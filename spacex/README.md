@@ -1,10 +1,15 @@
-# spacex/ — SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2.1（命題＋官方營收分部 → 損益表）
+# spacex/ — SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2.2（命題＋官方營收分部 → 損益表；v0.2.2 Tokenomics 快照 v21.9，基準數值同 v0.2.1）
 
 **命題（一句話）：** SI 分部的算力投入（9M26 SI 資本支出約 400 億美元、名目算力 1.7 GW；Q3 法說：Q4 資本支出 350–400 億、年底 2.5–3 GW）能否由 SI 營收（對外算力出租＋Grok／Cursor／X）回本；Connectivity（Starlink）現金流與 IPO 資金能支撐多久。
 
 **核心問題（S2）：** FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金與以其他融資取得之 PP&E；Valor 失敗售後租回本金列融資、不扣；公司口徑 FCF 並列）。
 
 **投資建議：強力放空**（v0.2.1；加權目標價 US$34.79，比現價 143.89〔2026-10-29 收盤〕低 75.8%；v0.2 為 34.83、v0.1 為 28.76）。主值＝自用 AI 讀法 2；讀法 1 目標價 22.57（−84.3%）。評等邊界：目標價 ≥ 71.95 才離開強力放空。市場共識目標價 244.97（MarketBeat 46 位）。
+
+## v0.2.2 改了什麼（2026-11-04；報告 `docs/reports/20261104_spacex_v0.2.2_TK快照v21.9.md`）
+- Tokenomics 快照 v21.7 → v21.9（`data/tokenomics_snapshot_v21.9.json`，master 7276259；名稱清單同 Alphabet）。契約名稱值的變動只在高成本欄（v21.8）與 `IF_NonNV_Out_TPU`（本模型不讀）。
+- 與 v0.2.1 逐格比對：只有版本與快照說明文字、In 頁 F77:F80（`he_*` 敏感度高）、Sens 第 66、68 列不同；加權目標價 34.79、強力放空與其他數值全部相同。
+- Sens：`he_all` 高 87.15 → 73.58（放空，同級）；`tk_all` 高 65.59 → 52.94（強力放空，同級）。G2 校準 `data/g2cal_v021_20261030.json` 未重解（基準不變）。v21.7 快照、`sens_v021_20261030.json`、v0.2.1 成品移 `_待刪除/`。
 
 ## v0.2.1 改了什麼（工作單 `docs/workorders/20261030_SpaceX_v0.2.1_一致性小修.md`；報告 `docs/reports/20261030_spacex_v0.2.1.md`）
 - **以融資取得 PP&E 的算法統一（第 1 點）**：pace 的 SI 投資季速 `si_cx_rr`＝Q4 SI 現金資本支出 34.06 ÷ (1 − fin_sh 8.93%)＝37.40（＝Thesis Q4 26 SI 投資；融資比例隨建置規模放大），不再「＋9M 以融資取得 PP&E 季均 1.307」（v0.2 35.37）。目標價 +0.62。
@@ -64,19 +69,19 @@
 | `build_spacex.py` | Python → Excel 產生器（openpyxl，全部活公式；藍字輸入、黑字公式、黃底判斷題） |
 | `facts_2026q3.py` | 10-Q 與新聞稿兩讀 → `data/spacex_facts_2026q3.json`（A 段；B 段依審查修正） |
 | `facts_v02.py` | v0.2 事實增補（424B4、2026Q2 10-Q、法說指引；逐字稿不入庫，本機有逐字稿時重讀核對）→ `data/spacex_facts_v02.json` |
-| `sens_v02.py` | 敏感度：一次改一個 In 頁輸入、整本 LibreOffice 重算 → `data/sens_v021_20261030.json`（v0.2.1；v0.1、v0.2 結果在 `data/_待刪除/`） |
+| `sens_v02.py` | 敏感度：一次改一個 In 頁輸入、整本 LibreOffice 重算 → `data/sens_v022_20261104.json`（v0.2.2；v0.1、v0.2、v0.2.1 結果在 `data/_待刪除/`） |
 | `waterfall_v02.py` | 目標價歸因瀑布：`WF=v021`（預設）v0.2 → v0.2.1（SPCX_STAGE 7–9）→ `data/waterfall_v021_20261030.json`；`WF=v02` v0.1 → v0.2（0–7）→ `data/waterfall_v02_20261030.json` |
 | `g2cal_v02.py` | 二修：解 G2 校準 k0（情境 B 的 2027Q1 營收＝35）→ `data/g2cal_v021_20261030.json`（v0.2.1 重解 4.8227；只供 Sens 的 k0_ovr；v0.2 的 4.8197 在 `data/_待刪除/`） |
 | `check_v02.py` | 成品核對：公式錯誤 0、核對列 0（分部對帳、子列、命題子列）、敏感度未過期、固定列標籤存在 |
 | `gen_html_json.py` | 由列號對照產生 `html.json`（勿手改 html.json） |
 | `make_v02.sh` | 一次跑完：事實總帳（v0.1＋v0.2）→（敏感度）→ 建置 → 重算 → check_v02 → check_in_layout → check_sens_coverage → check_segments → HTML 與檢核 |
 | `segments.json` | 官方分部宣告（`tools/segment_check/check_segments.py spacex` 符合） |
-| `dist/20261030_SpaceX個股模型_v0.2.1.xlsx`／`.html` | 成品（v0.1、v0.2 成品移 `dist/_待刪除/`） |
+| `dist/20261104_SpaceX個股模型_v0.2.2.xlsx`／`.html` | 成品（v0.1、v0.2、v0.2.1 成品移 `dist/_待刪除/`） |
 | `docs/reports/20261030_spacex_v0.2.1.md` | v0.2.1 報告；v0.2 報告 `docs/reports/20261030_spacex_v0.2.md`；v0.1 B 段報告 `docs/reports/20261030_spacex_v0.1.md`；A 段事實總帳報告 `docs/reports/20261030_spacex_v0.1_A段_事實總帳.md` |
 
 ## 建置
 ```
-bash spacex/make_v02.sh            # 沿用已提交的敏感度結果（VER 預設 0.2.1）
+bash spacex/make_v02.sh            # 沿用已提交的敏感度結果（VER 預設 0.2.2、VDATE 預設 20261104）
 SENS=1 bash spacex/make_v02.sh     # 改了任何輸入或公式時重跑敏感度（約 2 分鐘，JOBS＝2）
 G2CAL=1 SENS=1 bash spacex/make_v02.sh   # 影響 FY2027 營收的改動（如 pace）：先重解 G2 校準 k0
 python3 spacex/waterfall_v02.py /tmp/wf spacex/data/waterfall_v021_20261030.json   # 歸因瀑布 v0.2 → v0.2.1（WF=v02 為 v0.1 → v0.2）

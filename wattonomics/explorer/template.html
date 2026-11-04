@@ -99,7 +99,7 @@ footer{display:grid;gap:6px;font-size:.78rem;color:var(--muted);border-top:1px s
     <p class="lede">誰在蓋多少 AI 算力、何時上線、花了多少錢、錢從哪裡來、最後流到哪些零件與機組。資料來自 Wattonomics Excel 的匯出檔；每個數字都可在 Excel 追到輸入與來源標記。本頁只列<b>基準</b>（一條路徑，不做情境）：上線時點＝公司公告時程＋已確認延遲；情境分析留給下游個股模型。</p>
   </header>
 
-  <div class="bar" role="toolbar" aria-label="情境與年份">
+  <div class="bar" role="toolbar" aria-label="年份">
     <span class="chip ok">基準：公告時程＋已確認延遲</span>
     <div class="ctl"><label for="selYear">年份</label>
       <select id="selYear"></select></div>
@@ -185,7 +185,6 @@ footer{display:grid;gap:6px;font-size:.78rem;color:var(--muted);border-top:1px s
 <script>
 const D = __DATA__;
 const YEARS = ["2024","2025","2026","2027","2028","2029","2030","2031","2032"];
-const DELAY = [["D0","準時"],["D1","基準延遲"],["D2","壓力情境"]];
 const FAC = 1.2; // TK IF_FacilityGW 基準
 const ORDER = ["googl","msft","amzn","meta","orcl","xai","crwv","oai","nbis","neo","wyfi","ant","sov","cn","oth"];
 const SHORT = {googl:"Google",msft:"Microsoft",amzn:"Amazon",meta:"Meta",orcl:"Oracle",xai:"SpaceX／xAI",crwv:"CoreWeave",oai:"OpenAI／Stargate 自建",nbis:"Nebius",neo:"其他新雲",wyfi:"WhiteFiber",ant:"Anthropic 自建",sov:"主權 AI",cn:"中國",oth:"其他"};

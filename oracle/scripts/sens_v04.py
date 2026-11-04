@@ -49,10 +49,11 @@ CASES = [
 ]
 # v0.4.2：敏感度覆蓋（個股模型原則第 9 節）——In 頁每個有低／高的鍵都要有案例；IF_HoldEcon 四世代同時一案（鍵 he_all）。
 # 第 5 欄（可省略）＝Sens 頁「鍵」欄文字；省略時取低／高覆寫的全部鍵。
-_TK21 = json.load(open(os.path.join(HERE, "data", "tokenomics_snapshot_v21.4.json"), encoding="utf-8"))["items"]["IF_HoldEcon"]["values"]
+TKV = "v21.9"   # v0.4.3：IF_HoldEcon 低／高改讀 v21.9 快照（與 build_oracle.py 同檔）
+_TK21 = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))["items"]["IF_HoldEcon"]["values"]
 HE = {g: (round(_TK21[n]["低成本"], 4), round(_TK21[n]["高成本"], 4)) for g, n in GN.items()}
 CASES += [
-    ("IF_HoldEcon 四世代同時（每 MW 年持有成本）", f"Tokenomics v21.4 低成本／高成本欄（四世代同時；GB300 → {HE['gb300'][0]}／{HE['gb300'][1]}；k_長約分母同步變動）",
+    ("IF_HoldEcon 四世代同時（每 MW 年持有成本）", f"Tokenomics {TKV} 低成本／高成本欄（四世代同時；GB300 → {HE['gb300'][0]}／{HE['gb300'][1]}；k_長約分母同步變動）",
      {f"he_{g}": v[0] for g, v in HE.items()}, {f"he_{g}": v[1] for g, v in HE.items()}, "he_all"),
     ("長約價格證據 p_long（k_長約隨之）", "8.9073／12.7247（基準 9.70；k_long＝p_long ÷ he_gb300）", {"p_long": 8.9073}, {"p_long": 12.7247}, "p_long k_long"),
     ("隨需（現貨）占計費產能比例", "0%／20%", {"od_share": 0.0}, {"od_share": 0.20}),

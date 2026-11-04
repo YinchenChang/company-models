@@ -11,6 +11,9 @@ TAGS = ("Verified", "Interested-party", "Analogy", "Assumed", "Derived", "待證
 
 
 def main():
+    same = None
+    if "--same-gross" in sys.argv:   # v0.2.1 W2：給前一版快照時，驗證年新增毛額、年底與 R4 用的基準名稱不變
+        i_ = sys.argv.index("--same-gross"); same = sys.argv[i_ + 1]; del sys.argv[i_:i_ + 2]
     x = sys.argv[1]
     wb = openpyxl.load_workbook(x, data_only=True)
     wf = openpyxl.load_workbook(x, data_only=False)
@@ -69,6 +72,65 @@ def main():
     for n in gif:
         v = val(n)
         if isinstance(v, str) and v.startswith(ERRS): bad.append(f"{n} 錯誤")
+    # 5b) v0.2 V5（工作單 20261104）：停用情境名稱已刪；新別名＝舊名；Excel 文字不寫「需求 A」
+    import re as _re
+    stale = [n for n in gif if _re.search(r"_(B|C)_D\d|_A_D[12]|ShippedNotOnline|PlayerCumGap_A_D1", n)]
+    if stale: bad.append(f"停用情境名稱仍在：{stale[:5]}（共 {len(stale)}）")
+    for k_ in ("YE", "Avg", "Add"):
+        for y in range(2024, 2033):
+            if f"WIF_MktGW_{k_}_{y}" not in names: bad.append(f"缺別名 WIF_MktGW_{k_}_{y}"); continue
+            if val(f"WIF_MktGW_{k_}_{y}") != val(f"WIF_MktGW_{k_}_A_D0_{y}"): bad.append(f"別名 WIF_MktGW_{k_}_{y} ≠ 舊名")
+    nA = sum(1 for ws_ in wf.worksheets if ws_.title not in ("FundRaw", "DB_Evidence") for row in ws_.iter_rows() for c in row
+             if isinstance(c.value, str) and not c.value.startswith("=") and "需求 A" in c.value and not (ws_.title == "Decisions" and c.column == 6))
+    if nA: bad.append(f"Excel 文字含「需求 A」{nA} 格（Andy 11-04 07:44；Decisions 依據欄的原話除外）")
+    nS = sum(1 for ws_ in wf.worksheets if ws_.title not in ("FundRaw", "DB_Evidence", "Decisions") for row in ws_.iter_rows() for c in row
+             if isinstance(c.value, str) and "情景" in c.value)
+    if nS: bad.append(f"Excel 標籤含「情景」{nS} 格（獨立核對 2026-11-04 建議 5）")
+    # v0.2 修訂（複核 2026-11-04）：edits/v<版>_In_edits.csv 每列都須在 xlsx 生效（In 頁依鍵比對 new 值）
+    import csv as _csv, glob as _glob
+    ver = os.path.basename(x).split("_v")[-1].rsplit(".xlsx", 1)[0]
+    ef = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "edits", f"v{ver}_In_edits.csv")
+    if os.path.exists(ef):
+        from openpyxl.utils import column_index_from_string as _ci
+        wsI = wf["In"]; rowof = {wsI.cell(r_, 1).value: r_ for r_ in range(5, wsI.max_row + 1) if wsI.cell(r_, 1).value}
+        nmiss = 0
+        for e in _csv.DictReader(open(ef, encoding="utf-8-sig")):
+            cur = wsI.cell(rowof[e["key"]], _ci(e["col"])).value if e["key"] in rowof else "<缺鍵>"
+            ok_ = (str(cur) == e["new"]) or (cur is None and e["new"] == "")
+            try: ok_ = ok_ or abs(float(cur) - float(e["new"])) < 1e-9
+            except (TypeError, ValueError): pass
+            if not ok_:
+                nmiss += 1; print(f"  edits 未生效：{e['key']} {e['col']}：xlsx {cur!r} ≠ {e['new']!r}")
+        if nmiss: bad.append(f"{os.path.basename(ef)} 有 {nmiss} 列未在 xlsx 生效")
+        else: print(f"  {os.path.basename(ef)}：全部列已生效")
+    # v0.2.1 獨立核對第 3 項：上市年＋壽命以前不得出現該世代的汰換（上市年＝Players 世代占比首個 > 0 的年份；H100 視為 2023 前已上市）
+    if "Players" in wb.sheetnames and "Deploy" in wb.sheetnames:
+        PLs, DPs = wb["Players"], wb["Deploy"]
+        yrs = {c_: int(DPs.cell(3, c_).value) for c_ in range(4, 14) if str(DPs.cell(3, c_).value).isdigit()}
+        life = round(val("life_ret")) if "life_ret" in names else 6
+        mixrow = {str(PLs.cell(r_, 1).value).replace("世代占比：", ""): r_ for r_ in range(4, 15) if str(PLs.cell(r_, 1).value).startswith("世代占比：")}
+        nbadg = 0
+        for r_ in range(4, DPs.max_row + 1):
+            lab = str(DPs.cell(r_, 1).value or "")
+            if not lab.startswith("　其中 NVIDIA "): continue
+            gname = lab.replace("　其中 NVIDIA ", "")
+            if gname not in mixrow: continue
+            launch = next((y_ for c_, y_ in yrs.items() if (PLs.cell(mixrow[gname], c_).value or 0) > 0), 9999)
+            if gname.startswith("Hopper"): launch = min(launch, 2023) - life   # 最舊世代：早於 2023 的存量歸此
+            for c_, y_ in yrs.items():
+                v_ = DPs.cell(r_, c_).value or 0
+                if y_ < launch + life and abs(v_) > 1e-9:
+                    nbadg += 1; print(f"  世代汰換早於上市年＋壽命：{gname} {y_} 年 {v_:.3f}（上市 {launch}）")
+        if nbadg: bad.append(f"世代汰換早於上市年＋{life} 年：{nbadg} 格")
+        else: print(f"  世代汰換：無早於上市年＋{life} 年者")
+    for cid in ("C-K1", "R-K1", "R-K2", "W1-K1", "W1-K2"):
+        if cid not in [x_[0] for x_ in rows]: bad.append(f"Checks 缺 {cid}（v0.2）")
+    if same:
+        ps = json.load(open(same, encoding="utf-8"))["names"]
+        keys = [k for k in ps if k.startswith(("WIF_MktGW_Add_A_D0_", "WIF_MktGW_YE_A_D0_", "WIF_MktGW_Add_2", "WIF_MktGW_YE_2")) and "SiteOnly" not in k]   # 主路徑（R4 讀主路徑毛額）；SiteOnly 隨站點證據可變
+        dg = [k for k in keys if k in names and abs((val(k) or 0) - (ps[k] or 0)) > 1e-9]
+        if dg: bad.append(f"年新增毛額或年底與前一版不同：{dg[:5]}")
+        else: print(f"  毛額不變：{len(keys)} 名與 {os.path.basename(same)} 相同")
     # 6) 快照一致
     if len(sys.argv) > 2:
         snap = json.load(open(sys.argv[2], encoding="utf-8"))
@@ -78,13 +140,17 @@ def main():
     # 7) 固定規格（Andy 2026-10-28、2026-10-31）：README 須含對帳鏈、延遲情景與資金缺口規格
     rd = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "README.md")
     txt = open(rd, encoding="utf-8").read() if os.path.exists(rd) else ""
-    for kw in ("### 對帳鏈", "### 基建延遲情景", "| C0 |", "| C7 |", "D0 準時", "D1 基準延遲", "D2 嚴重延遲", "IT 關鍵電力", "IF_FacilityGW", "k_chip2it", "下游取用 2027 年後數值前看覆蓋率", "Wattonomics（瓦帳）＝全市場 GW 唯一基準事實", "舊名 GW 帳／gwledger",
+    for kw in ("### 對帳鏈", "| C0 |", "| C7 |", "IT 關鍵電力", "IF_FacilityGW", "k_chip2it", "下游取用 2027 年後數值前看覆蓋率", "Wattonomics（瓦帳）＝全市場 GW 唯一基準事實", "舊名 GW 帳／gwledger",
                # 資金缺口固定規格（Andy 2026-10-31 04:13、04:20、10:22）
                "資金缺口（Gap 頁", "新增 GW × 每 GW 建置成本", "不扣股票買回與股利", "整個市場當一間公司",
                # v0.1.8 固定規格（Andy 2026-11-02 15:58、16:22；工作單 20261102 E12）
                "### 三層只給基準", "### 地位鏈與對帳方向", "### 已確認延遲門檻", "公司本身揭露，或兩家以上獨立可信媒體報導且公司未否認", "〔停用，v0.2 刪〕",
                # v0.1.9（工作單 20261102 F4–F8）：NVIDIA 對帳點只並列、不校準
-               "### NVIDIA 資料中心營收對帳點", "只並列、不校準"):
+               "### NVIDIA 資料中心營收對帳點", "只並列、不校準",
+               # v0.2（工作單 20261104）：承租玩家、融資租賃、刪停用情境、K4 乙、汰換
+               "### 承租玩家只算 IT", "融資租賃走資本支出線", "出租方", "### 汰換", "K4 乙", "WIF_MktGW_<YE|Avg|Add>_<yyyy>", "A_D0 為舊名",
+               # v0.2.1
+               "殘差法", "攤到認列年"):
         if kw not in txt: bad.append(f"wattonomics/README.md 缺固定規格：{kw}")
     print(f"{os.path.basename(x)}：頁面 {len(wb.sheetnames)}、具名範圍 {len(names)}（WIF_ {len(gif)}）、Checks {len(rows)} 項（OK {nok}／WARN {len(cw)}／ERROR {len(ce)}／INFO {ninfo}）、"
           f"In 輸入列 {nrow}（待證據 {pend}）、錯誤格 {nerr}")

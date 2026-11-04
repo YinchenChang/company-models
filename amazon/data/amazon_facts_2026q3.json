@@ -1,5 +1,5 @@
 {
- "_readme": "Amazon 2026Q3 事實總帳（MAG v0.3.1 工作單第 1 節第 1 項）。由 amazon/facts_2026q3.py 自財報新聞稿逐列轉錄讀取；10-Q 未取得（雲端擋 SEC）：債務明細、租賃、在建工程、分部折舊、RPO 附註沿用 2026Q2 或推導（見 build_amazon.py 與報告資料缺口）。金額 USD M（費用與流出以正值記）；checks＝第二次獨立讀取。",
+ "_readme": "Amazon 2026Q3 事實總帳（MAG v0.3.1 工作單第 1 節第 1 項；v0.3.2 補入 10-Q：mag/docs/workorders/20261104_MAG_10Q補入_2026Q3.md）。由 amazon/facts_2026q3.py 自財報新聞稿逐列轉錄讀取，10-Q 附註數字（債務明細與面額、租賃、融資義務、分部折舊、分部 PP&E、RPO、承諾、封面股數、持股帳面）逐筆附頁碼登錄（全文不入 repo）；原推導或沿用值保留在 note「原（v0.3.1／v0.3.2）：」。金額 USD M（費用與流出以正值記）；checks＝第二次獨立讀取。",
  "asOf": "2026-09-30",
  "items": [
   {
@@ -1599,7 +1599,7 @@
    "docDate": "2026-10-29",
    "retrieved": "2026-10-31",
    "tag": "[Interested-party]",
-   "note": "10-Q 封面股數未取得（10-Q 缺）"
+   "note": "模型 sh_out 用本值（與淨負債、未歸屬獎勵同日 9/30）；10-Q 封面 10/21 股數 sh.cover.20261021 只作驗證"
   },
   {
    "id": "sh.awards.2026q3",
@@ -1616,16 +1616,907 @@
   },
   {
    "id": "debt.face.20260930",
-   "item": "債務面額（2026-09-30，推導）",
-   "value": 181090.0,
+   "item": "債務面額（2026-09-30）",
+   "value": 180887,
    "unit": "USD M",
-   "period": "20260930",
-   "source": "2026-06-30 債務面額 132,995（10-Q 2026Q2 附註 5）＋Q3 長期借款收入 − 償還",
-   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
-   "docDate": "2026-10-29",
-   "retrieved": "2026-10-31",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 18 頁 附註 5 Total face value of long-term debt",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "原（v0.3.1／v0.3.2）：181,090（推導：6/30 面額 132,995＋Q3 長期借款收入 48,102 − 償還 7）"
+  },
+  {
+   "id": "debt.notes.2026q3",
+   "item": "長期債務明細（逐次發行，面額）",
+   "value": [
+    [
+     "2014 票據（發行 6.0B）",
+     2750
+    ],
+    [
+     "2017 票據（17.0B）",
+     12000
+    ],
+    [
+     "2020 票據（10.0B）",
+     7750
+    ],
+    [
+     "2021 票據（18.5B）",
+     12250
+    ],
+    [
+     "2022-04 票據（12.8B）",
+     9750
+    ],
+    [
+     "2022-12 票據（8.3B）",
+     5750
+    ],
+    [
+     "2025 票據（15.0B）",
+     15000
+    ],
+    [
+     "2026-03 美元票據（37.0B；含浮動 2.8B）",
+     37000
+    ],
+    [
+     "2026-03 歐元票據（€14.5B；含浮動 €1.8B）",
+     16427
+    ],
+    [
+     "2026-05 瑞士法郎票據（CHF2.8B）",
+     3375
+    ],
+    [
+     "2026-06 加幣票據（C$14.0B）",
+     9834
+    ],
+    [
+     "2026-07 美元票據（25.0B；含浮動 0.75B）",
+     25000
+    ],
+    [
+     "2026-09 英鎊票據（£4.3B）",
+     5637
+    ],
+    [
+     "2026 定期貸款（Term Loan，2026-09 動用）",
+     17500
+    ],
+    [
+     "其他長期債",
+     864
+    ]
+   ],
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 18 頁 附註 5",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "債券合計 162.5B（另 2026 Term Loan 17.5B、其他 0.864B）；票據加權剩餘年限 13.9 年；無財務承諾條款"
+  },
+  {
+   "id": "debt.current.20260930",
+   "item": "長期債務流動部分（2026-09-30）",
+   "value": 6827,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 18 頁 附註 5",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "debt.discount.20260930",
+   "item": "未攤銷折價與發行成本（2026-09-30）",
+   "value": 935,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 18 頁 附註 5",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "debt.notesOut.20260930",
+   "item": "優先票據流通在外（2026-09-30）",
+   "value": 162500,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 18 頁 附註 5",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "debt.fv.20260930",
+   "item": "票據公允價值（2026-09-30，Level 2）",
+   "value": 145400,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 18 頁 附註 5",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "面額 162.5B → 價格約 89.5%"
+  },
+  {
+   "id": "debt.termLoan.20260930",
+   "item": "2026 Term Loan（無擔保、延後單次動用；2026-09 動用；2029-09 到期；SOFR＋0.625%–0.875%）",
+   "value": 17500,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 19 頁 附註 5",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "debt.q3gap.2026q3",
+   "item": "Q3 長期借款收入中未對上的約 18.9 的來源",
+   "value": 18887,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 18 頁 附註 5（Term Loan 17,500＋英鎊票據實際 5,637 − 原估 4,250）",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
    "tag": "[Derived]",
-   "note": "10-Q 附註未取得：收入為扣除折價後的淨額，外幣債未重估；帳面法（6/30 面額＋長期債帳面變動）為 177,226，差額主要是 2027 年到期票據轉入流動部分（10-Q 待補）"
+   "note": "差額 −35 為發行折價與成本（收入為淨額）；原（v0.3.1／v0.3.2）：未知 18,852（48,102 − 7 月美元 25,000 − 9 月英鎊 4,250）"
+  },
+  {
+   "id": "debt.supplierLoan.2026q3",
+   "item": "供應商融資：技術基礎設施採購的擔保貸款額度（2027Q1–2028Q3 可動用，每筆 5 年到期，浮動利率；最高約 80.0B）",
+   "value": 80000,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 19 頁 附註 5",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "期末未動用；動用後列長期債務、還本列長期借款償還；本版模型不計入（模型假設現金不足才舉債）"
+  },
+  {
+   "id": "debt.revolver.20260930",
+   "item": "未動用循環信用額度（15.0B＋5.0B 364 天；2026-10 改簽：15.0B 至 2031-10、5.0B 至 2027-10）",
+   "value": 20000,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 19 頁 附註 5",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "debt.stBorrow.20260930",
+   "item": "其他短期借款（營運資金用；列「Accrued expenses and other」）",
+   "value": 380,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 19 頁 附註 5",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "2025-12-31 為 455；模型淨負債不計入（金額小、屬營運資金；計入時加權目標價約 −0.03），只作驗證"
+  },
+  {
+   "id": "debt.stbyLC.20260930",
+   "item": "備付信用狀（指定受益人；主要為採購承諾、支付服務、工傷與保險）",
+   "value": 21600,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 19 頁 附註 5",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "或有，不減少可用額度；不進模型"
+  },
+  {
+   "id": "debt.cp.20260930",
+   "item": "商業本票餘額（上限 30.0B）",
+   "value": 0,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 19 頁 附註 5",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "debt.schedule.2026q3",
+   "item": "長期債務本金＋利息到期表（2026-09-30）",
+   "value": {
+    "2026Q4": 1413,
+    "2027": 16566,
+    "2028": 19567,
+    "2029": 39185,
+    "2030": 12489,
+    "thereafter": 205034
+   },
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 15 頁 附註 4 承諾表",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "合計 294,254（含利息）"
+  },
+  {
+   "id": "lease.finPV.2026q3",
+   "item": "融資租賃負債現值（2026-09-30）",
+   "value": 14495,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 14 頁 附註 3",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "原（v0.3.1／v0.3.2）：13,451（沿用 2026-06-30）"
+  },
+  {
+   "id": "lease.finGross.2026q3",
+   "item": "融資租賃負債（未折現，含利息）",
+   "value": 17955,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 14 頁 附註 3",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "lease.opPV.2026q3",
+   "item": "營業租賃負債現值",
+   "value": 100288,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 14 頁 附註 3",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "lease.opGross.2026q3",
+   "item": "營業租賃負債（未折現）",
+   "value": 121492,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 14 頁 附註 3",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "lease.finObl.2026q3",
+   "item": "融資義務（物流與資料中心，含利息；2026-09-30；只作說明）",
+   "value": 11565,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 15 頁 附註 4 承諾表",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "未折現、含利息；模型改用本金 lease.finOblPrin.2026q3；加權剩餘 14.5 年、加權利率 3.4%"
+  },
+  {
+   "id": "lease.finOblPrin.2026q3",
+   "item": "融資義務本金（不含利息；流動 426＋非流動 9,300；模型 fin_obl）",
+   "value": 9726,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 15 頁 附註 4 註 (1)",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "原（v0.3.1／v0.3.2）：11,070（沿用 2026-06-30，含利息口徑）；改用本金，與 debt_q3（面額）、fl_pv（現值）同為資產負債表口徑"
+  },
+  {
+   "id": "lease.term.2026q3",
+   "item": "加權平均剩餘租期：營業／融資（年）",
+   "value": [
+    9.9,
+    12.2
+   ],
+   "unit": "年",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 13 頁 附註 3",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "折現率 4.0%／3.8%"
+  },
+  {
+   "id": "lease.cost.2026q3",
+   "item": "租賃成本合計（營業 4,288＋融資 771＋變動 716）",
+   "value": 5775,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 13 頁 附註 3",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "lease.uncommenced.2026q3",
+   "item": "尚未起租的租賃承諾（逐年付款）",
+   "value": {
+    "2026Q4": 2590,
+    "2027": 12448,
+    "2028": 11477,
+    "2029": 12193,
+    "2030": 11385,
+    "thereafter": 114829
+   },
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 15 頁 附註 4 承諾表",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "合計 164,922（2026-06-30 為 137,214，季增 27,708）；起租時程與租期年限未揭露"
+  },
+  {
+   "id": "lease.uncommencedTotal.2026q3",
+   "item": "尚未起租的租賃承諾合計",
+   "value": 164922,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 15 頁 附註 4",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "原（v0.3.1／v0.3.2）：137,214（2026-06-30）"
+  },
+  {
+   "id": "cf.ppeUnpaid.10q.2026q3",
+   "item": "已取得未付款之不動產及設備增加（10-Q 補充現金流資訊）",
+   "value": 853,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 7 頁 附註 1 Supplemental Cash Flow",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "9M26 21,473；與新聞稿同值；設備延長付款期（最長一年）列應付帳款"
+  },
+  {
+   "id": "lease.finLeaseGross.2026q3",
+   "item": "融資租賃取得資產總額（帳列 PP&E）",
+   "value": 56400,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 13 頁 附註 3",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "累計攤銷 39.5B"
+  },
+  {
+   "id": "commit.ppe.2026q3",
+   "item": "不動產與設備長期採購承諾（未列資產負債表）",
+   "value": {
+    "2026Q4": 13955,
+    "2027": 63900,
+    "2028": 25220,
+    "2029": 25400,
+    "2030": 28941,
+    "thereafter": 2224
+   },
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 15 頁 附註 4 承諾表 註 (2)",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "合計 159,640；2027 年 63.9B"
+  },
+  {
+   "id": "commit.purchase.2026q3",
+   "item": "無條件採購義務（能源、影音內容、軟體；不含設備）",
+   "value": 94759,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 15 頁 附註 4 承諾表 註 (3)",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "原（v0.3.1／v0.3.2）：130,065（2026-06-30；當時口徑含設備，本季 10-Q 將設備另列一行，兩期不可直接比）"
+  },
+  {
+   "id": "commit.other.2026q3",
+   "item": "其他承諾（資產除役、影音內容、建造中自建租賃）",
+   "value": 18994,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 15 頁 附註 4",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "commit.total.2026q3",
+   "item": "主要合約承諾合計",
+   "value": 883581,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 15 頁 附註 4",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "原（v0.3.1／v0.3.2）：650,034（2026-06-30）"
+  },
+  {
+   "id": "is.NA.da.2026q3",
+   "item": "NA 分部折舊與攤銷（不動產與設備，依使用量分攤）",
+   "value": 4566,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "原（v0.3.1／v0.3.2）：4,716.4（推導：2026Q2 × 現金流量表 D&A 季增比）"
+  },
+  {
+   "id": "is.NA.da.2026m9",
+   "item": "NA 分部折舊與攤銷（9M26）",
+   "value": 13346,
+   "unit": "USD M",
+   "period": "2026m9",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "is.INTL.da.2026q3",
+   "item": "INTL 分部折舊與攤銷（不動產與設備，依使用量分攤）",
+   "value": 1346,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "原（v0.3.1／v0.3.2）：1,355.2（推導：2026Q2 × 現金流量表 D&A 季增比）"
+  },
+  {
+   "id": "is.INTL.da.2026m9",
+   "item": "INTL 分部折舊與攤銷（9M26）",
+   "value": 3916,
+   "unit": "USD M",
+   "period": "2026m9",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "is.AWS.da.2026q3",
+   "item": "AWS 分部折舊與攤銷（不動產與設備，依使用量分攤）",
+   "value": 9230,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "原（v0.3.1／v0.3.2）：8,464.3（推導：2026Q2 × 現金流量表 D&A 季增比）"
+  },
+  {
+   "id": "is.AWS.da.2026m9",
+   "item": "AWS 分部折舊與攤銷（9M26）",
+   "value": 24583,
+   "unit": "USD M",
+   "period": "2026m9",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "capex.netAdd.NA.2026q3",
+   "item": "不動產與設備淨增加（NA；含融資租賃與未付款，非現金口徑）",
+   "value": 14530,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "capex.netAdd.NA.2026m9",
+   "item": "不動產與設備淨增加（NA，9M26）",
+   "value": 37795,
+   "unit": "USD M",
+   "period": "2026m9",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "capex.netAdd.INTL.2026q3",
+   "item": "不動產與設備淨增加（INTL；含融資租賃與未付款，非現金口徑）",
+   "value": 6068,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "capex.netAdd.INTL.2026m9",
+   "item": "不動產與設備淨增加（INTL，9M26）",
+   "value": 10335,
+   "unit": "USD M",
+   "period": "2026m9",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "capex.netAdd.AWS.2026q3",
+   "item": "不動產與設備淨增加（AWS；含融資租賃與未付款，非現金口徑）",
+   "value": 57116,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "capex.netAdd.AWS.2026m9",
+   "item": "不動產與設備淨增加（AWS，9M26）",
+   "value": 147236,
+   "unit": "USD M",
+   "period": "2026m9",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "capex.netAdd.CORP.2026q3",
+   "item": "不動產與設備淨增加（CORP；含融資租賃與未付款，非現金口徑）",
+   "value": 548,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "capex.netAdd.CORP.2026m9",
+   "item": "不動產與設備淨增加（CORP，9M26）",
+   "value": 1544,
+   "unit": "USD M",
+   "period": "2026m9",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "capex.netAdd.TOT.2026q3",
+   "item": "不動產與設備淨增加（TOT；含融資租賃與未付款，非現金口徑）",
+   "value": 78262,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "capex.netAdd.TOT.2026m9",
+   "item": "不動產與設備淨增加（TOT，9M26）",
+   "value": 196910,
+   "unit": "USD M",
+   "period": "2026m9",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "bs.ppe.NA.2026q3",
+   "item": "不動產與設備淨額（NA，2026-09-30）",
+   "value": 145087,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "bs.ppe.INTL.2026q3",
+   "item": "不動產與設備淨額（INTL，2026-09-30）",
+   "value": 36263,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "bs.ppe.AWS.2026q3",
+   "item": "不動產與設備淨額（AWS，2026-09-30）",
+   "value": 313009,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "bs.ppe.CORP.2026q3",
+   "item": "不動產與設備淨額（CORP，2026-09-30）",
+   "value": 14503,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "bs.segAssets.AWS.2026q3",
+   "item": "AWS 分部資產（2026-09-30）",
+   "value": 419594,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 25 頁 附註 8",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "2025-12-31 為 252,588"
+  },
+  {
+   "id": "cip.20260930",
+   "item": "在建工程（construction in progress）",
+   "value": null,
+   "unit": "—",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁 （10-Q 未揭露；只見於 10-K 附註）",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[不存在]",
+   "note": "10-Q 不揭露 PP&E 組成；模型的在建以「實績期超出新增在役 MW 成本的 AI 資本支出」推導（Thesis cx_cip），不受影響"
+  },
+  {
+   "id": "rpo.2026q3",
+   "item": "RPO（原始期限 >1 年的未認列合約承諾，主要為 AWS）",
+   "value": 578000,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 10 頁 附註 1 Unearned Revenue",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "加權平均剩餘年限 6.1 年（Q2 6.4 年）；12 或 24 個月內認列比例未揭露；原（v0.3.1／v0.3.2）：496,000（2026-06-30）；法說 backlog 578"
+  },
+  {
+   "id": "rpo.life.2026q3",
+   "item": "RPO 加權平均剩餘年限",
+   "value": 6.1,
+   "unit": "年",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 10 頁 附註 1",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "原（v0.3.1／v0.3.2）：6.4（2026-06-30）"
+  },
+  {
+   "id": "sh.cover.20261021",
+   "item": "封面流通股數（2026-10-21；只作驗證）",
+   "value": 10813.138306,
+   "unit": "M 股",
+   "period": "2026-10-21",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 1 頁 封面",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "比 9/30 資產負債表 10,811 多約 2.1 百萬股（9/30–10/21 歸屬）；模型用 9/30 股數，避免與 9/30 淨負債、未歸屬獎勵重複計入"
+  },
+  {
+   "id": "is.intInc.2026q3.10q",
+   "item": "利息收入（10-Q 損益表）",
+   "value": 1187,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 4 頁 合併損益表",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "MD&A：主要投資於投資級短中期債券與 AAA 貨幣基金；利息收入隨平均投資餘額與利率變動，10-Q 不提供更細的明細"
+  },
+  {
+   "id": "inv.privEq.20260930",
+   "item": "非權益法非上市權益投資帳面（主要為 Anthropic 優先股與 OpenAI 優先股）",
+   "value": 143700,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 12 頁 附註 2",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "2025-12-31 為 16.2B"
+  },
+  {
+   "id": "inv.antPref.20260930",
+   "item": "Anthropic 無表決權優先股帳面（164 百萬股）",
+   "value": 92500,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 12 頁 附註 2",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "9M26 依 Anthropic 募資的可觀察價格上調 62.8B"
+  },
+  {
+   "id": "inv.antNotes.20260930",
+   "item": "Anthropic 可轉換票據公允價值（不計持股上限可轉約 184 百萬股優先股）",
+   "value": 146200,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 12 頁 附註 2",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "未實現利益 140.3B 列其他綜合損益；每股優先股可轉 10 股普通股；票據轉換受 12% 持股上限限制，但上限「may be waived at our election」（第 11 頁）"
+  },
+  {
+   "id": "inv.oaiPref.20260930",
+   "item": "OpenAI Series C 優先股帳面（Q1 15.0＋Q2 13.7＋Q3 21.3）",
+   "value": 50000,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 12 頁 附註 2",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "inv.antFacility.20260930",
+   "item": "Anthropic 融資額度可動用上限（20.0B − Series H 5.0B，依算力交付里程碑開放）",
+   "value": 15000,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 12 頁 附註 2",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "acq.globalstar",
+   "item": "Globalstar 收購（現金＋股票，含債務約 10.9B；預計 2027 年完成）",
+   "value": 10900,
+   "unit": "USD M",
+   "period": "2026-04-13",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 15 頁 附註 4",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "本版模型不計入（2027 年的現金部分最多 40%）"
+  },
+  {
+   "id": "capex.view.2027",
+   "item": "MD&A：預期 2027 年現金資本支出「meaningfully increase」，主要為技術基礎設施",
+   "value": null,
+   "unit": "—",
+   "period": "2027",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 28 頁 MD&A Liquidity",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Interested-party]",
+   "note": ""
   },
   {
    "id": "guide.2026q4.rev",
@@ -2463,6 +3354,706 @@
    "value": 244.0,
    "second": 244,
    "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "debt.face.20260930（10-Q 明細加總 vs 合計）",
+   "value": 180887,
+   "second": 180887,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 18 頁",
+   "ok": true
+  },
+  {
+   "id": "debt.face.20260930（新聞稿長期債帳面＋10-Q 流動部分＋折價 vs 10-Q 面額）",
+   "value": 180887.0,
+   "second": 180887,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第七節；Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 18 頁",
+   "ok": true
+  },
+  {
+   "id": "debt.q3gap（Q3 長期借款收入 vs 7 月美元＋9 月英鎊＋Term Loan；容差 0.2B＝折價與成本）",
+   "value": 48102.0,
+   "second": 48137,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 18 頁；mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md",
+   "ok": true
+  },
+  {
+   "id": "debt.schedule（到期表列加總 vs 合計）",
+   "value": 294254,
+   "second": 294254,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 15 頁",
+   "ok": true
+  },
+  {
+   "id": "lease.finPV（總額 − 利息 vs 現值）",
+   "value": 14495,
+   "second": 14495,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 14 頁",
+   "ok": true
+  },
+  {
+   "id": "lease.opPV（總額 − 利息 vs 現值）",
+   "value": 100288,
+   "second": 100288,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 14 頁",
+   "ok": true
+  },
+  {
+   "id": "bs.ltLease（10-Q 長期營業＋融資 vs 新聞稿資產負債表）",
+   "value": 98824,
+   "second": 98824.0,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 14 頁；mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第七節",
+   "ok": true
+  },
+  {
+   "id": "lease.uncommenced（列加總 vs 合計）",
+   "value": 164922,
+   "second": 164922,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 15 頁",
+   "ok": true
+  },
+  {
+   "id": "cf.ppeUnpaid.2026q3（10-Q vs 新聞稿）",
+   "value": 853,
+   "second": 853.0,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 7 頁；mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md",
+   "ok": true
+  },
+  {
+   "id": "cf.ppeUnpaid.2026m9（10-Q vs 新聞稿）",
+   "value": 21473,
+   "second": 21473.0,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 7 頁；mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md",
+   "ok": true
+  },
+  {
+   "id": "commit.ppe（列加總 vs 合計）",
+   "value": 159640,
+   "second": 159640,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 15 頁",
+   "ok": true
+  },
+  {
+   "id": "commit.total（各列合計 vs 總計）",
+   "value": 883581,
+   "second": 883581,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 15 頁",
+   "ok": true
+  },
+  {
+   "id": "is.NA.da.2026m9（10-Q 9M vs 既有 Q1＋Q2＋10-Q Q3）",
+   "value": 13346,
+   "second": 13346,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁；amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.NA.da.2025q3（10-Q 比較欄 vs 既有總帳）",
+   "value": 4001,
+   "second": 4001,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁",
+   "ok": true
+  },
+  {
+   "id": "is.INTL.da.2026m9（10-Q 9M vs 既有 Q1＋Q2＋10-Q Q3）",
+   "value": 3916,
+   "second": 3916,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁；amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.INTL.da.2025q3（10-Q 比較欄 vs 既有總帳）",
+   "value": 1276,
+   "second": 1276,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁",
+   "ok": true
+  },
+  {
+   "id": "is.AWS.da.2026m9（10-Q 9M vs 既有 Q1＋Q2＋10-Q Q3）",
+   "value": 24583,
+   "second": 24583,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁；amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.AWS.da.2025q3（10-Q 比較欄 vs 既有總帳）",
+   "value": 5648,
+   "second": 5648,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁",
+   "ok": true
+  },
+  {
+   "id": "分部折舊 Q3 合計（10-Q 合併列）",
+   "value": 15142,
+   "second": 15142,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁",
+   "ok": true
+  },
+  {
+   "id": "capex.netAdd.NA（9M − 1H26 vs Q3）",
+   "value": 14530,
+   "second": 14530,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁；10-Q 2026Q2",
+   "ok": true
+  },
+  {
+   "id": "capex.netAdd.INTL（9M − 1H26 vs Q3）",
+   "value": 6068,
+   "second": 6068,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁；10-Q 2026Q2",
+   "ok": true
+  },
+  {
+   "id": "capex.netAdd.AWS（9M − 1H26 vs Q3）",
+   "value": 57116,
+   "second": 57116,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁；10-Q 2026Q2",
+   "ok": true
+  },
+  {
+   "id": "capex.netAdd.CORP（9M − 1H26 vs Q3）",
+   "value": 548,
+   "second": 548,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁；10-Q 2026Q2",
+   "ok": true
+  },
+  {
+   "id": "capex.netAdd.TOT（9M − 1H26 vs Q3）",
+   "value": 78262,
+   "second": 78262,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁；10-Q 2026Q2",
+   "ok": true
+  },
+  {
+   "id": "capex.netAdd（分部加總 vs 合併，Q3）",
+   "value": 78262,
+   "second": 78262,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁",
+   "ok": true
+  },
+  {
+   "id": "bs.ppe（10-Q 分部加總 vs 新聞稿資產負債表）",
+   "value": 508862,
+   "second": 508862.0,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁；mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第七節",
+   "ok": true
+  },
+  {
+   "id": "sh.cover − sh.out（10/21 − 9/30，應小於未歸屬獎勵 223）",
+   "value": 2.138306000000739,
+   "second": 2.1,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 1 頁；mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md",
+   "ok": true
+  },
+  {
+   "id": "is.intInc.2026q3（10-Q vs 新聞稿）",
+   "value": 1187,
+   "second": 1187.0,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 4 頁；mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md",
+   "ok": true
+  },
+  {
+   "id": "is.intExp.2026q3（10-Q vs 新聞稿）",
+   "value": 1691,
+   "second": 1691.0,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 4 頁；mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md",
+   "ok": true
+  },
+  {
+   "id": "debt.face.20260930（10-Q 原文第 18 頁含「180,887」）",
+   "value": "180,887",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "debt.notes.2026q3（10-Q 原文第 18 頁含「16,427」）",
+   "value": "16,427",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "debt.notes.2026q3（10-Q 原文第 18 頁含「3,375」）",
+   "value": "3,375",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "debt.notes.2026q3（10-Q 原文第 18 頁含「9,834」）",
+   "value": "9,834",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "debt.notes.2026q3（10-Q 原文第 18 頁含「5,637」）",
+   "value": "5,637",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "debt.notes.2026q3（10-Q 原文第 18 頁含「17,500」）",
+   "value": "17,500",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "debt.notes.2026q3（10-Q 原文第 18 頁含「864」）",
+   "value": "864",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "debt.current.20260930（10-Q 原文第 18 頁含「6,827」）",
+   "value": "6,827",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "debt.discount.20260930（10-Q 原文第 18 頁含「(935)」）",
+   "value": "(935)",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "debt.notesOut.20260930（10-Q 原文第 18 頁含「$162.5 billion」）",
+   "value": "$162.5 billion",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "debt.fv.20260930（10-Q 原文第 18 頁含「$145.4 billion」）",
+   "value": "$145.4 billion",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "debt.termLoan.20260930（10-Q 原文第 19 頁含「$17.5 billion」）",
+   "value": "$17.5 billion",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "debt.supplierLoan.2026q3（10-Q 原文第 19 頁含「$80.0 billion」）",
+   "value": "$80.0 billion",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "debt.revolver.20260930（10-Q 原文第 19 頁含「$20.0 billion」）",
+   "value": "$20.0 billion",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "debt.stBorrow.20260930（10-Q 原文第 19 頁含「$380 million」）",
+   "value": "$380 million",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "debt.stbyLC.20260930（10-Q 原文第 19 頁含「$21.6 billion」）",
+   "value": "$21.6 billion",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "debt.schedule.2026q3（10-Q 原文第 15 頁含「294,254」）",
+   "value": "294,254",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "debt.schedule.2026q3（10-Q 原文第 15 頁含「39,185」）",
+   "value": "39,185",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "lease.finPV.2026q3（10-Q 原文第 14 頁含「14,495」）",
+   "value": "14,495",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "lease.finGross.2026q3（10-Q 原文第 14 頁含「17,955」）",
+   "value": "17,955",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "lease.opPV.2026q3（10-Q 原文第 14 頁含「100,288」）",
+   "value": "100,288",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "lease.opGross.2026q3（10-Q 原文第 14 頁含「121,492」）",
+   "value": "121,492",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "lease.finObl.2026q3（10-Q 原文第 15 頁含「11,565」）",
+   "value": "11,565",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "lease.finOblPrin.2026q3（10-Q 原文第 15 頁含「$426」）",
+   "value": "$426",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "lease.finOblPrin.2026q3（10-Q 原文第 15 頁含「$9.3 billion」）",
+   "value": "$9.3 billion",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "lease.cost.2026q3（10-Q 原文第 13 頁含「5,775」）",
+   "value": "5,775",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "lease.uncommenced.2026q3（10-Q 原文第 15 頁含「164,922」）",
+   "value": "164,922",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "lease.uncommenced.2026q3（10-Q 原文第 15 頁含「114,829」）",
+   "value": "114,829",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "cf.ppeUnpaid.10q.2026q3（10-Q 原文第 7 頁含「853」）",
+   "value": "853",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "cf.ppeUnpaid.10q.2026q3（10-Q 原文第 7 頁含「21,473」）",
+   "value": "21,473",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "lease.finLeaseGross.2026q3（10-Q 原文第 13 頁含「$56.4 billion」）",
+   "value": "$56.4 billion",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "commit.ppe.2026q3（10-Q 原文第 15 頁含「159,640」）",
+   "value": "159,640",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "commit.ppe.2026q3（10-Q 原文第 15 頁含「63,900」）",
+   "value": "63,900",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "commit.purchase.2026q3（10-Q 原文第 15 頁含「94,759」）",
+   "value": "94,759",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "commit.other.2026q3（10-Q 原文第 15 頁含「18,994」）",
+   "value": "18,994",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "commit.total.2026q3（10-Q 原文第 15 頁含「883,581」）",
+   "value": "883,581",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "is.NA.da.2026q3（10-Q 原文第 26 頁含「4,566」）",
+   "value": "4,566",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "is.NA.da.2026q3（10-Q 原文第 26 頁含「13,346」）",
+   "value": "13,346",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "is.INTL.da.2026q3（10-Q 原文第 26 頁含「1,346」）",
+   "value": "1,346",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "is.INTL.da.2026q3（10-Q 原文第 26 頁含「3,916」）",
+   "value": "3,916",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "is.AWS.da.2026q3（10-Q 原文第 26 頁含「9,230」）",
+   "value": "9,230",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "is.AWS.da.2026q3（10-Q 原文第 26 頁含「24,583」）",
+   "value": "24,583",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "capex.netAdd.NA.2026q3（10-Q 原文第 26 頁含「14,530」）",
+   "value": "14,530",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "capex.netAdd.NA.2026q3（10-Q 原文第 26 頁含「37,795」）",
+   "value": "37,795",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "capex.netAdd.INTL.2026q3（10-Q 原文第 26 頁含「6,068」）",
+   "value": "6,068",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "capex.netAdd.INTL.2026q3（10-Q 原文第 26 頁含「10,335」）",
+   "value": "10,335",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "capex.netAdd.AWS.2026q3（10-Q 原文第 26 頁含「57,116」）",
+   "value": "57,116",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "capex.netAdd.AWS.2026q3（10-Q 原文第 26 頁含「147,236」）",
+   "value": "147,236",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "capex.netAdd.CORP.2026q3（10-Q 原文第 26 頁含「548」）",
+   "value": "548",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "capex.netAdd.CORP.2026q3（10-Q 原文第 26 頁含「1,544」）",
+   "value": "1,544",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "capex.netAdd.TOT.2026q3（10-Q 原文第 26 頁含「78,262」）",
+   "value": "78,262",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "capex.netAdd.TOT.2026q3（10-Q 原文第 26 頁含「196,910」）",
+   "value": "196,910",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "bs.ppe.NA.2026q3（10-Q 原文第 26 頁含「145,087」）",
+   "value": "145,087",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "bs.ppe.INTL.2026q3（10-Q 原文第 26 頁含「36,263」）",
+   "value": "36,263",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "bs.ppe.AWS.2026q3（10-Q 原文第 26 頁含「313,009」）",
+   "value": "313,009",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "bs.ppe.CORP.2026q3（10-Q 原文第 26 頁含「14,503」）",
+   "value": "14,503",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "bs.segAssets.AWS.2026q3（10-Q 原文第 25 頁含「419,594」）",
+   "value": "419,594",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "rpo.2026q3（10-Q 原文第 10 頁含「$578 billion」）",
+   "value": "$578 billion",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "rpo.2026q3（10-Q 原文第 10 頁含「6.1 years」）",
+   "value": "6.1 years",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "sh.cover.20261021（10-Q 原文第 1 頁含「10,813,138,306」）",
+   "value": "10,813,138,306",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "is.intInc.2026q3.10q（10-Q 原文第 4 頁含「1,187」）",
+   "value": "1,187",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "is.intInc.2026q3.10q（10-Q 原文第 4 頁含「3,617」）",
+   "value": "3,617",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "inv.privEq.20260930（10-Q 原文第 12 頁含「$143.7 billion」）",
+   "value": "$143.7 billion",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "inv.antPref.20260930（10-Q 原文第 12 頁含「$92.5 billion」）",
+   "value": "$92.5 billion",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "inv.antPref.20260930（10-Q 原文第 12 頁含「164 million」）",
+   "value": "164 million",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "inv.antNotes.20260930（10-Q 原文第 12 頁含「$146.2 billion」）",
+   "value": "$146.2 billion",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "inv.antNotes.20260930（10-Q 原文第 12 頁含「184 million」）",
+   "value": "184 million",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "inv.oaiPref.20260930（10-Q 原文第 12 頁含「$21.3 billion」）",
+   "value": "$21.3 billion",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "inv.antFacility.20260930（10-Q 原文第 12 頁含「$15.0 billion」）",
+   "value": "$15.0 billion",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "acq.globalstar（10-Q 原文第 15 頁含「$10.9 billion」）",
+   "value": "$10.9 billion",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "capex.view.2027（10-Q 原文第 28 頁含「meaningfully increase in 2027」）",
+   "value": "meaningfully increase in 2027",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
    "ok": true
   },
   {

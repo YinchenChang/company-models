@@ -1,6 +1,7 @@
 # R4 對帳：Wattonomics 側殘差歸因（Compare 1–4 點＋「2026 七家改甲2」＋NVIDIA 營收對照）。
 # 用法：python3 wattonomics/tools/r4_attrib.py <輸出 xlsx>
-#       python3 wattonomics/tools/r4_attrib.py --base-compare <輸出 xlsx>   （v0.1.8 起「單一基準比較」模式：r2 起用；讀 model/CURRENT 與 r1 活頁簿）
+#       python3 wattonomics/tools/r4_attrib.py --base-compare <輸出 xlsx> [--prev <前一版重算 xlsx>]   （v0.1.8 起「單一基準比較」模式：r2 起用；讀 model/CURRENT 與 r1 活頁簿）
+#         --prev（v0.2 起，r3）：第二節改為「本版 − 前一版」差異拆解（七家其中承租三家、xAI、其他、其餘），並加第三節淨額比較（本版汰換列 vs Siliconomics r1 淨額）
 #   讀 wattonomics/model/CURRENT 的重算值（data_only）與 Siliconomics 側 R4 橋接活頁簿（r1），
 #   寫成「輸入格（藍字）＋公式格（黑字）」的活頁簿；之後以 LibreOffice 重算。本工具不改任何模型。
 #   公式一律在 Excel；Python 只搬值與排版。
@@ -14,13 +15,14 @@ from openpyxl.styles import Font as _F, PatternFill as _PF
 BLUE = _F(color="0000FF"); BOLD = _F(bold=True); HDR = _PF("solid", fgColor="DDEBF7")
 
 
-def base_compare(out):
+def base_compare(out, prev=None):
     """v0.1.8 起「單一基準比較」模式（工作單 20261102 第 2 節步驟 8）：Wattonomics 基準（model/CURRENT 的 WIF_MktGW_Add_A_D0）
     vs Siliconomics 側 R4 橋接 r1（毛額＝淨新增 + 汰換），逐年殘差、比值、判定；並對照 r1 預測的調整後值，把差異拆成七家、xAI、Anthropic、其他、其餘。
     輸入格藍字、公式黑字；之後以 LibreOffice 重算。本模式不改任何模型。"""
     root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     wdir = os.path.join(root, "wattonomics", "model")
     wf = open(os.path.join(wdir, "CURRENT")).read().strip()
+    wver = "v" + wf.rsplit("_v", 1)[1].rsplit(".xlsx", 1)[0]
     Wb = openpyxl.load_workbook(os.path.join(wdir, wf), data_only=True)
     nm = {n: d.attr_text for n, d in Wb.defined_names.items()}
     wv = lambda n: Wb[nm[n].split("!")[0].strip("'")][nm[n].split("!")[1].replace("$", "")].value
@@ -38,10 +40,15 @@ def base_compare(out):
             if ws.cell(r, 2).value == key: return r
         raise KeyError(key)
     CXs, PLs = Wb["CapexGW"], Wb["Players"]
+    if prev:
+        Pb = openpyxl.load_workbook(prev, data_only=True); pf = os.path.basename(prev); pver = "v" + pf.rsplit("_v", 1)[1].rsplit(".xlsx", 1)[0]
+        pnm = {n: d.attr_text for n, d in Pb.defined_names.items()}
+        pv = lambda n: Pb[pnm[n].split("!")[0].strip("'")][pnm[n].split("!")[1].replace("$", "")].value
+        PCX = Pb["CapexGW"]
     col = lambda y: 4 + (y - 2023)
     P7 = ["msft", "googl", "amzn", "meta", "orcl", "crwv", "nbis"]
     wb_ = openpyxl.Workbook(); IN_ = wb_.active; IN_.title = "In"
-    IN_["A1"] = (f"In — R4 Wattonomics 側歸因 r2（單一基準比較）輸入。藍字＝取自 {wf}（Wattonomics 基準：需求 A × 公告＋已確認延遲）、"
+    IN_["A1"] = (f"In — R4 Wattonomics 側歸因 {'r3' if prev else 'r2'}（單一基準比較）輸入。藍字＝取自 {wf}（Wattonomics 基準：公告時程＋已確認延遲）、"
                  f"{os.path.basename(r1f)}（r1：Siliconomics 側 r1 橋接值、v0.1.7 主路徑、r1 預測調整後與各項）。")
     IN_["A1"].font = BOLD
     for j, h in enumerate(["鍵", "項目", "單位", "值", "標記", "來源"], 1):
@@ -58,7 +65,7 @@ def base_compare(out):
     for y in OUTY:
         put(f"s_b8_{y}", f"Siliconomics 推得淨新增上線 IT GW（r1 橋接）{y}", "GW", r1v(f"s_b8_{y}"), "Derived", f"{os.path.basename(r1f)} In s_b8_{y}（Siliconomics 側 r1 Bridge b8）")
         put(f"s_b6_{y}", f"Siliconomics ④ 汰換（負值）{y}", "GW", r1v(f"s_b6_{y}"), "Assumed", f"{os.path.basename(r1f)} In s_b6_{y}")
-        put(f"w18_{y}", f"Wattonomics v0.1.8 基準年新增 IT GW（毛額）{y}", "GW", wv(f"WIF_MktGW_Add_A_D0_{y}"), "Derived", f"{wf} WIF_MktGW_Add_A_D0_{y}")
+        put(f"w18_{y}", f"Wattonomics {wver} 基準年新增 IT GW（毛額）{y}", "GW", wv(f"WIF_MktGW_Add_A_D0_{y}"), "Derived", f"{wf} WIF_MktGW_Add_A_D0_{y}")
         put(f"w17_{y}", f"Wattonomics v0.1.7 主路徑年新增 IT GW（A、D0）{y}", "GW", r1v(f"wt_new_{y}"), "Derived", f"{os.path.basename(r1f)} In wt_new_{y}")
         i1 = YC1.index(y)
         put(f"r1_wadj_{y}", f"r1 預測：Wattonomics 調整後年新增 {y}", "GW", r1br["wadj"][OUTY.index(y)], "Derived", f"{os.path.basename(r1f)} Bridge wadj")
@@ -71,11 +78,21 @@ def base_compare(out):
         put(f"ma_{y}", f"v0.1.8 Anthropic 自建年新增（Players 甲；v0.1.7 模型自建＝0，不替換）{y}", "GW", PLs.cell(rowkey(PLs, "ant_add"), col(y)).value, "Derived", f"{wf} Players ant_add")
         put(f"mo_{y}", f"v0.1.8 其他（企業、學研）主路徑年新增 {y}", "GW", CXs.cell(rowkey(CXs, "oth_main"), col(y)).value, "Analogy", f"{wf} CapexGW oth_main")
         put(f"so_{y}", f"v0.1.8 其他 甲 年新增（Players）{y}", "GW", CXs.cell(rowkey(CXs, "oth_site"), col(y)).value, "Derived", f"{wf} CapexGW oth_site")
-        put(f"dly_{y}", f"v0.1.8 已確認延遲園區 GW（全市場；Delay 頁）{y}", "GW", wv("WIF_Delay_Mkt_DelayedGW"), "Derived", f"{wf} WIF_Delay_Mkt_DelayedGW（純量；各年同值）")
+        put(f"dly_{y}", f"{wver} 已確認延遲園區 GW（全市場；Delay 頁）{y}", "GW", wv("WIF_Delay_Mkt_DelayedGW"), "Derived", f"{wf} WIF_Delay_Mkt_DelayedGW（純量；各年同值）")
+        if prev:
+            for p in ("orcl", "crwv", "nbis"):
+                put(f"m_{p}_{y}", f"{wver} {p} 主路徑年新增 {y}", "GW", CXs.cell(rowkey(CXs, f"{p}_main"), col(y)).value, "Derived", f"{wf} CapexGW {p}_main")
+                put(f"pm_{p}_{y}", f"{pver} {p} 主路徑年新增 {y}", "GW", PCX.cell(rowkey(PCX, f"{p}_main"), col(y)).value, "Derived", f"{pf} CapexGW {p}_main")
+            put(f"pw_{y}", f"{pver} 基準年新增（毛額）{y}", "GW", pv(f"WIF_MktGW_Add_A_D0_{y}"), "Derived", f"{pf} WIF_MktGW_Add_A_D0_{y}")
+            put(f"pm7_{y}", f"{pver} 七家主路徑年新增 {y}", "GW", sum(PCX.cell(rowkey(PCX, f"{p}_main"), col(y)).value for p in P7), "Derived", f"{pf} CapexGW <p>_main 七家合計")
+            put(f"pmx_{y}", f"{pver} xAI 主路徑年新增 {y}", "GW", PCX.cell(rowkey(PCX, "xai_main"), col(y)).value, "Derived", f"{pf} CapexGW xai_main")
+            put(f"pmo_{y}", f"{pver} 其他主路徑年新增 {y}", "GW", PCX.cell(rowkey(PCX, "oth_main"), col(y)).value, "Analogy", f"{pf} CapexGW oth_main")
+            if f"WIF_MktGW_AddNet_{y}" in nm:
+                put(f"wnet_{y}", f"{wver} 基準年新增淨額（毛額 − 汰換）{y}", "GW", wv(f"WIF_MktGW_AddNet_{y}"), "Derived", f"{wf} WIF_MktGW_AddNet_{y}")
     for j, w in enumerate([12, 66, 6, 11, 14, 70], 1):
         IN_.column_dimensions[CL(j)].width = w
     Bx = wb_.create_sheet("Bridge")
-    Bx["A1"] = "Bridge — 單一基準比較（v0.1.8 基準 vs Siliconomics r1 毛額）與 r1 預測對照。正值殘差＝Siliconomics 高於 Wattonomics。"; Bx["A1"].font = BOLD
+    Bx["A1"] = (f"Bridge — 單一基準比較（{wver} 基準 vs Siliconomics r1 毛額）" + (f"、{wver} − {pver} 差異拆解與淨額比較" if prev else "與 r1 預測對照") + "。正值殘差＝Siliconomics 高於 Wattonomics。"); Bx["A1"].font = BOLD
     for j, h in enumerate(["列", "項目", "說明"] + [str(y) for y in OUTY], 1):
         c = Bx.cell(3, j, h); c.font = BOLD; c.fill = HDR
     br = [4]; R = {}
@@ -90,24 +107,45 @@ def base_compare(out):
     ref = lambda k, y: f"{BC[y]}{R[k]}"
     Bx.cell(br[0], 1, "一、單一基準比較").font = BOLD; br[0] += 1
     row("sg", "Siliconomics 推得上線 IT GW（毛額＝淨新增 − ④）", "s_b8 − s_b6（與 r1 同口徑）", lambda y: f"=s_b8_{y}-s_b6_{y}", bold=True)
-    row("w18", "Wattonomics v0.1.8 基準年新增（毛額，未扣汰換）", "WIF_MktGW_Add_A_D0", lambda y: f"=w18_{y}", bold=True)
-    row("res", "殘差（r2）", "sg − w18", lambda y: f"={ref('sg', y)}-{ref('w18', y)}", bold=True)
-    row("ratio", "比值（r2）＝Wattonomics ÷ Siliconomics", "", lambda y: f"={ref('w18', y)}/{ref('sg', y)}", "0.000", True)
+    rn_ = "r3" if prev else "r2"
+    row("w18", f"Wattonomics {wver} 基準年新增（毛額，未扣汰換）", "WIF_MktGW_Add_A_D0", lambda y: f"=w18_{y}", bold=True)
+    row("res", f"殘差（{rn_}）", "sg − w18", lambda y: f"={ref('sg', y)}-{ref('w18', y)}", bold=True)
+    row("ratio", f"比值（{rn_}）＝Wattonomics ÷ Siliconomics", "", lambda y: f"={ref('w18', y)}/{ref('sg', y)}", "0.000", True)
     row("band", "容許帶判定", "|1 − 比值| ≤ tolband", lambda y: f'=IF(ABS(1-{ref("ratio", y)})<=tolband,"帶內",IF({ref("ratio", y)}<1,"帶外（Wattonomics 偏低）","帶外（Wattonomics 偏高）"))', "General")
     row("verdict", "判定（三層對帳原則）", "帶內＝一致；帶外且無對應已寄出送件＝待診斷（時差須對應送件，本版無）",
         lambda y: f'=IF(ABS(1-{ref("ratio", y)})<=tolband,"一致","待診斷")', "General", True)
     row("r17", "對照：比值（v0.1.7 主路徑 ÷ Siliconomics 毛額）", "r1 rb", lambda y: f"=w17_{y}/{ref('sg', y)}", "0.000")
-    br[0] += 1
-    Bx.cell(br[0], 1, "二、對照 r1 預測的調整後值").font = BOLD; br[0] += 1
-    row("wadj", "r1 預測：Wattonomics 調整後", "r1 Bridge wadj（19.42／26.01／29.36／27.91）", lambda y: f"=r1_wadj_{y}")
-    row("rr1", "r1 預測比值", "wadj ÷ sg", lambda y: f"={ref('wadj', y)}/{ref('sg', y)}", "0.000")
-    row("diff", "差異＝v0.1.8 − r1 預測", "w18 − wadj", lambda y: f"={ref('w18', y)}-{ref('wadj', y)}", bold=True)
-    row("c7", "　七家：Y9 讀法差（Y9 缺年改用 Y2、最後年後 × cap_g_ext 外推、t−1／t−2 代入；r1 Y9 讀法缺年即以站點代入）", "Σ七家主路徑（v0.1.8）− r1 on9", lambda y: f"=m7_{y}-r1_on9_{y}")
-    row("cx", "　xAI：模型推得（v0.1.8 與 r1 d4 同讀法：SpaceX 模型 AI 資本支出 ÷ 每 GW，2026 不平移）", "xAI 主路徑 − r1 onn_xai", lambda y: f"=mx_{y}-r1_onx_{y}")
-    row("ca", "　Anthropic：v0.1.7 模型自建＝0，不替換站點（r1 讀 v0.1.6 自建 16.7 $B／年）", "Players ant_add − r1 onn_ant", lambda y: f"=ma_{y}-r1_ona_{y}")
-    row("co", "　其他（企業、學研）：成長率改用市場（不含其他）且市場水位較高", "（其他主路徑 − 甲）− r1 d5", lambda y: f"=mo_{y}-so_{y}-r1_d5_{y}")
-    row("ck", "　其餘（Pipeline 基準年新增變動：已確認延遲 0 筆、Players 未變）", "diff − 以上四項", lambda y: f"={ref('diff', y)}-{ref('c7', y)}-{ref('cx', y)}-{ref('ca', y)}-{ref('co', y)}")
-    row("dly", "　備忘：已確認延遲園區 GW（全市場）", "Delay 頁；0＝本版無已確認延遲入基準", lambda y: f"=dly_{y}")
+    if prev:
+        row("rprev", f"對照：比值（{pver} ÷ Siliconomics 毛額；r2 值）", "", lambda y: f"=pw_{y}/{ref('sg', y)}", "0.000")
+        br[0] += 1
+        Bx.cell(br[0], 1, f"二、{wver} − {pver} 差異拆解").font = BOLD; br[0] += 1
+        row("diff", f"差異＝{wver} − {pver}", "w18 − pw", lambda y: f"={ref('w18', y)}-pw_{y}", bold=True)
+        for p, lab in (("orcl", "Oracle（V1 只算 IT＋自付／融資租賃廠房、V1b、V2 AI 占比）"), ("crwv", "CoreWeave（V1、V1b）"), ("nbis", "Nebius（V1、V1b）")):
+            row("c_" + p, "　" + lab, f"{p}_main 差", lambda y, p=p: f"=m_{p}_{y}-pm_{p}_{y}")
+        row("c7o", "　七家其餘四家", "七家差 − 三家", lambda y: f"=(m7_{y}-pm7_{y})-(m_orcl_{y}-pm_orcl_{y})-(m_crwv_{y}-pm_crwv_{y})-(m_nbis_{y}-pm_nbis_{y})")
+        row("cx", "　xAI", "xai_main 差", lambda y: f"=mx_{y}-pmx_{y}")
+        row("co", "　其他（企業、學研；隨市場成長，市場水位變動的連帶）", "oth_main 差", lambda y: f"=mo_{y}-pmo_{y}")
+        row("ck", "　其餘（Pipeline 基準年新增等）", "diff − 以上", lambda y: f"={ref('diff', y)}-(m7_{y}-pm7_{y})-{ref('cx', y)}-{ref('co', y)}")
+        if all(f"WIF_MktGW_AddNet_{y}" in nm for y in OUTY):
+            br[0] += 1
+            Bx.cell(br[0], 1, "三、淨額比較（v0.2 V7 汰換列；讀淨額或毛額由 AI半導體 決定）").font = BOLD; br[0] += 1
+            row("snet", "Siliconomics r1 淨新增上線 IT GW（b8）", "s_b8", lambda y: f"=s_b8_{y}", bold=True)
+            row("wnet", f"Wattonomics {wver} 年新增淨額（毛額 − 汰換；壽命 6 年）", "WIF_MktGW_AddNet", lambda y: f"=wnet_{y}", bold=True)
+            row("rnet", "比值（淨額）", "", lambda y: f"={ref('wnet', y)}/{ref('snet', y)}", "0.000", True)
+            row("vnet", "判定（淨額）", "", lambda y: f'=IF(ABS(1-{ref("rnet", y)})<=tolband,"一致","待診斷")', "General", True)
+    else:
+        br[0] += 1
+        Bx.cell(br[0], 1, "二、對照 r1 預測的調整後值").font = BOLD; br[0] += 1
+        row("wadj", "r1 預測：Wattonomics 調整後", "r1 Bridge wadj（19.42／26.01／29.36／27.91）", lambda y: f"=r1_wadj_{y}")
+        row("rr1", "r1 預測比值", "wadj ÷ sg", lambda y: f"={ref('wadj', y)}/{ref('sg', y)}", "0.000")
+        row("diff", "差異＝v0.1.8 − r1 預測", "w18 − wadj", lambda y: f"={ref('w18', y)}-{ref('wadj', y)}", bold=True)
+        row("c7", "　七家：Y9 讀法差（Y9 缺年改用 Y2、最後年後 × cap_g_ext 外推、t−1／t−2 代入；r1 Y9 讀法缺年即以站點代入）", "Σ七家主路徑（v0.1.8）− r1 on9", lambda y: f"=m7_{y}-r1_on9_{y}")
+        row("cx", "　xAI：模型推得（v0.1.8 與 r1 d4 同讀法：SpaceX 模型 AI 資本支出 ÷ 每 GW，2026 不平移）", "xAI 主路徑 − r1 onn_xai", lambda y: f"=mx_{y}-r1_onx_{y}")
+        row("ca", "　Anthropic：v0.1.7 模型自建＝0，不替換站點（r1 讀 v0.1.6 自建 16.7 $B／年）", "Players ant_add − r1 onn_ant", lambda y: f"=ma_{y}-r1_ona_{y}")
+        row("co", "　其他（企業、學研）：成長率改用市場（不含其他）且市場水位較高", "（其他主路徑 − 甲）− r1 d5", lambda y: f"=mo_{y}-so_{y}-r1_d5_{y}")
+        row("ck", "　其餘（Pipeline 基準年新增變動：已確認延遲 0 筆、Players 未變）", "diff − 以上四項", lambda y: f"={ref('diff', y)}-{ref('c7', y)}-{ref('cx', y)}-{ref('ca', y)}-{ref('co', y)}")
+        row("dly", "　備忘：已確認延遲園區 GW（全市場）", "Delay 頁；0＝本版無已確認延遲入基準", lambda y: f"=dly_{y}")
+
     Bx.column_dimensions["A"].width = 8; Bx.column_dimensions["B"].width = 70; Bx.column_dimensions["C"].width = 50
     for y in OUTY: Bx.column_dimensions[BC[y]].width = 11
     wb_.save(out)
@@ -115,7 +153,7 @@ def base_compare(out):
 
 
 if len(sys.argv) > 2 and sys.argv[1] == "--base-compare":
-    base_compare(sys.argv[2]); sys.exit(0)
+    base_compare(sys.argv[2], sys.argv[sys.argv.index("--prev") + 1] if "--prev" in sys.argv else None); sys.exit(0)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 WT = os.path.join(ROOT, "wattonomics", "model")
