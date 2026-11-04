@@ -1,4 +1,4 @@
-# Arm Holdings（ARM）個股模型 v0.1（AI 半導體 Project：運算次產業；CPU 架構授權與權利金）
+# Arm Holdings（ARM）個股模型 v0.2（AI 半導體 Project：運算次產業；CPU 架構授權與權利金）
 # 用法：python3 arm/build_arm.py raw.xlsx ；再以 LibreOffice headless 重算（見 README）
 # 會計年度：FY(t) 於 t 年 3 月 31 日結束（FY2027＝2026-04～2027-03）。上游市場層是日曆年：FY(t) 市場＝9/12 × CY(t−1)＋3/12 × CY(t)。
 # 金額：十億美元（US$B）；EPS：美元，non-GAAP（公司與市場共識口徑，排除股票薪酬、併購攤銷；GAAP EPS 另列對照）。
@@ -19,7 +19,7 @@ import relative_multiple as RMX   # noqa: E402
 sys.path.insert(0, os.path.join(ROOT, "tools", "in_layout"))
 import apply_in_layout   # noqa: E402
 
-VER, DATE = "v0.1", "2026-10-31"
+VER, DATE = "v0.2", "2026-11-05"
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC"); FADEFILL = PatternFill("solid", fgColor="E7E6E6")
 SC = ("A", "B", "C")
@@ -46,6 +46,9 @@ hdr(IN, 3, ["鍵", "項目", "單位", "低", "基準", "高", "標記", "來源
 rows = []; sec = lambda t: rows.append(("sec", t)); inp = lambda *a: rows.append(a)
 SL26 = "https://www.sec.gov/Archives/edgar/data/0001973239/000197323926000062/exhibit992fye26q431-marx26.htm"
 SL27 = "https://www.sec.gov/Archives/edgar/data/0001973239/000197323926000113/exhibit992fye27q130-junx26.htm"
+SL27Q2 = "https://www.sec.gov/Archives/edgar/data/0001973239/000197323926000141/exhibit992fye27q230-sepx26.htm"
+RT = "https://kfgo.com/2026/11/04/arm-beats-second-quarter-revenue-estimates-on-ai-and-data-center-demand/"
+SIO = "https://www.securities.io/arm-q2-revenue-rises-27-as-licensing-growth-outpaces-royalties/"
 SL25 = "https://www.sec.gov/Archives/edgar/data/1973239/000197323925000010/exhibit992fye25q431-marx25.htm"
 F20 = "https://www.sec.gov/Archives/edgar/data/0001973239/000197323926000097/arm-20260331.htm"
 TR3 = "https://www.fool.com/earnings/call-transcripts/2026/02/04/arm-holdings-arm-q3-2026-earnings-transcript/"
@@ -55,19 +58,21 @@ PW = "https://www.paulweiss.com/insights/client-news/qualcomm-wins-jury-verdict-
 SAF = "https://stockanalysis.com/stocks/arm/forecast/"
 IS = "https://www.investsmart.com.au/security/nasdaq/arm/arm-holdings-plc/share-price"
 
-sec("A. FY2027 錨點（1Q27 實績＋2Q27 公司指引＋下半年假設；2Q27 財報 2026-11-04 公布）")
-inp("q2_lg", "2Q27 授權及其他年增（公司指引：mid-30%）", "%", 0.30, 0.35, 0.38, "Interested-party", "公司 2Q27 指引：授權年增 mid-30%、權利金 low-teens、營收 13.8 億 ± 0.5 億美元（Longbridge 2026-07-29 轉述股東信）", "Hudson Labs：授權及其他年增約 30%")
-inp("q2_rg", "2Q27 權利金年增（公司指引：low-teens）", "%", 0.10, 0.12, 0.14, "Interested-party", "同上", "去年同期 6.20 億美元（2Q26）")
-inp("h2_lg", "3Q27、4Q27 授權及其他年增", "%", 0.08, 0.20, 0.30, "Assumed", "ACV 1Q27 年增 13%（股東信）；1Q27 授權年增 23%、2Q27 指引 mid-30%", "去年同期 3Q26 5.05、4Q26 8.19 億美元（含 SoftBank 協議每季約 2 億美元）")
-inp("h2_rg", "3Q27、4Q27 權利金年增", "%", 0.08, 0.15, 0.20, "Assumed", "1Q27 +22%、2Q27 指引 low-teens；資料中心權利金年增逾一倍（股東信）", "管理層：FY2027 約 20% 成長「非常合理」（3Q26 法說，The Motley Fool 逐字稿）")
-inp("q2_opx", "2Q27 non-GAAP 營業費用", "US$B", None, 0.78, None, "Interested-party", "公司 2Q27 指引約 7.8 億美元（股東信 2026-07-29）", "1Q27 實績 7.33 億")
-inp("q3_opx", "3Q27 non-GAAP 營業費用", "US$B", 0.78, 0.80, 0.83, "Assumed", "2Q27 指引 7.8 億；FY2026 季增約 2–4%（股東信）", "AGI CPU 與 CSS 研發投入")
-inp("q4_opx", "4Q27 non-GAAP 營業費用", "US$B", 0.80, 0.82, 0.86, "Assumed", "同上", "—")
-inp("cogs_r", "IP 營業成本 ÷ 營收（non-GAAP；不含晶片）", "%", 0.015, 0.019, 0.025, "Derived", "1Q27 non-GAAP 毛利率 98.1%（股東信）", "FY2026：（營收 − 營業費用 − 營業利益）÷ 營收＝1.8%")
-inp("q_oth", "每季業外收益（利息，non-GAAP）", "US$B", 0.025, 0.034, 0.04, "Derived", "1Q27 non-GAAP 稅前 5.65 億 − 營業利益 5.31 億（股東信）", "現金與短期投資利息")
-inp("q_tx", "non-GAAP 有效稅率（FY2027）", "%", 0.13, 0.15, 0.18, "Derived", "1Q27 non-GAAP 稅 0.85 ÷ 稅前 5.65＝15.0%（股東信調節表）", "英國 OECD 最低稅 15%")
-inp("q_sh", "稀釋加權股數（FY2027）", "十億股", None, 1.080, None, "Derived", "1Q27 1,078 百萬股（股東信）", "4Q26 1,068；20-F：2026-03-31 普通股 1,064 百萬股")
-inp("chip_27", "Arm AGI CPU 晶片營收 FY2027（含在授權及其他錨點內）", "US$B", 0.0, 0.15, 0.40, "Assumed", "公司：AGI CPU 2026-03 推出，首批已交付多家美、中客戶；FY2027–28 客戶需求逾 20 億美元（股東信 2026-07-29）", "晶片營收所在列公司未揭露：未找到；本模型暫列授權及其他之下")
+sec("A. FY2027 錨點（1Q27、2Q27 實績＋3Q27 公司指引＋4Q27 假設；2Q27 財報 2026-11-04 公布）")
+inp("q2_lg", "2Q27 授權及其他年增（實績）", "%", None, "=0.773/0.515-1", None, "Derived", "2Q27 實績授權及其他 7.73 億美元 ÷ 去年同期 5.15 億 − 1＝+50.1%（股東信 6-K Exhibit 99.2，2026-11-04，Verified；公司稱 +50%）", "原指引 mid-30%（v0.1 用 35%）；去年同期 2Q26 由 FY2026 全年減其他三季")
+inp("q2_rg", "2Q27 權利金年增（實績）", "%", None, "=0.670/0.620-1", None, "Derived", "2Q27 實績權利金 6.70 億美元 ÷ 去年同期 6.20 億 − 1＝+8.1%（股東信 2026-11-04，Verified；公司稱 +8%）", "原指引 low-teens（v0.1 用 12%）；記憶體漲價壓抑手機、資料中心權利金年增一倍")
+inp("q3_rev", "3Q27 營收（公司指引中點）", "US$B", 1.49, 1.54, 1.59, "Interested-party", "公司 3Q27 指引：營收 15.4 億 ± 0.5 億美元、non-GAAP EPS 0.56 ± 0.04、non-GAAP 營業費用約 8.25 億（股東信 2026-11-04）", "Reuters（kfgo 轉載 2026-11-04）：分析師平均 15.3 億；公司未給授權／權利金分列")
+inp("q3_rg", "3Q27 權利金年增（授權及其他＝指引營收 − 權利金）", "%", 0.04, 0.08, 0.12, "Assumed", "公司未給 3Q27 分列指引：未找到；2Q27 實績 +8%，股東信稱授權案進入量產後權利金將加速（無時點）", "去年同期 3Q26 權利金 7.37 億（基期高）；記憶體漲價對手機的壓力仍在")
+inp("h2_lg", "4Q27 授權及其他年增", "%", 0.08, 0.20, 0.30, "Assumed", "ACV 2Q27 年增 12%（17.9 億美元，股東信 2026-11-04）；1Q27 授權年增 23%、2Q27 +50%", "去年同期 4Q26 8.19 億美元（含 SoftBank 協議每季約 2 億美元）；4Q27 首批 AGI CPU 商業出貨（公司）")
+inp("h2_rg", "4Q27 權利金年增", "%", 0.08, 0.15, 0.20, "Assumed", "1Q27 +22%、2Q27 +8%；資料中心權利金年增一倍（股東信 2026-11-04）", "管理層：FY2027 約 20% 成長「非常合理」（3Q26 法說，The Motley Fool 逐字稿）；4Q26 基期 6.71 億較低")
+inp("q2_opx", "2Q27 non-GAAP 營業費用（實績）", "US$B", None, 0.774, None, "Verified", "2Q27 non-GAAP 營業費用 7.74 億美元（研發 5.47＋銷管 2.27；股東信 2026-11-04 調節表）", "原指引約 7.8 億；1Q27 實績 7.33 億")
+inp("q3_opx", "3Q27 non-GAAP 營業費用（公司指引）", "US$B", 0.81, 0.825, 0.84, "Interested-party", "公司 3Q27 指引約 8.25 億美元（股東信 2026-11-04）", "securities.io 2026-11-04：由 2Q27 的 7.74 億升到約 8.25 億")
+inp("q4_opx", "4Q27 non-GAAP 營業費用", "US$B", 0.82, 0.845, 0.88, "Assumed", "3Q27 指引 8.25 億 × 季增約 2.5%（沿用 v0.1 的 3Q→4Q 步幅 0.80→0.82；實績 1Q→2Q +5.6%、2Q→3Q 指引 +6.6%）", "AGI CPU 與 CSS 研發投入")
+inp("cogs_r", "IP 營業成本 ÷ 營收（non-GAAP；不含晶片）", "%", 0.015, 0.019, 0.025, "Derived", "1Q27 non-GAAP 毛利率 98.1%、2Q27 97.9%（成本 0.31 億 ÷ 營收 14.43 億；股東信）", "FY2026：（營收 − 營業費用 − 營業利益）÷ 營收＝1.8%")
+inp("q_oth", "每季業外收益（利息，non-GAAP）", "US$B", 0.025, 0.034, 0.04, "Derived", "1Q27 non-GAAP 稅前 5.65 億 − 營業利益 5.31 億（股東信）", "2Q27 6.65 − 6.38＝0.27 億；只用於 3Q27、4Q27")
+inp("q_tx", "non-GAAP 有效稅率（FY2027）", "%", 0.13, 0.15, 0.18, "Derived", "1Q27 non-GAAP 稅 0.85 ÷ 稅前 5.65＝15.0%；2Q27 0.99 ÷ 6.65＝14.9%（股東信調節表）", "英國 OECD 最低稅 15%；只用於 3Q27、4Q27")
+inp("q_sh", "稀釋加權股數（FY2027）", "十億股", None, 1.080, None, "Derived", "1Q27 1,078、2Q27 1,079 百萬股（股東信）", "只用於 3Q27、4Q27 與 FY2027 錨點；4Q26 1,068；20-F：2026-03-31 普通股 1,064 百萬股")
+inp("chip_27", "Arm AGI CPU 晶片營收 FY2027（含在授權及其他錨點內）", "US$B", 0.0, 0.15, 0.40, "Assumed", "公司：AGI CPU 2026-03 推出，首批已交付多家美、中客戶；FY2027–28 客戶需求逾 20 億美元（股東信 2026-07-29）；2Q27 股東信：首批商業出貨按計畫在 4Q27，FY2027–28 最多 20 億美元營收的信心提高，多家客戶訂單延伸到 CY2027", "晶片營收所在列公司未揭露：未找到；本模型暫列授權及其他之下")
 
 sec("B. 權利金分市場（FY2026 基期比例；公司只揭露手機占比）")
 inp("ph_s", "FY2026 智慧型手機（行動應用處理器）÷ 權利金", "%", 0.40, 0.43, 0.46, "Verified", "20-F（FY2026）：行動應用處理器權利金約占權利金 43%", "管理層：手機約 40–45%（3Q26 法說）")
@@ -75,7 +80,7 @@ inp("dc_s", "FY2026 資料中心（Neoverse）÷ 權利金", "%", 0.10, 0.14, 0.
 inp("au_s", "FY2026 車用 ÷ 權利金", "%", 0.07, 0.09, 0.11, "Assumed", "管理層：車用雙位數成長（3Q26 法說）；占比未揭露：未找到", "物聯網與其他（含 PC、消費電子、嵌入式）＝殘差")
 inp("ph_u26", "FY2026 智慧型手機出貨（全球）", "十億支", 1.15, 1.22, 1.28, "Assumed", "全球手機年出貨約 12 億支（IDC 量級；本專案未建立）", "Siliconomics 無手機出貨：待併入 Siliconomics")
 inp("g_ph27", "FY2027 手機權利金年增", "%", 0.08, 0.12, 0.18, "Interested-party", "Hudson Labs：管理層預期 FY2027 手機權利金年增 high-teens（原 20% 以上）", "記憶體漲價使手機出貨下修（聯發科預期約 −15%；管理層：出貨 −20% 使權利金 −1–2%）；本模型取保守值")
-inp("g_dc27", "FY2027 資料中心權利金年增", "%", 0.50, 0.70, 0.95, "Interested-party", "1Q27 資料中心權利金年增逾一倍（股東信）；全年假設低於上半年（Assumed）", "Neoverse 核心出貨逾 15 億顆，近 9 個月 5 億（新聞稿 2026-07-29）")
+inp("g_dc27", "FY2027 資料中心權利金年增", "%", 0.50, 0.70, 0.95, "Interested-party", "1Q27 資料中心權利金年增逾一倍、2Q27 年增一倍（股東信 2026-11-04）；全年假設低於上半年（Assumed）", "Neoverse 核心出貨逾 15 億顆，近 9 個月 5 億（新聞稿 2026-07-29）")
 inp("g_au27", "FY2027 車用權利金年增", "%", 0.08, 0.15, 0.22, "Assumed", "管理層：車用雙位數成長（3Q26 法說）", "物聯網與其他 FY2027＝錨點權利金 − 三個市場（殘差）")
 
 sec("C. 權利金驅動（FY2028 起：出貨 × 每顆權利金率）")
@@ -85,7 +90,7 @@ for s, v in (("A", 0.14), ("B", 0.11), ("C", 0.07)):
     inp(f"phr_{s}", f"情境 {s}：手機每支權利金率年增（FY2028–29；v9、CSS 滲透）", "%", None, v, None, "Assumed",
         "管理層：v9 CSS 權利金率每代上升；CSS 占權利金 FY2026 進入十幾 %、未來兩年可能逾 50%（3Q26 法說）" if s == "A" else ("同上；情境 B 為基準" if s == "B" else "情境 C：Qualcomm 2026-10-13 陪審團判 Arm 違約（架構授權），Arm 難以要求 Qualcomm 改用較高費率；加上 CSS 推廣較慢"),
         "Qualcomm 訴訟：Paul Weiss 2026-10-13；法官審理部分 10-20 結辯，判決未出" if s == "C" else "—")
-inp("qc_adj", "Qualcomm 相關手機權利金調整（FY2028 起；基準 0）", "%", -0.06, 0.0, 0.02, "Assumed", "陪審團 2026-10-13 判 Arm 違反架構授權、干擾 Qualcomm 與 Meta 的業務關係（Paul Weiss）；損害賠償未揭露：未找到", "低值＝Qualcomm 擴大自研核心、Arm 失去部分手機權利金；高值＝和解後費率調升")
+inp("qc_adj", "Qualcomm 相關手機權利金調整（FY2028 起；基準 0）", "%", -0.06, 0.0, 0.02, "Assumed", "陪審團 2026-10-13 判 Arm 違反架構授權、干擾 Qualcomm 與 Meta 的業務關係（Paul Weiss）；陪審團僅判賠 2 美元，權利金與未來授權條件由法官裁定、判決未出（Reuters 2026-11-04 轉載）", "低值＝Qualcomm 擴大自研核心、Arm 失去部分手機權利金；高值＝和解後費率調升")
 inp("cpu_gpu", "每顆 NVIDIA 資料中心 GPU 搭配的 Arm CPU（Grace／Vera）", "顆", 0.4, 0.5, 0.5, "Interested-party", "GB200／GB300 NVL72：72 顆 GPU 搭 36 顆 Grace；VR NVL144：72 顆封裝搭 36 顆 Vera（NVIDIA）", "低值反映 HGX（x86 主機）出貨占比")
 for k, lab in (("bw", "Blackwell"), ("rb", "Rubin"), ("ru", "Rubin Ultra")):
     for y, j in ((26, 1), (27, 2), (28, 3), (29, 4)):
@@ -101,7 +106,7 @@ inp("g_au", "車用權利金年增（FY2028 起）", "%", 0.08, 0.15, 0.22, "Ass
 inp("g_iot", "物聯網與其他權利金年增（FY2028 起）", "%", -0.02, 0.04, 0.08, "Assumed", "含 PC（Windows on Arm、NVIDIA RTX Spark）、消費電子、嵌入式；FY2027 殘差約持平", "—")
 
 sec("D. 授權及其他（含 SoftBank 協議）與 Arm AGI CPU 晶片")
-inp("g_lic", "授權（不含晶片）年增（FY2028 起）", "%", 0.02, 0.10, 0.15, "Assumed", "ACV 1Q27 年增 13%（股東信）；SoftBank 協議 3Q26 認列 2.0 億美元／季（3Q26 法說）", "SoftBank 協議期間與續約：未找到")
+inp("g_lic", "授權（不含晶片）年增（FY2028 起）", "%", 0.02, 0.10, 0.15, "Assumed", "ACV 1Q27 年增 13%、2Q27 12%（股東信）；SoftBank 協議 3Q26 認列 2.0 億美元／季（3Q26 法說）", "SoftBank 協議期間與續約：未找到")
 for y, vals in ((28, (1.4, 1.0, 0.5)), (29, (3.0, 2.0, 0.8))):
     for s, v in zip(SC, vals):
         inp(f"chip{y}_{s}", f"情境 {s}：Arm AGI CPU 晶片營收 FY20{y}", "US$B", None, v, None, "Assumed",
@@ -160,8 +165,8 @@ INLIST = [x for x in rows if x[0] != "sec"]
 # ---------------- Q：實績與 FY2027 錨點 ----------------
 Q = wb.create_sheet("Q")
 Q["A1"] = "Q — 實績與 FY2027 錨點（十億美元；EPS 美元；股數十億股；non-GAAP）。藍字＝輸入；黑字＝公式。實績取自 Arm 股東信（6-K Exhibit 99.2，SEC）"
-Q["A2"] = "FY2027 錨點＝1Q27 實績（2026-07-29）＋2Q27 公司指引（授權 mid-30%、權利金 low-teens、營業費用 7.8 億）＋3Q27、4Q27 假設（以去年同期 × (1＋年增)）。2Q27 財報 2026-11-04（美東盤後）公布後更新：待 FQ2 財報"
-hdr(Q, 3, ["項目", "FY2025A", "FY2026A", "1Q27（實績）", "2Q27（指引）", "3Q27（模型）", "4Q27（模型）", "FY2027 錨點", "標記", "來源1", "來源2／說明"])
+Q["A2"] = "FY2027 錨點＝1Q27 實績（2026-07-29）＋2Q27 實績（2026-11-04 股東信）＋3Q27 公司指引（營收 15.4 億 ± 0.5 億、non-GAAP 營業費用約 8.25 億、non-GAAP EPS 0.56 ± 0.04；權利金年增為假設，授權及其他＝指引營收 − 權利金）＋4Q27 假設（去年同期 × (1＋年增)）。v0.2 已滾入 2Q27"
+hdr(Q, 3, ["項目", "FY2025A", "FY2026A", "1Q27（實績）", "2Q27（實績）", "3Q27（指引）", "4Q27（模型）", "FY2027 錨點", "標記", "來源1", "來源2／說明"])
 def qrow(r, label, vals, fmt="#,##0.000", tag="Verified", s1="", s2="", ann=None):
     Q.cell(r, 1, label)
     for col, v in vals.items():
@@ -170,21 +175,21 @@ def qrow(r, label, vals, fmt="#,##0.000", tag="Verified", s1="", s2="", ann=None
     if ann != "":
         Q[f"H{r}"] = ann or f"=SUM(D{r}:G{r})"; Q[f"H{r}"].number_format = fmt
     Q.cell(r, 9, tag); Q.cell(r, 10, s1); Q.cell(r, 11, s2)
-qrow(4, "授權及其他營收（License and other）", {"B": 1.839, "C": 2.307, "D": 0.574, "E": "=C21*(1+q2_lg)", "F": "=C22*(1+h2_lg)", "G": "=C23*(1+h2_lg)"}, tag="Verified／指引／Assumed",
-     s1="FY2025：" + SL25 + "；FY2026：" + SL26, s2="1Q27：" + SL27)
-qrow(5, "權利金營收（Royalty）", {"B": 2.168, "C": 2.613, "D": 0.715, "E": "=D21*(1+q2_rg)", "F": "=D22*(1+h2_rg)", "G": "=D23*(1+h2_rg)"}, tag="Verified／指引／Assumed", s1="同上", s2="同上")
-qrow(6, "營收", {c: f"={c}4+{c}5" for c in "BCDEFG"}, tag="Derived", s1="FY2025 40.07、FY2026 49.20、1Q27 12.89 億美元（股東信）", s2="2Q27 指引 13.8 億 ± 0.5 億")
-qrow(7, "營業成本（non-GAAP）", {"B": "=B6-B8-B9", "C": "=C6-C8-C9", "D": "=D6-D8-D9", "E": "=E6*cogs_r", "F": "=F6*cogs_r", "G": "=G6*cogs_r"}, tag="Derived", s1="營收 − non-GAAP 營業費用 − non-GAAP 營業利益", s2="1Q27 non-GAAP 毛利率 98.1%")
-qrow(8, "營業費用（non-GAAP；研發＋銷管）", {"B": "=1.340+0.709", "C": "=1.911+0.806", "D": "=0.530+0.203", "E": "=q2_opx", "F": "=q3_opx", "G": "=q4_opx"}, tag="Verified／指引／Assumed", s1="股東信 non-GAAP 調節表", s2="")
-qrow(9, "營業利益（non-GAAP）", {"B": 1.871, "C": 2.115, "D": 0.531, "E": "=E6-E7-E8", "F": "=F6-F7-F8", "G": "=G6-G7-G8"}, tag="Verified／Derived", s1="股東信", s2="1Q27 營益率 41.2%")
+qrow(4, "授權及其他營收（License and other）", {"B": 1.839, "C": 2.307, "D": 0.574, "E": "=C21*(1+q2_lg)", "F": "=q3_rev-F5", "G": "=C23*(1+h2_lg)"}, tag="Verified／指引／Assumed",
+     s1="FY2025：" + SL25 + "；FY2026：" + SL26, s2="1Q27：" + SL27 + "；2Q27：" + SL27Q2 + "（7.73 億）；3Q27＝指引營收 − 權利金")
+qrow(5, "權利金營收（Royalty）", {"B": 2.168, "C": 2.613, "D": 0.715, "E": "=D21*(1+q2_rg)", "F": "=D22*(1+q3_rg)", "G": "=D23*(1+h2_rg)"}, tag="Verified／Assumed", s1="同上", s2="2Q27 實績 6.70 億；3Q27 公司未給分列，年增 q3_rg 為 Assumed")
+qrow(6, "營收", {c: f"={c}4+{c}5" for c in "BCDEFG"}, tag="Derived", s1="FY2025 40.07、FY2026 49.20、1Q27 12.89、2Q27 14.43 億美元（股東信）", s2="2Q27 原指引 13.8 億 ± 0.5 億；3Q27 指引 15.4 億 ± 0.5 億")
+qrow(7, "營業成本（non-GAAP）", {"B": "=B6-B8-B9", "C": "=C6-C8-C9", "D": "=D6-D8-D9", "E": "=E6-E8-E9", "F": "=F6*cogs_r", "G": "=G6*cogs_r"}, tag="Derived", s1="營收 − non-GAAP 營業費用 − non-GAAP 營業利益", s2="1Q27 non-GAAP 毛利率 98.1%、2Q27 97.9%（non-GAAP 營業成本 0.31 億）")
+qrow(8, "營業費用（non-GAAP；研發＋銷管）", {"B": "=1.340+0.709", "C": "=1.911+0.806", "D": "=0.530+0.203", "E": "=q2_opx", "F": "=q3_opx", "G": "=q4_opx"}, tag="Verified／指引／Assumed", s1="股東信 non-GAAP 調節表", s2="2Q27 實績 7.74 億（研發 5.47＋銷管 2.27）；3Q27 指引約 8.25 億")
+qrow(9, "營業利益（non-GAAP）", {"B": 1.871, "C": 2.115, "D": 0.531, "E": 0.638, "F": "=F6-F7-F8", "G": "=G6-G7-G8"}, tag="Verified／Derived", s1="股東信", s2="1Q27 營益率 41.2%、2Q27 44.2%")
 qrow(10, "營業利益率（non-GAAP）", {c: f"={c}9/{c}6" for c in "BCDEFGH"}, fmt="0.0%", ann="", tag="Derived")
-qrow(11, "業外收益（non-GAAP）", {"D": "=0.565-0.531", "E": "=q_oth", "F": "=q_oth", "G": "=q_oth"}, tag="Derived／Assumed", s1="1Q27 稅前 5.65 − 營業利益 5.31（股東信）", s2="FY2025、FY2026 含在淨利內")
-qrow(12, "稅前利益（non-GAAP）", {"D": 0.565, "E": "=E9+E11", "F": "=F9+F11", "G": "=G9+G11"}, tag="Verified／Derived", s1="股東信", s2="")
-qrow(13, "稅後淨利（non-GAAP）", {"B": 1.737, "C": 1.889, "D": 0.480, "E": "=E12*(1-q_tx)", "F": "=F12*(1-q_tx)", "G": "=G12*(1-q_tx)"}, tag="Verified／Derived", s1="股東信", s2="1Q27 稅 0.85 億（15%）")
-qrow(14, "稀釋加權股數（十億股）", {"B": 1.063, "C": 1.068, "D": 1.078, "E": "=q_sh", "F": "=q_sh", "G": "=q_sh"}, ann="=q_sh", tag="Verified／Derived", s1="股東信", s2="")
+qrow(11, "業外收益（non-GAAP）", {"D": "=0.565-0.531", "E": "=0.665-0.638", "F": "=q_oth", "G": "=q_oth"}, tag="Derived／Assumed", s1="1Q27 稅前 5.65 − 營業利益 5.31；2Q27 6.65 − 6.38（股東信）", s2="FY2025、FY2026 含在淨利內")
+qrow(12, "稅前利益（non-GAAP）", {"D": 0.565, "E": 0.665, "F": "=F9+F11", "G": "=G9+G11"}, tag="Verified／Derived", s1="股東信", s2="")
+qrow(13, "稅後淨利（non-GAAP）", {"B": 1.737, "C": 1.889, "D": 0.480, "E": 0.566, "F": "=F12*(1-q_tx)", "G": "=G12*(1-q_tx)"}, tag="Verified／Derived", s1="股東信", s2="1Q27 稅 0.85 億（15%）；2Q27 稅 0.99 億（14.9%）")
+qrow(14, "稀釋加權股數（十億股）", {"B": 1.063, "C": 1.068, "D": 1.078, "E": 1.079, "F": "=q_sh", "G": "=q_sh"}, ann="=q_sh", tag="Verified／Derived", s1="股東信", s2="")
 qrow(15, "EPS（non-GAAP）", {c: f"={c}13/{c}14" for c in "BCDEFG"}, fmt="0.00", ann="=H13/H14", tag="Derived", s1="淨利 ÷ 股數", s2="")
-qrow(16, "  公司揭露 non-GAAP EPS（2Q27 為指引中點）", {"B": 1.63, "C": 1.77, "D": 0.45, "E": 0.47}, fmt="0.00", ann="", tag="Verified／Interested-party", s1="股東信", s2="2Q27 指引 0.47 ± 0.04")
-qrow(17, "  公司揭露 GAAP EPS（對照；含股票薪酬）", {"B": 0.75, "C": 0.85, "D": 0.25}, fmt="0.00", ann="", tag="Verified", s1="股東信", s2="1Q27 股票薪酬 3.43 億美元（股東信）")
+qrow(16, "  公司揭露 non-GAAP EPS（3Q27 為指引中點）", {"B": 1.63, "C": 1.77, "D": 0.45, "E": 0.52, "F": 0.56}, fmt="0.00", ann="", tag="Verified／Interested-party", s1="股東信", s2="2Q27 實績 0.52（原指引 0.47 ± 0.04）；3Q27 指引 0.56 ± 0.04")
+qrow(17, "  公司揭露 GAAP EPS（對照；含股票薪酬）", {"B": 0.75, "C": 0.85, "D": 0.25, "E": 0.12}, fmt="0.00", ann="", tag="Verified", s1="股東信", s2="1Q27 股票薪酬 3.43、2Q27 3.77 億美元（股東信）；2Q27 GAAP 稅 0.78 億、權益投資損失 0.20 億")
 Q.cell(19, 1, "去年同期季資料（FY2026，十億美元；3Q27、4Q27 年增的基期）").font = BOLD
 hdr(Q, 20, ["季", "", "授權及其他", "權利金", "營收"])
 QR = {}
@@ -199,10 +204,13 @@ Q.cell(28, 1, "FY2027 錨點的檢查（參考；校準未使用共識）").font
 Q.cell(29, 1, "FY2027 營收年增"); Q["B29"] = "=H6/C6-1"
 Q.cell(30, 1, "FY2027 營收 ÷ 共識 − 1"); Q["B30"] = "=H6/c_rev27-1"
 Q.cell(31, 1, "FY2027 EPS ÷ 共識 − 1"); Q["B31"] = "=H15/c_eps27-1"
-Q.cell(32, 1, "2Q27 營收（模型）÷ 公司指引中點 − 1"); Q["B32"] = "=E6/1.38-1"
-Q.cell(33, 1, "2Q27 EPS（模型）÷ 公司指引中點 − 1"); Q["B33"] = "=E15/0.47-1"
+Q.cell(32, 1, "2Q27 營收（實績）÷ 原指引中點 − 1"); Q["B32"] = "=E6/1.38-1"
+Q.cell(33, 1, "2Q27 EPS（實績）÷ 原指引中點 − 1"); Q["B33"] = "=E15/0.47-1"
 Q.cell(34, 1, "FY2027 營業費用年增"); Q["B34"] = "=H8/C8-1"
-for rr in range(29, 35): Q[f"B{rr}"].number_format = "0.0%"
+Q.cell(35, 1, "3Q27 EPS（模型）÷ 公司指引中點 − 1"); Q["B35"] = "=F15/0.56-1"
+Q.cell(36, 1, "2Q27 營收（實績）÷ 模型 v0.1 原估 1.390 − 1"); Q["B36"] = "=E6/1.390-1"
+Q.cell(37, 1, "2Q27 EPS（實績）÷ 模型 v0.1 原估 0.486 − 1"); Q["B37"] = "=E15/0.486-1"
+for rr in range(29, 38): Q[f"B{rr}"].number_format = "0.0%"
 for nm, rr in (("lo", 4), ("ro", 5), ("rev", 6), ("cogs", 7), ("opx", 8), ("oi", 9), ("ni", 13), ("sh", 14), ("eps", 15)):
     defname(f"a25_{nm}", f"Q!$B${rr}"); defname(f"a26_{nm}", f"Q!$C${rr}"); defname(f"a27_{nm}", f"Q!$H${rr}")
 Q.column_dimensions["A"].width = 58
@@ -289,7 +297,7 @@ def engine(ws, r0, title, s):
 
 # ---------------- PL ----------------
 PL = wb.create_sheet("PL")
-PL["A1"] = "PL — Arm 損益（十億美元；EPS 美元；non-GAAP）。FY2025A、FY2026A 實績，FY2027 錨點（1Q27 實績＋2Q27 指引＋下半年假設），FY2028 起為模型。FY(t)＝t 年 3 月底結束。三情境各一個完整推導區塊（本頁下方），頂端為摘要；最下方延伸到 FY2032（FY2030 起為收斂法）"
+PL["A1"] = "PL — Arm 損益（十億美元；EPS 美元；non-GAAP）。FY2025A、FY2026A 實績，FY2027 錨點（1Q27、2Q27 實績＋3Q27 指引＋4Q27 假設），FY2028 起為模型。FY(t)＝t 年 3 月底結束。三情境各一個完整推導區塊（本頁下方），頂端為摘要；最下方延伸到 FY2032（FY2030 起為收斂法）"
 PB = {}; r0 = 60
 SCN_T = {"A": "情境 A：順利（Siliconomics 情境 A 顆數；晶片與手機費率最有利）", "B": "情境 B：平平（Siliconomics 情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85）", "C": "情境 C：不如預期（Siliconomics 情境 C：CY2028–29 ×0.6；Qualcomm 判決壓抑手機費率、晶片放量慢）"}
 for s in SC:
@@ -486,7 +494,7 @@ for k_, (lab, y) in enumerate((("現價 ÷ FY2026 EPS（實績）", 2026), ("現
     for j, s in enumerate(SC):
         V[f"{'BCD'[j]}{rr}"] = f"=px/PL!{FC[y]}{SUMR[(s, 'eps')]}"; V[f"{'BCD'[j]}{rr}"].number_format = "0.0"
 rr = v1 + 7
-V.cell(rr, 1, "近 12 月 non-GAAP EPS（2Q26～1Q27）"); V[f"B{rr}"] = "=1.77-0.35+0.45"; V[f"B{rr}"].number_format = "0.00"; T["ttm"] = rr
+V.cell(rr, 1, "近 12 月 non-GAAP EPS（3Q26～2Q27）"); V[f"B{rr}"] = "=1.77-0.35-0.39+0.45+0.52"; V[f"B{rr}"].number_format = "0.00"; T["ttm"] = rr
 V.cell(rr + 1, 1, "  現價 ÷ 近 12 月 non-GAAP EPS"); V[f"B{rr + 1}"] = f"=px/B{rr}"; V[f"B{rr + 1}"].number_format = "0.0"; T["pettm"] = rr + 1
 V.cell(rr + 2, 1, "  現價 ÷ 共識前瞻 EPS"); V[f"B{rr + 2}"] = "=px/cons_feps"; V[f"B{rr + 2}"].number_format = "0.0"; T["pecons"] = rr + 2
 V.cell(rr + 3, 1, "  市值（現價 × 稀釋股數，十億美元）"); V[f"B{rr + 3}"] = "=px*q_sh"; V[f"B{rr + 3}"].number_format = "#,##0"; T["mcap"] = rr + 3
@@ -500,7 +508,7 @@ SE["A1"] = "Sens — 一次改一個輸入（In 頁敏感度低／高值），�
 SENS_F = os.path.join(HERE, "sens.json")
 SJ = json.load(open(SENS_F, encoding="utf-8")) if (os.path.exists(SENS_F) and not OVR) else None
 LBL = {x[0]: x[1] for x in INLIST}
-SE["A2"] = ("相對基準＝案例目標價 ÷ 基準加權目標價 − 1；龍捲風依絕對值排序（HTML）。FY2027 錨點與 FY2026 比例的輸入（q2_lg、ph_s 等）透過錨點影響之後各年。"
+SE["A2"] = ("相對基準＝案例目標價 ÷ 基準加權目標價 − 1；龍捲風依絕對值排序（HTML）。FY2027 錨點與 FY2026 比例的輸入（q3_rev、h2_lg、ph_s 等）透過錨點影響之後各年；2Q27 已為實績，q2_lg、q2_rg、q2_opx 不做敏感度。"
             "tp_g 案例同時移動 DCF 永續成長與 PL 收斂目標 fade_g（fade_g 以 tp_g 為公式）。")
 hdr(SE, 3, ["驅動", "設定", "方向", "加權目標價", "相對基準", "鍵", "FY2028 EPS（情境 B）", "FY2028 EPS 相對基準", "說明"])
 SE.cell(4, 1, "基準"); SE.cell(4, 2, "In 頁基準欄"); SE.cell(4, 3, "—"); SE.cell(4, 9, "本活頁簿重算值")
@@ -573,9 +581,12 @@ def rec(label, ref, getter, src, note="", fmt="#,##0.000", pt=False, gap=True):
     RC.cell(rr_, 9, src); RC.cell(rr_, 10, note); rr_ += 1
 pl = lambda key, y: (lambda s: f"=PL!{FC[y]}{PB[s][key]}")
 RC.cell(rr_, 1, "A. 公司指引與共識（校準未使用共識）").font = BOLD; rr_ += 1
-rec("2Q27 營收 vs 公司指引中點", "=1.38", lambda s: "=Q!E6", "股東信 2026-07-29", "模型＝去年同期 × 指引年增")
-rec("2Q27 營收 vs 共識", "=c_q2rev", lambda s: "=Q!E6", "Hudson Labs", "")
-rec("2Q27 non-GAAP EPS vs 公司指引中點", "=0.47", lambda s: "=Q!E15", "股東信", "", fmt="0.00")
+rec("2Q27 營收：實績（模型欄）vs 原指引中點", "=1.38", lambda s: "=Q!E6", "股東信 2026-07-29（指引）、2026-11-04（實績）", "v0.2 起 Q!E6 為實績")
+rec("2Q27 營收：實績 vs 共識", "=c_q2rev", lambda s: "=Q!E6", "Hudson Labs", "Reuters（LSEG）共識 13.8 億")
+rec("2Q27 營收：實績 vs 模型 v0.1 原估", "=1.390", lambda s: "=Q!E6", "v0.1 Q!E6（去年同期 × 指引年增）", "授權 +50% 遠高於 v0.1 的 35%；權利金 +8% 低於 12%")
+rec("2Q27 non-GAAP EPS：實績 vs 原指引中點", "=0.47", lambda s: "=Q!E15", "股東信", "公司揭露 0.52", fmt="0.00")
+rec("2Q27 non-GAAP EPS：實績 vs 模型 v0.1 原估", "=0.486", lambda s: "=Q!E15", "v0.1 Q!E15", "", fmt="0.00")
+rec("3Q27 non-GAAP EPS：模型 vs 公司指引中點", "=0.56", lambda s: "=Q!F15", "股東信 2026-11-04", "指引 0.56 ± 0.04；模型營收、營業費用取指引中點", fmt="0.00")
 rec("FY2027 營收 vs 共識", "=c_rev27", pl("rev", 2027), "stockanalysis（S&P Global）", "", fmt="#,##0.000")
 rec("FY2027 non-GAAP EPS vs 共識", "=c_eps27", pl("eps", 2027), "同上", "高 2.38、低 2.06", fmt="0.00")
 RC.cell(rr_, 1, "B. 權利金結構（機制檢查）").font = BOLD; rr_ += 1
@@ -590,7 +601,10 @@ RECON_LAST = rr_ - 1
 
 # ---------------- Sources ----------------
 SO = wb.create_sheet("Sources"); SO["A1"] = "來源（公司原文＝Arm 股東信、6-K、20-F、法說；共識與券商皆為 Interested-party）"; SO["A1"].font = BOLD
-srcs = [("公司：1Q27 股東信（6-K Exhibit 99.2，2026-07-29；1Q27 實績、2Q27 指引、AGI CPU 需求、資料中心權利金）", SL27),
+srcs = [("公司：2Q27 股東信（6-K Exhibit 99.2，2026-11-04；2Q27 實績、3Q27 指引、AGI CPU 4Q27 首批出貨、資料中心權利金年增一倍、ACV +12%）", SL27Q2),
+        ("媒體：Reuters（kfgo 轉載 2026-11-04；3Q27 指引 vs 共識 15.3 億、權利金低於共識 7.21 億、盤後約 −2%、Qualcomm 陪審團判賠 2 美元）", RT),
+        ("媒體：securities.io 2026-11-04（3Q27 營業費用約 8.25 億、AGI CPU）", SIO),
+        ("公司：1Q27 股東信（6-K Exhibit 99.2，2026-07-29；1Q27 實績、2Q27 指引、AGI CPU 需求、資料中心權利金）", SL27),
         ("公司：4Q26 股東信（6-K，2026-05-06；FY2026 全年、AGI CPU、1Q27 指引）", SL26),
         ("公司：4Q25 股東信（6-K，2025-05；FY2025 全年、FY2024 non-GAAP EPS）", SL25),
         ("公司：20-F（FY2026；手機權利金約 43%、前五大客戶 57%、Arm China 16%、SoftBank 控股）", F20),
@@ -603,26 +617,26 @@ srcs = [("公司：1Q27 股東信（6-K Exhibit 99.2，2026-07-29；1Q27 實績�
         ("資料商：stockanalysis（共識 EPS、目標價、Forward PE、ROE；同業 Forward PE）", SAF),
         ("資料商：InvestSmart 價格歷史（2026-10-30 收盤 228.88）；digrin 月線（年底收盤）", IS),
         ("市場層：Siliconomics 快照（NVIDIA 加速器顆數、情境顆數係數）", SNAP),
-        ("待補（人工）：2Q27 財報（2026-11-04）；分市場權利金（公司只揭露手機）；AGI CPU 營收認列方式；Qualcomm 法官審理判決；FY2028 共識；Bloomberg 前瞻倍數（ARM 未取）", "未找到")]
+        ("待補（人工）：2Q27 法說逐字稿（授權／權利金分列口述）；分市場權利金（公司只揭露手機）；AGI CPU 營收認列方式；Qualcomm 法官審理判決；2Q27 後的 FY2027 共識；FY2028 共識；Bloomberg 前瞻倍數（ARM 未取）", "未找到")]
 for i, (a, b) in enumerate(srcs, 2): SO.cell(i, 1, a); SO.cell(i, 2, b)
 SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
 OBS = [   # 重點觀察（數字取自重算後的 Val／PL／Sens；與 README.md 相同文字）
- "目標價 US$53.52（DCF 34.56、Comparable 72.48 各半），比現價 228.88（2026-10-30）低 76.6%，級距小於 −50%、投資建議強力放空；Comparable 單獨為 −68.3%。"
- "差距全部來自倍數：本模型 12 個月後前瞻 EPS 2.90 反而比共識前瞻 EPS 高 20.1%（期間晚約一年），但現價約 94.7 倍共識前瞻 EPS、共識目標價 290.71 隱含 120.3 倍，同業前瞻 P/E 中位數只有 25.0 倍。"
- "DCF 偏低另因 GAAP ROE 近三年平均 10.5%（再投資率 38%）。SoftBank 持股約九成，流通市值約 247 億美元（總市值 2,472 億），流通量低可能撐住溢價，本模型不調整；ARM 無 Bloomberg 前瞻倍數，相對倍數係數＝1。",
- "單一參數都翻不過來：最有利的單一案例是 DCF 權重 0.3（+14.2%），其次授權成長 15%（+6.8%）、營業費用年增 8%（+7.4%），目標價仍比現價低七成以上；授權成長 2% −10.3%、營業費用年增 18% −7.7%、晶片毛利率 35%／55% ±4.6%（Sens 頁）。",
- "可追蹤的三件事：資料中心占權利金由 FY2026 14% 升到 FY2029 情境 B 24.9%（Grace／Vera 讀 Siliconomics、雲端自研 CPU 年增 30%）；AGI CPU 晶片營收 FY2028 情境 A／B／C＝14／10／5 億美元，對照公司稱 FY2027–28 客戶需求逾 20 億美元；Qualcomm 陪審團 2026-10-13 判 Arm 違約，法官審理部分待判。下一個檢驗點：2Q27 財報 2026-11-04（指引營收 13.8 億美元、non-GAAP EPS 0.47）。"]
+ "2Q27 實績（2026-11-04）營收 14.43 億美元（+27%）、non-GAAP EPS 0.52，高於模型 v0.1 原估 13.90 億／0.486 與公司原指引 13.8 億／0.47；但結構與假設相反：授權及其他 7.73 億（+50%，v0.1 假設 +35%）撐起全部超額，權利金 6.70 億只 +8%（v0.1 假設 +12%，低於共識約 7.2 億），記憶體漲價壓抑手機、資料中心權利金年增一倍。"
+ "3Q27 指引營收 15.4 億 ± 0.5 億、non-GAAP EPS 0.56 ± 0.04、營業費用約 8.25 億（模型 3Q27 EPS 0.57）；公司未給分列，本版權利金年增 8%（Assumed）、授權及其他為指引減權利金。FY2027 錨點營收 58.9 → 60.3 億、EPS 2.12 → 2.19（共識 2.23，10-21）。",
+ "目標價 US$53.52 → 55.10（DCF 35.51、Comparable 74.68 各半），比現價 228.88（2026-10-30，未更新）低 75.9%，仍小於 −50%、強力放空；Comparable 單獨 −67.4%。差距全部來自倍數：12 個月後前瞻 EPS 2.99 比共識前瞻 EPS 高 23.7%（期間晚約一年），但現價約 94.7 倍共識前瞻 EPS、共識目標價 290.71 隱含 120.3 倍，同業中位數 25.0 倍。"
+ "單一參數都翻不過來：DCF 權重 0.3 +14.2%、授權成長 15% +7.2%、營業費用年增 8% +7.3%；授權成長 2% −10.8%、FY2027 晶片營收 4 億 −7.2%（Sens 頁）。SoftBank 持股約九成、流通市值約 247 億美元，流通量低可能撐住溢價，本模型不調整。",
+ "可追蹤的三件事：(1) AGI CPU 首批商業出貨按計畫在 4Q27，公司對 FY2027–28 最多 20 億美元營收的信心提高、訂單延伸到 CY2027（模型 FY2027 1.5 億、FY2028 情境 A／B／C 14／10／5 億）；(2) 權利金能否如公司所說加速（2Q27 只 +8%），資料中心占權利金 FY2026 14% → FY2029 情境 B 25.4%；(3) Qualcomm：陪審團 10 月判 Arm 違約但只判賠 2 美元，權利金與未來授權條件由法官裁定、未判（2Q27 股東信未提）。下一個檢驗點：3Q27 財報（2027-02 初）與 Qualcomm 法官判決。"]
 lines = [(f"Arm Holdings（ARM）個股模型 {VER}（AI 半導體 Project：運算次產業；CPU 架構授權與權利金）　{DATE}", True),
- (f"版本：{VER}（{DATE}，初版）。樣板 crdo/（美股、估值 v2）；敏感度與份額寫法比照 tuc/；行業變數讀 {SNAP}。待 FQ2 財報（2026-11-04）更新錨點。", False),
+ (f"版本：{VER}（{DATE}）：滾入 2Q27 實績（2026-11-04 股東信）與 3Q27 公司指引；v0.1（2026-10-31）初版。樣板 crdo/（美股、估值 v2）；敏感度與份額寫法比照 tuc/；行業變數讀 {SNAP}。", False),
  ("模型命題：Arm 的權利金＝各市場晶片出貨 × 每顆權利金率：智慧型手機（出貨持平到下滑，成長靠 v9 與 CSS 費率）、資料中心 Neoverse（NVIDIA Grace／Vera 顆數讀 Siliconomics、雲端自研 CPU 年增、每顆費率隨核心數上升）、車用、物聯網與其他；授權及其他＝授權（含 SoftBank 協議）＋自研 Arm AGI CPU 晶片。", False),
  ("核心問題：現價約 95 倍共識前瞻 EPS，市場是否已把資料中心權利金倍增、CSS 費率上升與自研晶片（客戶需求逾 20 億美元）全部算進去；Qualcomm 判決與手機出貨下修會讓權利金少多少。", False),
  ("會計年度：FY(t) 於 t 年 3 月 31 日結束（FY2027＝2026-04～2027-03）；上游日曆年以 9/12 × CY(t−1)＋3/12 × CY(t) 換算。預測期 FY2028–FY2029 由驅動因子推導，FY2030–FY2032 為收斂法。金額：十億美元；EPS：non-GAAP（GAAP EPS 另列）。", False),
- ("驅動因子：FY2027 錨點＝1Q27 實績＋2Q27 指引＋下半年年增假設；權利金分市場以 FY2026 比例（手機 43% 為 20-F，其餘 Assumed）拆分；FY2028 起資料中心＝FY2027 × CPU 顆數指數（NVIDIA 讀 Siliconomics 同字母情境）× 每顆費率指數；手機＝出貨 × 每支權利金（情境 A／B／C 費率年增 14%／11%／7%）；晶片營收情境 A／B／C。", False),
+ ("驅動因子：FY2027 錨點＝1Q27、2Q27 實績＋3Q27 公司指引（營收、營業費用；權利金年增 Assumed）＋4Q27 年增假設；權利金分市場以 FY2026 比例（手機 43% 為 20-F，其餘 Assumed）拆分；FY2028 起資料中心＝FY2027 × CPU 顆數指數（NVIDIA 讀 Siliconomics 同字母情境）× 每顆費率指數；手機＝出貨 × 每支權利金（情境 A／B／C 費率年增 14%／11%／7%）；晶片營收情境 A／B／C。", False),
  ("估值：Val 第 0 節目標價＝0.5 × DCF 目標價（股東現金流＝EPS ×（1 − tp_g ÷ tp_roe），FY2027–FY2032 明確期＋永續，r 10%、g 4%，三情境權重 0.3／0.5／0.2，推到 12 個月後）＋0.5 × Comparable 目標價（高通、博通、邁威爾、Rambus、新思、益華前瞻 P/E 中位數 × 12 個月後前瞻 EPS）。本版未做先驗，無 Andy 合理 P/E 對照。Bloomberg 前瞻倍數待取（ARM 本身沒有，相對倍數係數＝1）。", False),
- ("已知限制：(1) 公司只揭露手機占權利金比例，其他市場拆分為 Assumed；(2) AGI CPU 晶片營收所在列與毛利率未揭露；(3) non-GAAP EPS 排除股票薪酬（FY2026 約占 non-GAAP 淨利一半）；(4) Qualcomm 法官審理部分未判、損害賠償未知；(5) 年底 P/E 只有 2023–2025 三年；(6) 2Q27 財報（2026-11-04）未納入。", False),
+ ("已知限制：(1) 公司只揭露手機占權利金比例，其他市場拆分為 Assumed；(2) AGI CPU 晶片營收所在列與毛利率未揭露；(3) non-GAAP EPS 排除股票薪酬（FY2026 約占 non-GAAP 淨利一半）；(4) Qualcomm 法官審理部分（權利金與未來授權條件）未判；(5) 年底 P/E 只有 2023–2025 三年；(6) 3Q27 公司未給授權／權利金分列，權利金年增為假設；共識仍為 2Q27 前（10-21）。", False),
  ("", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
