@@ -1,0 +1,59 @@
+{
+ "campus": [
+  {
+   "key": "cp_orcl_jup_p27",
+   "name": "Doña Ana（Project Jupiter）2027 分期部分（18 個月等量分期之 6／18）",
+   "op": "orcl",
+   "user": "oai",
+   "mw": 733.333,
+   "basis": "設施",
+   "year": 2027,
+   "month": 12,
+   "delay": null,
+   "inc": 1,
+   "sec": 0,
+   "tag": "Analogy",
+   "src": "SRC_GL_337",
+   "note": "v0.2 V3（工作單 20261104）：cp_orcl_jup 只有完工月（2028-12）、查無棟別時程 → 18 個月等量分期（2027-07 至 2028-12，終點＝公告完工；Oracle 診斷 R 18，區間 12–24 [Analogy]）；2027 年 7–12 月上線 6／18 併為本列（年底存量不受月別影響），其餘 12／18 留在 cp_orcl_jup"
+  },
+  {
+   "key": "cp_orcl_pw_p27",
+   "name": "Port Washington（Lighthouse）2027 分期部分（18 個月等量分期之 6／18）",
+   "op": "orcl",
+   "user": "oai",
+   "mw": 433.333,
+   "basis": "設施",
+   "year": 2027,
+   "month": 12,
+   "delay": null,
+   "inc": 1,
+   "sec": 0,
+   "tag": "Analogy",
+   "src": "SRC_GL_337",
+   "note": "v0.2 V3（工作單 20261104）：cp_orcl_pw 只有完工月（2028-12）、查無棟別時程 → 18 個月等量分期（2027-07 至 2028-12，終點＝公告完工；Oracle 診斷 R 18，區間 12–24 [Analogy]）；2027 年 7–12 月上線 6／18 併為本列（年底存量不受月別影響），其餘 12／18 留在 cp_orcl_pw"
+  },
+  {
+   "key": "cp_orcl_sal_p27",
+   "name": "Saline Township（The Barn）其餘 2027 分期部分（18 個月等量分期之 6／18）",
+   "op": "orcl",
+   "user": "oai",
+   "mw": 307.333,
+   "basis": "設施",
+   "year": 2027,
+   "month": 12,
+   "delay": null,
+   "inc": 1,
+   "sec": 0,
+   "tag": "Analogy",
+   "src": "SRC_GL_337",
+   "note": "v0.2 V3（工作單 20261104）：cp_orcl_sal 只有完工月（2028-12）、查無棟別時程 → 18 個月等量分期（2027-07 至 2028-12，終點＝公告完工；Oracle 診斷 R 18，區間 12–24 [Analogy]）；2027 年 7–12 月上線 6／18 併為本列（年底存量不受月別影響），其餘 12／18 留在 cp_orcl_sal"
+  }
+ ],
+ "sources": [
+  {
+   "id": "SRC_GL_337",
+   "path": "epoch.ai/data/ai-data-centers/directory（openai-stargate-shackelford、-new-mexico、-wisconsin、-michigan；2026-07 更新）；docs/verify/20261104_Oracle園區與資本支出差異診斷.md",
+   "desc": "v0.2 V3：Oracle 2028 園區分期與 Shackelford 規模（Epoch 棟別時程 1,400 MW IT；Vantage 1.4 GW）；其餘三站無棟別 MW → 18 個月等量分期"
+  }
+ ]
+}
