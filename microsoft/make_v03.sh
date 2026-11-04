@@ -1,14 +1,14 @@
 #!/bin/bash
-# Microsoft 個股模型 v0.3.4（v0.3.4：Tokenomics 快照 v21.9）：一次跑完 建置 → LibreOffice 重算 → 核對 → segment_check → HTML。
+# Microsoft 個股模型 v0.3.5（v0.3.4：Tokenomics 快照 v21.9；v0.3.5：Tokenomics 快照 v21.10）：一次跑完 建置 → LibreOffice 重算 → 核對 → segment_check → HTML。
 #   bash microsoft/make_v03.sh            # 用已提交的變動拆解 microsoft/data/attrib_v031_20261029.json（Recon 第 5、6 節）
 #   SENS=1 bash microsoft/make_v03.sh     # 先重跑 C10 重解與變動拆解（microsoft/attrib_v031.py --solve，約 15 次整本重算），
-#                                          再重跑 Sens 整本重算案例（microsoft/sens_v033.py，約 60 次整本重算 → data/sens_v034_20261104.json）
+#                                          再重跑 Sens 整本重算案例（microsoft/sens_v033.py，約 60 次整本重算 → data/sens_v035_20261104.json）
 # 敏感度（Sens 頁）：原有案例在同一本 xlsx 內以完整引擎區塊計算；v0.3.3 補的案例（原則第 9 節）為整本重算的數值。需要：python3＋openpyxl、python-docx、LibreOffice（soffice）。
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-OUTNAME="20261104_Microsoft個股模型_v0.3.4.xlsx"
+OUTNAME="20261104_Microsoft個股模型_v0.3.5.xlsx"
 python3 microsoft/facts_fy27q1.py
 if [ "${SENS:-0}" = "1" ]; then
   python3 microsoft/attrib_v031.py --solve

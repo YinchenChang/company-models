@@ -2,7 +2,7 @@
 # 用法：bash microsoft/make_v03.sh（建置 → LibreOffice 重算 → 核對 → HTML）；或
 #       python3 microsoft/build_microsoft.py raw.xlsx [--set 鍵=值 …] [--legacy-q1] [--snap v21.4] [--no-html]
 #       --set：覆寫 In 頁基準欄（E）的值（拆解與 C10 重解用）；--legacy-q1：回到 v0.3 口徑（FY2027 全年模型、評價日 2026-06-30；只供變動拆解）；
-#       --snap：Tokenomics 快照版本（預設 v21.9；v0.3.4 起）；--no-html：不寫 microsoft/html.json（變體建置用）
+#       --snap：Tokenomics 快照版本（預設 v21.10；v0.3.5 起）；--no-html：不寫 microsoft/html.json（變體建置用）
 # 財年結束於 6/30（FY2027＝2026-07～2027-06）。金額：十億美元（US$B）；MW＝IT 關鍵電力 MW；股數：十億股。
 # 結構：README → In → Q → Thesis → Seg → PL → CF → Val → Recon → Sens → Sources（順序固定）。
 # 規格：docs/plan/個股模型原則_命題加營收分部.md；工作單：mag/docs/workorders/20261027_MAG_v0.3_個股模型重建_分部架構.md、20261029_MAG_v0.3.1_季度滾動_2026Q3.md。
@@ -21,7 +21,7 @@ AP = argparse.ArgumentParser()
 AP.add_argument("out", nargs="?")
 AP.add_argument("--set", action="append", default=[])
 AP.add_argument("--legacy-q1", action="store_true")
-AP.add_argument("--snap", default="v21.9")   # v0.3.4：v21.7 → v21.9（基準數值不變；attrib_v031.py 以 --snap 指定舊版重現拆解）
+AP.add_argument("--snap", default="v21.10")   # v0.3.4：v21.7 → v21.9；v0.3.5：v21.9 → v21.10（兩次基準數值都不變；attrib_v031.py 以 --snap 指定舊版重現拆解）
 AP.add_argument("--no-html", action="store_true")
 AP.add_argument("--sens", default=None, help="v0.3.3：整本重算的敏感度結果 JSON（microsoft/sens_v033.py 產生）；省略時讀預設檔，--set 變體不讀")
 ARGS = AP.parse_args()
@@ -100,7 +100,7 @@ YHDR = ["項目", "單位"] + [f"FY{y}" + ("A" if y <= 2026 else "") for y in YR
 # In：輸入（一列一鍵；E＝基準、D＝低、F＝高）
 # =====================================================================================
 IN = WS["In"]
-IN["A1"] = "In — 輸入（v0.3.1：FY27Q1 實績滾入；v0.3.2：加「情境驅動對照」、欄名改敏感度低／高；v0.3.3：IF_HoldEcon 四列補低／高、Sens 頁補鍵欄與案例；v0.3.4：Tokenomics 快照 v21.7 → v21.9；基準數值不變）（藍字＝輸入、黑字＝由其他輸入推得）。基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」；金額十億美元（US$B），MW＝IT 關鍵電力。標記：Verified／Interested-party／Analogy／Assumed／Derived；Analogy、Assumed 一律給區間"
+IN["A1"] = "In — 輸入（v0.3.1：FY27Q1 實績滾入；v0.3.2：加「情境驅動對照」、欄名改敏感度低／高；v0.3.3：IF_HoldEcon 四列補低／高、Sens 頁補鍵欄與案例；v0.3.4：Tokenomics 快照 v21.7 → v21.9；v0.3.5：v21.9 → v21.10；基準數值不變）（藍字＝輸入、黑字＝由其他輸入推得）。基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」；金額十億美元（US$B），MW＝IT 關鍵電力。標記：Verified／Interested-party／Analogy／Assumed／Derived；Analogy、Assumed 一律給區間"
 IN["A2"] = "「沿用 v0.2.2」＝MAG v0.2.2（2026-10-25，PR #105）已核准的參數與證據，原出處見來源欄；SEC 一手數字取自 microsoft/data/microsoft_facts_20261008.json（v0.1a 起的事實總帳）；FY27Q1 取自 microsoft/data/microsoft_facts_FY27Q1_20261029.json（財報新聞稿與 IR 財務報表兩次讀取核對）"
 hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源1", "來源2／說明"])
 ROWS = []
@@ -205,7 +205,7 @@ for k, lab, v, note in (("al_m365", "Microsoft 365 cloud", 0.60, "舊 PBP 分部
                         ("al_srch", "Search and advertising", 0.30, "—")):
     inp(k, f"產品線營業利益率分配：{lab}（SOTP 用）", "%", v - 0.1, v, v + 0.1, "Assumed", FX + "｜alloc.oiMargin（公司不揭露產品線利潤）；" + V22, note + "；Azure 其他、XBOX＋Windows 為分部殘差")
 
-sec(f"C. Tokenomics {TKV} 快照（{SNAP_F}；基準成本欄；每 GW＝IT 關鍵電力；v0.3.1 由 v21.4 升級，契約名稱值逐一比對無差異；v0.3.4 由 v21.7 換入，只有高成本欄改變、基準欄不變）")
+sec(f"C. Tokenomics {TKV} 快照（{SNAP_F}；基準成本欄；每 GW＝IT 關鍵電力；v0.3.1 由 v21.4 升級，契約名稱值逐一比對無差異；v0.3.4 由 v21.7 換入，只有高成本欄改變、基準欄不變；v0.3.5 換 v21.10，本模型讀取的契約名稱值逐一相同）")
 for g in ("h100", "gb200", "gb300", "vr200"):                # v0.3.3：D／F 補 Tokenomics 低成本／高成本欄（原則第 9 節；基準不變）
     _hv = SNAP["items"]["IF_HoldEcon"]["values"][GEN[g]]; _hc = SNAP["items"]["IF_HoldEcon"].get("cells", {}).get(GEN[g], {})
     inp(f"tk_hold_{g}", f"IF_HoldEcon｜{GEN[g]}（每 MW 年持有成本，WACC 10% 打平）", "US$M/MW-年", _hv.get("低成本"), tk("IF_HoldEcon", g), _hv.get("高成本"), "Derived", TKN,
@@ -1184,7 +1184,7 @@ CASE_KEY = {"讀法 1（自用 AI 只計成本）": "internal_ai_reading", "k �
             "ERP 4.5%": "erp", "ERP 6%": "erp", "永續期新投資報酬 WACC＋5pt": "ronic_prem", "SOTP 倍數 −20%": "m_sw m_cloud m_ads m_game m_pc", "SOTP 倍數 +20%": "m_sw m_cloud m_ads m_game m_pc"}
 ALT_KEY = ["pace_epoch cap_epoch", "k_long_lo p_long_lo", "tv_alt", "m_own", "internal_ai_reading pace_epoch", "shadow_base", "floor", "floor", "g_q2_win",
            "nonnv pace_nv0", "nonnv", "tgt_alt", "oai_stake26", "oai_stake", "oai_stake liq_disc", "w_dcf", "w_dcf", "w_A w_B w_C", "w_B"]
-# v0.3.3：整本重算案例（In 頁低／高；microsoft/sens_v033.py 產生 microsoft/data/sens_v034_20261104.json；v0.3.4 起）
+# v0.3.3：整本重算案例（In 頁低／高；microsoft/sens_v033.py 產生 microsoft/data/sens_v035_20261104.json；v0.3.5 起）
 def _f(k, v):
     u = INR[k][2]
     return f"{v * 100:.4g}%" if u in ("%", "pt") else f"{v:,.4g}"
@@ -1212,7 +1212,7 @@ for k, lab, grp, ex in (("mw_ext_26", "FY2026 年底在役對外 AI MW", "命題
                         ("al_ind", "SOTP 利益率分配：Industry", "評價：SOTP 分配", ""), ("al_fro", "SOTP 利益率分配：Frontier", "評價：SOTP 分配", ""),
                         ("al_srch", "SOTP 利益率分配：Search and advertising", "評價：SOTP 分配", "")):
     RCASES += _rc(k, lab, grp, ex)
-_SP = ARGS.sens or os.path.join(HERE, "data", "sens_v034_20261104.json")
+_SP = ARGS.sens or os.path.join(HERE, "data", "sens_v035_20261104.json")
 SENSJ = json.load(open(_SP, encoding="utf-8")) if (os.path.exists(_SP) and not ARGS.set) else {}
 CUR["Sens"] = SENS_BLK0
 srow = 4
