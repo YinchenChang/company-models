@@ -118,3 +118,14 @@
 - HTML：頁尾紀錄區最前新增「①之七」；①之六 改以 v0.1.7.1 當時輸出呈現（情境 v0171、v0171_*）；① 結論改寫；`tools/html_scenarios.yaml` 新增 v018_off、r5a_off、r5b_off、r5c_off、r4_on、r5d_on、s1u_slow37、lease_lo／hi 群組，s1u_fast／s1u_slow 改含 R5c 關閉，歷史情境加 v018_off（105 情境、2,521 個數字）。dist 改 v0_1_8（v0.1.7.1 dist git rm）。
 - 報告 `docs/reports/20261103_v0.1.8.md`＋`_對照.xlsx`（`tools/make_report_v018.py`）。TK 快照 v21.7（master `ccb3498`）OK 129、DIFF 0。
 - **獨立核對後修正（2026-11-03；「有條件通過」）**：A 下半年一次性非現金捐贈 3.92 不進每人股權報酬基準（Cost 第二十六節兩列；2026 全成本另計，判斷題 INP_232 `s1a_chr_q4_switch`；Checks C217）——2027–2030 股權報酬 10.88／…／16.52 → 5.79／6.94／7.99／8.78，差額 2027–2030 改善（見上），現金不變；B 殘差法並列（INP_233 `s1a_resid_switch`，基準 0；`COST_S1aUnallocResid`）；C 標籤與 HTML 文字（W4 下半年、C115／C182／C194、第十九節舊對照、Google 合約來源、SRC_ANT_511 期間、① 谷底方塊、最低現金 3 個月＋R4＝15.99）。
+
+## v0.1.9 Tokenomics v21.7 → v21.10 同步（2026-11-04；Excel `model/20261104_Anthropic_v0.1.9.xlsx`；v0.1.8 移至 `model/archive/`；分支 `claude/anthropic-v0.1.9`）
+- 工作單 `docs/workorders/20261104_anthropic_v0.1.9_TK21.10.md`。Tokenomics master `eded8e6`（PR #193），CURRENT `20261104_Tokenomics_v21.10.xlsx`（SHA-256 `500cac80…`）。commit 見 git log「anthropic v0.1.9 步驟 1–6」。
+- check_tk_snapshot（v21.7 快照 vs v21.10）：OK 113、DIFF 16——TPU v7 產出比 0.6／0.8／1.1 → 0.35／0.66／0.84、Trainium3 0.3／0.5／0.8 → 0.14／0.28／0.50（進計算）；IF_HoldEcon、IF_FullCost_*、IF_TrainCost_*、IF_FullCostDefault_* 只有高成本欄（v21.8 IT 折舊 4 → 5 年；只進高成本敏感度與對照列）。持有比不變。重建後 OK 129。
+- 公式未改；README 新增「v0.1.9 更新」列（其後 3 列下移）、OAI_Link 說明註明兩家 TK 版本不同。
+- 結果：η 0.4676 → 0.6040（C54 警示消失，CHK_Warnings 4 → 3）；供給 VR 等值 GW 2030 10.42 → 9.32；命題 1 差額 2026–2030 −0.94／−6.64／−5.48／−1.29／+3.27 → **−1.20／−7.54／−6.14／−1.44／+3.65**（只因分母變小），覆蓋率、持續轉正年 2030 不變；**合約付款、營收、現金、命題 2（累計外部資金 0、谷底 40.23〔2029〕）逐位不變**；Funding F07 不變。拆解：只動 TPU η 0.520、只動 Trainium3 η 0.535、其他 DIFF 對基準 0。敏感度：TK 低端（＝v21.9 原生精度）η 0.989、2030 差額 +4.59；高端 η 0.455、+3.20；兩個命題皆不翻轉。
+- 逐格比對 v0.1.8 → v0.1.9：29,669 格中不同 1,272（數值 862、文字 410）；Demand、Revenue、Reverse、SRC_ANT、Inputs、合約付款、基準現金 0 格；Funding 51 格全在持續擴張情境。
+- 測試：parity 期望值 base_warnings 4 → 3、u_nnv_out_low 改新低端；builder 測試 η 0.6040、歷史回歸加 TK 回到 v21.7、新增 `test_v019_tk_back_reproduces_v018`、`test_v019_contract_pay_and_cash_unchanged`。
+- HTML：標頭與 ① 加 v0.1.9 摘要；新增「①之八」（TK 新舊值、拆解、反向檢查、敏感度、既有替代讀法在 v0.1.9 基準下、η 各版本）；①之七 改以 v0.1.8 當時輸出呈現（情境 v018、v018_*）；歷史情境加 tk18_back；①之三 η 小表加 v21.7、v21.10 欄；⑦、⑨ 改 TK 版本說明。`tools/build_html.py` 只存值（記憶體）、`ANT_HTML_CACHE`；dist 改 v0_1_9（v0.1.8 dist git rm）。
+- 報告 `docs/reports/20261104_v0.1.9.md`＋`_對照.xlsx`（`tools/make_report_v019.py`）。
+
