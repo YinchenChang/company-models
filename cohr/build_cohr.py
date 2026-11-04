@@ -1,4 +1,4 @@
-# Coherent（COHR，NYSE）收支與估值模型 v0.2.2（AI 半導體 Project：網通次產業內複製——光模組，樣板 innolight/）
+# Coherent（COHR，NYSE）收支與估值模型 v0.3（AI 半導體 Project：網通次產業內複製——光模組，樣板 innolight/）
 # 用法：python3 cohr/build_cohr.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度：FY(t)＝t−1 年 7 月～t 年 6 月（6 月底結束）。FY(t) 一半落在 CY(t−1) 下半年、一半落在 CY(t) 上半年。
 #   市場模型是日曆年：FY2027 資料中心＝CY2026 下半年（FY2027 Q1 指引＋Q2 假設）＋ hw × CY2027；FY2028＝（1 − hw）× CY2027 ＋ hw × CY2028；FY2029 同理。
@@ -81,6 +81,8 @@ MT = "https://www.macrotrends.net/stocks/charts/COHR/coherent/pe-ratio"
 DG = "https://www.digrin.com/stocks/detail/COHR/price"
 GF = "https://www.google.com/finance/labs/quote/COHR:NYSE"
 FV = "https://finviz.com/news/402637/coherent-corp-announces-timing-of-fy2027-first-quarter-earnings-release"
+PRQ1 = "https://www.sec.gov/Archives/edgar/data/0000820318/000119312526447200/d176836dex991.htm"   # v0.3：FY2027 Q1 新聞稿（8-K Ex.99.1，2026-11-04）
+IRQ1 = "https://ir.coherent.com/news-releases/news-release-details/coherent-corp-reports-first-quarter-fiscal-2027-results"   # v0.3：同一新聞稿（公司 IR 頁）
 
 sec("A. AI 光模組市場（讀 markets/network 成品；日曆年；情境 A（原始顆數），B／C 依顆數係數縮放）")
 for j, y in enumerate((26, 27, 28, 29)):
@@ -108,7 +110,7 @@ inp("pxr_27", "單價係數 CY2027（相對網通模型每顆內容；基準 1�
 inp("pxr_28", "單價係數 CY2028", "x", 0.80, 1.0, 1.05, "Assumed", "同上（與中際旭創模型相同）", "—")
 inp("pxr_29", "單價係數 CY2029", "x", 0.72, 1.0, 1.05, "Assumed", "同上", "—")
 inp("hw", "日曆年上半年占全年比重（資料中心；會計年度換算用）", "%", 0.42, 0.46, 0.50, "Assumed", "CY2026 推導：上半年（FY2026 Q3＋Q4）÷ 全年約 41%（高成長年下半年較重）", "CY2027 起成長放緩，比重向 50% 靠近；Sens 動 42%／50%")
-inp("q2_dg", "FY2027 Q2（2026-12 季）資料中心季增", "%", 0.05, 0.12, 0.20, "Assumed", BZ + "：共識 Q2 營收 25.4 億美元（約 +10%，Interested-party）", "CPO 與 PhotonLink 初期營收自 12 月季開始（公司）")
+inp("q2_dg", "FY2027 Q2（2026-12 季）資料中心季增（使 Q2 營收＝公司指引；通訊、工業依季增假設）", "%", "=(2.55-Q!G7-Q!G8)/Q!F6-1", "=(2.65-Q!G7-Q!G8)/Q!F6-1", "=(2.75-Q!G7-Q!G8)/Q!F6-1", "Derived", PRQ1 + "：Q2 營收指引 25.5–27.5 億美元（中點 26.5 億）；資料中心為殘差（v0.2.4 為 Assumed 12%，區間 5–20%）", "CPO 與 PhotonLink 初期營收自 12 月季開始（公司）；共識 Q2 營收 25.5 億（Interested-party，Seeking Alpha 轉述）")
 
 sec("C. FY2026 Q3／Q4 實績與資料中心、通訊拆分（公司只揭露 Datacenter & Communications 合計）")
 inp("q3_rev", "FY2026 Q3（2026-03 季）營收", "US$B", None, 1.8056, None, "Verified", PR + "：1,805.6 百萬美元", F3 + "：18.1 億美元")
@@ -124,13 +126,13 @@ inp("q4_dy", "FY2026 Q4 資料中心年增（核對用）", "%", None, 0.66, Non
 inp("q4_cy", "FY2026 Q4 通訊年增（核對用）", "%", None, 0.56, None, "Interested-party", F4, WB4)
 inp("h1r26", "FY2026 上半年資料中心 ÷ 下半年資料中心", "x", 0.72, 0.79, 0.86, "Assumed", "Futurum FY2026 Q1（網址見 Sources）：FY2026 Q1 資料中心年增 23%；Q2 指引約季增 10%（公司）", "FY2027 Q1 資料中心年增逾 80%（公司指引）回推 Q1 約 0.67、Q2 約 0.74，對下半年 1.79 約 0.79（推導；資料中心金額公司未揭露：未找到）")
 
-sec("D. FY2027 Q1 指引與 Q2 假設（＝CY2026 下半年）")
-inp("q1_rev", "FY2027 Q1（2026-09 季）營收指引中點", "US$B", 2.2, 2.3, 2.4, "Interested-party", PR + "：22–24 億美元（公司指引）", INV + "：高於共識 21.3 億美元")
-inp("q1_gm", "FY2027 Q1 non-GAAP 毛利率指引中點", "%", 0.395, 0.405, 0.415, "Interested-party", PR + "：39.5%–41.5%（公司指引）", "—")
-inp("q1_opx", "FY2027 Q1 non-GAAP 營業費用指引中點", "US$B", 0.40, 0.41, 0.42, "Interested-party", PR + "：4.0–4.2 億美元（公司指引）", "—")
-inp("q1_eps", "FY2027 Q1 non-GAAP EPS 指引中點", "US$", 1.85, 1.95, 2.05, "Interested-party", PR + "：1.85–2.05 美元（公司指引）", BZ + "：共識 1.93")
-inp("q_cg", "通訊季增（FY2027 Q1、Q2）", "%", 0.0, 0.05, 0.10, "Assumed", "FY2026 Q4 通訊季增 11%（公司）", "—")
-inp("q_ig", "工業季增（FY2027 Q1、Q2）", "%", -0.03, 0.0, 0.03, "Assumed", F4 + "：工業剔除出售事業約持平；半導體與顯示器設備季增（公司）", "—")
+sec("D. FY2027 Q1 實績與 Q2 指引（＝CY2026 下半年；v0.3 由指引／假設改為 2026-11-04 實績與新指引）")
+inp("q1_rev", "FY2027 Q1（2026-09 季）營收（實績）", "US$B", None, 2.3703, None, "Verified", PRQ1 + "：2,370.3 百萬美元（年增 49.9%、預估同口徑年增 56%；公司）", "原指引 22–24 億美元、中點 23.0（" + PR + "）")
+inp("q1_gm", "FY2027 Q1 non-GAAP 毛利率（實績）", "%", None, "=961.9/2370.3", None, "Verified", PRQ1 + "：non-GAAP 毛利 961.9 百萬美元、40.6%（GAAP 39.1%）", "原指引 39.5%–41.5%；Q2 指引 40%–42%")
+inp("q1_opx", "FY2027 Q1 non-GAAP 營業費用（實績；研發＋銷管）", "US$B", None, "=(226.7+184.9)/1000", None, "Verified", PRQ1 + "：non-GAAP 研發 226.7＋銷管 184.9 百萬美元（營業利益 550.3、23.2%）", "原指引 4.0–4.2 億；Q2 指引 4.3–4.5 億")
+inp("q1_eps", "FY2027 Q1 non-GAAP 稀釋 EPS（實績）", "US$", None, 2.09, None, "Verified", PRQ1 + "：2.09 美元（non-GAAP 歸屬淨利 422.0 百萬；GAAP 1.90）", "原指引 1.85–2.05；共識 1.93（" + BZ + "）")
+inp("q_cg", "通訊季增（FY2027 Q1、Q2）", "%", 0.0, 0.05, 0.10, "Assumed", "FY2026 Q4 通訊季增 11%（公司）", "v0.3：Q1 DCC 為實績，但資料中心與通訊拆分公司未揭露、法說會數字未找到，Q1 通訊仍依本假設，資料中心＝DCC − 通訊")
+inp("q_ig", "工業季增（FY2027 Q2）", "%", -0.03, 0.0, 0.03, "Assumed", F4 + "：工業剔除出售事業約持平；半導體與顯示器設備季增（公司）", "v0.3：Q1 改實績（季減 2.8%），本列只用於 Q2")
 
 sec("E. 通訊與工業（年增；FY2028 起）——已出售事業排除")
 inp("g_com_27", "通訊營收年增 FY2027", "%", 0.10, 0.20, 0.30, "Assumed", F4 + "：通訊 FY2026 Q4 年增 56%（DCI、scale-across、ZR／ZR+）", "OCS 光路交換潛在市場逾 40 億美元（約 2030，公司說法）")
@@ -148,7 +150,7 @@ inp("gm_29", "non-GAAP 毛利率 FY2029", "%", 0.365, 0.420, 0.450, "Assumed", "
 inp("phi", "營業費用成長對營收成長的彈性", "x", 0.40, "=Q!B24", 0.90, "Derived", "FY2026 non-GAAP 營業費用年增 ÷ 營收年增（Q 頁）", WB4 + "：目標營業費用率 18%；FY2026 19.0%、Q4 18.4%（公司）")
 inp("opx_adj", "營業費用額外占營收比（Sens 用；基準 0）", "pt", -0.01, 0.0, 0.02, "Assumed", "無", "Sens 用 +2 個百分點")
 inp("int_f", "non-GAAP 利息與其他淨支出（FY2027 起，每年）", "US$B", 0.04, 0.08, 0.12, "Assumed", PR + "：FY2026 1.181 億美元；長期借款 32.1 億、現金與短期投資 19.9 億美元（2026-06）", WB4 + "：FY2026 還債 5.13 億美元、槓桿 0.7x")
-inp("tx", "non-GAAP 稅率", "%", 0.18, 0.19, 0.20, "Interested-party", PR + "：FY2027 Q1 指引 18%–20%；FY2026 19%（公司）", "—")
+inp("tx", "non-GAAP 稅率", "%", 0.18, 0.19, 0.20, "Interested-party", PR + "：FY2027 Q1 指引 18%–20%；FY2026 19%（公司）", PRQ1 + "：Q1 實績 19%（non-GAAP 稅 98.3 百萬）；Q2 指引 18%–20%")
 inp("nci", "少數股權調整（加回；每年）", "US$B", None, "=Q!C15", None, "Derived", "FY2026 non-GAAP 歸屬淨利 − 稅後稅前利益（Q 頁）；SiC 子公司少數股權分攤虧損", "—")
 inp("sh_q4", "FY2026 Q4 non-GAAP 稀釋股數", "十億股", None, 0.2022, None, "Verified", PR + "：202.2 百萬股", TENK + "：普通股 195,832,246 股（2026-08-10）")
 inp("sh_g", "股數年變動", "%", 0.0, 0.01, 0.03, "Assumed", "10-K 摘要（autobound，網址見 Sources）：NVIDIA 投資 20 億美元；FY2026 發行新股 19.99 億美元（8-K）", "股票薪酬稀釋；回購：未找到")
@@ -226,8 +228,8 @@ def defname(name, ref):
 # ---------------- Q：實績、FY2026 季度拆分與 FY2027 上半年 ----------------
 Q = wb.create_sheet("Q")
 Q["A1"] = "Q — 實績與季度拆分（十億美元；EPS 為美元；股數為十億股；non-GAAP）。藍字＝輸入（In 頁）；黑字＝公式。FY(t)＝t−1 年 7 月～t 年 6 月"
-Q["A2"] = "資料中心與通訊的金額公司未揭露：FY2026 Q4 資料中心＝由 Q3、Q4 的 DCC 合計與兩者季增率聯立解出；Q3＝Q4 ÷（1＋季增）。FY2027 Q1 資料中心＝營收指引中點 − 通訊 − 工業；Q2 依季增假設。FY2027 Q1 季報（2026-11-04）公布後以實績取代"
-hdr(Q, 3, ["項目", "FY2025A", "FY2026A", "FY2026 Q3", "FY2026 Q4", "FY2027 Q1（指引）", "FY2027 Q2（假設）", "標記", "說明"])
+Q["A2"] = "資料中心與通訊的金額公司未揭露：FY2026 Q4 資料中心＝由 Q3、Q4 的 DCC 合計與兩者季增率聯立解出；Q3＝Q4 ÷（1＋季增）。v0.3（2026-11-04）：FY2027 Q1 營收、DCC、工業、毛利、營業費用、股數為實績（8-K），資料中心＝DCC 實績 − 通訊（通訊仍依季增假設，拆分未揭露）；Q2 營收＝公司指引中點 26.5 億，資料中心為殘差"
+hdr(Q, 3, ["項目", "FY2025A", "FY2026A", "FY2026 Q3", "FY2026 Q4", "FY2027 Q1（實績）", "FY2027 Q2（指引）", "標記", "說明"])
 def qrow(r, label, vals, fmt="#,##0.000", tag="Verified", note=""):
     Q.cell(r, 1, label)
     for col, v in vals.items():
@@ -235,10 +237,10 @@ def qrow(r, label, vals, fmt="#,##0.000", tag="Verified", note=""):
     Q.cell(r, 8, tag); Q.cell(r, 9, note)
 qrow(4, "營收", {"B": "=a25_rev_in", "C": "=a26_rev_in", "D": "=q3_rev", "E": "=q4_rev", "F": "=q1_rev", "G": "=G5+G8"}, tag="Verified／Interested-party（指引）")
 qrow(5, "資料中心與通訊（DCC）", {"B": "=a25_dcc_in", "C": "=a26_dcc_in", "D": "=q3_dcc", "E": "=q4_dcc", "F": "=F6+F7", "G": "=G6+G7"}, tag="Verified")
-qrow(6, "  資料中心（AI 光模組、雷射與光元件、OCS）", {"B": "=B5*C6/C5", "C": "=(D6+E6)*(1+h1r26)", "D": "=E6/(1+q4_dg)", "E": "=(D5-E5/(1+q4_cg))/(1/(1+q4_dg)-1/(1+q4_cg))", "F": "=F4-F7-F8", "G": "=F6*(1+q2_dg)"},
+qrow(6, "  資料中心（AI 光模組、雷射與光元件、OCS）", {"B": "=B5*C6/C5", "C": "=(D6+E6)*(1+h1r26)", "D": "=E6/(1+q4_dg)", "E": "=(D5-E5/(1+q4_cg))/(1/(1+q4_dg)-1/(1+q4_cg))", "F": "=q1_dcc-F7", "G": "=F6*(1+q2_dg)"},
      tag="Derived／Assumed", note="Q4：聯立 Q3 DCC＝Q4 資料中心 ÷（1＋24%）＋Q4 通訊 ÷（1＋11%）；FY2026 全年＝下半年 ×（1＋上半年 ÷ 下半年比）；FY2025 假設與 FY2026 相同結構")
 qrow(7, "  通訊（電信、DCI、ZR、泵浦雷射）", {"B": "=B5-B6", "C": "=C5-C6", "D": "=D5-D6", "E": "=E5-E6", "F": "=E7*(1+q_cg)", "G": "=F7*(1+q_cg)"}, tag="Derived")
-qrow(8, "工業（雷射、工程材料、SiC）", {"B": "=a25_ind_in", "C": "=a26_ind_in", "D": "=q3_ind", "E": "=q4_ind", "F": "=E8*(1+q_ig)", "G": "=F8*(1+q_ig)"}, tag="Verified／Assumed", note="FY2025、FY2026 含已出售的 A&D 與慕尼黑工具事業；Q4 起不含")
+qrow(8, "工業（雷射、工程材料、SiC）", {"B": "=a25_ind_in", "C": "=a26_ind_in", "D": "=q3_ind", "E": "=q4_ind", "F": "=q1_ind", "G": "=F8*(1+q_ig)"}, tag="Verified／Assumed", note="FY2025、FY2026 含已出售的 A&D 與慕尼黑工具事業；Q4 起不含")
 qrow(9, "non-GAAP 毛利", {"B": "=a25_gp_in", "C": "=a26_gp_in", "F": "=F4*q1_gm"}, tag="Verified")
 qrow(10, "non-GAAP 毛利率", {c: f"={c}9/{c}4" for c in "BCF"}, fmt="0.0%", tag="Derived")
 qrow(11, "non-GAAP 營業費用", {"B": "=a25_opx_in", "C": "=a26_opx_in", "F": "=q1_opx"}, tag="Verified")
@@ -248,8 +250,8 @@ qrow(14, "non-GAAP 稅率", {"B": "=a25_tax_in/(B12-B13)", "C": "=a26_tax_in/(C1
 qrow(15, "少數股權調整（歸屬淨利 −（營業利益 − 利息）×（1 − 稅率））", {"B": "=a25_ni_in-(B12-B13)*(1-B14)", "C": "=a26_ni_in-(C12-C13)*(1-C14)", "F": "=nci/4"}, tag="Derived")
 qrow(16, "non-GAAP 歸屬 Coherent 淨利", {"B": "=a25_ni_in", "C": "=a26_ni_in", "F": "=(F12-F13)*(1-F14)+F15"}, tag="Verified／Derived")
 qrow(17, "優先股股利（EPS 計算扣除）", {"B": "=a25_ni_in-a25_eps_in*a25_sh_in", "C": "=0", "F": "=0"}, tag="Derived", note="FY2025 由淨利 − EPS × 股數推得；FY2026 起優先股已轉換，無扣除")
-qrow(18, "non-GAAP 稀釋股數", {"B": "=a25_sh_in", "C": "=a26_sh_in", "E": "=sh_q4", "F": "=sh_q4"}, fmt="0.0000", tag="Verified")
-qrow(19, "non-GAAP 稀釋 EPS", {c: f"=({c}16-{c}17)/{c}18" for c in "BCF"}, fmt="0.00", tag="Derived", note="FY2027 Q1 指引中點 1.95")
+qrow(18, "non-GAAP 稀釋股數", {"B": "=a25_sh_in", "C": "=a26_sh_in", "E": "=sh_q4", "F": "=sh_q1"}, fmt="0.0000", tag="Verified")
+qrow(19, "non-GAAP 稀釋 EPS", {c: f"=({c}16-{c}17)/{c}18" for c in "BCF"}, fmt="0.00", tag="Derived", note="FY2027 Q1 實績 2.09（模型以實績營收、毛利率、費用、股數；利息與稅率、少數股權仍為假設）")
 Q.cell(21, 1, "推導量").font = BOLD
 Q.cell(22, 1, "FY2026 營收年增"); Q["B22"] = "=C4/B4-1"
 Q.cell(23, 1, "FY2026 營業費用年增"); Q["B23"] = "=C11/B11-1"
@@ -258,7 +260,7 @@ Q.cell(25, 1, "CY2026 資料中心（FY2026 Q3＋Q4＋FY2027 Q1＋Q2；份額校
 Q.cell(26, 1, "CY2026 下半年資料中心（＝FY2027 上半年）"); Q["B26"] = "=F6+G6"
 Q.cell(27, 1, "CY2026 上半年資料中心 ÷ 全年（hw 的依據）"); Q["B27"] = "=(D6+E6)/B25"
 Q.cell(28, 1, "核對：FY2025 Q4 DCC 由年增率回推 ÷ 實績 − 1"); Q["B28"] = "=(E6/(1+q4_dy)+E7/(1+q4_cy))/q4_dcc25-1"
-Q.cell(29, 1, "FY2027 Q1 EPS（模型，指引中點）÷ 公司 EPS 指引中點 − 1"); Q["B29"] = "=F19/q1_eps-1"
+Q.cell(29, 1, "FY2027 Q1 EPS（模型，實績營收、毛利率、費用）÷ 公司實績 EPS − 1"); Q["B29"] = "=F19/q1_eps-1"
 Q.cell(30, 1, "FY2026 資料中心 ÷ DCC"); Q["B30"] = "=C6/C5"
 for rr_, f in ((22, "0.0%"), (23, "0.0%"), (24, "0.00"), (25, "#,##0.000"), (26, "#,##0.000"), (27, "0.0%"), (28, "0.0%"), (29, "0.0%"), (30, "0.0%")): Q[f"B{rr_}"].number_format = f
 for nm, rr_ in (("rev", 4), ("dc", 6), ("com", 7), ("ind", 8), ("gp", 9), ("opx", 11), ("int", 13), ("ni", 16), ("pref", 17), ("sh", 18), ("eps", 19)):
@@ -403,7 +405,7 @@ for j, s in enumerate(SC):
         V[f"{c}{rr_}"] = f"=px/PL!{FC[y]}{SUMR[(s, 'eps')]}"; V[f"{c}{rr_}"].number_format = "0.0"
 V.cell(22, 1, "現價 ÷ 共識未來 12 月 EPS（9/12 × FY2027＋3/12 × FY2028）"); V["B22"] = "=px/(cons_eps27*9/12+cons_eps28*3/12)"; V["B22"].number_format = "0.0"
 V.cell(23, 1, "現價 ÷ 52 週高點 − 1"); V["B23"] = "=px/px_hi-1"; V["B23"].number_format = "0%"
-V.cell(24, 1, "現價 ÷ FY2027 Q1 EPS 指引中點年化"); V["B24"] = "=px/(q1_eps*4)"; V["B24"].number_format = "0.0"
+V.cell(24, 1, "現價 ÷ FY2027 Q1 EPS 實績年化"); V["B24"] = "=px/(q1_eps*4)"; V["B24"].number_format = "0.0"
 V["E19"] = "FY2027 三情境只差在網通 CPO 情境（顆數係數從 CY2028 開始）"; V["E24"] = "1.95 × 4"
 V.cell(26, 1, "2. 循環位置（本模型營收最高的會計年度）").font = BOLD
 hdr(V, 27, ["情境", "營收最高年（FY2026–FY2029）", "FY2027 判定", "規則倍數（P/E）", "見頂年是否未知", "說明"])
@@ -547,7 +549,7 @@ rec("FY2027 EPS vs 共識（四季加總）", "=cons_eps27b", pl("eps", 2027), "
 rec("FY2028 營收 vs 共識", "=cons_rev28", pl("rev", 2028), "TIKR（2026-09-30）", "")
 rec("FY2028 EPS vs 共識", "=cons_eps28", pl("eps", 2028), "MarketBeat（2026-10-23）", "", key="eps28")
 RC.cell(rr_, 1, "B. 公司指引與校準").font = BOLD; rr_ += 1
-rec("FY2027 Q1 EPS（模型，指引中點的營收、毛利率、費用）vs 公司 EPS 指引中點", "=q1_eps", lambda s: "=Q!F19", "公司指引（2026-08-12）", "費用與稅率皆取指引；股數用 Q4 稀釋股數", key="q1")
+rec("FY2027 Q1 EPS（模型，實績營收、毛利率、費用）vs 公司實績 EPS", "=q1_eps", lambda s: "=Q!F19", "公司 8-K（2026-11-04）", "利息（int_f）與少數股權（nci）仍為假設：實績 non-GAAP 利息與其他 0.033 億／季、模型 0.020", key="q1")
 rec("FY2027 Q1 EPS（模型）vs 共識", "=cons_q1eps", lambda s: "=Q!F19", "Benzinga", "")
 rec("FY2025 Q4 DCC 由年增率回推 vs 實績（季增拆分的一致性）", "=q4_dcc25", lambda s: "=E6/(1+q4_dy)+E7/(1+q4_cy)".replace("E6", "Q!E6").replace("E7", "Q!E7"), "公司", "差距小＝資料中心、通訊拆分與兩組成長率一致", fmt="#,##0.000")
 RC.cell(rr_, 1, "C. 份額與市場").font = BOLD; rr_ += 1
@@ -557,7 +559,7 @@ rec("FY2026 資料中心（含元件）vs 新易盛 2025 光模組營收", "=lc_
 rec("FY2027 資料中心 ÷ CY2027 AI IT 資本支出", None, lambda s: f"=PL!E{PB[s]['dc']}/itc_27", "markets/network", "每 1 美元 AI IT 資本支出分到的 Coherent 資料中心營收", fmt="0.00%")
 RC.cell(rr_, 1, "D. 預留").font = BOLD; rr_ += 1
 RC.cell(rr_, 1, "R4 產業部署路徑（markets/deploy_path/，尚未建立）：上線後以資料中心營收 ÷ 部署 GW 計算每 GW 營收"); RC.cell(rr_, 10, "預留列：本版無數值"); rr_ += 1
-RC.cell(rr_, 1, "FY2027 Q1 季報（2026-11-04 盤後）：公布後以實績取代 Q 頁 Q1 指引，並更新資料中心拆分"); RC.cell(rr_, 10, "預留列：本版無數值"); rr_ += 1
+RC.cell(rr_, 1, "FY2027 Q1 季報（2026-11-04 公布）：v0.3 已以實績取代 Q 頁 Q1；資料中心與通訊拆分公司未揭露，通訊仍為季增假設"); RC.cell(rr_, 10, "原估 vs 實績見本頁 F 節（最後）"); rr_ += 1
 RC_LAST = rr_ - 1
 RC.column_dimensions["A"].width = 70
 for c in "BCDEFGH": RC.column_dimensions[c].width = 12
@@ -580,6 +582,7 @@ srcs = [("公司：FY2026 第四季與全年財報新聞稿（8-K Exhibit 99.1�
         ("資料商：macrotrends 12 月底 P/E", MT),
         ("價格：digrin 月底價（10 月 209.29）、Google 財經（52 週區間）", DG + "；" + GF),
         ("公司：FY2027 Q1 財報日期（2026-11-04 盤後）", FV),
+        ("公司：FY2027 Q1 新聞稿（8-K Ex.99.1，2026-11-04；營收、分部、non-GAAP 調節、Q2 指引、FY2027 預估同口徑成長逾 60%）", PRQ1 + "；" + IRQ1),
         ("市場層：markets/network、tsmc、innolight 成品（本 repo，唯讀）", ""),
         ("待補（人工）：資料中心與通訊金額拆分；光模組營收；SiC 營收與少數股權明細；共識家數與區間；前瞻 P/E 歷史（Bloomberg）；回購", "未找到"),
         ("SemiAnalysis", "未使用")]
@@ -803,9 +806,9 @@ V.cell(RC_ROW, 1, "投資建議")
 V.cell(RC_ROW, 2, '=IF(B42>0.5,"強力買進",IF(B42>0.25,"買進",IF(B42>=-0.25,"中立",IF(B42>=-0.5,"放空","強力放空"))))').number_format = "@"
 V.cell(RC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
 OBS = [
-       "目標價 US$323（DCF 207、Comparable 438 各半），比現價 209.17（2026-10-23）高 54.2%，級距 大於 50%；Comparable 單獨為 +109.4%。主因是 Comparable 的倍數：DCF 207 與現價相當（−1.0%），本模型 12 個月後前瞻 EPS 14.24 只比共識前瞻 EPS 13.07 高 8.9%（本模型含 4／12 的 FY2029）；美股光通訊同業前瞻 P/E 中位數 30.8 倍，與共識目標價 394.79 隱含的 30.2 倍相近，但現價只隱含 21.4 倍共識未來 12 月 EPS——共識目標價本身也比現價高 88.7%。",
-       "最敏感的是毛利率與份額：毛利率低案例（FY2028 37.5%）FY2028 EPS −17.5%、份額流失 −16.2%、AI 市場 ×0.8 −14.7%；情境 C FY2028 EPS 12.31，只比情境 A 的 14.55 低 15.4%（通訊、工業另推，分散 AI 曝險），DCF 價格帶 126～275。",
-       "追蹤 FY2027 Q1 財報（2026-11-04 盤後）：資料中心與通訊金額公司只揭露合計、本版為推導值，季報後更新。網通 CPO 已改三情境（v0.2.2；A＝替代快、C＝慢）：Coherent 同時賣可插拔模組（減分）與 CPO 雷射（加分），淨效果小——情境 A FY2028 EPS 14.63 → 14.55（−0.5%）、C 12.28 → 12.31（+0.2%）、B 不變；CPO 份額 0 時 FY2028 EPS −4.8%。"
+       "目標價 US$373（DCF 216 與相對倍數調整後 Comparable 531 各半），比現價 209.17（2026-10-23）高 78.5%，級距 大於 50%。DCF 216 只比現價高 3.2%，上檔主要來自倍數：本模型 12 個月後前瞻 EPS 14.86 比共識前瞻 EPS 13.07 高 13.7%，美股光通訊同業前瞻 P/E 中位數 30.8 倍，而現價只隱含約 16 倍共識 FY2028 EPS；共識目標價 394.79 也比現價高 88.7%。",
+       "v0.3 滾入 FY2027 Q1：營收 23.70 億美元（原指引中點 23.0 億，+3.1%）、DCC 19.52 億（年增 79%）、工業 4.19 億（季減 2.8%）、non-GAAP 毛利率 40.6%、EPS 2.09（指引 1.85–2.05）；Q2 指引營收 25.5–27.5 億、毛利率 40%–42%、EPS 2.28–2.48，公司預估 FY2027 同口徑營收年增逾 60%。CY2026 資料中心（份額校準基礎）43.5 → 46.2 億美元（+6.1%），FY2027 EPS（B）10.17 → 10.73、FY2028（B）13.46 → 14.06；加權目標價 357.8 → 373.4，上檔 +71.1% → +78.5%，強力買進不變。",
+       "最敏感的仍是毛利率與份額：毛利率低案例 FY2028 EPS −17.4%、份額流失 −16.5%、AI 市場 ×0.8 −14.9%；情境 C FY2028 EPS 12.85，比情境 A 的 15.20 低 15.5%，DCF 價格帶 131～287。資料中心與通訊拆分公司仍未揭露（Q1 通訊沿用季增 5% 假設）。下一個檢驗點：FY2027 Q2 財報（約 2027-02 初）營收是否落在 25.5–27.5 億；模型 FY2027 B 隱含下半年營收 64.4 億（平均每季 32 億），比公司「FY2027 結束前首個 30 億美元季度」的說法積極。"
       ]   # 重點觀察（與 README.md 相同文字）
 _n0 = RD.max_row
 RD.cell(_n0 + 1, 1, "v0.2.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（Val 頁 0.3 結論加「上檔空間級距」「投資建議」兩列、README 頁加重點觀察三點；數值不變，既有儲存格位置不變）。")
@@ -837,6 +840,60 @@ for _kb, _lab, _kind in [('mpl', 'AI 可插拔光模組市場', 'mpl'), ('mcp', 
             wb.defined_names[_k] = DefinedName(_k, attr_text=f"In!$E${_ri}"); _ri += 1
 _n1 = RD.max_row
 RD.cell(_n1 + 1, 1, 'v0.2.2（2026-10-26）：網通模型 v0.2.3 的 CPO 滲透改三情境（A＝替代快、B＝平平、C＝慢），本模型 A／B／C 改讀同字母的可插拔與 CPO 市場（In 頁末新增 B、C 兩組；情境 A 沿用 A 節 mpl_／mcp_，數值改為網通情境 A）；FY2027 起三情境不再相同。其他輸入不變。')
+# ================= v0.3（2026-11-04）：滾入 FY2027 Q1 實績與 Q2 指引（工作單 brief_earn_20261104）；只改輸入，方法、情境結構、估值規則不變 =================
+SQ1 = "公司 FY2027 Q1 新聞稿（8-K Ex.99.1，2026-11-04）"
+q0 = Q.max_row + 2
+Q.cell(q0, 1, "v0.3：FY2027 Q1（2026-07～09）實績明細與 Q2（2026-10～12）指引（十億美元；EPS 美元；股數十億股）").font = BOLD
+hdr(Q, q0 + 1, ["項目", "Q1 實績（GAAP）", "Q1 實績（non-GAAP）", "Q2 指引低", "Q2 指引高", "原 Q1 指引中點", "v0.2.4 模型 Q1", "標記", "說明"])
+QV = {}
+def q3row(r, key, label, vals, fmt="#,##0.000", tag="Verified", note=""):
+    Q.cell(r, 1, label)
+    for col, v in vals.items():
+        c = Q[f"{col}{r}"]; c.value = v; c.number_format = fmt
+        if not (isinstance(v, str) and v.startswith("=")): c.font = BLUE
+    Q.cell(r, 8, tag); Q.cell(r, 9, note); QV[key] = r
+r = q0 + 2
+q3row(r, "rev", "營收", {"B": "=q1_rev", "C": "=q1_rev", "D": 2.55, "E": 2.75, "F": 2.30, "G": 2.30}, tag="Verified／Interested-party（指引）", note=SQ1 + "；季增 15.9%、年增 49.9%（預估同口徑 56%）；接近原指引上緣 24 億"); r += 1
+q3row(r, "dcc", "  資料中心與通訊（DCC）", {"B": "=q1_dcc", "C": "=q1_dcc", "G": 1.8695}, note="季增 20.8%、年增 79.1%；資料中心與通訊各自金額未揭露"); r += 1
+q3row(r, "ind", "  工業", {"B": "=q1_ind", "C": "=q1_ind", "G": 0.4305}, note="季減 2.8%、年減 14.8%（去年同期含已出售事業）"); r += 1
+q3row(r, "segchk", "  檢查：DCC＋工業 − 營收（應為 0）", {"B": f"=B{QV['dcc']}+B{QV['ind']}-B{QV['rev']}"}, tag="Derived"); r += 1
+q3row(r, "gp", "毛利", {"B": 0.9278, "C": 0.9619, "G": 0.9315}, note="GAAP 39.1%、non-GAAP 40.6%（年增 184bp；公司稱定價優化與降本）"); r += 1
+q3row(r, "gm", "毛利率", {"B": f"=B{QV['gp']}/B{QV['rev']}", "C": f"=C{QV['gp']}/C{QV['rev']}", "D": 0.40, "E": 0.42, "F": 0.405, "G": 0.405}, fmt="0.0%", tag="Derived／Interested-party（指引）", note="In 頁 gm_27 基準 41%（Assumed，未改）；公司目標 CY2028 底前單季逾 45%"); r += 1
+q3row(r, "opx", "營業費用", {"B": "=0.9278-0.3779", "C": "=q1_opx", "D": 0.43, "E": 0.45, "F": 0.41, "G": 0.41}, tag="Verified／Interested-party（指引）", note="GAAP＝毛利 − 營業利益；non-GAAP 研發 226.7＋銷管 184.9 百萬"); r += 1
+q3row(r, "op", "營業利益", {"B": 0.3779, "C": 0.5503, "G": 0.5215}, note="GAAP 15.9%、non-GAAP 23.2%"); r += 1
+q3row(r, "int", "利息與其他淨支出", {"B": 0.0191, "C": 0.0330, "G": 0.0200}, note="利息支出 46.3 百萬；non-GAAP 0.033 億／季（年化 0.132），模型 int_f 0.08／年（Assumed，未改）"); r += 1
+q3row(r, "tax", "所得稅", {"B": -0.0228, "C": 0.0983}, note="GAAP 為稅負抵減；non-GAAP 稅率 19%"); r += 1
+q3row(r, "txr", "non-GAAP 稅率", {"C": f"=C{QV['tax']}/(C{QV['op']}-C{QV['int']})", "D": 0.18, "E": 0.20, "F": 0.19, "G": 0.19}, fmt="0.0%", tag="Derived／Interested-party（指引）"); r += 1
+q3row(r, "ni", "歸屬 Coherent 淨利", {"B": 0.3847, "C": 0.4220, "G": 0.4093}, note="non-GAAP 含少數股權加回約 0.003 億"); r += 1
+q3row(r, "sh", "稀釋股數", {"B": "=sh_q1", "C": "=sh_q1", "G": 0.2022}, fmt="0.0000"); r += 1
+q3row(r, "eps", "稀釋 EPS", {"B": 1.90, "C": "=q1_eps", "D": 2.28, "E": 2.48, "F": 1.95, "G": 2.0241}, fmt="0.00", tag="Verified／Interested-party（指引）", note="原 Q1 指引 1.85–2.05；共識 1.93～1.97"); r += 1
+q3row(r, "h1", "1H FY27 non-GAAP EPS（Q1 實績＋Q2 指引中點）", {"C": f"=C{QV['eps']}+(D{QV['eps']}+E{QV['eps']})/2"}, fmt="0.00", tag="Derived"); r += 1
+q3row(r, "h1rev", "1H FY27 營收（Q1 實績＋Q2 指引中點）", {"C": f"=C{QV['rev']}+(D{QV['rev']}+E{QV['rev']})/2"}, tag="Derived", note="公司：FY2027 預估同口徑營收年增逾 60%；FY2027 底前首個 30 億美元季度、FY2028 首個 40 億美元季度"); r += 1
+defname("h1_eps27", f"Q!$C${QV['h1']}"); defname("h1_rev27", f"Q!$C${QV['h1rev']}")
+RC.cell(rr_ + 1, 1, "F. v0.3：FY2027 Q1 實績 vs 模型原估（v0.2.4）與公司指引").font = BOLD; rr_ += 2
+hdr(RC, rr_, ["項目", "Q1 實績", "v0.2.4 模型 Q1（指引中點）", "差距", "v0.2.4 模型 FY2027（A／B／C）", "v0.3 模型 FY2027（A）", "v0.3（B）", "v0.3（C）", "來源", "說明"]); rr_ += 1
+for lab, b, c, e, keyy, fmt, note in (
+        ("營收（US$B）", "=q1_rev", 2.30, "10.92／10.95／10.96", "rev", "#,##0.000", "原指引 22–24 億；Q2 指引 25.5–27.5 億（v0.2.4 Q2 假設 24.78 億）"),
+        ("non-GAAP 毛利率", "=q1_gm", 0.405, "41.0%／41.0%／41.0%", "gm", "0.0%", "原指引 39.5%–41.5%；Q2 指引 40%–42%"),
+        ("non-GAAP EPS（US$）", "=q1_eps", 2.0241, "10.13／10.17／10.19", "eps", "0.00", "原指引 1.85–2.05（中點 1.95）；v0.2.4 模型 Q1 2.02；Q2 指引 2.28–2.48")):
+    RC.cell(rr_, 1, lab)
+    for col, v in (("B", b), ("C", c)):
+        cc = RC[f"{col}{rr_}"]; cc.value = v; cc.number_format = fmt
+        if not (isinstance(v, str) and v.startswith("=")): cc.font = BLUE
+    RC[f"D{rr_}"] = f"=B{rr_}-C{rr_}" if fmt == "0.0%" else f"=B{rr_}/C{rr_}-1"; RC[f"D{rr_}"].number_format = "0.0%"
+    RC.cell(rr_, 5, e)
+    for col, s_ in zip("FGH", SC):
+        if keyy in PB[s_]:
+            RC[f"{col}{rr_}"] = f"=PL!E{PB[s_][keyy]}"; RC[f"{col}{rr_}"].number_format = fmt
+    RC.cell(rr_, 9, "公司 8-K（2026-08-12、2026-11-04）；v0.2.4 成品"); RC.cell(rr_, 10, note); rr_ += 1
+RC.cell(rr_, 1, "v0.3 模型 FY2027 EPS（B）− 1H FY27（Q1 實績＋Q2 指引中點）＝隱含 2H EPS"); RC[f"B{rr_}"] = f"=PL!E{PB['B']['eps']}-h1_eps27"; RC[f"B{rr_}"].number_format = "0.00"; rr_ += 1
+RC.cell(rr_, 1, "v0.3 模型 FY2027 營收（B）− 1H FY27 營收＝隱含 2H 營收（US$B；公司：Q4 前首個 30 億季度）"); RC[f"B{rr_}"] = f"=PL!E{PB['B']['rev']}-h1_rev27"; RC[f"B{rr_}"].number_format = "#,##0.000"; rr_ += 1
+RC.cell(rr_, 1, "v0.3 模型 FY2027 營收年增（B；對 FY2026 公布值，含已出售事業）vs 公司 FY2027 預估同口徑年增逾 60%"); RC[f"B{rr_}"] = 0.60; RC[f"B{rr_}"].font = BLUE; RC[f"B{rr_}"].number_format = "0.0%"
+RC[f"C{rr_}"] = f"=PL!E{PB['B']['rev']}/a26_rev-1"; RC[f"C{rr_}"].number_format = "0.0%"
+RC.cell(rr_, 9, SQ1); RC.cell(rr_, 10, "口徑不同：公司為預估同口徑（排除已出售的 A&D、慕尼黑工具），基期較低；模型對公布值的年增偏低估"); rr_ += 1
+SO.cell(SO.max_row + 1, 1, "公司：FY2027 Q1 新聞稿（公司 IR 頁；同 8-K Ex.99.1）"); SO.cell(SO.max_row, 2, IRQ1)
+RD.cell(RD.max_row + 1, 1, "v0.3（2026-11-04）：滾入 FY2027 Q1 實績（營收 2,370.3 百萬美元：DCC 1,951.7、工業 418.6；non-GAAP 毛利率 40.6%、營業利益率 23.2%、EPS 2.09，GAAP 1.90）與 Q2 指引（營收 25.5–27.5 億、non-GAAP 毛利率 40%–42%、營業費用 4.3–4.5 億、稅率 18%–20%、EPS 2.28–2.48）。In 頁 q1_rev、q1_gm、q1_opx、q1_eps 改實績，新增 q1_dcc、q1_ind、sh_q1；q2_dg 改為使 Q2 營收等於指引中點的資料中心季增（Derived）。方法、情境結構與估值規則不變；股價沿用 2026-10-23 收盤。")
+if isinstance(RD.cell(1, 1).value, str): RD.cell(1, 1).value = RD.cell(1, 1).value.replace("v0.2.3", "v0.3").replace("2026-10-26", "2026-11-04")
 # 相對倍數調整（Andy 2026-10-27「照建議做」；tools/relative_multiple.py，2026-10-29 接入）
 import os, sys  # noqa: E401
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
@@ -923,6 +980,16 @@ _wta_table(SE, _t0, [("FY2027 EPS", '0.00'), ("FY2028 EPS", '0.00'), ("目標價
            [("基準（Sens 主表基準＝情境 A；目標價＝情境加權）", [_e("A", 2027), _e("A", 2028), _W["tp_base"]]),
             ("情境 B（案例底）", [_e("B", 2027), _e("B", 2028), _W["tp_b"]]),
             ("Wattonomics 錨定（情境 B × wta）", [_ew(2027), _ew(2028), _W["tp_w"]])])
+# ---------------- v0.3（2026-11-04）：FY2027 Q1 新增實績輸入（In 頁最後追加，不位移既有列；Q 頁 F 欄讀取） ----------------
+_ri = IN.max_row + 2
+IN.cell(_ri, 1, "v0.3：FY2027 Q1 分部營收與股數實績（8-K，2026-11-04；Q 頁 F 欄）").font = BOLD; _ri += 1
+for _k, _lab, _u, _v, _s1, _s2 in (
+        ("q1_dcc", "FY2027 Q1 資料中心與通訊（DCC）營收（實績）", "US$B", 1.9517, "公司 FY2027 Q1 新聞稿（8-K Ex.99.1，2026-11-04；網址見 Sources）：1,951.7 百萬美元（季增 20.8%、年增 79.1%）", "資料中心與通訊各自金額：未揭露（法說會拆分：未找到）"),
+        ("q1_ind", "FY2027 Q1 工業營收（實績）", "US$B", 0.4186, PRQ1 + "：418.6 百萬美元（季減 2.8%）", IRQ1 + "：同值"),
+        ("sh_q1", "FY2027 Q1 non-GAAP 稀釋股數（實績）", "十億股", 0.2020, PRQ1 + "：202.0 百萬股", "Q 頁 F 欄用；PL 頁 FY2027 股數仍為 sh_q4 ×（1＋sh_g）（方法不變）")):
+    IN.cell(_ri, 1, _k); IN.cell(_ri, 2, _lab); IN.cell(_ri, 3, _u)
+    IN.cell(_ri, 5, _v).font = BLUE; IN.cell(_ri, 7, "Verified"); IN.cell(_ri, 8, _s1); IN.cell(_ri, 9, _s2)
+    wb.defined_names[_k] = DefinedName(_k, attr_text=f"In!$E${_ri}"); _ri += 1
 wb.save(sys.argv[1])
 if os.environ.get("COHR_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
