@@ -9744,7 +9744,7 @@
   }
  },
  "Anthropic": {
-  "model": "anthropic/dist/20261102_Anthropic收支模型_v0_1_7_1.xlsx",
+  "model": "anthropic/dist/20261103_Anthropic收支模型_v0_1_8.xlsx",
   "unlisted": true,
   "cash": {
    "basis": "現金流",
@@ -9752,31 +9752,31 @@
    "values": [
     [
      "2026",
-     8.04485732634755,
+     7.03417693153772,
      "Funding!E14"
     ],
     [
      "2027",
-     -51.8459670600359,
+     -42.2889936360334,
      "Funding!F14"
     ],
     [
      "2028",
-     -54.5702684273238,
+     -49.5627319900145,
      "Funding!G14"
     ],
     [
      "2029",
-     -10.048609663297,
+     -5.63061152877515,
      "Funding!H14"
     ],
     [
      "2030",
-     36.9903288118681,
+     42.8326240793285,
      "Funding!I14"
     ]
    ],
-   "file": "anthropic/dist/20261102_Anthropic收支模型_v0_1_7_1.xlsx"
+   "file": "anthropic/dist/20261103_Anthropic收支模型_v0_1_8.xlsx"
   }
  }
 }
