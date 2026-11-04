@@ -14,7 +14,7 @@ from openpyxl.workbook.defined_name import DefinedName
 HERE = os.path.dirname(os.path.abspath(__file__))
 GL = os.path.dirname(HERE)
 ROOT = os.path.dirname(GL)
-VERSION = "v0.2"
+VERSION = "v0.2.1"
 # v0.1.9（工作單 20261102 F4）：Siliconomics R4 橋接 r1 活頁簿（Bridge 頁 b8＝推得淨新增上線 IT GW）；只作並列，首建讀入 In S8，之後以 In 為準
 SIL_R4_R1 = os.path.join(ROOT, "siliconomics", "docs", "reports", "r4_bridge",
                          "20261031_R4對帳橋接_Siliconomics側_r1.xlsx")
@@ -68,7 +68,7 @@ FUND = os.path.join(HERE, "seed", "funding_v0.1.4.json")        # tools/import_f
 CAMPUS_ADD = sorted(__import__("glob").glob(os.path.join(HERE, "seed", "campus_v*_add.json")))   # v0.1.2 起新增的 T2 園區列（各版一檔；園區候選回查＋獨立抽查後合併；值之後由 Excel 讀回）
 SEG = os.path.join(ROOT, "markets", "invest_map", "data", "segments_ai_semis_v0.2.3.csv")   # AI半導體 次產業比例（最新版）
 SEG_COMMIT = "5dea5c8"
-GAPSEED = os.path.join(HERE, "seed", "gap_models_v0.1.8.json")   # tools/import_gap_models.py：Gap 頁個股模型基準值（In Y9 首建；--refresh-y9 時改以本檔覆寫 Y9）
+GAPSEED = os.path.join(HERE, "seed", "gap_models_v0.2.1.json")   # v0.2.1 W4：Anthropic 改 v0.1.8（其餘同 v0.1.8 種子）   # tools/import_gap_models.py：Gap 頁個股模型基準值（In Y9 首建；--refresh-y9 時改以本檔覆寫 Y9）
 GP = ["msft", "googl", "amzn", "meta", "orcl", "crwv", "nbis", "wyfi", "xai", "oai", "ant"]   # Gap 頁：11 家代表玩家（本專案覆蓋，不含中國；Andy 2026-10-31 12:58）
 GPN = {"msft": "Microsoft", "googl": "Alphabet", "amzn": "Amazon", "meta": "Meta", "orcl": "Oracle", "crwv": "CoreWeave", "nbis": "Nebius",
        "wyfi": "WhiteFiber", "xai": "SpaceX／xAI", "oai": "OpenAI", "ant": "Anthropic"}
@@ -93,6 +93,8 @@ LEASE_ON = "V1" not in _OFF
 FINL_ON = "V1b" not in _OFF
 ORCL_SPLIT = "V2" not in _OFF
 NV_V4 = "V4" not in _OFF
+NNV_RES = "W1" not in _OFF   # v0.2.1 W1：非 NVIDIA 占比殘差法
+RET_SPREAD = "W2" not in _OFF   # v0.2.1 W2：新納入存量汰換年份攤提
 LEASEP = ("orcl", "crwv", "nbis")
 AISPLIT = ("orcl",)   # v0.2 V2：AI 占比改讀個股模型 AI／非 AI 拆分（In Y9）   # v0.2 V1：承租玩家（廠房多由房東出資）
 GENS = ["H100", "GB200", "GB300", "VR200", "RU"]
@@ -143,6 +145,7 @@ def main():
     ap.add_argument("--version")
     ap.add_argument("--date")
     ap.add_argument("--refresh-y9", action="store_true", help="In Y9（g* 鍵）改讀 GAPSEED（個股模型重取後；工作單 20261102 E7），其餘輸入仍讀 --base")
+    ap.add_argument("--refresh-y9-only", help="v0.2.1：只重取這些玩家的 In Y9（逗號分隔，例如 ant）")
     a = ap.parse_args()
     if a.base:
         fn = os.path.basename(a.base)
@@ -205,6 +208,9 @@ def main():
     r = 5
 
     Y9KEYS = {f"g{it}_{p}" for it in ("ocf", "capai", "nai", "cap", "bb", "cash") for p in GP}
+    if a.refresh_y9_only:
+        a.refresh_y9 = True
+        Y9KEYS = {f"g{it}_{p}" for it in ("ocf", "capai", "nai", "cap", "bb", "cash") for p in a.refresh_y9_only.split(",")}
 
     def B(key, col, default):
         if a.refresh_y9 and key in Y9KEYS:
@@ -1042,25 +1048,37 @@ def main():
     s = "A"; D = "D0"
 
     def retire_rows():
-        """v0.2 V7：汰換列與淨新增列（主路徑；既有毛額列不改值）"""
+        """v0.2 V7：汰換列與淨新增列（主路徑；既有毛額列不改值）。v0.2.1 W2：新納入存量（2023 年底存量、2024–2025 新納入）平均攤到認列年與前 5 年共 6 個年份"""
         nonlocal r
         NA, YE = DR["naAD0"], DR["yeAD0"]
-        drow("vint", "汰換用裝機年份量（2023＝年底存量；2024 起＝年新增毛額＋新納入存量）", "A", "",
-             lambda y: f"={YC[y]}{YE}" if y == 2023 else f"={YC[y]}{NA}+{YC[y]}${DR['stk']}", note="V7：每一年裝機視為同一年份（vintage）")
+        STK = DR["stk"]
+        drow("yr", "年份（計算用）", "A", "", lambda y: f"={y}", fmt="0")
+        drow("vint", "汰換用裝機年份量：年新增毛額（2024 起；新納入存量另列，W2 攤到 6 個年份）" if RET_SPREAD else "汰換用裝機年份量（2023＝年底存量；2024 起＝年新增毛額＋新納入存量）", "A", "",
+             (lambda y: "=0" if y == 2023 else f"={YC[y]}{NA}") if RET_SPREAD else (lambda y: f"={YC[y]}{YE}" if y == 2023 else f"={YC[y]}{NA}+{YC[y]}${DR['stk']}"),
+             note="V7：每一年裝機視為同一年份（vintage）；v0.2.1 W2：新納入存量（含 2023 年底存量）攤到認列年 Y 與 Y−5…Y−1，汰換於 Y−5＋壽命 … Y＋壽命 各 1／6（站點或 In 無年份資料）")
         V = f"$D${DR['vint']}:$M${DR['vint']}"
+        YR = f"$D${DR['yr']}:$M${DR['yr']}"; SV = f"$D${STK}:$M${STK}"
+        NNV_ = f"Players!$D${NNVR}:$M${NNVR}"
         def ret(y, lf="life_ret", g=None):
             k = f"({y}-ROUND({lf},0)-2022)"
             base_ = f"INDEX({V},1,{k})"
-            if g == "nnv": base_ += f"*INDEX(Players!$D${NNVR}:$M${NNVR},1,{k})"
-            elif g: base_ += f"*(1-INDEX(Players!$D${NNVR}:$M${NNVR},1,{k}))*INDEX(Players!$D${MIXR[g]}:$M${MIXR[g]},1,{k})"
-            return "=0" if y == 2023 else f"=IF({y}-ROUND({lf},0)>=2023,{base_},0)"
-        drow("ret", "汰換 IT GW（暫定；壽命 life_ret 年；Assumed 5–7）", "A", "", ret, note="V7：汰換＝t − 壽命 年的裝機量（暫定：2025 年納入的存量 10.08 GW〔含中國 8.33 累計存量〕全數在 2031 年汰換，屬年份假設造成的人為結果，待 v0.2.1 處理；毛額與 R4 不受影響）")
+            if g == "nnv": base_ += f"*INDEX({NNV_},1,{k})"
+            elif g: base_ += f"*(1-INDEX({NNV_},1,{k}))*INDEX(Players!$D${MIXR[g]}:$M${MIXR[g]},1,{k})"
+            flow = "0" if y == 2023 else f"IF({y}-ROUND({lf},0)>=2023,{base_},0)"
+            if not RET_SPREAD:
+                return f"={flow}"
+            sh = f"((({y}-ROUND({lf},0))>={YR}-5)*(({y}-ROUND({lf},0))<={YR}))"
+            gw = "" if g is None else (f",{NNV_}" if g == "nnv" else f",1-{NNV_},Players!$D${MIXR[g]}:$M${MIXR[g]}")
+            return f"={flow}+SUMPRODUCT({SV},{sh}*1{gw})/6"
+        tmp = "" if RET_SPREAD else "（暫定）"
+        drow("ret", f"汰換 IT GW{tmp}（壽命 life_ret 年；Assumed 5–7）", "A", "", ret,
+             note=("V7：汰換＝t − 壽命 年的裝機量；新納入存量依 W2 攤到 6 個年份（v0.2.1；2025 年新納入 10.08 GW〔含中國 8.33〕於 2026–2031 各汰換 1／6）" if RET_SPREAD else "V7：汰換＝t − 壽命 年的裝機量"))
         for g in GENS:
             drow("ret_" + g, f"　其中 NVIDIA {GEN_NAME[g]}", "A", "", lambda y, g=g: ret(y, g=g))
         drow("ret_nnv", "　其中 非 NVIDIA", "A", "", lambda y: ret(y, g="nnv"))
         drow("retchk", "　檢查：世代合計 − 汰換（須＝0）", "A", "", lambda y: f"=SUM({YC[y]}{DR['ret_' + GENS[0]]}:{YC[y]}{DR['ret_nnv']})-{YC[y]}{DR['ret']}", fmt="0.000000")
-        drow("net", "年新增 IT GW（淨額＝毛額 − 汰換；不含新納入存量；2030–32 暫定）", "A", "", lambda y: f"={YC[y]}{NA}-{YC[y]}{DR['ret']}", fill=KEY,
-             note="V7：R4 比較讀淨額或毛額由 AI半導體 決定；毛額列名不變。2030–32（暫定：2025 年納入的存量 10.08 GW〔含中國 8.33 累計存量〕全數在 2031 年汰換，屬年份假設造成的人為結果，待 v0.2.1 處理；毛額與 R4 不受影響）")
+        drow("net", "年新增 IT GW（淨額＝毛額 − 汰換；不含新納入存量）", "A", "", lambda y: f"={YC[y]}{NA}-{YC[y]}{DR['ret']}", fill=KEY,
+             note="V7：R4 比較讀淨額或毛額由 AI半導體 決定；毛額列名不變" + ("" if RET_SPREAD else "（2030–32 暫定）"))
         drow("ret_lo", "　敏感度：汰換（壽命 life_ret_lo 年）", "A", "", lambda y: ret(y, "life_ret_lo"))
         drow("ret_hi", "　敏感度：汰換（壽命 life_ret_hi 年）", "A", "", lambda y: ret(y, "life_ret_hi"))
     for sfx, vlab, use_adj in VAR:
@@ -1348,6 +1366,8 @@ def main():
             # v0.2 V4（2027 診斷「現在可做」1–3）：七家與 xAI 直接用付款年 GW；其餘逐家以上線年鏡像式反推；NVIDIA GW 逐家（各家非 NVIDIA 占比；中國 NVIDIA 占比 0）
             CP.cell(r, 1, "　F2a. 逐家出貨年 GW 與 NVIDIA 出貨 GW（v0.2 V4）").font = BOLD; r += 1
             SH = {}; NVG = {}; ONL = {}
+            KNOWN = [q for q in PK if f"nnv_{q}" in INROW] + ["cn"]
+            RESTP = [q for q in PK if q not in KNOWN]
             for q in PK:
                 if q in XR:
                     on_ = lambda y, q=q: f"CapexGW!{YC[y]}{XR[q]['main']}"
@@ -1361,8 +1381,27 @@ def main():
                 ONL[q] = on_
                 nrow(px + "sh_" + q, f"　{PN[q]}：出貨年 GW（{how}）", "GW", {y: sh_(y) for y in ys}, fmt="0.000")
                 SH[q] = NVR[px + "sh_" + q]
-                nnvq = "1" if q == "cn" else f"Players!{{y}}{PR[q]['nnv']}"
-                nrow(px + "nv_" + q, f"　{PN[q]}：NVIDIA 出貨 GW＝出貨 ×（1 − 非 NVIDIA 占比）" + ("〔中國 NVIDIA 占比 0：NVIDIA 指引不含中國〕" if q == "cn" else ""), "GW",
+            if NNV_RES:
+                # v0.2.1 W1：殘差法（逐家值玩家維持；其餘共用殘差），權重＝本節出貨年 GW
+                cnv = lambda y: "(" + "+".join(f"Players!{YC[y]}{MIXR[g]}*TK_CapexIT_{g}" for g in GENS) + ")"
+                SN = lambda y: f"Players!{YC[y]}{NNVR}"
+                nrow(px + "gmkt", "　W1：市場非 NVIDIA 占比（GW 口徑）＝(s ÷ c_nn) ÷ (s ÷ c_nn ＋ (1 − s) ÷ c_nv)；s＝Players $ 占比，c_nn＝spend_nnv_hold × TK_CapexIT_VR200，c_nv＝NVIDIA 世代加權 TK_CapexIT", "%",
+                     {y: f"=({SN(y)}/(spend_nnv_hold*TK_CapexIT_VR200))/({SN(y)}/(spend_nnv_hold*TK_CapexIT_VR200)+(1-{SN(y)})/{cnv(y)})" for y in ys},
+                     "v0.2.1 W1：$ 占比換成 GW 占比（非 NVIDIA 每 GW IT capex 較低）", "0.0%")
+                kn = lambda y: "+".join(f"{YC[y]}{SH[q]}*" + ("1" if q == "cn" else f"nnv_{q}") for q in KNOWN)
+                tot = lambda y, qs: "(" + "+".join(f"{YC[y]}{SH[q]}" for q in qs) + ")"
+                nrow(px + "resraw", "　W1：殘差占比（未設下限）＝（市場 GW 占比 × Σ 出貨 − Σ 逐家值玩家非 NVIDIA 出貨）÷ 其餘玩家出貨", "%",
+                     {y: f"=IFERROR(({YC[y]}{NVR[px + 'gmkt']}*{tot(y, PK)}-({kn(y)}))/{tot(y, RESTP)},{YC[y]}{NVR[px + 'gmkt']})" for y in ys},
+                     "逐家值：In S5 覆寫（" + "、".join(PN[q] for q in KNOWN if q != "cn") + "）與中國＝1；其餘：" + "、".join(PN[q] for q in RESTP), "0.0%")
+                nrow(px + "res", "　W1：殘差占比（採用；< 0 時＝0，Checks W1-K1 WARN）", "%", {y: f"=MAX(0,{YC[y]}{NVR[px + 'resraw']})" for y in ys}, "", "0.0%")
+            for q in PK:
+                if q == "cn":
+                    nnvq = "1"; lab_ = "〔中國 NVIDIA 占比 0：NVIDIA 指引不含中國〕"
+                elif NNV_RES and q in RESTP:
+                    nnvq = f"{{y}}{NVR[px + 'res']}"; lab_ = "〔W1 殘差占比〕"
+                else:
+                    nnvq = f"Players!{{y}}{PR[q]['nnv']}"; lab_ = ""
+                nrow(px + "nv_" + q, f"　{PN[q]}：NVIDIA 出貨 GW＝出貨 ×（1 − 非 NVIDIA 占比）" + lab_, "GW",
                      {y: f"={YC[y]}{SH[q]}*(1-{nnvq.format(y=YC[y])})" for y in ys}, fmt="0.000")
                 NVG[q] = NVR[px + "nv_" + q]
             nrow(px + "onchk", "　檢查：Σ逐家上線年新增 − (1)（須＝0）", "GW", {y: "=" + "+".join(ONL[q](y) for q in PK) + f"-{YC[y]}{o}" for y in ys}, fmt="0.000000")
@@ -2172,8 +2211,8 @@ def main():
     for k_, lab_, dk in (("YE", "年底上線", "yeAD0"), ("Avg", "年平均", "avgAD0"), ("Add", "年新增（毛額，未扣汰換）", "naAD0")):
         irow(f"WIF_MktGW_{k_}", f"{lab_}（主路徑；{BASE_LAB}）", "Deploy", DR[dk])
     if RETIRE:
-        irow("WIF_MktGW_Retire", f"汰換 IT GW（暫定；主路徑；壽命 life_ret；v0.2 V7；2031 為年份假設的人為結果，待 v0.2.1）", "Deploy", DR["ret"])
-        irow("WIF_MktGW_AddNet", f"年新增 IT GW 淨額＝毛額 − 汰換（主路徑；v0.2 V7；2030–32 暫定）", "Deploy", DR["net"])
+        irow("WIF_MktGW_Retire", f"汰換 IT GW（主路徑；壽命 life_ret；v0.2 V7；v0.2.1 W2 新納入存量攤到 6 個年份）", "Deploy", DR["ret"])
+        irow("WIF_MktGW_AddNet", f"年新增 IT GW 淨額＝毛額 − 汰換（主路徑；v0.2 V7）", "Deploy", DR["net"])
     for sfx, nsfx, vlab in (("", "", "主路徑"), ("_SO", "_SiteOnly", "SiteOnly：只有 甲")):
         IF.cell(r, 1, f"A{nsfx}. 市場總 GW（{vlab}；基準；舊名 *_A_D0_*：A_D0 為舊名，v0.3 刪）").font = BOLD; r += 1
         s, D = "A", "D0"
@@ -2546,6 +2585,16 @@ def main():
         CK.cell(r, 1, "R-K1"); CK.cell(r, 2, "汰換：世代別合計＝汰換；淨額＝毛額 − 汰換；汰換 ≥ 0（2024–2032；v0.2 V7）")
         CK.cell(r, 3, f"=SUMPRODUCT(ABS(Deploy!E{DR['retchk']}:M{DR['retchk']}))+SUMPRODUCT(ABS(Deploy!E{DR['net']}:M{DR['net']}-Deploy!E{DR['naAD0']}:M{DR['naAD0']}+Deploy!E{DR['ret']}:M{DR['ret']}))+COUNTIF(Deploy!E{DR['ret']}:M{DR['ret']},\"<0\")")
         CK.cell(r, 6, f'=IF(C{r}<1E-6,"OK","ERROR")'); CK.cell(r, 7, "恆等式（汰換）"); r += 1
+    if NNV_RES:
+        CK.cell(r, 1, "W1-K1"); CK.cell(r, 2, "NVIDIA 對帳點：非 NVIDIA 殘差占比 < 0（設為 0）的年數（2025–2027；v0.2.1 W1）")
+        CK.cell(r, 3, f'=COUNTIF(Compare!E{NVR["wresraw"]}:G{NVR["wresraw"]},"<0")'); CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "驗證（W1）"); r += 1
+        CK.cell(r, 1, "W1-K2"); CK.cell(r, 2, "NVIDIA 對帳點：各年有效非 NVIDIA 占比 (3)＝市場 GW 占比（殘差未觸下限的年份；容差 1E-6）")
+        CK.cell(r, 3, "=" + "+".join(f'IF(Compare!{YC[y]}{NVR["wresraw"]}<0,0,ABS(Compare!{YC[y]}{NVR["w3"]}-Compare!{YC[y]}{NVR["wgmkt"]}))' for y in RY))
+        CK.cell(r, 6, f'=IF(C{r}<1E-6,"OK","ERROR")'); CK.cell(r, 7, "恆等式（W1）"); r += 1
+    if RETIRE and RET_SPREAD:
+        CK.cell(r, 1, "R-K2"); CK.cell(r, 2, "汰換總量守恆：Σ 2024–2032 汰換（壽命 life_ret）＝ Σ 年份量 × 已到期 ＋ 新納入存量攤提已到期部分（v0.2.1 W2；以全期加總核對：Σ_t ret_t ≤ Σ 新增＋存量）")
+        CK.cell(r, 3, f"=SUM(Deploy!D{DR['ret']}:M{DR['ret']})-SUM(Deploy!D{DR['vint']}:M{DR['vint']})-SUM(Deploy!D{DR['stk']}:M{DR['stk']})")
+        CK.cell(r, 6, f'=IF(C{r}<=1E-9,"OK","ERROR")'); CK.cell(r, 7, "驗證（W2）"); r += 1
     CK.cell(r, 1, "D-K1"); CK.cell(r, 2, "Delay：全市場＝11 家＋其餘（公告上線 GW 與已延遲 GW）")
     CK.cell(r, 3, f"=ABS(Delay!C{DLR['Mkt']}-SUM(Delay!C{DLR[GP[0]]}:C{DLR['Rest']}))+ABS(Delay!D{DLR['Mkt']}-SUM(Delay!D{DLR[GP[0]]}:D{DLR['Rest']}))")
     CK.cell(r, 6, f'=IF(C{r}<1E-9,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Delay）"); r += 1
@@ -2657,6 +2706,14 @@ def main():
         {"id": "GL01-68", "cat": "判斷", "item": "K4 乙：SiteOnly 2030–2032（V6）", "decision": "SiteOnly 2030–2032 年新增改直接加總站點證據（Pipeline 基準），不再用前年 × g；主路徑 2030–32 仍用 g 收斂規則。覆蓋率 2030–2032 因此＝站點證據 ÷ 主路徑", "date": "2026-11-04", "quote": "Andy 11-02 18:36（K4 乙）；" + WO2 + " V6", "status": "已定（Andy）"},
         {"id": "GL01-69", "cat": "工程", "item": "汰換列（V7）", "decision": "Deploy 主路徑新增汰換 IT GW＝t − life_ret 年的裝機量（年新增毛額＋新納入存量；2023 年底存量視為 2023 年裝機），世代別依該年 Players 世代組合與非 NVIDIA 占比；淨新增＝毛額 − 汰換。既有毛額列不改值、列名不變；淨額列名刻意不用『年新增 IT GW（淨，不含新納入存量）』，避免 Siliconomics r4_bridge 自動改讀淨額（讀淨額或毛額由 AI半導體 決定）。WIF_MktGW_Retire_<yyyy>、WIF_MktGW_AddNet_<yyyy>", "date": "2026-11-04", "quote": WO2 + " V7", "status": "預設、可撤回"},
         {"id": "GL01-70", "cat": "工程", "item": "Tokenomics 快照 v21.9（V8）", "decision": "Tokenomics master 最新為 v21.9（20261103，commit 7276259）；以 tools/tokenomics/import_tokenomics.py 抽取到 wattonomics/data/tokenomics_snapshot_v21.9.json（名稱清單＝Siliconomics 清單＋IF_FacilityGW；Siliconomics 仍為 v21.7，不改其檔）。與 v21.7 只差 IF_NonNV_Out_TPU、IF_NonNV_Out_Trn（本庫未用），WIF_ 數值 0 變動；IF_FacilityGW 已在快照（Checks K8 改 OK，Requests R5 結案）", "date": "2026-11-04", "quote": WO2 + " V8", "status": "執行"},
+    ]
+    WO21 = "工作單 20261104 v0.2.1"
+    Q1252 = "Andy 11-04 12:52「我現在人在外面……所有需要我決定的，就先依你的建議去處理，然後你就依照還要做的事情的優先順序繼續做下去。」"
+    decisions += [
+        {"id": "GL01-71", "cat": "判斷", "item": "非 NVIDIA 占比殘差法（W1）", "decision": "NVIDIA 對帳點（Compare F2a）：有逐家值的玩家維持（In S5 覆寫：Google 0.753、Amazon 0.67、CoreWeave、Nebius、WhiteFiber、xAI 0；中國＝1），其餘玩家共用殘差＝（市場非 NVIDIA GW 占比 × Σ 出貨 GW − Σ 逐家值玩家非 NVIDIA 出貨 GW）÷ 其餘玩家出貨 GW；殘差 < 0 時＝0 並 WARN（W1-K1）。市場 0.27 原為 $ 占比（Siliconomics Units × 每顆 IT capex），先換成 GW 占比＝(s ÷ c_nn) ÷ (s ÷ c_nn ＋ (1 − s) ÷ c_nv)，c_nn＝spend_nnv_hold × VR200 IT capex、c_nv＝NVIDIA 世代加權 IT capex。只用於對帳點；Players 與 CapexGW 的每 GW 成本仍用逐家值或市場 $ 占比（基準 GW 不變）。AI半導體 若提供逐買方份額，改讀其數字", "date": "2026-11-04", "quote": Q1252 + "；" + WO21 + " W1", "status": "預設、可撤回"},
+        {"id": "GL01-72", "cat": "判斷", "item": "汰換年份攤提（W2）", "decision": "新納入存量（2023 年底存量 0.63、2024 年 3.96、2025 年 10.08〔含中國 8.33〕）平均攤到認列年與前 5 年共 6 個年份，汰換於認列年 − 5 ＋ 壽命 … 認列年 ＋ 壽命 各 1／6（2025 年者 2026–2031 各 1.68）；站點證據與 In 無年份資料。年新增毛額不受影響；2031–32『暫定』標註移除。2032 淨新增仍為負（2026 年裝機 19.69 到期，而 2032 毛額依 g_lt 收斂為 18.25），屬實際結果", "date": "2026-11-04", "quote": Q1252 + "；" + WO21 + " W2", "status": "預設、可撤回"},
+        {"id": "GL01-73", "cat": "判斷", "item": "Oracle 三園區改 Epoch IT 容量（W3）", "decision": "Port Washington 902、Saline 988（含第 1 棟 1／3）、Jupiter 1,750 MW IT（Epoch，[Analogy]：第三方以衛星與許可推估）；上線年月與 18 個月等量分期沿用（Epoch 無棟別 MW）；原公告值保留在 In 說明作區間另一端。只改 SiteOnly 與覆蓋率，主路徑（甲2）不變", "date": "2026-11-04", "quote": Q1252 + "；" + WO21 + " W3", "status": "預設、可撤回"},
+        {"id": "GL01-74", "cat": "工程", "item": "Anthropic 取數 v0.1.8（W4）", "decision": "tools/import_gap_models.py MODEL_OVERRIDE 改 anthropic/dist/20261103_Anthropic收支模型_v0_1_8.xlsx；新增 --only（只重取指定玩家，其餘沿用前一種子）→ builder/seed/gap_models_v0.2.1.json；build.py 新增 --refresh-y9-only ant。營業現金流 2026–2030＝7.034／−42.289／−49.563／−5.631／42.833（F07＋F03，F03 皆 0）", "date": "2026-11-04", "quote": WO21 + " W4", "status": "執行"},
     ]
     for d in decisions:
         if d["id"] == "GL01-21":
@@ -2796,6 +2853,7 @@ def main():
         ("v0.2（2026-11-04）：承租玩家只算 IT＋對帳點修正＋刪停用情境＋K4 乙＋汰換列（工作單 20261104_Wattonomics_v0.2.md；含 V1b）——V1／V1b Oracle、CoreWeave、Nebius 的甲2 與 Gap 每 GW 成本＝IT＋（1 − 承租 ×（1 − 融資租賃占比））× 廠房，出租方廠房另列、融資租賃為來源③並加回本金（Andy 11-04 08:06、08:21）；"
          "V2 Oracle AI 占比讀個股模型拆分；V3 Oracle 2028 園區分期、Shackelford 依 Epoch 1,400 MW IT；V4 NVIDIA 對帳點改付款年 GW、逐家非 NVIDIA 占比（中國 0）、2026 校準與所需內容成長；V5 需求 B、C 與延遲 D1、D2 全部刪除（新別名 WIF_MktGW_<YE|Avg|Add>_<yyyy>）；"
          "V6 SiteOnly 2030–32 直接加總站點證據；V7 汰換列（壽命 6 年）與淨新增；V8 Tokenomics 快照 v21.9。Decisions GL01-62 至 GL01-70，GL01-21 改為 Andy 決定。報告 docs/verify/20261104_v0.2_build.md。", True),
+        ("v0.2.1（2026-11-04）：W1 NVIDIA 對帳點非 NVIDIA 占比改殘差法（$ 占比換 GW 占比；逐家值維持）；W2 新納入存量汰換攤到 6 個年份（移除暫定）；W3 Oracle Port Washington、Saline、Jupiter 改 Epoch IT 容量（902／988／1,750）；W4 Anthropic 取數 v0.1.8；W5 TK 快照已是 v21.9。基準 GW 不變。Decisions GL01-71 至 GL01-74。報告 docs/verify/20261104_v0.2.1_build.md。", True),
         ("顏色：藍字＝輸入；黑字＝公式；綠字＝跨頁或外部鏡像；淡黃底＝關鍵輸出；亮黃底＝待證據或預設待決。", False),
         ("Excel 優先：要改輸入，直接改 In 頁藍字；builder 重建時讀回（--base）。公式頁不要手改。下游只讀 Interface 的 WIF_ 名稱（經快照）。", False),
         ("版本命名：YYYYMMDD_Wattonomics_vX.Y.xlsx；model/CURRENT 記錄現行檔名；data/CURRENT_SNAPSHOT 指向現行快照。", False),
