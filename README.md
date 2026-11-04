@@ -7,14 +7,14 @@
 | `nebius/` | Nebius（NBIS） | `YinchenChang/crwv-model` @ `01b13ad`（v4.5） | v0.1 |
 | `coreweave/` | CoreWeave（CRWV） | `YinchenChang/crwv-model` @ `01b13ad`（v4.5；2026-10-07 起在此維護，改接 Tokenomics 中，見 `coreweave/docs/workorders/`） | 改造中 |
 | `openai/` | OpenAI（未上市） | `YinchenChang/openai-model` @ `13c16f0`（v0.6-P1；原 repo 停用，歷史留在原處） | 建置中（v0.6） |
-| `oracle/` | Oracle（ORCL） | `nebius/` @ `642d144`（CRWV v4.5＋Nebius v0.1b）；v0.4 起命題＋官方分部 | v0.4.1（成品 `oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx`／`.html`） |
+| `oracle/` | Oracle（ORCL） | `nebius/` @ `642d144`（CRWV v4.5＋Nebius v0.1b）；v0.4 起命題＋官方分部 | v0.4.3（Tokenomics 快照換 v21.9，目標價不變；成品 `oracle/dist/20261104_Oracle個股模型_v0.4.3.xlsx`／`.html`） |
 | `minimax/` | MiniMax（00100.HK） | 比照 `openai/` 結構（MW 主軸、P×Q 回本比值、TK v19.0 官方快照）；獨立的 Python→Excel 產生器 | v0.2 |
 | `zhipu/` | 智譜（智譜華章，02513.HK） | `openai/` v0.6（`claude/openai-s6-release` @ `e91df57`）的架構；骨架經 Anthropic A0 | v0.1.2（官方分部對帳） |
 | `anthropic/` | Anthropic（未上市） | `openai/`（v0.6，`claude/openai-s6-release` @ `e91df57`）的架構與工具鏈 | v0.1.7（正式 S-1 套用、自建資本支出 GW 法、TK v21.7；成品：`anthropic/dist/20261031_Anthropic收支模型_v0_1_7.html`／`.xlsx`） |
 | `whitefiber/` | WhiteFiber（WYFI） | `oracle/` @ `e4540c3`（Oracle v0.2 分支） | v0.1 |
-| `amazon/` | Amazon（AMZN） | 個股模型（命題＋官方分部 → 損益表；獨立 Python→Excel 產生器 `amazon/build_amazon.py`；v0.2.2 舊引擎在 `amazon/legacy_v0.2/`） | v0.3.1（2026Q3 季度滾動；Tokenomics v21.7；In 頁情境驅動對照與敏感度覆蓋；成品 `amazon/dist/20261031_Amazon個股模型_v0.3.1.xlsx`／`.html`） |
-| `alphabet/` | Alphabet（GOOGL） | 個股模型（命題＋官方分部 → 損益表；獨立 Python→Excel 產生器 `alphabet/build_alphabet.py`；v0.2.2 舊引擎在 `alphabet/legacy_v0.2/`） | v0.3.2（2026Q3 季度滾動；Tokenomics v21.7；v0.3.2 只加 In 頁情境驅動對照；成品 `alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx`／`.html`） |
-| `microsoft/` | Microsoft（MSFT） | v0.3 起：命題＋官方營收分部架構的獨立 Python→Excel 產生器（`microsoft/build_microsoft.py`；舊 MAG 共用引擎在 `microsoft/legacy_v0.2/`） | v0.3.2（FY27Q1 滾入；v0.3.2 只加 In 頁情境驅動對照；成品：`microsoft/dist/20261029_Microsoft個股模型_v0.3.2.html`／`.xlsx`；Tokenomics v21.7） |
+| `amazon/` | Amazon（AMZN） | 個股模型（命題＋官方分部 → 損益表；獨立 Python→Excel 產生器 `amazon/build_amazon.py`；v0.2.2 舊引擎在 `amazon/legacy_v0.2/`） | v0.3.3（2026Q3 10-Q 補入＋Tokenomics v21.9 快照；加權目標價 217.69、中立；成品 `amazon/dist/20261104_Amazon個股模型_v0.3.3.xlsx`／`.html`） |
+| `alphabet/` | Alphabet（GOOGL） | 個股模型（命題＋官方分部 → 損益表；獨立 Python→Excel 產生器 `alphabet/build_alphabet.py`；v0.2.2 舊引擎在 `alphabet/legacy_v0.2/`） | v0.3.5（2026Q3 10-Q 補入＋Tokenomics v21.9 快照；加權目標價 257.76、中立；成品 `alphabet/dist/20261104_Alphabet個股模型_v0.3.5.xlsx`／`.html`） |
+| `microsoft/` | Microsoft（MSFT） | v0.3 起：命題＋官方營收分部架構的獨立 Python→Excel 產生器（`microsoft/build_microsoft.py`；舊 MAG 共用引擎在 `microsoft/legacy_v0.2/`） | v0.3.4（Tokenomics 快照換 v21.9，目標價不變；成品 `microsoft/dist/20261104_Microsoft個股模型_v0.3.4.xlsx`／`.html`） |
 | `siliconomics/` | **AI 半導體產業基準庫 Siliconomics**（比照 Tokenomics）：行業變數唯一值（加速器顆數、HBM、記憶體價格路徑；其餘子產業分段併入）、Tokenomics 鏡像、跨模型衝突登錄；下游經 `siliconomics/data/` 快照取數（`markets/memory/market.py` 已改讀）；見 `siliconomics/README.md` | 新建（AI 半導體 Project） | v0.1 |
 | `markets/` | 市場層（AI 半導體）：每 GW 晶片內容橋接表等，見 `markets/README.md` | 新建（AI 半導體 Project） | chip_bridge v0.2.1、network v0.2.3、equipment v0.1.3、overview v0.6（Tokenomics v20.1；memory v0.4） |
 | `skhynix/` | SK 海力士（000660.KS） | 記憶體樣板 `tools/memory_model`（AI 半導體 Project） | v0.4.1（HBM 位元隨情境；Val 頁含十年倍數與規則值） |
