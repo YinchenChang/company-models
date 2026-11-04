@@ -78,7 +78,7 @@ asof: 2026-11-04
 
 | 客戶 | 關係 | 依據 | 標記 |
 |---|---|---|---|
-| Anthropic | 據報即 Customer B；租用 Colossus 1 與 Colossus II 算力 | Bloomberg 引知情人士；Anthropic 未回應 | [外部・未經本專案檢核：The Next Web 轉述 Bloomberg，2026-10-29] |
+| Anthropic | 據報即 Customer B；租用 SpaceX 算力 | Bloomberg 引知情人士；Anthropic 拒絕評論 | [外部・未經本專案檢核：The Next Web 轉述 Bloomberg，2026-10-29] |
 | Anthropic（合約條件） | 月費 12.5 億美元至 2029-05；正式 S-1 列 SpaceXAI 合約上限 1,205 億美元 | 本專案 Anthropic 模型來源頁 | [本專案：20261103_Anthropic收支模型_v0_1_8.xlsx SRC_ANT!E231、SRC_ANT!E457] |
 | Google（Alphabet） | 租用約 11 萬顆 NVIDIA GPU，每月約 9.2 億美元，2026-10 至 2029-06 | SpaceX FWP〈Cloud Service Agreement with Google LLC〉 | [本專案：alphabet_facts_20261008.json rent.spacex] |
 | Reflection AI | 租用 Colossus 2 的 GB300 算力，合約至 2029 | 媒體報導 | [外部・未經本專案檢核：Drive Tesla Canada，2026-06-22] |
@@ -114,8 +114,8 @@ asof: 2026-11-04
 ## 需要觀察的事項
 - 每 GW 年營收對持有成本（S2 核心問題）｜2026Q3 k0 1.87；情境 B 假設 FY2030 收斂到 1.25，FY2028 比值 A／B／C 為 1.73／1.56／1.43 [本專案：20261104_SpaceX個股模型_v0.2.2.xlsx Thesis!C9、In!E101、Val!B24、Val!C24、Val!D24]；若 k 不收斂，加權目標價 67.87 美元 [本專案：20261104_SpaceX個股模型_v0.2.2.xlsx Sens!D71]｜2026Q4 財報（日期未公告）
 - 營收指引與模型的差距｜2027Q1 指引中值 350 億美元，模型情境 B 為 208.3 億，低於下緣；若以 k0 校準到指引（k0 4.82），加權目標價 48.76 美元 [本專案：20261104_SpaceX個股模型_v0.2.2.xlsx Recon!B51、Recon!C52、Sens!D11]｜2026Q4 財報與 2027Q1 指引
-- 收支關卡與資金｜FY2026–FY2030 自由現金流合計 A／B／C 為 −176.6／−248.5／−300.9 億美元，情境 B 五年新增舉債 138.2 億，IPO 現金在 FY2027 用盡 [本專案：20261104_SpaceX個股模型_v0.2.2.xlsx CF!B6、CF!C6、CF!D6、CF!C8；spacex/README.md 重點觀察]｜下一次發債或增資
-- 擴產步調｜模型名目算力 2026 年底 2.75 GW、FY2027 年底 5.98 GW；管理層稱 2027 年底約 13 GW，照此路徑加權目標價 46.22 美元、FY2027 新增舉債 316.6 億 [本專案：20261104_SpaceX個股模型_v0.2.2.xlsx Thesis!F26、Thesis!H26、In!E66、Sens!D9、Sens!J9]｜2026 年底名目算力實績
+- 收支關卡與資金｜FY2026–FY2030 自由現金流合計 A／B／C 為 −1,766.3／−2,485.2／−3,008.6 億美元，情境 B 五年新增舉債 1,382.3 億美元，IPO 現金在 FY2027 用盡 [本專案：20261104_SpaceX個股模型_v0.2.2.xlsx CF!B6、CF!C6、CF!D6、CF!C8；spacex/README.md 重點觀察]｜下一次發債或增資
+- 擴產步調｜模型名目算力 2026 年底 2.75 GW、FY2027 年底 5.98 GW；管理層稱 2027 年底約 13 GW，照此路徑加權目標價 46.22 美元、FY2027 新增舉債 3,165.9 億美元 [本專案：20261104_SpaceX個股模型_v0.2.2.xlsx Thesis!F26、Thesis!H26、In!E66、Sens!D9、Sens!J9]｜2026 年底名目算力實績
 - 客戶集中與合約終止｜Customer B 占 Q3 營收 34.5%，模型對外出租占比 72%（區間 60%–85%）[本專案：spacex_facts_2026q3.json cust.B.pct.2026q3；20261104_SpaceX個股模型_v0.2.2.xlsx In!E67、In!D67、In!F67]｜2026Q4 10-K 客戶占比
 - 模型與現價差距｜現價 143.89 美元（2026-10-29），加權目標價 34.79 美元、上檔空間 −75.8%，模型評級「強力放空」；市場共識目標價 244.97 美元 [本專案：20261104_SpaceX個股模型_v0.2.2.xlsx Val!B9、Val!B8、Val!B11、Val!B14、Val!B10]｜Tesla 合併案進展
 
