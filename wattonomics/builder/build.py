@@ -401,7 +401,7 @@ def main():
         scalar(dict(key=k_, label=lab_, unit=("年" if k_ == "lease_term" else "%"), lo=lo_, base=b_, hi=hi_, tag=tag_, src=src_, note=note_))
     sec("S10. v0.2 汰換（V7；Deploy 汰換列與淨新增列）")
     scalar(dict(key="life_ret", label="AI 資料中心 IT 設備壽命（汰換年限；取整數年）", unit="年", lo=5, base=6, hi=7, tag="Assumed", src="SRC_GL_339",
-                note="工作單 20261104 V7：6 年〔TK 折舊年限〕，Assumed 5–7。汰換 GW_t＝t − 壽命 年的裝機（年新增毛額＋新納入存量；2023 年底存量視為 2023 年裝機）；世代別依該年 Players 世代組合與非 NVIDIA 占比"))
+                note="工作單 20261104 V7：6 年〔TK 折舊年限〕，Assumed 5–7。汰換 GW_t＝t − 壽命 年的裝機：年新增毛額（2024 起）＋新納入存量（2023 年底存量與 2024–2025 新納入）平均攤到認列年與前 5 年共 6 個年份（v0.2.1 W2）；世代別依裝機年份的 Players 世代組合與非 NVIDIA 占比，早於 2023 歸 H100"))
     sec("S11. v0.2 NVIDIA 對帳點備忘（V4；只作備忘，不入基準）")
     scalar(dict(key="nvc_rev_gb", label="每 IT GW NVIDIA 內容：營收口徑 GB300（GPU 模組全價；不含 scale-out 中 NVIDIA 部分）", unit="US$B/GW", base=24.88, tag="Derived", src="SRC_GL_338",
                 note="2027 時差來源診斷（20261103）：chip_bridge Rack × 每 GW 架數；營收口徑仍不含 scale-out 中 NVIDIA 部分，偏低"))
@@ -1067,18 +1067,26 @@ def main():
             flow = "0" if y == 2023 else f"IF({y}-ROUND({lf},0)>=2023,{base_},0)"
             if not RET_SPREAD:
                 return f"={flow}"
-            sh = f"((({y}-ROUND({lf},0))>={YR}-5)*(({y}-ROUND({lf},0))<={YR}))"
-            gw = "" if g is None else (f",{NNV_}" if g == "nnv" else f",1-{NNV_},Players!$D${MIXR[g]}:$M${MIXR[g]}")
-            return f"={flow}+SUMPRODUCT({SV},{sh}*1{gw})/6"
+            v_ = f"({y}-ROUND({lf},0))"
+            sh = f"(({v_}>={YR}-5)*({v_}<={YR}))"
+            # 獨立核對（v0.2.1）第 3 項：攤到前幾年的存量用「實際年份 v」的世代組合；v 早於 2023（Players 首年）一律歸最舊世代 H100、非 NVIDIA 占比用 2023 欄
+            kv = f"MAX(1,{v_}-2022)"
+            nnv_v = f"INDEX({NNV_},1,{kv})"
+            if g is None: mult = "1"
+            elif g == "nnv": mult = nnv_v
+            else:
+                mix_v = f"IF({v_}<2023,{1 if g == GENS[0] else 0},INDEX(Players!$D${MIXR[g]}:$M${MIXR[g]},1,{kv}))"
+                mult = f"(1-{nnv_v})*{mix_v}"
+            return f"={flow}+SUMPRODUCT({SV},{sh}*1)/6*{mult}"
         tmp = "" if RET_SPREAD else "（暫定）"
         drow("ret", f"汰換 IT GW{tmp}（壽命 life_ret 年；Assumed 5–7）", "A", "", ret,
-             note=("V7：汰換＝t − 壽命 年的裝機量；新納入存量依 W2 攤到 6 個年份（v0.2.1；2025 年新納入 10.08 GW〔含中國 8.33〕於 2026–2031 各汰換 1／6）" if RET_SPREAD else "V7：汰換＝t − 壽命 年的裝機量"))
+             note=("V7：汰換＝t − 壽命 年的裝機量；新納入存量依 W2 攤到 6 個年份（v0.2.1；2025 年新納入 10.08 GW〔含中國 8.33〕於 2026–2031 各汰換 1／6）；世代別用實際年份（裝機年 v）的 Players 世代組合，v 早於 2023 歸 H100（最舊世代）" if RET_SPREAD else "V7：汰換＝t − 壽命 年的裝機量"))
         for g in GENS:
             drow("ret_" + g, f"　其中 NVIDIA {GEN_NAME[g]}", "A", "", lambda y, g=g: ret(y, g=g))
         drow("ret_nnv", "　其中 非 NVIDIA", "A", "", lambda y: ret(y, g="nnv"))
         drow("retchk", "　檢查：世代合計 − 汰換（須＝0）", "A", "", lambda y: f"=SUM({YC[y]}{DR['ret_' + GENS[0]]}:{YC[y]}{DR['ret_nnv']})-{YC[y]}{DR['ret']}", fmt="0.000000")
         drow("net", "年新增 IT GW（淨額＝毛額 − 汰換；不含新納入存量）", "A", "", lambda y: f"={YC[y]}{NA}-{YC[y]}{DR['ret']}", fill=KEY,
-             note="V7：R4 比較讀淨額或毛額由 AI半導體 決定；毛額列名不變" + ("" if RET_SPREAD else "（2030–32 暫定）"))
+             note="V7：R4 比較讀淨額或毛額由 AI半導體 決定；毛額列名不變" + ("" if RET_SPREAD else "（2030–32 暫定）") + "。2032 年毛額 18.25 偏低是 g_lt 收斂假設（2030–32 年增率線性收斂到 g_lt）造成，不是證據；2032 淨新增為負由此而來")
         drow("ret_lo", "　敏感度：汰換（壽命 life_ret_lo 年）", "A", "", lambda y: ret(y, "life_ret_lo"))
         drow("ret_hi", "　敏感度：汰換（壽命 life_ret_hi 年）", "A", "", lambda y: ret(y, "life_ret_hi"))
     for sfx, vlab, use_adj in VAR:
@@ -1431,7 +1439,7 @@ def main():
         nrow(px + "7lo", "　(7) 低", "US$B", {y: actlo[y] for y in ys}, "", "0.0")
         nrow(px + "7hi", "　(7) 高", "US$B", {y: acthi[y] for y in ys}, "", "0.0")
         nrow(px + "8", "(8) 比值＝(6)÷(7)" + ("（未校準，不作判讀）" if px == "w" and NV_V4 else ""), "x", {y: f"={YC[y]}{NVR[px + '6']}/{YC[y]}{NVR[px + '7']}" for y in ys},
-             ("未校準比值不作判讀：非 NVIDIA 占比預設 0.27（市場 $ 占比）已含 TPU／Trainium，又疊加 Google、Amazon 逐家值，2027 有效占比 0.441，水準偏高；判讀看 (13) 成長比較（獨立核對 2026-11-04）" if px == "w" and NV_V4 else ""), "0.000")
+             (("未校準比值不作判讀（水準受非 NVIDIA 占比口徑影響）；v0.2.1 W1 殘差法：逐家值（Google、Amazon、中國等）維持，其餘玩家共用殘差，2027 有效占比 0.364（＝市場 GW 占比）；2025、2026 殘差為負（−28.2%、−10.7%），已設 0，這兩年有效占比高於市場值；判讀看 (13) 成長比較" if NNV_RES else "未校準比值不作判讀：非 NVIDIA 占比預設 0.27（市場 $ 占比）已含 TPU／Trainium，又疊加 Google、Amazon 逐家值，2027 有效占比 0.441，水準偏高；判讀看 (13) 成長比較（獨立核對 2026-11-04）") if px == "w" and NV_V4 else ""), "0.000")
         nrow(px + "8s", "　判定（tolband）", "—", {y: f'=IF(ABS({YC[y]}{NVR[px + "8"]}-1)<=tolband,"一致（帶內）","帶外：待診斷")' for y in ys},
              "三層對帳規則：帶內＝一致；帶外＝待診斷（各層先用自己的數字，上游先更新再對帳；不自動調參數）", "General")
         nrow(px + "8lo", "　比值（以 (7) 高）", "x", {y: f"={YC[y]}{NVR[px + '6']}/{YC[y]}{NVR[px + '7hi']}" for y in ys}, "", "0.000")
@@ -1445,7 +1453,7 @@ def main():
                  "水準誤差（混合口徑內容偏低、NVIDIA GW 口徑）同時影響兩年；校準後只比成長", "0.000")
             nrow("wreqg", "(11) 所需內容成長＝2027 (9) ÷ 2026 (9)", "x", {2027: f"={YC[2027]}{NVR['w9']}/{YC[2026]}{NVR['w9']}"}, "", "0.000")
             nrow("wcg", "(12) 模型內容成長＝2027 (5) ÷ 2026 (5)", "x", {2027: f"={YC[2027]}{NVR['w5']}/{YC[2026]}{NVR['w5']}"},
-                 "1.000 來自佔位值（F1 VR200、Rubin Ultra＝GB300 值，D31、D32＝D30），不是估計；改用備忘列內容（營收口徑 1.039、chip_bridge 1.037–1.096、沿用 GB300 占比 1.151），校準比值為 0.78–0.86，仍在帶外（獨立核對 2026-11-04）", "0.000")
+                 "1.000 來自佔位值（F1 VR200、Rubin Ultra＝GB300 值，D31、D32＝D30），不是估計；改用備忘列內容（營收口徑 1.039、chip_bridge 1.037–1.096、沿用 GB300 占比 1.151），校準比值為 0.74–0.82（v0.2.1；v0.2 為 0.78–0.86），仍在帶外", "0.000")
             nrow("wcalr", "(13) 校準後 2027 比值＝(12) ÷ (11)＝2027 (6) × λ ÷ 2027 (7)", "x", {2027: f"={YC[2027]}{NVR['wcg']}/{YC[2027]}{NVR['wreqg']}"}, "", "0.000")
             nrow("wcals", "　判定（以成長比較；tolband）", "—", {2027: f'=IF(ABS({YC[2027]}{NVR["wcalr"]}-1)<=tolband,"一致（帶內）","帶外：待診斷")'},
                  "v0.2 V4：判定改看成長（2027 診斷）；只並列、不校準基準", "General")
@@ -2711,7 +2719,7 @@ def main():
     Q1252 = "Andy 11-04 12:52「我現在人在外面……所有需要我決定的，就先依你的建議去處理，然後你就依照還要做的事情的優先順序繼續做下去。」"
     decisions += [
         {"id": "GL01-71", "cat": "判斷", "item": "非 NVIDIA 占比殘差法（W1）", "decision": "NVIDIA 對帳點（Compare F2a）：有逐家值的玩家維持（In S5 覆寫：Google 0.753、Amazon 0.67、CoreWeave、Nebius、WhiteFiber、xAI 0；中國＝1），其餘玩家共用殘差＝（市場非 NVIDIA GW 占比 × Σ 出貨 GW − Σ 逐家值玩家非 NVIDIA 出貨 GW）÷ 其餘玩家出貨 GW；殘差 < 0 時＝0 並 WARN（W1-K1）。市場 0.27 原為 $ 占比（Siliconomics Units × 每顆 IT capex），先換成 GW 占比＝(s ÷ c_nn) ÷ (s ÷ c_nn ＋ (1 − s) ÷ c_nv)，c_nn＝spend_nnv_hold × VR200 IT capex、c_nv＝NVIDIA 世代加權 IT capex。只用於對帳點；Players 與 CapexGW 的每 GW 成本仍用逐家值或市場 $ 占比（基準 GW 不變）。AI半導體 若提供逐買方份額，改讀其數字", "date": "2026-11-04", "quote": Q1252 + "；" + WO21 + " W1", "status": "預設、可撤回"},
-        {"id": "GL01-72", "cat": "判斷", "item": "汰換年份攤提（W2）", "decision": "新納入存量（2023 年底存量 0.63、2024 年 3.96、2025 年 10.08〔含中國 8.33〕）平均攤到認列年與前 5 年共 6 個年份，汰換於認列年 − 5 ＋ 壽命 … 認列年 ＋ 壽命 各 1／6（2025 年者 2026–2031 各 1.68）；站點證據與 In 無年份資料。年新增毛額不受影響；2031–32『暫定』標註移除。2032 淨新增仍為負（2026 年裝機 19.69 到期，而 2032 毛額依 g_lt 收斂為 18.25），屬實際結果", "date": "2026-11-04", "quote": Q1252 + "；" + WO21 + " W2", "status": "預設、可撤回"},
+        {"id": "GL01-72", "cat": "判斷", "item": "汰換年份攤提（W2）", "decision": "新納入存量（2023 年底存量 0.63、2024 年 3.96、2025 年 10.08〔含中國 8.33〕）平均攤到認列年與前 5 年共 6 個年份，汰換於認列年 − 5 ＋ 壽命 … 認列年 ＋ 壽命 各 1／6（2025 年者 2026–2031 各 1.68）；站點證據與 In 無年份資料。年新增毛額不受影響；2031–32『暫定』標註移除。2032 淨新增仍為負（2026 年裝機 19.69 到期，而 2032 毛額依 g_lt 收斂為 18.25；18.25 是 g_lt 收斂假設造成，不是證據）。已知限制：2023、2024 存量也攤到前 5 年，使汰換偏早（實際年份可能更分散或更晚）。世代別用實際年份組合，早於 2023 歸 H100（v0.2.1 獨立核對第 3 項）", "date": "2026-11-04", "quote": Q1252 + "；" + WO21 + " W2", "status": "預設、可撤回"},
         {"id": "GL01-73", "cat": "判斷", "item": "Oracle 三園區改 Epoch IT 容量（W3）", "decision": "Port Washington 902、Saline 988（含第 1 棟 1／3）、Jupiter 1,750 MW IT（Epoch，[Analogy]：第三方以衛星與許可推估）；上線年月與 18 個月等量分期沿用（Epoch 無棟別 MW）；原公告值保留在 In 說明作區間另一端。只改 SiteOnly 與覆蓋率，主路徑（甲2）不變", "date": "2026-11-04", "quote": Q1252 + "；" + WO21 + " W3", "status": "預設、可撤回"},
         {"id": "GL01-74", "cat": "工程", "item": "Anthropic 取數 v0.1.8（W4）", "decision": "tools/import_gap_models.py MODEL_OVERRIDE 改 anthropic/dist/20261103_Anthropic收支模型_v0_1_8.xlsx；新增 --only（只重取指定玩家，其餘沿用前一種子）→ builder/seed/gap_models_v0.2.1.json；build.py 新增 --refresh-y9-only ant。營業現金流 2026–2030＝7.034／−42.289／−49.563／−5.631／42.833（F07＋F03，F03 皆 0）", "date": "2026-11-04", "quote": WO21 + " W4", "status": "執行"},
     ]

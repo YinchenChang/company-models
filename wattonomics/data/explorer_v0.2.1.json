@@ -1,7 +1,7 @@
 {
 "source": {
 "file": "20261104_Wattonomics_v0.2.1.xlsx",
-"sha256": "065cc403d670bd0c7240a89f0546176ebc366e56ab25d67fb9978e562990348e",
+"sha256": "d3bcf67d093574aece905a68d6d132305725ddb194b8f78233d98376c3ffdb12",
 "note": "Wattonomics（瓦帳）互動頁取數；扁平紀錄，kind 欄區分種類；單位 IT GW（＝TK GW）；下游取用 2027 年後數值前看 coverage",
 "wgov_errors": 0
 },
@@ -5362,7 +5362,7 @@
 },
 {
 "key": "cp_orcl_sal_b1",
-"name_": "Saline Township（The Barn）第 1 棟（1,383 ÷ 3）",
+"name_": "Saline Township（The Barn）第 1 棟（988 ÷ 3）",
 "operator": "orcl",
 "user": "oai",
 "mw": 329.333,

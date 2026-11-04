@@ -2,7 +2,7 @@
  "source": {
   "file": "20261104_Wattonomics_v0.2.1.xlsx",
   "version": "v0.2.1",
-  "sha256": "065cc403d670bd0c7240a89f0546176ebc366e56ab25d67fb9978e562990348e",
+  "sha256": "d3bcf67d093574aece905a68d6d132305725ddb194b8f78233d98376c3ffdb12",
   "unit": "IT GW（＝TK GW，IT 關鍵電力；設施＝× IF_FacilityGW）",
   "years": [
    2024,
@@ -6903,7 +6903,7 @@
   },
   {
    "id": "cp_orcl_sal_b1",
-   "label": "Saline Township（The Barn）第 1 棟（1,383 ÷ 3）",
+   "label": "Saline Township（The Barn）第 1 棟（988 ÷ 3）",
    "basis": "IT",
    "unit": "MW",
    "tag": "Analogy（Epoch：第三方以衛星與許可推估）",
@@ -8237,7 +8237,7 @@
    "unit": "年",
    "tag": "Assumed",
    "src": "SRC_GL_339",
-   "note": "工作單 20261104 V7：6 年〔TK 折舊年限〕，Assumed 5–7。汰換 GW_t＝t − 壽命 年的裝機（年新增毛額＋新納入存量；2023 年底存量視為 2023 年裝機）；世代別依該年 Players 世代組合與非 NVIDIA 占比",
+   "note": "工作單 20261104 V7：6 年〔TK 折舊年限〕，Assumed 5–7。汰換 GW_t＝t − 壽命 年的裝機：年新增毛額（2024 起）＋新納入存量（2023 年底存量與 2024–2025 新納入）平均攤到認列年與前 5 年共 6 個年份（v0.2.1 W2）；世代別依裝機年份的 Players 世代組合與非 NVIDIA 占比，早於 2023 歸 H100（最舊世代）",
    "kind": 1,
    "values": [
     5,

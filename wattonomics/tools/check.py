@@ -103,6 +103,26 @@ def main():
                 nmiss += 1; print(f"  edits 未生效：{e['key']} {e['col']}：xlsx {cur!r} ≠ {e['new']!r}")
         if nmiss: bad.append(f"{os.path.basename(ef)} 有 {nmiss} 列未在 xlsx 生效")
         else: print(f"  {os.path.basename(ef)}：全部列已生效")
+    # v0.2.1 獨立核對第 3 項：上市年＋壽命以前不得出現該世代的汰換（上市年＝Players 世代占比首個 > 0 的年份；H100 視為 2023 前已上市）
+    if "Players" in wb.sheetnames and "Deploy" in wb.sheetnames:
+        PLs, DPs = wb["Players"], wb["Deploy"]
+        yrs = {c_: int(DPs.cell(3, c_).value) for c_ in range(4, 14) if str(DPs.cell(3, c_).value).isdigit()}
+        life = round(val("life_ret")) if "life_ret" in names else 6
+        mixrow = {str(PLs.cell(r_, 1).value).replace("世代占比：", ""): r_ for r_ in range(4, 15) if str(PLs.cell(r_, 1).value).startswith("世代占比：")}
+        nbadg = 0
+        for r_ in range(4, DPs.max_row + 1):
+            lab = str(DPs.cell(r_, 1).value or "")
+            if not lab.startswith("　其中 NVIDIA "): continue
+            gname = lab.replace("　其中 NVIDIA ", "")
+            if gname not in mixrow: continue
+            launch = next((y_ for c_, y_ in yrs.items() if (PLs.cell(mixrow[gname], c_).value or 0) > 0), 9999)
+            if gname.startswith("Hopper"): launch = min(launch, 2023) - life   # 最舊世代：早於 2023 的存量歸此
+            for c_, y_ in yrs.items():
+                v_ = DPs.cell(r_, c_).value or 0
+                if y_ < launch + life and abs(v_) > 1e-9:
+                    nbadg += 1; print(f"  世代汰換早於上市年＋壽命：{gname} {y_} 年 {v_:.3f}（上市 {launch}）")
+        if nbadg: bad.append(f"世代汰換早於上市年＋{life} 年：{nbadg} 格")
+        else: print(f"  世代汰換：無早於上市年＋{life} 年者")
     for cid in ("C-K1", "R-K1", "R-K2", "W1-K1", "W1-K2"):
         if cid not in [x_[0] for x_ in rows]: bad.append(f"Checks 缺 {cid}（v0.2）")
     if same:
