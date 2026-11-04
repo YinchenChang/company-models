@@ -1,4 +1,4 @@
-# 韓美半導體 Hanmi Semiconductor（042700.KS）收支與估值模型 v0.2.2（AI 半導體 Project 步驟 5：設備與材料）
+# 韓美半導體 Hanmi Semiconductor（042700.KS）收支與估值模型 v0.3（2026-11-04 滾入 26Q3；AI 半導體 Project 步驟 5：設備與材料）
 # 用法：python3 hanmi/build_hanmi.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年（FY2026＝2026-01～12）。金額：億韓元（₩億）；EPS：韓元。
 import sys, os, glob
@@ -107,11 +107,11 @@ inp("a25_hbm", "FY2025 對三大記憶體廠的 HBM TC 鍵合機營收（Derived
 inp("g_o26", "其他業務 FY2026 成長", "%", 0.0, 0.15, 0.35, "Assumed", "無：CGSI 預估中國 TC 鍵合機 FY26 約 2.8 倍（Interested-party，不採作點估計）；MSVP 訂單增加（dealsite 2026-07-14，無數字）", "AI 前（2019–2022）公司總營收 1,204–3,732（Analogy：其他業務的量級）")
 for s, b in (("A", 0.12), ("B", 0.08), ("C", -0.05)):
     inp(f"g_o_{s}", f"其他業務年成長（{s}；v0.2.1：FY2027 三情境共用 A 值，FY2028–29 分情境）", "%", b - 0.05, b, b + 0.05, "Assumed", "無：2.5D 封裝機（2026 推出三款）、HBF 用鍵合機、北美客戶", "C：中國出口受管制（Assumed）" if s == "C" else "—")
-sec("F. FY2026 錨點（上半年實績＋下半年假設；第三季 2026-11 才公布）")
-inp("h2f", "FY2026 下半年營收 ÷（2 × 第二季營收）", "x", 0.70, 0.90, 1.10, "Assumed", "第二季含美光超常加單（BofA，dealsite 2026-07-22）；SK 海力士 2026-03 預計約 100 台 HBM4 訂單（TrendForce）", "Interested-party 對照（不校準）：BofA 下半年約 ₩5,200 億＝1.04；共識全年 ₩7,280 億隱含 0.85")
-inp("m_h2", "FY2026 下半年營業利益率", "%", 0.42, 0.48, 0.52, "Assumed", "第二季 51.9%（創高）；FY2025 43.6%", "基準取兩者之間")
-inp("rev26", "FY2026 營收錨點（Derived）", "₩億", None, "=q1_rev+q2_rev+h2f*2*q2_rev", None, "Derived", "上半年實績 ＋ h2f × 2 × 第二季", "—")
-inp("oi26", "FY2026 營業利益錨點（Derived）", "₩億", None, "=q1_oi+q2_oi+h2f*2*q2_rev*m_h2", None, "Derived", "上半年實績 ＋ 下半年營收 × m_h2", "—")
+sec("F. FY2026 錨點（1–3Q 實績＋第四季假設；v0.3 起第三季為實績，2026-10-30 公布）")
+inp("h2f", "FY2026 下半年營收 ÷（2 × 第二季營收）；v0.3 起第三季為實績，第四季＝h2f × 2 × 第二季 − 第三季", "x", 0.70, 0.90, 1.10, "Assumed", "第三季實績 1,810（部分設備營收認列遞延至第四季）；公司（2026-10-30）：第四季可望創歷年第四季最高營收、全年連三年創高（質化，無數字）；第二季含美光超常加單（BofA，dealsite 2026-07-22）", "Interested-party 對照（不校準）：BofA 下半年約 ₩5,200 億＝1.04；共識全年 ₩7,280 億隱含 0.85")
+inp("m_h2", "FY2026 第四季營業利益率（v0.3 起只用於第四季；第三季為實績）", "%", 0.42, 0.48, 0.52, "Assumed", "第二季 51.9%（創高）、第三季 50.2%（實績）；FY2025 43.6%", "基準沿用 v0.2（兩者之間）；公司無第四季利益率指引")
+inp("rev26", "FY2026 營收錨點（Derived）", "₩億", None, "=q1_rev+q2_rev+h2f*2*q2_rev", None, "Derived", "上半年實績 ＋ h2f × 2 × 第二季（＝1–3Q 實績＋第四季）", "第四季＝h2f × 2 × 第二季 − 第三季實績")
+inp("oi26", "FY2026 營業利益錨點（Derived）", "₩億", None, "=q1_oi+q2_oi+q3_oi+(h2f*2*q2_rev-q3_rev)*m_h2", None, "Derived", "1–3Q 實績 ＋ 第四季營收 × m_h2（v0.3）", "v0.2：上半年實績 ＋ 下半年營收 × m_h2")
 sec("G. 毛利、營業費用、淨利、股數")
 inp("phi", "FY2025 營業費用中變動部分占比", "%", 0.30, 0.50, 0.70, "Assumed", "無：公司不揭露費用結構；FY2024 營業費用 589、FY2025 807，營收只增 3%（兩點推導不可用：費用增加非由營收驅動）", "營業費用＝固定（1−phi）× FY2025 ＋ 變動 phi × FY2025 ÷ FY2025 營收 × 營收")
 inp("opex25", "營業費用 FY2025（毛利 − 營業利益）", "₩億", None, "=a25_gp-a25_oi", None, "Derived", "Q 頁", "—")
@@ -164,8 +164,8 @@ def defname(name, ref):
 # ---------------- Q：實績 ----------------
 Q = wb.create_sheet("Q")
 Q["A1"] = "Q — 實績（億韓元；EPS 為韓元）。會計年度＝日曆年。藍字＝輸入；黑字＝公式（Derived）。公司只公布初步營收與營業利益（DART 公平揭露）；淨利與 EPS 取自財務資料頁的近 12 月數字"
-Q["A2"] = "FY2026 第三季（2026-07～09）：建置日 2026-10-25 尚未公布（去年第三季於 2025-10-31 公布；mydailybyte 列 2026-11-06，stockanalysis 估 2026-11-13）。公布後更新本頁 J 欄與 In 頁 h2f、m_h2"
-hdr(Q, 3, ["項目", "FY2024", "25Q1", "25Q2", "25Q3", "25Q4", "FY2025", "26Q1", "26Q2", "26Q3（未公布）", "標記", "來源1", "來源2／說明"])
+Q["A2"] = "FY2026 第三季（2026-07～09）：2026-10-30 公司公布初步實績（DART 公平揭露；SBS Biz、Bizwatch、dealsite 轉載）營收 1,810、營業利益 908（營益率 50.2%）；淨利未公布（季報待補）。v0.3 起 J 欄為實績，FY2026 第四季＝In 頁 h2f × 2 × 第二季 − 第三季"
+hdr(Q, 3, ["項目", "FY2024", "25Q1", "25Q2", "25Q3", "25Q4", "FY2025", "26Q1", "26Q2", "26Q3（實績，初步）", "標記", "來源1", "來源2／說明"])
 QR = {}
 def qrow(r, key, label, vals, tag, s1, s2, fmt="#,##0"):
     QR[key] = r
@@ -176,21 +176,23 @@ def qrow(r, key, label, vals, tag, s1, s2, fmt="#,##0"):
         if not (isinstance(v, str) and v.startswith("=")): c.font = BLUE
     Q.cell(r, 11, tag); Q.cell(r, 12, s1); Q.cell(r, 13, s2)
 qrow(4, "rev", "營收", [5589, "=G4-D4-E4-F4", 1800, 1662, 830, 5767, 509, 2511], "Verified（25Q1 Derived）",
-     "公司初步實績（DART）：FY2025 5,767（亞洲經濟 2026-02-09）；25Q2 1,800（dealsite 2025-07-25）；26Q1 509（−65.5%）、26Q2 2,511（+39.5%；ddaily 2026-07-14）",
+     "公司初步實績（DART）：FY2025 5,767（亞洲經濟 2026-02-09）；25Q2 1,800（dealsite 2025-07-25）；26Q1 509（−65.5%）、26Q2 2,511（+39.5%；ddaily 2026-07-14）；26Q3 1,810（+8.9%；2026-10-30，SBS Biz、Bizwatch、dealsite 轉載）",
      "etfshopping 各季（DART 初步）：25Q3 1,662、25Q4 830、26Q2 2,512；butler.works：FY2024 5,589、FY2025 5,767；25Q1＝全年 − 其他三季（＝上半年 3,274 − 1,800）")
 qrow(5, "gp", "毛利", [3143, None, None, None, None, 3320.6, None, None], "Verified", "valueline（DART 轉載）FY2025：營收 5,766.8、銷貨成本 2,446.1、毛利 3,320.6", "stockanalysis：FY2025 毛利 3,319.4、FY2024 3,143.0（季度毛利未找到）", "#,##0.0")
 qrow(6, "oi", "營業利益", [2554, "=G6-D6-E6-F6", 863, 678, 276, 2513.9, 85, 1303], "Verified（25Q1 Derived）",
-     "公司初步實績：FY2025 營益率 43.6%；26Q1 85（−87.9%）、26Q2 1,303（+51.0%，營益率 51.9%）", "valueline FY2025 2,513.9；stockanalysis 2,511.8；etfshopping 各季；25Q1＝上半年 1,559 − 863", "#,##0.0")
+     "公司初步實績：FY2025 營益率 43.6%；26Q1 85（−87.9%）、26Q2 1,303（+51.0%，營益率 51.9%）；26Q3 908（+33.9%，營益率 50.2%；2026-10-30）", "valueline FY2025 2,513.9；stockanalysis 2,511.8；etfshopping 各季；25Q1＝上半年 1,559 − 863", "#,##0.0")
 qrow(7, "oim", "營業利益率", [f"={c}6/{c}4" for c in "BCDEFGHI"], "Derived", "—", "公司：FY2025 43.6%、26Q2 51.9%", "0.0%")
 qrow(8, "opx", "營業費用（毛利 − 營業利益）", ["=B5-B6", None, None, None, None, "=G5-G6", None, None], "Derived", "—", "valueline FY2025 銷管費 806.7", "#,##0.0")
 qrow(9, "ni", "淨利（歸屬母公司）", [1526, None, None, None, None, 2140.0, 190, None], "Verified", "valueline（近 12 月表）FY2025 2,140.0；26Q1 190（etfshopping）", "butler.works：FY2024 1,526、FY2025 2,140；stockanalysis FY2025 2,140.1；25 各季、26Q2 單季未找到（近 12 月 2026-06 為 2,220.3）", "#,##0.0")
 qrow(10, "eps", "EPS（韓元）", [1584, None, None, None, None, 2231.7, None, None], "Verified（來源不一致）", "valueline FY2025 2,231.7（DART 轉載）", "stockanalysis 2,248、etfshopping 2,256（差 0.7–1.1%，口徑未解：基本／稀釋或加權股數）；FY2024 stockanalysis 1,584、etfshopping 1,589", "#,##0.0")
 qrow(11, "ck", "檢查：四季合計 − 全年（營收、營業利益；B、C 欄）", ["=SUM(C4:F4)-G4", "=SUM(C6:F6)-G6"], "—", "—", "—", "0.0")
-Q["J4"] = "未公布"; Q["J6"] = "未公布"
+Q["J4"] = 1810; Q["J6"] = 908
+for _c in ("J4", "J6"): Q[_c].font = BLUE; Q[_c].number_format = "#,##0"
+Q["J7"] = "=J6/J4"; Q["J7"].number_format = "0.0%"
 for nm, rr in (("rev", 4), ("gp", 5), ("oi", 6), ("ni", 9), ("eps", 10)):
     defname(f"a25_{nm}", f"Q!$G${rr}")
 for nm, rr in (("rev", 4), ("oi", 6)):
-    defname(f"q1_{nm}", f"Q!$H${rr}"); defname(f"q2_{nm}", f"Q!$I${rr}")
+    defname(f"q1_{nm}", f"Q!$H${rr}"); defname(f"q2_{nm}", f"Q!$I${rr}"); defname(f"q3_{nm}", f"Q!$J${rr}")
 Q.cell(13, 1, "客戶別營收（事業報告）").font = BOLD
 hdr(Q, 14, ["客戶", "FY2024", "占營收", "", "", "", "FY2025", "", "", "", "標記", "來源1", "來源2／說明"])
 for i, (nm, v, n25) in enumerate((("SK 海力士", 2996, "LS 證券估：TC 鍵合機營收的 40%（Interested-party）"), ("美光", 1111, "未找到"), ("其他（中國、OSAT 等）", "=B4-B15-B16", "CGSI 估中國 ₩589 億（Interested-party）")), 15):
@@ -284,7 +286,7 @@ PL[f"C{sr}"] = f"=ABS(D{SUMR[('A','rev')]}-D{SUMR[('B','rev')]})+ABS(D{SUMR[('A'
 PL.column_dimensions["A"].width = 56; PL.column_dimensions["B"].width = 14; PL.column_dimensions["I"].width = 50
 for c in "CDEFGH": PL.column_dimensions[c].width = 12
 PL["H3"] = "說明"; PL["H3"].font = BOLD; PL["H3"].fill = HDR
-PL["H5"] = "FY2026 為錨點（上半年實績＋下半年 h2f、m_h2），三情境相同；情境差異從 FY2027 起"
+PL["H5"] = "FY2026 為錨點（1–3Q 實績＋第四季 h2f、m_h2；v0.3），三情境相同；情境差異從 FY2027 起"
 
 # ---------------- Units 頁：情境 A 的產能需求摘要（引用 PL 區塊） ----------------
 UN = wb.create_sheet("Units")
@@ -402,9 +404,9 @@ cases = [("SK 海力士份額 −10pt", "35%", dict(hsk="hsk_A_lo")), ("SK 海�
          ("堆疊層數 低", "", dict(stk="_lo")), ("堆疊層數 高", "", dict(stk="_hi")),
          ("層數對鍵合時間 0", "beta＝0", dict(beta="beta_lo")), ("層數對鍵合時間 0.25", "beta＝0.25", dict(beta="beta_hi")),
          ("汰換比例 5%", "", dict(dlt="dlt_lo")), ("汰換比例 15%", "", dict(dlt="dlt_hi")),
-         ("FY2026 下半年 ×0.7", "錨點營收較低 → k 較低", dict(rev26="(q1_rev+q2_rev+h2f_lo*2*q2_rev)", oi26="(q1_oi+q2_oi+h2f_lo*2*q2_rev*m_h2)")),
-         ("FY2026 下半年 ×1.1", "錨點營收較高 → k 較高", dict(rev26="(q1_rev+q2_rev+h2f_hi*2*q2_rev)", oi26="(q1_oi+q2_oi+h2f_hi*2*q2_rev*m_h2)")),
-         ("下半年營益率 42%", "毛利率基準隨之下降", dict(oi26="(q1_oi+q2_oi+h2f*2*q2_rev*m_h2_lo)")), ("下半年營益率 52%", "", dict(oi26="(q1_oi+q2_oi+h2f*2*q2_rev*m_h2_hi)")),
+         ("FY2026 下半年 ×0.7", "錨點營收較低 → k 較低", dict(rev26="(q1_rev+q2_rev+h2f_lo*2*q2_rev)", oi26="(q1_oi+q2_oi+q3_oi+(h2f_lo*2*q2_rev-q3_rev)*m_h2)")),
+         ("FY2026 下半年 ×1.1", "錨點營收較高 → k 較高", dict(rev26="(q1_rev+q2_rev+h2f_hi*2*q2_rev)", oi26="(q1_oi+q2_oi+q3_oi+(h2f_hi*2*q2_rev-q3_rev)*m_h2)")),
+         ("第四季營益率 42%", "毛利率基準隨之下降", dict(oi26="(q1_oi+q2_oi+q3_oi+(h2f*2*q2_rev-q3_rev)*m_h2_lo)")), ("第四季營益率 52%", "", dict(oi26="(q1_oi+q2_oi+q3_oi+(h2f*2*q2_rev-q3_rev)*m_h2_hi)")),
          ("TC 鍵合機占 FY2025 營收 50%", "HBM 基期較低、其他較高", dict(a25h="(a25_rev*tcb_sh25_lo*(1-cn_sh25))")), ("TC 鍵合機占 FY2025 營收 70%", "", dict(a25h="(a25_rev*tcb_sh25_hi*(1-cn_sh25))")),
          ("其他業務成長 低", "7%", dict(go="g_o_A_lo")), ("其他業務成長 高", "17%", dict(go="g_o_A_hi")),
          ("營業費用變動比例 30%", "", dict(F="(1-phi_lo)*opex25", v="phi_lo*opex25/a25_rev")), ("營業費用變動比例 70%", "", dict(F="(1-phi_hi)*opex25", v="phi_hi*opex25/a25_rev")),
@@ -444,7 +446,7 @@ def rec(label, ref, getter, src, note="", fmt="#,##0", pt=False):
     RC.cell(rr_, 9, src); RC.cell(rr_, 10, note); rr_ += 1
 pl = lambda key, y=2026: (lambda s: f"=PL!{COL[y]}{SUMR[(s, key)]}")
 RC.cell(rr_, 1, "A. FY2026 vs 共識與賣方（校準未使用）").font = BOLD; rr_ += 1
-rec("營收", "=cons_rev26", pl("rev"), "etfshopping 共識 ₩7,280 億", "錨點＝上半年 3,020 ＋ 0.9 × 2 × 第二季")
+rec("營收", "=cons_rev26", pl("rev"), "etfshopping 共識 ₩7,280 億", "錨點＝1–3Q 實績 4,830 ＋ 第四季（0.9 × 2 × 第二季 − 第三季）")
 rec("營業利益", "=cons_oi26", pl("oi"), "上上人證券（2026-06-09）")
 rec("EPS（韓元）", "=cons_eps26", pl("eps"), "alphadistill（2026-10-12，非券商共識）", "stockanalysis 遠期 EPS 約 4,006（隱含）")
 RC.cell(rr_, 1, "B. FY2027 vs 第三方預估").font = BOLD; rr_ += 1
@@ -460,6 +462,13 @@ rec("CY2028：同上", "=semi_pkg28", lambda s: f"=PL!F{PB[s]['usd']}/1000", "SE
 RC.cell(rr_, 1, "E. 其他資訊（非對帳）").font = BOLD; rr_ += 1
 RC.cell(rr_, 1, "FY2026 上半年營收 ÷ 錨點全年"); RC.cell(rr_, 3, f"=(q1_rev+q2_rev)/PL!D{SUMR[('A','rev')]}").number_format = "0.0%"; rr_ += 1
 RC.cell(rr_, 1, "CY2026 三大廠 TC 鍵合機台數（模型 A，市場 ÷ 單價）"); RC.cell(rr_, 3, f"=Units!D{UR[('A','units')]}").number_format = "#,##0"; RC.cell(rr_, 10, "對照：SK 海力士 2026-03 預計約 100 台（The Elec）；HBM4 現有約 50 套"); rr_ += 1
+RC.cell(rr_, 1, "F. 26Q3 實績 vs 模型原估（v0.2.5：只有下半年合計，原估＝下半年平均每季）").font = BOLD; rr_ += 1
+hdr(RC, rr_, ["項目", "實績（2026-10-30）", "模型原估（v0.2.5）", "差距", "", "", "", "", "來源", "說明"]); rr_ += 1
+for _lab, _a, _m, _n in (("26Q3 營收", "=q3_rev", "=0.9*2*q2_rev/2", "原估＝h2f 0.9 × 2 × 第二季 ÷ 2"), ("26Q3 營業利益", "=q3_oi", "=0.9*2*q2_rev/2*0.48", "原估＝上列 × 下半年營益率 48%"), ("26Q3 營業利益率", "=q3_oi/q3_rev", "=0.48", "")):
+    RC.cell(rr_, 1, _lab); RC.cell(rr_, 2, _a); RC.cell(rr_, 3, _m)
+    RC.cell(rr_, 4, f"=C{rr_}-B{rr_}" if "率" in _lab else f"=B{rr_}/C{rr_}-1").number_format = "0.0%"
+    for _c in (2, 3): RC.cell(rr_, _c).number_format = "0.0%" if "率" in _lab else "#,##0"
+    RC.cell(rr_, 9, "公司初步實績（DART 轉載）"); RC.cell(rr_, 10, _n + ("；差距以百分點計（原估 − 實績）" if "率" in _lab else "；公司稱部分設備營收遞延至第四季")); rr_ += 1
 RC.column_dimensions["A"].width = 60
 for c in "BCDEFGH": RC.column_dimensions[c].width = 12
 RC.column_dimensions["I"].width = 36; RC.column_dimensions["J"].width = 60
@@ -495,7 +504,7 @@ RD = wb.create_sheet("README", 0)
 lines = [("韓美半導體 Hanmi Semiconductor（042700.KS）收支與估值模型 v0.2.2（AI 半導體 Project 步驟 5：設備與材料）　2026-10-25", True),
  ("v0.1（2026-10-25）：首版。樣板 advantest/（設備股，統一循環規則）。本版未做先驗，無 Andy 合理 P/E 對照。", False),
  ("模型命題：韓美的盈餘由 HBM 的 TC 鍵合需求決定——需求來自記憶體廠下一年的鍵合產能增量（HBM 位元 ÷ 晶粒容量 × 層數加權），韓美的份額集中在 SK 海力士與美光。股價取決於 HBM 位元成長在 2028 之後放緩、晶粒容量提高與混合鍵合導入時，TC 鍵合機的新機需求與韓美在 SK 海力士的份額能否守住。", False), ("", False),
- ("會計年度＝日曆年。金額以億韓元（₩億）為主；EPS 為韓元。FY2026 為錨點：上半年實績（509＋2,511）＋下半年假設（h2f、m_h2）；第三季預定 2026-11 公布，建置日未納入。", False), ("", False),
+ ("會計年度＝日曆年。金額以億韓元（₩億）為主；EPS 為韓元。FY2026 為錨點：1–3Q 實績（509＋2,511＋1,810）＋第四季假設（h2f × 2 × 第二季 − 第三季、m_h2）；v0.3（2026-11-04）滾入 2026-10-30 公布的第三季初步實績。", False), ("", False),
  ("驅動因子 → 推導量", True),
  ("HBM 出貨位元（markets/memory，情境別）÷ 晶粒容量 → 核心晶粒數 × 層數加權 ×（1 − 混合鍵合占比）→ TC 鍵合產能需求；新機需求＝下一年產能增量＋汰換", False),
  ("× 各記憶體廠占產能增量（t＋1 年 HBM 市占，讀三家記憶體模型）× 韓美在該廠份額 → 韓美可得需求 × 校準係數 k（FY2025–26 兩年營收）→ HBM TC 鍵合機營收；其他業務＝前一年 × 成長率", False),
@@ -705,7 +714,7 @@ V[f"B{_G + 1}"].number_format = "@"
 V[f"E{_G + 1}"] = "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空"
 OBS = ["目標價 ₩48,379（DCF 27,780、Comparable 68,979 各半），比現價 188,500（2026-10-23）低 74.3%，級距 小於 −50%；Comparable 單獨為 −63.4%。主因 EPS 與倍數都有：本模型 12 個月後前瞻 EPS 2,662 比共識前瞻 EPS 約 5,000 低 46.8%；現價隱含 70.8 倍前瞻 EPS，同業（BESI、ASMPT、Kulicke & Soffa、Disco）中位數 25.9 倍、共識目標價 271,429 隱含 54.3 倍（比同業高 109%）。DCF 低不是 ROE（39.2%）造成，而是 FY2028 起 TC 鍵合需求回落（FY2027 EPS 3,098 → A 情境 FY2028 2,363）。",
        "混合鍵合替代是最大變數：不納入混合鍵合時 FY2028 EPS 3,782（基準 2,363，+60.0%）、FY2027 +9.1%；晶粒容量取低值 FY2027 +15.1%，淨利 ÷ 營業利益 0.72 則 −15.4%。",
-       "三情境的現價隱含 P/E 都高於十年最大值（分位 100%）；共識前瞻 EPS 只顯示到千位（約 5,000），差距待第三季財報（預定 2026-11-06 前後）的 TC 鍵合出貨與 2027 年訂單檢驗。"]   # 重點觀察（與 hanmi/README.md 相同文字）
+       "三情境的現價隱含 P/E 都高於十年最大值（分位 100%）；共識前瞻 EPS 只顯示到千位（約 5,000），第三季（2026-10-30）營收 1,810、營業利益 908 低於模型下半年每季平均（2,260／1,085），公司稱部分設備營收遞延至第四季；下一個檢驗點是第四季實績（約 2027-01 下旬）與 SK 海力士、美光 HBM4 鍵合機訂單分配。"]   # 重點觀察（與 hanmi/README.md 相同文字）
 _R = RD.max_row + 1
 RD.cell(_R, 1, "v0.2.2（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁最後新增「上檔空間級距」「投資建議」兩列（依「上檔空間：加權目標價」固定規則）；README 頁最後新增投資建議與重點觀察三點。")
 RD.cell(_R + 1, 1, f'="投資建議："&Val!B{_G + 1}&"（依上檔空間固定規則）"')
@@ -723,6 +732,9 @@ from addrow import add_check
 add_check(Q, seg_rows=[15, 16, 17], total_row=4, cols="B", rnd=3, note="分部原則第 3 條（2026-10-28 追加）：客戶別營收（FY2024 事業報告）；分部宣告見 segments.json")
 RD.cell(RD.max_row + 1, 1, "v0.2.3（2026-10-28）：分部原則重建（數值不變）。Q 頁最後追加核對列「檢查：分部合計 − 合併營收」；官方分部與子列宣告見 segments.json。")
 if isinstance(RD.cell(1, 1).value, str): RD.cell(1, 1).value = RD.cell(1, 1).value.replace("v0.2.2", "v0.2.3")
+# v0.3（2026-11-04）：滾入 26Q3 初步實績（數值改變，次版）
+RD.cell(RD.max_row + 1, 1, "v0.3（2026-11-04）：滾入 2026-10-30 公布的 26Q3 初步實績（營收 1,810、營業利益 908，營益率 50.2%；Q 頁 J 欄）。FY2026 錨點改為 1–3Q 實績＋第四季（h2f × 2 × 第二季 − 第三季，營益率 m_h2 48%）；營收錨點不變（7,540），營業利益 3,558 → 3,597。方法、情境、估值規則不變；Recon 第 F 節列 26Q3 實績 vs 模型原估。")
+RD.cell(1, 1).value = RD.cell(1, 1).value.replace("v0.2.3", "v0.3").replace("2026-10-25", "2026-11-04")
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
