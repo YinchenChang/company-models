@@ -413,7 +413,7 @@ FYS = (2025, 2026, 2027, 2028, 2029); FC = {2025: "C", 2026: "D", 2027: "E", 202
 FADE = (2030, 2031, 2032); FADEFILL = PatternFill("solid", fgColor="E7E6E6")
 BU = (2026, 2027, 2028, 2029); F3 = (2027, 2028, 2029)
 DEFP = dict(scn="A", fx="fx", cap_adj="cap_adj", ut_adj="ut_adj", asp_adj="asp_adj", dag_adj="dag_adj", cc_g="cc_g", phi="phi",
-            nonop_f="nonop_f", tax="tax", ai_adj="ai_adj", m_new="m_new", vcap_adj="vcap_adj", vasp="vasp", fm_self=False)
+            nonop_f="nonop_f", tax="tax", ai_adj="ai_adj", m_new="m_new", vcap_adj="vcap_adj", vasp="vasp", fm_self=False, wm=None)
 FM_FACTOR = {"A": "1", "B": "0.9", "C": "0.8"}
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
@@ -441,8 +441,13 @@ def engine(ws, r0, title, **over):
     row("wrev", C["wafer_rev_label"], "NT$B", {FC[y]: f"={FC[y]}{R['ship']}*{FC[y]}{R['asp']}*{FC[y]}{R['fxr']}/1000000" for y in BU})
     if KIND == "umc":
         sec_("B. 新業務：AI 相關（先進封裝矽中介層、矽光子）與 Intel 12 奈米（美元營收）")
-        row("ai_usd", "AI 相關營收（美元；FY2028 起 × 同字母顆數係數）", "US$B", {"D": "=ai_26", "E": f"=D{r}*(1+aig27_{s})*{P['ai_adj']}",
-            "F": f"=E{r}*(1+aig_L)*um28_{s}", "G": f"=F{r}/um28_{s}*(1+aig_L)*um29_{s}"}, "0.000")
+        if P["wm"]:   # v0.13：Wattonomics 錨定（AI 相關營收 FY2027 起 × wta；FY2028 起先除去前一年係數再乘當年，避免連乘）
+            w_ = P["wm"]
+            row("ai_usd", "AI 相關營收（美元；FY2028 起 × 同字母顆數係數；FY2027 起 × Wattonomics 錨定係數）", "US$B", {"D": "=ai_26", "E": f"=D{r}*(1+aig27_{s})*{P['ai_adj']}*{w_[2027]}",
+                "F": f"=E{r}/{w_[2027]}*(1+aig_L)*um28_{s}*{w_[2028]}", "G": f"=F{r}/um28_{s}/{w_[2028]}*(1+aig_L)*um29_{s}*{w_[2029]}"}, "0.000")
+        else:
+            row("ai_usd", "AI 相關營收（美元；FY2028 起 × 同字母顆數係數）", "US$B", {"D": "=ai_26", "E": f"=D{r}*(1+aig27_{s})*{P['ai_adj']}",
+                "F": f"=E{r}*(1+aig_L)*um28_{s}", "G": f"=F{r}/um28_{s}*(1+aig_L)*um29_{s}"}, "0.000")
         row("ai_rev", "AI 相關營收", "NT$B", {FC[y]: f"={FC[y]}{R['ai_usd']}*{FC[y]}{R['fxr']}" for y in BU})
         row("int_usd", "Intel 12 奈米營收（美元）", "US$B", {"D": "=0", "E": "=int_27", "F": f"=int28_{s}", "G": f"=int29_{s}"}, "0.000")
         row("int_rev", "Intel 12 奈米營收", "NT$B", {FC[y]: f"={FC[y]}{R['int_usd']}*{FC[y]}{R['fxr']}" for y in BU})
@@ -846,6 +851,39 @@ RMX.apply(wb, C["folder"])
 RD.cell(RD.max_row, 1, "相對倍數調整（tools/relative_multiple.py；Val 第 0.5 節）已含在加權目標價：Comparable（相對倍數調整後）＝同業前瞻倍數中位數 × 本公司 10 年相對同業的倍數比（Bloomberg 前瞻倍數）。「Comparable 目標價（市場主流同業法）」維持不調整。重點觀察的數字以本版重算值撰寫（第 1 點第一句為公式）。")
 sys.path.insert(0, os.path.join(ROOT, "tools", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, "v0.1", "2026-10-31")
+# ---------------- v0.13（2026-11-04）：Sens「Wattonomics 錨定」案例（三層校準原則；決策 S37）。In 頁最後三列、Sens 頁最下方小表與案例區塊；既有格不動 ----------------
+WTA_NOTE = "Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
+WTA_MF = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
+def wta_in_rows():
+    r = IN.max_row + 2
+    IN.cell(r, 1, f"Z. Wattonomics 錨定係數（敏感度用；Siliconomics {SIL.VERSION}）").font = BOLD; r += 1
+    def _inp(key, item, unit, lo, base, hi, tag, s1, s2):
+        nonlocal r
+        for j, v in enumerate((key, item, unit, lo, base, hi, tag, s1, s2), 1):
+            if v is not None: IN.cell(r, j, v)
+        IN.cell(r, 5).number_format = "0.000"
+        wb.defined_names[key] = DefinedName(key, attr_text=f"In!$E${r}")
+        r += 1
+    SIL.wta_rows(_inp)
+def wta_sens():
+    t0 = SE.max_row + 3; brow_ = t0 + 9; WB = {}
+    for s in SC:
+        WB[s] = engine(SE, brow_, f"案例區塊：Wattonomics 錨定（情境 {s}；FY2027 起 AI 相關營收 × wta_27／wta_28／wta_29）", scn=s, fm_self=True, wm=WTA_MF)
+        brow_ = WB[s]["end"] + 2
+    SE.cell(t0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
+    hdr(SE, t0 + 1, [SE.cell(3, c).value for c in range(1, 11)] + ["FY2027 EPS（B）", "FY2028 EPS（B）"])
+    put_case(t0 + 2, "基準（三情境加權；同第 4 列）", "PL 頁三個推導區塊", "—", PB, "PL!")
+    put_case(t0 + 3, "Wattonomics 錨定", "FY2027 起 AI 相關營收（先進封裝中介層、矽光子）× wta（三情境同乘；權重不變）", "wta_27／wta_28／wta_29", WB, "")
+    for rr, bl, pre in ((t0 + 2, PB, "PL!"), (t0 + 3, WB, "")):
+        SE[f"K{rr}"] = f"={pre}E{bl['B']['eps']}"; SE[f"L{rr}"] = f"={pre}F{bl['B']['eps']}"
+        for c in "KL": SE[f"{c}{rr}"].number_format = "#,##0.00"
+    SE.cell(t0 + 4, 1, "差異%：Wattonomics 錨定 ÷ 基準 − 1")
+    for c in "DEGHIKL":
+        SE[f"{c}{t0 + 4}"] = f'=IFERROR({c}{t0 + 3}/{c}{t0 + 2}-1,"")'; SE[f"{c}{t0 + 4}"].number_format = "0.0%"
+    SE.cell(t0 + 5, 1, WTA_NOTE)
+    SE.cell(t0 + 6, 1, "本模型 AI 量驅動只有 AI 相關營收（FY2026 約占營收 3.4%）；成熟製程晶圓與 Intel 12 奈米不乘。FY(t)＝CY(t)；FY2030–FY2032 沿用收斂法。目標價為三情境皆 × wta 後依情境權重加權。")
+    return WB
+wta_in_rows(); WTA_R = wta_sens()   # v0.13：放在 In 版面套用之後，確保在 In 頁最後
 wb.save(sys.argv[1])
 if os.environ.get("ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK, "VAL": VAL, "INROW": INROW,
