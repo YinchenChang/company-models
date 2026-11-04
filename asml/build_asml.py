@@ -241,7 +241,7 @@ for c in "CDEFG": UN.column_dimensions[c].width = 11
 
 # ---------------- 引擎：一個情境的完整推導（PL 與 Sens 共用） ----------------
 FYC = YC
-DEFP = dict(gi="g_int", cn="cn_sh26", gcn=None, gibm=None, c28="cap_28", c27="cap_27", gmb="gm_b", phi="phi", nioi="nioi", bb="bb", scn="A")
+DEFP = dict(gi="g_int", cn="cn_sh26", gcn=None, gibm=None, c28="cap_28", c27="cap_27", gmb="gm_b", phi="phi", nioi="nioi", bb="bb", scn="A", lix=None, mix=None)   # v0.13：Wattonomics 錨定案例用；預設不變（lix／mix＝年→邏輯／記憶體指數儲存格）
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
     gcn = P["gcn"] or f"g_cn_{s}"; gibm = P["gibm"] or f"g_ibm_{s}"
@@ -256,8 +256,8 @@ def engine(ws, r0, title, **over):
         ws.cell(r, 8, note); R[key] = r; r += 1
     F3 = (2027, 2028, 2029)
     ws.cell(r, 1, "A. 設備市場連結（Units 頁；情境別）").font = BOLD; r += 1
-    row("li", "邏輯晶圓前段設備指數（2026＝1）", "x", {FYC[y]: f"=Units!{FYC[y]}{UR[(s,'li')]}" for y in YRS}, "0.000")
-    row("mi", "記憶體晶圓前段設備指數（2026＝1）", "x", {FYC[y]: f"=Units!{FYC[y]}{UR[(s,'mi')]}" for y in YRS}, "0.000")
+    row("li", "邏輯晶圓前段設備指數（2026＝1）", "x", {FYC[y]: (f"={P['lix'][y]}" if P['lix'] and y in P['lix'] else f"=Units!{FYC[y]}{UR[(s,'li')]}") for y in YRS}, "0.000")
+    row("mi", "記憶體晶圓前段設備指數（2026＝1）", "x", {FYC[y]: (f"={P['mix'][y]}" if P['mix'] and y in P['mix'] else f"=Units!{FYC[y]}{UR[(s,'mi')]}") for y in YRS}, "0.000")
     row("up", "微影強度與價格係數（2026＝1）", "x", {FYC[y]: f"=(1+{P['gi']})^{y-2026}" for y in (2026,) + F3}, "0.000", "(1＋g_int)^(t−2026)")
     ws.cell(r, 1, "B. 系統營收（€B）").font = BOLD; r += 1
     row("nlog", "非中國 邏輯系統需求", "€B", {"D": f"=a26_sys/1000*(1-{P['cn']})*log_sh26", **{FYC[y]: f"=$D{r}*{FYC[y]}{R['li']}*{FYC[y]}{R['up']}" for y in F3}}, note="FY2026＝錨點系統營收 ×（1−中國占比）× 邏輯占比；之後 × 邏輯指數 × 強度係數")
@@ -762,6 +762,46 @@ wb._sheets = [wb[n] for n in order]
 import os, sys  # noqa: E401
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
 import relative_multiple as RMX  # noqa: E402
+
+# ---------------- Wattonomics 錨定（三層校準原則；Siliconomics v0.13，決策 S37）----------------
+# In：三列 wta_27／28／29 接在模型輸入最後（apply_in_layout 的「情境驅動對照」展示節接在其後）；Sens：案例區塊放在既有內容最下方，摘要列接在案例清單之後
+sys.path.insert(0, os.path.join(ROOT, "siliconomics")); import reader as SIL  # noqa: E402
+from openpyxl.workbook.defined_name import DefinedName as _DN  # noqa: E402
+from openpyxl.styles import Font as _F  # noqa: E402
+def _wta_in(wb):
+    ws = wb["In"]; r = ws.max_row + 1
+    ws.cell(r, 1, f"Z. Wattonomics 錨定係數（敏感度用；Siliconomics {SIL.VERSION}）").font = _F(bold=True); r += 1
+    rows_ = []; SIL.wta_rows(lambda *a: rows_.append(a))
+    for a in rows_:
+        for j, v in enumerate(a, 1):
+            if v is not None: ws.cell(r, j, v)
+        ws.cell(r, 5).font = _F(color="0000FF")
+        wb.defined_names[a[0]] = _DN(a[0], attr_text=f"In!$E${r}")
+        r += 1
+_wta_in(wb)
+WTA_READ = "讀法：Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
+
+def _wta_f(SE, w0, CM, desc):
+    SE.cell(w0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
+    SE.cell(w0 + 1, 1, WTA_READ)
+    SE.cell(w0 + 2, 1, desc)
+    hdr(SE, w0 + 3, ["日曆年", "單位"] + [f"CY{y}" for y in range(2025, 2030)] + ["", "來源"])
+    fr = w0 + 4
+    SE.cell(fr, 1, "Wattonomics 錨定係數（In 頁 wta_27／28／29）"); SE.cell(fr, 2, "x")
+    for y, f in zip(range(2025, 2030), (1, 1, "=wta_27", "=wta_28", "=wta_29")): SE[f"{CM[y]}{fr}"] = f; SE[f"{CM[y]}{fr}"].number_format = "0.000"
+    return fr
+WTA_AIWFE = "產業量＝設備市場模型（markets/equipment，情境 B）中標〔AI〕的分項：先進邏輯〔AI〕、DRAM（含 HBM）〔AI〕、先進封裝〔AI〕；CY2027 起 × wta，其他分項不變。注意：設備市場由公司資本支出推得，與部署 GW 只是間接連動（資本支出領先產能），此處依工作單以同年係數近似。"
+
+fr = _wta_f(SE, SE.max_row + 3, YC, WTA_AIWFE + " 本模型：邏輯指數＝（先進邏輯〔AI〕× wta＋其他代工與邏輯）÷ 2026；記憶體指數＝（DRAM〔AI〕× wta＋NAND）÷ 2026。中國、IBM、產能上限照情境 B。")
+SE.cell(fr + 1, 1, "邏輯晶圓前段設備指數（錨定；2026＝1）"); SE.cell(fr + 1, 2, "x")
+SE.cell(fr + 2, 1, "記憶體晶圓前段設備指數（錨定；2026＝1）"); SE.cell(fr + 2, 2, "x")
+for y in YRS:
+    SE[f"{YC[y]}{fr + 1}"] = f"=(laB_{y % 100}*{YC[y]}{fr}+loB_{y % 100})/(laB_26+loB_26)"; SE[f"{YC[y]}{fr + 1}"].number_format = "0.000"
+    SE[f"{YC[y]}{fr + 2}"] = f"=(drB_{y % 100}*{YC[y]}{fr}+naB_{y % 100})/(drB_26+naB_26)"; SE[f"{YC[y]}{fr + 2}"].number_format = "0.000"
+RW = engine(SE, fr + 5, "案例區塊：Wattonomics 錨定（情境 B 為底；設備市場 AI 分項 CY2027 起 × wta）", scn="B",
+            lix={y: f"${YC[y]}${fr + 1}" for y in YRS}, mix={y: f"${YC[y]}${fr + 2}" for y in YRS})
+put_case(nn + 2, "Wattonomics 錨定（情境 B 為底）", "設備市場 AI 分項 CY2027 起 × wta；相對欄對情境 B 列", RW)
+for a_, b_ in (("E", "D"), ("H", "G")): SE[f"{a_}{nn + 2}"] = f"={b_}{nn + 2}/{b_}{nn}-1"
 RMX.apply(wb, "asml")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, "v0.2.3", "2026-10-30")  # v0.2.3：In 頁版面（個股模型原則第 8 節；數值不變）

@@ -243,7 +243,7 @@ Q.column_dimensions["I"].width = 22; Q.column_dimensions["J"].width = 60; Q.colu
 CYC = {y: chr(ord("C") + y - 2025) for y in range(2025, 2031)}   # C＝CY2025 … H＝CY2030
 FYC = {y: chr(ord("C") + y - 2025) for y in range(2025, 2030)}   # C＝FY2025 … G＝FY2029
 DEFP = dict(tail="g_tail", wpr="w_pr", wcmp="w_cmp", chn="chn", vs="v_s", vm="v_m", nioi="nioi", anc="g_anc", mspe="m_spe26", scn="A",
-            exc=None, chh=None, gmet=None, madj=None)
+            exc=None, chh=None, gmet=None, madj=None, ovr=None, den26=None)   # v0.13：Wattonomics 錨定案例用；預設不變（ovr＝設備市場列替換、den26＝FY2026 指數分母）
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
     exc = P["exc"] or f"exc_{s}"; chh = P["chh"] or f"chh_{s}"; gmet = P["gmet"] or f"gmet_{s}"
@@ -259,12 +259,12 @@ def engine(ws, r0, title, **over):
         ws.cell(r, 10, note); R[key] = r; r += 1
     ws.cell(r, 1, f"A. 設備市場（日曆年；markets/equipment 情境 {s}）").font = BOLD; r += 1
     for key, lab in (("tst", "測試與其他封裝設備"), ("apk", "先進封裝設備〔AI〕"), ("wfe", "晶圓前段設備")):
-        row(key, lab, "US$B", {**{CYC[y]: f"={key}{s}_{y % 100}" for y in range(2025, 2030)}, "H": f"=G{r}*(1+{P['tail']})"}, fmt="#,##0.0",
+        row(key, lab, "US$B", {**{CYC[y]: ((P['ovr'] or {}).get((key, y)) or f"={key}{s}_{y % 100}") for y in range(2025, 2030)}, "H": f"=G{r}*(1+{P['tail']})"}, fmt="#,##0.0",
             note="CY2030＝CY2029 ×（1＋g_tail）" if key == "tst" else "")
     ws.cell(r, 1, "B. 會計年度指數（FY(t)＝3/4 × CY(t)＋1/4 × CY(t+1)；FY2026＝1）").font = BOLD; r += 1
     fw = lambda key, y: f"(0.75*{CYC[y]}{R[key]}+0.25*{CYC[y+1]}{R[key]})"
     row("ti", "探針台需求指數（測試與其他封裝）", "x", {FYC[y]: f"={fw('tst', y)}/{fw('tst', 2026)}" for y in range(2025, 2030)}, fmt="0.000")
-    row("mi", "加工裝置需求指數（前段 × w_cmp ＋ 先進封裝 ×（1 − w_cmp））", "x", {FYC[y]: f"={P['wcmp']}*{fw('wfe', y)}/{fw('wfe', 2026)}+(1-{P['wcmp']})*{fw('apk', y)}/{fw('apk', 2026)}" for y in range(2025, 2030)}, fmt="0.000")
+    row("mi", "加工裝置需求指數（前段 × w_cmp ＋ 先進封裝 ×（1 − w_cmp））", "x", {FYC[y]: f"={P['wcmp']}*{fw('wfe', y)}/{(P['den26'] or {}).get('wfe') or fw('wfe', 2026)}+(1-{P['wcmp']})*{fw('apk', y)}/{(P['den26'] or {}).get('apk') or fw('apk', 2026)}" for y in range(2025, 2030)}, fmt="0.000")
     row("exf", "公司特有：超額成長係數（FY2027 起）", "x", {FYC[y]: f"=(1+{exc})^{y - 2026}" for y in range(2026, 2030)}, fmt="0.000")
     row("chf", "公司特有：中國係數（1 ＋ 中國占比 × 中國變化 × 生效比例）", "x", {"D": "=1", "E": f"=1+{P['chn']}*{chh}*0.5", "F": f"=1+{P['chn']}*{chh}", "G": f"=1+{P['chn']}*{chh}"}, fmt="0.000")
     ws.cell(r, 1, "C. 營收（FY2025 實績；FY2026 公司指引 ×（1＋g_anc）；FY2027 起驅動推導）").font = BOLD; r += 1
@@ -692,6 +692,55 @@ wb._sheets = [wb[n] for n in order]
 import os, sys  # noqa: E401
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
 import relative_multiple as RMX  # noqa: E402
+
+# ---------------- Wattonomics 錨定（三層校準原則；Siliconomics v0.13，決策 S37）----------------
+# In：三列 wta_27／28／29 接在模型輸入最後（apply_in_layout 的「情境驅動對照」展示節接在其後）；Sens：案例區塊放在既有內容最下方，摘要列接在案例清單之後
+sys.path.insert(0, os.path.join(ROOT, "siliconomics")); import reader as SIL  # noqa: E402
+from openpyxl.workbook.defined_name import DefinedName as _DN  # noqa: E402
+from openpyxl.styles import Font as _F  # noqa: E402
+def _wta_in(wb):
+    ws = wb["In"]; r = ws.max_row + 1
+    ws.cell(r, 1, f"Z. Wattonomics 錨定係數（敏感度用；Siliconomics {SIL.VERSION}）").font = _F(bold=True); r += 1
+    rows_ = []; SIL.wta_rows(lambda *a: rows_.append(a))
+    for a in rows_:
+        for j, v in enumerate(a, 1):
+            if v is not None: ws.cell(r, j, v)
+        ws.cell(r, 5).font = _F(color="0000FF")
+        wb.defined_names[a[0]] = _DN(a[0], attr_text=f"In!$E${r}")
+        r += 1
+_wta_in(wb)
+WTA_READ = "讀法：Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
+
+def _wta_f(SE, w0, CM, desc):
+    SE.cell(w0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
+    SE.cell(w0 + 1, 1, WTA_READ)
+    SE.cell(w0 + 2, 1, desc)
+    hdr(SE, w0 + 3, ["日曆年", "單位"] + [f"CY{y}" for y in range(2025, 2030)] + ["", "來源"])
+    fr = w0 + 4
+    SE.cell(fr, 1, "Wattonomics 錨定係數（In 頁 wta_27／28／29）"); SE.cell(fr, 2, "x")
+    for y, f in zip(range(2025, 2030), (1, 1, "=wta_27", "=wta_28", "=wta_29")): SE[f"{CM[y]}{fr}"] = f; SE[f"{CM[y]}{fr}"].number_format = "0.000"
+    return fr
+WTA_AIWFE = "產業量＝設備市場模型（markets/equipment，情境 B）中標〔AI〕的分項：先進邏輯〔AI〕、DRAM（含 HBM）〔AI〕、先進封裝〔AI〕；CY2027 起 × wta，其他分項不變。注意：設備市場由公司資本支出推得，與部署 GW 只是間接連動（資本支出領先產能），此處依工作單以同年係數近似。"
+
+_eq = openpyxl.load_workbook(EQ_F, data_only=True)["Mkt"]; _AIB = {}; _bk = None
+for _r in _eq.iter_rows():
+    _a = _r[0].value
+    if isinstance(_a, str) and _a[:3] in ("5A.", "5B.", "5C."): _bk = _a[1]; continue
+    if _bk == "B" and _a in ("先進邏輯（台積電設備＋其他代工中屬先進者）〔AI〕", "DRAM（含 HBM）〔AI〕") and _a not in _AIB: _AIB[_a] = ([_r[2 + j].value for j in range(5)], _r[0].row)
+assert len(_AIB) == 2, _AIB
+fr = _wta_f(SE, SE.max_row + 3, CYC, WTA_AIWFE + " 本模型：先進封裝設備〔AI〕× wta；晶圓前段設備扣除（先進邏輯〔AI〕＋DRAM〔AI〕）×（1 − wta）；測試與其他封裝不變。FY2026 指數分母維持情境 B（錨點）。")
+_ar = {}
+for i, (lab, vals_row) in enumerate(_AIB.items(), 1):
+    vals, srow = vals_row; SE.cell(fr + i, 1, f"{lab}（情境 B）"); SE.cell(fr + i, 2, "US$B"); SE.cell(fr + i, 10, f"{rel(EQ_F)}｜Mkt!C{srow}:G{srow}（唯讀抄錄）"); _ar[i] = fr + i
+    for j, y in enumerate(range(2025, 2030)): c_ = SE[f"{CYC[y]}{fr + i}"]; c_.value = float(vals[j]); c_.font = BLUE; c_.number_format = "0.00"
+ovr = {}
+for y in (2027, 2028, 2029):
+    ovr[("apk", y)] = f"=apkB_{y % 100}*${CYC[y]}${fr}"
+    ovr[("wfe", y)] = f"=wfeB_{y % 100}-(${CYC[y]}${_ar[1]}+${CYC[y]}${_ar[2]})*(1-${CYC[y]}${fr})"
+RW = engine(SE, fr + 5, "案例區塊：Wattonomics 錨定（情境 B 為底；設備市場 AI 分項 CY2027 起 × wta）", scn="B", ovr=ovr,
+            den26={"wfe": "(0.75*wfeB_26+0.25*wfeB_27)", "apk": "(0.75*apkB_26+0.25*apkB_27)"})
+put_case(nn + 2, "Wattonomics 錨定（情境 B 為底）", "設備市場 AI 分項 CY2027 起 × wta；相對欄對情境 B 列", RW)
+for a_, b_ in (("E", "D"), ("H", "G"), ("J", "I")): SE[f"{a_}{nn + 2}"] = f"={b_}{nn + 2}/{b_}{nn}-1"
 RMX.apply(wb, "accretech")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, "v0.1.3", "2026-10-31")  # v0.1.3：In 頁版面（個股模型原則第 8 節；數值不變）
