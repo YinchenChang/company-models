@@ -1,8 +1,8 @@
-# Amazon（AMZN）個股模型 v0.3.1（命題＋營收分部架構；工作單 mag/docs/workorders/20261027_MAG_v0.3_個股模型重建_分部架構.md；
-#   v0.3.1 季度滾動：mag/docs/workorders/20261029_MAG_v0.3.1_季度滾動_2026Q3.md 第 1–4 節）
+# Amazon（AMZN）個股模型 v0.3.3（命題＋營收分部架構；工作單 mag/docs/workorders/20261027_MAG_v0.3_個股模型重建_分部架構.md；
+#   v0.3.1 季度滾動：mag/docs/workorders/20261029_MAG_v0.3.1_季度滾動_2026Q3.md 第 1–4 節；v0.3.2 Tokenomics 快照 v21.9；v0.3.3 10-Q 補入：mag/docs/workorders/20261104_MAG_10Q補入_2026Q3.md）
 # 固定規格：docs/plan/個股模型原則_命題加營收分部.md（命題模組＋官方營收分部 → 損益表；第 7 節讀法 2、第 8 節 In 頁、第 9 節敏感度覆蓋）。
-# 用法：python3 amazon/build_amazon.py [輸出.xlsx] [--set 鍵=值 ...] [--sens sens.json] [--q3v03 q3.json]
-#       （預設輸出 amazon/dist/20261031_Amazon個股模型_v0.3.1.xlsx；amazon/make_v031.sh 一次跑完 建置 → 重算 → 核對 → HTML）
+# 用法：python3 amazon/build_amazon.py [輸出.xlsx] [--set 鍵=值 ...] [--sens sens.json] [--q3v03 q3.json ...]
+#       （預設輸出 amazon/dist/20261104_Amazon個股模型_v0.3.3.xlsx；amazon/make_v031.sh 一次跑完 建置 → 重算 → 核對 → HTML）
 #       再以 LibreOffice headless 重算：soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir <dir> <raw.xlsx>
 # 全部活公式；藍字＝輸入、黑字＝公式。金額 US$bn（每股 US$）；MW＝IT 關鍵電力 MW（MW-IT）。
 # 欄位（模型頁共用）：C FY2024A、D FY2025A、E 9M26A、F Q4 26E、G FY2026E（＝E＋F）、H–M FY2027–FY2032、N 9M25A、O Q4 25A。資料截至 2026-09-30。
@@ -20,10 +20,10 @@ from openpyxl.workbook.defined_name import DefinedName
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 AP = argparse.ArgumentParser()
-AP.add_argument("out", nargs="?", default=os.path.join(HERE, "dist", "20261031_Amazon個股模型_v0.3.1.xlsx"))
+AP.add_argument("out", nargs="?", default=os.path.join(HERE, "dist", "20261104_Amazon個股模型_v0.3.3.xlsx"))
 AP.add_argument("--set", action="append", default=[], help="覆寫 In 頁基準值：鍵=值（敏感度與拆解重算用；值可為數字或以 = 開頭的公式）")
 AP.add_argument("--sens", help="敏感度與拆解鏈的重算結果（amazon/sens_v031.py 產生）")
-AP.add_argument("--q3v03", help="變動拆解用：以 v0.3 對 2026Q3 的模型值取代 2026Q3 實績（JSON：{事實 id: 值}；amazon/q3cf_v03.py 產生）")
+AP.add_argument("--q3v03", action="append", default=[], help="變動拆解用：以 JSON 的事實值取代事實總帳（{\"facts\": {事實 id: 值}}；可重複；v0.3.3 拆解鏈以此把 10-Q 值改回 v0.3.2（＝v0.3.1）的推導或沿用值）")
 ARGS = AP.parse_args()
 OUT = ARGS.out
 OVR = {}
@@ -47,8 +47,8 @@ for g in json.load(open(os.path.join(HERE, "data", "amazon_facts_20261008.json")
         FACTS[f["id"]] = f
 for f in json.load(open(os.path.join(HERE, "data", "amazon_facts_2026q3.json"), encoding="utf-8"))["items"]:
     FACTS[f["id"]] = f
-if ARGS.q3v03:
-    for k, v in json.load(open(ARGS.q3v03, encoding="utf-8"))["facts"].items():
+for _qf in ARGS.q3v03:
+    for k, v in json.load(open(_qf, encoding="utf-8"))["facts"].items():
         FACTS.setdefault(k, {"id": k})
         FACTS[k] = dict(FACTS[k], value=v)
 CONS = json.load(open(os.path.join(HERE, "data", "consensus_amzn_20261008.json"), encoding="utf-8"))
@@ -112,6 +112,8 @@ S_PR24Q3 = src("2024Q3 財報新聞稿（8-K 附件 99.1）", "2024-10-31", "htt
 S_XBRL = src("SEC XBRL companyfacts（稀釋加權股數）", "2026-10-08", "https://data.sec.gov/api/xbrl/companyfacts/CIK0001018724.json", "Verified")
 S_CALL = src("2026Q2 法說會逐字稿（二手轉錄：Webull；2026 現金資本支出約 220）", "2026-07-30", "https://www.webull.com/news/15364638750483456", "Interested-party")
 S_424 = src("424B5 英鎊票據公開說明書補充（£3.25B）", "2026-09-11", "https://www.sec.gov/Archives/edgar/data/1018724/000110465926107122/tm2624614-3_424b5.htm", "Interested-party")
+S_10Q26Q3 = src("Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；accession 0001018724-26-000040；全文不入 repo，數字與頁碼見 data/amazon_facts_2026q3.json）", "2026-10-30",
+                  "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/", "Verified")
 S_PR26Q3 = src("2026Q3 財報新聞稿（PDF 逐列轉錄 mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md；IR 網頁第二讀 22 項一致）", "2026-10-29",
                "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf", "Interested-party")
 S_CALL3 = src("2026Q3 法說會逐字稿（不入 repo；只引用數字與短語：2026 現金資本支出約 220、2027「meaningfully more」、backlog 578、run-rate 184、AWS 2027–2028 各 >40%）", "2026-10-29",
@@ -123,7 +125,8 @@ S_MB = src("MarketBeat 預估頁（60 位共識目標價 325.12；最近更新 2
 S_SP = src("StockAnalysis 預估頁（S&P Global：營收與調整後 EPS 共識；財報前）", "2026-10-26", "https://stockanalysis.com/stocks/amzn/forecast/", "Interested-party")
 S_MS = src("MarketScreener 年度共識（S&P Capital IQ 系；EBITDA、EBIT、淨利、GAAP EPS、資本支出、FCF；財報前，本輪未能更新）", "2026-10-08", "https://www.marketscreener.com/quote/stock/AMAZON-COM-INC-12864605/finances/", "Interested-party")
 S_TK = src(f"Tokenomics {TKV} 快照（amazon/data/tokenomics_snapshot_{TKV}.json；model/CURRENT＝{SNAP['source']['current']}，master {SNAP['source']['commit'][:7]}）", SNAP["source"]["extractedAt"], f"amazon/data/tokenomics_snapshot_{TKV}.json", "Derived")
-S_V03 = src("Amazon v0.3 成品與報告（加權目標價 215.58；拆解起點）", "2026-10-27", "amazon/dist/_待刪除/20261027_Amazon個股模型_v0.3.xlsx；amazon/docs/reports/20261027_amazon_v0.3_分部架構.md", "Derived")
+S_V032 = src("Amazon v0.3.2 成品與報告（Tokenomics 快照 v21.9，基準同 v0.3.1；加權目標價 217.65；v0.3.3 拆解起點）", "2026-11-04", "amazon/dist/_待刪除/20261104_Amazon個股模型_v0.3.2.xlsx；amazon/docs/reports/20261104_amazon_v0.3.2_TK快照v21.9.md", "Derived")
+S_V03 = src("Amazon v0.3 成品與報告（加權目標價 215.58；v0.3.1 拆解起點）", "2026-10-27", "amazon/dist/_待刪除/20261027_Amazon個股模型_v0.3.xlsx；amazon/docs/reports/20261027_amazon_v0.3_分部架構.md", "Derived")
 S_KEV = src("k 證據（amazon/data/kevidence_amazon_20261008.json；Silicon Data H100 指數、AWS p5 牌價）", "2026-10-08", "amazon/data/kevidence_amazon_20261008.json", "Verified")
 S_EPOCH = src("Epoch AI 資料中心目錄（New Carlisle、Ridgeland、Madison）", "2026-10-05", "https://epoch.ai/data/ai-data-centers/directory/", "Analogy")
 S_V01A = src("v0.1a 資料報告（AI 在役 MW、對外比例、世代占比的推導）", "2026-10-08", "amazon/docs/reports/20261008_amazon_v0.1a_資料.md", "Derived")
@@ -145,7 +148,7 @@ IN = wb.active; IN.title = "In"
 IN["A1"] = ("In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁〔一次動一個參數〕、不進目標價；情境 A／B／C 的驅動見本頁最後一節「J. 情境驅動對照」〔v0.3.2〕）。"
             "金額 US$bn、每股 US$、MW＝IT 關鍵電力 MW。每列一個鍵（定義名稱＝鍵）；Analogy、Assumed 一律給低／高區間")
 IN["A2"] = ("標記：Verified／Interested-party／Analogy／Assumed／Derived。「沿用 v0.2.2」＝v0.2.2 已核准的參數與證據（k 規格 kspec.py、對外比例），出處見 legacy_v0.2/ 與 docs/handoff。"
-            "不以公司 AWS 營收、backlog、run-rate 反推 k 或每 MW 價格（共同規則第 4 節）；公司說法只作 Recon 驗證列。SemiAnalysis 未使用。資料截至 2026-09-30（2026Q3 新聞稿；10-Q 未取得）")
+            "不以公司 AWS 營收、backlog、run-rate 反推 k 或每 MW 價格（共同規則第 4 節）；公司說法只作 Recon 驗證列。SemiAnalysis 未使用。資料截至 2026-09-30（2026Q3 新聞稿與 10-Q）")
 hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "說明"])
 ROWS = []
 def sec(t): ROWS.append(("sec", t))
@@ -156,7 +159,7 @@ NM = "只作對照，不進模型"
 sec("A. 價格、股數與共識目標價")
 inp("px", "AMZN 現價（2026-10-30 收盤）", "US$", None, 240.35, None, "Verified", f"{S_PX}；{S_PXY}", "10-29 收盤 243.79（財報日，−4.3%）；只影響上檔空間與評等")
 inp("px_val", "WACC 權益權重用股價（最近收盤；評價日 2026-09-30 收盤本輪未取得）", "US$", None, 240.35, None, "Verified", f"{S_PX}", "與現價分開：現價變動只影響上檔空間（拆解 (e)），本列變動歸 (f)")
-inp("sh_out", "流通股數（2026-09-30，資產負債表股本說明）", "十億股", None, round(FACTS["sh.out.20260930"]["value"] / 1000, 6), None, "Interested-party", S_PR26Q3, "10-Q 封面股數未取得；Supplemental 同值 10,811 百萬股")
+inp("sh_out", "流通股數（2026-09-30，資產負債表股本說明）", "十億股", None, round(FACTS["sh.out.20260930"]["value"] / 1000, 6), None, "Verified", f"{S_PR26Q3}；{S_10Q26Q3}（第 6 頁）", "與淨負債、未歸屬獎勵同日；10-Q 封面 10/21 為 10,813.1 百萬股（只作驗證：用封面會重複計入 9/30–10/21 歸屬的約 2.1 百萬股）")
 inp("sh_awd", "未歸屬股份獎勵（2026-09-30）", "十億股", None, fv("sh.awards.2026q3"), None, "Interested-party", S_PR26Q3, "223 百萬股（Supplemental）")
 inp("sh_val", "分部加總用稀釋股數＝流通股數＋未歸屬獎勵（倍數為 SBC 加回口徑，故計入稀釋）", "十億股", None, "=sh_out+sh_awd", None, "Derived", "修正一（F2）", "DCF 視 SBC 為現金成本，改用流通股數 sh_out，不另計稀釋")
 inp("cons_tp", "市場共識目標價（Koyfin 60 位平均，2026-10-30 財報後）", "US$", 230, 332.41, 405, "Interested-party", f"{S_FC}；{S_MB}", "MarketBeat 60 位 325.12（10-29）；區間為最低／最高目標價；" + NM)
@@ -171,10 +174,10 @@ inp("kd_new", "新增借款利率（2026-07 新發 2066 票據有效利率；只
 inp("kd_spr", "AA 級公司債約 10 年期利差（相對 10 年美債）", "%", 0.005, 0.0065, 0.01, "Assumed", "修正一（F4）：kd＝約 10 年期公司債殖利率", "Amazon 各期票據的 10 年期殖利率：未找到")
 inp("kd", "稅前債務成本（WACC 用）＝rf＋利差", "%", None, "=rf+kd_spr", None, "Derived", "修正一（F4）", "")
 inp("tax", "稅率（2023–2025 有效稅率平均）", "%", 0.135, "=AVERAGE(«Q.etr.C»,«Q.etr.D»,«Q.etr.E»)", 0.23, "Derived", S_10K, "18.96%、13.50%、19.61%；9M26 有效稅率 23.0%（含 Anthropic 評價利益的遞延稅）")
-inp("debt_q3", "債務面額（2026-09-30，推導：6/30 面額 133.0＋Q3 長期借款收入 48.1 − 償還）", "US$bn", None, fv("debt.face.20260930"), None, "Derived", f"{S_10Q}；{S_PR26Q3}",
-    "10-Q 附註未取得；帳面法（長期債帳面變動）為 177.2，差額主要是 2027 年到期票據轉入流動部分")
-inp("fl_pv", "融資租賃負債現值（沿用 2026-06-30；10-Q 未取得）", "US$bn", None, fv("lease.finPV.2026q2"), None, "Verified", S_10Q, "附註 4；Q3 新增融資租賃取得 1.47、本金償還 0.43")
-inp("fin_obl", "融資義務（financing obligations；沿用 2026-06-30）", "US$bn", None, fv("lease.finObl.2026q2"), None, "Verified", S_10Q, "")
+inp("debt_q3", "債務面額（2026-09-30，10-Q 附註 5；含 2026 Term Loan 17.5）", "US$bn", None, fv("debt.face.20260930"), None, "Verified", f"{S_10Q26Q3}（第 18 頁）",
+    "原（v0.3.1／v0.3.2）：推導 181.09（6/30 面額＋Q3 長期借款收入 − 償還）；帳面 173.1＋流動 6.8＋折價 0.9＝180.9")
+inp("fl_pv", "融資租賃負債現值（2026-09-30，10-Q 附註 3）", "US$bn", None, fv("lease.finPV.2026q3"), None, "Verified", f"{S_10Q26Q3}（第 14 頁）", "原（v0.3.1／v0.3.2）：沿用 2026-06-30 的 13.45")
+inp("fin_obl", "融資義務本金（financing obligations；流動 0.426＋非流動 9.3；2026-09-30，10-Q 附註 4 註 1）", "US$bn", None, fv("lease.finOblPrin.2026q3"), None, "Verified", f"{S_10Q26Q3}（第 15 頁）", "原（v0.3.1／v0.3.2）：沿用 2026-06-30 的 11.07（含利息、未折現）；改用本金，與 debt_q3（面額）、fl_pv（現值）同口徑；含利息為 11.565")
 inp("fin_debt", "類債務（融資租賃＋融資義務；淨負債與 WACC 的 D 皆計入，模型期間持平）", "US$bn", None, "=fl_pv+fin_obl", None, "Derived", "修正一（F6、核對第 4 點）", "")
 inp("ke", "股權成本＝rf＋β × ERP", "%", None, "=rf+beta*erp", None, "Derived", "CAPM", "")
 inp("wacc_adj", "WACC 調整（Sens 用；基準 0）", "pt", -0.01, 0, 0.01, "Assumed", "Sens", "")
@@ -283,7 +286,7 @@ inp("dps", "每股股利", "US$", None, 0, None, "Verified", S_PR26Q3, "Amazon �
 
 sec("G. 持股（分部加總與 DCF 都加；預測期業外評價損益設 0）")
 inp("ant_val", "Anthropic 投後估值（Series H）", "US$bn", None, fv("rel.ant.valSeriesH"), None, "Interested-party", S_ANT, "新創自報估值；2026Q3 其他業外 −0.7（無新評價利益）")
-inp("ant_sh", "Amazon 持有 Anthropic 比例", "%", 0.15, 0.18, 0.21, "Assumed", f"沿用 v0.2.2；{S_FORT}", "Fortune 15%–19%、帳列 ÷ 投後 19.7%")
+inp("ant_sh", "Amazon 持有 Anthropic 比例", "%", 0.15, 0.18, 0.21, "Assumed", f"沿用 v0.2.2；{S_FORT}", "Fortune 15%–19%；10-Q 帳面（優先股 92.5＋票據公允價值 146.2＝238.7）÷ 投後 965＝24.7%；票據轉換受 12% 持股上限限制，但上限可由 Amazon 選擇放棄（10-Q 第 11 頁）")
 inp("oai_val", "OpenAI 投後估值（投前 730＋該輪 110）", "US$bn", None, 840, None, "Derived", S_OAI, "")
 inp("oai_sh", "Amazon 持有 OpenAI 比例（投入 50 ÷ 840）", "%", None, 0.0595, None, "Derived", "沿用 v0.2.2", "資本結構（PBC＋基金會）可能使比例不同")
 inp("liq_disc", "持股流動性折價", "%", 0.0, 0.2, 0.4, "Assumed", "工作單第 2 節（20%）", "")
@@ -310,10 +313,11 @@ inp("g26q4_oilo", "公司指引 2026Q4 營業利益下緣", "US$bn", None, 28.5,
 inp("g26q4_oihi", "公司指引 2026Q4 營業利益上緣", "US$bn", None, 33.5, None, "Interested-party", S_PR26Q3, "")
 inp("g26q4_mid", "公司指引 2026Q4 營收中點（Q4 零售營收校準目標）", "US$bn", None, "=(g26q4_lo+g26q4_hi)/2", None, "Derived", S_PR26Q3, "")
 
-sec("I. v0.3 對照（Recon 變動拆解用）")
+sec("I. 前版對照（Recon 變動拆解用；v0.3.3 起點為 v0.3.2）")
+inp("v032_tp", "v0.3.2 加權目標價（讀法 2；2026-11-04，Tokenomics 快照 v21.9）", "US$", None, 217.650781868569, None, "Derived", S_V032, "217.650782（v0.3.2 成品 Val!B19；sens_v032_20261104.json base；與 v0.3.1 相同）")
+inp("v032_tp1", "v0.3.2 讀法 1 加權目標價", "US$", None, 198.507777904831, None, "Derived", S_V032, "")
+inp("v032_px", "v0.3.2 現價（2026-10-30；本版不變）", "US$", None, 240.35, None, "Verified", S_V032, "")
 inp("v03_tp", "v0.3 加權目標價（讀法 2；2026-10-27）", "US$", None, 215.58, None, "Derived", S_V03, "215.578882（v0.3 成品 Val!B19）")
-inp("v03_tp1", "v0.3 讀法 1 加權目標價", "US$", None, 194.26, None, "Derived", S_V03, "")
-inp("v03_px", "v0.3 現價（2026-10-26）", "US$", None, 249.09, None, "Verified", S_V03, "")
 
 INROW = {}
 r = 4
@@ -387,7 +391,7 @@ RNG2 = re.compile(r"([A-Za-z]+)!(\$[A-Z]+\$\d+):\1!")
 # =====================================================================================
 Q = wb.create_sheet("Q")
 Q["A1"] = ("Q — 實績（US$bn；股數十億股）：FY2023–FY2025、最近 8 季（2024Q4–2026Q3）、9M25、9M26、1H26 與近四季。資料取自 data/amazon_facts_20261008.json（10-K、10-Q、財報新聞稿逐季補充表）"
-           "與 data/amazon_facts_2026q3.json（2026Q3 新聞稿，兩讀核對；10-Q 未取得），藍字＝事實值、黑字＝加總或換算")
+           "與 data/amazon_facts_2026q3.json（2026Q3 新聞稿與 10-Q，兩讀核對），藍字＝事實值、黑字＝加總或換算")
 Q["A2"] = "核對列（綠底）：零售營收線合計＝北美＋國際、營收線合計＝合併營收、分部合計＝合併營收、分部營業利益合計＋未分攤＝合併營業利益、9M26＝事實總帳九個月值；實績皆須為 0"
 QCOL = {"fy2023": "C", "fy2024": "D", "fy2025": "E", "2024q4": "F", "2025q1": "G", "2025q2": "H", "2025q3": "I",
         "2025q4": "J", "2026q1": "K", "2026q2": "L", "2026q3": "M"}
@@ -452,17 +456,18 @@ qrow("oi", "合併營業利益", "is.TOT.oi", tag="Verified／Interested-party",
 qrow("unal", "未分攤（合併 − 分部合計；Amazon 分部已含全部費用）", cells={c: f"={c}{QR['oi']}-({c}{QR['oi_na']}+{c}{QR['oi_in']}+{c}{QR['oi_aws']})" for c in ALLQ}, flow=False, tag="Derived")
 qrow("chk_oi", "檢查：分部營業利益合計＋未分攤 − 合併營業利益", cells={c: f"={c}{QR['oi_na']}+{c}{QR['oi_in']}+{c}{QR['oi_aws']}+{c}{QR['unal']}-{c}{QR['oi']}" for c in ALLQ}, flow=False, tag="Derived", check=True)
 qrow("chk_9moi", "檢查：9M26 合併營業利益 − 新聞稿九個月值（事實 is.TOT.oi.2026m9）", cells={"O": f"=O{QR['oi']}-{fv('is.TOT.oi.2026m9') if 'is.TOT.oi.2026m9' in FACTS else 0}"}, flow=False, tag="Derived", check=True)
-qsec("4. 分部折舊攤銷（不含影音內容與營業租賃資產攤銷；2024 季度未收；2025Q4＝全年 − 前三季；2026Q3＝2026Q2 × 現金流量表 D&A 季增比〔推導，10-Q 未取得〕）")
+qsec("4. 分部折舊攤銷（不含影音內容與營業租賃資產攤銷；2024 季度未收；2025Q4＝全年 − 前三季；2026Q3＝10-Q 附註 8〔v0.3.3；原為 2026Q2 × 現金流量表 D&A 季增比的推導〕）")
 for k, idb, lab in (("da_na", "is.NA.da", "North America 折舊攤銷"), ("da_in", "is.INTL.da", "International 折舊攤銷"), ("da_aws", "is.AWS.da", "AWS 折舊攤銷")):
-    r = qrow(k, lab, idb, flow=False, tag="Verified／Derived（2026Q3）", srcs=f"{S_10K}；{S_10Q}；{S_10Q3}")
+    r = qrow(k, lab, idb, flow=False, tag="Verified", srcs=f"{S_10K}；{S_10Q}；{S_10Q3}；{S_10Q26Q3}")
     Q[f"J{r}"] = f"=E{r}-G{r}-H{r}-I{r}"; Q[f"J{r}"].font = Font(color="000000")
-    Q[f"M{r}"] = f"=L{r}*M{{DACF}}/L{{DACF}}"
+    if Q[f"M{r}"].value is None:                                  # 10-Q 缺時退回 v0.3.1 的推導
+        Q[f"M{r}"] = f"=L{r}*M{{DACF}}/L{{DACF}}"
     for col, parts in FLOWSUM:
         Q[f"{col}{r}"] = "=" + "+".join(f"{p}{r}" for p in parts)
 qrow("da_seg", "分部折舊攤銷合計", cells={c: f"=IF(COUNT({c}{QR['da_na']}:{c}{QR['da_aws']})=3,{c}{QR['da_na']}+{c}{QR['da_in']}+{c}{QR['da_aws']},\"\")" for c in ALLQ}, flow=False, tag="Derived")
 qsec("5. 損益（業外、稅、淨利）")
 qrow("intx", "利息費用", "is.intExp", tag="Verified／Interested-party", srcs=f"{S_10K}；{S_PR26Q3}")
-qrow("inti", "利息收入", "is.intInc", flow=False, tag="Interested-party", srcs=f"{S_10Q}；{S_PR26Q3}")
+qrow("inti", "利息收入", "is.intInc", flow=False, tag="Verified／Interested-party", srcs=f"{S_10Q}；{S_PR26Q3}；{S_10Q26Q3}（第 4 頁，同值）")
 qrow("pretax", "稅前淨利", "is.pretax", tag="Verified／Interested-party", srcs=f"{S_10K}；{S_PR26Q3}")
 qrow("taxx", "所得稅", "is.tax", tag="Verified／Interested-party", srcs=f"{S_10K}；{S_PR26Q3}")
 qrow("ni", "淨利", "is.ni", tag="Verified／Interested-party", srcs=f"{S_10K}；{S_PR26Q3}")
@@ -478,7 +483,8 @@ qrow("cxg", "資本支出（購置 PP&E，總額）", "cf.capexGross", tag="Veri
 qrow("cxn", "資本支出（現金，淨額＝購置 − 出售及獎勵）", "cf.capexNet", tag="Derived", srcs="由同季新聞稿現金流量表換算")
 r_dacf = qrow("da_cf", "折舊攤銷（現金流量表；含影音內容與營業租賃資產）", "cf.da", tag="Verified／Interested-party", srcs=f"{S_10K}；{S_PR26Q3}")
 for k in ("da_na", "da_in", "da_aws"):
-    Q[f"M{QR[k]}"] = Q[f"M{QR[k]}"].value.replace("{DACF}", str(r_dacf)); Q[f"M{QR[k]}"].font = Font(color="000000")
+    if isinstance(Q[f"M{QR[k]}"].value, str):
+        Q[f"M{QR[k]}"] = Q[f"M{QR[k]}"].value.replace("{DACF}", str(r_dacf)); Q[f"M{QR[k]}"].font = Font(color="000000")
 qrow("sbc", "股份基礎給付", "cf.sbc", tag="Verified／Interested-party", srcs=f"{S_10K}；{S_PR26Q3}")
 qrow("fcf", "自由現金流（公司口徑＝營運現金流 − 資本支出淨額）", cells={c: f"={c}{QR['cfo']}-{c}{QR['cxn']}" for c in ALLQ}, flow=False, tag="Derived")
 qrow("lpr", "融資租賃本金償還", "cf.finLeasePrin", tag="Verified／Interested-party", srcs=f"{S_10K}；{S_PR26Q3}", flow=False,
@@ -487,16 +493,17 @@ qrow("bb", "買回庫藏股", "cf.buyback", flow=False, tag="Verified", srcs=f"{
 qrow("div", "現金股利", "cf.dividend", flow=False, tag="Verified", srcs=f"{S_10K}；{S_PR26Q3}", cells={"O": 0})
 qrow("acq", "策略投資（收購與非上市投資淨額；2026 含 OpenAI、Anthropic）", flow=False, tag="Interested-party", srcs=f"{S_10Q}；{S_PR26Q3}",
      cells={"P": fv("cf.acqInvest.2026h1"), "O": fv("cf.acqInvest.2026m9")})
-qsec("7. 資本支出分布（PP&E 淨增加，含融資租賃取得與已取得未付款；10-K／10-Q 分部附註；2026Q3 未取得）")
+qsec("7. 資本支出分布（PP&E 淨增加，含融資租賃取得與已取得未付款；10-K／10-Q 分部附註；2026Q3 與 9M26＝10-Q 2026Q3 附註 8；只作展示，模型讀 FY2023–FY2025）")
 for k, idb, lab in (("pa_na", "capex.netAdd.NA", "North America PP&E 淨增加"), ("pa_in", "capex.netAdd.INTL", "International PP&E 淨增加"),
                     ("pa_aws", "capex.netAdd.AWS", "AWS PP&E 淨增加"), ("pa_corp", "capex.netAdd.CORP", "公司層 PP&E 淨增加"), ("pa_tot", "capex.netAdd.TOT", "PP&E 淨增加合計")):
-    r = qrow(k, lab, idb, flow=False, tag="Verified", srcs=f"{S_10K}；{S_10Q}")
+    r = qrow(k, lab, idb, flow=False, tag="Verified", srcs=f"{S_10K}；{S_10Q}；{S_10Q26Q3}")
     Q[f"P{r}"] = fv(f"{idb}.2026h1"); Q[f"P{r}"].font = BLUE
+    Q[f"O{r}"] = fv(f"{idb}.2026m9"); Q[f"O{r}"].font = BLUE
     Q[f"L{r}"] = None
 qsec("8. 期末餘額")
 qrow("cash", "現金、約當現金與有價證券", flow=False, tag="Verified／Interested-party", srcs=f"{S_10K}；{S_10Q}；{S_PR26Q3}",
      cells={"E": fv("bs.cash.fy2025") + fv("bs.mktSec.fy2025"), "L": fv("bs.cashMs.2026q2"), "M": fv("bs.cashMs.2026q3")})
-qrow("debt", "債務面額（2026-09-30 為推導值：6/30 面額＋Q3 長期借款收入 − 償還；10-Q 未取得）", flow=False, tag="Verified／Derived", srcs=f"{S_10K}；{S_10Q}；{S_PR26Q3}",
+qrow("debt", "債務面額（2026-09-30＝10-Q 附註 5，含 2026 Term Loan 17.5）", flow=False, tag="Verified", srcs=f"{S_10K}；{S_10Q}；{S_10Q26Q3}",
      cells={"E": fv("debt.face.fy2025"), "L": fv("debt.face.2026q2"), "M": fv("debt.face.20260930")})
 for col in range(3, 18):
     Q.column_dimensions[openpyxl.utils.get_column_letter(col)].width = 11
@@ -1291,33 +1298,35 @@ rec("AWS 年增 FY2027 vs 公司「>40%」", "=aws_g40", lambda s: f"={tk_(s, 'L
 rec("AWS 年增 FY2028 vs 公司「>40%」", "=aws_g40", lambda s: f"={tk_(s, 'L', 'aws', 'I')}/{tk_(s, 'L', 'aws', 'H')}-1", "同上", "", fmt="0.0%", gap=False)
 rec("AWS 年化營收 run-rate（Q4 26 × 4）vs 2026Q3 的 184", "=aws_rr", lambda s: f"={tk_(s, 'L', 'aws', 'F')}*4", "2026Q3 新聞稿", "")
 rec("AWS backlog 578 vs 模型未來 24 個月 AWS 營收（Q4 26＋FY2027＋0.75 × FY2028）", "=aws_bl", lambda s: f"={tk_(s, 'L', 'aws', 'F')}+{tk_(s, 'L', 'aws', 'H')}+0.75*{tk_(s, 'L', 'aws', 'I')}", "2026Q3 法說",
-    "backlog 認列期間未揭露（Q2 RPO 加權剩餘 6.4 年）；只作驗證列", gap=False)
+    "10-Q：RPO 578（加權剩餘 6.1 年，Q2 為 496、6.4 年）；24 個月內認列比例未揭露；只作驗證列", gap=False)
 rec("AWS AI 年化營收（2026-06-30）vs 公司「>25」", "=ai_rr", lambda s: "=mw_open*rpm_open/1000", "2026Q2 法說", "C3：不回頭改 MW 或 k，差距本身是發現")
 rec("要對上公司說法：所需 k（MW 不變）", None, lambda s: "=ai_rr*1000/(mw_open*he_open)", "", "對照 k_B（In 頁）", fmt="0.000", gap=False)
 rec("要對上公司說法：所需對外 MW（k 不變）", None, lambda s: "=ai_rr*1000/rpm_open", "", "對照期初 2,080 MW", fmt="#,##0", gap=False)
 _rr = SE_ROW_OF.get("rpm_open|高")
 rec("替代：期初 k 對上公司 run-rate 時的加權目標價變動（每股）", None, lambda s: f"=Sens!D{_rr}-Val!B19", "Sens 頁案例", "不作主值（共同規則第 4 節：不以公司說法反推 k）", fmt="0.00", gap=False)
 rec("上限檢查：FY2028 每 MW 年收入 ÷ Tokenomics P×Q（VR200）", None, lambda s: f"={tk_(s, 'T', 'pq_chk', 'I')}", f"Tokenomics {TKV}", "上限，不得作預測", fmt="0.0%", gap=False)
-rsec("D. v0.3 → v0.3.1：加權目標價變動拆解（(a)–(d) 為整本重算快照：Sens 頁基準差＝0 時有效；(e) 不影響目標價；(f) 為活公式）")
-CHAIN = [("S1", "(a) 時間推移與期間結構：評價日 2026-06-30 → 09-30（FY2026 改 9M 實績＋Q4 模型）、目標日 2027-10-27 → 10-31；2026Q3 用 v0.3 自己的模型值", "v03"),
-         ("S2", "(b) 新季實績：2026Q3 實績取代 v0.3 的模型值（分部營收與利益、營收線、利息、稅、淨利、現金流、資本支出、現金、債務、股數、策略投資）", "S1"),
-         ("S3", "(c) 公司指引與 C10：Q4 26 營收指引 240–247（v0.3 隱含 Q4 改為指引中點）、2026 資本支出約 220 維持 → C10 速度重解（下半年視窗；舊 Trainium 口徑）", "S2"),
-         ("S4", "(d) Tokenomics v21.4 → v21.7：Trainium 係數 1.0 → IF_NonNV_Hold_Trn 0.61（收入與 IT 資本支出；C10 速度依新係數重解）", "S3")]
-RC_B0 = rec("v0.3 加權目標價（2026-10-27）", "=v03_tp", None, "v0.3 成品 Val!B19", fmt="0.00", gap=False)
+rsec("D. v0.3.2 → v0.3.3：加權目標價變動拆解（10-Q 補入；(a)–(c) 為整本重算快照：Sens 頁基準差＝0 時有效；(d) 為活公式；評價日、現價、共識、Tokenomics、情境與權重不動）")
+CHAIN = [("S1", "(a) 債務面額：推導 181.09 → 10-Q 180.89（含 2026 Term Loan 17.5；淨負債、WACC 的 D、既有債務利率 kd_book）", "S0"),
+         ("S2", "(b) 融資租賃負債：沿用 6/30 的 13.45 → 10-Q 9/30 的 14.50（類債務 fin_debt）", "S1"),
+         ("S3", "(c) 融資義務：沿用 6/30 的 11.07（含利息）→ 10-Q 9/30 本金 9.73（改用資產負債表口徑；含利息為 11.57）", "S2")]
+RC_B0 = rec("v0.3.2 加權目標價（2026-11-04，Tokenomics 快照 v21.9）", "=v032_tp", None, "v0.3.2 成品 Val!B19", fmt="0.00", gap=False)
 _ok = f"ABS(Sens!E{SE_STALE})<0.000001"
+s0 = SENS.get("chain|S0", {}).get("tp")
+rec("檢查：10-Q 值全部改回後的重算值 − v0.3.2 加權目標價（應為 0；證明拆解只含 10-Q）", (f"=IF({_ok},{s0}-v032_tp,\"快照過期\")" if s0 else 0), None,
+    f"重算快照 chain|S0：目標價 {s0:.6f}" if s0 else "（尚未重算）", "；".join(f"{a}={b}" for a, b in SENS.get("chain|S0", {}).get("set", [])[:10]), fmt="0.000000", gap=False, check=True)
 CH_ROWS = []
 for k, lab, prv in CHAIN:
-    res = SENS.get(f"chain|{k}"); pv = SENS.get(f"chain|{prv}", {}).get("tp") if prv != "v03" else None
-    f_ = (f"=IF({_ok},{res['tp']}-" + ("v03_tp" if prv == "v03" else f"{pv}") + ",\"快照過期\")") if res else None
+    res = SENS.get(f"chain|{k}"); pv = SENS.get(f"chain|{prv}", {}).get("tp")
+    f_ = (f"=IF({_ok},{res['tp']}-{pv},\"快照過期\")") if (res and pv) else None
     CH_ROWS.append(rec(lab, f_, None, f"重算快照 chain|{k}：目標價 {res['tp']:.4f}" if res else "（尚未重算）", "；".join(f"{a}={b}" for a, b in (res or {}).get("set", [])[:10]), fmt="0.00", gap=False))
-s4 = SENS.get("chain|S4", {}).get("tp")
-CH_ROWS.append(rec("(e) 現價與共識：現價 249.09 → 240.35（10-30）、共識 332.24 → 332.41；只影響上檔空間與評等", 0, None, "", "", fmt="0.00", gap=False))
-CH_ROWS.append(rec("(f) 其他：無風險利率 5.00% → 4.99%、WACC 權益權重股價 249.09 → 240.35、Q4 其他營運項目改用 2025Q4 同期比例（C14）", f"=Val!B19-{s4}" if s4 else None, None, "活公式＝本版 − chain|S4", fmt="0.00", gap=False))
-RC_SUM = rec("拆解合計（(a)–(f)）", "=" + "+".join(f"B{x}" for x in CH_ROWS) if SENS else None, None, "", fmt="0.00", gap=False)
-RC_TOT = rec("總變動＝v0.3.1 − v0.3", f"=Val!B19-B{RC_B0}", None, "", fmt="0.00", gap=False)
+s3 = SENS.get("chain|S3", {}).get("tp")
+CH_ROWS.append(rec("(d) 2026Q3 分部折舊：推導（Q2 × 現金流量表 D&A 季增比）→ 10-Q（北美 4.57、國際 1.35、AWS 9.23；只進 9M26 實績欄）", f"=Val!B19-{s3}" if s3 else None, None, "活公式＝本版 − chain|S3", fmt="0.00", gap=False))
+RC_SUM = rec("拆解合計（(a)–(d)）", "=" + "+".join(f"B{x}" for x in CH_ROWS) if SENS else None, None, "", fmt="0.00", gap=False)
+RC_TOT = rec("總變動＝v0.3.3 − v0.3.2", f"=Val!B19-B{RC_B0}", None, "", fmt="0.00", gap=False)
 rec("檢查：拆解合計 − 總變動（應為 0）", f"=B{RC_SUM}-B{RC_TOT}" if SENS else 0, None, "", fmt="0.000000", gap=False, check=True)
-rec("另列：讀法 1 加權目標價 v0.3 → v0.3.1", "=v03_tp1", None, "", "", fmt="0.00", gap=False)
-rec("另列：v0.3 上檔空間（當時現價 249.09）", "=v03_tp/v03_px-1", None, "", "v0.3 評等：中立", fmt="0.0%", gap=False)
+rec("另列：讀法 1 加權目標價 v0.3.2 → v0.3.3", "=v032_tp1", None, "", "", fmt="0.00", gap=False)
+rec("另列：v0.3.2 上檔空間（現價 240.35，本版不變）", "=v032_tp/v032_px-1", None, "", "v0.3.2 評等：中立", fmt="0.0%", gap=False)
+rec("另列：v0.3 加權目標價（2026-10-27；v0.3 → v0.3.1 拆解見 v0.3.1 報告第 2 節）", "=v03_tp", None, "", "", fmt="0.00", gap=False)
 RC.column_dimensions["A"].width = 64
 for c in "BCDEF": RC.column_dimensions[c].width = 13
 RC.column_dimensions["G"].width = 40; RC.column_dimensions["H"].width = 60
@@ -1348,15 +1357,15 @@ SO.column_dimensions["A"].width = 8; SO.column_dimensions["B"].width = 90; SO.co
 RD = wb.create_sheet("README", 0)
 B_ = lambda blk, key, col: tk_("B", blk, key, col)
 lines = [
-    ("Amazon（AMZN）個股模型 v0.3.2（命題模組＋官方營收分部 → 損益表；2026Q3 季度滾動；v0.3.2 Tokenomics 快照 v21.9）　2026-11-04", True),
-    ("版本：v0.3.1（2026Q3 財報 2026-10-29 滾入；v0.3 為 2026-10-27）。資料截至 2026-09-30（2026Q3 新聞稿；10-Q 未取得，附註數字沿用 2026Q2）；FY2026＝9M 實績＋Q4 模型；Tokenomics v21.7（Trainium 改讀 IF_NonNV_Hold_Trn）。v0.3.2（2026-11-04）：Tokenomics 快照換 " + TKV + "（基準數值不變；只有高成本欄與 IF_NonNV_Out_Trn 改變，影響 Sens 頁）。", False),
+    ("Amazon（AMZN）個股模型 v0.3.3（命題模組＋官方營收分部 → 損益表；2026Q3 季度滾動、Tokenomics 快照 v21.9、10-Q 補入）　2026-11-04", True),
+    ("版本：v0.3.3（2026Q3 10-Q 補入；v0.3.2 為 2026-11-04 Tokenomics 快照 v21.9〔基準同 v0.3.1〕，v0.3.1 為 2026-10-31，v0.3 為 2026-10-27）。資料截至 2026-09-30（2026Q3 新聞稿與 10-Q）；FY2026＝9M 實績＋Q4 模型；Tokenomics " + TKV + "（Trainium 改讀 IF_NonNV_Hold_Trn）。本版只以 10-Q 取代 v0.3.2 沿用自 v0.3.1 的推導與沿用值（債務面額、融資租賃、融資義務〔改本金口徑〕、分部折舊；股數維持 9/30 資產負債表），評價日、現價、共識、Tokenomics、情境與權重不動。", False),
     ("命題：AWS 的 AI 容量（Trainium＋NVIDIA）能否以高於資金成本的報酬變現，零售與廣告的現金流能否支應資本支出。", True),
     ("核心問題：FY2028 AWS 營業利益率與自由現金流（扣股利後）是否轉正並維持。", True),
     ('="投資建議："&Val!B24&"（加權目標價 US$"&TEXT(Val!B19,"0.00")&"，現價 US$"&TEXT(px,"0.00")&"〔2026-10-30〕，上檔空間 "&TEXT(Val!B21,"+0.0%;-0.0%")&"；依五級固定規則）"', True),
     (f'="命題答案（情境 B）：FY2028 對外 AI ROIC "&TEXT({B_("T", "roic", "I")},"0.0%")&"，WACC "&TEXT(wacc,"0.0%")&"；打平所需機隊平均 k "&TEXT({B_("T", "k_be", "I")},"0.00")&"，模型 k "&TEXT({B_("T", "k_eff", "I")},"0.00")&"。FY2028 AWS 營業利益率 "&TEXT({B_("L", "m_aws", "I")},"0.0%")&"（FY2025 "&TEXT({B_("L", "m_aws", "D")},"0.0%")&"）；FY2028 自由現金流扣股利 "&TEXT({B_("C", "fcfd", "I")},"#,##0.0")&"；收支關卡（FY2026–FY2030 合計，情境加權）"&TEXT(CF!E6,"#,##0.0")&"。"', False),
     (f'="重點觀察 1：目標價 US$"&TEXT(Val!B19,"0.00")&"＝DCF "&TEXT(Val!B17,"0.00")&"（永續價值占 EV "&TEXT(Val!C8,"0%")&"）與分部加總 "&TEXT(Val!B18,"0.00")&" 各半；DCF 低是因為 WACC "&TEXT(wacc,"0.0%")&" 下，2027–2029 的 AI 資本支出（情境 B FY2027 "&TEXT({B_("C", "cx", "H")},"#,##0")&"）讓 FCFF 偏低，而 AI 增量報酬接近資金成本。"', False),
     (f'="重點觀察 2：分部加總中 AWS 其他（非 AI 雲端）占 "&TEXT({B_("V", "ev_awso", "C")}/{B_("V", "sev", "C")},"0%")&"、廣告占 "&TEXT({B_("V", "ev_ads", "C")}/{B_("V", "sev", "C")},"0%")&"；零售本業未來 12 個月 EBITDA（SBC 加回）"&TEXT({B_("V", "e_rt", "C")},"#,##0")&"；AWS AI 以自身 DCF 計 "&TEXT({B_("V", "ev_ai", "C")},"#,##0")&"。"', False),
-    (f'="重點觀察 3：三情境目標價 A "&TEXT(Val!B7,"0")&"／B "&TEXT(Val!C7,"0")&"／C "&TEXT(Val!D7,"0")&"（差異來自新產能 k 與 MW 速度，In 頁 J 節）；讀法 1 加權 "&TEXT(Val!B33,"0.00")&"；市場共識目標價 "&TEXT(cons_tp,"0")&"；v0.3 加權目標價 "&TEXT(v03_tp,"0.00")&"（拆解見 Recon D 節）。"', False),
+    (f'="重點觀察 3：三情境目標價 A "&TEXT(Val!B7,"0")&"／B "&TEXT(Val!C7,"0")&"／C "&TEXT(Val!D7,"0")&"（差異來自新產能 k 與 MW 速度，In 頁 J 節）；讀法 1 加權 "&TEXT(Val!B33,"0.00")&"；市場共識目標價 "&TEXT(cons_tp,"0")&"；v0.3.2 加權目標價 "&TEXT(v032_tp,"0.00")&"（10-Q 補入拆解見 Recon D 節）。"', False),
     ("", False),
     ("驅動 → 推導對照表（每頁輸入、推導量、因果方向）", True),
     ("In → Thesis：對外 AI MW（6/30 機隊 2,080 MW、評價日 9/30 加一季 C10 速度、之後每年新增 pace）× Tokenomics IF_HoldEcon × k → AWS AI 營收；新增 MW ÷ 對外比例 ×（IT＋自建機房成本）→ AI 資本支出 → IT 6 年／機房 20 年折舊 → AWS AI 營業利益（對外）與自用 AI 成本（零售）。", False),
@@ -1367,7 +1376,7 @@ lines = [
     ("", False),
     ("工作表：README → In（輸入；J 節情境驅動對照）→ Q（實績與核對）→ Thesis（命題模組）→ Seg（營收分部）→ PL → CF → Val → Recon（共識、指引、v0.3 拆解）→ Sens（敏感度）→ Sources。", False),
     ("標記：Verified、Interested-party、Analogy、Assumed、Derived。沿用 v0.2.2：k 規格（kspec.py）、對外比例、WACC 輸入、持股與同業倍數。SemiAnalysis 未使用。In 頁 D／F＝敏感度低／高，只用於 Sens 頁；共識區間只作對照。", False),
-    ("已知限制：(1) 公司未揭露 AI 在役 MW、對外比例與 AI 營收，AWS AI／AWS 其他的歷史分拆為估計；(2) 分部共識未找到，合併共識為財報前；(3) 同業倍數沿用 2026-10-07；(4) 到期債務假設全數再融資；(5) 10-Q 未取得：債務面額、在建、分部折舊、租賃為推導或沿用 2026Q2。", False),
+    ("已知限制：(1) 公司未揭露 AI 在役 MW、對外比例與 AI 營收，AWS AI／AWS 其他的歷史分拆為估計；(2) 分部共識未找到，合併共識為財報前；(3) 同業倍數沿用 2026-10-07；(4) 到期債務假設全數再融資；(5) 10-Q 不揭露在建工程與 RPO 的認列時程；供應商擔保貸款額度（最高約 80.0，2027Q1 起可動用）與 Globalstar 收購（約 10.9，預計 2027 年完成）未入模型。", False),
 ]
 for i, (tx, b) in enumerate(lines, 1):
     RD.cell(i, 1, tx).font = Font(bold=b)
