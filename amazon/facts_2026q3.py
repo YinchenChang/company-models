@@ -210,7 +210,7 @@ PG = {}          # 事實 id → (頁碼, [應出現在該頁的數字字串])
 def addq(iid, item, value, page, note_=None, unit="USD M", period=None, old=None, tag="[Verified]", find=None, note=""):
     nt = note
     if old is not None:
-        nt = (nt + "；" if nt else "") + f"原（v0.3.1）：{old}"
+        nt = (nt + "；" if nt else "") + f"原（v0.3.1／v0.3.2）：{old}"
     ITEMS.append({"id": iid, "item": item, "value": value, "unit": unit, "period": period or ("2026Q3" if iid.endswith(Q) else iid.split(".")[-1]),
                   "source": f"{TQ} 第 {page} 頁" + (f" {note_}" if note_ else ""), "url": TQ_URL, "docDate": "2026-10-30", "retrieved": "2026-11-04",
                   "tag": tag, "note": nt})
@@ -376,7 +376,7 @@ for iid, item, val, src in G:
     ITEMS.append({"id": iid, "item": item, "value": val, "unit": "USD M" if isinstance(val, (int, dict)) else "—", "period": "2026Q3", "source": src,
                   "url": URL, "docDate": "2026-10-29", "retrieved": "2026-10-31", "tag": "[Interested-party]", "note": ""})
 OUT = {"_readme": "Amazon 2026Q3 事實總帳（MAG v0.3.1 工作單第 1 節第 1 項；v0.3.2 補入 10-Q：mag/docs/workorders/20261104_MAG_10Q補入_2026Q3.md）。由 amazon/facts_2026q3.py 自財報新聞稿逐列轉錄讀取，"
-                  "10-Q 附註數字（債務明細與面額、租賃、融資義務、分部折舊、分部 PP&E、RPO、承諾、封面股數、持股帳面）逐筆附頁碼登錄（全文不入 repo）；原推導或沿用值保留在 note「原（v0.3.1）：」。"
+                  "10-Q 附註數字（債務明細與面額、租賃、融資義務、分部折舊、分部 PP&E、RPO、承諾、封面股數、持股帳面）逐筆附頁碼登錄（全文不入 repo）；原推導或沿用值保留在 note「原（v0.3.1／v0.3.2）：」。"
                   "金額 USD M（費用與流出以正值記）；checks＝第二次獨立讀取。",
        "asOf": "2026-09-30", "items": ITEMS, "checks": CHK}
 json.dump(OUT, open(os.path.join(HERE, "data", "amazon_facts_2026q3.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)

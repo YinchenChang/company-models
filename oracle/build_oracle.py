@@ -1,4 +1,4 @@
-# Oracle（ORCL）個股模型 v0.4.2（v0.4.1＝v0.4＋In 頁情境驅動對照；v0.4.2＝Sens 敏感度覆蓋（原則第 9 節）；兩者數值不變；命題＋營收分部架構；docs/plan/個股模型原則_命題加營收分部.md）
+# Oracle（ORCL）個股模型 v0.4.3（v0.4.1＝v0.4＋In 頁情境驅動對照；v0.4.2＝Sens 敏感度覆蓋（原則第 9 節）；v0.4.3＝Tokenomics 快照 v21.9；三者基準數值不變；命題＋營收分部架構；docs/plan/個股模型原則_命題加營收分部.md）
 # 用法：python3 oracle/build_oracle.py raw.xlsx ；再以 LibreOffice headless 重算：
 #   soffice --headless --calc --convert-to xlsx --outdir oracle/dist raw.xlsx
 # 會計年度 FY(t)＝t−1 年 6 月～t 年 5 月（FY2027＝2026-06～2027-05）。金額：十億美元（US$B），MW 為 IT 口徑（MW-IT）。
@@ -12,7 +12,9 @@ from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OVR = json.loads(os.environ.get("SENS_OVR", "{}"))
-TK = json.load(open(os.path.join(HERE, "data", "tokenomics_snapshot_v21.4.json"), encoding="utf-8"))["items"]
+TKV = "v21.9"   # v0.4.3：Tokenomics 快照 v21.4 → v21.9（基準數值不變；名稱清單同 v21.4 快照＝microsoft/data/tokenomics_names.txt）
+TKS = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
+TK = TKS["items"]
 SENS_F = os.path.join(HERE, "data", "sens_v04.json")
 SENS = json.load(open(SENS_F, encoding="utf-8")) if (os.path.exists(SENS_F) and not OVR) else None
 
@@ -47,7 +49,7 @@ def tkv(name, g):
 # In
 # =====================================================================================
 IN = wb.active; IN.title = "In"
-IN["A1"] = "In — 輸入（藍字＝輸入；黑字＝公式；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」〔v0.4.2〕）。金額：十億美元（US$B）；MW＝IT 口徑（MW-IT）；每 MW 金額：百萬美元／MW·年（＝US$B／GW·年）"
+IN["A1"] = "In — 輸入（藍字＝輸入；黑字＝公式；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」〔v0.4.3〕）。金額：十億美元（US$B）；MW＝IT 口徑（MW-IT）；每 MW 金額：百萬美元／MW·年（＝US$B／GW·年）"
 IN["A2"] = "標記：Verified／Interested-party／Analogy／Assumed／Derived；Analogy、Assumed 給低／高區間。SemiAnalysis 未使用。「沿用 v0.3.1」＝沿用 oracle/legacy_v0.3 舊引擎 company.json 已核准的參數（原出處見來源欄）"
 hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源1", "來源2／說明"])
 rows = []; sec = lambda t: rows.append(("sec", t)); inp = lambda *a: rows.append(a)
@@ -85,17 +87,17 @@ inp("rf_h100_30", "FY2030 汰換：H100 在役量的比例（換成 VR200）", "
 inp("rf_h100_31", "FY2031 汰換：H100 在役量的比例", "%", None, 0.5, None, "Assumed", "同上", "—")
 inp("rf_gb200_32", "FY2032 汰換：GB200 在役量的比例", "%", None, 1.0, None, "Assumed", "GB200 約 FY26 上線", "GB300 以後的汰換落在 FY2033 以後（模型期外；永續價值改用穩態汰換）")
 
-sec("D. 命題：每 MW 經濟性（Tokenomics v21.4 快照，基準成本情境；修正一自 v19.0 升級，與 MAG 相同）")
+sec(f"D. 命題：每 MW 經濟性（Tokenomics {TKV} 快照，基準成本情境；修正一自 v19.0 升級，與 MAG 相同；v0.4.3 由 v21.4 換入，基準欄不變）")
 for g in GEN:
-    inp(f"he_{g}", f"每 MW 年持有成本（經濟口徑）IF_HoldEcon｜{GNAME[g]}", "US$M／MW·年", round(TK["IF_HoldEcon"]["values"][GNAME[g]]["低成本"], 4), round(tkv("IF_HoldEcon", g), 4), round(TK["IF_HoldEcon"]["values"][GNAME[g]]["高成本"], 4), "Derived", "oracle/data/tokenomics_snapshot_v21.4.json（Tokenomics v21.4，3ac70ac；複製自 microsoft/data）Interface!13 列", "低／高＝Tokenomics 低成本／高成本情境（只作敏感度）")
+    inp(f"he_{g}", f"每 MW 年持有成本（經濟口徑）IF_HoldEcon｜{GNAME[g]}", "US$M／MW·年", round(TK["IF_HoldEcon"]["values"][GNAME[g]]["低成本"], 4), round(tkv("IF_HoldEcon", g), 4), round(TK["IF_HoldEcon"]["values"][GNAME[g]]["高成本"], 4), "Derived", f"oracle/data/tokenomics_snapshot_{TKV}.json（Tokenomics {TKV}，{TKS['source']['commit'][:7]}；名稱清單同 microsoft/data）Interface!13 列", "低／高＝Tokenomics 低成本／高成本情境（只作敏感度）")
 for g in GEN:
     inp(f"cx_{g}", f"每 MW IT 資本支出 IF_CapexIT｜{GNAME[g]}", "US$M／MW", None, round(tkv("IF_CapexIT", g), 4), None, "Derived", "同上 Interface!9 列（只含 IT；機房以租賃取得）", "沿用 v0.3.1 methodology.perMw.capexName")
 for g in GEN:
     inp(f"ox_{g}", f"每 MW 年營運費用（不含折舊；含電費）IF_OpexGW｜{GNAME[g]}", "US$M／MW·年", None, round(tkv("IF_OpexGW", g), 4), None, "Derived", "同上 IF_OpexGW（電費、IT 與廠房維護、人員、稅與保險）", "本版新增：AI 營運成本由 Tokenomics 正向推導（v0.3.1 用 EBITDAR 率）")
-inp("life_ai", "AI 設備折舊年限", "年", 5, 6, 6, "Derived", "Tokenomics IF_DeprLifeIT｜GB300 基準 6（高成本 4）", "Oracle 伺服器與網通設備耐用年限 6 年（10-K，" + FACTS + " ppe.serverLife）")
+inp("life_ai", "AI 設備折舊年限", "年", 5, 6, 6, "Derived", f"Tokenomics IF_DeprLifeIT｜GB300 基準 {TK['IF_DeprLifeIT']['values']['GB300 NVL72']['基準']:g}（高成本 {TK['IF_DeprLifeIT']['values']['GB300 NVL72']['高成本']:g}；{TKV}）", "Oracle 伺服器與網通設備耐用年限 6 年（10-K，" + FACTS + " ppe.serverLife）")
 inp("p_long", "長約價格證據：IREN–Microsoft GB300 五年約", "US$M／MW·年", 8.9073, 9.70, 12.7247, "Derived", "IREN 新聞稿 2025-11-03：$9.7bn ÷ 5 年 ÷ 200 MW（含 20% 預付）", "沿用 v0.3.1 pricing.anchorMultiple（低／高為 v0.3 的 k 0.70／1.00 × v5.27 錨換成固定價格）")
 inp("p_spot", "現貨價格證據：H100 Silicon Data 指數", "US$／GPU-hr", None, 2.82, None, "Verified", "Silicon Data H100 Index（2026-10-06）", "沿用 v0.3.1")
-inp("gh_h100", "每 GPU 小時持有成本 IF_GPUhrEcon｜Hopper H100", "US$／GPU-hr", None, round(TK["IF_GPUhrEcon"]["values"]["Hopper H100"]["基準"], 5), None, "Derived", "Tokenomics v21.4 快照", "—")
+inp("gh_h100", "每 GPU 小時持有成本 IF_GPUhrEcon｜Hopper H100", "US$／GPU-hr", None, round(TK["IF_GPUhrEcon"]["values"]["Hopper H100"]["基準"], 5), None, "Derived", f"Tokenomics {TKV} 快照", "—")
 inp("od_share", "隨需（現貨）占計費產能比例", "%", 0.0, 0.10, 0.20, "Assumed", "公司未揭露長約／隨需比例（找不到）；Oracle 以 take-or-pay 大型容量合約為主", "沿用 v0.3.1 pricing.anchorMultiple.onDemandShare")
 inp("k_long", "長約定價倍數 k_長約（＝長約價 ÷ GB300 持有成本）", "x", "=p_long_lo/he_gb300", "=p_long/he_gb300", "=p_long_hi/he_gb300", "Derived", "契約第 4 條預設解讀：長約以略低於打平租金換取預付與五年確定性", "Oracle–OpenAI 合約隱含 k 約 1.22（4.5 GW 視為 IT）／1.47（視為設施），金額未經證實，只作敏感度")
 inp("k_spot", "現貨定價倍數 k_現貨", "x", None, "=p_spot/gh_h100", None, "Derived", "H100 現貨指數 ÷ H100 每 GPU 小時持有成本", "—")
@@ -424,7 +426,7 @@ for s in SC:
         return "(" + "+".join(f"({p}{R['st_'+g]}+{c}{R['st_'+g]})*{pref}_{g}" for g in GEN) + f")/({p}{cR}+{c}{cR})"
     v = {c: "=" + mixsum(c, "he") for c in "CDFGHIJ"}
     rh = nr("anc"); v["E"] = f"=(C{rh}*C{R['bill']}*C{R['L']}+D{rh}*D{R['bill']}*D{R['L']})/(C{R['bill']}*C{R['L']}+D{R['bill']}*D{R['L']})"
-    put(TH, rh, "每 MW 錨：在役世代加權 IF_HoldEcon", "US$M／MW·年", v, "0.00", "期初＋期末存量平均加權（Tokenomics v21.4 基準成本）")
+    put(TH, rh, "每 MW 錨：在役世代加權 IF_HoldEcon", "US$M／MW·年", v, "0.00", f"期初＋期末存量平均加權（Tokenomics {TKV} 基準成本）")
     put(TH, nr("pm"), "每 MW 年收入（錨 × k × k 調整）", "US$M／MW·年", {c: f"={c}{rh}*k_mix*k_adj" for c in ALLC}, "0.00", "k：In 頁 k_mix")
     v = {c: f"={c}{R['bill']}*{c}{R['pm']}*{c}{R['L']}/1000" for c in "CDFGHIJ"}; v["E"] = f"=C{r}+D{r}"
     put(TH, nr("rev"), "OCI AI 算力營收（命題子列）", "US$B", v, "#,##0.00", "Q1 為估計（Q1 實際 OCI 7.388 的 AI 部分；其餘為非 AI 殘差）")
@@ -1096,7 +1098,7 @@ srcs = [("Oracle FY2026 10-K（附註 13 分部、經查核財報）", "2026-06-
         ("市場共識（MarketScreener／S&P、LSEG）", "2026-10-22", "oracle/data/consensus_orcl_20261022.json", "Interested-party"),
         ("現價：stockanalysis.com 歷史股價（2026-10-26 收盤 126.06）", "2026-10-27", "https://stockanalysis.com/stocks/orcl/history/", "Verified"),
         ("現價對照：markets/invest_map/data/prices.csv（2026-10-23 收盤 126.16）", "2026-10-23", "markets/invest_map/data/prices.csv", "Verified"),
-        ("Tokenomics v21.4 快照（IF_HoldEcon、IF_CapexIT、IF_OpexGW、IF_DeprLifeIT）", "2026-10-25", "oracle/data/tokenomics_snapshot_v21.4.json（YinchenChang/Tokenomics 3ac70ac；與 microsoft/data 同檔）", "Derived"),
+        (f"Tokenomics {TKV} 快照（IF_HoldEcon、IF_CapexIT、IF_OpexGW、IF_DeprLifeIT）", TKS["source"]["extractedAt"], f"oracle/data/tokenomics_snapshot_{TKV}.json（YinchenChang/Tokenomics {TKS['source']['commit'][:7]}，{TKS['source']['file']}；名稱清單同 microsoft/data）", "Derived"),
         ("IREN–Microsoft GB300 五年約 $9.7bn", "2025-11-03", "https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-97bn-ai-cloud-contract-microsoft", "Derived"),
         ("Silicon Data H100 Index", "2026-10-06", "https://www.silicondata.com/products/silicon-index/h100", "Verified"),
         ("Oracle–OpenAI 約 $300bn／4.5 GW（WSJ 轉述）", "2025-09-11", "https://www.theregister.com/2025/09/11/openai_reportedly_on_the_hook/", "Interested-party"),

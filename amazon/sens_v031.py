@@ -1,7 +1,7 @@
 # 敏感度與變動拆解（v0.3.1）：一次改一個 In 頁輸入（Sens 頁案例，定義在 build_amazon.py 的 SCASES，經 rowmap 的 SE_JOBS 傳來），
 # 整本以 LibreOffice 重算，讀 Val 頁加權目標價、投資建議、情境 B 目標價、FY2028 AWS 營業利益率、收支關卡，寫成 JSON 供 build_amazon.py --sens 使用。
-# 另跑 v0.3.1 → v0.3.2 拆解鏈（Recon D 節；v0.3.2 起，10-Q 補入）：把 10-Q 值依序改回 v0.3.1 的推導或沿用值（--q3v03 事實覆寫）：
-# S3＝本版但分部折舊 Q3 改回推導；S2＝S3＋融資義務改回 6/30（含利息）；S1＝S2＋融資租賃改回 6/30；S0＝S1＋債務面額改回推導（應＝v0.3.1）。
+# 另跑 v0.3.2 → v0.3.3 拆解鏈（Recon D 節；v0.3.3 起，10-Q 補入）：把 10-Q 值依序改回 v0.3.2（＝v0.3.1）的推導或沿用值（--q3v03 事實覆寫）：
+# S3＝本版但分部折舊 Q3 改回推導；S2＝S3＋融資義務改回 6/30（含利息）；S1＝S2＋融資租賃改回 6/30；S0＝S1＋債務面額改回推導（應＝v0.3.2）。
 # （v0.3 → v0.3.1 的拆解鏈見 git 歷史與 data/bridge_v031.json。）
 # 用法：python3 amazon/sens_v031.py <工作資料夾> <輸出 sens.json>（環境變數 JOBS＝平行數，預設 2）
 import json, os, subprocess, sys, shutil, tempfile
@@ -81,19 +81,19 @@ with ThreadPoolExecutor(max_workers=int(os.environ.get("JOBS", "2"))) as ex:
         res[k] = {**o, "set": [[a, b] for a, b in jobs[k]]}
         print(k, round(o["tp"], 4), o["rec"], round(o["gateB"], 1), flush=True)
 json.dump(res, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-# 變動拆解鏈的中間值（v0.3.2 報告第 2 節；amazon/data/bridge_v032.json）
+# 變動拆解鏈的中間值（v0.3.3 報告第 2 節；amazon/data/bridge_v033.json）
 if all(f"chain|{k}" in res for k in ("S0", "S1", "S2", "S3")):
-    v031 = 217.650781868569
-    ch = [("v0.3.1", v031)] + [(k, res[f"chain|{k}"]["tp"]) for k in ("S0", "S1", "S2", "S3")] + [("v0.3.2", res["base|base"]["tp"])]
-    labs = ["殘差：10-Q 值全部改回後 − v0.3.1（應為 0）", "(a) 債務面額 181.09 → 180.89", "(b) 融資租賃 13.45 → 14.50",
+    v032 = 217.650781868569   # v0.3.2（TK 快照 v21.9）基準＝v0.3.1
+    ch = [("v0.3.2", v032)] + [(k, res[f"chain|{k}"]["tp"]) for k in ("S0", "S1", "S2", "S3")] + [("v0.3.3", res["base|base"]["tp"])]
+    labs = ["殘差：10-Q 值全部改回後 − v0.3.2（應為 0）", "(a) 債務面額 181.09 → 180.89", "(b) 融資租賃 13.45 → 14.50",
             "(c) 融資義務 11.07（含利息）→ 9.73（本金）", "(d) 2026Q3 分部折舊：推導 → 10-Q"]
     steps = [{"item": labs[i], "from": ch[i][0], "to": ch[i + 1][0], "tp_from": ch[i][1], "tp_to": ch[i + 1][1], "delta": ch[i + 1][1] - ch[i][1]} for i in range(5)]
     other = {}
     for kk in ("tp1", "tpB", "gateB", "gateW", "awsm28B", "cx27B"):
         other[kk] = {k: res[f"chain|{k}"][kk] for k in ("S0", "S1", "S2", "S3")}
-        other[kk]["v0.3.2"] = res["base|base"][kk]
-    bo = {"_readme": "Amazon v0.3.1 → v0.3.2 加權目標價變動拆解（10-Q 補入；逐步重建鏈，amazon/sens_v031.py chain|S0–S3 的整本重算值）。"
-                     "S0＝10-Q 值全部改回 v0.3.1；S1＝(a) 後；S2＝(b) 後；S3＝(c) 後；(d)＝本版 − S3。",
+        other[kk]["v0.3.3"] = res["base|base"][kk]
+    bo = {"_readme": "Amazon v0.3.2 → v0.3.3 加權目標價變動拆解（10-Q 補入；逐步重建鏈，amazon/sens_v031.py chain|S0–S3 的整本重算值）。"
+                     "S0＝10-Q 值全部改回 v0.3.2；S1＝(a) 後；S2＝(b) 後；S3＝(c) 後；(d)＝本版 − S3。",
           "chain": dict(ch), "chain_sets": {k: res[f"chain|{k}"]["set"] for k in ("S0", "S1", "S2", "S3")}, "steps": steps, "other_outputs": other,
-          "total": ch[-1][1] - v031, "sum_check": sum(x["delta"] for x in steps) - (ch[-1][1] - v031)}
-    json.dump(bo, open(os.path.join(HERE, "data", "bridge_v032.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+          "total": ch[-1][1] - v032, "sum_check": sum(x["delta"] for x in steps) - (ch[-1][1] - v032)}
+    json.dump(bo, open(os.path.join(HERE, "data", "bridge_v033.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
