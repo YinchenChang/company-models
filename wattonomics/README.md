@@ -13,7 +13,7 @@
 | 現行版本 | 見 `model/CURRENT` |
 | 下游快照 | `data/CURRENT_SNAPSHOT` 指向的 `data/wattonomics_snapshot_v*.json`（`tools/export_snapshot.py` 產生；名稱前綴 `WIF_`） |
 | TK 快照 | `wattonomics/data/tokenomics_snapshot_v21.9.json`（v0.2 起自抽：`tools/tokenomics/import_tokenomics.py`，名稱清單＝Siliconomics 清單＋`IF_FacilityGW`；Siliconomics 仍為 v21.7） |
-| Siliconomics 快照 | `siliconomics/data/CURRENT_SNAPSHOT` 指向者 |
+| Siliconomics 快照 | `siliconomics/data/CURRENT_SNAPSHOT` 指向者（v0.2.2 起 v0.13；只讀基準名稱 `*_Base`：`SIF_DeployGW_Base`、`SIF_AIITCapex_Base`、`SIF_UnitsCoef_Base`、`SIF_CapGW_Base` 等，不讀 A／B／C） |
 | 規劃書 | `docs/plan/20261028_全市場GW帳_規劃.md` |
 | 工作單 | `wattonomics/docs/workorders/` |
 | 證據（查證代理產出，chat 端複核後才入 In） | `wattonomics/evidence_raw/`；`tools/import_evidence.py` → `builder/seed/evidence_v0.1.json`（DB_Evidence，附 C 段判定）；`tools/import_funding.py` → `builder/seed/funding_v<版>.json`（FundRaw、Facility，附 G／H／Q 段判定與更正） |
@@ -82,7 +82,7 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 
 ### NVIDIA 資料中心營收對帳點（工作單 20261102 v0.1.9 F4–F8；Andy 2026-11-02 16:22）
 
-- Compare 頁 F 節，2025–2027 逐年：(1) 上線年新增 IT GW（基準）→ (2) 出貨年 GW（上線年反推：出貨_t＝(1−L)·上線_t＋L·上線_t+1＋inv·(上線_t+1 − 上線_t)，L＝`lag_on` ÷ 12、inv＝`inv_on`）→ (3) 非 NVIDIA 占比（Players `nnv_mkt`，出貨年）→ (4) NVIDIA 出貨 GW → (5) 每 IT GW NVIDIA 內容（世代加權）→ (6) 隱含 NVIDIA 資料中心營收 → (7) NVIDIA 實績／指引（低、基準、高）→ (8) 比值與 `tolband` 判定 → (9) 反解所需每 GW 內容；另列 Siliconomics R4 橋接 r1 欄（Siliconomics r1 淨額（已扣汰換）；Wattonomics 毛額）。
+- Compare 頁 F 節，2025–2027 逐年：(1) 上線年新增 IT GW（基準）→ (2) 出貨年 GW（上線年反推：出貨_t＝(1−L)·上線_t＋L·上線_t+1＋inv·(上線_t+1 − 上線_t)，L＝`lag_on` ÷ 12、inv＝`inv_on`）→ (3) 非 NVIDIA 占比（Players `nnv_mkt`，出貨年）→ (4) NVIDIA 出貨 GW → (5) 每 IT GW NVIDIA 內容（世代加權）→ (6) 隱含 NVIDIA 資料中心營收 → (7) NVIDIA 實績／指引（低、基準、高）→ (8) 比值與 `tolband` 判定 → (9) 反解所需每 GW 內容；另列 Siliconomics 欄（v0.2.2 起直接讀出貨年 `SIF_DeployGW_Base`，不再由 r1 上線值往返換算）。
 - **只並列、不校準**：基準數值不因對帳點改變；帶外標「待診斷」，各層先用自己的數字，上游（Tokenomics 每 GW 內容）先更新再對帳（Andy 11-02 16:22）。NVIDIA 公司指引（FY2028 年增約 70%）屬 Interested-party，只作對帳點，不入基準。
 - (5) 的推導：Siliconomics `nvc_gb_tk`（20.84）＝TK `IF_GPUsPerGW` GB300 × Siliconomics `nv_content`（每顆 NVIDIA 內容，GB300）；H100、GB200 以同一 NVIDIA 占機架價比 × TK 各自機架價（Analogy）；VR200、Rubin Ultra 用 GB300 值〔Assumed；TK 無權威分世代值〕；markets/chip_bridge v0.2.2 Bridge 第 44 列（AI半導體產品，非 TK）的 VR200 拆分 23.47（2026 HBM 價）／21.85（2027 HBM 價、NVIDIA 吸收）只列備忘（`WIF_Recon_NV_*Memo*`）；Requests R7 請 Tokenomics 採用權威分世代值。
 - 名稱 `WIF_Recon_NV_<ShipGW|NVGW|ContentPerGW|ImpliedRev|ActualRev|Ratio|ReqContent>_<2025–2027>`；Checks N-K1（INFO，不計入 ERROR／WARN）。互動頁不加此節。
@@ -111,6 +111,10 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 - 原話（11-04 08:06）：「要，這才是Oracle真正付出的資本開支，其他的改租賃->營業現金流降低這條線」；（11-04 08:21）融資租賃「處理上應該就要走資本開支那條線」。
 - 承租玩家（Oracle、CoreWeave、Nebius）的甲2 每 GW 成本與 Gap AI 需要＝IT＋（1 − 承租比例 ×（1 − 融資租賃占比））× 廠房（In S9：`lease_<p>`、`finl_<p>`）。**融資租賃走資本支出線**：融資租賃廠房算承租方資本支出（會計擁有者），其金額為資金來源③（同 Funding「新增融資租賃」類，2026 起；`WIF_Gap_FinLeaseSrc_<yyyy>`）；營業租賃廠房歸**出租方**列（`WIF_Gap_LessorFacility_<yyyy>`；含在市場其餘參考列與 Spend 備忘，Spend 合計不變），不入 11 家收支。
 - 營業現金流：個股模型已扣租金（Oracle v0.4.2 Thesis 第 57 列 → CF!55），不另扣；融資租賃部分加回租金中的本金＝Σ（2026 起融資租賃廠房上線年金額）÷ `lease_term`（直線法，Assumed 15–20 年；`WIF_Gap_FinLeasePrincipalAddback_<yyyy>`），利息留在營業現金流。融資租賃本金償還屬籌資活動、不在營業現金流；日後若改用財報實際營業現金流，須另扣融資租賃本金。
+
+### 供給上限（v0.2.2；校準原則第 2 條）
+
+- 基準 GW＝需求側錨點，但不得超過供給產能（Andy 11-04）。Compare G 節：Wattonomics 出貨年 GW（全市場一律以上線年新增鏡像反推；F2 對七家與 xAI 則用付款年，若 G 節也改用付款年，2026 headroom 為 6.4%）× 成本等值係數（Wattonomics 每 IT GW IT capex ÷ `SIF_ITCapexPerGW`）對 `SIF_CapGW_Base`，逐年 headroom；超過時 Checks X4-K1 WARN。只檢查，不自動截斷（判斷題，預設不截斷）。限制：2026 年上限等於 Siliconomics 自己的需求（CapHead 0、HBM 利用率 1.0），2026 年只是與 Siliconomics 需求對帳，不是獨立的供給檢驗；成本等值係數以 $ 占比當 GW 權重、市場含中國而上限多半不含，兩項都使 Wattonomics 偏高（保守方向），各讀法下 2026 headroom 介於 6%–18%。
 
 ### 汰換（v0.2；工作單 20261104 V7）
 
@@ -143,6 +147,8 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 | Decisions、DB_Evidence、Sources、Requests | 決策（GL01-01 起）、證據、來源 ID、對 TK／Siliconomics 的請求；v0.1.9：GL01-55 至 GL01-61、DB_Evidence N#1、SRC_GL_331–333、Requests R7 |
 
 ## 版本紀錄（摘要；完整見活頁簿 README 頁）
+
+- v0.2.2（2026-11-04）：Siliconomics 改讀 v0.13 `*_Base`（X1）；Deploy 不乘 Siliconomics 顆數係數（X2，地位鏈）；Compare F3 改讀 Siliconomics 出貨年（X3）；供給上限檢查 Compare G 節與 Checks X4-K1（X4，只檢查不截斷）。基準 GW 不變。報告 `docs/verify/20261104_v0.2.2_build.md`。
 
 - v0.2.1（2026-11-04）：W1 對帳點非 NVIDIA 殘差法、W2 新納入存量汰換攤提、W3 Oracle 三園區 Epoch IT 容量、W4 Anthropic v0.1.8；基準 GW 不變。工作單 `docs/workorders/20261104_Wattonomics_v0.2.1.md`；報告 `docs/verify/20261104_v0.2.1_build.md`；R4 r4。
 
