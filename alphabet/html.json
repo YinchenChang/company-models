@@ -45,7 +45,7 @@
     },
     {
      "type": "h3",
-     "text": "與上一版的差異（季度滾動）"
+     "text": "與上一版的差異"
     },
     {
      "type": "list",
@@ -1067,7 +1067,7 @@
      ],
      "rowgen": {
       "sheet": "Recon",
-      "rows": "24-37",
+      "rows": "24-42",
       "cols": [
        "A",
        "B",
@@ -1090,7 +1090,7 @@
     },
     {
      "type": "table",
-     "caption": "@Recon!A39",
+     "caption": "@Recon!A44",
      "head": [
       "項目",
       "數值",
@@ -1098,7 +1098,30 @@
      ],
      "rowgen": {
       "sheet": "Recon",
-      "rows": "41-51",
+      "rows": "46-56",
+      "cols": [
+       "A",
+       "B",
+       "C"
+      ],
+      "fmts": [
+       "",
+       "n2",
+       ""
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A59",
+     "head": [
+      "項目",
+      "數值",
+      "說明"
+     ],
+     "rowgen": {
+      "sheet": "Recon",
+      "rows": "61-74",
       "cols": [
        "A",
        "B",
@@ -1198,7 +1221,7 @@
       ],
       [
        "Tokenomics 快照",
-       "@Sources!B12"
+       "@Sources!B13"
       ]
      ]
     },

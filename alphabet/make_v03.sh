@@ -1,14 +1,14 @@
 #!/bin/bash
-# Alphabet 個股模型 v0.3.4（v0.3.1 季度滾動＋v0.3.3 敏感度覆蓋＋v0.3.4 Tokenomics 快照 v21.9；腳本沿用 v0.3 名稱）：一次跑完 建置 → 敏感度重算（可略）→ 成品重算 → 核對 → HTML。
-#   bash alphabet/make_v03.sh            # 沿用已提交的敏感度結果 alphabet/data/sens_v034_20261104.json
-#   SENS=1 bash alphabet/make_v03.sh     # 重新跑敏感度（約 120 次整本重算；JOBS＝平行數）
+# Alphabet 個股模型 v0.3.5（v0.3.1 季度滾動＋v0.3.3 敏感度覆蓋＋v0.3.4 Tokenomics 快照 v21.9＋v0.3.5 10-Q 補入；腳本沿用 v0.3 名稱）：一次跑完 建置 → 敏感度重算（可略）→ 成品重算 → 核對 → HTML。
+#   bash alphabet/make_v03.sh            # 沿用已提交的敏感度結果 alphabet/data/sens_v035_20261104.json
+#   SENS=1 bash alphabet/make_v03.sh     # 重新跑敏感度（約 80 次整本重算；JOBS＝平行數，記憶體小時 JOBS=1）
 # 需要：python3＋openpyxl、LibreOffice（soffice）；tools/segment_check/check_segments.py 尚未在 main 時以 SEGCHECK 指定路徑。
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-OUTNAME="20261104_Alphabet個股模型_v0.3.4.xlsx"
-SJ="alphabet/data/sens_v034_20261104.json"
+OUTNAME="20261104_Alphabet個股模型_v0.3.5.xlsx"
+SJ="alphabet/data/sens_v035_20261104.json"
 python3 alphabet/facts_2026q3.py                       # 2026Q3 事實總帳（兩讀核對；不一致即失敗）
 if [ "${CALIB:-0}" = "1" ]; then python3 alphabet/calib_pace_v031.py "$WD/calib"; fi   # C10 速度重解（改了資本支出相關輸入時）
 if [ "${SENS:-0}" = "1" ]; then

@@ -51,6 +51,7 @@ hdr(IN, 3, ["鍵", "項目", "單位", "低", "基準", "高", "標記", "來源
 rows = []; sec = lambda t: rows.append(("sec", t)); inp = lambda *a: rows.append(a)
 EDG = "https://www.sec.gov/Archives/edgar/data/0001596532/"
 PR_Q226 = EDG + "000159653226000174/ex991q226-earningsrelease.htm"
+PR_Q326 = EDG + "000159653226000252/ex991q326-earningsrelease.htm"   # v0.4：3Q26 實績與 4Q26 指引（2026-11-03）
 PR_Q425 = "https://www.businesswire.com/news/home/20260212962784/en/Arista-Networks-Inc.-Reports-Fourth-Quarter-and-Year-End-2025-Financial-Results"
 CALL = "法說轉述：BigGo Finance 摘要（2026-08-04；二手）"
 
@@ -85,16 +86,16 @@ inp("ai25", "2025 年 AI 營收（參考）", "US$B", 1.5, 1.63, 1.8, "Derived",
 sec("D. 毛利率")
 inp("d_ai", "AI 營收毛利率低於非 AI 的幅度", "pt", 0.03, 0.06, 0.10, "Assumed", "公司：毛利率下滑來自雲端與 AI 大客戶占比（2Q26 毛利率較去年同期 −2.2 個百分點；法說，二手）", "產品別毛利率未揭露：未找到")
 
-sec("E. FY2026 錨點（Q1–Q2 實績＋Q3 指引＋全年指引）")
-inp("fy_rev", "FY2026 營收指引", "US$B", None, 12.6, None, "Interested-party", CALL + "：約 $12.6B（8 月由 11.5 上修）", "StockAnalysis 共識 12.68（27 位）")
-inp("fy_gm", "FY2026 non-GAAP 毛利率指引（中點）", "%", 0.62, 0.63, 0.64, "Interested-party", CALL + "：62–64%", "sec-api 彙整同值")
-inp("fy_oim", "FY2026 non-GAAP 營業利益率指引（中點）", "%", 0.48, 0.485, 0.49, "Interested-party", CALL + "：48–49%", "sec-api 彙整同值")
-inp("q3_rev", "3Q26 營收指引", "US$B", None, 3.3, None, "Interested-party", PR_Q226 + "：約 $3.3B", "BigGo（二手）同值")
-inp("q3_gm", "3Q26 non-GAAP 毛利率指引", "%", 0.62, 0.63, 0.64, "Interested-party", CALL + "：約 63%", "第二來源：未找到")
-inp("q3_oim", "3Q26 non-GAAP 營業利益率指引（中點）", "%", 0.48, 0.485, 0.49, "Interested-party", PR_Q226 + "：48–49%", "—")
-inp("q_oth", "3Q、4Q26 non-GAAP 其他收益（每季）", "US$B", 0.12, 0.13, 0.14, "Derived", "1Q26 0.1136、2Q26 0.1263（公司，GAAP 其他收益）", "現金與有價證券 13.3（2026-06，公司）")
-inp("q_tx", "3Q、4Q26 non-GAAP 有效稅率", "%", 0.20, 0.21, 0.22, "Derived", "2Q26：1 − 1301.7 ÷（1513.7＋126.3）＝20.6%；1Q26 21.3%（推導）", "3Q26 EPS 指引 1.06–1.08 隱含約 21%（推導）")
-inp("q_sh", "3Q、4Q26 稀釋股數", "十億股", None, 1.277, None, "Derived", "2Q26 1.2760（公司）", "—")
+sec("E. FY2026 錨點（v0.4：1Q–3Q 實績＋4Q26 公司指引；原「全年指引 − 前三季」改為公司 4Q26 指引，同列改寫不位移）")
+inp("q4_rev", "4Q26 營收指引（中點）", "US$B", 3.9, 3.95, 4.0, "Interested-party", PR_Q326 + "：$3.9–4.0B", "v0.3.1 本列為 FY2026 營收指引 12.6（fy_rev；4Q＝全年 − 前三季＝3.56）；新指引隱含 FY2026 約 13.35")
+inp("q4_gm", "4Q26 non-GAAP 毛利率（公司新聞稿未給；假設）", "%", 0.62, 0.63, 0.64, "Assumed", "公司 4Q26 新聞稿只給營收、營業利益率、EPS；8 月全年毛利率指引 62–64%（" + CALL + "）", "3Q26 實績 64.0%、前 9 月 63.4%（公司）；法說逐字稿：未取得。只影響毛利與營業費用拆分（營業利益依指引）")
+inp("q4_oim", "4Q26 non-GAAP 營業利益率指引（中點）", "%", 0.48, 0.485, 0.49, "Interested-party", PR_Q326 + "：48–49%", "v0.3.1 為 FY2026 營業利益率指引 48.5%（fy_oim）")
+inp("q3_rev", "3Q26 營收（實績）", "US$B", None, 3.6576, None, "Verified", PR_Q326 + "：3,657.6 百萬美元（Product 3,190.0、Service 467.6；年增 58.5%）", "v0.3.1 為指引約 3.3（Interested-party）")
+inp("q3_gp", "3Q26 non-GAAP 毛利（實績）", "US$B", None, 2.3411, None, "Verified", PR_Q326 + "：non-GAAP 毛利 2,341.1 百萬美元（毛利率 64.0%）", "v0.3.1 本列為毛利率指引約 63%（q3_gm）")
+inp("q3_oi", "3Q26 non-GAAP 營業利益（實績）", "US$B", None, 1.7958, None, "Verified", PR_Q326 + "：non-GAAP 營業利益 1,795.8 百萬美元（營業利益率 49.1%）", "v0.3.1 本列為營業利益率指引 48.5%（q3_oim）")
+inp("q_oth", "4Q26 non-GAAP 其他收益", "US$B", 0.13, 0.14, 0.15, "Derived", "3Q26 non-GAAP 0.1386＝GAAP 0.2731 − 策略投資利得 0.1345（公司）；1Q26 0.1136、2Q26 0.1263", "現金與有價證券 14.4（2026-09，公司）")
+inp("q_tx", "4Q26 non-GAAP 有效稅率", "%", 0.20, 0.21, 0.22, "Derived", "3Q26：1 − 1530.8 ÷（1795.8＋138.6）＝20.9%；2Q26 20.6%（推導）", "4Q26 EPS 指引 1.26–1.30；本列與 q_oth、q_sh 推得約 1.27")
+inp("q_sh", "4Q26 稀釋股數", "十億股", None, 1.279, None, "Derived", "3Q26 1.2782（公司）", "—")
 inp("ai26", "FY2026 AI 營收（公司目標「至少」）", "US$B", 3.5, 3.5, 4.0, "Interested-party", CALL + "：AI 至少 $3.5B（2 月 3.25、8 月 3.5）；其中 scale-across 約 1.2", "sec-api 彙整：至少 $3.50B（2026-08-04 法說）")
 
 sec("F. 營業費用、其他收益、稅、股數（FY2027 起）")
@@ -154,9 +155,9 @@ def defname(name, ref):
 # ---------------- Q：實績與 FY2026 錨點 ----------------
 Q = wb.create_sheet("Q")
 Q["A1"] = "Q — 實績（十億美元；EPS 為美元；股數為十億股）。口徑：公司 non-GAAP。藍字＝輸入；黑字＝公式。實績取自 Arista 8-K 新聞稿（SEC EDGAR、Business Wire）"
-Q["A2"] = "FY2026 錨點＝1Q26、2Q26 實績＋3Q26 指引＋4Q26（＝全年指引 − 前三季；毛利率、營業利益率同法）。1Q26＝上半年合計 − 2Q26。FY2025 non-GAAP 淨利與 EPS 為 2025 年度新聞稿原報值；公司 2026 年起改 non-GAAP 稅額方法並重編 2025 年各季，重編後的全年值：未找到"
-hdr(Q, 3, ["項目", "FY2025A", "1Q26", "2Q26", "3Q26（指引）", "4Q26（全年指引 − 前三季）", "FY2026 錨點", "標記", "來源1（公司）", "來源2／說明"])
-S1 = "FY2025：" + PR_Q425 + "；1Q26、2Q26：" + PR_Q226 + "（2Q26 與上半年合計）"
+Q["A2"] = "FY2026 錨點（v0.4）＝1Q26–3Q26 實績＋4Q26 公司指引（營收 3.9–4.0、營業利益率 48–49%；毛利率公司未給，假設 63%）。1Q26＝上半年合計 − 2Q26。FY2025 non-GAAP 淨利與 EPS 為 2025 年度新聞稿原報值；公司 2026 年起改 non-GAAP 稅額方法並重編 2025 年各季，重編後的全年值：未找到"
+hdr(Q, 3, ["項目", "FY2025A", "1Q26", "2Q26", "3Q26（實績）", "4Q26（指引）", "FY2026 錨點", "標記", "來源1（公司）", "來源2／說明"])
+S1 = "FY2025：" + PR_Q425 + "；1Q26、2Q26：" + PR_Q226 + "（2Q26 與上半年合計）；3Q26：" + PR_Q326
 S2 = "1Q26＝上半年 − 2Q26；交叉：sec-api 彙整的 GAAP、non-GAAP 毛利率與營業利益率同值"
 def qrow(r, label, vals, fmt="#,##0.000", tag="Verified", s1=S1, s2=S2, ann=None):
     Q.cell(r, 1, label)
@@ -166,19 +167,19 @@ def qrow(r, label, vals, fmt="#,##0.000", tag="Verified", s1=S1, s2=S2, ann=None
     if ann != "":
         Q[f"G{r}"] = ann or f"=SUM(C{r}:F{r})"; Q[f"G{r}"].number_format = fmt
     Q.cell(r, 8, tag); Q.cell(r, 9, s1); Q.cell(r, 10, s2)
-qrow(4, "營收", {"B": 9.0057, "C": "=5.7447-D4", "D": 3.0357, "E": "=q3_rev", "F": "=fy_rev-C4-D4-E4"}, tag="Verified／Interested-party（3Q、4Q 指引）")
-qrow(5, "non-GAAP 毛利", {"B": 5.8154, "C": "=3.6155-D5", "D": 1.9247, "E": "=E4*q3_gm", "F": "=fy_rev*fy_gm-C5-D5-E5"}, tag="Verified／Interested-party")
+qrow(4, "營收", {"B": 9.0057, "C": "=5.7447-D4", "D": 3.0357, "E": "=q3_rev", "F": "=q4_rev"}, tag="Verified／Interested-party（4Q 指引）")
+qrow(5, "non-GAAP 毛利", {"B": 5.8154, "C": "=3.6155-D5", "D": 1.9247, "E": "=q3_gp", "F": "=F4*q4_gm"}, tag="Verified／Assumed（4Q 毛利率）")
 qrow(6, "毛利率", {c: f"={c}5/{c}4" for c in "BCDEFG"}, fmt="0.0%", ann="", tag="Derived", s1="—", s2="FY2025 64.6%；FY2026 指引 62–64%")
 qrow(7, "non-GAAP 營業費用", {c: f"={c}5-{c}8" for c in "BCDEF"}, tag="Derived（毛利 − 營業利益）")
-qrow(8, "non-GAAP 營業利益", {"B": 4.3370, "C": "=2.8077-D8", "D": 1.5137, "E": "=E4*q3_oim", "F": "=fy_rev*fy_oim-C8-D8-E8"}, tag="Verified／Interested-party")
+qrow(8, "non-GAAP 營業利益", {"B": 4.3370, "C": "=2.8077-D8", "D": 1.5137, "E": "=q3_oi", "F": "=F4*q4_oim"}, tag="Verified／Interested-party（4Q 指引）")
 qrow(9, "營業利益率", {c: f"={c}8/{c}4" for c in "BCDEFG"}, fmt="0.0%", ann="", tag="Derived", s1="—", s2="—")
-qrow(10, "其他收益（GAAP，non-GAAP 沿用）", {"B": 0.3936, "C": "=0.2399-D10", "D": 0.1263, "E": "=q_oth", "F": "=q_oth"}, tag="Verified／Derived（3Q、4Q）")
+qrow(10, "其他收益（GAAP，non-GAAP 沿用；3Q26 起扣除策略投資利得）", {"B": 0.3936, "C": "=0.2399-D10", "D": 0.1263, "E": "=0.2731-0.1345", "F": "=q_oth"}, tag="Verified／Derived（4Q）", s2=S2 + "；3Q26＝GAAP 273.1 − 策略投資利得 134.5（公司 non-GAAP 調節）")
 qrow(11, "稅前利益", {c: f"={c}8+{c}10" for c in "BCDEF"}, tag="Derived")
-qrow(12, "non-GAAP 淨利", {"B": 3.8060, "C": "=2.4099-D12", "D": 1.3017, "E": "=E11*(1-q_tx)", "F": "=F11*(1-q_tx)"}, tag="Verified／Derived（3Q、4Q）")
+qrow(12, "non-GAAP 淨利", {"B": 3.8060, "C": "=2.4099-D12", "D": 1.3017, "E": 1.5308, "F": "=F11*(1-q_tx)"}, tag="Verified／Derived（4Q）")
 qrow(13, "有效稅率（推導）", {c: f"=1-{c}12/{c}11" for c in "BCDEFG"}, fmt="0.0%", ann="", tag="Derived", s1="—", s2="non-GAAP 稅額未直接揭露：1 − 淨利 ÷ 稅前")
-qrow(14, "稀釋股數（十億股）", {"B": 1.2757, "C": "=(1.2749*2-D14)", "D": 1.2760, "E": "=q_sh", "F": "=q_sh"}, ann="=AVERAGE(C14:F14)", tag="Verified／Derived", s2="1Q26＝上半年加權 × 2 − 2Q26（近似）")
+qrow(14, "稀釋股數（十億股）", {"B": 1.2757, "C": "=(1.2749*2-D14)", "D": 1.2760, "E": 1.2782, "F": "=q_sh"}, ann="=AVERAGE(C14:F14)", tag="Verified／Derived", s2="1Q26＝上半年加權 × 2 − 2Q26（近似）")
 qrow(15, "non-GAAP EPS", {c: f"={c}12/{c}14" for c in "BCDEF"}, fmt="0.000", ann="=G12/G14", tag="Derived", s1="淨利 ÷ 稀釋股數", s2="—")
-qrow(16, "  公司揭露 non-GAAP EPS", {"B": 2.98, "D": 1.02}, fmt="0.00", ann="", tag="Verified", s2="1Q26：1.89 − 1.02＝0.87；3Q26 指引 1.06–1.08")
+qrow(16, "  公司揭露 non-GAAP EPS", {"B": 2.98, "D": 1.02, "E": 1.20}, fmt="0.00", ann="", tag="Verified", s2="1Q26：1.89 − 1.02＝0.87；3Q26 1.20（舊指引 1.06–1.08）；4Q26 指引 1.26–1.30")
 qrow(17, "AI 營收", {"B": "=ai25"}, ann="=ai26", tag="Derived／Interested-party", s1="FY2025：In ai25；FY2026：公司目標「至少 3.5」", s2="各季 AI 營收未揭露：未找到")
 qrow(18, "非 AI 營收（＝營收 − AI）", {"B": "=B4-B17"}, ann="=G4-G17", tag="Derived", s1="—", s2="—")
 qrow(19, "AI ÷ 營收", {"B": "=B17/B4"}, fmt="0.0%", ann="=G17/G4", tag="Derived", s1="—", s2="Andy 先驗 A2：2026 年 50%")
@@ -188,7 +189,7 @@ Q.cell(23, 1, "FY2026 EPS ÷ 共識 − 1"); Q["B23"] = "=G15/cons_eps26-1"
 Q.cell(24, 1, "FY2026 營收年增"); Q["B24"] = "=G4/B4-1"
 Q.cell(25, 1, "FY2026 營業費用年增"); Q["B25"] = "=G7/B7-1"
 Q.cell(26, 1, "營業費用彈性（營業費用年增 ÷ 營收年增；In 頁 phi 的依據）"); Q["B26"] = "=B25/B24"
-Q.cell(27, 1, "3Q26 EPS（模型）vs 公司指引中點 1.07"); Q["B27"] = "=E15/1.07-1"
+Q.cell(27, 1, "3Q26 EPS（模型）vs 公司揭露 1.20"); Q["B27"] = "=E15/1.20-1"
 for rr in range(22, 28): Q[f"B{rr}"].number_format = "0.0%" if rr != 26 else "0.00"
 for nm, rr in (("rev", 4), ("gp", 5), ("opx", 7), ("oi", 8), ("oth", 10), ("ni", 12), ("sh", 14), ("eps", 15), ("ai", 17), ("nai", 18)):
     defname(f"a25_{nm}", f"Q!$B${rr}"); defname(f"a26_{nm}", f"Q!$G${rr}")
@@ -445,7 +446,7 @@ def rec(label, ref, getter, src, note="", fmt="#,##0.00", pt=False, gap=True):
     RC.cell(rr_, 9, src); RC.cell(rr_, 10, note); rr_ += 1
 pl = lambda key, y: (lambda s: f"=PL!{FC[y]}{PB[s][key]}")
 RC.cell(rr_, 1, "A. 共識與分析師（校準未使用）").font = BOLD; rr_ += 1
-rec("FY2026 營收 vs 共識", "=cons_rev26", pl("rev", 2026), "StockAnalysis", "錨點＝公司全年指引 12.6")
+rec("FY2026 營收 vs 共識", "=cons_rev26", pl("rev", 2026), "StockAnalysis（3Q 財報前）", "錨點＝1Q–3Q 實績＋4Q 指引中點（v0.4）")
 rec("FY2026 EPS vs 共識", "=cons_eps26", pl("eps", 2026), "StockAnalysis", "錨點（3Q、4Q 依指引與 In 頁假設）")
 rec("FY2027 EPS vs Erste Group（單一分析師）", "=erste_eps27", pl("eps", 2027), "MarketBeat", "2027 共識：未找到（付費）")
 rec("FY2027 EPS vs 前瞻 P/E 隱含未來 12 月 EPS", "=px/pe_fwd_sa", pl("eps", 2027), "StockAnalysis（推導）", "未來 12 月 ≈ 4Q26＋¾ FY2027，口徑不同，只作量級比較")
@@ -459,7 +460,7 @@ rec("FY2028 Arista AI 營收 ÷ AI 後端乙太網路市場（有效份額）", 
 RC.cell(rr_, 1, "C. 校準").font = BOLD; rr_ += 1
 rec("非 AI 毛利率（Derived）", None, lambda s: f"=PL!D{PB[s]['gmn']}", "FY2026 錨點", "AI 毛利率＝此值 − d_ai", fmt="0.0%")
 rec("FY2027 毛利率 vs FY2026（百分點）", "=a26_gp/a26_rev", pl("gm", 2027), "錨點", "AI 占比上升使毛利率下滑", fmt="0.0%", pt=True)
-rec("3Q26 EPS（模型）vs 公司指引中點 1.07", 1.07, lambda s: "=Q!E15", "公司（2Q26 新聞稿）", "", fmt="0.000")
+rec("3Q26 EPS（模型）vs 公司揭露 1.20", 1.20, lambda s: "=Q!E15", "公司（3Q26 新聞稿）", "舊指引 1.06–1.08", fmt="0.000")
 RC.cell(rr_, 1, "D. 預留").font = BOLD; rr_ += 1
 RC.cell(rr_, 1, "R4 產業部署路徑（markets/deploy_path/，尚未建立）：上線後以 Arista AI 營收 ÷ 部署 GW 計算每 GW 營收，對照 Andy 先驗 A7"); RC.cell(rr_, 10, "預留列：本版無數值"); rr_ += 1
 RC.column_dimensions["A"].width = 70
@@ -468,7 +469,8 @@ RC.column_dimensions["I"].width = 36; RC.column_dimensions["J"].width = 60
 
 # ---------------- Sources ----------------
 SO = wb.create_sheet("Sources"); SO["A1"] = "來源（公司原文＝Arista 8-K 新聞稿，已逐份抓取；法說內容只經二手轉述）"; SO["A1"].font = BOLD
-srcs = [("公司：2Q26 新聞稿（含上半年合計、3Q26 指引）", PR_Q226),
+srcs = [("公司：3Q26 新聞稿（2026-11-03；3Q26 實績、4Q26 指引；v0.4 滾入）", PR_Q326),
+        ("公司：2Q26 新聞稿（含上半年合計、3Q26 指引）", PR_Q226),
         ("公司：4Q25 與 FY2025 新聞稿", PR_Q425),
         ("二手：BigGo Finance 2Q26 法說摘要（全年指引 12.6、AI 至少 3.5、scale-across 約 1.2、毛利率與營業利益率指引）", "https://finance.biggo.com/news/US_ANET_2026-08-04"),
         ("二手：sec-api 彙整（客戶集中、遞延收入、GAAP／non-GAAP 毛利率與營業利益率）", "https://sec-api.io/insights/arista-networks-anet-stock-analysis-q2-2026-ai-networking-revenue-deferred-revenue-customer-concentration-insider-sales-and-scenarios-to-fy2029"),
@@ -487,7 +489,7 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Arista Networks（ANET）收支與估值模型 v0.2.1（AI 半導體 Project：網通系統端樣板）　2026-10-25", True),
+lines = [("Arista Networks（ANET）收支與估值模型 v0.4（AI 半導體 Project：網通系統端樣板）　2026-11-04", True),
  ("版本：v0.2.1（2026-10-25：補上檔空間級距、投資建議、重點觀察，數值不變）；v0.1（初版）。Arista 在 AI 後端乙太網路交換器的份額在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
  ("模型命題：Arista 的 AI 營收＝AI 後端 scale-out 交換器市場（本專案網通模型）× 乙太網路占比 × Arista 份額（含前端與 scale-across 附掛）；非 AI（雲端前端、企業、園區）另依成長率推。股價約 37 倍前瞻 EPS：在 NVIDIA（Spectrum-X）與白牌夾擊下，Arista 的份額路徑能否支撐這個倍數？", False),
  ("核心問題：2027–28 年 Arista 在 AI 乙太網路的份額每掉一截，EPS 少多少；現價隱含的份額路徑合不合理。", False), ("", False),
@@ -495,7 +497,7 @@ lines = [("Arista Networks（ANET）收支與估值模型 v0.2.1（AI 半導體 
  ("驅動因子 → 推導量（全部唯讀上游，不修改）", True),
  ("AI 營收：markets/network 的 AI 後端 scale-out 交換器市場 × 情境顆數係數 × 乙太網路占比（Assumed）× Arista 有效份額（FY2026 以公司 AI 目標 3.5 校準）× 份額相對值（Assumed）。", False),
  ("非 AI 營收：FY2026 錨點（營收指引 − AI 目標）× Assumed 成長率。毛利率：AI 比非 AI 低 d_ai（Assumed），非 AI 毛利率為 FY2026 殘差（Derived）。營業費用：彈性 phi（Derived）。", False),
- ("校準：FY2026 ＝ 1Q–2Q 實績＋3Q 指引＋全年指引（營收 12.6、毛利率 63%、營業利益率 48.5%）。不用共識（只在 Recon 對帳）。", False),
+ ("校準（v0.4）：FY2026 ＝ 1Q–3Q 實績＋4Q26 公司指引（營收 3.9–4.0、營業利益率 48–49%；毛利率公司未給，假設 63%）。不用共識（只在 Recon 對帳）。", False),
  ("估值：現價 ÷ FY2027、FY2028 EPS；十年 GAAP P/E 規則值（兩個資料商來源）× FY2027 GAAP 換算 EPS；循環位置以本模型營收最高年判定（Arista 不套設備股見頂年）。", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。公司原文＝SEC EDGAR 8-K；法說內容只經二手轉述（標二手）。", False),
  ("", False),
@@ -591,14 +593,17 @@ for _i, s in enumerate(SC):
 SO.cell(SO.max_row + 1, 1, "[Verified] 公司 FY2025 10-K（SEC XBRL）：折舊與攤銷 72.6、購置不動產設備與無形資產 119.5（百萬美元）；營收 9,006 百萬美元——自由現金流比率錨點"); SO.cell(SO.max_row, 2, "https://data.sec.gov/api/xbrl/companyconcept/CIK0001596532/us-gaap/DepreciationDepletionAndAmortization.json；https://data.sec.gov/api/xbrl/companyconcept/CIK0001596532/us-gaap/PaymentsToAcquireProductiveAssets.json（10-K accession 0001596532-26-000013）")
 SO.cell(SO.max_row + 1, 1, "[Assumed] 自由現金流：FY2026 起折舊 ÷ 營收、資本支出 ÷ 營收沿用 FY2025 比率（In 頁 fcf_da、fcf_capex）；不含營運資金變動"); SO.cell(SO.max_row, 2, "本模型假設")
 OBS = [
-       "目標價 US$99.5（DCF 87.2、Comparable 111.7 各半），比現價 172.37（2026-10-23）低 42.3%，級距 −25%～−50%；Comparable 單獨為 −35.2%。主因是倍數不是 EPS：本模型 12 個月後前瞻 EPS 5.53 比共識前瞻 EPS 4.65 高 12.6%（期間差約一年），但同業（Cisco、Ciena、Celestica、HPE、Credo）前瞻 P/E 中位數 20.2 倍，現價隱含 37.1 倍、共識目標價 243.59 隱含 52.4 倍（比同業高 159%）；市場給 Arista 的 AI 乙太網路份額與高毛利溢價，Comparable 未計入。DCF 87.2 更低，因 ROE 雖有 28.6%，B 情境 FY2028 EPS 5.51 幾乎不成長（+0.8%）。",
-       "最敏感的是份額與市場量：份額相對值降到 0.80／0.70 時 FY2028 EPS −8.8%，AI scale-out 交換器市場 ×0.8 時 −7.9%；情境 C（CY2028–29 顆數 ×0.6）FY2028 EPS 4.97，比情境 A 的 5.99 低 17.1%，營收在 FY2027 見頂。追蹤 3Q26 財報（2026-11-03）的 AI 營收（FY2026 目標至少 35 億美元）與 2027 年指引。",
-       "以歷史看不貴：現價 ÷ FY2028 EPS 為 28.8／31.3／34.7 倍（A／B／C），在 2016–2025 年底 P/E 的 24%～33% 分位；目標價偏低是因 Comparable 同業成長較低。DCF 權重改 0.3／0.7 時加權目標價 104.4／94.6（±4.9%）、折現率 ±1pt 時 −5.9%／+8.3%，都不改變放空級距。"
+       "目標價 US$164（DCF 92、Comparable 經相對倍數調整後 236 各半），比現價 172.37（2026-10-23，沿用）低 5.1%，級距 0%～−25%，投資建議維持中立；上一版 155（−9.9%）。上調來自 3Q26 實績與 4Q26 指引：FY2026 錨點營收 12.60 → 13.35、EPS 4.09 → 4.36，FY2027 EPS 5.47 → 5.75（三情境相同）；12 個月後前瞻 EPS 5.83 比共識前瞻 EPS 4.65 高 25.4%，與共識的差距主要在倍數（共識目標價隱含 52.4 倍 vs 同業 20.2 倍）。",
+       "3Q26 實績營收 3.658（模型原用指引 3.30，+10.8%）、non-GAAP EPS 1.20（原估 1.07，+12.1%），毛利率 64.0%、營業利益率 49.1% 都高於指引；4Q26 指引營收 3.9–4.0（原「全年指引 − 前三季」3.56，+11.1%）、營業利益率 48–49%、EPS 1.26–1.30。公司新聞稿沒有更新 AI 營收目標，模型 FY2026 AI 仍用「至少 3.5」，上修全部落在非 AI。",
+       "最敏感的是 AI 市場量與份額：AI scale-out 交換器市場 ×0.8 時 FY2027 EPS −7.4%、份額流失 −5.8%（Sens 頁）；情境 C FY2028 EPS 5.27 比 A 的 6.29 低 16.2%。下一個檢驗點：4Q26 財報（2027-02）與 2027 年營收、AI 目標指引。",
       ]   # 重點觀察（與 README.md 相同文字）
 _n0 = RD.max_row
 RD.cell(_n0 + 1, 1, "v0.2.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（Val 頁 0.3 結論加「上檔空間級距」「投資建議」兩列、README 頁加重點觀察三點；數值不變，既有儲存格位置不變）。另在 PL 頁末新增「自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）」三情境列（FY2025A–FY2032；算力收支 2026-10-25 請求），In 頁末新增 fcf_da、fcf_capex（FY2025 10-K 比率 0.81%、1.33%）。")
 RD.cell(_n0 + 2, 1, f'="投資建議："&Val!B{RC_ROW}&"（依上檔空間固定規則）"').font = BOLD
 for _i, _t in enumerate(OBS, 1): RD.cell(_n0 + 2 + _i, 1, f"重點觀察 {_i}：" + _t)
+# v0.4（2026-11-04）：滾入 3Q26 實績與 4Q26 指引；README 頁只在最後一列之後追加
+RD.cell(RD.max_row + 1, 1, "v0.4（2026-11-04）：滾入 3Q26 實績（8-K 2026-11-03：營收 3.6576、non-GAAP 毛利 2.3411（64.0%）、營業利益 1.7958（49.1%）、其他收益 0.1386（扣策略投資利得 0.1345）、淨利 1.5308、稀釋股數 1.2782、EPS 1.20）與 4Q26 指引（營收 3.9–4.0、營業利益率 48–49%、EPS 1.26–1.30；毛利率公司未給，假設 63%）。原 4Q26＝全年指引 − 前三季，改為公司 4Q26 指引；In 頁 E 節同列改寫（fy_rev → q4_rev 等），不位移。方法、情境結構、估值規則不變；現價沿用 2026-10-23。")
+RD.cell(RD.max_row + 1, 1, "模型原估 vs 實績：3Q26 營收 3.300（指引）vs 3.658（+10.8%）、毛利率 63.0% vs 64.0%、營業利益率 48.5% vs 49.1%、EPS 1.071 vs 1.20（+12.1%）。4Q26：原（全年指引 − 前三季）營收 3.555、EPS 1.134 → 公司指引營收 3.95、模型推得 EPS 1.270（指引 1.26–1.30）。FY2026 錨點：營收 12.60 → 13.35、EPS 4.09 → 4.36。")
 
 order =["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
