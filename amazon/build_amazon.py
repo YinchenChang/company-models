@@ -157,7 +157,7 @@ NM = "只作對照，不進模型"
 sec("A. 價格、股數與共識目標價")
 inp("px", "AMZN 現價（2026-10-30 收盤）", "US$", None, 240.35, None, "Verified", f"{S_PX}；{S_PXY}", "10-29 收盤 243.79（財報日，−4.3%）；只影響上檔空間與評等")
 inp("px_val", "WACC 權益權重用股價（最近收盤；評價日 2026-09-30 收盤本輪未取得）", "US$", None, 240.35, None, "Verified", f"{S_PX}", "與現價分開：現價變動只影響上檔空間（拆解 (e)），本列變動歸 (f)")
-inp("sh_out", "流通股數（10-Q 封面，2026-10-21）", "十億股", None, round(FACTS["sh.cover.20261021"]["value"] / 1000, 6), None, "Verified", f"{S_10Q26Q3}（第 1 頁）", "原（v0.3.1）：資產負債表 2026-09-30 的 10,811 百萬股（新聞稿）")
+inp("sh_out", "流通股數（2026-09-30，資產負債表股本說明）", "十億股", None, round(FACTS["sh.out.20260930"]["value"] / 1000, 6), None, "Verified", f"{S_PR26Q3}；{S_10Q26Q3}（第 6 頁）", "與淨負債、未歸屬獎勵同日；10-Q 封面 10/21 為 10,813.1 百萬股（只作驗證：用封面會重複計入 9/30–10/21 歸屬的約 2.1 百萬股）")
 inp("sh_awd", "未歸屬股份獎勵（2026-09-30）", "十億股", None, fv("sh.awards.2026q3"), None, "Interested-party", S_PR26Q3, "223 百萬股（Supplemental）")
 inp("sh_val", "分部加總用稀釋股數＝流通股數＋未歸屬獎勵（倍數為 SBC 加回口徑，故計入稀釋）", "十億股", None, "=sh_out+sh_awd", None, "Derived", "修正一（F2）", "DCF 視 SBC 為現金成本，改用流通股數 sh_out，不另計稀釋")
 inp("cons_tp", "市場共識目標價（Koyfin 60 位平均，2026-10-30 財報後）", "US$", 230, 332.41, 405, "Interested-party", f"{S_FC}；{S_MB}", "MarketBeat 60 位 325.12（10-29）；區間為最低／最高目標價；" + NM)
@@ -175,7 +175,7 @@ inp("tax", "稅率（2023–2025 有效稅率平均）", "%", 0.135, "=AVERAGE(�
 inp("debt_q3", "債務面額（2026-09-30，10-Q 附註 5；含 2026 Term Loan 17.5）", "US$bn", None, fv("debt.face.20260930"), None, "Verified", f"{S_10Q26Q3}（第 18 頁）",
     "原（v0.3.1）：推導 181.09（6/30 面額＋Q3 長期借款收入 − 償還）；帳面 173.1＋流動 6.8＋折價 0.9＝180.9")
 inp("fl_pv", "融資租賃負債現值（2026-09-30，10-Q 附註 3）", "US$bn", None, fv("lease.finPV.2026q3"), None, "Verified", f"{S_10Q26Q3}（第 14 頁）", "原（v0.3.1）：沿用 2026-06-30 的 13.45")
-inp("fin_obl", "融資義務（financing obligations，含利息；2026-09-30，10-Q 附註 4）", "US$bn", None, fv("lease.finObl.2026q3"), None, "Verified", f"{S_10Q26Q3}（第 15 頁）", "原（v0.3.1）：沿用 2026-06-30 的 11.07（同口徑含利息）；本金 9.73")
+inp("fin_obl", "融資義務本金（financing obligations；流動 0.426＋非流動 9.3；2026-09-30，10-Q 附註 4 註 1）", "US$bn", None, fv("lease.finOblPrin.2026q3"), None, "Verified", f"{S_10Q26Q3}（第 15 頁）", "原（v0.3.1）：沿用 2026-06-30 的 11.07（含利息、未折現）；改用本金，與 debt_q3（面額）、fl_pv（現值）同口徑；含利息為 11.565")
 inp("fin_debt", "類債務（融資租賃＋融資義務；淨負債與 WACC 的 D 皆計入，模型期間持平）", "US$bn", None, "=fl_pv+fin_obl", None, "Derived", "修正一（F6、核對第 4 點）", "")
 inp("ke", "股權成本＝rf＋β × ERP", "%", None, "=rf+beta*erp", None, "Derived", "CAPM", "")
 inp("wacc_adj", "WACC 調整（Sens 用；基準 0）", "pt", -0.01, 0, 0.01, "Assumed", "Sens", "")
@@ -284,7 +284,7 @@ inp("dps", "每股股利", "US$", None, 0, None, "Verified", S_PR26Q3, "Amazon �
 
 sec("G. 持股（分部加總與 DCF 都加；預測期業外評價損益設 0）")
 inp("ant_val", "Anthropic 投後估值（Series H）", "US$bn", None, fv("rel.ant.valSeriesH"), None, "Interested-party", S_ANT, "新創自報估值；2026Q3 其他業外 −0.7（無新評價利益）")
-inp("ant_sh", "Amazon 持有 Anthropic 比例", "%", 0.15, 0.18, 0.21, "Assumed", f"沿用 v0.2.2；{S_FORT}", "Fortune 15%–19%、帳列 ÷ 投後 19.7%")
+inp("ant_sh", "Amazon 持有 Anthropic 比例", "%", 0.15, 0.18, 0.21, "Assumed", f"沿用 v0.2.2；{S_FORT}", "Fortune 15%–19%；10-Q 帳面（優先股 92.5＋票據公允價值 146.2＝238.7）÷ 投後 965＝24.7%；票據轉換受 12% 持股上限限制，但上限可由 Amazon 選擇放棄（10-Q 第 11 頁）")
 inp("oai_val", "OpenAI 投後估值（投前 730＋該輪 110）", "US$bn", None, 840, None, "Derived", S_OAI, "")
 inp("oai_sh", "Amazon 持有 OpenAI 比例（投入 50 ÷ 840）", "%", None, 0.0595, None, "Derived", "沿用 v0.2.2", "資本結構（PBC＋基金會）可能使比例不同")
 inp("liq_disc", "持股流動性折價", "%", 0.0, 0.2, 0.4, "Assumed", "工作單第 2 節（20%）", "")
@@ -1305,8 +1305,8 @@ rec("替代：期初 k 對上公司 run-rate 時的加權目標價變動（每�
 rec("上限檢查：FY2028 每 MW 年收入 ÷ Tokenomics P×Q（VR200）", None, lambda s: f"={tk_(s, 'T', 'pq_chk', 'I')}", "Tokenomics v21.7", "上限，不得作預測", fmt="0.0%", gap=False)
 rsec("D. v0.3.1 → v0.3.2：加權目標價變動拆解（10-Q 補入；(a)–(c) 為整本重算快照：Sens 頁基準差＝0 時有效；(d) 為活公式；評價日、現價、共識、Tokenomics、情境與權重不動）")
 CHAIN = [("S1", "(a) 債務面額：推導 181.09 → 10-Q 180.89（含 2026 Term Loan 17.5；淨負債、WACC 的 D、既有債務利率 kd_book）", "S0"),
-         ("S2", "(b) 融資租賃負債 13.45 → 14.50、融資義務 11.07 → 11.57（沿用 6/30 → 10-Q 9/30；類債務 fin_debt）", "S1"),
-         ("S3", "(c) 2026Q3 分部折舊：推導（Q2 × 現金流量表 D&A 季增比）→ 10-Q（北美 4.57、國際 1.35、AWS 9.23；9M26 實績欄與預測期起點）", "S2")]
+         ("S2", "(b) 融資租賃負債：沿用 6/30 的 13.45 → 10-Q 9/30 的 14.50（類債務 fin_debt）", "S1"),
+         ("S3", "(c) 融資義務：沿用 6/30 的 11.07（含利息）→ 10-Q 9/30 本金 9.73（改用資產負債表口徑；含利息為 11.57）", "S2")]
 RC_B0 = rec("v0.3.1 加權目標價（2026-10-31）", "=v031_tp", None, "v0.3.1 成品 Val!B19", fmt="0.00", gap=False)
 _ok = f"ABS(Sens!E{SE_STALE})<0.000001"
 s0 = SENS.get("chain|S0", {}).get("tp")
@@ -1318,7 +1318,7 @@ for k, lab, prv in CHAIN:
     f_ = (f"=IF({_ok},{res['tp']}-{pv},\"快照過期\")") if (res and pv) else None
     CH_ROWS.append(rec(lab, f_, None, f"重算快照 chain|{k}：目標價 {res['tp']:.4f}" if res else "（尚未重算）", "；".join(f"{a}={b}" for a, b in (res or {}).get("set", [])[:10]), fmt="0.00", gap=False))
 s3 = SENS.get("chain|S3", {}).get("tp")
-CH_ROWS.append(rec("(d) 流通股數：資產負債表 9/30 的 10,811 → 10-Q 封面 10/21 的 10,813.1 百萬股", f"=Val!B19-{s3}" if s3 else None, None, "活公式＝本版 − chain|S3", fmt="0.00", gap=False))
+CH_ROWS.append(rec("(d) 2026Q3 分部折舊：推導（Q2 × 現金流量表 D&A 季增比）→ 10-Q（北美 4.57、國際 1.35、AWS 9.23；只進 9M26 實績欄）", f"=Val!B19-{s3}" if s3 else None, None, "活公式＝本版 − chain|S3", fmt="0.00", gap=False))
 RC_SUM = rec("拆解合計（(a)–(d)）", "=" + "+".join(f"B{x}" for x in CH_ROWS) if SENS else None, None, "", fmt="0.00", gap=False)
 RC_TOT = rec("總變動＝v0.3.2 − v0.3.1", f"=Val!B19-B{RC_B0}", None, "", fmt="0.00", gap=False)
 rec("檢查：拆解合計 − 總變動（應為 0）", f"=B{RC_SUM}-B{RC_TOT}" if SENS else 0, None, "", fmt="0.000000", gap=False, check=True)
@@ -1356,7 +1356,7 @@ RD = wb.create_sheet("README", 0)
 B_ = lambda blk, key, col: tk_("B", blk, key, col)
 lines = [
     ("Amazon（AMZN）個股模型 v0.3.2（命題模組＋官方營收分部 → 損益表；2026Q3 季度滾動＋10-Q 補入）　2026-11-04", True),
-    ("版本：v0.3.2（2026Q3 10-Q 補入；v0.3.1 為 2026-10-31，v0.3 為 2026-10-27）。資料截至 2026-09-30（2026Q3 新聞稿與 10-Q）；FY2026＝9M 實績＋Q4 模型；Tokenomics v21.7（Trainium 改讀 IF_NonNV_Hold_Trn）。本版只以 10-Q 取代 v0.3.1 的推導與沿用值（債務面額、融資租賃、融資義務、分部折舊、股數），評價日、現價、共識、Tokenomics、情境與權重不動。", False),
+    ("版本：v0.3.2（2026Q3 10-Q 補入；v0.3.1 為 2026-10-31，v0.3 為 2026-10-27）。資料截至 2026-09-30（2026Q3 新聞稿與 10-Q）；FY2026＝9M 實績＋Q4 模型；Tokenomics v21.7（Trainium 改讀 IF_NonNV_Hold_Trn）。本版只以 10-Q 取代 v0.3.1 的推導與沿用值（債務面額、融資租賃、融資義務〔改本金口徑〕、分部折舊；股數維持 9/30 資產負債表），評價日、現價、共識、Tokenomics、情境與權重不動。", False),
     ("命題：AWS 的 AI 容量（Trainium＋NVIDIA）能否以高於資金成本的報酬變現，零售與廣告的現金流能否支應資本支出。", True),
     ("核心問題：FY2028 AWS 營業利益率與自由現金流（扣股利後）是否轉正並維持。", True),
     ('="投資建議："&Val!B24&"（加權目標價 US$"&TEXT(Val!B19,"0.00")&"，現價 US$"&TEXT(px,"0.00")&"〔2026-10-30〕，上檔空間 "&TEXT(Val!B21,"+0.0%;-0.0%")&"；依五級固定規則）"', True),

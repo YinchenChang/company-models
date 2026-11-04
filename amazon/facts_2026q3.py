@@ -194,7 +194,7 @@ chk("bs.totalAssets（資產各列加總）", BS["Total assets"][1], sum(BS[k][1
 stl = [k for k in BS if k.startswith("Common stock")][0]
 m = re.search(r"11,246 and 11,326 shares issued; 10,731 and ([\d,]+) shares outstanding", stl)
 sh_out = float(m.group(1).replace(",", ""))
-add("sh.out.20260930", "流通股數（2026-09-30）", sh_out, unit="M 股", src=f"{PRF} 第七節資產負債表股本說明", note="10-Q 封面股數見 sh.cover.20261021（v0.3.2 起模型用封面股數）")
+add("sh.out.20260930", "流通股數（2026-09-30）", sh_out, unit="M 股", src=f"{PRF} 第七節資產負債表股本說明", note="模型 sh_out 用本值（與淨負債、未歸屬獎勵同日 9/30）；10-Q 封面 10/21 股數 sh.cover.20261021 只作驗證")
 chk("sh.out.20260930（資產負債表 vs Supplemental 8.1）", sh_out, S81["Common shares outstanding"][4], f"{PRF} 8.1")
 add(f"sh.awards.{Q}", "未歸屬股份獎勵（2026-09-30）", S81["Stock-based awards outstanding"][4], unit="M 股", src=f"{PRF} 8.1")
 chk("sh.awards.2026q2（Supplemental vs 既有總帳）", S81["Stock-based awards outstanding"][3], F0["sh.awards.2026q2"]["value"], "amazon_facts_20261008.json")
@@ -243,6 +243,10 @@ chk("debt.q3gap（Q3 長期借款收入 vs 7 月美元＋9 月英鎊＋Term Loan
 addq("debt.supplierLoan.2026q3", "供應商融資：技術基礎設施採購的擔保貸款額度（2027Q1–2028Q3 可動用，每筆 5 年到期，浮動利率；最高約 80.0B）", 80000, 19, "附註 5",
      note="期末未動用；動用後列長期債務、還本列長期借款償還；本版模型不計入（模型假設現金不足才舉債）", find=["$80.0 billion"])
 addq("debt.revolver.20260930", "未動用循環信用額度（15.0B＋5.0B 364 天；2026-10 改簽：15.0B 至 2031-10、5.0B 至 2027-10）", 20000, 19, "附註 5", period="2026-09-30", find=["$20.0 billion"])
+addq("debt.stBorrow.20260930", "其他短期借款（營運資金用；列「Accrued expenses and other」）", 380, 19, "附註 5", period="2026-09-30",
+     note="2025-12-31 為 455；模型淨負債不計入（金額小、屬營運資金；計入時加權目標價約 −0.03），只作驗證", find=["$380 million"])
+addq("debt.stbyLC.20260930", "備付信用狀（指定受益人；主要為採購承諾、支付服務、工傷與保險）", 21600, 19, "附註 5", period="2026-09-30",
+     note="或有，不減少可用額度；不進模型", find=["$21.6 billion"])
 addq("debt.cp.20260930", "商業本票餘額（上限 30.0B）", 0, 19, "附註 5", period="2026-09-30")
 DS = {"2026Q4": 1413, "2027": 16566, "2028": 19567, "2029": 39185, "2030": 12489, "thereafter": 205034}
 addq("debt.schedule.2026q3", "長期債務本金＋利息到期表（2026-09-30）", DS, 15, "附註 4 承諾表", period="2026-09-30", note="合計 294,254（含利息）", find=["294,254", "39,185"])
@@ -255,9 +259,10 @@ addq("lease.opGross.2026q3", "營業租賃負債（未折現）", 121492, 14, "�
 chk("lease.finPV（總額 − 利息 vs 現值）", 17955 - 3460, 14495, f"{TQ} 第 14 頁")
 chk("lease.opPV（總額 − 利息 vs 現值）", 121492 - 21204, 100288, f"{TQ} 第 14 頁")
 chk("bs.ltLease（10-Q 長期營業＋融資 vs 新聞稿資產負債表）", 86195 + 12629, BS["Long-term lease liabilities"][1], f"{TQ} 第 14 頁；{PRF} 第七節")
-addq("lease.finObl.2026q3", "融資義務（物流與資料中心，含利息；2026-09-30）", 11565, 15, "附註 4 承諾表", period="2026-09-30", old="11,070（沿用 2026-06-30）",
-     note="本金：流動 426、非流動 9.3B（合計約 9.73B）；加權剩餘 14.5 年、加權利率 3.4%", find=["11,565"])
-addq("lease.finOblPrin.2026q3", "融資義務本金（不含利息；流動 426＋非流動 9,300）", 9726, 15, "附註 4 註 (1)", period="2026-09-30", tag="[Derived]", find=["$426", "$9.3 billion"])
+addq("lease.finObl.2026q3", "融資義務（物流與資料中心，含利息；2026-09-30；只作說明）", 11565, 15, "附註 4 承諾表", period="2026-09-30",
+     note="未折現、含利息；模型改用本金 lease.finOblPrin.2026q3；加權剩餘 14.5 年、加權利率 3.4%", find=["11,565"])
+addq("lease.finOblPrin.2026q3", "融資義務本金（不含利息；流動 426＋非流動 9,300；模型 fin_obl）", 9726, 15, "附註 4 註 (1)", period="2026-09-30", tag="[Verified]",
+     old="11,070（沿用 2026-06-30，含利息口徑）；改用本金，與 debt_q3（面額）、fl_pv（現值）同為資產負債表口徑", find=["$426", "$9.3 billion"])
 addq("lease.term.2026q3", "加權平均剩餘租期：營業／融資（年）", [9.9, 12.2], 13, "附註 3", unit="年", period="2026-09-30", note="折現率 4.0%／3.8%")
 addq("lease.cost.2026q3", "租賃成本合計（營業 4,288＋融資 771＋變動 716）", 5775, 13, "附註 3", find=["5,775"])
 UNC = {"2026Q4": 2590, "2027": 12448, "2028": 11477, "2029": 12193, "2030": 11385, "thereafter": 114829}
@@ -265,6 +270,10 @@ addq("lease.uncommenced.2026q3", "尚未起租的租賃承諾（逐年付款）"
      note="合計 164,922（2026-06-30 為 137,214，季增 27,708）；起租時程與租期年限未揭露", find=["164,922", "114,829"])
 addq("lease.uncommencedTotal.2026q3", "尚未起租的租賃承諾合計", 164922, 15, "附註 4", period="2026-09-30", old="137,214（2026-06-30）")
 chk("lease.uncommenced（列加總 vs 合計）", sum(UNC.values()), 164922, f"{TQ} 第 15 頁")
+addq("cf.ppeUnpaid.10q.2026q3", "已取得未付款之不動產及設備增加（10-Q 補充現金流資訊）", 853, 7, "附註 1 Supplemental Cash Flow", period="2026Q3",
+     note="9M26 21,473；與新聞稿同值；設備延長付款期（最長一年）列應付帳款", find=["853", "21,473"])
+chk("cf.ppeUnpaid.2026q3（10-Q vs 新聞稿）", 853, CFV["cf.ppeUnpaid"][1], f"{TQ} 第 7 頁；{PRF}")
+chk("cf.ppeUnpaid.2026m9（10-Q vs 新聞稿）", 21473, CFV["cf.ppeUnpaid"][3], f"{TQ} 第 7 頁；{PRF}")
 addq("lease.finLeaseGross.2026q3", "融資租賃取得資產總額（帳列 PP&E）", 56400, 13, "附註 3", period="2026-09-30", note="累計攤銷 39.5B", find=["$56.4 billion"])
 # 3) 承諾（附註 4，第 15 頁）
 CPPE = {"2026Q4": 13955, "2027": 63900, "2028": 25220, "2029": 25400, "2030": 28941, "thereafter": 2224}
@@ -302,15 +311,16 @@ addq("rpo.2026q3", "RPO（原始期限 >1 年的未認列合約承諾，主要�
      note="加權平均剩餘年限 6.1 年（Q2 6.4 年）；12 或 24 個月內認列比例未揭露", find=["$578 billion", "6.1 years"])
 addq("rpo.life.2026q3", "RPO 加權平均剩餘年限", 6.1, 10, "附註 1", unit="年", period="2026-09-30", old="6.4（2026-06-30）")
 # 6) 股數、利息、持股（封面、第 4、12 頁）
-addq("sh.cover.20261021", "封面流通股數（2026-10-21）", 10813.138306, 1, "封面", unit="M 股", period="2026-10-21",
-     old="無（v0.3.1 用資產負債表 2026-09-30 的 10,811）", find=["10,813,138,306"])
+addq("sh.cover.20261021", "封面流通股數（2026-10-21；只作驗證）", 10813.138306, 1, "封面", unit="M 股", period="2026-10-21",
+     note="比 9/30 資產負債表 10,811 多約 2.1 百萬股（9/30–10/21 歸屬）；模型用 9/30 股數，避免與 9/30 淨負債、未歸屬獎勵重複計入", find=["10,813,138,306"])
+chk("sh.cover − sh.out（10/21 − 9/30，應小於未歸屬獎勵 223）", 10813.138306 - sh_out, 2.1, f"{TQ} 第 1 頁；{PRF}", tol=0.1)
 addq(f"is.intInc.{Q}.10q", "利息收入（10-Q 損益表）", 1187, 4, "合併損益表", period="2026Q3", note="MD&A：主要投資於投資級短中期債券與 AAA 貨幣基金；利息收入隨平均投資餘額與利率變動，10-Q 不提供更細的明細", find=["1,187", "3,617"])
 chk("is.intInc.2026q3（10-Q vs 新聞稿）", 1187, IS["Interest income"][1], f"{TQ} 第 4 頁；{PRF}")
 chk("is.intExp.2026q3（10-Q vs 新聞稿）", 1691, abs(IS["Interest expense"][1]), f"{TQ} 第 4 頁；{PRF}")
 addq("inv.privEq.20260930", "非權益法非上市權益投資帳面（主要為 Anthropic 優先股與 OpenAI 優先股）", 143700, 12, "附註 2", period="2026-09-30", note="2025-12-31 為 16.2B", find=["$143.7 billion"])
 addq("inv.antPref.20260930", "Anthropic 無表決權優先股帳面（164 百萬股）", 92500, 12, "附註 2", period="2026-09-30", note="9M26 依 Anthropic 募資的可觀察價格上調 62.8B", find=["$92.5 billion", "164 million"])
-addq("inv.antNotes.20260930", "Anthropic 可轉換票據公允價值（不計持股上限可轉約 184 百萬股優先股；持股上限 12%）", 146200, 12, "附註 2", period="2026-09-30",
-     note="未實現利益 140.3B 列其他綜合損益；每股優先股可轉 10 股普通股", find=["$146.2 billion", "184 million"])
+addq("inv.antNotes.20260930", "Anthropic 可轉換票據公允價值（不計持股上限可轉約 184 百萬股優先股）", 146200, 12, "附註 2", period="2026-09-30",
+     note="未實現利益 140.3B 列其他綜合損益；每股優先股可轉 10 股普通股；票據轉換受 12% 持股上限限制，但上限「may be waived at our election」（第 11 頁）", find=["$146.2 billion", "184 million"])
 addq("inv.oaiPref.20260930", "OpenAI Series C 優先股帳面（Q1 15.0＋Q2 13.7＋Q3 21.3）", 50000, 12, "附註 2", period="2026-09-30", find=["$21.3 billion"])
 addq("inv.antFacility.20260930", "Anthropic 融資額度可動用上限（20.0B − Series H 5.0B，依算力交付里程碑開放）", 15000, 12, "附註 2", period="2026-09-30", find=["$15.0 billion"])
 addq("acq.globalstar", "Globalstar 收購（現金＋股票，含債務約 10.9B；預計 2027 年完成）", 10900, 15, "附註 4", period="2026-04-13", note="本版模型不計入（2027 年的現金部分最多 40%）", find=["$10.9 billion"])

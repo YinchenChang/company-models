@@ -1599,7 +1599,7 @@
    "docDate": "2026-10-29",
    "retrieved": "2026-10-31",
    "tag": "[Interested-party]",
-   "note": "10-Q 封面股數見 sh.cover.20261021（v0.3.2 起模型用封面股數）"
+   "note": "模型 sh_out 用本值（與淨負債、未歸屬獎勵同日 9/30）；10-Q 封面 10/21 股數 sh.cover.20261021 只作驗證"
   },
   {
    "id": "sh.awards.2026q3",
@@ -1806,6 +1806,32 @@
    "note": ""
   },
   {
+   "id": "debt.stBorrow.20260930",
+   "item": "其他短期借款（營運資金用；列「Accrued expenses and other」）",
+   "value": 380,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 19 頁 附註 5",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "2025-12-31 為 455；模型淨負債不計入（金額小、屬營運資金；計入時加權目標價約 −0.03），只作驗證"
+  },
+  {
+   "id": "debt.stbyLC.20260930",
+   "item": "備付信用狀（指定受益人；主要為採購承諾、支付服務、工傷與保險）",
+   "value": 21600,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 19 頁 附註 5",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "或有，不減少可用額度；不進模型"
+  },
+  {
    "id": "debt.cp.20260930",
    "item": "商業本票餘額（上限 30.0B）",
    "value": 0,
@@ -1892,7 +1918,7 @@
   },
   {
    "id": "lease.finObl.2026q3",
-   "item": "融資義務（物流與資料中心，含利息；2026-09-30）",
+   "item": "融資義務（物流與資料中心，含利息；2026-09-30；只作說明）",
    "value": 11565,
    "unit": "USD M",
    "period": "2026-09-30",
@@ -1901,11 +1927,11 @@
    "docDate": "2026-10-30",
    "retrieved": "2026-11-04",
    "tag": "[Verified]",
-   "note": "本金：流動 426、非流動 9.3B（合計約 9.73B）；加權剩餘 14.5 年、加權利率 3.4%；原（v0.3.1）：11,070（沿用 2026-06-30）"
+   "note": "未折現、含利息；模型改用本金 lease.finOblPrin.2026q3；加權剩餘 14.5 年、加權利率 3.4%"
   },
   {
    "id": "lease.finOblPrin.2026q3",
-   "item": "融資義務本金（不含利息；流動 426＋非流動 9,300）",
+   "item": "融資義務本金（不含利息；流動 426＋非流動 9,300；模型 fin_obl）",
    "value": 9726,
    "unit": "USD M",
    "period": "2026-09-30",
@@ -1913,8 +1939,8 @@
    "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
    "docDate": "2026-10-30",
    "retrieved": "2026-11-04",
-   "tag": "[Derived]",
-   "note": ""
+   "tag": "[Verified]",
+   "note": "原（v0.3.1）：11,070（沿用 2026-06-30，含利息口徑）；改用本金，與 debt_q3（面額）、fl_pv（現值）同為資產負債表口徑"
   },
   {
    "id": "lease.term.2026q3",
@@ -1977,6 +2003,19 @@
    "retrieved": "2026-11-04",
    "tag": "[Verified]",
    "note": "原（v0.3.1）：137,214（2026-06-30）"
+  },
+  {
+   "id": "cf.ppeUnpaid.10q.2026q3",
+   "item": "已取得未付款之不動產及設備增加（10-Q 補充現金流資訊）",
+   "value": 853,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 7 頁 附註 1 Supplemental Cash Flow",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/",
+   "docDate": "2026-10-30",
+   "retrieved": "2026-11-04",
+   "tag": "[Verified]",
+   "note": "9M26 21,473；與新聞稿同值；設備延長付款期（最長一年）列應付帳款"
   },
   {
    "id": "lease.finLeaseGross.2026q3",
@@ -2364,7 +2403,7 @@
   },
   {
    "id": "sh.cover.20261021",
-   "item": "封面流通股數（2026-10-21）",
+   "item": "封面流通股數（2026-10-21；只作驗證）",
    "value": 10813.138306,
    "unit": "M 股",
    "period": "2026-10-21",
@@ -2373,7 +2412,7 @@
    "docDate": "2026-10-30",
    "retrieved": "2026-11-04",
    "tag": "[Verified]",
-   "note": "原（v0.3.1）：無（v0.3.1 用資產負債表 2026-09-30 的 10,811）"
+   "note": "比 9/30 資產負債表 10,811 多約 2.1 百萬股（9/30–10/21 歸屬）；模型用 9/30 股數，避免與 9/30 淨負債、未歸屬獎勵重複計入"
   },
   {
    "id": "is.intInc.2026q3.10q",
@@ -2416,7 +2455,7 @@
   },
   {
    "id": "inv.antNotes.20260930",
-   "item": "Anthropic 可轉換票據公允價值（不計持股上限可轉約 184 百萬股優先股；持股上限 12%）",
+   "item": "Anthropic 可轉換票據公允價值（不計持股上限可轉約 184 百萬股優先股）",
    "value": 146200,
    "unit": "USD M",
    "period": "2026-09-30",
@@ -2425,7 +2464,7 @@
    "docDate": "2026-10-30",
    "retrieved": "2026-11-04",
    "tag": "[Verified]",
-   "note": "未實現利益 140.3B 列其他綜合損益；每股優先股可轉 10 股普通股"
+   "note": "未實現利益 140.3B 列其他綜合損益；每股優先股可轉 10 股普通股；票據轉換受 12% 持股上限限制，但上限「may be waived at our election」（第 11 頁）"
   },
   {
    "id": "inv.oaiPref.20260930",
@@ -3374,6 +3413,20 @@
    "ok": true
   },
   {
+   "id": "cf.ppeUnpaid.2026q3（10-Q vs 新聞稿）",
+   "value": 853,
+   "second": 853.0,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 7 頁；mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md",
+   "ok": true
+  },
+  {
+   "id": "cf.ppeUnpaid.2026m9（10-Q vs 新聞稿）",
+   "value": 21473,
+   "second": 21473.0,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 7 頁；mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md",
+   "ok": true
+  },
+  {
    "id": "commit.ppe（列加總 vs 合計）",
    "value": 159640,
    "second": 159640,
@@ -3483,6 +3536,13 @@
    "value": 508862,
    "second": 508862.0,
    "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 26 頁；mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第七節",
+   "ok": true
+  },
+  {
+   "id": "sh.cover − sh.out（10/21 − 9/30，應小於未歸屬獎勵 223）",
+   "value": 2.138306000000739,
+   "second": 2.1,
+   "source": "Form 10-Q 2026Q3（期末 2026-09-30，核閱未查核；2026-10-30 提交，accession 0001018724-26-000040） 第 1 頁；mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md",
    "ok": true
   },
   {
@@ -3598,6 +3658,20 @@
    "ok": true
   },
   {
+   "id": "debt.stBorrow.20260930（10-Q 原文第 19 頁含「$380 million」）",
+   "value": "$380 million",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "debt.stbyLC.20260930（10-Q 原文第 19 頁含「$21.6 billion」）",
+   "value": "$21.6 billion",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
    "id": "debt.schedule.2026q3（10-Q 原文第 15 頁含「294,254」）",
    "value": "294,254",
    "second": "found",
@@ -3677,6 +3751,20 @@
   {
    "id": "lease.uncommenced.2026q3（10-Q 原文第 15 頁含「114,829」）",
    "value": "114,829",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "cf.ppeUnpaid.10q.2026q3（10-Q 原文第 7 頁含「853」）",
+   "value": "853",
+   "second": "found",
+   "source": "AMZN_10Q_TXT",
+   "ok": true
+  },
+  {
+   "id": "cf.ppeUnpaid.10q.2026q3（10-Q 原文第 7 頁含「21,473」）",
+   "value": "21,473",
    "second": "found",
    "source": "AMZN_10Q_TXT",
    "ok": true

@@ -1,7 +1,7 @@
 # 敏感度與變動拆解（v0.3.1）：一次改一個 In 頁輸入（Sens 頁案例，定義在 build_amazon.py 的 SCASES，經 rowmap 的 SE_JOBS 傳來），
 # 整本以 LibreOffice 重算，讀 Val 頁加權目標價、投資建議、情境 B 目標價、FY2028 AWS 營業利益率、收支關卡，寫成 JSON 供 build_amazon.py --sens 使用。
 # 另跑 v0.3.1 → v0.3.2 拆解鏈（Recon D 節；v0.3.2 起，10-Q 補入）：把 10-Q 值依序改回 v0.3.1 的推導或沿用值（--q3v03 事實覆寫）：
-# S3＝本版但股數改回資產負債表 10,811；S2＝S3＋分部折舊 Q3 改回推導；S1＝S2＋融資租賃與融資義務改回 6/30；S0＝S1＋債務面額改回推導（應＝v0.3.1）。
+# S3＝本版但分部折舊 Q3 改回推導；S2＝S3＋融資義務改回 6/30（含利息）；S1＝S2＋融資租賃改回 6/30；S0＝S1＋債務面額改回推導（應＝v0.3.1）。
 # （v0.3 → v0.3.1 的拆解鏈見 git 歷史與 data/bridge_v031.json。）
 # 用法：python3 amazon/sens_v031.py <工作資料夾> <輸出 sens.json>（環境變數 JOBS＝平行數，預設 2）
 import json, os, subprocess, sys, shutil, tempfile
@@ -64,9 +64,9 @@ for k, sets in rm["SE_JOBS"].items():
 _F = {f["id"]: f for f in json.load(open(os.path.join(HERE, "data", "amazon_facts_2026q3.json"), encoding="utf-8"))["items"]}
 _O = {f["id"]: f for g in json.load(open(os.path.join(HERE, "data", "amazon_facts_20261008.json"), encoding="utf-8"))["groups"].values() for f in g}
 _r = _F["cf.da.2026q3"]["value"] / _O["cf.da.2026q2"]["value"]
-S3 = [("__fact:sh.cover.20261021", _F["sh.out.20260930"]["value"])]
-S2 = S3 + [(f"__fact:is.{c}.da.2026q3", _O[f"is.{c}.da.2026q2"]["value"] * _r) for c in ("NA", "INTL", "AWS")]
-S1 = S2 + [("__fact:lease.finPV.2026q3", _O["lease.finPV.2026q2"]["value"]), ("__fact:lease.finObl.2026q3", _O["lease.finObl.2026q2"]["value"])]
+S3 = [(f"__fact:is.{c}.da.2026q3", _O[f"is.{c}.da.2026q2"]["value"] * _r) for c in ("NA", "INTL", "AWS")]
+S2 = S3 + [("__fact:lease.finOblPrin.2026q3", _O["lease.finObl.2026q2"]["value"])]
+S1 = S2 + [("__fact:lease.finPV.2026q3", _O["lease.finPV.2026q2"]["value"])]
 S0 = S1 + [("__fact:debt.face.20260930", _O["debt.face.2026q2"]["value"] + _F["cf.ltdProceeds.2026q3"]["value"] - _F["cf.ltdRepay.2026q3"]["value"])]
 for k, v in (("S0", S0), ("S1", S1), ("S2", S2), ("S3", S3)):
     jobs[f"chain|{k}"] = v
@@ -85,8 +85,8 @@ json.dump(res, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 if all(f"chain|{k}" in res for k in ("S0", "S1", "S2", "S3")):
     v031 = 217.650781868569
     ch = [("v0.3.1", v031)] + [(k, res[f"chain|{k}"]["tp"]) for k in ("S0", "S1", "S2", "S3")] + [("v0.3.2", res["base|base"]["tp"])]
-    labs = ["殘差：10-Q 值全部改回後 − v0.3.1（應為 0）", "(a) 債務面額 181.09 → 180.89", "(b) 融資租賃 13.45 → 14.50、融資義務 11.07 → 11.57",
-            "(c) 2026Q3 分部折舊：推導 → 10-Q", "(d) 流通股數 10,811 → 10,813.1（10-Q 封面）"]
+    labs = ["殘差：10-Q 值全部改回後 − v0.3.1（應為 0）", "(a) 債務面額 181.09 → 180.89", "(b) 融資租賃 13.45 → 14.50",
+            "(c) 融資義務 11.07（含利息）→ 9.73（本金）", "(d) 2026Q3 分部折舊：推導 → 10-Q"]
     steps = [{"item": labs[i], "from": ch[i][0], "to": ch[i + 1][0], "tp_from": ch[i][1], "tp_to": ch[i + 1][1], "delta": ch[i + 1][1] - ch[i][1]} for i in range(5)]
     other = {}
     for kk in ("tp1", "tpB", "gateB", "gateW", "awsm28B", "cx27B"):
