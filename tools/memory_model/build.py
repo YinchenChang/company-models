@@ -63,6 +63,11 @@ PXU = next(x[2] for x in C["inputs"] if x[0] == "px")
 inp("cons_tp", "市場共識目標價（賣方平均；低／高＝最低／最高）", PXU, TPC["cons_tp"][1], TPC["cons_tp"][0], TPC["cons_tp"][2], "Interested-party", TPC["cons_tp"][3])
 for k_, lab_, v_, s_ in TPC["cons"]:
     inp(k_, lab_, PXU, None, v_, None, "Interested-party", s_)
+# Siliconomics v0.13（決策 S37，三層校準原則 Andy 2026-11-04）：Wattonomics 錨定係數，只供 Sens 頁「Wattonomics 錨定」案例用；
+# 放在模型輸入最後（In 頁版面的「情境驅動對照」展示節由 apply_in_layout 接在其後）
+sys.path.insert(0, os.path.join(ROOT, "siliconomics")); import reader as SIL  # noqa: E402
+sec(f"Z. Wattonomics 錨定係數（敏感度用；Siliconomics {SIL.VERSION}）")
+SIL.wta_rows(lambda *a: inp(*a[:7], a[7] + "；" + a[8]))
 TPKEYS = ["tp_wA", "tp_wB", "tp_wC", "tp_r", "tp_g", "tp_roe", "tp_w_dcf", "nim10", "fade_gA", "fade_gB", "fade_gC", "cyc_mA", "cyc_mC", "fade_mA", "fade_mB", "fade_mC", "cons_tp"] + [x[0] for x in TPC["cons"]]
 YEL = PatternFill("solid", fgColor="FFF2CC")
 INROW = {}
@@ -504,6 +509,102 @@ for k_, (nm_, st_, kw) in enumerate(TPCASES):
 TPS_LAST = TPS0 + 1 + len(TPCASES)
 SE.cell(TPS_LAST + 1, 1, "核對：基準列 DCF 目標價應等於 Val 頁第 0 節"); SE[f"C{TPS_LAST + 1}"] = f"=C{TPS0 + 2}-Val!B{T['dcftp']}"; SE[f"C{TPS_LAST + 1}"].number_format = "0.000000"
 SE.column_dimensions["A"].width = 14; SE.column_dimensions["B"].width = 30
+# Wattonomics 錨定（三層校準原則；Siliconomics v0.13，決策 S37）：放在 Sens 既有內容最下方（不位移既有列）。
+# 以情境 B 為底，HBM 需求（加速器顆數 × 每顆 GB × 情境 B 顆數係數）自 CY2027 起 × wta；FY2026 不乘。出貨＝MIN(需求, 供給)，供給與單價照情境 B；
+# 會計年度依既有日曆季對應（fy_quarters）取各季。一般 DRAM、NAND、折舊、資本支出、非記憶體事業不受影響（讀 Y 頁情境 B）。
+# FY2030–FY2032 依 Y 頁收斂法（由本案例 FY2029 年增、淨利率收斂到 fade_gB、fade_mB）。
+W0 = TPS_LAST + 4
+SE.cell(W0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
+SE.cell(W0 + 1, 1, "讀法：Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。")
+SE.cell(W0 + 2, 1, "本模型的產業量＝HBM 需求位元（Mkt 頁：加速器顆數 × 每顆 GB × 情境 B 顆數係數）；出貨＝MIN(需求 × wta, 供給)，供給與 HBM 單價照情境 B；HBM 以外收入線不受影響")
+hdr(SE, W0 + 4, ["日曆年（HBM 市場層，情境 B）", "單位", "2025", "2026", "2027", "2028", "2029"])
+WC = {2025: "C", 2026: "D", 2027: "E", 2028: "F", 2029: "G"}
+WM = {}
+def wrow(r_, key, lab, unit, fs, fmt="0.00"):
+    SE.cell(r_, 1, lab); SE.cell(r_, 2, unit); WM[key] = r_
+    for y_, f_ in fs.items():
+        SE[f"{WC[y_]}{r_}"] = f_; SE[f"{WC[y_]}{r_}"].number_format = fmt
+r_ = W0 + 5
+wrow(r_, "f", "Wattonomics 錨定係數（2027 起；In 頁 wta_27／28／29）", "x", {2025: 1, 2026: 1, 2027: "=wta_27", 2028: "=wta_28", 2029: "=wta_29"}, "0.000"); r_ += 1
+wrow(r_, "dem", "需求 × 出貨係數（情境 B，Mkt 頁）", "EB", {y_: f"=Mkt!{WC[y_]}{MK['demgB']}" for y_ in (2026, 2027, 2028, 2029)}); r_ += 1
+wrow(r_, "demw", "需求 × wta", "EB", {y_: f"={WC[y_]}{WM['dem']}*{WC[y_]}{WM['f']}" for y_ in (2026, 2027, 2028, 2029)}); r_ += 1
+wrow(r_, "sup", "供給（三情境相同，Mkt 頁）", "EB", {y_: f"=Mkt!{WC[y_]}{MK['sup']}" for y_ in WC}); r_ += 1
+wrow(r_, "ship", "出貨＝MIN(需求 × wta, 供給)", "EB", {2025: f"=Mkt!C{MK['shipB']}", **{y_: f"=MIN({WC[y_]}{WM['demw']},{WC[y_]}{WM['sup']})" for y_ in (2026, 2027, 2028, 2029)}}); r_ += 1
+wrow(r_, "shipb", "  對照：出貨（情境 B，Mkt 頁）", "EB", {y_: f"=Mkt!{WC[y_]}{MK['shipB']}" for y_ in WC}); r_ += 1
+wrow(r_, "mkt", "HBM 市場＝出貨 × 情境 B 單價", "$B", {y_: f"={WC[y_]}{WM['ship']}*Mkt!{WC[y_]}{MK['pB']}" for y_ in WC}, "0.0"); r_ += 1
+wrow(r_, "mktb", "  對照：HBM 市場（情境 B，Mkt 頁）", "$B", {y_: f"=Mkt!{WC[y_]}{MK['mB']}" for y_ in WC}, "0.0"); r_ += 2
+WY = YRS + FADEY
+WCOL = {y_: chr(ord("C") + i) for i, y_ in enumerate(WY)}
+hdr(SE, r_, [f"會計年度（{U}）", "說明"] + [f"{FYL.format(y_)} 錨定" for y_ in WY]); r_ += 1
+WR = {}
+WKEYS = ["hbm", "conv", "nand", "oth", "rev", "hbmbits", "da", "vol", "cogs", "opex", "op", "nmrev", "nmop", "crev", "cop", "ni", "capex", "fcf", "div", "bb", "eq", "nc", "sh", "eps", "cg", "nim"]
+for k_ in WKEYS:
+    WR[k_] = r_; SE.cell(r_, 1, YLAB[k_]); r_ += 1
+def wset(k_, y_, f_, fmt="0.0"):
+    c_ = SE[f"{WCOL[y_]}{WR[k_]}"]; c_.value = f_; c_.number_format = fmt
+EPSF = "#,##0.00" if SS < 1e5 else "#,##0"
+for n, y in enumerate(YRS, 1):
+    col, YB = WCOL[y], FC[("B", n)]
+    pv = (lambda k_: f"Y!C{R[k_]}") if n == 1 else (lambda k_, pc=WCOL[YRS[n - 2]]: f"{pc}{WR[k_]}")
+    yb = lambda k_: f"Y!{YB}{R[k_]}"
+    wset("hbm", y, "=(" + "+".join(f"{WC[cy_of(i)]}{WM['mkt']}/4*{C['hbm_share'][cy_of(i)]}" for i in fy_quarters(y)) + f")*{CCY}")
+    wset("hbmbits", y, "=(" + "+".join(f"{WC[cy_of(i)]}{WM['ship']}/4*{C['hbm_share'][cy_of(i)]}" for i in fy_quarters(y)) + ")", "0.00")
+    for k_ in ("conv", "nand", "oth", "da", "nmrev", "nmop", "capex"): wset(k_, y, "=" + yb(k_))
+    wset("rev", y, f"={col}{WR['conv']}+{col}{WR['hbm']}+{col}{WR['nand']}+{col}{WR['oth']}")
+    wset("vol", y, f"=w_c*(1+cb_{n})+w_h*{col}{WR['hbmbits']}/{pv('hbmbits')}+w_n*(1+nb_{n})", "0.00")
+    wset("cogs", y, f"=({pv('cogs')}-da_cogs*{pv('da')})*{col}{WR['vol']}*(1-costdn_y)+da_cogs*{col}{WR['da']}")
+    wset("opex", y, f"=opex_fix_y*(1+opex_g)^{n}+opex_var*{col}{WR['rev']}")
+    wset("op", y, f"={col}{WR['rev']}-{col}{WR['cogs']}-{col}{WR['opex']}")
+    wset("crev", y, f"={col}{WR['rev']}+{col}{WR['nmrev']}")
+    wset("cop", y, f"={col}{WR['op']}+{col}{WR['nmop']}")
+    wset("ni", y, f"=({col}{WR['cop']}+rf*{pv('nc')})*(1-tax)")
+    wset("fcf", y, f"={col}{WR['ni']}+{col}{WR['da']}-{col}{WR['capex']}")
+    wset("div", y, f"=dps_{n}*{pv('sh')}/{SS}")
+    wset("bb", y, f"=MAX(0,payout*{col}{WR['fcf']}-{col}{WR['div']})")
+    wset("eq", y, f"={pv('eq')}+{col}{WR['ni']}-{col}{WR['div']}-{col}{WR['bb']}")
+    wset("nc", y, f"={pv('nc')}+{col}{WR['fcf']}-{col}{WR['div']}-{col}{WR['bb']}")
+    wset("sh", y, f"={pv('sh')}-{col}{WR['bb']}/bb_px*{SS}")
+    wset("eps", y, f"={col}{WR['ni']}/{col}{WR['sh']}*{SS}", EPSF)
+    wset("cg", y, f"={col}{WR['crev']}/{pv('crev')}-1", "0.0%")
+    wset("nim", y, f"={col}{WR['ni']}/{col}{WR['crev']}", "0.0%")
+L9 = WCOL[YRS[-1]]
+for k, y in enumerate(FADEY, 1):
+    col = WCOL[y]; P_ = WCOL[WY[WY.index(y) - 1]]
+    wset("cg", y, f"=${L9}{WR['cg']}+(fade_gB-${L9}{WR['cg']})*{k}/3", "0.0%")
+    wset("crev", y, f"={P_}{WR['crev']}*(1+{col}{WR['cg']})")
+    wset("nim", y, f"=${L9}{WR['nim']}+(fade_mB-${L9}{WR['nim']})*{k}/3", "0.0%")
+    wset("ni", y, f"={col}{WR['crev']}*{col}{WR['nim']}")
+    wset("sh", y, f"={P_}{WR['sh']}")
+    wset("eps", y, f"={col}{WR['ni']}/{col}{WR['sh']}*{SS}", EPSF)
+    for k_ in ("cg", "crev", "nim", "ni", "sh", "eps"): SE[f"{col}{WR[k_]}"].fill = FADEFILL
+SE.cell(WR["hbm"], 2, "Σ 會計年度各季：上表 HBM 市場 ÷ 4 × 市占 × 匯率")
+SE.cell(WR["conv"], 2, "＝Y 頁情境 B（不受影響；折舊、資本支出、非記憶體事業同）")
+SE.cell(WR["cg"], 2, f"{FYL.format(FADEY[0])} 起灰底＝收斂法（同 Y 頁，收斂到 fade_gB、fade_mB）")
+# 情境 B 的 DCF 每股價值（12 個月後；同 Val 第 0 節 C 欄算法）：基準 vs 錨定
+r_ += 1
+WCF = r_
+SE.cell(r_, 1, "股東現金流（每股；同 Val 第 0 節）"); SE.cell(r_, 2, "FY2027–FY2029：FCF ÷ 股數；收斂期：EPS ×（1 − 再投資率）")
+for y in WY:
+    c_ = WCOL[y]
+    SE[f"{c_}{r_}"] = (f"={c_}{WR['fcf']}/{c_}{WR['sh']}*{SS}" if y in YRS else f"={c_}{WR['eps']}*(1-Val!$B${REINV})"); SE[f"{c_}{r_}"].number_format = EPSF
+r_ += 1
+WDCF = r_
+c0_, c9_ = WCOL[WY[0]], WCOL[WY[-1]]
+SE.cell(r_, 1, "情境 B DCF 每股價值（推到 12 個月後）"); SE.cell(r_, 2, "同 Val 第 0 節 DCF 情境價值 ×(1＋tp_r)")
+SE[f"C{r_}"] = f"=(SUMPRODUCT({c0_}{WCF}:{c9_}{WCF},1/(1+tp_r)^{{1,2,3,4,5,6}})+{c9_}{WCF}*(1+tp_g)/(tp_r-tp_g)/(1+tp_r)^6)*(1+tp_r)"; SE[f"C{r_}"].number_format = fmtp
+r_ += 2
+hdr(SE, r_, ["Wattonomics 錨定 vs 基準", "指標", "基準（情境 B）", "Wattonomics 錨定", "差異%"]); r_ += 1
+WSUM0 = r_
+for n, y in enumerate(YRS, 1):
+    YB = FC[("B", n)]
+    for k_, nm_, fm_ in (("hbm", "HBM 營收", "0.0"), ("op", "記憶體營業利益", "0.0"), ("eps", "EPS", EPSF)):
+        SE.cell(r_, 1, FYL.format(y)); SE.cell(r_, 2, nm_)
+        SE[f"C{r_}"] = f"=Y!{YB}{R[k_]}"; SE[f"D{r_}"] = f"={WCOL[y]}{WR[k_]}"; SE[f"E{r_}"] = f"=D{r_}/C{r_}-1"
+        SE[f"C{r_}"].number_format = fm_; SE[f"D{r_}"].number_format = fm_; SE[f"E{r_}"].number_format = "0.0%"; r_ += 1
+SE.cell(r_, 1, "目標價"); SE.cell(r_, 2, "情境 B DCF 每股價值（12 個月後）")
+SE[f"C{r_}"] = f"=Val!C{T['dcf12']}"; SE[f"D{r_}"] = f"=C{WDCF}"; SE[f"E{r_}"] = f"=D{r_}/C{r_}-1"
+SE[f"C{r_}"].number_format = fmtp; SE[f"D{r_}"].number_format = fmtp; SE[f"E{r_}"].number_format = "0.0%"; r_ += 1
+SE.cell(r_, 1, "核對：本區塊 wta＝1 時應等於 Y 頁情境 B（引擎同式）；加權目標價（A／B／C）不重算，此處只比較情境 B 的 DCF 價值")
 
 # ---------------- Recon ----------------
 RC = wb.create_sheet("Recon")

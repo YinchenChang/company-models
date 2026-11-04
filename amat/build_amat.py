@@ -247,7 +247,7 @@ for c in "CDEFG": UN.column_dimensions[c].width = 11
 # ---------------- 引擎：一個情境的完整推導（PL 與 Sens 共用） ----------------
 FYC = col   # FY 欄位同 C＝FY2025 … G＝FY2029
 DEFP = dict(sf="sf", fyw="fyw", mdr="m_dr", mfl="m_fl", mnd="m_nd", cF="cF", cv="cv", oF="oF", ov="ov", nioi="nioi", bb="bb",
-            aff=None, affv="aff_hit", cn="0", gags=None, goth=None, scn="A")
+            aff=None, affv="aff_hit", cn="0", gags=None, goth=None, scn="A", wf=None)   # v0.13：Wattonomics 錨定案例用；預設不變（wf＝年→AI 分項係數儲存格）
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
     aff = P["aff"] or f"aff_{s}"; gags = P["gags"] or f"g_ags_{s}"; goth = P["goth"] or f"g_oth_{s}"
@@ -261,8 +261,8 @@ def engine(ws, r0, title, **over):
             ws[f"{c_}{r}"] = f; ws[f"{c_}{r}"].number_format = fmt
         ws.cell(r, 8, note); R[key] = r; r += 1
     ws.cell(r, 1, "A. 市場（日曆年 CY，US$B；讀 In 頁的設備市場成品）").font = BOLD; r += 1
-    row("fl_c", "晶圓代工、邏輯與其他 CY", "US$B", {col[y]: f"=la{s}_{y%100}+lo{s}_{y%100}+of{s}_{y%100}" for y in YRS}, "0.0")
-    row("dr_c", "DRAM（含 HBM）CY", "US$B", {col[y]: f"=dr{s}_{y%100}" for y in YRS}, "0.0")
+    row("fl_c", "晶圓代工、邏輯與其他 CY", "US$B", {col[y]: f"=la{s}_{y%100}" + (f"*{P['wf'][y]}" if P['wf'] and y in P['wf'] else "") + f"+lo{s}_{y%100}+of{s}_{y%100}" for y in YRS}, "0.0")
+    row("dr_c", "DRAM（含 HBM）CY", "US$B", {col[y]: f"=dr{s}_{y%100}" + (f"*{P['wf'][y]}" if P['wf'] and y in P['wf'] else "") for y in YRS}, "0.0")
     row("nd_c", "NAND CY", "US$B", {col[y]: f"=nd{s}_{y%100}" for y in YRS}, "0.0")
     ws.cell(r, 1, "B. 會計年度（FY；FY(t)＝fyw×CY(t−1)＋(1−fyw)×CY(t)）").font = BOLD; r += 1
     for k in ("fl", "dr", "nd"):
@@ -799,6 +799,40 @@ wb._sheets = [wb[n] for n in order]
 import os, sys  # noqa: E401
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
 import relative_multiple as RMX  # noqa: E402
+
+# ---------------- Wattonomics 錨定（三層校準原則；Siliconomics v0.13，決策 S37）----------------
+# In：三列 wta_27／28／29 接在模型輸入最後（apply_in_layout 的「情境驅動對照」展示節接在其後）；Sens：案例區塊放在既有內容最下方，摘要列接在案例清單之後
+sys.path.insert(0, os.path.join(ROOT, "siliconomics")); import reader as SIL  # noqa: E402
+from openpyxl.workbook.defined_name import DefinedName as _DN  # noqa: E402
+from openpyxl.styles import Font as _F  # noqa: E402
+def _wta_in(wb):
+    ws = wb["In"]; r = ws.max_row + 1
+    ws.cell(r, 1, f"Z. Wattonomics 錨定係數（敏感度用；Siliconomics {SIL.VERSION}）").font = _F(bold=True); r += 1
+    rows_ = []; SIL.wta_rows(lambda *a: rows_.append(a))
+    for a in rows_:
+        for j, v in enumerate(a, 1):
+            if v is not None: ws.cell(r, j, v)
+        ws.cell(r, 5).font = _F(color="0000FF")
+        wb.defined_names[a[0]] = _DN(a[0], attr_text=f"In!$E${r}")
+        r += 1
+_wta_in(wb)
+WTA_READ = "讀法：Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
+
+def _wta_f(SE, w0, CM, desc):
+    SE.cell(w0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
+    SE.cell(w0 + 1, 1, WTA_READ)
+    SE.cell(w0 + 2, 1, desc)
+    hdr(SE, w0 + 3, ["日曆年", "單位"] + [f"CY{y}" for y in range(2025, 2030)] + ["", "來源"])
+    fr = w0 + 4
+    SE.cell(fr, 1, "Wattonomics 錨定係數（In 頁 wta_27／28／29）"); SE.cell(fr, 2, "x")
+    for y, f in zip(range(2025, 2030), (1, 1, "=wta_27", "=wta_28", "=wta_29")): SE[f"{CM[y]}{fr}"] = f; SE[f"{CM[y]}{fr}"].number_format = "0.000"
+    return fr
+WTA_AIWFE = "產業量＝設備市場模型（markets/equipment，情境 B）中標〔AI〕的分項：先進邏輯〔AI〕、DRAM（含 HBM）〔AI〕、先進封裝〔AI〕；CY2027 起 × wta，其他分項不變。注意：設備市場由公司資本支出推得，與部署 GW 只是間接連動（資本支出領先產能），此處依工作單以同年係數近似。"
+
+fr = _wta_f(SE, SE.max_row + 3, col, WTA_AIWFE + " 本模型：先進邏輯〔AI〕與 DRAM（含 HBM）〔AI〕× wta；其他代工與邏輯、其他前段、NAND 不變（AMAT 未直接讀先進封裝分項）。AGS、其他、份額照情境 B。")
+RW = engine(SE, fr + 3, "案例區塊：Wattonomics 錨定（情境 B 為底；設備市場 AI 分項 CY2027 起 × wta）", scn="B", wf={y: f"${col[y]}${fr}" for y in (2027, 2028, 2029)})
+put_case(nn + 2, "Wattonomics 錨定（情境 B 為底）", "設備市場 AI 分項 CY2027 起 × wta；相對欄對情境 B 列", RW)
+for a_, b_ in (("E", "D"), ("H", "G")): SE[f"{a_}{nn + 2}"] = f"={b_}{nn + 2}/{b_}{nn}-1"
 RMX.apply(wb, "amat")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, "v0.3.1", "2026-10-31")  # v0.3.1：In 頁版面（個股模型原則第 8 節；數值不變）
