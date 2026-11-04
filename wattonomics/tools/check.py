@@ -78,8 +78,11 @@ def main():
             if f"WIF_MktGW_{k_}_{y}" not in names: bad.append(f"缺別名 WIF_MktGW_{k_}_{y}"); continue
             if val(f"WIF_MktGW_{k_}_{y}") != val(f"WIF_MktGW_{k_}_A_D0_{y}"): bad.append(f"別名 WIF_MktGW_{k_}_{y} ≠ 舊名")
     nA = sum(1 for ws_ in wf.worksheets if ws_.title not in ("FundRaw", "DB_Evidence") for row in ws_.iter_rows() for c in row
-             if isinstance(c.value, str) and not c.value.startswith("=") and "需求 A" in c.value)
-    if nA: bad.append(f"Excel 文字含「需求 A」{nA} 格（Andy 11-04 07:44）")
+             if isinstance(c.value, str) and not c.value.startswith("=") and "需求 A" in c.value and not (ws_.title == "Decisions" and c.column == 6))
+    if nA: bad.append(f"Excel 文字含「需求 A」{nA} 格（Andy 11-04 07:44；Decisions 依據欄的原話除外）")
+    nS = sum(1 for ws_ in wf.worksheets if ws_.title not in ("FundRaw", "DB_Evidence", "Decisions") for row in ws_.iter_rows() for c in row
+             if isinstance(c.value, str) and "情景" in c.value)
+    if nS: bad.append(f"Excel 標籤含「情景」{nS} 格（獨立核對 2026-11-04 建議 5）")
     for cid in ("C-K1", "R-K1"):
         if cid not in [x_[0] for x_ in rows]: bad.append(f"Checks 缺 {cid}（v0.2）")
     # 6) 快照一致

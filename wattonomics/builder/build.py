@@ -1054,13 +1054,13 @@ def main():
             if g == "nnv": base_ += f"*INDEX(Players!$D${NNVR}:$M${NNVR},1,{k})"
             elif g: base_ += f"*(1-INDEX(Players!$D${NNVR}:$M${NNVR},1,{k}))*INDEX(Players!$D${MIXR[g]}:$M${MIXR[g]},1,{k})"
             return "=0" if y == 2023 else f"=IF({y}-ROUND({lf},0)>=2023,{base_},0)"
-        drow("ret", "汰換 IT GW（壽命 life_ret 年；Assumed 5–7）", "A", "", ret, note="V7：汰換＝t − 壽命 年的裝機量")
+        drow("ret", "汰換 IT GW（暫定；壽命 life_ret 年；Assumed 5–7）", "A", "", ret, note="V7：汰換＝t − 壽命 年的裝機量（暫定：2025 年納入的存量 10.08 GW〔含中國 8.33 累計存量〕全數在 2031 年汰換，屬年份假設造成的人為結果，待 v0.2.1 處理；毛額與 R4 不受影響）")
         for g in GENS:
             drow("ret_" + g, f"　其中 NVIDIA {GEN_NAME[g]}", "A", "", lambda y, g=g: ret(y, g=g))
         drow("ret_nnv", "　其中 非 NVIDIA", "A", "", lambda y: ret(y, g="nnv"))
         drow("retchk", "　檢查：世代合計 − 汰換（須＝0）", "A", "", lambda y: f"=SUM({YC[y]}{DR['ret_' + GENS[0]]}:{YC[y]}{DR['ret_nnv']})-{YC[y]}{DR['ret']}", fmt="0.000000")
-        drow("net", "年新增 IT GW（淨額＝毛額 − 汰換；不含新納入存量）", "A", "", lambda y: f"={YC[y]}{NA}-{YC[y]}{DR['ret']}", fill=KEY,
-             note="V7：R4 比較讀淨額或毛額由 AI半導體 決定；毛額列名不變")
+        drow("net", "年新增 IT GW（淨額＝毛額 − 汰換；不含新納入存量；2030–32 暫定）", "A", "", lambda y: f"={YC[y]}{NA}-{YC[y]}{DR['ret']}", fill=KEY,
+             note="V7：R4 比較讀淨額或毛額由 AI半導體 決定；毛額列名不變。2030–32（暫定：2025 年納入的存量 10.08 GW〔含中國 8.33 累計存量〕全數在 2031 年汰換，屬年份假設造成的人為結果，待 v0.2.1 處理；毛額與 R4 不受影響）")
         drow("ret_lo", "　敏感度：汰換（壽命 life_ret_lo 年）", "A", "", lambda y: ret(y, "life_ret_lo"))
         drow("ret_hi", "　敏感度：汰換（壽命 life_ret_hi 年）", "A", "", lambda y: ret(y, "life_ret_hi"))
     for sfx, vlab, use_adj in VAR:
@@ -1391,7 +1391,8 @@ def main():
              "2025 Verified；2026 Q1–Q2 Verified＋Q3 指引（Interested-party）＋Q4 Assumed；2027＝FY2027 共識 ×（1＋FY2028 指引年增 70%）× 資料中心占比 92.5%（Derived／Interested-party）", "0.0")
         nrow(px + "7lo", "　(7) 低", "US$B", {y: actlo[y] for y in ys}, "", "0.0")
         nrow(px + "7hi", "　(7) 高", "US$B", {y: acthi[y] for y in ys}, "", "0.0")
-        nrow(px + "8", "(8) 比值＝(6)÷(7)", "x", {y: f"={YC[y]}{NVR[px + '6']}/{YC[y]}{NVR[px + '7']}" for y in ys}, "", "0.000")
+        nrow(px + "8", "(8) 比值＝(6)÷(7)" + ("（未校準，不作判讀）" if px == "w" and NV_V4 else ""), "x", {y: f"={YC[y]}{NVR[px + '6']}/{YC[y]}{NVR[px + '7']}" for y in ys},
+             ("未校準比值不作判讀：非 NVIDIA 占比預設 0.27（市場 $ 占比）已含 TPU／Trainium，又疊加 Google、Amazon 逐家值，2027 有效占比 0.441，水準偏高；判讀看 (13) 成長比較（獨立核對 2026-11-04）" if px == "w" and NV_V4 else ""), "0.000")
         nrow(px + "8s", "　判定（tolband）", "—", {y: f'=IF(ABS({YC[y]}{NVR[px + "8"]}-1)<=tolband,"一致（帶內）","帶外：待診斷")' for y in ys},
              "三層對帳規則：帶內＝一致；帶外＝待診斷（各層先用自己的數字，上游先更新再對帳；不自動調參數）", "General")
         nrow(px + "8lo", "　比值（以 (7) 高）", "x", {y: f"={YC[y]}{NVR[px + '6']}/{YC[y]}{NVR[px + '7hi']}" for y in ys}, "", "0.000")
@@ -1405,7 +1406,7 @@ def main():
                  "水準誤差（混合口徑內容偏低、NVIDIA GW 口徑）同時影響兩年；校準後只比成長", "0.000")
             nrow("wreqg", "(11) 所需內容成長＝2027 (9) ÷ 2026 (9)", "x", {2027: f"={YC[2027]}{NVR['w9']}/{YC[2026]}{NVR['w9']}"}, "", "0.000")
             nrow("wcg", "(12) 模型內容成長＝2027 (5) ÷ 2026 (5)", "x", {2027: f"={YC[2027]}{NVR['w5']}/{YC[2026]}{NVR['w5']}"},
-                 "VR200 用 GB300 值時＝1；chip_bridge 混合口徑與營收口徑都約 1.04（備忘列）", "0.000")
+                 "1.000 來自佔位值（F1 VR200、Rubin Ultra＝GB300 值，D31、D32＝D30），不是估計；改用備忘列內容（營收口徑 1.039、chip_bridge 1.037–1.096、沿用 GB300 占比 1.151），校準比值為 0.78–0.86，仍在帶外（獨立核對 2026-11-04）", "0.000")
             nrow("wcalr", "(13) 校準後 2027 比值＝(12) ÷ (11)＝2027 (6) × λ ÷ 2027 (7)", "x", {2027: f"={YC[2027]}{NVR['wcg']}/{YC[2027]}{NVR['wreqg']}"}, "", "0.000")
             nrow("wcals", "　判定（以成長比較；tolband）", "—", {2027: f'=IF(ABS({YC[2027]}{NVR["wcalr"]}-1)<=tolband,"一致（帶內）","帶外：待診斷")'},
                  "v0.2 V4：判定改看成長（2027 診斷）；只並列、不校準基準", "General")
@@ -2171,8 +2172,8 @@ def main():
     for k_, lab_, dk in (("YE", "年底上線", "yeAD0"), ("Avg", "年平均", "avgAD0"), ("Add", "年新增（毛額，未扣汰換）", "naAD0")):
         irow(f"WIF_MktGW_{k_}", f"{lab_}（主路徑；{BASE_LAB}）", "Deploy", DR[dk])
     if RETIRE:
-        irow("WIF_MktGW_Retire", f"汰換 IT GW（主路徑；壽命 life_ret；v0.2 V7）", "Deploy", DR["ret"])
-        irow("WIF_MktGW_AddNet", f"年新增 IT GW 淨額＝毛額 − 汰換（主路徑；v0.2 V7）", "Deploy", DR["net"])
+        irow("WIF_MktGW_Retire", f"汰換 IT GW（暫定；主路徑；壽命 life_ret；v0.2 V7；2031 為年份假設的人為結果，待 v0.2.1）", "Deploy", DR["ret"])
+        irow("WIF_MktGW_AddNet", f"年新增 IT GW 淨額＝毛額 − 汰換（主路徑；v0.2 V7；2030–32 暫定）", "Deploy", DR["net"])
     for sfx, nsfx, vlab in (("", "", "主路徑"), ("_SO", "_SiteOnly", "SiteOnly：只有 甲")):
         IF.cell(r, 1, f"A{nsfx}. 市場總 GW（{vlab}；基準；舊名 *_A_D0_*：A_D0 為舊名，v0.3 刪）").font = BOLD; r += 1
         s, D = "A", "D0"
@@ -2359,7 +2360,7 @@ def main():
         CK.cell(r, 3, f"=SUM(Matrix!C{m['sum']}:{L(UNC)}{m['sum']})"); CK.cell(r, 4, f"=Players!{YC[y]}{TOT['ye']}")
         CK.cell(r, 5, f"=C{r}-D{r}"); CK.cell(r, 6, f'=IF(ABS(E{r})<1E-9,"OK","ERROR")'); CK.cell(r, 7, "恆等式"); r += 1
     for y in YEARS:
-        CK.cell(r, 1, f"K2-{y}"); CK.cell(r, 2, f"Pipeline D0 {y} 年底＝Players 市場合計（容差 0.01 GW）")
+        CK.cell(r, 1, f"K2-{y}"); CK.cell(r, 2, f"Pipeline 基準 {y} 年底＝Players 市場合計（容差 0.01 GW）")
         CK.cell(r, 3, f"=Pipeline!{YC[y]}{PA['yeD0']}"); CK.cell(r, 4, f"=Players!{YC[y]}{TOT['ye']}")
         CK.cell(r, 5, f"=C{r}-D{r}"); CK.cell(r, 6, f'=IF(ABS(E{r})<=0.01,"OK","ERROR")'); CK.cell(r, 7, "恆等式"); r += 1
     for y in YEARS:
@@ -2646,13 +2647,13 @@ def main():
     WO2 = "工作單 20261104 v0.2"
     Q0806 = "Andy 11-04 08:06「要，這才是Oracle真正付出的資本開支，其他的改租賃->營業現金流降低這條線」"
     decisions += [
-        {"id": "GL01-62", "cat": "判斷", "item": "融資租賃走資本支出線（V1b）", "decision": "承租玩家（Oracle、CoreWeave、Nebius）的承租廠房中，融資租賃部分算承租方資本支出（會計擁有者），營業租賃部分歸出租方列。甲2 每 GW 成本與 Gap AI 需要＝IT＋（1 − 承租比例 ×（1 − 融資租賃占比））× 廠房；融資租賃廠房金額為資金來源③（同 Funding『新增融資租賃』類，2026 起；2024–2025 已在已觀測外部融資內）。營業現金流一致性：個股模型把未起租租金全列營業，融資租賃部分加回本金＝Σ（2026 起融資租賃廠房上線年金額）÷ lease_term（直線法，Assumed 15–20 年），利息留在營業現金流。出租方列只含營業租賃部分",
+        {"id": "GL01-62", "cat": "判斷", "item": "融資租賃走資本支出線（V1b）", "decision": "承租玩家（Oracle、CoreWeave、Nebius）的承租廠房中，融資租賃部分算承租方資本支出（會計擁有者），營業租賃部分歸出租方列。甲2 每 GW 成本與 Gap AI 需要＝IT＋（1 − 承租比例 ×（1 − 融資租賃占比））× 廠房；融資租賃廠房金額為資金來源③（同 Funding『新增融資租賃』類，2026 起；2024–2025 已在已觀測外部融資內）。營業現金流一致性：個股模型把未起租租金全列營業，融資租賃部分加回本金＝Σ（2026 起融資租賃廠房上線年金額）÷ lease_term（直線法，Assumed 15–20 年），利息留在營業現金流。本金加回的基數是本庫推得的融資租賃廠房（承租 GW × 全額廠房 × 承租比例 × 融資租賃占比），不是 Oracle 2,880 億未起租租約。出租方列只含營業租賃部分",
          "date": "2026-11-04", "quote": "Andy 11-04 08:21：融資租賃「處理上應該就要走資本開支那條線」；chat 端 V1b 追加", "status": "已定（Andy）"},
         {"id": "GL01-63", "cat": "工程", "item": "承租比例與融資租賃占比（V1、V1b）", "decision": "In S9：lease_orcl 1.0（0.8–1.0）、lease_crwv 0.85（0.75–1.0；個股模型 leases.facts.share）、lease_nbis 0.25（0.10–0.30；個股模型）；finl_orcl 0.21（0–0.40；FY27Q1 9.185 ÷ 43.806）、finl_crwv 0.013（0–0.10）、finl_nbis 0（0–0.10）。出租方廠房＝承租 GW × 營業租賃占比 × 全額廠房（廠房提前 lag_bldg），只入 Spend 備忘與 Gap 市場其餘參考（Spend 合計不變：市場層本來就以全額計），不入 11 家收支。C1 頁承租玩家廠房同乘自付比", "date": "2026-11-04", "quote": WO2 + " V1、V1b", "status": "預設、可撤回"},
         {"id": "GL01-64", "cat": "工程", "item": "Oracle AI 占比（V2）", "decision": "CapexGW Oracle 財年 AI 占比＝In Y9 個股模型 AI 資本支出 ÷ 資本支出合計（FY2027 0.946、FY2028 0.939、FY2029 0.851）；模型無拆分的財年（FY2026 以前、外推年）用 ai_sh；曆年化改為財年 AI 資本支出依財年結束月拆分；Gap 非 AI 替代改為曆年資本支出 − 曆年 AI 資本支出；AI 占比敏感度列仍以 ai_sh 低／高比例縮放（近似）", "date": "2026-11-04", "quote": WO2 + " V2；Oracle 診斷建議 2", "status": "執行"},
         {"id": "GL01-65", "cat": "工程", "item": "Oracle 2028 園區分期與 Shackelford 規模（V3）", "decision": "Shackelford：Epoch（2026-07 更新）全站 1,400 MW IT、10 棟逐棟上線（2027 年 3 棟 420、2028 年 7 棟 980），與 Vantage 1.4 GW 一致 → 改值（原 2.0 GW 設施）。Jupiter、Port Washington、Saline 其餘：查無棟別 MW → 18 個月等量分期（終點＝公告完工 2028-12），2027 年 6／18 拆成新列 *_p27（2027-12）。Epoch 對 Port Washington（902 IT）、Saline（988 IT）、Jupiter（1,750 IT）的規模只記在說明，未改值。Checks C-K1：七家 2026–2028 園區年底存量 > 甲2 年底 ×（1＋tolband）→ WARN", "date": "2026-11-04", "quote": WO2 + " V3；Oracle 診斷建議 3–5", "status": "執行"},
-        {"id": "GL01-66", "cat": "工程", "item": "NVIDIA 對帳點方法（V4）", "decision": "出貨年 GW：七家與 xAI 直接用 CapexGW 付款年 GW，其餘逐家以上線年鏡像式反推；NVIDIA 出貨 GW 逐家＝出貨 ×（1 − 該家非 NVIDIA 占比），中國 NVIDIA 占比 0（2025–2027 一致；NVIDIA 指引不含中國）；新增 2026 校準係數 λ、所需內容成長（2027÷2026）、模型內容成長與校準後比值，判定以成長比較；營收口徑內容（GB300 24.88、VR200 26.13，不含 scale-out）與黃仁勳每 GW（晶片口徑 ÷ k_chip2it）只列備忘。Siliconomics r1 欄（F3）方法不變（無逐家值）", "date": "2026-11-04", "quote": "Andy 11-04 07:47（黃仁勳每 GW＝晶片口徑）；" + WO2 + " V4；2027 診斷「現在可做」1–4", "status": "執行"},
-        {"id": "GL01-67", "cat": "判斷", "item": "刪除停用情境（V5）", "decision": "需求 B、C 與延遲 D1、D2 的 In 參數（S2）、Pipeline 欄位與矩陣、Deploy 列、Gap 區塊（含 A／D1 分配、M1 非基準）、Checks（K3、K6 延遲參數、K9、K18、K19、G-K3c）、WIF_ 名稱（含 WIF_ShippedNotOnline_*、WIF_Gap_PlayerCumGap_A_D1_*）與 explorer 紀錄全部刪除。保留三列名（Deploy『年新增 IT GW（毛額…）』『年底上線 IT GW』、Compare『瓦帳 年新增 IT GW（淨；SiteOnly）』；B 欄改『基準』）。*_A_D0_* 名稱保留（A_D0 為舊名，v0.3 刪），另新增 WIF_MktGW_<YE|Avg|Add>_<yyyy>。In T2 O 欄（已確保電力）只作資訊", "date": "2026-11-04", "quote": "Andy 11-02 15:58（三層只給基準）、11-04 07:44（不寫需求 A）；" + WO2 + " V5", "status": "已定（Andy）"},
+        {"id": "GL01-66", "cat": "工程", "item": "NVIDIA 對帳點方法（V4）", "decision": "出貨年 GW：七家與 xAI 直接用 CapexGW 付款年 GW，其餘逐家以上線年鏡像式反推；NVIDIA 出貨 GW 逐家＝出貨 ×（1 − 該家非 NVIDIA 占比），中國 NVIDIA 占比 0（2025–2027 一致；NVIDIA 指引不含中國）；新增 2026 校準係數 λ、所需內容成長（2027÷2026）、模型內容成長與校準後比值，判定以成長比較；營收口徑內容（GB300 24.88、VR200 26.13，不含 scale-out）與黃仁勳每 GW（晶片口徑 ÷ k_chip2it）只列備忘。Siliconomics r1 欄（F3）方法不變（無逐家值）", "date": "2026-11-04", "quote": "Andy 11-04 07:47「同意，我也認為是口徑(GW，老黃說的應該是晶片口徑)，照我們自己的算法就好。」；" + WO2 + " V4；2027 診斷「現在可做」1–4", "status": "執行"},
+        {"id": "GL01-67", "cat": "判斷", "item": "刪除停用情境（V5）", "decision": "需求 B、C 與延遲 D1、D2 的 In 參數（S2）、Pipeline 欄位與矩陣、Deploy 列、Gap 區塊（含 A／D1 分配、M1 非基準）、Checks（K3、K6 延遲參數、K9、K18、K19、G-K3c）、WIF_ 名稱（含 WIF_ShippedNotOnline_*、WIF_Gap_PlayerCumGap_A_D1_*）與 explorer 紀錄全部刪除。保留三列名（Deploy『年新增 IT GW（毛額…）』『年底上線 IT GW』、Compare『瓦帳 年新增 IT GW（淨；SiteOnly）』；B 欄改『基準』）。*_A_D0_* 名稱保留（A_D0 為舊名，v0.3 刪），另新增 WIF_MktGW_<YE|Avg|Add>_<yyyy>。In T2 O 欄（已確保電力）只作資訊。Andy 11-04 07:44 的意思：拿掉「需求 A」字樣，基準就稱「基準」（不是另設情境）", "date": "2026-11-04", "quote": "Andy 11-02 15:58（三層只給基準）；11-04 07:44「Wattonomics網頁上，'基準：需求 A・公告時程＋已確認延遲':這個'基準:需求A'實在看不習慣。因為看到需求A，就會覺得還有B、C、...，而A通常不會是基準情境。」→ 拿掉「需求 A」字樣，基準就稱「基準」；" + WO2 + " V5", "status": "已定（Andy）"},
         {"id": "GL01-68", "cat": "判斷", "item": "K4 乙：SiteOnly 2030–2032（V6）", "decision": "SiteOnly 2030–2032 年新增改直接加總站點證據（Pipeline 基準），不再用前年 × g；主路徑 2030–32 仍用 g 收斂規則。覆蓋率 2030–2032 因此＝站點證據 ÷ 主路徑", "date": "2026-11-04", "quote": "Andy 11-02 18:36（K4 乙）；" + WO2 + " V6", "status": "已定（Andy）"},
         {"id": "GL01-69", "cat": "工程", "item": "汰換列（V7）", "decision": "Deploy 主路徑新增汰換 IT GW＝t − life_ret 年的裝機量（年新增毛額＋新納入存量；2023 年底存量視為 2023 年裝機），世代別依該年 Players 世代組合與非 NVIDIA 占比；淨新增＝毛額 − 汰換。既有毛額列不改值、列名不變；淨額列名刻意不用『年新增 IT GW（淨，不含新納入存量）』，避免 Siliconomics r4_bridge 自動改讀淨額（讀淨額或毛額由 AI半導體 決定）。WIF_MktGW_Retire_<yyyy>、WIF_MktGW_AddNet_<yyyy>", "date": "2026-11-04", "quote": WO2 + " V7", "status": "預設、可撤回"},
         {"id": "GL01-70", "cat": "工程", "item": "Tokenomics 快照 v21.9（V8）", "decision": "Tokenomics master 最新為 v21.9（20261103，commit 7276259）；以 tools/tokenomics/import_tokenomics.py 抽取到 wattonomics/data/tokenomics_snapshot_v21.9.json（名稱清單＝Siliconomics 清單＋IF_FacilityGW；Siliconomics 仍為 v21.7，不改其檔）。與 v21.7 只差 IF_NonNV_Out_TPU、IF_NonNV_Out_Trn（本庫未用），WIF_ 數值 0 變動；IF_FacilityGW 已在快照（Checks K8 改 OK，Requests R5 結案）", "date": "2026-11-04", "quote": WO2 + " V8", "status": "執行"},
@@ -2679,8 +2680,9 @@ def main():
             d.update(decision=d["decision"] +"。【2026-11-02 改】主路徑 2026 起七家一律甲2 上線年（含 Meta、CoreWeave 2027），讀 In Y9（GL01-46、GL01-45）", status="已改（2026-11-02）")
         elif d["id"] == "GL01-23":
             d.update(decision=d["decision"] + "。【2026-11-02 撤回】不再跳過：t−1、t−2 資本支出缺值時，缺 t−2 用 t−1，兩者皆缺用當年；CapexGW 標『代入』（R4 r1：跳過整年的偏差遠大於代入誤差）", status="撤回（2026-11-02）")
-    r = 4
+    r = 4; DEC_ROW = {}
     for d in decisions:
+        DEC_ROW[d["id"]] = r
         for j, k in enumerate(("id", "cat", "item", "decision", "date", "quote", "status"), 1):
             c = DC.cell(r, j, d.get(k)); c.alignment = WRAP
         if "預設" in str(d.get("status")):
@@ -2811,6 +2813,13 @@ def main():
         for row_ in ws_.iter_rows():
             for c_ in row_:
                 v_ = c_.value
+                if ws_.title == "Decisions" and c_.column == 6: continue   # 依據欄保留 Andy 原話
+                # 獨立核對（2026-11-04）建議 5：清理現行標籤中的「情景」（Decisions 停用項目的歷史說明除外）
+                if isinstance(v_, str) and "情景" in v_ and (ws_.title != "Decisions" or c_.row == DEC_ROW.get("GL01-30")):
+                    for a_, b_ in (("情景比例 r", "縮放比例 r"), ("不隨需求情景變", "不隨假設變"), ("不隨情景", "不隨假設"), ("屬情景", "屬推算"),
+                                   ("每情景、", "基準、"), ("情景係數", "假設係數"), ("標『情景』", "標『推算』"), ("情景（覆蓋率", "推算（覆蓋率"), ("情景：", "假設："), ("情景", "推算")):
+                        v_ = v_.replace(a_, b_)
+                    c_.value = v_
                 if isinstance(v_, str) and not v_.startswith("=") and "需求 A" in v_:
                     v_ = _re9.sub(r"基準＝需求 A ?× ?(延遲)?[『「]?D0＋已確認延遲[』」]?", "基準＝公告時程＋已確認延遲", v_)
                     v_ = _re9.sub(r"需求 A ?× ?(延遲)?[『「]?D0＋已確認延遲[』」]?", "基準（公告時程＋已確認延遲）", v_)
