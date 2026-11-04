@@ -2443,6 +2443,14 @@ def main():
     CK.cell(r, 1, "G-K11"); CK.cell(r, 2, "Σ逐家 AddGW＝Add11（WIF_Gap_Player_<p>_<yyyy>_AddGW 加總＝WIF_Gap_Add11_<yyyy>；2024–2030；容差 0.001 GW；工作單 E4）")
     CK.cell(r, 3, "=" + "+".join(f"ABS(WIF_Gap_Add11_{y}-(" + "+".join(f"WIF_Gap_Player_{p}_{y}_AddGW" for p in GPL if "add" in GPR[p]) + "))" for y in OUTG))
     CK.cell(r, 6, f'=IF(C{r}<=0.001,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Gap）"); r += 1
+    # v0.2 V3（工作單 20261104；2027 診斷建議 5、Oracle 診斷建議 4）：園區年底存量 vs 甲2 年底存量（不用年新增，避免整站完工月放大）
+    ck_ = []
+    for p in CAPP:
+        for y in (2026, 2027, 2028):
+            ck_.append(f"(N(Players!{YC[y]}{PR[p]['tk']})>CapexGW!{YC[y]}{XR[p]['ye']}*(1+tolband))")
+    CK.cell(r, 1, "C-K1"); CK.cell(r, 2, "七家 2026–2028：園區（Players，SiteOnly）年底 IT GW 高於 甲2 主路徑年底 ×（1＋tolband）的家 × 年數（v0.2 V3：比年底存量；WARN）")
+    CK.cell(r, 3, "=" + "+".join(ck_)); CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "驗證（園區 vs 資本支出）")
+    CK.cell(r, 8, f'="Oracle 2028 年底：園區 "&TEXT(Players!{YC[2028]}{PR["orcl"]["tk"]},"0.00")&" vs 甲2 "&TEXT(CapexGW!{YC[2028]}{XR["orcl"]["ye"]},"0.00")&" GW"'); r += 1
     CK.cell(r, 1, "D-K1"); CK.cell(r, 2, "Delay：全市場＝11 家＋其餘（公告上線 GW 與已延遲 GW）")
     CK.cell(r, 3, f"=ABS(Delay!C{DLR['Mkt']}-SUM(Delay!C{DLR[GP[0]]}:C{DLR['Rest']}))+ABS(Delay!D{DLR['Mkt']}-SUM(Delay!D{DLR[GP[0]]}:D{DLR['Rest']}))")
     CK.cell(r, 6, f'=IF(C{r}<1E-9,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Delay）"); r += 1
@@ -2606,6 +2614,12 @@ def main():
              "Siliconomics 側 R4 橋接 r1：推得淨新增上線 IT GW 與 NVIDIA 每 GW 內容推導（nvc_gb_tk＝TK IF_GPUsPerGW GB300 × nv_content）"),
             ("SRC_GL_332", "nvidia/build_nvidia.py（Q 頁，8-K 季報）；nvidia/README.md（FY2027 錨點：Q1、Q2 實績＋Q3 指引中點＋Q4 假設）",
              "NVIDIA 資料中心營收 CY2025（FY26 四季實績）與 CY2026 錨點 375.46"),
+            ("SRC_GL_335", "wattonomics/docs/verify/20261104_Oracle園區與資本支出差異診斷.md（第六節 Andy 11-04 08:06 決定）；wattonomics/evidence_raw/E_oracle_20261104.md（E#5、E#10）；chat 端 11-04 V1b 追加（FY27Q1 融資／營業租賃負債 9.185／34.621）",
+             "v0.2 V1、V1b：Oracle 承租比例、融資租賃占比、租期（Interested-party／Derived／Assumed）"),
+            ("SRC_GL_336", "coreweave/company.json（leases.facts.share、finLeaseLiab、opLeaseLiab、defaults.sites）；nebius/company.json（同上）；datacenterdynamics.com『CoreWeave surpasses 1GW…self-builds』；convergedigest.com『Nebius targets 4 GW』",
+             "v0.2 V1、V1b：CoreWeave、Nebius 承租比例與融資租賃占比（個股模型；網路查證為 Interested-party 轉述）"),
+            ("SRC_GL_338", "wattonomics/docs/verify/20261103_2027時差來源診斷.md（營收口徑每 IT GW NVIDIA 內容 VR200 26.13、GB300 24.88；2026 校準）",
+             "v0.2 V4：NVIDIA 對帳點方法修正（付款年 GW、逐家非 NVIDIA 占比、中國 0、2026 校準、所需內容成長）"),
             ("SRC_GL_334", "markets/chip_bridge/dist/20261027_晶片內容橋接表_v0.2.2.xlsx（Bridge 第 7、44 列）",
              "AI半導體 晶片內容橋接表 v0.2.2：NVIDIA 合計 ÷ IT capex × IT capex＝每 IT GW NVIDIA 內容（GB300 20.85、VR200 23.47／21.85）；只作備忘（獨立核對 R2）"),
             ("SRC_GL_333", "交流 已處理/20261102_AI半導體-to-算力收支_回執_R4歸因與2027證據送件.md 第 3 節；siliconomics/docs/reports/r4_bridge/20261102_R4對帳橋接_Siliconomics側_r2.md「2027 年新證據」",

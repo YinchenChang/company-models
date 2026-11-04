@@ -1,0 +1,18 @@
+key,col,old,new,source,reason
+cp_orcl_shk1,C,設施,IT,docs/workorders/20261104_Wattonomics_v0.2.md,V3（Shackelford 改值、分期）
+cp_orcl_shk1,J,600,420,docs/workorders/20261104_Wattonomics_v0.2.md,V3（Shackelford 改值、分期）
+cp_orcl_shk1,E,Derived,Analogy（Epoch 棟別時程）,docs/workorders/20261104_Wattonomics_v0.2.md,V3（Shackelford 改值、分期）
+cp_orcl_shk1,F,SRC_GL_200,SRC_GL_337,docs/workorders/20261104_Wattonomics_v0.2.md,V3（Shackelford 改值、分期）
+cp_orcl_shk1,G,,"v0.2 V3：Epoch（2026-07 更新）全站 1,400 MW IT、10 棟各 140 MW；2027 年 3 棟（08-15、10-19、11-18）＝420 MW IT；Vantage 1.4 GW 一致（Interested-party）→ 改值（原 Epoch 2.0 GW 設施 → 600 設施）；A#72、J#26 舊依據作廢",docs/workorders/20261104_Wattonomics_v0.2.md,V3（Shackelford 改值、分期）
+cp_orcl_shk2,C,設施,IT,docs/workorders/20261104_Wattonomics_v0.2.md,V3（Shackelford 改值、分期）
+cp_orcl_shk2,J,1400,980,docs/workorders/20261104_Wattonomics_v0.2.md,V3（Shackelford 改值、分期）
+cp_orcl_shk2,E,Analogy,Analogy（Epoch 棟別時程）,docs/workorders/20261104_Wattonomics_v0.2.md,V3（Shackelford 改值、分期）
+cp_orcl_shk2,F,SRC_GL_200,SRC_GL_337,docs/workorders/20261104_Wattonomics_v0.2.md,V3（Shackelford 改值、分期）
+cp_orcl_shk2,G,,"v0.2 V3：Epoch 第 4–10 棟 2028-02-11 至 2028-11-11 上線，7 × 140＝980 MW IT（月別不影響年底存量，併為 2028-11）；原 1,400 設施",docs/workorders/20261104_Wattonomics_v0.2.md,V3（Shackelford 改值、分期）
+cp_orcl_jup,J,2200,1466.667,docs/workorders/20261104_Wattonomics_v0.2.md,V3（Shackelford 改值、分期）
+cp_orcl_jup,G,,"v0.2 V3：18 個月等量分期之 12／18（2028 年；2027 部分見 cp_orcl_jup_p27）。Epoch 估 1,750 MW IT（2028-12-31，無棟別 MW）與本列合計 1,833 IT 差 5%，未改。原說明：A#73（屬實，設施）；Oracle 稱照時程，天然氣管線晚約 6 個月、已發不可抗力通知（F#133）",docs/workorders/20261104_Wattonomics_v0.2.md,V3（Shackelford 改值、分期）
+cp_orcl_pw,J,1300,866.667,docs/workorders/20261104_Wattonomics_v0.2.md,V3（Shackelford 改值、分期）
+cp_orcl_pw,G,,"v0.2 V3：18 個月等量分期之 12／18（2027 部分見 cp_orcl_pw_p27）。Epoch 估 902 MW IT（4 棟，2028-12-31，無棟別 MW）低於本列合計 1,083 IT，未改（工作單只要求 Shackelford 改值；待 chat 端決定）。原說明：A#74（屬實，設施）",docs/workorders/20261104_Wattonomics_v0.2.md,V3（Shackelford 改值、分期）
+cp_orcl_sal,J,922,614.667,docs/workorders/20261104_Wattonomics_v0.2.md,V3（Shackelford 改值、分期）
+cp_orcl_sal,G,,"v0.2 V3：其餘 922 設施 18 個月等量分期之 12／18（2027 部分見 cp_orcl_sal_p27）。Epoch 估全站 988 MW IT（3 棟，2028-12-31）低於本站合計 1,153 IT，未改（待 chat 端決定）。原說明：第 1 棟 461 拆出為 cp_orcl_sal_b1（2027-12；J#20）；A#75（屬實，設施）",docs/workorders/20261104_Wattonomics_v0.2.md,V3（Shackelford 改值、分期）
+cap_g_ext,G,,共識只到 FY28–FY29（Meta 只有 2026 指引）；之後以本值外推，基準＝g_lt〔v0.2 V8：刪去『最早一年之前取最早值』半句，實際規則見 GL01-19〕,docs/workorders/20261104_Wattonomics_v0.2.md,V8（核對意見 B4）
