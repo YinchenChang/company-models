@@ -150,7 +150,9 @@ def check(path):
         fail.append(f"情境權重合計應為 1：{rows['scn_w']}")
     # 4. 本節純展示：不得被引用
     wbf = wf.parent
-    sec_rows = set(range(sec[0], ws.max_row + 1))
+    # v0.13：其後的「Z. Wattonomics 錨定係數」節（Siliconomics 決策 S37）不屬展示區
+    _z = [r for r in range(sec[0] + 1, ws.max_row + 1) if str(ws.cell(r, 1).value or "").startswith("Z. ")]
+    sec_rows = set(range(sec[0], (_z[0] if _z else ws.max_row + 1)))
     bad = []
     for sh in wbf.worksheets:
         for row in sh.iter_rows():
