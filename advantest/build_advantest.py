@@ -307,7 +307,7 @@ UNITS_CHECK_ROW = ur + 2
 # ---------------- 引擎：一個情境的完整推導（PL 與 Sens 共用，確保一致） ----------------
 FYC = {y: chr(ord("C") + y - 2025) for y in range(2025, 2030)}   # FY2025＝C … FY2029＝G
 DEFP = dict(fx="fx", eff="0", sh="sh_soc", shC28="shC_28", shC29="shC_29", shm="sh_mem", tt="", mk26="mk_soc26", nonai="nonai26",
-            w="w_hbm", F="opex_fix", v="opex_var", nioi="nioi", mkm26="mk_mem26", scn="A")
+            w="w_hbm", F="opex_fix", v="opex_var", nioi="nioi", mkm26="mk_mem26", scn="A", wm=None)
 def engine(ws, r0, title, P0=None, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
     ws.cell(r0, 1, title).font = BOLD
@@ -320,20 +320,23 @@ def engine(ws, r0, title, P0=None, **over):
         for col, f in fs.items():
             ws[f"{col}{r}"] = f; ws[f"{col}{r}"].number_format = fmt
         ws.cell(r, 8, note); R[key] = r; r += 1
-    row("wu", "測試時間加權顆數", "百萬顆", {**{cyc(y): "=" + "+".join(f"{u(k, y, s)}*tt_{k}{P['tt']}" for k in PLAT) for y in CYS[:4]}, "G": f"=F{r}*(1+cy30g)"}, note="Σ 顆數 × tt；CY2030＝CY2029×(1+cy30g)")
+    wm = P["wm"]; wmf = lambda y: f"*{wm[y]}" if wm and 2027 <= y <= 2029 else ""   # v0.13：wm＝Wattonomics 錨定年別乘數（CY；預設 None＝公式不變）
+    _wu = lambda y: "+".join(f"{u(k, y, s)}*tt_{k}{P['tt']}" for k in PLAT)
+    row("wu", "測試時間加權顆數", "百萬顆", {**{cyc(y): (f"=({_wu(y)}){wmf(y)}" if wm else "=" + _wu(y)) for y in CYS[:4]}, "G": f"=F{r}*(1+cy30g)"}, note="Σ 顆數 × tt；CY2030＝CY2029×(1+cy30g)")
     row("cw", "每加權顆測試支出（以 CY2026 校準）", "US$B／百萬顆", {"C": f"=({P['mk26']}-{P['nonai']})/C{R['wu']}"}, fmt="0.0000", note="（公司 CY2026 SoC 市場 − 非 AI）÷ 加權顆數")
     row("ai", "AI SoC 測試機市場", "US$B", {cyc(y): f"=$C${R['cw']}*{cyc(y)}{R['wu']}*(1-{P['eff']})^{y-2026}" for y in CYS})
     row("nai", "非 AI SoC 測試機市場", "US$B", {cyc(y): f"={P['nonai']}*(1+g_nonai)^{y-2026}" for y in CYS})
     row("soc", "SoC 測試機市場 CY", "US$B", {cyc(y): f"={cyc(y)}{R['ai']}+{cyc(y)}{R['nai']}" for y in CYS}, note="CY2026 ＝ 公司規模（校準）")
     dr = lambda y: f"dr{s}_{y % 100}"
     row("mem", "記憶體測試機市場 CY", "US$B", {**{cyc(y): f"={P['mkm26']}*({P['w']}*hs{s}_{y%100}/hs{s}_26+(1-{P['w']})*{dr(y)}/{dr(2026)})" for y in CYS[:4]}, "G": f"=F{r}*(1+cy30g)"}, note="CY2026 錨定公司規模；之後＝w×HBM 出貨位元指數＋(1−w)×DRAM 設備支出指數")
+    s27 = f"({cyc(2027)}{R['soc']}-{cyc(2027)}{R['ai']}*(1-1/{wm[2027]}))" if wm else f"{cyc(2027)}{R['soc']}"   # v0.13：FY2026 錨點用未乘係數的 CY2027
     ws.cell(r, 1, "B. 會計年度（C＝FY2025 … G＝FY2029；FY(t)＝3/4×CY(t)＋1/4×CY(t+1)）").font = BOLD; r += 1
     fy = lambda y: FYC[y]
-    row("fsoc", "SoC 測試機市場 FY", "US$B", {"C": f"=fmk_soc25", **{fy(y): f"=0.75*{cyc(y)}{R['soc']}+0.25*{cyc(y+1)}{R['soc']}" for y in range(2026, 2030)}})
+    row("fsoc", "SoC 測試機市場 FY", "US$B", {"C": f"=fmk_soc25", **{fy(y): f"=0.75*{cyc(y)}{R['soc']}+0.25*" + (s27 if y == 2026 else f"{cyc(y+1)}{R['soc']}") for y in range(2026, 2030)}})
     row("fmem", "記憶體測試機市場 FY", "US$B", {"C": f"=fmk_mem25", **{fy(y): f"=0.75*{cyc(y)}{R['mem']}+0.25*{cyc(y+1)}{R['mem']}" for y in range(2026, 2030)}})
     shf = {2026: P["sh"], 2027: P["sh"], 2028: P["shC28"] if s == "C" else P["sh"], 2029: P["shC29"] if s == "C" else P["sh"]}
     row("sh", "Advantest SoC 市占", "%", {"C": f"=a25_soc/(C{R['fsoc']}*{P['fx']})", **{fy(y): f"={shf[y]}" for y in range(2026, 2030)}}, fmt="0.0%", note="FY2025＝實績隱含（對照公司自估 CY2025 66%）；FY2026 起＝sh_soc（CY2026 推得）")
-    row("rsoc", "SoC 測試機營收", "¥B", {"C": "=a25_soc", fy(2026): f"={cyc(2026)}{R['soc']}*{fy(2026)}{R['sh']}*{P['fx']}-Q!E4+0.25*{cyc(2027)}{R['soc']}*{fy(2027)}{R['sh']}*{P['fx']}", **{fy(y): f"={fy(y)}{R['fsoc']}*{fy(y)}{R['sh']}*{P['fx']}" for y in range(2027, 2030)}}, fmt="#,##0.0", note="市場 × 市占 × 匯率；FY2026＝CY2026 SoC 營收 − 2026-01～03 實績（Q!E4）＋1/4×CY2027（CY2026 逐季上升，不用 3/4 平均）")
+    row("rsoc", "SoC 測試機營收", "¥B", {"C": "=a25_soc", fy(2026): f"={cyc(2026)}{R['soc']}*{fy(2026)}{R['sh']}*{P['fx']}-Q!E4+0.25*{s27}*{fy(2027)}{R['sh']}*{P['fx']}", **{fy(y): f"={fy(y)}{R['fsoc']}*{fy(y)}{R['sh']}*{P['fx']}" for y in range(2027, 2030)}}, fmt="#,##0.0", note="市場 × 市占 × 匯率；FY2026＝CY2026 SoC 營收 − 2026-01～03 實績（Q!E4）＋1/4×CY2027（CY2026 逐季上升，不用 3/4 平均）")
     row("rmem", "記憶體測試機營收", "¥B", {"C": "=a25_mem", **{fy(y): f"={fy(y)}{R['fmem']}*{P['shm']}*{P['fx']}" for y in range(2026, 2030)}}, fmt="#,##0.0")
     g_o = {2026: "g_oth_26", **{y: f"g_oth_{s}" for y in (2027, 2028, 2029)}}; g_s = {2026: "g_svc_26", **{y: f"g_svc_{s}" for y in (2027, 2028, 2029)}}
     row("roth", "其他系統營收", "¥B", {"C": "=a25_oth", **{fy(y): f"={fy(y-1)}{r}*(1+{g_o[y]})" for y in range(2026, 2030)}}, fmt="#,##0.0")
@@ -885,4 +888,35 @@ IN.cell(_r, 7, "Interested-party"); IN.cell(_r, 8, "Advantest FY2025 簡報：CY
 wb.defined_names["sh_soc25"] = DefinedName("sh_soc25", attr_text=f"In!$E${_r}")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, "v0.4.1", "2026-10-31", base_map={"shC_28": "sh_soc", "shC_29": "sh_soc"})  # v0.4.1：In 頁版面（個股模型原則第 8 節；數值不變）
+# ---------------- v0.13（2026-11-04）：Sens「Wattonomics 錨定」案例（三層校準原則；決策 S37）。In 頁最後三列、Sens 頁最下方小表與案例區塊；既有格不動 ----------------
+WTA_NOTE = "Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
+WTA_MF = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
+def wta_in_rows():
+    r = IN.max_row + 2
+    IN.cell(r, 1, f"Z. Wattonomics 錨定係數（敏感度用；Siliconomics {SIL.VERSION}）").font = BOLD; r += 1
+    def _inp(key, item, unit, lo, base, hi, tag, s1, s2):
+        nonlocal r
+        for j, v in enumerate((key, item, unit, lo, base, hi, tag, s1, s2), 1):
+            if v is not None: IN.cell(r, j, v)
+        IN.cell(r, 5).number_format = "0.000"
+        wb.defined_names[key] = DefinedName(key, attr_text=f"In!$E${r}")
+        r += 1
+    SIL.wta_rows(_inp)
+def wta_sens():
+    t0 = SE.max_row + 3; b0 = t0 + 11
+    RW = engine(SE, b0, "案例區塊：Wattonomics 錨定（情境 B；CY2027 起加權顆數 × wta_27／wta_28／wta_29）", scn="B", wm=WTA_MF)
+    SE.cell(t0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
+    for c in range(1, 8 + 1): SE.cell(t0 + 1, c, SE.cell(3, c).value).font = BOLD
+    put_case(t0 + 2, "基準（情境 A；同第 4 列）", "PL 區塊 A", PB["A"])
+    put_case(t0 + 3, "顆數情境 B（本案例的底）", "2028 ×0.8、2029 ×0.85；記憶體 B 路徑；服務／其他系統成長 B", PB["B"])
+    put_case(t0 + 4, "Wattonomics 錨定", "情境 B；CY2027 起加速器加權顆數 × wta_27／wta_28／wta_29，FY 依 3/4×CY(t)＋1/4×CY(t+1)", RW)
+    SE.cell(t0 + 5, 1, "差異%：Wattonomics 錨定 ÷ 基準 − 1"); SE.cell(t0 + 6, 1, "差異%：Wattonomics 錨定 ÷ 情境 B − 1")
+    for c in "CDFG":
+        for rr, rb in ((t0 + 5, t0 + 2), (t0 + 6, t0 + 3)):
+            SE[f"{c}{rr}"] = f"=IFERROR({c}{t0 + 4}/{c}{rb}-1,\"\")"; SE[f"{c}{rr}"].number_format = "0.0%"
+    SE.cell(t0 + 7, 1, WTA_NOTE)
+    SE.cell(t0 + 8, 1, "FY(t)＝3/4×CY(t)＋1/4×CY(t+1)（模型既有換算）；FY2026 內含的 1/4×CY2027 用未乘係數值（錨點不動）；CY2030＝CY2029 ×（1＋cy30g），即沿用 wta_29。記憶體測試機市場（HBM 出貨位元＝MIN（需求, 供給），供給受限）不乘。")
+    SE.cell(t0 + 9, 1, "目標價：本模型 Sens 目標價參數表只動 DCF 參數，不逐案例重算 DCF，本案例不列目標價。")
+    return RW
+wta_in_rows(); WTA_R = wta_sens()   # v0.13：放在 In 版面套用之後，確保在 In 頁最後
 wb.save(sys.argv[1])

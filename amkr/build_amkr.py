@@ -311,7 +311,7 @@ def engine(ws, r0, title, **over):
         ws.cell(r, 1, t).font = BOLD; r += 1
     um =lambda y: {2026: "", 2027: "", 2028: f"*um28_{s}", 2029: f"*um29_{s}"}[y]
     sec_("A. AI 加速器 → Amkor AI 先進封裝（D 欄＝FY2026 校準年）")
-    row("units", "AI 加速器顆數（含情境係數）", "百萬顆", {FC[y]: f"=units_{y % 100}{um(y)}" + ("" if y == 2026 else f"*{P['mf']}") for y in BU}, "0.00")
+    row("units", "AI 加速器顆數（含情境係數）", "百萬顆", {FC[y]: f"=units_{y % 100}{um(y)}" + ("" if y == 2026 else f"*{P['mf'][y] if isinstance(P['mf'], dict) else P['mf']}") for y in BU}, "0.00")   # v0.13：mf 可為年別 dict（Wattonomics 錨定）
     row("area", "封裝面積指數（2026＝1）", "x", {FC[y]: f"=ar_{y % 100}" for y in BU}, "0.000")
     row("out", "後段委外比例", "%", {"D": "=out_26", **{FC[y]: f"={p('out', y)}" for y in F3}}, "0.0%", note="FY2026 固定基準值（Sens 只動 FY2027 起）")
     row("sh", "Amkor 份額（占委外後段）", "%", {"D": "=sh_26", **{FC[y]: f"={p('sh', y)}" for y in F3}}, "0.0%")
@@ -803,6 +803,37 @@ RMX.apply(wb, "amkr")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
 RD.cell(RD.max_row + 2, 1, "v0.3（2026-10-31）：滾入 3Q26 實績（2026-10-26 新聞稿：營收 1,990.6、毛利 363.5、營業利益 224.7、所得稅 39.0、淨利 190.6、EPS 0.76；終端市場 通訊 37%／運算 26%／車用與工業 22%／消費 15%；折舊攤提 187）；4Q26 四市場季增改為合計約 −2.4%（公司指引營收 1,900–2,000）。FY2026 EPS 2.58 → 2.49；加權目標價 66.4 → 61.8，投資建議維持強力買進。")
 apply_in_layout.apply(wb, "v0.2.3", "2026-10-30")  # v0.2.3：In 頁版面（個股模型原則第 8 節；數值不變）
+# ---------------- v0.13（2026-11-04）：Sens「Wattonomics 錨定」案例（三層校準原則；決策 S37）。In 頁最後三列、Sens 頁最下方小表與案例區塊；既有格不動 ----------------
+WTA_NOTE = "Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
+WTA_MF = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
+def wta_in_rows():
+    r = IN.max_row + 2
+    IN.cell(r, 1, f"Z. Wattonomics 錨定係數（敏感度用；Siliconomics {SIL.VERSION}）").font = BOLD; r += 1
+    def _inp(key, item, unit, lo, base, hi, tag, s1, s2):
+        nonlocal r
+        for j, v in enumerate((key, item, unit, lo, base, hi, tag, s1, s2), 1):
+            if v is not None: IN.cell(r, j, v)
+        IN.cell(r, 5).number_format = "0.000"
+        wb.defined_names[key] = DefinedName(key, attr_text=f"In!$E${r}")
+        r += 1
+    SIL.wta_rows(_inp)
+def wta_sens():
+    t0 = SE.max_row + 3; b0 = t0 + 11
+    RW = engine(SE, b0, "案例區塊：Wattonomics 錨定（情境 B；FY2027 起 mf＝wta_27／wta_28／wta_29）", scn="B", mf=WTA_MF)
+    SE.cell(t0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
+    for c in range(1, 10 + 1): SE.cell(t0 + 1, c, SE.cell(3, c).value).font = BOLD
+    put_case(t0 + 2, "基準（情境 A；同第 4 列）", "PL 區塊 A", PB["A"], "PL!")
+    put_case(t0 + 3, "情境 B（本案例的底）", "CY2028 顆數 ×0.8、CY2029 ×0.85；通訊較弱", PB["B"], "PL!")
+    put_case(t0 + 4, "Wattonomics 錨定", "情境 B；FY2027 起 AI 加速器顆數 × wta_27／wta_28／wta_29（mf 年別 dict）", RW, "")
+    SE.cell(t0 + 5, 1, "差異%：Wattonomics 錨定 ÷ 基準 − 1"); SE.cell(t0 + 6, 1, "差異%：Wattonomics 錨定 ÷ 情境 B − 1")
+    for c in "CDEGHI":
+        for rr, rb in ((t0 + 5, t0 + 2), (t0 + 6, t0 + 3)):
+            SE[f"{c}{rr}"] = f"=IFERROR({c}{t0 + 4}/{c}{rb}-1,\"\")"; SE[f"{c}{rr}"].number_format = "0.0%"
+    SE.cell(t0 + 7, 1, WTA_NOTE)
+    SE.cell(t0 + 8, 1, "FY2030–FY2032 收斂欄沿用本模型延伸表收斂法（由 FY2029 收斂），不另乘係數。")
+    SE.cell(t0 + 9, 1, "目標價：Sens 頁目標價參數表只動 DCF 參數（r、g、權重），不逐案例重算 DCF，本案例不列目標價。")
+    return RW
+wta_in_rows(); WTA_R = wta_sens()   # v0.13：放在 In 版面套用之後，確保在 In 頁最後
 wb.save(sys.argv[1])
 if os.environ.get("AMKR_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

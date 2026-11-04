@@ -20,6 +20,7 @@ for r in range(4, ws.max_row + 1):
 for k, (lo, hi) in jobs.items():
     for side, v in (("lo", lo), ("hi", hi)):
         subprocess.run([sys.executable, BUILD, os.path.join(TMP, "raw", f"{k}__{side}.xlsx")], check=True, env={**env0, "TUC_OVERRIDE": f"{k}={v}"})
+subprocess.run([sys.executable, BUILD, os.path.join(TMP, "raw", "_wta.xlsx")], check=True, env={**env0, "TUC_WTA": "1", "TUC_ROWMAP": os.path.join(TMP, "wta_rowmap.json")})   # v0.13：Wattonomics 錨定
 files = sorted(glob.glob(os.path.join(TMP, "raw", "*.xlsx")))
 subprocess.run(["soffice", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", os.path.join(TMP, "rc")] + files,
                check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -33,7 +34,11 @@ out = {}
 b = read(os.path.join(TMP, "rc", "base.xlsx"))
 for k in jobs:
     out[k] = {"低": read(os.path.join(TMP, "rc", f"{k}__lo.xlsx")), "高": read(os.path.join(TMP, "rc", f"{k}__hi.xlsx"))}
+_wb = openpyxl.load_workbook(os.path.join(TMP, "rc", "_wta.xlsx"), data_only=True); _sm = json.load(open(os.path.join(TMP, "wta_rowmap.json")))["SUMR"]
+_tp, _ = read(os.path.join(TMP, "rc", "_wta.xlsx"))
+out["_wta"] = {"tp": _tp, "epsA28": _wb["PL"][f"F{_sm['A|eps']}"].value, "epsB27": _wb["PL"][f"E{_sm['B|eps']}"].value, "epsB28": _wb["PL"][f"F{_sm['B|eps']}"].value}   # v0.13
 json.dump(out, open(os.path.join(HERE, "sens.json"), "w"), ensure_ascii=False, indent=1)
 print("基準", b, "；案例", len(out))
-for k, v in sorted(out.items(), key=lambda kv: -max(abs(kv[1]["低"][0] / b[0] - 1), abs(kv[1]["高"][0] / b[0] - 1))):
+print("Wattonomics 錨定", out["_wta"])
+for k, v in sorted(((k, v) for k, v in out.items() if k != "_wta"), key=lambda kv: -max(abs(kv[1]["低"][0] / b[0] - 1), abs(kv[1]["高"][0] / b[0] - 1))):
     print(f"{k:10s} 低 {v['低'][0] / b[0] - 1:+.1%}  高 {v['高'][0] / b[0] - 1:+.1%}")
