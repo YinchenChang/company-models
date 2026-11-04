@@ -701,7 +701,7 @@ for _a in _wrows:
 W0 = SE.max_row + 3
 SE.cell(W0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
 SE.cell(W0 + 1, 1, WTA_NOTE)
-SE.cell(W0 + 2, 1, "2030–2032：沿用 PL 頁延伸表收斂法（營收年增由案例 2029 年增線性收斂到 fade_gB、淨利率由案例 2029 淨利率收斂到 fade_mB，2032 達到）。目標價＝單一路徑（不做情境加權）：tp_w_dcf × DCF（Val 第 0 節同式）＋（1 − tp_w_dcf）× Comparable（tp_comp_adj × 本路徑前瞻 EPS ÷ 加權前瞻 EPS）")
+SE.cell(W0 + 2, 1, "2030–2032：沿用 PL 頁延伸表收斂法（營收年增由案例 2029 年增線性收斂到 fade_gB、淨利率收斂目標＝（本案例 2029 淨利率＋nim10）÷ 2，與 In 頁 fade_mB 同規則；2032 達到）。目標價＝單一路徑（不做情境加權）：tp_w_dcf × DCF（Val 第 0 節同式）＋（1 − tp_w_dcf）× Comparable（tp_comp_adj × 本路徑前瞻 EPS ÷ 加權前瞻 EPS）")
 hdr(SE, W0 + 3, ["案例", "2027 EPS", "相對基準", "相對情境 B", "2028 EPS", "相對基準", "相對情境 B", "目標價", "相對基準", "相對情境 B"])
 WB0 = W0 + 9   # 案例區塊
 WC = dict(zip((27, 28, 29, 30, 31, 32), "BCDEFG"))
@@ -727,7 +727,7 @@ for k_, y in enumerate((30, 31, 32), 1):
     c, p = WC[y], WC[y - 1]
     SE[f"{c}{WR['g']}"] = f"=$D{WR['g']}+(fade_gB-$D{WR['g']})*{k_}/3"
     SE[f"{c}{WR['rev']}"] = f"={p}{WR['rev']}*(1+{c}{WR['g']})"
-    SE[f"{c}{WR['nim']}"] = f"=$D{WR['nim']}+(fade_mB-$D{WR['nim']})*{k_}/3"
+    SE[f"{c}{WR['nim']}"] = f"=$D{WR['nim']}+(($D{WR['nim']}+nim10)/2-$D{WR['nim']})*{k_}/3"
     SE[f"{c}{WR['ni']}"] = f"={c}{WR['rev']}*{c}{WR['nim']}"
 for y in YRS6:
     c = WC[y]
