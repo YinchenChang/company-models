@@ -12,6 +12,7 @@ from openpyxl.utils import get_column_letter as GL
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import valuation_rule as VR
+sys.path.insert(0, os.path.join(ROOT, "siliconomics")); import reader as SIL  # noqa: E402
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC"); FADE = PatternFill("solid", fgColor="E7E6E6")
@@ -193,6 +194,10 @@ for s_, f_, t_ in (("A", "=tp_g+0.02", "tp_g＋2pt"), ("B", "=tp_g", "＝tp_g"),
     inp(f"fade_g{s_}", f"情境 {s_}：FY2032 營收年增收斂目標（{t_}）", "%", None, f_, None, "Assumed", "工作單 2026-10-25 11:20 收斂法", "FY2030 起由 FY2029 年增線性收斂")
 inp("cons_tp", "市場共識目標價（賣方平均；低／高＝最低／最高）", PXU, 1000, 2144, 3600, "Interested-party", "stockanalysis（S&P Global，25 位，2026-10-18 更新）：平均 2,144、中位數 2,150、區間 1,000–3,600", "MarketScreener 25 位平均 2,173（10-09 收盤時）")
 flush()
+# Siliconomics v0.13（決策 S37）：Wattonomics 錨定係數，只供 Sens「Wattonomics 錨定」案例用；放在模型輸入最後
+sec(f"Z. Wattonomics 錨定係數（敏感度用；Siliconomics {SIL.VERSION}）")
+SIL.wta_rows(inp)
+flush()
 for col, w in zip("ABCDEFGHI", [12, 60, 10, 9, 11, 9, 18, 90, 70]): IN.column_dimensions[col].width = w
 IN.freeze_panes = "D4"
 
@@ -247,7 +252,7 @@ Q.column_dimensions["I"].width = 70
 # ---------------- 引擎 ----------------
 QC = {q: GL(3 + i) for i, q in enumerate(QL)}            # C..R
 FYC = {2025: "C", 2026: "D", 2027: "E", 2028: "F", 2029: "G"}
-DEFP = dict(cd=None, oxv="ox_var", oxg="ox_g", tax="tax", gm="g_gm", pay="payout", capr="cap_r", pxm="1", shm="1")
+DEFP = dict(cd=None, oxv="ox_var", oxg="ox_g", tax="tax", gm="g_gm", pay="payout", capr="cap_r", pxm="1", shm="1", vq=None)
 def engine(ws, r0, title, s, **over):
     p = dict(DEFP); p.update(over); cd = p["cd"] or f"cd_{s}"
     R = {}; rr = [r0]
@@ -263,8 +268,8 @@ def engine(ws, r0, title, s, **over):
     ref = QC[REFQ]
     nq = lambda q: QL.index(q) - QL.index(REFQ)
     uc = lambda q: UCOL[cyq(*q)]
-    row("um", "市場層營收（TrendForce 口徑，同字母情境）", U, {QC[q]: f"=Units!{uc(q)}{UR[('rev', s)]}*{p['shm']}" + (f"*{p['pxm']}" if nq(q) > 0 else "") for q in QL}, note="markets/nand；Sens 可乘份額係數、價格係數（FQ2 FY27 起）")
-    row("bit", "位元（市場層；同字母）", "EB", {QC[q]: f"=Units!{uc(q)}{UR[('bit', s)]}*{p['shm']}" for q in QL})
+    row("um", "市場層營收（TrendForce 口徑，同字母情境）", U, {QC[q]: f"=Units!{uc(q)}{UR[('rev', s)]}*{p['shm']}" + (f"*{p['pxm']}" if nq(q) > 0 else "") + (f"*{p['vq'][q]}" if p['vq'] else "") for q in QL}, note="markets/nand；Sens 可乘份額係數、價格係數（FQ2 FY27 起）")
+    row("bit", "位元（市場層；同字母）", "EB", {QC[q]: f"=Units!{uc(q)}{UR[('bit', s)]}*{p['shm']}" + (f"*{p['vq'][q]}" if p['vq'] else "") for q in QL})
     row("rev", "營收", U, {**{QC[q]: f"=q{q[1]}_rev" for q in QT}, **{QC[q]: f"={QC[q]}{R['um']}*sd_k" for q in DQ}}, note="實績季＝公司財報；之後＝市場層 × 公司口徑係數")
     fyc = lambda q: q[0] % 100
     row("dc", "資料中心", U, {**{QC[q]: f"=q{q[1]}_dc" for q in QT}, **{QC[q]: f"={QC[q]}{R['rev']}*dcsh_{fyc(q)}" for q in DQ}}, note="官方分部；實績季＝10-Q／10-K；之後＝營收 × 資料中心占比（In）")
@@ -566,6 +571,47 @@ for k, (nm, st, kw) in enumerate(tcases):
     SE[f"F{i}"].number_format = "0.0%"
 SE.cell(s0 + 2 + len(tcases), 1, "核對：基準列 DCF 目標價 − Val 第 0 節（應為 0）"); SE[f"C{s0 + 2 + len(tcases)}"] = f"=C{s0 + 2}-Val!B{T['dcftp']}"
 T["sens0"] = s0; T["sens_last"] = s0 + 1 + len(tcases)
+# ---- Wattonomics 錨定（三層校準原則；Siliconomics v0.13，決策 S37）：引擎區塊放在 Sens 既有內容最下方，摘要列接在案例清單（情境 C 列）之後 ----
+WTAL = {}
+_sc = None
+for r in wn["Ann"].iter_rows():
+    a_ = str(r[0].value or "")
+    if a_.startswith("情境 ") and len(a_) > 3 and a_[3] in SC: _sc = a_[3]
+    if _sc == "B" and a_ in ("  需求：AI 企業級 SSD", "位元需求合計", "位元供給", "位元出貨") and a_ not in WTAL:
+        WTAL[a_] = ([r[4 + j].value for j in range(5)], r[0].row)      # CY2026..CY2030（Ann E..I）
+assert len(WTAL) == 4, WTAL
+WB0 = SE.max_row + 3
+SE.cell(WB0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
+SE.cell(WB0 + 1, 1, "讀法：Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。")
+SE.cell(WB0 + 2, 1, "產業量＝markets/nand 的 AI 企業級 SSD 位元需求（加速器顆數 × 每顆容量；情境 B）：CY2027 起 × wta（CY2030 沿用 wta_29）→ 需求合計 → 出貨＝MIN(需求, 供給) → 季度位元（市場層同一平滑式）；"
+    f"{NAME} 營收與位元 × 季度出貨比（錨定 ÷ 情境 B），價格、份額、成本年降照情境 B；會計年度依既有日曆季對應。資料中心 AI 子列仍用情境 B 占比（不進合計）")
+hdr(SE, WB0 + 3, ["日曆年（markets/nand 情境 B；藍字＝唯讀抄錄）", "單位", "CY2026", "CY2027", "CY2028", "CY2029", "CY2030", "來源"])
+WAC = {y: GL(3 + y - 2026) for y in range(2026, 2031)}
+WRW = {}
+def wrow_(r_, key, lab, unit, fs, fmt="#,##0.0", blue=False, note=""):
+    SE.cell(r_, 1, lab); SE.cell(r_, 2, unit); WRW[key] = r_
+    for col, f in fs.items():
+        c = SE[f"{col}{r_}"]; c.value = f; c.number_format = fmt
+        if blue: c.font = BLUE
+    if note: SE.cell(r_, 8, note)
+r_ = WB0 + 4
+wrow_(r_, "f", "Wattonomics 錨定係數（In 頁 wta_27／28／29；CY2030 沿用 wta_29）", "x", {WAC[2026]: 1, WAC[2027]: "=wta_27", WAC[2028]: "=wta_28", WAC[2029]: "=wta_29", WAC[2030]: "=wta_29"}, "0.000"); r_ += 1
+for key, lab in (("dai", "  需求：AI 企業級 SSD"), ("dem", "位元需求合計"), ("sup", "位元供給"), ("ship", "位元出貨")):
+    vals, srow = WTAL[lab]
+    wrow_(r_, key, f"{lab.strip()}（情境 B）", "EB", {WAC[y]: float(vals[j]) for j, y in enumerate(range(2026, 2031))}, blue=True, note=f"{rel(NAND_F)}｜Ann!E{srow}:I{srow}"); r_ += 1
+wrow_(r_, "demw", "位元需求合計（錨定）＝需求 − AI 需求 ×（1 − 係數）", "EB", {WAC[y]: f"={WAC[y]}{WRW['dem']}-{WAC[y]}{WRW['dai']}*(1-{WAC[y]}{WRW['f']})" for y in range(2026, 2031)}); r_ += 1
+wrow_(r_, "shipw", "位元出貨（錨定）＝MIN(需求, 供給)", "EB", {WAC[y]: f"=MIN({WAC[y]}{WRW['demw']},{WAC[y]}{WRW['sup']})" for y in range(2026, 2031)}); r_ += 2
+hdr(SE, r_, ["日曆季", "單位"] + CYQS); r_ += 1
+def bq_(shp, q):
+    y, k = int(q[:4]), int(q[-1]); g = f"({WAC[y]}{WRW[shp]}/{WAC[y - 1]}{WRW[shp]})"
+    return f"={WAC[y]}{WRW[shp]}/4*{g}^(({k}-2.5)/4)/(({g}^(-0.375)+{g}^(-0.125)+{g}^(0.125)+{g}^(0.375))/4)"
+QW = [q for q in CYQS if int(q[:4]) >= 2027]
+wrow_(r_, "bqb", "季度位元出貨（情境 B；市場層平滑式）", "EB", {UCOL[q]: bq_("ship", q) for q in QW}, "#,##0.00"); r_ += 1
+wrow_(r_, "bqw", "季度位元出貨（錨定）", "EB", {UCOL[q]: bq_("shipw", q) for q in QW}, "#,##0.00"); r_ += 1
+wrow_(r_, "vq", "季度出貨比（錨定 ÷ 情境 B；CY2026 以前＝1）", "x", {UCOL[q]: (f"={UCOL[q]}{WRW['bqw']}/{UCOL[q]}{WRW['bqb']}" if q in QW else 1) for q in CYQS}, "0.000"); r_ += 2
+RW = engine(SE, r_, "案例區塊：Wattonomics 錨定（情境 B 為底；市場層營收與位元 × 季度出貨比）", "B", vq={q: f"${UCOL[cyq(*q)]}${WRW['vq']}" for q in QL})
+put(SN + 2, "Wattonomics 錨定（情境 B 為底）", "產業量 CY2027 起 × wta；相對欄對情境 B 列", RW)
+SE[f"E{SN + 2}"] = f"=D{SN + 2}/D{SN}-1"; SE[f"H{SN + 2}"] = f"=G{SN + 2}/G{SN}-1"
 SE.column_dimensions["A"].width = 40; SE.column_dimensions["B"].width = 30
 for c in "CDEFGHI": SE.column_dimensions[c].width = 14
 
