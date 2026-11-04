@@ -93,7 +93,8 @@ LEASE_ON = "V1" not in _OFF
 FINL_ON = "V1b" not in _OFF
 ORCL_SPLIT = "V2" not in _OFF
 NV_V4 = "V4" not in _OFF
-LEASEP = ("orcl", "crwv", "nbis")   # v0.2 V1：承租玩家（廠房多由房東出資）
+LEASEP = ("orcl", "crwv", "nbis")
+AISPLIT = ("orcl",)   # v0.2 V2：AI 占比改讀個股模型 AI／非 AI 拆分（In Y9）   # v0.2 V1：承租玩家（廠房多由房東出資）
 GENS = ["H100", "GB200", "GB300", "VR200", "RU"]
 GEN_NAME = {"H100": "Hopper H100", "GB200": "GB200 NVL72", "GB300": "GB300 NVL72", "VR200": "VR200 NVL72", "RU": "Rubin Ultra"}
 
@@ -879,7 +880,8 @@ def main():
         for k, lab, unit in (("in9", "財年資本支出（In Y9 個股模型基準；v0.1.8 起採用）", "US$B"), ("in2", "財年資本支出（In Y2；C1／Compare 對照，Y9 缺年代入）", "US$B"),
                              ("in", "財年資本支出（採用：Y9 優先，缺年用 Y2）", "US$B"), ("insrc", "　採用來源", "—"),
                              ("cnt", "　已知值累計個數", "—"), ("N", "　下一已知值", "US$B"), ("fy", "財年資本支出（補值）", "US$B"),
-                             ("cy", "曆年資本支出", "US$B"), ("ai", "曆年 AI 資本支出", "US$B"), ("pit", "每 IT GW IT capex", "US$B"), ("pfac", "每 IT GW 廠房 capex（全額）", "US$B"),
+                             ("cy", "曆年資本支出", "US$B"), ("aish", "財年 AI 占比（Oracle：個股模型 AI ÷ 資本支出合計，In Y9；其餘＝AI 占比純量；v0.2 V2）", "%"),
+                             ("fyai", "財年 AI 資本支出（補值 × 財年 AI 占比）", "US$B"), ("ai", "曆年 AI 資本支出", "US$B"), ("pit", "每 IT GW IT capex", "US$B"), ("pfac", "每 IT GW 廠房 capex（全額）", "US$B"),
                              ("own", "　廠房自付比＝1 − 承租比例 ×（1 − 融資租賃占比）（v0.2 V1、V1b；非承租玩家＝1）", "x"), ("pfo", "每 IT GW 廠房 capex（承租方帳上：自有＋融資租賃）", "US$B"),
                              ("a1", "　廠房提前：t−1 AI 資本支出（缺值以當年代入）", "US$B"), ("a2", "　廠房提前：t−2 AI 資本支出（缺值以 t−1 代入）", "US$B"), ("sub", "　代入標記（GL01-23 改）", "—"),
                              ("fund", "當年上線 GW 的資金（廠房提前入帳）", "US$B"), ("gw", "甲2 年新增 IT GW（付款年）", "GW"),
@@ -905,7 +907,18 @@ def main():
             FY_ = f"{c}{rows['fy']}"
             nfy = f"{nc}{rows['fy']}" if nc else f'IF({FY_}="","",{FY_}*(1+cap_g_ext))'
             CX.cell(rows["cy"], col, f'=IF(OR({FY_}="",AND({fye}<12,{nfy}="")),"",{FY_}*{fye}/12+IF({fye}<12,{nfy},0)*(12-{fye})/12)').number_format = "0.0"
-            CX.cell(rows["ai"], col, f'=IF({c}{rows["cy"]}="","",{c}{rows["cy"]}*{aik})').number_format = "0.0"
+            if p in AISPLIT and ORCL_SPLIT:
+                ra_, rc_ = INROW[f"gcapai_{p}"], INROW[f"gcap_{p}"]
+                A9, C9 = f"In!{IC[y]}{ra_}", f"In!{IC[y]}{rc_}"
+                CX.cell(rows["aish"], col, f'=IF(AND(ISNUMBER({A9}),ISNUMBER({C9})),IF({C9}>0,{A9}/{C9},{aik}),{aik})').number_format = "0.0%"
+                CX.cell(rows["fyai"], col, f'=IF({FY_}="","",{FY_}*{c}{rows["aish"]})').number_format = "0.0"
+                FA_ = f"{c}{rows['fyai']}"
+                nfa = f"{nc}{rows['fyai']}" if nc else f'IF({FA_}="","",{FA_}*(1+cap_g_ext))'
+                CX.cell(rows["ai"], col, f'=IF(OR({FA_}="",AND({fye}<12,{nfa}="")),"",{FA_}*{fye}/12+IF({fye}<12,{nfa},0)*(12-{fye})/12)').number_format = "0.0"
+            else:
+                CX.cell(rows["aish"], col, f"={aik}").number_format = "0.0%"
+                CX.cell(rows["fyai"], col, f'=IF({FY_}="","",{FY_}*{aik})').number_format = "0.0"
+                CX.cell(rows["ai"], col, f'=IF({c}{rows["cy"]}="","",{c}{rows["cy"]}*{aik})').number_format = "0.0"
             nnv = f"Players!{c}{PR[p]['nnv']}"
             CX.cell(rows["pit"], col, f"=(1-{nnv})*{c}${XIT}+{nnv}*TK_NonNV_Hold_{PLAT[p]}*TK_CapexIT_VR200").number_format = "0.00"
             CX.cell(rows["pfac"], col, f"=(1-{nnv})*{c}${XFAC}+{nnv}*TK_NonNV_Hold_{PLAT[p]}*TK_CapexFacility_VR200").number_format = "0.00"
@@ -1760,7 +1773,7 @@ def main():
                                                               f'"以 CapexGW 資本支出 × (1−AI 占比) 替代（模型無拆分）","無模型值（以 0 計）"))'), years=OUTG, fmt="General",
                note=f"[Derived] 模型無非 AI 拆分的年份：CapexGW 曆年資本支出（In Y2，財年按月數換曆年；同 CapexGW）×（1 − {aik_}）")
             pl("nai", "非 AI 資本支出（曆年；模型優先，缺則 Y2 × (1−AI 占比)，仍缺以 0 計）", "US$B",
-               lambda y: f'=IF({YC[y]}{rows["nai_cy"]}<>"",{YC[y]}{rows["nai_cy"]},IF(CapexGW!{YC[y]}{XR[p]["cy"]}<>"",CapexGW!{YC[y]}{XR[p]["cy"]}*(1-{aik_}),0))', years=OUTG)
+               lambda y: f'=IF({YC[y]}{rows["nai_cy"]}<>"",{YC[y]}{rows["nai_cy"]},IF(CapexGW!{YC[y]}{XR[p]["cy"]}<>"",CapexGW!{YC[y]}{XR[p]["cy"]}' + (f'-N(CapexGW!{YC[y]}{XR[p]["ai"]})' if (p in AISPLIT and ORCL_SPLIT) else f'*(1-{aik_})') + ',0))', years=OUTG)
         else:
             pl("nai_fb", "非 AI 資本支出替代旗標", "—", lambda y: f'=IF({YC[y]}{rows["nai_cy"]}<>"","","無模型值（以 0 計；無 Y2 資本支出）")', years=OUTG, fmt="General")
             pl("nai", "非 AI 資本支出（曆年；無模型值以 0 計，G2）", "US$B", lambda y: f"=N({YC[y]}{rows['nai_cy']})", years=OUTG)
