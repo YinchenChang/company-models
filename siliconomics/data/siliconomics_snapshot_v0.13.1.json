@@ -1,8 +1,8 @@
 {
  "source": {
-  "file": "20261103_Siliconomics_v0.12.xlsx",
-  "version": "v0.12",
-  "sha256": "deb3ec4e2a482ff36e6fa8b81f995a258cd27cca9594fa8812d94c1f533def62",
+  "file": "20261104_Siliconomics_v0.13.1.xlsx",
+  "version": "v0.13.1",
+  "sha256": "218074f739fb8907200e9189f3aa6fb3c064fc2a3852ebf53f49160a4c36dba9",
   "note": "Siliconomics 快照；下游只讀本檔。SGOV_Errors 須為 0"
  },
  "scen": [
@@ -7156,11 +7156,80 @@
    "tag": "Analogy",
    "src": "CY2025：1 − Advantest 自估 66% − 泰瑞達 27.4%（實績 ÷ 市場）＝6.6%（泰瑞達 v0.3 Recon）；CY2026：兩家推得合計 98.1%，其他約 1.9%（v0.9 SoC 合併對帳）；基準取兩點之間",
    "src2": "其他廠為致茂、Cohu 等；口徑差（Advantest 會計年度 4–3 月）也落在此項"
+  },
+  {
+   "sec": "M28. 每 IT GW NVIDIA 內容比例（分世代；Wattonomics Requests R7、Tokenomics 下一版對帳點；三層校準原則）"
+  },
+  {
+   "id": "nvr_GB300",
+   "label": "NVIDIA 合計 ÷ IT capex（GB300）",
+   "unit": "%",
+   "lo": 0.5969,
+   "base": 0.6469,
+   "hi": 0.6969,
+   "tag": "Derived",
+   "src": "markets/chip_bridge/dist/20261027_晶片內容橋接表_v0.2.2.xlsx Bridge!B44（GPU 毛利＋CPU＋NIC／DPU＋NVLink＋殘差）",
+   "src2": "低／高 ±5pt（Assumed：ASP 折讓與系統配置差異）"
+  },
+  {
+   "id": "nvr_VR26",
+   "label": "NVIDIA 合計 ÷ IT capex（VR200，2026 HBM 價）",
+   "unit": "%",
+   "lo": 0.5744,
+   "base": 0.6244,
+   "hi": 0.6744,
+   "tag": "Derived",
+   "src": "同上 C44",
+   "src2": "同上"
+  },
+  {
+   "id": "nvr_VR27",
+   "label": "NVIDIA 合計 ÷ IT capex（VR200，2027 HBM 價；NVIDIA 吸收漲價）",
+   "unit": "%",
+   "lo": 0.5313,
+   "base": 0.5813,
+   "hi": 0.5986,
+   "tag": "Derived",
+   "src": "同上 D44；高值＝E44（HBM 漲價轉嫁給買方）",
+   "src2": "低值 −5pt（Assumed）"
+  },
+  {
+   "id": "nvr_H100",
+   "label": "NVIDIA 合計 ÷ IT capex（Hopper HGX）",
+   "unit": "%",
+   "lo": 0.55,
+   "base": 0.6469,
+   "hi": 0.7,
+   "tag": "Analogy",
+   "src": "以 GB300 比例代入（橋接表未拆 Hopper）；HGX 伺服器的 CPU 多為 x86、NVLink 較少 → 實際可能較低",
+   "src2": "對照：黃仁勳 Hopper 每 GW 約 180 億美元（Interested-party；GW 口徑未說明）"
+  },
+  {
+   "id": "nvr_GB200",
+   "label": "NVIDIA 合計 ÷ IT capex（GB200）",
+   "unit": "%",
+   "lo": 0.5969,
+   "base": 0.6469,
+   "hi": 0.6969,
+   "tag": "Analogy",
+   "src": "以 GB300 比例代入（同為 Grace Blackwell NVL72；橋接表只拆 GB300）",
+   "src2": "—"
+  },
+  {
+   "id": "nvr_RU",
+   "label": "NVIDIA 合計 ÷ IT capex（Rubin Ultra）",
+   "unit": "%",
+   "lo": 0.5013,
+   "base": 0.5813,
+   "hi": 0.5986,
+   "tag": "Analogy",
+   "src": "以 VR200 2027 比例代入（橋接表未拆 Rubin Ultra）",
+   "src2": "區間較寬：HBM4E 用量倍增，HBM 占比上升時 NVIDIA 比例下降"
   }
  ],
  "names": {
   "SGOV_Errors": 0,
-  "SGOV_Warn": 4,
+  "SGOV_Warn": 5,
   "SIF_abfcap_ib_27": 1.25,
   "SIF_abfcap_ib_27_hi": 1.4,
   "SIF_abfcap_ib_27_lo": 1.1,
@@ -7601,6 +7670,24 @@
   "SIF_asm_wyrel_29_hi": 1.1,
   "SIF_asm_wyrel_29_lo": 0.7,
   "SIF_asm_wysh_26": 0.0344775081035094,
+  "SIF_CapGW_Base": [
+   23.3995380420639,
+   34.4125791042576,
+   42.2337105529984,
+   51.1178029756948
+  ],
+  "SIF_CapHead_Base": [
+   0,
+   -0.173703445593336,
+   0.0338864608972922,
+   0.0104953644969013
+  ],
+  "SIF_CapOnlineGW_Base": [
+   20.805525896637,
+   29.889965850367,
+   46.4989073690836,
+   51.9055491366403
+  ],
   "SIF_CCLMkt_A": [
    8.18983831472237,
    21.9686689732486,
@@ -7673,6 +7760,12 @@
   "SIF_core_tpu": 8,
   "SIF_core_tpu_hi": 11,
   "SIF_core_tpu_lo": 6,
+  "SIF_CoWoSUtil_Base": [
+   0.808950438706787,
+   0.962547553456644,
+   0.705845332204028,
+   0.68058315606807
+  ],
   "SIF_CPOShareSum": [
    0.5,
    0.65,
@@ -8258,10 +8351,10 @@
    894.458333333333
   ],
   "SIF_GWvsWT_Base": [
-   0.0913310360150752,
-   0.409112909598656,
-   0.59651387407142,
-   0.872089055402096
+   0.0566305218882024,
+   0.36006655951947,
+   0.561414569926039,
+   0.855742248476557
   ],
   "SIF_g_amd_26": 288,
   "SIF_g_amd_26_hi": 288,
@@ -8385,6 +8478,12 @@
   "SIF_hbmsh_ss_29": 0.4,
   "SIF_hbmsh_ss_29_hi": 0.45,
   "SIF_hbmsh_ss_29_lo": 0.35,
+  "SIF_HBMUtil_Base": [
+   1,
+   1.21021925441534,
+   0.96722419513272,
+   0.989613644094125
+  ],
   "SIF_hbm_dem29": 0.3,
   "SIF_hbm_dem29_hi": 0.45,
   "SIF_hbm_dem29_lo": 0.2,
@@ -9056,6 +9155,42 @@
   "SIF_nq_7": 0.081,
   "SIF_nq_7_hi": 0.175,
   "SIF_nq_7_lo": 0.032,
+  "SIF_NVContentGW_GB200": 15.5354160606,
+  "SIF_NVContentGW_GB200_hi": 16.7361747606,
+  "SIF_NVContentGW_GB200_lo": 14.3346573606,
+  "SIF_NVContentGW_GB300": 20.8542602056,
+  "SIF_NVContentGW_GB300_hi": 22.4661214056,
+  "SIF_NVContentGW_GB300_lo": 19.2423990056,
+  "SIF_NVContentGW_H100": 17.7963574366,
+  "SIF_NVContentGW_H100_hi": 19.2571498,
+  "SIF_NVContentGW_H100_lo": 15.1306177,
+  "SIF_NVContentGW_RU": 29.114863914,
+  "SIF_NVContentGW_RU_hi": 29.981347908,
+  "SIF_NVContentGW_RU_lo": 25.108001514,
+  "SIF_NVContentGW_VR200": 21.8489464176,
+  "SIF_NVContentGW_VR200_26": 23.4689181888,
+  "SIF_NVContentGW_VR200_26_hi": 25.3482357888,
+  "SIF_NVContentGW_VR200_26_lo": 21.5896005888,
+  "SIF_NVContentGW_VR200_hi": 22.4991903072,
+  "SIF_NVContentGW_VR200_lo": 19.9696288176,
+  "SIF_nvr_GB200": 0.6469,
+  "SIF_nvr_GB200_hi": 0.6969,
+  "SIF_nvr_GB200_lo": 0.5969,
+  "SIF_nvr_GB300": 0.6469,
+  "SIF_nvr_GB300_hi": 0.6969,
+  "SIF_nvr_GB300_lo": 0.5969,
+  "SIF_nvr_H100": 0.6469,
+  "SIF_nvr_H100_hi": 0.7,
+  "SIF_nvr_H100_lo": 0.55,
+  "SIF_nvr_RU": 0.5813,
+  "SIF_nvr_RU_hi": 0.5986,
+  "SIF_nvr_RU_lo": 0.5013,
+  "SIF_nvr_VR26": 0.6244,
+  "SIF_nvr_VR26_hi": 0.6744,
+  "SIF_nvr_VR26_lo": 0.5744,
+  "SIF_nvr_VR27": 0.5813,
+  "SIF_nvr_VR27_hi": 0.5986,
+  "SIF_nvr_VR27_lo": 0.5313,
   "SIF_nv_content": 42.8,
   "SIF_nv_content_hi": 48,
   "SIF_nv_content_lo": 38,
@@ -9801,6 +9936,12 @@
   "SIF_u_trn_28_lo": 2,
   "SIF_vr26": 0.22,
   "SIF_vr26_hi": 0.3,
-  "SIF_vr26_lo": 0.15
+  "SIF_vr26_lo": 0.15,
+  "SIF_WTAnchor_Base": [
+   0.946404612856532,
+   0.735258133508785,
+   0.64044490122016,
+   0.538867938594886
+  ]
  }
 }

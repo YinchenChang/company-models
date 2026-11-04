@@ -1,0 +1,11 @@
+[
+ {
+  "id": "S38",
+  "cat": "輸入",
+  "item": "v0.13.1：分世代每 IT GW NVIDIA 內容（Wattonomics Requests R7）與 Wattonomics 可比口徑的供給上限",
+  "decision": "算力收支 11-03／11-04 請求（R7 期限 11-12；產能上限供 Wattonomics v0.3 檢查）。每 IT GW NVIDIA 內容＝NVIDIA 合計 ÷ IT capex（晶片內容橋接表 Bridge 第 44 列）× Tokenomics IF_CapexIT（鏡像）；Hopper、GB200 以 GB300 比例、Rubin Ultra 以 VR200 2027 比例代入（Analogy，給區間）。可支撐上線 GW＝本庫推得上線 GW（R4 橋接 b8）× 可支撐部署 GW ÷ 基準部署 GW，讓 Wattonomics 直接以自己的毛額上線 GW 比較。",
+  "date": "2026-11-04",
+  "quote": "Andy 2026-11-04 14:10「算力收資的請求，請處理」",
+  "status": "工程決定"
+ }
+]

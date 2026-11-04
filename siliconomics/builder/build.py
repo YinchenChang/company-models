@@ -1221,6 +1221,27 @@ def main():
                 c = IF.cell(r, 5 + j, f"=Cap!{'CDEF'[j]}{CPROW[key]}"); c.font = GREEN; c.number_format = fm
             IF.cell(r, 9, f"Cap!C{CPROW[key]}:F{CPROW[key]}")
             name(wb, nm_, f"Interface!$E${r}:$H${r}"); IFNAMES.append(nm_); r += 1
+        if RC is not None and "r4_s" in RCROW:
+            IF.cell(r, 1, "SIF_CapOnlineGW_Base"); IF.cell(r, 2, "可支撐新增上線 IT GW（Wattonomics 可比口徑：本庫推得上線 GW × 可支撐 ÷ 基準部署；毛額）"); IF.cell(r, 3, "GW")
+            for j in range(4):
+                col = "CDEF"[j]
+                c = IF.cell(r, 5 + j, f"=Recon!{'DEFG'[j]}{RCROW['r4_s']}*Cap!{col}{CPROW['gw_cap']}/Cap!{col}{CPROW['gw_b']}"); c.font = GREEN; c.number_format = "0.00"
+            IF.cell(r, 9, "Recon B 節 × Cap C 節")
+            name(wb, "SIF_CapOnlineGW_Base", f"Interface!$E${r}:$H${r}"); IFNAMES.append("SIF_CapOnlineGW_Base"); r += 1
+    if "nvr_GB300" in INROW:
+        # v0.13.1：分世代每 IT GW NVIDIA 內容（Wattonomics Requests R7）＝NVIDIA 合計 ÷ IT capex（M28）× Tokenomics 每 IT GW IT capex（鏡像）
+        for gen, rk in (("H100", "nvr_H100"), ("GB200", "nvr_GB200"), ("GB300", "nvr_GB300"), ("VR200_26", "nvr_VR26"), ("VR200", "nvr_VR27"), ("RU", "nvr_RU")):
+            tkg = gen.split("_")[0]
+            nm_ = f"SIF_NVContentGW_{gen}"
+            IF.cell(r, 1, nm_); IF.cell(r, 3, "$B/GW")
+            IF.cell(r, 2, f"每 IT GW NVIDIA 內容（{gen.replace('_26', '，2026 HBM 價')}；{rk} × Tokenomics IF_CapexIT_{tkg}）")
+            IF.cell(r, 4, f"={rk}_lo*TK_CapexIT_{tkg}").font = GREEN
+            IF.cell(r, 5, f"={rk}*TK_CapexIT_{tkg}").font = GREEN
+            IF.cell(r, 6, f"={rk}_hi*TK_CapexIT_{tkg}").font = GREEN
+            for j in (4, 5, 6): IF.cell(r, j).number_format = "0.00"
+            IF.cell(r, 7, f"=In!G{INROW[rk][0]}"); IF.cell(r, 9, f"In!E{INROW[rk][0]} × TK_In")
+            name(wb, nm_, f"Interface!$E${r}"); name(wb, nm_ + "_lo", f"Interface!$D${r}"); name(wb, nm_ + "_hi", f"Interface!$F${r}")
+            IFNAMES.append(nm_); r += 1
     for col, w in zip("ABCDEFGHI", (30, 50, 9, 10, 10, 10, 10, 14, 16)):
         IF.column_dimensions[col].width = w
 
@@ -1396,6 +1417,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.13.1：新增 M28（分世代 NVIDIA 合計 ÷ IT capex；GB300、VR200 取自晶片內容橋接表，Hopper、GB200、Rubin Ultra 為 Analogy）與 Interface SIF_NVContentGW_<世代>（＝比例 × Tokenomics 每 IT GW IT capex；Wattonomics Requests R7）、SIF_CapOnlineGW_Base（可支撐新增上線 GW，Wattonomics 可比口徑）。", False),
         ("v0.13：三層校準原則（Andy 2026-11-04：實績雙向校正、供給是上限、錨點可信度分時段看）落地：新增 Cap 頁（基準顆數的 CoWoS、HBM 需求 vs 產能 → 可支撐部署 GW；Checks K10、K10w）、Recon F 節季度實績驗證（NVIDIA 資料中心營收）、Interface SIF_WTAnchor_Base（個股敏感度「Wattonomics 錨定」案例用）、SIF_CapGW_Base、SIF_CapHead_Base、SIF_CoWoSUtil_Base、SIF_HBMUtil_Base。決策 S37。", False),
         ("v0.12：本庫只留基準（工作方式 v1.7；基準＝原情境 B，決策 S33、S35）：Interface 新增 D 節 *_Base 名稱（57 組，等同原 B 列）與 SIF_GWvsWT_Base（本庫基準推得上線 GW 相對 Wattonomics 基準）；A／B／C 名稱標停用過渡、v0.13 刪除；Scen、Units 頁改標；R4 對帳以基準重跑（r3，讀 Wattonomics v0.1.9），新增 NVIDIA 資料中心營收對帳點；個股情境改為個股自訂（決策 S36）。輸入值不變。", False),
         ("v0.11：新增 Recon 頁（由下往上對帳：覆蓋個股基準情境 → 本庫市場；本庫推得上線 GW → Wattonomics；狀態 一致／時差／待診斷，決策 S32、S33）與 M27 對帳參數（容差 rc_tol、SoC 其他廠份額 rc_soc_oth）、Checks K6-soc、K9；標記更正：hbm_hbp_27 高值改 0、u_rb_28 與 u_bw_28 改標 Assumed 並給區間、nd_sh_essd25 改標 Derived、混合鍵合列名改「HBM 工序比例」（決策 S34）。", False),

@@ -1,0 +1,74 @@
+[
+ {
+  "after_section_end": "M27.",
+  "section": "M28. 每 IT GW NVIDIA 內容比例（分世代；Wattonomics Requests R7、Tokenomics 下一版對帳點；三層校準原則）",
+  "rows": [
+   {
+    "id": "nvr_GB300",
+    "label": "NVIDIA 合計 ÷ IT capex（GB300）",
+    "unit": "%",
+    "lo": 0.5969,
+    "base": 0.6469,
+    "hi": 0.6969,
+    "tag": "Derived",
+    "src": "markets/chip_bridge/dist/20261027_晶片內容橋接表_v0.2.2.xlsx Bridge!B44（GPU 毛利＋CPU＋NIC／DPU＋NVLink＋殘差）",
+    "src2": "低／高 ±5pt（Assumed：ASP 折讓與系統配置差異）"
+   },
+   {
+    "id": "nvr_VR26",
+    "label": "NVIDIA 合計 ÷ IT capex（VR200，2026 HBM 價）",
+    "unit": "%",
+    "lo": 0.5744,
+    "base": 0.6244,
+    "hi": 0.6744,
+    "tag": "Derived",
+    "src": "同上 C44",
+    "src2": "同上"
+   },
+   {
+    "id": "nvr_VR27",
+    "label": "NVIDIA 合計 ÷ IT capex（VR200，2027 HBM 價；NVIDIA 吸收漲價）",
+    "unit": "%",
+    "lo": 0.5313,
+    "base": 0.5813,
+    "hi": 0.5986,
+    "tag": "Derived",
+    "src": "同上 D44；高值＝E44（HBM 漲價轉嫁給買方）",
+    "src2": "低值 −5pt（Assumed）"
+   },
+   {
+    "id": "nvr_H100",
+    "label": "NVIDIA 合計 ÷ IT capex（Hopper HGX）",
+    "unit": "%",
+    "lo": 0.55,
+    "base": 0.6469,
+    "hi": 0.7,
+    "tag": "Analogy",
+    "src": "以 GB300 比例代入（橋接表未拆 Hopper）；HGX 伺服器的 CPU 多為 x86、NVLink 較少 → 實際可能較低",
+    "src2": "對照：黃仁勳 Hopper 每 GW 約 180 億美元（Interested-party；GW 口徑未說明）"
+   },
+   {
+    "id": "nvr_GB200",
+    "label": "NVIDIA 合計 ÷ IT capex（GB200）",
+    "unit": "%",
+    "lo": 0.5969,
+    "base": 0.6469,
+    "hi": 0.6969,
+    "tag": "Analogy",
+    "src": "以 GB300 比例代入（同為 Grace Blackwell NVL72；橋接表只拆 GB300）",
+    "src2": "—"
+   },
+   {
+    "id": "nvr_RU",
+    "label": "NVIDIA 合計 ÷ IT capex（Rubin Ultra）",
+    "unit": "%",
+    "lo": 0.5013,
+    "base": 0.5813,
+    "hi": 0.5986,
+    "tag": "Analogy",
+    "src": "以 VR200 2027 比例代入（橋接表未拆 Rubin Ultra）",
+    "src2": "區間較寬：HBM4E 用量倍增，HBM 占比上升時 NVIDIA 比例下降"
+   }
+  ]
+ }
+]
