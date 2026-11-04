@@ -70,5 +70,352 @@
     "src2": "區間較寬：HBM4E 用量倍增，HBM 占比上升時 NVIDIA 比例下降"
    }
   ]
+ },
+ {
+  "after_section_end": "M28.",
+  "section": "M29. 逐買方加速器採購金額中 NVIDIA 占比（2025–2027；Wattonomics NVIDIA 對帳點用；晶片商份額權威在本庫）",
+  "rows": [
+   {
+    "id": "nvsh_goog_25",
+    "label": "Google（Alphabet）：加速器採購金額中 NVIDIA 占比 2025",
+    "unit": "%",
+    "lo": 0.3,
+    "base": 0.4,
+    "hi": 0.5,
+    "tag": "Derived",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.1（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "分母＝加速器系統採購（NVIDIA＋AMD＋自研 ASIC＋其他；不含機房、CPU 伺服器）；歸屬＝資產持有人"
+   },
+   {
+    "id": "nvsh_goog_26",
+    "label": "Google（Alphabet）：加速器採購金額中 NVIDIA 占比 2026",
+    "unit": "%",
+    "lo": 0.25,
+    "base": 0.35,
+    "hi": 0.46,
+    "tag": "Derived",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.1（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_goog_27",
+    "label": "Google（Alphabet）：加速器採購金額中 NVIDIA 占比 2027",
+    "unit": "%",
+    "lo": 0.18,
+    "base": 0.28,
+    "hi": 0.4,
+    "tag": "Derived",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.1（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_amzn_25",
+    "label": "Amazon（AWS）：加速器採購金額中 NVIDIA 占比 2025",
+    "unit": "%",
+    "lo": 0.45,
+    "base": 0.6,
+    "hi": 0.75,
+    "tag": "Derived",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.2（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_amzn_26",
+    "label": "Amazon（AWS）：加速器採購金額中 NVIDIA 占比 2026",
+    "unit": "%",
+    "lo": 0.55,
+    "base": 0.68,
+    "hi": 0.78,
+    "tag": "Derived",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.2（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_amzn_27",
+    "label": "Amazon（AWS）：加速器採購金額中 NVIDIA 占比 2027",
+    "unit": "%",
+    "lo": 0.45,
+    "base": 0.6,
+    "hi": 0.75,
+    "tag": "Derived",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.2（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_msft_25",
+    "label": "Microsoft：加速器採購金額中 NVIDIA 占比 2025",
+    "unit": "%",
+    "lo": 0.85,
+    "base": 0.92,
+    "hi": 0.96,
+    "tag": "Assumed",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.3（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_msft_26",
+    "label": "Microsoft：加速器採購金額中 NVIDIA 占比 2026",
+    "unit": "%",
+    "lo": 0.8,
+    "base": 0.88,
+    "hi": 0.94,
+    "tag": "Assumed",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.3（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_msft_27",
+    "label": "Microsoft：加速器採購金額中 NVIDIA 占比 2027",
+    "unit": "%",
+    "lo": 0.65,
+    "base": 0.78,
+    "hi": 0.88,
+    "tag": "Assumed",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.3（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_meta_25",
+    "label": "Meta：加速器採購金額中 NVIDIA 占比 2025",
+    "unit": "%",
+    "lo": 0.7,
+    "base": 0.8,
+    "hi": 0.88,
+    "tag": "Assumed",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.4（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_meta_26",
+    "label": "Meta：加速器採購金額中 NVIDIA 占比 2026",
+    "unit": "%",
+    "lo": 0.6,
+    "base": 0.72,
+    "hi": 0.82,
+    "tag": "Assumed",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.4（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_meta_27",
+    "label": "Meta：加速器採購金額中 NVIDIA 占比 2027",
+    "unit": "%",
+    "lo": 0.45,
+    "base": 0.58,
+    "hi": 0.72,
+    "tag": "Assumed",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.4（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_orcl_25",
+    "label": "Oracle：加速器採購金額中 NVIDIA 占比 2025",
+    "unit": "%",
+    "lo": 0.9,
+    "base": 0.95,
+    "hi": 0.99,
+    "tag": "Assumed",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.5（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_orcl_26",
+    "label": "Oracle：加速器採購金額中 NVIDIA 占比 2026",
+    "unit": "%",
+    "lo": 0.85,
+    "base": 0.93,
+    "hi": 0.97,
+    "tag": "Assumed",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.5（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_orcl_27",
+    "label": "Oracle：加速器採購金額中 NVIDIA 占比 2027",
+    "unit": "%",
+    "lo": 0.72,
+    "base": 0.85,
+    "hi": 0.93,
+    "tag": "Assumed",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.5（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_xai_25",
+    "label": "xAI（SpaceXAI）：加速器採購金額中 NVIDIA 占比 2025",
+    "unit": "%",
+    "lo": 0.98,
+    "base": 1.0,
+    "hi": 1.0,
+    "tag": "Interested-party",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.6（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_xai_26",
+    "label": "xAI（SpaceXAI）：加速器採購金額中 NVIDIA 占比 2026",
+    "unit": "%",
+    "lo": 0.97,
+    "base": 1.0,
+    "hi": 1.0,
+    "tag": "Interested-party",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.6（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_xai_27",
+    "label": "xAI（SpaceXAI）：加速器採購金額中 NVIDIA 占比 2027",
+    "unit": "%",
+    "lo": 0.9,
+    "base": 0.98,
+    "hi": 1.0,
+    "tag": "Interested-party",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.6（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_oai_26",
+    "label": "OpenAI 直接採購（不含經 Oracle／Microsoft／CoreWeave／AWS）：加速器採購金額中 NVIDIA 占比 2026",
+    "unit": "%",
+    "lo": 0.2,
+    "base": 0.4,
+    "hi": 0.65,
+    "tag": "Assumed",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.7（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_oai_27",
+    "label": "OpenAI 直接採購（不含經 Oracle／Microsoft／CoreWeave／AWS）：加速器採購金額中 NVIDIA 占比 2027",
+    "unit": "%",
+    "lo": 0.3,
+    "base": 0.45,
+    "hi": 0.65,
+    "tag": "Assumed",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.7（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_neo_25",
+    "label": "CoreWeave＋其他新雲：加速器採購金額中 NVIDIA 占比 2025",
+    "unit": "%",
+    "lo": 0.93,
+    "base": 0.97,
+    "hi": 0.99,
+    "tag": "Assumed",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.8（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_neo_26",
+    "label": "CoreWeave＋其他新雲：加速器採購金額中 NVIDIA 占比 2026",
+    "unit": "%",
+    "lo": 0.92,
+    "base": 0.96,
+    "hi": 0.99,
+    "tag": "Assumed",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.8（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_neo_27",
+    "label": "CoreWeave＋其他新雲：加速器採購金額中 NVIDIA 占比 2027",
+    "unit": "%",
+    "lo": 0.88,
+    "base": 0.94,
+    "hi": 0.98,
+    "tag": "Assumed",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.8（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_cn_25",
+    "label": "中國買方（合併；含 H20／H200 與國產）：加速器採購金額中 NVIDIA 占比 2025",
+    "unit": "%",
+    "lo": 0.25,
+    "base": 0.35,
+    "hi": 0.55,
+    "tag": "Derived",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.9（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_cn_26",
+    "label": "中國買方（合併；含 H20／H200 與國產）：加速器採購金額中 NVIDIA 占比 2026",
+    "unit": "%",
+    "lo": 0.02,
+    "base": 0.08,
+    "hi": 0.2,
+    "tag": "Derived",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.9（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_cn_27",
+    "label": "中國買方（合併；含 H20／H200 與國產）：加速器採購金額中 NVIDIA 占比 2027",
+    "unit": "%",
+    "lo": 0.0,
+    "base": 0.05,
+    "hi": 0.2,
+    "tag": "Derived",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.9（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_sov_25",
+    "label": "主權 AI＋其他企業：加速器採購金額中 NVIDIA 占比 2025",
+    "unit": "%",
+    "lo": 0.8,
+    "base": 0.88,
+    "hi": 0.94,
+    "tag": "Assumed",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.10（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_sov_26",
+    "label": "主權 AI＋其他企業：加速器採購金額中 NVIDIA 占比 2026",
+    "unit": "%",
+    "lo": 0.78,
+    "base": 0.87,
+    "hi": 0.93,
+    "tag": "Assumed",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.10（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_sov_27",
+    "label": "主權 AI＋其他企業：加速器採購金額中 NVIDIA 占比 2027",
+    "unit": "%",
+    "lo": 0.72,
+    "base": 0.83,
+    "hi": 0.9,
+    "tag": "Assumed",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §3.10（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_anth_26",
+    "label": "Anthropic 直接 TPU（Broadcom 直購、融資 SPV 持有；不併入 Google）：加速器採購金額中 NVIDIA 占比 2026",
+    "unit": "%",
+    "lo": 0.0,
+    "base": 0.0,
+    "hi": 0.05,
+    "tag": "Interested-party",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §4（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   },
+   {
+    "id": "nvsh_anth_27",
+    "label": "Anthropic 直接 TPU（Broadcom 直購、融資 SPV 持有；不併入 Google）：加速器採購金額中 NVIDIA 占比 2027",
+    "unit": "%",
+    "lo": 0.0,
+    "base": 0.0,
+    "hi": 0.05,
+    "tag": "Interested-party",
+    "src": "siliconomics/docs/reports/20261104_逐買方NVIDIA份額_研究.md §4（每買方至少兩來源；公司未揭露 NVIDIA 與自研的金額拆分）",
+    "src2": "同上"
+   }
+  ]
  }
 ]
