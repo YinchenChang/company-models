@@ -272,8 +272,129 @@ WEB = [("guid.capex.2026.oct", "2026 資本支出指引（維持 195–205）", 
 for iid, item, val, unit, src, note in WEB:
     ITEMS.append({"id": iid, "item": item, "value": val, "unit": unit, "period": "2026Q3", "source": src, "url": src.split(" ")[1] if " http" in src else "",
                   "docDate": "2026-10-28", "retrieved": "2026-10-29", "tag": "[Interested-party]", "note": note})
+# ---- v0.3.4：2026Q3 10-Q 原文（chat 端自 SEC 原文擷取的摘錄；工作單 mag/docs/workorders/20261104_MAG_10Q補入_2026Q3.md）----
+# 第一讀：摘錄檔逐列讀取；第二讀：同一附註的組成相加、或新聞稿（上方事實）同一數字。數字照原文，單位 USD M。
+QF = "alphabet/docs/reports/20261104_10Q_2026Q3_原文摘錄.md"
+QURL = "https://www.sec.gov/Archives/edgar/data/0001652044/000165204426000084/goog-20260930.htm"
+QX = open(os.path.join(HERE, "docs", "reports", "20261104_10Q_2026Q3_原文摘錄.md"), encoding="utf-8").read()
+QL = QX.splitlines()
+PV = {x["id"]: x["value"] for x in ITEMS}
+
+
+def qn(s):
+    return float(s.replace(",", "").replace("(", "-").replace(")", ""))
+
+
+def qrow(label, col=-1, exact=False):
+    """摘錄表格列：第一格含 label（exact＝完全相同）的列，回傳數字格（col＝-1 取最後一欄＝2026-09-30）。"""
+    for l in QL:
+        if l.startswith("|"):
+            cells = [c.strip().strip("*").strip() for c in l.strip("|").split("|")]
+            if (cells[0] == label) if exact else (label in cells[0]):
+                vs = [qn(c.strip("*")) for c in cells[1:] if re.fullmatch(r"\(?[\d,]+(\.\d+)?\)?", c.strip("*"))]
+                if vs: return vs[col]
+    raise SystemExit("10-Q 摘錄找不到列：" + label)
+
+
+def qre(pat, g=1):
+    m = re.search(pat, QX)
+    if not m: raise SystemExit("10-Q 摘錄找不到：" + pat)
+    return qn(m.group(g))
+
+
+def add10(iid, item, value, unit, page, note="", second=None, second_src="", tol=0.5):
+    n0 = len(ITEMS)
+    if isinstance(value, float): value = round(value, 3)
+    add(iid, item, value, unit, f"Alphabet Form 10-Q 2026Q3 {page}（{QF}）", tag="[Verified]", note=note, second=second, second_src=second_src, tol=tol)
+    ITEMS[n0].update({"url": QURL, "docDate": "10-Q 2026Q3（季末 2026-09-30）", "retrieved": "2026-11-04", "period": "2026Q3" if not iid.endswith("20261021") and not iid.endswith("202610") else iid.split(".")[-1]})
+
+
+B = 1000.0   # 十億 → 百萬
+# 1. 收入積壓（營收附註）
+add10("rpo.10q.2026q3", "剩餘履約義務（RPO）合計 2026-09-30", qre(r"剩餘履約義務 \*\*([\d.]+) 十億") * B, "USD M", "營收附註（收入積壓）")
+add10("rpo.cloud.10q.2026q3", "RPO：Google Cloud 2026-09-30", qre(r"Google Cloud \*\*([\d.]+) 十億") * B, "USD M", "營收附註（收入積壓）",
+      note="原（v0.3.3）：法說 backlog 561", second=PV["rpo.cloud.2026q3"] if "rpo.cloud.2026q3" in PV else 561000, second_src="法說 CFO backlog 561B（四捨五入）", tol=500)
+add10("rpo.share24m.10q.2026q3", "RPO 24 個月內認列比例（「略多於 55%」，取 55% 下限）", 0.55, "比例", "營收附註（收入積壓）",
+      second=qre(r"「略多於 (\d+)%」") / 100, second_src="摘錄原文「略多於 55%」")
+# 2. 權益證券（金融工具附註 p.15）
+_mkt = qre(r"合計 \*\*([\d,]+)\*\*")
+add10("eqsec.mkt.10q.2026q3", "可交易權益證券公允價值 2026-09-30", _mkt, "USD M", "p.15 金融工具附註",
+      second=qre(r"Level 1 ([\d,]+)") + qre(r"Level 2 ([\d,]+)"), second_src="Level 1 89,919＋Level 2 465")
+add10("eqsec.mkt.vsCall.2026q3", "可交易權益證券（對照法說 90.4）", _mkt, "USD M", "p.15", second=PV["mkt.eqsec.2026q3"], second_src="法說 including $90.4B in equity securities", tol=50)
+add10("eqsec.spacex.2026q3", "SpaceX 持股公允價值（含在可交易權益證券；受短期出售限制）", qre(r"含 \*\*([\d.]+) 十億\*\* SpaceX") * B, "USD M", "p.15 註 (1)",
+      note="原（v0.3.3）：推導 85.436（6/30 94.1＋Q3 權益證券損益 −8.664）")
+add10("eqsec.nonMkt.2026q3", "非上市權益證券（衡量替代法）帳面值", qre(r"帳面值 \*\*([\d.]+) 十億\*\*") * B, "USD M", "p.15", note="其中 8.8B 於 Q3 以公允價值重衡量（主要 Level 3）；新增事實")
+add10("is.eqGain.10q.2026q3", "權益證券損益 2026Q3", qre(r"權益證券損益 Q3 2026 \*\*\(([\d,]+)\)\*\*") * -1, "USD M", "OI&E（p.53 MD&A：Q3 減少主要來自 SpaceX 未實現損失）",
+      second=PV["is.eqGain.2026q3"], second_src="新聞稿 OI&E 權益證券淨損益")
+add10("is.eqGain.10q.ytd2026", "權益證券損益 9M 2026", qre(r"9M 2026 \*\*([\d,]+)\*\*。MD&A"), "USD M", "OI&E")
+# 3. 租賃（p.24–25）
+_fl = qrow("融資租賃負債合計")
+add10("lease.finLiab.2026q3", "融資租賃負債合計 2026-09-30", _fl, "USD M", "p.24–25 租賃附註", note="原（v0.3.3）：沿用 2026-06-30 2.59",
+      second=qrow("融資租賃負債：流動") + qrow("融資租賃負債：長期"), second_src="流動 1,053＋長期 2,652")
+add10("lease.opLiab.2026q3", "營業租賃負債合計 2026-09-30", qrow("營業租賃負債合計"), "USD M", "p.24–25")
+_p9 = qre(r"9M 2026 \*\*([\d,]+)\*\*（v0.3.3 推導")
+add10("lease.finPrin.ytd2026", "融資租賃本金現金支出 9M 2026", _p9, "USD M", "p.24–25（籌資活動）", note="原（v0.3.3）：推導 0.943（1H 0.840＋Q3 推估 0.103）",
+      second=840 + qre(r"Q3 2026 \*\*([\d,]+)\*\*；9M"), second_src="1H26 0.840（10-Q 2026Q2，v0.3.1 lease_1H 說明）＋本季 Q3 1,110")
+add10("lease.finPrin.2026q3", "融資租賃本金現金支出 2026Q3", qre(r"Q3 2026 \*\*([\d,]+)\*\*；9M"), "USD M", "p.24–25")
+add10("lease.finPrepay.ytd2026", "預付尚未起租的融資租賃 9M 2026", qre(r"9M 預付尚未起租的融資租賃 ([\d,]+)"), "USD M", "p.24–25")
+add10("lease.uncommenced.2026q3", "已簽未起租租賃（主要資料中心與能源基礎設施）未來付款", qre(r"未來付款 ([\d.]+) 十億") * B, "USD M", "p.24–25",
+      note="2026–2031 起租，租期 1–26 年；2026-06-30 為 85.2（10-Q 2026Q2）")
+add10("lease.shortTerm.commit.2026q3", "短期租賃剩餘不可取消承諾（不入資產負債表）", qre(r"約 \*\*([\d.]+) 十億\*\*（不入") * B, "USD M", "p.24–25", note="2026-06 簽、09 修訂")
+_mat = {y: [qn(x) for x in re.search(rf"{y} ([\d,]+)／([\d,]+)", QX).groups()] for y in ("2027", "2028", "2029", "2030")}
+_m26 = [qn(x) for x in re.search(r"2026 餘 ([\d,]+)／([\d,]+)", QX).groups()]
+_mth = [qn(x) for x in re.search(r"之後 ([\d,]+)／([\d,]+)", QX).groups()]
+_mtot = [qn(x) for x in re.search(r"合計未折現 ([\d,]+)／([\d,]+)", QX).groups()]
+add10("lease.maturity.10q.2026q3", "租賃未來付款（營業／融資，未折現）",
+      {"2026r": dict(zip(("operating", "finance"), _m26)), **{y: dict(zip(("operating", "finance"), v)) for y, v in _mat.items()},
+       "thereafter": dict(zip(("operating", "finance"), _mth)), "total": dict(zip(("operating", "finance"), _mtot))}, "USD M", "p.24–25")
+for j, nm in enumerate(("operating", "finance")):
+    CHK.append((f"lease.maturity.10q 合計（{nm}）", _mtot[j], _m26[j] + sum(v[j] for v in _mat.values()) + _mth[j], "逐年相加", abs(_mtot[j] - (_m26[j] + sum(v[j] for v in _mat.values()) + _mth[j])) < 0.5))
+# 4. 債務（Note 6，p.26–27）
+_face = qrow("面額合計")
+_rows = ["2016 美元", "2020 美元", "2025 美元", "2025 歐元", "2026 美元", "2026 英鎊", "2026 瑞郎", "2026 歐元", "2026 加幣", "2026 日圓", "2026 澳幣", "其他長期債務"]
+add10("debt.face.2026q3", "債務面額合計 2026-09-30", _face, "USD M", "p.26–27 Note 6", note="原（v0.3.3）：推導 126.455（6/30 面額 101.085＋Q3 發債淨額 28.996 − Q3 償還 3.626）",
+      second=sum(qrow(x) for x in _rows), second_src="Note 6 各票據 2026-09-30 欄相加（12 列）")
+_ltd = qrow("長期債務", exact=True)
+add10("debt.ltd.10q.2026q3", "長期債務帳面 2026-09-30", _ltd, "USD M", "p.26–27 Note 6",
+      second=_face + qrow("未攤銷折價與發行成本") + qrow("避險公允價值調整") + qrow("減：一年內到期"), second_src="面額 − 折價與發行成本 − 避險調整 − 一年內到期")
+add10("debt.ltd.vsPR.2026q3", "長期債務帳面（對照新聞稿資產負債表）", _ltd, "USD M", "p.26–27", second=PV["bs.ltd.2026q3"], second_src="新聞稿資產負債表 Long-term debt")
+add10("debt.current.2026q3", "一年內到期債務 2026-09-30", -qrow("減：一年內到期"), "USD M", "p.26–27")
+add10("debt.fv.2026q3", "票據公允價值 2026-09-30", qre(r"\*\*([\d.]+) 十億\*\*（2026-09-30）") * B, "USD M", "p.26–27")
+add10("debt.waymo.loan.202610", "期後：Waymo 優先有擔保定期貸款（2032-10 到期，Term SOFR＋5.25%；Waymo 資產擔保，Alphabet 不保證）",
+      qre(r"Waymo 簽 \*\*([\d.]+) 十億\*\*") * B, "USD M", "p.26–27 期後事項", note="2026 年 10 月；評價日後，不進 9/30 資產負債表")
+add10("debt.revolver.2026q3", "循環信用額度（未動用）", qre(r"循環信用額度 ([\d.]+) 十億") * B, "USD M", "p.26–27", note="4.0B 2027-04 到期、6.0B 2030-04 到期")
+# 5. 補充資訊（Note 7，p.28–29）
+_cip = qrow("尚未啟用資產")
+add10("bs.ppe.notInService.2026q3", "尚未啟用資產（在建工程）2026-09-30", _cip, "USD M", "p.28–29 Note 7", note="原（v0.3.3）：推導 142.6（6/30 在建 122.814 × 淨額比例）",
+      second=qrow("PP&E 淨額", exact=True) - qrow("在用合計") - qrow("累計折舊"), second_src="PP&E 淨額 − 在用合計＋累計折舊")
+add10("bs.ppe.10q.2026q3", "PP&E 淨額 2026-09-30", qrow("PP&E 淨額", exact=True), "USD M", "p.28–29", second=PV["bs.ppe.2026q3"], second_src="新聞稿資產負債表 PP&E")
+add10("bs.ppe.techInfra.2026q3", "技術基礎設施（在用，約 60% 為伺服器與網路設備）", qrow("技術基礎設施"), "USD M", "p.28–29")
+add10("bs.fines.2026q3", "應計罰款與和解 2026-09-30", qre(r"應計罰款與和解 [\d,]+ → \*\*([\d,]+)\*\*"), "USD M", "p.28–29 應計費用",
+      note="原（v0.3.3）：推導 12.156（6/30 17.356 − 歐盟 Android 罰款 5.2）；Note 10 p.33：2026-07 支付 5.2B（含利息）")
+add10("bs.accruedPPE.2026q3", "應計購買 PP&E 2026-09-30", qre(r"應計購買 PP&E [\d,]+ → ([\d,]+)"), "USD M", "p.28–29")
+add10("bs.nci.2026q3", "非控制權益 2026-09-30（含可贖回 0.825B；列在普通股與 APIC 內）", qre(r"非控制權益：\*\* [\d.]+ 十億 → \*\*([\d.]+) 十億") * B, "USD M", "p.28–29",
+      note="原（v0.3.3）：沿用 2026-06-30 7.1")
+add10("is.intInc.10q.2026q3", "利息收入 2026Q3", qre(r"利息收入 ([\d,]+)／"), "USD M", "p.28–29 OI&E", second=PV["is.intInc.2026q3"], second_src="新聞稿 OI&E")
+add10("is.intExp.10q.2026q3", "利息費用 2026Q3（已扣資本化利息 405）", -qre(r"利息費用 \(([\d,]+)\)／"), "USD M", "p.28–29 OI&E", second=PV["is.intExp.2026q3"], second_src="新聞稿 OI&E")
+# 6. 承諾與保證（Note 10，p.32）
+add10("commit.total.2026q3", "合約承諾合計（含 4.5B 備用信用狀；主要為長期供應協議，至 2032）", qre(r"合約承諾合計 ([\d.]+) 十億") * B, "USD M", "p.32 Note 10",
+      note="2026-06-30 為 811.0（10-Q 2026Q2）；法說「未來採購承諾 924」口徑不同（只作對照）")
+add10("guar.energy.2026q3", "財務保證：對手方長交期能源設備採購（最大潛在付款，至 2049-01）", qre(r"最大潛在付款 \*\*([\d.]+) 十億\*\*（至") * B, "USD M", "p.32 Note 10")
+add10("guar.tpuRepurchase.2026q3", "TPU 回購保證（特定合約；最大潛在付款；公允價值不重大）", qre(r"TPU 回購保證：\*\*.*?最大潛在付款 \*\*([\d.]+) 十億") * B, "USD M", "p.32 Note 10",
+      note="公司認為對手方無經濟誘因行使")
+# 7. 封面股數
+_cov = qre(r"合計 \*\*([\d,]+) 百萬\*\*")
+add10("sh.cover.20261021", "10-Q 封面流通股數（2026-10-21，A＋B＋C）", _cov, "M 股", "封面",
+      second=qre(r"A 股 ([\d,]+) 百萬") + qre(r"B 股 ([\d,]+) 百萬") + qre(r"C 股 ([\d,]+) 百萬"), second_src="A 5,888＋B 827＋C 5,579")
+CHK.append(("sh.cover.20261021 vs 資產負債表 2026-09-30", _cov, PV["sh.out.20260930"], "新聞稿資產負債表股本說明 12,294", abs(_cov - PV["sh.out.20260930"]) < 0.5))
+# 8. 現金流量表（9M 2026；對照新聞稿）
+for fid, pat in (("cf.capex.ytd2026", r"資本支出 \([\d,]+\)／\*\*\(([\d,]+)\)\*\*"), ("cf.cfo.ytd2026", r"營運現金流 [\d,]+／\*\*([\d,]+)\*\*"),
+                 ("cf.debtIss.ytd2026", r"發行債務 [\d,]+／([\d,]+)"), ("cf.debtRep.ytd2026", r"償還 \([\d,]+\)／\(([\d,]+)\)")):
+    v = qre(pat) * (-1 if fid in ("cf.capex.ytd2026", "cf.debtRep.ytd2026") else 1)
+    CHK.append((f"{fid}（10-Q vs 新聞稿）", v, PV[fid], "新聞稿現金流量表年初至今欄", abs(v - PV[fid]) < 0.5))
+add10("cf.da.10q.ytd2026", "折舊 9M 2026（現金流量表）", qre(r"折舊 [\d,]+／\*\*([\d,]+)\*\*"), "USD M", "現金流量表")
 OUT = {"_readme": "Alphabet 2026Q3 事實總帳（MAG v0.3.1 工作單第 1 節第 1 項）。由 alphabet/facts_2026q3.py 自 Andy 2026-10-29 提供的財報新聞稿與簡報讀取；"
-                  "10-Q 尚未提供：10-Q 附註才有的數字（債務面額、租賃、在建工程、權益證券明細）見 build_alphabet.py 的推導與資料缺口。金額 USD M；check＝第二次獨立讀取。",
+                  "v0.3.4 起含 2026Q3 10-Q（docs/reports/20261104_10Q_2026Q3_原文摘錄.md；id 標 10q 或 Note 頁碼，tag [Verified]）。金額 USD M；check＝第二次獨立讀取。",
        "asOf": "2026-09-30", "items": ITEMS,
        "checks": [{"id": a, "value": b, "second": c, "source": d, "ok": e} for a, b, c, d, e in CHK]}
 json.dump(OUT, open(os.path.join(HERE, "data", "alphabet_facts_2026q3.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
