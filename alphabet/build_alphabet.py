@@ -112,8 +112,8 @@ inp("px", "現價（2026-10-28 收盤）", "US$", None, 324.89, None, "Verified"
 inp("px_val", "評價日股價（2026-09-30 收盤；WACC 權益權重與回購價用）", "US$", None, 344.08, None, "Verified",
     "FinancialContent GOOGL 歷史股價 https://www.financialcontent.com/quote/NQ%3AGOOGL/historical（2026-10-29 讀取：9/30 收盤 344.08；同頁 10/07 350.50、10/23 320.21 與 StockAnalysis 相同）",
     "v0.3.1 新增：評價日市值權重（與評價日一致）；v0.3 以現價代用")
-inp("sh_out", "流通股數（2026-09-30，資產負債表股本說明）", "十億股", None, fv("sh.out.20260930") / 1000, None, "Verified", fs("sh.out.20260930"),
-    "v0.3.4：10-Q 封面（2026-10-21）A 5,888＋B 827＋C 5,579＝12,294 百萬股，與資產負債表相同（事實總帳 sh.cover.20261021）")
+inp("sh_out", "流通股數（2026-09-30，資產負債表股本說明）", "十億股", None, fv("sh.out.20260930") / 1000, None, "Verified", fs("sh.cover.20261021"),
+    "v0.3.4：10-Q 封面（2026-10-21）A 5,888＋B 827＋C 5,579＝12,294 百萬股，與 2026-09-30 資產負債表股本說明相同（事實總帳 sh.out.20260930）")
 inp("sh_dil_q2", "2026Q3 稀釋加權股數", "十億股", None, fv("sh.dilW.2026q3") / 1000, None, "Interested-party", fs("sh.dilW.2026q3"))
 inp("sh_basic_q2", "2026Q3 基本加權股數", "十億股", None, fv("sh.basicW.2026q3") / 1000, None, "Interested-party", fs("sh.basicW.2026q3"),
     "Q3 ATM 發行 36M 股（在季內加權）；期末稀釋股數＝Q3 稀釋加權＋(9/30 流通股 − Q3 基本加權)")
