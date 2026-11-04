@@ -1,4 +1,4 @@
-# Oracle（ORCL）個股模型 v0.4.4（v0.4.1＝v0.4＋In 頁情境驅動對照；v0.4.2＝Sens 敏感度覆蓋（原則第 9 節）；v0.4.3＝Tokenomics 快照 v21.9；三者基準數值不變；v0.4.4＝2026-11-02 股債增資納入（In 頁 I2 節）；命題＋營收分部架構；docs/plan/個股模型原則_命題加營收分部.md）
+# Oracle（ORCL）個股模型 v0.4.5（v0.4.1＝v0.4＋In 頁情境驅動對照；v0.4.2＝Sens 敏感度覆蓋（原則第 9 節）；v0.4.3＝Tokenomics 快照 v21.9；三者基準數值不變；v0.4.4＝2026-11-02 股債增資納入（In 頁 I2 節）；命題＋營收分部架構；docs/plan/個股模型原則_命題加營收分部.md）
 # 用法：python3 oracle/build_oracle.py raw.xlsx ；再以 LibreOffice headless 重算：
 #   soffice --headless --calc --convert-to xlsx --outdir oracle/dist raw.xlsx
 # 會計年度 FY(t)＝t−1 年 6 月～t 年 5 月（FY2027＝2026-06～2027-05）。金額：十億美元（US$B），MW 為 IT 口徑（MW-IT）。
@@ -12,7 +12,7 @@ from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OVR = json.loads(os.environ.get("SENS_OVR", "{}"))
-TKV = "v21.9"   # v0.4.3：Tokenomics 快照 v21.4 → v21.9（基準數值不變；名稱清單同 v21.4 快照＝microsoft/data/tokenomics_names.txt）
+TKV = "v21.10"   # v0.4.3：Tokenomics 快照 v21.4 → v21.9；v0.4.5：v21.9 → v21.10（兩次基準數值都不變；名稱清單同 v21.4 快照＝microsoft/data/tokenomics_names.txt）
 TKS = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 TK = TKS["items"]
 SENS_F = os.path.join(HERE, "data", "sens_v04.json")
@@ -51,7 +51,7 @@ def tkv(name, g):
 # In
 # =====================================================================================
 IN = wb.active; IN.title = "In"
-IN["A1"] = "In — 輸入（藍字＝輸入；黑字＝公式；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」〔v0.4.4〕）。金額：十億美元（US$B）；MW＝IT 口徑（MW-IT）；每 MW 金額：百萬美元／MW·年（＝US$B／GW·年）"
+IN["A1"] = "In — 輸入（藍字＝輸入；黑字＝公式；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」〔v0.4.5〕）。金額：十億美元（US$B）；MW＝IT 口徑（MW-IT）；每 MW 金額：百萬美元／MW·年（＝US$B／GW·年）"
 IN["A2"] = "標記：Verified／Interested-party／Analogy／Assumed／Derived；Analogy、Assumed 給低／高區間。SemiAnalysis 未使用。「沿用 v0.3.1」＝沿用 oracle/legacy_v0.3 舊引擎 company.json 已核准的參數（原出處見來源欄）"
 hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源1", "來源2／說明"])
 rows = []; sec = lambda t: rows.append(("sec", t)); inp = lambda *a: rows.append(a)
@@ -89,7 +89,7 @@ inp("rf_h100_30", "FY2030 汰換：H100 在役量的比例（換成 VR200）", "
 inp("rf_h100_31", "FY2031 汰換：H100 在役量的比例", "%", None, 0.5, None, "Assumed", "同上", "—")
 inp("rf_gb200_32", "FY2032 汰換：GB200 在役量的比例", "%", None, 1.0, None, "Assumed", "GB200 約 FY26 上線", "GB300 以後的汰換落在 FY2033 以後（模型期外；永續價值改用穩態汰換）")
 
-sec(f"D. 命題：每 MW 經濟性（Tokenomics {TKV} 快照，基準成本情境；修正一自 v19.0 升級，與 MAG 相同；v0.4.3 由 v21.4 換入，基準欄不變）")
+sec(f"D. 命題：每 MW 經濟性（Tokenomics {TKV} 快照，基準成本情境；修正一自 v19.0 升級，與 MAG 相同；v0.4.3 由 v21.4 換入 v21.9、v0.4.5 換 v21.10，基準欄不變）")
 for g in GEN:
     inp(f"he_{g}", f"每 MW 年持有成本（經濟口徑）IF_HoldEcon｜{GNAME[g]}", "US$M／MW·年", round(TK["IF_HoldEcon"]["values"][GNAME[g]]["低成本"], 4), round(tkv("IF_HoldEcon", g), 4), round(TK["IF_HoldEcon"]["values"][GNAME[g]]["高成本"], 4), "Derived", f"oracle/data/tokenomics_snapshot_{TKV}.json（Tokenomics {TKV}，{TKS['source']['commit'][:7]}；名稱清單同 microsoft/data）Interface!13 列", "低／高＝Tokenomics 低成本／高成本情境（只作敏感度）")
 for g in GEN:
@@ -1165,7 +1165,7 @@ RD = wb.create_sheet("README", 0)
 B_ = PR_["B"]; TB = TR["B"]; CB = CR_["B"]
 up = f"Val!C{CON['up']}"; tp = f"Val!C{CON['tp']}"
 lines = [
-    ("Oracle（ORCL）個股模型 v0.4.4（命題＋營收分部架構；2026-11-02 股債增資納入）　2026-11-04", True),
+    ("Oracle（ORCL）個股模型 v0.4.5（命題＋營收分部架構；2026-11-02 股債增資納入〔v0.4.4〕；Tokenomics 快照 " + TKV + "〔v0.4.5，基準數值不變〕）　2026-11-04", True),
     ("命題：OCI 已簽約的 backlog（RPO 約 6,640 億美元，約一半來自 OpenAI／Stargate）能否以高於資金成本的報酬轉成營收與現金，同時不把資產負債表撐破。命題模組（已連網 MW × 每 MW 年收入〔Tokenomics 持有成本 × 定價倍數 k〕、延誤、租金、AI 折舊）只驅動 Cloud Infrastructure 營收線的「OCI AI 算力」子列；SaaS、授權、支援、硬體、服務各有自己的成長路徑。", False),
     ("核心問題：FY2029 的 OCI 營收與營業利益率，相對於資本支出與租約的擴張，以及 Oracle 的資金缺口（自由現金流為負）要如何補。", False),
     (f'="投資建議："&Val!C{CON["rec"]}&"（加權目標價 US$"&TEXT({tp},"0.0")&"，現價 US$"&TEXT(px,"0.00")&"〔2026-11-03〕，上檔空間 "&TEXT({up},"+0.0%;-0.0%")&"）"', True),

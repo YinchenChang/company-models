@@ -1,5 +1,5 @@
 #!/bin/bash
-# Oracle 個股模型 v0.4.4（v0.4.4：2026-11-02 股債增資納入；v0.4.3：Tokenomics 快照 v21.9）：一次跑完 （敏感度）→ 建置 → LibreOffice 重算 → 核對（In 版面、敏感度覆蓋、segment_check）→ HTML。
+# Oracle 個股模型 v0.4.5（v0.4.5：Tokenomics 快照 v21.10；v0.4.4：2026-11-02 股債增資納入；v0.4.3：Tokenomics 快照 v21.9）：一次跑完 （敏感度）→ 建置 → LibreOffice 重算 → 核對（In 版面、敏感度覆蓋、segment_check）→ HTML。
 #   bash oracle/make_v04.sh            # 沿用已提交的敏感度結果 oracle/data/sens_v04.json
 #   SENS=1 bash oracle/make_v04.sh     # 重跑敏感度（約 100 次整本重算；JOBS＝平行數，預設 4）
 # v0.4.2 起新增本腳本（原 README「建置」各步驟）；敏感度覆蓋核對依個股模型原則第 9 節（--require-keycol）。
@@ -7,7 +7,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-OUTNAME="20261104_Oracle個股模型_v0.4.4.xlsx"
+OUTNAME="20261104_Oracle個股模型_v0.4.5.xlsx"
 if [ "${SENS:-0}" = "1" ]; then python3 oracle/scripts/sens_v04.py --jobs "${JOBS:-4}"; fi
 ORCL_ROWMAP="$WD/rowmap.json" python3 oracle/build_oracle.py "$WD/raw.xlsx"
 mkdir -p "$WD/out"

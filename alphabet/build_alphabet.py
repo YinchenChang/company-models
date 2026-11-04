@@ -1,4 +1,4 @@
-# Alphabet（GOOGL）個股模型 v0.3.5（v0.3.1 季度滾動＋v0.3.4 Tokenomics v21.9＋v0.3.5 2026Q3 10-Q 補入）：命題模組＋官方營收分部 → 損益表（docs/plan/個股模型原則_命題加營收分部.md）
+# Alphabet（GOOGL）個股模型 v0.3.6（v0.3.1 季度滾動＋v0.3.4 Tokenomics v21.9＋v0.3.5 2026Q3 10-Q 補入＋v0.3.6 Tokenomics v21.10）：命題模組＋官方營收分部 → 損益表（docs/plan/個股模型原則_命題加營收分部.md）
 # 工作單：mag/docs/workorders/20261027_MAG_v0.3_個股模型重建_分部架構.md；v0.3.1 季度滾動：mag/docs/workorders/20261029_MAG_v0.3.1_季度滾動_2026Q3.md
 # 用法：python3 alphabet/build_alphabet.py raw.xlsx [--sens sens.json]
 #       再以 LibreOffice headless 重算（alphabet/make_v03.sh 一次跑完：建置 → 敏感度重算 → 成品 → 檢查）。
@@ -33,8 +33,8 @@ if A.q3cf:                                                          # 變動拆�
     _cf = json.load(open(A.q3cf, encoding="utf-8")); _cf = _cf.get("facts", _cf)
     for k, v in _cf.items():
         F[k] = dict(F.get(k, {"id": k}), value=v)
-TKV = "v21.9"   # v0.3.4：Tokenomics 快照 v21.7 → v21.9（基準數值不變）
-Q1NOTE = "Q1 已定案：各晶片最高原生精度（Tokenomics v21.9，Andy 2026-11-03）"
+TKV = "v21.10"   # v0.3.4：Tokenomics 快照 v21.7 → v21.9；v0.3.6：v21.9 → v21.10（兩次基準數值都不變）
+Q1NOTE = "Q1 已定案：基準＝FP8 對齊、原生精度為低端（Tokenomics v21.10，Andy 2026-11-04 照建議）"
 TK = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 GEN = {x["code"]: x["name"] for x in TK["source"]["generations"]}
 def tk(name, code=None):
@@ -90,8 +90,8 @@ SE = wb.create_sheet("Sens"); SO = wb.create_sheet("Sources")
 
 # =====================================================================================================
 # In：輸入（一列一鍵；E＝基準，D＝低，F＝高）
-IN["A1"] = "In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」〔v0.3.5〕）。金額 US$B；每股 US$；股數十億股；MW＝IT MW。標記：Verified／Interested-party／Analogy／Assumed／Derived（Analogy、Assumed 一律給低／高區間）"
-IN["A2"] = "「沿用 v0.2.2」＝MAG v0.2.2 已核准的參數（原出處：alphabet/legacy_v0.2/company.json、kspec.py、data/kevidence_alphabet_20261008.json；對照表 r1 C1–C23）。v0.3.1：Tokenomics 升級 v21.7、2026Q3 實績（data/alphabet_facts_2026q3.json）、評價日 2026-09-30；v0.3.4：Tokenomics 快照換 " + TKV + "（data/tokenomics_snapshot_" + TKV + ".json，基準數值不變）；v0.3.5：10-Q 2026Q3 原文取代推導／沿用值（說明欄「原（v0.3.3）：」為舊值，v0.3.4 同值）。黃底＝判斷題（Andy 可改）"
+IN["A1"] = "In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」〔v0.3.6〕）。金額 US$B；每股 US$；股數十億股；MW＝IT MW。標記：Verified／Interested-party／Analogy／Assumed／Derived（Analogy、Assumed 一律給低／高區間）"
+IN["A2"] = "「沿用 v0.2.2」＝MAG v0.2.2 已核准的參數（原出處：alphabet/legacy_v0.2/company.json、kspec.py、data/kevidence_alphabet_20261008.json；對照表 r1 C1–C23）。v0.3.1：Tokenomics 升級 v21.7、2026Q3 實績（data/alphabet_facts_2026q3.json）、評價日 2026-09-30；v0.3.4：Tokenomics 快照換 v21.9（基準數值不變）；v0.3.5：10-Q 2026Q3 原文取代推導／沿用值（說明欄「原（v0.3.3）：」為舊值，v0.3.4 同值）；v0.3.6：Tokenomics 快照換 " + TKV + "（data/tokenomics_snapshot_" + TKV + ".json，基準數值不變）。黃底＝判斷題（Andy 可改）"
 hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "說明"])
 ROWS = []
 def sec(t): ROWS.append(("sec", t))
@@ -554,7 +554,7 @@ if os.environ.get("STAGE") == "1":
 # =====================================================================================================
 # Thesis：命題模組（Cloud AI：MW × 每 MW 收入 × k；AI 資本支出 → 折舊 → 分部營業利益）
 TH["A1"] = "Thesis — 命題模組：AI 容量（MW）× 每 MW 收入（Tokenomics 持有成本 × k）→ Google Cloud 的 Cloud AI 子列；同一套 MW 推出 AI 資本支出、AI 折舊與營運成本，接到分部營業利益（對外 → Google Cloud；自用 → Google Services／Alphabet 層級）"
-TH["A2"] = "三情境共用（本版的情境軸是 Search，見 Seg 頁）；MW 速度、對外比例、k 的區間在 Sens 頁。沿用 v0.2.2：k 規格（kspec.py）、對外比例 30%；v0.3.1：Tokenomics v21.7 快照（v0.3.4 換 v21.9，基準不變）、TPU 係數改讀 IF_NonNV_Hold_TPU、C10 速度依 2026 指引重解。不以 Cloud 營收、RPO 反推 k 或每 MW 價格（工作單第 4 節）"
+TH["A2"] = "三情境共用（本版的情境軸是 Search，見 Seg 頁）；MW 速度、對外比例、k 的區間在 Sens 頁。沿用 v0.2.2：k 規格（kspec.py）、對外比例 30%；v0.3.1：Tokenomics v21.7 快照（v0.3.4 換 v21.9、v0.3.6 換 v21.10，基準不變）、TPU 係數改讀 IF_NonNV_Hold_TPU、C10 速度依 2026 指引重解。不以 Cloud 營收、RPO 反推 k 或每 MW 價格（工作單第 4 節）"
 T = {}
 r = 4
 TH.cell(r, 1, "A. 價格與起始值（單一數值，C 欄）").font = BOLD; r += 1
@@ -1326,7 +1326,7 @@ SENS_CASES = [
     ("kl_px", "k：長約價格（低＝判斷倍數 0.60）", "lo", None, "長約 0.75 → 0.60"),
     ("ks_px", "k：現貨價格（高＝GCP 牌價）", None, "hi", "2.82 → 4.858 US$/GPU-hr"),
     ("tpu_f", "TPU 係數（收入與資本支出雙邊；Tokenomics 低端／舊 C2 口徑）", "lo", "hi", "0.70 → 0.65／1.0（同時改 tpu_cf；pace 不重解）"),
-    ("tpu_fo", "TPU 收入係數改用產出比（資本支出仍用持有比）", None, "hi", f"收入 {_hold[1]:.2f} → IF_NonNV_Out_TPU {_out[1]:.2f}（{Q1NOTE}）"),
+    ("tpu_fo", "TPU 收入係數改用產出比（資本支出仍用持有比）", *((None, "hi") if _out[1] > _hold[1] else ("lo", None)), f"收入 {_hold[1]:.2f} → IF_NonNV_Out_TPU {_out[1]:.2f}（{Q1NOTE}）"),
     ("cip_0", "評價日在建工程", "lo", "hi", "145.3 → 122.8（6/30 值）／160"),
     ("abc_rate", "Alphabet 層級未分攤費用率", "lo", "hi", "6.0% → 4.83%（2026Q2）／6.5%"),
     ("life_it", "AI IT 折舊年限", "lo", "hi", "5／7 年"),
@@ -1460,7 +1460,7 @@ if _q0 is not None:
 # 第 4 節：v0.3.4 → v0.3.5（sens_v03.py 的 q10|Q0…Q{n-1}；Q0＝全部 10-Q 前的值；第 k 步＝Q(k) − Q(k−1)；最後一步＝本版目標價 − Q(n−1)，活公式）
 rr = RC_Q10
 RC.cell(rr, 1, "v0.3.4 加權目標價（2026-11-04，Tokenomics v21.9 快照版；重算快照 q10|Q0）"); RC.cell(rr, 2, f"=B{RCV['v03']}").number_format = "#,##0.00"; Q10_V0 = rr; rr += 1
-RC.cell(rr, 1, "v0.3.5 加權目標價（本版）"); RC.cell(rr, 2, f"=Val!B{VR_['tp']}").number_format = "#,##0.00"; Q10_V1 = rr; rr += 1
+RC.cell(rr, 1, "v0.3.5 加權目標價（10-Q 補入後；＝本版 v0.3.6）"); RC.cell(rr, 2, f"=Val!B{VR_['tp']}").number_format = "#,##0.00"; Q10_V1 = rr; rr += 1
 RC.cell(rr, 1, "差額"); RC.cell(rr, 2, f"=B{Q10_V1}-B{Q10_V0}").number_format = "#,##0.00"; Q10_D = rr; rr += 1
 _q10a = rr
 for i, st in enumerate(Q10):
@@ -1515,7 +1515,7 @@ for col, w in zip("ABCDEF", [6, 80, 12, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = "Alphabet（GOOGL）個股模型 v0.3.5（2026-11-04；2026Q3 季度滾動＋Tokenomics v21.9＋10-Q 補入）— 命題模組＋官方營收分部 → 損益表"
+RD["A1"] = "Alphabet（GOOGL）個股模型 v0.3.6（2026-11-04；2026Q3 季度滾動＋10-Q 補入＋Tokenomics " + TKV + "）— 命題模組＋官方營收分部 → 損益表"
 RD["A3"] = "命題：AI 改變搜尋之後，Google Search 的變現能否守住，同時 Google Cloud（含 TPU）能否把翻倍的資本支出變成營收；資本支出與 2026 年股權發行後的每股價值是否高於現價。"
 RD["A4"] = "核心問題：Search & other 在 C 情境（AI 助理分流、每次查詢變現下降）下 FY2028 營收與利益率會掉多少，Cloud 的 AI 營收能否抵銷；加計 AI 折舊與股權發行後的每股價值。"
 VB = lambda k, c="B": f"Val!{c}{VR_[k]}"
@@ -1543,7 +1543,7 @@ for row in DRV:
     for j, v in enumerate(row, 1): RD.cell(r, j, v)
     r += 1
 r += 1
-RD.cell(r, 1, "與上一版的差異（v0.3.5：2026Q3 10-Q 補入，疊在 v0.3.4 Tokenomics v21.9 快照版上；v0.3.1 季度滾動見 docs/reports/20261029_alphabet_v0.3.1_季度滾動.md）").font = BOLD; r += 1
+RD.cell(r, 1, "與上一版的差異（v0.3.6：Tokenomics 快照 v21.9 → " + TKV + "，基準數值不變，只有 Sens 讀 IF_NonNV_Out_TPU 的案例改變；v0.3.5：2026Q3 10-Q 補入，疊在 v0.3.4 Tokenomics v21.9 快照版上；v0.3.1 季度滾動見 docs/reports/20261029_alphabet_v0.3.1_季度滾動.md）").font = BOLD; r += 1
 for t in ("v0.3.5 只把 v0.3.1 暫用的推導值與沿用 2026Q2 的值換成 2026Q3 10-Q 原文（docs/reports/20261104_10Q_2026Q3_原文摘錄.md；事實總帳標 [Verified]）；公式、架構、評價日、現價、共識、Tokenomics v21.7 快照、情境與權重都不動。",
           "資產負債：債務面額 126.455 → 127.485、融資租賃負債 2.59 → 3.705、應計罰款 12.156 → 13.807、非控制權益 7.1 → 6.9（不進目標價）、權益證券 90.4 → 90.384（現金＋債權類證券隨之調整）。",
           "持股：SpaceX 85.436 → 75.2（10-Q 附註）；其他可交易權益證券 7.089 → 15.184（＝10-Q 合計 90.384 − SpaceX，與 SpaceX 同步改，持股合計對得上 10-Q）。",

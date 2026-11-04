@@ -1,8 +1,8 @@
-# Amazon（AMZN）個股模型 v0.3.3（命題＋營收分部架構；工作單 mag/docs/workorders/20261027_MAG_v0.3_個股模型重建_分部架構.md；
-#   v0.3.1 季度滾動：mag/docs/workorders/20261029_MAG_v0.3.1_季度滾動_2026Q3.md 第 1–4 節；v0.3.2 Tokenomics 快照 v21.9；v0.3.3 10-Q 補入：mag/docs/workorders/20261104_MAG_10Q補入_2026Q3.md）
+# Amazon（AMZN）個股模型 v0.3.4（命題＋營收分部架構；工作單 mag/docs/workorders/20261027_MAG_v0.3_個股模型重建_分部架構.md；
+#   v0.3.1 季度滾動：mag/docs/workorders/20261029_MAG_v0.3.1_季度滾動_2026Q3.md 第 1–4 節；v0.3.2 Tokenomics 快照 v21.9；v0.3.3 10-Q 補入：mag/docs/workorders/20261104_MAG_10Q補入_2026Q3.md；v0.3.4 Tokenomics 快照 v21.10）
 # 固定規格：docs/plan/個股模型原則_命題加營收分部.md（命題模組＋官方營收分部 → 損益表；第 7 節讀法 2、第 8 節 In 頁、第 9 節敏感度覆蓋）。
 # 用法：python3 amazon/build_amazon.py [輸出.xlsx] [--set 鍵=值 ...] [--sens sens.json] [--q3v03 q3.json ...]
-#       （預設輸出 amazon/dist/20261104_Amazon個股模型_v0.3.3.xlsx；amazon/make_v031.sh 一次跑完 建置 → 重算 → 核對 → HTML）
+#       （預設輸出 amazon/dist/20261104_Amazon個股模型_v0.3.4.xlsx；amazon/make_v031.sh 一次跑完 建置 → 重算 → 核對 → HTML）
 #       再以 LibreOffice headless 重算：soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir <dir> <raw.xlsx>
 # 全部活公式；藍字＝輸入、黑字＝公式。金額 US$bn（每股 US$）；MW＝IT 關鍵電力 MW（MW-IT）。
 # 欄位（模型頁共用）：C FY2024A、D FY2025A、E 9M26A、F Q4 26E、G FY2026E（＝E＋F）、H–M FY2027–FY2032、N 9M25A、O Q4 25A。資料截至 2026-09-30。
@@ -20,7 +20,7 @@ from openpyxl.workbook.defined_name import DefinedName
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 AP = argparse.ArgumentParser()
-AP.add_argument("out", nargs="?", default=os.path.join(HERE, "dist", "20261104_Amazon個股模型_v0.3.3.xlsx"))
+AP.add_argument("out", nargs="?", default=os.path.join(HERE, "dist", "20261104_Amazon個股模型_v0.3.4.xlsx"))
 AP.add_argument("--set", action="append", default=[], help="覆寫 In 頁基準值：鍵=值（敏感度與拆解重算用；值可為數字或以 = 開頭的公式）")
 AP.add_argument("--sens", help="敏感度與拆解鏈的重算結果（amazon/sens_v031.py 產生）")
 AP.add_argument("--q3v03", action="append", default=[], help="變動拆解用：以 JSON 的事實值取代事實總帳（{\"facts\": {事實 id: 值}}；可重複；v0.3.3 拆解鏈以此把 10-Q 值改回 v0.3.2（＝v0.3.1）的推導或沿用值）")
@@ -52,8 +52,8 @@ for _qf in ARGS.q3v03:
         FACTS.setdefault(k, {"id": k})
         FACTS[k] = dict(FACTS[k], value=v)
 CONS = json.load(open(os.path.join(HERE, "data", "consensus_amzn_20261008.json"), encoding="utf-8"))
-TKV = "v21.9"   # v0.3.2：Tokenomics 快照 v21.7 → v21.9（基準數值不變）
-Q1NOTE = "Q1 已定案：各晶片最高原生精度（Tokenomics v21.9，Andy 2026-11-03）"
+TKV = "v21.10"   # v0.3.2：Tokenomics 快照 v21.7 → v21.9；v0.3.4：v21.9 → v21.10（兩次基準數值都不變）
+Q1NOTE = "Q1 已定案：基準＝FP8 對齊、原生精度為低端（Tokenomics v21.10，Andy 2026-11-04 照建議）"
 SNAP = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 GEN = {g["code"]: g["name"] for g in SNAP["source"]["generations"]}
 _PJ = os.path.join(HERE, "data", "pace_v031.json")
@@ -145,7 +145,7 @@ S_MSTAN = src("Morgan Stanley（Brian Nowak）：AWS 2026 新增 6 GW、2027 新
 # In
 # =====================================================================================
 IN = wb.active; IN.title = "In"
-IN["A1"] = ("In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁〔一次動一個參數〕、不進目標價；情境 A／B／C 的驅動見本頁最後一節「J. 情境驅動對照」〔v0.3.2〕）。"
+IN["A1"] = ("In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁〔一次動一個參數〕、不進目標價；情境 A／B／C 的驅動見本頁最後一節「J. 情境驅動對照」〔v0.3.4〕）。"
             "金額 US$bn、每股 US$、MW＝IT 關鍵電力 MW。每列一個鍵（定義名稱＝鍵）；Analogy、Assumed 一律給低／高區間")
 IN["A2"] = ("標記：Verified／Interested-party／Analogy／Assumed／Derived。「沿用 v0.2.2」＝v0.2.2 已核准的參數與證據（k 規格 kspec.py、對外比例），出處見 legacy_v0.2/ 與 docs/handoff。"
             "不以公司 AWS 營收、backlog、run-rate 反推 k 或每 MW 價格（共同規則第 4 節）；公司說法只作 Recon 驗證列。SemiAnalysis 未使用。資料截至 2026-09-30（2026Q3 新聞稿與 10-Q）")
@@ -1149,7 +1149,8 @@ case("he_all", "IF_HoldEcon 四世代同時取低／高（每 MW 年持有成本
      keycol="he_all", sets={"低": [(k, _INR[k][3]) for k in HE], "高": [(k, _INR[k][5]) for k in HE]})
 case("trn_hold", "Tokenomics IF_NonNV_Hold_Trn（cf_chip、cf_cx 同時跟隨）", _desc("trn_hold") + "（MW 速度沿用基準）")
 case("cf_chip", "自研晶片係數改回舊 C2 口徑 1.0（收入與資本支出）", "0.61 → 1.0（同時改 cf_cx；MW 速度沿用基準）", keycol="cf_chip cf_cx", sets={"高": [("cf_chip", 1.0), ("cf_cx", 1.0)]})
-case("trn_out", "Trainium 收入係數改用產出比 IF_NonNV_Out_Trn（資本支出仍用持有比）", f"收入 {TRN[1]:g} → {TRO[1]:g}（基準產出比）／" + "／".join(f"{x:g}" for x in (TRO[0], TRO[2])) + f"（{Q1NOTE}）",
+case("trn_out", "Trainium 收入係數改用產出比 IF_NonNV_Out_Trn（資本支出仍用持有比）", f"收入 {TRN[1]:g} → {TRO[1]:g}（基準產出比）／" + "／".join(f"{x:g}" for x in (TRO[0], TRO[2])) + f"（{Q1NOTE}）"
+     + (f"；三端都低於持有比 {TRN[1]:g}，方向欄的基準／低／高指產出比區間的端點，三案都是下行" if max(TRO) < TRN[1] else ""),
      keycol="trn_out cf_chip", sets={"基準": [("cf_chip", TRO[1])], "低": [("cf_chip", TRO[0])], "高": [("cf_chip", TRO[2])]})
 case("c10_win", "C10 校準視窗（基準＝下半年：Q4 公式＝（指引 − 上半年）÷ 2）", f"低＝只校準 Q4（速度 {PACE.get('pace_q4', 0):,.1f}）；高＝全年平均（指引 ÷ 4；速度 {PACE.get('pace_fy', 0):,.1f}）",
      keycol="pace_B", sets={"低": [("pace_B", PACE.get("pace_q4", 0))], "高": [("pace_B", PACE.get("pace_fy", 0))]})
@@ -1357,8 +1358,8 @@ SO.column_dimensions["A"].width = 8; SO.column_dimensions["B"].width = 90; SO.co
 RD = wb.create_sheet("README", 0)
 B_ = lambda blk, key, col: tk_("B", blk, key, col)
 lines = [
-    ("Amazon（AMZN）個股模型 v0.3.3（命題模組＋官方營收分部 → 損益表；2026Q3 季度滾動、Tokenomics 快照 v21.9、10-Q 補入）　2026-11-04", True),
-    ("版本：v0.3.3（2026Q3 10-Q 補入；v0.3.2 為 2026-11-04 Tokenomics 快照 v21.9〔基準同 v0.3.1〕，v0.3.1 為 2026-10-31，v0.3 為 2026-10-27）。資料截至 2026-09-30（2026Q3 新聞稿與 10-Q）；FY2026＝9M 實績＋Q4 模型；Tokenomics " + TKV + "（Trainium 改讀 IF_NonNV_Hold_Trn）。本版只以 10-Q 取代 v0.3.2 沿用自 v0.3.1 的推導與沿用值（債務面額、融資租賃、融資義務〔改本金口徑〕、分部折舊；股數維持 9/30 資產負債表），評價日、現價、共識、Tokenomics、情境與權重不動。", False),
+    (f"Amazon（AMZN）個股模型 v0.3.4（命題模組＋官方營收分部 → 損益表；2026Q3 季度滾動、10-Q 補入、Tokenomics 快照 {TKV}）　2026-11-04", True),
+    (f"版本：v0.3.4（Tokenomics 快照 v21.9 → {TKV}，基準數值同 v0.3.3）；v0.3.3（2026Q3 10-Q 補入；v0.3.2 為 2026-11-04 Tokenomics 快照 v21.9〔基準同 v0.3.1〕，v0.3.1 為 2026-10-31，v0.3 為 2026-10-27）。資料截至 2026-09-30（2026Q3 新聞稿與 10-Q）；FY2026＝9M 實績＋Q4 模型；Tokenomics " + TKV + "（Trainium 改讀 IF_NonNV_Hold_Trn）。v0.3.3 只以 10-Q 取代 v0.3.2 沿用自 v0.3.1 的推導與沿用值（債務面額、融資租賃、融資義務〔改本金口徑〕、分部折舊；股數維持 9/30 資產負債表），評價日、現價、共識、Tokenomics、情境與權重不動。", False),
     ("命題：AWS 的 AI 容量（Trainium＋NVIDIA）能否以高於資金成本的報酬變現，零售與廣告的現金流能否支應資本支出。", True),
     ("核心問題：FY2028 AWS 營業利益率與自由現金流（扣股利後）是否轉正並維持。", True),
     ('="投資建議："&Val!B24&"（加權目標價 US$"&TEXT(Val!B19,"0.00")&"，現價 US$"&TEXT(px,"0.00")&"〔2026-10-30〕，上檔空間 "&TEXT(Val!B21,"+0.0%;-0.0%")&"；依五級固定規則）"', True),

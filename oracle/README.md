@@ -1,4 +1,6 @@
-# Oracle（ORCL）個股模型 v0.4.4（命題＋營收分部架構）
+# Oracle（ORCL）個股模型 v0.4.5（命題＋營收分部架構）
+
+**v0.4.5（2026-11-04，Tokenomics 快照 v21.9 → v21.10，基準數值不變）：** 快照 `data/tokenomics_snapshot_v21.10.json`（`20261104_Tokenomics_v21.10.xlsx`，master eded8e6；名稱清單同 v21.9 快照＝MAG 清單；`--check` 通過）。v21.10 只改 `IF_NonNV_Out_TPU`／`IF_NonNV_Out_Trn`，本模型的快照不含這兩個名稱，新舊快照的值逐一相同。與 v0.4.4 逐格比對 15 格不同，全是版本與快照說明文字；數值格 0 差異，加權目標價 74.67、放空不變；敏感度重跑（`data/sens_v04.json` 只有 `he_all` 說明文字的版本號改變）。v21.9 快照、v0.4.4 成品移 `_待刪除/`；v19.0 快照保留（`sens_v04.py` 的營運費用基準）。報告 `docs/reports/20261104_oracle_v0.4.5_TK快照v21.10.md`。
 
 **v0.4.4（2026-11-04，2026-11-02 股債增資納入）：** 2026-11-04 交割的新股 86,206,897 股 × $116（淨額 9.9）與五檔優先無擔保票據 10.0（7.000%–8.650%，加權 7.77%）以「已發生」計入：In 頁 I2 節（`ex_*`、`fin_cap`）；CF 頁 FY2027 新增「已發生增資淨額」19.9（先於瀑布）、借款加 10.0、利息加票息、股數與股利加新股；Val 的淨借款、完全稀釋股數、WACC 權重以 pro forma 計入（評價日維持 2026-08-31）。現價 126.06（10-26）→ **126.19（2026-11-03 收盤，FinancialContent）**。加權目標價 73.22 → **74.67**，上檔空間 −40.8%，**放空維持**；收支關卡 A／B／C 111.06／72.76／8.35 → 110.12／72.70／7.01。增資取代了瀑布原本的投資級債（B 18.62）與新股（C 2.41），三情境之後都不需外部融資；新增檢查列「FY2027–FY2030 模型外部融資合計」20.0 對照公司投資人日上限 20（未超出；依預設不設硬限制）。調整後槓桿峰值 B 4.43 → 4.64。Recon 新增 B2 節（投資人日驗證列：FY29 自由現金流 ≥30、FY29 淨負債／調整後 EBITDA <3.5x、FY30 營收 ≥225 等，不作校準）。事實總帳 `data/oracle_facts_20261104.json`（PRNewswire 發行人原文＝Verified；投資人日＝Interested-party）。拆解（股數 −2.22、現金 +6.65、負債與利息 −2.95、瀑布 −0.02、現價 −0.01）：`scripts/decomp_v044.py` → `data/decomp_v044.json`。判斷題：kd／新增投資級債利率仍 5.8%（改用新票據 7.77% 時 72.70，待 Project 決定）。報告 `docs/reports/20261104_oracle_v0.4.4_增資納入.md`；v0.4.3 成品移 `dist/_待刪除/`。
 
@@ -33,14 +35,14 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_oracle.py` | 獨立 Python → Excel 產生器（openpyxl，全部活公式；藍字輸入、黑字公式） |
-| `dist/20261104_Oracle個股模型_v0.4.4.xlsx` | LibreOffice headless 重算後的成品（公式錯誤 0） |
-| `dist/20261104_Oracle個股模型_v0.4.4.html`、`html.json` | `tools/company_html/build_company_html.py oracle` 產生；`check_company_html.py` 通過 |
+| `dist/20261104_Oracle個股模型_v0.4.5.xlsx` | LibreOffice headless 重算後的成品（公式錯誤 0） |
+| `dist/20261104_Oracle個股模型_v0.4.5.html`、`html.json` | `tools/company_html/build_company_html.py oracle` 產生；`check_company_html.py` 通過 |
 | `segments.json` | 官方分部宣告；`tools/segment_check/check_segments.py oracle` 通過 |
 | `scripts/sens_v04.py` | 敏感度：一次動一個輸入，完整重算（寫 `data/sens_v04.json`，再建置時寫入 Sens 頁；v0.4.2 起涵蓋 In 頁全部有區間的鍵） |
 | `scripts/decomp_v044.py` | v0.4.4 增資拆解：逐步完整重算（瀑布可凍結，環境變數 `ORCL_WF_FREEZE`，成品不設）→ `data/decomp_v044.json` |
 | `make_v04.sh` | 一次跑完：（`SENS=1` 時敏感度）→ 建置 → 重算 → 公式錯誤與 Sens 快照 → In 版面 → 敏感度覆蓋 → segment_check → HTML |
 | `scripts/make_html_json.py` | 由建置列號對照產生 `html.json` |
-| `data/` | 事實總帳（v0.1a SEC 一手、v0.3.1 增補、v0.4.4 增資與投資人日 `oracle_facts_20261104.json`）、共識、Tokenomics v21.9 快照（v19.0 保留；v21.4 在 `data/_待刪除/`） |
+| `data/` | 事實總帳（v0.1a SEC 一手、v0.3.1 增補、v0.4.4 增資與投資人日 `oracle_facts_20261104.json`）、共識、Tokenomics v21.10 快照（v19.0 保留；v21.4、v21.9 在 `data/_待刪除/`） |
 | `legacy_v0.3/` | v0.3.1 舊引擎（CRWV 樣板：HTML＋Excel 雙引擎、company.json、驗證腳本），保留不刪 |
 | `dist/_待刪除/` | v0.4.3、v0.4.2、v0.4.1、v0.4、v0.3.1 舊成品 |
 
