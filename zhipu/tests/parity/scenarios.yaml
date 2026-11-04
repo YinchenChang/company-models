@@ -14,7 +14,7 @@ workbook_expectations:            # 版本升級時必須有意識地更新（CL
 
 # 預期轉 ERR 的檢查（保證檢查有牙齒）；未列出的情境不得有任何 ERR
 expected_errors:
-  k2_rev_total_mismatch: [C17]
+  k2_rev_total_mismatch: [C17, C101]   # v0.1.3：只改 API 營收、不改官方雲端部署分部 → 分部對帳 C101 亦轉 ERR
   h_cp_mix_broken: [C23]
   i_cp_subs_exceed_api: [C06, C21]
   j_input_out_of_range: [C06]
@@ -65,7 +65,7 @@ scenarios:
     description: 校準：FY2025 開放平台及 API 實際營收 1.9038→2.5（SRC_ZP_112）、營收總額同步 7.2433→7.8395（SRC_ZP_120）、官方雲端部署分部同步 1.9038→2.5（SRC_ZP_122；v0.1.2 起分部對帳 C101 需一致）；按量計費倒推 token 上升，校準差距仍為 0
     inputs: {"SRC_ZP_112": 2.5, "SRC_ZP_120": 7.8395, "SRC_ZP_122": 2.5}
   - id: k2_rev_total_mismatch
-    description: 只改 FY2025 開放平台及 API 實際營收（SRC_ZP_112 1.9038→2.5）、不改總額：分部合計≠年報總額（C17 應轉 ERR）
+    description: 只改 FY2025 開放平台及 API 實際營收（SRC_ZP_112 1.9038→2.5）、不改總額：分部合計≠年報總額（C17 應轉 ERR）；官方雲端部署分部 SRC_ZP_122 未同步（C101 亦轉 ERR，v0.1.3 列入）
     inputs: {"SRC_ZP_112": 2.5}
   - id: l_era_overflow
     description: GLM-4.7 期間天數 42→150，GLM-5.1 期間權重為負（C25、C06 應轉 ERR）

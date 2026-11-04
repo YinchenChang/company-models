@@ -1,4 +1,4 @@
-# 智譜 收支模型 — 建置代理工作規範（v0.1；以 `openai/CLAUDE.md`（v0.6）改寫）
+# 智譜 個股模型 — 建置代理工作規範（v0.1；以 `openai/CLAUDE.md`（v0.6）改寫；v0.1.3 起依 `docs/plan/個股模型原則_命題加營收分部.md` 第 1 節改稱「個股模型」，原稱收支模型）
 
 > 本檔所有路徑相對於 `zhipu/`；指令一律在 `zhipu/` 內執行。預設分支 `main`；本版建置分支 `claude/zhipu-v0.1`（單一分支、單一 PR，分段 commit）。
 > 流程＝自主建置：chat 端寫工作單（`docs/workorders/`）→ 建置代理執行 → chat 端審查並合併；Andy 只在里程碑（v0.1 完成）審查。開工前必讀 `docs/workorders/20261008_zhipu_共同規則.md` 與規格 `docs/plan/20261008_Zhipu_v0.1_規格.md`。
@@ -67,6 +67,6 @@ dist/             成品（HTML 一頁摘要＋xlsx）
 - **來源標記**：Verified／Interested-party／Analogy／Assumed／Derived／Decision；Analogy、Assumed 一律給區間。
 - **曆年制**：智譜會計年度＝曆年；FY2025–FY2030，2025 為實際校準年（經審計年報），2026 上半年為第二個實際點（中期報告，規格 D14）。
 - **幣別**：公司金額一律 **人民幣億元（RMB 億）**，與財報一致；港幣、美元數據以 Inputs 匯率（`INP` 定義常數，附日期）換算後才進計算頁。命題表與 OAI_Link 並排時另列 **美元口徑（$B／GW）**。token 單位兆（T），電力 GW（IT 口徑）。
-- **版本命名**：`YYYYMMDD_Zhipu_v0.1.xlsx`；各段完成時記為 `v0.1-Z2`…`v0.1-Z4`，Z4 完成即 v0.1；成品 `dist/YYYYMMDD_智譜收支模型_v0_1.html／.xlsx`。
+- **版本命名**：`YYYYMMDD_Zhipu_v0.1.xlsx`；各段完成時記為 `v0.1-Z2`…`v0.1-Z4`，Z4 完成即 v0.1；成品 `dist/YYYYMMDD_智譜個股模型_v0_1_x.html／.xlsx`（v0.1.2 起；v0.1.1 以前為「智譜收支模型」）。
 - **Excel 語言**：工作表名稱與具名範圍用英文；標籤與註解用繁體中文。
 - **與 OpenAI v0.6 同名**：命題輸出與主要衍生量的具名範圍沿用 OpenAI 的前綴與名稱（`DEM_`、`REV_`、`CMP_`、`COST_`、`FND_`、`RVS_`；例如 `COST_PropGap_VR`、`COST_Coverage`、`FND_ExtNeedCum`），方便兩家並排。

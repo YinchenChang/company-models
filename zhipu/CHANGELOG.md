@@ -1,4 +1,4 @@
-# CHANGELOG（智譜收支模型）
+# CHANGELOG（智譜個股模型；v0.1.1 以前稱收支模型）
 
 ## Z0（2026-10-08，chat 端）
 - 建立 `zhipu/`：骨架（builder／engine／tools／tests 基礎自 OpenAI v0.6 經 Anthropic A0 複製，名稱待 Z2 改寫）、規格 r0（D1–D26）、共同規則、Z1–Z5 工作單、進度檔、交接檔。
@@ -83,3 +83,10 @@
 - `segments.json`（官方分部：本地化部署、雲端部署；子列 ①–④；核對列＝第七節四列對帳差額）；`check_segments.py zhipu`＝符合。
 - builder：`--tk-sha`（TK 快照檔非 git checkout 時記錄提交）；Checks 判定種類 `tolinp`。
 - 成品改名「個股模型」：`dist/20261030_智譜個股模型_v0_1_2.html／.xlsx`（`tools/build_html.py`、`tests/test_html.py` 檔名與標題）；v0.1.1 成品移 `dist/_待刪除/`。報告 `docs/reports/20261030_v0.1.2.md`。
+
+## v0.1.3（2026-11-04，建置代理；文件與核對小修）— Excel `model/20261104_Zhipu_v0.1.3.xlsx`（v0.1.2 移 `model/archive/20261030_Zhipu_v0.1.2.xlsx`）
+- **數值不變**：與 v0.1.2 逐格比對（公式＋LibreOffice 重算值，13 頁），只差 3 格字串：README A1（「收支模型 v0.1.2（2026-10-22）」→「個股模型 v0.1.3（2026-11-04）」）、README B4（加 v0.1.3 說明）、Checks A1（版本）。具名範圍不變；restore matched 3,582、unmatched 0。
+- builder：`VERSION_DATE`（README A1 顯示版本日期；`--date 2026-10-22` 仍為快照讀取日）；docstring 與 `engine/core.py` 改稱「個股模型」。
+- `CLAUDE.md` 標題與成品命名改「個股模型」；parity `k2_rev_total_mismatch` 預期 [C17] → [C17, C101]（v0.1.2 起只改 API 營收不改官方雲端部署分部時 C101 亦轉 ERR，原只列 C17）。
+- 成品 `dist/20261104_智譜個股模型_v0_1_3.html／.xlsx`（HTML 文字差異只在版本、日期、檔名）；v0.1.2 成品移 `dist/_待刪除/`。報告 `docs/reports/20261104_v0.1.3.md`。
+
