@@ -35,8 +35,8 @@ from common import F_BOLD, F_CALC, F_IN, F_NOTE, e6_violations, header, lo_recal
 from oai_link import read_oai  # noqa: E402
 from tk_link import NONNV_STATUS, PENDING_NOTE, V17_NAMES, V19B_NAMES, read_nonnv, read_snapshot  # noqa: E402
 
-VERSION = "v0.1.8"
-STAGE = "v0.1.8"
+VERSION = "v0.1.9"
+STAGE = "v0.1.9"
 REGISTRY_PATH = HERE / "id_registry.json"
 SRC_YAML = ROOT / "data" / "anthropic_src.yaml"
 INP_YAML = ROOT / "data" / "anthropic_inputs.yaml"
@@ -219,6 +219,9 @@ def sheet_readme(ctx, summary):
                         "R5b 承諾：W1(b) 三段 832 → 871.4（表內 320.0＋未起租 451.2＋9-30 後 100.2）、Google 114.5 → 121.3（s1a_commit_switch）；R5c 未歸屬餘額付款期改依 S-1/A 結構合成（s1a_unalloc_switch）；"
                         "R5d 附條件 213.8 基準計入、扣除讀法並列（s1a_cond_deduct_switch）；R4 SpaceXAI S-1 路徑並列（s1f_spacex_fee_switch，基準 0）；R5e 9-30 現金對照；R5f Q3 無新股權。"
                         "新列：SRC_ANT_488–521、Inputs 尾端 11 列、Cost 第二十六節、Funding 第十五節。"),
+        ("v0.1.9 更新", "Tokenomics 快照 v21.7 → v21.10（master eded8e6；工作單 20261104 v0.1.9）：TK_Link 以同一份名稱清單重讀，公式不變。"
+                        "進計算的是 NonNV 產出比（v21.9 改原生精度、v21.10 改 FP8 對齊作基準、原生精度降為低端）：TPU v7 低／基準／高 0.6／0.8／1.1 → 0.35／0.66／0.84、Trainium3 0.3／0.5／0.8 → 0.14／0.28／0.50；η 重校（2025 推論支出校準）。"
+                        "v21.8 高成本情境 IT 折舊 4 → 5 年只動 IF_HoldEcon、IF_FullCost*、IF_TrainCost* 的高成本欄（本模型只進高成本敏感度列與對照列）。持有比不變，合約付款不變。"),
         ("層級對應", "Haiku→低層（Tokenomics Luna）、Sonnet→中層（Sol）、Opus→頂層（Astra）；具名範圍沿用 OpenAI 的 Top／Mid／Low。"),
         ("標記", "Verified／Interested-party／Analogy／Assumed／Derived／Decision（Analogy、Assumed 一律附區間）。"),
         ("分層", "公司財務原始數據→SRC_ANT；AI 技術與算力→TK_Link（取自 Tokenomics）；假設→Inputs；OpenAI 對照→OAI_Link（不進計算）。"),
@@ -328,7 +331,7 @@ def sheet_oai(ctx):
     ov = ov.group(1) if ov else "v0.6"
     title(ws, f"OAI_Link — OpenAI {ov} 命題輸出快照（規格 D20；只作並排對照）",
           f"值由 builder 從 OpenAI {ov} 活頁簿的快取值讀出寫入（藍字）。本頁只被 Checks（與 A5 的 HTML）引用，任何計算頁不得引用（Checks 列 builder 掃描結果；tests 每次重驗）。",
-          "OpenAI 的 2025 為其實際校準年。v0.1.7 起快照改 OpenAI v0.6.4（其 TK_Link 為 Tokenomics v21.7，與本模型同一版）；v0.1.6 以前為 OpenAI v0.6（Tokenomics v5.26），並排時差異有一部分來自 Tokenomics 版本。")
+          "OpenAI 的 2025 為其實際校準年。v0.1.7 起快照改 OpenAI v0.6.4（其 TK_Link 為 Tokenomics v21.7；v0.1.7–v0.1.8 與本模型同一版，v0.1.9 起本模型為 v21.10，並排時 TPU／Trainium 產出比口徑不同）；v0.1.6 以前為 OpenAI v0.6（Tokenomics v5.26），並排時差異有一部分來自 Tokenomics 版本。")
     meta = [("OpenAI 檔案", oa["file"], "OAI_File"), ("檔案 SHA-256", oa["sha256"], "OAI_SHA256"), ("git 提交（建置時）", oa["commit"], "OAI_Commit"),
             ("讀取日期", ctx.date, "OAI_ReadDate")]
     for i, (lab, v, name) in enumerate(meta):

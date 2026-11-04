@@ -110,6 +110,9 @@ def resolve_overrides(scn_id: str, loc: Locator, cfg: dict | None = None) -> dic
                 v = loc.input_cell(name, spec)
             elif isinstance(spec, dict) and "mul" in spec:
                 v = loc.input_cell(name, "val") * loc.input_cell(spec["mul"], "val")
+            elif spec == "prev18":
+                out.update(prev_cells(name, PREV18_XLSX))      # v0.1.9：TK 快照回到 v21.7（值取自 v0.1.8 Excel）
+                continue
             elif spec == "prev16":
                 out.update(prev_cells(name, PREV16_XLSX))      # v0.1.7：TK 快照回到 v21.2（值取自 v0.1.6 Excel）
                 continue
@@ -136,6 +139,7 @@ PREV_XLSX = REPO / "model" / "archive" / "20261021_Anthropic_v0.1.1.xlsx"
 PREV19_XLSX = REPO / "model" / "archive" / "20261022_Anthropic_v0.1.3.xlsx"
 PREV14_XLSX = REPO / "model" / "archive" / "20261022_Anthropic_v0.1.4.xlsx"
 PREV16_XLSX = REPO / "model" / "archive" / "20261031_Anthropic_v0.1.6.xlsx"
+PREV18_XLSX = REPO / "model" / "archive" / "20261103_Anthropic_v0.1.8.xlsx"
 _PREV: dict = {}
 
 
