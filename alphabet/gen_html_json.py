@@ -32,7 +32,7 @@ rf_s = {str(VR["tvsh"]): {"B": "p1", "C": "p1", "D": "p1"}, str(VR["shv"]): {"B"
 rf_t = {str(VR["ssh"]): {"B": "n3", "C": "n3", "D": "n3"}, str(VR["simp"]): {"B": "x1", "C": "x1", "D": "x1"}}
 gate = rm["GATE"]
 r1 = find("Recon", "1. 合併層"); r2 = find("Recon", "2. 逐分部"); r3 = find("Recon", "3. v0.3"); rend = find("Recon", "檢查：(a)")
-r4 = find("Recon", "4. v0.3.3"); rend4 = find("Recon", "檢查：10-Q")
+r4 = find("Recon", "4. v0.3.4"); rend4 = find("Recon", "檢查：10-Q")
 se_end = max(x[3] for x in rm["SE_ROWS"])
 thh = T["adds"] - 1
 th_rows = ",".join(str(T[k]) for k in ("end_ext", "avg_ext", "ai_rev", "permw", "ai_ebitda", "ai_em", "capchk", "cx_ai", "cx_rev", "da_ai", "da_ext", "da_int", "int_cost"))

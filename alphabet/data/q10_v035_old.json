@@ -1,5 +1,5 @@
 {
- "_readme": "v0.3.3 → v0.3.4（2026Q3 10-Q 補入）變動拆解：In 頁鍵的 v0.3.3 值；sens_v03.py 依序換成本版值（q10|Q0＝全部舊值＝v0.3.3 目標價），build_alphabet.py 在 Recon 第 4 節顯示；v0.3 → v0.3.1 鏈（chain|S1–S4）也先套這些舊值，使其不受 10-Q 影響。",
+ "_readme": "v0.3.4 → v0.3.5（2026Q3 10-Q 補入）變動拆解：In 頁鍵的 v0.3.4（＝v0.3.3）值；sens_v03.py 依序換成本版值（q10|Q0＝全部舊值＝v0.3.3 目標價），build_alphabet.py 在 Recon 第 4 節顯示；v0.3 → v0.3.1 鏈（chain|S1–S4）也先套這些舊值，使其不受 10-Q 影響。",
  "steps": [
   {
    "key": "debt_0",

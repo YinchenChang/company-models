@@ -272,7 +272,7 @@ WEB = [("guid.capex.2026.oct", "2026 資本支出指引（維持 195–205）", 
 for iid, item, val, unit, src, note in WEB:
     ITEMS.append({"id": iid, "item": item, "value": val, "unit": unit, "period": "2026Q3", "source": src, "url": src.split(" ")[1] if " http" in src else "",
                   "docDate": "2026-10-28", "retrieved": "2026-10-29", "tag": "[Interested-party]", "note": note})
-# ---- v0.3.4：2026Q3 10-Q 原文（chat 端自 SEC 原文擷取的摘錄；工作單 mag/docs/workorders/20261104_MAG_10Q補入_2026Q3.md）----
+# ---- v0.3.5：2026Q3 10-Q 原文（chat 端自 SEC 原文擷取的摘錄；工作單 mag/docs/workorders/20261104_MAG_10Q補入_2026Q3.md）----
 # 第一讀：摘錄檔逐列讀取；第二讀：同一附註的組成相加、或新聞稿（上方事實）同一數字。數字照原文，單位 USD M。
 QF = "alphabet/docs/reports/20261104_10Q_2026Q3_原文摘錄.md"
 QURL = "https://www.sec.gov/Archives/edgar/data/0001652044/000165204426000084/goog-20260930.htm"
@@ -394,7 +394,7 @@ for fid, pat in (("cf.capex.ytd2026", r"資本支出 \([\d,]+\)／\*\*\(([\d,]+)
     CHK.append((f"{fid}（10-Q vs 新聞稿）", v, PV[fid], "新聞稿現金流量表年初至今欄", abs(v - PV[fid]) < 0.5))
 add10("cf.da.10q.ytd2026", "折舊 9M 2026（現金流量表）", qre(r"折舊 [\d,]+／\*\*([\d,]+)\*\*"), "USD M", "現金流量表")
 OUT = {"_readme": "Alphabet 2026Q3 事實總帳（MAG v0.3.1 工作單第 1 節第 1 項）。由 alphabet/facts_2026q3.py 自 Andy 2026-10-29 提供的財報新聞稿與簡報讀取；"
-                  "v0.3.4 起含 2026Q3 10-Q（docs/reports/20261104_10Q_2026Q3_原文摘錄.md；id 標 10q 或 Note 頁碼，tag [Verified]）。金額 USD M；check＝第二次獨立讀取。",
+                  "v0.3.5 起含 2026Q3 10-Q（docs/reports/20261104_10Q_2026Q3_原文摘錄.md；id 標 10q 或 Note 頁碼，tag [Verified]）。金額 USD M；check＝第二次獨立讀取。",
        "asOf": "2026-09-30", "items": ITEMS,
        "checks": [{"id": a, "value": b, "second": c, "source": d, "ok": e} for a, b, c, d, e in CHK]}
 json.dump(OUT, open(os.path.join(HERE, "data", "alphabet_facts_2026q3.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)

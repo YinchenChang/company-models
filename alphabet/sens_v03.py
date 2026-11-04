@@ -85,9 +85,9 @@ for key, side, val, _r in rm["SE_ROWS"]:
 # S2＝S3 再改回 v0.3 的 pace 與伺服器占比；S1＝S2 再以 v0.3 的 2026Q3 模型值取代實績（q3cf_v03.py）
 PACE = json.load(open(os.path.join(HERE, "data", "pace_v031.json"), encoding="utf-8"))
 CF3 = json.load(open(Q3CF, encoding="utf-8"))
-# v0.3.4：10-Q 補入前的值（data/q10_v034_old.json）。S1–S4 先套這些舊值，使 v0.3 → v0.3.1 拆解不受 10-Q 補入影響；
+# v0.3.5：10-Q 補入前的值（data/q10_v035_old.json）。S1–S4 先套這些舊值，使 v0.3 → v0.3.1 拆解不受 10-Q 補入影響；
 # q10|Qk＝前 k 項換成本版值、其餘仍為舊值（Q0＝v0.3.3），Recon 第 4 節逐項相減
-Q10 = json.load(open(os.path.join(HERE, "data", "q10_v034_old.json"), encoding="utf-8"))["steps"]
+Q10 = json.load(open(os.path.join(HERE, "data", "q10_v035_old.json"), encoding="utf-8"))["steps"]
 OLD10 = [(x["key"], x["old"]) for x in Q10]
 for k in range(len(Q10)):
     jobs[f"q10|Q{k}"] = OLD10[k:]

@@ -1,5 +1,5 @@
 {
- "_readme": "Alphabet 2026Q3 事實總帳（MAG v0.3.1 工作單第 1 節第 1 項）。由 alphabet/facts_2026q3.py 自 Andy 2026-10-29 提供的財報新聞稿與簡報讀取；v0.3.4 起含 2026Q3 10-Q（docs/reports/20261104_10Q_2026Q3_原文摘錄.md；id 標 10q 或 Note 頁碼，tag [Verified]）。金額 USD M；check＝第二次獨立讀取。",
+ "_readme": "Alphabet 2026Q3 事實總帳（MAG v0.3.1 工作單第 1 節第 1 項）。由 alphabet/facts_2026q3.py 自 Andy 2026-10-29 提供的財報新聞稿與簡報讀取；v0.3.5 起含 2026Q3 10-Q（docs/reports/20261104_10Q_2026Q3_原文摘錄.md；id 標 10q 或 Note 頁碼，tag [Verified]）。金額 USD M；check＝第二次獨立讀取。",
  "asOf": "2026-09-30",
  "items": [
   {
