@@ -24,7 +24,7 @@ wb = openpyxl.Workbook()
 
 FD = json.load(open(os.path.join(HERE, "data", "meta_facts_2026q3.json"), encoding="utf-8"))
 F = {it["id"]: it for it in FD["items"]}
-TKV = "v21.9"   # v0.1.2：Tokenomics 快照 v21.7 → v21.9（基準數值不變）
+TKV = "v21.10"   # v0.1.2：Tokenomics 快照 v21.7 → v21.9；v0.1.4：v21.9 → v21.10（兩次基準數值都不變）
 TK = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 GEN = {x["code"]: x["name"] for x in TK["source"]["generations"]}
 CONS = json.load(open(os.path.join(HERE, "data", "consensus_meta_20261030.json"), encoding="utf-8"))
@@ -78,7 +78,7 @@ SE = wb.create_sheet("Sens"); SO = wb.create_sheet("Sources")
 # =====================================================================================================
 # In
 IN["A1"] = "In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」）。金額 US$B；每股 US$（Class C 股票股利前口徑）；股數十億股；MW＝IT MW。標記：Verified／Interested-party／Analogy／Assumed／Derived（Analogy、Assumed 一律給低／高區間）"
-IN["A2"] = "事實總帳：data/meta_facts_2026q3.json（facts_2026q3.py 兩讀核對，648 筆；v0.1.1 加完整 10-Q、424B5、follow-up call）；Tokenomics " + TKV + " 快照（data/tokenomics_snapshot_" + TKV + ".json；v0.1.2 由 v21.7 換入，基準數值不變）；共識 data/consensus_meta_20261030.json；同業 data/peers_ads_20261030.json（五家 2026-10-07 基準＋GOOGL）。評價日 2026-09-30，目標時點 2027-10-30。黃底＝判斷題（Andy 可改）"
+IN["A2"] = "事實總帳：data/meta_facts_2026q3.json（facts_2026q3.py 兩讀核對，648 筆；v0.1.1 加完整 10-Q、424B5、follow-up call）；Tokenomics " + TKV + " 快照（data/tokenomics_snapshot_" + TKV + ".json；v0.1.2 由 v21.7 換入 v21.9、v0.1.4 換 v21.10，基準數值不變）；共識 data/consensus_meta_20261030.json；同業 data/peers_ads_20261030.json（五家 2026-10-07 基準＋GOOGL）。評價日 2026-09-30，目標時點 2027-10-30。黃底＝判斷題（Andy 可改）"
 hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "說明"])
 ROWS = []
 def sec(t): ROWS.append(("sec", t))
@@ -1183,7 +1183,7 @@ for col, w in zip("ABCDEF", [6, 80, 14, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = "Meta（META）個股模型 v0.1.3（2026-11-04；v0.1.2 之上加協議應計驗證列與受限現金口徑核對，兩案只進 Sens，基準數值不變）— 命題模組＋官方營收分部 → 損益表（完整 10-Q、法說與 follow-up call 補資料缺口）"
+RD["A1"] = "Meta（META）個股模型 v0.1.4（2026-11-04；v0.1.3 之上換 Tokenomics 快照 " + TKV + "，基準數值不變；v0.1.3 加協議應計驗證列與受限現金口徑核對，兩案只進 Sens）— 命題模組＋官方營收分部 → 損益表（完整 10-Q、法說與 follow-up call 補資料缺口）"
 RD["A3"] = "命題：Meta 的 AI 資本支出（2026 指引 1,350–1,450 億美元，含融資租賃本金）能否由廣告現金流支撐，且自用算力（GPU＋自研 MTIA）是否帶來足以回本的廣告變現提升。"
 RD["A4"] = "核心問題：FY2028 AI 增量營業利益（讀法 2：自用 AI 影子效益＝自用在役 MW × Tokenomics 每 MW 持有成本）能否覆蓋 AI 資本支出的資金成本；收支關卡＝FY2026–FY2030 自由現金流扣股利合計。"
 VB = lambda k, c="B": f"Val!{c}{VR_[k]}"

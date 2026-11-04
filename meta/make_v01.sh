@@ -1,13 +1,13 @@
 #!/bin/bash
-# Meta 個股模型 v0.1.3（v0.1.3：協議應計驗證與受限現金口徑兩個 Sens 案；v0.1.2：Tokenomics 快照 v21.9；腳本沿用 v0.1 名稱；VER 可指定版號）：一次跑完 事實總帳 → （敏感度）→ 建置 → LibreOffice 重算 → 核對 → In 頁版面 → 敏感度覆蓋 → 分部檢查 → HTML。
-#   bash meta/make_v01.sh            # 沿用已提交的敏感度結果 meta/data/sens_v013_20261104.json
+# Meta 個股模型 v0.1.4（v0.1.4：Tokenomics 快照 v21.10；v0.1.3：協議應計驗證與受限現金口徑兩個 Sens 案；v0.1.2：Tokenomics 快照 v21.9；腳本沿用 v0.1 名稱；VER 可指定版號）：一次跑完 事實總帳 → （敏感度）→ 建置 → LibreOffice 重算 → 核對 → In 頁版面 → 敏感度覆蓋 → 分部檢查 → HTML。
+#   bash meta/make_v01.sh            # 沿用已提交的敏感度結果 meta/data/sens_v014_20261104.json
 #   SENS=1 bash meta/make_v01.sh     # 重跑敏感度（約 80 次整本重算；JOBS＝平行數，預設 2）
 # 需要：python3＋openpyxl、LibreOffice（soffice）。
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-VER="${VER:-0.1.3}"; VDATE="${VDATE:-20261104}"
+VER="${VER:-0.1.4}"; VDATE="${VDATE:-20261104}"
 OUTNAME="${VDATE}_Meta個股模型_v${VER}.xlsx"
 SJ="meta/data/sens_v${VER//./}_${VDATE}.json"
 python3 meta/facts_2026q3.py                           # 事實總帳（兩讀核對；不一致即失敗；逐字稿不在本機時短句標「未核對」）

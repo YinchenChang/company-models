@@ -1,4 +1,6 @@
-# meta/ — Meta Platforms（META）個股模型 v0.1.3（命題＋官方營收分部 → 損益表；2026Q3；完整 10-Q、法說與 follow-up call 補資料缺口；v0.1.3 加協議應計驗證與受限現金口徑兩個 Sens 案，基準數值同 v0.1.1）
+# meta/ — Meta Platforms（META）個股模型 v0.1.4（命題＋官方營收分部 → 損益表；2026Q3；完整 10-Q、法說與 follow-up call 補資料缺口；v0.1.3 加協議應計驗證與受限現金口徑兩個 Sens 案；v0.1.4 Tokenomics 快照 v21.10；基準數值同 v0.1.1）
+
+**v0.1.4（2026-11-04）：** Tokenomics 快照 v21.9 → v21.10（`data/tokenomics_snapshot_v21.10.json`，`20261104_Tokenomics_v21.10.xlsx`，master eded8e6；名稱清單同 Alphabet；`--check` 通過）。契約名稱值的變動只在 `IF_NonNV_Out_TPU`（本模型不讀）。與 v0.1.3 逐格比對 21 格不同，全是版本與快照說明文字；數值格 0 差異，加權目標價 844.10、買進不變；敏感度 84 案重跑，逐一相同（`data/sens_v014_20261104.json`）。v0.1.3 成品、`sens_v013` 與 v21.9 快照移 `_待刪除/`。報告 `docs/reports/20261104_meta_v0.1.4_TK快照v21.10.md`。
 
 **v0.1.3（2026-11-04）：** 基準數值不變（加權目標價 844.10，買進）。
 - **協議應計驗證：** Recon 5 新增驗證列。協議應計可能大於 11.89，因為協議總付款含約 0.5 的隱私案。若如此，legal_oth 最多高估 0.885（名目上限 12.775 − 11.89）。這個情況只列入 Sens（In `ag_acc_x`），結果 844.45（+0.35）。
@@ -78,12 +80,12 @@ In 頁 D／F 欄＝敏感度低／高，只用於 Sens 頁（原則第 8 節）�
 | `build_meta.py` | Python → Excel 產生器（openpyxl，全部活公式；藍字輸入、黑字公式、黃底判斷題） |
 | `facts_2026q3.py` | 四季新聞稿兩讀核對 → `data/meta_facts_2026q3.json`（648 筆、729 項核對一致）。v0.1.1 加第 8 節：完整 10-Q 新事實 22 筆（程式自 `mag/extract/docs/2026Q3/text/meta_2026Q3_10-Q.txt` 擷取數字作第二讀，記 PDF 頁碼）、v0.1 的 14 筆 10-Q 事實以完整版重核、424B5 承銷折扣、follow-up call 13 筆短句 |
 | `check_v01.py` | 成品核對。須全部為 0：公式錯誤、Q 頁核對列、Thesis 的 C10 與 M6 對帳、Seg 核對、PL 分部對帳（三情境 × 全部年度）、CF 核對。另查敏感度未過期、固定列標籤存在 |
-| `sens_v01.py` | 敏感度：一次改一個 In 頁輸入、整本 LibreOffice 重算，結果寫入 `data/sens_v013_20261104.json`（v0.1～v0.1.2 結果移 `data/_待刪除/`） |
+| `sens_v01.py` | 敏感度：一次改一個 In 頁輸入、整本 LibreOffice 重算，結果寫入 `data/sens_v014_20261104.json`（v0.1～v0.1.3 結果移 `data/_待刪除/`） |
 | `gen_html_json.py` | 由列號對照產生 `html.json`（勿手改） |
 | `make_v01.sh` | 一次跑完（版號 `VER`，預設 0.1.3、日期 `VDATE` 預設 20261104；腳本沿用 v0.1 名稱）：事實總帳 →（敏感度）→ 建置 → 重算 → check_v01 → check_in_layout → check_segments → HTML 產生與檢核 |
 | `segments.json` | 官方分部宣告（`tools/segment_check/check_segments.py meta` 通過） |
-| `dist/20261104_Meta個股模型_v0.1.3.xlsx`／`.html` | 成品（v0.1～v0.1.2 移 `dist/_待刪除/`） |
-| `data/` | 事實總帳與兩讀轉錄（`reads/`）、Tokenomics v21.9 快照、共識、同業、敏感度結果 |
+| `dist/20261104_Meta個股模型_v0.1.4.xlsx`／`.html` | 成品（v0.1～v0.1.3 移 `dist/_待刪除/`） |
+| `data/` | 事實總帳與兩讀轉錄（`reads/`）、Tokenomics v21.10 快照、共識、同業、敏感度結果 |
 | `docs/` | 工作單（v0.1、v0.1.1）、A 段事實總帳報告、v0.1 報告、本版報告 `docs/reports/20261030_meta_v0.1.1.md`、進度檔 |
 
 ## 建置
