@@ -1,4 +1,9 @@
-# meta/ — Meta Platforms（META）個股模型 v0.1.2（命題＋官方營收分部 → 損益表；2026Q3；完整 10-Q、法說與 follow-up call 補資料缺口；v0.1.2 Tokenomics 快照 v21.9，基準數值同 v0.1.1）
+# meta/ — Meta Platforms（META）個股模型 v0.1.3（命題＋官方營收分部 → 損益表；2026Q3；完整 10-Q、法說與 follow-up call 補資料缺口；v0.1.3 加協議應計驗證與受限現金口徑兩個 Sens 案，基準數值同 v0.1.1）
+
+**v0.1.3（2026-11-04）：** 基準數值不變（加權目標價 844.10，買進）。
+- **協議應計驗證：** Recon 5 新增驗證列。協議應計可能大於 11.89，因為協議總付款含約 0.5 的隱私案。若如此，legal_oth 最多高估 0.885（名目上限 12.775 − 11.89）。這個情況只列入 Sens（In `ag_acc_x`），結果 844.45（+0.35）。
+- **受限現金口徑：** 與 Alphabet、Amazon 一致，三家的淨現金都不含受限現金。把 10.80 採購保證金計入淨現金的情況只列入 Sens（In `esc_in`），結果 848.40（+4.30）。
+- **檔案：** 敏感度結果在 `data/sens_v013_20261104.json`；v0.1.2 成品與 `sens_v012` 已移到 `_待刪除/`。報告見 `docs/reports/20261104_meta_v0.1.3_小修.md`。
 
 **v0.1.2（2026-11-04）：** Tokenomics 快照 v21.7 → v21.9（`data/tokenomics_snapshot_v21.9.json`，master 7276259；名稱清單同 Alphabet）。契約名稱值的變動只在高成本欄（v21.8）與 `IF_NonNV_Out_TPU`（本模型不讀）。與 v0.1.1 逐格比對：只有版本與快照說明文字、In 頁 F90:F93（`he_*` 敏感度高）、Sens 第 28–29 列不同；加權目標價 844.10、買進與其他數值全部相同。Sens `he_all` 高 1,054.79 → 1,000.38（上檔 +63.3%，強力買進，與舊版同級）；`he_all` 標籤改由快照取值。v21.7 快照、`sens_v011_20261030.json`、v0.1.1 成品移 `_待刪除/`。報告 `docs/reports/20261104_meta_v0.1.2_TK快照v21.9.md`。
 
@@ -9,7 +14,7 @@
 **投資建議：買進**（v0.1.1，2026-10-30；v0.1 為 843.95，逐項歸因見 `docs/reports/20261030_meta_v0.1.1.md`）。依五級固定規則：
 - 加權目標價 US$844.10，比現價 612.49（2026-10-28 收盤）高 37.8%。主值用自用 AI 讀法 2。
 - 讀法 1 目標價 428.70（−30.0%，放空），只作下緣敏感度。
-- 評等邊界：82 個敏感度案例中，讀法 1 與 IF_HoldEcon 低值（765.15，+24.9%，中立）兩案低於買進下限（765.61）。
+- 評等邊界：84 個敏感度案例中（v0.1.3 新增 ag_acc_x、esc_in 兩案），讀法 1 與 IF_HoldEcon 低值（765.15，+24.9%，中立）兩案低於買進下限（765.61）。
 - 情境 A／B／C：933.27／844.10／754.93。
 - DCF 792.59、分部加總 895.60，兩者各占一半。
 - 市場共識目標價 833.12（MarketBeat，58 位，2026-10-22）。
@@ -48,8 +53,8 @@
 | Seg | 近四季年增（Q 頁）、gl_impr、gl_price、pA／pC、gl_other、gl_rl、conv_n、g0_q | Advertising（曝光 × 價格）、Other revenue、FoA、RL；非 AI 資本支出與折舊 | 近四季年增 → 長期值；Advertising＝B 路徑 ×(1＋價格情境調整) |
 | PL | m_foa（Q 頁）、inc_m、rl_loss26／27／32、rl_da_sh、tax、ot_*、phi_q4 | 分部 EBITDA 與營業利益、合併營業利益、三種 EPS | 分部營收 → EBITDA − 折舊 → 營業利益 → EPS |
 | CF | sbc_r、wc_k、ag_pay、ag_y1、ag_rest、dps、bb_t、min_cash、mcps、fwd_cash、fwd_on | 自由現金流、股利、回購、新債、淨現金、收支關卡 | 淨利＋折舊 − 協議付款 − 資本支出 → 自由現金流 → 股利 → 回購／舉債 |
-| Val | rf、beta、erp、kd_sp、g_tv、ronic_sp、同業倍數、ads_mode、rl_mode、tp_w*、w_dcf、legal_oth、contg、fin_lease | DCF、分部加總、目標價、上檔空間、評等 | 無槓桿 FCF 折現＋分部 EBITDA × 倍數 → 情境加權 → 50／50 |
-| Sens | In 頁敏感度低／高 | 加權目標價、收支關卡 B、FY2027 資本支出 B（82 案；含 IF_HoldEcon 四世代同時取低／高：765.15〔中立〕／1,054.79） | 一次改一個輸入、整本重算 |
+| Val | rf、beta、erp、kd_sp、g_tv、ronic_sp、同業倍數、ads_mode、rl_mode、tp_w*、w_dcf、legal_oth、ag_acc_x、contg、fin_lease、esc_in | DCF、分部加總、目標價、上檔空間、評等 | 無槓桿 FCF 折現＋分部 EBITDA × 倍數 → 情境加權 → 50／50 |
+| Sens | In 頁敏感度低／高 | 加權目標價、收支關卡 B、FY2027 資本支出 B（84 案；含 IF_HoldEcon 四世代同時取低／高：765.15〔中立〕／1,054.79） | 一次改一個輸入、整本重算 |
 
 **情境驅動對照（In 頁 J 節）：**
 - 每則價格調整：A +10%／B 0／C −10%。
@@ -73,11 +78,11 @@ In 頁 D／F 欄＝敏感度低／高，只用於 Sens 頁（原則第 8 節）�
 | `build_meta.py` | Python → Excel 產生器（openpyxl，全部活公式；藍字輸入、黑字公式、黃底判斷題） |
 | `facts_2026q3.py` | 四季新聞稿兩讀核對 → `data/meta_facts_2026q3.json`（648 筆、729 項核對一致）。v0.1.1 加第 8 節：完整 10-Q 新事實 22 筆（程式自 `mag/extract/docs/2026Q3/text/meta_2026Q3_10-Q.txt` 擷取數字作第二讀，記 PDF 頁碼）、v0.1 的 14 筆 10-Q 事實以完整版重核、424B5 承銷折扣、follow-up call 13 筆短句 |
 | `check_v01.py` | 成品核對。須全部為 0：公式錯誤、Q 頁核對列、Thesis 的 C10 與 M6 對帳、Seg 核對、PL 分部對帳（三情境 × 全部年度）、CF 核對。另查敏感度未過期、固定列標籤存在 |
-| `sens_v01.py` | 敏感度：一次改一個 In 頁輸入、整本 LibreOffice 重算，結果寫入 `data/sens_v012_20261104.json`（v0.1、v0.1.1 結果移 `data/_待刪除/`） |
+| `sens_v01.py` | 敏感度：一次改一個 In 頁輸入、整本 LibreOffice 重算，結果寫入 `data/sens_v013_20261104.json`（v0.1～v0.1.2 結果移 `data/_待刪除/`） |
 | `gen_html_json.py` | 由列號對照產生 `html.json`（勿手改） |
-| `make_v01.sh` | 一次跑完（版號 `VER`，預設 0.1.2、日期 `VDATE` 預設 20261104；腳本沿用 v0.1 名稱）：事實總帳 →（敏感度）→ 建置 → 重算 → check_v01 → check_in_layout → check_segments → HTML 產生與檢核 |
+| `make_v01.sh` | 一次跑完（版號 `VER`，預設 0.1.3、日期 `VDATE` 預設 20261104；腳本沿用 v0.1 名稱）：事實總帳 →（敏感度）→ 建置 → 重算 → check_v01 → check_in_layout → check_segments → HTML 產生與檢核 |
 | `segments.json` | 官方分部宣告（`tools/segment_check/check_segments.py meta` 通過） |
-| `dist/20261104_Meta個股模型_v0.1.2.xlsx`／`.html` | 成品（v0.1、v0.1.1 移 `dist/_待刪除/`） |
+| `dist/20261104_Meta個股模型_v0.1.3.xlsx`／`.html` | 成品（v0.1～v0.1.2 移 `dist/_待刪除/`） |
 | `data/` | 事實總帳與兩讀轉錄（`reads/`）、Tokenomics v21.9 快照、共識、同業、敏感度結果 |
 | `docs/` | 工作單（v0.1、v0.1.1）、A 段事實總帳報告、v0.1 報告、本版報告 `docs/reports/20261030_meta_v0.1.1.md`、進度檔 |
 
@@ -85,7 +90,7 @@ In 頁 D／F 欄＝敏感度低／高，只用於 Sens 頁（原則第 8 節）�
 ```
 bash meta/make_v01.sh                 # 沿用已提交的敏感度結果
 SENS=1 JOBS=2 bash meta/make_v01.sh   # 改了任何輸入或公式後重跑敏感度（約 2 分鐘；否則 Sens 基準差不為 0、check_v01 失敗）
-VER=0.1.3 VDATE=YYYYMMDD bash meta/make_v01.sh   # 下一版：成品與敏感度檔名隨版號與日期（先把舊成品移 dist/_待刪除/）
+VER=0.1.4 VDATE=YYYYMMDD bash meta/make_v01.sh   # 下一版：成品與敏感度檔名隨版號與日期（先把舊成品移 dist/_待刪除/）
 ```
 法說與 follow-up call 逐字稿不入庫（repo 公開）。`facts_2026q3.py` 會讀本機 `/tmp/claude-0/meta_src/Transcript_META_3Q26.txt` 與 `Transcript_follow up call_META_3Q26.txt`（可用環境變數 `META_TR`、`META_TR2` 指定；v0.1.1 起為 PDF 轉文字版，比對不分大小寫），用來核對短句位置。檔案不在時，短句標「未核對」，數值與核對結果不變，但事實總帳中的位置欄文字會不同。完整 10-Q（SEC 公開）入庫於 `mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf` 與 `text/meta_2026Q3_10-Q.txt`。
 
