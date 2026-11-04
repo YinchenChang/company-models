@@ -15,7 +15,7 @@ def drv(key, fmt, dlabel, dref, dfmt, why, unit=True):
     return [f"@In!B{r}", base, f"@In!G{r}|tag", [dlabel, f"{dref}|{dfmt}"], why]
 A = PB["B"]
 drivers = [
-    drv("q2_lg", "p0", "授權及其他（FY2027 錨點）：", "@Q!H4", "n3", "公司指引；錨點＝第一季實績＋第二季指引＋下半年假設", unit=False),
+    drv("q2_lg", "p0", "授權及其他（FY2027 錨點）：", "@Q!H4", "n3", "第二季實績推得；錨點＝第一、二季實績＋第三季公司指引＋第四季假設", unit=False),
     drv("ph_s", "p0", "智慧型手機權利金（FY2026）：", f"@PL!D{A['ph']}", "n3", "公司揭露的唯一市場比例；其餘市場為假設", unit=False),
     drv("ph_u26", "n2", "手機每支權利金（FY2026）：", f"@PL!D{A['phrt']}", "n3", "出貨持平到下滑，權利金成長靠費率"),
     drv("cpu_gpu", "n2", "輝達 Grace／Vera 處理器（FY2028，情境 B）：", f"@PL!F{A['nvcpu']}", "n2", "加速器顆數讀 Siliconomics，同字母情境"),
@@ -42,7 +42,7 @@ html = {
       "rowgen": {"sheet": "Units", "rows": f"4-{rm['UR']['chip']}", "cols": ["A", "B", "C", "D", "E", "F"], "fmts": ["", "", "n3", "n3", "n3", "n3"],
                  "row_fmt": {str(rm["UR"][k]): {c: f for c in "CDEF"} for k, f in (("nvcy", "n2"), ("nvcpu", "n2"), ("dcx", "n2"), ("dcrx", "n2"), ("dcsh", "p1"))}}},
      {"type": "note", "parts": [f"@Units!A{rm['UNOTE']}"]}]},
-  {"id": "pl", "title": "三情境損益", "intro": "FY2025、FY2026 為實績，FY2027 為錨點（第一季實績＋第二季指引＋下半年假設），FY2028 起為模型。會計年度三月底結束；上游日曆年依月份加權。", "blocks": [
+  {"id": "pl", "title": "三情境損益", "intro": "FY2025、FY2026 為實績，FY2027 為錨點（第一、二季實績＋第三季公司指引＋第四季假設），FY2028 起為模型。會計年度三月底結束；上游日曆年依月份加權。", "blocks": [
      {"type": "pl", "years": "@PL!C3:G3", "metrics": [
         {"name": ["營收（", f"@PL!B{S('A', 'rev')}", "）"], "fmt": "n3", "chart": True, "rows": {s: f"@PL!C{S(s, 'rev')}:G{S(s, 'rev')}" for s in "ABC"}},
         {"name": ["權利金（", f"@PL!B{S('A', 'ro')}", "）"], "fmt": "n3", "chart": True, "rows": {s: f"@PL!C{S(s, 'ro')}:G{S(s, 'ro')}" for s in "ABC"}},
