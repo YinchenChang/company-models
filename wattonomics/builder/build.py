@@ -1483,11 +1483,11 @@ def main():
     CP.cell(r, 1, "G. 供給上限（v0.2.2 X4；Siliconomics v0.13 Cap 頁；只檢查、不截斷基準）").font = BOLD; r += 1
     hdr(CP, r, ["項目", "鍵", "單位"] + [str(y) for y in YEARS] + ["說明"]); r += 1
     CY = (2026, 2027, 2028, 2029)
-    nrow("cap", "供給上限可支撐 GW（SIF_CapGW_Base；成本等值、出貨年）", "GW", {y: f"={sv('SIF_CapGW_Base', y)}" for y in CY}, "Siliconomics v0.13：CoWoS、HBM 等產能可支撐的部署 GW（成本等值＝AI IT 資本支出 ÷ NVIDIA 每 GW IT capex）")
+    nrow("cap", "供給上限可支撐 GW（SIF_CapGW_Base；成本等值、出貨年）", "GW", {y: f"={sv('SIF_CapGW_Base', y)}" for y in CY}, "Siliconomics v0.13：CoWoS、HBM 等產能可支撐的部署 GW（成本等值＝AI IT 資本支出 ÷ NVIDIA 每 GW IT capex）。注意：2026 年上限就等於 Siliconomics 自己的需求（CapHead 0、HBM 利用率 1.0），所以 2026 年的 headroom（約 8%）是與 Siliconomics 需求對帳，不是獨立的供給檢驗")
     nrow("capship", "Wattonomics 出貨年 GW（市場；上線年新增鏡像反推）", "GW", {y: "=" + "(1-lag_on/12-inv_on)*Deploy!" + YC[y] + str(DR['naAD0']) + "+(lag_on/12+inv_on)*Deploy!" + YC[y + 1] + str(DR['naAD0']) for y in CY},
-         "口徑對齊 1：上線年 → 出貨年（同 F2 鏡像式，市場層；毛額）")
+         "口徑對齊 1：上線年 → 出貨年（全市場一律用鏡像式；毛額）。F2 對七家與 xAI 改用付款年 GW、其餘鏡像；若本節也改用付款年，2026 headroom 為 6.4%")
     nrow("capfx", "成本等值換算係數＝Wattonomics 每 IT GW IT capex（Spend 頁同式）÷ SIF_ITCapexPerGW", "x", {y: f"=((1-Players!{YC[y]}{NNVR})*CapexGW!{YC[y]}{XIT}+Players!{YC[y]}{NNVR}*spend_nnv_hold*TK_CapexIT_VR200)/{sv('SIF_ITCapexPerGW', y)}" for y in CY},
-         "口徑對齊 2：Wattonomics 為實體 IT GW；Siliconomics 為成本等值（NVIDIA 每 GW），非 NVIDIA 每 GW 較便宜 → 係數 < 1", "0.000")
+         "口徑對齊 2：Wattonomics 為實體 IT GW；Siliconomics 為成本等值（NVIDIA 每 GW），非 NVIDIA 每 GW 較便宜 → 係數 < 1。限制：係數以 $ 占比當 GW 權重；市場含中國而上限多半不含——兩項都使 Wattonomics 偏高（保守方向）。各種讀法下 2026 headroom 介於 6%–18%", "0.000")
     nrow("capw", "Wattonomics 出貨年 GW（成本等值）＝出貨 × 係數", "GW", {y: f"={YC[y]}{NVR['capship']}*{YC[y]}{NVR['capfx']}" for y in CY})
     nrow("caphead", "headroom＝上限 − Wattonomics（GW）", "GW", {y: f"={YC[y]}{NVR['cap']}-{YC[y]}{NVR['capw']}" for y in CY})
     nrow("capheadp", "headroom 比＝headroom ÷ 上限", "比", {y: f"={YC[y]}{NVR['caphead']}/{YC[y]}{NVR['cap']}" for y in CY}, "< 0＝Wattonomics 基準超過供給上限（Checks X4-K1 WARN；預設不截斷，判斷題）", "0.0%")

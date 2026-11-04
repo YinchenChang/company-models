@@ -1,7 +1,7 @@
 {
 "source": {
 "file": "20261104_Wattonomics_v0.2.2.xlsx",
-"sha256": "245270943388e72a5c60c4723fd7260758c82acb4c79a171413b5fc828bacea0",
+"sha256": "1c1eaf6c71eceda4569c2c4c97ab384b16e883980ee0bada93b630d606c2befc",
 "note": "Wattonomics（瓦帳）互動頁取數；扁平紀錄，kind 欄區分種類；單位 IT GW（＝TK GW）；下游取用 2027 年後數值前看 coverage",
 "wgov_errors": 0
 },

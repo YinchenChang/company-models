@@ -114,7 +114,7 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 
 ### 供給上限（v0.2.2；校準原則第 2 條）
 
-- 基準 GW＝需求側錨點，但不得超過供給產能（Andy 11-04）。Compare G 節：Wattonomics 出貨年 GW（市場上線年新增鏡像反推）× 成本等值係數（Wattonomics 每 IT GW IT capex ÷ `SIF_ITCapexPerGW`）對 `SIF_CapGW_Base`，逐年 headroom；超過時 Checks X4-K1 WARN。只檢查，不自動截斷（判斷題，預設不截斷）。
+- 基準 GW＝需求側錨點，但不得超過供給產能（Andy 11-04）。Compare G 節：Wattonomics 出貨年 GW（全市場一律以上線年新增鏡像反推；F2 對七家與 xAI 則用付款年，若 G 節也改用付款年，2026 headroom 為 6.4%）× 成本等值係數（Wattonomics 每 IT GW IT capex ÷ `SIF_ITCapexPerGW`）對 `SIF_CapGW_Base`，逐年 headroom；超過時 Checks X4-K1 WARN。只檢查，不自動截斷（判斷題，預設不截斷）。限制：2026 年上限等於 Siliconomics 自己的需求（CapHead 0、HBM 利用率 1.0），2026 年只是與 Siliconomics 需求對帳，不是獨立的供給檢驗；成本等值係數以 $ 占比當 GW 權重、市場含中國而上限多半不含，兩項都使 Wattonomics 偏高（保守方向），各讀法下 2026 headroom 介於 6%–18%。
 
 ### 汰換（v0.2；工作單 20261104 V7）
 
