@@ -59,7 +59,7 @@ LEASE_IN = [
 ]
 
 DATE = "20261102"
-TK_SNAPSHOT = os.path.join(ROOT, "siliconomics", "data", "tokenomics_snapshot_v21.7.json")
+TK_SNAPSHOT = os.path.join(GL, "data", "tokenomics_snapshot_v21.9.json")   # v0.2 V8：Tokenomics master 最新 v21.9（tools/tokenomics/import_tokenomics.py 抽取；含 IF_FacilityGW）；Siliconomics 仍用 v21.7
 SIL_DIR = os.path.join(ROOT, "siliconomics", "data")
 SEED = os.path.join(HERE, "seed", "seed_v0.1.json")
 TK_EXTRA = os.path.join(HERE, "seed", "tk_extra_v21.7.json")   # 快照未含、直接讀 Tokenomics 活頁簿的名稱（R1 裁定）
@@ -409,7 +409,7 @@ def main():
     # ================= TK_In：Tokenomics 鏡像（只讀） =================
     src = tk["source"]
     TKS["A1"] = (f"TK_In — Tokenomics 取數（只讀鏡像；權威在 Tokenomics）：{src['file']}（{src['version']}，commit {src['commit'][:7]}，擷取 {src['extractedAt']}）。"
-                 "同一份快照與 Siliconomics 相同（siliconomics/data/tokenomics_snapshot_v21.7.json），不另抽；綠字不得修改")
+                 "v0.2 起 Wattonomics 自抽快照 wattonomics/data/tokenomics_snapshot_v21.9.json（tools/tokenomics/import_tokenomics.py；名稱清單＝Siliconomics 清單＋IF_FacilityGW；Siliconomics 仍為 v21.7）；綠字不得修改")
     TKS["A2"] = "快照註記：" + src.get("note", "")
     hdr(TKS, 4, ["名稱（TK）", "世代／項目", "本庫名稱", "低", "基準", "高", "單位", "TK 位置"])
     gens = {g["name"]: g["code"] for g in src["generations"]}
