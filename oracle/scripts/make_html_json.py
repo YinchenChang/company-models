@@ -97,8 +97,8 @@ cfg = {
              "rowgen": {"sheet": "PL", "rows": f"{R['CHK'][0]}-{R['CHK'][2]}", "cols": ["A", "C", "D", "E", "F", "G", "H", "I"], "fmts": ["", "n3", "n3", "n3", "n3", "n3", "n3", "n3"]}},
             {"type": "h3", "text": "現金流與融資（收支模組）"},
             {"type": "table", "grid": True, "head": ["@CF!A3", "@CF!C3", "@CF!D3", "@CF!E3"],
-             "rowgen": {"sheet": "CF", "rows": f"{G}-{G+6}", "cols": ["A", "C", "D", "E"], "fmts": ["", "n1", "n1", "n1"], "row_fmt": {str(G + 4): {"C": "n2", "D": "n2", "E": "n2"}}}},
-            {"type": "pl", "years": "@CF!D13:I13", "metrics": [
+             "rowgen": {"sheet": "CF", "rows": f"{G}-{G+6},{G+8}-{G+10}", "cols": ["A", "C", "D", "E"], "fmts": ["", "n1", "n1", "n1"], "row_fmt": {str(G + 4): {"C": "n2", "D": "n2", "E": "n2"}}}},
+            {"type": "pl", "years": f"@CF!D{R['CFH']}:I{R['CFH']}", "metrics": [
                 met("自由現金流（十億美元）", None, "n1", chart=True, rows={s: f"@CF!D{CR[s]['fcf']}:I{CR[s]['fcf']}" for s in "ABC"}),
                 met("自由現金流扣股利（十億美元）", None, "n1", rows={s: f"@CF!D{CR[s]['fcfd']}:I{CR[s]['fcfd']}" for s in "ABC"}),
                 met("資本支出（十億美元）", None, "n1", chart=True, rows={s: f"@CF!D{CR[s]['cx']}:I{CR[s]['cx']}" for s in "ABC"}),
