@@ -132,7 +132,7 @@ def load_base_inputs(path):
         k = ws.cell(r, 1).value
         if not k or not ws.cell(r, 19).value:
             continue
-        out[k] = {c: ws.cell(r, c).value for c in [3] + list(range(5, 18))}
+        out[k] = {c: ws.cell(r, c).value for c in [2, 3] + list(range(5, 18))}
     return out
 
 
@@ -355,7 +355,7 @@ def main():
     CAMP = []
     for cp in seed["campus"]:
         k = cp["key"]
-        meta(k, cp["name"], cp["basis"], "MW", cp["tag"], cp["src"], cp["note"], 4)
+        meta(k, B(k, 2, cp["name"]), cp["basis"], "MW", cp["tag"], cp["src"], cp["note"], 4)   # v0.2 修訂：T2 園區名稱也以 Excel 為準（edits 可改 B 欄）
         for j, f in enumerate(("op", "user", "mw", "year", "month", "delay", "inc", "sec", "dly_ev", "dly_grade")):
             v = B(k, 8 + j, cp.get(f))
             if v is not None and v != "":
@@ -724,7 +724,7 @@ def main():
     # ================= Pipeline：園區管線 × 延遲情景 =================
     PP["A1"] = ("Pipeline — 上線事件（IT GW；v0.2 起只有基準：公告時程＋已確認延遲）。事件＝(1) 園區（In T2，有上線年月且納入＝1）＋(2) 各玩家各年『未分園區殘差』＝Players 年新增 − 該年 T2 園區；"
                 "＋新納入存量。時間為小數年（年 Y 月 M 底＝Y＋M/12；Y 年底＝Y＋1）。基準時點＝公告上線年月＋In T2 M 欄已確認延遲月（asof 後者平移）。殘差在年內均勻上線（觀測年在觀測時點前已上線）。"
-                "v0.2（工作單 20261104 V5）：延遲情景 D1、D2 的欄位、矩陣與公式已刪除")
+                "v0.2（工作單 20261104 V5）：原延遲情境 D1、D2（已停用）的欄位、矩陣與公式已刪除")
     r = 3
     PP.cell(r, 1, "A. 園區（In T2 鏡像與上線時點）").font = BOLD; r += 1
     hdr(PP, r, ["園區鍵", "名稱", "營運者", "使用者", "MW", "口徑", "納入", "上線年", "上線月", "已確認延遲月", "t 公告", "IT GW", "t 基準（公告＋已確認延遲）",
@@ -2771,7 +2771,7 @@ def main():
     lines = [
         (f"瓦帳 {a.version} — 全市場 AI 資料中心 GW 唯一基準事實（{a.date}）", True),
         ("命題：市場總 GW 要與主要玩家 GW 對得上，再與資本支出、GPU／ASIC 顆數、記憶體、電廠與發電機組、電源散熱、AI 投資地圖個股逐環對得上。v0.2 起只給基準（公告時程＋已確認延遲），情境留給下游個股。", False),
-        ("驅動 → 推導：In（Epoch 晶片功耗、玩家年底 MW、觀測、園區管線與已確認延遲、世代組合、使用者分配、承租比例）＋ TK_In（每 GW 係數、IF_FacilityGW）＋ SIL_In（顆數、情景係數）→ Players（玩家 × 年 IT GW）→ Matrix（營運者 × 使用者）→ Pipeline（上線事件；基準時點）→ CapexGW（甲2）→ Deploy（市場 GW、汰換）→ C0／C1／Compare（對帳）→ Interface（WIF_）→ Checks（WGOV_Errors＝0）。", False),
+        ("驅動 → 推導：In（Epoch 晶片功耗、玩家年底 MW、觀測、園區管線與已確認延遲、世代組合、使用者分配、承租比例）＋ TK_In（每 GW 係數、IF_FacilityGW）＋ SIL_In（顆數、顆數係數）→ Players（玩家 × 年 IT GW）→ Matrix（營運者 × 使用者）→ Pipeline（上線事件；基準時點）→ CapexGW（甲2）→ Deploy（市場 GW、汰換）→ C0／C1／Compare（對帳）→ Interface（WIF_）→ Checks（WGOV_Errors＝0）。", False),
         ("單位（規劃書 r1）：主口徑 IT GW＝TK GW（IT 關鍵電力）；設施電力＝IT × TK IF_FacilityGW（1.2）。公司標設施者 ÷ IF_FacilityGW；口徑未說明者基準取 IT 讀法，Players 另列設施讀法；Epoch 晶片功耗 × k_chip2it。", False),
         ("頁面：README｜In 輸入｜TK_In、SIL_In 鏡像（綠字）｜Players 玩家 × 年｜Matrix 營運者 × 使用者｜Pipeline 園區管線 × 延遲｜Delay 延遲逐站追蹤（v0.1.8）｜Deploy 市場總 GW 需求 × 延遲｜C0 由下而上 vs 第三方｜C1 資本支出對帳｜Compare 與 Siliconomics 成本等值 GW｜Funding、FundRaw 資金來源｜Gap 資金缺口（v0.1.7）｜Facility、SegIn、Spend｜Interface WIF_｜Checks｜Decisions｜DB_Evidence｜Sources｜Requests。", False),
         ("v0.1 範圍：C0、C1、延遲管線（D0–D2）、WIF_ 輸出；C2–C7 自 v0.2 起。第 2 階段：填入 evidence_raw 證據（只用 C 段判屬實或已更正的列；DB_Evidence 頁列全部證據與判定），延遲參數依 B_delay 校準。", False),
@@ -2784,7 +2784,7 @@ def main():
         ("v0.1.5：補 2027 覆蓋率（J 段）：Epoch 站點時間線逐頁、公司與電力公司文件、AI半導體 2026-10-30 送件，經未參與代理開原文複核（30 列可用、1 列無法核對）後合併——新增 T2 27 列（Google Fort Wayne、Cedar Rapids、Storey、Columbus、Lincoln、Goodnight；AWS New Albany、Ridgeland B5、Berwick、Black Pearl DH4；Meta Montgomery、Cheyenne、Bowling Green；Oracle Saline 第 1 棟、Red Oak；Nebius Mäntsälä；Nscale Sines、Lake Mariner；2028：Van Buren、Kozani），改既有 6 列（Shackelford 依 Epoch 時程前移、Saline 1,383→922、Lordstown 納入、Nebius PA 260／Lappeenranta 70 納入）。WIF_Coverage_2027 0.377→0.526；只動 2027 年以後的上線量，2026 年底不變。", True),
         ("v0.1.6：K 段 2028H2–2032 證據（未參與代理複核：屬實 26、小誤 9）——新增 T2 33 列：站點 10 列（Microsoft Pecos 2,000、Catawba 720 IT、Rome 422、Aragón 150；Google Visakhapatnam 1,000；CoreWeave Helios III 132）、電力證據路徑 10 列（納入＝2：NIPSCO–Amazon 確定 1,200、Georgia Power–OpenAI 確定 2,200；只進 WIF_Coverage_Power，不入 Players）、未核准合約 13 列（納入＝0）。新名稱 WIF_Coverage_Power_<yyyy>。2026 年以前 0 變動，2027 年主路徑與 SiteOnly 不變。", True),
         ("v0.1.7：新增 Gap 頁（資金缺口；Andy 2026-10-31 規格）：需要的錢＝新增 IT GW × 每 IT GW 建置成本（TK IF_CapexTotal；IT 與 Spend 同式、廠房與 CapexGW 同式；廠房提前 lag_bldg），每 GW 只在擁有者計一次；"
-         "錢從哪來＝11 家全公司營業現金流（個股模型基準情境，不扣買回股利）＋已觀測外部融資（2024–2025）；『整個市場當一間公司』逐情景列需要三層（11 家 AI、市場其餘、11 家非 AI）、來源兩層、尚需新融資與累計仍未安排；In 新節 Y9（個股模型基準值）；"
+         "錢從哪來＝11 家全公司營業現金流（個股模型基準情境，不扣買回股利）＋已觀測外部融資（2024–2025）；『整個市場當一間公司』逐情境（原需求 × 延遲情境，已停用）列需要三層（11 家 AI、市場其餘、11 家非 AI）、來源兩層、尚需新融資與累計仍未安排；In 新節 Y9（個股模型基準值）；"
          "Interface 新增 WIF_Gap_*；既有 WIF_ 名稱 0 變動。判斷題 G1–G6 見 Decisions GL01-25 至 GL01-33。", True),
         ("v0.1.8（2026-11-02）：基準化與上游更新——三層只給基準（Andy 11-02 15:58）：基準＝需求 A × 延遲『D0＋已確認延遲』（T2 M 欄），B、C、D1、D2 標〔停用，v0.2 刪〕；"
          "主路徑 2026 起七家一律甲2，改讀 In Y9（個股模型基準；缺年 Y2 代入），付款年經 lag_on、inv_on 轉上線年，t−1、t−2 缺值代入；xAI 2026 起以 SpaceX 模型 AI 資本支出推得；『其他（企業、學研）』2026 起隨市場成長；"

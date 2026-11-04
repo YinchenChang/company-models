@@ -83,6 +83,23 @@ def main():
     nS = sum(1 for ws_ in wf.worksheets if ws_.title not in ("FundRaw", "DB_Evidence", "Decisions") for row in ws_.iter_rows() for c in row
              if isinstance(c.value, str) and "情景" in c.value)
     if nS: bad.append(f"Excel 標籤含「情景」{nS} 格（獨立核對 2026-11-04 建議 5）")
+    # v0.2 修訂（複核 2026-11-04）：edits/v<版>_In_edits.csv 每列都須在 xlsx 生效（In 頁依鍵比對 new 值）
+    import csv as _csv, glob as _glob
+    ver = os.path.basename(x).split("_v")[-1].rsplit(".xlsx", 1)[0]
+    ef = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "edits", f"v{ver}_In_edits.csv")
+    if os.path.exists(ef):
+        from openpyxl.utils import column_index_from_string as _ci
+        wsI = wf["In"]; rowof = {wsI.cell(r_, 1).value: r_ for r_ in range(5, wsI.max_row + 1) if wsI.cell(r_, 1).value}
+        nmiss = 0
+        for e in _csv.DictReader(open(ef, encoding="utf-8-sig")):
+            cur = wsI.cell(rowof[e["key"]], _ci(e["col"])).value if e["key"] in rowof else "<缺鍵>"
+            ok_ = (str(cur) == e["new"]) or (cur is None and e["new"] == "")
+            try: ok_ = ok_ or abs(float(cur) - float(e["new"])) < 1e-9
+            except (TypeError, ValueError): pass
+            if not ok_:
+                nmiss += 1; print(f"  edits 未生效：{e['key']} {e['col']}：xlsx {cur!r} ≠ {e['new']!r}")
+        if nmiss: bad.append(f"{os.path.basename(ef)} 有 {nmiss} 列未在 xlsx 生效")
+        else: print(f"  {os.path.basename(ef)}：全部列已生效")
     for cid in ("C-K1", "R-K1"):
         if cid not in [x_[0] for x_ in rows]: bad.append(f"Checks 缺 {cid}（v0.2）")
     # 6) 快照一致

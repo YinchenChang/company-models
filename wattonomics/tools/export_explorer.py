@@ -130,7 +130,7 @@ def main():
                              finlease_src=(val(f"WIF_Gap_FinLeaseSrc_{y}") if f"WIF_Gap_FinLeaseSrc_{y}" in names else None),
                              lessor_facility=(val(f"WIF_Gap_LessorFacility_{y}") if f"WIF_Gap_LessorFacility_{y}" in names else None))
                     add("gap", part="market", scen=s, delay=d, year=y, values=v, unit="US$B", tag="Derived", src="Gap",
-                        name=f"WIF_Gap_*_{s}_{d}_{y}", note="11 家代表玩家（不含中國）：需要＝AI 資料中心（× 情景比例 r）＋非 AI；來源＝營業現金流（個股模型基準，不隨情景變）＋已觀測外部融資（2024–2025）")
+                        name=f"WIF_Gap_*_{s}_{d}_{y}", note="11 家代表玩家（不含中國）：需要＝AI 資料中心（基準；縮放比例 r 恆＝1）＋非 AI；來源＝營業現金流（個股模型基準，固定）＋已觀測外部融資（2024–2025）")
                 add("gap", part="verdict", scen=s, delay=d, verdict=val(f"WIF_Gap_Verdict_{s}_{d}"), verdict_mc=val(f"WIF_Gap_Verdict_ModelCapex_{s}_{d}"), tag="Derived", src="Gap",
                     note="G3：2030 自由現金流 < 0 或缺口占資本支出 > 30% 連 3 年＝OpenAI 型；否則 Anthropic 型")
         for nm in names:

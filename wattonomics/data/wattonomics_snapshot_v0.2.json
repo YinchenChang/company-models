@@ -2,7 +2,7 @@
  "source": {
   "file": "20261104_Wattonomics_v0.2.xlsx",
   "version": "v0.2",
-  "sha256": "247af409d6d599e4a0bce15757eaeed6a215b9685fe91628d9468e10567babff",
+  "sha256": "604ebadb164e484e8f2cee96a58860ca296da9b264c22b7dd182357ee2729f35",
   "unit": "IT GW（＝TK GW，IT 關鍵電力；設施＝× IF_FacilityGW）",
   "years": [
    2024,
@@ -5253,7 +5253,7 @@
   },
   {
    "id": "cp_orcl_shk1",
-   "label": "Shackelford（Frontier）首棟",
+   "label": "Shackelford（Frontier）首批 3 棟（2027）",
    "basis": "IT",
    "unit": "MW",
    "tag": "Analogy（Epoch 棟別時程）",
@@ -5275,7 +5275,7 @@
   },
   {
    "id": "cp_orcl_shk2",
-   "label": "Shackelford 其餘 9 棟",
+   "label": "Shackelford 其餘 7 棟（2028）",
    "basis": "IT",
    "unit": "MW",
    "tag": "Analogy（Epoch 棟別時程）",
