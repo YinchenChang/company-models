@@ -1,18 +1,18 @@
 {
  "meta": {
-  "version": "v0.6.22",
-  "book": "20261103_AI投資地圖_資料_v0.6.22.xlsx",
+  "version": "v0.6.22.1",
+  "book": "20261104_AI投資地圖_資料_v0.6.22.1.xlsx",
   "tk_file": "20261102_Tokenomics_v21.8.xlsx",
   "tk_version": "v21.8",
   "tk_commit": "91db9ac",
-  "cm_commit": "dee819b1",
-  "built": "2026-11-03",
+  "cm_commit": "0d3af7f8",
+  "built": "2026-11-04",
   "price_date": "全部用 2026-11-02 收盤（上檔空間＝模型目標價 ÷ 最新收盤 − 1）；Micron、Coherent 未取得 11-02 收盤，沿用 10-30",
   "last_close_date": "2026-11-02",
   "pages": "https://yinchenchang.github.io/company-models/",
   "private_models": {
    "openai": "20261029_OpenAI收支模型_v0_6_4.html",
-   "anthropic": "20261102_Anthropic收支模型_v0_1_7_1.html"
+   "anthropic": "20261103_Anthropic收支模型_v0_1_8.html"
   }
  },
  "pergw": {
@@ -2632,14 +2632,14 @@
    "tier": "未上市",
    "vtier": "未上市",
    "mfolder": "anthropic",
-   "mfile": "20261102_Anthropic收支模型_v0_1_7_1.html",
+   "mfile": "20261103_Anthropic收支模型_v0_1_8.html",
    "gate": "不通過",
    "gbasis": "現金流",
    "glabel": "F07 自由現金流",
-   "gseries": "2026 8.0、2027 -51.8、2028 -54.6、2029 -10.0、2030 37.0",
-   "gsum": -71.4296590124411,
-   "gmin": -54.5702684273238,
-   "gsrc": "[Derived] anthropic/dist/20261102_Anthropic收支模型_v0_1_7_1.xlsx Funding!E14…Funding!I14",
+   "gseries": "2026 7.0、2027 -42.3、2028 -49.6、2029 -5.6、2030 42.8",
+   "gsum": -47.6155361439568,
+   "gmin": -49.5627319900145,
+   "gsrc": "[Derived] anthropic/dist/20261103_Anthropic收支模型_v0_1_8.xlsx Funding!E14…Funding!I14",
    "alt": null,
    "altlbl": "",
    "pe28": "",
@@ -12135,11 +12135,11 @@
   },
   "Anthropic": {
    "folder": "anthropic",
-   "file": "20261102_Anthropic收支模型_v0_1_7_1.html",
+   "file": "20261103_Anthropic收支模型_v0_1_8.html",
    "title": "Anthropic收支模型",
-   "date": "2026-11-02",
-   "ver": "v0.1.7.1",
-   "xlsx": "20261102_Anthropic收支模型_v0_1_7_1.xlsx"
+   "date": "2026-11-03",
+   "ver": "v0.1.8",
+   "xlsx": "20261103_Anthropic收支模型_v0_1_8.xlsx"
   },
   "AMD": {
    "folder": "amd",
