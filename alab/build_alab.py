@@ -2,7 +2,7 @@
 # 用法：python3 alab/build_alab.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年（12 月底結束）；上游市場層是日曆年，FY(t) 市場＝CY(t)（不需月數加權）。
 # 金額：十億美元（US$B）；EPS：美元；口徑：公司 non-GAAP（排除股票薪酬、併購費用與非現金公允價值調整）；十年 P/E 規則值用 GAAP 換算 EPS。
-# FY2025 為完整實績；FY2026 錨點＝1Q26、2Q26 實績＋3Q26 指引中點＋4Q26（季增 g_q4，Assumed）。3Q26 財報 2026-11-03 公布。
+# FY2025 為完整實績；FY2026 錨點（v0.2）＝1Q26–3Q26 實績＋4Q26 公司指引（3Q26 財報 2026-11-03 已滾入）。
 import sys, os, glob
 import openpyxl
 from openpyxl.styles import Font, PatternFill
@@ -73,6 +73,7 @@ rows = []; sec = lambda t: rows.append(("sec", t)); inp = lambda *a: rows.append
 PR2 = "https://www.sec.gov/Archives/edgar/data/0001736297/000173629726000033/q226exhibit991.htm"
 IR2 = "https://ir.asteralabs.com/news-releases/news-release-details/astera-labs-reports-second-quarter-2026-financial-results"
 PR4 = "https://www.sec.gov/Archives/edgar/data/1736297/000173629726000005/q425exhibit991.htm"
+PR3 = "https://www.sec.gov/Archives/edgar/data/1736297/000173629726000044/q326exhibit991.htm"   # v0.2：3Q26 實績與 4Q26 指引（2026-11-03）
 K10 = "https://www.sec.gov/Archives/edgar/data/1736297/000173629726000010/alab-20251231.htm"
 MB = "https://www.marketbeat.com/instant-alerts/astera-labs-q2-earnings-call-highlights-2026-08-04/"
 FUT = "https://futurumgroup.com/insights/astera-labs-q2-fy-2026-earnings-pull-scorpio-switch-leadership-forward/"
@@ -123,7 +124,7 @@ inp("cl_loss", "最大客戶部分轉單：其 PCIe 等內容轉給其他供應�
 for y in (27, 28, 29):
     inp(f"cl_{y}", f"最大客戶部分轉單情境：PCIe 等相對值 FY20{y}（Sens 用）", "x", None, f"=rel_p_{y}*(1-cust_top*cl_loss)", None, "Derived", "相對值 ×（1 − 最大客戶占比 × 轉單比例）", "同上" if y > 27 else "假設轉單只發生在 PCIe 等（Scorpio X 不變）")
 
-sec("D. FY2026 錨點（1Q26、2Q26 實績＋3Q26 指引＋4Q26 假設）")
+sec("D. FY2026 錨點（v0.2：1Q26–3Q26 實績＋4Q26 公司指引；3Q26 列由指引改為實績，同列改寫不位移）")
 inp("q1_rev", "1Q26 營收（截至 2026-03-31）", "US$B", None, 0.308361, None, "Verified", PR2 + "：308,361 千美元（2Q26 新聞稿比較欄）", FOOL + "：1Q26 法說")
 inp("q1_gp", "1Q26 non-GAAP 毛利", "US$B", None, 0.235640, None, "Verified", PR2 + "：235,640 千美元（毛利率 76.4%）", FOOL + "：76.4%")
 inp("q1_opx", "1Q26 non-GAAP 營業費用（＝毛利 − 營業利益）", "US$B", None, "=0.235640-0.111729", None, "Verified", PR2 + "：non-GAAP 營業利益 111,729 千美元", "—")
@@ -137,17 +138,17 @@ inp("q2_ninc", "2Q26 利息與其他收益（non-GAAP；扣除 150 萬美元公�
 inp("q2_ni", "2Q26 non-GAAP 淨利", "US$B", None, 0.145816, None, "Verified", PR2 + "：145,816 千美元", FUT + "：1.458 億美元")
 inp("q2_sh", "2Q26 稀釋股數", "十億股", None, 0.183340, None, "Verified", PR2 + "：183,340 千股", "—")
 inp("q2_eps", "2Q26 non-GAAP 稀釋 EPS", "US$", None, 0.80, None, "Verified", PR2 + "：0.80（GAAP 0.83，含所得稅利益）", FUT + "：0.80")
-inp("q3_rev", "3Q26 營收指引（中點；截至 2026-09-30）", "US$B", 0.540, 0.550, 0.560, "Interested-party", PR2 + "：5.40–5.60 億美元（Scorpio X 320 通道交換晶片量產）", MB + "：同值，中點季增約 40%")
-inp("q3_gm", "3Q26 non-GAAP 毛利率指引", "%", 0.715, 0.72, 0.725, "Interested-party", PR2 + "：約 72%", FUT + "：硬體比重較高的交換晶片占比上升")
-inp("q3_opx", "3Q26 non-GAAP 營業費用指引（中點）", "US$B", 0.156, 0.158, 0.160, "Interested-party", PR2 + "：1.56–1.60 億美元", MB + "：同值")
-inp("q3_eps", "3Q26 non-GAAP EPS 指引（中點）", "US$", 1.16, 1.185, 1.21, "Interested-party", PR2 + "：1.16–1.21", MB + "：同值；稀釋股數約 1.85 億股")
-inp("q3_sh", "3Q26 稀釋股數指引", "十億股", None, 0.185, None, "Interested-party", PR2 + "：約 1.85 億股", "—")
-inp("tx_26", "FY2026 下半年 non-GAAP 稅率", "%", 0.11, 0.12, 0.13, "Interested-party", PR2 + "：3Q26 non-GAAP 稅率約 12%", "1H26 推導約 11%")
-inp("q_oth", "3Q26、4Q26 每季利息與其他收益", "US$B", 0.011, 0.0125, 0.014, "Assumed", "2Q26 0.0121；現金與有價證券 12.5 億美元（2026-06-30）", "—")
-inp("g_q4", "4Q26 營收季增", "%", 0.05, 0.15, 0.30, "Assumed", "公司未給 4Q26 指引；Scorpio X 第二家以後客戶 2026 年底起出貨（公司）", YH + "：共識 4Q26 營收 6.557 億美元（18 家；6.09–7.38；Interested-party，不作校準）")
-inp("gm_q4", "4Q26 non-GAAP 毛利率", "%", 0.70, 0.715, 0.725, "Assumed", "3Q26 指引 72%；公司長期目標 70%（公司，MarketBeat 轉述）", "—")
-inp("q4_opx", "4Q26 non-GAAP 營業費用", "US$B", 0.162, 0.168, 0.176, "Assumed", "3Q26 指引中點 1.58 億美元；2Q→3Q 季增約 16%", "—")
-inp("q4_sh", "4Q26 稀釋股數", "十億股", 0.1855, 0.1865, 0.188, "Assumed", "3Q26 約 1.85 億股；Amazon 認股權證最多 326 萬股（TIKR 轉述，Interested-party）", "—")
+inp("q3_rev", "3Q26 營收（實績；截至 2026-09-30）", "US$B", None, 0.584899, None, "Verified", PR3 + "：584,899 千美元（季增 49%、年增 154%）", "v0.1.3 為指引中點 0.550（5.40–5.60；Interested-party）；實績高於指引上緣")
+inp("q3_gp", "3Q26 non-GAAP 毛利（實績）", "US$B", None, 0.423642, None, "Verified", PR3 + "：423,642 千美元（毛利率 72.4%）", "v0.1.3 本列為毛利率指引約 72%（q3_gm）")
+inp("q3_opx", "3Q26 non-GAAP 營業費用（實績；＝毛利 − 營業利益）", "US$B", None, "=0.423642-0.261646", None, "Verified", PR3 + "：non-GAAP 營業利益 261,646 千美元（營業利益率 44.7%）", "v0.1.3 為指引中點 0.158（1.56–1.60）")
+inp("q3_eps", "3Q26 non-GAAP 稀釋 EPS（實績）", "US$", None, 1.32, None, "Verified", PR3 + "：1.32（GAAP 0.99）；non-GAAP 淨利 243,400 千美元、利息與其他收益 12,971 千美元（Q 頁 F 欄）", "v0.1.3 為指引中點 1.185（1.16–1.21）")
+inp("q3_sh", "3Q26 稀釋股數（實績）", "十億股", None, 0.184077, None, "Verified", PR3 + "：184,077 千股", "v0.1.3 為指引約 1.85 億股")
+inp("tx_26", "4Q26 non-GAAP 稅率指引", "%", 0.11, 0.12, 0.13, "Interested-party", PR3 + "：4Q26 non-GAAP 稅率約 12%", "3Q26 實績約 11%（公司）；v0.2 起 3Q26 稅額改為實績推導，本列只用於 4Q26")
+inp("q_oth", "4Q26 利息與其他收益", "US$B", 0.011, 0.0125, 0.014, "Assumed", "公司未給指引；2Q26 0.0121、3Q26 0.0130（公司）", "以本列與指引推得 4Q26 EPS 1.64，等於指引中點（1.62–1.66）")
+inp("q4_rev", "4Q26 營收指引（中點）", "US$B", 0.730, 0.740, 0.750, "Interested-party", PR3 + "：7.30–7.50 億美元（中點季增約 27%）", "v0.1.3 本列為季增 15% 假設（g_q4，Assumed）；共識 4Q26 營收 6.557 億美元（Yahoo，18 家，3Q 財報前）")
+inp("gm_q4", "4Q26 non-GAAP 毛利率指引", "%", None, 0.72, None, "Interested-party", PR3 + "：約 72%", "v0.1.3 為 Assumed 71.5%；3Q26 實績 72.4%")
+inp("q4_opx", "4Q26 non-GAAP 營業費用指引（中點）", "US$B", 0.194, 0.197, 0.200, "Interested-party", PR3 + "：1.94–2.00 億美元", "v0.1.3 為 Assumed 1.68 億美元；3Q26 實績 1.62 億美元")
+inp("q4_sh", "4Q26 稀釋股數指引", "十億股", None, 0.187, None, "Interested-party", PR3 + "：約 1.87 億股（non-GAAP EPS 指引 1.62–1.66）", "v0.1.3 為 Assumed 1.865 億股")
 
 sec("E. FY2024、FY2025 實績（non-GAAP）與股東權益")
 for y, rv, gp, oi, ninc, ni, sh, eps, src2 in (
@@ -248,28 +249,28 @@ def defname(name, ref):
 # ---------------- Q：實績與 FY2026 錨點 ----------------
 Q = wb.create_sheet("Q")
 Q["A1"] = "Q — 實績與 FY2026 錨點（十億美元；EPS 為美元；股數為十億股；non-GAAP）。藍字＝輸入；黑字＝公式。會計年度＝日曆年"
-Q["A2"] = "FY2026 錨點＝1Q26、2Q26 實績＋3Q26 指引中點（營收 5.50 億美元、毛利率 72%、營業費用 1.58 億美元）＋4Q26（季增 g_q4、毛利率 gm_q4，Assumed）。產品線拆分（Scorpio X）為假設，PCIe 與訊號調節為殘差。3Q26 財報（2026-11-03）公布後以實績取代 3Q"
-hdr(Q, 3, ["項目", "FY2024A", "FY2025A", "1Q26（實績）", "2Q26（實績）", "3Q26（指引）", "4Q26（假設）", "FY2026 錨點", "標記", "說明"])
+Q["A2"] = "FY2026 錨點（v0.2）＝1Q26–3Q26 實績（3Q26：8-K 2026-11-03）＋4Q26 公司指引中點（營收 7.40 億美元、毛利率 72%、營業費用 1.97 億美元、稅率 12%、股數 1.87 億股；利息與其他收益為假設）。產品線拆分（Scorpio X）為假設，PCIe 與訊號調節為殘差"
+hdr(Q, 3, ["項目", "FY2024A", "FY2025A", "1Q26（實績）", "2Q26（實績）", "3Q26（實績）", "4Q26（指引）", "FY2026 錨點", "標記", "說明"])
 def qrow(r, label, vals, fmt="#,##0.000", tag="Verified", note=""):
     Q.cell(r, 1, label)
     for col, v in vals.items():
         c = Q[f"{col}{r}"]; c.value = v; c.number_format = fmt
     Q.cell(r, 9, tag); Q.cell(r, 10, note)
 QC = "BCDEFGH"
-qrow(4, "營收", {"B": "=a24_rev_in", "C": "=a25_rev_in", "D": "=q1_rev", "E": "=q2_rev", "F": "=q3_rev", "G": "=F4*(1+g_q4)", "H": "=SUM(D4:G4)"}, tag="Verified／Interested-party（指引）／Assumed", note="4Q26＝3Q26 ×（1＋g_q4）")
-qrow(5, "毛利（non-GAAP）", {"B": "=a24_gp_in", "C": "=a25_gp_in", "D": "=q1_gp", "E": "=q2_gp", "F": "=F4*q3_gm", "G": "=G4*gm_q4", "H": "=SUM(D5:G5)"}, tag="Verified／Derived")
+qrow(4, "營收", {"B": "=a24_rev_in", "C": "=a25_rev_in", "D": "=q1_rev", "E": "=q2_rev", "F": "=q3_rev", "G": "=q4_rev", "H": "=SUM(D4:G4)"}, tag="Verified／Interested-party（4Q 指引）", note="4Q26＝公司指引中點（7.30–7.50 億美元）")
+qrow(5, "毛利（non-GAAP）", {"B": "=a24_gp_in", "C": "=a25_gp_in", "D": "=q1_gp", "E": "=q2_gp", "F": "=q3_gp", "G": "=G4*gm_q4", "H": "=SUM(D5:G5)"}, tag="Verified／Derived")
 qrow(6, "毛利率", {c: f"={c}5/{c}4" for c in QC}, fmt="0.0%", tag="Derived")
-qrow(7, "營業費用（non-GAAP）", {"B": "=a24_opx_in", "C": "=a25_opx_in", "D": "=q1_opx", "E": "=q2_opx", "F": "=q3_opx", "G": "=q4_opx", "H": "=SUM(D7:G7)"}, tag="Verified／Interested-party（指引）／Assumed")
+qrow(7, "營業費用（non-GAAP）", {"B": "=a24_opx_in", "C": "=a25_opx_in", "D": "=q1_opx", "E": "=q2_opx", "F": "=q3_opx", "G": "=q4_opx", "H": "=SUM(D7:G7)"}, tag="Verified／Interested-party（4Q 指引）")
 qrow(8, "營業費用率", {c: f"={c}7/{c}4" for c in QC}, fmt="0.0%", tag="Derived")
 qrow(9, "營業利益（non-GAAP）", {c: f"={c}5-{c}7" for c in QC}, tag="Derived")
-qrow(10, "利息與其他收益", {"B": "=a24_ninc_in", "C": "=a25_ninc_in", "D": "=q1_ninc", "E": "=q2_ninc", "F": "=q_oth", "G": "=q_oth", "H": "=SUM(D10:G10)"}, tag="Verified／Assumed")
+qrow(10, "利息與其他收益", {"B": "=a24_ninc_in", "C": "=a25_ninc_in", "D": "=q1_ninc", "E": "=q2_ninc", "F": 0.012971, "G": "=q_oth", "H": "=SUM(D10:G10)"}, tag="Verified／Assumed（4Q）", note="3Q26 實績 12,971 千美元（8-K 2026-11-03；藍字）")
 qrow(11, "稅前利益", {c: f"={c}9+{c}10" for c in QC}, tag="Derived")
-qrow(12, "所得稅（non-GAAP）", {"B": "=B11-a24_ni_in", "C": "=C11-a25_ni_in", "D": "=D11-q1_ni", "E": "=E11-q2_ni", "F": "=F11*tx_26", "G": "=G11*tx_26", "H": "=SUM(D12:G12)"}, tag="Derived", note="實績＝稅前 − 淨利（推導）")
+qrow(12, "所得稅（non-GAAP）", {"B": "=B11-a24_ni_in", "C": "=C11-a25_ni_in", "D": "=D11-q1_ni", "E": "=E11-q2_ni", "F": "=F11-F14", "G": "=G11*tx_26", "H": "=SUM(D12:G12)"}, tag="Derived", note="實績＝稅前 − 淨利（推導）；4Q26＝稅前 × 指引稅率")
 qrow(13, "有效稅率", {c: f"={c}12/{c}11" for c in QC}, fmt="0.0%", tag="Derived")
-qrow(14, "淨利（non-GAAP）", {"B": "=a24_ni_in", "C": "=a25_ni_in", "D": "=q1_ni", "E": "=q2_ni", "F": "=F11-F12", "G": "=G11-G12", "H": "=SUM(D14:G14)"}, tag="Verified／Derived")
+qrow(14, "淨利（non-GAAP）", {"B": "=a24_ni_in", "C": "=a25_ni_in", "D": "=q1_ni", "E": "=q2_ni", "F": 0.243400, "G": "=G11-G12", "H": "=SUM(D14:G14)"}, tag="Verified／Derived", note="3Q26 實績 243,400 千美元（8-K 2026-11-03；藍字）")
 qrow(15, "淨利率", {c: f"={c}14/{c}4" for c in QC}, fmt="0.0%", tag="Derived")
 qrow(16, "稀釋股數（non-GAAP）", {"B": "=a24_sh_in", "C": "=a25_sh_in", "D": "=q1_sh", "E": "=q2_sh", "F": "=q3_sh", "G": "=q4_sh", "H": "=AVERAGE(D16:G16)"}, tag="Verified／Assumed", note="全年＝四季平均")
-qrow(17, "EPS（non-GAAP）", {c: f"={c}14/{c}16" for c in QC}, fmt="0.00", tag="Derived", note="公司揭露：FY2024 0.84、FY2025 1.84、1Q26 0.61、2Q26 0.80；3Q26 指引 1.16–1.21")
+qrow(17, "EPS（non-GAAP）", {c: f"={c}14/{c}16" for c in QC}, fmt="0.00", tag="Derived", note="公司揭露：FY2024 0.84、FY2025 1.84、1Q26 0.61、2Q26 0.80、3Q26 1.32；4Q26 指引 1.62–1.66")
 qrow(18, "Scorpio X 營收", {"C": "=x_25", "H": "=x_26"}, tag="Assumed")
 qrow(19, "PCIe 與訊號調節（Aries、Scorpio P、Taurus、Leo）＝營收 − Scorpio X（殘差）", {"C": "=C4-C18", "H": "=H4-H18"}, tag="Derived")
 qrow(20, "Scorpio X ÷ 營收", {"C": "=C18/C4", "H": "=H18/H4"}, fmt="0.0%", tag="Derived", note="公司：Scorpio 3Q26 成為最大產品線、X 超過 P")
@@ -280,7 +281,7 @@ Q.cell(26, 1, "FY2026 營收年增"); Q["B26"] = "=H4/C4-1"
 Q.cell(27, 1, "FY2026 營業費用年增"); Q["B27"] = "=H7/C7-1"
 Q.cell(28, 1, "營業費用彈性（營業費用年增 ÷ 營收年增；In 頁 phi 的依據）"); Q["B28"] = "=B27/B26"
 Q.cell(29, 1, "2Q26 EPS（模型）vs 公司揭露 0.80"); Q["B29"] = "=E17/q2_eps-1"
-Q.cell(30, 1, "3Q26 EPS（模型）vs 指引中點 1.185"); Q["B30"] = "=F17/q3_eps-1"
+Q.cell(30, 1, "3Q26 EPS（模型）vs 公司揭露 1.32"); Q["B30"] = "=F17/q3_eps-1"
 Q.cell(31, 1, "4Q26 營收 ÷ 共識 − 1"); Q["B31"] = "=G4/cons_q4-1"
 for rr in range(24, 32): Q[f"B{rr}"].number_format = "0.0%" if rr != 28 else "0.00"
 for nm, rr in (("rev", 4), ("gp", 5), ("opx", 7), ("ninc", 10), ("tx", 13), ("ni", 14), ("sh", 16), ("eps", 17)):
@@ -561,8 +562,8 @@ def rec(label, ref, getter, src, note="", fmt="#,##0.00", pt=False, gap=True):
     RC.cell(rr_, 9, src); RC.cell(rr_, 10, note); rr_ += 1
 pl = lambda key, y: (lambda s: f"=PL!{FC[y]}{PB[s][key]}")
 RC.cell(rr_, 1, "A. 共識與指引（校準未使用共識）").font = BOLD; rr_ += 1
-rec("3Q26 營收（指引中點）vs 共識", "=cons_q3", lambda s: "=Q!F4", "Yahoo（18 家）", "指引 5.40–5.60", fmt="#,##0.000")
-rec("4Q26 營收（模型假設）vs 共識", "=cons_q4", lambda s: "=Q!G4", "Yahoo（18 家；6.09–7.38）", "季增 15%（Assumed）", fmt="#,##0.000")
+rec("3Q26 營收（實績）vs 共識", "=cons_q3", lambda s: "=Q!F4", "Yahoo（18 家）", "舊指引 5.40–5.60；實績 5.849", fmt="#,##0.000")
+rec("4Q26 營收（公司指引中點）vs 共識", "=cons_q4", lambda s: "=Q!G4", "Yahoo（18 家；6.09–7.38；3Q 財報前）", "指引 7.30–7.50", fmt="#,##0.000")
 rec("FY2026 營收 vs 共識", "=cons_rev26", pl("rev", 2026), "Yahoo（21 家；1.86–1.99）", "")
 rec("FY2026 EPS vs 共識", "=cons_eps26", pl("eps", 2026), "Yahoo（21 家；3.90–4.33）", "")
 rec("FY2027 營收 vs 共識", "=cons_rev27", pl("rev", 2027), "Yahoo（24 家；2.19–3.68）", "")
@@ -577,12 +578,12 @@ rec("FY2027 Scorpio X 有效份額（÷ 非 NVIDIA scale-up 交換）", None, pl
 rec("FY2028 Astera 營收 ÷ AI IT 資本支出", None, lambda s: f"=PL!F{PB[s]['rev']}/itc_28", "markets/network", "每 1 美元 AI IT 資本支出分到的 Astera 營收", fmt="0.00%")
 RC.cell(rr_, 1, "C. 校準").font = BOLD; rr_ += 1
 rec("2Q26 EPS（模型）vs 公司揭露 0.80", "=q2_eps", lambda s: "=Q!E17", "公司", "淨利 ÷ 稀釋股數", fmt="0.00")
-rec("3Q26 EPS（模型）vs 指引中點", "=q3_eps", lambda s: "=Q!F17", "公司指引 1.16–1.21", "", fmt="0.00")
+rec("3Q26 EPS（模型）vs 公司揭露", "=q3_eps", lambda s: "=Q!F17", "公司 8-K 2026-11-03", "舊指引 1.16–1.21", fmt="0.00")
 rec("FY2025 EPS（模型）vs 公司揭露 1.84", "=a25_eps_in", pl("eps", 2025), "公司", "", fmt="0.00")
 rec("FY2026 營業費用彈性（Derived）", None, lambda s: "=Q!B28", "Q 頁", "", fmt="0.00")
 RC.cell(rr_, 1, "D. 預留").font = BOLD; rr_ += 1
 RC.cell(rr_, 1, "R4 產業部署路徑（markets/deploy_path/，尚未建立）：上線後以 Astera 營收 ÷ 部署 GW 計算每 GW 營收"); RC.cell(rr_, 10, "預留列：本版無數值"); rr_ += 1
-RC.cell(rr_, 1, "3Q26 財報（2026-11-03）：公布後以實績取代 Q 頁 3Q 指引，並依 4Q26 指引更新 g_q4"); RC.cell(rr_, 10, "預留列：本版無數值"); rr_ += 1
+RC.cell(rr_, 1, "3Q26 財報（2026-11-03）：v0.2 已以實績取代 Q 頁 3Q 指引，4Q26 改用公司指引；下一個檢驗點 4Q26 財報（2027-02）"); RC.cell(rr_, 10, "v0.2 已完成"); rr_ += 1
 RECON_END = rr_ - 1
 RC.column_dimensions["A"].width = 70
 for c in "BCDEFGH": RC.column_dimensions[c].width = 12
@@ -590,7 +591,7 @@ RC.column_dimensions["I"].width = 36; RC.column_dimensions["J"].width = 60
 
 # ---------------- Sources ----------------
 SO = wb.create_sheet("Sources"); SO["A1"] = "來源（公司原文＝SEC 8-K 新聞稿與 10-K）"; SO["A1"].font = BOLD
-srcs = [("公司：2Q26 實績、3Q26 指引（8-K 附件 99.1；含 1Q26、1H 比較欄與資產負債表）", PR2),
+srcs = [("公司：2Q26 實績、3Q26 指引（8-K 附件 99.1；含 1Q26、1H 比較欄與資產負債表）；v0.2 起 3Q26 實績與 4Q26 指引見 " + PR3, PR2),
         ("公司：2Q26 新聞稿（IR 網站）", IR2),
         ("公司：4Q25 與 FY2025 實績、1Q26 指引、2030 年商用 scale-up 交換市場 200 億美元（8-K 附件 99.1）", PR4),
         ("公司：FY2025 10-K（客戶集中、競爭者、股數）", K10),
@@ -615,15 +616,15 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Astera Labs（ALAB）收支與估值模型 v0.1.1（AI 半導體 Project：網通次產業內複製——PCIe／CXL 重定時器、Scorpio 交換晶片、AEC 模組；scale-up 互連）　2026-10-25", True),
+lines = [("Astera Labs（ALAB）收支與估值模型 v0.2（AI 半導體 Project：網通次產業內複製——PCIe／CXL 重定時器、Scorpio 交換晶片、AEC 模組；scale-up 互連）　2026-11-04", True),
  ("版本：v0.1（2026-10-25 初版；三情境延伸到 FY2032、目標價＝DCF 與 Comparable 加權）。Astera Labs 在非 NVIDIA scale-up 交換晶片（Scorpio X）與 PCIe／CXL／AEC 的份額在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
- ("模型命題：Astera Labs 的 Scorpio X 營收＝非 NVIDIA scale-up 交換晶片市場（本專案網通模型：AMD、Trainium、其他 ASIC 顆數 × 每顆 scale-up 交換晶片內容）× Astera 有效份額；PCIe 與訊號調節（Aries 重定時器、Scorpio P、Taurus AEC、Leo CXL）＝AI 加速器顆數 × 每顆內容 × 份額。3Q26 指引季增約 40%、Scorpio 成為最大產品線：成長重心正由重定時器轉到 scale-up 交換晶片。現價約 64 倍共識 FY2026 EPS、40 倍 FY2027。", False),
+ ("模型命題：Astera Labs 的 Scorpio X 營收＝非 NVIDIA scale-up 交換晶片市場（本專案網通模型：AMD、Trainium、其他 ASIC 顆數 × 每顆 scale-up 交換晶片內容）× Astera 有效份額；PCIe 與訊號調節（Aries 重定時器、Scorpio P、Taurus AEC、Leo CXL）＝AI 加速器顆數 × 每顆內容 × 份額。3Q26 實績季增 49%（指引約 40%）、4Q26 指引再季增約 27%，Scorpio 成為最大產品線：成長重心正由重定時器轉到 scale-up 交換晶片。現價約 64 倍共識 FY2026 EPS、40 倍 FY2027。", False),
  ("核心問題：現價隱含的 FY2028 EPS 需要 Scorpio X 在非 NVIDIA scale-up 交換晶片維持多少份額、PCIe 等業務流失多少才成立？非 NVIDIA 加速器顆數（AMD、Trainium、其他 ASIC）與 NVLink Fusion 的競爭是主要不確定性。", False), ("", False),
  ("會計年度：日曆年（12 月底結束）；上游市場層為日曆年，FY(t) 市場＝CY(t)。預測期 FY2027–FY2029（FY2026 為錨點），FY2030–FY2032 為收斂法。口徑：公司 non-GAAP；十年 P/E 規則值用 GAAP 換算 EPS。", False), ("", False),
  ("驅動因子 → 推導量（全部唯讀上游，不修改）", True),
  ("Scorpio X：markets/network 的非 NVIDIA scale-up 交換晶片市場 × 情境顆數係數 × Astera 有效份額（FY2026 錨點校準）× 份額相對值（Assumed）。PCIe 等：AI 加速器顆數 × 情境顆數係數 × 每顆內容 × 有效份額（FY2026 校準）× 相對值（Assumed）。", False),
  ("毛利率：FY2027 起為輸入路徑（Assumed；公司長期目標 70%）。營業費用：彈性 phi（FY2026 錨點 Derived）。稅率：約 12%（公司 non-GAAP 稅率）。股數：+1.5%／年。", False),
- ("校準：FY2026 ＝ 1Q26、2Q26 實績（營收 3.08、3.92 億美元；non-GAAP EPS 0.61、0.80）＋ 3Q26 指引中點（5.50 億美元）＋ 4Q26（季增 15%，Assumed）。產品線拆分公司未揭露：Scorpio X FY2026 為假設，PCIe 等為殘差。不用共識（只在 Recon 對帳）。", False),
+ ("校準（v0.2）：FY2026 ＝ 1Q26–3Q26 實績（營收 3.08、3.92、5.85 億美元；non-GAAP EPS 0.61、0.80、1.32）＋ 4Q26 公司指引中點（營收 7.40 億美元、毛利率 72%、營業費用 1.97 億美元、EPS 指引 1.62–1.66）。產品線拆分公司未揭露：Scorpio X FY2026 為假設，PCIe 等為殘差。不用共識（只在 Recon 對帳）。", False),
  ("估值：目標價（Val 第 0 節）＝0.5 × DCF（股東現金流＝EPS ×（1 − g／ROE），FY2027–32 明確期＋永續，r 10%、g 4%，情境權重 0.3／0.5／0.2）＋0.5 × Comparable（美股高速連接晶片同業前瞻 P/E 中位數 × 12 個月後前瞻 EPS）。舊法規則值情境加權保留參考（不是目標價）；市場隱含 FY2028 EPS（Val 第 4 節）；十年 P/E 規則值（只有 2025 年一個正值）× FY2027 GAAP 換算 EPS；循環位置以本模型營收最高年判定。本版未做先驗，無 Andy 合理 P/E 對照。", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。客戶名稱公司未具名；10-K 只揭露單一終端客戶逾 70%、前三大約 86%（FY2025）。", False),
  ("", False),
@@ -827,7 +828,7 @@ V.cell(GRADE_ROW, 5, f"以「上檔空間：加權目標價」（B{_up}）分六
 V.cell(REC_ROW, 1, "投資建議")
 V.cell(REC_ROW, 2, f'=IF(B{_up}>0.5,"強力買進",IF(B{_up}>0.25,"買進",IF(B{_up}>=-0.25,"中立",IF(B{_up}>=-0.5,"放空","強力放空"))))')
 V.cell(REC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
-OBS = ['目標價 US$132（DCF 105、Comparable 160 各半），比現價 257.16（2026-10-23）低 48.5%，級距 −25%～−50%；Comparable 單獨為 −37.9%。EPS 與倍數兩個因素都在：本模型 12 個月後前瞻 EPS 6.33 比共識 8.21 低 22.9%；同業（Credo、Marvell、Broadcom、Rambus、MACOM）前瞻 P/E 中位數 25.2 倍，現價隱含 31.3 倍共識 EPS、共識目標價 388.36 隱含 47.3 倍（比同業高 87.5%）；Comparable 未給 Astera 的成長溢價（本身前瞻 P/E 約 46 倍）。', '情境分歧從 FY2028 起：FY2027 EPS 三情境同為 6.90，FY2028 A／B／C 為 8.10／6.13／3.60，DCF 價格帶 52～139；Val 頁讀法：以同業約 25 倍計，現價隱含的 FY2028 EPS 比模型 A 高約三成，需要 Scorpio X 份額上升才達得到。', 'FY2027 EPS 最敏感的是 Scorpio X 份額（高 +18.7%、低 −14.0%）與 PCIe 等份額（高 +15.2%、低 −11.4%）；最大客戶 30% 轉單時 −12.8%（Sens 頁）。下一個檢驗點是 3Q26 財報（2026-11-03）的 Scorpio X 營收與客戶數。']   # 重點觀察（與 README.md 相同文字；數字取自重算後的 Val／PL／Sens 頁）
+OBS = ['目標價 US$140（DCF 111、Comparable 169 各半），比現價 257.16（2026-10-23，沿用）低 45.5%，級距 −25%～−50%，投資建議維持放空；上一版 132（−48.5%）。上調來自 3Q26 實績與 4Q26 指引：FY2026 錨點營收 1.88 → 2.03、EPS 4.01 → 4.38，FY2027 EPS 6.90 → 7.35（已高於共識 6.40，+14.8%），12 個月後前瞻 EPS 6.70 仍比共識 8.21 低 18.4%；差距主要在倍數（共識目標價隱含 47.3 倍 vs 同業 25.2 倍）。', '3Q26 實績營收 5.85 億美元（模型原用指引中點 5.50，+6.3%）、non-GAAP EPS 1.32（原估 1.19，+11.0%）；4Q26 指引營收 7.30–7.50 億美元（原假設 6.33，+17.0%）、毛利率約 72%、營業費用 1.94–2.00 億美元、EPS 1.62–1.66。Scorpio 交換晶片已成為最大產品線，但公司仍不揭露產品線營收，Scorpio X FY2026 0.38 億美元的假設未改。', 'FY2027 EPS 最敏感的是 Scorpio X 份額（高 +17.9%、低 −13.4%）與 PCIe 等份額（高 +15.9%、低 −11.9%）；最大客戶 30% 轉單 −13.3%（Sens 頁）。下一個檢驗點：4Q26 財報（2027-02）與法說對 Scorpio X 客戶數、2027 年成長的說法。']   # 重點觀察（與 README.md 相同文字；數字取自重算後的 Val／PL／Sens 頁）
 _rr = RD.max_row + 1
 RD.cell(_rr, 1, 'v0.1.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁末新增「上檔空間級距」「投資建議」兩列（Andy 2026-10-25 14:00、14:17 固定規則），README 頁末新增投資建議與重點觀察三點；既有儲存格位置與數值不變。')
 RD.cell(_rr + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"').font = Font(bold=True)
@@ -843,6 +844,8 @@ _sys2.path.insert(0, _os2.path.join(_os2.path.dirname(_os2.path.dirname(_os2.pat
 from addrow import add_check
 add_check(Q, seg_rows=[18, 19], total_row=4, cols="C", rnd=6, note="分部原則第 3 條（2026-10-28 追加）；分部宣告見 segments.json")
 RD.cell(RD.max_row + 1, 1, "v0.1.2（2026-10-28）：分部原則重建（數值不變）。Q 頁最後追加核對列「檢查：分部合計 − 合併營收」；官方分部與子列宣告見 segments.json。")
+RD.cell(RD.max_row + 1, 1, "v0.2（2026-11-04）：滾入 3Q26 實績（8-K 2026-11-03：營收 5.849 億美元、non-GAAP 毛利 4.236（72.4%）、營業費用 1.620、營業利益 2.616、利息與其他收益 0.130、淨利 2.434、稀釋股數 1.841 億股、EPS 1.32）與 4Q26 指引（營收 7.30–7.50、毛利率約 72%、營業費用 1.94–2.00、稅率約 12%、股數約 1.87 億股、EPS 1.62–1.66）。In 頁 D 節 3Q26、4Q26 各列同列改寫（不位移）；方法、情境結構、估值規則不變；現價沿用 2026-10-23。")
+RD.cell(RD.max_row + 1, 1, "模型原估 vs 實績：3Q26 營收 0.550（指引中點）vs 0.585（+6.3%）、毛利率 72.0% vs 72.4%、營業費用 0.158 vs 0.162、EPS 1.19 vs 1.32（+11.0%）。4Q26：原假設營收 0.633、EPS 1.40 → 公司指引營收 0.740、模型推得 EPS 1.64（＝指引中點）。FY2026 錨點：營收 1.883 → 2.026、EPS 4.01 → 4.38。")
 if isinstance(RD.cell(1, 1).value, str): RD.cell(1, 1).value = RD.cell(1, 1).value.replace("v0.1.1", "v0.1.2")
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
