@@ -6,7 +6,9 @@
 
 **範例：** `spacex/`（Val 頁 0.0–0.1 節），另有 `meta/`、`alphabet/`、`amazon/`、`microsoft/`、`oracle/`。
 **適用：** 所有個股模型的 DCF 腿。目標價仍是 DCF 與 Comparable 加權（預設各半），見 `docs/plan/個股模型原則_命題加營收分部.md`。
-**例外：** 新雲模板（CoreWeave、Nebius、WhiteFiber）與私人 AI 公司收支模型（OpenAI、Anthropic、MiniMax、智譜）維持各自的資金模型格式。
+**例外（Andy 2026-11-05 21:03「不改」）：**
+- 新雲模板（CoreWeave、Nebius、WhiteFiber）維持自己的 DCF：UFCF 公式與本規格相同，明確期到 FY2030，永續價值用常態化 FCF（維持性資本支出）的 Gordon 法。
+- AI 公司收支模型（OpenAI、Anthropic、MiniMax、智譜）維持資金模型與反向檢驗，不加 DCF 腿。
 **取代：** 簡化版股東現金流 DCF，即「股東現金流＝EPS ×（1 − g ÷ ROE）」、以單一折現率 tp_r 折現。2026-11-05 盤點時，AI半導體 的個股模型全部採用此簡化版，智邦也是，與 NVIDIA 相同。
 
 ## 1. 現金流（每年，明確期到 FY2032）
