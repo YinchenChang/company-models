@@ -1432,7 +1432,8 @@ def main():
                     c_ = lambda y, q=q: f"(TK_NonNV_Hold_{PLAT[q]}*TK_CapexIT_VR200/{cnv(y)})"
                     for x_, lab_ in (("", ""), ("_lo", "：低"), ("_hi", "：高")):
                         nrow(px + "gs" + x_ + "_" + q, f"　{PN[q]}：NVIDIA GW 占比{lab_}＝s ÷（s ＋（1 − s）÷ c）；s＝SIF_nvsh_{BUY[q]}（金額），c＝非 NVIDIA 每 GW ÷ NVIDIA 每 GW（TK；c < 1 → 同樣金額買到較多非 NVIDIA GW）", "%",
-                             {y: f"={sv_(q, y, x_)}/({sv_(q, y, x_)}+(1-{sv_(q, y, x_)})/{c_(y)})" for y in ys}, fmt="0.0%")
+                             {y: f"={sv_(q, y, x_)}/({sv_(q, y, x_)}+(1-{sv_(q, y, x_)})/{c_(y)})" for y in ys},
+                             ("c＝TK 持有比 × IT capex 比（非 NVIDIA 平台持有比 × VR200 IT capex ÷ NVIDIA 世代加權 IT capex），只是加速器成本比的近似值；「其他（企業、學研）」借用主權 AI（sov）的份額；換算式為「÷ c」（工作單原寫「× c」，方向反了，已改正；GL01-80）" if (q == PK[0] and x_ == "") else ""), fmt="0.0%")
             for q in PK:
                 if NVSH:
                     nnvq = f"(1-{{y}}{NVR[px + 'gs_' + q]})"; lab_ = f"〔v0.3 Y3：逐買方份額 {BUY[q]}〕"
@@ -1463,7 +1464,7 @@ def main():
                 nvd = lambda y, qs: "(" + "+".join(f"{YC[y]}{NVG[q]}" for q in qs) + f")*{ACCNV(y)}"
                 totd = lambda y, qs: nvd(y, qs) + "+" + "+".join(f"({YC[y]}{SH[q]}-{YC[y]}{NVG[q]})*{ACCNN(q)}" for q in qs)
                 nrow(px + "dsh", "　加權 NVIDIA 占比（金額口徑）＝Σ NVIDIA GW × NVIDIA 每 GW ÷ Σ（NVIDIA＋非 NVIDIA）金額；對照由上而下 82%（2025）／80%（2026）", "%",
-                     {y: f"={nvd(y, PK)}/({totd(y, PK)})" for y in ys}, "AI半導體 11-04 回執第 3 節：供應商營收由上而下約 82%／80%", "0.0%")
+                     {y: f"={nvd(y, PK)}/({totd(y, PK)})" for y in ys}, "AI半導體 11-04 回執第 3 節：供應商營收由上而下約 82%／80%。金額加權約 70%，比由上而下低，會壓低對帳比值；這個差距與「Wattonomics 對 NVIDIA 份額高的買方（新雲、主權、企業）覆蓋不足」的推論方向一致", "0.0%")
                 nrow(px + "gsh", "　加權 NVIDIA 占比（GW 口徑）＝(4) ÷ (2)", "%", {y: f"={YC[y]}{NVR[px + '4']}/{YC[y]}{NVR[px + '2']}" for y in ys}, "", "0.0%")
                 HS = ["msft", "googl", "amzn", "meta"]
                 nrow(px + "hsc", "　備忘：四大雲 NVIDIA 金額 ÷ 全部 NVIDIA 金額（對照 NVIDIA FY27 Q2 Hyperscale 54.7%）", "%",
@@ -1551,7 +1552,7 @@ def main():
     nrow("caphb", "（備忘）HBM 利用率（SIF_HBMUtil_Base）", "比", {y: f"={sv('SIF_HBMUtil_Base', y)}" for y in CY}, "", "0.0%")
     # v0.3 Y4：主檢查＝可支撐新增上線 IT GW（毛額；Siliconomics v0.13.1 Wattonomics 可比口徑），直接對 Deploy 毛額年新增；上方成本等值比較保留作第二口徑
     nrow("con", "主檢查：可支撐新增上線 IT GW（SIF_CapOnlineGW_Base；毛額）", "GW", {y: f"={sv('SIF_CapOnlineGW_Base', y)}" for y in CY},
-         "v0.3 Y4：Siliconomics v0.13.1（推得上線 GW × 可支撐 ÷ 基準部署）；只含 CoWoS、HBM（電力、前段未建）")
+         "v0.3 Y4：Siliconomics v0.13.1（推得上線 GW × 可支撐 ÷ 基準部署）；只含 CoWoS、HBM（電力、前段未建）。注意：(1) 可支撐上線 GW 是成本等值口徑，Deploy 毛額是實體 GW，兩者比較的結果偏保守；(2) 2026 年上限就等於 Siliconomics 自己推得的上線量，不是獨立的供給檢驗")
     nrow("conw", "Wattonomics 基準年新增 IT GW（毛額；Deploy）", "GW", {y: f"=Deploy!{YC[y]}{DR['naAD0']}" for y in CY})
     nrow("conh", "headroom＝可支撐 − Wattonomics", "GW", {y: f"={YC[y]}{NVR['con']}-{YC[y]}{NVR['conw']}" for y in CY})
     nrow("conhp", "headroom 比", "比", {y: f"={YC[y]}{NVR['conh']}/{YC[y]}{NVR['con']}" for y in CY}, "< 0 → Checks X4-K1 WARN；只檢查、不截斷", "0.0%")
@@ -2823,7 +2824,7 @@ def main():
     QA = "Andy 11-04 12:52「所有需要我決定的，就先依你的建議去處理」；11-05 08:11「請繼續」"
     decisions += [
         {"id": "GL01-79", "cat": "工程", "item": "讀取來源換新（Y1）", "decision": "Siliconomics 讀 v0.13.1（CURRENT_SNAPSHOT）；Tokenomics 讀 v21.10（master 9e91447；wattonomics/data/tokenomics_snapshot_v21.10.json）。v21.10 只改 IF_NonNV_Out_TPU、IF_NonNV_Out_Trn（FP8 對齊），本庫不讀，每 GW 成本與 GW 不變", "date": "2026-11-05", "quote": WO3 + " Y1", "status": "執行"},
-        {"id": "GL01-80", "cat": "判斷", "item": "逐買方 NVIDIA 份額換 GW 份額（Y3）", "decision": "NVIDIA 對帳點逐家 NVIDIA GW＝出貨 GW × s ÷（s ＋（1 − s）÷ c）（工作單寫「×c」，方向相反：NVIDIA GW＝s$／c_NV、非 NVIDIA GW＝(1−s)$／c_NN，GW 份額＝s ÷（s＋(1−s)·c_NV／c_NN）；依推導改為 ÷ c）；s＝SIF_nvsh_<買方>_<yy>（加速器採購金額中 NVIDIA 占比），c＝TK_NonNV_Hold_<平台> × VR200 IT capex ÷ NVIDIA 世代加權 IT capex（每 GW 加速器成本比，以 IT capex 近似）。買方對應：googl→goog、amzn、msft、meta、orcl、xai、oai、CoreWeave／Nebius／WhiteFiber／其他新雲→neo、cn、sov／其他→sov、Anthropic 自建→anth（經 Google 雲租用的 TPU 已在 Google）。oai、anth 無 2025 值 → 沿用 2026。取代 In S5 覆寫、中國 1 與 W1 殘差法（只在對帳點；Players／CapexGW 每 GW 成本仍用 In S5 與市場 $ 占比，GW 不變）。敏感度：s 直接當 GW 份額；並列金額口徑加權占比對照由上而下 82%／80%、四大雲占比對照 Hyperscale 54.7%", "date": "2026-11-05", "quote": QA + "；AI半導體 11-04 回執第 3 節；" + WO3 + " Y3", "status": "預設、可撤回"},
+        {"id": "GL01-80", "cat": "判斷", "item": "逐買方 NVIDIA 份額換 GW 份額（Y3）", "decision": "NVIDIA 對帳點逐家 NVIDIA GW＝出貨 GW × s ÷（s ＋（1 − s）÷ c）（工作單原寫「×c」，方向反了，已改正（獨立核對 2026-11-05 確認）：NVIDIA GW＝s$／c_NV、非 NVIDIA GW＝(1−s)$／c_NN，GW 份額＝s ÷（s＋(1−s)·c_NV／c_NN）；依推導改為 ÷ c）；s＝SIF_nvsh_<買方>_<yy>（加速器採購金額中 NVIDIA 占比），c＝TK_NonNV_Hold_<平台> × VR200 IT capex ÷ NVIDIA 世代加權 IT capex（每 GW 加速器成本比，以 IT capex 近似）。買方對應：googl→goog、amzn、msft、meta、orcl、xai、oai、CoreWeave／Nebius／WhiteFiber／其他新雲→neo、cn、sov／其他→sov、Anthropic 自建→anth（經 Google 雲租用的 TPU 已在 Google）。oai、anth 無 2025 值 → 沿用 2026。取代 In S5 覆寫、中國 1 與 W1 殘差法（只在對帳點；Players／CapexGW 每 GW 成本仍用 In S5 與市場 $ 占比，GW 不變）。敏感度：s 直接當 GW 份額；並列金額口徑加權占比對照由上而下 82%／80%、四大雲占比對照 Hyperscale 54.7%", "date": "2026-11-05", "quote": QA + "；AI半導體 11-04 回執第 3 節；" + WO3 + " Y3", "status": "預設、可撤回"},
         {"id": "GL01-81", "cat": "工程", "item": "R7 分世代內容（Y2）", "decision": "Compare F1／(5) 改讀 SIF_NVContentGW_{H100,GB200,GB300,VR200_26,VR200,RU}（含低、高），依 Players 各年世代組合加權；VR200 2026 年用 VR200_26（2026 HBM 價），2027 起用 VR200（2027 HBM 價）。取代佔位值（VR200、Rubin Ultra＝GB300）", "date": "2026-11-05", "quote": "AI半導體 11-04 回執第 2 節；" + WO3 + " Y2", "status": "執行"},
         {"id": "GL01-82", "cat": "判斷", "item": "供給上限主檢查改可支撐上線 GW（Y4）", "decision": "主檢查：Deploy 毛額年新增 ≤ SIF_CapOnlineGW_Base（X4-K1）；原成本等值比較保留作第二口徑（X4-K2）。只檢查、不截斷", "date": "2026-11-05", "quote": QA + "；" + WO3 + " Y4", "status": "預設、可撤回"},
         {"id": "GL01-83", "cat": "判斷", "item": "W1 殘差法不套到每 GW 成本", "decision": "v0.2.1 待判斷 C1（是否把殘差法套到 CapexGW 每 GW 成本）：Y3 改讀逐買方份額後已不需要，殘差法在對帳點也已停用；每 GW 成本口徑維持 In S5 與市場 $ 占比。汰換權重與 C2–C4 排 v0.4", "date": "2026-11-05", "quote": QA + "；" + WO3 + " 不做", "status": "預設、可撤回"},
