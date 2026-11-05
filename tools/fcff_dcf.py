@@ -1,4 +1,4 @@
-# 標準版 DCF：無槓桿自由現金流（FCFF）＋ WACC — 個股模型共用模組 v1（2026-11-05；NVIDIA v0.3 試作）
+# 標準版 DCF：無槓桿自由現金流（FCFF）＋ WACC — 個股模型共用模組 v2（2026-11-05；v1 為 NVIDIA v0.3 試作，v2 依工作單第二輪修正 Part 一）
 # 依據：工作單「AI半導體 個股 DCF 改為標準版」（Andy 2026-11-05 20:42、20:45）、docs/plan/個股DCF標準規格.md v1.0；範本 spacex/build_spacex.py Val 頁、meta/build_meta.py β 寫法。
 #
 # 方法（每情境、每年；明確期到最後一個會計年度，通常 FY2032）
@@ -28,6 +28,33 @@
 #      「FCFF 各列加總 − FCFF」與「終值占 EV 是否超過 80%」兩列。
 #   FD.value_expr(R, name, **over) 回傳單一路徑每股價值的閉式公式（over：w、ke、g、ronic、cxd、wc、nc、tv="alt"），可用於其他對照路徑。
 #
+#
+# ---------------- v2 新參數（2026-11-05 第二輪修正；未使用時輸出與 v1 相同，只有 Sens「β 低／高」列與 In 頁 M2 標題不同）----------------
+#   (1) 資本支出、折舊逐年、逐情境讀模型自己的列（write_detail 的 paths 每條路徑可加）：
+#       "da": {年: 儲存格或公式}、"cx": {年: 儲存格或公式}（金額，與營收同單位；例 {2027: "PL!D58", 2028: "PL!E58"}）。
+#       須從第一年起連續；給到的年度：比例列＝該列 ÷ 營收（資本支出比例另加 fc_cx_d，Sens ±1pt 照舊）；
+#       之後各年：由最後一個給定年度的比例線性收斂到 fc_da_ss／fc_cx_ss（最後一年等於穩態），且資本支出比例 ≥ 折舊比例 ×（1＋g_tv）
+#       （收斂年度逐年取 MAX；write_detail(ss_floor=False) 可關閉）。只給 "da" 或只給 "cx" 亦可；未給的照 v1 占營收比例。
+#       例：dict(name="B", …, da={y: f"PL!{C[y]}{r_da}" for y in (2027, 2028, 2029)}, cx={y: f"PL!{C[y]}{r_cx_B}" for y in (2027, 2028, 2029)})
+#   (2) Stub 期（資產負債表日 ≠ 評價日 2026-12-31）：in_rows 的 P 加
+#       stub=dict(bs_date="2026-07-26", val_date="2026-12-31",
+#                 frac=(值或公式, 標記, 來源1, 來源2)       # 可省略：預設＝(評價日 − 資產負債表日) ÷ 365，寫成 =(DATE(…)-DATE(…))/365
+#                 div=(值或公式, 標記, 來源1, 來源2))       # 該段已宣告股利／買回金額（金額單位同 debt_v）；可省略＝0
+#       → In 列 bs_date（資產負債表日）、stub_frac（年）、stub_div（金額）；write_detail(…, stub=True)（或 R 由含 stub 的 in_rows 建好後傳 stub=True）。
+#       淨現金滾到評價日＝dcf_nc（資產負債表）＋ stub FCFF − stub_div；stub FCFF 預設＝該路徑第一年（年度）FCFF × stub_frac，
+#       路徑可加 "stub_fcff": "公式"（不含「=」；例 "0.25*PL!C80" 用模型季度數）。write_summary 在「＋淨現金與投資」之後多兩列
+#       （「＋Stub 期 FCFF」「淨現金滾到評價日」；SUMMARY_ROWS＋2＝summary_rows(stub=True)）；明細頁不增列（每股價值公式內含）。
+#       Sens 閉式同式（預設 stub FCFF 隨資本支出、營運資金案例重算；自訂 stub_fcff 視為常數）。write_checks 的 nc_bs 照舊對 dcf_nc（資產負債表）。
+#   (3) β 敏感度＝β_u ± 0.3、各自重新加槓桿（write_sens 預設）：
+#       write_sens(…, beta_u="beta_u", beta_du=0.3, relever="(1+(1-tax_w)*beta_de)")；beta_du 可給定義名稱（例 "beta_du"）。
+#       In 頁須有 beta_u、beta_de（及 tax_w）；β 不是由 β_u 重新加槓桿的公司傳 beta_u=None，沿用 In 頁 beta_lo／beta_hi（v1 行為）。
+#       建議同時把 In 頁 beta 的低／高欄改成同式（例 "=(beta_u-0.3)*(1+(1-tax_w)*beta_de)"），讓 In 與 Sens 一致。
+#   (4) Sens「美元口徑折現」（非美國公司）：in_rows 的 P 加 rf_us=(0.05, 來源1, 來源2)（美國 10 年期公債殖利率）→ In 列 rf_us；
+#       write_sens(…, usd=True) 加一列：ke＝rf_us ＋ β ×（ERP ＋ CRP）（CRP 照基準）、WACC 同式重算、g＝MIN(g_cap, rf_us)，其他不變
+#       （kd、權重、現金流、匯率不變）；結果寫在「低」欄（單一案例）。美國公司此案例＝基準，省略（不傳 usd）。
+#   (5) In 頁 M2 節標題不寫版號（「標準版 DCF」）；P 可加 m2_title 整句覆寫。
+#   (6) ke 說明格的 β 說明由公司腳本提供：write_summary(…, beta_note="自算產業 β 重新加槓桿")；預設 None＝「Blume 調整」（v1 字樣）。
+#
 # 只用 openpyxl；不讀寫其他資料夾。各公司版面不同，本模組只管 FCFF／WACC 區塊；列標籤沿用下游（markets/invest_map、tools/target_summary）
 # 讀取的「DCF 目標價（情境加權）」「DCF 情境價值推到 12 個月後」。
 from openpyxl.styles import Font, PatternFill
@@ -36,7 +63,11 @@ from openpyxl.workbook.defined_name import DefinedName
 
 BOLD = Font(bold=True); BLUE = Font(color="0000FF")
 HDR = PatternFill("solid", fgColor="DDEBF7"); KEY = PatternFill("solid", fgColor="FFF2CC"); SUB = PatternFill("solid", fgColor="EDEDED")
-SUMMARY_ROWS = 18
+SUMMARY_ROWS = 18          # write_summary 列數（無 stub）；有 stub 時多 2 列：summary_rows(stub=True)
+
+
+def summary_rows(stub=False):
+    return SUMMARY_ROWS + (2 if stub else 0)
 IN_KEYS = ("rf", "erp", "crp", "beta", "blume_a", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt",
            "debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v", "fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc")
 JUDG = ("erp", "crp", "beta", "g_cap", "ronic_sp", "fc_cx", "fc_cx_ss", "fc_wc", "inv_k")   # 黃底（Andy 可改）
@@ -63,10 +94,13 @@ def in_rows(P):
       dps：(值或公式, 標記, 來源1, 來源2)  評價日到目標時點的每股股利合計（預設 0；規格第 3 節「扣除期間股利」）
     回傳 In 列清單。"""
     a, sh = P.get("amt", "US$B"), P.get("shu", "十億股")
-    rows = [("sec", f"M2. 折現率與無槓桿自由現金流（v0.3 標準版 DCF；tools/fcff_dcf.py；評價日 {P['date']}；黃底＝Andy 可改）")]
+    rows = [("sec", P.get("m2_title") or f"M2. 折現率與無槓桿自由現金流（標準版 DCF；tools/fcff_dcf.py；評價日 {P['date']}；黃底＝Andy 可改）")]
     add = rows.append
     rf = P["rf"]
     add(("rf", rf[3] if len(rf) > 3 else "無風險利率（計價幣別 10 年期公債殖利率）", "%", None, rf[0], None, "Verified", rf[1], rf[2]))
+    if P.get("rf_us"):   # v2 (4)：Sens「美元口徑折現」用
+        u = P["rf_us"]
+        add(("rf_us", "美元口徑折現用：美國 10 年期公債殖利率（只用於 Sens「美元口徑折現」；基準用上一列當地利率＋固定匯率）", "%", None, u[0], None, "Verified", u[1], u[2]))
     if P.get("betas"):
         add(("blume_a", "Blume 調整係數（調整後 β＝a × 原始 β ＋ 1 − a）", "x", None, 0.67, None, "Derived", "Blume（1971）；同 Meta、Alphabet", "工作單 2026-11-05：β 用 Blume 調整"))
         ks = []
@@ -98,6 +132,14 @@ def in_rows(P):
     for key, lab in (("debt", "債務本金（WACC 負債與淨負債）"), ("lease", "租賃負債（WACC 負債與淨負債）"), ("cash", "現金與有價債務證券"),
                      ("inv", "非營業投資（權益證券等；評價時加入）"), ("mi", "少數股權")):
         v = P[key]; add((f"{key}_v", lab, a, None, v[0], None, v[1], v[2], v[3]))
+    if P.get("stub"):   # v2 (2)：資產負債表日到評價日的 stub 期
+        st = P["stub"]; bd, vd = st["bs_date"], st.get("val_date", "2026-12-31")
+        D_ = lambda d: "DATE({},{},{})".format(*[int(x) for x in d.split("-")])
+        add(("bs_date", "資產負債表日（淨現金、債務等科目的日期）", "日期", None, bd, None, "Verified", st.get("bs_src", "上列資產負債科目的來源"), f"評價日 {vd}；淨現金以 stub 期滾到評價日"))
+        fr_ = st.get("frac", (f"=({D_(vd)}-{D_(bd)})/365", "Derived", f"＝(評價日 {vd} − 資產負債表日 {bd}) ÷ 365", "stub FCFF＝各路徑第一年 FCFF × 本值（年度比例）"))
+        add(("stub_frac", "Stub 期長度（資產負債表日 → 評價日；年）", "年", None, fr_[0], None, fr_[1], fr_[2], fr_[3]))
+        dv = st.get("div", (0, "Assumed", "該段無已宣告股利／買回", "—"))
+        add(("stub_div", "Stub 期已宣告股利／買回（資產負債表日 → 評價日；從淨現金扣除）", a, None, dv[0], None, dv[1], dv[2], dv[3]))
     add(("inv_k", "非營業投資計入評價的比例（1＝全部；Sens 低＝0）", "x", 0, 1, None, "Assumed", "帳面價值計入（公開權益證券為公允價值）", "Sens：不計"))
     s = P["sh"]; add(("sh_v", "評價用稀釋股數", sh, None, s[0], None, s[1], s[2], s[3]))
     for key, lab in (("fc_da", "折舊攤銷 ÷ 營收（明確期近期）"), ("fc_cx", "資本支出 ÷ 營收（明確期近期）"), ("fc_wc", "營運資金 ÷ 營收（營運資金增加＝本值 × 營收增量）")):
@@ -116,9 +158,11 @@ def yellow(IN, keys=JUDG):
 
 
 # ---------------- 2. 明細頁 ----------------
-def write_detail(ws, r0, paths, years, frac0, conv_from=None, title=None, fmt="#,##0.00", note=None):
+def write_detail(ws, r0, paths, years, frac0, conv_from=None, title=None, fmt="#,##0.00", note=None, stub=False, ss_floor=True):
     """ws：明細工作表；r0：起始列；years：明確期會計年度（遞增）；frac0：第一年在評價日後的比例；
-    conv_from：折舊與資本支出比例開始線性收斂的年度（預設＝第二年；最後一年等於 *_ss）。回傳 R（列號對照）。"""
+    conv_from：折舊與資本支出比例開始線性收斂的年度（預設＝第二年；最後一年等於 *_ss；只用於未給模型列的路徑）。
+    v2：路徑可加 "da"／"cx"（模型自己的逐年金額列；見檔頭 (1)）、"stub_fcff"；stub＝True 時每股價值含 stub 期（見檔頭 (2)）。
+    ss_floor：模型列之後的收斂年度，資本支出比例 ≥ 折舊比例 ×（1＋g_tv）。回傳 R（列號對照）。"""
     n = len(years); col = {y: get_column_letter(3 + i) for i, y in enumerate(years)}
     last = col[years[-1]]
     conv_from = conv_from or years[1]
@@ -140,7 +184,7 @@ def write_detail(ws, r0, paths, years, frac0, conv_from=None, title=None, fmt="#
     tvt = tr + 1
     ws.cell(tvt, 1, "終值折現年數（最後一年年底）"); ws.cell(tvt, 3, round(frac0 + n - 1, 6)).number_format = "0.000"
     r = tvt + 2
-    R = {"sheet": ws.title, "col": col, "years": list(years), "frac": fr, "t": tr, "tvt": f"{ws.title}!$C${tvt}", "hdr": hdr_r, "paths": {}}
+    R = {"sheet": ws.title, "col": col, "years": list(years), "frac": fr, "t": tr, "tvt": f"{ws.title}!$C${tvt}", "hdr": hdr_r, "paths": {}, "stub": bool(stub)}
     k_ = lambda y: max(0, years.index(y) - years.index(conv_from) + 1)
     nconv = years.index(years[-1]) - years.index(conv_from) + 1
     for p in paths:
@@ -161,8 +205,39 @@ def write_detail(ws, r0, paths, years, frac0, conv_from=None, title=None, fmt="#
         row("tax", "稅率", lambda y: p["tax"][y] if str(p["tax"][y]).startswith("=") else "=" + p["tax"][y], "0.0%")
         row("nopat", "NOPAT＝EBIT ×（1 − 稅率）", lambda y: f"={col[y]}{D['ebit']}*(1-{col[y]}{D['tax']})", nt="股權報酬視為費用、不加回")
         cv = lambda a, b: (lambda y: f"={a}+({b}-{a})*{min(k_(y), nconv)}/{nconv}" if k_(y) > 0 else f"={a}")
-        row("dar", "折舊攤銷 ÷ 營收", cv("fc_da", "fc_da_ss"), "0.00%", f"FY{conv_from} 起線性收斂到長期穩態")
-        row("cxr", "資本支出 ÷ 營收（含 fc_cx_d）", lambda y: cv("fc_cx", "fc_cx_ss")(y) + "+fc_cx_d", "0.00%", f"FY{conv_from} 起線性收斂到長期穩態")
+        # v2 (1)：模型自己的逐年金額列（da／cx）；給到的年度＝金額 ÷ 營收，之後由最後一個給定年度的比例線性收斂到穩態
+        def given(key):
+            g_ = p.get(key) or {}
+            ys = [y for y in years if y in g_]
+            assert ys == years[:len(ys)], (p["name"], key, "模型列須從第一年起連續", ys)
+            return g_, ys
+        def mdl(key, ss, base_of_last):
+            g_, ys = given(key)
+            yl = ys[-1]; nn = years.index(years[-1]) - years.index(yl)
+            def f(y):
+                if y in g_:
+                    v = str(g_[y]); v = v[1:] if v.startswith("=") else v
+                    return f"=({v})/{col[y]}{D['rev']}"
+                k = years.index(y) - years.index(yl)
+                a = base_of_last(col[yl])
+                return f"={a}+({ss}-{a})*{k}/{nn}"
+            return f, ys
+        if p.get("da"):
+            f_da, ys_da = mdl("da", "fc_da_ss", lambda c: f"{c}{r}")   # r＝正在寫的列（dar）
+            row("dar", "折舊攤銷 ÷ 營收", f_da, "0.00%", f"FY{ys_da[0]}–FY{ys_da[-1]}＝模型列 ÷ 營收" + (f"；之後線性收斂到長期穩態" if ys_da[-1] != years[-1] else ""))
+        else:
+            row("dar", "折舊攤銷 ÷ 營收", cv("fc_da", "fc_da_ss"), "0.00%", f"FY{conv_from} 起線性收斂到長期穩態")
+        if p.get("cx"):
+            f_cx, ys_cx = mdl("cx", "fc_cx_ss", lambda c: f"({c}{r}-fc_cx_d)")   # r＝正在寫的列（cxr）
+            def f_cx2(y):
+                v = f_cx(y)
+                if y in p["cx"]: return v + "+fc_cx_d"
+                if ss_floor: return f"=MAX({v[1:]},{col[y]}{D['dar']}*(1+g_tv))+fc_cx_d"
+                return v + "+fc_cx_d"
+            row("cxr", "資本支出 ÷ 營收（含 fc_cx_d）", f_cx2, "0.00%", f"FY{ys_cx[0]}–FY{ys_cx[-1]}＝模型列 ÷ 營收" +
+                (("；之後線性收斂到長期穩態" + ("，且 ≥ 折舊比例 ×（1＋g）" if ss_floor else "")) if ys_cx[-1] != years[-1] else ""))
+        else:
+            row("cxr", "資本支出 ÷ 營收（含 fc_cx_d）", lambda y: cv("fc_cx", "fc_cx_ss")(y) + "+fc_cx_d", "0.00%", f"FY{conv_from} 起線性收斂到長期穩態")
         row("da", "＋折舊攤銷", lambda y: f"={col[y]}{D['rev']}*{col[y]}{D['dar']}")
         row("cx", "− 資本支出", lambda y: f"={col[y]}{D['rev']}*{col[y]}{D['cxr']}")
         row("dwc", "− 營運資金增加（fc_wc × 營收增量）", lambda y: f"=fc_wc*{col[y]}{D['drev']}")
@@ -177,7 +252,12 @@ def write_detail(ws, r0, paths, years, frac0, conv_from=None, title=None, fmt="#
         one("tv", "終值（最後一年年底）＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g）", f"={last}{D['nopat']}*(1+g_tv)*(1-g_tv/ronic)/(wacc-g_tv)")
         one("pvtv", "終值現值", f"=C{D['tv']}/(1+wacc)^{R['tvt']}")
         one("ev", "企業價值 EV", f"=C{D['pvx']}+C{D['pvtv']}")
-        one("val", "每股價值（評價日）＝MAX(0,(EV＋淨現金與投資) ÷ 股數)", f"=MAX(0,(C{D['ev']}+dcf_nc)/sh_v)")
+        if stub:   # v2 (2)：淨現金滾到評價日＝dcf_nc ＋ stub FCFF − stub_div（明細不增列，寫在每股價值公式內）
+            D["stub_x"] = p.get("stub_fcff") or f"{ws.title}!$C${D['fcff']}*stub_frac"
+            one("val", "每股價值（評價日）＝MAX(0,(EV＋淨現金與投資＋stub 期 FCFF − stub 期已宣告股利) ÷ 股數)", f"=MAX(0,(C{D['ev']}+dcf_nc+{D['stub_x']}-stub_div)/sh_v)",
+                nt="stub FCFF＝" + ("自訂（路徑 stub_fcff）" if p.get("stub_fcff") else "第一年 FCFF × stub_frac"))
+        else:
+            one("val", "每股價值（評價日）＝MAX(0,(EV＋淨現金與投資) ÷ 股數)", f"=MAX(0,(C{D['ev']}+dcf_nc)/sh_v)")
         one("v12", "每股價值推到目標時點 ×（1＋ke）^t_tgt − 期間股利", f"=C{D['val']}*(1+ke)^t_tgt-dps_tgt", nt="DCF 情境價值推到 12 個月後")
         one("tvsh", "終值現值占 EV", f"=C{D['pvtv']}/C{D['ev']}", "0.0%")
         one("mult", "隱含終值 EV／EBITDA（最後一年後一年預估）", f"=C{D['tv']}/(({last}{D['ebit']}+{last}{D['da']})*(1+g_tv))", "0.0", "EBITDA＝EBIT＋折舊攤銷")
@@ -211,13 +291,21 @@ def value_expr(R, name, w="wacc", ke="ke", g="g_tv", ronic=None, cxd="fc_cx_d", 
         tvx = f"{fl}*(1+{g})/({w}-{g})/(1+{w})^{R['tvt']}"
     else:
         tvx = f"{L('nopat')}*(1+{g})*(1-{g}/{ronic})/({w}-{g})/(1+{w})^{R['tvt']}"
-    v = f"MAX(0,({pvx}+{tvx}+{nc})/sh_v)"
+    stub = ""
+    if R.get("stub"):   # v2 (2)
+        if D.get("stub_x", "").endswith("*stub_frac") and D["stub_x"].startswith(f"{s}!$C${D['fcff']}"):
+            c0 = R["col"][R["years"][0]]; F = lambda k: f"{s}!${c0}${D[k]}"
+            stub = f"+({F('nopat')}+{F('rev')}*({F('dar')}-({F('cxr')}-fc_cx_d+{cxd}))-{wc}*{F('drev')})*stub_frac-stub_div"
+        else:
+            stub = f"+({D['stub_x']})-stub_div"
+    v = f"MAX(0,({pvx}+{tvx}+{nc}{stub})/sh_v)"
     return f"({v}*(1+{ke})^t_tgt-dps_tgt)" if push else v
 
 
 # ---------------- 3. Val 摘要 ----------------
-def write_summary(wb, V, r0, R, names, weights, cols="BCD", fmt="#,##0.00", title=None, px="px"):
-    """names：三情境路徑名（對應 B／C／D 欄）；weights：情境權重名稱（例 ["tp_wA","tp_wB","tp_wC"]）。寫 SUMMARY_ROWS 列。"""
+def write_summary(wb, V, r0, R, names, weights, cols="BCD", fmt="#,##0.00", title=None, px="px", beta_note=None):
+    """names：三情境路徑名（對應 B／C／D 欄）；weights：情境權重名稱（例 ["tp_wA","tp_wB","tp_wC"]）。寫 summary_rows(R["stub"]) 列。
+    beta_note：ke 說明格中 β 的說明（v2；例 "自算產業 β 重新加槓桿"）；None＝「Blume 調整」（v1 字樣）。"""
     r = r0; S = {}; sh = R["sheet"]
     def put(key, lab, vals, fm=fmt, note=None, bold=False, fill=None):
         nonlocal r
@@ -235,7 +323,7 @@ def write_summary(wb, V, r0, R, names, weights, cols="BCD", fmt="#,##0.00", titl
         c = V.cell(r, j, h); c.font = BOLD; c.fill = HDR
     S["h"] = r; r += 1
     put("ke", "股權成本 ke＝rf ＋ β ×（ERP ＋ CRP）", ["=rf+beta*(erp+crp)"], "0.00%",
-        note='="rf "&TEXT(rf,"0.00%")&"、β "&TEXT(beta,"0.000")&"（Blume 調整）、ERP "&TEXT(erp,"0.0%")&"、CRP "&TEXT(crp,"0.0%")')
+        note='="rf "&TEXT(rf,"0.00%")&"、β "&TEXT(beta,"0.000")&"（' + (beta_note or "Blume 調整") + '）、ERP "&TEXT(erp,"0.0%")&"、CRP "&TEXT(crp,"0.0%")')
     _dn(wb, "ke", f"{V.title}!$B${S['ke']}")
     put("kd_at", "稅後債務成本 kd ×（1 − t）", ["=kd*(1-tax_w)"], "0.00%", note='="kd "&TEXT(kd,"0.00%")&"、稅率 "&TEXT(tax_w,"0.0%")')
     _dn(wb, "kd_at", f"{V.title}!$B${S['kd_at']}")
@@ -254,6 +342,11 @@ def write_summary(wb, V, r0, R, names, weights, cols="BCD", fmt="#,##0.00", titl
     put("ev", "企業價值 EV", x("ev"), bold=True)
     put("nc", "＋淨現金與投資（現金＋有價證券＋權益投資 − 債務 − 租賃 − 少數股權）", ["=cash_v+inv_k*inv_v-debt_v-lease_v-mi_v"] * len(names))
     _dn(wb, "dcf_nc", f"{V.title}!$B${S['nc']}")
+    if R.get("stub"):   # v2 (2)
+        put("stub", "＋Stub 期 FCFF（資產負債表日 → 評價日）", ["=" + D[n]["stub_x"] for n in names],
+            note='="資產負債表日 "&bs_date&"；stub_frac "&TEXT(stub_frac,"0.000")&" 年（第一年 FCFF × stub_frac）"')
+        put("ncr", "淨現金滾到評價日（＝淨現金與投資＋stub FCFF − stub 期已宣告股利／買回）", [f"={c}{S['nc']}+{c}{S['stub']}-stub_div" for c in cols[:len(names)]],
+            note='="已宣告股利／買回 "&TEXT(stub_div,"#,##0.00")')
     put("sh", "評價用稀釋股數", ["=sh_v"] * len(names), "#,##0.000")
     put("dcfv", "DCF 情境每股價值（評價日）", x("val"))
     put("v12", "DCF 情境價值推到 12 個月後（×（1＋ke）^t_tgt − 期間股利）", x("v12"), fill=KEY)
@@ -261,7 +354,7 @@ def write_summary(wb, V, r0, R, names, weights, cols="BCD", fmt="#,##0.00", titl
     put("mult", "  隱含終值 EV／EBITDA", x("mult"), "0.0", note="終值 ÷ 最後一年後一年 EBITDA（EBIT＋折舊）")
     put("dcf", "DCF 目標價（情境加權）", ["=" + "+".join(f"{wgt}*{c}{S['v12']}" for wgt, c in zip(weights, cols))], fill=KEY,
         note="Σ 情境權重 × 情境價值（已推到 12 個月後）")
-    assert r - r0 == SUMMARY_ROWS, (r - r0, SUMMARY_ROWS)
+    assert r - r0 == summary_rows(R.get("stub")), (r - r0, summary_rows(R.get("stub")))
     return S
 
 
@@ -281,8 +374,10 @@ SENS_CASES = [
 ]
 
 
-def write_sens(SE, r0, R, names, weights, comp_ref, base_ref, w_dcf="tp_w_dcf", fmt="#,##0.00", title=None, cases=SENS_CASES, w_dcf_lohi=False):
-    """SE 第 r0 列起：標題、表頭、各案例（低／高加權目標價與相對基準）、閉式核對列。base_ref：基準加權目標價儲存格（例 "Val!$B$37"）。回傳 (案例首列, 案例末列, 下一列)。"""
+def write_sens(SE, r0, R, names, weights, comp_ref, base_ref, w_dcf="tp_w_dcf", fmt="#,##0.00", title=None, cases=SENS_CASES, w_dcf_lohi=False,
+               beta_u="beta_u", beta_du=0.3, relever="(1+(1-tax_w)*beta_de)", usd=False):
+    """SE 第 r0 列起：標題、表頭、各案例（低／高加權目標價與相對基準）、閉式核對列。base_ref：基準加權目標價儲存格（例 "Val!$B$37"）。回傳 (案例首列, 案例末列, 下一列)。
+    v2：β 案例＝(beta_u ∓ beta_du) × relever（各自重新加槓桿）；beta_u＝None 時沿用 In 頁 beta_lo／beta_hi。usd＝True 時在 DCF 權重案例前加「美元口徑折現」（需 In 頁 rf_us）。"""
     SE.cell(r0, 1, title or "目標價參數敏感度（v0.3 標準版 DCF）：加權目標價一次動一個參數；Comparable 不變（DCF 權重案例除外）").font = BOLD
     for j, h in enumerate(["參數", "設定（低／高）", "低：加權目標價", "低：相對基準", "高：加權目標價", "高：相對基準", "基準加權目標價", "鍵"], 1):
         c = SE.cell(r0 + 1, j, h); c.font = BOLD; c.fill = HDR
@@ -297,15 +392,29 @@ def write_sens(SE, r0, R, names, weights, comp_ref, base_ref, w_dcf="tp_w_dcf", 
         dcf = "+".join(f"{wgt}*{value_expr(R, n, w=w, ke=ke, **o)}" for wgt, n in zip(weights, names))
         return f"={wd}*({dcf})+(1-{wd})*{comp_ref}"
 
+    bl = lambda sg: f"(({beta_u}{sg}{beta_du})*{relever})"
     def resolve(spec):
         if spec is None: return None
         if spec in ("beta_lo", "beta_hi"):
-            k = ke_of(beta=spec); return tp(dict(ke=k, w=f"(w_e*{k}+(1-w_e)*kd_at+wacc_adj)"))
+            b = (bl("-") if spec == "beta_lo" else bl("+")) if beta_u else spec
+            k = ke_of(beta=b); return tp(dict(ke=k, w=f"(w_e*{k}+(1-w_e)*kd_at+wacc_adj)"))
+        if spec == "usd":
+            k = "(rf_us+beta*(erp+crp))"; return tp(dict(ke=k, w=f"(w_e*{k}+(1-w_e)*kd_at+wacc_adj)", g="MIN(g_cap,rf_us)"))
         if spec in ("erp_lo", "erp_hi"):
             k = ke_of(erp=spec); return tp(dict(ke=k, w=f"(w_e*{k}+(1-w_e)*kd_at+wacc_adj)"))
         if spec == "w03": return tp({}, w_dcf + "_lo" if w_dcf_lohi else "0.3")
         if spec == "w07": return tp({}, w_dcf + "_hi" if w_dcf_lohi else "0.7")
         return tp(spec)
+    cases = list(cases)
+    if beta_u:
+        bd = beta_du if isinstance(beta_du, str) else repr(beta_du)
+        bt = lambda sg: f"({beta_u}{sg}{bd})*{relever}"
+        cases = [(nm, (f'="β_u "&TEXT({beta_u},"0.000")&" ∓ "&TEXT({bd},"0.0")&" 各自重新加槓桿：β "&TEXT({bt("-")},"0.00")&"／"&TEXT({bt("+")},"0.00")&"（基準 "&TEXT(beta,"0.00")&"）"'
+                  if key == "beta" else st), lo, hi, key) for nm, st, lo, hi, key in cases]
+    if usd:
+        i_ = next((i for i, c in enumerate(cases) if c[4] == "tp_w_dcf"), len(cases))
+        cases.insert(i_, ("美元口徑折現", '="rf＝美國 10 年期 "&TEXT(rf_us,"0.00%")&"（基準當地 "&TEXT(rf,"0.00%")&"）＋ β ×（ERP＋CRP）、g＝MIN("&TEXT(g_cap,"0%")&", "&TEXT(rf_us,"0.00%")&")；其他不變（單一案例，列在低欄）"',
+                          "usd", None, "rf_us"))
     r = r0 + 2; first = r
     for nm, st, lo, hi, key in cases:
         SE.cell(r, 1, nm); SE.cell(r, 2, st); SE.cell(r, 8, key)
