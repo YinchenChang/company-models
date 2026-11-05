@@ -32,6 +32,14 @@ def lab(sh, prefix, start=1, col=1):
 INK = {str(wb["In"].cell(r, 1).value): r for r in range(4, wb["In"].max_row + 1) if wb["In"].cell(r, 1).value}
 sec = lambda c, i: next(s for s in c["sections"] if s["id"] == i)
 
+# 第三輪修正：情境驅動表的數值依單位給格式（% → 百分比、pt → 帶正負號百分點、情境權重 → 整數百分比）
+def _r3_scn_row(r):
+    k = str(wb["In"].cell(r, 1).value or ""); u = str(wb["In"].cell(r, 3).value or "")
+    f = "p0" if k == "scn_w" else {"%": "p2" if "fade_m" in k else "p1", "pt": "sp1"}.get(u, "")
+    unit = "百分點" if u == "pt" else ("權重" if k == "scn_w" else f"@In!C{r}")
+    return [f"@In!B{r}"] + [f"@In!{c}{r}" + (f"|{f}" if f else "") for c in "DEF"] + [unit]
+
+
 # 情境驅動表：依 In 頁「情境驅動對照」節的實際列號重寫參照（v0.4 起 In 頁新增折現率一節，html_src 的固定列號錯位；欄序同 html_src：B、D、E、F、C）
 _scn_r0 = next(r for r in range(4, wb["In"].max_row + 1) if str(wb["In"].cell(r, 1).value or "").startswith("情境驅動對照")) + 1
 _scn_rs, _r = [], _scn_r0 + 1
@@ -41,7 +49,7 @@ _n = 0
 for b in sec(cfg, "drivers")["blocks"]:
     if str(b.get("caption", "")).startswith("情境驅動"):
         b["head"] = [f"@In!{c}{_scn_r0}" for c in "BDEFC"]
-        b["rows"] = [[f"@In!{c}{r}" for c in "BDEFC"] for r in _scn_rs]
+        b["rows"] = [_r3_scn_row(r) for r in _scn_rs]
         _n += 1
 assert _n == 1, "情境驅動表"
 
@@ -95,11 +103,11 @@ h_val = lab("README", "估值說明：")
 
 # 投資建議橫幅（補充規則 A）：中間格＝只看 Comparable（市場主流同業法、未經相對倍數調整）＋自己的上檔空間；
 # 進加權目標價的是相對倍數調整後的 Comparable，數值寫在橫幅附註（公式帶數字）
-cfg["hero"]["tiles"][0][1] = f"@Val!B{r_tpw}|n0"
-cfg["hero"]["tiles"][1] = ["只看 Comparable 目標價（市場主流同業法）", f"@Val!B{r_cmp0}|n0", ["上檔空間 ", f"@Val!B{r_upc}|sp1"]]
-cfg["hero"]["tiles"][2] = [f"@Val!A{r_px}", f"@Val!B{r_px}|n0", ""]
+cfg["hero"]["tiles"][0][1] = f"@Val!B{r_tpw}|n2"
+cfg["hero"]["tiles"][1] = ["只看 Comparable 目標價（市場主流同業法）", f"@Val!B{r_cmp0}|n2", ["上檔空間 ", f"@Val!B{r_upc}|sp1"]]
+cfg["hero"]["tiles"][2] = [f"@Val!A{r_px}", f"@Val!B{r_px}|n2", ""]
 _note = cfg["hero"].get("note") or []
-cfg["hero"]["note"] = (_note if isinstance(_note, list) else [_note]) + ["；進加權的 Comparable 為相對倍數調整後 ", f"@Val!B{r_cmp}|n0", " 元（上檔空間 ", f"@README!B{h_upc}|sp1", "）。"]
+cfg["hero"]["note"] = (_note if isinstance(_note, list) else [_note]) + ["；進加權的 Comparable 為相對倍數調整後 ", f"@Val!B{r_cmp}|n2", " 美元（上檔空間 ", f"@README!B{h_upc}|sp1", "）。"]
 
 # 命題章：原有的情境定義與口徑摺疊在最後
 th_kv = next(b for b in sec(src, "thesis")["blocks"] if b["type"] == "kv")
@@ -213,5 +221,18 @@ se["blocks"] += [{"type": "note", "parts": [f"@Sens!A{r_w + 1}"]},
                   "head": [f"@Sens!{c}{r_wh}" for c in full["rowgen"]["cols"]],
                   "rowgen": dict(full["rowgen"], rows=f"{r_wh + 1}-{r_we}")}]
 
+# 第三輪修正：In 頁單位為 pt（百分點，存為小數）的列，relayout 預設 n1 會把 0.02 顯示成 0.0 → 改 sp1（帶正負號百分比）
+_PT = {r for r in range(4, wb["In"].max_row + 1) if wb["In"].cell(r, 3).value == "pt"}
+def _r3_pt(o):
+    if isinstance(o, dict):
+        return {k: _r3_pt(v) for k, v in o.items()}
+    if isinstance(o, list):
+        return [_r3_pt(v) for v in o]
+    if isinstance(o, str):
+        m = re.fullmatch(r"@In!([DEF])(\d+)\|n1", o)
+        if m and int(m.group(2)) in _PT:
+            return f"@In!{m.group(1)}{m.group(2)}|sp1"
+    return o
+cfg = _r3_pt(cfg)
 json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")
