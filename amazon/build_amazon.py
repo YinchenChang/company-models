@@ -2,7 +2,7 @@
 #   v0.3.1 季度滾動：mag/docs/workorders/20261029_MAG_v0.3.1_季度滾動_2026Q3.md 第 1–4 節；v0.3.2 Tokenomics 快照 v21.9；v0.3.3 10-Q 補入：mag/docs/workorders/20261104_MAG_10Q補入_2026Q3.md；v0.3.4 Tokenomics 快照 v21.10）
 # 固定規格：docs/plan/個股模型原則_命題加營收分部.md（命題模組＋官方營收分部 → 損益表；第 7 節讀法 2、第 8 節 In 頁、第 9 節敏感度覆蓋）。
 # 用法：python3 amazon/build_amazon.py [輸出.xlsx] [--set 鍵=值 ...] [--sens sens.json] [--q3v03 q3.json ...]
-#       （預設輸出 amazon/dist/20261104_Amazon個股模型_v0.3.4.xlsx；amazon/make_v031.sh 一次跑完 建置 → 重算 → 核對 → HTML）
+#       （預設輸出 amazon/dist/20261105_Amazon個股模型_v0.3.5.xlsx；amazon/make_v031.sh 一次跑完 建置 → 重算 → 核對 → HTML）
 #       再以 LibreOffice headless 重算：soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir <dir> <raw.xlsx>
 # 全部活公式；藍字＝輸入、黑字＝公式。金額 US$bn（每股 US$）；MW＝IT 關鍵電力 MW（MW-IT）。
 # 欄位（模型頁共用）：C FY2024A、D FY2025A、E 9M26A、F Q4 26E、G FY2026E（＝E＋F）、H–M FY2027–FY2032、N 9M25A、O Q4 25A。資料截至 2026-09-30。
@@ -20,7 +20,7 @@ from openpyxl.workbook.defined_name import DefinedName
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 AP = argparse.ArgumentParser()
-AP.add_argument("out", nargs="?", default=os.path.join(HERE, "dist", "20261104_Amazon個股模型_v0.3.4.xlsx"))
+AP.add_argument("out", nargs="?", default=os.path.join(HERE, "dist", "20261105_Amazon個股模型_v0.3.5.xlsx"))
 AP.add_argument("--set", action="append", default=[], help="覆寫 In 頁基準值：鍵=值（敏感度與拆解重算用；值可為數字或以 = 開頭的公式）")
 AP.add_argument("--sens", help="敏感度與拆解鏈的重算結果（amazon/sens_v031.py 產生）")
 AP.add_argument("--q3v03", action="append", default=[], help="變動拆解用：以 JSON 的事實值取代事實總帳（{\"facts\": {事實 id: 值}}；可重複；v0.3.3 拆解鏈以此把 10-Q 值改回 v0.3.2（＝v0.3.1）的推導或沿用值）")
@@ -1358,7 +1358,7 @@ SO.column_dimensions["A"].width = 8; SO.column_dimensions["B"].width = 90; SO.co
 RD = wb.create_sheet("README", 0)
 B_ = lambda blk, key, col: tk_("B", blk, key, col)
 lines = [
-    (f"Amazon（AMZN）個股模型 v0.3.4（命題模組＋官方營收分部 → 損益表；2026Q3 季度滾動、10-Q 補入、Tokenomics 快照 {TKV}）　2026-11-04", True),
+    (f"Amazon（AMZN）個股模型 v0.3.5（命題模組＋官方營收分部 → 損益表；v0.3.5 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；2026Q3 季度滾動、10-Q 補入、Tokenomics 快照 {TKV}）　2026-11-05", True),
     (f"版本：v0.3.4（Tokenomics 快照 v21.9 → {TKV}，基準數值同 v0.3.3）；v0.3.3（2026Q3 10-Q 補入；v0.3.2 為 2026-11-04 Tokenomics 快照 v21.9〔基準同 v0.3.1〕，v0.3.1 為 2026-10-31，v0.3 為 2026-10-27）。資料截至 2026-09-30（2026Q3 新聞稿與 10-Q）；FY2026＝9M 實績＋Q4 模型；Tokenomics " + TKV + "（Trainium 改讀 IF_NonNV_Hold_Trn）。v0.3.3 只以 10-Q 取代 v0.3.2 沿用自 v0.3.1 的推導與沿用值（債務面額、融資租賃、融資義務〔改本金口徑〕、分部折舊；股數維持 9/30 資產負債表），評價日、現價、共識、Tokenomics、情境與權重不動。", False),
     ("命題：AWS 的 AI 容量（Trainium＋NVIDIA）能否以高於資金成本的報酬變現，零售與廣告的現金流能否支應資本支出。", True),
     ("核心問題：FY2028 AWS 營業利益率與自由現金流（扣股利後）是否轉正並維持。", True),
@@ -1378,6 +1378,24 @@ lines = [
     ("工作表：README → In（輸入；J 節情境驅動對照）→ Q（實績與核對）→ Thesis（命題模組）→ Seg（營收分部）→ PL → CF → Val → Recon（共識、指引、v0.3 拆解）→ Sens（敏感度）→ Sources。", False),
     ("標記：Verified、Interested-party、Analogy、Assumed、Derived。沿用 v0.2.2：k 規格（kspec.py）、對外比例、WACC 輸入、持股與同業倍數。SemiAnalysis 未使用。In 頁 D／F＝敏感度低／高，只用於 Sens 頁；共識區間只作對照。", False),
     ("已知限制：(1) 公司未揭露 AI 在役 MW、對外比例與 AI 營收，AWS AI／AWS 其他的歷史分拆為估計；(2) 分部共識未找到，合併共識為財報前；(3) 同業倍數沿用 2026-10-07；(4) 到期債務假設全數再融資；(5) 10-Q 不揭露在建工程與 RPO 的認列時程；供應商擔保貸款額度（最高約 80.0，2027Q1 起可動用）與 Globalstar 收購（約 10.9，預計 2027 年完成）未入模型。", False),
+]
+# v0.3.5（Andy 2026-11-05，個股 HTML 版面規格 v1.0）：展示層與命題回覆（HTML 讀；原列保留）
+_BC = lambda k, c: B_("C", k, c)
+lines += [
+    ("", False),
+    ("展示層：命題摘要、命題分項與白話重點（HTML 用）", True),
+    ("命題：AWS 的 AI 容量（Trainium＋NVIDIA）能否賺到高於資金成本的報酬，以及零售與廣告的現金流能否撐住資本支出；三個問題如下。", False),
+    ("命題 1｜AWS AI 能否賺過資金成本：AI 算力租給客戶的收入，扣掉營運成本與折舊後，報酬率能否高於 WACC。", False),
+    ("命題 2｜零售與廣告撐得住資本支出嗎：資本支出大增期間，零售與廣告本業的現金流能否支應，是否需要舉債。", False),
+    ("命題 3｜每股值多少：把 AI 資本支出與折舊算進去之後，每股價值是否仍高於現價。", False),
+    (f'="重點 1｜合理價值略低於現價：我們估每股約 "&TEXT(Val!B19,"0")&" 美元，比現價 "&TEXT(px,"0.00")&" 低 "&TEXT(-Val!B21,"0%")&"。未來現金流折現約 "&TEXT(Val!B17,"0")&"、分部加總約 "&TEXT(Val!B18,"0")&"（廣告、零售本業、AWS 其他用同業倍數，AWS AI 用自身現金流折現，另加 Anthropic、OpenAI 持股）各占一半；樂觀、基準、保守三種情境約 "&TEXT(Val!B7,"0")&"、"&TEXT(Val!C7,"0")&"、"&TEXT(Val!D7,"0")&"。市場分析師平均目標價約 "&TEXT(cons_tp,"0")&"。"', False),
+    (f'="重點 2｜AI 算力的報酬目前低於資金成本：基準情境 2028 年對外 AI 投資報酬率約 "&TEXT({B_("T", "roic", "I")},"0.0%")&"，低於 WACC "&TEXT(wacc,"0.0%")&"；要打平，每 MW 年收入需達持有成本的 "&TEXT({B_("T", "k_be", "I")},"0.00")&" 倍，模型只有 "&TEXT({B_("T", "k_eff", "I")},"0.00")&" 倍。"', False),
+    (f'="重點 3｜現金撐得住，不必舉債：基準情境自由現金流 2027 年約 "&TEXT({_BC("fcfd", "H")}*10,"#,##0")&" 億美元、2028 年約 "&TEXT({_BC("fcfd", "I")}*10,"#,##0")&" 億，之後轉正；五年合計約 "&TEXT(CF!C6*10,"#,##0")&" 億美元；"&IF(SUM(CF!B7:D7)=0,"三種情境都不需舉債","部分情境需要舉債")&"。"', False),
+    ("", False),
+    ("命題回覆（HTML 用；依本模型計算回答開頭三個命題）", True),
+    (f'="AWS AI 能否賺過資金成本？答：基準情境賺不過。2028 年對外 AI 投資報酬率約 "&TEXT({B_("T", "roic", "I")},"0.0%")&"，低於 WACC "&TEXT(wacc,"0.0%")&"；要打平，機隊平均每 MW 年收入需達 Tokenomics 持有成本的 "&TEXT({B_("T", "k_be", "I")},"0.00")&" 倍，模型基準只有 "&TEXT({B_("T", "k_eff", "I")},"0.00")&" 倍。AWS 整體營業利益率由 2025 年 "&TEXT({B_("L", "m_aws", "D")},"0.0%")&" 降到 2028 年 "&TEXT({B_("L", "m_aws", "I")},"0.0%")&"。"', False),
+    (f'="零售與廣告撐得住資本支出嗎？答："&IF(SUM(CF!B7:D7)=0,"撐得住，三種情境都不需舉債","部分情境需要舉債")&"。基準情境自由現金流（扣融資租賃本金）2026、2027 年為負（約 "&TEXT({_BC("fcfd", "G")}*10,"#,##0")&"、"&TEXT({_BC("fcfd", "H")}*10,"#,##0")&" 億美元），2028 年約 "&TEXT({_BC("fcfd", "I")}*10,"#,##0")&" 億、之後轉正；期間現金最低約 "&TEXT(MIN({_BC("cash", "G")}:{_BC("cash", "I")})*10,"#,##0")&" 億美元，仍高於最低現金 "&TEXT(min_cash*10,"#,##0")&" 億。五年合計約 "&TEXT(CF!C6*10,"#,##0")&" 億美元（樂觀 "&TEXT(CF!B6*10,"#,##0")&"、保守 "&TEXT(CF!D6*10,"#,##0")&"）。"', False),
+    (f'="每股值多少？答：每股約 "&TEXT(Val!B19,"0.00")&" 美元（DCF "&TEXT(Val!B17,"0.00")&"、Comparable "&TEXT(Val!B18,"0.00")&" 各半），比現價 "&TEXT(px,"0.00")&" 低 "&TEXT(-Val!B21,"0.0%")&"，投資建議"&Val!B24&"。DCF 偏低是因為 2027–2029 年 AI 資本支出大（基準情境 2027 年約 "&TEXT({_BC("cx", "H")}*10,"#,##0")&" 億美元），而 AI 增量報酬接近或低於資金成本；只看 Comparable 則比現價高 "&TEXT(Val!B22,"0%")&"。三種情境約 "&TEXT(Val!B7,"0")&"、"&TEXT(Val!C7,"0")&"、"&TEXT(Val!D7,"0")&"；市場分析師平均目標價約 "&TEXT(cons_tp,"0")&"。"', False),
 ]
 for i, (tx, b) in enumerate(lines, 1):
     RD.cell(i, 1, tx).font = Font(bold=b)
