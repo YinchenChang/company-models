@@ -18,12 +18,14 @@ DC = wb["DCF"]
 r_dtp = row(VA, "DCF 目標價（情境加權）")
 _rk = row(VA, "股權成本 ke"); _rr = row(VA, "永續期 RONIC"); _rp = row(VA, "明確期 FCFF 現值")
 _dh = row(DC, "項目")
+# 第二輪修正：DCF 彙總表格式依標籤（模組 v2 stub 期在「＋淨現金與投資」後多兩列，不寫死列偏移）
+_fm = lambda r: (lambda lab: "n3" if lab.startswith("評價用稀釋股數") else "p1" if "終值現值占 EV" in lab else "x1" if "隱含終值" in lab else "n2")(str(VA.cell(r, 1).value or "").strip())
 DCF_BLOCKS = [
     {"type": "note", "parts": [f"@Val!A{_rk - 2}"]},
     {"type": "table", "caption": "DCF 折現率：股權成本、稅後債務成本、WACC、永續成長率、RONIC", "head": ["項目", "數值", "說明"],
      "rows": [[f"@Val!A{r}", f"@Val!B{r}|" + ("p1" if r == _rk + 2 else "p2"), f"@Val!E{r}"] for r in range(_rk, _rr + 1)]},
     {"type": "table", "caption": "DCF 彙總：明確期現值、終值現值、企業價值、淨現金與每股價值", "head": [f"@Val!{c}{_rk - 1}" for c in "ABCD"],
-     "rows": [[f"@Val!A{r}"] + [f"@Val!{c}{r}|" + {_rp + 4: "n3", _rp + 7: "p1", _rp + 8: "x1"}.get(r, "n2") for c in "BCD"] for r in range(_rp, r_dtp)]
+     "rows": [[f"@Val!A{r}"] + [f"@Val!{c}{r}|" + _fm(r) for c in "BCD"] for r in range(_rp, r_dtp)]
              + [[f"@Val!A{r_dtp}", f"@Val!B{r_dtp}|n2", "", ""]]}]
 for s_ in "ABC":
     _a = row(DC, f"情境 {s_}（"); _b = next(r for r in range(_a, DC.max_row + 1) if str(DC.cell(r, 1).value or "").startswith("現值（FCFF"))
@@ -47,6 +49,16 @@ for b in secs["sens"]["blocks"]:
 assert _n == 1, _n
 
 # 前處理（只動版面，不加數字）
+# 0. 第二輪修正：「情境驅動」表依 xlsx 的「情境驅動對照」節重建列號（In 頁新增 beta_du、stub 列後，html_src.json 的寫死列號會錯位）
+_s0 = row(IN, "情境驅動對照") + 1
+_s1 = max(r for r in range(_s0 + 1, IN.max_row + 1) if str(IN.cell(r, 1).value or "").startswith("scn_"))
+_nscn = 0
+for b in secs["drivers"]["blocks"]:
+    if b["type"] == "table" and str(b.get("caption", "")).startswith("情境驅動"):
+        b["head"] = [f"@In!{c}{_s0}" for c in "BDEFC"]
+        b["rows"] = [[f"@In!B{r}"] + [f"@In!{c}{r}" for c in "DEF"] + [f"@In!C{r}"] for r in range(_s0 + 1, _s1 + 1)]
+        _nscn += 1
+assert _nscn == 1, _nscn
 # 1. 驅動：原「單一參數」表實為輸入 → 推導量對照，交給轉換器放到附錄
 for b in secs["drivers"]["blocks"]:
     if str(b.get("caption", "")).startswith("單一參數"):
@@ -106,13 +118,13 @@ SPEC = {
   ["全公司：股價、折現率、目標價規則與收斂法", [
     ["股價與股數", ["px", "px_hi", "sh_basic"]],
     ["目標價規則（情境權重、DCF 權重）", ["tp_wA", "tp_wB", "tp_wC", "tp_w_dcf"]],
-    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta_u", "beta_u_med", "beta_de", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
-    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"]],
+    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta_u", "beta_u_med", "beta_du", "beta_de", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
+    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "bs_date", "stub_frac", "stub_div", "sh_v"]],
     ["自由現金流（股票薪酬、折舊、資本支出、營運資金）", ["fc_sbc", "fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]],
     ["收斂法（FY2030 起）", ["tp_g", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fade_mB", "fade_mC"]],
     ["共識目標價與前瞻 EPS（只作對照）", ["cons_tp", "cons_feps"]]]]],
  "blocks_to": {"數量、每模組雷射數與份額": "AI 光學（雷射晶片、光模組、OCS、CPO）", "@Units!A15": "AI 光學（雷射晶片、光模組、OCS、CPO）"},
- "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+ "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
           "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
           "Comparable 計算": ["同業前瞻 P/E 中位數", "12 個月後的前瞻 EPS", "Comparable 目標價"],
           "sheet:Recon": ["FY2027 EPS vs 共識", "FY2028 EPS vs 共識", "CY2026 雷射有效份額 vs", "CY2027 AI 相關營收 ÷", "FY2026 EPS vs 公司揭露"]},
