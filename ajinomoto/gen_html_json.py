@@ -134,14 +134,14 @@ SPEC = {
     ["全公司錨點與實績", ["f_rev", "f_bp", "f_oi", "f_ni", "f_eps", "q1_rev", "q1_bp", "q1_ni", "q1_eps", "a_rev", "a_bp", "a_oi", "a_ni", "a_eps", "a_da", "a_cx"]],
     ["淨利與股數", ["ni_bp", "sh_g", "so"]],
     ["股價與市場倍數", ["px", "pe_cf", "fpe", "cons_feps", "cons_tp"]],
-    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta", "beta_u", "beta_u_food", "beta_u_chem", "beta_w_fm", "beta_de", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
-    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"]],
+    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "rf_us", "beta", "beta_u", "beta_u_food", "beta_u_chem", "beta_w_fm", "beta_du", "beta_de", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
+    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "bs_date", "stub_frac", "stub_div", "sh_v"]],
     ["自由現金流（折舊、資本支出、營運資金；da_rev、cx_rev 另供 PL 頁自由現金流列）", ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc", "da_rev", "cx_rev"]],
     ["目標價規則與情境權重", ["tp_w_dcf", "tp_wA", "tp_wB", "tp_wC"]],
     ["收斂期（FY2030 起）", ["tp_g", "nm10_k", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fade_mB", "fade_mC"]]]]],
  "blocks_to": {"加速器顆數": "ファンクショナルマテリアルズ（FM）：ABF 增層膜", "@Units!A": "ファンクショナルマテリアルズ（FM）：ABF 增層膜"},
  "main": {
-  "0.1 DCF": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+  "0.1 DCF": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
   "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
  },
 }
