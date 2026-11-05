@@ -12,7 +12,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import cycle_position as CP
 import valuation_rule as VR
-import fcff_dcf as FD   # v0.3：標準版 DCF（無槓桿自由現金流＋WACC）共用模組（tools/fcff_dcf.py，原樣取自 claude/html-v1-nvidia）
+import fcff_dcf as FD   # v0.3：標準版 DCF（無槓桿自由現金流＋WACC）共用模組（tools/fcff_dcf.py）
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -1043,7 +1043,7 @@ _SG = '"+0.0%;-0.0%"'
 _wd, _wc = f"tp_w_dcf*({DCF}-{PX})/({TPW}-{PX})", f"(1-tp_w_dcf)*({CMP}-{PX})/({TPW}-{PX})"
 _e28 = f"(tp_wA*{_Ex('A', 2028)}+tp_wB*{_Ex('B', 2028)}+tp_wC*{_Ex('C', 2028)})"
 _main = f'IF(ABS({_wd}-{_wc})<0.1,"由 DCF 與 Comparable 各占約一半",IF({_wd}>{_wc},"主要來自 DCF","主要來自 Comparable"))'
-RD["A1"] = RD["A1"].value + "；v0.3（2026-11-05）：README 新增展示層、命題回覆與本版要點各段，HTML 改用個股版面規格 v1.0；模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；DCF 頁、Val 0.1 節、In 頁 K2 節、Sens 目標價參數），Comparable、情境權重、DCF 權重 50% 與投資建議規則不變；v0.3.1（2026-11-05）β 改為自算產業 β（US 半導體 同業中位數，Blume 調整；Andy 2026-11-05 22:55），評價日 2026-12-31 不變，其他模型參數不變；v0.3.2（2026-11-05）第二輪修正：換用共用模組 tools/fcff_dcf.py v2（淨現金由資產負債表日 2026-09-30 滾到評價日、β 敏感度改 β_u ± 0.3）"
+RD["A1"] = RD["A1"].value + "；v0.3（2026-11-05）：README 新增展示層、命題回覆與本版要點各段，HTML 改用個股版面規格 v1.0；模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；DCF 頁、Val 0.1 節、In 頁 K2 節、Sens 目標價參數），Comparable、情境權重、DCF 權重 50% 與投資建議規則不變；v0.3.1（2026-11-05）β 改為自算產業 β（US 半導體 同業中位數，Blume 調整；Andy 2026-11-05 22:55），評價日 2026-12-31 不變，其他模型參數不變；v0.3.2（2026-11-05）第二輪修正：換用共用模組 tools/fcff_dcf.py v2（淨現金由資產負債表日 2026-09-30 滾到評價日、β 敏感度改 β_u ± 0.3）；v0.3.3（2026-11-06）第三輪修正：HTML 橫幅美元兩位小數、相對倍數係數資料不足註記、stub 列名、情境驅動對照列名與格式（數值不變）"
 r = RD.max_row + 2
 RD.cell(r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；v0.3 新增，原 A3、A4、重點觀察各列保留）").font = BOLD; r += 1
 RD.cell(r, 1, "命題：Astera Labs 的營收＝Scorpio X（非 NVIDIA scale-up 交換晶片）＋PCIe 與訊號調節（重定時器、Scorpio P、AEC、CXL）。要回答的是現價隱含的 FY2028 EPS 需要 Scorpio X 份額多高、PCIe 等業務流失多少才成立，以及 NVLink Fusion 等競爭的影響。"); r += 1
@@ -1070,11 +1070,46 @@ RD.cell(r, 1, "上檔空間：Comparable 目標價（相對倍數調整後）");
 RD.cell(r, 1, f'="估值說明：加權目標價＝DCF 目標價 × "&TEXT(tp_w_dcf,"0%")&"＋Comparable 目標價（相對倍數調整後）× "&TEXT(1-tp_w_dcf,"0%")&"，投資建議依它的上檔空間判定。DCF 為標準版：無槓桿自由現金流（稅後營業利益〔GAAP〕＋折舊 − 資本支出 − 營運資金增加）以 WACC "&TEXT(wacc,"0.0%")&" 折現，終值用永續成長率 "&TEXT(g_tv,"0.0%")&"、新投資報酬率＝WACC，企業價值加淨現金（資產負債表日的淨現金加 stub 期無槓桿自由現金流、扣已宣告股利，滾到評價日）後除以股數，三情境價值以股權成本推到 12 個月後，再依情境權重加權；Comparable＝同業前瞻本益比中位數 × 本公司長期相對同業的倍數比 × 約一年後的未來 12 個月 EPS（non-GAAP，情境加權）。十年本益比規則值是舊法，只作參考，不進目標價。"'); r += 1
 r += 1
 RD.cell(r, 1, "本版要點（版本沿革；HTML 附錄用）").font = BOLD; r += 1
-RD.cell(r, 1, f'="v0.3.2（2026-11-05）：第二輪修正（Andy 2026-11-05 23:16 定案），換用共用模組 tools/fcff_dcf.py v2。(1) 淨現金滾到評價日：資產負債表日 "&bs_date&"（3Q26 已公布）→ 評價日 2026-12-31，淨現金與投資 "&TEXT(dcf_nc,"0.00")&"＋stub 期 FCFF（FY2026 錨點全年 FCFF × "&TEXT(stub_frac,"0.000")&" 年；情境 B "&TEXT(Val!C{SDCF["stub"]},"0.00")&"）− 已宣告股利 "&TEXT(stub_div,"0.00")&"＝"&TEXT(Val!C{SDCF["ncr"]},"0.00")&"（US$B；情境 B）。(2) β 敏感度改 β_u ± 0.3 各自重新加槓桿（β "&TEXT(beta_lo,"0.00")&"／"&TEXT(beta_hi,"0.00")&"）；基準 β_u 1.884 不變（β "&TEXT(beta,"0.00")&"）。(3) 美國公司不加「美元口徑折現」（＝基準）。(4) RONIC＝WACC 不變；無非控制權益；資本支出、折舊：本模型沒有擴產排程列，維持占營收比例；Sens「Wattonomics 錨定」路徑同樣滾到評價日。β 1.89 → "&TEXT(beta,"0.00")&"、WACC 14.4% → "&TEXT(wacc,"0.0%")&"、DCF 目標價 37.54 → "&TEXT({DCF},"0.00")&"、加權目標價 103.32 → "&TEXT({TPW},"0.00")&"、上檔空間 -59.8% → "&TEXT({UP},"+0.0%;-0.0%")&"、投資建議 強力放空 → "&{REC}&"。"'); r += 1
+RD.cell(r, 1, f'="v0.3.3（2026-11-06）：第三輪修正。(1) HTML 投資建議橫幅：單位美元、兩位小數；相對倍數調整係數 1.00 註明未調整（資料不足）。(2) stub 列名改為含 stub 期會計年度（FY2026）FCFF × stub_frac（實際口徑為 FY2026 錨點）。(3) 情境驅動對照收斂法列名中性化與百分比格式。數值不變。加權目標價 103.42 → "&TEXT({TPW},"0.00")&"、上檔空間 -59.8% → "&TEXT({UP},"+0.0%;-0.0%")&"、投資建議 強力放空 → "&{REC}&"。"'); r += 1
+RD.cell(r, 1, "v0.3.2（2026-11-05）：第二輪修正（Andy 2026-11-05 23:16 定案），換用共用模組 tools/fcff_dcf.py v2。(1) 淨現金滾到評價日：資產負債表日 2026-09-30（3Q26 已公布）→ 評價日 2026-12-31，淨現金與投資 1.32＋stub 期 FCFF（FY2026 錨點全年 FCFF × 0.252 年；情境 B 0.03）− 已宣告股利 0.00＝1.35（US$B；情境 B）。(2) β 敏感度改 β_u ± 0.3 各自重新加槓桿（β 1.59／2.19）；基準 β_u 1.884 不變（β 1.89）。(3) 美國公司不加「美元口徑折現」（＝基準）。(4) RONIC＝WACC 不變；無非控制權益；資本支出、折舊：本模型沒有擴產排程列，維持占營收比例；Sens「Wattonomics 錨定」路徑同樣滾到評價日。β 1.89 → 1.89、WACC 14.4% → 14.4%、DCF 目標價 37.54 → 37.73、加權目標價 103.32 → 103.42、上檔空間 -59.8% → -59.8%、投資建議 強力放空 → 強力放空。"); r += 1   # 舊版沿革：固定為該版成品的計算結果
 RD.cell(r, 1, "v0.3.1（2026-11-05）：β 改為自算產業 β（US 半導體 同業 13 家無槓桿 β 中位數 2.32，Blume 調整後 1.884，依 Astera Labs 負債比重新加槓桿；Andy 2026-11-05 22:55，取代 Damodaran 產業 β）。β 1.50 → 1.89、WACC 12.5% → 14.4%、DCF 目標價 42.18 → 37.54、加權目標價 105.64 → 103.32、上檔空間 -58.9% → -59.8%、投資建議 強力放空 → 強力放空。評價日 2026-12-31、目標時點 12 個月後與其他模型參數不變。"); r += 1
 RD.cell(r, 1, "v0.3（2026-11-05）：模型改版，DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC，docs/plan/個股DCF標準規格.md）。DCF 目標價 110.98 → 42.18、加權目標價 140.04 → 105.64、上檔空間 −45.5% → -58.9%、投資建議 放空 → 強力放空。DCF 差異拆解見 PR 內文。Comparable、情境權重、DCF 權重 50% 與投資建議規則不變。"); r += 1   # 舊版沿革：固定為該版成品的計算結果
 RD.cell(r, 1, "v0.3（2026-11-05）展示層：README 新增展示層、命題回覆、HTML 輔助列與本版要點；HTML 改用個股 HTML 版面規格 v1.0（投資建議橫幅、命題分點與命題回覆、驅動因子依業務分塊、估值與對帳只列主要項目）。"); r += 1
 RD.cell(r, 1, "=A2"); r += 1
+
+# ================= v0.3.3（2026-11-06）：第三輪修正（存檔前；只改標籤、格式與本節列出的項目） =================
+def _r3_common(stub_fy, tw, scn_labels):
+    # (1) stub 列名依實際口徑：含 stub 期的會計年度 FCFF × stub_frac（模組 tools/fcff_dcf.py v2 的說明字串在此覆寫）
+    for ws_ in (IN, V, wb["DCF"]):
+        for row_ in ws_.iter_rows():
+            for c_ in row_:
+                if isinstance(c_.value, str) and "第一年 FCFF" in c_.value:
+                    c_.value = c_.value.replace("各路徑第一年 FCFF", "第一年 FCFF").replace("第一年 FCFF", f"含 stub 期會計年度（FY{stub_fy}）FCFF")
+    # (2) Sens：g 的高值受上限 rf 限制時列名改「g −1pt／上限 rf」
+    if tw:
+        n_ = 0
+        for r_ in range(1, SE.max_row + 1):
+            if SE.cell(r_, 1).value == "永續成長率 g ±1pt":
+                SE.cell(r_, 1).value = "永續成長率 g −1pt／上限 rf"
+                SE.cell(r_, 2).value = '="g "&TEXT(g_tv_lo,"0.00%")&"／"&TEXT(g_tv_hi,"0.00%")&"（＋1pt 受上限 rf 限制）"'
+                n_ += 1
+        assert n_ >= 1
+    # (3) In「情境驅動對照」：收斂法列名改中性（三情境並排），百分比／pt 給格式
+    r0_ = next(r_ for r_ in range(1, IN.max_row + 1) if str(IN.cell(r_, 1).value or "").startswith("情境驅動對照"))
+    r_ = r0_ + 2; seen_ = set()
+    while IN.cell(r_, 1).value:
+        k_ = IN.cell(r_, 1).value; u_ = IN.cell(r_, 3).value
+        if k_ in scn_labels: IN.cell(r_, 2).value = scn_labels[k_]; seen_.add(k_)
+        fm_ = "0%" if k_ == "scn_w" else {"%": "0.00%" if "fade_m" in k_ else "0.0%", "pt": "+0.0%;-0.0%;0.0%"}.get(u_)
+        if fm_:
+            for cc_ in (4, 5, 6): IN.cell(r_, cc_).number_format = fm_
+        r_ += 1
+    assert seen_ == set(scn_labels), (seen_, scn_labels)
+_r3_common(2026, False, {'scn_fade_g': '收斂法：FY2032 營收年增收斂目標（A＝tp_g＋2pt；B＝tp_g；C＝tp_g−2pt）', 'scn_fade_m': '收斂法：中段淨利率（A＝本情境 FY2029；B＝FY2029 與十年平均替代值〔FY2029 × 0.8〕的中點；C＝十年平均替代值 FY2029 × 0.8）'})
+# (4) 相對倍數調整係數：資料不足（＝1）時在 C 欄註明「未調整（資料不足）」
+_rc = next(r_ for r_ in range(1, V.max_row + 1) if V.cell(r_, 1).value == "相對倍數調整係數")
+V.cell(_rc, 3).value = f'=IF(ISNUMBER(B{_rc - 3}),"","未調整（資料不足）")'
+
 wb.save(sys.argv[1])
 if os.environ.get("ALAB_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
