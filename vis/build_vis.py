@@ -855,6 +855,34 @@ sys.path.insert(0, os.path.join(ROOT, "tools", "in_layout")); import apply_in_la
 apply_in_layout.apply(wb, "v0.1", "2026-10-31")
 # v0.13（2026-11-04）：Sens「Wattonomics 錨定」案例（三層校準原則；決策 S37）——本模型不適用，只在 Sens 頁最下方寫一行說明（既有格不動）
 SE.cell(SE.max_row + 3, 1, "Wattonomics 錨定：不適用（理由：營收＝8 吋晶圓（產能 × 稼動率 × 售價）＋ VSMC 12 吋，沒有 AI 加速器顆數、部署 GW 或 AI 市場規模等量驅動；AI 相關 ÷ 營收只是記憶列（ai_sh26／ai_sh27_*）、不進營收加總。三層校準原則（Andy 2026-11-04）。）")
+# ---------------- v0.1.1（2026-11-05）：README 展示層與命題回覆（個股 HTML 版面規格 v1.0；只改 README，其他工作表逐格不變） ----------------
+RD["A1"] = str(RD["A1"].value) + "；v0.1.1（2026-11-05）只改展示層（README 新增展示層與命題回覆兩段、HTML 改用新版面 v1.0），其他工作表數值與 v0.1 逐格相同"
+RD.cell(RD.max_row + 1, 1, "v0.1.1（2026-11-05）：只改展示層。README 新增「展示層」（命題摘要、命題分項、白話重點）與「命題回覆」兩段，數字皆以公式帶出；HTML 改用個股 HTML 版面規格 v1.0（投資建議橫幅、命題回覆摺疊、驅動因子依業務分塊）。其他工作表與 v0.1 逐格相同。")
+_B = lambda k, c="B": f"Val!{c}{T[k]}"
+_E = lambda s, y: f"PL!{FC[y]}{SUMR[(s, 'eps')]}"
+_U = lambda k, s, y: f"Units!{dict(zip((2026, 2027, 2028, 2029), 'CDEF'))[y]}{UR[f'{k}_{s}']}"
+_S = lambda k, side: f"Sens!J{SENS_ROWS[(k, side)]}"
+_SW = lambda lab: f"Sens!J{TP_ROWS[lab]}"
+_rec, _f0 = f"Val!B{REC_ROW}", f"Val!B{O + 8}"
+_T = lambda x, f="0.0": f'TEXT({x},"{f}")'
+_pc = lambda x: f'TEXT({x},"+0.0%;-0.0%")'
+_p0 = lambda x: f'TEXT({x},"+0%;-0%;0%")'
+_3 = lambda f: "&\"／\"&".join(f(s) for s in "ABC")
+r = RD.max_row + 2
+RD.cell(r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；v0.1.1 起；上方各列原文保留給下游）").font = Font(bold=True); r += 1
+RD.cell(r, 1, "命題：世界先進的獲利由 8 吋成熟與特殊製程的稼動率與售價循環決定；新加坡 VSMC 12 吋廠 2027 年量產是營收成長的主要來源，但量產初期折舊重；以下三個問題依序回答。"); r += 1
+RD.cell(r, 1, "命題 1：8 吋稼動率與售價能回升多少。AI 伺服器電源帶動電源管理 IC 需求、稼動率回到九成以上，這個回升能撐起多少 EPS。"); r += 1
+RD.cell(r, 1, "命題 2：VSMC 能補多少。新加坡 12 吋廠量產後占營收多少，量產初期的毛利率與 NXP 的非控制權益讓它對 EPS 與目標價的影響有多大。"); r += 1
+RD.cell(r, 1, "命題 3：每股值多少。用 DCF 與同業倍數算出的目標價，和現價相比是高是低。"); r += 1
+RD.cell(r, 1, f'="重點 1：合理價值低於現價，但跌幅未到放空門檻，投資建議"&{_rec}&"。加權目標價約 "&{_T(_B("tpw"))}&" 元，比現價 "&{_T("px")}&" 元低 "&TEXT(-{_B("upw")},"0.0%")&"，距放空門檻 −25% 只差 "&TEXT(({_B("upw")}+0.25)*100,"0.0")&" 個百分點。拆解這段差距：DCF（約 "&{_T(_B("dcftp"))}&" 元）貢獻 "&TEXT(tp_w_dcf*({_B("dcftp")}-px),"+0.0;-0.0")&" 元，Comparable（約 "&{_T("tp_comp_adj")}&" 元）貢獻 "&TEXT((1-tp_w_dcf)*(tp_comp_adj-px),"+0.0;-0.0")&" 元，下檔全部來自 DCF。DCF 偏低是因為 ROE 近三年平均只有 "&TEXT(tp_roe,"0.0%")&"、再投資率 "&TEXT({_B("reinv")},"0%")&"，且情境 B 的 FY2028 EPS "&{_T(_E("B", 2028), "0.00")}&" 元低於 FY2027 的 "&{_T(_E("B", 2027), "0.00")}&" 元。敏感度案例「"&Sens!A{TP_ROWS["DCF 權重 0.3"]}&"」／「"&Sens!A{TP_ROWS["DCF 權重 0.7"]}&"」使加權目標價 "&{_pc(_SW("DCF 權重 0.3"))}&"／"&{_pc(_SW("DCF 權重 0.7"))}&"（DCF 權重為假設）。"'); r += 1
+RD.cell(r, 1, f'="重點 2：8 吋稼動率與售價決定三情境的差別，兩者都是假設。三情境 FY2027 稼動率 "&{_3(lambda s: f"TEXT(ut27_{s},\"0%\")")}&"、平均售價年增 "&{_3(lambda s: _p0(f"asp27_{s}"))}&"，FY2027 EPS 分別約 "&{_3(lambda s: _T(_E(s, 2027), "0.00"))}&" 元（FY2026 錨點 "&{_T(_E("B", 2026), "0.00")}&" 元）。敏感度（Sens 頁以三情境加權目標價為基準，每個案例三情境同時改）：匯率 "&TEXT(fx_lo,"0.0")&"／"&TEXT(fx_hi,"0.0")&"（基準 "&TEXT(fx,"0.0")&"）使加權目標價 "&{_pc(_S("fx", "lo"))}&"／"&{_pc(_S("fx", "hi"))}&"，8 吋售價水準低／高 "&TEXT(asp_adj_hi,"0%")&" 使 "&{_pc(_S("asp_adj", "lo"))}&"／"&{_pc(_S("asp_adj", "hi"))}&"，8 吋稼動率低／高 "&TEXT(ut_adj_hi*100,"0")&" 個百分點使 "&{_pc(_S("ut_adj", "lo"))}&"／"&{_pc(_S("ut_adj", "hi"))}&"。"'); r += 1
+RD.cell(r, 1, f'="重點 3：VSMC 營收占比上升快，但對目標價影響小。12 吋（VSMC）占營收 FY2027 約 "&{_3(lambda s: f"TEXT({_U('v12sh', s, 2027)},\"0.0%\")")}&"（研究機構約 "&TEXT(an_12sh27,"0%")&"）、FY2029 約 "&{_3(lambda s: f"TEXT({_U('v12sh', s, 2029)},\"0.0%\")")}&"；VSMC 毛利率假設 FY2027 "&{_3(lambda s: _p0(f"vgm27_{s}"))}&"、FY2028 "&{_3(lambda s: _p0(f"vgm28_{s}"))}&"（含折舊，公司未揭露），且 NXP 持有 "&TEXT(vmi,"0%")&" 的非控制權益，所以 VSMC 產能低／高 "&TEXT(1-vcap_adj_lo,"0%")&" 對加權目標價只有 "&{_pc(_S("vcap_adj", "lo"))}&"／"&{_pc(_S("vcap_adj", "hi"))}&"，售價 "&TEXT(vasp_lo,"#,##0")&"／"&TEXT(vasp_hi,"#,##0")&" 美元只有 "&{_pc(_S("vasp", "lo"))}&"／"&{_pc(_S("vasp", "hi"))}&"。"'); r += 1
+r += 1
+RD.cell(r, 1, "命題回覆（HTML 用；依本模型計算逐一回答上面三個命題）").font = Font(bold=True); r += 1
+RD.cell(r, 1, f'="8 吋稼動率與售價能回升多少？答：本模型設定的回升溫和。FY2026 平均稼動率約 "&TEXT({_U("ut", "B", 2026)},"0.0%")&"，FY2027 三情境設為 "&{_3(lambda s: f"TEXT(ut27_{s},\"0%\")")}&"（假設），平均售價由 FY2026 約 "&{_T(_U("asp", "B", 2026), "#,##0")}&" 美元／片到 FY2027 "&{_3(lambda s: _T(_U("asp", s, 2027), "#,##0"))}&"。FY2027 EPS 三情境約 "&{_3(lambda s: _T(_E(s, 2027), "0.00"))}&" 元，情境 A、B 高於 FY2026 的 "&{_T(_E("B", 2026), "0.00")}&" 元、情境 C 低於；研究機構的 FY2027 EPS 約 "&{_T("an_eps27", "0")}&" 元，只有情境 A 高於它。情境 B 的 FY2028 EPS 降到 "&{_T(_E("B", 2028), "0.00")}&" 元（8 吋稼動率由 "&TEXT(ut27_B,"0%")&" 降到 "&TEXT(ut28_B,"0%")&"、售價持平，皆為假設）。"'); r += 1
+RD.cell(r, 1, f'="VSMC 能補多少？答：營收補得多、獲利補得少。VSMC 營收 FY2029 約 "&{_3(lambda s: _T(f"PL!{FC[2029]}{SUMR[(s, 'vrev')]}", "0.0"))}&" 十億元（情境 A／B／C），占營收約 "&{_3(lambda s: f"TEXT({_U('v12sh', s, 2029)},\"0.0%\")")}&"；但量產初期毛利率低（FY2027 假設 "&{_3(lambda s: _p0(f"vgm27_{s}"))}&"），獲利的 "&TEXT(vmi,"0%")&" 歸 NXP，所以 VSMC 產能低／高 "&TEXT(1-vcap_adj_lo,"0%")&" 對加權目標價只有 "&{_pc(_S("vcap_adj", "lo"))}&"／"&{_pc(_S("vcap_adj", "hi"))}&"，比 8 吋售價低／高 "&TEXT(asp_adj_hi,"0%")&" 的 "&{_pc(_S("asp_adj", "lo"))}&"／"&{_pc(_S("asp_adj", "hi"))}&" 小得多（同以三情境加權目標價為基準）。"'); r += 1
+RD.cell(r, 1, f'="每股值多少？答：加權目標價約 "&{_T(_B("tpw"))}&" 元（DCF "&{_T(_B("dcftp"))}&"、Comparable "&{_T("tp_comp_adj")}&"，權重各半），比現價 "&{_T("px")}&" 元低 "&TEXT(-{_B("upw")},"0.0%")&"，投資建議"&{_rec}&"。只看 Comparable（市場主流同業法）的目標價 "&{_T(_B("comptp"))}&" 元，比現價高 "&TEXT({_B("upc")},"0.0%")&"；本版沒有相對倍數調整（世界先進的 Bloomberg 前瞻倍數待取，係數取 "&{_T("rm_factor", "0.0")}&"），所以進加權的 Comparable 與它相同。市場共識目標價 "&{_T(_B("cons"))}&" 元。DCF 三情境價值（推到 12 個月後）順利、平平、不如預期約 "&{_T(_B("dcf12", "B"))}&"、"&{_T(_B("dcf12", "C"))}&"、"&{_T(_B("dcf12", "D"))}&" 元。現價約為未來 12 個月 EPS（情境 B）的 "&{_T(_f0)}&" 倍，同業前瞻 P/E 中位數 "&{_T(_B("pmed"))}&" 倍（兩者都是往後 12 個月的倍數）。"'); r += 1
+r += 1
 wb.save(sys.argv[1])
 if os.environ.get("ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK, "VAL": VAL, "INROW": INROW,
