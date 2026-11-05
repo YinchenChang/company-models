@@ -78,6 +78,8 @@ _gw = nvr(S, "SIF_DeployGW_Base") if "SIF_DeployGW_Base" in S.defined_names else
 
 # A. Siliconomics 平台別 AI IT 資本支出（$B；本庫基準＝原始顆數 × 基準係數）
 DEP = S["Deploy"]
+# v0.16 起 Deploy 頁只剩基準列：每 GW IT capex 列依列名定位（原寫死第 8 列）
+PGW_ROW = next(rr for rr in range(1, DEP.max_row + 1) if str(DEP.cell(rr, 1).value or "").startswith("每 GW IT 資本支出"))
 UN = S["Units"]
 it = {k: nv(S, n) for k, n in [("GB", "it_GB"), ("VR", "it_VR"), ("RU", "it_RU"), ("HP", "it_HP"), ("AMD8", "it_AMD8"),
                                 ("AMDR", "it_AMDR"), ("TPU", "it_TPU"), ("TRN", "it_TRN"), ("ASIC", "it_ASIC")]}
@@ -93,21 +95,21 @@ for k, row, fit in plat:
 for y in (2026, 2027, 2028, 2029):
     inp(f"dep_{y}", f"Siliconomics 部署 GW（成本等值，基準）{y}", "GW", None, _gw[y - 2026], None, "Derived",
         f"{sil_f} Interface SIF_DeployGW_Base（＝原情境 B）＝AI IT capex × 基準係數 ÷ 每 GW IT capex")
-    inp(f"pgw_{y}", f"Siliconomics 每 GW IT capex {y}（成本等值的分母）", "$B/GW", None, DEP.cell(8, YC[y] - 2).value, None, "Derived",
-        f"{sil_f} Deploy!{CL(YC[y]-2)}8（2026 依 vr26 混合 GB300／VR200；2027 起 VR200）")
+    inp(f"pgw_{y}", f"Siliconomics 每 GW IT capex {y}（成本等值的分母）", "$B/GW", None, DEP.cell(PGW_ROW, YC[y] - 2).value, None, "Derived",
+        f"{sil_f} Deploy!{CL(YC[y]-2)}{PGW_ROW}（2026 依 vr26 混合 GB300／VR200；2027 起 VR200）")
 
 # B. 非 NVIDIA 實體 GW 換算（Tokenomics 持有成本比）
 IN.cell(r, 1, "B. 非 NVIDIA 實體 GW 換算：每 GW IT capex ＝ VR200 每 GW IT capex × 持有成本比（與 Wattonomics CapexGW 同法）").font = BOLD; r += 1
 vr = tk("TK_CapexIT_VR200")
-inp("pgw_vr", "VR200 每 IT GW IT capex", "$B/GW", vr[0], vr[1], vr[2], "Derived", "Tokenomics v21.7 IF_CapexIT（TK_In 鏡像）")
+inp("pgw_vr", "VR200 每 IT GW IT capex", "$B/GW", vr[0], vr[1], vr[2], "Derived", "Tokenomics IF_CapexIT（Siliconomics TK_In 鏡像）")
 for k, nm, lab in [("amd", "TK_NonNV_Hold_AMD", "AMD（MI455X）"), ("tpu", "TK_NonNV_Hold_TPU", "Google TPU（Ironwood）"),
                    ("trn", "TK_NonNV_Hold_Trn", "AWS Trainium3")]:
     v = tk(nm)
-    inp(f"hold_{k}", f"持有成本比 {lab} ÷ VR200", "x", v[0], v[1], v[2], "Assumed", f"Tokenomics v21.7 {nm.replace('TK_', 'IF_')}（TK 標 Assumed）")
+    inp(f"hold_{k}", f"持有成本比 {lab} ÷ VR200", "x", v[0], v[1], v[2], "Assumed", f"Tokenomics {nm.replace('TK_', 'IF_')}（Siliconomics TK_In 鏡像；TK 標 Assumed）")
 v1, v2, v3 = tk("TK_NonNV_Hold_Maia"), tk("TK_NonNV_Hold_Ascend"), tk("TK_NonNV_Hold_OAI")
 inp("hold_oth", "持有成本比 其他 ASIC ÷ VR200（Maia、昇騰、OpenAI 客製三者簡單平均）", "x",
     round((v1[0] + v2[0] + v3[0]) / 3, 3), round((v1[1] + v2[1] + v3[1]) / 3, 3), round((v1[2] + v2[2] + v3[2]) / 3, 3), "Assumed",
-    f"Tokenomics v21.7 IF_NonNV_Hold_Maia {v1[1]}、_Ascend {v2[1]}、_OAI {v3[1]}；MTIA 無 TK 值，組合權重未知故取簡單平均")
+    f"Tokenomics IF_NonNV_Hold_Maia {v1[1]}、_Ascend {v2[1]}、_OAI {v3[1]}；MTIA 無 TK 值，組合權重未知故取簡單平均")
 
 # C. 出貨 → 上線
 IN.cell(r, 1, "C. 出貨年 → 上線年").font = BOLD; r += 1

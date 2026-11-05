@@ -15,6 +15,7 @@ import valuation_rule as VR
 import market as MEM
 sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
 import reader as SIL   # Siliconomics 快照（行業變數單一來源）
+sys.path.insert(0, os.path.join(ROOT, "markets", "scen")); import scen as SCN   # noqa: E402  v0.16：產業情境 A／C 參考值（市場層；B 讀 Siliconomics）
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -109,8 +110,8 @@ for y in (26, 27, 28):
 # 世芯占 Trainium 份額：Siliconomics In 頁 M7（v0.3 起單一來源；數值與文字由本檔原寫死值逐字搬入）
 for key in ["al_trn_26"] + [f"al{y}_{s}" for y in (27, 28) for s in ("A", "B", "C")]:
     y = 26 if key == "al_trn_26" else int(key[2:4])
-    inp(*SIL.row9(key))
-    assert MV[f"msh_trn_{y}"][0][1] + SIL.V[key]["hi"] <= 1.0 + 1e-9, key   # Marvell（基準）＋世芯（高）≤ 100%
+    inp(*SCN.row9(key))   # v0.16：A、C 讀市場層 markets/scen，B 與 al_trn_26 讀 Siliconomics
+    assert MV[f"msh_trn_{y}"][0][1] + SCN.V[key]["hi"] <= 1.0 + 1e-9, key   # Marvell（基準）＋世芯（高）≤ 100%
 PFC = {"A": 1.5, "B": 1.2, "C": 1.0}
 for s in SC:
     inp(f"pfc_{s}", f"CY2028 起每顆營收係數（2 奈米 Trainium 4；情境 {s}）", "x", 0.8 if s == "A" else None, PFC[s], 2.5 if s == "A" else None, "Assumed",

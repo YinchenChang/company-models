@@ -10,6 +10,7 @@ sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 import market as MEM
 sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
 import reader as SIL   # Siliconomics 快照：每顆網通內容、每顆 IT capex、技術轉換、CPO 三情境（v0.4 起單一來源）
+sys.path.insert(0, os.path.join(ROOT, "markets", "scen")); import scen as SCN   # noqa: E402  v0.16：產業情境 A／C 參考值（市場層；B 讀 Siliconomics）
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 wb = openpyxl.Workbook()
@@ -67,9 +68,9 @@ inp("rep_avgo26", "Broadcom AI 網通營收 2026", "$B", 16, 17.6, 20, "Derived"
 inp("rep_opt26", "AI 叢集光學市場 2026（LightCounting）", "$B", None, 26, None, "Interested-party", "LightCounting 2026-01：2025 16.5、2026 26（含 scale-up）")
 inp("rep_bern", "網通 ÷ AI 資料中心總 capex（Bernstein）", "%", None, 0.13, None, "Interested-party", "Bernstein 2025-11；IT 約占 75% → ÷ IT 約 17%")
 sec("F. CPO 滲透三情境（v0.2.3；技術替代屬行業情境：A＝替代快、B＝平平、C＝慢；下游公司 A／B／C 讀同字母）")
-for s_ in ("A", "B", "C"):   # Siliconomics In 頁 M10（v0.4 起）
+for s_ in ("A", "B", "C"):   # Siliconomics In 頁 M10（v0.4 起）；v0.16 起 A、C 在市場層 markets/scen，B＝Siliconomics 基準
     for y in YRS:
-        inp(*SIL.row8(f"cpo_{s_}_{y}"))
+        inp(*SCN.row8(f"cpo_{s_}_{y}"))
 R = {}
 r = 4
 for s in rows:

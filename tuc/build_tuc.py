@@ -13,6 +13,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
 import reader as SIL   # noqa: E402  Siliconomics 快照（行業變數單一來源）
+sys.path.insert(0, os.path.join(ROOT, "markets", "scen")); import scen as SCN   # noqa: E402  v0.16：產業情境 A／C 參考值（市場層；B 讀 Siliconomics）
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import relative_multiple as RMX   # noqa: E402
 sys.path.insert(0, os.path.join(ROOT, "tools", "in_layout"))
@@ -39,7 +40,7 @@ SNAP = f"Siliconomics 快照 {SIL.VERSION}（{SIL.FILE}）"
 # ---------------- 上游：Siliconomics（行業）＋台光電成品（份額一致性檢查，唯讀） ----------------
 N = SIL.NAMES
 # v0.15：本庫只給基準（SIF_*_Base）；個股自訂情境＝基準 × (個股情境係數 ÷ 基準係數)（2028–29；2026–27 三情境相同）
-_SF = {s: [1, 1, SIL.base(f"um28_{s}") / SIL.base("um28_B"), SIL.base(f"um29_{s}") / SIL.base("um29_B")] for s in SC}
+_SF = {s: [1, 1, SCN.base(f"um28_{s}") / SIL.base("um28_B"), SCN.base(f"um29_{s}") / SIL.base("um29_B")] for s in SC}   # v0.16：A、C 係數讀市場層 markets/scen
 GW = {s: [b * f for b, f in zip(N["SIF_DeployGW_Base"], _SF[s])] for s in SC}          # 2026–2029
 PGW = N["SIF_CCLperGW"]; MKT = {s: [b * f for b, f in zip(N["SIF_CCLMkt_Base"], _SF[s])] for s in SC}
 assert all(GW[s][:2] == GW["A"][:2] for s in SC), "2026–27 部署 GW 三情境應相同"

@@ -15,7 +15,7 @@
 1. 只取 `SIF_` 具名範圍（Interface 頁）；`SGOV_Errors` 須為 0 的版本才可匯出快照。不得連結 In、Path、Mkt、Checks 等內部頁。
 2. 經快照取數：`data/CURRENT_SNAPSHOT` 指向的 JSON（`tools/export_snapshot.py` 產生，記錄 xlsx 檔名、版本、sha256）。公司模型在來源欄寫明快照版本。
 3. 低／高（`SIF_<鍵>_lo`、`_hi`）只作敏感度；主值一律取基準。
-4. 情境（v0.12 起；工作方式 v1.7，Andy 2026-11-02 15:58）：本庫只給基準（＝原情境 B），下游基準讀 `*_Base` 名稱；公司模型的 A／C 由公司自訂，並在情境係數列說明欄寫明相對本庫基準的倍數與產業 GW 相對 Wattonomics 基準 ±%（`reader.scen_note()`、`SIF_GWvsWT_Base`）。A／B／C 名稱 v0.12 停用過渡、v0.13 刪除。原規則「A／B／C 一律讀本庫同字母」（2026-10-25）已取代。行業變數的基準值仍不得在公司模型內另訂一套。
+4. 情境（v0.12 起；工作方式 v1.7，Andy 2026-11-02 15:58；v0.16 完成過渡）：本庫只給基準（＝原情境 B），下游基準讀 `*_Base` 名稱。產業情境 A、C 的參考值自 v0.16 起由市場層 `markets/scen/`（`scen.py`、`industry_scen_v*.json`）持有，本庫 In 頁與各推導頁不再有 A／C（決策 S41）。公司模型的 A／C 預設讀市場層同字母情境（Andy 2026-10-25 情境一致性），覆寫時在說明欄寫明相對市場層的倍數與產業 GW 相對 Wattonomics 基準 ±%（`reader.scen_note()`、`SIF_GWvsWT_Base`）。行業變數的基準值仍不得在公司模型內另訂一套。
 5. Tokenomics 的量：經本庫 `SIF_TK_*` 取（值＝Tokenomics 現行快照，版本見 Interface 第 2 列），或直接讀 Tokenomics 快照；兩者不得混用不同版本。
 6. 公司模型發現行業變數需要修正：改本庫 In 頁（同一 repo 的 PR），不在公司模型覆寫。
 
@@ -41,3 +41,4 @@
 
 版本號：只改證據、標記、文字為修補版（v0.1.x）；輸入值或公式改變為次版（v0.x）；Interface 名稱刪除或定義改變為主版（v1.0 前只新增名稱以次版處理）。
 | v0.12 | 2026-11-03 | 新增 `*_Base`（57 組，等同原 B 名稱，例 `SIF_DeployGW_Base`、`SIF_um28_Base`、`SIF_cpo_Base_27`、`SIF_cqBase_8`）、`SIF_GWvsWT_Base`（2026–2029）；A／B／C 名稱標停用過渡（v0.13 刪） | 35 個公司模型與 tsmc 的情境係數列改標「個股自訂」，說明欄由 `reader.scen_note()` 產生；數值不變（cascade 第二輪 64 個全部 SAME） |
+| v0.16 | 2026-11-05 | 刪除 In 頁層情境名稱 `SIF_cqA_*`／`SIF_cqC_*`、`SIF_nqA_*`／`SIF_nqC_*`、`SIF_um28_A`／`_C`、`SIF_um29_A`／`_C`、`SIF_hbm_p28_A`／`_C`、`SIF_hbm_p29_A`／`_C`、`SIF_al27_A`／`_C`、`SIF_al28_A`／`_C`、`SIF_cpo_A_*`／`SIF_cpo_C_*`、`SIF_eq_ck_C_*`（含 `_lo`／`_hi`；值移到 `markets/scen`）；新增 `SIF_CapGW_CoWoS_Base`、`SIF_CapGW_HBM_Base`、`SIF_CapOnlineGW_CoWoS_Base`、`SIF_CapOnlineGW_HBM_Base`；`SIF_TestWFE_SoC` 2028–29 改為基準；`SIF_TK_*` 鏡像改 Tokenomics v21.10 | market.py 以 `markets/scen` 合併列序（記憶體公司 In 頁逐列相同）；network、ase、mpi、alchip、tuc、arm、umc、vis 改讀 `markets/scen`；下游數值不變（cascade 第二輪 SAME） |

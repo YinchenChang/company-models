@@ -196,6 +196,7 @@ sys.dont_write_bytecode = True      # 不在上游資料夾寫入 __pycache__（
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
 import reader as SIL   # Siliconomics 快照（行業變數單一來源）
+sys.path.insert(0, os.path.join(ROOT, "markets", "scen")); import scen as SCN   # noqa: E402  v0.16：產業情境 A／C 參考值（市場層；B 讀 Siliconomics）
 import cycle_position as CP
 import valuation_rule as VR
 
@@ -227,7 +228,7 @@ inp("fx", "匯率（FY2027 起；美元售價換算）", "NT$/US$", fl, fb, fh, 
 for s in (SC if C.get("use_um", True) else ()):
     for y in (28, 29):
         k = f"um{y}_{s}"
-        inp(k, f"情境 {s}：CY20{y} AI 加速器顆數 ÷ 基準", "x", None, SIL.base(k), None, SIL.V[k]["tag"], f"{SILV}｜{k}",
+        inp(k, f"情境 {s}：CY20{y} AI 加速器顆數 ÷ 基準", "x", None, SCN.base(k), None, SCN.V[k]["tag"], (f"{SILV}｜{k}" if s == "B" else f"{SCN.SRC}｜{k}"),
             "AI 相關營收 CY2028–29 依同字母顆數係數縮放（行業情境；A＝原始顆數）" if (s == "A" and y == 28) else "同上")
 
 sec(f"B. 產能與稼動率（{C['wafer_unit']}；公司層級，{TBD}：Siliconomics 尚無成熟製程稼動率）")

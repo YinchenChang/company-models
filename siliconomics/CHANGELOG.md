@@ -1,5 +1,15 @@
 # Siliconomics 變更紀錄
 
+## v0.16（2026-11-05；`model/20261105_Siliconomics_v0.16.xlsx`；Tokenomics v21.10）
+
+- **情境過渡完成：產業情境 A、C 移到市場層 `markets/scen/`**（決策 S41）：v0.15 In 頁的 70 列（記憶體價格路徑 cqA／cqC、nqA／nqC 各 12 季；顆數係數 um28／um29 的 A、C；HBM 單價 hbm_p28／29 的 A、C；世芯 Trainium 份額 al27／al28 的 A、C；CPO 滲透率 cpo A、C 2026–29；設備係數 eq_ck C 2028–29）逐字搬到 `markets/scen/industry_scen_v0.1.json`（數值、標記、來源不變；`markets/scen/README.md` 有對照表）。In 675 → 605 列；Scen 頁只剩基準；Units、Deploy、ABF、PGW、Rack、Equip、Path、Mkt、ShareTbl、Checks 只算基準（K1 只比對 SK 海力士成品的 B、K2 只查基準係數區間、K6-trn／pwr／lc 只查基準）。
+  - 讀者：`markets/memory/market.py`（`SCEN`、`SCEN_DESC` 改由市場層提供；`merged_rows()` 把 A／C 列插回原列序，記憶體公司 In 頁重播逐列相同；`write()` 新增 `scen` 參數，本庫只寫基準）、network、ase、mpi、alchip、tuc、arm、umc、vis 改讀 `markets/scen`。`tools/r4_bridge.py` 的每 GW IT capex 改依列名定位（Deploy 頁列位改變）。
+  - 唯一數值變動：Interface `SIF_TestWFE_SoC` 2028–29 由原情境 A 改為基準（0.091／0.094 → 0.078／0.083；無下游讀者）；Checks K8-2028 由 WARN 轉 OK（SGOV_Warn 5 → 4）。
+- **Cap 頁分項上限**（決策 S42；算力收支 11-04 問題的後續）：新增「只受 CoWoS／只受 HBM 限制的可支撐部署 GW」兩列（基準 × 產能 ÷ 需求，不截頂）與 Interface `SIF_CapGW_CoWoS_Base`＝28.9／43.3／59.8／75.1、`SIF_CapGW_HBM_Base`＝26.2／38.5／48.8／57.8（2026–29，本庫部署口徑）；`SIF_CapOnlineGW_CoWoS_Base`＝25.7／37.6／65.9／76.3、`SIF_CapOnlineGW_HBM_Base`＝23.3／33.4／53.8／58.7（Wattonomics 可比上線口徑，毛額）。`SIF_CapGW_Base`、`SIF_CapOnlineGW_Base` 不變。
+- **TK_In 改 Tokenomics v21.10**（決策 S43）：22 個名稱中只有 `IF_NonNV_Out_TPU`、`IF_NonNV_Out_Trn` 改值（本庫與下游不讀產出比）；chip_bridge 仍讀 v21.7（差異格皆為產出比）。
+- R4 r6（讀 Wattonomics v0.3）：與 r5 逐值相同；Recon 快照改 `recon_snapshot_v0.16.json`（v0.14、v0.15 未重抽，只差來源檔名）。
+- 下游：cascade 第一輪 63 個 CHANGED（全部為版本與來源文字）、umc 首輪建置失敗（讀 `um28_A`）已改讀市場層；第二輪只有 umc CHANGED（文字），第三輪全部 SAME。投資建議、目標價全部不變。
+
 ## v0.15（2026-11-05；`model/20261105_Siliconomics_v0.15.xlsx`；Tokenomics v21.7）
 
 - **刪除 Interface 推導節的情境 A／B／C 名稱**（v0.12 起停用過渡；決策 S40）：66 個名稱（含 _lo／_hi），快照 2,067 → 2,001 個名稱；頁內列保留並標「名稱已刪除」，`*_Base` 仍指向原 B 列。In 頁層情境列（um28_A、cqA_8、cpo_A_26 等）名稱保留，作為個股自訂情境參考值（v0.16 移到個股）。
