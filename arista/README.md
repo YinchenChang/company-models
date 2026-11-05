@@ -1,4 +1,12 @@
-# arista/ — Arista Networks（ANET）收支與估值模型 v0.4
+# arista/ — Arista Networks（ANET）收支與估值模型 v0.4.1
+
+## v0.4.1（2026-11-05）：只改展示層（個股 HTML 版面規格 v1.0）
+
+- 依 `docs/plan/個股HTML版面規格.md` v1.0：xlsx README 頁新增「展示層」（命題摘要、命題 1–3、白話重點 1–3）與「命題回覆」兩段，數字全部用公式帶出；原各列保留。
+- HTML：原 `html.json` 改名 `html_src.json`（內容不動）；`gen_html_json.py` 讀它，經 `tools/company_html/relayout.py` 轉成新版面寫回 `html.json`（投資建議橫幅、命題分點與命題回覆摺疊、驅動因子依業務分四塊〔AI 後端乙太網路／非 AI 產品與服務／全公司營運／全公司股價折現率目標價規則〕、DCF 折現率直接顯示、龍捲風圖只顯示變動達兩位數的案例）。
+- 數值與 v0.4 相同：新舊成品 README 以外逐格 0 差異。成品：`dist/20261105_Arista個股模型_v0.4.1.xlsx`、`.html`；v0.4 移到 `dist/_待刪除/`。
+- 讀法提醒：橫幅的「Comparable 目標價」是 Val 頁未經相對倍數調整的同業倍數法（不進加權目標價）；加權目標價用的是相對倍數調整後的 Comparable（Val 第 0.5 節）。
+
 
 ## v0.4（2026-11-04）：滾入 3Q26 實績與 4Q26 指引
 
