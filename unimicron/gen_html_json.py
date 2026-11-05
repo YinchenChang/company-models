@@ -41,8 +41,10 @@ IN_GROUPS = lambda K: [
     ["FY2026 錨點（季報實績與第四季假設）", ["q3_rev", "q3_gm", "q3_opx", "q3_ni", "q4_g", "q4_gm", "q4_opx", "q_nonop", "q_sh"]],
     ["共識與券商（只作對照）", ["cons_eps26", "cons_eps27", "cons_eps28", "cons_rev27", "cons_rev28", "bk_eps27", "cons_feps", "cons_tp"]],
     ["股價、市場倍數與匯率", ["px", "fpe", "pe_ttm", "fx", "nim5"]],
-    ["折現率（DCF）", ["tp_r", "tp_g", "tp_roe"]],
-    ["目標價規則與收斂法", ["tp_w_dcf", "tp_wA", "tp_wB", "tp_wC", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fade_mB", "fade_mC"]]]]]
+    ["折現率（標準版 DCF：無風險利率、β、股權風險溢酬、WACC、永續成長率、RONIC）", FCFF_KEYS["rate"]],
+    ["資本結構與淨現金（WACC 權重、EV 到每股價值）", FCFF_KEYS["bs"]],
+    ["自由現金流假設（DCF：折舊、資本支出、營運資金）", FCFF_KEYS["fcf"]],
+    ["目標價規則與收斂法", ["tp_w_dcf", "tp_wA", "tp_wB", "tp_wC", "tp_g", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fade_mB", "fade_mC"]]]]]
 BLOCKS_TO = {"單一參數": B_AI, "AI 加速器載板份額": B_AI, "@Units!A": B_AI}
 RECON_CAP = "本模型對照券商、共識與市場口徑"
 RECON_MAIN = ["FY2027 EPS vs 2026-10 券商平均", "FY2028 EPS vs FactSet", "FY2027 ABF 需求滿足率", "FY2026 AI 占營收"]
@@ -72,11 +74,50 @@ def ctext(b):
 V = lambda r, f="": f"@Val!B{r}" + (f"|{f}" if f else "")
 VA = lambda r: f"@Val!A{r}"
 INK = {str(wb["In"].cell(r, 1).value): r for r in range(4, wb["In"].max_row + 1) if wb["In"].cell(r, 1).value}
+# ---- v0.5：標準版 DCF（FCFF＋WACC）的估值區塊——折現率表緊接 DCF 彙總，各情境 FCFF 明細摺疊（docs/plan/個股DCF標準規格.md、個股HTML版面規格 v1.0）----
+def fcff_blocks(pxf="n0", amt="n1"):
+    Vw, Dw = wb["Val"], wb["DCF"]
+    rk = find("Val", "股權成本 ke")
+    rate = {"type": "table", "caption": "DCF 折現率：WACC、股權成本、稅後債務成本、RONIC、永續成長率（直接顯示）", "head": ["項目", "數值", "說明"],
+            "rows": [[VA(r), V(r, "p1" if r == rk + 2 else "p2"), f"@Val!E{r}"] for r in range(rk, rk + 6)]}
+    rows = []
+    for r in range(rk + 6, rk + 15):
+        lab = str(Vw.cell(r, 1).value)
+        f = ("n3" if lab.startswith("評價用") else "p1" if "占 EV" in lab else "x1" if "EV／EBITDA" in lab
+             else pxf if ("每股" in lab or "推到" in lab) else amt)
+        rows.append([VA(r)] + [f"@Val!{c}{r}|{f}" for c in "BCD"])
+    rows.append([VA(rk + 15), V(rk + 15, pxf), "", ""])
+    assert str(Vw.cell(rk + 15, 1).value).startswith("DCF 目標價（情境加權）")
+    summ = {"type": "table", "caption": "DCF 彙總：明確期現值、終值現值、企業價值、淨現金與每股價值", "head": [f"@Val!{c}{rk - 1}" for c in "ABCD"], "rows": rows}
+    hd = next(r for r in range(1, Dw.max_row + 1) if Dw.cell(r, 1).value == "項目")
+    ncol = next(c for c in range(3, 30) if not Dw.cell(hd, c).value) - 3
+    cols = [chr(ord("C") + i) for i in range(ncol)]
+    det = []
+    for r in range(hd + 1, Dw.max_row + 1):
+        if str(Dw.cell(r, 1).value or "").startswith("情境 ") and Dw.cell(r + 1, 1).value == "營收" and len(det) < 3:
+            rf = {str(r + k): {c: f for c in cols} for k, f in ((4, "p1"), (6, "p1"), (7, "p1"), (12, "n3"))}
+            det.append({"type": "table", "caption": f"@DCF!A{r}", "collapse": True, "summary": "展開：本情境各年無槓桿自由現金流明細",
+                        "head": [f"@DCF!A{hd}"] + [f"@DCF!{c}{hd}" for c in cols],
+                        "rowgen": {"sheet": "DCF", "rows": f"{r + 1}-{r + 13}", "cols": ["A"] + cols, "fmts": [""] + [amt] * ncol, "row_fmt": rf}})
+    return [rate, summ] + det
+
+
+FCFF_MAIN = {"DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
+             "DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"]}
+FCFF_KEYS = {"rate": ["rf", "beta_u", "beta_de", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"],
+             "bs": ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"],
+             "fcf": ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]}
+
+
+def sens_tp_block(pxf="n0"):
+    t0 = find("Sens", "目標價參數敏感度")
+    return {"type": "table", "caption": f"@Sens!A{t0}", "head": [f"@Sens!{c}{t0 + 1}" for c in "ABCDEFG"],
+            "rowgen": {"sheet": "Sens", "rows": f"{t0 + 2}-{t0 + 11}", "cols": list("ABCDEFG"), "fmts": ["", "", pxf, "sp1", pxf, "sp1", pxf]}}
+
 v_tp, v_dcf, v_cmp, v_cmp0 = find("Val", "目標價（DCF 與 Comparable 加權）"), find("Val", "DCF 目標價（情境加權）"), find("Val", "Comparable 目標價（相對倍數調整後）"), find("Val", "Comparable 目標價（市場主流同業法）")
 v_px, v_up, v_up0, v_cons = find("Val", "現價（"), find("Val", "上檔空間：加權目標價"), find("Val", "上檔空間：Comparable 目標價"), find("Val", "市場共識目標價")
 v_rec, v_grade, v_band, v_hist, v_meth = find("Val", "投資建議"), find("Val", "上檔空間級距"), find("Val", "價格帶"), find("Val", "歷史倍數檢查"), find("Val", "目標價方法")
 v_eps_f, v_eps_m = find("Val", "與市場共識目標價的差距：EPS"), find("Val", "與市場共識目標價的差距：倍數")
-v_reinv = find("Val", "參考：再投資率", must=False) or find("Val", "再投資率", must=False)
 rd_upc = find("README", "上檔空間：Comparable 目標價（相對倍數調整後）", find("README", "HTML 輔助數字"))
 
 # ---- 前處理一：估值章依規格重排（長條圖 → 結論主要項目 → 折現率 → DCF → Comparable → 其他）----
@@ -113,7 +154,6 @@ for b in old:
         rest.append(t)
     else:
         rest.append(b)
-disc_rows = [[f"@In!B{INK[k]}", f"@In!E{INK[k]}|p1"] for k in ("tp_r", "tp_g", "tp_roe") if k in INK] + ([[f"@Val!A{v_reinv}", V(v_reinv, "p1")]] if v_reinv else [])
 va["blocks"] = [
     {"type": "bars", "title": "目標價與現價", "fmt": "n0", "items": [
         {"label": VA(v_dcf), "value": V(v_dcf), "series": 0},
@@ -126,8 +166,7 @@ va["blocks"] = [
         [VA(v_up), V(v_up, "sp1")], [f"@README!A{rd_upc}", f"@README!B{rd_upc}|sp1"], [VA(v_rec), V(v_rec)], [VA(v_band), V(v_band)], [VA(v_cons), V(v_cons, "n0")],
         [VA(v_cmp0), V(v_cmp0, "n0")], [VA(v_up0), V(v_up0, "sp1")], [VA(v_grade), V(v_grade)], [VA(v_eps_f), V(v_eps_f, "sp1")], [VA(v_eps_m), V(v_eps_m, "sp1")],
         [VA(v_hist), [V(v_hist, "p0"), "／", f"@Val!C{v_hist}|p0", "／", f"@Val!D{v_hist}|p0"]], [VA(v_meth), V(v_meth)]]},
-    {"type": "table", "caption": "DCF 折現率（股東權益現金流折現；直接顯示）", "head": ["項目", "數值"], "rows": disc_rows},
-    dcf_tbl, cmp_tbl] + cmp_kv + rm_tbl + rest
+    *fcff_blocks(), cmp_tbl] + cmp_kv + rm_tbl + rest
 
 # ---- 前處理二：敏感度章「目標價參數」表的列號依標題對到 Sens 頁實際位置；記下各龍捲風圖原標題 ----
 se = sec(cfg, "sens")
@@ -135,15 +174,9 @@ tor_title = {}
 for b in se["blocks"]:
     if b["type"] == "tornado":
         tor_title[b["value_col"]] = b["title"]
-    if b["type"] == "table" and str(b.get("caption", "")).startswith("@Sens!A") and "rowgen" in b:
-        t0 = find("Sens", "目標價參數")
-        if ctext(b).startswith("目標價參數"):
-            r1 = t0 + 2
-            while wb["Sens"][f"A{r1 + 1}"].value:
-                r1 += 1
-            b["caption"] = f"@Sens!A{t0}"
-            b["head"] = [f"@Sens!{c}{t0 + 1}" for c in b["rowgen"]["cols"]]
-            b["rowgen"]["rows"] = f"{t0 + 2}-{r1}"
+for i_, b in enumerate(se["blocks"]):
+    if b["type"] == "table" and str(b.get("caption", "")).startswith("@Sens!A") and "rowgen" in b and ctext(b).startswith("目標價參數"):
+        se["blocks"][i_] = sens_tp_block()   # v0.4：目標價參數表改為標準版 DCF 案例（tools/fcff_dcf.write_sens）
 
 # ---- 前處理三：對帳章的表加標題（供指定主要列）----
 for b in sec(cfg, "recon")["blocks"]:
@@ -160,8 +193,7 @@ SPEC = {
  "blocks_to": dict(BLOCKS_TO),
  "main": {
   "目標價結論": ["目標價（DCF 與 Comparable 加權）", "DCF 目標價", "Comparable 目標價（相對倍數調整後）", "現價", "上檔空間：加權目標價", "上檔空間：Comparable 目標價（相對倍數調整後）", "投資建議", "價格帶", "市場共識目標價"],
-  "0.1 DCF": [p for p in ("DCF 情境每股價值", "DCF 情境價值推到", "DCF 目標價（情境加權）", "參考：EPS", "再投資率")
-              if any(str(wb["Val"].cell(r, 1).value or "").strip().startswith(p) for r in range(find("Val", "0.1 DCF"), find("Val", "0.2 Comparable")))][:5],
+  **FCFF_MAIN,
   "0.2 Comparable": [],
   "Comparable：": ["同業前瞻 P/E 中位數", "12 個月後的前瞻 EPS", "Comparable 目標價"],
   "相對倍數調整": ["本公司 10 年中位數", "同業 10 年中位數的中位數", "相對倍數調整係數", "Comparable 目標價（相對倍數調整後）"],

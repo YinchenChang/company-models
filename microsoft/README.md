@@ -1,4 +1,4 @@
-# Microsoft（MSFT）個股模型 v0.3.5 — 命題＋官方營收分部 → 損益表（v0.3.4：Tokenomics 快照 v21.9；v0.3.5：換 v21.10；基準數值同 v0.3.1）
+# Microsoft（MSFT）個股模型 v0.3.6 — 命題＋官方營收分部 → 損益表（v0.3.6 只改展示層〔個股 HTML 版面規格 v1.0〕；v0.3.4：Tokenomics 快照 v21.9；v0.3.5：換 v21.10；基準數值同 v0.3.1）
 
 更新日 2026-10-29（v0.3.1 季度滾動：工作單 `mag/docs/workorders/20261029_MAG_v0.3.1_季度滾動_2026Q3.md`；架構工作單 `mag/docs/workorders/20261027_MAG_v0.3_個股模型重建_分部架構.md`；固定規格 `docs/plan/個股模型原則_命題加營收分部.md`）。資料截至 **FY27Q1**（2026-09-30；財報 2026-10-28：新聞稿、IR 財務報表、10-Q、FY27Q2 展望簡報、法說）。評價日 2026-09-30、目標價時點 2027-10-29。財年結束於 6/30（FY2027＝2026-07～2027-06）。金額十億美元（US$B）。
 
@@ -32,19 +32,20 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_microsoft.py` | Python → Excel 產生器（openpyxl，全部活公式；藍字輸入、黑字公式）；同時寫 `html.json`。`--set`／`--legacy-q1`／`--snap` 供變動拆解 |
-| `make_v03.sh` | 一次跑完：事實總帳雙讀 → 建置 → LibreOffice 重算 → `check_v03.py` → In 版面 → 敏感度覆蓋（`--require-keycol`）→ segment_check → HTML（`SENS=1` 先重跑 C10 重解、變動拆解與 Sens 整本重算案例） |
-| `sens_v033.py` | v0.3.3：Sens 整本重算案例（In 頁有低／高、活公式案例未涵蓋的鍵；含 he_all）→ `data/sens_v035_20261104.json`（v0.3.5 起；v0.3.3 結果移 `data/_待刪除/`） |
+| `make_v03.sh` | 一次跑完：事實總帳雙讀 → 建置 → LibreOffice 重算 → `check_v03.py` → In 版面 → 敏感度覆蓋（`--require-keycol`）→ segment_check → 版面轉換（`tools/company_html/relayout.py`，v0.3.6 起）→ HTML（`SENS=1` 先重跑 C10 重解、變動拆解與 Sens 整本重算案例） |
+| `sens_v033.py` | v0.3.3：Sens 整本重算案例（In 頁有低／高、活公式案例未涵蓋的鍵；含 he_all）→ `data/sens_v036_20261105.json`（v0.3.5 結果，v0.3.6 改名沿用；v0.3.3 結果移 `data/_待刪除/`） |
 | `check_v03.py` | 成品核對：公式錯誤 0、核對列 0、C10 對帳落差 0、固定列標籤、拆解 JSON 與 Sens 整本重算案例未過期 |
 | `facts_fy27q1.py` | FY27Q1 事實總帳：新聞稿 docx 與 IR 財務報表 xlsx（必要時 10-Q）兩次讀取核對 → `data/microsoft_facts_FY27Q1_20261029.json` |
 | `attrib_v031.py` | C10 重解（割線法，每次整本重算）與 v0.3 → v0.3.1 變動拆解 → `data/attrib_v031_20261029.json` |
-| `dist/20261104_Microsoft個股模型_v0.3.5.xlsx` | 成品（v0.3.5＝v0.3.1 數值＋In 頁情境驅動對照＋敏感度覆蓋＋Tokenomics 快照 v21.10）（LibreOffice headless 重算，公式錯誤 0） |
-| `dist/20261104_Microsoft個股模型_v0.3.5.html` | HTML 展示層（`tools/company_html`；數字全由 xlsx 抽出） |
-| `html.json` | HTML 設定（由產生器寫出，列號與 xlsx 一致） |
+| `dist/20261105_Microsoft個股模型_v0.3.6.xlsx` | 成品（v0.3.6＝v0.3.5 數值＋README 展示層；v0.3.5＝v0.3.1 數值＋In 頁情境驅動對照＋敏感度覆蓋＋Tokenomics 快照 v21.10）（LibreOffice headless 重算，公式錯誤 0） |
+| `dist/20261105_Microsoft個股模型_v0.3.6.html` | HTML 展示層（`tools/company_html`；數字全由 xlsx 抽出；版面依 `docs/plan/個股HTML版面規格.md`） |
+| `html.json` | HTML 設定（由產生器寫出、再由 `relayout.py` 依 `layout_spec.py` 轉成新版面；列號與 xlsx 一致；勿手改） |
+| `layout_spec.py` | v0.3.6：HTML 版面設定（In 參數依業務分四塊、估值與對帳的主要列） |
 | `segments.json` | 官方分部宣告（`tools/segment_check/check_segments.py microsoft`） |
 | `data/` | 事實總帳（SEC 一手 v0.1a 起＋FY27Q1）、k 證據、共識、同業倍數、Tokenomics v21.7 快照（v21.4 快照保留供拆解重現） |
 | `docs/reports/20261029_microsoft_v0.3.1_季度滾動.md` | 本版報告 |
 | `legacy_v0.2/` | 舊引擎（v0.2.2 以前），保留不刪 |
-| `dist/_待刪除/` | v0.3.2、v0.3.1、v0.3、v0.2.2 成品 |
+| `dist/_待刪除/` | v0.3.5、v0.3.4、v0.3.3、v0.3.2、v0.3.1、v0.3、v0.2.2 成品 |
 
 建置：
 
@@ -77,6 +78,12 @@ bash microsoft/make_v03.sh          # SENS=1 時先重跑 C10 重解、變動拆
 README → In（輸入一鍵一列、標記與區間）→ Q（FY25Q2–FY27Q1 八季、FY2026 四季合計、FY2027 年初至今與 FY2025、FY2026 年度值，核對列 0）→ Thesis → Seg → PL（最上方四列三情境核對列）→ CF（最上方收支關卡表與核對列）→ Val（0. 目標價；列 70 起各情境明細）→ Recon（共識、指引、FY27Q1 實績對 v0.3、v0.3 → v0.3.1 拆解、v0.3.1 vs v0.2.2）→ Sens（30 個案例的龍捲風＋判斷預設替代；列 80 起各案例完整引擎區塊）→ Sources。
 
 地圖抽數用的列標籤：Val「目標價（DCF 與 Comparable 加權）」「DCF 目標價（情境加權）」「Comparable 目標價（市場主流同業法）」（＝分部加總 SOTP）「市場共識目標價」「現價（2026-10-28 收盤）」「上檔空間：加權目標價」「上檔空間級距」「投資建議」「DCF 情境價值推到 12 個月後（A／B／C）」；CF「收支關卡：自由現金流扣股利（五年合計）」（B／C／D 欄＝A／B／C 情境）。
+
+## v0.3.6（2026-11-05，只改展示層，數值格 0 差異）
+- 依 `docs/plan/個股HTML版面規格.md` v1.0：README 頁第 42 列起新增「展示層」（命題摘要、命題 1–3、白話重點 1–3）、「命題回覆」（三題，格式「問題？答：…」）與「本版要點」三段，全部公式帶數字；A1 改版本字串，A2–A40 原列保留給下游。
+- HTML 由 `tools/company_html/relayout.py microsoft <成品>` 轉成新版面（`make_v03.sh` 在 LibreOffice 重算後執行；設定 `layout_spec.py`）：投資建議橫幅、命題分點、命題回覆摺疊；In 參數分「Azure 與 AI 基礎設施／生產力與企業軟體／Windows、搜尋與 XBOX／全公司」四塊（H 共識與指引、J 情境驅動對照不歸組）；估值、對帳只列主要項目（對帳改每節一張表）；龍捲風圖只列變動 ≥ 10% 的案例。
+- `build_microsoft.py` 的 html.json 另加：驅動 → 推導對照表標題（移附錄用）、DCF 彙總前的折現率表、Thesis!A2 說明移到驅動章。共用產生器新增可選功能：日期格以 YYYY-MM-DD 文字顯示（In 頁五個日期鍵；其他公司沒有日期格，輸出不變）。
+- 與 v0.3.5 比對：README 以外 10 頁逐格 0 差異；加權目標價 384.10、放空不變。敏感度不重跑：`data/sens_v035_20261104.json` 改名 `data/sens_v036_20261105.json`；v0.3.5 成品移 `dist/_待刪除/`。
 
 ## v0.3.5（2026-11-04，Tokenomics 快照 v21.9 → v21.10，基準數值不變）
 - 快照 `data/tokenomics_snapshot_v21.10.json`（`20261104_Tokenomics_v21.10.xlsx`，master eded8e6；名稱清單 `data/tokenomics_names.txt` 不變；`--check` 通過）；`build_microsoft.py --snap` 預設改 v21.10。v21.9 快照、`sens_v034_20261104.json`、v0.3.4 成品移 `_待刪除/`；v21.4、v21.7 快照仍保留（`attrib_v031.py` 以 `--snap` 重現拆解）。
