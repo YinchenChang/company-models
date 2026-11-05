@@ -1,4 +1,11 @@
-# delta/ — 台達電（2308）收支與估值模型 v0.5
+# delta/ — 台達電（2308）收支與估值模型 v0.5.1
+
+## v0.5.1（2026-11-05）：β 改為自算產業 β
+
+- Andy 2026-11-05 22:55：β 不再用 Damodaran 表，改用自算產業 β（Yahoo Finance 含股利調整月報酬 2021-11～2026-10，對台灣加權指數迴歸，Hamada 去槓桿、現金修正，取同業中位數後 Blume 調整 0.67β＋0.33）。台達電歸「TW 散熱／電源／探針卡」組（3017 3324 3653 2308 2301 6223，6 家），無槓桿 β 中位數 1.30 → 採用 1.201（原 Damodaran 全球 Electrical Equipment 1.25），依台達電市值 D／E 重新加槓桿約 1.23（原 1.28）。Sens 低／高＝1.027／1.30（Analogy）。
+- 評價日原本就是 2026-12-31（目標時點 2027-12-31），淨現金沿用 2026-09-30 資產負債表；其他模型輸入不變。
+- 結果：WACC 9.2% → 8.9%、DCF 目標價 949 → 981、加權目標價 1,196 → 1,211、上檔空間 −10.4% → −9.3%，投資建議維持中立（README 頁「本版要點」第一列以公式帶出）。
+- 成品：`dist/20261105_台達電個股模型_v0.5.1.xlsx`／`.html`；v0.5 移到 `dist/_待刪除/`。
 
 ## v0.5（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）
 
@@ -60,9 +67,9 @@ AI 半導體 Project **電源與散熱次產業的樣板**。AI 電源每 kW 內
 | 檔案 | 內容 |
 |---|---|
 | `build_delta.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261105_台達電個股模型_v0.5.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261105_台達電個股模型_v0.5.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html_src.json` → `gen_html_json.py` → `html.json` | HTML 展示層設定（原設定 → 版面規格 v1.0 轉換；`html.json` 勿手改，格式見 `tools/company_html/README.md`） |
-| `dist/20261105_台達電個股模型_v0.5.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261105_台達電個股模型_v0.5.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 delta/build_delta.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數、機架內液冷）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）；**不修改它們**。
 
