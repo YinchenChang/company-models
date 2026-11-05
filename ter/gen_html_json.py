@@ -124,6 +124,10 @@ def prep(cfg, spec):
     assert text(conc.get("caption", "")).endswith("結論"), conc
     head = old[:k_dcf]
     bars = next(b for b in head if b["type"] == "bars")
+    h01 = row("Val", "0.1 DCF"); r_dcf = row("Val", "DCF 目標價（情境加權）", start=h01)
+    for it in bars["items"]:   # 第二輪修正：模組 v2 stub 期在 0.1 節多兩列；html_src.json 的 DCF 目標價列號（0.1 節標題 ＋ 17）改依標籤定位
+        if it["value"] == f"@Val!B{h01 + 17}":
+            it["label"], it["value"] = f"@Val!A{r_dcf}", f"@Val!B{r_dcf}"
     ca = row("Val", "Comparable 目標價（相對倍數調整後）")
     if not any(it["value"] == f"@Val!B{ca}" for it in bars["items"]):   # 加權目標價實際使用的 Comparable（相對倍數調整後）也畫出，避免讀成加權價高於兩法
         k = next(j for j, it in enumerate(bars["items"]) if text(it["label"]).startswith("Comparable 目標價"))
@@ -280,11 +284,11 @@ SPEC = {
     ["公司指引、目標模型與共識（只作對帳）", ["h1sh_lo", "h1sh_hi", "cons_rev26", "cons_eps26", "cons_eps27", "tm_rev", "tm_eps_lo", "tm_eps_hi", "tw_lo", "tw_hi"]],
     ["股價與循環位置", ["px", "sa_fpe", "pk_A", "pk_B", "pk_C"]],
     ["目標價規則（情境權重、DCF 權重、延伸期收斂與共識）", ["tp_wA", "tp_wB", "tp_wC", "tp_g", "tp_w_dcf", "nim10", "cons_tp", "cons_feps"]],
-    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
-    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"]],
+    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta_u", "beta_de", "beta_du", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
+    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "bs_date", "stub_frac", "stub_div", "sh_v"]],
     ["自由現金流（折舊、資本支出、營運資金）", ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]]]]],
  "in_skip": [],
- "main": {"0.1 DCF": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+ "main": {"0.1 DCF": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
           "對帳要點": ["營收：公司口述全年", "EPS（共識，non-GAAP）", "營收 6.0B：模型 FY2027", "non-GAAP EPS 上緣", "CY2027：SoC＋記憶體測試機 ÷ WFE"]},
 }
 if __name__ == "__main__":
