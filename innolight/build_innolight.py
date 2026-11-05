@@ -439,7 +439,7 @@ block_end = VR.add_rule_block(V, 50, [{"id": "P/E", "name": "P/E", "sources": [
         {"case": "見頂", "pos": "25 分位", "q": 25, "basis_label": "FY2027 EPS（A）", "basis": f"=B{VAL['A']}"},
         {"case": "中段", "pos": "中位數", "q": 50, "basis_label": "FY2027 EPS（A）", "basis": f"=B{VAL['A']}"},
         {"case": "谷底", "pos": "75 分位", "q": 75, "basis_label": "FY2027 EPS（A）", "basis": f"=B{VAL['A']}"}]}],
-    "#,##0.00", "規則（Andy 2026-10-13）：合理倍數＝年底 P/E 依循環位置取分位。只有一個來源、8 年（第二來源：未找到）。歷史倍數為落後 P/E，且 2019、2025 年為高成長期（98x、65x），規則值可能高估成長放緩後的倍數；前瞻 P/E 歷史待 Bloomberg（抓取單已含 300308）。")
+    "#,##0.00", "規則（Andy 2026-10-13）：合理倍數＝年底 P/E 依循環位置取分位。只有一個來源、8 年（第二來源：未找到）。歷史倍數為落後 P/E，且 2019、2025 年為高成長期（98x、65x），規則值可能高估成長放緩後的倍數；前瞻 P/E 歷史待 Bloomberg（取數單已含 300308）。")
 rule_rows = [rw for rw in range(50, block_end) if str(V.cell(rw, 1).value or "").startswith("規則值：")]
 assert len(rule_rows) == 3, rule_rows
 for nm, rw in zip(("pe_peak", "pe_mid", "pe_trough"), rule_rows):
