@@ -1,4 +1,4 @@
-# 奇鋐 html.json 產生器（v0.2.5：個股 HTML 版面規格 v1.0，docs/plan/個股HTML版面規格.md；v0.3：DCF 改標準版（FCFF＋WACC），估值章改放折現率、DCF 彙總與各情境 FCFF 明細）
+# 奇鋐 html.json 產生器（v0.3.2：DCF 彙總加 stub 期兩列、In 分組加第二輪修正新參數；v0.2.5：個股 HTML 版面規格 v1.0，docs/plan/個股HTML版面規格.md；v0.3：DCF 改標準版（FCFF＋WACC），估值章改放折現率、DCF 彙總與各情境 FCFF 明細）
 # 讀 avc/html_src.json（原版面設定，內容不動）→ 依列標籤重定位與整理 → relayout() → 寫 avc/html.json（勿手改 html.json）。
 # 用法：python3 avc/gen_html_json.py [成品 xlsx]（省略時用 avc/dist/ 內唯一的 xlsx）
 # ───────── 以下為共通整理步驟（各公司 gen_html_json.py 相同；公司差異在檔尾 SPEC 與 CO 設定） ─────────
@@ -117,7 +117,7 @@ def dcf_blocks():
                        (("股權成本 ke", "p2"), ("稅後債務成本", "p2"), ("權益占資本", "p1"), ("WACC", "p2"), ("永續成長率 g", "p2"), ("永續期 RONIC", "p2"))]}
     h = vr("股權成本 ke") - 1
     px = pfmt("DCF 目標價（情境加權）") if "pfmt" in globals() else "n2"
-    summ = [("明確期 FCFF 現值", "n1"), ("終值現值", "n1"), ("企業價值 EV", "n1"), ("＋淨現金與投資", "n1"), ("評價用稀釋股數", "n3"), ("DCF 情境每股價值（評價日）", px),
+    summ = [("明確期 FCFF 現值", "n1"), ("終值現值", "n1"), ("企業價值 EV", "n1"), ("＋淨現金與投資", "n1"), ("＋Stub 期 FCFF", "n1"), ("淨現金滾到評價日", "n1"), ("評價用稀釋股數", "n3"), ("DCF 情境每股價值（評價日）", px),
             ("DCF 情境價值推到 12 個月後", px), ("其中：終值現值占 EV", "p1"), ("隱含終值 EV／EBITDA", "x1")]
     sum_t = {"type": "table", "caption": "DCF 彙總：明確期現值、終值現值、企業價值、淨現金與每股價值", "head": [f"@Val!{c}{h}" for c in "ABCD"],
              "rows": [[f"@Val!A{vr(l)}"] + [f"@Val!{c}{vr(l)}|{f}" for c in "BCD"] for l, f in summ] + [[f"@Val!A{vr('DCF 目標價（情境加權）')}", f"@Val!B{vr('DCF 目標價（情境加權）')}|{px}", "", ""]]}
@@ -252,13 +252,13 @@ SPEC = {
     ["股價、市場倍數與共識目標價", ["px", "pe_ttm", "cons_tp", "cons_feps"]],
     ["目標價規則", ["tp_wA", "tp_wB", "tp_wC", "tp_w_dcf"]],
     ["延伸期收斂法（FY2030–FY2032）", ["tp_g", "fade_gA", "fade_gB", "fade_gC", "nim10_f"]],
-    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta_u", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
-    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"]],
+    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "rf_us", "beta_u", "beta_du", "beta_de", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
+    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "bs_date", "stub_frac", "stub_div", "sh_v"]],
     ["自由現金流（折舊、資本支出、營運資金）", ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]],
     ["Wattonomics 錨定係數（只進敏感度）", ["wta_27", "wta_28", "wta_29"]]]]],
  "blocks_to": {"AI 液冷市場": LC, "@Units!A15": LC, "標記沿用": LC},
  "main": {"目標價、現價與投資建議": ["目標價（DCF 與 Comparable 加權）", "DCF 目標價（情境加權）", "Comparable 目標價（相對倍數調整後）", "現價（", "上檔空間：加權目標價", "投資建議", "市場共識目標價"],
-          "DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+          "DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
           "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
           "相對倍數調整": ["同業 10 年中位數的中位數", "相對倍數調整係數", "Comparable 目標價（相對倍數調整後）"],
           "本模型與券商估計": ["FY2027 EPS vs 高盛", "FY2028 EPS vs 高盛", "FY2027 液冷 ÷ 營收 vs 凱基", "CY2027 液冷滲透率"]},
