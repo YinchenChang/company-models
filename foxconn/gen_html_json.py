@@ -103,7 +103,7 @@ SPEC = {
     ["市場共識（只作對照）", ["cons_tp", "cons_feps"]],
     ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "rf_us", "beta", "beta_u", "beta_de", "beta_du", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
     ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "bs_date", "stub_frac", "stub_div", "sh_v"]],
-    ["上市子公司少數股權市值（工業富聯；非控制權益用）", ["fii_sh", "fii_hh", "fii_px", "cnytwd", "fii_eq", "cnytwd_bs"]],
+    ["上市子公司少數股權市值（工業富聯、鴻騰、富智康、樺漢；非控制權益用）", ["fii_sh", "fii_hh", "fii_px", "cnytwd", "fii_eq", "cnytwd_bs", "hkdtwd", "usdtwd_bs", "usdtwd_bs25", "ht_sh", "ht_hh", "ht_px", "ht_eq", "fm_sh", "fm_hh", "fm_px", "fm_eq", "en_sh", "en_hh", "en_px", "en_eq"]],
     ["自由現金流（折舊、資本支出、營運資金）", ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]]]]],
  "blocks_to": {"組裝市場": "AI 伺服器組裝（部署量、整櫃價值、鴻海份額、客供與毛利率）", "@Units!A18": "AI 伺服器組裝（部署量、整櫃價值、鴻海份額、客供與毛利率）",
                "標記沿用": "AI 伺服器組裝（部署量、整櫃價值、鴻海份額、客供與毛利率）"},

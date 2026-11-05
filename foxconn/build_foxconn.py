@@ -168,7 +168,7 @@ inp("rk_sh", "三家 ODM 中鴻海的 NVL72 櫃數份額（8 月調查）", "%",
 inp("rk_sh2", "鴻海占 NVIDIA AI 伺服器機櫃的全球份額（法人估）", "%", None, 0.44, None, "Interested-party", INSIDE + "：法人估約 44%（公司說 40% 以上）", "櫃數口徑（推測；原文未寫明櫃數或金額）")
 
 sec("H. 價格與估值")
-inp("px", "股價（2026-10-22 收盤）", "NT$", None, 245, None, "Interested-party", "聚財網 2317 日成交（10-22 收盤 245、10-21 250）", "Yahoo 股市：10-16 收盤 244")
+inp("px", "股價（2026-11-04 收盤）", "NT$", None, 240, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（2317.TW；第三輪修正統一價格日）", "v0.4.3 為 2026-10-22 收盤 245（聚財網）")
 inp("pe_ttm", "近 12 月 P/E（Yahoo，10-16）", "x", None, 16.08, None, "Interested-party", "Yahoo 股市 2317（10-16）", "Goodinfo 目前 P/E 16.14；companiesmarketcap TTM 15.3")
 
 sec("I. 目標價情境權重（Val 第 0 節用；Andy 可改）")
@@ -188,18 +188,18 @@ V2 = {'name': '鴻海',
  'roe': ('=AVERAGE(0.0928,0.0971,0.1125)', 'stockanalysis 比率頁（Return on Equity）：FY2023 9.28%、FY2024 9.71%、FY2025 11.25%', '單一來源；近 12 月 13.15%（同站，2026-09-18）'),
  'cons_tp': (347.45, 'stockanalysis forecast 頁（S&P Global）21 位分析師平均 347.45（中位數 338.50），頁面時間 2026-10-12', '第二來源：未找到'),
  'cons_feps': ('=239.5/11.37', 'stockanalysis 個股頁 2026-10-19：價格 239.5 ÷ Forward PE 11.37'),
- 'peers': [('廣達（Quanta）', '2382.TW', 11.31, '2026-10-14'),
-           ('緯創（Wistron）', '3231.TW', 9.93, '2026-09-29'),
-           ('和碩（Pegatron）', '4938.TW', 14.88, '2026-10-22'),
-           ('Jabil', 'JBL', 15.49, '2026-10-23'),
-           ('Flex', 'FLEX', 14.74, '2026-10-23')],
+ 'peers': [('廣達（Quanta）', '2382.TW', '=11.52*302.5/328.5', '2026-11-04', 'stockanalysis.com 統計頁 Forward PE 11.52（2026-10-21 頁面，價格 328.5；共識前瞻 EPS＝328.5 ÷ 11.52）× 2026-11-04 收盤 302.5 ÷ 328.5（Yahoo Finance 日線收盤 2026-11-04）；上一版 11.31（2026-10-14）'),
+           ('緯創（Wistron）', '3231.TW', '=9.21*176/178', '2026-11-04', 'stockanalysis.com 統計頁 Forward PE 9.21（2026-10-19 頁面，價格 178；共識前瞻 EPS＝178 ÷ 9.21）× 2026-11-04 收盤 176 ÷ 178（Yahoo Finance 日線收盤 2026-11-04）；上一版 9.93（2026-09-29）'),
+           ('和碩（Pegatron）', '4938.TW', '=13.42*101.5/90', '2026-11-04', 'stockanalysis.com 統計頁 Forward PE 13.42（2026-09-22 頁面，價格 90；共識前瞻 EPS＝90 ÷ 13.42）× 2026-11-04 收盤 101.5 ÷ 90（Yahoo Finance 日線收盤 2026-11-04）；上一版 14.88（2026-10-22）'),
+           ('Jabil', 'JBL', '=15.49*258.56/273.97', '2026-11-04', 'stockanalysis.com forward PE 15.49（2026-10-23，收盤 273.97）× 2026-11-04 收盤 258.56 ÷ 273.97（Yahoo Finance 日線收盤 2026-11-04；共識 EPS 不變）'),
+           ('Flex', 'FLEX', '=14.74*77.24/76.55', '2026-11-04', 'stockanalysis.com forward PE 14.74（2026-10-23，收盤 76.55）× 2026-11-04 收盤 77.24 ÷ 76.55（Yahoo Finance 日線收盤 2026-11-04；共識 EPS 不變）')],
  'peer_note': '電子代工與 AI 伺服器組裝同業：廣達、緯創、和碩、Jabil、Flex（券商常用比較組）。工業富聯（601138.SS，鴻海子公司）為 A 股，依規則不列。非 A 股公司的同業名單不放中國 A 股（A 股有結構性溢價；Andy 2026-10-25 11:53）',
  'fwd_w': (0.16666666666666666, 0.8333333333333334),
  'fwd_note': '約 2027-10 時的未來 12 月 EPS ≈ 2／12 × FY2027＋10／12 × FY2028（會計年度＝日曆年）',
  'pe10': None,
- 'px_note': '現價＝In 頁 px（2026-10-22 收盤 245；10-23 收盤未找到）',
+ 'px_note': '現價＝In 頁 px（2026-11-04 收盤；Yahoo Finance）',
  'method': 'DCF（v0.4 標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現到 2026 年底（期中慣例），終值＝NOPAT(FY2033) ×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, 台灣 10 年期公債殖利率)、RONIC＝WACC；'
-           'EV 加淨現金與投資、減非控制權益（工業富聯少數股權市值＋其餘帳面）÷ 股數，以股權成本推到 12 個月後並扣除期間股利（DCF 頁、tools/fcff_dcf.py）。β 為自算產業 β（台灣伺服器／ODM 同業 6 家無槓桿 β 中位數，Blume 調整）依鴻海 D/E 重新加槓桿，股權成本含台灣國家風險溢酬。'
+           'EV 加淨現金與投資、減非控制權益（工業富聯、鴻騰、富智康、樺漢少數股權市值＋其餘帳面）÷ 股數，以股權成本推到 12 個月後並扣除期間股利（DCF 頁、tools/fcff_dcf.py）。β 為自算產業 β（台灣伺服器／ODM 同業 6 家無槓桿 β 中位數，Blume 調整）依鴻海 D/E 重新加槓桿，股權成本含台灣國家風險溢酬。'
            'Comparable：廣達、緯創、和碩、Jabil、Flex 前瞻 P/E 中位數；鴻海含消費電子與電動車等低倍數事業，同業含 EMS，偏誤方向不明確。情境對應：A＝順利、B＝平平、C＝不如預期（原顆數情境）。',
  'readme_val': '估值：Val 第 0 節目標價＝0.5 × DCF 目標價（v0.4 標準版：無槓桿自由現金流 FCFF 以 WACC 折現，FY2027–FY2032 明確期＋終值，三情境權重 0.3／0.5／0.2，推到 12 個月後；明細見 DCF 頁）＋0.5 × Comparable 目標價（廣達、緯創、和碩、Jabil、Flex 前瞻 P/E 中位數 × 12 '
                '個月後前瞻 EPS）；另列 Comparable 單獨目標價、市場共識目標價與差距拆解（EPS 因素、倍數因素）、DCF 價格帶、十年 P/E 分位檢查（只作檢查）。',
@@ -245,9 +245,9 @@ _FD = FD.in_rows(dict(
     lease=("=10.904+30.935", "Verified", SA_BS + "：租賃負債 流動 10,904＋非流動 30,935", NO2),
     cash=(1524.703, "Verified", SA_BS + "：現金及短期投資合計 1,524,703（現金及約當現金 963,002、短期投資 558,771 及其他）", NO2),
     inv=(491.182, "Verified", SA_BS + "：長期投資 491,182（權益證券與採權益法投資；帳面計入）", "Sens 測不計"),
-    mi=("=211.651-fii_eq*(1-fii_hh/fii_sh)*cnytwd_bs+(fii_sh-fii_hh)*fii_px*cnytwd", "Derived",
+    mi=("=211.651-fii_eq*(1-fii_hh/fii_sh)*cnytwd_bs+(fii_sh-fii_hh)*fii_px*cnytwd-ht_eq*(1-ht_hh/ht_sh)*usdtwd_bs+(ht_sh-ht_hh)*ht_px*hkdtwd-fm_eq*(1-fm_hh/fm_sh)*usdtwd_bs25+(fm_sh-fm_hh)*fm_px*hkdtwd-en_eq*(1-en_hh/en_sh)+(en_sh-en_hh)*en_px", "Derived",
         "上市子公司少數股權用市值、其餘用帳面（Andy 2026-11-05 23:16 定案）：" + SA_BS + " 非控制權益帳面 211,651 − 工業富聯（601138.SS）少數股權帳面（工業富聯 2Q26 歸屬母公司權益 × 少數持股 × 人民幣匯率）＋ 工業富聯少數股權市值（流通股數 − 鴻海持股）× 股價 × 匯率；In 頁 K2 節 fii_*",
-        "其他上市子公司（鴻騰 6088.HK、富智康 2038.HK、樺漢 6414 等）少數股權本版仍以帳面計入：與鴻海 px 同日（2026-10-22）的收盤價本次未能取得（第三輪修正待補；工業富聯股價亦為 10-16，與 px 差 4 個交易日）"),
+        "v0.4.4（第三輪修正第 13、35 點）：鴻騰（6088.HK）、富智康（2038.HK）、樺漢（6414）少數股權同樣改市值（帳面以各公司歸屬母公司權益 × 少數持股 × 匯率近似扣除；In 頁 K2 節 ht_*、fm_*、en_*）；股價與匯率皆為 2026-11-04 收盤（與 px 同日）；樺漢本身的非控制權益（36,905 百萬元）維持帳面"),
     stub=dict(bs_date="2026-06-30", val_date="2026-12-31", bs_src=SA_BS + "（3Q26 合併財報尚未公布：台灣上市公司第三季財報期限 11-14；2026-11-05 查 stockanalysis 最新仍為 2Q26）",
               div=("=7.17179*sh_v", "Derived", "FY2025 盈餘現金股利每股 7.17179 元（股東會已決議；除息日 2026-07-02、發放日 2026-07-31，stockanalysis https://stockanalysis.com/quote/tpe/2317/dividend/），發放落在 2026-06-30～2026-12-31；× 評價用股數 sh_v",
                    "2Q26 資產負債表的應付股利屬其他流動負債、未計入債務，故 stub 期現金流出另扣；鴻海一年配息一次，評價日前無其他已宣告股利；買回無")),
@@ -270,13 +270,28 @@ inp("beta_u", "產業無槓桿 β（採用）：自算 TW 伺服器／ODM 同業
     "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）；本組維持 0.792（工作單第二輪修正：只改 Sens 規則）")
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v+mi_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 稀釋股數 sh_v ＋ 非控制權益 mi_v)", "與 WACC 權重同一口徑；第三輪修正：合併 EV 含子公司 100%，E＝母公司市值＋非控制權益市值（主控決定）")
 inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新加槓桿）", "x", None, 0.3, None, "Assumed", "工作單第二輪修正（Andy 2026-11-05 23:16 定案）：β 敏感度改為 β_u ± 0.3", "取代 v0.4.1 的低＝中位數 × 0.8 再 Blume、高＝未調整中位數")
-sec("K2. 上市子公司少數股權市值（非控制權益 mi_v 用；v0.4.2 新增，Andy 2026-11-05 23:16 定案：上市子公司用市值、非上市用帳面）")
+sec("K2. 上市子公司少數股權市值（非控制權益 mi_v 用；v0.4.2 新增，Andy 2026-11-05 23:16 定案：上市子公司用市值、非上市用帳面；v0.4.4 加鴻騰、富智康、樺漢，股價與匯率統一 2026-11-04 收盤）")
 inp("fii_sh", "工業富聯（601138.SS）流通股數", "十億股", None, 19.84, None, "Verified", "stockanalysis 601138 統計頁：流通股數 19.84B（https://stockanalysis.com/quote/sha/601138/statistics/；2026-11-05 讀取）", "MarketScreener 601138 股東表：庫藏股 117,579,159 股另列")
 inp("fii_hh", "鴻海持有工業富聯股數", "十億股", None, 16.52385, None, "Verified", "MarketScreener 601138 股東表：Hon Hai Precision Industry 16,523,850,047 股（83.32%）（https://www.marketscreener.com/quote/stock/FOXCONN-INDUSTRIAL-INTERN-44388510/company/；2026-11-05 讀取）", "少數持股＝1 − fii_hh ÷ fii_sh（約 16.7%）")
-inp("fii_px", "工業富聯股價（2026-10-16 收盤）", "CNY", None, 47.99, None, "Verified", "Investing.com 601138 歷史資料：2026-10-16 收盤 47.99（https://uk.investing.com/equities/foxconn-historical-data；2026-11-05 讀取；可取得的最近收盤）", "鴻海股價為 10-22 收盤，兩者日期差 4 個交易日；10 月 601138 波動大（10-09 56.07 → 10-16 47.99）")
-inp("cnytwd", "人民幣兌新台幣（2026-10 月平均）", "NT$/CNY", None, 4.817997, None, "Verified", "x-rates 2026 年 CNY→TWD 月平均：10 月 4.817997（https://www.x-rates.com/average/?from=CNY&to=TWD&amount=1&year=2026；2026-11-05 讀取）", "與鴻海股價同月")
+inp("fii_px", "工業富聯股價（2026-11-04 收盤）", "CNY", None, 45.25, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（601138.SS；與鴻海 px 同日）", "v0.4.3 為 2026-10-16 收盤 47.99（Investing.com）")
+inp("cnytwd", "人民幣兌新台幣（2026-11-04 收盤；美元交叉）", "NT$/CNY", None, "=32.733/6.6701", None, "Verified", "Yahoo Finance 日線收盤 2026-11-04：USD/TWD 32.733 ÷ USD/CNY 6.6701（Yahoo FX，1 美元兌當地幣）", "v0.4.3 為 x-rates 2026-10 月平均 4.817997")
 inp("fii_eq", "工業富聯歸屬母公司權益（2Q26）", "CNY B", None, 175.753, None, "Verified", "stockanalysis 601138 季資產負債表：2026-06-30 股東權益 175,753（百萬人民幣）（https://stockanalysis.com/quote/sha/601138/financials/balance-sheet/?p=quarterly；2026-11-05 讀取）", "鴻海合併報表中工業富聯少數股權帳面 ≈ 本值 × 少數持股（近似；未取得鴻海附註的子公司別非控制權益）")
 inp("cnytwd_bs", "人民幣兌新台幣（2026-06 月平均；資產負債表日換算）", "NT$/CNY", None, 4.671294, None, "Verified", "x-rates 2026 年 CNY→TWD 月平均：6 月 4.671294（同上）", "—")
+inp("hkdtwd", "港幣兌新台幣（2026-11-04 收盤；美元交叉）", "NT$/HKD", None, "=32.733/7.8462", None, "Verified", "Yahoo Finance 日線收盤 2026-11-04：USD/TWD 32.733 ÷ USD/HKD 7.8462（Yahoo FX）", "鴻騰、富智康少數股權市值換算")
+inp("usdtwd_bs", "美元兌新台幣（2026-06 月平均；資產負債表日換算）", "NT$/US$", None, 31.65026, None, "Verified", "x-rates 2026 年 USD→TWD 月平均：6 月 31.650260（https://www.x-rates.com/average/?from=USD&to=TWD&amount=1&year=2026；2026-11-06 讀取）", "鴻騰帳面（美元報表）換算")
+inp("usdtwd_bs25", "美元兌新台幣（2025-12 月平均；富智康資產負債表日換算）", "NT$/US$", None, 31.387819, None, "Verified", "x-rates 2025 年 USD→TWD 月平均：12 月 31.387819（https://www.x-rates.com/average/?from=USD&to=TWD&amount=1&year=2025；2026-11-06 讀取）", "富智康帳面（美元報表）換算")
+inp("ht_sh", "鴻騰（6088.HK）流通股數", "十億股", None, 7.116, None, "Verified", "stockanalysis 6088 半年資產負債表 1H26（2026-06-30）：流通股數 7,116 百萬股（https://stockanalysis.com/quote/hkg/6088/financials/balance-sheet/?p=quarterly；2026-11-06 讀取）", "同站統計頁 7.11B")
+inp("ht_hh", "鴻海持有鴻騰股數", "十億股", None, 5.179557888, None, "Interested-party", "Simply Wall St 6088 股東表：Hon Hai Precision Industry 5,179,557,888 股（72.8%）（https://simplywall.st/stocks/hk/tech/hkg-6088/fit-hon-teng-shares/ownership；2026-11-06 讀取，頁面 2026-10-09）", "少數持股＝1 − ht_hh ÷ ht_sh（約 27.2%）")
+inp("ht_px", "鴻騰股價（2026-11-04 收盤）", "HKD", None, 3.41, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（6088.HK）", "與鴻海 px 同日")
+inp("ht_eq", "鴻騰歸屬母公司權益（1H26）", "US$B", None, 2.743, None, "Verified", "stockanalysis 6088 半年資產負債表 2026-06-30：Total Common Equity 2,743（百萬美元；本身非控制權益 15.53）（同上網址）", "鴻海合併報表中鴻騰少數股權帳面 ≈ 本值 × 少數持股 × usdtwd_bs（近似）")
+inp("fm_sh", "富智康（2038.HK）流通股數", "十億股", None, 0.78099, None, "Verified", "stockanalysis 2038 統計頁：流通股數 780.99 百萬股（https://stockanalysis.com/quote/hkg/2038/statistics/；2026-11-06 讀取，頁面 2026-10-01）", "同站資產負債表 2025-12-31：780.78 百萬股")
+inp("fm_hh", "鴻海持有富智康股數", "十億股", None, 0.515777266, None, "Interested-party", "Simply Wall St 2038 股東表：Hon Hai Precision Industry 515,777,266 股（66%）（https://simplywall.st/stocks/hk/tech/hkg-2038/fih-mobile-shares/ownership；2026-11-06 讀取，頁面 2026-10-09）", "少數持股約 34.0%")
+inp("fm_px", "富智康股價（2026-11-04 收盤）", "HKD", None, 13.57, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（2038.HK）", "與鴻海 px 同日")
+inp("fm_eq", "富智康歸屬母公司權益（2025-12-31）", "US$B", None, 1.518, None, "Verified", "stockanalysis 2038 半年資產負債表 2025-12-31：Total Common Equity 1,518（百萬美元；本身非控制權益 4.39）（https://stockanalysis.com/quote/hkg/2038/financials/balance-sheet/?p=quarterly；2026-11-06 讀取）", "1H26（2026-06-30）資產負債表：未取得（資料商頁面最新為 2025-12-31），沿用 2025-12-31")
+inp("en_sh", "樺漢（6414）流通股數", "十億股", None, 0.15048, None, "Verified", "stockanalysis 6414 季資產負債表 2Q26：流通股數 150.48 百萬股（https://stockanalysis.com/quote/tpe/6414/financials/balance-sheet/?p=quarterly；2026-11-06 讀取）", "同站統計頁同值")
+inp("en_hh", "鴻海集團持有樺漢股數（鴻海＋鴻揚創投）", "十億股", None, "=0.033178779+0.002063433", None, "Interested-party", "Simply Wall St 6414 股東表：Hon Hai Precision Industry 33,178,779 股（22.1%）、Hyield Venture Capital（鴻揚創投，鴻海子公司）2,063,433 股（1.37%）（網址見 Sources 頁；2026-11-06 讀取，頁面 2026-10-15）", "合計約 23.4%；鴻海對樺漢具控制力而合併（持股未過半）；其他鴻海子公司持股：未找到（若有，少數股權市值會略低）")
+inp("en_px", "樺漢股價（2026-11-04 收盤）", "NT$", None, 348.5, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（6414.TW）", "與鴻海 px 同日")
+inp("en_eq", "樺漢歸屬母公司權益（2Q26）", "NT$B", None, 28.501, None, "Verified", "stockanalysis 6414 季資產負債表 2026-06-30：Total Common Equity 28,501（百萬元；本身非控制權益 36,905 維持帳面）（同上網址）", "鴻海合併報表中樺漢少數股權帳面 ≈ 本值 × 少數持股（近似）")
 
 r = 4
 for srow in rows:
@@ -495,7 +510,7 @@ V["A1"] = "Val — P/E 估值（新台幣）。結論用「現價 ÷ FY2027、FY
 V["A2"] = "循環位置：鴻海不是設備股，不套設備市場見頂年；以本模型營收最高的會計年度為見頂年（比照廣達、NVIDIA、台達電；FY(t)＝CY(t)）。營收到 FY2029 仍在增加時，見頂年未知，判為中段"
 V.cell(4, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, 5, ["項目", "A", "B", "C", "說明"])
-V.cell(6, 1, "現價（2026-10-22 收盤）"); V["B6"] = "=px"; V["B6"].number_format = "#,##0"
+V.cell(6, 1, "現價（2026-11-04 收盤）"); V["B6"] = "=px"; V["B6"].number_format = "#,##0"
 V.cell(7, 1, "現價 ÷ FY2026 EPS（錨點）"); V.cell(8, 1, "現價 ÷ FY2027 EPS（模型）"); V.cell(9, 1, "現價 ÷ FY2028 EPS（模型）"); V.cell(10, 1, "現價 ÷ FY2029 EPS（模型）")
 for j, s in enumerate(SC):
     c = "BCD"[j]
@@ -693,7 +708,11 @@ srcs = [("公司（摘要）：富果 2Q26 法說摘要 2026-08-12（2Q26 與 1H
         ("券商：經濟日報 2026-09-10（美系券商 NVL72 櫃數調查）", UDN0910),
         ("券商：經濟日報 2026-08-27（VR200 市占 40% 以上）", UDN0827),
         ("資料商：聚財網 2317 日成交（10 月收盤）", "https://stock.wearn.com/cdata.asp?kind=2317"),
+        ("價格：Yahoo Finance 日線收盤 2026-11-04（現價、同業報價、工業富聯／鴻騰／富智康／樺漢股價、匯率 USD/TWD、USD/CNY、USD/HKD；第三輪修正統一價格日）", "https://finance.yahoo.com/quote/2317.TW/history/"),
         ("資料商：Yahoo 股市（10-16 收盤、近 12 月 P/E）", "https://tw.stock.yahoo.com/quote/2317.TW"),
+        ("Simply Wall St 6088 股東表（鴻海持有鴻騰；In 頁 ht_hh）", "https://simplywall.st/stocks/hk/tech/hkg-6088/fit-hon-teng-shares/ownership"),
+        ("Simply Wall St 2038 股東表（鴻海持有富智康；In 頁 fm_hh）", "https://simplywall.st/stocks/hk/tech/hkg-2038/fih-mobile-shares/ownership"),
+        ("Simply Wall St 6414 股東表（鴻海、鴻揚創投持有樺漢；In 頁 en_hh）", "https://simplywall.st/stocks/tw/tech/twse-6414/ennoconn-shares/ownership"),
         ("資料商：companiesmarketcap 年底 P/E", "https://companiesmarketcap.com/foxconn/pe-ratio/"),
         ("資料商：Goodinfo 歷年經營績效（年底收盤、EPS）", "https://goodinfo.tw/tw/StockBzPerformance.asp?STOCK_ID=2317&RPT_CAT=M_YEAR"),
         ("市場層：markets/network、markets/chip_bridge、tsmc、quanta 成品（本 repo，唯讀）", ""),
@@ -814,9 +833,9 @@ r_ = t0 + 22
 V.cell(r_, 1, "0.2 Comparable（市場主流同業前瞻 P/E）").font = BOLD; r_ += 1
 hdr(V, r_, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"]); T["ph"] = r_; r_ += 1
 P1 = r_
-for nm, tk, pe, dt in V2["peers"]:
+for nm, tk, pe, dt, src in V2["peers"]:
     V.cell(r_, 1, nm); V.cell(r_, 2, tk); cc = V.cell(r_, 3, pe); cc.font = BLUE; cc.number_format = "0.0"
-    V.cell(r_, 4, dt); V.cell(r_, 5, "stockanalysis.com 個股頁 Forward PE（分析師共識；價格日期如左）"); V.cell(r_, 6, "Interested-party（賣方共識）"); r_ += 1
+    V.cell(r_, 4, dt); V.cell(r_, 5, src); V.cell(r_, 6, "Interested-party（賣方共識）"); r_ += 1
 P2 = r_ - 1; T["p1"], T["p2"] = P1, P2
 tset(r_, "pmed", "同業前瞻 P/E 中位數", [f"=MEDIAN(C{P1}:C{P2})", None, None], "0.0", V2["peer_note"]); r_ += 1
 w1, w2 = V2["fwd_w"]
@@ -989,7 +1008,7 @@ RD.cell(r, 1, f'="重點 2｜FY2027 EPS 高於法人，最敏感的是 AI 部署
 RD.cell(r, 1, f'="重點 3｜三情境從 FY2028 才分開：FY2028 EPS 樂觀、基準、保守約 "&TEXT(PL!F{_pa["eps"]},"0.00")&"、"&TEXT(PL!F{_pb["eps"]},"0.00")&"、"&TEXT(PL!F{_pc["eps"]},"0.00")&" 元，對法人（08-18）"&TEXT({_r("FY2028 EPS vs 法人", "B")},"0.0")&" 元分別 "&TEXT({_r("FY2028 EPS vs 法人", "D")},"+0.0%;-0.0%")&"、"&TEXT({_r("FY2028 EPS vs 法人", "F")},"+0.0%;-0.0%")&"、"&TEXT({_r("FY2028 EPS vs 法人", "H")},"+0.0%;-0.0%")&"。要追蹤的是 Vera Rubin 整櫃份額：敏感度測試（以情境 A 為基準）中份額相對值 2028 年降到 "&TEXT({_in("rel_28")},"0.00")&"（廣達、緯創搶單）時 FY2028 EPS 變動 "&TEXT({_s("份額流失（低）", "L")},"+0.0%;-0.0%")&"，升到 "&TEXT({_in("rel_28", "F")},"0.00")&" 時 "&TEXT({_s("份額上升（高）", "L")},"+0.0%;-0.0%")&"。"'); r += 1
 _SG = '"+0.0%;-0.0%"'
 _sv = lambda p, c: f"Sens!{c}{_lab(SE, p)}"
-RD.cell(r, 1, f'="重點 4｜v0.4 起 DCF 改為標準版（無槓桿自由現金流折現），DCF 目標價為 "&TEXT({DCF},"0")&" 元（舊法為股東現金流、折現率 10%；新舊對照見本版要點）。WACC "&TEXT(wacc,"0.0%")&"（股權成本 "&TEXT(ke,"0.0%")&"＝台灣 10 年期公債 "&TEXT(rf,"0.00%")&" ＋ β "&TEXT(beta,"0.00")&" ×（ERP "&TEXT(erp,"0%")&"＋國家風險溢酬 "&TEXT(crp,"0.00%")&"）；β 為自算產業 β（台灣伺服器／ODM 同業 6 家無槓桿 β 中位數，Blume 調整）依鴻海負債比重新加槓桿，ERP 5% 與 RONIC＝WACC 為假設），永續成長率 "&TEXT(g_tv,"0.00%")&"（不超過台灣 10 年期公債殖利率）。營運資金約占營收增量 "&TEXT(fc_wc,"0%")&"：FY2027 營運資金增加 "&TEXT(DCF!C{RD_["paths"]["B"]["dwc"]}*10,"#,##0")&" 億元，情境 B 無槓桿自由現金流 "&TEXT(DCF!C{RD_["paths"]["B"]["fcff"]}*10,"#,##0")&" 億元。DCF 比現價"&IF({DCF}>={PX},"高 ","低 ")&TEXT(ABS({DCF}/{PX}-1),"0%")&"。終值現值占情境 B 企業價值 "&TEXT(Val!C{SDCF["tvsh"]},"0%")&"，隱含終值 EV／EBITDA 約 "&TEXT(Val!C{SDCF["mult"]},"0.0")&" 倍。非控制權益 "&TEXT(mi_v*10,"#,##0")&" 億元扣除：上市子公司工業富聯的少數股權用市值（"&TEXT((fii_sh-fii_hh)*fii_px*cnytwd*10,"#,##0")&" 億元，取代其帳面），其餘子公司（含鴻騰、富智康、樺漢等上市子公司）本版仍為帳面；這些上市子公司的少數股權若改市值，DCF 會略低。敏感度（以情境加權目標價為基準）：WACC −1pt／＋1pt 時 "&TEXT({_sv("WACC ±1pt", "D")},{_SG})&"／"&TEXT({_sv("WACC ±1pt", "F")},{_SG})&"；β 改用敏感度低值 "&TEXT(beta_lo,"0.00")&"／高值 "&TEXT(beta_hi,"0.00")&"（產業無槓桿 β "&TEXT(beta_u,"0.000")&" ∓ "&TEXT(beta_du,"0.0")&" 各自重新加槓桿）時 "&TEXT({_sv("β 低／高", "D")},{_SG})&"／"&TEXT({_sv("β 低／高", "F")},{_SG})&"。"'); r += 1
+RD.cell(r, 1, f'="重點 4｜v0.4 起 DCF 改為標準版（無槓桿自由現金流折現），DCF 目標價為 "&TEXT({DCF},"0")&" 元（舊法為股東現金流、折現率 10%；新舊對照見本版要點）。WACC "&TEXT(wacc,"0.0%")&"（股權成本 "&TEXT(ke,"0.0%")&"＝台灣 10 年期公債 "&TEXT(rf,"0.00%")&" ＋ β "&TEXT(beta,"0.00")&" ×（ERP "&TEXT(erp,"0%")&"＋國家風險溢酬 "&TEXT(crp,"0.00%")&"）；β 為自算產業 β（台灣伺服器／ODM 同業 6 家無槓桿 β 中位數，Blume 調整）依鴻海負債比重新加槓桿，ERP 5% 與 RONIC＝WACC 為假設），永續成長率 "&TEXT(g_tv,"0.00%")&"（不超過台灣 10 年期公債殖利率）。營運資金約占營收增量 "&TEXT(fc_wc,"0%")&"：FY2027 營運資金增加 "&TEXT(DCF!C{RD_["paths"]["B"]["dwc"]}*10,"#,##0")&" 億元，情境 B 無槓桿自由現金流 "&TEXT(DCF!C{RD_["paths"]["B"]["fcff"]}*10,"#,##0")&" 億元。DCF 比現價"&IF({DCF}>={PX},"高 ","低 ")&TEXT(ABS({DCF}/{PX}-1),"0%")&"。終值現值占情境 B 企業價值 "&TEXT(Val!C{SDCF["tvsh"]},"0%")&"，隱含終值 EV／EBITDA 約 "&TEXT(Val!C{SDCF["mult"]},"0.0")&" 倍。非控制權益 "&TEXT(mi_v*10,"#,##0")&" 億元扣除：上市子公司工業富聯的少數股權用市值（"&TEXT((fii_sh-fii_hh)*fii_px*cnytwd*10,"#,##0")&" 億元，取代其帳面）；鴻騰、富智康、樺漢的少數股權同樣用市值（合計 "&TEXT(((ht_sh-ht_hh)*ht_px*hkdtwd+(fm_sh-fm_hh)*fm_px*hkdtwd+(en_sh-en_hh)*en_px)*10,"#,##0")&" 億元），股價與匯率皆為 2026-11-04 收盤；其餘子公司為帳面。敏感度（以情境加權目標價為基準）：WACC −1pt／＋1pt 時 "&TEXT({_sv("WACC ±1pt", "D")},{_SG})&"／"&TEXT({_sv("WACC ±1pt", "F")},{_SG})&"；β 改用敏感度低值 "&TEXT(beta_lo,"0.00")&"／高值 "&TEXT(beta_hi,"0.00")&"（產業無槓桿 β "&TEXT(beta_u,"0.000")&" ∓ "&TEXT(beta_du,"0.0")&" 各自重新加槓桿）時 "&TEXT({_sv("β 低／高", "D")},{_SG})&"／"&TEXT({_sv("β 低／高", "F")},{_SG})&"。"'); r += 1
 _tvs3 = [f"Val!{c}{SDCF['tvsh']}" for c in "BCD"]
 _tvflag = "&".join(f'IF({t}>0.8,"情境 {n}（{l}）"&TEXT({t},"0%")&"；","")' for t, n, l in zip(_tvs3, "ABC", ("順利", "平平", "不如預期")))
 _usd = _sv("美元口徑折現", "C"); _usdp = _sv("美元口徑折現", "D")
@@ -1005,7 +1024,8 @@ RD.cell(r, 1, "上檔空間：Comparable 目標價（相對倍數調整後）");
 RD.cell(r, 1, f'="估值說明：加權目標價＝DCF 目標價 × "&TEXT(tp_w_dcf,"0%")&"＋Comparable 目標價（相對倍數調整後）× "&TEXT(1-tp_w_dcf,"0%")&"，投資建議依它的上檔空間判定。DCF 為標準版：無槓桿自由現金流（稅後營業利益＋折舊 − 資本支出 − 營運資金增加）以 WACC "&TEXT(wacc,"0.0%")&" 折現，終值用永續成長率 "&TEXT(g_tv,"0.00%")&"、新投資報酬率＝WACC，企業價值加淨現金與投資、減非控制權益（資產負債表日的淨現金加 stub 期無槓桿自由現金流、扣已宣告股利，滾到評價日）後除以股數，三情境價值以股權成本推到 12 個月後並扣除期間股利，再依情境權重加權；Comparable＝同業前瞻本益比中位數 × 本公司長期相對同業的倍數比 × 約一年後的未來 12 個月 EPS（情境加權）。十年本益比規則值是舊法，只作參考，不進目標價。"'); r += 1
 r += 1
 RD.cell(r, 1, "本版要點（版本沿革；HTML 附錄用）").font = BOLD; r += 1
-RD.cell(r, 1, f'="v0.4.3（2026-11-06）：第三輪修正。(1) 資本結構 E＝母公司市值＋非控制權益市值（WACC 權重與 β 重新加槓桿）。(2) 重點 4 更正：非控制權益中工業富聯已用市值，其餘上市子公司（鴻騰、富智康、樺漢等）仍為帳面（同日收盤價未能取得，待補）。(3) stub 列名改為含 stub 期會計年度（FY2026）FCFF × stub_frac；Sens 永續成長率列名改 g −1pt／上限 rf。(4) 情境驅動對照：收斂法列名中性化、補 FY2032 淨利率收斂目標列、百分比格式。加權目標價 453.83 → "&TEXT({TPW},"0.00")&"、上檔空間 +85.2% → "&TEXT({UP},"+0.0%;-0.0%")&"、投資建議 強力買進 → "&{REC}&"。"'); r += 1
+RD.cell(r, 1, f'="v0.4.4（2026-11-06）：第三輪修正（現價統一 2026-11-04）。現價 245（2026-10-22） → "&TEXT({PX},"#,##0")&"（Yahoo Finance 日線收盤 2026-11-04）；Comparable 同業前瞻 P/E 換算到 11-04 收盤（共識 EPS 不變），同業中位數 14.74 → "&TEXT({MED},"0.00")&"；上市子公司少數股權（第 13 點）：工業富聯 47.99（10-16）→ 45.25 人民幣、人民幣匯率改 11-04 收盤交叉，鴻騰、富智康、樺漢由帳面改市值（11-04 收盤），非控制權益 841.17 → "&TEXT(mi_v,"0.00")&" NT$B。DCF 目標價 515 → "&TEXT({DCF},"#,##0")&"、Comparable 目標價（相對倍數調整後）388 → "&TEXT({CMP},"#,##0")&"、加權目標價 452 → "&TEXT({TPW},"#,##0")&"、上檔空間 +84.4% → "&TEXT({UP},"+0.0%;-0.0%")&"、投資建議 強力買進 → "&{REC}&"。"'); r += 1
+RD.cell(r, 1, 'v0.4.3（2026-11-06）：第三輪修正。(1) 資本結構 E＝母公司市值＋非控制權益市值（WACC 權重與 β 重新加槓桿）。(2) 重點 4 更正：非控制權益中工業富聯已用市值，其餘上市子公司（鴻騰、富智康、樺漢等）仍為帳面（同日收盤價未能取得，待補）。(3) stub 列名改為含 stub 期會計年度（FY2026）FCFF × stub_frac；Sens 永續成長率列名改 g −1pt／上限 rf。(4) 情境驅動對照：收斂法列名中性化、補 FY2032 淨利率收斂目標列、百分比格式。加權目標價 453.83 → 451.68、上檔空間 +85.2% → +84.4%、投資建議 強力買進 → 強力買進。'); r += 1   # 舊版沿革固定文字（第三輪修正第 37 點）
 RD.cell(r, 1, "v0.4.2（2026-11-05）：第二輪修正（Andy 2026-11-05 23:16 定案），換用共用模組 tools/fcff_dcf.py v2。(1) 淨現金滾到評價日：資產負債表日 2026-06-30（3Q26 財報尚未公布，維持 2Q26）→ 評價日 2026-12-31，淨現金與投資 -183.1＋stub 期 FCFF（FY2026 錨點 × stub_frac 0.504；-63.2）− 已宣告股利 100.5＝-346.8（NT$B）。(2) β 敏感度改 β_u ± 0.3 各自重新加槓桿（β 0.64／1.43）；基準 β_u 0.792 不變（β 1.04）。(3) 新增 Sens「美元口徑折現」：加權目標價 381.19（-16.0%）。(4) 非控制權益改市值：工業富聯（601138.SS）少數股權用市值（流通股數 − 鴻海持股）× 股價 × 匯率、扣回其帳面，其餘子公司用帳面；非控制權益 211.7 → 841.2（NT$B；fii 參數見 In 頁 K2 節）。RONIC＝WACC 不變；資本支出、折舊：本模型沒有擴產排程列，維持近三年占營收比例。β 1.04 → 1.04、WACC 6.4% → 6.4%、DCF 目標價 580.87 → 519.77、加權目標價 484.38 → 453.83、上檔空間 +97.7% → +85.2%、投資建議 強力買進 → 強力買進。"); r += 1   # 舊版沿革：固定為該版成品的計算結果
 RD.cell(r, 1, "v0.4.1（2026-11-05）：β 改為自算產業 β（TW 伺服器／ODM 同業 6 家無槓桿 β 中位數 0.69，Blume 調整後 0.792，依鴻海負債比重新加槓桿；Andy 2026-11-05 22:55，取代 Damodaran 產業 β）。β 2.06 → 1.04、WACC 10.6% → 6.4%、DCF 目標價 351.97 → 580.87、加權目標價 369.93 → 484.38、上檔空間 +51.0% → +97.7%、投資建議 強力買進 → 強力買進。評價日 2026-12-31、目標時點 12 個月後與其他模型參數不變。"); r += 1
 RD.cell(r, 1, "v0.4（2026-11-05）：模型改版，DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC，docs/plan/個股DCF標準規格.md）。DCF 目標價 290.31 → 351.97、加權目標價 339.10 → 369.93、上檔空間 +38.4% → +51.0%、投資建議 買進 → 強力買進。DCF 差異拆解（情境加權，依序替換）：現金流改 FCFF 與淨現金 +94.33、折現率改 WACC 與永續成長率改 MIN(3%, rf) −75.48、終值改價值驅動式 +53.20、扣期間股利 −10.39。Comparable、情境權重、DCF 權重 50% 與投資建議規則不變。"); r += 1   # 舊版沿革：固定為該版成品的計算結果
@@ -1049,7 +1069,16 @@ for _r in range(1, V.max_row + 1):
 else:
     raise KeyError("w_e 列")
 
+# v0.4.4（2026-11-06）：第三輪修正（現價統一 2026-11-04）
+for _ws in wb:   # 公式中的現價日期標籤同步（含 tools/relative_multiple 產生的重點觀察 1）
+    for _row in _ws.iter_rows():
+        for _c in _row:
+            if isinstance(_c.value, str) and _c.value.startswith("="):
+                for _o in ['"（2026-10-22）"']:
+                    if _o in _c.value: _c.value = _c.value.replace(_o, '"（2026-11-04 收盤）"')
+RD["A1"] = RD["A1"].value + "；v0.4.4（2026-11-06）第三輪修正：現價與同業報價統一 2026-11-04 收盤（Yahoo Finance）"
 wb.save(sys.argv[1])
+if os.environ.get("R4_NOOP"): pass
 if os.environ.get("FOXCONN_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
     json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK_ROW, "SENSN": SENS_N, "VAL": VAL, "SB": {k: v["end"] for k, v in SB.items()}},
