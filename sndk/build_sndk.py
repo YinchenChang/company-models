@@ -699,6 +699,95 @@ import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, "sndk")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, "v0.2.1", "2026-10-30")  # v0.2.1：In 頁版面（個股模型原則第 8 節；數值不變）
+
+
+# ---------------- v0.4.1（2026-11-05）：只改展示層（個股 HTML 版面規格 v1.0；docs/plan/個股HTML版面規格.md）----------------
+# README 頁最後新增「展示層」「命題回覆」兩段（HTML 讀；數字一律由公式帶出）；原 README 各列保留不動。
+# 文字中的 {鍵|格式} 轉成 TEXT(儲存格,"格式")、{鍵} 直接引用（文字格）。
+import re as _re  # noqa: E402
+def _srow(prefix):
+    for r_ in range(4, SE.max_row + 1):
+        if str(SE.cell(r_, 1).value or "").startswith(prefix):
+            return r_
+    raise KeyError(prefix)
+_s = {k: _srow(p) for k, p in (("pdn", "市場層營收 −20%"), ("pup", "市場層營收 +20%"), ("sdn", "份額 ×0.9"), ("sup", "份額 ×1.1"),
+                               ("cdn", "每位元成本年降 10%"), ("cup", "每位元成本年降 18%"))}
+_W = {s_: f"tp_w{s_}" for s_ in SC}
+_bvye = lambda y0, y1: "(" + "+".join(f"{_W[s_]}*(PL!{FYC[y0]}{SUMR[(s_, 'bv')]}+PL!{FYC[y1]}{SUMR[(s_, 'bv')]})/2" for s_ in SC) + ")"
+_vb = lambda k, c="B": f"Val!{c}{T[k]}"
+REF = {"tpw": _vb("tpw"), "dcftp": _vb("dcftp"), "comp": _vb("comptp"), "px": "px", "upw": _vb("upw"), "upc": _vb("upc"), "rec": _vb("rec"), "tier": _vb("tier"),
+       "wdcf": "tp_w_dcf", "pmed": _vb("pmed"), "fbv": _vb("fbv"), "feps": _vb("feps"), "geps": _vb("geps"), "gbv": _vb("gbv"), "cons": _vb("cons"),
+       "dcfup": f"({_vb('dcftp')}/px-1)", "ceps27": "cons_eps27", "ceps28": "cons_eps28", "cfeps": "(8/12*cons_eps28+4/12*cons_eps29)",
+       "cpb": "(cons_tp/((cons_bv28+cons_bv29)/2))", "cpbx": f"((cons_tp/((cons_bv28+cons_bv29)/2))/{_vb('pmed')})",
+       "bv27": _bvye(2027, 2028)}
+REF["pxbv27"] = f"(px/{REF['bv27']})"
+REF["bvg"] = f"({REF['fbv']}/{REF['bv27']}-1)"
+REF["pmg"] = f"({REF['pmed']}/{REF['pxbv27']}-1)"
+_dc, _cc = f"(tp_w_dcf*({REF['dcftp']}-px))", f"((1-tp_w_dcf)*({REF['comp']}-px))"
+REF["dcfsh"], REF["compsh"] = f"({_dc}/({_dc}+{_cc}))", f"({_cc}/({_dc}+{_cc}))"
+REF["src"] = f'IF({REF["dcfsh"]}>=0.6,"差距主要來自 DCF",IF({REF["dcfsh"]}<=0.4,"差距主要來自 Comparable（同業倍數法）","差距由 DCF 與 Comparable 約各半貢獻"))'
+REF["cdrv"] = f'IF(ABS({REF["pmg"]})>ABS({REF["bvg"]}),"倍數差大於每股淨值成長","每股淨值成長大於倍數差")'
+REF["updesc"] = f'IF({REF["upw"]}>0.25,"遠高於",IF({REF["upw"]}>=0,"略高於",IF({REF["upw"]}>=-0.25,"低於","遠低於")))'
+REF["verdict"] = f'IF({REF["upw"]}>0.25,"現價低於估值、有明顯上檔",IF({REF["upw"]}>=0,"現價大致合理、略有上檔",IF({REF["upw"]}>=-0.25,"現價高於估值","現價明顯高於估值")))'
+_dcfpx = [f"Val!{c}{T['dcfpx']}" for c in "BCD"]
+REF["ndcf"] = "(" + "+".join(f"({x}>1)" for x in _dcfpx) + ")"
+REF["dcfwho"] = f'IF({REF["ndcf"]}=3,"三種情境的 DCF 價值都高於現價",IF({REF["ndcf"]}=0,"三種情境的 DCF 價值都低於現價","只有"&IF({_dcfpx[0]}>1,"情境 A ","")&IF({_dcfpx[1]}>1,"情境 B ","")&IF({_dcfpx[2]}>1,"情境 C ","")&"的 DCF 價值高於現價"))'
+for s_, c in zip(SC, "BCD"):
+    REF[f"dcfpx{s_}"] = f"Val!{c}{T['dcfpx']}"
+    for y in (2026, 2027, 2028, 2029):
+        REF[f"eps{s_}{y % 100}"] = f"PL!{FYC[y]}{SUMR[(s_, 'eps')]}"
+        REF[f"gm{s_}{y % 100}"] = f"PL!{FYC[y]}{SUMR[(s_, 'ygm')]}"
+        REF[f"dcsh{s_}{y % 100}"] = f"(PL!{FYC[y]}{SUMR[(s_, 'ydc')]}/PL!{FYC[y]}{SUMR[(s_, 'yrev')]})"
+        REF[f"aish{s_}{y % 100}"] = f"(PL!{FYC[y]}{SUMR[(s_, 'yai')]}/PL!{FYC[y]}{SUMR[(s_, 'yrev')]})"
+    _rng = f"PL!{FYC[2027]}{SUMR[(s_, 'eps')]}:{FYC[2029]}{SUMR[(s_, 'eps')]}"
+    REF[f"peak{s_}"] = f"INDEX(PL!{FYC[2027]}3:{FYC[2029]}3,MATCH(MAX({_rng}),{_rng},0))"
+    REF[f"vs27{s_}"] = f'IF({REF[f"eps{s_}27"]}>cons_eps27,"高於","低於")'
+    REF[f"vs28{s_}"] = f'IF({REF[f"eps{s_}28"]}>cons_eps28,"高於","低於")'
+for k, r_ in _s.items():
+    REF[f"l_{k}"] = f"Sens!A{r_}"; REF[f"e_{k}"] = f"Sens!H{r_}"
+_ab = lambda *ks: "MAX(" + ",".join(f"ABS(Sens!H{_s[k]})" for k in ks) + ")"
+REF["s_top"] = f'IF({_ab("pdn", "pup")}>={_ab("sdn", "sup", "cdn", "cup")},"NAND 價格",IF({_ab("sdn", "sup")}>={_ab("cdn", "cup")},"份額","每位元成本"))'
+for k in ("dcsh_27", "dcsh_28", "dcsh_29"):
+    REF[k] = k
+_SP = "+0.0%;−0.0%"
+
+def _fx(t):
+    def lit(x):
+        x = x.replace('"', '""')
+        return [f'"{x[i:i + 200]}"' for i in range(0, len(x), 200)]
+    parts, pos = [], 0
+    for m in _re.finditer(r"\{([A-Za-z0-9_]+)(?:\|([^}]*))?\}", t):
+        parts += lit(t[pos:m.start()])
+        e = REF[m.group(1)]
+        parts.append(e if m.group(2) is None else f'TEXT({e},"{m.group(2).replace("SP", _SP)}")')
+        pos = m.end()
+    parts += lit(t[pos:])
+    parts = [x for x in parts if x != '""']
+    return t if len(parts) == 1 and parts[0].startswith('"') else "=" + "&".join(parts)
+
+PRES_LEAD = "命題：SanDisk 是純 NAND 公司，盈餘由 NAND 合約價循環與 AI 推論帶動的企業級 SSD 位元決定，產能與 Kioxia 合資；股價取決於目前的高價能維持多久，以及現價隱含的倍數是否已反映循環見頂。三個問題如下。"
+PRES_PROPS = [
+ "命題 1：盈餘由什麼決定：NAND 價格、SanDisk 份額與每位元成本，哪一個對 EPS 的影響最大；資料中心（含 AI 企業級 SSD）占營收多少。",
+ "命題 2：高價能維持多久：三種價格情境下，EPS 在哪一年到高點、FY2028 起分歧多大。",
+ "命題 3：現價是否已反映循環見頂：用現金流折現與同業倍數估出的每股價值，和現價相比是高還是低；現價隱含的倍數與同業差多少。"]
+PRES_OBS = [
+ "重點 1：合理價值{updesc}現價，{src}。加權目標價約 {tpw|#,##0} 美元（DCF {dcftp|#,##0} 權重 {wdcf|0%}，其餘為 Comparable {comp|#,##0}），比現價 {px|#,##0.00} 美元 {upw|SP}，投資建議{rec}（級距 {tier}）。把加權目標價與現價的差距拆成兩個來源（各自權重 ×（目標價 − 現價））：DCF 占 {dcfsh|0%}、Comparable 占 {compsh|0%}。Comparable 比現價 {upc|+0%;−0%}，可拆成兩個因素相乘：每股淨值由約 2027 年底成長到約 2028 年底（本模型，情境加權）{bvg|+0%;−0%}，但記憶體同業前瞻 P/B 中位數 {pmed|0.00} 倍比現價隱含的約 2027 年底 P/B（{pxbv27|0.00} 倍）低 {pmg|0%;0%}，{cdrv}。DCF 比現價 {dcfup|+0%;−0%}：{dcfwho}（情境 DCF 價值為現價的 A {dcfpxA|0.00}／B {dcfpxB|0.00}／C {dcfpxC|0.00} 倍）。",
+ "重點 2：近一年的 EPS 高於市場共識，之後依情境分歧。FY2027 EPS 情境 A {epsA27|0.0}、B {epsB27|0.0}、C {epsC27|0.0} 美元，共識 {ceps27|0.0}（三者依序{vs27A}、{vs27B}、{vs27C}共識）；FY2028 EPS 情境 A {epsA28|0.0}、B {epsB28|0.0}、C {epsC28|0.0} 美元，共識 {ceps28|0.0}（依序{vs28A}、{vs28B}、{vs28C}共識）。同一時間窗比較：12 個月後的前瞻 EPS（約 2027-11～2028-10，情境加權）{feps|0.0} 美元，比共識同窗 {cfeps|0.0} {geps|SP}。",
+ "重點 3：營業利益與 EPS 最受 {s_top}影響。以情境 A 為基準（Sens 頁，一次改一個輸入），「{l_pdn}」「{l_pup}」使 FY2028 EPS 變動 {e_pdn|+0%;−0%}／{e_pup|+0%;−0%}；「{l_sdn}」「{l_sup}」為 {e_sdn|+0%;−0%}／{e_sup|+0%;−0%}；「{l_cdn}」「{l_cup}」只有 {e_cdn|SP}／{e_cup|SP}。這些是敏感度測試案例，不是門檻。"]
+PRES_ANS = [
+ "盈餘由什麼決定？答：{s_top}。以情境 A 為基準的敏感度測試中，「{l_pdn}」「{l_pup}」使 FY2028 EPS 變動 {e_pdn|+0%;−0%}／{e_pup|+0%;−0%}，「{l_sdn}」「{l_sup}」為 {e_sdn|+0%;−0%}／{e_sup|+0%;−0%}，「{l_cdn}」「{l_cup}」只有 {e_cdn|SP}／{e_cup|SP}。資料中心占營收由 FY2026 的 {dcshA26|0%} 升到 FY2028 的 {dcshA28|0%}（情境 A；其中 AI 相關約占營收 {aishA28|0%}）；FY2027–FY2029 的資料中心占營收 {dcsh_27|0%}、{dcsh_28|0%}、{dcsh_29|0%} 是假設，分部拆分不影響合併營收與 EPS。",
+ "高價能維持多久？答：依本模型三種情境的價格路徑（情境設定，不是單一預測），FY2027–FY2029 的 EPS 高點在情境 A {peakA}、情境 B {peakB}、情境 C {peakC}。FY2027 三情境幾乎相同（A {epsA27|0.0}、B {epsB27|0.0}、C {epsC27|0.0} 美元），分歧從 FY2028 開始：FY2028 為 A {epsA28|0.0}、B {epsB28|0.0}、C {epsC28|0.0}，FY2029 為 A {epsA29|0.0}、B {epsB29|0.0}、C {epsC29|0.0}。情境 C 的 FY2029 毛利率降到 {gmC29|0%}（FY2027 為 {gmC27|0%}）。",
+ "現價是否已反映循環見頂？答：依本模型{verdict}。現價 {px|#,##0.00} 美元相當於約 2027 年底每股淨值（本模型，情境加權）的 {pxbv27|0.00} 倍，記憶體同業同口徑的前瞻 P/B 中位數 {pmed|0.00} 倍；Comparable 把同業倍數套在 12 個月後的前瞻每股淨值（約 2028 年底，情境加權）{fbv|#,##0.0} 上，得 {comp|#,##0} 美元（比現價 {upc|SP}）。DCF 目標價 {dcftp|#,##0}（比現價 {dcfup|SP}），{dcfwho}。加權目標價 {tpw|#,##0}，比現價 {upw|SP}，投資建議{rec}。市場共識目標價 {cons|#,##0} 美元隱含約 {cpb|0.00} 倍 P/B（÷ 共識約 2028 年底每股淨值），是同業中位數的 {cpbx|0.00} 倍；本模型約 2028 年底每股淨值比共識 {gbv|SP}。"]
+RD["A1"] = RD["A1"].value + "；v0.4.1（2026-11-05）只改展示層（README 新增展示層與命題回覆兩段、HTML 改用個股 HTML 版面規格 v1.0；README 以外的儲存格不變）"
+_r = RD.max_row + 2
+RD.cell(_r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；v0.4.1 新增，上方原列保留給下游）").font = BOLD; _r += 1
+for t_ in [PRES_LEAD] + PRES_PROPS + PRES_OBS:
+    RD.cell(_r, 1, _fx(t_)); _r += 1
+_r += 1
+RD.cell(_r, 1, "命題回覆（HTML 用；依本模型計算逐一回答上方三個命題）").font = BOLD; _r += 1
+for t_ in PRES_ANS:
+    RD.cell(_r, 1, _fx(t_)); _r += 1
+
 wb.save(sys.argv[1])
 RULER = [i for i in range(nr, tr) if isinstance(V.cell(i, 1).value, str) and V.cell(i, 1).value.startswith("規則值：")]
 RULEH = RULER[0] - 1
