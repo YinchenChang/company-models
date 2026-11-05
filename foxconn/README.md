@@ -1,4 +1,11 @@
-# foxconn/ — 鴻海（2317）收支與估值模型 v0.2.1
+# foxconn/ — 鴻海（2317）收支與估值模型 v0.3.2
+
+## v0.3.2（2026-11-05）：HTML 新版面 v1.0（只改展示層）
+
+- 依 `docs/plan/個股HTML版面規格.md` v1.0 與補充規則 A–E：xlsx README 頁最後新增「展示層」（命題摘要、命題分點、白話重點）、「命題回覆」、「HTML 輔助列」、「本版要點」四段，數字全由公式帶出；原 README 各列保留。README 以外逐格 0 差異（`tools/xlsx_diff.py`）。
+- HTML：原 `html.json` 改名 `html_src.json`（內容不動）；`gen_html_json.py`（沿用廣達樣板）讀它 → `tools/company_html/relayout.py` → 寫 `html.json`。驅動因子依業務分三塊（AI 伺服器組裝／其他事業／全公司）；估值章為說明 → 目標價長條圖 → 結論主要項目 → DCF 折現率 → DCF → Comparable，十年本益比規則值（舊法）全部摺疊。投資建議橫幅中間格為只看 Comparable 目標價（市場主流同業法、未經相對倍數調整）與其上檔空間，進加權的相對倍數調整後值寫在橫幅附註。敏感度龍捲風維持 FY2028 EPS（情境 A），只顯示變動達兩位數百分比的案例。
+- 建置：`python3 foxconn/build_foxconn.py raw.xlsx` → LibreOffice 重算 → `python3 foxconn/gen_html_json.py dist/<xlsx> foxconn/html_src.json foxconn/html.json` → `python3 tools/company_html/build_company_html.py foxconn`。
+- 成品：`dist/20261105_鴻海個股模型_v0.3.2.xlsx`、`.html`；舊版移到 `dist/_待刪除/`。
 
 ## v0.3.1（2026-10-30）：In 頁「敏感度低／高」與「情境 A／B／C」分開（數值不變）
 
@@ -35,9 +42,9 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_foxconn.py` | 產生器（參數與公式；上游成品唯讀） |
-| `dist/20261025_鴻海模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
-| `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_鴻海模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
+| `dist/20261105_鴻海個股模型_v0.3.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `html_src.json`、`gen_html_json.py`、`html.json` | HTML 展示層設定：`html_src.json` 為來源設定，`gen_html_json.py` 套用版面規格 v1.0 後寫出 `html.json`（七章；格式見 `tools/company_html/README.md`） |
+| `dist/20261105_鴻海個股模型_v0.3.2.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
 
 建置：`python3 foxconn/build_foxconn.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用：`markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數）、`tsmc/dist`（情境顆數係數）、`quanta/dist`（ODM 每櫃價格、Rubin 占比、匯率、每 GW 價值變動；廣達有效份額只用來做合計檢查）。另外經 `tools/cycle_position.py` 使用規則函式。**這些檔案都不修改。**
 
