@@ -136,7 +136,7 @@ inp("rk_sh", "三家 ODM 中廣達的 NVL72 櫃數份額（8 月調查）", "%",
 inp("pe_fair_andy", "Andy 先驗：合理 P/E", "x", None, 15, None, "Assumed", "先驗_Andy_廣達_20261024 Q9b（Drive；不在本 repo）", "只作對照")
 
 sec("H. 價格與估值")
-inp("px", "股價（2026-10-22 收盤）", "NT$", None, 322, None, "Interested-party", "Yahoo 股市 2382（10-22 收盤 322、前收 328.5）", "財報狗：10-13 收盤 323")
+inp("px", "股價（2026-11-04 收盤）", "NT$", None, 302.5, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（2382.TW；第三輪修正統一價格日）", "v0.4.3 為 2026-10-22 收盤 322（Yahoo 股市）")
 inp("pe_ttm", "近 12 月 P/E（10-22）", "x", None, 14.31, None, "Interested-party", "Yahoo 股市 2382", "—")
 
 sec("I. 目標價情境權重（Val 第 0 節用；Andy 可改）")
@@ -156,16 +156,16 @@ V2 = {'name': '廣達',
  'roe': ('=AVERAGE(0.2186,0.2842,0.3119)', 'stockanalysis 比率頁（Return on Equity）：FY2023 21.86%、FY2024 28.42%、FY2025 31.19%', '單一來源；近 12 月 39.48%（同站）'),
  'cons_tp': (427.84, 'stockanalysis 個股頁（S&P Global）19 位分析師平均 427.84，頁面時間 2026-10-14', '第二來源：未找到'),
  'cons_feps': ('=323/11.31', 'stockanalysis 個股頁 2026-10-14：價格 323 ÷ Forward PE 11.31'),
- 'peers': [('緯創（Wistron）', '3231.TW', 9.93, '2026-09-29'),
-           ('緯穎（Wiwynn）', '6669.TW', 13.87, '2026-10-02'),
-           ('鴻海（Hon Hai）', '2317.TW', 11.37, '2026-10-19'),
-           ('英業達（Inventec）', '2356.TW', 18.0, '2026-08-14'),
-           ('Super Micro', 'SMCI', 7.06, '2026-10-23')],
+ 'peers': [('緯創（Wistron）', '3231.TW', '=9.21*176/178', '2026-11-04', 'stockanalysis.com 統計頁 Forward PE 9.21（2026-10-19 頁面，價格 178；共識前瞻 EPS＝178 ÷ 9.21）× 2026-11-04 收盤 176 ÷ 178（Yahoo Finance 日線收盤 2026-11-04）；上一版 9.93（2026-09-29）'),
+           ('緯穎（Wiwynn）', '6669.TW', '=11.73*1785/1880', '2026-11-04', 'stockanalysis.com 統計頁 Forward PE 11.73（2026-10-21 頁面，價格 1,880；共識前瞻 EPS＝1,880 ÷ 11.73）× 2026-11-04 收盤 1,785 ÷ 1,880（Yahoo Finance 日線收盤 2026-11-04）；上一版 13.87（2026-10-02）'),
+           ('鴻海（Hon Hai）', '2317.TW', '=11.94*240/250', '2026-11-04', 'stockanalysis.com 統計頁 Forward PE 11.94（2026-10-21 頁面，價格 250；共識前瞻 EPS＝250 ÷ 11.94）× 2026-11-04 收盤 240 ÷ 250（Yahoo Finance 日線收盤 2026-11-04）；上一版 11.37（2026-10-19）'),
+           ('英業達（Inventec）', '2356.TW', '=18.0*56.4/69.9', '2026-11-04', 'stockanalysis.com forward PE 18.0（2026-08-14，收盤 69.9）× 2026-11-04 收盤 56.4 ÷ 69.9（Yahoo Finance 日線收盤 2026-11-04；共識 EPS 不變）'),
+           ('Super Micro', 'SMCI', '=7.06*29.6/32.94', '2026-11-04', 'stockanalysis.com forward PE 7.06（2026-10-23，收盤 32.94）× 2026-11-04 收盤 29.6 ÷ 32.94（Yahoo Finance 日線收盤 2026-11-04；共識 EPS 不變）')],
  'peer_note': 'AI 伺服器 ODM 同業：緯創、緯穎、鴻海、英業達、Super Micro（券商常用比較組）。工業富聯（601138.SS）為 A 股，依規則不列。非 A 股公司的同業名單不放中國 A 股（A 股有結構性溢價；Andy 2026-10-25 11:53）',
  'fwd_w': (0.16666666666666666, 0.8333333333333334),
  'fwd_note': '約 2027-10 時的未來 12 月 EPS ≈ 2／12 × FY2027＋10／12 × FY2028（會計年度＝日曆年）',
  'pe10': None,
- 'px_note': '現價＝In 頁 px（2026-10-22 收盤 322；10-23 收盤未找到）',
+ 'px_note': '現價＝In 頁 px（2026-11-04 收盤；Yahoo Finance）',
  'method': 'DCF（v0.4 標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現到 2026 年底（期中慣例），終值＝NOPAT(FY2033) ×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, 台灣 10 年期公債殖利率)、RONIC＝WACC；'
            'EV 加淨現金與投資、減非控制權益 ÷ 股數，以股權成本推到 12 個月後並扣除期間股利（DCF 頁、tools/fcff_dcf.py）。β 為自算產業 β（台灣伺服器／ODM 同業 6 家無槓桿 β 中位數，Blume 調整）依廣達 D/E 重新加槓桿，股權成本含台灣國家風險溢酬。'
            'ODM 營運資金占營收增量約 16%，營收高成長年度 FCFF 偏低。Comparable：緯創、緯穎、鴻海、英業達、Super Micro 前瞻 P/E 中位數；部分價格為 8–10 月初，Super Micro 低倍數（約 '
@@ -216,7 +216,7 @@ _FD = FD.in_rows(dict(
     inv=(22.151, "Verified", SA_BS + "：長期投資 22,151（權益證券與採權益法投資；帳面計入）", "Sens 測不計"),
     mi=("=12.192-((1-qs_hold)*qs_eq+qs_mi)+(1-qs_hold)*qs_sh*qs_px+(tm_sh-tm_hold)*tm_px", "Derived",
         "上市子公司少數股權用市值、其餘用帳面（第三輪修正，Andy 2026-11-05 23:16 定案）：" + SA_BS + "：非控制權益帳面 12,192 − 廣明（6188）集團少數股權帳面（廣明歸屬母公司權益 × (1 − 廣達持股)＋廣明本身的非控制權益〔主要為達明少數股東〕）＋ 廣明少數股權市值 ＋ 達明（4585）少數股權市值；In 頁 K2 節 qs_*／tm_*",
-        "其餘子公司少數股權（差額約 1.0）維持帳面；股價與廣達 px 同日（2026-10-22 收盤）"),
+        "其餘子公司少數股權（差額約 1.0）維持帳面；股價與廣達 px 同日（2026-11-04 收盤）"),
     stub=dict(bs_date="2026-06-30", val_date="2026-12-31", bs_src=SA_BS + "（3Q26 合併財報尚未公布：台灣上市公司第三季財報期限 11-14；2026-11-05 查 stockanalysis 最新仍為 2Q26）",
               div=("=15.6*sh_v", "Derived", "FY2025 盈餘現金股利每股 15.6 元（股東會已決議；除息日 2026-07-16、發放日 2026-08-28，stockanalysis https://stockanalysis.com/quote/tpe/2382/dividend/），發放落在 2026-06-30～2026-12-31；× 評價用股數 sh_v",
                    "2Q26 資產負債表的應付股利屬其他流動負債、未計入債務，故 stub 期現金流出另扣；廣達一年配息一次，評價日前無其他已宣告股利；買回無")),
@@ -239,15 +239,15 @@ inp("beta_u", "產業無槓桿 β（採用）：自算 TW 伺服器／ODM 同業
     "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）；本組維持 0.792（工作單第二輪修正：只改 Sens 規則）")
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v+mi_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 稀釋股數 sh_v ＋ 非控制權益市值 mi_v)", "與 WACC 權重同一口徑；第三輪修正：合併 EV 含子公司 100%，E＝母公司市值＋非控制權益市值（主控決定）")
 inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新加槓桿）", "x", None, 0.3, None, "Assumed", "工作單第二輪修正（Andy 2026-11-05 23:16 定案）：β 敏感度改為 β_u ± 0.3", "取代 v0.4.1 的低＝中位數 × 0.8 再 Blume、高＝未調整中位數")
-sec("K2. 上市子公司少數股權市值（非控制權益 mi_v 用；v0.4.3 第三輪修正新增：上市子公司用市值、非上市用帳面；股價與 px 同日 2026-10-22）")
+sec("K2. 上市子公司少數股權市值（非控制權益 mi_v 用；v0.4.3 第三輪修正新增：上市子公司用市值、非上市用帳面；股價與 px 同日 2026-11-04）")
 inp("qs_hold", "廣達持有廣明（6188）比例（直接＋達啟投資）", "%", None, 0.3022, None, "Interested-party", "CMoney 廣明分析：廣達直接持有 29.78%、經達啟投資 0.44%，合計 30.22%，與廣明編製合併報表（網址見 Sources 頁）", "Simply Wall St 6188 股東表：Quanta Computer 82,881,664 股（29.8%）（網址見 Sources 頁；2026-11-06 讀取）；廣達 2Q26 合併財報子公司附註本次未直接讀取")
 inp("qs_sh", "廣明流通股數", "十億股", None, 0.27836, None, "Verified", "stockanalysis 6188 季資產負債表 2Q26：流通股數 278.36 百萬股（https://stockanalysis.com/quote/tpex/6188/financials/balance-sheet/?p=quarterly；2026-11-06 讀取）", "Simply Wall St 股東表合計約 278.4 百萬股")
-inp("qs_px", "廣明股價（2026-10-22 收盤）", "NT$", None, 61.0, None, "Verified", "stockanalysis 6188 歷史股價：2026-10-22 收盤 61.00（https://stockanalysis.com/quote/tpex/6188/history/；2026-11-06 讀取）", "與廣達 px 同日")
+inp("qs_px", "廣明股價（2026-11-04 收盤）", "NT$", None, 54.6, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（6188.TWO）", "與廣達 px 同日；v0.4.3 為 2026-10-22 收盤 61.00（stockanalysis）")
 inp("qs_eq", "廣明歸屬母公司權益（2Q26）", "NT$B", None, 12.747, None, "Verified", "stockanalysis 6188 季資產負債表 2Q26：Total Common Equity 12,747（TWD 百萬）（同上網址）", "廣達合併報表中廣明少數股權帳面 ≈ 本值 × (1 − qs_hold)（近似）")
 inp("qs_mi", "廣明本身的非控制權益（2Q26；主要為達明少數股東）", "NT$B", None, 2.345, None, "Verified", "stockanalysis 6188 季資產負債表 2Q26：Minority Interest 2,345（TWD 百萬）（同上網址）", "—")
 inp("tm_sh", "達明（4585）流通股數", "十億股", None, 0.10461, None, "Verified", "stockanalysis 4585 統計頁：流通股數 104.61 百萬股（https://stockanalysis.com/quote/tpe/4585/statistics/；2026-11-06 讀取）", "Simply Wall St 股東表合計約 104.6 百萬股")
 inp("tm_hold", "廣達集團持有達明股數（經廣明）", "十億股", None, 0.069757, None, "Interested-party", "Simply Wall St 4585 股東表：Quanta Storage 69,757,000 股（66.7%）、OMRON 9.46%（網址見 Sources 頁；2026-11-06 讀取）", "廣達直接持股：未找到（股東表未列）；若有直接持股，非控制權益市值會略低")
-inp("tm_px", "達明股價（2026-10-22 收盤）", "NT$", None, 270.0, None, "Verified", "stockanalysis 4585 歷史股價：2026-10-22 收盤 270.00（https://stockanalysis.com/quote/tpe/4585/history/；2026-11-06 讀取）", "與廣達 px 同日")
+inp("tm_px", "達明股價（2026-11-04 收盤）", "NT$", None, 231, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（4585.TW）", "與廣達 px 同日；v0.4.3 為 2026-10-22 收盤 270.00（stockanalysis）")
 
 r = 4
 for srow in rows:
@@ -451,7 +451,7 @@ V["A1"] = "Val — P/E 估值（新台幣）。結論用「現價 ÷ FY2027、FY
 V["A2"] = "循環位置：廣達不是設備股，不套設備市場見頂年；以本模型營收最高的會計年度為見頂年（比照 NVIDIA、Arista、台達電；FY(t)＝CY(t)）。營收到 FY2029 仍在增加時，見頂年未知，判為中段"
 V.cell(4, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, 5, ["項目", "A", "B", "C", "說明"])
-V.cell(6, 1, "現價（2026-10-22 收盤）"); V["B6"] = "=px"; V["B6"].number_format = "#,##0"
+V.cell(6, 1, "現價（2026-11-04 收盤）"); V["B6"] = "=px"; V["B6"].number_format = "#,##0"
 V.cell(7, 1, "現價 ÷ FY2026 EPS（錨點）"); V.cell(8, 1, "現價 ÷ FY2027 EPS（模型）"); V.cell(9, 1, "現價 ÷ FY2028 EPS（模型）"); V.cell(10, 1, "現價 ÷ FY2029 EPS（模型）")
 for j, s in enumerate(SC):
     c = "BCD"[j]
@@ -644,7 +644,8 @@ srcs = [("公司（摘要）：富果 2Q26 法說摘要 2026-08-13（1H26 損益
         ("券商：工商時報 2026-10-08（法人 2027 營收 5.3 兆、EPS 32.09、GB300 與 VR 每櫃價格）", CTEE),
         ("券商：FTNN 2026-10-09（同上；Neocloud 繞過 OEM）", "https://www.ftnn.com.tw/news/585951"),
         ("券商：經濟日報 2026-09-10（美系券商 NVL72 櫃數調查）", UDN0910),
-        ("資料商：Yahoo 股市（10-22 收盤、近 12 月 P/E）", "https://tw.stock.yahoo.com/quote/2382.TW"),
+        ("價格：Yahoo Finance 日線收盤 2026-11-04（現價、同業報價、廣明與達明股價；第三輪修正統一價格日）", "https://finance.yahoo.com/quote/2382.TW/history/"),
+        ("資料商：Yahoo 股市（10-22 收盤〔v0.4.3 現價〕、近 12 月 P/E）", "https://tw.stock.yahoo.com/quote/2382.TW"),
         ("資料商：companiesmarketcap 年底 P/E", "https://companiesmarketcap.com/quanta-computer/pe-ratio/"),
         ("資料商：Goodinfo 歷年經營績效（年底收盤、EPS）", "https://goodinfo.tw/tw/StockBzPerformance.asp?STOCK_ID=2382&RPT_CAT=M_YEAR"),
         ("市場層：markets/network、markets/chip_bridge、tsmc 成品（本 repo，唯讀）", ""),
@@ -766,9 +767,9 @@ r_ = t0 + 22
 V.cell(r_, 1, "0.2 Comparable（市場主流同業前瞻 P/E）").font = BOLD; r_ += 1
 hdr(V, r_, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"]); T["ph"] = r_; r_ += 1
 P1 = r_
-for nm, tk, pe, dt in V2["peers"]:
+for nm, tk, pe, dt, src in V2["peers"]:
     V.cell(r_, 1, nm); V.cell(r_, 2, tk); cc = V.cell(r_, 3, pe); cc.font = BLUE; cc.number_format = "0.0"
-    V.cell(r_, 4, dt); V.cell(r_, 5, "stockanalysis.com 個股頁 Forward PE（分析師共識；價格日期如左）"); V.cell(r_, 6, "Interested-party（賣方共識）"); r_ += 1
+    V.cell(r_, 4, dt); V.cell(r_, 5, src); V.cell(r_, 6, "Interested-party（賣方共識）"); r_ += 1
 P2 = r_ - 1; T["p1"], T["p2"] = P1, P2
 tset(r_, "pmed", "同業前瞻 P/E 中位數", [f"=MEDIAN(C{P1}:C{P2})", None, None], "0.0", V2["peer_note"]); r_ += 1
 w1, w2 = V2["fwd_w"]
@@ -982,7 +983,8 @@ RD.cell(r, 1, "上檔空間：Comparable 目標價（相對倍數調整後）");
 RD.cell(r, 1, f'="估值說明：加權目標價＝DCF 目標價 × "&TEXT(tp_w_dcf,"0%")&"＋Comparable 目標價（相對倍數調整後）× "&TEXT(1-tp_w_dcf,"0%")&"，投資建議依它的上檔空間判定。DCF 為標準版：無槓桿自由現金流（稅後營業利益＋折舊 − 資本支出 − 營運資金增加）以 WACC "&TEXT(wacc,"0.0%")&" 折現，終值用永續成長率 "&TEXT(g_tv,"0.00%")&"、新投資報酬率＝WACC，企業價值加淨現金與投資、減非控制權益（資產負債表日的淨現金加 stub 期無槓桿自由現金流、扣已宣告股利，滾到評價日）後除以股數，三情境價值以股權成本推到 12 個月後並扣除期間股利，再依情境權重加權；Comparable＝同業前瞻本益比中位數 × 本公司長期相對同業的倍數比 × 約一年後的未來 12 個月 EPS（情境加權）。十年本益比規則值是舊法，只作參考，不進目標價。"'); r += 1
 r += 1
 RD.cell(r, 1, "本版要點（版本沿革；HTML 附錄用）").font = BOLD; r += 1
-RD.cell(r, 1, f'="v0.4.3（2026-11-06）：第三輪修正。(1) 非控制權益：上市子公司廣明（6188，廣達持股 30.22%、合併）與達明（4585，廣明持股 66.7%）少數股權改用市值（2026-10-22 收盤，同 px），其餘子公司維持帳面（In 頁 K2 節）；資本結構 E＝母公司市值＋非控制權益市值（WACC 權重與 β 重新加槓桿）。(2) stub 列名改為含 stub 期會計年度（FY2026）FCFF × stub_frac。(3) Sens 永續成長率列名改 g −1pt／上限 rf（g 已等於 rf 上限）。(4) 情境驅動對照：收斂法列名改中性、補 FY2032 淨利率收斂目標列、百分比格式。加權目標價 567.52 → "&TEXT({TPW},"0.00")&"、上檔空間 +76.2% → "&TEXT({UP},"+0.0%;-0.0%")&"、投資建議 強力買進 → "&{REC}&"。"'); r += 1
+RD.cell(r, 1, f'="v0.4.4（2026-11-06）：第三輪修正（現價統一 2026-11-04）。現價 322（2026-10-22） → "&TEXT({PX},"#,##0.0")&"（Yahoo Finance 日線收盤 2026-11-04）；Comparable 同業前瞻 P/E 換算到 11-04 收盤（共識 EPS 不變），同業中位數 11.37 → "&TEXT({MED},"0.00")&"；上市子公司廣明（6188）61.00 → 54.60、達明（4585）270 → 231（11-04 收盤），非控制權益（市值口徑）22.21 → "&TEXT(mi_v,"0.00")&" NT$B。DCF 目標價 584 → "&TEXT({DCF},"#,##0")&"、Comparable 目標價（相對倍數調整後）548 → "&TEXT({CMP},"#,##0")&"、加權目標價 566 → "&TEXT({TPW},"#,##0")&"、上檔空間 +75.8% → "&TEXT({UP},"+0.0%;-0.0%")&"、投資建議 強力買進 → "&{REC}&"。"'); r += 1
+RD.cell(r, 1, 'v0.4.3（2026-11-06）：第三輪修正。(1) 非控制權益：上市子公司廣明（6188，廣達持股 30.22%、合併）與達明（4585，廣明持股 66.7%）少數股權改用市值（2026-10-22 收盤，同 px），其餘子公司維持帳面（In 頁 K2 節）；資本結構 E＝母公司市值＋非控制權益市值（WACC 權重與 β 重新加槓桿）。(2) stub 列名改為含 stub 期會計年度（FY2026）FCFF × stub_frac。(3) Sens 永續成長率列名改 g −1pt／上限 rf（g 已等於 rf 上限）。(4) 情境驅動對照：收斂法列名改中性、補 FY2032 淨利率收斂目標列、百分比格式。加權目標價 567.52 → 565.98、上檔空間 +76.2% → +75.8%、投資建議 強力買進 → 強力買進。'); r += 1   # 舊版沿革固定文字（第三輪修正第 37 點）
 RD.cell(r, 1, "v0.4.2（2026-11-05）：第二輪修正（Andy 2026-11-05 23:16 定案），換用共用模組 tools/fcff_dcf.py v2。(1) 淨現金滾到評價日：資產負債表日 2026-06-30（3Q26 財報尚未公布，維持 2Q26）→ 評價日 2026-12-31，淨現金與投資 -92.2＋stub 期 FCFF（FY2026 錨點 × stub_frac 0.504；-101.8）− 已宣告股利 60.1（每股 15.6 元）＝-254.1（NT$B）。(2) β 敏感度改 β_u ± 0.3 各自重新加槓桿（β 0.63／1.40）；基準 β_u 0.792 不變（β 1.01）。(3) 新增 Sens「美元口徑折現」：加權目標價 477.37（-15.9%）。(4) RONIC＝WACC 不變；非控制權益維持帳面 12.2（占市值 1.0%）；資本支出、折舊：本模型沒有擴產排程列，維持近三年占營收比例。β 1.01 → 1.01、WACC 6.5% → 6.5%、DCF 目標價 632.40 → 587.11、加權目標價 590.17 → 567.52、上檔空間 +83.3% → +76.2%、投資建議 強力買進 → 強力買進。"); r += 1   # 舊版沿革：固定為該版成品的計算結果
 RD.cell(r, 1, "v0.4.1（2026-11-05）：β 改為自算產業 β（TW 伺服器／ODM 同業 6 家無槓桿 β 中位數 0.69，Blume 調整後 0.792，依廣達負債比重新加槓桿；Andy 2026-11-05 22:55，取代 Damodaran 產業 β）。β 1.88 → 1.01、WACC 10.2% → 6.5%、DCF 目標價 373.79 → 632.40、加權目標價 460.86 → 590.17、上檔空間 +43.1% → +83.3%、投資建議 買進 → 強力買進。評價日 2026-12-31、目標時點 12 個月後與其他模型參數不變。"); r += 1
 RD.cell(r, 1, "v0.4（2026-11-05）：模型改版，DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC，docs/plan/個股DCF標準規格.md）。DCF 目標價 644.26 → 373.79 元、加權目標價 596.09 → 460.86 元、上檔空間 +85.1% → +43.1%、投資建議 強力買進 → 買進。DCF 差異拆解（情境加權）：現金流改 FCFF 與淨現金 −163.55（營運資金增加吸走營收高成長年度的現金）、折現率改 WACC 與永續成長率改 MIN(3%, rf) −100.11、終值改價值驅動式 +16.22、扣期間股利 −23.04。Comparable、情境權重、DCF 權重 50% 與投資建議規則不變。"); r += 1   # 舊版沿革：固定為該版成品的計算結果
@@ -1033,7 +1035,16 @@ for _a, _b in (("[Interested-party] CMoney 廣明分析：廣達直接持有廣�
                ("[Interested-party] Simply Wall St 4585 股東表：Quanta Storage 69,757,000 股（66.7%）（In 頁 tm_hold）", "https://simplywall.st/stocks/tw/capital-goods/twse-4585/techman-robot-shares/ownership")):
     SO.cell(_so, 1, _a); SO.cell(_so, 2, _b); _so += 1
 
+# v0.4.4（2026-11-06）：第三輪修正（現價統一 2026-11-04）
+for _ws in wb:   # 公式中的現價日期標籤同步（含 tools/relative_multiple 產生的重點觀察 1）
+    for _row in _ws.iter_rows():
+        for _c in _row:
+            if isinstance(_c.value, str) and _c.value.startswith("="):
+                for _o in ['"（2026-10-22）"']:
+                    if _o in _c.value: _c.value = _c.value.replace(_o, '"（2026-11-04 收盤）"')
+RD["A1"] = RD["A1"].value + "；v0.4.4（2026-11-06）第三輪修正：現價與同業報價統一 2026-11-04 收盤（Yahoo Finance）"
 wb.save(sys.argv[1])
+if os.environ.get("R4_NOOP"): pass
 if os.environ.get("QUANTA_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
     json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK_ROW, "SENSN": SENS_N, "IMP": IMP, "VAL": VAL, "SB": SB},
