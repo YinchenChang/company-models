@@ -1,4 +1,4 @@
-# Applied Materials（AMAT）收支與估值模型 v0.2.1（AI 半導體 Project 步驟 5：設備與材料——第三家公司）
+# Applied Materials（AMAT）收支與估值模型 v0.3.2（AI 半導體 Project 步驟 5：設備與材料——第三家公司）
 # 用法：python3 amat/build_amat.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度約 11 月到隔年 10 月底（52／53 週，結束於 10 月最後一個星期日）：FY2026＝2025-10-27～2026-10-25。
 # 金額：百萬美元（US$M）；EPS 為美元，採公司 non-GAAP 稀釋 EPS（指引與共識同口徑），GAAP 另列。
@@ -836,5 +836,100 @@ for a_, b_ in (("E", "D"), ("H", "G")): SE[f"{a_}{nn + 2}"] = f"={b_}{nn + 2}/{b
 RMX.apply(wb, "amat")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, "v0.3.1", "2026-10-31")  # v0.3.1：In 頁版面（個股模型原則第 8 節；數值不變）
+# ---------------- v0.3.2（2026-11-05）：只改展示層——README 新增「展示層」「命題回覆」兩段（個股 HTML 版面規格 v1.0；公式帶數字）----------------
+# 新列放在 README 既有內容之後，不位移既有列；README 以外的工作表不動
+def _rw(ws, text, exact=False, col=1, start=1):
+    for r_ in range(start, ws.max_row + 1):
+        v_ = ws.cell(r_, col).value
+        if isinstance(v_, str) and ((v_.strip() == text) if exact else v_.strip().startswith(text)):
+            return r_
+    raise KeyError((ws.title, text))
+def _F(*parts):   # 文字公式：字串常數每段 ≤ 120 字（Excel 公式內字串常數上限 255 字元）；("=", 運算式) 為公式片段
+    out = []
+    for p_ in parts:
+        if isinstance(p_, tuple):
+            out.append(p_[1])
+        else:
+            s_ = str(p_)
+            out += ['"' + s_[i_:i_ + 120].replace('"', '""') + '"' for i_ in range(0, len(s_), 120)]
+    return "=" + "&".join(out)
+_E = lambda e: ("=", e)
+_TX = lambda c, f: _E(f'TEXT({c},"{f}")')
+_SG = lambda c: _TX(c, "+0.0%;-0.0%")
+_PC = lambda c: _TX(c, "0.0%")
+_UP = lambda c: _E(f'IF({c}>=0,"高 ","低 ")&TEXT(ABS({c}),"0.0%")')
+_ws_in = wb["In"]
+_IN = {_ws_in.cell(r_, 1).value: r_ for r_ in range(4, _ws_in.max_row + 1) if _ws_in.cell(r_, 1).value}
+I_ = lambda k: f"In!E{_IN[k]}"
+I_lo = lambda k: f"In!D{_IN[k]}"
+I_hi = lambda k: f"In!F{_IN[k]}"
+_V, _RC, _SE, _RD = wb["Val"], wb["Recon"], wb["Sens"], wb["README"]
+vw, vd, vc = _rw(_V, "目標價（DCF 與 Comparable 加權）", exact=True), _rw(_V, "DCF 目標價（情境加權）"), _rw(_V, "Comparable 目標價", exact=True)
+vca, vk, vm = _rw(_V, "Comparable 目標價（相對倍數調整後）"), _rw(_V, "相對倍數調整係數"), _rw(_V, "同業前瞻 P/E 中位數")
+vup, vuc, vcons, vrec = _rw(_V, "上檔空間：加權目標價"), _rw(_V, "上檔空間：Comparable"), _rw(_V, "市場共識目標價"), _rw(_V, "投資建議", exact=True)
+vpx = _rw(_V, "現價（")
+vfe = _rw(_V, "12 個月後的前瞻 EPS")
+vd12 = _rw(_V, "DCF 情境價值推到 12 個月後")
+e0 = _rw(_V, "情境 EPS（FY2027")
+E27, E28, E29, E32 = e0 + 1, e0 + 2, e0 + 3, e0 + 6
+W_ = I_("tp_w_dcf")
+# 加權目標價相對現價的差距拆解（補充規則 B）：DCF 貢獻＝w ×（DCF − 現價），Comparable 貢獻＝(1 − w) ×（調整後 Comparable − 現價）
+SH_DCF = f"{W_}*(Val!B{vd}-Val!B{vpx})/(Val!B{vw}-Val!B{vpx})"
+def _block(lead, props, obs, answers):
+    rr = _RD.max_row + 2
+    _RD.cell(rr, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；" + VER_HTML + " 新增，上方各列保留）").font = Font(bold=True); rr += 1
+    for t_ in [lead] + props + obs:
+        _RD.cell(rr, 1, t_); rr += 1
+    rr += 1
+    _RD.cell(rr, 1, "命題回覆（HTML 用；依本模型計算回答開頭的命題）").font = Font(bold=True); rr += 1
+    for t_ in answers:
+        _RD.cell(rr, 1, t_); rr += 1
+    rr += 1
+    _RD.cell(rr, 1, "HTML 橫幅附註用：Comparable 目標價（相對倍數調整後）的上檔空間（＝Val 相對倍數調整後 Comparable 目標價 ÷ 現價 − 1；進加權目標價的是該值，橫幅中間格則放未調整的只看 Comparable 目標價）")
+    _RD.cell(rr, 2, f"=Val!B{vca}/Val!B{vpx}-1").number_format = "0.0%"
+    _RD["A1"] = str(_RD["A1"].value) + "；" + VER_HTML + "（2026-11-05）只改展示層（README 展示層與命題回覆、HTML 新版面 v1.0），數值不變"
+    return rr
+README_HELPER_ROW = lambda: _rw(_RD, "HTML 橫幅附註用")
+VER_HTML = "v0.3.2"
+r_e27 = _rw(_RC, "FY2027 non-GAAP EPS"); r_cn = None
+s_cn20, s_cn40, s_c, s_aff, s_b = _rw(_SE, "中國營收 −20%"), _rw(_SE, "中國營收 −40%"), _rw(_SE, "設備市場情境 C"), _rw(_SE, "關係企業規則恢復（US$600M／年）"), _rw(_SE, "設備市場情境 B")
+s_w8 = _rw(_SE, "DCF 權重 0.8")
+T2 = lambda c: _TX(c, "0.00")
+T0 = lambda c: _TX(c, "#,##0")
+lead = "命題：應用材料約四分之三營收來自半導體系統、跟著晶圓廠設備支出走，中國約占三成；問題是設備支出在 2028 年見頂、出口管制再收緊時，盈餘能否撐住現價。三個問題如下。"
+props = [
+    "命題 1：設備支出見頂時盈餘還會成長嗎——2028 年晶圓廠設備支出持平或下滑時，FY2028 每股盈餘是否仍高於 FY2027。",
+    "命題 2：中國與出口管制會讓盈餘少多少——關係企業規則恢復或中國營收下修時，每股盈餘的影響有多大。",
+    "命題 3：每股值多少——以 DCF 與同業倍數加權的目標價，相對現價的上檔空間是多少。",
+]
+obs = [
+    _F("重點 1：加權目標價低於現價，投資建議", _E(f"Val!B{vrec}"), "：加權目標價約 ", T2(f"Val!B{vw}"), " 美元，比現價 ", T2(f"Val!B{vpx}"), " ", _UP(f"Val!B{vup}"),
+       "（在正負 25% 之間為中立）。低於現價的差距約 ", _PC(SH_DCF), " 來自 DCF（",
+       T2(f"Val!B{vd}"), "，權重 ", _TX(W_, "0%"), "），其餘來自相對倍數調整後的 Comparable（", T2(f"Val!B{vca}"), "，也略低於現價）。"),
+    _F("重點 2：模型盈餘三個情境都低於共識：FY2027 每股盈餘順利／平平／不如預期 ", T2(f"Recon!C{r_e27}"), "／", T2(f"Recon!E{r_e27}"), "／", T2(f"Recon!G{r_e27}"),
+       " 美元，比共識 ", T2(f"Recon!B{r_e27}"), " 低 ", _PC(f"-Recon!D{r_e27}"), "／", _PC(f"-Recon!F{r_e27}"), "／", _PC(f"-Recon!H{r_e27}"),
+       "（同一年度比較）。市場共識目標價 ", T2(f"Val!B{vcons}"), " 除以共識 FY2027 每股盈餘約 ", _TX(f"{I_('cons_tp')}/{I_('cons_feps')}", "0.0"),
+       " 倍（Val 頁差距拆解的口徑；共識目標價是 12 個月後的價格，此倍數只作粗略對照），高於同業目前的前瞻本益比中位數 ", _TX(f"Val!B{vm}", "0.0"), " 倍。共識目標價較高，來自較高的倍數與較高的盈餘兩者。"),
+    _F("重點 3：設備市場情境決定 FY2028：三情境 FY2028 每股盈餘 ", T2(f"Val!B{E28}"), "／", T2(f"Val!C{E28}"), "／", T2(f"Val!D{E28}"),
+       " 美元；不如預期情境（先進邏輯設備 2028 年 ", _SG(f"{I_('laC_28')}/{I_('laC_27')}-1"), "，並假設關係企業規則恢復）比順利情境低 ", _PC(f"-Sens!H{s_c}"),
+       "。FY2027 三情境相近（", T2(f"Val!B{E27}"), "～", T2(f"Val!D{E27}"), "），因為設備市場三情境在 2027 年以前相同。"),
+    _F("重點 4：DCF 三個情境都低於現價：推到 12 個月後的 DCF 情境價值順利／平平／不如預期為 ", T2(f"Val!B{vd12}"), "／", T2(f"Val!C{vd12}"), "／", T2(f"Val!D{vd12}"),
+       "。平平與不如預期情境的盈餘在 FY2029 後下滑（FY2032 每股盈餘 ", T2(f"Val!C{E32}"), "、", T2(f"Val!D{E32}"),
+       "；FY2030 起為收斂法、非驅動因子推導，是假設），所以 DCF 目標價只有 ", T2(f"Val!B{vd}"), "。敏感度測試「", _E(f"Sens!A{s_w8}"), "」時，加權目標價變為 ", T2(f"Sens!E{s_w8}"), "（", _SG(f"Sens!F{s_w8}"), "）。"),
+]
+answers = [
+    _F("設備支出見頂時盈餘還會成長嗎？答：要看見頂後支出掉多少。FY2027 三情境每股盈餘 ", T2(f"Val!B{E27}"), "／", T2(f"Val!C{E27}"), "／", T2(f"Val!D{E27}"),
+       " 美元（順利／平平／不如預期），都高於 FY2026 錨點 ", T2(f"Recon!C{_rw(_RC, 'FY2026 non-GAAP EPS')}"), "。FY2028 設備支出持平的平平情境為 ", T2(f"Val!C{E28}"),
+       "，仍比 FY2027 高 ", _PC(f"Val!C{E28}/Val!C{E27}-1"), "；先進邏輯設備 2028 年 ", _SG(f"{I_('laC_28')}/{I_('laC_27')}-1"), " 的不如預期情境降到 ", T2(f"Val!D{E28}"), "，比 FY2027 低 ", _PC(f"1-Val!D{E28}/Val!D{E27}"),
+       "；順利情境為 ", T2(f"Val!B{E28}"), "。平平情境 FY2029 為 ", T2(f"Val!C{E29}"), "，大致持平。"),
+    _F("中國與出口管制會讓盈餘少多少？答：中國營收下修的影響大於關係企業規則。以順利情境為基準（Sens 頁），中國營收 −20% 使 FY2028 每股盈餘 ", _SG(f"Sens!H{s_cn20}"),
+       "、−40% 使 ", _SG(f"Sens!H{s_cn40}"), "；關係企業規則恢復（每年少 ", T0(I_("aff_hit")), " 百萬美元，公司 2025-09 的估計）使 FY2027 每股盈餘 ", _SG(f"Sens!E{s_aff}"),
+       "。中國下修比例是敏感度假設，基準為 0；不如預期情境假設規則恢復（In 頁 aff_C 為 Assumed）。"),
+    _F("每股值多少？答：加權目標價約 ", T2(f"Val!B{vw}"), " 美元，比現價 ", T2(f"Val!B{vpx}"), " ", _UP(f"Val!B{vup}"), "，投資建議", _E(f"Val!B{vrec}"),
+       "。加權目標價＝DCF ", T2(f"Val!B{vd}"), " 與 Comparable 各占 ", _TX(W_, "0%"), "／", _TX(f"1-{W_}", "0%"), "；進加權的 Comparable 是相對倍數調整後的 ", T2(f"Val!B{vca}"),
+       "（同業前瞻本益比中位數 ", _TX(f"Val!B{vm}", "0.0"), " 倍 × 相對倍數調整係數 ", T2(f"Val!B{vk}"), " × 12 個月後前瞻每股盈餘 ", T2(f"Val!B{vfe}"), "，上檔空間 ", _SG(f"Val!B{vca}/Val!B{vpx}-1"),
+       "）。只看 Comparable 目標價（市場主流同業法，不做相對倍數調整）為 ", T2(f"Val!B{vc}"), "（上檔空間 ", _SG(f"Val!B{vuc}"), "），頁首橫幅中間格放這個值，用來對照市場主流的目標價。"),
+]
+_block(lead, props, obs, answers)
 wb.save(sys.argv[1])
 print("PB", {s: (PB[s]["ss"], PB[s]["rev"], PB[s]["eps"], PB[s]["idx"]) for s in SC}, "SUMR", SUMR[("A", "rev")], SUMR[("C", "eps")], "VAL", VAL, "FR", FR, "SENS_LAST", SENS_LAST, "RECON_LAST", RECON_LAST)

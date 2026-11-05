@@ -1,4 +1,12 @@
-# amat/ — Applied Materials（AMAT）收支與估值模型 v0.2.1
+# amat/ — Applied Materials（AMAT）收支與估值模型 v0.3.2
+
+## v0.3.2（2026-11-05）：HTML 新版面 v1.0（只改展示層，數值不變）
+
+- 依 `docs/plan/個股HTML版面規格.md` v1.0：xlsx README 頁最後新增「展示層」（命題摘要、命題 1–3、白話重點）與「命題回覆」兩段，數字全部以公式取自 Val／Recon／Sens／In／PL；另一列（B 欄公式）給橫幅附註用的「Comparable 目標價（相對倍數調整後）」上檔空間。README 以外的工作表與前版逐格相同（`tools/xlsx_diff.py`：差異只在 README）。
+- HTML：舊設定改名 `html_src.json`（內容不動），`gen_html_json.py` 經共用轉換器 `tools/company_html/relayout.py` 產生 `html.json`（勿手改）。參數依業務分塊：半導體系統（設備市場三情境、會計年度換算、終端權重與份額、對帳用 SEMI、Wattonomics 係數）、中國與出口管制、AGS 服務與其他（含顯示器）、全公司（指引、成本費用、股價、共識、目標價規則與折現率）。
+- 橫幅並列加權目標價、只看 Comparable 目標價（市場主流同業法，未做相對倍數調整；附自己的上檔空間）與現價；進加權的相對倍數調整後 Comparable 寫在橫幅附註（工作單補充規則 A）。目標價長條圖補上調整後值；敏感度章新增加權目標價龍捲風圖；情境驅動表與目標價參數案例表的列號依 In／Sens 頁現況重新定位（舊設定在插入 Wattonomics 列後位移）。
+- 成品：`dist/20261105_應用材料個股模型_v0.3.2.xlsx`、`dist/20261105_應用材料個股模型_v0.3.2.html`；舊版移到 `dist/_待刪除/`。敏感度未重跑（數值不變）。
+
 
 ## v0.3.1（2026-10-31）：In 頁「敏感度低／高」與「情境 A／B／C」分開（數值不變）
 
@@ -30,9 +38,9 @@ AI 半導體 Project 步驟 5（設備與材料）的第三家公司，結構比
 | 檔案 | 內容 |
 |---|---|
 | `build_amat.py` | 產生器（參數與公式） |
-| `dist/20261028_應用材料個股模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
-| `html.json` | HTML 展示層設定（格式見 `tools/company_html/README.md`） |
-| `dist/20261028_應用材料個股模型_v0.3.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格） |
+| `dist/20261105_應用材料個股模型_v0.3.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `html_src.json`、`gen_html_json.py` → `html.json` | HTML 展示層設定（舊版面設定 → 版面規格 v1.0；勿手改 `html.json`） |
+| `dist/20261105_應用材料個股模型_v0.3.2.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格） |
 
 建置：`python3 amat/build_amat.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。唯讀取用 `markets/equipment/dist`（各終端市場設備支出三情境、見頂年度、SEMI 對帳值）與 `tools/cycle_position.py`；不修改它們。算力假設（GW、每 GW capex）不直接讀，經設備市場模型間接使用。
 
