@@ -55,13 +55,13 @@ AI 模型公司（位於 AI 金流的最上游）：自研 GPT 系列大模型�
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| Anthropic | 企業 API、程式代理、訂閱 | 2026 Q3 營收 16.8bn；Q2 11.6bn | [本專案：20261103_Anthropic收支模型_v0_1_8.xlsx SRC_ANT!E388、E386] |
+| Anthropic | 企業 API、程式代理、訂閱 | 2026 Q3 營收 16.8bn；Q2 11.6bn | [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx SRC_ANT!E388、E386] |
 | Google（Gemini） | 消費端助理、API、雲端 | Gemini 營收：本專案未建立；Q2 法說揭露 API 每分鐘 22B token | [本專案：alphabet_facts_20261008.json split.aiRunRate] |
 | MiniMax（00100.HK） | API、消費型 App | 1H26 營收 116.6m 美元 | [本專案：20261022_MiniMax收支模型_v0_2.xlsx SRC_MM!E8] |
 | 智譜（02513.HK） | API、Coding 方案 | 1H26 營收 RMB 954m | [本專案：20261022_MiniMax收支模型_v0_2.xlsx SRC_MM!E75] |
 
 - 市占：本專案未建立。
-- 營收口徑不同：Anthropic 經雲端市集的銷售以總額認列 [本專案：20261103_Anthropic收支模型_v0_1_8.xlsx Revenue!B67]；OpenAI 9 月底 50bn 為淨額口徑 [本專案：20261029_OpenAI收支模型_v0_6_4.xlsx SRC_OAI!C139]，兩家季營收不能直接比大小。
+- 營收口徑不同：Anthropic 經雲端市集的銷售以總額認列 [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx Revenue!B67]；OpenAI 9 月底 50bn 為淨額口徑 [本專案：20261029_OpenAI收支模型_v0_6_4.xlsx SRC_OAI!C139]，兩家季營收不能直接比大小。
 - 價格競爭：2026-07～09 OpenAI 五次調價，中、低層降幅最大（Luna 輸入由 1 降至 0.1 美元）[本專案：20261029_OpenAI收支模型_v0_6_4.xlsx SRC_OAI!C29–C33、C115、C23]。
 
 ## 主要客戶
@@ -109,7 +109,7 @@ AI 模型公司（位於 AI 金流的最上游）：自研 GPT 系列大模型�
 
 ## 來源
 1. 本專案：`/home/claude/company-models/openai/dist/20261029_OpenAI收支模型_v0_6_4.xlsx`（SRC_OAI、Revenue、Compute、Cost、Funding、Reverse、PxQ）；`openai/docs/reports/20261029_v0.6.4.md`
-2. 本專案：`/home/claude/company-models/anthropic/dist/20261103_Anthropic收支模型_v0_1_8.xlsx`（SRC_ANT、Revenue）；`minimax/dist/20261022_MiniMax收支模型_v0_2.xlsx`（SRC_MM）；`alphabet/data/alphabet_facts_20261008.json`
+2. 本專案：`/home/claude/company-models/anthropic/dist/20261104_Anthropic收支模型_v0_1_9.xlsx`（SRC_ANT、Revenue）；`minimax/dist/20261022_MiniMax收支模型_v0_2.xlsx`（SRC_MM）；`alphabet/data/alphabet_facts_20261008.json`
 3. [OpenAI Rumours: punta a 70 miliardi di dollari di ricavi annualizzati entro fine 2026](https://www.borsaitaliana.it/borsa/notizie/teleborsa/finanza/openai-rumours-punta-a-70-miliardi-di-dollari-di-ricavi-annualizzati-entro-fine-2026-37_2026-10-09_TLB.html?lang=it)（Teleborsa，2026-10-09）
 4. [FT: OpenAI Told Investors Annualized Revenue Was Nearing $50B at End of September](https://aiweekly.co/alerts/ft-openai-told-investors-annualized-revenue-was-nearing-50b-at-end-of-september)（AI Weekly，2026-10-08）
 5. [AI news for Thursday, October 8, 2026](https://aiweekly.co/ai-news-today/edition/2026-10-08)（AI Weekly，2026-10-08）
