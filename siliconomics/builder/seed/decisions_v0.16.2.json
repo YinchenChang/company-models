@@ -1,0 +1,11 @@
+[
+ {
+  "id": "S45",
+  "cat": "結構",
+  "item": "v0.16.2：新增實體部署 GW（SIF_DeployGWPhys_Base）",
+  "decision": "Deploy 頁 2027–29 的部署 GW 以 VR200 每 GW IT capex 當分母（成本等值），Rubin Ultra 被高估、ASIC 被低估；按金額計的下游（PCB、CCL 每 GW 金額）維持讀成本等值，按實體電力計的下游（電源、散熱、組裝）應讀實體 GW。本版只新增列與名稱，讀者改讀另案逐檔進行並列出目標價變動。",
+  "date": "2026-11-05",
+  "quote": "Andy 2026-11-05 16:33「Deploy 頁要不要另加一列實體 GW…：先加」",
+  "status": "Andy 決定"
+ }
+]

@@ -204,6 +204,22 @@ for y in YRS:
 for j, w in enumerate([16, 58, 8, 9, 10, 9, 16, 90], 1):
     IN.column_dimensions[CL(j)].width = w
 
+# H. r8（v0.16.2）：PR #342 診斷與算力收支 11-05 回執的調整項（只作對照，不進兩側基準）
+if "SIF_DeployGWPhys_Base" in S.defined_names:
+    IN.cell(r, 1, "H. r8 調整項（PR #342 部署量差距診斷；算力收支 11-05 回執；只作對照，不進兩側基準）").font = BOLD; r += 1
+    _ph = nvr(S, "SIF_DeployGWPhys_Base"); _cap = nvr(S, "SIF_CapOnlineGW_Base")
+    for i, y in enumerate((2026, 2027, 2028, 2029)):
+        inp(f"phys_{y}", f"Siliconomics 實體部署 GW（出貨年）{y}", "GW", None, _ph[i], None, "Derived",
+            f"{sil_f} Interface SIF_DeployGWPhys_Base（NVIDIA 依世代每 GW 顆數、非 NVIDIA 依持有成本比）")
+        inp(f"capon_{y}", f"Siliconomics 可支撐新增上線 GW（供給上限）{y}", "GW", None, _cap[i], None, "Derived", f"{sil_f} Interface SIF_CapOnlineGW_Base")
+    for y, (lo, b, hi, src) in {2026: (0, 0, 0, "2026 不調整"),
+                                2027: (1.84, 4.81, 8.28, "算力收支 11-03《2027 時差來源診斷》：(a) 七家資本支出 1.84＋(b1) Oracle 0.77＋(b2) xAI 0.75＋(b3) 主權 0.65＋(b4) 其他新雲 0.80，全部 Assumed；在 Wattonomics v0.1.9 上推得，待 v0.3 重算（扣 Oracle 重疊約 4.04）"),
+                                2028: (1.84, 4.81, 8.28, "算力收支 11-05 回執：買方集合不完整屬水準缺口，2028 延續（Assumed）"),
+                                2029: (1.84, 4.81, 8.28, "算力收支 11-05 回執：延續假設（Assumed）")}.items():
+        inp(f"w4_{y}", f"④ Wattonomics 覆蓋不足（全市場上線 GW）{y}", "GW", lo, b, hi, "Assumed", src)
+    for y, (lo, b, hi) in {2026: (0, 0, 0), 2027: (0, 0, 0), 2028: (0, 0, 0), 2029: (0, 1.12, 1.95)}.items():
+        inp(f"w2_{y}", f"W2 Wattonomics 新雲、主權站點清單結束後年增歸零（扣除與 ④ 重疊）{y}", "GW", lo, b, hi, "Assumed", "算力收支 11-05 回執第 2 節")
+
 for k, ref in names.items():
     wb.defined_names[k] = openpyxl.workbook.defined_name.DefinedName(k, attr_text=ref)
 
@@ -262,6 +278,17 @@ brow("b10", "⑥ 殘差（Wattonomics 側未解釋；歸覆蓋率）", "b8 − b
 brow("b11", "比值：Wattonomics ÷ Siliconomics 部署 GW（原始）", "Compare 頁同值", lambda y: None if y == 2025 else f"={C(y)}{R['b9']}/{C(y)}{R['b1']}")
 brow("b12", "比值：Wattonomics ÷ Siliconomics 推得上線 GW（橋接後）", "", lambda y: None if y == 2025 else f"={C(y)}{R['b9']}/{C(y)}{R['b8']}", True)
 brow("b13", "殘差占 Siliconomics 部署 GW", "", lambda y: None if y == 2025 else f"={C(y)}{R['b10']}/{C(y)}{R['b1']}")
+if "phys_2026" in names:
+    br += 1
+    B.cell(br, 1, "r8 調整後（PR #342 診斷＋算力收支 11-05；只作對照，兩側基準不變）").font = BOLD; br += 1
+    brow("p1", "① NVIDIA 世代改實體（出貨年）", "SIF_DeployGWPhys − b3（b3 只換算非 NVIDIA）", lambda y: None if y == 2025 else f"=phys_{y}-{C(y)}{R['b3']}")
+    brow("p2", "　① 上線年", "p1 −（lag＋inv_k）×（p1 − 前一年 p1）", lambda y: None if y == 2025 else (f"={C(y)}{R['p1']}-(lag+inv_k)*{C(y)}{R['p1']}" if y == 2026 else f"={C(y)}{R['p1']}-(lag+inv_k)*({C(y)}{R['p1']}-{CL(YC[y]-1)}{R['p1']})"))
+    brow("p3", "Siliconomics 推得上線（實體）", "b8 ＋ p2", lambda y: None if y == 2025 else f"={C(y)}{R['b8']}+{C(y)}{R['p2']}", True)
+    brow("p4", "Siliconomics 推得上線（供給上限截頂後）", "MIN(p3, SIF_CapOnlineGW_Base)", lambda y: None if y == 2025 else f"=MIN({C(y)}{R['p3']},capon_{y})", True)
+    brow("p5", "Wattonomics 調整後（④＋W2）", "b9 ＋ ④ ＋ W2；全部 Assumed", lambda y: None if y == 2025 else f"={C(y)}{R['b9']}+w4_{y}+w2_{y}", True)
+    brow("p6", "比值：調整後（p5 ÷ p4）", "", lambda y: None if y == 2025 else f"={C(y)}{R['p5']}/{C(y)}{R['p4']}", True)
+    brow("p7", "　④ 取低值", "", lambda y: None if y == 2025 else f"=({C(y)}{R['b9']}+w4_{y}_lo+w2_{y}_lo)/{C(y)}{R['p4']}")
+    brow("p8", "　④ 取高值", "", lambda y: None if y == 2025 else f"=({C(y)}{R['b9']}+w4_{y}_hi+w2_{y}_hi)/{C(y)}{R['p4']}")
 br += 1
 B.cell(br, 1, "NVIDIA 資料中心營收對帳點（只作診斷；2026＝FY2027 錨點、2027＝FY2028 指引推得）").font = BOLD; br += 1
 brow("n1", "NVIDIA 成本等值 GW（出貨年；基準）", "b1 − 非 NVIDIA 成本等值 GW（b2a）", lambda y: None if y in (2025, 2028, 2029) else f"={C(y)}{R['b1']}-{C(y)}{R['b2a']}")
