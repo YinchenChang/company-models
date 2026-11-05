@@ -1,4 +1,4 @@
-# 東京精密（Tokyo Seimitsu／ACCRETECH，7729.T）收支與估值模型 v0.1.1（AI 半導體 Project：設備與材料）
+# 東京精密（Tokyo Seimitsu／ACCRETECH，7729.T）收支與估值模型 v0.3.1（AI 半導體 Project：設備與材料）
 # 用法：python3 accretech/build_accretech.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度 4 月到隔年 3 月：FY2025＝2025-04～2026-03（公司「2026年3月期」）。金額：十億日圓（¥B）；EPS：日圓。
 # 結構比照 disco/build_disco.py：README、In、Q、Hist、PL、Val、Recon、Sens、Sources。
@@ -134,8 +134,8 @@ inp("mtp_oi", "中期經營計畫：FY2027 營業利益目標", "¥B", None, 45.
 # v0.3：標準版 DCF（無槓桿自由現金流＋WACC；tools/fcff_dcf.py）的 In 參數。評價日 2026-12-31（FY2026 只計 2027-01～03）；股價 2026-10-23；資產負債為 2026-06-30（stockanalysis 最近一季）
 JGB10 = ("日本財務省 國債金利情報（jgbcme.csv）10 年：2026-11-02 2.817%（https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/jgbcme.csv；2026-11-05 讀取）",
          "FRED IRLTLT01JPM156N（OECD 月均）：2026-09 3.050%（https://fred.stlouisfed.org/series/IRLTLT01JPM156N）；股價日 2026-10-23 的當日值未取得，用評價日附近最近可得值", "無風險利率（日圓：日本 10 年期國債殖利率，2026-11-02）")
-DAM_GL = ("Damodaran 全球產業 β「Semiconductor Equip」無槓桿 β 2.04（391 家；資料 2026-01；https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/BetasGlobal.html；2026-11-05 讀取），以公司 D/E（市值）與稅率依 Hamada 重新加槓桿：β＝βU ×（1＋(1−t) × D/E）",
-          "Andy 2026-11-05 21:21：β 用 Damodaran 產業 β 重新加槓桿。日本表（betaJapan.xls）建置環境讀不到，改用全球表；低＝美國表無槓桿 β 1.35（Betas.html 2026-01），高＝全球表現金修正後 2.12；個股迴歸 β 未取得")
+DAM_GL = ("自算產業 β：JP 半導體設備 同業 8 家中位數（8035、6857、6146、6920、7735、6525、7729、6315；Yahoo Finance 月報酬 2021-11～2026-10，對 日經 225 ^N225 迴歸，Hamada 去槓桿、現金修正）無槓桿 β 1.91；以公司 D/E（市值）與稅率依 Hamada 重新加槓桿：β＝βU ×（1＋(1−t) × D/E）",
+          "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）：採用無槓桿 β 1.610。低／高（Analogy）：低＝中位數 × 0.8 再 Blume 調整（無槓桿 1.354）、高＝中位數未調整（1.91）；取代 Damodaran 全球產業表")
 CRP_JP = (0.0091, "Verified", "Damodaran 國家風險溢酬（2026-01-05）：日本 A1、CRP 0.91%（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html）", "2026-07 更新版（ctrypremJuly26.xlsx）建置環境讀不到；Andy 2026-11-05 20:45：非美國加 CRP、不設股權成本下限")
 SAJ = "stockanalysis.com TYO:7729 財報（百萬日圓；網站 FY 標籤比本模型晚一年：網站 FY2026＝本模型 FY2025，2026-03 期；2026-11-05 讀取）"
 SAQJ = "stockanalysis.com TYO:7729 季度資產負債表（2026-06-30；百萬日圓；2026-11-05 讀取）https://stockanalysis.com/quote/tyo/7729/financials/balance-sheet/?p=quarterly"
@@ -143,7 +143,7 @@ RELEV = "*(1+(1-tax_w)*(debt_v+lease_v)/(px*sh_v))"
 for _row in FD.in_rows(dict(
         date="2026-12-31（FY2026 只計 2027-01～03）", amt="¥B", shu="十億股", ccy="¥",
         rf=(0.02817,) + JGB10,
-        beta_fixed=("=1.35" + RELEV, "=2.04" + RELEV, "=2.12" + RELEV, "Analogy") + DAM_GL,
+        beta_fixed=("=(0.67*0.8*1.91+0.33)" + RELEV, "=1.610" + RELEV, "=1.91" + RELEV, "Derived") + DAM_GL,
         crp=CRP_JP,
         kd=("=rf+0.005", "Assumed", "rf ＋ 0.5 個百分點信用利差（銀行借款為主）", "負債占資本約 2%，對 WACC 影響可忽略"),
         tax_w=("=(0.289+0.252+0.254)/3", "Derived", SAJ + "：近三年有效稅率（稅前淨利由稅前利益率推得，近似）2024-03 期 28.9%、2025-03 期 25.2%、2026-03 期 25.4%", "NOPAT 各年也用本稅率（PL 淨利＝營業利益 × nioi，含業外與稅）"),
@@ -450,7 +450,7 @@ q8 = q + 8
 T["pr"] = q8  # 公式在 P/E 表建好後填入
 V.cell(q8, 1, "歷史倍數檢查：現價隱含 P/E 的十年分位（A／B／C）")
 V.cell(q + 9, 1, "目標價方法"); T["meth"] = q + 9
-V[f"B{q + 9}"] = ("DCF（v0.3 標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加（股權報酬視為費用），以 WACC 折現到 2026-12-31（期中慣例；FY2026 只計 2027-01～03），FY2026–32 明確期（FY2030 起收斂法），終值＝NOPAT(FY2033) ×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC；EV 加淨現金 ÷ 股數，以 ke 推到 12 個月後並扣除期間股利（DCF 頁、tools/fcff_dcf.py）；β 為 Damodaran 全球半導體設備產業 β 重新加槓桿、ke 含日本國家風險溢酬（股權成本與 WACC 見 0.1 節）。"
+V[f"B{q + 9}"] = ("DCF（v0.3 標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加（股權報酬視為費用），以 WACC 折現到 2026-12-31（期中慣例；FY2026 只計 2027-01～03），FY2026–32 明確期（FY2030 起收斂法），終值＝NOPAT(FY2033) ×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC；EV 加淨現金 ÷ 股數，以 ke 推到 12 個月後並扣除期間股利（DCF 頁、tools/fcff_dcf.py）；β 為自算產業 β（日本半導體設備同業中位數，Blume 調整）重新加槓桿、ke 含日本國家風險溢酬（股權成本與 WACC 見 0.1 節）。"
                   "Comparable：Disco、東京威力科創、Advantest、Lasertec、Kokusai 前瞻 P/E 中位數 × 12 個月後前瞻 EPS。"
                   "偏誤：本公司十年 P/E 與自身前瞻 P/E 長期低於同業（探針台、計測的成長與利潤率低於同業），Comparable 偏高估；DCF 已扣資本支出與營運資金（營運資金占營收約六成五），擴產期現金流偏低。")
 for k in ("dcftp", "comptp", "tpw"): V[f"B{T[k]}"].fill = KEY
@@ -927,9 +927,9 @@ obs = [
        "；SPE 無超額成長（與設備市場同步）使 ", _SG(f"Sens!H{s_exc0}"), "；改用平平／不如預期情境使 ", _SG(f"Sens!H{s_b}"), "／", _SG(f"Sens!H{s_c}"), "。"),
     _F("重點 4：DCF 改為標準版（無槓桿自由現金流折現）：推到 12 個月後的 DCF 情境價值順利／平平／不如預期為 ", T0(f"Val!B{vd12}"), "／", T0(f"Val!C{vd12}"), "／", T0(f"Val!D{vd12}"),
        "，DCF 目標價 ", T0(f"Val!B{vd}"), "（舊法股東現金流 ", T0(f"README!B{OLD['dcf']}"), "）。WACC ", _TX("wacc", "0.0%"), "（股權成本 ", _TX("ke", "0.0%"), "＝rf ", _TX("rf", "0.00%"),
-       " ＋ β ", _TX("beta", "0.00"), " ×（ERP ", _TX("erp", "0%"), " ＋ 日本國家風險溢酬 ", _TX("crp", "0.00%"), "）；β 為 Damodaran 全球半導體設備產業 β 重新加槓桿（產業類比），ERP 5% 與 RONIC＝WACC 為假設）；",
+       " ＋ β ", _TX("beta", "0.00"), " ×（ERP ", _TX("erp", "0%"), " ＋ 日本國家風險溢酬 ", _TX("crp", "0.00%"), "）；β 為自算產業 β（日本半導體設備同業中位數，Blume 調整）重新加槓桿，ERP 5% 與 RONIC＝WACC 為假設）；",
        "營運資金占營收約 ", _TX("fc_wc", "0%"), "（近三年平均，存貨與應收占比高），營收成長要先墊營運資金。終值現值占平平情境企業價值 ", _TX(f"Val!C{v_tv}", "0%"), "、隱含終值 EV／EBITDA ",
-       _TX(f"Val!C{v_mx}", "0.0"), " 倍。以情境加權目標價為基準，β 改為 ", _TX("beta_lo", "0.00"), "（美國產業表）時加權目標價 ", _SG(f"Sens!D{s_beta}"), "、WACC −1pt／＋1pt 時 ", _SG(f"Sens!D{s_wacc}"), "／", _SG(f"Sens!F{s_wacc}"),
+       _TX(f"Val!C{v_mx}", "0.0"), " 倍。以情境加權目標價為基準，β 改為 ", _TX("beta_lo", "0.00"), "（敏感度低案例）時加權目標價 ", _SG(f"Sens!D{s_beta}"), "、WACC −1pt／＋1pt 時 ", _SG(f"Sens!D{s_wacc}"), "／", _SG(f"Sens!F{s_wacc}"),
        "；「", _E(f"Sens!A{s_w8}"), "」時 ", _SG(f"Sens!D{s_w8}"), "／", _SG(f"Sens!F{s_w8}"), "。"),
 ]
 answers = [
@@ -959,5 +959,8 @@ _RD["A1"] = (str(_RD["A1"].value).replace(A1_FROM, "v0.3", 1) + "；v0.3（2026-
 _RD.cell(_RD.max_row + 2, 1, "v0.3（2026-11-05）：(1) DCF 改為標準版（docs/plan/個股DCF標準規格.md v1.0；tools/fcff_dcf.py）：Val 0.1 節改為 FCFF＋WACC 摘要（列數不變）；新增 DCF 頁（三情境 FCFF 明細與檢查列；原 Val 0.1 節的情境 EPS 表移入，Comparable 讀此表，數值不變）；"
          "In 頁新增 M2 節（rf 日本 10 年期國債、Damodaran 全球半導體設備產業 β 重新加槓桿、ERP 5%＋日本 CRP、g＝MIN(3%, rf)、RONIC＝WACC、資本結構、折舊／資本支出／營運資金比例）；刪除 tp_r、tp_roe；Sens 頁目標價參數段改為標準案例。"
          "(2) HTML 新版面 v1.0：README 新增「展示層」「命題回覆」兩段（公式帶數字）。新舊目標價對照見本頁「v0.2 → v0.3 對照」列。")
+# v0.3.1（2026-11-05）：β 改自算產業 β（JP 半導體設備同業中位數、Blume 調整；Andy 2026-11-05 22:55），其他模型不變
+_RD["A1"] = str(_RD["A1"].value) + "；v0.3.1（2026-11-05）β 改自算產業 β（JP 半導體設備同業中位數、Blume 調整；Andy 2026-11-05 22:55），其他模型不變"
+_RD.cell(_RD.max_row + 2, 1, "v0.3.1（2026-11-05）：β 由 Damodaran 全球產業表改為自算產業 β——JP 半導體設備同業 8 家（8035、6857、6146、6920、7735、6525、7729、6315）Yahoo Finance 月報酬 2021-11～2026-10 對 ^N225 迴歸、Hamada 去槓桿、現金修正後的中位數，Blume 調整 0.67β＋0.33，再依本公司 D/E 與稅率重新加槓桿（In 頁 beta）；Sens β 低／高改為中位數 × 0.8 再 Blume／中位數未調整。評價日 2026-12-31 不變，其他模型不變")
 FD.yellow(IN)   # v0.3：M2 節判斷參數黃底
 wb.save(sys.argv[1])
