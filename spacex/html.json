@@ -3816,6 +3816,27 @@
    ]
   },
   {
+   "id": "conclusion",
+   "title": "命題回覆",
+   "blocks": [
+    {
+     "type": "list",
+     "ordered": true,
+     "items": [
+      "@README!A40",
+      "@README!A41",
+      "@README!A42"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "數字皆為本模型計算結果（情境 B 為基準），推導見前面各章；投資建議依加權目標價。"
+     ]
+    }
+   ]
+  },
+  {
    "id": "status",
    "title": "資料狀態",
    "blocks": [
