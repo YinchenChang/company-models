@@ -134,8 +134,9 @@ GROUPS = lambda SK: [
 I = IN_ROW
 va = SEC["valuation"]
 rk = row_of("Val", "股權成本 ke")
-assert str(WB["Val"].cell(rk + 15, 1).value).startswith("DCF 目標價（情境加權）")
-dcft = rk + 15
+r_pvx, dcft = row_of("Val", "明確期 FCFF 現值"), row_of("Val", "DCF 目標價（情境加權）")   # 第二輪修正：依標籤定位（模組 v2 stub 期多兩列）
+assert r_pvx == rk + 6, (r_pvx, rk)
+_fm = lambda lab: "n3" if lab.startswith("評價用") else "p1" if "終值現值占 EV" in lab else "x1" if "隱含終值" in lab else "n2" if lab.startswith(("DCF 情境", "DCF 目標價")) else "n1"
 fb = row_of("DCF", "營收", start=row_of("DCF", "情境 B"))
 cap01 = f"@Val!A{rk - 2}"          # 0.1 節標題列（舊 DCF 表的 caption）
 nb = []
@@ -143,14 +144,14 @@ for b in va["blocks"]:
     if b["type"] == "bars":
         b = copy.deepcopy(b)
         for it in b["items"]:
-            if it["value"] == f"@Val!B{dcft + 2}": it.update(label=f"@Val!A{dcft}", value=f"@Val!B{dcft}")
+            if it["value"] == f"@Val!B{rk + 17}": it.update(label=f"@Val!A{dcft}", value=f"@Val!B{dcft}")
         nb.append(b); continue
     if b["type"] == "table" and b.get("caption") == cap01:
         nb += [{"type": "table", "caption": "DCF 折現率（WACC、股權成本、稅後債務成本、RONIC、永續成長率；直接顯示）", "head": ["項目", "數值", "說明"],
                 "rows": [[f"@Val!A{r}", f"@Val!B{r}|p2", f"@Val!E{r}"] for r in range(rk, rk + 6)]},
                {"type": "table", "caption": "DCF 彙總（標準版：無槓桿自由現金流 FCFF＋WACC；三情境）", "head": ["項目", "A（順利）", "B（平平）", "C（不如預期）", "說明"],
                 "rows": [[f"@Val!A{r}", f"@Val!B{r}|{fm}", f"@Val!C{r}|{fm}" if r != dcft else "", f"@Val!D{r}|{fm}" if r != dcft else "", f"@Val!E{r}"]
-                         for r, fm in zip(range(rk + 6, rk + 16), NFMT)]},
+                         for r, fm in ((r, _fm(str(WB["Val"].cell(r, 1).value).strip())) for r in range(r_pvx, dcft + 1))]},
                {"type": "table", "collapse": True, "summary": "展開：情境 B FCFF 逐年明細（DCF 頁）", "head": ["@DCF!A5", "@DCF!C5", "@DCF!D5", "@DCF!E5", "@DCF!F5", "@DCF!G5", "@DCF!H5"],
                 "rowgen": {"sheet": "DCF", "rows": f"{fb}-{fb + 10}", "cols": ["A", "C", "D", "E", "F", "G", "H"], "fmts": ["", "n1", "n1", "n1", "n1", "n1", "n1"],
                            "row_fmt": {str(fb + 3): {c: "p1" for c in "CDEFGH"}, str(fb + 5): {c: "p1" for c in "CDEFGH"}, str(fb + 6): {c: "p1" for c in "CDEFGH"}}}}]
@@ -181,8 +182,8 @@ for _r in range(4, _ws.max_row + 1):
     _a, _b = _ws.cell(_r, 1).value, _ws.cell(_r, 2).value
     if _a and _b in (None, ""): _cur = re.split(r"[.\s（]", str(_a))[0]; SK[_cur] = []; continue
     if _a and _cur and re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", str(_a)): SK[_cur].append(str(_a))
-_DCFK = ["rf", "beta_u", "beta_u_med", "beta_de", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]
-_CAPK = ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"]
+_DCFK = ["rf", "rf_us", "beta_u", "beta_u_med", "beta_de", "beta_du", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]
+_CAPK = ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "bs_date", "stub_frac", "stub_div", "sh_v"]
 _FCK = ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]
 _J = [k for k in SK.get("J", []) if k not in _DCFK + _CAPK + _FCK]
 SPEC = {
@@ -197,7 +198,7 @@ SPEC = {
     ["自由現金流（折舊、資本支出、營運資金）", _FCK],
     ["Wattonomics 錨定（只進敏感度）", SK["Z"]]]]],
  "blocks_to": {},
- "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+ "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
           "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"]},
  "n_recon": 4,
 }
