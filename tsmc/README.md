@@ -39,6 +39,14 @@
 - HTML：原 `html.json` 改名 `html_src.json`（內容不動）；新增 `gen_html_json.py`（讀 `html_src.json` → `tools/company_html/relayout.py` → 寫 `html.json`）。驅動因子依業務分四塊：AI 加速器（HPC 的 AI 子列）／CoWoS 先進封裝（瓶頸檢查）／非 AI 平台／全公司（2026 錨點、利潤率、資本支出、股本與目標價規則）。投資建議橫幅中間格依工作單補充規則 A 為「只看 Comparable 目標價（市場主流同業法）」（未經相對倍數調整，Val 第 95 列，附 Val 第 98 列上檔空間），橫幅附註寫出進加權的相對倍數調整後 Comparable（Val 第 136 列）；估值章依序為長條圖、結論主要項目、DCF 折現率（直接顯示）、DCF 彙總主要列、Comparable，其餘摺疊。
 - 成品：`dist/20261105_台積電個股模型_v0.4.2.xlsx`／`.html`；舊版移到 `dist/_待刪除/`。重建：`python3 tsmc/build_tsmc.py <raw.xlsx>` → LibreOffice 重算 → `python3 tsmc/gen_html_json.py <成品 xlsx>` → `python3 tools/company_html/build_company_html.py tsmc`。
 
+## v0.5.3（2026-11-06）：WACC 權重 E 含非控制權益（第三輪修正第 12 點）
+
+- 合併 EV 含子公司 100%。WACC 權重與 β 重新加槓桿用的 E，改為母公司市值＋非控制權益 mi_v 690.9（上市子公司用市值，其餘用帳面；NT$B）。
+- 權益占資本 98.30% → 98.23%；WACC 10.217% → 10.216%。
+- DCF 目標價 1,532.3 → 1,532.3；加權目標價 2,338.4 → 2,338.4（+3.5%）；投資建議中立，不變。
+- 成品：`dist/20261106_台積電個股模型_v0.5.3.xlsx`。
+- 下游 Amkor（#402）、BESI（#409）以 v0.5.2 成品建置；它們讀取的 In 頁與 CoWoS 頁數值，與 v0.5.3 相同。
+
 ## v0.5.2（2026-11-06）：第三輪修正（合併前）
 
 - **Stub 期 FCFF**：改用含 stub 期的會計年度 FY2026 FCFF（1–3Q 實績＋4Q 指引：EBIT ×（1 − etr_new）＋營收 × fc_da − capex26 − 營運資金增加，新台幣；DCF 頁下方）× stub_frac 0.252＝426（v0.5.1 誤用 FY2027，568）。

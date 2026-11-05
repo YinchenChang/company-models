@@ -583,7 +583,7 @@ V.cell(r_, 1, "0. 目標價").font = BOLD; T["sec0"] = r_; r_ += 1
 # v0.5：0.1 節改為標準版 DCF（FCFF＋WACC；tools/fcff_dcf.py）。DCF 明細另開 DCF 頁；本節列數與舊版相同（20 列＋空列），0.2 節以後位置不動
 X01 = r_
 DCFW = wb.create_sheet("DCF", wb.sheetnames.index("Val") + 1)
-DCFW["A1"] = ("DCF — 標準版（v0.5.2；tools/fcff_dcf.py v2）：無槓桿自由現金流 FCFF＝NOPAT＋折舊攤銷 − 資本支出 − 營運資金增加；WACC 折現到評價日 2026-12-31（期中慣例）；"
+DCFW["A1"] = ("DCF — 標準版（v0.5.3；tools/fcff_dcf.py v2）：無槓桿自由現金流 FCFF＝NOPAT＋折舊攤銷 − 資本支出 − 營運資金增加；WACC 折現到評價日 2026-12-31（期中慣例）；"
               "終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g）。共用模組 tools/fcff_dcf.py；金額為新台幣十億元（PL 頁美元 × fx）")
 DCFW["A2"] = ("EBIT：2027–2029 取 PL 頁「營業利益」（營收 ×（毛利率 − 營業費用率））；2030–2032（PL 收斂欄只有淨利）由淨利還原：EBIT＝淨利 ÷ ni_op（PL 頁同一淨利 ÷ 營業利益比）。"
               "稅率＝NI_OI 頁 etr_new。營業外收支（主要是利息收入）不進 NOPAT，現金與投資另在評價時加入。折舊：近三年（2023–2025）占營收平均；資本支出：FY2027–FY2029 讀 PL 頁資本支出列（capex27–29，美元 × fx；三情境相同），FY2030 起由 FY2029 比例線性收斂到 fc_cx_ss（且 ≥ 折舊比例 ×（1＋g））；"
@@ -618,6 +618,16 @@ SDCF = FD.write_summary(wb, V, X01, RD_, list(SC), ["tp_wA", "tp_wB", "tp_wC"], 
                         title="0.1 DCF（標準版：無槓桿自由現金流 FCFF＋WACC；明細見 DCF 頁）", beta_note="自算產業 β 重新加槓桿")
 for _j, _h in enumerate(["項目", "A（順利）", "B（平平）", "C（不如預期）", "說明"], 1): V.cell(SDCF["h"], _j, _h)
 T.update(h01=SDCF["h"], dcfv=SDCF["dcfv"], dcf12=SDCF["v12"], dcftp=SDCF["dcf"])
+# v0.5.3（第三輪修正第 12 點）：合併 EV 含子公司 100% → WACC 權重與 β 重新加槓桿的 E＝母公司市值＋非控制權益 mi_v（上市子公司市值、其餘帳面）
+V.cell(SDCF["w_e"], 1).value = "權益占資本 E ÷（E＋D）（市值；E＝母公司市值＋非控制權益 mi_v；D＝債務＋租賃）"
+V.cell(SDCF["w_e"], 2).value = "=(px*sh_v+mi_v)/(px*sh_v+mi_v+debt_v+lease_v)"
+V.cell(SDCF["w_e"], 5).value = '="E "&TEXT(px*sh_v+mi_v,"#,##0")&"（含非控制權益 "&TEXT(mi_v,"#,##0.0")&"）、D "&TEXT(debt_v+lease_v,"#,##0.0")'
+for _r in range(1, DCFW.max_row + 1):
+    if str(DCFW.cell(_r, 1).value or "").startswith("檢查：WACC 由 In 頁輸入重算"):
+        DCFW.cell(_r, 3).value = "=((px*sh_v+mi_v)*(rf+beta*(erp+crp))+(debt_v+lease_v)*kd*(1-tax_w))/(px*sh_v+mi_v+debt_v+lease_v)+wacc_adj-wacc"
+        DCFW.cell(_r, 2).value = "E＝母公司市值＋非控制權益（第三輪修正第 12 點）"
+IN.cell(INROW["beta_de"], 5).value = "=(debt_v+lease_v)/(px*sh_v+mi_v)"
+IN.cell(INROW["beta_de"], 8).value = "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 股數 sh_v ＋ 非控制權益 mi_v)；與 WACC 權重同一口徑（第三輪修正第 12 點：E 含非控制權益，上市子公司市值、其餘帳面）"
 V.cell(SDCF["stub"], 5, '="資產負債表日 "&bs_date&"；stub_frac "&TEXT(stub_frac,"0.000")&" 年（含 stub 期會計年度 FY2026 FCFF × stub_frac；DCF 頁下方）"')
 r_ = X01 + 21
 V.cell(r_, 1, "0.2 Comparable（市場主流同業前瞻 P/E）").font = BOLD; r_ += 1
@@ -873,7 +883,8 @@ for i, (nm, e27, e28, tp) in enumerate([("基準（Sens 主表基準＝情境 A�
 RD["A1"] = (str(RD["A1"].value) + "；v0.4.2（2026-11-05）只改展示層（README 新增展示層與命題回覆兩段、HTML 改用新版面 v1.0），其他工作表數值與 v0.4.1 逐格相同"
             "；v0.5（2026-11-05）模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；DCF 頁、Val 0.1 節、Sens 目標價參數），Comparable、情境權重、DCF 權重 50% 與投資建議規則不變"
             "；v0.5.1（2026-11-05）第二輪修正：共用模組 tools/fcff_dcf.py v2（淨現金由 2026-09-30 滾到評價日、β 敏感度 β_u ± 0.3、Sens 美元口徑折現）、資產負債表更新到 3Q26、DCF 資本支出 FY2027–2029 改讀 PL 頁資本支出列"
-            "；v0.5.2（2026-11-06）第三輪修正：stub 期 FCFF 改 FY2026、上市子公司非控制權益改市值、現價與同業報價統一 2026-11-04 收盤")
+            "；v0.5.2（2026-11-06）第三輪修正：stub 期 FCFF 改 FY2026、上市子公司非控制權益改市值、現價與同業報價統一 2026-11-04 收盤"
+            "；v0.5.3（2026-11-06）WACC 權重 E 含非控制權益")
 def XF(*parts):
     """公式字串：str＝文字（每段 ≤ 200 字，避免 Excel 255 字上限）；tuple(expr,)＝公式運算式。"""
     out = []
@@ -884,11 +895,11 @@ def XF(*parts):
     return "=" + "&".join(out)
 _SP = '"+0.0%;-0.0%"'
 _vr = RD.max_row + 1
-RD.cell(_vr, 1, XF("v0.5.2（2026-11-06）：第三輪修正（合併前）。(1) Stub 期 FCFF 改用含 stub 期的會計年度 FY2026 FCFF × stub_frac（", ('TEXT(stub_fcff26,"#,##0")',), " × ", ('TEXT(stub_frac,"0.000")',), "＝", (f'TEXT(Val!C{SDCF["stub"]},"#,##0")',),
-                   "；v0.5.1 誤用 FY2027，568）。(2) 非控制權益：上市子公司創意（3443）、采鈺（6789）改用 2026-11-04 市值（", ('TEXT(nci_mv_guc+nci_mv_vis,"#,##0.0")',), "，取代其帳面 ", ('TEXT(nci_bk_l,"#,##0.0")',), "），其餘帳面；mi_v 45.3 → ", ('TEXT(mi_v,"#,##0.0")',),
-                   "。(3) 現價與同業報價統一 2026-11-04 收盤：現價 2,385 → ", ('TEXT(px,"#,##0")',), "；同業前瞻 P/E 依收盤比例換算（英特爾、中芯原報價日收盤未取得，沿用），中位數 20.5 → ", (f'TEXT(Val!B{T["pmed"]},"0.0")',),
-                   "。(4) README 重點觀察 1、重點 1、命題回覆 3 改公式並拆解與共識差距的來源；情境名稱統一順利／平平／不如預期；HTML 情境驅動表依節標題定位。新舊對照（v0.5.1 → v0.5.2）：DCF 目標價 1,566 → ", (f'TEXT(Val!B{T["dcftp"]},"#,##0")',),
-                   "，加權目標價 2,509 → ", (f'TEXT(Val!B{T["tpw"]},"#,##0")',), "，上檔空間 +5.2% → ", (f'TEXT(Val!B{T["upw"]},{_SP})',), "，投資建議 中立 → ", (f"Val!B{_G + 1}",), "。"))
+RD.cell(_vr, 1, XF("v0.5.3（2026-11-06）：第三輪修正第 12 點。WACC 權重與 β 重新加槓桿的 E 改為母公司市值＋非控制權益 mi_v（", ('TEXT(mi_v,"#,##0")',), "；上市子公司市值、其餘帳面）：權益占資本 → ", ('TEXT(w_e,"0.00%")',), "、WACC → ", ('TEXT(wacc,"0.00%")',),
+                   "。新舊對照（v0.5.2 → v0.5.3）：DCF 目標價 1,532 → ", (f'TEXT(Val!B{T["dcftp"]},"#,##0")',), "，加權目標價 2,338 → ", (f'TEXT(Val!B{T["tpw"]},"#,##0")',), "，上檔空間 +3.5% → ", (f'TEXT(Val!B{T["upw"]},{_SP})',), "，投資建議 中立 → ", (f"Val!B{_G + 1}",), "。"))
+_vr += 1
+RD.cell(_vr, 1, "v0.5.2（2026-11-06）：第三輪修正（合併前）。(1) Stub 期 FCFF 改用含 stub 期的會計年度 FY2026 FCFF × stub_frac（1,692 × 0.252＝426；v0.5.1 誤用 FY2027，568）。(2) 非控制權益：創意（3443）、采鈺（6789）改 2026-11-04 市值（660.4，取代其帳面 14.8），mi_v 45.3 → 690.9。"
+                "(3) 現價與同業報價統一 2026-11-04 收盤：現價 2,385 → 2,260；同業 P/E 中位數 20.5 → 18.6。(4) README 重點觀察 1、重點 1、命題回覆 3 改公式；情境名稱統一；HTML 情境驅動表依節標題定位。新舊對照（v0.5.1 → v0.5.2，當時數值）：DCF 目標價 1,566 → 1,532，加權目標價 2,509 → 2,338，上檔空間 +5.2% → +3.5%，投資建議 中立 → 中立。")
 _vr += 1
 RD.cell(_vr, 1, "v0.5.1（2026-11-05）：第二輪修正（工作單 2026-11-05 23:20；Andy 23:16 定案）。(1) 共用模組 tools/fcff_dcf.py v2。(2) 資產負債表更新到 2026-09-30（3Q26 財報）：現金與有價證券 4,016.98、有息負債 1,031.58、長期投資 224.633、非控制權益 45.326（NT$B；租賃 36.882 沿用 2026-06-30）；"
                 "淨現金以 stub 期滾到評價日 2026-12-31：淨現金與投資 3,128＋stub 期 FCFF（當時用 FY2027 FCFF × stub_frac 0.252 年；情境 B 568；v0.5.2 改 FY2026）− 已宣告 1Q26 股利 182＝3,514。(3) DCF 資本支出 FY2027–FY2029 改讀 PL 頁資本支出列（77／90／95 十億美元 × fx），FY2030 起收斂到 29.4%。"

@@ -1,7 +1,7 @@
 {
  "company": "台積電",
  "ticker": "2330.TW",
- "thesis": "@README!A33",
+ "thesis": "@README!A34",
  "question": "AI 加速器的成長有多少變成台積電的 EPS，CoWoS 供給上限會不會先成為瓶頸",
  "scenarios": [
   {
@@ -30,9 +30,9 @@
      "type": "list",
      "ordered": true,
      "items": [
-      "@README!A34",
       "@README!A35",
-      "@README!A36"
+      "@README!A36",
+      "@README!A37"
      ]
     },
     {
@@ -41,9 +41,9 @@
      "collapse": true,
      "summary": "展開：命題回覆（依本模型計算的答案；想先看結論可展開，或讀完全文再看）",
      "items": [
-      "@README!A44",
       "@README!A45",
-      "@README!A46"
+      "@README!A46",
+      "@README!A47"
      ]
     },
     {
@@ -54,11 +54,11 @@
      "type": "list",
      "ordered": true,
      "items": [
-      "@README!A37",
       "@README!A38",
       "@README!A39",
       "@README!A40",
-      "@README!A41"
+      "@README!A41",
+      "@README!A42"
      ]
     }
    ]
@@ -2539,7 +2539,7 @@
       ],
       [
        "Comparable（相對倍數調整後）的上檔空間",
-       "@README!B48|sp1",
+       "@README!B49|sp1",
        "",
        "",
        ""
