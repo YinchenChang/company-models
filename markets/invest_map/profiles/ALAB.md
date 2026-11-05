@@ -86,7 +86,7 @@ AI 伺服器內部連接晶片商：PCIe 重定時器起家，成長重心正轉
 - 2026-08-04｜2Q26 財報：營收 US$392M、non-GAAP EPS 0.80；3Q26 指引營收 540–560M、EPS 1.16–1.21；Scorpio 將提前一季成為最大產品線 [本專案：20261104_Astera Labs個股模型_v0.2.xlsx In!E54、In!E60、Sources!A6；alab/README.md v0.2 模型原估 vs 實績表]
 
 ## 需要觀察的事項
-- 顆數情境 C｜FY2028 EPS −56%，最大變數；營業費用彈性高，營收下滑時淨利率由 39% 降到 29% [本專案：alab/README.md 結果]｜4Q26 財報（2027-02）
+- 顆數情境 C｜FY2028 EPS −55%，最大變數；營業費用彈性高，營收下滑時淨利率由 39% 降到 29% [本專案：20261104_Astera Labs個股模型_v0.2.xlsx Sens!L19；alab/README.md 結果]｜4Q26 財報（2027-02）
 - Scorpio X 份額｜份額低／高使 FY2028 EPS −25%／+30% [本專案：alab/README.md 結果]｜同上，看 Scorpio 是否如期成為最大產品線
 - PCIe 等份額｜低／高 −14%／+18%；最大客戶部分轉單 −11% [本專案：alab/README.md 結果]｜同上
 - 非 NVIDIA scale-up 市場｜×0.8 使 FY2028 EPS −11%；NVLink Fusion 是主要不確定性 [本專案：alab/README.md 結果、開頭]｜AMD、AWS Trainium 機架出貨
