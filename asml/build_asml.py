@@ -1017,7 +1017,7 @@ RD.cell(RD.max_row + 2, 1, "v0.3.2（2026-11-05）：第二輪修正（工作單
 def _r3_fix(wb, ver_new, a1_note, rd_note, stub_note=None, stub_frac_note=None, stub_pt=None, rd_clear=(), rd_set=None):
     RDw, INw, Vw, SEw = wb["README"], wb["In"], wb["Val"], wb["Sens"]
     # (22) README 舊「重點觀察」列（v0.3 前的過時數字）：清空內容（不刪列，其他公式引用 README 列號），首列留一句說明
-    cl = [r for r in range(1, RDw.max_row + 1) if isinstance(RDw.cell(r, 1).value, str) and RDw.cell(r, 1).value.startswith("重點觀察 ")]
+    cl = [r for r in range(1, RDw.max_row + 1) if isinstance(RDw.cell(r, 1).value, str) and RDw.cell(r, 1).value.startswith(("重點觀察 ", '="重點觀察 '))]
     cl += [r for r in rd_clear if r not in cl]
     for r in sorted(cl):
         RDw.cell(r, 1).value = None
@@ -1068,7 +1068,47 @@ def _r3_fix(wb, ver_new, a1_note, rd_note, stub_note=None, stub_frac_note=None, 
         assert hit == 1, hit
     # 版本
     RDw["A1"] = RDw["A1"].value + "；" + a1_note
-    RDw.cell(RDw.max_row + 2, 1, rd_note)
+    RDw.cell(RDw.max_row + 2, 1, rd_note)# 第三輪修正（2026-11-06）：現價統一更新（fixes_round3 第 35 項；主控決定）——本公司現價與 Comparable 同業前瞻 P/E 一律用 2026-11-04 收盤（Yahoo Finance 日線收盤 2026-11-04）。
+#   同業前瞻 P/E 換算到 2026-11-04：原 P/E × 11-04 收盤 ÷ 原報價日收盤（前瞻 EPS 共識視為不變；原報價日收盤取自 stockanalysis 歷史股價／statistics 頁）。
+R3_PX_NEW = {"ASML.AS": 1337.6, "ASML": 1496.3, "AMAT": 369.4, "LRCX": 221.43, "KLAC": 149.79, "8035.T": 9663, "ASM.AS": 683.6, "6857.T": 34570, "TER": 250.99,
+             "6146.T": 47370, "7729.T": 14920, "6920.T": 39130, "6525.T": 6400, "COHU": 43.98, "FORM": 85.24}
+R3_PX_OLD = {   # 原報價日 → 收盤（同業 P/E 的價格日期）
+    ("AMAT", "2026-10-23"): 377.24, ("LRCX", "2026-10-23"): 230.1, ("KLAC", "2026-10-23"): 145.61, ("ASML", "2026-10-23"): 1571.80,
+    ("8035.T", "2026-10-21"): 10160, ("ASM.AS", "2026-10-23"): 699.80, ("6920.T", "2026-10-23"): 38040, ("TER", "2026-10-23"): 308.85,
+    ("6857.T", "2026-10-21"): 34440, ("6146.T", "2026-10-23"): 49290, ("6525.T", "2026-10-02"): 10050, ("7729.T", "2026-09-29"): 18405,
+    ("COHU", "2026-10-23"): 47.96, ("FORM", "2026-10-23"): 98.51}
+def _r3_px(wb, tk, px_label, px_src):
+    INw, Vw = wb["In"], wb["Val"]
+    r = next(r for r in range(1, INw.max_row + 1) if INw.cell(r, 1).value == "px")
+    old_px = INw.cell(r, 5).value
+    INw.cell(r, 2).value = re.sub(r"\d{4}-\d{2}-\d{2} 收盤", "2026-11-04 收盤", str(INw.cell(r, 2).value))
+    INw.cell(r, 5).value = R3_PX_NEW[tk]
+    INw.cell(r, 8).value = f"Yahoo Finance 日線收盤 2026-11-04：{R3_PX_NEW[tk]:,}（{tk}）"
+    INw.cell(r, 9).value = f"第三輪修正（2026-11-06）：現價統一為 2026-11-04 收盤（原 {old_px:,}，{px_src}）"
+    for rr in range(1, Vw.max_row + 1):
+        a = Vw.cell(rr, 1).value
+        if isinstance(a, str) and a.startswith("現價（") and not str(Vw.cell(rr, 2).value or "").startswith("現價"):
+            Vw.cell(rr, 1).value = px_label
+    for rr in range(1, Vw.max_row + 1):   # 說明欄的現價日期
+        e = Vw.cell(rr, 5).value
+        if isinstance(e, str) and not e.startswith("=") and "px" in e:
+            Vw.cell(rr, 5).value = re.sub(r"\d{4}-\d{2}-\d{2} 收盤", "2026-11-04 收盤", e)
+    h = next(r for r in range(1, Vw.max_row + 1) if str(Vw.cell(r, 1).value or "").startswith("0.2 Comparable"))
+    out = []
+    for rr in range(h + 1, h + 15):
+        t, pe, d = Vw.cell(rr, 2).value, Vw.cell(rr, 3).value, Vw.cell(rr, 4).value
+        if isinstance(t, str) and isinstance(pe, (int, float)) and isinstance(d, str) and re.match(r"\d{4}-\d{2}-\d{2}$", d):
+            p0 = R3_PX_OLD[(t, d)]; p1 = R3_PX_NEW[t]
+            Vw.cell(rr, 3).value = round(pe * p1 / p0, 2)
+            Vw.cell(rr, 4).value = "2026-11-04"
+            Vw.cell(rr, 5).value = (str(Vw.cell(rr, 5).value or "") + f"；第三輪修正：換算到 2026-11-04＝原 {pe}（{d}）× 11-04 收盤 {p1:,} ÷ {d} 收盤 {p0:,}"
+                                    f"（前瞻 EPS 視為不變；Yahoo Finance 日線收盤 2026-11-04；原日期收盤 stockanalysis）")
+            out.append((t, pe, Vw.cell(rr, 3).value))
+    assert out
+    return out
+import re
+R3_PE = _r3_px(wb, "ASML.AS", "現價（2026-11-04 收盤，Euronext Amsterdam）", "2026-10-23 收盤，stockanalysis")
+
 _r3_fix(wb, "v0.3.3",
         "v0.3.3（2026-11-06）第三輪修正：stub 期 FCFF 改用第四季指引（不再用 FY2027 全年 × stub_frac）、README 舊重點觀察列刪除、情境名稱統一、列名與 HTML 展示調整",
         "v0.3.3（2026-11-06）：第三輪修正（合併前）。(1) Stub 期 FCFF：資產負債表日 2026-09-27 → 評價日 2026-12-31 正好是第四季；ASML 會計年度＝日曆年，stub 期在 FY2026 內，"
