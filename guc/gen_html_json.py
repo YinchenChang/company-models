@@ -42,6 +42,20 @@ for b in SEC["drivers"]["blocks"]:
     if b["type"] == "table" and ((not b.get("caption") and b.get("head", [None])[0] == "輸入") or str(b.get("caption", "")).startswith("單一參數")):
         b["caption"] = "驅動 → 推導對照（單一參數：輸入、基準值、推導量與因果方向）"
 
+# 第三輪修正：情境驅動表數值格式（年度不加千分位、百分比／pt 以 % 顯示、其他依大小取小數位）
+def _scen_fmt(ws, r):
+    u = str(ws.cell(r, 3).value or "").strip()
+    vs = [ws.cell(r, c).value for c in (4, 5, 6)]
+    vs = [v for v in vs if isinstance(v, (int, float)) and not isinstance(v, bool)]
+    if not vs:
+        return ""
+    if all(float(v).is_integer() and 1990 <= v <= 2100 for v in vs) and ("年" in u or u in ("", "—")):
+        return "|yr"
+    if u in ("%", "pt", "百分點") or u.startswith("%"):
+        return "|p2" if any(0 < abs(v) < 0.001 for v in vs) or any(abs(round(v * 1000) - v * 1000) > 1e-6 for v in vs) else "|p1"
+    if all(float(v).is_integer() for v in vs):
+        return "|n0"
+    return "|n1" if max(abs(v) for v in vs) >= 100 else "|n2"
 # ─── 情境驅動表：依 In 頁「情境驅動對照」節的實際位置重建（不寫死列號；v0.x 起 In 頁新增 M2 節，列號下移） ───
 _s0 = row_of("In", "情境驅動對照"); _h0 = _s0 + 1
 assert WB["In"].cell(_h0, 1).value == "鍵", WB["In"].cell(_h0, 1).value
@@ -51,7 +65,7 @@ _nsc = 0
 for b in SEC["drivers"]["blocks"]:
     if b["type"] == "table" and str(b.get("caption", "")).startswith("情境驅動"):
         b["head"] = [f"@In!{c}{_h0}" for c in "BDEFC"]
-        b["rows"] = [[f"@In!{c}{r}" for c in "BDEFC"] for r in range(_h0 + 1, _r1)]
+        b["rows"] = [[f"@In!{c}{r}" + (_scen_fmt(WB["In"], r) if c in "DEF" else "") for c in "BDEFC"] for r in range(_h0 + 1, _r1)]
         _nsc += 1
 assert _nsc == 1, _nsc
 
@@ -59,7 +73,7 @@ assert _nsc == 1, _nsc
 V = lambda k: row_of("Val", k, need_num=True)
 tpw, dcft, comp, compadj, cons = V("目標價（DCF 與 Comparable 加權）"), V("DCF 目標價（情境加權）"), V("Comparable 目標價（市場主流同業法）"), V("Comparable 目標價（相對倍數調整後）"), V("市場共識目標價")
 upw, upc, dcf12, px = V("上檔空間：加權目標價"), V("上檔空間：Comparable"), V("DCF 情境價值推到 12 個月後"), V("現價")
-rec, grade = row_of("Val", "投資建議", exact=True), row_of("Val", "上檔空間級距", exact=True)
+rec, grade = row_of("Val", "投資建議", exact=True), row_of("Val", "上檔空間級距（六級，供分組）", exact=True)
 rk = row_of("Val", "股權成本 ke")                       # v0.3：0.1 節 ke、kd_at、w_e、WACC、g、RONIC，接著 DCF 彙總 10 列（第二輪修正：模組 v2 stub 期多兩列，依標籤定位）
 assert dcft > rk + 6 and str(WB["Val"].cell(dcft, 1).value).startswith("DCF 目標價（情境加權）")
 _dfm = lambda lab: ("g" if lab.startswith("評價用稀釋股數") else "p1" if "終值現值占 EV" in lab else "x1" if "隱含終值" in lab else
@@ -146,7 +160,7 @@ SPEC = {
     ["自由現金流（折舊、資本支出、營運資金）", ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]],
     ["收斂法（FY2030–FY2032）", ["tp_g", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fade_mB", "fade_mC"]]]]],
  "blocks_to": {p_: T1 for p_ in ("1. Google", "2. 份額加總", "@Units!A27")},
- "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+ "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "＋Stub 期 FCFF", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
           "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
           "目標價結論": ["目標價（DCF", "DCF 目標價", "Comparable 目標價（相對", "Comparable 目標價（市場", "現價", "上檔空間：加權", "上檔空間：Comparable", "Comparable（相對倍數調整後）的上檔空間", "投資建議", "DCF 情境價值推到", "市場共識"],
           "本模型與公司說法、共識、券商的對照": ["FY2026 EPS vs 共識", "CY2027 創意 CPU 顆數 vs 法人", "FY2027 EPS vs 市場共識", "FY2028 EPS vs 外資", "共識前瞻 12 月 EPS"]},
@@ -173,5 +187,9 @@ for s in out["sections"]:
                 ws = WB["README"]
                 b["rows"] = [[f"@README!A{r}"] for r in range(1, ws.max_row + 1) if re.match(r"^v\d+\.\d", str(ws.cell(r, 1).value or ""))]
 
+# 第三輪修正：橫幅金額單位（新台幣）
+for _t in out["hero"]["tiles"]:
+    if isinstance(_t[0], str):
+        _t[0] = [_t[0], "（新台幣）"]
 json.dump(out, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")
