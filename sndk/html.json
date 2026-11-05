@@ -21,7 +21,6 @@
   {
    "id": "thesis",
    "title": "命題與核心問題",
-   "intro": "@README!A7",
    "blocks": [
     {
      "type": "h3",
@@ -139,15 +138,6 @@
        "@In!F114",
        "@In!C114"
       ]
-     ]
-    },
-    {
-     "type": "list",
-     "items": [
-      "@README!A10",
-      "@README!A11",
-      "@README!A12",
-      "@README!A13"
      ]
     },
     {
@@ -2238,6 +2228,21 @@
      ],
      "collapse": true,
      "summary": "展開：每頁的輸入、推導量與因果方向"
+    },
+    {
+     "type": "h3",
+     "text": "附錄：各頁因果（查核用）"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A10",
+      "@README!A11",
+      "@README!A12",
+      "@README!A13"
+     ],
+     "collapse": true,
+     "summary": "展開：各頁因果"
     },
     {
      "type": "h3",
