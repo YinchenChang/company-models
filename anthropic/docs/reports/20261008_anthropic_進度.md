@@ -134,7 +134,7 @@ Tokenomics：master `c2ecb71`，CURRENT `20261022_Tokenomics_v19.1.xlsx`（Luna 
 |---|---|---|---|
 | 1 快照 v21.10 | 完成 | 見 git log「v0.1.9 步驟 1」 | TK master `eded8e6`；DIFF 16（進計算：TPU v7、Trainium3 產出比；其餘 10 名只動高成本欄）；η 0.4676 → 0.6040；合約付款、現金、外部資金逐位不變 |
 | 2–3 拆解與敏感度 | 完成 | 見 git log「v0.1.9 步驟 2–3」 | html_scenarios：tk18_tpu_back／trn_back／rest_back／tk18_back、tt_lo／tt_hi；情境 wf9_a／ab／b／c、sens9_lo／hi、v019_no_*、v018 與 v018_*；歷史情境 59 個加 tk18_back。命題 1、2 在 (a)(b)(c) 與 (i)(ii)(iii) 皆不翻轉 |
-| 4 重算與測試 | 完成 | 見 git log「v0.1.9 步驟 4」 | test_builder 28、test_html 6 全過；parity 分片 3 輪（結果見報告 ⑧）；LO 錯誤 0、CHK_Errors 0、Warnings 3 |
+| 4 重算與測試 | 完成 | 見 git log「v0.1.9 步驟 4」 | test_builder 28、test_html 6 全過；parity 分片 3 輪 57／55／55＝167 項全過；LO 錯誤 0、CHK_Errors 0、Warnings 3 |
 | 5 HTML 與 dist | 完成 | `ba6da3a` | HTML 3,071 數字、140 情境；Playwright 17 節 × 桌機／手機 0 不符 |
 | 6 報告、CHANGELOG、交接檔、PR 留言 | 完成 | 見 git log「v0.1.9 步驟 6」 | PR #327 |
 
