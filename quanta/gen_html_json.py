@@ -183,7 +183,7 @@ disc = {"type": "table", "caption": "DCF 折現率（WACC）、永續成長率�
                  ["情境權重（A／B／C）", [f"@In!E{INK['tp_wA']}|p0", "／", f"@In!E{INK['tp_wB']}|p0", "／", f"@In!E{INK['tp_wC']}|p0"], ""]]}
 d3 = lambda p, f: [f"@Val!A{V(p, r_d0)}"] + [f"@Val!{c}{V(p, r_d0)}|{f}" for c in "BCD"] + [f"@Val!E{V(p, r_d0)}"]
 r_dh = V("項目", r_d0)
-dhead = [f"@Val!A{r_dh}", "情境 A（順利）", "情境 B（平平）", "情境 C（不如預期）", "說明"]
+dhead = [f"@Val!A{r_dh}", "情境 A（樂觀）", "情境 B（基準）", "情境 C（保守）", "說明"]
 dcf_main = {"type": "table", "caption": f"@Val!A{r_d0}", "head": dhead,
             "rows": [d3("明確期 FCFF 現值", "n1"), d3("終值現值", "n1"), d3("企業價值 EV", "n1"), d3("＋淨現金與投資", "n1"), d3("＋Stub 期 FCFF", "n1"), d3("淨現金滾到評價日", "n1"), d3("DCF 情境價值推到 12 個月後", "n0"),
                      [f"@Val!A{r_dcf}", f"@Val!B{r_dcf}|n0", "", "", f"@Val!E{r_dcf}"]]}
