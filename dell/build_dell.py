@@ -191,9 +191,9 @@ _FD = FD.in_rows(dict(
     date="2026-12-31（同 v0.1 DCF 基準日）", ccy="US$", amt="US$B", shu="十億股",
     rf=(0.0500, "美國財政部每日殖利率曲線 10 Yr：2026-10-23 5.00%（https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202610；2026-11-05 讀取；同 NVIDIA v0.3）",
         "FRED DGS10（https://fred.stlouisfed.org/series/DGS10）：10-28～10-30 5.05%／4.98%／4.94%；與股價同日（2026-10-23）", "無風險利率（美國 10 年期公債殖利率，2026-10-23）"),
-    beta_fixed=("=(0.33+0.67*0.8*1.48)*(1+(1-tax_w)*(debt_v+lease_v)/(px*sh_v))", "=1.322*(1+(1-tax_w)*(debt_v+lease_v)/(px*sh_v))", "=1.48*(1+(1-tax_w)*(debt_v+lease_v)/(px*sh_v))", "Derived",
-                "自算產業 β：US 伺服器／EMS 同業 8 家中位數（DELL SMCI HPE HPQ NTAP CLS FLEX JBL；Yahoo Finance 月報酬 2021-11～2026-10，對S&P 500（^GSPC）迴歸，Hamada 去槓桿、現金修正）無槓桿 β 1.48，Blume 調整後 βU 1.322；依 Dell D/E（市值；債務＋租賃 ÷ 股價 × 股數）與 tax_w 以 Hamada 重新加槓桿：βL＝βU ×（1＋(1−t) × D/E）",
-                "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）。敏感度（Analogy）：低＝本組中位數 × 0.8 再 Blume（0.33＋0.67 × 1.48 × 0.8＝1.123）、高＝本組 Blume 前中位數 1.48（未調整），同法加槓桿"),
+    beta_fixed=("=(beta_u-beta_du)*(1+(1-tax_w)*beta_de)", "=beta_u*(1+(1-tax_w)*beta_de)", "=(beta_u+beta_du)*(1+(1-tax_w)*beta_de)", "Derived",
+                "自算產業 β：US 伺服器／EMS 同業 8 家中位數（DELL SMCI HPE HPQ NTAP CLS FLEX JBL；Yahoo Finance 月報酬 2021-11～2026-10，對 S&P 500（^GSPC） 迴歸，Hamada 去槓桿、現金修正）無槓桿 β 1.48，Blume 調整後 βU 1.322（In 頁 beta_u）；依 Dell D/E（市值；In 頁 beta_de）與 tax_w 以 Hamada 重新加槓桿：βL＝βU ×（1＋(1−t) × D/E）",
+                "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）。Sens 低／高（Analogy；v0.2.2 起）：β_u ∓ beta_du（0.3），各自同式重新加槓桿（工作單第二輪修正，Andy 2026-11-05 23:16 定案；tools/fcff_dcf.py v2 write_sens）"),
     kd=("=1.56/((25.369+32.26)/2)", "Derived", SA_IS + "：FY2026 利息費用 1,560 ÷ 平均總債務（FY2025 25,369、FY2026 32,260；" + SA_BY + "）", "含 Dell Financial Services 債務與租賃"),
     tax_w=("=(0.1749+0.0935+0.1827)/3", "Derived", SA_IS + "：有效稅率 FY2024 17.49%、FY2025 9.35%、FY2026 18.27%（所得稅 715／472／1,327 ÷ 稅前 4,087／5,048／7,263）",
            "NOPAT 亦用本稅率（GAAP 口徑）"),
@@ -202,6 +202,9 @@ _FD = FD.in_rows(dict(
     cash=(11.57, "Verified", SA_BS + "：現金及短期投資合計 11,570", NO2),
     inv=(2.721, "Verified", SA_BS + "：長期投資 2,721（帳面計入）", "Sens 測不計；融資應收款未另計（債務已含 DFS 借款，偏保守）"),
     mi=(0.0, "Verified", SA_BS + "：未列非控制權益", NO2),
+    stub=dict(bs_date="2026-07-31", val_date="2026-12-31", bs_src=SA_BS + "（Q3 FY27 於 2026-10-30 結束、財報約 11 月下旬公布；2026-11-05 最新為 Q2 FY27）",
+              div=("=0.63*sh_v", "Derived", "已宣告季度股息每股 0.63 美元（除息 2026-10-20、發放 2026-10-30，stockanalysis https://stockanalysis.com/stocks/dell/dividend/），落在 2026-07-31～2026-12-31；× 評價用股數 sh_v",
+                   "07-21 除息、07-31 發放的上一筆已在資產負債表日付出，不扣；下一筆（2027-01）尚未宣告（Q3 財報約 11 月下旬），不扣；買回無已宣告金額，不扣")),
     dps=("=4*0.63", "Assumed", "評價日 2026-12-31 到目標時點 2027-12-31 之間四次季度股息，每次 0.63 美元（年化 2.52，stockanalysis 統計頁 2026-10-30；最近除息日 2026-10-20）；假設金額不變",
          "FY2026 每股股利 2.10（stockanalysis 損益表）；Dell 通常於 2 月宣布調升，不調升為保守"),
     sh=("=h2_sh", "Assumed", "＝In 頁 h2_sh（2H FY27 稀釋股數 0.642 十億股）", "stockanalysis 流通股數 635.81 百萬股（2026-10-30）"),
@@ -214,9 +217,14 @@ _FD = FD.in_rows(dict(
            SA_BY + "：營運資金＝應收＋存貨 − 應付（不含合約負債：Dell 的遞延收入主要是服務合約，AI 伺服器增量不帶來同比例預收）；FY2024 9,343＋3,622 − 19,226、FY2025 10,298＋6,716 − 20,832、FY2026 17,585＋10,437 − 33,630，各 ÷ 同年營收後平均（−7.1%、−4.0%、−4.9%；負值＝營收成長釋出現金）",
            "含流動與長期遞延收入時約 −33%（Sens 低 −30%）；Sens 高 +5%（AI 伺服器以應收與存貨為主，Assumed）"),
 ))
-_FD[0] = ("sec", "I2. 折現率與無槓桿自由現金流（v0.2 標準版 DCF；tools/fcff_dcf.py；評價日 2026-12-31；黃底＝Andy 可改）")
+_FD[0] = ("sec", "I2. 折現率與無槓桿自由現金流（標準版 DCF；tools/fcff_dcf.py；評價日 2026-12-31；黃底＝Andy 可改）")
 inp("gaap_k", "GAAP 營業利益 ÷ non-GAAP 分部營業利益（FY2026；EBIT 換成 GAAP 口徑，股權報酬視為費用）", "x", None, "=8.718/a26_oi", None, "Derived", SA_IS + "：FY2026 GAAP 營業利益 8,718 ÷ 本模型 FY2026 分部營業利益（Q 頁）", "差額為股權報酬（FY2026 723）、無形資產攤銷與其他；各年沿用 FY2026 比例")
 rows += _FD
+inp("beta_u", "產業無槓桿 β（採用）：自算 US 伺服器／EMS 同業中位數 Blume 調整（0.67 × 中位數＋0.33）", "x", None, 1.322, None, "Analogy",
+    "自算產業 β：US 伺服器／EMS 同業 8 家（DELL SMCI HPE HPQ NTAP CLS FLEX JBL）中位數（Yahoo Finance 含股利調整月收盤價 2021-11～2026-10 共 60 個月，對 S&P 500（^GSPC） 迴歸，Hamada 去槓桿、現金修正）1.48 → Blume 調整 1.322",
+    "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）；本組不變（工作單第二輪修正：只改 Sens 規則）")
+inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 稀釋股數 sh_v)", "與 WACC 權重同一口徑")
+inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新加槓桿）", "x", None, 0.3, None, "Assumed", "工作單第二輪修正（Andy 2026-11-05 23:16 定案）：β 敏感度改為 β_u ± 0.3", "取代上一版的低＝中位數 × 0.8 再 Blume、高＝未調整中位數")
 TP_KEYS += ["tp_g", "tp_w_dcf", "nm10_k", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fade_mB", "fade_mC"]
 
 r = 4; INROW = {}
@@ -553,13 +561,15 @@ FY_X = list(range(2027, 2033))
 _ebit = lambda s_, y: f"=PL!{FC[y]}{PB[s_]['oi']}*gaap_k" if y <= 2030 else f"=PL!{FC[y]}{PB[s_]['ni']}/nio_f*gaap_k"
 DPATHS = [dict(name=s, label=f"情境 {s}（{ {'A': '順利', 'B': '平平', 'C': '不如預期'}[s] }）", rev={y: f"PL!{FC[y]}{PB[s]['rev']}" for y in FY_X}, rev0=f"PL!{FC[2026]}{PB[s]['rev']}",
               ebit={y: _ebit(s, y) for y in FY_X}, tax={y: "tax_w" for y in FY_X}, ebit_note="× gaap_k；FY2031 起＝淨利 ÷ nio_f × gaap_k") for s in SC]
-RD_ = FD.write_detail(DCFW, 4, DPATHS, FY_X, 1 / 12, title="三情境 FCFF 明細（US$B；FY2027＝2026-02～2027-01，評價日後只計 2027-01）")
+RD_ = FD.write_detail(DCFW, 4, DPATHS, FY_X, 1 / 12, title="三情境 FCFF 明細（US$B；FY2027＝2026-02～2027-01，評價日後只計 2027-01）", stub=True,
+                      note="淨現金滾到評價日（v0.2.2）：資產負債表日 2026-07-31 → 評價日 2026-12-31；stub FCFF＝各情境 FY2027（2026-02～2027-01，含 stub 期）FCFF × stub_frac（模組預設），再扣已宣告股利 stub_div")
 RD_["end"] = FD.write_checks(DCFW, RD_["end"], nc_bs="11.57+2.721-(35.284-0.253-0.552)-(0.253+0.552)-0",
                              nc_note="2Q FY27 資產負債表（US$B）：現金及短期投資 11.570＋長期投資 2.721 − 總債務 35.284（含租賃 0.805）") + 1
 DCFW.column_dimensions["A"].width = 58; DCFW.column_dimensions["B"].width = 40
 for _c in "CDEFGH": DCFW.column_dimensions[_c].width = 13
+assert FD.summary_rows(stub=True) <= 20   # 原 0.1 節列數；0.2 節起列號不變
 SDCF = FD.write_summary(wb, V, 5, RD_, list(SC), ["tp_wA", "tp_wB", "tp_wC"], fmt="#,##0.00",
-                        title="0.1 DCF（標準版：無槓桿自由現金流 FCFF＋WACC；v0.2；明細見 DCF 頁；B／C／D＝情境 A／B／C）")
+                        title="0.1 DCF（標準版：無槓桿自由現金流 FCFF＋WACC；明細見 DCF 頁；B／C／D＝情境 A／B／C）", beta_note="自算產業 β 重新加槓桿")
 T.update(dcfv=SDCF["dcfv"], dcf12=SDCF["v12"], dcftp=SDCF["dcf"], tvsh=SDCF["tvsh"], mult=SDCF["mult"], wacc=SDCF["wacc"])
 V[f"E{SDCF['dcf']}"] = "Σ 權重 × 情境價值（已推到 12 個月後）；權重見 In 頁"
 EPSR, CFR = {}, {}
@@ -645,8 +655,8 @@ SENS_NOTE = nn + 3
 # v0.2：目標價參數敏感度改為標準版 DCF 案例（tools/fcff_dcf.py write_sens；舊 tp_r／tp_roe 案例刪除），表格放在案例區塊之後（原位置只有 13 列空間不足）
 TPS0 = SE.max_row + 3
 SE.cell(nn + 4, 1, f"v0.2：目標價參數表（標準版 DCF）移到本頁第 {TPS0} 列")
-_tvs = FD.write_sens(SE, TPS0, RD_, list(SC), ["tp_wA", "tp_wB", "tp_wC"], comp_ref=f"Val!$B${T['comptp']}", base_ref=f"Val!$B${T['tpw']}", fmt="#,##0.00",
-                     title="目標價參數敏感度（v0.2 標準版 DCF）：加權目標價一次動一個參數；Comparable 不變（DCF 權重案例除外）")
+_tvs = FD.write_sens(SE, TPS0, RD_, list(SC), ["tp_wA", "tp_wB", "tp_wC"], comp_ref=f"Val!$B${T['comptp']}", base_ref=f"Val!$B${T['tpw']}", fmt="#,##0.00", beta_du="beta_du",
+                     title="目標價參數敏感度（標準版 DCF）：加權目標價一次動一個參數；Comparable 不變（DCF 權重案例除外）")
 TPCASES = FD.SENS_CASES
 TPS_LAST = _tvs[1]
 SE.column_dimensions["A"].width = 30; SE.column_dimensions["B"].width = 48
@@ -826,7 +836,7 @@ _e1, _e2, _m = f"({NTM}/cons_feps)", f"({FEPS}/{NTM})", f"({MED}*{COEF}/({PX}/co
 _wd, _wc = f"tp_w_dcf*({DCF}-{PX})/({TPW}-{PX})", f"(1-tp_w_dcf)*({CMP}-{PX})/({TPW}-{PX})"
 _le = f"(LN({_e1})+LN({_e2}))/LN({CMP}/{PX})"
 _main = f'IF(ABS({_wd}-{_wc})<0.1,"由 DCF 與 Comparable 各占約一半",IF({_wd}>{_wc},"主要來自 DCF","主要來自 Comparable"))'
-RD["A1"] = RD["A1"].value + "；v0.2（2026-11-05）：README 新增展示層、命題回覆與本版要點各段，HTML 改用個股版面規格 v1.0；模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；DCF 頁、Val 0.1 節、In 頁 I2 節、Sens 目標價參數），Comparable、情境權重、DCF 權重 50% 與投資建議規則不變；v0.2.1（2026-11-05）β 改為自算產業 β（US 伺服器／EMS 同業中位數，Blume 調整；Andy 2026-11-05 22:55），評價日 2026-12-31 不變，其他模型參數不變"
+RD["A1"] = RD["A1"].value + "；v0.2（2026-11-05）：README 新增展示層、命題回覆與本版要點各段，HTML 改用個股版面規格 v1.0；模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；DCF 頁、Val 0.1 節、In 頁 I2 節、Sens 目標價參數），Comparable、情境權重、DCF 權重 50% 與投資建議規則不變；v0.2.1（2026-11-05）β 改為自算產業 β（US 伺服器／EMS 同業中位數，Blume 調整；Andy 2026-11-05 22:55），評價日 2026-12-31 不變，其他模型參數不變；v0.2.2（2026-11-05）第二輪修正：換用共用模組 tools/fcff_dcf.py v2（淨現金由資產負債表日 2026-07-31 滾到評價日、β 敏感度改 β_u ± 0.3）"
 r = RD.max_row + 2
 RD.cell(r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；v0.2 新增，原 A3、A4、重點觀察各列保留）").font = BOLD; r += 1
 RD.cell(r, 1, "命題：Dell 的 AI 伺服器營收＝商用 GPU 顆數 × 每顆系統價值 × Dell 份額；傳統伺服器、儲存與 PC 另列、不隨 AI 情境。要回答的是在手訂單能否在 FY2028 轉成 AI 營收再成長、同時守住 AI 營益率，以及現價的前瞻本益比隱含什麼路徑。"); r += 1
@@ -838,6 +848,10 @@ RD.cell(r, 1, f'="重點 2｜FY2028 EPS "&TEXT(PL!E{_pa["eps"]},"0.00")&" 美元
 RD.cell(r, 1, f'="重點 3｜AI 營益率是最大的不確定：公司不揭露，本模型以非 AI ISG 營益率 "&TEXT(m_nai,"0%")&"（假設）拆分得 FY2027 約 "&TEXT(PL!D{_pa["aim"]},"0.0%")&"。敏感度測試（以情境 A 為基準）：拆分改用 "&TEXT({_in("m_nai", "F")},"0%")&" 時 FY2028 EPS "&TEXT({_s("非 AI 營益率拆分 19%", "F")},{_SG})&"、AI 營益率 −3pt 時 "&TEXT({_s("AI 營益率 −3pt", "F")},{_SG})&"。FY2029 起三情境才分開：FY2029 EPS 樂觀、基準、保守約 "&TEXT(PL!F{_pa["eps"]},"0.00")&"、"&TEXT(PL!F{_pb["eps"]},"0.00")&"、"&TEXT(PL!F{_pc["eps"]},"0.00")&" 美元。"'); r += 1
 _sv = lambda p, c: f"Sens!{c}{_lab(SE, p, TPS0)}"
 RD.cell(r, 1, f'="重點 4｜v0.2 起 DCF 改為標準版（無槓桿自由現金流折現；EBIT 換成 GAAP 口徑、股權報酬視為費用），DCF 目標價為 "&TEXT({DCF},"0.00")&" 美元（舊法為 non-GAAP EPS 股東現金流、折現率 10%；新舊對照見本版要點）。WACC "&TEXT(wacc,"0.0%")&"（股權成本 "&TEXT(ke,"0.0%")&"＝美國 10 年期公債 "&TEXT(rf,"0.00%")&" ＋ β "&TEXT(beta,"0.00")&" × ERP "&TEXT(erp,"0%")&"；β 為自算產業 β（美國伺服器／EMS 同業 8 家無槓桿 β 中位數，Blume 調整）依 Dell 負債比重新加槓桿，ERP 5% 與 RONIC＝WACC 為假設），永續成長率 "&TEXT(g_tv,"0.0%")&"。淨負債 "&TEXT(-dcf_nc*10,"#,##0")&" 億美元從企業價值扣除。營運資金（應收＋存貨 − 應付）約占營收增量 "&TEXT(fc_wc,"0.0%")&"，成長時小幅釋出現金。DCF 三情境（推到 12 個月後）"&TEXT({D12("B")},"0.00")&"／"&TEXT({D12("C")},"0.00")&"／"&TEXT({D12("D")},"0.00")&" 美元，"&IF(MAX({D12("B")},{D12("C")},{D12("D")})<{PX},"都低於現價","並非都低於現價")&"；終值現值占情境 B 企業價值 "&TEXT(Val!C{SDCF["tvsh"]},"0%")&"，隱含終值 EV／EBITDA 約 "&TEXT(Val!C{SDCF["mult"]},"0.0")&" 倍。敏感度（以情境加權目標價為基準）：WACC −1pt／＋1pt 時 "&TEXT({_sv("WACC ±1pt", "D")},{_SG})&"／"&TEXT({_sv("WACC ±1pt", "F")},{_SG})&"；ERP 4%／6% 時 "&TEXT({_sv("ERP 低／高", "D")},{_SG})&"／"&TEXT({_sv("ERP 低／高", "F")},{_SG})&"。"'); r += 1
+_tvs3 = [f"Val!{c}{SDCF['tvsh']}" for c in "BCD"]
+_tvflag = "&".join(f'IF({t}>0.8,"情境 {n}（{l}）"&TEXT({t},"0%")&"；","")' for t, n, l in zip(_tvs3, "ABC", ("順利", "平平", "不如預期")))
+_bsv = lambda c: f"Sens!{c}{_lab(SE, 'β 低／高', TPS0)}"
+RD.cell(r, 1, f'="重點 5｜淨現金滾到評價日、β 敏感度與終值占比：資產負債表為 "&bs_date&"（最近一季 10-Q），淨現金與投資 "&TEXT(dcf_nc,"#,##0.00")&" US$B，加上 stub 期無槓桿自由現金流（FY2027 全年 FCFF × "&TEXT(stub_frac,"0.000")&" 年）"&TEXT(Val!C{SDCF["stub"]},"#,##0.00")&" US$B、扣除已宣告股利 "&TEXT(stub_div,"#,##0.00")&" US$B（每股 0.63 美元，2026-10-30 發放），滾到評價日為 "&TEXT(Val!C{SDCF["ncr"]},"#,##0.00")&" US$B（情境 B）。β 改用產業無槓桿 β "&TEXT(beta_u,"0.000")&" ∓ "&TEXT(beta_du,"0.0")&" 各自重新加槓桿（β "&TEXT(beta_lo,"0.00")&"／"&TEXT(beta_hi,"0.00")&"）時，加權目標價變動 "&TEXT({_bsv("D")},{_SG})&"／"&TEXT({_bsv("F")},{_SG})&"（敏感度，以情境加權目標價為基準）。美國公司以美元計價，「美元口徑折現」即基準，不另列。"&IF(MAX({",".join(_tvs3)})>0.8,"終值占比標示（終值現值占企業價值）："&{_tvflag}&"超過 80%，這些情境的價值主要取決於永續期假設（g、RONIC＝WACC）。","三情境終值現值占企業價值都未超過 80%。")'); r += 1
 r += 1
 RD.cell(r, 1, "命題回覆（HTML 用；依本模型計算逐一回答展示層的三個命題）").font = BOLD; r += 1
 RD.cell(r, 1, f'="AI 伺服器營收能跟著商用 GPU 顆數成長嗎？答：FY2028 能，之後看情境。FY2027 以公司指引校準為 "&TEXT(PL!D{_pa["ai"]}*10,"#,##0")&" 億美元，FY2028 升到 "&TEXT(PL!E{_pa["ai"]}*10,"#,##0")&" 億美元（"&TEXT(PL!E{_pa["ai"]}/PL!D{_pa["ai"]}-1,{_SG})&"；三情境相同），帶動 FY2028 營收年增 "&TEXT(PL!E{_pa["g"]},"0%")&"。FY2029 起顆數係數下修，AI 營收樂觀、基準、保守約 "&TEXT(PL!F{_pa["ai"]}*10,"#,##0")&"、"&TEXT(PL!F{_pb["ai"]}*10,"#,##0")&"、"&TEXT(PL!F{_pc["ai"]}*10,"#,##0")&" 億美元。份額相對值為假設。"'); r += 1
@@ -846,10 +860,11 @@ RD.cell(r, 1, f'="現價的前瞻本益比隱含什麼路徑、每股值多少�
 r += 1
 RD.cell(r, 1, "HTML 輔助列（只供 HTML 抽數，不是模型輸出；B 欄為公式）").font = BOLD; r += 1
 RD.cell(r, 1, "上檔空間：Comparable 目標價（相對倍數調整後）"); RD.cell(r, 2, f"={CMP}/{PX}-1").number_format = "0.0%"; r += 1
-RD.cell(r, 1, f'="估值說明：加權目標價＝DCF 目標價 × "&TEXT(tp_w_dcf,"0%")&"＋Comparable 目標價（相對倍數調整後）× "&TEXT(1-tp_w_dcf,"0%")&"，投資建議依它的上檔空間判定。DCF 為標準版：無槓桿自由現金流（稅後營業利益〔GAAP〕＋折舊 − 資本支出 − 營運資金增加）以 WACC "&TEXT(wacc,"0.0%")&" 折現，終值用永續成長率 "&TEXT(g_tv,"0.0%")&"、新投資報酬率＝WACC，企業價值減淨負債後除以股數，三情境價值以股權成本推到 12 個月後並扣除期間股利，再依情境權重加權；Comparable＝同業前瞻本益比中位數 × 本公司長期相對同業的倍數比 × 約一年後的未來 12 個月 EPS（non-GAAP，情境加權）。十年本益比規則值是舊法，只作參考，不進目標價。"'); r += 1
+RD.cell(r, 1, f'="估值說明：加權目標價＝DCF 目標價 × "&TEXT(tp_w_dcf,"0%")&"＋Comparable 目標價（相對倍數調整後）× "&TEXT(1-tp_w_dcf,"0%")&"，投資建議依它的上檔空間判定。DCF 為標準版：無槓桿自由現金流（稅後營業利益〔GAAP〕＋折舊 − 資本支出 − 營運資金增加）以 WACC "&TEXT(wacc,"0.0%")&" 折現，終值用永續成長率 "&TEXT(g_tv,"0.0%")&"、新投資報酬率＝WACC，企業價值減淨負債（資產負債表日的淨現金加 stub 期無槓桿自由現金流、扣已宣告股利，滾到評價日）後除以股數，三情境價值以股權成本推到 12 個月後並扣除期間股利，再依情境權重加權；Comparable＝同業前瞻本益比中位數 × 本公司長期相對同業的倍數比 × 約一年後的未來 12 個月 EPS（non-GAAP，情境加權）。十年本益比規則值是舊法，只作參考，不進目標價。"'); r += 1
 r += 1
 RD.cell(r, 1, "本版要點（版本沿革；HTML 附錄用）").font = BOLD; r += 1
-RD.cell(r, 1, f'="v0.2.1（2026-11-05）：β 改為自算產業 β（US 伺服器／EMS 同業 8 家無槓桿 β 中位數 1.48，Blume 調整後 1.322，依 Dell 負債比重新加槓桿；Andy 2026-11-05 22:55，取代 Damodaran 產業 β）。β 1.46 → "&TEXT(beta,"0.00")&"、WACC 11.5% → "&TEXT(wacc,"0.0%")&"、DCF 目標價 264.38 → "&TEXT({DCF},"0.00")&"、加權目標價 254.21 → "&TEXT({TPW},"0.00")&"、上檔空間 -44.3% → "&TEXT({UP},"+0.0%;-0.0%")&"、投資建議 放空 → "&{REC}&"。評價日 2026-12-31、目標時點 12 個月後與其他模型參數不變。"'); r += 1
+RD.cell(r, 1, f'="v0.2.2（2026-11-05）：第二輪修正（Andy 2026-11-05 23:16 定案），換用共用模組 tools/fcff_dcf.py v2。(1) 淨現金滾到評價日：資產負債表日 "&bs_date&"（Q3 FY27 財報約 11 月下旬公布，維持 Q2 FY27）→ 評價日 2026-12-31，淨現金與投資 "&TEXT(dcf_nc,"0.00")&"＋stub 期 FCFF（FY2027 全年 FCFF × "&TEXT(stub_frac,"0.000")&" 年；情境 B "&TEXT(Val!C{SDCF["stub"]},"0.00")&"）− 已宣告股利 "&TEXT(stub_div,"0.00")&"＝"&TEXT(Val!C{SDCF["ncr"]},"0.00")&"（US$B；情境 B）。(2) β 敏感度改 β_u ± 0.3 各自重新加槓桿（β "&TEXT(beta_lo,"0.00")&"／"&TEXT(beta_hi,"0.00")&"）；基準 β_u 1.322 不變（β "&TEXT(beta,"0.00")&"）。(3) 美國公司不加「美元口徑折現」（＝基準）。(4) RONIC＝WACC 不變；無非控制權益；資本支出、折舊：本模型沒有擴產排程列，維持近三年占營收比例。β 1.46 → "&TEXT(beta,"0.00")&"、WACC 11.5% → "&TEXT(wacc,"0.0%")&"、DCF 目標價 264.16 → "&TEXT({DCF},"0.00")&"、加權目標價 254.10 → "&TEXT({TPW},"0.00")&"、上檔空間 -44.3% → "&TEXT({UP},"+0.0%;-0.0%")&"、投資建議 放空 → "&{REC}&"。"'); r += 1
+RD.cell(r, 1, "v0.2.1（2026-11-05）：β 改為自算產業 β（US 伺服器／EMS 同業 8 家無槓桿 β 中位數 1.48，Blume 調整後 1.322，依 Dell 負債比重新加槓桿；Andy 2026-11-05 22:55，取代 Damodaran 產業 β）。β 1.46 → 1.46、WACC 11.5% → 11.5%、DCF 目標價 264.38 → 264.16、加權目標價 254.21 → 254.10、上檔空間 -44.3% → -44.3%、投資建議 放空 → 放空。評價日 2026-12-31、目標時點 12 個月後與其他模型參數不變。"); r += 1
 RD.cell(r, 1, "v0.2（2026-11-05）：模型改版，DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC，docs/plan/個股DCF標準規格.md）。DCF 目標價 424.95 → 264.38、加權目標價 334.49 → 254.21、上檔空間 −26.7% → -44.3%、投資建議 放空 → 放空。DCF 差異拆解見 PR 內文；主因是折現率（WACC 11.5%、股權成本 12.3%，高於舊法 10%）與終值改價值驅動式；EBIT 改 GAAP 口徑、扣除淨負債的影響被營運資金釋出與折舊加回抵銷。Comparable、情境權重、DCF 權重 50% 與投資建議規則不變。"); r += 1   # 舊版沿革：固定為該版成品的計算結果
 RD.cell(r, 1, "v0.2（2026-11-05）展示層：README 新增展示層、命題回覆、HTML 輔助列與本版要點；HTML 改用個股 HTML 版面規格 v1.0（投資建議橫幅、命題分點與命題回覆、驅動因子依業務分塊、估值與對帳只列主要項目）。"); r += 1
 RD.cell(r, 1, "=A2"); r += 1
