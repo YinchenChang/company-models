@@ -1,11 +1,20 @@
-# lrcx/ — Lam Research（LRCX，科林研發）收支與估值模型 v0.2.3
+# lrcx/ — Lam Research（LRCX，科林研發）收支與估值模型 v0.3
+
+## v0.3（2026-11-05）：標準版 DCF（無槓桿自由現金流 FCFF＋WACC）
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0 與 `tools/fcff_dcf.py`：Val 0.1 節由股東現金流法（EPS ×（1 − g ÷ ROE）、折現率 10%）改為 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現到 FY2026 年底（2026-06-28）；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC；EV 加淨現金 ÷ 稀釋股數，以 ke 推到 12 個月後並扣除期間股利。
+- 新增 DCF 頁（三情境 FCFF 明細、檢查列；原 Val 0.1 節的情境 EPS 表移入）；In 頁新增 M2 節；刪除 tp_r、tp_roe；Sens 目標價參數改為標準案例。Comparable、情境權重、DCF 權重 50%、投資建議規則不變。
+- 折現率：rf 5.00%（美國 10 年期公債，2026-10-23）；β＝Damodaran 美國「Semiconductor Equip」無槓桿 β 1.35 依 D/E 1.4% 重新加槓桿 ≈ 1.37；ERP 5% → ke 11.8%、WACC 11.7%。
+- EBIT：FY2027–29 取 PL 營業利益；FY2030–32 由淨利 ÷（1 − tax）− oth_inc 還原；稅率 tax 16.5%。折舊、資本支出、營運資金為近三年占營收比例。
+- 結果（以 xlsx 為準）：DCF 目標價 143.84 → 91.70；加權目標價 190.79 → 164.72；上檔空間 −17.1% → −28.4%；投資建議 **中立 → 放空**。差異拆解：現金流口徑 −5.44、折現率 −27.37、終值 −18.32、期間股利 −1.01。終值現值占 EV 60%／53%／44%（A／B／C），隱含終值 EV／EBITDA 6.8／6.7／6.6 倍。
+- 成品：`dist/20261105_科林研發模型_v0.3.xlsx`、`.html`；v0.2.3 移到 `dist/_待刪除/`。
 
 ## v0.2.3（2026-11-05）：HTML 新版面 v1.0（只改展示層，數值不變）
 
 - 依 `docs/plan/個股HTML版面規格.md` v1.0：xlsx README 頁最後新增「展示層」（命題摘要、命題 1–3、白話重點）與「命題回覆」兩段，數字全部以公式取自 Val／Recon／Sens／In／PL；另一列（B 欄公式）給橫幅附註用的「Comparable 目標價（相對倍數調整後）」上檔空間。README 以外的工作表與前版逐格相同（`tools/xlsx_diff.py`：差異只在 README）。
 - HTML：舊設定改名 `html_src.json`（內容不動），`gen_html_json.py` 經共用轉換器 `tools/company_html/relayout.py` 產生 `html.json`（勿手改）。參數依業務分塊：系統營收（設備市場三情境、合計與見頂年度、年度切分與份額漂移、公司說法、Wattonomics 係數）、中國與出口管制、客戶支援事業群 CSBG、全公司（指引、毛利率與營業費用、業外稅率股數、共識與股價、目標價規則與折現率）。
 - 橫幅並列加權目標價、只看 Comparable 目標價（市場主流同業法，未做相對倍數調整；附自己的上檔空間）與現價；進加權的相對倍數調整後 Comparable 寫在橫幅附註（工作單補充規則 A）。目標價長條圖補上調整後值；敏感度章新增加權目標價龍捲風圖；情境驅動表與目標價參數案例表的列號依 In／Sens 頁現況重新定位。
-- 成品：`dist/20261105_科林研發模型_v0.2.3.xlsx`、`dist/20261105_科林研發模型_v0.2.3.html`；舊版移到 `dist/_待刪除/`。敏感度未重跑（數值不變）。
+- 成品：`dist/20261105_科林研發模型_v0.3.xlsx`、`dist/20261105_科林研發模型_v0.3.html`；舊版移到 `dist/_待刪除/`。敏感度未重跑（數值不變）。
 
 
 ## v0.2.2（2026-10-31）：In 頁「敏感度低／高」與「情境 A／B／C」分開（數值不變）
@@ -31,9 +40,9 @@ AI 半導體 Project 步驟 5（設備與材料）的公司模型，樣板為 `a
 | 檔案 | 內容 |
 |---|---|
 | `build_lrcx.py` | 產生器（參數與公式） |
-| `dist/20261105_科林研發模型_v0.2.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261105_科林研發模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html_src.json`、`gen_html_json.py` → `html.json` | HTML 展示層設定（舊版面設定 → 版面規格 v1.0；勿手改 `html.json`） |
-| `dist/20261105_科林研發模型_v0.2.3.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
+| `dist/20261105_科林研發模型_v0.3.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
 
 建置：`python3 lrcx/build_lrcx.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir dist raw.xlsx`。工作表依序是 README、In、Q、Units、PL、Val、Recon、Sens、Sources。上游只讀取 `markets/equipment/dist`（WFE 分項三情境、見頂年度）與 `tools/cycle_position.py`，兩者都不修改。
 
