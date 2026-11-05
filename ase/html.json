@@ -1,7 +1,7 @@
 {
  "company": "日月光投控",
  "ticker": "3711.TW",
- "thesis": "@README!A32",
+ "thesis": "@README!A33",
  "question": "LEAP 先進封裝占封測營收升到三成以上後，前瞻本益比應停在歷史中位與今年窗口之間的哪裡；資本支出約占營收四成的報酬能否撐住毛利率與每股盈餘",
  "scenarios": [
   {
@@ -30,9 +30,9 @@
      "type": "list",
      "ordered": true,
      "items": [
-      "@README!A33",
       "@README!A34",
-      "@README!A35"
+      "@README!A35",
+      "@README!A36"
      ]
     },
     {
@@ -41,9 +41,9 @@
      "collapse": true,
      "summary": "展開：命題回覆（依本模型計算的答案；想先看結論可展開，或讀完全文再看）",
      "items": [
-      "@README!A43",
       "@README!A44",
-      "@README!A45"
+      "@README!A45",
+      "@README!A46"
      ]
     },
     {
@@ -54,11 +54,11 @@
      "type": "list",
      "ordered": true,
      "items": [
-      "@README!A36",
       "@README!A37",
       "@README!A38",
       "@README!A39",
-      "@README!A40"
+      "@README!A40",
+      "@README!A41"
      ]
     }
    ]
@@ -1950,7 +1950,7 @@
       ],
       [
        "Comparable（相對倍數調整後）的上檔空間",
-       "@README!B47|sp1",
+       "@README!B48|sp1",
        "",
        "",
        ""
@@ -2860,6 +2860,9 @@
       ],
       [
        "@README!A29"
+      ],
+      [
+       "@README!A30"
       ]
      ]
     },

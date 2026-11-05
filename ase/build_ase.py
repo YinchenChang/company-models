@@ -217,7 +217,7 @@ inp("beta_u", "產業無槓桿 β（自算封測，Blume 調整後；採用值�
     "自算產業 β：封測 同業 6 家中位數（3711 6239 8150 6257 2449 AMKR；Yahoo Finance 月報酬 2021-11～2026-10，各自對本地大盤迴歸，Hamada 去槓桿、現金修正）；＝0.67 × 中位數 beta_u_med ＋ 0.33（＝1.356）", "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）；第二輪修正（2026-11-05 23:20）由 TW 半導體 1.429 改為封測組；用現金修正值：淨現金另計，β 只對營業資產")
 inp("beta_u_med", "產業無槓桿 β 中位數（自算封測，Blume 調整前）", "x", None, 1.531, None, "Derived",
     "自算產業 β：封測 同業 6 家中位數（3711 6239 8150 6257 2449 AMKR；Yahoo Finance 月報酬 2021-11～2026-10，各自對本地大盤迴歸，Hamada 去槓桿、現金修正）", "只用於計算 beta_u；v0.2.1 起 β 敏感度改 β_u ± beta_du（v0.2 為中位數 × 0.8 再 Blume／中位數未調整）")
-inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 股數 sh_v)", "與 WACC 權重同一口徑")
+inp("beta_de", "市值負債權益比 D/E（重新加槓桿用；E 含非控制權益）", "x", None, "=(debt_v+lease_v)/(px*sh_v+mi_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 股數 sh_v ＋ 非控制權益 mi_v)", "與 WACC 權重同一口徑（第三輪修正第 12 點：E 含非控制權益，環旭市值、其餘帳面）")
 inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新加槓桿）", "x", None, 0.3, None, "Assumed", "工作單第二輪修正（Andy 2026-11-05 23:16 定案）：β 敏感度改為 β_u ± 0.3", "取代 v0.2 的低＝中位數 × 0.8 再 Blume、高＝中位數未調整")
 TP_KEYS += ["tp_g", "tp_w_dcf", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fade_mB", "fade_mC"]
 
@@ -616,6 +616,14 @@ SDCF = FD.write_summary(wb, V, 5, RD_, list(SC), ["tp_wA", "tp_wB", "tp_wC"], fm
                         title="0.1 DCF（標準版：無槓桿自由現金流 FCFF＋WACC；明細見 DCF 頁）", beta_note="自算產業 β 重新加槓桿")
 for _j, _h in enumerate(["項目", "A（順利）", "B（平平）", "C（不如預期）", "說明"], 1): V.cell(SDCF["h"], _j, _h)
 T.update(dcfv=SDCF["dcfv"], dcf12=SDCF["v12"], dcftp=SDCF["dcf"])
+# v0.2.3（第三輪修正第 12 點）：合併 EV 含子公司 100% → WACC 權重的 E＝母公司市值＋非控制權益 mi_v（環旭市值、其餘帳面）
+V.cell(SDCF["w_e"], 1).value = "權益占資本 E ÷（E＋D）（市值；E＝母公司市值＋非控制權益 mi_v；D＝債務＋租賃）"
+V.cell(SDCF["w_e"], 2).value = "=(px*sh_v+mi_v)/(px*sh_v+mi_v+debt_v+lease_v)"
+V.cell(SDCF["w_e"], 5).value = '="E "&TEXT(px*sh_v+mi_v,"#,##0")&"（含非控制權益 "&TEXT(mi_v,"#,##0.0")&"）、D "&TEXT(debt_v+lease_v,"#,##0.0")'
+for _r in range(1, DCFW.max_row + 1):
+    if str(DCFW.cell(_r, 1).value or "").startswith("檢查：WACC 由 In 頁輸入重算"):
+        DCFW.cell(_r, 3).value = "=((px*sh_v+mi_v)*(rf+beta*(erp+crp))+(debt_v+lease_v)*kd*(1-tax_w))/(px*sh_v+mi_v+debt_v+lease_v)+wacc_adj-wacc"
+        DCFW.cell(_r, 2).value = "E＝母公司市值＋非控制權益（第三輪修正第 12 點）"
 V.cell(SDCF["stub"], 5, '="資產負債表日 "&bs_date&"；stub 期 FCFF＝Q 頁 4Q26 季度數（DCF 頁下方；三情境相同）"')
 _PE = lambda c, y: f"PL!{FC[y]}{SUMR[(dict(zip('BCD', SC))[c], 'eps')]}"
 EPSR = {}
@@ -914,7 +922,7 @@ _J = lambda nm: f"Sens!J{_CROW[nm] if nm in _CROW else TP_ROWS[nm]}"
 _rec = f"Val!B{RC_ROW}"
 _T = lambda x, f="0.0": (f'TEXT({x},"{f}")',)
 _3 = lambda f: [z for s_ in SC for z in (((f(s_),),) if s_ == "A" else ("／", (f(s_),)))]
-RD["A1"] = str(RD["A1"].value) + "；v0.2.2（2026-11-06）第三輪修正：stub 期改 Q 頁 4Q26、環旭非控制權益改市值、現價與同業報價統一 2026-11-04；v0.2（2026-11-05）模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；DCF 頁、Val 0.1 節、Sens），README 新增展示層與命題回覆、HTML 改用新版面 v1.0；Comparable、情境權重、DCF 權重 50% 與投資建議規則不變；v0.2.1（2026-11-05）第二輪修正：β 改封測組 1.356、共用模組 tools/fcff_dcf.py v2（stub 期、β ± 0.3、美元口徑折現）、資產負債表 3Q26"
+RD["A1"] = str(RD["A1"].value) + "；v0.2.3（2026-11-06）WACC 權重 E 含非控制權益；v0.2.2（2026-11-06）第三輪修正：stub 期改 Q 頁 4Q26、環旭非控制權益改市值、現價與同業報價統一 2026-11-04；v0.2（2026-11-05）模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；DCF 頁、Val 0.1 節、Sens），README 新增展示層與命題回覆、HTML 改用新版面 v1.0；Comparable、情境權重、DCF 權重 50% 與投資建議規則不變；v0.2.1（2026-11-05）第二輪修正：β 改封測組 1.356、共用模組 tools/fcff_dcf.py v2（stub 期、β ± 0.3、美元口徑折現）、資產負債表 3Q26"
 RD.cell(RD.max_row + 1, 1, XF("v0.2（2026-11-05）：模型改版——DCF 改為標準版（Andy 2026-11-05 20:42、20:45；docs/plan/個股DCF標準規格.md）：FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現，終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g）；ke＝rf＋β ×（ERP＋CRP），rf ",
     "1.98%（新台幣 10 年期公債）、β 1.55（自算 TW 半導體產業無槓桿 β 1.43（Blume 調整）依市值 D/E 重新加槓桿）、ERP 5%、台灣 CRP 0.78%，g＝MIN(3%, rf)＝1.98%"
     "。FY2027–29 的資本支出與折舊直接取推導區塊（公司指引），FY2030 起收斂到穩態（資本支出 22.5%、折舊 14.7%）。新增 DCF 頁（Sens 每個案例三情境各一個 FCFF 明細）；舊折現率三案改為 17 列 DCF 參數案例；刪除 tp_r、tp_roe。"
@@ -923,9 +931,10 @@ RD.cell(RD.max_row + 1, 1, XF("v0.2（2026-11-05）：模型改版——DCF 改�
 RD.cell(RD.max_row + 1, 1, "v0.2.1（2026-11-05）：第二輪修正（工作單 2026-11-05 23:20；Andy 23:16 定案）。(1) β 改用自算「封測」組（6 家中位數 1.531，Blume 調整 1.356），重新加槓桿 1.51；β 敏感度改 β_u ∓ 0.3。(2) 共用模組 tools/fcff_dcf.py v2：DCF 的 FY2027–29 折舊、資本支出讀推導區塊列。"
     "(3) 資產負債表更新到 2026-09-30：淨現金滾到評價日＝淨現金與投資 −257.2＋stub 期 FCFF（當時用 FY2027 FCFF × 0.252 年；情境 B −47.3；v0.2.2 改 Q 頁 4Q26）＝−304.5。(4) Sens 新增「美元口徑折現」。"
     "新舊對照（v0.2 → v0.2.1，當時數值）：β 1.55 → 1.51、WACC 10.16% → 9.71%，DCF 目標價 121.27 → 109.38，加權目標價 396.21 → 390.27，上檔空間 −40.7% → −41.6%，投資建議 放空 → 放空。")
-RD.cell(RD.max_row + 1, 1, XF("v0.2.2（2026-11-06）：第三輪修正（合併前）。(1) Stub 期 FCFF 改用 Q 頁 4Q26 季度數（資本支出＝全年 US$11.5B − 前三季 US$8.0B）＝", _T("stub_fcff4q", "0.0"), "（v0.2.1 誤用 FY2027 FCFF × stub_frac，情境 B −47.3）。(2) 非控制權益：環旭（601231.SS，持股 ", _T("usi_own", "0.00%"),
-    "）改用 2026-11-04 市值 ", _T("nci_usi_mv", "0.0"), "（取代帳面 ", _T("nci_usi_bk", "0.0"), "），mi_v 31.1 → ", _T("mi_v", "0.0"), "。(3) 現價與同業報價統一 2026-11-04 收盤：現價 668 → ", _T("px", "0"), "；同業 P/E 依收盤比例換算，中位數 22.1 → ", (f'TEXT({_B("pmed")},"0.0")',),
-    "。新舊對照（v0.2.1 → v0.2.2）：DCF 目標價 109.38 → ", (f'TEXT({_B("dcftp")},"0.00")',), "，加權目標價 390.27 → ", (f'TEXT({_B("tpw")},"0.00")',), "，上檔空間 −41.6% → ", (f'TEXT({_B("upw")},{_SP})',), "，投資建議 放空 → ", (_rec,), "。"))
+RD.cell(RD.max_row + 1, 1, "v0.2.2（2026-11-06）：第三輪修正（合併前）。(1) Stub 期 FCFF 改用 Q 頁 4Q26 季度數（資本支出＝全年 US$11.5B − 前三季 US$8.0B）＝−67.2（v0.2.1 誤用 FY2027）。(2) 非控制權益：環旭（601231.SS，持股 70.48%）改用 2026-11-04 市值 63.1（取代帳面 33.3），mi_v 31.1 → 63.1。"
+    "(3) 現價與同業報價統一 2026-11-04 收盤：現價 668 → 627；同業 P/E 中位數 22.1 → 16.1。新舊對照（v0.2.1 → v0.2.2，當時數值）：DCF 目標價 109.38 → 99.11，加權目標價 390.27 → 294.02，上檔空間 −41.6% → −53.1%，投資建議 放空 → 強力放空。")
+RD.cell(RD.max_row + 1, 1, XF("v0.2.3（2026-11-06）：第三輪修正第 12 點。WACC 權重與 β 重新加槓桿的 E 改為母公司市值＋非控制權益 mi_v（", _T("mi_v", "0.0"), "；環旭市值、其餘帳面）：權益占資本 → ", _T("w_e", "0.00%"), "、β → ", _T("beta", "0.000"), "、WACC → ", _T("wacc", "0.00%"),
+    "。新舊對照（v0.2.2 → v0.2.3）：DCF 目標價 99.11 → ", (f'TEXT({_B("dcftp")},"0.00")',), "，加權目標價 294.02 → ", (f'TEXT({_B("tpw")},"0.00")',), "，上檔空間 −53.1% → ", (f'TEXT({_B("upw")},{_SP})',), "，投資建議 強力放空 → ", (_rec,), "。"))
 RD.cell(OBS_ROW0 + 1, 1, XF("重點觀察 2：核心問題一（LEAP 三成以上後的倍數）：LEAP 占封測營收 FY2026 ", (f'TEXT({_L("B", 2026)},"0.0%")',), " → FY2027 ", *_3(lambda s_: f'TEXT({_L(s_, 2027)},"0.0%")'), "（A／B／C），現價 ÷ FY2027 EPS ",
     *_3(lambda s_: f'TEXT(px/{_E(s_, 2027)},"0.0")'), " 倍；Comparable 等於同業中位數 ", (f'TEXT({_B("pmed")},"0.0")',), " 倍 × 相對倍數係數 ", _T("rm_factor", "0.00"), "。與 BofA 目標價 ", _T("cons_tp", "0"), " 的差距主要在 EPS（本模型 12 個月後前瞻 EPS ",
     (f'TEXT({_B("feps")},"0.0")',), " 比 BofA 同口徑 ", _T("cons_feps", "0.0"), " 低 ", (f'TEXT(-{_B("geps")},"0%")',), "），倍數因素 ", (f'TEXT({_B("gmul")},{_SP})',), "。"))
