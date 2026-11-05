@@ -19,7 +19,7 @@
 | Sens β 低／高（加權目標價） | 491.93／452.76 | 488.87／461.58 |
 | Sens 美元口徑折現 | — | 453.56（−4.2%） |
 
-- 成品：`dist/20261105_新易盛個股模型_v0.4.2.xlsx`、`.html`；v0.4.1 移到 `dist/_待刪除/`。依賴：`innolight/dist`（PR #395 v0.4.2；Units 頁未變）、`tsmc/dist`、`markets/network/dist`（main）。
+- 成品：`dist/20261105_新易盛個股模型_v0.4.2.xlsx`、`.html`；v0.4.1 移到 `dist/_待刪除/`。依賴：`innolight/dist`（以 main 的 v0.3 成品建置；讀取的 Units 頁與 PR #395 v0.4.2 逐格相同，28 個數值格 0 差異）、`tsmc/dist`、`markets/network/dist`（main）。
 
 ## v0.4.1（2026-11-05）：β 改用自算產業 β（CN 光通訊）
 
