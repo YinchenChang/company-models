@@ -67,6 +67,17 @@
      ]
     },
     {
+     "type": "list",
+     "ordered": true,
+     "collapse": true,
+     "summary": "展開：命題回覆（依本模型計算的答案；想先看結論可展開，或讀完全文再看）",
+     "items": [
+      "@README!A40",
+      "@README!A41",
+      "@README!A42"
+     ]
+    },
+    {
      "type": "h3",
      "text": "重點觀察"
     },
@@ -3811,27 +3822,6 @@
        "@Sens!A98",
        "@Sens!D98|n2"
       ]
-     ]
-    }
-   ]
-  },
-  {
-   "id": "conclusion",
-   "title": "命題回覆",
-   "blocks": [
-    {
-     "type": "list",
-     "ordered": true,
-     "items": [
-      "@README!A40",
-      "@README!A41",
-      "@README!A42"
-     ]
-    },
-    {
-     "type": "note",
-     "parts": [
-      "數字皆為本模型計算結果（情境 B 為基準），推導見前面各章；投資建議依加權目標價。"
      ]
     }
    ]

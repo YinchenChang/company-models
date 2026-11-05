@@ -227,6 +227,8 @@ cfg = {
   {"id": "thesis", "title": "命題與核心問題", "blocks": [
     {"type": "h3", "text": "命題"},
     {"type": "list", "ordered": True, "items": [f"@README!A{rd_show + 2}", f"@README!A{rd_show + 3}", f"@README!A{rd_show + 4}"]},
+    {"type": "list", "ordered": True, "collapse": True, "summary": "展開：命題回覆（依本模型計算的答案；想先看結論可展開，或讀完全文再看）",
+     "items": [f"@README!A{rd_ans + 1}", f"@README!A{rd_ans + 2}", f"@README!A{rd_ans + 3}"]},
     {"type": "h3", "text": "重點觀察"},
     {"type": "list", "ordered": True, "items": [f"@README!A{rd_show + 5}", f"@README!A{rd_show + 6}", f"@README!A{rd_show + 7}"]}]},
   {"id": "drivers", "title": "驅動因子 → 推導量", "blocks": [
@@ -306,9 +308,6 @@ cfg = {
     {"type": "table", "collapse": True, "summary": "展開：全部案例", "head": ["驅動", "設定", "方向", "加權目標價", "相對基準"],
      "rowgen": {"sheet": "Sens", "rows": f"4-{se_end}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "", "", "n2", "sp1"]}},
     {"type": "kv", "items": [["@Sens!A" + str(rm["SE_BASE"]), "@Sens!D" + str(rm["SE_BASE"]) + "|n2"], ["@Sens!A" + str(rm["SE_STALE"]), "@Sens!D" + str(rm["SE_STALE"]) + "|n2"]]}]},
-  {"id": "conclusion", "title": "命題回覆", "blocks": [
-    {"type": "list", "ordered": True, "items": [f"@README!A{rd_ans + 1}", f"@README!A{rd_ans + 2}", f"@README!A{rd_ans + 3}"]},
-    {"type": "note", "parts": ["數字皆為本模型計算結果（情境 B 為基準），推導見前面各章；投資建議依加權目標價。"]}]},
   {"id": "status", "title": "資料狀態", "blocks": [
     {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"],
                              ["Tokenomics 快照", "@Sources!B" + str(find("Sources", "Tokenomics 快照", 2))]]},
