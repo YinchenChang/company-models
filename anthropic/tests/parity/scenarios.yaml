@@ -8,7 +8,7 @@ workbook_expectations:            # 版本升級時必須有意識地更新（CL
   src_rows: 521                   # v0.1.8 新增 SRC_ANT_488–521（S-1/A No.1：Q3 實績、承諾總額與付款表、9-30 現金）；v0.1.7.1 新增 SRC_ANT_472–487（正式 S-1 原文：各輪融資、條件式額度、信用額度條款、受限現金）；v0.1.7 核對後新增 SRC_ANT_465–471（S-1 調整後營業損益與股權報酬，二手轉載）；A1 376＋A2 新增 3（SRC_ANT_377–379）＋v0.1.1 新增 30（SRC_ANT_380–409）＋v0.1.6 新增 55（SRC_ANT_410–464，正式 S-1）
   src_named: 465                  # v0.1.8：＋33（SRC_ANT_511 無固定金額安排只有低高欄）；v0.1.7.1：＋15（SRC_ANT_483 IPO 認購選擇權只有上限欄，無點值）；有值欄的列才有 SRC_ANT_nnn 名稱（另有 _Lo／_Hi／_Date）；v0.1.1 新增 28 列有值（2 列定性）；v0.1.6 新增 52 列有值（3 列無點值：S-1 留白、Google 額外 TPU 區間、單一客戶上限）
   inp_rows: 229                   # v0.1.8 核對後新增 INP_232–233；v0.1.8 新增 INP_221–231（R4、R5a–R5d 開關與參數、前九月月數）；v0.1.7.1 新增 INP_218–220（s1f_round_switch、s1f_cond_switch、s1f_cmt_tol）；v0.1.7 新增 INP_197–217；INP_001–196；INP_016（A2 容量上限佔位）、INP_067–069 退役；v0.1.1 新增 INP_180–186；v0.1.6 新增 INP_195–196
-  base_warnings: 4                # v0.1.7：C54 η（2025）0.468 低於合理範圍下緣 0.5、C69／C70 2025／2026 年底 GW 對報導 +33%／+37%（皆因 TK v21.7 的 TPU／Trainium 持有比下降使既有雲端加權合約價下降、同額付款換得較多 GW）、C89 逐家合約（AMD）；C116 消失（自建資本支出改 GW 法後為 0）；v0.1.1：C89 逐家合約總額對招股書（AMD ×3.9）＋C116 U4 模型算力成本（含自建資本支出）對報導外推全年 +47%（U4 口徑未明）
+  base_warnings: 3                # v0.1.9：C54 η（2025）0.604 回到合理範圍 0.5–2（TK v21.10 TPU／Trainium3 產出比下降），警示消失（4 → 3）；v0.1.7：C54 η（2025）0.468 低於合理範圍下緣 0.5、C69／C70 2025／2026 年底 GW 對報導 +33%／+37%（皆因 TK v21.7 的 TPU／Trainium 持有比下降使既有雲端加權合約價下降、同額付款換得較多 GW）、C89 逐家合約（AMD）；C116 消失（自建資本支出改 GW 法後為 0）；v0.1.1：C89 逐家合約總額對招股書（AMD ×3.9）＋C116 U4 模型算力成本（含自建資本支出）對報導外推全年 +47%（U4 口徑未明）
   tk_values: 107                  # v0.1.7：＋2（IF_CapexIT、IF_CapexFacility）；v0.1.4：＋1（IF_ProdDerate）；v0.1.3 B：＋22（η 診斷對照名稱）；OpenAI v0.6 同一組 63 名＋A2 新增 5 名（IF_HdrTask、IF_TaskLen、IF_TaskTokFresh／Cached／Dec）＋v0.1.2 新增 14 名（Tokenomics v18.0 對照名稱，只對照）
   tk_nonnv: 18                    # TK_NNV_*（TPU v7、Trainium3、MI455X × 6；讀表，非具名）
   oai_names: 21                   # OAI_ 17 個逐年名稱＋4 個中繼資料
@@ -79,8 +79,8 @@ scenarios:
     description: η 路徑開關 0 → 1（線性回升至 2030＝1）：2026 起有效推論 GW 下降、研發 GW 上升
     inputs: {"INP_117": 1}
   - id: u_nnv_out_low
-    description: Tokenomics NonNV 產出比取低值（TPU v7 0.8 → 0.6、Trainium3 0.5 → 0.3）：TPU／Trainium 每 GW 產能與 VR 等值係數下降
-    inputs: {"TK_NNV_TPUv7_Out": 0.6, "TK_NNV_Trn3_Out": 0.3}
+    description: Tokenomics NonNV 產出比取低值（v0.1.9 起 TK v21.10：TPU v7 0.66 → 0.35、Trainium3 0.28 → 0.14＝TK 低端／v21.9 原生精度；v0.1.8 以前為 0.8 → 0.6、0.5 → 0.3）：TPU／Trainium 每 GW 產能與 VR 等值係數下降
+    inputs: {"TK_NNV_TPUv7_Out": 0.35, "TK_NNV_Trn3_Out": 0.14}
   - id: v_headcount_high
     description: 2026 員工人數年增率 0.8 → 1.2（Inputs 上緣）：非算力成本與股權報酬上升
     inputs: {"INP_156": 1.2}
