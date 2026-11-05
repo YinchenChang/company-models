@@ -1,4 +1,4 @@
-# ASML（ASML.AS／ASML ADR）收支與估值模型 v0.2.4（AI 半導體 Project 步驟 5：設備與材料）
+# ASML（ASML.AS／ASML ADR）收支與估值模型 v0.3.1（AI 半導體 Project 步驟 5：設備與材料）
 # 用法：python3 asml/build_asml.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年（FY2026＝2026-01～12）。金額：歐元（Q 頁 €M，PL 頁 €B）；EPS 為歐元。
 # 結構比照 advantest/build_advantest.py：README、In、Q、Units、PL、Val、Recon、Sens、Sources。
@@ -148,9 +148,9 @@ for _row in FD.in_rows(dict(
         date="2026-12-31（同 v0.2 DCF 基準日）", amt="€B", shu="十億股", ccy="€",
         rf=(0.0337, "tradingeconomics 荷蘭 10 年期公債殖利率 2026-11-05 3.37%（3.3650；https://tradingeconomics.com/netherlands/government-bond-yield；2026-11-05 讀取）",
             "FRED IRLTLT01NLM156N（OECD 月均）：2026-08 3.285%（https://fred.stlouisfed.org/series/IRLTLT01NLM156N）；股價日 2026-10-23 的當日值未取得，用評價日附近最近可得值", "無風險利率（歐元：荷蘭 10 年期公債殖利率，2026-11-05）"),
-        beta_fixed=("=1.35" + RELEV, "=2.04" + RELEV, "=2.12" + RELEV, "Analogy",
-                    "Damodaran 全球產業 β「Semiconductor Equip」無槓桿 β 2.04（391 家；資料 2026-01；https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/BetasGlobal.html；2026-11-05 讀取），以 ASML 的 D/E（市值）與稅率依 Hamada 重新加槓桿：β＝βU ×（1＋(1−t) × D/E）",
-                    "Andy 2026-11-05 21:21：β 用 Damodaran 產業 β 重新加槓桿。歐洲表（betaEurope.xls）建置環境讀不到，改用全球表；低＝美國表無槓桿 β 1.35（31 家，Betas.html 2026-01），高＝全球表現金修正後無槓桿 β 2.12；個股迴歸 β 未取得"),
+        beta_fixed=("=(0.67*0.8*2.23+0.33)" + RELEV, "=1.824" + RELEV, "=2.23" + RELEV, "Derived",
+                    "自算產業 β：EU 半導體設備 同業 3 家中位數（ASML.AS、ASM.AS、BESI.AS；Yahoo Finance 月報酬 2021-11～2026-10，對 AEX 指數 ^AEX 迴歸，Hamada 去槓桿、現金修正）無槓桿 β 2.23；以 ASML 的 D/E（市值）與稅率依 Hamada 重新加槓桿：β＝βU ×（1＋(1−t) × D/E）",
+                    "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）：採用無槓桿 β 1.824。低／高（Analogy）：低＝中位數 × 0.8 再 Blume 調整（無槓桿 1.525）、高＝中位數未調整（2.23）；取代 v0.3 的 Damodaran 全球表"),
         crp=(0.0, "Verified", "Damodaran 國家風險溢酬（2026-01-05）：荷蘭 Aaa、CRP 0.00%（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html）", "2026-07 更新版（ctrypremJuly26.xlsx）建置環境讀不到；荷蘭為 Aaa，預期仍為 0"),
         kd=("=rf+0.005", "Assumed", "rf ＋ 0.5 個百分點信用利差（ASML 為 A 級以上歐元公司債發行人）", "負債占資本不到 1%，對 WACC 影響可忽略"),
         tax_w=("=g_tax", "Interested-party", "FY2026 有效稅率指引約 17%（In 頁 g_tax）", "NOPAT 各年也用 g_tax；淨利 ÷ 營業利益 nioi（0.85）含稅與利息收益，與本稅率一致"),
@@ -578,7 +578,7 @@ CFG_V2 = dict(cols=FYC, scn={"A": "順利", "B": "平平", "C": "不如預期"},
     pe10='F26:F35',
     pe10_note='現價 ÷ 各情境 FY2028 EPS 在 2016–2025 年底 P/E（自算）的分位；只作檢查，不進目標價',
     px_note='現價＝In 頁 px（Euronext 2026-10-23 收盤）',
-    method='DCF（v0.3 標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加（股權報酬視為費用），以 WACC 折現到 2026 年底（期中慣例），FY2027–32 明確期（FY2030 起收斂法），終值＝NOPAT(FY2033) ×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC；EV 加淨現金與權益投資 ÷ 稀釋股數，以 ke 推到 12 個月後並扣除期間股利（DCF 頁、tools/fcff_dcf.py；規格 docs/plan/個股DCF標準規格.md）。β 為 Damodaran 全球半導體設備產業 β 依 ASML 資本結構重新加槓桿（股權成本與 WACC 見 0.1 節，高於舊法單一折現率 10%）。Comparable：應用材料、科林研發、科磊、東京威力科創、ASM International 前瞻 P/E 中位數 × 12 個月後前瞻 EPS（同業多為美元計價，倍數不受幣別影響）。偏誤：ASML 的 EUV 獨占通常享有溢價，用同業中位數偏低估；十年平均淨利率約兩成六，情境 C 收斂偏保守；產業 β 為全球表（含小型高 β 設備股），股權成本偏高、DCF 偏低。',
+    method='DCF（v0.3 標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加（股權報酬視為費用），以 WACC 折現到 2026 年底（期中慣例），FY2027–32 明確期（FY2030 起收斂法），終值＝NOPAT(FY2033) ×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC；EV 加淨現金與權益投資 ÷ 稀釋股數，以 ke 推到 12 個月後並扣除期間股利（DCF 頁、tools/fcff_dcf.py；規格 docs/plan/個股DCF標準規格.md）。β 為自算產業 β（歐洲半導體設備同業中位數，Blume 調整）依 ASML 資本結構重新加槓桿（股權成本與 WACC 見 0.1 節）。Comparable：應用材料、科林研發、科磊、東京威力科創、ASM International 前瞻 P/E 中位數 × 12 個月後前瞻 EPS（同業多為美元計價，倍數不受幣別影響）。偏誤：ASML 的 EUV 獨占通常享有溢價，用同業中位數偏低估；十年平均淨利率約兩成六，情境 C 收斂偏保守；產業 β 的歐洲同業只有 3 家，樣本小。',
     readme=['v0.2（2026-10-25）估值 v2：Val 頁新增「0. 目標價」（放在既有內容之後，不位移既有列）＝0.5 × DCF 目標價（股東現金流＝EPS ×（1 − g／ROE），FY2027–32 明確期＋永續，r 10%、g 4%，情境權重 A 0.3／B 0.5／C 0.2）＋0.5 × Comparable 目標價（同業前瞻 P/E 中位數 × 12 個月後前瞻 EPS）；另列 Comparable 單獨目標價、市場共識目標價與差距拆解、歷史分位檢查。原「0. 目標價與上檔空間」改名「舊法：規則值情境加權（參考）」，不再叫目標價。', '預估期間延伸到 FY2032：FY2027–FY2029 由驅動因子推導；FY2030 起為收斂法，非驅動因子推導（PL 頁底部延伸區塊，灰底）。情境對應：A＝順利、B＝平平、C＝不如預期（原為顆數情境）。本版未做先驗，無 Andy 合理 P/E 對照。'])
 
 # ---------------- 估值 v2（2026-10-25，Andy 11:18／11:20／11:28／11:53）：PL 延伸到 FY2032（收斂法）＋ Val「0. 目標價」（DCF 與 Comparable 加權） ----------------
@@ -953,7 +953,7 @@ for t_ in [
     "命題 3：每股值多少——以 DCF 與同業倍數加權的目標價，相對現價的上檔空間是多少。",
     f'="重點 1：加權目標價"&IF(Val!B{vup}>=0,"略高於","略低於")&"現價，投資建議"&Val!B{vrec}&"：加權目標價約 "&{T0(f"Val!B{vw}")}&" 歐元，比現價 "&TEXT(Val!B{vpx},"#,##0.0")&" "&{UP(f"Val!B{vup}")}&"（上檔空間在正負 25% 之間為中立）。兩種方法差很多：DCF 約 "&{T0(f"Val!B{vd}")}&"、Comparable（相對倍數調整後）約 "&{T0(f"Val!B{vca}")}&"，各占 "&TEXT({I_("tp_w_dcf")},"0%")&" 與 "&TEXT(1-{I_("tp_w_dcf")},"0%")&"。"',
     f'="重點 2：設備市場情境是最大變數：2027 年三情境每股盈餘相近（順利／平平／不如預期 "&{T2(f"DCF!B{E27}")}&"／"&{T2(f"DCF!C{E27}")}&"／"&{T2(f"DCF!D{E27}")}&" 歐元；設備市場模型 2027 年三情境相同，差異只來自中國與 IBM 成長假設），2028 年拉開到 "&{T2(f"DCF!B{E28}")}&"／"&{T2(f"DCF!C{E28}")}&"／"&{T2(f"DCF!D{E28}")}&"。不如預期情境（2028 年晶圓前段設備支出 "&{WFC}&"）的 2028 年每股盈餘比順利情境低 "&TEXT(-Sens!H{s_c},"0.0%")&"，也低於 2026 年錨點的 "&{T2(f"Recon!C{r_eps26}")}&"。"',
-    f'="重點 3：DCF 改為標準版（無槓桿自由現金流折現）："&"WACC "&TEXT(wacc,"0.0%")&"（股權成本 "&TEXT(ke,"0.0%")&"＝rf "&TEXT(rf,"0.00%")&" ＋ β "&TEXT(beta,"0.00")&" × ERP "&TEXT(erp,"0%")&"；β 為 Damodaran 全球半導體設備產業 β 依 ASML 資本結構重新加槓桿（產業類比），ERP 5% 與 RONIC＝WACC 為假設）、永續成長率 "&TEXT(g_tv,"0.0%")&"，DCF 目標價 "&{T0(f"Val!B{vd}")}&"（舊法股東現金流 "&{T0(f"README!B{OLD['dcf']}")}&"）。平平情境 2030 年起依收斂法（非驅動因子推導）每股盈餘逐年下滑，2032 年 "&{T2(f"DCF!C{E32}")}&"，低於 2029 年的 "&{T2(f"DCF!C{E29}")}&"；終值現值占平平情境企業價值 "&TEXT(Val!C{_rw(V, "其中：終值現值占 EV")},"0%")&"、隱含終值 EV／EBITDA "&TEXT(Val!C{_rw(V, "隱含終值 EV／EBITDA")},"0.0")&" 倍。以情境加權目標價為基準，β 改為 "&TEXT(beta_lo,"0.00")&"（美國產業表）時加權目標價 "&{SG(f"Sens!D{_rw(_SE, "β 低／高")}")}&"、WACC −1pt／＋1pt 時 "&{SG(f"Sens!D{_rw(_SE, "WACC ±1pt")}")}&"／"&{SG(f"Sens!F{_rw(_SE, "WACC ±1pt")}")}&"；「"&Sens!A{s_w8}&"」時 "&{SG(f"Sens!D{s_w8}")}&"／"&{SG(f"Sens!F{s_w8}")}&"。Comparable 用同業前瞻本益比中位數 "&TEXT(Val!B{vm},"0.0")&" 倍 × 相對倍數調整係數 "&TEXT(Val!B{vk},"0.00")&"（ASML 過去十年前瞻本益比相對同業的比值），得 "&{T0(f"Val!B{vca}")}&"。"',
+    f'="重點 3：DCF 改為標準版（無槓桿自由現金流折現）："&"WACC "&TEXT(wacc,"0.0%")&"（股權成本 "&TEXT(ke,"0.0%")&"＝rf "&TEXT(rf,"0.00%")&" ＋ β "&TEXT(beta,"0.00")&" × ERP "&TEXT(erp,"0%")&"；β 為自算產業 β（歐洲半導體設備同業中位數，Blume 調整）依 ASML 資本結構重新加槓桿，ERP 5% 與 RONIC＝WACC 為假設）、永續成長率 "&TEXT(g_tv,"0.0%")&"，DCF 目標價 "&{T0(f"Val!B{vd}")}&"（舊法股東現金流 "&{T0(f"README!B{OLD['dcf']}")}&"）。平平情境 2030 年起依收斂法（非驅動因子推導）每股盈餘逐年下滑，2032 年 "&{T2(f"DCF!C{E32}")}&"，低於 2029 年的 "&{T2(f"DCF!C{E29}")}&"；終值現值占平平情境企業價值 "&TEXT(Val!C{_rw(V, "其中：終值現值占 EV")},"0%")&"、隱含終值 EV／EBITDA "&TEXT(Val!C{_rw(V, "隱含終值 EV／EBITDA")},"0.0")&" 倍。以情境加權目標價為基準，β 改為 "&TEXT(beta_lo,"0.00")&"（敏感度低案例）時加權目標價 "&{SG(f"Sens!D{_rw(_SE, "β 低／高")}")}&"、WACC −1pt／＋1pt 時 "&{SG(f"Sens!D{_rw(_SE, "WACC ±1pt")}")}&"／"&{SG(f"Sens!F{_rw(_SE, "WACC ±1pt")}")}&"；「"&Sens!A{s_w8}&"」時 "&{SG(f"Sens!D{s_w8}")}&"／"&{SG(f"Sens!F{s_w8}")}&"。Comparable 用同業前瞻本益比中位數 "&TEXT(Val!B{vm},"0.0")&" 倍 × 相對倍數調整係數 "&TEXT(Val!B{vk},"0.00")&"（ASML 過去十年前瞻本益比相對同業的比值），得 "&{T0(f"Val!B{vca}")}&"。"',
     f'="重點 4：中國與產能都不是主要變數：模型的中國占系統營收由 2026 年 "&TEXT({I_("cn_sh26")},"0%")&" 降到 2029 年 "&TEXT(Recon!G{r_cn},"0.0%")&"～"&TEXT(Recon!C{r_cn},"0.0%")&"（不如預期～順利）；以順利情境為底，中國年成長由 "&TEXT({I_("g_cn_A")},"0%")&" 改為 "&TEXT({I_lo("g_cn_A")},"0%")&"，2028 年每股盈餘只少 "&TEXT(-Sens!H{s_cn},"0.0%")&"。依本模型假設的產能成長，2027 年系統需求只用到產能上限的 "&TEXT(Recon!E{r_cap27},"0%")&"（平平情境），出貨由需求決定、不受產能限制。"',
 ]:
     RD.cell(rr, 1, t_); rr += 1
@@ -973,5 +973,8 @@ RD["A1"] = (RD["A1"].value.replace("v0.2.2", "v0.3", 1) + "；v0.2.4（2026-11-0
 RD.cell(RD.max_row + 2, 1, "v0.3（2026-11-05）：DCF 改為標準版（docs/plan/個股DCF標準規格.md v1.0；tools/fcff_dcf.py）。(1) Val 0.1 節改為 FCFF＋WACC 摘要（折現率、明確期現值、終值現值、EV、淨現金、每股價值、終值占比、隱含終值倍數），列數不變；"
         "(2) 新增 DCF 頁：三情境 FCFF 明細與檢查列；原 Val 0.1 節的情境 EPS 表移到 DCF 頁（Comparable 讀此表，數值不變）；(3) In 頁新增 M2 節（rf 荷蘭 10 年期公債、Damodaran 全球半導體設備產業 β 重新加槓桿、ERP 5%、CRP 0、g＝MIN(3%, rf)、RONIC＝WACC、資本結構、折舊／資本支出／營運資金比例）；刪除 tp_r、tp_roe；"
         "(4) Sens 頁目標價參數段改為標準案例（WACC ±1pt、β、ERP、g、RONIC、資本支出、營運資金、權益投資、終值替代法、DCF 權重）。新舊目標價對照見本頁「v0.2.4 → v0.3 對照」列。")
+# v0.3.1（2026-11-05）：β 改自算產業 β（Andy 2026-11-05 22:55）；其他模型不變
+RD["A1"] = RD["A1"].value + "；v0.3.1（2026-11-05）β 改自算產業 β（EU 半導體設備同業中位數、Blume 調整；Andy 2026-11-05 22:55），其他模型不變"
+RD.cell(RD.max_row + 2, 1, "v0.3.1（2026-11-05）：β 由 Damodaran 全球產業表改為自算產業 β——EU 半導體設備同業 3 家（ASML.AS、ASM.AS、BESI.AS）Yahoo Finance 月報酬 2021-11～2026-10 對 ^AEX 迴歸、Hamada 去槓桿、現金修正後的中位數，Blume 調整 0.67β＋0.33，再依 ASML 的 D/E 與稅率重新加槓桿（In 頁 beta）；Sens β 低／高改為中位數 × 0.8 再 Blume／中位數未調整。評價日 2026-12-31 不變，其他模型不變")
 FD.yellow(IN)   # v0.3：M2 節判斷參數黃底
 wb.save(sys.argv[1])
