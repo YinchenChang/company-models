@@ -109,7 +109,7 @@ def hero_rule_a(out):
         adj = None
     if adj and abs(WB["Val"].cell(adj, 2).value - WB["Val"].cell(tpm, 2).value) > 1e-9:
         note = h.get("note") or []
-        note = (note if isinstance(note, list) else [note]) + ["；進加權的 Comparable 為相對倍數調整後 ", f"@Val!B{adj}|n2", " 元。"]
+        note = (note if isinstance(note, list) else [note]) + ["；進加權的 Comparable 為相對倍數調整後 ", f"@Val!B{adj}|n2", " 韓元。"]
         h["note"] = note
     return out
 
@@ -188,6 +188,31 @@ _DCFK = ["rf", "rf_us", "beta_u", "beta_u_med", "beta_de", "beta_du", "beta", "e
 _CAPK = ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "bs_date", "stub_frac", "stub_div", "sh_v"]
 _FCK = ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]
 _J = [k for k in SK.get("J", []) if k not in _DCFK + _CAPK + _FCK]
+
+def scn_table_fix(sec):
+    """第三輪修正第 32 點：情境驅動表依 In 頁「情境驅動對照」節標題找列範圍（不寫死列號）；百分比列以 % 顯示。"""
+    ws = WB["In"]
+    t = next(r for r in range(4, ws.max_row + 1) if str(ws.cell(r, 1).value or "").startswith("情境驅動對照"))
+    h = t + 1; rows = []; r = h + 1
+    while ws.cell(r, 1).value not in (None, ""):
+        rows.append(r); r += 1
+    assert ws.cell(rows[-1], 1).value == "scn_w", ws.cell(rows[-1], 1).value
+    def fm(rr):
+        u = str(ws.cell(rr, 3).value or "")
+        vals = [ws.cell(rr, c).value for c in (4, 5, 6) if isinstance(ws.cell(rr, c).value, (int, float))]
+        if u in ("%", "pt") or "%" in u: return "p1"
+        return "n0" if vals and max(abs(v) for v in vals) >= 100 else "n2"
+    for b in sec["blocks"]:
+        if b.get("type") == "table" and str(b.get("caption", "")).startswith("情境驅動"):
+            b["head"] = [f"@In!B{h}", f"@In!D{h}", f"@In!E{h}", f"@In!F{h}", f"@In!C{h}"]
+            b["rows"] = [[f"@In!B{rr}", f"@In!D{rr}|{fm(rr)}", f"@In!E{rr}|{fm(rr)}", f"@In!F{rr}|{fm(rr)}", f"@In!C{rr}"] for rr in rows]
+            b.pop("rowgen", None)
+            return
+    raise KeyError("情境驅動表")
+
+
+scn_table_fix(SEC["drivers"])
+
 SPEC = {
  "in_skip": [in_skip_token(), in_skip_token("情境專屬列")] + SKIP_EXTRA,
  "in_groups": GROUPS(SK) + [
@@ -200,7 +225,7 @@ SPEC = {
     ["自由現金流（折舊、資本支出、營運資金）", _FCK],
     ["Wattonomics 錨定（只進敏感度）", SK["Z"]]]]],
  "blocks_to": {},
- "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+ "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "＋Stub 期 FCFF", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
           "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"]},
  "n_recon": 4,
 }
