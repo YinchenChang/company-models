@@ -1,4 +1,13 @@
-# accretech/ — 東京精密（Tokyo Seimitsu／ACCRETECH，7729.T）收支與估值模型 v0.2
+# accretech/ — 東京精密（Tokyo Seimitsu／ACCRETECH，7729.T）收支與估值模型 v0.3
+
+## v0.3（2026-11-05）：標準版 DCF（無槓桿自由現金流 FCFF＋WACC）＋HTML 新版面 v1.0
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0 與 `tools/fcff_dcf.py`：Val 0.1 節由股東現金流法（EPS ×（1 − g ÷ ROE）、折現率 10%）改為 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現到 2026-12-31（FY2026＝2026-04～2027-03，只計 2027-01～03）；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC；EV 加淨現金 ÷ 股數，以 ke 推到 12 個月後並扣除期間股利。
+- EBIT：FY2026–29 取 PL 營業利益（SPE＋計測）；FY2030–32 由淨利 ÷ nioi 還原；稅率為近三年有效稅率平均 26.5%。折舊 3.4%、資本支出 7.3%（FY2027 起收斂到折舊 × 1.5）、營運資金 65.2% 營收（存貨與應收占比高）。
+- 折現率：rf 2.82%（日本 10 年期國債，財務省 2026-11-02）；β＝Damodaran 全球「Semiconductor Equip」無槓桿 β 2.04 重新加槓桿 ≈ 2.07（日本表讀不到）；ERP 5%＋日本 CRP 0.91% → ke 15.1%、WACC 14.8%；g＝2.82%（＝rf）。
+- HTML 新版面 v1.0：xlsx README 頁新增「展示層」（命題摘要、命題 1–3、重點 1–4）與「命題回覆」兩段，數字全部以公式帶出；`html.json` 改名 `html_src.json`，新增 `gen_html_json.py`（共用轉換器）；橫幅中間格＝只看 Comparable 目標價（市場主流同業法），相對倍數調整後值進附註。
+- 結果（以 xlsx 為準）：DCF 目標價 10,508 → 7,460；加權目標價 13,477 → 11,953；上檔空間 −13.2% → −23.0%；投資建議 中立 → 中立（接近 −25% 放空門檻）。差異拆解：現金流口徑 +1,705、折現率 −4,464、終值 −39、期間股利 −251。終值現值占 EV 63%／48%／39%，隱含終值 EV／EBITDA 4.4／4.3／4.2 倍。
+- 成品：`dist/20261105_東京精密個股模型_v0.3.xlsx`、`.html`；v0.2 移到 `dist/_待刪除/`。
 
 ## v0.2（2026-11-04）：滾入 FY2026 上半實績與 11-04 通期再上修（數值改變）
 
@@ -50,8 +59,8 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_accretech.py` | 產生器（openpyxl 寫公式） |
-| `dist/20261104_東京精密個股模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格）；舊版在 `dist/_待刪除/` |
-| `dist/20261104_東京精密個股模型_v0.2.html` | HTML 展示層（`html.json` 設定；數字全部取自 xlsx） |
+| `dist/20261104_東京精密個股模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格）；舊版在 `dist/_待刪除/` |
+| `dist/20261104_東京精密個股模型_v0.3.html` | HTML 展示層（`html.json` 設定；數字全部取自 xlsx） |
 
 建置：`python3 accretech/build_accretech.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序是 README、In、Q、Hist、PL、Val、Recon、Sens、Sources（比照 `disco/`）。
 
