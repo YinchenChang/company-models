@@ -1,4 +1,4 @@
-# ASML（ASML.AS／ASML ADR）收支與估值模型 v0.2.1（AI 半導體 Project 步驟 5：設備與材料）
+# ASML（ASML.AS／ASML ADR）收支與估值模型 v0.2.4（AI 半導體 Project 步驟 5：設備與材料）
 # 用法：python3 asml/build_asml.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年（FY2026＝2026-01～12）。金額：歐元（Q 頁 €M，PL 頁 €B）；EPS 為歐元。
 # 結構比照 advantest/build_advantest.py：README、In、Q、Units、PL、Val、Recon、Sens、Sources。
@@ -805,4 +805,55 @@ for a_, b_ in (("E", "D"), ("H", "G")): SE[f"{a_}{nn + 2}"] = f"={b_}{nn + 2}/{b
 RMX.apply(wb, "asml")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, "v0.2.3", "2026-10-30")  # v0.2.3：In 頁版面（個股模型原則第 8 節；數值不變）
+
+# ---------------- v0.2.4（2026-11-05）：只改展示層——README 新增「展示層」「命題回覆」兩段（個股 HTML 版面規格 v1.0；公式帶數字）----------------
+# 新列放在 README 既有內容之後，不位移既有列；README 以外的工作表不動
+def _rw(ws, text, exact=False, col=1, start=1):
+    for r_ in range(start, ws.max_row + 1):
+        v_ = ws.cell(r_, col).value
+        if isinstance(v_, str) and ((v_.strip() == text) if exact else v_.strip().startswith(text)):
+            return r_
+    raise KeyError((ws.title, text))
+_IN = {IN.cell(r_, 1).value: r_ for r_ in range(4, IN.max_row + 1) if IN.cell(r_, 1).value}
+I_ = lambda k: f"In!E{_IN[k]}"
+I_lo = lambda k: f"In!D{_IN[k]}"
+_RC, _SE = wb["Recon"], wb["Sens"]
+vw, vd, vc = _rw(V, "目標價（DCF 與 Comparable 加權）", exact=True), _rw(V, "DCF 目標價（情境加權）"), _rw(V, "Comparable 目標價", exact=True)
+vca, vk, vm = _rw(V, "Comparable 目標價（相對倍數調整後）"), _rw(V, "相對倍數調整係數"), _rw(V, "同業前瞻 P/E 中位數")
+vup, vuc, vcons, vrec = _rw(V, "上檔空間：加權目標價"), _rw(V, "上檔空間：Comparable"), _rw(V, "市場共識目標價"), _rw(V, "投資建議", exact=True)
+vpx = _rw(V, "現價（")
+e0 = _rw(V, "情境 EPS（FY2027")
+E27, E28, E29, E32 = e0 + 1, e0 + 2, e0 + 3, e0 + 6
+r_eps26 = _rw(_RC, "FY2026 EPS（€）"); r_cap27 = _rw(_RC, "FY2027：系統需求 ÷ 產能上限"); r_cn = _rw(_RC, "FY2025 中國占總營收")
+s_c, s_cn, s_cap, s_w8 = _rw(_SE, "情境 C", exact=True), _rw(_SE, "中國年成長 −10%"), _rw(_SE, "2027 產能 +20%"), _rw(_SE, "DCF 權重 0.8")
+UP = lambda c: f'IF({c}>=0,"高 ","低 ")&TEXT(ABS({c}),"0.0%")'
+SG = lambda c: f'TEXT({c},"+0.0%;-0.0%")'
+T0 = lambda c: f'TEXT({c},"#,##0")'
+T2 = lambda c: f'TEXT({c},"0.00")'
+WFC = f'TEXT({I_("wfC_28")}/{I_("wfC_27")}-1,"0%")'
+rr = RD.max_row + 2
+RD.cell(rr, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；v0.2.4 新增，上方各列保留）").font = BOLD; rr += 1
+for t_ in [
+    "命題：ASML 是 EUV 唯一供應者，AI 帶動先進邏輯與記憶體擴產；問題是晶圓前段設備支出在 2027 年後放緩、中國營收占比續降時，盈餘能否續增，以及現價是否已經反映。三個問題如下。",
+    "命題 1：設備支出放緩時盈餘還能成長嗎——AI 帶動的擴產若在 2027 年後停下來（設備支出持平或下滑），ASML 的每股盈餘是否仍高於 2026 年。",
+    "命題 2：中國占比下降與產能擴充會不會卡住盈餘——中國營收占比續降時，非中國需求能否補上；公司擴充的產能會不會限制出貨。",
+    "命題 3：每股值多少——以 DCF 與同業倍數加權的目標價，相對現價的上檔空間是多少。",
+    f'="重點 1：加權目標價略高於現價，投資建議"&Val!B{vrec}&"：加權目標價約 "&{T0(f"Val!B{vw}")}&" 歐元，比現價 "&TEXT(Val!B{vpx},"#,##0.0")&" "&{UP(f"Val!B{vup}")}&"（上檔空間在正負 25% 之間為中立）。兩種方法差很多：DCF 約 "&{T0(f"Val!B{vd}")}&"、Comparable（相對倍數調整後）約 "&{T0(f"Val!B{vca}")}&"，各占 "&TEXT({I_("tp_w_dcf")},"0%")&" 與 "&TEXT(1-{I_("tp_w_dcf")},"0%")&"。"',
+    f'="重點 2：設備市場情境是最大變數：2027 年三情境每股盈餘相近（順利／平平／不如預期 "&{T2(f"Val!B{E27}")}&"／"&{T2(f"Val!C{E27}")}&"／"&{T2(f"Val!D{E27}")}&" 歐元；設備市場模型 2027 年三情境相同，差異只來自中國與 IBM 成長假設），2028 年拉開到 "&{T2(f"Val!B{E28}")}&"／"&{T2(f"Val!C{E28}")}&"／"&{T2(f"Val!D{E28}")}&"。不如預期情境（2028 年晶圓前段設備支出 "&{WFC}&"）的 2028 年每股盈餘比順利情境低 "&TEXT(-Sens!H{s_c},"0.0%")&"，也低於 2026 年錨點的 "&{T2(f"Recon!C{r_eps26}")}&"。"',
+    f'="重點 3：DCF 偏低、Comparable 偏高，權重左右結果：DCF 用折現率 "&TEXT({I_("tp_r")},"0%")&"、永續成長 "&TEXT({I_("tp_g")},"0%")&"；平平情境 2030 年起依收斂法（非驅動因子推導）每股盈餘逐年下滑，2032 年 "&{T2(f"Val!C{E32}")}&"，低於 2029 年的 "&{T2(f"Val!C{E29}")}&"，所以 DCF 只有 "&{T0(f"Val!B{vd}")}&"。Comparable 用同業前瞻本益比中位數 "&TEXT(Val!B{vm},"0.0")&" 倍，再乘相對倍數調整係數 "&TEXT(Val!B{vk},"0.00")&"（ASML 過去十年前瞻本益比相對同業的比值），得 "&{T0(f"Val!B{vca}")}&"。敏感度測試「"&Sens!A{s_w8}&"」時，加權目標價變為 "&{T0(f"Sens!E{s_w8}")}&"（"&{SG(f"Sens!F{s_w8}")}&"）。"',
+    f'="重點 4：中國與產能都不是主要變數：模型的中國占系統營收由 2026 年 "&TEXT({I_("cn_sh26")},"0%")&" 降到 2029 年 "&TEXT(Recon!G{r_cn},"0.0%")&"～"&TEXT(Recon!C{r_cn},"0.0%")&"（不如預期～順利）；以順利情境為底，中國年成長由 "&TEXT({I_("g_cn_A")},"0%")&" 改為 "&TEXT({I_lo("g_cn_A")},"0%")&"，2028 年每股盈餘只少 "&TEXT(-Sens!H{s_cn},"0.0%")&"。依本模型假設的產能成長，2027 年系統需求只用到產能上限的 "&TEXT(Recon!E{r_cap27},"0%")&"（平平情境），出貨由需求決定、不受產能限制。"',
+]:
+    RD.cell(rr, 1, t_); rr += 1
+rr += 1
+RD.cell(rr, 1, "命題回覆（HTML 用；依本模型計算回答開頭三個命題）").font = BOLD; rr += 1
+for t_ in [
+    f'="設備支出放緩時盈餘還能成長嗎？答：2027 年可以，2028 年起要看設備市場。2027 年三情境每股盈餘 "&{T2(f"Val!B{E27}")}&"／"&{T2(f"Val!C{E27}")}&"／"&{T2(f"Val!D{E27}")}&" 歐元，都高於 2026 年錨點 "&{T2(f"Recon!C{r_eps26}")}&"。2028 年設備支出持平的平平情境，每股盈餘 "&{T2(f"Val!C{E28}")}&"、2029 年 "&{T2(f"Val!C{E29}")}&"，大致持平；2028 年設備支出 "&{WFC}&" 的不如預期情境降到 "&{T2(f"Val!D{E28}")}&"，低於 2026 年。盈餘續增要靠設備支出續增（順利情境 2028 年 "&{T2(f"Val!B{E28}")}&"）；本模型假設的微影強度與價格提升（每年 "&TEXT({I_("g_int")},"0%")&"）不足以抵銷設備支出下滑。"',
+    f'="中國占比下降與產能擴充會卡住盈餘嗎？答：影響都不大。模型的中國占系統營收由 2026 年 "&TEXT({I_("cn_sh26")},"0%")&" 降到 2029 年 "&TEXT(Recon!G{r_cn},"0.0%")&"～"&TEXT(Recon!C{r_cn},"0.0%")&"（對照的 2025 年 "&TEXT(Recon!B{r_cn},"0%")&" 是占總營收，口徑不同）；以順利情境為底，中國年成長由 "&TEXT({I_("g_cn_A")},"0%")&" 改為 "&TEXT({I_lo("g_cn_A")},"0%")&"，2028 年每股盈餘少 "&TEXT(-Sens!H{s_cn},"0.0%")&"。產能方面，依本模型假設（2027 年產能成長 "&TEXT({I_("cap_27")},"0%")&"），2027 年系統需求只用到產能上限的 "&TEXT(Recon!C{r_cap27},"0%")&"～"&TEXT(Recon!G{r_cap27},"0%")&"（順利～不如預期）；把 2027 年產能成長降到 "&TEXT({I_lo("cap_27")},"0%")&"，每股盈餘變動 "&TEXT(Sens!H{s_cap},"0.0%")&"。"',
+    f'="每股值多少？答：加權目標價約 "&TEXT(Val!B{vw},"#,##0.00")&" 歐元（DCF "&TEXT(Val!B{vd},"#,##0.00")&" 與相對倍數調整後的 Comparable "&TEXT(Val!B{vca},"#,##0.00")&"，DCF 權重 "&TEXT({I_("tp_w_dcf")},"0%")&"），比現價 "&TEXT(Val!B{vpx},"#,##0.0")&" "&{UP(f"Val!B{vup}")}&"，投資建議"&Val!B{vrec}&"。只看同業倍數、不做相對倍數調整的 Comparable 目標價為 "&TEXT(Val!B{vc},"#,##0.00")&"（上檔空間 "&{SG(f"Val!B{vuc}")}&"）；頁首橫幅的 Comparable 目標價是這個值。市場共識目標價 "&{T0(f"Val!B{vcons}")}&" 高出許多，主因是共識隱含的本益比約 "&TEXT({I_("cons_tp")}/{I_("cons_feps")},"0.0")&" 倍，遠高於同業中位數 "&TEXT(Val!B{vm},"0.0")&" 倍。"',
+]:
+    RD.cell(rr, 1, t_); rr += 1
+rr += 1
+RD.cell(rr, 1, "HTML 橫幅用：Comparable 目標價（相對倍數調整後）的上檔空間（＝Val 相對倍數調整後 Comparable 目標價 ÷ 現價 − 1；加權目標價使用該值）")
+RD.cell(rr, 2, f"=Val!B{vca}/Val!B{vpx}-1").number_format = "0.0%"
+RD["A1"] = RD["A1"].value.replace("v0.2.2", "v0.2.4", 1) + "；v0.2.4（2026-11-05）只改展示層（README 展示層與命題回覆、HTML 新版面 v1.0），數值不變"
 wb.save(sys.argv[1])

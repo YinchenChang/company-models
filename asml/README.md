@@ -1,4 +1,12 @@
-# asml/ — ASML（ASML.AS／ASML ADR）收支與估值模型 v0.2.1
+# asml/ — ASML（ASML.AS／ASML ADR）收支與估值模型 v0.2.4
+
+## v0.2.4（2026-11-05）：HTML 新版面 v1.0（只改展示層，數值不變）
+
+- 依 `docs/plan/個股HTML版面規格.md` v1.0：xlsx README 頁最後新增「展示層」（命題摘要、命題 1–3、白話重點 1–4）與「命題回覆」兩段，數字全部以公式取自 Val／Recon／Sens／In；另一列（B 欄公式）給橫幅用的「Comparable 目標價（相對倍數調整後）」上檔空間。README 以外的工作表與 v0.2.3 逐格相同（`tools/xlsx_diff.py`：差異只在 README）。
+- HTML：舊設定改名 `html_src.json`（內容不動），`gen_html_json.py` 經共用轉換器 `tools/company_html/relayout.py` 產生 `html.json`。參數依業務分三塊：系統銷售（設備市場需求、微影強度與產能、邏輯／記憶體組成、中國、EUV 核對、Wattonomics 係數）、裝機基礎管理（IBM）、全公司（指引、利潤率、股價、共識、目標價規則與折現率）。
+- 橫幅並列加權目標價、相對倍數調整後的 Comparable 目標價（加權價實際使用者）與現價，附註未調整的 Comparable 目標價；目標價長條圖也補上調整後值，避免讀成「加權價高於兩法」。
+- 修正舊設定的情境驅動表列號（In 頁插入 Wattonomics 係數後位移三列）；敏感度章新增加權目標價龍捲風圖（目標價參數案例）。
+- 成品：`dist/20261105_ASML個股模型_v0.2.4.xlsx`、`.html`；舊版移到 `dist/_待刪除/`。敏感度未重跑（數值不變）。
 
 ## v0.2.3（2026-10-30）：In 頁「敏感度低／高」與「情境 A／B／C」分開（數值不變）
 
@@ -28,9 +36,9 @@ AI 半導體 Project 步驟 5（設備與材料）。獨立的 Python→Excel �
 | 檔案 | 內容 |
 |---|---|
 | `build_asml.py` | 產生器（參數與公式） |
-| `dist/20261028_ASML個股模型_v0.2.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
-| `html.json` | HTML 展示層設定（格式見 `tools/company_html/README.md`） |
-| `dist/20261028_ASML個股模型_v0.2.2.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
+| `dist/20261105_ASML個股模型_v0.2.4.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `html_src.json`、`gen_html_json.py` → `html.json` | HTML 展示層設定（舊版面設定 → 版面規格 v1.0；勿手改 `html.json`） |
+| `dist/20261105_ASML個股模型_v0.2.4.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
 
 建置：`python3 asml/build_asml.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序是 README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/equipment/dist`（晶圓前段設備三情境分項、各情境見頂年度、SEMI WFE）與 `tools/cycle_position.py`；不修改它們。算力假設不自行重估，只經由設備市場模型間接使用。
 
