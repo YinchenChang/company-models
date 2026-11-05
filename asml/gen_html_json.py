@@ -3,7 +3,7 @@
 # 用法：python3 asml/gen_html_json.py（讀 asml/dist 內唯一的 xlsx）
 # 前處理（本檔）：把設備股模板的舊版面調成轉換器預期的形狀——單一參數表改作「驅動 → 推導量對照」（進附錄）、
 #   估值章的 kv 改成具名表格、舊法規則值與同業名單摺疊、補 DCF 折現率表與目標價敏感度龍捲風圖；
-# 後處理：還原驅動因子章說明、EPS 龍捲風圖標題（轉換器預設寫「加權目標價」）、橫幅改列相對倍數調整後的 Comparable。
+# 後處理：還原驅動因子章說明、EPS 龍捲風圖標題（轉換器預設寫「加權目標價」）、橫幅中間格＝只看 Comparable（市場主流同業法），調整後值進附註。
 import copy, glob, json, os, re, sys
 import openpyxl
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -171,17 +171,18 @@ def post(cfg, intro, tor, scen_kv, spec):
             b["title"] = base + ("（未達兩位數百分比）" if b.get("collapse") else "（變動達兩位數百分比的案例；一次改一個輸入，整本重算）")
         if b["type"] == "tornado" and b.get("collapse"):
             b["summary"] = "展開：" + (tor.get(b["value_col"]) or "加權目標價") + " 變動未達兩位數百分比的案例"
-    # 橫幅：Comparable 改列加權目標價實際使用的相對倍數調整後值（上檔空間由 README 公式帶出），另註明市場主流同業法的值
+    # 橫幅（補充規則 A）：中間格＝只看 Comparable 目標價（市場主流同業法，未做相對倍數調整）與其上檔空間；
+    #   進加權的相對倍數調整後 Comparable 放附註（數字由 xlsx 帶出）
     v = lambda p, **kw: row("Val", p, **kw)
     tp, ca, cu, px, up, rec = v("目標價（DCF 與 Comparable 加權）", exact=True), v("Comparable 目標價（相對倍數調整後）"), v("Comparable 目標價", exact=True), v("現價（"), v("上檔空間：加權目標價"), v("投資建議", exact=True)
-    rd = row("README", "HTML 橫幅用：Comparable 目標價（相對倍數調整後）")
+    rd = row("README", "HTML 橫幅附註用：Comparable 目標價（相對倍數調整後）")
     uc = v("上檔空間：Comparable")
     cfg["hero"] = {"rec": f"@Val!B{rec}",
                    "tiles": [[f"@Val!A{tp}", f"@Val!B{tp}|n2", ["上檔空間 ", f"@Val!B{up}|sp1"]],
-                             [f"@Val!A{ca}", f"@Val!B{ca}|n2", ["上檔空間 ", f"@README!B{rd}|sp1"]],
+                             ["只看 Comparable 目標價（市場主流同業法）", f"@Val!B{cu}|n2", ["上檔空間 ", f"@Val!B{uc}|sp1"]],
                              [f"@Val!A{px}", f"@Val!B{px}|n2", ""]],
-                   "note": ["投資建議依加權目標價判定：", f"@Val!E{rec}", "。未做相對倍數調整的 Comparable 目標價（市場主流同業法）為 ", f"@Val!B{cu}|n2",
-                            "，上檔空間 ", f"@Val!B{uc}|sp1", "。"]}
+                   "note": ["投資建議依加權目標價判定：", f"@Val!E{rec}", "。進加權的 Comparable 為相對倍數調整後 ", f"@Val!B{ca}|n2",
+                            "（上檔空間 ", f"@README!B{rd}|sp1", "）。"]}
 
 
 def in_skip():
