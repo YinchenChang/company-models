@@ -206,19 +206,19 @@
           "type": "table",
           "caption": "情境驅動（三情境並排，進加權目標價；取自 In 頁最後一節「情境驅動對照」）",
           "head": [
-            "@In!B70",
-            "@In!D70",
-            "@In!E70",
-            "@In!F70",
-            "@In!C70"
+            "@In!B94",
+            "@In!D94",
+            "@In!E94",
+            "@In!F94",
+            "@In!C94"
           ],
           "rows": [
             [
-              "@In!B71",
-              "@In!D71",
-              "@In!E71",
-              "@In!F71",
-              "@In!C71"
+              "@In!B95",
+              "@In!D95",
+              "@In!E95",
+              "@In!F95",
+              "@In!C95"
             ],
             [
               "@In!B72",
@@ -228,11 +228,11 @@
               "@In!C72"
             ],
             [
-              "@In!B73",
-              "@In!D73",
-              "@In!E73",
-              "@In!F73",
-              "@In!C73"
+              "@In!B97",
+              "@In!D97",
+              "@In!E97",
+              "@In!F97",
+              "@In!C97"
             ],
             [
               "@In!B74",
@@ -242,11 +242,11 @@
               "@In!C74"
             ],
             [
-              "@In!B75",
-              "@In!D75",
-              "@In!E75",
-              "@In!F75",
-              "@In!C75"
+              "@In!B99",
+              "@In!D99",
+              "@In!E99",
+              "@In!F99",
+              "@In!C99"
             ]
           ]
         }
@@ -503,8 +503,8 @@
               "series": 0
             },
             {
-              "label": "@Val!A114",
-              "value": "@Val!B114",
+              "label": "@Val!A112",
+              "value": "@Val!B112",
               "series": 1
             },
             {
@@ -1020,12 +1020,12 @@
           "type": "table",
           "caption": "@Sens!A836",
           "head": [
-            "@Sens!A837",
-            "@Sens!B837",
-            "@Sens!C837",
-            "@Sens!D837",
-            "@Sens!E837",
-            "@Sens!F837"
+            "@Sens!A3",
+            "@Sens!B3",
+            "@Sens!C3",
+            "@Sens!D3",
+            "@Sens!E3",
+            "@Sens!F3"
           ],
           "rowgen": {
             "sheet": "Sens",
