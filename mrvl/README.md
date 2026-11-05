@@ -1,4 +1,30 @@
-# mrvl/ — Marvell（MRVL）收支與估值模型 v0.2.2
+# mrvl/ — Marvell（MRVL）收支與估值模型 v0.3
+
+## v0.3（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）＋HTML 新版面 v1.0（模型改版，數值改變）
+
+依工作單「AI半導體 個股 DCF 改為標準版」、`docs/plan/個股DCF標準規格.md` v1.0 與 `docs/plan/個股HTML版面規格.md` v1.0；共用模組 `tools/fcff_dcf.py`（原樣取自 NVIDIA v0.3，PR #355）、`tools/company_html/relayout.py`（main）。
+
+- **FCFF**＝NOPAT＋折舊 − 資本支出 − 營運資金增加。EBIT＝non-GAAP 營業利益 − 股票薪酬（sbc_rev 9.55%，FY2024–FY2026 平均）；FY2031–FY2032 營業利益＝淨利 ÷（1 − tx_f）＋int_f。折舊只取不含併購無形資產攤銷者（2.82%）、資本支出 5.12%、營運資金 8.5% × 營收增量（FY2024–FY2026 年底平均）。
+- **WACC**＝12.45%：rf 5.00%、β 1.533（Damodaran 美國 Semiconductor 無槓桿 β 1.50〔現金修正〕以市值 D/E 2.53%、稅率 13% 重新加槓桿；Andy 2026-11-05 21:21）、ERP 5% → ke 12.66%；kd 4.58%；D＝債務本金 5.000＋租賃 0.320。β 低／高 1.42／1.91（Damodaran 美國 Semiconductor Equip 1.39／Global Semiconductor 1.87）。
+- **終值**＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝3%、RONIC＝WACC；期中慣例折到 2026-12-31（FY2027 只計 2027-01）；EV＋淨現金（現金 3.933 − 債務 5.000 − 租賃 0.320）÷ 稀釋股數 0.9212，以 ke 推到 12 個月後，扣期間股利 0.24。
+- 新增 **DCF 頁**；Val 0.1 節改為折現率與 DCF 彙總（列數不變）；In 頁刪除 tp_r、tp_roe，新增 M2 節；Sens 目標價參數表改標準版（13 列，移到案例區塊之後）；Wattonomics 錨定路徑同式；重點觀察 2 的 DCF 價格帶改公式。
+- **HTML v1.0**：README 頁新增「展示層」（命題摘要、命題 1–4、重點 1–4）、「命題回覆」（逐一回答，公式帶數字）、「本版要點與版本沿革」；原 `html.json` 改名 `html_src.json`（DCF 區塊改為 NVIDIA v0.3 範式、列號依鍵對應），新增 `gen_html_json.py`（驅動因子分四塊：客製 XPU／光互連／交換器、AEC、儲存與通訊／全公司；橫幅中間格＝只看 Comparable〔市場主流同業法〕，附註列進加權的相對倍數調整後值）。
+- 上游改讀 Broadcom v0.5 成品（`avgo/dist/20261105_Broadcom個股模型_v0.5.xlsx`，PR #374；In 值不變，只有來源檔名）。
+
+| 項目 | v0.2.4（舊：股東現金流、10%） | v0.3（標準版 FCFF＋WACC） |
+|---|---|---|
+| DCF 情境價值（A／B／C，推到 12 個月後） | 142.57／116.02／71.88 | 67.50／54.71／32.63 |
+| DCF 目標價（情境加權） | 115.16 | 54.13 |
+| Comparable（相對倍數調整後；未調整） | 104.19（138.77） | 104.19（138.77） |
+| 加權目標價 | 109.67 | 79.16 |
+| 上檔空間（現價 228.51） | −52.0% | −65.4% |
+| 投資建議 | 強力放空 | 強力放空（不變） |
+
+DCF 差異 −61.03 的拆解（情境加權、推到 12 個月後）：①現金流口徑（non-GAAP EPS × 可發放比例 → FCFF〔扣股票薪酬、資本支出、營運資金〕＋淨負債；同用 10%、g 4% 永續）−25.68；②折現率（10% → WACC 12.45%，推到目標時點用 ke 12.66%）−25.03；③終值（g 4% → 3% −5.16；永續成長法 → RONIC 價值驅動式 −4.92）−10.08；④扣期間股利 −0.24。終值占 EV 65%／62%／55%；隱含終值 EV／EBITDA 約 6.0–6.3 倍。加權下檔 −65.4% 中 DCF 貢獻 −38.2pt（約 58%）、Comparable（調整後）−27.2pt。
+
+- 成品：`dist/20261105_邁威爾個股模型_v0.3.xlsx`、`.html`；v0.2.4 移到 `dist/_待刪除/`。
+- 建置：`python3 mrvl/build_mrvl.py raw.xlsx` → LibreOffice 重算 → 放入 `dist/` → `python3 mrvl/gen_html_json.py` → `python3 tools/company_html/build_company_html.py mrvl`。
+
 
 ## v0.2.4（2026-10-30）：In 頁「敏感度低／高」與「情境 A／B／C」分開（數值不變）
 
