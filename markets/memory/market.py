@@ -20,12 +20,24 @@ for _r in _ROWS:
             _x = _r[_f]
             if isinstance(_x, (int, float)) and not isinstance(_x, bool):
                 _r[_f] = float(_x) if _r["unit"] in _FLOAT_UNITS else (int(_x) if float(_x).is_integer() else _x)
+# v0.16（Siliconomics 只給基準；決策 S41）：產業情境 A、C 的參考值改由市場層 markets/scen 持有；
+# 列序以 SCN.merged_rows 插回 Siliconomics In 列序，記憶體公司 In 頁重播與 v0.15 逐列相同
+import sys as _sys
+_sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scen"))
+import scen as SCN
+_ROWS = SCN.merged_rows(_ROWS)
+for _r in _ROWS:
+    if "id" in _r:
+        for _f in ("lo", "base", "hi"):
+            _x = _r[_f]
+            if isinstance(_x, (int, float)) and not isinstance(_x, bool):
+                _r[_f] = float(_x) if _r["unit"] in _FLOAT_UNITS else (int(_x) if float(_x).is_integer() else _x)
 _V = {r["id"]: r for r in _ROWS if "id" in r}
 
 QUARTERS = [f"{y}Q{q}" for y in (2025, 2026, 2027, 2028, 2029) for q in (1, 2, 3, 4)]  # Path!C..V（結構，非數值）
 NQ = len(QUARTERS)
-SCEN = tuple(SNAP["scen"])
-SCEN_DESC = dict(SNAP["scen_desc"])
+SCEN = SCN.SCEN                    # v0.16：情境定義在市場層（markets/scen）；Siliconomics 快照只有 B（基準）
+SCEN_DESC = SCN.SCEN_DESC
 
 
 def _b(k):
@@ -80,8 +92,9 @@ def _replay(sec, inp, want_ref):
 def inputs(sec, inp):
     _replay(sec, inp, False)
 
-def write(wb, hdr, Font):
-    """寫 Path、Mkt 兩頁；回傳參照表"""
+def write(wb, hdr, Font, scen=None):
+    """寫 Path、Mkt 兩頁；回傳參照表。scen＝要寫的情境（預設 A／B／C；Siliconomics v0.16 起只寫 ("B",)＝基準）"""
+    SCEN = tuple(scen) if scen else globals()["SCEN"]
     BOLD = Font(bold=True)
     P = wb.create_sheet("Path")
     P["A1"] = "Path — 記憶體合約價指數（2025Q1＝1；季增來自 In 頁 M1）。共用市場層：所有記憶體公司用同一條路徑，再依各自會計年度取平均"
@@ -147,12 +160,12 @@ def write(wb, hdr, Font):
         put(f"需求 × 出貨係數（{s}）", "EB", [None] + [f"={YC[y]}{MK['demg']}*{YC[y]}{MK['cf' + s]}" for y in (26, 27, 28, 29)], key="demg" + s)
     for s in SCEN:
         put(f"出貨＝MIN(需求, 供給)（{s}）", "EB", [f"=C{MK['sup']}"] + [f"=MIN({YC[y]}{MK['demg' + s]},{YC[y]}{MK['sup']})" for y in (26, 27, 28, 29)], key="ship" + s,
-            note="需求低於供給時出貨＝需求（閒置產能）" if s == "A" else "")
+            note="需求低於供給時出貨＝需求（閒置產能）" if s == SCEN[0] else "")
     for s in SCEN:
         put(f"需求 − 供給（{s}；>0＝短缺）", "EB", [None] + [f"={YC[y]}{MK['demg' + s]}-{YC[y]}{MK['sup']}" for y in (26, 27, 28, 29)], key="gap" + s)
-    MK["ship"], MK["gap"] = MK["shipA"], MK["gapA"]   # 舊鍵：情境 A（2026–27 三情境相同）
+    MK["ship"], MK["gap"] = MK["ship" + SCEN[0]], MK["gap" + SCEN[0]]   # 舊鍵：第一個情境（A；只寫基準時＝B；2026–27 三情境相同）
     for s in SCEN:
-        put(f"HBM 單價（{s}）", "$/GB", [f"=hbm_mkt25/C{MK['shipA']}", "=hbm_p26", "=D{r}*(1+hbm_p27)", f"=E{{r}}*(1+hbm_p28_{s})"], key="p" + s)
+        put(f"HBM 單價（{s}）", "$/GB", [f"=hbm_mkt25/C{MK['ship' + SCEN[0]]}", "=hbm_p26", "=D{r}*(1+hbm_p27)", f"=E{{r}}*(1+hbm_p28_{s})"], key="p" + s)
         rr = MK["p" + s]
         M.cell(rr, 5, f"=D{rr}*(1+hbm_p27)"); M.cell(rr, 6, f"=E{rr}*(1+hbm_p28_{s})"); M.cell(rr, 7, f"=F{rr}*(1+hbm_p29_{s})")
     for s in SCEN:
@@ -164,7 +177,7 @@ def write(wb, hdr, Font):
     put("  差距", "%", [None, f"=D{MK['bu']}/D{MK['td']}-1"], fmt="0%")
     put("由營收推得 NVIDIA 顆數 vs 顆數預測", "百萬顆", [None, "=nv_dc26/nv_content", "=u_bw_26+u_rb_26+u_hp_26"], fmt="0.0", note="D＝營收推得；E＝顆數預測（2026）")
     put("已發布：SK 海力士自估 2026／BofA 2026／BofA 2027", "$B", [None, "=pub26_lo", "=pub26_hi", "=pub27"], key="pub", fmt="0.0")
-    put("  本模型 2026 ÷ SK 海力士自估、2027 ÷ BofA", "%", [None, f"=D{MK['mA']}/pub26_lo-1", None, f"=E{MK['mA']}/pub27-1"], fmt="0%")
+    put("  本模型 2026 ÷ SK 海力士自估、2027 ÷ BofA", "%", [None, f"=D{MK['m' + SCEN[0]]}/pub26_lo-1", None, f"=E{MK['m' + SCEN[0]]}/pub27-1"], fmt="0%")
     M.column_dimensions["A"].width = 58
     for c in "CDEFG": M.column_dimensions[c].width = 10
     M.column_dimensions["H"].width = 50

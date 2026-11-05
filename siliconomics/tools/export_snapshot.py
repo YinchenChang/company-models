@@ -45,8 +45,10 @@ def read(xlsx):
                          src2=ws.cell(r, 10).value or ""))
     sc = wb["Scen"]
     scen, desc = [], {}
-    for r in range(4, 7):
+    for r in range(4, 7):   # v0.16 起只有基準一列（B）；A、C 在市場層 markets/scen
         s = sc.cell(r, 1).value
+        if s in (None, ""):
+            break
         scen.append(s); desc[s] = sc.cell(r, 4).value
     return names, rows, groups, scen, desc
 

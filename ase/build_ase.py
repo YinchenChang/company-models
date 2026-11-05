@@ -10,6 +10,7 @@ from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
 import reader as SIL   # Siliconomics 快照（行業變數單一來源）
+sys.path.insert(0, os.path.join(ROOT, "markets", "scen")); import scen as SCN   # noqa: E402  v0.16：產業情境 A／C 參考值（市場層；B 讀 Siliconomics）
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import cycle_position as CP
 import valuation_rule as VR
@@ -65,7 +66,7 @@ for y in (26, 27, 28, 29):
         "Siliconomics SIF_UnitsPlat_Total（八類加速器合計；原始顆數）" if y == 26 else "同上", "NVIDIA、AMD、Google TPU、AWS Trainium、其他 ASIC 合計；與台積電、Amkor、京元電模型同一份" if y == 26 else "同上")
 for s in SC:
     for y in (28, 29):
-        inp(f"um{y}_{s}", SIL.V[f"um{y}_{s}"]["label"], "x", None, SIL.base(f"um{y}_{s}"), None, "Assumed", f"Siliconomics {f'um{y}_{s}'}（同字母行業情境）",
+        inp(f"um{y}_{s}", SCN.V[f"um{y}_{s}"]["label"], "x", None, SCN.base(f"um{y}_{s}"), None, "Assumed", (f"Siliconomics um{y}_{s}（基準）" if s == "B" else f"市場層 markets/scen um{y}_{s}（同字母產業情境）"),
             "A＝原始顆數；B＝AI 資本支出消化；C＝明顯下修（與台積電、Amkor、NVIDIA 模型相同）" if (s == "A" and y == 28) else "同上")
 for y in (26, 27, 28, 29):
     inp(f"ar_{y}", f"封裝面積指數 20{y}（加速器用 CoWoS 片數 ÷ 顆數，2026＝1）", "x", None, round(AREA[y], 6), None, "Derived",
@@ -74,7 +75,7 @@ for y in (26, 27, 28, 29):
 for s in SC:
     for y in (26, 27, 28, 29):
         k = f"cpo_{s}_{y}"
-        inp(k, SIL.V[k]["label"], "%", None, SIL.base(k), None, "Assumed", f"Siliconomics {k}（技術替代屬行業情境，同字母）", "日月光 CPO 營收依此滲透率相對 2027 情境 A 縮放" if (s == "A" and y == 26) else "同上")
+        inp(k, SCN.V[k]["label"], "%", None, SCN.base(k), None, "Assumed", (f"Siliconomics {k}（基準）" if s == "B" else f"市場層 markets/scen {k}（技術替代屬產業情境，同字母）"), "日月光 CPO 營收依此滲透率相對 2027 情境 A 縮放" if (s == "A" and y == 26) else "同上")
 inp("fx", "匯率：新台幣 ÷ 美元（2027 起換算 LEAP 與資本支出）", "NT$/US$", *SIL.vals("fx_twd"), "Assumed", f"Siliconomics fx_twd（{SIL.VERSION}）", "公司 4Q26 指引假設 31.9（3Q26 新聞稿）")
 
 sec("B. 封測（ATM）：LEAP 先進封裝＝顆數 × 委外／份額相對值 × 每顆內容（隨封裝面積）＋全流程（CoWoS full process）＋CPO；主流封測另依成長率")

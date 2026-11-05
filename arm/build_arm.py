@@ -14,6 +14,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
 import reader as SIL   # noqa: E402
+sys.path.insert(0, os.path.join(ROOT, "markets", "scen")); import scen as SCN   # noqa: E402  v0.16：產業情境 A／C 參考值（市場層；B 讀 Siliconomics）
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import relative_multiple as RMX   # noqa: E402
 sys.path.insert(0, os.path.join(ROOT, "tools", "in_layout"))
@@ -35,7 +36,7 @@ def defname(name, ref):
 SNAP = f"Siliconomics 快照 {SIL.VERSION}（{SIL.FILE}）"
 N = SIL.NAMES
 UP = {k: N[f"SIF_UnitsPlat_{k}"] for k in ("bw", "rb", "ru")}    # [2025(None), 2026, 2027, 2028, 2029]
-UC = {s: [None, 1, 1, SIL.base(f"um28_{s}"), SIL.base(f"um29_{s}")] for s in SC}   # v0.15：由個股自訂情境係數列（um28／um29）組成；原讀 SIF_UnitsCoef_{s}
+UC = {s: [None, 1, 1, SCN.base(f"um28_{s}"), SCN.base(f"um29_{s}")] for s in SC}   # v0.15：由個股自訂情境係數列（um28／um29）組成；原讀 SIF_UnitsCoef_{s}
 
 # ---------------- In ----------------
 IN = wb.active; IN.title = "In"

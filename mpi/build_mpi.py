@@ -10,6 +10,7 @@ from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
 import reader as SIL   # Siliconomics 快照（行業變數單一來源）
+sys.path.insert(0, os.path.join(ROOT, "markets", "scen")); import scen as SCN   # noqa: E402  v0.16：產業情境 A／C 參考值（市場層；B 讀 Siliconomics）
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import cycle_position as CP
 import valuation_rule as VR
@@ -69,7 +70,7 @@ for y in (26, 27, 28, 29):
         "Siliconomics SIF_UnitsPlat_Total（八類加速器合計；原始顆數）" if y == 26 else "同上", "與台積電、日月光、京元電模型同一份" if y == 26 else "同上")
 for s in SC:
     for y in (28, 29):
-        inp(f"um{y}_{s}", SIL.V[f"um{y}_{s}"]["label"], "x", None, SIL.base(f"um{y}_{s}"), None, "Assumed", f"Siliconomics um{y}_{s}（同字母行業情境）",
+        inp(f"um{y}_{s}", SCN.V[f"um{y}_{s}"]["label"], "x", None, SCN.base(f"um{y}_{s}"), None, "Assumed", (f"Siliconomics um{y}_{s}（基準）" if s == "B" else f"市場層 markets/scen um{y}_{s}（同字母產業情境）"),
             "A＝原始顆數；B＝AI 資本支出消化；C＝明顯下修" if (s == "A" and y == 28) else "同上")
 for y in (26, 27, 28, 29):
     inp(f"nvtt_{y}", f"NVIDIA 加速器的測試時間加權顆數 ÷ 總顆數 20{y}", "x", None, round(NVTT[y], 6), None, "Derived",
@@ -82,8 +83,8 @@ inp("g_nonai", "非 AI SoC 市場年增（其他探針卡的行業成長）", "%
 for s in SC:
     for y in (27, 28, 29):
         k = f"cpo_{s}_{y}"
-        inp(k, SIL.V[k]["label"], "%", None, SIL.base(k), None, "Assumed", f"Siliconomics {k}（技術替代屬行業情境，同字母）", "旺矽 CPO 測試設備營收依此滲透率相對 2027 情境 A 縮放" if (s == "A" and y == 27) else "同上")
-inp("cpo_A_26", SIL.V["cpo_A_26"]["label"] + "（三情境相同）", "%", None, SIL.base("cpo_A_26"), None, "Assumed", "Siliconomics cpo_A_26（B、C 同值）", "—")
+        inp(k, SCN.V[k]["label"], "%", None, SCN.base(k), None, "Assumed", (f"Siliconomics {k}（基準）" if s == "B" else f"市場層 markets/scen {k}（技術替代屬產業情境，同字母）"), "旺矽 CPO 測試設備營收依此滲透率相對 2027 情境 A 縮放" if (s == "A" and y == 27) else "同上")
+inp("cpo_A_26", SCN.V["cpo_A_26"]["label"] + "（三情境相同）", "%", None, SCN.base("cpo_A_26"), None, "Assumed", "市場層 markets/scen cpo_A_26（B、C 同值）", "—")
 for y, i in ((27, 2), (28, 3), (29, 4)):
     inp(f"semi_{y}", f"SEMI 測試設備 20{y} ÷ 2026（情境 A 設備路徑）", "x", None, round(SEMI[i] / SEMI[1], 6), None, "Derived", "Siliconomics SIF_SEMI_Test（2025–2029）" if y == 27 else "同上", "設備分部的行業成長（SoC、記憶體測試設備合計）" if y == 27 else "同上")
 for s in SC:
@@ -91,7 +92,7 @@ for s in SC:
         if s == "A":
             inp(f"eqk{y}_A", f"情境 A：設備水準 20{y} ÷ 2027（SEMI 路徑）", "x", None, round(SEMI[y - 25] / SEMI[2], 6), None, "Derived", "Siliconomics SIF_SEMI_Test 推得", "—")
         else:
-            inp(f"eqk{y}_{s}", f"情境 {s}：設備水準 20{y} ÷ 2027", "x", None, SIL.base(f"eq_ck_{s}_{y}"), None, "Assumed", f"Siliconomics eq_ck_{s}_{y}（設備情境係數，套用於 2027 水準；與 markets/equipment 同口徑）", "—")
+            inp(f"eqk{y}_{s}", f"情境 {s}：設備水準 20{y} ÷ 2027", "x", None, SCN.base(f"eq_ck_{s}_{y}"), None, "Assumed", (f"Siliconomics eq_ck_{s}_{y}（基準；設備情境係數，套用於 2027 水準；與 markets/equipment 同口徑）" if s == "B" else f"市場層 markets/scen eq_ck_{s}_{y}（設備情境係數，套用於 2027 水準；與 markets/equipment 同口徑）"), "—")
 
 sec("B. 探針卡分部：AI／HPC 探針卡（VPC、MEMS）＝ AI_26 × 晶圓測試量指數 × 旺矽份額與價格相對值 × 每顆內容成長；其他探針卡依非 AI SoC 成長")
 inp("ai_sh25", "AI／HPC 探針卡 ÷ 探針卡營收 FY2025", "%", None, 0.55, None, "Assumed", "公司：VPC 需求主要來自 AI／HPC；VPC 產能 2H25 起滿載（2025-03 法說，富果）", "AI 占比公司未揭露：未找到")

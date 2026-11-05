@@ -1,0 +1,29 @@
+[
+ {
+  "id": "S41",
+  "cat": "結構",
+  "item": "v0.16：In 頁層的產業情境列（A、C）移到市場層 markets/scen；本庫各頁只算基準",
+  "decision": "70 列（記憶體價格路徑 cqA／cqC、nqA／nqC 各 12 季；顆數係數 um28／um29 的 A、C；HBM 單價 hbm_p28／29 的 A、C；世芯 Trainium 份額 al27／al28 的 A、C；CPO 滲透率 cpo A、C 2026–29；設備係數 eq_ck C 2028–29）自 v0.15 In 頁逐字搬到 markets/scen/industry_scen_v0.1.json（數值、標記、來源不變）。本庫 In 605 列、Scen 頁只剩基準；Units、Deploy、ABF、PGW、Rack、Equip、Path、Mkt、ShareTbl 只算基準。記憶體市場層 market.py 以 scen.merged_rows 把 A／C 列插回原列序（記憶體公司 In 頁重播逐列相同）；network、ase、mpi、alchip、tuc 改讀 markets/scen。個股 A／C 預設讀市場層同字母情境（Andy 2026-10-25 情境一致性），覆寫須寫明倍數。唯一數值變動：Interface SIF_TestWFE_SoC 2028–29 由原情境 A 改基準（0.091／0.094 → 0.078／0.083；無下游讀者），Checks K8 隨之改讀基準。",
+  "date": "2026-11-05",
+  "quote": "Andy 2026-11-05 13:41「情境過渡的執行狀況，設日落」（情境過渡〔v0.12 停用過渡〕的最後一步）",
+  "status": "工程決定"
+ },
+ {
+  "id": "S42",
+  "cat": "結構",
+  "item": "v0.16：Cap 頁分項上限（CoWoS、HBM 分開）",
+  "decision": "新增 Cap 頁兩列（只受 CoWoS／只受 HBM 限制的可支撐部署 GW＝基準 × 產能 ÷ 需求，不截頂）與 Interface SIF_CapGW_CoWoS_Base、SIF_CapGW_HBM_Base（本庫部署口徑）、SIF_CapOnlineGW_CoWoS_Base、SIF_CapOnlineGW_HBM_Base（Wattonomics 可比上線口徑，毛額）。SIF_CapGW_Base、SIF_CapOnlineGW_Base 不變（＝MIN(基準, 兩項)）。回應算力收支 11-04 問題與 11-05 回執第 2 節第 2 點。",
+  "date": "2026-11-05",
+  "quote": "交接檔第 3 節待辦 1",
+  "status": "工程決定"
+ },
+ {
+  "id": "S43",
+  "cat": "Tokenomics",
+  "item": "v0.16：TK_In 鏡像改 Tokenomics v21.10",
+  "decision": "v21.7 → v21.10 的 22 個名稱中只有 IF_NonNV_Out_TPU（0.6／0.8／1.1 → 0.35／0.66／0.84）、IF_NonNV_Out_Trn（0.3／0.5／0.8 → 0.14／0.28／0.5）改值（FP8 對齊）；本庫與下游皆不讀產出比，數值不變。chip_bridge 仍讀 v21.7 快照（Checks K3＝6 格 WARN，皆為產出比），留待 chip_bridge 下次改版一併換。",
+  "date": "2026-11-05",
+  "quote": "專案指示第 2 條：算力假設取自 Tokenomics 並註明版本",
+  "status": "工程決定"
+ }
+]
