@@ -168,7 +168,7 @@ inp("cons_oi26", "共識營業利益 FY2026", "¥B", None, 12.25, None, "Interes
 inp("cons_ni26", "共識淨利 FY2026", "¥B", None, 8.70, None, "Interested-party", "stockanalysis.com（同上）：8.70 → EPS 約 116（÷ 75.03 百萬股，Derived）", "共識 EPS：stockanalysis 未顯示（付費）")
 for s in SC:
     inp(f"pk_{s}", f"情境 {s}：設備市場見頂年度（日曆年；循環位置規則用）", "年", None, PEAK[s], None, "Derived", PEAK_SRC[s], "設備股共用規則（tools/cycle_position.py）" if s == "A" else "同上")
-inp("px", "股價（2026-10-23 收盤）", "¥", None, 1968, None, "Verified", "株探 日足（s.kabutan.jp，2026-10-23 終值 1,968）", "kabutore（同值）。2026-10-09 為 2,650，兩週內 −26%")
+inp("px", "股價（2026-11-04 收盤）", "¥", None, 2097, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（第三輪修正統一價格日）", "v0.3.2 為 2026-10-23 收盤 1,968（株探 日足）")
 inp("sa_fpe", "遠期 P/E（stockanalysis，2026-09-25）", "x", None, 17.54, None, "Interested-party", "stockanalysis.com statistics（股價 2,193）", "")
 inp("sa_ttm", "TTM P/E（stockanalysis，2026-09-25）", "x", None, 24.07, None, "Interested-party", "stockanalysis.com（TTM EPS 90.36）", "")
 sec("J. 目標價情境權重（Val 頁「0. 目標價」用；Andy 可改）")
@@ -216,14 +216,14 @@ BETA_SRC = "自算產業 β：JP 半導體設備 同業 8 家中位數（Yahoo F
 r += 1
 IN.cell(r, 1, "M2. 折現率與無槓桿自由現金流（v0.3 標準版 DCF；tools/fcff_dcf.py；評價日 2026-12-31；黃底＝Andy 可改）").font = BOLD; r += 1
 _US10 = ("美國財政部每日殖利率曲線 10 Yr：2026-10-23 5.00%（https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202610；2026-11-05 讀取）",
-         "FRED DGS10 同序列；與股價同日（2026-10-23）；只用於 Sens「美元口徑折現」（工作單第二輪修正，Andy 2026-11-05 23:16）")
+         "FRED DGS10 同序列；v0.3.2 現價日（2026-10-23）值，第三輪修正未改；只用於 Sens「美元口徑折現」（工作單第二輪修正，Andy 2026-11-05 23:16）")
 _m2 = list(FD.in_rows(dict(
         date="2026-12-31（統一評價日；FY2026 只計評價日後一季；v0.3.2 起資產負債表日 2026-06-30 的淨現金與投資以 stub 期滾到評價日）", amt="¥B", shu="十億股", ccy="¥",
         rf_us=(0.05, _US10[0], _US10[1]),
         stub=dict(bs_date="2026-06-30", val_date="2026-12-31", bs_src=SA_BS + "（最新已公布一季：2027 年 3 月期第 1 季；第 2 季財報尚未公布）",
                   div=(0, "Verified", "2026-06-30 → 2026-12-31 無已宣告股利（年度股利 FY2025 期末 ¥20 已於 2026-06 支付；FY2026 期末股利於 2027-05 宣告，列在 dps_tgt）；無已宣告買回", "只扣已宣告者")),
         rf=(0.02817, "財務省 國債金利情報（https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/jgbcme.csv）：2026-11-02 10 年期 2.817%（本月檔最早一日；2026-11-04 為 2.855%）",
-            "Trading Economics 2026-11-05 為 2.76%（https://tradingeconomics.com/japan/government-bond-yield）；10 月逐日值本次無法讀取，取與股價日（10-23）最近可得值；同 Kioxia、味之素", "無風險利率（日本 10 年期公債殖利率，2026-11-02）"),
+            "Trading Economics 2026-11-05 為 2.76%（https://tradingeconomics.com/japan/government-bond-yield）；10 月逐日值未取得，取 v0.3.2 現價日（10-23）之後最近可得值；第三輪修正現價改 2026-11-04（同日 2.855%），rf 未改（不在該輪範圍）；同 Kioxia、味之素", "無風險利率（日本 10 年期公債殖利率，2026-11-02）"),
         beta_fixed=("=(beta_u-beta_du)*(1+(1-tax_w)*beta_de)", "=beta_u*(1+(1-tax_w)*beta_de)", "=(beta_u+beta_du)*(1+(1-tax_w)*beta_de)", "Derived",
                     BETA_SRC + "；Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）；以本公司市值 D/E 與稅率重新加槓桿（Hamada：βL＝βU ×（1＋(1 − tax_w) × D/E）；Andy 2026-11-05 21:21）",
                     "Sens 低／高（Analogy；v0.3.2 起）：β_u ∓ beta_du（0.3），各自同式重新加槓桿（tools/fcff_dcf.py v2 write_sens）；個股迴歸 β 未取得"),
@@ -533,10 +533,10 @@ V4E = vr - 1
 q = vr + 1
 V.cell(q, 1, "5. 目前倍數（僅供參考）").font = BOLD; hdr(V, q + 1, ["項目", "A／數值", "B", "C", "備註"]); CMH = q + 1
 fr = q + 2; CUR = {}
-for key, nm, fs, fm, note in (("px", "現價（2026-10-23 收盤）", ["=px"], "#,##0", "株探、kabutore"),
+for key, nm, fs, fm, note in (("px", "現價（2026-11-04 收盤）", ["=px"], "#,##0", "Yahoo Finance 日線收盤 2026-11-04"),
                         ("pe25", "P/E：現價 ÷ FY2025 EPS 61.22", ["=px/a25_eps"], "0.0", "上一個會計年度（營益率 12.7% 的低點年）"),
                         ("pettm", "P/E：現價 ÷ 近 12 月 EPS（FY25 Q2–Q4＋FY26 Q1）", ["=px/(Q!C7+Q!D7+Q!E7+Q!G7)"], "0.0", "近 12 月 EPS ＝ 31.70＋10.37＋26.20＋22.09 ＝ 90.36（Derived；與 stockanalysis TTM 相同）"),
-                        ("peg", "P/E：現價 ÷ 公司 FY2026 指引 EPS 93.30", ["=px/g26_eps"], "0.0", "命題中的「約 21 倍」"),
+                        ("peg", "P/E：現價 ÷ 公司 FY2026 指引 EPS 93.30", ["=px/g26_eps"], "0.0", "命題中的指引本益比"),
                         ("sa", "遠期 P/E：stockanalysis（共識，2026-09-25）", ["=sa_fpe"], "0.0", "參考，不用於估值；當時股價 2,193"),
                         ("pe27", "現價 ÷ FY2027 EPS（模型）", [f"=px/PL!{FYC[2027]}{SUMR[(s, 'eps')]}" for s in SC], "0.0", "A／B／C"),
                         ("pe28", "現價 ÷ FY2028 EPS（模型）", [f"=px/PL!{FYC[2028]}{SUMR[(s, 'eps')]}" for s in SC], "0.0", "A／B／C")):
@@ -588,9 +588,10 @@ q = rr + 12
 V.cell(q, 1, "0.2 Comparable（市場主流同業前瞻 P/E）").font = BOLD; T["h02"] = q
 hdr(V, q + 1, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"]); T["phd"] = q + 1
 SAS = "stockanalysis.com statistics：Forward PE（分析師共識；價格日期如左；本 repo hanmi／disco 同值）"
-PEERS = [("Disco", "6146.T", 26.01, "2026-10-23", SAS), ("東京精密（Accretech）", "7729.T", 21.86, "2026-09-29", SAS),
-         ("ASMPT（封膠與鍵合競爭者）", "0522.HK", 30.26, "2026-09-23", SAS), ("BE Semiconductor（BESI）", "BESI.AS", 25.82, "2026-10-23", SAS),
-         ("Kulicke & Soffa", "KLIC", 12.61, "2026-10-23", SAS)]
+SAS = "2026-11-04 收盤（Yahoo Finance 日線收盤）÷ stockanalysis.com 前瞻 EPS（＝取得日價格 ÷ Forward PE；第三輪修正第 26、35 項）"
+PEERS = [("Disco", "6146.T", "=47370/(49290/26.01)", "2026-11-04", SAS + "：取得日 10-23 ¥49,290"), ("東京精密（Accretech）", "7729.T", "=14920/(18405/21.86)", "2026-11-04", SAS + "：取得日 09-29 ¥18,405"),
+         ("ASMPT（封膠與鍵合競爭者）", "0522.HK", "=112.6/(171/30.26)", "2026-11-04", SAS + "：取得日 09-23 HK$171.00"), ("BE Semiconductor（BESI）", "BESI.AS", "=152/(147.25/24.30)", "2026-11-04", SAS + "：取得日 10-26 €147.25"),
+         ("Kulicke & Soffa", "KLIC", "=68.44/(73.71/12.61)", "2026-11-04", SAS + "：取得日 10-23 $73.71")]
 for i, (nm, tk, pe, dt, src) in enumerate(PEERS, q + 2):
     V.cell(i, 1, nm); V.cell(i, 2, tk); c = V.cell(i, 3, pe); c.font = BLUE; c.number_format = "0.0"
     V.cell(i, 4, dt); V.cell(i, 5, src); V.cell(i, 6, "Interested-party")
@@ -609,7 +610,7 @@ q += 2
 tset(q, "tpw", "目標價（DCF 與 Comparable 加權）", [f"=tp_w_dcf*B{T['dcftp']}+(1-tp_w_dcf)*B{T['comptp']}", None, None], MF, "tp_w_dcf × DCF 目標價＋（1 − tp_w_dcf）× Comparable 目標價；tp_w_dcf 見 In 頁")
 tset(q + 1, "comp2", "Comparable 目標價（市場主流同業法）", [f"=B{T['comptp']}", None, None], MF, "引用 0.2")
 tset(q + 2, "cons", "市場共識目標價", ["=cons_tp", None, None], MF, "stockanalysis：6 位分析師平均 ¥3,300（中位數 3,300；區間 2,600–4,000），2026-09-17 更新")
-tset(q + 3, "upw", "上檔空間：加權目標價", [f"=B{q}/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-10-23 收盤）")
+tset(q + 3, "upw", "上檔空間：加權目標價", [f"=B{q}/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-04 收盤）")
 tset(q + 4, "upc", "上檔空間：Comparable 目標價", [f"=B{q + 1}/px-1", None, None], "0.0%")
 tset(q + 5, "geps", "與市場共識目標價的差距：EPS 因素", [f"=B{T['feps']}/cons_feps-1", None, None], "0.0%", "本模型 12 個月後前瞻 EPS ÷ 共識前瞻 EPS − 1；共識前瞻 EPS＝FY2026 共識淨利 8.70 ÷ 股數，早約一年半")
 tset(q + 6, "gmul", "與市場共識目標價的差距：倍數因素", [f"=(cons_tp/cons_feps)/B{T['pmed']}-1", None, None], "0.0%")
@@ -749,7 +750,7 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 130
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
 PROP = ("TOWA 握有封膠設備約 2/3 市占，但營收只有約兩成來自 AI（HBM 與 CoWoS 封膠），FY2025 營益率僅 12.7%；"
-        "問題是 HBM 堆疊與 2.5D 封裝的封膠增量，能否在 FY2027 以後延續並把營益率拉回 16% 以上，撐住約 21 倍的指引本益比？")
+        "問題是 HBM 堆疊與 2.5D 封裝的封膠增量，能否在 FY2027 以後延續並把營益率拉回 16% 以上，撐住約 22 倍的指引本益比？")
 lines = [("TOWA（6315.T）收支與估值模型 v0.1.1（AI 半導體 Project 步驟 5：設備與材料）　2026-10-25", True),
  ("模型命題：" + PROP, False),
  ("註：21 倍＝現價 ¥1,968（2026-10-23）÷ 公司 FY2026 指引 EPS ¥93.30；÷ FY2025 EPS ¥61.22 為 32.1 倍（Val 第 5 節）。", False), ("", False),
@@ -779,7 +780,7 @@ V.cell(_G + 1, 1, "投資建議")
 V[f"B{_G + 1}"] = f'=IF({_U}>0.5,"強力買進",IF({_U}>0.25,"買進",IF({_U}>=-0.25,"中立",IF({_U}>=-0.5,"放空","強力放空"))))'
 V[f"B{_G + 1}"].number_format = "@"
 V[f"E{_G + 1}"] = "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空"
-OBS = ["目標價 ¥1,726（DCF 1,015、Comparable 2,436 各半），比現價 1,968（2026-10-23）低 12.3%，級距 0%～−25%；Comparable 單獨為 +23.8%。（v0.1.1 舊法 DCF 的說明已不適用：v0.3 起 DCF 改為標準版，見 Val 第 0.1 節與展示層。）",
+OBS = ["目標價 ¥1,726（DCF 1,015、Comparable 2,436 各半），比現價 1,968（2026-11-04）低 12.3%，級距 0%～−25%；Comparable 單獨為 +23.8%。（v0.1.1 舊法 DCF 的說明已不適用：v0.3 起 DCF 改為標準版，見 Val 第 0.1 節與展示層。）",
        "本模型 12 個月後前瞻 EPS 94.4 比共識前瞻 EPS 116.0 低 18.6%；共識目標價 3,300 隱含 28.5 倍，同業中位數 25.8 倍（倍數因素 +10.2%）。情境 B、C 的 FY2027 EPS 比 A 低 12.5%、22.6%（AI 封膠市占流失 3pt／8pt 與上游下修）。",
        "FY2027 EPS 對堆疊層數（低值 → +8.9%）、淨利 ÷ 營業利益（0.65／0.72 → −4.9%／+5.3%）與 FY2026 錨點（−5%／+8% → −3.5%／+5.7%）最敏感。下一個檢驗事件是第二季財報（預計 2026-11 上旬，日期未確認），FY2026 錨點將改為上半年實績加下半年指引。"]   # 重點觀察（與 towa/README.md 相同文字）
 _R = RD.max_row + 1
@@ -854,6 +855,8 @@ for a_, b_ in (("E", "D"), ("H", "G"), ("K", "J")): SE[f"{a_}{nn + 2}"] = f"={b_
 RMX.apply(wb, "towa")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, "v0.2.1", "2026-10-30")  # v0.2.1：In 頁版面（個股模型原則第 8 節；數值不變）
+for _r in range(4, wb["In"].max_row + 1):   # v0.3.3（第三輪修正第 15 項）：情境驅動對照的收斂法列名改中性（共用工具取情境 C 的列名）
+    if wb["In"].cell(_r, 1).value == "scn_fade_g": wb["In"].cell(_r, 2, "FY2032 營收年增收斂目標（tp_g ± 2pt）")
 # ---------------- v0.3（2026-11-05）：HTML 新版面 v1.0（個股 HTML 版面規格 v1.0）＋標準版 DCF 的展示層 ----------------
 # README 頁最後新增「展示層」「命題回覆」兩段（HTML 讀；數字一律由公式帶出）；原 README 各列保留不動。文字中的 {鍵|格式} 轉成 TEXT(儲存格,"格式")。
 import re as _re  # noqa: E402
@@ -867,7 +870,7 @@ def _vrow(prefix):
         if str(V.cell(r_, 1).value or "").strip().startswith(prefix):
             return r_
     raise KeyError(prefix)
-_s = {k: _srow(p) for k, p in (("stk", "堆疊層數 低"), ("nlo", "淨利÷營業利益 0.65"), ("nhi", "淨利÷營業利益 0.72"), ("shl", "AI 封膠市占流失 12pt"), ("alo", "AI 錨點 7.0"), ("ahi", "AI 錨點 13.0"))}
+_s = {k: _srow(p) for k, p in (("glo", "FY2026 錨點 −5%"), ("ghi", "FY2026 錨點 +"), ("stk", "堆疊層數 低"), ("nlo", "淨利÷營業利益 0.65"), ("nhi", "淨利÷營業利益 0.72"), ("shl", "AI 封膠市占流失 12pt"), ("alo", "AI 錨點 7.0"), ("ahi", "AI 錨點 13.0"))}
 _P = lambda s_, k, y: f"PL!{FYC[y]}{SUMR[(s_, k)]}"
 REF = {"tpw": f"Val!B{T['tpw']}", "dcftp": f"Val!B{T['dcftp']}", "comp": f"Val!B{T['comptp']}", "compadj": "tp_comp_adj", "px": "px", "upw": f"Val!B{T['upw']}",
        "upc": f"Val!B{T['upc']}", "rec": f"Val!B{_G + 1}", "grade": f"Val!B{_G}", "wdcf": "tp_w_dcf", "pmed": f"Val!B{T['pmed']}", "feps": f"Val!B{T['feps']}",
@@ -894,6 +897,18 @@ REF["dcfsh"], REF["compsh"] = f"({_dc}/({_dc}+{_cc}))", f"({_cc}/({_dc}+{_cc}))"
 REF["src"] = f'IF({REF["dcfsh"]}>=0.6,"差距主要來自 DCF",IF({REF["dcfsh"]}<=0.4,"差距主要來自 Comparable","差距由 DCF 與 Comparable 約各半貢獻"))'
 REF["mulg"] = f"({REF['pmadj']}/{REF['pxpe']}-1)"
 REF["mdir"] = f'IF({REF["mulg"]}>=0,"高","低")'
+# v0.3.3（第三輪修正：同一時間窗；相對倍數調整係數的影響）
+REF["ntm"] = "(" + "+".join(f"tp_w{s_}*(5/12*{REF[f'eps{s_}26']}+7/12*{REF[f'eps{s_}27']})" for s_ in SC) + ")"
+REF["pxntm"] = f"(px/{REF['ntm']})"; REF["epsg"] = f"({REF['feps']}/{REF['ntm']}-1)"; REF["mulg2"] = f"({REF['pmadj']}/{REF['pxntm']}-1)"
+REF["cdrv2"] = f'IF(ABS(LN(1+{REF["mulg2"]}))>ABS(LN(1+{REF["epsg"]})),"倍數差大於 EPS 成長","EPS 成長大於倍數差")'
+REF["tpwun"] = f"(tp_w_dcf*{REF['dcftp']}+(1-tp_w_dcf)*{REF['comp']})"; REF["upwun"] = f"({REF['tpwun']}/px-1)"
+_u = REF["upwun"]
+REF["recun"] = f'IF({_u}>0.5,"強力買進",IF({_u}>0.25,"買進",IF({_u}>=-0.25,"中立",IF({_u}>=-0.5,"放空","強力放空"))))'
+REF["rmline"] = (f'IF({REF["rec"]}<>{REF["recun"]},"投資建議「"&{REF["rec"]}&"」完全取決於相對倍數調整係數 "&TEXT(rm_factor,"0.00")&"：未調整時 Comparable ¥"&TEXT({REF["comp"]},"#,##0")&"、加權目標價 ¥"&TEXT({REF["tpwun"]},"#,##0")&"（"&TEXT({REF["upwun"]},"+0.0%;−0.0%")&"），投資建議為「"&{REF["recun"]}&"」。",'
+                 f'"相對倍數調整係數 "&TEXT(rm_factor,"0.00")&" 不改變投資建議：未調整時加權目標價 ¥"&TEXT({REF["tpwun"]},"#,##0")&"（"&TEXT({REF["upwun"]},"+0.0%;−0.0%")&"）。")')
+REF["cfeps"] = "cons_feps"; REF["cpe"] = "(cons_tp/cons_feps)"; REF["gmul"] = f"Val!B{T['geps'] + 1}"
+for s_ in "BC":
+    REF[f"eps{s_}A27"] = f"({REF[f'eps{s_}27']}/{REF['epsA27']}-1)"
 REF["updesc"] = f'IF({REF["upw"]}>0.25,"遠高於",IF({REF["upw"]}>=0,"略高於",IF({REF["upw"]}>=-0.25,"低於","遠低於")))'
 REF["verdict"] = f'IF({REF["upw"]}>0.25,"現價低於估值、有明顯上檔",IF({REF["upw"]}>=0,"現價大致合理",IF({REF["upw"]}>=-0.25,"現價高於估值","現價明顯高於估值")))'
 _np = "(" + "+".join(f"({REF[f'dcfpx{s_}']}>1)" for s_ in SC) + ")"
@@ -917,11 +932,11 @@ def _fx(t):
     return t if len(parts) == 1 and parts[0].startswith('"') else "=" + "&".join(parts)
 
 PRES = [
- "命題：TOWA 握有封膠設備約三分之二市占，但營收只有約兩成來自 AI（HBM 與 CoWoS 封膠）；股價取決於 HBM 堆疊與 2.5D 封裝的封膠增量能否在 FY2027 以後延續、把營益率拉回 16% 以上，撐住約 21 倍的指引本益比。三個問題如下。",
+ "命題：TOWA 握有封膠設備約三分之二市占，但營收只有約兩成來自 AI（HBM 與 CoWoS 封膠）；股價取決於 HBM 堆疊與 2.5D 封裝的封膠增量能否在 FY2027 以後延續、把營益率拉回 16% 以上，撐住約 22 倍的指引本益比。三個問題如下。",
  "命題 1：AI 封膠能長多大：HBM 堆疊數與 CoWoS 片數的增量，讓 AI 封膠營收與占營收比在 FY2027–FY2028 成長多少。",
  "命題 2：營益率能否回到 16% 以上：營收成長後，FY2027 營業利益率在三種情境下是多少。",
  "命題 3：現價合不合理：以標準版 DCF（自由現金流折現）與後段設備同業倍數估出的每股價值，和現價相比是高還是低。",
- "重點 1：合理價值{updesc}現價，{src}。加權目標價約 ¥{tpw|#,##0}（DCF ¥{dcftp|#,##0} 占 {wdcf|0%}、Comparable〔相對倍數調整後〕¥{compadj|#,##0} 占其餘），比現價 ¥{px|#,##0} {upw|SP}，投資建議{rec}（級距 {grade}）。把加權目標價與現價的差距拆成兩個來源（各自權重 ×（目標價 − 現價））：DCF 占 {dcfsh|0%}、Comparable 占 {compsh|0%}。Comparable 的同業倍數經相對倍數調整（係數 {rmf|0.00}）後為 {pmadj|0.0} 倍，比現價隱含的 {pxpe|0.0} 倍（÷ 12 個月後前瞻 EPS ¥{feps|#,##0.0}）{mdir} {mulg|0%;0%}；本模型前瞻 EPS 比共識 {geps|SP}。DCF 比現價 {dcfup|SP}：{dcfwho}。",
+ "重點 1：合理價值{updesc}現價，{src}。加權目標價約 ¥{tpw|#,##0}（DCF ¥{dcftp|#,##0} 占 {wdcf|0%}、Comparable〔相對倍數調整後〕¥{compadj|#,##0} 占其餘），比現價 ¥{px|#,##0} {upw|SP}，投資建議{rec}（級距 {grade}）。把加權目標價與現價的差距拆成兩個來源（各自權重 ×（目標價 − 現價））：DCF 占 {dcfsh|0%}、Comparable 占 {compsh|0%}。{rmline}Comparable ¥{compadj|#,##0} 比現價 {upcadj|SP}，同一時間窗拆成兩個因素相乘：12 個月後前瞻 EPS ¥{feps|#,##0.0} 比目前未來 12 月 EPS ¥{ntm|#,##0.0} {epsg|SP}，同業倍數（相對倍數調整係數 {rmf|0.00} 後 {pmadj|0.0} 倍）比現價 ÷ 目前未來 12 月 EPS（{pxntm|0.0} 倍）{mulg2|SP}，{cdrv2}；本模型前瞻 EPS 比共識 {geps|SP}。DCF 比現價 {dcfup|SP}：{dcfwho}。",
  "重點 2：營收的大部分仍是非 AI 設備與其他事業。情境 A 的 AI 封膠營收 FY2026 ¥{eaiA26|#,##0.0}B、FY2027 ¥{eaiA27|#,##0.0}B，占營收由 {aishA26|0%} {aidir}為 {aishA27|0%}（FY2026 為錨點年，FY2027 起 AI 兩項回到驅動推導）；FY2027 營業利益率情境 A／B／C 為 {oimA27|0.0%}／{oimB27|0.0%}／{oimC27|0.0%}（{om16}）。AI 錨點（FY2025 ¥10.0B）為假設，公司不揭露。",
  "重點 3：FY2027 EPS 對 AI 錨點與淨利 ÷ 營業利益比例敏感（情境 A；敏感度測試，不是門檻）：「{l_alo}」「{l_ahi}」為 {e_alo|SP}／{e_ahi|SP}，「{l_nlo}」「{l_nhi}」為 {e_nlo|SP}／{e_nhi|SP}，「{l_stk}」為 {e_stk|SP}，「{l_shl}」為 {e_shl|SP}。",
  "重點 4：v0.3 起 DCF 改為標準版（無槓桿自由現金流折現）：DCF 目標價 ¥{dcftp|#,##0}，三種情境推到 12 個月後為 A ¥{dcfA|#,##0}、B ¥{dcfB|#,##0}、C ¥{dcfC|#,##0}（{dcfwho}）。折現率 WACC {wacc|0.0%}：股權成本 {ke|0.0%}＝rf {rfv|0.00%}（日本 10 年期公債）＋ β {beta|0.00} ×（ERP {erp|0%} ＋ 日本國家風險溢酬 {crp|0.00%}）；β 為自算 JP 半導體設備產業無槓桿 β {betau|0.000}（同業中位數 Blume 調整）依負債比重新加槓桿，ERP 5% 與 RONIC＝WACC 為假設；永續成長率 g＝{gtv|0.00%}。設備業營運資金重（近三年平均占營收 {fcwc|0%}），營收成長期的自由現金流被營運資金吃掉一部分；情境 B 的終值現值占企業價值 {tvshB|0%}、隱含終值 EV／EBITDA 約 {multB|0.0} 倍。以三情境加權目標價為基準，WACC −1pt／＋1pt 使加權目標價變動 {s_wlo|SP}／{s_whi|SP}，β 低／高案例（β_u ∓ 0.3 各自重新加槓桿）為 {s_blo|SP}／{s_bhi|SP}，營運資金比例低／高為 {s_wclo|SP}／{s_wchi|SP}（敏感度測試，不是門檻）。"
@@ -931,7 +946,7 @@ ANS = [
  "AI 封膠能長多大？答：依本模型情境 A，AI 封膠（HBM＋2.5D）營收由 FY2025 ¥{eaiA25|#,##0.0}B 到 FY2027 ¥{eaiA27|#,##0.0}B、FY2028 ¥{eaiA28|#,##0.0}B，占營收 {aishA25|0%} → {aishA27|0%} → {aishA28|0%}；情境 B、C 的 FY2028 為 ¥{eaiB28|#,##0.0}B、¥{eaiC28|#,##0.0}B（上游 HBM 位元、顆數係數依情境，AI 封膠市占流失 3pt／8pt 為假設）。",
  "營益率能否回到 16% 以上？答：依本模型 FY2027 營業利益率情境 A／B／C 為 {oimA27|0.0%}／{oimB27|0.0%}／{oimC27|0.0%}，{om16}；FY2028 為 {oimA28|0.0%}／{oimB28|0.0%}／{oimC28|0.0%}。增量營益率來自 Hist 迴歸加情境調整（A ＋3pt、C −5pt，為假設）。",
  "現價合不合理？答：依本模型{verdict}。現價 ¥{px|#,##0} 為公司 FY2026 指引 EPS ¥{g26eps|#,##0.0} 的 {peg|0.0} 倍。標準版 DCF 目標價 ¥{dcftp|#,##0}（{dcfup|SP}），{dcfwho}；Comparable（後段設備同業倍數，相對倍數調整後）¥{compadj|#,##0}（{upcadj|SP}）。加權目標價 ¥{tpw|#,##0}，比現價 {upw|SP}，投資建議{rec}；市場共識目標價 ¥{cons|#,##0}。"]
-RD["A1"] = RD["A1"].value + "；v0.3（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；DCF 頁、Val 0.1 節、Sens 目標價參數）＋HTML 新版面 v1.0（README 新增展示層與命題回覆）；Comparable、情境權重、DCF 權重 50% 與投資建議規則不變；v0.3.1（2026-11-05）：β 改自算產業 β（JP 半導體設備，Blume 調整），評價日統一為 2026-12-31；v0.3.2（2026-11-05）：第二輪修正（6-30 淨現金以 stub 期滾到評價日、β 敏感度 ±0.3、Sens 美元口徑折現）"
+RD["A1"] = RD["A1"].value + "；v0.3（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；DCF 頁、Val 0.1 節、Sens 目標價參數）＋HTML 新版面 v1.0（README 新增展示層與命題回覆）；Comparable、情境權重、DCF 權重 50% 與投資建議規則不變；v0.3.1（2026-11-05）：β 改自算產業 β（JP 半導體設備，Blume 調整），評價日統一為 2026-12-31；v0.3.2（2026-11-05）：第二輪修正（6-30 淨現金以 stub 期滾到評價日、β 敏感度 ±0.3、Sens 美元口徑折現）；v0.3.3（2026-11-06）：第三輪修正（現價與同業報價統一 2026-11-04、相對倍數調整係數影響明示、README 同一時間窗與公式、版本沿革固定文字）"
 _r = RD.max_row + 2
 RD.cell(_r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；v0.3 新增，上方原列保留給下游）").font = BOLD; _r += 1
 for t_ in PRES:
@@ -942,19 +957,15 @@ for t_ in ANS:
     RD.cell(_r, 1, _fx(t_)); _r += 1
 _r += 1
 RD.cell(_r, 1, "v0.3（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；tools/fcff_dcf.py；docs/plan/個股DCF標準規格.md v1.0）。新增 DCF 頁（三情境 FCFF 明細與檢查列；評價日 2026-06-30，FY2026 只計評價日後三季）；Val 0.1 節改為折現率與 DCF 彙總（0.2 節以後列號不變）；Sens 目標價參數改為標準案例；In 頁新增 M2 節（日本 rf、Damodaran Global 半導體設備無槓桿 β 重新加槓桿、ERP＋日本 CRP、資本結構、折舊／資本支出／營運資金比例），刪除 tp_r、tp_roe。HTML 改用個股 HTML 版面規格 v1.0。PL、Q、Hist、Recon 頁與 v0.2.1 相同。"); _r += 1
-_SPV = '"+0.0%;−0.0%"'
-RD.cell(_r, 1, "=" + "&".join([
-    '"v0.3.1（2026-11-05）：β 改自算產業 β（Andy 2026-11-05 22:55）：JP 半導體設備同業 8 家無槓桿 β 中位數 "', 'TEXT(beta_u_med,"0.00")',
-    '"（Yahoo Finance 月報酬 2021-11～2026-10 對日經 225 迴歸，Hamada 去槓桿、現金修正），Blume 調整後 "', 'TEXT(beta_u,"0.000")',
-    '"，依市值 D/E 重新加槓桿為 "', 'TEXT(beta,"0.00")', '"，取代 Damodaran Global 半導體設備表；β 低／高案例改為中位數 × 0.8 再 Blume／中位數未調整。"',
-    '"評價日由 2026-06-30 統一為 2026-12-31（FY2026 只計評價日後一季；目標時點 2027-12-31；淨現金與投資沿用 2026-06-30 資產負債表）。"',
-    '"新舊對照（v0.3 → v0.3.1）：β 2.33 → "', 'TEXT(beta,"0.00")', '"，WACC 14.9% → "', 'TEXT(wacc,"0.0%")',
-    f'"，DCF 目標價 1,016 → "', f'TEXT(Val!B{T["dcftp"]},"#,##0")', '"，加權目標價 1,343 → "', f'TEXT(Val!B{T["tpw"]},"#,##0")',
-    '"，上檔空間 −31.8% → "', f'TEXT(Val!B{T["upw"]},{_SPV})', '"，投資建議 放空 → "', f'Val!B{_G + 1}', '"。其他模型內容不變。"'])); _r += 1
-RD.cell(_r, 1, _fx("v0.3.2（2026-11-05）：工作單第二輪修正（Andy 2026-11-05 23:16 定案；共用模組 tools/fcff_dcf.py v2）。β 組別不變（JP 半導體設備 1.610，重新加槓桿 {beta|0.00}）；β 敏感度改 β_u ∓ 0.3 重新加槓桿。"
-                   "淨現金與投資：資產負債表日 2026-06-30（最新已公布一季）¥{dcfnc|#,##0.0}B，以 stub 期滾到評價日 2026-12-31＝＋stub 期 FCFF（FY2026 FCFF × stub_frac；情境 B ¥{stubB|#,##0.0}B）− 已宣告股利／買回 0＝¥{ncrB|#,##0.0}B（v0.3.1 直接沿用 6-30 值，未計 7–12 月現金流）。"
-                   "模型沒有逐年資本支出／折舊列，維持近三年占營收比例。Sens 新增「美元口徑折現」：加權目標價 ¥{usd|#,##0}（{usdp|SP}）。"
-                   "新舊對照（v0.3.1 → v0.3.2）：β 1.77 → {beta|0.00}，WACC 12.0% → {wacc|0.0%}，DCF 目標價 1,209 → {dcftp|#,##0}，加權目標價 1,440 → {tpw|#,##0}，上檔空間 −26.8% → {upw|SP}，投資建議 放空 → {rec}。")); _r += 1
+# v0.3.3（第三輪修正第 37 項）：版本沿革列改為當版成品的固定文字（原為活公式，會顯示現值）
+RD.cell(_r, 1, 'v0.3.1（2026-11-05）：β 改自算產業 β（Andy 2026-11-05 22:55）：JP 半導體設備同業 8 家無槓桿 β 中位數 1.91（Yahoo Finance 月報酬 2021-11～2026-10 對日經 225 迴歸，Hamada 去槓桿、現金修正），Blume 調整後 1.610，依市值 D/E 重新加槓桿為 1.77，取代 Damodaran Global 半導體設備表；β 低／高案例改為中位數 × 0.8 再 Blume／中位數未調整。評價日由 2026-06-30 統一為 2026-12-31（FY2026 只計評價日後一季；目標時點 2027-12-31；淨現金與投資沿用 2026-06-30 資產負債表）。新舊對照（v0.3 → v0.3.1）：β 2.33 → 1.77，WACC 14.9% → 12.0%，DCF 目標價 1,016 → 1,209，加權目標價 1,343 → 1,440，上檔空間 −31.8% → −26.8%，投資建議 放空 → 放空。其他模型內容不變。'); _r += 1
+RD.cell(_r, 1, 'v0.3.2（2026-11-05）：工作單第二輪修正（Andy 2026-11-05 23:16 定案；共用模組 tools/fcff_dcf.py v2）。β 組別不變（JP 半導體設備 1.610，重新加槓桿 1.77）；β 敏感度改 β_u ∓ 0.3 重新加槓桿。淨現金與投資：資產負債表日 2026-06-30（最新已公布一季）¥22.4B，以 stub 期滾到評價日 2026-12-31＝＋stub 期 FCFF（FY2026 FCFF × stub_frac；情境 B ¥0.6B）− 已宣告股利／買回 0＝¥23.0B（v0.3.1 直接沿用 6-30 值，未計 7–12 月現金流）。模型沒有逐年資本支出／折舊列，維持近三年占營收比例。Sens 新增「美元口徑折現」：加權目標價 ¥1,390（−3.8%）。新舊對照（v0.3.1 → v0.3.2）：β 1.77 → 1.77，WACC 12.0% → 12.0%，DCF 目標價 1,209 → 1,218，加權目標價 1,440 → 1,444，上檔空間 −26.8% → −26.6%，投資建議 放空 → 放空。'); _r += 1
+RD.cell(_r, 1, 'v0.3.3（2026-11-06）：第三輪（合併前）修正（共用模組 tools/fcff_dcf.py v2 不變）。(1) 現價改 2026-11-04 收盤 ¥2,097（Yahoo Finance 日線收盤；v0.3.2 為 10-23 的 ¥1,968）。(2) 同業報價統一 11-04 收盤（第 26 項）：同業前瞻 P/E＝11-04 收盤 ÷ 前瞻 EPS（stockanalysis 取得日價格 ÷ Forward PE；原報價日 09-23～10-23 不一），中位數 25.8 → 19.9（ASMPT 30.3 → 19.9、東京精密 21.9 → 17.7 等）。(3) README 展示層重點 1 明示相對倍數調整係數 0.72 對投資建議的影響（公式判定：本版未調整時加權目標價 ¥1,506、−28.2%，同為放空；v0.3.2 時未調整為 −9.9% 中立，放空完全取決於係數），並改同一時間窗（現價 ÷ 目前未來 12 月 EPS 對比同業倍數）；README 上方重點觀察 2、3 與 A3 註的寫死數字改公式；版本沿革列改固定文字；情境驅動對照收斂法列名中性化。(4) HTML：DCF 明細只有比例列用 %；DCF 彙總金額列取一位小數（含 stub 期 FCFF）、主表顯示「＋Stub 期 FCFF」；情境驅動表年度不加千分位、% 與 pt 列顯示百分比。新舊對照（v0.3.2 → v0.3.3）：DCF 目標價 1,218 → 1,216，Comparable（相對倍數調整後）1,670 → 1,289，加權目標價 1,444 → 1,252，上檔空間 −26.6% → −40.3%，投資建議 放空 → 放空。'); _r += 1
+# v0.3.3（第三輪修正第 40 項）：README 上方重點觀察 2、3 與 A3 註的寫死數字改公式
+_ob = lambda k: next(r_ for r_ in range(1, 30) if str(RD.cell(r_, 1).value or "").startswith(k))
+RD.cell(_ob("重點觀察 2："), 1, _fx("重點觀察 2：本模型 12 個月後前瞻 EPS {feps|#,##0.0} 比共識前瞻 EPS {cfeps|#,##0.0} {geps|SP}；共識目標價 {cons|#,##0} 隱含 {cpe|0.0} 倍，同業中位數 {pmed|0.0} 倍（倍數因素 {gmul|SP}）。情境 B、C 的 FY2027 EPS 比 A {epsBA27|SP}、{epsCA27|SP}（AI 封膠市占流失 3pt／8pt 與上游下修）。"))
+RD.cell(_ob("重點觀察 3："), 1, _fx("重點觀察 3：FY2027 EPS 對「{l_stk}」（{e_stk|SP}）、淨利 ÷ 營業利益（「{l_nlo}」「{l_nhi}」→ {e_nlo|SP}／{e_nhi|SP}）與 FY2026 錨點（「{l_glo}」「{l_ghi}」→ {e_glo|SP}／{e_ghi|SP}）最敏感（敏感度測試，不是門檻）。下一個檢驗事件是第二季財報，FY2026 錨點將改為上半年實績加下半年指引。"))
+RD.cell(_ob("註："), 1, _fx("註：指引本益比 {peg|0.0} 倍＝現價 ¥{px|#,##0}（2026-11-04）÷ 公司 FY2026 指引 EPS ¥{g26eps|#,##0.00}；÷ FY2025 EPS 見 Val 第 5 節。"))
 RD.cell(_r, 1, "HTML 橫幅輔助值（只引用 Val 頁；不進任何計算）").font = BOLD; _r += 1
 RD.cell(_r, 1, "上檔空間：Comparable 目標價（相對倍數調整後）"); RD.cell(_r, 2, "=tp_comp_adj/px-1").number_format = "0.0%"; _r += 1
 
