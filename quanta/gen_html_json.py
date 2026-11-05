@@ -264,5 +264,18 @@ se["blocks"] += [{"type": "note", "parts": [f"@Sens!A{r_w + 1}"]},
                   "head": [f"@Sens!{c}{r_wh}" for c in full["rowgen"]["cols"]],
                   "rowgen": dict(full["rowgen"], rows=f"{r_wh + 1}-{r_we}")}]
 
+# 第三輪修正：In 頁單位為 pt（百分點，存為小數）的列，relayout 預設 n1 會把 0.02 顯示成 0.0 → 改 sp1（帶正負號百分比）
+_PT = {r for r in range(4, wb["In"].max_row + 1) if wb["In"].cell(r, 3).value == "pt"}
+def _r3_pt(o):
+    if isinstance(o, dict):
+        return {k: _r3_pt(v) for k, v in o.items()}
+    if isinstance(o, list):
+        return [_r3_pt(v) for v in o]
+    if isinstance(o, str):
+        m = re.fullmatch(r"@In!([DEF])(\d+)\|n1", o)
+        if m and int(m.group(2)) in _PT:
+            return f"@In!{m.group(1)}{m.group(2)}|sp1"
+    return o
+cfg = _r3_pt(cfg)
 json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")
