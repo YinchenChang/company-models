@@ -183,7 +183,7 @@
 "company": "台積電",
 "metric": "P/E",
 "ccy": "TWD",
-"px": 2385,
+"px": 2260,
 "p25": 15.44,
 "p50": 21.97,
 "p75": 28.49,
@@ -196,14 +196,14 @@
 "basis_label": "2027 EPS（A）",
 "basis": 137.67,
 "implied_px": 3025,
-"vs_px": 0.268,
-"px_multiple": 17.32
+"vs_px": 0.338,
+"px_multiple": 16.42
 },
 {
 "company": "台積電",
 "metric": "P/E",
 "ccy": "TWD",
-"px": 2385,
+"px": 2260,
 "p25": 15.44,
 "p50": 21.97,
 "p75": 28.49,
@@ -216,14 +216,14 @@
 "basis_label": "2027 EPS（A）",
 "basis": 137.67,
 "implied_px": 2126,
-"vs_px": -0.109,
-"px_multiple": 17.32
+"vs_px": -0.059,
+"px_multiple": 16.42
 },
 {
 "company": "台積電",
 "metric": "P/E",
 "ccy": "TWD",
-"px": 2385,
+"px": 2260,
 "p25": 15.44,
 "p50": 21.97,
 "p75": 28.49,
@@ -236,8 +236,8 @@
 "basis_label": "2027 EPS（A）",
 "basis": 137.67,
 "implied_px": 3922,
-"vs_px": 0.645,
-"px_multiple": 17.32
+"vs_px": 0.735,
+"px_multiple": 16.42
 },
 {
 "company": "美光（P/E）",
