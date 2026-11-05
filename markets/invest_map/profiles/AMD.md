@@ -11,21 +11,21 @@ asof: 2026-10-25
 ---
 
 ## 一句話定位
-AI 加速器（GPU）市場中 NVIDIA 以外的第二大 GPU 供應商，同時賣伺服器 CPU；資料中心 GPU 營收＝加速器市場金額 × AMD 金額份額 [本專案：AMD模型_v0.2.1.xlsx README!A3]。
+AI 加速器（GPU）市場中 NVIDIA 以外的第二大 GPU 供應商，同時賣伺服器 CPU；資料中心 GPU 營收＝加速器市場金額 × AMD 金額份額 [本專案：20261104_AMD模型_v0.3.xlsx README!A3]。
 
 ## 公司在做什麼
-- 賣資料中心晶片：Instinct GPU（MI355X、MI450／MI455X，用來訓練與執行 AI 模型）、EPYC 伺服器 CPU、DPU、FPGA；另有個人電腦（Client）、遊戲主機與顯示卡（Gaming）、嵌入式（Embedded）[本專案：AMD模型_v0.2.1.xlsx Q!A5:A10]。
+- 賣資料中心晶片：Instinct GPU（MI355X、MI450／MI455X，用來訓練與執行 AI 模型）、EPYC 伺服器 CPU、DPU、FPGA；另有個人電腦（Client）、遊戲主機與顯示卡（Gaming）、嵌入式（Embedded）[本專案：20261104_AMD模型_v0.3.xlsx Q!A5:A10]。
 - Helios 是 AMD 的整櫃 AI 系統（MI455X GPU＋EPYC CPU＋網通），把 GPU 賣成整櫃，對標 NVIDIA 的 NVL72 [外部・未經本專案檢核]。
-- 大客戶以「GW（十億瓦）」為單位簽約：OpenAI 6 GW、Meta 6 GW（兩案合計 12 GW）、Anthropic 最多 2 GW、Oracle 首批 5 萬顆 MI450 [本專案：AMD模型_v0.2.1.xlsx In!E122、In!E112、In!E124、In!E125]。
-- 公司不揭露資料中心內 GPU 與 CPU 的拆分；本專案的 GPU 金額是假設拆分（Assumed）[本專案：AMD模型_v0.2.1.xlsx Q!M6]。
+- 大客戶以「GW（十億瓦）」為單位簽約：OpenAI 6 GW、Meta 6 GW（兩案合計 12 GW）、Anthropic 最多 2 GW、Oracle 首批 5 萬顆 MI450 [本專案：20261104_AMD模型_v0.3.xlsx In!E122、In!E112、In!E124、In!E125]。
+- 公司不揭露資料中心內 GPU 與 CPU 的拆分；本專案的 GPU 金額是假設拆分（Assumed）[本專案：20261104_AMD模型_v0.3.xlsx Q!M6]。
 
 ## 主要產品與營收占比
 | 產品／部門 | 內容（白話） | 營收占比 | 期間 | 標記 |
 |---|---|---|---|---|
-| Data Center | Instinct GPU、EPYC CPU、DPU、FPGA | 48.0%（US$16.6B ÷ 34.6B） | FY2025 | [本專案：AMD模型_v0.2.1.xlsx Q!F5、Q!F4，占比為換算] |
-| Client | 個人電腦 CPU | 30.7%（US$10.6B） | FY2025 | [本專案：AMD模型_v0.2.1.xlsx Q!F8，換算] |
-| Gaming | 遊戲主機晶片、顯示卡 | 11.3%（US$3.9B） | FY2025 | [本專案：AMD模型_v0.2.1.xlsx Q!F9，換算] |
-| Embedded | 工業、車用、通訊用嵌入式晶片 | 10.0%（US$3.5B） | FY2025 | [本專案：AMD模型_v0.2.1.xlsx Q!F10，換算] |
+| Data Center | Instinct GPU、EPYC CPU、DPU、FPGA | 48.0%（US$16.6B ÷ 34.6B） | FY2025 | [本專案：20261104_AMD模型_v0.3.xlsx Q!F5、Q!F4，占比為換算] |
+| Client | 個人電腦 CPU | 30.7%（US$10.6B） | FY2025 | [本專案：20261104_AMD模型_v0.3.xlsx Q!F8，換算] |
+| Gaming | 遊戲主機晶片、顯示卡 | 11.3%（US$3.9B） | FY2025 | [本專案：20261104_AMD模型_v0.3.xlsx Q!F9，換算] |
+| Embedded | 工業、車用、通訊用嵌入式晶片 | 10.0%（US$3.5B） | FY2025 | [本專案：20261104_AMD模型_v0.3.xlsx Q!F10，換算] |
 | 合計 | — | 100% | FY2025 | — |
 
 - FY2026 錨點（Q1、Q2 實績＋Q3 指引＋Q4 假設）營收 US$49.6B，其中 Data Center 30.9B（62.1%）[本專案：AMD模型_v0.2.1.xlsx Q!K4、Q!K5，占比為換算]。
@@ -33,10 +33,10 @@ AI 加速器（GPU）市場中 NVIDIA 以外的第二大 GPU 供應商，同時�
 - non-GAAP 毛利率：FY2025 52.4%、FY2026 錨點 55.8%、模型 FY2027 49.7%（HBM 2027 漲價、吸收比例 0.5 壓 GPU 毛利率）[本專案：AMD模型_v0.2.1.xlsx Q!F13、Q!K13、PL!E12、Recon!J15]。
 
 ## 市場定位與產業位置
-- 本專案推算 CY2027 AI 加速器**金額份額** AMD 6.7%、**顆數份額** 6.3%；NVIDIA 金額份額 75.1% [本專案：AMD模型_v0.2.1.xlsx Recon!C27、Recon!C28、Recon!C29]。
+- 本專案推算 CY2027 AI 加速器**金額份額** AMD 6.7%、**顆數份額** 6.3%；NVIDIA 金額份額 75.1% [本專案：20261104_AMD模型_v0.3.xlsx Recon!C27、Recon!C28、Recon!C29]。
 - 同一題 AI半導體 先驗比對的推導值為 3–6%（候選母體表同此寫法），比模型的 6.7% 低，兩者並列 [本專案：先驗比對_NVDA_20261023.md N5c；universe_ai_semis_v0.2.2.csv AMD 列]。
 - 每顆售價水準：FY2026 隱含每顆認列售價約 US$20.2K，HSBC 估 MI355X 約 23K [本專案：AMD模型_v0.2.1.xlsx Recon!C18、Recon!B18]。
-- 大單附帶認股權證：OpenAI、Meta 合計上限 3.2 億股，約為 FY2026 股數的 19%，依出貨 GW 分批歸屬 [本專案：AMD模型_v0.2.1.xlsx In!E111、Recon!J25]。
+- 大單附帶認股權證：OpenAI、Meta 合計上限 3.2 億股，約為 FY2026 股數的 19%，依出貨 GW 分批歸屬 [本專案：20261104_AMD模型_v0.3.xlsx In!E111、Recon!J25]。
 - 上游依賴 HBM（高頻寬記憶體）：HBM 是 AMD 的成本，漲價時 AMD 吸收多少由模型假設決定 [本專案：amd/README.md 驅動因子]。
 
 ## 管理層與經營風格
@@ -46,17 +46,17 @@ AI 加速器（GPU）市場中 NVIDIA 以外的第二大 GPU 供應商，同時�
 | 財務長 | Jean Hu | 2022 | 2026-09 仍以財務長身分公開發言 [外部・未經本專案檢核] |
 
 - 經營風格：本專案尚未研究。
-- 本專案記錄到的資本配置事實：2026 上半年買回僅 US$0.22B [本專案：AMD模型_v0.2.1.xlsx In!H110]。
+- 本專案記錄到的資本配置事實：2026 上半年買回僅 US$0.22B [本專案：20261104_AMD模型_v0.3.xlsx In!H110]。
 
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| NVIDIA | AI GPU、整櫃系統 | CY2027 加速器金額份額 75.1% | [本專案：NVIDIA模型_v0.2.xlsx Units!D32] |
-| Google TPU（Broadcom、聯發科設計） | 自研 AI 晶片 | CY2027 金額份額 9.8% | [本專案：NVIDIA模型_v0.2.xlsx Units!D34] |
-| AWS Trainium（世芯、Marvell 設計） | 自研 AI 晶片 | CY2027 金額份額 3.0% | [本專案：NVIDIA模型_v0.2.xlsx Units!D35] |
-| 其他 ASIC（MTIA、Maia、昇騰等） | 自研 AI 晶片 | CY2027 金額份額 5.4% | [本專案：NVIDIA模型_v0.2.xlsx Units!D36] |
+| NVIDIA | AI GPU、整櫃系統 | CY2027 加速器金額份額 75.1% | [本專案：20261030_NVIDIA個股模型_v0.2.3.xlsx Units!D32] |
+| Google TPU（Broadcom、聯發科設計） | 自研 AI 晶片 | CY2027 金額份額 9.8% | [本專案：20261030_NVIDIA個股模型_v0.2.3.xlsx Units!D34] |
+| AWS Trainium（世芯、Marvell 設計） | 自研 AI 晶片 | CY2027 金額份額 3.0% | [本專案：20261030_NVIDIA個股模型_v0.2.3.xlsx Units!D35] |
+| 其他 ASIC（MTIA、Maia、昇騰等） | 自研 AI 晶片 | CY2027 金額份額 5.4% | [本專案：20261030_NVIDIA個股模型_v0.2.3.xlsx Units!D36] |
 
-- AMD 與 NVIDIA 模型用同一份顆數與每顆價，所以份額可互相加總 [本專案：AMD模型_v0.2.1.xlsx Recon!J29]。
+- AMD 與 NVIDIA 模型用同一份顆數與每顆價，所以份額可互相加總 [本專案：20261104_AMD模型_v0.3.xlsx Recon!J29]。
 - 伺服器 CPU（與 Intel、Arm 架構自研 CPU 競爭）的份額：本專案未建立。
 
 ## 主要客戶

@@ -15,7 +15,7 @@ asof: 2026-10-25
 
 ## 公司在做什麼
 - 做光模組（把電訊號轉成光訊號、在光纖上傳輸的小盒子），也自製模組裡最關鍵的雷射（EML、VCSEL、CW 雷射）與矽光元件，部分元件也賣給其他模組廠 [本專案：cohr/README.md 開頭、最大限制]。
-- 資料中心以外：通訊（電信、資料中心互連 DCI、ZR、泵浦雷射）與工業（雷射、工程材料、碳化矽 SiC 基板）[本專案：Coherent模型_v0.2.xlsx Q!A7、Q!A8]。
+- 資料中心以外：通訊（電信、資料中心互連 DCI、ZR、泵浦雷射）與工業（雷射、工程材料、碳化矽 SiC 基板）[本專案：20261104_Coherent個股模型_v0.3.xlsx Q!A7、Q!A8]。
 - 公司說 FY2027 訂單已近滿載，磷化銦（做雷射晶片的半導體材料）產能將再倍增 [本專案：cohr/README.md 開頭]。
 - 已出售航太國防事業（約 4 億美元）與慕尼黑雷射加工工具事業，模型 FY2027 起不含 [本專案：cohr/README.md 已出售事業排除]。
 - 下一代：CPO（光學引擎與交換器晶片封裝在一起）；網通比對檔記錄 Coherent 的 scale-up CPO 在 2027 下半年起量 [本專案：先驗比對_網通_20261008.md N4]。
@@ -23,21 +23,21 @@ asof: 2026-10-25
 ## 主要產品與營收占比
 | 產品／部門 | 內容（白話） | 營收占比 | 期間 | 標記 |
 |---|---|---|---|---|
-| 資料中心 | AI 光模組、雷射與光元件、光路交換（OCS） | 44.9%（US$3.20B） | FY2026 | [本專案：Coherent模型_v0.2.xlsx Q!C6 ÷ Q!C4；Derived／Assumed，公司只揭露資料中心＋通訊合計] |
-| 通訊 | 電信、DCI、ZR、泵浦雷射 | 29.2%（US$2.08B） | FY2026 | [本專案：Coherent模型_v0.2.xlsx Q!C7 ÷ Q!C4；Derived] |
-| 工業 | 雷射、工程材料、SiC（含已出售事業） | 25.9%（US$1.84B） | FY2026 | [本專案：Coherent模型_v0.2.xlsx Q!C8 ÷ Q!C4；Verified] |
-| 合計 | — | 100%（US$7.12B） | FY2026 | [本專案：Coherent模型_v0.2.xlsx Q!C4] |
+| 資料中心 | AI 光模組、雷射與光元件、光路交換（OCS） | 44.9%（US$3.20B） | FY2026 | [本專案：20261104_Coherent個股模型_v0.3.xlsx Q!C6 ÷ Q!C4；Derived／Assumed，公司只揭露資料中心＋通訊合計] |
+| 通訊 | 電信、DCI、ZR、泵浦雷射 | 29.2%（US$2.08B） | FY2026 | [本專案：20261104_Coherent個股模型_v0.3.xlsx Q!C7 ÷ Q!C4；Derived] |
+| 工業 | 雷射、工程材料、SiC（含已出售事業） | 25.9%（US$1.84B） | FY2026 | [本專案：20261104_Coherent個股模型_v0.3.xlsx Q!C8 ÷ Q!C4；Verified] |
+| 合計 | — | 100%（US$7.12B） | FY2026 | [本專案：20261104_Coherent個股模型_v0.3.xlsx Q!C4] |
 
-- 營收 FY2025 US$5.81B → FY2026 7.12B（+22.5%）[本專案：Coherent模型_v0.2.xlsx Q!B4、Q!C4、Q!B22]。
-- 資料中心與通訊合計 FY2026 US$5.27B 是公司揭露值；兩者拆分由季增率聯立推導 [本專案：Coherent模型_v0.2.xlsx Q!C5；cohr/README.md 資料中心與通訊的拆分]。
-- non-GAAP 毛利率 FY2025 37.9% → FY2026 39.4%，公司長期目標 42% 以上 [本專案：Coherent模型_v0.2.xlsx Q!B10、Q!C10；cohr/README.md 驅動因子]。
+- 營收 FY2025 US$5.81B → FY2026 7.12B（+22.5%）[本專案：20261104_Coherent個股模型_v0.3.xlsx Q!B4、Q!C4、Q!B22]。
+- 資料中心與通訊合計 FY2026 US$5.27B 是公司揭露值；兩者拆分由季增率聯立推導 [本專案：20261104_Coherent個股模型_v0.3.xlsx Q!C5；cohr/README.md 資料中心與通訊的拆分]。
+- non-GAAP 毛利率 FY2025 37.9% → FY2026 39.4%，公司長期目標 42% 以上 [本專案：20261104_Coherent個股模型_v0.3.xlsx Q!B10、Q!C10；cohr/README.md 驅動因子]。
 
 ## 市場定位與產業位置
 - LightCounting 2025 光模組排名：中際旭創第一、新易盛第二（首次超過 Coherent）、Coherent 第三 [本專案：先驗比對_中際旭創_20261024.md Q5(b)]。
 - 本專案推算 Coherent 在 AI 可插拔光模組的有效份額 CY2026 14.6% → CY2028 16.8%（情境 A；含賣給其他模組廠的雷射元件，所以叫「有效」份額）[本專案：Coherent模型_v0.2.xlsx Units!C6、Units!E6]。
 - 與中際旭創合計 CY2026 56.8%，其餘由新易盛、Lumentum、Fabrinet 代工客戶等分配 [本專案：Coherent模型_v0.2.xlsx Units!C8、Units!G8]。
-- 客戶集中：兩大客戶各逾營收 10%；NVIDIA 投資 Coherent 20 億美元 [本專案：Coherent模型_v0.2.xlsx Sources!A4、In!H77（10-K 摘要，二手）]。
-- SiC 子公司 25% 由 DENSO、三菱電機持有 [本專案：Coherent模型_v0.2.xlsx In!I65]。
+- 客戶集中：兩大客戶各逾營收 10%；NVIDIA 投資 Coherent 20 億美元 [本專案：20261104_Coherent個股模型_v0.3.xlsx Sources!A4、In!H77（10-K 摘要，二手）]。
+- SiC 子公司 25% 由 DENSO、三菱電機持有 [本專案：20261104_Coherent個股模型_v0.3.xlsx In!I65]。
 
 ## 管理層與經營風格
 | 職位 | 姓名 | 任職起 | 背景 |
@@ -47,18 +47,18 @@ asof: 2026-10-25
 | 技術長 | Julie Eng | 2022-10 | [外部・未經本專案檢核] |
 
 - 經營風格：本專案尚未研究。
-- 本專案記錄到：FY2026 還債 5.13 億美元、槓桿 0.7 倍；目標營業費用率 18%（FY2026 19.0%）；FY2026 發行新股 19.99 億美元；回購未找到 [本專案：Coherent模型_v0.2.xlsx In!I73、In!I71、In!H77、In!I77]。
+- 本專案記錄到：FY2026 還債 5.13 億美元、槓桿 0.7 倍；目標營業費用率 18%（FY2026 19.0%）；FY2026 發行新股 19.99 億美元；回購未找到 [本專案：20261104_Coherent個股模型_v0.3.xlsx In!I73、In!I71、In!H77、In!I77]。
 
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
 | 中際旭創 | 800G／1.6T 光模組 | 可插拔有效份額 CY2026 42.2% | [本專案：Coherent模型_v0.2.xlsx Units!C7] |
-| 新易盛 | 光模組 | 2025 光模組營收 US$3.5B，排名高於 Coherent（LightCounting） | [本專案：Coherent模型_v0.2.xlsx In!E107] |
+| 新易盛 | 光模組 | 2025 光模組營收 US$3.5B，排名高於 Coherent（LightCounting） | [本專案：20261104_Coherent個股模型_v0.3.xlsx In!E107] |
 | Lumentum | 雷射元件、OCS | 本專案未建立對比份額 | — |
 
 - 本專案網通模型：AI 可插拔光模組市場 CY2026 US$29.8B → CY2027 54.7B → CY2028 61.2B [本專案：Coherent模型_v0.2.xlsx Units!C4:E4]。
 - CPO 光學市場 CY2026 US$0.3B → CY2029 5.9B，模型假設 Coherent 拿 10%／15%／20% [本專案：Coherent模型_v0.2.xlsx Units!C5、Units!F5；In!E31:E33]。
-- 份額相對值假設 1.10／1.15／1.15（磷化銦產能倍增、1.6T 提前）；新易盛、中際旭創搶 1.6T 是下行路徑 [本專案：cohr/README.md 驅動因子；Coherent模型_v0.2.xlsx Sens!B5]。
+- 份額相對值假設 1.10／1.15／1.15（磷化銦產能倍增、1.6T 提前）；新易盛、中際旭創搶 1.6T 是下行路徑 [本專案：cohr/README.md 驅動因子；20261104_Coherent個股模型_v0.3.xlsx Sens!B5]。
 
 ## 主要客戶
 - 10-K 口徑（Note 20 Major Customers）：「One major customer accounted for 20%, 10%, and 10% of consolidated revenue during fiscal 2026, 2025 and 2024, respectively. A second major customer accounted for 12% of consolidated revenue during fiscal 2026. A third major customer accounted for 12% of consolidated revenue during fiscal 2025.」營收主要來自 Datacenter & Communications 分部；均不具名（來源 1）。 [外部・未經本專案檢核]

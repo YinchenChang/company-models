@@ -11,7 +11,7 @@ asof: 2026-10-25
 ---
 
 ## 一句話定位
-客製 AI 晶片（XPU／ASIC）設計夥伴與資料中心交換器晶片龍頭，另有 VMware 軟體；AI 營收＝各 XPU 平台顆數 × Broadcom 份額 × 每顆售價＋網通附掛 [本專案：Broadcom模型_v0.1.xlsx README!A3]。
+客製 AI 晶片（XPU／ASIC）設計夥伴與資料中心交換器晶片龍頭，另有 VMware 軟體；AI 營收＝各 XPU 平台顆數 × Broadcom 份額 × 每顆售價＋網通附掛 [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx README!A3]。
 
 ## 公司在做什麼
 - 替 Google、Meta、OpenAI、Anthropic 等設計並代工出貨客製 AI 晶片（ASIC，為單一客戶量身做的晶片，比通用 GPU 便宜但用途窄）[本專案：先驗比對_AVGO_20261023.md 資料表]。
@@ -22,20 +22,20 @@ asof: 2026-10-25
 ## 主要產品與營收占比
 | 產品／部門 | 內容（白話） | 營收占比 | 期間 | 標記 |
 |---|---|---|---|---|
-| AI 半導體 | XPU＋AI 網通晶片 | 31.7%（US$20.3B） | FY2025 | [本專案：Broadcom模型_v0.1.xlsx Q!B7，推導值；換算] |
-| 非 AI 半導體 | 寬頻、無線、儲存等 | 25.9%（US$16.6B） | FY2025 | [本專案：Broadcom模型_v0.1.xlsx Q!B11；換算] |
-| 基礎架構軟體 | VMware 等 | 42.3%（US$27.0B） | FY2025 | [本專案：Broadcom模型_v0.1.xlsx Q!B6；換算] |
-| AI 半導體 | 同上 | 54.4%（US$57.6B） | FY2026 錨點（Q1–Q3 實績＋Q4 指引） | [本專案：Broadcom模型_v0.1.xlsx Q!G7、Q!G4；換算] |
-| 非 AI 半導體 | 同上 | 15.9%（US$16.9B） | FY2026 錨點 | [本專案：Broadcom模型_v0.1.xlsx Q!G11] |
-| 基礎架構軟體 | 同上 | 29.7%（US$31.4B） | FY2026 錨點 | [本專案：Broadcom模型_v0.1.xlsx Q!G6] |
+| AI 半導體 | XPU＋AI 網通晶片 | 31.7%（US$20.3B） | FY2025 | [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Q!B7，推導值；換算] |
+| 非 AI 半導體 | 寬頻、無線、儲存等 | 25.9%（US$16.6B） | FY2025 | [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Q!B11；換算] |
+| 基礎架構軟體 | VMware 等 | 42.3%（US$27.0B） | FY2025 | [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Q!B6；換算] |
+| AI 半導體 | 同上 | 54.4%（US$57.6B） | FY2026 錨點（Q1–Q3 實績＋Q4 指引） | [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Q!G7、Q!G4；換算] |
+| 非 AI 半導體 | 同上 | 15.9%（US$16.9B） | FY2026 錨點 | [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Q!G11] |
+| 基礎架構軟體 | 同上 | 29.7%（US$31.4B） | FY2026 錨點 | [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Q!G6] |
 
-- 兩期各自合計約 100%（營收 FY2025 US$63.9B、FY2026 錨點 105.9B）[本專案：Broadcom模型_v0.1.xlsx Q!B4、Q!G4]。
-- AI 內 XPU 約 69%、網通約 31%（FY2026 推估）；Q3 FY26 法說稱 XPU 73%（二手）[本專案：Broadcom模型_v0.1.xlsx Q!G10、Q!J10]。
-- non-GAAP 毛利率 FY2025 78.6% → FY2026 75.1% → 模型 FY2027 67.8%（代購 HBM 稀釋）[本專案：Broadcom模型_v0.1.xlsx Q!B13、Q!G13、PL!E11]。
+- 兩期各自合計約 100%（營收 FY2025 US$63.9B、FY2026 錨點 105.9B）[本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Q!B4、Q!G4]。
+- AI 內 XPU 約 69%、網通約 31%（FY2026 推估）；Q3 FY26 法說稱 XPU 73%（二手）[本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Q!G10、Q!J10]。
+- non-GAAP 毛利率 FY2025 78.6% → FY2026 75.1% → 模型 FY2027 67.8%（代購 HBM 稀釋）[本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Q!B13、Q!G13、PL!E11]。
 
 ## 市場定位與產業位置
-- 本專案推算 CY2027 Broadcom 占 ASIC 金額 61.5%、顆數 55% [本專案：Broadcom模型_v0.1.xlsx Units!D61、Units!D62]；外部：Counterpoint 約 60%（口徑未說明）、JPMorgan 高階 ASIC 80–85% [本專案：先驗比對_AVGO_20261023.md 資料表]。
-- ASIC 整體在 CY2027 加速器金額中占 22.4%（Broadcom 模型）[本專案：Broadcom模型_v0.1.xlsx Units!D59]；NVIDIA 模型對應約 18%，先驗比對推導 14–19%，三者並列 [本專案：NVIDIA模型_v0.1.1.xlsx Units!D34:D36；先驗比對_AVGO_20261023.md B6a]。
+- 本專案推算 CY2027 Broadcom 占 ASIC 金額 61.5%、顆數 55% [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Units!D61、Units!D62]；外部：Counterpoint 約 60%（口徑未說明）、JPMorgan 高階 ASIC 80–85% [本專案：先驗比對_AVGO_20261023.md 資料表]。
+- ASIC 整體在 CY2027 加速器金額中占 22.4%（Broadcom 模型）[本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Units!D59]；NVIDIA 模型對應約 18%，先驗比對推導 14–19%，三者並列 [本專案：20261030_NVIDIA個股模型_v0.2.3.xlsx Units!D34:D36；先驗比對_AVGO_20261023.md B6a]。
 - 客戶集中：6 家 XPU 客戶合計占 AI 營收 73%；Anthropic 預計 2027 年成為最大 XPU 客戶 [本專案：先驗比對_AVGO_20261023.md 資料表]。
 
 ## 管理層與經營風格
@@ -45,17 +45,17 @@ asof: 2026-10-25
 | 財務長 | Amie Thuener | 2026-06-12 | 前 Alphabet 主計長暨會計長；接替退休的 Kirsten Spears [外部・未經本專案檢核] |
 
 - 經營風格：本專案尚未研究。
-- 本專案記錄的特色：替客戶融資。對 Anthropic 放款上限 US$42B、為 OpenAI 安排超過 50B，媒體合計約 92B，約為模型 FY2027 AI 營收的 76% [本專案：Broadcom模型_v0.1.xlsx Recon!B34、Recon!C35]。
+- 本專案記錄的特色：替客戶融資。對 Anthropic 放款上限 US$42B、為 OpenAI 安排超過 50B，媒體合計約 92B，約為模型 FY2027 AI 營收的 76% [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Recon!B34、Recon!C35]。
 
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| NVIDIA | AI 加速器、網通 | CY2027 加速器金額份額 71.3%（Broadcom 模型）／75.1%（NVIDIA 模型） | [本專案：Broadcom模型_v0.1.xlsx Recon!C24；20261030_NVIDIA個股模型_v0.2.3.xlsx Units!D32] |
+| NVIDIA | AI 加速器、網通 | CY2027 加速器金額份額 71.3%（Broadcom 模型）／75.1%（NVIDIA 模型） | [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Recon!C24；20261030_NVIDIA個股模型_v0.2.3.xlsx Units!D32] |
 | Marvell | 客製 ASIC | 2027 約 8%（Counterpoint）／10–12%（JPMorgan） | [本專案：先驗比對_AVGO_20261023.md 資料表] |
 | 聯發科（MediaTek） | Google TPU 部分版本 | 本專案未建立 | — |
-| AWS Trainium（非 Broadcom） | 自研 AI 晶片 | CY2027 加速器金額份額 3.0% | [本專案：NVIDIA模型_v0.1.1.xlsx Units!D35] |
+| AWS Trainium（非 Broadcom） | 自研 AI 晶片 | CY2027 加速器金額份額 3.0% | [本專案：20261030_NVIDIA個股模型_v0.2.3.xlsx Units!D35] |
 
-- 模型假設 Broadcom 在 Google TPU 的份額由 90%（2026）降到 75%（2028）[本專案：Broadcom模型_v0.1.xlsx Units!C5:E5]。
+- 模型假設 Broadcom 在 Google TPU 的份額由 90%（2026）降到 75%（2028）[本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Units!C5:E5]。
 
 ## 主要客戶
 - 財報集中度原文口徑（10-Q Q3 FY2026）：「Direct sales to one semiconductor solutions customer, which is a distributor, accounted for 50% and 46% of our net revenue for the fiscal quarter and three fiscal quarters ended August 2, 2026, respectively, and 32% and 30% … for [the prior-year periods].」「We believe aggregate sales to our top five end customers, through all channels, accounted for approximately 55% and 50% of our net revenue for the fiscal quarter and three fiscal quarters ended August 2, 2026, respectively, and approximately 40% … [prior year].」 [外部・未經本專案檢核：Broadcom Form 10-Q，期間至 2026-08-02，2026-09-10]
@@ -83,13 +83,13 @@ asof: 2026-10-25
 - 2026-10-08｜傳 Broadcom 與 OpenAI 進行晶片融資的初步洽談｜客戶融資擴大 [外部新聞：Bloomberg]
 - 2026-10-02｜傳 Broadcom 開始籌組 Anthropic 晶片融資｜同上 [外部新聞：Bloomberg]
 - 2026-10-01｜Anthropic 上市文件揭露 Broadcom 放款上限 US$42B 用於租賃晶片與設備 [本專案：先驗比對_AVGO_20261023.md 資料表]｜市場質疑「循環融資」 [外部新聞：Yahoo Finance 引 Reuters]
-- 2026-09-02｜FY2026 Q3 財報：營收 US$29.6B、AI 16.7B；Q4 指引營收 34.8B、AI 21.7B；公司展望 FY2027 AI 約 115B、FY2028 約 230B [本專案：Broadcom模型_v0.1.xlsx Q!E4、Q!E7、Q!F4、Q!F7、Recon!B6、Recon!B8]；Google TPU v8i 開始量產出貨、OpenAI 首代 XPU 出貨 [外部新聞：Constellation Research]
+- 2026-09-02｜FY2026 Q3 財報：營收 US$29.6B、AI 16.7B；Q4 指引營收 34.8B、AI 21.7B；公司展望 FY2027 AI 約 115B、FY2028 約 230B [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Q!E4、Q!E7、Q!F4、Q!F7、Recon!B6、Recon!B8]；Google TPU v8i 開始量產出貨、OpenAI 首代 XPU 出貨 [外部新聞：Constellation Research]
 
 ## 需要觀察的事項
-- FY2028 AI 營收 230B 的可達性｜要對上，Broadcom XPU 顆數需為市場層推得的 1.73 倍 [本專案：Broadcom模型_v0.1.xlsx Recon!C11]｜FY2026 Q4 財報（約 2026-12-10，未確認）
-- 毛利率下滑幅度｜模型 FY2027 67.8% vs 共識隱含約 72.4%，差在代購 HBM 比例 [本專案：Broadcom模型_v0.1.xlsx Recon!C32、Recon!B32]｜同上
-- 客戶融資曝險｜約 92B，若全損約等於模型 FY2027 淨利 1.03 倍 [本專案：Broadcom模型_v0.1.xlsx Recon!C36]｜Anthropic 上市進度、OpenAI 融資條款
-- Google TPU 份額（聯發科分食）｜份額假設 90%→75% 是 Assumed [本專案：Broadcom模型_v0.1.xlsx Units!C5:E5]｜Google 下一代 TPU 供應商消息
+- FY2028 AI 營收 230B 的可達性｜要對上，Broadcom XPU 顆數需為市場層推得的 1.73 倍 [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Recon!C11]｜FY2026 Q4 財報（約 2026-12-10，未確認）
+- 毛利率下滑幅度｜模型 FY2027 67.8% vs 共識隱含約 72.4%，差在代購 HBM 比例 [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Recon!C32、Recon!B32]｜同上
+- 客戶融資曝險｜約 92B，若全損約等於模型 FY2027 淨利 1.03 倍 [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Recon!C36]｜Anthropic 上市進度、OpenAI 融資條款
+- Google TPU 份額（聯發科分食）｜份額假設 90%→75% 是 Assumed [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Units!C5:E5]｜Google 下一代 TPU 供應商消息
 - 模型狀態｜Broadcom 模型 v0.1 已合併到 main（PR #107，`avgo/dist/`）[本專案：avgo/dist/20261023_Broadcom模型_v0.1.xlsx]｜下一版更新
 
 ## 來源

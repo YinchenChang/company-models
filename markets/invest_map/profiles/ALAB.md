@@ -50,7 +50,7 @@ AI 伺服器內部連接晶片商：PCIe 重定時器起家，成長重心正轉
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
 | NVIDIA（NVLink、NVLink Fusion） | scale-up 交換 | scale-up 交換晶片市場（含 NVLink）CY2026 US$18.3B | [本專案：Astera Labs模型_v0.1.xlsx Units!C4] |
-| Credo | AEC、重定時器 | 本專案未建立對比份額 | [本專案：Credo模型_v0.2.xlsx In!A40] |
+| Credo | AEC、重定時器 | 本專案未建立對比份額 | [本專案：20261030_Credo個股模型_v0.2.4.xlsx In!A40] |
 | Broadcom 等乙太網路 scale-up | scale-up 交換 | 本專案未建立 | — |
 
 - NVLink Fusion 若開放第三方交換晶片，會改變 Scorpio X 的分母；乙太網路 scale-up 可能搶 UALink／PCIe 架構 [本專案：alab/README.md 最大限制；Astera Labs模型_v0.1.xlsx In!I103]。
