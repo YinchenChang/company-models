@@ -181,7 +181,7 @@ for _r in range(4, _ws.max_row + 1):
     _a, _b = _ws.cell(_r, 1).value, _ws.cell(_r, 2).value
     if _a and _b in (None, ""): _cur = re.split(r"[.\s（]", str(_a))[0]; SK[_cur] = []; continue
     if _a and _cur and re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", str(_a)): SK[_cur].append(str(_a))
-_DCFK = ["rf", "beta_u", "beta_u_us", "beta_de", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]
+_DCFK = ["rf", "beta_u", "beta_u_med", "beta_de", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]
 _CAPK = ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"]
 _FCK = ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]
 _J = [k for k in SK.get("J", []) if k not in _DCFK + _CAPK + _FCK]
