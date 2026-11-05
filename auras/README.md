@@ -1,4 +1,12 @@
-# auras/ — 雙鴻（3324）收支與估值模型 v0.1.5
+# auras/ — 雙鴻（3324）收支與估值模型 v0.2
+
+## v0.2（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0 與共用模組 `tools/fcff_dcf.py`（原樣取自 NVIDIA v0.3）：新增 **DCF 頁**（三情境 FY2027–FY2032 FCFF 明細與檢查列）；Val 0.1 節改為折現率緊接 DCF 彙總；Sens 目標價參數改為標準案例。In 頁新增 M2 節，刪除 tp_r、tp_roe（tp_g 只留作 PL 延伸期收斂目標）。
+- 參數：rf＝台灣 10 年期公債 1.98%（2026-11-04）；ERP 5%＋台灣國家風險溢酬 0.78%（Damodaran 2026-01）；β＝Damodaran 全球 Electronics (General) 無槓桿 β 1.45 依雙鴻 D／E 重新加槓桿約 1.53；g＝MIN(3%, rf)；RONIC＝WACC。折舊、資本支出（8.7%，泰國、越南擴產）、營運資金（31%）為近三年實績比例，FY2029 起資本支出收斂到 折舊 ×（1＋5g）。
+- 結果：DCF 目標價 1,979 → 1,348、加權目標價 2,290 → 1,975，上檔 +68.4% → +45.2%，**投資建議由強力買進改為買進**。
+- 成品：`dist/20261105_雙鴻個股模型_v0.2.xlsx`／`.html`；v0.1.5 移到 `dist/_待刪除/`。
+
 
 ## v0.1.5（2026-11-05）：HTML 新版面 v1.0（只改展示層）
 
@@ -47,7 +55,7 @@ AI 半導體 Project 電源與散熱次產業，樣板＝`avc/`（奇鋐）。**
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
 | `dist/20261028_雙鴻個股模型_v0.1.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
 
-建置：`python3 auras/build_auras.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數、機架內液冷）、`tsmc/dist`（情境顆數係數）、`markets/memory/market.py`（SCEN_UNITS，建置時核對）、`avc/dist`（In 頁液冷假設、Units 頁奇鋐份額）、`tools/cycle_position.py`、`tools/valuation_rule.py`；**不修改它們**。
+建置：`python3 auras/build_auras.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數、機架內液冷）、`tsmc/dist`（情境顆數係數）、`markets/memory/market.py`（SCEN_UNITS，建置時核對）、`avc/dist`（In 頁液冷假設、Units 頁奇鋐份額）、`tools/cycle_position.py`、`tools/valuation_rule.py`；**不修改它們**。
 
 ## 情境對照表（情境與行業一致）
 
