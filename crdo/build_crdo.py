@@ -1107,6 +1107,20 @@ for _ws in wb:   # 公式中的現價日期標籤同步（含 tools/relative_mul
                 for _o in ['"（2026-10-23）"']:
                     if _o in _c.value: _c.value = _c.value.replace(_o, '"（2026-11-04 收盤）"')
 RD["A1"] = RD["A1"].value + "；v0.3.4（2026-11-06）第三輪修正：現價與同業報價統一 2026-11-04 收盤（Yahoo Finance）"
+# v0.3.4（2026-11-06）第三輪修正（續）：情境名稱統一（第 23 點：順利／平平／不如預期）、重點觀察 1 刪除 2026-10-29 調整前舊文（第 22 點）
+import re as _re5
+_SCN5 = {"樂觀": "順利", "基準": "平平", "保守": "不如預期", "下檔": "不如預期"}
+_PAT5 = _re5.compile(r"(情境 ?[ABC][^（）\"]{0,12})（(樂觀|基準|保守|下檔)）")
+for _ws in wb:
+    for _row in _ws.iter_rows():
+        for _c in _row:
+            if isinstance(_c.value, str):
+                _v = _PAT5.sub(lambda m: m.group(1) + "（" + _SCN5[m.group(2)] + "）", _c.value).replace("樂觀、基準、保守", "順利、平平、不如預期")
+                if _v != _c.value: _c.value = _v
+for _c in RD["A"]:
+    if isinstance(_c.value, str) and _c.value.startswith('="重點觀察 1') and '&"以下為 2026-10-29' in _c.value:
+        _c.value = _c.value[:_c.value.index('&"以下為 2026-10-29')]
+
 wb.save(sys.argv[1])
 if os.environ.get("CRDO_NOOP"): pass
 if os.environ.get("CRDO_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
