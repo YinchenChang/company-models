@@ -1126,6 +1126,7 @@ for _ws in wb:
             if isinstance(_c.value, str):
                 _v = _PAT5.sub(lambda m: m.group(1) + "（" + _SCN5[m.group(2)] + "）", _c.value).replace("順利、平平、不如預期", "樂觀、基準、保守").replace("A＝順利、B＝平平、C＝不如預期", "A＝樂觀、B＝基準、C＝保守").replace("A 順利／B 平平／C 不如預期", "A 樂觀／B 基準／C 保守").replace("A 順利、B 平平、C 不如預期", "A 樂觀、B 基準、C 保守")
                 _v = _re5.sub(r"([ABC])＝(順利|平平|不如預期)", lambda m: m.group(1) + "＝" + _SCN5[m.group(2)], _v).replace("不如預期～順利", "保守～樂觀")
+                _v = _re5.sub(r"(情境 [ABC])：(順利|平平|不如預期)", lambda m: m.group(1) + "：" + _SCN5[m.group(2)], _v)
                 if _v != _c.value: _c.value = _v
 for _c in RD["A"]:
     if isinstance(_c.value, str) and _c.value.startswith('="重點觀察 1') and '&"以下為 2026-10-29' in _c.value:
