@@ -81,13 +81,13 @@ def fcff_blocks(pxf="n0", amt="n1"):
     rate = {"type": "table", "caption": "DCF 折現率：WACC、股權成本、稅後債務成本、RONIC、永續成長率（直接顯示）", "head": ["項目", "數值", "說明"],
             "rows": [[VA(r), V(r, "p1" if r == rk + 2 else "p2"), f"@Val!E{r}"] for r in range(rk, rk + 6)]}
     rows = []
-    for r in range(rk + 6, rk + 15):
+    r_end = find("Val", "DCF 目標價（情境加權）", rk)   # 第二輪修正：依標籤定位（模組 v2 stub 期在「＋淨現金與投資」後多兩列）
+    for r in range(rk + 6, r_end):
         lab = str(Vw.cell(r, 1).value)
         f = ("n3" if lab.startswith("評價用") else "p1" if "占 EV" in lab else "x1" if "EV／EBITDA" in lab
              else pxf if ("每股" in lab or "推到" in lab) else amt)
         rows.append([VA(r)] + [f"@Val!{c}{r}|{f}" for c in "BCD"])
-    rows.append([VA(rk + 15), V(rk + 15, pxf), "", ""])
-    assert str(Vw.cell(rk + 15, 1).value).startswith("DCF 目標價（情境加權）")
+    rows.append([VA(r_end), V(r_end, pxf), "", ""])
     summ = {"type": "table", "caption": "DCF 彙總：明確期現值、終值現值、企業價值、淨現金與每股價值", "head": [f"@Val!{c}{rk - 1}" for c in "ABCD"], "rows": rows}
     hd = next(r for r in range(1, Dw.max_row + 1) if Dw.cell(r, 1).value == "項目")
     ncol = next(c for c in range(3, 30) if not Dw.cell(hd, c).value) - 3
@@ -103,16 +103,16 @@ def fcff_blocks(pxf="n0", amt="n1"):
 
 
 FCFF_MAIN = {"DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
-             "DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"]}
-FCFF_KEYS = {"rate": ["rf", "beta_u", "beta_de", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"],
-             "bs": ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"],
+             "DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"]}
+FCFF_KEYS = {"rate": ["rf", "rf_us", "beta_u", "beta_de", "beta_du", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"],
+             "bs": ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "bs_date", "stub_frac", "stub_div", "sh_v"],
              "fcf": ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]}
 
 
 def sens_tp_block(pxf="n0"):
     t0 = find("Sens", "目標價參數敏感度")
     return {"type": "table", "caption": f"@Sens!A{t0}", "head": [f"@Sens!{c}{t0 + 1}" for c in "ABCDEFG"],
-            "rowgen": {"sheet": "Sens", "rows": f"{t0 + 2}-{t0 + 11}", "cols": list("ABCDEFG"), "fmts": ["", "", pxf, "sp1", pxf, "sp1", pxf]}}
+            "rowgen": {"sheet": "Sens", "rows": f"{t0 + 2}-{find('Sens', '檢查：閉式公式', t0) - 1}", "cols": list("ABCDEFG"), "fmts": ["", "", pxf, "sp1", pxf, "sp1", pxf]}}
 
 v_tp, v_dcf, v_cmp, v_cmp0 = find("Val", "目標價（DCF 與 Comparable 加權）"), find("Val", "DCF 目標價（情境加權）"), find("Val", "Comparable 目標價（相對倍數調整後）"), find("Val", "Comparable 目標價（市場主流同業法）")
 v_px, v_up, v_up0, v_cons = find("Val", "現價（"), find("Val", "上檔空間：加權目標價"), find("Val", "上檔空間：Comparable 目標價"), find("Val", "市場共識目標價")
