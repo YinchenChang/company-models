@@ -468,6 +468,32 @@ def main():
             for y, col in COLS.items():
                 c = DP.cell(r, list(COLS).index(y) + 3, f"={col}{DROW['itc' + s_]}/{col}{DROW['itpg']}"); c.number_format = "0.0"; c.fill = KEY
             DROW["gw" + s_] = r; r += 1
+        # v0.16.3：實體部署 GW（Andy 2026-11-05「先加」；電源、散熱、組裝等按實體電力計的下游用）。
+        # 成本等值 GW（上列）以 VR200 每 GW IT capex 當分母：Rubin Ultra（每 GW 成本較高）被高估、ASIC（較便宜）被低估。
+        # NVIDIA＝顆數 ÷ 該世代 Tokenomics 每 GW 顆數；非 NVIDIA＝IT 資本支出 ÷（VR200 每 GW IT capex × Tokenomics 持有成本比），與 R4 橋接 ① 同法。
+        NVG = {"bw": "GB300", "rb": "VR200", "ru": "RU", "hp": "H100"}
+        HOLD = {"amd": "TK_NonNV_Hold_AMD", "tpu": "TK_NonNV_Hold_TPU", "trn": "TK_NonNV_Hold_Trn",
+                "oth": "((TK_NonNV_Hold_Maia+TK_NonNV_Hold_Ascend+TK_NonNV_Hold_OAI)/3)"}
+        def ucoef(y):
+            return f"*um{y % 100}_B" if y >= 2028 else ""
+        DP.cell(r, 1, "實體部署 GW：NVIDIA（Σ 顆數 ÷ 該世代每 GW 顆數）"); DP.cell(r, 2, "B")
+        for y, col in COLS.items():
+            f = "=(" + "+".join(f"Units!{col}{UROW[k]}/TK_GPUsPerGW_{gname}" for k, gname in NVG.items() if k in UROW) + f")*1E6{ucoef(y)}"
+            DP.cell(r, list(COLS).index(y) + 3, f).number_format = "0.0"
+        DROW["phnv"] = r; r += 1
+        DP.cell(r, 1, "實體部署 GW：非 NVIDIA（IT 資本支出 ÷（VR200 每 GW × 持有成本比））"); DP.cell(r, 2, "B")
+        for y, col in COLS.items():
+            f = "=(" + "+".join(f"Units!{col}{UROW[k]}*it_{plat(k, y)}/(TK_CapexIT_VR200*{h})" for k, h in HOLD.items() if k in UROW) + f"){ucoef(y)}"
+            DP.cell(r, list(COLS).index(y) + 3, f).number_format = "0.0"
+        DROW["phno"] = r; r += 1
+        DP.cell(r, 1, "實體部署 GW（IT 電力；電源、散熱、組裝用）").font = BOLD; DP.cell(r, 2, "B")
+        for y, col in COLS.items():
+            c = DP.cell(r, list(COLS).index(y) + 3, f"={col}{DROW['phnv']}+{col}{DROW['phno']}"); c.number_format = "0.0"; c.fill = KEY
+        DROW["gwphB"] = r; r += 1
+        DP.cell(r, 1, "實體 ÷ 成本等值")
+        for y, col in COLS.items():
+            DP.cell(r, list(COLS).index(y) + 3, f"={col}{DROW['gwphB']}/{col}{DROW['gwB']}").number_format = "0.000"
+        DROW["phr"] = r; r += 1
         DP.column_dimensions["A"].width = 36
         for col in "BCDEF": DP.column_dimensions[col].width = 10
 
@@ -821,7 +847,7 @@ def main():
         RC.cell(r, 1, "狀態").font = BOLD
         for j in range(4):
             col = "DEFG"[j]
-            c = RC.cell(r, 4 + j, f'=IF(ABS({col}{RCROW["r4_ratio"]}-1)<=rc_tol,"一致",IF(LEN({col}{RCROW["r4_ev"]})>0,"時差","待診斷"))'); c.fill = KEY
+            c = RC.cell(r, 4 + j, f'=IF(ABS({col}{RCROW["r4_ratio"]}-1)<=rc_tol,"一致",IF(LEFT({col}{RCROW["r4_ev"]},6)="兩邊都不錨定","兩邊都不錨定",IF(LEN({col}{RCROW["r4_ev"]})>0,"時差","待診斷")))'); c.fill = KEY
         RCROW["r4_st"] = r; r += 2
         RC.cell(r, 1, "C. 結構一致的市場（覆蓋個股直接讀本庫份額 × 本庫市場，比值恆等於份額合計；由 Checks K6 約束 ≤ 100%）").font = BOLD; r += 1
         for mk, k6 in (("ASIC 設計服務（TPU、Trainium、其他 ASIC）", "K6-tpu／oth／trn"), ("CPO 光學", "K6-cpo"), ("加速器 ABF 載板", "K6-abfnv／abfot"),
@@ -855,7 +881,7 @@ def main():
             r += 2
         RC.cell(r, 1, "E. 狀態彙總（A、B 節）").font = BOLD; r += 1
         st_cells = f"C{RCROW['soc_st']}:G{RCROW['soc_st']},D{RCROW['r4_st']}:G{RCROW['r4_st']}"
-        for lab in ("一致", "時差", "待診斷"):
+        for lab in ("一致", "時差", "兩邊都不錨定", "待診斷"):
             RC.cell(r, 1, lab)
             RC.cell(r, 3, f'=COUNTIF(C{RCROW["soc_st"]}:G{RCROW["soc_st"]},"{lab}")+COUNTIF(D{RCROW["r4_st"]}:G{RCROW["r4_st"]},"{lab}")')
             RCROW["n_" + lab] = r; r += 1
@@ -1042,7 +1068,8 @@ def main():
         IF.cell(r, 1, "B4. AI IT 資本支出與部署 GW（Deploy 頁；欄 E–H＝2026–2029）").font = BOLD; r += 1
         items = ([(f"SIF_AIITCapex_{s_}", "itc" + s_, f"AI IT 資本支出（{s_}）", "$B") for s_ in SCL]
                  + [("SIF_ITCapexPerGW", "itpg", "每 GW IT 資本支出（2026 依 vr26 混合）", "$B/GW")]
-                 + [(f"SIF_DeployGW_{s_}", "gw" + s_, f"部署 GW（{s_}）", "GW") for s_ in SCL])
+                 + [(f"SIF_DeployGW_{s_}", "gw" + s_, f"部署 GW（{s_}）", "GW") for s_ in SCL]
+                 + [("SIF_DeployGWPhys_Base", "gwphB", "實體部署 GW（基準；NVIDIA 依世代每 GW 顆數、非 NVIDIA 依持有成本比；v0.16.2）", "GW")])
         for nm_, key, lab, unit in items:
             dr = DROW[key]
             IF.cell(r, 1, nm_); IF.cell(r, 2, lab); IF.cell(r, 3, unit)
@@ -1377,7 +1404,7 @@ def main():
             CK.cell(r, 3, f"=Recon!{'CDEFG'[j]}{RCROW['soc_sum']}"); CK.cell(r, 4, 1)
             CK.cell(r, 6, f'=IF(C{r}<=1+1E-9,"OK","ERROR")'); CK.cell(r, 7, "驗證（加總受限）"); r += 1
         CK.cell(r, 1, "K9"); CK.cell(r, 2, "Recon 頁狀態為『待診斷』的格數（沒有證據送件的落差；規則：兩邊都更新後仍有落差須診斷錯在哪一方）")
-        CK.cell(r, 3, f"=Recon!C{RCROW['n_待診斷']}"); CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "治理（對帳）")
+        CK.cell(r, 3, f"=Recon!C{RCROW['n_待診斷']}+Recon!C{RCROW['n_兩邊都不錨定']}"); CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "治理（對帳）")
         CK.cell(r, 8, "WARN＝仍有待診斷的落差；明細見 Recon 頁"); r += 1
     if CP is not None:
         for j, y in enumerate((2026, 2027, 2028, 2029)):
@@ -1451,6 +1478,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.16.3：Deploy 頁新增實體部署 GW（NVIDIA＝顆數 ÷ 該世代每 GW 顆數；非 NVIDIA＝IT 資本支出 ÷（VR200 每 GW × 持有成本比））與 Interface SIF_DeployGWPhys_Base，供電源、散熱、組裝等按實體電力計的下游讀取（Andy 11-05「先加」；讀者尚未改讀）。成本等值的 SIF_DeployGW_Base 不變。決策 S46。", False),
         ("v0.16.2（只改文字）：CF03、CF11、CF13、CF23 結案（Andy 2026-11-05 15:24；決策 S45），Checks G5 4 → 0。", False),
         ("v0.16.1：M28 改為 NVIDIA 營收口徑（算力收支 11-05 指出晶片內容橋接表第 44 列 GPU 取毛利、其餘取售價，為混合口徑；橋接表 v0.2.3 新增營收口徑列）：nvr_ 基準 GB300 0.647 → 0.772、VR200 0.624／0.581 → 0.695；SIF_NVContentGW_* 隨之改變（例 VR200 21.85 → 26.13）。Recon F 節 NVIDIA 資料中心營收比值 2026／2027 由 1.02／1.04 變為約 1.19／1.25（待診斷）。決策 S44。", False),
         ("v0.16：情境過渡完成（決策 S41）：In 頁層的產業情境 A、C 列（70 列）移到市場層 markets/scen（數值不變），本庫各頁只算基準、Scen 頁只剩基準；Cap 頁分項上限 SIF_CapGW_CoWoS_Base／SIF_CapGW_HBM_Base 與上線口徑 SIF_CapOnlineGW_CoWoS_Base／_HBM_Base（S42）；TK_In 改 Tokenomics v21.10（S43；只有本庫不讀的 NonNV 產出比改值）。唯一數值變動：SIF_TestWFE_SoC 2028–29 改讀基準（無下游讀者）。", False),
