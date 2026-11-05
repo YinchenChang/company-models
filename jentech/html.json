@@ -41,9 +41,9 @@
      "collapse": true,
      "summary": "展開：命題回覆（依本模型計算的答案；想先看結論可展開，或讀完全文再看）",
      "items": [
-      "@README!A45",
       "@README!A46",
-      "@README!A47"
+      "@README!A47",
+      "@README!A48"
      ]
     },
     {
@@ -59,7 +59,8 @@
       "@README!A39",
       "@README!A40",
       "@README!A41",
-      "@README!A42"
+      "@README!A42",
+      "@README!A43"
      ]
     },
     {
@@ -2600,6 +2601,12 @@
        "@Val!D16|n1"
       ],
       [
+       "@Val!A17",
+       "@Val!B17|n1",
+       "@Val!C17|n1",
+       "@Val!D17|n1"
+      ],
+      [
        "@Val!A18",
        "@Val!B18|n1",
        "@Val!C18|n1",
@@ -2630,12 +2637,6 @@
       "@Val!D6"
      ],
      "rows": [
-      [
-       "@Val!A17",
-       "@Val!B17|n1",
-       "@Val!C17|n1",
-       "@Val!D17|n1"
-      ],
       [
        "@Val!A19",
        "@Val!B19|n3",
@@ -3919,9 +3920,6 @@
      ],
      "rows": [
       [
-       "@README!A50"
-      ],
-      [
        "@README!A51"
       ],
       [
@@ -3932,6 +3930,12 @@
       ],
       [
        "@README!A54"
+      ],
+      [
+       "@README!A55"
+      ],
+      [
+       "@README!A56"
       ]
      ]
     },
@@ -3995,7 +3999,7 @@
    "；進加權的 Comparable 為相對倍數調整後 ",
    "@Val!B139|n2",
    "（上檔空間 ",
-   "@README!B56|sp1",
+   "@README!B58|sp1",
    "）"
   ]
  }
