@@ -1,4 +1,25 @@
-# arista/ — Arista Networks（ANET）收支與估值模型 v0.5.2
+# arista/ — Arista Networks（ANET）收支與估值模型 v0.5.3
+
+
+## v0.5.3（2026-11-06）：第三輪修正（合併前）
+
+- **Stub 期 FCFF**（第三輪修正 2、25）：原用 FY2027 全年 FCFF × stub_frac（情境 B 1.551）偏高；改用 4Q26（2026-10-01～12-31）＝Q 頁公司 4Q26 指引：(營業利益 − fc_sbc × 營收) ×（1 − 稅率）＋營收 ×（fc_da − fc_cx）− fc_wc × FY2026 營收增量 × stub_frac＝1.345（US$B）；淨現金滾到評價日 15.901 → 15.695。Wattonomics Sens 路徑同式。
+- **現價與同業報價統一 2026-11-04 收盤**（第 35 項；Yahoo Finance 日線收盤）：現價 172.37 → 178.48；Comparable 同業前瞻 P/E＝資料商頁面前瞻 P/E × 11-04 收盤 ÷ 頁面價格（共識 EPS 不變）：Cisco 20.70 → 20.14、Ciena 30.77 → 26.16、Celestica 16.65 → 15.14、HPE 12.19 → 10.77、Credo 20.19 → 18.71，中位數 20.19 → 18.71。StockAnalysis 本公司前瞻 P/E 同法換算（37.06 → 38.37）。
+- **README 頁舊「重點觀察」**（第 22 項）：重點觀察 1 只留公式部分（刪 v0.4 數字與不同時間窗的「5.83 vs 4.65＝+25.4%」比較；同窗比較見命題回覆第三題），重點觀察 2、3 舊文刪除。
+- 情境名稱統一 A（順利）／B（平平）／C（不如預期）（In、Val）；Val「上檔空間級距」改「上檔空間級距（六級，供分組）」；HTML：DCF 彙總主表直接顯示「＋Stub 期 FCFF」「淨現金滾到評價日」，情境驅動表依單位格式化，橫幅標明美元；Sources 工具字樣改中性。後處理見 `r3_post.py`（只改標籤、格式與 README 舊文）。
+
+| 項目 | v0.5.2 | v0.5.3 |
+|---|---|---|
+| 現價 | 172.37（2026-10-23） | 178.48（2026-11-04） |
+| Stub FCFF／淨現金（評價日，US$B） | 1.551／15.901 | 1.345／15.695 |
+| DCF 目標價（情境加權） | 68.28 | 68.10 |
+| 同業前瞻 P/E 中位數 | 20.19 | 18.71 |
+| Comparable（相對倍數調整後） | 235.52 | 218.27 |
+| 加權目標價（上檔空間） | 151.90（−11.9%） | 143.18（−19.8%） |
+| 投資建議 | 中立 | 中立（不變） |
+| Sens β 低／高 | 155.22／149.34 | 146.51／140.62 |
+
+- 成品：`dist/20261106_Arista個股模型_v0.5.3.xlsx`、`.html`；v0.5.2 移到 `dist/_待刪除/`。依賴不變（`tsmc/dist`、`markets/network/dist`，main）。
 
 
 ## v0.5.2（2026-11-05）：第二輪修正——換用共用模組 `tools/fcff_dcf.py` v2
@@ -38,7 +59,7 @@
 
 ## v0.5（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）
 
-- 依 Andy 2026-11-05 20:42、20:45 與 `docs/plan/個股DCF標準規格.md` v1.0：Val 頁 0.1 DCF 由「股東現金流＝EPS ×（1 − tp_g ÷ tp_roe）、折現率 10%」改為 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC；EV 加淨現金 ÷ 稀釋股數，以 ke 推到 12 個月後。新增 DCF 頁（共用模組 `tools/fcff_dcf.py`，原樣取自 NVIDIA v0.3）。
+- 依 Andy 2026-11-05 20:42、20:45 與 `docs/plan/個股DCF標準規格.md` v1.0：Val 頁 0.1 DCF 由「股東現金流＝EPS ×（1 − tp_g ÷ tp_roe）、折現率 10%」改為 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC；EV 加淨現金 ÷ 稀釋股數，以 ke 推到 12 個月後。新增 DCF 頁（共用模組 `tools/fcff_dcf.py`；現行為 tools/fcff_dcf.py v2）。
 - EBIT＝PL 頁 non-GAAP 營業利益 − 股票薪酬（In `fc_sbc`，近三年 4.9–5.1% × 營收；規格：股票薪酬視為費用）；FY2030–FY2032 由淨利還原（淨利 ÷（1 − tx_f）− oth_f）。折舊只計非收購無形資產部分（non-GAAP 已排除無形資產攤銷）。折舊、資本支出、營運資金占營收取 FY2023–FY2025 平均（SEC XBRL），資本支出長期穩態 ≥ 折舊 ×（1＋g）。
 - 折現率：rf 5.00%（美國 10 年期，2026-10-23）、β＝Damodaran 美國 Telecom. Equipment 現金修正無槓桿 β 0.89 依市值 D/E 重新加槓桿（Andy 2026-11-05 21:21；無負債，≈ 0.89）、ERP 5%、CRP 0 → ke＝WACC 9.45%。β 高案例用 Damodaran Global 同產業 1.30。
 - Sens 目標價參數改為 WACC ±1pt、β、ERP、g、RONIC＝WACC＋5pt、資本支出 ±1pt、營運資金、權益投資、終值替代法、DCF 權重；刪除 tp_r、tp_roe（tp_g 只留給 PL 延伸期收斂）。PL、Comparable、情境權重、投資建議規則不變。

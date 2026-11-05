@@ -124,6 +124,16 @@ SPEC = {
           "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
           "對帳要點": ["FY2026 營收 vs 共識", "FY2026 EPS vs 共識", "FY2027 EPS vs 前瞻", "FY2026 Arista 有效份額 vs IDC", "3Q26 EPS"]},
 }
+# 第三輪修正 15／21：情境驅動表依 In 頁 C 欄單位格式化（% 與 pt 用百分比，避免 0.06 顯示成小數）；DCF 彙總主表直接顯示 stub 兩列
+def _uf3(r_):
+    u = IN.cell(r_, 3).value
+    return "p1" if u in ("%", "pt") else "n3" if u == "十億股" else "n2"
+for b in secs["drivers"]["blocks"]:
+    if b["type"] == "table" and str(b.get("caption", "")).startswith("情境驅動"):
+        b["rows"] = [[x[0]] + [(f"{c}|{_uf3(int(c.split('!')[1][1:]))}" if "|" not in c and isinstance(IN[c.split('!')[1]].value, (int, float)) else c) for c in x[1:4]] + x[4:] for x in b["rows"]]
+_m3 = SPEC["main"]["DCF 彙總"]
+if "＋Stub 期 FCFF" not in _m3:
+    _m3.insert(_m3.index("＋淨現金與投資") + 1, "＋Stub 期 FCFF")
 cfg = relayout(cfg, X, SPEC)
 # 後處理（補充規則 A）：橫幅中間格＝只看 Comparable（市場主流同業法、未經相對倍數調整）；附註列進加權的調整後值
 _rc, _ru, _ra = row(VA, "Comparable 目標價"), row(VA, "上檔空間：Comparable"), row(VA, "Comparable 目標價（相對倍數調整後）")
@@ -148,5 +158,12 @@ for b in cfg["sections"][[s["id"] for s in cfg["sections"]].index("drivers")]["b
 for b in cfg["sections"][[s["id"] for s in cfg["sections"]].index("sens")]["blocks"]:
     if b["type"] == "tornado":
         b["title"] = "FY2028 EPS 相對基準的變動（情境 A，一次動一個輸入；" + ("未達兩位數百分比）" if b.get("collapse") else "變動達兩位數百分比的案例）")
+# 第三輪修正 17：橫幅金額標明幣別
+_CUR3 = "美元"
+def _lab3(x):
+    t = str(wb[x[1:].split("!")[0]][x.split("!")[1]].value) if isinstance(x, str) and x.startswith("@") else str(x)
+    return x if _CUR3 in t else ([x, "（" + _CUR3 + "）"] if isinstance(x, str) and x.startswith("@") else t + "（" + _CUR3 + "）")
+for _t in cfg["hero"]["tiles"]:
+    _t[0] = _lab3(_t[0])
 json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")
