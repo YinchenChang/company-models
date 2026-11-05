@@ -17,7 +17,7 @@ ROOT = os.path.dirname(GL)
 EXTRACT = os.path.join(ROOT, "markets", "invest_map", "data", "models_extract.json")
 # v0.1.8：models_extract.json 尚未更新的個股（Wattonomics 不改 markets/ 檔案），在此逐家覆寫為 main 上的現行版；
 # 覆寫只換檔案路徑，列位核對規則不變（工作單 20261102 E7：Anthropic v0.1.7 已合併 #289，dist 只剩 v0_1_7）
-MODEL_OVERRIDE = {"Anthropic": "anthropic/dist/20261103_Anthropic收支模型_v0_1_8.xlsx"}   # v0.2.1 W4：Anthropic v0.1.8
+MODEL_OVERRIDE = {"Anthropic": "anthropic/dist/20261104_Anthropic收支模型_v0_1_9.xlsx"}   # v0.2.1 W4：Anthropic v0.1.8；2026-11-05 改指 v0.1.9（#327 移除 v0_1_8；F07／F03 逐位相同，種子與成品不重建）
 
 # 欄位 → 財年。MAG 型：C=FY2024A、D=FY2025A、E=9M26A、F=Q4 26E、G=FY2026E、H..M=FY2027E..FY2032E（Amazon、Alphabet、Meta）
 MAG7 = {"C": 2024, "D": 2025, "G": 2026, "H": 2027, "I": 2028, "J": 2029, "K": 2030, "L": 2031, "M": 2032}

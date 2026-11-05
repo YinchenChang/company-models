@@ -149,6 +149,8 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 
 ## 版本紀錄（摘要；完整見活頁簿 README 頁）
 
+- 2026-11-05（不改版）：`tools/import_gap_models.py` 的 Anthropic `MODEL_OVERRIDE` 改指 `anthropic/dist/20261104_Anthropic收支模型_v0_1_9.xlsx`（#327 已移除 v0_1_8）；重跑 `--only ant` 與 `builder/seed/gap_models_v0.2.1.json` 逐項相同（Funding F07／F03 2026–2030 與 v0.1.8 逐位相同，只有 file／commit 欄不同），種子與成品不重建。
+
 - v0.3（2026-11-05）：Siliconomics v0.13.1、Tokenomics v21.10（Y1）；R7 分世代內容（Y2）；逐買方 NVIDIA 份額（Y3）；供給上限主檢查改可支撐上線 GW（Y4）。基準 GW 不變。報告 `docs/verify/20261105_v0.3_build.md`。
 
 - v0.2.2（2026-11-04）：Siliconomics 改讀 v0.13 `*_Base`（X1）；Deploy 不乘 Siliconomics 顆數係數（X2，地位鏈）；Compare F3 改讀 Siliconomics 出貨年（X3）；供給上限檢查 Compare G 節與 Checks X4-K1（X4，只檢查不截斷）。基準 GW 不變。報告 `docs/verify/20261104_v0.2.2_build.md`。

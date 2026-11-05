@@ -79,7 +79,7 @@ asof: 2026-11-04
 | 客戶 | 關係 | 依據 | 標記 |
 |---|---|---|---|
 | Anthropic | 據報即 Customer B；租用 SpaceX 算力 | Bloomberg 引知情人士；Anthropic 拒絕評論 | [外部・未經本專案檢核：The Next Web 轉述 Bloomberg，2026-10-29] |
-| Anthropic（合約條件） | 月費 12.5 億美元至 2029-05；正式 S-1 列 SpaceXAI 合約上限 1,205 億美元 | 本專案 Anthropic 模型來源頁 | [本專案：20261103_Anthropic收支模型_v0_1_8.xlsx SRC_ANT!E231、SRC_ANT!E457] |
+| Anthropic（合約條件） | 月費 12.5 億美元至 2029-05；正式 S-1 列 SpaceXAI 合約上限 1,205 億美元 | 本專案 Anthropic 模型來源頁 | [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx SRC_ANT!E231、SRC_ANT!E457] |
 | Google（Alphabet） | 租用約 11 萬顆 NVIDIA GPU，每月約 9.2 億美元，2026-10 至 2029-06 | SpaceX FWP〈Cloud Service Agreement with Google LLC〉 | [本專案：alphabet_facts_20261008.json rent.spacex] |
 | Reflection AI | 租用 Colossus 2 的 GB300 算力，合約至 2029 | 媒體報導 | [外部・未經本專案檢核：Drive Tesla Canada，2026-06-22] |
 | 未具名客戶 | CFO 稱新簽算力託管合約，2026-12-01 起 | 高盛研討會發言 | [外部・未經本專案檢核：Drive Tesla Canada，2026-09-10] |
@@ -122,7 +122,7 @@ asof: 2026-11-04
 ## 來源
 1. 本專案：spacex/dist/20261104_SpaceX個股模型_v0.2.3.xlsx（In、Q、Thesis、CF、Val、Recon、Sens）、spacex/README.md、spacex/docs/reports/20261104_spacex_v0.2.2_TK快照v21.9.md（2026-11-04）
 2. 本專案：/home/claude/wt23/spacex/data/spacex_facts_2026q3.json、spacex_facts_v02.json（2026-10-30）
-3. 本專案：/home/claude/wt23/anthropic/dist/20261103_Anthropic收支模型_v0_1_8.xlsx（SRC_ANT）；/home/claude/wt23/alphabet/data/alphabet_facts_20261008.json、alphabet_facts_2026q3.json
+3. 本專案：/home/claude/wt23/anthropic/dist/20261104_Anthropic收支模型_v0_1_9.xlsx（SRC_ANT）；/home/claude/wt23/alphabet/data/alphabet_facts_20261008.json、alphabet_facts_2026q3.json
 4. [Anthropic is SpaceX's biggest customer, bringing in a third of revenue（The Next Web，轉述 Bloomberg）](https://thenextweb.com/news/anthropic-spacex-largest-customer-customer-b)（2026-10-29）
 5. [SpaceX and Tesla boards form special committees to review merger（TechCrunch）](https://techcrunch.com/2026/10/20/spacex-and-tesla-boards-form-special-committees-to-review-merger/)（2026-10-20）
 6. [SpaceX AI compute deal（Drive Tesla Canada）](https://driveteslacanada.ca/news/spacex-ai-compute-deal-13-billion-revenue/)（2026-09-10）
