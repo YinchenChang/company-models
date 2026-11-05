@@ -815,6 +815,46 @@ _wta_table(SE, _t0, [("FY2027 EPS", "0.00"), ("FY2028 EPS", "0.00"), ("目標價
            [("基準（Sens 主表基準＝情境 A；目標價＝情境加權）", [_e("A", 2027), _e("A", 2028), _W["tp_base"]]),
             ("情境 B（案例底）", [_e("B", 2027), _e("B", 2028), _W["tp_b"]]),
             ("Wattonomics 錨定（情境 B × wta）", [_W["eps"](2027), _W["eps"](2028), _W["tp_w"]])])
+# ---------------- v0.3.1（2026-11-05）：只改展示層——README 頁「展示層」「命題回覆」「本版要點」三段（個股 HTML 版面規格 v1.0；公式帶數字，其他頁不變） ----------------
+def _fr(ws, prefix, start=1):
+    for _r in range(start, ws.max_row + 1):
+        _v = ws.cell(_r, 1).value
+        if isinstance(_v, str) and _v.strip().startswith(prefix): return _r
+    raise KeyError((ws.title, prefix))
+_VB = lambda k: f"Val!B{TPL[k]}"
+_E = lambda s_, y: f"PL!{XC[y]}{XR[(s_, 'eps')]}"
+_T = lambda x, f: f'TEXT({x},"{f}")'
+_PP = lambda x: f'TEXT(({x})*100,"0.0")'
+_SG = '"+0.0%;-0.0%"'
+_vadj = _fr(V, "相對倍數調整係數"); _vhi = _fr(V, "夾值上限"); _vband = TPL["band"]; _vpe28 = _fr(V, "現價 ÷ FY2028 EPS（模型）")
+_r_dc = _fr(RC, "FY2027 資料中心營收 vs 公司"); _r_gpu = _fr(RC, "FY2027 資料中心 GPU 營收 vs 公司"); _r_gm = _fr(RC, "FY2027 毛利率 vs FY2026 錨點")
+_r_e27 = _fr(RC, "FY2027 EPS vs 共識（stockanalysis"); _r_e28 = _fr(RC, "FY2028 EPS vs 共識約"); _r_e29 = _fr(RC, "FY2029 EPS vs 公司策略期間"); _r_gw = _fr(RC, "FY2027 AMD 認列顆數 ÷ 每 GW"); _r_w = _fr(RC, "認股權證稀釋占 FY2029 股數")
+_s_u = _fr(SE, "AMD 顆數係數 高"); _s_pg = _fr(SE, "世代售價係數 高"); _s_a0 = _fr(SE, "HBM 吸收比例 0"); _s_a1 = _fr(SE, "HBM 吸收比例 1"); _s_gh = _fr(SE, "GPU 毛利率 高")
+_s_ch = _fr(SE, "資料中心 CPU 成長 高"); _s_w0 = _fr(SE, "認股權證不歸屬"); _s_c = _fr(SE, "顆數情境 C"); _s_wta = _fr(SE, "Wattonomics 錨定（情境 B × wta）", _w0 + 1)
+RD.cell(1, 1).value = RD.cell(1, 1).value.replace("模型 v0.3（", "模型 v0.3.1（", 1) + "；v0.3.1（2026-11-05）只改展示層（README 展示層、命題回覆與本版要點三段，HTML 新版面 v1.0），其他頁數值不變"
+_r = RD.max_row + 2; _r0 = _r
+RD.cell(_r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；v0.3.1 新增，A3、A4、A21–A24 原文保留給下游）").font = BOLD; _r += 1
+RD.cell(_r, 1, "命題：AMD 的資料中心 GPU 營收＝加速器市場金額 × AMD 金額份額；OpenAI、Meta、Anthropic、Oracle 等大單自 2026 下半年起放量，但附帶認股權證稀釋，HBM 漲價又壓 GPU 毛利率。問題是本模型推得的營收與 EPS 撐不撐得住現價與公司的說法，四個問題如下。"); _r += 1
+RD.cell(_r, 1, "命題 1：大單放量後，資料中心營收能否做到公司說的「2027 年逾一倍」。"); _r += 1
+RD.cell(_r, 1, "命題 2：GPU 占比上升、HBM 漲價之下，毛利率守得住多少。"); _r += 1
+RD.cell(_r, 1, "命題 3：每 GW 附帶的客戶認股權證，會把股數稀釋多少。"); _r += 1
+RD.cell(_r, 1, f'="命題 4：股價約為共識 FY2027 EPS 的 "&TEXT(Val!B{_fr(V, "現價 ÷ 共識 FY2027 EPS")},"0")&" 倍；本模型的 EPS 撐不撐得住現價與公司「EPS 逾 20 美元」的說法，差距來自顆數、售價還是毛利率。"'); _r += 1
+RD.cell(_r, 1, f'="重點 1：加權目標價約 "&{_T(_VB("tp"), "0.00")}&" 美元，比現價 "&TEXT(px,"0.00")&" 低 "&TEXT(-{_VB("up")},"0.0%")&"，投資建議「"&Val!B{REC_ROW}&"」。大下檔的主因是本模型的 EPS 比市場預期低：12 個月後前瞻 EPS（情境加權）比共識低 "&TEXT(-{_VB("geps")},"0.0%")&"；以本模型情境 B 的 FY2028 EPS 計，現價約 "&TEXT(Val!C{_vpe28},"0.0")&" 倍，是同業前瞻本益比中位數 "&{_T(_VB("med"), "0.0")}&" 倍的 "&TEXT(Val!C{_vpe28}/{_VB("med")},"0.0")&" 倍（同業為未來 12 個月口徑，時點相近但不完全相同）。加權目標價由 DCF（"&{_T(_VB("dcf"), "0.00")}&"）與相對倍數調整後的 Comparable（"&TEXT(tp_comp_adj,"0.00")&"，調整係數 "&TEXT(Val!B{_vadj},"0.00")&IF(Val!B{_vadj}>=Val!B{_vhi},"，已達夾值上限","")&"）各半；未調整的 Comparable 為 "&{_T(_VB("comp"), "0.00")}&"。"'); _r += 1
+RD.cell(_r, 1, f'="重點 2：FY2027 三情境相同（EPS "&{_T(_E("B", 2027), "0.00")}&" 美元），分歧從 FY2028 開始：FY2028 EPS 情境 A（樂觀）／B（基準）／C（保守）為 "&{_T(_E("A", 2028), "0.00")}&"／"&{_T(_E("B", 2028), "0.00")}&"／"&{_T(_E("C", 2028), "0.00")}&"。DCF 價格帶（推到約 12 個月後）"&TEXT(Val!B{_vband},"0.0")&"～"&TEXT(Val!C{_vband},"0.0")&"，三情境都低於現價。"'); _r += 1
+RD.cell(_r, 1, f'="重點 3：單一輸入中影響最大的是售價與 HBM 成本由誰吸收：世代售價係數提高（隨 HBM 容量加價）時 FY2028 EPS "&TEXT(Sens!J{_s_pg},{_SG})&"；HBM 漲價全由 AMD 吸收時 "&TEXT(Sens!J{_s_a1},{_SG})&"；顆數 ×1.2 只有 "&TEXT(Sens!J{_s_u},{_SG})&"。改用 Wattonomics 錨定的產業量（情境 B × 錨定係數，敏感度案例、未進基準）時，單一路徑目標價 "&TEXT(Sens!H{_s_wta},"0.00")&"（相對基準 "&TEXT(Sens!I{_s_wta},{_SG})&"）。"'); _r += 1
+_r += 1
+RD.cell(_r, 1, "命題回覆（HTML 用；依本模型計算回答開頭四個命題）").font = BOLD; _r += 1
+RD.cell(_r, 1, f'="資料中心營收能否「2027 年逾一倍」？答：本模型差一點。FY2027 資料中心營收 "&TEXT(Recon!C{_r_dc},"0.0")&"（十億美元，三情境相同），比 FY2026 錨點的兩倍（"&TEXT(Recon!B{_r_dc},"0.0")&"）低 "&TEXT(-Recon!D{_r_dc},"0.0%")&"；其中資料中心 GPU "&TEXT(Recon!C{_r_gpu},"0.0")&"，換算認列顆數約 "&TEXT(Recon!C{_r_gw},"0.0")&" GW。顆數是市場層的估計，公司不拆分 GPU 與 CPU；若大單提前放量（顆數 ×1.2），FY2028 EPS "&TEXT(Sens!J{_s_u},{_SG})&"。"'); _r += 1
+RD.cell(_r, 1, f'="毛利率守得住多少？答：本模型守不住 FY2026 的水準。FY2027 毛利率 "&TEXT(Recon!C{_r_gm},"0.0%")&"，比 FY2026 錨點 "&TEXT(Recon!B{_r_gm},"0.0%")&" 低 "&{_PP(f"-Recon!D{_r_gm}")}&" 個百分點，原因是毛利率較低的 GPU（假設 "&TEXT(gm_gpu,"0%")&"）占比上升與 HBM 漲價。HBM 漲價由 AMD 吸收的比例是假設（情境 B "&TEXT(abs_mem_B,"0.0")&"）；全額轉嫁時 FY2028 EPS "&TEXT(Sens!J{_s_a0},{_SG})&"，全額吸收時 "&TEXT(Sens!J{_s_a1},{_SG})&"。"'); _r += 1
+RD.cell(_r, 1, f'="認股權證會稀釋多少？答：依已歸屬 GW 換算，FY2029 認股權證約占股數 "&TEXT(Recon!E{_r_w},"0.0%")&"（情境 B；情境 A "&TEXT(Recon!C{_r_w},"0.0%")&"、情境 C "&TEXT(Recon!G{_r_w},"0.0%")&"，放量愈多、歸屬愈多）。若認股權證完全不歸屬，FY2028 EPS "&TEXT(Sens!J{_s_w0},{_SG})&"。"'); _r += 1
+RD.cell(_r, 1, f'="EPS 撐得住現價嗎？答：本模型撐不住。FY2027 EPS "&TEXT(Recon!C{_r_e27},"0.00")&" 比共識 "&TEXT(Recon!B{_r_e27},"0.00")&" 低 "&TEXT(-Recon!D{_r_e27},"0.0%")&"（另一共識來源為 "&TEXT(Recon!B{_r_e27 + 1},"0.00")&"，兩來源差距大）；FY2029 情境 B EPS "&TEXT(Recon!E{_r_e29},"0.00")&"，仍低於公司「逾 20 美元」的說法。現價約為情境 B FY2028 EPS 的 "&TEXT(Val!C{_vpe28},"0.0")&" 倍，加權目標價 "&{_T(_VB("tp"), "0.00")}&"（"&TEXT({_VB("up")},{_SG})&"）。差距來源：單一輸入中售價影響最大（世代售價係數提高 "&TEXT(Sens!J{_s_pg},{_SG})&"），其次是資料中心 CPU 成長（照公司說法 "&TEXT(Sens!J{_s_ch},{_SG})&"）與顆數（×1.2 為 "&TEXT(Sens!J{_s_u},{_SG})&"），GPU 毛利率提高到 55% 只有 "&TEXT(Sens!J{_s_gh},{_SG})&"；這些是一次動一個輸入的測試，不是撐住現價所需的門檻。"'); _r += 1
+_r += 1
+RD.cell(_r, 1, "本版要點與版本沿革（HTML 附錄用）").font = BOLD; _r += 1
+RD.cell(_r, 1, "v0.3.1（2026-11-05）：只改展示層——README 頁新增「展示層」「命題回覆」「本版要點」三段（公式帶數字），HTML 改用個股 HTML 版面規格 v1.0（tools/company_html/relayout.py）；README 以外逐格與 v0.3 相同，敏感度沿用。"); _r += 1
+for _p in ("v0.2.3", "2026-10-29", "v0.3（", "v0.2.2", "v0.2.1", "v0.2（"):
+    RD.cell(_r, 1, f"=A{_fr(RD, _p)}"); _r += 1
+from openpyxl.styles import Alignment as _AL
+for _rr in range(_r0, _r): RD.cell(_rr, 1).alignment = _AL(wrap_text=True, vertical="top")
 wb.save(sys.argv[1])
 if os.environ.get("AMD_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
