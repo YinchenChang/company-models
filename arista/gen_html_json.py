@@ -1,4 +1,4 @@
-# v0.4.1（2026-11-05）：套用個股 HTML 版面規格 v1.0（docs/plan/個股HTML版面規格.md）——只改展示層。
+# v0.4.1（2026-11-05）：套用個股 HTML 版面規格 v1.0（docs/plan/個股HTML版面規格.md）——只改展示層。v0.5：DCF 改標準版（FCFF＋WACC），估值章 DCF 區塊改由本檔依 xlsx 列號產生（html_src.json 不動）。
 # 讀 arista/html_src.json（v0.4 的版面，內容不動）→ 少量前處理 → tools/company_html/relayout.py → 寫 arista/html.json。
 # 用法：python3 arista/gen_html_json.py [成品 xlsx（預設 arista/dist/ 內唯一的 xlsx）]
 import copy, glob, json, os, re, sys
@@ -14,6 +14,25 @@ def row(ws, prefix, col=1):
     return next(r for r in range(1, ws.max_row + 1) if str(ws.cell(r, col).value or "").startswith(prefix))
 ink = lambda k: next(r for r in range(1, IN.max_row + 1) if IN.cell(r, 1).value == k)
 secs = {s["id"]: s for s in cfg["sections"]}
+DC = wb["DCF"]
+r_dcf = row(VA, "DCF 目標價（情境加權）")
+_rk = row(VA, "股權成本 ke"); _rr = row(VA, "永續期 RONIC"); _rp = row(VA, "明確期 FCFF 現值")
+_dh = row(DC, "項目")
+DCF_BLOCKS = [
+    {"type": "note", "parts": [f"@Val!A{_rk - 2}"]},
+    {"type": "table", "caption": "DCF 折現率：股權成本、稅後債務成本、WACC、永續成長率、RONIC", "head": ["項目", "數值", "說明"],
+     "rows": [[f"@Val!A{r}", f"@Val!B{r}|" + ("p1" if r == _rk + 2 else "p2"), f"@Val!E{r}"] for r in range(_rk, _rr + 1)]},
+    {"type": "table", "caption": "DCF 彙總：明確期現值、終值現值、企業價值、淨現金與每股價值", "head": [f"@Val!{c}{_rk - 1}" for c in "ABCD"],
+     "rows": [[f"@Val!A{r}"] + [f"@Val!{c}{r}|" + {_rp + 4: "n3", _rp + 7: "p1", _rp + 8: "x1"}.get(r, "n2") for c in "BCD"] for r in range(_rp, r_dcf)]
+             + [[f"@Val!A{r_dcf}", f"@Val!B{r_dcf}|n2", "", ""]]}]
+for s_ in "ABC":
+    _a = row(DC, f"情境 {s_}（"); _b = row(DC, "現值（FCFF", _a) if False else next(r for r in range(_a, DC.max_row + 1) if str(DC.cell(r, 1).value or "").startswith("現值（FCFF"))
+    _cols = ["A"] + [chr(ord("C") + i) for i in range(6)]
+    _pct = {str(r): {c: "p1" for c in _cols[1:]} for r in range(_a + 1, _b + 1) if str(DC.cell(r, 1).value).startswith(("稅率", "折舊攤銷 ÷", "資本支出 ÷"))}
+    _pct.update({str(r): {c: "n3" for c in _cols[1:]} for r in range(_a + 1, _b + 1) if str(DC.cell(r, 1).value).startswith("折現因子")})
+    DCF_BLOCKS.append({"type": "table", "caption": f"@DCF!A{_a}", "collapse": True, "summary": "展開：本情境各年無槓桿自由現金流明細",
+                       "head": [f"@DCF!{c}{_dh}" for c in _cols],
+                       "rowgen": {"sheet": "DCF", "rows": f"{_a + 1}-{_b}", "cols": _cols, "fmts": [""] + ["n2"] * 6, "row_fmt": _pct}})
 
 # 前處理（只動版面，不加數字）
 # 1. 驅動：原「單一參數」表實為輸入 → 推導量對照，交給轉換器放到附錄
@@ -33,10 +52,16 @@ for b in va:
         continue
     if b["type"] == "kv":
         b = {"type": "table", "caption": "相對倍數調整", "head": ["項目", "數值"], "rows": [list(i) for i in b["items"]]}
-    if b["type"] == "table" and not b.get("caption") and b.get("rows") and b["rows"][0][0] == f"@Val!A{row(VA, '股東現金流＝')}":
-        out.append({"type": "table", "caption": "DCF 折現率與永續假設（股東權益現金流折現）", "head": ["@In!B3", "@In!E3", "@In!C3", "@In!G3"],
-                    "rows": [[f"@In!B{ink(k)}", f"@In!E{ink(k)}|p1", f"@In!C{ink(k)}", f"@In!G{ink(k)}|tag"] for k in ("tp_r", "tp_g", "tp_roe")]})
-        b = dict(b, caption="DCF 彙總（股東權益現金流折現）")
+    if b["type"] == "table" and b.get("caption") == "@Val!A4":      # v0.5：舊 0.1 DCF（股東現金流）兩張表 → 標準版 DCF 折現率、彙總與各情境 FCFF 明細
+        out += DCF_BLOCKS
+        continue
+    if b["type"] == "table" and not b.get("caption") and b.get("rows") and b["rows"][0][0] == "@Val!A13":
+        continue
+    if b["type"] == "bars":
+        b = copy.deepcopy(b)
+        for it in b["items"]:
+            if it["label"] == "@Val!A23":
+                it["label"], it["value"] = f"@Val!A{r_dcf}", f"@Val!B{r_dcf}"
     if b["type"] == "table" and not b.get("caption") and b.get("rows") and b["rows"][0][0] == f"@Val!A{row(VA, '同業前瞻 P/E 中位數')}":
         b = dict(b, caption="Comparable 計算")
     out.append(b)
@@ -46,6 +71,15 @@ for b in secs["recon"]["blocks"]:
     if b["type"] == "table" and not b.get("caption"):
         b["caption"] = "對帳要點"
 tor_title = {b["title"]: b for b in secs["sens"]["blocks"] if b["type"] == "tornado"}
+# v0.5：Sens 目標價參數表改為標準版 DCF 的十個案例（tools/fcff_dcf.py write_sens）
+SE = wb["Sens"]
+_st = row(SE, "目標價參數敏感度")
+_se = next(r for r in range(_st + 2, SE.max_row + 1) if str(SE.cell(r, 1).value or "").startswith("檢查：閉式公式"))
+for b in secs["sens"]["blocks"]:
+    if b["type"] == "table" and b.get("caption") == "@Sens!A21":
+        b["caption"] = f"@Sens!A{_st}"
+        b["head"] = [f"@Sens!{c}{_st + 1}" for c in "ABCDEFG"]
+        b["rowgen"] = dict(b["rowgen"], rows=f"{_st + 2}-{_se - 1}")
 
 scen_tok = re.split(r"[.\s]", IN.cell(row(IN, "情境驅動對照"), 1).value)[0]
 SPEC = {
@@ -69,12 +103,13 @@ SPEC = {
   ["全公司：股價、折現率、目標價規則與現金流", [
     ["股價與市場倍數", ["px", "pe_ttm_gaap", "pe_fwd_sa", "g2n"]],
     ["共識與先驗（只作對帳）", ["cons_rev26", "cons_eps26", "erste_eps27", "dell_top2", "idc_anet", "pe_fair_andy", "cons_tp"]],
-    ["折現率與永續假設", ["tp_r", "tp_g", "tp_gd", "tp_roe", "nm10_k"]],
-    ["目標價規則（情境權重、DCF 權重）", ["tp_wA", "tp_wB", "tp_wC", "tp_w_dcf"]],
-    ["自由現金流比率", ["fcf_da", "fcf_capex"]]]]],
+    ["目標價規則（情境權重、DCF 權重、PL 延伸期收斂）", ["tp_wA", "tp_wB", "tp_wC", "tp_w_dcf", "tp_g", "tp_gd", "nm10_k"]],
+    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta_u", "beta_ug", "beta_de", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
+    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"]],
+    ["自由現金流（股票薪酬、折舊、資本支出、營運資金）", ["fc_sbc", "fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc", "fcf_da", "fcf_capex"]]]]],
  "blocks_to": {"Arista 份額": "AI 後端乙太網路（AI 營收）", "@Units!A13": "AI 後端乙太網路（AI 營收）"},
- "main": {"0.1 DCF": ["FY2027", "FY2028", "FY2029", "FY2030", "FY2031", "FY2032"],
-          "DCF 彙總": ["股東現金流＝", "永續價值", "DCF 情境每股價值", "其中：永續價值現值占比", "DCF 目標價"],
+ "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+          "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
           "對帳要點": ["FY2026 營收 vs 共識", "FY2026 EPS vs 共識", "FY2027 EPS vs 前瞻", "FY2026 Arista 有效份額 vs IDC", "3Q26 EPS"]},
 }
 cfg = relayout(cfg, X, SPEC)
