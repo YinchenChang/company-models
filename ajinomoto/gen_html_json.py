@@ -47,12 +47,27 @@ def _shift_scn(blocks):
                 blocks[i_] = json.loads(re.sub(r"In!([A-Z]+)(\d+)", lambda m: f"In!{m.group(1)}{int(m.group(2)) + d}" if int(m.group(2)) >= old_h else m.group(0), json.dumps(b, ensure_ascii=False)))
             nb_ = len(blocks[i_]["rows"])
             assert wb["In"].cell(new_h + nb_, 1).value and not wb["In"].cell(new_h + nb_ + 1, 1).value, ("情境驅動表列數與 In 頁不符", new_h, nb_)
+            # v0.3.3（第三輪修正第 15、39 項）：三情境欄依單位格式化（% 列顯示百分比）
+            for row_ in blocks[i_]["rows"]:
+                r_ = int(re.search(r"In!B(\d+)", row_[0]).group(1)); u_ = str(wb["In"].cell(r_, 3).value or "")
+                f_ = "p1" if u_ == "%" else ("n2" if u_ == "x" else "")
+                if f_:
+                    row_[1:4] = [x.split("|")[0] + "|" + f_ for x in row_[1:4]]
 _shift_scn(sec("drivers")["blocks"])
 for b in sec("drivers")["blocks"]:
     if str(b.get("caption", "")).startswith("單一參數"):
         b["caption"] = "驅動 → 推導對照表（In 頁基準值與 PL 頁推導量）"
 
 # ---- 前處理一：估值章（重點觀察已在第一章；kv 改為有標題的表；DCF 前加折現率表）----
+def _dfmt(t):
+    """DCF 頁明細列的顯示格式（v0.3.3）：只有稅率、折舊攤銷 ÷、資本支出 ÷、終值現值占 EV 用百分比；NOPAT、終值、每股價值不顯示成 %。"""
+    if t.startswith(("稅率", "折舊攤銷 ÷", "資本支出 ÷", "終值現值占", "評價日後占")): return "p1"
+    if t.startswith("折現因子"): return "n4"
+    if t.startswith("隱含終值 EV／EBITDA"): return "x1"
+    if t.startswith("每股價值"): return "n0"
+    return "n1"
+
+
 va = sec("valuation")
 nb, old, i = [], va["blocks"], 0
 while i < len(old):
@@ -94,7 +109,7 @@ while i < len(old):
         nb.append({"type": "table", "collapse": True, "summary": "展開：情境 B 的無槓桿自由現金流明細（DCF 頁；情境 A、C 同式）", "caption": f"@DCF!A{b0}",
                    "head": [f"@DCF!{c}{hd}" for c in "ACDEFGHI"],
                    "rowgen": {"sheet": "DCF", "rows": f"{b0 + 1}-{b1}", "cols": list("ACDEFGHI"), "fmts": ["", "n1", "n1", "n1", "n1", "n1", "n1", "n1"],
-                              "row_fmt": {str(r): {c: ("n4" if "因子" in lab(r) else "p1") for c in "CDEFGHI"} for r in range(b0 + 1, b1 + 1) if any(k in lab(r) for k in ("率", "÷", "占", "因子"))}}})
+                              "row_fmt": {str(r): {c: _dfmt(lab(r)) for c in "CDEFGHI"} for r in range(b0 + 1, b1 + 1) if _dfmt(lab(r)) != "n1"}}})   # v0.3.3：只有比例列用百分比（第三輪修正第 38 項）
         i += 1
         continue
     if b["type"] == "table" and txt(b.get("caption", "")).startswith("0.2 Comparable"):
@@ -141,7 +156,7 @@ SPEC = {
     ["收斂期（FY2030 起）", ["tp_g", "nm10_k", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fade_mB", "fade_mC"]]]]],
  "blocks_to": {"加速器顆數": "ファンクショナルマテリアルズ（FM）：ABF 增層膜", "@Units!A": "ファンクショナルマテリアルズ（FM）：ABF 增層膜"},
  "main": {
-  "0.1 DCF": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+  "0.1 DCF": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "＋Stub 期 FCFF", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
   "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
  },
 }
