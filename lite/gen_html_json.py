@@ -117,6 +117,7 @@ SPEC = {
     ["營業費用、營業外收入、稅與股數", ["phi", "opx_adj", "oi_oth", "tx", "sh_g"]]]],
   ["全公司：股價、折現率、目標價規則與收斂法", [
     ["股價與股數", ["px", "px_hi", "sh_basic"]],
+    ["Marvell 合併協議（換股價值對照；不進加權目標價）", ["mrg_x", "mrvl_px", "mrvl_tp"]],
     ["目標價規則（情境權重、DCF 權重）", ["tp_wA", "tp_wB", "tp_wC", "tp_w_dcf"]],
     ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta_u", "beta_u_med", "beta_du", "beta_de", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
     ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "bs_date", "stub_frac", "stub_div", "sh_v"]],
@@ -129,6 +130,16 @@ SPEC = {
           "Comparable 計算": ["同業前瞻 P/E 中位數", "12 個月後的前瞻 EPS", "Comparable 目標價"],
           "sheet:Recon": ["FY2027 EPS vs 共識", "FY2028 EPS vs 共識", "CY2026 雷射有效份額 vs", "CY2027 AI 相關營收 ÷", "FY2026 EPS vs 公司揭露"]},
 }
+# 第三輪修正 15／21：情境驅動表依 In 頁 C 欄單位格式化（% 與 pt 用百分比，避免 0.06 顯示成小數）；DCF 彙總主表直接顯示 stub 兩列
+def _uf3(r_):
+    u = IN.cell(r_, 3).value
+    return "p1" if u in ("%", "pt") else "n3" if u == "十億股" else "n2"
+for b in secs["drivers"]["blocks"]:
+    if b["type"] == "table" and str(b.get("caption", "")).startswith("情境驅動"):
+        b["rows"] = [[x[0]] + [(f"{c}|{_uf3(int(c.split('!')[1][1:]))}" if "|" not in c and isinstance(IN[c.split('!')[1]].value, (int, float)) else c) for c in x[1:4]] + x[4:] for x in b["rows"]]
+_m3 = SPEC["main"]["DCF 彙總"]
+if "＋Stub 期 FCFF" not in _m3:
+    _m3.insert(_m3.index("＋淨現金與投資") + 1, "＋Stub 期 FCFF")
 cfg = relayout(cfg, X, SPEC)
 secs = {s["id"]: s for s in cfg["sections"]}
 # 後處理：轉換器把估值章所有長條圖移到最前面；舊法（規則值）長條圖放回舊法段落，避免與目標價並列
@@ -146,5 +157,16 @@ _rc, _ru, _ra = row(VA, "Comparable 目標價"), row(VA, "上檔空間：Compara
 assert VA.cell(_rc, 1).value == "Comparable 目標價" and str(VA.cell(_ra - 1, 1).value).startswith("相對倍數調整係數")
 cfg["hero"]["tiles"][1] = ["只看 Comparable 目標價（市場主流同業法）", f"@Val!B{_rc}|n2", ["上檔空間 ", f"@Val!B{_ru}|sp1"]]
 cfg["hero"]["note"] = list(cfg["hero"].get("note") or []) + ["。進加權的 Comparable 為相對倍數調整後 ", f"@Val!B{_ra}|n2", "（調整係數 ", f"@Val!B{_ra - 1}|n2", "）"]
+# 第三輪修正 17：橫幅金額標明幣別
+_CUR3 = '美元'
+def _lab3(x):
+    t = str(wb[x[1:].split("!")[0]][x.split("!")[1]].value) if isinstance(x, str) and x.startswith("@") else str(x)
+    return x if _CUR3 in t else ([x, "（" + _CUR3 + "）"] if isinstance(x, str) and x.startswith("@") else t + "（" + _CUR3 + "）")
+for _t in cfg["hero"]["tiles"]:
+    _t[0] = _lab3(_t[0])
+# 第三輪修正 27：橫幅附註加併購協議說明（文字與數字取自 Val 0.6 節）
+_mn = row(VA, "0.6 併購協議對照") + 5
+assert str(VA.cell(_mn, 1).value).startswith("併購協議"), VA.cell(_mn, 1).value
+cfg["hero"]["note"] = list(cfg["hero"].get("note") or []) + ["。", f"@Val!A{_mn}", "。"]
 json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")
