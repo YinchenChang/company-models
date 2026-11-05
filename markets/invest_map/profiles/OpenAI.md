@@ -15,9 +15,9 @@ AI 模型公司（位於 AI 金流的最上游）：自研 GPT 系列大模型�
 
 ## 公司在做什麼
 - 消費端產品是 ChatGPT（對話式 AI 助理）：免費版加上 Go、Plus、Pro 三種月費方案，牌價分別為每月 8、20、100–200 美元 [本專案：20261029_OpenAI收支模型_v0_6_4.xlsx SRC_OAI!C35–C38]；2026-02 週活躍用戶 900M [本專案：20261029_OpenAI收支模型_v0_6_4.xlsx SRC_OAI!C91]（[Interested-party]）。
-- API（應用程式介面，讓開發者按用量付費呼叫模型）：以「每百萬 token」計價（token 是模型處理文字的最小單位），分頂層、中層、低層三個價位；2026-09 旗艦 GPT-6 Astra 牌價為輸入 10、輸出 50 美元／百萬 token [本專案：20261029_OpenAI收支模型_v0_6_4.xlsx SRC_OAI!C17、C19、C26]。2026-03 底 API 每分鐘處理超過 15B token [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C143]（[Interested-party]）。
+- API（應用程式介面，讓開發者按用量付費呼叫模型）：以「每百萬 token」計價（token 是模型處理文字的最小單位），分頂層、中層、低層三個價位；2026-09 旗艦 GPT-6 Astra 牌價為輸入 10、輸出 50 美元／百萬 token [本專案：20261029_OpenAI收支模型_v0_6_4.xlsx SRC_OAI!C17、C19、C26]。2026-03 底 API 每分鐘處理超過 15B token [本專案：20261029_OpenAI收支模型_v0_6_4.xlsx SRC_OAI!C140]（[Interested-party]）。
 - 企業端：ChatGPT 企業席位（Business／Enterprise）加上 API 大客戶；公司 CFO 稱年初消費端與企業端約 60／40，8 月企業端已超過消費端 [本專案：20261029_OpenAI收支模型_v0_6_4.xlsx SRC_OAI!C11]（[Interested-party]）。
-- 營收規模：FY2025 認列營收 13.07bn 美元 [本專案：20261029_OpenAI收支模型_v0_6_4.xlsx SRC_OAI!C6]；2026 Q1 5.7bn、Q2 6.7bn [本專案：20261029_OpenAI收支模型_v0_6_4.xlsx SRC_OAI!C8–C9]；9 月底 run-rate（年化營收）約 50bn（OpenAI 淨額口徑）[本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C142]（皆為 [Interested-party] 或二手報導）。
+- 營收規模：FY2025 認列營收 13.07bn 美元 [本專案：20261029_OpenAI收支模型_v0_6_4.xlsx SRC_OAI!C6]；2026 Q1 5.7bn、Q2 6.7bn [本專案：20261029_OpenAI收支模型_v0_6_4.xlsx SRC_OAI!C8–C9]；9 月底 run-rate（年化營收）約 50bn（OpenAI 淨額口徑）[本專案：20261029_OpenAI收支模型_v0_6_4.xlsx SRC_OAI!C139]（皆為 [Interested-party] 或二手報導）。
 - 算力主要靠租用：2025 年底算力規模約 1.9 GW [本專案：20261029_OpenAI收支模型_v0_6_4.xlsx SRC_OAI!C89]（[Interested-party]，電力口徑未明）。
 
 ## 主要產品與營收占比
@@ -61,7 +61,7 @@ AI 模型公司（位於 AI 金流的最上游）：自研 GPT 系列大模型�
 | 智譜（02513.HK） | API、Coding 方案 | 1H26 營收 RMB 954m | [本專案：20261022_MiniMax收支模型_v0_2.xlsx SRC_MM!E75] |
 
 - 市占：本專案未建立。
-- 營收口徑不同：Anthropic 經雲端市集的銷售以總額認列 [本專案：20261103_Anthropic收支模型_v0_1_8.xlsx Revenue!B67]；OpenAI 9 月底 50bn 為淨額口徑 [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C142]，兩家季營收不能直接比大小。
+- 營收口徑不同：Anthropic 經雲端市集的銷售以總額認列 [本專案：20261103_Anthropic收支模型_v0_1_8.xlsx Revenue!B67]；OpenAI 9 月底 50bn 為淨額口徑 [本專案：20261029_OpenAI收支模型_v0_6_4.xlsx SRC_OAI!C139]，兩家季營收不能直接比大小。
 - 價格競爭：2026-07～09 OpenAI 五次調價，中、低層降幅最大（Luna 輸入由 1 降至 0.1 美元）[本專案：20261029_OpenAI收支模型_v0_6_4.xlsx SRC_OAI!C29–C33、C115、C23]。
 
 ## 主要客戶
@@ -108,8 +108,8 @@ AI 模型公司（位於 AI 金流的最上游）：自研 GPT 系列大模型�
 - 2027 Oracle 起跑｜年付款 60bn 讓算力成本一年增加約 88bn [本專案：20261029_OpenAI收支模型_v0_6_4.xlsx Cost!F18、E27、F27]（[Derived]）；Broadcom 自研晶片融資能否落地影響自建比例｜2026 年底前 Broadcom 融資結案
 
 ## 來源
-1. 本專案：`/home/claude/company-models/openai/dist/20261025_OpenAI收支模型_v0_6_3.xlsx`（SRC_OAI、Revenue、Compute、Cost、Funding、Reverse、PxQ）；`openai/docs/reports/20261025_v0.6.3.md`
-2. 本專案：`/home/claude/company-models/anthropic/dist/20261024_Anthropic收支模型_v0_1_5.xlsx`（SRC_ANT、Revenue）；`minimax/dist/20261022_MiniMax收支模型_v0_2.xlsx`（SRC_MM）；`alphabet/data/alphabet_facts_20261008.json`
+1. 本專案：`/home/claude/company-models/openai/dist/20261029_OpenAI收支模型_v0_6_4.xlsx`（SRC_OAI、Revenue、Compute、Cost、Funding、Reverse、PxQ）；`openai/docs/reports/20261029_v0.6.4.md`
+2. 本專案：`/home/claude/company-models/anthropic/dist/20261103_Anthropic收支模型_v0_1_8.xlsx`（SRC_ANT、Revenue）；`minimax/dist/20261022_MiniMax收支模型_v0_2.xlsx`（SRC_MM）；`alphabet/data/alphabet_facts_20261008.json`
 3. [OpenAI Rumours: punta a 70 miliardi di dollari di ricavi annualizzati entro fine 2026](https://www.borsaitaliana.it/borsa/notizie/teleborsa/finanza/openai-rumours-punta-a-70-miliardi-di-dollari-di-ricavi-annualizzati-entro-fine-2026-37_2026-10-09_TLB.html?lang=it)（Teleborsa，2026-10-09）
 4. [FT: OpenAI Told Investors Annualized Revenue Was Nearing $50B at End of September](https://aiweekly.co/alerts/ft-openai-told-investors-annualized-revenue-was-nearing-50b-at-end-of-september)（AI Weekly，2026-10-08）
 5. [AI news for Thursday, October 8, 2026](https://aiweekly.co/ai-news-today/edition/2026-10-08)（AI Weekly，2026-10-08）

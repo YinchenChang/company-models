@@ -11,7 +11,7 @@ asof: 2026-11-04
 ---
 
 ## 一句話定位
-AI 模型公司（位於 AI 金流的最上游）：自研 Claude 系列大模型，收入以企業與開發者按 token 付費的 API 為主（FY2025 82.9%，模型推估 FY2026 91.0%）[本專案：20261103_20261103_20261103_Anthropic收支模型_v0_1_8.xlsx SRC_ANT!E30、E416；Revenue!E58、E67；Derived]，算力向 Google、Amazon、Microsoft 等租用；本專案模型（已納入公開 S-1 與 S-1/A 的算力承諾）推估自由現金流 2026 年為正、2027–2029 年為負、2030 年起持續轉正，只靠已到位融資不需再募資 [本專案：20261103_20261103_Anthropic收支模型_v0_1_8.xlsx Funding!E14–I14、D254、I43]，但若 SpaceXAI 合約照 S-1/A 月費付滿上限，需要外部資金 22.0bn [本專案：anthropic/docs/reports/20261103_v0.1.8.md ⑤]。
+AI 模型公司（位於 AI 金流的最上游）：自研 Claude 系列大模型，收入以企業與開發者按 token 付費的 API 為主（FY2025 82.9%，模型推估 FY2026 91.0%）[本專案：20261103_Anthropic收支模型_v0_1_8.xlsx SRC_ANT!E30、E416；Revenue!E58、E67；Derived]，算力向 Google、Amazon、Microsoft 等租用；本專案模型（已納入公開 S-1 與 S-1/A 的算力承諾）推估自由現金流 2026 年為正、2027–2029 年為負、2030 年起持續轉正，只靠已到位融資不需再募資 [本專案：20261103_Anthropic收支模型_v0_1_8.xlsx Funding!E14–I14、D254、I43]，但若 SpaceXAI 合約照 S-1/A 月費付滿上限，需要外部資金 22.0bn [本專案：anthropic/docs/reports/20261103_v0.1.8.md ⑤]。
 
 ## 公司在做什麼
 - 模型與 API：Claude 分 Opus（頂層）、Sonnet（中層）、Haiku（低層）三個價位，按「每百萬 token」計價（token 是模型處理文字的最小單位）；2026-09 Opus 5.5 牌價輸入 4、輸出 20 美元，2026-10 Haiku 5.5 降至 0.1／0.5 美元 [本專案：20261103_Anthropic收支模型_v0_1_8.xlsx SRC_ANT!E115–E116、E119–E120]。
@@ -59,14 +59,14 @@ AI 模型公司（位於 AI 金流的最上游）：自研 Claude 系列大模�
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| OpenAI | API、訂閱、程式代理 | 2026 Q2 營收 6.7bn；9 月底 run-rate 約 50bn（淨額口徑） | [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C9、C142] |
+| OpenAI | API、訂閱、程式代理 | 2026 Q2 營收 6.7bn；9 月底 run-rate 約 50bn（淨額口徑） | [本專案：20261029_OpenAI收支模型_v0_6_4.xlsx SRC_OAI!C9、C139] |
 | Google（Gemini） | API、企業助理；也是 Anthropic 股東與 TPU 供應商 | Gemini 營收：本專案未建立 | — |
 | MiniMax（00100.HK） | API、消費型 App | 1H26 營收 116.6m 美元 | [本專案：20261022_MiniMax收支模型_v0_2.xlsx SRC_MM!E8] |
 | 智譜（02513.HK） | API、Coding 方案 | 1H26 營收 RMB 954m | [本專案：20261022_MiniMax收支模型_v0_2.xlsx SRC_MM!E75] |
 
 - 份額（第三方）：企業 LLM API 使用份額 32%（Menlo，2025-07）；OpenRouter 文字請求份額 2.5%（2026-09 底）[本專案：20261103_Anthropic收支模型_v0_1_8.xlsx SRC_ANT!E186、E185]（[Analogy]）。兩者差距大，反映 Anthropic 偏企業、OpenRouter 偏開發者長尾 [判斷]。
 - 營收口徑：Anthropic 雲端市集營收以總額認列 [本專案：20261103_Anthropic收支模型_v0_1_8.xlsx Revenue!B67]，與 OpenAI 淨額口徑不能直接比大小。
-- 價格競爭：Opus 5.5 降價 20%、Haiku 5.5 較前代降 90% [本專案：20261103_20261103_Anthropic收支模型_v0_1_8.xlsx SRC_ANT!E162–E163]。
+- 價格競爭：Opus 5.5 降價 20%、Haiku 5.5 較前代降 90% [本專案：20261103_Anthropic收支模型_v0_1_8.xlsx SRC_ANT!E162–E163]。
 
 ## 主要客戶
 - 財報口徑：公開 S-1 寫 2026 前九個月前五大客戶約占營收 25%、無單一客戶超過 10%，上半年 Customer C 占 11%、雲端市集約占 48% [本專案：20261103_Anthropic收支模型_v0_1_8.xlsx SRC_ANT!E463、G464、E465–E466]；S-1 未具名客戶。報導稱 2025 年約 47% 營收經由 Amazon 與 Google（兩者同時是投資人與供應商）。 [外部・未經本專案檢核：Revenue Memo：Anthropic funding，2026]
@@ -107,7 +107,7 @@ AI 模型公司（位於 AI 金流的最上游）：自研 Claude 系列大模�
 
 ## 來源
 1. 本專案：`/home/claude/company-models/anthropic/dist/20261103_Anthropic收支模型_v0_1_8.xlsx`（SRC_ANT、Revenue、Compute、Cost、Funding）與 `anthropic/dist/20261103_Anthropic收支模型_v0_1_8.html`；`anthropic/docs/handoff/Anthropic_handoff.md`；`anthropic/docs/reports/20261103_v0.1.8.md`、`20261103_S1A原文摘錄.md`、`20261102_S1原文核對.md`、`20261102_v0.1.7.1.md`、`20261031_v0.1.7.md`、`20261031_v0.1.6.md`
-2. 本專案：`/home/claude/company-models/openai/dist/20261025_OpenAI收支模型_v0_6_3.xlsx`（SRC_OAI）；`minimax/dist/20261022_MiniMax收支模型_v0_2.xlsx`（SRC_MM）；`alphabet/data/alphabet_facts_20261008.json`
+2. 本專案：`/home/claude/company-models/openai/dist/20261029_OpenAI收支模型_v0_6_4.xlsx`（SRC_OAI）；`minimax/dist/20261022_MiniMax收支模型_v0_2.xlsx`（SRC_MM）；`alphabet/data/alphabet_facts_20261008.json`
 3. [Anthropic, PBC Form S-1/A（Amendment No. 1）](https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm)（SEC EDGAR，2026-11-02）
 4. [Anthropic, PBC Form S-1](https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm)（SEC EDGAR，2026-10-26）
 5. [Anthropic IPO draft shows nearly 15-fold revenue jump and $600 billion in compute deals](https://investinglive.com/stocks/anthropic-ipo-draft-shows-nearly-15-fold-revenue-jump-and-600-billion-in-compute-deals/)（investingLive，2026-10-20）

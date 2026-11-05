@@ -34,8 +34,8 @@ asof: 2026-10-27
 | 營收線：AWS | 與 AWS 分部相同 | 18.0%；1H26 20.9% | 2025；1H26 | [本專案：20261104_Amazon個股模型_v0.3.4.xlsx Q!E17、Q!P17；Derived] |
 
 - 口徑：三個官方分部，以及 10-K 的七條營收線（零售六線合計＝北美＋國際，AWS 線＝AWS 分部）；合計 7,169.24 億（2025）、3,821.25 億美元（1H26）＝全公司營收，核對列為 0 [本專案：20261104_Amazon個股模型_v0.3.4.xlsx Q!E8、Q!P8、Q!E18、Q!E19、Q!E20]。
-- 獲利集中在 AWS：2025 年 AWS 營業利益 456.06 億美元，占全公司 799.75 億的 57%；1H26 AWS 營業利益 307.82 億，營業利益率 38.6% [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E24、Q!E25、Q!P24、PL!E53；Derived]。
-- 廣告成長快：1H26 廣告營收 370.52 億美元，比 1H25 的 296.15 億增 25.1% [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!P13、Q!N13；Derived]。
+- 獲利集中在 AWS：2025 年 AWS 營業利益 456.06 億美元，占全公司 799.75 億的 57%；1H26 AWS 營業利益 307.82 億，營業利益率 38.6%；9M26 為 485.55 億、38.6% [本專案：20261104_Amazon個股模型_v0.3.4.xlsx Q!E25、Q!E26、Q!P25、Q!P7、Q!O25、PL!E53；Derived]。
+- 廣告成長快：1H26 廣告營收 370.52 億美元，比 1H25 的 296.15 億增 25.1% [本專案：20261104_Amazon個股模型_v0.3.4.xlsx Q!P13、Q!G13:H13；Derived]。
 
 ## 市場定位與產業位置
 - 雲端市占：本專案未建立。
@@ -99,15 +99,15 @@ asof: 2026-10-27
 - 2026-07-30｜Q2 財報：營收 2,006.1 億美元；淨利 626.5 億主要來自 Anthropic 投資評價利益；資本支出指引上調至約 2,200 億美元 [本專案：amazon_facts_20261008.json is.TOT.rev.2026q2、guide.2026.capex；company.json latestQuarter]
 
 ## 需要觀察的事項
-- 對外 AI 報酬（命題核心）｜基準情境 FY2028 對外 AI ROIC 6.7%，低於 WACC 11.3%；要打平，機隊平均每 MW 價格 k 需約 1.20，模型基準為 0.99 [本專案：20261027_Amazon個股模型_v0.3.xlsx Thesis!I124、Val!B30、Thesis!I126、Thesis!I125]｜2026-10-29（美國時間）Q3 財報的 AWS 成長與 AI 營收說法
-- AWS 營業利益率（核心問題一）｜FY2028 基準 34.1%（樂觀 43.2%、保守 30.7%），2025 年為 35.4% [本專案：20261027_Amazon個股模型_v0.3.xlsx Val!C10、Val!B10、Val!D10、PL!D123]｜Q3 財報 AWS 營業利益率
-- 自由現金流（核心問題二）｜FY2028 自由現金流扣股利基準 −150.3 億美元；五年（2026–2030）合計基準 +190.1 億、保守 −432.2 億；基準需新增借款 216.8 億 [本專案：20261027_Amazon個股模型_v0.3.xlsx Val!C11、CF!C6、CF!D6、CF!C7]｜Q3 現金流量表與 2026 年資本支出約 2,200 億美元指引 [本專案：amazon_facts_20261008.json guide.2026.capex]
-- 新產能的每 MW 價格 k｜k 取價格軸低／高時，情境 B 目標價 183.83／268.30 美元（−10.0%／+31.4%），是敏感度最大的一項 [本專案：20261027_Amazon個股模型_v0.3.xlsx Sens!C5、Sens!C6]｜AWS AI 定價與 Trainium 承諾轉成營收的速度
-- 自用 AI 的讀法｜模型假設 AI 算力八成對外、自用較少；Andy 2026-10-27 定讀法 2（自用 AI 價值中性）為主值：加權目標價 215.58 美元，讀法 1（只計成本）194.26 美元；現價 249.09 美元（2026-10-26），兩種讀法的模型評級都是「中立」[本專案：20261027_Amazon個股模型_v0.3.xlsx Val!B19、Val!B33、Val!B20、Val!B24、Val!B35]｜財報對自用 AI（零售、Alexa 等）算力的說法
+- 對外 AI 報酬（命題核心）｜基準情境 FY2028 對外 AI ROIC 4.9%，低於 WACC 11.2%；要打平，機隊平均每 MW 價格 k 需約 1.30，模型基準為 0.99 [本專案：20261104_Amazon個股模型_v0.3.4.xlsx Thesis!I130、Val!B30、Thesis!I132、Thesis!I131]｜2026-10-29（美國時間）Q3 財報的 AWS 成長與 AI 營收說法
+- AWS 營業利益率（核心問題一）｜FY2028 基準 32.8%（樂觀 40.7%、保守 29.8%），2025 年為 35.4% [本專案：20261104_Amazon個股模型_v0.3.4.xlsx Val!C10、Val!B10、Val!D10、PL!D123]｜Q3 財報 AWS 營業利益率
+- 自由現金流（核心問題二）｜FY2028 自由現金流扣股利基準 +6.5 億美元；五年（2026–2030）合計基準 +896.3 億、保守 +377.3 億；基準不需新增借款 [本專案：20261104_Amazon個股模型_v0.3.4.xlsx Val!C11、CF!C6、CF!D6、CF!C7]｜Q3 現金流量表與 2026 年資本支出約 2,200 億美元指引 [本專案：amazon_facts_20261008.json guide.2026.capex]
+- 每 MW 價格 k 與 Trainium 收入口徑｜k_現貨改用 AWS 牌價時加權目標價 247.99 美元（+13.9%），k_長約改用長約下緣價格時 208.38 美元（−4.3%）[本專案：20261104_Amazon個股模型_v0.3.4.xlsx Sens!D21:E22]；敏感度最大的一項是 Trainium 收入係數改用產出比（低端 183.17 美元，−15.9%）[本專案：20261104_Amazon個股模型_v0.3.4.xlsx Sens!D11:E11]｜AWS AI 定價與 Trainium 承諾轉成營收的速度
+- 自用 AI 的讀法｜模型假設 AI 算力八成對外、自用較少；Andy 2026-10-27 定讀法 2（自用 AI 價值中性）為主值：加權目標價 217.69 美元，讀法 1（只計成本）198.55 美元；現價 240.35 美元（2026-10-30），兩種讀法的模型評級都是「中立」[本專案：20261104_Amazon個股模型_v0.3.4.xlsx Val!B19、Val!B33、Val!B20、Val!B24、Val!B35]｜財報對自用 AI（零售、Alexa 等）算力的說法
 - 客戶集中｜backlog 約一半可能來自兩家 AI 實驗室 [本專案：amazon_facts_20261008.json rel.rpoShare]｜Q3 10-Q 的 RPO 揭露
 
 ## 來源
-1. 本專案：/home/claude/company-models/amazon/dist/20261027_Amazon個股模型_v0.3.xlsx（Q、Thesis、PL、CF、Val、Sens）、amazon/README.md、amazon/docs/reports/20261027_amazon_v0.3_分部架構.md（2026-10-27）
+1. 本專案：/home/claude/company-models/amazon/dist/20261104_Amazon個股模型_v0.3.4.xlsx（Q、Thesis、PL、CF、Val、Sens）、amazon/README.md、amazon/docs/reports/20261027_amazon_v0.3_分部架構.md（2026-10-27）
 2. 本專案：/home/claude/company-models/amazon/data/amazon_facts_20261008.json、/home/claude/company-models/amazon/company.json（2026-10-08）
 3. 本專案：/home/claude/company-models/microsoft/data/microsoft_facts_20261008.json、/home/claude/company-models/alphabet/data/alphabet_facts_20261008.json、/home/claude/company-models/oracle/data/oracle_facts_20261007.json、/home/claude/company-models/oracle/dist/20261027_Oracle個股模型_v0.4.xlsx（Val，CoreWeave 倍數）
 4. [Amazon Form 10-K FY2025（管理層名單）](https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm)（2026-01）

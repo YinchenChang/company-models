@@ -36,10 +36,10 @@ asof: 2026-10-25
 - 運算類占 SoC 營收比例：本專案未建立。
 
 ## 市場定位與產業位置
-- SoC 測試機市占（本專案以 Advantest 的市場口徑推得）：CY2025 27.4%、CY2026 29.5%；Advantest 自估 66%，其他廠 4.5–6.6% [本專案：泰瑞達模型_v0.1.xlsx Units!C8:D9]。
+- SoC 測試機市占（本專案以 Advantest 的市場口徑推得）：CY2025 27.4%、CY2026 26.7%；Advantest 模型取 71.4%（Advantest 自估 CY2025 66%），其他廠 1.2–1.9% [本專案：20261031_泰瑞達個股模型_v0.3.xlsx Units!C7:D9、Units!H9]。
 - 並列：2Q26 法說有分析師估泰瑞達測試份額約 37%（公司未證實、口徑未明）；若用 1 − Advantest 66% 則約 34% 以下 [本專案：20261031_泰瑞達個股模型_v0.3.xlsx In!E104；Recon!B14:B15]。
-- 記憶體測試機市占：FY2025 約 24.0%，FY2026 錨點推得 31.7% [本專案：泰瑞達模型_v0.1.xlsx In!E66、I66]。
-- 市場規模（Advantest 自估）：SoC 測試機 CY2025 US$6.9B、記憶體測試機 US$2.1B；本專案 CY2026 為 US$11.0B、US$2.75B [本專案：泰瑞達模型_v0.1.xlsx In!E5、E6、E7、E19]。
+- 記憶體測試機市占：FY2025 約 24.0%，FY2026 錨點推得 37.0% [本專案：20261031_泰瑞達個股模型_v0.3.xlsx In!E66、I66]。
+- 市場規模（Advantest 自估）：SoC 測試機 CY2025 US$6.9B、記憶體測試機 US$2.1B；本專案 CY2026 為 US$11.5B、US$2.75B [本專案：20261031_泰瑞達個股模型_v0.3.xlsx In!E5、E6、E7、E19]。
 - 公司說法：測試對 WFE 比 2025 約 7%、2026 前五月約 8%，長期 7–9%，2027 可能回到 7% [本專案：20261031_泰瑞達個股模型_v0.3.xlsx In!H102]。
 - 客戶集中度：本專案未建立。
 
@@ -52,14 +52,14 @@ asof: 2026-10-25
 
 - 資本配置：回購 FY2025 US$702.1M，2026 上半年只 US$74.2M；稀釋股數 FY2024→FY2025 −2.2% [本專案：20261031_泰瑞達個股模型_v0.3.xlsx In!I89、H89]。
 - 持有 Technoprobe（探針卡廠）權益法投資 [本專案：20261031_泰瑞達個股模型_v0.3.xlsx In!B87]。
-- 機器人：公司目標 2026 年損益兩平 [本專案：泰瑞達模型_v0.1.xlsx In!H73]。
+- 機器人：公司 3Q26 新聞稿稱機器人 3Q26 單季轉盈（金額未揭露），原目標為 2026 年損益兩平 [本專案：20261031_泰瑞達個股模型_v0.3.xlsx In!H73、I73]。
 - 其他經營風格與治理：本專案尚未研究。
 
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| Advantest（6857） | SoC、記憶體測試機 | SoC 測試機 66%（公司自估 CY2025） | [本專案：泰瑞達模型_v0.1.xlsx In!E31、I31，Interested-party] |
-| 其他測試機廠 | 類比、功率、RF 測試等 | SoC 測試機合計 4.5%（CY2026，推得） | [本專案：泰瑞達模型_v0.1.xlsx Units!D9] |
+| Advantest（6857） | SoC、記憶體測試機 | SoC 測試機 71.4%（Advantest 模型 FY2026；公司自估 CY2025 66%） | [本專案：20261031_泰瑞達個股模型_v0.3.xlsx In!E31、I31，Interested-party] |
+| 其他測試機廠 | 類比、功率、RF 測試等 | SoC 測試機合計 1.9%（CY2026，推得） | [本專案：20261031_泰瑞達個股模型_v0.3.xlsx Units!D9] |
 | Cohu、FormFactor | 分選機、探針卡（測試周邊） | 本專案未建立 | — |
 
 - 份額是兩家之間的零和變數：本專案情境 C 讓泰瑞達在 FY2028、FY2029 各加 5、10 個百分點，對應 Advantest 降到 61%、56% [本專案：ter/README.md 情境對照表]。
@@ -88,7 +88,7 @@ asof: 2026-10-25
 - 口徑：13F 機構持股，資料日 2026-06-30（Q2 2026），來自 insiderset 彙整頁（依申報價值排序）；比例為本檔以 10-Q 封面流通股數 156,340,750（2026/7/27）換算，僅供參考。Vanguard 13F 拆成兩個申報實體，合計約 18.9M 股（約 12.1%）。proxy（來源 3）5% 以上持有人：The Vanguard Group 20,972,755 股 13.4%（13G，2025-06-30）、BlackRock 14,337,126 股 9.2%（13G，2023-12-29，已舊）、FMR LLC 7,910,777 股 5.1%。 [外部・未經本專案檢核]
 
 ## 近期重大事件
-- 2026-10-27（預定）｜3Q26 財報（美東盤後）｜指引營收 US$1,200–1,300M、GAAP EPS US$1.79–2.09；1Q26、2Q26 營收都高於指引上緣 [本專案：泰瑞達模型_v0.1.xlsx Q!A2；In!D69:F70；ter/README.md 資料狀態]
+- 2026-10-27｜3Q26 財報：營收 US$1,306.0M、GAAP EPS US$2.17；SoC US$676M、記憶體 US$301M（法說）；4Q26 指引營收 US$1,250–1,350M、GAAP EPS US$1.88–2.18 [本專案：20261031_泰瑞達個股模型_v0.3.xlsx Q!A2、Q!I10、Q!I19、Q!I4、Q!I5、Q!M4；In!D69:F70]
 - 2026-10-23｜收盤 US$308.85；52 週區間 US$135.83–487.91 [本專案：20261031_泰瑞達個股模型_v0.3.xlsx In!E108；ter/README.md 資料狀態]
 - 2026-07-28｜2Q26：營收 US$1,329.0M（+104%）、GAAP EPS US$2.38；SoC US$843.0M、記憶體 US$212.3M 創新高 [本專案：20261031_泰瑞達個股模型_v0.3.xlsx Q!H10、L10、H19、H4、H5]
 - 2026-07-28｜法說：記憶體訂單出貨比超過 2；美國製造中心預定 2026 年內啟用；機器人營收 +33% [外部新聞：MarketBeat]
@@ -102,7 +102,7 @@ asof: 2026-10-25
 - 模型 vs 共識｜FY2027 EPS（GAAP 13.74）比共識（non-GAAP 11.30）高 21.6% [本專案：ter/README.md 對帳]｜3Q26 財報後共識變化
 
 ## 來源
-1. 本專案：`ter/README.md`（v0.1，2026-10-25）；`ter/dist/20261025_泰瑞達模型_v0.1.xlsx`（In、Q、Units、Recon 頁）
+1. 本專案：`ter/README.md`（v0.3，2026-10-31）；`ter/dist/20261031_泰瑞達個股模型_v0.3.xlsx`（In、Q、Units、Recon 頁）
 2. 本專案：`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 3. [Teradyne：Chief Financial Officer Transition（隨 3Q25 財報公布）](https://investors.teradyne.com/news-events/press-releases/detail/428/teradyne-reports-first-quarter-2026-results)（2025-10-28）
 4. [Simply Wall St：Teradyne Management](https://simplywall.st/stocks/us/semiconductors/nasdaq-ter/teradyne/management)（查閱 2026-10-25）

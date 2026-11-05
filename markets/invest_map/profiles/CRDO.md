@@ -3,7 +3,7 @@ ticker: CRDO
 name: Credo
 name_full: Credo Technology Group Holding Ltd
 listing: Nasdaq｜CRDO [外部・未經本專案檢核]
-hq: 開曼群島註冊；營運總部在美國加州聖荷西 [外部・未經本專案檢核；本專案：Credo模型_v0.2.xlsx In!I58]
+hq: 開曼群島註冊；營運總部在美國加州聖荷西 [外部・未經本專案檢核；本專案：20261030_Credo個股模型_v0.2.4.xlsx In!I58]
 founded: 2008 [外部・未經本專案檢核]
 employees: 本專案未建立
 fiscal_year_end: 4 月底／5 月初（52／53 週；FY2027＝2026-05-03～2027-05-01）[本專案：crdo/README.md]
@@ -37,7 +37,7 @@ asof: 2026-10-25
 - Credo 占 AEC 市場的比例沒有第一手資料：模型假設 75%；Jefferies 樂觀情境 2027 年約 70% [本專案：20261030_Credo個股模型_v0.2.4.xlsx In!E31、In!H31]。
 - Jefferies 估 AEC 市場 2026 年 860 萬條、2027 年 1,230 萬條 [本專案：20261030_Credo個股模型_v0.2.4.xlsx In!E93、In!E94]。
 - 客戶集中：FY2026 10-K 未具名終端客戶 33%、32%、19%；1Q27 法說轉述前四大 33%、28%、13%、10% [本專案：crdo/README.md 最大限制；20261030_Credo個股模型_v0.2.4.xlsx Sources!A7]。客戶名稱（Amazon、xAI、Microsoft）只有券商來源 [本專案：20261030_Credo個股模型_v0.2.4.xlsx In!I33]。
-- 光學有效份額占可插拔光模組市場 1.6%（FY2027）[本專案：Credo模型_v0.2.xlsx Units!C12]。
+- 光學有效份額占可插拔光模組市場 1.6%（FY2027）[本專案：20261030_Credo個股模型_v0.2.4.xlsx Units!C12]。
 
 ## 管理層與經營風格
 | 職位 | 姓名 | 任職起 | 背景 |
@@ -95,7 +95,7 @@ asof: 2026-10-25
 - 光學放量｜FY2027 目標逾 6 億美元是否達成 [本專案：20261030_Credo個股模型_v0.2.4.xlsx In!E37]｜同上
 
 ## 來源
-1. 本專案：`crdo/README.md`；`crdo/dist/20261025_Credo模型_v0.2.xlsx`（Q、Units、In、Sources）；AI半導體 `先驗比對_網通_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
+1. 本專案：`crdo/README.md`；`crdo/dist/20261030_Credo個股模型_v0.2.4.xlsx`（Q、Units、In、Sources）；AI半導體 `先驗比對_網通_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 2. [CRDO Moved Down by 8.76% on Oct 23（TradingKey）](https://www.tradingkey.com/news/market-movers/262236387-market-movers-crdo-20261023)（2026-10-23）
 3. [CRDO Stock Hits 6-Month Low After MaxLinear Targets Credo-Dominated Cable Market（Stocktwits）](https://stocktwits.com/news-articles/markets/equity/crdo-stock-hits-6-month-low-after-max-linear-targets-credo-dominated-cable-market/cZxyk1CRBxY)（2026-10-23）
 4. [Credo Stocks Fall 5.1% as AI Cable's 2027 Timeline Takes Focus（GuruFocus）](https://www.gurufocus.com/news/9121299/credo-stocks-fall-51-as-ai-cables-2027-timeline-takes-focus)（2026-10-13）

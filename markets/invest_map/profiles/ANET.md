@@ -24,12 +24,12 @@ asof: 2026-10-25
 |---|---|---|---|---|
 | AI | AI 後端、前端與 scale-across | 18.1%（US$1.63B） | FY2025 | [本專案：20261104_Arista個股模型_v0.4.xlsx Q!B17、Q!B19] |
 | 非 AI | 雲端前端、企業、園區 | 81.9%（US$7.38B） | FY2025 | [本專案：20261104_Arista個股模型_v0.4.xlsx Q!B18；換算] |
-| AI | 同上（公司目標「至少 3.5B」） | 27.8%（US$3.5B） | FY2026 錨點 | [本專案：Arista模型_v0.1.xlsx Q!G17、Q!G19] |
-| 非 AI | 同上 | 72.2%（US$9.1B） | FY2026 錨點 | [本專案：Arista模型_v0.1.xlsx Q!G18；換算] |
+| AI | 同上（公司目標「至少 3.5B」） | 26.2%（US$3.5B） | FY2026 錨點 | [本專案：20261104_Arista個股模型_v0.4.xlsx Q!G17、Q!G19] |
+| 非 AI | 同上 | 73.8%（US$9.9B） | FY2026 錨點 | [本專案：20261104_Arista個股模型_v0.4.xlsx Q!G18；換算] |
 
-- 營收 FY2025 US$9.01B → FY2026 錨點 12.6B（公司 8 月由 11.5B 上修）[本專案：Arista模型_v0.1.xlsx Q!B4、Q!G4；先驗比對_Arista_20261024.md 資料表]。
+- 營收 FY2025 US$9.01B → FY2026 錨點 13.4B（1Q26–3Q26 實績＋4Q26 公司指引；公司 8 月曾由 11.5B 上修）[本專案：20261104_Arista個股模型_v0.4.xlsx Q!A2、Q!B4、Q!G4；先驗比對_Arista_20261024.md 資料表]。
 - 2026 年 AI 3.5B 內含 scale-across 約 1.2B；園區網路目標至少 1.25B（公司展望）[本專案：先驗比對_Arista_20261024.md 資料表]。產品／服務拆分：本專案未建立。
-- non-GAAP 毛利率 FY2025 64.6%、FY2026 錨點 63%；營業利益率 48.5% [本專案：Arista模型_v0.1.xlsx Q!B6、Q!G6、Q!G9]。
+- non-GAAP 毛利率 FY2025 64.6%、FY2026 錨點 63.2%；營業利益率 48.8% [本專案：20261104_Arista個股模型_v0.4.xlsx Q!B6、Q!G6、Q!G9]。
 
 ## 市場定位與產業位置
 - IDC 2Q26 資料中心乙太網路交換器（全部速率）：NVIDIA 20.4% 第 1、Arista 18.7% 第 2、Cisco 18.2% [本專案：先驗比對_Arista_20261024.md 資料表]。
@@ -95,7 +95,7 @@ asof: 2026-10-25
 - AI 毛利率｜假設 AI 毛利率比非 AI 低 6 個百分點，雲端占比上升使毛利率下滑 [本專案：arista/README.md 驅動因子（In 頁 D 節）]｜同上
 
 ## 來源
-1. 本專案：`arista/README.md`；`arista/dist/20261024_Arista模型_v0.1.xlsx`（Q、Recon）；AI半導體 `先驗比對_Arista_20261024.md`
+1. 本專案：`arista/README.md`；`arista/dist/20261104_Arista個股模型_v0.4.xlsx`（Q、Recon）；AI半導體 `先驗比對_Arista_20261024.md`
 2. [Arista Networks Inc Stock (ANET) Moved Down by 7.22% on Oct 22](https://www.tradingkey.com/news/market-movers/262232985-market-movers-anet-20261022)（2026-10-22）
 3. [Arista Networks Stock Fell 18% From Its Record in One Week](https://www.tikr.com/blog/arista-networks-stock-fell-18-from-its-record-in-one-week-heres-what-the-selloff-missed-and-where-the-stock-could-go-by-2030)（2026-10）
 4. [Arista Networks management (Simply Wall St)](https://simplywall.st/stocks/de/tech/etr-1170/arista-networks-shares/management)（2026-10）

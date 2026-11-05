@@ -14,21 +14,21 @@ asof: 2026-10-25
 小型 AI 基礎設施商，兩條腿走路：一是在第三方機房出租 GPU 的 AI 雲，二是自有資料中心的託管（colocation，把機房空間與電力長租給別的 AI 雲業者）；母公司 Bit Digital 仍持股約六成 [本專案：whitefiber/docs/reports/20261008_whitefiber_v0.1a_資料.md 第 5 點（59.9%）]。
 
 ## 公司在做什麼
-- AI 雲：在冰島、亞特蘭大、雪梨、加拿大、巴黎等第三方機房放 GPU 出租，客戶包括 Baseten、Prime Intellect 等 AI 公司 [本專案：20261022_20261022_20261022_WhiteFiber收支模型_v0_2.xlsx 來源!B9]（[Interested-party]）。
+- AI 雲：在冰島、亞特蘭大、雪梨、加拿大、巴黎等第三方機房放 GPU 出租，客戶包括 Baseten、Prime Intellect 等 AI 公司 [本專案：20261022_WhiteFiber收支模型_v0_2.xlsx 來源!B9]（[Interested-party]）。
 - 託管：自有蒙特婁站點（MTL-1／2／3）與北卡羅來納 NC-1；NC-1 40 MW-IT 由英國 AI 雲業者 Nscale 承租 10 年、總額 865m 美元、年調 3% [本專案：WhiteFiber收支模型_v0_2.xlsx 來源!B9；輸入與假設!I56]。
 - 託管合約比雲端合約長得多：6/30 RPO 1,008.0m，其中託管 932.9m、雲端 75.1m [本專案：20261022_WhiteFiber收支模型_v0_2.xlsx 來源!B5]。
-- 規模仍小：2025 年底雲端已連網約 5.5 MW-IT [本專案：20261022_WhiteFiber收支模型_v0_2.xlsx 輸入與假設!C35]；另以 60m 美元買入 NC-2／3 用地（買賣協議）[本專案：20261022_20261022_20261022_WhiteFiber收支模型_v0_2.xlsx 來源!B7]。
+- 規模仍小：2025 年底雲端已連網約 5.5 MW-IT [本專案：20261022_WhiteFiber收支模型_v0_2.xlsx 輸入與假設!C35]；另以 60m 美元買入 NC-2／3 用地（買賣協議）[本專案：20261022_WhiteFiber收支模型_v0_2.xlsx 來源!B7]。
 
 ## 主要產品與營收占比
 | 產品／部門 | 內容（白話） | 營收占比 | 期間 | 標記 |
 |---|---|---|---|---|
-| AI 雲 | GPU 算力出租 | 86.9%（68.754 ÷ 79.164m） | FY2025 | [本專案：20261022_20261022_20261022_WhiteFiber收支模型_v0_2.xlsx 來源!B8]（[Derived]） |
+| AI 雲 | GPU 算力出租 | 86.9%（68.754 ÷ 79.164m） | FY2025 | [本專案：20261022_WhiteFiber收支模型_v0_2.xlsx 來源!B8]（[Derived]） |
 | 託管（HPC 資料中心） | 機房空間與電力長租 | 11.3%（8.914 ÷ 79.164m） | FY2025 | [本專案：WhiteFiber收支模型_v0_2.xlsx 來源!B8]（[Derived]） |
 | 其他 | — | 1.9%（1.497 ÷ 79.164m） | FY2025 | [本專案：WhiteFiber收支模型_v0_2.xlsx 來源!B8]（[Derived]） |
 
 - 1H26 結構轉向託管：雲端 40.573m（含 Q2 一次性終止費 12.3m）、託管 9.5m、其他 0.689m，占比約 79.9%／18.7%／1.4% [本專案：whitefiber/company.json ytdActual.notes.revenue]（[Derived]）。
 - 本專案模型 FY26 下半年：雲端 33.4m、託管 37.9m，託管首度超過雲端（NC-1 起租）[本專案：20261022_WhiteFiber收支模型_v0_2.xlsx 損益!C6、C8]。
-- Q2 2026 調整後 EBITDA 5.535m，扣終止費等一次性項目後約 −0.565m [本專案：20261022_20261022_WhiteFiber收支模型_v0_2.xlsx 來源!B4]。
+- Q2 2026 調整後 EBITDA 5.535m，扣終止費等一次性項目後約 −0.565m [本專案：20261022_WhiteFiber收支模型_v0_2.xlsx 來源!B4]。
 
 ## 市場定位與產業位置
 - 客戶集中高：最大客戶占 1H26 營收 63%（推測為已終止的初始客戶）；NC-1 唯一承租人 Nscale 本身無公開信評 [本專案：whitefiber/company.json texts.concentration]。
@@ -49,7 +49,7 @@ asof: 2026-10-25
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| CoreWeave（CRWV） | GPU 算力雲 | 市值 49,110m（2026-10-07） | [本專案：20261022_20261022_20261022_20261022_WhiteFiber收支模型_v0_2.xlsx 來源!B12] |
+| CoreWeave（CRWV） | GPU 算力雲 | 市值 49,110m（2026-10-07） | [本專案：20261022_WhiteFiber收支模型_v0_2.xlsx 來源!B12] |
 | Nebius（NBIS） | GPU 算力雲 | 市值 68,490m（2026-10-07） | [本專案：WhiteFiber收支模型_v0_2.xlsx 來源!B12] |
 | Applied Digital（APLD） | AI 資料中心託管 | 市值 6,940m | [本專案：WhiteFiber收支模型_v0_2.xlsx 來源!B12] |
 | Core Scientific（CORZ） | AI 資料中心託管 | 市值 5,750m | [本專案：WhiteFiber收支模型_v0_2.xlsx 來源!B12] |

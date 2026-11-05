@@ -22,17 +22,17 @@ asof: 2026-10-27
 ## 主要產品與營收占比
 | 產品／部門 | 內容（白話） | 營收占比 | 期間 | 標記 |
 |---|---|---|---|---|
-| **Google Services**（分部） | 廣告與消費端訂閱、裝置 | 85.1%（3,427.2 億美元）；1H26 80.2% | 2025；2026 上半年 | [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!K9、Q!L9；Derived＝÷Q!K14、Q!L14] |
-| 　Search & other | 搜尋廣告、地圖等 | 55.7%（2,245.3 億美元）；1H26 53.8% | 2025；1H26 | [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!K5、Q!L5；Derived] |
-| 　YouTube ads | 影音廣告 | 10.0%（403.7 億美元）；1H26 9.1% | 2025；1H26 | [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!K6、Q!L6；Derived] |
-| 　Google Network | 放在第三方網站與 App 的廣告 | 7.4%（297.9 億美元）；1H26 6.2% | 2025；1H26 | [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!K7、Q!L7；Derived] |
-| 　Subscriptions, platforms, and devices | YouTube／Google One 訂閱、Play 商店、Pixel | 11.9%（480.3 億美元）；1H26 11.0% | 2025；1H26 | [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!K8、Q!L8；Derived] |
-| **Google Cloud**（分部） | 雲端與 AI 算力（含 TPU）、Workspace | 14.6%（587.1 億美元）；1H26 19.5% | 2025；1H26 | [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!K11、Q!L11；Derived] |
-| **Other Bets**（分部） | Waymo 等新事業 | 0.4%（15.4 億美元）；1H26 0.3% | 2025；1H26 | [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!K12、Q!L12；Derived] |
+| **Google Services**（分部） | 廣告與消費端訂閱、裝置 | 85.1%（3,427.2 億美元）；9M26 78.5% | 2025；2026 前三季 | [本專案：20261104_Alphabet個股模型_v0.3.6.xlsx Q!K9、Q!L9；Derived＝÷Q!K14、Q!L14] |
+| 　Search & other | 搜尋廣告、地圖等 | 55.7%（2,245.3 億美元）；9M26 52.3% | 2025；9M26 | [本專案：20261104_Alphabet個股模型_v0.3.6.xlsx Q!K5、Q!L5；Derived] |
+| 　YouTube ads | 影音廣告 | 10.0%（403.7 億美元）；9M26 9.0% | 2025；9M26 | [本專案：20261104_Alphabet個股模型_v0.3.6.xlsx Q!K6、Q!L6；Derived] |
+| 　Google Network | 放在第三方網站與 App 的廣告 | 7.4%（297.9 億美元）；9M26 6.1% | 2025；9M26 | [本專案：20261104_Alphabet個股模型_v0.3.6.xlsx Q!K7、Q!L7；Derived] |
+| 　Subscriptions, platforms, and devices | YouTube／Google One 訂閱、Play 商店、Pixel | 11.9%（480.3 億美元）；9M26 11.1% | 2025；9M26 | [本專案：20261104_Alphabet個股模型_v0.3.6.xlsx Q!K8、Q!L8；Derived] |
+| **Google Cloud**（分部） | 雲端與 AI 算力（含 TPU）、Workspace | 14.6%（587.1 億美元）；9M26 21.1% | 2025；9M26 | [本專案：20261104_Alphabet個股模型_v0.3.6.xlsx Q!K11、Q!L11；Derived] |
+| **Other Bets**（分部） | Waymo 等新事業 | 0.4%（15.4 億美元）；9M26 0.3% | 2025；9M26 | [本專案：20261104_Alphabet個股模型_v0.3.6.xlsx Q!K12、Q!L12；Derived] |
 
-- 另有 Alphabet 層級避險損益 2025 年 −1.27 億、1H26 −0.74 億美元；合計 4,028.36 億（2025）、2,296.92 億美元（1H26）＝全公司營收，核對列為 0 [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!K13、Q!L13、Q!K14、Q!L14、Q!K15]。
-- 成長最快的是 Cloud：近四季（2025Q3–2026Q2）776.17 億美元，比前四季 491.92 億增 57.8%；2026Q2 單季 247.68 億美元 [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!M11、Q!N11、Q!I11；Derived]。
-- 分部營業利益 1H26：Google Services 801.33 億、Google Cloud 154.12 億、Other Bets −38.99 億美元 [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!L18、Q!L19、Q!L20]；Cloud 營業利益率 1H26 為 34.4% [本專案：20261027_Alphabet個股模型_v0.3.xlsx PL!E52]。
+- 另有 Alphabet 層級避險損益 2025 年 −1.27 億、9M26 +1.20 億美元；合計 4,028.36 億（2025）、3,572.69 億美元（9M26）＝全公司營收，核對列為 0 [本專案：20261104_Alphabet個股模型_v0.3.6.xlsx Q!K13、Q!L13、Q!K14、Q!L14、Q!K15]。
+- 成長最快的是 Cloud：近四季（2025Q4–2026Q3）931.69 億美元，比前四季 529.96 億增 75.8%；2026Q3 單季 307.09 億美元 [本專案：20261104_Alphabet個股模型_v0.3.6.xlsx Q!M11、Q!N11、Q!I11；Derived]。
+- 分部營業利益 9M26：Google Services 1,192.90 億、Google Cloud 265.33 億、Other Bets −59.46 億美元 [本專案：20261104_Alphabet個股模型_v0.3.6.xlsx Q!L18、Q!L19、Q!L20]；Cloud 營業利益率 9M26 為 35.1% [本專案：20261104_Alphabet個股模型_v0.3.6.xlsx PL!E52]。
 - 公司未揭露 AI 營收 [本專案：alphabet company.json callFacts.aiRunRateNote]。
 
 ## 市場定位與產業位置
@@ -98,7 +98,7 @@ asof: 2026-10-27
 
 ## 近期重大事件
 - 2026-10-28｜Q3 財報：營收 1,275.77 億美元、稀釋 EPS 2.12 美元；Google Cloud 營收 307.09 億、營業利益 111.21 億；資本支出 513.55 億，單季自由現金流 −90.65 億；Cloud 積壓 5,610 億｜Cloud 獲利續強，但資本支出已超過營運現金流 [本專案：alphabet_facts_2026q3.json is.rev.total.2026q3、is.epsDil.2026q3、is.rev.cloud.2026q3、is.ebit.cloud.2026q3、cf.capex.2026q3、cf.fcf.2026q3、rpo.cloud.2026q3]
-- 2026-10-28｜2026 資本支出指引維持 1,950–2,050 億美元，2027 年「顯著增加」；Q3 以 ATM 發行普通股淨額 124 億、發行票據 287 億｜開始以發股與舉債支應資本支出；模型 2026-10-29 滾到 v0.3.1，收支關卡基準由 +1,800.5 億降到約 −6 億 [本專案：alphabet_facts_2026q3.json guid.capex.2026.oct、guid.capex.2027.oct、atm.q3.netProceeds、debt.iss.2026q3；20261029_Alphabet個股模型_v0.3.1.xlsx CF!C6]
+- 2026-10-28｜2026 資本支出指引維持 1,950–2,050 億美元，2027 年「顯著增加」；Q3 以 ATM 發行普通股淨額 124 億、發行票據 287 億｜開始以發股與舉債支應資本支出；模型 2026-10-29 滾到 v0.3.1，收支關卡基準由 +1,800.5 億轉為負值；現行 v0.3.6 為約 −16 億 [本專案：alphabet_facts_2026q3.json guid.capex.2026.oct、guid.capex.2027.oct、atm.q3.netProceeds、debt.iss.2026q3；20261104_Alphabet個股模型_v0.3.6.xlsx CF!C6]
 - 2026-10｜SpaceX 算力租約起租，每月約 9.2 億美元至 2029-06｜短期用租的補產能，Cloud 利潤率受壓 [本專案：alphabet_facts_20261008.json rent.spacex]
 - 2026-10-28｜Q3 財報盤後發布（預定）｜下一個驗證點 [外部新聞：days.to（稱公司 IR 已確認）]
 - 2026-08｜發行美元票據 250 億美元（2028–2066 年到期）｜資本支出部分改由舉債支應 [本專案：alphabet company.json callFacts.postQShortDated]
@@ -106,15 +106,15 @@ asof: 2026-10-27
 - 2026-07-22｜Q2 財報：營收 1,198.0 億美元、Cloud 年增 81.8%；2026 資本支出指引由 1,800–1,900 億上調至 1,950–2,050 億美元 [本專案：alphabet company.json latestQuarter、mag.segments.cloud；alphabet_facts_20261008.json guid.capex.2026.jul]
 
 ## 需要觀察的事項
-- Search 變現（命題核心）｜保守情境（AI 助理分流 20%、每次查詢變現 −10%）FY2028 Search & other 2,842 億美元，比基準 3,325 億少 14.5%；Google Services 營業利益率 30.4%（基準 34.3%）[本專案：20261029_Alphabet個股模型_v0.3.1.xlsx PL!I131、PL!I72、PL!I169、PL!I110；alphabet/README.md 重點觀察 2]｜Q4 財報（約 2027-02 初）的 Search 年增
+- Search 變現（命題核心）｜保守情境（AI 助理分流 20%、每次查詢變現 −10%）FY2028 Search & other 2,842 億美元，比基準 3,325 億少 14.5%；Google Services 營業利益率 30.3%（基準 34.2%）[本專案：20261104_Alphabet個股模型_v0.3.6.xlsx PL!I131、PL!I72、PL!I169、PL!I110；alphabet/README.md 重點觀察 2]｜Q4 財報（約 2027-02 初）的 Search 年增
 - Cloud 能否抵銷｜保守情境 FY2028 Google Cloud 營業利益比 2025 年增加 719 億美元，是 Services 營業利益損失 335 億的 214%（v0.3 為 141%）[本專案：alphabet/README.md 重點觀察 2]｜Q4 財報的 Cloud 營收、營業利益率與 backlog
-- 自用 AI 的讀法｜AI 算力約七成自用（對外比例 30% 為模型假設）。Andy 2026-10-27 定讀法 2（自用 AI 價值中性）為主值：加權目標價 258.21 美元；讀法 1（只計成本）188.31 美元，是敏感度最大的一項 [本專案：20261029_Alphabet個股模型_v0.3.1.xlsx Val!B20、Val!B21、Sens!D4]｜財報對 AI 算力自用與 Cloud 配置的說法
-- AI 折舊進損益｜基準情境合併營業利益率（財報口徑）由 2025 年 32.0% 降到 FY2028 22.4% [本專案：20261029_Alphabet個股模型_v0.3.1.xlsx PL!D109、PL!I109]｜Q4 財報的 2027 年資本支出指引（公司稱「顯著增加」）
-- 現金與股東回饋｜五年（2026–2030）自由現金流扣股利：基準約 −6 億美元（接近 0）、保守 −1,457.6 億美元，模型判定需要舉債且減少回購（v0.3 為基準 1,800.5 億、不需舉債）[本專案：20261029_Alphabet個股模型_v0.3.1.xlsx CF!C6、CF!D6、CF!C9]；地圖收支關卡以容忍帶（±500 億美元）視為接近 0、維持通過，待 Andy 決定 [本專案：alphabet/README.md 開頭]；現價 324.89 美元（2026-10-28），加權目標價上檔空間 −20.5%，模型評級「中立」[本專案：20261029_Alphabet個股模型_v0.3.1.xlsx Val!B9、Val!B11、Val!B14]｜Q4 財報給出 2027 年資本支出數字後重判收支關卡
+- 自用 AI 的讀法｜AI 算力約七成自用（對外比例 30% 為模型假設）。Andy 2026-10-27 定讀法 2（自用 AI 價值中性）為主值：加權目標價 257.76 美元；讀法 1（只計成本）187.78 美元，是敏感度最大的一項 [本專案：20261104_Alphabet個股模型_v0.3.6.xlsx Val!B20、Val!B21、Sens!D4]｜財報對 AI 算力自用與 Cloud 配置的說法
+- AI 折舊進損益｜基準情境合併營業利益率（財報口徑）由 2025 年 32.0% 降到 FY2028 22.3% [本專案：20261104_Alphabet個股模型_v0.3.6.xlsx PL!D109、PL!I109]｜Q4 財報的 2027 年資本支出指引（公司稱「顯著增加」）
+- 現金與股東回饋｜五年（2026–2030）自由現金流扣股利：基準約 −16 億美元（接近 0）、保守 −1,466.9 億美元，模型判定需要舉債且減少回購（v0.3 為基準 1,800.5 億、不需舉債）[本專案：20261104_Alphabet個股模型_v0.3.6.xlsx CF!C6、CF!D6、CF!C9]；地圖收支關卡以容忍帶（±500 億美元）視為接近 0、維持通過，待 Andy 決定 [本專案：alphabet/README.md 開頭]；現價 324.89 美元（2026-10-28），加權目標價上檔空間 −20.7%，模型評級「中立」[本專案：20261104_Alphabet個股模型_v0.3.6.xlsx Val!B9、Val!B11、Val!B14]｜Q4 財報給出 2027 年資本支出數字後重判收支關卡
 - Anthropic 集中度與 TPU 對外銷售認列｜[本專案：alphabet_facts_20261008.json rp.anthropic.rpoShare、guid.tpuRev]｜Q3 10-Q
 
 ## 來源
-1. 本專案：/home/claude/company-models/alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx（Q、PL、CF、Val、Sens）、alphabet/README.md、alphabet/docs/reports/20261027_alphabet_v0.3_分部架構.md（2026-10-27）
+1. 本專案：/home/claude/company-models/alphabet/dist/20261104_Alphabet個股模型_v0.3.6.xlsx（Q、PL、CF、Val、Sens）、alphabet/README.md、alphabet/docs/reports/20261027_alphabet_v0.3_分部架構.md（2026-10-27）
 2. 本專案：/home/claude/company-models/alphabet/data/alphabet_facts_20261008.json、/home/claude/company-models/alphabet/company.json、/home/claude/company-models/alphabet/data/peers_ads_20261009.json（2026-10-08／09）
 3. 本專案：/home/claude/company-models/amazon/data/amazon_facts_20261008.json、/home/claude/company-models/microsoft/data/microsoft_facts_20261008.json、/home/claude/company-models/oracle/data/oracle_facts_20261007.json
 4. [Alphabet 2026 委託書 DEF 14A（管理層名單）](https://www.sec.gov/Archives/edgar/data/0001652044/000130817926000342/goog2025_courtesy-pdf.pdf)（2026-04）

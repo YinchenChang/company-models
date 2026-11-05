@@ -56,7 +56,7 @@ asof: 2026-10-25
 | 三星電子 | HBM、DRAM、NAND | HBM 2026 營收市占 28–32%（本專案） | [本專案：先驗比對_HBM_20261008.md H3] |
 | Kioxia、SanDisk 等 | NAND | 本專案未建立 | — |
 
-- 三星 HBM4 放量後，模型假設美光 HBM 市占持平在 20% 左右，而 SK 海力士由 52% 降到 42% [本專案：同檔 In!E18；20261023_SK海力士模型_v0.4.1.xlsx In!E28]。
+- 三星 HBM4 放量後，模型假設美光 HBM 市占持平在 20% 左右，而 SK 海力士由 2026 年 52% 降到 2027 年 42% [本專案：同檔 In!E18；20261030_SK海力士個股模型_v0.6.1.xlsx In!E22、E23]。
 
 ## 主要客戶
 - 財報集中度原文口徑：FY2026 10-K Note 21：「No customer accounted for 10% or more of total revenue in 2026. Revenue from one customer was 17% (primarily included in the CMBU segment) of total revenue for 2025. Revenue from one customer was 10% (primarily included in the MCBU, AEBU, and CMBU segments) of total revenue for 2024.」前三大風險因子口徑：「In each of the last three years, approximately one-half of our total revenue was from our top ten customers」；FY2026「over half of our total revenue came from our top ten customers」。 [外部・未經本專案檢核：Micron Form 10-K，FY2026（期間至 2026-09-03），2026-10-09]
@@ -90,12 +90,12 @@ asof: 2026-10-25
 - FQ1 FY27 財報｜檢驗指引 61.5B 與模型 FY27 平均每季 66.9B 的差距 [本專案：micron/README.md 共識對照]｜2026 年 12 月中下旬（日期本次未確認）
 - 股東回饋擴大幅度｜模型取超額現金 80% 回饋；回饋越快，P/B 法下的淨值越低、買回加回 P/B 越重要 [本專案：同檔 In!E61]｜2026-12-09 起
 - HBM 2028 年價格重議｜模型 2028 單價 A／B／C ＝ +10%／−25%／−40%，FY2028 營業利益 245.6／145.4／112.2B [本專案：同檔 In!E221:E223、Y!E14、H14、K14]｜各季法說
-- ROE 與估值｜模型 ROE FY26 61%、FY27A 92%，遠高於十年歷史；估值 v2 加權目標價 $684.09（DCF $932.63、同業 P/B 法 $435.55），舊法十年 P/B 規則值情境加權價 $348.75，兩法相差 2.0 倍（空間以 2026-10-23 收盤計，見網站「可投資性」頁）[本專案：micron/dist/20261025_美光模型_v0.4.xlsx Y!C30:D30、Val!B208、B193、B209、B223]｜每季更新淨值
+- ROE 與估值｜模型 ROE FY26 61%、FY27A 91%，遠高於十年歷史；估值 v2 加權目標價 $743.42（DCF $921.76、同業 P/B 法 $433.49，經相對倍數調整後 $565.09 才進加權），舊法十年 P/B 規則值情境加權價 $347.71，兩法相差 2.1 倍（[Derived]：743.42 ÷ 347.71；空間以 2026-10-23 收盤計，見網站「可投資性」頁）[本專案：20261030_美光個股模型_v0.4.3.xlsx Y!C30:D30、Val!B208、B193、B209、B251、B223]｜每季更新淨值
 - 一般 DRAM 與 NAND 合約價見頂｜美光 FY 含半年 CY2028，對 2028 谷底較不敏感 [本專案：micron/README.md v0.3 變更]｜TrendForce 每季合約價
 
 ## 來源
-1. 本專案：`micron/README.md`、`micron/dist/20261023_美光模型_v0.3.1.xlsx`（In、Q、Y、Val 頁）
-2. 本專案：`先驗與比對/先驗比對_HBM_20261008.md`；`skhynix/dist/20261023_SK海力士模型_v0.4.1.xlsx` In 頁
+1. 本專案：`micron/README.md`、`micron/dist/20261030_美光個股模型_v0.4.3.xlsx`（In、Q、Y、Val 頁）
+2. 本專案：`先驗與比對/先驗比對_HBM_20261008.md`；`skhynix/dist/20261030_SK海力士個股模型_v0.6.1.xlsx` In 頁
 3. [Micron Reports Record Fiscal Fourth-Quarter and Full-Year 2026 Results（Micron）](https://investors.micron.com/news/press-release/2026/Micron-Technology-Inc--Reports-Record-Fiscal-Fourth-Quarter-and-Full-Year-2026-Results/)（2026-09-30）
 4. [Micron FQ4 2026 Prepared Remarks（Micron）](https://investors.micron.com/files/doc_financials/2026/q4/Q4-FY26-Prepared-Remarks.pdf)（2026-09-30）
 5. [Earnings call transcript: Micron tops Q4 2026 estimates（Investing.com）](https://www.investing.com/news/transcripts/earnings-call-transcript-micron-tops-q4-2026-estimates-as-demand-stays-hot-93CH-4925992)（2026-09-30）

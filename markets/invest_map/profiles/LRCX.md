@@ -34,9 +34,9 @@ asof: 2026-10-25
 
 ## 市場定位與產業位置
 - 記憶體蝕刻的主要供應者；設備商排名第 3（TechInsights 2025 前五名列為 ASML、AMAT、Lam、TEL、KLA，排序未明示）[本專案：universe_ai_semis_v0.2.2.csv LRCX 列，判斷；先驗比對_TEL_20261023.md 第 1 節，Interested-party]。
-- 份額：Lam 系統營收 ÷ 本專案設備市場模型 CY2026 晶圓前段設備約 12.7%；按分項校準的係數為代工與邏輯 13.3%、DRAM 11.1%、NAND 25.7%（不是嚴格市占）[本專案：科林研發模型_v0.2.xlsx Recon!C22；lrcx/README.md 驅動因子 1]。
+- 份額：Lam 系統營收 ÷ 本專案設備市場模型 CY2026 晶圓前段設備約 12.4%；按分項校準的係數為代工與邏輯 13.3%、DRAM 11.1%、NAND 25.7%（不是嚴格市占）[本專案：20261031_科林研發模型_v0.2.2.xlsx Recon!C22；lrcx/README.md 驅動因子 1]。
 - 公司稱 CY2026 是連續第三年表現優於 WFE（晶圓前段設備市場）[本專案：20261031_科林研發模型_v0.2.2.xlsx In!I85，Interested-party]。
-- WFE 規模各來源並列（口徑不同）：CY2026 公司 mid-$150B、本專案設備市場模型 US$156.2B；CY2025 公司約 US$110B、SEMI 實績 US$116.9B [本專案：科林研發模型_v0.2.xlsx Recon!B16:C16、J16]。
+- WFE 規模各來源並列（口徑不同）：CY2026 公司 mid-$150B、本專案設備市場模型 US$160.0B；CY2025 公司約 US$110B、SEMI 實績 US$116.9B [本專案：20261031_科林研發模型_v0.2.2.xlsx Recon!B16:C16、J16]。
 - 出口管制前例：2022-10 美國管制使公司估 2023 年營收少 US$2.0–2.5B，約為當時中國營收的三到四成 [本專案：20261031_科林研發模型_v0.2.2.xlsx In!H87，Analogy]。
 - 客戶集中度：本專案未建立。
 
@@ -103,7 +103,7 @@ asof: 2026-10-25
 - 模型 vs 共識｜FY2028 營收、EPS 比 Yahoo 共識低 11.5%、12.1% [本專案：lrcx/README.md 對帳]｜公司若給 CY2027 WFE 正式數字
 
 ## 來源
-1. 本專案：`lrcx/README.md`（v0.2，2026-10-25）；`lrcx/dist/20261025_科林研發模型_v0.2.xlsx`（In、Q、Recon 頁）
+1. 本專案：`lrcx/README.md`（v0.2.2，2026-10-31）；`lrcx/dist/20261031_科林研發模型_v0.2.2.xlsx`（In、Q、Recon 頁）
 2. 本專案：`先驗與比對/先驗比對_設備材料_20261022.md`、`先驗比對_TEL_20261023.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
-3. 本專案：`amat/dist/20261025_應用材料模型_v0.2.xlsx`（同業欄）
+3. 本專案：`amat/dist/20261031_應用材料個股模型_v0.3.1.xlsx`（同業欄）
 4. [Motley Fool：Lam Research Q1 2027 Earnings Call Transcript](https://www.fool.com/earnings/call-transcripts/2026/10/21/lam-research-lrcx-q1-2027-earnings-call-transcript/)（2026-10-21）
