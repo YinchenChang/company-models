@@ -272,8 +272,12 @@ cfg = {
     {"type": "table", "caption": "結論（主要項目）", "head": ["項目", "數值", "對照", "對照", "說明"], "rows": vrows(CONC_MAIN, CONC_COLS, CONC_FMT, rowfmt_conc)},
     {"type": "table", "collapse": True, "summary": "展開：結論的其他項目（價格帶、讀法一／二、核心問題比值、收支關卡、檢查列）", "head": ["項目", "數值", "對照", "對照", "說明"],
      "rows": vrows(CONC_REST, CONC_COLS, CONC_FMT, rowfmt_conc)},
-    {"type": "table", "collapse": True, "summary": "展開：折現率（股權成本、債務成本、WACC、RONIC）", "head": ["項目", "數值"],
-     "rows": [["@Val!A" + str(VR[k]), "@Val!B" + str(VR[k]) + "|" + f] for k, f in (("emkt", "n0"), ("dmkt", "n1"), ("ke", "p2"), ("kdat", "p2"), ("wacc", "p2"), ("ronic", "p2"))]},
+    {"type": "table", "caption": "DCF 折現率（主要項目）", "head": ["項目", "數值"],
+     "rows": [["@Val!A" + str(VR[k]), "@Val!B" + str(VR[k]) + "|p2"] for k in ("wacc", "ke", "kdat", "ronic")]
+             + [[f"@In!B{INK['g_tv']}", f"@In!E{INK['g_tv']}|p1"]]},
+    {"type": "table", "collapse": True, "summary": "展開：折現率的組成（股權市值、負債、無風險利率、β、股權風險溢酬、稅前債務成本）", "head": ["項目", "數值"],
+     "rows": [["@Val!A" + str(VR["emkt"]), "@Val!B" + str(VR["emkt"]) + "|n0"], ["@Val!A" + str(VR["dmkt"]), "@Val!B" + str(VR["dmkt"]) + "|n1"]]
+             + [[f"@In!B{INK[k]}", f"@In!E{INK[k]}|{f}"] for k, f in (("rf", "p2"), ("beta", "n2"), ("erp", "p1"), ("kd", "p2"), ("tax_w", "p0"))]},
     {"type": "table", "caption": "DCF 彙總與 SI 對外出租模組（三情境；主要項目）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
      "rows": vrows(DSUM_MAIN, ["A", "B", "C", "D"], ["", "n1", "n1", "n1"], rf_s)},
     {"type": "table", "collapse": True, "summary": "展開：DCF 彙總的其他項目（讀法一／二、自用 AI 影子效益、股數等）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
