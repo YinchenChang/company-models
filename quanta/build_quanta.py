@@ -12,7 +12,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import cycle_position as CP
 import valuation_rule as VR
-import fcff_dcf as FD   # v0.4：標準版 DCF（無槓桿自由現金流＋WACC）共用模組（tools/fcff_dcf.py，原樣取自 claude/html-v1-nvidia）
+import fcff_dcf as FD   # v0.4：標準版 DCF（無槓桿自由現金流＋WACC）共用模組（tools/fcff_dcf.py）
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -185,6 +185,8 @@ inp("fade_gA", "情境 A（順利）：FY2032 營收年增收斂目標（tp_g＋
 inp("fade_gB", "情境 B（平平）：FY2032 營收年增收斂目標（＝tp_g）", "%", None, "=tp_g", None, "Assumed", "同上", "—")
 inp("fade_gC", "情境 C（不如預期）：FY2032 營收年增收斂目標（tp_g−2pt）", "%", None, "=tp_g-0.02", None, "Assumed", "同上", "—")
 inp("nim10_f", "十年平均淨利率的替代：最後一年（FY2029）淨利率 ×（本值）", "x", None, 0.8, None, "Assumed", "十年（2016–2025）平均淨利率：未找到（免費資料商只到近五年）；依工作單以最後一年 × 0.8 替代", "淨利率收斂目標：A＝FY2029、B＝FY2029 與替代值的中點、C＝替代值（PL 延伸表）")
+for s_, d_ in (("A", "＝本情境 FY2029 淨利率"), ("B", "＝FY2029 淨利率與十年平均替代值（FY2029 × nim10_f）的中點"), ("C", "＝十年平均替代值（FY2029 × nim10_f）")):   # v0.4.3：情境驅動對照補列（第三輪修正）
+    inp(f"fade_m{s_}", f"情境 {s_}（{dict(A='順利', B='平平', C='不如預期')[s_]}）：FY2032 淨利率收斂目標（{d_}）", "%", None, "=0", None, "Derived", "PL 延伸表本情境「收斂目標：FY2032 淨利率」列（公式於建置時連結；由 nim10_f 推導）", "只引用、不另設假設")
 inp("cons_tp", "市場共識目標價（賣方平均）", V2["cur"], None, V2["cons_tp"][0], None, "Interested-party", V2["cons_tp"][1], V2["cons_tp"][2])
 inp("cons_feps", "共識前瞻 12 月 EPS（＝價格 ÷ 前瞻 P/E）", V2["cur"], None, V2["cons_feps"][0], None, "Interested-party", V2["cons_feps"][1], "賣方共識，只作對帳與差距拆解，不作校準")
 # v0.4：標準版 DCF（無槓桿自由現金流 FCFF＋WACC；tools/fcff_dcf.py；docs/plan/個股DCF標準規格.md v1.0）。評價日沿用 v0.2 DCF 基準日 2026-12-31；資產負債為 2Q26（2026-06-30）
@@ -212,7 +214,9 @@ _FD = FD.in_rows(dict(
     lease=("=2.346+11.845", "Verified", SA_BS + "：租賃負債 流動 2,346＋非流動 11,845", NO2),
     cash=(328.301, "Verified", SA_BS + "：現金及短期投資合計 328,301（現金及約當現金 268,997、短期投資 14,059 及其他）", NO2),
     inv=(22.151, "Verified", SA_BS + "：長期投資 22,151（權益證券與採權益法投資；帳面計入）", "Sens 測不計"),
-    mi=(12.192, "Verified", SA_BS + "：非控制權益 12,192", NO2),
+    mi=("=12.192-((1-qs_hold)*qs_eq+qs_mi)+(1-qs_hold)*qs_sh*qs_px+(tm_sh-tm_hold)*tm_px", "Derived",
+        "上市子公司少數股權用市值、其餘用帳面（第三輪修正，Andy 2026-11-05 23:16 定案）：" + SA_BS + "：非控制權益帳面 12,192 − 廣明（6188）集團少數股權帳面（廣明歸屬母公司權益 × (1 − 廣達持股)＋廣明本身的非控制權益〔主要為達明少數股東〕）＋ 廣明少數股權市值 ＋ 達明（4585）少數股權市值；In 頁 K2 節 qs_*／tm_*",
+        "其餘子公司少數股權（差額約 1.0）維持帳面；股價與廣達 px 同日（2026-10-22 收盤）"),
     stub=dict(bs_date="2026-06-30", val_date="2026-12-31", bs_src=SA_BS + "（3Q26 合併財報尚未公布：台灣上市公司第三季財報期限 11-14；2026-11-05 查 stockanalysis 最新仍為 2Q26）",
               div=("=15.6*sh_v", "Derived", "FY2025 盈餘現金股利每股 15.6 元（股東會已決議；除息日 2026-07-16、發放日 2026-08-28，stockanalysis https://stockanalysis.com/quote/tpe/2382/dividend/），發放落在 2026-06-30～2026-12-31；× 評價用股數 sh_v",
                    "2Q26 資產負債表的應付股利屬其他流動負債、未計入債務，故 stub 期現金流出另扣；廣達一年配息一次，評價日前無其他已宣告股利；買回無")),
@@ -233,8 +237,17 @@ rows += _FD
 inp("beta_u", "產業無槓桿 β（採用）：自算 TW 伺服器／ODM 同業中位數 Blume 調整（0.67 × 中位數＋0.33）", "x", None, 0.792, None, "Analogy",
     "自算產業 β：TW 伺服器／ODM 同業 6 家（2382 2317 6669 3231 2356 4938）中位數（Yahoo Finance 含股利調整月收盤價 2021-11～2026-10 共 60 個月，對台灣加權指數迴歸，Hamada 去槓桿、現金修正）0.69 → Blume 調整 0.792",
     "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）；本組維持 0.792（工作單第二輪修正：只改 Sens 規則）")
-inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 稀釋股數 sh_v)", "與 WACC 權重同一口徑")
+inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v+mi_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 稀釋股數 sh_v ＋ 非控制權益市值 mi_v)", "與 WACC 權重同一口徑；第三輪修正：合併 EV 含子公司 100%，E＝母公司市值＋非控制權益市值（主控決定）")
 inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新加槓桿）", "x", None, 0.3, None, "Assumed", "工作單第二輪修正（Andy 2026-11-05 23:16 定案）：β 敏感度改為 β_u ± 0.3", "取代 v0.4.1 的低＝中位數 × 0.8 再 Blume、高＝未調整中位數")
+sec("K2. 上市子公司少數股權市值（非控制權益 mi_v 用；v0.4.3 第三輪修正新增：上市子公司用市值、非上市用帳面；股價與 px 同日 2026-10-22）")
+inp("qs_hold", "廣達持有廣明（6188）比例（直接＋達啟投資）", "%", None, 0.3022, None, "Interested-party", "CMoney 廣明分析：廣達直接持有 29.78%、經達啟投資 0.44%，合計 30.22%，與廣明編製合併報表（網址見 Sources 頁）", "Simply Wall St 6188 股東表：Quanta Computer 82,881,664 股（29.8%）（網址見 Sources 頁；2026-11-06 讀取）；廣達 2Q26 合併財報子公司附註本次未直接讀取")
+inp("qs_sh", "廣明流通股數", "十億股", None, 0.27836, None, "Verified", "stockanalysis 6188 季資產負債表 2Q26：流通股數 278.36 百萬股（https://stockanalysis.com/quote/tpex/6188/financials/balance-sheet/?p=quarterly；2026-11-06 讀取）", "Simply Wall St 股東表合計約 278.4 百萬股")
+inp("qs_px", "廣明股價（2026-10-22 收盤）", "NT$", None, 61.0, None, "Verified", "stockanalysis 6188 歷史股價：2026-10-22 收盤 61.00（https://stockanalysis.com/quote/tpex/6188/history/；2026-11-06 讀取）", "與廣達 px 同日")
+inp("qs_eq", "廣明歸屬母公司權益（2Q26）", "NT$B", None, 12.747, None, "Verified", "stockanalysis 6188 季資產負債表 2Q26：Total Common Equity 12,747（TWD 百萬）（同上網址）", "廣達合併報表中廣明少數股權帳面 ≈ 本值 × (1 − qs_hold)（近似）")
+inp("qs_mi", "廣明本身的非控制權益（2Q26；主要為達明少數股東）", "NT$B", None, 2.345, None, "Verified", "stockanalysis 6188 季資產負債表 2Q26：Minority Interest 2,345（TWD 百萬）（同上網址）", "—")
+inp("tm_sh", "達明（4585）流通股數", "十億股", None, 0.10461, None, "Verified", "stockanalysis 4585 統計頁：流通股數 104.61 百萬股（https://stockanalysis.com/quote/tpe/4585/statistics/；2026-11-06 讀取）", "Simply Wall St 股東表合計約 104.6 百萬股")
+inp("tm_hold", "廣達集團持有達明股數（經廣明）", "十億股", None, 0.069757, None, "Interested-party", "Simply Wall St 4585 股東表：Quanta Storage 69,757,000 股（66.7%）、OMRON 9.46%（網址見 Sources 頁；2026-11-06 讀取）", "廣達直接持股：未找到（股東表未列）；若有直接持股，非控制權益市值會略低")
+inp("tm_px", "達明股價（2026-10-22 收盤）", "NT$", None, 270.0, None, "Verified", "stockanalysis 4585 歷史股價：2026-10-22 收盤 270.00（https://stockanalysis.com/quote/tpe/4585/history/；2026-11-06 讀取）", "與廣達 px 同日")
 
 r = 4
 for srow in rows:
@@ -712,6 +725,9 @@ for s in SC:
     PL.cell(R["sh"], 11, f"FY2030 起股數年變動＝{V2['shg']}")
     XR[s] = R; xr += 1
 PL.column_dimensions["I"].width = 14; PL.column_dimensions["J"].width = 14; PL.column_dimensions["K"].width = 60
+for s_ in SC:   # v0.4.3：In 頁 fade_mA／B／C 連結 PL 延伸表的收斂目標列
+    _rk = next(r_ for r_ in range(4, IN.max_row + 1) if IN.cell(r_, 1).value == f"fade_m{s_}")
+    IN.cell(_rk, 5, f"=PL!$C${XR[s_]['tm']}"); IN.cell(_rk, 5).number_format = "0.00%"
 # --- Val 第 0 節：目標價 ---
 YRS6 = (2027, 2028, 2029, 2030, 2031, 2032)
 T = {}
@@ -736,12 +752,12 @@ DPATHS = [dict(name=s, label=f"情境 {s}（{ {'A': '順利', 'B': '平平', 'C'
               stub_fcff=f"(PL!$D${PB[s]['oi']}*(1-tax_w)+PL!$D${XR[s]['rev']}*(fc_da-fc_cx)-fc_wc*(PL!$D${XR[s]['rev']}-PL!$C${XR[s]['rev']}))*stub_frac") for s in SC]
 RD_ = FD.write_detail(DCFW, 4, DPATHS, FY_X, 1.0, title="三情境 FCFF 明細（NT$B；FY2027＝評價日後第一個完整年度）", stub=True,
                       note="淨現金滾到評價日（v0.4.2）：資產負債表日 2026-06-30 → 評價日 2026-12-31；stub FCFF＝FY2026 錨點欄（PL D 欄）FCFF × stub_frac（NOPAT＋營收 ×（fc_da − fc_cx）− fc_wc × 營收增量），再扣已宣告股利 stub_div")
-RD_["end"] = FD.write_checks(DCFW, RD_["end"], nc_bs="328.301+22.151-(339.939+76.332+0.021)-(2.346+11.845)-12.192",
-                             nc_note="2Q26 資產負債表（NT$B）：現金及短期投資 328.301＋長期投資 22.151 − 借款（短期 339.939＋長期 76.332＋其他 0.021）− 租賃（2.346＋11.845）− 非控制權益 12.192") + 1
+RD_["end"] = FD.write_checks(DCFW, RD_["end"], px="(px+mi_v/sh_v)", nc_bs="328.301+22.151-(339.939+76.332+0.021)-(2.346+11.845)-mi_v",
+                             nc_note="2Q26 資產負債表（NT$B）：現金及短期投資 328.301＋長期投資 22.151 − 借款（短期 339.939＋長期 76.332＋其他 0.021）− 租賃（2.346＋11.845）− 非控制權益 mi_v（廣明、達明少數股權市值＋其餘帳面；In 頁 K2 節）") + 1
 DCFW.column_dimensions["A"].width = 58; DCFW.column_dimensions["B"].width = 40
 for _c in "CDEFGH": DCFW.column_dimensions[_c].width = 13
 assert FD.summary_rows(stub=True) <= 20   # 原 0.1 節占 20 列（t0＋1～t0＋20）；0.2 節起列號不變
-SDCF = FD.write_summary(wb, V, t0 + 1, RD_, list(SC), ["tp_wA", "tp_wB", "tp_wC"], fmt="#,##0.0",
+SDCF = FD.write_summary(wb, V, t0 + 1, RD_, list(SC), ["tp_wA", "tp_wB", "tp_wC"], fmt="#,##0.0", px="(px+mi_v/sh_v)",
                         title="0.1 DCF（標準版：無槓桿自由現金流 FCFF＋WACC；明細見 DCF 頁；B／C／D＝情境 A／B／C）", beta_note="自算產業 β 重新加槓桿")
 T.update(dcfv=SDCF["dcfv"], dcf12=SDCF["v12"], dcftp=SDCF["dcf"], tvsh=SDCF["tvsh"], mult=SDCF["mult"], wacc=SDCF["wacc"])
 V[f"E{SDCF['dcf']}"] = "Σ tp_wA／wB／wC × 情境價值（已推到 12 個月後）；權重見 In 頁"
@@ -934,7 +950,7 @@ _pa, _pb, _pc = PB["A"], PB["B"], PB["C"]
 TPW, DCF, CMP, PX, UP, REC = _v("目標價（DCF 與 Comparable 加權）"), _v("DCF 目標價（情境加權）"), _v("Comparable 目標價（相對倍數調整後）"), _v("現價（"), _v("上檔空間：加權目標價"), _v("投資建議")
 FEPS, MED, CONS = _v("12 個月後的前瞻 EPS"), _v("同業前瞻 P/E 中位數"), _v("市場共識目標價")
 D12 = lambda c: _v("DCF 情境價值推到 12 個月後", c)
-RD["A1"] = RD["A1"].value + "；v0.3.2（2026-11-05）只改展示層：README 新增展示層、命題回覆與本版要點各段，HTML 改用個股版面規格 v1.0，其他工作表逐格不變；v0.4（2026-11-05）模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；DCF 頁、Val 0.1 節、In 頁 J2 節、Sens 目標價參數），Comparable、情境權重、DCF 權重 50% 與投資建議規則不變；v0.4.1（2026-11-05）β 改為自算產業 β（TW 伺服器／ODM 同業中位數，Blume 調整；Andy 2026-11-05 22:55），評價日 2026-12-31 不變，其他模型參數不變；v0.4.2（2026-11-05）第二輪修正：換用共用模組 tools/fcff_dcf.py v2（淨現金由資產負債表日 2026-06-30 滾到評價日、β 敏感度改 β_u ± 0.3、新增 Sens「美元口徑折現」）"
+RD["A1"] = RD["A1"].value + "；v0.3.2（2026-11-05）只改展示層：README 新增展示層、命題回覆與本版要點各段，HTML 改用個股版面規格 v1.0，其他工作表逐格不變；v0.4（2026-11-05）模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；DCF 頁、Val 0.1 節、In 頁 J2 節、Sens 目標價參數），Comparable、情境權重、DCF 權重 50% 與投資建議規則不變；v0.4.1（2026-11-05）β 改為自算產業 β（TW 伺服器／ODM 同業中位數，Blume 調整；Andy 2026-11-05 22:55），評價日 2026-12-31 不變，其他模型參數不變；v0.4.2（2026-11-05）第二輪修正：換用共用模組 tools/fcff_dcf.py v2（淨現金由資產負債表日 2026-06-30 滾到評價日、β 敏感度改 β_u ± 0.3、新增 Sens「美元口徑折現」）；v0.4.3（2026-11-06）第三輪修正：廣明、達明少數股權改市值、資本結構 E 含非控制權益市值、stub 與 Sens 列名、情境驅動對照補列與格式"
 r = RD.max_row + 2
 RD.cell(r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；v0.3.2 新增，原 A3、A4、重點觀察各列保留）").font = BOLD; r += 1
 RD.cell(r, 1, "命題：廣達的 AI 伺服器營收跟著雲端 AI 部署量走；客戶自行供料（客供）的比例上升會壓低營收成長、但毛利金額大致保留。要回答的是每股盈餘能否持續成長，以及現價是否低估這條路徑。"); r += 1
@@ -966,12 +982,57 @@ RD.cell(r, 1, "上檔空間：Comparable 目標價（相對倍數調整後）");
 RD.cell(r, 1, f'="估值說明：加權目標價＝DCF 目標價 × "&TEXT(tp_w_dcf,"0%")&"＋Comparable 目標價（相對倍數調整後）× "&TEXT(1-tp_w_dcf,"0%")&"，投資建議依它的上檔空間判定。DCF 為標準版：無槓桿自由現金流（稅後營業利益＋折舊 − 資本支出 − 營運資金增加）以 WACC "&TEXT(wacc,"0.0%")&" 折現，終值用永續成長率 "&TEXT(g_tv,"0.00%")&"、新投資報酬率＝WACC，企業價值加淨現金與投資、減非控制權益（資產負債表日的淨現金加 stub 期無槓桿自由現金流、扣已宣告股利，滾到評價日）後除以股數，三情境價值以股權成本推到 12 個月後並扣除期間股利，再依情境權重加權；Comparable＝同業前瞻本益比中位數 × 本公司長期相對同業的倍數比 × 約一年後的未來 12 個月 EPS（情境加權）。十年本益比規則值是舊法，只作參考，不進目標價。"'); r += 1
 r += 1
 RD.cell(r, 1, "本版要點（版本沿革；HTML 附錄用）").font = BOLD; r += 1
-RD.cell(r, 1, f'="v0.4.2（2026-11-05）：第二輪修正（Andy 2026-11-05 23:16 定案），換用共用模組 tools/fcff_dcf.py v2。(1) 淨現金滾到評價日：資產負債表日 "&bs_date&"（3Q26 財報尚未公布，維持 2Q26）→ 評價日 2026-12-31，淨現金與投資 "&TEXT(dcf_nc,"0.0")&"＋stub 期 FCFF（FY2026 錨點 × stub_frac "&TEXT(stub_frac,"0.000")&"；"&TEXT(Val!C{SDCF["stub"]},"0.0")&"）− 已宣告股利 "&TEXT(stub_div,"0.0")&"（每股 15.6 元）＝"&TEXT(Val!C{SDCF["ncr"]},"0.0")&"（NT$B）。(2) β 敏感度改 β_u ± 0.3 各自重新加槓桿（β "&TEXT(beta_lo,"0.00")&"／"&TEXT(beta_hi,"0.00")&"）；基準 β_u 0.792 不變（β "&TEXT(beta,"0.00")&"）。(3) 新增 Sens「美元口徑折現」：加權目標價 "&TEXT({_usd},"0.00")&"（"&TEXT({_usdp},{_SG})&"）。(4) RONIC＝WACC 不變；非控制權益維持帳面 "&TEXT(mi_v,"0.0")&"（占市值 "&TEXT(mi_v/(px*sh_v),"0.0%")&"）；資本支出、折舊：本模型沒有擴產排程列，維持近三年占營收比例。β 1.01 → "&TEXT(beta,"0.00")&"、WACC 6.5% → "&TEXT(wacc,"0.0%")&"、DCF 目標價 632.40 → "&TEXT({DCF},"0.00")&"、加權目標價 590.17 → "&TEXT({TPW},"0.00")&"、上檔空間 +83.3% → "&TEXT({UP},"+0.0%;-0.0%")&"、投資建議 強力買進 → "&{REC}&"。"'); r += 1
+RD.cell(r, 1, f'="v0.4.3（2026-11-06）：第三輪修正。(1) 非控制權益：上市子公司廣明（6188，廣達持股 30.22%、合併）與達明（4585，廣明持股 66.7%）少數股權改用市值（2026-10-22 收盤，同 px），其餘子公司維持帳面（In 頁 K2 節）；資本結構 E＝母公司市值＋非控制權益市值（WACC 權重與 β 重新加槓桿）。(2) stub 列名改為含 stub 期會計年度（FY2026）FCFF × stub_frac。(3) Sens 永續成長率列名改 g −1pt／上限 rf（g 已等於 rf 上限）。(4) 情境驅動對照：收斂法列名改中性、補 FY2032 淨利率收斂目標列、百分比格式。加權目標價 567.52 → "&TEXT({TPW},"0.00")&"、上檔空間 +76.2% → "&TEXT({UP},"+0.0%;-0.0%")&"、投資建議 強力買進 → "&{REC}&"。"'); r += 1
+RD.cell(r, 1, "v0.4.2（2026-11-05）：第二輪修正（Andy 2026-11-05 23:16 定案），換用共用模組 tools/fcff_dcf.py v2。(1) 淨現金滾到評價日：資產負債表日 2026-06-30（3Q26 財報尚未公布，維持 2Q26）→ 評價日 2026-12-31，淨現金與投資 -92.2＋stub 期 FCFF（FY2026 錨點 × stub_frac 0.504；-101.8）− 已宣告股利 60.1（每股 15.6 元）＝-254.1（NT$B）。(2) β 敏感度改 β_u ± 0.3 各自重新加槓桿（β 0.63／1.40）；基準 β_u 0.792 不變（β 1.01）。(3) 新增 Sens「美元口徑折現」：加權目標價 477.37（-15.9%）。(4) RONIC＝WACC 不變；非控制權益維持帳面 12.2（占市值 1.0%）；資本支出、折舊：本模型沒有擴產排程列，維持近三年占營收比例。β 1.01 → 1.01、WACC 6.5% → 6.5%、DCF 目標價 632.40 → 587.11、加權目標價 590.17 → 567.52、上檔空間 +83.3% → +76.2%、投資建議 強力買進 → 強力買進。"); r += 1   # 舊版沿革：固定為該版成品的計算結果
 RD.cell(r, 1, "v0.4.1（2026-11-05）：β 改為自算產業 β（TW 伺服器／ODM 同業 6 家無槓桿 β 中位數 0.69，Blume 調整後 0.792，依廣達負債比重新加槓桿；Andy 2026-11-05 22:55，取代 Damodaran 產業 β）。β 1.88 → 1.01、WACC 10.2% → 6.5%、DCF 目標價 373.79 → 632.40、加權目標價 460.86 → 590.17、上檔空間 +43.1% → +83.3%、投資建議 買進 → 強力買進。評價日 2026-12-31、目標時點 12 個月後與其他模型參數不變。"); r += 1
 RD.cell(r, 1, "v0.4（2026-11-05）：模型改版，DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC，docs/plan/個股DCF標準規格.md）。DCF 目標價 644.26 → 373.79 元、加權目標價 596.09 → 460.86 元、上檔空間 +85.1% → +43.1%、投資建議 強力買進 → 買進。DCF 差異拆解（情境加權）：現金流改 FCFF 與淨現金 −163.55（營運資金增加吸走營收高成長年度的現金）、折現率改 WACC 與永續成長率改 MIN(3%, rf) −100.11、終值改價值驅動式 +16.22、扣期間股利 −23.04。Comparable、情境權重、DCF 權重 50% 與投資建議規則不變。"); r += 1   # 舊版沿革：固定為該版成品的計算結果
 RD.cell(r, 1, "v0.3.2（2026-11-05）：只改展示層。README 新增展示層、命題回覆、HTML 輔助列與本版要點；HTML 改用個股 HTML 版面規格 v1.0（投資建議橫幅、命題分點與命題回覆、驅動因子依業務分塊、估值與對帳只列主要項目）。README 以外逐格不變。"); r += 1
 for a_ in ("A26", "A24", "A16", "A2"):
     RD.cell(r, 1, f"={a_}"); r += 1
+
+# ================= v0.4.3（2026-11-06）：第三輪修正（存檔前；只改標籤、格式與本節列出的項目） =================
+def _r3_common(stub_fy, tw, scn_labels):
+    # (1) stub 列名依實際口徑：含 stub 期的會計年度 FCFF × stub_frac（模組 tools/fcff_dcf.py v2 的說明字串在此覆寫）
+    for ws_ in (IN, V, wb["DCF"]):
+        for row_ in ws_.iter_rows():
+            for c_ in row_:
+                if isinstance(c_.value, str) and "第一年 FCFF" in c_.value:
+                    c_.value = c_.value.replace("各路徑第一年 FCFF", "第一年 FCFF").replace("第一年 FCFF", f"含 stub 期會計年度（FY{stub_fy}）FCFF")
+    # (2) Sens：g 的高值受上限 rf 限制時列名改「g −1pt／上限 rf」
+    if tw:
+        n_ = 0
+        for r_ in range(1, SE.max_row + 1):
+            if SE.cell(r_, 1).value == "永續成長率 g ±1pt":
+                SE.cell(r_, 1).value = "永續成長率 g −1pt／上限 rf"
+                SE.cell(r_, 2).value = '="g "&TEXT(g_tv_lo,"0.00%")&"／"&TEXT(g_tv_hi,"0.00%")&"（＋1pt 受上限 rf 限制）"'
+                n_ += 1
+        assert n_ >= 1
+    # (3) In「情境驅動對照」：收斂法列名改中性（三情境並排），百分比／pt 給格式
+    r0_ = next(r_ for r_ in range(1, IN.max_row + 1) if str(IN.cell(r_, 1).value or "").startswith("情境驅動對照"))
+    r_ = r0_ + 2; seen_ = set()
+    while IN.cell(r_, 1).value:
+        k_ = IN.cell(r_, 1).value; u_ = IN.cell(r_, 3).value
+        if k_ in scn_labels: IN.cell(r_, 2).value = scn_labels[k_]; seen_.add(k_)
+        fm_ = "0%" if k_ == "scn_w" else {"%": "0.00%" if "fade_m" in k_ else "0.0%", "pt": "+0.0%;-0.0%;0.0%"}.get(u_)
+        if fm_:
+            for cc_ in (4, 5, 6): IN.cell(r_, cc_).number_format = fm_
+        r_ += 1
+    assert seen_ == set(scn_labels), (seen_, scn_labels)
+_r3_common(2026, True, {'scn_fade_g': 'FY2032 營收年增收斂目標（A＝tp_g＋2pt；B＝tp_g；C＝tp_g−2pt）', 'scn_fade_m': 'FY2032 淨利率收斂目標（A＝本情境 FY2029；B＝FY2029 與十年平均替代值的中點；C＝十年平均替代值 FY2029 × nim10_f）'})
+# (4) 資本結構口徑（主控決定）：合併 EV 含子公司 100%，WACC 權重與 β 重新加槓桿的 E＝母公司市值＋非控制權益市值（write_summary／write_checks 傳 px＝px＋mi_v ÷ sh_v）
+for _r in range(1, V.max_row + 1):
+    if V.cell(_r, 1).value == "權益占資本 E ÷（E＋D）（市值；D＝債務＋租賃）":
+        V.cell(_r, 1).value = "權益占資本 E ÷（E＋D）（市值；E＝母公司市值＋非控制權益市值 mi_v，D＝債務＋租賃）"; break
+else:
+    raise KeyError("w_e 列")
+
+# (5) Sources：廣明、達明持股來源（第三輪修正；In 頁 K2 節）
+_so = SO.max_row + 2
+for _a, _b in (("[Interested-party] CMoney 廣明分析：廣達直接持有廣明 29.78%、經達啟投資 0.44%，與廣明編製合併報表（In 頁 qs_hold）", "https://www.cmoney.tw/notes/note-detail.aspx?nid=207876"),
+               ("[Interested-party] Simply Wall St 6188 股東表：Quanta Computer 82,881,664 股（29.8%）（In 頁 qs_hold）", "https://simplywall.st/stocks/tw/tech/tpex-6188/quanta-storage-shares/ownership"),
+               ("[Interested-party] Simply Wall St 4585 股東表：Quanta Storage 69,757,000 股（66.7%）（In 頁 tm_hold）", "https://simplywall.st/stocks/tw/capital-goods/twse-4585/techman-robot-shares/ownership")):
+    SO.cell(_so, 1, _a); SO.cell(_so, 2, _b); _so += 1
+
 wb.save(sys.argv[1])
 if os.environ.get("QUANTA_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
