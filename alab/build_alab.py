@@ -1130,7 +1130,8 @@ for _c in RD["A"]:
     if isinstance(_c.value, str) and _c.value.startswith('="重點觀察 1') and '&"以下為 2026-10-29' in _c.value:
         _c.value = _c.value[:_c.value.index('&"以下為 2026-10-29')]
 for _c in RD["A"]:   # v0.2 時期撰寫的重點觀察 2、3（數字為 v0.2）刪除；現況見展示層重點 1–5
-    if isinstance(_c.value, str) and _c.value.startswith(("重點觀察 2：", "重點觀察 3：")): _c.value = None
+    if isinstance(_c.value, str) and _c.value.startswith(("重點觀察 2：", "重點觀察 3：")):
+        _c.value = "重點觀察 2、3：舊版撰寫的文字（數字為 v0.2）已刪除；現況見展示層重點 1–5。" if _c.value.startswith("重點觀察 2：") else None
 
 wb.save(sys.argv[1])
 if os.environ.get("ALAB_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
