@@ -330,7 +330,7 @@ def main():
                         ST.cell(r, 4 + j, f"=1-{col}{r-1}").number_format = "0.0%"
                     r += 2
                 ST.cell(r, 1, "註：台達電液冷營收多在機架外（CDU、Liquid-to-Air），不屬本市場，不入表（CF12）；奇鋐、雙鴻分子含部分 CDU，份額可能高估"); r += 2
-            ST.cell(r, 1, "對照：凱基台達電份額（只作對照，不入表；CF11 待 Andy）"); ST.cell(r, 2, "2025-07 Blackwell PSU／2025-09 AI 伺服器電源")
+            ST.cell(r, 1, "對照：凱基台達電份額（只作對照，不入表；CF11 Andy 11-05 選甲）"); ST.cell(r, 2, "2025-07 Blackwell PSU／2025-09 AI 伺服器電源")
             ST.cell(r, 4, "=pwr_kgi_0701").number_format = "0.0%"; ST.cell(r, 5, "=pwr_kgi_0926").number_format = "0.0%"; r += 2
             ST.column_dimensions["G"].width = 9
         if "hbmsh_skh_25" in INROW:
@@ -1451,6 +1451,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.16.1（只改文字）：CF03、CF11、CF13、CF23 結案（Andy 2026-11-05 15:24；決策 S44），Checks G5 4 → 0。", False),
         ("v0.16：情境過渡完成（決策 S41）：In 頁層的產業情境 A、C 列（70 列）移到市場層 markets/scen（數值不變），本庫各頁只算基準、Scen 頁只剩基準；Cap 頁分項上限 SIF_CapGW_CoWoS_Base／SIF_CapGW_HBM_Base 與上線口徑 SIF_CapOnlineGW_CoWoS_Base／_HBM_Base（S42）；TK_In 改 Tokenomics v21.10（S43；只有本庫不讀的 NonNV 產出比改值）。唯一數值變動：SIF_TestWFE_SoC 2028–29 改讀基準（無下游讀者）。", False),
         ("v0.15：Interface 推導節的情境 A／B／C 名稱刪除（下游 9 檔改讀 *_Base 或個股自訂：tuc、arm、ase、mpi、smci、dell、jentech、ter、tsmc；Wattonomics 已於 v0.2.2 改讀）；In 頁層情境列名稱保留為個股自訂參考值。數值不變。決策 S40。", False),
         ("v0.14：HBM 供給基數改用廠商出貨推估（M3b hbm_sup26 4.23 EB；原＝本庫 2026 需求）；2027 HBM 需求 ÷ 供給 121% → 108%，可支撐部署 GW 34.4 → 38.5。Andy 2026-11-05 選甲；決策 S39。", False),

@@ -1,5 +1,12 @@
 # Siliconomics 變更紀錄
 
+## v0.16.1（2026-11-05；只改文字；`model/20261105_Siliconomics_v0.16.1.xlsx`）
+
+- **CF03、CF11、CF13、CF23 結案**（Andy 2026-11-05 15:24「CF03 甲丙、CF11 甲、CF13 a、CF23 乙」；決策 S44）：Conflicts 頁狀態改「結案」，Checks G5 4 → 0（SGOV_Warn 4 → 3）。
+  - CF03 甲＋丙：各載板與膜模型維持自身滿足率；研究「缺口 → 價格溢價 pp_*」排 11-30。CF11 甲：凱基兩值只作對照。
+  - CF13 (a)：avgo v0.4 金額份額改整顆售價（CY2027 AMD 6.36% → 6.70%；營收、EPS 不變）。
+  - CF23 乙：緯創 v0.3 緯穎份額相對值改讀本庫（asm_wyrel × SIF_AsmWyTilt），客供與保留毛利讀緯穎模型；緯創 FY2027 EPS +11.2%、加權目標價 +11.7%，強力買進不變。CI 建置順序 wiwynn 移到 wistron 之前。
+
 ## v0.16（2026-11-05；`model/20261105_Siliconomics_v0.16.xlsx`；Tokenomics v21.10）
 
 - **情境過渡完成：產業情境 A、C 移到市場層 `markets/scen/`**（決策 S41）：v0.15 In 頁的 70 列（記憶體價格路徑 cqA／cqC、nqA／nqC 各 12 季；顆數係數 um28／um29 的 A、C；HBM 單價 hbm_p28／29 的 A、C；世芯 Trainium 份額 al27／al28 的 A、C；CPO 滲透率 cpo A、C 2026–29；設備係數 eq_ck C 2028–29）逐字搬到 `markets/scen/industry_scen_v0.1.json`（數值、標記、來源不變；`markets/scen/README.md` 有對照表）。In 675 → 605 列；Scen 頁只剩基準；Units、Deploy、ABF、PGW、Rack、Equip、Path、Mkt、ShareTbl、Checks 只算基準（K1 只比對 SK 海力士成品的 B、K2 只查基準係數區間、K6-trn／pwr／lc 只查基準）。
