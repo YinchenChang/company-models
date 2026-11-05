@@ -1,5 +1,19 @@
-# delta/ — 台達電（2308）收支與估值模型 v0.4
+# delta/ — 台達電（2308）收支與估值模型 v0.5
 
+## v0.5（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0 與共用模組 `tools/fcff_dcf.py`（原樣取自 NVIDIA v0.3）：新增 **DCF 頁**（三情境 FY2027–FY2032 的營收、EBIT、NOPAT、折舊、資本支出、營運資金增加、FCFF、折現與終值；檢查列）；Val 0.1 節改為折現率（ke、稅後 kd、權益占比、WACC、g、RONIC）緊接 DCF 彙總（明確期現值、終值現值、EV、淨現金、每股價值、推到 12 個月後、終值占比、隱含終值 EV／EBITDA）；Sens 目標價參數改為 WACC ±1pt、β、ERP、g、RONIC＝WACC＋5pt、資本支出 ±1pt、營運資金、淨現金不含長期投資、終值替代法、DCF 權重。In 頁新增 M2 節，刪除 tp_r、tp_roe（tp_g 只留作 PL 延伸期收斂目標）。
+- 參數：rf＝台灣 10 年期公債 1.98%（2026-11-04）；ERP 5%＋台灣國家風險溢酬 0.78%（Damodaran 2026-01）；β＝Damodaran 全球 Electrical Equipment 無槓桿 β 1.25 依台達電 D／E（市值）重新加槓桿（Hamada）約 1.28；g＝MIN(3%, rf)＝1.98%；RONIC＝WACC。EBIT：FY2027–29 取 PL 營業利益，FY2030 起由淨利還原（淨利 ÷ nir_f − nop_f）；稅率 tax_w（FY2024–25 有效稅率平均）；FCFF 為合併口徑，評價時扣非控制權益帳面值、加長期投資；期間股利以 FY2025 發放率 × FY2026 EPS 扣除。
+- Comparable、情境權重、DCF 權重 50%、投資建議規則不變；數字見 PR 內文與 README 頁「重點 4」（公式帶出）。
+- 成品：`dist/20261105_台達電個股模型_v0.5.xlsx`／`.html`；v0.4.1 移到 `dist/_待刪除/`。
+
+
+## v0.4.1（2026-11-05）：HTML 新版面 v1.0（只改展示層）
+
+- 依 `docs/plan/個股HTML版面規格.md` v1.0：README 頁最後新增「展示層」（命題摘要、命題 1–3、白話重點 1–3）與「命題回覆」兩段，數字全以公式取自各頁；另加「本版要點」與 HTML 橫幅用的 Comparable（相對倍數調整後）上檔空間列。README 以外逐格與 v0.4 相同（`tools/xlsx_diff.py`）。
+- HTML：原設定改名 `html_src.json`（內容不動），`gen_html_json.py` 依列標籤重定位後呼叫 `tools/company_html/relayout.py` 產生 `html.json`。參數分四塊：AI 電源（電源及零組件）／液冷（基礎設施）／非 AI 事業／全公司。
+- 順帶修正（只影響展示）：舊 `html.json` 的情境驅動表與 Sens 目標價參數表列號已過時（v0.4 In、Sens 頁加列後未更新），改由列標籤定位；龍捲風圖標題標明為「情境 A 的 FY2028 EPS」（不是加權目標價）；估值章說明改用 README 的目標價方法列。
+- 成品：`dist/20261105_台達電個股模型_v0.4.1.xlsx`／`.html`；舊版移到 `dist/_待刪除/`。
 
 ## v0.4（2026-11-02）：滾入 3Q26 實績、股價改最新收盤
 
@@ -46,11 +60,11 @@ AI 半導體 Project **電源與散熱次產業的樣板**。AI 電源每 kW 內
 | 檔案 | 內容 |
 |---|---|
 | `build_delta.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_台達電模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
-| `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_台達電模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261105_台達電個股模型_v0.5.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `html_src.json` → `gen_html_json.py` → `html.json` | HTML 展示層設定（原設定 → 版面規格 v1.0 轉換；`html.json` 勿手改，格式見 `tools/company_html/README.md`） |
+| `dist/20261105_台達電個股模型_v0.5.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
-建置：`python3 delta/build_delta.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數、機架內液冷）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）；**不修改它們**。
+建置：`python3 delta/build_delta.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數、機架內液冷）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）；**不修改它們**。
 
 ## 驅動因子
 
