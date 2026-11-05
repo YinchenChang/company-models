@@ -1,5 +1,12 @@
 # Siliconomics 變更紀錄
 
+## v0.16.3（2026-11-05；`model/20261105_Siliconomics_v0.16.3.xlsx`；Tokenomics v21.10）
+
+- **實體部署 GW**（Andy 11-05「先加」；決策 S46）：Deploy 頁新增 NVIDIA（顆數 ÷ 該世代每 GW 顆數）、非 NVIDIA（IT 資本支出 ÷（VR200 每 GW × 持有成本比））兩列與合計；Interface `SIF_DeployGWPhys_Base`＝24.82／46.45／44.11／53.32（2026–29），對照成本等值 `SIF_DeployGW_Base` 23.40／41.65／42.23／51.12。電源、散熱、組裝類讀者尚未改讀。
+- **R4 橋接 r8**（PR #342 診斷與算力收支 11-05 回執）：新增 r8 調整區（① NVIDIA 世代實體換算、供給上限截頂、Wattonomics 側 ④ 覆蓋不足 4.81〔2027 待 Wattonomics v0.3 重算〕與 W2），調整後比值 0.952／0.940／0.765／0.693（④ 低高：2027 0.851–1.043、2028 0.699–0.842、2029 0.609–0.780）；只作對照，兩側基準不變。供給上限仍為第三方數字（HBM：UBS＋TrendForce；CoWoS：MS／TrendForce），Andy 11-05 要求自建後才可截頂基準（v0.17）。
+- Recon 頁 R4 狀態新增「兩邊都不錨定」（只 WARN，K9 一併計入）：2028–29 改標此狀態。
+- 既有名稱逐值不變；下游只有版本文字。
+
 ## v0.16.2（2026-11-05；只改文字；`model/20261105_Siliconomics_v0.16.2.xlsx`）
 
 - **CF03、CF11、CF13、CF23 結案**（Andy 2026-11-05 15:24「CF03 甲丙、CF11 甲、CF13 a、CF23 乙」；決策 S45）：Conflicts 頁狀態改「結案」，Checks G5 4 → 0。
