@@ -1,4 +1,14 @@
-# kyec/ — 京元電子（2449）收支與估值模型 v0.3
+# kyec/ — 京元電子（2449）收支與估值模型 v0.4
+
+## v0.4（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）＋HTML 新版面 v1.0
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0 與共用模組 `tools/fcff_dcf.py`（原樣取自 NVIDIA v0.3）：新增 **DCF 頁**（三情境 FY2027–FY2032 FCFF 明細與檢查列）；Val 0.1 節改為折現率緊接 DCF 彙總；Sens 目標價參數改為標準案例。In 頁新增 M2 節，刪除 tp_r、tp_roe。
+- 京元電資本密集：DCF 頁的折舊與資本支出 FY2027–29 讀本模型推導區塊（維持性 m_cx＋κ × 營收增量、折舊率 dr），FY2030 起由 FY2029 線性收斂到穩態（fc_da_ss＝情境 B FY2029 折舊 ÷ 營收；fc_cx_ss＝MAX(m_cx, fc_da_ss ×（1＋5g）)）；近三年實績比例（折舊 28.9%、資本支出 60%）只作對照。共用模組未改，只覆寫 DCF 頁兩列比例格（保留 fc_cx_d 供 Sens）。
+- 參數：rf＝台灣 10 年期公債 1.98%；ERP 5%＋台灣國家風險溢酬 0.78%；β＝Damodaran 全球 Semiconductor 無槓桿 β 1.82 依京元電 D／E（約 12.5%）重新加槓桿約 2.00；稅率法定 20%；g＝MIN(3%, rf)；RONIC＝WACC。
+- 結果：DCF 目標價 138.4 → 56.0、加權目標價 170.5 → 129.3，上檔 −35.1% → −50.7%，**投資建議由放空改為強力放空**（主因：FY2027 資本支出約營收 86% 使當年 FCFF 為負，WACC 12.3%）。情境 A 終值占 EV 83%（超過 80%，規格第 4 節標示）。
+- HTML：`html.json` 改名 `html_src.json`，新增 `gen_html_json.py`；README 頁新增「展示層」「命題回覆」「本版要點」三段（數字以公式帶出）。
+- 成品：`dist/20261105_京元電個股模型_v0.4.xlsx`／`.html`；v0.3 移到 `dist/_待刪除/`。
+
 
 ## v0.3（2026-11-05）：滾入 3Q26 實績
 
@@ -46,11 +56,11 @@ AI 半導體 Project 測試代工的第一家公司。驅動邏輯比照 `advant
 | 檔案 | 內容 |
 |---|---|
 | `build_kyec.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261105_京元電個股模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
-| `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261105_京元電個股模型_v0.3.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261105_京元電個股模型_v0.4.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `html_src.json` → `gen_html_json.py` → `html.json` | HTML 展示層設定（原設定 → 版面規格 v1.0 轉換；`html.json` 勿手改） |
+| `dist/20261105_京元電個股模型_v0.4.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
-建置：`python3 kyec/build_kyec.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `tsmc/dist`（加速器顆數、2029 成長、情境係數）、`tools/cycle_position.py`（只用規則函式）、`tools/valuation_rule.py`；**不修改它們**。
+建置：`python3 kyec/build_kyec.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `tsmc/dist`（加速器顆數、2029 成長、情境係數）、`tools/cycle_position.py`（只用規則函式）、`tools/valuation_rule.py`；**不修改它們**。
 
 ## 驅動因子
 
