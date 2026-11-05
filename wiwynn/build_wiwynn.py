@@ -975,6 +975,11 @@ for _c in RD["A"]:
     if isinstance(_c.value, str) and _c.value.startswith('="重點觀察 1') and '&"以下為 2026-10-29' in _c.value:
         _c.value = _c.value[:_c.value.index('&"以下為 2026-10-29')]
 
+for _c in RD["A"]:   # 第 23 點（續）：README 本模型情境用語「樂觀情境／基準情境／保守情境」同步改名
+    if isinstance(_c.value, str):
+        _v = _c.value.replace("樂觀、基準情境", "順利、平平情境").replace("樂觀情境", "順利情境").replace("基準情境", "平平情境").replace("保守情境", "不如預期情境")
+        if _v != _c.value: _c.value = _v
+
 wb.save(sys.argv[1])
 if os.environ.get("R4_NOOP"): pass
 if os.environ.get("WIWYNN_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
