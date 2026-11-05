@@ -49,7 +49,7 @@ cfg = {
  "company": "Meta Platforms",
  "ticker": "META",
  "thesis": "@README!A3",
- "question": "FY2028 AI 增量營業利益（主值讀法：自用 AI 影子效益＝自用在役 MW × Tokenomics 每 MW 持有成本）能否覆蓋 AI 資本支出的資金成本；收支關卡＝FY2026 到 FY2030 自由現金流扣股利合計",
+ "question": "FY2028 AI 增量營業利益（主值讀法：自用 AI 影子效益＝自用增量在役 MW × Tokenomics 每 MW 持有成本）能否覆蓋 AI 資本支出的資金成本；收支關卡＝FY2026 到 FY2030 自由現金流扣股利合計",
  "scenarios": [{"key": "A", "name": "情境 A（AI 提高每則廣告價格）"}, {"key": "B", "name": "情境 B（近四季成長收斂；基準）"}, {"key": "C", "name": "情境 C（AI 價格提升消退）"}],
  "sections": [
   {"id": "thesis", "title": "命題與核心問題", "blocks": [
@@ -125,5 +125,39 @@ cfg = {
     {"type": "scan", "needle": "未找到", "collapse": True, "summary": "展開：標為「未找到」的項目", "sheets": {"Recon": ["A", "C", "F"], "In": ["B", "H", "I"]}, "empty": "沒有標為未找到的項目。"}]}
  ]
 }
+# v0.1.5：套用個股 HTML 版面規格 v1.0（docs/plan/個股HTML版面規格.md）
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "company_html"))
+from relayout import relayout
+SPEC = {
+ "in_skip": ["H", "J"],
+ "in_groups": [
+  ["廣告本業（Family of Apps）", [
+    ["廣告曝光與價格", ["conv_n", "g0_q", "gl_impr", "gl_price", "pA", "pC", "inc_m", "mb_q3"]],
+    ["其他營收", ["gl_other"]],
+    ["一次性項目（評價口徑排除）", ["ot_legal_q2", "ot_sev_q2", "ot_legal_q3", "ot_tax_q1", "eps_x_q3", "ot_legal_at"]],
+    ["估值倍數（數位廣告同業 NTM EV/EBITDA）", ["pm_ads_googl", "pm_ads_pins", "pm_ads_ttd", "pm_ads_app", "pm_ads_rddt", "pm_ads_snap", "pm_meta_own", "ads_mode"]]]],
+  ["Reality Labs", [
+    ["營收與虧損", ["gl_rl", "rl_loss26", "rl_loss27", "rl_loss32", "rl_da_sh", "rl_mode"]]]],
+  ["自用 AI 算力", [
+    ["資本支出與 AI 占比", ["cx_na", "cx_23", "ai_23", "cx_24", "cx_25", "capex_9m", "capex_g", "cx27_k", "cx27_up", "cx27_B", "cx27_A", "cx27_C", "a28", "conv_mw"]],
+    ["機隊組成與機房", ["selfb", "am_26", "am_27", "am_28"]],
+    ["在建工程與折舊", ["cip_0", "cip_ai", "cip_it", "life_it", "life_fac", "life_na", "phi_0", "phi_q4", "da_base"]],
+    ["租用算力（只進敏感度）", ["rent_l"]],
+    ["每 MW 成本（Tokenomics 快照）", ["he_h", "he_b2", "he_b3", "he_vr", "opx_h", "opx_b2", "opx_b3", "opx_vr", "cit_h", "cit_b2", "cit_b3", "cit_vr", "dpi_h", "dpi_b2", "dpi_b3", "cfac"]],
+    ["自用 AI 讀法", ["internal_ai_reading"]]]],
+  ["全公司：資產負債、折現率、目標價規則、稅與現金流", [
+    ["股價、股數與資產負債（評價日）", ["px", "px_val", "sh_out", "sh_dil_q3", "sh_basic_q3", "cash_0", "cash_ye25", "debt_0", "debt_ye25", "fin_lease", "legal_oth", "ag_acc_x", "esc_in"]],
+    ["特別股與遠期出售", ["mcps", "conv_sh", "pref_2H", "pref_27", "pref_28", "pref_29", "fwd_on", "fwd_sh", "fwd_cash"]],
+    ["折現率", ["rf", "beta_cr", "beta_cd", "blume_a", "beta", "erp", "kd_sp", "kd", "wacc_adj", "g_tv", "ronic_sp"]],
+    ["目標價規則", ["mid", "t_val", "t_q4", "tp_wA", "tp_wB", "tp_wC", "w_dcf", "t_tgt", "w_ntm27", "cons_tp", "dps_tgt", "sbc_add", "tv_alt"]],
+    ["稅、股利、回購與現金", ["tax", "r_cash", "r_debt", "sbc_r", "dil", "wc_k", "dps", "dps_g", "bb_t", "min_cash", "mat_27"]],
+    ["多州檢察長協議", ["ag_pay", "ag_y1", "ag_rest", "contg"]]]]],
+ "blocks_to": {"命題模組": "自用 AI 算力", "@Thesis!A1": "自用 AI 算力", "@Thesis!A2": "自用 AI 算力", "@Seg!A2": "廣告本業（Family of Apps）"},
+ "main": {"DCF 彙總": ["明確期現值", "終值現值", "企業價值 EV（主值", "＋淨現金", "DCF 情境價值推到 12 個月後"],
+          "分部加總": ["Family of Apps", "Reality Labs", "分部加總 EV（主值）", "分部加總每股價值（主值", "  隱含 EV"],
+          "1. 合併層": ["營收|FY2027", "營收|FY2028", "營業利益（財報口徑）|FY2028", "自由現金流|FY2027"]},
+}
+cfg = relayout(cfg, X, SPEC)
 json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")

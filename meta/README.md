@@ -1,4 +1,6 @@
-# meta/ — Meta Platforms（META）個股模型 v0.1.4（命題＋官方營收分部 → 損益表；2026Q3；完整 10-Q、法說與 follow-up call 補資料缺口；v0.1.3 加協議應計驗證與受限現金口徑兩個 Sens 案；v0.1.4 Tokenomics 快照 v21.10；基準數值同 v0.1.1）
+# meta/ — Meta Platforms（META）個股模型 v0.1.5（命題＋官方營收分部 → 損益表；2026Q3；完整 10-Q、法說與 follow-up call 補資料缺口；v0.1.3 加協議應計驗證與受限現金口徑兩個 Sens 案；v0.1.4 Tokenomics 快照 v21.10；基準數值同 v0.1.1）
+
+**v0.1.5（2026-11-05）：** 只改展示層，數值格 0 差異。README 頁新增「展示層」「命題回覆」兩段（公式帶數字），HTML 套用個股 HTML 版面規格 v1.0（`docs/plan/個股HTML版面規格.md`；`tools/company_html/relayout.py`，參數分「廣告本業／Reality Labs／自用 AI 算力／全公司」四塊）。敏感度沿用 v0.1.4 結果改名 `sens_v015_20261105.json`；v0.1.4 成品移 `dist/_待刪除/`。
 
 **v0.1.4（2026-11-04）：** Tokenomics 快照 v21.9 → v21.10（`data/tokenomics_snapshot_v21.10.json`，`20261104_Tokenomics_v21.10.xlsx`，master eded8e6；名稱清單同 Alphabet；`--check` 通過）。契約名稱值的變動只在 `IF_NonNV_Out_TPU`（本模型不讀）。與 v0.1.3 逐格比對 21 格不同，全是版本與快照說明文字；數值格 0 差異，加權目標價 844.10、買進不變；敏感度 84 案重跑，逐一相同（`data/sens_v014_20261104.json`）。v0.1.3 成品、`sens_v013` 與 v21.9 快照移 `_待刪除/`。報告 `docs/reports/20261104_meta_v0.1.4_TK快照v21.10.md`。
 
@@ -84,7 +86,7 @@ In 頁 D／F 欄＝敏感度低／高，只用於 Sens 頁（原則第 8 節）�
 | `gen_html_json.py` | 由列號對照產生 `html.json`（勿手改） |
 | `make_v01.sh` | 一次跑完（版號 `VER`，預設 0.1.3、日期 `VDATE` 預設 20261104；腳本沿用 v0.1 名稱）：事實總帳 →（敏感度）→ 建置 → 重算 → check_v01 → check_in_layout → check_segments → HTML 產生與檢核 |
 | `segments.json` | 官方分部宣告（`tools/segment_check/check_segments.py meta` 通過） |
-| `dist/20261104_Meta個股模型_v0.1.4.xlsx`／`.html` | 成品（v0.1～v0.1.3 移 `dist/_待刪除/`） |
+| `dist/20261105_Meta個股模型_v0.1.5.xlsx`／`.html` | 成品（v0.1～v0.1.3 移 `dist/_待刪除/`） |
 | `data/` | 事實總帳與兩讀轉錄（`reads/`）、Tokenomics v21.10 快照、共識、同業、敏感度結果 |
 | `docs/` | 工作單（v0.1、v0.1.1）、A 段事實總帳報告、v0.1 報告、本版報告 `docs/reports/20261030_meta_v0.1.1.md`、進度檔 |
 
