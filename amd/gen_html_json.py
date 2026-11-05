@@ -1,4 +1,4 @@
-# v0.3.1：套用個股 HTML 版面規格 v1.0（docs/plan/個股HTML版面規格.md）
+# v0.4：DCF 改為標準版（FCFF＋WACC；html_src.json 的 DCF 區塊同 NVIDIA v0.3）。v0.3.1：套用個股 HTML 版面規格 v1.0（docs/plan/個股HTML版面規格.md）
 # 讀 amd/html_src.json（v0.3 的 html.json，原樣保留）→ 本檔前處理 → tools/company_html/relayout.py → 本檔後處理 → 寫 amd/html.json。
 # 用法：python3 amd/gen_html_json.py（讀 amd/dist 內唯一的 xlsx）；之後 python3 tools/company_html/build_company_html.py nvidia
 import copy, glob, itertools, json, os, re, sys
@@ -37,7 +37,7 @@ for b in dr["blocks"]:
         b["caption"] = "驅動 → 推導對照（In 頁基準值與推導量）"
 
 # 估值：相對倍數 kv 改成有標題的表；移除舊「重點觀察」（已移到第一章）；長條圖加入相對倍數調整後的 Comparable；
-# DCF 折現率表放在 DCF 彙總之前；上一版估值內容摺疊
+# v0.4：DCF 折現率表（WACC 等）與 DCF 彙總、各情境 FCFF 明細已寫在 html_src.json（折現率緊接 DCF 彙總之前）；上一版估值內容摺疊
 va = SEC["valuation"]
 nb, legacy = [], False
 r_adj = find("Val", "Comparable 目標價（相對倍數調整後）")
@@ -62,12 +62,6 @@ for b in va["blocks"]:
         b["items"].insert(3, {"label": f"@Val!A{r_adj}", "value": f"@Val!B{r_adj}", "series": 2})
     if t == "h3" and b.get("text", "").startswith("以下為上一版"):
         legacy = True
-    if t == "table" and "caption" not in b and b.get("rows") and b["rows"][0][0] == f"@Val!A{find('Val', '股東現金流＝EPS')}":
-        rows = [[f"@In!B{KEY[k]}", f"@In!E{KEY[k]}|p1"] for k in ("tp_r", "tp_g", "tp_roe")]
-        rows.append([f"@Val!A{find('Val', '股東現金流＝EPS')}", f"@Val!B{find('Val', '股東現金流＝EPS')}|p1"])
-        nb.append({"type": "table", "caption": "DCF 折現率與永續假設（股東權益成本、永續成長率、再投資報酬率與可發放比例）", "head": ["項目", "數值"], "rows": rows})
-    if t == "table" and "caption" not in b and b.get("rows") and b["rows"][0][0] == f"@Val!A{find('Val', '股東現金流＝EPS')}":
-        b = dict(b, caption="DCF 彙總：股東現金流、永續價值與每股價值")
     if t == "table" and b.get("caption") == "@Val!A25":
         b = dict(b, collapse=True, summary="展開：同業前瞻本益比")
     if t == "table" and "caption" not in b and b.get("rows") and b["rows"][0][0] == f"@Val!A{find('Val', '同業前瞻 P/E 中位數')}":
@@ -105,11 +99,13 @@ SPEC = {
     ["FY2026 錨點（第三季實績＋第四季指引）", ["q3_rev", "q3_gm", "q3_opx", "q4_oth", "tx_26", "q3_sh", "q3_cli", "q3_gam", "q3_emb", "q4_rev", "q4_cli", "q4_gam", "q4_emb", "q4_gm", "q4_opx", "q4_sh"]],
     ["營業費用、稅與股數", ["phi", "g_opx_min", "opx_adj", "tx_f", "oth_f", "sh_g"]],
     ["股價與循環位置", ["px", "r_disc", "pk_A", "pk_B", "pk_C"]],
-    ["目標價規則（情境權重、DCF 與 Comparable）", ["tp_wA", "tp_wB", "tp_wC", "tp_r", "tp_g", "tp_gd", "tp_roe", "tp_w_dcf", "nm10_k", "cons_tp"]]]]],
+    ["目標價規則（情境權重、DCF 權重、延伸期收斂與共識）", ["tp_wA", "tp_wB", "tp_wC", "tp_g", "tp_gd", "tp_w_dcf", "nm10_k", "cons_tp"]],
+    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta_u", "beta_de", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
+    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"]],
+    ["自由現金流（股票薪酬、折舊、資本支出、營運資金）", ["sbc_rev", "fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]]]]],
  "blocks_to": {},
- "main": {"0.1 DCF": ["FY2027", "FY2028", "FY2029", "FY2030", "FY2031", "FY2032"],
-          "DCF 彙總": ["股東現金流＝EPS", "永續價值", "DCF 情境每股價值", "其中：永續價值現值占比", "DCF 目標價（情境加權）"],
-          "DCF 折現率": ["DCF 折現率", "長期成長率", "ROE", "股東現金流＝EPS"],
+ "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+          "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
           "Comparable 彙總": ["同業前瞻 P/E 中位數", "各情境 12 個月後的前瞻 EPS", "12 個月後的前瞻 EPS（情境加權）", "Comparable 目標價"],
           "對帳要點": ["FY2027 資料中心營收 vs 公司", "FY2027 毛利率 vs FY2026 錨點", "FY2027 EPS vs 共識（stockanalysis", "FY2028 EPS vs 共識約", "FY2029 EPS vs 公司策略期間", "認股權證稀釋占 FY2029 股數"]},
 }
