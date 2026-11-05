@@ -1,4 +1,10 @@
-# kyec/ — 京元電子（2449）收支與估值模型 v0.4
+# kyec/ — 京元電子（2449）收支與估值模型 v0.4.1
+## v0.4.1（2026-11-05）：β 改為自算產業 β
+
+- Andy 2026-11-05 22:55：β 不再用 Damodaran 表，改用自算產業 β（Yahoo Finance 含股利調整月報酬 2021-11～2026-10，對台灣加權指數迴歸，Hamada 去槓桿、現金修正，取同業中位數後 Blume 調整 0.67β＋0.33）。京元電歸「TW 半導體」組（2330 2303 5347 2454 3661 3443 3035 2408 2449 3711 6239 6257 8150，13 家），無槓桿 β 中位數 1.64 → 採用 1.429（原 Damodaran Global Semiconductor 1.82），依京元電市值 D／E 重新加槓桿約 1.57（原 2.00）。Sens 低／高＝1.209／1.64（Analogy）。
+- 評價日 2026-12-31（目標時點 2027-12-31），淨現金沿用 2026-06-30 資產負債表；其他模型輸入不變。
+- 結果：WACC 12.3% → 10.1%、DCF 目標價 56.0 → 75.6、加權目標價 129.3 → 139.1、上檔空間 −50.7% → −47.0%，投資建議由強力放空改為放空（README 頁「本版要點」第一列以公式帶出）。
+- 成品：`dist/20261105_京元電個股模型_v0.4.1.xlsx`／`.html`；v0.4 移到 `dist/_待刪除/`。
 
 ## v0.4（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）＋HTML 新版面 v1.0
 
@@ -56,9 +62,9 @@ AI 半導體 Project 測試代工的第一家公司。驅動邏輯比照 `advant
 | 檔案 | 內容 |
 |---|---|
 | `build_kyec.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261105_京元電個股模型_v0.4.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261105_京元電個股模型_v0.4.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html_src.json` → `gen_html_json.py` → `html.json` | HTML 展示層設定（原設定 → 版面規格 v1.0 轉換；`html.json` 勿手改） |
-| `dist/20261105_京元電個股模型_v0.4.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261105_京元電個股模型_v0.4.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 kyec/build_kyec.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `tsmc/dist`（加速器顆數、2029 成長、情境係數）、`tools/cycle_position.py`（只用規則函式）、`tools/valuation_rule.py`；**不修改它們**。
 

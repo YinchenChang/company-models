@@ -186,20 +186,22 @@ inp("cons_tp", "市場共識目標價（賣方平均）", "NT$", None, 340.73, N
 inp("cons_feps", "共識 12 個月後前瞻 EPS（2/12 × FY2027＋10/12 × FY2028；換成配股後股數 ÷ 1.05）", "NT$", None, "=(2/12*c_eps27+10/12*c_eps28)/1.05", None, "Derived", "In 頁 FactSet 共識 FY2027、FY2028 中位數（2026-04-06；推定為配股前口徑）", "共識只放 Recon 與本列，不作校準；共識日期較舊")
 
 # v0.4：標準版 DCF（無槓桿自由現金流＋WACC；tools/fcff_dcf.py；docs/plan/個股DCF標準規格.md v1.0）。評價日沿用 DCF 基準日 2026-12-31；股價 2026-10-22；資產負債為 2026-06-30
-DAMO_B = "Damodaran「Betas by Sector (Global)」2026 年 1 月版（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/BetasGlobal.html；2026-11-05 讀取）"
+BETA_SRC = "自算產業 β 表（2026-11-05 22:50 計算；Yahoo Finance 含股利調整月收盤價 2021-11～2026-10，60 個月；Andy 2026-11-05 22:55 選定，取代 Damodaran 表）"
 DAMO_C = "Damodaran「Country Default Spreads and Risk Premiums」2026-01-05 版（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html；2026-11-05 讀取）"
 SA_BS = "stockanalysis.com 京元電（TPE:2449）資產負債表，2026-06-30 欄（https://stockanalysis.com/quote/tpe/2449/financials/balance-sheet/；2026-11-05 讀取；資料商轉載合併報表）"
 SA_CF = "stockanalysis.com 京元電現金流量表（https://stockanalysis.com/quote/tpe/2449/financials/cash-flow-statement/；2026-11-05 讀取）"
 NC_BS = "13.321+19.269-33.827-(1.012+7.341)-0.00842"
 NC_NOTE = "2026-06-30 資產負債表（NT$B）：現金 13.321＋長期投資 19.269 − 長期借款 33.827 − 租賃（1.012＋7.341）− 非控制權益 0.008"
-inp("beta_u", "產業無槓桿 β（Damodaran 全球 Semiconductor）", "x", 1.49, 1.82, 1.87, "Analogy", DAMO_B + "：Semiconductor 675 家，無槓桿 β 1.82（槓桿 β 1.88、D/E 4.13%）；封測同業（日月光等）屬此產業",
-    "低＝美國 Semiconductor 1.49（Damodaran 美國表，2026-01）；高＝全球 Semiconductor 現金修正後 1.87；Andy 2026-11-05 21:21：β 用 Damodaran 產業 β 重新加槓桿")
+inp("beta_u", "產業無槓桿 β：自算 TW 半導體同業中位數，Blume 調整（0.67β＋0.33）", "x", "=0.67*1.64*0.8+0.33", "=0.67*1.64+0.33", 1.64, "Derived",
+    BETA_SRC + "：TW 半導體同業 13 家（2330 2303 5347 2454 3661 3443 3035 2408 2449 3711 6239 6257 8150），對台灣加權指數 ^TWII 迴歸、Hamada 去槓桿、現金修正後中位數 1.64；Blume 調整 0.67 × 1.64＋0.33＝1.429",
+    "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）。低／高（Analogy）：低＝中位數 × 0.8 再 Blume＝1.209、高＝Blume 前中位數 1.64（未調整）")
 for _row in FD.in_rows(dict(
         date="2026-12-31（同 DCF 基準日）", ccy="NT$", amt="NT$B", shu="十億股",
         rf=(0.0198, "Trading Economics「Taiwan 10Y Bond Yield」：2026-11-04 1.98%（https://tradingeconomics.com/taiwan/government-bond-yield；2026-11-05 讀取）",
             "經濟日報 2026-08-21（https://money.udn.com/money/story/5613/9704659）：Bloomberg 經濟學家預期下半年接近 2%；與台達電模型同值", "無風險利率（台灣 10 年期公債殖利率，2026-11-04）"),
-        beta_fixed=("=beta_u_lo*(1+(1-tax_w)*(debt_v+lease_v)/(px*sh_v))", "=beta_u*(1+(1-tax_w)*(debt_v+lease_v)/(px*sh_v))", "=beta_u_hi*(1+(1-tax_w)*(debt_v+lease_v)/(px*sh_v))", "Analogy",
-                    "Hamada 重新加槓桿：β＝beta_u ×（1＋(1 − tax_w) × D ÷ E），D＝債務＋租賃、E＝現價 × 股數（市值）", "個股迴歸 β：建置環境無法取得股價序列（未取得）；低／高＝產業區間 beta_u_lo／beta_u_hi 同式加槓桿"),
+        beta_fixed=("=beta_u_lo*(1+(1-tax_w)*(debt_v+lease_v)/(px*sh_v))", "=beta_u*(1+(1-tax_w)*(debt_v+lease_v)/(px*sh_v))", "=beta_u_hi*(1+(1-tax_w)*(debt_v+lease_v)/(px*sh_v))", "Derived",
+                    "自算產業 β：TW 半導體 同業 13 家中位數（Yahoo Finance 月報酬 2021-11～2026-10，對台灣加權指數 ^TWII 迴歸，Hamada 去槓桿、現金修正）；以本公司市值 D/E 與稅率重新加槓桿（Hamada：β＝beta_u ×（1＋(1 − tax_w) × D ÷ E），D＝債務＋租賃、E＝現價 × 股數）",
+                    "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）。低／高（Analogy）：低＝本組 Blume 前中位數 1.64 × 0.8 再 Blume＝1.209、高＝本組 Blume 前中位數 1.64（未調整），皆同式重新加槓桿"),
         crp=(0.0078, "Verified", DAMO_C + "：Taiwan（Moody's Aa3）Country Risk Premium 0.78%", "Andy 2026-11-05 20:45：非美國市場 ERP＝5%＋國家風險溢酬、不設股權成本下限"),
         kd=("=rf+0.01", "Assumed", "台灣 10 年期公債＋1 個百分點（公司借款利率未揭露：未找到）", "負債約占資本一成，kd 每 ±1pt 影響 WACC 約 ±0.1pt"),
         tax_w=(0.20, "Assumed", "台灣營利事業所得稅法定稅率 20%（本模型損益以「淨利 ÷ 營業利益」合併稅與業外，無單獨稅率列）",
@@ -924,7 +926,7 @@ TPT = _tp_section(V, lambda s_, y: f"PL!{FCX[y]}{SUMR[(s_, 'eps')]}", [(2027, "2
     "台美封測同業（不放 A 股：長電、通富等 A 股同業有結構性溢價；工作單 Andy 11:53）",
     "stockanalysis：15 位分析師平均 340.73（頁面價格日期 2026-10-06）；法人中位數 348–350、Morgan Stanley 388",
     ("DCF（v0.4 標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現到 2026 年底（期中慣例），終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），"
-     "g＝MIN(3%, 台灣 10 年期公債殖利率)、RONIC＝WACC；ke＝rf＋β ×（ERP 5%＋台灣國家風險溢酬），β 為 Damodaran 全球 Semiconductor 無槓桿 β 依京元電 D／E 重新加槓桿；"
+     "g＝MIN(3%, 台灣 10 年期公債殖利率)、RONIC＝WACC；ke＝rf＋β ×（ERP 5%＋台灣國家風險溢酬），β 為自算產業 β（TW 半導體同業中位數，Blume 調整）依京元電 D／E 重新加槓桿；"
      "折舊與資本支出 FY2027–29 讀本模型推導區塊（擴產期），FY2030 起收斂到穩態（DCF 頁）。"
      "Comparable：台美封測同業（日月光、Amkor、力成、矽格、南茂）前瞻 P/E 中位數；京元電以 AI 測試為主、成長較高，同業中位數偏低估。"
      "情境對應：顆數情境 A＝順利、B＝平平、C＝不如預期；FY2027 三情境 EPS 相同（差異從 CY2028 起）。"),
@@ -1048,7 +1050,7 @@ for t_ in [
     f'&"DCF 低的原因是擴產期現金流與折現率：本模型 FY2027 資本支出約為營收的 "&TEXT({_RC("FY2027 資本支出 ÷ 營收", "C")},"0%")&"（維持性＋κ × 營收增量，模型推導），情境 B 的 FY2027 無槓桿自由現金流約 "&TEXT(DCF!{_c27}{_PBd["fcff"]},"#,##0.0")&" 十億元；股權成本 "&TEXT(ke,"0.0%")&"（β "&TEXT(beta,"0.00")&" 為半導體產業類比）。"'
     f'&"Comparable 低於現價是倍數差：現價 ÷ 本模型 12 個月後前瞻 EPS 為 "&TEXT({PX}/{FEPS},"0.0")&" 倍，同業中位數 "&TEXT({PEER},"0.0")&" 倍（同業為目前的前瞻倍數，時間窗不同）。"',
     f'="重點 3｜顆數情境與折舊最敏感：以情境 A 為基準一次只改一個輸入時，「顆數情境 C」使 FY2028 EPS 變動 "&{SG(_SL("顆數情境 C"))}&"，「折舊率 14%」變動 "&{SG(_SL("折舊率 14%"))}&"，「非 AI 成長 低」變動 "&{SG(_SL("非 AI 成長 低"))}&"。這些是敏感度測試的案例，不是門檻。"',
-    f'="重點 4｜v0.4 起 DCF 改為標準版（無槓桿自由現金流折現），DCF 目標價約 "&{T_(DCF)}&" 元：WACC "&TEXT(wacc,"0.0%")&"（股權成本 "&TEXT(ke,"0.0%")&"＝台灣 10 年期公債 "&TEXT(rf,"0.00%")&" ＋ β "&TEXT(beta,"0.00")&" ×（ERP "&TEXT(erp,"0%")&" ＋ 國家風險溢酬 "&TEXT(crp,"0.00%")&"）；β 為 Damodaran 全球半導體產業無槓桿 β 依京元電負債比重新加槓桿，ERP 與 RONIC＝WACC 為假設），永續成長率 "&TEXT(g_tv,"0.00%")&"。"'
+    f'="重點 4｜v0.4 起 DCF 改為標準版（無槓桿自由現金流折現），DCF 目標價約 "&{T_(DCF)}&" 元：WACC "&TEXT(wacc,"0.0%")&"（股權成本 "&TEXT(ke,"0.0%")&"＝台灣 10 年期公債 "&TEXT(rf,"0.00%")&" ＋ β "&TEXT(beta,"0.00")&" ×（ERP "&TEXT(erp,"0%")&" ＋ 國家風險溢酬 "&TEXT(crp,"0.00%")&"）；β 為自算產業 β（TW 半導體同業中位數，Blume 調整）依京元電負債比重新加槓桿，ERP 與 RONIC＝WACC 為假設），永續成長率 "&TEXT(g_tv,"0.00%")&"。"'
     f'&"終值現值占企業價值 "&TEXT(Val!B{_SD["tvsh"]},"0%")&"／"&TEXT(Val!C{_SD["tvsh"]},"0%")&"／"&TEXT(Val!D{_SD["tvsh"]},"0%")&"（情境 A／B／C"&IF(MAX(Val!B{_SD["tvsh"]}:D{_SD["tvsh"]})>0.8,"；超過 80% 的情境，DCF 幾乎全靠終值","")&"），隱含終值 EV／EBITDA 約 "&TEXT(Val!C{_SD["mult"]},"0.0")&" 倍（折舊占營收約三成，EBITDA 遠大於 NOPAT）。"'
     f'&"β 改用美國半導體產業 β 時加權目標價 "&TEXT(Sens!D{_tvs_k[0] + 1},"+0.0%;-0.0%")&"、ERP 4%／6% 時 "&TEXT(Sens!D{_tvs_k[0] + 2},"+0.0%;-0.0%")&"／"&TEXT(Sens!F{_tvs_k[0] + 2},"+0.0%;-0.0%")&"（以三情境加權目標價為基準）。"']:
     RD.cell(rn, 1, t_); rn += 1
@@ -1064,13 +1066,14 @@ for t_ in [
     RD.cell(rn, 1, t_); rn += 1
 rn += 1
 RD.cell(rn, 1, "本版要點（HTML 附錄用）").font = BOLD; rn += 1
-for t_ in ["v0.4（2026-11-05）模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；新增 DCF 頁，FY2027–29 折舊與資本支出讀本模型推導區塊；Val 0.1 節改為折現率與 DCF 彙總；Sens 目標價參數改為 WACC、β、ERP、g、RONIC、資本支出、營運資金等案例；In 頁新增 M2 節、刪除 tp_r、tp_roe）。README 新增展示層與命題回覆，HTML 改用個股 HTML 版面規格 v1.0。Comparable、情境權重、DCF 權重 50% 與投資建議規則不變。",
+for t_ in [f'="v0.4.1（2026-11-05）β 改為自算產業 β（Andy 2026-11-05 22:55）：TW 半導體同業 13 家無槓桿 β 中位數 1.64，Blume 調整後 "&TEXT(beta_u,"0.000")&"，依京元電 D／E 重新加槓桿為 "&TEXT(beta,"0.00")&"；WACC "&TEXT(wacc,"0.0%")&"、DCF 目標價約 "&{T_(DCF)}&" 元、加權目標價約 "&{T_(TP)}&" 元、上檔空間 "&TEXT({UP},"+0.0%;-0.0%")&"、投資建議"&{REC}&"。評價日 2026-12-31；其他模型輸入不變。"',
+           "v0.4（2026-11-05）模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；新增 DCF 頁，FY2027–29 折舊與資本支出讀本模型推導區塊；Val 0.1 節改為折現率與 DCF 彙總；Sens 目標價參數改為 WACC、β、ERP、g、RONIC、資本支出、營運資金等案例；In 頁新增 M2 節、刪除 tp_r、tp_roe）。README 新增展示層與命題回覆，HTML 改用個股 HTML 版面規格 v1.0。Comparable、情境權重、DCF 權重 50% 與投資建議規則不變。",
            "v0.3（2026-11-05）：滾入 3Q26 實績。"]:
     RD.cell(rn, 1, t_); rn += 1
 rn += 1
 RD.cell(rn, 1, "HTML 橫幅附註用：進加權的 Comparable 目標價（相對倍數調整後）相對現價的上檔空間（橫幅中間格為只看 Comparable 目標價（市場主流同業法），其上檔空間見 Val 頁）")
 RD.cell(rn, 2, f"={CMP}/{PX}-1").number_format = "0.0%"
-RD["A1"] = RD["A1"].value.replace("v0.3", "v0.4") + "；v0.4（2026-11-05）模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC），並新增 README 展示層、HTML 新版面 v1.0"
+RD["A1"] = RD["A1"].value.replace("v0.3", "v0.4") + "；v0.4（2026-11-05）模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC），並新增 README 展示層、HTML 新版面 v1.0；v0.4.1（2026-11-05）β 改為自算產業 β（TW 半導體同業中位數，Blume 調整；Andy 2026-11-05 22:55），其他輸入不變"
 wb.save(sys.argv[1])
 if os.environ.get("KYEC_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
