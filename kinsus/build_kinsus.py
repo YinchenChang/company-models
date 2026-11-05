@@ -912,6 +912,58 @@ def wta_sens():
     SE.cell(t0 + 9, 1, "目標價：Sens 頁目標價參數表只動 DCF 參數（r、g、權重），不逐案例重算 DCF，本案例不列目標價。")
     return RW
 wta_in_rows(); WTA_R = wta_sens()   # v0.13：放在 In 版面套用之後，確保在 In 頁最後
+# ---------------- v0.3.1（2026-11-05）：只改展示層（個股 HTML 版面規格 v1.0；docs/plan/個股HTML版面規格.md）----------------
+# README 頁最後新增「展示層」「命題回覆」兩段（HTML 讀；數字一律由公式帶出）；原 README 各列保留不動
+def _row(ws, prefix, start=1, end=None):
+    for r_ in range(start, (end or ws.max_row) + 1):
+        if str(ws.cell(r_, 1).value or "").strip().startswith(prefix.strip()):
+            return r_
+    raise KeyError((ws.title, prefix))
+_vt = _row(V, "目標價（DCF 與 Comparable 加權）"); _vd = _row(V, "DCF 目標價（情境加權）"); _vc = _row(V, "Comparable 目標價（相對倍數調整後）")
+_vc0 = _row(V, "Comparable 目標價（市場主流同業法）"); _vup = _row(V, "上檔空間：加權目標價"); _vup0 = _row(V, "上檔空間：Comparable 目標價")
+_vp = _row(V, "現價（"); _vcons = _row(V, "市場共識目標價"); _vpe27 = _row(V, "現價 ÷ FY2027 EPS"); _vpe28 = _row(V, "現價 ÷ FY2028 EPS"); _vfpe = _row(V, "前瞻 P/E")
+_vrm = _row(V, "相對倍數調整係數"); _vmed = _row(V, "同業前瞻 P/E 中位數"); _vrec = _row(V, "投資建議")
+_vcf27 = _row(V, "FY2027", _row(V, "股東現金流"))   # 情境 A FY2027 每股股東現金流（淨利＋折舊－資本支出）
+_S = {s_: _row(PL, f"情境 {s_}", 4, 45) for s_ in "ABC"}
+_P = lambda s_, lab: _row(PL, lab, _S[s_] + 1, _S[s_] + 13)
+_inr = {str(IN.cell(r_, 1).value): r_ for r_ in range(4, IN.max_row + 1) if IN.cell(r_, 1).value}
+_I = lambda k: f"In!E{_inr[k]}"
+_T = lambda ref, f: f'TEXT({ref},"{f}")'
+_hi = lambda ref: f'IF({ref}<0,"低 ","高 ")&TEXT(ABS({ref}),"0.0%")'
+_sn = lambda ref: f'IF({ref}<0,"−","+")&TEXT(ABS({ref}),"0.0%")'
+_sg = lambda ref: f'IF({ref}<0,"少 ","多 ")&TEXT(ABS({ref}),"0.0%")'
+_se = lambda lab: _row(SE, lab, 4, 40)
+_s_pl, _s_ph = _se("ABF 溢價 低"), _se("ABF 溢價 高"); _s_cl, _s_ch = _se("漲價年度化 8%"), _se("漲價年度化 22%")
+_s_cap = _se("ABF 產能 低"); _s_ai = _se("AI 部署 ×0.8"); _s_gpu = _se("景碩 NVIDIA GPU 份額 高"); _s_cpu = _se("景碩 Vera CPU 份額 低"); _s_c = _se("情境 C")
+_rc = lambda lab: _row(RC, lab, 4)
+_rk27c, _rk27b, _rk28f, _rk28b, _rkf = _rc("FY2027 EPS vs 共識"), _rc("FY2027 EPS vs 券商平均"), _rc("FY2028 EPS vs FactSet"), _rc("FY2028 EPS vs 券商平均"), _rc("模型前瞻 12 月 EPS")
+_rai26, _rai27 = _rc("FY2026 AI 載板占營收"), _rc("FY2027 AI 載板占營收")
+_u = lambda lab: _row(UN, lab, 4, 30)
+_ucpu, _uacc = _u("景碩份額：NVIDIA CPU"), _u("景碩加速器與 CPU 載板營收")
+_cons27, _fs28 = _I("cons_eps27"), _I("fs_eps28")
+_cmpB = lambda c_, s_, ref: f'IF(PL!{c_}{_P(s_, "EPS")}<{ref},"低於","高於")'
+RD["A1"] = RD["A1"].value + "；v0.3.1（2026-11-05）只改展示層（README 新增展示層與命題回覆兩段、HTML 改用個股 HTML 版面規格 v1.0；數值格不變）"
+r = RD.max_row + 2
+RD.cell(r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；v0.3.1 新增，原 A4、A5、A6–A9 保留給下游）").font = BOLD; r += 1
+for t_ in (
+    "命題：景碩的 ABF 載板營收＝需求與產能取小；需求以 NVIDIA 自家 CPU（Grace→Vera）載板為主，加上份額不大的 GPU／ASIC 加速器載板、其他 AI 與非 AI 載板；BT 載板與合併的晶碩（隱形眼鏡）另依成長率推。漲價、K6 新產能與擴產支出能不能撐起目前的股價，分成三個問題。",
+    "命題 1：AI 載板能長多大——NVIDIA CPU 載板份額與加速器顆數，能讓 AI 載板營收與占比成長多少。",
+    "命題 2：產能與漲價才是關鍵——ABF 產能不足時，EPS 是由 AI 份額決定，還是由產能與漲價決定；EPS 能否從 FY2025 的個位數升到 FY2027 二十多元。",
+    "命題 3：現價隱含什麼——以 DCF 與同業倍數估出的每股價值，和現價相比是高還是低；兩種算法為何差很多。",
+    f'="重點 1：目標價和現價差不多，投資建議"&Val!B{_vrec}&"。DCF 與同業倍數法各半的加權目標價約 "&{_T(f"Val!B{_vt}", "#,##0")}&" 元，比現價 "&{_T(f"Val!B{_vp}", "#,##0")}&" 元"&{_hi(f"Val!B{_vup}")}&"；只看市場主流同業法（同業前瞻本益比中位數 × 12 個月後的前瞻 EPS）約 "&{_T(f"Val!B{_vc0}", "#,##0")}&" 元（"&{_hi(f"Val!B{_vup0}")}&"），進加權的是乘上景碩長期相對同業倍數比 "&{_T(f"Val!B{_vrm}", "0.00")}&" 後的約 "&{_T(f"Val!B{_vc}", "#,##0")}&" 元；DCF 只有約 "&{_T(f"Val!B{_vd}", "#,##0")}&" 元。市場分析師平均目標價約 "&{_T(f"Val!B{_vcons}", "#,##0")}&" 元。"',
+    f'="重點 2：EPS 主要看產能與漲價，不是 AI 份額。情境 A 的 ABF 需求滿足率 FY2027 約 "&{_T(f"PL!E{_P('A', '  ABF 需求滿足率')}", "0%")}&"、FY2028 約 "&{_T(f"PL!F{_P('A', '  ABF 需求滿足率')}", "0%")}&"（產能不足），所以敏感度測試（以情境 A 為基準、一次改一個輸入）中 AI 部署 ×0.8 的 FY2028 EPS 幾乎不變（"&{_sn(f"Sens!J{_s_ai}")}&"），景碩 GPU 份額改用券商說法（"&Sens!B{_s_gpu}&"）也幾乎不變（"&{_sn(f"Sens!J{_s_gpu}")}&"）；反之 ABF 溢價用 Ibiden 模型的低值或高值（假設）時 FY2028 EPS "&{_sg(f"Sens!J{_s_pl}")}&"／"&{_sg(f"Sens!J{_s_ph}")}&"，漲價年度化 "&{_T(f"In!D{_inr['carry']}", "0%")}&" 或 "&{_T(f"In!F{_inr['carry']}", "0%")}&"（基準 "&{_T(_I("carry"), "0%")}&"，假設）時 FY2027 EPS "&{_sg(f"Sens!F{_s_cl}")}&"／"&{_sg(f"Sens!F{_s_ch}")}&"，ABF 產能低值時 FY2028 EPS "&{_sg(f"Sens!J{_s_cap}")}&"。這些是測試案例，不是門檻。"',
+    f'="重點 3：DCF 低，是因為擴產期現金流少。DCF 以每股（淨利＋折舊－資本支出）折現，FY2027–FY2029 資本支出每年約 "&{_T(_I("cx27")+"*10", "#,##0")}&"、"&{_T(_I("cx28")+"*10", "#,##0")}&"、"&{_T(_I("cx29")+"*10", "#,##0")}&" 億元（假設，含 K6 新廠），情境 A FY2027 每股現金流約 "&{_T(f"Val!B{_vcf27}", "0.0")}&" 元，"&IF(Val!B{_vcf27}<PL!E{_P('A', 'EPS')}/2,"不到","超過")&"同年 EPS "&{_T(f"PL!E{_P('A', 'EPS')}", "0.00")}&" 元的一半；同業倍數法則直接反映市場目前給載板股的高倍數（中位數 "&{_T(f"Val!B{_vmed}", "0.0")}&" 倍）。"'):
+    RD.cell(r, 1, t_); r += 1
+r += 1
+RD.cell(r, 1, "命題回覆（HTML 用；依本模型計算逐一回答上方三個命題）").font = BOLD; r += 1
+for t_ in (
+    f'="AI 載板能長多大？答：情境 A 的 AI 載板營收由 FY2026 約 "&{_T(f"PL!D{_P('A', '  AI 載板')}*10", "#,##0")}&" 億元增至 FY2028 約 "&{_T(f"PL!F{_P('A', '  AI 載板')}*10", "#,##0")}&" 億元（情境 B 約 "&{_T(f"PL!F{_P('B', '  AI 載板')}*10", "#,##0")}&" 億、情境 C 約 "&{_T(f"PL!F{_P('C', '  AI 載板')}*10", "#,##0")}&" 億）；AI 載板占營收由 FY2026 約 "&{_T(f"Recon!C{_rai26}", "0.0%")}&" 升到 FY2027 約 "&{_T(f"Recon!C{_rai27}", "0.0%")}&"。主力是 NVIDIA CPU 載板：景碩份額 CY2026 約 "&{_T(f"Units!C{_ucpu}", "0%")}&"（公司與券商說法）、CY2027 起 "&{_T(f"Units!D{_ucpu}", "0%")}&"–"&{_T(f"Units!E{_ucpu}", "0%")}&"（假設），加速器與 CPU 載板營收由 CY2026 約 "&{_T(f"Units!C{_uacc}", "#,##0")}&" 百萬美元增至 CY2028 約 "&{_T(f"Units!E{_uacc}", "#,##0")}&" 百萬美元。"',
+    f'="產能與漲價才是關鍵？答：是。ABF 營收受產能限制（情境 A 需求滿足率 FY2027 "&{_T(f"PL!E{_P('A', '  ABF 需求滿足率')}", "0.0%")}&"、FY2028 "&{_T(f"PL!F{_P('A', '  ABF 需求滿足率')}", "0.0%")}&"；產能指數 FY2027 "&{_T(_I("cap_27"), "0.00")}&"、FY2028 "&{_T(_I("cap_28"), "0.00")}&"，FY2028 起為假設），份額或顆數變動多半被產能吃掉，EPS 的變動主要來自漲價年度化、ABF 溢價與產能（見重點 2）。EPS 由 FY2025 的 "&{_T(f"PL!C{_P('A', 'EPS')}", "0.00")}&" 元、FY2026 的 "&{_T(f"PL!D{_P('A', 'EPS')}", "0.00")}&" 元，到 FY2027 三情境 "&{_T(f"PL!E{_P('A', 'EPS')}", "0.00")}&"／"&{_T(f"PL!E{_P('B', 'EPS')}", "0.00")}&"／"&{_T(f"PL!E{_P('C', 'EPS')}", "0.00")}&" 元（A／B／C）"&IF(AND(MIN(PL!E{_P('A', 'EPS')},PL!E{_P('B', 'EPS')},PL!E{_P('C', 'EPS')})>=20,MAX(PL!E{_P('A', 'EPS')},PL!E{_P('B', 'EPS')},PL!E{_P('C', 'EPS')})<30),"，都在二十多元","")&"；FY2028 為 "&{_T(f"PL!F{_P('A', 'EPS')}", "0.00")}&"／"&{_T(f"PL!F{_P('B', 'EPS')}", "0.00")}&"／"&{_T(f"PL!F{_P('C', 'EPS')}", "0.00")}&" 元。對照共識：FY2027 共識 "&{_T(_cons27, "0.00")}&" 元，情境 A "&{_cmpB("E", "A", _cons27)}&"、B "&{_cmpB("E", "B", _cons27)}&"、C "&{_cmpB("E", "C", _cons27)}&"；FY2028 FactSet 共識 "&{_T(_fs28, "0.00")}&" 元，情境 A "&{_cmpB("F", "A", _fs28)}&"、B "&{_cmpB("F", "B", _fs28)}&"、C "&{_cmpB("F", "C", _fs28)}&"；券商平均 FY2027 "&{_T(f"Recon!B{_rk27b}", "0.00")}&"、FY2028 "&{_T(f"Recon!B{_rk28b}", "0.00")}&" 元"&IF(AND(PL!E{_P("A", "EPS")}<Recon!B{_rk27b},PL!F{_P("A", "EPS")}<Recon!B{_rk28b}),"，三情境都低於","")&"。"',
+    f'="現價隱含什麼？答：現價約為情境 A FY2027 EPS 的 "&{_T(f"Val!B{_vpe27}", "0.0")}&" 倍、FY2028 EPS 的 "&{_T(f"Val!B{_vpe28}", "0.0")}&" 倍。同一時間窗（未來 12 個月）比較，本模型情境 A 的未來 12 個月 EPS 比共識前瞻 12 個月 EPS "&{_hi(f"Recon!D{_rkf}")}&"。加權目標價約 "&{_T(f"Val!B{_vt}", "#,##0")}&" 元，比現價"&{_hi(f"Val!B{_vup}")}&"，投資建議"&Val!B{_vrec}&"。兩種算法差很多：同業倍數法（市場主流約 "&{_T(f"Val!B{_vc0}", "#,##0")}&" 元、相對倍數調整後約 "&{_T(f"Val!B{_vc}", "#,##0")}&" 元）高於現價，DCF 約 "&{_T(f"Val!B{_vd}", "#,##0")}&" 元遠低於現價；"&IF(ABS(Val!B{_vup})<0.1,"現價大致落在兩者各半的位置","現價與兩者各半的加權值有明顯差距")&"，要再往上，需要擴產後的現金流比本模型高（資本支出提早下降，或漲價與產能都比假設好）。"'):
+    RD.cell(r, 1, t_); r += 1
+r += 1
+RD.cell(r, 1, "HTML 輔助數字（展示層用；只引用 Val 頁）").font = BOLD; r += 1
+RD.cell(r, 1, "上檔空間：Comparable 目標價（相對倍數調整後）"); RD.cell(r, 2, f"=Val!B{_vc}/Val!B{_vp}-1").number_format = "0.0%"
 wb.save(sys.argv[1])
 if os.environ.get("KINSUS_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

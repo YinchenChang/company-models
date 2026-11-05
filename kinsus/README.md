@@ -1,4 +1,11 @@
-# kinsus/ — 景碩（Kinsus，3189.TW）收支與估值模型 v0.3
+# kinsus/ — 景碩（Kinsus，3189.TW）收支與估值模型 v0.3.1
+
+## v0.3.1（2026-11-05）：只改展示層（個股 HTML 版面規格 v1.0）
+
+- 依 `docs/plan/個股HTML版面規格.md` v1.0：xlsx README 頁最後新增「展示層」（命題摘要、命題 1–3、白話重點 1–3）與「命題回覆」兩段，數字全由公式帶出；另加一列「上檔空間：Comparable 目標價（相對倍數調整後）」供估值結論表使用。原 README 各列保留。
+- HTML：原設定改名 `html_src.json`（內容不動）；`gen_html_json.py` 讀它，經 `tools/company_html/relayout.py` 轉成新版面後寫 `html.json`（勿手改）。驅動因子依業務分塊：ABF 載板 AI 加速器與 NVIDIA CPU 載板／ABF 載板其他 AI、非 AI 與產能／BT 與其他載板／晶碩／全公司。橫幅中間格為只看 Comparable（市場主流同業法、未經相對倍數調整），進加權的調整後值寫在橫幅附註。
+- 數值不變：新舊成品逐格比較，README 以外 0 差異；敏感度沿用。成品：`dist/20261105_景碩個股模型_v0.3.1.xlsx`／`.html`；舊版移到 `dist/_待刪除/`。
+- HTML 產生：`python3 kinsus/gen_html_json.py && python3 tools/company_html/build_company_html.py kinsus`。
 
 ## v0.3（2026-11-04）：滾入 3Q26 財報（數值改變，次版）
 
@@ -48,9 +55,9 @@ AI 半導體 Project 載板與 PCB 次產業的模型，樣板為 `nanya_pcb/`�
 | 檔案 | 內容 |
 |---|---|
 | `build_kinsus.py` | 產生器（參數與公式；上游成品唯讀） |
-| `dist/20261028_景碩個股模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
-| `html.json` | HTML 展示層設定（七章） |
-| `dist/20261028_景碩個股模型_v0.2.html` | HTML 展示層（數字全部由 xlsx 抽出） |
+| `dist/20261105_景碩個股模型_v0.3.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `html_src.json`、`gen_html_json.py`、`html.json` | HTML 展示層設定：`html_src.json` 為原設定，`gen_html_json.py` 套用版面規格 v1.0 產生 `html.json`（勿手改） |
+| `dist/20261105_景碩個股模型_v0.3.1.html` | HTML 展示層（數字全部由 xlsx 抽出） |
 
 建置分兩步：先執行 `python3 kinsus/build_kinsus.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。
 
