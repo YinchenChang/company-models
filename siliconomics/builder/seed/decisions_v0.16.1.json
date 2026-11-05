@@ -1,0 +1,11 @@
+[
+ {
+  "id": "S44",
+  "cat": "口徑",
+  "item": "v0.16.1：M28 每 IT GW NVIDIA 內容改為營收口徑（Wattonomics Requests R7）",
+  "decision": "晶片內容橋接表 v0.2.2 Bridge 第 44 列的 GPU 部分為 NVIDIA 晶片毛利（模組售價 − HBM − 台積電 − 其他製造），CPU、NIC、NVLink、殘差為售價，scale-out 中 NVIDIA 份額未計，屬混合口徑。R7 用於對 NVIDIA 營收，口徑應為營收：橋接表 v0.2.3 新增營收口徑列（低＝模組售價＋CPU＋NIC/DPU＋NVLink 交換晶片；基準＝＋交換匣其他＋殘差；高＝＋LPDDR＋scale-out × NVIDIA 份額），M28 改讀。顆數不改：改口徑後 2026 年 NVIDIA 資料中心營收比值約 1.19（Q1、Q2 實績＋Q3 指引），帶外，依三層校準原則由本庫診斷顆數 × 每顆營收；診斷前不以內容或顆數硬湊比值。",
+  "date": "2026-11-05",
+  "quote": "算力收支 11-05「請確認 R7 每 GW NVIDIA 內容口徑」；Andy 2026-11-05 14:35「我授權你繼續」",
+  "status": "工程決定（可撤回）"
+ }
+]

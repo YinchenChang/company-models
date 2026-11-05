@@ -148,11 +148,15 @@ _CB = openpyxl.load_workbook(_cb, data_only=True)["Bridge"]
 def _cbv(row, col): return _CB.cell(row, col).value
 IN.cell(r, 1, "G. NVIDIA 資料中心營收對帳點（出貨年 NVIDIA 成本等值 GW × 每 GW NVIDIA 內容 vs 公司營收；只作診斷）").font = BOLD; r += 1
 _cbn = os.path.basename(_cb)
-inp("nvc_gb", "每 IT GW NVIDIA 內容（GB300）", "$B/GW", None, round(_cbv(44, 2) * _cbv(7, 2), 3), None, "Derived",
-    f"markets/chip_bridge/dist/{_cbn} Bridge!B44（NVIDIA 合計 ÷ IT capex）× B7（IT 設備 $B/GW）")
-inp("nvc_vr26", "每 IT GW NVIDIA 內容（VR200，2026 HBM 價）", "$B/GW", None, round(_cbv(44, 3) * _cbv(7, 3), 3), None, "Derived", f"同上 C44 × C7")
-inp("nvc_vr27", "每 IT GW NVIDIA 內容（VR200，2027 HBM 價、NVIDIA 吸收）", "$B/GW", round(_cbv(44, 4) * _cbv(7, 4), 3) * 0.9, round(_cbv(44, 4) * _cbv(7, 4), 3),
-    round(_cbv(44, 5) * _cbv(7, 5), 3), "Derived", "同上 D44 × D7；高值＝E 欄（HBM 漲價轉嫁）；低值 −10%（Assumed：ASP 折讓）")
+# v0.15.1：改用晶片內容橋接表 v0.2.3 的營收口徑（第 48–50 列＝每 IT GW NVIDIA 營收 低／基準／高；第 44 列混合口徑只作對照）
+inp("nvc_gb", "每 IT GW NVIDIA 營收（GB300；營收口徑）", "$B/GW", round(_cbv(48, 2), 3), round(_cbv(49, 2), 3), round(_cbv(50, 2), 3), "Derived",
+    f"markets/chip_bridge/dist/{_cbn} Bridge!B48／B49／B50（低＝模組售價＋CPU＋NIC/DPU＋NVLink 晶片；基準＝＋交換匣其他＋殘差；高＝＋LPDDR＋scale-out × NVIDIA 份額）")
+inp("nvc_vr26", "每 IT GW NVIDIA 營收（VR200，2026 HBM 價；營收口徑）", "$B/GW", round(_cbv(48, 3), 3), round(_cbv(49, 3), 3), round(_cbv(50, 3), 3), "Derived", "同上 C48／C49／C50")
+inp("nvc_vr27", "每 IT GW NVIDIA 營收（VR200，2027 HBM 價、NVIDIA 吸收；營收口徑）", "$B/GW", round(_cbv(48, 4), 3), round(_cbv(49, 4), 3), round(_cbv(50, 4), 3), "Derived",
+    "同上 D48／D49／D50；營收口徑下 NVIDIA 吸收 HBM 漲價時售價不變，與 2026 相同")
+inp("nvcm_gb", "對照：混合口徑每 IT GW NVIDIA 內容（GB300；GPU 取毛利）", "$B/GW", None, round(_cbv(44, 2) * _cbv(7, 2), 3), None, "Derived", f"{_cbn} Bridge!B44 × B7（v0.15 以前的口徑）")
+inp("nvcm_vr26", "對照：混合口徑（VR200，2026 HBM 價）", "$B/GW", None, round(_cbv(44, 3) * _cbv(7, 3), 3), None, "Derived", "同上 C44 × C7")
+inp("nvcm_vr27", "對照：混合口徑（VR200，2027 HBM 價）", "$B/GW", None, round(_cbv(44, 4) * _cbv(7, 4), 3), None, "Derived", "同上 D44 × D7")
 inp("vr26_mix", "2026 部署中 Rubin 世代占比（混合每 GW 內容用）", "%", None, nv(S, "vr26"), None, "Interested-party", f"{sil_f} In vr26（TrendForce 2026 組合）")
 inp("nv_dc_27", "NVIDIA 資料中心營收 FY2028（約 CY2027）", "$B", 623, 633.7, 645, "Derived",
     "NVIDIA FY27 Q2 法說（2026-08-26）FY2028 營收約 +70%（Interested-party）× 資料中心占比 92.5% → 623–645（11-02 證據送件）")
@@ -261,11 +265,14 @@ brow("b13", "殘差占 Siliconomics 部署 GW", "", lambda y: None if y == 2025 
 br += 1
 B.cell(br, 1, "NVIDIA 資料中心營收對帳點（只作診斷；2026＝FY2027 錨點、2027＝FY2028 指引推得）").font = BOLD; br += 1
 brow("n1", "NVIDIA 成本等值 GW（出貨年；基準）", "b1 − 非 NVIDIA 成本等值 GW（b2a）", lambda y: None if y in (2025, 2028, 2029) else f"={C(y)}{R['b1']}-{C(y)}{R['b2a']}")
-brow("n2", "每 IT GW NVIDIA 內容", "2026＝GB300 與 VR200 依 vr26 混合；2027＝VR200（2027 HBM 價）；chip_bridge", lambda y: {2026: "=nvc_gb*(1-vr26_mix)+nvc_vr26*vr26_mix", 2027: "=nvc_vr27"}.get(y))
+brow("n2", "每 IT GW NVIDIA 營收（營收口徑基準）", "2026＝GB300 與 VR200 依 vr26 混合；2027＝VR200（2027 HBM 價）；chip_bridge v0.2.3 第 49 列", lambda y: {2026: "=nvc_gb*(1-vr26_mix)+nvc_vr26*vr26_mix", 2027: "=nvc_vr27"}.get(y))
 brow("n3", "隱含 NVIDIA 資料中心營收（$B）", "n1 × n2", lambda y: None if y not in (2026, 2027) else f"={C(y)}{R['n1']}*{C(y)}{R['n2']}")
 brow("n4", "NVIDIA 資料中心營收（公司；$B）", "2026 錨點 nv_dc_26；2027 指引推得 nv_dc_27", lambda y: {2026: "=nv_dc_26", 2027: "=nv_dc_27"}.get(y))
 brow("n5", "比值（隱含 ÷ 公司）", "1 附近＝顆數與每 GW 內容一致；> 1 本庫 NVIDIA 出貨 GW 偏多或內容偏高", lambda y: None if y not in (2026, 2027) else f"={C(y)}{R['n3']}/{C(y)}{R['n4']}", True)
 brow("n6", "所需每 GW 內容（公司營收 ÷ n1）", "與 n2 比較", lambda y: None if y not in (2026, 2027) else f"={C(y)}{R['n4']}/{C(y)}{R['n1']}")
+brow("n7", "　比值：營收口徑低值內容", "n1 × 低值 ÷ n4", lambda y: {2026: f"={C(y)}{R['n1']}*(nvc_gb_lo*(1-vr26_mix)+nvc_vr26_lo*vr26_mix)/{C(y)}{R['n4']}", 2027: f"={C(y)}{R['n1']}*nvc_vr27_lo/{C(y)}{R['n4']}"}.get(y))
+brow("n8", "　比值：營收口徑高值內容", "n1 × 高值 ÷ n4", lambda y: {2026: f"={C(y)}{R['n1']}*(nvc_gb_hi*(1-vr26_mix)+nvc_vr26_hi*vr26_mix)/{C(y)}{R['n4']}", 2027: f"={C(y)}{R['n1']}*nvc_vr27_hi/{C(y)}{R['n4']}"}.get(y))
+brow("n9", "　對照：混合口徑比值（v0.15 以前；GPU 取毛利）", "n1 × 混合口徑內容 ÷ n4", lambda y: {2026: f"={C(y)}{R['n1']}*(nvcm_gb*(1-vr26_mix)+nvcm_vr26*vr26_mix)/{C(y)}{R['n4']}", 2027: f"={C(y)}{R['n1']}*nvcm_vr27/{C(y)}{R['n4']}"}.get(y))
 br += 1
 B.cell(br, 1, "敏感度（2026、2027 推得上線 GW；一次動一個輸入，其餘取基準）").font = BOLD; br += 1
 for j, h in enumerate(["列", "情況", "說明", "2026 推得上線", "2027 推得上線", "2026 殘差", "2027 殘差"], 1):

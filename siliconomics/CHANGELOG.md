@@ -1,5 +1,11 @@
 # Siliconomics 變更紀錄
 
+## v0.16.1（2026-11-05；`model/20261105_Siliconomics_v0.16.1.xlsx`；Tokenomics v21.10）
+
+- **R7 每 IT GW NVIDIA 內容改營收口徑**（算力收支 11-05「請確認 R7 口徑」；決策 S44；報告 `docs/reports/20261105_v0.16.1_R7營收口徑與NVIDIA對帳診斷.md`）：晶片內容橋接表 v0.2.2 第 44 列的 GPU 取晶片毛利、其餘取售價，屬混合口徑。橋接表 v0.2.3 新增 Bridge 第 45–50 列營收口徑（低／基準／高）與 In so_nv，既有數值不變；M28 改讀，基準 GB300 0.647 → 0.772、VR200 0.624／0.581 → 0.695；`SIF_NVContentGW_*`：GB300 20.85 → 24.88、VR200_26 23.47 → 26.13、VR200 21.85 → 26.13。
+- R4 橋接 r7：NVIDIA 資料中心營收比值 2026／2027 由 1.017／1.044 變為 **1.194／1.248（待診斷）**；營收口徑低值 1.044／0.940、高值 1.337／1.400；新增 n7–n9 列（低、高、原混合口徑對照）。診斷：兩年都對得上的單一因素是殘差歸屬（低值，顆數算法 1.00／0.98），基準暫不改。
+- 介面只變 36 個名稱（`SIF_nvr_*`、`SIF_NVContentGW_*`）；下游 cascade 第一輪 60 個 CHANGED，全部是版本與來源文字，第二輪全部 SAME；投資建議、目標價不變。
+
 ## v0.16（2026-11-05；`model/20261105_Siliconomics_v0.16.xlsx`；Tokenomics v21.10）
 
 - **情境過渡完成：產業情境 A、C 移到市場層 `markets/scen/`**（決策 S41）：v0.15 In 頁的 70 列（記憶體價格路徑 cqA／cqC、nqA／nqC 各 12 季；顆數係數 um28／um29 的 A、C；HBM 單價 hbm_p28／29 的 A、C；世芯 Trainium 份額 al27／al28 的 A、C；CPO 滲透率 cpo A、C 2026–29；設備係數 eq_ck C 2028–29）逐字搬到 `markets/scen/industry_scen_v0.1.json`（數值、標記、來源不變；`markets/scen/README.md` 有對照表）。In 675 → 605 列；Scen 頁只剩基準；Units、Deploy、ABF、PGW、Rack、Equip、Path、Mkt、ShareTbl、Checks 只算基準（K1 只比對 SK 海力士成品的 B、K2 只查基準係數區間、K6-trn／pwr／lc 只查基準）。

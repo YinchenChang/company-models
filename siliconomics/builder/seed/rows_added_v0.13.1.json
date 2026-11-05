@@ -1,11 +1,11 @@
 [
  {
   "after_section_end": "M27.",
-  "section": "M28. 每 IT GW NVIDIA 內容比例（分世代；Wattonomics Requests R7、Tokenomics 下一版對帳點；三層校準原則）",
+  "section": "M28. 每 IT GW NVIDIA 營收比例（NVIDIA 營收 ÷ IT capex；分世代；Wattonomics Requests R7；v0.15.1 起為營收口徑，原混合口徑見晶片內容橋接表 Bridge 第 44 列）",
   "rows": [
    {
     "id": "nvr_GB300",
-    "label": "NVIDIA 合計 ÷ IT capex（GB300）",
+    "label": "NVIDIA 營收 ÷ IT capex（GB300）",
     "unit": "%",
     "lo": 0.5969,
     "base": 0.6469,
@@ -16,7 +16,7 @@
    },
    {
     "id": "nvr_VR26",
-    "label": "NVIDIA 合計 ÷ IT capex（VR200，2026 HBM 價）",
+    "label": "NVIDIA 營收 ÷ IT capex（VR200，2026 HBM 價）",
     "unit": "%",
     "lo": 0.5744,
     "base": 0.6244,
@@ -27,7 +27,7 @@
    },
    {
     "id": "nvr_VR27",
-    "label": "NVIDIA 合計 ÷ IT capex（VR200，2027 HBM 價；NVIDIA 吸收漲價）",
+    "label": "NVIDIA 營收 ÷ IT capex（VR200，2027 HBM 價；NVIDIA 吸收漲價）",
     "unit": "%",
     "lo": 0.5313,
     "base": 0.5813,
@@ -38,7 +38,7 @@
    },
    {
     "id": "nvr_H100",
-    "label": "NVIDIA 合計 ÷ IT capex（Hopper HGX）",
+    "label": "NVIDIA 營收 ÷ IT capex（Hopper HGX）",
     "unit": "%",
     "lo": 0.55,
     "base": 0.6469,
@@ -49,7 +49,7 @@
    },
    {
     "id": "nvr_GB200",
-    "label": "NVIDIA 合計 ÷ IT capex（GB200）",
+    "label": "NVIDIA 營收 ÷ IT capex（GB200）",
     "unit": "%",
     "lo": 0.5969,
     "base": 0.6469,
@@ -60,7 +60,7 @@
    },
    {
     "id": "nvr_RU",
-    "label": "NVIDIA 合計 ÷ IT capex（Rubin Ultra）",
+    "label": "NVIDIA 營收 ÷ IT capex（Rubin Ultra）",
     "unit": "%",
     "lo": 0.5013,
     "base": 0.5813,
