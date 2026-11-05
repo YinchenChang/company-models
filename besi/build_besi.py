@@ -569,9 +569,9 @@ CFG_V2.update(
         fc_wc=(0.20, "=AVERAGE((143.71+92.51-46.89)/579,(183.8+103.29-52.63)/607.6,(180.56+104.07-56.52)/591.3)", 0.45, "Derived",
                "近三年年底營運資金 ÷ 營收平均：營運資金＝應收帳款＋存貨 − 應付帳款（stockanalysis 年度資產負債表；FY2023 143.71＋92.51 − 46.89、FY2024 183.80＋103.29 − 52.63、FY2025 180.56＋104.07 − 56.52，€M）；" + _REV3,
                "比例 32.7%、38.6%、38.6%；Sens 低／高 20%／45%（Assumed）")),
-    dcf_extra=[("beta_u", "產業無槓桿 β：Damodaran Global Semiconductor Equip（現金修正後；2026 年 1 月）", "x", None, 2.12, None, "Analogy",
-                "Damodaran Betas by Sector (Global) 2026 年 1 月：Semiconductor Equip 391 家，β 2.13、D/E 5.61%、稅率 12.19%、無槓桿 β 2.04、現金修正後 2.12（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/BetasGlobal.html；2026-11-05 讀取）",
-                "非美國公司用 Global 表（Europe 表本次無法開啟）；鍵合設備歸 Semiconductor Equip；用現金修正值：淨現金另計；β 低案例改用美國表（beta_u_us）"),
+    dcf_extra=[("beta_u", "產業無槓桿 β：Damodaran Europe Semiconductor Equip（現金修正後；2026-01-05 版）", "x", None, 1.6929, None, "Analogy",
+                "Damodaran betaEurope.xls（2026-01-05 版，stern.nyu.edu），Andy 下載存 Drive 07-AI半導體/inbox：Europe Semiconductor Equip 21 家，無槓桿 β 1.6579、現金修正後 1.6929（區域邊際稅率 24.7%）",
+                "台灣、韓國用 Emerging Markets 表、歐洲用 Europe 表（Andy 2026-11-05 22:26）；鍵合設備歸 Semiconductor Equip；用現金修正值：淨現金另計；β 低案例改用美國表（beta_u_us）"),
                ("beta_u_us", "產業無槓桿 β 對照：Damodaran 美國 Semiconductor Equip（現金修正後；只用於 β 低案例）", "x", None, 1.39, None, "Analogy",
                 "Damodaran Betas by Sector (US) 2026 年 1 月：Semiconductor Equip 31 家，現金修正後無槓桿 β 1.39（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/Betas.html；2026-11-05 讀取）", "—"),
                ("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 股數 sh_v)", "與 WACC 權重同一口徑")],
@@ -580,7 +580,7 @@ CFG_V2.update(
             "折舊、資本支出、營運資金：FY2023–25 占營收平均（模型本身無折舊與資本支出推導），資本支出 FY2029 起收斂。財務費用不進 NOPAT，淨現金另在評價時加入。"),
     ebit_x="{ni}/(1-tax)+fin", nopat_tax="tax")
 CFG_V2["method"] = ("DCF（標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現到 2026 年底（期中慣例），終值＝NOPAT(FY2033) ×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, 荷蘭 10 年期公債殖利率)、RONIC＝WACC；"
-                    "ke＝rf＋β × ERP 5%，β 為 Damodaran Global 半導體設備無槓桿 β 依市值 D/E 重新加槓桿；EV 加淨現金 ÷ 股數，以 ke 推到 12 個月後並扣期間股利（DCF 頁、tools/fcff_dcf.py）；折舊、資本支出、營運資金取 FY2023–25 占營收平均。"
+                    "ke＝rf＋β × ERP 5%，β 為 Damodaran 歐洲半導體設備無槓桿 β 依市值 D/E 重新加槓桿；EV 加淨現金 ÷ 股數，以 ke 推到 12 個月後並扣期間股利（DCF 頁、tools/fcff_dcf.py）；折舊、資本支出、營運資金取 FY2023–25 占營收平均。"
                     + CFG_V2["method"][CFG_V2["method"].index("Comparable："):])
 
 # ---------------- 估值 v2：PL 延伸到 FY2032（收斂法）＋ Val「0. 目標價」（DCF 與 Comparable 加權） ----------------
@@ -847,10 +847,10 @@ _srow = lambda lab: next(r_ for r_ in range(1, SE.max_row + 1) if str(SE.cell(r_
 _TV = V2T["tvs"]; _TS = lambda k, side: f"Sens!{'D' if side == 'lo' else 'F'}{_TV[0] + k}"   # 目標價參數表：0 WACC、1 β、2 ERP、3 g、4 RONIC、5 資本支出、6 營運資金、7 權益投資、8 終值替代法、9 DCF 權重
 RD["A1"] = str(RD["A1"].value) + "；v0.2（2026-11-05）模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；DCF 頁、Val 0.1 節、Sens 目標價參數），README 新增展示層與命題回覆、HTML 改用新版面 v1.0；Comparable、情境權重、DCF 權重 50% 與投資建議規則不變"
 RD.cell(RD.max_row + 2, 1, XF("v0.2（2026-11-05）：模型改版——DCF 改為標準版（Andy 2026-11-05 20:42、20:45；docs/plan/個股DCF標準規格.md）：FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現，終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g）；ke＝rf＋β ×（ERP＋CRP），rf ",
-    _T("rf", "0.00%"), "（荷蘭 10 年期公債）、β ", _T("beta", "0.00"), "（Damodaran Global 半導體設備無槓桿 β 2.12 依市值 D/E 重新加槓桿）、ERP 5%、CRP ", _T("crp", "0.00%"), "，g＝MIN(3%, rf)＝", _T("g_tv", "0.0%"),
+    _T("rf", "0.00%"), "（荷蘭 10 年期公債）、β ", _T("beta", "0.00"), "（Damodaran 歐洲半導體設備無槓桿 β ", ('TEXT(beta_u,"0.00")',), " 依市值 D/E 重新加槓桿）、ERP 5%、CRP ", _T("crp", "0.00%"), "，g＝MIN(3%, rf)＝", _T("g_tv", "0.0%"),
     "。模型本身無折舊與資本支出推導，DCF 用 FY2023–25 占營收平均（折舊 ", _T("fc_da", "0.0%"), "、資本支出 ", _T("fc_cx", "0.0%"), "、營運資金 ", _T("fc_wc", "0.0%"), "）。新增 DCF 頁；Sens 目標價參數改為 WACC、β、ERP、g、RONIC、資本支出、營運資金、權益投資、終值替代法與 DCF 權重；刪除 tp_r、tp_roe；In 頁堆疊層數參數鍵名由 beta 改為 beta_stk（避免與 DCF 的 β 同名，數值不變）。"
     "README 新增「展示層」「命題回覆」兩段，HTML 改用個股 HTML 版面規格 v1.0。新舊對照（v0.1.3 → v0.2）：DCF 目標價 96.68 → ", (f'TEXT({_B("dcftp")},"0.00")',), "，加權目標價 158.35 → ", (f'TEXT({_B("tpw")},"0.00")',),
-    "，上檔空間 +9.1% → ", (f'TEXT({_B("upw")},{_SP})',), "，投資建議 中立 → ", (_rec,), "。DCF 差異拆解（建置時以 DCF 頁明細依序替換計算，歐元／股）：現金流口徑改 FCFF（仍 r 10%、g 4%）+14.1；折現率改 WACC 13.9%、g 改 3.0% −43.5；終值改價值驅動式（RONIC＝WACC）−6.3；扣期間股利 −2.1。FCFF 每股合計（FY2027–32 未折現）A 56.8／B 35.3／C 21.5，舊股東現金流 54.1／31.6／17.4。PL、Comparable 不變。"))
+    "，上檔空間 +9.1% → ", (f'TEXT({_B("upw")},{_SP})',), "，投資建議 中立 → ", (_rec,), "。DCF 差異拆解（建置時以 DCF 頁明細依序替換計算，歐元／股）：現金流口徑改 FCFF（仍 r 10%、g 4%）+14.1；折現率改 WACC 11.8%、g 改 3.0% −29.7；終值改價值驅動式（RONIC＝WACC）−10.5；扣期間股利 −2.1。FCFF 每股合計（FY2027–32 未折現）A 56.8／B 35.3／C 21.5，舊股東現金流 54.1／31.6／17.4。PL、Comparable 不變。"))
 
 _HB = lambda s_, y: f"PL!{COL[y]}{SUMR[(s_, 'hbr')]}"
 _RV = lambda s_, y: f"PL!{COL[y]}{SUMR[(s_, 'rev')]}"
@@ -872,7 +872,7 @@ RD.cell(r, 1, XF("重點 2：混合鍵合占營收上升，但情境分歧大。
 RD.cell(r, 1, XF("重點 3：最敏感的是邏輯（SoIC 類）導入速度。導入比例 ×0.7／×1.3 使 FY2027 EPS ", (f'TEXT(Sens!E{_srow("邏輯導入 低")},{_SP})',), "／", (f'TEXT(Sens!E{_srow("邏輯導入 高")},{_SP})',),
     "；HBM 混合鍵合取 Disco 低值 ", (f'TEXT(Sens!E{_srow("HBM 混合鍵合 Disco 低值")},{_SP})',), "（情境 A 為基準的 EPS 敏感度；導入比例為假設）。")); r += 1
 RD.cell(r, 1, XF("重點 4：v0.2 起 DCF 改為標準版（無槓桿自由現金流折現），DCF 目標價由舊法 96.7 歐元降為 ", (f'TEXT({_B("dcftp")},"0.0")',), " 歐元（新舊對照見 README 頁 v0.2 版本說明）。主因是折現率：WACC ", _T("wacc", "0.0%"),
-    "（股權成本 ", _T("ke", "0.0%"), "＝rf ", _T("rf", "0.00%"), " ＋ β ", _T("beta", "0.00"), " × ERP 5%；β 為 Damodaran Global 半導體設備產業 β 依市值 D/E 重新加槓桿，ERP 5% 與 RONIC＝WACC 為假設），高於舊法 10%。終值現值占情境 B 企業價值 ",
+    "（股權成本 ", _T("ke", "0.0%"), "＝rf ", _T("rf", "0.00%"), " ＋ β ", _T("beta", "0.00"), " × ERP 5%；β 為 Damodaran 歐洲半導體設備產業 β 依市值 D/E 重新加槓桿，ERP 5% 與 RONIC＝WACC 為假設），高於舊法 10%。終值現值占情境 B 企業價值 ",
     (f'TEXT(Val!C{_SD["tvsh"]},"0%")',), "、隱含終值 EV／EBITDA ", (f'TEXT(Val!C{_SD["mult"]},"0.0")',), " 倍。DCF 參數案例（以加權目標價為基準）：β 低／高 ", (f'TEXT({_TS(1, "lo")},{_SP})',), "／", (f'TEXT({_TS(1, "hi")},{_SP})',),
     "、WACC −1pt／＋1pt ", (f'TEXT({_TS(0, "lo")},{_SP})',), "／", (f'TEXT({_TS(0, "hi")},{_SP})',), "、DCF 權重 0.3／0.7 ", (f'TEXT({_TS(9, "lo")},{_SP})',), "／", (f'TEXT({_TS(9, "hi")},{_SP})',), "。")); r += 1
 r += 1
