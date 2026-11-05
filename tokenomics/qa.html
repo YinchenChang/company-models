@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>九題問答：答案、區間與缺口｜Tokenomics v21.10</title>
+<style>
+/* 版面：研究入口式刊頭（與 company-models 的 AI 投資地圖同色系）→ 左側導覽 → 單頁內容；表格細線、數字等寬 */
+:root{
+  --paper:#F5F6F8; --surface:#FFFFFF; --sunken:#EEF1F5; --ink:#0F1B2D; --muted:#5A6577; --faint:#8A94A3;
+  --rule:#D8DDE4; --rule-strong:#AEB7C3; --navy:#12284A; --navy-ink:#E9EEF6; --navy-muted:#9FB0C9;
+  --brass:#8C6A2E; --info:#2F4C78; --info-bg:#E6ECF5; --watch:#9A6410; --watch-bg:#F7EDDB;
+  --c0:#2F4C78; --c1:#B07A2A; --c2:#1D7A52; --c3:#8E3B46; --c4:#5B3C88; --c5:#4D8FB8; --c6:#7A8B3A; --c7:#C4572C; --c8:#6B7480; --c9:#2B8C88;
+  --f-display:"Noto Serif TC","Noto Serif CJK TC","Songti TC",Georgia,serif;
+  --f-body:"IBM Plex Sans","Noto Sans TC","Noto Sans CJK TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono","SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root{
+  --paper:#0C1118; --surface:#121923; --sunken:#0F151E; --ink:#E4E9F0; --muted:#9BA6B6; --faint:#6F7A8A;
+  --rule:#243041; --rule-strong:#3A4A60; --navy:#0A1626; --navy-ink:#E4EAF3; --navy-muted:#8296B3;
+  --brass:#C9A35C; --info:#8FB0E0; --info-bg:#15233A; --watch:#E2A64A; --watch-bg:#2B2213;
+  --c0:#7FA2D6; --c1:#D9A75A; --c2:#55C08E; --c3:#E07A86; --c4:#B79AE6; --c5:#7CC3E8; --c6:#B5C46A; --c7:#F08C5E; --c8:#9AA3AF; --c9:#5FC7C2;
+  color-scheme:dark}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.55;margin:0}
+h1,h2,h3,h4{font-family:var(--f-display);margin:0;font-weight:700;text-wrap:balance}
+code,.num,td.n,.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.mast{background:var(--navy);color:var(--navy-ink)}
+.mast .in{max-width:1440px;margin:0 auto;padding:22px 20px 18px}
+.eyebrow{font-size:11px;letter-spacing:.14em;color:var(--navy-muted);display:flex;gap:10px;align-items:center}
+.eyebrow::before{content:"";width:18px;height:2px;background:var(--brass)}
+.mast h1{font-size:30px;letter-spacing:.02em;margin-top:6px}
+.mast p{margin:6px 0 0;color:var(--navy-muted);max-width:980px}
+.meta{display:flex;flex-wrap:wrap;gap:4px 22px;font-size:12px;color:var(--navy-muted);border-top:1px solid #ffffff2e;margin:14px 0 0;padding-top:10px}
+.meta div{display:flex;gap:8px;min-width:0}
+.meta dt{white-space:nowrap}
+.meta dd{margin:0;color:var(--navy-ink);font-family:var(--f-mono);overflow-wrap:anywhere}
+.shell{max-width:1440px;margin:0 auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:0;align-items:start}
+.side{position:sticky;top:0;max-height:100vh;overflow-y:auto;padding:18px 0 24px;border-right:1px solid var(--rule);background:var(--surface);min-height:calc(100vh - 160px)}
+.side .lab{font-size:11px;letter-spacing:.12em;color:var(--faint);padding:0 18px 8px}
+.side ol{list-style:none;margin:0;padding:0;counter-reset:p;position:relative}
+.side li a{display:flex;gap:8px;padding:9px 18px;text-decoration:none;color:var(--muted);border-left:3px solid transparent;line-height:1.35}
+.side li a::before{counter-increment:p;content:counter(p,decimal-leading-zero);font-family:var(--f-mono);font-size:11px;color:var(--faint);padding-top:2px}
+.side li a:hover{color:var(--ink);background:var(--sunken)}
+.side li a[aria-current="page"]{color:var(--ink);font-weight:600;border-left-color:var(--brass);background:var(--sunken)}
+main{min-width:0;padding:20px 24px 56px}
+.pt{font-size:24px}
+.ptsub{margin:4px 0 0;color:var(--muted);font-size:13px}
+.sec>.ctlbar{margin:0}
+.ctlbar{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--rule-strong);padding:10px 0;margin:12px 0 4px;display:flex;flex-wrap:wrap;gap:8px 22px}
+.cg{display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-width:0}
+.cl{font-size:12px;color:var(--muted);white-space:nowrap}
+.seg{display:flex;flex-wrap:wrap;border:1px solid var(--rule-strong);border-radius:3px;overflow:hidden;background:var(--surface)}
+.seg button{font:500 13px var(--f-body);background:none;color:var(--ink);border:0;border-right:1px solid var(--rule);padding:5px 10px;cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--navy);color:var(--navy-ink)}
+.sec{margin-top:26px;display:grid;gap:10px;min-width:0}
+.sec>*{min-width:0}
+.sec h3{font-size:18px;padding-bottom:6px;border-bottom:1px solid var(--rule)}
+.sec h4{font-size:15px;margin:4px 0 8px}
+.var{display:grid;gap:10px;min-width:0}
+.lede{margin:0;color:var(--muted)}
+.note{margin:0;font-size:12.5px;color:var(--muted)}
+.label{margin:6px 0 0;font-size:12px;letter-spacing:.04em;color:var(--muted);font-weight:600}
+.callout{border-left:3px solid var(--info);background:var(--info-bg);padding:10px 14px;font-size:13px}
+.callout.warn{border-left-color:var(--watch);background:var(--watch-bg)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));border:1px solid var(--rule);background:var(--surface);margin-top:12px}
+.kpi{padding:12px 16px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);min-width:0;margin:0 -1px -1px 0}
+.kpi .k{font-size:11.5px;color:var(--muted);overflow-wrap:anywhere}
+.kpi .v{font-size:22px;font-weight:500;margin-top:2px;overflow-wrap:anywhere}
+.kpi .s{font-size:12px;color:var(--muted);margin-top:2px}
+.tw{overflow:auto;max-width:100%;border:1px solid var(--rule);background:var(--surface)}
+.tw.scroll{max-height:640px}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{border-bottom:1px solid var(--rule);padding:5px 9px;vertical-align:top;text-align:left;white-space:nowrap}
+thead th{position:sticky;top:0;z-index:2;background:var(--sunken);font-weight:600;color:var(--ink);white-space:normal;min-width:72px;border-bottom:1px solid var(--rule-strong)}
+thead tr+tr th{top:30px}
+th.grp{text-align:center;border-left:1px solid var(--rule)}
+th.ix{font-weight:500;color:var(--ink);white-space:normal;min-width:200px;max-width:340px;background:var(--surface)}
+thead th.ix{background:var(--sunken)}
+td.n{text-align:right}
+th.ab{cursor:help}
+th.ab .more{color:var(--faint);margin-left:2px}
+td.wr{white-space:normal;min-width:220px;max-width:460px}
+td.blank{color:var(--faint);text-align:center}
+tbody tr:hover td,tbody tr:hover th{background:var(--sunken)}
+.figs{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.figs.two{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.fig{margin:0;max-width:860px;background:var(--surface);border:1px solid var(--rule);padding:10px 10px 6px;min-width:0}
+.fig figcaption{font-size:12px;color:var(--muted);margin-bottom:4px}
+svg.chart{width:100%;height:auto;display:block}
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .zero{stroke:var(--rule-strong);stroke-width:1}
+svg .ax{fill:var(--muted);font-size:11px;font-family:var(--f-body)}
+svg .lab{fill:var(--faint)}
+.b0{fill:var(--c0)}.b1{fill:var(--c1)}.b2{fill:var(--c2)}.b3{fill:var(--c3)}.b4{fill:var(--c4)}.b5{fill:var(--c5)}.b6{fill:var(--c6)}.b7{fill:var(--c7)}.b8{fill:var(--c8)}.b9{fill:var(--c9)}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:11.5px;color:var(--muted);margin-top:4px}
+.legend i{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px}
+.k0{background:var(--c0)}.k1{background:var(--c1)}.k2{background:var(--c2)}.k3{background:var(--c3)}.k4{background:var(--c4)}.k5{background:var(--c5)}.k6{background:var(--c6)}.k7{background:var(--c7)}.k8{background:var(--c8)}.k9{background:var(--c9)}
+.dets{display:grid;gap:4px}
+.det{background:var(--surface);border:1px solid var(--rule);padding:6px 12px}
+.det summary{cursor:pointer;font-size:13px}
+.det dl,.kv{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px 14px;margin:8px 0 2px;font-size:13px}
+.det dt,.kv dt{color:var(--muted);font-weight:600}
+.det dd,.kv dd{margin:0;overflow-wrap:anywhere}
+.tagx{margin:0;font-family:var(--f-mono);font-size:11px;color:var(--faint)}
+.filters{display:grid;gap:8px;margin-top:10px}
+.qbox{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.qbox span{font-size:12px;color:var(--muted)}
+.qbox input,.qbox select{font:inherit;max-width:100%;padding:6px 10px;border:1px solid var(--rule-strong);border-radius:3px;background:var(--surface);color:var(--ink);width:min(420px,100%)}
+.chips{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.chips button{font:12px var(--f-body);border:1px solid var(--rule-strong);background:var(--surface);color:var(--ink);border-radius:12px;padding:2px 10px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--navy);color:var(--navy-ink);border-color:var(--navy)}
+.count{margin:0;font-size:12.5px;color:var(--muted)}
+footer{border-top:1px solid var(--rule);color:var(--muted);font-size:12px}
+footer .in{max-width:1440px;margin:0 auto;padding:16px 20px 28px}
+@media (max-width:900px){
+  .mast .in{padding:16px 14px 14px}
+  .mast h1{font-size:24px}
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .side{position:static;max-height:none;min-height:0;border-right:0;border-bottom:1px solid var(--rule);padding:8px 0}
+  .side .lab{display:none}
+  .side ol{display:flex;overflow-x:auto;gap:0;scrollbar-width:thin}
+  .side li{flex:0 0 auto}
+  .side li a{border-left:0;border-bottom:3px solid transparent;padding:8px 12px;white-space:nowrap}
+  .side li a[aria-current="page"]{border-bottom-color:var(--brass)}
+  main{padding:14px 12px 40px}
+  .pt{font-size:20px}
+  th.ix{min-width:150px;max-width:200px}
+  td.wr{min-width:180px;max-width:280px}
+  .figs{grid-template-columns:minmax(0,1fr)}
+  .kpis{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+  .det dl,.kv{grid-template-columns:minmax(0,1fr)}
+  .ctlbar{gap:6px 14px;position:static}
+}
+</style>
+</head>
+<body>
+<header class="mast"><div class="in">
+<div class="eyebrow">算力收支｜第 0 層模型｜唯讀靜態版</div>
+<h1>Tokenomics</h1>
+<p>AI 資料中心的 token 經濟學：由物理量推到每 GW 的產能、成本、營收與回本。本站只呈現 Excel 經 LibreOffice 重算後存下的值，不做任何計算、不可調整。</p>
+<dl class="meta">
+<div><dt>模型版本</dt><dd id="meta-version">v21.10</dd></div>
+<div><dt>Excel</dt><dd id="meta-excel">20261104_Tokenomics_v21.10.xlsx</dd></div>
+<div><dt>master commit</dt><dd id="meta-commit">9cb6a41</dd></div>
+<div><dt>建置日期</dt><dd id="meta-date">2026-11-05</dd></div>
+</dl>
+</div></header>
+<div class="shell">
+<nav class="side" aria-label="頁面"><div class="lab">頁面</div><ol><li><a href="index.html">回本判讀：m、L 與每 GW 營收</a></li><li><a href="lookup.html">名稱查詢：具名範圍與 L1 全表</a></li><li><a href="overview.html">總覽</a></li><li><a href="block2.html">推論：每 GW 產能與單位成本</a></li><li><a href="block3.html">訓練：算力與成本</a></li><li><a href="block4.html">價格、營收與攤提</a></li><li><a href="block5.html">任務成功率與每任務成本</a></li><li><a href="alloc.html">算力分配：服務／訓練／研發</a></li><li><a href="qa.html" aria-current="page">九題問答：答案、區間與缺口</a></li><li><a href="evidence.html">證據登錄：新資訊比對與判定</a></li><li><a href="governance.html">治理：來源、L1 與檢查</a></li></ol></nav>
+<main id="main" data-page="qa">
+<h2 class="pt">九題問答：答案、區間與缺口</h2><p class="ptsub">問答 — Block 6 九題（L1_Ans1–9；含毛利率與 GPU 小時口徑子項）</p>
+
+<p class="note">答案、區間、讀法與缺口全部來自 Excel 的 L1 頁；本頁唯讀。</p><section class="sec qa"><h3>問 1：研發算力占比 Q1（R1）</h3><p class="tagx">L1_Ans1</p><div class="kpis"><div class="kpi"><div class="k">答案（基準值）</div><div class="v num">18.41%</div><div class="s">單位：%</div></div><div class="kpi"><div class="k">低</div><div class="v num">10.14%</div></div><div class="kpi"><div class="k">高</div><div class="v num">61.23%</div></div></div><dl class="kv"><dt>單位</dt><dd>%</dd><dt>條件</dt><dd>OpenAI；2025 穩態年度；基準輸入見 Alloc_In；R1＝研發 GW ÷（研發 GW＋服務 GW）</dd><dt>區間的定義</dt><dd>Alloc G 節：一次動一個輸入（區間低與高）的最小與最大 Q1（R1）；R2（免費服務算作產品改良）見 IF_AllocQ1_R2</dd><dt>讀法</dt><dd>物理部分只給下限（家族＋改版計畫的 GW 年）；實際占比由策略變數決定（N、k）。R2 另列於 IF_AllocQ1_R2（A7）</dd><dt>最弱輸入</dt><dd>每則提示 token 數（Assumed，A10）</dd><dt>所在頁與列</dt><dd>Alloc 第 D 節；Interface F 節</dd><dt>未能回答的部分（缺口）</dt><dd>R3（內部使用）無參數（A7）；本題為單一實驗室（OpenAI）、2025 穩態年度；成長情境見 Alloc D 節</dd></dl></section><section class="sec qa"><h3>問 2：研發算力成本占比 Q2</h3><p class="tagx">L1_Ans2</p><div class="kpis"><div class="kpi"><div class="k">答案（基準值）</div><div class="v num">18.47%</div><div class="s">單位：%</div></div><div class="kpi"><div class="k">低</div><div class="v num">10.18%</div></div><div class="kpi"><div class="k">高</div><div class="v num">61.33%</div></div></div><dl class="kv"><dt>單位</dt><dd>%</dd><dt>條件</dt><dd>OpenAI；2025 穩態年度；基準輸入見 Alloc_In；已裝 GW × 各世代每 GW 年持有成本；利用率不進入（A5）</dd><dt>區間的定義</dt><dd>Alloc G 節：一次動一個輸入的最小與最大 Q2</dd><dt>讀法</dt><dd>研發 GW × 訓練世代持有成本 ÷（同＋Σ 各世代服務 GW × 各世代持有成本）；雲端與自有的差異留在下游</dd><dt>最弱輸入</dt><dd>每則提示 token 數（Assumed，A10）</dd><dt>所在頁與列</dt><dd>Alloc 第 D 節；Interface F 節</dd><dt>未能回答的部分（缺口）</dt><dd>雲端租用與自有的成本差異在下游（A5）</dd></dl></section><section class="sec qa"><h3>問 3：研發占整體成本 Q3（算力部分）</h3><p class="tagx">L1_Ans3</p><div class="kpis"><div class="kpi"><div class="k">答案（基準值）</div><div class="v num">1.903</div><div class="s">單位：$B/年</div></div><div class="kpi"><div class="k">低</div><div class="v num">0.9517</div></div><div class="kpi"><div class="k">高</div><div class="v num">13.32</div></div></div><dl class="kv"><dt>單位</dt><dd>$B/年</dd><dt>條件</dt><dd>OpenAI；2025 穩態年度；基準輸入見 Alloc_In</dd><dt>區間的定義</dt><dd>Alloc G 節：一次動一個輸入的研發算力成本最小與最大值</dd><dt>讀法</dt><dd>D 欄＝研發 GW × 訓練世代每 GW 年經濟持有成本（算力部分）；整體成本需加非算力成本</dd><dt>最弱輸入</dt><dd>計畫規模 k：Assumed（A3）</dd><dt>所在頁與列</dt><dd>Alloc 第 C 節</dd><dt>未能回答的部分（缺口）</dt><dd>未能回答：非算力成本（人事、資料、評測、非 GPU 費用）不在第 0 層，歸 OpenAI 模型。外部對照為 OpenAI 揭露 2025 訓練支出（利害關係方，2 級）；本列絕對值約為其 1/10，服務端同幅度偏小（Alloc 第 61 列），只宜取比值口徑（Q1、Q2），絕對規模由 OpenAI 模型校準（X13 c）。</dd></dl></section><section class="sec qa"><h3>問 4：各層級每 M token 成本（VR200；本列為 Sol decode 含思考，Luna、Astra 在另兩列）</h3><p class="tagx">L1_Ans4</p><div class="kpis"><div class="kpi"><div class="k">答案（基準值）</div><div class="v num">0.2844</div><div class="s">單位：$/M</div></div><div class="kpi"><div class="k">低</div><div class="v num">0.2145</div></div><div class="kpi"><div class="k">高</div><div class="v num">0.4129</div></div></div><dl class="kv"><dt>單位</dt><dd>$/M</dd><dt>條件</dt><dd>VR200；經濟口徑、100% 利用率、SLO 下；decode（含思考）</dd><dt>區間的定義</dt><dd>成本角落情境（低成本／高成本欄）</dd><dt>讀法</dt><dd>本列為 Sol；Luna 見 L1 第 19 列（L1_CostDec_Luna_VR200）、Astra 見第 23 列（L1_CostDec_Astra_VR200）。新鮮輸入與快取輸入見 IF_CostPre_*、IF_CostCache_*</dd><dt>最弱輸入</dt><dd>生產折減 1.0：Assumed（K11）；VR200 η_d：Analogy</dd><dt>所在頁與列</dt><dd>L1 第 21 列</dd><dt>未能回答的部分（缺口）</dt><dd>VR200 無實測，η_d 沿用 GB300；本題只連結既有 L1 列，未新增計算</dd></dl></section><section class="sec qa"><h3>問 5：每 GW 理論營收（Sol，VR200）</h3><p class="tagx">L1_Ans5</p><div class="kpis"><div class="kpi"><div class="k">答案（基準值）</div><div class="v num">300.1</div><div class="s">單位：$B/GW/年</div></div><div class="kpi"><div class="k">低</div><div class="v num">200.1</div></div><div class="kpi"><div class="k">高</div><div class="v num">400.1</div></div></div><dl class="kv"><dt>單位</dt><dd>$B/GW/年</dd><dt>條件</dt><dd>OpenAI 有效單價、基準成本、基準利用率；單一層級滿載的上限</dd><dt>區間的定義</dt><dd>利用率 40–80%（Sens_Rev 情境值；J6 區間）</dd><dt>讀法</dt><dd>連結 L1_RevGW_*（Luna、Sol、Astra、機隊各一列）；毛利率見 L1_Ans5_GM、L1_Ans5_FullMargin；全成本 $/M 見 IF_FullCost_*</dd><dt>最弱輸入</dt><dd>利用率 60%：Assumed（K11）</dd><dt>所在頁與列</dt><dd>L1 第 27 列；Interface D 節</dd><dt>未能回答的部分（缺口）</dt><dd>—</dd></dl></section><section class="sec qa"><h3>問 5：理論毛利率（全成本口徑：含 K6 預設訓練攤提；Sol，VR200）</h3><p class="tagx">L1_Ans5_FullMargin</p><div class="kpis"><div class="kpi"><div class="k">答案（基準值）</div><div class="v num">92.81%</div><div class="s">單位：%</div></div><div class="kpi"><div class="k">低</div><div class="v num">89.57%</div></div><div class="kpi"><div class="k">高</div><div class="v num">94.58%</div></div></div><dl class="kv"><dt>單位</dt><dd>%</dd><dt>條件</dt><dd>OpenAI 有效單價；VR200；Sol；基準利用率；SLO 下單一層級滿載（理想上限）</dd><dt>區間的定義</dt><dd>成本角落情境（高成本／低成本欄；毛利率隨成本反向）</dd><dt>讀法</dt><dd>1 − IF_FullCostDefault_Sol ÷ IF_PriceRef_Sol：含 K6 預設攤提（自下而上總額 × 權重）的全成本口徑，為第二列。E＝高成本欄、F＝低成本欄</dd><dt>最弱輸入</dt><dd>利用率 60%：Assumed（K11）</dd><dt>所在頁與列</dt><dd>Interface D 節（IF_FullCostDefault_Sol、IF_PriceRef_Sol）</dd><dt>未能回答的部分（缺口）</dt><dd>—</dd></dl></section><section class="sec qa"><h3>問 5：理論毛利率（毛利口徑：服務＋快取儲存，不含訓練攤提；Sol，VR200）</h3><p class="tagx">L1_Ans5_GM</p><div class="kpis"><div class="kpi"><div class="k">答案（基準值）</div><div class="v num">95.92%</div><div class="s">單位：%</div></div><div class="kpi"><div class="k">低</div><div class="v num">94.08%</div></div><div class="kpi"><div class="k">高</div><div class="v num">96.92%</div></div></div><dl class="kv"><dt>單位</dt><dd>%</dd><dt>條件</dt><dd>OpenAI 有效單價；VR200；Sol；基準利用率；SLO 下單一層級滿載（理想上限）</dd><dt>區間的定義</dt><dd>成本角落情境（高成本／低成本欄；毛利率隨成本反向）</dd><dt>讀法</dt><dd>1 −（IF_FullCost_Sol − IF_AmortBU_Sol）÷ IF_PriceRef_Sol：推論算力計入營業成本、訓練計入研發（不含攤提）。理論毛利率是 SLO 下單一層級滿載、基準利用率的上限；與 2025 隱含值約 36% 的差距，與「兩路線差約 8.2 倍」同源（物理產能上限 對 實際營運），屬預期，不調整輸入。E＝高成本欄、F＝低成本欄</dd><dt>最弱輸入</dt><dd>利用率 60%：Assumed（K11）</dd><dt>所在頁與列</dt><dd>Interface D 節（IF_FullCost_Sol、IF_AmortBU_Sol、IF_PriceRef_Sol）</dd><dt>未能回答的部分（缺口）</dt><dd>外部為 2025 推論毛利隱含值＝1 − 推論支出 ÷ 營收（Derived；兩者皆 Interested-party），與本列的物理上限口徑不同</dd></dl></section><section class="sec qa"><h3>問 6：後訓練占比（FLOPs 口徑；Sol；訓練世代＝IF_TrainGenDefault）</h3><p class="tagx">L1_Ans6</p><div class="kpis"><div class="kpi"><div class="k">答案（基準值）</div><div class="v num">12.7%</div><div class="s">單位：%</div></div><div class="kpi"><div class="k">低</div><div class="v num">12.7%</div></div><div class="kpi"><div class="k">高</div><div class="v num">12.7%</div></div></div><dl class="kv"><dt>單位</dt><dd>%</dd><dt>條件</dt><dd>單一模型最終訓練；Block 3 基準</dd><dt>區間的定義</dt><dd>無區間</dd><dt>讀法</dt><dd>GPU 小時口徑見 L1_Ans6_GPUh；RL 以推論型運算計價，兩種口徑的後訓練占比不同；Luna、Astra 見 IF_PostShare*_Luna／_Astra</dd><dt>最弱輸入</dt><dd>rollout token：Assumed（J9 校準值）</dd><dt>所在頁與列</dt><dd>Interface C 節</dd><dt>未能回答的部分（缺口）</dt><dd>本題只連結既有名稱</dd></dl></section><section class="sec qa"><h3>問 6：後訓練占比（GPU 小時口徑；Sol；訓練世代＝IF_TrainGenDefault）</h3><p class="tagx">L1_Ans6_GPUh</p><div class="kpis"><div class="kpi"><div class="k">答案（基準值）</div><div class="v num">28.23%</div><div class="s">單位：%</div></div><div class="kpi"><div class="k">低</div><div class="v num">28.23%</div></div><div class="kpi"><div class="k">高</div><div class="v num">28.23%</div></div></div><dl class="kv"><dt>單位</dt><dd>%</dd><dt>條件</dt><dd>單一模型最終訓練；Block 3 基準</dd><dt>區間的定義</dt><dd>無區間</dd><dt>讀法</dt><dd>FLOPs 口徑見 L1_Ans6；Luna、Astra 見 IF_PostShareGPUh_Luna／_Astra</dd><dt>最弱輸入</dt><dd>rollout token：Assumed（J9 校準值）</dd><dt>所在頁與列</dt><dd>Interface C 節</dd><dt>未能回答的部分（缺口）</dt><dd>—</dd></dl></section><section class="sec qa"><h3>問 7：OpenAI 單價 ÷ 前緣單價（Sol；參考請求混合）</h3><p class="tagx">L1_Ans7</p><div class="kpis"><div class="kpi"><div class="k">答案（基準值）</div><div class="v num">1</div><div class="s">單位：x</div></div><div class="kpi"><div class="k">低</div><div class="v num">1</div></div><div class="kpi"><div class="k">高</div><div class="v num">1</div></div></div><dl class="kv"><dt>單位</dt><dd>x</dd><dt>條件</dt><dd>OpenAI 有效單價 ÷ 前緣有效單價；2026-09／10 快照</dd><dt>區間的定義</dt><dd>無區間</dd><dt>讀法</dt><dd>依定義 ≥ 1（前緣＝能力指數不低於 OpenAI 該層級模型的最便宜模型，集合含 OpenAI 本身，K2 (i)）；＝1 表示 OpenAI 該層級即在前緣上，&gt; 1 表示 OpenAI 高於前緣；兩個單價見 IF_PriceRef_Sol、IF_FrontRef_Sol（$/M）。Luna、Astra 見 IF_PriceRef_*、IF_FrontRef_*</dd><dt>最弱輸入</dt><dd>AA 指數：2 級、改版頻繁</dd><dt>所在頁與列</dt><dd>Interface D 節</dd><dt>未能回答的部分（缺口）</dt><dd>本題只連結既有名稱</dd></dl></section><section class="sec qa"><h3>問 8：harness 是否降低每成功任務成本：選定 ÷ 標準（Coding agent，Sol，VR200）</h3><p class="tagx">L1_Ans8</p><div class="kpis"><div class="kpi"><div class="k">答案（基準值）</div><div class="v num">0.4781</div><div class="s">單位：x</div></div><div class="kpi"><div class="k">低</div><div class="v num">0.4781</div></div><div class="kpi"><div class="k">高</div><div class="v num">0.4781</div></div></div><dl class="kv"><dt>單位</dt><dd>x</dd><dt>條件</dt><dd>VR200；任務＝Coding agent（長程，第 5 欄）；選定 harness 檔案全採用 對 標準 harness</dd><dt>區間的定義</dt><dd>無區間</dd><dt>讀法</dt><dd>&lt; 1 表示 harness 降低每成功任務成本；各任務見 IF_HarR_Sol 各欄、其他層級見 IF_HarR_Luna／_Astra</dd><dt>最弱輸入</dt><dd>harness 成功率：Assumed 或 3 級</dd><dt>所在頁與列</dt><dd>Interface E 節</dd><dt>未能回答的部分（缺口）</dt><dd>—</dd></dl></section><section class="sec qa"><h3>問 9：成功任務成本前緣（p ≥ p_min；Coding agent；VR200）</h3><p class="tagx">L1_Ans9</p><div class="kpis"><div class="kpi"><div class="k">答案（基準值）</div><div class="v num">0.01909</div><div class="s">單位：$</div></div><div class="kpi"><div class="k">低</div><div class="v num">0.01909</div></div><div class="kpi"><div class="k">高</div><div class="v num">0.01909</div></div></div><dl class="kv"><dt>單位</dt><dd>$</dd><dt>條件</dt><dd>VR200；任務＝Coding agent（第 5 欄）；層級與 harness 檔案見 IF_FrontSuccVRName</dd><dt>區間的定義</dt><dd>無區間（單一前緣值）</dd><dt>讀法</dt><dd>前緣組合名稱見 IF_FrontSuccVRName、成功率見 IF_FrontSuccVRP；『無合格』表示無組合達 p_min</dd><dt>最弱輸入</dt><dd>p_min 50%：Assumed</dd><dt>所在頁與列</dt><dd>Interface E 節</dd><dt>未能回答的部分（缺口）</dt><dd>任務欄（目前取 Coding agent）未由工作單指定；其他任務見 IF_FrontSuccVR 各欄</dd></dl></section>
+</main>
+</div>
+<footer><div class="in">研究整理，非投資建議。數字全部取自 20261104_Tokenomics_v21.10.xlsx（LibreOffice 重算後存下的值）；「—」＝Excel 該格空白。
+選擇器只切換預先產生的版本，網站不重算。改值一律改 Excel 並升版。</div></footer>
+<script>
+(function(){
+  var st={};
+  function apply(){
+    document.querySelectorAll('.var').forEach(function(el){
+      var ok=true;
+      Object.keys(el.dataset).forEach(function(k){
+        if(k.length>1&&k[0]==='v'&&k[1]===k[1].toUpperCase()){var d=k.slice(1).toLowerCase(); if(st[d]!==undefined&&st[d]!==el.dataset[k]) ok=false;}
+      });
+      el.hidden=!ok;
+    });
+  }
+  document.querySelectorAll('.seg[data-dim]').forEach(function(g){
+    var on=g.querySelector('button[aria-pressed="true"]'); st[g.dataset.dim]=on?on.dataset.v:'0';
+    g.addEventListener('click',function(ev){var b=ev.target.closest('button'); if(!b) return;
+      g.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});
+      st[g.dataset.dim]=b.dataset.v; apply();});
+  });
+  apply();
+  // 窄螢幕：導覽列橫向捲到目前頁
+  var cur=document.querySelector('.side a[aria-current="page"]'), ol=document.querySelector('.side ol');
+  if(cur&&ol&&ol.scrollWidth>ol.clientWidth){ ol.scrollLeft=Math.max(0,cur.parentNode.offsetLeft-12); }
+  // 表格篩選：chips（依列的 data-<key>）＋關鍵字（依列的 data-s，全部關鍵字須符合）
+  var words=[];
+  function filter(id){
+    var t=document.getElementById(id); if(!t) return;
+    var sel={};
+    document.querySelectorAll('.chips[data-target="'+id+'"]').forEach(function(c){
+      var v=[]; c.querySelectorAll('button[aria-pressed="true"]').forEach(function(b){v.push(b.dataset.val);});
+      if(v.length) sel[c.dataset.key]=v;
+    });
+    document.querySelectorAll('.fsel[data-target="'+id+'"]').forEach(function(c){ if(c.value) sel[c.dataset.key]=[c.value]; });
+    var useQ=!!document.querySelector('.q[data-targets~="'+id+'"]');
+    var n=0;
+    t.querySelectorAll('tbody tr').forEach(function(r){
+      var ok=true;
+      Object.keys(sel).forEach(function(k){ if(sel[k].indexOf(r.dataset[k])<0) ok=false; });
+      if(ok&&useQ){ var s=r.dataset.s||''; for(var i=0;i<words.length;i++){ if(s.indexOf(words[i])<0){ok=false;break;} } }
+      r.hidden=!ok; if(ok) n++;
+    });
+    document.querySelectorAll('.cnt[data-target="'+id+'"]').forEach(function(c){c.textContent=n.toLocaleString('en-US');});
+  }
+  document.querySelectorAll('.chips').forEach(function(c){
+    c.addEventListener('click',function(ev){var b=ev.target.closest('button'); if(!b) return;
+      b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true'); filter(c.dataset.target);});
+  });
+  document.querySelectorAll('.fsel').forEach(function(c){ c.addEventListener('change',function(){filter(c.dataset.target);}); });
+  document.querySelectorAll('.q').forEach(function(q){
+    q.addEventListener('input',function(){
+      words=q.value.toLowerCase().split(/\s+/).filter(Boolean);
+      q.dataset.targets.split(' ').forEach(filter);
+    });
+  });
+})();
+</script>
+</body>
+</html>

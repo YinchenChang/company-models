@@ -1,0 +1,65 @@
+{
+ "version": "v21.10",
+ "excel": "20261104_Tokenomics_v21.10.xlsx",
+ "date": "2026-11-05",
+ "head": "9cb6a41",
+ "master": "9cb6a41",
+ "on_master": true,
+ "pages": [
+  {
+   "key": "payback",
+   "title": "回本判讀：m、L 與每 GW 營收",
+   "file": "index.html"
+  },
+  {
+   "key": "lookup",
+   "title": "名稱查詢：具名範圍與 L1 全表",
+   "file": "lookup.html"
+  },
+  {
+   "key": "overview",
+   "title": "總覽",
+   "file": "overview.html"
+  },
+  {
+   "key": "block2",
+   "title": "推論：每 GW 產能與單位成本",
+   "file": "block2.html"
+  },
+  {
+   "key": "block3",
+   "title": "訓練：算力與成本",
+   "file": "block3.html"
+  },
+  {
+   "key": "block4",
+   "title": "價格、營收與攤提",
+   "file": "block4.html"
+  },
+  {
+   "key": "block5",
+   "title": "任務成功率與每任務成本",
+   "file": "block5.html"
+  },
+  {
+   "key": "alloc",
+   "title": "算力分配：服務／訓練／研發",
+   "file": "alloc.html"
+  },
+  {
+   "key": "qa",
+   "title": "九題問答：答案、區間與缺口",
+   "file": "qa.html"
+  },
+  {
+   "key": "evidence",
+   "title": "證據登錄：新資訊比對與判定",
+   "file": "evidence.html"
+  },
+  {
+   "key": "governance",
+   "title": "治理：來源、L1 與檢查",
+   "file": "governance.html"
+  }
+ ]
+}
