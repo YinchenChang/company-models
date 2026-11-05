@@ -4,7 +4,7 @@
 
 - 依 `docs/plan/個股HTML版面規格.md`（v1.0）。README 工作表最後新增「展示層」段（命題摘要、命題 1–3、白話重點 1–3）與「命題回覆」段（逐一回答三個命題，數字全部由公式帶出），另加一列「展示層輔助：Comparable 目標價（相對倍數調整後）的上檔空間」給投資建議橫幅用；README A1 加註「v0.4.2 只改展示層」。原 README 各列保留。
 - 驗證：LibreOffice 重算錯誤格 0；`tools/xlsx_diff.py` 對 v0.4.1 成品：差異 15 格，全部在 README 頁（A1 與新增列），其他工作表逐格 0 差異。敏感度未重跑（Sens 頁數值與 v0.4.1 相同）。
-- HTML：原 `html.json` 改名 `html_src.json`（內容不動）；新增 `gen_html_json.py`（讀 `html_src.json` → `tools/company_html/relayout.py` → 寫 `html.json`）。驅動因子依業務分四塊：AI 加速器（HPC 的 AI 子列）／CoWoS 先進封裝（瓶頸檢查）／非 AI 平台／全公司（2026 錨點、利潤率、資本支出、股本與目標價規則）。投資建議橫幅的 Comparable 用加權目標價實際使用的「相對倍數調整後」值；估值章依序為長條圖、結論主要項目、DCF 折現率（直接顯示）、DCF 彙總主要列、Comparable，其餘摺疊。
+- HTML：原 `html.json` 改名 `html_src.json`（內容不動）；新增 `gen_html_json.py`（讀 `html_src.json` → `tools/company_html/relayout.py` → 寫 `html.json`）。驅動因子依業務分四塊：AI 加速器（HPC 的 AI 子列）／CoWoS 先進封裝（瓶頸檢查）／非 AI 平台／全公司（2026 錨點、利潤率、資本支出、股本與目標價規則）。投資建議橫幅中間格依工作單補充規則 A 為「只看 Comparable 目標價（市場主流同業法）」（未經相對倍數調整，Val 第 95 列，附 Val 第 98 列上檔空間），橫幅附註寫出進加權的相對倍數調整後 Comparable（Val 第 136 列）；估值章依序為長條圖、結論主要項目、DCF 折現率（直接顯示）、DCF 彙總主要列、Comparable，其餘摺疊。
 - 成品：`dist/20261105_台積電個股模型_v0.4.2.xlsx`／`.html`；舊版移到 `dist/_待刪除/`。重建：`python3 tsmc/build_tsmc.py <raw.xlsx>` → LibreOffice 重算 → `python3 tsmc/gen_html_json.py <成品 xlsx>` → `python3 tools/company_html/build_company_html.py tsmc`。
 
 ## v0.4.1（2026-10-30）：In 頁「敏感度低／高」與「情境 A／B／C」分開（數值不變）
