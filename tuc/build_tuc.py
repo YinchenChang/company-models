@@ -806,6 +806,15 @@ for t_ in (
 r += 1
 RD.cell(r, 1, "HTML 輔助數字（展示層用；只引用 Val 頁）").font = BOLD; r += 1
 RD.cell(r, 1, "上檔空間：Comparable 目標價（相對倍數調整後）"); RD.cell(r, 2, f"=Val!B{_vc}/Val!B{_vp}-1").number_format = "0.0%"
+# ---------------- v0.2.2（2026-11-06）：第三輪修正（合併前；r3_post.py，項目編號對照第三輪修正清單）----------------
+import r3_post  # noqa: E402
+R3 = dict(PX={"6274.TWO": 1115, "2383.TW": 4555, "6213.TW": 612, "2368.TW": 964},
+          OLD={("2383.TW", "2026-09-04"): 5415, ("6213.TW", "2026-10-22"): 777, ("2368.TW", "2026-10-22"): 1115},
+          px="6274.TWO", px_src="HiStock",
+          stub="含 stub 期的會計年度 FY2026 FCFF（PL FY2026 欄：EBIT × 淨利率係數＋營收 ×（折舊比例 − 資本支出比例）− 營運資金增加）× stub_frac")
+r3_post.apply(wb, R3)
+RD.cell(RD.max_row + 1, 1, 'v0.2.2（2026-11-06）：第三輪修正（合併前）。(1) 現價與 Comparable 同業前瞻 P/E 統一為 2026-11-04 收盤（現價 1,265 → 1,115；同業 P/E＝原 P/E × 11-04 收盤 ÷ 原報價日收盤，前瞻 EPS 視為不變；台光電原為 09-04 快取值，一併換算）；整本重算的 Sens（sens_tuc.py）重跑。(2) HTML 情境驅動表表頭原取 In!B2（標記說明列），改依 In 頁「情境驅動對照」節標題取列並自檢。(3) 情境名稱、收斂法列名、上檔空間級距、stub 說明、g 上限列名、README 舊重點觀察（含靜態重點觀察 1–4）改公式或刪除；工具字樣改「未取得」。')
+RD["A1"] = RD["A1"].value + '；v0.2.2（2026-11-06）第三輪修正：現價與同業報價統一為 2026-11-04 收盤、HTML 情境驅動表修正'
 wb.save(sys.argv[1])
 if os.environ.get("TUC_ROWMAP"):
     json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK, "XT": XT, "XH": XH, "XR": XR, "T": T, "EPSR": EPSR, "CFR": CFR,
