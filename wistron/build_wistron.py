@@ -59,6 +59,16 @@ for r in QWB["In"].iter_rows(min_row=4):
     if k in ("odm_gb", "odm_vr", "vr26", "fx", "vpg_28", "vpg_29", "cs_27", "cs_28", "cs_29", "keep"):
         QU[k] = (r[3].value, r[4].value, r[5].value, f"{rel(QU_F)}｜In!D{r[0].row}:F{r[0].row}")
 assert len(QU) == 10, QU.keys()
+# CF23 乙（Andy 2026-11-05 15:24）：緯穎部分改以緯穎模型為單一來源——份額路徑讀 Siliconomics（相對值 × ASIC 傾斜，與緯穎模型同讀），
+# 客供比例與保留毛利讀緯穎模型成品（唯讀；CI 建置順序 wiwynn 在 wistron 之前）
+WY_F = only("wiwynn/dist/*.xlsx")
+WY = {}
+for r in openpyxl.load_workbook(WY_F, data_only=True)["In"].iter_rows(min_row=4):
+    k = r[0].value
+    if k in ("cs_27", "cs_28", "cs_29", "keep"):
+        WY[k] = (r[3].value, r[4].value, r[5].value, f"{rel(WY_F)}｜In!D{r[0].row}:F{r[0].row}")
+assert len(WY) == 4, WY.keys()
+WTILT = dict(zip((2026, 2027, 2028, 2029), SIL.NAMES["SIF_AsmWyTilt"]))
 def units_row(wbk, label, f):
     for r in wbk["Units"].iter_rows(min_row=4):
         if r[0].value == label:
@@ -127,9 +137,19 @@ inp("keep", "客供部分保留的毛利比例（相對買賣模式；廣達模�
 inp("rel_27", "緯創本體 AI 系統有效份額 2027 ÷ 2026（相對值）", "x", *SIL.vals("asm_wirel_27"), "Assumed", CNY2Q + "：2H26 起新企業與 CSP 客戶，含 L10 與 L11 整櫃（公司）", UDN0910 + "：美系券商 8 月調查 鴻海約 2,600 櫃、廣達 2,500–2,550、緯創 2,300–2,400（Interested-party，單一來源）")
 inp("rel_28", "緯創本體份額 2028 ÷ 2026", "x", *SIL.vals("asm_wirel_28"), "Assumed", "同上；鴻海、廣達同時擴產（廣達模型 0.95、鴻海模型 1.0）", "—")
 inp("rel_29", "緯創本體份額 2029 ÷ 2026", "x", *SIL.vals("asm_wirel_29"), "Assumed", "同上", "—")
-inp("wrel_27", "緯穎 AI 有效份額 2027 ÷ 2026（相對值）", "x", 0.85, 1.0, 1.2, "Assumed", FUGW + "：AI 伺服器約九成為 ASIC 專案；2H26 新 ASIC 與 GPU 平台開始出貨（公司）", KGIW + "：凱基 2027F 緯穎營收 +74%（Interested-party）")
-inp("wrel_28", "緯穎 AI 份額 2028 ÷ 2026", "x", 0.75, 1.0, 1.2, "Assumed", "同上（ASIC 顆數占 tsmc 成品的比重 2026–28 上升）", "—")
-inp("wrel_29", "緯穎 AI 份額 2029 ÷ 2026", "x", 0.70, 0.95, 1.2, "Assumed", "同上", "—")
+_v = SIL.vals("asm_wyrel_27"); _t = WTILT[2027]
+inp("wrel_27", "緯穎 AI 有效份額 2027 ÷ 2026（＝份額相對值 × ASIC 傾斜係數；與緯穎模型同口徑）", "x", round(_v[0] * _t, 6), round(_v[1] * _t, 6), round(_v[2] * _t, 6), "Derived",
+    f"Siliconomics {SIL.VERSION} asm_wyrel_27 {_v[1]}（低 {_v[0]}／高 {_v[2]}）× SIF_AsmWyTilt {_t:.4f}（CF23 乙，Andy 2026-11-05）", "原為本模型自訂 1.0／1.0／0.95（Assumed，未含 ASIC 傾斜）；緯穎 AI 約九成為 ASIC 專案，份額隨客戶 ASIC 顆數上升")
+_v = SIL.vals("asm_wyrel_28"); _t = WTILT[2028]
+inp("wrel_28", "緯穎 AI 有效份額 2028 ÷ 2026（＝份額相對值 × ASIC 傾斜係數；與緯穎模型同口徑）", "x", round(_v[0] * _t, 6), round(_v[1] * _t, 6), round(_v[2] * _t, 6), "Derived",
+    f"Siliconomics {SIL.VERSION} asm_wyrel_28 {_v[1]}（低 {_v[0]}／高 {_v[2]}）× SIF_AsmWyTilt {_t:.4f}（CF23 乙，Andy 2026-11-05）", "同上")
+_v = SIL.vals("asm_wyrel_29"); _t = WTILT[2029]
+inp("wrel_29", "緯穎 AI 有效份額 2029 ÷ 2026（＝份額相對值 × ASIC 傾斜係數；與緯穎模型同口徑）", "x", round(_v[0] * _t, 6), round(_v[1] * _t, 6), round(_v[2] * _t, 6), "Derived",
+    f"Siliconomics {SIL.VERSION} asm_wyrel_29 {_v[1]}（低 {_v[0]}／高 {_v[2]}）× SIF_AsmWyTilt {_t:.4f}（CF23 乙，Andy 2026-11-05）", "同上")
+inp("wcs_27", "緯穎客供比例 2027（AI 毛額價值中改為客戶供料、不計營收；緯穎模型）", "%", WY["cs_27"][0], WY["cs_27"][1], WY["cs_27"][2], "Assumed", WY["cs_27"][3], "CF23 乙：與緯穎模型同值（Assumed）")
+inp("wcs_28", "緯穎客供比例 2028（AI 毛額價值中改為客戶供料、不計營收；緯穎模型）", "%", WY["cs_28"][0], WY["cs_28"][1], WY["cs_28"][2], "Assumed", WY["cs_28"][3], "同上")
+inp("wcs_29", "緯穎客供比例 2029（AI 毛額價值中改為客戶供料、不計營收；緯穎模型）", "%", WY["cs_29"][0], WY["cs_29"][1], WY["cs_29"][2], "Assumed", WY["cs_29"][3], "同上")
+inp("wkeep", "緯穎客供部分保留的毛利比例（緯穎模型）", "x", WY["keep"][0], WY["keep"][1], WY["keep"][2], "Assumed", WY["keep"][3], "CF23 乙：客供不計營收，但大部分毛利保留；緯穎營業利益以保留後的毛額價值計")
 
 sec("C. GPU 基板與運算板（緯創本體：GPU 顆數 × 每顆基板金額 × 份額；FY2026 以券商「AI 伺服器零組件超過千億」校準）")
 inp("brd_26", "FY2026 GPU 基板與運算板營收（AI 伺服器零組件）", "NT$B", 100, 110, 140, "Interested-party", KGI05 + "：2026 AI 伺服器零組件營收超過 NT$1,000 億，由運算板（Bianca／Strata）帶動（凱基 2026-05-08）", "公司：零組件（L10）出貨量逐季增加（2Q26 法說，鉅亨）；金額公司未揭露：未找到")
@@ -329,7 +349,7 @@ FYS = (2025, 2026, 2027, 2028, 2029); FC = {2025: "C", 2026: "D", 2027: "E", 202
 FADE = (2030, 2031, 2032); FADEFILL = PatternFill("solid", fgColor="E7E6E6")
 BU = (2026, 2027, 2028, 2029); F3 = (2027, 2028, 2029)
 _mfy = lambda m, y: m[y] if isinstance(m, dict) else m   # Siliconomics v0.13：mf 可為年別 dict（Sens「Wattonomics 錨定」案例）；預設字串不變
-DEFP = dict(scn="A", rel="rel_{y}", wrel="wrel_{y}", cs="cs_{y}", keep="keep", vpg="vpg_{y}", mf="1", bv="bv_{y}", brel="brel_{y}",
+DEFP = dict(scn="A", rel="rel_{y}", wrel="wrel_{y}", wcs="wcs_{y}", wkeep="wkeep", cs="cs_{y}", keep="keep", vpg="vpg_{y}", mf="1", bv="bv_{y}", brel="brel_{y}",
             ggen="g_gen{y}", gpc="g_pc{y}", gwn="g_wn{y}", d="d_ai", dbrd="d_brd", dgen="d_gen", vrd="vrd", opxa="0",
             wgm="wgm", wopm="wopm", wnio="wnio", snio="snio", stake="stake", fg="fade_g{s}", fm="fade_m{s}")
 def engine(ws, r0, title, **over):
@@ -377,7 +397,9 @@ def engine(ws, r0, title, **over):
     row("srev", "緯創本體營收", "NT$B", {"C": "=a25_srev", **{c_(y): f"={c_(y)}{R['ais']}+{c_(y)}{R['brd']}+{c_(y)}{R['gen']}+{c_(y)}{R['pc']}" for y in BU}})
     row("wsh0", "緯穎 AI 有效份額（FY2026 校準）", "%", {"D": f"=a26_wai/D{R['mkn']}"}, fmt="0.0%", note="Derived：緯穎營收 × AI 占比 ÷ 市場（緯穎 AI 約九成為 ASIC）")
     row("wsh", "緯穎 AI 有效份額", "%", {"D": f"=D{R['wsh0']}", **{c_(y): f"=$D${R['wsh0']}*{p('wrel', y)}" for y in F3}}, fmt="0.0%")
-    row("wai", "緯穎 AI 伺服器營收", "NT$B", {c_(y): f"={c_(y)}{R['mkn']}*{c_(y)}{R['wsh']}" for y in BU})
+    row("waig", "緯穎 AI 伺服器毛額價值（市場 × 有效份額）", "NT$B", {c_(y): f"={c_(y)}{R['mkn']}*{c_(y)}{R['wsh']}" for y in BU})
+    row("wcs", "緯穎客供比例（FY2027 起；緯穎模型）", "%", {"D": "=0", **{c_(y): f"={p('wcs', y)}" for y in F3}}, fmt="0.0%", note="FY2026 的客供已含在錨點與校準份額內，記為 0（CF23 乙）")
+    row("wai", "緯穎 AI 伺服器營收 ＝ 毛額價值 ×（1 − 客供）", "NT$B", {c_(y): f"={c_(y)}{R['waig']}*(1-{c_(y)}{R['wcs']})" for y in BU})
     row("wna", "緯穎非 AI（一般伺服器）", "NT$B", {"D": "=a26_wna", **{c_(y): f"={c_(y - 1)}{r}*(1+{p('gwn', y)})" for y in F3}})
     row("wrev", "緯穎營收", "NT$B", {"C": "=a25_wrev", **{c_(y): f"={c_(y)}{R['wai']}+{c_(y)}{R['wna']}" for y in BU}})
     row("rev", "合併營收", "NT$B", {c_(y): f"={c_(y)}{R['srev']}+{c_(y)}{R['wrev']}" for y in FYS})
@@ -404,7 +426,7 @@ def engine(ws, r0, title, **over):
     row("sni", "本體淨利（歸屬緯創，不含緯穎持股收益）", "NT$B", {"C": "=a25_sni", "D": "=a26_sni", **{c_(y): f"={c_(y)}{R['soi']}*{P['snio']}" for y in F3}})
     sec_("F. 緯穎（合併子公司）")
     row("wgp", "緯穎毛利", "NT$B", {"C": "=a25_wgp", "D": "=a26_wgp", **{c_(y): f"={c_(y)}{R['wrev']}*{P['wgm']}" for y in F3}})
-    row("woi", "緯穎營業利益", "NT$B", {"C": "=a25_woi", "D": "=a26_woi", **{c_(y): f"={c_(y)}{R['wrev']}*{P['wopm']}" for y in F3}})
+    row("woi", "緯穎營業利益 ＝ 營益率 ×（營收 ＋ 客供部分 × 保留比例）", "NT$B", {"C": "=a25_woi", "D": "=a26_woi", **{c_(y): f"=({c_(y)}{R['wrev']}+{c_(y)}{R['waig']}*{c_(y)}{R['wcs']}*{P['wkeep']})*{P['wopm']}" for y in F3}})
     row("wni", "緯穎淨利", "NT$B", {"C": "=a25_wni", "D": "=a26_wni", **{c_(y): f"={c_(y)}{R['woi']}*{P['wnio']}" for y in F3}})
     row("stk", "緯創持有緯穎比例", "%", {"C": "=stake25", **{c_(y): f"={P['stake']}" for y in BU}}, fmt="0.00%")
     sec_("G. 合併與歸屬母公司")
@@ -673,7 +695,7 @@ SE["A1"] = "Sens — 一次動一個輸入（情境 A；FY2026 恆等於錨點�
 hdr(SE, 3, ["案例", "設定", "FY2027 營收", "FY2027 毛利率", "FY2027 EPS", "FY2027 EPS 相對基準", "FY2028 營收", "FY2028 毛利率", "FY2028 EPS", "FY2028 EPS 相對基準"])
 cases = [("AI 部署 ×0.8", "FY2027 起 AI IT 資本支出與 GPU 顆數 ×0.8", dict(mf="0.8")), ("AI 部署 ×1.2", "×1.2", dict(mf="1.2")),
          ("本體份額流失", "相對值 2027 0.85、2028 0.75、2029 0.70", dict(rel="rel_{y}_lo")), ("本體份額上升", "相對值 1.15", dict(rel="rel_{y}_hi")),
-         ("緯穎份額流失", "相對值 2027 0.85、2028 0.75、2029 0.70", dict(wrel="wrel_{y}_lo")), ("緯穎份額上升", "相對值 1.2", dict(wrel="wrel_{y}_hi")),
+         ("緯穎份額流失", "相對值低值 × ASIC 傾斜（Siliconomics）", dict(wrel="wrel_{y}_lo")), ("緯穎份額上升", "相對值高值 × ASIC 傾斜", dict(wrel="wrel_{y}_hi")),
          ("客供 高", "客供比例 25%／40%／50%", dict(cs="cs_{y}_hi")), ("客供保留毛利 0.7", "客供部分只保留 70% 毛利", dict(keep="keep_lo")),
          ("每 GW 價值 低", "2028–29 每 GW ODM 價值 ×0.85", dict(vpg="vpg_{y}_lo")), ("每 GW 價值 高", "×1.2", dict(vpg="vpg_{y}_hi")),
          ("基板份額 低", "2027 0.8、2028 0.7、2029 0.65", dict(brel="brel_{y}_lo")), ("基板每顆金額 高", "2027 1.4、2028–29 1.5", dict(bv="bv_{y}_hi")),
@@ -798,7 +820,7 @@ SO.column_dimensions["A"].width = 100; SO.column_dimensions["B"].width = 130
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
 lines = [("緯創資通（3231）收支與估值模型 v0.1.1（AI 半導體 Project：伺服器組裝次產業，樣板＝quanta/）　2026-10-25", True),
- ("版本：v0.1.1（2026-10-25：補上檔空間級距、投資建議、重點觀察（數值不變））。v0.1（初版）。伺服器組裝次產業第三家（廣達、鴻海之後）；AI 伺服器組裝市場、ODM 每櫃價格、客供比例讀廣達模型（規則第 13 條）。另加 GPU 基板驅動（讀 tsmc 成品顆數），並把子公司緯穎拆開以區分合併與歸母口徑。", False),
+ ("版本：v0.3（2026-11-05：CF23 乙〔Andy 2026-11-05 15:24〕——緯穎 AI 有效份額相對值改讀 Siliconomics〔asm_wyrel × SIF_AsmWyTilt，與緯穎模型同口徑〕，緯穎客供比例與保留毛利讀緯穎模型；原為本模型自訂 1.0／1.0／0.95 且未扣客供）。v0.1.1（2026-10-25：補上檔空間級距、投資建議、重點觀察（數值不變））。v0.1（初版）。伺服器組裝次產業第三家（廣達、鴻海之後）；AI 伺服器組裝市場、ODM 每櫃價格、客供比例讀廣達模型（規則第 13 條）。另加 GPU 基板驅動（讀 tsmc 成品顆數），並把子公司緯穎拆開以區分合併與歸母口徑。", False),
  ("模型命題：緯創的合併營收＝本體 AI 系統（部署 GW × 每 GW 架數 × 每櫃價格 × 份額 ×（1 − 客供））＋GPU 基板與運算板（GPU 顆數 × 每顆基板金額 × 份額）＋一般伺服器與非伺服器＋子公司緯穎（ASIC 機架為主）。緯穎占合併營收約三分之一、營益率約為本體的三倍，但緯創只持有 37.68%，合併淨利約四成歸少數股東；EPS 看歸屬母公司淨利＝本體淨利＋37.68% × 緯穎淨利。", False),
  ("核心問題：本體約 2% 的營益率能不能隨 AI 系統與基板放量撐住，以及緯穎的成長有多少真正流到緯創股東；約 9–10 倍前瞻 P/E 隱含什麼路徑。", False), ("", False),
  ("會計年度＝日曆年，FY(t)＝CY(t)，不平移。金額：十億新台幣；整櫃價格與市場以美元計、以匯率換算。口徑：營收、毛利、營業利益為合併（含緯穎）；淨利與 EPS 為歸屬母公司。3Q26 財報與法說約 2026-11-10，本版只納入 3Q26 月營收。", False), ("", False),
@@ -843,7 +865,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, "wistron")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
-apply_in_layout.apply(wb, "v0.2.1", "2026-10-30")  # v0.2.1：In 頁版面（個股模型原則第 8 節；數值不變）
+apply_in_layout.apply(wb, "v0.3", "2026-11-05")  # v0.3：CF23 乙（緯穎份額與客供改以緯穎模型為單一來源）；v0.2.1：In 頁版面
 # ---------------- Siliconomics v0.13（2026-11-04；決策 S37）：Sens「Wattonomics 錨定」案例 ----------------
 # In 頁最後追加 Z 節（wta_27／28／29，數值取 SIL.WTA）；Sens 頁既有內容最下方另起小表與案例區塊。既有儲存格不位移、數值不變。
 WTA_NOTE = "Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
