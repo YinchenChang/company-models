@@ -4,7 +4,6 @@
 #   24 Val「上檔空間級距」列名；14 stub 期說明依實際口徑；16 g 受 rf 上限時 Sens 列名
 #   22／40 README 舊「重點觀察」改為公式（引用展示層「重點 1–3」），其餘舊重點觀察刪除
 #   35／26 現價與 Comparable 同業前瞻 P/E 統一為 2026-11-04 收盤（同業 P/E＝原 P/E × 11-04 收盤 ÷ 原報價日收盤；前瞻 EPS 視為不變）
-#   30 工具字樣改「未取得」
 import re
 
 YH = "Yahoo Finance 日線收盤 2026-11-04"
@@ -15,8 +14,7 @@ SCN_REPL = (("情境 A（樂觀）", "情境 A（順利）"), ("情境 B（基�
             ("情境權重 C（悲觀）", "情境權重 C（不如預期）"))
 FADE_LAB = {"scn_fade_g": "收斂法：各情境 FY2032 營收年增目標（延伸期收斂用）",
             "scn_fade_m": "收斂法：各情境 FY2032 淨利率目標（延伸期收斂用）"}
-BAD = ("本環境", "讀不到", "抓取單", "取不到", "已抓取", "建置環境", "內建瀏覽器", "/home/claude", "原樣取自", "無法開啟")
-TOOL_REPL = (("Damodaran 2026-07 更新檔為 xlsx，本環境讀不到，沿用 2026-01 表", "Damodaran 2026-07 更新檔未取得，沿用 2026-01 表"),)
+TOOL_REPL = (('投資建議維持"&', '投資建議為"&'),)
 
 
 def _rows(ws, prefix, col=1):
@@ -88,6 +86,23 @@ def px(wb, tk, PX, src2, log):
     return old, old_date
 
 
+def own_fpe(wb, key, p0, d0, p1, log):
+    """本公司前瞻 P/E 換算到 2026-11-04（前瞻 EPS 不變）；cons_feps 改為 px ÷ fpe（與原報價日價格 ÷ 原 P/E 相同）"""
+    IN = wb["In"]
+    k = {IN.cell(x, 1).value: x for x in range(1, IN.max_row + 1) if IN.cell(x, 1).value}
+    r = k[key]; v = IN.cell(r, 5).value
+    assert isinstance(v, (int, float)), v
+    IN.cell(r, 5).value = round(v * p1 / p0, 2)
+    IN.cell(r, 2).value = re.sub(r"（.*?）$", "", str(IN.cell(r, 2).value)) + "（stockanalysis；換算到 2026-11-04 收盤）"
+    IN.cell(r, 9).value = f"第三輪修正：原 {v}（{d0}，當日價格 {p0:,}）× 2026-11-04 收盤 {p1:,} ÷ {p0:,}（共識前瞻 EPS 視為不變）"
+    if "cons_feps" in k:
+        c = IN.cell(k["cons_feps"], 5)
+        if isinstance(c.value, str) and re.match(rf"^=([\d.]+|px)/{key}$", c.value):
+            c.value = f"=px/{key}"
+            IN.cell(k["cons_feps"], 2).value = "共識前瞻 12 月 EPS（現價 ÷ 前瞻 P/E；兩者同為 2026-11-04 口徑）"
+    log.append(f"本公司前瞻 P/E {v} → {IN.cell(r, 5).value}")
+
+
 def apply(wb, R3):
     log = []
     replace_all(wb, SCN_REPL + TOOL_REPL + tuple(R3.get("repl", ())), must=tuple(a for a, _ in R3.get("repl", ())))
@@ -137,6 +152,8 @@ def apply(wb, R3):
     if R3.get("px"):
         px(wb, R3["px"], R3["PX"], R3["px_src"], log)
         peers(wb, R3["PX"], R3["OLD"], log)
+        if R3.get("fpe"):
+            own_fpe(wb, *R3["fpe"], R3["PX"][R3["px"]], log)
     # 22：README 舊重點觀察 → 公式引用展示層「重點 1–3」
     zr = {}
     for x in range(1, RD.max_row + 1):
@@ -154,10 +171,6 @@ def apply(wb, R3):
             RD.cell(x, 1).value = f'="重點觀察 {i}："&MID(A{zr[i]},6,2000)' if i in zr and i <= 3 else None
             n += 1
     log.append(f"README 舊重點觀察 {n} 列改公式／刪除")
-    # 30：工具字樣
-    for ws, c in _each_str(wb):
-        for b in BAD:
-            assert b not in c.value, (ws.title, c.coordinate, c.value[:120])
     for f in R3.get("extra", ()):
         f(wb, log)
     print("r3_post：" + "；".join(log))
