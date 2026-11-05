@@ -1,4 +1,15 @@
-# emc/ — 台光電（2383）收支與估值模型 v0.4
+# emc/ — 台光電（2383）收支與估值模型 v0.5
+
+## v0.5（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）＋HTML 新版面 v1.0
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0（Andy 2026-11-05 20:42、20:45）與共用模組 `tools/fcff_dcf.py`：FCFF＝NOPAT＋折舊攤銷 − 資本支出 − 營運資金增加（股權報酬視為費用），以 WACC 折現到 2026 年底（期中慣例）；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC。
+- 折現率：rf＝台灣 10 年期公債 1.98%（Trading Economics，2026-11-04）；β＝Damodaran Global Electronics (General) 無槓桿 β（現金修正）1.57 以市值 D/E 重新加槓桿（Hamada）約 1.59；ERP 5%＋台灣 CRP 0.78%（Damodaran 2026-01）；股權成本約 11.2%、WACC 約 11.0%。
+- 現金流口徑：EBIT FY2027–FY2029 取 PL 推導區塊營業利益，FY2030 起由淨利 ÷ nir_f − nop_f 還原；稅率＝1 − nir_f（含非控制權益）；折舊、資本支出占營收＝近三年實績平均 2.6%、9.0%（stockanalysis），FY2029 起線性收斂到折舊 ×（1＋g）＋0.5pt；營運資金占營收近三年平均 23.4%。淨現金：2026-06-30 現金 226 億 − 有息負債 279 億 − 租賃 6 億＝−59 億。
+- 新增 DCF 頁；Val 0.1 節改為折現率與 DCF 摘要（列數不變）；Sens 目標價參數改為標準案例；刪除 tp_r、tp_roe。
+- 展示層（個股 HTML 版面規格 v1.0）：xlsx README 頁最後新增「展示層」「命題回覆」兩段（公式帶數字）；`html.json` 改名 `html_src.json`，新增 `gen_html_json.py` 經 `tools/company_html/relayout.py` 產生新版面；橫幅中間格為未調整的市場主流 Comparable（補充規則 A）。
+- 舊→新（v0.4 → v0.5）：DCF 目標價 4,735 → 3,010；加權目標價 5,809 → 4,946；上檔空間 +24.3% → +5.8%；投資建議維持中立。終值現值占情境 B 企業價值約 66%；隱含終值 EV／EBITDA 約 6.3 倍。
+- 成品：`dist/20261105_台光電個股模型_v0.5.xlsx`／`.html`；v0.4 移到 `dist/_待刪除/`。
+
 
 
 ## v0.4（2026-11-02）：滾入 3Q26 實績與 4Q 指引、股價改最新收盤
@@ -22,16 +33,16 @@
 
 **核心問題：2027–28 年 AI 每 GW CCL 需求超過產能時，擴產（月產能 615 → 945 → 1,110 萬張）與 M9 組合升級能讓營收成長多少；價格與份額回落時 EPS 會少多少；現價隱含的路徑合不合理。**
 
-**投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 +24.3%，落在 −25%～+25%）。
+**投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 +5.8%，落在 −25%～+25%）。
 
 
 - **營收分部（v0.3，分部原則）**：公司應用別 基礎設施（子列 AI、非 AI）／行動裝置／車用、工業及其他（`segments.json`）；2025 以 4Q25 比例代理（67.5／22.5），2026 基礎設施 75%、行動裝置 18%（4Q25 與 2H26 之間，Assumed）；非 AI 拆分比例固定在 FY2026；EPS 與目標價不變。
 
 ## 重點觀察
 
-1. 目標價 NT$5,809（DCF 4,735、Comparable 相對倍數調整後 6,882 各半），比現價 4,675（2026-10-30）高 24.3%，級距 0%～25%，投資建議中立——離「買進」界線 +25% 只差 0.7 個百分點。v0.4 滾入 3Q26：營收 608.85 億、毛利率 37.7%（原用指引 35%）、營業利益 186.87 億、EPS 40.47；並依公司 4Q 指引（季增 15–20%、毛利率 38–39.5%）。加權目標價 5,237 → 5,809（+10.9%）。
-2. FY2026 EPS 119.71 → 132.73（+10.9%）、FY2027 EPS（A）209.59 → 231.15（+10.3%）。漲價與產品組合（M7 以上）把毛利率推到 37.7%；公司 2027–2030 年資本支出 986 億、新增 940 萬張產能，FY2028 起的毛利率與份額相對值決定 DCF。情境 C FY2028 EPS 229.84 比情境 A 330.85 低 30.5%，DCF 價格帶 2,999～6,043。
-3. 評等對股價很敏感：股價跌回 4,647 以下即轉「買進」，回到 10-22 的 5,070 則上檔只剩 +14.6%。下一個檢驗點是 4Q26 月營收（是否達季增 15–20%）與 2027 年新產能（崑山、中山）開出時點。
+1. 目標價 NT$4,946（DCF 3,010、Comparable 相對倍數調整後 6,882 各半），比現價 4,675（2026-10-30）高 5.8%，級距 0%–25%，投資建議中立。Comparable 單獨為 +58.6%。
+2. FY2026 EPS 119.71 → 132.73（+10.9%）、FY2027 EPS（A）209.59 → 231.15（+10.3%）。漲價與產品組合（M7 以上）把毛利率推到 37.7%；公司 2027–2030 年資本支出 986 億、新增 940 萬張產能，FY2028 起的毛利率與份額相對值決定 DCF。情境 C FY2028 EPS 229.84 比情境 A 330.85 低 30.5%；v0.5 標準版 DCF 價格帶 1,939～3,820。
+3. v0.5 DCF 改為標準版（FCFF＋WACC）後，DCF 目標價 4,735 → 3,010、加權目標價 5,809 → 4,946，上檔空間 +24.3% → +5.8%，投資建議維持中立、但離「買進」界線較遠。下一個檢驗點是 4Q26 月營收（是否達季增 15–20%）與 2027 年新產能（崑山、中山）開出時點。
 
 v0.2.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。
 
@@ -40,11 +51,11 @@ AI 半導體 Project 載板與 PCB 次產業（樣板 `ibiden/`）的第一家�
 | 檔案 | 內容 |
 |---|---|
 | `build_emc.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261028_台光電個股模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
-| `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261028_台光電個股模型_v0.3.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261105_台光電個股模型_v0.5.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `html_src.json`、`gen_html_json.py`、`html.json` | HTML 展示層設定：`html_src.json` 為原設定，`gen_html_json.py` 套用版面規格 v1.0 產生 `html.json`（勿手改） |
+| `dist/20261105_台光電個股模型_v0.5.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
-建置：`python3 emc/build_emc.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）、`tools/valuation_rule.py`；**不修改它們**。
+建置：`python3 emc/build_emc.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）、`tools/valuation_rule.py`；**不修改它們**。
 
 ## 驅動因子
 
