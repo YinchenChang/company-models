@@ -98,7 +98,7 @@ asof: 2026-10-25
 - 模型 vs 共識｜FY2027 營收比共識低 7.1%、FY2028 EPS 比 eulerpool 隱含值低 13.2% [本專案：asml/README.md 對帳]｜2027-01 下旬第四季財報
 
 ## 來源
-1. 本專案：`asml/README.md`（v0.2，2026-10-25）；`asml/dist/20261025_ASML模型_v0.2.xlsx`（In、Q、Recon 頁）
+1. 本專案：`asml/README.md`（v0.2，2026-10-25）；`asml/dist/20261030_ASML個股模型_v0.2.3.xlsx`（In、Q、Recon 頁）
 2. 本專案：`先驗與比對/先驗比對_TEL_20261023.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 3. [ASML Board of Management](https://www.asml.com/en/company/governance/board-of-management)（查閱 2026-10-25）
 4. [Börse Express：ASML: Rekordausblick trifft Exportverdacht](https://www.boerse-express.com/news/articles/asml-rekordausblick-trifft-exportverdacht-929561)（2026-07-18）

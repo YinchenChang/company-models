@@ -57,7 +57,7 @@ asof: 2026-10-25
 | Core Scientific（CORZ） | AI 資料中心／託管 | 市值 5.90bn（2026-09-21） | [本專案：20261030_Nebius個股模型_v0_5_2.xlsx 來源!B9] |
 
 - 市占：本專案未建立。
-- 與 CRWV 相比，Nebius 財務槓桿低：本專案以 TTM 至 Q2 計 Nebius 為淨現金約 0.46bn [本專案：20261030_Nebius個股模型_v0_5_2.xlsx 評價_可比公司!C10]；差異主要來自預付款與可轉債為主的融資組合 [本專案：同檔 來源 頁]。
+- 與 CRWV 相比，Nebius 財務槓桿低：本專案以 TTM 至 Q2 計 Nebius 為淨現金約 0.46bn [本專案：20261030_Nebius個股模型_v0_5_2.xlsx 評價_可比公司!C10]；差異主要來自預付款與可轉債為主的融資組合 [本專案：20261030_Nebius個股模型_v0_5_2.xlsx 來源 頁]。
 - 大型雲端業者自建 GPU 叢集與其他 neocloud 爭奪同一批 AI 實驗室客戶 [外部・未經本專案檢核]。
 
 ## 主要客戶
@@ -102,7 +102,7 @@ asof: 2026-10-25
 - 在役 MW 揭露｜Q1／Q2 季末 active MW 未揭露，本專案以推估代替 [本專案：20261030_Nebius個股模型_v0_5_2.xlsx 公司實況驗證!D5]｜Q3 股東信
 
 ## 來源
-1. 本專案：`/home/claude/company-models/nebius/dist/20261022_Nebius收支模型_v0_5.xlsx`（摘要、來源、輸入與假設、公司實況驗證）
+1. 本專案：`nebius/dist/20261030_Nebius個股模型_v0_5_2.xlsx`（摘要、來源、輸入與假設、公司實況驗證）
 2. [Nebius stock falls as $3.5B loan raises AI infrastructure debt concerns](https://invezz.com/au/news/2026/10/22/nebius-stock-falls-as-dollar35b-loan-raises-ai-infrastructure-debt-concerns/)（Invezz，2026-10-22）
 3. [Nebius borrows $3.5 billion as investors question neocloud debt](https://www.thestreet.com/investing/nebius-citi-bridge-loan-gpu-prices)（TheStreet，2026-10-22）
 4. [Nebius Group Drops 12% On CoreWeave Debt Contagion](https://www.foreignpolicyjournal.com/2026/10/18/nebius-group-nasdaq-nbis-drops-12-on-coreweave-debt-contagion-but-balance-sheets-tell-different-stories-for-now/)（Foreign Policy Journal，2026-10-18）

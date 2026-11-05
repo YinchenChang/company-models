@@ -33,8 +33,8 @@ asof: 2026-10-25
 - 2Q FY27 ISG 營益率 15.0%、CSG 7.6% [本專案：20261030_戴爾個股模型_v0.1.2.xlsx In!H36、H37]。
 
 ## 市場定位與產業位置
-- 本專案有效份額（分母為 NVIDIA 與 AMD 商用 GPU 整櫃售價，不含 ASIC）FY2027 為 11.6%；換到廣達模型的 ODM 組裝市場口徑約 11.7% [本專案：20261030_戴爾個股模型_v0.1.2.xlsx Units!C9、C13]。
-- FY2027 隱含出貨約 1.3 萬櫃（NVL72 等值）；廣達模型 2026 年約 1.8 萬櫃、鴻海約 2.4 萬櫃 [本專案：20261030_戴爾個股模型_v0.1.2.xlsx Units!C11；dell/README.md 份額合理性]。
+- 本專案有效份額（分母為 NVIDIA 與 AMD 商用 GPU 整櫃售價，不含 ASIC）FY2027 為 12.4%；換到廣達模型的 ODM 組裝市場口徑約 11.7% [本專案：20261030_戴爾個股模型_v0.1.2.xlsx Units!C9、C13]。
+- FY2027 隱含出貨約 1.44 萬櫃（NVL72 等值）；廣達模型 2026 年約 1.8 萬櫃、鴻海約 2.4 萬櫃 [本專案：20261030_戴爾個股模型_v0.1.2.xlsx Units!C11；dell/README.md 份額合理性]。
 - 2Q FY27 AI 訂單 US$60.9B、在手訂單 US$95B [本專案：20261030_戴爾個股模型_v0.1.2.xlsx In!H23]。
 - Dell 與鴻海、緯創之間有重複計算（ODM 代工、Dell 以 OEM 售價入帳），份額不能直接相加 [本專案：dell/README.md 份額合理性]。
 - 主要客戶占比：本專案未建立。
@@ -53,9 +53,9 @@ asof: 2026-10-25
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| Supermicro（SMCI） | AI 伺服器品牌 | FY2027 有效份額約 7%（不同分母） | [本專案：美超微模型_v0.1.xlsx Units!D10] |
+| Supermicro（SMCI） | AI 伺服器品牌 | FY2027 有效份額約 8.1%（不同分母） | [本專案：20261104_美超微個股模型_v0.2.xlsx Units!D10] |
 | HPE | 企業 AI 伺服器 | 本專案未建立 | [本專案：20261030_戴爾個股模型_v0.1.2.xlsx In!I23] |
-| 鴻海、廣達、緯創 | ODM 直供雲端 | 三家（含緯穎）有效份額合計 43.5% | [本專案：20261030_戴爾個股模型_v0.1.2.xlsx Units!C14] |
+| 鴻海、廣達、緯創 | ODM 直供雲端 | 三家（含緯穎）有效份額合計 43.0% | [本專案：20261030_戴爾個股模型_v0.1.2.xlsx Units!C14] |
 
 - 雲端與 neocloud 直接向 ODM 採購、Supermicro 與 HPE 競價，是份額下滑的主因；本專案假設份額相對值逐年降到 0.80 [本專案：dell/README.md 份額合理性；20261030_戴爾個股模型_v0.1.2.xlsx In!E23:E25，Assumed]。
 
@@ -92,11 +92,11 @@ asof: 2026-10-25
 - AI 伺服器營益率｜拆分改用非 AI 19% 使 FY2028 EPS −11%；AI 營益率 −3pt 使 −10% [本專案：dell/README.md 結果]｜公司是否揭露 AI 毛利
 - AI 營收能否由 US$74B 升到 US$122B（FY2028）｜份額相對值 0.90 為 Assumed；在手訂單可支撐約八成 [本專案：dell/README.md 重點觀察]｜訂單公告
 - AI 部署與份額｜部署 ×0.8／×1.2 使 FY2028 EPS ±10%；份額流失 −8% [本專案：dell/README.md 結果]｜neocloud 資本支出
-- 市場口徑差異｜Dell 模型的 2026 年商用 GPU 系統市場 US$638B，美超微模型同年 US$595B（AMD 2026 年每顆價值的處理不同）[本專案：20261030_戴爾個股模型_v0.1.2.xlsx Units!C8；20261104_美超微個股模型_v0.2.xlsx Units!C8]｜模型更新
+- 市場口徑一致性｜Dell 模型與美超微模型的 2026 年商用 GPU 系統市場現在同為 US$595B（先前兩模型因 AMD 2026 年每顆價值處理不同而有差異，已對齊），兩邊更新時需同步 [本專案：20261030_戴爾個股模型_v0.1.2.xlsx Units!C8；20261104_美超微個股模型_v0.2.xlsx Units!C8]｜模型更新
 
 ## 來源
-1. 本專案：`dell/README.md`（v0.1，2026-10-25）；`dell/dist/20261025_戴爾模型_v0.1.xlsx`（In、Q、Units 頁）
-2. 本專案：`smci/dist/20261025_美超微模型_v0.1.xlsx`（對照）
+1. 本專案：`dell/README.md`（v0.1.2，2026-10-30）；`dell/dist/20261030_戴爾個股模型_v0.1.2.xlsx`（In、Q、Units 頁）
+2. 本專案：`smci/dist/20261104_美超微個股模型_v0.2.xlsx`（對照）
 3. [Dell 8-K 2Q FY27 財報新聞稿](https://www.sec.gov/Archives/edgar/data/0001571996/000157199626000039/exhibit991earnings8kq2fy27.htm)（2026-09-01）
 4. [Dell FY2026 10-K（主管名單）](https://www.sec.gov/Archives/edgar/data/1571996/000157199626000008/dell-20260130.htm)（查閱 2026-10-25）
 5. [Business Wire：Dell CFO Transition](https://www.businesswire.com/news/home/20250908467929/en/Dell-Technologies-Announces-CFO-Transition)（2025-09-08）

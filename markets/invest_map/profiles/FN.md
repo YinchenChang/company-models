@@ -34,7 +34,7 @@ asof: 2026-10-25
 - 代工毛利率低：non-GAAP 毛利率 FY2025 12.4%、FY2026 12.2% [本專案：20261104_Fabrinet個股模型_v0.2.xlsx Q!B12、Q!C12]。
 
 ## 市場定位與產業位置
-- 本專案推算 Fabrinet 在 AI 可插拔光模組的有效份額 CY2026 4.2%（代工含料件，口徑與模組廠不同）[本專案：Fabrinet模型_v0.1.xlsx Units!C6、Units!A14]。
+- 本專案推算 Fabrinet 在 AI 可插拔光模組的有效份額 CY2026 4.7%（代工含料件，口徑與模組廠不同）[本專案：20261104_Fabrinet個股模型_v0.2.xlsx Units!C6、Units!A14]。
 - 客戶集中：NVIDIA 占營收由 FY2025 27.6% 降到 FY2026 16.3%；法說轉述 FY2026 Cisco 20%、Nokia 11%、Amazon 11% [本專案：fabrinet/README.md 開頭；20261104_Fabrinet個股模型_v0.2.xlsx In!E59、In!I59]。
 - 產能：現有加 Building 10（2027 年初完工）約 85–93 億美元營收；長期目標 125–140 億美元 [本專案：20261104_Fabrinet個股模型_v0.2.xlsx In!H122、In!I122、In!H123]。
 - 泰國 BOI 租稅優惠使 non-GAAP 稅率約 4.6%；Pillar Two 補充稅每股約 1.6 美元／年被排除在 non-GAAP 外 [本專案：20261104_Fabrinet個股模型_v0.2.xlsx In!H89、In!I89；fabrinet/README.md 最大限制]。
@@ -51,11 +51,11 @@ asof: 2026-10-25
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| 中際旭創 | 光模組（自有品牌） | 可插拔有效份額 CY2026 42.2% | [本專案：Fabrinet模型_v0.1.xlsx Units!C7] |
-| Coherent、新易盛、Lumentum | 光模組 | 與中際旭創、Fabrinet 以外的市場合計 CY2026 US$16.2B | [本專案：Fabrinet模型_v0.1.xlsx Units!C10、Units!G8] |
+| 中際旭創 | 光模組（自有品牌） | 可插拔有效份額 CY2026 46.7% | [本專案：20261104_Fabrinet個股模型_v0.2.xlsx Units!C7] |
+| Coherent、新易盛、Lumentum | 光模組 | 與中際旭創、Fabrinet 以外的市場合計 CY2026 US$14.8B | [本專案：20261104_Fabrinet個股模型_v0.2.xlsx Units!C10、Units!G8] |
 
 - 網通比對檔提醒：Fabrinet 代工 NVIDIA 光學，與 NVIDIA 網通營收有重複計算風險 [本專案：先驗比對_網通_20261008.md 資料限制]。
-- 本專案網通模型：AI 可插拔光模組市場 CY2026 US$29.8B → CY2028 61.2B [本專案：Fabrinet模型_v0.1.xlsx Units!C4、Units!E4]。
+- 本專案網通模型：AI 可插拔光模組市場 CY2026 US$29.8B → CY2028 58.0B [本專案：20261104_Fabrinet個股模型_v0.2.xlsx Units!C4、Units!E4]。
 
 ## 主要客戶
 - 10-K 口徑：FY2026 有四家客戶各占營收 10% 以上、合計 57.4%（FY2025 兩家合計 45.8%；FY2024 兩家合計 48.5%）。 [外部・未經本專案檢核]
@@ -87,7 +87,7 @@ asof: 2026-10-25
 - 2026-10-20｜連跌 9 個交易日，累計約 −29%；媒體未指出公司特定原因 [外部新聞：Trefis]
 - 2026-10-23｜收盤 US$314.94，52 週高點 748.89 [本專案：20261104_Fabrinet個股模型_v0.2.xlsx In!E125、In!E126]
 - 2026-08-18｜財報後股價下跌：毛利率年減、擴產使自由現金流轉負、第一季 EPS 指引季減，另有泰國補充稅不確定性 [外部新聞：Yahoo Finance]
-- 2026-08-17｜FY2026 財報：營收 US$4.64B、non-GAAP EPS 14.09；改為三類揭露營收；第一季營收指引中點 1.40B、EPS 4.10–4.25 [本專案：Fabrinet模型_v0.1.xlsx Q!C4、Q!C19、In!E61、In!D62:F62；外部新聞：MarketBeat]
+- 2026-08-17｜FY2026 財報：營收 US$4.64B、non-GAAP EPS 14.09；改為三類揭露營收；第一季營收指引中點 1.40B、EPS 4.10–4.25 [本專案：20261104_Fabrinet個股模型_v0.2.xlsx Q!C4、Q!C19、In!I61、In!I62；外部新聞：MarketBeat]
 
 ## 需要觀察的事項
 - Pillar Two 補充稅｜計入時 FY2028 EPS −9.5%（non-GAAP 排除）[本專案：fabrinet/README.md 結果]｜FY2027 Q1 財報（預估 2026-11-02 盤後）
@@ -97,7 +97,7 @@ asof: 2026-10-25
 - 顆數情境｜情境 C 全部使 FY2028 EPS −20.8% [本專案：fabrinet/README.md 結果]｜NVIDIA、雲端業者資本支出
 
 ## 來源
-1. 本專案：`fabrinet/README.md`；`fabrinet/dist/20261025_Fabrinet模型_v0.1.xlsx`（Q、Units、In）；AI半導體 `先驗比對_網通_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
+1. 本專案：`fabrinet/README.md`；`fabrinet/dist/20261104_Fabrinet個股模型_v0.2.xlsx`（Q、Units、In）；AI半導體 `先驗比對_網通_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 2. [A 9-Day Losing Streak Has Fabrinet Stock Down 29%（Trefis）](https://www.trefis.com/stock/fn/articles/619603/a-9-day-losing-streak-has-fabrinet-stock-down-29/2026-10-21)（2026-10-21）
 3. [Fabrinet Shares Slide Despite Earnings Beat（Yahoo Finance）](https://finance.yahoo.com/markets/stocks/articles/fabrinet-shares-slide-despite-earnings-102815774.html)（2026-08-18）
 4. [Fabrinet Q4 Earnings Call Highlights（MarketBeat）](https://www.marketbeat.com/instant-alerts/fabrinet-q4-earnings-call-highlights-2026-08-17/)（2026-08-17）

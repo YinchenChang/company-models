@@ -120,7 +120,7 @@ asof: 2026-11-04
 - 模型與現價差距｜現價 143.89 美元（2026-10-29），加權目標價 34.79 美元、上檔空間 −75.8%，模型評級「強力放空」；市場共識目標價 244.97 美元 [本專案：20261104_SpaceX個股模型_v0.2.3.xlsx Val!B9、Val!B8、Val!B11、Val!B14、Val!B10]｜Tesla 合併案進展
 
 ## 來源
-1. 本專案：/home/claude/wt23/spacex/dist/20261104_SpaceX個股模型_v0.2.2.xlsx（In、Q、Thesis、CF、Val、Recon、Sens）、spacex/README.md、spacex/docs/reports/20261104_spacex_v0.2.2_TK快照v21.9.md（2026-11-04）
+1. 本專案：spacex/dist/20261104_SpaceX個股模型_v0.2.3.xlsx（In、Q、Thesis、CF、Val、Recon、Sens）、spacex/README.md、spacex/docs/reports/20261104_spacex_v0.2.2_TK快照v21.9.md（2026-11-04）
 2. 本專案：/home/claude/wt23/spacex/data/spacex_facts_2026q3.json、spacex_facts_v02.json（2026-10-30）
 3. 本專案：/home/claude/wt23/anthropic/dist/20261103_Anthropic收支模型_v0_1_8.xlsx（SRC_ANT）；/home/claude/wt23/alphabet/data/alphabet_facts_20261008.json、alphabet_facts_2026q3.json
 4. [Anthropic is SpaceX's biggest customer, bringing in a third of revenue（The Next Web，轉述 Bloomberg）](https://thenextweb.com/news/anthropic-spacex-largest-customer-customer-b)（2026-10-29）

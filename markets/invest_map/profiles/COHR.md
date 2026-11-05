@@ -34,8 +34,8 @@ asof: 2026-10-25
 
 ## 市場定位與產業位置
 - LightCounting 2025 光模組排名：中際旭創第一、新易盛第二（首次超過 Coherent）、Coherent 第三 [本專案：先驗比對_中際旭創_20261024.md Q5(b)]。
-- 本專案推算 Coherent 在 AI 可插拔光模組的有效份額 CY2026 14.6% → CY2028 16.8%（情境 A；含賣給其他模組廠的雷射元件，所以叫「有效」份額）[本專案：Coherent模型_v0.2.xlsx Units!C6、Units!E6]。
-- 與中際旭創合計 CY2026 56.8%，其餘由新易盛、Lumentum、Fabrinet 代工客戶等分配 [本專案：Coherent模型_v0.2.xlsx Units!C8、Units!G8]。
+- 本專案推算 Coherent 在 AI 可插拔光模組的有效份額 CY2026 15.5% → CY2028 17.9%（情境 A；含賣給其他模組廠的雷射元件，所以叫「有效」份額）[本專案：20261104_Coherent個股模型_v0.3.xlsx Units!C6、Units!E6]。
+- 與中際旭創合計 CY2026 62.2%，其餘由新易盛、Lumentum、Fabrinet 代工客戶等分配 [本專案：20261104_Coherent個股模型_v0.3.xlsx Units!C8、Units!G8]。
 - 客戶集中：兩大客戶各逾營收 10%；NVIDIA 投資 Coherent 20 億美元 [本專案：20261104_Coherent個股模型_v0.3.xlsx Sources!A4、In!H77（10-K 摘要，二手）]。
 - SiC 子公司 25% 由 DENSO、三菱電機持有 [本專案：20261104_Coherent個股模型_v0.3.xlsx In!I65]。
 
@@ -52,12 +52,12 @@ asof: 2026-10-25
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| 中際旭創 | 800G／1.6T 光模組 | 可插拔有效份額 CY2026 42.2% | [本專案：Coherent模型_v0.2.xlsx Units!C7] |
+| 中際旭創 | 800G／1.6T 光模組 | 可插拔有效份額 CY2026 46.7% | [本專案：20261104_Coherent個股模型_v0.3.xlsx Units!C7] |
 | 新易盛 | 光模組 | 2025 光模組營收 US$3.5B，排名高於 Coherent（LightCounting） | [本專案：20261104_Coherent個股模型_v0.3.xlsx In!E107] |
 | Lumentum | 雷射元件、OCS | 本專案未建立對比份額 | — |
 
-- 本專案網通模型：AI 可插拔光模組市場 CY2026 US$29.8B → CY2027 54.7B → CY2028 61.2B [本專案：Coherent模型_v0.2.xlsx Units!C4:E4]。
-- CPO 光學市場 CY2026 US$0.3B → CY2029 5.9B，模型假設 Coherent 拿 10%／15%／20% [本專案：Coherent模型_v0.2.xlsx Units!C5、Units!F5；In!E31:E33]。
+- 本專案網通模型：AI 可插拔光模組市場 CY2026 US$29.8B → CY2027 53.6B → CY2028 58.0B [本專案：20261104_Coherent個股模型_v0.3.xlsx Units!C4:E4]。
+- CPO 光學市場 CY2026 US$0.3B → CY2029 11.7B，模型假設 Coherent 拿 10%／15%／20% [本專案：20261104_Coherent個股模型_v0.3.xlsx Units!C5、Units!F5；In!E31:E33]。
 - 份額相對值假設 1.10／1.15／1.15（磷化銦產能倍增、1.6T 提前）；新易盛、中際旭創搶 1.6T 是下行路徑 [本專案：cohr/README.md 驅動因子；20261104_Coherent個股模型_v0.3.xlsx Sens!B5]。
 
 ## 主要客戶
@@ -83,11 +83,12 @@ asof: 2026-10-25
 - 口徑：13F 機構持股（insiderset 彙整頁，頁面導言稱 2026-06-30（Q2 2026），但標題／FAQ 另有 Q3 2026 字樣，資料日不完全確定）；比例為本檔以 proxy 所載流通股數 196,934,659（2026/8/31）換算，僅供參考。Vanguard 13F 拆成兩實體。第 6 名 NVIDIA Corp 為 2026/3 私募投資（與上述策略協議一併）。proxy（來源 3）5% 以上持有人：Vanguard Capital Management 13,968,914 股 7.1%、BlackRock 12,978,940 股 6.6%、FMR LLC 11,006,110 股 5.6%（13G 申報）。 [外部・未經本專案檢核]
 
 ## 近期重大事件
+- 2026-11-04｜FY2027 第一季財報：營收 US$2.37B（年增 49.9%）、non-GAAP 毛利率 40.6%、non-GAAP EPS 2.09，皆高於原指引；第二季營收指引 2.55–2.75B [本專案：20261104_Coherent個股模型_v0.3.xlsx In!E53、In!E54、In!E56、In!H38]
 - 2026-10-22｜光通訊股隨晶片股重挫，Coherent 單日跌約 12%；媒體歸因於科技股賣壓與財報前觀望，非公司本身利空 [外部新聞：24/7 Wall St.]
 - 2026-10-14｜公布 FY2027 第一季財報日為 2026-11-04 盤後 [外部新聞：Earnings Whispers]
 - 2026-09-20｜在 ECOC 展示 PhotonLink 整合光學平台（CPO、NPO、晶片間連接），並擴充六吋磷化銦與特殊光纖產能 [外部新聞：Autobound 彙整公司新聞稿]
 - 2026-08-17｜開始送樣 300mm 高導熱 SiC 基板，用於 AI 基礎設施散熱 [外部新聞：Autobound 彙整公司新聞稿]
-- 2026-08-12｜FY2026 財報：第四季營收 US$2.05B、全年 7.12B、non-GAAP EPS 5.61；第一季指引營收 2.3B、EPS 1.95 [本專案：Coherent模型_v0.2.xlsx In!E41、Q!C4、Q!C19、In!E53、In!E56]
+- 2026-08-12｜FY2026 財報：第四季營收 US$2.05B、全年 7.12B、non-GAAP EPS 5.61；第一季指引營收 2.2–2.4B、non-GAAP EPS 1.85–2.05 [本專案：20261104_Coherent個股模型_v0.3.xlsx In!E41、Q!C4、Q!C19、In!I53、In!I56]
 - 2026-07-08｜宣布擴建德州 Sherman 六吋磷化銦廠 [外部新聞：Autobound 彙整公司新聞稿]
 
 ## 需要觀察的事項
@@ -95,10 +96,10 @@ asof: 2026-10-25
 - 份額｜份額流失（新易盛、中際旭創搶 1.6T）使 FY2028 EPS −17% [本專案：cohr/README.md 結果]｜同上，看資料中心季增
 - 加速器顆數情境 C｜FY2028 EPS −16%；AI 市場 ×0.8 −15% [本專案：cohr/README.md 結果]｜NVIDIA、雲端業者資本支出
 - 資料中心／通訊拆分｜兩者金額是推導值，季報後要更新 [本專案：cohr/README.md 最大限制]｜同上
-- CPO｜CPO 份額歸零只使 FY2028 EPS −3%，短期不是承重變數 [本專案：cohr/README.md 結果]｜PhotonLink 營收自 12 月季開始（公司說法）[本專案：Coherent模型_v0.2.xlsx In!I38]
+- CPO｜CPO 份額歸零只使 FY2028 EPS −3%，短期不是承重變數 [本專案：cohr/README.md 結果]｜PhotonLink 營收自 12 月季開始（公司說法）[本專案：20261104_Coherent個股模型_v0.3.xlsx In!I38]
 
 ## 來源
-1. 本專案：`cohr/README.md`；`cohr/dist/20261025_Coherent模型_v0.2.xlsx`（Q、Units、In、Sens、Sources）；AI半導體 `先驗比對_中際旭創_20261024.md`、`先驗比對_網通_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
+1. 本專案：`cohr/README.md`；`cohr/dist/20261104_Coherent個股模型_v0.3.xlsx`（Q、Units、In、Sens、Sources）；AI半導體 `先驗比對_中際旭創_20261024.md`、`先驗比對_網通_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 2. [Optics Stocks Tumble as Tech Selloff Deepens Ahead of Earnings（24/7 Wall St.）](https://247wallst.com/investing/2026/10/22/optics-stocks-tumble-as-tech-selloff-deepens-ahead-of-earnings-coherent-tumbles-12-applied-optoelectronics-drops-10-lumentum-falls-9/)（2026-10-22）
 3. [Coherent news（Earnings Whispers）](https://www.earningswhispers.com/news/COHR)（2026-10）
 4. [Coherent news（Autobound）](https://www.autobound.ai/companies/coherent/news)（2026-07～09）

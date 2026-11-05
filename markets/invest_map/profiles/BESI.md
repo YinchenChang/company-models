@@ -90,14 +90,14 @@ asof: 2026-10-25
 - 2026-07-23｜第二季營收 €249.9M、毛利率 65.7% [本專案：20261031_BESI模型_v0.1.3.xlsx Q!I4、I6]
 
 ## 需要觀察的事項
-- 邏輯混合鍵合導入比例的斜率（2028 年起）｜×0.7／×1.3 使 FY2027 EPS −22.0%／+22.0%，是最敏感的公司變數 [本專案：BESI模型_v0.1.xlsx Sens!E7:E8]｜台積電 SoIC 擴產消息
-- 上游情境（CoWoS 片數、HBM 位元、設備市場）｜情境 B／C 的 FY2027 EPS 比 A 低 30.0%／45.4% [本專案：BESI模型_v0.1.xlsx Sens!E32:E33]｜台積電、記憶體廠財報
-- 主流業務對設備市場的彈性｜0.5／1.5 使 FY2027 EPS −6.9%／+6.9% [本專案：BESI模型_v0.1.xlsx Sens!E23:E24]｜每季訂單
-- HBM 混合鍵合導入時點｜改用 Disco 基準／低值時 FY2027 EPS −4.1%／−7.2%；HBM 段在 FY2027–28 權重仍小 [本專案：BESI模型_v0.1.xlsx Sens!E5:E6]｜HBM4E／HBM5 製程決定
+- 邏輯混合鍵合導入比例的斜率（2028 年起）｜×0.7／×1.3 使 FY2027 EPS −21.9%／+21.9%，是最敏感的公司變數 [本專案：20261031_BESI模型_v0.1.3.xlsx Sens!E7:E8]｜台積電 SoIC 擴產消息
+- 上游情境（CoWoS 片數、HBM 位元、設備市場）｜情境 B／C 的 FY2027 EPS 比 A 低 31.9%／47.2% [本專案：20261031_BESI模型_v0.1.3.xlsx Sens!E32:E33]｜台積電、記憶體廠財報
+- 主流業務對設備市場的彈性｜0.5／1.5 使 FY2027 EPS −6.1%／+6.1% [本專案：20261031_BESI模型_v0.1.3.xlsx Sens!E23:E24]｜每季訂單
+- HBM 混合鍵合導入時點｜改用 Disco 基準／低值時 FY2027 EPS −6.1%／−9.2%；HBM 段在 FY2027–28 權重仍小 [本專案：20261031_BESI模型_v0.1.3.xlsx Sens!E5:E6]｜HBM4E／HBM5 製程決定
 - 策略檢討結論｜可能改變與應用材料的合作方式，模型未建模 [本專案：besi/README.md 最大限制]｜2027-01 初；第四季與全年實績 2027-02-25
 
 ## 來源
-1. 本專案：`besi/README.md`（v0.1，2026-10-25）；`besi/dist/20261025_BESI模型_v0.1.xlsx`（In、Q、PL、Sens 頁）
+1. 本專案：`besi/README.md`（v0.1.3，2026-10-31）；`besi/dist/20261031_BESI模型_v0.1.3.xlsx`（In、Q、PL、Sens 頁）
 2. 本專案：`先驗與比對/先驗比對_HBM_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 3. [GuruFocus：BESI Q3 2026 法說重點](https://www.gurufocus.com/news/9137691/be-semiconductor-industries-nv-besiy-q3-2026-earnings-call-highlights-revenue-more-than-doubles-a)（2026-10-22）
 4. [Simply Wall St：BESI management](https://simplywall.st/stocks/nl/semiconductors/ams-besi/be-semiconductor-industries-shares/management)（查閱 2026-10-25）

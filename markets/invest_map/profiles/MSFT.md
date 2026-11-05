@@ -22,21 +22,21 @@ asof: 2026-10-27
 ## 主要產品與營收占比
 | 產品／部門 | 內容（白話） | 營收占比 | 期間 | 標記 |
 |---|---|---|---|---|
-| **Agents and Infra**（分部） | 雲端、AI 算力與商用軟體 | 80.8%（2,681.3 億美元）；FY26Q4 82.9% | FY2026（至 2026-06）；FY26Q4 | [本專案：20261027_Microsoft個股模型_v0.3.xlsx Q!M5、Q!I5；Derived＝÷Q!M18、Q!I18] |
-| 　Azure | 雲端與 AI 用量型服務、虛擬桌面 | 30.7%（1,019.4 億美元）；FY26Q4 32.7% | FY2026；FY26Q4 | [本專案：20261027_Microsoft個股模型_v0.3.xlsx Q!M6、Q!I6；Derived] |
-| 　Microsoft 365 cloud | Microsoft 365 雲端訂閱（含 Copilot 加購） | 30.2%（1,003.0 億美元）；FY26Q4 29.7% | FY2026；FY26Q4 | [本專案：20261027_Microsoft個股模型_v0.3.xlsx Q!M7、Q!I7；Derived] |
-| 　Productivity and server licensing | 非雲端的辦公軟體與伺服器授權 | 11.2%（372.9 億美元）；FY26Q4 12.3% | FY2026；FY26Q4 | [本專案：20261027_Microsoft個股模型_v0.3.xlsx Q!M8、Q!I8；Derived] |
-| 　Industry solutions | Dynamics、LinkedIn 人才與銷售方案、醫療雲 | 6.1%（203.5 億美元）；FY26Q4 5.9% | FY2026；FY26Q4 | [本專案：20261027_Microsoft個股模型_v0.3.xlsx Q!M9、Q!I9；microsoft_facts_20261008.json 產品別口徑說明；Derived] |
-| 　Frontier and support services | 企業支援與顧問服務 | 2.5%（82.6 億美元）；FY26Q4 2.3% | FY2026；FY26Q4 | [本專案：20261027_Microsoft個股模型_v0.3.xlsx Q!M10、Q!I10；Derived] |
-| **Devices and Consumer**（分部） | 消費端產品 | 19.2%（637.1 億美元）；FY26Q4 17.1% | FY2026；FY26Q4 | [本專案：20261027_Microsoft個股模型_v0.3.xlsx Q!M12、Q!I12；Derived] |
-| 　Search and advertising | Bing 搜尋廣告、LinkedIn 行銷與 Premium | 7.5%（248.4 億美元）；FY26Q4 7.1% | FY2026；FY26Q4 | [本專案：20261027_Microsoft個股模型_v0.3.xlsx Q!M13、Q!I13；Derived] |
-| 　XBOX | 遊戲內容、服務與主機 | 6.6%（217.9 億美元）；FY26Q4 5.5% | FY2026；FY26Q4 | [本專案：20261027_Microsoft個股模型_v0.3.xlsx Q!M14、Q!I14；Derived] |
-| 　Windows OEM and devices | 預載在新電腦的 Windows 授權、Surface 等裝置 | 5.1%（170.9 億美元）；FY26Q4 4.5% | FY2026；FY26Q4 | [本專案：20261027_Microsoft個股模型_v0.3.xlsx Q!M15、Q!I15；Derived] |
+| **Agents and Infra**（分部） | 雲端、AI 算力與商用軟體 | 80.8%（2,681.3 億美元）；FY26Q4 82.9% | FY2026（至 2026-06）；FY26Q4 | [本專案：20261104_Microsoft個股模型_v0.3.5.xlsx Q!M5、Q!H5；Derived＝÷Q!M18、Q!H18] |
+| 　Azure | 雲端與 AI 用量型服務、虛擬桌面 | 30.7%（1,019.4 億美元）；FY26Q4 32.7% | FY2026；FY26Q4 | [本專案：20261104_Microsoft個股模型_v0.3.5.xlsx Q!M6、Q!H6；Derived] |
+| 　Microsoft 365 cloud | Microsoft 365 雲端訂閱（含 Copilot 加購） | 30.2%（1,003.0 億美元）；FY26Q4 29.7% | FY2026；FY26Q4 | [本專案：20261104_Microsoft個股模型_v0.3.5.xlsx Q!M7、Q!H7；Derived] |
+| 　Productivity and server licensing | 非雲端的辦公軟體與伺服器授權 | 11.2%（372.9 億美元）；FY26Q4 12.3% | FY2026；FY26Q4 | [本專案：20261104_Microsoft個股模型_v0.3.5.xlsx Q!M8、Q!H8；Derived] |
+| 　Industry solutions | Dynamics、LinkedIn 人才與銷售方案、醫療雲 | 6.1%（203.5 億美元）；FY26Q4 5.9% | FY2026；FY26Q4 | [本專案：20261104_Microsoft個股模型_v0.3.5.xlsx Q!M9、Q!H9；microsoft_facts_20261008.json 產品別口徑說明；Derived] |
+| 　Frontier and support services | 企業支援與顧問服務 | 2.5%（82.6 億美元）；FY26Q4 2.3% | FY2026；FY26Q4 | [本專案：20261104_Microsoft個股模型_v0.3.5.xlsx Q!M10、Q!H10；Derived] |
+| **Devices and Consumer**（分部） | 消費端產品 | 19.2%（637.1 億美元）；FY26Q4 17.1% | FY2026；FY26Q4 | [本專案：20261104_Microsoft個股模型_v0.3.5.xlsx Q!M12、Q!H12；Derived] |
+| 　Search and advertising | Bing 搜尋廣告、LinkedIn 行銷與 Premium | 7.5%（248.4 億美元）；FY26Q4 7.1% | FY2026；FY26Q4 | [本專案：20261104_Microsoft個股模型_v0.3.5.xlsx Q!M13、Q!H13；Derived] |
+| 　XBOX | 遊戲內容、服務與主機 | 6.6%（217.9 億美元）；FY26Q4 5.5% | FY2026；FY26Q4 | [本專案：20261104_Microsoft個股模型_v0.3.5.xlsx Q!M14、Q!H14；Derived] |
+| 　Windows OEM and devices | 預載在新電腦的 Windows 授權、Surface 等裝置 | 5.1%（170.9 億美元）；FY26Q4 4.5% | FY2026；FY26Q4 | [本專案：20261104_Microsoft個股模型_v0.3.5.xlsx Q!M15、Q!H15；Derived] |
 
-- 口徑：FY2027 起的兩分部、八條產品線（2026-09-02 8-K 重編 FY2025–FY2026 各季）；兩分部合計 3,318.39 億美元＝全公司營收，FY26Q4 單季 900.07 億美元，核對列為 0 [本專案：20261027_Microsoft個股模型_v0.3.xlsx Q!M17、Q!M18、Q!I18、Q!M19]。
-- 舊三分部（FY2026 以前口徑）對照：生產力與商業流程 1,399.96 億、智慧雲 1,377.91 億、更多個人運算 540.52 億美元 [本專案：20261027_Microsoft個股模型_v0.3.xlsx Q!M46、Q!M47、Q!M48]。
-- 成長最快的是 Azure：FY26Q4 年增 42%（重編口徑）[本專案：20261027_Microsoft個股模型_v0.3.xlsx Q!I50]；模型把 Azure 再拆成 Azure AI（FY2026 模型估計約 278 億美元）與其他，Microsoft 365 cloud 拆出 Copilot（約 52.5 億美元，估計），兩者公司皆未揭露 [本專案：microsoft/docs/reports/20261027_microsoft_v0.3_分部架構.md 3.1]。
-- 分部營業利益 FY2026：Agents and Infra 1,363.65 億、Devices and Consumer 188.72 億美元 [本專案：20261027_Microsoft個股模型_v0.3.xlsx Q!M21、Q!M22]；對 OpenAI 的商業收入 241 億美元 [本專案：microsoft_facts_20261008.json oai.rev.fy2026]。
+- 口徑：FY2027 起的兩分部、八條產品線（2026-09-02 8-K 重編 FY2025–FY2026 各季）；兩分部合計 3,318.39 億美元＝全公司營收，FY26Q4 單季 900.07 億美元，核對列為 0 [本專案：20261104_Microsoft個股模型_v0.3.5.xlsx Q!M17、Q!M18、Q!H18、Q!M19]。
+- 舊三分部（FY2026 以前口徑）對照：生產力與商業流程 1,399.96 億、智慧雲 1,377.91 億、更多個人運算 540.52 億美元 [本專案：20261104_Microsoft個股模型_v0.3.5.xlsx Q!M47、Q!M48、Q!M49]。
+- 成長最快的是 Azure：FY26Q4 年增 42%（重編口徑）[本專案：20261104_Microsoft個股模型_v0.3.5.xlsx Q!H51]；模型把 Azure 再拆成 Azure AI（FY2026 模型估計約 278 億美元）與其他，Microsoft 365 cloud 拆出 Copilot（約 52.5 億美元，估計），兩者公司皆未揭露 [本專案：microsoft/docs/reports/20261027_microsoft_v0.3_分部架構.md 3.1]。
+- 分部營業利益 FY2026：Agents and Infra 1,363.65 億、Devices and Consumer 188.72 億美元 [本專案：20261104_Microsoft個股模型_v0.3.5.xlsx Q!M21、Q!M22]；對 OpenAI 的商業收入 241 億美元 [本專案：microsoft_facts_20261008.json oai.rev.fy2026]。
 
 ## 市場定位與產業位置
 - 雲端市占：本專案未建立。
@@ -111,8 +111,8 @@ asof: 2026-10-27
 - OpenAI 集中度｜扣除 OpenAI 後商用 RPO 年增約 25% [本專案：microsoft_facts_20261008.json call.rpoExOAI.fy26q4]｜2026-10-28 財報的 RPO 拆分
 
 ## 來源
-1. 本專案：/home/claude/company-models/microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx（Q、Thesis、CF、Val、Sens）、microsoft/README.md、microsoft/docs/reports/20261027_microsoft_v0.3_分部架構.md（2026-10-27）
+1. 本專案：/home/claude/company-models/microsoft/dist/20261104_Microsoft個股模型_v0.3.5.xlsx（Q、Thesis、CF、Val、Sens）、microsoft/README.md、microsoft/docs/reports/20261027_microsoft_v0.3_分部架構.md（2026-10-27）
 2. 本專案：/home/claude/company-models/microsoft/data/microsoft_facts_20261008.json（2026-10-08）
-3. 本專案：/home/claude/company-models/amazon/data/amazon_facts_20261008.json、/home/claude/company-models/alphabet/data/alphabet_facts_20261008.json、/home/claude/company-models/oracle/data/oracle_facts_20261007.json、/home/claude/company-models/oracle/dist/20261027_Oracle個股模型_v0.4.xlsx（Val，CoreWeave 倍數）
+3. 本專案：/home/claude/company-models/amazon/data/amazon_facts_20261008.json、/home/claude/company-models/alphabet/data/alphabet_facts_20261008.json、/home/claude/company-models/oracle/data/oracle_facts_20261007.json、/home/claude/company-models/oracle/dist/20261104_Oracle個股模型_v0.4.5.xlsx（Val，CoreWeave 倍數）
 4. [Microsoft Form 10-K FY2026（管理層名單）](https://www.sec.gov/Archives/edgar/data/0000789019/000119312526323660/msft-20260630.htm)（2026-07-29）
 5. [Microsoft announces quarterly earnings release date（Finviz 轉載）](https://finviz.com/news/400058/microsoft-announces-quarterly-earnings-release-date)（2026-10-07）
