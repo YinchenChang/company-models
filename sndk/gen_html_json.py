@@ -49,6 +49,12 @@ def _shift_scn(blocks):
                 blocks[i_] = json.loads(re.sub(r"In!([A-Z]+)(\d+)", lambda m: f"In!{m.group(1)}{int(m.group(2)) + d}" if int(m.group(2)) >= old_h else m.group(0), json.dumps(b, ensure_ascii=False)))
             nb_ = len(blocks[i_]["rows"])
             assert wb["In"].cell(new_h + nb_, 1).value and not wb["In"].cell(new_h + nb_ + 1, 1).value, ("情境驅動表列數與 In 頁不符", new_h, nb_)
+            # v0.5.3（第三輪修正第 15、39 項）：三情境欄依單位格式化（% 列顯示百分比，原為小數）
+            for row_ in blocks[i_]["rows"]:
+                r_ = int(re.search(r"In!B(\d+)", row_[0]).group(1)); u_ = str(wb["In"].cell(r_, 3).value or "")
+                f_ = "p1" if u_ == "%" else ("n2" if u_ == "x" else "")
+                if f_:
+                    row_[1:4] = [x.split("|")[0] + "|" + f_ for x in row_[1:4]]
 _shift_scn(sec("drivers")["blocks"])
 
 # ---- 前處理一：驅動因子章的「單一參數」表其實是驅動 → 推導對照表（輸入、推導量、因果方向），移到附錄 ----
@@ -57,6 +63,14 @@ for b in sec("drivers")["blocks"]:
         b["caption"] = "驅動 → 推導對照表（In 頁基準值與 PL 頁推導量）"
 
 # ---- 前處理二：估值章（重點觀察與投資建議已在第一章與橫幅；kv 改為有標題的表；DCF 前加折現率表；同業表摺疊）----
+def _dfmt(t):
+    """DCF 頁明細列的顯示格式（v0.5.3）：只有稅率、折舊攤銷 ÷、資本支出 ÷、終值現值占 EV 用百分比；NOPAT、終值、每股價值不顯示成 %。"""
+    if t.startswith(("稅率", "折舊攤銷 ÷", "資本支出 ÷", "終值現值占", "評價日後占")): return "p1"
+    if t.startswith("折現因子"): return "n4"
+    if t.startswith("隱含終值 EV／EBITDA"): return "x1"
+    return "n2"
+
+
 va = sec("valuation")
 nb, old, i = [], va["blocks"], 0
 while i < len(old):
@@ -99,7 +113,7 @@ while i < len(old):
         nb.append({"type": "table", "collapse": True, "summary": "展開：情境 B 的無槓桿自由現金流明細（DCF 頁；情境 A、C 同式）", "caption": f"@DCF!A{b0}",
                    "head": [f"@DCF!{c}{hd}" for c in "ACDEFGH"],
                    "rowgen": {"sheet": "DCF", "rows": f"{b0 + 1}-{b1}", "cols": list("ACDEFGH"), "fmts": ["", "n2", "n2", "n2", "n2", "n2", "n2"],
-                              "row_fmt": {str(r): {c: ("n4" if "因子" in lab(r) else "p1") for c in "CDEFGH"} for r in range(b0 + 1, b1 + 1) if any(k in lab(r) for k in ("率", "÷", "占", "因子"))}}})
+                              "row_fmt": {str(r): {c: _dfmt(lab(r)) for c in "CDEFGH"} for r in range(b0 + 1, b1 + 1) if _dfmt(lab(r)) != "n2"}}})   # v0.5.3：只有比例列用百分比（第三輪修正第 38 項）
         i += 1
         continue
     if b["type"] == "bars":     # v0.5：舊 0.1 節的 DCF 目標價列已移位（Val 第 24 列 → 標籤所在列）
@@ -152,10 +166,10 @@ SPEC = {
     ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "bs_date", "stub_frac", "stub_div", "sh_v"]],
     ["自由現金流（折舊、資本支出、營運資金的長期穩態）", ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]],
     ["目標價規則與情境權重", ["tp_w_dcf", "tp_wA", "tp_wB", "tp_wC", "cons_tp"]],
-    ["收斂期（FY2030 起回到循環中段）", ["tp_g", "nim10", "cyc_mA", "cyc_mC", "fade_mA", "fade_mB", "fade_mC", "fade_gA", "fade_gB", "fade_gC"]]]]],
+    ["收斂期（FY2030 起回到循環中段）", ["tp_g", "nim10", "cyc_mA", "cyc_mB", "cyc_mC", "fade_mA", "fade_mB", "fade_mC", "fade_gA", "fade_gB", "fade_gC"]]]]],
  "blocks_to": {},
  "main": {
-  "0.1 DCF": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+  "0.1 DCF": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "＋Stub 期 FCFF", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
   "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
   "與公司實績、指引與共識": ["FQ1 FY27 營收 vs 公司實績", "FQ1 FY27 EPS vs 實績", "FY2027 EPS vs 共識", "FY2028 EPS vs 共識", "FY2028 年底每股淨值 vs 共識"],
  },
