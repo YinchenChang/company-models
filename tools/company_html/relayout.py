@@ -114,6 +114,17 @@ def _clean(cap, fallback):
     return c if c and not re.search(r"\d", re.sub(r"(FY|CY)\d{4}", "", c)) else fallback
 
 
+def _pick(mains, cap, blk):
+    """main 的鍵：表格 caption 開頭；或「sheet:工作表」配沒有 caption 的 rowgen 表。"""
+    for k, v in mains.items():
+        if k.startswith("sheet:"):
+            if not cap and blk.get("rowgen", {}).get("sheet") == k[6:]:
+                return v
+        elif cap and cap.startswith(k):
+            return v
+    return None
+
+
 def _split_table(w, blk, prefixes, n_main, summary):
     rows = _table_rows(w, blk)
     data = [(lab, r) for lab, r in rows if not isinstance(r, dict)]
@@ -247,6 +258,7 @@ def relayout(cfg, xlsx, spec):
     cfg["wide_text"] = True
     cfg["hero"] = _hero(w)
     old_thesis = secs["thesis"]
+    old_thesis.pop("intro", None)   # 版本說明等改放附錄
     appendix = [b for b in old_thesis["blocks"] if b["type"] == "list" and b is not None][-1:] if old_thesis["blocks"] else []
     secs["thesis"]["blocks"] = [
         {"type": "h3", "text": "命題"},
@@ -297,7 +309,7 @@ def relayout(cfg, xlsx, spec):
     for b in rest:
         if b["type"] == "table" and not b.get("collapse"):
             cap = w.text(b.get("caption", ""))
-            pref = next((v for k, v in mains.items() if cap.startswith(k)), None)
+            pref = _pick(mains, cap, b)
             if pref is None:
                 hit = [p for p in CONC_MAIN if any(lab.strip().startswith(p) for lab, _ in _table_rows(w, b))]
                 if len(hit) >= 4:
@@ -315,7 +327,7 @@ def relayout(cfg, xlsx, spec):
     for b in rc["blocks"]:
         if b["type"] == "table" and not b.get("collapse"):
             cap = w.text(b.get("caption", ""))
-            pref = next((v for k, v in mains.items() if cap.startswith(k)), None)
+            pref = _pick(mains, cap, b)
             nb += _split_table(w, b, pref, spec.get("n_recon", 4), f"展開：{_clean(cap, '本節')[:30]}的其他對帳項目")
         else:
             nb.append(b)
