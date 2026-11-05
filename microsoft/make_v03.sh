@@ -1,14 +1,14 @@
 #!/bin/bash
-# Microsoft 個股模型 v0.3.5（v0.3.4：Tokenomics 快照 v21.9；v0.3.5：Tokenomics 快照 v21.10）：一次跑完 建置 → LibreOffice 重算 → 核對 → segment_check → HTML。
+# Microsoft 個股模型 v0.3.6（v0.3.4：Tokenomics 快照 v21.9；v0.3.5：Tokenomics 快照 v21.10；v0.3.6：只改展示層〔個股 HTML 版面規格 v1.0〕）：一次跑完 建置 → LibreOffice 重算 → 核對 → segment_check → 版面轉換 → HTML。
 #   bash microsoft/make_v03.sh            # 用已提交的變動拆解 microsoft/data/attrib_v031_20261029.json（Recon 第 5、6 節）
 #   SENS=1 bash microsoft/make_v03.sh     # 先重跑 C10 重解與變動拆解（microsoft/attrib_v031.py --solve，約 15 次整本重算），
-#                                          再重跑 Sens 整本重算案例（microsoft/sens_v033.py，約 60 次整本重算 → data/sens_v035_20261104.json）
+#                                          再重跑 Sens 整本重算案例（microsoft/sens_v033.py，約 60 次整本重算 → data/sens_v036_20261105.json）
 # 敏感度（Sens 頁）：原有案例在同一本 xlsx 內以完整引擎區塊計算；v0.3.3 補的案例（原則第 9 節）為整本重算的數值。需要：python3＋openpyxl、python-docx、LibreOffice（soffice）。
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-OUTNAME="20261104_Microsoft個股模型_v0.3.5.xlsx"
+OUTNAME="20261105_Microsoft個股模型_v0.3.6.xlsx"
 python3 microsoft/facts_fy27q1.py
 if [ "${SENS:-0}" = "1" ]; then
   python3 microsoft/attrib_v031.py --solve
@@ -22,5 +22,6 @@ python3 microsoft/check_v03.py "microsoft/dist/$OUTNAME"
 python3 mag/check_in_layout.py "microsoft/dist/$OUTNAME"
 python3 tools/sens_coverage/check_sens_coverage.py "microsoft/dist/$OUTNAME" --require-keycol   # v0.3.3：敏感度覆蓋（原則第 9 節）
 python3 tools/segment_check/check_segments.py microsoft
+python3 tools/company_html/relayout.py microsoft "microsoft/dist/$OUTNAME"   # v0.3.6：html.json 轉成個股 HTML 版面規格 v1.0（讀 microsoft/layout_spec.py；須在重算後）
 python3 tools/company_html/build_company_html.py microsoft
 python3 tools/company_html/check_company_html.py microsoft

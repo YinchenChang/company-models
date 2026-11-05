@@ -1,4 +1,14 @@
-# ibiden/ — Ibiden（4062）收支與估值模型 v0.4.1
+# ibiden/ — Ibiden（4062）收支與估值模型 v0.5
+
+## v0.5（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0（Andy 2026-11-05 20:42、20:45）與共用模組 `tools/fcff_dcf.py`：FCFF＝NOPAT＋折舊攤銷 − 資本支出 − 營運資金增加（股權報酬視為費用），以 WACC 折現到 2026 年底（期中慣例；FY2026 只計 2027-01～03）；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC。
+- 折現率：rf＝日本 10 年期公債 2.817%（財務省，2026-11-02）；β＝Damodaran Global Electronics (General) 無槓桿 β（現金修正）1.57 以市值 D/E 重新加槓桿（Hamada）約 1.61；ERP 5%＋日本 CRP 0.91%（Damodaran 2026-01）；股權成本約 12.4%、WACC 約 11.9%。
+- 現金流口徑：EBIT FY2026–FY2029 取 PL 推導區塊營業利益，FY2030 起由淨利 ÷ ni_oi 還原；稅率＝近三年平均約 32.7%；折舊、資本支出占營收＝近三年實績平均 14.3%、34.0%（stockanalysis），FY2029 起線性收斂到折舊 ×（1＋g）＋0.5pt；營運資金占營收近三年平均 1.0%（含客戶預收款）。淨現金：2026-03-31 現金 2,957 億＋投資有價證券 344 億 − 有息負債 1,989 億 − 少數股權 73 億。
+- 新增 DCF 頁；Val 0.1 節改為折現率與 DCF 摘要（列數不變，0.2、0.3 節位置不動）；Sens 目標價參數改為標準案例（WACC ±1pt、β、ERP、g、RONIC、資本支出、營運資金、淨現金不含投資、終值替代法、DCF 權重）；刪除 tp_r、tp_roe。
+- 舊→新（v0.4.1 → v0.5）：DCF 目標價 2,064 → 1,735；加權目標價 6,870 → 6,706；上檔空間 −17.8% → −19.8%；投資建議維持中立。終值現值占情境 B 企業價值約 83%（超過 80%，已在 README 重點 4 標示）；隱含終值 EV／EBITDA 約 3.4 倍。
+- 成品：`dist/20261105_Ibiden個股模型_v0.5.xlsx`／`.html`；v0.4.1 移到 `dist/_待刪除/`。
+
 
 ## v0.4.1（2026-11-05）：只改展示層（個股 HTML 版面規格 v1.0）
 
@@ -28,15 +38,15 @@ Ibiden 的 AI 伺服器載板營收＝AI 加速器顆數（`markets/network`）�
 
 **核心問題：短缺溢價回落多少、何時回落，FY2028 EPS 會少多少；現價隱含的溢價路徑合不合理。**
 
-**投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 −17.8%，落在 −25%～+25%）。
+**投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 −19.8%，落在 −25%～+25%）。
 
 
 - **營收分部（v0.3，分部原則）**：官方セグメント 電子（子列 AI 伺服器載板、非 AI）／陶瓷／其他三列原已存在，補分部合計核對列（FY2025 與公司合計差 0.001，四捨五入）與 `segments.json`；EPS 與目標價不變。
 
 ## 重點觀察
 
-1. 目標價 ¥6,870（DCF 2,064、Comparable 相對倍數調整後 11,676 各半），比現價 8,359（2026-10-30）低 17.8%，級距 0%～−25%，投資建議維持中立。v0.4 改用 10-29 中間決算再上修的公司預測（營業利益 1,270 → 1,330 億、淨利 840 → 890 億）；加權目標價 6,499 → 6,870（+5.7%），上檔空間 −23.7% → −17.8%（股價同期 −1.8%）。
-2. FY2026 EPS 149.68 → 158.59（+6.0%，以淨利上修比例推得）、FY2027 EPS（A）216.13 → 227.52（+5.3%）。DCF 與 Comparable 差距極大（2,064 對 11,676）：DCF 反映 2027 年後擴產折舊與份額相對值下滑（Siliconomics M13：0.95／0.88／0.85），Comparable 反映市場給 AI 載板的高倍數；情境 C FY2028 EPS 157.86，比情境 A 232.26 低 32.0%。
+1. 目標價 ¥6,706（DCF 1,735、Comparable 相對倍數調整後 11,676 各半），比現價 8,359（2026-10-30）低 19.8%，級距 0%～−25%，投資建議維持中立。Comparable 單獨為 9,012。
+2. FY2026 EPS 149.68 → 158.59（+6.0%，以淨利上修比例推得）、FY2027 EPS（A）216.13 → 227.52（+5.3%）。DCF 與 Comparable 差距極大：v0.5 標準版 DCF（無槓桿自由現金流折現）反映擴產期資本支出（近三年平均約占營收 34%）、2027 年後份額相對值下滑（Siliconomics M13：0.95／0.88／0.85）與約 12% 的 WACC，Comparable 反映市場給 AI 載板的高倍數；情境 C FY2028 EPS 157.86，比情境 A 232.26 低 32.0%。
 3. 待補：10-29 的營收與部門別修正值未取得，上修 60 億全數歸電子事業（Assumed）。NVIDIA 預付數十億美元支援大野事業場產能三倍、2028 年起分段開出（路透），另新投資約 1,510 億（2029 年度起稼動）——若份額相對值因此不降，FY2028 起 EPS 與 DCF 會上修。下一個檢驗點是 2027-01 第三季決算。
 
 v0.2.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。PL 頁最後新增「自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）」一列（三情境 × FY2026–FY2032，表頭在上一列；折舊、資本支出＝營收 × In 頁新增的 da_rev 15%、cx_rev 25%，Assumed；不進 EPS 與目標價）。
@@ -46,11 +56,11 @@ AI 半導體 Project **載板與 PCB 次產業的樣板**。**Ibiden 在 AI 加�
 | 檔案 | 內容 |
 |---|---|
 | `build_ibiden.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261105_Ibiden個股模型_v0.4.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261105_Ibiden個股模型_v0.5.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html_src.json`、`gen_html_json.py`、`html.json` | HTML 展示層設定：`html_src.json` 為原設定，`gen_html_json.py` 套用版面規格 v1.0 產生 `html.json`（勿手改） |
-| `dist/20261105_Ibiden個股模型_v0.4.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261105_Ibiden個股模型_v0.5.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
-建置：`python3 ibiden/build_ibiden.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（加速器顆數、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`（規則函式）；**不修改它們**。
+建置：`python3 ibiden/build_ibiden.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（加速器顆數、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`（規則函式）；**不修改它們**。
 
 ## 驅動因子
 

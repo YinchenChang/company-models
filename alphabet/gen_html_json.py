@@ -124,5 +124,45 @@ cfg = {
     {"type": "scan", "needle": "未找到", "collapse": True, "summary": "展開：標為「未找到」的項目", "sheets": {"Recon": ["A", "E", "G"], "In": ["B", "H", "I"]}, "empty": "沒有標為未找到的項目。"}]}
  ]
 }
+# v0.3.7：套用個股 HTML 版面規格 v1.0（docs/plan/個股HTML版面規格.md）
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "company_html"))
+from relayout import relayout
+_IW = wb["In"]
+_keys = {}
+_sec = None
+for _r in range(4, _IW.max_row + 1):
+    _a = str(_IW.cell(_r, 1).value or "")
+    if _a and _IW.cell(_r, 2).value in (None, ""): _sec = _a.split(".")[0]; continue
+    if _a: _keys.setdefault(_sec, []).append(_a)
+_sel = lambda sec, pred=lambda k: True: [k for k in _keys[sec] if pred(k)]
+SVC = "搜尋、YouTube 與訂閱（Google Services）"; CLD = "Google Cloud（含 TPU 與 AI 算力）"; OB = "Other Bets（Waymo 等）"; CO = "全公司：持股、資產負債、折現率、目標價規則、稅與現金流"
+SPEC = {
+ "in_skip": ["H", "J"],
+ "in_groups": [
+  [SVC, [["成長路徑與搜尋情境軸", ["conv_n", "g0s_q", "gl_search", "gl_yt", "gl_net", "gl_subs", "dA", "mA", "dC", "mC", "inc_m"]],
+         ["利益率、非 AI 資本支出與 Alphabet 層級費用", ["m_yt", "m_net", "m_subs", "cx_svc", "abc_rate", "mb_ttm"]],
+         ["估值倍數（數位廣告、訂閱影音同業）", _sel("C2", lambda k: k.startswith(("pm_ads", "pm_subs"))) + ["mult_ads_own", "ads_mode"]]]],
+  [CLD, [["AI 容量與擴產速度", _sel("D", lambda k: not k.startswith("tpu"))],
+         ["TPU", _sel("D", lambda k: k.startswith("tpu")) + ["tpu_2h", "tpu_yr", "tpu_m"]],
+         ["每 MW 價格（k）與 Tokenomics 成本", ["kl_px", "ks_px", "long_sh"] + _sel("E", lambda k: (k[:3] in ("he_", "opx", "cit", "dpi") or k.startswith("cap_")) or k in ("gpuhr_h", "cfac"))],
+         ["機房、折舊與在建工程", ["selfb", "life_it", "life_fac", "life_na", "phi_0", "da_base", "cip_0", "cip_it"]],
+         ["資本支出指引、自用 AI 與租用算力", ["capex_g", "capex_1h", "svc_sh", "ai_mw_ttm", "ai_mw_pttm"] + _sel("E", lambda k: k.startswith("rent_")) + ["internal_ai_reading"]],
+         ["Cloud 其他與估值倍數", ["gl_co", "cx_co"] + _sel("C2", lambda k: k.startswith("pm_cloud")) + ["mult_ai"]]]],
+  [OB, [["營收、利益與資本支出", _sel("F", lambda k: k.startswith("ob_")) + ["cx_ob"]],
+        ["估值", ["waymo_val", "waymo_stake", "ob_val"]]]],
+  [CO, [["股價、股數與資產負債（評價日）", _keys["A"]],
+        ["持股", _keys["B"]],
+        ["折現率", ["rf", "beta_sa", "beta_gf", "blume_a", "beta", "erp", "kd_sp", "kd", "fin_lease", "wacc_adj", "tax_w", "g_tv", "ronic_sp"]],
+        ["目標價規則", ["mid", "t_val", "t_q4", "tp_wA", "tp_wB", "tp_wC", "w_dcf", "t_tgt", "w_ntm27", "cons_tp", "dps_tgt", "t_px0", "sbc_add", "tv_alt"]],
+        ["損益與現金流", _keys["G"]],
+        ["今年以來實績", _keys["G2"]]]]],
+ "blocks_to": {"命題模組": CLD, "@Thesis!A1": CLD, "@Seg!A2": SVC},
+ "main": {"DCF 彙總": ["明確期現值", "終值現值", "企業價值 EV（主值", "＋淨現金", "DCF 情境價值推到 12 個月後"],
+          "分部加總": ["Google Search & other", "YouTube ads", "Cloud AI（EV", "分部加總 EV（主值）", "分部加總每股價值（主值"],
+          "1. 合併層": ["營收|FY2027", "營收|FY2028", "營業利益|FY2028", "自由現金流|FY2027"],
+          "2. 逐分部": ["Google Search & other", "Google Services", "Google Cloud", "  Cloud AI"]},
+}
+cfg = relayout(cfg, X, SPEC)
 json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")

@@ -1,6 +1,8 @@
 # Amazon（AMZN）個股模型 v0.3.4 — 命題模組＋官方營收分部 → 損益表（2026Q3 季度滾動；10-Q 補入；v0.3.4 Tokenomics 快照 v21.10，基準數值同 v0.3.3）
 
-成品：`dist/20261104_Amazon個股模型_v0.3.4.xlsx`（全部活公式，LibreOffice 重算、公式錯誤 0）與同名 `.html`（`tools/company_html` 產生）。v0.3、v0.3.1、v0.3.2、v0.3.3 成品移至 `dist/_待刪除/`。
+**v0.3.5（2026-11-05）：** 只改展示層，數值格 0 差異。README 頁新增「展示層」「命題回覆」兩段（公式帶數字），HTML 套用 `docs/plan/個股HTML版面規格.md`（`tools/company_html/relayout.py` 讀 `amazon/layout_spec.py`；參數分「AWS AI／AWS 其他／零售與廣告／全公司」四塊）。敏感度沿用 v0.3.4 結果改名；v0.3.4 成品移 `dist/_待刪除/`。
+
+成品：`dist/20261105_Amazon個股模型_v0.3.5.xlsx`（全部活公式，LibreOffice 重算、公式錯誤 0）與同名 `.html`（`tools/company_html` 產生）。v0.3、v0.3.1、v0.3.2、v0.3.3 成品移至 `dist/_待刪除/`。
 規格：`docs/plan/個股模型原則_命題加營收分部.md`（第 7 節讀法 2、第 8 節 In 頁、第 9 節敏感度覆蓋）；工作單：`mag/docs/workorders/20261104_MAG_10Q補入_2026Q3.md`（v0.3.3）、`mag/docs/workorders/20261029_MAG_v0.3.1_季度滾動_2026Q3.md`（v0.3.1）；
 報告：`docs/reports/20261104_amazon_v0.3.4_TK快照v21.10.md`（v0.3.3：`docs/reports/20261104_amazon_v0.3.3_10Q補入.md`；v0.3.2：`docs/reports/20261104_amazon_v0.3.2_TK快照v21.9.md`；v0.3.1：`docs/reports/20261031_amazon_v0.3.1_季度滾動.md`；v0.3：`docs/reports/20261027_amazon_v0.3_分部架構.md`）。
 
@@ -29,7 +31,7 @@ FY2028 AWS 營業利益率與自由現金流（扣股利後）是否轉正並維
 - 快照 `data/tokenomics_snapshot_v21.10.json`（`20261104_Tokenomics_v21.10.xlsx`，master eded8e6；名稱清單 `data/tokenomics_names.txt` 不變；`--check` 通過）；v21.9 快照、`sens_v033_20261104.json`、v0.3.3 成品移 `_待刪除/`。
 - 契約名稱值的變動只在 `IF_NonNV_Out_Trn`（v21.10：基準改 FP8 對齊，0.06／0.14／0.25 → 0.14／0.28／0.50；原生精度改為低端）；本模型基準讀 `IF_NonNV_Hold_Trn` 0.61，不變。
 - 與 v0.3.3 逐格比對 42 格不同：版本與快照說明文字、In 頁 D87:F87（`trn_out`，只用於 Sens）、Sens 第 10–12 列；加權目標價 217.69、評等中立與其他數值全部相同。
-- Sens 變動：`trn_out` 基準／低／高 183.17／177.30／191.25 → 193.45／183.17／209.61（低端由放空回到中立）。三端仍都低於持有比 0.61，設定說明加註「方向欄的基準／低／高指產出比區間的端點，三案都是下行」。標籤註明「Q1 已定案：基準＝FP8 對齊、原生精度為低端（Tokenomics v21.10，Andy 2026-11-04 照建議）」。敏感度結果 `data/sens_v034_20261104.json`。報告 `docs/reports/20261104_amazon_v0.3.4_TK快照v21.10.md`。
+- Sens 變動：`trn_out` 基準／低／高 183.17／177.30／191.25 → 193.45／183.17／209.61（低端由放空回到中立）。三端仍都低於持有比 0.61，設定說明加註「方向欄的基準／低／高指產出比區間的端點，三案都是下行」。標籤註明「Q1 已定案：基準＝FP8 對齊、原生精度為低端（Tokenomics v21.10，Andy 2026-11-04 照建議）」。敏感度結果 `data/sens_v035_20261105.json`。報告 `docs/reports/20261104_amazon_v0.3.4_TK快照v21.10.md`。
 
 ## v0.3.3 的變更（2026-11-04，10-Q 補入；工作單第 1 節 1–6；疊在 v0.3.2 之上）
 - 事實總帳 `data/amazon_facts_2026q3.json`（`facts_2026q3.py`）補入 10-Q 2026Q3 附註數字，每筆附頁碼、標 [Verified]，原推導或沿用值保留在說明欄「原（v0.3.1）：」；10-Q 全文不入 repo。兩讀核對 212 項一致（含 10-Q 內部互對、對新聞稿，以及原文文字檔存在時的逐值比對 67 項）。
