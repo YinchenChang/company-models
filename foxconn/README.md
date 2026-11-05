@@ -1,4 +1,21 @@
-# foxconn/ — 鴻海（2317）收支與估值模型 v0.4
+# foxconn/ — 鴻海（2317）收支與估值模型 v0.4.1
+
+## v0.4.1（2026-11-05）：β 改為自算產業 β
+
+- β 改為自算產業 β（Andy 2026-11-05 22:55）：TW 伺服器／ODM 同業 6 家無槓桿 β 中位數 0.69（Yahoo Finance 月報酬 2021-11～2026-10，對本地大盤迴歸，Hamada 去槓桿、現金修正），Blume 調整 0.67 × 中位數＋0.33＝0.792，再依鴻海自身 D/E 與稅率以 Hamada 重新加槓桿；取代 Damodaran 產業 β。敏感度低＝中位數 × 0.8 再 Blume（0.700）、高＝未調整中位數 0.69，同法加槓桿（Analogy）。本組中位數低於 1，Blume 調整後的基準 0.792 高於「高」值 0.69，所以 Sens 的 β 低、高兩案都比基準低（依規則照列）。
+- 評價日 2026-12-31、目標時點 12 個月後（2027-12-31）不變；淨現金與投資沿用 In 頁註明的最近一季資產負債表。其他模型參數不變。
+
+| 項目 | 舊（Damodaran 產業 β） | 新（自算產業 β） |
+|---|---|---|
+| β（重新加槓桿後） | 2.06 | 1.04 |
+| WACC | 10.6% | 6.4% |
+| DCF 目標價（NT$） | 351.97 | 580.87 |
+| 加權目標價（NT$） | 369.93 | 484.38 |
+| 上檔空間 | +51.0% | +97.7% |
+| 投資建議 | 強力買進 | 強力買進 |
+
+- HTML：`gen_html_json.py` 改依 In 頁「情境驅動對照」節的實際列號重寫「情境驅動」表參照（上一版 In 頁新增折現率一節後，`html_src.json` 的固定列號錯位，表內誤列永續成長率等列）；只改展示層。
+- 成品：`dist/` 內 v0.4.1 的 xlsx 與 html（取代未合併的上一版）。
 
 ## v0.4（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）
 
@@ -48,9 +65,9 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_foxconn.py` | 產生器（參數與公式；上游成品唯讀） |
-| `dist/20261105_鴻海個股模型_v0.4.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261105_鴻海個股模型_v0.4.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html_src.json`、`gen_html_json.py`、`html.json` | HTML 展示層設定：`html_src.json` 為來源設定，`gen_html_json.py` 套用版面規格 v1.0 後寫出 `html.json`（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261105_鴻海個股模型_v0.4.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
+| `dist/20261105_鴻海個股模型_v0.4.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
 
 建置：`python3 foxconn/build_foxconn.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用：`markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數）、`tsmc/dist`（情境顆數係數）、`quanta/dist`（ODM 每櫃價格、Rubin 占比、匯率、每 GW 價值變動；廣達有效份額只用來做合計檢查）。另外經 `tools/cycle_position.py` 使用規則函式。**這些檔案都不修改。**
 
