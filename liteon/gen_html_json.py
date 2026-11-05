@@ -161,10 +161,14 @@ old_thesis_kv = copy.deepcopy(next((b for b in sec["thesis"]["blocks"] if b["typ
 
 
 def post(cfg):
-    # 1. 橫幅第二格：加權目標價實際使用的 Comparable（相對倍數調整後）；上檔空間取 README 頁 HTML 橫幅用列
-    hb = row("README", "HTML 橫幅用：", must=False)
-    if hb:
-        cfg["hero"]["tiles"][1] = [VA("Comparable 目標價（相對倍數調整後）"), V("Comparable 目標價（相對倍數調整後）", f="n2"), ["上檔空間 ", f"@README!B{hb}|sp1"]]
+    # 1. 橫幅第二格（補充規則 A）：只看 Comparable 目標價（市場主流同業法，未經相對倍數調整）與其上檔空間；
+    #    有相對倍數調整時，進加權的調整後值寫在橫幅附註（上檔空間取 README 頁 HTML 橫幅附註用列）
+    cfg["hero"]["tiles"][1] = ["只看 Comparable 目標價（市場主流同業法）", V("Comparable 目標價（市場主流同業法）", f="n2"),
+                               ["上檔空間 ", V("上檔空間：Comparable 目標價", f="sp1")]]
+    hb = row("README", "HTML 橫幅附註用：", must=False)
+    if hb and row("Val", "Comparable 目標價（相對倍數調整後）", must=False):
+        cfg["hero"]["note"] = cfg["hero"]["note"] + ["；進加權的 Comparable 為相對倍數調整後 ", V("Comparable 目標價（相對倍數調整後）", f="n2"),
+                                                     "（上檔空間 ", f"@README!B{hb}|sp1", "）"]
     # 2. 敏感度龍捲風圖：標題依 Sens 頁欄名（本模型龍捲風不是加權目標價）
     for b in sec["sens"]["blocks"]:
         if b["type"] == "tornado":
