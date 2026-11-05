@@ -224,7 +224,7 @@ for _row in FD.in_rows(dict(
         beta_fixed=("=(beta_u-beta_du)*(1+(1-tax_w)*beta_de)", "=beta_u*(1+(1-tax_w)*beta_de)", "=(beta_u+beta_du)*(1+(1-tax_w)*beta_de)", "Derived",
                     "自算產業 β：TW PCB／載板／CCL 同業 10 家中位數（Yahoo Finance 月報酬 2021-11～2026-10，對 台灣加權指數 ^TWII 迴歸，Hamada 去槓桿、現金修正）；以本公司市值 D/E 與稅率重新加槓桿（Hamada：βL＝βU ×（1＋(1 − tax_w) × D/E））",
                     "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）。Sens 低／高（Analogy；v0.3.1 起）：β_u ∓ beta_du（0.3），各自同式重新加槓桿（工作單第二輪修正，Andy 2026-11-05 23:16；tools/fcff_dcf.py v2 write_sens）"),
-        crp=(0.0078, "Interested-party", "Damodaran Country Risk Premium 表（2026 年 1 月更新）：Taiwan（Moody's Aa3）CRP 0.78%（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html；2026-11-05 讀取）", "Andy 2026-11-05 20:45：非美國市場 ERP＝5%＋CRP，不設股權成本下限；Damodaran 2026-07 更新檔為 xlsx，本環境讀不到，沿用 2026-01 表"),
+        crp=(0.0078, "Interested-party", "Damodaran Country Risk Premium 表（2026 年 1 月更新）：Taiwan（Moody's Aa3）CRP 0.78%（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html；2026-11-05 讀取）", "Andy 2026-11-05 20:45：非美國市場 ERP＝5%＋CRP，不設股權成本下限；Damodaran 2026-07 更新檔未取得，沿用 2026-01 表"),
         kd=("=rf+0.005", "Assumed", "台灣 10 年期公債＋信用利差 0.5%（Assumed；無金融負債，只有租賃）", "負債占資本很小，對 WACC 影響很小"),
         tax_w=("=tax", "Derived", "＝In 頁 tax（與 PL 推導區塊同一稅率）", "https://stockanalysis.com/quote/tpe/8046/financials：FY2023–25 稅前利益率 16.82%／0.51%／5.84%、淨利 5,817／204／1,947（FY2024 稅前近零，有效稅率無意義）；營所稅 20%。NOPAT 各年同用 tax"),
         debt=(0.0, "Verified", FB3Q + "：2026-09-30 短期借款、應付商業本票、一年內到期長期負債、應付公司債、銀行借款皆為 0（南電無金融負債，僅租賃）", "2026-06-30 同為 0"),
