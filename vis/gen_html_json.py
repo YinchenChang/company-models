@@ -46,7 +46,7 @@ for b in SEC["drivers"]["blocks"]:
 V = lambda k: row_of("Val", k, need_num=True)
 tpw, dcft, comp, compadj, cons = V("目標價（DCF 與 Comparable 加權）"), V("DCF 目標價（情境加權）"), V("Comparable 目標價（市場主流同業法）"), V("Comparable 目標價（相對倍數調整後）"), V("市場共識目標價")
 upw, upc, dcf12, px = V("上檔空間：加權目標價"), V("上檔空間：Comparable"), V("DCF 情境價值推到 12 個月後"), V("現價")
-rec, grade = row_of("Val", "投資建議", exact=True), row_of("Val", "上檔空間級距", exact=True)
+rec, grade = row_of("Val", "投資建議", exact=True), row_of("Val", "上檔空間級距")
 rk = row_of("Val", "股權成本 ke")                       # v0.2：0.1 節 ke、kd_at、w_e、WACC、g、RONIC，接著 DCF 彙總 10 列
 r_pvx, r_dcf = row_of("Val", "明確期 FCFF 現值"), row_of("Val", "DCF 目標價（情境加權）")   # 第二輪修正：依標籤定位（模組 v2 stub 期多兩列）
 assert r_pvx == rk + 6, (r_pvx, rk)
@@ -58,6 +58,9 @@ pick = lambda f: next(b for b in old if f(b))
 bars = pick(lambda b: b["type"] == "bars")
 for _it in bars["items"]:   # v0.2：0.1 節改版後 DCF 目標價列移到 dcft
     if _it["value"] == "@Val!B24": _it.update(label=f"@Val!A{dcft}", value=f"@Val!B{dcft}")
+def _bv(ref):
+    sh, c = ref[1:].split("!"); return WB[sh][c].value
+bars["items"] = [_it for _it in bars["items"] if isinstance(_bv(_it["value"]), (int, float)) and _bv(_it["value"]) > 0]   # v0.2.2：值為 0 的長條（DCF 情境價值下限 0）不畫，數值見下表
 dcf_tbl = pick(lambda b: b.get("caption") == "@Val!A5")
 peer_tbl = pick(lambda b: b.get("caption") == "@Val!A26")
 comp_kv = pick(lambda b: b["type"] == "kv" and b["items"][0][0] == "@Val!A33")
@@ -115,6 +118,31 @@ for b in SEC["sens"]["blocks"]:
     if b["type"] == "note" and b["parts"][0].startswith("@Sens!A") and b["parts"][0] != "@Sens!A2": b["parts"] = [f"@Sens!A{_sn}"]
 pass
 
+
+def scn_table_fix(sec):
+    """第三輪修正第 32 點：情境驅動表依 In 頁「情境驅動對照」節標題找列範圍（不寫死列號）；百分比列以 % 顯示。"""
+    ws = WB["In"]
+    t = next(r for r in range(4, ws.max_row + 1) if str(ws.cell(r, 1).value or "").startswith("情境驅動對照"))
+    h = t + 1; rows = []; r = h + 1
+    while ws.cell(r, 1).value not in (None, ""):
+        rows.append(r); r += 1
+    assert ws.cell(rows[-1], 1).value == "scn_w", ws.cell(rows[-1], 1).value
+    def fm(rr):
+        u = str(ws.cell(rr, 3).value or "")
+        vals = [ws.cell(rr, c).value for c in (4, 5, 6) if isinstance(ws.cell(rr, c).value, (int, float))]
+        if u in ("%", "pt") or "%" in u: return "p1"
+        return "n0" if vals and max(abs(v) for v in vals) >= 100 else "n2"
+    for b in sec["blocks"]:
+        if b.get("type") == "table" and str(b.get("caption", "")).startswith("情境驅動"):
+            b["head"] = [f"@In!B{h}", f"@In!D{h}", f"@In!E{h}", f"@In!F{h}", f"@In!C{h}"]
+            b["rows"] = [[f"@In!B{rr}", f"@In!D{rr}|{fm(rr)}", f"@In!E{rr}|{fm(rr)}", f"@In!F{rr}|{fm(rr)}", f"@In!C{rr}"] for rr in rows]
+            b.pop("rowgen", None)
+            return
+    raise KeyError("情境驅動表")
+
+
+scn_table_fix(SEC["drivers"])
+
 SPEC = {
  "in_skip": [in_tok("G."), in_tok("情境驅動對照")],
  "in_groups": [
@@ -127,7 +155,7 @@ SPEC = {
     ["產能與稼動率", ["vcap27", "vcap28", "vcap29", "vcap_adj", "vut_A", "vut_B", "vut_C"]],
     ["售價與毛利率（含折舊）", ["vasp"] + [k for k in I if re.match(r"^vgm2\d_[ABC]$", k)]],
     ["非控制權益", ["vmi"]],
-    ["建廠計畫（DCF 資本支出：總投資、已投入、剩餘與分年比例）", ["vsmc_tot", "cxh_24", "cxh_25", "cxg_26", "cx8_r", "vsmc_rem", "vsmc_sp27", "vsmc_sp28", "vsmc_sp29"]]]],
+    ["建廠計畫（DCF 資本支出：總投資、已投入、剩餘與分年比例）", ["vsmc_tot", "vda_life", "vda_adj", "nxp_rem", "cxh_24", "cxh_25", "cxg_26", "cx8_r", "vsmc_rem", "vsmc_sp27", "vsmc_sp28", "vsmc_sp29"]]]],
   ["全公司（匯率、成本、FY2026 錨點、股價與目標價規則）", [
     ["匯率", ["fx", "fx_26"]],
     ["成本：折舊、每片現金成本、營業費用", ["da_tot26", "da_sh", "dag_27", "dag_28", "dag_29", "dag_adj", "cc_g", "phi", "g_opx_min"]],
@@ -140,7 +168,7 @@ SPEC = {
     ["自由現金流（折舊、資本支出、營運資金）", ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]],
     ["收斂法（FY2030–FY2032）", ["tp_g", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fade_mB", "fade_mC"]]]]],
  "blocks_to": {"1. 8 吋晶圓": "八吋晶圓（產能 × 稼動率 × 平均售價）", "@Units!A37": "VSMC 新加坡十二吋廠（與 NXP 合資、合併報表）"},
- "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+ "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "＋Stub 期 FCFF", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
           "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
           "目標價結論": ["目標價（DCF", "DCF 目標價", "Comparable 目標價（相對", "Comparable 目標價（市場", "現價", "上檔空間：加權", "上檔空間：Comparable", "投資建議", "DCF 情境價值推到", "市場共識"],
           "本模型與公司說法、共識、券商的對照": ["FY2026 營收 vs 共識", "FY2026 EPS vs 共識", "FY2027 EPS vs 研究機構", "FY2027 12 吋", "共識前瞻 12 月 EPS"]},
