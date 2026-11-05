@@ -257,3 +257,54 @@ CONFIG["pres"] = {
   "見頂時累積的淨值撐不撐得住股價？答：依本模型{verdict}。現價 {px|P} 韓元只相當於 {y27} 年底每股淨值（情境加權）的 {pxbv27|0.00} 倍，記憶體同業同口徑的前瞻 P/B 中位數 {pmed|0.00} 倍；目標價把同業倍數（經相對倍數調整後 {pmadj|0.00} 倍）套在 12 個月後的前瞻每股淨值（{y28} 年底，情境加權）{fbv|P} 上，得 Comparable 目標價 {compadj|P}（比現價 {upcadj|+0.0%;−0.0%}）。加上 DCF 目標價 {dcftp|P}，加權目標價 {tpw|P}，比現價 {upw|+0.0%;−0.0%}，投資建議{rec}。{dcfall}（最低的情境 C 為現價 {dcfpxC|0.00} 倍）。",
   "非記憶體事業在谷底能撐住多少？答：本模型沒有建模非記憶體事業，營收與營業利益是輸入假設。情境 C 的 {y28}、{y29}，非記憶體事業營業利益約 {nmopC28|#,##0.0}、{nmopC29|#,##0.0} 兆韓元，占合併營業利益 {nmshC28|0%}、{nmshC29|0%}；依這組假設，{nmsupport}。"],
 }
+
+# v0.5（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；樣板 v0.5、tools/fcff_dcf.py；規格 docs/plan/個股DCF標準規格.md v1.0）。
+# Comparable、情境權重、DCF 權重 50% 與投資建議規則不變；舊 DCF 參數 tp_r、tp_roe 刪除；淨現金收益率鍵 rf 改名 ncy（值不變）。
+_DAM = "Damodaran Betas by Sector (Global) 2026 年 1 月（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/BetasGlobal.html；2026-11-05 讀取）"
+_DAMUS = "Damodaran Betas by Sector (US) 2026 年 1 月（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/Betas.html；2026-11-05 讀取）"
+_CRP = "Damodaran Country Default Spreads and Risk Premiums（2026-01-05 更新；https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html；2026-11-05 讀取）"
+_KR10 = ("Trading Economics「South Korea 10-Year Yield Lowest Since June」2026-10-22：約 4.14%（https://tradingeconomics.com/south-korea/government-bond-yield/news/593996；2026-11-05 讀取）",
+         "同站 2026-10-27「Lowest Since May」約 4.00%、2026-11-05 為 3.90%；取與股價（2026-10-23）最近的 10-22 值；同 SK 海力士 v0.7")
+_SA = "stockanalysis.com Samsung Electronics（KRX:005930）財報頁，2026-11-05 讀取；百萬韓元"
+CONFIG["dcf"] = {
+ "frac0": 1.0,
+ "capex_note": "（記憶體事業口徑；非記憶體事業只有營業利益輸入，其折舊與資本支出在明確期視為相抵）",
+ "fd": dict(
+  date="2026-12-31（基準年底；同 v0.4 DCF 基準日）",
+  rf=(0.0414, _KR10[0], _KR10[1], "無風險利率（韓國 10 年期公債殖利率，2026-10-22）"),
+  crp=(0.0064, "Verified", _CRP + "：South Korea（Aa2）國家風險溢酬 0.64%", "Andy 2026-11-05 20:45：非美國市場 ERP＝5%＋CRP，不設股權成本下限"),
+  kd=("=rf+0.01", "Assumed", "rf ＋ 1.0pt 信用利差（借款利率未逐筆查）", "負債占資本約 2%，對 WACC 影響可忽略"),
+  debt=(22.41, "Verified", "2Q26 合併資產負債表：借款 22.41 兆韓元（In 頁 nc_last 同一來源；9-30 資產負債表待季報）", "只用於 WACC 權重與 β 重新加槓桿；評價日淨現金取 Y 頁基準年末"),
+  lease=(3.674, "Verified", _SA + "：FY2025 Long-Term Leases 3,673,503", "2026 年租賃負債未找到；視為不含在借款內"),
+  inv=(0, "Assumed", "關聯企業與權益投資（三星 SDI、三星生物等持股）未計入（帳面值未逐項取得）", "偏保守；Sens 案例「淨現金不含權益投資」因此與基準相同"),
+  mi=(12.007, "Verified", _SA + "：FY2025 Minority Interest 12,007,082", "合併營業利益含子公司少數股權份額，評價時扣除"),
+  dps=("=dps_1", "Derived", "＝In 頁 dps_1（2027 每股定期股利 1,500 韓元）", "2026 股東回饋剩餘 55–75 兆（含大規模買回）待 2027-01 董事會，未計入"),
+  t_tgt=(1.0, "目標價為評價日（2026-12-31）後 12 個月，與 v0.4 DCF 目標價同一時點"),
+  fc_da=(None, "=(38.581541/258.935494+42.630822/300.870903+46.926592/333.605938)/3", None, "Derived",
+         _SA + "：近三年（2023–2025）全公司折舊攤銷 ÷ 合併營收平均＝14.9%／14.2%／14.1%（D&A 38,581,541／42,630,822／46,926,592；營收 258,935,494／300,870,903／333,605,938）",
+         "明確期 2027–2029 用 Y 頁記憶體折舊；本值為 2030 起收斂的長期穩態（全公司口徑，含非記憶體事業）"),
+  fc_cx=(None, "=(57.611292/258.935494+51.406355/300.870903+47.522179/333.605938)/3", None, "Derived",
+         _SA + "：近三年（2023–2025）全公司資本支出 ÷ 合併營收平均＝22.2%／17.1%／14.2%（57,611,292／51,406,355／47,522,179）",
+         "明確期用 Y 頁記憶體資本支出（In 頁 cap_1–cap_3）；本值為 2030 起長期穩態（全公司口徑）；穩態資本支出 ≥ 折舊 ×（1＋g）（DCF 頁一致性檢查）"),
+  fc_wc=(0.15, "=((43.280641+51.625874+5.256702-11.319824-26.013273)/258.935494+(53.246047+51.754865+6.04674-12.370177-29.613258)/300.870903+(58.608969+52.636828+6.964529-13.03938-32.707431)/333.605938)/3", 0.35, "Derived",
+         _SA + "：近三年全公司營運資金 ÷ 合併營收平均＝24.3%／23.0%／21.7%；營運資金＝應收＋存貨＋其他流動資產 − 應付 − 應計費用（不含其他流動負債）",
+         "Sens 低／高 15%／35%（Assumed）"),
+ ),
+ "beta_u": (1.87, "產業無槓桿 β：Damodaran Global Semiconductor（現金修正後；2026 年 1 月）",
+            _DAM + "：Semiconductor 675 家，β 1.88、D/E 4.13%、稅率 8.46%、無槓桿 β 1.82、現金修正後 1.87",
+            "三星為集團公司，本模型盈餘以記憶體為主，故用半導體；同表 Electronics (General) 現金修正後 1.57（對照）。非美國公司用 Global 表；用現金修正值：淨現金另計"),
+ "beta_extra": [("beta_u_us", "對照：Damodaran US Semiconductor 無槓桿 β（現金修正後；β 低案例）", 1.50, _DAMUS + "：Semiconductor 66 家，現金修正後無槓桿 β 1.50")],
+ "beta_lo": "=beta_u_us*(1+(1-tax_w)*beta_de)", "beta_hi": None,
+ "beta_lohi_note": "低＝Damodaran US Semiconductor 1.50 重新加槓桿（Analogy；與 Global Electronics (General) 1.57 相近）；高＝與低對稱（2 × 基準 − 低，Assumed）。個股迴歸 β 未取得",
+}
+CONFIG["tp"]["method"] = ("DCF（v0.5 標準版）：無槓桿自由現金流 FCFF＝NOPAT（合併營業利益 ×（1 − 稅率））＋折舊 − 資本支出 − 營運資金增加；2027–2029 折舊與資本支出為 Y 頁記憶體事業口徑（非記憶體事業視為相抵），2030–2032 收斂期由淨利還原營業利益、比例收斂到全公司近三年平均；"
+                          "以 WACC（股權成本＝韓國 10 年期公債 rf ＋ β ×（ERP 5%＋韓國 CRP 0.64%），β 為 Damodaran Global 半導體無槓桿 β 重新加槓桿）折到 2026 年底，終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝3%、RONIC＝WACC；"
+                          "加淨現金、扣少數股權 ÷ 股數，以股權成本推到 12 個月後並扣 2027 年股利（DCF 頁、tools/fcff_dcf.py）。"
+                          + CONFIG["tp"]["method"][CONFIG["tp"]["method"].index("Comparable"):])
+CONFIG["version"] = "v0.5"
+CONFIG["a1_note"] = "；v0.4.1 只改展示層（README 展示層與命題回覆、HTML 新版面）；v0.5（2026-11-05）模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；DCF 頁、Val 0.1 節、Sens 目標價參數），Comparable、情境權重、DCF 權重 50% 與投資建議規則不變"
+CONFIG["obs_tpl"] = {
+ 2: "DCF 情境價值（v0.5 標準版 FCFF＋WACC，推到 12 個月後）A {dcfA|P}、B {dcfB|P}、C {dcfC|P}（現價的 {dcfpxA|0.00}／{dcfpxB|0.00}／{dcfpxC|0.00} 倍），對應 2028 EPS A {epsA28|E}、B {epsB28|E}、C {epsC28|E}。4Q 位元季增由 5% 上調到公司指引的 15–16%，使 2027 起營收基期上移約 3%；2026 記憶體資本支出依公司全年 84.4 兆上調 10.8 兆，部分抵銷自由現金流。",
+ 3: "2028 B 營業利益對一般 DRAM 收入最敏感（±20% → ±15.5%），NAND ±30% → ±9.2%、HBM ±30% → ±7.2%；WACC −1pt／＋1pt 使加權目標價 {s_wlo|+0.0%;−0.0%}／{s_whi|+0.0%;−0.0%}。待校正：9-30 資產負債表（權益、淨現金為推估）於季報公布後更新；2026 股東回饋剩餘 55–75 兆（含大規模買回註銷）待 2027-01 董事會，未計入。",
+}
+CONFIG["readme_tail"] = ["v0.5（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；記憶體樣板 v0.5、tools/fcff_dcf.py；docs/plan/個股DCF標準規格.md v1.0）。新增 DCF 頁（三情境與 Wattonomics 錨定路徑的 FCFF 明細、檢查列）；Val 0.1 節改為折現率與 DCF 彙總（列數不變，0.2 節以後列號不變）；Sens 目標價參數改為標準案例（WACC、β、ERP、g、RONIC、資本支出、營運資金、DCF 權重、終值替代法）；In 頁新增 M2 節（rf、β、ERP、CRP、資本結構、折舊／資本支出／營運資金穩態比例），刪除 tp_r、tp_roe，淨現金收益率鍵 rf 改名 ncy（值不變）。Y、Q、Mkt、Recon 頁與 v0.4.1 相同。已知簡化：非記憶體事業只有營業利益輸入，明確期折舊與資本支出視為相抵；營運資金只在 DCF 計入；權益投資未計入 DCF 淨現金。"]

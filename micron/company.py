@@ -201,3 +201,52 @@ CONFIG["pres"] = {
   "循環在哪一年見頂？答：依本模型三種情境的價格路徑（情境設定，不是單一預測），淨利高點在情境 A {peakA}、情境 B {peakB}、情境 C {peakC}。情境 B 高點淨利約 {nipkB|#,##0.0} 十億美元，{y28} 為 {niB28|#,##0.0} 十億美元（比高點 {nichgB28|+0%;−0%}）；情境 C {y28} 為 {niC28|#,##0.0} 十億美元（比高點 {nichgC28|+0%;−0%}）。",
   "見頂時累積的淨值與買回撐不撐得住股價？答：依本模型{verdict}。買回使情境 B 的期末股數由基準年到 {y29} 變動 {shchgB29|+0.0%;−0.0%}，帳面淨值因此偏低：現價 {px|P} 美元相當於 {y27} 年底每股淨值（情境加權）的 {pxbv27|0.00} 倍，記憶體同業同口徑的前瞻 P/B 中位數 {pmed|0.00} 倍。目標價把同業倍數（經相對倍數調整後 {pmadj|0.00} 倍）套在 12 個月後的前瞻每股淨值（{y28} 年底，情境加權）{fbv|P} 上，得 Comparable 目標價 {compadj|P}（比現價 {upcadj|+0.0%;−0.0%}）；DCF 目標價 {dcftp|P}（比現價 {dcfup|+0.0%;−0.0%}）。加權目標價 {tpw|P}，比現價 {upw|+0.0%;−0.0%}，投資建議{rec}；{dcfall}（情境 C 為現價 {dcfpxC|0.00} 倍）。"],
 }
+
+# v0.5（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；樣板 v0.5、tools/fcff_dcf.py；規格 docs/plan/個股DCF標準規格.md v1.0）。
+# Comparable、情境權重、DCF 權重 50% 與投資建議規則不變；舊 DCF 參數 tp_r、tp_roe 刪除；淨現金收益率鍵 rf 改名 ncy（值不變）。
+_DAMUS = "Damodaran Betas by Sector (US) 2026 年 1 月（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/Betas.html；2026-11-05 讀取）"
+_DAM = "Damodaran Betas by Sector (Global) 2026 年 1 月（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/BetasGlobal.html；2026-11-05 讀取）"
+_SA = "stockanalysis.com Micron（MU）財報頁，2026-11-05 讀取；百萬美元"
+CONFIG["dcf"] = {
+ "frac0": 1.0, "nc_incl_lease": True,
+ "capex_note": "",
+ "fd": dict(
+  date="2026-09-03（FY2026 年底；淨現金錨點；與 v0.4 DCF 同樣以第 1 年＝FY2027 折現）",
+  rf=(0.0500, "美國財政部每日殖利率曲線 10 Yr：2026-10-23 5.00%（https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202610；與 NVIDIA v0.3 同一來源）",
+      "FRED DGS10（https://fred.stlouisfed.org/series/DGS10）同序列；與股價同日（2026-10-23）", "無風險利率（美國 10 年期公債殖利率，2026-10-23）"),
+  crp=(0.0, "Assumed", "美國：0（同 NVIDIA v0.3；Damodaran 2026-01 表的美國 CRP 為 0.23%，未採用）", "—"),
+  kd=("=rf+0.01", "Assumed", "rf ＋ 1.0pt 信用利差（BBB 級；公司債利率未逐筆查）", "負債占資本 < 1%，對 WACC 影響可忽略"),
+  debt=(2.792, "Verified", _SA + "：FY2026 長期債務 2,792（總債務 5,179＝長期債務 2,792＋流動租賃 491＋長期租賃 1,896）", "In 頁 nc_last 68.3＝現金與投資 73.48 − 負債 5.18（含租賃）"),
+  lease=(2.387, "Verified", _SA + "：FY2026 租賃負債 491＋1,896", "公司淨現金（nc_last）已扣租賃，故評價日現金加回租賃，避免重複扣除"),
+  inv=(0, "Assumed", "無重大權益投資", "—"),
+  mi=(0, "Verified", _SA + "：未報少數股權", "—"),
+  dps=("=dps_1", "Derived", "＝In 頁 dps_1（FY2027 每股股利）", "評價日到目標時點約一年"),
+  t_tgt=(1.0, "目標價為評價日後 12 個月（約 2027-09；與 v0.4 DCF 目標價同一時點口徑）"),
+  fc_da=(None, "=(7.78/25.111+8.352/37.378+9.503/133.188)/3", None, "Derived",
+         _SA + "：近三年（FY2024–FY2026）折舊攤銷 ÷ 營收平均＝31.0%／22.3%／7.1%（D&A 7,780／8,352／9,503；營收 25,111／37,378／133,188）",
+         "記憶體樣板：明確期 FY2027–FY2029 用 Y 頁折舊；本值只作 FY2030 起收斂的長期穩態"),
+  fc_cx=(None, "=(8.386/25.111+15.857/37.378+30.712/133.188)/3", None, "Derived",
+         _SA + "：近三年（FY2024–FY2026）資本支出（毛額）÷ 營收平均＝33.4%／42.4%／23.1%（8,386／15,857／30,712）",
+         "明確期用 Y 頁資本支出（In 頁 cap_1–cap_3）；本值只作 FY2030 起長期穩態；穩態資本支出 ≥ 折舊 ×（1＋g）（DCF 頁一致性檢查）"),
+  fc_wc=(0.20, "=((6.615+8.875+0.765-2.726-1.117)/25.111+(9.265+8.355+0.91-3.132-1.116)/37.378+(36.197+10.372+1.04-3.518-4.447)/133.188)/3", 0.50, "Derived",
+         _SA + "：近三年營運資金 ÷ 營收平均＝49.4%／38.2%／29.8%；營運資金＝應收＋存貨＋其他流動資產 − 應付 − 應計費用（不含其他流動負債）",
+         "Sens 低／高 20%／50%（Assumed）"),
+ ),
+ "beta_u": (1.50, "產業無槓桿 β：Damodaran US Semiconductor（現金修正後；2026 年 1 月）",
+            _DAMUS + "：Semiconductor 66 家，β 1.52、D/E 2.59%、稅率 5.11%、無槓桿 β 1.49、現金修正後 1.50", "同 NVIDIA v0.3；用現金修正值：淨現金另計，β 只對營業資產"),
+ "beta_extra": [("beta_u_gl", "對照：Damodaran Global Semiconductor 無槓桿 β（現金修正後；β 高案例）", 1.87, _DAM + "：Semiconductor 675 家，現金修正後無槓桿 β 1.87")],
+ "beta_lo": None, "beta_hi": "=beta_u_gl*(1+(1-tax_w)*beta_de)",
+ "beta_lohi_note": "高＝Damodaran Global Semiconductor 1.87 重新加槓桿（Analogy）；低＝與高對稱（2 × 基準 − 高，Assumed）。個股迴歸 β 未取得（建置環境抓不到股價序列）",
+}
+CONFIG["tp"]["method"] = ("DCF（v0.5 標準版）：無槓桿自由現金流 FCFF＝NOPAT（營業利益 ×（1 − 稅率））＋折舊 − 資本支出 − 營運資金增加，FY2027–FY2029 用 Y 頁折舊與資本支出，FY2030–FY2032 收斂期由淨利還原營業利益、折舊與資本支出比例收斂到近三年平均；"
+                          "以 WACC（股權成本＝美國 10 年期公債 rf ＋ β × ERP 5%，β 為 Damodaran 美國半導體無槓桿 β 重新加槓桿）折到 FY2026 年底，終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝3%、RONIC＝WACC；"
+                          "加淨現金 ÷ 股數，以股權成本推到 12 個月後並扣 FY2027 股利（DCF 頁、tools/fcff_dcf.py）。"
+                          + CONFIG["tp"]["method"][CONFIG["tp"]["method"].index("Comparable"):])
+CONFIG["version"] = "v0.5"
+CONFIG["a1_note"] = "；v0.4.4 只改展示層（README 展示層與命題回覆、HTML 新版面）；v0.5（2026-11-05）模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；DCF 頁、Val 0.1 節、Sens 目標價參數），Comparable、情境權重、DCF 權重 50% 與投資建議規則不變"
+CONFIG["obs_tpl"] = {
+ 2: "本模型比共識保守：12 個月後的前瞻 EPS（情境加權）{feps|P} 比共識同口徑 {geps|+0.0%;−0.0%}、FY2028 年底每股淨值（情境加權）比共識 {gbv|+0.0%;−0.0%}；情境 DCF 價值（v0.5 標準版 FCFF＋WACC，推到 12 個月後）A {dcfA|P}、B {dcfB|P}、C {dcfC|P}（現價的 {dcfpxA|0.00}／{dcfpxB|0.00}／{dcfpxC|0.00} 倍），分歧集中在 FY2028 以後的 DRAM 價格路徑。",
+ 3: "FY2028 B 營業利益對一般 DRAM 收入最敏感（±20% → ±16.5%），NAND ±30% → ±8.3%、HBM ±30% → ±6.5%；DCF 權重改 0.3／0.7 使加權目標價 {s_d03|+0.0%;−0.0%}／{s_d07|+0.0%;−0.0%}，WACC −1pt／＋1pt 為 {s_wlo|+0.0%;−0.0%}／{s_whi|+0.0%;−0.0%}。下一個檢驗事件是 FQ1 FY2027 財報（約 2026-12 下旬）的 DRAM 合約價與 HBM 出貨。",
+}
+CONFIG["readme_tail"] = ["v0.5（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；記憶體樣板 v0.5、tools/fcff_dcf.py；docs/plan/個股DCF標準規格.md v1.0）。新增 DCF 頁（三情境與 Wattonomics 錨定路徑的 FCFF 明細、檢查列）；Val 0.1 節改為折現率與 DCF 彙總（列數不變，0.2 節以後列號不變）；Sens 目標價參數改為標準案例（WACC、β、ERP、g、RONIC、資本支出、營運資金、DCF 權重、終值替代法）；In 頁新增 M2 節（rf、β、ERP、CRP、資本結構、折舊／資本支出／營運資金穩態比例），刪除 tp_r、tp_roe，淨現金收益率鍵 rf 改名 ncy（值不變）。Y、Q、Mkt、Recon 頁與 v0.4.4 相同。"]
+CONFIG["readme_extra"] = [(t + "營運資金只在 DCF 以 fc_wc × 營收增量計入（Y 頁淨現金未計）。" if t.startswith("已知簡化") else t) for t in CONFIG["readme_extra"]]

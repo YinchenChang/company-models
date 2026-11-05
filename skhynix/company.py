@@ -203,3 +203,55 @@ CONFIG["pres"] = {
   "循環在哪一年見頂？答：依本模型三種情境的價格路徑（情境設定，不是單一預測），淨利高點在情境 A {peakA}、情境 B {peakB}、情境 C {peakC}。情境 B 高點淨利約 {nipkB|#,##0} 兆韓元，{y28} 為 {niB28|#,##0} 兆韓元（比高點 {nichgB28|+0%;−0%}）；情境 C {y28} 為 {niC28|#,##0} 兆韓元（比高點 {nichgC28|+0%;−0%}）。",
   "見頂時累積的淨值撐不撐得住股價？答：依本模型{verdict}。現價 {px|P} 韓元只相當於 {y27} 年底每股淨值（情境加權）的 {pxbv27|0.00} 倍，記憶體同業同口徑的前瞻 P/B 中位數 {pmed|0.00} 倍；目標價把同業倍數（經相對倍數調整後 {pmadj|0.00} 倍）套在 12 個月後的前瞻每股淨值（{y28} 年底，情境加權）{fbv|P} 上，得 Comparable 目標價 {compadj|P}（比現價 {upcadj|+0.0%;−0.0%}）。加上 DCF 目標價 {dcftp|P}，加權目標價 {tpw|P}，比現價 {upw|+0.0%;−0.0%}，投資建議{rec}。{dcfall}（最低的情境 C 為現價 {dcfpxC|0.00} 倍）。"],
 }
+
+# v0.7（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；樣板 v0.5、tools/fcff_dcf.py；規格 docs/plan/個股DCF標準規格.md v1.0）。
+# Comparable、情境權重、DCF 權重 50% 與投資建議規則不變；舊 DCF 參數 tp_r、tp_roe 刪除；淨現金收益率鍵 rf 改名 ncy（值不變）。
+_DAM = "Damodaran Betas by Sector (Global) 2026 年 1 月（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/BetasGlobal.html；2026-11-05 讀取）"
+_DAMUS = "Damodaran Betas by Sector (US) 2026 年 1 月（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/Betas.html；2026-11-05 讀取）"
+_CRP = "Damodaran Country Default Spreads and Risk Premiums（2026-01-05 更新；https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html；2026-11-05 讀取）"
+_KR10 = ("Trading Economics「South Korea 10-Year Yield Lowest Since June」2026-10-22：約 4.14%（https://tradingeconomics.com/south-korea/government-bond-yield/news/593996；2026-11-05 讀取）",
+         "同站 2026-10-27「Lowest Since May」約 4.00%、2026-11-05 為 3.90%；取與股價（2026-10-23）最近的 10-22 值")
+_SA = "stockanalysis.com SK hynix（KRX:000660）財報頁，2026-11-05 讀取；百萬韓元"
+CONFIG["dcf"] = {
+ "frac0": 1.0,
+ "capex_note": "",
+ "fd": dict(
+  date="2026-12-31（基準年底；同 v0.6 DCF 基準日）",
+  rf=(0.0414, _KR10[0], _KR10[1], "無風險利率（韓國 10 年期公債殖利率，2026-10-22）"),
+  crp=(0.0064, "Verified", _CRP + "：South Korea（Aa2）國家風險溢酬 0.64%", "Andy 2026-11-05 20:45：非美國市場 ERP＝5%＋CRP，不設股權成本下限"),
+  kd=("=rf+0.01", "Assumed", "rf ＋ 1.0pt 信用利差（公司債利率未逐筆查）", "負債占資本約 2%，對 WACC 影響可忽略"),
+  debt=(15.8, "Verified", "3Q26 法說（2026-10-28）：有息負債 15.8 兆韓元（與 In 頁 nc_last 同一來源）", "只用於 WACC 權重與 β 重新加槓桿；評價日淨現金取 Y 頁基準年末"),
+  lease=(1.963, "Verified", _SA + "：FY2025 Long-Term Leases 1,962,647", "2026-09-30 租賃負債未找到；公司「有息負債」是否含租賃未載明，視為不含"),
+  inv=(0, "Assumed", "鎧俠等權益投資未計入（9-30 帳面值未取得；投資資產評價損益不進營業利益）", "偏保守；Sens 案例「淨現金不含權益投資」因此與基準相同"),
+  mi=(0.151, "Verified", _SA + "：FY2025 Minority Interest 150,573", "—"),
+  dps=("=dps_1", "Derived", "＝In 頁 dps_1（2027 年支付的每股股利，含 FY2026 年度股利）", "評價日 2026-12-31 到目標時點 2027-12-31"),
+  t_tgt=(1.0, "目標價為評價日（2026-12-31）後 12 個月，與 v0.6 DCF 目標價同一時點"),
+  fc_da=(None, "=(13.421531/32.765719+12.581537/66.19296+13.93013/97.146675)/3", None, "Derived",
+         _SA + "：近三年（2023–2025）折舊攤銷 ÷ 營收平均＝41.0%／19.0%／14.3%（D&A 13,421,531／12,581,537／13,930,130；營收 32,765,719／66,192,960／97,146,675）",
+         "記憶體樣板：明確期 2027–2029 用 Y 頁折舊；本值只作 2030 起收斂的長期穩態（含谷底年，近似循環平均）"),
+  fc_cx=(None, "=(8.325138/32.765719+15.945534/66.19296+27.518924/97.146675)/3", None, "Derived",
+         _SA + "：近三年（2023–2025）資本支出 ÷ 營收平均＝25.4%／24.1%／28.3%（8,325,138／15,945,534／27,518,924）",
+         "明確期 2027–2029 用 Y 頁資本支出（In 頁 cap_1–cap_3）；本值只作 2030 起長期穩態；穩態資本支出 ≥ 折舊 ×（1＋g）（DCF 頁一致性檢查）"),
+  fc_wc=(0.20, "=((6.737251+13.480659+0.392361-1.845537-1.680914)/32.765719+(13.019006+13.313937+0.302814-2.277347-3.977166)/66.19296+(18.199078+14.28939+0.300766-2.848455-6.277237)/97.146675)/3", 0.50, "Derived",
+         _SA + "：近三年營運資金 ÷ 營收平均＝52.1%／30.8%／24.4%；營運資金＝應收＋存貨＋其他流動資產 − 應付 − 應計費用（不含其他流動負債）",
+         "Sens 低／高 20%／50%（Assumed）；2023 谷底年營收低使比例偏高"),
+ ),
+ "beta_u": (1.87, "產業無槓桿 β：Damodaran Global Semiconductor（現金修正後；2026 年 1 月）",
+            _DAM + "：Semiconductor 675 家，β 1.88、D/E 4.13%、稅率 8.46%、無槓桿 β 1.82、現金修正後 1.87", "非美國公司用 Global 表（Japan／Emerging 表本次無法讀取）；用現金修正值：淨現金另計，β 只對營業資產"),
+ "beta_extra": [("beta_u_us", "對照：Damodaran US Semiconductor 無槓桿 β（現金修正後；β 低案例）", 1.50, _DAMUS + "：Semiconductor 66 家，現金修正後無槓桿 β 1.50")],
+ "beta_lo": "=beta_u_us*(1+(1-tax_w)*beta_de)", "beta_hi": None,
+ "beta_lohi_note": "低＝Damodaran US Semiconductor 1.50 重新加槓桿（Analogy）；高＝與低對稱（2 × 基準 − 低，Assumed）。個股迴歸 β 未取得（建置環境抓不到股價序列）",
+}
+CONFIG["tp"]["method"] = ("DCF（v0.7 標準版）：無槓桿自由現金流 FCFF＝NOPAT（合併營業利益 ×（1 − 稅率））＋折舊 − 資本支出 − 營運資金增加，2027–2029 用 Y 頁折舊與資本支出，2030–2032 收斂期由淨利還原營業利益、折舊與資本支出比例收斂到近三年平均；"
+                          "以 WACC（股權成本＝韓國 10 年期公債 rf ＋ β ×（ERP 5%＋韓國 CRP 0.64%），β 為 Damodaran Global 半導體無槓桿 β 重新加槓桿）折到 2026 年底，終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝3%、RONIC＝WACC；"
+                          "加淨現金 ÷ 股數，以股權成本推到 12 個月後並扣 2027 年股利（DCF 頁、tools/fcff_dcf.py）。"
+                          "Comparable：三星、美光、鎧俠、南亞科前瞻 P/B 中位數 × 2028 年底每股淨值（情境加權）。收斂期（2030–2032）淨利率收斂到循環中段：A 十年平均 × 1.2、B 十年平均、C 十年平均 × 0.8（In 頁 cyc_mA／cyc_mC）。"
+                          "偏誤：2027–2029 高峰期現金流權重大；永續期以 2032 循環中段為基礎；同業 P/B 為循環高峰前的市場倍數，Comparable 方向不明。情境對應：A＝順利、B＝平平、C＝不如預期。")
+CONFIG["version"] = "v0.7"
+CONFIG["a1_note"] = "；v0.6.2 只改展示層（README 展示層與命題回覆、HTML 新版面）；v0.7（2026-11-05）模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；DCF 頁、Val 0.1 節、Sens 目標價參數），Comparable、情境權重、DCF 權重 50% 與投資建議規則不變"
+CONFIG["obs_tpl"] = {
+ 2: "情境分歧集中在 2028 年後：EPS 2028 A {epsA28|E}、B {epsB28|E}、C {epsC28|E}；DCF 情境價值（v0.7 標準版 FCFF＋WACC，推到 12 個月後）A {dcfA|P}、B {dcfB|P}、C {dcfC|P}，C 情境為現價 {dcfpxC|0.00} 倍。2026 年淨利與 v0.6 前相近：3Q 業外淨損 32.6 兆（匯兌損失 11.6、投資資產評價損失 22.9、其他淨收益 1.9）抵銷了 4Q 上調。",
+ 3: "2027 A 營業利益對一般 DRAM 收入最敏感（+20% → {s_dram|+0.0%;−0.0%}），NAND +30% → {s_nand|+0.0%;−0.0%}、HBM +30% → {s_hbm|+0.0%;−0.0%}；WACC −1pt／＋1pt 使加權目標價 {s_wlo|+0.0%;−0.0%}／{s_whi|+0.0%;−0.0%}。待校正：3Q 資產負債表（權益、股數為推估，假設 40 兆買回於 3Q 執行完畢）於季報公布後更新；下一個檢驗事件是 4Q26 財報（2027-01 下旬）的 DRAM 位元與 HBM4 占比。",
+}
+CONFIG["readme_tail"] = ["v0.7（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；記憶體樣板 v0.5、tools/fcff_dcf.py；docs/plan/個股DCF標準規格.md v1.0）。新增 DCF 頁（三情境與 Wattonomics 錨定路徑的 FCFF 明細、檢查列）；Val 0.1 節改為折現率與 DCF 彙總（列數不變，0.2 節以後列號不變）；Sens 目標價參數改為標準案例（WACC、β、ERP、g、RONIC、資本支出、營運資金、DCF 權重、終值替代法）；In 頁新增 M2 節（rf、β、ERP、CRP、資本結構、折舊／資本支出／營運資金穩態比例），刪除 tp_r、tp_roe，淨現金收益率鍵 rf 改名 ncy（值不變）。Y、Q、Mkt、Recon 頁與 v0.6.2 相同。"]   # 接在 README 最後（不位移既有列）
+CONFIG["readme_extra"] = [("已知簡化：Y 頁淨現金與 ROE 未計營運資金（只在 DCF 以 fc_wc × 營收增量計入）；鎧俠等權益投資未計入 DCF 淨現金；股數用期末；HBM 毛利率無法由公開資料分離。" if t.startswith("已知簡化") else t) for t in CONFIG["readme_extra"]]

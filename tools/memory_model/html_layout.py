@@ -63,16 +63,22 @@ def classify(k, nm_block):
         return (B_NM, "營收與營業利益") if nm_block else (B_CO, "非記憶體事業（本公司沒有，皆為零）")
     if k in ("fx", "px"):
         return B_CO, "股價與匯率"
-    if k in ("tax", "rf"):
+    if k in ("tax", "ncy"):
         return B_CO, "稅與淨現金收益率"
+    if k in ("rf", "erp", "crp", "beta", "beta_u", "beta_u_us", "beta_u_gl", "beta_de", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"):
+        return B_CO, "折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）"
+    if k in ("debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"):
+        return B_CO, "資本結構、淨現金與股數（評價用）"
+    if k.startswith("fc_"):
+        return B_CO, "自由現金流（折舊、資本支出、營運資金的長期穩態）"
     if k in ("eq_last", "nc_last", "sh_last", "extra_eq", "extra_sh"):
         return B_CO, "資產負債錨點（最後實績季末）"
     if k in ("bb_0", "bb_sh_0", "div_0", "payout", "bb_px") or re.match(r"^dps_\d$", k):
         return B_CO, "股東回饋（股利與買回）"
     if re.match(r"^p[be]_\d$", k):
         return B_CO, "固定倍數格（對照）"
-    if k in ("tp_r", "tp_g", "tp_roe"):
-        return B_CO, "折現率與永續成長"
+    if k == "tp_g":
+        return B_CO, "收斂期（FY2030 起回到循環中段）"
     if k in ("tp_wA", "tp_wB", "tp_wC", "tp_w_dcf"):
         return B_CO, "目標價規則（情境權重、DCF 權重）"
     if k == "nim10" or k.startswith(("fade_", "cyc_")):
@@ -167,18 +173,48 @@ def build(co_dir, xlsx, nm_block=False, pfmt="n0", recon_main=None):
             i += 1
             continue
         if b["type"] == "table" and txt(b.get("caption", "")).startswith("0.1 DCF"):
-            reinv = _find(V, "  再投資率")
-            nb.append({"type": "table", "caption": "DCF 折現率與永續假設（直接顯示）", "head": ["項目", "數值"],
-                       "rows": [[f"@In!B{ink[k]}", f"@In!E{ink[k]}|p1"] for k in ("tp_r", "tp_g", "tp_roe")] + [[f"@Val!A{reinv}", f"@Val!B{reinv}|p1"]]})
+            # 樣板 v0.5：標準版 DCF。折現率（WACC 等）直接顯示、緊接 DCF 彙總之前；彙總列由 Val 頁標籤找列號（不用 html_src 的舊列號）
+            h = _find(V, "0.1 DCF") + 1
+            ke, ronic, pvx, dcf = _find(V, "股權成本 ke"), _find(V, "永續期 RONIC"), _find(V, "明確期 FCFF 現值"), _find(V, "DCF 目標價（情境加權）")
+            nb.append({"type": "table", "caption": "DCF 折現率（標準版 DCF：WACC、股權成本、稅後債務成本、RONIC、永續成長率）", "head": ["項目", "數值", "說明"],
+                       "rows": [[f"@Val!A{r}", f"@Val!B{r}|p2", f"@Val!E{r}"] for r in range(ke, ronic + 1)]})
+            pct = {str(_find(V, "  其中：終值現值占 EV")): {c: "p1" for c in "BCD"}, str(_find(V, "  隱含終值 EV／EBITDA")): {c: "x1" for c in "BCD"},
+                   str(_find(V, "評價用稀釋股數")): {c: "" for c in "BCD"}}
+            nb.append({"type": "table", "caption": f"@Val!A{h - 1}", "head": [f"@Val!{c}{h}" for c in "ABCDE"],
+                       "rowgen": {"sheet": "Val", "rows": f"{pvx}-{dcf}", "cols": list("ABCDE"), "fmts": ["", pfmt, pfmt, pfmt, ""], "row_fmt": pct}})
+            D = wb["DCF"]
+            b0 = _find(D, "情境 B（")
+            b1 = next(r for r in range(b0, D.max_row + 1) if str(D.cell(r, 1).value or "").startswith("檢查：終值占 EV"))
+            hd = _find(D, "項目")
+            nb.append({"type": "table", "collapse": True, "summary": "展開：情境 B 的無槓桿自由現金流明細（DCF 頁；情境 A、C 同式）", "caption": f"@DCF!A{b0}",
+                       "head": [f"@DCF!{c}{hd}" for c in "ACDEFGH"],
+                       "rowgen": {"sheet": "DCF", "rows": f"{b0 + 1}-{b1}", "cols": list("ACDEFGH"), "fmts": ["", "n1", "n1", "n1", "n1", "n1", "n1"],
+                                  "row_fmt": {str(r): {c: ("p1" if "率" in str(D.cell(r, 1).value) or "÷" in str(D.cell(r, 1).value) or "占" in str(D.cell(r, 1).value) else ("n4" if "因子" in str(D.cell(r, 1).value) else "n1")) for c in "CDEFGH"}
+                                              for r in range(b0 + 1, b1 + 1) if any(k in str(D.cell(r, 1).value or "") for k in ("率", "÷", "占", "因子"))}}})
+            i += 1
+            continue
         nb.append(b)
         i += 1
     secs["valuation"]["blocks"] = va = nb
     adj0, comp2 = _find(V, "Comparable 目標價（相對倍數調整後）"), _find(V, "Comparable 目標價（市場主流同業法）")
     for b in va:      # 長條圖的 Comparable 改為進加權目標價的相對倍數調整後值（與橫幅一致）
         if b["type"] == "bars" and str(b.get("title", "")).startswith("目標價與現價"):
+            dcf_r = _find(V, "DCF 目標價（情境加權）")
             for it in b["items"]:
+                if str(it.get("label", "")).startswith("@Val!A") and not txt(it["label"]):   # 樣板 v0.5：舊 0.1 節的 DCF 目標價列已移位
+                    it["label"], it["value"] = f"@Val!A{dcf_r}", f"@Val!B{dcf_r}"
                 if it.get("label") == f"@Val!A{comp2}":
                     it["label"], it["value"] = f"@Val!A{adj0}", f"@Val!B{adj0}"
+    # 樣板 v0.5：目標價參數敏感度（標準版 DCF 的標準案例）；列號由 Sens 頁標題找（html_src 的舊列號停在 v0.4 的 tp_r／tp_g 案例）
+    SE = wb["Sens"]
+    t0 = _find(SE, "目標価參數敏感度".replace("価", "價"))
+    t1 = _find(SE, "檢查：閉式公式的基準") - 1
+    for b in secs["sens"]["blocks"]:
+        if b["type"] == "h3" and str(b.get("text", "")).startswith("@Sens!A") and "目標價" in txt(b["text"]) or (b["type"] == "h3" and txt(b.get("text", "")).startswith("目標價參數")):
+            b["text"] = f"@Sens!A{t0}"
+        if b["type"] == "table" and b.get("rowgen", {}).get("sheet") == "Sens" and txt(b.get("head", [""])[0]) in ("案例", "參數"):
+            b["head"] = [f"@Sens!{c}{t0 + 1}" for c in "ABCDEFG"]
+            b["rowgen"] = {"sheet": "Sens", "rows": f"{t0 + 2}-{t1}", "cols": list("ABCDEFG"), "fmts": ["", "", pfmt, "sp1", pfmt, "sp1", pfmt]}
     for b in secs["recon"]["blocks"]:
         if b["type"] == "table" and not b.get("caption"):
             b["caption"] = "與共識、公司指引的對照（本模型正向推導，只作事後對照）"
@@ -201,7 +237,8 @@ def build(co_dir, xlsx, nm_block=False, pfmt="n0", recon_main=None):
     intro = secs["drivers"].get("intro")
     spec["blocks_to"] = {intro: first} if intro else {}
     spec["main"] = {"0.3 結論": ["目標價（DCF 與 Comparable 加權）", "市場共識目標價", "上檔空間：加權目標價", "DCF ÷ 現價", "價格帶"],
-                    "0.1 DCF": ["再投資率", "DCF 情境每股價值", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"]}
+                    "0.1 DCF": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+                    "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"]}
     if recon_main:
         spec["main"]["與共識、公司指引的對照"] = recon_main
     old_tornado = {json.dumps(b.get("rows")): b.get("title") for b in secs["sens"]["blocks"] if b["type"] == "tornado"}
