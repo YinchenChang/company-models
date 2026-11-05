@@ -104,7 +104,7 @@ SPEC = {
     ["營業費用、稅與股數", ["phi", "g_opx_min", "opx_adj", "tx_f", "oth_f", "sh_g"]],
     ["股價與循環位置", ["px", "r_disc", "pk_A", "pk_B", "pk_C"]],
     ["目標價規則（情境權重、DCF 權重、延伸期收斂與共識）", ["tp_wA", "tp_wB", "tp_wC", "tp_g", "tp_gd", "tp_w_dcf", "nm10", "cons_tp"]],
-    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "blume_a", "beta_1", "beta_2", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
+    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta_u", "beta_de", "blume_a", "beta_1", "beta_2", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
     ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"]],
     ["自由現金流（折舊、資本支出、營運資金）", ["da_rev", "cx_rev", "fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]]]]],
  "blocks_to": {},
