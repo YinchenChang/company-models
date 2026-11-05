@@ -1183,7 +1183,7 @@ for col, w in zip("ABCDEF", [6, 80, 14, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = "Meta（META）個股模型 v0.1.4（2026-11-04；v0.1.3 之上換 Tokenomics 快照 " + TKV + "，基準數值不變；v0.1.3 加協議應計驗證列與受限現金口徑核對，兩案只進 Sens）— 命題模組＋官方營收分部 → 損益表（完整 10-Q、法說與 follow-up call 補資料缺口）"
+RD["A1"] = "Meta（META）個股模型 v0.1.5（2026-11-05；v0.1.5 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；v0.1.4 換 Tokenomics 快照 " + TKV + "，基準數值不變；v0.1.3 加協議應計驗證列與受限現金口徑核對，兩案只進 Sens）— 命題模組＋官方營收分部 → 損益表（完整 10-Q、法說與 follow-up call 補資料缺口）"
 RD["A3"] = "命題：Meta 的 AI 資本支出（2026 指引 1,350–1,450 億美元，含融資租賃本金）能否由廣告現金流支撐，且自用算力（GPU＋自研 MTIA）是否帶來足以回本的廣告變現提升。"
 RD["A4"] = "核心問題：FY2028 AI 增量營業利益（讀法 2：自用 AI 影子效益＝自用在役 MW × Tokenomics 每 MW 持有成本）能否覆蓋 AI 資本支出的資金成本；收支關卡＝FY2026–FY2030 自由現金流扣股利合計。"
 VB = lambda k, c="B": f"Val!{c}{VR_[k]}"
@@ -1219,6 +1219,25 @@ for t_ in ("v0.1.3：Recon 5 加驗證列——協議應計可能大於 11.89（
 r += 1
 RD.cell(r, 1, "工作表：README → In → Q → Thesis → Seg → PL → CF → Val → Recon → Sens → Sources。藍字＝輸入、黑字＝公式；黃底＝判斷題。建置：bash meta/make_v01.sh").font = BOLD; r += 1
 RD.cell(r, 1, "數字標記：Verified（公司正式財報或申報文件）／Interested-party（公司指引、賣方、第三方網站）／Analogy／Assumed（給區間）／Derived（換算）。每股數字為 Class C 股票股利（2027-01 下旬，1:1）前的口徑。")
+r += 2
+# v0.1.5（Andy 2026-11-05，個股 HTML 版面規格 v1.0）：展示層與命題回覆（HTML 讀；A3、A5–A8 原文保留）
+_CB = CR["B"]
+_ch = next(rr for rr in range(_CB["cfo"] - 1, 0, -1) if CF.cell(rr, 1).value == "項目")
+_first = lambda row, cond: f'INDEX(CF!H{_ch}:M{_ch},MATCH(1,INDEX((CF!H{row}:M{row}{cond})*1,0),0))'
+_TB = T["B"]
+RD.cell(r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用）").font = BOLD; r += 1
+RD.cell(r, 1, "命題：Meta 的巨額 AI 資本支出能否由廣告現金流支撐，以及自用算力能否帶來足以回本的廣告變現提升；三個問題如下。"); r += 1
+RD.cell(r, 1, "命題 1｜廣告現金流撐得住嗎：2026 年資本支出指引 1,350–1,450 億美元（含融資租賃本金），廣告本業的現金流能否支撐、是否需要舉債。"); r += 1
+RD.cell(r, 1, "命題 2｜自用算力能否回本：自建 GPU 與自研 MTIA 用在廣告推薦與生成式 AI，帶來的廣告變現提升是否足以覆蓋這些算力的成本。"); r += 1
+RD.cell(r, 1, "命題 3｜每股值多少：把新增 AI 折舊與資本支出算進去之後，每股價值是否仍高於現價。"); r += 1
+RD.cell(r, 1, f'="重點 1｜合理價值高於現價：我們估每股約 "&TEXT({VB("tp")},"0")&" 美元，比現價 "&TEXT(px,"0.00")&" 高 "&TEXT({VB("up")},"0%")&"。兩種算法各占一半：未來現金流折現約 "&TEXT({VB("tpdcf")},"0")&"、各業務按數位廣告同業倍數加總約 "&TEXT({VB("tpcomp")},"0")&"；樂觀、基準、保守三種情境約 "&TEXT({VB("scen")},"0")&"、"&TEXT({VB("scen", "C")},"0")&"、"&TEXT({VB("scen", "D")},"0")&"，都高於現價。市場分析師平均目標價約 "&TEXT(cons_tp,"0")&"。"'); r += 1
+RD.cell(r, 1, f'="重點 2｜帳面利潤率會下滑，但自用算力的效益大於成本：2028 年自用 AI 的效益（以 Tokenomics 持有成本估的影子價值）約 "&TEXT(Thesis!I{_TB["shadow"]}*10,"#,##0")&" 億美元，增量成本（營運＋新增 AI 折舊）約 "&TEXT(Thesis!I{_TB["int_cost"]}*10,"#,##0")&" 億；但新增折舊讓合併營業利益率從 2025 年 "&TEXT(PL!D{PB["om"]},"0.0%")&" 降到 2028 年 "&TEXT(PL!I{PB["om"]},"0.0%")&"。"'); r += 1
+RD.cell(r, 1, f'="重點 3｜投資高峰期要短暫舉債：2026–2030 五年自由現金流扣股利合計，樂觀、基準、保守約 "&TEXT(CF!B{GATE}*10,"#,##0")&"、"&TEXT(CF!C{GATE}*10,"#,##0")&"、"&TEXT(CF!D{GATE}*10,"#,##0")&" 億美元；基準情境 2027 年資本支出約 "&TEXT(CF!H{_CB["cx"]}*10,"#,##0")&" 億美元，自用 AI 容量由評價日 "&TEXT(mw_tot0,"#,##0")&" MW 增至 2028 年底 "&TEXT(Thesis!I{_TB["end"]},"#,##0")&" MW。"'); r += 1
+r += 1
+RD.cell(r, 1, "命題回覆（HTML 用；依本模型計算回答開頭三個命題）").font = BOLD; r += 1
+RD.cell(r, 1, f'="廣告現金流撐得住嗎？答：基準情境撐得住，但投資高峰期要短暫舉債。基準情境的自由現金流扣股利在 "&CF!G{_ch}&"～"&CF!I{_ch}&" 都是負的（"&CF!H{_ch}&" 最低，約 "&TEXT(CF!H{_CB["fcfd"]}*10,"#,##0")&" 億美元），"&{_first(_CB["plug"], ">0")}&" 新增舉債約 "&TEXT(CF!C{GATE + 1}*10,"#,##0")&" 億美元，淨現金在 "&{_first(_CB["nc"], ">0")}&" 轉正；五年合計約 "&TEXT(CF!C{GATE}*10,"#,##0")&" 億美元。樂觀情境因加碼投資，五年需舉債約 "&TEXT(CF!B{GATE + 1}*10,"#,##0")&" 億、合計 "&TEXT(CF!B{GATE}*10,"#,##0")&" 億；保守情境投資放緩，"&CF!D{GATE + 3}&"。"'); r += 1
+RD.cell(r, 1, f'="自用算力能否回本？答：以本模型的主值讀法可以，但這是影子價值、不是財報營收。2028 年自用 AI 效益約 "&TEXT(Thesis!I{_TB["shadow"]}*10,"#,##0")&" 億美元，是增量成本 "&TEXT(Thesis!I{_TB["int_cost"]}*10,"#,##0")&" 億的 "&TEXT(Thesis!I{_TB["sh_vs"]},"0.00")&" 倍。若自用算力只算成本、不算效益，目標價降到 "&TEXT({VB("tp_r1")},"0")&"（上檔空間 "&TEXT({VB("tp_r1", "C")},"+0%;-0%")&"）；所以回本與否取決於廣告變現提升是否真的發生——樂觀情境（AI 讓每則廣告價格再提高 "&TEXT(In!E{IN_ROW["pA"]},"0%")&"）目標價約 "&TEXT({VB("scen")},"0")&"，保守情境（提升消退 "&TEXT(-In!E{IN_ROW["pC"]},"0%")&"）約 "&TEXT({VB("scen", "D")},"0")&"。"'); r += 1
+RD.cell(r, 1, f'="每股值多少？答：每股約 "&TEXT({VB("tp")},"0.00")&" 美元（DCF "&TEXT({VB("tpdcf")},"0.00")&"、Comparable "&TEXT({VB("tpcomp")},"0.00")&" 各半），比現價 "&TEXT(px,"0.00")&" 高 "&TEXT({VB("up")},"0.0%")&"，投資建議"&{VB("rec")}&"；三種情境都高於現價。這已計入新增 AI 折舊（2028 年約 "&TEXT(PL!I{PB["da_ai"]}*10,"#,##0")&" 億美元）與 2027 年約 "&TEXT(CF!H{_CB["cx"]}*10,"#,##0")&" 億美元的資本支出。主要下行風險是自用算力的效益不如預期（只計成本時目標價 "&TEXT({VB("tp_r1")},"0")&"）。"'); r += 1
 RD.column_dimensions["A"].width = 120; RD.column_dimensions["B"].width = 60; RD.column_dimensions["C"].width = 60; RD.column_dimensions["D"].width = 60
 for rr in range(3, 9): RD.cell(rr, 1).alignment = Alignment(wrap_text=True, vertical="top")
 
