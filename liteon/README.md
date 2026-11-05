@@ -1,4 +1,10 @@
-# liteon/ — 光寶科（2301.TW）收支與估值模型 v0.3
+# liteon/ — 光寶科（2301.TW）收支與估值模型 v0.3.1
+
+## v0.3.1（2026-11-05）：HTML 新版面 v1.0（只改展示層）
+
+- 依 `docs/plan/個股HTML版面規格.md` v1.0：README 頁最後新增「展示層」（命題摘要、命題分項、白話重點）與「命題回覆」兩段，數字全以公式取自各頁；另加「本版要點」與 HTML 橫幅用的 Comparable（相對倍數調整後）上檔空間列。README 以外逐格與 v0.3 相同（`tools/xlsx_diff.py`）。
+- HTML：原設定改名 `html_src.json`（內容不動），`gen_html_json.py` 依列標籤重定位後呼叫 `tools/company_html/relayout.py` 產生 `html.json`（勿手改）。參數分塊：AI 電源（雲端及物聯網的 AI 相關）／非 AI 事業／全公司。舊 `html.json` 的情境驅動表改由列標籤定位；龍捲風圖標題改依 Sens 頁欄名（FY2027／FY2028 EPS，不是加權目標價）；估值章說明改用 README 的目標價方法列。
+- 成品：`dist/` 內 20261105 的 v0.3.1 xlsx／html；舊版移到 `dist/_待刪除/`。
 
 ## v0.3（2026-10-31）：滾入 3Q26 實績
 
