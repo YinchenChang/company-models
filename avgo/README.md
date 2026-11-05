@@ -1,4 +1,11 @@
-# avgo/ — Broadcom（AVGO）收支與估值模型 v0.2.1
+# avgo/ — Broadcom（AVGO）收支與估值模型 v0.4
+
+## v0.4（2026-11-05）：CF13 (a)——加速器金額份額改用整顆售價（只影響份額展示）
+
+- 依 Andy 2026-11-05 15:24「CF13 a」：Units 頁第 3 節的 TPU、其他 ASIC 每顆價改讀整顆售價 `pa_tpu`、`pa_oth`（Siliconomics M6，經 NVIDIA 模型），與 NVIDIA、AMD 模型同口徑；「Broadcom ÷ ASIC 金額」同改整顆售價口徑。本頁第 1 節「核心 × k_x＋全部 HBM」仍用於 Broadcom 自身營收。
+- 結果（CY2027，情境 A）：AMD 金額份額 6.36% → 6.70%（與 AMD、NVIDIA 模型一致）；ASIC 合計 22.4% → 18.2%；營收、EPS、目標價、投資建議不變。
+- 成品：`dist/20261105_Broadcom個股模型_v0.4.xlsx`。
+
 
 ## v0.3.1（2026-10-30）：In 頁「敏感度低／高」與「情境 A／B／C」分開（數值不變）
 

@@ -158,7 +158,7 @@ inp("jpm_u27", "2027 年 ASIC 占加速器出貨顆數（JPMorgan）", "%", None
 inp("cp_sh27", "2027 年 Broadcom 占 ASIC 設計夥伴份額（Counterpoint）", "%", None, 0.60, None, "Interested-party", "Counterpoint（Benzinga／Yahoo 2026-01-28 轉述；口徑未說明）", "JPMorgan：高階 ASIC 80–85%")
 
 sec("I. 加速器每顆價格（金額份額計算用；讀 NVIDIA 模型成品，模組層級）")
-for k, lab in (("pm_bw", "Blackwell 模組"), ("pm_rb", "Rubin 模組"), ("pm_ru", "Rubin Ultra 模組"), ("pm_hp", "Hopper 模組"), ("pa_amd", "AMD Instinct"), ("pa_trn", "AWS Trainium")):
+for k, lab in (("pm_bw", "Blackwell 模組"), ("pm_rb", "Rubin 模組"), ("pm_ru", "Rubin Ultra 模組"), ("pm_hp", "Hopper 模組"), ("pa_amd", "AMD Instinct"), ("pa_trn", "AWS Trainium"), ("pa_tpu", "Google TPU"), ("pa_oth", "其他 ASIC")):   # CF13 (a)（Andy 2026-11-05）：金額份額一律用整顆售價
     inp(k, f"{lab} 每顆", "US$K", None, NVP[k][0], None, "Derived", NVP[k][1], "NVIDIA 模型 In 頁（同一套價格；唯讀）")
 
 sec("J. 價格、估值與客戶融資")
@@ -405,9 +405,9 @@ for key, lab, f, fmt, note in (("kx", "XPU 校準係數 k_x", f"=PL!D{A_['kx']}"
                                ("xr26", "FY2026 未校準 XPU", f"=PL!D{A_['xraw']}", "0.0", "")):
     UN.cell(ur, 1, lab); UN[f"C{ur}"] = f; UN[f"C{ur}"].number_format = fmt; UN.cell(ur, 7, note); CAL[key] = ur; ur += 1
 ur += 1
-UN.cell(ur, 1, "3. 加速器金額份額（accel_share；各平台每顆總價 × 顆數；ASIC 用本頁第 1 節的 CY2027 每顆總價，其他平台讀 NVIDIA 模型）").font = BOLD; ur += 1
-PRICE = {"bw": "pm_bw", "rb": "pm_rb", "ru": "pm_ru", "hp": "pm_hp", "amd": "pa_amd", "trn": "pa_trn",
-         "tpu": f"Units!$D${SPEC[('q', 'tpu')]}", "oth": f"Units!$D${SPEC[('q', 'oth')]}"}
+UN.cell(ur, 1, "3. 加速器金額份額（accel_share；各平台整顆售價 × 顆數；整顆售價讀 NVIDIA 模型〔Siliconomics M6〕，CF13 (a)）").font = BOLD; ur += 1
+# CF13 (a)（Andy 2026-11-05 15:24）：市場金額份額一律用整顆售價 pa_*（與 NVIDIA、AMD 模型同口徑）；本頁第 1 節「核心 × k_x＋HBM」只用於 Broadcom 自身營收
+PRICE = {"bw": "pm_bw", "rb": "pm_rb", "ru": "pm_ru", "hp": "pm_hp", "amd": "pa_amd", "trn": "pa_trn", "tpu": "pa_tpu", "oth": "pa_oth"}
 ycols = {y: cyc(y) for y in CYS}
 SHR = {}
 for s in SC:
@@ -424,10 +424,10 @@ for s in SC:
         c = cyc(y)
         UN[f"{c}{ur}"] = f"={c}{SHR[s][('us', 'tpu')]}+{c}{SHR[s][('us', 'trn')]}+{c}{SHR[s][('us', 'oth')]}"; UN[f"{c}{ur}"].number_format = "0.0%"
     SHR[s]["asic_u"] = ur
-    UN.cell(ur + 1, 1, "  Broadcom ÷ ASIC 金額（ASIC 總價口徑）").font = BOLD
+    UN.cell(ur + 1, 1, "  Broadcom ÷ ASIC 金額（整顆售價口徑；CF13 (a)）").font = BOLD
     for y in CYS:
         c = cyc(y)
-        UN[f"{c}{ur + 1}"] = (f"=(PL!{FC[y]}{PB[s]['b_tpu']}*{c}{SPEC[('q', 'tpu')]}+PL!{FC[y]}{PB[s]['b_oth']}*{c}{SPEC[('q', 'oth')]})"
+        UN[f"{c}{ur + 1}"] = (f"=(PL!{FC[y]}{PB[s]['b_tpu']}*pa_tpu+PL!{FC[y]}{PB[s]['b_oth']}*pa_oth)"
                               f"/({c}{SHR[s][('d', 'tpu')]}+{c}{SHR[s][('d', 'trn')]}+{c}{SHR[s][('d', 'oth')]})")
         UN[f"{c}{ur + 1}"].number_format = "0.0%"
     SHR[s]["avgo_d"] = ur + 1
@@ -438,7 +438,7 @@ for s in SC:
         UN[f"{c}{ur + 2}"].number_format = "0.0%"
     SHR[s]["avgo_u"] = ur + 2
     ur += 4
-UN.cell(ur, 1, "口徑：每顆價為「晶片＋HBM」的模組層級價（NVIDIA＝GPU 模組價；ASIC＝本頁第 1 節總價，含全部 HBM，不論由誰採購），不含系統加價與網通。ASIC 每顆價的金額份額以 CY2027 價套用各年（accel_share 每平台一個價格）。").font = BOLD
+UN.cell(ur, 1, "口徑：每顆價為整顆售價（模組層級；NVIDIA＝GPU 模組價，AMD 與 ASIC＝Siliconomics M6 pa_*，經 NVIDIA 模型），不含系統加價與網通；CF13 (a)（Andy 2026-11-05）起與 NVIDIA、AMD 模型同口徑。本頁第 1 節「核心 × k_x＋全部 HBM」只用於 Broadcom 營收與「Broadcom ÷ ASIC 金額」列。").font = BOLD
 UN.column_dimensions["A"].width = 64; UN.column_dimensions["B"].width = 12
 for c in "CDEF": UN.column_dimensions[c].width = 17
 UN.column_dimensions["G"].width = 70
@@ -617,7 +617,7 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 140
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
 lines = [("Broadcom（AVGO）收支與估值模型 v0.2.1（AI 半導體 Project：運算層第二個樣板，ASIC＋網通）　2026-10-25", True),
- ("版本：v0.1（初版）。ASIC 每顆規格（Broadcom 份額、核心售價、HBM 代購）在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
+ ("版本：v0.4（2026-11-05：CF13 (a)〔Andy 2026-11-05 15:24〕——Units 頁加速器金額份額改用整顆售價 pa_*〔與 NVIDIA、AMD 模型同口徑〕；只影響份額展示，營收、EPS、目標價不變）。v0.1（初版）。ASIC 每顆規格（Broadcom 份額、核心售價、HBM 代購）在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
  ("模型命題：Broadcom 的 AI 營收＝各 XPU 平台的顆數 × Broadcom 份額 × 每顆售價（核心＋代購 HBM）＋網通附掛；2027–28 年的增量集中在 Anthropic、OpenAI 兩家靠融資部署的客戶。股價約 17 倍 FY2027 EPS：這個折價是在定價客戶信用風險，還是低估了營收？", False),
  ("核心問題：以市場層顆數往前推，Broadcom 的 AI 營收與 EPS 能否支撐公司展望（FY2027 約 115B、FY2028 約 230B）；差距要靠多少額外顆數補上。", False), ("", False),
  ("會計年度：FY(t) 於 t 年 10 月底／11 月初結束，10/12 落在日曆年 t，FY(t) 直接對照 CY(t)，不做平移。預測期 FY2027–FY2029（三年）。口徑：公司 non-GAAP（排除股票薪酬、攤銷、重組）。", False), ("", False),
@@ -741,7 +741,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, "avgo")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
-apply_in_layout.apply(wb, "v0.3.1", "2026-10-30")  # v0.3.1：In 頁版面（個股模型原則第 8 節；數值不變）
+apply_in_layout.apply(wb, "v0.4", "2026-11-05")  # v0.4：CF13 (a) 金額份額改整顆售價（只影響份額展示）；v0.3.1：In 頁版面
 
 # ---------------- Wattonomics 錨定（決策 S37；Siliconomics v0.13）：In 頁最後三列（wta_27／28／29，數值取 SIL.WTA）＋Sens 頁新案例；既有儲存格不變 ----------------
 WTA_NOTE = "Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
