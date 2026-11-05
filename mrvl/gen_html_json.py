@@ -28,6 +28,26 @@ IN = wb["In"]
 KEY = {str(IN[f"A{r}"].value): r for r in range(4, IN.max_row + 1) if IN[f"A{r}"].value}
 SEC = {s["id"]: s for s in cfg["sections"]}
 
+# 第二輪修正：DCF 彙總表與「目標價與現價」長條圖的 Val 列號依標籤重建（模組 v2 stub 期在「＋淨現金與投資」後多兩列，不寫死列號；同 NVIDIA v0.3.2）
+def _dcf_sum_fix():
+    r0, r1 = find("Val", "明確期 FCFF 現值"), find("Val", "DCF 目標價（情境加權）")
+    fm = lambda lab: ("n3" if lab.startswith("評價用稀釋股數") else "p1" if "終值現值占 EV" in lab else "x1" if "隱含終值" in lab else
+                      "n2" if lab.startswith(("DCF 情境", "DCF 目標價")) else "n1")
+    n = 0
+    for b in SEC["valuation"]["blocks"]:
+        if b["type"] == "table" and str(b.get("caption", "")).startswith("DCF 彙總"):
+            rows = []
+            for r in range(r0, r1 + 1):
+                lab = str(wb["Val"][f"A{r}"].value).strip(); f = fm(lab)
+                rows.append([f"@Val!A{r}", f"@Val!B{r}|{f}", "", ""] if r == r1 else [f"@Val!A{r}"] + [f"@Val!{c}{r}|{f}" for c in "BCD"])
+            b["rows"] = rows; n += 1
+        if b["type"] == "bars":
+            for it in b["items"]:
+                if it["value"] == "@Val!B21":   # html_src.json 的 DCF 目標價列
+                    it["label"], it["value"] = f"@Val!A{r1}", f"@Val!B{r1}"; n += 1
+    assert n == 2, n
+_dcf_sum_fix()
+
 # 情境驅動表：依 In 頁「情境驅動對照」節的實際位置重建（html_src.json 寫死的 In 列號在 M2 節〔標準版 DCF〕插入後錯位；不寫死列號）
 def _scen_fix():
     ws = wb["In"]
@@ -120,11 +140,11 @@ SPEC = {
     ["營業費用、利息、稅與股數", ["phi", "g_opx_min", "opx_adj", "int_f", "tx_f", "sh_g"]],
     ["股價、循環位置與近一年倍數", ["px", "pe_ttm_gaap", "eps_q3_26", "eps_q4_26", "pk_A", "pk_B", "pk_C"]],
     ["目標價規則（情境權重、DCF 權重、延伸期收斂與共識）", ["tp_wA", "tp_wB", "tp_wC", "tp_g", "tp_gd", "tp_w_dcf", "nm10_k", "cons_tp"]],
-    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta_u", "beta_de", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
-    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"]],
+    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta_u", "beta_de", "beta_du", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
+    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "bs_date", "stub_frac", "stub_div", "sh_v"]],
     ["自由現金流（股票薪酬、折舊、資本支出、營運資金）", ["sbc_rev", "fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]]]]],
  "blocks_to": {},
- "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+ "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
           "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
           "Comparable 彙總": ["同業前瞻 P/E 中位數", "各情境 12 個月後的前瞻 EPS", "12 個月後的前瞻 EPS（情境加權）", "Comparable 目標價"],
           "對帳要點": ["FY2028 營收 vs 投資人日", "FY2028 資料中心 vs 投資人日", "FY2029 客製 vs 投資人日", "FY2028 EPS vs 共識", "FY2028：所需資料中心倍數", "FY2030 毛利率 vs 公司 FY2031 目標"]},
