@@ -21,7 +21,7 @@ import re
 import openpyxl
 
 TOR_BIG = 0.1
-CONC_MAIN = ["目標價（DCF 與 Comparable 加權）", "DCF 目標價", "Comparable 目標價", "現價", "上檔空間：加權目標價", "上檔空間：Comparable", "投資建議", "情境目標價", "市場共識目標價"]   # 敏感度：|變動| ≥ 10% 直接顯示，其餘摺疊
+CONC_MAIN = ["目標價（DCF 與 Comparable 加權）", "DCF 目標價", "Comparable 目標價", "現價", "上檔空間：加權目標價", "上檔空間：Comparable", "投資建議", "情境目標價", "市場共識目標價", "WACC"]   # 敏感度：|變動| ≥ 10% 直接顯示，其餘摺疊
 
 
 def _unit_fmt(u):
@@ -261,7 +261,7 @@ def relayout(cfg, xlsx, spec):
     intro = dr.pop("intro", None)
     titles = [t for t, _ in spec["in_groups"]]
     placed = {t: [] for t in titles}
-    scen, driver_map, others = None, None, []
+    scen, driver_map, others, drv_text = None, None, [], []
     for b in old:
         cap = w.text(b.get("caption", "")) if b.get("caption") else ""
         if cap.startswith("情境驅動"):
@@ -269,6 +269,9 @@ def relayout(cfg, xlsx, spec):
         elif cap.startswith("驅動 → 推導") or (b["type"] == "table" and b.get("head", [None])[:1] == ["頁"]):
             driver_map = b
         elif cap.startswith("單一參數區間"):
+            continue
+        elif b["type"] in ("h3", "list"):
+            drv_text.append(b)
             continue
         else:
             others.append(b)
@@ -295,8 +298,10 @@ def relayout(cfg, xlsx, spec):
         if b["type"] == "table" and not b.get("collapse"):
             cap = w.text(b.get("caption", ""))
             pref = next((v for k, v in mains.items() if cap.startswith(k)), None)
-            if pref is None and cap.endswith("結論"):
-                pref = [p for p in CONC_MAIN if any(lab.strip().startswith(p) for lab, _ in _table_rows(w, b))]
+            if pref is None:
+                hit = [p for p in CONC_MAIN if any(lab.strip().startswith(p) for lab, _ in _table_rows(w, b))]
+                if len(hit) >= 4:
+                    pref = hit
             nb += _split_table(w, b, pref, n_main, f"展開：{_clean(cap, '本表')}的其他項目")
         elif b["type"] == "kv":
             nb.append({"type": "table", "caption": "折現率與資本結構", "head": ["項目", "數值"], "rows": [[k, v] for k, v in b["items"]]})
@@ -340,6 +345,9 @@ def relayout(cfg, xlsx, spec):
         dm = dict(driver_map)
         dm.pop("caption", None)
         app += [{"type": "h3", "text": "附錄：驅動 → 推導對照表（查核用）"}, dict(dm, collapse=True, summary="展開：每頁的輸入、推導量與因果方向")]
+    if drv_text:
+        app.append({"type": "h3", "text": "附錄：各頁因果（查核用）"})
+        app += [dict(b, collapse=True, summary="展開：各頁因果") for b in drv_text if b["type"] == "list"]
     for b in old_thesis_extra(cfg, w):
         app.append(b)
     ins = next((i for i, b in enumerate(st["blocks"]) if b["type"] == "h3" and "未找到" in str(b.get("text"))), len(st["blocks"]))
@@ -351,7 +359,11 @@ def old_thesis_extra(cfg, w):
     """版本要點：README 頁「本版要點」或「與上一版的差異」段 → 附錄（摺疊）。"""
     ws = w.wb["README"]
     r0 = None
-    for p in ("本版要點", "與上一版的差異", "版本要點", "v0."):
+    rv = w.find("README", "版本：")
+    if rv and not w.find("README", "本版要點"):
+        return [{"type": "h3", "text": "附錄：版本要點"},
+                {"type": "table", "collapse": True, "summary": "展開：本版與前版的修改要點", "head": ["要點"], "rows": [[f"@README!A{rv}"]]}]
+    for p in ("本版要點", "與上一版的差異", "版本要點"):
         r0 = w.find("README", p)
         if r0:
             break
@@ -365,3 +377,19 @@ def old_thesis_extra(cfg, w):
         return []
     return [{"type": "h3", "text": "附錄：版本要點"},
             {"type": "table", "collapse": True, "summary": "展開：本版與前版的修改要點", "head": ["要點"], "rows": rows}]
+
+
+if __name__ == "__main__":
+    # 用法：python3 tools/company_html/relayout.py <公司資料夾> <成品 xlsx>
+    # 讀 <公司資料夾>/layout_spec.py 的 SPEC，就地改寫 <公司資料夾>/html.json（建置腳本寫出 html.json 之後、LibreOffice 重算之後執行一次）
+    import json, sys, os, importlib.util
+    cdir, xlsx = sys.argv[1], sys.argv[2]
+    sp = importlib.util.spec_from_file_location("layout_spec", os.path.join(cdir, "layout_spec.py"))
+    mod = importlib.util.module_from_spec(sp); sp.loader.exec_module(mod)
+    hp = os.path.join(cdir, "html.json")
+    cfg = json.load(open(hp, encoding="utf-8"))
+    if cfg.get("hero"):
+        raise SystemExit("html.json 已是新版面（有 hero）；請先由建置腳本重寫 html.json 再執行")
+    cfg = relayout(cfg, xlsx, mod.SPEC)
+    json.dump(cfg, open(hp, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    print("relayout：", hp)
