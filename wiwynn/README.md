@@ -1,4 +1,12 @@
-# wiwynn/ — 緯穎（6669）收支與估值模型 v0.1.1
+# wiwynn/ — 緯穎（6669）收支與估值模型 v0.2
+
+## v0.2（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）＋HTML 新版面 v1.0
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0 與工作單（Andy 2026-11-05 20:42、20:45、21:21）：Val 0.1 節由「股東現金流＝EPS ×（1 − tp_g ÷ tp_roe）、折現率 tp_r 10%」改為 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現（期中慣例）；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, 台灣 10 年期公債殖利率)、RONIC＝WACC；EV 加淨現金與投資 ÷ 除權後股數，以股權成本推到 12 個月後並扣除期間股利。新增 DCF 頁；In 頁新增 I2 節，刪除 tp_r、tp_roe；Sens 目標價參數改為標準案例（表格移到案例區塊之後）。共用模組 `tools/fcff_dcf.py`（原樣取自 NVIDIA PR #355）。
+- 參數：rf 台灣 10 年期公債 1.98%（2026-11-04）；β＝Damodaran 全球 Computers/Peripherals 現金修正後無槓桿 β 1.47 依緯穎 D/E 重新加槓桿（約 1.66；個股迴歸 β 0.98 經 Blume 調整 0.99 列為 Sens 低值）；ERP 5%＋台灣國家風險溢酬 0.78%；kd、稅率、折舊、資本支出、營運資金為近三年實績；淨現金與投資取 2Q26 資產負債表。
+- HTML 改用 `docs/plan/個股HTML版面規格.md` v1.0（補充規則 A–E）：原 `html.json` 改名 `html_src.json`（內容不動），`gen_html_json.py` 讀它 → `tools/company_html/relayout.py` → 寫 `html.json`；xlsx README 頁新增「展示層」「命題回覆」「HTML 輔助列」「本版要點」。
+- 建置：`python3 wiwynn/build_wiwynn.py raw.xlsx` → LibreOffice 重算 → `python3 wiwynn/gen_html_json.py dist/<xlsx> wiwynn/html_src.json wiwynn/html.json` → `python3 tools/company_html/build_company_html.py wiwynn`。
+- 成品：`dist/20261105_緯穎個股模型_v0.2.xlsx`、`.html`；舊版移到 `dist/_待刪除/`。
 
 ## v0.1.3（2026-10-30）：In 頁「敏感度低／高」與「情境 A／B／C」分開（數值不變）
 
@@ -40,7 +48,7 @@
 
 建置：先執行 `python3 wiwynn/build_wiwynn.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。
 
-工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。
+工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。
 
 唯讀取用的上游成品：
 - `markets/network/dist`：AI IT 資本支出。
