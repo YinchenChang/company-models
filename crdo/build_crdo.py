@@ -164,7 +164,7 @@ inp("tp_wB", "目標價情境權重 B", "%", None, 0.5, None, "Assumed", "Andy �
 inp("tp_wC", "目標價情境權重 C", "%", None, 0.2, None, "Assumed", "Andy 可改", "—")
 
 sec("I. 價格與估值")
-inp("px", "股價（2026-10-23 收盤）", "US$", None, 147.29, None, "Interested-party", SA + "：147.29（前收 162.77；盤後 148.75）", CMC + "：147.29（市值 276.8 億美元）")
+inp("px", "股價（2026-11-04 收盤）", "US$", None, 136.5, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（CRDO；第三輪修正統一價格日）", "v0.3.3 為 2026-10-23 收盤 147.29（stockanalysis、CoinMarketCap）")
 inp("px_hi", "52 週高點", "US$", None, 308.67, None, "Interested-party", SA + "：52 週區間 86.49–308.67", TK + "：2026-06-22 收盤 302.52")
 inp("sh_out", "流通股數（2026-10）", "十億股", None, 0.18795, None, "Interested-party", SA + "：187.95 百萬股", K10 + "：186,477,898 股（2026-06-08，公司）")
 
@@ -194,7 +194,7 @@ SA_BY = "stockanalysis（S&P Global）Credo 年度資產負債表 FY2024–FY202
 NO2 = "第二來源：無（公司 10-Q 本次未直接讀取）"
 _FD = FD.in_rows(dict(
     date="2026-12-31（同 v0.2 DCF 基準日）", ccy="US$", amt="US$B", shu="十億股",
-    rf=(0.0500, "美國財政部每日殖利率曲線 10 Yr：2026-10-23 5.00%（2026-11-05 讀取；同 NVIDIA v0.3）", "FRED DGS10：10-28～10-30 5.05%／4.98%／4.94%；與股價同日（2026-10-23）", "無風險利率（美國 10 年期公債殖利率，2026-10-23）"),
+    rf=(0.0500, "美國財政部每日殖利率曲線 10 Yr：2026-10-23 5.00%（2026-11-05 讀取；同 NVIDIA v0.3）", "FRED DGS10：10-28～10-30 5.05%／4.98%／4.94%；v0.3.4 起股價日為 2026-11-04，殖利率沿用 2026-10-23（未更新）", "無風險利率（美國 10 年期公債殖利率，2026-10-23）"),
     beta_fixed=("=(beta_u-beta_du)*(1+(1-tax_w)*beta_de)", "=beta_u*(1+(1-tax_w)*beta_de)", "=(beta_u+beta_du)*(1+(1-tax_w)*beta_de)", "Derived",
                 "自算產業 β：US 半導體 同業 13 家中位數（NVDA AMD AVGO MRVL QCOM INTC MU ARM CRDO ALAB RMBS MTSI GFS；Yahoo Finance 月報酬 2021-11～2026-10，對 S&P 500（^GSPC） 迴歸，Hamada 去槓桿、現金修正）無槓桿 β 2.32，Blume 調整後 βU 1.884（In 頁 beta_u）；依 Credo D/E（市值；In 頁 beta_de）與 tax_w 以 Hamada 重新加槓桿：βL＝βU ×（1＋(1−t) × D/E）",
                 "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）。Sens 低／高（Analogy；v0.3.2 起）：β_u ∓ beta_du（0.3），各自同式重新加槓桿（工作單第二輪修正，Andy 2026-11-05 23:16 定案；tools/fcff_dcf.py v2 write_sens）"),
@@ -433,7 +433,7 @@ VAL = {}
 # 1. 價格與市場隱含倍數（第 14 列起；第 0 節在最後寫入第 4–12 列）
 V.cell(14, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, 15, ["項目", "A", "B", "C", "說明"])
-V.cell(16, 1, "現價（2026-10-23 收盤）"); V["B16"] = "=px"; V["B16"].number_format = "0.00"
+V.cell(16, 1, "現價（2026-11-04 收盤）"); V["B16"] = "=px"; V["B16"].number_format = "0.00"
 V.cell(17, 1, "現價 ÷ FY2026 EPS（實績）"); V.cell(18, 1, "現價 ÷ FY2027 EPS（模型）"); V.cell(19, 1, "現價 ÷ FY2028 EPS（模型）"); V.cell(20, 1, "現價 ÷ FY2029 EPS（模型）")
 for j, s in enumerate(SC):
     c = "BCD"[j]
@@ -503,7 +503,7 @@ V.cell(4, 1, "舊法：規則值情境加權（參考）").font = BOLD
 hdr(V, 5, ["項目", "數值", "", "", "說明"])
 V.cell(6, 1, "規則值情境加權價（參考，非目標價）"); V["B6"] = f"=tp_wA*F{VAL['A']}+tp_wB*F{VAL['B']}+tp_wC*F{VAL['C']}"; V["B6"].number_format = "#,##0"
 V["E6"] = "權重 × 各情境隱含價（第 3 節規則值）"
-V.cell(7, 1, "規則值情境加權價 ÷ 現價 − 1（參考）"); V["B7"] = "=B6/px-1"; V["B7"].number_format = "0.0%"; V["E7"] = "現價＝In 頁 px（2026-10-23 收盤）"
+V.cell(7, 1, "規則值情境加權價 ÷ 現價 − 1（參考）"); V["B7"] = "=B6/px-1"; V["B7"].number_format = "0.0%"; V["E7"] = "現價＝In 頁 px（2026-11-04 收盤）"
 for rr, s, lab in ((8, "A", "情境 A 隱含價（樂觀）"), (9, "B", "情境 B 隱含價（基準）"), (10, "C", "情境 C 隱含價（下檔）")):
     V.cell(rr, 1, lab); V[f"B{rr}"] = f"=F{VAL[s]}"; V[f"B{rr}"].number_format = "#,##0"
     V[f"E{rr}"] = f'="近 12 月 GAAP 換算 EPS "&TEXT(D{VAL[s]},"0.00")&" × "&TEXT(E{VAL[s]},"0.0")&" 倍（第 3 節）"'
@@ -611,7 +611,7 @@ srcs = [("公司：4Q26 與 FY2026 實績、1Q27 指引（8-K 附件 99.1）", P
         ("券商：Needham 等（客戶名稱 Amazon、Microsoft、xAI；Benzinga 2025-03）", BZ),
         ("共識：Yahoo Finance 分析師預估（2026-10-01）", YH),
         ("共識：StockAnalysis 預估與目標價（2026-10-05）", SAF),
-        ("價格：StockAnalysis（2026-10-23 收盤、52 週區間、股數）", SA),
+        ("價格：Yahoo Finance 日線收盤 2026-11-04（現價、同業報價；第三輪修正統一價格日）", "https://finance.yahoo.com/quote/CRDO/history/"), ("價格：StockAnalysis（2026-10-23 收盤〔同業 P/E 換算基準〕、52 週區間、股數）", SA),
         ("價格與評論：TIKR（10 月跌幅、OCP 發表 ALC、FY2027 共識 GAAP／調整後 EPS）", TK),
         ("資料商：companiesmarketcap 年底 P/E", CMC),
         ("資料商：StockAnalysis 會計年度末 P/E", "https://stockanalysis.com/stocks/crdo/financials/ratios/"),
@@ -817,7 +817,7 @@ _fade_all(lambda c, R: f"{c}{R['ni']}/{c}{R['sh_']}", None)
 _shift_rows(wb, "Val", 4, 47)
 TPT = _tp_section(V, lambda s_, y: f"PL!{FCX[y]}{SUMR[(s_, 'eps')]}", [(2028, '6/12'), (2029, '6/12')],
     '約 2027-10 時的未來 12 月（2027-11～2028-10）≈ 6／12 × FY2028＋6／12 × FY2029（會計年度 4 月底／5 月初結束）',
-    [('Astera Labs', 'ALAB', 45.77, '2026-10-23', 'stockanalysis forward PE（分析師共識；價格日期如左）'), ('Marvell', 'MRVL', 40.44, '2026-10-23', 'stockanalysis forward PE（分析師共識；價格日期如左）'), ('Broadcom', 'AVGO', 18.52, '2026-10-23', 'stockanalysis forward PE（分析師共識；價格日期如左）'), ('MACOM', 'MTSI', 28.59, '2026-10-23', 'stockanalysis forward PE（分析師共識；價格日期如左）')],
+    [('Astera Labs', 'ALAB', '=45.77*223.27/257.16', '2026-11-04', 'stockanalysis.com forward PE 45.77（2026-10-23，收盤 257.16）× 2026-11-04 收盤 223.27 ÷ 257.16（Yahoo Finance 日線收盤 2026-11-04；共識 EPS 不變）'), ('Marvell', 'MRVL', '=40.44*159.8/228.51', '2026-11-04', 'stockanalysis.com forward PE 40.44（2026-10-23，收盤 228.51）× 2026-11-04 收盤 159.8 ÷ 228.51（Yahoo Finance 日線收盤 2026-11-04；共識 EPS 不變）'), ('Broadcom', 'AVGO', '=18.52*325.48/321.68', '2026-11-04', 'stockanalysis.com forward PE 18.52（2026-10-23，收盤 321.68）× 2026-11-04 收盤 325.48 ÷ 321.68（Yahoo Finance 日線收盤 2026-11-04；共識 EPS 不變）'), ('MACOM', 'MTSI', '=28.59*233.13/236.24', '2026-11-04', 'stockanalysis.com forward PE 28.59（2026-10-23，收盤 236.24）× 2026-11-04 收盤 233.13 ÷ 236.24（Yahoo Finance 日線收盤 2026-11-04；共識 EPS 不變）')],
     '美股高速連接晶片同業（Astera Labs、Marvell、Broadcom、MACOM；不放 A 股）',
     'In 頁 tp_street：20 家平均 279.09（2026-10-05）；10-23 為 284.05',
     'DCF：股東現金流＝EPS（non-GAAP）×（1 − g／ROE），r＝10%、g＝4%、ROE 需與 non-GAAP EPS 同口徑，本模型無股東權益、算不出，取 0.20（Assumed；再投資率 20%），FY2027–32 明確期＋永續，FY2030 起為收斂法。Comparable：美股高速連接晶片同業（Astera Labs、Marvell、Broadcom、MACOM）前瞻 P/E 中位數 × 12 個月後前瞻 EPS（non-GAAP）；Broadcom 規模與業務組合不同，拉低中位數。會計年度 4 月底結束：FY2027 為錨點年（2026-05～2027-04），DCF 的 t＝1 對 FY2027，偏高估。十年 P/E 只有 2025 年一個觀測值（GAAP），分位檢查參考性低。情境對應：顆數情境 A＝順利、B＝平平、C＝不如預期。',
@@ -1058,7 +1058,8 @@ RD.cell(r, 1, "上檔空間：Comparable 目標價（相對倍數調整後）");
 RD.cell(r, 1, f'="估值說明：加權目標價＝DCF 目標價 × "&TEXT(tp_w_dcf,"0%")&"＋Comparable 目標價（相對倍數調整後）× "&TEXT(1-tp_w_dcf,"0%")&"，投資建議依它的上檔空間判定。DCF 為標準版：無槓桿自由現金流（稅後營業利益〔GAAP〕＋折舊 − 資本支出 − 營運資金增加）以 WACC "&TEXT(wacc,"0.0%")&" 折現，終值用永續成長率 "&TEXT(g_tv,"0.0%")&"、新投資報酬率＝WACC，企業價值加淨現金（資產負債表日的淨現金加 stub 期無槓桿自由現金流、扣已宣告股利，滾到評價日）後除以股數，三情境價值以股權成本推到 12 個月後，再依情境權重加權；Comparable＝同業前瞻本益比中位數 × 本公司長期相對同業的倍數比 × 約一年後的未來 12 個月 EPS（non-GAAP，情境加權）。十年本益比規則值是舊法，只作參考，不進目標價。"'); r += 1
 r += 1
 RD.cell(r, 1, "本版要點（版本沿革；HTML 附錄用）").font = BOLD; r += 1
-RD.cell(r, 1, f'="v0.3.3（2026-11-06）：第三輪修正。(1) HTML 投資建議橫幅：單位美元、兩位小數；相對倍數調整係數 1.00 註明未調整（資料不足）。(2) HTML 補一句說明可插拔光模組市場 A＜B＜C（共同封裝光學替代越快、可插拔市場越小）。(3) stub 列名改為含 stub 期會計年度（FY2027）FCFF × stub_frac；情境驅動對照收斂法列名中性化與百分比格式。數值不變。加權目標價 168.83 → "&TEXT({TPW},"0.00")&"、上檔空間 +14.6% → "&TEXT({UP},"+0.0%;-0.0%")&"、投資建議 中立 → "&{REC}&"。"'); r += 1
+RD.cell(r, 1, f'="v0.3.4（2026-11-06）：第三輪修正（現價統一 2026-11-04）。現價 147.29（2026-10-23）→ "&TEXT(px,"0.00")&"（Yahoo Finance 日線收盤 2026-11-04）；Comparable 同業前瞻 P/E 換算到 11-04 收盤（原 P/E × 11-04 收盤 ÷ 10-23 收盤；共識 EPS 不變），同業中位數 34.52 → "&TEXT({MED},"0.00")&"。模型其他參數不變。DCF 目標價 48.82 → "&TEXT({DCF},"0.00")&"、Comparable 目標價 288.85 → "&TEXT({CMP},"0.00")&"、加權目標價 168.83 → "&TEXT({TPW},"0.00")&"、上檔空間 +14.6% → "&TEXT({UP},"+0.0%;-0.0%")&"、投資建議 中立 → "&{REC}&"。"'); r += 1
+RD.cell(r, 1, 'v0.3.3（2026-11-06）：第三輪修正。(1) HTML 投資建議橫幅：單位美元、兩位小數；相對倍數調整係數 1.00 註明未調整（資料不足）。(2) HTML 補一句說明可插拔光模組市場 A＜B＜C（共同封裝光學替代越快、可插拔市場越小）。(3) stub 列名改為含 stub 期會計年度（FY2027）FCFF × stub_frac；情境驅動對照收斂法列名中性化與百分比格式。數值不變。加權目標價 168.83 → 168.83、上檔空間 +14.6% → +14.6%、投資建議 中立 → 中立。'); r += 1   # 舊版沿革固定文字（第三輪修正第 37 點）
 RD.cell(r, 1, "v0.3.2（2026-11-05）：第二輪修正（Andy 2026-11-05 23:16 定案），換用共用模組 tools/fcff_dcf.py v2。(1) 淨現金滾到評價日：資產負債表日 2026-08-01（2Q FY27 財報約 12 月初公布，維持 1Q FY27）→ 評價日 2026-12-31，淨現金與投資 0.74＋stub 期 FCFF（FY2027 全年 FCFF × 0.416 年；情境 B 0.15）− 已宣告股利 0.00＝0.89（US$B；情境 B）。(2) β 敏感度改 β_u ± 0.3 各自重新加槓桿（β 1.59／2.19）；基準 β_u 1.884 不變（β 1.89）。(3) 美國公司不加「美元口徑折現」（＝基準）。(4) RONIC＝WACC 不變；無非控制權益；資本支出、折舊：本模型沒有擴產排程列，維持近期占營收比例；Sens「Wattonomics 錨定」路徑同樣滾到評價日。β 1.89 → 1.89、WACC 14.4% → 14.4%、DCF 目標價 47.94 → 48.82、加權目標價 168.40 → 168.83、上檔空間 +14.3% → +14.6%、投資建議 中立 → 中立。"); r += 1   # 舊版沿革：固定為該版成品的計算結果
 RD.cell(r, 1, "v0.3.1（2026-11-05）：β 改為自算產業 β（US 半導體 同業 13 家無槓桿 β 中位數 2.32，Blume 調整後 1.884，依 Credo 負債比重新加槓桿；Andy 2026-11-05 22:55，取代 Damodaran 產業 β）。β 1.50 → 1.89、WACC 12.5% → 14.4%、DCF 目標價 54.27 → 47.94、加權目標價 171.56 → 168.40、上檔空間 +16.5% → +14.3%、投資建議 中立 → 中立。評價日 2026-12-31、目標時點 12 個月後與其他模型參數不變。"); r += 1
 RD.cell(r, 1, "v0.3（2026-11-05）：模型改版，DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC，docs/plan/個股DCF標準規格.md）。DCF 目標價 100.16 → 54.27、加權目標價 194.50 → 171.56、上檔空間 +32.1% → +16.5%、投資建議 買進 → 中立。DCF 差異拆解見 PR 內文。Comparable、情境權重、DCF 權重 50% 與投資建議規則不變。"); r += 1   # 舊版沿革：固定為該版成品的計算結果
@@ -1098,7 +1099,16 @@ _r3_common(2027, False, {'scn_fade_g': '收斂法：FY2032 營收年增收斂目
 _rc = next(r_ for r_ in range(1, V.max_row + 1) if V.cell(r_, 1).value == "相對倍數調整係數")
 V.cell(_rc, 3).value = f'=IF(ISNUMBER(B{_rc - 3}),"","未調整（資料不足）")'
 
+# v0.3.4（2026-11-06）：第三輪修正（現價統一 2026-11-04）
+for _ws in wb:   # 公式中的現價日期標籤同步（含 tools/relative_multiple 產生的重點觀察 1）
+    for _row in _ws.iter_rows():
+        for _c in _row:
+            if isinstance(_c.value, str) and _c.value.startswith("="):
+                for _o in ['"（2026-10-23）"']:
+                    if _o in _c.value: _c.value = _c.value.replace(_o, '"（2026-11-04 收盤）"')
+RD["A1"] = RD["A1"].value + "；v0.3.4（2026-11-06）第三輪修正：現價與同業報價統一 2026-11-04 收盤（Yahoo Finance）"
 wb.save(sys.argv[1])
+if os.environ.get("CRDO_NOOP"): pass
 if os.environ.get("CRDO_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
     json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "UN_NOTE": UN_NOTE, "CHK": CHK_ROW, "SENSN": SENS_N, "SENS_READ": SENS_READ,
