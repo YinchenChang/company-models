@@ -60,6 +60,8 @@ rows = [
  ("nvsw_chip","交換匣中交換晶片占比","%",0.4,0.5,0.6,0.4,0.5,0.6,"Assumed","GB300 18 顆、VR200 36 顆 NVLink 交換晶片（NVIDIA）"),
  ("nonnv","非 NVIDIA 機架內容 ÷ 機架","%",0.05,0.07,0.08,0.05,0.07,0.08,"Interested-party","Wing VC：電源架、匯流排、冷板、鋼構、線纜、整合合計 <8%"),
  ("cool","其中：機架內液冷","$K/架",*SIL.vals("lc_cool_gb"),*SIL.vals("lc_cool_vr"),"Interested-party","Morgan Stanley（Tom's Hardware）：GB300 約 $49,860、Vera Rubin 約 $56K"),
+ ("sec","C. NVIDIA 營收口徑（v0.2.3；算力收支 11-03／11-05 指出第 44 列為混合口徑）"),
+ ("so_nv","scale-out（機架外交換器、光模組、線纜）中 NVIDIA 的金額份額","%",0.3,0.5,0.7,0.3,0.5,0.7,"Assumed","只用於營收口徑高值。NVIDIA 賣 Spectrum-X／Quantum InfiniBand 交換器與 LinkX 線纜光模組，但 Arista、Broadcom 系交換器與第三方光模組也占一部分；公司未揭露 AI scale-out 份額，取 30–70%"),
 ]
 R = {}
 r = 4
@@ -215,7 +217,14 @@ sput("每顆加速器 HBM 金額 $K", lambda c: f"=Rack!{c}{K['hbmk']}", "f1", "
 sput("HBM ÷ GPU 售價", lambda c: f"=Rack!{c}{K['hbmsh']}", "f2", "0.0%")
 sput("台積電 ÷ GPU 售價", lambda c: f"=Rack!{c}{K['tssh']}", "f3", "0.0%")
 sput("NVIDIA 晶片層級毛利率", lambda c: f"=Rack!{c}{K['nvgm']}", "f4", "0.0%")
-sput("NVIDIA 合計 ÷ IT capex（GPU 毛利＋CPU＋NIC/DPU＋NVLink＋殘差）", lambda c: f"=({c}{B['m_nv']}+{c}{B['cpu']}+{c}{B['nicdpu']}+{c}{B['nvsw_c']}+{c}{B['nvsw_o']}+{c}{B['resid']})/{c}{B['it']}", "f5", "0.0%")
+sput("NVIDIA 合計 ÷ IT capex（GPU 毛利＋CPU＋NIC/DPU＋NVLink＋殘差）〔混合口徑：GPU 為毛利、其餘為售價；v0.2.3 起只供對照，NVIDIA 營收請用下方營收口徑列〕", lambda c: f"=({c}{B['m_nv']}+{c}{B['cpu']}+{c}{B['nicdpu']}+{c}{B['nvsw_c']}+{c}{B['nvsw_o']}+{c}{B['resid']})/{c}{B['it']}", "f5", "0.0%")
+# v0.2.3：NVIDIA 營收口徑（GPU 改用模組售價；殘差、交換匣其他、LPDDR、scale-out 的 NVIDIA 歸屬不確定 → 低／基準／高）
+sput("NVIDIA 營收 ÷ IT capex — 低：GPU 模組售價＋CPU＋NIC/DPU＋NVLink 交換晶片", lambda c: f"=({c}{B['mod']}+{c}{B['cpu']}+{c}{B['nicdpu']}+{c}{B['nvsw_c']})/{c}{B['it']}", "r_lo", "0.0%")
+sput("NVIDIA 營收 ÷ IT capex — 基準：低＋交換匣其他＋殘差（殘差全額歸 NVIDIA）", lambda c: f"={c}{B['r_lo']}+({c}{B['nvsw_o']}+{c}{B['resid']})/{c}{B['it']}", "r_b", "0.0%")
+sput("NVIDIA 營收 ÷ IT capex — 高：基準＋機架內 LPDDR5X＋scale-out × NVIDIA 份額（In so_nv）", lambda c: f"={c}{B['r_b']}+({c}{B['lp']}+{c}{B['so']}*{g('so_nv',cols[c])})/{c}{B['it']}", "r_hi", "0.0%")
+sput("每 IT GW NVIDIA 營收 $B — 低", lambda c: f"={c}{B['r_lo']}*{c}{B['it']}", "rv_lo", "0.00")
+sput("每 IT GW NVIDIA 營收 $B — 基準", lambda c: f"={c}{B['r_b']}*{c}{B['it']}", "rv_b", "0.00")
+sput("每 IT GW NVIDIA 營收 $B — 高", lambda c: f"={c}{B['r_hi']}*{c}{B['it']}", "rv_hi", "0.00")
 for col, w in zip("ABCDEFGHIJ", [58, 10, 12, 15, 15, 12, 14, 15, 15, 30]):
     br.column_dimensions[col].width = w
 
@@ -266,7 +275,8 @@ for col in "BCDEFGHIJKLM": se.column_dimensions[col].width = 13
 # ---------------- README ----------------
 rd = wb.create_sheet("README", 0)
 lines = [
- ("每 GW 晶片內容橋接表（AI 半導體專案 步驟 0）v0.2.2　2026-10-27", True),
+ ("每 GW 晶片內容橋接表（AI 半導體專案 步驟 0）v0.2.3　2026-11-05", True),
+ ("v0.2.3：Bridge 第 44 列（NVIDIA 合計 ÷ IT capex）是混合口徑——GPU 部分為 NVIDIA 晶片毛利（Rack 第 19 列＝模組售價 − HBM − 台積電 − 其他製造），CPU、NIC、NVLink、殘差為售價，scale-out 中 NVIDIA 份額未計（算力收支 11-03 診斷、11-05 請確認，AI半導體 11-05 回執確認）。新增第 45–50 列 NVIDIA 營收口徑：低（模組售價＋CPU＋NIC/DPU＋NVLink 交換晶片）、基準（＋交換匣其他＋殘差）、高（＋LPDDR＋scale-out × NVIDIA 份額）。第 44 列保留供對照；所有既有列與數值不變。In 頁新增 so_nv（Assumed 30／50／70%）。", False),
  ("v0.2.2：Tokenomics 快照改讀 Siliconomics 的 v21.7（siliconomics/data/tokenomics_snapshot_v21.7.json，本專案單一份）；機架價、scale-out 比率、每 GPU 儲存改讀 v21.0 起的契約名稱 IF_RackPrice、IF_ScaleOutShare、IF_StoragePerGPU（R1 已上線，不再抄錄）。基準值全部不變；只有 VR200 低成本欄變動：機架價 7.8 → 7.5（Tokenomics v21.3）、IT 與總資本支出 33.27 → 32.00、43.49 → 42.21 $B／GW。", False),
  ("v0.2.1：Tokenomics 快照改 v20.1（v19.0→v20.1 為 LifeSelf 主口徑與 L1_PriceReqBE 的 L 改動，與本表使用的名稱無關）；IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_GPUsPerGW、IF_RacksPerGW 逐值相同，只更新版本標籤與說明文字，數值不變。", False),
  ("模型命題：買方每投入 1 GW 的資料中心資本支出，晶片內容（運算、HBM、非 HBM 記憶體、網通晶片、代工）各分到多少，作為後續 HBM、網通、台積電模型的共同分母。", False),

@@ -16,7 +16,7 @@
 | `alphabet/` | Alphabet（GOOGL） | 個股模型（命題＋官方分部 → 損益表；獨立 Python→Excel 產生器 `alphabet/build_alphabet.py`；v0.2.2 舊引擎在 `alphabet/legacy_v0.2/`） | v0.3.5（2026Q3 10-Q 補入＋Tokenomics v21.9 快照；加權目標價 257.76、中立；成品 `alphabet/dist/20261104_Alphabet個股模型_v0.3.5.xlsx`／`.html`） |
 | `microsoft/` | Microsoft（MSFT） | v0.3 起：命題＋官方營收分部架構的獨立 Python→Excel 產生器（`microsoft/build_microsoft.py`；舊 MAG 共用引擎在 `microsoft/legacy_v0.2/`） | v0.3.4（Tokenomics 快照換 v21.9，目標價不變；成品 `microsoft/dist/20261104_Microsoft個股模型_v0.3.4.xlsx`／`.html`） |
 | `siliconomics/` | **AI 半導體產業基準庫 Siliconomics**（比照 Tokenomics）：行業變數唯一值（加速器顆數、HBM、記憶體價格路徑；其餘子產業分段併入）、Tokenomics 鏡像、跨模型衝突登錄；下游經 `siliconomics/data/` 快照取數（`markets/memory/market.py` 已改讀）；見 `siliconomics/README.md` | 新建（AI 半導體 Project） | v0.1 |
-| `markets/` | 市場層（AI 半導體）：每 GW 晶片內容橋接表等，見 `markets/README.md` | 新建（AI 半導體 Project） | chip_bridge v0.2.1、network v0.2.3、equipment v0.1.3、overview v0.6（Tokenomics v20.1；memory v0.4） |
+| `markets/` | 市場層（AI 半導體）：每 GW 晶片內容橋接表等，見 `markets/README.md` | 新建（AI 半導體 Project） | chip_bridge v0.2.3（11-05 新增 NVIDIA 營收口徑列）、network v0.2.3、equipment v0.1.3、overview v0.6（Tokenomics v20.1；memory v0.4） |
 | `skhynix/` | SK 海力士（000660.KS） | 記憶體樣板 `tools/memory_model`（AI 半導體 Project） | v0.4.1（HBM 位元隨情境；Val 頁含十年倍數與規則值） |
 | `micron/` | 美光（MU） | 記憶體樣板（複製測試） | v0.3.1 |
 | `samsung/` | 三星電子（005930.KS） | 記憶體樣板（集團公司：只建模記憶體，其餘事業為輸入） | v0.2.1 |
