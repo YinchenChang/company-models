@@ -1,4 +1,10 @@
-# foxconn/ — 鴻海（2317）收支與估值模型 v0.3.2
+# foxconn/ — 鴻海（2317）收支與估值模型 v0.4
+
+## v0.4（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0 與工作單（Andy 2026-11-05 20:42、20:45、21:21）：Val 0.1 節由「股東現金流＝EPS ×（1 − tp_g ÷ tp_roe）、折現率 tp_r 10%」改為 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現（期中慣例）；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, 台灣 10 年期公債殖利率)、RONIC＝WACC；EV 加淨現金與投資、減非控制權益（帳面）÷ 股數，以股權成本推到 12 個月後並扣除期間股利。新增 DCF 頁；In 頁新增 J2 節，刪除 tp_r、tp_roe；Sens 目標價參數改為標準案例。共用模組 `tools/fcff_dcf.py`（原樣取自 NVIDIA PR #355）。
+- 參數：rf 台灣 10 年期公債 1.98%（2026-11-04）；β＝Damodaran 全球 Electronics (General) 現金修正後無槓桿 β 1.57 依鴻海 D/E 重新加槓桿（約 2.06；個股迴歸 β 0.86 經 Blume 調整 0.91 列為 Sens 低值）；ERP 5%＋台灣國家風險溢酬 0.78%；kd、稅率、折舊、資本支出、營運資金為近三年實績；淨現金與投資、非控制權益取 2Q26 資產負債表（非控制權益為帳面，上市子公司少數股權市值較高，DCF 可能偏高）。
+- 成品：`dist/20261105_鴻海個股模型_v0.4.xlsx`、`.html`（取代未合併的 v0.3.2）。
 
 ## v0.3.2（2026-11-05）：HTML 新版面 v1.0（只改展示層）
 
@@ -42,11 +48,11 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_foxconn.py` | 產生器（參數與公式；上游成品唯讀） |
-| `dist/20261105_鴻海個股模型_v0.3.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261105_鴻海個股模型_v0.4.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html_src.json`、`gen_html_json.py`、`html.json` | HTML 展示層設定：`html_src.json` 為來源設定，`gen_html_json.py` 套用版面規格 v1.0 後寫出 `html.json`（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261105_鴻海個股模型_v0.3.2.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
+| `dist/20261105_鴻海個股模型_v0.4.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
 
-建置：`python3 foxconn/build_foxconn.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用：`markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數）、`tsmc/dist`（情境顆數係數）、`quanta/dist`（ODM 每櫃價格、Rubin 占比、匯率、每 GW 價值變動；廣達有效份額只用來做合計檢查）。另外經 `tools/cycle_position.py` 使用規則函式。**這些檔案都不修改。**
+建置：`python3 foxconn/build_foxconn.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用：`markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數）、`tsmc/dist`（情境顆數係數）、`quanta/dist`（ODM 每櫃價格、Rubin 占比、匯率、每 GW 價值變動；廣達有效份額只用來做合計檢查）。另外經 `tools/cycle_position.py` 使用規則函式。**這些檔案都不修改。**
 
 ## 驅動因子
 
