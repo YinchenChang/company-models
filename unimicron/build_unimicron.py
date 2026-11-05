@@ -849,6 +849,50 @@ def wta_sens():
     SE.cell(t0 + 9, 1, "目標價：Sens 頁目標價參數表只動 DCF 參數（r、g、權重），不逐案例重算 DCF，本案例不列目標價。")
     return RW
 wta_in_rows(); WTA_R = wta_sens()   # v0.13：放在 In 版面套用之後，確保在 In 頁最後
+
+
+# ---------------- v0.3.1（2026-11-05）：只改展示層（個股 HTML 版面規格 v1.0；docs/plan/個股HTML版面規格.md）----------------
+# README 頁最後新增「展示層」「命題回覆」兩段（HTML 讀；數字一律由公式帶出）；原 README 各列保留不動
+def _row(ws, prefix, start=1, end=None):
+    for r_ in range(start, (end or ws.max_row) + 1):
+        if str(ws.cell(r_, 1).value or "").strip().startswith(prefix.strip()):
+            return r_
+    raise KeyError((ws.title, prefix))
+_vt = _row(V, "目標價（DCF 與 Comparable 加權）"); _vd = _row(V, "DCF 目標價（情境加權）"); _vc = _row(V, "Comparable 目標價（相對倍數調整後）")
+_vp = _row(V, "現價（"); _vcons = _row(V, "市場共識目標價"); _vpe27 = _row(V, "現價 ÷ FY2027 EPS"); _vfpe = _row(V, "前瞻 P/E")
+_vrm = _row(V, "相對倍數調整係數"); _vmed = _row(V, "同業前瞻 P/E 中位數")
+_vcf = _row(V, "FY2027", _row(V, "股東現金流"))   # 情境 A 的 FY2027 每股股東現金流（淨利＋折舊－資本支出）
+_S = {s_: _row(PL, f"情境 {s_}", 4, 45) for s_ in "ABC"}
+_P = lambda s_, lab: _row(PL, lab, _S[s_] + 1, _S[s_] + 13)
+_inr = {str(IN.cell(r_, 1).value): r_ for r_ in range(4, IN.max_row + 1) if IN.cell(r_, 1).value}
+_I = lambda k: f"In!E{_inr[k]}"
+_T = lambda ref, f: f'TEXT({ref},"{f}")'
+_UP = f"Val!B{UPW_ROW}"
+_hi = lambda ref: f'IF({ref}<0,"低 ","高 ")&TEXT(ABS({ref}),"0.0%")'
+_s_pl = _row(SE, "ABF 溢價 低"); _s_ph = _row(SE, "ABF 溢價 高"); _s_c = _row(SE, "情境 C", 4, 40)
+_rk7 = _row(RC, "FY2027 EPS vs 2026-10 券商平均"); _rk8 = _row(RC, "FY2028 EPS vs FactSet")
+RD["A1"] = RD["A1"].value + "；v0.3.1（2026-11-05）只改展示層（README 新增展示層與命題回覆兩段、HTML 改用個股 HTML 版面規格 v1.0；數值格不變）"
+r = RD.max_row + 2
+RD.cell(r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；v0.3.1 新增，原 A3、A4、A19–A22 保留給下游）").font = BOLD; r += 1
+for t_ in (
+    "命題：欣興的 ABF 載板營收由 AI 加速器顆數、每顆載板金額與欣興份額決定，並受產能上限約束；ABF 短缺與漲價能不能抵過擴產折舊、讓獲利大幅成長，以及現價隱含了什麼，分成三個問題。",
+    "命題 1：AI 載板營收與產能——加速器顆數、每顆載板金額與份額能帶來多少 ABF 營收，產能夠不夠用。",
+    "命題 2：漲價能否抵過擴產折舊——毛利率能否從 FY2026 持續上升、EPS 能否在 FY2027–FY2028 倍增。",
+    "命題 3：現價隱含什麼——以 DCF 與同業倍數估出的每股價值，和現價相比是高還是低。",
+    f'="重點 1：目標價低於現價，投資建議"&Val!B{REC_ROW}&"。DCF 與同業倍數法各半的加權目標價約 "&{_T(f"Val!B{_vt}", "#,##0")}&" 元，比現價 "&{_T(f"Val!B{_vp}", "#,##0")}&" 元"&{_hi(_UP)}&"；市場分析師平均目標價約 "&{_T(f"Val!B{_vcons}", "#,##0")}&" 元，比本模型樂觀很多。"',
+    f'="重點 2：下檔大，主因是 DCF 遠低於現價。DCF 以每股（淨利＋折舊－資本支出）折現，FY2027–FY2029 擴產期資本支出高（情境 A 每年 "&{_T(_I("cx27_A")+"*10", "#,##0")}&"、"&{_T(_I("cx28_A")+"*10", "#,##0")}&"、"&{_T(_I("cx29_A")+"*10", "#,##0")}&" 億元，同期折舊約 "&{_T(f"PL!E{_P('A', '  折舊攤提')}*10", "#,##0")}&"–"&{_T(f"PL!G{_P('A', '  折舊攤提')}*10", "#,##0")}&" 億元），情境 A FY2027 每股現金流只有約 "&{_T(f"Val!B{_vcf}", "0.0")}&" 元，DCF 目標價約 "&{_T(f"Val!B{_vd}", "#,##0")}&" 元；同業倍數法（同業中位數 "&{_T(f"Val!B{_vmed}", "0.0")}&" 倍 × 欣興長期相對同業的倍數比 "&{_T(f"Val!B{_vrm}", "0.00")}&"）約 "&{_T(f"Val!B{_vc}", "#,##0")}&" 元，和現價差不多。"',
+    f'="重點 3：本模型的 EPS 比市場保守。情境 A FY2027 EPS 約 "&{_T(f"PL!E{_P('A', 'EPS')}", "0.00")}&" 元、FY2028 約 "&{_T(f"PL!F{_P('A', 'EPS')}", "0.00")}&" 元，分別比券商平均（2026-10）"&{_hi(f"Recon!D{_rk7}")}&"、比 FactSet 共識（2026-06）"&{_hi(f"Recon!D{_rk8}")}&"。本模型裡擴產折舊吃掉部分漲價效益（FY2028 毛利率低於 FY2027）；敏感度測試中，ABF 溢價用 Ibiden 模型低值（"&Sens!B{_s_pl}&"）的案例 FY2028 EPS 少 "&{_T(f"-Sens!J{_s_pl}", "0.0%")}&"，用高值的案例多 "&{_T(f"Sens!J{_s_ph}", "0.0%")}&"。這些是測試案例，不是門檻。"'):
+    RD.cell(r, 1, t_); r += 1
+r += 1
+RD.cell(r, 1, "命題回覆（HTML 用；依本模型計算逐一回答上方三個命題）").font = BOLD; r += 1
+for t_ in (
+    f'="AI 載板營收與產能？答：情境 A（順利）的 ABF 載板營收由 FY2026 約 "&{_T(f"PL!D{_P('A', '  ABF 載板')}*10", "#,##0")}&" 億元增至 FY2028 約 "&{_T(f"PL!F{_P('A', '  ABF 載板')}*10", "#,##0")}&" 億元，其中 AI 載板由約 "&{_T(f"PL!D{_P('A', '  AI 載板')}*10", "#,##0")}&" 億元增至約 "&{_T(f"PL!F{_P('A', '  AI 載板')}*10", "#,##0")}&" 億元（情境 B 約 "&{_T(f"PL!F{_P('B', '  AI 載板')}*10", "#,##0")}&" 億、情境 C 約 "&{_T(f"PL!F{_P('C', '  AI 載板')}*10", "#,##0")}&" 億）。產能大致夠用：FY2027 需求滿足率 "&{_T(f"PL!E{_P('A', '  ABF 需求滿足率')}", "0.0%")}&"（略受產能限制），FY2028 為 "&{_T(f"PL!F{_P('A', '  ABF 需求滿足率')}", "0.0%")}&"；產能指數 FY2028 為 FY2026 的 "&{_T(_I("cap_28"), "0.00")}&" 倍（假設）。"',
+    f'="漲價能否抵過擴產折舊？答：部分抵得過，但 EPS "&IF(PL!F{_P('A', 'EPS')}>=2*PL!D{_P('A', 'EPS')},"有","沒有")&"倍增。情境 A 毛利率由 FY2026 的 "&{_T(f"PL!D{_P('A', '毛利率')}", "0.0%")}&" 升到 FY2027 的 "&{_T(f"PL!E{_P('A', '毛利率')}", "0.0%")}&"，FY2028 回落到 "&{_T(f"PL!F{_P('A', '毛利率')}", "0.0%")}&"（折舊由 "&{_T(f"PL!D{_P('A', '  折舊攤提')}*10", "#,##0")}&" 億元增至 "&{_T(f"PL!F{_P('A', '  折舊攤提')}*10", "#,##0")}&" 億元）；EPS 由 FY2026 的 "&{_T(f"PL!D{_P('A', 'EPS')}", "0.00")}&" 元到 FY2028 的 "&{_T(f"PL!F{_P('A', 'EPS')}", "0.00")}&" 元（情境 B "&{_T(f"PL!F{_P('B', 'EPS')}", "0.00")}&"、情境 C "&{_T(f"PL!F{_P('C', 'EPS')}", "0.00")}&"）。"',
+    f'="現價隱含什麼？答：現價約為 FY2027 EPS（模型）的 "&{_T(f"Val!B{_vpe27}", "0.0")}&" 倍，前瞻本益比 "&{_T(f"Val!B{_vfpe}", "0.0")}&" 倍（stockanalysis）；本模型的加權目標價約 "&{_T(f"Val!B{_vt}", "#,##0")}&" 元，比現價"&{_hi(_UP)}&"，投資建議"&Val!B{REC_ROW}&"。同業倍數法約 "&{_T(f"Val!B{_vc}", "#,##0")}&" 元、與現價接近，DCF 約 "&{_T(f"Val!B{_vd}", "#,##0")}&" 元、遠低於現價：現價要成立，需要擴產後的現金流比本模型高很多（例如 EPS 接近券商預估，或資本支出提早下降）。"'):
+    RD.cell(r, 1, t_); r += 1
+r += 1
+RD.cell(r, 1, "HTML 輔助數字（展示層用；只引用 Val 頁）").font = BOLD; r += 1
+RD.cell(r, 1, "上檔空間：Comparable 目標價（相對倍數調整後）"); RD.cell(r, 2, f"=Val!B{_vc}/Val!B{_vp}-1").number_format = "0.0%"
 wb.save(sys.argv[1])
 if os.environ.get("UNIMICRON_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
