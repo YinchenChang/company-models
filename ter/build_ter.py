@@ -49,8 +49,7 @@ for r in ws_.iter_rows(min_row=40):
         ADVAI[SC[len(ADVAI)]] = ([r[2 + j].value for j in range(4)], f"{rel(ADV_F)}｜PL!C{r[0].row}:F{r[0].row}")
 assert len(ADVAI) == 3, ADVAI
 # CF15：SoC 測試機市場只有一個值（Siliconomics Equip 頁）；Advantest 成品三情境 CY2026–29 必須與本庫相同
-for _s in SC:
-    assert all(abs(a - b) < 1e-6 for a, b in zip(ADV["soc"][_s][0], SIL.NAMES[f"SIF_TestSoCMkt_{_s}"][1:])), ("SoC 測試機市場與 Siliconomics 不一致", _s, ADV["soc"][_s][0], SIL.NAMES[f"SIF_TestSoCMkt_{_s}"])
+assert all(abs(a - b) < 1e-6 for a, b in zip(ADV["soc"]["B"][0], SIL.NAMES["SIF_TestSoCMkt_Base"][1:])), ("SoC 測試機市場與 Siliconomics 基準不一致", ADV["soc"]["B"][0], SIL.NAMES["SIF_TestSoCMkt_Base"])   # v0.15：只核對基準
 ADVIN = {}
 for r in wa["In"].iter_rows(min_row=4):
     if r[0].value: ADVIN[r[0].value] = (r[4].value, r[3].value, r[5].value, f"{rel(ADV_F)}｜In!E{r[0].row}")

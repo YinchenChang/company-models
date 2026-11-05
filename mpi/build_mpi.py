@@ -28,14 +28,23 @@ SILV = f"Siliconomics 快照 {SIL.VERSION}（{SIL.SNAP['source']['file']}）"
 PLATS = ("bw", "rb", "ru", "hp", "amd", "tpu", "trn", "oth")
 NV = ("bw", "rb", "ru", "hp")
 UP = {p: SIL.NAMES[f"SIF_UnitsPlat_{p}"] for p in PLATS}          # [None, 2026, 2027, 2028, 2029]
-UT = SIL.NAMES["SIF_UnitsPlat_Total_A"]
+UT = SIL.NAMES["SIF_UnitsPlat_Total"]
 UNITS = {26: UT[1], 27: UT[2], 28: UT[3], 29: UT[4]}
 TT = {p: SIL.base(f"ts_tt_{p}") for p in PLATS}
 EXO = {"amd": 0.3, "tpu": 1.0, "trn": 0.8, "oth": 1.0}              # 旺矽曝險（NVIDIA 另以 ex_nv 輸入）；Assumed
 NVTT = {y: sum(UP[p][j] * TT[p] for p in NV) / UT[j] for j, y in enumerate((26, 27, 28, 29), 1)}
 ASTT = {y: sum(UP[p][j] * TT[p] * EXO[p] for p in EXO) / UT[j] for j, y in enumerate((26, 27, 28, 29), 1)}
 SEMI = SIL.NAMES["SIF_SEMI_Test"]       # 2025–2029
-SOC = {s: SIL.NAMES[f"SIF_TestSoCMkt_{s}"] for s in SC}
+# v0.15：本庫只給基準；SoC 測試機市場三情境改讀 Advantest 成品（個股自訂情境；與泰瑞達同一份），2025 讀本庫基準
+import glob as _glob, openpyxl as _opx
+_ADV_F = _glob.glob(os.path.join(ROOT, "advantest", "dist", "*.xlsx")); assert len(_ADV_F) == 1, _ADV_F
+_adv = {}
+for _r in _opx.load_workbook(_ADV_F[0], data_only=True)["PL"].iter_rows(min_row=40):
+    if _r[0].value == "SoC 測試機市場 CY" and len(_adv) < 3:
+        _adv[SC[len(_adv)]] = [_r[2 + _j].value for _j in range(4)]
+assert len(_adv) == 3, _adv
+SOC = {s: [SIL.NAMES["SIF_TestSoCMkt_Base"][0]] + _adv[s] for s in SC}
+assert all(abs(a - b) < 1e-6 for a, b in zip(SOC["B"], SIL.NAMES["SIF_TestSoCMkt_Base"])), ("SoC 測試機市場（Advantest 情境 B）與 Siliconomics 基準不一致", SOC["B"])
 
 # ---------------- In ----------------
 IN = wb.active; IN.title = "In"
@@ -57,7 +66,7 @@ WG = "https://www.wantgoo.com/stock/6223/enterprise-value/price-to-earning-river
 sec(f"A. AI 加速器顆數、情境係數與晶圓測試量（讀 {SILV}；唯讀，不自行重估）")
 for y in (26, 27, 28, 29):
     inp(f"units_{y}", f"AI 加速器顆數 20{y}（情境 A（原始顆數））", "百萬顆", None, UNITS[y], None, "Derived",
-        "Siliconomics SIF_UnitsPlat_Total_A（八類加速器合計）" if y == 26 else "同上", "與台積電、日月光、京元電模型同一份" if y == 26 else "同上")
+        "Siliconomics SIF_UnitsPlat_Total（八類加速器合計；原始顆數）" if y == 26 else "同上", "與台積電、日月光、京元電模型同一份" if y == 26 else "同上")
 for s in SC:
     for y in (28, 29):
         inp(f"um{y}_{s}", SIL.V[f"um{y}_{s}"]["label"], "x", None, SIL.base(f"um{y}_{s}"), None, "Assumed", f"Siliconomics um{y}_{s}（同字母行業情境）",
@@ -340,7 +349,7 @@ PL.cell(2, 1, "灰底＝FY2030–FY2032 收斂法（上游只到 2029）：營�
 
 # ---------------- Units：AI 加速器 → 晶圓測試量 → AI 探針卡 ----------------
 UN = wb.create_sheet("Units")
-UN["A1"] = "Units — AI 加速器顆數（Siliconomics）× 每顆測試時間 → 晶圓測試量 → 旺矽 AI／HPC 探針卡（情境 A）。SoC 測試機市場（Siliconomics SIF_TestSoCMkt_A）只作 Recon"
+UN["A1"] = "Units — AI 加速器顆數（Siliconomics）× 每顆測試時間 → 晶圓測試量 → 旺矽 AI／HPC 探針卡（情境 A）。SoC 測試機市場（Advantest 模型情境 A）只作 Recon"
 A_ = PB["A"]; cyc = lambda y: chr(ord("C") + y - 2026)
 hdr(UN, 3, ["項目", "單位", "CY2026", "CY2027", "CY2028", "CY2029", "說明"])
 ur = 4; UR = {}
@@ -352,7 +361,7 @@ for key, lab, unit, f, fmt, note in (
         ("ct", "每顆探針卡內容指數", "x", lambda y: f"=PL!{FC[y]}{A_['ct']}", "0.000", "Assumed"),
         ("ai", "旺矽 AI／HPC 探針卡營收", "NT$B", lambda y: f"=PL!{FC[y]}{A_['ai']}", "0.00", "FY2026 × 指數 × 相對值 × 內容"),
         ("pu", "每顆加速器的旺矽 AI 探針卡營收", "NT$／顆", lambda y: f"=PL!{FC[y]}{A_['ai']}/PL!{FC[y]}{A_['units']}*1000", "#,##0", "十億元 ÷ 百萬顆 × 1,000"),
-        ("soc", "SoC 測試機市場（Siliconomics SIF_TestSoCMkt_A）", "US$B", lambda y: SOC["A"][y - 2025], "0.00", "Siliconomics 推導值（唯讀）"),
+        ("soc", "SoC 測試機市場（Advantest 模型情境 A；Siliconomics 只給基準）", "US$B", lambda y: SOC["A"][y - 2025], "0.00", "Siliconomics 推導值（唯讀）"),
         ("aig", "旺矽 AI 探針卡年增", "%", lambda y: f"={cyc(y)}{{ai}}/{chr(ord(cyc(y)) - 1)}{{ai}}-1" if y > 2026 else None, "0.0%", "對照下列 SoC 測試機市場年增"),
         ("socg", "SoC 測試機市場年增", "%", lambda y: f"={cyc(y)}{{soc}}/{chr(ord(cyc(y)) - 1)}{{soc}}-1" if y > 2026 else SOC["A"][1] / SOC["A"][0] - 1, "0.0%", "測試機（設備）與探針卡（耗材）同受晶圓測試量驅動")):
     UN.cell(ur, 1, lab); UN.cell(ur, 2, unit)
@@ -613,7 +622,7 @@ RC.cell(rr_, 1, "B. 晶圓測試量與 SoC 測試機市場（Siliconomics）").f
 for y in (2027, 2028, 2029):
     soc = SOC
     rec(f"FY{y} AI 探針卡年增 vs SoC 測試機市場年增（同字母情境，百分點）", None, lambda s, y=y: f"=PL!{FC[y]}{PB[s]['ai']}/PL!{FC[y - 1]}{PB[s]['ai']}-1-({SOC[s][y - 2025]}/{SOC[s][y - 2026]}-1)",
-        "Siliconomics SIF_TestSoCMkt_A／B／C", "正值＝探針卡成長快於測試機市場", fmt="0.0%", gap=False)
+        "Advantest 模型 SoC 測試機市場 A／B／C（Siliconomics 只給基準）", "正值＝探針卡成長快於測試機市場", fmt="0.0%", gap=False)
 rec("FY2026 每顆加速器的旺矽 AI 探針卡營收（NT$）", None, lambda s: f"=Units!C{UR['pu']}", "—", "對照：京元電每顆 Blackwell 等值測試營收 US$46.9（京元電模型）", fmt="#,##0")
 RC.cell(rr_, 1, "C. 產能").font = BOLD; rr_ += 1
 rec("FY2027 AI 探針卡 ÷ FY2026（公司：2027 產能增幅不低於 2026 的約五成）", 1.5, lambda s: f"=PL!E{PB[s]['ai']}/PL!D{PB[s]['ai']}", "2026-05 法說（富果）：VPC 月產能 200 萬針、MEMS 350 萬針（2026 年底）", "比值高於 1.5 表示需要比公司計畫更多的產能或漲價", fmt="0.00")

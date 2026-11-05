@@ -72,7 +72,7 @@ def nvr(wb, name):
 
 
 # v0.12 起（r3）：本庫只給基準＝原情境 B（決策 S33、S35）；原始顆數 × 基準係數（SIF_UnitsCoef_B：2028 0.8、2029 0.85）
-_cf = nvr(S, "SIF_UnitsCoef_B")           # 2025–2029
+_cf = nvr(S, "SIF_UnitsCoef_Base") if "SIF_UnitsCoef_Base" in S.defined_names else nvr(S, "SIF_UnitsCoef_B")           # 2025–2029
 COEF = {y: (_cf[i] if _cf[i] not in (None, "") else 1) for i, y in enumerate(YRS)}
 _gw = nvr(S, "SIF_DeployGW_Base") if "SIF_DeployGW_Base" in S.defined_names else nvr(S, "SIF_DeployGW_B")   # 2026–2029
 

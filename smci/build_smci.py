@@ -54,7 +54,8 @@ assert len(BR) == 2, BR.keys()
 # CF10：商用 GPU 系統市場只有一個值（Siliconomics Rack 頁）；本模型的世代分組與每顆系統價值必須重現同一市場（情境 A）
 for j, y in enumerate((26, 27, 28, 29)):
     _m = OLD[y] * BR["rack"][0] / BR["gpu_n"][0] * 1000 + NEW[y] * BR["rack"][1] / BR["gpu_n"][1] * 1000
-    assert abs(_m - SIL.NAMES["SIF_GPUSysMkt_A"][j]) < 1e-6, ("商用 GPU 系統市場與 Siliconomics 不一致", y, _m, SIL.NAMES["SIF_GPUSysMkt_A"][j])
+    _m *= {28: SIL.base("um28_B"), 29: SIL.base("um29_B")}.get(y, 1)   # v0.15：本庫只給基準（原始顆數 × 基準係數）
+    assert abs(_m - SIL.NAMES["SIF_GPUSysMkt_Base"][j]) < 1e-6, ("商用 GPU 系統市場與 Siliconomics 基準不一致", y, _m, SIL.NAMES["SIF_GPUSysMkt_Base"][j])
 
 # ---------------- In ----------------
 IN = wb.active; IN.title = "In"

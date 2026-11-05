@@ -1,0 +1,11 @@
+[
+ {
+  "id": "S40",
+  "cat": "結構",
+  "item": "v0.15：刪除 Interface 推導節的情境 A／B／C 名稱（v0.12 起停用過渡）",
+  "decision": "算力收支 11-04 確認 Wattonomics v0.2.2 起只讀 *_Base。其餘 9 個讀者改讀基準或個股自訂：tuc（部署 GW、CCL 市場＝基準 × 個股情境係數 ÷ 基準係數）、arm（顆數係數改由 um28／um29 列組成）、ase、mpi（原始顆數改讀 SIF_UnitsPlat_Total；ase 部署 GW 改讀基準；mpi 的 SoC 測試機三情境改讀 Advantest 成品）、smci、dell、jentech、ter（市場一致性檢查只核對基準）、tsmc（HBM 2027 缺口改讀基準，2027 三情境相同）。In 頁層的情境列（um28_A 等）名稱保留，作為個股自訂情境參考值，v0.16 移到個股。數值不變（ase Recon 頁部署 GW 2028–29 由情境 A 改為基準，屬展示列）。",
+  "date": "2026-11-05",
+  "quote": "Andy 2026-11-05 08:22「請按照你們的規劃優先順序繼續執行。我授權給你們自行合併PR」",
+  "status": "工程決定"
+ }
+]

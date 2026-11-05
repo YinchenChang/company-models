@@ -62,8 +62,9 @@ for r in openpyxl.load_workbook(AVC_F, data_only=True)["PL"].iter_rows(min_row=6
 assert len(AVC["lmk"]) == 3 and len(AVC["sh"]) == 3, {k: len(v) for k, v in AVC.items()}
 assert all(v is not None for k in AVC for x in AVC[k] for v in x[0]), AVC
 # AI 液冷市場只有一個值（Siliconomics Rack 頁）：奇鋐成品三情境必須與本庫相同
-for _s, (_v, _src) in zip(SC, AVC["lmk"]):
-    assert all(abs(a - b) < 1e-6 for a, b in zip(_v, SIL.NAMES[f"SIF_LiqMkt_{_s}"])), ("液冷市場與 Siliconomics 不一致", _s, _v, SIL.NAMES[f"SIF_LiqMkt_{_s}"])
+for _s, (_v, _src) in zip(SC, AVC["lmk"]):   # v0.15：本庫只給基準，只核對情境 B
+    if _s == "B":
+        assert all(abs(a - b) < 1e-6 for a, b in zip(_v, SIL.NAMES["SIF_LiqMkt_Base"])), ("液冷市場與 Siliconomics 基準不一致", _s, _v, SIL.NAMES["SIF_LiqMkt_Base"])
 
 # ---------------- In ----------------
 IN = wb.active; IN.title = "In"
