@@ -2,8 +2,9 @@
 
 ## v0.4.1（2026-11-05）：只改展示層（個股 HTML 版面規格 v1.0）
 
-- README 頁最後新增「展示層」（命題摘要、命題分項、白話重點 1–3）與「命題回覆」兩段，數字全部由公式帶出；另加一列 HTML 橫幅輔助值（Comparable〔相對倍數調整後〕的上檔空間）。原 README 各列保留；A1 加註「v0.4.1 只改展示層」。
-- HTML 套用 `docs/plan/個股HTML版面規格.md` v1.0：原 `html.json` 改名 `html_src.json`（內容不動），由 `gen_html_json.py` 經 `tools/memory_model/html_layout.py`（記憶體三家共用）與 `tools/company_html/relayout.py` 產生 `html.json`。參數依業務分塊：一般 DRAM／HBM／NAND／記憶體共用成本／非記憶體事業／全公司。投資建議橫幅的 Comparable 用進加權目標價的「相對倍數調整後」值。情境驅動表改由 In 頁「情境驅動對照」一節直接產生（原 `html.json` 列號已錯位）。
+- README 頁最後新增「展示層」（命題摘要、命題分項、白話重點 1–3）與「命題回覆」兩段，數字全部由公式帶出；另加兩列 HTML 橫幅輔助值（只看 Comparable〔市場主流同業法、未調整〕與 Comparable〔相對倍數調整後〕的上檔空間）。原 README 各列保留；A1 加註「v0.4.1 只改展示層」。
+- HTML 套用 `docs/plan/個股HTML版面規格.md` v1.0：原 `html.json` 改名 `html_src.json`（內容不動），由 `gen_html_json.py` 經 `tools/memory_model/html_layout.py`（記憶體三家共用）與 `tools/company_html/relayout.py` 產生 `html.json`。參數依業務分塊：一般 DRAM／HBM／NAND／記憶體共用成本／非記憶體事業／全公司。投資建議橫幅中間格為「只看 Comparable 目標價（市場主流同業法）」（未做相對倍數調整，附自己的上檔空間）；進加權目標價的相對倍數調整後 Comparable 寫在橫幅附註。情境驅動表改由 In 頁「情境驅動對照」一節直接產生（原 `html.json` 列號已錯位）。
+- 加權目標價上檔的來源拆解（DCF 與 Comparable 各自的權重 ×（目標價 − 現價）；Comparable 再拆每股淨值成長與倍數差）寫進重點 1，主因依占比由公式判定。
 - 驗證：README 以外逐格 0 差異（`tools/xlsx_diff.py` 對 v0.4）；重算錯誤格 0；`check_company_html.py` 通過。敏感度不重跑（Sens 頁為公式，數值與 v0.4 相同）。
 - 成品：`dist/20261105_三星電子個股模型_v0.4.1.xlsx`／`.html`；v0.4 成品移 `dist/_待刪除/`。
 

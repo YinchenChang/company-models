@@ -711,6 +711,16 @@ def _pres(wb, C):
     REF["nmsupport"] = f'IF(MAX({REF["nmshC28"]},{REF["nmshC29"]})<0.2,"撐住的部分有限，谷底時的盈餘仍主要看記憶體","可撐住相當比例的盈餘")'
     REF["dcfall"] = f'IF(MIN(Val!B{T["dcfpx"]}:D{T["dcfpx"]})>1,"三種情境的 DCF 價值都高於現價","並非三種情境的 DCF 價值都高於現價")'
     REF["shchgB29"] = f"(Y!{yc('B', 3)}{R['sh']}/Y!C{R['sh']}-1)"
+    # 加權目標價上檔的來源拆解（工作單補充規則 B）：DCF 貢獻 tp_w_dcf ×（DCF − 現價），Comparable 貢獻（1 − tp_w_dcf）×（調整後 Comparable − 現價）；
+    # Comparable ÷ 現價 ＝（前瞻每股淨值 ÷ 第 1 年底每股淨值）×（調整後同業倍數 ÷ 現價隱含第 1 年底 P/B），兩者都以情境加權每股淨值計、同一時間窗。
+    _dc, _cc = f"(tp_w_dcf*({REF['dcftp']}-px))", f"((1-tp_w_dcf)*(tp_comp_adj-px))"
+    REF["dcfsh"] = f"({_dc}/({_dc}+{_cc}))"
+    REF["compsh"] = f"({_cc}/({_dc}+{_cc}))"
+    REF["bvg"] = f"({REF['fbv']}/{REF['bv27w']}-1)"
+    REF["pmg"] = f"({REF['pmadj']}/{REF['pxbv27']}-1)"
+    REF["upsrc"] = f'IF({REF["dcfsh"]}>=0.6,"上檔主要來自 DCF",IF({REF["dcfsh"]}<=0.4,"上檔主要來自 Comparable","上檔由 DCF 與 Comparable 約各半貢獻"))'
+    REF["compdrv"] = f'IF({REF["bvg"]}>{REF["pmg"]},"每股淨值成長大於倍數差","倍數差大於每股淨值成長")'
+    REF["upc"] = f"({REF['comp']}/px-1)"
     for k, lab in (("dram", "一般 DRAM 收入 +20%"), ("hbm", "HBM 收入 +30%"), ("nand", "NAND 收入 +30%")):
         REF[f"s_{k}_l"] = f"Sens!B{srow[lab]}"; REF[f"s_{k}"] = f"Sens!E{srow[lab]}"
     a, h, n = (f"ABS(Sens!E{srow[x]})" for x in ("一般 DRAM 收入 +20%", "HBM 收入 +30%", "NAND 收入 +30%"))
@@ -756,6 +766,7 @@ def _pres(wb, C):
     r += 1
     RDs.cell(r, 1, "HTML 橫幅輔助值（只引用 Val、In 頁；不進任何計算）").font = BOLD; r += 1
     RDs.cell(r, 1, "上檔空間：Comparable 目標價（相對倍數調整後）"); RDs.cell(r, 2, "=tp_comp_adj/px-1").number_format = "0.0%"; r += 1
+    RDs.cell(r, 1, "上檔空間：只看 Comparable 目標價（市場主流同業法，未調整）"); RDs.cell(r, 2, f"=Val!B{T['comp2']}/px-1").number_format = "0.0%"; r += 1
 
 
 _pres(wb, C)

@@ -3,8 +3,9 @@
 # 共用轉換器 tools/company_html/relayout.py 依 Meta／SpaceX 的頁面結構寫成；記憶體樣板的頁面結構不同，本檔在轉換前後做記憶體專屬的調整：
 #   轉換前：驅動對照表改名歸附錄、情境驅動表展開、估值頁的 kv 改為有標題的表、加 DCF 折現率表、移除估值章重複的重點觀察。
 #   轉換時：In 參數依業務分塊（一般 DRAM／HBM／NAND／記憶體共用成本／〔非記憶體事業〕／全公司）。
-#   投資建議橫幅：Val 頁沒有「現價」列（現價在 In 頁 px），且加權目標價用的是「Comparable 目標價（相對倍數調整後）」，
-#   所以本檔提供記憶體專用的橫幅（現價取 In 頁、Comparable 取相對倍數調整後的值，上檔空間取 README 頁輔助列），不用轉換器的預設橫幅。
+#   投資建議橫幅：Val 頁沒有「現價」列（現價在 In 頁 px），所以本檔提供記憶體專用的橫幅，不用轉換器的預設橫幅。
+#   中間格＝只看 Comparable（市場主流同業法、未做相對倍數調整；Andy 2026-10-25 目標價標準），上檔空間取 README 頁輔助列；
+#   進加權目標價的是相對倍數調整後的 Comparable，數值寫在橫幅附註。
 #   轉換後：敏感度龍捲風圖的標題還原（記憶體的龍捲風圖是營業利益的變動，不是加權目標價）、版本要點附錄只列版本說明列、
 #   循環位置長條圖放回規則值表之後、情境定義放在驅動因子章開頭。
 import copy
@@ -185,12 +186,14 @@ def build(co_dir, xlsx, nm_block=False, pfmt="n0", recon_main=None):
     # ── 投資建議橫幅（記憶體專用）──
     rec, tpw, upw = _find(V, "投資建議"), _find(V, "目標價（DCF 與 Comparable 加權）"), _find(V, "上檔空間：加權目標價")
     adj, hup = _find(V, "Comparable 目標價（相對倍數調整後）"), _find(RD, "上檔空間：Comparable 目標價（相對倍數調整後）")
+    hup2 = _find(RD, "上檔空間：只看 Comparable 目標價（市場主流同業法")
     px = ink["px"]
     hero = {"rec": f"@Val!B{rec}",
             "tiles": [[f"@Val!A{tpw}", f"@Val!B{tpw}|{pfmt}", ["上檔空間 ", f"@Val!B{upw}|sp1"]],
-                      [f"@Val!A{adj}", f"@Val!B{adj}|{pfmt}", ["上檔空間 ", f"@README!B{hup}|sp1"]],
+                      ["只看 Comparable 目標價（市場主流同業法）", f"@Val!B{comp2}|{pfmt}", ["上檔空間 ", f"@README!B{hup2}|sp1"]],
                       [f"@In!B{px}", f"@In!E{px}|{pfmt}", ""]],
-            "note": ["投資建議依加權目標價判定：", f"@Val!E{rec}"]}
+            "note": ["投資建議依加權目標價判定：", f"@Val!E{rec}", "。進加權的 Comparable 為相對倍數調整後 ", f"@Val!B{adj}|{pfmt}",
+                     "（上檔空間 ", f"@README!B{hup}|sp1", "）。"]}
     RL._hero = lambda w: copy.deepcopy(hero)
 
     spec = spec_for(wb, nm_block)
