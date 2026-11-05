@@ -1,4 +1,30 @@
-# fabrinet/ — Fabrinet（FN，NYSE）收支與估值模型 v0.2
+# fabrinet/ — Fabrinet（FN，NYSE）收支與估值模型 v0.3
+
+## v0.3（2026-11-05）：DCF 改為標準版（FCFF＋WACC）＋ HTML 新版面 v1.0
+
+- **DCF**（Andy 2026-11-05 20:42、20:45；`docs/plan/個股DCF標準規格.md` v1.0）：Val 頁 0.1 DCF 由「股東現金流＝EPS ×（1 − tp_g ÷ tp_roe）、折現率 10%」改為 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC；EV 加淨現金 ÷ 稀釋股數，以 ke 推到 12 個月後。新增 DCF 頁（共用模組 `tools/fcff_dcf.py`）。
+  - 會計年度 6 月底結束：評價日 2026-12-31 後 FY2027 只計半年（舊法以 t＝1 計整年）。
+  - EBIT＝PL non-GAAP 營業利益 − 股票薪酬（`fc_sbc` 0.9% × 營收）；FY2030–FY2032 由淨利還原（淨利 ÷（1 − tx）− int_f）。**NOPAT 稅率＝tx＋p2（non-GAAP 5%＋Pillar Two 補充稅約 12pt＝17%）**，即實際稅負（PL 的 non-GAAP EPS 仍不含 Pillar Two）。
+  - 折舊 1.55%、資本支出 3.54%、營運資金 19.9% × 營收增量（FY2024–FY2026 平均，SEC XBRL；應付帳款未標，以流動資產負債差額計）。
+  - 折現率：rf 5.00%、β＝Damodaran 美國 Electronics (General) 現金修正無槓桿 β 0.94 重新加槓桿＝0.95、ERP 5%、CRP 0 → ke 9.73%、WACC 9.69%。β 高案例＝Damodaran Global 同產業 1.57。
+  - 淨現金 0.68（US$B，2026-09-25：現金與短期投資 0.76 − 借款 0.07）；不配息。
+  - 情境 A 的終值現值占 EV 82%，**超過規格第 4 節 80% 標示線**（情境 B 74%、C 63%）。
+  - Sens 目標價參數改為十個標準案例；刪除 tp_r、tp_roe（roe_24–26 保留作參考；tp_g 只留給收斂法）。Comparable 的前瞻 EPS 與歷史分位檢查改讀 PL 頁（數值不變）。
+- **HTML 新版面 v1.0**：xlsx README 頁新增「展示層」「命題回覆」「本版要點」三段（公式帶數字）；原 `html.json` 改名 `html_src.json`，`gen_html_json.py` 經 `tools/company_html/relayout.py` 轉成新版面（橫幅中間格＝未調整 Comparable）。
+- 成品：`dist/20261105_Fabrinet個股模型_v0.3.xlsx`、`.html`；v0.2 移到 `dist/_待刪除/`。
+
+| 項目 | v0.2 | v0.3 |
+|---|---|---|
+| DCF 目標價（情境加權） | 368.75 | 243.32 |
+| 加權目標價 | 520.87 | 458.16 |
+| 上檔空間（現價 314.94） | +65.4% | +45.5% |
+| 投資建議 | 強力買進 | **買進** |
+| WACC／β | 10%（tp_r） | 9.69%／0.95 |
+| 終值現值占 EV（A／B／C） | — | 82%／74%／63% |
+| 隱含終值 EV／EBITDA（B） | — | 7.3 倍 |
+
+DCF 差異拆解（情境加權）：舊 368.75 → 現金流口徑改 FCFF（同 10%、g 4%、Gordon 終值；含淨現金、FY2027 半年、Pillar Two 稅負、股票薪酬與營運資金）249.99（−118.77）→ 終值改價值驅動式、g 3% 235.70（−14.29）→ 折現率改 WACC 9.69% 243.32（+7.62）；不配息。情境 B 明確期合計每股：舊股東現金流 116.56、新 FCFF 58.17（−50.1%）。
+
 
 ## v0.2（2026-11-04）：滾入 FY2027 Q1 實績與 Q2 指引（數值改變，次版）
 
