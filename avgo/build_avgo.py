@@ -191,8 +191,8 @@ for _row in FD.in_rows(dict(
         rf=(0.0500, "美國財政部每日殖利率曲線 10 Yr：2026-10-23 5.00%（https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202610；2026-11-05 讀取）",
             "FRED DGS10（同一序列，https://fred.stlouisfed.org/series/DGS10）；與股價同日（2026-10-23）；同 NVIDIA v0.3", "無風險利率（美國 10 年期公債殖利率，2026-10-23）"),
         beta_fixed=("=beta_u_lo*(1+(1-tax_w)*beta_de)", "=beta_u*(1+(1-tax_w)*beta_de)", "=beta_u_hi*(1+(1-tax_w)*beta_de)", "Derived",
-                    "Damodaran 產業無槓桿 β 以本公司市值 D/E 與稅率重新加槓桿（Hamada：βL＝βU ×（1＋(1 − tax_w) × D/E）；Andy 2026-11-05 21:21 確認）",
-                    "低／高＝beta_u 低／高欄（Damodaran 美國 Software (System & Application) 1.25／Global Semiconductor 1.87，Analogy）重新加槓桿；個股迴歸 β：未取得"),
+                    "自算產業 β：US 半導體 同業 13 家中位數（Yahoo Finance 月報酬 2021-11～2026-10，對 S&P 500 迴歸，Hamada 去槓桿、現金修正），以本公司市值 D/E 與稅率重新加槓桿（βL＝βU ×（1＋(1 − tax_w) × D/E））",
+                    "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）。低／高（beta_u 低／高欄，Analogy）：低＝本組 Blume 前中位數 2.32 × 0.8 再 Blume、高＝本組 Blume 前中位數 2.32（未調整），皆同式重新加槓桿"),
         kd=("=2.355/0.75/((67.12+61.079)/2)", "Derived",
             Q10 + "：前三季利息費用 2,355（US$M）年化 ÷ 期初期末平均債務本金（67,120、61,079）", "各批票據有效利率見同 10-Q 債務附註（2.6%–5.2% 區間）"),
         tax_w=("=tx_f", "Derived", "＝In 頁 tx_f（non-GAAP 有效稅率 16%，公司口徑）", "NOPAT 用 PL 頁各年稅率（FY2027 起同為 tx_f）"),
@@ -212,9 +212,9 @@ for _row in FD.in_rows(dict(
                "FY2023（併購 VMware 前）2.4%、FY2024（VMware 購買價格分攤後，合約負債與其他流動負債大增）−10.0%，不納入平均（判斷，見 PR）；Sens 低／高 0%／10%（Assumed）"),
         )):
     rows.append(_row)
-inp("beta_u", "產業無槓桿 β：Damodaran 美國 Semiconductor（現金修正後；2026 年 1 月）", "x", 1.25, 1.50, 1.87, "Analogy",
-    "Damodaran Betas by Sector (US) 2026 年 1 月：Semiconductor 66 家，無槓桿 β 1.49、現金修正後 1.50（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/Betas.html；2026-11-05 讀取）",
-    "低＝同表 Software (System & Application) 1.25（VMware 等基礎架構軟體約占營收兩成多）；高＝Global 表 Semiconductor 1.87（BetasGlobal.html）。基準以半導體為主（AI 營收占比上升）；同 NVIDIA v0.3")
+inp("beta_u", "產業無槓桿 β（採用）：自算 US 半導體 同業中位數 Blume 調整（0.67 × 中位數＋0.33）", "x", "=0.67*0.8*2.32+0.33", 1.884, 2.32, "Analogy",
+    "自算產業 β：US 半導體 同業 13 家（NVDA AMD AVGO MRVL QCOM INTC MU ARM CRDO ALAB RMBS MTSI GFS）無槓桿 β 中位數（Yahoo Finance 含股利調整月收盤價 2021-11～2026-10 共 60 個月，對 S&P 500 迴歸，Hamada 去槓桿、現金修正）2.32 → Blume 調整 1.884（Andy 2026-11-05 22:55）",
+    "低＝中位數 × 0.8 再 Blume（0.67 × 0.8 × 2.32＋0.33）；高＝中位數 2.32（未調整）。取代 Damodaran 美國 Semiconductor 1.50（v0.5）")
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 評價股數 sh_v)", "與 WACC 權重同一口徑")
 inp("sbc_rev", "股票薪酬 ÷ 營收（EBIT 扣除；non-GAAP 營業利益排除股票薪酬，標準版 DCF 視為費用）", "%", None, "=(5.67/51.574+7.568/63.887+6.287/71.089)/3", None, "Derived",
     "股票薪酬 ÷ 營收：FY2024 5,670／51,574、FY2025 7,568／63,887、FY2026 前三季 6,287／71,089（" + XB + "：AllocatedShareBasedCompensationExpense）；三期平均 10.6%",
@@ -718,7 +718,7 @@ TPL, TPN = TP.add_tp_section(wb, V,
     method="DCF（v0.5 標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加；EBIT＝non-GAAP 營業利益 − 股票薪酬（股權報酬視為費用；併購無形資產攤銷不計，折舊也不含該攤銷），以 WACC 折現到 2026 年底（期中慣例；FY2027 計 10/12），"
            "終值＝NOPAT(FY2033) ×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC；EV 加淨現金 ÷ 稀釋股數，以 ke 推到 12 個月後並扣除期間股利（DCF 頁、tools/fcff_dcf.py；規格 docs/plan/個股DCF標準規格.md）。"
            "Comparable：NVIDIA、AMD、Marvell、Qualcomm、台積電 ADR 前瞻 P/E 中位數 × FY2028 EPS。偏誤方向：non-GAAP EPS 排除股票薪酬與攤銷（偏高）；C 情境 FY2030 起淨利率收斂到 FY2029 × 0.8（Assumed）；"
-           "歷史分位用十年 GAAP 落後 P/E（攤銷扭曲，只作檢查）；β 取 Damodaran 美國半導體產業無槓桿 β（2026 年 1 月，現金修正 1.50）以本公司市值 D/E 重新加槓桿（Andy 2026-11-05 21:21）；DCF 對 WACC、股票薪酬口徑敏感（Sens 頁）。")
+           "歷史分位用十年 GAAP 落後 P/E（攤銷扭曲，只作檢查）；β 取自算產業 β（US 半導體同業 13 家無槓桿 β 中位數 Blume 調整 1.884）以本公司市值 D/E 重新加槓桿（Andy 2026-11-05 22:55）；DCF 對 WACC、股票薪酬口徑敏感（Sens 頁）。")
 # ---------------- v0.5：標準版 DCF（FCFF＋WACC）——DCF 明細頁＋Val 0.1 節摘要（取代 v0.2 股東現金流法；tools/fcff_dcf.py） ----------------
 DCFW = wb.create_sheet("DCF")
 DCFW["A1"] = "DCF — 標準版（v0.5）：無槓桿自由現金流 FCFF＝NOPAT＋折舊攤銷 − 資本支出 − 營運資金增加；WACC 折現到評價日 2026-12-31（期中慣例）；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g）。共用模組 tools/fcff_dcf.py"
@@ -744,7 +744,7 @@ for _rr in range(_r1, _r2 + 1):
         V.cell(_rr, _cc).value = None; V.cell(_rr, _cc).fill = PatternFill(); V.cell(_rr, _cc).font = Font()
 assert _r2 - _r1 + 1 >= FD.SUMMARY_ROWS
 SDCF = FD.write_summary(wb, V, _r1, RD_, list(SC), ["tp_wA", "tp_wB", "tp_wC"], title="0.1 DCF（標準版：無槓桿自由現金流 FCFF＋WACC；v0.5；明細見 DCF 頁）")
-V.cell(SDCF["ke"], 5, '="rf "&TEXT(rf,"0.00%")&"、β "&TEXT(beta,"0.000")&"（Damodaran 產業無槓桿 β 重新加槓桿）、ERP "&TEXT(erp,"0.0%")&"、CRP "&TEXT(crp,"0.0%")')   # 覆寫共用模組的「Blume 調整」說明
+V.cell(SDCF["ke"], 5, '="rf "&TEXT(rf,"0.00%")&"、β "&TEXT(beta,"0.000")&"（自算產業 β 重新加槓桿）、ERP "&TEXT(erp,"0.0%")&"、CRP "&TEXT(crp,"0.0%")')   # 覆寫共用模組的「Blume 調整」說明
 for _k in [k for k in TPL if k.startswith(("eps", "cf")) or k in ("po", "tv", "h1")]:
     del TPL[_k]
 TPL.update(dcf=SDCF["dcf"], dcfv=SDCF["v12"], tvsh=SDCF["tvsh"])
@@ -933,8 +933,9 @@ _r_fin = _fr(RC, "Anthropic 放款＋OpenAI"); _r_fai = _fr(RC, "兩家合計 ÷
 _s_c1 = _fr(SE, "核心售價 ×1.2"); _s_c0 = _fr(SE, "核心售價 ×0.8"); _s_tpu = _fr(SE, "TPU 份額 −15pt"); _s_net = _fr(SE, "AI 網通 ×0.8")
 _s_wta = _fr(SE, "Wattonomics 錨定（情境 B × wta）", _w0 + 1)
 _ADJM = f"Val!B{TPL['med']}*Val!B{_vadj}"   # 相對倍數調整後的目標倍數
-RD.cell(1, 1).value = (RD.cell(1, 1).value.replace("模型 v0.2.1（", "模型 v0.5（", 1) + "；v0.4.1（2026-11-05）只改展示層（README 展示層、命題回覆與本版要點三段，HTML 新版面 v1.0）"
-                       "；v0.5（2026-11-05）模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；DCF 頁、Val 0.1 節、Sens 目標價參數），Comparable、情境權重、DCF 權重 50% 與投資建議規則不變")
+RD.cell(1, 1).value = (RD.cell(1, 1).value.replace("模型 v0.2.1（", "模型 v0.5.1（", 1) + "；v0.4.1（2026-11-05）只改展示層（README 展示層、命題回覆與本版要點三段，HTML 新版面 v1.0）"
+                       "；v0.5（2026-11-05）模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；DCF 頁、Val 0.1 節、Sens 目標價參數），Comparable、情境權重、DCF 權重 50% 與投資建議規則不變"
+                       "；v0.5.1（2026-11-05）β 改自算產業 β（US 半導體同業中位數 Blume 調整 1.884 重新加槓桿；Andy 2026-11-05 22:55），其他輸入不變")
 _r = RD.max_row + 2; _r0 = _r
 RD.cell(_r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；v0.4.1 新增，A3、A4、A20–A23 原文保留給下游）").font = BOLD; _r += 1
 RD.cell(_r, 1, "命題：Broadcom 的 AI 營收＝各 XPU 平台的顆數 × Broadcom 份額 × 每顆售價（核心＋代購 HBM）＋網通附掛；2027–28 年的增量集中在 Anthropic、OpenAI 兩家靠融資部署的客戶。問題是以市場層顆數推得的營收撐不撐得住公司展望，以及現價的低倍數在反映什麼，四個問題如下。"); _r += 1
@@ -945,7 +946,7 @@ RD.cell(_r, 1, f'="命題 4：股價約為共識 FY2027 EPS 的 "&TEXT(Val!B{_vp
 RD.cell(_r, 1, f'="重點 1：加權目標價約 "&{_T(_VB("tp"), "0.00")}&" 美元，比現價 "&TEXT(px,"0.00")&" 低 "&TEXT(-{_VB("up")},"0.0%")&"，投資建議「"&Val!B{REC_ROW}&"」。拆到估值來源：加權目標價相對現價的差距（"&TEXT({_VB("tp")}-px,"+0.00;-0.00")&" 美元）中，DCF 部分 "&TEXT(tp_w_dcf*({_VB("dcf")}-px),"+0.00;-0.00")&"、Comparable 部分 "&TEXT((1-tp_w_dcf)*(tp_comp_adj-px),"+0.00;-0.00")&"（DCF 約占 "&TEXT(tp_w_dcf*({_VB("dcf")}-px)/({_VB("tp")}-px),"0%")&"）。標準版 DCF "&{_T(_VB("dcf"), "0.00")}&" 比現價"&IF({_VB("dcf")}<px,"低 "&TEXT(1-{_VB("dcf")}/px,"0.0%"),"高 "&TEXT({_VB("dcf")}/px-1,"0.0%"))&"：EBIT 扣股票薪酬（營收的 "&TEXT(sbc_rev,"0.0%")&"，non-GAAP EPS 不扣）後以 WACC "&TEXT(wacc,"0.0%")&" 折現（見重點 4）。進加權的是相對倍數調整後的 Comparable "&TEXT(tp_comp_adj,"0.00")&"：目標倍數＝同業前瞻本益比中位數 "&{_T(_VB("med"), "0.0")}&" 倍 × 調整係數 "&TEXT(Val!B{_vadj},"0.00")&"（Broadcom 過去 10 年前瞻本益比中位數 "&TEXT(Val!B{_vown},"0.0")&" 倍 ÷ 同業 "&TEXT(Val!B{_vpeer},"0.0")&" 倍）＝"&TEXT({_ADJM},"0.0")&" 倍。以同一個 12 個月後前瞻 EPS（情境加權 "&{_T(_VB("fwd"), "0.00")}&"）計，現價相當於 "&TEXT(px/{_VB("fwd")},"0.0")&" 倍，所以 Comparable 與現價的差距全部是倍數差，不是盈餘差。只看 Comparable（市場主流同業法、未調整）為 "&{_T(_VB("comp"), "0.00")}&"（"&TEXT({_VB("upc")},{_SG})&"）。"'); _r += 1
 RD.cell(_r, 1, f'="重點 2：FY2027 三情境相同（EPS "&{_T(_E("B", 2027), "0.00")}&" 美元），分歧從 FY2028 開始：FY2028 EPS 情境 A（順利）／B（平平）／C（不如預期）為 "&{_T(_E("A", 2028), "0.00")}&"／"&{_T(_E("B", 2028), "0.00")}&"／"&{_T(_E("C", 2028), "0.00")}&"，B、C 低於 FY2027。DCF 價格帶（情境 C～A，推到約 12 個月後）"&TEXT(Val!B{_vband},"0.0")&"～"&TEXT(Val!C{_vband},"0.0")&"。FY2028 AI 營收三情境為 "&TEXT(Recon!C{_r_ai28},"0.0")&"／"&TEXT(Recon!E{_r_ai28},"0.0")&"／"&TEXT(Recon!G{_r_ai28},"0.0")&"（十億美元），都低於公司展望 "&TEXT(Recon!B{_r_ai28},"0")&"。"'); _r += 1
 RD.cell(_r, 1, f'="重點 3：單一輸入（Sens 頁一次動一個，以情境 A 為基準）中，FY2028 EPS 對 XPU 核心售價最敏感：×0.8／×1.2 時 "&TEXT(Sens!L{_s_c0},{_SG})&"／"&TEXT(Sens!L{_s_c1},{_SG})&"（每顆核心售價 TPU "&TEXT(core_tpu,"0")&"、其他 ASIC "&TEXT(core_oth,"0")&" 千美元為假設）；其次是 TPU 份額少 15 個百分點 "&TEXT(Sens!L{_s_tpu},{_SG})&"（份額為假設）與 AI 網通 ×0.8 "&TEXT(Sens!L{_s_net},{_SG})&"，都未達兩位數。改用 Wattonomics 錨定的產業量（情境 B × 錨定係數，敏感度案例、未進基準）時，單一路徑目標價 "&TEXT(Sens!H{_s_wta},"0.00")&"（相對加權目標價 "&TEXT(Sens!I{_s_wta},{_SG})&"）。"'); _r += 1
-RD.cell(_r, 1, f'="重點 4：v0.5 起 DCF 改為標準版（無槓桿自由現金流折現），DCF 目標價 "&{_T(_VB("dcf"), "0.00")}&"（舊法為 non-GAAP EPS 的股東現金流、折現率 10%；新舊數字對照見版本沿革），投資建議因此由中立轉為「"&Val!B{REC_ROW}&"」。WACC "&TEXT(wacc,"0.0%")&"（股權成本 "&TEXT(ke,"0.0%")&"＝rf "&TEXT(rf,"0.0%")&" ＋ β "&TEXT(beta,"0.00")&" × ERP "&TEXT(erp,"0%")&"；β 為 Damodaran 美國半導體產業無槓桿 β 依本公司市值 D/E 重新加槓桿，ERP 5% 與 RONIC＝WACC 為假設）；EBIT 為 non-GAAP 營業利益扣股票薪酬（營收的 "&TEXT(sbc_rev,"0.0%")&"）。終值現值占情境 B 企業價值 "&TEXT(Val!C{SDCF["tvsh"]},"0%")&"，隱含終值 EV／EBITDA 約 "&TEXT(Val!C{SDCF["mult"]},"0.0")&" 倍。以情境加權目標價為基準：WACC ±1pt 時 "&TEXT(Sens!D{_tvs[0]},{_SG})&"／"&TEXT(Sens!F{_tvs[0]},{_SG})&"，β 低／高 "&TEXT(Sens!D{_tvs[0] + 1},{_SG})&"／"&TEXT(Sens!F{_tvs[0] + 1},{_SG})&"，終值改用 FCFF ×（1＋g） "&TEXT(Sens!F{_tvs[0] + 8},{_SG})&"。"'); _r += 1
+RD.cell(_r, 1, f'="重點 4：v0.5 起 DCF 改為標準版（無槓桿自由現金流折現），DCF 目標價 "&{_T(_VB("dcf"), "0.00")}&"（舊法為 non-GAAP EPS 的股東現金流、折現率 10%；新舊數字對照見版本沿革），投資建議因此由中立轉為「"&Val!B{REC_ROW}&"」。WACC "&TEXT(wacc,"0.0%")&"（股權成本 "&TEXT(ke,"0.0%")&"＝rf "&TEXT(rf,"0.0%")&" ＋ β "&TEXT(beta,"0.00")&" × ERP "&TEXT(erp,"0%")&"；β 為自算產業 β（US 半導體同業中位數 Blume 調整）依本公司市值 D/E 重新加槓桿，ERP 5% 與 RONIC＝WACC 為假設）；EBIT 為 non-GAAP 營業利益扣股票薪酬（營收的 "&TEXT(sbc_rev,"0.0%")&"）。終值現值占情境 B 企業價值 "&TEXT(Val!C{SDCF["tvsh"]},"0%")&"，隱含終值 EV／EBITDA 約 "&TEXT(Val!C{SDCF["mult"]},"0.0")&" 倍。以情境加權目標價為基準：WACC ±1pt 時 "&TEXT(Sens!D{_tvs[0]},{_SG})&"／"&TEXT(Sens!F{_tvs[0]},{_SG})&"，β 低／高 "&TEXT(Sens!D{_tvs[0] + 1},{_SG})&"／"&TEXT(Sens!F{_tvs[0] + 1},{_SG})&"，終值改用 FCFF ×（1＋g） "&TEXT(Sens!F{_tvs[0] + 8},{_SG})&"。"'); _r += 1
 _r += 1
 RD.cell(_r, 1, "命題回覆（HTML 用；依本模型計算回答開頭四個命題）").font = BOLD; _r += 1
 RD.cell(_r, 1, f'="AI 營收能否達到公司展望？答：FY2027 可以，FY2028 三情境都達不到。FY2027 AI 營收 "&TEXT(Recon!C{_r_ai27},"0.0")&"（十億美元，三情境相同），比公司展望 "&TEXT(Recon!B{_r_ai27},"0")&" 高 "&TEXT(Recon!D{_r_ai27},"0.0%")&"，但比 JPMorgan 的 "&TEXT(Recon!B{_r_jpm},"0")&" 低 "&TEXT(-Recon!D{_r_jpm},"0.0%")&"；FY2028 情境 A／B／C 為 "&TEXT(Recon!C{_r_ai28},"0.0")&"／"&TEXT(Recon!E{_r_ai28},"0.0")&"／"&TEXT(Recon!G{_r_ai28},"0.0")&"，分別比展望 "&TEXT(Recon!B{_r_ai28},"0")&" 低 "&TEXT(-Recon!D{_r_ai28},"0.0%")&"／"&TEXT(-Recon!F{_r_ai28},"0.0%")&"／"&TEXT(-Recon!H{_r_ai28},"0.0%")&"。顆數取自市場層；Broadcom 在各平台的份額與每顆核心售價為假設（Assumed），公司展望為 Interested-party、未用於校準。"'); _r += 1
@@ -954,6 +955,7 @@ RD.cell(_r, 1, f'="客戶融資曝險有多大？答：媒體報導的 Anthropic
 RD.cell(_r, 1, f'="折價是在定價信用風險，還是低估了營收？答：本模型找不到營收被低估的證據，也無法單獨辨識信用風險。FY2027 營收 "&TEXT(Recon!C{_r_rev27},"0.0")&" 與共識 "&TEXT(Recon!B{_r_rev27},"0.0")&" 只差 "&TEXT(Recon!D{_r_rev27},{_SG})&"，EPS "&TEXT(Recon!C{_r_eps27},"0.00")&" 比共識 "&TEXT(Recon!B{_r_eps27},"0.00")&" 低 "&TEXT(-Recon!D{_r_eps27},"0.0%")&"（FY2027 毛利率 "&TEXT(Recon!C{_r_gmc},"0.0%")&"，比共識隱含約 "&TEXT(Recon!B{_r_gmc},"0.0%")&" 低 "&{_PP(f"-Recon!D{_r_gmc}")}&" 個百分點；本模型的毛利率下滑來自代購 HBM 占比上升，代購比例 "&TEXT(f_hbm,"0%")&"、代購毛利率 "&TEXT(m_hbm,"0%")&" 為假設）。同窗比較，現價約為本模型 FY2027 EPS（FY2027 約為 2026-11～2027-10，接近未來 12 個月）的 "&TEXT(Val!B{_vpe27},"0.0")&" 倍，低於同業前瞻本益比中位數（未來 12 個月）"&{_T(_VB("med"), "0.0")}&" 倍；但 Broadcom 過去 10 年前瞻本益比中位數本來就只有同業的 "&TEXT(Val!B{_vadj},"0.00")&" 倍，依這個相對倍數調整後的 Comparable 為 "&TEXT(tp_comp_adj,"0.00")&"，低於現價。所以現價的低倍數與 Broadcom 自身的歷史折價一致；加權目標價 "&{_T(_VB("tp"), "0.00")}&"（"&TEXT({_VB("up")},{_SG})&"）。"'); _r += 1
 _r += 1
 RD.cell(_r, 1, "本版要點與版本沿革（HTML 附錄用）").font = BOLD; _r += 1
+RD.cell(_r, 1, "v0.5.1（2026-11-05）：β 改自算產業 β（Andy 2026-11-05 22:55，取代 Damodaran 表）：US 半導體同業 13 家（Yahoo Finance 月報酬 2021-11～2026-10，對 S&P 500 迴歸，Hamada 去槓桿、現金修正）無槓桿 β 中位數 2.32，Blume 調整 0.67β＋0.33＝1.884，以本公司市值 D/E 與稅率重新加槓桿；Sens 低／高＝中位數 × 0.8 再 Blume／中位數未調整（同式重新加槓桿）。評價日 2026-12-31 不變；其他輸入不變。"); _r += 1
 RD.cell(_r, 1, "v0.5（2026-11-05）：模型改版——DCF 改為標準版（Andy 2026-11-05 20:42、20:45；docs/plan/個股DCF標準規格.md）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加；EBIT＝non-GAAP 營業利益 − 股票薪酬（sbc_rev），折舊不含併購無形資產攤銷；"
         "以 WACC 折現（ke＝rf＋β ×（ERP＋CRP），rf 5.00%、β＝Damodaran 美國半導體產業無槓桿 β（現金修正 1.50）以市值 D/E 重新加槓桿（Hamada；Andy 2026-11-05 21:21）、ERP 5%、CRP 0），終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC；"
         "EV 加淨現金（現金 − 債務本金 − 租賃）÷ 稀釋股數，以 ke 推到 12 個月後並扣期間股利（每季 0.65 美元 × 4）。新增 DCF 頁（共用模組 tools/fcff_dcf.py），Val 0.1 節改為 WACC 與 DCF 彙總，Sens 目標價參數改為標準版；Wattonomics 錨定案例路徑改用同一 FCFF 式；"
