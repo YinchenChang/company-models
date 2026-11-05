@@ -1,4 +1,12 @@
-# avc/ — 奇鋐（3017）收支與估值模型 v0.2.5
+# avc/ — 奇鋐（3017）收支與估值模型 v0.3
+
+## v0.3（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0 與共用模組 `tools/fcff_dcf.py`（原樣取自 NVIDIA v0.3）：新增 **DCF 頁**（三情境 FY2027–FY2032 FCFF 明細與檢查列）；Val 0.1 節改為折現率緊接 DCF 彙總；Sens 目標價參數改為標準案例。In 頁新增 M2 節，刪除 tp_r、tp_roe（tp_g 只留作 PL 延伸期收斂目標）。
+- 參數：rf＝台灣 10 年期公債 1.98%（2026-11-04）；ERP 5%＋台灣國家風險溢酬 0.78%（Damodaran 2026-01）；β＝Damodaran 全球 Electronics (General) 無槓桿 β 1.45 依奇鋐 D／E 重新加槓桿約 1.48；g＝MIN(3%, rf)；RONIC＝WACC；稅率用台灣法定 20%（所得稅費用未找到）。折舊、資本支出、營運資金為近三年實績比例，FY2029 起資本支出收斂到 折舊 ×（1＋5g）。FCFF 為合併口徑，扣非控制權益帳面值（富世達市值高於帳面，偏高估）。
+- 結果：DCF 目標價 3,002 → 2,671、加權目標價 2,962 → 2,796，上檔 −5.8% → −11.1%，投資建議維持中立。
+- 成品：`dist/20261105_奇鋐個股模型_v0.3.xlsx`／`.html`；v0.2.5 移到 `dist/_待刪除/`。
+
 
 ## v0.2.5（2026-11-05）：HTML 新版面 v1.0（只改展示層）
 
@@ -51,7 +59,7 @@ AI 半導體 Project 電源與散熱次產業，樣板＝`delta/`。每架機架
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
 | `dist/20261028_奇鋐個股模型_v0.2.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
-建置：`python3 avc/build_avc.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數、機架內液冷）、`tsmc/dist`（情境顆數係數）、`delta/dist`（台達電液冷營收，只作 Recon）；**不修改它們**。
+建置：`python3 avc/build_avc.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數、機架內液冷）、`tsmc/dist`（情境顆數係數）、`delta/dist`（台達電液冷營收，只作 Recon）；**不修改它們**。
 
 ## 驅動因子
 
