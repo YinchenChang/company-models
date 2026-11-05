@@ -10,7 +10,24 @@ S = lambda s, k: SUMR[f"{s}|{k}"]
 # 情境驅動對照
 INS = wb["In"]
 scn = next(r for r in range(1, INS.max_row + 1) if str(INS.cell(r, 1).value or "").startswith("情境驅動對照"))
-scn_rows = [r for r in range(scn + 2, INS.max_row + 1) if INS.cell(r, 2).value]
+scn_rows = []   # 第三輪修正：只取「情境驅動對照」節本身（到第一個空白鍵為止）；原本取到工作表末尾，混入只進敏感度的 Wattonomics 錨定係數列
+for r in range(scn + 2, INS.max_row + 1):
+    if not INS.cell(r, 1).value: break
+    scn_rows.append(r)
+# 第三輪修正：情境驅動表數值格式（年度不加千分位、百分比／pt 以 % 顯示、其他依大小取小數位）
+def _scen_fmt(ws, r):
+    u = str(ws.cell(r, 3).value or "").strip()
+    vs = [ws.cell(r, c).value for c in (4, 5, 6)]
+    vs = [v for v in vs if isinstance(v, (int, float)) and not isinstance(v, bool)]
+    if not vs:
+        return ""
+    if all(float(v).is_integer() and 1990 <= v <= 2100 for v in vs) and ("年" in u or u in ("", "—")):
+        return "|yr"
+    if u in ("%", "pt", "百分點") or u.startswith("%"):
+        return "|p2" if any(0 < abs(v) < 0.001 for v in vs) or any(abs(round(v * 1000) - v * 1000) > 1e-6 for v in vs) else "|p1"
+    if all(float(v).is_integer() for v in vs):
+        return "|n0"
+    return "|n1" if max(abs(v) for v in vs) >= 100 else "|n2"
 def drv(key, fmt, dlabel, dref, dfmt, why, unit=True):
     r = IR[key]
     base = [f"@In!E{r}|{fmt}"] + ([" ", f"@In!C{r}"] if unit else [])
@@ -39,7 +56,7 @@ html = {
      {"type": "table", "caption": "單一參數（In 頁基準值；敏感度低／高只用於敏感度頁、不進目標價）", "head": ["輸入", "基準值", "標記", "推導量", "因果方向"], "rows": drivers},
      {"type": "table", "caption": "情境驅動（三情境並排，進加權目標價；取自 In 頁最後一節「情境驅動對照」）",
       "head": [f"@In!B{scn + 1}", f"@In!D{scn + 1}", f"@In!E{scn + 1}", f"@In!F{scn + 1}", f"@In!C{scn + 1}"],
-      "rows": [[f"@In!B{r}", f"@In!D{r}|n2", f"@In!E{r}|n2", f"@In!F{r}|n2", f"@In!C{r}"] for r in scn_rows]},
+      "rows": [[f"@In!B{r}", f"@In!D{r}{_scen_fmt(INS, r)}", f"@In!E{r}{_scen_fmt(INS, r)}", f"@In!F{r}{_scen_fmt(INS, r)}", f"@In!C{r}"] for r in scn_rows]},
      {"type": "table", "caption": "權利金分市場與資料中心處理器（情境 B）", "head": ["@Units!A3", "@Units!B3", "@Units!C3", "@Units!D3", "@Units!E3", "@Units!F3"],
       "rowgen": {"sheet": "Units", "rows": f"4-{rm['UR']['chip']}", "cols": ["A", "B", "C", "D", "E", "F"], "fmts": ["", "", "n3", "n3", "n3", "n3"],
                  "row_fmt": {str(rm["UR"][k]): {c: f for c in "CDEF"} for k, f in (("nvcy", "n2"), ("nvcpu", "n2"), ("dcx", "n2"), ("dcrx", "n2"), ("dcsh", "p1"))}}},
@@ -165,12 +182,14 @@ SPEC = {
     ["自由現金流（股票薪酬、折舊、資本支出、營運資金）", ["sbc_rev", "fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]],
     ["收斂法（FY2030–FY2032）", ["tp_g", "fade_gA", "fade_gB", "fade_gC", "nim10_f"]]]]],
  "blocks_to": {},
- "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+ "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "＋Stub 期 FCFF", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
           "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"]},
  "n_recon": 5,
 }
 out = RLY.relayout(html, xl, SPEC)
 ht = out["hero"]
 ht["tiles"][1] = ["只看 Comparable 目標價（市場主流同業法）", f"@Val!B{T['comp2']}|n2", ["上檔空間 ", f"@Val!B{T['upc']}|sp1"]]
+for _t in ht["tiles"]:   # 第三輪修正：橫幅金額單位（美元）
+    if isinstance(_t[0], str): _t[0] = [_t[0], "（美元）"]
 json.dump(out, open(sys.argv[2], "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")
