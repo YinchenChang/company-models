@@ -1704,6 +1704,28 @@
     },
     {
      "type": "table",
+     "caption": "DCF 折現率",
+     "head": [
+      "項目",
+      "數值"
+     ],
+     "rows": [
+      [
+       "WACC",
+       "@Val!B30|p2"
+      ],
+      [
+       "股東權益成本 ke",
+       "@Val!C30|p2"
+      ],
+      [
+       "永續成長率 g",
+       "@Val!D30|p1"
+      ]
+     ]
+    },
+    {
+     "type": "table",
      "caption": "收支關卡",
      "head": [
       "@CF!A5",
