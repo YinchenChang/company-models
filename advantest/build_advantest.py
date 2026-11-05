@@ -551,7 +551,7 @@ def rec(label, ref, getter, src, note="", fmt="#,##0.0", pt=False):
         RC.cell(rr_, cd, f"={L}{rr_}-{M}{rr_}" if pt else f"={L}{rr_}/{M}{rr_}-1").number_format = "0.0%"
     RC.cell(rr_, 9, src); RC.cell(rr_, 10, note); rr_ += 1
 pl = lambda key, y=2026: (lambda s: f"=PL!{FYC[y]}{SUMR[(s, key)]}")
-RC.cell(rr_, 1, "A. FY2026 vs 公司指引（2026-07-29 上修；校準時未使用指引）").font = BOLD; rr_ += 1
+RC.cell(rr_, 1, "A. FY2026 vs 公司指引（2026-10-28 指引；校準時未使用指引）").font = BOLD; rr_ += 1
 rec("營收", "=g_rev", pl("rev"), "公司 Q1 FY26 決算短信")
 rec("SoC 測試機", "=g_soc", pl("rsoc"), "同上")
 rec("記憶體測試機", "=g_mem", pl("rmem"), "同上（公司原文未開啟）")

@@ -710,7 +710,7 @@ rec("FY2028 EPS vs Citi", "=citi_eps28", pl("eps", 2028), "經濟日報 2026-08-
 rec("FY2027 營收 vs 凱基", "=kgi_rev27", pl("rev", 2027), "凱基 2026-07-23", "", fmt="#,##0.0")
 rec("共識前瞻 12 月 EPS vs 模型（情境加權 2／12 × FY2027＋10／12 × FY2028）", "=cons_feps", lambda s: f"=Val!B{T['feps']}", "stockanalysis 前瞻 P/E 推得", "三欄同值（情境加權）", fmt="#,##0.00")
 RC.cell(rr_, 1, "D. 校準與份額").font = BOLD; rr_ += 1
-rec("k_x（ASIC 校準係數）", None, lambda s: f"=PL!D{PB[s]['kx']}", "公司 FY2026 資料中心 ÷ 未校準", "接近 1＝市場層 TPU 顆數 × 5% × Broadcom 模型單價與公司說法一致", fmt="0.000")
+rec("k_x（ASIC 校準係數）", None, lambda s: f"=PL!D{PB[s]['kx']}", "公司 FY2026 資料中心 ÷ 未校準", "1＝市場層 TPU 顆數 × 5% × Broadcom 模型單價與公司說法一致；> 1＝公司說法高於市場層推算（現值見本列 C 欄）", fmt="0.000")
 rec("非 ASIC 毛利率（FY2026 殘差）", None, lambda s: f"=PL!D{PB[s]['gmx']}", "FY2026 毛利殘差", "FY2025 47.5%（全部非 ASIC）", fmt="0.00%")
 rec("CY2028 Broadcom＋Marvell＋聯發科 TPU 份額", 1.0, lambda s: f"=Units!E{UR['sum_tpu']}", "avgo、mrvl 成品", "應 ≤ 100%", fmt="0.0%", pt=True)
 rec("FY2027 營業利益率 vs 高盛 22%（百分點）", 0.22, pl("oim", 2027), "經濟日報 2026-05-03", "", fmt="0.0%", pt=True)
