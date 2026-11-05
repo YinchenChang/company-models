@@ -1,6 +1,6 @@
 # Arm Sens 產生器：一次把 In 頁一個鍵的基準值換成敏感度低／高值，整本重建、LibreOffice 重算，讀加權目標價（tp_final）與情境 B FY2028 EPS，
 # 寫入 arm/sens.json（建置時 build_arm.py 讀入 Sens 頁）。In 頁或模型改動後重跑一次，再正式建置。
-# 用法：python3 arm/sens_arm.py [暫存資料夾，預設 /tmp/work_arm/sens]
+# 用法：python3 arm/sens_arm.py [暫存資料夾，預設 /tmp/work_arm/sens]；環境變數 LO_PROFILE（例 file:///tmp/lo_x）可指定 LibreOffice 私有設定檔
 import json, os, subprocess, sys, glob, shutil
 import openpyxl
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -25,7 +25,7 @@ WJOBS = {"_wtaB": "tp_wA=0;tp_wB=1;tp_wC=0", "_wtaW": "tp_wA=0;tp_wB=1;tp_wC=0;_
 for nm, ov in WJOBS.items():
     subprocess.run([sys.executable, BUILD, os.path.join(TMP, "raw", f"{nm}.xlsx")], check=True, env={**env0, "ARM_OVERRIDE": ov})
 files = sorted(glob.glob(os.path.join(TMP, "raw", "*.xlsx")))
-subprocess.run(["soffice", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", os.path.join(TMP, "rc")] + files,
+subprocess.run(["soffice"] + ([f"-env:UserInstallation={os.environ['LO_PROFILE']}"] if os.environ.get("LO_PROFILE") else []) + ["--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", os.path.join(TMP, "rc")] + files,
                check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 def read(f):
     wb = openpyxl.load_workbook(f, data_only=True)
