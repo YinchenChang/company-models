@@ -1,4 +1,13 @@
-# mpi/ — 旺矽（6223.TWO；MPI）個股模型 v0.1
+# mpi/ — 旺矽（6223.TWO；MPI）個股模型 v0.2
+
+## v0.2（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）＋HTML 新版面 v1.0
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0 與共用模組 `tools/fcff_dcf.py`（原樣取自 NVIDIA v0.3）：新增 **DCF 頁**（三情境 FY2027–FY2032 FCFF 明細與檢查列；Sens 各案例三情境亦各有一組同式明細）；Val 0.1 節改為折現率緊接 DCF 彙總；Sens 主表的 DCF 目標價改讀各案例的標準版 DCF，目標價參數另表（WACC、β、ERP、g、RONIC、資本支出、營運資金、淨現金、終值替代法、DCF 權重）。In 頁新增 M2 節，刪除 tp_r、tp_roe。
+- 參數：rf＝台灣 10 年期公債 1.98%（2026-11-04）；ERP 5%＋台灣國家風險溢酬 0.78%（Damodaran 2026-01）；β＝Damodaran 全球 Semiconductor Equip 無槓桿 β 2.04 依旺矽 D／E 重新加槓桿約 2.05（股權成本 13.8%）；g＝MIN(3%, rf)；RONIC＝WACC；稅率 17.4%（近三年 1 − 淨利 ÷ 稅前）。折舊 5.1%、資本支出 15.0%（湖口新廠擴產）、營運資金 45%（近三年實績比例），FY2029 起資本支出收斂到 折舊 ×（1＋5g）。
+- 結果：DCF 目標價 1,995 → 964、加權目標價 2,641 → 2,126，上檔 −42.7% → −53.9%，**投資建議由放空改為強力放空**（主因是折現率：β 2.05 使 WACC 13.8%）。
+- HTML：`html.json` 改名 `html_src.json`，新增 `gen_html_json.py`（經 `tools/company_html/relayout.py`）；README 頁新增「展示層」「命題回覆」「本版要點」三段（數字以公式帶出）。
+- 成品：`dist/20261105_旺矽個股模型_v0.2.xlsx`／`.html`；v0.1 移到 `dist/_待刪除/`。
+
 
 ## v0.1（2026-10-31）：初版
 
@@ -21,12 +30,12 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_mpi.py` | 產生器（參數與公式；行業變數唯讀取自 Siliconomics 快照） |
-| `dist/20261031_旺矽個股模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
-| `html.json` | HTML 展示層設定（七章） |
-| `dist/20261031_旺矽個股模型_v0.1.html` | HTML 展示層 |
+| `dist/20261105_旺矽個股模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `html_src.json` → `gen_html_json.py` → `html.json` | HTML 展示層設定（原設定 → 版面規格 v1.0 轉換；`html.json` 勿手改） |
+| `dist/20261105_旺矽個股模型_v0.2.html` | HTML 展示層（版面規格 v1.0） |
 | `segments.json` | 事業別（探針卡、設備、其他）與命題子列（AI／HPC 探針卡、其他探針卡）宣告 |
 
-建置：`python3 mpi/build_mpi.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。樣板 `kyec/`（驅動邏輯），工作表與 Val 頁列標籤同 `amkr/`。
+建置：`python3 mpi/build_mpi.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。樣板 `kyec/`（驅動邏輯），工作表與 Val 頁列標籤同 `amkr/`。
 
 ## 驅動因子
 
