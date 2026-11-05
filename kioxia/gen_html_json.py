@@ -149,7 +149,7 @@ SPEC = {
     ["股價與股數", ["px", "bb_px", "sh0", "dil"]],
     ["資產負債、資本支出與股東回饋", ["eq_j", "nc_j", "eq25", "da_y", "cap_2026", "cap_2027", "cap_2028", "cap_2029", "payout"]],
     ["稅與淨現金收益率", ["tax", "ncy"]],
-    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta", "beta_u", "beta_u_us", "beta_de", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
+    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta", "beta_u", "beta_u_med", "beta_de", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
     ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"]],
     ["自由現金流（折舊、資本支出、營運資金的長期穩態）", ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]],
     ["目標價規則與情境權重", ["tp_w_dcf", "tp_wA", "tp_wB", "tp_wC", "cons_tp"]],
