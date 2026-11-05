@@ -1,4 +1,11 @@
-# quanta/ — 廣達（2382）收支與估值模型 v0.3.2
+# quanta/ — 廣達（2382）收支與估值模型 v0.4
+
+## v0.4（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0 與工作單（Andy 2026-11-05 20:42、20:45、21:21）：Val 0.1 節由「股東現金流＝EPS ×（1 − tp_g ÷ tp_roe）、折現率 tp_r 10%」改為 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現（期中慣例）；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, 台灣 10 年期公債殖利率)、RONIC＝WACC；EV 加淨現金與投資、減非控制權益 ÷ 股數，以股權成本推到 12 個月後並扣除期間股利。新增 DCF 頁（三情境明細與檢查列）；In 頁新增 J2 節（折現率與自由現金流參數），刪除 tp_r、tp_roe；Sens 目標價參數改為標準案例（WACC ±1pt、β、ERP、g、RONIC、資本支出、營運資金、權益投資、終值替代法、DCF 權重）。共用模組 `tools/fcff_dcf.py`（原樣取自 NVIDIA PR #355）。
+- 參數：rf 台灣 10 年期公債 1.98%（2026-11-04）；β＝Damodaran 全球 Computers/Peripherals 現金修正後無槓桿 β 1.47 依廣達 D/E 以 Hamada 重新加槓桿（約 1.88；個股迴歸 β 0.69 經 Blume 調整 0.79 列為 Sens 低值）；ERP 5%＋台灣國家風險溢酬 0.78%（Damodaran 2026-01）；kd 為 FY2025 利息 ÷ 平均債務；稅率為近三年有效稅率；折舊、資本支出、營運資金占營收為近三年實績平均；淨現金與投資取 2Q26 資產負債表。
+- 數值變化與拆解見 PR 內文與 xlsx README「本版要點」。Comparable、情境權重、DCF 權重 50% 與投資建議規則不變。
+- 成品：`dist/20261105_廣達個股模型_v0.4.xlsx`、`.html`（取代未合併的 v0.3.2）。
 
 ## v0.3.2（2026-11-05）：HTML 新版面 v1.0（只改展示層）
 
@@ -40,11 +47,11 @@ AI 半導體 Project **伺服器組裝次產業的樣板**。AI 伺服器組裝�
 | 檔案 | 內容 |
 |---|---|
 | `build_quanta.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261105_廣達個股模型_v0.3.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261105_廣達個股模型_v0.4.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html_src.json`、`gen_html_json.py`、`html.json` | HTML 展示層設定：`html_src.json` 為來源設定，`gen_html_json.py` 套用版面規格 v1.0 後寫出 `html.json`（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261105_廣達個股模型_v0.3.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261105_廣達個股模型_v0.4.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
-建置：`python3 quanta/build_quanta.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數、整櫃買方價格）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）；**不修改它們**。
+建置：`python3 quanta/build_quanta.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數、整櫃買方價格）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）；**不修改它們**。
 
 ## 驅動因子
 

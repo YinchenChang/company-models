@@ -1,7 +1,7 @@
 # 廣達 HTML 設定：讀 quanta/html_src.json（v0.3.1 的 html.json，內容不動）→ 套用個股 HTML 版面規格 v1.0 → 寫 quanta/html.json。
 # 用法：python3 quanta/gen_html_json.py <成品 xlsx> quanta/html_src.json quanta/html.json
 # 規格：docs/plan/個股HTML版面規格.md；共用轉換器 tools/company_html/relayout.py（原樣使用）。
-# 本模型屬伺服器組裝樣板（DCF 為股東現金流、Comparable 為同業前瞻本益比 × 相對倍數調整），與轉換器預設的估值頁不同，
+# 本模型屬伺服器組裝樣板（v0.4 起 DCF 為標準版 FCFF＋WACC、Comparable 為同業前瞻本益比 × 相對倍數調整），與轉換器預設的估值頁不同，
 # 所以 relayout 之後在本檔重組：投資建議橫幅（補充規則 A：中間格為市場主流同業法，調整後值寫在附註）、估值章、敏感度章（龍捲風為 FY2028 EPS，不是目標價）。
 import copy
 import json
@@ -75,9 +75,11 @@ SPEC = {
     ["營業費用、淨利係數與股數（FY2027 起）", ["phi", "opx_adj", "nio_f", "sh_g"]],
     ["匯率", ["fx"]],
     ["股價", ["px", "pe_ttm"]],
-    ["目標價規則（DCF 與 Comparable）", ["tp_wA", "tp_wB", "tp_wC", "tp_r", "tp_g", "tp_roe", "tp_w_dcf", "fade_gA", "fade_gB", "fade_gC", "nim10_f"]],
+    ["目標價規則（情境權重、DCF 權重、延伸期收斂）", ["tp_wA", "tp_wB", "tp_wC", "tp_g", "tp_w_dcf", "fade_gA", "fade_gB", "fade_gC", "nim10_f"]],
     ["市場共識（只作對照）", ["cons_tp", "cons_feps"]],
-    ["自由現金流參數", ["da_r", "cx_r"]]]]],
+    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
+    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"]],
+    ["自由現金流（折舊、資本支出、營運資金）", ["da_r", "cx_r", "fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]]]]],
  "blocks_to": {"組裝市場": "AI 伺服器組裝（部署量、整櫃價值、份額、客供與毛利率）", "@Units!A16": "AI 伺服器組裝（部署量、整櫃價值、份額、客供與毛利率）",
                "標記沿用": "AI 伺服器組裝（部署量、整櫃價值、份額、客供與毛利率）"},
  "main": {"本模型與券商估計": ["FY2027 營收 vs 法人", "FY2027 EPS vs 法人", "FY2026 有效份額 vs", "12 個月後的前瞻 EPS", "目標價（DCF 與 Comparable 加權）vs"]},
@@ -151,10 +153,21 @@ conc_rest = [vrow(r_cmp0), vrow(r_upc, "sp1"), vrow(V("與市場共識目標價�
              vrow(V("價格帶（DCF"), ""), [f"@Val!A{r_hist}", [f"@Val!B{r_hist}|p0", "／", f"@Val!C{r_hist}|p0", "／", f"@Val!D{r_hist}|p0"], f"@Val!E{r_hist}"],
              [f"@Val!A{V('目標價方法')}", f"@Val!B{V('目標價方法')}", ""], [f"@Val!A{r_grade}", f"@Val!B{r_grade}", f"@Val!E{r_grade}"]]
 ink = lambda k, f: [f"@In!B{INK[k]}", f"@In!E{INK[k]}|{f}"]
-r_reinv = V("  再投資率")
-disc = {"type": "table", "caption": "DCF 折現率、長期成長率與權重", "head": ["項目", "數值"],
-        "rows": [ink("tp_r", "p1"), ink("tp_g", "p1"), ink("tp_roe", "p1"), [f"@Val!A{r_reinv}", f"@Val!B{r_reinv}|p1"], ink("tp_w_dcf", "p0"),
-                 ["情境權重（A／B／C）", [f"@In!E{INK['tp_wA']}|p0", "／", f"@In!E{INK['tp_wB']}|p0", "／", f"@In!E{INK['tp_wC']}|p0"]]]}
+# v0.4：標準版 DCF——折現率（緊接在 DCF 彙總之前；規格 v1.0 直接顯示 WACC、ke、稅後 kd、RONIC、永續成長率）
+r_d0 = V("0.1 DCF")
+vr = lambda p, f: [f"@Val!A{V(p, r_d0)}", f"@Val!B{V(p, r_d0)}|{f}", f"@Val!E{V(p, r_d0)}"]
+disc = {"type": "table", "caption": "DCF 折現率（WACC）、永續成長率與權重", "head": ["項目", "數值", "說明"],
+        "rows": [vr("股權成本", "p2"), vr("稅後債務成本", "p2"), vr("權益占資本", "p1"), vr("WACC", "p2"), vr("永續成長率", "p2"), vr("永續期 RONIC", "p2"),
+                 [f"@In!B{INK['tp_w_dcf']}", f"@In!E{INK['tp_w_dcf']}|p0", ""],
+                 ["情境權重（A／B／C）", [f"@In!E{INK['tp_wA']}|p0", "／", f"@In!E{INK['tp_wB']}|p0", "／", f"@In!E{INK['tp_wC']}|p0"], ""]]}
+d3 = lambda p, f: [f"@Val!A{V(p, r_d0)}"] + [f"@Val!{c}{V(p, r_d0)}|{f}" for c in "BCD"] + [f"@Val!E{V(p, r_d0)}"]
+r_dh = V("項目", r_d0)
+dhead = [f"@Val!A{r_dh}", "情境 A（順利）", "情境 B（平平）", "情境 C（不如預期）", "說明"]
+dcf_main = {"type": "table", "caption": f"@Val!A{r_d0}", "head": dhead,
+            "rows": [d3("明確期 FCFF 現值", "n1"), d3("終值現值", "n1"), d3("企業價值 EV", "n1"), d3("＋淨現金與投資", "n1"), d3("DCF 情境價值推到 12 個月後", "n0"),
+                     [f"@Val!A{r_dcf}", f"@Val!B{r_dcf}|n0", "", "", f"@Val!E{r_dcf}"]]}
+dcf_rest = {"type": "table", "collapse": True, "summary": "展開：DCF 的其他項目（股數、評價日每股價值、終值占比、隱含終值倍數）", "head": dhead,
+            "rows": [d3("評價用稀釋股數", "n3"), d3("DCF 情境每股價值（評價日）", "n1"), d3("  其中：終值現值占 EV", "p1"), d3("  隱含終值 EV／EBITDA", "x1")]}
 dcf_blk = next(b for b in vs if b.get("caption") == f"@Val!A{V('0.1 DCF')}")
 cmp_blk = next(b for b in vs if b.get("caption") == f"@Val!A{V('0.2 Comparable')}")
 rm_kv = next(b for b in vs if b["type"] == "kv")
@@ -168,7 +181,7 @@ nb = [{"type": "bars", "title": "目標價與現價", "fmt": "n0", "items": [
       {"type": "table", "caption": "結論（主要項目）", "head": ["項目", "數值", "說明"], "rows": conc},
       {"type": "table", "collapse": True, "summary": "展開：結論的其他項目（市場主流同業法、與共識的差距拆解、價格帶、歷史倍數檢查、級距）", "head": ["項目", "數值", "說明"], "rows": conc_rest},
       disc]
-nb += split(dcf_blk, ["情境 EPS", "FY2027", "FY2028", "DCF 情境每股價值", "DCF 情境價值推到", "DCF 目標價"], "展開：DCF 的其他年度與股東現金流")
+nb += [dcf_main, dcf_rest]
 cm = lambda p: next(r for r in cmp_blk["rows"] if text(r[0]).strip().startswith(p))[:2]
 kv2 = [[k, v] for k, v in rm_kv["items"]]
 kv_main = [r for r in kv2 if text(r[0]).startswith(("相對倍數調整係數", "Comparable 目標價（相對倍數調整後）"))]
@@ -217,8 +230,8 @@ while wb["Sens"].cell(r_end + 1, 1).value:
     r_end += 1
 for b in se["blocks"]:
     if b.get("caption") == f"@Sens!A{r_tp}":
-        b["head"] = [f"@Sens!{c}{r_tp + 1}" for c in "ABCDEF"]
-        b["rowgen"]["rows"] = f"{r_tp + 2}-{r_end}"
+        b["head"] = [f"@Sens!{c}{r_tp + 1}" for c in "ABCDEFG"]
+        b["rowgen"] = {"sheet": "Sens", "rows": f"{r_tp + 2}-{r_end}", "cols": list("ABCDEFG"), "fmts": ["", "", "n0", "sp1", "n0", "sp1", "n0"]}
 r_w = lab("Sens", "Wattonomics 錨定（三層校準原則）")
 r_wh = lab("Sens", "案例", r_w)
 r_we = r_wh
