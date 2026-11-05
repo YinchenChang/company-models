@@ -768,4 +768,32 @@ for i, (nm, e27, e28, tp) in enumerate([("基準（Sens 主表基準＝情境 A�
         SE[f"{d1}{rr}"] = f"={v}{rr}/{v}${b}-1"; SE[f"{d2}{rr}"] = f"={v}{rr}/{v}${bb}-1"
         SE[f"{v}{rr}"].number_format = "#,##0" if v == "H" else "0.0"
         for d in (d1, d2): SE[f"{d}{rr}"].number_format = "0.0%"
+
+# ---------------- v0.4.2（2026-11-05）：README 展示層與命題回覆（個股 HTML 版面規格 v1.0；只改 README，其他工作表逐格不變） ----------------
+RD["A1"] = str(RD["A1"].value) + "；v0.4.2（2026-11-05）只改展示層（README 新增展示層與命題回覆兩段、HTML 改用新版面 v1.0），其他工作表數值與 v0.4.1 逐格相同"
+def _serow(prefix):
+    return next(r for r in range(1, SE.max_row + 1) if str(SE.cell(r, 1).value or "").startswith(prefix))
+_kgi = _serow("CoWoS 2027 年底產能")
+_V = lambda k, c="B": f"Val!{c}{T[k]}"
+_P = lambda s, y, r: f"PL!{COLOF[(s, y)] if y != 26 else 'B'}{r}"
+_F = lambda s, y: f"PL!{COLOF[(s, y)]}{_fr}"
+_UTL, _HBM = f"CoWoS!C{CR['util']}", f"CoWoS!C{CR['util'] + 1}"
+_rec = f"Val!B{_G + 1}"
+r = RD.max_row + 2
+RD.cell(r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；v0.4.2 起；上方各列原文保留給下游）").font = Font(bold=True); r += 1
+RD.cell(r, 1, "命題：台積電在 AI 算力中扮演的是「供給上限」，而不是分到多少金額比例；以下三個問題依序回答。"); r += 1
+RD.cell(r, 1, "命題 1：AI 只占營收一部分。AI 加速器相關營收占台積電營收的比重有多大，其餘非 AI 業務能否穩定成長。"); r += 1
+RD.cell(r, 1, "命題 2：2027 年誰先卡住。加速器出貨先受 HBM 供給限制，還是先受台積電 CoWoS 先進封裝產能限制。"); r += 1
+RD.cell(r, 1, "命題 3：每股值多少。AI 顆數 × 每顆台積電內容 × 漲價，加上非 AI 成長，推到 EPS 與目標價之後，是否高於現價。"); r += 1
+RD.cell(r, 1, f'="重點 1：合理價值"&IF({_V("upw")}>=0,"高於","低於")&"現價，投資建議"&{_rec}&"。加權目標價約 "&TEXT({_V("tpw")},"#,##0")&" 元，比現價 "&TEXT(px,"#,##0")&" 元"&IF({_V("upw")}>=0,"高 ","低 ")&TEXT(ABS({_V("upw")}),"0.0%")&"。兩種算法差距大：未來現金流折現（DCF）約 "&TEXT({_V("dcftp")},"#,##0")&" 元、同業倍數法（Comparable，已乘本公司相對同業的長期倍數比 "&TEXT(rm_factor,"0.00")&"）約 "&TEXT(tp_comp_adj,"#,##0")&" 元，各占一半。市場分析師平均目標價約 "&TEXT(cons_tp,"#,##0")&" 元，差距主要在 EPS：本模型 12 個月後的前瞻 EPS 比共識低 "&TEXT(-{_V("geps")},"0.0%")&"。"'); r += 1
+RD.cell(r, 1, f'="重點 2：2027 年 HBM 比 CoWoS 更緊。本模型 2027 年 CoWoS 需求約為可用產能（含委外）的 "&TEXT({_UTL},"0.0%")&"，"&IF({_UTL}>1,"已超過","還沒超過")&"滿載；HBM 需求缺口則約為供給的 "&TEXT({_HBM},"0.0%")&"。但這個結論對 CoWoS 產能假設很敏感——敏感度案例「"&Sens!A{_kgi}&"」下，比值升到 "&TEXT(Sens!D{_kgi},"0.0%")&"，CoWoS 會與 HBM 同時受限（這是測試案例，不是門檻）。"'); r += 1
+RD.cell(r, 1, f'="重點 3：情境分歧從 2028 年才開始，資本支出不隨情境下修。2027 年三情境 EPS 都是 "&TEXT({_P("A", 27, PR["eps"])},"0.0")&" 元；2028 年順利、平平、不如預期分別為 "&TEXT({_P("A", 28, PR["eps"])},"0.0")&"、"&TEXT({_P("B", 28, PR["eps"])},"0.0")&"、"&TEXT({_P("C", 28, PR["eps"])},"0.0")&" 元。2028 年資本支出三情境都是 "&TEXT(capex28,"0")&" 十億美元，自由現金流因此降得比淨利快（三情境約 "&TEXT({_F("A", 28)},"0.0")&"、"&TEXT({_F("B", 28)},"0.0")&"、"&TEXT({_F("C", 28)},"0.0")&" 十億美元）。DCF 用 EPS ×（1 − 成長率 ÷ ROE）估股東現金流，沒有直接扣資本支出，可能偏高。"'); r += 1
+r += 1
+RD.cell(r, 1, "命題回覆（HTML 用；依本模型計算逐一回答上面三個命題）").font = Font(bold=True); r += 1
+RD.cell(r, 1, f'="AI 只占營收一部分嗎？答：是。2026 年 AI 相關營收約 "&TEXT({_P("A", 26, PR["ai"])},"0.0")&" 十億美元，占營收 "&TEXT({_P("A", 26, PR["aish"])},"0.0%")&"；到 2028 年，平平情境占 "&TEXT({_P("B", 28, PR["aish"])},"0.0%")&"（順利 "&TEXT({_P("A", 28, PR["aish"])},"0.0%")&"、不如預期 "&TEXT({_P("C", 28, PR["aish"])},"0.0%")&"），非 AI 仍占大多數。非 AI 營收由 2026 年 "&TEXT({_P("A", 26, PR["nonai"])},"0.0")&" 十億美元到 2028 年平平情境 "&TEXT({_P("B", 28, PR["nonai"])},"0.0")&" 十億美元；非 AI 成長率是假設（In 頁 na 系列），不是公司指引。"'); r += 1
+RD.cell(r, 1, f'="2027 年誰先卡住？答："&IF({_UTL}<1,"HBM。","CoWoS 與 HBM 都卡。")&"本模型 2027 年 CoWoS 需求約 "&TEXT(CoWoS!C{CR["dem"]},"#,##0")&" 千片、可用產能（含委外）約 "&TEXT(CoWoS!C{CR["capt"]},"#,##0")&" 千片，需求 ÷ 產能 "&TEXT({_UTL},"0.0%")&"；HBM 需求缺口約為供給的 "&TEXT({_HBM},"0.0%")&"。CoWoS 產能是券商估計（公司不揭露）：敏感度案例「"&Sens!A{_kgi}&"」下比值為 "&TEXT(Sens!D{_kgi},"0.0%")&"，屆時兩者同時受限。"'); r += 1
+RD.cell(r, 1, f'="每股值多少？答：加權目標價約 "&TEXT({_V("tpw")},"#,##0")&" 元（DCF "&TEXT({_V("dcftp")},"#,##0")&"、Comparable 相對倍數調整後 "&TEXT(tp_comp_adj,"#,##0")&"，權重各半），比現價 "&TEXT(px,"#,##0")&" 元"&IF({_V("upw")}>=0,"高 ","低 ")&TEXT(ABS({_V("upw")}),"0.0%")&"，投資建議"&{_rec}&"。DCF 三情境價值（推到 12 個月後）順利、平平、不如預期約 "&TEXT({_V("dcf12")},"#,##0")&"、"&TEXT({_V("dcf12", "C")},"#,##0")&"、"&TEXT({_V("dcf12", "D")},"#,##0")&" 元。比市場平均目標價 "&TEXT(cons_tp,"#,##0")&" 元低，主因是本模型的前瞻 EPS 比共識低 "&TEXT(-{_V("geps")},"0.0%")&"。"'); r += 1
+r += 1
+RD.cell(r, 1, "展示層輔助：Comparable 目標價（相對倍數調整後）的上檔空間（HTML 投資建議橫幅用；加權目標價使用的 Comparable 即此值）")
+RD.cell(r, 2, "=tp_comp_adj/px-1").number_format = "0.0%"
 wb.save(sys.argv[1]); print("saved")
