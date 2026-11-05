@@ -3,7 +3,7 @@
 # 會計年度＝日曆年，FY(t)＝CY(t)，不平移。金額：十億新台幣（NT$B）；每顆價格：千美元（US$K）；EPS：新台幣（基本）。
 # 營收＝NRE（委託設計）＋量產（turnkey：晶圓、封裝、測試轉售，毛利率低）。
 # Trainium 量產營收＝AWS Trainium 顆數（tsmc 成品）× 世芯份額 × 每顆營收（Broadcom 模型的 pa_trn 扣 HBM，與 Marvell 模型同口徑）× k_x × 匯率。
-import sys, os, glob
+import sys, os, glob, re
 import openpyxl
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
@@ -261,8 +261,8 @@ for srow in rows:
         if v is not None:
             IN.cell(r, j, v)
             if not (isinstance(v, str) and v.startswith("=")): IN.cell(r, j).font = BLUE
-    for u_, nm_ in URLNAME.items():          # 網址只列在 Sources 頁；In 頁寫來源名稱
-        s1 = s1.replace(u_, nm_); s2 = s2.replace(u_, nm_)
+    for u_, nm_ in sorted(URLNAME.items(), key=lambda kv: -len(kv[0])):   # 網址只列在 Sources 頁；In 頁寫來源名稱（第三輪清單 18：只換完整網址，長者先換，避免截斷成「stockanalysis.comfinancials/」）
+        s1 = re.sub(re.escape(u_) + r"(?![\w/%?=&.~-])", nm_, s1); s2 = re.sub(re.escape(u_) + r"(?![\w/%?=&.~-])", nm_, s2)
     IN.cell(r, 7, tag); IN.cell(r, 8, s1); IN.cell(r, 9, s2)
     wb.defined_names[key] = DefinedName(key, attr_text=f"In!$E${r}")
     if lo is not None: wb.defined_names[key + "_lo"] = DefinedName(key + "_lo", attr_text=f"In!$D${r}")
@@ -627,7 +627,7 @@ _PE = lambda c, y: f"PL!{FC[y]}{SUMR[(dict(zip('BCD', SC))[c], 'eps')]}"
 EPSR = {}   # v0.2：舊 0.1 節 EPS 列已移除（ROWMAP 相容）
 V.cell(26, 1, "0.2 Comparable（市場主流同業前瞻 P/E）").font = BOLD
 hdr(V, 27, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"])
-PEERS = [("創意（GUC）", "3443.TW", 89.84, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 99.75（2026-10-02 頁面，價格 7900）→ 前瞻 EPS 79.2；P/E＝Yahoo Finance 日線收盤 2026-11-04 7115 ÷ 前瞻 EPS"),
+PEERS = [("創意（GUC）", "3443.TW", 87.53, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 102.85（2026-10-08 頁面，價格 8360）→ 前瞻 EPS 81.28；P/E＝Yahoo Finance 日線收盤 2026-11-04 7115 ÷ 前瞻 EPS"),
          ("智原（Faraday）", "3035.TW", 40.13, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 41.6（2026-10-16 頁面，價格 197.5）→ 前瞻 EPS 4.748；P/E＝Yahoo Finance 日線收盤 2026-11-04 190.5 ÷ 前瞻 EPS"),
          ("聯發科（MediaTek）", "2454.TW", 35.9, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 38.75（2026-10-22 頁面，價格 4010）→ 前瞻 EPS 103.5；P/E＝Yahoo Finance 日線收盤 2026-11-04 3715 ÷ 前瞻 EPS"),
          ("博通（Broadcom）", "AVGO", 18.71, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 18.74（2026-10-30 頁面，價格 326.08）→ 前瞻 EPS 17.4；P/E＝Yahoo Finance 日線收盤 2026-11-04 325.48 ÷ 前瞻 EPS"),
