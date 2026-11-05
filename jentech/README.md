@@ -1,4 +1,12 @@
-# jentech/ — 健策精密（3653.TW）收支與估值模型 v0.1.5
+# jentech/ — 健策精密（3653.TW）收支與估值模型 v0.2
+
+## v0.2（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0 與共用模組 `tools/fcff_dcf.py`（原樣取自 NVIDIA v0.3）：新增 **DCF 頁**（三情境 FY2027–FY2032 FCFF 明細與檢查列）；Val 0.1 節改為折現率緊接 DCF 彙總；Sens 目標價參數改為標準案例。In 頁新增 M2 節，刪除 tp_r、tp_roe（tp_g 只留作 PL 收斂目標）。
+- 參數：rf＝台灣 10 年期公債 1.98%（2026-11-04）；ERP 5%＋台灣國家風險溢酬 0.78%（Damodaran 2026-01）；β＝Damodaran 全球 Electronics (General) 無槓桿 β 1.45（健策無借款，重新加槓桿後仍約 1.45）；g＝MIN(3%, rf)；RONIC＝WACC。折舊、資本支出、營運資金（36%）為近三年實績比例，FY2029 起資本支出收斂到 折舊 ×（1＋5g）。
+- 結果：DCF 目標價 3,247 → 2,493、加權目標價 5,111 → 4,734，上檔 −15.8% → −22.0%，投資建議維持中立。
+- 成品：`dist/20261105_健策個股模型_v0.2.xlsx`／`.html`；v0.1.5 移到 `dist/_待刪除/`。
+
 
 ## v0.1.5（2026-11-05）：HTML 新版面 v1.0（只改展示層）
 
@@ -46,7 +54,7 @@ AI 半導體 Project 電源與散熱次產業，樣板＝`avc/`（奇鋐）；Va
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
 | `dist/20261028_健策個股模型_v0.1.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；檢核全過） |
 
-建置：`python3 jentech/build_jentech.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（Units 頁加速器顆數）、`tsmc/dist`（情境顆數係數）、`avc/dist`（PL 頁同字母情境的 AI 液冷市場與奇鋐份額）；**不修改它們**。`auras/`（雙鴻）未在 main，依工作單讀奇鋐模型的液冷市場口徑。
+建置：`python3 jentech/build_jentech.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（Units 頁加速器顆數）、`tsmc/dist`（情境顆數係數）、`avc/dist`（PL 頁同字母情境的 AI 液冷市場與奇鋐份額）；**不修改它們**。`auras/`（雙鴻）未在 main，依工作單讀奇鋐模型的液冷市場口徑。
 
 ## 情境對照表
 
