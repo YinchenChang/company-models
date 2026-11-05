@@ -143,6 +143,9 @@ upw, rec = V("上檔空間：加權目標價"), row_of("Val", "投資建議", ex
 dcf12 = row_of("Val", "DCF 情境價值推到 12 個月後")
 hc = row_of("README", "展示層輔助：Comparable 目標價（相對倍數調整後）的上檔空間")
 c0 = row_of("Val", "0.3 結論")
+rk = row_of("Val", "股權成本 ke")                       # 0.1 節：ke、kd_at、w_e、WACC、g、RONIC，接著 DCF 彙總 10 列
+assert str(WB["Val"].cell(rk + 15, 1).value).startswith("DCF 目標價（情境加權）")
+fb = row_of("DCF", "營收", start=row_of("DCF", "情境 B（平平）"))   # 情境 B 明細首列（營收）
 va = SEC["valuation"]
 old = va["blocks"]
 dcf_tbl = next(b for b in old if b.get("caption") == "@Val!A60")
@@ -173,9 +176,14 @@ va["blocks"] = [
  {"type": "table", "collapse": True, "summary": "展開：結論的其他項目（市場主流同業法、與共識的差距拆解、價格帶、十年分位、方法）", "head": H5,
   "rowgen": {"sheet": "Val", "rows": f"{c0 + 3},{c0 + 6}-{c0 + 11}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n0", "", "", ""],
              "row_fmt": {str(c0 + 6): {"B": "sp1"}, str(c0 + 7): {"B": "sp1"}, str(c0 + 8): {"B": "sp1"}, str(c0 + 9): {"B": ""}, str(c0 + 10): {"B": "p0", "C": "p0", "D": "p0"}, str(c0 + 11): {"B": ""}}}},
- {"type": "table", "caption": "DCF 折現率與永續假設（直接顯示）", "head": ["項目", "數值"], "rows": [
-   inr("tp_r", "p1"), inr("tp_g", "p1"), inr("tp_roe", "p1"), [f"@Val!A{row_of('Val', '再投資率')}", f"@Val!B{row_of('Val', '再投資率')}|p1"]]},
- dict(dcf_tbl, caption="DCF 彙總（股東權益現金流；三情境）"),
+ {"type": "table", "caption": "DCF 折現率（WACC、股權成本、稅後債務成本、RONIC、永續成長率；直接顯示）", "head": ["項目", "數值", "說明"], "rows": [
+   [f"@Val!A{r}", f"@Val!B{r}|p2", f"@Val!E{r}"] for r in range(rk, rk + 6)]},
+ {"type": "table", "caption": "DCF 彙總（標準版：無槓桿自由現金流 FCFF＋WACC；三情境）", "head": ["項目", "A（順利）", "B（平平）", "C（不如預期）", "說明"], "rows": [
+   [f"@Val!A{r}", f"@Val!B{r}|{fm}", f"@Val!C{r}|{fm}" if r != rk + 15 else "", f"@Val!D{r}|{fm}" if r != rk + 15 else "", f"@Val!E{r}"]
+   for r, fm in zip(range(rk + 6, rk + 16), ["n0", "n0", "n0", "n0", "n2", "n0", "n0", "p1", "x1", "n0"])]},
+ {"type": "table", "collapse": True, "summary": "展開：情境 B（平平）FCFF 逐年明細（DCF 頁；新台幣十億元）", "head": ["@DCF!A5", "@DCF!C5", "@DCF!D5", "@DCF!E5", "@DCF!F5", "@DCF!G5", "@DCF!H5"],
+  "rowgen": {"sheet": "DCF", "rows": f"{fb}-{fb + 10}", "cols": ["A", "C", "D", "E", "F", "G", "H"], "fmts": ["", "n0", "n0", "n0", "n0", "n0", "n0"],
+             "row_fmt": {str(fb + 3): {c: "p1" for c in "CDEFGH"}, str(fb + 5): {c: "p1" for c in "CDEFGH"}, str(fb + 6): {c: "p1" for c in "CDEFGH"}}}},
  {"type": "table", "caption": "Comparable（同業前瞻 P/E × 前瞻 EPS × 相對倍數調整）", "head": ["項目", "數值"], "rows": [
    [f"@Val!A{comp - 2}", f"@Val!B{comp - 2}|x1"], [f"@Val!A{comp - 1}", f"@Val!B{comp - 1}|n2"], [f"@Val!A{comp}", f"@Val!B{comp}|n0"],
    [f"@Val!A{compadj - 1}", f"@Val!B{compadj - 1}|n2"], [f"@Val!A{compadj}", f"@Val!B{compadj}|n0"]]},
@@ -189,8 +197,13 @@ va["blocks"] = [
  {"type": "note", "parts": ["@Val!A23"]}]
 SEC["recon"]["blocks"][0]["rowgen"]["rows"] = "4-14"
 # 敏感度：全部案例表摺疊（龍捲風由轉換器依 |變動| ≥ 10% 分顯示／摺疊）
-_sum = {"@Sens!A3": "展開：全部案例（2027 EPS 與 2027 CoWoS 需求 ÷ 產能）", "@Sens!A14": "展開：淨利 ÷ 營業利益的三種設定", "@Sens!A22": "展開：目標價參數案例（折現率、長期成長、DCF 權重）"}
+_sum = {"@Sens!A3": "展開：全部案例（2027 EPS 與 2027 CoWoS 需求 ÷ 產能）", "@Sens!A14": "展開：淨利 ÷ 營業利益的三種設定",
+        "@Sens!A22": "展開：目標價參數案例（WACC、β、ERP、永續成長率、RONIC、資本支出、營運資金、權益投資、終值替代法、DCF 權重）"}
+_ts = row_of("Sens", "WACC ±1pt"); _te = row_of("Sens", "DCF 權重 0.3／0.7")
 for b in SEC["sens"]["blocks"]:
+    if b["type"] == "table" and b.get("head", [None])[0] == "@Sens!A22":   # v0.5：標準版 DCF 敏感度表（tools/fcff_dcf.write_sens；8 欄）
+        b.update(head=[f"@Sens!{c}22" for c in "ABCDEFG"],
+                 rowgen={"sheet": "Sens", "rows": f"{_ts}-{_te}", "cols": list("ABCDEFG"), "fmts": ["", "", "n0", "sp1", "n0", "sp1", "n0"]})
     if b["type"] == "table" and b.get("head", [None])[0] in _sum:
         b.update(collapse=True, summary=_sum[b["head"][0]])
 SEC["recon"]["blocks"][0]["caption"] = "本模型與公司口徑、共識的對照"
@@ -219,12 +232,16 @@ SPEC = {
     ["毛利率、營業費用與淨利轉換（FY2027 起）", [k for k in I if re.match(r"^gm2[789]_[ABC]$", k)] + ["opex", "ni_op"]],
     ["資本支出與自由現金流", ["capex26", "capex27", "capex28", "capex29", "da_rev", "cx_rev"]],
     ["股價與股數", ["px", "shares"]],
-    ["折現率與目標價規則", ["tp_r", "tp_g", "tp_roe", "tp_w_dcf", "tp_wA", "tp_wB", "tp_wC"]],
-    ["收斂法（FY2030–FY2032）", ["nim10", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fade_mB", "fade_mC"]],
+    ["目標價規則（情境權重、DCF 權重）", ["tp_w_dcf", "tp_wA", "tp_wB", "tp_wC"]],
+    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta_u", "beta_u_us", "beta_de", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
+    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"]],
+    ["自由現金流（折舊、資本支出、營運資金）", ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]],
+    ["收斂法（FY2030–FY2032）", ["tp_g", "nim10", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fade_mB", "fade_mC"]],
     ["固定倍數與市場共識（對帳用）", ["pe_1", "pe_2", "pe_3", "cons_rev27", "cons_eps26", "cons_eps27", "cons_tp", "cons_feps27", "cons_feps28"]],
     ["Wattonomics 錨定（只進敏感度）", ["wta_27", "wta_28", "wta_29"]]]]],
  "blocks_to": {"CoWoS 供需": "CoWoS 先進封裝（瓶頸檢查）", "@CoWoS!F17": "CoWoS 先進封裝（瓶頸檢查）", "標記沿用": "全公司（2026 錨點、利潤率、資本支出、股本與目標價規則）"},
- "main": {"DCF 彙總": ["FY2028", "再投資率", "DCF 情境每股價值", "DCF 情境價值推到 12 個月後", "DCF 目標價"],
+ "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+          "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
           "目標價結論": ["目標價（DCF", "DCF 目標價", "Comparable 目標價（相對", "股價", "上檔空間：加權", "Comparable（相對倍數調整後）的上檔空間", "投資建議", "DCF 情境價值推到", "市場共識"],
           "本模型與公司口徑、共識的對照": ["2026 AI 相關營收", "2026 營收 vs 公司", "2027 EPS（A）vs 共識（", "2028 EPS（A）vs 共識", "2027 CoWoS 需求"]},
  "n_recon": 4,
