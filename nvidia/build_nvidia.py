@@ -951,6 +951,46 @@ assert SE.cell(nn + 3, 1).value is None
 put_case(nn + 3, "Wattonomics 錨定（情境 B × wta）", f"情境 B；CY2027 起顆數與網通 × wta（本頁第 {_w0} 列起）", SB_W, "")
 for _c, _src in (("F", "F4"), ("K", "K4")):   # 隱含價欄：Val 頁於 v0.2 整體下移，沿用基準列的引用
     SE[f"{_c}{nn + 3}"] = SE[_src].value.replace("4*", f"{nn + 3}*", 1)
+# ---------------- v0.2.4（2026-11-05）：只改展示層——README 頁「展示層」「命題回覆」「本版要點」三段（個股 HTML 版面規格 v1.0；公式帶數字，其他頁不變） ----------------
+def _fr(ws, prefix, start=1):
+    for _r in range(start, ws.max_row + 1):
+        _v = ws.cell(_r, 1).value
+        if isinstance(_v, str) and _v.strip().startswith(prefix): return _r
+    raise KeyError((ws.title, prefix))
+_VB = lambda k: f"Val!B{TPL[k]}"
+_E = lambda s_, y: f"PL!{XC[y]}{XR[(s_, 'eps')]}"
+_vadj = _fr(V, "相對倍數調整係數"); _vband = TPL["band"]
+_r_sh = _fr(RC, "2027 年 NVIDIA 金額份額（加速器晶片"); _r_ush = _fr(RC, "2027 年 NVIDIA 顆數份額")
+_r_gm = _fr(RC, "FY2028 毛利率 vs 指引"); _r_gm27 = _fr(RC, "認列後 FY2027 毛利率"); _r_dgm = _fr(RC, "FY2028 毛利率 − FY2027 毛利率"); _r_hbm = _fr(RC, "HBM 成本占由下而上營收")
+_s_u = _fr(SE, "NVIDIA 顆數係數 低"); _s_asic = _fr(SE, "ASIC 金額份額 +5pt"); _s_a0 = _fr(SE, "HBM／LPDDR 吸收比例 0"); _s_a1 = _fr(SE, "HBM／LPDDR 吸收比例 1")
+_s_flat = _fr(SE, "CY2029 顆數與 CY2028 持平"); _s_wta = _fr(SE, "Wattonomics 錨定（情境 B × wta）")
+_T = lambda x, f: f'TEXT({x},"{f}")'
+_PP = lambda x: f'TEXT(({x})*100,"0.0")'
+_SG = '"+0.0%;-0.0%"'
+RD.cell(1, 1).value = RD.cell(1, 1).value.replace("v0.2.2", "v0.2.4") + "；v0.2.4（2026-11-05）只改展示層（README 展示層、命題回覆與本版要點三段，HTML 新版面 v1.0），其他頁數值不變"
+_r = RD.max_row + 2; _r0 = _r
+RD.cell(_r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；v0.2.4 新增，A3、A4、A21–A24 原文保留給下游）").font = Font(bold=True); _r += 1
+RD.cell(_r, 1, "命題：NVIDIA 的營收＝加速器顆數 × 每顆售價＋網通附掛；ASIC 競爭與 HBM 漲價會壓縮份額與毛利，而股價取決於加速器顆數持平之後 EPS 還能不能成長。四個問題如下。"); _r += 1
+RD.cell(_r, 1, f'="命題 1：ASIC 會把 NVIDIA 的加速器金額份額壓到多少——命題設定日曆年 2027 年約 "&TEXT(th_sh_lo,"0%")&"～"&TEXT(th_sh_hi,"0%")&"。"'); _r += 1
+RD.cell(_r, 1, '="命題 2：HBM 漲價會把毛利率壓低多少——命題設定約 2～3 個百分點（FY2028 對 FY2027）。"'); _r += 1
+RD.cell(_r, 1, "命題 3：加速器顆數在 2028 年（CY2028＝FY2029）持平以後，NVIDIA 的 EPS 還能不能成長（看 FY2030 相對 FY2029）。"); _r += 1
+RD.cell(_r, 1, f'="命題 4：現價約為 2027 年（FY2028）EPS 的 "&TEXT(th_mult,"0.0")&" 倍，這是低估，還是見頂前的折價。"'); _r += 1
+RD.cell(_r, 1, f'="重點 1：加權目標價約 "&{_T(_VB("tp"), "0.00")}&" 美元，比現價 "&TEXT(px,"0.00")&" 高 "&{_T(_VB("up"), "0.0%")}&"，投資建議「"&Val!B{REC_ROW}&"」。大上檔的主因是倍數假設，不是 EPS 比市場樂觀：加權目標價由 DCF（"&{_T(_VB("dcf"), "0.00")}&"）與 Comparable 各占一半，其中 Comparable 用相對倍數調整後的 "&TEXT(tp_comp_adj,"0.00")&"（同業前瞻本益比中位數 "&{_T(_VB("med"), "0.0")}&" 倍 × NVIDIA 過去十年相對同業的倍數比 "&TEXT(Val!B{_vadj},"0.00")&"）；不做這個調整的 Comparable 只有 "&{_T(_VB("comp"), "0.00")}&"（上檔 "&{_T(_VB("upc"), "0.0%")}&"）。本模型 FY2028 EPS（情境加權）反而比共識低 "&TEXT(-{_VB("geps")},"0.0%")&"。"'); _r += 1
+RD.cell(_r, 1, f'="重點 2：三種情境在 FY2028 幾乎一樣、分歧從 FY2029 開始：FY2028 EPS 約 "&{_T(_E("B", 2028), "0.00")}&" 美元；FY2029 情境 A（樂觀）／B（基準）／C（保守）為 "&{_T(_E("A", 2029), "0.00")}&"／"&{_T(_E("B", 2029), "0.00")}&"／"&{_T(_E("C", 2029), "0.00")}&"，FY2030 為 "&{_T(_E("A", 2030), "0.00")}&"／"&{_T(_E("B", 2030), "0.00")}&"／"&{_T(_E("C", 2030), "0.00")}&"。DCF 價格帶（推到約 12 個月後）從情境 C 的 "&TEXT(Val!B{_vband},"0.0")&" 到情境 A 的 "&TEXT(Val!C{_vband},"0.0")&"，情境 C 低於現價。"'); _r += 1
+RD.cell(_r, 1, f'="重點 3：單一輸入中最敏感的是 NVIDIA 的出貨顆數。顆數 ×0.9 時 FY2028 EPS "&TEXT(Sens!E{_s_u},{_SG})&"；ASIC 金額份額多 5 個百分點時 "&TEXT(Sens!E{_s_asic},{_SG})&"；HBM／LPDDR 漲價全由 NVIDIA 吸收時 "&TEXT(Sens!E{_s_a1},{_SG})&"。若改用 Wattonomics 錨定的產業量（情境 B × 錨定係數，敏感度案例、未進基準），FY2028 EPS "&TEXT(Sens!E{_s_wta},{_SG})&"、單一路徑目標價 "&TEXT(Sens!{_W["tp_w"]},"0.00")&"。"'); _r += 1
+_r += 1
+RD.cell(_r, 1, "命題回覆（HTML 用；依本模型計算回答開頭四個命題）").font = Font(bold=True); _r += 1
+RD.cell(_r, 1, f'="ASIC 會把 NVIDIA 的金額份額壓到多少？答：本模型（三情境相同）日曆年 2027 年 NVIDIA 的加速器金額份額約 "&TEXT(Recon!C{_r_sh},"0.0%")&"（模組層級），落在命題區間的下緣；顆數份額只有約 "&TEXT(Recon!C{_r_ush},"0.0%")&"，因為 ASIC 每顆金額遠低於 GPU。份額是市場層顆數與各家每顆金額假設算出來的，不是公司揭露。若 ASIC 金額份額再多 5 個百分點，FY2028 EPS "&TEXT(Sens!E{_s_asic},{_SG})&"。"'); _r += 1
+RD.cell(_r, 1, f'="HBM 漲價會把毛利率壓低多少？答：比命題多。情境 B FY2028 毛利率 "&TEXT(Recon!E{_r_gm},"0.0%")&"，比 FY2027 錨點 "&TEXT(Recon!B{_r_gm27},"0.0%")&" 低 "&{_PP(f"-Recon!E{_r_dgm}")}&" 個百分點，也比公司 FY2028 指引中點低 "&{_PP(f"-Recon!F{_r_gm}")}&" 個百分點；同期 HBM 成本占營收（吸收前）上升 "&{_PP(f"Recon!E{_r_hbm}")}&" 個百分點。基準假設 NVIDIA 吸收一半漲價（假設，公司未揭露）；全額轉嫁時 FY2028 EPS "&TEXT(Sens!E{_s_a0},{_SG})&"，全額吸收時 "&TEXT(Sens!E{_s_a1},{_SG})&"。"'); _r += 1
+RD.cell(_r, 1, f'="顆數持平以後 EPS 還能不能成長？答：能，但幅度小。敏感度案例「CY2029 顆數與 CY2028 持平」（以情境 A 為底、網通同步持平）中，FY2030 EPS 只比 FY2029 "&TEXT(Sens!N{_s_flat},{_SG})&"（情境 A 原本為 "&TEXT(Sens!N4,{_SG})&"）。情境 B（基準）的顆數在 CY2028 先降到原始的 "&TEXT(um28_B,"0.00")&" 倍，FY2029 EPS "&{_T(_E("B", 2029), "0.00")}&" 比 FY2028 的 "&{_T(_E("B", 2028), "0.00")}&" 低 "&TEXT(1-{_E("B", 2029)}/{_E("B", 2028)},"0.0%")&"；CY2029 顆數回升後，FY2030 回到 "&{_T(_E("B", 2030), "0.00")}&"（"&TEXT({_E("B", 2030)}/{_E("B", 2029)}-1,{_SG})&"）。"'); _r += 1
+RD.cell(_r, 1, f'="現價是低估，還是見頂前的折價？答：依本模型偏向低估，但結論主要來自倍數假設。現價 "&TEXT(px,"0.00")&" 約為本模型情境 B FY2028 EPS 的 "&TEXT(Val!C{_fr(V, "現價 ÷ FY2028 EPS（模型）")},"0.0")&" 倍，低於同業前瞻本益比中位數 "&{_T(_VB("med"), "0.0")}&" 倍（同業為未來 12 個月口徑，與 FY2028 時點相近但不完全相同）。只看 DCF 的目標價 "&{_T(_VB("dcf"), "0.00")}&"，比現價高 "&TEXT({_VB("dcf")}/px-1,"0.0%")&"；加權目標價 "&{_T(_VB("tp"), "0.00")}&"（"&TEXT({_VB("up")},{_SG})&"）多出的部分主要來自 Comparable 的相對倍數調整：不做調整時加權目標價約 "&TEXT(tp_w_dcf*{_VB("dcf")}+(1-tp_w_dcf)*{_VB("comp")},"0.00")&"（"&TEXT((tp_w_dcf*{_VB("dcf")}+(1-tp_w_dcf)*{_VB("comp")})/px-1,{_SG})&"）。若情境 C 成真（CY2028–29 顆數為原始的 "&TEXT(um28_C,"0.0")&" 倍），DCF 價值 "&TEXT(Val!B{_vband},"0.0")&" 低於現價，這是「見頂前折價」讀法成立時的情形。"'); _r += 1
+_r += 1
+RD.cell(_r, 1, "本版要點與版本沿革（HTML 附錄用）").font = Font(bold=True); _r += 1
+RD.cell(_r, 1, "v0.2.4（2026-11-05）：只改展示層——README 頁新增「展示層」「命題回覆」「本版要點」三段（公式帶數字），HTML 改用個股 HTML 版面規格 v1.0（tools/company_html/relayout.py）；README 以外逐格與 v0.2.3 相同，敏感度沿用。"); _r += 1
+for _p in ("v0.2.3", "2026-10-29", "v0.2.2", "v0.2.1", "v0.2（", "v0.1.2", "v0.1.1"):
+    RD.cell(_r, 1, f"=A{_fr(RD, _p)}"); _r += 1
+from openpyxl.styles import Alignment as _AL
+for _rr in range(_r0, _r): RD.cell(_rr, 1).alignment = _AL(wrap_text=True, vertical="top")
 wb.save(sys.argv[1])
 if os.environ.get("NV_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
