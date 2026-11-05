@@ -315,6 +315,8 @@ def relayout(cfg, xlsx, spec):
                 if len(hit) >= 4:
                     pref = hit
             nb += _split_table(w, b, pref, n_main, f"展開：{_clean(cap, '本表')}的其他項目")
+            if spec.get("rate_table") and pref and pref[0] == CONC_MAIN[0] and not any(x.get("caption") == "DCF 折現率" for x in nb):
+                nb.append({"type": "table", "caption": "DCF 折現率", "head": ["項目", "數值"], "rows": spec["rate_table"]})
         elif b["type"] == "kv":
             nb.append({"type": "table", "caption": "折現率與資本結構", "head": ["項目", "數值"], "rows": [[k, v] for k, v in b["items"]]})
         else:

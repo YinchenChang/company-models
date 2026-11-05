@@ -150,7 +150,7 @@ def check_company(cdir, errs):
                 n_pt += 1
         elif kind == 'lbl':
             n_lbl += 1
-            if cell(ref) != t:
+            if B.date_text(cell(ref)) != t:
                 errs.append(f'{name}：{ref} 標籤「{t[:30]}」≠ xlsx「{str(cell(ref))[:30]}」')
         elif kind == 'na':
             n_na += 1
