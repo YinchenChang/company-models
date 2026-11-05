@@ -112,6 +112,19 @@ def spec_for(wb, nm_block):
     return {"in_skip": skip, "in_groups": [[b, [[g, ks] for g, ks in groups[b].items()]] for b in order if groups[b]]}
 
 
+def _dfmt(lab, pfmt):
+    """DCF 頁明細列的顯示格式（樣板 v0.5.3，第三輪修正第 38 項）：只有比例列用百分比；NOPAT、終值、每股價值不得顯示成 %。"""
+    if lab.startswith(("稅率", "折舊攤銷 ÷", "資本支出 ÷", "終值現值占", "評價日後占")):
+        return "p1"
+    if lab.startswith("折現因子"):
+        return "n4"
+    if lab.startswith("隱含終值 EV／EBITDA"):
+        return "x1"
+    if lab.startswith("每股價值"):
+        return pfmt
+    return "n1"
+
+
 def _find(ws, prefix, col=1):
     for r in range(1, ws.max_row + 1):
         if str(ws.cell(r, col).value or "").startswith(prefix):
@@ -189,8 +202,8 @@ def build(co_dir, xlsx, nm_block=False, pfmt="n0", recon_main=None):
             nb.append({"type": "table", "collapse": True, "summary": "展開：情境 B 的無槓桿自由現金流明細（DCF 頁；情境 A、C 同式）", "caption": f"@DCF!A{b0}",
                        "head": [f"@DCF!{c}{hd}" for c in "ACDEFGH"],
                        "rowgen": {"sheet": "DCF", "rows": f"{b0 + 1}-{b1}", "cols": list("ACDEFGH"), "fmts": ["", "n1", "n1", "n1", "n1", "n1", "n1"],
-                                  "row_fmt": {str(r): {c: ("p1" if "率" in str(D.cell(r, 1).value) or "÷" in str(D.cell(r, 1).value) or "占" in str(D.cell(r, 1).value) else ("n4" if "因子" in str(D.cell(r, 1).value) else "n1")) for c in "CDEFGH"}
-                                              for r in range(b0 + 1, b1 + 1) if any(k in str(D.cell(r, 1).value or "") for k in ("率", "÷", "占", "因子"))}}})
+                                  "row_fmt": {str(r): {c: _dfmt(str(D.cell(r, 1).value or ""), pfmt) for c in "CDEFGH"}
+                                              for r in range(b0 + 1, b1 + 1) if _dfmt(str(D.cell(r, 1).value or ""), pfmt) != "n1"}}})
             i += 1
             continue
         nb.append(b)
@@ -237,12 +250,13 @@ def build(co_dir, xlsx, nm_block=False, pfmt="n0", recon_main=None):
     intro = secs["drivers"].get("intro")
     spec["blocks_to"] = {intro: first} if intro else {}
     spec["main"] = {"0.3 結論": ["目標價（DCF 與 Comparable 加權）", "市場共識目標價", "上檔空間：加權目標價", "DCF ÷ 現價", "價格帶"],
-                    "0.1 DCF": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+                    "0.1 DCF": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "＋Stub 期 FCFF", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
                     "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"]}
     try:
         _find(V, "淨現金滾到評價日")
     except KeyError:   # 未設 stub 期（樣板 v0.5.2 前）
         spec["main"]["0.1 DCF"].remove("淨現金滾到評價日")
+        spec["main"]["0.1 DCF"].remove("＋Stub 期 FCFF")
     if recon_main:
         spec["main"]["與共識、公司指引的對照"] = recon_main
     old_tornado = {json.dumps(b.get("rows")): b.get("title") for b in secs["sens"]["blocks"] if b["type"] == "tornado"}

@@ -58,7 +58,7 @@ for s_, f_, t_ in (("A", "=tp_g+0.02", "tp_g＋2pt"), ("B", "=tp_g", "＝tp_g"),
 # 記憶體為循環股：收斂期改收斂到「循環中段」淨利率（主串 2026-10-25 定預設；Andy 可改），不延續高峰利潤率
 inp("cyc_mA", "循環中段係數：情境 A 淨利率收斂目標 ÷ 十年平均", "x", None, 1.2, None, "Assumed", "Andy 可改（預設 1.2；記憶體循環股，收斂期不延續 FY2029 高峰利潤率）")
 inp("cyc_mC", "循環中段係數：情境 C 淨利率收斂目標 ÷ 十年平均", "x", None, 0.8, None, "Assumed", "Andy 可改（預設 0.8）")
-for s_, f_, t_ in (("A", "=nim10*cyc_mA", "十年平均 × cyc_mA"), ("B", "=nim10", "＝十年平均淨利率"), ("C", "=nim10*cyc_mC", "十年平均 × cyc_mC")):
+for s_, f_, t_ in (("A", "=nim10*cyc_mA", "十年平均 × cyc_mA"), ("B", "=nim10*cyc_mB", "十年平均 × cyc_mB（＝1）"), ("C", "=nim10*cyc_mC", "十年平均 × cyc_mC")):   # 樣板 v0.5.3：情境 B 改乘 cyc_mB（＝1，數值不變）
     inp(f"fade_m{s_}", f"情境 {s_}：FY2032 淨利率收斂目標（循環中段：{t_}）", "%", None, f_, None, "Derived", "In 頁 nim10 × 循環中段係數；FY2030 起由 FY2029 淨利率線性收斂，FY2032 達到")
 PXU = next(x[2] for x in C["inputs"] if x[0] == "px")
 inp("cons_tp", "市場共識目標價（賣方平均；低／高＝最低／最高）", PXU, TPC["cons_tp"][1], TPC["cons_tp"][0], TPC["cons_tp"][2], "Interested-party", TPC["cons_tp"][3])
@@ -91,7 +91,12 @@ _FDP.update(
 )
 STUB = DC.get("stub")
 if STUB:   # 樣板 v0.5.2：stub 期（資產負債表日 → 評價日 2026-12-31）
-    _FDP["stub"] = {k: v for k, v in STUB.items() if k != "fcff"}
+    _FDP["stub"] = {k: v for k, v in STUB.items() if k not in ("fcff", "fcff_label")}
+    if STUB.get("fcff"):   # 樣板 v0.5.3（第三輪修正）：自訂 stub FCFF（模型季度數）時，stub_frac 說明改依實際口徑（模組預設寫「第一年 FCFF × 本值」）
+        _d = lambda s: "DATE({},{},{})".format(*[int(x) for x in s[:10].split("-")])
+        _FDP["stub"]["frac"] = (f"=({_d(STUB['val_date'])}-{_d(STUB['bs_date'])})/365", "Derived",
+                                f"＝(評價日 {STUB['val_date']} − 資產負債表日 {STUB['bs_date']}) ÷ 365（展示用）",
+                                f"本公司 stub FCFF 不用本值：直接取{STUB['fcff_label']}（Val 頁「＋Stub 期 FCFF」列公式）")
 for _row in FD.in_rows(_FDP):
     if _row[0] == "sec": sec(_row[1])
     else: inp(*_row[:7], _row[7] + ("；" + _row[8] if _row[8] and _row[8] != "—" else ""))
@@ -99,7 +104,11 @@ inp("beta_u", DC["beta_u"][1], "x", None, DC["beta_u"][0], None, DC["beta_u"][4]
 for _bx in DC.get("beta_extra", []):
     inp(_bx[0], _bx[1], "x", None, _bx[2], None, _bx[4] if len(_bx) > 4 else "Analogy", _bx[3])
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 評價用股數 sh_v)；與 WACC 權重同一口徑")
-TPKEYS = ["tp_wA", "tp_wB", "tp_wC", "tp_g", "tp_w_dcf", "nim10", "fade_gA", "fade_gB", "fade_gC", "cyc_mA", "cyc_mC", "fade_mA", "fade_mB", "fade_mC", "cons_tp"] + [x[0] for x in TPC["cons"]] + list(FD.JUDG)
+# 樣板 v0.5.3（2026-11-06，第三輪修正第 39 項）：情境 B 的循環中段係數補成輸入列（＝1；原 fade_mB 直接＝nim10，情境驅動對照的 B 欄為佔位 0）。
+# 放在模型輸入最後（M2 節之後），不位移上方各列；只有其後的「情境驅動對照」一節下移。
+sec("目標價參數（續）：情境 B 循環中段係數（樣板 v0.5.3）")
+inp("cyc_mB", "循環中段係數：情境 B 淨利率收斂目標 ÷ 十年平均", "x", None, 1, None, "Assumed", "＝1：情境 B 收斂到十年平均淨利率（fade_mB＝nim10 × 本值）；v0.5.3 前 fade_mB 直接＝nim10，數值不變。Andy 可改")
+TPKEYS = ["tp_wA", "tp_wB", "tp_wC", "tp_g", "tp_w_dcf", "nim10", "fade_gA", "fade_gB", "fade_gC", "cyc_mA", "cyc_mB", "cyc_mC", "fade_mA", "fade_mB", "fade_mC", "cons_tp"] + [x[0] for x in TPC["cons"]] + list(FD.JUDG)
 YEL = PatternFill("solid", fgColor="FFF2CC")
 INROW = {}
 r = 4
@@ -441,6 +450,9 @@ for _c in "CDEFGH": DCFW.column_dimensions[_c].width = 13
 SDCF = FD.write_summary(wb, V, r_, RDCF, list(MKT.SCEN), ["tp_wA", "tp_wB", "tp_wC"], fmt=fmtp, beta_note=DC.get("beta_note"),
                         title=f"0.1 DCF（標準版：無槓桿自由現金流 FCFF＋WACC；樣板 v0.5；{FYL.format(YRS[0])}–{FYL.format(FADEY[-1])} 明確期＋永續；明細見 DCF 頁）")
 T.update(h01=SDCF["h"], dcfv=SDCF["dcfv"], dcf12=SDCF["v12"], dcftp=SDCF["dcf"], tvsh=SDCF["tvsh"], mult=SDCF["mult"], wacc=SDCF["wacc"], ke=SDCF["ke"])
+if STUB and STUB.get("fcff"):   # 樣板 v0.5.3：Val「＋Stub 期 FCFF」說明依實際口徑（模組預設寫「第一年 FCFF × stub_frac」）
+    _sr = SDCF["stub"]; assert str(V.cell(_sr, 1).value).startswith("＋Stub 期 FCFF"), V.cell(_sr, 1).value
+    V[f"E{_sr}"] = f'="資產負債表日 "&bs_date&"；stub 期 FCFF＝{STUB["fcff_label"]}（三情境相同；不用 stub_frac）"'
 for y in YRS6:
     T[f"eps{y}"] = None   # 樣板 v0.5：情境 EPS 列移除（Y 頁），保留鍵避免舊引用
 assert FD.summary_rows(bool(STUB)) <= 20
@@ -695,6 +707,20 @@ import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, os.path.basename(os.path.dirname(os.path.abspath(sys.argv[1]))))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, C.get("in_layout_version", C["version"]), "2026-10-30")  # In 頁版面（個股模型原則第 8 節；數值不變）
+# 樣板 v0.5.3（第三輪修正第 15、39 項）：情境驅動對照的收斂法三列改中性列名（共用工具取情境 C 的列名）；循環中段係數情境 B 由新增輸入列 cyc_mB（＝1）帶入（原佔位 0）
+_INW = wb["In"]
+_SCN_FIX = {"scn_fade_g": ("FY2032 合併營收年增收斂目標（tp_g ± 2pt）", None, None),
+            "scn_cyc_m": ("循環中段係數：淨利率收斂目標 ÷ 十年平均", None, None),
+            "scn_fade_m": ("FY2032 淨利率收斂目標（循環中段：十年平均 × 係數）", None, None)}
+for _r in range(4, _INW.max_row + 1):
+    _k = str(_INW.cell(_r, 1).value or "")
+    if _k in _SCN_FIX:
+        _lab, _b, _h = _SCN_FIX[_k]
+        _INW.cell(_r, 2, _lab)
+        if _b is not None:
+            assert _INW.cell(_r, 5).value in (0, "0", None), (_k, _INW.cell(_r, 5).value)
+            _INW.cell(_r, 5, _b); _INW.cell(_r, 5).number_format = _INW.cell(_r, 4).number_format
+        if _h: _INW.cell(_r, 8, _h)
 
 
 # 樣板 v0.4.2（2026-11-05，個股 HTML 版面規格 v1.0）：README 頁「展示層」「命題回覆」兩段（HTML 讀；只改 README，其他頁不動）。
@@ -763,7 +789,8 @@ def _pres(wb, C):
     REF["verdict"] = f'IF({_u}>0.25,"撐得住，而且有明顯上檔",IF({_u}>=-0.25,"大致在合理範圍內，上下檔有限","撐不住"))'
     REF["updesc"] = f'IF({_u}>0.25,"遠高於",IF({_u}>=0,"略高於",IF({_u}>=-0.25,"略低於","遠低於")))'
     REF["nmsupport"] = f'IF(MAX({REF["nmshC28"]},{REF["nmshC29"]})<0.2,"撐住的部分有限，谷底時的盈餘仍主要看記憶體","可撐住相當比例的盈餘")'
-    REF["dcfall"] = f'IF(MIN(Val!B{T["dcfpx"]}:D{T["dcfpx"]})>1,"三種情境的 DCF 價值都高於現價","並非三種情境的 DCF 價值都高於現價")'
+    REF["dcfall"] = (f'IF(MIN(Val!B{T["dcfpx"]}:D{T["dcfpx"]})>1,"三種情境的 DCF 價值都高於現價",'
+                     f'IF(MAX(Val!B{T["dcfpx"]}:D{T["dcfpx"]})<1,"三種情境的 DCF 價值都低於現價","DCF 價值有的情境高於、有的低於現價"))')   # 樣板 v0.5.3：補「三種情境都低於現價」分支
     REF["shchgB29"] = f"(Y!{yc('B', 3)}{R['sh']}/Y!C{R['sh']}-1)"
     # 加權目標價上檔的來源拆解（工作單補充規則 B）：DCF 貢獻 tp_w_dcf ×（DCF − 現價），Comparable 貢獻（1 − tp_w_dcf）×（調整後 Comparable − 現價）；
     # Comparable ÷ 現價 ＝（前瞻每股淨值 ÷ 第 1 年底每股淨值）×（調整後同業倍數 ÷ 現價隱含第 1 年底 P/B），兩者都以情境加權每股淨值計、同一時間窗。
@@ -775,8 +802,16 @@ def _pres(wb, C):
     REF["upsrc"] = f'IF({REF["dcfsh"]}>=0.6,"上檔主要來自 DCF",IF({REF["dcfsh"]}<=0.4,"上檔主要來自 Comparable","上檔由 DCF 與 Comparable 約各半貢獻"))'
     REF["compdrv"] = f'IF({REF["bvg"]}>{REF["pmg"]},"每股淨值成長大於倍數差","倍數差大於每股淨值成長")'
     REF["upc"] = f"({REF['comp']}/px-1)"
+    REF["dirsame"] = f'IF(({REF["dcftp"]}-px)*(tp_comp_adj-px)>0,"兩種方法方向一致","兩種方法方向相反")'   # 樣板 v0.5.3
     for k, lab in (("dram", "一般 DRAM 收入 +20%"), ("hbm", "HBM 收入 +30%"), ("nand", "NAND 收入 +30%")):
         REF[f"s_{k}_l"] = f"Sens!B{srow[lab]}"; REF[f"s_{k}"] = f"Sens!E{srow[lab]}"
+    # 樣板 v0.5.3（第三輪修正第 40 項）：Sens 營業利益四組（第 1 年 A、第 2 年 B、第 2 年 C、第 3 年 C）各收入線 ± 的公式引用，取代 README 寫死的數字
+    _grp = [f"{FYL.format(YRS[n - 1])} {s}" for s, n in (("A", 1), ("B", 2), ("C", 2), ("C", 3))]
+    _sg = {(str(SN.cell(r_, 1).value), str(SN.cell(r_, 2).value)): r_ for r_ in range(4, T["sens0"])}
+    for gi, g in enumerate(_grp, 1):
+        REF[f"sg{gi}"] = f'"{g}"'
+        for k, (lo, hi) in (("dram", ("一般 DRAM 收入 −20%", "一般 DRAM 收入 +20%")), ("hbm", ("HBM 收入 −30%（價格或份額）", "HBM 收入 +30%")), ("nand", ("NAND 收入 −30%", "NAND 收入 +30%"))):
+            REF[f"sg{gi}_{k}_lo"] = f"Sens!E{_sg[(g, lo)]}"; REF[f"sg{gi}_{k}_hi"] = f"Sens!E{_sg[(g, hi)]}"
     a, h, n = (f"ABS(Sens!E{srow[x]})" for x in ("一般 DRAM 收入 +20%", "HBM 收入 +30%", "NAND 收入 +30%"))
     REF["s_top"] = f'IF({a}>=MAX({h},{n}),"一般 DRAM",IF({h}>={n},"HBM","NAND"))'
     sc = yc("A", 1)      # Sens 第一組＝第 1 年情境 A
