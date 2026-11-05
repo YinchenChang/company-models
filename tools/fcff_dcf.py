@@ -1,5 +1,5 @@
 # 標準版 DCF：無槓桿自由現金流（FCFF）＋ WACC — 個股模型共用模組 v1（2026-11-05；NVIDIA v0.3 試作）
-# 依據：工作單「AI半導體 個股 DCF 改為標準版」（Andy 2026-11-05 20:42、20:45）；範本 spacex/build_spacex.py Val 頁、meta/build_meta.py β 寫法。
+# 依據：工作單「AI半導體 個股 DCF 改為標準版」（Andy 2026-11-05 20:42、20:45）、docs/plan/個股DCF標準規格.md v1.0；範本 spacex/build_spacex.py Val 頁、meta/build_meta.py β 寫法。
 #
 # 方法（每情境、每年；明確期到最後一個會計年度，通常 FY2032）
 #   FCFF ＝ NOPAT ＋ 折舊攤銷 − 資本支出 − 營運資金增加；NOPAT ＝ EBIT ×（1 − 稅率）；股權報酬視為費用、不加回
@@ -9,7 +9,7 @@
 #   g ＝ MIN(g_cap, rf)（Andy 2026-11-05 20:45：3%，且不超過計價幣別 10 年期公債殖利率）；RONIC ＝ WACC ＋ ronic_sp
 #   終值（最後一年年底）＝ NOPAT(最後一年) ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g）
 #   期中慣例：第一年只計評價日後的 frac0（例 1/12），折現年數 frac0 ÷ 2；之後各年 frac0 ＋ (k − 1) ＋ 0.5；終值在 frac0 ＋ n − 1
-#   每股價值＝MAX(0, (EV ＋ 淨現金與投資) ÷ sh_v)；推到目標時點 ×（1＋ke）^t_tgt
+#   每股價值＝MAX(0, (EV ＋ 淨現金與投資) ÷ sh_v)；推到目標時點 ×（1＋ke）^t_tgt − 期間每股股利 dps_tgt
 #   淨現金與投資 dcf_nc ＝ cash_v ＋ inv_k × inv_v − debt_v − lease_v − mi_v
 #
 # 用法（四步；範例見 nvidia/build_nvidia.py「v0.3」段）
@@ -24,7 +24,9 @@
 #   4. Sens：FD.write_sens(SE, r0, R, names, weights, comp_ref)   標準案例（WACC ±1pt、β、ERP、g ±1pt、RONIC＝WACC＋5pt、
 #      資本支出 ÷ 營收 ±1pt、營運資金 ÷ 營收、淨現金不含權益投資、DCF 權重 0.3／0.7）對加權目標價；每格為閉式公式（與明細同式，
 #      write_sens 另寫一列核對：閉式基準 − 明細基準＝0）。comp_ref 寫成「Val!$B$<列>」時，tools/relative_multiple.apply 會改成 tp_comp_adj。
-#   FD.value_expr(R, name, **over) 回傳單一路徑每股價值的閉式公式（over：w、ke、g、ronic、cxd、wc、nc），可用於其他對照路徑。
+#   5. 檢查列：FD.write_checks(ws, r0, nc_bs=…) 寫 WACC 由 In 頁輸入重算、淨現金與資產負債表核對（規格第 4 節）；明細每路徑另有
+#      「FCFF 各列加總 − FCFF」與「終值占 EV 是否超過 80%」兩列。
+#   FD.value_expr(R, name, **over) 回傳單一路徑每股價值的閉式公式（over：w、ke、g、ronic、cxd、wc、nc、tv="alt"），可用於其他對照路徑。
 #
 # 只用 openpyxl；不讀寫其他資料夾。各公司版面不同，本模組只管 FCFF／WACC 區塊；列標籤沿用下游（markets/invest_map、tools/target_summary）
 # 讀取的「DCF 目標價（情境加權）」「DCF 情境價值推到 12 個月後」。
@@ -35,7 +37,7 @@ from openpyxl.workbook.defined_name import DefinedName
 BOLD = Font(bold=True); BLUE = Font(color="0000FF")
 HDR = PatternFill("solid", fgColor="DDEBF7"); KEY = PatternFill("solid", fgColor="FFF2CC"); SUB = PatternFill("solid", fgColor="EDEDED")
 SUMMARY_ROWS = 18
-IN_KEYS = ("rf", "erp", "crp", "beta", "blume_a", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt",
+IN_KEYS = ("rf", "erp", "crp", "beta", "blume_a", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt",
            "debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v", "fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc")
 JUDG = ("erp", "crp", "beta", "g_cap", "ronic_sp", "fc_cx", "fc_cx_ss", "fc_wc", "inv_k")   # 黃底（Andy 可改）
 
@@ -58,6 +60,7 @@ def in_rows(P):
       sh：(值或公式, 標記, 來源1, 來源2)          評價用稀釋股數
       fc_da、fc_cx、fc_wc：(低, 基準, 高, 標記, 來源1, 來源2)；fc_da_ss、fc_cx_ss（可省略，預設＝近期值）：(基準, 標記, 來源1, 來源2)
       g_cap（預設 0.03）、ronic_hi（預設 0.05）、t_tgt：(值, 說明)（預設 1 年）
+      dps：(值或公式, 標記, 來源1, 來源2)  評價日到目標時點的每股股利合計（預設 0；規格第 3 節「扣除期間股利」）
     回傳 In 列清單。"""
     a, sh = P.get("amt", "US$B"), P.get("shu", "十億股")
     rows = [("sec", f"M2. 折現率與無槓桿自由現金流（v0.3 標準版 DCF；tools/fcff_dcf.py；評價日 {P['date']}；黃底＝Andy 可改）")]
@@ -90,6 +93,8 @@ def in_rows(P):
          "工作單 2026-11-05：RONIC＝WACC（同 SpaceX、Alphabet）", "Sens：WACC＋5pt"))
     tt = P.get("t_tgt", (1.0, "目標價為 12 個月後（與 v0.2 DCF 目標價同一時點）"))
     add(("t_tgt", "目標時點距評價日", "年", None, tt[0], None, "Derived", tt[1], "每股價值 ×（1＋ke）^t_tgt"))
+    dp = P.get("dps", (0, "Assumed", "未配息或未設定", "—"))
+    add(("dps_tgt", "評價日到目標時點的每股股利合計（推到目標時點後扣除）", P.get("ccy", "US$"), None, dp[0], None, dp[1], dp[2], dp[3]))
     for key, lab in (("debt", "債務本金（WACC 負債與淨負債）"), ("lease", "租賃負債（WACC 負債與淨負債）"), ("cash", "現金與有價債務證券"),
                      ("inv", "非營業投資（權益證券等；評價時加入）"), ("mi", "少數股權")):
         v = P[key]; add((f"{key}_v", lab, a, None, v[0], None, v[1], v[2], v[3]))
@@ -173,11 +178,13 @@ def write_detail(ws, r0, paths, years, frac0, conv_from=None, title=None, fmt="#
         one("pvtv", "終值現值", f"=C{D['tv']}/(1+wacc)^{R['tvt']}")
         one("ev", "企業價值 EV", f"=C{D['pvx']}+C{D['pvtv']}")
         one("val", "每股價值（評價日）＝MAX(0,(EV＋淨現金與投資) ÷ 股數)", f"=MAX(0,(C{D['ev']}+dcf_nc)/sh_v)")
-        one("v12", "每股價值推到目標時點 ×（1＋ke）^t_tgt", f"=C{D['val']}*(1+ke)^t_tgt", nt="DCF 情境價值推到 12 個月後")
+        one("v12", "每股價值推到目標時點 ×（1＋ke）^t_tgt − 期間股利", f"=C{D['val']}*(1+ke)^t_tgt-dps_tgt", nt="DCF 情境價值推到 12 個月後")
         one("tvsh", "終值現值占 EV", f"=C{D['pvtv']}/C{D['ev']}", "0.0%")
         one("mult", "隱含終值 EV／EBITDA（最後一年後一年預估）", f"=C{D['tv']}/(({last}{D['ebit']}+{last}{D['da']})*(1+g_tv))", "0.0", "EBITDA＝EBIT＋折舊攤銷")
         one("ssck", "一致性：最後一年資本支出 ≥ 折舊 ×（1＋g）", f'=IF({last}{D["cx"]}>={last}{D["da"]}*(1+g_tv),"通過","未通過")', "@")
         one("fsum", "明確期 FCFF 合計（× 評價日後比例，未折現）", f"=SUMPRODUCT(C{D['fcff']}:{last}{D['fcff']},C${fr}:{last}${fr})")
+        one("ck_f", "檢查：FCFF 各列加總 − FCFF（各年合計，應為 0）", f"=SUM(C{D['nopat']}:{last}{D['nopat']})+SUM(C{D['da']}:{last}{D['da']})-SUM(C{D['cx']}:{last}{D['cx']})-SUM(C{D['dwc']}:{last}{D['dwc']})-SUM(C{D['fcff']}:{last}{D['fcff']})", "0.000000")
+        one("ck_tv", "檢查：終值占 EV 超過 80%？（規格第 4 節；超過時在報告標示）", f'=IF(C{D["tvsh"]}>0.8,"超過 80%，需在報告標示","未超過")', "@")
         R["paths"][p["name"]] = D
         r += 1
     R["end"] = r
@@ -189,17 +196,23 @@ def _ref(R, row, a=None, b=None, abs_=True):
     return f"{s}!${c0}${row}:${c1}${row}"
 
 
-def value_expr(R, name, w="wacc", ke="ke", g="g_tv", ronic=None, cxd="fc_cx_d", wc="fc_wc", nc="dcf_nc", push=True):
-    """單一路徑每股價值的閉式公式（不含開頭「=」）；與明細同式。push＝True 時乘（1＋ke）^t_tgt。"""
+def value_expr(R, name, w="wacc", ke="ke", g="g_tv", ronic=None, cxd="fc_cx_d", wc="fc_wc", nc="dcf_nc", push=True, tv="vd"):
+    """單一路徑每股價值的閉式公式（不含開頭「=」）；與明細同式。push＝True 時乘（1＋ke）^t_tgt 再扣 dps_tgt。
+    tv＝"vd"：價值驅動式（基準）；"alt"：終值改用最後一年 FCFF ×（1＋g）÷（WACC − g）（規格第 4 節敏感度）。"""
     D = R["paths"][name]; s = R["sheet"]; last = R["col"][R["years"][-1]]
     ronic = ronic or f"({w}+ronic_sp)"
     rg = lambda k: _ref(R, D[k])
     cx = f"({rg('cxr')}-fc_cx_d+{cxd})"
     fc = f"({rg('nopat')}+{rg('rev')}*({rg('dar')}-{cx})-{wc}*{rg('drev')})"
     pvx = f"SUMPRODUCT({fc}*{_ref(R, R['frac'])}/(1+{w})^{_ref(R, R['t'])})"
-    tv = f"{s}!${last}${D['nopat']}*(1+{g})*(1-{g}/{ronic})/({w}-{g})/(1+{w})^{R['tvt']}"
-    v = f"MAX(0,({pvx}+{tv}+{nc})/sh_v)"
-    return f"{v}*(1+{ke})^t_tgt" if push else v
+    L = lambda k: f"{s}!${last}${D[k]}"
+    if tv == "alt":
+        fl = f"({L('nopat')}+{L('rev')}*({L('dar')}-({L('cxr')}-fc_cx_d+{cxd}))-{wc}*{L('drev')})"
+        tvx = f"{fl}*(1+{g})/({w}-{g})/(1+{w})^{R['tvt']}"
+    else:
+        tvx = f"{L('nopat')}*(1+{g})*(1-{g}/{ronic})/({w}-{g})/(1+{w})^{R['tvt']}"
+    v = f"MAX(0,({pvx}+{tvx}+{nc})/sh_v)"
+    return f"({v}*(1+{ke})^t_tgt-dps_tgt)" if push else v
 
 
 # ---------------- 3. Val 摘要 ----------------
@@ -243,7 +256,7 @@ def write_summary(wb, V, r0, R, names, weights, cols="BCD", fmt="#,##0.00", titl
     _dn(wb, "dcf_nc", f"{V.title}!$B${S['nc']}")
     put("sh", "評價用稀釋股數", ["=sh_v"] * len(names), "#,##0.000")
     put("dcfv", "DCF 情境每股價值（評價日）", x("val"))
-    put("v12", "DCF 情境價值推到 12 個月後（×（1＋ke）^t_tgt）", x("v12"), fill=KEY)
+    put("v12", "DCF 情境價值推到 12 個月後（×（1＋ke）^t_tgt − 期間股利）", x("v12"), fill=KEY)
     put("tvsh", "  其中：終值現值占 EV", x("tvsh"), "0.0%")
     put("mult", "  隱含終值 EV／EBITDA", x("mult"), "0.0", note="終值 ÷ 最後一年後一年 EBITDA（EBIT＋折舊）")
     put("dcf", "DCF 目標價（情境加權）", ["=" + "+".join(f"{wgt}*{c}{S['v12']}" for wgt, c in zip(weights, cols))], fill=KEY,
@@ -263,6 +276,7 @@ SENS_CASES = [
     ("資本支出 ÷ 營收 ±1pt", "每年資本支出比例 −1pt／＋1pt", dict(cxd="fc_cx_d_lo"), dict(cxd="fc_cx_d_hi"), "fc_cx_d"),
     ("營運資金 ÷ 營收 低／高", '="營運資金比例 "&TEXT(fc_wc_lo,"0%")&"／"&TEXT(fc_wc_hi,"0%")&"（基準 "&TEXT(fc_wc,"0.0%")&"）"', dict(wc="fc_wc_lo"), dict(wc="fc_wc_hi"), "fc_wc"),
     ("淨現金不含權益投資", "權益證券等非營業投資不計（只有低）", dict(nc="(cash_v+inv_k_lo*inv_v-debt_v-lease_v-mi_v)"), None, "inv_k"),
+    ("終值改用 FCFF ×（1＋g）", "終值＝最後一年 FCFF ×（1＋g）÷（WACC − g）（替代法；只有高）", None, dict(tv="alt"), ""),
     ("DCF 權重 0.3／0.7", "tp_w_dcf 0.3／0.7", "w03", "w07", "tp_w_dcf"),
 ]
 
@@ -308,3 +322,19 @@ def write_sens(SE, r0, R, names, weights, comp_ref, base_ref, w_dcf="tp_w_dcf", 
     SE.cell(r, 1, "檢查：閉式公式的基準 − 基準加權目標價（應為 0；閉式與 DCF 頁明細同式）")
     SE.cell(r, 3, tp({}) + f"-{base_ref}").number_format = "0.000000"
     return first, last, r + 1
+
+
+# ---------------- 5. 檢查列（規格第 4 節） ----------------
+def write_checks(ws, r0, px="px", nc_bs=None, nc_note=""):
+    """ws 第 r0 列起：WACC 由 In 頁輸入重算 − Val 的 WACC（應為 0）；nc_bs（資產負債表各科目的公式字串，不含「=」）給定時，
+    另寫「淨現金與投資 − 資產負債表」（應為 0）。回傳下一列。"""
+    ws.cell(r0, 1, "檢查列（docs/plan/個股DCF標準規格.md 第 4 節）").font = BOLD
+    r = r0 + 1
+    ws.cell(r, 1, "檢查：WACC 由 In 頁輸入重算 − Val 的 WACC（應為 0）")
+    ws.cell(r, 3, f"=({px}*sh_v*(rf+beta*(erp+crp))+(debt_v+lease_v)*kd*(1-tax_w))/({px}*sh_v+debt_v+lease_v)+wacc_adj-wacc").number_format = "0.000000"
+    r += 1
+    if nc_bs:
+        ws.cell(r, 1, "檢查：淨現金與投資 − 資產負債表科目（應為 0）"); ws.cell(r, 2, nc_note)
+        ws.cell(r, 3, f"=dcf_nc-({nc_bs})").number_format = "0.000000"
+        r += 1
+    return r
