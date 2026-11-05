@@ -24,7 +24,7 @@ def _rows(ws, prefix, col=1):
 
 def apply(wb, stub_note=None, stub_src=None, stub_lab=None, g_capped=False, obs_extra=None, readme_repl=()):
     """stub_note：Val「＋Stub 期 FCFF」列 E 欄說明（字串或公式）；stub_src：In 頁 stub_frac 列 I 欄說明；stub_lab：DCF 頁每股價值列 B 欄說明。
-    g_capped：g 受 rf 上限（g_tv 高＝基準）。obs_extra：{README 列首字串: 新值或 None}（公司自訂的舊文處理）。readme_repl：[(舊, 新)] README 字串替換。"""
+    g_capped：g 受 rf 上限（g_tv 高＝基準）。obs_extra：{README 列首字串: 新值或 None}（公司自訂的舊文處理）。readme_repl：[(舊, 新)] 重點觀察 1 的字串替換（現價日期等）。"""
     log = []
     # 23：情境名稱
     n = 0
@@ -100,8 +100,8 @@ def apply(wb, stub_note=None, stub_src=None, stub_lab=None, g_capped=False, obs_
         elif v.startswith(("重點觀察 2：", "重點觀察 3：")):
             c.value = None if done2 else OBS_NOTE
             done2 = True
-        for a, b in readme_repl:
-            if isinstance(c.value, str) and a in c.value:
+        if isinstance(c.value, str) and "重點觀察 1：" in c.value[:20]:   # readme_repl 只用於重點觀察 1（現價日期等）
+            for a, b in readme_repl:
                 c.value = c.value.replace(a, b)
     log.append("README 舊重點觀察已清")
     return log
