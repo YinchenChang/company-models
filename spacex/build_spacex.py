@@ -1593,6 +1593,16 @@ for t in ("v0.2.1 一致性小修：pace 的 SI 投資季速改與 Q4 同法＝Q
 r += 1
 RD.cell(r, 1, "工作表：README → In → Q → Thesis → Seg → PL → CF → Val → Recon → Sens → Sources。藍字＝輸入、黑字＝公式；黃底＝判斷題。建置：bash spacex/make_v02.sh").font = BOLD; r += 1
 RD.cell(r, 1, "數字標記：Verified（經查核）／Interested-party（公司或賣方自述）／Analogy／Assumed（給區間）／Derived（換算）。本模型是研究整理，不構成投資建議。")
+r += 2
+# v0.2.4（Andy 2026-11-05，HTML 版面）：命題分三點、重點觀察白話版；HTML 讀這幾列（A3、A6–A8 原文保留，地圖等下游不受影響）
+RD.cell(r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用）").font = BOLD; r += 1
+RD.cell(r, 1, "命題：xAI（SI 分部）的巨額算力投資能否回本，以及 Starlink 的現金流與 IPO 資金能撐多久；三個問題如下。"); r += 1
+RD.cell(r, 1, "xAI 算力能否回本：SI 分部已投入大量算力（9M26 SI 資本支出約 400 億美元、名目算力 1.7 GW），對外出租算力加上 Grok／Cursor／X 的收入，能否把投資賺回來。"); r += 1
+RD.cell(r, 1, "Starlink 撐得住多久：Connectivity（Starlink）賺的現金加上 IPO 募得的資金，能支撐 xAI 的投資多久、何時需要再舉債。"); r += 1
+RD.cell(r, 1, "每股值多少：把新增 AI 折舊與 Cursor 收購的獎酬成本算進去之後，每股價值是否仍高於現價。"); r += 1
+RD.cell(r, 1, f'="合理價值遠低於現價：我們估每股約 "&TEXT({VB("tp")},"0.0")&" 美元，比現價 "&TEXT(px,"0.00")&" 低 "&TEXT(-{VB("up")},"0%")&"。這是兩種算法各占一半：未來現金流折現約 "&TEXT({VB("tpdcf")},"0.0")&"、各業務按同業倍數加總約 "&TEXT({VB("tpcomp")},"0.0")&"；樂觀、基準、保守三種情境分別約 "&TEXT({VB("scen")},"0.0")&"、"&TEXT({VB("scen", "C")},"0.0")&"、"&TEXT({VB("scen", "D")},"0.0")&"。市場分析師平均目標價約 "&TEXT(cons_tp,"0")&"；以現價計，市場等於給未來一年 EBITDA 約 "&TEXT({VB("mkt_imp")},"0")&" 倍的估值。"'); r += 1
+RD.cell(r, 1, f'="xAI 算力仍賺錢，但利潤會被壓縮：每 1 GW 算力一年的收入，目前約是持有成本的 "&TEXT(k0,"0.00")&" 倍（2026Q3）；我們假設租金逐步向成本靠攏，到 2028 年三種情境為 "&TEXT({VB("s2")},"0.00")&"、"&TEXT({VB("s2", "C")},"0.00")&"、"&TEXT({VB("s2", "D")},"0.00")&" 倍。規模擴張很快：2028 年底算力約 "&TEXT(Thesis!I{T["end"]},"0.0")&" GW，光 2027 年就要投入約 "&TEXT(Thesis!H{T["si_inv"]}*10,"#,##0")&" 億美元。"'); r += 1
+RD.cell(r, 1, f'="錢不夠，需要再舉債：2026–2030 五年自由現金流合計約 "&TEXT(CF!C{GATE}*10,"#,##0")&" 億美元（公司自己的算法約 "&TEXT(CF!C{GATE + 1}*10,"#,##0")&" 億），Starlink 的現金與 IPO 資金補不上，結論："&CF!C{GATE + 4}&"。獲利面也被 AI 折舊壓低：2028 年新增 AI 折舊約 "&TEXT(PL!I{PB_["da_ai"]}*10,"#,##0")&" 億美元，整體營業利益率約 "&TEXT(PL!I{PB_["om"]},"0.0%")&"。"'); r += 1
 RD.column_dimensions["A"].width = 120; RD.column_dimensions["B"].width = 60; RD.column_dimensions["C"].width = 60; RD.column_dimensions["D"].width = 60
 for rr in range(3, 9): RD.cell(rr, 1).alignment = Alignment(wrap_text=True, vertical="top")
 

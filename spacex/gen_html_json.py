@@ -57,34 +57,140 @@ INK = {str(wb["In"].cell(r, 1).value): r for r in range(4, wb["In"].max_row + 1)
 SCN_H = find("In", "J. 情境驅動對照") + 1
 SCN = {k: INK[k] for k in ("scn_k", "scn_n", "scn_w")}
 mh = PB["lsv"] - 1
+# ─── v0.2.4 版面（Andy 2026-11-05）：參數依業務分「發射／Starlink／xAI 算力／全公司」四塊 ───
+IW = wb["In"]
+def in_unit_fmt(u):
+    u = str(u or "")
+    if u == "%": return "p1"
+    if u in ("x",): return "n2"
+    if u in ("次", "年", "季", "US$/月"): return "n1"
+    if u.startswith("US$m/") or u in ("GW", "GW/年", "US$"): return "n2"
+    if u in ("十億股",): return "n3"
+    return "n1"
+def in_row(k):
+    r = INK[k]; f = in_unit_fmt(IW.cell(r, 3).value)
+    return [f"@In!B{r}", f"@In!D{r}|{f}", f"@In!E{r}|{f}", f"@In!F{r}|{f}", f"@In!C{r}", f"@In!G{r}|tag"]
+def has_rng(k):
+    r = INK[k]; return IW.cell(r, 4).value not in (None, "") or IW.cell(r, 6).value not in (None, "")
+IN_GROUPS = {
+ "space": [("發射次數與單價", ["nl_q4", "nl_27", "g_nl", "g_rpl"]), ("發射與開發合約", ["gl_ld"]),
+           ("利益率、資本支出與折舊", ["m_spl", "cx_spl", "life_sp", "rem_sp"]), ("估值倍數", ["evs_space"])],
+ "conn": [("消費訂戶與 ARPU", ["nadd_q4", "nadd_A", "nadd_B", "nadd_C", "nadd_dec", "arpu0", "g_arpu"]), ("企業與政府", ["g0_eg_adj", "gl_eg"]),
+          ("利益率、資本支出與折舊", ["m_cn", "cx_cn", "life_cn", "rem_cn"]), ("EchoStar 頻譜付款", ["spec_2h", "spec_27"]),
+          ("估值倍數（同業 EV/EBITDA）", ["pm_conn_irdm", "pm_conn_tmus", "pm_conn_t", "pm_conn_cmcsa", "pm_conn_sats", "mult_cn_adj", "mult_cn_pm"])],
+ "si": [("算力規模（名目 GW）與投資速度", ["gw_0", "gw_q2", "gw_ye25", "gw_ye24", "gw_ye26", "cx_q4", "si_cx_rr", "pace", "conv_mw", "mgmt_gw27", "gw27_mgmt", "fin_sh"]),
+        ("機隊組成與機房", ["mix0_h", "mix0_b2", "mix0_b3", "am_27", "selfb"]),
+        ("每 GW 成本（Tokenomics 快照）", ["he_h", "he_b2", "he_b3", "he_vr", "opx_h", "opx_b2", "opx_b3", "opx_vr", "cit_b3", "cit_vr", "cfac"]),
+        ("折舊與在建工程", ["dpi_h", "dpi_b2", "dpi_b3", "life_it", "life_fac", "phi_0", "cip_0", "cip_si", "cip_it", "da_si0", "it_sh_da"]),
+        ("對外出租與定價（k＝每 GW 年營收 ÷ 持有成本）", ["ext_sh", "k30_A", "k30_B", "k30_C", "conv_k", "k0_ovr", "k0_cal"]),
+        ("Grok／Cursor／X 其他收入", ["cur_pf", "g27_nr", "gl_nr", "gl_ads", "conv_n", "m_so_adj", "sbc_cur_left", "sbc_cur_yrs"]),
+        ("自用 AI 與估值倍數", ["internal_ai_reading", "evs_si", "pm_si_crwv", "pm_si_nbis", "pm_si_orcl", "mult_si_adj"])],
+ "co": [("股價、股數與資產負債（評價日）", ["px", "px_val", "sh_out", "sh_dil_9m", "dil_perf", "dil_opt", "dil_rsu", "dil_echo", "dil_x", "cash_0", "cash_ye25", "debt_0", "debt_ye25", "slb_0", "fin_lease", "btc", "legal"]),
+        ("折現率", ["rf", "beta", "erp", "kd", "tax_w", "wacc_adj", "g_tv", "ronic_sp", "tax_tv"]),
+        ("目標價規則", ["mid", "t_val", "t_q4", "tp_wA", "tp_wB", "tp_wC", "w_dcf", "t_tgt", "w_ntm27", "cons_tp", "sbc_add", "tv_alt"]),
+        ("稅、利率與股數稀釋", ["tax", "r_cash", "r_debt", "dil", "wc_k", "min_cash"]),
+        ("債務與融資租賃到期", ["mat_2H", "mat_27", "mat_28", "mat_29", "mat_30", "mat_31", "mat_32", "lease_2H", "lease_27", "lease_28", "lease_29", "lease_30", "lease_31", "lease_32"])],
+}
+# 每個 In 參數（A–I 節，不含 I2 實績、J0 對照、J 情境對照）須剛好歸入一組，避免漏列
+_sec, _need = None, set()
+for _r in range(4, IW.max_row + 1):
+    _a = str(IW.cell(_r, 1).value or "")
+    if _a and IW.cell(_r, 2).value in (None, ""): _sec = _a.split(".")[0]; continue
+    if _a and _sec in ("A", "B", "C", "D", "E", "F", "G", "H", "I"): _need.add(_a)
+_got = [k for g in IN_GROUPS.values() for _, ks in g for k in ks]
+assert len(_got) == len(set(_got)), "In 參數重複歸組"
+assert set(_got) == _need, ("In 參數歸組不完整", sorted(_need - set(_got)), sorted(set(_got) - _need))
+IN_HEAD = ["@In!B3", "@In!D3", "@In!E3", "@In!F3", "@In!C3", "@In!G3"]
+def in_tables(g, label):
+    rng_rows, fix_rows = [], []
+    for sub, ks in IN_GROUPS[g]:
+        a = [in_row(k) for k in ks if has_rng(k)]; b = [in_row(k) for k in ks if not has_rng(k)]
+        if a: rng_rows += [{"sub": sub}] + a
+        if b: fix_rows += [{"sub": sub}] + b
+    out = []
+    if rng_rows:
+        out.append({"type": "table", "caption": f"{label}：有敏感度區間的參數（基準進目標價；低／高只用於敏感度頁）", "head": IN_HEAD, "rows": rng_rows})
+    if fix_rows:
+        out.append({"type": "table", "collapse": True, "summary": f"展開：{label}的其他固定輸入（實績、公司揭露、換算值）", "head": IN_HEAD, "rows": fix_rows})
+    return out
+# Seg 頁情境 B 區塊：依業務取營運驅動列
+SW = wb["Seg"]
+segB0 = find("Seg", "情境 B"); segB1 = find("Seg", "情境 C") - 1
+def segr(prefix):
+    for r in range(segB0, segB1 + 1):   # 先找完全相同的列名（分部合計列），再找開頭相同者
+        if str(SW.cell(r, 1).value or "").strip() == prefix: return r
+    for r in range(segB0, segB1 + 1):
+        if str(SW.cell(r, 1).value or "").strip().startswith(prefix): return r
+    raise KeyError(prefix)
+def seg_unit_fmt(u):
+    u = str(u or "")
+    return {"x": "n2", "%": "p1", "次": "n1", "US$B／次": "n3", "US$": "n1", "百萬": "n1"}.get(u, "n1")
+SEG_YC = ["E", "F", "G", "H", "I", "J", "K", "L", "M"]
+def seg_table(caption, prefixes):
+    rows = []
+    for p_ in prefixes:
+        r = segr(p_); f = seg_unit_fmt(SW.cell(r, 2).value)
+        rows.append([f"@Seg!A{r}", f"@Seg!B{r}"] + [f"@Seg!{c}{r}|{f}" for c in SEG_YC])
+    return {"type": "table", "caption": caption, "head": ["項目", "單位"] + [f"@Seg!{c}{segB0 + 1}" for c in SEG_YC], "rows": rows}
+SEG_SPACE = ["客戶發射次數", "每次客戶發射收入", "Launch Services", "Launch & Development 年增", "Launch & Development", "Space", "Space 資本支出占營收", "資本支出：Space", "新增折舊：Space"]
+SEG_CONN = ["Starlink 消費訂戶", "平均消費訂戶", "消費 ARPU", "Consumer", "Enterprise & Government 年增", "Enterprise & Government", "Connectivity", "資本支出：Connectivity", "新增折舊：Connectivity"]
+SEG_SI = ["k＝每 GW", "對外每 GW 年營收", "SI 對外雲端服務", "SI 其他收入年增", "Grok／Cursor／X", "SI Solutions", "Advertising 年增", "Advertising", "SI (Super", "S2 核心問題"]
+# Thesis A 節（校準與起始值）依項目分組
+TW = wb["Thesis"]
+def thr(prefix, start):
+    for r in range(start, start + 20):
+        if str(TW.cell(r, 1).value or "").startswith(prefix): return r
+    raise KeyError(prefix)
+TA = T["he0"]
+CAL_GROUPS = [("每 GW 持有成本與營運費用（評價日機隊）", ["評價日機隊每 GW 年持有成本", "評價日機隊每 GW 年營運費用"]),
+              ("每 GW 年營收與 k 校準（最近一季）", ["校準季每 GW 年營收", "校準 k0"]),
+              ("對外出租與其他收入（實績）", ["2026Q3 對外雲端服務營收", "9M26 對外雲端服務營收", "2026Q3 SI 其他收入", "SI 其他 EBITDA 率（2026Q3", "SI 其他 EBITDA 率（預測期"]),
+              ("每 GW 投資", ["每 GW 投資（2026", "每 GW 投資（FY2027", "對照：PP&E"])]
+cal_rows = []
+_cal_used = []
+for sub, ps in CAL_GROUPS:
+    cal_rows.append({"sub": sub})
+    for p_ in ps:
+        r = thr(p_, TA); _cal_used.append(r)
+        f = "p1" if TW.cell(r, 2).value == "%" else "n2"
+        cal_rows.append([f"@Thesis!A{r}", f"@Thesis!B{r}", f"@Thesis!C{r}|{f}"])
+assert sorted(_cal_used) == list(range(TA, T["ppe_gw"] + 1)), "Thesis A 節校準列分組不完整"
+RDW = wb["README"]
+rd_show = find("README", "展示層")
+
 cfg = {
  "company": "SpaceX",
  "ticker": "SPCX",
- "thesis": "@README!A3",
+ "wide_text": True,
+ "thesis": f"@README!A{rd_show + 1}",
  "question": "FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金與以其他融資取得之不動產設備；Valor 失敗售後租回本金列融資、不扣）",
  "scenarios": [{"key": "A", "name": "情境 A（算力租金維持高檔、Starlink 增長快）"}, {"key": "B", "name": "情境 B（租金向持有成本部分收斂；基準）"}, {"key": "C", "name": "情境 C（租金收斂到持有成本、Starlink 增長放緩）"}],
  "sections": [
   {"id": "thesis", "title": "命題與核心問題", "blocks": [
-    {"type": "kv", "items": [["投資建議", "@README!A5"], ["重點觀察一", "@README!A6"], ["重點觀察二", "@README!A7"], ["重點觀察三", "@README!A8"]]},
-    {"type": "h3", "text": "本版要點（本版）"},
-    {"type": "list", "items": [f"@README!A{r}" for r in range(find("README", "本版要點") + 1, find("README", "本版要點") + 6)]}]},
-  {"id": "drivers", "title": "驅動因子 → 推導量", "intro": "@Thesis!A1", "blocks": [
-    {"type": "table", "caption": "驅動 → 推導對照表", "head": ["頁", "輸入", "推導量", "因果方向"],
-     "rowgen": {"sheet": "README", "rows": f"{find('README', '頁') + 1}-{find('README', 'Sens', 1, find('README', '頁'))}", "cols": ["A", "B", "C", "D"]}},
+    {"type": "h3", "text": "命題"},
+    {"type": "list", "ordered": True, "items": [f"@README!A{rd_show + 2}", f"@README!A{rd_show + 3}", f"@README!A{rd_show + 4}"]},
+    {"type": "note", "parts": ["@README!A5"]},
+    {"type": "h3", "text": "重點觀察"},
+    {"type": "list", "ordered": True, "items": [f"@README!A{rd_show + 5}", f"@README!A{rd_show + 6}", f"@README!A{rd_show + 7}"]}]},
+  {"id": "drivers", "title": "驅動因子 → 推導量", "blocks": [
     {"type": "table", "caption": "情境驅動（三情境並排，進加權目標價；In 頁 J 節）", "head": [f"@In!{c}{SCN_H}" for c in "BDEFCG"],
      "rows": [[f"@In!B{SCN[k]}", f"@In!D{SCN[k]}|{f}", f"@In!E{SCN[k]}|{f}", f"@In!F{SCN[k]}|{f}", f"@In!C{SCN[k]}", f"@In!G{SCN[k]}|tag"] for k, f in (("scn_k", "n2"), ("scn_n", "n1"), ("scn_w", "p0"))]},
-    {"type": "table", "caption": "單一參數區間（In 頁；基準進主模型，敏感度低／高只用於敏感度頁、不進目標價；三情境共用）", "head": ["@In!B3", "@In!D3", "@In!E3", "@In!F3", "@In!C3", "@In!G3"],
-     "rows": [[f"@In!B{INK[k]}", f"@In!D{INK[k]}|{f}", f"@In!E{INK[k]}|{f}", f"@In!F{INK[k]}|{f}", f"@In!C{INK[k]}", f"@In!G{INK[k]}|tag"]
-              for k, f in (("cx_q4", "n1"), ("gw_ye26", "n2"), ("ext_sh", "p0"), ("pace", "n2"), ("selfb", "p0"), ("g27_nr", "p0"), ("gl_nr", "p0"), ("m_cn", "p1"), ("cx_cn", "p1"), ("g_arpu", "p1"),
-                           ("m_spl", "p0"), ("nl_27", "n0"), ("tax", "p0"), ("internal_ai_reading", "n0"), ("beta", "n2"), ("g_tv", "p0"), ("w_dcf", "p0"), ("evs_space", "x1"))]},
-    {"type": "table", "caption": "命題模組的校準與起始值", "head": ["項目", "單位", "數值"],
-     "rowgen": {"sheet": "Thesis", "rows": f"{T['he0']}-{T['ppe_gw']}", "cols": ["A", "B", "C"], "fmts": ["", "", "n2"],
-                "row_fmt": {str(T[k]): {"C": "p1"} for k in ("m_so0", "m_so")} | {str(T[k]): {"C": "n3"} for k in ("rent_q3", "rent_9m", "nr_q3")}}},
-    {"type": "table", "caption": "命題模組：SI 名目算力、SI 投資、折舊與自用 AI（三情境相同）", "head": ["項目", "單位"] + [f"@Thesis!{c}{thh}" for c in "EFGHIJKLM"],
+    {"type": "note", "parts": ["@Seg!A2"]},
+    {"type": "h3", "text": "一、發射（Space）"}]
+    + in_tables("space", "發射")
+    + [seg_table("發射：營運驅動與分部營收（情境 B）", SEG_SPACE),
+    {"type": "h3", "text": "二、星鏈（Starlink／Connectivity）"}]
+    + in_tables("conn", "星鏈")
+    + [seg_table("星鏈：營運驅動與分部營收（情境 B）", SEG_CONN),
+    {"type": "h3", "text": "三、xAI 算力（SI 分部）"},
+    {"type": "note", "parts": ["@Thesis!A1"]}]
+    + in_tables("si", "xAI 算力")
+    + [{"type": "table", "caption": "xAI 算力：命題模組的校準與起始值（依項目分組）", "head": ["項目", "單位", "數值"], "rows": cal_rows},
+    {"type": "table", "caption": "xAI 算力：名目算力、投資、折舊與自用 AI（三情境相同）", "head": ["項目", "單位"] + [f"@Thesis!{c}{thh}" for c in "EFGHIJKLM"],
      "rowgen": {"sheet": "Thesis", "rows": th_rows, "cols": ["A", "B", "E", "F", "G", "H", "I", "J", "K", "L", "M"], "fmts": ["", "", "n1", "n1", "n1", "n1", "n1", "n1", "n1", "n1", "n1"], "row_fmt": th_fmt}},
-    {"type": "table", "caption": "情境 B 的營運驅動：k、每 GW 年營收、核心問題比值、訂戶、ARPU、發射", "head": ["項目", "單位"] + [f"@Seg!{c}{SB_['k'] - 1 - (SB_['k'] - min(SB_.values()))}" for c in "EFGHIJKLM"],
-     "rowgen": {"sheet": "Seg", "rows": sg_rows, "cols": ["A", "B", "E", "F", "G", "H", "I", "J", "K", "L", "M"], "fmts": ["", "", "n1", "n1", "n1", "n1", "n1", "n1", "n1", "n1", "n1"], "row_fmt": sg_fmt}},
-    {"type": "note", "parts": ["@Seg!A2"]}]},
+    seg_table("xAI 算力：k、每 GW 年營收、核心問題比值與 SI 營收（情境 B）", SEG_SI),
+    {"type": "h3", "text": "四、全公司：折現率、目標價規則、稅與融資"}]
+    + in_tables("co", "全公司")},
   {"id": "pl", "title": "三情境損益", "intro": "@PL!A2", "blocks": [
     {"type": "pl", "years": f"@PL!G{hA}:M{hA}", "metrics": [
        met("合併營收（十億美元）", "rev", "n0", True), met("SI 分部營收（十億美元）", "si", "n0", True),
@@ -139,6 +245,12 @@ cfg = {
                              ["Tokenomics 快照", "@Sources!B" + str(find("Sources", "Tokenomics 快照", 2))]]},
     {"type": "h3", "text": "資料與口徑"},
     {"type": "list", "items": ["@Q!A1", "@Q!A2", "@In!A2", "@CF!A2", "@Sens!A2"]},
+    {"type": "h3", "text": "附錄：驅動 → 推導對照表（查核用）"},
+    {"type": "table", "collapse": True, "summary": "展開：每頁的輸入、推導量與因果方向", "head": ["頁", "輸入", "推導量", "因果方向"],
+     "rowgen": {"sheet": "README", "rows": f"{find('README', '頁') + 1}-{find('README', 'Sens', 1, find('README', '頁'))}", "cols": ["A", "B", "C", "D"]}},
+    {"type": "h3", "text": "附錄：版本要點"},
+    {"type": "table", "collapse": True, "summary": "展開：本版與前版的修改要點", "head": ["要點"],
+     "rowgen": {"sheet": "README", "rows": f"{find('README', '本版要點') + 1}-{find('README', '工作表：') - 2}", "cols": ["A"]}},
     {"type": "h3", "text": "「未找到」清單"},
     {"type": "scan", "needle": "未找到", "collapse": True, "summary": "展開：標為「未找到」的項目", "sheets": {"Recon": ["A", "E", "G"], "In": ["B", "H", "I"]}, "empty": "沒有標為未找到的項目。"}]}
  ]

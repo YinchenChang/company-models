@@ -238,7 +238,10 @@ def render_table(cx, blk):
             rows.append(('sub', cells[:1]) if sub else ('row', cells))
     else:
         for r in blk['rows']:
-            rows.append(('row', r))
+            if isinstance(r, dict):   # {"sub": 規格}：分組小標列
+                rows.append(('sub', [r['sub']]))
+            else:
+                rows.append(('row', r))
     ncols = max([len(head)] + [len(r) if k == 'row' else 1 for k, r in rows])
     # 範圍展開後的欄數
     def expanded(r):
@@ -480,7 +483,8 @@ def render_upstream(cx, blk, root):
 
 
 def render_list(cx, blk):
-    return '<ul class="items">' + ''.join(f'<li>{cx.cell_html(i)}</li>' for i in blk['items']) + '</ul>'
+    tag = 'ol' if blk.get('ordered') else 'ul'   # ordered=true：編號清單
+    return f'<{tag} class="items">' + ''.join(f'<li>{cx.cell_html(i)}</li>' for i in blk['items']) + f'</{tag}>'
 
 
 def render_block(cx, blk, cfg, root):
@@ -598,6 +602,12 @@ footer{margin:24px 0 0;padding-top:10px;border-top:1px solid var(--line);font-si
 }
 """
 
+# html.json 頂層 wide_text=true：說明文字（命題、核心問題、各章說明、note）延伸到頁面全寬（Andy 2026-11-05，SpaceX 版面）
+WIDE_CSS = """
+.thesis,.q,.note{max-width:none}
+ol.items{margin:6px 0;padding-left:24px}ol.items li,ul.items li{margin:2px 0}
+"""
+
 REQUIRED_IDS = ['thesis', 'drivers', 'pl', 'valuation', 'recon', 'sens', 'status']
 
 
@@ -659,7 +669,7 @@ def build(cdir, xlsx=None, root=None):
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
 <title>{esc(title)}</title>
-<style>{CSS}</style>
+<style>{CSS}{WIDE_CSS if cfg.get('wide_text') else ''}</style>
 </head>
 <body>
 <input type="checkbox" id="refs" class="refs-toggle" aria-label="顯示每個數字的來源儲存格">
