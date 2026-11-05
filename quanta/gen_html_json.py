@@ -90,8 +90,8 @@ SPEC = {
     ["股價", ["px", "pe_ttm"]],
     ["目標價規則（情境權重、DCF 權重、延伸期收斂）", ["tp_wA", "tp_wB", "tp_wC", "tp_g", "tp_w_dcf", "fade_gA", "fade_gB", "fade_gC", "nim10_f"]],
     ["市場共識（只作對照）", ["cons_tp", "cons_feps"]],
-    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
-    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"]],
+    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "rf_us", "beta", "beta_u", "beta_de", "beta_du", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
+    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "bs_date", "stub_frac", "stub_div", "sh_v"]],
     ["自由現金流（折舊、資本支出、營運資金）", ["da_r", "cx_r", "fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]]]]],
  "blocks_to": {"組裝市場": "AI 伺服器組裝（部署量、整櫃價值、份額、客供與毛利率）", "@Units!A16": "AI 伺服器組裝（部署量、整櫃價值、份額、客供與毛利率）",
                "標記沿用": "AI 伺服器組裝（部署量、整櫃價值、份額、客供與毛利率）"},
@@ -177,7 +177,7 @@ d3 = lambda p, f: [f"@Val!A{V(p, r_d0)}"] + [f"@Val!{c}{V(p, r_d0)}|{f}" for c i
 r_dh = V("項目", r_d0)
 dhead = [f"@Val!A{r_dh}", "情境 A（順利）", "情境 B（平平）", "情境 C（不如預期）", "說明"]
 dcf_main = {"type": "table", "caption": f"@Val!A{r_d0}", "head": dhead,
-            "rows": [d3("明確期 FCFF 現值", "n1"), d3("終值現值", "n1"), d3("企業價值 EV", "n1"), d3("＋淨現金與投資", "n1"), d3("DCF 情境價值推到 12 個月後", "n0"),
+            "rows": [d3("明確期 FCFF 現值", "n1"), d3("終值現值", "n1"), d3("企業價值 EV", "n1"), d3("＋淨現金與投資", "n1"), d3("＋Stub 期 FCFF", "n1"), d3("淨現金滾到評價日", "n1"), d3("DCF 情境價值推到 12 個月後", "n0"),
                      [f"@Val!A{r_dcf}", f"@Val!B{r_dcf}|n0", "", "", f"@Val!E{r_dcf}"]]}
 dcf_rest = {"type": "table", "collapse": True, "summary": "展開：DCF 的其他項目（股數、評價日每股價值、終值占比、隱含終值倍數）", "head": dhead,
             "rows": [d3("評價用稀釋股數", "n3"), d3("DCF 情境每股價值（評價日）", "n1"), d3("  其中：終值現值占 EV", "p1"), d3("  隱含終值 EV／EBITDA", "x1")]}
