@@ -1,4 +1,11 @@
-# alab/ — Astera Labs（ALAB）收支與估值模型 v0.2
+# alab/ — Astera Labs（ALAB）收支與估值模型 v0.3
+
+## v0.3（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）＋HTML 新版面 v1.0
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0 與工作單（Andy 2026-11-05 20:42、20:45、21:21）：Val 0.1 節由「股東現金流＝non-GAAP EPS ×（1 − tp_g ÷ tp_roe）、折現率 tp_r 10%」改為 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現到 2026-12-31（期中慣例）；EBIT 換成 GAAP 口徑（non-GAAP 營業利益 × gaap_k，股權報酬視為費用）；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, 美國 10 年期公債殖利率)、RONIC＝WACC；EV 加淨現金 ÷ 股數，以股權成本推到 12 個月後。新增 DCF 頁（含 Wattonomics 錨定 Sens 路徑）；In 頁新增 K2 節與 gaap_k，刪除 tp_r、tp_roe；Sens 目標價參數改為標準案例。
+- 參數：rf 美國 10 年期公債 5.00%（2026-10-23）；β＝Damodaran 美國 Semiconductor 現金修正後無槓桿 β 1.50（幾乎無負債）；ERP 5%；折舊、資本支出、營運資金為近三年實績平均。
+- HTML 改用 `docs/plan/個股HTML版面規格.md` v1.0（補充規則 A–E）：原 `html.json` 改名 `html_src.json`（內容不動），新增 `gen_html_json.py`；xlsx README 頁新增「展示層」「命題回覆」「HTML 輔助列」「本版要點」。
+- 成品：`dist/20261105_Astera Labs個股模型_v0.3.xlsx`、`.html`；v0.2 移到 `dist/_待刪除/`。
 
 ## v0.2（2026-11-04）：滾入 3Q26 實績與 4Q26 指引
 
@@ -66,7 +73,7 @@ AI 半導體 Project **網通次產業內複製（scale-up 互連：重定時器
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
 | `dist/20261028_Astera Labs個股模型_v0.1.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
-建置：`python3 alab/build_alab.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（scale-up 交換晶片、加速器顆數、每顆 scale-up 交換晶片內容、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`、`tools/valuation_rule.py`（只用規則函式）；**不修改它們**。
+建置：`python3 alab/build_alab.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（scale-up 交換晶片、加速器顆數、每顆 scale-up 交換晶片內容、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`、`tools/valuation_rule.py`（只用規則函式）；**不修改它們**。
 
 ## 驅動因子
 
