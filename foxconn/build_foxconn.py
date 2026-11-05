@@ -1096,6 +1096,10 @@ for _c in RD["A"]:   # 第 23 點（續）：README 本模型情境用語「樂�
         _v = _c.value.replace("樂觀、基準情境", "順利、平平情境").replace("樂觀情境", "順利情境").replace("基準情境", "平平情境").replace("保守情境", "不如預期情境")
         if _v != _c.value: _c.value = _v
 
+_old5 = [_c for _c in RD["A"] if isinstance(_c.value, str) and not _c.value.startswith("=") and _c.value.startswith(("重點觀察 2：", "重點觀察 3："))]
+for _k, _c in enumerate(_old5):   # 第 22 點：舊版撰寫、帶舊版數字的重點觀察 2、3（固定文字）刪除；現況見展示層重點 1–5
+    _c.value = ("重點觀察 " + "、".join(x.value[5] for x in _old5) + "：舊版撰寫的文字（數字為舊版）已刪除；現況見展示層重點 1–5。") if _k == 0 else None
+
 wb.save(sys.argv[1])
 if os.environ.get("R4_NOOP"): pass
 if os.environ.get("FOXCONN_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
