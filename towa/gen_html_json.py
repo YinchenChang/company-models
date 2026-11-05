@@ -138,7 +138,7 @@ SPEC = {
     ["利潤率與股數", ["im", "ima_A", "ima_B", "ima_C", "nioi", "shares"]],
     ["共識與市場倍數", ["cons_rev26", "cons_oi26", "cons_ni26", "cons_tp", "cons_feps", "sa_fpe", "sa_ttm", "px"]],
     ["循環位置（設備市場見頂年）", ["pk_A", "pk_B", "pk_C"]],
-    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta", "beta_u", "beta_u_us", "beta_de", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
+    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta", "beta_u", "beta_u_med", "beta_de", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
     ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"]],
     ["自由現金流（折舊、資本支出、營運資金）", ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]],
     ["目標價規則、情境權重與收斂期", ["tp_w_dcf", "tp_wA", "tp_wB", "tp_wC", "tp_g", "nim10"]]]]],
