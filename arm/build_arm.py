@@ -35,7 +35,7 @@ def defname(name, ref):
 SNAP = f"Siliconomics 快照 {SIL.VERSION}（{SIL.FILE}）"
 N = SIL.NAMES
 UP = {k: N[f"SIF_UnitsPlat_{k}"] for k in ("bw", "rb", "ru")}    # [2025(None), 2026, 2027, 2028, 2029]
-UC = {s: N[f"SIF_UnitsCoef_{s}"] for s in SC}
+UC = {s: [None, 1, 1, SIL.base(f"um28_{s}"), SIL.base(f"um29_{s}")] for s in SC}   # v0.15：由個股自訂情境係數列（um28／um29）組成；原讀 SIF_UnitsCoef_{s}
 
 # ---------------- In ----------------
 IN = wb.active; IN.title = "In"
@@ -97,7 +97,7 @@ for k, lab in (("bw", "Blackwell"), ("rb", "Rubin"), ("ru", "Rubin Ultra")):
         inp(f"nv{k}_{y}", f"NVIDIA {lab} 顆數 CY20{y}（情境 A）", "百萬顆", None, float(UP[k][j]), None, "Derived", f"{SNAP}｜SIF_UnitsPlat_{k}[20{y}]", "Siliconomics 加速器顆數（情境 A）；B、C 乘同字母顆數係數")
 for y, j in ((28, 3), (29, 4)):
     for s in SC:
-        inp(f"uc{y}_{s}", f"情境 {s}：CY20{y} 顆數係數", "x", None, float(UC[s][j]), None, "Derived", f"{SNAP}｜SIF_UnitsCoef_{s}[20{y}]", "A＝1；B＝0.8／0.85；C＝0.6（與台積電、NVIDIA 模型同一套）")
+        inp(f"uc{y}_{s}", f"情境 {s}：CY20{y} 顆數係數", "x", None, float(UC[s][j]), None, "Derived", f"{SNAP}｜In um{y}_{s}（個股自訂情境係數）", "A＝1；B＝0.8／0.85；C＝0.6（與台積電、NVIDIA 模型同一套）")
 inp("nv_cy25", "NVIDIA 資料中心 GPU 顆數 CY2025（Blackwell＋Hopper）", "百萬顆", 5.0, 6.0, 7.0, "Assumed", "Siliconomics 加速器顆數從 2026 年起：CY2025 未建立，待併入 Siliconomics", "只用於 FY2026 的 NVIDIA CPU 指數基期")
 inp("w_nv", "FY2027 資料中心權利金中 NVIDIA Grace／Vera 的比重", "%", 0.20, 0.35, 0.50, "Assumed", "公司未揭露客戶別：未找到；NVIDIA Vera 88 核、AWS Graviton5 192 核、Microsoft Cobalt 200 132 核（3Q26 法說）", "其餘＝雲端自研 CPU（Graviton、Axion、Cobalt 等）與網通、DPU")
 inp("g_hc", "雲端自研 Arm CPU 顆數年增（Graviton、Axion、Cobalt 等；× 同字母顆數係數）", "%", 0.15, 0.30, 0.45, "Assumed", "管理層：預期 Arm 在前幾大雲端業者的 CPU 份額達 50%（3Q26 法說）；IDC：Arm 加速伺服器平台支出兩季近倍增（新聞稿 2026-07-29）", "Siliconomics 無 CPU 顆數：待併入 Siliconomics")
@@ -244,7 +244,7 @@ def engine(ws, r0, title, s):
     sec_("A. 資料中心 CPU 顆數指數（NVIDIA Grace／Vera 讀 Siliconomics；雲端自研 CPU Assumed × 同字母係數）")
     row("nvcy", "NVIDIA 資料中心 GPU 顆數（會計年度＝9/12 × CY(t−1)＋3/12 × CY(t)）", "百萬顆",
         {"D": f"=0.75*nv_cy25+0.25*{cyu(26, s)}", "E": f"=0.75*{cyu(26, s)}+0.25*{cyu(27, s)}", "F": f"=0.75*{cyuw(27, s)}+0.25*{cyuw(28, s)}", "G": f"=0.75*{cyuw(28, s)}+0.25*{cyuw(29, s)}"},
-        fmt="0.00", note=f"Siliconomics SIF_UnitsPlat_bw＋rb＋ru × SIF_UnitsCoef_{s}；CY2025 為 In 頁 nv_cy25（待併入 Siliconomics）")
+        fmt="0.00", note=f"Siliconomics SIF_UnitsPlat_bw＋rb＋ru × 個股自訂情境係數 um28／um29_{s}；CY2025 為 In 頁 nv_cy25（待併入 Siliconomics）")
     row("nvcpu", "NVIDIA Grace／Vera CPU 顆數 ＝ GPU × 每顆 GPU 搭配 CPU", "百萬顆", {c: f"={c}{R['nvcy']}*cpu_gpu" for c in "DEFG"}, fmt="0.00")
     row("hcx", "雲端自研 Arm CPU 顆數指數（FY2027＝1）", "x", {"E": "=1", "F": f"=E{r}*(1+g_hc)*(0.75*{cycw(27, s)}+0.25*{cycw(28, s)})", "G": f"=F{r}*(1+g_hc)*(0.75*{cycw(28, s)}+0.25*{cycw(29, s)})/(0.75*{cycw(27, s)}+0.25*{cycw(28, s)})"},
         fmt="0.00", note="年增 g_hc × 同字母顆數係數（行業情境）；Siliconomics 無 CPU 顆數：待併入 Siliconomics")

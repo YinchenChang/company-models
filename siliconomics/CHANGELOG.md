@@ -1,5 +1,10 @@
 # Siliconomics 變更紀錄
 
+## v0.15（2026-11-05；`model/20261105_Siliconomics_v0.15.xlsx`；Tokenomics v21.7）
+
+- **刪除 Interface 推導節的情境 A／B／C 名稱**（v0.12 起停用過渡；決策 S40）：66 個名稱（含 _lo／_hi），快照 2,067 → 2,001 個名稱；頁內列保留並標「名稱已刪除」，`*_Base` 仍指向原 B 列。In 頁層情境列（um28_A、cqA_8、cpo_A_26 等）名稱保留，作為個股自訂情境參考值（v0.16 移到個股）。
+- 讀者改寫（數值不變）：tuc（部署 GW、CCL 市場＝基準 × 個股情境係數 ÷ 基準係數）、arm（顆數係數由 um28／um29 列組成）、ase、mpi（原始顆數改讀 `SIF_UnitsPlat_Total`；ase Recon 部署 GW 改讀基準〔展示列〕；mpi SoC 測試機三情境改讀 Advantest 成品）、smci、dell、jentech、ter（一致性檢查只核對基準）、tsmc（HBM 2027 缺口改讀基準）。Wattonomics v0.2.2 起只讀 `*_Base`（算力收支 11-04 確認）。`tools/r4_bridge.py` 改讀 `SIF_UnitsCoef_Base`。
+
 ## v0.14（2026-11-05；`model/20261105_Siliconomics_v0.14.xlsx`；Tokenomics v21.7）
 
 - **HBM 供給基數改用廠商出貨推估**（Andy 2026-11-05 08:22 選甲；決策 S39；報告 `docs/reports/20261105_HBM供給校準.md`）：新增 In 頁 M3b `hbm_sup26`＝4.23 EB（3.8–4.6；UBS 廠商出貨推得，Derived）；2026 供給改讀此值（原＝本庫 2026 需求 3.78），2027 年增仍 +55%（TrendForce）→ 2027 供給 5.86 → 6.56 EB。markets/memory `_INPUT_SECS` 加 M3b（記憶體三家 In 頁重播）。

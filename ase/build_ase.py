@@ -27,7 +27,7 @@ SILV = f"Siliconomics 快照 {SIL.VERSION}（{SIL.SNAP['source']['file']}）"
 # ---------------- Siliconomics：加速器顆數、平台別、CoWoS 每片封裝數 → 封裝面積指數 ----------------
 PLATS = ("bw", "rb", "ru", "hp", "amd", "tpu", "trn", "oth")
 UP = {p: SIL.NAMES[f"SIF_UnitsPlat_{p}"] for p in PLATS}          # [None, 2026, 2027, 2028, 2029]
-UT = SIL.NAMES["SIF_UnitsPlat_Total_A"]
+UT = SIL.NAMES["SIF_UnitsPlat_Total"]
 UNITS = {26: UT[1], 27: UT[2], 28: UT[3], 29: UT[4]}
 PPMAP = {"bw": "GB", "rb": "VR", "ru": "RU", "hp": "HP", "amd": ("AMD8", "AMDR"), "tpu": ("TPU7", "TPU8"), "trn": "TRN", "oth": "ASIC"}
 def pp(p, y):
@@ -62,7 +62,7 @@ PR3 = "公司 3Q26 新聞稿與簡報（SEC 6-K，2026-10-29）"
 sec(f"A. AI 加速器顆數、情境係數與封裝面積（讀 {SILV}；唯讀，不自行重估）")
 for y in (26, 27, 28, 29):
     inp(f"units_{y}", f"AI 加速器顆數 20{y}（情境 A（原始顆數））", "百萬顆", None, UNITS[y], None, "Derived",
-        "Siliconomics SIF_UnitsPlat_Total_A（八類加速器合計）" if y == 26 else "同上", "NVIDIA、AMD、Google TPU、AWS Trainium、其他 ASIC 合計；與台積電、Amkor、京元電模型同一份" if y == 26 else "同上")
+        "Siliconomics SIF_UnitsPlat_Total（八類加速器合計；原始顆數）" if y == 26 else "同上", "NVIDIA、AMD、Google TPU、AWS Trainium、其他 ASIC 合計；與台積電、Amkor、京元電模型同一份" if y == 26 else "同上")
 for s in SC:
     for y in (28, 29):
         inp(f"um{y}_{s}", SIL.V[f"um{y}_{s}"]["label"], "x", None, SIL.base(f"um{y}_{s}"), None, "Assumed", f"Siliconomics {f'um{y}_{s}'}（同字母行業情境）",
@@ -389,11 +389,11 @@ PL.cell(2, 1, "灰底＝FY2030–FY2032 收斂法（上游只到 2029）：營�
 
 # ---------------- Units：AI 加速器 → LEAP ----------------
 UN = wb.create_sheet("Units")
-UN["A1"] = "Units — AI 加速器顆數（Siliconomics）→ 日月光 LEAP 先進封裝營收（情境 A）。部署 GW 讀 Siliconomics SIF_DeployGW_A，只作 Recon"
+UN["A1"] = "Units — AI 加速器顆數（Siliconomics）→ 日月光 LEAP 先進封裝營收（情境 A）。部署 GW 讀 Siliconomics SIF_DeployGW_Base（基準），只作 Recon"
 A_ = PB["A"]; cyc = lambda y: chr(ord("C") + y - 2026)
 hdr(UN, 3, ["項目", "單位", "CY2026", "CY2027", "CY2028", "CY2029", "說明"])
 ur = 4; UR = {}
-GW = SIL.NAMES["SIF_DeployGW_A"]
+GW = SIL.NAMES["SIF_DeployGW_Base"]
 for key, lab, unit, f, fmt, note in (
         ("units", "AI 加速器顆數（情境 A）", "百萬顆", lambda y: f"=PL!{FC[y]}{A_['units']}", "0.00", "Siliconomics（台積電、Amkor、京元電模型同一份）"),
         ("area", "封裝面積指數（2026＝1）", "x", lambda y: f"=PL!{FC[y]}{A_['area']}", "0.000", "Siliconomics 平台顆數 ÷ CoWoS 每片封裝數"),
@@ -404,7 +404,7 @@ for key, lab, unit, f, fmt, note in (
         ("cpo", "CPO", "US$B", lambda y: f"=PL!{FC[y]}{A_['cpo']}", "0.00", "公司 2027 逾 0.5；Siliconomics 滲透率"),
         ("leapu", "LEAP 合計", "US$B", lambda y: f"=PL!{FC[y]}{A_['leapu']}", "0.00", "公司：2026 逾 4.0、2027 翻倍"),
         ("pu", "每顆加速器的日月光 LEAP 營收", "US$／顆", lambda y: f"=PL!{FC[y]}{A_['leapu']}/PL!{FC[y]}{A_['units']}*1000", "#,##0", "含全流程與 CPO"),
-        ("gw", "部署 GW（Siliconomics SIF_DeployGW_A）", "GW", lambda y: GW[y - 2026], "0.0", "Siliconomics 推導值（唯讀）"),
+        ("gw", "部署 GW（Siliconomics SIF_DeployGW_Base）", "GW", lambda y: GW[y - 2026], "0.0", "Siliconomics 推導值（唯讀）"),
         ("pgw", "每 GW 的日月光 LEAP 營收", "US$B／GW", lambda y: f"={cyc(y)}{{leapu}}/{cyc(y)}{{gw}}", "0.000", "對照 Amkor 投資人日：OSAT 先進封裝可服務市場約 US$0.5B／GW")):
     UN.cell(ur, 1, lab); UN.cell(ur, 2, unit)
     UR[key] = ur

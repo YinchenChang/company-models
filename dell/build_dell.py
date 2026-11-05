@@ -49,7 +49,8 @@ for y in (27, 28, 29): UV[y] += UA[y]
 def _chk_mkt():
     for j, y in enumerate((26, 27, 28, 29)):
         _m = UG[y] * BR["rack"][0][1] / BR["gpu_n"][0][1] * 1000 + UV[y] * BR["rack"][0][4] / BR["gpu_n"][0][4] * 1000
-        assert abs(_m - SIL.NAMES["SIF_GPUSysMkt_A"][j]) < 1e-6, ("商用 GPU 系統市場與 Siliconomics 不一致", y, _m, SIL.NAMES["SIF_GPUSysMkt_A"][j])
+        _m *= {28: SIL.base("um28_B"), 29: SIL.base("um29_B")}.get(y, 1)   # v0.15：本庫只給基準
+        assert abs(_m - SIL.NAMES["SIF_GPUSysMkt_Base"][j]) < 1e-6, ("商用 GPU 系統市場與 Siliconomics 基準不一致", y, _m, SIL.NAMES["SIF_GPUSysMkt_Base"][j])
 U_SRC = f"{rel(TSMC_F)}｜In!E{TS['u_bw_26'][1]}:E{TS['g29_amd'][1]}"
 BR = {}
 for r in openpyxl.load_workbook(BR_F, data_only=True)["In"].iter_rows(min_row=4):

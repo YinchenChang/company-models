@@ -38,8 +38,10 @@ SNAP = f"Siliconomics 快照 {SIL.VERSION}（{SIL.FILE}）"
 
 # ---------------- 上游：Siliconomics（行業）＋台光電成品（份額一致性檢查，唯讀） ----------------
 N = SIL.NAMES
-GW = {s: N[f"SIF_DeployGW_{s}"] for s in SC}          # 2026–2029
-PGW = N["SIF_CCLperGW"]; MKT = {s: N[f"SIF_CCLMkt_{s}"] for s in SC}
+# v0.15：本庫只給基準（SIF_*_Base）；個股自訂情境＝基準 × (個股情境係數 ÷ 基準係數)（2028–29；2026–27 三情境相同）
+_SF = {s: [1, 1, SIL.base(f"um28_{s}") / SIL.base("um28_B"), SIL.base(f"um29_{s}") / SIL.base("um29_B")] for s in SC}
+GW = {s: [b * f for b, f in zip(N["SIF_DeployGW_Base"], _SF[s])] for s in SC}          # 2026–2029
+PGW = N["SIF_CCLperGW"]; MKT = {s: [b * f for b, f in zip(N["SIF_CCLMkt_Base"], _SF[s])] for s in SC}
 assert all(GW[s][:2] == GW["A"][:2] for s in SC), "2026–27 部署 GW 三情境應相同"
 EMC_F = glob.glob(os.path.join(ROOT, "emc", "dist", "*.xlsx")); assert len(EMC_F) == 1, EMC_F; EMC_F = EMC_F[0]
 EMC = {}

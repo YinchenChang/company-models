@@ -1174,11 +1174,18 @@ def main():
         m = _pat.match(nm_b)
         for x in "ABC":
             _scen_set.add(m.group(1) + m.group(2).replace("B", x) + m.group(3))
-    # 停用標示：A／B／C 列的項目欄加註
+    # v0.15：推導節（B 節起）的 A／B／C 名稱已刪除（下游全部改讀 *_Base 或個股自訂；Wattonomics v0.2.2 起只讀 *_Base）；
+    #        列保留在頁內作為 *_Base 的指向與參考。In 頁層的情境列（um28_A 等）名稱保留，作為個股自訂情境的參考值（v0.16 移到個股）
+    _in_names = {"SIF_" + k for k in INROW}
+    _to_del = []
     for rr in range(5, r):
         nm_ = IF.cell(rr, 1).value
         if nm_ in _scen_set:
-            IF.cell(rr, 2, f"{IF.cell(rr, 2).value}〔停用過渡：v0.13 刪；基準改讀 *_Base，A／C 改個股自訂〕")
+            if nm_ in _in_names:
+                IF.cell(rr, 2, f"{IF.cell(rr, 2).value}〔個股自訂情境參考值；基準讀 *_Base〕")
+            else:
+                IF.cell(rr, 2, f"{IF.cell(rr, 2).value}〔名稱已刪除（v0.15）；基準讀 *_Base〕")
+                _to_del.append(nm_)
     r += 1
     IF.cell(r, 1, "D. 基準（v0.12 起；三層只給基準、情境在個股〔工作方式 v1.7〕；基準＝原情境 B〔平平〕，決策 S33、S35）。"
                   "下游基準一律讀本節 *_Base；個股的 A／C 由個股自訂，並寫明產業 GW 相對 Wattonomics 基準 ±%（見 Recon 頁 B 節、SIF_GWvsWT_Base）").font = BOLD; r += 1
@@ -1200,6 +1207,10 @@ def main():
         if nm_b + "_lo" in wb.defined_names: name(wb, nm_base + "_lo", f"Interface!$D${r}")
         if nm_b + "_hi" in wb.defined_names: name(wb, nm_base + "_hi", f"Interface!$F${r}")
         IFNAMES.append(nm_base); r += 1
+    for nm_ in _to_del:   # v0.15：*_Base 建好之後才刪（Base 列以 B 名稱的位置定址）
+        for _x in (nm_, nm_ + "_lo", nm_ + "_hi"):
+            if _x in wb.defined_names: del wb.defined_names[_x]
+        if nm_ in IFNAMES: IFNAMES.remove(nm_)
     if RC is not None and "r4_vs" in RCROW:
         IF.cell(r, 1, "SIF_GWvsWT_Base"); IF.cell(r, 2, "本庫基準推得新增上線 IT GW 相對 Wattonomics 基準（＝本庫 ÷ Wattonomics − 1；個股情境的產業 GW 換算基礎）"); IF.cell(r, 3, "%")
         for j in range(4):
@@ -1417,6 +1428,8 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.15：Interface 推導節的情境 A／B／C 名稱刪除（下游 9 檔改讀 *_Base 或個股自訂：tuc、arm、ase、mpi、smci、dell、jentech、ter、tsmc；Wattonomics 已於 v0.2.2 改讀）；In 頁層情境列名稱保留為個股自訂參考值。數值不變。決策 S40。", False),
+        ("v0.14：HBM 供給基數改用廠商出貨推估（M3b hbm_sup26 4.23 EB；原＝本庫 2026 需求）；2027 HBM 需求 ÷ 供給 121% → 108%，可支撐部署 GW 34.4 → 38.5。Andy 2026-11-05 選甲；決策 S39。", False),
         ("v0.13.1：新增 M28（分世代 NVIDIA 合計 ÷ IT capex；GB300、VR200 取自晶片內容橋接表，Hopper、GB200、Rubin Ultra 為 Analogy）與 Interface SIF_NVContentGW_<世代>（＝比例 × Tokenomics 每 IT GW IT capex；Wattonomics Requests R7）、SIF_CapOnlineGW_Base（可支撐新增上線 GW，Wattonomics 可比口徑）。", False),
         ("v0.13：三層校準原則（Andy 2026-11-04：實績雙向校正、供給是上限、錨點可信度分時段看）落地：新增 Cap 頁（基準顆數的 CoWoS、HBM 需求 vs 產能 → 可支撐部署 GW；Checks K10、K10w）、Recon F 節季度實績驗證（NVIDIA 資料中心營收）、Interface SIF_WTAnchor_Base（個股敏感度「Wattonomics 錨定」案例用）、SIF_CapGW_Base、SIF_CapHead_Base、SIF_CoWoSUtil_Base、SIF_HBMUtil_Base。決策 S37。", False),
         ("v0.12：本庫只留基準（工作方式 v1.7；基準＝原情境 B，決策 S33、S35）：Interface 新增 D 節 *_Base 名稱（57 組，等同原 B 列）與 SIF_GWvsWT_Base（本庫基準推得上線 GW 相對 Wattonomics 基準）；A／B／C 名稱標停用過渡、v0.13 刪除；Scen、Units 頁改標；R4 對帳以基準重跑（r3，讀 Wattonomics v0.1.9），新增 NVIDIA 資料中心營收對帳點；個股情境改為個股自訂（決策 S36）。輸入值不變。", False),
