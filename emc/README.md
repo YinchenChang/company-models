@@ -1,4 +1,13 @@
-# emc/ — 台光電（2383）收支與估值模型 v0.5.1
+# emc/ — 台光電（2383）收支與估值模型 v0.5.2
+
+## v0.5.2（2026-11-06）：第三輪修正（合併前）
+
+- **現價與同業報價統一為 2026-11-04 收盤**：現價 4,675（10-30）→ 4,555；同業前瞻 P/E＝原 P/E × 11-04 收盤 ÷ 原報價日收盤（前瞻 EPS 視為不變）：台燿 26.37 → 20.71、聯茂 27.49 → 21.65、金像電 19.57 → 16.92（中位數 26.37 → 20.71）。共識前瞻 EPS 取 09-04 頁面價格 ÷ 當日前瞻 P/E，不受現價影響。
+- **HTML**：「情境定義與口徑」kv 情境 B／C 原指 PL!A113／A165，改為 PL!A112／A164（gen 自檢自動對正）；情境驅動表依 In 頁「情境驅動對照」節標題取列（原指到折現率列）並自檢 scn_ 鍵；DCF 彙總主表顯示 stub 列；橫幅標示新台幣。
+- **README 措辭**：重點 1「目標價略高於現價」、命題回覆「略低於本模型的加權目標價」改為依上檔空間判斷的公式（本版現價高於加權目標價）。
+- **標籤**：情境名稱、收斂法列名、上檔空間級距、stub 說明（含 stub 期的會計年度 FY2026 FCFF × stub_frac）、g 上限列名、README 舊重點觀察改公式；工具字樣改「未取得」。
+- **結果**：加權目標價 4,847 → 4,108 元（DCF 2,811 不變、Comparable 調整後 6,882 → 5,405），上檔空間 +3.7% → −9.8%，投資建議 **中立**（不變）。
+- 未做：第 9 項（PL 補逐年資本支出／折舊列）不在本輪指派範圍，維持近三年占營收比例。
 
 ## v0.5.1（2026-11-05）：第二輪修正（工作單 Andy 2026-11-05 23:16 定案；共用模組 `tools/fcff_dcf.py` v2）
 
@@ -73,9 +82,9 @@ AI 半導體 Project 載板與 PCB 次產業（樣板 `ibiden/`）的第一家�
 | 檔案 | 內容 |
 |---|---|
 | `build_emc.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261105_台光電個股模型_v0.5.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261106_台光電個股模型_v0.5.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html_src.json`、`gen_html_json.py`、`html.json` | HTML 展示層設定：`html_src.json` 為原設定，`gen_html_json.py` 套用版面規格 v1.0 產生 `html.json`（勿手改） |
-| `dist/20261105_台光電個股模型_v0.5.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261106_台光電個股模型_v0.5.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 emc/build_emc.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）、`tools/valuation_rule.py`；**不修改它們**。
 
