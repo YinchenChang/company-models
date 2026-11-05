@@ -1,8 +1,17 @@
-# delta/ — 台達電（2308）收支與估值模型 v0.5.2
+# delta/ — 台達電（2308）收支與估值模型 v0.5.3
+
+## v0.5.3（2026-11-06）：第三輪修正（合併前）
+
+- 現價：2026-10-30 收盤 1,335 → **2026-11-04 收盤 1,220**（Yahoo Finance 日線收盤；全批統一價格日）。Comparable 同業前瞻 P/E 改為 11-04 收盤 ÷ 資料商前瞻 EPS（stockanalysis 統計頁 10-22～10-27 的價格 ÷ Forward PE）：Vertiv 25.9、Eaton 23.3、Schneider 18.7、光寶科 17.4，中位數 21.9 → 21.0。
+- **非控制權益改市值**（上市子公司一律市值；fixes_round3 第 36 項）：台達泰國（DELTA.BK）少數股東 37.8%（＝1 − 台達集團 62.16%，台達泰國官網股東名冊 2026-02-27）× 實收 12,473,816,140 股 × 195 泰銖（11-04 收盤）× 匯率（USD 交叉：32.733 ÷ 33.75）≈ 8,917 億元，其餘子公司帳面約 276 億元（合併帳面 662 億 − 台達泰國少數股東帳面約 386 億），合計約 9,193 億元（帳面 662 億 → 每股多扣約 328 元）。WACC 權重與 β 重新加槓桿的 E＝母公司市值＋非控制權益（第 12 項）。晶睿（3454）等其他上市子公司本版仍以帳面計（在其餘帳面內）。
+- **Stub 期 FCFF**：v0.5.2 誤用各情境 FY2027 FCFF × stub_frac（12.2）；改用模型季度數 4Q26（Q 頁 E 欄）：4Q26 營業利益 ×（1 − tax_w）＋營收 ×（fc_da − fc_cx）− fc_wc × FY2026 營收增量 × stub_frac ＝ 10.7（十億新台幣）。
+- 展示：情境名稱統一 A（順利）／B（平平）／C（不如預期）；In 頁情境驅動對照「FY2032 營收年增收斂目標」列名改中性；Val「上檔空間級距（六級，供分組）」；Sens「永續成長率 g −1pt／上限 rf」；stub 說明改實際口徑；README「重點觀察 1」刪除相對倍數調整前的舊說明；新增「重點 7」（非控制權益市值的影響與上檔空間主因）；HTML DCF 彙總主表直接顯示「＋Stub 期 FCFF」。
+- 結果：DCF 目標價 986 → 626、Comparable（相對倍數調整後）1,442 → 1,380、加權目標價 1,214 → 1,003、上檔空間 −9.1% → −17.8%，投資建議**維持中立**（未跌破 −25%；上檔空間主要由 DCF 決定）。
+- 成品：`dist/20261106_台達電個股模型_v0.5.3.xlsx`／`.html`；v0.5.2 移到 `dist/_待刪除/`。
 
 ## v0.5.2（2026-11-05）：第二輪修正（共用模組 tools/fcff_dcf.py v2）
 
-- 模組：`tools/fcff_dcf.py` 換成 v2（原樣取自分支 `claude/html-v1-nvidia`，md5 23d39844…）。
+- 模組：`tools/fcff_dcf.py` 換成 v2（tools/fcff_dcf.py v2，md5 23d39844…）。
 - 資產負債表：維持最新已公布一季 2026-09-30（3Q26；stockanalysis 與富邦 e-Broker 季表同值）。淨現金以 stub 期滾到評價日 2026-12-31：淨現金與投資 40.2＋stub 期 FCFF（各情境 FY2027 FCFF × 92／365；情境 B 約 12.2）− 已宣告股利 0（FY2025 股利 11.6 元已於 2026-07-22 發放）＝約 52.4（十億新台幣）。
 - β：組名改「TW 散熱／電源」，β_u 1.201 不變；Sens β 低／高改為 β_u ∓ 0.3 各自重新加槓桿（In 頁新增 beta_du、beta_de）。
 - 新增 Sens「美元口徑折現」（rf＝美國 10 年期 5.00%＋CRP、g＝MIN(3%, 5%)）：加權目標價約 1,089（相對基準 −10.3%）；README 頁「重點 5」以公式帶出。「重點 6」以公式判斷各情境終值占比是否超過 80%（本版三情境 66%–73%，皆未超過）。
@@ -77,9 +86,9 @@ AI 半導體 Project **電源與散熱次產業的樣板**。AI 電源每 kW 內
 | 檔案 | 內容 |
 |---|---|
 | `build_delta.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261105_台達電個股模型_v0.5.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261106_台達電個股模型_v0.5.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html_src.json` → `gen_html_json.py` → `html.json` | HTML 展示層設定（原設定 → 版面規格 v1.0 轉換；`html.json` 勿手改，格式見 `tools/company_html/README.md`） |
-| `dist/20261105_台達電個股模型_v0.5.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261106_台達電個股模型_v0.5.3.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 delta/build_delta.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數、機架內液冷）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）；**不修改它們**。
 

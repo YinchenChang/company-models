@@ -1,4 +1,4 @@
-# 台達電 html.json 產生器（v0.5.2：DCF 彙總加 stub 期兩列、In 分組加第二輪修正新參數；v0.4.1：個股 HTML 版面規格 v1.0，docs/plan/個股HTML版面規格.md；v0.5：DCF 改標準版（FCFF＋WACC），估值章改放折現率、DCF 彙總與各情境 FCFF 明細）
+# 台達電 html.json 產生器（v0.5.3：DCF 彙總主表直接顯示「＋Stub 期 FCFF」、情境驅動表百分比一位小數（第三輪修正）；v0.5.2：DCF 彙總加 stub 期兩列、In 分組加第二輪修正新參數；v0.4.1：個股 HTML 版面規格 v1.0，docs/plan/個股HTML版面規格.md；v0.5：DCF 改標準版（FCFF＋WACC），估值章改放折現率、DCF 彙總與各情境 FCFF 明細）
 # 讀 delta/html_src.json（原版面設定，內容不動）→ 依列標籤重定位與整理 → relayout() → 寫 delta/html.json（勿手改 html.json）。
 # 用法：python3 delta/gen_html_json.py [成品 xlsx]（省略時用 delta/dist/ 內唯一的 xlsx）
 import copy, glob, json, os, re, sys
@@ -46,7 +46,7 @@ for b in dr:
         b["head"] = [f"@In!{c}{h}" for c in "BDEFCG"]
         b["rows"] = [[f"@In!B{r}", f"@In!D{r}|{f}", f"@In!E{r}|{f}", f"@In!F{r}|{f}", f"@In!C{r}", f"@In!G{r}|tag"]
                      for r in range(h + 1, until_blank("In", h + 1) + 1)
-                     for f in [{"%": "p0", "x": "n2", "權重": "p0"}.get(str(IW.cell(r, 3).value), "n2")]]
+                     for f in [{"%": "p1", "pt": "p1", "x": "n2", "權重": "p0", "年": "n0"}.get(str(IW.cell(r, 3).value), "n2")]]   # 第三輪修正（fixes_round3 第 31 項）：百分比一位小數
 
 # ── 估值：目標價與現價長條圖、結論表（主要列）、DCF 折現率、相對倍數調整表；舊法與規則值摺疊 ──
 va = sec["valuation"]["blocks"]
@@ -178,7 +178,7 @@ SPEC = {
     ["Wattonomics 錨定係數（只進敏感度）", ["wta_27", "wta_28", "wta_29"]]]]],
  "blocks_to": {"AI 電源與液冷": "AI 電源（電源及零組件事業群）", "@Units!A15": "AI 電源（電源及零組件事業群）", "標記沿用": "AI 電源（電源及零組件事業群）"},
  "main": {"目標價、現價與投資建議": ["目標價（DCF 與 Comparable 加權）", "DCF 目標價（情境加權）", "Comparable 目標價（相對倍數調整後）", "現價（", "上檔空間：加權目標價", "投資建議", "市場共識目標價"],
-          "DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+          "DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "＋Stub 期 FCFF", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
           "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
           "0.2 Comparable": ["同業前瞻 P/E 中位數", "12 個月後的前瞻 EPS", "Comparable 目標價"],
           "相對倍數調整": ["同業 10 年中位數的中位數", "相對倍數調整係數", "Comparable 目標價（相對倍數調整後）"],
