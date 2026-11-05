@@ -65,7 +65,7 @@ def classify(k, nm_block):
         return B_CO, "股價與匯率"
     if k in ("tax", "ncy"):
         return B_CO, "稅與淨現金收益率"
-    if k in ("rf", "erp", "crp", "beta", "beta_u", "beta_u_us", "beta_u_gl", "beta_de", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"):
+    if k in ("rf", "erp", "crp", "beta", "beta_u", "beta_u_med", "beta_u_us", "beta_u_gl", "beta_de", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"):
         return B_CO, "折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）"
     if k in ("debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"):
         return B_CO, "資本結構、淨現金與股數（評價用）"

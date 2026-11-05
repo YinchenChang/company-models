@@ -255,3 +255,24 @@ CONFIG["obs_tpl"] = {
 }
 CONFIG["readme_tail"] = ["v0.7（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；記憶體樣板 v0.5、tools/fcff_dcf.py；docs/plan/個股DCF標準規格.md v1.0）。新增 DCF 頁（三情境與 Wattonomics 錨定路徑的 FCFF 明細、檢查列）；Val 0.1 節改為折現率與 DCF 彙總（列數不變，0.2 節以後列號不變）；Sens 目標價參數改為標準案例（WACC、β、ERP、g、RONIC、資本支出、營運資金、DCF 權重、終值替代法）；In 頁新增 M2 節（rf、β、ERP、CRP、資本結構、折舊／資本支出／營運資金穩態比例），刪除 tp_r、tp_roe，淨現金收益率鍵 rf 改名 ncy（值不變）。Y、Q、Mkt、Recon 頁與 v0.6.2 相同。"]   # 接在 README 最後（不位移既有列）
 CONFIG["readme_extra"] = [("已知簡化：Y 頁淨現金與 ROE 未計營運資金（只在 DCF 以 fc_wc × 營收增量計入）；鎧俠等權益投資未計入 DCF 淨現金；股數用期末；HBM 毛利率無法由公開資料分離。" if t.startswith("已知簡化") else t) for t in CONFIG["readme_extra"]]
+
+# v0.7.1（2026-11-05）：β 改自算產業 β（Andy 2026-11-05 22:55；/home/claude/beta/industry_beta.md 對照表）：KR 半導體 同業中位數 1.72，Blume 調整 0.67β＋0.33，依本公司 D/E 重新加槓桿；取代 Damodaran 表。其他模型內容不變。
+_BSRC = "自算產業 β：KR 半導體 同業 4 家（SK 海力士、三星電子、韓美半導體、Samsung Electro-Mechanics）中位數（Yahoo Finance 月報酬 2021-11～2026-10，對 韓國綜合指數 ^KS11 迴歸，Hamada 去槓桿、現金修正）"
+CONFIG["dcf"].update({
+ "beta_u": ("=0.67*beta_u_med+0.33", "產業無槓桿 β（自算 KR 半導體，Blume 調整後；採用值）", _BSRC + "；＝0.67 × 中位數 beta_u_med ＋ 0.33",
+            "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）；用現金修正值：淨現金另計，β 只對營業資產", "Derived"),
+ "beta_extra": [("beta_u_med", "產業無槓桿 β 中位數（自算 KR 半導體，Blume 調整前；β 低／高案例用）", 1.72, _BSRC + "；β 低案例＝中位數 × 0.8 再 Blume 調整；高案例＝中位數未調整（Analogy）", "Derived")],
+ "beta_lo": "=(0.67*0.8*beta_u_med+0.33)*(1+(1-tax_w)*beta_de)", "beta_hi": "=beta_u_med*(1+(1-tax_w)*beta_de)",
+ "beta_lohi_note": "低＝本組 Blume 前中位數 × 0.8 再 Blume、高＝本組 Blume 前中位數（未調整），重新加槓桿（Analogy）；個股迴歸 β 未取得",
+ "beta_src": _BSRC + "；Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）；",
+ "beta_obs": "自算 KR 半導體產業無槓桿 β {betau|0.000}（同業中位數 Blume 調整）",
+ "beta_sens": "β 低／高案例（本組中位數 × 0.8 再 Blume／中位數未調整）為 {s_blo|+0.0%;−0.0%}／{s_bhi|+0.0%;−0.0%}，",
+})
+CONFIG["version"] = "v0.7.1"
+CONFIG["a1_note"] = CONFIG["a1_note"] + "；v0.7.1（2026-11-05）：β 改自算產業 β（KR 半導體，Blume 調整）"
+CONFIG["readme_tail"] = CONFIG["readme_tail"] + ["v0.7.1（2026-11-05）：β 改自算產業 β（Andy 2026-11-05 22:55）：KR 半導體 同業無槓桿 β 中位數 {betaum|0.00}（Yahoo Finance 月報酬 2021-11～2026-10 對 韓國綜合指數 ^KS11 迴歸，Hamada 去槓桿、現金修正），Blume 調整後 {betau|0.000}，依市值 D/E 重新加槓桿為 {beta|0.00}，取代 Damodaran 表；β 低／高案例改為中位數 × 0.8 再 Blume／中位數未調整。"
+    "評價日 2026-12-31 不變（已是統一評價日）。"
+    "新舊對照（v0.7 → v0.7.1）：β 1.90 → {beta|0.00}，WACC 14.6% → {wacc|0.0%}，DCF 目標價 2,178,721 → {dcftp|P}，加權目標價 2,320,245 → {tpw|P}，上檔空間 +81.7% → {upw|+0.0%;−0.0%}，投資建議 強力買進 → {rec}。其他模型內容不變。"]
+
+_m = CONFIG["tp"]["method"]; assert "β 為 Damodaran Global 半導體無槓桿 β 重新加槓桿" in _m
+CONFIG["tp"]["method"] = _m.replace("β 為 Damodaran Global 半導體無槓桿 β 重新加槓桿", "β 為自算 KR 半導體產業無槓桿 β（Blume 調整）重新加槓桿")
