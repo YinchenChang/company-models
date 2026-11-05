@@ -32,7 +32,7 @@ F.update({it["id"]: it for it in FD2["items"]})
 STAGE = int(os.environ.get("SPCX_STAGE", "99"))   # 歸因瀑布：1 讀法 2 加回小修、2 融資租賃重扣小修、3 G5 原文、4 G1 Q4 資本支出、5 G1 年底 GW、6 G3 pace（9M 占比）、7 pace 改用 Q4 拆法（二修）、8 v0.2.1 pace 季速改 ÷(1 − fin_sh)、9 v0.2.1 pace 分母改 FY2027 世代組合（預設全部）
 G2C = os.path.join(HERE, "data", "g2cal_v021_20261030.json")   # v0.2.1 重解（pace 改變 FY2027 營收）
 G2CAL = json.load(open(G2C, encoding="utf-8")) if (os.path.exists(G2C) and not os.environ.get("SPCX_NO_G2CAL")) else None   # G2 校準 k0（g2cal_v02.py 解出；只用於 Sens）
-VER = "v0.2.3"
+VER = "v0.2.4"
 TKV = "v21.10"   # v0.2.2：Tokenomics 快照 v21.7 → v21.9；v0.2.3：v21.9 → v21.10（兩次基準數值都不變）
 TK = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 GEN = {x["code"]: x["name"] for x in TK["source"]["generations"]}
@@ -1553,7 +1553,7 @@ for col, w in zip("ABCDEF", [6, 80, 12, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = "SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2.3（2026-11-04；v0.2.1 之上換 Tokenomics 快照 v21.9〔v0.2.2〕、再換 " + TKV + "〔v0.2.3〕，基準數值不變；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
+RD["A1"] = "SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2.4（2026-11-05；v0.2.4 只改展示層：README 頁新增命題分項、白話重點、命題回覆，供 HTML 新版面；v0.2.2／v0.2.3 換 Tokenomics 快照 v21.9／" + TKV + "，基準數值同 v0.2.1；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
 RD["A3"] = ("命題：SI 分部的算力投入（9M26 SI 資本支出約 400 億美元、名目算力 1.7 GW）能否由 SI 營收（對外算力出租＋Grok／Cursor／X）回本；"
             "Connectivity（Starlink）現金流與 IPO 資金能支撐多久；加計 AI 折舊與 Cursor 收購獎酬後的每股價值是否高於現價。")
 RD["A4"] = "核心問題：FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金與以融資取得 PP&E；Valor 失敗售後租回本金列融資，不扣）。"
@@ -1593,6 +1593,25 @@ for t in ("v0.2.1 一致性小修：pace 的 SI 投資季速改與 Q4 同法＝Q
 r += 1
 RD.cell(r, 1, "工作表：README → In → Q → Thesis → Seg → PL → CF → Val → Recon → Sens → Sources。藍字＝輸入、黑字＝公式；黃底＝判斷題。建置：bash spacex/make_v02.sh").font = BOLD; r += 1
 RD.cell(r, 1, "數字標記：Verified（經查核）／Interested-party（公司或賣方自述）／Analogy／Assumed（給區間）／Derived（換算）。本模型是研究整理，不構成投資建議。")
+r += 2
+# v0.2.4（Andy 2026-11-05，HTML 版面）：命題分三點、重點觀察白話版；HTML 讀這幾列（A3、A6–A8 原文保留，地圖等下游不受影響）
+RD.cell(r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用）").font = BOLD; r += 1
+RD.cell(r, 1, "命題：xAI（SI 分部）的巨額算力投資能否回本，以及 Starlink 的現金流與 IPO 資金能撐多久；三個問題如下。"); r += 1
+RD.cell(r, 1, "xAI 算力能否回本：SI 分部已投入大量算力（9M26 SI 資本支出約 400 億美元、名目算力 1.7 GW），對外出租算力加上 Grok／Cursor／X 的收入，能否把投資賺回來。"); r += 1
+RD.cell(r, 1, "Starlink 撐得住多久：Connectivity（Starlink）賺的現金加上 IPO 募得的資金，能支撐 xAI 的投資多久、何時需要再舉債。"); r += 1
+RD.cell(r, 1, "每股值多少：把新增 AI 折舊與 Cursor 收購的獎酬成本算進去之後，每股價值是否仍高於現價。"); r += 1
+RD.cell(r, 1, f'="合理價值遠低於現價：我們估每股約 "&TEXT({VB("tp")},"0.0")&" 美元，比現價 "&TEXT(px,"0.00")&" 低 "&TEXT(-{VB("up")},"0%")&"。這是兩種算法各占一半：未來現金流折現約 "&TEXT({VB("tpdcf")},"0.0")&"、分部加總約 "&TEXT({VB("tpcomp")},"0.0")&"（Starlink 用同業倍數、xAI 對外出租用自身現金流折現）；樂觀、基準、保守三種情境分別約 "&TEXT({VB("scen")},"0.0")&"、"&TEXT({VB("scen", "C")},"0.0")&"、"&TEXT({VB("scen", "D")},"0.0")&"。市場分析師平均目標價約 "&TEXT(cons_tp,"0")&"；以現價計，約為 2028 年 EBITDA 的 "&TEXT({VB("mkt_imp")},"0")&" 倍。"'); r += 1
+RD.cell(r, 1, f'="xAI 算力仍賺錢，但利潤會被壓縮：每 1 GW 算力一年的收入，目前約是持有成本的 "&TEXT(k0,"0.00")&" 倍（2026Q3）；我們假設租金逐步向成本靠攏，到 2028 年三種情境為 "&TEXT({VB("s2")},"0.00")&"、"&TEXT({VB("s2", "C")},"0.00")&"、"&TEXT({VB("s2", "D")},"0.00")&" 倍。規模擴張很快：2028 年底算力約 "&TEXT(Thesis!I{T["end"]},"0.0")&" GW，光 2027 年 xAI 就要投入約 "&TEXT(Thesis!H{T["si_inv"]}*10,"#,##0")&" 億美元（含以融資取得的設備）。"'); r += 1
+RD.cell(r, 1, f'="錢不夠，需要再舉債：2026–2030 五年自由現金流合計約 "&TEXT(CF!C{GATE}*10,"#,##0")&" 億美元（依公司口徑、即營運現金減資本支出約 "&TEXT(CF!C{GATE + 1}*10,"#,##0")&" 億），Starlink 的現金與 IPO 資金補不上，結論："&CF!C{GATE + 4}&"。獲利面也被 AI 折舊壓低：2028 年新增 AI 折舊約 "&TEXT(PL!I{PB_["da_ai"]}*10,"#,##0")&" 億美元，整體營業利益率約 "&TEXT(PL!I{PB_["om"]},"0.0%")&"。"'); r += 1
+# 命題回覆（Andy 2026-11-05 19:13：敏感度之後、資料狀態之前逐一回答三個命題，與開頭前後呼應）
+CB_ = CR["B"]; _ch = CB_["ni"] - 1
+_g2 = next(x[3] for x in SE_ROWS if x[0] == "k0_ovr_flat" and x[1] == "高")
+_kf = next(x[3] for x in SE_ROWS if x[0] == "k_flat" and x[1] == "高")
+_first = lambda row, cond: f'INDEX(CF!H{_ch}:M{_ch},MATCH(1,INDEX((CF!H{row}:M{row}{cond})*1,0),0))'
+RD.cell(r, 1, "命題回覆（HTML 用；依本模型計算回答開頭三個命題）").font = BOLD; r += 1
+RD.cell(r, 1, f'="xAI 算力能否回本？答：在我們假設的租金路徑下，以每 GW 看可以回本，但利潤空間逐年收窄；整體能否回本取決於 xAI 自用算力的價值。2028 年每 GW 收入是持有成本（已含折舊與資金成本）的 "&TEXT({VB("s2")},"0.00")&"／"&TEXT({VB("s2", "C")},"0.00")&"／"&TEXT({VB("s2", "D")},"0.00")&" 倍（樂觀／基準／保守），三種情境都大於 1（保守情境到 2030 年降到 1、即打平）；對外出租算力的價值約 "&TEXT({VB("r_v", "C")}*10,"#,##0")&" 億美元（2027 年底時點；基準；樂觀 "&TEXT({VB("r_v")}*10,"#,##0")&"、保守 "&TEXT({VB("r_v", "D")}*10,"#,##0")&"），2028 年 SI 分部營業利益約 "&TEXT(PL!I{PB_["oi_si"]}*10,"#,##0")&" 億美元。但 xAI 自用的算力（訓練 Grok 等）若只算成本、不算效益，基準情境的 DCF 企業價值是 "&TEXT({VB("ev1", "C")}*10,"#,##0")&" 億美元；租金若再往下壓到持有成本以下（k < 1），對外出租也無法回本。"'); r += 1
+RD.cell(r, 1, f'="Starlink 撐得住多久？答：撐不住，"&{_first(CB_["plug"], ">0")}&" 就要開始舉債。IPO 後 2026-09-30 現金約 "&TEXT(CF!E{CB_["cend"]}*10,"#,##0")&" 億美元；Connectivity（Starlink）"&CF!H{_ch}&" 的調整後 EBITDA 約 "&TEXT(PL!H{PB_["e_cn"]}*10,"#,##0")&" 億美元，但同年全公司資本支出約 "&TEXT(CF!H{CB_["cx"]}*10,"#,##0")&" 億美元，缺口主要來自 xAI。基準情境需新增舉債 "&CF!H{_ch}&" 約 "&TEXT(CF!H{CB_["plug"]}*10,"#,##0")&" 億、"&CF!I{_ch}&" 約 "&TEXT(CF!I{CB_["plug"]}*10,"#,##0")&" 億、"&CF!J{_ch}&" 約 "&TEXT(CF!J{CB_["plug"]}*10,"#,##0")&" 億美元，"&CF!J{_ch}&" 年底債務本金約 "&TEXT(CF!J{CB_["dend"]}*10,"#,##0")&" 億美元（評價日 "&TEXT(CF!E{CB_["dend"]}*10,"#,##0")&" 億）；自由現金流（收支關卡口徑）要到 "&{_first(CB_["fcf"], ">0")}&" 才轉正，五年合計約 "&TEXT(CF!C{GATE}*10,"#,##0")&" 億美元。"'); r += 1
+RD.cell(r, 1, f'="每股值多少？答：每股約 "&TEXT({VB("tp")},"0.00")&" 美元（DCF "&TEXT({VB("tpdcf")},"0.00")&"、Comparable "&TEXT({VB("tpcomp")},"0.00")&" 各半），比現價 "&TEXT(px,"0.00")&" 低 "&TEXT(-{VB("up")},"0%")&"，投資建議"&{VB("rec")}&"；樂觀、基準、保守三種情境 "&TEXT({VB("scen")},"0.0")&"、"&TEXT({VB("scen", "C")},"0.0")&"、"&TEXT({VB("scen", "D")},"0.0")&" 都低於現價。這已計入新增 AI 折舊（2028 年約 "&TEXT(PL!I{PB_["da_ai"]}*10,"#,##0")&" 億美元）與 Cursor 收購獎酬（尚未認列約 "&TEXT(In!E{IN_ROW["sbc_cur_left"]}*10,"#,##0")&" 億美元，約 "&TEXT(In!E{IN_ROW["sbc_cur_yrs"]},"0.0")&" 年攤完）。若 xAI 每 GW 收入只維持目前約 "&TEXT(k0,"0.00")&" 倍、不向成本收斂，目標價約 "&TEXT(Sens!D{_kf},"0.0")&"，仍低於現價；要到持有成本約 "&TEXT(In!F{IN_ROW["k0_ovr"]},"0.0")&" 倍（公司 2027Q1 營收指引隱含的水準）並長期維持，目標價 "&TEXT(Sens!D{_g2},"0.0")&" 才高於現價（敏感度「G2 校準＋k 不收斂」）。"'); r += 1
 RD.column_dimensions["A"].width = 120; RD.column_dimensions["B"].width = 60; RD.column_dimensions["C"].width = 60; RD.column_dimensions["D"].width = 60
 for rr in range(3, 9): RD.cell(rr, 1).alignment = Alignment(wrap_text=True, vertical="top")
 

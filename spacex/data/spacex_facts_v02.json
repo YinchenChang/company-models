@@ -10,7 +10,7 @@
    "T3": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫）",
    "T2": "2026Q2 法說逐字稿（2026-07；Andy 提供，未入庫）"
   },
-  "transcripts_reread": 21,
+  "transcripts_reread": 0,
   "note": "法說逐字稿不入庫；guide.* 只存數字與短句"
  },
  "items": [
@@ -3079,9 +3079,9 @@
    "tag": "[Interested-party]",
    "note": "CFO；G1 中值 37.5（Interested-party）",
    "check": {
-    "value": 35.0,
-    "source": "逐字稿重讀（第 8 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3096,9 +3096,9 @@
    "tag": "[Interested-party]",
    "note": "",
    "check": {
-    "value": 40.0,
-    "source": "逐字稿重讀（第 8 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3113,9 +3113,9 @@
    "tag": "[Interested-party]",
    "note": "CFO；Musk 同段亦稱 2.5 to 3 GW（第 3 頁）；G1 中值 2.75",
    "check": {
-    "value": 2.5,
-    "source": "逐字稿重讀（第 8 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3130,9 +3130,9 @@
    "tag": "[Interested-party]",
    "note": "",
    "check": {
-    "value": 3.0,
-    "source": "逐字稿重讀（第 8 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3147,9 +3147,9 @@
    "tag": "[Interested-party]",
    "note": "第二讀（上緣）",
    "check": {
-    "value": 3.0,
-    "source": "逐字稿重讀（第 3 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3164,9 +3164,9 @@
    "tag": "[Interested-party]",
    "note": "Recon",
    "check": {
-    "value": 2.0,
-    "source": "逐字稿重讀（第 8 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3181,9 +3181,9 @@
    "tag": "[Interested-party]",
    "note": "G2：只作校準檢查",
    "check": {
-    "value": 33.0,
-    "source": "逐字稿重讀（第 8 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3198,9 +3198,9 @@
    "tag": "[Interested-party]",
    "note": "",
    "check": {
-    "value": 37.0,
-    "source": "逐字稿重讀（第 8 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3215,9 +3215,9 @@
    "tag": "[Interested-party]",
    "note": "G2；定義：annualized revenue based on the month of December",
    "check": {
-    "value": 100.0,
-    "source": "逐字稿重讀（第 8 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3232,9 +3232,9 @@
    "tag": "[Interested-party]",
    "note": "第二讀",
    "check": {
-    "value": 100.0,
-    "source": "逐字稿重讀（第 7 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3249,9 +3249,9 @@
    "tag": "[Interested-party]",
    "note": "G3：不入基準，只作 Sens 管理層路徑案",
    "check": {
-    "value": 10.0,
-    "source": "逐字稿重讀（第 3 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3266,9 +3266,9 @@
    "tag": "[Interested-party]",
    "note": "第二讀：第 3 頁「less than 13 GW」",
    "check": {
-    "value": 13.0,
-    "source": "逐字稿重讀（第 10 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3283,9 +3283,9 @@
    "tag": "[Interested-party]",
    "note": "",
    "check": {
-    "value": 13.0,
-    "source": "逐字稿重讀（第 3 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3300,9 +3300,9 @@
    "tag": "[Interested-party]",
    "note": "只作 Recon",
    "check": {
-    "value": 20.0,
-    "source": "逐字稿重讀（第 10 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3317,9 +3317,9 @@
    "tag": "[Interested-party]",
    "note": "G6：只列 Recon（10-Q GAAP 對價 42.474＋收購後服務期 23.376 為不同口徑）",
    "check": {
-    "value": 60.0,
-    "source": "逐字稿重讀（第 8 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3334,9 +3334,9 @@
    "tag": "[Interested-party]",
    "note": "約三年認列（roughly the next three-year）；10-Q 收購後服務期 23.376、加權 2.8 年",
    "check": {
-    "value": 23.0,
-    "source": "逐字稿重讀（第 8 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3351,9 +3351,9 @@
    "tag": "[Interested-party]",
    "note": "G7：Recon（10-Q 62.959）",
    "check": {
-    "value": 63.0,
-    "source": "逐字稿重讀（第 8 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3368,9 +3368,9 @@
    "tag": "[Interested-party]",
    "note": "G7",
    "check": {
-    "value": 17.5,
-    "source": "逐字稿重讀（第 8 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3385,9 +3385,9 @@
    "tag": "[Interested-party]",
    "note": "G7（10-Q：約 67% 一年內）",
    "check": {
-    "value": 42.0,
-    "source": "逐字稿重讀（第 8 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3402,9 +3402,9 @@
    "tag": "[Interested-party]",
    "note": "只作 Recon（口徑未說明：合約總價 ÷ 瓦？）",
    "check": {
-    "value": 50.0,
-    "source": "逐字稿重讀（第 7 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -3419,9 +3419,9 @@
    "tag": "[Interested-party]",
    "note": "v0.1 Recon 的二手值，現以逐字稿原文代替",
    "check": {
-    "value": 2.0,
-    "source": "逐字稿重讀（第 6 頁）",
-    "ok": true
+    "value": null,
+    "source": "逐字稿未入庫，未重讀（數字沿用本檔）",
+    "ok": null
    }
   },
   {
@@ -4596,153 +4596,6 @@
    "value": 93522.0,
    "second": 93522,
    "source": "v0.1 事實總帳（Q3 新聞稿／10-Q 比較）",
-   "ok": true
-  },
-  {
-   "id": "guide.capex.2026q4.lo",
-   "value": 35.0,
-   "second": 35.0,
-   "source": "逐字稿重讀（第 8 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.capex.2026q4.hi",
-   "value": 40.0,
-   "second": 40.0,
-   "source": "逐字稿重讀（第 8 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.gw.ye2026.lo",
-   "value": 2.5,
-   "second": 2.5,
-   "source": "逐字稿重讀（第 8 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.gw.ye2026.hi",
-   "value": 3.0,
-   "second": 3.0,
-   "source": "逐字稿重讀（第 8 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.gw.ye2026.musk",
-   "value": 3.0,
-   "second": 3.0,
-   "source": "逐字稿重讀（第 3 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.gw.oct2026",
-   "value": 2.0,
-   "second": 2.0,
-   "source": "逐字稿重讀（第 8 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.rev.2027q1.lo",
-   "value": 33.0,
-   "second": 33.0,
-   "source": "逐字稿重讀（第 8 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.rev.2027q1.hi",
-   "value": 37.0,
-   "second": 37.0,
-   "source": "逐字稿重讀（第 8 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.arr.dec2026",
-   "value": 100.0,
-   "second": 100.0,
-   "source": "逐字稿重讀（第 8 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.arr.dec2026.q2call",
-   "value": 100.0,
-   "second": 100.0,
-   "source": "逐字稿重讀（第 7 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.gw.add2027",
-   "value": 10.0,
-   "second": 10.0,
-   "source": "逐字稿重讀（第 3 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.gw.ye2027",
-   "value": 13.0,
-   "second": 13.0,
-   "source": "逐字稿重讀（第 10 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.gw.ye2027.b",
-   "value": 13.0,
-   "second": 13.0,
-   "source": "逐字稿重讀（第 3 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.gw.ye2027.stretch",
-   "value": 20.0,
-   "second": 20.0,
-   "source": "逐字稿重讀（第 10 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.cursor.equity",
-   "value": 60.0,
-   "second": 60.0,
-   "source": "逐字稿重讀（第 8 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.cursor.retention",
-   "value": 23.0,
-   "second": 23.0,
-   "source": "逐字稿重讀（第 8 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.backlog.total",
-   "value": 63.0,
-   "second": 63.0,
-   "source": "逐字稿重讀（第 8 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.backlog.deferred",
-   "value": 17.5,
-   "second": 17.5,
-   "source": "逐字稿重讀（第 8 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.backlog.1y",
-   "value": 42.0,
-   "second": 42.0,
-   "source": "逐字稿重讀（第 8 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.price.perWatt.hi",
-   "value": 50.0,
-   "second": 50.0,
-   "source": "逐字稿重讀（第 7 頁）",
-   "ok": true
-  },
-  {
-   "id": "guide.gw.ye2026.q2call",
-   "value": 2.0,
-   "second": 2.0,
-   "source": "逐字稿重讀（第 6 頁）",
    "ok": true
   },
   {

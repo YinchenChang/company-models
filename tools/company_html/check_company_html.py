@@ -171,7 +171,7 @@ def check_company(cdir, errs):
     if re.search(r'https?://|@import|url\(', text):
         errs.append(f'{name}：含外部網址或 @import／url()')
     # 5. 結構
-    if ps.section_ids[:len(REQUIRED)] != REQUIRED:
+    if [i for i in ps.section_ids if i not in B.OPTIONAL_IDS][:len(REQUIRED)] != REQUIRED:
         errs.append(f'{name}：章節順序 {ps.section_ids} 不符 {REQUIRED}')
     if ps.svg_charts == 0 or n_pt == 0:
         errs.append(f'{name}：沒有折線圖資料點')

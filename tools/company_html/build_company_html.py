@@ -238,7 +238,10 @@ def render_table(cx, blk):
             rows.append(('sub', cells[:1]) if sub else ('row', cells))
     else:
         for r in blk['rows']:
-            rows.append(('row', r))
+            if isinstance(r, dict):   # {"sub": 規格}：分組小標列
+                rows.append(('sub', [r['sub']]))
+            else:
+                rows.append(('row', r))
     ncols = max([len(head)] + [len(r) if k == 'row' else 1 for k, r in rows])
     # 範圍展開後的欄數
     def expanded(r):
@@ -480,7 +483,25 @@ def render_upstream(cx, blk, root):
 
 
 def render_list(cx, blk):
-    return '<ul class="items">' + ''.join(f'<li>{cx.cell_html(i)}</li>' for i in blk['items']) + '</ul>'
+    tag = 'ol' if blk.get('ordered') else 'ul'   # ordered=true：編號清單
+    return f'<{tag} class="items">' + ''.join(f'<li>{cx.cell_html(i)}</li>' for i in blk['items']) + f'</{tag}>'
+
+
+def render_hero(cx, h):
+    """投資建議橫幅（html.json 頂層 hero，可選；Andy 2026-11-05）：全寬、大字、依建議著色。
+    hero：{"rec": 投資建議規格, "tiles": [[標籤, 主值規格, 副值規格或空字串], …], "note": 規格或省略}"""
+    rec_txt = cx.text_of(h['rec'])
+    tone = 'neg' if '放空' in rec_txt else 'pos' if '買進' in rec_txt else 'neu'
+    o = [f'<div class="hero hero-{tone}"><div class="hero-rec"><span class="hero-k">投資建議</span>'
+         f'<span class="hero-v">{cx.cell_html(h["rec"])}</span></div><div class="hero-tiles">']
+    for lab, main, sub in h['tiles']:
+        o.append(f'<div class="hero-t"><div class="hero-l">{cx.cell_html(lab)}</div><div class="hero-n">{cx.cell_html(main)}</div>'
+                 + (f'<div class="hero-s">{cx.cell_html(sub)}</div>' if sub else '') + '</div>')
+    o.append('</div>')
+    if h.get('note'):
+        o.append(f'<p class="hero-note">{cx.cell_html(h["note"])}</p>')
+    o.append('</div>')
+    return ''.join(o)
 
 
 def render_block(cx, blk, cfg, root):
@@ -598,7 +619,27 @@ footer{margin:24px 0 0;padding-top:10px;border-top:1px solid var(--line);font-si
 }
 """
 
+# html.json 頂層 wide_text=true：說明文字（命題、核心問題、各章說明、note）延伸到頁面全寬（Andy 2026-11-05，SpaceX 版面）
+WIDE_CSS = """
+.thesis,.q,.note{max-width:none}
+ol.items{margin:6px 0;padding-left:24px}ol.items li,ul.items li{margin:2px 0}
+.hero{margin-top:18px;border-radius:8px;padding:18px 22px;border:2px solid var(--line);display:grid;gap:12px}
+.hero-neg{background:#fbece8;border-color:#b4472f}.hero-pos{background:#e6f4f3;border-color:#0b7a80}.hero-neu{background:#fbf6e8;border-color:#c29a2b}
+.hero-rec{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.hero-k{font-size:16px;color:var(--muted);font-weight:600}
+.hero-v{font-size:34px;font-weight:700;line-height:1.2}
+.hero-neg .hero-v,.hero-neg .hero-s{color:#b4472f}.hero-pos .hero-v,.hero-pos .hero-s{color:#0b7a80}.hero-neu .hero-v,.hero-neu .hero-s{color:#8a6d16}
+.hero-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:12px}
+.hero-t{background:#fff;border:1px solid var(--line);border-radius:6px;padding:10px 14px}
+.hero-l{font-size:14px;color:var(--muted)}
+.hero-n{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.3}
+.hero-s{font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+.hero-note{margin:0;font-size:13px;color:var(--muted)}
+@media (max-width:640px){table.rt tr.sub th{justify-content:flex-start;text-align:left}.hero-v{font-size:28px}.hero-n{font-size:24px}}
+"""
+
 REQUIRED_IDS = ['thesis', 'drivers', 'pl', 'valuation', 'recon', 'sens', 'status']
+OPTIONAL_IDS = ['conclusion']   # 命題回覆（可選；放在 sens 與 status 之間，Andy 2026-11-05）
 
 
 def find_xlsx(cdir, override=None):
@@ -632,7 +673,10 @@ def build(cdir, xlsx=None, root=None):
     root = root or os.path.dirname(os.path.abspath(cdir))
     date, ver = parse_name(xlsx)
     cx = Ctx(Book(xlsx), {'$version': 'v' + ver, '$date': date, '$sha': sha12(xlsx), '$xlsx': os.path.basename(xlsx)})
-    ids = [s['id'] for s in cfg['sections']]
+    ids = [s['id'] for s in cfg['sections'] if s['id'] not in OPTIONAL_IDS]
+    allids = [s['id'] for s in cfg['sections']]
+    if 'conclusion' in allids and allids[allids.index('conclusion') - 1:allids.index('conclusion') + 2] != ['sens', 'conclusion', 'status']:
+        raise SystemExit(f'conclusion 須放在 sens 與 status 之間，實際 {allids}')
     if ids[:len(REQUIRED_IDS)] != REQUIRED_IDS:
         raise SystemExit(f'sections 的 id 須依序為 {REQUIRED_IDS}，實際 {ids}')
     check_prose(cfg['question'], 'question')
@@ -659,7 +703,7 @@ def build(cdir, xlsx=None, root=None):
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
 <title>{esc(title)}</title>
-<style>{CSS}</style>
+<style>{CSS}{WIDE_CSS if (cfg.get('wide_text') or cfg.get('hero')) else ''}</style>
 </head>
 <body>
 <input type="checkbox" id="refs" class="refs-toggle" aria-label="顯示每個數字的來源儲存格">
@@ -670,7 +714,7 @@ def build(cdir, xlsx=None, root=None):
 <label class="refs" for="refs">顯示來源儲存格（工作表!儲存格）</label>
 <nav class="toc" aria-label="章節">{toc}</nav>
 </header>
-<main>
+{render_hero(cx, cfg['hero']) if cfg.get('hero') else ''}<main>
 {"".join(secs)}
 </main>
 <footer>
