@@ -28,6 +28,23 @@ IN = wb["In"]
 KEY = {str(IN[f"A{r}"].value): r for r in range(4, IN.max_row + 1) if IN[f"A{r}"].value}
 SEC = {s["id"]: s for s in cfg["sections"]}
 
+# 情境驅動表：依 In 頁「情境驅動對照」節的實際位置重建（html_src.json 寫死的 In 列號在 M2 節〔標準版 DCF〕插入後錯位；不寫死列號）
+def _scen_fix():
+    ws = wb["In"]
+    s0 = next(r for r in range(1, ws.max_row + 1) if str(ws.cell(r, 1).value or "").startswith("情境驅動對照"))
+    h0 = s0 + 1
+    assert ws.cell(h0, 1).value == "鍵", ws.cell(h0, 1).value
+    r1 = h0 + 1
+    while ws.cell(r1, 1).value: r1 += 1
+    n = 0
+    for b in SEC["drivers"]["blocks"]:
+        if b["type"] == "table" and str(b.get("caption", "")).startswith("情境驅動"):
+            b["head"] = [f"@In!{c}{h0}" for c in "BDEFC"]
+            b["rows"] = [[f"@In!{c}{r}" for c in "BDEFC"] for r in range(h0 + 1, r1)]
+            n += 1
+    assert n == 1, n
+_scen_fix()
+
 # ---------- 前處理（只改展示設定，不動 html_src.json） ----------
 # 驅動因子：輸入 → 推導量的對照表移到附錄（轉換器依 caption「驅動 → 推導」辨識）
 dr = SEC["drivers"]
