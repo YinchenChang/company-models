@@ -1,6 +1,7 @@
 # Anthropic v0.1 分段建置進度（接手用；A1–A5 共用）
 
 ## 目前狀態（每次 push 前覆寫）
+- **v0.1.9 完成**（2026-11-04／05；工作單 `docs/workorders/20261104_anthropic_v0.1.9_TK21.10.md`；分支 `claude/anthropic-v0.1.9`；**PR #327**、**不合併**）。TK master `eded8e6`（v21.10）；DIFF 16（進計算：TPU v7、Trainium3 產出比）；η 0.4676 → 0.6040；差額 2026–2030 −1.20／−7.54／−6.14／−1.44／+3.65；覆蓋率、持續轉正年 2030、合約付款、現金、累計外部資金 0、谷底 40.23（2029）逐位不變；拆解與敏感度命題 1、2 皆不翻轉。報告 `docs/reports/20261104_v0.1.9.md`。**下一步**：chat 端驗收（未參與代理獨立核對 ②③④ 數字）、合併；Wattonomics MODEL_OVERRIDE 改指 v0_1_9 dist。**未解問題**：持續擴張情境的變現計價（報告 ⑥-2）、TPU v6e／Trainium2 比例（⑥-5）。
 - **v0.1.8 完成**（2026-11-03；工作單 `docs/workorders/20261102_anthropic_v0.1.8_S1A滾動.md`；分支 `claude/anthropic-v0.1.8`；PR #306、**不合併**）。步驟 1 模型（R4、R5a–R5f）、2 HTML／dist／測試／工具、3 報告與文件完成；報告 `docs/reports/20261103_v0.1.8.md`。命題 2 不變（累計外部資金 0、谷底 22.26 → 40.23）；命題 1 2026 單年 +2.66 → −0.94。**下一步**：chat 端審查；未參與代理逐列核對 SRC_ANT_488–521 與瀑布；Andy 決定 SpaceXAI 讀法（R4 單獨翻轉命題 2）與捐贈 Q4 處理；通知 Wattonomics 串（MODEL_OVERRIDE 改指 v0_1_8 dist）與地圖串重抽。
 - **v0.1.7.1 完成**（2026-11-02；工作單 `docs/workorders/20261102_anthropic_v0.1.7.1_S1原文落地.md`；分支 `claude/anthropic-v0.1.7.1`；PR 已開、**不合併**）。步驟 1 模型（V1–V4）、2 HTML／dist／測試／工具、3 報告與文件完成；報告 `docs/reports/20261102_v0.1.7.1.md`。命題 2：累計外部資金需求 1.19 → 0、谷底 11.86 → 22.26（2029）。下一步：未參與代理獨立核對 V2 數字（SRC_ANT_472–481 對 S-1 原文）與命題輸出；v0.1.8（S-1/A）以本版為底。未解：最低現金口徑（6 個月 vs 12 個月時 3.83）。
 - **v0.1.7 完成**（2026-10-31；工作單 `docs/workorders/20261031_anthropic_v0.1.7_S1全面套用.md`；分支 `claude/anthropic-v0.1.7`；**不合併、未開 PR**）。步驟 1 模型（W1–W6）、2 測試／HTML／dist、3 報告與文件完成；報告 `docs/reports/20261031_v0.1.7.md`。**下一步**：chat 端審查；未參與代理獨立核對瀑布與首節數字；Andy 決定未歸屬餘額付款期等替代讀法。**未解問題**：S-1 付款時程留白（未歸屬餘額付款期為 Assumed）；η 0.468 低於 WARN 下緣；sec.gov 一手章節仍未直讀。
@@ -126,3 +127,15 @@ Tokenomics：master `c2ecb71`，CURRENT `20261022_Tokenomics_v19.1.xlsx`（Luna 
 | 3 報告、對照 Excel、CHANGELOG、交接檔、進度檔 | 完成 | 見 git log「步驟 3」 | |
 
 已套用的預設（v0.1.7）：全表見報告 ⑤ 與對照 Excel ④（未歸屬餘額 2027–2033、上限型沿用既有規則、Google 額外 TPU 不進基準、自建 GW 0、二手列維持 Interested-party、W4 照推得值入基準、AMD 不扣、Broadcom 首個爬坡年 2027 等）。
+
+
+## v0.1.9 TK v21.7 → v21.10 同步（2026-11-04）
+| 步驟 | 狀態 | commit | 備註 |
+|---|---|---|---|
+| 1 快照 v21.10 | 完成 | 見 git log「v0.1.9 步驟 1」 | TK master `eded8e6`；DIFF 16（進計算：TPU v7、Trainium3 產出比；其餘 10 名只動高成本欄）；η 0.4676 → 0.6040；合約付款、現金、外部資金逐位不變 |
+| 2–3 拆解與敏感度 | 完成 | 見 git log「v0.1.9 步驟 2–3」 | html_scenarios：tk18_tpu_back／trn_back／rest_back／tk18_back、tt_lo／tt_hi；情境 wf9_a／ab／b／c、sens9_lo／hi、v019_no_*、v018 與 v018_*；歷史情境 59 個加 tk18_back。命題 1、2 在 (a)(b)(c) 與 (i)(ii)(iii) 皆不翻轉 |
+| 4 重算與測試 | 完成 | 見 git log「v0.1.9 步驟 4」 | test_builder 28、test_html 6 全過；parity 分片 3 輪（結果見報告 ⑧）；LO 錯誤 0、CHK_Errors 0、Warnings 3 |
+| 5 HTML 與 dist | 完成 | `ba6da3a` | HTML 3,071 數字、140 情境；Playwright 17 節 × 桌機／手機 0 不符 |
+| 6 報告、CHANGELOG、交接檔、PR 留言 | 完成 | 見 git log「v0.1.9 步驟 6」 | PR #327 |
+
+已套用的預設（v0.1.9）：見報告 ⑨（敏感度只動 TPU／Trainium3、舊世代沿用新比例、歷史節以當時輸出呈現、OpenAI 並排維持 v0.6.4、C54 門檻不改、HTML 產生器只存值）。

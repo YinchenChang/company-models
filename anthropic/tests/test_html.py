@@ -185,7 +185,9 @@ def test_single_driver_claims(engine, loc):
         assert need[sc] > base, sc
     assert need["price_hi"] in (None, "", 0)
     assert need["mc_hi"] in (None, "", 0) and need["mc_lo"] in (None, "", 0)          # v0.1.8：最低現金 12 個月也不需要
-    assert need["r5d_on"] in (None, "", 0) and need["v0171"] in (None, "", 0)
+    assert need["r5d_on"] in (None, "", 0)
+    v0171 = _scenario_values(engine, loc, "v0171", [("FND_ExtNeedCum", 2030)])[("FND_ExtNeedCum", 2030)]   # v0.1.9：v0171 加 tk18_back 後不再是單一群組
+    assert v0171 in (None, "", 0)
     for sc, pos in (("combo1", True), ("v016", False), ("v017", True), ("v0171_v2only_off", True), ("v017_w4_q3only", True), ("v017_w4_sbconly", False),
                     ("v017_mc_hi", True), ("v017_mc_lo", False), ("v0171_mc_hi", True), ("v0171_mc_lo", False), ("wf8_b", True), ("wf8_a", False), ("wf8_c", False),
                     ("r4_mc_hi", True)):

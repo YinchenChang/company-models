@@ -175,10 +175,11 @@ def test_bridge_not_fed_back(wb):
 
 
 def test_eta_decomposition_does_not_change_eta(eng):
-    """η 拆解只作診斷：η 等於 Compute 的值（v0.1.7 起為 0.46763641507486053：W3 2025 校準改正式 S-1、W5 TK v21.7 的 TPU／Trainium 持有比下降使既有雲端加權合約價下降；
+    """η 拆解只作診斷：η 等於 Compute 的值（v0.1.9 起為 0.603958469653879：TK v21.10 的 TPU v7、Trainium3 產出比改 FP8 對齊（0.8 → 0.66、0.5 → 0.28），2025 token 換算 GW 上升；
+    v0.1.7–v0.1.8 為 0.46763641507486053：W3 2025 校準改正式 S-1、W5 TK v21.7 的 TPU／Trainium 持有比下降使既有雲端加權合約價下降；
     v0.1.4–v0.1.6 為 0.525427732668394；v0.1.3 為 0.52729641508883，差異全來自 TK IF_TokGW_Luna）；乘積 × 殘差 ＝ η；殘差為正。"""
     eta = eng.get_name("CMP_Eta2025")
-    assert abs(eta - 0.46763641507486053) < 1e-9
+    assert abs(eta - 0.603958469653879) < 1e-9
     assert abs(eng.get_name("ETA_Eta") - eta) < 1e-12
     prod = eng.get_name("ETA_fP") * eng.get_name("ETA_fU") * eng.get_name("ETA_fW")
     assert abs(prod - eng.get_name("ETA_Prod")) < 1e-12
@@ -250,7 +251,7 @@ def test_s1f_w2_and_eta_unchanged(eng):
     q3 = eng.get_name(s["rev_s1a_2026q3"]) if eng.get_name(i["s1a_q3_switch"]) == 1 else eng.get_name(s["rev_2026_q3"])     # v0.1.8 R5a：Q3 改 S-1/A 實績
     tgt = eng.get_name(s["rev_s1f_2026h1"]) + q3 * (2 + eng.get_name(i["q4_growth"]))
     assert abs(eng.get_name("REV_Target")[1] - tgt) < 1e-9
-    assert abs(eng.get_name("CMP_Eta2025") - 0.46763641507486053) < 1e-9
+    assert abs(eng.get_name("CMP_Eta2025") - 0.603958469653879) < 1e-9          # v0.1.9：TK v21.10（v0.1.7–v0.1.8 為 0.46763641507486053）
     assert eng.get_name("COST_Eta2026H1") > 0
     for a, b in ((eng.get_name("COST_PropGap_VR_EtaH1")[0], eng.get_name("COST_PropGap_VR")[0]),
                  (eng.get_name("COST_Coverage_EtaH1")[0], eng.get_name("COST_Coverage")[0])):
@@ -365,6 +366,7 @@ def test_v0171_switches_off_reproduce_v017(eng):
     wv = openpyxl.load_workbook(old, data_only=True)
     _s, i = _ids()
     ov = {i[k]: 0 for k in ("googl_upfront_switch", "s1f_round_switch", "s1f_cond_switch", "s1a_q3_switch", "s1a_commit_switch", "s1a_unalloc_switch")}  # v0.1.8 開關一併關閉
+    ov.update(_tk_ov(eng, V018_XLSX))   # v0.1.9：TK 快照回到 v21.7（v0.1.7 當時；值取自 v0.1.8 Excel）
     from engine import resolve_key
     orig = {k: eng.get(*resolve_key(eng.names, k)) for k in ov}
     n_cmp = 0
@@ -390,6 +392,26 @@ def test_v0171_switches_off_reproduce_v017(eng):
         for k, v in orig.items():
             eng.set_key(k, v)
     assert n_cmp > 1500          # v0.1.7.1：1,696 個值
+
+
+V018_XLSX = REPO / "model" / "archive" / "20261103_Anthropic_v0.1.8.xlsx"
+TK_META = ("TK_File", "TK_Version", "TK_Commit", "TK_ReadDate", "TK_HdrGen", "TK_HdrCost")
+
+
+def _tk_ov(eng, old):
+    """old 活頁簿 TK_Link 的全部具名值（覆寫用；v0.1.9 起歷史回歸需把 TK 快照一併回到當時版本）。"""
+    wo = openpyxl.load_workbook(old)
+    ov = {}
+    for n, d in wo.defined_names.items():
+        if not n.startswith("TK_") or n in TK_META or n not in eng.names:
+            continue
+        sh, ref = d.attr_text.split("!")
+        cells = wo[sh][ref.replace("$", "")]
+        if isinstance(cells, tuple):
+            ov.update({f"{n}[{k + 1}]": c.value for k, c in enumerate(x for row in cells for x in row)})
+        else:
+            ov[n] = cells.value
+    return ov
 
 
 def _reproduce(eng, old, ov, prefixes=("DEM_", "REV_", "CMP_", "COST_", "FND_", "RVS_")):
@@ -427,6 +449,7 @@ def test_v018_switches_off_reproduce_v0171(eng):
     _s, i = _ids()
     assert eng.get_name(i["s1f_spacex_fee_switch"]) == 0 and eng.get_name(i["s1a_cond_deduct_switch"]) == 0
     ov = {i[k]: 0 for k in ("s1a_q3_switch", "s1a_commit_switch", "s1a_unalloc_switch")}
+    ov.update(_tk_ov(eng, V018_XLSX))   # v0.1.9：TK 快照回到 v21.7（v0.1.7.1 當時）
     n_cmp = _reproduce(eng, REPO / "model" / "archive" / "20261102_Anthropic_v0.1.7.1.xlsx", ov)
     assert n_cmp > 1700          # v0.1.7.1 的計算具名範圍值
 
@@ -481,3 +504,29 @@ def test_v018_charity_not_in_per_person_base(eng):
         assert abs(s2[1] - (proxy - chr_)) < 1e-9 and all(abs(a - b) < 1e-12 for a, b in zip(s2[2:], later))
     finally:
         eng.set_key(k, orig)
+
+
+def test_v019_tk_back_reproduces_v018(eng):
+    """v0.1.9：TK 快照回到 v21.7（TK_Link 全部具名值取自 v0.1.8 Excel）時，v0.1.8 的全部計算具名範圍逐位相同（公式未改；差異只來自 TK）。"""
+    n_cmp = _reproduce(eng, V018_XLSX, _tk_ov(eng, V018_XLSX))
+    assert n_cmp > 1700
+
+
+def test_v019_contract_pay_and_cash_unchanged(eng):
+    """v0.1.9 工作單：合約付款（GW × 持有比）應不變；TK 產出比只改 VR 等值換算與 η，現金與命題 2 輸出逐位等於 v0.1.8。"""
+    wo = openpyxl.load_workbook(V018_XLSX)
+    wv = openpyxl.load_workbook(V018_XLSX, data_only=True)
+    names = [n for n in wo.defined_names if n.startswith("COST_Pay_")] + [
+        "COST_ContractPay", "COST_Compute", "CMP_SupplyGW", "REV_NetCapped", "FND_FCF", "FND_CashNoExt", "FND_CashNoExtTrough", "FND_ExtNeedCum",
+        "FND_MinCash", "FND_FirstGapYear", "COST_Coverage", "COST_GapPosSustainYear"]
+    for n in names:
+        sh, ref = wo.defined_names[n].attr_text.split("!")
+        cells = wv[sh][ref.replace("$", "")]
+        want = [c.value for row in cells for c in row] if isinstance(cells, tuple) else [cells.value]
+        got = eng.get_name(n)
+        got = got if isinstance(got, list) else [got]
+        for a, b in zip(got, want):
+            if isinstance(b, (int, float)) and not isinstance(b, bool):
+                assert abs(a - b) <= 1e-9 * max(1, abs(b)), (n, a, b)
+            else:
+                assert (a in (None, "") and b in (None, "")) or a == b, (n, a, b)

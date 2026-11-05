@@ -23,7 +23,21 @@
 - **2026-11-03 v0.1.8（S-1/A No.1；工作單 `docs/workorders/20261102_anthropic_v0.1.8_S1A滾動.md` R3–R7；分支 `claude/anthropic-v0.1.8`，PR #306）**：R5a Q3 實績（營收 16.956、W4 下半年非算力 4.630／季、股權報酬代理 Q3 實際）、R5b 三段 832 → 871.4、Google 121.3、R5c 未歸屬餘額付款期依 S-1/A 結構、R5d 附條件 213.8 照計（扣除並列）、R4 SpaceXAI S-1 路徑並列、R5e 9-30 現金對照、R5f Q3 無新股權。**命題 2 不變（0；谷底 22.26 → 40.23）；命題 1 2026 單年 +2.66 → −0.94**。
 - **Wattonomics 注意（v0.1.8）**：營業現金流 Funding F07 改變（2026–2030：7.034／−42.289／−49.563／−5.631／42.833；F03 仍 0）；`wattonomics/tools/import_gap_models.py` 的 `MODEL_OVERRIDE` 仍指向已刪除的 `dist/20261031_…v0_1_7.xlsx`，合併後需改指 `dist/20261103_Anthropic收支模型_v0_1_8.xlsx` 重取（列 ID 與表頭不變）。地圖串需重抽。
 
-## 3. 模型狀態：**v0.1.8**（2026-11-03；S-1/A 第 1 號修訂滾動，分支 `claude/anthropic-v0.1.8`，PR #306，不合併，待 chat 端審查）
+- **2026-11-04 v0.1.9（TK v21.7 → v21.10；工作單 `docs/workorders/20261104_anthropic_v0.1.9_TK21.10.md`；分支 `claude/anthropic-v0.1.9`，PR 待 chat 端驗收）**：TPU v7、Trainium3 產出比改 FP8 對齊（0.8 → 0.66、0.5 → 0.28）；η 0.468 → 0.604；每 VR 等值 GW 差額絕對值放大（2030 +3.27 → +3.65），覆蓋率、持續轉正年、現金、外部資金需求逐位不變；兩個命題在 TK 低端／高端敏感度下都不翻轉。
+- **Wattonomics 注意（v0.1.9）**：Funding F07／F03 與 v0.1.8 逐位相同；`MODEL_OVERRIDE` 合併後改指 `dist/20261104_Anthropic收支模型_v0_1_9.xlsx`（v0.1.8 dist 已 git rm）。
+
+## 3. 模型狀態：**v0.1.9**（2026-11-04；Tokenomics v21.10 同步，分支 `claude/anthropic-v0.1.9`，不合併，待 chat 端驗收）
+| 項目 | 現況 |
+|---|---|
+| Excel | `model/20261104_Anthropic_v0.1.9.xlsx`（`model/CURRENT`）；v0.1–v0.1.8 在 `model/archive/`；成品副本 `dist/20261104_Anthropic收支模型_v0_1_9.xlsx`（位元組相同） |
+| HTML 一頁摘要 | `dist/20261104_Anthropic收支模型_v0_1_9.html`（「①之八」＝v0.1.9 在頁尾紀錄區最前；①之七 以 v0.1.8 當時輸出呈現〔情境 v018、v018_*〕） |
+| 報告 | `docs/reports/20261104_v0.1.9.md`、`20261104_v0.1.9_對照.xlsx`（`tools/make_report_v019.py`） |
+| Tokenomics | **v21.10**，master `eded8e6`；check_tk_snapshot OK 129、DIFF 0（v21.7 → v21.10 DIFF 16：進計算的是 TPU v7、Trainium3 產出比） |
+| 規模 | SRC_ANT 521；Inputs 229；具名範圍 1,503；公式格 8,277；Checks C01–C217（CHK_Errors＝0、CHK_Warnings＝3：C69、C70、C89）；parity 情境 70；HTML 情境 140 |
+
+**v0.1.9 結果**：η 0.6040；命題 1 差額 2026–2030 −1.20／−7.54／−6.14／−1.44／+3.65、覆蓋率 2030 1.202、持續轉正年 2030；命題 2 累計外部資金需求 **0**、谷底 **40.23**（2029；最低現金 12.04）。拆解：只動 TPU η 0.520、只動 Trainium3 η 0.535、其他 DIFF 0。敏感度：TK 低端（v21.9 原生精度）η 0.989、2030 差額 +4.59；高端 η 0.455、+3.20。待決：持續擴張情境的變現計價（按機隊平均每 VR 等值 GW 營收）、TPU v6e／Trainium2 是否另設比例（Tokenomics 缺口）、OpenAI 並排待同步 v21.10。v0.1.8 的待決（SpaceXAI 讀法、捐贈 Q4、最低現金口徑）照舊。
+
+## 3-0. 前一版：**v0.1.8**（2026-11-03；S-1/A 第 1 號修訂滾動，分支 `claude/anthropic-v0.1.8`，PR #306，已合併）
 | 項目 | 現況 |
 |---|---|
 | Excel | `model/20261103_Anthropic_v0.1.8.xlsx`（`model/CURRENT`）；v0.1–v0.1.7.1 在 `model/archive/`；成品副本 `dist/20261103_Anthropic收支模型_v0_1_8.xlsx`（位元組相同） |
