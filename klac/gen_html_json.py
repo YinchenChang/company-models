@@ -140,8 +140,14 @@ def prep(cfg, spec):
     rm_h3 = next(b for b in head if b["type"] == "h3" and str(b.get("text", "")).startswith("相對倍數調整"))
     rm_kv = head[head.index(rm_h3) + 1]
     assert rm_kv["type"] == "kv"
+    # 第三輪修正（2026-11-06）：折現率主表直接顯示股權成本、稅後債務成本、WACC、永續成長率、RONIC；rf／β／ERP／CRP 與權益占資本摺疊（規格 v1.0）
+    _vr = [[f"@Val!A{r}", f"@Val!B{r}|p2", ""] for r in spec.get("dcf_rate_val", [])]
+    _we = [x for x in _vr if text(x[0]).startswith("權益占資本")]
     nb.append({"type": "table", "caption": "DCF 折現率：股權成本、稅後債務成本、WACC、永續成長率、RONIC（標準版 DCF；直接顯示）", "head": ["項目", "數值", "標記"],
-               "rows": [in_row(k, f) for k, f in spec["dcf_rates"]] + [[f"@Val!A{r}", f"@Val!B{r}|p2", ""] for r in spec.get("dcf_rate_val", [])]})
+               "rows": [x for x in _vr if x not in _we]})
+    nb.append({"type": "table", "caption": "股權成本的組成與資本結構：rf、β、ERP、CRP、權益占資本", "head": ["項目", "數值", "標記"], "collapse": True,
+               "summary": "展開：股權成本的組成（rf、β、ERP、CRP）與權益占資本",
+               "rows": [in_row(k, f) for k, f in spec["dcf_rates"]] + _we})
     nb.append({"type": "h3", "text": "DCF 彙總"})
     nb.append(dcf_summary_block(old[k_dcf]))
     nb += dcf_detail_blocks()
@@ -199,6 +205,7 @@ def prep(cfg, spec):
 
 
 def post(cfg, intro, tor, scen_kv, spec):
+    CCY = "（美元）"   # 第三輪修正：橫幅標示幣別（金額兩位小數）
     secs = {s["id"]: s for s in cfg["sections"]}
     if intro:   # 轉換器把章說明當 note 放進某一塊；還原為章說明
         secs["drivers"]["intro"] = intro
@@ -237,9 +244,9 @@ def post(cfg, intro, tor, scen_kv, spec):
     rd = row("README", "HTML 橫幅附註用：Comparable 目標價（相對倍數調整後）")
     uc = v("上檔空間：Comparable")
     cfg["hero"] = {"rec": f"@Val!B{rec}",
-                   "tiles": [[f"@Val!A{tp}", f"@Val!B{tp}|n2", ["上檔空間 ", f"@Val!B{up}|sp1"]],
-                             ["只看 Comparable 目標價（市場主流同業法）", f"@Val!B{cu}|n2", ["上檔空間 ", f"@Val!B{uc}|sp1"]],
-                             [f"@Val!A{px}", f"@Val!B{px}|n2", ""]],
+                   "tiles": [[[f"@Val!A{tp}", CCY], f"@Val!B{tp}|n2", ["上檔空間 ", f"@Val!B{up}|sp1"]],
+                             ["只看 Comparable 目標價（市場主流同業法）" + CCY, f"@Val!B{cu}|n2", ["上檔空間 ", f"@Val!B{uc}|sp1"]],
+                             [[f"@Val!A{px}", CCY], f"@Val!B{px}|n2", ""]],
                    "note": ["投資建議依加權目標價判定：", f"@Val!E{rec}", "。進加權的 Comparable 為相對倍數調整後 ", f"@Val!B{ca}|n2",
                             "（上檔空間 ", f"@README!B{rd}|sp1", "）。"]}
 
@@ -293,7 +300,7 @@ SPEC = {
     ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "bs_date", "stub_frac", "stub_div", "sh_v"]],
     ["自由現金流（折舊、資本支出、營運資金）", ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]]]]],
  "in_skip": [],
- "main": {"0.1 DCF": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+ "main": {"0.1 DCF": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "＋Stub 期 FCFF", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
           "對帳要點": ["CY2026 下半營收", "FY2027 營收", "FY2027 EPS", "FY2028 營收", "FY2028 EPS"]},
 }
 
