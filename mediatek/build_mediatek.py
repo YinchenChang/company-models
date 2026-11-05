@@ -246,7 +246,7 @@ for _row in FD.in_rows(dict(
         )):
     rows.append(_row)
 inp("beta_u", "產業無槓桿 β：自算 TW 半導體（同業 13 家中位數，現金修正、Blume 調整）", "x", None, 1.429, None, "Analogy",
-    "自算產業 β：TW 半導體 同業 13 家中位數（Yahoo Finance 月報酬 2021-11～2026-10，對 ^TWII（加權指數） 迴歸，Hamada 去槓桿、現金修正）：中位數 1.64；Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）：0.67 × 1.64 ＋ 0.33＝1.429（/home/claude/beta/industry_beta.md）",
+    "自算產業 β：TW 半導體 同業 13 家中位數（Yahoo Finance 月報酬 2021-11～2026-10，對 ^TWII（加權指數） 迴歸，Hamada 去槓桿、現金修正）：中位數 1.64；Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）：0.67 × 1.64 ＋ 0.33＝1.429（同業表與方法：docs/plan/自算產業β_20261105.md）",
     "Sens 低／高改為 β_u ∓ beta_du（v0.3.1）；取代 Damodaran 表（Andy 2026-11-05 22:55）")
 inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新加槓桿）", "x", None, 0.3, None, "Assumed", "工作單第二輪修正（Andy 2026-11-05 23:16 定案）：β 敏感度改為 β_u ± 0.3", "取代上一版 beta_u 低／高欄（中位數 × 0.8 再 Blume 1.209／中位數未調整 1.64）")
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 股數 sh_v)", "與 WACC 權重同一口徑")
@@ -1069,7 +1069,6 @@ def _r3_fix(wb, ver, stub_fy, extra=()):
         (r"在?(?:本|建置)環境(?:中)?(?:無法開啟|找不到|取不到)(?:（未找到）)?", "未取得"),
         (r"無法開啟：未找到", "未取得"), (r"px（2026-10-23 收盤）", "px（2026-11-04 收盤）"), (r"無法開啟", "未取得"), (r"取不到", "未取得"), (r"，已抓取", ""), (r"已逐頁抓取", "已逐頁讀取"), (r"已抓取", "已讀取"), (r"抓取", "取得"),
         (r"第一年 FCFF × stub_frac", f"含 stub 期會計年度（{stub_fy}）FCFF × stub_frac"),
-        (r"原樣取自 ?claude/html-v1-nvidia", "tools/fcff_dcf.py v2"),
         (r"重點觀察 1 的第一句已改為公式；重點觀察 2、3 與其他說明中的目標價與上檔空間數字為調整前撰寫，以 Val 頁為準。",
          f"重點觀察 1 的目標價等數字為公式；調整前撰寫的舊說明已於 {ver} 刪除（第三輪修正）。"),
     ]
@@ -1119,7 +1118,7 @@ for _rr in range(_s0 + 2, _wsI.max_row + 1):
     _lb = str(_wsI.cell(_rr, 2).value or "")
     if _lb.startswith("FY2032 ") and _lb.endswith("）"): _wsI.cell(_rr, 2).value = _lb[:_lb.rindex("（")]
 _r3_gcap(wb)   # rf 1.98% < g 上限 3%：g＝rf
-_r3_fix(wb, "v0.3.2", "FY2026＝日曆年 2026，錨點", extra=[(r"（/home/claude/beta/industry_beta\.md）", "（同業表與方法：docs/plan/自算產業β_20261105.md）"), (r'"（2026-10-30）"', '"（2026-11-04）"'), (r"（v0\.2 為放空；v0\.3 DCF 改為標準版後 DCF 目標價由 2,138 降為 [^）]*）", ""), (r"與股價同日（2026-10-23）", "rf 沿用 2026-10-23")])
+_r3_fix(wb, "v0.3.2", "FY2026＝日曆年 2026，錨點", extra=[(r'"（2026-10-30）"', '"（2026-11-04）"'), (r"（v0\.2 為放空；v0\.3 DCF 改為標準版後 DCF 目標價由 2,138 降為 [^）]*）", ""), (r"與股價同日（2026-10-23）", "rf 沿用 2026-10-23")])
 wb.save(sys.argv[1])
 if os.environ.get("MTK_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
