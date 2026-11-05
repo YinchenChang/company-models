@@ -1,4 +1,4 @@
-# v0.2.4：套用個股 HTML 版面規格 v1.0（docs/plan/個股HTML版面規格.md；只改展示層）；v0.3：DCF 改標準版（FCFF＋WACC），估值章 DCF 區塊與目標價敏感度表改由本檔依 xlsx 標籤產生
+# 第二輪修正（2026-11-05）：DCF 目標價長條列號依標籤定位、In 新參數分組（模組 v2 stub、β_u ± 0.3、美元口徑）；v0.2.4：套用個股 HTML 版面規格 v1.0（docs/plan/個股HTML版面規格.md；只改展示層）；v0.3：DCF 改標準版（FCFF＋WACC），估值章 DCF 區塊與目標價敏感度表改由本檔依 xlsx 標籤產生
 # 由 html_src.json（舊版面設定，內容不動）經共用轉換器 tools/company_html/relayout.py 產生 html.json（勿手改 html.json）。
 # 用法：python3 asml/gen_html_json.py（讀 asml/dist 內唯一的 xlsx）
 # 前處理（本檔）：把設備股模板的舊版面調成轉換器預期的形狀——單一參數表改作「驅動 → 推導量對照」（進附錄）、
@@ -123,6 +123,10 @@ def prep(cfg, spec):
     assert text(conc.get("caption", "")).endswith("結論"), conc
     head = old[:k_dcf]
     bars = next(b for b in head if b["type"] == "bars")
+    h01 = row("Val", "0.1 DCF"); r_dcf = row("Val", "DCF 目標價（情境加權）", start=h01)
+    for it in bars["items"]:   # 第二輪修正：模組 v2 stub 期在 0.1 節多兩列；html_src.json 的 DCF 目標價列號（0.1 節標題 ＋ 17）改依標籤定位
+        if it["value"] == f"@Val!B{h01 + 17}":
+            it["label"], it["value"] = f"@Val!A{r_dcf}", f"@Val!B{r_dcf}"
     ca = row("Val", "Comparable 目標價（相對倍數調整後）")
     if not any(it["value"] == f"@Val!B{ca}" for it in bars["items"]):   # 加權目標價實際使用的 Comparable（相對倍數調整後）也畫出，避免讀成加權價高於兩法
         k = next(j for j, it in enumerate(bars["items"]) if text(it["label"]).startswith("Comparable 目標價"))
@@ -269,11 +273,11 @@ SPEC = {
     ["匯率與股價", ["fx_25", "fx_f", "px"]],
     ["共識與公司長期目標", ["sa_fpe", "cons_rev26", "cons_eps26", "cons_rev27", "cons_eps27", "eul_pe28", "t30_rev_lo", "t30_rev_hi", "t30_gm_lo", "t30_gm_hi"]],
     ["目標價規則（情境權重、DCF 權重、延伸期收斂與共識）", ["tp_g", "tp_w_dcf", "tp_wA", "tp_wB", "tp_wC", "nim10", "cons_tp", "cons_feps"]],
-    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
-    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"]],
+    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "rf_us", "beta_u", "beta_de", "beta_du", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
+    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "bs_date", "stub_frac", "stub_div", "sh_v"]],
     ["自由現金流（折舊、資本支出、營運資金）", ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]]]]],
  "in_skip": [],
- "main": {"0.1 DCF": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+ "main": {"0.1 DCF": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
           "對帳要點": ["FY2026 EPS", "FY2027 EPS", "FY2028 EPS", "營收（€B）vs 目標下緣", "FY2027：系統需求 ÷ 產能上限"]},
 }
 if __name__ == "__main__":
