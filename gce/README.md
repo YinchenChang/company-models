@@ -1,4 +1,12 @@
-# gce/ — 金像電（2368.TW）收支與估值模型 v0.3.1
+# gce/ — 金像電（2368.TW）收支與估值模型 v0.3.2
+
+## v0.3.2（2026-11-06）：第三輪修正（合併前）
+
+- **Stub 期已宣告股利股數與評價用股數統一**：stub_div＝9.803 元 × 除息時流通股數 0.5119 十億股（＝sh_h2 0.513756 − Amazon 私募 185.6 萬股；私募 2026-09-29 發行、晚於 06-23 除息日，不參與配息）＝50.18 億元；原用普通股股本 ÷ 面額 0.517 十億股（50.68 億元，含庫藏股等，與 sh_v 不一致）。
+- **現價與同業報價統一為 2026-11-04 收盤**：現價 1,115（10-22）→ 964；同業前瞻 P/E＝原 P/E × 11-04 收盤 ÷ 原報價日收盤（前瞻 EPS 視為不變）：健鼎 13.96 → 13.43、華通 20.76 → 17.42、臻鼎-KY 25.13 → 21.76、博智 18.49 → 15.43、TTM 10.31 → 9.44（中位數 18.49 → 15.43）；本公司前瞻 P/E 19.57 → 16.92（共識前瞻 EPS 不變）；並列參考的勝宏、沪电一併換算。
+- **README 措辭**：重點 4「投資建議由強力買進改為」改為現況＋版本註記；命題回覆「略高於現價」改為依差距判斷的公式。
+- **HTML／標籤**：情境驅動表依 In 頁「情境驅動對照」節標題取列（原指到折現率列）並自檢 scn_ 鍵；DCF 彙總主表顯示 stub 列；橫幅標示新台幣；情境名稱、收斂法列名、上檔空間級距、stub 說明、g 上限列名、README 舊重點觀察改公式；工具字樣改「未取得」。
+- **結果**：加權目標價 1,497 → 1,312 元（DCF 749 → 750、Comparable 調整後 2,245 → 1,873），上檔空間 +34.2% → +36.1%，投資建議 **買進**（不變）。
 
 ## v0.3.1（2026-11-05）：第二輪修正（工作單 Andy 2026-11-05 23:16 定案；共用模組 `tools/fcff_dcf.py` v2）
 
@@ -71,9 +79,9 @@ AI 半導體 Project 載板與 PCB 次產業，樣板 `victory_giant/`（勝宏�
 | 檔案 | 內容 |
 |---|---|
 | `build_gce.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261105_金像電個股模型_v0.3.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261106_金像電個股模型_v0.3.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html_src.json`、`gen_html_json.py`、`html.json` | HTML 展示層設定：`html_src.json` 為原設定，`gen_html_json.py` 套用版面規格 v1.0 產生 `html.json`（勿手改） |
-| `dist/20261105_金像電個股模型_v0.3.1.html` | HTML 展示層（數字全由 xlsx 重算值抽出） |
+| `dist/20261106_金像電個股模型_v0.3.2.html` | HTML 展示層（數字全由 xlsx 重算值抽出） |
 
 建置：`python3 gce/build_gce.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數）、`tsmc/dist`（情境顆數係數）、`markets/memory/market.py`（SCEN_UNITS，核對用）、`victory_giant/dist`（每 GW PCB 金額）、`emc/dist`（台光電每 GW CCL 金額，只在 Recon）、`tools/cycle_position.py`、`tools/valuation_rule.py`；**不修改它們**。
 
