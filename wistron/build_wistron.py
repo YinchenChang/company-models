@@ -222,7 +222,7 @@ inp("kw_rev27", "凱基緯穎 FY2027 營收（07-28）", "NT$B", None, 2368.079,
 inp("kw_ni27", "凱基緯穎 FY2027 淨利（07-28）", "NT$B", None, 105.263, None, "Interested-party", KGIW, "—")
 
 sec("I. 價格與市場倍數")
-inp("px", "股價（2026-10-22 收盤）", "NT$", None, 190, None, "Interested-party", SD + "：10-22 收盤 190（−2.56%）（財報狗）", "財報狗：10-14 收盤 187；Goodinfo 頁面同 190")
+inp("px", "股價（2026-11-04 收盤）", "NT$", None, 176, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（3231.TW；第三輪修正統一價格日）", "v0.4.3 為 2026-10-22 收盤 190（財報狗、Goodinfo）")
 inp("pe_ttm", "近 12 月 P/E（財報狗，10-22）", "x", None, 15.09, None, "Interested-party", SD + "：近四季 EPS 12.59", "Goodinfo 目前 P/E 14.93")
 inp("fpe", "前瞻 P/E（stockanalysis，09-29）", "x", None, 9.93, None, "Interested-party", SA_Q + "：價格 185.5（2026-09-29 擷取）", "—")
 inp("cons_feps", "共識前瞻 12 月 EPS（09-29 價格 ÷ 前瞻 P/E）", "NT$", None, "=185.5/fpe", None, "Derived", "stockanalysis 前瞻 P/E 9.93、價格 185.5（2026-09-29）", "共識前瞻 EPS 的直接數字：未找到")
@@ -288,12 +288,12 @@ _FD = FD.in_rows(dict(
            "2Q26 應收 716,679＋存貨 532,898 − 應付 434,695 − 預收 13,000（季資產負債表）；Sens 低／高 10%／22%（Assumed）"),
 ))
 _FD[0] = ("sec", "J2. 折現率與無槓桿自由現金流（標準版 DCF；tools/fcff_dcf.py；評價日 2026-12-31；黃底＝Andy 可改）")
-inp("wy_px", "緯穎股價（評價非控制權益市值用；讀緯穎模型 In 頁 px）", "NT$", None, WY["px"][1], None, "Interested-party", WY["px"][3], "唯讀；緯穎模型更新後重建本模型即同步")
+inp("wy_px", "緯穎股價（2026-11-04 收盤；非控制權益市值用）", "NT$", None, 1785, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（6669.TW；與緯創 px 同日；緯穎模型 v0.2.4 現價同值）", "v0.4.3 讀緯穎模型 In 頁 px（" + WY["px"][3] + "：" + format(WY["px"][1], ",.0f") + "）")
 inp("wy_sh", "緯穎股數（讀緯穎模型 In 頁 q_sh）", "十億股", None, WY["q_sh"][1], None, "Interested-party", WY["q_sh"][3], "唯讀")
 inp("wy_eq", "緯穎股東權益（2Q26；少數股權帳面推算用）", "NT$B", None, 137.263, None, "Verified", "stockanalysis（S&P Global）緯穎季資產負債表 2Q26：Shareholders' Equity 137,263（TWD 百萬）https://stockanalysis.com/quote/tpe/6669/financials/balance-sheet/?p=quarterly（2026-11-06 讀取）", "未列非控制權益")
 inp("ws_hold", "緯創持有緯軟（4953）比例", "%", 0.236, 0.236, 0.40, "Interested-party", "Simply Wall St 4953 股東表：Wistron Corporation 16,756,254 股（23.6%）（2026-11-06 讀取；網址見 Sources 頁）", "間接持股：未找到（高值 40% 為 Assumed）；緯軟為緯創子公司（公司簡介）")
 inp("ws_sh", "緯軟流通股數", "十億股", None, 0.07115, None, "Verified", "stockanalysis 4953 季資產負債表 2Q26：流通股數 71.15 百萬股 https://stockanalysis.com/quote/tpex/4953/financials/balance-sheet/?p=quarterly（2026-11-06 讀取）", "—")
-inp("ws_px", "緯軟股價（2026-10-22 收盤）", "NT$", None, 125.5, None, "Verified", "stockanalysis 4953 歷史股價：2026-10-22 收盤 125.50 https://stockanalysis.com/quote/tpex/4953/history/（2026-11-06 讀取）", "與緯創 px 同日")
+inp("ws_px", "緯軟股價（2026-11-04 收盤）", "NT$", None, 119, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（4953.TWO）", "與緯創 px 同日；v0.4.3 為 2026-10-22 收盤 125.50（stockanalysis）")
 inp("ws_eq", "緯軟股東權益（2Q26）", "NT$B", None, 4.095, None, "Verified", "stockanalysis 4953 季資產負債表 2Q26：Shareholders' Equity 4,095（TWD 百萬）（同上網址）", "少數股權帳面 ≈ 本值 ×（1 − ws_hold）")
 rows += _FD
 inp("beta_u", "產業無槓桿 β（採用）：自算 TW 伺服器／ODM 同業中位數 Blume 調整（0.67 × 中位數＋0.33）", "x", None, 0.792, None, "Analogy",
@@ -604,7 +604,7 @@ V["A2"] = "循環位置：緯創不是設備股，不套設備市場見頂年；
 O = 51
 V.cell(O, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, O + 1, ["項目", "A", "B", "C", "說明"])
-V.cell(O + 2, 1, "現價（2026-10-22 收盤）"); V[f"B{O + 2}"] = "=px"; V[f"B{O + 2}"].number_format = "#,##0.0"
+V.cell(O + 2, 1, "現價（2026-11-04 收盤）"); V[f"B{O + 2}"] = "=px"; V[f"B{O + 2}"].number_format = "#,##0.0"
 for k, y, lab in ((3, 2026, "現價 ÷ FY2026 EPS（錨點）"), (4, 2027, "現價 ÷ FY2027 EPS（模型）"), (5, 2028, "現價 ÷ FY2028 EPS（模型）"), (6, 2029, "現價 ÷ FY2029 EPS（模型）")):
     V.cell(O + k, 1, lab)
     for j, s in enumerate(SC):
@@ -719,12 +719,15 @@ EPSR, CFR = {}, {}
 _E = lambda s_, y: f"PL!{FC[y]}{SUMR[(s_, 'eps')]}"
 V.cell(26, 1, "0.2 Comparable（市場主流同業前瞻 P/E）").font = BOLD
 hdr(V, 27, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"])
-PEERS = [("廣達（Quanta）", "2382.TW", 11.31, "2026-10-14"), ("鴻海（Hon Hai）", "2317.TW", 11.37, "2026-10-19"),
-         ("英業達（Inventec）", "2356.TW", 18.00, "2026-08-14"), ("緯穎（Wiwynn；緯創子公司）", "6669.TW", 13.87, "2026-10-02"),
-         ("美超微（Supermicro）", "SMCI", 7.06, "2026-10-23")]
-for i, (nm, tk, pe, dt) in enumerate(PEERS, 28):
+# v0.4.4（第三輪修正）：同業前瞻 P/E 換算到 2026-11-04 收盤（共識 EPS 不變；台股同業＝stockanalysis 統計頁同頁價格 ÷ Forward PE 得前瞻 EPS）
+PEERS = [('廣達（Quanta）', '2382.TW', '=11.52*302.5/328.5', '2026-11-04', 'stockanalysis.com 統計頁 Forward PE 11.52（2026-10-21 頁面，價格 328.5；共識前瞻 EPS＝328.5 ÷ 11.52）× 2026-11-04 收盤 302.5 ÷ 328.5（Yahoo Finance 日線收盤 2026-11-04）；上一版 11.31（2026-10-14）'),
+         ('鴻海（Hon Hai）', '2317.TW', '=11.94*240/250', '2026-11-04', 'stockanalysis.com 統計頁 Forward PE 11.94（2026-10-21 頁面，價格 250；共識前瞻 EPS＝250 ÷ 11.94）× 2026-11-04 收盤 240 ÷ 250（Yahoo Finance 日線收盤 2026-11-04）；上一版 11.37（2026-10-19）'),
+         ('英業達（Inventec）', '2356.TW', '=18.0*56.4/69.9', '2026-11-04', 'stockanalysis.com forward PE 18.0（2026-08-14，收盤 69.9）× 2026-11-04 收盤 56.4 ÷ 69.9（Yahoo Finance 日線收盤 2026-11-04；共識 EPS 不變）'),
+         ('緯穎（Wiwynn；緯創子公司）', '6669.TW', '=11.73*1785/1880', '2026-11-04', 'stockanalysis.com 統計頁 Forward PE 11.73（2026-10-21 頁面，價格 1,880；共識前瞻 EPS＝1,880 ÷ 11.73）× 2026-11-04 收盤 1,785 ÷ 1,880（Yahoo Finance 日線收盤 2026-11-04）；上一版 13.87（2026-10-02）'),
+         ('美超微（Supermicro）', 'SMCI', '=7.06*29.6/32.94', '2026-11-04', 'stockanalysis.com forward PE 7.06（2026-10-23，收盤 32.94）× 2026-11-04 收盤 29.6 ÷ 32.94（Yahoo Finance 日線收盤 2026-11-04；共識 EPS 不變）')]
+for i, (nm, tk, pe, dt, src) in enumerate(PEERS, 28):
     V.cell(i, 1, nm); V.cell(i, 2, tk); c = V.cell(i, 3, pe); c.font = BLUE; c.number_format = "0.0"
-    V.cell(i, 4, dt); V.cell(i, 5, "stockanalysis.com forward PE（分析師共識；價格日期如左）"); V.cell(i, 6, "Interested-party")
+    V.cell(i, 4, dt); V.cell(i, 5, src); V.cell(i, 6, "Interested-party")
 PEER_LAST = 27 + len(PEERS)
 assert PEER_LAST == 32
 tset(33, "pmed", "同業前瞻 P/E 中位數", [f"=MEDIAN(C28:C{PEER_LAST})", None, None], "0.0", "伺服器 ODM 同業：廣達、鴻海、英業達、緯穎、美超微（券商常用比較組；不含 A 股）")
@@ -736,7 +739,7 @@ hdr(V, 38, ["項目", "數值", "", "", "說明"])
 tset(39, "tpw", "目標價（DCF 與 Comparable 加權）", [f"=tp_w_dcf*B{T['dcftp']}+(1-tp_w_dcf)*B35", None, None], "0.00", "tp_w_dcf × DCF＋（1 − tp_w_dcf）× Comparable；tp_w_dcf 見 In 頁（0.5）")
 tset(40, "comp2", "Comparable 目標價（市場主流同業法）", ["=B35", None, None], "0.00")
 tset(41, "cons", "市場共識目標價", ["=cons_tp", None, None], "0.00", "stockanalysis：17 位分析師平均 268.71（中位數 275、區間 165–400），2026-09-16 擷取")
-tset(42, "upw", "上檔空間：加權目標價", ["=B39/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-10-22 收盤）")
+tset(42, "upw", "上檔空間：加權目標價", ["=B39/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-04 收盤）")
 tset(43, "upc", "上檔空間：Comparable 目標價", ["=B40/px-1", None, None], "0.0%")
 tset(44, "geps", "與市場共識目標價的差距：EPS 因素", ["=B34/cons_feps-1", None, None], "0.0%", "本模型前瞻 EPS ÷ 共識前瞻 EPS − 1；共識前瞻 EPS＝09-29 價格 ÷ 前瞻 P/E（In 頁 cons_feps）")
 tset(45, "gmul", "與市場共識目標價的差距：倍數因素", ["=(cons_tp/cons_feps)/B33-1", None, None], "0.0%")
@@ -860,7 +863,7 @@ srcs = [("公司（摘要）：鉅亨 2Q26 法說（2Q26 營收、毛利率、�
         ("媒體：財報狗 GDR 新聞（2.5 億股、NT$186.24、稀釋 7.29%）", SD_GDR),
         ("券商：經濟日報 2026-09-10（美系券商 NVL72 櫃數調查）", UDN0910),
         ("券商：旺得富 2026-08-10（法人 2026–27 EPS、目標價）", WR0810), ("券商：工商時報 2026-08-05（本國投顧目標價 300）", CTEE0805),
-        ("資料商：財報狗（10-22 收盤 190、近 12 月 P/E）", SD), ("資料商：stockanalysis 報價頁（前瞻 P/E、股數）", SA_Q),
+        ("價格：Yahoo Finance 日線收盤 2026-11-04（現價、同業報價、緯穎與緯軟股價；第三輪修正統一價格日）", "https://finance.yahoo.com/quote/3231.TW/history/"), ("資料商：財報狗（10-22 收盤 190〔v0.4.3 現價〕、近 12 月 P/E）", SD), ("資料商：stockanalysis 報價頁（前瞻 P/E、股數）", SA_Q),
         ("資料商：stockanalysis 預估頁（共識營收、EPS、目標價）", SA_F), ("資料商：stockanalysis 財報與比率頁（FY2021–25 損益、ROE、P/E）", SA_FIN),
         ("資料商：stockanalysis 比率頁", SA_R), ("資料商：Goodinfo 歷年經營績效（年底收盤、EPS、ROE）", GI),
         ("同業前瞻 P/E：stockanalysis（廣達、鴻海、英業達、緯穎、美超微各報價頁）", "https://stockanalysis.com/quote/tpe/2382/；https://stockanalysis.com/quote/tpe/2317/；https://stockanalysis.com/quote/tpe/2356/；https://stockanalysis.com/quote/tpe/6669/；https://stockanalysis.com/stocks/smci/"),
@@ -1016,7 +1019,8 @@ RD.cell(r, 1, "上檔空間：Comparable 目標價（相對倍數調整後）");
 RD.cell(r, 1, f'="估值說明：加權目標價＝DCF 目標價 × "&TEXT(tp_w_dcf,"0%")&"＋Comparable 目標價（相對倍數調整後）× "&TEXT(1-tp_w_dcf,"0%")&"，投資建議依它的上檔空間判定。DCF 為標準版：合併無槓桿自由現金流（稅後營業利益＋折舊 − 資本支出 − 營運資金增加）以 WACC "&TEXT(wacc,"0.0%")&" 折現，終值用永續成長率 "&TEXT(g_tv,"0.00%")&"、新投資報酬率＝WACC，企業價值加淨現金與投資、減緯穎少數股權市值（資產負債表日的淨現金加 stub 期無槓桿自由現金流、扣已宣告股利，滾到評價日）後除以股數，三情境價值以股權成本推到 12 個月後並扣除期間股利，再依情境權重加權；Comparable＝同業前瞻本益比中位數 × 本公司長期相對同業的倍數比 × 約一年後的未來 12 個月 EPS（情境加權）。十年本益比規則值是舊法，只作參考，不進目標價。"'); r += 1
 r += 1
 RD.cell(r, 1, "本版要點（版本沿革；HTML 附錄用）").font = BOLD; r += 1
-RD.cell(r, 1, f'="v0.4.3（2026-11-06）：第三輪修正。(1) 非控制權益：緯穎少數股權市值之外，另加緯軟（4953）少數股權市值（2026-10-22 收盤，同 px）與其他子公司帳面差額（下限 0）；資本結構 E＝母公司市值＋非控制權益市值（WACC 權重與 β 重新加槓桿）。(2) In 頁來源網址殘缺修復（網址整段比對）。(3) README 舊 DCF 說明與舊重點觀察 1 更新；重點 1 倍數比較改寫相近；命題回覆補本模型 EPS 高於共識的前提。(4) stub 列名改含 stub 期會計年度（FY2026）FCFF × stub_frac；Sens 永續成長率列名改 g −1pt／上限 rf；情境驅動對照收斂法列名中性化與百分比格式。加權目標價 363.48 → "&TEXT({TPW},"0.00")&"、上檔空間 +91.3% → "&TEXT({UP},"+0.0%;-0.0%")&"、投資建議 強力買進 → "&{REC}&"。"'); r += 1
+RD.cell(r, 1, f'="v0.4.4（2026-11-06）：第三輪修正（現價統一 2026-11-04）。現價 190（2026-10-22） → "&TEXT({PX},"#,##0.0")&"（Yahoo Finance 日線收盤 2026-11-04）；Comparable 同業前瞻 P/E 換算到 11-04 收盤（共識 EPS 不變），同業中位數 11.37 → "&TEXT({MED},"0.00")&"；上市子公司緯穎（6669）1,840 → 1,785、緯軟（4953）125.5 → 119（11-04 收盤），非控制權益（市值口徑）645.94 → "&TEXT(mi_v,"0.00")&" NT$B。DCF 目標價 452.1 → "&TEXT({DCF},"#,##0.0")&"、Comparable 目標價（相對倍數調整後）308.8 → "&TEXT({CMP},"#,##0.0")&"、加權目標價 380.5 → "&TEXT({TPW},"#,##0.0")&"、上檔空間 +100.3% → "&TEXT({UP},"+0.0%;-0.0%")&"、投資建議 強力買進 → "&{REC}&"。"'); r += 1
+RD.cell(r, 1, 'v0.4.3（2026-11-06）：第三輪修正。(1) 非控制權益：緯穎少數股權市值之外，另加緯軟（4953）少數股權市值（2026-10-22 收盤，同 px）與其他子公司帳面差額（下限 0）；資本結構 E＝母公司市值＋非控制權益市值（WACC 權重與 β 重新加槓桿）。(2) In 頁來源網址殘缺修復（網址整段比對）。(3) README 舊 DCF 說明與舊重點觀察 1 更新；重點 1 倍數比較改寫相近；命題回覆補本模型 EPS 高於共識的前提。(4) stub 列名改含 stub 期會計年度（FY2026）FCFF × stub_frac；Sens 永續成長率列名改 g −1pt／上限 rf；情境驅動對照收斂法列名中性化與百分比格式。加權目標價 363.48 → 380.49、上檔空間 +91.3% → +100.3%、投資建議 強力買進 → 強力買進。'); r += 1   # 舊版沿革固定文字（第三輪修正第 37 點）
 RD.cell(r, 1, "v0.4.2（2026-11-05）：第二輪修正（Andy 2026-11-05 23:16 定案），換用共用模組 tools/fcff_dcf.py v2。(1) 淨現金滾到評價日：資產負債表日 2026-06-30（3Q26 財報尚未公布，維持 2Q26）→ 評價日 2026-12-31，淨現金與投資 -1037.7＋stub 期 FCFF（FY2026 錨點 × stub_frac 0.504；-121.1）− 已宣告股利 34.3＝-1193.1（NT$B）。(2) β 敏感度改 β_u ± 0.3 各自重新加槓桿（β 0.84／1.86）；基準 β_u 0.792 不變（β 1.35）。(3) 新增 Sens「美元口徑折現」：加權目標價 282.64（-22.2%）。(4) 非控制權益維持市值（緯穎少數股權，v0.4 起）。期間股利更正：FY2025 盈餘股利為每股 5.50 元（v0.4.1 誤用前一年度 3.80 元），評價日到目標時點的期間股利 7.74 → 11.21 元。RONIC＝WACC 不變；資本支出、折舊：本模型沒有擴產排程列，維持近三年占營收比例。β 1.35 → 1.35、WACC 7.5% → 7.5%、DCF 目標價 471.32 → 418.12、加權目標價 390.08 → 363.48、上檔空間 +105.3% → +91.3%、投資建議 強力買進 → 強力買進。"); r += 1   # 舊版沿革：固定為該版成品的計算結果
 RD.cell(r, 1, "v0.4.1（2026-11-05）：β 改為自算產業 β（TW 伺服器／ODM 同業 6 家無槓桿 β 中位數 0.69，Blume 調整後 0.792，依緯創負債比重新加槓桿；Andy 2026-11-05 22:55，取代 Damodaran 產業 β）。β 2.51 → 1.35、WACC 10.9% → 7.5%、DCF 目標價 165.67 → 471.32、加權目標價 237.26 → 390.08、上檔空間 +24.9% → +105.3%、投資建議 中立 → 強力買進。評價日 2026-12-31、目標時點 12 個月後與其他模型參數不變。"); r += 1
 RD.cell(r, 1, "v0.4（2026-11-05）：模型改版，DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC，docs/plan/個股DCF標準規格.md）。DCF 目標價 434.89 → 165.67、加權目標價 371.86 → 237.26、上檔空間 +95.7% → +24.9%、投資建議 強力買進 → 中立。DCF 差異拆解（情境加權，依序替換）見 PR 內文；主因是合併口徑扣除緯穎少數股權市值（約 6,391 億元）與 β 重新加槓桿。Comparable、情境權重、DCF 權重 50% 與投資建議規則不變。"); r += 1   # 舊版沿革：固定為該版成品的計算結果
@@ -1072,7 +1076,16 @@ for _r in range(1, V.max_row + 1):
 else:
     raise KeyError("w_e 列")
 
+# v0.4.4（2026-11-06）：第三輪修正（現價統一 2026-11-04）
+for _ws in wb:   # 公式中的現價日期標籤同步（含 tools/relative_multiple 產生的重點觀察 1）
+    for _row in _ws.iter_rows():
+        for _c in _row:
+            if isinstance(_c.value, str) and _c.value.startswith("="):
+                for _o in ['"（2026-10-22）"']:
+                    if _o in _c.value: _c.value = _c.value.replace(_o, '"（2026-11-04 收盤）"')
+RD["A1"] = RD["A1"].value + "；v0.4.4（2026-11-06）第三輪修正：現價與同業報價統一 2026-11-04 收盤（Yahoo Finance）"
 wb.save(sys.argv[1])
+if os.environ.get("R4_NOOP"): pass
 if os.environ.get("WISTRON_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
     json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK, "VAL": VAL, "INROW": INROW,
