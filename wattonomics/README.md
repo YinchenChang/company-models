@@ -12,8 +12,8 @@
 |---|---|
 | 現行版本 | 見 `model/CURRENT` |
 | 下游快照 | `data/CURRENT_SNAPSHOT` 指向的 `data/wattonomics_snapshot_v*.json`（`tools/export_snapshot.py` 產生；名稱前綴 `WIF_`） |
-| TK 快照 | `wattonomics/data/tokenomics_snapshot_v21.9.json`（v0.2 起自抽：`tools/tokenomics/import_tokenomics.py`，名稱清單＝Siliconomics 清單＋`IF_FacilityGW`；Siliconomics 仍為 v21.7） |
-| Siliconomics 快照 | `siliconomics/data/CURRENT_SNAPSHOT` 指向者（v0.2.2 起 v0.13；只讀基準名稱 `*_Base`：`SIF_DeployGW_Base`、`SIF_AIITCapex_Base`、`SIF_UnitsCoef_Base`、`SIF_CapGW_Base` 等，不讀 A／B／C） |
+| TK 快照 | `wattonomics/data/tokenomics_snapshot_v21.10.json`（v0.3；先前 v21.9）`wattonomics/data/tokenomics_snapshot_v21.9.json`（v0.2 起自抽：`tools/tokenomics/import_tokenomics.py`，名稱清單＝Siliconomics 清單＋`IF_FacilityGW`；Siliconomics 仍為 v21.7） |
+| Siliconomics 快照 | `siliconomics/data/CURRENT_SNAPSHOT` 指向者（v0.3 起 v0.13.1，另讀 R7 `SIF_NVContentGW_*`、逐買方 `SIF_nvsh_*`、`SIF_CapOnlineGW_Base`；只讀基準名稱 `*_Base`：`SIF_DeployGW_Base`、`SIF_AIITCapex_Base`、`SIF_UnitsCoef_Base`、`SIF_CapGW_Base` 等，不讀 A／B／C） |
 | 規劃書 | `docs/plan/20261028_全市場GW帳_規劃.md` |
 | 工作單 | `wattonomics/docs/workorders/` |
 | 證據（查證代理產出，chat 端複核後才入 In） | `wattonomics/evidence_raw/`；`tools/import_evidence.py` → `builder/seed/evidence_v0.1.json`（DB_Evidence，附 C 段判定）；`tools/import_funding.py` → `builder/seed/funding_v<版>.json`（FundRaw、Facility，附 G／H／Q 段判定與更正） |
@@ -86,7 +86,7 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 - **只並列、不校準**：基準數值不因對帳點改變；帶外標「待診斷」，各層先用自己的數字，上游（Tokenomics 每 GW 內容）先更新再對帳（Andy 11-02 16:22）。NVIDIA 公司指引（FY2028 年增約 70%）屬 Interested-party，只作對帳點，不入基準。
 - (5) 的推導：Siliconomics `nvc_gb_tk`（20.84）＝TK `IF_GPUsPerGW` GB300 × Siliconomics `nv_content`（每顆 NVIDIA 內容，GB300）；H100、GB200 以同一 NVIDIA 占機架價比 × TK 各自機架價（Analogy）；VR200、Rubin Ultra 用 GB300 值〔Assumed；TK 無權威分世代值〕；markets/chip_bridge v0.2.2 Bridge 第 44 列（AI半導體產品，非 TK）的 VR200 拆分 23.47（2026 HBM 價）／21.85（2027 HBM 價、NVIDIA 吸收）只列備忘（`WIF_Recon_NV_*Memo*`）；Requests R7 請 Tokenomics 採用權威分世代值。
 - 名稱 `WIF_Recon_NV_<ShipGW|NVGW|ContentPerGW|ImpliedRev|ActualRev|Ratio|ReqContent>_<2025–2027>`；Checks N-K1（INFO，不計入 ERROR／WARN）。互動頁不加此節。
-- v0.2 方法修正（工作單 20261104 V4；2027 時差來源診斷「現在可做」）：(2) 七家與 xAI 直接用付款年 GW（CapexGW），其餘玩家逐家以上線年鏡像式反推；(3)(4) NVIDIA GW 逐家（各家非 NVIDIA 占比），中國 NVIDIA 占比 0（2025–2027 一致）；v0.2.1 W1：非 NVIDIA 占比改殘差法——逐家值（In S5 覆寫、中國 1）維持，其餘玩家共用殘差＝（市場 GW 占比 × Σ 出貨 − 逐家值玩家非 NVIDIA 出貨）÷ 其餘出貨，市場 $ 占比先換 GW 占比，殘差 < 0 設 0 並 WARN；只用於對帳點，AI半導體 提供逐買方份額後改讀；新增 2026 校準係數 λ、所需內容成長（2027÷2026）、模型內容成長、校準後比值，**判定以成長比較**（`WIF_Recon_NV_<Calib_2026|ReqGrowth_2027|ContentGrowth_2027|CalibRatio_2027>`）；營收口徑內容（GB300 24.88、VR200 26.13，不含 scale-out）與黃仁勳每 GW（**晶片口徑，Andy 11-04**；÷ `k_chip2it` 換成每 IT GW）只列備忘。Requests R7 收件人改 AI半導體。
+- v0.2 方法修正（工作單 20261104 V4；2027 時差來源診斷「現在可做」）：(2) 七家與 xAI 直接用付款年 GW（CapexGW），其餘玩家逐家以上線年鏡像式反推；(3)(4) NVIDIA GW 逐家（各家非 NVIDIA 占比），中國 NVIDIA 占比 0（2025–2027 一致）；v0.3 Y2／Y3：每 GW 內容改讀 R7 `SIF_NVContentGW_*`；非 NVIDIA 占比改讀逐買方 `SIF_nvsh_*`（金額份額 s 換 GW 份額＝s ÷（s＋（1−s）÷ c），c＝非 NVIDIA ÷ NVIDIA 每 GW IT capex），取代殘差法。（以下為 v0.2.1 紀錄）v0.2.1 W1：非 NVIDIA 占比改殘差法——逐家值（In S5 覆寫、中國 1）維持，其餘玩家共用殘差＝（市場 GW 占比 × Σ 出貨 − 逐家值玩家非 NVIDIA 出貨）÷ 其餘出貨，市場 $ 占比先換 GW 占比，殘差 < 0 設 0 並 WARN；只用於對帳點，AI半導體 提供逐買方份額後改讀；新增 2026 校準係數 λ、所需內容成長（2027÷2026）、模型內容成長、校準後比值，**判定以成長比較**（`WIF_Recon_NV_<Calib_2026|ReqGrowth_2027|ContentGrowth_2027|CalibRatio_2027>`）；營收口徑內容（GB300 24.88、VR200 26.13，不含 scale-out）與黃仁勳每 GW（**晶片口徑，Andy 11-04**；÷ `k_chip2it` 換成每 IT GW）只列備忘。Requests R7 收件人改 AI半導體。
 
 ### 對帳鏈（每一環都是一列「左值、右值、比、容許帶、狀態」）
 
@@ -114,6 +114,7 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 
 ### 供給上限（v0.2.2；校準原則第 2 條）
 
+- v0.3 起主檢查：Deploy 毛額年新增 ≤ `SIF_CapOnlineGW_Base`（可支撐新增上線 IT GW，毛額；Checks X4-K1）；以下成本等值比較改為第二口徑（X4-K2）。
 - 基準 GW＝需求側錨點，但不得超過供給產能（Andy 11-04）。Compare G 節：Wattonomics 出貨年 GW（全市場一律以上線年新增鏡像反推；F2 對七家與 xAI 則用付款年，若 G 節也改用付款年，2026 headroom 為 6.4%）× 成本等值係數（Wattonomics 每 IT GW IT capex ÷ `SIF_ITCapexPerGW`）對 `SIF_CapGW_Base`，逐年 headroom；超過時 Checks X4-K1 WARN。只檢查，不自動截斷（判斷題，預設不截斷）。限制：2026 年上限等於 Siliconomics 自己的需求（CapHead 0、HBM 利用率 1.0），2026 年只是與 Siliconomics 需求對帳，不是獨立的供給檢驗；成本等值係數以 $ 占比當 GW 權重、市場含中國而上限多半不含，兩項都使 Wattonomics 偏高（保守方向），各讀法下 2026 headroom 介於 6%–18%。
 
 ### 汰換（v0.2；工作單 20261104 V7）
@@ -147,6 +148,8 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 | Decisions、DB_Evidence、Sources、Requests | 決策（GL01-01 起）、證據、來源 ID、對 TK／Siliconomics 的請求；v0.1.9：GL01-55 至 GL01-61、DB_Evidence N#1、SRC_GL_331–333、Requests R7 |
 
 ## 版本紀錄（摘要；完整見活頁簿 README 頁）
+
+- v0.3（2026-11-05）：Siliconomics v0.13.1、Tokenomics v21.10（Y1）；R7 分世代內容（Y2）；逐買方 NVIDIA 份額（Y3）；供給上限主檢查改可支撐上線 GW（Y4）。基準 GW 不變。報告 `docs/verify/20261105_v0.3_build.md`。
 
 - v0.2.2（2026-11-04）：Siliconomics 改讀 v0.13 `*_Base`（X1）；Deploy 不乘 Siliconomics 顆數係數（X2，地位鏈）；Compare F3 改讀 Siliconomics 出貨年（X3）；供給上限檢查 Compare G 節與 Checks X4-K1（X4，只檢查不截斷）。基準 GW 不變。報告 `docs/verify/20261104_v0.2.2_build.md`。
 
