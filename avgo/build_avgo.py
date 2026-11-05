@@ -838,6 +838,50 @@ _wta_table(SE, _t0, [("FY2027 EPS", "0.00"), ("FY2028 EPS", "0.00"), ("目標價
            [("基準（Sens 主表基準＝情境 A；目標價＝情境加權）", [_e("A", 2027), _e("A", 2028), _W["tp_base"]]),
             ("情境 B（案例底）", [_e("B", 2027), _e("B", 2028), _W["tp_b"]]),
             ("Wattonomics 錨定（情境 B × wta）", [_W["eps"](2027), _W["eps"](2028), _W["tp_w"]])])
+# ---------------- v0.4.1（2026-11-05）：只改展示層——README 頁「展示層」「命題回覆」「本版要點」三段（個股 HTML 版面規格 v1.0；公式帶數字，其他頁不變） ----------------
+def _fr(ws, prefix, start=1):
+    for _r in range(start, ws.max_row + 1):
+        _v = ws.cell(_r, 1).value
+        if isinstance(_v, str) and _v.strip().startswith(prefix): return _r
+    raise KeyError((ws.title, prefix))
+_VB = lambda k: f"Val!B{TPL[k]}"
+_E = lambda s_, y: f"PL!{XC[y]}{XR[(s_, 'eps')]}"
+_T = lambda x, f: f'TEXT({x},"{f}")'
+_PP = lambda x: f'TEXT(({x})*100,"0.0")'
+_SG = '"+0.0%;-0.0%"'
+_vadj = _fr(V, "相對倍數調整係數"); _vown = _fr(V, "本公司 10 年中位數"); _vpeer = _fr(V, "同業 10 年中位數的中位數"); _vband = TPL["band"]
+_vpe27 = _fr(V, "現價 ÷ FY2027 EPS（模型）"); _vpec = _fr(V, "現價 ÷ 共識 FY2027 EPS")
+_r_ai27 = _fr(RC, "FY2027 AI 營收 vs 公司展望"); _r_jpm = _fr(RC, "FY2027 AI 營收 vs JPMorgan"); _r_ai28 = _fr(RC, "FY2028 AI 營收 vs 公司展望")
+_r_m27 = _fr(RC, "FY2027：所需 XPU 顆數倍數"); _r_m28 = _fr(RC, "FY2028：所需 XPU 顆數倍數"); _r_u28 = _fr(RC, "FY2028：所需 Broadcom XPU 顆數")
+_r_rev27 = _fr(RC, "FY2027 營收 vs 共識"); _r_eps27 = _fr(RC, "FY2027 EPS vs 共識"); _r_gmc = _fr(RC, "FY2027 毛利率 vs 共識隱含")
+_r_fin = _fr(RC, "Anthropic 放款＋OpenAI"); _r_fai = _fr(RC, "兩家合計 ÷ FY2027 AI 營收"); _r_fni = _fr(RC, "兩家合計 ÷ FY2027 淨利")
+_s_c1 = _fr(SE, "核心售價 ×1.2"); _s_c0 = _fr(SE, "核心售價 ×0.8"); _s_tpu = _fr(SE, "TPU 份額 −15pt"); _s_net = _fr(SE, "AI 網通 ×0.8")
+_s_wta = _fr(SE, "Wattonomics 錨定（情境 B × wta）", _w0 + 1)
+_ADJM = f"Val!B{TPL['med']}*Val!B{_vadj}"   # 相對倍數調整後的目標倍數
+RD.cell(1, 1).value = RD.cell(1, 1).value.replace("模型 v0.2.1（", "模型 v0.4.1（", 1) + "；v0.4.1（2026-11-05）只改展示層（README 展示層、命題回覆與本版要點三段，HTML 新版面 v1.0），其他頁數值與 v0.4 相同"
+_r = RD.max_row + 2; _r0 = _r
+RD.cell(_r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；v0.4.1 新增，A3、A4、A20–A23 原文保留給下游）").font = BOLD; _r += 1
+RD.cell(_r, 1, "命題：Broadcom 的 AI 營收＝各 XPU 平台的顆數 × Broadcom 份額 × 每顆售價（核心＋代購 HBM）＋網通附掛；2027–28 年的增量集中在 Anthropic、OpenAI 兩家靠融資部署的客戶。問題是以市場層顆數推得的營收撐不撐得住公司展望，以及現價的低倍數在反映什麼，四個問題如下。"); _r += 1
+RD.cell(_r, 1, f'="命題 1：以市場層顆數往前推，Broadcom 的 AI 營收能否達到公司展望（FY2027 約 "&TEXT(co_ai27,"0")&"、FY2028 約 "&TEXT(co_ai28,"0")&" 十億美元）。"'); _r += 1
+RD.cell(_r, 1, "命題 2：達不到的話，差距要靠多少額外的 Broadcom XPU 顆數補上。"); _r += 1
+RD.cell(_r, 1, "命題 3：增量集中在兩家靠融資部署的客戶，Broadcom 自身承擔的客戶融資曝險有多大。"); _r += 1
+RD.cell(_r, 1, f'="命題 4：股價約為共識 FY2027 EPS 的 "&TEXT(Val!B{_vpec},"0")&" 倍：這個折價是在定價客戶信用風險，還是低估了營收。"'); _r += 1
+RD.cell(_r, 1, f'="重點 1：加權目標價約 "&{_T(_VB("tp"), "0.00")}&" 美元，比現價 "&TEXT(px,"0.00")&" 低 "&TEXT(-{_VB("up")},"0.0%")&"，投資建議「"&Val!B{REC_ROW}&"」（落在 ±25% 內）。拆到估值來源：DCF "&{_T(_VB("dcf"), "0.00")}&" 比現價高 "&TEXT({_VB("dcf")}/px-1,"0.0%")&"，加權目標價相對現價的差距（"&TEXT({_VB("tp")}-px,"+0.00;-0.00")&" 美元）中，DCF 部分 "&TEXT(tp_w_dcf*({_VB("dcf")}-px),"+0.00;-0.00")&"、Comparable 部分 "&TEXT((1-tp_w_dcf)*(tp_comp_adj-px),"+0.00;-0.00")&"，下檔全部來自 Comparable。進加權的是相對倍數調整後的 Comparable "&TEXT(tp_comp_adj,"0.00")&"：目標倍數＝同業前瞻本益比中位數 "&{_T(_VB("med"), "0.0")}&" 倍 × 調整係數 "&TEXT(Val!B{_vadj},"0.00")&"（Broadcom 過去 10 年前瞻本益比中位數 "&TEXT(Val!B{_vown},"0.0")&" 倍 ÷ 同業 "&TEXT(Val!B{_vpeer},"0.0")&" 倍）＝"&TEXT({_ADJM},"0.0")&" 倍。以同一個 12 個月後前瞻 EPS（情境加權 "&{_T(_VB("fwd"), "0.00")}&"）計，現價相當於 "&TEXT(px/{_VB("fwd")},"0.0")&" 倍，所以 Comparable 與現價的差距全部是倍數差，不是盈餘差。只看 Comparable（市場主流同業法、未調整）為 "&{_T(_VB("comp"), "0.00")}&"（"&TEXT({_VB("upc")},{_SG})&"）。"'); _r += 1
+RD.cell(_r, 1, f'="重點 2：FY2027 三情境相同（EPS "&{_T(_E("B", 2027), "0.00")}&" 美元），分歧從 FY2028 開始：FY2028 EPS 情境 A（順利）／B（平平）／C（不如預期）為 "&{_T(_E("A", 2028), "0.00")}&"／"&{_T(_E("B", 2028), "0.00")}&"／"&{_T(_E("C", 2028), "0.00")}&"，B、C 低於 FY2027。DCF 價格帶（情境 C～A，推到約 12 個月後）"&TEXT(Val!B{_vband},"0.0")&"～"&TEXT(Val!C{_vband},"0.0")&"。FY2028 AI 營收三情境為 "&TEXT(Recon!C{_r_ai28},"0.0")&"／"&TEXT(Recon!E{_r_ai28},"0.0")&"／"&TEXT(Recon!G{_r_ai28},"0.0")&"（十億美元），都低於公司展望 "&TEXT(Recon!B{_r_ai28},"0")&"。"'); _r += 1
+RD.cell(_r, 1, f'="重點 3：單一輸入（Sens 頁一次動一個，以情境 A 為基準）中，FY2028 EPS 對 XPU 核心售價最敏感：×0.8／×1.2 時 "&TEXT(Sens!L{_s_c0},{_SG})&"／"&TEXT(Sens!L{_s_c1},{_SG})&"（每顆核心售價 TPU "&TEXT(core_tpu,"0")&"、其他 ASIC "&TEXT(core_oth,"0")&" 千美元為假設）；其次是 TPU 份額少 15 個百分點 "&TEXT(Sens!L{_s_tpu},{_SG})&"（份額為假設）與 AI 網通 ×0.8 "&TEXT(Sens!L{_s_net},{_SG})&"，都未達兩位數。改用 Wattonomics 錨定的產業量（情境 B × 錨定係數，敏感度案例、未進基準）時，單一路徑目標價 "&TEXT(Sens!H{_s_wta},"0.00")&"（相對加權目標價 "&TEXT(Sens!I{_s_wta},{_SG})&"）。"'); _r += 1
+_r += 1
+RD.cell(_r, 1, "命題回覆（HTML 用；依本模型計算回答開頭四個命題）").font = BOLD; _r += 1
+RD.cell(_r, 1, f'="AI 營收能否達到公司展望？答：FY2027 可以，FY2028 三情境都達不到。FY2027 AI 營收 "&TEXT(Recon!C{_r_ai27},"0.0")&"（十億美元，三情境相同），比公司展望 "&TEXT(Recon!B{_r_ai27},"0")&" 高 "&TEXT(Recon!D{_r_ai27},"0.0%")&"，但比 JPMorgan 的 "&TEXT(Recon!B{_r_jpm},"0")&" 低 "&TEXT(-Recon!D{_r_jpm},"0.0%")&"；FY2028 情境 A／B／C 為 "&TEXT(Recon!C{_r_ai28},"0.0")&"／"&TEXT(Recon!E{_r_ai28},"0.0")&"／"&TEXT(Recon!G{_r_ai28},"0.0")&"，分別比展望 "&TEXT(Recon!B{_r_ai28},"0")&" 低 "&TEXT(-Recon!D{_r_ai28},"0.0%")&"／"&TEXT(-Recon!F{_r_ai28},"0.0%")&"／"&TEXT(-Recon!H{_r_ai28},"0.0%")&"。顆數取自市場層；Broadcom 在各平台的份額與每顆核心售價為假設（Assumed），公司展望為 Interested-party、未用於校準。"'); _r += 1
+RD.cell(_r, 1, f'="差距要靠多少額外顆數補上？答：在網通、核心售價、HBM 不變的前提下反推，FY2028 要達到展望，Broadcom XPU 顆數須為模型的 "&TEXT(Recon!C{_r_m28},"0.00")&" 倍（情境 A）／"&TEXT(Recon!E{_r_m28},"0.00")&" 倍（B）／"&TEXT(Recon!G{_r_m28},"0.00")&" 倍（C），約 "&TEXT(Recon!C{_r_u28},"0.0")&"／"&TEXT(Recon!E{_r_u28},"0.0")&"／"&TEXT(Recon!G{_r_u28},"0.0")&" 百萬顆（情境 A 的模型值為 "&TEXT(Recon!B{_r_u28},"0.0")&" 百萬顆）。FY2027 只需模型的 "&TEXT(Recon!C{_r_m27},"0.00")&" 倍，模型已超過展望。這是其他條件不變下的反推，不是預測。"'); _r += 1
+RD.cell(_r, 1, f'="客戶融資曝險有多大？答：媒體報導的 Anthropic 放款上限 "&TEXT(fin_anth,"0")&"（十億美元，下同）與 OpenAI 融資安排 "&TEXT(fin_oai,"0")&" 合計 "&TEXT(Recon!B{_r_fin},"0")&"（標題值；非資產負債表曝險，部分由銀行團分擔），約為本模型 FY2027 AI 營收的 "&TEXT(Recon!C{_r_fai},"0%")&"、FY2027 淨利的 "&TEXT(Recon!C{_r_fni},"0%")&"（全數損失時的量級，不含回收）。另有一家客戶機架租賃擔保約 "&TEXT(fin_lease,"0")&"，可能與上列重疊、不加總。本模型基準 EPS 不計入這項風險。"'); _r += 1
+RD.cell(_r, 1, f'="折價是在定價信用風險，還是低估了營收？答：本模型找不到營收被低估的證據，也無法單獨辨識信用風險。FY2027 營收 "&TEXT(Recon!C{_r_rev27},"0.0")&" 與共識 "&TEXT(Recon!B{_r_rev27},"0.0")&" 只差 "&TEXT(Recon!D{_r_rev27},{_SG})&"，EPS "&TEXT(Recon!C{_r_eps27},"0.00")&" 比共識 "&TEXT(Recon!B{_r_eps27},"0.00")&" 低 "&TEXT(-Recon!D{_r_eps27},"0.0%")&"（FY2027 毛利率 "&TEXT(Recon!C{_r_gmc},"0.0%")&"，比共識隱含約 "&TEXT(Recon!B{_r_gmc},"0.0%")&" 低 "&{_PP(f"-Recon!D{_r_gmc}")}&" 個百分點；本模型的毛利率下滑來自代購 HBM 占比上升，代購比例 "&TEXT(f_hbm,"0%")&"、代購毛利率 "&TEXT(m_hbm,"0%")&" 為假設）。同窗比較，現價約為本模型 FY2027 EPS（FY2027 約為 2026-11～2027-10，接近未來 12 個月）的 "&TEXT(Val!B{_vpe27},"0.0")&" 倍，低於同業前瞻本益比中位數（未來 12 個月）"&{_T(_VB("med"), "0.0")}&" 倍；但 Broadcom 過去 10 年前瞻本益比中位數本來就只有同業的 "&TEXT(Val!B{_vadj},"0.00")&" 倍，依這個相對倍數調整後的 Comparable 為 "&TEXT(tp_comp_adj,"0.00")&"，低於現價。所以現價的低倍數與 Broadcom 自身的歷史折價一致；加權目標價 "&{_T(_VB("tp"), "0.00")}&"（"&TEXT({_VB("up")},{_SG})&"）。"'); _r += 1
+_r += 1
+RD.cell(_r, 1, "本版要點與版本沿革（HTML 附錄用）").font = BOLD; _r += 1
+RD.cell(_r, 1, "v0.4.1（2026-11-05）：只改展示層——README 頁新增「展示層」「命題回覆」「本版要點」三段（公式帶數字），HTML 改用個股 HTML 版面規格 v1.0（tools/company_html/relayout.py）；README 以外逐格與 v0.4 相同，敏感度沿用。"); _r += 1
+for _p in ("版本：v0.4", "2026-10-29", "v0.2.1", "v0.2（", "v0.1.1"):
+    RD.cell(_r, 1, f"=A{_fr(RD, _p)}"); _r += 1
+from openpyxl.styles import Alignment as _AL
+for _rr in range(_r0, _r): RD.cell(_rr, 1).alignment = _AL(wrap_text=True, vertical="top")
 wb.save(sys.argv[1])
 if os.environ.get("AVGO_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
