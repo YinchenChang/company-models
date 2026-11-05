@@ -1,4 +1,4 @@
-# KLA（KLAC）收支與估值模型 v0.3.1（AI 半導體 Project 步驟 5：設備與材料——量測與檢測）
+# KLA（KLAC）收支與估值模型 v0.4.1（AI 半導體 Project 步驟 5：設備與材料——量測與檢測）
 # 用法：python3 klac/build_klac.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度 7 月到隔年 6 月：FY2027＝2026-07～2027-06（一半在 CY2026、一半在 CY2027）。金額：百萬美元（US$M）；EPS 為美元（2026-06 的 10 比 1 分割調整後）。
 import sys, os, glob
@@ -103,19 +103,19 @@ inp("tp_wA", "目標價情境權重 A", "%", None, 0.3, None, "Assumed", "Andy �
 inp("tp_wB", "目標價情境權重 B", "%", None, 0.5, None, "Assumed", "Andy 可改", "—")
 inp("tp_wC", "目標價情境權重 C", "%", None, 0.2, None, "Assumed", "Andy 可改", "—")
 
-# v0.4：標準版 DCF（無槓桿自由現金流＋WACC；tools/fcff_dcf.py）的 In 參數。評價日＝FY2026 年底（2026-06-30，同 v0.3 DCF 基準）；股價 2026-10-23；資產負債為 Q1 FY2027（2026-09-30）
+# v0.4：標準版 DCF（無槓桿自由現金流＋WACC；tools/fcff_dcf.py）的 In 參數。評價日 v0.4.1 起改為 2026-12-31（原 FY2026 年底 2026-06-30）；股價 2026-10-23；資產負債為 Q1 FY2027（2026-09-30）
 UST10 = ("美國財政部每日殖利率曲線 10 Yr：2026-10-23 5.00%（https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202610；2026-11-05 讀取）",
          "FRED DGS10（同一序列，https://fred.stlouisfed.org/series/DGS10）：10-28～10-30 5.05%／4.98%／4.94% 與財政部表一致；與股價同日（2026-10-23）；同 NVIDIA v0.3", "無風險利率（美國 10 年期公債殖利率，2026-10-23）")
-DAM_US = ("Damodaran 美國產業 β「Semiconductor Equip」無槓桿 β 1.35（31 家；資料 2026-01；https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/Betas.html；2026-11-05 讀取），以公司 D/E（市值）與稅率依 Hamada 重新加槓桿：β＝βU ×（1＋(1−t) × D/E）",
-          "Andy 2026-11-05 21:21：β 用 Damodaran 產業 β 重新加槓桿。低／高＝基準 ±0.3（Assumed）；對照：全球表無槓桿 β 2.04（BetasGlobal.html）、美國表現金修正後 1.39；個股迴歸 β 未取得")
+DAM_US = ("自算產業 β：US 半導體設備 同業 7 家中位數（AMAT、LRCX、KLAC、TER、FORM、COHU、KLIC；Yahoo Finance 月報酬 2021-11～2026-10，對 S&P 500 ^GSPC 迴歸，Hamada 去槓桿、現金修正）無槓桿 β 1.75；以公司 D/E（市值）與稅率依 Hamada 重新加槓桿：β＝βU ×（1＋(1−t) × D/E）",
+          "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）：採用無槓桿 β 1.503。低／高（Analogy）：低＝中位數 × 0.8 再 Blume 調整（無槓桿 1.268）、高＝中位數未調整（1.75）；取代 Damodaran 美國產業表")
 CRP_US = (0.0, "Assumed", "美國等成熟市場：0（同 NVIDIA v0.3；Damodaran 2026-01-05 表美國 Aa1、CRP 0.23%，本模型不加）", "非美國市場：Damodaran 最新 Country Risk Premium 表（Andy 2026-11-05 20:45）")
 SA = "stockanalysis.com KLAC 財報（US$M，2026-11-05 讀取）"
 SAQ = "stockanalysis.com KLAC 季度資產負債表（Q1 FY2027，2026-09-30；US$M；2026-11-05 讀取）https://stockanalysis.com/stocks/klac/financials/balance-sheet/?p=quarterly"
 RELEV = "*(1+(1-tax_w)*(debt_v+lease_v)/(px*sh_v))"
 for _row in FD.in_rows(dict(
-        date="FY2026 年底（2026-06-30；同 v0.3 DCF 基準日）", amt="US$M", shu="百萬股", ccy="US$",
+        date="2026-12-31（v0.4.1 起；FY2027 只計評價日後 6 個月；淨現金為 Q1 FY2027 資產負債表 2026-09-30）", amt="US$M", shu="百萬股", ccy="US$",
         rf=(0.0500,) + UST10,
-        beta_fixed=("=1.35" + RELEV + "-0.3", "=1.35" + RELEV, "=1.35" + RELEV + "+0.3", "Analogy") + DAM_US,
+        beta_fixed=("=(0.67*0.8*1.75+0.33)" + RELEV, "=1.503" + RELEV, "=1.75" + RELEV, "Derived") + DAM_US,
         crp=CRP_US,
         kd=("=rf+0.008", "Assumed", "rf ＋ 0.8 個百分點信用利差（科磊長期債評等 A 級）", "負債占資本約 3%，對 WACC 影響可忽略"),
         tax_w=("=tax", "Interested-party", "＝In 頁 tax（公司規劃稅率 14.5%）", "NOPAT 各年也用 tax（與 PL 淨利＝（營業利益＋營業外）×（1 − tax）同一稅率）"),
@@ -554,7 +554,7 @@ CFG_V2 = dict(cols=FYC, scn={"A": "順利", "B": "平平", "C": "不如預期"},
     pe10='E32:E41',
     pe10_note='現價 ÷ 各情境 FY2028 EPS 在 2016–2025 年底 P/E（當期口徑自算）的分位；只作檢查，不進目標價',
     px_note='現價＝In 頁 px（2026-10-23 收盤）',
-    method='DCF（v0.4 標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加（股權報酬視為費用），以 WACC 折現到 FY2026 年底（期中慣例），FY2027–32 明確期（FY2030 起收斂法），終值＝NOPAT(FY2033) ×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC；EV 加淨現金與投資 ÷ 稀釋股數，以 ke 推到 12 個月後並扣除期間股利（DCF 頁、tools/fcff_dcf.py）；β 為Damodaran 美國半導體設備產業 β 重新加槓桿（股權成本與 WACC 見 0.1 節）。Comparable：應用材料、科林研發、ASML、東京威力科創、Lasertec 前瞻 P/E 中位數 × 12 個月後前瞻 EPS。偏誤：科磊製程控制份額高、歷史上享有溢價，用同業中位數偏低估。',
+    method='DCF（v0.4 標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加（股權報酬視為費用），以 WACC 折現到 2026-12-31（期中慣例；FY2027 只計評價日後 6 個月），FY2027–32 明確期（FY2030 起收斂法），終值＝NOPAT(FY2033) ×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC；EV 加淨現金與投資 ÷ 稀釋股數，以 ke 推到 12 個月後並扣除期間股利（DCF 頁、tools/fcff_dcf.py）；β 為自算產業 β（美國半導體設備同業中位數，Blume 調整）重新加槓桿（股權成本與 WACC 見 0.1 節）。Comparable：應用材料、科林研發、ASML、東京威力科創、Lasertec 前瞻 P/E 中位數 × 12 個月後前瞻 EPS。偏誤：科磊製程控制份額高、歷史上享有溢價，用同業中位數偏低估。',
     readme=['v0.2（2026-10-25）估值 v2：Val 頁新增「0. 目標價」（放在既有內容之後，不位移既有列）＝0.5 × DCF 目標價（股東現金流＝EPS ×（1 − g／ROE），FY2027–32 明確期＋永續，r 10%、g 4%，情境權重 A 0.3／B 0.5／C 0.2）＋0.5 × Comparable 目標價（同業前瞻 P/E 中位數 × 12 個月後前瞻 EPS）；另列 Comparable 單獨目標價、市場共識目標價與差距拆解、歷史分位檢查。原「0. 目標價與上檔空間」改名「舊法：規則值情境加權（參考）」，不再叫目標價。', '預估期間延伸到 FY2032：FY2027–FY2029 由驅動因子推導；FY2030 起為收斂法，非驅動因子推導（PL 頁底部延伸區塊，灰底）。情境對應：A＝順利、B＝平平、C＝不如預期（原為顆數情境）。本版未做先驗，無 Andy 合理 P/E 對照。'])
 
 # ---------------- 估值 v2（2026-10-25，Andy 11:18／11:20／11:28／11:53）：PL 延伸到 FY2032（收斂法）＋ Val「0. 目標價」（DCF 與 Comparable 加權） ----------------
@@ -784,13 +784,13 @@ def _ebit(s_, y):
     return f"PL!{FYC[y]}{PB[s_]['oi']}" if y <= 2029 else f"=PL!{_EXTC[y]}{V2EXT[s_]['ni']}/(1-tax)-oth_exp"
 DPATHS = [dict(name=s_, label=f"情境 {s_}（{CFG_V2['scn'][s_]}）", rev={y: f"PL!{_EXTC[y]}{V2EXT[s_]['rev']}" for y in FY_X}, rev0=f"PL!{_EXTC[2026]}{V2EXT[s_]['rev']}",
               ebit={y: _ebit(s_, y) for y in FY_X}, tax={y: "tax" for y in FY_X}, ebit_note="FY2030 起＝淨利 ÷（1 − tax）− oth_exp（PL 延伸區塊只有淨利）") for s_ in SC]
-V2T = dcf_v03(V2T, DPATHS, FY_X, 1.0, "v0.4",
-              "DCF — 標準版（v0.4）：無槓桿自由現金流 FCFF＝NOPAT＋折舊攤銷 − 資本支出 − 營運資金增加；WACC 折現到評價日 FY2026 年底（2026-06-30，期中慣例）；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g）。共用模組 tools/fcff_dcf.py",
+V2T = dcf_v03(V2T, DPATHS, FY_X, 0.5, "v0.4",
+              "DCF — 標準版（v0.4）：無槓桿自由現金流 FCFF＝NOPAT＋折舊攤銷 − 資本支出 − 營運資金增加；WACC 折現到評價日 2026-12-31（v0.4.1 起；原 FY2026 年底 2026-06-30；期中慣例）；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g）。共用模組 tools/fcff_dcf.py",
               "EBIT：FY2027–FY2029 取 PL 推導區塊「營業利益」；FY2030–FY2032（PL 延伸區塊只有淨利）由淨利還原：EBIT＝淨利 ÷（1 − tax）− oth_exp（與 PL 淨利＝（營業利益＋營業外）×（1 − tax）同式）。稅率：tax（14.5%）。"
               "營業外淨額不進 NOPAT，現金另在評價時加入。折舊、資本支出：近三年占營收比例（In 頁 fc_da、fc_cx），FY2028 起資本支出線性收斂到長期穩態 fc_cx_ss；營運資金：近三年平均占營收 × 營收增量。",
               CFG_V2["fmt"], CFG_V2["band_fmt"], nc_bs="1532+3209-5723-(54.01+215.34)",
               nc_note="Q1 FY2027 資產負債表（US$M）：現金 1,532＋短期投資 3,209 − 長期債務 5,723 − 租賃（54.01＋215.34）",
-              detail_title="三情境 FCFF 明細（US$M；FY2027＝2026-07～2027-06，全年在評價日之後）")
+              detail_title="三情境 FCFF 明細（US$M；FY2027＝2026-07～2027-06，評價日 2026-12-31 後只計 6 個月）")
 if os.environ.get("V2_ROWS"):
     print("V2", V2T, V2EXT)
 
@@ -972,7 +972,7 @@ obs = [
        "；中國系統營收自 CY2027 起 −50% 使 ", _SG(f"Sens!H{s_cn50}"), "；製程控制強度不再提升使 ", _SG(f"Sens!H{s_pc0}"), "。"),
     _F("重點 4：DCF 改為標準版（無槓桿自由現金流折現）：推到 12 個月後的 DCF 情境價值順利／平平／不如預期為 ", T2(f"Val!B{vd12}"), "／", T2(f"Val!C{vd12}"), "／", T2(f"Val!D{vd12}"),
        "，DCF 目標價 ", T2(f"Val!B{vd}"), "（舊法股東現金流 ", T2(f"README!B{OLD['dcf']}"), "）。WACC ", _TX("wacc", "0.0%"), "（股權成本 ", _TX("ke", "0.0%"), "＝rf ", _TX("rf", "0.00%"),
-       " ＋ β ", _TX("beta", "0.00"), " × ", _E('IF(crp>0,"（ERP "&TEXT(erp,"0%")&" ＋ CRP "&TEXT(crp,"0.00%")&"）","ERP "&TEXT(erp,"0%"))'), "；β 為 Damodaran 美國半導體設備產業 β 重新加槓桿（產業類比），ERP 5% 與 RONIC＝WACC 為假設）；",
+       " ＋ β ", _TX("beta", "0.00"), " × ", _E('IF(crp>0,"（ERP "&TEXT(erp,"0%")&" ＋ CRP "&TEXT(crp,"0.00%")&"）","ERP "&TEXT(erp,"0%"))'), "；β 為自算產業 β（美國半導體設備同業中位數，Blume 調整）重新加槓桿，ERP 5% 與 RONIC＝WACC 為假設）；",
        "平平與不如預期情境的盈餘在 FY2029 後依收斂法變化（FY2032 每股盈餘 ", T2(f"DCF!C{E32}"), "、", T2(f"DCF!D{E32}"), "；FY2030 起為收斂法、非驅動因子推導，是假設）。終值現值占平平情境企業價值 ",
        _TX(f"Val!C{_rw(_V, '其中：終值現值占 EV')}", "0%"), "、隱含終值 EV／EBITDA ", _TX(f"Val!C{_rw(_V, '隱含終值 EV／EBITDA')}", "0.0"), " 倍。以情境加權目標價為基準，WACC −1pt／＋1pt 時加權目標價 ",
        _SG(f"Sens!D{_rw(_SE, 'WACC ±1pt')}"), "／", _SG(f"Sens!F{_rw(_SE, 'WACC ±1pt')}"), "；「", _E(f"Sens!A{s_w8}"), "」時 ", _SG(f"Sens!D{s_w8}"), "／", _SG(f"Sens!F{s_w8}"), "。"),
@@ -992,5 +992,8 @@ answers = [
 _block(lead, props, obs, answers)
 _RD.cell(_RD.max_row + 2, 1, "v0.4（2026-11-05）：DCF 改為標準版（docs/plan/個股DCF標準規格.md v1.0；tools/fcff_dcf.py）。(1) Val 0.1 節改為 FCFF＋WACC 摘要（折現率、明確期現值、終值現值、EV、淨現金、每股價值、終值占比、隱含終值倍數），列數不變；(2) 新增 DCF 頁：三情境 FCFF 明細與檢查列；原 Val 0.1 節的情境 EPS 表移到 DCF 頁（Comparable 讀此表，數值不變）；"
                 "(3) In 頁新增 M2 節（rf 美國 10 年期公債、Damodaran 美國半導體設備產業 β 重新加槓桿、ERP 5%、g＝MIN(3%, rf)、RONIC＝WACC、資本結構、折舊／資本支出／營運資金比例）；刪除 tp_r、tp_roe；(4) Sens 頁目標價參數段改為標準案例。新舊目標價對照見本頁「v0.3.1 → v0.4 對照」列。")
+# v0.4.1（2026-11-05）：β 改自算產業 β（US 半導體設備同業中位數、Blume 調整；Andy 2026-11-05 22:55）、評價日改為 2026-12-31，其他模型不變
+_RD["A1"] = str(_RD["A1"].value) + "；v0.4.1（2026-11-05）β 改自算產業 β（US 半導體設備同業中位數、Blume 調整；Andy 2026-11-05 22:55）、評價日改為 2026-12-31，其他模型不變"
+_RD.cell(_RD.max_row + 2, 1, "v0.4.1（2026-11-05）：(1) β 由 Damodaran 美國產業表改為自算產業 β——US 半導體設備同業 7 家（AMAT、LRCX、KLAC、TER、FORM、COHU、KLIC）Yahoo Finance 月報酬 2021-11～2026-10 對 ^GSPC 迴歸、Hamada 去槓桿、現金修正後的中位數，Blume 調整 0.67β＋0.33，再依本公司 D/E 與稅率重新加槓桿（In 頁 beta）；Sens β 低／高改為中位數 × 0.8 再 Blume／中位數未調整。(2) 評價日由 FY2026 年底（2026-06-30）改為 2026-12-31（全模型統一），FY2027 只計評價日後 6 個月，目標時點 2027-12-31；淨現金沿用 Q1 FY2027 資產負債表（2026-09-30）。其他模型不變")
 FD.yellow(IN)   # v0.4：M2 節判斷參數黃底
 wb.save(sys.argv[1])
