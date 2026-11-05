@@ -39,4 +39,4 @@ Excel 是計算事實的來源；HTML 只負責呈現，給 Andy 與投資處同
 - 對帳章：每節只列主要對帳要點，其餘摺疊。
 - 命題回覆：依模型計算逐一回答開頭的命題，答案文字由 xlsx 公式帶數字（Andy 2026-11-05 19:13）；**放在第一章命題清單正下方、預設摺疊**，讀者可先看結論或讀完再展開（Andy 19:22 改定；可選章節 `conclusion` 保留但 SpaceX 不用）。
 - 敏感度章：龍捲風圖只顯示變動達兩位數百分比（絕對值 ≥ 10%）的案例，其餘摺疊。
-- 產生器可選功能：表格 `rows` 內 `{"sub": "小標"}` 分組列；`list` 的 `ordered: true` 編號；頂層 `wide_text`、`hero`（`rec`、`tiles`、`note`）；可選章節 `conclusion`（須在 `sens` 與 `status` 之間）。
+- 產生器可選功能：表格 `rows` 內 `{"sub": "小標"}` 分組列；日期格（datetime）以 YYYY-MM-DD 文字標籤顯示、檢核比對同一格式（Microsoft v0.3.6 起）；`list` 的 `ordered: true` 編號；頂層 `wide_text`、`hero`（`rec`、`tiles`、`note`）；可選章節 `conclusion`（須在 `sens` 與 `status` 之間）。
