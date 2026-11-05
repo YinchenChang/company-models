@@ -83,6 +83,11 @@ SPEC = {
           "對帳要點": ["FY2026 營收 vs 共識", "FY2026 EPS vs 共識", "FY2027 EPS vs 共識", "FY2028 EPS vs 共識", "3Q26 EPS"]},
 }
 cfg = relayout(cfg, X, SPEC)
+# 後處理（補充規則 A）：橫幅中間格＝只看 Comparable（市場主流同業法、未經相對倍數調整）；附註列進加權的調整後值
+_rc, _ru, _ra = row(VA, "Comparable 目標價"), row(VA, "上檔空間：Comparable"), row(VA, "Comparable 目標價（相對倍數調整後）")
+assert VA.cell(_rc, 1).value == "Comparable 目標價" and str(VA.cell(_ra - 1, 1).value).startswith("相對倍數調整係數")
+cfg["hero"]["tiles"][1] = ["只看 Comparable 目標價（市場主流同業法）", f"@Val!B{_rc}|n2", ["上檔空間 ", f"@Val!B{_ru}|sp1"]]
+cfg["hero"]["note"] = list(cfg["hero"].get("note") or []) + ["。進加權的 Comparable 為相對倍數調整後 ", f"@Val!B{_ra}|n2", "（調整係數 ", f"@Val!B{_ra - 1}|n2", "）"]
 # 後處理：轉換器把估值章所有長條圖移到最前面；舊法（規則值）長條圖放回舊法段落，避免與目標價並列
 _vb = cfg["sections"][[s["id"] for s in cfg["sections"]].index("valuation")]["blocks"]
 _old = next(b for b in _vb if b["type"] == "bars" and b.get("title") == "規則值隱含股價與現價")
