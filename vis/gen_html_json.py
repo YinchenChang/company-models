@@ -143,6 +143,22 @@ def scn_table_fix(sec):
 
 scn_table_fix(SEC["drivers"])
 
+
+def vda_table():
+    """第三輪修正追加：VSMC 建廠折舊假設 [Assumed] 敏感度表（Sens 頁）。"""
+    ws = WB["Sens"]
+    t = next(r for r in range(1, ws.max_row + 1) if str(ws.cell(r, 1).value or "").startswith("VSMC 建廠折舊假設"))
+    h = t + 1; rows = []; r = h + 1
+    while str(ws.cell(r, 1).value or "") and not str(ws.cell(r, 1).value).startswith("讀法"):
+        rows.append(r); r += 1
+    fm = {"A": "", "B": "", "G": "n2", "H": "n2", "I": "n2", "J": "sp1", "K": "sp1", "L": ""}
+    return [{"type": "table", "caption": f"@Sens!A{t}", "head": [f"@Sens!{c}{h}" for c in fm],
+             "rows": [[f"@Sens!{c}{rr}" + (f"|{f}" if f else "") for c, f in fm.items()] for rr in rows]},
+            {"type": "note", "parts": [f"@Sens!A{r}"]}]
+
+
+SEC["sens"]["blocks"] = SEC["sens"]["blocks"][:1] + vda_table() + SEC["sens"]["blocks"][1:]
+
 SPEC = {
  "in_skip": [in_tok("G."), in_tok("情境驅動對照")],
  "in_groups": [
@@ -155,7 +171,7 @@ SPEC = {
     ["產能與稼動率", ["vcap27", "vcap28", "vcap29", "vcap_adj", "vut_A", "vut_B", "vut_C"]],
     ["售價與毛利率（含折舊）", ["vasp"] + [k for k in I if re.match(r"^vgm2\d_[ABC]$", k)]],
     ["非控制權益", ["vmi"]],
-    ["建廠計畫（DCF 資本支出：總投資、已投入、剩餘與分年比例）", ["vsmc_tot", "vda_life", "vda_adj", "nxp_rem", "cxh_24", "cxh_25", "cxg_26", "cx8_r", "vsmc_rem", "vsmc_sp27", "vsmc_sp28", "vsmc_sp29"]]]],
+    ["建廠計畫（DCF 資本支出：總投資、已投入、剩餘與分年比例）", ["vsmc_tot", "vda_life", "vda_eq", "vda_life_b", "vda_adj", "nxp_rem", "cxh_24", "cxh_25", "cxg_26", "cx8_r", "vsmc_rem", "vsmc_sp27", "vsmc_sp28", "vsmc_sp29"]]]],
   ["全公司（匯率、成本、FY2026 錨點、股價與目標價規則）", [
     ["匯率", ["fx", "fx_26"]],
     ["成本：折舊、每片現金成本、營業費用", ["da_tot26", "da_sh", "dag_27", "dag_28", "dag_29", "dag_adj", "cc_g", "phi", "g_opx_min"]],
