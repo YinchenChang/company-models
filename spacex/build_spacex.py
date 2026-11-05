@@ -32,7 +32,7 @@ F.update({it["id"]: it for it in FD2["items"]})
 STAGE = int(os.environ.get("SPCX_STAGE", "99"))   # 歸因瀑布：1 讀法 2 加回小修、2 融資租賃重扣小修、3 G5 原文、4 G1 Q4 資本支出、5 G1 年底 GW、6 G3 pace（9M 占比）、7 pace 改用 Q4 拆法（二修）、8 v0.2.1 pace 季速改 ÷(1 − fin_sh)、9 v0.2.1 pace 分母改 FY2027 世代組合（預設全部）
 G2C = os.path.join(HERE, "data", "g2cal_v021_20261030.json")   # v0.2.1 重解（pace 改變 FY2027 營收）
 G2CAL = json.load(open(G2C, encoding="utf-8")) if (os.path.exists(G2C) and not os.environ.get("SPCX_NO_G2CAL")) else None   # G2 校準 k0（g2cal_v02.py 解出；只用於 Sens）
-VER = "v0.2.3"
+VER = "v0.2.4"
 TKV = "v21.10"   # v0.2.2：Tokenomics 快照 v21.7 → v21.9；v0.2.3：v21.9 → v21.10（兩次基準數值都不變）
 TK = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 GEN = {x["code"]: x["name"] for x in TK["source"]["generations"]}
@@ -1553,7 +1553,7 @@ for col, w in zip("ABCDEF", [6, 80, 12, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = "SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2.3（2026-11-04；v0.2.1 之上換 Tokenomics 快照 v21.9〔v0.2.2〕、再換 " + TKV + "〔v0.2.3〕，基準數值不變；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
+RD["A1"] = "SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2.4（2026-11-05；v0.2.4 只改展示層：README 頁新增命題分項、白話重點、命題回覆，供 HTML 新版面；v0.2.2／v0.2.3 換 Tokenomics 快照 v21.9／" + TKV + "，基準數值同 v0.2.1；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
 RD["A3"] = ("命題：SI 分部的算力投入（9M26 SI 資本支出約 400 億美元、名目算力 1.7 GW）能否由 SI 營收（對外算力出租＋Grok／Cursor／X）回本；"
             "Connectivity（Starlink）現金流與 IPO 資金能支撐多久；加計 AI 折舊與 Cursor 收購獎酬後的每股價值是否高於現價。")
 RD["A4"] = "核心問題：FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金與以融資取得 PP&E；Valor 失敗售後租回本金列融資，不扣）。"
