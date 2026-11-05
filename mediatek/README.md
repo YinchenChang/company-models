@@ -1,4 +1,15 @@
-# mediatek/ — 聯發科（2454.TW）收支與估值模型 v0.2
+# mediatek/ — 聯發科（2454.TW）收支與估值模型 v0.3
+
+## v0.3（2026-11-05）：標準版 DCF（FCFF＋WACC）＋HTML 新版面 v1.0
+
+- DCF 改為標準版（Andy 2026-11-05 20:42、20:45；`docs/plan/個股DCF標準規格.md`；共用模組 `tools/fcff_dcf.py`）：FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現到 2026-12-31（期中慣例），終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），RONIC＝WACC。
+- 折現率：ke＝rf 1.98%（新台幣 10 年期公債）＋β 1.88 ×（ERP 5%＋台灣 CRP 0.78%）＝12.8%；β＝Damodaran Global Semiconductor 無槓桿 β 1.87 依市值 D/E 重新加槓桿；WACC 12.8%；g＝MIN(3%, rf)＝1.98%。
+- EBIT：FY2027–29 取 PL 營業利益（TIFRS）；FY2030–32 由（淨利＋非控制權益）÷（1 − 稅率）− 營業外還原。折舊 3.9%、資本支出 2.4%（FY2029 起收斂到折舊 ×（1＋g））、營運資金 8.1% 為 FY2023–25 占營收平均（stockanalysis）。淨現金與投資＝2026-06-30 現金與短期投資 197.8＋長期投資 180.6 − 借款 17.2 − 租賃 9.8 − 非控制權益 8.5 − 2026-07 已發放股利 39.1（十億新台幣）；以 ke 推到 12 個月後並扣 2027 年兩次股利合計 53.50 元（Assumed）。
+- 新舊對照（v0.2 → v0.3）：DCF 目標價 2,138 → 1,541；加權目標價 1,996 → 1,698；上檔空間 −49.0% → −56.6%；**投資建議 放空 → 強力放空**。DCF 差異拆解（元／股）：現金流口徑 +479.8、折現率改 WACC −705.8、g 4% → 1.98% −209.0、終值改價值驅動式 −108.5、扣期間股利 −53.5。
+- 終值現值占情境 B 企業價值 51%；隱含終值 EV／EBITDA 約 5.5 倍。
+- README 頁新增「展示層」「命題回覆」兩段，重點觀察 1 改為公式；HTML 改用個股 HTML 版面規格 v1.0（`html_src.json` → `gen_html_json.py` → `html.json`；情境驅動表依 In 頁標籤定位）。
+- 上游：讀 `avgo/dist`（Broadcom v0.5，PR #374）與 `mrvl/dist`（邁威爾 v0.3，PR #383）。下游：`guc/build_guc.py` 讀本資料夾 dist。
+- 成品：`dist/20261105_聯發科個股模型_v0.3.xlsx`、`.html`；舊版移到 `dist/_待刪除/`。以下各節 v0.2 以前的說明數字為改版前撰寫，以 xlsx 為準。
 
 
 ## v0.2（2026-11-02）：滾入 3Q26 實績與 4Q26 指引、股價改最新收盤
@@ -39,7 +50,7 @@
 |---|---|
 | `build_mediatek.py` | 產生器（參數與公式；唯讀取用上游成品） |
 | `dist/20261028_聯發科個股模型_v0.1.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
-| `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
+| `html_src.json`、`gen_html_json.py`、`html.json` | HTML 展示層設定（v0.3 起由 `gen_html_json.py` 依個股 HTML 版面規格 v1.0 產生 `html.json`） |
 | `dist/20261028_聯發科個股模型_v0.1.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
 
 建置：先跑 `python3 mediatek/build_mediatek.py raw.xlsx`，再跑 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序為 README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用的上游為 `tsmc/dist`（TPU 與其他 ASIC 顆數、2029 成長、情境係數）、`avgo/dist`（ASIC 規格、Broadcom 份額、HBM 價格路徑）、`mrvl/dist`（Marvell 份額）、`tools/cycle_position.py`（只用規則函式）與 `tools/valuation_rule.py`；**不修改它們**。
@@ -119,7 +130,7 @@ Val 第 0 節目標價（A＝順利、B＝平平、C＝不如預期；權重 0.3
 | 價格帶（DCF C～A） | 1,012～2,466 |
 | 歷史倍數檢查：現價隱含 P/E（÷ FY2028 EPS）的十年分位 | A／B／C 皆 100%（高於十年最大值 25.9x） |
 
-- DCF 的股東現金流＝EPS ×（1 − g／ROE）。參數為 r＝10%、g＝4%，ROE 取近三年平均 24.2%（stockanalysis），再投資率 16.6%。聯發科是輕資產的 IC 設計公司，所以不改用「淨利＋折舊－資本支出」。
+- （v0.2 以前的舊法；v0.3 起改為標準版 FCFF＋WACC，見頁首）DCF 的股東現金流＝EPS ×（1 − g／ROE）。參數為 r＝10%、g＝4%，ROE 取近三年平均 24.2%（stockanalysis），再投資率 16.6%。聯發科是輕資產的 IC 設計公司，所以不改用「淨利＋折舊－資本支出」。
 - 與共識目標價的差距**幾乎全在倍數**。模型的 12 個月前瞻 EPS 反而比共識高 15%，因為共識前瞻 EPS 是用現價 ÷ 前瞻 P/E 推得，對應的是 FY2026–27 的混合期。賣方目標價隱含約 25 倍 FY2028 EPS（凱基 25x × 2028 EPS），用的是 FY2028 約 250 元的 EPS。同業法用的是 19 倍前瞻 P/E。
 - 舊法對照（Val 第 3 節，FY2027 EPS × 十年 P/E 規則倍數、未折現）：A、B 為中段 18.4x，得 2,113 與 2,011；C 為見頂 14.5x，得 1,455。十年 P/E 的兩個來源為 companiesmarketcap 與自算（digrin 12 月股價 ÷ 公司 EPS；2016 EPS 未找到）。
 
