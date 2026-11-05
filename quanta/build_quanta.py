@@ -877,6 +877,50 @@ def _wta_sens(mf, setting, how):
     return dict(r0=r0, base=rb, case=rw, diff=rd, block=WR)
 _wta_in()
 WTA_SENS = _wta_sens({2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}, '情境 B；AI IT 資本支出（→ 整櫃組裝市場） CY2027 起 × wta_27／28／29', '做法：引擎的 AI 部署係數 mf（原只乘在 AI IT 資本支出列、FY2027 起）改為年別 dict（wta_27／28／29）；FY2026 不乘。FY2030 以後無延伸表（Sens 引擎只到 FY2029）。目標價：Sens 目標價表只有 DCF 參數案例，本案例不重算目標價。')
+# ================= v0.3.2（2026-11-05）：只改展示層（個股 HTML 版面規格 v1.0，docs/plan/個股HTML版面規格.md） =================
+# README 頁最後新增「展示層」「命題回覆」「HTML 輔助列」「本版要點」四段（數字全由公式帶出）；其他工作表不動。原 README 各列保留（下游可能讀）。
+def _lab(ws, prefix):
+    for r_ in range(1, ws.max_row + 1):
+        v_ = ws.cell(r_, 1).value
+        if isinstance(v_, str) and v_.strip().startswith(prefix.strip()): return r_
+    raise KeyError((ws.title, prefix))
+def _in(k, c="D"):
+    for r_ in range(4, IN.max_row + 1):
+        if IN.cell(r_, 1).value == k: return f"In!{c}{r_}"
+    raise KeyError(k)
+_v = lambda p, c="B": f"Val!{c}{_lab(V, p)}"
+_s = lambda p, c: f"Sens!{c}{_lab(SE, p)}"
+_r = lambda p, c: f"Recon!{c}{_lab(RC, p)}"
+_pa, _pb, _pc = PB["A"], PB["B"], PB["C"]
+TPW, DCF, CMP, PX, UP, REC = _v("目標價（DCF 與 Comparable 加權）"), _v("DCF 目標價（情境加權）"), _v("Comparable 目標價（相對倍數調整後）"), _v("現價（"), _v("上檔空間：加權目標價"), _v("投資建議")
+FEPS, MED, CONS = _v("12 個月後的前瞻 EPS"), _v("同業前瞻 P/E 中位數"), _v("市場共識目標價")
+D12 = lambda c: _v("DCF 情境價值推到 12 個月後", c)
+RD["A1"] = RD["A1"].value + "；v0.3.2（2026-11-05）只改展示層：README 新增展示層、命題回覆與本版要點各段，HTML 改用個股版面規格 v1.0，其他工作表逐格不變"
+r = RD.max_row + 2
+RD.cell(r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；v0.3.2 新增，原 A3、A4、重點觀察各列保留）").font = BOLD; r += 1
+RD.cell(r, 1, "命題：廣達的 AI 伺服器營收跟著雲端 AI 部署量走；客戶自行供料（客供）的比例上升會壓低營收成長、但毛利金額大致保留。要回答的是每股盈餘能否持續成長，以及現價是否低估這條路徑。"); r += 1
+RD.cell(r, 1, "命題 1｜AI 伺服器營收跟著部署量成長：營收＝部署 GW（上游網通模型的 AI IT 資本支出 ÷ 每 GW IT 資本支出）× 每 GW 整櫃組裝價值 × 廣達有效份額 ×（1 − 客供比例）。"); r += 1
+RD.cell(r, 1, "命題 2｜客供比例上升，毛利金額撐得住：客供部分不計營收，營收成長放慢、毛利率回升；每櫃毛利金額能否大致不變、撐住每股盈餘成長。"); r += 1
+RD.cell(r, 1, f'="命題 3｜現價隱含的路徑偏保守：現價只有本模型未來 12 個月 EPS 的 "&TEXT(Val!B{_lab(V, "  現價 ÷ 未來 12 月 EPS")},"0.0")&" 倍；若模型的盈餘路徑成立，每股價值應明顯高於現價。"'); r += 1
+NTM, COEF, CMP0, UPC0 = _v("未來 12 月 EPS（模型 A）"), _v("相對倍數調整係數"), _v("Comparable 目標價（市場主流同業法）"), _v("上檔空間：Comparable 目標價")
+_e1, _e2, _m = f"({NTM}/cons_feps)", f"({FEPS}/{NTM})", f"({MED}*{COEF}/({PX}/cons_feps))"
+RD.cell(r, 1, f'="重點 1｜目標價比現價高很多，上檔主要來自 DCF，而 DCF 與 Comparable 都建立在本模型盈餘高於市場共識：加權目標價每股約 "&TEXT({TPW},"0")&" 元（DCF "&TEXT({DCF},"0")&"、相對倍數調整後的 Comparable "&TEXT({CMP},"0")&"，權重 "&TEXT(tp_w_dcf,"0%")&"／"&TEXT(1-tp_w_dcf,"0%")&"），比現價 "&TEXT({PX},"0")&" 元高 "&TEXT({UP},"0%")&"，投資建議"&{REC}&"。加權上檔約 "&TEXT({TPW}-{PX},"0")&" 元中，DCF 貢獻 "&TEXT(tp_w_dcf*({DCF}-{PX})/({TPW}-{PX}),"0%")&"、Comparable 貢獻 "&TEXT((1-tp_w_dcf)*({CMP}-{PX})/({TPW}-{PX}),"0%")&"。Comparable 比現價高 "&TEXT({CMP}/{PX}-1,"0%")&"，可拆成三個因素：同一期間（目前的未來 12 個月）本模型 EPS "&TEXT({NTM},"0.00")&" 元比共識前瞻 EPS "&TEXT(cons_feps,"0.00")&" 元高 "&TEXT({_e1}-1,"0%")&"；到約一年後的未來 12 個月再成長 "&TEXT({_e2}-1,"0%")&"（"&TEXT({FEPS},"0.00")&" 元）；目標倍數 "&TEXT({MED}*{COEF},"0.0")&" 倍（同業前瞻本益比中位數 "&TEXT({MED},"0.0")&" 倍 × 相對倍數調整 "&TEXT({COEF},"0.00")&"）比現價對共識前瞻 EPS 的 "&TEXT({PX}/cons_feps,"0.0")&" 倍高 "&TEXT({_m}-1,"0%")&"。盈餘因素（前兩項）約占 Comparable 上檔的 "&TEXT((LN({_e1})+LN({_e2}))/LN({CMP}/{PX}),"0%")&"（對數拆解）。只看市場主流同業法（不做相對倍數調整）的 Comparable 為 "&TEXT({CMP0},"0")&" 元、上檔 "&TEXT({UPC0},"0%")&"。"'); r += 1
+RD.cell(r, 1, f'="重點 2｜盈餘比法人高，來自營收與淨利係數：FY2027 營收 "&TEXT(PL!E{_pa["rev"]}/1000,"0.00")&" 兆元，比法人（10-08）高 "&TEXT({_r("FY2027 營收 vs 法人", "D")},"0.0%")&"；FY2027 EPS "&TEXT(PL!E{_pa["eps"]},"0.00")&" 元，比法人高 "&TEXT({_r("FY2027 EPS vs 法人", "D")},"0.0%")&"。本模型淨利 ÷ 營業利益用 "&TEXT(nio_f,"0.000")&"（FY2026 錨點約 "&TEXT(PL!D{_pa["nio"]},"0.00")&"）；敏感度測試（以情境 A 為基準；FY2027 三情境相同）改用券商隱含的 "&TEXT({_in("nio_f")},"0.00")&" 時，FY2027 EPS 變動 "&TEXT({_s("淨利 ÷ 營業利益 0.75", "G")},"+0.0%;-0.0%")&"。第三季法說的業外與稅率是第一個檢驗點。"'); r += 1
+RD.cell(r, 1, f'="重點 3｜三情境從 FY2028 才分開：FY2027 三情境相同（顆數係數從 2028 年起才不同），FY2028 EPS 樂觀、基準、保守約 "&TEXT(PL!F{_pa["eps"]},"0.00")&"、"&TEXT(PL!F{_pb["eps"]},"0.00")&"、"&TEXT(PL!F{_pc["eps"]},"0.00")&" 元。要追蹤的是份額：敏感度測試（以情境 A 為基準）中份額相對值降到 "&TEXT({_in("rel_28")},"0.00")&"（鴻海、緯創搶單）時 FY2028 EPS 變動 "&TEXT({_s("份額流失（低）", "L")},"+0.0%;-0.0%")&"，AI 部署量 ×"&TEXT({_in("mf")},"0.0")&" 時變動 "&TEXT({_s("AI 部署 ×0.8", "L")},"+0.0%;-0.0%")&"。"'); r += 1
+r += 1
+RD.cell(r, 1, "命題回覆（HTML 用；依本模型計算逐一回答展示層的三個命題）").font = BOLD; r += 1
+RD.cell(r, 1, f'="AI 伺服器營收能跟著部署量成長嗎？答：能，而且是營收成長的主力（部署量讀上游網通模型，不在本模型另訂）。部署 GW 由 2026 年約 "&TEXT(Units!C{UR["gw"]},"0.0")&" GW 增到 2027 年約 "&TEXT(Units!D{UR["gw"]},"0.0")&" GW，AI 伺服器營收由 "&TEXT(PL!D{_pa["ai"]}/1000,"0.00")&" 兆元增到 "&TEXT(PL!E{_pa["ai"]}/1000,"0.00")&" 兆元，帶動 FY2027 營收年增 "&TEXT(PL!E{_pa["g"]},"0%")&"。2028 年起成長放慢：假設份額相對值降到 "&TEXT(rel_28,"0.00")&"、客供比例升到 "&TEXT(cs_28,"0%")&"，樂觀情境 FY2028 營收年增只有 "&TEXT(PL!F{_pa["g"]},"0.0%")&"，基準與保守情境（顆數係數下修）則轉為 "&TEXT(PL!F{_pb["g"]},"0.0%")&"、"&TEXT(PL!F{_pc["g"]},"0.0%")&"。"'); r += 1
+RD.cell(r, 1, f'="客供比例上升時，毛利金額撐得住每股盈餘成長嗎？答：在客供部分保留 "&TEXT(keep,"0%")&" 毛利的假設下撐得住，客供比例本身對 EPS 影響小。客供比例假設由 2027 年 "&TEXT(cs_27,"0%")&" 升到 2029 年 "&TEXT(cs_29,"0%")&"，AI 伺服器毛利率（營收基礎）由 FY2027 "&TEXT(PL!E{_pa["gma"]},"0.0%")&" 升到 FY2029 "&TEXT(PL!G{_pa["gma"]},"0.0%")&"，全公司毛利金額由 "&TEXT(PL!E{_pa["gp"]}*10,"#,##0")&" 億元增到 "&TEXT(PL!G{_pa["gp"]}*10,"#,##0")&" 億元（樂觀情境）。敏感度測試（以情境 A 為基準）：客供比例全為零時 FY2028 EPS 變動 "&TEXT({_s("客供 0（維持買賣）", "L")},"+0.0%;-0.0%")&"、客供比例調高到 2028 年 "&TEXT({_in("cs_28", "F")},"0%")&" 時 "&TEXT({_s("客供 高", "L")},"+0.0%;-0.0%")&"；影響較大的是客供部分保留多少毛利（只保留 "&TEXT({_in("keep")},"0%")&" 時 "&TEXT({_s("客供保留毛利 0.7", "L")},"+0.0%;-0.0%")&"）。真正左右 EPS 的是部署量、份額與淨利係數。"'); r += 1
+RD.cell(r, 1, f'="現價隱含的路徑是否偏保守、每股值多少？答：偏保守。現價 "&TEXT({PX},"0")&" 元只有本模型未來 12 個月 EPS 的 "&TEXT(Val!B{_lab(V, "  現價 ÷ 未來 12 月 EPS")},"0.0")&" 倍、共識前瞻 EPS 的 "&TEXT({PX}/cons_feps,"0.0")&" 倍。每股約 "&TEXT({TPW},"0")&" 元（DCF "&TEXT({DCF},"0")&"、相對倍數調整後的 Comparable "&TEXT({CMP},"0")&"；只看市場主流同業法為 "&TEXT({CMP0},"0")&"），比現價高 "&TEXT({UP},"0.0%")&"，投資建議"&{REC}&"；DCF 三情境價值（推到 12 個月後）樂觀、基準、保守約 "&TEXT({D12("B")},"0")&"、"&TEXT({D12("C")},"0")&"、"&TEXT({D12("D")},"0")&" 元，"&IF(MIN({D12("B")},{D12("C")},{D12("D")})>{PX},"都高於現價","並非都高於現價")&"。這個結論建立在本模型的盈餘路徑上；若盈餘只到共識水準，上檔空間會大幅縮小。"'); r += 1
+r += 1
+RD.cell(r, 1, "HTML 輔助列（只供 HTML 抽數，不是模型輸出；B 欄為公式）").font = BOLD; r += 1
+RD.cell(r, 1, "上檔空間：Comparable 目標價（相對倍數調整後）"); RD.cell(r, 2, f"={CMP}/{PX}-1").number_format = "0.0%"; r += 1
+RD.cell(r, 1, f'="估值說明：加權目標價＝DCF 目標價 × "&TEXT(tp_w_dcf,"0%")&"＋Comparable 目標價（相對倍數調整後）× "&TEXT(1-tp_w_dcf,"0%")&"，投資建議依它的上檔空間判定。DCF 以股東現金流（EPS ×（1 − 長期成長率 ÷ ROE））折現，三情境價值推到 12 個月後，再依情境權重加權；Comparable＝同業前瞻本益比中位數 × 本公司長期相對同業的倍數比 × 約一年後的未來 12 個月 EPS（情境加權）。十年本益比規則值是舊法，只作參考，不進目標價。"'); r += 1
+r += 1
+RD.cell(r, 1, "本版要點（版本沿革；HTML 附錄用）").font = BOLD; r += 1
+RD.cell(r, 1, "v0.3.2（2026-11-05）：只改展示層。README 新增展示層、命題回覆、HTML 輔助列與本版要點；HTML 改用個股 HTML 版面規格 v1.0（投資建議橫幅、命題分點與命題回覆、驅動因子依業務分塊、估值與對帳只列主要項目）。README 以外逐格不變。"); r += 1
+for a_ in ("A26", "A24", "A16", "A2"):
+    RD.cell(r, 1, f"={a_}"); r += 1
 wb.save(sys.argv[1])
 if os.environ.get("QUANTA_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
