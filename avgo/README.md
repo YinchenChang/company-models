@@ -1,4 +1,12 @@
-# avgo/ — Broadcom（AVGO）收支與估值模型 v0.4
+# avgo/ — Broadcom（AVGO）收支與估值模型 v0.4.1
+
+## v0.4.1（2026-11-05）：HTML 新版面 v1.0（只改展示層，數值不變）
+
+- 依 `docs/plan/個股HTML版面規格.md`（v1.0）：README 頁新增「展示層」（命題摘要、命題分項、白話重點）、「命題回覆」（逐一回答每個命題，數字全由 xlsx 公式帶出）、「本版要點與版本沿革」三段；README A1 版本說明加註 v0.4.1。其他頁逐格與 v0.4 相同（`tools/xlsx_diff.py` README 以外 0 差異），敏感度沿用。
+- HTML：原 `html.json` 改名 `html_src.json`（內容不動），新增 `gen_html_json.py`：前處理 → `tools/company_html/relayout.py` → 後處理 → 寫 `html.json`。驅動因子依業務分塊：客製加速器 XPU／AI 網通／非 AI 半導體與基礎架構軟體／全公司。橫幅中間格為只看 Comparable（市場主流同業法、未經相對倍數調整），附註列進加權的調整後值。
+- 成品：`dist/20261105_Broadcom個股模型_v0.4.1.xlsx`、`.html`；舊版移到 `dist/_待刪除/`。
+- 建置：`python3 avgo/build_avgo.py raw.xlsx` → LibreOffice 重算 → 放入 `dist/` → `python3 avgo/gen_html_json.py` → `python3 tools/company_html/build_company_html.py avgo`。
+
 
 ## v0.4（2026-11-05）：CF13 (a)——加速器金額份額改用整顆售價（只影響份額展示）
 
@@ -36,7 +44,9 @@ AI 半導體 Project **運算層的第二個樣板**（ASIC＋網通），複製
 | `build_avgo.py` | 產生器（參數與公式；唯讀取用上游成品） |
 | `tp_v2.py` | v0.2 目標價與延伸期的共用函式（PL 延伸到 FY2032 的收斂法、Val 第 0 節 DCF＋Comparable、Sens 目標價參數；各公司資料夾各放一份相同內容） |
 | `dist/20261028_Broadcom個股模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
-| `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
+| `html_src.json` | 前一版的 HTML 設定（原樣保留，`gen_html_json.py` 的輸入） |
+| `gen_html_json.py` | 套用個股 HTML 版面規格 v1.0，產生 `html.json` |
+| `html.json` | HTML 展示層設定（由 `gen_html_json.py` 產生，勿手改）（七章；格式見 `tools/company_html/README.md`） |
 | `dist/20261028_Broadcom個股模型_v0.3.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 avgo/build_avgo.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/memory/market.py`、`markets/network/dist`、`skhynix/dist`、`tsmc/dist`、`markets/equipment/dist`、`nvidia/dist`；**不修改它們**。
