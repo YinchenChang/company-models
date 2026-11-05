@@ -118,6 +118,14 @@ cfg = relayout(cfg, X, SPEC)
 SEC = {s["id"]: s for s in cfg["sections"]}
 
 # ---------- 後處理 ----------
+# 橫幅中間格（工作單補充規則 A）：只看 Comparable＝市場主流同業法、未經相對倍數調整的 Val!B36（上檔空間 Val!B44＝B41/px−1，B41＝B36）；
+# 進加權的是相對倍數調整後的值，寫在附註
+r_c, r_cu = find("Val", "Comparable 目標價"), find("Val", "上檔空間：Comparable")
+assert wb["Val"][f"B{find('Val', 'Comparable 目標價（市場主流同業法）')}"].value == wb["Val"][f"B{r_c}"].value
+cfg["hero"]["tiles"][1] = ["只看 Comparable 目標價（市場主流同業法）", f"@Val!B{r_c}|n2", ["上檔空間 ", f"@Val!B{r_cu}|sp1"]]
+cfg["hero"]["note"] = list(cfg["hero"].get("note") or []) + [
+    "；進加權的 Comparable 為相對倍數調整後 ", f"@Val!B{r_adj}|n2", "（市場主流同業法 × 相對倍數調整係數 ", f"@Val!B{r_adj - 1}|n2",
+    "，已達夾值上限）" if wb["Val"][f"B{r_adj - 1}"].value >= wb["Val"][f"B{r_adj - 2}"].value else "）"]
 # 第一章：保留情境定義與會計年度（原第一章內容）
 if old_thesis_kv:
     SEC["thesis"]["blocks"] += [{"type": "h3", "text": "情境定義與會計年度"}] + old_thesis_kv
