@@ -129,7 +129,18 @@ def main():
         abc = [str(c.value) for row in wf["SIL_In"].iter_rows(min_col=1, max_col=2) for c in row if isinstance(c.value, str) and _re2.search(r"^(SIF|SIL)_\w*_(A|B|C)$", c.value)]
         if abc: bad.append(f"SIL_In 頁仍讀 A／B／C 名稱：{abc[:5]}")
         else: print("  SIL_In：無 A／B／C 名稱")
-    for cid in ("C-K1", "R-K1", "R-K2", "W1-K1", "W1-K2", "X4-K1"):
+    # v0.3 Y5：SIL_In 須有逐買方份額與分世代內容名稱；內容低 ≤ 基準 ≤ 高
+    if "SIL_In" in wf.sheetnames:
+        sil = {wb["SIL_In"].cell(r_, 1).value: wb["SIL_In"].cell(r_, 4).value for r_ in range(1, wb["SIL_In"].max_row + 1) if isinstance(wb["SIL_In"].cell(r_, 1).value, str)}
+        nsh = [k_ for k_ in sil if k_.startswith("SIF_nvsh_")]
+        gens = ("H100", "GB200", "GB300", "VR200_26", "VR200", "RU")
+        miss = [g_ for g_ in gens if f"SIF_NVContentGW_{g_}" not in sil]
+        if len(nsh) < 33 or miss: bad.append(f"SIL_In 缺 nvsh（{len(nsh)} 名）或 NVContent（{miss}）")
+        badr = [g_ for g_ in gens if not miss and not (sil[f"SIF_NVContentGW_{g_}_lo"] <= sil[f"SIF_NVContentGW_{g_}"] <= sil[f"SIF_NVContentGW_{g_}_hi"])]
+        badr += [k_ for k_ in nsh if not k_.endswith(("_lo", "_hi")) and not (sil.get(k_ + "_lo", 0) <= sil[k_] <= sil.get(k_ + "_hi", 1))]
+        if badr: bad.append(f"SIL 內容或份額 低 ≤ 基準 ≤ 高 不成立：{badr}")
+        else: print(f"  SIL_In：nvsh {len(nsh)} 名、NVContent 6 世代齊全，低 ≤ 基準 ≤ 高")
+    for cid in ("C-K1", "R-K1", "R-K2", "X4-K1", "X4-K2"):
         if cid not in [x_[0] for x_ in rows]: bad.append(f"Checks 缺 {cid}（v0.2）")
     if same:
         ps = json.load(open(same, encoding="utf-8"))["names"]
@@ -158,7 +169,9 @@ def main():
                # v0.2.1
                "殘差法", "攤到認列年",
                # v0.2.2
-               "SIF_DeployGW_Base", "SIF_CapGW_Base"):
+               "SIF_DeployGW_Base", "SIF_CapGW_Base",
+               # v0.3
+               "SIF_nvsh_", "SIF_NVContentGW_", "SIF_CapOnlineGW_Base"):
         if kw not in txt: bad.append(f"wattonomics/README.md 缺固定規格：{kw}")
     print(f"{os.path.basename(x)}：頁面 {len(wb.sheetnames)}、具名範圍 {len(names)}（WIF_ {len(gif)}）、Checks {len(rows)} 項（OK {nok}／WARN {len(cw)}／ERROR {len(ce)}／INFO {ninfo}）、"
           f"In 輸入列 {nrow}（待證據 {pend}）、錯誤格 {nerr}")
