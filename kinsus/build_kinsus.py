@@ -245,13 +245,13 @@ TP_KEYS += ["tp_g", "tp_w_dcf", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fad
 SA_BS = "stockanalysis 資產負債表（百萬新台幣；https://stockanalysis.com/quote/tpe/3189/financials/balance-sheet/；2026-11-05 讀取）"
 SA_CF = "stockanalysis 現金流量表（年度，百萬新台幣；https://stockanalysis.com/quote/tpe/3189/financials/cash-flow-statement/；2026-11-05 讀取）"
 SA_IS = "stockanalysis 損益表（年度，百萬新台幣；https://stockanalysis.com/quote/tpe/3189/financials/；2026-11-05 讀取）"
-DAMO_G = "Damodaran betaemerg.xls（2026-01-05 版，stern.nyu.edu；Andy 2026-11-05 22:29 下載存 Drive 07-AI半導體/inbox，已核對）"
+BETA_SRC = "自算產業 β 表（2026-11-05 22:50 計算；Yahoo Finance 含股利調整月收盤價 2021-11～2026-10，60 個月；Andy 2026-11-05 22:55 選定，取代 Damodaran 表）"
 for _row in FD.in_rows(dict(
         date="2026-12-31（同 v0.2 DCF 基準日）", amt="NT$B", shu="十億股", ccy="NT$",
         rf=(0.0198, "Trading Economics 台灣 10 年期公債殖利率 2026-11-04 1.98%（https://tradingeconomics.com/taiwan/government-bond-yield；2026-11-05 讀取）", "Investing.com 台灣 10 年期公債 2026-10-21 2.034%（https://www.investing.com/rates-bonds/taiwan-10-year-bond-yield-historical-data）", "無風險利率（台灣 10 年期公債殖利率，2026-11-04）"),
         beta_fixed=("=beta_u_lo*(1+(1-tax_w)*beta_de)", "=beta_u*(1+(1-tax_w)*beta_de)", "=beta_u_hi*(1+(1-tax_w)*beta_de)", "Derived",
-                    "Damodaran 產業無槓桿 β（beta_u）以本公司市值 D/E 與稅率重新加槓桿（Hamada：βL＝βU ×（1＋(1 − tax_w) × D/E）；Andy 2026-11-05 21:21 確認）",
-                    "低＝新興市場表 Electronics (General) 未做現金修正的無槓桿 β 1.5753；高＝新興市場表 Semiconductor 現金修正 1.98（皆重新加槓桿，Analogy）。個股迴歸 β：未取得（建置環境抓不到股價序列）"),
+                    "自算產業 β：TW PCB／載板／CCL 同業 10 家中位數（Yahoo Finance 月報酬 2021-11～2026-10，對 台灣加權指數 ^TWII 迴歸，Hamada 去槓桿、現金修正）；以本公司市值 D/E 與稅率重新加槓桿（Hamada：βL＝βU ×（1＋(1 − tax_w) × D/E））",
+                    "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）。低／高（Analogy）：低＝本組 Blume 前中位數 2.02 × 0.8 再 Blume＝1.413、高＝本組 Blume 前中位數 2.02（未調整），皆重新加槓桿"),
         crp=(0.0078, "Interested-party", "Damodaran Country Risk Premium 表（2026 年 1 月更新）：Taiwan（Moody's Aa3）CRP 0.78%（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html；2026-11-05 讀取）", "Andy 2026-11-05 20:45：非美國市場 ERP＝5%＋CRP，不設股權成本下限；Damodaran 2026-07 更新檔為 xlsx，本環境讀不到，沿用 2026-01 表"),
         kd=("=rf+0.005", "Assumed", "台灣 10 年期公債＋信用利差 0.5%（Assumed；銀行借款為主，利息費用未取得）", "負債占資本很小，對 WACC 影響很小"),
         tax_w=("=tax", "Derived", "＝In 頁 tax（與 PL 推導區塊同一稅率）", "https://stockanalysis.com/quote/tpe/3189/financials：FY2025 稅前利益率 7.85%；營所稅 20%。NOPAT 各年同用 tax"),
@@ -268,9 +268,9 @@ for _row in FD.in_rows(dict(
         fc_wc=(-0.05, "=AVERAGE((4.44+2.612+1.445-2.101-4.015-1.091-2.742)/26.832,(5.326+2.981+4.735-2.5-3.551-1.119-3.408)/30.535,(6.901+4.828+0.97-3.9-4.524-1.111-2.142)/39.351)", 0.20, "Derived", SA_BS + "：近三年（FY2023–25 年底）營運資金 ÷ 營收平均；營運資金＝應收＋存貨＋其他應收、預付與其他流動資產 − 應付 − 應計費用 − 流動合約負債 − 其他流動負債＝−5.4%／8.1%／2.6%", "Sens 高 20%＝只計應收＋存貨 − 應付（FY2025 19.9%）；低 −5%（Assumed）"),
         )):
     rows.append(_row)
-inp("beta_u", "產業無槓桿 β：Damodaran 新興市場表 Electronics (General)（現金修正後；2026-01-05 版）", "x", 1.5753, 1.7235, 1.9759, "Analogy",
-    DAMO_G + "：Electronics (General) 1050 家，現金修正後無槓桿 β 1.7235（未修正 1.5753）",
-    "Andy 2026-11-05 22:26：依掛牌地選區域表（美國→US、台灣／韓國→Emerging、中國／香港→China、日本→Japan、歐洲→Europe），不再用 Global 表。用現金修正值：淨現金另計，β 只對營業資產")
+inp("beta_u", "產業無槓桿 β：自算 TW PCB／載板／CCL 同業中位數，Blume 調整（0.67β＋0.33）", "x", 1.413, 1.683, 2.02, "Derived",
+    BETA_SRC + "：TW PCB／載板／CCL 同業 10 家（3037 8046 3189 2383 6274 2368 2313 3044 4958 6213），對 台灣加權指數 ^TWII 迴歸、Hamada 去槓桿、現金修正後中位數 2.02；Blume 調整 0.67 × 2.02＋0.33＝1.683",
+    "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）。低／高（Analogy）：低＝中位數 × 0.8 再 Blume＝1.413、高＝Blume 前中位數 2.02")
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 股數 sh_v)", "與 WACC 權重同一口徑")
 
 r = 4; INROW = {}
@@ -716,7 +716,7 @@ tset(49, "rec", "投資建議", ['=IF(B42>0.5,"強力買進",IF(B42>0.25,"買進
 V.cell(50, 1, "目標價方法")
 V["B50"] = ("DCF（v0.4 標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加（股權報酬視為費用），以 WACC 折現到 2026 年底（期中慣例），"
             "終值＝NOPAT(FY2033) ×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, 台灣 10 年期公債殖利率)、RONIC＝WACC；EV 加淨現金與投資、減非控制權益（晶碩）帳面 ÷ 股數，以 ke 推到 12 個月後並扣除期間股利（DCF 頁、tools/fcff_dcf.py；規格 docs/plan/個股DCF標準規格.md）。"
-            "β＝Damodaran 新興市場表 Electronics (General) 無槓桿 β（現金修正）以市值 D/E 重新加槓桿，ERP 5%＋台灣 CRP。EBIT FY2027–29 取 PL 推導區塊營業利益（含晶碩），FY2030 起由淨利 × FY2029 合併淨利 ÷ 歸屬淨利 ÷（1 − tax）− FY2029 業外還原；"
+            "β＝自算 TW PCB／載板／CCL 產業無槓桿 β（Blume 調整 1.683）以市值 D/E 重新加槓桿，ERP 5%＋台灣 CRP。EBIT FY2027–29 取 PL 推導區塊營業利益（含晶碩），FY2030 起由淨利 × FY2029 合併淨利 ÷ 歸屬淨利 ÷（1 − tax）− FY2029 業外還原；"
             "折舊、資本支出占營收取近三年實績（含晶碩；本模型自己的資本支出排程只進 PL 折舊），FY2029 起收斂到折舊 ×（1＋g）＋0.5pt。ABF 溢價沿用 Ibiden 模型。"
             "Comparable：欣興、南電、Ibiden、三星電機、AT&S 前瞻 P/E 中位數（無 A 股）；同業同處 ABF 短缺溢價期，倍數偏高；景碩含晶碩（隱形眼鏡）未另計。"
             "情境對應：A＝順利（原始顆數）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6），皆讀 tsmc 同字母係數；BT 與其他載板年增 A 最高、C 最低")
@@ -885,7 +885,7 @@ SO.column_dimensions["A"].width = 110; SO.column_dimensions["B"].width = 130
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-OBS = ["目標價 NT$928（DCF 352、Comparable 相對倍數調整後 1,503 各半），比現價 986（2026-10-22）低 5.9%，級距 0%～−25%（中立）；Comparable 單獨為 +35.3%。",
+OBS = ["目標價 NT$931（DCF 360、Comparable 相對倍數調整後 1,503 各半），比現價 986（2026-10-22）低 5.5%，級距 0%～−25%（中立）；Comparable 單獨為 +35.3%。",
        "本模型 12 個月後前瞻 EPS 30.44 比共識前瞻 EPS 22.06 高 38%（期間差約一年），共識目標價隱含 49.5 倍、比同業中位數 42.3 倍高 17%。",
        "FY2027–28 ABF 需求滿足率約 86%／88%（產能受限），EPS 由價格與產能決定、而非 AI 份額：漲價年度化 8%／22%（基準 15%）使 FY2027 EPS −11.1%／+11.1%，ABF 溢價取 Ibiden 低／高值使 FY2028 EPS −14.9%／+15.4%，ABF 產能低值 −13.0%；"
        "AI 部署 ×0.8、Vera CPU 或 GPU 份額高低對 FY2027–28 EPS 的影響都在 0.3% 以內。",
@@ -924,9 +924,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, "kinsus")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
-RD.cell(RD.max_row + 1, 1, "v0.4（2026-11-05）：模型改版——DCF 改為標準版（Andy 2026-11-05 20:42、20:45；docs/plan/個股DCF標準規格.md v1.0）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現（ke＝rf＋β ×（ERP＋CRP），rf＝台灣 10 年期公債 1.98%、β＝Damodaran 新興市場表 Electronics (General) 無槓桿 β 1.7235 以市值 D/E 重新加槓桿、ERP 5%＋台灣 CRP 0.78%），"
+RD.cell(RD.max_row + 1, 1, "v0.4（2026-11-05）：模型改版——DCF 改為標準版（Andy 2026-11-05 20:42、20:45；docs/plan/個股DCF標準規格.md v1.0）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現（ke＝rf＋β ×（ERP＋CRP），rf＝台灣 10 年期公債 1.98%、β＝自算產業 β（TW PCB／載板／CCL 同業中位數，Blume 調整）1.683 以市值 D/E 重新加槓桿、ERP 5%＋台灣 CRP 0.78%），"
         "終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC；EV 減晶碩非控制權益帳面；新增 DCF 頁（三情境 FCFF 明細與檢查列），Val 0.1 節（第 5–25 列）改為 WACC 與 DCF 摘要，Sens 目標價參數改為標準案例；刪除 tp_r、tp_roe。"
-        "舊→新（v0.3.1 → v0.4）：DCF 目標價 545 → 352、加權目標價 1,024 → 928、上檔空間 +3.9% → −5.9%，投資建議維持中立；Comparable、情境權重、DCF 權重 50% 與投資建議規則不變。")
+        "舊→新（v0.3.1 → v0.4）：DCF 目標價 545 → 360、加權目標價 1,024 → 931、上檔空間 +3.9% → −5.5%，投資建議維持中立；Comparable、情境權重、DCF 權重 50% 與投資建議規則不變。")
 apply_in_layout.apply(wb, "v0.2.1", "2026-10-30")  # v0.2.1：In 頁版面（個股模型原則第 8 節；數值不變）
 # ---------------- v0.13（2026-11-04）：Sens「Wattonomics 錨定」案例（三層校準原則；決策 S37）。In 頁最後三列、Sens 頁最下方小表與案例區塊；既有格不動 ----------------
 WTA_NOTE = "Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
@@ -1000,7 +1000,7 @@ for t_ in (
     "命題 3：現價隱含什麼——以標準版 DCF（自由現金流折現）與同業倍數估出的每股價值，和現價相比是高還是低；兩種算法為何差很多。",
     f'="重點 1：目標價和現價差不多，投資建議"&Val!B{_vrec}&"。DCF 與同業倍數法各半的加權目標價約 "&{_T(f"Val!B{_vt}", "#,##0")}&" 元，比現價 "&{_T(f"Val!B{_vp}", "#,##0")}&" 元"&{_hi(f"Val!B{_vup}")}&"；只看市場主流同業法（同業前瞻本益比中位數 × 12 個月後的前瞻 EPS）約 "&{_T(f"Val!B{_vc0}", "#,##0")}&" 元（"&{_hi(f"Val!B{_vup0}")}&"），進加權的是乘上景碩長期相對同業倍數比 "&{_T(f"Val!B{_vrm}", "0.00")}&" 後的約 "&{_T(f"Val!B{_vc}", "#,##0")}&" 元；DCF 只有約 "&{_T(f"Val!B{_vd}", "#,##0")}&" 元。市場分析師平均目標價約 "&{_T(f"Val!B{_vcons}", "#,##0")}&" 元。"',
     f'="重點 2：EPS 主要看產能與漲價，不是 AI 份額。情境 A 的 ABF 需求滿足率 FY2027 約 "&{_T(f"PL!E{_P('A', '  ABF 需求滿足率')}", "0%")}&"、FY2028 約 "&{_T(f"PL!F{_P('A', '  ABF 需求滿足率')}", "0%")}&"（產能不足），所以敏感度測試（以情境 A 為基準、一次改一個輸入）中 AI 部署 ×0.8 的 FY2028 EPS 幾乎不變（"&{_sn(f"Sens!J{_s_ai}")}&"），景碩 GPU 份額改用券商說法（"&Sens!B{_s_gpu}&"）也幾乎不變（"&{_sn(f"Sens!J{_s_gpu}")}&"）；反之 ABF 溢價用 Ibiden 模型的低值或高值（假設）時 FY2028 EPS "&{_sg(f"Sens!J{_s_pl}")}&"／"&{_sg(f"Sens!J{_s_ph}")}&"，漲價年度化 "&{_T(f"In!D{_inr['carry']}", "0%")}&" 或 "&{_T(f"In!F{_inr['carry']}", "0%")}&"（基準 "&{_T(_I("carry"), "0%")}&"，假設）時 FY2027 EPS "&{_sg(f"Sens!F{_s_cl}")}&"／"&{_sg(f"Sens!F{_s_ch}")}&"，ABF 產能低值時 FY2028 EPS "&{_sg(f"Sens!J{_s_cap}")}&"。這些是測試案例，不是門檻。"',
-    f'="重點 3：DCF 低，是因為擴產期自由現金流少、折現率高。標準版 DCF（無槓桿自由現金流折現）用近三年（FY2023–FY2025）平均的資本支出占營收 "&TEXT(fc_cx,"0%")&"（FY2023–24 為擴產期；折舊 "&TEXT(fc_da,"0%")&"），以 WACC "&TEXT(wacc,"0.0%")&" 折現（股權成本 "&TEXT(ke,"0.0%")&"＝台灣 10 年期公債 "&TEXT(rf,"0.00%")&" ＋ β "&TEXT(beta,"0.00")&" ×（ERP "&TEXT(erp,"0%")&" ＋ 台灣國家風險溢酬 "&TEXT(crp,"0.00%")&"）；β 為 Damodaran 新興市場表電子產業 β 重新加槓桿，ERP 5% 與 RONIC＝WACC 為假設），再扣晶碩非控制權益帳面 "&TEXT(mi_v*10,"#,##0")&" 億元，DCF 目標價約 "&{_T(f"Val!B{_vd}", "#,##0")}&" 元；同業倍數法則直接反映市場目前給載板股的高倍數（中位數 "&{_T(f"Val!B{_vmed}", "0.0")}&" 倍）。"',
+    f'="重點 3：DCF 低，是因為擴產期自由現金流少、折現率高。標準版 DCF（無槓桿自由現金流折現）用近三年（FY2023–FY2025）平均的資本支出占營收 "&TEXT(fc_cx,"0%")&"（FY2023–24 為擴產期；折舊 "&TEXT(fc_da,"0%")&"），以 WACC "&TEXT(wacc,"0.0%")&" 折現（股權成本 "&TEXT(ke,"0.0%")&"＝台灣 10 年期公債 "&TEXT(rf,"0.00%")&" ＋ β "&TEXT(beta,"0.00")&" ×（ERP "&TEXT(erp,"0%")&" ＋ 台灣國家風險溢酬 "&TEXT(crp,"0.00%")&"）；β 為 自算 TW PCB／載板／CCL 產業 β 重新加槓桿，ERP 5% 與 RONIC＝WACC 為假設），再扣晶碩非控制權益帳面 "&TEXT(mi_v*10,"#,##0")&" 億元，DCF 目標價約 "&{_T(f"Val!B{_vd}", "#,##0")}&" 元；同業倍數法則直接反映市場目前給載板股的高倍數（中位數 "&{_T(f"Val!B{_vmed}", "0.0")}&" 倍）。"',
     f'="重點 4：v0.4 起 DCF 改為標準版（無槓桿自由現金流以 WACC 折現；舊法為每股（淨利＋折舊 − 資本支出）以 10% 折現；新舊數字對照見 README 版本沿革 v0.4 列），DCF 目標價為 "&{_T(f"Val!B{_vd}", "#,##0")}&" 元、加權目標價為 "&{_T(f"Val!B{_vt}", "#,##0")}&" 元，投資建議維持"&Val!B{_vrec}&"。終值現值占情境 B 企業價值 "&TEXT(Val!C{SDCF["tvsh"]},"0%")&"，隱含終值 EV／EBITDA 約 "&TEXT(Val!C{SDCF["mult"]},"0.0")&" 倍。DCF 參數中 ERP 對加權目標價的影響最大（以情境加權目標價為基準：ERP 4%／6% 時 "&TEXT(Sens!D{_tvs[0] + 2},"+0.0%;-0.0%")&"／"&TEXT(Sens!F{_tvs[0] + 2},"+0.0%;-0.0%")&"；WACC ±1pt 時 "&TEXT(Sens!D{_tvs[0]},"+0.0%;-0.0%")&"／"&TEXT(Sens!F{_tvs[0]},"+0.0%;-0.0%")&"）。"'):
     RD.cell(r, 1, t_); r += 1
 r += 1
