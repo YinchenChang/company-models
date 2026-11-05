@@ -37,6 +37,19 @@ VA = lambda r: f"@Val!A{r}"
 INK = {str(wb["In"].cell(r, 1).value): r for r in range(4, wb["In"].max_row + 1) if wb["In"].cell(r, 1).value}
 v_cmp0, v_up0 = find("Val", "Comparable 目標價（市場主流同業法）"), find("Val", "上檔空間：Comparable 目標價")
 
+# ---- 前處理零（v0.5）：情境驅動表的 In 列號依「情境驅動對照」一節實際位置平移（v0.5 在其上方新增 M2 節，html_src 的列號已位移）----
+def _shift_scn(blocks):
+    for i_, b in enumerate(blocks):
+        if b.get("type") == "table" and str(b.get("caption", "")).startswith("情境驅動"):
+            old_h = int(re.search(r"In!B(\d+)", json.dumps(b["head"])).group(1))
+            new_h = find("In", "情境驅動對照") + 1
+            d = new_h - old_h
+            if d:
+                blocks[i_] = json.loads(re.sub(r"In!([A-Z]+)(\d+)", lambda m: f"In!{m.group(1)}{int(m.group(2)) + d}" if int(m.group(2)) >= old_h else m.group(0), json.dumps(b, ensure_ascii=False)))
+            nb_ = len(blocks[i_]["rows"])
+            assert wb["In"].cell(new_h + nb_, 1).value and not wb["In"].cell(new_h + nb_ + 1, 1).value, ("情境驅動表列數與 In 頁不符", new_h, nb_)
+_shift_scn(sec("drivers")["blocks"])
+
 # ---- 前處理一：驅動因子章的「單一參數」表其實是驅動 → 推導對照表（輸入、推導量、因果方向），移到附錄 ----
 for b in sec("drivers")["blocks"]:
     if str(b.get("caption", "")).startswith("單一參數"):
