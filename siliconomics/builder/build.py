@@ -1478,6 +1478,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.17：HBM 供給改本庫自算（Andy 11-05「證據到哪，數字到哪」）：2026 基數＝本庫 2026 HBM 出貨 3.78 EB（三家皆稱售罄；參照 UBS 4.23）；2027 成長＝晶圓 +12% × HBM 晶圓占比 20%→30% × 每片位元 +5% ＝ +76%（0.36–1.19；參照 TrendForce +55%）。2027 供給 6.56 → 6.67 EB、需求 ÷ 供給 108% → 106%。決策 S47。", False),
         ("v0.16.3：Deploy 頁新增實體部署 GW（NVIDIA＝顆數 ÷ 該世代每 GW 顆數；非 NVIDIA＝IT 資本支出 ÷（VR200 每 GW × 持有成本比））與 Interface SIF_DeployGWPhys_Base，供電源、散熱、組裝等按實體電力計的下游讀取（Andy 11-05「先加」；讀者尚未改讀）。成本等值的 SIF_DeployGW_Base 不變。決策 S46。", False),
         ("v0.16.2（只改文字）：CF03、CF11、CF13、CF23 結案（Andy 2026-11-05 15:24；決策 S45），Checks G5 4 → 0。", False),
         ("v0.16.1：M28 改為 NVIDIA 營收口徑（算力收支 11-05 指出晶片內容橋接表第 44 列 GPU 取毛利、其餘取售價，為混合口徑；橋接表 v0.2.3 新增營收口徑列）：nvr_ 基準 GB300 0.647 → 0.772、VR200 0.624／0.581 → 0.695；SIF_NVContentGW_* 隨之改變（例 VR200 21.85 → 26.13）。Recon F 節 NVIDIA 資料中心營收比值 2026／2027 由 1.02／1.04 變為約 1.19／1.25（待診斷）。決策 S44。", False),
