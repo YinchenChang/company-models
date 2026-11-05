@@ -1,13 +1,14 @@
-# umc/：聯電（2303.TW；ADR UMC）個股模型 v0.1
+# umc/：聯電（2303.TW；ADR UMC）個股模型 v0.1.1
 
 AI 半導體 Project 代工層：成熟製程晶圓代工。樣板 `guc/`（工作表結構、Val 頁、相對倍數、In 頁版面），營收結構參考 `tsmc/`（量 × 價、公司固定揭露的製程別）。
 
 | 檔案 | 內容 |
 |---|---|
 | `build_umc.py` | 產生器（上半部為公司設定，下半部為與 `vis/build_vis.py` 相同的共用建置程式） |
-| `dist/20261031_聯電個股模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
-| `dist/20261031_聯電個股模型_v0.1.html` | 展示層（`tools/company_html`） |
-| `html.json`、`segments.json` | HTML 設定、分部宣告 |
+| `dist/20261105_聯電個股模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261105_聯電個股模型_v0.1.1.html` | 展示層（`tools/company_html`；個股 HTML 版面規格 v1.0） |
+| `html_src.json` → `gen_html_json.py` → `html.json` | HTML 設定原稿、轉換腳本（`tools/company_html/relayout.py`）、轉換結果（勿手改 `html.json`） |
+| `segments.json` | 分部宣告 |
 
 工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。
 
@@ -16,6 +17,14 @@ AI 半導體 Project 代工層：成熟製程晶圓代工。樣板 `guc/`（工�
 **核心問題：** 稼動率與美元售價回升能走多遠（情境 A 稼動率 95%、售價 +10%），AI 相關與 Intel 合作在 FY2029 能補多少（模型情境 A 約 10 億＋5 億美元，不到營收一成）；現價約 20 倍前瞻 P/E，比聯電自己 10 年 Bloomberg 前瞻 P/E 中位數 15.2 倍高多少。
 
 **投資建議：放空**（依上檔空間固定規則：加權目標價上檔空間 −39.1%，落在 −25%～−50%）。
+
+
+## v0.1.1（2026-11-05）：HTML 新版面 v1.0（只改展示層）
+
+- 依 `docs/plan/個股HTML版面規格.md` v1.0：README 工作表新增「展示層」（命題摘要、三個命題、三點白話重點）與「命題回覆」兩段，數字全部以公式帶出；A1 註明只改展示層。其他工作表與 v0.1 逐格相同（`tools/xlsx_diff.py`：差異只在 README 頁），重算錯誤格 0；敏感度沿用。
+- 原 `html.json` 改名 `html_src.json`（內容不動）；新增 `gen_html_json.py`。驅動因子依業務分三塊：成熟製程晶圓（產能 × 稼動率 × 平均售價）／新業務（AI 相關與 Intel 12 奈米合作）／全公司（匯率、成本、FY2026 錨點、股價與目標價規則）；In 頁「G. 公司說法、共識與券商」與「情境驅動對照」不歸組。
+- 投資建議橫幅中間格為「只看 Comparable 目標價（市場主流同業法）」（未經相對倍數調整，Val 第 40 列，附 Val 第 43 列上檔空間）；附註寫出進加權的相對倍數調整後 Comparable（Val 第 155 列）。
+- 重建：`python3 umc/build_umc.py <raw.xlsx>` → LibreOffice 重算 → `python3 umc/gen_html_json.py <成品 xlsx>` → `python3 tools/company_html/build_company_html.py umc`。舊版成品移到 `dist/_待刪除/`。
 
 ## 重點觀察
 
