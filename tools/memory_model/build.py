@@ -635,7 +635,7 @@ for i, (a, b) in enumerate(C["sources"] + [("markets/memory/market.py（共用�
     SO.cell(i, 1, a); SO.cell(i, 2, b)
 SO.column_dimensions["A"].width = 60; SO.column_dimensions["B"].width = 120
 RD = wb.create_sheet("README", 0)
-lines = [(f"{C['name']} 收支與估值模型 {C['version']}（記憶體樣板 v0.4.1）　{C['date']}", True), ("模型命題：" + C["thesis"], False), ("", False),
+lines = [(f"{C['name']} 收支與估值模型 {C['version']}（記憶體樣板 v0.4.1）　{C['date']}" + C.get("a1_note", ""), True), ("模型命題：" + C["thesis"], False), ("", False),
  ("驅動因子 → 推導量", True),
  ("Path（共用市場層）：一般 DRAM、NAND 合約價季增 → 季度指數（情境 A／B／C）；各公司依會計年度取平均，算年均價變動", False),
  ("Mkt（共用市場層）：加速器顆數 × 每顆 GB × 情境顆數係數（2028–29，與台積電、Advantest 同一套）→ 需求位元；MIN(需求, 供給（三情境相同）) → 出貨；× 單價（依情境）→ HBM 市場（日曆年）", False),
@@ -658,5 +658,117 @@ import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, os.path.basename(os.path.dirname(os.path.abspath(sys.argv[1]))))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, C.get("in_layout_version", C["version"]), "2026-10-30")  # In 頁版面（個股模型原則第 8 節；數值不變）
+
+
+# 樣板 v0.4.2（2026-11-05，個股 HTML 版面規格 v1.0）：README 頁「展示層」「命題回覆」兩段（HTML 讀；只改 README，其他頁不動）。
+# 各公司 company.py 的 CONFIG["pres"]：lead（命題摘要）、props（命題分項）、obs（白話重點）、ans（命題回覆）。
+# 文字中的 {鍵|格式} 轉成 TEXT(儲存格,"格式")、{鍵} 直接引用（文字格）；格式 P＝每股金額、E＝EPS 的數字格式。數字一律由公式帶出。
+def _pres(wb, C):
+    if not C.get("pres"):
+        return
+    V, YS, SN, RDs = wb["Val"], wb["Y"], wb["Sens"], wb["README"]
+    def vrow(p):
+        for r in range(1, V.max_row + 1):
+            if str(V.cell(r, 1).value or "").startswith(p):
+                return r
+        raise KeyError(p)
+    srow = {str(SN.cell(r, 2).value): r for r in range(5, 11)}
+    yc = lambda s, n: FC[(s, n)]
+    fade = {s: (FCF_[(s, FADEY[0])], FCF_[(s, FADEY[-1])]) for s in MKT.SCEN}
+    ni = R["ni"]
+    REF = {"tpw": f"Val!B{T['tpw']}", "dcftp": f"Val!B{T['dcftp']}", "comp": f"Val!B{T['comptp']}", "compadj": "tp_comp_adj", "px": "px",
+           "upw": f"Val!B{T['upw']}", "upcadj": "(tp_comp_adj/px-1)", "dcfup": f"(Val!B{T['dcftp']}/px-1)", "rec": f"Val!B{T['rec']}", "cons": f"Val!B{T['cons']}",
+           "conspx": f"(Val!B{T['cons']}/px-1)", "fbv": f"Val!B{T['fbv']}", "pxbv": f"(px/Val!B{T['fbv']})", "pmed": f"Val!B{T['pmed']}", "rmf": "rm_factor",
+           "pmadj": f"(Val!B{T['pmed']}*rm_factor)", "wdcf": "tp_w_dcf", "gbv": f"Val!B{T['gbv']}", "gbvabs": f"ABS(Val!B{T['gbv']})",
+           "gbvdir": f'IF(Val!B{T["gbv"]}<0,"低","高")', "y27": f'"{FYL.format(YRS[0])}"', "y28": f'"{FYL.format(YRS[1])}"', "y29": f'"{FYL.format(YRS[2])}"',
+           "s_case": f"Sens!A{srow['一般 DRAM 收入 +20%']}"}
+    for s, c_ in zip(MKT.SCEN, "BCD"):
+        REF[f"dcf{s}"] = f"Val!{c_}{T['dcf12']}"; REF[f"dcfpx{s}"] = f"Val!{c_}{T['dcfpx']}"
+        REF[f"eps{s}28"] = f"Val!{c_}{T[f'eps{YRS[1]}']}"
+        e1, e3 = f"Y!{yc(s, 1)}{ni}", f"Y!{yc(s, 3)}{ni}"
+        rng1, rng2 = f"Y!{yc(s, 1)}{ni}:{yc(s, 3)}{ni}", f"Y!{fade[s][0]}{ni}:{fade[s][1]}{ni}"
+        h1, h2 = f"Y!{yc(s, 1)}3:{yc(s, 3)}3", f"Y!{fade[s][0]}3:{fade[s][1]}3"
+        mx = f"MAX(Y!C{ni},{rng1},{rng2})"
+        lab = (f'IF(Y!C{ni}={mx},LEFT(Y!C3,FIND("（",Y!C3)-1),IF(MAX({rng1})={mx},INDEX({h1},MATCH({mx},{rng1},0)),INDEX({h2},MATCH({mx},{rng2},0))))')
+        REF[f"peak{s}"] = f'IFERROR(LEFT({lab},FIND(" ",{lab})-1),{lab})'
+        REF[f"nipk{s}"] = mx
+        REF[f"ni{s}28"] = f"Y!{yc(s, 2)}{ni}"
+        REF[f"nichg{s}28"] = f"(Y!{yc(s, 2)}{ni}/{mx}-1)"
+        REF[f"sh{s}29"] = f"Y!{yc(s, 3)}{R['sh']}"
+        REF[f"nmop{s}28"] = f"Y!{yc(s, 2)}{R['nmop']}"
+        REF[f"nmsh{s}28"] = f"IFERROR(Y!{yc(s, 2)}{R['nmop']}/Y!{yc(s, 2)}{R['cop']},0)"
+        REF[f"cop{s}28"] = f"Y!{yc(s, 2)}{R['cop']}"
+        REF[f"nmop{s}29"] = f"Y!{yc(s, 3)}{R['nmop']}"
+        REF[f"nmsh{s}29"] = f"IFERROR(Y!{yc(s, 3)}{R['nmop']}/Y!{yc(s, 3)}{R['cop']},0)"
+    REF["sh0"] = f"Y!C{R['sh']}"
+    REF["bv27w"] = "(" + "+".join(f"tp_w{s}*Y!{yc(s, 1)}{R['bvps']}" for s in MKT.SCEN) + ")"
+    REF["pxbv27"] = f"(px/{REF['bv27w']})"
+    REF["s_year"] = f'LEFT({REF["s_case"]},FIND(" ",{REF["s_case"]})-1)'
+    REF["s_scn"] = f'RIGHT({REF["s_case"]},1)'
+    _u = REF["upw"]
+    REF["verdict"] = f'IF({_u}>0.25,"撐得住，而且有明顯上檔",IF({_u}>=-0.25,"大致在合理範圍內，上下檔有限","撐不住"))'
+    REF["updesc"] = f'IF({_u}>0.25,"遠高於",IF({_u}>=0,"略高於",IF({_u}>=-0.25,"略低於","遠低於")))'
+    REF["nmsupport"] = f'IF(MAX({REF["nmshC28"]},{REF["nmshC29"]})<0.2,"撐住的部分有限，谷底時的盈餘仍主要看記憶體","可撐住相當比例的盈餘")'
+    REF["dcfall"] = f'IF(MIN(Val!B{T["dcfpx"]}:D{T["dcfpx"]})>1,"三種情境的 DCF 價值都高於現價","並非三種情境的 DCF 價值都高於現價")'
+    REF["shchgB29"] = f"(Y!{yc('B', 3)}{R['sh']}/Y!C{R['sh']}-1)"
+    # 加權目標價上檔的來源拆解（工作單補充規則 B）：DCF 貢獻 tp_w_dcf ×（DCF − 現價），Comparable 貢獻（1 − tp_w_dcf）×（調整後 Comparable − 現價）；
+    # Comparable ÷ 現價 ＝（前瞻每股淨值 ÷ 第 1 年底每股淨值）×（調整後同業倍數 ÷ 現價隱含第 1 年底 P/B），兩者都以情境加權每股淨值計、同一時間窗。
+    _dc, _cc = f"(tp_w_dcf*({REF['dcftp']}-px))", f"((1-tp_w_dcf)*(tp_comp_adj-px))"
+    REF["dcfsh"] = f"({_dc}/({_dc}+{_cc}))"
+    REF["compsh"] = f"({_cc}/({_dc}+{_cc}))"
+    REF["bvg"] = f"({REF['fbv']}/{REF['bv27w']}-1)"
+    REF["pmg"] = f"({REF['pmadj']}/{REF['pxbv27']}-1)"
+    REF["upsrc"] = f'IF({REF["dcfsh"]}>=0.6,"上檔主要來自 DCF",IF({REF["dcfsh"]}<=0.4,"上檔主要來自 Comparable","上檔由 DCF 與 Comparable 約各半貢獻"))'
+    REF["compdrv"] = f'IF({REF["bvg"]}>{REF["pmg"]},"每股淨值成長大於倍數差","倍數差大於每股淨值成長")'
+    REF["upc"] = f"({REF['comp']}/px-1)"
+    for k, lab in (("dram", "一般 DRAM 收入 +20%"), ("hbm", "HBM 收入 +30%"), ("nand", "NAND 收入 +30%")):
+        REF[f"s_{k}_l"] = f"Sens!B{srow[lab]}"; REF[f"s_{k}"] = f"Sens!E{srow[lab]}"
+    a, h, n = (f"ABS(Sens!E{srow[x]})" for x in ("一般 DRAM 收入 +20%", "HBM 收入 +30%", "NAND 收入 +30%"))
+    REF["s_top"] = f'IF({a}>=MAX({h},{n}),"一般 DRAM",IF({h}>={n},"HBM","NAND"))'
+    sc = yc("A", 1)      # Sens 第一組＝第 1 年情境 A
+    for k in ("conv", "hbm", "nand", "rev"):
+        REF[f"{k}A27"] = f"Y!{sc}{R[k]}"
+    REF["hbmshA27"] = f"Y!{sc}{R['hbmsh']}"
+    REF["hbm_lt_dram"] = f'IF(Y!{sc}{R["hbm"]}<Y!{sc}{R["conv"]},1,0)'
+    FMT = {"P": fmtp, "E": EPSF}
+
+    def lit(t):
+        t = t.replace('"', '""')
+        return [f'"{t[i:i + 200]}"' for i in range(0, len(t), 200)]
+
+    def fx(t):
+        import re as _re
+        parts, pos = [], 0
+        for m in _re.finditer(r"\{([A-Za-z0-9_]+)(?:\|([^}]*))?\}", t):
+            parts += lit(t[pos:m.start()])
+            e = REF[m.group(1)]
+            if m.group(2) is None:
+                parts.append(e)
+            else:
+                f_ = FMT.get(m.group(2), m.group(2)).replace('"', '""')
+                parts.append(f'TEXT({e},"{f_}")')
+            pos = m.end()
+        parts += lit(t[pos:])
+        parts = [p for p in parts if p != '""']
+        if len(parts) == 1 and parts[0].startswith('"'):
+            return t
+        return "=" + "&".join(parts)
+
+    P = C["pres"]
+    r = RDs.max_row + 2
+    RDs.cell(r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；上方各列原文保留給下游）").font = BOLD; r += 1
+    for t in [P["lead"]] + P["props"] + P["obs"]:
+        RDs.cell(r, 1, fx(t)); r += 1
+    r += 1
+    RDs.cell(r, 1, "命題回覆（HTML 用；依本模型計算回答開頭的命題）").font = BOLD; r += 1
+    for t in P["ans"]:
+        RDs.cell(r, 1, fx(t)); r += 1
+    r += 1
+    RDs.cell(r, 1, "HTML 橫幅輔助值（只引用 Val、In 頁；不進任何計算）").font = BOLD; r += 1
+    RDs.cell(r, 1, "上檔空間：Comparable 目標價（相對倍數調整後）"); RDs.cell(r, 2, "=tp_comp_adj/px-1").number_format = "0.0%"; r += 1
+    RDs.cell(r, 1, "上檔空間：只看 Comparable 目標價（市場主流同業法，未調整）"); RDs.cell(r, 2, f"=Val!B{T['comp2']}/px-1").number_format = "0.0%"; r += 1
+
+
+_pres(wb, C)
 wb.save(sys.argv[2])
 print("saved", sys.argv[2])
