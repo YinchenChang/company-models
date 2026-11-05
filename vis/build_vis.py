@@ -133,7 +133,7 @@ C["peers"] = [("聯電（UMC）", "2303.TW", 20.22, "2026-10-22", "stockanalysis
               ("高塔半導體（Tower）", "TSEM", 34.63, "2026-10-26", "stockanalysis.com forward PE（分析師共識；價格日期如左）")]
 C["peer_note"] = "成熟與特殊製程晶圓代工同業（聯電、格芯、中芯港股、高塔）；不含 A 股（非 A 股公司，Andy 2026-10-25 11:53）；力積電、華虹前瞻 P/E 未取得或資料日過舊，未列"
 C["tp_method"] = ("DCF（v0.2 標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現到 2026 年底（期中慣例），終值＝NOPAT(FY2033) ×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, 新台幣 10 年期公債殖利率)、RONIC＝WACC；"
-                  "ke＝rf＋β ×（ERP 5%＋台灣國家風險溢酬），β 為 Damodaran Global 半導體無槓桿 β 依市值 D/E 重新加槓桿；EV 加淨現金與長期投資、減非控制權益（NXP 占 VSMC 40%，帳面）÷ 股數，以 ke 推到 12 個月後並扣期間股利（DCF 頁）。"
+                  "ke＝rf＋β ×（ERP 5%＋台灣國家風險溢酬），β 為 Damodaran 新興市場半導體無槓桿 β 依市值 D/E 重新加槓桿；EV 加淨現金與長期投資、減非控制權益（NXP 占 VSMC 40%，帳面）÷ 股數，以 ke 推到 12 個月後並扣期間股利（DCF 頁）。"
                   "資本支出以 FY2023–25 占營收平均（含 VSMC 建廠，61%）扣除、FY2029 起收斂，折舊、營運資金亦取近三年平均；VSMC 量產後折舊上升未反映在折舊加回比例，DCF 偏低估；情境價值負值取 0。"
                   "Comparable：聯電、格芯、中芯（港股）、高塔前瞻 P/E 中位數；世界先進本身 Bloomberg 前瞻倍數待取，相對倍數調整係數取 1.0（不調整）。"
                   "主要偏誤：8 吋稼動率、售價與 VSMC 毛利率屬公司層級假設（待併入 Siliconomics）；FY2030 起只用收斂法。情境對應：A＝順利（8 吋稼動率 95%、VSMC 稼動率 90%）、B＝平平、C＝不如預期（中國成熟製程擴產、8 吋稼動率 74–80%、VSMC 毛利率為負）")
@@ -370,9 +370,9 @@ inp("fade_mB", "情境 B：FY2032 淨利率收斂目標（FY2029 與「FY2029 ×
 inp("fade_mC", "情境 C：FY2032 淨利率收斂目標（FY2029 × 0.8）", "%", None, 0, None, "Assumed", "同上", "—")
 for _row in FD.in_rows(C["dcf_P"]):
     rows.append(_row)
-inp("beta_u", "產業無槓桿 β：Damodaran Global Semiconductor（現金修正後；2026 年 1 月）", "x", None, 1.87, None, "Analogy",
-    "Damodaran Betas by Sector (Global) 2026 年 1 月：Semiconductor 675 家，β 1.88、D/E 4.13%、稅率 8.46%、無槓桿 β 1.82、現金修正後 1.87（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/BetasGlobal.html；2026-11-05 讀取）",
-    "非美國公司用 Global 表（Emerging 表本次無法開啟）；用現金修正值：淨現金另計，β 只對營業資產；β 低案例改用美國表（beta_u_us）")
+inp("beta_u", "產業無槓桿 β：Damodaran Emerging Markets Semiconductor（現金修正後；2026-01-05 版）", "x", None, 1.9759, None, "Analogy",
+    "Damodaran betaemerg.xls（2026-01-05 版，stern.nyu.edu），Andy 下載存 Drive 07-AI半導體/inbox：Emerging Markets Semiconductor 546 家，無槓桿 β 1.8524、現金修正後 1.9759（區域邊際稅率 24.7%）",
+    "台灣、韓國用 Emerging Markets 表、歐洲用 Europe 表（Andy 2026-11-05 22:26）；用現金修正值：淨現金另計，β 只對營業資產；β 低案例改用美國表（beta_u_us）")
 inp("beta_u_us", "產業無槓桿 β 對照：Damodaran 美國 Semiconductor（現金修正後；只用於 β 低案例）", "x", None, 1.50, None, "Analogy",
     "Damodaran Betas by Sector (US) 2026 年 1 月：Semiconductor 66 家，現金修正後無槓桿 β 1.50（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/Betas.html；2026-11-05 讀取）", "—")
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 股數 sh_v)", "與 WACC 權重同一口徑")
@@ -956,7 +956,7 @@ def XF(*parts):
 _SP = '"+0.0%;-0.0%"'
 _J = lambda nm: f"Sens!J{TP_ROWS[nm]}"
 RD.cell(RD.max_row + 1, 1, XF("v0.2（2026-11-05）：模型改版——DCF 改為標準版（Andy 2026-11-05 20:42、20:45；docs/plan/個股DCF標準規格.md）：FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現，終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g）；ke＝rf＋β ×（ERP＋CRP），rf ",
-    ('TEXT(rf,"0.00%")',), "（新台幣 10 年期公債）、β ", ('TEXT(beta,"0.00")',), "（Damodaran Global 半導體無槓桿 β 1.87 依市值 D/E 重新加槓桿）、ERP 5%、台灣 CRP ", ('TEXT(crp,"0.00%")',), "，g＝MIN(3%, rf)＝", ('TEXT(g_tv,"0.00%")',),
+    ('TEXT(rf,"0.00%")',), "（新台幣 10 年期公債）、β ", ('TEXT(beta,"0.00")',), "（Damodaran 新興市場半導體無槓桿 β ", ('TEXT(beta_u,"0.00")',), " 依市值 D/E 重新加槓桿）、ERP 5%、台灣 CRP ", ('TEXT(crp,"0.00%")',), "，g＝MIN(3%, rf)＝", ('TEXT(g_tv,"0.00%")',),
     "。資本支出取 FY2023–25 占營收平均 ", ('TEXT(fc_cx,"0.0%")',), "（含 VSMC 建廠），FY2029 起收斂到 ", ('TEXT(fc_cx_ss,"0.0%")',), "；折舊由近三年平均 ", ('TEXT(fc_da,"0.0%")',), " 收斂到 ", ('TEXT(fc_da_ss,"0.0%")',), "（穩態時折舊趕上資本支出，Assumed）。股權價值為 0 的情境扣期間股利後下限 0。"
     "新增 DCF 頁（tools/fcff_dcf.py）；Sens 每個案例三情境各一個 FCFF 明細，另加 DCF 參數案例；刪除 tp_r、tp_roe 與舊折現率三案。"
     "新舊對照（v0.1.1 → v0.2）：DCF 目標價 77.48 → ", (f'TEXT({_B("dcftp")},"0.00")',), "，加權目標價 126.59 → ", (f'TEXT({_B("tpw")},"0.00")',), "，上檔空間 −21.4% → ", (f'TEXT({_B("upw")},{_SP})',), "，投資建議 中立 → ", (_rec,), "。DCF 差異拆解（建置時以 DCF 頁明細依序替換計算，元／股）：現金流口徑改 FCFF（仍 r 10%、g 4%）−36.9；折現率改 WACC 12.7%、g 改 2.0% −32.6；終值改價值驅動式 −1.0；扣期間股利（下限 0）−1.3。"
