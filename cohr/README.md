@@ -17,7 +17,7 @@
 | 投資建議 | 強力買進 | 強力買進 |
 | Sens β 低／高（加權目標價） | 330.40／317.21 | 333.39／315.50 |
 
-- 成品：`dist/20261105_Coherent個股模型_v0.4.2.xlsx`、`.html`；v0.4.1 移到 `dist/_待刪除/`。依賴：`innolight/dist`（PR #395 v0.4.2；Units 頁未變）、`tsmc/dist`、`markets/network/dist`（main）。
+- 成品：`dist/20261105_Coherent個股模型_v0.4.2.xlsx`、`.html`；v0.4.1 移到 `dist/_待刪除/`。依賴：`innolight/dist`（以 main 的 v0.3 成品建置；讀取的 Units 頁與 PR #395 v0.4.2 逐格相同，28 個數值格 0 差異）、`tsmc/dist`、`markets/network/dist`（main）。
 
 ## v0.4.1（2026-11-05）：β 改用自算產業 β（US 網通／光通訊）
 
