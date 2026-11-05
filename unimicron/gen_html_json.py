@@ -178,8 +178,9 @@ for b in sec(cfg, "drivers")["blocks"]:
         SPEC["blocks_to"][b["parts"][0]] = BLOCKS_TO["@Units!A"]
 cfg = relayout(cfg, X, SPEC)
 
-# ---- 後處理一：橫幅的 Comparable 目標價改用「相對倍數調整後」（加權目標價實際使用的值；轉換器預設抓到未調整的列）----
-cfg["hero"]["tiles"][1] = [VA(v_cmp), V(v_cmp, "n2"), ["上檔空間 ", f"@README!B{rd_upc}|sp1"]]
+# ---- 後處理一：橫幅中間格＝只看 Comparable（市場主流同業法、未經相對倍數調整；工作單補充規則 A），附它自己的上檔空間；進加權的調整後值寫在橫幅附註 ----
+cfg["hero"]["tiles"][1] = ["只看 Comparable 目標價（市場主流同業法）", V(v_cmp0, "n2"), ["上檔空間 ", V(v_up0, "sp1")]]
+cfg["hero"]["note"] = list(cfg["hero"]["note"]) + ["；進加權的 Comparable 為相對倍數調整後 ", V(v_cmp, "n0"), "（調整係數 ", f"@Val!B{find('Val', '相對倍數調整係數')}|n2", "）。"]
 
 # ---- 後處理二：龍捲風圖量的是 EPS 變動，不是加權目標價；標題改回原口徑 ----
 for b in sec(cfg, "sens")["blocks"]:
