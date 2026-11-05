@@ -1,4 +1,11 @@
-# smci/ — 美超微 Super Micro Computer（SMCI US）收支與估值模型 v0.2
+# smci/ — 美超微 Super Micro Computer（SMCI US）收支與估值模型 v0.3
+
+## v0.3（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）＋HTML 新版面 v1.0
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0 與工作單（Andy 2026-11-05 20:42、20:45、21:21）：Val 0.1 節由「股東現金流＝GAAP EPS ×（1 − tp_g ÷ tp_roe）、折現率 tp_r 10%」改為 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加（GAAP 營業利益，股權報酬視為費用），以 WACC 折現到 2026-12-31（期中慣例；FY2027 只計 2027-01～06 半年）；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, 美國 10 年期公債殖利率)、RONIC＝WACC；EV 減淨負債與特別股轉換前股利 ÷ 股數（普通股 658.13 百萬股＋特別股轉換股數），以股權成本推到 12 個月後。新增 DCF 頁；In 頁新增 H2 節，刪除 tp_r、tp_roe；Sens 目標價參數改為標準案例（表格移到案例區塊之後）。
+- 參數：rf 美國 10 年期公債 5.00%（2026-10-23）；β＝Damodaran 美國 Computers/Peripherals 現金修正後無槓桿 β 1.32 依美超微 D/E 重新加槓桿（約 1.72；個股迴歸 β 1.40 經 Blume 調整 1.27 列為 Sens 低值）；ERP 5%；營運資金約占營收三分之一（近三年實績）。
+- HTML 改用 `docs/plan/個股HTML版面規格.md` v1.0（補充規則 A–E）：原 `html.json` 改名 `html_src.json`（內容不動），新增 `gen_html_json.py`；xlsx README 頁新增「展示層」「命題回覆」「HTML 輔助列」「本版要點」。
+- 成品：`dist/20261105_美超微個股模型_v0.3.xlsx`、`.html`；v0.2 移到 `dist/_待刪除/`。
 
 ## v0.2（2026-11-04）：滾入 1Q FY27 實績、2Q FY27 指引與 FY2027 全年指引上修（數值改變，次版）
 
@@ -72,13 +79,13 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_smci.py` | 產生器（參數與公式；上游成品唯讀） |
-| `dist/20261104_美超微個股模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261104_美超微個股模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261104_美超微個股模型_v0.2.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
+| `dist/20261104_美超微個股模型_v0.3.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
 
 建置：先執行 `python3 smci/build_smci.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。
 
-工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。
+工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。
 
 唯讀取用的上游成品：
 - `tsmc/dist`：八類加速器顆數（CY2026–28，2029 為成長率）與情境顆數係數。
