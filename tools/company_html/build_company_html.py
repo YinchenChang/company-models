@@ -13,6 +13,7 @@ Excel 是計算事實的來源；本程式只呈現。每個數字與標籤都�
 html.json 的格式見 tools/company_html/README.md。
 """
 import argparse
+import datetime
 import hashlib
 import html
 import json
@@ -32,6 +33,11 @@ CELL_RE = re.compile(r'^([A-Z]+)(\d+)$')
 
 
 # ───────────────────────── 數字格式 ─────────────────────────
+def date_text(v):
+    """日期格的顯示文字（YYYY-MM-DD）；非日期原樣回傳。"""
+    return v.strftime('%Y-%m-%d') if isinstance(v, datetime.datetime) else v
+
+
 def _sign(v, s, plus=False):
     """負值加 U+2212；四捨五入後為零不加號。"""
     if re.fullmatch(r'[0-9,]*\.?0*[%x]?', s) and not re.search(r'[1-9]', s):
@@ -140,6 +146,8 @@ class Ctx:
         self.used.add(ref)
         if v is None:
             return f'<span class="na" data-ref="{ref}" title="{ref}">—</span>'
+        if isinstance(v, datetime.datetime):   # 可選：日期格以 YYYY-MM-DD 文字標籤顯示（檢核比對同一格式）
+            v = date_text(v)
         if isinstance(v, str):
             cls = 'lbl' + tag_class(v, f)
             return f'<span class="{cls}" data-ref="{ref}" title="{ref}">{esc(v)}</span>'
