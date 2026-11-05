@@ -1,0 +1,19 @@
+[
+ {
+  "after_section_end": "M3.",
+  "section": "M3b. HBM 供給基數（v0.14；三層校準原則：實績雙向校正）",
+  "rows": [
+   {
+    "id": "hbm_sup26",
+    "label": "2026 HBM 位元供給（廠商出貨推估；2027 起供給的基數）",
+    "unit": "EB",
+    "lo": 3.8,
+    "base": 4.23,
+    "hi": 4.6,
+    "tag": "Derived",
+    "src": "UBS（經 iTiger 轉述，2026-10）：SK 海力士 2026 HBM 出貨 177 億 Gb、三星 97 億 Gb（Interested-party）；美光以 2026 HBM 營收份額約 19% 推得總量 ≈ (177＋97) ÷ 0.81 ＝ 338 億 Gb ＝ 4.23 EB（1 EB＝80 億 Gb）",
+    "src2": "原做法（v0.13 以前）以本庫 2026 需求出貨 3.78 EB 當供給，2027 需求 ÷ 供給 121%（K10 WARN）；主因查證見 docs/reports/20261105_HBM供給校準.md。UBS 2027：SK 海力士 231、三星 230 億 Gb → 約 7.20 EB（高值參考）；TrendForce 2027 年增 +50–60%（hbm_sup27 不變）。Andy 2026-11-05 08:22 選甲"
+   }
+  ]
+ }
+]

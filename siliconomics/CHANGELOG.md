@@ -1,5 +1,11 @@
 # Siliconomics 變更紀錄
 
+## v0.14（2026-11-05；`model/20261105_Siliconomics_v0.14.xlsx`；Tokenomics v21.7）
+
+- **HBM 供給基數改用廠商出貨推估**（Andy 2026-11-05 08:22 選甲；決策 S39；報告 `docs/reports/20261105_HBM供給校準.md`）：新增 In 頁 M3b `hbm_sup26`＝4.23 EB（3.8–4.6；UBS 廠商出貨推得，Derived）；2026 供給改讀此值（原＝本庫 2026 需求 3.78），2027 年增仍 +55%（TrendForce）→ 2027 供給 5.86 → 6.56 EB。markets/memory `_INPUT_SECS` 加 M3b（記憶體三家 In 頁重播）。
+  - 2027：HBM 需求 ÷ 供給 121% → 108%；HBM 出貨 +12%；HBM 市場 154.1 → 172.3 $B；可支撐部署 GW 34.4 → 38.5（K10 仍 WARN）；`SIF_CapOnlineGW_Base` 29.9 → 33.4。2026 出貨不變（2026 HBM 供給成為獨立數據，需求 ÷ 供給 89%）。2028–29 不變。
+  - 下游加權目標價：SK 海力士 +2.6%、三星 +1.4%、美光 +1.5%、泰瑞達 +0.9%、BESI +0.5%、Advantest +0.1%；Disco −1.3%、韓美 −2.9%、TOWA −3.2%（CY2027 出貨提高使 CY2028 增量變小）；投資建議全部不變。cascade 第二、三輪全部 SAME。
+
 ## v0.13.1（2026-11-04；`model/20261104_Siliconomics_v0.13.1.xlsx`；Tokenomics v21.7）
 
 - **分世代每 IT GW NVIDIA 內容**（算力收支 Wattonomics Requests R7，期限 11-12；決策 S38）：In 頁新增 M28（NVIDIA 合計 ÷ IT capex：GB300 0.647、VR200 2026 0.624、VR200 2027 0.581〔高值 0.599＝HBM 漲價轉嫁〕取自晶片內容橋接表；Hopper、GB200 以 GB300、Rubin Ultra 以 VR200 2027 代入〔Analogy〕）；Interface `SIF_NVContentGW_<H100|GB200|GB300|VR200_26|VR200|RU>`（$B／IT GW）：17.80／15.54／20.85／23.47／21.85／29.11（含 _lo／_hi）。

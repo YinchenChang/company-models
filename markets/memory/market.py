@@ -60,7 +60,7 @@ G_U29 = SNAP["names"].get("SIF_UnitsGrowth29")
 
 # 各記憶體公司模型 In 頁重播的節：inputs() 只放 M1–M3（市場層），ref_inputs() 只放 M4（對帳參考）；
 # M5 起的節（例如 2029 平台別成長）不寫進記憶體公司模型，由需要的模型經上面的名稱取用
-_INPUT_SECS = ("M1.", "M2.", "M2b.", "M3.")
+_INPUT_SECS = ("M1.", "M2.", "M2b.", "M3.", "M3b.")
 _REF_SECS = ("M4.",)
 
 
@@ -135,9 +135,10 @@ def write(wb, hdr, Font):
     put("需求 × 出貨係數（基準＝情境 A）", "EB", [None] + [f"={YC[y]}{MK['dem']}*hbm_gross" for y in (26, 27, 28, 29)], key="demg")
     put("加速器顆數合計", "百萬顆", [None] + ["=" + "+".join(f"u_{k}_{y}" for k, *_ in UNITS) for y in (26, 27, 28)], key="units", fmt="0.0", note="JPMorgan 2027：GPU 10.9M、ASIC 12.5M；情境 A（原始顆數）")
     put("每顆平均 HBM", "GB", [None] + [f"={YC[y]}{MK['dem']}*1000/{YC[y]}{MK['units']}" for y in (26, 27, 28)], key="gbavg", fmt="0")
-    put("供給（三情境相同）", "EB", [None] * 5, key="sup", note="2026 供給＝需求出貨（年中已成交）；供給不隨需求情境變（產能 2027 前已訂定）")
+    put("供給（三情境相同）", "EB", [None] * 5, key="sup", note="2025＝2026 需求出貨 ÷ (1＋hbm_g26)；2026 起＝廠商出貨推估 hbm_sup26（Siliconomics v0.14；原為 2026 供給＝本庫需求）；供給不隨需求情境變（產能 2027 前已訂定）")
     rr = MK["sup"]
-    for j, f in enumerate(["=D{0}/(1+hbm_g26)".format(rr), "=D{0}".format(MK["demg"]), "=D{0}*(1+hbm_sup27)".format(rr), "=E{0}*(1+hbm_sup28)".format(rr), "=F{0}*(1+hbm_sup29)".format(rr)]):
+    _s26 = "=hbm_sup26" if _V.get("hbm_sup26") else "=D{0}".format(MK["demg"])
+    for j, f in enumerate(["=D{0}/(1+hbm_g26)".format(MK["demg"]), _s26, "=D{0}*(1+hbm_sup27)".format(rr), "=E{0}*(1+hbm_sup28)".format(rr), "=F{0}*(1+hbm_sup29)".format(rr)]):
         M.cell(rr, 3 + j, f).number_format = "0.00"
     # 情境層：顆數係數 → 需求 → 出貨 → 缺口（供給不變，需求隨情境）
     for s in SCEN:
