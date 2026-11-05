@@ -1515,7 +1515,7 @@ for col, w in zip("ABCDEF", [6, 80, 12, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = "Alphabet（GOOGL）個股模型 v0.3.6（2026-11-04；2026Q3 季度滾動＋10-Q 補入＋Tokenomics " + TKV + "）— 命題模組＋官方營收分部 → 損益表"
+RD["A1"] = "Alphabet（GOOGL）個股模型 v0.3.7（2026-11-05；v0.3.7 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；v0.3.6：2026Q3 季度滾動＋10-Q 補入＋Tokenomics " + TKV + "）— 命題模組＋官方營收分部 → 損益表"
 RD["A3"] = "命題：AI 改變搜尋之後，Google Search 的變現能否守住，同時 Google Cloud（含 TPU）能否把翻倍的資本支出變成營收；資本支出與 2026 年股權發行後的每股價值是否高於現價。"
 RD["A4"] = "核心問題：Search & other 在 C 情境（AI 助理分流、每次查詢變現下降）下 FY2028 營收與利益率會掉多少，Cloud 的 AI 營收能否抵銷；加計 AI 折舊與股權發行後的每股價值。"
 VB = lambda k, c="B": f"Val!{c}{VR_[k]}"
@@ -1553,6 +1553,23 @@ for t in ("v0.3.5 只把 v0.3.1 暫用的推導值與沿用 2026Q2 的值換成 
 r += 1
 RD.cell(r, 1, "工作表：README → In → Q → Thesis → Seg → PL → CF → Val → Recon → Sens → Sources。藍字＝輸入、黑字＝公式；黃底＝判斷題。建置：bash alphabet/make_v03.sh").font = BOLD; r += 1
 RD.cell(r, 1, "數字標記：Verified（經查核）／Interested-party（公司或賣方自述）／Analogy／Assumed（給區間）／Derived（換算）。本模型是研究整理，不是投資建議以外的保證。")
+r += 2
+# v0.3.7（Andy 2026-11-05，個股 HTML 版面規格 v1.0）：展示層與命題回覆（HTML 讀；A3、A5–A8 原文保留）
+_CB = CR["B"]
+_ch = next(rr for rr in range(_CB["cfo"] - 1, 0, -1) if CF.cell(rr, 1).value == "項目")
+RD.cell(r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用）").font = BOLD; r += 1
+RD.cell(r, 1, "命題：AI 改變搜尋之後，Google 的搜尋生意守不守得住，Google Cloud（含 TPU）能否把翻倍的資本支出變成營收；三個問題如下。"); r += 1
+RD.cell(r, 1, "命題 1｜搜尋守得住嗎：AI 助理分流查詢、每次查詢變現下降時，Search & other 的營收與 Google Services 的利益率會掉多少。"); r += 1
+RD.cell(r, 1, "命題 2｜Cloud 能否把資本支出變成營收：2026 年資本支出指引 1,950–2,050 億美元，Google Cloud 的 AI 營收與利潤能否跟上、抵銷搜尋被侵蝕的部分。"); r += 1
+RD.cell(r, 1, "命題 3｜每股值多少：把新增 AI 折舊、2026 年股權發行與資本支出算進去之後，每股價值是否仍高於現價。"); r += 1
+RD.cell(r, 1, f'="重點 1｜合理價值低於現價約兩成：我們估每股約 "&TEXT({VB("tp")},"0")&" 美元，比現價 "&TEXT(px,"0.00")&" 低 "&TEXT(-{VB("up")},"0%")&"。未來現金流折現約 "&TEXT({VB("tpdcf")},"0")&"、分部加總約 "&TEXT({VB("tpcomp")},"0")&"（多數分部用同業倍數，Cloud AI 用自身現金流折現，另含自用 AI 讀法調整）各占一半；三種情境約 "&TEXT({VB("scen")},"0")&"、"&TEXT({VB("scen", "C")},"0")&"、"&TEXT({VB("scen", "D")},"0")&"，都低於現價。市場分析師平均目標價約 "&TEXT(cons_tp,"0")&"。"'); r += 1
+RD.cell(r, 1, f'="重點 2｜搜尋即使被侵蝕，Cloud 也補得回來：悲觀情境 2028 年 Search & other 營收約 "&TEXT(PL!I{PC_["search"]}*10,"#,##0")&" 億美元，比基準少 "&TEXT(1-PL!I{PC_["search"]}/PL!I{PB_["search"]},"0%")&"，Google Services 營業利益少約 "&TEXT((PL!I{PB_["oi_gs"]}-PL!I{PC_["oi_gs"]})*10,"#,##0")&" 億；同期 Google Cloud 營業利益比 2025 年多約 "&TEXT((PL!I{PB_["oi_cl"]}-PL!D{PB_["oi_cl"]})*10,"#,##0")&" 億，約是搜尋損失的 "&TEXT((PL!I{PB_["oi_cl"]}-PL!D{PB_["oi_cl"]})/(PL!I{PB_["oi_gs"]}-PL!I{PC_["oi_gs"]}),"0.0")&" 倍。"'); r += 1
+RD.cell(r, 1, f'="重點 3｜真正壓力在 AI 折舊與現金：基準情境 2028 年新增 AI 折舊約 "&TEXT(PL!I{PB_["da_ai"]}*10,"#,##0")&" 億美元，合併營業利益率從 2025 年 "&TEXT(PL!D{PB_["om"]},"0.0%")&" 降到 2028 年 "&TEXT(PL!I{PB_["om"]},"0.0%")&"；五年自由現金流扣股利合計約 "&TEXT(CF!C{GATE}*10,"#,##0")&" 億美元，"&CF!C{GATE + 3}&"。"'); r += 1
+r += 1
+RD.cell(r, 1, "命題回覆（HTML 用；依本模型計算回答開頭三個命題）").font = BOLD; r += 1
+RD.cell(r, 1, f'="搜尋守得住嗎？答：守得住大部分，但利益率會被壓縮。在悲觀情境（AI 助理分流、每次查詢變現下降），2028 年 Search & other 營收約 "&TEXT(PL!I{PC_["search"]}*10,"#,##0")&" 億美元，比基準 "&TEXT(PL!I{PB_["search"]}*10,"#,##0")&" 億少 "&TEXT(1-PL!I{PC_["search"]}/PL!I{PB_["search"]},"0.0%")&"；Google Services 營業利益率 "&TEXT(PL!I{PC_["om_gs"]},"0.0%")&"（基準 "&TEXT(PL!I{PB_["om_gs"]},"0.0%")&"）。營收沒有崩跌，主要是變現率下降、利潤縮水。"'); r += 1
+RD.cell(r, 1, f'="Cloud 能否把資本支出變成營收？答：Cloud 本身可以，但全公司的 AI 折舊與資本支出會壓低整體利潤率與現金流。基準情境 2028 年 Cloud AI 營收約 "&TEXT(PL!I{PB_["ai"]}*10,"#,##0")&" 億美元、Google Cloud 營業利益約 "&TEXT(PL!I{PB_["oi_cl"]}*10,"#,##0")&" 億，比 2025 年多 "&TEXT((PL!I{PB_["oi_cl"]}-PL!D{PB_["oi_cl"]})*10,"#,##0")&" 億，足以抵銷悲觀情境的搜尋損失；Cloud AI 的價值約 "&TEXT({VB("ai_v")}*10,"#,##0")&" 億美元（2027 年底時點）。但全公司新增 AI 折舊 2028 年約 "&TEXT(PL!I{PB_["da_ai"]}*10,"#,##0")&" 億，2027 年資本支出約 "&TEXT(CF!H{_CB["cx"]}*10,"#,##0")&" 億，基準情境五年自由現金流扣股利約 "&TEXT(CF!C{GATE}*10,"#,##0")&" 億美元，"&CF!C{GATE + 3}&"（五年新增舉債約 "&TEXT(CF!C{GATE + 1}*10,"#,##0")&" 億）。"'); r += 1
+RD.cell(r, 1, f'="每股值多少？答：每股約 "&TEXT({VB("tp")},"0.00")&" 美元（DCF "&TEXT({VB("tpdcf")},"0.00")&"、Comparable "&TEXT({VB("tpcomp")},"0.00")&" 各半），比現價 "&TEXT(px,"0.00")&" 低 "&TEXT(-{VB("up")},"0.0%")&"，投資建議"&{VB("rec")}&"。只看 Comparable 約等於現價，差距主要來自 DCF：AI 資本支出與折舊壓低了未來現金流。三種情境約 "&TEXT({VB("scen")},"0")&"、"&TEXT({VB("scen", "C")},"0")&"、"&TEXT({VB("scen", "D")},"0")&"，都低於現價；市場分析師平均目標價約 "&TEXT(cons_tp,"0")&"，明顯較樂觀。"'); r += 1
 RD.column_dimensions["A"].width = 120; RD.column_dimensions["B"].width = 60; RD.column_dimensions["C"].width = 60; RD.column_dimensions["D"].width = 60
 for rr in range(3, 9): RD.cell(rr, 1).alignment = Alignment(wrap_text=True, vertical="top")
 
