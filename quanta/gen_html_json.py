@@ -183,6 +183,8 @@ nb.append({"type": "h3", "text": "參考：舊法（十年本益比規則值）�
 nb.append({"type": "note", "parts": ["@Val!A1"], "collapse": True, "summary": "展開：本頁原說明（十年本益比規則值）"})
 skip = {id(dcf_blk), id(cmp_blk), id(rm_kv)}
 title = "舊法"
+last_cap = "舊法"
+NOTE_SUM = {"@Val!A2": "循環位置的判定方式", "@Val!A33": "What must be true 表的讀法", "@Val!A51": "十年倍數規則的說明"}
 for b in vs[vs.index(cmp_blk) + 1:]:
     if id(b) in skip or (b["type"] == "note" and b["parts"][0].startswith(("@Val!E", "@Val!A135", "@Val!A136"))):
         continue
@@ -194,9 +196,11 @@ for b in vs[vs.index(cmp_blk) + 1:]:
     if b.get("collapse"):
         nb.append(b)
         continue
-    cap = clean(text(b["caption"]), title) if b.get("caption") else clean(b.get("title", ""), title) if b["type"] == "bars" else title
-    if b["type"] == "note":
-        cap = f"{title}的說明"
+    if b["type"] == "note":   # 依說明所在儲存格給摘要；未列者掛在前一個表格名下
+        cap = NOTE_SUM.get(b["parts"][0], f"{last_cap}的說明")
+    else:
+        cap = clean(text(b["caption"]), title) if b.get("caption") else clean(b.get("title", ""), title) if b["type"] == "bars" else title
+        last_cap = cap
     nb.append(dict(b, collapse=True, summary=f"展開：{cap}"))
 va["blocks"] = nb
 

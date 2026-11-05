@@ -1726,7 +1726,7 @@
       "@Val!A2"
      ],
      "collapse": true,
-     "summary": "展開：舊法的說明"
+     "summary": "展開：循環位置的判定方式"
     },
     {
      "type": "table",
@@ -1856,7 +1856,7 @@
       "@Val!A33"
      ],
      "collapse": true,
-     "summary": "展開：What must be true：FY2027 年底要達到的倍數的說明"
+     "summary": "展開：What must be true 表的讀法"
     },
     {
      "type": "table",
@@ -1925,7 +1925,7 @@
       "@Val!A51"
      ],
      "collapse": true,
-     "summary": "展開：對照：以 Andy 合理市盈率計算的隱含價的說明"
+     "summary": "展開：十年倍數規則的說明"
     }
    ]
   },
