@@ -21,7 +21,7 @@ import fcff_dcf as FD   # noqa: E402  v0.3：標準版 DCF（無槓桿自由現�
 sys.path.insert(0, os.path.join(ROOT, "tools", "in_layout"))
 import apply_in_layout   # noqa: E402
 
-VER, DATE = "v0.3", "2026-11-05"
+VER, DATE = "v0.3.1", "2026-11-05"
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC"); FADEFILL = PatternFill("solid", fgColor="E7E6E6")
 SC = ("A", "B", "C")
@@ -150,14 +150,16 @@ for _row in FD.in_rows(dict(
         rf=(0.0500, "美國財政部每日殖利率曲線 10 Yr：2026-10-23 5.00%（https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202610；2026-11-05 讀取）",
             "FRED DGS10（同一序列）；與 NVIDIA、AMD、Broadcom、邁威爾 DCF 同一值（股價日 2026-10-30 的殖利率未另取）", "無風險利率（美國 10 年期公債殖利率，2026-10-23）"),
         beta_fixed=("=beta_u_lo*(1+(1-tax_w)*beta_de)", "=beta_u*(1+(1-tax_w)*beta_de)", "=beta_u_hi*(1+(1-tax_w)*beta_de)", "Derived",
-                    "自算產業 β：US 半導體 同業 13 家中位數（Yahoo Finance 月報酬 2021-11～2026-10，對 ^GSPC（S&P 500） 迴歸，Hamada 去槓桿、現金修正），以本公司市值 D/E 與稅率重新加槓桿（Hamada）", "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）；低／高＝beta_u 低／高欄重新加槓桿"),
+                    "自算產業 β：US 半導體 同業 13 家中位數（Yahoo Finance 月報酬 2021-11～2026-10，對 ^GSPC（S&P 500） 迴歸，Hamada 去槓桿、現金修正），以本公司市值 D/E 與稅率重新加槓桿（Hamada）", "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）。Sens 低／高（Analogy；v0.3.1 起）：β_u ∓ 0.3（beta_u 低／高欄），各自同式重新加槓桿（工作單第二輪修正，Andy 2026-11-05 23:16 定案；tools/fcff_dcf.py v2 write_sens）"),
         kd=("=rf+0.01", "Assumed", "美國 10 年期公債＋信用利差 1%（Assumed；公司無金融借款）", "負債只有租賃（0.43 十億美元），占資本不到 0.2%，對 WACC 影響可忽略"),
         tax_w=("=tx_f", "Derived", "＝In 頁 tx_f（non-GAAP 有效稅率 15%）", "NOPAT 用同一稅率"),
-        debt=(0.0, "Verified", XB + "：無金融借款（2026-03-31）", "20-F 資產負債表"),
-        lease=(0.432, "Verified", XB + "：OperatingLeaseLiability 2026-03-31 為 432（US$M；流動 39＋非流動 393）", "20-F 租賃附註"),
-        cash=("=2.751+0.85", "Verified", XB + "：現金及約當現金 2,751＋短期投資 850（2026-03-31，US$M）", "2Q27 股東信資產負債表未入 XBRL，取最近年報；之後兩季現金應再增加（偏保守）"),
-        inv=(0.387, "Verified", XB + "：LongTermInvestments 2026-03-31 為 387（US$M；含無公開市價權益證券 130）", "帳面計入；Sens 測不計"),
+        debt=(0.0, "Verified", "Arm 6-K 2026-11-04（季度財報，季度結束 2026-09-30；https://www.sec.gov/Archives/edgar/data/1973239/000197323926000142/arm-20260930.htm）資產負債表：無金融借款（2026-09-30）", "20-F 資產負債表（2026-03-31）同"),
+        lease=("=0.045+0.435", "Verified", "Arm 6-K 2026-11-04（季度財報，季度結束 2026-09-30；https://www.sec.gov/Archives/edgar/data/1973239/000197323926000142/arm-20260930.htm）資產負債表：營業租賃負債流動 45＋非流動 435（2026-09-30，US$M）", "2026-03-31 為 432（20-F）；融資租賃（使用權資產 56）不計，同 v0.3 口徑"),
+        cash=("=3.251+0.37", "Verified", "Arm 6-K 2026-11-04（季度財報，季度結束 2026-09-30；https://www.sec.gov/Archives/edgar/data/1973239/000197323926000142/arm-20260930.htm）資產負債表：現金及約當現金 3,251＋短期投資 370（2026-09-30，US$M）", "2026-03-31：2,751＋850（v0.3 用值，20-F）"),
+        inv=(0.599, "Verified", "Arm 6-K 2026-11-04（季度財報，季度結束 2026-09-30；https://www.sec.gov/Archives/edgar/data/1973239/000197323926000142/arm-20260930.htm）資產負債表：Equity investments 599（2026-09-30，US$M；含公允價值選擇權 157）", "2026-03-31 為 387；帳面計入；Sens 測不計"),
         mi=(0.0, "Verified", "無少數股權", "—"),
+        stub=dict(bs_date="2026-09-30", val_date="2026-12-31", bs_src="Arm 6-K 2026-11-04（季度財報，季度結束 2026-09-30；https://www.sec.gov/Archives/edgar/data/1973239/000197323926000142/arm-20260930.htm）資產負債表（2Q27，最新已公布一季）",
+                  div=(0.0, "Verified", "Arm 未發放現金股利（20-F）", "買回無已宣告金額，不扣")),
         dps=(0, "Verified", "Arm 未發放現金股利（20-F）", "—"),
         sh=("=q_sh", "Derived", "＝In 頁 q_sh（2Q27 稀釋股數 1.080 十億股）", "股票薪酬持續發行；回購未建模"),
         fc_da=(None, "=AVERAGE(0.162/3.233,0.183/4.007,0.249/4.92)", None, "Derived",
@@ -170,9 +172,9 @@ for _row in FD.in_rows(dict(
                "合約資產隨權利金與授權認列增加；Sens 低／高 0%／25%（Assumed）"),
         )):
     rows.append(_row)
-inp("beta_u", "產業無槓桿 β：自算 US 半導體（同業 13 家中位數，現金修正、Blume 調整）", "x", 1.574, 1.884, 2.32, "Analogy",
+inp("beta_u", "產業無槓桿 β：自算 US 半導體（同業 13 家中位數，現金修正、Blume 調整）", "x", 1.584, 1.884, 2.184, "Analogy",
     "自算產業 β：US 半導體 同業 13 家中位數（Yahoo Finance 月報酬 2021-11～2026-10，對 ^GSPC（S&P 500） 迴歸，Hamada 去槓桿、現金修正）：中位數 2.32；Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）：0.67 × 2.32 ＋ 0.33＝1.884（/home/claude/beta/industry_beta.md）",
-    "低＝中位數 × 0.8 再 Blume（1.574）、高＝中位數未調整（2.32）；取代 Damodaran 表（Andy 2026-11-05 22:55）")
+    "低／高＝β_u ∓ 0.3（工作單第二輪修正，Andy 2026-11-05 23:16 定案；v0.3 為中位數 × 0.8 再 Blume 1.574／中位數未調整 2.32；寫成數值供 sens_arm.py 整本重建）；取代 Damodaran 表（Andy 2026-11-05 22:55）")
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 評價股數 sh_v)", "與 WACC 權重同一口徑")
 inp("sbc_rev", "股票薪酬 ÷ 營收（EBIT 扣除；non-GAAP 營業利益排除股票薪酬，標準版 DCF 視為費用）", "%", None, "=AVERAGE(1.037/3.233,0.82/4.007,1.052/4.92)", None, "Derived",
     XB + "：ShareBasedCompensation FY2024 1,037、FY2025 820、FY2026 1,052 ÷ 營收（US$M）；比例 32.1%、20.5%、21.4%，平均 24.6%",
@@ -463,19 +465,18 @@ def _ebit(s_, y):
     return f"={oi}-sbc_rev*PL!{XC[y]}{XR[s_]['rev']}"
 DPATHS = [dict(name=s_, label=f"情境 {s_}（{SCN_NAME[s_]}）", rev={y: f"PL!{XC[y]}{XR[s_]['rev']}" for y in YRS6}, rev0=f"PL!{XC[2026]}{XR[s_]['rev']}",
                ebit={y: _ebit(s_, y) for y in YRS6}, tax={y: "tx_f" for y in YRS6}, ebit_note="non-GAAP 營業利益 − sbc_rev × 營收；FY2030 起由淨利還原") for s_ in SC]
-RD_ = FD.write_detail(DCFW, 4, DPATHS, list(YRS6), 0.25, conv_from=2029, title="三情境 FCFF 明細（US$B；會計年度 3 月底；評價日後 FY2027 只計 0.25 年）", fmt="#,##0.000")
-RD_["end"] = FD.write_checks(DCFW, RD_["end"], nc_bs="2.751+0.85+0.387-0.432",
-                             nc_note="2026-03-31 資產負債表（US$B；SEC XBRL）：現金 2.751＋短期投資 0.850＋長期投資 0.387 − 租賃 0.432") + 1
+RD_ = FD.write_detail(DCFW, 4, DPATHS, list(YRS6), 0.25, conv_from=2029, title="三情境 FCFF 明細（US$B；會計年度 3 月底；評價日後 FY2027 只計 0.25 年）", fmt="#,##0.000", stub=True)
+RD_["end"] = FD.write_checks(DCFW, RD_["end"], nc_bs="3.251+0.37+0.599-0.045-0.435",
+                             nc_note="2026-09-30 資產負債表（US$B；6-K 2026-11-04）：現金 3.251＋短期投資 0.370＋權益投資 0.599 − 營業租賃 0.045 − 0.435") + 1
 DCFW.column_dimensions["A"].width = 58; DCFW.column_dimensions["B"].width = 40
 for _c in "CDEFGH": DCFW.column_dimensions[_c].width = 13
-SDCF = FD.write_summary(wb, V, t0 + 1, RD_, list(SC), ["tp_wA", "tp_wB", "tp_wC"], fmt=PXF, title="0.1 DCF（標準版：無槓桿自由現金流 FCFF＋WACC；v0.3；明細見 DCF 頁）")
+SDCF = FD.write_summary(wb, V, t0 + 1, RD_, list(SC), ["tp_wA", "tp_wB", "tp_wC"], fmt=PXF, title="0.1 DCF（標準版：無槓桿自由現金流 FCFF＋WACC；明細見 DCF 頁）", beta_note="自算產業 β，Blume 調整，重新加槓桿")
 for _j, _h in enumerate(["項目", "A（順利）", "B（平平）", "C（不如預期）", "說明"], 1): V.cell(SDCF["h"], _j, _h)
-V.cell(SDCF["ke"], 5, '="rf "&TEXT(rf,"0.00%")&"、β "&TEXT(beta,"0.000")&"（自算產業 β，Blume 調整，重新加槓桿）、ERP "&TEXT(erp,"0.0%")&"、CRP "&TEXT(crp,"0.0%")')   # 覆寫共用模組的「Blume 調整」說明
 for _k in ("tvsh", "mult"): pass
 T.update(h1=SDCF["h"], dcfv=SDCF["dcfv"], dcf12=SDCF["v12"], dcftp=SDCF["dcf"], tvsh=SDCF["tvsh"], mult=SDCF["mult"], rk=SDCF["ke"])
 _PE = lambda c, y: f"PL!{XC[y]}{XR[dict(zip('BCD', SC))[c]]['eps']}"
 EPSR = {}; CFR = {}   # v0.3：舊 0.1 節 EPS 與股東現金流列已移除（ROWMAP 相容）
-r_ = t0 + 1 + FD.SUMMARY_ROWS + 1
+r_ = t0 + 1 + FD.summary_rows(stub=True) + 1
 V.cell(r_, 1, "0.2 Comparable（市場主流同業前瞻 P/E）").font = BOLD; r_ += 1
 hdr(V, r_, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"]); T["ph"] = r_; r_ += 1
 SAS = "stockanalysis 個股頁 Forward PE（分析師共識；價格日期如左）"
@@ -609,7 +610,7 @@ for _i in range(3):
         for _d in (_d1, _d2): SE[f"{_d}{_r}"].number_format = "0.0%"
 SE.cell(WROW + 3, 1, "註：基準列的 EPS 為情境 B（Arm Sens 主表以情境 B FY2028 EPS 為基準）；FY2027 為錨點，三列相同。")
 # v0.3：標準版 DCF 參數敏感度（tools/fcff_dcf.write_sens：閉式公式與 DCF 頁明細同式；加權目標價為基準）
-_tvs = FD.write_sens(SE, WROW + 6, RD_, list(SC), ["tp_wA", "tp_wB", "tp_wC"], comp_ref=f"Val!$B${T['comptp']}", base_ref=f"Val!$B${T['tpw']}", fmt=PXF, w_dcf_lohi=True,
+_tvs = FD.write_sens(SE, WROW + 6, RD_, list(SC), ["tp_wA", "tp_wB", "tp_wC"], comp_ref=f"Val!$B${T['comptp']}", base_ref=f"Val!$B${T['tpw']}", fmt=PXF, w_dcf_lohi=True, beta_du=0.3,
                      title="目標價參數敏感度（v0.3 標準版 DCF）：加權目標價一次動一個參數（閉式公式）；Comparable 不變（DCF 權重案例除外）")
 SE.column_dimensions["A"].width = 60; SE.column_dimensions["B"].width = 18; SE.column_dimensions["I"].width = 30
 for c in "CDEFGH": SE.column_dimensions[c].width = 14
@@ -681,7 +682,7 @@ OBS = [   # 重點觀察（數字取自重算後的 Val／PL／Sens；與 README
  "單一參數都翻不過來：DCF 權重 0.3 +14.2%、授權成長 15% +7.2%、營業費用年增 8% +7.3%；授權成長 2% −10.8%、FY2027 晶片營收 4 億 −7.2%（Sens 頁）。SoftBank 持股約九成、流通市值約 247 億美元，流通量低可能撐住溢價，本模型不調整。",
  "可追蹤的三件事：(1) AGI CPU 首批商業出貨按計畫在 4Q27，公司對 FY2027–28 最多 20 億美元營收的信心提高、訂單延伸到 CY2027（模型 FY2027 1.5 億、FY2028 情境 A／B／C 14／10／5 億）；(2) 權利金能否如公司所說加速（2Q27 只 +8%），資料中心占權利金 FY2026 14% → FY2029 情境 B 25.4%；(3) Qualcomm：陪審團 10 月判 Arm 違約但只判賠 2 美元，權利金與未來授權條件由法官裁定、未判（2Q27 股東信未提）。下一個檢驗點：3Q27 財報（2027-02 初）與 Qualcomm 法官判決。"]
 lines = [(f"Arm Holdings（ARM）個股模型 {VER}（AI 半導體 Project：運算次產業；CPU 架構授權與權利金）　{DATE}", True),
- (f"版本：{VER}（{DATE}）：滾入 2Q27 實績（2026-11-04 股東信）與 3Q27 公司指引；v0.1（2026-10-31）初版。樣板 crdo/（美股、估值 v2）；敏感度與份額寫法比照 tuc/；行業變數讀 {SNAP}。", False),
+ (f"版本：{VER}（{DATE}）：換用共用模組 tools/fcff_dcf.py v2（資產負債表改 2026-09-30 並滾到評價日、β 敏感度 β_u ± 0.3）；v0.3 DCF 改標準版；v0.2 滾入 2Q27 實績（2026-11-04 股東信）與 3Q27 公司指引；v0.1（2026-10-31）初版。樣板 crdo/（美股、估值 v2）；敏感度與份額寫法比照 tuc/；行業變數讀 {SNAP}。", False),
  ("模型命題：Arm 的權利金＝各市場晶片出貨 × 每顆權利金率：智慧型手機（出貨持平到下滑，成長靠 v9 與 CSS 費率）、資料中心 Neoverse（NVIDIA Grace／Vera 顆數讀 Siliconomics、雲端自研 CPU 年增、每顆費率隨核心數上升）、車用、物聯網與其他；授權及其他＝授權（含 SoftBank 協議）＋自研 Arm AGI CPU 晶片。", False),
  ("核心問題：現價約 95 倍共識前瞻 EPS，市場是否已把資料中心權利金倍增、CSS 費率上升與自研晶片（客戶需求逾 20 億美元）全部算進去；Qualcomm 判決與手機出貨下修會讓權利金少多少。", False),
  ("會計年度：FY(t) 於 t 年 3 月 31 日結束（FY2027＝2026-04～2027-03）；上游日曆年以 9/12 × CY(t−1)＋3/12 × CY(t) 換算。預測期 FY2028–FY2029 由驅動因子推導，FY2030–FY2032 為收斂法。金額：十億美元；EPS：non-GAAP（GAAP EPS 另列）。", False),
@@ -716,6 +717,8 @@ RD.cell(rn, 1, f'="投資建議："&Val!B{T["rec"]}&"（依上檔空間固定規
 for k_, o_ in enumerate(OBS, 1):
     RD.cell(rn, 1, f"重點觀察 {k_}：" + o_); rn += 1
 # ---------------- v0.3（2026-11-05）：README 重點觀察 2 改公式、「展示層」「命題回覆」兩段（個股 HTML 版面規格 v1.0；數字皆為公式）、版本說明 ----------------
+_tvsh = SDCF["tvsh"]
+_TVF = f'IF(MAX(Val!B{_tvsh}:D{_tvsh})>0.8,"終值現值占 EV 超過 80% 的情境："&IF(Val!B{_tvsh}>0.8,"A ","")&IF(Val!C{_tvsh}>0.8,"B ","")&IF(Val!D{_tvsh}>0.8,"C ","")&"（DCF 價值高度依賴終值假設，需留意）。","")'   # 第二輪修正：終值占 EV > 80% 的情境標示（公式判斷）
 def XF(*parts):
     out = []
     for p_ in parts:
@@ -747,6 +750,11 @@ for _r in range(1, RD.max_row + 1):
 RD.cell(_RRD["2"], 1, XF("重點觀察 2：目標價 US$", _T(_B("tpw")), "（DCF ", _T(_B("dcftp")), "、Comparable ", _T("tp_comp_adj"), " 各半；v0.3 標準版 DCF，v0.2 為 55.10），比現價 ", _T("px"), "（2026-10-30）",
     _HL(_B("upw")), "，級距 ", (_grd,), "、", (_rec,), "；Comparable 單獨 ", _S(_B("upc")), "。", *_CMP))
 _r = RD.max_row + 2
+RD.cell(_r, 1, XF("v0.3.1（2026-11-05）：換用共用模組 tools/fcff_dcf.py v2（工作單第二輪修正；Andy 2026-11-05 23:16 定案）。(1) 資產負債表改 2026-09-30（6-K 2026-11-04，2Q27），淨現金與投資 3.56 → ",
+    (f'TEXT(dcf_nc,"0.000")',), "。(2) Stub 期：評價日 2026-12-31，淨現金滾到評價日＝上述＋stub 期 FCFF（各情境 FY2027 FCFF × stub_frac ", (f'TEXT(stub_frac,"0.000")',), " 年；情境 B ",
+    (f'TEXT(Val!C{SDCF["stub"]},"0.000")',), "）− 已宣告股利 0（未配息）＝", (f'TEXT(Val!C{SDCF["ncr"]},"0.000")',), "（十億美元）。",
+    "DCF 目標價 14.47 → ", _T(_B("dcftp"), "0.00"), "、加權目標價 44.58 → ", _T(_B("tpw"), "0.00"), "（上檔 ", _S(_B("upw")), "，", (_rec,), "）。(3) β 敏感度：低／高改為 β_u ∓ 0.3 各自重新加槓桿（In 頁 beta_u 低／高欄 1.584／2.184；Sens 主表整本重建同值）。",
+    "(4) ke 說明格改由模組參數 beta_note 提供；In 頁 M2 標題不寫版號。資本支出、折舊：本模型沒有逐年資本支出／折舊列，維持占營收比例。美國上市、美元計價，不加「美元口徑折現」案例（＝基準）。PL、Comparable、情境權重不變。")); _r += 1
 RD.cell(_r, 1, "v0.3（2026-11-05）：模型改版——DCF 改為標準版（Andy 2026-11-05 20:42、20:45；docs/plan/個股DCF標準規格.md）：FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加；EBIT＝non-GAAP 營業利益 − 股票薪酬（sbc_rev，近三年平均 24.6%），以 WACC 折現，終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g）；"
     "ke＝rf＋β × ERP，rf 5.00%（美國 10 年期公債）、β＝自算美國半導體產業無槓桿 β 1.884（同業 13 家中位數 2.32，Blume 調整；Andy 2026-11-05 22:55）依市值 D/E 重新加槓桿、ERP 5%、CRP 0，g＝MIN(3%, rf)、RONIC＝WACC；評價日 2026-12-31（FY2027 只計 0.25 年），EV 加淨現金與投資 ÷ 股數，以 ke 推到 12 個月後（未配息）。"
     "新增 DCF 頁（tools/fcff_dcf.py），Val 0.1 節改為 WACC 與 DCF 彙總，Sens 加標準版 DCF 參數表（閉式），主表新增 ERP、WACC 調整、營運資金、資本支出、產業 β 案例（sens_arm.py 整本重建）；刪除 tp_r、tp_roe，tp_g 只留給 PL 延伸期收斂。"
@@ -772,7 +780,7 @@ RD.cell(_r, 1, XF("重點 4：v0.3 起 DCF 改為標準版（無槓桿自由現�
     _T("sbc_rev", "0.0%"), "）與折現率：WACC ", _T("wacc", "0.0%"), "（股權成本＝rf ", _T("rf", "0.00%"), " ＋ β ", _T("beta", "0.00"), " × ERP ", _T("erp", "0%"),
     "；β 是自算美國半導體產業無槓桿 β（同業 13 家、Blume 調整）依市值 D/E 重新加槓桿，ERP 5% 與 RONIC＝WACC 為假設），永續成長率 ", _T("g_tv", "0.0%"), "。終值現值占情境 B 企業價值 ",
     (f'TEXT(Val!C{SDCF["tvsh"]},"0%")',), "，隱含終值 EV／EBITDA 約 ", (f'TEXT(Val!C{SDCF["mult"]},"0.0")',), " 倍。以加權目標價為基準（閉式）：WACC −1pt／＋1pt 時 ", _S(_TS(0)), "／", _S(_TS(0, "F")), "，β 低／高 ", _S(_TS(1)), "／", _S(_TS(1, "F")),
-    "，終值改用 FCFF ×（1＋g） ", _S(_TS(8, "F")), "；股票薪酬照 non-GAAP 口徑加回只作敏感度，本版未列。"))
+    "，終值改用 FCFF ×（1＋g） ", _S(_TS(8, "F")), "；股票薪酬照 non-GAAP 口徑加回只作敏感度，本版未列。", (_TVF,)))
 _r += 2
 RD.cell(_r, 1, "命題回覆（HTML 用；依本模型計算逐一回答上面三個命題）").font = BOLD; _r += 1
 RD.cell(_r, 1, XF("資料中心能撐起多少成長？答：資料中心權利金 FY2028 情境 B 約 ", _T(_P("dc", "B", 2028), "0.00"), " 十億美元、FY2029 約 ", _T(_P("dc", "B", 2029), "0.00"), "，占權利金 ", (f'TEXT({_P("dcsh", "B", 2029)},"0%")',),

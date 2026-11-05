@@ -65,6 +65,8 @@ html = {
 V = wb["Val"]
 DW = wb["DCF"]
 FB = next(r for r in range(next(r for r in range(1, DW.max_row + 1) if str(DW.cell(r, 1).value or "").startswith("情境 B（平平）")), DW.max_row + 1) if DW.cell(r, 1).value == "營收")
+_dfm = lambda lab: ("n3" if lab.startswith("評價用稀釋股數") else "p1" if "終值現值占 EV" in lab else "x1" if "隱含終值" in lab else "n2")
+assert str(V.cell(T["dcftp"], 1).value).startswith("DCF 目標價（情境加權）")
 def vrow(k, fmt, three=False):
     r = T[k]
     return [f"@Val!A{r}", f"@Val!B{r}|{fmt}"] + ([f"@Val!C{r}|{fmt}", f"@Val!D{r}|{fmt}"] if three else ["", ""])
@@ -83,8 +85,8 @@ val_blocks = [
   {"type": "table", "caption": "DCF 折現率（WACC、股權成本、稅後債務成本、RONIC、永續成長率；直接顯示）", "head": ["項目", "數值", "說明"],
    "rows": [[f"@Val!A{r}", f"@Val!B{r}|p2", f"@Val!E{r}"] for r in range(T["rk"], T["rk"] + 6)]},
   {"type": "table", "caption": "DCF 彙總（標準版：無槓桿自由現金流 FCFF＋WACC；三情境；十億美元、每股美元）", "head": ["項目", "A（順利）", "B（平平）", "C（不如預期）", "說明"],
-   "rows": [[f"@Val!A{r}", f"@Val!B{r}|{fm}", f"@Val!C{r}|{fm}" if r != T["rk"] + 15 else "", f"@Val!D{r}|{fm}" if r != T["rk"] + 15 else "", f"@Val!E{r}"]
-            for r, fm in zip(range(T["rk"] + 6, T["rk"] + 16), ["n2", "n2", "n2", "n2", "n3", "n2", "n2", "p1", "x1", "n2"])]},
+   "rows": [[f"@Val!A{r}", f"@Val!B{r}|{fm}", f"@Val!C{r}|{fm}" if r != T["dcftp"] else "", f"@Val!D{r}|{fm}" if r != T["dcftp"] else "", f"@Val!E{r}"]
+            for r, fm in ((r, _dfm(str(V.cell(r, 1).value).strip())) for r in range(T["rk"] + 6, T["dcftp"] + 1))]},   # 第二輪修正：依 DCF 目標價列定位（模組 v2 stub 期多兩列）
   {"type": "table", "collapse": True, "summary": "展開：情境 B（平平）FCFF 逐年明細（DCF 頁；十億美元；FY2027 只計評價日後一季）", "head": ["@DCF!A5", "@DCF!C5", "@DCF!D5", "@DCF!E5", "@DCF!F5", "@DCF!G5", "@DCF!H5"],
    "rowgen": {"sheet": "DCF", "rows": f"{FB}-{FB + 10}", "cols": ["A", "C", "D", "E", "F", "G", "H"], "fmts": ["", "n3", "n3", "n3", "n3", "n3", "n3"],
               "row_fmt": {str(FB + 3): {c: "p1" for c in "CDEFGH"}, str(FB + 5): {c: "p1" for c in "CDEFGH"}, str(FB + 6): {c: "p1" for c in "CDEFGH"}}}},
@@ -159,11 +161,11 @@ SPEC = {
     ["股價、股權與共識", ["px", "sb_own", "cons_tp", "cons_feps"]],
     ["目標價規則（情境權重、DCF 權重）", ["tp_wA", "tp_wB", "tp_wC", "tp_w_dcf"]],
     ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta_u", "beta_de", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
-    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"]],
+    ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "bs_date", "stub_frac", "stub_div", "sh_v"]],
     ["自由現金流（股票薪酬、折舊、資本支出、營運資金）", ["sbc_rev", "fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]],
     ["收斂法（FY2030–FY2032）", ["tp_g", "fade_gA", "fade_gB", "fade_gC", "nim10_f"]]]]],
  "blocks_to": {},
- "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+ "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
           "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"]},
  "n_recon": 5,
 }
