@@ -104,7 +104,7 @@ SPEC = {
     ["股價與市場倍數", ["px", "pe_ttm_gaap", "pe_fwd_sa", "g2n"]],
     ["共識與先驗（只作對帳）", ["cons_rev26", "cons_eps26", "erste_eps27", "dell_top2", "idc_anet", "pe_fair_andy", "cons_tp"]],
     ["目標價規則（情境權重、DCF 權重、PL 延伸期收斂）", ["tp_wA", "tp_wB", "tp_wC", "tp_w_dcf", "tp_g", "tp_gd", "nm10_k"]],
-    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta_u", "beta_ug", "beta_de", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
+    ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "beta_u", "beta_u_med", "beta_de", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
     ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"]],
     ["自由現金流（股票薪酬、折舊、資本支出、營運資金）", ["fc_sbc", "fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc", "fcf_da", "fcf_capex"]]]]],
  "blocks_to": {"Arista 份額": "AI 後端乙太網路（AI 營收）", "@Units!A13": "AI 後端乙太網路（AI 營收）"},
