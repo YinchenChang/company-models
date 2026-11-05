@@ -240,9 +240,9 @@ for _row in FD.in_rows(dict(
                "2026-06-30：5,552＋24,725＋579＋648 − 7,784 − 1,425 − 15,297 − 3,886＝3,112（NT$M；Trainium 量產備料）÷ 2Q26 年化營收 30.6B＝10.2%；Sens 低／高 0%／15%（Assumed）"),
         )):
     rows.append(_row)
-inp("beta_u", "產業無槓桿 β：Damodaran Global Semiconductor（現金修正後；2026 年 1 月）", "x", None, 1.87, None, "Analogy",
-    "Damodaran Betas by Sector (Global) 2026 年 1 月：Semiconductor 675 家，β 1.88、D/E 4.13%、稅率 8.46%、無槓桿 β 1.82、現金修正後 1.87（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/BetasGlobal.html；2026-11-05 讀取）",
-    "非美國公司用 Global 表（Emerging 表本次無法開啟）；用現金修正值：淨現金另計，β 只對營業資產；β 低案例改用美國表（beta_u_us）。同台積電、聯電")
+inp("beta_u", "產業無槓桿 β：Damodaran Emerging Markets Semiconductor（現金修正後；2026-01-05 版）", "x", None, 1.9759, None, "Analogy",
+    "Damodaran betaemerg.xls（2026-01-05 版，stern.nyu.edu），Andy 下載存 Drive 07-AI半導體/inbox：Semiconductor 546 家，無槓桿 β 1.8524、現金修正後 1.9759（區域邊際稅率 24.7%）",
+    "台灣掛牌用 Emerging Markets 表（Andy 2026-11-05 22:26，不再用 Global 表）；用現金修正值：淨現金另計，β 只對營業資產；β 低案例改用美國表（beta_u_us）")
 inp("beta_u_us", "產業無槓桿 β 對照：Damodaran 美國 Semiconductor（現金修正後；只用於 β 低案例）", "x", None, 1.50, None, "Analogy",
     "Damodaran Betas by Sector (US) 2026 年 1 月：Semiconductor 66 家，現金修正後無槓桿 β 1.50（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/Betas.html；2026-11-05 讀取）", "—")
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 股數 sh_v)", "與 WACC 權重同一口徑")
@@ -648,7 +648,7 @@ tset(47, "pr", "歷史倍數檢查：現價隱含 P/E 的十年分位（A／B／
      "現價 ÷ 各情境 FY2028 EPS 在 2016–2025 年底 P/E（第 5 節兩來源平均）的分位；低於十年最小值記為 0%；只作檢查，不進目標價")
 V.cell(48, 1, "目標價方法")
 V["B48"] = ("DCF（v0.2 標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現到 2026 年底（期中慣例），終值＝NOPAT(FY2033) ×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, 新台幣 10 年期公債殖利率)、RONIC＝WACC；"
-            "ke＝rf＋β ×（ERP 5%＋台灣國家風險溢酬），β 為 Damodaran Global 半導體無槓桿 β 依市值 D/E 重新加槓桿；EV 加淨現金與長期投資 ÷ 股數，以 ke 推到 12 個月後並扣期間股利（DCF 頁、tools/fcff_dcf.py）。"
+            "ke＝rf＋β ×（ERP 5%＋台灣國家風險溢酬），β 為 Damodaran Emerging Markets 半導體無槓桿 β 依市值 D/E 重新加槓桿；EV 加淨現金與長期投資 ÷ 股數，以 ke 推到 12 個月後並扣期間股利（DCF 頁、tools/fcff_dcf.py）。"
             "折舊、資本支出、營運資金（含客戶預收）取 FY2023–25 占營收平均（資本支出 FY2029 起收斂到維持水準）。情境價值負值取 0。"
             "Comparable：創意、智原、聯發科、博通、邁威爾前瞻 P/E 中位數；創意 103x 為極端值，中位數不受影響；世芯本身前瞻 P/E 約 17x，遠低於同業，反映單一客戶集中與 turnkey 低毛利，Comparable 偏向高估。"
             "主要偏誤：Trainium 顆數受市場層 CY2027 2.5 百萬顆限制（UBS 估 Trainium 3 即 2.8 百萬顆），FY2030 起只用收斂法，DCF 偏低估；2 奈米 COT 模式若使每顆營收下降，則偏高估。"
@@ -939,6 +939,14 @@ _T = lambda x, f="#,##0": (f'TEXT({x},"{f}")',)
 _SP = '"+0.0%;-0.0%"'
 _S = lambda x: (f"TEXT({x},{_SP})",)
 _dP = f"tp_w_dcf*({_B('dcftp')}-px)"; _cP = f"(1-tp_w_dcf)*(tp_comp_adj-px)"
+_EN = f"Val!B{O + 7}"                                                # 現在的未來 12 個月 EPS（模型情境 B；與共識前瞻 EPS 同一時間窗）
+_M = f"({_B('pmed')}*rm_factor)"                                     # Comparable 用的倍數
+_HL = lambda x: (f'IF({x}>=0,"高 ","低 ")&TEXT(ABS({x}),"0.0%")',)
+_WIN = ("Comparable 的上檔主要是倍數：以同一時間窗（現在的未來 12 個月）比較，本模型 EPS（情境 B）約 ", _T(_EN, "0.00"), " 元、比共識前瞻 EPS ", _T("cons_feps", "0.00"), " 元", _HL(_EN + "/cons_feps-1"),
+        "，現價相當於 ", _T("px/" + _EN, "0.0"), " 倍（以共識 EPS 計 ", _T("px/cons_feps", "0.0"), " 倍）；Comparable 用的倍數是同業（創意、智原、聯發科、博通、邁威爾）前瞻 P/E 中位數 ", _T(_B("pmed"), "0.0"),
+        " 倍 × 相對倍數調整係數 ", _T("rm_factor", "0.00"), "＝", _T(_M, "0.0"), " 倍，再乘一年後的前瞻 EPS（情境加權 ", _T(_B("feps"), "0.00"), " 元，比現在", _HL(_B("feps") + "/" + _EN + "-1"),
+        "）。兩者相乘：倍數差（Comparable 倍數 ÷ 現價倍數 − 1）", _S(f"{_M}*{_EN}/px-1"), "、一年 EPS 成長 ", _S(_B("feps") + "/" + _EN + "-1"), "，",
+        (f'IF(ABS(LN({_M}*{_EN}/px))>=ABS(LN({_B("feps")}/{_EN})),"倍數差是主因","盈餘成長是主因")',), "。同業倍數未扣世芯單一客戶集中與 turnkey 低毛利的折價，Comparable 偏高估。")
 _RRD = {}
 for _r in range(1, RD.max_row + 1):
     _v = str(RD.cell(_r, 1).value or "")
@@ -949,10 +957,7 @@ RD.cell(_RRD["1"], 1, XF("重點觀察 1：目標價 NT$", _T(_B("tpw")), "（DC
     "），比現價 ", _T("px"), "（2026-10-22）", (f'IF({_B("upw")}>=0,"高 ","低 ")&TEXT(ABS({_B("upw")}),"0.0%")',), "，級距 ", (_grd,), "、投資建議 ", (_rec,),
     "。拆到估值來源：加權目標價相對現價的差距（", (f'TEXT({_B("tpw")}-px,"+#,##0;-#,##0")',), " 元）中，Comparable 部分 ", (f'TEXT({_cP},"+#,##0;-#,##0")',),
     "、DCF 部分 ", (f'TEXT({_dP},"+#,##0;-#,##0")',), "（標準版 DCF ", _T(_B("dcftp")), (f'IF({_B("dcftp")}<px,"，比現價低 "&TEXT(1-{_B("dcftp")}/px,"0.0%"),"，比現價高 "&TEXT({_B("dcftp")}/px-1,"0.0%"))',),
-    "；WACC ", _T("wacc", "0.0%"), "）。Comparable 的上檔主要是倍數：本模型 12 個月後前瞻 EPS ", _T(_B("feps"), "0.00"), " 比共識前瞻 EPS ", _T("cons_feps", "0.00"), " ",
-    (f'IF({_B("geps")}>=0,"高 ","低 ")&TEXT(ABS({_B("geps")}),"0.0%")',), "，但 Comparable 用的倍數（同業前瞻 P/E 中位數 ", _T(_B("pmed"), "0.0"), " 倍 × 相對倍數調整係數 ", _T("rm_factor", "0.00"),
-    "）約 ", _T(_B("pmed") + "*rm_factor", "0.0"), " 倍，現價只隱含 ", _T("px/" + _B("feps"), "0.0"), " 倍、共識目標價隱含 ", _T("cons_tp/cons_feps", "0.0"),
-    " 倍；Comparable 未扣世芯單一客戶集中與 turnkey 低毛利的折價，偏高估。只看 Comparable（市場主流同業法、未調整）為 ", _S(_B("upc")), "。"))
+    "；WACC ", _T("wacc", "0.0%"), "）。", *_WIN, "只看 Comparable（市場主流同業法、未調整）為 ", _S(_B("upc")), "。"))
 RD.cell(_RRD["2"], 1, XF("重點觀察 2：情境分歧很大：FY2028 EPS A／B／C 為 ", _T(_E("A", 2028), "0.0"), "／", _T(_E("B", 2028), "0.0"), "／", _T(_E("C", 2028), "0.0"),
     "，DCF 價格帶 ", (_B("band"),), "（v0.2 標準版 DCF），差在 Trainium 顆數與世芯份額（CY2028 起 ", _T("al28_A", "0%"), "／", _T("al28_B", "0%"), "／", _T("al28_C", "0%"),
     "，假設）；目標價對 DCF 權重也敏感，權重 0.7 時 ", _S(_TS(9, "F")), "（約 ", _T(_TS(9, "E")), "，上檔 ", _S(_TS(9, "E") + "/px-1"), "）。"))
@@ -961,11 +966,11 @@ RD.cell(_RRD["3"], 1, XF("重點觀察 3：Trainium 份額是 FY2027 EPS 最敏�
     "）；FY2028 起再加上 2 奈米每顆營收（×2.5 時 FY2028 營收 ", _S(_g4("2 奈米每顆營收 ×2.5")), "、COT 模式 ×0.8 時 ", _S(_g4("2 奈米每顆營收 ×0.8")), "）（Sens 頁）。下一個檢驗點是 3Q26 財報與法說（約 2026-11 上旬）的 Trainium 3 量產進度。"))
 _r = RD.max_row + 2
 RD.cell(_r, 1, "v0.2（2026-11-05）：模型改版——DCF 改為標準版（Andy 2026-11-05 20:42、20:45；docs/plan/個股DCF標準規格.md）：FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加（含客戶預收），以 WACC 折現，終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g）；"
-    "ke＝rf＋β ×（ERP＋CRP），rf 1.98%（新台幣 10 年期公債）、β＝Damodaran Global 半導體無槓桿 β 1.87 依市值 D/E 重新加槓桿（Andy 2026-11-05 21:21）、ERP 5%、台灣 CRP 0.78%，g＝MIN(3%, rf)、RONIC＝WACC；EV 加淨現金與長期投資 ÷ 股數，以 ke 推到 12 個月後並扣期間股利（每股 32.57 元，Assumed）。"
+    "ke＝rf＋β ×（ERP＋CRP），rf 1.98%（新台幣 10 年期公債）、β＝Damodaran Emerging Markets 半導體無槓桿 β 1.9759（現金修正，2026-01-05 版）依市值 D/E 重新加槓桿（Andy 2026-11-05 21:21、22:26）、ERP 5%、台灣 CRP 0.78%，g＝MIN(3%, rf)、RONIC＝WACC；EV 加淨現金與長期投資 ÷ 股數，以 ke 推到 12 個月後並扣期間股利（每股 32.57 元，Assumed）。"
     "新增 DCF 頁（tools/fcff_dcf.py），Val 0.1 節改為 WACC 與 DCF 彙總，Sens 目標價參數改為 WACC、β、ERP、g、RONIC、資本支出、營運資金、權益投資、終值替代法與 DCF 權重；Wattonomics 錨定案例改用同一 FCFF 式；刪除 tp_r、tp_roe，tp_g 只留給 PL 延伸期收斂。"
     "同時改用個股 HTML 版面規格 v1.0（README 新增展示層、命題回覆；重點觀察 1–3 改為公式）。PL、Q、Units、Comparable、情境權重不變。"
-    "新舊對照（v0.1.3 → v0.2）：DCF 目標價 3,503.25 → 3,000.11，加權目標價 6,113.00 → 5,861.43，上檔空間 +74.9% → +67.7%，投資建議 強力買進 → 強力買進（不變）。"
-    "DCF 差異拆解（建置時以 DCF 頁明細依序替換計算，元／股）：現金流口徑改 FCFF（仍 r 10%、g 4%、終值 FCFF ×（1＋g））+1,300.5；折現率改 WACC 12.8%（並以 ke 推到 12 個月後）−1,222.8；g 改 1.98% −364.0；終值改價值驅動式（RONIC＝WACC）−184.2；扣期間股利 −32.6。"
+    "新舊對照（v0.1.3 → v0.2）：DCF 目標價 3,503.25 → 2,903.66，加權目標價 6,113.00 → 5,813.21，上檔空間 +74.9% → +66.3%，投資建議 強力買進 → 強力買進（不變）。"
+    "DCF 差異拆解（建置時以 DCF 頁明細依序替換計算，元／股）：現金流口徑改 FCFF（仍 r 10%、g 4%、終值 FCFF ×（1＋g））+1,300.5；折現率改 WACC 13.4%（並以 ke 推到 12 個月後）−1,392.2；g 改 1.98% −315.2；終值改價值驅動式（RONIC＝WACC）−160.1；扣期間股利 −32.6。"
     "FCFF 每股合計（FY2027–32 未折現）A 2,192.5／B 1,276.3／C 575.8，舊股東現金流 1,862.2／1,098.9／513.2（FCFF 不扣再投資、只扣資本支出與營運資金）。"); _r += 2
 RD.cell(_r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；v0.2 起；上方各列原文保留給下游）").font = BOLD; _r += 1
 RD.cell(_r, 1, "命題：世芯的營收由 NRE 轉為 AWS Trainium 量產（turnkey，含晶圓與封裝轉售、毛利率低）。以市場層 Trainium 顆數 × 世芯份額 × 每顆營收往前推，依序回答以下三個問題。"); _r += 1
@@ -974,10 +979,7 @@ RD.cell(_r, 1, "命題 2：2 奈米換代靠什麼。FY2028 起 Trainium 4（2 �
 RD.cell(_r, 1, "命題 3：每股值多少。用標準版 DCF 與同業倍數算出的目標價，和現價相比是高是低、差在哪裡。"); _r += 1
 RD.cell(_r, 1, XF("重點 1：加權目標價", (f'IF({_B("upw")}>=0,"高於","低於")',), "現價，投資建議", (_rec,), "。加權目標價約 ", _T(_B("tpw")), " 元，比現價 ", _T("px"), " 元",
     (f'IF({_B("upw")}>=0,"高 ","低 ")&TEXT(ABS({_B("upw")}),"0.0%")',), "。拆解這段差距：Comparable（相對倍數調整後約 ", _T("tp_comp_adj"), " 元）貢獻 ", (f'TEXT({_cP}/({_B("tpw")}-px),"0%")',),
-    "、DCF（約 ", _T(_B("dcftp")), " 元）貢獻 ", (f'TEXT({_dP}/({_B("tpw")}-px),"0%")',), "（DCF 低於現價時為負），", (f'IF(ABS({_cP})>=ABS({_dP}),"主因是 Comparable","主因是 DCF")',), "。Comparable 的上檔主要來自倍數而非盈餘：以同一個 EPS（12 個月後的前瞻 EPS，情境加權 ",
-    _T(_B("feps"), "0.00"), " 元，比共識前瞻 EPS ", (f'IF({_B("geps")}>=0,"高 ","低 ")&TEXT(ABS({_B("geps")}),"0.0%")',), "）計，現價相當於 ", _T("px/" + _B("feps"), "0.0"),
-    " 倍，Comparable 用的倍數是同業（創意、智原、聯發科、博通、邁威爾）前瞻 P/E 中位數 ", _T(_B("pmed"), "0.0"), " 倍 × 相對倍數調整係數 ", _T("rm_factor", "0.00"), "＝", _T(_B("pmed") + "*rm_factor", "0.0"),
-    " 倍。同業倍數未扣世芯單一客戶集中與 turnkey 低毛利的折價，Comparable 偏高估。只看 Comparable（市場主流同業法、未調整）目標價 ", _T(_B("comptp")), " 元，比現價高 ", (f'TEXT({_B("upc")},"0.0%")',), "。"))
+    "、DCF（約 ", _T(_B("dcftp")), " 元）貢獻 ", (f'TEXT({_dP}/({_B("tpw")}-px),"0%")',), "（DCF 低於現價時為負），", (f'IF(ABS({_cP})>=ABS({_dP}),"主因是 Comparable","主因是 DCF")',), "。", *_WIN, "只看 Comparable（市場主流同業法、未調整）目標價 ", _T(_B("comptp")), " 元，比現價高 ", (f'TEXT({_B("upc")},"0.0%")',), "。"))
 _r += 1
 RD.cell(_r, 1, XF("重點 2：三情境差很大，差在 Trainium 顆數與世芯份額。FY2028 EPS 情境 A／B／C 約 ", _T(_E("A", 2028), "0.0"), "／", _T(_E("B", 2028), "0.0"), "／", _T(_E("C", 2028), "0.0"),
     " 元，DCF 價值（推到 12 個月後）", _T(_B("dcf12", "D")), "～", _T(_B("dcf12", "B")), " 元。世芯 Trainium 份額 CY2028 起 ", _T("al28_A", "0%"), "／", _T("al28_B", "0%"), "／", _T("al28_C", "0%"),
@@ -990,7 +992,7 @@ RD.cell(_r, 1, XF("重點 3：Trainium 份額是 FY2027 EPS 最敏感的變數�
 _r += 1
 RD.cell(_r, 1, XF("重點 4：v0.2 起 DCF 改為標準版（無槓桿自由現金流折現），DCF 目標價 ", _T(_B("dcftp")), " 元（舊法股東現金流、折現率 10%、成長率 4% 為 3,503 元；差異拆解見上方 v0.2 版本說明）。WACC ",
     _T("wacc", "0.0%"), "（股權成本 ", _T("ke", "0.0%"), "＝rf ", _T("rf", "0.00%"), " ＋ β ", _T("beta", "0.00"), " ×（ERP ", _T("erp", "0%"), " ＋ 台灣國家風險溢酬 ", _T("crp", "0.00%"),
-    "）；β 是 Damodaran Global 半導體產業無槓桿 β 依市值 D/E 重新加槓桿，ERP 5% 與 RONIC＝WACC 為假設），永續成長率 ", _T("g_tv", "0.00%"), "（＝新台幣 10 年期公債殖利率，低於上限 3%）。終值現值占情境 B 企業價值 ",
+    "）；β 是 Damodaran Emerging Markets 半導體產業無槓桿 β 依市值 D/E 重新加槓桿，ERP 5% 與 RONIC＝WACC 為假設），永續成長率 ", _T("g_tv", "0.00%"), "（＝新台幣 10 年期公債殖利率，低於上限 3%）。終值現值占情境 B 企業價值 ",
     (f'TEXT(Val!C{SDCF["tvsh"]},"0%")',), "，隱含終值 EV／EBITDA 約 ", (f'TEXT(Val!C{SDCF["mult"]},"0.0")',), " 倍，低於同業交易倍數：WACC 高、永續成長率低、RONIC＝WACC（永續期新投資不創造價值），且折舊攤銷占營收 ",
     _T("fc_da", "0.0%"), "（EBITDA 比 EBIT 大）。以情境加權目標價為基準：WACC −1pt／＋1pt 時 ", _S(_TS(0)), "／", _S(_TS(0, "F")), "，β 低／高 ", _S(_TS(1)), "／", _S(_TS(1, "F")),
     "，終值改用 FCFF ×（1＋g） ", _S(_TS(8, "F")), "。"))
@@ -1011,7 +1013,7 @@ RD.cell(_r, 1, XF("每股值多少？答：加權目標價約 ", _T(_B("tpw")), 
     (f'IF({_B("upw")}>=0,"高 ","低 ")&TEXT(ABS({_B("upw")}),"0.0%")',), "，投資建議", (_rec,), "。只看 Comparable（市場主流同業法，不做相對倍數調整）的目標價 ", _T(_B("comptp")), " 元、上檔 ", _S(_B("upc")),
     "，高於市場共識目標價 ", _T(_B("cons")), " 元；進加權的是調整後的 ", _T("tp_comp_adj"), " 元。標準版 DCF 三情境價值（推到 12 個月後）順利、平平、不如預期約 ", _T(_B("dcf12", "B")), "、", _T(_B("dcf12", "C")), "、", _T(_B("dcf12", "D")),
     " 元，", (f'IF(AND({_B("dcf12", "B")}>px,{_B("dcf12", "C")}<px),"只有情境 A 高於現價",IF({_B("dcf12", "D")}>px,"三情境都高於現價",IF({_B("dcf12", "B")}<px,"三情境都低於現價","情境 A、B 高於現價")))',),
-    "。現價約為 12 個月後前瞻 EPS 的 ", _T("px/" + _B("feps"), "0.0"), " 倍，共識目標價隱含 ", _T("cons_tp/cons_feps", "0.0"), " 倍、同業中位數 ", _T(_B("pmed"), "0.0"), " 倍；上檔主要看市場是否給世芯接近同業的倍數。"))
+    "。以現在的未來 12 個月 EPS 計，現價約為本模型（情境 B）的 ", _T("px/" + _EN, "0.0"), " 倍、共識的 ", _T("px/cons_feps", "0.0"), " 倍（共識目標價 ÷ 共識前瞻 EPS 為 ", _T("cons_tp/cons_feps", "0.0"), " 倍），同業前瞻 P/E 中位數 ", _T(_B("pmed"), "0.0"), " 倍；上檔主要看市場是否給世芯接近同業的倍數。"))
 _r += 2
 RD.cell(_r, 1, "展示層輔助：Comparable 目標價（相對倍數調整後）的上檔空間（HTML 估值表用；加權目標價使用的 Comparable 即此值；投資建議橫幅中間格放只看 Comparable〔市場主流同業法〕，見 Val 頁）")
 RD.cell(_r, 2, "=tp_comp_adj/px-1").number_format = "0.0%"

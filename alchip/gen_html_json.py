@@ -42,6 +42,19 @@ for b in SEC["drivers"]["blocks"]:
     if b["type"] == "table" and not b.get("caption") and b.get("head", [None])[0] == "輸入":
         b["caption"] = "驅動 → 推導對照（單一參數：輸入、基準值、推導量與因果方向）"
 
+# ─── 情境驅動表：依 In 頁「情境驅動對照」節的實際位置重建（不寫死列號；v0.x 起 In 頁新增 M2 節，列號下移） ───
+_s0 = row_of("In", "情境驅動對照"); _h0 = _s0 + 1
+assert WB["In"].cell(_h0, 1).value == "鍵", WB["In"].cell(_h0, 1).value
+_r1 = _h0 + 1
+while WB["In"].cell(_r1, 1).value: _r1 += 1
+_nsc = 0
+for b in SEC["drivers"]["blocks"]:
+    if b["type"] == "table" and str(b.get("caption", "")).startswith("情境驅動"):
+        b["head"] = [f"@In!{c}{_h0}" for c in "BDEFC"]
+        b["rows"] = [[f"@In!{c}{r}" for c in "BDEFC"] for r in range(_h0 + 1, _r1)]
+        _nsc += 1
+assert _nsc == 1, _nsc
+
 # ─── 估值：長條圖 → 結論主要項目 → DCF 折現率 → DCF 彙總 → Comparable → 其餘摺疊 ───
 V = lambda k: row_of("Val", k, need_num=True)
 tpw, dcft, comp, compadj, cons = V("目標價（DCF 與 Comparable 加權）"), V("DCF 目標價（情境加權）"), V("Comparable 目標價（市場主流同業法）"), V("Comparable 目標價（相對倍數調整後）"), V("市場共識目標價")
