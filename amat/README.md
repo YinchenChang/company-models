@@ -1,11 +1,20 @@
-# amat/ — Applied Materials（AMAT）收支與估值模型 v0.3.2
+# amat/ — Applied Materials（AMAT）收支與估值模型 v0.4
+
+## v0.4（2026-11-05）：標準版 DCF（無槓桿自由現金流 FCFF＋WACC）
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0 與 `tools/fcff_dcf.py`：Val 0.1 節由股東現金流法（EPS ×（1 − g ÷ ROE）、折現率 10%）改為 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現到 FY2026 年底；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC；EV 加淨現金與投資 ÷ 稀釋股數，以 ke 推到 12 個月後並扣除期間股利。
+- 新增 DCF 頁（三情境 FCFF 明細、檢查列；原 Val 0.1 節的情境 EPS 表移入）；In 頁新增 M2 節；刪除 tp_r、tp_roe（tp_g 只保留為 PL 延伸期營收收斂目標）；Sens 目標價參數改為標準案例。Comparable、情境權重、DCF 權重 50%、投資建議規則不變。
+- 折現率：rf 5.00%（美國 10 年期公債，2026-10-23）；β＝Damodaran 美國「Semiconductor Equip」無槓桿 β 1.35 依 D/E 2.4% 重新加槓桿 ≈ 1.38；ERP 5% → ke 11.9%、WACC 11.7%。
+- EBIT：FY2027–29 取 PL non-GAAP 營業利益；FY2030–32 由淨利 ÷ nioi 還原；稅率為近三年 GAAP 有效稅率平均 15.9%。折舊 1.6%、資本支出 5.5%（FY2028 起收斂到 4.3%）、營運資金 20.1% 營收（近三年平均）。
+- 結果（以 xlsx 為準）：DCF 目標價 247.85 → 157.75；加權目標價 307.90 → 262.85；上檔空間 −18.4% → −30.3%；投資建議 **中立 → 放空**。差異拆解：現金流口徑 −15.87、折現率（10% → WACC 11.7%）−44.64、終值（價值驅動式、g 4% → 3%）−27.88、期間股利 −1.71。終值現值占 EV 60%／53%／48%（A／B／C），隱含終值 EV／EBITDA 6.9／6.8／6.7 倍。
+- 成品：`dist/20261105_應用材料個股模型_v0.4.xlsx`、`.html`；v0.3.2 移到 `dist/_待刪除/`。
 
 ## v0.3.2（2026-11-05）：HTML 新版面 v1.0（只改展示層，數值不變）
 
 - 依 `docs/plan/個股HTML版面規格.md` v1.0：xlsx README 頁最後新增「展示層」（命題摘要、命題 1–3、白話重點）與「命題回覆」兩段，數字全部以公式取自 Val／Recon／Sens／In／PL；另一列（B 欄公式）給橫幅附註用的「Comparable 目標價（相對倍數調整後）」上檔空間。README 以外的工作表與前版逐格相同（`tools/xlsx_diff.py`：差異只在 README）。
 - HTML：舊設定改名 `html_src.json`（內容不動），`gen_html_json.py` 經共用轉換器 `tools/company_html/relayout.py` 產生 `html.json`（勿手改）。參數依業務分塊：半導體系統（設備市場三情境、會計年度換算、終端權重與份額、對帳用 SEMI、Wattonomics 係數）、中國與出口管制、AGS 服務與其他（含顯示器）、全公司（指引、成本費用、股價、共識、目標價規則與折現率）。
 - 橫幅並列加權目標價、只看 Comparable 目標價（市場主流同業法，未做相對倍數調整；附自己的上檔空間）與現價；進加權的相對倍數調整後 Comparable 寫在橫幅附註（工作單補充規則 A）。目標價長條圖補上調整後值；敏感度章新增加權目標價龍捲風圖；情境驅動表與目標價參數案例表的列號依 In／Sens 頁現況重新定位（舊設定在插入 Wattonomics 列後位移）。
-- 成品：`dist/20261105_應用材料個股模型_v0.3.2.xlsx`、`dist/20261105_應用材料個股模型_v0.3.2.html`；舊版移到 `dist/_待刪除/`。敏感度未重跑（數值不變）。
+- 成品：`dist/20261105_應用材料個股模型_v0.4.xlsx`、`dist/20261105_應用材料個股模型_v0.4.html`；舊版移到 `dist/_待刪除/`。敏感度未重跑（數值不變）。
 
 
 ## v0.3.1（2026-10-31）：In 頁「敏感度低／高」與「情境 A／B／C」分開（數值不變）
@@ -38,9 +47,9 @@ AI 半導體 Project 步驟 5（設備與材料）的第三家公司，結構比
 | 檔案 | 內容 |
 |---|---|
 | `build_amat.py` | 產生器（參數與公式） |
-| `dist/20261105_應用材料個股模型_v0.3.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261105_應用材料個股模型_v0.4.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html_src.json`、`gen_html_json.py` → `html.json` | HTML 展示層設定（舊版面設定 → 版面規格 v1.0；勿手改 `html.json`） |
-| `dist/20261105_應用材料個股模型_v0.3.2.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格） |
+| `dist/20261105_應用材料個股模型_v0.4.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格） |
 
 建置：`python3 amat/build_amat.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。唯讀取用 `markets/equipment/dist`（各終端市場設備支出三情境、見頂年度、SEMI 對帳值）與 `tools/cycle_position.py`；不修改它們。算力假設（GW、每 GW capex）不直接讀，經設備市場模型間接使用。
 
