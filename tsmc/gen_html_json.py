@@ -91,6 +91,27 @@ def run(spec, hero=None):
     return out
 
 
+def hero_rule_a(out):
+    """補充規則 A（2026-11-05 20:20）：橫幅中間格＝只看 Comparable（市場主流同業法、未經相對倍數調整）＋自己的上檔空間；
+    有相對倍數調整且數值不同時，附註寫出進加權的調整後 Comparable。"""
+    try:
+        tpm = row_of("Val", "Comparable 目標價（市場主流同業法）", need_num=True)
+    except KeyError:
+        tpm = row_of("Val", "Comparable 目標價", need_num=True, exact=True)
+    upm = row_of("Val", "上檔空間：Comparable", need_num=True)
+    h = out["hero"]
+    h["tiles"][1] = ["只看 Comparable 目標價（市場主流同業法）", f"@Val!B{tpm}|n2", ["上檔空間 ", f"@Val!B{upm}|sp1"]]
+    try:
+        adj = row_of("Val", "Comparable 目標價（相對倍數調整後）", need_num=True)
+    except KeyError:
+        adj = None
+    if adj and abs(WB["Val"].cell(adj, 2).value - WB["Val"].cell(tpm, 2).value) > 1e-9:
+        note = h.get("note") or []
+        note = (note if isinstance(note, list) else [note]) + ["；進加權的 Comparable 為相對倍數調整後 ", f"@Val!B{adj}|n2", " 元。"]
+        h["note"] = note
+    return out
+
+
 def dump(out):
     json.dump(out, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("ok")
@@ -209,4 +230,4 @@ SPEC = {
  "n_recon": 4,
 }
 
-dump(run(SPEC))
+dump(hero_rule_a(run(SPEC)))
