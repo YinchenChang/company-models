@@ -852,6 +852,65 @@ def _wta_sens(mf, setting, how):
     return dict(r0=r0, base=rb, case=rw, diff=rd, block=WR)
 _wta_in()
 WTA_SENS = _wta_sens({2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}, '情境 B；AI 加速器顆數（均熱片市場）與奇鋐液冷市場 CY2027 起 × wta_27／28／29', '做法：引擎 mf 改為年別 dict（wta_27／28／29），乘在各類加速器顆數列與液冷市場列；FY2026 不乘。FY2030–32 沿用引擎延伸表的收斂法。目標價：Sens 目標價表只有 DCF 參數案例，本案例不重算目標價。')
+# ---------------- v0.1.5（2026-11-05）：展示層（個股 HTML 版面規格 v1.0；docs/plan/個股HTML版面規格.md） ----------------
+# 只寫 README 頁（既有列之後）；其他工作表不動。數字一律以公式取自各頁。
+def _row(ws, label, start=1, exact=False):
+    for r_ in range(start, ws.max_row + 1):
+        v_ = ws.cell(r_, 1).value
+        if isinstance(v_, str) and ((v_.strip() == label.strip()) if exact else v_.strip().startswith(label.strip())): return r_
+    raise KeyError((ws.title, label))
+_V = lambda lab, c="B": f"Val!{c}{_row(V, lab)}"
+_I = lambda k: f"In!E{_row(IN, k, exact=True)}"
+_pa, _pb, _pc = (_row(PL, f"情境 {s}", exact=True) for s in ("A", "B", "C"))
+_PS = {"A": _pa, "B": _pb, "C": _pc}
+_P = lambda lab, c, s="A": f"PL!{c}{_row(PL, lab, _PS[s], exact=True)}"
+_BLK = {s: next(r_ for r_ in range(_PS["C"] + 1, PL.max_row + 1) if str(PL.cell(r_, 1).value or "").startswith(f"情境 {s}（")) for s in ("A", "B", "C")}   # 各情境推導區塊
+_PD = lambda lab, c, s: f"PL!{c}{_row(PL, lab, _BLK[s])}"
+_U = lambda lab, c: f"Units!{c}{_row(UN, lab)}"
+_S = lambda lab, c: (f"Sens!A{_row(SE, lab, 4)}", f"Sens!{c}{_row(SE, lab, 4)}")
+_RC = lambda lab, c="B": f"Recon!{c}{_row(RC, lab)}"
+TP, DCF, CMP, CMK, PX, UP, UPC, REC = (_V(x) for x in ("目標價（DCF 與 Comparable 加權）", "DCF 目標價（情境加權）", "Comparable 目標價（相對倍數調整後）",
+                                               "Comparable 目標價（市場主流同業法）", "現價（", "上檔空間：加權目標價", "上檔空間：Comparable 目標價", "投資建議"))
+CONS, EPSF, PEER, FEPS, RMK = _V("市場共識目標價"), _V("與市場共識目標價的差距：EPS 因素"), _V("同業前瞻 P/E 中位數"), _V("12 個月後的前瞻 EPS"), _V("相對倍數調整係數")
+_dv = _row(V, "DCF 情境價值推到 12 個月後")
+DV = lambda c: f"Val!{c}{_dv}"
+T_ = lambda x, f="#,##0": f'TEXT({x},"{f}")'
+P_ = lambda x, f="0.0%": f'TEXT({x},"{f}")'
+SG = lambda x: f'TEXT({x},"+0.0%;-0.0%")'
+_dir = lambda x: f'IF({x}<0,"低 ","高 ")&TEXT(ABS({x}),"0.0%")'
+_hl = lambda a, b: f'IF({a}>{b},"高於","低於")'
+_fs27, _ab27, _fs28, _ab28 = _I("fs_eps27"), _I("ab_eps27"), _I("fs_eps28"), _I("ab_eps28")
+_s_vr, _s_mf, _s_sh = _S("可拆式上蓋 慢", "G"), _S("AI 部署 ×0.8", "G"), _S("份額流失（低）", "G")
+AIR = lambda c, s: _P("  AI 加速器均熱片營收", c, s) + "*10"   # 十億 → 億元
+LQR = lambda c, s: _P("  液冷冷板元件營收", c, s) + "*10"
+_hl3 = lambda c, ref: "&\"、\"&".join(_hl(_P("EPS", c, s), ref) for s in ("A", "B", "C"))
+rn = RD.max_row + 2
+RD.cell(rn, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；原 README 各列保留）").font = BOLD; rn += 1
+for t_ in [
+    "命題：健策能否靠 Rubin 世代每顆均熱片與可拆式上蓋的單價上升、加上液冷冷板元件放量，讓 FY2027–28 EPS 維持高成長，以及現價是否已反映這條路徑；分成三個問題。",
+    "命題 1｜每顆均熱片金額能否帶動營收：VR 世代每顆均熱片金額遠高於 Blackwell，可拆式上蓋再提高單價，但新供應商可能切入；健策 AI 均熱片營收能否持續成長。",
+    "命題 2｜EPS 能否達到券商預期：券商預期 FY2027–28 EPS 大幅成長；本模型三情境的 EPS 與券商相比如何。",
+    "命題 3｜現價合不合理：把 DCF 與同業倍數法加權後，每股價值與現價相比如何。",
+    f'="重點 1｜加權目標價比現價"&{_dir(UP)}&"，投資建議"&{REC}&"：加權目標價約 "&{T_(TP)}&" 元，由 DCF 約 "&{T_(DCF)}&" 元與同業倍數法（相對倍數調整後）約 "&{T_(CMP)}&" 元加權（DCF 權重 "&TEXT({_I("tp_w_dcf")},"0%")&"）；現價 "&{T_(PX)}&" 元。只看 Comparable（市場主流同業法、未調整）約 "&{T_(CMK)}&" 元、上檔 "&{SG(UPC)}&"；健策 10 年前瞻倍數長期高於同業，相對倍數調整係數 "&{T_(RMK, "0.00")}&" 把進加權的 Comparable 提高到約 "&{T_(CMP)}&" 元。"',
+    f'="重點 2｜AI 均熱片是成長主力，靠的是每顆金額上升：情境 B（平平）的 AI 加速器均熱片營收由 FY2026 約 "&{T_(AIR("D", "B"))}&" 億元增至 FY2027 約 "&{T_(AIR("E", "B"))}&" 億元；同期 Rubin 每顆均熱片／上蓋由 "&{T_(_U("Rubin 每顆均熱片", "C"))}&" 美元升到 "&{T_(_U("Rubin 每顆均熱片", "D"))}&" 美元（可拆式上蓋滲透，假設），市場平均每顆金額由 "&{T_(_U("市場平均每顆金額", "C"), "0.0")}&" 升到 "&{T_(_U("市場平均每顆金額", "D"), "0.0")}&" 美元；健策 NVIDIA 份額由 "&{P_(_U("健策 NVIDIA 份額", "C"))}&" 降到 "&{P_(_U("健策 NVIDIA 份額", "D"))}&"（份額相對值為假設）。"',
+    f'="重點 3｜最大的變數是可拆式上蓋進度與 AI 部署量：以情境 B 為基準一次只改一個輸入時，「"&{_s_vr[0]}&"」使 FY2027 EPS 變動 "&{SG(_s_vr[1])}&"，「"&{_s_mf[0]}&"」變動 "&{SG(_s_mf[1])}&"，「"&{_s_sh[0]}&"」變動 "&{SG(_s_sh[1])}&"。這些是敏感度測試的案例，不是門檻。"']:
+    RD.cell(rn, 1, t_); rn += 1
+rn += 1
+RD.cell(rn, 1, "命題回覆（HTML 用；依本模型計算回答開頭三個命題）").font = BOLD; rn += 1
+for t_ in [
+    f'="每顆均熱片金額能否帶動營收？答："&IF(AND({_P("  AI 加速器均熱片營收", "F", "A")}>{_P("  AI 加速器均熱片營收", "D", "A")},{_P("  AI 加速器均熱片營收", "F", "B")}>{_P("  AI 加速器均熱片營收", "D", "B")},{_P("  AI 加速器均熱片營收", "F", "C")}>{_P("  AI 加速器均熱片營收", "D", "C")}),"三情境下都可以","不是每個情境都可以")&"，但單價是假設。Rubin 每顆均熱片／上蓋 2027／2028 年情境 A／B／C 為 "&{T_(_I("asp_vr_27_A"))}&"／"&{T_(_I("asp_vr_27"))}&"／"&{T_(_I("asp_vr_27_C"))}&" 與 "&{T_(_I("asp_vr_28_A"))}&"／"&{T_(_I("asp_vr_28"))}&"／"&{T_(_I("asp_vr_28_C"))}&" 美元（2026 年 "&{T_(_I("asp_vr_26"))}&" 美元；2027 年起為假設）。FY2028 AI 均熱片營收情境 A／B／C 約 "&{T_(AIR("F", "A"))}&"／"&{T_(AIR("F", "B"))}&"／"&{T_(AIR("F", "C"))}&" 億元，FY2026 約 "&{T_(AIR("D", "B"))}&" 億元。情境 B 下健策 AI 均熱片占市場由 CY2026 的 "&{P_(_U("健策 AI 均熱片 ÷ 市場合計", "C"), "0%")}&" 到 CY2028 的 "&{P_(_U("健策 AI 均熱片 ÷ 市場合計", "E"), "0%")}&"。液冷冷板元件是新業務：FY2028 營收情境 A／B／C 約 "&{T_(LQR("F", "A"))}&"／"&{T_(LQR("F", "B"))}&"／"&{T_(LQR("F", "C"))}&" 億元，前提是液冷份額 "&{P_(_I("lcs_28_A"))}&"／"&{P_(_I("lcs_28"))}&"／"&{P_(_I("lcs_28_C"))}&"（2028，假設）。"',
+    f'="EPS 能否達到券商預期？答：要看情境與券商。FY2027 EPS 情境 A／B／C 約 "&{T_(_P("EPS", "E", "A"), "0.0")}&"／"&{T_(_P("EPS", "E", "B"), "0.0")}&"／"&{T_(_P("EPS", "E", "C"), "0.0")}&" 元，對 FactSet 中位數 "&{T_(_fs27, "0.0")}&" 元分別"&{_hl3("E", _fs27)}&"，對亞系券商 "&{T_(_ab27, "0.0")}&" 元分別"&{_hl3("E", _ab27)}&"；FY2028 EPS 約 "&{T_(_P("EPS", "F", "A"), "0.0")}&"／"&{T_(_P("EPS", "F", "B"), "0.0")}&"／"&{T_(_P("EPS", "F", "C"), "0.0")}&" 元，對 FactSet 中位數 "&{T_(_fs28, "0.0")}&" 元分別"&{_hl3("F", _fs28)}&"，對亞系券商 "&{T_(_ab28, "0.0")}&" 元分別"&{_hl3("F", _ab28)}&"（FactSet 為 2026-05 資料、亞系券商為 2026-08）。情境 B 毛利率由 FY2026 的 "&{P_(_P("毛利率", "D", "B"))}&" 到 FY2028 的 "&{P_(_P("毛利率", "F", "B"))}&"，前提是 AI 均熱片毛利率比其他營收高 "&TEXT({_I("d_ai")}*100,"0")&" 個百分點（假設）。"',
+    f'="現價合不合理？答："&IF({UP}<0,"現價高於本模型的合理價值。","現價低於本模型的合理價值。")&"加權目標價約 "&{T_(TP)}&" 元（DCF "&{T_(DCF)}&"、同業倍數法相對倍數調整後 "&{T_(CMP)}&"），比現價 "&{T_(PX)}&" 元"&{_dir(UP)}&"，投資建議"&{REC}&"。DCF 三情境推到 12 個月後的每股價值約 "&{T_(DV("B"))}&"／"&{T_(DV("C"))}&"／"&{T_(DV("D"))}&" 元（情境 A／B／C），"&IF(MAX({DV("B")},{DV("C")},{DV("D")})<{PX},"三情境都低於現價",IF(MIN({DV("B")},{DV("C")},{DV("D")})>{PX},"三情境都高於現價","有高有低"))&"。只看 Comparable（市場主流同業法）約 "&{T_(CMK)}&" 元，"&IF({CMK}<{PX},"也低於現價","高於現價")&"；進加權時乘相對倍數調整係數 "&{T_(RMK, "0.00")}&"（健策長期享有溢價）後約 "&{T_(CMP)}&" 元。市場共識目標價約 "&{T_(CONS)}&" 元，隱含約 "&TEXT({CONS}/{_I("cons_feps")},"0.0")&" 倍目前共識前瞻 EPS，同業中位數約 "&TEXT({PEER},"0.0")&" 倍；本模型 12 個月後的前瞻 EPS 約 "&{T_(FEPS, "0.0")}&" 元，比目前的共識前瞻 EPS "&{T_(_I("cons_feps"), "0.0")}&" 元高 "&TEXT({EPSF},"0%")&"（時間窗不同，含約 12 個月的成長）。"']:
+    RD.cell(rn, 1, t_); rn += 1
+rn += 1
+RD.cell(rn, 1, "本版要點（HTML 附錄用）").font = BOLD; rn += 1
+for t_ in ["v0.1.5（2026-11-05）只改展示層：README 新增「展示層」「命題回覆」兩段（數字以公式取自各頁），HTML 改用個股 HTML 版面規格 v1.0；README 以外逐格與 v0.1.4 相同。",
+           "v0.1.4（2026-10-31）：情境專屬列由敏感度欄拆出（數值不變）。"]:
+    RD.cell(rn, 1, t_); rn += 1
+rn += 1
+RD.cell(rn, 1, "HTML 橫幅附註用：進加權的 Comparable 目標價（相對倍數調整後）相對現價的上檔空間（橫幅中間格為只看 Comparable 目標價（市場主流同業法），其上檔空間見 Val 頁）")
+RD.cell(rn, 2, f"={CMP}/{PX}-1").number_format = "0.0%"
+RD["A1"] = RD["A1"].value + "；v0.1.5（2026-11-05）只改展示層：README 新增展示層與命題回覆段、HTML 改用版面規格 v1.0，數值不變"
 wb.save(sys.argv[1])
 if os.environ.get("JT_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
