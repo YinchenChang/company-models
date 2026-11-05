@@ -815,8 +815,13 @@ _EXTC = {y: chr(ord("C") + y - 2025) for y in range(2025, 2033)}   # PL 延伸�
 FY_X = list(range(2027, 2033))
 def _ebit(s_, y):
     return f"PL!{FYC[y]}{PB[s_]['oi']}" if y <= 2029 else f"=PL!{_EXTC[y]}{V2EXT[s_]['ni']}/nioi"
+# 第三輪修正（2026-11-06）：stub 期（2026-09-27 → 12-31＝第四季）FCFF 改用 Q 頁第四季指引（營收 14.7、毛利率 57%、營業費用 1.6，€B），
+#   不再用 FY2027 全年 FCFF × stub_frac（日曆年公司的 stub 期在 FY2026 內）；三情境相同（FY2026 錨點三情境相同）。
+#   FCFF＝第四季營業利益 ×（1 − g_tax）＋第四季營收 ×（fc_da − fc_cx）− fc_wc ×（FY2026 錨點營收 − FY2025 營收）× stub_frac（FY2026 營運資金增加按 stub 期比例）
+R3_STUB = "(Q!$J$11*(1-g_tax)+Q!$J$6*(fc_da-fc_cx))/1000-fc_wc*(Q!$K$6-Q!$F$6)/1000*stub_frac"
 DPATHS = [dict(name=s_, label=f"情境 {s_}（{CFG_V2['scn'][s_]}）", rev={y: f"PL!{_EXTC[y]}{V2EXT[s_]['rev']}" for y in FY_X}, rev0=f"PL!{_EXTC[2026]}{V2EXT[s_]['rev']}",
-              ebit={y: _ebit(s_, y) for y in FY_X}, tax={y: "g_tax" for y in FY_X}, ebit_note="FY2030 起＝淨利 ÷ nioi（PL 延伸區塊只有淨利）") for s_ in SC]
+              ebit={y: _ebit(s_, y) for y in FY_X}, tax={y: "g_tax" for y in FY_X}, ebit_note="FY2030 起＝淨利 ÷ nioi（PL 延伸區塊只有淨利）",
+              stub_fcff=R3_STUB) for s_ in SC]
 V2T = dcf_v03(V2T, DPATHS, FY_X, 1.0, "v0.3",
               "DCF — 標準版（v0.3）：無槓桿自由現金流 FCFF＝NOPAT＋折舊攤銷 − 資本支出 − 營運資金增加；WACC 折現到評價日 2026-12-31（期中慣例）；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g）。共用模組 tools/fcff_dcf.py",
               "EBIT：FY2027–FY2029 取 PL 推導區塊「營業利益」；FY2030–FY2032（PL 延伸區塊只有淨利）由淨利還原：EBIT＝淨利 ÷ nioi（與 FY2027–29 淨利＝營業利益 × nioi 同一比例）。稅率：各年 g_tax（FY2026 指引 17%）。"
@@ -1007,5 +1012,73 @@ RD["A1"] = RD["A1"].value + "；v0.3.2（2026-11-05）第二輪修正：換用 t
 RD.cell(RD.max_row + 2, 1, "v0.3.2（2026-11-05）：第二輪修正（工作單 2026-11-05 23:20；Andy 2026-11-05 23:16 定案），換用共用模組 tools/fcff_dcf.py v2。(1) Stub 期：資產負債表日 2026-09-27（Q3 2026，最新已公布一季）≠ 評價日 2026-12-31，淨現金滾到評價日＝資產負債表淨現金與投資＋各情境 FY2027 FCFF × stub_frac − 已宣告期中股利（每股 1.88 歐元，2026-11-04 發放；買回無已宣告的 stub 期金額，不扣）；In 頁新增 bs_date、stub_frac、stub_div，Val 0.1 節多「＋Stub 期 FCFF」「淨現金滾到評價日」兩列（0.2 節以後位置不動）。"
         "(2) β：In 頁新增 beta_u（1.824）、beta_de、beta_du（0.3），beta＝beta_u 重新加槓桿；Sens β 低／高改為 β_u ∓ 0.3 各自重新加槓桿（取代中位數 × 0.8 再 Blume／中位數未調整）。(3) Sens 新增「美元口徑折現」：rf＝美國 10 年期 5.00%（In 頁 rf_us）、CRP 照基準、g＝MIN(3%, 5.00%)，其他不變；基準仍為當地利率＋固定匯率。(4) ke 說明格由模組參數提供；In 頁 M2 標題不寫版號。"
         "資本支出、折舊：本模型 PL 沒有逐年資本支出／折舊列，維持占營收比例（fc_cx、fc_da）。展示層新增重點 5（stub 淨現金、美元口徑結果、終值占比是否超過 80%，公式帶數字）。PL、Comparable、情境權重不變。")
+# ---------------- 第三輪修正（2026-11-06；合併前）：展示與說明字串（fixes_round3 第 14、16、22、23、24 項）＋各公司專屬修正 ----------------
+# 只改說明字串、列名與 README 舊列；數值變動只來自各公司專屬修正（見呼叫處註解）。共用模組 tools/fcff_dcf.py v2 不改，說明字串在此覆寫。
+def _r3_fix(wb, ver_new, a1_note, rd_note, stub_note=None, stub_frac_note=None, stub_pt=None, rd_clear=(), rd_set=None):
+    RDw, INw, Vw, SEw = wb["README"], wb["In"], wb["Val"], wb["Sens"]
+    # (22) README 舊「重點觀察」列（v0.3 前的過時數字）：清空內容（不刪列，其他公式引用 README 列號），首列留一句說明
+    cl = [r for r in range(1, RDw.max_row + 1) if isinstance(RDw.cell(r, 1).value, str) and RDw.cell(r, 1).value.startswith("重點觀察 ")]
+    cl += [r for r in rd_clear if r not in cl]
+    for r in sorted(cl):
+        RDw.cell(r, 1).value = None
+        for c in range(2, 6):
+            RDw.cell(r, c).value = None
+    if cl:
+        RDw.cell(min(cl), 1, f"（{ver_new} 第三輪修正：本處原為 v0.2.1 起的「重點觀察」與相關舊說明，數字為 v0.3 標準版 DCF 之前的舊法、已過時，刪除；現行重點見本頁「展示層」重點各列，數字皆為公式）")
+    for r, t in (rd_set or {}).items():
+        RDw.cell(r, 1).value = t
+    # (23) 情境名稱統一：情境 A（順利）／B（平平）／C（不如預期）（Andy 10-25 命名）；只改文字格，不改公式格
+    MAP = (("情境 A（樂觀）", "情境 A（順利）"), ("情境 B（基準）", "情境 B（平平）"), ("情境 C（保守）", "情境 C（不如預期）"), ("情境 C（下檔）", "情境 C（不如預期）"),
+           ("情境 A 隱含價（樂觀）", "情境 A 隱含價（順利）"), ("情境 B 隱含價（基準）", "情境 B 隱含價（平平）"), ("情境 C 隱含價（下檔）", "情境 C 隱含價（不如預期）"))
+    for ws in wb:
+        for row in ws.iter_rows():
+            for c in row:
+                v = c.value
+                if isinstance(v, str) and not v.startswith("="):
+                    w = v
+                    for a, b in MAP:
+                        w = w.replace(a, b)
+                    if w != v:
+                        c.value = w
+    # (24) 上檔空間級距列名：六級僅供分組，投資建議另依五級規則
+    for r in range(1, Vw.max_row + 1):
+        if Vw.cell(r, 1).value == "上檔空間級距":
+            Vw.cell(r, 1).value = "上檔空間級距（六級，供分組）"
+            e = str(Vw.cell(r, 5).value or "")
+            Vw.cell(r, 5).value = (e + "；" if e else "") + "六級只供分組比較；投資建議依下一列的五級固定規則"
+    # (16) Sens「g ±1pt」：g 受 rf 上限時列名改「g −1pt／上限 rf」（公式判斷）
+    for r in range(1, SEw.max_row + 1):
+        if SEw.cell(r, 1).value == "永續成長率 g ±1pt":
+            SEw.cell(r, 1).value = '=IF(g_tv_hi<g_tv+0.01-0.000001,"永續成長率 g −1pt／上限 rf","永續成長率 g ±1pt")'
+    # (14) stub 說明字串依實際口徑（模組預設字樣為「第一年 FCFF × stub_frac」）
+    if stub_note:
+        h = next(r for r in range(1, Vw.max_row + 1) if str(Vw.cell(r, 1).value or "").startswith("0.1 DCF"))
+        r = next(r for r in range(h, Vw.max_row + 1) if str(Vw.cell(r, 1).value or "").startswith("＋Stub 期 FCFF"))
+        Vw.cell(r, 5).value = '="資產負債表日 "&bs_date&"；stub_frac "&TEXT(stub_frac,"0.000")&" 年（' + stub_note + '）"'
+    if stub_frac_note:
+        r = next(r for r in range(1, INw.max_row + 1) if INw.cell(r, 1).value == "stub_frac")
+        INw.cell(r, 9).value = stub_frac_note
+    if stub_pt:
+        old = '（情境 B 第一年 FCFF × "&TEXT(stub_frac,"0.000")&" 年）'
+        hit = 0
+        for r in range(1, RDw.max_row + 1):
+            v = RDw.cell(r, 1).value
+            if isinstance(v, str) and old in v:
+                RDw.cell(r, 1).value = v.replace(old, stub_pt); hit += 1
+        assert hit == 1, hit
+    # 版本
+    RDw["A1"] = RDw["A1"].value + "；" + a1_note
+    RDw.cell(RDw.max_row + 2, 1, rd_note)
+_r3_fix(wb, "v0.3.3",
+        "v0.3.3（2026-11-06）第三輪修正：stub 期 FCFF 改用第四季指引（不再用 FY2027 全年 × stub_frac）、README 舊重點觀察列刪除、情境名稱統一、列名與 HTML 展示調整",
+        "v0.3.3（2026-11-06）：第三輪修正（合併前）。(1) Stub 期 FCFF：資產負債表日 2026-09-27 → 評價日 2026-12-31 正好是第四季；ASML 會計年度＝日曆年，stub 期在 FY2026 內，"
+        "原本用 FY2027 全年 FCFF × stub_frac 偏高估成長、口徑不對，改用 Q 頁第四季公司指引（營收 €14.7B、毛利率 57%、研發＋銷管 €1.6B）：第四季營業利益 ×（1 − g_tax）＋第四季營收 ×（fc_da − fc_cx）"
+        "− fc_wc ×（FY2026 錨點營收 − FY2025 營收）× stub_frac，三情境相同（DCF 頁路徑 stub_fcff；Sens 中視為常數）。(2) README 舊「重點觀察」三列（v0.3 前舊法數字）刪除。"
+        "(3) 情境名稱統一為 情境 A（順利）／B（平平）／C（不如預期）（In 情境驅動對照表頭、Val 舊法隱含價列）。(4) Val「上檔空間級距」列名改「上檔空間級距（六級，供分組）」，註明投資建議依五級規則。"
+        "(5) Sens「永續成長率 g ±1pt」在 g＋1pt 受 rf 上限時列名改「g −1pt／上限 rf」（公式判斷）。(6) HTML：DCF 彙總主表直接顯示「＋Stub 期 FCFF」「淨現金滾到評價日」；折現率主表直接顯示股權成本、稅後債務成本、WACC、永續成長率、RONIC，"
+        "rf／β／ERP／CRP 與權益占資本摺疊；橫幅標示幣別（歐元）。模組 tools/fcff_dcf.py v2 不變。",
+        stub_note="第四季指引 FCFF；三情境相同",
+        stub_frac_note="stub 期＝2026 第四季：stub FCFF 改用 Q 頁第四季指引 FCFF（第三輪修正；不用 FY2027 全年 × 本值）；本值只用於 FY2026 營運資金增加的期間比例",
+        stub_pt='（第四季指引 FCFF：營業利益 "&TEXT(Q!$J$11/1000,"0.00")&" ×（1 − 稅率）＋折舊 − 資本支出 − 營運資金增加）')
 FD.yellow(IN)   # v0.3：M2 節判斷參數黃底
 wb.save(sys.argv[1])

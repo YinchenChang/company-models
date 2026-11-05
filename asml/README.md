@@ -1,4 +1,22 @@
-# asml/ — ASML（ASML.AS／ASML ADR）收支與估值模型 v0.3.2
+# asml/ — ASML（ASML.AS／ASML ADR）收支與估值模型 v0.3.3
+
+## v0.3.3（2026-11-06）：第三輪修正（合併前）
+
+- **Stub 期 FCFF 改用第四季指引**（獨立核對發現；fixes_round3 第 2、25 項）：ASML 會計年度＝日曆年，資產負債表日 2026-09-27 → 評價日 2026-12-31 正好是 FY2026 第四季，原本用 FY2027 全年 FCFF × stub_frac（Val!B93:D93）口徑不對。改用 Q 頁第四季公司指引（營收 €14.7B、毛利率 57%、研發＋銷管 €1.6B → 營業利益 €6.78B）：FCFF＝營業利益 ×（1 − 17%）＋營收 ×（fc_da − fc_cx）− fc_wc ×（FY2026 錨點營收 − FY2025 營收）× stub_frac＝5.70（€B，三情境相同；原 4.98／4.77／4.48）。淨現金滾到評價日 17.15 → 18.09（情境 B）。DCF 頁路徑 `stub_fcff` 自訂，Val／In 說明字串改寫實際口徑（模組 v2 不變）。
+- **README 工作表**：舊「重點觀察」三列（A19–A21，v0.3 前舊法數字）刪除，首列留說明；展示層重點 5 的 stub 說明改為第四季指引口徑。
+- **情境名稱統一**：In「情境驅動對照」表頭與 Val 舊法隱含價列改為 情境 A（順利）／B（平平）／C（不如預期）。
+- **列名**：Val「上檔空間級距」→「上檔空間級距（六級，供分組）」並註明投資建議依五級規則；Sens「永續成長率 g ±1pt」在 g＋1pt 受 rf（3.37%）上限時顯示「g −1pt／上限 rf」（公式判斷）。
+- **HTML**：DCF 彙總主表直接顯示「＋Stub 期 FCFF」「淨現金滾到評價日」；折現率主表直接顯示股權成本、稅後債務成本、WACC、永續成長率、RONIC，rf／β／ERP／CRP 與權益占資本摺疊；橫幅標示幣別（歐元，兩位小數）。
+
+| 項目 | v0.3.2 | v0.3.3 |
+|---|---|---|
+| Stub 期 FCFF（A／B／C，€B） | 4.98／4.77／4.48 | 5.70／5.70／5.70 |
+| DCF 目標價 | 528.72 | 531.45 |
+| 加權目標價 | 1,427.36 | 1,428.73 |
+| 上檔空間 | +1.4% | +1.5% |
+| 投資建議 | 中立 | 中立 |
+
+- 成品：`dist/20261106_ASML個股模型_v0.3.3.xlsx`、`.html`；v0.3.2 移到 `dist/_待刪除/`。驗證：重算錯誤格 0、重建 0 差異、DCF 檢查列 0、check_company_html 通過、情境驅動表 110 格無「—」。
 
 ## v0.3.2（2026-11-05）：第二輪修正——換用共用模組 `tools/fcff_dcf.py` v2（工作單 2026-11-05 23:20；Andy 23:16 定案）
 
@@ -74,9 +92,9 @@ AI 半導體 Project 步驟 5（設備與材料）。獨立的 Python→Excel �
 | 檔案 | 內容 |
 |---|---|
 | `build_asml.py` | 產生器（參數與公式） |
-| `dist/20261105_ASML個股模型_v0.3.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261106_ASML個股模型_v0.3.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html_src.json`、`gen_html_json.py` → `html.json` | HTML 展示層設定（舊版面設定 → 版面規格 v1.0；勿手改 `html.json`） |
-| `dist/20261105_ASML個股模型_v0.3.2.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
+| `dist/20261106_ASML個股模型_v0.3.3.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
 
 建置：`python3 asml/build_asml.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序是 README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/equipment/dist`（晶圓前段設備三情境分項、各情境見頂年度、SEMI WFE）與 `tools/cycle_position.py`；不修改它們。算力假設不自行重估，只經由設備市場模型間接使用。
 
