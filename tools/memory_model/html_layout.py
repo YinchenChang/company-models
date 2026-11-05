@@ -65,9 +65,9 @@ def classify(k, nm_block):
         return B_CO, "股價與匯率"
     if k in ("tax", "ncy"):
         return B_CO, "稅與淨現金收益率"
-    if k in ("rf", "erp", "crp", "beta", "beta_u", "beta_u_med", "beta_u_us", "beta_u_gl", "beta_de", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"):
+    if k in ("rf", "rf_us", "erp", "crp", "beta", "beta_u", "beta_u_med", "beta_du", "beta_u_us", "beta_u_gl", "beta_de", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"):
         return B_CO, "折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）"
-    if k in ("debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v"):
+    if k in ("debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "sh_v", "bs_date", "stub_frac", "stub_div"):
         return B_CO, "資本結構、淨現金與股數（評價用）"
     if k.startswith("fc_"):
         return B_CO, "自由現金流（折舊、資本支出、營運資金的長期穩態）"
@@ -237,8 +237,12 @@ def build(co_dir, xlsx, nm_block=False, pfmt="n0", recon_main=None):
     intro = secs["drivers"].get("intro")
     spec["blocks_to"] = {intro: first} if intro else {}
     spec["main"] = {"0.3 結論": ["目標價（DCF 與 Comparable 加權）", "市場共識目標價", "上檔空間：加權目標價", "DCF ÷ 現價", "價格帶"],
-                    "0.1 DCF": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+                    "0.1 DCF": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
                     "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"]}
+    try:
+        _find(V, "淨現金滾到評價日")
+    except KeyError:   # 未設 stub 期（樣板 v0.5.2 前）
+        spec["main"]["0.1 DCF"].remove("淨現金滾到評價日")
     if recon_main:
         spec["main"]["與共識、公司指引的對照"] = recon_main
     old_tornado = {json.dumps(b.get("rows")): b.get("title") for b in secs["sens"]["blocks"] if b["type"] == "tornado"}

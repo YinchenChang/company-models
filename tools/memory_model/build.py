@@ -72,6 +72,9 @@ SIL.wta_rows(lambda *a: inp(*a[:7], a[7] + "；" + a[8]))
 # 樣板 v0.5（2026-11-05）：標準版 DCF（無槓桿自由現金流 FCFF＋WACC；tools/fcff_dcf.py）。放在 In 頁模型輸入最後（Z 節之後），不位移上方各列。
 # 公司別參數在 company.py 的 CONFIG["dcf"]；評價日見 fd["date"]（樣板 v0.5.1 起三家統一 2026-12-31；DCF 頁第一年＝第 1 年，只計評價日後 frac0），淨現金與股數取 Y 頁基準年末（含基準年剩餘季度的推估）。
 # 樣板 v0.5.1（2026-11-05）：β 改自算產業 β（Andy 2026-11-05 22:55；beta_src、beta_obs、beta_u 第 5 欄標記可由 company.py 設定）；β 低／高可同時設定。
+# 樣板 v0.5.2（2026-11-05，工作單第二輪修正；tools/fcff_dcf.py v2）：(1) stub 期：company.py 的 CONFIG["dcf"]["stub"]（bs_date、div、fcff）＋ fd["cash"]（資產負債表日的現金），
+#   淨現金以資產負債表日科目計，滾到評價日＝dcf_nc ＋ stub 期 FCFF − 已宣告股利／買回（未設 stub 時同 v0.5.1：取 Y 頁基準年末淨現金）；(2) 明確期折舊／資本支出改用模組 v2 的 da／cx 路徑
+#   （Y 頁逐年列，之後收斂到穩態且資本支出 ≥ 折舊 ×（1＋g）），取代本檔原 fix_ratios；(3) β 敏感度＝β_u ∓ beta_du 重新加槓桿；(4) 非美國公司 fd["rf_us"] → Sens「美元口徑折現」。
 YKEYS = ["rev", "conv", "hbm", "nand", "oth", "hbmsh", "da", "vol", "cogs", "opex", "op", "opm", "nmrev", "nmop", "crev", "cop", "ni", "capex", "fcf", "div", "bb", "eq", "nc", "sh", "bvps", "eps", "roe", "hbmbits", "cg", "nim"]
 YR0 = {k: 4 + i for i, k in enumerate(YKEYS)}
 DC = C["dcf"]
@@ -79,13 +82,16 @@ _FDP = dict(DC["fd"])
 _FDP.update(
     amt=U, ccy=next(x[2] for x in C["inputs"] if x[0] == "px"), shu=f"百萬股 ÷ {SS:,}（金額 ÷ 本值＝每股金額）",
     tax_w=("=tax", "Derived", "＝In 頁 tax（本模型 NOPAT 與淨利同一稅率）", "只用於債務稅盾"),
-    cash=(f"=Y!C{YR0['nc']}+debt_v" + ("+lease_v" if DC.get("nc_incl_lease") else ""), "Derived",
+    cash=DC["fd"]["cash"] if "cash" in DC["fd"] else (f"=Y!C{YR0['nc']}+debt_v" + ("+lease_v" if DC.get("nc_incl_lease") else ""), "Derived",
           f"{FYL.format(BASE)} 年底現金推估（評價日 {DC['fd']['date'][:10]} 沿用）＝Y 頁 C{YR0['nc']} 基準年末淨現金（含基準年剩餘季度的淨利、折舊、資本支出、股利與買回）＋債務本金 debt_v" + ("＋租賃 lease_v（公司淨現金已扣租賃）" if DC.get("nc_incl_lease") else ""),
           "淨現金與投資＝本值 − 債務 − 租賃 − 少數股權＝Y 頁淨現金" + ("" if DC.get("nc_incl_lease") else " − 租賃") + " − 少數股權"),
     sh=(f"=Y!C{YR0['sh']}/{SS}", "Derived", f"Y 頁 C{YR0['sh']} 基準年末流通股數（百萬股；含基準年剩餘買回註銷）÷ {SS:,}", "評價用；未來買回由 FCFF 支應，不另推股數"),
     beta_fixed=(DC["beta_lo"] or "=2*beta-beta_hi", "=beta_u*(1+(1-tax_w)*beta_de)", DC["beta_hi"] or "=2*beta-beta_lo", "Derived",
                 DC.get("beta_src", "Damodaran 產業無槓桿 β") + " 以本公司市值 D/E 與稅率重新加槓桿（Hamada：βL＝βU ×（1＋(1 − tax_w) × D/E）；Andy 2026-11-05 21:21 確認）", DC["beta_lohi_note"]),
 )
+STUB = DC.get("stub")
+if STUB:   # 樣板 v0.5.2：stub 期（資產負債表日 → 評價日 2026-12-31）
+    _FDP["stub"] = {k: v for k, v in STUB.items() if k != "fcff"}
 for _row in FD.in_rows(_FDP):
     if _row[0] == "sec": sec(_row[1])
     else: inp(*_row[:7], _row[7] + ("；" + _row[8] if _row[8] and _row[8] != "—" else ""))
@@ -413,7 +419,7 @@ DCFW["A1"] = (f"DCF — 標準版（樣板 v0.5）：無槓桿自由現金流 FC
               "終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g）。共用模組 tools/fcff_dcf.py；規格 docs/plan/個股DCF標準規格.md")
 DCFW["A2"] = (f"營收＝Y 頁合併營收；EBIT：{FYL.format(YRS[0])}–{FYL.format(YRS[-1])} 取 Y 頁合併營業利益，{FYL.format(FADEY[0])}–{FYL.format(FADEY[-1])}（收斂法只有淨利）由淨利還原："
               f"EBIT＝淨利 ÷（1 − tax）− ncy × {FYL.format(YRS[-1])} 年底淨現金（與 Y 頁淨利同一稅率、同一利息口徑；利息收入不進 NOPAT，淨現金另在評價時加入）。"
-              f"折舊、資本支出：{FYL.format(YRS[0])}–{FYL.format(YRS[-1])} 取 Y 頁（÷ 合併營收）{DC.get('capex_note', '')}，{FYL.format(FADEY[0])} 起由 {FYL.format(YRS[-1])} 比例線性收斂到長期穩態 fc_da_ss、fc_cx_ss（{FYL.format(FADEY[-1])} 達到）；"
+              f"折舊、資本支出：{FYL.format(YRS[0])}–{FYL.format(YRS[-1])} 取 Y 頁（÷ 合併營收）{DC.get('capex_note', '')}，{FYL.format(FADEY[0])} 起由 {FYL.format(YRS[-1])} 比例線性收斂到長期穩態 fc_da_ss、fc_cx_ss（{FYL.format(FADEY[-1])} 達到），收斂年度資本支出比例 ≥ 折舊比例 ×（1＋g）（樣板 v0.5.2，模組 v2）；"
               "營運資金增加＝fc_wc × 合併營收增量（Y 頁未計營運資金，只在 DCF 計入）。")
 FY6 = YRS + FADEY
 def _ebit(s, y, sheet="Y", col=None, rows=None):
@@ -422,35 +428,23 @@ def _ebit(s, y, sheet="Y", col=None, rows=None):
         return f"{sheet}!{c}{rr['cop']}"
     c9 = col(YRS[-1]) if col else ycol(s, YRS[-1])
     return f"={sheet}!{c}{rr['ni']}/(1-tax)-ncy*{sheet}!{c9}{rr['nc']}"
+# 樣板 v0.5.2：明確期折舊、資本支出用模組 v2 的 da／cx（Y 頁逐年列；之後由最後明確年比例線性收斂到穩態，且資本支出 ≥ 折舊 ×（1＋g））
+_SX = (dict(stub_fcff=STUB["fcff"]) if STUB and STUB.get("fcff") else {})
 DPATHS = [dict(name=s, label=f"情境 {s}（{ {'A': '順利', 'B': '平平', 'C': '不如預期'}[s] }）", rev={y: f"Y!{ycol(s, y)}{R['crev']}" for y in FY6}, rev0=f"Y!C{R['crev']}",
-               ebit={y: _ebit(s, y) for y in FY6}, tax={y: "tax" for y in FY6}, ebit_note=f"{FYL.format(FADEY[0])} 起＝淨利 ÷（1 − tax）− ncy × {FYL.format(YRS[-1])} 年底淨現金") for s in MKT.SCEN]
-RDCF = FD.write_detail(DCFW, 4, DPATHS, FY6, DC["frac0"], title=f"三情境 FCFF 明細（{U}；{FYL.format(YRS[0])}–{FYL.format(FADEY[-1])}；評價日 {DC['fd']['date']}）", fmt="#,##0.00")
-def fix_ratios(R_, name, da, cx):
-    """折舊、資本支出比例：明確期取 Y 頁（或 Sens 路徑）實際列 ÷ 營收；收斂期由最後明確年線性收斂到長期穩態（覆寫模組預設的 fc_da／fc_cx 列；資本支出列保留 + fc_cx_d 供敏感度）。"""
-    D = R_["paths"][name]; ws = wb[R_["sheet"]]; cl = R_["col"]; c9 = cl[YRS[-1]]
-    for y in FY6:
-        c = cl[y]
-        if y in YRS:
-            ws[f"{c}{D['dar']}"] = f"={da(y)}/{c}{D['rev']}"
-            ws[f"{c}{D['cxr']}"] = f"={cx(y)}/{c}{D['rev']}+fc_cx_d"
-        else:
-            k = y - YRS[-1]; n = len(FADEY)
-            ws[f"{c}{D['dar']}"] = f"={c9}{D['dar']}+(fc_da_ss-{c9}{D['dar']})*{k}/{n}"
-            ws[f"{c}{D['cxr']}"] = f"=({c9}{D['cxr']}-fc_cx_d)+(fc_cx_ss-({c9}{D['cxr']}-fc_cx_d))*{k}/{n}+fc_cx_d"
-    ws.cell(D["dar"], 2, f"{FYL.format(YRS[0])}–{FYL.format(YRS[-1])}＝折舊 ÷ 營收（Y 頁）；之後線性收斂到 fc_da_ss")
-    ws.cell(D["cxr"], 2, f"{FYL.format(YRS[0])}–{FYL.format(YRS[-1])}＝資本支出 ÷ 營收（Y 頁）＋fc_cx_d；之後線性收斂到 fc_cx_ss")
-for s in MKT.SCEN:
-    fix_ratios(RDCF, s, lambda y, s=s: f"Y!{ycol(s, y)}{R['da']}", lambda y, s=s: f"Y!{ycol(s, y)}{R['capex']}")
-RDCF["end"] = FD.write_checks(DCFW, RDCF["end"], nc_bs=f"Y!C{R['nc']}" + ("" if DC.get("nc_incl_lease") else "-lease_v") + "-mi_v",
-                              nc_note=f"Y 頁 C{R['nc']} 基準年末淨現金（最後實績季資產負債表 nc_last 加基準年剩餘季度現金流）− 租賃 − 少數股權") + 1
+               ebit={y: _ebit(s, y) for y in FY6}, tax={y: "tax" for y in FY6}, ebit_note=f"{FYL.format(FADEY[0])} 起＝淨利 ÷（1 − tax）− ncy × {FYL.format(YRS[-1])} 年底淨現金",
+               da={y: f"Y!{ycol(s, y)}{R['da']}" for y in YRS}, cx={y: f"Y!{ycol(s, y)}{R['capex']}" for y in YRS}, **_SX) for s in MKT.SCEN]
+RDCF = FD.write_detail(DCFW, 4, DPATHS, FY6, DC["frac0"], title=f"三情境 FCFF 明細（{U}；{FYL.format(YRS[0])}–{FYL.format(FADEY[-1])}；評價日 {DC['fd']['date']}）", fmt="#,##0.00", stub=bool(STUB))
+RDCF["end"] = FD.write_checks(DCFW, RDCF["end"], nc_bs=DC.get("nc_bs") or (f"Y!C{R['nc']}" + ("" if DC.get("nc_incl_lease") else "-lease_v") + "-mi_v"),
+                              nc_note=DC.get("nc_bs_note") or f"Y 頁 C{R['nc']} 基準年末淨現金（最後實績季資產負債表 nc_last 加基準年剩餘季度現金流）− 租賃 − 少數股權") + 1
 DCFW.column_dimensions["A"].width = 58; DCFW.column_dimensions["B"].width = 44
 for _c in "CDEFGH": DCFW.column_dimensions[_c].width = 13
-SDCF = FD.write_summary(wb, V, r_, RDCF, list(MKT.SCEN), ["tp_wA", "tp_wB", "tp_wC"], fmt=fmtp,
+SDCF = FD.write_summary(wb, V, r_, RDCF, list(MKT.SCEN), ["tp_wA", "tp_wB", "tp_wC"], fmt=fmtp, beta_note=DC.get("beta_note"),
                         title=f"0.1 DCF（標準版：無槓桿自由現金流 FCFF＋WACC；樣板 v0.5；{FYL.format(YRS[0])}–{FYL.format(FADEY[-1])} 明確期＋永續；明細見 DCF 頁）")
 T.update(h01=SDCF["h"], dcfv=SDCF["dcfv"], dcf12=SDCF["v12"], dcftp=SDCF["dcf"], tvsh=SDCF["tvsh"], mult=SDCF["mult"], wacc=SDCF["wacc"], ke=SDCF["ke"])
 for y in YRS6:
     T[f"eps{y}"] = None   # 樣板 v0.5：情境 EPS 列移除（Y 頁），保留鍵避免舊引用
-r_ = T["sec01"] + 21     # 0.2 節位置同 v0.4（舊 0.1 節 20 列＋空一列）
+assert FD.summary_rows(bool(STUB)) <= 20
+r_ = T["sec01"] + 21     # 0.2 節位置同 v0.4（舊 0.1 節 20 列＋空一列；樣板 v0.5.2 stub 期摘要 20 列，正好填滿）
 V.cell(r_, 1, "0.2 Comparable（市場主流同業前瞻 P/B）").font = BOLD; T["sec02"] = r_; r_ += 1
 hdr(V, r_, ["同業與前瞻 P/B", "代號", "前瞻 P/B", "日期", "來源", "標記"]); T["ph"] = r_; r_ += 1
 p0 = r_
@@ -541,7 +535,8 @@ TPS0 = sr + 2
 # 樣板 v0.5：目標價參數敏感度改為標準版 DCF 的標準案例（WACC ±1pt、β、ERP、g、RONIC、資本支出、營運資金、DCF 權重、終值替代法；tools/fcff_dcf.py）。
 # 每格為閉式公式（與 DCF 頁明細同式）；Comparable 不變（DCF 權重案例除外）。舊 tp_r／tp_g 案例刪除。
 _TS = FD.write_sens(SE, TPS0, RDCF, list(MKT.SCEN), ["tp_wA", "tp_wB", "tp_wC"], comp_ref=f"Val!$B${T['comptp']}", base_ref=f"Val!$B${T['tpw']}", fmt=fmtp,
-                    title="目標價參數敏感度（樣板 v0.5 標準版 DCF）：加權目標價一次動一個參數；Comparable 不變（DCF 權重案例除外）；基準＝三情境加權（Val 頁第 0.3 節）")
+                    title="目標價參數敏感度（樣板 v0.5 標準版 DCF）：加權目標價一次動一個參數；Comparable 不變（DCF 權重案例除外）；基準＝三情境加權（Val 頁第 0.3 節）",
+                    beta_du="beta_du" if DC.get("beta_du") else 0.3, usd=bool(DC["fd"].get("rf_us")))
 T["sens0"], T["sens1"] = _TS[0], _TS[1]
 TPS_LAST = _TS[2] - 2
 SE.column_dimensions["A"].width = 14; SE.column_dimensions["B"].width = 30
@@ -624,8 +619,8 @@ _wc = lambda y: WCOL[y]
 _PW = dict(name="W", label="Wattonomics 錨定（情境 B × wta；Sens 案例，未進基準）", rev={y: f"Sens!{WCOL[y]}{WR['crev']}" for y in FY6}, rev0=f"Y!C{R['crev']}",
            ebit={y: _ebit("B", y, sheet="Sens", col=_wc, rows=WR) for y in FY6}, tax={y: "tax" for y in FY6},
            ebit_note=f"{FYL.format(FADEY[0])} 起＝淨利 ÷（1 − tax）− ncy × {FYL.format(YRS[-1])} 年底淨現金（本頁）")
-RW = FD.write_detail(DCFW, RDCF["end"] + 1, [_PW], FY6, DC["frac0"], title="Sens 案例路徑：Wattonomics 錨定（情境 B × wta）FCFF 明細", fmt="#,##0.00")
-fix_ratios(RW, "W", lambda y: f"Sens!{WCOL[y]}{WR['da']}", lambda y: f"Sens!{WCOL[y]}{WR['capex']}")
+_PW.update(da={y: f"Sens!{WCOL[y]}{WR['da']}" for y in YRS}, cx={y: f"Sens!{WCOL[y]}{WR['capex']}" for y in YRS}, **_SX)
+RW = FD.write_detail(DCFW, RDCF["end"] + 1, [_PW], FY6, DC["frac0"], title="Sens 案例路徑：Wattonomics 錨定（情境 B × wta）FCFF 明細", fmt="#,##0.00", stub=bool(STUB))
 SE.cell(r_, 1, "無槓桿自由現金流 FCFF（標準版 DCF；明細見 DCF 頁）"); SE.cell(r_, 2, f"DCF 頁第 {RW['paths']['W']['fcff']} 列（三情境同式）")
 for y in WY:
     SE[f"{WCOL[y]}{r_}"] = f"=DCF!{RW['col'][y]}{RW['paths']['W']['fcff']}"; SE[f"{WCOL[y]}{r_}"].number_format = "#,##0.0"
@@ -744,11 +739,22 @@ def _pres(wb, C):
         REF[f"nmsh{s}29"] = f"IFERROR(Y!{yc(s, 3)}{R['nmop']}/Y!{yc(s, 3)}{R['cop']},0)"
     REF["sh0"] = f"Y!C{R['sh']}"
     # 樣板 v0.5：標準版 DCF 的折現率與終值（Val 第 0.1 節）
+    # 樣板 v0.5.2：Sens 案例列依 A 欄名稱定位（模組 v2 非美國公司多「美元口徑折現」一列，插在 DCF 權重案例之前）；SRW[k]＝模組 SENS_CASES 第 k 個案例的列
+    _snm = {str(SN.cell(r_, 1).value): r_ for r_ in range(T["sens0"], T["sens1"] + 1)}
+    SRW = [_snm[c[0]] for c in FD.SENS_CASES]
+    REF["usd"] = f"Sens!C{_snm['美元口徑折現']}" if "美元口徑折現" in _snm else None
+    REF["usdp"] = f"Sens!D{_snm['美元口徑折現']}" if "美元口徑折現" in _snm else None
     REF.update(wacc="wacc", ke="ke", beta="beta", betau="beta_u", betaum="beta_u_med", rfv="rf", erp="erp", crp="crp", gtv="g_tv", kdat="kd_at",
                tvshB=f"Val!C{T['tvsh']}", multB=f"Val!C{T['mult']}", dcfB=f"Val!C{T['dcf12']}", dcfA=f"Val!B{T['dcf12']}", dcfC=f"Val!D{T['dcf12']}",
-               s_wlo=f"Sens!D{T['sens0']}", s_whi=f"Sens!F{T['sens0']}", s_blo=f"Sens!D{T['sens0'] + 1}", s_bhi=f"Sens!F{T['sens0'] + 1}", s_elo=f"Sens!D{T['sens0'] + 2}", s_ehi=f"Sens!F{T['sens0'] + 2}",
-               s_cxlo=f"Sens!D{T['sens0'] + 5}", s_cxhi=f"Sens!F{T['sens0'] + 5}", s_wclo=f"Sens!D{T['sens0'] + 6}", s_wchi=f"Sens!F{T['sens0'] + 6}",
-               s_alt=f"Sens!F{T['sens0'] + 8}", s_d03=f"Sens!D{T['sens0'] + 9}", iw="(1/wacc)", y33=f'"{FYL.format(FADEY[-1] + 1)}"', feps=f"Val!B{T['feps']}", geps=f"Val!B{T['geps']}", s_d07=f"Sens!F{T['sens0'] + 9}", dcfbelow=f'IF(MAX(Val!B{T["dcfpx"]}:D{T["dcfpx"]})<1,"三種情境的 DCF 價值都低於現價",IF(MIN(Val!B{T["dcfpx"]}:D{T["dcfpx"]})>1,"三種情境的 DCF 價值都高於現價","DCF 價值有的情境高於、有的低於現價"))')
+               s_wlo=f"Sens!D{SRW[0]}", s_whi=f"Sens!F{SRW[0]}", s_blo=f"Sens!D{SRW[1]}", s_bhi=f"Sens!F{SRW[1]}", s_elo=f"Sens!D{SRW[2]}", s_ehi=f"Sens!F{SRW[2]}",
+               s_cxlo=f"Sens!D{SRW[5]}", s_cxhi=f"Sens!F{SRW[5]}", s_wclo=f"Sens!D{SRW[6]}", s_wchi=f"Sens!F{SRW[6]}",
+               s_alt=f"Sens!F{SRW[8]}", s_d03=f"Sens!D{SRW[9]}", iw="(1/wacc)", y33=f'"{FYL.format(FADEY[-1] + 1)}"', feps=f"Val!B{T['feps']}", geps=f"Val!B{T['geps']}", s_d07=f"Sens!F{SRW[9]}", dcfbelow=f'IF(MAX(Val!B{T["dcfpx"]}:D{T["dcfpx"]})<1,"三種情境的 DCF 價值都低於現價",IF(MIN(Val!B{T["dcfpx"]}:D{T["dcfpx"]})>1,"三種情境的 DCF 價值都高於現價","DCF 價值有的情境高於、有的低於現價"))')
+    REF.update(rfus="rf_us", gcap="g_cap")
+    if STUB:
+        REF.update(dcfnc="dcf_nc", stubB=f"Val!C{SDCF['stub']}", stubdiv="stub_div", ncrB=f"Val!C{SDCF['ncr']}", stubfr="stub_frac")
+    _tv = [f"Val!{c_}{T['tvsh']}" for c_ in "BCD"]
+    REF["tvflag"] = ('IF(MAX(' + ",".join(_tv) + ')>0.8,"終值占 EV 超過 80% 的情境："&' + '&'.join(f'IF({t_}>0.8,"{s_} "&TEXT({t_},"0%")&" ","")' for s_, t_ in zip("ABC", _tv))
+                     + '&"（DCF 價值多半來自終值，對 g、RONIC 與收斂期假設敏感）。","")')
     REF["bv27w"] = "(" + "+".join(f"tp_w{s}*Y!{yc(s, 1)}{R['bvps']}" for s in MKT.SCEN) + ")"
     REF["pxbv27"] = f"(px/{REF['bv27w']})"
     REF["s_year"] = f'LEFT({REF["s_case"]},FIND(" ",{REF["s_case"]})-1)'
@@ -805,7 +811,7 @@ def _pres(wb, C):
     P = C["pres"]
     # 樣板 v0.5：重點觀察（README 上方舊列；下游 tools/target_summary 讀）可由 company.py 的 obs_tpl 改為公式（DCF 數字隨重算更新）
     for i, t in (C.get("obs_tpl") or {}).items():
-        rr = next(r for r in range(1, RDs.max_row + 1) if str(RDs.cell(r, 1).value or "").startswith(f"重點觀察 {i}："))
+        rr = next(r for r in range(1, RDs.max_row + 1) if str(RDs.cell(r, 1).value or "").startswith((f"重點觀察 {i}：", f'="重點觀察 {i}：')))
         RDs.cell(rr, 1, fx(f"重點觀察 {i}：" + t))
     r = RDs.max_row + 2
     RDs.cell(r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；上方各列原文保留給下游）").font = BOLD; r += 1
@@ -816,7 +822,9 @@ def _pres(wb, C):
                "折現率 WACC {wacc|0.0%}：股權成本 {ke|0.0%}＝rf {rfv|0.00%} ＋ β {beta|0.00} ×（ERP {erp|0%} ＋ 國家風險溢酬 {crp|0.00%}）；β 為" + DC_.get("beta_obs", " Damodaran 產業無槓桿 β {betau|0.00} ") + "依本公司負債比重新加槓桿，ERP 5% 與 RONIC＝WACC 為假設。"
                "情境 B 的終值現值占企業價值 {tvshB|0%}、隱含終值 EV／EBITDA 約 {multB|0.0} 倍（RONIC＝WACC 時終值約為 {y33} NOPAT 的 1 ÷ WACC＝{iw|0.0} 倍；記憶體折舊占營收高，以 EBITDA 計的倍數因此偏低）。"
                "以三情境加權目標價為基準，WACC −1pt／＋1pt 使加權目標價變動 {s_wlo|+0.0%;−0.0%}／{s_whi|+0.0%;−0.0%}，" + DC_.get("beta_sens", "") + "ERP 4%／6% 為 {s_elo|+0.0%;−0.0%}／{s_ehi|+0.0%;−0.0%}，"
-               "營運資金比例低／高為 {s_wclo|+0.0%;−0.0%}／{s_wchi|+0.0%;−0.0%}（敏感度測試，不是門檻）。")
+               "營運資金比例低／高為 {s_wclo|+0.0%;−0.0%}／{s_wchi|+0.0%;−0.0%}（敏感度測試，不是門檻）。"
+               + ("美元口徑折現（Sens 案例：rf 改用美國 10 年期 {rfus|0.00%}、CRP 照基準、g＝MIN({gcap|0%}, {rfus|0.00%})，現金流與匯率不變）下加權目標價 {usd|P}，相對基準 {usdp|+0.0%;−0.0%}；基準仍採當地利率＋固定匯率。" if REF.get("usd") else "")
+               + "{tvflag}")
     for t in [P["lead"]] + P["props"] + P["obs"] + ([dcf_obs] if C.get("dcf") else []):
         RDs.cell(r, 1, fx(t)); r += 1
     r += 1

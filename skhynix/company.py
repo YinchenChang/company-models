@@ -276,3 +276,54 @@ CONFIG["readme_tail"] = CONFIG["readme_tail"] + ["v0.7.1（2026-11-05）：β �
 
 _m = CONFIG["tp"]["method"]; assert "β 為 Damodaran Global 半導體無槓桿 β 重新加槓桿" in _m
 CONFIG["tp"]["method"] = _m.replace("β 為 Damodaran Global 半導體無槓桿 β 重新加槓桿", "β 為自算 KR 半導體產業無槓桿 β（Blume 調整）重新加槓桿")
+
+# v0.7.2（2026-11-05）：工作單第二輪修正（Andy 2026-11-05 23:16 定案；共用模組 tools/fcff_dcf.py v2、記憶體樣板 v0.5.2）
+# (1) β 改「記憶體」組（/home/claude/beta/industry_beta.md 第二輪修正新增組：MU、WDC、SK 海力士、三星電子、南亞科 5 家，無槓桿中位數 2.294 → Blume 1.867）；β 低／高＝β_u ∓ 0.3 重新加槓桿
+# (2) 資產負債表日 2026-09-30（3Q26 財報新聞稿：現金 114.5、借款 15.8 兆）；淨現金滾到評價日 2026-12-31＝9-30 淨現金 ＋ 4Q 模型 FCFF − 已宣告股利與買回
+# (3) 明確期折舊／資本支出照舊讀 Y 頁逐年列（模組 v2 da／cx），收斂年度資本支出 ≥ 折舊 ×（1＋g）；(4) Sens 新增「美元口徑折現」
+_BSRC2 = ("自算產業 β：記憶體 同業 5 家（美光 MU、Western Digital WDC、SK 海力士 000660、三星電子 005930、南亞科 2408；SanDisk、Kioxia 上市不足 5 年不入中位數）中位數"
+          "（Yahoo Finance 月報酬 2021-11～2026-10，各自對本地大盤迴歸，Hamada 去槓桿、現金修正）")
+_US10 = ("美國財政部每日殖利率曲線 10 Yr：2026-10-23 5.00%（https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202610；2026-11-05 讀取）",
+         "FRED DGS10 同序列；與股價同日（2026-10-23）；只用於 Sens「美元口徑折現」（工作單第二輪修正，Andy 2026-11-05 23:16）")
+_REL3Q = "SK hynix 3Q26 財報新聞稿（2026-10-28；https://www.placera.se/pressmeddelanden/sk-hynix-announces-3q26-financial-results-20261028，2026-11-05 讀取）"
+_SAQ = "stockanalysis.com SK hynix（KRX:000660）季度資產負債表（https://stockanalysis.com/quote/krx/000660/financials/balance-sheet/?p=quarterly，2026-11-05 讀取；最新一季 2026-06-30，百萬韓元）"
+CONFIG["dcf"].update({
+ "beta_u": ("=0.67*beta_u_med+0.33", "產業無槓桿 β（自算記憶體組，Blume 調整後；採用值）", _BSRC2 + "；＝0.67 × 中位數 beta_u_med ＋ 0.33",
+            "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）；記憶體組為第二輪修正新增（2026-11-05 23:20，取代 KR 半導體 1.482）；用現金修正值：淨現金另計，β 只對營業資產", "Derived"),
+ "beta_extra": [("beta_u_med", "產業無槓桿 β 中位數（自算記憶體組，Blume 調整前；只作來源對照）", 2.294, _BSRC2, "Derived"),
+                ("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新加槓桿）", 0.3, "工作單第二輪修正（Andy 2026-11-05 23:16 定案）：β 敏感度改為 β_u ± 0.3；取代 v0.7.1 的中位數 × 0.8 再 Blume／中位數未調整", "Assumed")],
+ "beta_du": True,
+ "beta_lo": "=(beta_u-beta_du)*(1+(1-tax_w)*beta_de)", "beta_hi": "=(beta_u+beta_du)*(1+(1-tax_w)*beta_de)",
+ "beta_lohi_note": "Sens 低／高（Analogy；v0.7.2 起）：β_u ∓ beta_du（0.3），各自同式重新加槓桿（tools/fcff_dcf.py v2 write_sens）；個股迴歸 β 未取得",
+ "beta_src": _BSRC2 + "；Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）；",
+ "beta_obs": "自算記憶體產業無槓桿 β {betau|0.000}（同業中位數 Blume 調整）",
+ "beta_sens": "β 低／高案例（β_u ∓ 0.3 各自重新加槓桿）為 {s_blo|+0.0%;−0.0%}／{s_bhi|+0.0%;−0.0%}，",
+ "beta_note": "自算產業 β 重新加槓桿",
+ "stub": dict(bs_date="2026-09-30", val_date="2026-12-31", bs_src=_REL3Q + "：現金 114.5 兆、借款 15.8 兆（初步、未經核閱）；租賃、少數股權取最新一季 2026-06-30（" + _SAQ + "）",
+              div=("=div_0+bb_0", "Derived", "＝In 頁 div_0（3Q 股利每股 20,000 韓元 × 9-30 股數，2026-10-28 宣告、4Q 支付）＋ bb_0（10-28 董事會決議買回 20 兆）",
+                   "只扣已宣告者；8 月決議的 40 兆買回依新聞稿於 10-28 前一週完成，部分可能在 9-30 之後執行，本模型沿用「3Q 執行完畢」假設（季報公布後核對；未扣部分會高估淨現金）")),
+ "nc_bs": "114.5-15.8-lease_v-mi_v", "nc_bs_note": "2026-09-30（3Q26 財報新聞稿）：現金 114.5 − 借款 15.8 − 租賃 − 少數股權（後兩者為 6-30 值）",
+})
+CONFIG["dcf"]["stub"]["fcff"] = "(Q!I10+nm_op_q)*(1-tax)+Q!I13-capex_rem-fc_wc*(Q!I4-Q!E4)"   # 4Q26 模型 FCFF：營業利益 ×（1 − 稅率）＋折舊 − 4Q 資本支出 − fc_wc ×（2026Q4 − 2025Q4 營收；近四季營收增量）
+CONFIG["dcf"]["fd"] = dict(CONFIG["dcf"]["fd"],
+    rf_us=(0.05, _US10[0], _US10[1]),
+    cash=(114.5, "Verified", _REL3Q + "：2026-09-30 現金 114.5 兆韓元（初步）", "淨現金 98.7＝現金 114.5 − 借款 15.8（與 In 頁 nc_last 同一來源）；DCF 淨現金以本列計，再以 stub 期滾到評價日"),
+    debt=(15.8, "Verified", _REL3Q + "：2026-09-30 借款 15.8 兆韓元", "WACC 權重、β 重新加槓桿與評價淨現金皆用本值"),
+    lease=("=(2000.044+526.461)/1000", "Verified", _SAQ + "：Long-Term Leases 2,000,044＋Current Portion of Leases 526,461", "9-30 租賃負債未揭露（季報約 11 月中），用最新一季 6-30 值；視為不含在借款內"),
+    mi=(0.313, "Verified", _SAQ + "：Minority Interest 312,618", "9-30 未揭露，用 6-30 值"),
+)
+CONFIG["obs_tpl"] = dict(CONFIG["obs_tpl"])
+CONFIG["obs_tpl"][1] = ("目標價 {tpw|P}（DCF {dcftp|P}、Comparable（相對倍數調整後）{compadj|P}；DCF 權重 {wdcf|0%}），相對現價 {px|P}（2026-10-23）為 {upw|+0.0%;−0.0%}，投資建議{rec}。"
+                        "{upsrc}：加權目標價的上檔中 DCF 貢獻 {dcfsh|0%}、Comparable 貢獻 {compsh|0%}（各自權重 ×（目標價 − 現價））；Comparable 單獨（市場主流同業法、未調整）{upc|+0.0%;−0.0%}。")
+CONFIG["obs_tpl"][3] = CONFIG["obs_tpl"][3].replace("待校正：3Q 資產負債表（權益、股數為推估，假設 40 兆買回於 3Q 執行完畢）於季報公布後更新",
+                                                    "待校正：3Q 季報（權益、股數為推估；8 月 40 兆買回依新聞稿於 10-28 前一週完成，本模型假設 3Q 執行完畢）公布後更新")
+CONFIG["version"] = "v0.7.2"
+CONFIG["a1_note"] = CONFIG["a1_note"] + "；v0.7.2（2026-11-05）：第二輪修正（記憶體組 β、資產負債表日 9-30 滾到評價日、β 敏感度 ±0.3、Sens 美元口徑折現）"
+CONFIG["readme_tail"] = CONFIG["readme_tail"] + ["v0.7.2（2026-11-05）：工作單第二輪修正（Andy 2026-11-05 23:16 定案；共用模組 tools/fcff_dcf.py v2、記憶體樣板 v0.5.2）。"
+    "(1) β 改「記憶體」組（MU、WDC、SK 海力士、三星電子、南亞科 5 家無槓桿中位數 {betaum|0.000}，Blume 調整 {betau|0.000}），依市值 D/E 重新加槓桿為 {beta|0.00}；β 敏感度改 β_u ∓ 0.3 重新加槓桿。"
+    "(2) 資產負債表日 2026-09-30（3Q26 財報新聞稿：現金 114.5、借款 15.8 兆）：DCF 淨現金與投資 {dcfnc|#,##0.0} 兆，滾到評價日 2026-12-31＝＋4Q 模型 FCFF {stubB|#,##0.0} 兆 − 已宣告股利與買回 {stubdiv|#,##0.0} 兆＝{ncrB|#,##0.0} 兆。"
+    "(3) 明確期 2027–2029 折舊／資本支出照舊讀 Y 頁逐年列（模組 v2），2030 起收斂且資本支出 ≥ 折舊 ×（1＋g）。(4) Sens 新增「美元口徑折現」：加權目標價 {usd|P}（{usdp|+0.0%;−0.0%}）。"
+    "新舊對照（v0.7.1 → v0.7.2）：β 1.51 → {beta|0.00}，WACC 12.5% → {wacc|0.0%}，DCF 目標價 2,367,571 → {dcftp|P}，加權目標價 2,414,670 → {tpw|P}，上檔空間 +89.1% → {upw|+0.0%;−0.0%}，投資建議 強力買進 → {rec}。"]
+
+CONFIG["tp"]["method"] = CONFIG["tp"]["method"].replace("β 為自算 KR 半導體產業無槓桿 β（Blume 調整）重新加槓桿", "β 為自算記憶體產業無槓桿 β（Blume 調整）重新加槓桿")
+assert "β 為自算記憶體產業無槓桿 β（Blume 調整）重新加槓桿" in CONFIG["tp"]["method"]
