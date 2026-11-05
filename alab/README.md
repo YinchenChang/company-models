@@ -1,4 +1,66 @@
-# alab/ — Astera Labs（ALAB）收支與估值模型 v0.2
+# alab/ — Astera Labs（ALAB）收支與估值模型 v0.3.4
+
+## v0.3.4（2026-11-06）：第三輪修正（現價統一 2026-11-04）
+
+- 現價 257.16（2026-10-23）→ 223.27 美元（Yahoo Finance 日線收盤 2026-11-04）；Val 頁「現價（2026-11-04 收盤）」、README 重點觀察 1 日期標籤同步。
+- Comparable 同業前瞻 P/E 換算到 11-04 收盤＝原 P/E（stockanalysis 2026-10-23）× 11-04 收盤 ÷ 10-23 收盤（共識 EPS 不變）：CRDO 20.19 → 18.71、MRVL 40.44 → 28.28、AVGO 18.52 → 18.74、RMBS 25.23 → 24.42、MTSI 28.59 → 28.21；中位數 25.23 → 24.42。
+- 無上市子公司（非控制權益 0）；美元公司無匯率換算。無風險利率沿用 2026-10-23（未更新）。
+- DCF 目標價 37.73 → 37.73、Comparable 169.10 → 163.67、加權目標價 103.42 → 100.70；上檔空間 −59.8% → −54.9%；投資建議強力放空 → 強力放空（不變）。
+- 第三輪修正（續）：README 頁固定文字的重點觀察 2、3（舊版撰寫、數字為舊版）刪除，改為指向展示層重點 1–5（第 22 點）；數值不變。
+- 第三輪修正（續）：情境名稱統一為「情境 A（樂觀）／B（基準）／C（保守）」（Andy 2026-11-06 改定，取代第 23 點的順利／平平／不如預期；In、Val、DCF、README 情境列名與用語，HTML 隨之更新）；README 重點觀察 1 刪除 2026-10-29 相對倍數調整前撰寫的舊段落（第 22 點）。另刪除 v0.2 時期撰寫的重點觀察 2、3（數字為 v0.2；現況見展示層重點 1–5）。數值不變。
+- 舊版沿革列（v0.3.3）改固定文字。成品：`dist/20261106_Astera Labs個股模型_v0.3.4.xlsx`、`.html`（取代未合併的 v0.3.3）。
+
+## v0.3.3（2026-11-06）：第三輪修正（合併前；只改標籤與格式，數值不變）
+
+- HTML 投資建議橫幅：單位「美元」、兩位小數。
+- 相對倍數調整係數：本公司 10 年倍數資料不足（2024-03 上市）時係數為 1.00，Val 頁 C 欄與 HTML 註明「未調整（資料不足）」。
+- stub 列名改「含 stub 期會計年度（FY2026）FCFF × stub_frac」（實際口徑為 FY2026 錨點；共用模組說明字串在 build 覆寫，模組 tools/fcff_dcf.py v2 未改）；In「情境驅動對照」收斂法列名改中性、百分比格式；HTML 情境驅動表與輸入表 pt 列格式化。
+- 加權目標價 103.42、上檔空間 −59.8%、投資建議強力放空，皆不變。
+- 成品：`dist/20261106_Astera Labs個股模型_v0.3.3.xlsx`、`.html`（取代未合併的 v0.3.2）。
+
+## v0.3.2（2026-11-05）：第二輪修正（共用模組 tools/fcff_dcf.py v2）
+
+- 依工作單第二輪修正（Andy 2026-11-05 23:16 定案）換用 `tools/fcff_dcf.py` v2（md5 23d39844a6695cc1eed6b2d185c105bc）。
+- 淨現金滾到評價日：資產負債表為最新一季 3Q26（2026-09-30，已公布）；淨現金與投資 1.321 ＋ stub 期 FCFF（stub 期落在 FY2026：FY2026 錨點欄全年 FCFF × 92／365；0.031）− 已宣告股利 0（不配息）＝ 1.352（US$B）。Sens「Wattonomics 錨定」路徑同樣滾到評價日。
+- β：US 半導體產業無槓桿 β 1.884 不變（In 頁新增 beta_u、beta_de、beta_du）；敏感度低／高改為 β_u ∓ 0.3 各自重新加槓桿（β 1.59／2.19）→ 加權目標價 +1.7%／−1.3%。
+- 美國公司不加「美元口徑折現」（＝基準）。三情境終值現值占 EV 皆未超過 80%。
+- RONIC＝WACC 不變；無非控制權益；本模型沒有擴產排程的資本支出／折舊列，維持占營收比例。
+
+| 項目 | v0.3.1 | v0.3.2 |
+|---|---|---|
+| β（重新加槓桿後） | 1.89 | 1.89 |
+| WACC | 14.42% | 14.42% |
+| DCF 目標價（US$） | 37.54 | 37.73 |
+| 加權目標價（US$） | 103.32 | 103.42 |
+| 上檔空間 | −59.8% | −59.8% |
+| 投資建議 | 強力放空 | 強力放空 |
+
+- 成品：`dist/20261105_Astera Labs個股模型_v0.3.2.xlsx`、`.html`（取代未合併的 v0.3.1）。
+
+## v0.3.1（2026-11-05）：β 改為自算產業 β
+
+- β 改為自算產業 β（Andy 2026-11-05 22:55）：US 半導體 同業 13 家無槓桿 β 中位數 2.32（Yahoo Finance 月報酬 2021-11～2026-10，對本地大盤迴歸，Hamada 去槓桿、現金修正），Blume 調整 0.67 × 中位數＋0.33＝1.884，再依 Astera Labs 自身 D/E 與稅率以 Hamada 重新加槓桿；取代 Damodaran 產業 β。敏感度低＝中位數 × 0.8 再 Blume（1.574）、高＝未調整中位數 2.32，同法加槓桿（Analogy）。
+- 評價日 2026-12-31、目標時點 12 個月後（2027-12-31）不變；淨現金與投資沿用 In 頁註明的最近一季資產負債表。其他模型參數不變。
+
+| 項目 | 舊（Damodaran 產業 β） | 新（自算產業 β） |
+|---|---|---|
+| β（重新加槓桿後） | 1.50 | 1.89 |
+| WACC | 12.5% | 14.4% |
+| DCF 目標價（US$） | 42.18 | 37.54 |
+| 加權目標價（US$） | 105.64 | 103.32 |
+| 上檔空間 | -58.9% | -59.8% |
+| 投資建議 | 強力放空 | 強力放空 |
+
+- README「本版要點」中上一版那一列改為上一版成品的計算結果（固定文字；原為公式，改 β 後會顯示新數字）。
+- HTML：`gen_html_json.py` 改依 In 頁「情境驅動對照」節的實際列號重寫「情境驅動」表參照（上一版 In 頁新增折現率一節後，`html_src.json` 的固定列號錯位，表內誤列永續成長率等列）；只改展示層。
+- 成品：`dist/` 內 v0.3.1 的 xlsx 與 html（取代未合併的上一版）。
+
+## v0.3（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）＋HTML 新版面 v1.0
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0 與工作單（Andy 2026-11-05 20:42、20:45、21:21）：Val 0.1 節由「股東現金流＝non-GAAP EPS ×（1 − tp_g ÷ tp_roe）、折現率 tp_r 10%」改為 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現到 2026-12-31（期中慣例）；EBIT 換成 GAAP 口徑（non-GAAP 營業利益 × gaap_k，股權報酬視為費用）；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, 美國 10 年期公債殖利率)、RONIC＝WACC；EV 加淨現金 ÷ 股數，以股權成本推到 12 個月後。新增 DCF 頁（含 Wattonomics 錨定 Sens 路徑）；In 頁新增 K2 節與 gaap_k，刪除 tp_r、tp_roe；Sens 目標價參數改為標準案例。
+- 參數：rf 美國 10 年期公債 5.00%（2026-10-23）；β＝Damodaran 美國 Semiconductor 現金修正後無槓桿 β 1.50（幾乎無負債）；ERP 5%；折舊、資本支出、營運資金為近三年實績平均。
+- HTML 改用 `docs/plan/個股HTML版面規格.md` v1.0（補充規則 A–E）：原 `html.json` 改名 `html_src.json`（內容不動），新增 `gen_html_json.py`；xlsx README 頁新增「展示層」「命題回覆」「HTML 輔助列」「本版要點」。
+- 成品：`dist/20261105_Astera Labs個股模型_v0.3.xlsx`、`.html`；v0.2 移到 `dist/_待刪除/`。
 
 ## v0.2（2026-11-04）：滾入 3Q26 實績與 4Q26 指引
 
@@ -66,7 +128,7 @@ AI 半導體 Project **網通次產業內複製（scale-up 互連：重定時器
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
 | `dist/20261028_Astera Labs個股模型_v0.1.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
-建置：`python3 alab/build_alab.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（scale-up 交換晶片、加速器顆數、每顆 scale-up 交換晶片內容、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`、`tools/valuation_rule.py`（只用規則函式）；**不修改它們**。
+建置：`python3 alab/build_alab.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（scale-up 交換晶片、加速器顆數、每顆 scale-up 交換晶片內容、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`、`tools/valuation_rule.py`（只用規則函式）；**不修改它們**。
 
 ## 驅動因子
 
