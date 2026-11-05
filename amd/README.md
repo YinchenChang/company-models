@@ -1,4 +1,12 @@
-# amd/ — AMD（AMD）收支與估值模型 v0.3
+# amd/ — AMD（AMD）收支與估值模型 v0.3.1
+
+## v0.3.1（2026-11-05）：HTML 新版面 v1.0（只改展示層，數值不變）
+
+- 依 `docs/plan/個股HTML版面規格.md`（v1.0）：README 頁新增「展示層」（命題摘要、命題分項、白話重點）、「命題回覆」（逐一回答每個命題，數字全由 xlsx 公式帶出）、「本版要點與版本沿革」三段；README A1 版本說明改為 v0.3.1。其他頁逐格與 v0.3 相同（`tools/xlsx_diff.py` README 以外 0 差異），敏感度沿用。
+- HTML：原 `html.json` 改名 `html_src.json`（內容不動），新增 `gen_html_json.py`：前處理 → `tools/company_html/relayout.py` → 後處理 → 寫 `html.json`。驅動因子依業務分塊：資料中心 GPU（Instinct）／資料中心 CPU 與其他業務／全公司。
+- 成品：`dist/20261105_AMD模型_v0.3.1.xlsx`、`.html`；舊版移到 `dist/_待刪除/`。
+- 建置：`python3 amd/build_amd.py raw.xlsx` → LibreOffice 重算 → 放入 `dist/` → `python3 amd/gen_html_json.py` → `python3 tools/company_html/build_company_html.py amd`。
+
 
 ## v0.3（2026-11-04）：滾入 Q3 2026 實績與 Q4 2026 指引
 
@@ -62,7 +70,9 @@ AI 半導體 Project **運算層第三個模型**（GPU 側非 NVIDIA 份額）�
 | `build_amd.py` | 產生器（參數與公式；唯讀取用上游成品） |
 | `tp_v2.py` | v0.2 目標價與延伸期的共用函式（PL 延伸到 FY2032 的收斂法、Val 第 0 節 DCF＋Comparable、Sens 目標價參數；各公司資料夾各放一份相同內容） |
 | `dist/20261025_AMD模型_v0.2.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
-| `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
+| `html_src.json` | 前一版的 HTML 設定（原樣保留，`gen_html_json.py` 的輸入） |
+| `gen_html_json.py` | 套用個股 HTML 版面規格 v1.0，產生 `html.json` |
+| `html.json` | HTML 展示層設定（由 `gen_html_json.py` 產生，勿手改；格式見 `tools/company_html/README.md`） |
 | `dist/20261025_AMD模型_v0.2.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
 
 建置：`python3 amd/build_amd.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/memory/market.py`（UNITS）、`tsmc/dist`（顆數、情境係數，建置時與 UNITS 核對）、`nvidia/dist`（各平台每顆價、HBM 價格路徑）、`markets/chip_bridge/dist`（每 GW GPU 數）、`markets/equipment/dist`（見頂年度）；**不修改它們**。
