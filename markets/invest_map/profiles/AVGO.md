@@ -50,7 +50,7 @@ asof: 2026-10-25
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| NVIDIA | AI 加速器、網通 | CY2027 加速器金額份額 71.3%（Broadcom 模型）／75.1%（NVIDIA 模型） | [本專案：Broadcom模型_v0.1.xlsx Recon!C24；NVIDIA模型_v0.1.1.xlsx Units!D32] |
+| NVIDIA | AI 加速器、網通 | CY2027 加速器金額份額 71.3%（Broadcom 模型）／75.1%（NVIDIA 模型） | [本專案：Broadcom模型_v0.1.xlsx Recon!C24；20261030_NVIDIA個股模型_v0.2.3.xlsx Units!D32] |
 | Marvell | 客製 ASIC | 2027 約 8%（Counterpoint）／10–12%（JPMorgan） | [本專案：先驗比對_AVGO_20261023.md 資料表] |
 | 聯發科（MediaTek） | Google TPU 部分版本 | 本專案未建立 | — |
 | AWS Trainium（非 Broadcom） | 自研 AI 晶片 | CY2027 加速器金額份額 3.0% | [本專案：NVIDIA模型_v0.1.1.xlsx Units!D35] |
