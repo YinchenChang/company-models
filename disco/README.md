@@ -1,4 +1,14 @@
-# disco/ — Disco（6146.T）收支與估值模型 v0.2.2
+# disco/ — Disco（6146.T）收支與估值模型 v0.3
+
+## v0.3（2026-11-05）：標準版 DCF（無槓桿自由現金流 FCFF＋WACC）＋HTML 新版面 v1.0
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0 與 `tools/fcff_dcf.py`：Val 0.1 節由股東現金流法（EPS ×（1 − g ÷ ROE）、折現率 10%）改為 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現到 2026-12-31（FY2026＝2026-04～2027-03，只計 2027-01～03）；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC；EV 加淨現金與投資 ÷ 股數，以 ke 推到 12 個月後並扣除期間股利。
+- EBIT：FY2026–29 取 PL 營業利益；FY2030–32 由淨利 ÷ nioi 還原；稅率 etr（27.1%）。折舊 3.4%、資本支出 10.1%（近三年平均，含擴產高峰；FY2027 起收斂到 2024-03 期 5.3%）、營運資金 32.6% 營收。
+- 折現率：rf 2.82%（日本 10 年期國債，財務省 2026-11-02）；β＝Damodaran 全球「Semiconductor Equip」無槓桿 β 2.04（無負債，不需重新加槓桿；日本表讀不到）；ERP 5%＋日本 CRP 0.91% → ke＝WACC 14.9%；g＝2.82%（＝rf）。
+- HTML 新版面 v1.0：xlsx README 頁新增「展示層」（命題摘要、命題 1–3、重點 1–4）與「命題回覆」兩段，數字全部以公式帶出；`html.json` 改名 `html_src.json`，新增 `gen_html_json.py`（共用轉換器）；橫幅中間格＝只看 Comparable 目標價（市場主流同業法），相對倍數調整後值進附註。
+- 結果（以 xlsx 為準）：DCF 目標價 22,665 → 16,233；加權目標價 47,331 → 44,115；上檔空間 −4.0% → −10.5%；投資建議 中立 → 中立。差異拆解：現金流口徑 +5,108、折現率 −9,724、終值 −1,398、期間股利 −418。終值現值占 EV 49%／46%／41%，隱含終值 EV／EBITDA 4.6／4.5／4.5 倍。
+- 下游：besi、hanmi 依鍵讀本模型 In 頁 den_、stk_、hbp_、g_tail（數值未變）。
+- 成品：`dist/20261105_Disco模型_v0.3.xlsx`、`.html`；v0.2.3 移到 `dist/_待刪除/`。
 
 ## v0.2.3（2026-10-31）：In 頁「敏感度低／高」與「情境 A／B／C」分開（數值不變）
 
@@ -111,7 +121,7 @@ Val 頁新增「0. 目標價與上檔空間」（放在 Val 既有內容之後�
 
 ## HTML 展示層
 
-`html.json`（頁面設定）與 `dist/20261025_Disco模型_v0.2.2.html`（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格；CI 檢核）。產生與檢核見 `tools/company_html/README.md`；xlsx 或 `html.json` 變動後須重建 HTML 一併提交。
+`html.json`（頁面設定）與 `dist/20261025_Disco模型_v0.3.html`（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格；CI 檢核）。產生與檢核見 `tools/company_html/README.md`；xlsx 或 `html.json` 變動後須重建 HTML 一併提交。
 
 ## 驅動因子 → 推導量
 
@@ -134,7 +144,7 @@ Val 頁新增「0. 目標價與上檔空間」（放在 Val 既有內容之後�
 | 檔案 | 內容 |
 |---|---|
 | `build_disco.py` | 產生器（openpyxl 寫公式） |
-| `dist/20261025_Disco模型_v0.2.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261025_Disco模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 
 建置：`python3 disco/build_disco.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序是 README、In、Q、Hist、PL、Val、Recon、Sens、Sources。
 
