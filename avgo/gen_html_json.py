@@ -49,6 +49,20 @@ def _dcf_sum_fix():
 _dcf_sum_fix()
 
 # 情境驅動表：依 In 頁「情境驅動對照」節的實際位置重建（html_src.json 寫死的 In 列號在 M2 節〔標準版 DCF〕插入後錯位；不寫死列號）
+# 第三輪修正：情境驅動表數值格式（年度不加千分位、百分比／pt 以 % 顯示、其他依大小取小數位）
+def _scen_fmt(ws, r):
+    u = str(ws.cell(r, 3).value or "").strip()
+    vs = [ws.cell(r, c).value for c in (4, 5, 6)]
+    vs = [v for v in vs if isinstance(v, (int, float)) and not isinstance(v, bool)]
+    if not vs:
+        return ""
+    if all(float(v).is_integer() and 1990 <= v <= 2100 for v in vs) and ("年" in u or u in ("", "—")):
+        return "|yr"
+    if u in ("%", "pt", "百分點") or u.startswith("%"):
+        return "|p2" if any(0 < abs(v) < 0.001 for v in vs) or any(abs(round(v * 1000) - v * 1000) > 1e-6 for v in vs) else "|p1"
+    if all(float(v).is_integer() for v in vs):
+        return "|n0"
+    return "|n1" if max(abs(v) for v in vs) >= 100 else "|n2"
 def _scen_fix():
     ws = wb["In"]
     s0 = next(r for r in range(1, ws.max_row + 1) if str(ws.cell(r, 1).value or "").startswith("情境驅動對照"))
@@ -60,7 +74,7 @@ def _scen_fix():
     for b in SEC["drivers"]["blocks"]:
         if b["type"] == "table" and str(b.get("caption", "")).startswith("情境驅動"):
             b["head"] = [f"@In!{c}{h0}" for c in "BDEFC"]
-            b["rows"] = [[f"@In!{c}{r}" for c in "BDEFC"] for r in range(h0 + 1, r1)]
+            b["rows"] = [[f"@In!{c}{r}" + (_scen_fmt(ws, r) if c in "DEF" else "") for c in "BDEFC"] for r in range(h0 + 1, r1)]
             n += 1
     assert n == 1, n
 _scen_fix()
@@ -148,7 +162,7 @@ SPEC = {
     ["自由現金流（股票薪酬、折舊、資本支出、營運資金）", ["sbc_rev", "fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]],
     ["自由現金流", ["da_rev", "cx_rev"]]]]],
  "blocks_to": {},
- "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+ "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "＋Stub 期 FCFF", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
           "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
           "Comparable 彙總": ["同業前瞻 P/E 中位數", "各情境 12 個月後的前瞻 EPS", "12 個月後的前瞻 EPS（情境加權）", "Comparable 目標價"],
           "對帳要點": ["FY2027 AI 營收 vs 公司展望", "FY2028 AI 營收 vs 公司展望", "FY2028：所需 XPU 顆數倍數", "FY2027 EPS vs 共識", "兩家合計 ÷ FY2027 AI 營收"]},
@@ -182,5 +196,9 @@ for i, b in enumerate(st):
     if b["type"] == "h3" and b.get("text", "").startswith("附錄：驅動 → 推導") and drivers_intro:
         st.insert(i + 1, {"type": "note", "parts": [drivers_intro]})
         break
+# 第三輪修正：橫幅金額單位（美元）
+for _t in cfg["hero"]["tiles"]:
+    if isinstance(_t[0], str):
+        _t[0] = [_t[0], "（美元）"]
 json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")
