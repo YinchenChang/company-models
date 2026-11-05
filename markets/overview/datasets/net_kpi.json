@@ -19,18 +19,18 @@
 },
 {
 "year": 2027,
-"total": 292.5,
+"total": 275.0,
 "su_share": 0.268,
 "so_share": 0.732,
 "net_of_it": 0.187,
-"it_capex": 1565.3,
-"nvda": 122.5,
-"avgo": 27.0,
+"it_capex": 1472.0,
+"nvda": 115.2,
+"avgo": 25.4,
 "nvda_avgo_share": 0.511,
-"optics": 56.4,
-"pluggable": 53.6,
-"cpo": 2.8,
-"copper": 51.1
+"optics": 53.0,
+"pluggable": 50.4,
+"cpo": 2.7,
+"copper": 48.0
 },
 {
 "year": 2028,

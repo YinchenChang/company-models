@@ -47,11 +47,11 @@
 "ship_A": 6.67,
 "ship_B": 6.67,
 "ship_C": 6.67,
-"gap_eb_A": 0.42,
-"gap_eb_B": 0.42,
-"gap_eb_C": 0.42,
-"gap_eb": 0.42,
-"gap_pct": 0.063
+"gap_eb_A": 0.0,
+"gap_eb_B": 0.0,
+"gap_eb_C": 0.0,
+"gap_eb": 0.0,
+"gap_pct": 0.0
 },
 {
 "year": 2028,

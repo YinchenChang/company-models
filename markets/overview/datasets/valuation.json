@@ -194,10 +194,10 @@
 "position": "中段 → 中位數",
 "multiple": 21.97,
 "basis_label": "2027 EPS（A）",
-"basis": 137.67,
-"implied_px": 3025,
-"vs_px": 0.268,
-"px_multiple": 17.32
+"basis": 135.24,
+"implied_px": 2971,
+"vs_px": 0.246,
+"px_multiple": 17.64
 },
 {
 "company": "台積電",
@@ -214,10 +214,10 @@
 "position": "25 分位（區間下緣）",
 "multiple": 15.44,
 "basis_label": "2027 EPS（A）",
-"basis": 137.67,
-"implied_px": 2126,
-"vs_px": -0.109,
-"px_multiple": 17.32
+"basis": 135.24,
+"implied_px": 2088,
+"vs_px": -0.124,
+"px_multiple": 17.64
 },
 {
 "company": "台積電",
@@ -234,10 +234,10 @@
 "position": "75 分位（區間上緣）",
 "multiple": 28.49,
 "basis_label": "2027 EPS（A）",
-"basis": 137.67,
-"implied_px": 3922,
-"vs_px": 0.645,
-"px_multiple": 17.32
+"basis": 135.24,
+"implied_px": 3853,
+"vs_px": 0.616,
+"px_multiple": 17.64
 },
 {
 "company": "美光（P/E）",
@@ -495,10 +495,10 @@
 "position": "情境 A：中段 → 中位數",
 "multiple": 22.8,
 "basis_label": "FY2027 EPS（A）",
-"basis": 1348.43,
-"implied_px": 30750.6,
-"vs_px": -0.049,
-"px_multiple": 23.98,
+"basis": 1304.62,
+"implied_px": 29751.4,
+"vs_px": -0.08,
+"px_multiple": 24.79,
 "fwd_pe": 37.7
 },
 {
@@ -517,10 +517,10 @@
 "position": "情境 B：中段 → 中位數",
 "multiple": 22.8,
 "basis_label": "FY2027 EPS（B）",
-"basis": 1289.23,
-"implied_px": 29400.5,
-"vs_px": -0.091,
-"px_multiple": 25.08,
+"basis": 1245.42,
+"implied_px": 28401.3,
+"vs_px": -0.122,
+"px_multiple": 25.97,
 "fwd_pe": 37.7
 },
 {
@@ -539,10 +539,10 @@
 "position": "情境 C：見頂年 → 25 分位",
 "multiple": 20.51,
 "basis_label": "FY2027 EPS（C）",
-"basis": 1228.26,
-"implied_px": 25191.6,
-"vs_px": -0.221,
-"px_multiple": 26.33,
+"basis": 1184.45,
+"implied_px": 24293.0,
+"vs_px": -0.249,
+"px_multiple": 27.3,
 "fwd_pe": 37.7
 },
 {
@@ -561,10 +561,10 @@
 "position": "情境 A：中段 → 中位數",
 "multiple": 28.11,
 "basis_label": "FY2027 EPS（A）",
-"basis": 1717.47,
-"implied_px": 48278.5,
-"vs_px": -0.021,
-"px_multiple": 28.7,
+"basis": 1747.51,
+"implied_px": 49122.7,
+"vs_px": -0.003,
+"px_multiple": 28.21,
 "fwd_pe": 28.33
 },
 {
@@ -583,10 +583,10 @@
 "position": "情境 B：中段 → 中位數",
 "multiple": 28.11,
 "basis_label": "FY2027 EPS（B）",
-"basis": 1696.69,
-"implied_px": 47694.2,
-"vs_px": -0.032,
-"px_multiple": 29.05,
+"basis": 1726.73,
+"implied_px": 48538.6,
+"vs_px": -0.015,
+"px_multiple": 28.55,
 "fwd_pe": 28.33
 },
 {
@@ -605,10 +605,10 @@
 "position": "情境 C：見頂年 → 25 分位",
 "multiple": 19.6,
 "basis_label": "FY2027 EPS（C）",
-"basis": 1634.19,
-"implied_px": 32037.5,
-"vs_px": -0.35,
-"px_multiple": 30.16,
+"basis": 1663.16,
+"implied_px": 32605.4,
+"vs_px": -0.338,
+"px_multiple": 29.64,
 "fwd_pe": 28.33
 }
 ]
