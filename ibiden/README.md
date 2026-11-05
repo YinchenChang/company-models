@@ -1,4 +1,12 @@
-# ibiden/ — Ibiden（4062）收支與估值模型 v0.5.1
+# ibiden/ — Ibiden（4062）收支與估值模型 v0.5.2
+
+## v0.5.2（2026-11-06）：第三輪修正（合併前）
+
+- **客戶擴產預付款統一規則（第 43 項）**：前受金（2026-09-30 1,997 億日圓）維持類債務、自現金扣除；營運資金比例 fc_wc 改為剔除前受金後的近三年平均（前受金 801／921／810 億日圓，決算短信 2024-10-30、2026-05-05），1.0% → 23.0%（Sens 低／高 15%／30%），避免同一筆預收款在淨現金與營運資金重複計算。In 頁 cash_v 說明改寫口徑與金額日期。
+- **現價與同業報價統一為 2026-11-04 收盤（第 35 項）**：現價 8,359 → 8,037 日圓；同業前瞻 P/E＝原 P/E × 11-04 收盤 ÷ 原報價日收盤（前瞻 EPS 視為不變）：欣興 42.28 → 34.60、南電 33.73 → 34.69、景碩 44.70 → 37.27、三星電機 43.40 → 34.05、AT&S 14.91 → 14.01；中位數 42.28 → 34.60。
+- **HTML**：情境驅動表改依 In 頁「情境驅動對照」節標題取列（原指到折現率列），新增鍵值 scn_ 自檢；DCF 彙總主表顯示「＋Stub 期 FCFF」；橫幅標示日圓。
+- **標籤**：情境名稱統一 A（順利）／B（平平）／C（不如預期）；收斂法列名中性；Val「上檔空間級距（六級，供分組）」；stub 說明寫實際口徑（含 stub 期的會計年度 FY2026 FCFF × stub_frac）；Sens「永續成長率 g −1pt／上限 rf」；README 頁舊重點觀察改公式引用展示層重點 1–3；工具字樣改「未取得」；Val!A1 抓取單字樣改中性。
+- **結果**：加權目標價 6,817 → 5,672 日圓（DCF 1,959 → 1,789、Comparable 調整後 11,676 → 9,555），上檔空間 −18.4% → −29.4%，投資建議 中立 → **放空**。終值現值占 EV A／B／C 83%／86%／91%（皆超過 80%，README 重點 4 已標示）。
 
 ## v0.5.1（2026-11-05）：第二輪修正（工作單 Andy 2026-11-05 23:16 定案；共用模組 `tools/fcff_dcf.py` v2）
 
@@ -80,9 +88,9 @@ AI 半導體 Project **載板與 PCB 次產業的樣板**。**Ibiden 在 AI 加�
 | 檔案 | 內容 |
 |---|---|
 | `build_ibiden.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261105_Ibiden個股模型_v0.5.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261106_Ibiden個股模型_v0.5.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html_src.json`、`gen_html_json.py`、`html.json` | HTML 展示層設定：`html_src.json` 為原設定，`gen_html_json.py` 套用版面規格 v1.0 產生 `html.json`（勿手改） |
-| `dist/20261105_Ibiden個股模型_v0.5.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261106_Ibiden個股模型_v0.5.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 ibiden/build_ibiden.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（加速器顆數、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`（規則函式）；**不修改它們**。
 
