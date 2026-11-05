@@ -46,7 +46,7 @@ for b in SEC["drivers"]["blocks"]:
 V = lambda k: row_of("Val", k, need_num=True)
 tpw, dcft, comp, compadj, cons = V("目標價（DCF 與 Comparable 加權）"), V("DCF 目標價（情境加權）"), V("Comparable 目標價（市場主流同業法）"), V("Comparable 目標價（相對倍數調整後）"), V("市場共識目標價")
 upw, upc, dcf12, px = V("上檔空間：加權目標價"), V("上檔空間：Comparable"), V("DCF 情境價值推到 12 個月後"), V("現價")
-rec, grade = row_of("Val", "投資建議", exact=True), row_of("Val", "上檔空間級距", exact=True)
+rec, grade = row_of("Val", "投資建議", exact=True), row_of("Val", "上檔空間級距")
 rk = row_of("Val", "股權成本 ke")                       # v0.2：0.1 節 ke、kd_at、w_e、WACC、g、RONIC，接著 DCF 彙總 10 列
 r_pvx, r_dcf = row_of("Val", "明確期 FCFF 現值"), row_of("Val", "DCF 目標價（情境加權）")   # 第二輪修正：依標籤定位（模組 v2 stub 期多兩列）
 assert r_pvx == rk + 6, (r_pvx, rk)
@@ -117,6 +117,31 @@ for b in SEC["sens"]["blocks"]:
     if b["type"] == "note" and b["parts"][0].startswith("@Sens!A") and b["parts"][0] != "@Sens!A2": b["parts"] = [f"@Sens!A{_sn}"]
 pass
 
+
+def scn_table_fix(sec):
+    """第三輪修正第 32 點：情境驅動表依 In 頁「情境驅動對照」節標題找列範圍（不寫死列號）；百分比列以 % 顯示。"""
+    ws = WB["In"]
+    t = next(r for r in range(4, ws.max_row + 1) if str(ws.cell(r, 1).value or "").startswith("情境驅動對照"))
+    h = t + 1; rows = []; r = h + 1
+    while ws.cell(r, 1).value not in (None, ""):
+        rows.append(r); r += 1
+    assert ws.cell(rows[-1], 1).value == "scn_w", ws.cell(rows[-1], 1).value
+    def fm(rr):
+        u = str(ws.cell(rr, 3).value or "")
+        vals = [ws.cell(rr, c).value for c in (4, 5, 6) if isinstance(ws.cell(rr, c).value, (int, float))]
+        if u in ("%", "pt") or "%" in u: return "p1"
+        return "n0" if vals and max(abs(v) for v in vals) >= 100 else "n2"
+    for b in sec["blocks"]:
+        if b.get("type") == "table" and str(b.get("caption", "")).startswith("情境驅動"):
+            b["head"] = [f"@In!B{h}", f"@In!D{h}", f"@In!E{h}", f"@In!F{h}", f"@In!C{h}"]
+            b["rows"] = [[f"@In!B{rr}", f"@In!D{rr}|{fm(rr)}", f"@In!E{rr}|{fm(rr)}", f"@In!F{rr}|{fm(rr)}", f"@In!C{rr}"] for rr in rows]
+            b.pop("rowgen", None)
+            return
+    raise KeyError("情境驅動表")
+
+
+scn_table_fix(SEC["drivers"])
+
 SPEC = {
  "in_skip": [in_tok("G."), in_tok("情境驅動對照")],
  "in_groups": [
@@ -133,18 +158,19 @@ SPEC = {
     ["EMS 成長與毛利率", ["g_ems27", "g_emsL", "ems_gm"]]]],
   ["全公司（資本支出與折舊、利潤率、FY2026 錨點、股價與目標價規則）", [
     ["匯率", ["fx"]],
-    ["資本支出與折舊（核心問題之二）", ["capex25", "capex26", "capex27", "capi", "life", "q4_da"]],
+    ["資本支出與折舊（核心問題之二）", ["capex25", "capex26_9m", "capex26", "capex27", "capi", "life", "q4_da"]],
     ["毛利、營業費用、營業外、稅與股數", ["ft", "phi", "nonop_f", "tax", "nci", "sh_g"]],
     ["FY2026 錨點（第四季依公司指引）", ["q4_atm", "q4_atmgm", "q4_ems", "q4_emsgm", "q4_opx", "q4_nonop", "q4_tax", "q4_nci"]],
     ["股價與市場倍數", ["px", "pe_ttm", "fpe", "cons_feps", "cons_tp"]],
     ["目標價規則（情境權重、DCF 權重）", ["tp_w_dcf", "tp_wA", "tp_wB", "tp_wC"]],
     ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "rf_us", "beta_u", "beta_u_med", "beta_de", "beta_du", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
     ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "bs_date", "stub_frac", "stub_div", "sh_v"]],
+    ["非控制權益（環旭電子市值、其餘帳面）", ["usi_sh", "usi_own", "usi_eq", "usi_px", "fx_cnytwd", "nci_usi_bk", "nci_usi_mv"]],
     ["自由現金流（折舊、資本支出、營運資金）", ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]],
     ["收斂法（FY2030–FY2032）", ["tp_g", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fade_mB", "fade_mC"]],
     ["Wattonomics 錨定（只進敏感度）", ["wta_27", "wta_28", "wta_29"]]]]],
  "blocks_to": {"AI 加速器 → 日月光 LEAP": "封測（ATM）：LEAP 先進封裝（AI 加速器 × 委外份額 × 每顆內容＋全流程＋CPO）", "@Units!A16": "封測（ATM）：LEAP 先進封裝（AI 加速器 × 委外份額 × 每顆內容＋全流程＋CPO）"},
- "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
+ "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "＋Stub 期 FCFF", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
           "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
           "目標價結論": ["目標價（DCF", "DCF 目標價", "Comparable 目標價（相對", "Comparable 目標價（市場", "現價", "上檔空間：加權", "上檔空間：Comparable", "Comparable（相對倍數調整後）的上檔空間", "投資建議", "DCF 情境價值推到", "市場共識"],
           "本模型與公司指引、公司說法、券商的對照": ["4Q26 合併營收季增", "FY2027 LEAP ÷ FY2026", "FY2027 資本支出", "FY2027 EPS vs BofA", "FY2028 LEAP ÷ 封測營收"]},
