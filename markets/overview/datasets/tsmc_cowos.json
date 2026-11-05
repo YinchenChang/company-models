@@ -10,12 +10,12 @@
 },
 {
 "year": 2027,
-"demand": 2096,
-"nvidia": 1121,
+"demand": 1983,
+"nvidia": 1055,
 "capacity": 2178,
-"util": 0.963,
+"util": 0.91,
 "ms_demand": 2509,
-"hbm_gap": 0.0634012723037308
+"hbm_gap": 7.41082213129355e-08
 },
 {
 "year": 2028,

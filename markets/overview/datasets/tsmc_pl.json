@@ -16,14 +16,14 @@
 "key": "2027 A",
 "year": 2027,
 "scenario": "A",
-"ai_rev": 66.8,
-"rev": 225.8,
+"ai_rev": 62.8,
+"rev": 221.8,
 "non_ai_rev": 159.0,
-"ai_share": 0.296,
+"ai_share": 0.283,
 "gm": 0.64,
-"eps": 137.67,
+"eps": 135.24,
 "capex": 77,
-"pe_now": 17.3
+"pe_now": 17.6
 },
 {
 "key": "2028 A",
@@ -55,14 +55,14 @@
 "key": "2027 B",
 "year": 2027,
 "scenario": "B",
-"ai_rev": 66.8,
-"rev": 225.8,
+"ai_rev": 62.8,
+"rev": 221.8,
 "non_ai_rev": 159.0,
-"ai_share": 0.296,
+"ai_share": 0.283,
 "gm": 0.64,
-"eps": 137.67,
+"eps": 135.24,
 "capex": 77,
-"pe_now": 17.3
+"pe_now": 17.6
 },
 {
 "key": "2028 B",
@@ -94,14 +94,14 @@
 "key": "2027 C",
 "year": 2027,
 "scenario": "C",
-"ai_rev": 66.8,
-"rev": 225.8,
+"ai_rev": 62.8,
+"rev": 221.8,
 "non_ai_rev": 159.0,
-"ai_share": 0.296,
+"ai_share": 0.283,
 "gm": 0.64,
-"eps": 137.67,
+"eps": 135.24,
 "capex": 77,
-"pe_now": 17.3
+"pe_now": 17.6
 },
 {
 "key": "2028 C",
