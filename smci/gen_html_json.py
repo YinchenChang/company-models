@@ -32,6 +32,19 @@ def lab(sh, prefix, start=1, col=1):
 INK = {str(wb["In"].cell(r, 1).value): r for r in range(4, wb["In"].max_row + 1) if wb["In"].cell(r, 1).value}
 sec = lambda c, i: next(s for s in c["sections"] if s["id"] == i)
 
+# 情境驅動表：依 In 頁「情境驅動對照」節的實際列號重寫參照（v0.4 起 In 頁新增折現率一節，html_src 的固定列號錯位；欄序同 html_src：B、D、E、F、C）
+_scn_r0 = next(r for r in range(4, wb["In"].max_row + 1) if str(wb["In"].cell(r, 1).value or "").startswith("情境驅動對照")) + 1
+_scn_rs, _r = [], _scn_r0 + 1
+while wb["In"].cell(_r, 1).value:
+    _scn_rs.append(_r); _r += 1
+_n = 0
+for b in sec(cfg, "drivers")["blocks"]:
+    if str(b.get("caption", "")).startswith("情境驅動"):
+        b["head"] = [f"@In!{c}{_scn_r0}" for c in "BDEFC"]
+        b["rows"] = [[f"@In!{c}{r}" for c in "BDEFC"] for r in _scn_rs]
+        _n += 1
+assert _n == 1, "情境驅動表"
+
 # ---------- relayout 前：驅動 → 推導對照表移到附錄；對帳表給標題 ----------
 for b in sec(cfg, "drivers")["blocks"]:
     if str(b.get("caption", "")).startswith("單一參數（"):
