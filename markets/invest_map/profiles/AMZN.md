@@ -22,18 +22,18 @@ asof: 2026-10-27
 ## 主要產品與營收占比
 | 產品／部門 | 內容（白話） | 營收占比 | 期間 | 標記 |
 |---|---|---|---|---|
-| **North America**（分部） | 北美電商、第三方賣家服務、廣告、訂閱、實體店 | 59.5%（4,263.1 億美元）；1H26 57.7% | 2025；2026 上半年 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E5、Q!P5；Derived＝÷Q!E8、Q!P8] |
-| **International**（分部） | 北美以外的同類業務 | 22.6%（1,618.9 億美元）；1H26 21.5% | 2025；1H26 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E6、Q!P6；Derived] |
-| **AWS**（分部） | 雲端與 AI 算力出租 | 18.0%（1,287.3 億美元）；1H26 20.9% | 2025；1H26 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E7、Q!P7；Derived] |
-| 營收線：Online stores | 自營線上商品銷售 | 37.6%（2,692.9 億美元）；1H26 35.2% | 2025；1H26 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E10、Q!P10；Derived] |
-| 營收線：Physical stores | Whole Foods 等實體店 | 3.1%（225.6 億美元）；1H26 3.0% | 2025；1H26 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E11、Q!P11；Derived] |
-| 營收線：Third-party seller services | 第三方賣家的抽成、倉儲物流費 | 24.0%（1,721.6 億美元）；1H26 23.1% | 2025；1H26 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E12、Q!P12；Derived] |
-| 營收線：Advertising services | 購物頁面等廣告 | 9.6%（686.4 億美元）；1H26 9.7% | 2025；1H26 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E13、Q!P13；Derived] |
-| 營收線：Subscription services | Prime 等訂閱 | 6.9%（496.2 億美元）；1H26 7.1% | 2025；1H26 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E14、Q!P14；Derived] |
-| 營收線：Other | 其他 | 0.8%（59.4 億美元）；1H26 0.9% | 2025；1H26 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E15、Q!P15；Derived] |
-| 營收線：AWS | 與 AWS 分部相同 | 18.0%；1H26 20.9% | 2025；1H26 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E17、Q!P17；Derived] |
+| **North America**（分部） | 北美電商、第三方賣家服務、廣告、訂閱、實體店 | 59.5%（4,263.1 億美元）；1H26 57.7% | 2025；2026 上半年 | [本專案：20261104_Amazon個股模型_v0.3.4.xlsx Q!E5、Q!P5；Derived＝÷Q!E8、Q!P8] |
+| **International**（分部） | 北美以外的同類業務 | 22.6%（1,618.9 億美元）；1H26 21.5% | 2025；1H26 | [本專案：20261104_Amazon個股模型_v0.3.4.xlsx Q!E6、Q!P6；Derived] |
+| **AWS**（分部） | 雲端與 AI 算力出租 | 18.0%（1,287.3 億美元）；1H26 20.9% | 2025；1H26 | [本專案：20261104_Amazon個股模型_v0.3.4.xlsx Q!E7、Q!P7；Derived] |
+| 營收線：Online stores | 自營線上商品銷售 | 37.6%（2,692.9 億美元）；1H26 35.2% | 2025；1H26 | [本專案：20261104_Amazon個股模型_v0.3.4.xlsx Q!E10、Q!P10；Derived] |
+| 營收線：Physical stores | Whole Foods 等實體店 | 3.1%（225.6 億美元）；1H26 3.0% | 2025；1H26 | [本專案：20261104_Amazon個股模型_v0.3.4.xlsx Q!E11、Q!P11；Derived] |
+| 營收線：Third-party seller services | 第三方賣家的抽成、倉儲物流費 | 24.0%（1,721.6 億美元）；1H26 23.1% | 2025；1H26 | [本專案：20261104_Amazon個股模型_v0.3.4.xlsx Q!E12、Q!P12；Derived] |
+| 營收線：Advertising services | 購物頁面等廣告 | 9.6%（686.4 億美元）；1H26 9.7% | 2025；1H26 | [本專案：20261104_Amazon個股模型_v0.3.4.xlsx Q!E13、Q!P13；Derived] |
+| 營收線：Subscription services | Prime 等訂閱 | 6.9%（496.2 億美元）；1H26 7.1% | 2025；1H26 | [本專案：20261104_Amazon個股模型_v0.3.4.xlsx Q!E14、Q!P14；Derived] |
+| 營收線：Other | 其他 | 0.8%（59.4 億美元）；1H26 0.9% | 2025；1H26 | [本專案：20261104_Amazon個股模型_v0.3.4.xlsx Q!E15、Q!P15；Derived] |
+| 營收線：AWS | 與 AWS 分部相同 | 18.0%；1H26 20.9% | 2025；1H26 | [本專案：20261104_Amazon個股模型_v0.3.4.xlsx Q!E17、Q!P17；Derived] |
 
-- 口徑：三個官方分部，以及 10-K 的七條營收線（零售六線合計＝北美＋國際，AWS 線＝AWS 分部）；合計 7,169.24 億（2025）、3,821.25 億美元（1H26）＝全公司營收，核對列為 0 [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E8、Q!P8、Q!E18、Q!E19、Q!E20]。
+- 口徑：三個官方分部，以及 10-K 的七條營收線（零售六線合計＝北美＋國際，AWS 線＝AWS 分部）；合計 7,169.24 億（2025）、3,821.25 億美元（1H26）＝全公司營收，核對列為 0 [本專案：20261104_Amazon個股模型_v0.3.4.xlsx Q!E8、Q!P8、Q!E18、Q!E19、Q!E20]。
 - 獲利集中在 AWS：2025 年 AWS 營業利益 456.06 億美元，占全公司 799.75 億的 57%；1H26 AWS 營業利益 307.82 億，營業利益率 38.6% [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E24、Q!E25、Q!P24、PL!E53；Derived]。
 - 廣告成長快：1H26 廣告營收 370.52 億美元，比 1H25 的 296.15 億增 25.1% [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!P13、Q!N13；Derived]。
 
@@ -62,7 +62,7 @@ asof: 2026-10-27
 | Microsoft（Azure） | 公有雲、AI 算力出租 | 市占本專案未建立；Azure FY2026 營收 1,019.4 億美元 | [本專案：microsoft_facts_20261008.json prod27.azure.fy2026] |
 | Alphabet（Google Cloud） | 公有雲、自研 TPU、Anthropic 也是其客戶 | 市占本專案未建立；Google Cloud 2025 營收 587.1 億美元 | [本專案：alphabet_facts_20261008.json is.rev.cloud.fy2025] |
 | Oracle（OCI） | AI 機房出租 | 市占本專案未建立；OCI FY2026 營收 181.0 億美元 | [本專案：oracle_facts_20261007.json is.rev.iaas.fy2026] |
-| CoreWeave | GPU 雲 | 企業價值 801.2 億美元、2027 前瞻 EV/EBITDA 4.81 倍（2026-10-21） | [本專案：20261027_Oracle個股模型_v0.4.xlsx Val!C35、Val!D35] |
+| CoreWeave | GPU 雲 | 企業價值 801.2 億美元、2027 前瞻 EV/EBITDA 4.81 倍（2026-10-21） | [本專案：20261104_Oracle個股模型_v0.4.5.xlsx Val!C35、Val!D35] |
 
 - 各家雲端營收期間不同，只能比量級 [判斷]。
 - Anthropic 同時向 Google（TPU）採購算力，客戶不是 AWS 獨占 [本專案：alphabet_facts_20261008.json rp.anthropic.cloudCommit]。

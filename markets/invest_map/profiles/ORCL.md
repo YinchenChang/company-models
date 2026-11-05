@@ -22,17 +22,17 @@ asof: 2026-10-27
 ## 主要產品與營收占比
 | 產品／部門 | 內容（白話） | 營收占比 | 期間 | 標記 |
 |---|---|---|---|---|
-| **Cloud and software**（分部） | 下列四條營收線合計 | 86.9%（585.3 億美元）；FY27Q1 88.7% | FY2026（至 2026-05）；FY27Q1（2026-06～08） | [本專案：20261027_Oracle個股模型_v0.4.xlsx Q!L11、Q!I11；Derived＝÷Q!L10、Q!I10] |
-| 　Cloud Infrastructure（OCI） | AI 與一般運算機房出租 | 26.9%（181.0 億美元）；FY27Q1 38.2% | FY2026；FY27Q1 | [本專案：20261027_Oracle個股模型_v0.4.xlsx Q!L4、Q!I4；Derived] |
-| 　Cloud Applications（SaaS） | 雲端 ERP、人資、醫療等應用軟體訂閱 | 23.6%（158.9 億美元）；FY27Q1 21.8% | FY2026；FY27Q1 | [本專案：20261027_Oracle個股模型_v0.4.xlsx Q!L5、Q!I5；Derived] |
-| 　Software license | 一次性軟體授權 | 7.0%（47.4 億美元）；FY27Q1 3.4% | FY2026；FY27Q1 | [本專案：20261027_Oracle個股模型_v0.4.xlsx Q!L6、Q!I6；Derived] |
-| 　Software support | 既有授權的年度維護 | 29.4%（198.0 億美元）；FY27Q1 25.3% | FY2026；FY27Q1 | [本專案：20261027_Oracle個股模型_v0.4.xlsx Q!L7、Q!I7；Derived] |
-| **Hardware**（分部） | Exadata 等伺服器與儲存 | 4.6%（30.8 億美元）；FY27Q1 4.0% | FY2026；FY27Q1 | [本專案：20261027_Oracle個股模型_v0.4.xlsx Q!L8、Q!I8；Derived] |
-| **Services**（分部） | 顧問與導入 | 8.5%（57.4 億美元）；FY27Q1 7.3% | FY2026；FY27Q1 | [本專案：20261027_Oracle個股模型_v0.4.xlsx Q!L9、Q!I9；Derived] |
+| **Cloud and software**（分部） | 下列四條營收線合計 | 86.9%（585.3 億美元）；FY27Q1 88.7% | FY2026（至 2026-05）；FY27Q1（2026-06～08） | [本專案：20261104_Oracle個股模型_v0.4.5.xlsx Q!L11、Q!I11；Derived＝÷Q!L10、Q!I10] |
+| 　Cloud Infrastructure（OCI） | AI 與一般運算機房出租 | 26.9%（181.0 億美元）；FY27Q1 38.2% | FY2026；FY27Q1 | [本專案：20261104_Oracle個股模型_v0.4.5.xlsx Q!L4、Q!I4；Derived] |
+| 　Cloud Applications（SaaS） | 雲端 ERP、人資、醫療等應用軟體訂閱 | 23.6%（158.9 億美元）；FY27Q1 21.8% | FY2026；FY27Q1 | [本專案：20261104_Oracle個股模型_v0.4.5.xlsx Q!L5、Q!I5；Derived] |
+| 　Software license | 一次性軟體授權 | 7.0%（47.4 億美元）；FY27Q1 3.4% | FY2026；FY27Q1 | [本專案：20261104_Oracle個股模型_v0.4.5.xlsx Q!L6、Q!I6；Derived] |
+| 　Software support | 既有授權的年度維護 | 29.4%（198.0 億美元）；FY27Q1 25.3% | FY2026；FY27Q1 | [本專案：20261104_Oracle個股模型_v0.4.5.xlsx Q!L7、Q!I7；Derived] |
+| **Hardware**（分部） | Exadata 等伺服器與儲存 | 4.6%（30.8 億美元）；FY27Q1 4.0% | FY2026；FY27Q1 | [本專案：20261104_Oracle個股模型_v0.4.5.xlsx Q!L8、Q!I8；Derived] |
+| **Services**（分部） | 顧問與導入 | 8.5%（57.4 億美元）；FY27Q1 7.3% | FY2026；FY27Q1 | [本專案：20261104_Oracle個股模型_v0.4.5.xlsx Q!L9、Q!I9；Derived] |
 
-- 口徑：10-K 的三個報導分部，雲端與軟體再拆四條營收線（新聞稿口徑）；合計 673.57 億（FY2026）、193.45 億美元（FY27Q1）＝全公司營收，核對列為 0 [本專案：20261027_Oracle個股模型_v0.4.xlsx Q!L10、Q!I10、Q!L14、Q!L15]。
-- 成長最快的是 OCI：FY2026 年增 77%（102.34 → 181.01 億美元），近四季年增 93.8% [本專案：20261027_Oracle個股模型_v0.4.xlsx Q!K4、Q!L4、Q!B36；Derived]。
-- 分部利潤 FY2026：雲端與軟體 344.68 億美元（只含直接成本），未分攤費用 174.12 億；OCI 未單獨揭露利潤 [本專案：20261027_Oracle個股模型_v0.4.xlsx Q!L16、Q!L20]。
+- 口徑：10-K 的三個報導分部，雲端與軟體再拆四條營收線（新聞稿口徑）；合計 673.57 億（FY2026）、193.45 億美元（FY27Q1）＝全公司營收，核對列為 0 [本專案：20261104_Oracle個股模型_v0.4.5.xlsx Q!L10、Q!I10、Q!L14、Q!L15]。
+- 成長最快的是 OCI：FY2026 年增 77%（102.34 → 181.01 億美元），近四季年增 93.8% [本專案：20261104_Oracle個股模型_v0.4.5.xlsx Q!K4、Q!L4、Q!B36；Derived]。
+- 分部利潤 FY2026：雲端與軟體 344.68 億美元（只含直接成本），未分攤費用 174.12 億；OCI 未單獨揭露利潤 [本專案：20261104_Oracle個股模型_v0.4.5.xlsx Q!L16、Q!L20]。
 
 ## 市場定位與產業位置
 - 雲端市占：本專案未建立。
@@ -59,7 +59,7 @@ asof: 2026-10-27
 |---|---|---|---|
 | Microsoft（Azure） | AI 算力出租、OpenAI 供應商 | 市占本專案未建立；Azure FY2026 營收 1,019.4 億美元 | [本專案：microsoft_facts_20261008.json prod27.azure.fy2026] |
 | Amazon（AWS） | 公有雲、OpenAI 也是其客戶 | 市占本專案未建立；AWS 2025 營收 1,287.3 億美元 | [本專案：amazon_facts_20261008.json is.AWS.rev.fy2025] |
-| CoreWeave | GPU 雲（同樣以租賃機房為主） | 企業價值 801.2 億美元、2027 前瞻 EV/EBITDA 4.81 倍（2026-10-21） | [本專案：20261027_Oracle個股模型_v0.4.xlsx Val!C35、Val!D35] |
+| CoreWeave | GPU 雲（同樣以租賃機房為主） | 企業價值 801.2 億美元、2027 前瞻 EV/EBITDA 4.81 倍（2026-10-21） | [本專案：20261104_Oracle個股模型_v0.4.5.xlsx Val!C35、Val!D35] |
 | SAP | 企業應用軟體 | NTM EV/EBITDA 15.13 倍 | [本專案：microsoft/data/peers_cloud_20261008.json SAP] |
 
 - OpenAI 同時向 Microsoft、Amazon 等多家採購算力，Oracle 不是唯一供應商 [本專案：amazon_facts_20261008.json contract.openai.nv]。
@@ -99,7 +99,7 @@ asof: 2026-10-27
 - OCI AI 的報酬（命題核心）｜基準情境 FY2029 OCI 營收 936 億美元，為公司路徑 1,140 億的 82%；扣 AI 折舊與機房租金後 OCI AI 營業利益率 6.2%，AI 增量 ROIC 1.7%，低於 WACC 10.5% [本專案：20261027_Oracle個股模型_v0.4.xlsx Thesis!D125、Thesis!D127、Thesis!D131、Val!C9]｜FY27Q2 財報（約 2026-12，日期未公告）
 - 每 MW 價格 k｜k ×0.9／×1.2（1.2 約當 Oracle 自身合約）時加權目標價 59.98／100.04 美元，是敏感度最大的一項 [本專案：20261027_Oracle個股模型_v0.4.xlsx Sens!C4、Sens!E4]｜OCI 新簽合約定價
 - 槓桿與資金缺口｜調整後槓桿峰值基準 4.43 倍、保守 5.20 倍，S&P 降評門檻 4.5 倍 [本專案：20261027_Oracle個股模型_v0.4.xlsx CF!D8、CF!E8；oracle_facts_20261007.json rating.sp]；FY2027–FY2031 自由現金流扣股利合計基準 +727.6 億、保守 +83.5 億美元，基準需新增投資級債 186.2 億、保守需新股 24.1 億 [本專案：20261027_Oracle個股模型_v0.4.xlsx CF!D4、CF!E4、CF!D5、CF!E6]｜信評動作與債券、股權發行
-- 營收與交付時程｜基準 FY2027 營收 871.5 億美元，低於公司指引下限 900 億 [本專案：20261027_Oracle個股模型_v0.4.xlsx Recon!E20、Recon!B20]；各站點延誤再加 6 個月時加權目標價 65.41 美元 [本專案：20261027_Oracle個股模型_v0.4.xlsx Sens!E8]｜Jupiter 天然氣管線與 Abilene 交付、FY27Q2 財報
+- 營收與交付時程｜基準 FY2027 營收 871.5 億美元，低於公司指引下限 900 億 [本專案：20261104_Oracle個股模型_v0.4.5.xlsx Recon!E20、Recon!B20]；各站點延誤再加 6 個月時加權目標價 65.41 美元 [本專案：20261027_Oracle個股模型_v0.4.xlsx Sens!E8]｜Jupiter 天然氣管線與 Abilene 交付、FY27Q2 財報
 - 模型與現價差距｜現價 126.06 美元（2026-10-26），加權目標價 73.22 美元、上檔空間 −41.9%，模型評級「放空」；若分部加總的 OCI AI 改用 neocloud 同業倍數，加權目標價為 106.39 美元 [本專案：20261027_Oracle個股模型_v0.4.xlsx Val!C75、Val!C74、Val!C77、Val!C80、Val!C86]｜模型 FY27Q2 滾入時
 - 自用 AI 讀法不適用｜Oracle 的 AI 產能幾乎全數對外出租，模型不設自用 AI 讀法 [本專案：oracle/docs/reports/20261027_oracle_v0.4_分部架構.md 修正一]｜—
 

@@ -62,7 +62,7 @@ asof: 2026-10-27
 | Amazon（AWS） | 公有雲、AI 算力出租 | 市占本專案未建立；AWS 2025 營收 1,287.3 億美元 | [本專案：amazon_facts_20261008.json is.AWS.rev.fy2025] |
 | Alphabet（Google Cloud） | 公有雲、自研 TPU | 市占本專案未建立；Google Cloud 2025 營收 587.1 億美元 | [本專案：alphabet_facts_20261008.json is.rev.cloud.fy2025] |
 | Oracle（OCI） | AI 機房出租（OpenAI 為大客戶） | 市占本專案未建立；OCI FY2026 營收 181.0 億美元 | [本專案：oracle_facts_20261007.json is.rev.iaas.fy2026] |
-| CoreWeave | GPU 雲（同時是 Microsoft 的供應商） | 企業價值 801.2 億美元、2027 前瞻 EV/EBITDA 4.81 倍（2026-10-21） | [本專案：20261027_Oracle個股模型_v0.4.xlsx Val!C35、Val!D35] |
+| CoreWeave | GPU 雲（同時是 Microsoft 的供應商） | 企業價值 801.2 億美元、2027 前瞻 EV/EBITDA 4.81 倍（2026-10-21） | [本專案：20261104_Oracle個股模型_v0.4.5.xlsx Val!C35、Val!D35] |
 
 - 三家雲端營收期間不同（Microsoft 為 FY2026 至 6 月，其他為曆年 2025），只能看量級，不能直接算市占 [判斷]。
 - OpenAI 不再獨家使用 Azure，可在其他雲端提供產品 [本專案：microsoft_facts_20261008.json oai.ip]。
@@ -95,7 +95,7 @@ asof: 2026-10-27
 
 ## 近期重大事件
 - 2026-10-28｜FY27Q1 財報：營收 922.79 億美元、稀釋 EPS 4.92 美元；Azure 營收 331.65 億（年增 48%）；Microsoft Cloud 營收 639 億、毛利率 66%；商用 RPO 6,770 億；資本支出（含融資租賃）452 億｜AI 雲成長延續，資本支出同步放大 [本專案：microsoft_facts_FY27Q1_20261029.json q.rev.fy27q1、q.epsDil.fy27q1、q.prod27.azure.fy27q1、q.azure27.growth.fy27q1、msCloud.rev.fy27q1、msCloud.gm.fy27q1、rpo.commercial.fy27q1、capexFL.fy27q1]
-- 2026-10-28｜FY27Q2 指引：營收 960–971 億美元、Azure 年增 49–50%（固定匯率）、資本支出至少 500 億；曆年 2026 資本支出約 1,700 億｜模型 2026-10-29 滾到 v0.3.1：加權目標價 384.10 美元，評級仍為「放空」[本專案：microsoft_facts_FY27Q1_20261029.json guid.fy27q2.rev、guid.fy27q2.azure、guid.fy27q2.capex、guid.cy26.capex；20261029_Microsoft個股模型_v0.3.1.xlsx Val!B36、Val!B43]
+- 2026-10-28｜FY27Q2 指引：營收 960–971 億美元、Azure 年增 49–50%（固定匯率）、資本支出至少 500 億；曆年 2026 資本支出約 1,700 億｜模型 2026-10-29 滾到 v0.3.1：加權目標價 384.10 美元，評級仍為「放空」[本專案：microsoft_facts_FY27Q1_20261029.json guid.fy27q2.rev、guid.fy27q2.azure、guid.fy27q2.capex、guid.cy26.capex；20261104_Microsoft個股模型_v0.3.5.xlsx Val!B36、Val!B43]
 - 2026-10-07｜公告 FY27Q1 財報於 2026-10-28 盤後發布｜下一個驗證點 [外部新聞：Finviz（PR Newswire）]
 - 2026-09-15｜季度股利調高至 0.98 美元（+8%）｜回饋政策延續 [本專案：microsoft_facts_20261008.json sh.dpsQ.fy27q1]
 - 2026-09-02｜8-K 改為兩分部並揭露 Azure 各季金額｜往後各季比較口徑改變 [本專案：microsoft_facts_20261008.json seg27.ai.rev.fy2026]
@@ -103,11 +103,11 @@ asof: 2026-10-27
 - 2026-07-29｜10-K：OpenAI 持股由約 27% 降至約 25%｜OpenAI 再融資稀釋 [本專案：microsoft_facts_20261008.json oai.stake.fy2026]
 
 ## 需要觀察的事項
-- 自用 AI 的讀法｜自有 AI 算力約四成自用（對外比例 60% 為模型假設，公司未揭露）。Andy 2026-10-27 定讀法 2（自用 AI 價值中性）為主值：加權目標價 384.10 美元；讀法 1（自用 AI 只計成本）為 310.88 美元，是敏感度最大的一項 [本專案：20261029_Microsoft個股模型_v0.3.1.xlsx Val!B36、Val!B47、Sens!C4]｜每次財報對 AI 算力自用與對外配置的說法
-- AI 增量 ROIC 對資金成本（核心問題）｜基準情境 FY2029：讀法 2 為 8.6%、讀法 1 為 1.0%，對外的 Azure AI 本身 13.1%，WACC 10.29% [本專案：20261029_Microsoft個股模型_v0.3.1.xlsx Thesis!H104、Thesis!H103、Thesis!H105、Val!B15]｜FY27Q2 財報（約 2027-01 下旬）的 Azure 成長與 Microsoft Cloud 毛利率
-- 每 MW 價格 k｜k 同乘 0.85／1.15 時加權目標價 355.70／412.44 美元，是命題變數中影響最大者之一 [本專案：20261029_Microsoft個股模型_v0.3.1.xlsx Sens!C5、Sens!C6]｜Azure AI 長約與現貨價格
-- FY2027 資本支出與現金｜模型 FY2027 資本支出 2,042 億美元（公司口徑，含融資租賃），基準情境自由現金流 112.7 億美元，需舉債 81 億、回購兩年共少 443 億；五年（FY2027–FY2031）自由現金流扣股利合計 2,596.4 億美元 [本專案：20261029_Microsoft個股模型_v0.3.1.xlsx CF!C9、CF!C7、CF!C6、CF!C5]｜FY27Q2 財報的資本支出（公司指引至少 500 億美元 [本專案：microsoft_facts_FY27Q1_20261029.json guid.fy27q2.capex]）
-- 模型與現價差距｜現價 531.01 美元（2026-10-28），加權目標價的上檔空間 −27.7%，模型評級「放空」；距「中立」門檻 −25% 約 2.7 個百分點 [本專案：20261029_Microsoft個股模型_v0.3.1.xlsx Val!B39、Val!B40、Val!B43]｜FY27Q2 財報後的模型滾動
+- 自用 AI 的讀法｜自有 AI 算力約四成自用（對外比例 60% 為模型假設，公司未揭露）。Andy 2026-10-27 定讀法 2（自用 AI 價值中性）為主值：加權目標價 384.10 美元；讀法 1（自用 AI 只計成本）為 310.88 美元，是敏感度最大的一項 [本專案：20261104_Microsoft個股模型_v0.3.5.xlsx Val!B36、Val!B47、Sens!C4]｜每次財報對 AI 算力自用與對外配置的說法
+- AI 增量 ROIC 對資金成本（核心問題）｜基準情境 FY2029：讀法 2 為 8.6%、讀法 1 為 1.0%，對外的 Azure AI 本身 13.1%，WACC 10.29% [本專案：20261104_Microsoft個股模型_v0.3.5.xlsx Thesis!H104、Thesis!H103、Thesis!H105、Val!B15]｜FY27Q2 財報（約 2027-01 下旬）的 Azure 成長與 Microsoft Cloud 毛利率
+- 每 MW 價格 k｜k 同乘 0.85／1.15 時加權目標價 355.70／412.44 美元，是命題變數中影響最大者之一 [本專案：20261104_Microsoft個股模型_v0.3.5.xlsx Sens!C5、Sens!C6]｜Azure AI 長約與現貨價格
+- FY2027 資本支出與現金｜模型 FY2027 資本支出 2,042 億美元（公司口徑，含融資租賃），基準情境自由現金流 112.7 億美元，需舉債 81 億、回購兩年共少 443 億；五年（FY2027–FY2031）自由現金流扣股利合計 2,596.4 億美元 [本專案：20261104_Microsoft個股模型_v0.3.5.xlsx CF!C9、CF!C7、CF!C6、CF!C5]｜FY27Q2 財報的資本支出（公司指引至少 500 億美元 [本專案：microsoft_facts_FY27Q1_20261029.json guid.fy27q2.capex]）
+- 模型與現價差距｜現價 531.01 美元（2026-10-28），加權目標價的上檔空間 −27.7%，模型評級「放空」；距「中立」門檻 −25% 約 2.7 個百分點 [本專案：20261104_Microsoft個股模型_v0.3.5.xlsx Val!B39、Val!B40、Val!B43]｜FY27Q2 財報後的模型滾動
 - OpenAI 集中度｜扣除 OpenAI 後商用 RPO 年增約 25% [本專案：microsoft_facts_20261008.json call.rpoExOAI.fy26q4]｜2026-10-28 財報的 RPO 拆分
 
 ## 來源
