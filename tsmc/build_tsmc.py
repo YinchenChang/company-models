@@ -833,7 +833,7 @@ RD.cell(_vr, 1, XF("v0.5（2026-11-05）：模型改版——DCF 改為標準版
                    "。新增 DCF 頁（tools/fcff_dcf.py）；Sens 目標價參數改為 WACC、β、ERP、g、RONIC、資本支出、營運資金、權益投資、終值替代法與 DCF 權重；刪除 tp_r、tp_roe。"
                    "新舊對照（v0.4.2 → v0.5）：DCF 目標價 2,155 → ", (f'TEXT(Val!B{T["dcftp"]},"#,##0")',), "，加權目標價 2,803 → ", (f'TEXT(Val!B{T["tpw"]},"#,##0")',),
                    "，上檔空間 +17.5% → ", (f'TEXT(Val!B{T["upw"]},{_SP})',), "，投資建議 中立 → ", (f"Val!B{_G + 1}",), "。PL、Comparable 不變。"
-                   "DCF 差異拆解（建置時以 DCF 頁明細依序替換計算，元／股）：現金流口徑改 FCFF（仍用 r 10%、g 4%）−223；折現率改 WACC 12.8%、g 改 2.0% −714；終值改價值驅動式（RONIC＝WACC）+43；扣期間股利（每季 7 元 × 4）−28。"
+                   "DCF 差異拆解（建置時以 DCF 頁明細依序替換計算，元／股）：現金流口徑改 FCFF（仍用 r 10%、g 4%）−223；折現率改 WACC 13.4%、g 改 2.0% −769；終值改價值驅動式（RONIC＝WACC）+45；扣期間股利（每季 7 元 × 4）−28。"
                    "FCFF 每股合計（2027–2032，未折現）比舊股東現金流低約 22%–26%（資本支出占營收 36.8% 高於折舊 21.7%）。"))
 def _serow(prefix):
     return next(r for r in range(1, SE.max_row + 1) if str(SE.cell(r, 1).value or "").startswith(prefix))
