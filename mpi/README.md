@@ -1,4 +1,10 @@
-# mpi/ — 旺矽（6223.TWO；MPI）個股模型 v0.2
+# mpi/ — 旺矽（6223.TWO；MPI）個股模型 v0.2.1
+## v0.2.1（2026-11-05）：β 改為自算產業 β
+
+- Andy 2026-11-05 22:55：β 不再用 Damodaran 表，改用自算產業 β（Yahoo Finance 含股利調整月報酬 2021-11～2026-10，對台灣加權指數迴歸，Hamada 去槓桿、現金修正，取同業中位數後 Blume 調整 0.67β＋0.33）。旺矽歸「TW 散熱／電源／探針卡」組（3017 3324 3653 2308 2301 6223，6 家），無槓桿 β 中位數 1.30 → 採用 1.201（原 Damodaran Global Semiconductor Equip 2.04），依旺矽市值 D／E 重新加槓桿約 1.21（原 2.05）。Sens 低／高＝1.027／1.30（Analogy）。
+- 評價日 2026-12-31（目標時點 2027-12-31），淨現金沿用 2026-03-31 資產負債表；其他模型輸入不變。
+- 結果：WACC 13.8% → 8.9%、DCF 目標價 964 → 1,564、加權目標價 2,126 → 2,426、上檔空間 −53.9% → −47.4%，投資建議由強力放空改為放空（README 頁「本版要點」第一列以公式帶出）。
+- 成品：`dist/20261105_旺矽個股模型_v0.2.1.xlsx`／`.html`；v0.2 移到 `dist/_待刪除/`。
 
 ## v0.2（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）＋HTML 新版面 v1.0
 
@@ -30,9 +36,9 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_mpi.py` | 產生器（參數與公式；行業變數唯讀取自 Siliconomics 快照） |
-| `dist/20261105_旺矽個股模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261105_旺矽個股模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html_src.json` → `gen_html_json.py` → `html.json` | HTML 展示層設定（原設定 → 版面規格 v1.0 轉換；`html.json` 勿手改） |
-| `dist/20261105_旺矽個股模型_v0.2.html` | HTML 展示層（版面規格 v1.0） |
+| `dist/20261105_旺矽個股模型_v0.2.1.html` | HTML 展示層（版面規格 v1.0） |
 | `segments.json` | 事業別（探針卡、設備、其他）與命題子列（AI／HPC 探針卡、其他探針卡）宣告 |
 
 建置：`python3 mpi/build_mpi.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。樣板 `kyec/`（驅動邏輯），工作表與 Val 頁列標籤同 `amkr/`。
