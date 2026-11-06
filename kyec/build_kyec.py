@@ -14,6 +14,7 @@ sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
 import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 import cycle_position as CP
 import valuation_rule as VR
+import fcff_dcf as FD   # v0.4：標準版 DCF（無槓桿自由現金流＋WACC）共用模組
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -169,15 +170,12 @@ inp("dp_26", "公司 2Q26 資料處理應用占營收", "%", None, 0.363, None, 
 inp("bi_25", "Burn-in 占營收（3Q25）", "%", None, 0.09, None, "Interested-party", FG1128 + "（AI 摘要公司法說）", "最終測試 58.2%、晶圓測試 30.4%")
 
 sec("I. 價格與估值")
-inp("px", "股價（2026-10-22 收盤）", "NT$", None, 262.5, None, "Interested-party", "鉅亨網 2449 個股頁（10-22 收盤 262.5，−5.58%；網址見 Sources）", "財報狗、HiStock：10-22 收盤 262.5；10-23 收盤：未找到")
+inp("px", "股價（2026-11-04 收盤）", "NT$", None, 248.5, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（第三輪修正：全批統一價格日）", "markets/invest_map/data/prices.csv 2026-11-04 同值 248.5（statementdog）；v0.4.2 為 2026-10-22 收盤 262.5（鉅亨網）")
 inp("pe_ttm", "近 12 月 P/E（鉅亨網，10-22）", "x", None, 36.13, None, "Interested-party", CNYQ, "HiStock 10 月本益比 34.40；stockanalysis 2026-09-03 為 36.12")
 sec("J. 目標價（DCF＋Comparable）與收斂法參數（黃底；Andy 可改；v0.2 由短期法／長期法改為 DCF＋Comparable）")
 for s, w, nm in (("A", 0.3, "順利"), ("B", 0.5, "平平"), ("C", 0.2, "不如預期")):
     inp(f"tp_w{s}", f"目標價情境權重 {s}（{nm}）", "%", None, w, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 A 0.3／B 0.5／C 0.2）", "三者合計應為 100%（Val 頁第 0 節列示）")
-inp("tp_r", "折現率／要求報酬（DCF）", "%", None, 0.10, None, "Assumed", "Andy 可改（工作單預設 10%；各市場同一值）", "DCF 與 Sens")
-inp("tp_g", "長期成長率（DCF 永續；收斂法情境 B 的 FY2032 營收年增）", "%", None, 0.04, None, "Assumed", "Andy 可改（工作單預設 4%）", "—")
-inp("tp_roe", "近三年平均 ROE（2023–2025；DCF 再投資率＝tp_g ÷ tp_roe）", "%", None, "=(0.1584+0.1584+0.2377)/3", None, "Derived", "玩股網年度 ROE：2023 15.84%、2024 15.84%、2025 23.77%（2025 含處分利益）；Andy 可改",
-    "stockanalysis：2023 11.13%、2024 11.24%、2025 16.83%（口徑不同，平均 13.1%，不採）")
+inp("tp_g", "PL 收斂法情境 B 的 FY2032 營收年增（v0.4 起不再用於 DCF，DCF 永續成長率見 M2 節 g_tv）", "%", None, 0.04, None, "Assumed", "Andy 可改（工作單預設 4%）", "v0.4 刪除 tp_r、tp_roe（舊股東現金流法 DCF 參數）；本值只決定 FY2030–FY2032 營收收斂路徑")
 inp("tp_w_dcf", "目標價中 DCF 的權重；其餘為 Comparable", "%", None, 0.5, None, "Assumed", "Andy 可改（工作單 2026-10-25 11:53 定 DCF／Comparable 各半）", "—")
 inp("fade_gA", "收斂法：情境 A 於 FY2032 的營收年增（＝tp_g＋2pt）", "%", None, "=tp_g+0.02", None, "Assumed", "Andy 可改（工作單 11:20）", "FY2030 起為收斂法，非驅動因子推導")
 inp("fade_gC", "收斂法：情境 C 於 FY2032 的營收年增（＝tp_g−2pt）", "%", None, "=tp_g-0.02", None, "Assumed", "Andy 可改（工作單 11:20）；情境 B 收斂到 tp_g", "—")
@@ -186,6 +184,54 @@ inp("fade_mB", "收斂法：情境 B 的中段淨利率（＝FY2029 與十年平
 inp("fade_mC", "收斂法：情境 C 的中段淨利率（＝十年平均）", "%", None, None, None, "Assumed", "十年平均淨利率：未找到，以情境 C FY2029 淨利率 × 0.8 代替", "Andy 可改")
 inp("cons_tp", "市場共識目標價（賣方平均）", "NT$", None, 340.73, None, "Interested-party", "stockanalysis 統計頁：15 位分析師平均 340.73（頁面價格日期 2026-10-06）", "法人目標價中位數 348–350（理財周刊 2026-09-01）；Morgan Stanley 388（In 頁 ms_tp）")
 inp("cons_feps", "共識 12 個月後前瞻 EPS（2/12 × FY2027＋10/12 × FY2028；換成配股後股數 ÷ 1.05）", "NT$", None, "=(2/12*c_eps27+10/12*c_eps28)/1.05", None, "Derived", "In 頁 FactSet 共識 FY2027、FY2028 中位數（2026-04-06；推定為配股前口徑）", "共識只放 Recon 與本列，不作校準；共識日期較舊")
+
+# v0.4：標準版 DCF（無槓桿自由現金流＋WACC；tools/fcff_dcf.py；docs/plan/個股DCF標準規格.md v1.0）。評價日沿用 DCF 基準日 2026-12-31；股價 2026-10-22；資產負債為 2026-06-30
+BETA_SRC = "自算產業 β 表（2026-11-05 22:50 計算；Yahoo Finance 含股利調整月收盤價 2021-11～2026-10，60 個月；Andy 2026-11-05 22:55 選定，取代 Damodaran 表）"
+DAMO_C = "Damodaran「Country Default Spreads and Risk Premiums」2026-01-05 版（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html；2026-11-05 讀取）"
+SA_BS = "stockanalysis.com 京元電（TPE:2449）資產負債表，2026-06-30 欄（https://stockanalysis.com/quote/tpe/2449/financials/balance-sheet/；2026-11-05 讀取；資料商轉載合併報表）"
+SA_CF = "stockanalysis.com 京元電現金流量表（https://stockanalysis.com/quote/tpe/2449/financials/cash-flow-statement/；2026-11-05 讀取）"
+NC_BS = "13.321+19.269-33.827-(1.012+7.341)-0.00842"
+NC_NOTE = "2026-06-30 資產負債表（NT$B）：現金 13.321＋長期投資 19.269 − 長期借款 33.827 − 租賃（1.012＋7.341）− 非控制權益 0.008"
+inp("beta_u", "產業無槓桿 β：自算 封測同業中位數，Blume 調整（0.67β＋0.33）", "x", "=beta_u-beta_du", "=0.67*1.531+0.33", "=beta_u+beta_du", "Derived",
+    BETA_SRC + "：封測同業 6 家（3711 6239 8150 6257 2449 AMKR），對各自本地大盤（台股對台灣加權指數 ^TWII、AMKR 對美國大盤）迴歸、Hamada 去槓桿、現金修正後中位數 1.531；Blume 調整 0.67 × 1.531＋0.33＝1.356",
+    "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）。第二輪修正（Andy 2026-11-05 23:16）：改用「封測」組（原 TW 半導體 13 家 1.429）；低／高（Analogy）：β_u ∓ beta_du（0.3）")
+for _row in FD.in_rows(dict(
+        date="2026-12-31（同 DCF 基準日）", ccy="NT$", amt="NT$B", shu="十億股",
+        rf_us=(0.05, "美國財政部每日殖利率曲線 10 Yr：2026-10-23 5.00%（https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202610；2026-11-05 讀取）",
+               "FRED DGS10（https://fred.stlouisfed.org/series/DGS10）；與 NVIDIA 模型同值。只用於 Sens「美元口徑折現」（Andy 2026-11-05 23:16：基準維持當地利率＋固定匯率）"),
+        stub=dict(bs_date="2026-06-30", val_date="2026-12-31", bs_src=SA_BS + "；富邦證券 e-Broker 資產負債表（季）2026.2Q 欄同值（2026-11-05 讀取；網址見 Sources 頁）。3Q26 合併財報 2026-11-05 董事會通過，但 9-30 資產負債表明細（現金、借款、租賃）於 2026-11-05 尚未見於可取得的資料商頁面（只有總資產 1,492.23 億、總負債 834.97 億），沿用 6-30",
+                  div=("=1*1.2227", "Verified", "FY2025 現金股利每股 1 元（另配股 0.5 元；除權息 2026-07-28、現金發放 2026-08-20；玩股網除權息表，2026-11-05 讀取；網址見 Sources 頁）× 配股前股數 12.227 億股（普通股股本 122.27 億元 ÷ 10；富邦 e-Broker 2026.2Q）",
+                       "發放日落在資產負債表日 2026-06-30 之後、評價日之前，從淨現金扣除；股票股利不動用現金（評價股數已用配股後口徑）；買回無已宣告金額，不扣")),
+        rf=(0.0198, "Trading Economics「Taiwan 10Y Bond Yield」：2026-11-04 1.98%（https://tradingeconomics.com/taiwan/government-bond-yield；2026-11-05 讀取）",
+            "經濟日報 2026-08-21（https://money.udn.com/money/story/5613/9704659）：Bloomberg 經濟學家預期下半年接近 2%；與台達電模型同值", "無風險利率（台灣 10 年期公債殖利率，2026-11-04）"),
+        beta_fixed=("=beta_u_lo*(1+(1-tax_w)*(debt_v+lease_v)/(px*sh_v))", "=beta_u*(1+(1-tax_w)*(debt_v+lease_v)/(px*sh_v))", "=beta_u_hi*(1+(1-tax_w)*(debt_v+lease_v)/(px*sh_v))", "Derived",
+                    "自算產業 β：封測 同業 6 家中位數（Yahoo Finance 月報酬 2021-11～2026-10，對各自本地大盤迴歸，Hamada 去槓桿、現金修正）；以本公司市值 D/E 與稅率重新加槓桿（Hamada：β＝beta_u ×（1＋(1 − tax_w) × D ÷ E），D＝債務＋租賃、E＝現價 × 股數）",
+                    "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）。Sens 低／高（Analogy；第二輪修正起）：β_u ∓ beta_du（0.3），各自同式重新加槓桿（工作單第二輪修正，Andy 2026-11-05 23:16 定案；tools/fcff_dcf.py v2 write_sens）"),
+        crp=(0.0078, "Verified", DAMO_C + "：Taiwan（Moody's Aa3）Country Risk Premium 0.78%", "Andy 2026-11-05 20:45：非美國市場 ERP＝5%＋國家風險溢酬、不設股權成本下限"),
+        kd=("=rf+0.01", "Assumed", "台灣 10 年期公債＋1 個百分點（公司借款利率未揭露：未找到）", "負債約占資本一成，kd 每 ±1pt 影響 WACC 約 ±0.1pt"),
+        tax_w=(0.20, "Assumed", "台灣營利事業所得稅法定稅率 20%（本模型損益以「淨利 ÷ 營業利益」合併稅與業外，無單獨稅率列）",
+               "近三年有效稅率：資料商數字含處分子公司利益與停業單位，不採；NOPAT 各年亦用本稅率"),
+        debt=(33.827, "Verified", SA_BS + "：長期借款 33,827（NT$M；無短期借款）", "2025-12-31：30,275（同站）"),
+        lease=("=1.012+7.341", "Verified", SA_BS + "：租賃負債流動 1,012＋非流動 7,341（NT$M；新租廠房）", "2025-12-31：442.21＋2,421（同站）"),
+        cash=(13.321, "Verified", SA_BS + "：現金及約當現金 13,321（NT$M）", "2025-12-31：17,964（同站）"),
+        inv=(19.269, "Verified", SA_BS + "：長期投資 19,269（NT$M；含權益法與金融資產）", "帳面計入評價；Sens 測不計"),
+        mi=(0.00842, "Verified", SA_BS + "：非控制權益 8.42（NT$M）", "—"),
+        dps=("=a26_eps*1/9.01", "Derived", "評價日 2026-12-31 到目標時點 2027-12-31 之間發放 FY2026 盈餘的現金股利：假設現金發放率同 FY2025（每股現金股利 1.0 元 ÷ EPS 9.01 元＝11.1%；另配股 0.5 元不計）× FY2026 錨點 EPS",
+             "中央社 2026-03-06（https://www.cna.com.tw/news/afe/202603060261.aspx）：2025 年 EPS 9.01 元，擬配發現金股利 1 元、股票股利 0.5 元"),
+        sh=("=a26_sh", "Derived", "＝Q 頁 FY2026 股數（十億股；配股後口徑）", "stockanalysis 流通股數 1,284 百萬股（2026-06-30，配股前）；不另推未來股數"),
+        fc_da=(None, "=(9.1/23.992+7.311/26.856+7.508/34.934)/3", None, "Derived", SA_CF + "：折舊攤銷 FY2023 9,100、FY2024 7,311、FY2025 7,508（NT$M）÷ 營收 23,992／26,856／34,934，近三年平均 28.9%（只作對照）",
+               "DCF 頁 FY2027–29 折舊改讀 PL 推導區塊「折舊攤提」（模型自有的資本支出與折舊推導），FY2030 起由 FY2029 線性收斂到 fc_da_ss"),
+        fc_da_ss=("=0", "Derived", "長期穩態折舊 ÷ 營收＝情境 B FY2029 的折舊攤提 ÷ 營收（PL 推導區塊）", "擴產高峰後的穩態水準；三情境共用"),
+        fc_cx=(None, "=(7.726/23.992+14.857/26.856+32.355/34.934)/3", None, "Derived", SA_CF + "：資本支出 FY2023 7,726、FY2024 14,857、FY2025 32,355（NT$M）÷ 營收＝32.2%、55.3%、92.6%，近三年平均 60.0%（只作對照）",
+               "DCF 頁 FY2027–29 資本支出改讀 PL 推導區塊「資本支出」（維持性 m_cx ＋ κ × 營收增量），FY2030 起收斂到 fc_cx_ss；Sens 用 fc_cx_d ±1pt"),
+        fc_cx_ss=("=MAX(m_cx,fc_da_ss*(1+5*g_tv))", "Assumed", "長期穩態（FY2032）資本支出 ÷ 營收＝MAX(維持性 m_cx, 折舊 ÷ 營收 ×（1＋5 × g）)：設備平均年限約 10 年、以 g 成長時，資本支出 ÷ 折舊約 1＋g × 年限 ÷ 2", "滿足規格「資本支出 ≥ 折舊 ×（1＋g）」"),
+        fc_wc=(0.15, "=((7.886+1.073-1.162)/23.992+(6.122+0.84812-0.94239)/26.856+(7.377+1.159-0.90909)/34.934)/3", 0.35, "Derived",
+               SA_BS.replace("，2026-06-30 欄", "") + "：營運資金＝應收帳款＋存貨 − 應付帳款；FY2023 7,797、FY2024 6,028、FY2025 7,627（NT$M）÷ 營收＝32.5%、22.4%、21.8%，平均 25.6%",
+               "2026-06-30 8,270；Sens 低／高 15%／35%（Assumed）"),
+        )):
+    rows.append(_row)
+inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新加槓桿）", "x", None, 0.3, None, "Assumed", "工作單第二輪修正（Andy 2026-11-05 23:16 定案）：β 敏感度改為 β_u ± 0.3", "取代第一輪的「中位數 × 0.8 再 Blume／中位數未調整」")
+inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 股數 sh_v)", "與 WACC 權重同一口徑；Sens β 案例用")
 
 r = 4
 for srow in rows:
@@ -205,6 +251,7 @@ for srow in rows:
     if hi is not None: wb.defined_names[key + "_hi"] = DefinedName(key + "_hi", attr_text=f"In!$F${r}")
     r += 1
 for col, w in zip("ABCDEFGHI", [12, 58, 10, 9, 11, 9, 18, 70, 70]): IN.column_dimensions[col].width = w
+FD.yellow(IN)   # v0.4：標準版 DCF 的判斷參數黃底（Andy 可改）
 IN.freeze_panes = "D4"
 def defname(name, ref):
     wb.defined_names[name] = DefinedName(name, attr_text=ref)
@@ -468,7 +515,7 @@ V["A2"] = "循環位置：京元電是測試代工，不是設備股，不套設
 # 第 1 節（價格與市場隱含倍數）；建置最後整體下移 23 列（第 1 節起於第 51 列），第 0 節放第 4–48 列
 V.cell(28, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, 29, ["項目", "A", "B", "C", "說明"])
-V.cell(30, 1, "現價（2026-10-22 收盤）"); V["B30"] = "=px"; V["B30"].number_format = "#,##0.0"
+V.cell(30, 1, "現價（2026-11-04 收盤）"); V["B30"] = "=px"; V["B30"].number_format = "#,##0.0"
 V.cell(31, 1, "現價 ÷ FY2026 EPS（錨點）"); V.cell(32, 1, "現價 ÷ FY2027 EPS（模型）"); V.cell(33, 1, "現價 ÷ FY2028 EPS（模型）"); V.cell(34, 1, "現價 ÷ FY2029 EPS（模型）")
 for j, s in enumerate(SC):
     c = "BCD"[j]
@@ -776,19 +823,11 @@ def _tp_section(V, eps_ref, fwd, fwd_note, peers, peer_note, cons_note, method, 
             V[f"{c}{r}"] = f; V[f"{c}{r}"].number_format = nf
         if note: V[f"E{r}"] = note
     V.cell(4, 1, "0. 目標價").font = BOLD
-    V.cell(5, 1, "0.1 DCF（股東權益現金流，FY2027–FY2032 明確期＋FY2032 後永續）").font = BOLD
-    hdr(V, 6, ["項目", "A（順利）", "B（平平）", "C（不如預期）", "說明"])
-    V.cell(7, 1, "情境 EPS（FY2027–FY2032）"); V["E7"] = "PL 頁各情境；FY2030 起為收斂法（PL 頁灰底）"
-    for i, y in enumerate(YRS6):
-        tset(8 + i, f"eps{y}", f"  FY{y}", [f"={eps_ref(s, y)}" for s in SC], "0.00")
-    V.cell(14, 1, "股東現金流＝EPS ×（1 − tp_g ÷ tp_roe）")
-    tset(15, "reinv", "  再投資率（tp_g ÷ tp_roe，上限 0.8）", ["=IF(tp_roe<=tp_g,0.8,MIN(tp_g/tp_roe,0.8))", None, None], "0.0%", "ROE＝In 頁 tp_roe；tp_roe ≤ tp_g 時取上限 0.8")
-    for i, y in enumerate(YRS6):
-        tset(16 + i, f"cf{y}", f"  FY{y}", [f"={c}{8 + i}*(1-$B$15)" for c in "BCD"], "0.00")
-    tset(22, "dcfv", "DCF 情境每股價值（折現率 tp_r）", [f"=SUMPRODUCT({c}16:{c}21,1/(1+tp_r)^{{1;2;3;4;5;6}})+{c}21*(1+tp_g)/(tp_r-tp_g)/(1+tp_r)^6" for c in "BCD"], fmt,
-         "Σ 明確期現金流 ÷ (1＋r)^t ＋ 永續價值 ÷ (1＋r)^6；永續價值＝FY2032 現金流 ×(1＋g)÷(r−g)；基準日 2026 年底，t＝1 對 FY2027")
-    tset(23, "dcf12", "  DCF 情境價值推到 12 個月後（×(1＋tp_r)）", [f"={c}22*(1+tp_r)" for c in "BCD"], fmt)
-    tset(24, "dcftp", "DCF 目標價（情境加權）", ["=tp_wA*B23+tp_wB*C23+tp_wC*D23", None, None], fmt, "Σ 權重 × 情境價值 ×(1＋r)；權重見 In 頁")
+    SD = FD.write_summary(wb, V, 5, RD_, list(SC), ["tp_wA", "tp_wB", "tp_wC"], fmt=fmt,
+                          title="0.1 DCF（標準版：無槓桿自由現金流 FCFF＋WACC；v0.4；明細見 DCF 頁；B／C／D＝A 順利／B 平平／C 不如預期）", beta_note="自算產業 β 重新加槓桿")
+    for _k in ("pvx", "pvtv", "ev", "nc"):
+        for _c in "BCD": V[f"{_c}{SD[_k]}"].number_format = "#,##0.00"
+    T.update(dcfv=SD["dcfv"], dcf12=SD["v12"], dcftp=SD["dcf"], h1=SD["h"], _S=SD)
     V.cell(26, 1, "0.2 Comparable（市場主流同業前瞻 P/E）").font = BOLD
     hdr(V, 27, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"])
     assert 3 <= len(peers) <= 5, peers
@@ -797,11 +836,11 @@ def _tp_section(V, eps_ref, fwd, fwd_note, peers, peer_note, cons_note, method, 
         V.cell(i, 4, dt); V.cell(i, 5, src); V.cell(i, 6, "Interested-party")
     tset(33, "pmed", "同業前瞻 P/E 中位數", [f"=MEDIAN(C28:C{27 + len(peers)})", None, None], "0.0", peer_note)
     tset(34, "feps", "12 個月後的前瞻 EPS（情境加權）",
-         ["=" + "+".join(f"tp_w{s}*(" + "+".join(f"{w}*{c}{8 + YRS6.index(y)}" for y, w in fwd) + ")" for s, c in zip(SC, "BCD")), None, None], "0.00", fwd_note)
+         ["=" + "+".join(f"tp_w{s}*(" + "+".join(f"{w}*{eps_ref(s, y)}" for y, w in fwd) + ")" for s in SC), None, None], "0.00", fwd_note)
     tset(35, "comptp", "Comparable 目標價", ["=B33*B34", None, None], fmt, "同業中位數 × 前瞻 EPS")
     V.cell(37, 1, "0.3 結論").font = BOLD
     hdr(V, 38, ["項目", "數值", "", "", "說明"])
-    tset(39, "tpw", "目標價（DCF 與 Comparable 加權）", ["=tp_w_dcf*B24+(1-tp_w_dcf)*B35", None, None], fmt, "tp_w_dcf × DCF＋（1 − tp_w_dcf）× Comparable；tp_w_dcf 見 In 頁")
+    tset(39, "tpw", "目標價（DCF 與 Comparable 加權）", [f"=tp_w_dcf*B{T['dcftp']}+(1-tp_w_dcf)*B35", None, None], fmt, "tp_w_dcf × DCF＋（1 − tp_w_dcf）× Comparable；tp_w_dcf 見 In 頁")
     tset(40, "comp2", "Comparable 目標價（市場主流同業法）", ["=B35", None, None], fmt)
     tset(41, "cons", "市場共識目標價", ["=cons_tp", None, None], fmt, cons_note)
     tset(42, "upw", "上檔空間：加權目標價", ["=B39/px-1", None, None], "0.0%", "現價＝In 頁 px")
@@ -809,42 +848,25 @@ def _tp_section(V, eps_ref, fwd, fwd_note, peers, peer_note, cons_note, method, 
     tset(44, "geps", "與市場共識目標價的差距：EPS 因素", ["=B34/cons_feps-1", None, None], "0.0%", cons_feps_note)
     tset(45, "gmul", "與市場共識目標價的差距：倍數因素", ["=(cons_tp/cons_feps)/B33-1", None, None], "0.0%")
     V["E45"] = '="共識目標價隱含 "&TEXT(cons_tp/cons_feps,"0.0")&"x，同業中位數 "&TEXT(B33,"0.0")&"x"'
-    tset(46, "band", "價格帶（DCF 不如預期～順利）", [f'=TEXT(D23,"{fmt}")&"～"&TEXT(B23,"{fmt}")', None, None], "@", "C 情境價值～A 情境價值（推到 12 個月後）")
+    tset(46, "band", "價格帶（DCF 不如預期～順利）", [f'=TEXT(D{T["dcf12"]},"{fmt}")&"～"&TEXT(B{T["dcf12"]},"{fmt}")', None, None], "@", "C 情境價值～A 情境價值（推到 12 個月後）")
     tset(47, "pr", "歷史倍數檢查：現價隱含 P/E 的十年分位（A／B／C）",
-         [f"=IF(px/{c}9>MAX({pe_rng}),1,IF(px/{c}9<MIN({pe_rng}),0,PERCENTRANK({pe_rng},px/{c}9)))" for c in "BCD"], "0%",
+         [(lambda e: f"=IF(px/{e}>MAX({pe_rng}),1,IF(px/{e}<MIN({pe_rng}),0,PERCENTRANK({pe_rng},px/{e})))")(eps_ref(s, 2028)) for s in SC], "0%",
          "現價 ÷ 各情境 FY2028 EPS 在 2016–2025 年底 P/E（第 6 節採用來源）的分位；高於十年最大值＝100%；只作檢查，不進目標價")
     V.cell(48, 1, "目標價方法"); V["B48"] = method
-    for r_ in (24, 35, 39):
+    for r_ in (T["dcftp"], 35, 39):
         V[f"B{r_}"].fill = KEY
     return T
 
 def _tp_sens(SE, T):
-    """Sens：目標價參數（tp_r ±1pt、tp_g ±1pt、tp_w_dcf 0.3／0.7）；放在案例摘要與第 40 列推導區塊之間。"""
+    """Sens：目標價參數（v0.4 標準版 DCF：WACC、β、ERP、g、RONIC、資本支出、營運資金、淨現金、終值替代法、DCF 權重；tools/fcff_dcf.write_sens）。
+    放在案例摘要與第 40 列推導區塊之間；放不下時放在全部推導區塊之後。"""
     last = max(r for r in range(1, 40) if any(SE.cell(r, j).value is not None for j in range(1, 13)))
     t0 = last + 2
-    if t0 + 8 >= 40:          # 案例摘要與第 40 列推導區塊之間放不下：放在全部推導區塊之後
+    if t0 + 14 >= 40:   # v0.4.2：美元口徑折現多一列
         t0 = SE.max_row + 3
-    SE.cell(t0, 1, "目標價參數（只改 DCF 參數與權重；PL 收斂法的 fade_g 不隨 tp_g 變動）").font = BOLD
-    hdr(SE, t0 + 1, ["案例", "設定", "DCF 目標價", "Comparable 目標價", "加權目標價", "相對基準"])
-    def dcf_f(c, r, g, reinv):
-        cf = lambda i: f"Val!{c}{8 + i}*(1-{reinv})"
-        pv = "+".join(f"{cf(i)}/(1+{r})^{i + 1}" for i in range(6))
-        return f"({pv}+{cf(5)}*(1+{g})/({r}-{g})/(1+{r})^6)"
-    cases = [("基準", "r 10%、g 4%、DCF 權重 0.5", {}), ("折現率 +1pt", "r 11%", dict(r="(tp_r+0.01)")), ("折現率 −1pt", "r 9%", dict(r="(tp_r-0.01)")),
-             ("長期成長 +1pt", "g 5%", dict(g="(tp_g+0.01)")), ("長期成長 −1pt", "g 3%", dict(g="(tp_g-0.01)")),
-             ("DCF 權重 0.3", "Comparable 0.7", dict(w="0.3")), ("DCF 權重 0.7", "Comparable 0.3", dict(w="0.7"))]
-    for k, (nm, st, kw) in enumerate(cases):
-        i = t0 + 2 + k; r = kw.get("r", "tp_r"); g = kw.get("g", "tp_g"); w = kw.get("w", "tp_w_dcf")
-        reinv = f"IF(tp_roe<={g},0.8,MIN({g}/tp_roe,0.8))"
-        SE.cell(i, 1, nm); SE.cell(i, 2, st)
-        SE[f"C{i}"] = "=(" + "+".join(f"tp_w{s}*{dcf_f(c, r, g, reinv)}" for s, c in zip(SC, "BCD")) + f")*(1+{r})"
-        SE[f"D{i}"] = f"=Val!B{T['comptp']}"
-        SE[f"E{i}"] = f"={w}*C{i}+(1-{w})*D{i}"
-        SE[f"F{i}"] = f"=E{i}/E${t0 + 2}-1"
-        for c in "CDE": SE[f"{c}{i}"].number_format = "0.00"
-        SE[f"F{i}"].number_format = "0.0%"
-    assert t0 + 1 + len(cases) < 40 or t0 > 40, t0
-    return t0, t0 + 1 + len(cases)
+    f0, f1, nx = FD.write_sens(SE, t0, RD_, list(SC), ["tp_wA", "tp_wB", "tp_wC"], comp_ref=f"Val!$B${T['comptp']}", base_ref=f"Val!$B${T['tpw']}", fmt="0.00",
+                               title="目標價參數敏感度（v0.4 標準版 DCF）：加權目標價一次動一個參數；Comparable 不變（DCF 權重案例除外）", beta_du="beta_du", usd=True)
+    return t0, f1
 
 def _fade_all(eps_f, nim10):
     """PL：三情境推導區塊與頂端摘要延伸到 FY2032；In 頁 fade_m 連到 PL 頁 FY2029 淨利率。nim10＝十年平均淨利率的名稱；None＝未找到，依工作單用 FY2029 × 0.8。"""
@@ -871,23 +893,46 @@ def _rule_pe_range(V, ncols=1):
     return f"$B${yr[0]}:${chr(65 + ncols)}${yr[-1]}"
 
 _shift_rows(wb, "Val", 28, 23)
+# ---------------- v0.4：標準版 DCF（FCFF＋WACC）明細頁（tools/fcff_dcf.py） ----------------
+IN.cell(INR["fc_da_ss"], 5, f"=PL!G{PB['B']['depr']}")
+DCFW = wb.create_sheet("DCF")
+DCFW["A1"] = ("DCF — 標準版（v0.4）：無槓桿自由現金流 FCFF＝NOPAT＋折舊攤銷 − 資本支出 − 營運資金增加；WACC 折現到評價日 2026-12-31（期中慣例；FY2027 起整年）；"
+              "終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g）。共用模組 tools/fcff_dcf.py；規格 docs/plan/個股DCF標準規格.md v1.0")
+DCFW["A2"] = ("EBIT：FY2027–FY2029 取 PL 推導區塊「營業利益」；FY2030–FY2032（收斂法只有淨利）由淨利還原：EBIT＝淨利 ÷ nir_f（淨利 ÷ 營業利益，與 PL 同口徑）。NOPAT＝EBIT ×（1 − tax_w）。"
+              "折舊攤銷與資本支出 FY2027–29 讀 PL 推導區塊（本模型自有的資本支出與折舊推導：維持性 m_cx ＋ κ × 營收增量、折舊率 dr），FY2030 起由 FY2029 線性收斂到穩態 fc_da_ss、fc_cx_ss；Stub 期（2026-06-30 → 12-31）FCFF＝Q 頁 2H26：營業利益（3Q 實績＋4Q 模型）×（1 − tax_w）＋折舊攤提 −（全年資本支出 capex_26 − 1H26 實績）− fc_wc × 年化營收增量（2 ×（2H26 − 1H26 營收）），三情境相同；不用模組預設的 FY2027 FCFF × stub_frac（2026 下半年擴產資本支出集中，FY2027 比例不代表該段）。"
+              "近三年實績比例（fc_da、fc_cx）因 2025–26 大幅擴產不具代表性，只作對照。營運資金：近三年實績比例 fc_wc。")
+FY_X = list(range(2027, 2033))
+_eb = lambda s_, y: f"PL!{FC[y]}{PB[s_]['oi']}" if y <= 2029 else f"=PL!{FX[y]}{FB[s_]['ni']}/nir_f"
+_rv = lambda s_, y: f"PL!{FC[y]}{PB[s_]['rev']}" if y <= 2029 else f"PL!{FX[y]}{FB[s_]['rev']}"
+DPATHS = [dict(name=s_, label=SCN_T[s_], rev={y: _rv(s_, y) for y in FY_X}, rev0=f"PL!{FC[2026]}{PB[s_]['rev']}",
+               ebit={y: _eb(s_, y) for y in FY_X}, tax={y: "tax_w" for y in FY_X}, ebit_note="FY2030 起＝淨利 ÷ nir_f",
+               da={y: f"PL!{FC[y]}{PB[s_]['dep']}" for y in (2027, 2028, 2029)}, cx={y: f"PL!{FC[y]}{PB[s_]['capex']}" for y in (2027, 2028, 2029)},
+               stub_fcff="(Q!D10+Q!E10)*(1-tax_w)+(Q!D7+Q!E7)-(Q!F17-Q!C17)-fc_wc*2*((Q!D4+Q!E4)-Q!C4)") for s_ in SC]   # v0.4.2：模組 v2 逐年讀 PL 推導區塊折舊攤提、資本支出；stub 期 FCFF 用 Q 頁 2H26（3Q 實績＋4Q 模型；資本支出＝全年 capex_26 − 1H26），三情境相同
+RD_ = FD.write_detail(DCFW, 4, DPATHS, FY_X, 1.0, conv_from=2030, title="三情境 FCFF 明細（NT$B；會計年度＝日曆年，FY2027 起整年）", fmt="#,##0.00", stub=True)
+# v0.4.2：v0.4 的建置後覆寫（FY2027–29 比例列改讀 PL、FY2030 起線性收斂）改由模組 v2 的 da／cx 路徑參數處理（同法，另加資本支出 ≥ 折舊 ×（1＋g）下限）
+RD_["end"] = FD.write_checks(DCFW, RD_["end"], nc_bs=NC_BS, nc_note=NC_NOTE) + 1
+DCFW.column_dimensions["A"].width = 60; DCFW.column_dimensions["B"].width = 44
+for _c in "CDEFGH": DCFW.column_dimensions[_c].width = 13
 TPT = _tp_section(V, lambda s_, y: f"PL!{FCX[y]}{SUMR[(s_, 'eps')]}", [(2027, "2/12"), (2028, "10/12")],
     "約 2027-10 時的未來 12 月 EPS ≈ 2／12 × FY2027＋10／12 × FY2028（會計年度＝日曆年；配股後股數）",
-    [("日月光投控（ASE Technology）", "ASX／3711.TW", 27.37, "2026-10-23", "stockanalysis forward PE（ASX；分析師共識）"),
-     ("Amkor Technology", "AMKR", 14.02, "2026-10-23", "stockanalysis forward PE（分析師共識）"),
-     ("力成（Powertech）", "6239.TW", 20.60, "2026-10-02", "stockanalysis forward PE（頁面價格日期較舊）"),
-     ("矽格（Sigurd）", "6257.TW", 23.30, "2026-10-02", "stockanalysis forward PE（頁面價格日期較舊）"),
-     ("南茂（ChipMOS）", "IMOS／8150.TW", 22.08, "2026-10-08", "stockanalysis forward PE（IMOS；頁面價格日期較舊）")],
+    [("日月光投控（ASE Technology）", "ASX／3711.TW", "=(2*627/32.733)/(39.91/26.99)", "2026-11-04", "第三輪修正：P/E＝3711.TW 2026-11-04 收盤 627 × 2 ÷ USD/TWD 32.733（1 ADS＝2 股，換成 ADS 美元價）÷ ASX 前瞻 EPS（stockanalysis 統計頁 2026-10-26 收盤 39.91 ÷ Forward PE 26.99）"),
+     ("Amkor Technology", "AMKR", "=35.66/(39.3/14.02)", "2026-11-04", "第三輪修正：P/E＝Yahoo Finance 日線收盤 2026-11-04 ÷ 資料商前瞻 EPS（stockanalysis 2026-10-23：收盤 39.30（Amkor 模型同值）÷ Forward PE 14.02）"),
+     ("力成（Powertech）", "6239.TW", "=240.5/(308/20.6)", "2026-11-04", "第三輪修正：P/E＝Yahoo Finance 日線收盤 2026-11-04 ÷ 資料商前瞻 EPS（stockanalysis 統計頁 2026-10-02：價格 308 ÷ Forward PE 20.60；可取得的最新頁面，較舊）"),
+     ("矽格（Sigurd）", "6257.TW", "=190.5/(257.5/23.3)", "2026-11-04", "第三輪修正：P/E＝Yahoo Finance 日線收盤 2026-11-04 ÷ 資料商前瞻 EPS（stockanalysis 統計頁 2026-10-02：價格 257.5 ÷ Forward PE 23.30；可取得的最新頁面，較舊）"),
+     ("南茂（ChipMOS）", "IMOS／8150.TW", "=84.1/(113/19.92)", "2026-11-04", "第三輪修正：P/E＝8150.TW Yahoo Finance 日線收盤 2026-11-04 ÷ 資料商前瞻 EPS（stockanalysis 8150 統計頁 2026-10-01：價格 113 ÷ Forward PE 19.92；IMOS 頁 10-08 換算 15.0 倍，相近）")],
     "台美封測同業（不放 A 股：長電、通富等 A 股同業有結構性溢價；工作單 Andy 11:53）",
     "stockanalysis：15 位分析師平均 340.73（頁面價格日期 2026-10-06）；法人中位數 348–350、Morgan Stanley 388",
-    ("DCF：股東現金流＝EPS ×（1 − g／ROE），r＝10%、g＝4%、ROE 為近三年平均約 18%（玩股網；2025 含處分利益，偏高，再投資率約 22%），FY2027–32 明確期＋永續，FY2030 起為收斂法。"
-     "京元電為資本密集的測試代工，模型有資本支出與折舊，但 FY2030 起只有收斂法、未延伸資本支出，未改用淨利＋折舊－資本支出；2026–27 年大幅擴產期的現金流偏高估。"
+    ("DCF（v0.4 標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現到 2026 年底（期中慣例），終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），"
+     "g＝MIN(3%, 台灣 10 年期公債殖利率)、RONIC＝WACC；ke＝rf＋β ×（ERP 5%＋台灣國家風險溢酬），β 為自算產業 β（封測同業中位數，Blume 調整）依京元電 D／E 重新加槓桿；"
+     "折舊與資本支出 FY2027–29 讀本模型推導區塊（擴產期），FY2030 起收斂到穩態（DCF 頁）。"
      "Comparable：台美封測同業（日月光、Amkor、力成、矽格、南茂）前瞻 P/E 中位數；京元電以 AI 測試為主、成長較高，同業中位數偏低估。"
      "情境對應：顆數情境 A＝順利、B＝平平、C＝不如預期；FY2027 三情境 EPS 相同（差異從 CY2028 起）。"),
     _rule_pe_range(V, 1), "#,##0.0",
     "本模型前瞻 EPS ÷ 共識前瞻 EPS − 1；共識前瞻 EPS＝In 頁 cons_feps（FactSet 2026-04-06，換成配股後股數）")
 defname("tp_final", f"Val!$B${TPT['tpw']}")
 TPS0, TPS_LAST = _tp_sens(SE, TPT)
+_tvs_k = (TPS0 + 2, TPS_LAST)
+USD_ROW = next(r for r in range(_tvs_k[0], _tvs_k[1] + 1) if SE.cell(r, 1).value == "美元口徑折現")   # 第二輪修正：Sens「美元口徑折現」列
 
 # ---------------- v0.2.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（Andy 14:00、14:17；既有數值與儲存格位置不變） ----------------
 _UPW = [r_ for r_ in range(1, 60) if V.cell(r_, 1).value == "上檔空間：加權目標價"]
@@ -930,7 +975,7 @@ RD.cell(1, 1).value = RD.cell(1, 1).value.replace("v0.2.1", "v0.2.2")
 # ---------------- v0.3（2026-11-05）：滾入 3Q26 實績（Q 頁 D 欄、In 頁 F 節；方法與估值規則不變） ----------------
 RD.cell(1, 1).value = RD.cell(1, 1).value.replace("v0.2.2", "v0.3").replace("2026-10-25", "2026-11-05")
 RD.cell(RD.max_row + 2, 1, "v0.3（2026-11-05）：滾入 3Q26 實績（公司 11-05 前三季財報 − 上半年）：毛利率 37.5%（原假設 38.5%）、營業費用 14.27 億、營業利益 31.32 億、歸屬淨利 26.44 億；股數改用公司前三季口徑 12.84 億股（74.23 億 ÷ EPS 5.78）。4Q 公司未給量化指引，假設不變。FY2026 EPS 8.32 → 8.28。方法、情境結構、估值規則不變；現價未更新。")
-order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
+order = ["README", "In", "Q", "Units", "PL", "Val", "DCF", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
 # 相對倍數調整（Andy 2026-10-27「照建議做」；tools/relative_multiple.py，2026-10-29 接入）
 import os, sys  # noqa: E401
@@ -970,6 +1015,126 @@ def wta_sens():
     SE.cell(t0 + 9, 1, "目標價：本模型 Sens 目標價參數表只動 DCF 參數（r、g、權重），不逐案例重算 DCF，本案例不列目標價。")
     return RW
 wta_in_rows(); WTA_R = wta_sens()   # v0.13：放在 In 版面套用之後，確保在 In 頁最後
+# ---------------- v0.4（2026-11-05）：展示層（個股 HTML 版面規格 v1.0；docs/plan/個股HTML版面規格.md）——README 頁「展示層」「命題回覆」「本版要點」三段，數字一律以公式取自各頁 ----------------
+def _row(ws, label, start=1, exact=False):
+    for r_ in range(start, ws.max_row + 1):
+        v_ = ws.cell(r_, 1).value
+        if isinstance(v_, str) and ((v_.strip() == label.strip()) if exact else v_.strip().startswith(label.strip())): return r_
+    raise KeyError((ws.title, label))
+_V = lambda lab, c="B": f"Val!{c}{_row(V, lab)}"
+TP, DCF, CMP, CMK, PX, UP, UPC, REC = (_V(x) for x in ("目標價（DCF 與 Comparable 加權）", "DCF 目標價（情境加權）", "Comparable 目標價（相對倍數調整後）",
+                                               "Comparable 目標價（市場主流同業法）", "現價（", "上檔空間：加權目標價", "上檔空間：Comparable 目標價", "投資建議"))
+PEER, FEPS, EPSF, CONS, RMK = _V("同業前瞻 P/E 中位數"), _V("12 個月後的前瞻 EPS"), _V("與市場共識目標價的差距：EPS 因素"), _V("市場共識目標價"), _V("相對倍數調整係數")
+_SD = TPT["_S"]
+DV = lambda c: f"Val!{c}{_SD['v12']}"
+_P = lambda s_, k, y: f"PL!{FCX[y]}{SUMR[(s_, k)]}"
+_RC = lambda lab, c: f"Recon!{c}{_row(RC, lab)}"
+_SL = lambda lab: f"Sens!L{_row(SE, lab, 4)}"
+T_ = lambda x, f="#,##0.0": f'TEXT({x},"{f}")'
+SG = lambda x: f'TEXT({x},"+0.0%;-0.0%")'
+_dir = lambda x: f'IF({x}<0,"低 ","高 ")&TEXT(ABS({x}),"0.0%")'
+_wd = "tp_w_dcf"
+_dsh = f"{_wd}*({DCF}-{PX})/({TP}-{PX})"
+_PBd = RD_["paths"]["B"]; _c27 = RD_["col"][2027]
+rn = RD.max_row + 2
+RD.cell(rn, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用；v0.4 新增，原 README 各列保留）").font = BOLD; rn += 1
+for t_ in [
+    "命題：京元電 2026 年約 500 億元的擴產（約為營收的一倍）能否在 2027–28 年被 AI 加速器的測試量吸收；顆數放緩或份額流失時，累積的折舊會讓毛利率掉多少；現價隱含的路徑合不合理。分成三個問題。",
+    "命題 1｜擴產能否被 AI 測試量吸收：AI 測試營收（加速器顆數 × 每顆測試時間 × 曝險 × 份額 × 單價）能否跟上資本支出與折舊的增加。",
+    "命題 2｜折舊會讓毛利率掉多少：顆數放緩（情境 B、C）或份額流失時，累積的折舊壓低毛利率與 EPS 的幅度。",
+    "命題 3｜現價合不合理：把標準版 DCF 與同業倍數法加權後，每股價值與現價相比如何。",
+    f'="重點 1｜加權目標價比現價"&{_dir(UP)}&"，投資建議"&{REC}&"：加權目標價約 "&{T_(TP)}&" 元，由標準版 DCF 約 "&{T_(DCF)}&" 元與同業倍數法（相對倍數調整後）約 "&{T_(CMP)}&" 元加權（DCF 權重 "&TEXT({_wd},"0%")&"）；現價 "&{T_(PX)}&" 元。只看 Comparable（市場主流同業法、未調整）約 "&{T_(CMK)}&" 元、上檔 "&{SG(UPC)}&"。"',
+    f'="重點 2｜大下檔"&IF({_dsh}>0.5,"主因是 DCF","主因是 Comparable")&"：加權上檔 "&{SG(UP)}&" 中，DCF 貢獻 "&TEXT({_wd}*({DCF}/{PX}-1)*100,"+0.0;-0.0")&" 個百分點（占 "&TEXT({_dsh},"0%")&"），Comparable 貢獻 "&TEXT((1-{_wd})*({CMP}/{PX}-1)*100,"+0.0;-0.0")&" 個百分點（占 "&TEXT(1-{_dsh},"0%")&"）。"'
+    f'&"DCF 低的原因是擴產期現金流與折現率：本模型 FY2027 資本支出約為營收的 "&TEXT({_RC("FY2027 資本支出 ÷ 營收", "C")},"0%")&"（維持性＋κ × 營收增量，模型推導），情境 B 的 FY2027 無槓桿自由現金流約 "&TEXT(DCF!{_c27}{_PBd["fcff"]},"#,##0.0")&" 十億元；股權成本 "&TEXT(ke,"0.0%")&"（β "&TEXT(beta,"0.00")&" 為自算封測產業 β 依京元電 D／E 重新加槓桿）。"'
+    f'&"Comparable 低於現價是倍數差：現價 ÷ 本模型 12 個月後前瞻 EPS 為 "&TEXT({PX}/{FEPS},"0.0")&" 倍，同業中位數 "&TEXT({PEER},"0.0")&" 倍（同業為目前的前瞻倍數，時間窗不同）。"',
+    f'="重點 3｜顆數情境與折舊最敏感：以情境 A 為基準一次只改一個輸入時，「顆數情境 C」使 FY2028 EPS 變動 "&{SG(_SL("顆數情境 C"))}&"，「折舊率 14%」變動 "&{SG(_SL("折舊率 14%"))}&"，「非 AI 成長 低」變動 "&{SG(_SL("非 AI 成長 低"))}&"。這些是敏感度測試的案例，不是門檻。"',
+    f'="重點 4｜v0.4 起 DCF 改為標準版（無槓桿自由現金流折現），DCF 目標價約 "&{T_(DCF)}&" 元：WACC "&TEXT(wacc,"0.0%")&"（股權成本 "&TEXT(ke,"0.0%")&"＝台灣 10 年期公債 "&TEXT(rf,"0.00%")&" ＋ β "&TEXT(beta,"0.00")&" ×（ERP "&TEXT(erp,"0%")&" ＋ 國家風險溢酬 "&TEXT(crp,"0.00%")&"）；β 為自算產業 β（封測同業中位數，Blume 調整）依京元電負債比重新加槓桿，ERP 與 RONIC＝WACC 為假設），永續成長率 "&TEXT(g_tv,"0.00%")&"。"'
+    f'&"終值現值占企業價值 "&TEXT(Val!B{_SD["tvsh"]},"0%")&"／"&TEXT(Val!C{_SD["tvsh"]},"0%")&"／"&TEXT(Val!D{_SD["tvsh"]},"0%")&"（情境 A／B／C"&IF(MAX(Val!B{_SD["tvsh"]}:D{_SD["tvsh"]})>0.8,"；終值占比超過 80% 的情境："&TRIM(IF(Val!B{_SD["tvsh"]}>0.8,"A ","")&IF(Val!C{_SD["tvsh"]}>0.8,"B ","")&IF(Val!D{_SD["tvsh"]}>0.8,"C ",""))&"，DCF 幾乎全靠終值、對 g 與 WACC 較敏感","")&"），隱含終值 EV／EBITDA 約 "&TEXT(Val!C{_SD["mult"]},"0.0")&" 倍（折舊占營收約三成，EBITDA 遠大於 NOPAT）。"'
+    f'&"β 低／高（β_u ∓ 0.3）時加權目標價 "&TEXT(Sens!D{_tvs_k[0] + 1},"+0.0%;-0.0%")&"／"&TEXT(Sens!F{_tvs_k[0] + 1},"+0.0%;-0.0%")&"、ERP 4%／6% 時 "&TEXT(Sens!D{_tvs_k[0] + 2},"+0.0%;-0.0%")&"／"&TEXT(Sens!F{_tvs_k[0] + 2},"+0.0%;-0.0%")&"（以三情境加權目標價為基準）。"',
+    f'="重點 5｜美元口徑折現（敏感度案例，非基準）：基準以台灣 10 年期公債 "&TEXT(rf,"0.00%")&" 折現並假設匯率固定；若改用美國 10 年期公債 "&TEXT(rf_us,"0.00%")&"＋ β ×（ERP＋國家風險溢酬）、g＝MIN("&TEXT(g_cap,"0%")&", "&TEXT(rf_us,"0.00%")&")＝"&TEXT(MIN(g_cap,rf_us),"0.00%")&"，股權成本 "&TEXT(rf_us+beta*(erp+crp),"0.0%")&"，加權目標價 "&TEXT(Sens!C{USD_ROW},"#,##0.0")&" 元（相對基準 "&TEXT(Sens!D{USD_ROW},"+0.0%;-0.0%")&"）。"']:
+    RD.cell(rn, 1, t_); rn += 1
+rn += 1
+RD.cell(rn, 1, "命題回覆（HTML 用；依本模型計算回答開頭三個命題）").font = BOLD; rn += 1
+for t_ in [
+    f'="擴產能否被 AI 測試量吸收？答：要看顆數情境。AI 加速器測試營收情境 A 由 FY2026 約 "&{T_(_P("A", "ai", 2026))}&" 十億元增至 FY2028 約 "&{T_(_P("A", "ai", 2028))}&" 十億元（情境 B／C 約 "&{T_(_P("B", "ai", 2028))}&"／"&{T_(_P("C", "ai", 2028))}&"）；FY2027 資本支出約為營收的 "&TEXT({_RC("FY2027 資本支出 ÷ 營收", "C")},"0%")&"。"'
+    f'&"FY2028 的 EBITDA 減資本支出情境 A／B／C 約 "&{T_(_RC("FY2028 EBITDA − 資本支出", "C"))}&"／"&{T_(_RC("FY2028 EBITDA − 資本支出", "E"))}&"／"&{T_(_RC("FY2028 EBITDA − 資本支出", "G"))}&" 十億元（情境 A 營收持續成長、擴產較多）。每顆測試時間、份額與單價路徑為假設。"',
+    f'="折舊會讓毛利率掉多少？答：毛利率由 FY2026 的 "&TEXT({_P("A", "gm", 2026)},"0.0%")&" 到 FY2028 情境 A／B／C 為 "&TEXT({_P("A", "gm", 2028)},"0.0%")&"／"&TEXT({_P("B", "gm", 2028)},"0.0%")&"／"&TEXT({_P("C", "gm", 2028)},"0.0%")&"；FY2028 折舊攤提占營收 "&TEXT({_RC("FY2028 折舊攤提 ÷ 營收", "C")},"0.0%")&"／"&TEXT({_RC("FY2028 折舊攤提 ÷ 營收", "E")},"0.0%")&"／"&TEXT({_RC("FY2028 折舊攤提 ÷ 營收", "G")},"0.0%")&"。"'
+    f'&"FY2028 EPS 情境 A／B／C 約 "&{T_(_P("A", "eps", 2028), "0.00")}&"／"&{T_(_P("B", "eps", 2028), "0.00")}&"／"&{T_(_P("C", "eps", 2028), "0.00")}&" 元。新增資本支出折舊率 "&TEXT(dr,"0%")&" 與變動現金成本比例為假設。"',
+    f'="現價合不合理？答："&IF({UP}<0,"現價高於本模型的合理價值。","現價低於本模型的合理價值。")&"加權目標價約 "&{T_(TP)}&" 元（標準版 DCF "&{T_(DCF)}&"、同業倍數法相對倍數調整後 "&{T_(CMP)}&"），比現價 "&{T_(PX)}&" 元"&{_dir(UP)}&"，投資建議"&{REC}&"。DCF 三情境推到 12 個月後約 "&{T_(DV("B"))}&"／"&{T_(DV("C"))}&"／"&{T_(DV("D"))}&" 元（情境 A／B／C）"&IF({DV("B")}<{PX},"，三情境都低於現價","")&"。"'
+    f'&"市場共識目標價約 "&{T_(CONS)}&" 元；本模型 12 個月後前瞻 EPS 比共識前瞻 EPS "&IF({EPSF}<0,"低 ","高 ")&TEXT(ABS({EPSF}),"0%")&"（兩者同一時間窗：2／12 × FY2027＋10／12 × FY2028；共識為 FactSet 中位數，資料日期 2026-04-06，較舊），與共識的差距同時來自盈餘與 DCF 的擴產期現金流。"']:
+    RD.cell(rn, 1, t_); rn += 1
+rn += 1
+RD.cell(rn, 1, "本版要點（HTML 附錄用）").font = BOLD; rn += 1
+for t_ in [f'="v0.4.3（2026-11-06）第三輪修正（合併前）：(1) 現價改 2026-11-04 收盤 "&TEXT(px,"0.0")&" 元（Yahoo Finance；原 2026-10-22 收盤 262.5）；Comparable 同業前瞻 P/E 改為 11-04 收盤 ÷ 資料商前瞻 EPS（中位數 "&TEXT(Val!B33,"0.0")&" 倍，原 22.1 倍）；"&"(2) In 頁情境驅動對照：情境 B 的 FY2032 營收年增收斂目標原寫死 0，改引用 tp_g；兩列收斂法列名刪除「情境 C」；(3) 命題回覆 3 更正：本模型與共識前瞻 EPS 為同一時間窗（原誤寫「時間窗不同」），註明 FactSet 共識資料日期 2026-04-06；"&"(4) 情境名稱統一為 A（順利）／B（平平）／C（不如預期）、級距列名、Sens g 列名。stub 期 FCFF 原已用 Q 頁 2H26 季度數，不變。DCF 目標價 62.9 → "&{T_(DCF)}&" 元、加權目標價 132.7 → "&{T_(TP)}&" 元、上檔空間 −49.4% → "&TEXT({UP},"+0.0%;-0.0%")&"、投資建議放空 → "&{REC}&"。"',
+           'v0.4.2（2026-11-05）第二輪修正（換用共用模組 tools/fcff_dcf.py v2；Andy 2026-11-05 23:16 定案）：(1) β 改用「封測」組（3711 6239 8150 6257 2449 AMKR 6 家，無槓桿 β 中位數 1.531，Blume 調整 1.356；原 TW 半導體 1.429），依京元電 D／E 重新加槓桿 1.57 → 1.49，WACC 10.1% → 9.7%；Sens β 低／高改 β_u ∓ 0.3；(2) 資產負債表維持 2026-06-30（3Q26 財報 11-05 公布，但 9-30 明細尚未見於可取得的資料商頁面），淨現金以 stub 期滾到評價日 2026-12-31＝淨現金與投資 -9.60＋stub 期 FCFF -18.94（Q 頁 2H26：營業利益 ×（1 − 稅率）＋折舊 − 下半年資本支出 28.1 − 營運資金增加；三情境相同）− 已宣告股利 1.22（FY2025 現金股利每股 1 元，2026-08-20 發放）＝-29.76（十億新台幣）；(3) 折舊與資本支出 FY2027–29 改用模組 v2 的逐年參數讀 PL 推導區塊（與 v0.4 同列；FY2030 起收斂到穩態，另加資本支出 ≥ 折舊 ×（1＋g）下限）；(4) 新增 Sens「美元口徑折現」：加權目標價 120.4 元（-9.3%）。DCF 目標價 75.6 → 62.9 元、加權目標價 139.1 → 132.7 元、上檔空間 −47.0% → -49.4%、投資建議放空 → 放空。',
+           "v0.4.1（2026-11-05）β 改為自算產業 β（Andy 2026-11-05 22:55）：TW 半導體同業 13 家無槓桿 β 中位數 1.64，Blume 調整後 1.429，依京元電 D／E 重新加槓桿為 1.57；WACC 10.1%、DCF 目標價約 75.6 元、加權目標價約 139.1 元、上檔空間 −47.0%、投資建議放空。評價日 2026-12-31；其他模型輸入不變。",
+           "v0.4（2026-11-05）模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC；新增 DCF 頁，FY2027–29 折舊與資本支出讀本模型推導區塊；Val 0.1 節改為折現率與 DCF 彙總；Sens 目標價參數改為 WACC、β、ERP、g、RONIC、資本支出、營運資金等案例；In 頁新增 M2 節、刪除 tp_r、tp_roe）。README 新增展示層與命題回覆，HTML 改用個股 HTML 版面規格 v1.0。Comparable、情境權重、DCF 權重 50% 與投資建議規則不變。",
+           "v0.3（2026-11-05）：滾入 3Q26 實績。"]:
+    RD.cell(rn, 1, t_); rn += 1
+rn += 1
+RD.cell(rn, 1, "HTML 橫幅附註用：進加權的 Comparable 目標價（相對倍數調整後）相對現價的上檔空間（橫幅中間格為只看 Comparable 目標價（市場主流同業法），其上檔空間見 Val 頁）")
+RD.cell(rn, 2, f"={CMP}/{PX}-1").number_format = "0.0%"
+RD["A1"] = RD["A1"].value.replace("v0.3", "v0.4") + "；v0.4（2026-11-05）模型改版：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC），並新增 README 展示層、HTML 新版面 v1.0；v0.4.1（2026-11-05）β 改為自算產業 β（TW 半導體同業中位數，Blume 調整；Andy 2026-11-05 22:55），其他輸入不變；v0.4.2（2026-11-05）第二輪修正：換用 tools/fcff_dcf.py v2（β 改封測組、淨現金由 2026-06-30 滾到評價日並扣已宣告股利、β 敏感度 β_u ± 0.3、新增 Sens 美元口徑折現）"
+_so = SO.max_row + 1   # v0.4.2 第二輪修正：資產負債表與 stub 期股利的來源網址
+for _t, _u in (("[Verified] 第二輪修正：資產負債表（季）2026.2Q 欄（富邦證券 e-Broker；資料商轉載合併報表）", "https://fubon-ebrokerdj.fbs.com.tw/z/zc/zcp/zcpa/zcpa_2449.djhtm"),
+               ("[Verified] 第二輪修正：除權息表（FY2025 現金股利 1 元、股票股利 0.5 元，除權息 2026-07-28、發放 2026-08-20）", "https://www.wantgoo.com/stock/2449/dividend-policy/ex-dividend")):
+    SO.cell(_so, 1, _t); SO.cell(_so, 2, _u); _so += 1
+# ---------------- 第三輪修正（2026-11-06；合併前）：展示與說明字串（fixes_round3 第 14、16、22、23、24、30 項） ----------------
+# 只改說明字串、列名與 README 舊說明；數值變動只來自各公司專屬修正（見呼叫處）。共用模組 tools/fcff_dcf.py v2 不改，說明字串在此覆寫。
+def _r3_text(wb, stub_lab, px_old_dates=(), px_new_date="2026-11-04", extra=()):
+    """stub_lab：stub FCFF 實際口徑（取代模組預設字樣「第一年 FCFF × stub_frac」）；px_old_dates：README／Val 公式內寫死的舊現價日期（改為 px_new_date）"""
+    import re as _re
+    subs = list(extra) + [
+        ("情境 A（樂觀）", "情境 A（順利）"), ("情境 B（基準）", "情境 B（平平）"), ("情境 C（保守）", "情境 C（不如預期）"), ("情境 C（下檔）", "情境 C（不如預期）"),
+        ("隱含價（樂觀）", "隱含價（順利）"), ("隱含價（基準）", "隱含價（平平）"), ("隱含價（保守）", "隱含價（不如預期）"), ("隱含價（下檔）", "隱含價（不如預期）"),
+        ("已逐份抓取", "已逐份讀取"), ("未逐份抓取", "未逐份讀取"), ("已抓取", "已讀取"), ("抓取", "讀取"), ("無法開啟", "未取得"), ("取不到", "未取得"),
+        ("原樣取自 " + "claude" + "/html-v1-" + "nvidia", "tools/fcff_dcf.py v2"),   # 舊說明字樣（字串拆開，避免本檔含該字樣）
+        ("stub FCFF＝第一年 FCFF × stub_frac", "stub FCFF＝" + stub_lab), ("（第一年 FCFF × stub_frac）", "（" + stub_lab + "）"),
+        ("stub FCFF＝各路徑第一年 FCFF × 本值（年度比例）", "stub FCFF＝" + stub_lab),
+    ]
+    n = 0
+    for ws in wb.worksheets:
+        for row in ws.iter_rows():
+            for c in row:
+                v = c.value
+                if not isinstance(v, str):
+                    continue
+                w = v
+                for a, b in subs:
+                    w = _re.sub(a, b, w) if a.startswith("(?") else w.replace(a, b)
+                if ws.title in ("README", "Val") and w.startswith("="):
+                    for d in px_old_dates:
+                        w = w.replace(f"（{d}）", f"（{px_new_date}）")
+                # (22) README「重點觀察 1」：刪除 2026-10-29 相對倍數調整前撰寫的舊說明（數字已過時）
+                if ws.title == "README" and w.startswith(('="重點觀察 1：', '="1. ')) and '&"以下為 2026-10-29 相對倍數調整前撰寫的說明' in w:
+                    w = w[:w.index('&"以下為 2026-10-29 相對倍數調整前撰寫的說明')]
+                if ws.title == "README" and "重點觀察 1 的第一句已改為公式；重點觀察 2、3 與其他說明中的目標價與上檔空間數字為調整前撰寫，以 Val 頁為準。" in w:
+                    w = w.replace("重點觀察 1 的第一句已改為公式；重點觀察 2、3 與其他說明中的目標價與上檔空間數字為調整前撰寫，以 Val 頁為準。",
+                                  "重點觀察 1 的第一句已改為公式；第三輪修正（2026-11-06）刪除重點觀察 1 中調整前撰寫的舊說明；重點觀察 2、3 為當時撰寫的說明，目標價與上檔空間以 Val 頁為準。")
+                # (15) 情境驅動對照：收斂法列名改中性（apply_in_layout 取情境 C 列名，會帶「（不如預期）」）
+                if ws.title == "In" and c.column == 2 and ws.cell(c.row, 1).value == "scn_fade_g" and "收斂目標" in w:
+                    w = "FY2032 營收年增收斂目標（A＝tp_g＋2pt、B＝tp_g、C＝tp_g−2pt）"
+                # (24) 上檔空間級距列名
+                if ws.title == "Val" and c.column == 1 and w == "上檔空間級距":
+                    w = "上檔空間級距（六級，供分組）"
+                    e = ws.cell(c.row, 5)
+                    e.value = (str(e.value) + "；" if e.value else "") + "六級只供分組比較；投資建議依下一列的五級固定規則"
+                # (16) Sens「g ±1pt」：g 受 rf 上限時列名改「g −1pt／上限 rf」（公式判斷）
+                if ws.title == "Sens" and c.column == 1 and w == "永續成長率 g ±1pt":
+                    w = '=IF(g_tv_hi<g_tv+0.01-0.000001,"永續成長率 g −1pt／上限 rf","永續成長率 g ±1pt")'
+                if w != v:
+                    c.value = w; n += 1
+    return n
+RD["A1"] = RD["A1"].value + "；v0.4.3（2026-11-06）第三輪修正（合併前）：現價與同業報價統一到 2026-11-04 收盤、情境驅動對照情境 B 收斂目標改引用 tp_g、命題回覆時間窗更正、展示字串統一"
+for _r in range(4, IN.max_row + 1):   # 第三輪修正（fixes_round3 第 15 項；獨立核對）：情境驅動對照收斂法列
+    if IN.cell(_r, 1).value == "scn_fade_g":
+        IN.cell(_r, 2).value = "收斂法：FY2032 的營收年增（A＝tp_g＋2pt、B＝tp_g、C＝tp_g−2pt）"
+        _tg = next(_k for _k in range(4, IN.max_row + 1) if IN.cell(_k, 1).value == "tp_g")
+        IN.cell(_r, 5).value = f"=E{_tg}"; IN.cell(_r, 5).number_format = IN.cell(_r, 4).number_format
+        IN.cell(_r, 8).value = "引用 In 頁 fade_gA／tp_g／fade_gC；情境 B 收斂到 tp_g（第三輪修正前寫死 0）；修改請改上方藍字"
+    if IN.cell(_r, 1).value == "scn_fade_m":
+        IN.cell(_r, 2).value = "收斂法：中段淨利率（A、B、C 各自收斂目標；C＝十年平均替代值）"
+_r3_text(wb, "Q 頁 2H26 季度 FCFF（3Q 實績＋4Q 模型）", px_old_dates=("2026-10-22",))
 wb.save(sys.argv[1])
 if os.environ.get("KYEC_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
