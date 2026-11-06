@@ -37,8 +37,8 @@ import z2  # noqa: E402
 import z3  # noqa: E402
 import z4  # noqa: E402
 
-VERSION = "v0.1.3"
-VERSION_DATE = "2026-11-04"   # v0.1.3：README A1 顯示版本日期（--date 仍為 Tokenomics／OpenAI 快照讀取日）
+VERSION = "v0.1.4"
+VERSION_DATE = "2026-11-06"   # v0.1.4：只換現價；v0.1.3：README A1 顯示版本日期（--date 仍為 Tokenomics／OpenAI 快照讀取日）
 SRC_YAML = ROOT / "data" / "zhipu_src.yaml"
 INP_YAML = ROOT / "data" / "zhipu_inputs.yaml"
 REGISTRY_PATH = HERE / "id_registry.json"
@@ -119,7 +119,7 @@ def sheet_readme(wb, D, snap, oai, date, summary):
           "命題（規格 D1，與 OpenAI v0.6 同一句）：智譜每 VR 等值 GW 的年營收能否覆蓋每 GW 年全成本；若不能，缺口要多少外部資金、由誰以什麼條件提供。FY2025–FY2030，曆年制。")
     lines = [
         ("本版範圍", "v0.1（Z2–Z4）：SRC_ZP（公司財務原始數據）、TK_Link（Tokenomics 快照）、OAI_Link（OpenAI v0.6 命題輸出快照）、Inputs（假設）、Demand（需求與 token）、Revenue（營收）、"
-                     "Compute（算力）、Cost（成本與命題表）、Funding（融資，命題 2）、Reverse（反向模式，只對照）、Checks。v0.1.2：Revenue 第七節官方分部（部署方式）對帳列＋Checks C100–C103（既有數值不變）。v0.1.3：文件與核對小修（命名改「個股模型」、README A1 版本日期、parity k2 情境加 C101），數值不變。"),
+                     "Compute（算力）、Cost（成本與命題表）、Funding（融資，命題 2）、Reverse（反向模式，只對照）、Checks。v0.1.2：Revenue 第七節官方分部（部署方式）對帳列＋Checks C100–C103（既有數值不變）。v0.1.3：文件與核對小修（命名改「個股模型」、README A1 版本日期、parity k2 情境加 C101），數值不變。v0.1.4：股價改 2026-11-05 收盤 HK$476（SRC_ZP_1055，Andy 2026-11-06 要求），只影響 Reverse 市值與 Funding 可換股債券價內比。"),
         ("幣別與單位", "公司金額一律人民幣億元（RMB 億），與財報一致。港幣、美元數據以 Inputs 匯率（USD/CNY、HKD/CNY，2026-09-28 中間價；定義常數，區間 ±5%）換算後才進計算頁。"
                      "API 牌價：人民幣元／百萬 token；token：兆（T）；Coding Plan 訂閱者：萬人；智譜清言用戶：百萬人。OAI_Link 為美元（$B），不換算、不參與計算。"),
         ("Excel 為唯一計算引擎", "藍字＝輸入（Excel 擁有）；黑字＝公式；綠字＝跨頁連結。builder 只產生結構，重建時保留 Excel 內已改過的藍字（隱藏頁 _Defaults）。公式不含常數（E6）：單位換算、天數、月數為 Inputs 的定義常數。"),

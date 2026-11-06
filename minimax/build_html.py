@@ -115,7 +115,7 @@ ev = ''.join(f'<tr><td>{lab}</td><td>{N(a, 2026, "f2")}</td><td>{N(b, 2026, "f1"
              for lab, a, b, c in (('AutoDL H800 單卡（口徑明確）', 'C32', 'C35', 'C38'), ('SMM H20 96G 年約（8 卡整機口徑，樣本 2 台）', 'C33', 'C36', 'C39'), ('SMM H100 80G 現貨', 'C34', 'C37', 'C40')))
 
 page = f'''<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MiniMax 收支模型 v0.2</title>
+<title>MiniMax 收支模型 v0.2.1</title>
 <style>
 :root{{--surface:#fcfcfb;--bg:#f4f4f2;--ink:#0b0b0b;--ink2:#52514e;--ink3:#8a8984;--line:#e4e3df;--s1:#2a78d6;--s2:#eb6834;--neg:#e34948;--key:#fff6d9}}
 @media (prefers-color-scheme: dark){{:root:not([data-theme="light"]){{--surface:#1a1a19;--bg:#121211;--ink:#fff;--ink2:#c3c2b7;--ink3:#8f8e86;--line:#33322f;--s1:#3987e5;--s2:#d95926;--neg:#e66767;--key:#3a3320}}}}
@@ -139,7 +139,7 @@ ul{{margin:6px 0;padding-left:20px}}li{{margin:3px 0}}.muted{{color:var(--ink2);
 .two{{display:grid;grid-template-columns:1fr 1fr;gap:12px}}@media (max-width:760px){{.two{{grid-template-columns:1fr}}}}
 .mono{{font-family:ui-monospace,Menlo,monospace;font-size:12px;word-break:break-all}}
 </style></head><body><main>
-<h1>MiniMax（00100.HK）收支模型 v0.2</h1>
+<h1>MiniMax（00100.HK）收支模型 v0.2.1</h1>
 <p class="sub">上海稀宇科技｜比照 OpenAI 收支模型（MW 主軸、P×Q 回本比值、Tokenomics 官方快照）｜FY2025 實際、FY2026 上半年實際＋下半年推估、FY2027–2030 推估｜2026-10-22｜單位 US$M</p>
 
 <div class="card ans"><b>命題：</b>MiniMax 每 MW 算力的營收，能否覆蓋每 MW 全成本？若不能，缺口何時出現、由誰補？<br>
@@ -206,7 +206,7 @@ ul{{margin:6px 0;padding-left:20px}}li{{margin:3px 0}}.muted{{color:var(--ink2);
 <div class="card"><ul>
 <li><b>模型：</b>{N('readme',None,'txt')}。Excel 為唯一計算引擎，本頁數字逐一對照 Excel（scripts/check_html.py，納入 CI）。</li>
 <li><b>Tokenomics 官方快照：</b><span class="mono">{N('tk',None,'txt')}</span></li>
-<li><b>市場資料（M2，擷取 2026-10-22）：</b>10-21 推算收盤價 HK${N('S078',None,'f1')}（Derived）、盤中 {N('S079',None,'f1')}；市值 ${N('V02',2026,'f0')}M；M3.1 Flash 牌價 {N('S098',None,'f2')}／{N('S099',None,'f2')}（輸入／輸出 $/M）；合約負債 {N('S085',None,'f1')}（2026-06-30）。</li>
+<li><b>市場資料（M2，擷取 2026-10-22；股價 2026-11-06 擷取）：</b>2026-11-05 收盤價 HK${N('S113',None,'f1')}（v0.2.1 換價；v0.2 為 10-21 推算 {N('S078',None,'f1')}）；市值 ${N('V02',2026,'f0')}M；M3.1 Flash 牌價 {N('S098',None,'f2')}／{N('S099',None,'f2')}（輸入／輸出 $/M）；合約負債 {N('S085',None,'f1')}（2026-06-30）。</li>
 <li><b>財務一手：</b>1H26 中期業績公告 2026-08-26（銷售成本 {N('S020',None,'f1')}、營收 {N('S004',None,'f1')}）；FY2025 年度業績公告 2026-03-02；FY2025 現金流量為經濟通轉載年報（二手）。</li>
 </ul></div>
 </main><div id="tip"></div>

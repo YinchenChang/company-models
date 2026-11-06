@@ -3242,6 +3242,14 @@
        "@Recon!D54|n2",
        "@Recon!E54|sp1",
        "@Recon!F54|"
+      ],
+      [
+       "@Recon!A55|",
+       "@Recon!B55|n2",
+       "@Recon!C55|n2",
+       "@Recon!D55|n2",
+       "@Recon!E55|sp1",
+       "@Recon!F55|"
       ]
      ]
     },
@@ -3291,25 +3299,72 @@
        "@Recon!F53|"
       ],
       [
-       "@Recon!A55|",
-       "@Recon!B55|n3",
-       "@Recon!C55|n3",
-       "@Recon!D55|n3",
-       "@Recon!E55|sp1",
-       "@Recon!F55|"
+       "@Recon!A56|",
+       "@Recon!B56|n3",
+       "@Recon!C56|n3",
+       "@Recon!D56|n3",
+       "@Recon!E56|sp1",
+       "@Recon!F56|"
       ]
      ]
     },
     {
      "type": "table",
-     "caption": "@Recon!A56",
+     "caption": "@Recon!A57",
      "head": [
-      "@Recon!A57",
-      "@Recon!B57",
-      "@Recon!C57",
-      "@Recon!D57",
-      "@Recon!E57",
-      "@Recon!F57"
+      "@Recon!A58",
+      "@Recon!B58",
+      "@Recon!C58",
+      "@Recon!D58",
+      "@Recon!E58",
+      "@Recon!F58"
+     ],
+     "rows": [
+      [
+       "@Recon!A60|",
+       "@Recon!B60|n1",
+       "@Recon!C60|n1",
+       "@Recon!D60|n1",
+       "@Recon!E60|sp1",
+       "@Recon!F60|"
+      ],
+      [
+       "@Recon!A69|",
+       "@Recon!B69|n1",
+       "@Recon!C69|n1",
+       "@Recon!D69|n1",
+       "@Recon!E69|sp1",
+       "@Recon!F69|"
+      ],
+      [
+       "@Recon!A72|",
+       "@Recon!B72|n1",
+       "@Recon!C72|n1",
+       "@Recon!D72|n1",
+       "@Recon!E72|sp1",
+       "@Recon!F72|"
+      ],
+      [
+       "@Recon!A73|",
+       "@Recon!B73|n1",
+       "@Recon!C73|n1",
+       "@Recon!D73|n1",
+       "@Recon!E73|sp1",
+       "@Recon!F73|"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：本節的其他對帳項目",
+     "head": [
+      "@Recon!A58",
+      "@Recon!B58",
+      "@Recon!C58",
+      "@Recon!D58",
+      "@Recon!E58",
+      "@Recon!F58"
      ],
      "rows": [
       [
@@ -3319,61 +3374,6 @@
        "@Recon!D59|n1",
        "@Recon!E59|sp1",
        "@Recon!F59|"
-      ],
-      [
-       "@Recon!A68|",
-       "@Recon!B68|n1",
-       "@Recon!C68|n1",
-       "@Recon!D68|n1",
-       "@Recon!E68|sp1",
-       "@Recon!F68|"
-      ],
-      [
-       "@Recon!A71|",
-       "@Recon!B71|n1",
-       "@Recon!C71|n1",
-       "@Recon!D71|n1",
-       "@Recon!E71|sp1",
-       "@Recon!F71|"
-      ],
-      [
-       "@Recon!A72|",
-       "@Recon!B72|n1",
-       "@Recon!C72|n1",
-       "@Recon!D72|n1",
-       "@Recon!E72|sp1",
-       "@Recon!F72|"
-      ]
-     ]
-    },
-    {
-     "type": "table",
-     "collapse": true,
-     "summary": "展開：本節的其他對帳項目",
-     "head": [
-      "@Recon!A57",
-      "@Recon!B57",
-      "@Recon!C57",
-      "@Recon!D57",
-      "@Recon!E57",
-      "@Recon!F57"
-     ],
-     "rows": [
-      [
-       "@Recon!A58|",
-       "@Recon!B58|n1",
-       "@Recon!C58|n1",
-       "@Recon!D58|n1",
-       "@Recon!E58|sp1",
-       "@Recon!F58|"
-      ],
-      [
-       "@Recon!A60|",
-       "@Recon!B60|n1",
-       "@Recon!C60|n1",
-       "@Recon!D60|n1",
-       "@Recon!E60|sp1",
-       "@Recon!F60|"
       ],
       [
        "@Recon!A61|",
@@ -3432,12 +3432,12 @@
        "@Recon!F67|"
       ],
       [
-       "@Recon!A69|",
-       "@Recon!B69|n1",
-       "@Recon!C69|n1",
-       "@Recon!D69|n1",
-       "@Recon!E69|sp1",
-       "@Recon!F69|"
+       "@Recon!A68|",
+       "@Recon!B68|n1",
+       "@Recon!C68|n1",
+       "@Recon!D68|n1",
+       "@Recon!E68|sp1",
+       "@Recon!F68|"
       ],
       [
        "@Recon!A70|",
@@ -3446,59 +3446,20 @@
        "@Recon!D70|n1",
        "@Recon!E70|sp1",
        "@Recon!F70|"
+      ],
+      [
+       "@Recon!A71|",
+       "@Recon!B71|n1",
+       "@Recon!C71|n1",
+       "@Recon!D71|n1",
+       "@Recon!E71|sp1",
+       "@Recon!F71|"
       ]
      ]
     },
     {
      "type": "table",
-     "caption": "@Recon!A73",
-     "head": [
-      "@Recon!A3",
-      "@Recon!B3",
-      "@Recon!C3",
-      "@Recon!D3",
-      "@Recon!E3",
-      "@Recon!F3"
-     ],
-     "rows": [
-      [
-       "@Recon!A74|",
-       "@Recon!B74|n1",
-       "@Recon!C74|n1",
-       "@Recon!D74|n1",
-       "@Recon!E74|sp1",
-       "@Recon!F74|"
-      ],
-      [
-       "@Recon!A76|",
-       "@Recon!B76|n1",
-       "@Recon!C76|n1",
-       "@Recon!D76|n1",
-       "@Recon!E76|sp1",
-       "@Recon!F76|"
-      ],
-      [
-       "@Recon!A77|",
-       "@Recon!B77|n1",
-       "@Recon!C77|n1",
-       "@Recon!D77|n1",
-       "@Recon!E77|sp1",
-       "@Recon!F77|"
-      ],
-      [
-       "@Recon!A79|",
-       "@Recon!B79|n1",
-       "@Recon!C79|n1",
-       "@Recon!D79|n1",
-       "@Recon!E79|sp1",
-       "@Recon!F79|"
-      ]
-     ]
-    },
-    {
-     "type": "table",
-     "collapse": true,
-     "summary": "展開：本節的其他對帳項目",
+     "caption": "@Recon!A74",
      "head": [
       "@Recon!A3",
       "@Recon!B3",
@@ -3517,6 +3478,14 @@
        "@Recon!F75|"
       ],
       [
+       "@Recon!A77|",
+       "@Recon!B77|n1",
+       "@Recon!C77|n1",
+       "@Recon!D77|n1",
+       "@Recon!E77|sp1",
+       "@Recon!F77|"
+      ],
+      [
        "@Recon!A78|",
        "@Recon!B78|n1",
        "@Recon!C78|n1",
@@ -3526,11 +3495,50 @@
       ],
       [
        "@Recon!A80|",
-       "@Recon!B80|n3",
-       "@Recon!C80|n3",
-       "@Recon!D80|n3",
+       "@Recon!B80|n1",
+       "@Recon!C80|n1",
+       "@Recon!D80|n1",
        "@Recon!E80|sp1",
        "@Recon!F80|"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：本節的其他對帳項目",
+     "head": [
+      "@Recon!A3",
+      "@Recon!B3",
+      "@Recon!C3",
+      "@Recon!D3",
+      "@Recon!E3",
+      "@Recon!F3"
+     ],
+     "rows": [
+      [
+       "@Recon!A76|",
+       "@Recon!B76|n1",
+       "@Recon!C76|n1",
+       "@Recon!D76|n1",
+       "@Recon!E76|sp1",
+       "@Recon!F76|"
+      ],
+      [
+       "@Recon!A79|",
+       "@Recon!B79|n1",
+       "@Recon!C79|n1",
+       "@Recon!D79|n1",
+       "@Recon!E79|sp1",
+       "@Recon!F79|"
+      ],
+      [
+       "@Recon!A81|",
+       "@Recon!B81|n3",
+       "@Recon!C81|n3",
+       "@Recon!D81|n3",
+       "@Recon!E81|sp1",
+       "@Recon!F81|"
       ]
      ]
     },
@@ -3851,6 +3859,9 @@
       ],
       [
        "@README!A60"
+      ],
+      [
+       "@README!A61"
       ]
      ]
     },

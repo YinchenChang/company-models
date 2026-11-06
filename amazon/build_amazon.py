@@ -2,7 +2,7 @@
 #   v0.3.1 季度滾動：mag/docs/workorders/20261029_MAG_v0.3.1_季度滾動_2026Q3.md 第 1–4 節；v0.3.2 Tokenomics 快照 v21.9；v0.3.3 10-Q 補入：mag/docs/workorders/20261104_MAG_10Q補入_2026Q3.md；v0.3.4 Tokenomics 快照 v21.10）
 # 固定規格：docs/plan/個股模型原則_命題加營收分部.md（命題模組＋官方營收分部 → 損益表；第 7 節讀法 2、第 8 節 In 頁、第 9 節敏感度覆蓋）。
 # 用法：python3 amazon/build_amazon.py [輸出.xlsx] [--set 鍵=值 ...] [--sens sens.json] [--q3v03 q3.json ...]
-#       （預設輸出 amazon/dist/20261105_Amazon個股模型_v0.3.5.xlsx；amazon/make_v031.sh 一次跑完 建置 → 重算 → 核對 → HTML）
+#       （預設輸出 amazon/dist/20261106_Amazon個股模型_v0.3.6.xlsx；amazon/make_v031.sh 一次跑完 建置 → 重算 → 核對 → HTML）
 #       再以 LibreOffice headless 重算：soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir <dir> <raw.xlsx>
 # 全部活公式；藍字＝輸入、黑字＝公式。金額 US$bn（每股 US$）；MW＝IT 關鍵電力 MW（MW-IT）。
 # 欄位（模型頁共用）：C FY2024A、D FY2025A、E 9M26A、F Q4 26E、G FY2026E（＝E＋F）、H–M FY2027–FY2032、N 9M25A、O Q4 25A。資料截至 2026-09-30。
@@ -20,7 +20,7 @@ from openpyxl.workbook.defined_name import DefinedName
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 AP = argparse.ArgumentParser()
-AP.add_argument("out", nargs="?", default=os.path.join(HERE, "dist", "20261105_Amazon個股模型_v0.3.5.xlsx"))
+AP.add_argument("out", nargs="?", default=os.path.join(HERE, "dist", "20261106_Amazon個股模型_v0.3.6.xlsx"))
 AP.add_argument("--set", action="append", default=[], help="覆寫 In 頁基準值：鍵=值（敏感度與拆解重算用；值可為數字或以 = 開頭的公式）")
 AP.add_argument("--sens", help="敏感度與拆解鏈的重算結果（amazon/sens_v031.py 產生）")
 AP.add_argument("--q3v03", action="append", default=[], help="變動拆解用：以 JSON 的事實值取代事實總帳（{\"facts\": {事實 id: 值}}；可重複；v0.3.3 拆解鏈以此把 10-Q 值改回 v0.3.2（＝v0.3.1）的推導或沿用值）")
@@ -120,6 +120,8 @@ S_CALL3 = src("2026Q3 法說會逐字稿（不入 repo；只引用數字與短�
               "https://ir.aboutamazon.com/（法說 webcast；逐字稿由 Andy 提供）", "Interested-party")
 S_PX = src("Motley Fool／Yahoo Finance「Stock Market Today, Oct. 30」：AMZN 收盤 240.35（−1.41%）", "2026-10-30", "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-oct-30-213502210.html", "Verified")
 S_PXY = src("MarketChameleon AMZN 概覽：2026-10-30 收盤 240.35", "2026-10-30", "https://marketchameleon.com/Overview/AMZN", "Verified")
+S_PX5 = src("Yahoo Finance AMZN 日線：2026-11-05 收盤 260.21（前日 266.03）", "2026-11-05", "https://query1.finance.yahoo.com/v8/finance/chart/AMZN?range=5d&interval=1d", "Verified")
+S_PX5F = src("Motley Fool「Stock Market Today, Nov. 5」：AMZN 收盤 260.21（−2.19%，4:00 PM ET）", "2026-11-05", "https://www.fool.com/coverage/stock-market-today/2026/11/05/stock-market-today-nov-5-amazon-shares-slide-as-technology-selloff-erases-early-gains/", "Verified")
 S_FC = src("BigGo Finance（Koyfin 彙整：60 位平均目標價 332.41、區間 230–405；TD Cowen 340、UBS 352、Mizuho 335 等財報後調整）", "2026-10-30", "https://finance.biggo.com/news/41346e0c-47f7-4ab6-adb0-e12aeffbd88f", "Interested-party")
 S_MB = src("MarketBeat 預估頁（60 位共識目標價 325.12；最近更新 2026-10-29 收盤後）", "2026-10-29", "https://www.marketbeat.com/stocks/NASDAQ/AMZN/Forecast/", "Interested-party")
 S_SP = src("StockAnalysis 預估頁（S&P Global：營收與調整後 EPS 共識；財報前）", "2026-10-26", "https://stockanalysis.com/stocks/amzn/forecast/", "Interested-party")
@@ -157,8 +159,8 @@ KEYFILL = set()
 NM = "只作對照，不進模型"
 
 sec("A. 價格、股數與共識目標價")
-inp("px", "AMZN 現價（2026-10-30 收盤）", "US$", None, 240.35, None, "Verified", f"{S_PX}；{S_PXY}", "10-29 收盤 243.79（財報日，−4.3%）；只影響上檔空間與評等")
-inp("px_val", "WACC 權益權重用股價（最近收盤；評價日 2026-09-30 收盤本輪未取得）", "US$", None, 240.35, None, "Verified", f"{S_PX}", "與現價分開：現價變動只影響上檔空間（拆解 (e)），本列變動歸 (f)")
+inp("px", "AMZN 現價（2026-11-05 收盤）", "US$", None, 260.21, None, "Verified", f"{S_PX5}；{S_PX5F}", "兩來源一致（docs/reports/20261105_收盤價_個股換價來源.md）；v0.3.5 為 10-30 收盤 240.35；只影響上檔空間與評等")
+inp("px_val", "WACC 權益權重用股價（2026-10-30 收盤；評價日 2026-09-30 收盤本輪未取得；v0.3.6 換現價時不跟著改）", "US$", None, 240.35, None, "Verified", f"{S_PX}", "與現價分開：現價變動只影響上檔空間（拆解 (e)），本列變動歸 (f)")
 inp("sh_out", "流通股數（2026-09-30，資產負債表股本說明）", "十億股", None, round(FACTS["sh.out.20260930"]["value"] / 1000, 6), None, "Verified", f"{S_PR26Q3}；{S_10Q26Q3}（第 6 頁）", "與淨負債、未歸屬獎勵同日；10-Q 封面 10/21 為 10,813.1 百萬股（只作驗證：用封面會重複計入 9/30–10/21 歸屬的約 2.1 百萬股）")
 inp("sh_awd", "未歸屬股份獎勵（2026-09-30）", "十億股", None, fv("sh.awards.2026q3"), None, "Interested-party", S_PR26Q3, "223 百萬股（Supplemental）")
 inp("sh_val", "分部加總用稀釋股數＝流通股數＋未歸屬獎勵（倍數為 SBC 加回口徑，故計入稀釋）", "十億股", None, "=sh_out+sh_awd", None, "Derived", "修正一（F2）", "DCF 視 SBC 為現金成本，改用流通股數 sh_out，不另計稀釋")
@@ -316,7 +318,7 @@ inp("g26q4_mid", "公司指引 2026Q4 營收中點（Q4 零售營收校準目標
 sec("I. 前版對照（Recon 變動拆解用；v0.3.3 起點為 v0.3.2）")
 inp("v032_tp", "v0.3.2 加權目標價（讀法 2；2026-11-04，Tokenomics 快照 v21.9）", "US$", None, 217.650781868569, None, "Derived", S_V032, "217.650782（v0.3.2 成品 Val!B19；sens_v032_20261104.json base；與 v0.3.1 相同）")
 inp("v032_tp1", "v0.3.2 讀法 1 加權目標價", "US$", None, 198.507777904831, None, "Derived", S_V032, "")
-inp("v032_px", "v0.3.2 現價（2026-10-30；本版不變）", "US$", None, 240.35, None, "Verified", S_V032, "")
+inp("v032_px", "v0.3.2 現價（2026-10-30 收盤 240.35；v0.3.6 起現價另換 11-05 收盤）", "US$", None, 240.35, None, "Verified", S_V032, "")
 inp("v03_tp", "v0.3 加權目標價（讀法 2；2026-10-27）", "US$", None, 215.58, None, "Derived", S_V03, "215.578882（v0.3 成品 Val!B19）")
 
 INROW = {}
@@ -1073,7 +1075,7 @@ hdr(V, 16, ["項目", "數值", None, None, "說明"])
 vrow(17, "dcftp", "DCF 目標價（情境加權）", {"B": "=w_A*B5+w_B*C5+w_C*D5"})
 vrow(18, "comptp", "Comparable 目標價（市場主流同業法）", {"B": "=w_A*B6+w_B*C6+w_C*D6"}, note="分部加總（工作單：Comparable 在分部層做）")
 vrow(19, "tpw", "目標價（DCF 與 Comparable 加權）", {"B": "=w_dcf*B17+(1-w_dcf)*B18"}, note="＝Σ 情境權重 × 情境目標價")
-vrow(20, "px", "現價（2026-10-30 收盤）", {"B": "=px"}, note="Motley Fool／Yahoo Finance；MarketChameleon 同值")
+vrow(20, "px", "現價（2026-11-05 收盤）", {"B": "=px"}, note="Yahoo Finance；Motley Fool 同值；v0.3.5 為 10-30 收盤 240.35")
 vrow(21, "upw", "上檔空間：加權目標價", {"B": "=B19/px-1"}, "0.0%")
 vrow(22, "upc", "上檔空間：Comparable 目標價", {"B": "=B18/px-1"}, "0.0%")
 vrow(23, "tier", "上檔空間級距", {"B": '=IF(B21>=0.5,"大於 50%",IF(B21>=0.25,"25%–50%",IF(B21>=0,"0%–25%",IF(B21>-0.25,"0%～−25%",IF(B21>-0.5,"−25%～−50%","小於 −50%")))))'}, "@")
@@ -1326,7 +1328,7 @@ RC_SUM = rec("拆解合計（(a)–(d)）", "=" + "+".join(f"B{x}" for x in CH_R
 RC_TOT = rec("總變動＝v0.3.3 − v0.3.2", f"=Val!B19-B{RC_B0}", None, "", fmt="0.00", gap=False)
 rec("檢查：拆解合計 − 總變動（應為 0）", f"=B{RC_SUM}-B{RC_TOT}" if SENS else 0, None, "", fmt="0.000000", gap=False, check=True)
 rec("另列：讀法 1 加權目標價 v0.3.2 → v0.3.3", "=v032_tp1", None, "", "", fmt="0.00", gap=False)
-rec("另列：v0.3.2 上檔空間（現價 240.35，本版不變）", "=v032_tp/v032_px-1", None, "", "v0.3.2 評等：中立", fmt="0.0%", gap=False)
+rec("另列：v0.3.2 上檔空間（以 v0.3.2 現價 240.35 計）", "=v032_tp/v032_px-1", None, "", "v0.3.2 評等：中立", fmt="0.0%", gap=False)
 rec("另列：v0.3 加權目標價（2026-10-27；v0.3 → v0.3.1 拆解見 v0.3.1 報告第 2 節）", "=v03_tp", None, "", "", fmt="0.00", gap=False)
 RC.column_dimensions["A"].width = 64
 for c in "BCDEF": RC.column_dimensions[c].width = 13
@@ -1358,11 +1360,11 @@ SO.column_dimensions["A"].width = 8; SO.column_dimensions["B"].width = 90; SO.co
 RD = wb.create_sheet("README", 0)
 B_ = lambda blk, key, col: tk_("B", blk, key, col)
 lines = [
-    (f"Amazon（AMZN）個股模型 v0.3.5（命題模組＋官方營收分部 → 損益表；v0.3.5 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；2026Q3 季度滾動、10-Q 補入、Tokenomics 快照 {TKV}）　2026-11-05", True),
+    (f"Amazon（AMZN）個股模型 v0.3.6（命題模組＋官方營收分部 → 損益表；v0.3.6 只換現價為 2026-11-05 收盤 260.21，目標價不變；v0.3.5 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；2026Q3 季度滾動、10-Q 補入、Tokenomics 快照 {TKV}）　2026-11-06", True),
     (f"版本：v0.3.4（Tokenomics 快照 v21.9 → {TKV}，基準數值同 v0.3.3）；v0.3.3（2026Q3 10-Q 補入；v0.3.2 為 2026-11-04 Tokenomics 快照 v21.9〔基準同 v0.3.1〕，v0.3.1 為 2026-10-31，v0.3 為 2026-10-27）。資料截至 2026-09-30（2026Q3 新聞稿與 10-Q）；FY2026＝9M 實績＋Q4 模型；Tokenomics " + TKV + "（Trainium 改讀 IF_NonNV_Hold_Trn）。v0.3.3 只以 10-Q 取代 v0.3.2 沿用自 v0.3.1 的推導與沿用值（債務面額、融資租賃、融資義務〔改本金口徑〕、分部折舊；股數維持 9/30 資產負債表），評價日、現價、共識、Tokenomics、情境與權重不動。", False),
     ("命題：AWS 的 AI 容量（Trainium＋NVIDIA）能否以高於資金成本的報酬變現，零售與廣告的現金流能否支應資本支出。", True),
     ("核心問題：FY2028 AWS 營業利益率與自由現金流（扣股利後）是否轉正並維持。", True),
-    ('="投資建議："&Val!B24&"（加權目標價 US$"&TEXT(Val!B19,"0.00")&"，現價 US$"&TEXT(px,"0.00")&"〔2026-10-30〕，上檔空間 "&TEXT(Val!B21,"+0.0%;-0.0%")&"；依五級固定規則）"', True),
+    ('="投資建議："&Val!B24&"（加權目標價 US$"&TEXT(Val!B19,"0.00")&"，現價 US$"&TEXT(px,"0.00")&"〔2026-11-05〕，上檔空間 "&TEXT(Val!B21,"+0.0%;-0.0%")&"；依五級固定規則）"', True),
     (f'="命題答案（情境 B）：FY2028 對外 AI ROIC "&TEXT({B_("T", "roic", "I")},"0.0%")&"，WACC "&TEXT(wacc,"0.0%")&"；打平所需機隊平均 k "&TEXT({B_("T", "k_be", "I")},"0.00")&"，模型 k "&TEXT({B_("T", "k_eff", "I")},"0.00")&"。FY2028 AWS 營業利益率 "&TEXT({B_("L", "m_aws", "I")},"0.0%")&"（FY2025 "&TEXT({B_("L", "m_aws", "D")},"0.0%")&"）；FY2028 自由現金流扣股利 "&TEXT({B_("C", "fcfd", "I")},"#,##0.0")&"；收支關卡（FY2026–FY2030 合計，情境加權）"&TEXT(CF!E6,"#,##0.0")&"。"', False),
     (f'="重點觀察 1：目標價 US$"&TEXT(Val!B19,"0.00")&"＝DCF "&TEXT(Val!B17,"0.00")&"（永續價值占 EV "&TEXT(Val!C8,"0%")&"）與分部加總 "&TEXT(Val!B18,"0.00")&" 各半；DCF 低是因為 WACC "&TEXT(wacc,"0.0%")&" 下，2027–2029 的資本支出（情境 B FY2027 總額 "&TEXT({B_("C", "cx", "H")},"#,##0")&"）讓 FCFF 偏低，而 AI 增量報酬接近資金成本。"', False),
     (f'="重點觀察 2：分部加總中 AWS 其他（非 AI 雲端）占 "&TEXT({B_("V", "ev_awso", "C")}/{B_("V", "sev", "C")},"0%")&"、廣告占 "&TEXT({B_("V", "ev_ads", "C")}/{B_("V", "sev", "C")},"0%")&"；零售本業未來 12 個月 EBITDA（SBC 加回）"&TEXT({B_("V", "e_rt", "C")},"#,##0")&"；AWS AI 以自身 DCF 計 "&TEXT({B_("V", "ev_ai", "C")},"#,##0")&"。"', False),
@@ -1388,7 +1390,7 @@ lines += [
     ("命題 1｜AWS AI 能否賺過資金成本：AI 算力租給客戶的收入，扣掉營運成本與折舊後，報酬率能否高於 WACC。", False),
     ("命題 2｜零售與廣告撐得住資本支出嗎：資本支出大增期間，零售與廣告本業的現金流能否支應，是否需要舉債。", False),
     ("命題 3｜每股值多少：把 AI 資本支出與折舊算進去之後，每股價值是否仍高於現價。", False),
-    (f'="重點 1｜合理價值略低於現價：我們估每股約 "&TEXT(Val!B19,"0")&" 美元，比現價 "&TEXT(px,"0.00")&" 低 "&TEXT(-Val!B21,"0%")&"。未來現金流折現約 "&TEXT(Val!B17,"0")&"、分部加總約 "&TEXT(Val!B18,"0")&"（廣告、零售本業、AWS 其他用同業倍數，AWS AI 用自身現金流折現，另加 Anthropic、OpenAI 持股）各占一半；樂觀、基準、保守三種情境約 "&TEXT(Val!B7,"0")&"、"&TEXT(Val!C7,"0")&"、"&TEXT(Val!D7,"0")&"。市場分析師平均目標價約 "&TEXT(cons_tp,"0")&"。"', False),
+    (f'="重點 1｜合理價值"&IF(Val!B21<0,"低於","高於")&"現價約"&TEXT(ABS(Val!B21),"0%")&"：我們估每股約 "&TEXT(Val!B19,"0")&" 美元，比現價 "&TEXT(px,"0.00")&" 低 "&TEXT(-Val!B21,"0%")&"。未來現金流折現約 "&TEXT(Val!B17,"0")&"、分部加總約 "&TEXT(Val!B18,"0")&"（廣告、零售本業、AWS 其他用同業倍數，AWS AI 用自身現金流折現，另加 Anthropic、OpenAI 持股）各占一半；樂觀、基準、保守三種情境約 "&TEXT(Val!B7,"0")&"、"&TEXT(Val!C7,"0")&"、"&TEXT(Val!D7,"0")&"。市場分析師平均目標價約 "&TEXT(cons_tp,"0")&"。"', False),
     (f'="重點 2｜基準情境下 AI 算力的報酬預估低於資金成本：基準情境 2028 年對外 AI 投資報酬率約 "&TEXT({B_("T", "roic", "I")},"0.0%")&"，低於 WACC "&TEXT(wacc,"0.0%")&"；要打平，每 MW 年收入需達持有成本的 "&TEXT({B_("T", "k_be", "I")},"0.00")&" 倍，模型只有 "&TEXT({B_("T", "k_eff", "I")},"0.00")&" 倍。"', False),
     (f'="重點 3｜現金撐得住，預測期不必再舉債：基準情境自由現金流 2027 年約 "&TEXT({_BC("fcfd", "H")}*10,"#,##0")&" 億美元、2028 年約 "&TEXT({_BC("fcfd", "I")}*10,"#,##0")&" 億（大致打平），之後明顯轉正；五年合計約 "&TEXT(CF!C6*10,"#,##0")&" 億美元；"&IF(SUM(CF!B7:D7)=0,"除 2026 年已發行的債券外，預測期三種情境都不需再舉債","部分情境需要舉債")&"。"', False),
     ("", False),
