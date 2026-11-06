@@ -45,7 +45,7 @@ for sh, need in (("Thesis", 6), ("PL", 12)):
     if n_chk[sh] < need: fail.append(f"{sh} 核對列少於 {need}（{n_chk[sh]}）")
 V = wb["Val"]
 need = ["目標價（DCF 與 Comparable 加權）", "上檔空間：加權目標價", "投資建議", "上檔空間級距", "DCF 目標價（情境加權）", "Comparable 目標價（市場主流同業法）",
-        "價格帶（DCF 不如預期～順利）", "現價（2026-10-28 收盤）", "市場共識目標價", "讀法 2（自用 AI 價值中性）：目標價／上檔空間／投資建議", "讀法 1（自用 AI 只計成本）：目標價／上檔空間／投資建議"]
+        "價格帶（DCF 不如預期～順利）", "現價（2026-11-05 收盤）", "市場共識目標價", "讀法 2（自用 AI 價值中性）：目標價／上檔空間／投資建議", "讀法 1（自用 AI 只計成本）：目標價／上檔空間／投資建議"]
 labs = {V.cell(r, 1).value: r for r in range(1, V.max_row + 1)}
 for n in need:
     if n not in labs: fail.append(f"Val 缺列「{n}」")

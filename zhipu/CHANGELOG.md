@@ -90,3 +90,9 @@
 - `CLAUDE.md` 標題與成品命名改「個股模型」；parity `k2_rev_total_mismatch` 預期 [C17] → [C17, C101]（v0.1.2 起只改 API 營收不改官方雲端部署分部時 C101 亦轉 ERR，原只列 C17）。
 - 成品 `dist/20261104_智譜個股模型_v0_1_3.html／.xlsx`（HTML 文字差異只在版本、日期、檔名）；v0.1.2 成品移 `dist/_待刪除/`。報告 `docs/reports/20261104_v0.1.3.md`。
 
+
+## v0.1.4（2026-11-06，只換現價；報告 `docs/reports/20261106_v0.1.4.md`）
+- Andy 2026-11-06 07:32「請所有個股都換成十一月五號的收盤價」：新增 SRC_ZP_1055 `price_20261105`（2026-11-05 收盤 HK$476，Verified；Yahoo Finance、StockAnalysis 兩來源一致）；Reverse「收盤價」與 Funding「現價 ÷ 換股價」改讀 SRC_ZP_1055（v0.1.3 以前讀 SRC_ZP_569，10-07 收盤 696）。
+- 數值差異只在 Reverse（市值 3,393.6 → 2,320.9 HKD 億、EV、市值隱含營收 65.1 → 41.9 RMB 億等 17 格）、Funding D59（價內比 0.780 → 0.533）、Checks C91 預覽與 SRC 筆數；其他計算頁 0 差異。同業 MiniMax 市值（Reverse 第 57 列）不更新。
+- 重建：Tokenomics v19.0（1916a06）、OpenAI v0.6.2、`--base model/archive/20261104_Zhipu_v0.1.3.xlsx --date 2026-10-22`；restore matched 3,582、unmatched 0；e6 0、OAI 引用 0。parity `src_rows` 1054 → 1055。
+- 成品 `dist/20261106_智譜個股模型_v0_1_4.html／.xlsx`；v0.1.3 成品移 `dist/_待刪除/`、Excel 移 `model/archive/`。
