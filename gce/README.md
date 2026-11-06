@@ -1,4 +1,15 @@
-# gce/ — 金像電（2368.TW）收支與估值模型 v0.3.2
+# gce/ — 金像電（2368.TW）收支與估值模型 v0.3.3
+
+## v0.3.3（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
+
+- 工作單 px1105（Andy 2026-11-06 07:28；情境名稱 03:14，取代第三輪修正第 23 點）。來源：Yahoo Finance 日線收盤 2026-11-05。
+- 現價 964 → 868 元（2026-11-04 → 11-05 收盤）。
+- Comparable 同業前瞻 P/E＝現行倍數（2026-11-04 口徑）× 11-05 收盤 ÷ 11-04 收盤（共識 EPS 不變）：3044.TW 13.43 → 12.17、2313.TW 17.42 → 15.8、4958.TW 21.76 → 19.8、8155.TWO 15.43 → 13.9、TTMI 9.44 → 8.0；本公司前瞻 P/E 16.92 → 15.24。
+- Val 頁並列參考同業（不進目標價）的前瞻 P/E 文字同法換算到 11-05。
+- 情境名稱：xlsx 各頁（In、Val、DCF、PL、README 等）與 HTML 設定（`html_src.json`）的「情境 A（順利）／B（平平）／C（不如預期）」改回「情境 A（樂觀）／B（基準）／C（保守）」（建置最後的 `px1105_post.py`）。
+- 不改：rf、共識 EPS、預測用匯率、模型假設。
+- 結果：加權目標價 1,312 → 1,219 元（DCF 750 → 751、Comparable 調整後 1,873 → 1,688），上檔空間 +36.1% → +40.5%，投資建議 買進 → **買進**。
+- 成品：`dist/20261106_*_v0.3.3.xlsx`／`.html`；v0.3.2 移到 `dist/_待刪除/`。
 
 ## v0.3.2（2026-11-06）：第三輪修正（合併前）
 
@@ -79,9 +90,9 @@ AI 半導體 Project 載板與 PCB 次產業，樣板 `victory_giant/`（勝宏�
 | 檔案 | 內容 |
 |---|---|
 | `build_gce.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261106_金像電個股模型_v0.3.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261106_金像電個股模型_v0.3.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html_src.json`、`gen_html_json.py`、`html.json` | HTML 展示層設定：`html_src.json` 為原設定，`gen_html_json.py` 套用版面規格 v1.0 產生 `html.json`（勿手改） |
-| `dist/20261106_金像電個股模型_v0.3.2.html` | HTML 展示層（數字全由 xlsx 重算值抽出） |
+| `dist/20261106_金像電個股模型_v0.3.3.html` | HTML 展示層（數字全由 xlsx 重算值抽出） |
 
 建置：`python3 gce/build_gce.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數）、`tsmc/dist`（情境顆數係數）、`markets/memory/market.py`（SCEN_UNITS，核對用）、`victory_giant/dist`（每 GW PCB 金額）、`emc/dist`（台光電每 GW CCL 金額，只在 Recon）、`tools/cycle_position.py`、`tools/valuation_rule.py`；**不修改它們**。
 
