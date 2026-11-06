@@ -1096,7 +1096,33 @@ for k_, y_ in enumerate(range(2026, 2030)):
     for cc, s_ in zip((4, 5, 6), SC):
         _I3.cell(r_, cc, f"=Units!{cy_}{UR[(s_, 'L')]}+Units!{cy_}{UR[(s_, 'M')]}").number_format = "0.0"
     _I3.cell(r_, 7, "Derived"); _I3.cell(r_, 8, "Units 頁：markets/equipment 三情境的代工邏輯＋記憶體 WFE 小計（純展示；系統營收＝製程控制強度 × 加權前段 WFE）")
-    _I3.cell(r_, 9, None)# 第三輪修正（2026-11-06）：現價統一更新（fixes_round3 第 35 項；主控決定）——本公司現價與 Comparable 同業前瞻 P/E 一律用 2026-11-04 收盤（Yahoo Finance 日線收盤 2026-11-04）。
+    _I3.cell(r_, 9, None)
+# 第三輪修正補（2026-11-06，合併前 check_in_layout）：情境驅動對照只能是 =E<列> 或常數——前段 WFE 三情境小計改放在對照節上方的
+#   「Y.」輔助列（wfe_A_26…wfe_C_29，E 欄＝Units 頁代工邏輯＋記憶體小計），對照節 scn_wfe_* 的 D／E／F 改為 =E<輔助列>；數值不變。
+_s0 = next(r for r in range(1, _I3.max_row + 1) if str(_I3.cell(r, 1).value or "").startswith("情境驅動對照"))
+_zr = next(r for r in range(1, _s0) if str(_I3.cell(r, 1).value or "").startswith("Z. "))
+_wr = next(r for r in range(1, _s0) if _I3.cell(r, 1).value == "wta_27")
+_sh = 1 + 3 * 4 + 1
+_I3.move_range(f"A{_s0}:I{_I3.max_row}", rows=_sh)
+for cc in range(1, 10):
+    _I3.cell(_s0, cc)._style = _cp(_I3.cell(_zr, cc)._style)
+_I3.cell(_s0, 1, "Y. 前段 WFE 三情境小計（Units 頁 markets/equipment 代工邏輯＋記憶體；純展示，供下方三情境並排表引用，不進計算）")
+_hr = {}
+for k_, y_ in enumerate(range(2026, 2030)):
+    cy_ = chr(ord("C") + y_ - 2025)
+    for j_, s_ in enumerate(SC):
+        r_ = _s0 + 1 + 3 * k_ + j_; _hr[(y_, j_)] = r_
+        for cc in range(1, 10):
+            _I3.cell(r_, cc)._style = _cp(_I3.cell(_wr, cc)._style)
+        _I3.cell(r_, 1, f"wfe_{'ABC'[j_]}_{y_ % 100}"); _I3.cell(r_, 2, f"前段 WFE（代工邏輯＋記憶體）CY{y_}（情境 {'ABC'[j_]}）"); _I3.cell(r_, 3, "US$B")
+        _I3.cell(r_, 5, f"=Units!{cy_}{UR[(s_, 'L')]}+Units!{cy_}{UR[(s_, 'M')]}").number_format = "0.0"
+        _I3.cell(r_, 7, "Derived"); _I3.cell(r_, 8, f"Units 頁 {cy_}{UR[(s_, 'L')]}＋{cy_}{UR[(s_, 'M')]}：markets/equipment 情境 {'ABC'[j_]} 的代工邏輯＋記憶體 WFE 小計（純展示）")
+for k_, y_ in enumerate(range(2026, 2030)):
+    r_ = _rw3 + _sh + k_
+    assert _I3.cell(r_, 1).value == f"scn_wfe_{y_ % 100}", _I3.cell(r_, 1).value
+    for j_, cc in enumerate((4, 5, 6)):
+        _I3.cell(r_, cc).value = f"=E{_hr[(y_, j_)]}"
+    _I3.cell(r_, 8, f"引用 In 頁 wfe_A_{y_ % 100}／wfe_B_{y_ % 100}／wfe_C_{y_ % 100}；Units 頁設備市場三情境的代工邏輯＋記憶體 WFE 小計（純展示）")# 第三輪修正（2026-11-06）：現價統一更新（fixes_round3 第 35 項；主控決定）——本公司現價與 Comparable 同業前瞻 P/E 一律用 2026-11-04 收盤（Yahoo Finance 日線收盤 2026-11-04）。
 #   同業前瞻 P/E 換算到 2026-11-04：原 P/E × 11-04 收盤 ÷ 原報價日收盤（前瞻 EPS 共識視為不變；原報價日收盤取自 stockanalysis 歷史股價／statistics 頁）。
 R3_PX_NEW = {"ASML.AS": 1337.6, "ASML": 1496.3, "AMAT": 369.4, "LRCX": 221.43, "KLAC": 149.79, "8035.T": 9663, "ASM.AS": 683.6, "6857.T": 34570, "TER": 250.99,
              "6146.T": 47370, "7729.T": 14920, "6920.T": 39130, "6525.T": 6400, "COHU": 43.98, "FORM": 85.24}

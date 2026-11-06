@@ -283,7 +283,8 @@ SPEC = {
     ["製程控制強度與市占", ["fl26", "m_mem", "kla_wfe25", "share_up", "pc_u", "kla_sh_pc"]],
     ["先進封裝製程控制", ["ap26", "ap_g26", "k_ap"]],
     ["設備市場見頂年度（循環位置規則用）", ["pk_A", "pk_B", "pk_C"]],
-    ["Wattonomics 錨定係數（只進敏感度）", ["wta_27", "wta_28", "wta_29"]]]],
+    ["Wattonomics 錨定係數（只進敏感度）", ["wta_27", "wta_28", "wta_29"]],
+    ["前段 WFE 三情境小計（Units 頁設備市場；純展示）", [f"wfe_{s}_{y}" for y in range(26, 30) for s in "ABC"]]]],
   ["中國與出口管制", [
     ["中國占營收與出口管制下修", ["chn_sh26", "chn_sh25", "chn_sh24", "chn_cut"]]]],
   ["服務", [
