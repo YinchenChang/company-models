@@ -660,7 +660,7 @@ r += 1
 
 # ---------------- F 評價 ----------------
 r = section(ws, r, "F｜評價（價格、股數、折現、倍數、權重）")
-PX = gi(r, f"現價（{CO['meta']['priceDate']} 收盤）", "US$", V['price'], f"{CONS['priceReference']['source']}（{CONS['priceReference']['url']}）；9/17 收盤 79.88 [Verified]", USD); r += 1
+PX = gi(r, f"現價（{CO['meta']['priceDate']} 收盤）", "US$", V['price'], f"{CO['callFacts'].get('priceSource') or (CONS['priceReference']['source'] + '（' + CONS['priceReference']['url'] + '）')}；9/17 收盤 79.88 [Verified]", USD); r += 1
 SH = gi(r, "股數（含 ATM 上限）", "bn", V['shares'], "7/31 流通 0.5515＋ATM 35m [Verified]", '0.000'); r += 1
 ND = gi(r, "淨負債（6/30）", "US$bn", V['netDebt'], "本金 35.551 − 現金 5.524 [Verified]"); r += 1
 WACC = gi(r, "WACC", "%", V['wacc'], "[Assumed]", PCT); r += 1
