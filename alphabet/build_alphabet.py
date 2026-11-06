@@ -1446,7 +1446,7 @@ for i, (k, lab, prv) in enumerate(CHAIN):
 rr = RC_ATT + 1 + len(CHAIN)
 RC.cell(rr, 1, "(e) 現價與共識：現價 316.80 → 324.89（v0.3.1）→ 282.57（v0.3.8，2026-11-05 收盤）、共識 429.12 不變（只影響上檔空間與評等，不影響目標價）")
 RC.cell(rr, 2, 0).number_format = "#,##0.00"
-RC.cell(rr, 3, f'="上檔空間 v0.3 −18.3% → v0.3.1 "&TEXT(Val!B{VR_["up"]},"+0.0%;-0.0%")&"；評等 中立 → "&Val!B{VR_["rec"]}'); rr += 1
+RC.cell(rr, 3, f'="上檔空間 v0.3 −18.3% → v0.3.1 −20.7%（現價 324.89）→ 本版 v0.3.8 "&TEXT(Val!B{VR_["up"]},"+0.0%;-0.0%")&"；評等 中立 → "&Val!B{VR_["rec"]}'); rr += 1
 RC.cell(rr, 1, "(f) 其他：無風險利率 5.00% → 4.99%、WACC 權益權重改用評價日股價 344.08（v0.3 用現價 316.80）")
 s4 = SENS.get("chain|S4", {}).get("tp")
 RC.cell(rr, 2, f"=B{RCV['v03']}-{s4}" if s4 is not None else "").number_format = "#,##0.00"
