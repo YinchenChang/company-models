@@ -234,7 +234,7 @@ def build(wb, D, Z):
     F.section("六、或有與承諾（只列示；不作資金來源、不進外部資金需求）")
     F.add("或有：可換股債券本金（轉股則免償還）", "RMB 億", {"D": f"={S('cb_principal')}*{I('cb_redeem')}"}, "基準視為債務；換股價 HK$892.50", key="cl_cb",
           name="FND_Contingent", name_col="D")
-    F.add("現價 ÷ 換股價", "倍", {"D": f"={S('price_20261007')}/{S('cb_conv_price')}"}, "SRC_ZP_569 ÷ SRC_ZP_548；<1＝價外（偏向償還）", key="cl_moneyness")
+    F.add("現價 ÷ 換股價", "倍", {"D": f"={S('price_20261105')}/{S('cb_conv_price')}"}, "SRC_ZP_1055 ÷ SRC_ZP_548；<1＝價外（偏向償還）；v0.1.3 以前用 SRC_ZP_569（10-07 收盤 696）", key="cl_moneyness")
     F.add("對照：2025-10-31 現金＋短期投資＋可用承諾銀行授信合計（未拆）", "RMB 億", {"D": f"={S('liquidity_2510')}"},
           "SRC_ZP_110（Interested-party）；未提用授信額度單獨金額找不到 → 只列", key="cl_liq")
     F.add("未提用授信額度、合約承諾（算力採購等）", "—", {}, "找不到（中期公告未列；Z1 not_found）", key="cl_nf")
@@ -396,9 +396,9 @@ def build(wb, D, Z):
     X.add("累計外部資金需求（反向）", "RMB 億", {"E": "=E«X.ext»", **{c: f"={PREV[c]}«X.cum»+{c}«X.ext»" for c in LATE}}, "", key="cum", name="RVS_ExtNeedCum")
 
     X.section("六、市值隱含營收（D22 ③、D21r）：EV ÷ 同業 EV／年化營收倍數（MiniMax，Analogy）→ 與正向營收比較")
-    X.add("收盤價（2026-10-07）", "HKD／股", {"D": f"={S('price_20261007')}"}, "SRC_ZP_569", key="v_px")
+    X.add("收盤價（2026-11-05）", "HKD／股", {"D": f"={S('price_20261105')}"}, "SRC_ZP_1055（v0.1.3 以前為 SRC_ZP_569，10-07 收盤 696）", key="v_px")
     X.add("總股本（2026-09-16 配售後）", "股", {"D": f"={S('shares_total_post_placing2')}"}, "SRC_ZP_563（含非上市股份，同價計）", key="v_sh")
-    X.add("市值（港幣）＝股價 × 股數 ÷ 10^8", "HKD 億", {"D": f"=D«X.v_px»*D«X.v_sh»/{I('div_yuan_yi')}"}, "對照：行情頁 3,396.48（SRC_ZP_571）", key="v_mc_hkd")
+    X.add("市值（港幣）＝股價 × 股數 ÷ 10^8", "HKD 億", {"D": f"=D«X.v_px»*D«X.v_sh»/{I('div_yuan_yi')}"}, "對照：行情頁 3,396.48（SRC_ZP_571，10-07 市值；v0.1.4 起股價改 11-05 收盤）", key="v_mc_hkd")
     X.add("市值（人民幣）", "RMB 億", {"D": f"=D«X.v_mc_hkd»*{fxh}"}, "× HKD/CNY", key="v_mc", name="RVS_MktCap", name_col="D")
     X.add("淨現金（估計，Derived）＝2026-06-30 現金＋2H26 配售與可換股債券淨額 − 2026-07 配售款已動用 − 銀行借款 − 可換股債券本金", "RMB 億",
           {"D": f"={S('cash_end_1h26')}+{fnd('pl1', 'L')}+{fnd('pl2', 'L')}+{fnd('cb', 'L')}-{fnd('u_pl1_used', 'L')}-{S('bank_loans_1h26')}-{S('cb_principal')}*{I('cb_redeem')}"},

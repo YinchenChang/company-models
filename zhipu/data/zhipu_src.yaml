@@ -19038,6 +19038,24 @@ items:
   party: 弗若斯特沙利文（受公司委託之行業顧問）
   basis: 第三方行業顧問口徑
   note: 原文（第 98 頁，弗若斯特沙利文行業概覽）「單個H100 GPU的成本約為25,000美元」；非智譜採購價
+- id: SRC_ZP_1055
+  team: v0.1.4
+  key: price_20261105
+  group: F
+  metric: 收盤價
+  value: 476.0
+  lo: null
+  hi: null
+  unit: HKD／股
+  period: 2026-11-05
+  source: Yahoo Finance 2513.HK 日線；StockAnalysis HKG:2513 歷史頁（兩來源一致）
+  url: https://query1.finance.yahoo.com/v8/finance/chart/2513.HK?range=5d&interval=1d
+  doc_date: 2026-11-05
+  retrieved: 2026-11-06
+  tag: Verified
+  party: null
+  basis: 市場數據
+  note: 476.00，跌 1.69%；前收 484.20（11-04）；StockAnalysis https://stockanalysis.com/quote/hkg/2513/history/ 同值；Andy 2026-11-06 要求換 11-05 收盤（docs/reports/20261105_收盤價_個股換價來源.md；repo 根目錄）
 not_found:
 - team: Z1-F
   item: 研發開支組成（算力服務費、人工、股權報酬）FY2023、FY2025、1H2026 金額
