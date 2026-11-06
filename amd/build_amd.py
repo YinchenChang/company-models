@@ -167,7 +167,7 @@ inp("cons_eps27", "共識 FY2027 non-GAAP EPS", "US$", 11.23, 15.76, None, "Inte
 inp("cons_eps28", "共識 FY2028 EPS（約 $20）", "US$", 14.41, 20.0, None, "Interested-party", "ts2.tech 2026-07-30 轉述 Motley Fool（二手）", "低＝tickflow 四季合計 14.41")
 
 sec("I. 價格與估值")
-inp("px", "股價（2026-11-04 收盤）", "US$", None, 488.78, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（第三輪修正：全批統一價格日）", "v0.4.2 為 2026-10-23 收盤 516.79（stockanalysis.com 歷史股價與統計頁）；digrin.com AMD 價格頁現價 516.79（2026-10-25 頁面，即 10-23 收盤）；heygotrade 每日報導的收盤序列與 stockanalysis 一致（10-19 538.05、10-14 570.82）")
+inp("px", "股價（2026-11-05 收盤）", "US$", None, 404.4, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05", "v0.4.3 為 2026-11-04 收盤 488.78；v0.4.2 為 2026-10-23 收盤 516.79（stockanalysis.com 歷史股價與統計頁）；digrin.com AMD 價格頁現價 516.79（2026-10-25 頁面，即 10-23 收盤）；heygotrade 每日報導的收盤序列與 stockanalysis 一致（10-19 538.05、10-14 570.82）")
 inp("r_disc", "折現率（把 FY2027 年底隱含價折回現在；參考用）", "%", 0.08, 0.10, 0.12, "Assumed", "無", "FY2027 年底（2027-12）距 2026-10-23 約 1.19 年")
 for s in SC:
     inp(f"pk_{s}", f"情境 {s}：設備市場見頂年度（日曆年；循環位置規則用）", "年", None, PEAK[s], None, "Derived", PEAK_SRC[s], "共用規則（tools/cycle_position.py classify）：AMD 會計年度＝日曆年，不平移" if s == "A" else "同上")
@@ -462,7 +462,7 @@ V.cell(12, 1, "舊法說明"); V["B12"] = ("P/E：十年（2016–2025 年底）
                                        "樣板標籤 A 樂觀／B 基準／C 下檔沿用，本模型 A＝市場層基準、B＝AI 資本支出消化、C＝明顯下修")
 V.cell(14, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, 15, ["項目", "A", "B", "C", "說明"])
-V.cell(16, 1, "現價（2026-11-04 收盤）"); V["B16"] = "=px"; V["B16"].number_format = "0.00"
+V.cell(16, 1, "現價（2026-11-05 收盤）"); V["B16"] = "=px"; V["B16"].number_format = "0.00"
 for i, (lab, y) in enumerate((("現價 ÷ FY2026 EPS（錨點）", 2026), ("現價 ÷ FY2027 EPS（模型）", 2027), ("現價 ÷ FY2028 EPS（模型）", 2028), ("現價 ÷ FY2029 EPS（模型）", 2029)), 17):
     V.cell(i, 1, lab)
     for j, s in enumerate(SC):
@@ -702,11 +702,11 @@ TPL, TPN = TP.add_tp_section(wb, V,
     eps={s: [f"PL!{XC[y]}{XR[(s, 'eps')]}" for y in range(2027, 2033)] for s in SC}, e_mon=12,
     fwd={s: [(f"PL!{XC[2027]}{XR[(s, 'eps')]}", "2/12"), (f"PL!{XC[2028]}{XR[(s, 'eps')]}", "10/12")] for s in SC},
     fwd_note="會計年度＝日曆年：約 12 個月後（2027-10 底）的未來 12 個月＝2027-11～2028-10（2/12 × FY2027＋10/12 × FY2028）",
-    peers=[("NVIDIA", "NVDA", 16.55, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 16.92（2026-10-30 頁面，價格 204.64）→ 前瞻 EPS 12.09；P/E＝Yahoo Finance 日線收盤 2026-11-04 200.13 ÷ 前瞻 EPS", "Interested-party（資料商彙整賣方預估）"),
-           ("Broadcom", "AVGO", 18.71, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 18.74（2026-10-30 頁面，價格 326.08）→ 前瞻 EPS 17.4；P/E＝Yahoo Finance 日線收盤 2026-11-04 325.48 ÷ 前瞻 EPS", "Interested-party（資料商彙整賣方預估）"),
-           ("Intel", "INTC", 37.76, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 42.61（2026-10-30 頁面，價格 65.76）→ 前瞻 EPS 1.543；P/E＝Yahoo Finance 日線收盤 2026-11-04 58.27 ÷ 前瞻 EPS", "Interested-party（資料商彙整賣方預估）"),
-           ("Qualcomm", "QCOM", 18.71, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 20.03（2026-10-29 頁面，價格 185.41）→ 前瞻 EPS 9.257；P/E＝Yahoo Finance 日線收盤 2026-11-04 173.19 ÷ 前瞻 EPS", "Interested-party（資料商彙整賣方預估）"),
-           ("Marvell", "MRVL", 28.31, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 42.09（2026-10-27 頁面，價格 237.6）→ 前瞻 EPS 5.645；P/E＝Yahoo Finance 日線收盤 2026-11-04 159.8 ÷ 前瞻 EPS", "Interested-party（資料商彙整賣方預估）")],
+    peers=[("NVIDIA", "NVDA", 15.02, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 16.92（2026-10-30 頁面，價格 204.64）→ 前瞻 EPS 12.09；P/E＝2026-11-04 基準 16.55 × Yahoo Finance 日線收盤 2026-11-05 181.6 ÷ 2026-11-04 收盤 200.13（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）"),
+           ("Broadcom", "AVGO", 16.76, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 18.74（2026-10-30 頁面，價格 326.08）→ 前瞻 EPS 17.4；P/E＝2026-11-04 基準 18.71 × Yahoo Finance 日線收盤 2026-11-05 291.53 ÷ 2026-11-04 收盤 325.48（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）"),
+           ("Intel", "INTC", 33.86, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 42.61（2026-10-30 頁面，價格 65.76）→ 前瞻 EPS 1.543；P/E＝2026-11-04 基準 37.76 × Yahoo Finance 日線收盤 2026-11-05 52.25 ÷ 2026-11-04 收盤 58.27（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）"),
+           ("Qualcomm", "QCOM", 16.93, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 20.03（2026-10-29 頁面，價格 185.41）→ 前瞻 EPS 9.257；P/E＝2026-11-04 基準 18.71 × Yahoo Finance 日線收盤 2026-11-05 156.75 ÷ 2026-11-04 收盤 173.19（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）"),
+           ("Marvell", "MRVL", 23.66, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 42.09（2026-10-27 頁面，價格 237.6）→ 前瞻 EPS 5.645；P/E＝2026-11-04 基準 28.31 × Yahoo Finance 日線收盤 2026-11-05 133.55 ÷ 2026-11-04 收盤 159.8（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）")],
     peer_note="券商常用的 CPU／GPU／AI 半導體同業（NVIDIA、Intel 為直接競爭者）；不含 A 股（Andy 11:53）。前瞻 P/E 口徑為資料商的未來 12 個月共識 EPS，各家 GAAP／non-GAAP 口徑不一",
     cons_tp="cons_tp", cons_note="stockanalysis.com：55 位分析師平均目標價（2026-10-25 頁面）；Interested-party",
     cons_fwd="2/12*cons_eps27+10/12*cons_eps28", cons_fwd_note="同權重的共識 EPS：2/12 × 共識 FY2027（15.76，stockanalysis）＋10/12 × 共識 FY2028（約 20，二手）",
@@ -780,7 +780,7 @@ for _j, _t in enumerate(OBS, 1): RD.cell(_rr + 1 + _j, 1, f"重點觀察 {_j}：
 # v0.4：重點觀察 1 的目標價、DCF、上檔空間改用公式（下游 tools/target_summary 讀本列文字；DCF 改為標準版）
 _o1 = OBS[0].split("，投資建議維持放空；上一版 278（−46.2%）。")
 assert len(_o1) == 2
-RD.cell(_rr + 2, 1, '="重點觀察 1：目標價 US$"&TEXT(Val!B' + str(TPL["tp"]) + ',"0")&"（標準版 DCF "&TEXT(Val!B' + str(TPL["dcf"]) + ',"0")&"、Comparable 經相對倍數調整後 "&TEXT(tp_comp_adj,"0")&" 各半），比現價 "&TEXT(px,"0.00")&"（2026-11-04 收盤）"&IF(Val!B' + str(_up) + '<0,"低 "&TEXT(-Val!B' + str(_up) + ',"0.0%"),"高 "&TEXT(Val!B' + str(_up) + ',"0.0%"))&"，級距 "&Val!B' + str(GRADE_ROW) + '&"，投資建議 "&Val!B' + str(REC_ROW) + '&"。Q3 實績與 Q4 指引的影響見重點觀察 2、3。"')   # 第三輪修正：刪除 v0.3 前的舊目標價比較（過時數字）
+RD.cell(_rr + 2, 1, '="重點觀察 1：目標價 US$"&TEXT(Val!B' + str(TPL["tp"]) + ',"0")&"（標準版 DCF "&TEXT(Val!B' + str(TPL["dcf"]) + ',"0")&"、Comparable 經相對倍數調整後 "&TEXT(tp_comp_adj,"0")&" 各半），比現價 "&TEXT(px,"0.00")&"（2026-11-05 收盤）"&IF(Val!B' + str(_up) + '<0,"低 "&TEXT(-Val!B' + str(_up) + ',"0.0%"),"高 "&TEXT(Val!B' + str(_up) + ',"0.0%"))&"，級距 "&Val!B' + str(GRADE_ROW) + '&"，投資建議 "&Val!B' + str(REC_ROW) + '&"。Q3 實績與 Q4 指引的影響見重點觀察 2、3。"')   # 第三輪修正：刪除 v0.3 前的舊目標價比較（過時數字）
 # v0.3（2026-11-04）：滾入 Q3 2026 實績與 Q4 2026 指引；README 頁只在最後一列之後追加
 _r3 = RD.max_row + 1
 RD.cell(_r3, 1, 'v0.3（2026-11-04）：滾入 Q3 2026 實績（8-K 2026-11-03：營收 13.377、資料中心 8.546、Client 2.949、Gaming 0.773、Embedded 1.109、non-GAAP 毛利 7.483、營業費用 3.560、營業利益 3.923、淨利 3.471、稀釋股數 1.661、EPS 2.09）與 Q4 2026 指引（營收約 17.0 ±3%、毛利率約 55%、營業費用約 3.75、其他收益約 0.004、稅率 13%、股數約 1.67）。Q4 資料中心＝指引 − 其他分部（分部假設不變）。方法、情境結構、估值規則不變；現價沿用 2026-10-23。')
@@ -993,8 +993,12 @@ def _r3_static(wb, prefix, text):
         if isinstance(v, str) and v.startswith('="' + prefix):
             ws.cell(r, 1).value = text; return 1
     raise KeyError(prefix)
-_r3_fix(wb, "v0.4.3", "FY2026＝日曆年 2026，錨點", extra=[(r"自訂（路徑 stub_fcff）", "含 stub 期會計年度（FY2026 錨點）FCFF × stub_frac"), (r"樣板標籤 A 樂觀／B 基準／C 下檔沿用", "情境名稱 A 順利／B 平平／C 不如預期"), (r"與股價同日（2026-10-23）", "rf 沿用 2026-10-23（第三輪修正只把股價與同業報價統一到 2026-11-04）")])
+_r3_fix(wb, "v0.4.3", "FY2026＝日曆年 2026，錨點", extra=[(r"自訂（路徑 stub_fcff）", "含 stub 期會計年度（FY2026 錨點）FCFF × stub_frac"), (r"樣板標籤 A 樂觀／B 基準／C 下檔沿用", "情境名稱 A 順利／B 平平／C 不如預期"), (r"與股價同日（2026-10-23）", "rf 沿用 2026-10-23（股價與同業報價已換成 2026-11-05 收盤，rf 不變）")])
 _r3_static(wb, "v0.4.2（2026-11-05）", "v0.4.2（2026-11-05）：換用共用模組 tools/fcff_dcf.py v2（工作單第二輪修正；Andy 2026-11-05 23:16 定案）。(1) Stub 期：資產負債表日 2026-09-26（10-Q，最新已公布一季）與評價日 2026-12-31 不同，淨現金滾到評價日＝資產負債表淨現金與投資 9.72＋stub 期 FCFF（各情境 FY2027 FCFF × stub_frac 0.263 年；情境 B 1.79）− 已宣告股利 0.00（AMD 未配息；買回無已宣告金額、不扣）＝11.51（US$B）。DCF 目標價 90.47 → 91.50、加權目標價 287.49 → 288.01（上檔 -44.3%，放空）。(2) β 敏感度：低／高改為 β_u ∓ 0.3 各自重新加槓桿（In 頁 beta_du；beta_u 低／高欄刪除）。(3) ke 說明格改由模組參數 beta_note 提供；In 頁 M2 標題不寫版號。資本支出、折舊：本模型沒有逐年資本支出／折舊列（只有近三期比率 fc_da、fc_cx），維持占營收比例。美國公司不加「美元口徑折現」案例（＝基準）。PL、Comparable、情境權重不變。")
+# ---------------- v0.4.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守（本資料夾 px1105_post.py；只改文字） ----------------
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import px1105_post  # noqa: E402
+print(px1105_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), "v0.4.4", "v0.4.3", "v0.4.3（2026-11-06）"))
 wb.save(sys.argv[1])
 if os.environ.get("AMD_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
