@@ -12,17 +12,20 @@ base_raw = os.path.join(TMP, "raw", "base.xlsx")
 subprocess.run([sys.executable, BUILD, base_raw], check=True, env={**env0, "TUC_OVERRIDE": "_none=0"})
 ws = openpyxl.load_workbook(base_raw)["In"]
 jobs = {}
+sys.path.insert(0, os.path.join(HERE, "..", "tools")); import fcff_dcf as FD   # noqa: E402
+FD_KEYS = set(FD.IN_KEYS) | {"beta_u", "beta_de", "beta_1", "beta_2", "blume_a"}
 for r in range(4, ws.max_row + 1):
     k, lo, hi = ws.cell(r, 1).value, ws.cell(r, 4).value, ws.cell(r, 6).value
     if k and isinstance(lo, (int, float)) and isinstance(hi, (int, float)) and lo != hi:
         if "情境驅動對照" in str(ws.cell(r - 1, 1).value or ""): break
+        if k in FD_KEYS: continue   # v0.2：DCF 參數由 build_tuc.py 的閉式敏感度表處理（tools/fcff_dcf.write_sens），不整本重算
         jobs[k] = (lo, hi)
 for k, (lo, hi) in jobs.items():
     for side, v in (("lo", lo), ("hi", hi)):
         subprocess.run([sys.executable, BUILD, os.path.join(TMP, "raw", f"{k}__{side}.xlsx")], check=True, env={**env0, "TUC_OVERRIDE": f"{k}={v}"})
 subprocess.run([sys.executable, BUILD, os.path.join(TMP, "raw", "_wta.xlsx")], check=True, env={**env0, "TUC_WTA": "1", "TUC_ROWMAP": os.path.join(TMP, "wta_rowmap.json")})   # v0.13：Wattonomics 錨定
 files = sorted(glob.glob(os.path.join(TMP, "raw", "*.xlsx")))
-subprocess.run(["soffice", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", os.path.join(TMP, "rc")] + files,
+subprocess.run(["soffice", "-env:UserInstallation=file://" + os.path.join(TMP, "lo_profile"), "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", os.path.join(TMP, "rc")] + files,
                check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 def read(f):
     wb = openpyxl.load_workbook(f, data_only=True)
