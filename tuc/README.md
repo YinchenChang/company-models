@@ -1,4 +1,15 @@
-# tuc/ — 台燿（6274）個股模型 v0.2.2
+# tuc/ — 台燿（6274）個股模型 v0.2.3
+
+## v0.2.3（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
+
+- 工作單 px1105（Andy 2026-11-06 07:28；情境名稱 03:14，取代第三輪修正第 23 點）。來源：Yahoo Finance 日線收盤 2026-11-05。
+- 現價 1,115 → 1,005 元（2026-11-04 → 11-05 收盤）。
+- Comparable 同業前瞻 P/E＝現行倍數（2026-11-04 口徑）× 11-05 收盤 ÷ 11-04 收盤（共識 EPS 不變）：2383.TW 27.06 → 24.36、6213.TW 21.65 → 19.49、2368.TW 16.92 → 15.24。
+- 整本重算的 Sens（`sens_tuc.py`）重跑，`sens.json` 更新（讀台光電 v0.5.3 成品）。
+- 情境名稱：xlsx 各頁（In、Val、DCF、PL、README 等）與 HTML 設定（`html_src.json`）的「情境 A（順利）／B（平平）／C（不如預期）」改回「情境 A（樂觀）／B（基準）／C（保守）」（建置最後的 `px1105_post.py`）。
+- 不改：rf、共識 EPS、預測用匯率、模型假設。
+- 結果：加權目標價 1,401 → 1,311 元（DCF 981 → 982、Comparable 調整後 1,821 → 1,639），上檔空間 +25.6% → +30.4%，投資建議 買進 → **買進**。
+- 成品：`dist/20261106_*_v0.2.3.xlsx`／`.html`；v0.2.2 移到 `dist/_待刪除/`。
 
 ## v0.2.2（2026-11-06）：第三輪修正（合併前）
 
@@ -60,8 +71,8 @@ AI 半導體 Project 載板與 PCB 次產業的第二家 CCL 廠，樣板 `emc/`
 | `sens.json` | 敏感度重算值（33 個鍵 × 低／高） |
 | `html_src.json`、`gen_html_json.py`、`html.json` | HTML 展示層設定：`html_src.json` 為原設定（v0.1 依列號產生，v0.2 起內容不動），`gen_html_json.py` 套用版面規格 v1.0 產生 `html.json`（勿手改） |
 | `segments.json` | 官方分部宣告（單一部門＋損耗等級子列） |
-| `dist/20261106_台燿個股模型_v0.2.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
-| `dist/20261106_台燿個股模型_v0.2.2.html` | HTML 展示層（數字全由 xlsx 重算值抽出） |
+| `dist/20261106_台燿個股模型_v0.2.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261106_台燿個股模型_v0.2.3.html` | HTML 展示層（數字全由 xlsx 重算值抽出） |
 
 建置：`python3 tuc/build_tuc.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir <dir> raw.xlsx`，改名放 `dist/`。In 頁或模型改動時先跑 `python3 tuc/sens_tuc.py` 更新 `sens.json`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。上游唯讀：`siliconomics/data/` 現行快照（v0.10）、`emc/dist`（台光電份額，一致性檢查）、`tools/relative_multiple.py`、`tools/in_layout/apply_in_layout.py`；**不修改它們**。
 
