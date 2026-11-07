@@ -185,9 +185,9 @@ inp("c_eps27", "共識 FY2027 EPS（＝共識 FY2026 EPS ×（1＋年增））",
 inp("c_rev27", "共識 FY2027 營收", "¥B", None, 1840.0, None, "Interested-party", SAF + "：Revenue Next Year 1.84 兆（+6.41%）", "—")
 
 sec("H. 價格與市場倍數")
-inp("px", "股價（2026-11-04 收盤）", "¥", None, 4945, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（第三輪修正統一價格日）", "v0.3.2 為 2026-10-23 收盤 5,064（" + MAT + "）")
-inp("pe_cf", "P/E（公司預測；2026-11-04 收盤 ÷ 公司預測 EPS 129.12）", "x", None, "=px/129.12", None, "Derived", YJ + "：EPS（會社予想）129.12（10-22 頁面 PER 39.08 倍）", "v0.3.3 起以 11-04 收盤重算")
-inp("fpe", "前瞻 P/E（2026-11-04 收盤 ÷ stockanalysis 前瞻 EPS）", "x", None, "=px/(5051/32.76)", None, "Derived", SA + "：2026-09-25 價格 5,051、Forward PE 32.76（前瞻 EPS＝5,051 ÷ 32.76）", "v0.3.3 起以 11-04 收盤重算；" + STO + "：12 月滾動預估 P/E 30.66（10-26）")
+inp("px", "股價（2026-11-05 收盤）", "¥", None, 4872, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（2802.T）", "v0.3.3 為 2026-11-04 收盤 4,945（Yahoo Finance 日線收盤 2026-11-04）；v0.3.2 為 2026-10-23 收盤 5,064（" + MAT + "）")
+inp("pe_cf", "P/E（公司預測；2026-11-05 收盤 ÷ 公司預測 EPS 129.12）", "x", None, "=px/129.12", None, "Derived", YJ + "：EPS（會社予想）129.12（10-22 頁面 PER 39.08 倍）", "v0.3.4 起以 11-05 收盤重算（v0.3.3 為 11-04 收盤）")
+inp("fpe", "前瞻 P/E（2026-11-05 收盤 ÷ stockanalysis 前瞻 EPS）", "x", None, "=px/(5051/32.76)", None, "Derived", SA + "：2026-09-25 價格 5,051、Forward PE 32.76（前瞻 EPS＝5,051 ÷ 32.76）", "v0.3.4 起以 11-05 收盤重算（v0.3.3 為 11-04 收盤）；" + STO + "：12 月滾動預估 P/E 30.66（10-26）")
 inp("cons_feps", "共識前瞻 12 月 EPS（＝取得時價格 ÷ 前瞻 P/E）", "¥", None, "=5051/32.76", None, "Derived", "stockanalysis 2026-09-25 價格 5,051 ÷ 前瞻 P/E 32.76", "DBS：FY26F 正常化 EPS 155")
 inp("cons_tp", "市場共識目標價（賣方平均）", "¥", 5800, 6321.43, 7300, "Interested-party", SWS + "：14 位平均 6,321（最高 7,300、最低 5,800；2026-10-26）",
     SAF + "：14 位平均 6,104、中位數 6,200（2026-08-07）；" + KY + "：5,906（2026-08）；高盛 6,500（" + TN + "）、DBS 6,200")
@@ -244,7 +244,7 @@ for _row in FD.in_rows(dict(
         lease=(52.498, "Verified", SA_BS + "：2026-03-31 Long-Term Leases 52,498", "—"),
         cash=(196.979, "Verified", SA_BS + "：2026-06-30 Cash & Short-Term Investments 196,979", "2026-03-31：106,693"),
         inv=(189.162, "Verified", SA_BS + "：2026-06-30 Long-Term Investments 189,162（投資有價證券與權益法投資，政策持股為主）", "以帳面計入；Sens：不計"),
-        mi=("=73.845-0.496*0.89086*158.469/4.0555+0.496*60.80*19.72/1000*158.469/4.0555", "Verified／Derived", SA_BS + "：2026-06-30 Minority Interest 73,845；其中上市子公司 Ajinomoto (Malaysia) 部分改市值：− 帳面 49.6% × MYR 0.891B ＋ 市值 49.6% × 60.80 百萬股 × MYR 19.72（換日圓）", "Ajinomoto (Malaysia) Berhad（KLSE:AJI 2658）：味之素持股約 50.4%（合併子公司）；股數 60.80 百萬股、2026-06-30 權益 MYR 890.86M（stockanalysis.com）；股價 2026-11-04 收盤未取得，沿用 11-03 收盤 MYR 19.72（stockanalysis.com 歷史股價）；MYR 匯率 11-04 未取得，沿用 FRED DEXMAUS 2026-10-30 4.0555 MYR／USD，與 USD/JPY 158.469（Yahoo Finance 2026-11-04）交叉；其餘子公司未上市，維持帳面（第三輪修正第 1、13 項）"),
+        mi=("=73.845-0.496*0.89086*157.279/4.044+0.496*60.80*19.72/1000*157.279/4.044", "Verified／Derived", SA_BS + "：2026-06-30 Minority Interest 73,845；其中上市子公司 Ajinomoto (Malaysia) 部分改市值：− 帳面 49.6% × MYR 0.891B ＋ 市值 49.6% × 60.80 百萬股 × MYR 19.72（換日圓）", "Ajinomoto (Malaysia) Berhad（KLSE:AJI 2658）：味之素持股約 50.4%（合併子公司）；股數 60.80 百萬股、2026-06-30 權益 MYR 890.86M（stockanalysis.com）；股價 Yahoo Finance 日線收盤 2026-11-05 MYR 19.72（2658.KL）；匯率 Yahoo Finance 2026-11-05 USD/MYR 4.044、USD/JPY 157.279 交叉（v0.3.3：股價沿用 11-03 收盤 19.72、MYR 匯率沿用 FRED 10-30 4.0555、USD/JPY 158.469）；其餘子公司未上市，維持帳面（第三輪修正第 1、13 項）"),
         sh=("=so-0.023173875", "Derived", "期末發行股數 so 0.977736 − 庫藏股 0.023174 十億股（" + TANQ1 + "）", "未來買回由 FCFF 支應，不另推股數"),
         dps=(50, "Derived", "stockanalysis 股利頁（https://stockanalysis.com/quote/tyo/2802/dividend/）：2026-09 基準日中間股利 ¥25（2026-12 支付）；2027-03 期末、2027-09 中間股利假設同 ¥25（2027-06、2027-12 支付）", "評價日 2026-12-31 到目標時點 2027-12-31 之間兩次，共 ¥50（Assumed 股利不變）"),
         t_tgt=(1.0, "目標價為評價日後 12 個月（2027-12-31）"),
@@ -573,13 +573,13 @@ SDCF = FD.write_summary(wb, V, 5, RDCF, list(SC), ["tp_wA", "tp_wB", "tp_wC"], f
 T.update(dcfv=SDCF["dcfv"], dcf12=SDCF["v12"], dcftp=SDCF["dcf"], tvsh=SDCF["tvsh"], mult=SDCF["mult"])
 V.cell(26, 1, "0.2 Comparable（市場主流同業前瞻 P/E：食品同業）").font = BOLD
 hdr(V, 27, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"])
-PEERS = [("龜甲萬（Kikkoman）", "2801.T", "=1800/(1662/22.86)", "2026-11-04", "tyo/2801"), ("日清食品 HD（Nissin Foods）", "2897.T", "=3055/(2938.5/16.97)", "2026-11-04", "tyo/2897"),
-         ("明治 HD（Meiji）", "2269.T", "=4244/(4323/17.79)", "2026-11-04", "tyo/2269"), ("Kewpie（丘比）", "2809.T", "=4587/(4645/23.40)", "2026-11-04", "tyo/2809"),
-         ("McCormick（味好美）", "MKC", "=50.48/(47.36/15.33)", "2026-11-04", "stocks/mkc"), ("Nestlé（雀巢）", "NESN.SW", "=85.9/(83.7/17.74)", "2026-11-04", "swx/NESN")]
+PEERS = [("龜甲萬（Kikkoman）", "2801.T", "=1944/(1662/22.86)", "2026-11-05", "tyo/2801"), ("日清食品 HD（Nissin Foods）", "2897.T", "=3214/(2938.5/16.97)", "2026-11-05", "tyo/2897"),
+         ("明治 HD（Meiji）", "2269.T", "=4422/(4323/17.79)", "2026-11-05", "tyo/2269"), ("Kewpie（丘比）", "2809.T", "=4809/(4645/23.40)", "2026-11-05", "tyo/2809"),
+         ("McCormick（味好美）", "MKC", "=50.06/(47.36/15.33)", "2026-11-05", "stocks/mkc"), ("Nestlé（雀巢）", "NESN.SW", "=87.23/(83.7/17.74)", "2026-11-05", "swx/NESN")]
 # v0.3.3（第三輪修正第 26、35 項）：同業前瞻 P/E＝2026-11-04 收盤（Yahoo Finance）÷ 前瞻 EPS（＝stockanalysis 統計頁取得日價格 ÷ Forward PE；取得日：2801 09-25 ¥1,662、2897 08-07 ¥2,938.5、2269 09-18 ¥4,323、2809 08-14 ¥4,645、MKC 10-27 $47.36、NESN 10-23 CHF 83.70）
 for i, (nm, tk, pe, dt, _u) in enumerate(PEERS, 28):
     V.cell(i, 1, nm); V.cell(i, 2, tk); c = V.cell(i, 3, pe); c.font = BLUE; c.number_format = "0.0"
-    V.cell(i, 4, dt); V.cell(i, 5, "2026-11-04 收盤（Yahoo Finance 日線收盤）÷ stockanalysis.com 前瞻 EPS（＝取得日價格 ÷ Forward PE，見 build 註解）"); V.cell(i, 6, "Interested-party")
+    V.cell(i, 4, dt); V.cell(i, 5, "2026-11-05 收盤（Yahoo Finance 日線收盤 2026-11-05）÷ stockanalysis.com 前瞻 EPS（＝取得日價格 ÷ Forward PE，見 build 註解）；＝現行倍數 × 11-05 收盤 ÷ 11-04 收盤，共識 EPS 不變"); V.cell(i, 6, "Interested-party")
 PEER_LAST = 27 + len(PEERS)
 tset(34, "pmed", "同業前瞻 P/E 中位數", [f"=MEDIAN(C28:C{PEER_LAST})", None, None], "0.0",
      "食品與調味料同業：日本四家（東證食料品）＋全球調味料兩家（不含 A 股）。理由：東證與 GICS 皆歸食品，賣方由食品分析師覆蓋，事業利益約三分之二來自食品本業；電子材料同業與 SOTP 見第 7 節（參考，不進目標價）")
@@ -591,7 +591,7 @@ hdr(V, 39, ["項目", "數值", "對照", "對照", "說明"])
 tset(40, "tpw", "目標價（DCF 與 Comparable 加權）", [f"=tp_w_dcf*B{T['dcftp']}+(1-tp_w_dcf)*B36", None, None], "#,##0", "tp_w_dcf × DCF＋（1 − tp_w_dcf）× Comparable；tp_w_dcf 見 In 頁（0.5）")
 tset(41, "comp2", "Comparable 目標價（市場主流同業法）", ["=B36", None, None], "#,##0")
 tset(42, "cons", "市場共識目標價", ["=cons_tp", None, None], "#,##0", "Simply Wall St：14 位分析師平均 6,321（最高 7,300、最低 5,800），2026-10-26；stockanalysis 14 位 6,104（2026-08-07）")
-tset(43, "upw", "上檔空間：加權目標價", ["=B40/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-04 收盤）")
+tset(43, "upw", "上檔空間：加權目標價", ["=B40/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-05 收盤）")
 tset(44, "upc", "上檔空間：Comparable 目標價", ["=B41/px-1", None, None], "0.0%")
 tset(45, "geps", "與市場共識目標價的差距：EPS 因素", ["=B35/C45-1", "=cons_feps", None], "0.0%", "B＝本模型前瞻 EPS ÷ 共識前瞻 EPS − 1；C＝共識前瞻 EPS（stockanalysis 價格 5,051 ÷ 前瞻 P/E 32.76）；兩者期間差約一年")
 V["C45"].number_format = "#,##0.00"
@@ -617,15 +617,15 @@ for r_ in (T["dcftp"], 36, 40):
     V[f"B{r_}"].fill = KEY
 V.cell(O, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, O + 1, ["項目", "A", "B", "C", "說明"])
-V.cell(O + 2, 1, "現價（2026-11-04 收盤）"); V[f"B{O + 2}"] = "=px"; V[f"B{O + 2}"].number_format = "#,##0"
+V.cell(O + 2, 1, "現價（2026-11-05 收盤）"); V[f"B{O + 2}"] = "=px"; V[f"B{O + 2}"].number_format = "#,##0"
 for k, y, lab in ((3, 2025, "現價 ÷ FY2025 EPS（實績）"), (4, 2026, "現價 ÷ FY2026 EPS（錨點）"), (5, 2027, "現價 ÷ FY2027 EPS（模型）"), (6, 2028, "現價 ÷ FY2028 EPS（模型）"), (7, 2029, "現價 ÷ FY2029 EPS（模型）")):
     V.cell(O + k, 1, lab)
     for j, s in enumerate(SC):
         c = "BCD"[j]; V[f"{c}{O + k}"] = f"=px/PL!{FC[y]}{SUMR[(s, 'eps')]}"; V[f"{c}{O + k}"].number_format = "0.0"
 V.cell(O + 8, 1, "未來 12 月 EPS（模型 B）≈ 5/12 × FY2026＋7/12 × FY2027（2026-11～2027-10）"); V[f"B{O + 8}"] = f"=5/12*PL!D{SUMR[('B', 'eps')]}+7/12*PL!E{SUMR[('B', 'eps')]}"; V[f"B{O + 8}"].number_format = "#,##0.00"
 V.cell(O + 9, 1, "  現價 ÷ 未來 12 月 EPS（模型 B）"); V[f"B{O + 9}"] = f"=px/B{O + 8}"; V[f"B{O + 9}"].number_format = "0.0"
-V.cell(O + 10, 1, "P/E（公司預測 EPS 129.12；11-04 收盤）"); V[f"B{O + 10}"] = "=pe_cf"; V[f"B{O + 10}"].number_format = "0.0"
-V.cell(O + 11, 1, "前瞻 P/E（stockanalysis 前瞻 EPS；11-04 收盤）"); V[f"B{O + 11}"] = "=fpe"; V[f"B{O + 11}"].number_format = "0.0"
+V.cell(O + 10, 1, "P/E（公司預測 EPS 129.12；11-05 收盤）"); V[f"B{O + 10}"] = "=pe_cf"; V[f"B{O + 10}"].number_format = "0.0"
+V.cell(O + 11, 1, "前瞻 P/E（stockanalysis 前瞻 EPS；11-05 收盤）"); V[f"B{O + 11}"] = "=fpe"; V[f"B{O + 11}"].number_format = "0.0"
 V[f"E{O + 4}"] = "FY2025 含土地出售利益；FY2026 三情境相同（錨點）"; V[f"E{O + 5}"] = "FY2027 三情境相同（顆數係數從 CY2028＝FY2028 開始）"
 CY0 = O + 13
 V.cell(CY0, 1, "2. 循環位置（本模型營收最高年）").font = BOLD
@@ -702,12 +702,12 @@ for nm, rw in zip(("pe_peak", "pe_mid", "pe_trough"), rule_rows):
 S0 = block_end + 1
 V.cell(S0, 1, "7. 參考：分部加總（SOTP）與現價隱含的 ABF 價值（不進目標價；Comparable 目標價仍為第 0.2 節食品同業法）").font = BOLD
 hdr(V, S0 + 1, ["電子材料同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"])
-EPEERS = [("Resonac（力森諾科）", "4004.T", "=13045/(14960/20.86)", "2026-11-04"), ("東京應化（Tokyo Ohka Kogyo）", "4186.T", "=7616/(8277/20.85)", "2026-11-04"),
-          ("日東紡（Nitto Boseki）", "3110.T", "=2659/(3080/24.44)", "2026-11-04"), ("信越化學（Shin-Etsu）", "4063.T", "=5799/(5882/18.85)", "2026-11-04"), ("Ibiden", "4062.T", "=8037/(8512/46.82)", "2026-11-04")]
+EPEERS = [("Resonac（力森諾科）", "4004.T", "=11335/(14960/20.86)", "2026-11-05"), ("東京應化（Tokyo Ohka Kogyo）", "4186.T", "=6852/(8277/20.85)", "2026-11-05"),
+          ("日東紡（Nitto Boseki）", "3110.T", "=2321/(3080/24.44)", "2026-11-05"), ("信越化學（Shin-Etsu）", "4063.T", "=5693/(5882/18.85)", "2026-11-05"), ("Ibiden", "4062.T", "=6726/(8512/46.82)", "2026-11-05")]
 # v0.3.3：同業前瞻 P/E＝2026-11-04 收盤 ÷ 前瞻 EPS（stockanalysis 取得日：4004 09-25 ¥14,960、4186 10-19 ¥8,277、3110 09-18 ¥3,080、4063 10-21 ¥5,882、4062 10-23 ¥8,512）
 for i, (nm, tk, pe, dt) in enumerate(EPEERS, S0 + 2):
     V.cell(i, 1, nm); V.cell(i, 2, tk); c = V.cell(i, 3, pe); c.font = BLUE; c.number_format = "0.0"
-    V.cell(i, 4, dt); V.cell(i, 5, "2026-11-04 收盤（Yahoo Finance 日線收盤）÷ stockanalysis.com 前瞻 EPS（＝取得日價格 ÷ Forward PE）"); V.cell(i, 6, "Interested-party")
+    V.cell(i, 4, dt); V.cell(i, 5, "2026-11-05 收盤（Yahoo Finance 日線收盤 2026-11-05）÷ stockanalysis.com 前瞻 EPS（＝取得日價格 ÷ Forward PE）；＝現行倍數 × 11-05 收盤 ÷ 11-04 收盤，共識 EPS 不變"); V.cell(i, 6, "Interested-party")
 EP1, EP2 = S0 + 2, S0 + 1 + len(EPEERS)
 SR = {}
 srow_ = EP2 + 1
@@ -1001,7 +1001,7 @@ REF["cgap"] = f'IF(ABS(LN(1+{_V("gmul")}))>ABS(LN(1+{_V("geps")})),"與共識目
 REF["dcfsh"] = f"((tp_w_dcf*({_V('dcftp')}-px))/(tp_w_dcf*({_V('dcftp')}-px)+(1-tp_w_dcf)*(tp_comp_adj-px)))"
 REF["upsrc"] = f'IF({REF["dcfsh"]}>=0.6,"差距主要來自 DCF",IF({REF["dcfsh"]}<=0.4,"差距主要來自 Comparable","差距由 DCF 與 Comparable 約各半貢獻"))'
 _o1 = next(r_ for r_ in range(1, RD.max_row + 1) if str(RD.cell(r_, 1).value or "").startswith(("重點觀察 1：", '="重點觀察 1：')))
-RD.cell(_o1, 1, _fx("重點觀察 1：目標價 ¥{tpw|#,##0}（DCF {dcftp|#,##0}、Comparable（相對倍數調整後）{compadj|#,##0}；DCF 權重 {wdcf|0%}），相對現價 ¥{px|#,##0}（2026-11-04）為 {upw|SP}，投資建議{rec}。"
+RD.cell(_o1, 1, _fx("重點觀察 1：目標價 ¥{tpw|#,##0}（DCF {dcftp|#,##0}、Comparable（相對倍數調整後）{compadj|#,##0}；DCF 權重 {wdcf|0%}），相對現價 ¥{px|#,##0}（2026-11-05）為 {upw|SP}，投資建議{rec}。"
                     "{upsrc}（DCF 占 {dcfsh|0.0%}；各自權重 ×（目標價 − 現價））。{cgap}：本模型前瞻 EPS 比共識 {geps|SP}、共識目標價隱含倍數比食品同業高 {gmul|SP}。"))
 for t_ in PRES:
     RD.cell(_r, 1, _fx(t_)); _r += 1
@@ -1021,6 +1021,9 @@ for _k in ("重點觀察 2：", "重點觀察 3："):   # v0.3.3（第三輪修�
     RD.cell(_rr, 1, _k + "（v0.3.3 刪除過時數字；最新說明見本頁展示層「重點 2」「重點 3」）")
 RD.cell(_r, 1, "HTML 橫幅輔助值（只引用 Val 頁；不進任何計算）").font = BOLD; _r += 1
 RD.cell(_r, 1, "上檔空間：Comparable 目標價（相對倍數調整後）"); RD.cell(_r, 2, "=tp_comp_adj/px-1").number_format = "0.0%"; _r += 1
+# ---------------- v0.3.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤（上方 In 頁 px、0.2 節與第 7 節同業、mi_v 直接改）；情境名稱改回樂觀／基準／保守（px1105_post.py）----------------
+import px1105_post  # noqa: E402
+px1105_post.apply(wb, dict(ver="v0.3.4", px=None, peers=False))
 wb.save(sys.argv[1])
 if os.environ.get("AJI_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     _json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK, "VAL": VAL, "INROW": INROW, "QR": QR, "Q_NOTE": Q_NOTE,
