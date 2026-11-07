@@ -655,7 +655,7 @@ r += 1
 
 # ---------------- F 評價 ----------------
 r = section(ws, r, "F｜評價（價格、股數、折現、倍數、權重）")
-PX = gi(r, f"現價（{CO['meta']['priceDate']} 收盤）", "US$", V['price'], f"{CONS['priceReference']['source']}（{CONS['priceReference']['url']}）[Verified]", USD); r += 1
+PX = gi(r, f"現價（{CO['meta']['priceDate']} 收盤）", "US$", V['price'], f"{CO['callFacts'].get('priceSource') or (CONS['priceReference']['source'] + '（' + CONS['priceReference']['url'] + '）')} [Verified]", USD); r += 1
 SH = gi(r, "股數（含 ATM 上限）", UN, f"={V['shares']!r}+{PE_SH}", f"季末流通 {CO['latestQuarter']['sharesOut']}＋{TXQ['sharesNote']}＋期後事件股數（E 區）[Derived]", '0.0000', font=BLACK); r += 1
 ND = gi(r, "淨負債（不含可轉債）", UB, f"={V['netDebt']!r}+{PE_OD}-{PE_CASH}", f"評價日其他借款 − 現金 {_n(V['netDebt'])}＋期後事件（其他借款 − 現金，E 區）；可轉債依稀釋判斷另計（見『評價_DCF與目標價』可轉債區）[Derived]", font=BLACK); r += 1
 _HV = []  # v0.1b：持股（估值 × 持股比例 ×（1 − 折價））與類債項目 → 淨負債調整項

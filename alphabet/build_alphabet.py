@@ -107,9 +107,9 @@ def fs(i): i = _fid(i); it = F[i]; return f"{it['source']}（{it['docDate']}；�
 
 V22 = "沿用 v0.2.2（legacy_v0.2/company.json）"
 sec("A. 現價、股數與資產負債（評價日 2026-09-30；2026Q3 財報新聞稿＋10-Q〔v0.3.5〕）")
-inp("px", "現價（2026-10-28 收盤）", "US$", None, 324.89, None, "Verified",
-    "BigGo Finance https://finance.biggo.com/news/747b8ed4-8d02-4fc5-84ac-f68ab61a7d20（10-28 收盤 324.89、盤後 294.20）；Investing.com GOOGL 報價 324.89（+1.34%）https://www.investing.com/news/company-news/alphabet-q3-2026-slides-128b-revenue-overshadowed-by-profit-miss-93CH-4981067（2026-10-29 讀取）",
-    "只影響上檔空間與評等（v0.3.1 起與 WACC、回購價脫鉤，見 px_val）。財報後盤後約 288–294（−9%～−11%）；10-29 收盤尚未產生。v0.3 現價 316.80（2026-10-26）")
+inp("px", "現價（2026-11-05 收盤）", "US$", None, 282.57, None, "Verified",
+    "Yahoo Finance GOOGL 日線 https://query1.finance.yahoo.com/v8/finance/chart/GOOGL?range=5d&interval=1d（11-05 收盤 282.57、前日 288.93）；MarketAlleys〈Closing Tape — 2026-11-05〉https://www.marketalleys.com/post/marketalleys-closing-tape-2026-11-05（282.57，−2.20%）（2026-11-06 讀取）",
+    "兩來源一致（docs/reports/20261105_收盤價_個股換價來源.md）。只影響上檔空間與評等（v0.3.1 起與 WACC、回購價脫鉤，見 px_val）。v0.3.7 現價 324.89（2026-10-28）、v0.3 316.80（2026-10-26）")
 inp("px_val", "評價日股價（2026-09-30 收盤；WACC 權益權重與回購價用）", "US$", None, 344.08, None, "Verified",
     "FinancialContent GOOGL 歷史股價 https://www.financialcontent.com/quote/NQ%3AGOOGL/historical（2026-10-29 讀取：9/30 收盤 344.08；同頁 10/07 350.50、10/23 320.21 與 StockAnalysis 相同）",
     "v0.3.1 新增：評價日市值權重（與評價日一致）；v0.3 以現價代用")
@@ -174,7 +174,7 @@ inp("cons_tp", "市場共識目標價（平均）", "US$", None, 429.12, None, "
     "財報後（10-28 盤後）的修正尚未反映；賣方有承銷關係，只作對照")
 
 inp("dps_tgt", "評價日到目標時點的每股股利（推到目標價時扣除）", "US$", None, "=dps/4+dps*(1+dps_g)*(1-w_ntm27)", None, "Derived", "Q4 26 一季＋2027 年至 10-29（修正一 F6）")
-inp("t_px0", "現價日（2026-10-28）的年份小數", "年", None, 2026.82, None, "Derived", "只供對照（v0.3.1 起回購均價改用評價日股價 px_val × (1＋ke)^(期中 − t_val)）")
+inp("t_px0", "現價日（2026-11-05）的年份小數", "年", None, 2026.85, None, "Derived", "只供對照（v0.3.1 起回購均價改用評價日股價 px_val × (1＋ke)^(期中 − t_val)）")
 inp("mb_ttm", "分部利益率起點改用近四季（1＝是；0＝9M26）", "x", None, 0, 1, "Assumed", "判斷：預設 9M26（最新已申報的年初至今，利潤率擴張中、與評價日機隊同時點）；1＝v0.2.2 的近四季口徑", "", judg=True)
 inp("internal_ai_reading", "自用 AI 讀法（2＝主值：自用 AI 價值中性，計影子效益；1＝敏感度：只計成本）", "x", 1, 2, None, "Assumed",
     "修正一 F1；Andy 2026-10-27 15:03 決定讀法 2 為主值：自用增量 MW × Tokenomics IF_HoldEcon（k＝1）＝自用 AI 影子效益（非財報營收），進評價口徑 NOPAT、FCF、EPS；對照表 r1 C16",
@@ -1208,7 +1208,7 @@ vput("tpdcf", "DCF 目標價（情境加權）", [f"={W3(VR_['dcf12'])}"], "#,##
 vput("tpcomp", "Comparable 目標價（市場主流同業法）", [f"={W3(VR_['sotp'])}"], "#,##0.00", note="＝分部加總（SOTP）情境加權；各分部用各自同業倍數，Cloud AI 用自身 DCF")
 vput("tp", "目標價（DCF 與 Comparable 加權）", ["=w_dcf*B{0}+(1-w_dcf)*B{1}".format(r - 2, r - 1)], "#,##0.00", bold=True, fill=KEY,
      note='="DCF 權重 "&TEXT(w_dcf,"0%")&"、分部加總 "&TEXT(1-w_dcf,"0%")&"；自用 AI 讀法 "&internal_ai_reading')
-vput("px", "現價（2026-10-28 收盤）", ["=px"], "#,##0.00", note="BigGo Finance、Investing.com（In 頁 px）；財報後盤後約 288–294")
+vput("px", "現價（2026-11-05 收盤）", ["=px"], "#,##0.00", note="Yahoo Finance、MarketAlleys（In 頁 px）；v0.3.7 為 10-28 收盤 324.89")
 vput("cons", "市場共識目標價", ["=cons_tp"], "#,##0.00", note="StockAnalysis 61 位分析師平均（2026-10-26 更新，財報前）；只作對照")
 vput("up", "上檔空間：加權目標價", [f"=B{VR_['tp']}/px-1"], "0.0%", bold=True, fill=KEY)
 vput("upc", "上檔空間：Comparable 目標價", [f"=B{VR_['tpcomp']}/px-1"], "0.0%")
@@ -1444,9 +1444,9 @@ for i, (k, lab, prv) in enumerate(CHAIN):
         c = RC.cell(rr, 2, f"=IF(ABS(Sens!E{SE_STALE})<0.000001,{res['tp']}-{pv},\"快照過期\")"); c.number_format = "#,##0.00"
     RC.cell(rr, 3, (f"重算快照：{k} 目標價 {res['tp']:.4f}" if res else "") + "（" + "；".join(f"{a}={b}" for a, b in (res or {}).get("set", [])[:12]) + "）")
 rr = RC_ATT + 1 + len(CHAIN)
-RC.cell(rr, 1, "(e) 現價與共識：現價 316.80 → 324.89、共識 429.12 不變（只影響上檔空間與評等，不影響目標價）")
+RC.cell(rr, 1, "(e) 現價與共識：現價 316.80 → 324.89（v0.3.1）→ 282.57（v0.3.8，2026-11-05 收盤）、共識 429.12 不變（只影響上檔空間與評等，不影響目標價）")
 RC.cell(rr, 2, 0).number_format = "#,##0.00"
-RC.cell(rr, 3, f'="上檔空間 v0.3 −18.3% → v0.3.1 "&TEXT(Val!B{VR_["up"]},"+0.0%;-0.0%")&"；評等 中立 → "&Val!B{VR_["rec"]}'); rr += 1
+RC.cell(rr, 3, f'="上檔空間 v0.3 −18.3% → v0.3.1 −20.7%（現價 324.89）→ 本版 v0.3.8 "&TEXT(Val!B{VR_["up"]},"+0.0%;-0.0%")&"；評等 中立 → "&Val!B{VR_["rec"]}'); rr += 1
 RC.cell(rr, 1, "(f) 其他：無風險利率 5.00% → 4.99%、WACC 權益權重改用評價日股價 344.08（v0.3 用現價 316.80）")
 s4 = SENS.get("chain|S4", {}).get("tp")
 RC.cell(rr, 2, f"=B{RCV['v03']}-{s4}" if s4 is not None else "").number_format = "#,##0.00"
@@ -1498,7 +1498,7 @@ SRCS = [
     ("Epoch AI〈AI Chip Owners〉cumulative by designer", "2026-05-12", "https://epoch.ai/data/ai_chip_owners_cumulative_by_designer.csv", "Derived", "AI 在役 MW（期初、歷史）"),
     ("Silicon Data H100 Index", "2026-10-06", "https://www.silicondata.com/products/silicon-index/h100", "Verified", "k_現貨"),
     ("Alphabet 2026Q3 法說逐字稿（Investing.com 轉錄，二手）", "2026-10-28", "https://www.investing.com/news/transcripts/earnings-call-transcript-alphabet-q3-2026-profit-miss-sparks-10-afterhours-drop-93CH-4981037", "Interested-party", "2026 資本支出指引維持 195–205、2027 顯著增加、Cloud backlog 561、55%／24 月、伺服器與網通 65%、權益證券 90.4"),
-    ("BigGo Finance：Alphabet Q3 財報與股價", "2026-10-28", "https://finance.biggo.com/news/747b8ed4-8d02-4fc5-84ac-f68ab61a7d20", "Interested-party", "現價 324.89（10-28 收盤）、資本支出指引第二來源"),
+    ("BigGo Finance：Alphabet Q3 財報與股價", "2026-10-28", "https://finance.biggo.com/news/747b8ed4-8d02-4fc5-84ac-f68ab61a7d20", "Interested-party", "v0.3.7 現價 324.89（10-28 收盤）、資本支出指引第二來源"),
     ("FinancialContent GOOGL 歷史股價", "2026-10-29", "https://www.financialcontent.com/quote/NQ%3AGOOGL/historical", "Verified", "評價日股價 344.08（2026-09-30 收盤）"),
     ("StockAnalysis GOOGL 預測頁（S&P Global）", "2026-10-26", "https://stockanalysis.com/stocks/googl/forecast/", "Interested-party", "共識目標價 429.12、FY2026 non-GAAP EPS 11.89"),
     ("MarketScreener Alphabet 財務預估（S&P Capital IQ 系）", "2026-10-26", "https://www.marketscreener.com/quote/stock/ALPHABET-INC-24203373/finances/", "Interested-party", "FY2026–2028 合併共識"),
@@ -1515,12 +1515,12 @@ for col, w in zip("ABCDEF", [6, 80, 12, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = "Alphabet（GOOGL）個股模型 v0.3.7（2026-11-05；v0.3.7 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；v0.3.6：2026Q3 季度滾動＋10-Q 補入＋Tokenomics " + TKV + "）— 命題模組＋官方營收分部 → 損益表"
+RD["A1"] = "Alphabet（GOOGL）個股模型 v0.3.8（2026-11-06；v0.3.8 只換現價為 2026-11-05 收盤 282.57，目標價不變；v0.3.7 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；v0.3.6：2026Q3 季度滾動＋10-Q 補入＋Tokenomics " + TKV + "）— 命題模組＋官方營收分部 → 損益表"
 RD["A3"] = "命題：AI 改變搜尋之後，Google Search 的變現能否守住，同時 Google Cloud（含 TPU）能否把翻倍的資本支出變成營收；資本支出與 2026 年股權發行後的每股價值是否高於現價。"
 RD["A4"] = "核心問題：Search & other 在 C 情境（AI 助理分流、每次查詢變現下降）下 FY2028 營收與利益率會掉多少，Cloud 的 AI 營收能否抵銷；加計 AI 折舊與股權發行後的每股價值。"
 VB = lambda k, c="B": f"Val!{c}{VR_[k]}"
 PB_, PC_ = PR_["B"], PR_["C"]
-RD["A5"] = f'="投資建議："&{VB("rec")}&"（加權目標價 US$"&TEXT({VB("tp")},"0.00")&"，上檔空間 "&TEXT({VB("up")},"+0.0%;-0.0%")&"；現價 "&TEXT(px,"0.00")&"，2026-10-28 收盤）"'
+RD["A5"] = f'="投資建議："&{VB("rec")}&"（加權目標價 US$"&TEXT({VB("tp")},"0.00")&"，上檔空間 "&TEXT({VB("up")},"+0.0%;-0.0%")&"；現價 "&TEXT(px,"0.00")&"，2026-11-05 收盤）"'
 RD["A6"] = (f'="重點觀察 1：目標價 "&TEXT({VB("tp")},"0")&"＝DCF "&TEXT({VB("tpdcf")},"0")&"、分部加總 "&TEXT({VB("tpcomp")},"0")&" 各半；情境 A／B／C 為 "'
             f'&TEXT({VB("scen")},"0")&"／"&TEXT({VB("scen", "C")},"0")&"／"&TEXT({VB("scen", "D")},"0")&"，DCF 終值占 EV "&TEXT({VB("tvsh2", "C")},"0%")&"（B）。市場共識目標價 "&TEXT(cons_tp,"0")&"。"')
 RD["A7"] = (f'="重點觀察 2：C 情境 FY2028 Search & other "&TEXT(PL!I{PC_["search"]},"0.0")&"（比 B 少 "&TEXT(1-PL!I{PC_["search"]}/PL!I{PB_["search"]},"0.0%")'
@@ -1562,14 +1562,14 @@ RD.cell(r, 1, "命題：AI 改變搜尋之後，Google 的搜尋生意守不守�
 RD.cell(r, 1, "命題 1｜搜尋守得住嗎：AI 助理分流查詢、每次查詢變現下降時，Search & other 的營收與 Google Services 的利益率會掉多少。"); r += 1
 RD.cell(r, 1, "命題 2｜Cloud 能否把資本支出變成營收：2026 年資本支出指引 1,950–2,050 億美元，Google Cloud 的 AI 營收與利潤能否跟上、抵銷搜尋被侵蝕的部分。"); r += 1
 RD.cell(r, 1, "命題 3｜每股值多少：把新增 AI 折舊、2026 年股權發行與資本支出算進去之後，每股價值是否仍高於現價。"); r += 1
-RD.cell(r, 1, f'="重點 1｜合理價值低於現價約兩成：我們估每股約 "&TEXT({VB("tp")},"0")&" 美元，比現價 "&TEXT(px,"0.00")&" 低 "&TEXT(-{VB("up")},"0%")&"。未來現金流折現約 "&TEXT({VB("tpdcf")},"0")&"、分部加總約 "&TEXT({VB("tpcomp")},"0")&"（多數分部用同業倍數，Cloud AI 用自身現金流折現，另含自用 AI 讀法調整）各占一半；三種情境約 "&TEXT({VB("scen")},"0")&"、"&TEXT({VB("scen", "C")},"0")&"、"&TEXT({VB("scen", "D")},"0")&"，都低於現價。市場分析師平均目標價約 "&TEXT(cons_tp,"0")&"。"'); r += 1
+RD.cell(r, 1, f'="重點 1｜合理價值"&IF({VB("up")}<0,"低於","高於")&"現價約"&TEXT(ABS({VB("up")}),"0%")&"：我們估每股約 "&TEXT({VB("tp")},"0")&" 美元，比現價 "&TEXT(px,"0.00")&" 低 "&TEXT(-{VB("up")},"0%")&"。未來現金流折現約 "&TEXT({VB("tpdcf")},"0")&"、分部加總約 "&TEXT({VB("tpcomp")},"0")&"（多數分部用同業倍數，Cloud AI 用自身現金流折現，另含自用 AI 讀法調整）各占一半；三種情境約 "&TEXT({VB("scen")},"0")&"、"&TEXT({VB("scen", "C")},"0")&"、"&TEXT({VB("scen", "D")},"0")&"，"&IF(MAX({VB("scen")},{VB("scen", "C")},{VB("scen", "D")})<px,"都低於現價",IF(MIN({VB("scen")},{VB("scen", "C")},{VB("scen", "D")})>px,"都高於現價","有高有低"))&"。市場分析師平均目標價約 "&TEXT(cons_tp,"0")&"。"'); r += 1
 RD.cell(r, 1, f'="重點 2｜搜尋被侵蝕時，Cloud 的成長讓整體利潤仍高於 2025 年：悲觀情境 2028 年 Search & other 營收約 "&TEXT(PL!I{PC_["search"]}*10,"#,##0")&" 億美元，比基準少 "&TEXT(1-PL!I{PC_["search"]}/PL!I{PB_["search"]},"0%")&"，Google Services 營業利益比基準少約 "&TEXT((PL!I{PB_["oi_gs"]}-PL!I{PC_["oi_gs"]})*10,"#,##0")&" 億；同年 Google Cloud 營業利益比 2025 年多約 "&TEXT((PL!I{PB_["oi_cl"]}-PL!D{PB_["oi_cl"]})*10,"#,##0")&" 億（三種情境相同），所以悲觀情境的合併營業利益仍高於 2025 年（"&TEXT(PL!I{PC_["oi"]}*10,"#,##0")&" 億對 "&TEXT(PL!D{PB_["oi"]}*10,"#,##0")&" 億），只是比基準少約 "&TEXT((PL!I{PB_["oi"]}-PL!I{PC_["oi"]})*10,"#,##0")&" 億。"'); r += 1
 RD.cell(r, 1, f'="重點 3｜真正壓力在 AI 折舊與現金：基準情境 2028 年新增 AI 折舊約 "&TEXT(PL!I{PB_["da_ai"]}*10,"#,##0")&" 億美元，合併營業利益率從 2025 年 "&TEXT(PL!D{PB_["om"]},"0.0%")&" 降到 2028 年 "&TEXT(PL!I{PB_["om"]},"0.0%")&"；五年自由現金流扣股利合計約 "&TEXT(CF!C{GATE}*10,"#,##0")&" 億美元，"&CF!C{GATE + 3}&"。"'); r += 1
 r += 1
 RD.cell(r, 1, "命題回覆（HTML 用；依本模型計算回答開頭三個命題）").font = BOLD; r += 1
 RD.cell(r, 1, f'="搜尋守得住嗎？答：守得住大部分，但利益率會被壓縮。在悲觀情境（AI 助理分流、每次查詢變現下降），2028 年 Search & other 營收約 "&TEXT(PL!I{PC_["search"]}*10,"#,##0")&" 億美元，比基準 "&TEXT(PL!I{PB_["search"]}*10,"#,##0")&" 億少 "&TEXT(1-PL!I{PC_["search"]}/PL!I{PB_["search"]},"0.0%")&"；Google Services 營業利益率 "&TEXT(PL!I{PC_["om_gs"]},"0.0%")&"（基準 "&TEXT(PL!I{PB_["om_gs"]},"0.0%")&"）。營收沒有崩跌（仍高於 2025 年的 "&TEXT(PL!D{PC_["search"]}*10,"#,##0")&" 億），與基準的差距主要來自 AI 助理分流查詢，其次是每次查詢變現下降；Google Services 營業利益率因此壓縮約 "&TEXT((PL!I{PB_["om_gs"]}-PL!I{PC_["om_gs"]})*100,"0.0")&" 個百分點。"'); r += 1
 RD.cell(r, 1, f'="Cloud 能否把資本支出變成營收？答：Cloud 本身可以，但全公司的 AI 折舊與資本支出會壓低整體利潤率與現金流。基準情境 2028 年 Cloud AI 營收約 "&TEXT(PL!I{PB_["ai"]}*10,"#,##0")&" 億美元、Google Cloud 營業利益約 "&TEXT(PL!I{PB_["oi_cl"]}*10,"#,##0")&" 億，比 2025 年多 "&TEXT((PL!I{PB_["oi_cl"]}-PL!D{PB_["oi_cl"]})*10,"#,##0")&" 億（三種情境相同；它讓悲觀情境的整體利潤仍高於 2025 年，但不會縮小悲觀與基準的差距）；Cloud AI 的價值約 "&TEXT({VB("ai_v")}*10,"#,##0")&" 億美元（2027 年底時點）。但全公司新增 AI 折舊 2028 年約 "&TEXT(PL!I{PB_["da_ai"]}*10,"#,##0")&" 億，2027 年資本支出約 "&TEXT(CF!H{_CB["cx"]}*10,"#,##0")&" 億，基準情境五年自由現金流扣股利約 "&TEXT(CF!C{GATE}*10,"#,##0")&" 億美元，"&CF!C{GATE + 3}&"（五年新增舉債約 "&TEXT(CF!C{GATE + 1}*10,"#,##0")&" 億）。"'); r += 1
-RD.cell(r, 1, f'="每股值多少？答：每股約 "&TEXT({VB("tp")},"0.00")&" 美元（DCF "&TEXT({VB("tpdcf")},"0.00")&"、Comparable "&TEXT({VB("tpcomp")},"0.00")&" 各半），比現價 "&TEXT(px,"0.00")&" 低 "&TEXT(-{VB("up")},"0.0%")&"，投資建議"&{VB("rec")}&"。只看 Comparable 約等於現價，差距主要來自 DCF：AI 資本支出與折舊壓低了未來現金流。三種情境約 "&TEXT({VB("scen")},"0")&"、"&TEXT({VB("scen", "C")},"0")&"、"&TEXT({VB("scen", "D")},"0")&"，都低於現價；市場分析師平均目標價約 "&TEXT(cons_tp,"0")&"，明顯較樂觀。此目標價採主值讀法 2（假設自用 AI 算力的價值等於其持有成本，不是財報收入）；若自用算力只算成本（讀法 1），目標價約 "&TEXT({VB("tp_r1")},"0")&" 美元（上檔空間 "&TEXT({VB("tp_r1", "C")},"+0%;-0%")&"），投資建議為"&{VB("tp_r1", "D")}&"。"'); r += 1
+RD.cell(r, 1, f'="每股值多少？答：每股約 "&TEXT({VB("tp")},"0.00")&" 美元（DCF "&TEXT({VB("tpdcf")},"0.00")&"、Comparable "&TEXT({VB("tpcomp")},"0.00")&" 各半），比現價 "&TEXT(px,"0.00")&" 低 "&TEXT(-{VB("up")},"0.0%")&"，投資建議"&{VB("rec")}&"。只看 Comparable 比現價"&IF({VB("tpcomp")}/px-1>=0,"高 ","低 ")&TEXT(ABS({VB("tpcomp")}/px-1),"0%")&"，差距主要來自 DCF：AI 資本支出與折舊壓低了未來現金流。三種情境約 "&TEXT({VB("scen")},"0")&"、"&TEXT({VB("scen", "C")},"0")&"、"&TEXT({VB("scen", "D")},"0")&"，"&IF(MAX({VB("scen")},{VB("scen", "C")},{VB("scen", "D")})<px,"都低於現價",IF(MIN({VB("scen")},{VB("scen", "C")},{VB("scen", "D")})>px,"都高於現價","有高有低"))&"；市場分析師平均目標價約 "&TEXT(cons_tp,"0")&"，明顯較樂觀。此目標價採主值讀法 2（假設自用 AI 算力的價值等於其持有成本，不是財報收入）；若自用算力只算成本（讀法 1），目標價約 "&TEXT({VB("tp_r1")},"0")&" 美元（上檔空間 "&TEXT({VB("tp_r1", "C")},"+0%;-0%")&"），投資建議為"&{VB("tp_r1", "D")}&"。"'); r += 1
 RD.column_dimensions["A"].width = 120; RD.column_dimensions["B"].width = 60; RD.column_dimensions["C"].width = 60; RD.column_dimensions["D"].width = 60
 for rr in range(3, 9): RD.cell(rr, 1).alignment = Alignment(wrap_text=True, vertical="top")
 

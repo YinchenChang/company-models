@@ -1053,7 +1053,8 @@
 "chip_no_purchase_since_el": "SRC_ZP_1051",
 "chip_platforms_compat": "SRC_ZP_1052",
 "chip_owned_hw_desc": "SRC_ZP_1053",
-"h100_cost_industry": "SRC_ZP_1054"
+"h100_cost_industry": "SRC_ZP_1054",
+"price_20261105": "SRC_ZP_1055"
 },
 "INP": {
 "year_2025": "INP_001",

@@ -32,7 +32,7 @@ F.update({it["id"]: it for it in FD2["items"]})
 STAGE = int(os.environ.get("SPCX_STAGE", "99"))   # 歸因瀑布：1 讀法 2 加回小修、2 融資租賃重扣小修、3 G5 原文、4 G1 Q4 資本支出、5 G1 年底 GW、6 G3 pace（9M 占比）、7 pace 改用 Q4 拆法（二修）、8 v0.2.1 pace 季速改 ÷(1 − fin_sh)、9 v0.2.1 pace 分母改 FY2027 世代組合（預設全部）
 G2C = os.path.join(HERE, "data", "g2cal_v021_20261030.json")   # v0.2.1 重解（pace 改變 FY2027 營收）
 G2CAL = json.load(open(G2C, encoding="utf-8")) if (os.path.exists(G2C) and not os.environ.get("SPCX_NO_G2CAL")) else None   # G2 校準 k0（g2cal_v02.py 解出；只用於 Sens）
-VER = "v0.2.4"
+VER = "v0.2.5"
 TKV = "v21.10"   # v0.2.2：Tokenomics 快照 v21.7 → v21.9；v0.2.3：v21.9 → v21.10（兩次基準數值都不變）
 TK = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 GEN = {x["code"]: x["name"] for x in TK["source"]["generations"]}
@@ -116,9 +116,9 @@ def inp(key, item, unit, lo, base, hi, tag, src, note="", judg=False):
 
 FQ = "mag/extract/docs/2026Q3/spacex_2026Q3_10-Q.pdf"
 sec("A. 現價、股數與資產負債（評價日 2026-09-30；10-Q 2026Q3）")
-inp("px", "現價（2026-10-29 收盤）", "US$", None, 143.89, None, "Verified",
-    "MarketBeat SPCX 預測頁 https://www.marketbeat.com/stocks/NASDAQ/SPCX/forecast/（4:00 PM 收盤 143.89）；Equibles https://equibles.com/stocks/spcx/summary（10-29 收盤 143.89、跌 1.34；2026-10-30 讀取）",
-    "兩來源一致（審查第 7 條）；Digrin 月線 10 月 143.89 亦同。A 段候選 Robinhood 140.40 為盤中價，不採")
+inp("px", "現價（2026-11-05 收盤）", "US$", None, 123.62, None, "Verified",
+    "Yahoo Finance SPCX 日線 https://query1.finance.yahoo.com/v8/finance/chart/SPCX?range=5d&interval=1d（11-05 收盤 123.62、前日 135.92；2026-11-06 讀取）；Benzinga SPCX 報價 https://www.benzinga.com/quote/SPCX（4:02 PM 123.58）",
+    "兩來源差 0.03%，採官方收盤（docs/reports/20261105_收盤價_個股換價來源.md）；v0.2.4 為 2026-10-29 收盤 143.89")
 inp("px_val", "評價日股價（2026-09-30 收盤；WACC 權益權重用）", "US$", None, 150.86, None, "Derived",
     "Digrin SPCX 月線 https://www.digrin.com/stocks/detail/SPCX/price（2026 年 9 月收盤 150.86；2026-10-30 讀取）",
     "單一來源（第二來源未取得：StockAnalysis 歷史頁逾時）；只影響 WACC 權重，負債占比 < 2%，對目標價影響極小")
@@ -1272,7 +1272,7 @@ vput("tpdcf", "DCF 目標價（情境加權）", [f"={W3(VR_['dcf12'])}"], "#,##
 vput("tpcomp", "Comparable 目標價（市場主流同業法）", [f"={W3(VR_['sotp'])}"], "#,##0.00", note="＝分部加總（SOTP）情境加權；Connectivity、SI 其他用同業倍數，SI 對外出租用自身 DCF，Space 用 EV／營收")
 vput("tp", "目標價（DCF 與 Comparable 加權）", ["=w_dcf*B{0}+(1-w_dcf)*B{1}".format(r - 2, r - 1)], "#,##0.00", bold=True, fill=KEY,
      note='="DCF 權重 "&TEXT(w_dcf,"0%")&"、分部加總 "&TEXT(1-w_dcf,"0%")&"；自用 AI 讀法 "&internal_ai_reading')
-vput("px", "現價（2026-10-29 收盤）", ["=px"], "#,##0.00", note="MarketBeat、Equibles 兩來源一致（In 頁 px）")
+vput("px", "現價（2026-11-05 收盤）", ["=px"], "#,##0.00", note="Yahoo Finance、Benzinga 兩來源一致（In 頁 px）；v0.2.4 為 10-29 收盤 143.89")
 vput("cons", "市場共識目標價", ["=cons_tp"], "#,##0.00", note="MarketBeat 46 位分析師平均（含 10-21～10-26 財報後調整）；只作對照")
 vput("up", "上檔空間：加權目標價", [f"=B{VR_['tp']}/px-1"], "0.0%", bold=True, fill=KEY)
 vput("upc", "上檔空間：Comparable 目標價", [f"=B{VR_['tpcomp']}/px-1"], "0.0%")
@@ -1539,8 +1539,9 @@ SRCS = [
      "G1 Q4 資本支出 35–40、年底 2.5–3 GW；G2 ARR 1,000 億、2027Q1 營收 33–37；G3 2027 年底 13 GW；G6 Cursor；G7 backlog"),
     (f"Tokenomics 快照 spacex/data/tokenomics_snapshot_{TKV}.json（{TK['source']['file']}，master {TK['source']['commit'][:7]}；與 alphabet/data/ 同一名稱清單）", TK["source"]["extractedAt"], "repo 內（YinchenChang/Tokenomics）", "Derived",
      "IF_HoldEcon、IF_OpexGW、IF_CapexIT／Facility、IF_DeprIT、IF_FacilityGW"),
-    ("MarketBeat SPCX 預測頁", "2026-10-29", "https://www.marketbeat.com/stocks/NASDAQ/SPCX/forecast/", "Interested-party／Verified", "現價 143.89（4:00 PM 收盤）、共識目標價 244.97（46 位）"),
-    ("Equibles SPCX 摘要", "2026-10-29", "https://equibles.com/stocks/spcx/summary", "Verified", "10-29 收盤 143.89（第二來源）"),
+    ("MarketBeat SPCX 預測頁", "2026-10-29", "https://www.marketbeat.com/stocks/NASDAQ/SPCX/forecast/", "Interested-party", "共識目標價 244.97（46 位）；v0.2.4 現價 143.89 出處"),
+    ("Yahoo Finance SPCX 日線", "2026-11-05", "https://query1.finance.yahoo.com/v8/finance/chart/SPCX?range=5d&interval=1d", "Verified", "11-05 收盤 123.62（v0.2.5 現價）"),
+    ("Benzinga SPCX 報價", "2026-11-05", "https://www.benzinga.com/quote/SPCX", "Verified", "11-05 4:02 PM 123.58（第二來源）"),
     ("Digrin SPCX 月線", "2026-10-30", "https://www.digrin.com/stocks/detail/SPCX/price", "Derived", "9 月收盤 150.86（評價日股價，單一來源）"),
     ("美國財政部每日殖利率曲線（10 Yr）", "2026-10-27", "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202610", "Verified", "無風險利率 4.99%"),
     ("同業檔 spacex/data/peers_si_20261030.json、peers_connectivity_20261030.json（MarketScreener）", "2026-10-08／10-23", "repo 內", "Derived", "SOTP 倍數"),
@@ -1553,13 +1554,13 @@ for col, w in zip("ABCDEF", [6, 80, 12, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = "SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2.4（2026-11-05；v0.2.4 只改展示層：README 頁新增命題分項、白話重點、命題回覆，供 HTML 新版面；v0.2.2／v0.2.3 換 Tokenomics 快照 v21.9／" + TKV + "，基準數值同 v0.2.1；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
+RD["A1"] = "SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2.5（2026-11-06；v0.2.5 只換現價為 2026-11-05 收盤 123.62，目標價不變；v0.2.4 只改展示層：README 頁新增命題分項、白話重點、命題回覆，供 HTML 新版面；v0.2.2／v0.2.3 換 Tokenomics 快照 v21.9／" + TKV + "，基準數值同 v0.2.1；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
 RD["A3"] = ("命題：SI 分部的算力投入（9M26 SI 資本支出約 400 億美元、名目算力 1.7 GW）能否由 SI 營收（對外算力出租＋Grok／Cursor／X）回本；"
             "Connectivity（Starlink）現金流與 IPO 資金能支撐多久；加計 AI 折舊與 Cursor 收購獎酬後的每股價值是否高於現價。")
 RD["A4"] = "核心問題：FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金與以融資取得 PP&E；Valor 失敗售後租回本金列融資，不扣）。"
 VB = lambda k, c="B": f"Val!{c}{VR_[k]}"
 PB_ = PR_["B"]
-RD["A5"] = f'="投資建議："&{VB("rec")}&"（加權目標價 US$"&TEXT({VB("tp")},"0.00")&"，上檔空間 "&TEXT({VB("up")},"+0.0%;-0.0%")&"；現價 "&TEXT(px,"0.00")&"，2026-10-29 收盤）"'
+RD["A5"] = f'="投資建議："&{VB("rec")}&"（加權目標價 US$"&TEXT({VB("tp")},"0.00")&"，上檔空間 "&TEXT({VB("up")},"+0.0%;-0.0%")&"；現價 "&TEXT(px,"0.00")&"，2026-11-05 收盤）"'
 RD["A6"] = (f'="重點觀察 1：目標價 "&TEXT({VB("tp")},"0.0")&"＝DCF "&TEXT({VB("tpdcf")},"0.0")&"、分部加總 "&TEXT({VB("tpcomp")},"0.0")&" 各半；情境 A／B／C 為 "'
             f'&TEXT({VB("scen")},"0.0")&"／"&TEXT({VB("scen", "C")},"0.0")&"／"&TEXT({VB("scen", "D")},"0.0")&"；市場共識目標價 "&TEXT(cons_tp,"0")&"，現價隱含 NTM EV/EBITDA "&TEXT({VB("mkt_imp")},"0")&" 倍。"')
 RD["A7"] = (f'="重點觀察 2：S2 核心問題比值（FY2028 SI 每 GW 年營收 ÷ Tokenomics 持有成本）A／B／C＝"&TEXT({VB("s2")},"0.00")&"／"&TEXT({VB("s2", "C")},"0.00")&"／"&TEXT({VB("s2", "D")},"0.00")'
