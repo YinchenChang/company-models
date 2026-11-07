@@ -1,20 +1,20 @@
 {
  "company": "聯電",
  "ticker": "2303.TW",
- "thesis": "@README!A37",
+ "thesis": "@README!A38",
  "question": "成熟製程的稼動率與美元售價回升能走多遠，AI 相關（先進封裝矽中介層、矽光子）與 Intel 合作能補多少；現價隱含的倍數與同業、與聯電自己的歷史差多少",
  "scenarios": [
   {
    "key": "A",
-   "name": "情境 A（順利）"
+   "name": "情境 A（樂觀）"
   },
   {
    "key": "B",
-   "name": "情境 B（平平）"
+   "name": "情境 B（基準）"
   },
   {
    "key": "C",
-   "name": "情境 C（不如預期）"
+   "name": "情境 C（保守）"
   }
  ],
  "sections": [
@@ -30,9 +30,9 @@
      "type": "list",
      "ordered": true,
      "items": [
-      "@README!A38",
       "@README!A39",
-      "@README!A40"
+      "@README!A40",
+      "@README!A41"
      ]
     },
     {
@@ -41,9 +41,9 @@
      "collapse": true,
      "summary": "展開：命題回覆（依本模型計算的答案；想先看結論可展開，或讀完全文再看）",
      "items": [
-      "@README!A48",
       "@README!A49",
-      "@README!A50"
+      "@README!A50",
+      "@README!A51"
      ]
     },
     {
@@ -54,11 +54,11 @@
      "type": "list",
      "ordered": true,
      "items": [
-      "@README!A41",
       "@README!A42",
       "@README!A43",
       "@README!A44",
-      "@README!A45"
+      "@README!A45",
+      "@README!A46"
      ]
     }
    ]
@@ -1691,7 +1691,7 @@
       ],
       [
        "Comparable（相對倍數調整後）的上檔空間",
-       "@README!B52|sp1",
+       "@README!B53|sp1",
        "",
        "",
        ""
@@ -1814,9 +1814,9 @@
      "caption": "DCF 彙總（標準版：無槓桿自由現金流 FCFF＋WACC；三情境）",
      "head": [
       "項目",
-      "A（順利）",
-      "B（平平）",
-      "C（不如預期）",
+      "A（樂觀）",
+      "B（基準）",
+      "C（保守）",
       "說明"
      ],
      "rows": [
@@ -1884,9 +1884,9 @@
      "summary": "展開：DCF 彙總的其他項目",
      "head": [
       "項目",
-      "A（順利）",
-      "B（平平）",
-      "C（不如預期）",
+      "A（樂觀）",
+      "B（基準）",
+      "C（保守）",
       "說明"
      ],
      "rows": [
@@ -1923,7 +1923,7 @@
     {
      "type": "table",
      "collapse": true,
-     "summary": "展開：情境 B（平平）FCFF 逐年明細（DCF 頁；十億新台幣）",
+     "summary": "展開：情境 B（基準）FCFF 逐年明細（DCF 頁；十億新台幣）",
      "head": [
       "@DCF!A5",
       "@DCF!C5",
@@ -2518,7 +2518,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準的變動（變動達兩位數百分比的案例；一次改一個輸入，整本重算）",
      "sheet": "Sens",
-     "rows": "5,6,29,42",
+     "rows": "5,6,29,40,42",
      "label_col": "A",
      "value_col": "J",
      "fmt": "sp1"
@@ -2527,7 +2527,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準的變動（未達兩位數百分比）",
      "sheet": "Sens",
-     "rows": "7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,30,31,32,33,35,36,37,38,39,40,41,43,44",
+     "rows": "7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,30,31,32,33,35,36,37,38,39,41,43,44",
      "label_col": "A",
      "value_col": "J",
      "fmt": "sp1",
@@ -2831,6 +2831,9 @@
       ],
       [
        "@README!A34"
+      ],
+      [
+       "@README!A35"
       ]
      ]
     },

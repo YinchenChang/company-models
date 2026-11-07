@@ -887,6 +887,94 @@ for _row_ in RD.iter_rows():   # 第三輪修正（fixes_round3 第 22 項）：
         if isinstance(_c_.value, str) and _c_.value.startswith(("重點觀察 2：（v0.1 撰寫", "重點觀察 3：（v0.1 撰寫")):
             _c_.value = _c_.value[:7] + "（已刪除）v0.1 撰寫的舊說明，數字為舊股東現金流 DCF，已過時；現行重點見本頁「展示層」重點各列（第三輪修正 2026-11-06）"
 _r3_text(wb, "含 stub 期會計年度 FY2026（日曆年）FCFF × stub_frac", px_old_dates=("2026-10-30",))
+# ---------------- 工作單 px1105（2026-11-06；Andy 07:28 價格、03:14 情境名稱）：現價與同業報價改 2026-11-05 收盤；情境名稱改回 樂觀／基準／保守 ----------------
+# (1) 現價 px、Comparable 同業前瞻 P/E（現行倍數 × 11-05 收盤 ÷ 現行報價日 11-04 收盤；共識前瞻 EPS 不變）、上市關聯企業市值與換算匯率：
+#     一律 Yahoo Finance 日線收盤 2026-11-05。不改 rf、共識 EPS、預測用匯率與模型假設。
+# (2) 情境名稱「情境 A（順利）／B（平平）／C（不如預期）」改回「情境 A（樂觀）／B（基準）／C（保守）」（取代第三輪修正第 23 項）；
+#     README 的版本沿革列（v0. 開頭）與 A1 版本串維持當時原文。
+import re as _re4
+PX4_OLD = {"LRCX": 221.43, "KLAC": 149.79, "AMAT": 369.4, "ASML": 1496.3, "8035.T": 9663, "6920.T": 39130, "6146.T": 47370, "6857.T": 34570, "6525.T": 6400, "7729.T": 14920, "TER": 250.99, "COHU": 43.98, "FORM": 85.24, "2449.TW": 248.5, "3711.TW": 627, "AMKR": 35.66, "6239.TW": 240.5, "6257.TW": 190.5, "8150.TW": 84.1, "6223.TWO": 4135, "TPRO.MI": 22.62}
+PX4_NEW = {"LRCX": 185.2, "KLAC": 129.8, "AMAT": 319.25, "ASML": 1356.65, "8035.T": 8753, "6920.T": 33570, "6146.T": 41450, "6857.T": 29485, "6525.T": 5400, "7729.T": 12635, "TER": 212.74, "COHU": 34.9, "FORM": 71.76, "2449.TW": 228.5, "3711.TW": 572, "AMKR": 30.49, "6239.TW": 220, "6257.TW": 173, "8150.TW": 76, "6223.TWO": 3725, "TPRO.MI": 20.52}
+FX4 = {"USDTWD": (32.733, 33.034), "USDEUR": (0.8923, 0.8904)}   # 1 美元兌當地幣：2026-11-04 → 2026-11-05（Yahoo Finance）
+SCN4 = (("不如預期", "保守"), ("順利", "樂觀"), ("平平", "基準"))   # 本模型內三詞只作情境名稱使用（逐格核對過）
+_n4 = lambda x: f"{x:,}" if isinstance(x, int) or float(x) != int(x) else f"{int(x):,}"
+
+
+def _px1105(wb, tk, ver, subs=(), static=None, formula_subs=()):
+    INw, Vw, RDw = wb["In"], wb["Val"], wb["README"]
+    # 現價
+    r = next(r for r in range(1, INw.max_row + 1) if INw.cell(r, 1).value == "px")
+    old = INw.cell(r, 5).value
+    assert abs(old - PX4_OLD[tk]) < 1e-9, (tk, old, PX4_OLD[tk])
+    INw.cell(r, 5).value = PX4_NEW[tk]
+    INw.cell(r, 2).value = _re4.sub(r"\d{4}-\d{2}-\d{2} 收盤", "2026-11-05 收盤", str(INw.cell(r, 2).value))
+    INw.cell(r, 8).value = f"Yahoo Finance 日線收盤 2026-11-05：{_n4(PX4_NEW[tk])}（{tk}）"
+    INw.cell(r, 9).value = f"工作單 px1105（2026-11-06）：現價改 2026-11-05 收盤（原 {_n4(old)}，Yahoo Finance 日線收盤 2026-11-04）"
+    # Comparable 同業前瞻 P/E
+    h = next(r for r in range(1, Vw.max_row + 1) if str(Vw.cell(r, 1).value or "").startswith("0.2 Comparable"))
+    e = next(r for r in range(h, Vw.max_row + 1) if str(Vw.cell(r, 1).value or "").startswith("同業前瞻 P/E 中位數"))
+    peer_rows, out = set(), []
+    for rr in range(h + 2, e):
+        t, pe, d = Vw.cell(rr, 2).value, Vw.cell(rr, 3).value, Vw.cell(rr, 4).value
+        if not (isinstance(t, str) and d == "2026-11-04"):
+            continue
+        k = t.split("／")[-1]
+        p0, p1 = PX4_OLD[k], PX4_NEW[k]
+        if isinstance(pe, (int, float)):
+            new = round(pe * p1 / p0, 2)
+            note = f"工作單 px1105：換算到 2026-11-05＝現行 {pe}（2026-11-04）× 11-05 收盤 {_n4(p1)} ÷ 11-04 收盤 {_n4(p0)}（共識前瞻 EPS 不變；Yahoo Finance 日線收盤 2026-11-05）"
+        else:
+            m = _re4.match(r"^=\(2\*([\d.]+)/([\d.]+)\)/", pe)
+            if m:   # ADS 換算：本地股價 × 2 ÷ 匯率
+                assert abs(float(m.group(1)) - p0) < 1e-9 and abs(float(m.group(2)) - FX4["USDTWD"][0]) < 1e-9, pe
+                f0, f1 = FX4["USDTWD"]
+                new = f"=(2*{p1:g}/{f1:g})/" + pe[m.end():]
+                note = f"工作單 px1105：分子改 {k} 2026-11-05 收盤 {_n4(p1)} × 2 ÷ USD/TWD {f1:g}（原 {_n4(p0)}、{f0:g}；Yahoo Finance 日線收盤 2026-11-05；前瞻 EPS 不變）"
+            else:
+                m = _re4.match(r"^=([\d.]+)/", pe)
+                assert m and abs(float(m.group(1)) - p0) < 1e-9, (pe, p0)
+                new = f"={p1:g}/" + pe[m.end():]
+                note = f"工作單 px1105：分子改 2026-11-05 收盤 {_n4(p1)}（原 11-04 收盤 {_n4(p0)}；Yahoo Finance 日線收盤 2026-11-05；前瞻 EPS 不變）"
+        Vw.cell(rr, 3).value = new
+        Vw.cell(rr, 4).value = "2026-11-05"
+        Vw.cell(rr, 5).value = str(Vw.cell(rr, 5).value or "") + "；" + note
+        peer_rows.add(rr); out.append((k, pe, new))
+    assert out, "找不到 2026-11-04 的同業報價"
+    # 其他寫死的公式常數（上市關聯企業市值、匯率等）
+    for a, b in formula_subs:
+        hit = 0
+        for ws in wb.worksheets:
+            for row in ws.iter_rows():
+                for c in row:
+                    if isinstance(c.value, str) and a in c.value:
+                        c.value = c.value.replace(a, b); hit += 1
+        assert hit, a
+    # 說明字串：現價日期與各公司專屬字串；情境名稱
+    hist = lambda ws, c, v: ws.title == "README" and (c.coordinate == "A1" or _re4.match(r'^(="|=)?v\d+\.', v))
+    for ws in wb.worksheets:
+        for row in ws.iter_rows():
+            for c in row:
+                v = c.value
+                if (ws.title, c.coordinate) in (static or {}):
+                    c.value = static[(ws.title, c.coordinate)]; continue
+                if not isinstance(v, str) or hist(ws, c, v):
+                    continue
+                w = v
+                for a, b in subs:
+                    w = w.replace(a, b)
+                if ws.title in ("Val", "README") and not (ws.title == "Val" and c.row in peer_rows):
+                    w = _re4.sub(r"2026-11-04 收盤 [\d,]+", f"2026-11-05 收盤 {_n4(PX4_NEW[tk])}", w)
+                    w = w.replace("2026-11-04 收盤", "2026-11-05 收盤")
+                for a, b in SCN4:
+                    w = w.replace(a, b)
+                if w != v:
+                    c.value = w
+    # 版本
+    RDw["A1"] = RDw["A1"].value + f"；{ver}（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"
+    RDw.cell(RDw.max_row + 2, 1, f"{ver}：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守")
+    return out
+R4_PE = _px1105(wb, "6223.TWO", "v0.2.4", subs=(("現價 4,135（2026-11-04 收盤；第三輪修正起全批統一價格日）", "現價 3,725（2026-11-05 收盤；工作單 px1105 起全批統一價格日）"), ('&"（2026-11-04）"&', '&"（2026-11-05）"&'), ("v0.2.3 起現價為 Yahoo Finance 日線收盤 2026-11-04（4,135）", "v0.2.3 起現價為 Yahoo Finance 日線收盤 2026-11-04（4,135）；v0.2.4 起為 2026-11-05（3,725）")), static={("README", "A46"): 'v0.2.3（2026-11-06）第三輪修正（合併前）：(1) 現價改 2026-11-04 收盤 4,135 元（Yahoo Finance；原 2026-10-30 收盤 4,610）；Comparable 同業前瞻 P/E 改為 11-04 收盤 ÷ 資料商前瞻 EPS（中位數 24.1 倍，原 30.3 倍）；(2) stub 期 FCFF 改用含 stub 期的會計年度 FY2026 FCFF × stub_frac（情境 B 0.29；原 FY2027 FCFF × 0.504＝1.33；Sens 各案例同式）；(3) 重點 2 的 DCF 主因改寫為終值（RONIC＝WACC、g、隱含終值倍數）與擴產期資本支出／營運資金，不是折現率；(4) 刪除 v0.1 撰寫的重點觀察 2、3（舊 DCF 數字）；情境名稱統一為 A（順利）／B（平平）／C（不如預期）、級距列名、Sens g 列名、stub 口徑說明。DCF 目標價 1,484 → 1,473 元、加權目標價 2,386 → 2,040 元、上檔空間 −48.2% → -50.7%、投資建議放空 → 強力放空。'})
+
 wb.save(sys.argv[1])
 if os.environ.get("MPI_ROWMAP"):
     import json
