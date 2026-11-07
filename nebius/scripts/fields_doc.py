@@ -314,7 +314,7 @@ CF = {
  'tier34Active': ('主動電力位於 Tier 3/4 市場比例', '比例'), 'tier34Contracted': ('簽約電力位於 Tier 3/4 市場比例', '比例'),
  'cdsMid': ('CDS 中價', 'bps'), 'cdsBidAsk': ('CDS 買／賣價', '文字'), 'cdsRange': ('CDS 近期區間', '文字'), 'cdsPeak': ('CDS 峰值', 'bps'),
  'cdsPeakDate': ('CDS 峰值日期', '日期'), 'cdsLow': ('CDS 低點', 'bps'), 'cdsLowDate': ('CDS 低點日期', '日期'),
- 'availability': ('未動用信用額度', 'US$bn'), 'price0918': ('9/18 收盤價', 'US$'), 'priceLast': ('最新收盤價', 'US$'),
+ 'availability': ('未動用信用額度', 'US$bn'), 'price0918': ('9/18 收盤價', 'US$'), 'priceLast': ('最新收盤價', 'US$'), 'priceSource': ('最新收盤價來源', '文字'),
  'priceDate': ('最新收盤價日期', '日期'), 'postQShortDated': ('期後公告摘要', '文字'), 'ttmRev': ('近十二個月營收', 'US$bn'),
  'ttmOpInc': ('近十二個月 GAAP 營業損益', 'US$bn'), 'ttmDa': ('近十二個月折舊攤銷', 'US$bn'),
  'ttmOpLease': ('近十二個月營業租賃成本', 'US$bn'), 'mktCapLast': ('本公司市值（Comps 用；與同業同一收盤日 peers.priceDate，v4.3 起不隨現價更新）', 'US$bn'), 'nextEarn': ('下次財報時間', '文字'),

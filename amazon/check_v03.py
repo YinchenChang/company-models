@@ -41,7 +41,7 @@ print(f"核對列：{n_chk} 列（Q、Seg、PL、CF、Val、Recon、Sens；含�
 V, CF, IN, SE, RC = wb["Val"], wb["CF"], wb["In"], wb["Sens"], wb["Recon"]
 labs = {V.cell(r, 1).value: r for r in range(1, V.max_row + 1)}
 for n in ("目標價（DCF 與 Comparable 加權）", "上檔空間：加權目標價", "投資建議", "上檔空間級距", "DCF 目標價（情境加權）", "Comparable 目標價（市場主流同業法）",
-          "價格帶（DCF 不如預期～順利）", "現價（2026-10-30 收盤）", "市場共識目標價", "讀法 1：加權目標價", "FY2028 AWS 營業利益率"):
+          "價格帶（DCF 不如預期～順利）", "現價（2026-11-05 收盤）", "市場共識目標價", "讀法 1：加權目標價", "FY2028 AWS 營業利益率"):
     if n not in labs: fail.append(f"Val 缺列「{n}」")
 if CF["A6"].value != "收支關卡：自由現金流扣股利（五年合計）":
     fail.append("CF!A6 應為「收支關卡：自由現金流扣股利（五年合計）」")
