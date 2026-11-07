@@ -173,7 +173,7 @@ r_pvx, r_dcf = row_of("Val", "明確期 FCFF 現值"), row_of("Val", "DCF 目標
 assert r_pvx == rk + 6, (r_pvx, rk)
 def _fm(lab):
     return ("n2" if lab.startswith("評價用") else "p1" if "終值現值占 EV" in lab else "x1" if "隱含終值" in lab else "n0")
-fb = row_of("DCF", "營收", start=row_of("DCF", "情境 B（平平）"))   # 情境 B 明細首列（營收）
+fb = row_of("DCF", "營收", start=row_of("DCF", "情境 B（基準）"))   # 情境 B 明細首列（營收）
 va = SEC["valuation"]
 old = va["blocks"]
 dcf_tbl = next(b for b in old if b.get("caption") == "@Val!A60")
@@ -206,10 +206,10 @@ va["blocks"] = [
              "row_fmt": {str(c0 + 6): {"B": "sp1"}, str(c0 + 7): {"B": "sp1"}, str(c0 + 8): {"B": "sp1"}, str(c0 + 9): {"B": ""}, str(c0 + 10): {"B": "p0", "C": "p0", "D": "p0"}, str(c0 + 11): {"B": ""}}}},
  {"type": "table", "caption": "DCF 折現率（WACC、股權成本、稅後債務成本、RONIC、永續成長率；直接顯示）", "head": ["項目", "數值", "說明"], "rows": [
    [f"@Val!A{r}", f"@Val!B{r}|p2", f"@Val!E{r}"] for r in range(rk, rk + 6)]},
- {"type": "table", "caption": "DCF 彙總（標準版：無槓桿自由現金流 FCFF＋WACC；三情境）", "head": ["項目", "A（順利）", "B（平平）", "C（不如預期）", "說明"], "rows": [
+ {"type": "table", "caption": "DCF 彙總（標準版：無槓桿自由現金流 FCFF＋WACC；三情境）", "head": ["項目", "A（樂觀）", "B（基準）", "C（保守）", "說明"], "rows": [
    [f"@Val!A{r}", f"@Val!B{r}|{fm}", f"@Val!C{r}|{fm}" if r != r_dcf else "", f"@Val!D{r}|{fm}" if r != r_dcf else "", f"@Val!E{r}"]
    for r, fm in ((r, _fm(str(WB["Val"].cell(r, 1).value).strip())) for r in range(r_pvx, r_dcf + 1))]},
- {"type": "table", "collapse": True, "summary": "展開：情境 B（平平）FCFF 逐年明細（DCF 頁；新台幣十億元）", "head": ["@DCF!A5", "@DCF!C5", "@DCF!D5", "@DCF!E5", "@DCF!F5", "@DCF!G5", "@DCF!H5"],
+ {"type": "table", "collapse": True, "summary": "展開：情境 B（基準）FCFF 逐年明細（DCF 頁；新台幣十億元）", "head": ["@DCF!A5", "@DCF!C5", "@DCF!D5", "@DCF!E5", "@DCF!F5", "@DCF!G5", "@DCF!H5"],
   "rowgen": {"sheet": "DCF", "rows": f"{fb}-{fb + 10}", "cols": ["A", "C", "D", "E", "F", "G", "H"], "fmts": ["", "n0", "n0", "n0", "n0", "n0", "n0"],
              "row_fmt": {str(fb + 3): {c: "p1" for c in "CDEFGH"}, str(fb + 5): {c: "p1" for c in "CDEFGH"}, str(fb + 6): {c: "p1" for c in "CDEFGH"}}}},
  {"type": "table", "caption": "Comparable（同業前瞻 P/E × 前瞻 EPS × 相對倍數調整）", "head": ["項目", "數值"], "rows": [
