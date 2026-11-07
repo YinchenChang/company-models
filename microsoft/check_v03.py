@@ -62,7 +62,14 @@ rec = V.cell(labs["投資建議"], 2).value
 AJ = os.path.join(HERE, "data", "attrib_v031_20261029.json")
 if os.path.exists(AJ):
     last = json.load(open(AJ, encoding="utf-8"))["steps"][-1]["tp"]
-    if abs(last - tp) > 1e-6:
+    # v0.3.7：只換現價（(g) 列＝本檔目標價 − v0.3.1～v0.3.6 目標價），拆解 JSON 保留 v0.3.1 終點；(g) 須存在且只是小幅（|g| < 5）
+    RCW = wb["Recon"]
+    g_rows = [r for r in range(1, RCW.max_row + 1) if str(RCW.cell(r, 1).value or "").startswith("(g) v0.3.7 現價")]
+    if g_rows:
+        g = RCW.cell(g_rows[0], 2).value
+        if not isinstance(g, (int, float)) or abs(last + g - tp) > 1e-6 or abs(g) >= 5:
+            fail.append(f"變動拆解：v0.3.1 終點 {last:.4f} ＋ (g) {g} ≠ 本檔 {tp:.4f}，或 (g) 過大")
+    elif abs(last - tp) > 1e-6:
         fail.append(f"變動拆解 JSON 已過期：最後一步 {last:.4f} ≠ 本檔 {tp:.4f}（重跑 SENS=1 bash microsoft/make_v03.sh）")
 else:
     fail.append("缺 microsoft/data/attrib_v031_20261029.json")

@@ -109,7 +109,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - **判斷句**：營收、EBITDA、CapEx 任一項差距絕對值超過 `methodology.consensusGapTol`（5%）即為分歧；句子寫出分歧起始年與之後各年超過門檻的項目。
 - **隱含倍數**：（價格 × 模型股數 0.587bn＋共識 FY28 淨負債）÷ 共識 FY28 調整後 EBITDA，價格分別用共識平均目標價與現價；與方法區間上緣（6x）並列。
 - **一頁摘要**：HTML 總結頁第 1 頁（`onePageQ`；原 9 頁順延為附錄，列印 10 頁）；Excel「摘要」分頁（「導覽」之後，全部活公式）。四個句子（結論句、共識判斷句、隱含倍數句、Q3 句）由 HTML 函式與 Excel 文字公式各自產生，cmp31 逐字比對。反向 DCF 在 Excel 引用快照（`rv_snap.json`）。
-- **現價**：$90.13（2026-09-24 收盤）；股權發行參考價同步。Comps 表的 CRWV 市值維持 9/21（與同業同一天）；股權／可轉債金額維持 6.2bn（Andy 決定）。
+- **現價**：$43.66（2026-11-05 收盤，v4.13；v4.3–v4.12 為 $90.13〔2026-09-24〕）；股權發行參考價同步。Comps 表的 CRWV 市值維持 9/21（與同業同一天）；股權／可轉債金額維持 6.2bn（Andy 決定）。
 - **核對**：B＋C（現價不變）先與 v4.2 比對：Excel 用 `xl_diff.py --by-label --ignore=來源,摘要`（值與公式 0 差異，新增列 64）；畫面文字差異限於新頁、Street 列刪除、來源句、附錄前綴與頁碼。再做 A（改現價）並列出數字對照（見 `docs/reports/20260925_一頁摘要與市場共識.md`）。
 
 ## v4.4 季度層與差異原因
@@ -231,7 +231,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY26 下半年、FY27、FY28、FY29、FY30，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 CoreWeave v4.12 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 CoreWeave v4.13 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
@@ -239,8 +239,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `meta.company` | 公司名稱 | 文字 | CoreWeave | 必改 |
 | `meta.ticker` | 股票代號 | 文字 | CRWV | 必改 |
-| `meta.updateDate` | 資料更新日 | 日期 | 2026-09-25 | 必改 |
-| `meta.priceDate` | 股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格） | 日期 | 2026-09-24 | 必改 |
+| `meta.updateDate` | 資料更新日 | 日期 | 2026-11-06 | 必改 |
+| `meta.priceDate` | 股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格） | 日期 | 2026-11-05 | 必改 |
 | `meta.consensusFile` | 市場共識資料檔路徑（v4.3；只讀，由使用者查證後提供；建置時併入 HTML、Excel 讀同一檔） | 路徑 | data/consensus_crwv_202609… | 必改 |
 | `meta.sourceOrderNote` | 資料來源的先後與衝突時的取捨原則（畫面說明文字） | 文字 | 時序先法說（8/11）、後 10-Q（8/12）、再… | 必改 |
 | `meta.mwBasis` | MW 口徑（W2）：IT＝IT 關鍵電力（與 Tokenomics 每 GW 相同）；facility＝設施電力（Tokenomics 每 MW 值 ÷ IF_FacilityGW） | 代碼 | IT | 必改 |
@@ -465,8 +465,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `cdsLowDate` | CDS 低點日期 | 日期 | 2026-06 | 否 |
 | `availability` | 未動用信用額度 | US$bn | 10.014 | 否 |
 | `price0918` | 9/18 收盤價 | US$ | 80.2 | 否 |
-| `priceLast` | 最新收盤價 | US$ | 90.13 | 是 |
-| `priceDate` | 最新收盤價日期 | 日期 | 2026-09-24 | 是 |
+| `priceLast` | 最新收盤價 | US$ | 43.66 | 是 |
+| `priceSource` | 最新收盤價來源 | 文字 | Yahoo Finance 日線（https://q… | 否 |
+| `priceDate` | 最新收盤價日期 | 日期 | 2026-11-05 | 是 |
 | `postQShortDated` | 期後公告摘要 | 文字 | 2026-09-16 公告：6/30 後持續以更高價… | 否 |
 | `ttmRev` | 近十二個月營收 | US$bn | 7.59 | 是 |
 | `ttmOpInc` | 近十二個月 GAAP 營業損益 | US$bn | -0.231 | 是 |
@@ -521,7 +522,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.debtBacklog` | 新債上限：總債務不超過 backlog 的倍數 | 倍 | 1 | 檢查 |
 | `defaults.ctrTerm` | 新簽合約的平均年期（決定 backlog 補入量） | 年 | 5 | 檢查 |
 | `defaults.minCash` | 最低現金：每期融資後期末現金不低於此值 | US$bn | 2 | 檢查 |
-| `defaults.eqPx` | 新股發行參考價（預設＝現價） | US$ | 90.13 | 必改 |
+| `defaults.eqPx` | 新股發行參考價（預設＝現價） | US$ | 43.66 | 必改 |
 | `defaults.eqDisc` | 新股發行折價 | 比例 | 0.1 | 檢查 |
 | `defaults.eqCapPct` | 每年股權募資上限（占現市值）；輸入 9 以上視為無上限 | 比例 | 0.2 | 檢查 |
 | `defaults.eqCapShares` | 股權年上限的股數基礎：現市值＝發行參考價 × 此股數（5a；評價日時點，列入滾動檢查） | bn | 0.5865 | 必改 |
@@ -574,7 +575,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `valuation.price` | 現價 | US$ | 90.13 | 必改 |
+| `valuation.price` | 現價 | US$ | 43.66 | 必改 |
 | `valuation.shares` | 評價股數（含期後股權發行上限） | bn 股 | 0.587 | 必改 |
 | `valuation.netDebt` | 淨負債（最新季末本金 − 現金） | US$bn | 30 | 必改 |
 | `valuation.tax` | 稅率 | 比例 | 0.21 | 檢查 |
