@@ -2352,7 +2352,7 @@
      "type": "tornado",
      "title": "FY2028 EPS 相對基準的變動（情境 A；變動達兩位數百分比的案例；一次動一個輸入）",
      "sheet": "Sens",
-     "rows": "5,6,7,8,9,18,19",
+     "rows": "5,6,7,8,9,10,18,19",
      "label_col": "A",
      "value_col": "H",
      "fmt": "sp1"
@@ -2361,7 +2361,7 @@
      "type": "tornado",
      "title": "FY2028 EPS 相對基準的變動（情境 A；變動未達兩位數百分比的案例）",
      "sheet": "Sens",
-     "rows": "10,11,12,13,14,15,16,17",
+     "rows": "11,12,13,14,15,16,17",
      "label_col": "A",
      "value_col": "H",
      "fmt": "sp1",

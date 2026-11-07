@@ -1,20 +1,20 @@
 {
  "company": "Amkor",
  "ticker": "AMKR",
- "thesis": "@README!A36",
+ "thesis": "@README!A37",
  "question": "AI 封裝的高成長能不能抵過通訊停滯與亞利桑那折舊，讓每股盈餘持續成長；現價的前瞻本益比隱含什麼路徑",
  "scenarios": [
   {
    "key": "A",
-   "name": "情境 A（順利）"
+   "name": "情境 A（樂觀）"
   },
   {
    "key": "B",
-   "name": "情境 B（平平）"
+   "name": "情境 B（基準）"
   },
   {
    "key": "C",
-   "name": "情境 C（不如預期）"
+   "name": "情境 C（保守）"
   }
  ],
  "sections": [
@@ -30,9 +30,9 @@
      "type": "list",
      "ordered": true,
      "items": [
-      "@README!A37",
       "@README!A38",
-      "@README!A39"
+      "@README!A39",
+      "@README!A40"
      ]
     },
     {
@@ -41,9 +41,9 @@
      "collapse": true,
      "summary": "展開：命題回覆（依本模型計算的答案；想先看結論可展開，或讀完全文再看）",
      "items": [
-      "@README!A46",
       "@README!A47",
-      "@README!A48"
+      "@README!A48",
+      "@README!A49"
      ]
     },
     {
@@ -54,10 +54,10 @@
      "type": "list",
      "ordered": true,
      "items": [
-      "@README!A40",
       "@README!A41",
       "@README!A42",
-      "@README!A43"
+      "@README!A43",
+      "@README!A44"
      ]
     }
    ]
@@ -1937,7 +1937,7 @@
       ],
       [
        "Comparable（相對倍數調整後）的上檔空間",
-       "@README!B50|sp1",
+       "@README!B51|sp1",
        "",
        "",
        ""
@@ -2060,9 +2060,9 @@
      "caption": "DCF 彙總（標準版：無槓桿自由現金流 FCFF＋WACC；三情境）",
      "head": [
       "項目",
-      "A（順利）",
-      "B（平平）",
-      "C（不如預期）",
+      "A（樂觀）",
+      "B（基準）",
+      "C（保守）",
       "說明"
      ],
      "rows": [
@@ -2130,9 +2130,9 @@
      "summary": "展開：DCF 彙總的其他項目",
      "head": [
       "項目",
-      "A（順利）",
-      "B（平平）",
-      "C（不如預期）",
+      "A（樂觀）",
+      "B（基準）",
+      "C（保守）",
       "說明"
      ],
      "rows": [
@@ -2988,6 +2988,9 @@
       ],
       [
        "@README!A33"
+      ],
+      [
+       "@README!A34"
       ]
      ]
     },
