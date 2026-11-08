@@ -224,10 +224,10 @@ inp("dom_cpu27", "本國投顧：FY2027 CSP CPU 專案 ÷ 營收", "%", None, 0.
 inp("dom_ts27", "本國投顧：FY2027 北美車用 turnkey ÷ 營收", "%", None, 0.349, None, "Interested-party", UDN4, "本模型車用含中國、歐洲 ADAS")
 
 sec("H. 價格與市場倍數")
-inp("px", "股價（2026-11-04 收盤）", "NT$", None, 7115.0, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（3443.TW；第三輪修正：全批統一價格日）", "v0.3.1 為 2026-10-22 收盤 7,585（舊來源：" + "；".join([SAH + "：10-22 收盤 7,585", SDOG + "：10/22 7,585（−5.19%）；10-23 收盤：未找到"]) + "）")
+inp("px", "股價（2026-11-05 收盤）", "NT$", None, 6405, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（3443.TW）", "v0.3.2 為 2026-11-04 收盤 7115；v0.3.1 為 2026-10-22 收盤 7,585（舊來源：" + "；".join([SAH + "：10-22 收盤 7,585", SDOG + "：10/22 7,585（−5.19%）；10-23 收盤：未找到"]) + "）")
 inp("pe_ttm", "近 12 月 P/E（現價 ÷ 近 12 月 EPS 38.90）", "x", None, "=px/38.90", None, "Derived", SA + "：近 12 月 EPS 38.90", "財報狗近四季 EPS 39.01")
-inp("fpe", "前瞻 P/E（2026-11-04 收盤 ÷ 資料商前瞻 EPS）", "x", None, 87.53, None, "Interested-party", SA + "：stockanalysis.com 統計頁 Forward PE 102.85（2026-10-08 頁面，價格 8360）→ 前瞻 EPS 81.28；P/E＝Yahoo Finance 日線收盤 2026-11-04 7115 ÷ 前瞻 EPS", "v0.3.1 為 stockanalysis 頁面值（價格日 2026-10-22）")
-inp("cons_feps", "共識前瞻 12 月 EPS（現價 ÷ 前瞻 P/E）", "NT$", None, "=px/fpe", None, "Derived", "stockanalysis 前瞻 P/E 102.85（2026-10-08，股價 8,360）→ 81.28；第三輪修正：fpe 改為 11-04 口徑後以 px ÷ fpe 還原同一 EPS", "共識前瞻 EPS 的直接數字：未找到")
+inp("fpe", "前瞻 P/E（2026-11-05 收盤 ÷ 資料商前瞻 EPS）", "x", None, 78.8, None, "Interested-party", SA + "：stockanalysis.com 統計頁 Forward PE 102.85（2026-10-08 頁面，價格 8360）→ 前瞻 EPS 81.28；P/E＝2026-11-04 基準 87.53 × Yahoo Finance 日線收盤 2026-11-05 6405 ÷ 2026-11-04 收盤 7115（共識 EPS 不變）", "v0.3.2 為 87.53（2026-11-04）；v0.3.1 為 stockanalysis 頁面值（價格日 2026-10-22）")
+inp("cons_feps", "共識前瞻 12 月 EPS（現價 ÷ 前瞻 P/E）", "NT$", None, "=px/fpe", None, "Derived", "stockanalysis 前瞻 P/E 102.85（2026-10-08，股價 8,360）→ 81.28；fpe 改為 11-05 口徑後以 px ÷ fpe 還原同一 EPS（第三輪修正起）", "共識前瞻 EPS 的直接數字：未找到")
 inp("cons_tp", "市場共識目標價（賣方平均）", "NT$", 2500, 6722.37, 8000, "Interested-party", SA + "：19 位分析師平均 6,722（2026-10-08 擷取）", "共識頁（2026-09-04）：18 位平均 5,729、中位數 5,800、區間 2,500–8,000")
 inp("nim5", "近五年平均淨利率（FY2021–25；對照用）", "%", None, "=AVERAGE(1460/15108,3710/24040,3508/26241,3451/25044,3770/34141)", None, "Derived",
     "stockanalysis 財報頁：FY2021–25 營收與淨利", "十年平均（2016–2025）：未找到（2016–2020 未取得）；收斂法依工作單改用最後一年 × 0.8")
@@ -552,7 +552,7 @@ V["A2"] = "循環位置：創意不是設備股，不套設備市場見頂年；
 O = 51
 V.cell(O, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, O + 1, ["項目", "A", "B", "C", "說明"])
-V.cell(O + 2, 1, "現價（2026-11-04 收盤）"); V[f"B{O + 2}"] = "=px"; V[f"B{O + 2}"].number_format = "#,##0"
+V.cell(O + 2, 1, "現價（2026-11-05 收盤）"); V[f"B{O + 2}"] = "=px"; V[f"B{O + 2}"].number_format = "#,##0"
 for k, y, lab in ((3, 2026, "現價 ÷ FY2026 EPS（錨點）"), (4, 2027, "現價 ÷ FY2027 EPS（模型）"), (5, 2028, "現價 ÷ FY2028 EPS（模型）"), (6, 2029, "現價 ÷ FY2029 EPS（模型）")):
     V.cell(O + k, 1, lab)
     for j, s in enumerate(SC):
@@ -678,10 +678,10 @@ _PE = lambda c, y: f"PL!{FC[y]}{SUMR[(dict(zip('BCD', SC))[c], 'eps')]}"
 EPSR = {}   # v0.3：舊 0.1 節 EPS 列已移除（ROWMAP 相容）
 V.cell(26, 1, "0.2 Comparable（市場主流同業前瞻 P/E）").font = BOLD
 hdr(V, 27, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"])
-PEERS = [("世芯-KY（Alchip）", "3661.TW", 15.6, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 17.15（2026-10-22 頁面，價格 3495）→ 前瞻 EPS 203.8；P/E＝Yahoo Finance 日線收盤 2026-11-04 3180 ÷ 前瞻 EPS"),
-         ("聯發科（MediaTek）", "2454.TW", 35.9, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 38.75（2026-10-22 頁面，價格 4010）→ 前瞻 EPS 103.5；P/E＝Yahoo Finance 日線收盤 2026-11-04 3715 ÷ 前瞻 EPS"),
-         ("博通（Broadcom）", "AVGO", 18.71, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 18.74（2026-10-30 頁面，價格 326.08）→ 前瞻 EPS 17.4；P/E＝Yahoo Finance 日線收盤 2026-11-04 325.48 ÷ 前瞻 EPS"),
-         ("邁威爾（Marvell）", "MRVL", 28.31, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 42.09（2026-10-27 頁面，價格 237.6）→ 前瞻 EPS 5.645；P/E＝Yahoo Finance 日線收盤 2026-11-04 159.8 ÷ 前瞻 EPS")]
+PEERS = [("世芯-KY（Alchip）", "3661.TW", 14.52, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 17.15（2026-10-22 頁面，價格 3495）→ 前瞻 EPS 203.8；P/E＝2026-11-04 基準 15.6 × Yahoo Finance 日線收盤 2026-11-05 2960 ÷ 2026-11-04 收盤 3180（共識 EPS 不變）"),
+         ("聯發科（MediaTek）", "2454.TW", 33.44, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 38.75（2026-10-22 頁面，價格 4010）→ 前瞻 EPS 103.5；P/E＝2026-11-04 基準 35.9 × Yahoo Finance 日線收盤 2026-11-05 3460 ÷ 2026-11-04 收盤 3715（共識 EPS 不變）"),
+         ("博通（Broadcom）", "AVGO", 16.76, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 18.74（2026-10-30 頁面，價格 326.08）→ 前瞻 EPS 17.4；P/E＝2026-11-04 基準 18.71 × Yahoo Finance 日線收盤 2026-11-05 291.53 ÷ 2026-11-04 收盤 325.48（共識 EPS 不變）"),
+         ("邁威爾（Marvell）", "MRVL", 23.66, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 42.09（2026-10-27 頁面，價格 237.6）→ 前瞻 EPS 5.645；P/E＝2026-11-04 基準 28.31 × Yahoo Finance 日線收盤 2026-11-05 133.55 ÷ 2026-11-04 收盤 159.8（共識 EPS 不變）")]
 for i, (nm, tk, pe, dt, src) in enumerate(PEERS, 28):
     V.cell(i, 1, nm); V.cell(i, 2, tk); c = V.cell(i, 3, pe); c.font = BLUE; c.number_format = "0.0"
     V.cell(i, 4, dt); V.cell(i, 5, src); V.cell(i, 6, "Interested-party")
@@ -695,7 +695,7 @@ hdr(V, 38, ["項目", "數值", "", "", "說明"])
 tset(39, "tpw", "目標價（DCF 與 Comparable 加權）", [f"=tp_w_dcf*B{T['dcftp']}+(1-tp_w_dcf)*B35", None, None], "#,##0.00", "tp_w_dcf × DCF＋（1 − tp_w_dcf）× Comparable；tp_w_dcf 見 In 頁")
 tset(40, "comp2", "Comparable 目標價（市場主流同業法）", ["=B35", None, None], "#,##0.00")
 tset(41, "cons", "市場共識目標價", ["=cons_tp", None, None], "#,##0.00", "stockanalysis：19 位分析師平均 6,722，2026-10-08 擷取")
-tset(42, "upw", "上檔空間：加權目標價", ["=B39/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-04 收盤）")
+tset(42, "upw", "上檔空間：加權目標價", ["=B39/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-05 收盤）")
 tset(43, "upc", "上檔空間：Comparable 目標價", ["=B40/px-1", None, None], "0.0%")
 tset(44, "geps", "與市場共識目標價的差距：EPS 因素", ["=B34/cons_feps-1", None, None], "0.0%", "本模型前瞻 EPS ÷ 共識前瞻 EPS − 1；共識前瞻 EPS＝2026-10-08 股價 ÷ 前瞻 P/E（In 頁 cons_feps）")
 tset(45, "gmul", "與市場共識目標價的差距：倍數因素", ["=(cons_tp/cons_feps)/B33-1", None, None], "0.0%")
@@ -1097,7 +1097,7 @@ def _r3_fix(wb, ver, stub_fy, extra=()):
         (r"(情境 ?C[^（）\n\"]{0,8})（(?:保守|下檔|悲觀)）", r"\1（不如預期）"),
         (r"／B（基準）", "／B（平平）"), (r"／C（(?:保守|下檔|悲觀)）", "／C（不如預期）"),
         (r"在?(?:本|建置)環境(?:中)?(?:無法開啟|找不到|取不到)(?:（未找到）)?", "未取得"),
-        (r"無法開啟：未找到", "未取得"), (r"px（2026-10-23 收盤）", "px（2026-11-04 收盤）"), (r"無法開啟", "未取得"), (r"取不到", "未取得"), (r"，已抓取", ""), (r"已逐頁抓取", "已逐頁讀取"), (r"已抓取", "已讀取"), (r"抓取", "取得"),
+        (r"無法開啟：未找到", "未取得"), (r"px（2026-10-23 收盤）", "px（2026-11-05 收盤）"), (r"無法開啟", "未取得"), (r"取不到", "未取得"), (r"，已抓取", ""), (r"已逐頁抓取", "已逐頁讀取"), (r"已抓取", "已讀取"), (r"抓取", "取得"),
         (r"第一年 FCFF × stub_frac", f"含 stub 期會計年度（{stub_fy}）FCFF × stub_frac"),
         (r"重點觀察 1 的第一句已改為公式；重點觀察 2、3 與其他說明中的目標價與上檔空間數字為調整前撰寫，以 Val 頁為準。",
          f"重點觀察 1 的目標價等數字為公式；調整前撰寫的舊說明已於 {ver} 刪除（第三輪修正）。"),
@@ -1148,7 +1148,11 @@ for _rr in range(_s0 + 2, _wsI.max_row + 1):
     if _lb.startswith("FY2032 ") and _lb.endswith("）"): _wsI.cell(_rr, 2).value = _lb[:_lb.rindex("（")]
 _r3_static(wb, "v0.3.1（2026-11-05）", "v0.3.1（2026-11-05）：換用共用模組 tools/fcff_dcf.py v2（工作單第二輪修正；Andy 2026-11-05 23:16 定案）。(1) 資產負債表：沿用 2026-06-30（3Q26 財報 2026-10-29 已通過，但明細在建置環境取不到，待補），淨現金 10.10。(2) Stub 期：評價日 2026-12-31，淨現金滾到評價日＝上述＋stub 期 FCFF（各情境 FY2027 FCFF × stub_frac 0.504 年；情境 B 7.62）− 已宣告股利 0.00（2026 年股利已於 6 月 30 日發放）＝17.72（十億新台幣）。DCF 目標價 1,805.92 → 1,869.89、加權目標價 3,737.11 → 3,769.09（上檔 -50.3%，強力放空）。(3) β 敏感度：低／高改為 β_u ∓ 0.3 各自重新加槓桿（In 頁 beta_du）。(4) 新增 Sens「美元口徑折現」：rf＝美國 10 年期 5.00%＋CRP、g＝MIN(3%, 5.00%)，其他不變；加權目標價 3,587 元（-4.8%）。(5) ke 說明格改由模組參數 beta_note 提供；In 頁 M2 標題不寫版號。資本支出、折舊：本模型沒有逐年資本支出／折舊列，維持占營收比例。PL、Comparable、情境權重不變。")
 _r3_gcap(wb)   # rf 1.98% < g 上限 3%：g＝rf
-_r3_fix(wb, "v0.3.2", "FY2026＝日曆年 2026，錨點", extra=[('"（2026-10-22）"', '"（2026-11-04）"'), ('與股價同日（2026-10-23）', 'rf 沿用 2026-10-23')])
+_r3_fix(wb, "v0.3.2", "FY2026＝日曆年 2026，錨點", extra=[('"（2026-10-22）"', '"（2026-11-05）"'), ('與股價同日（2026-10-23）', 'rf 沿用 2026-10-23')])
+# ---------------- v0.3.3（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守（本資料夾 px1105_post.py；只改文字） ----------------
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import px1105_post  # noqa: E402
+print(px1105_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), "v0.3.3", "v0.3.2", "v0.3.2（2026-11-06）"))
 wb.save(sys.argv[1])
 if os.environ.get("GUC_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

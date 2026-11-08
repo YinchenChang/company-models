@@ -1,20 +1,20 @@
 {
  "company": "創意",
  "ticker": "3443.TW",
- "thesis": "@README!A40",
+ "thesis": "@README!A41",
  "question": "在市場層 TPU 顆數與 CPU 對 TPU 配比口徑下，創意的 CPU 顆數與每股盈餘離法人估計多遠；差距靠配比、份額還是車用補上，現價隱含的倍數與同業差多少",
  "scenarios": [
   {
    "key": "A",
-   "name": "情境 A（順利）"
+   "name": "情境 A（樂觀）"
   },
   {
    "key": "B",
-   "name": "情境 B（平平）"
+   "name": "情境 B（基準）"
   },
   {
    "key": "C",
-   "name": "情境 C（不如預期）"
+   "name": "情境 C（保守）"
   }
  ],
  "sections": [
@@ -30,9 +30,9 @@
      "type": "list",
      "ordered": true,
      "items": [
-      "@README!A41",
       "@README!A42",
-      "@README!A43"
+      "@README!A43",
+      "@README!A44"
      ]
     },
     {
@@ -41,9 +41,9 @@
      "collapse": true,
      "summary": "展開：命題回覆（依本模型計算的答案；想先看結論可展開，或讀完全文再看）",
      "items": [
-      "@README!A50",
       "@README!A51",
-      "@README!A52"
+      "@README!A52",
+      "@README!A53"
      ]
     },
     {
@@ -54,10 +54,10 @@
      "type": "list",
      "ordered": true,
      "items": [
-      "@README!A44",
       "@README!A45",
       "@README!A46",
-      "@README!A47"
+      "@README!A47",
+      "@README!A48"
      ]
     }
    ]
@@ -1905,7 +1905,7 @@
       ],
       [
        "Comparable（相對倍數調整後）的上檔空間",
-       "@README!B54|sp1",
+       "@README!B55|sp1",
        "",
        "",
        ""
@@ -2028,9 +2028,9 @@
      "caption": "DCF 彙總（標準版：無槓桿自由現金流 FCFF＋WACC；三情境；十億新台幣、每股新台幣）",
      "head": [
       "項目",
-      "A（順利）",
-      "B（平平）",
-      "C（不如預期）",
+      "A（樂觀）",
+      "B（基準）",
+      "C（保守）",
       "說明"
      ],
      "rows": [
@@ -2098,9 +2098,9 @@
      "summary": "展開：DCF 彙總的其他項目",
      "head": [
       "項目",
-      "A（順利）",
-      "B（平平）",
-      "C（不如預期）",
+      "A（樂觀）",
+      "B（基準）",
+      "C（保守）",
       "說明"
      ],
      "rows": [
@@ -2137,7 +2137,7 @@
     {
      "type": "table",
      "collapse": true,
-     "summary": "展開：情境 B（平平）FCFF 逐年明細（DCF 頁；十億新台幣）",
+     "summary": "展開：情境 B（基準）FCFF 逐年明細（DCF 頁；十億新台幣）",
      "head": [
       "@DCF!A5",
       "@DCF!C5",
@@ -3106,6 +3106,9 @@
       ],
       [
        "@README!A37"
+      ],
+      [
+       "@README!A38"
       ]
      ]
     },

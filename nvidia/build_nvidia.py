@@ -200,7 +200,7 @@ inp("dsh", "ASIC 金額份額變動（Sens 用；NVIDIA 份額 ±）", "pt", Non
 inp("uk", "NVIDIA 顆數係數（Sens 用；FY2028 起乘以所有 NVIDIA 世代顆數）", "x", 0.9, 1.0, 1.1, "Assumed", "無", "±10%")
 
 sec("K. 價格與估值")
-inp("px", "股價（2026-11-04 收盤）", "US$", None, 200.13, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（第三輪修正：全批統一價格日）", "v0.3.2 為 2026-10-23 收盤 210.96（markets/invest_map/data/prices.csv）；v0.1.2 為 10-22 收盤 212.21。股數量級核對（v0.1.2）：市值約 $5.12T ÷ 212.21 ≈ 24.1B 股，與 Q2 FY27 稀釋股數 24.285B 同量級")
+inp("px", "股價（2026-11-05 收盤）", "US$", None, 181.6, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05", "v0.3.3 為 2026-11-04 收盤 200.13；v0.3.2 為 2026-10-23 收盤 210.96（markets/invest_map/data/prices.csv）；v0.1.2 為 10-22 收盤 212.21。股數量級核對（v0.1.2）：市值約 $5.12T ÷ 212.21 ≈ 24.1B 股，與 Q2 FY27 稀釋股數 24.285B 同量級")
 inp("r_disc", "折現率（把 FY2028 年底隱含價折回現在；參考用）", "%", 0.08, 0.10, 0.12, "Assumed", "無", "FY2028 年底（2028-01）距 2026-10-22 約 1.27 年")
 for s in SC:
     inp(f"pk_{s}", f"情境 {s}：設備市場見頂年度（日曆年；循環位置規則用）", "年", None, PEAK[s], None, "Derived", PEAK_SRC[s], "共用規則（tools/cycle_position.py）：NVIDIA 的 FY(t) 對照日曆年 t−1，用 classify_lag；設備市場模型的情境係數為 Assumed" if s == "A" else "同上")
@@ -221,7 +221,7 @@ Q10 = "NVIDIA 10-Q（季度結束 2026-07-26）https://www.sec.gov/Archives/edga
 for _row in FD.in_rows(dict(
         date="2026-12-31（同 v0.2 DCF 基準日）", amt="US$B", shu="十億股",
         rf=(0.0500, "美國財政部每日殖利率曲線 10 Yr：2026-10-23 5.00%（https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202610；2026-11-05 讀取）",
-            "FRED DGS10（同一序列，https://fred.stlouisfed.org/series/DGS10）：10-28～10-30 5.05%／4.98%／4.94% 與財政部表一致；rf 沿用 2026-10-23（第三輪修正只把股價與同業報價統一到 2026-11-04）", "無風險利率（美國 10 年期公債殖利率，2026-10-23）"),
+            "FRED DGS10（同一序列，https://fred.stlouisfed.org/series/DGS10）：10-28～10-30 5.05%／4.98%／4.94% 與財政部表一致；rf 沿用 2026-10-23（v0.3.4 只把股價與同業報價換成 2026-11-05 收盤）", "無風險利率（美國 10 年期公債殖利率，2026-10-23）"),
         beta_fixed=("=(beta_u-beta_du)*(1+(1-tax_w)*beta_de)", "=beta_u*(1+(1-tax_w)*beta_de)", "=(beta_u+beta_du)*(1+(1-tax_w)*beta_de)", "Derived",
                     "自算產業 β：US 半導體 同業 13 家中位數（Yahoo Finance 月報酬 2021-11～2026-10，對 S&P 500 迴歸，Hamada 去槓桿、現金修正），以本公司市值 D/E 與稅率重新加槓桿（βL＝βU ×（1＋(1 − tax_w) × D/E））",
                     "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）。Sens 低／高（Analogy；v0.3.2 起）：β_u ∓ beta_du（0.3），各自同式重新加槓桿（工作單第二輪修正，Andy 2026-11-05 23:16 定案；tools/fcff_dcf.py v2 write_sens）"),
@@ -519,7 +519,7 @@ V["A1"] = "Val — P/E 估值（美元）。結論用「現價 ÷ FY2028 EPS（�
 V["A2"] = "不適用的理由：歷史倍數是「會計年度年底價 ÷ 該年度（剛結束）GAAP 稀釋 EPS」＝落後（trailing）倍數；規則把它乘在 FY2028 EPS 上，得到的是約 2028-01 的價格（距 2026-10-22 約 1.27 年，未折現；折現值另列）。歷史倍數含高成長期的高估值（FY2023 因 EPS 低谷達 114x），規則值遠高於現價——見下方「What must be true」"
 V.cell(4, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, 5, ["項目", "A", "B", "C", "說明"])
-V.cell(6, 1, "現價（2026-11-04 收盤）"); V["B6"] = "=px"; V["B6"].number_format = "0.00"
+V.cell(6, 1, "現價（2026-11-05 收盤）"); V["B6"] = "=px"; V["B6"].number_format = "0.00"
 V.cell(7, 1, "現價 ÷ FY2028 EPS（模型）")
 V.cell(8, 1, "現價 ÷ FY2029 EPS（模型）")
 V.cell(9, 1, "現價 ÷ 共識 FY2028 EPS")
@@ -797,7 +797,7 @@ TP0 = add_target_price(V, {s: f"=pe_mid*PL!D{SUMR[(s, 'eps')]}" for s in SC},
     "P/E：十年（FY2016–FY2025 會計年度年底，Macrotrends 9 年）落後 P/E 中位數 × 各情境 FY2027 EPS（不含權益證券損益；FY2027＝2026-02～2027-01）。"
     "本模型主估值法（FY2028 EPS × 循環位置分位）標「不適用」，依工作單改用此備案。十年倍數含高成長期溢價（FY2023 約 115x、FY2021 約 75x），偏誤方向為高估；"
     "FY2027 三情境 EPS 相同（情境差從 FY2028 起），故三情境隱含價相同；隱含價約為 FY2027 年底（2027-01）的價格、未折現。",
-    "現價＝In 頁 px（2026-11-04 收盤）")
+    "現價＝In 頁 px（2026-11-05 收盤）")
 
 # ---------------- v0.2：三情境延伸到 FY2032、Val 第 0 節（DCF 與 Comparable 加權）、Sens 目標價參數 ----------------
 XH, XR, XC = TP.extend_pl(PL, PB, FC, FYS, 2030, {"rev": "rev", "ni": "ni", "sh": "sh", "eps": "eps"}, "US$",
@@ -809,11 +809,11 @@ TPL, TPN = TP.add_tp_section(wb, V,
     eps={s: [f"PL!{XC[y]}{XR[(s, 'eps')]}" for y in range(2027, 2033)] for s in SC}, e_mon=1,
     fwd={s: [(f"PL!{XC[2028]}{XR[(s, 'eps')]}", 0.25), (f"PL!{XC[2029]}{XR[(s, 'eps')]}", 0.75)] for s in SC},
     fwd_note="會計年度 FY(t)＝t−1 年 2 月～t 年 1 月：約 12 個月後（2027-10 底）的未來 12 個月＝2027-11～2028-10＝FY2028 的 3 個月＋FY2029 的 9 個月（3/12 × FY2028＋9/12 × FY2029）",
-    peers=[("AMD", "AMD", 43.66, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 45.09（2026-10-30 頁面，價格 504.8）→ 前瞻 EPS 11.2；P/E＝Yahoo Finance 日線收盤 2026-11-04 488.78 ÷ 前瞻 EPS", "Interested-party（資料商彙整賣方預估）"),
-           ("Broadcom", "AVGO", 18.71, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 18.74（2026-10-30 頁面，價格 326.08）→ 前瞻 EPS 17.4；P/E＝Yahoo Finance 日線收盤 2026-11-04 325.48 ÷ 前瞻 EPS", "Interested-party（資料商彙整賣方預估）"),
-           ("Marvell", "MRVL", 28.31, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 42.09（2026-10-27 頁面，價格 237.6）→ 前瞻 EPS 5.645；P/E＝Yahoo Finance 日線收盤 2026-11-04 159.8 ÷ 前瞻 EPS", "Interested-party（資料商彙整賣方預估）"),
-           ("台積電 ADR", "TSM", 18.58, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 19.07（2026-10-30 頁面，價格 406.13）→ 前瞻 EPS 21.3；P/E＝Yahoo Finance 日線收盤 2026-11-04 395.75 ÷ 前瞻 EPS", "Interested-party（資料商彙整賣方預估）"),
-           ("Qualcomm", "QCOM", 18.71, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 20.03（2026-10-29 頁面，價格 185.41）→ 前瞻 EPS 9.257；P/E＝Yahoo Finance 日線收盤 2026-11-04 173.19 ÷ 前瞻 EPS", "Interested-party（資料商彙整賣方預估）")],
+    peers=[("AMD", "AMD", 36.12, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 45.09（2026-10-30 頁面，價格 504.8）→ 前瞻 EPS 11.2；P/E＝2026-11-04 基準 43.66 × Yahoo Finance 日線收盤 2026-11-05 404.4 ÷ 2026-11-04 收盤 488.78（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）"),
+           ("Broadcom", "AVGO", 16.76, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 18.74（2026-10-30 頁面，價格 326.08）→ 前瞻 EPS 17.4；P/E＝2026-11-04 基準 18.71 × Yahoo Finance 日線收盤 2026-11-05 291.53 ÷ 2026-11-04 收盤 325.48（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）"),
+           ("Marvell", "MRVL", 23.66, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 42.09（2026-10-27 頁面，價格 237.6）→ 前瞻 EPS 5.645；P/E＝2026-11-04 基準 28.31 × Yahoo Finance 日線收盤 2026-11-05 133.55 ÷ 2026-11-04 收盤 159.8（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）"),
+           ("台積電 ADR", "TSM", 16.58, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 19.07（2026-10-30 頁面，價格 406.13）→ 前瞻 EPS 21.3；P/E＝2026-11-04 基準 18.58 × Yahoo Finance 日線收盤 2026-11-05 353.1 ÷ 2026-11-04 收盤 395.75（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）"),
+           ("Qualcomm", "QCOM", 16.93, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 20.03（2026-10-29 頁面，價格 185.41）→ 前瞻 EPS 9.257；P/E＝2026-11-04 基準 18.71 × Yahoo Finance 日線收盤 2026-11-05 156.75 ÷ 2026-11-04 收盤 173.19（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）")],
     peer_note="券商常用的 AI 運算／半導體大型股同業（GPU、客製 ASIC、代工、手機 SoC）；不含 A 股（Andy 11:53）。前瞻 P/E 口徑為資料商的未來 12 個月共識 EPS，各家 GAAP／non-GAAP 口徑不一",
     cons_tp="cons_tp", cons_note="stockanalysis.com：62 位分析師平均目標價（2026-10-25 頁面）；Interested-party",
     cons_fwd="cons_eps28", cons_fwd_note="共識 FY2028 EPS（In 頁 cons_eps28；FY2029 共識未找到，故 EPS 因素以 FY2028 同年度比較：B＝情境加權 FY2028 EPS ÷ 共識 − 1）",
@@ -1114,7 +1114,11 @@ def _r3_fix(wb, ver, stub_fy, extra=()):
                 if w != v:
                     c.value = w; n += 1
     return n
-_r3_fix(wb, "v0.3.3", "FY2027＝2026-02～2027-01", extra=[(r'"（2026-10-23）"', '"（2026-11-04）"')])
+_r3_fix(wb, "v0.3.3", "FY2027＝2026-02～2027-01", extra=[(r'"（2026-10-23）"', '"（2026-11-05）"')])
+# ---------------- v0.3.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守（本資料夾 px1105_post.py；只改文字） ----------------
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import px1105_post  # noqa: E402
+print(px1105_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), "v0.3.4", "v0.3.3", "v0.3.3（2026-11-06）"))
 wb.save(sys.argv[1])
 if os.environ.get("NV_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

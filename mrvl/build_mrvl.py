@@ -215,7 +215,7 @@ inp("cons_rev28", "共識 FY2028 營收", "US$B", None, 19.71, None, "Interested
 inp("cons_eps28", "共識 FY2028 non-GAAP EPS", "US$", None, 7.33, None, "Interested-party", "同上", "—")
 
 sec("I. 價格、估值與目標價權重")
-inp("px", "股價（2026-11-04 收盤）", "US$", None, 159.8, None, "Verified", "Yahoo Finance 日線收盤 2026-11-04（第三輪修正：全批統一價格日；2026-11-02 宣布 Lumentum 合併協議後）", "v0.3.2 為 2026-10-23 收盤 228.51（StockAnalysis）；digrin.com MRVL 價格頁現價 228.51（2026-10-25 頁面，即 10-23 收盤）；Benzinga 報價 227.70（盤後）；10-06 投資人日後 $282，10-09～10-16 跌 17%（Trefis）")
+inp("px", "股價（2026-11-05 收盤）", "US$", None, 133.55, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05", "v0.3.3 為 2026-11-04 收盤 159.8；v0.3.2 為 2026-10-23 收盤 228.51（StockAnalysis）；digrin.com MRVL 價格頁現價 228.51（2026-10-25 頁面，即 10-23 收盤）；Benzinga 報價 227.70（盤後）；10-06 投資人日後 $282，10-09～10-16 跌 17%（Trefis）")
 inp("pe_ttm_gaap", "近 12 月 GAAP P/E（2026-10-16）", "x", None, 77.4, None, "Interested-party", "Trefis 2026-10-19", "第二來源：未找到")
 inp("eps_q3_26", "Q3 FY26 non-GAAP EPS（近 12 月計算用）", "US$", None, 0.76, None, "Verified", Q3PR26, "—")
 inp("eps_q4_26", "Q4 FY26 non-GAAP EPS（近 12 月計算用）", "US$", None, 0.80, None, "Verified", Q4PR, "—")
@@ -551,7 +551,7 @@ for rr in range(6, 13):
     for c in range(1, 3): V.cell(rr, c).fill = KEY
 V.cell(15, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, 16, ["項目", "A", "B", "C", "說明"])
-V.cell(17, 1, "現價（2026-11-04 收盤）"); V["B17"] = "=px"; V["B17"].number_format = "0.00"
+V.cell(17, 1, "現價（2026-11-05 收盤）"); V["B17"] = "=px"; V["B17"].number_format = "0.00"
 V.cell(18, 1, "現價 ÷ FY2026 EPS（實績）")
 V.cell(19, 1, "現價 ÷ FY2027 EPS（模型）")
 V.cell(20, 1, "現價 ÷ FY2028 EPS（模型）")
@@ -775,11 +775,11 @@ TPL, TPN = TP.add_tp_section(wb, V,
     eps={s: [f"PL!{XC[y]}{XR[(s, 'eps')]}" for y in range(2027, 2033)] for s in SC}, e_mon=1,
     fwd={s: [(f"PL!{XC[2028]}{XR[(s, 'eps')]}", 0.25), (f"PL!{XC[2029]}{XR[(s, 'eps')]}", 0.75)] for s in SC},
     fwd_note="會計年度 FY(t)＝t−1 年 2 月～t 年 1 月：約 12 個月後（2027-10 底）的未來 12 個月＝2027-11～2028-10＝FY2028 的 3 個月＋FY2029 的 9 個月（3/12 × FY2028＋9/12 × FY2029）",
-    peers=[("Broadcom", "AVGO", 18.71, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 18.74（2026-10-30 頁面，價格 326.08）→ 前瞻 EPS 17.4；P/E＝Yahoo Finance 日線收盤 2026-11-04 325.48 ÷ 前瞻 EPS", "Interested-party（資料商彙整賣方預估）"),
-           ("NVIDIA", "NVDA", 16.55, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 16.92（2026-10-30 頁面，價格 204.64）→ 前瞻 EPS 12.09；P/E＝Yahoo Finance 日線收盤 2026-11-04 200.13 ÷ 前瞻 EPS", "Interested-party（資料商彙整賣方預估）"),
-           ("AMD", "AMD", 43.66, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 45.09（2026-10-30 頁面，價格 504.8）→ 前瞻 EPS 11.2；P/E＝Yahoo Finance 日線收盤 2026-11-04 488.78 ÷ 前瞻 EPS", "Interested-party（資料商彙整賣方預估）"),
-           ("Astera Labs", "ALAB", 39.76, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 47.95（2026-10-27 頁面，價格 269.24）→ 前瞻 EPS 5.615；P/E＝Yahoo Finance 日線收盤 2026-11-04 223.27 ÷ 前瞻 EPS", "Interested-party（資料商彙整賣方預估）"),
-           ("Credo", "CRDO", 18.71, "2026-11-04", "stockanalysis.com 統計頁 Forward PE 20.7（2026-10-30 頁面，價格 150.99）→ 前瞻 EPS 7.294；P/E＝Yahoo Finance 日線收盤 2026-11-04 136.5 ÷ 前瞻 EPS", "Interested-party（資料商彙整賣方預估）")],
+    peers=[("Broadcom", "AVGO", 16.76, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 18.74（2026-10-30 頁面，價格 326.08）→ 前瞻 EPS 17.4；P/E＝2026-11-04 基準 18.71 × Yahoo Finance 日線收盤 2026-11-05 291.53 ÷ 2026-11-04 收盤 325.48（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）"),
+           ("NVIDIA", "NVDA", 15.02, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 16.92（2026-10-30 頁面，價格 204.64）→ 前瞻 EPS 12.09；P/E＝2026-11-04 基準 16.55 × Yahoo Finance 日線收盤 2026-11-05 181.6 ÷ 2026-11-04 收盤 200.13（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）"),
+           ("AMD", "AMD", 36.12, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 45.09（2026-10-30 頁面，價格 504.8）→ 前瞻 EPS 11.2；P/E＝2026-11-04 基準 43.66 × Yahoo Finance 日線收盤 2026-11-05 404.4 ÷ 2026-11-04 收盤 488.78（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）"),
+           ("Astera Labs", "ALAB", 31.96, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 47.95（2026-10-27 頁面，價格 269.24）→ 前瞻 EPS 5.615；P/E＝2026-11-04 基準 39.76 × Yahoo Finance 日線收盤 2026-11-05 179.47 ÷ 2026-11-04 收盤 223.27（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）"),
+           ("Credo", "CRDO", 15.4, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 20.7（2026-10-30 頁面，價格 150.99）→ 前瞻 EPS 7.294；P/E＝2026-11-04 基準 18.71 × Yahoo Finance 日線收盤 2026-11-05 112.33 ÷ 2026-11-04 收盤 136.5（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）")],
     peer_note="券商常用的客製 ASIC 與 AI 互連同業（Broadcom 為直接競爭者；Astera Labs、Credo 為互連）；不含 A 股（Andy 11:53）。前瞻 P/E 口徑為資料商的未來 12 個月共識 EPS，各家 GAAP／non-GAAP 口徑不一",
     cons_tp="cons_tp", cons_note="stockanalysis.com：46 位分析師平均目標價（2026-10-25 頁面）；Interested-party",
     cons_fwd="cons_eps28", cons_fwd_note="共識 FY2028 non-GAAP EPS（In 頁 cons_eps28；FY2029 共識未找到，故 EPS 因素以 FY2028 同年度比較：B＝情境加權 FY2028 EPS ÷ 共識 − 1）",
@@ -1043,7 +1043,7 @@ def _r3_fix(wb, ver, stub_fy, extra=()):
         (r"(情境 ?C[^（）\n\"]{0,8})（(?:保守|下檔|悲觀)）", r"\1（不如預期）"),
         (r"／B（基準）", "／B（平平）"), (r"／C（(?:保守|下檔|悲觀)）", "／C（不如預期）"),
         (r"在?(?:本|建置)環境(?:中)?(?:無法開啟|找不到|取不到)(?:（未找到）)?", "未取得"),
-        (r"無法開啟：未找到", "未取得"), (r"px（2026-10-23 收盤）", "px（2026-11-04 收盤）"), (r"無法開啟", "未取得"), (r"取不到", "未取得"), (r"，已抓取", ""), (r"已逐頁抓取", "已逐頁讀取"), (r"已抓取", "已讀取"), (r"抓取", "取得"),
+        (r"無法開啟：未找到", "未取得"), (r"px（2026-10-23 收盤）", "px（2026-11-05 收盤）"), (r"無法開啟", "未取得"), (r"取不到", "未取得"), (r"，已抓取", ""), (r"已逐頁抓取", "已逐頁讀取"), (r"已抓取", "已讀取"), (r"抓取", "取得"),
         (r"第一年 FCFF × stub_frac", f"含 stub 期會計年度（{stub_fy}）FCFF × stub_frac"),
         (r"重點觀察 1 的第一句已改為公式；重點觀察 2、3 與其他說明中的目標價與上檔空間數字為調整前撰寫，以 Val 頁為準。",
          f"重點觀察 1 的目標價等數字為公式；調整前撰寫的舊說明已於 {ver} 刪除（第三輪修正）。"),
@@ -1078,8 +1078,12 @@ def _r3_static(wb, prefix, text):
         if isinstance(v, str) and v.startswith('="' + prefix):
             ws.cell(r, 1).value = text; return 1
     raise KeyError(prefix)
-_r3_fix(wb, "v0.3.3", "FY2027＝2026-02～2027-01", extra=[(r"樣板標籤 A 樂觀／B 基準／C 下檔沿用", "情境名稱 A 順利／B 平平／C 不如預期"), (r"情境標籤沿用工作單（A 樂觀、B 基準、C 下檔）", "情境名稱 A 順利、B 平平、C 不如預期"), (r"與股價同日（2026-10-23）", "rf 沿用 2026-10-23（第三輪修正只把股價與同業報價統一到 2026-11-04）"), (r"；即使 A 情境 FY2029 EPS 8\.38 乘同業中位數 20\.2 倍（約 169）也低於現價", ""), (r'"（2026-10-23）"', '"（2026-11-04）"')])
+_r3_fix(wb, "v0.3.3", "FY2027＝2026-02～2027-01", extra=[(r"樣板標籤 A 樂觀／B 基準／C 下檔沿用", "情境名稱 A 順利／B 平平／C 不如預期"), (r"情境標籤沿用工作單（A 樂觀、B 基準、C 下檔）", "情境名稱 A 順利、B 平平、C 不如預期"), (r"與股價同日（2026-10-23）", "rf 沿用 2026-10-23（股價與同業報價已換成 2026-11-05 收盤，rf 不變）"), (r"；即使 A 情境 FY2029 EPS 8\.38 乘同業中位數 20\.2 倍（約 169）也低於現價", ""), (r'"（2026-10-23）"', '"（2026-11-05）"')])
 _r3_static(wb, "v0.3.2（2026-11-05）", "v0.3.2（2026-11-05）：換用共用模組 tools/fcff_dcf.py v2（工作單第二輪修正；Andy 2026-11-05 23:16 定案）。(1) Stub 期：資產負債表日 2026-08-01（10-Q，Q2 FY27，最新已公布一季）與評價日 2026-12-31 不同，淨現金滾到評價日＝資產負債表淨現金 -1.39＋stub 期 FCFF（各情境 FY2027 FCFF × stub_frac 0.416 年；情境 B 0.98）− 已宣告股利 0.055（每股 0.06 美元，2026-10-29 發放；買回無已宣告金額、不扣）＝-0.46（US$B）。DCF 目標價 46.89 → 48.04、加權目標價 75.54 → 76.11（上檔 -66.7%，強力放空）。(2) β 敏感度：低／高改為 β_u ∓ 0.3 各自重新加槓桿（In 頁 beta_du；beta_u 低／高欄刪除）。(3) ke 說明格改由模組參數 beta_note 提供；In 頁 M2 標題不寫版號。資本支出、折舊：本模型沒有逐年資本支出／折舊列，維持占營收比例。美國公司不加「美元口徑折現」案例（＝基準）。2026-11-02 宣布與 Lumentum 簽訂合併協議（8-K），本版未反映。PL、Comparable、情境權重不變。")
+# ---------------- v0.3.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守（本資料夾 px1105_post.py；只改文字） ----------------
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import px1105_post  # noqa: E402
+print(px1105_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), "v0.3.4", "v0.3.3", "v0.3.3（2026-11-06）", keep=('B＝平平、C＝慢',)))
 wb.save(sys.argv[1])
 
 if os.environ.get("MRVL_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
