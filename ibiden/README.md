@@ -1,4 +1,14 @@
-# ibiden/ — Ibiden（4062）收支與估值模型 v0.5.2
+# ibiden/ — Ibiden（4062）收支與估值模型 v0.5.3
+
+## v0.5.3（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
+
+- 工作單 px1105（Andy 2026-11-06 07:28；情境名稱 03:14，取代第三輪修正第 23 點）。來源：Yahoo Finance 日線收盤 2026-11-05。
+- 現價 8,037 → 6,726 日圓（2026-11-04 → 11-05 收盤）。
+- Comparable 同業前瞻 P/E＝現行倍數（2026-11-04 口徑）× 11-05 收盤 ÷ 11-04 收盤（共識 EPS 不變）：3037.TW 34.6 → 31.17、8046.TW 34.69 → 31.22、3189.TW 37.27 → 33.55、009150.KS 34.05 → 28.83、ATS.VI 14.01 → 11.82；本公司前瞻 P/E 44.42 → 37.17。
+- 情境名稱：xlsx 各頁（In、Val、DCF、PL、README 等）與 HTML 設定（`html_src.json`）的「情境 A（順利）／B（平平）／C（不如預期）」改回「情境 A（樂觀）／B（基準）／C（保守）」（建置最後的 `px1105_post.py`）。
+- 不改：rf、共識 EPS、預測用匯率、模型假設。
+- 結果：加權目標價 5,672 → 5,201 日圓（DCF 1,789 → 1,794、Comparable 調整後 9,555 → 8,608），上檔空間 -29.4% → -22.7%，投資建議 放空 → **中立**。
+- 成品：`dist/20261106_*_v0.5.3.xlsx`／`.html`；v0.5.2 移到 `dist/_待刪除/`。
 
 ## v0.5.2（2026-11-06）：第三輪修正（合併前）
 
@@ -88,9 +98,9 @@ AI 半導體 Project **載板與 PCB 次產業的樣板**。**Ibiden 在 AI 加�
 | 檔案 | 內容 |
 |---|---|
 | `build_ibiden.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261106_Ibiden個股模型_v0.5.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261106_Ibiden個股模型_v0.5.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html_src.json`、`gen_html_json.py`、`html.json` | HTML 展示層設定：`html_src.json` 為原設定，`gen_html_json.py` 套用版面規格 v1.0 產生 `html.json`（勿手改） |
-| `dist/20261106_Ibiden個股模型_v0.5.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261106_Ibiden個股模型_v0.5.3.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 ibiden/build_ibiden.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（加速器顆數、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`（規則函式）；**不修改它們**。
 

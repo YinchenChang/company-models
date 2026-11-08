@@ -1,4 +1,14 @@
-# unimicron/ — 欣興電子（3037.TW）收支與估值模型 v0.4.2
+# unimicron/ — 欣興電子（3037.TW）收支與估值模型 v0.4.3
+
+## v0.4.3（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
+
+- 工作單 px1105（Andy 2026-11-06 07:28；情境名稱 03:14，取代第三輪修正第 23 點）。來源：Yahoo Finance 日線收盤 2026-11-05。
+- 現價 888 → 800 元（2026-11-04 → 11-05 收盤）。
+- Comparable 同業前瞻 P/E＝現行倍數（2026-11-04 口徑）× 11-05 收盤 ÷ 11-04 收盤（共識 EPS 不變）：4062.T 44.42 → 37.17、3189.TW 37.27 → 33.55、8046.TW 34.69 → 31.22、009150.KS 34.05 → 28.83、ATS.VI 14.01 → 11.82；本公司前瞻 P/E 34.6 → 31.17。
+- 情境名稱：xlsx 各頁（In、Val、DCF、PL、README 等）與 HTML 設定（`html_src.json`）的「情境 A（順利）／B（平平）／C（不如預期）」改回「情境 A（樂觀）／B（基準）／C（保守）」（建置最後的 `px1105_post.py`）。
+- 不改：rf、共識 EPS、預測用匯率、模型假設。
+- 結果：加權目標價 528 → 489 元（DCF 278 → 279、Comparable 調整後 777 → 699），上檔空間 -40.6% → -38.9%，投資建議 放空 → **放空**。
+- 成品：`dist/20261106_*_v0.4.3.xlsx`／`.html`；v0.4.2 移到 `dist/_待刪除/`。
 
 ## v0.4.2（2026-11-06）：第三輪修正（合併前）
 
@@ -97,9 +107,9 @@ AI 半導體 Project 載板與 PCB 次產業的第二個模型，樣板為 `ibid
 | 檔案 | 內容 |
 |---|---|
 | `build_unimicron.py` | 產生器（參數與公式；上游成品唯讀） |
-| `dist/20261106_欣興個股模型_v0.4.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261106_欣興個股模型_v0.4.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html_src.json`、`gen_html_json.py`、`html.json` | HTML 展示層設定：`html_src.json` 為原設定，`gen_html_json.py` 套用版面規格 v1.0 產生 `html.json`（勿手改） |
-| `dist/20261106_欣興個股模型_v0.4.2.html` | HTML 展示層（數字全部由 xlsx 抽出） |
+| `dist/20261106_欣興個股模型_v0.4.3.html` | HTML 展示層（數字全部由 xlsx 抽出） |
 
 建置分兩步：先執行 `python3 unimicron/build_unimicron.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。
 

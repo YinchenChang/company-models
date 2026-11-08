@@ -1,4 +1,15 @@
-# kinsus/ — 景碩（Kinsus，3189.TW）收支與估值模型 v0.4.2
+# kinsus/ — 景碩（Kinsus，3189.TW）收支與估值模型 v0.4.3
+
+## v0.4.3（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
+
+- 工作單 px1105（Andy 2026-11-06 07:28；情境名稱 03:14，取代第三輪修正第 23 點）。來源：Yahoo Finance 日線收盤 2026-11-05。
+- 現價 822 → 740 元（2026-11-04 → 11-05 收盤）。
+- Comparable 同業前瞻 P/E＝現行倍數（2026-11-04 口徑）× 11-05 收盤 ÷ 11-04 收盤（共識 EPS 不變）：3037.TW 34.6 → 31.17、8046.TW 34.69 → 31.22、4062.T 44.42 → 37.17、009150.KS 34.05 → 28.83、ATS.VI 14.01 → 11.82；本公司前瞻 P/E 37.27 → 33.55。
+- 非控制權益：晶碩（6491.TW）市值改 Yahoo Finance 日線收盤 2026-11-05 399.5（v0.4.2 為 nstock 11-04 收盤 398.5）；DCF 檢查列的資產負債表式同步。
+- 情境名稱：xlsx 各頁（In、Val、DCF、PL、README 等）與 HTML 設定（`html_src.json`）的「情境 A（順利）／B（平平）／C（不如預期）」改回「情境 A（樂觀）／B（基準）／C（保守）」（建置最後的 `px1105_post.py`）。
+- 不改：rf、共識 EPS、預測用匯率、模型假設。
+- 結果：加權目標價 793 → 732 元（DCF 356 → 356、Comparable 調整後 1,230 → 1,108），上檔空間 -3.5% → -1.0%，投資建議 中立 → **中立**。
+- 成品：`dist/20261106_*_v0.4.3.xlsx`／`.html`；v0.4.2 移到 `dist/_待刪除/`。
 
 ## v0.4.2（2026-11-06）：第三輪修正（合併前）
 
@@ -95,9 +106,9 @@ AI 半導體 Project 載板與 PCB 次產業的模型，樣板為 `nanya_pcb/`�
 | 檔案 | 內容 |
 |---|---|
 | `build_kinsus.py` | 產生器（參數與公式；上游成品唯讀） |
-| `dist/20261106_景碩個股模型_v0.4.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261106_景碩個股模型_v0.4.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html_src.json`、`gen_html_json.py`、`html.json` | HTML 展示層設定：`html_src.json` 為原設定，`gen_html_json.py` 套用版面規格 v1.0 產生 `html.json`（勿手改） |
-| `dist/20261106_景碩個股模型_v0.4.2.html` | HTML 展示層（數字全部由 xlsx 抽出） |
+| `dist/20261106_景碩個股模型_v0.4.3.html` | HTML 展示層（數字全部由 xlsx 抽出） |
 
 建置分兩步：先執行 `python3 kinsus/build_kinsus.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。
 
