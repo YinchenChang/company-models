@@ -114,8 +114,8 @@ asof: 2026-10-27
 - Anthropic 集中度與 TPU 對外銷售認列｜[本專案：alphabet_facts_20261008.json rp.anthropic.rpoShare、guid.tpuRev]｜Q3 10-Q
 
 ## 來源
-1. 本專案：/home/claude/company-models/alphabet/dist/20261104_Alphabet個股模型_v0.3.6.xlsx（Q、PL、CF、Val、Sens）、alphabet/README.md、alphabet/docs/reports/20261027_alphabet_v0.3_分部架構.md（2026-10-27）
-2. 本專案：/home/claude/company-models/alphabet/data/alphabet_facts_20261008.json、/home/claude/company-models/alphabet/company.json、/home/claude/company-models/alphabet/data/peers_ads_20261009.json（2026-10-08／09）
-3. 本專案：/home/claude/company-models/amazon/data/amazon_facts_20261008.json、/home/claude/company-models/microsoft/data/microsoft_facts_20261008.json、/home/claude/company-models/oracle/data/oracle_facts_20261007.json
+1. 本專案：alphabet/dist/20261104_Alphabet個股模型_v0.3.6.xlsx（Q、PL、CF、Val、Sens）、alphabet/README.md、alphabet/docs/reports/20261027_alphabet_v0.3_分部架構.md（2026-10-27）
+2. 本專案：alphabet/data/alphabet_facts_20261008.json、alphabet/company.json、alphabet/data/peers_ads_20261009.json（2026-10-08／09）
+3. 本專案：amazon/data/amazon_facts_20261008.json、microsoft/data/microsoft_facts_20261008.json、oracle/data/oracle_facts_20261007.json
 4. [Alphabet 2026 委託書 DEF 14A（管理層名單）](https://www.sec.gov/Archives/edgar/data/0001652044/000130817926000342/goog2025_courtesy-pdf.pdf)（2026-04）
 5. [Alphabet earnings date（days.to）](https://days.to/alphabet-earnings)（擷取 2026-10-25）

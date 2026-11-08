@@ -107,8 +107,8 @@ asof: 2026-10-27
 - 客戶集中｜backlog 約一半可能來自兩家 AI 實驗室 [本專案：amazon_facts_20261008.json rel.rpoShare]｜Q3 10-Q 的 RPO 揭露
 
 ## 來源
-1. 本專案：/home/claude/company-models/amazon/dist/20261104_Amazon個股模型_v0.3.4.xlsx（Q、Thesis、PL、CF、Val、Sens）、amazon/README.md、amazon/docs/reports/20261027_amazon_v0.3_分部架構.md（2026-10-27）
-2. 本專案：/home/claude/company-models/amazon/data/amazon_facts_20261008.json、/home/claude/company-models/amazon/company.json（2026-10-08）
-3. 本專案：/home/claude/company-models/microsoft/data/microsoft_facts_20261008.json、/home/claude/company-models/alphabet/data/alphabet_facts_20261008.json、/home/claude/company-models/oracle/data/oracle_facts_20261007.json、oracle/dist/20261104_Oracle個股模型_v0.4.5.xlsx（Val，CoreWeave 倍數）
+1. 本專案：amazon/dist/20261104_Amazon個股模型_v0.3.4.xlsx（Q、Thesis、PL、CF、Val、Sens）、amazon/README.md、amazon/docs/reports/20261027_amazon_v0.3_分部架構.md（2026-10-27）
+2. 本專案：amazon/data/amazon_facts_20261008.json、amazon/company.json（2026-10-08）
+3. 本專案：microsoft/data/microsoft_facts_20261008.json、alphabet/data/alphabet_facts_20261008.json、oracle/data/oracle_facts_20261007.json、oracle/dist/20261104_Oracle個股模型_v0.4.5.xlsx（Val，CoreWeave 倍數）
 4. [Amazon Form 10-K FY2025（管理層名單）](https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm)（2026-01）
 5. [Amazon will share its Q3 2026 earnings on October 29（About Amazon）](https://www.aboutamazon.com/md/news/company-news/amazon-earnings-q3-2026-report)（2026-10）

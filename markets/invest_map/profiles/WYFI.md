@@ -99,7 +99,7 @@ asof: 2026-10-25
 - 營收與共識差距｜模型 FY28 營收 336m 對共識 530m [本專案：20261022_WhiteFiber收支模型_v0_2.xlsx 摘要!E22–E23]｜Q3 財報
 
 ## 來源
-1. 本專案：`/home/claude/company-models/whitefiber/dist/20261022_WhiteFiber收支模型_v0_2.xlsx`（摘要、來源、輸入與假設、損益）；`whitefiber/company.json`；`whitefiber/docs/reports/20261008_whitefiber_v0.1a_資料.md`
+1. 本專案：`whitefiber/dist/20261022_WhiteFiber收支模型_v0_2.xlsx`（摘要、來源、輸入與假設、損益）；`whitefiber/company.json`；`whitefiber/docs/reports/20261008_whitefiber_v0.1a_資料.md`
 2. [Why Is WhiteFiber Down 6.95% at an Oversold RSI of 27.7 as AI Infrastructure Names Slide?](https://kalkine.ca/news/technology/why-is-whitefiber-nasdaqwyfi-down-695-at-an-oversold-rsi-of-277-as-ai-infrastructure-names-slide)（Kalkine，2026-10-14）
 3. [WhiteFiber Stock Price Down 8.2%](https://www.marketbeat.com/instant-alerts/price-whitefiber-nasdaq-wyfi-stock-price-down-82-heres-what-happened-2026-10-08/)（MarketBeat，2026-10-08）
 4. [B. Riley keeps WhiteFiber at Buy, $38 target as North Carolina financing nears](https://finance.yahoo.com/markets/stocks/articles/b-riley-keeps-whitefiber-buy-221508312.html)（Yahoo Finance，2026-09-10）

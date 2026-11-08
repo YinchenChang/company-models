@@ -108,7 +108,7 @@ AI 算力雲（neocloud）：向 NVIDIA 買 GPU、向房東租機房，把整櫃
 - 產能上線速度｜年底主動電力 1.85 GW（公司數字，只作對照）[本專案：20261021_CoreWeave收支模型_v4_12.xlsx 每MW經濟性!I104；coreweave/company.json yeActiveGw]｜Q3 財報
 
 ## 來源
-1. 本專案：`/home/claude/company-models/coreweave/dist/20261021_CoreWeave收支模型_v4_12.xlsx`（摘要、來源、輸入與假設、損益、公司實況驗證、評價_可比公司）
+1. 本專案：`coreweave/dist/20261021_CoreWeave收支模型_v4_12.xlsx`（摘要、來源、輸入與假設、損益、公司實況驗證、評價_可比公司）
 2. [CoreWeave's market confidence erodes as bond yields spike and stock sinks](https://www.cnbc.com/2026/10/21/coreweaves-market-confidence-erodes-as-bond-yields-spike-stock-sinks.html)（CNBC，2026-10-21；經 briefs.co 轉述）
 3. [CoreWeave Stock Plunges 25% As AI Debt Fears Mount](https://www.forbes.com/sites/the-prompt/2026/10/20/coreweave-stock-plunges-25-as-ai-debt-fears-mount/)（Forbes，2026-10-20）
 4. [CoreWeave (CRWV) Shares Plunge Over 10%, Hit New 52-Week Low](https://www.gurufocus.com/news/9137799/coreweave-crwv-shares-plunge-over-10-hit-new-52week-low-amid-financing-woes)（GuruFocus，2026-10-22）
