@@ -1290,4 +1290,75 @@ _r3_fix(wb, "v0.3.3",
         stub_frac_note="stub FCFF＝含 stub 期的會計年度（FY2026，2026-04～2027-03；DCF 第一年）FCFF × 本值（年度比例）",
         stub_pt='（含 stub 期的會計年度 FY2026 FCFF × "&TEXT(stub_frac,"0.000")&" 年）')
 FD.yellow(IN)   # v0.3：M2 節判斷參數黃底
+# ---------------- vv0.3.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守 ----------------
+# 工作單 px1105（Andy 2026-11-06 07:28 價格、03:14 情境名稱）：只改報價與說明文字；rf、共識 EPS、預測用匯率、模型假設不改。
+# 同業前瞻 P/E＝現行倍數 × 11-05 收盤 ÷ 現行報價日收盤（共識 EPS 不變）；來源 Yahoo Finance 日線收盤 2026-11-05（/home/claude/px/prices_20261105.json）。
+def _px1105(wb, ver, tk, px5, px4, peer5, peer_old):
+    import re as _re
+    INw, Vw, RDw = wb["In"], wb["Val"], wb["README"]
+    _hist = lambda v: isinstance(v, str) and (v.startswith("v0.") or v.startswith('="v0.'))
+    # (1) 現價 px（bb_px 若有，公式連動 px）
+    r = next(r for r in range(1, INw.max_row + 1) if INw.cell(r, 1).value == "px")
+    old = INw.cell(r, 5).value
+    assert abs(old - px4) < 1e-9, (old, px4)
+    INw.cell(r, 5).value = px5
+    INw.cell(r, 2).value = str(INw.cell(r, 2).value).replace("2026-11-04 收盤", "2026-11-05 收盤")
+    INw.cell(r, 8).value = f"Yahoo Finance 日線收盤 2026-11-05：{px5:,}（{tk}）"
+    INw.cell(r, 9).value = f"{ver}（2026-11-06）：現價改 2026-11-05 收盤（原 2026-11-04 收盤 {px4:,}）"
+    skip = {(INw.title, r, 8), (INw.title, r, 9)}
+    # (2) Comparable 同業前瞻 P/E
+    h = next(r for r in range(1, Vw.max_row + 1) if str(Vw.cell(r, 1).value or "").startswith("0.2 Comparable"))
+    out = []
+    for rr in range(h + 1, h + 16):
+        t, pe, d = Vw.cell(rr, 2).value, Vw.cell(rr, 3).value, Vw.cell(rr, 4).value
+        if not (isinstance(t, str) and isinstance(d, str) and _re.match(r"\d{4}-\d{2}-\d{2}$", d)):
+            continue
+        p5 = peer5[t]; e = str(Vw.cell(rr, 5).value or "")
+        if isinstance(pe, (int, float)) and d == "2026-11-04":
+            p0 = peer_old[(t, d)]
+            Vw.cell(rr, 3).value = round(pe * p5 / p0, 2)
+            Vw.cell(rr, 5).value = e + f"；{ver}：換算到 2026-11-05＝{pe}（2026-11-04）× 11-05 收盤 {p5:,} ÷ 11-04 收盤 {p0:,}（Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變）"
+        elif isinstance(pe, (int, float)):   # 報價日早於 11-04：現行倍數 × 11-05 收盤 ÷ 原報價日收盤
+            p0, p0src = peer_old[(t, d)]
+            Vw.cell(rr, 3).value = f"={pe}*{p5}/{p0}"
+            Vw.cell(rr, 5).value = (_re.sub(r"；\d{4}-\d{2}-\d{2} 收盤未取得.*$", "", e) + f"；{ver}：換算到 2026-11-05＝{pe}（{d}）× Yahoo Finance 日線收盤 2026-11-05 {p5:,} ÷ {d} 收盤 {p0:,}（{p0src}；共識 EPS 不變）")
+        elif isinstance(pe, str) and _re.match(r"^=[\d.]+\*[\d.]+/[\d.]+$", pe) and d == "2026-11-04":   # =原倍數*11-04 收盤/原報價日收盤
+            a, b, c = _re.match(r"^=([\d.]+)\*([\d.]+)/([\d.]+)$", pe).groups()
+            assert abs(float(b) - peer_old[(t, d)]) < 1e-9, (t, b)
+            Vw.cell(rr, 3).value = f"={a}*{p5}/{c}"
+            Vw.cell(rr, 5).value = _re.sub(r"日線收盤 2026-11-04 [\d,.]+ ÷", f"日線收盤 2026-11-05 {p5:,} ÷", e)
+            assert Vw.cell(rr, 5).value != e, e
+        elif isinstance(pe, str) and _re.match(r"^=[\d.]+/\([\d.]+/[\d.]+\)$", pe) and d == "2026-11-04":   # =11-04 收盤/(取得日價格/Forward PE)
+            b, c = _re.match(r"^=([\d.]+)/(\([\d.]+/[\d.]+\))$", pe).groups()
+            assert abs(float(b) - peer_old[(t, d)]) < 1e-9, (t, b)
+            Vw.cell(rr, 3).value = f"={p5}/{c}"
+            Vw.cell(rr, 5).value = e.replace("2026-11-04 收盤（Yahoo Finance 日線收盤）", "2026-11-05 收盤（Yahoo Finance 日線收盤）", 1) + f"；{ver}：分子改 2026-11-05 收盤 {p5:,}"
+        else:
+            raise ValueError((t, pe, d))
+        Vw.cell(rr, 4).value = "2026-11-05"
+        for cc in (3, 4, 5): skip.add((Vw.title, rr, cc))
+        out.append(t)
+    assert out
+    # (3) 其他說明文字的現價日期（版本沿革列與 README A1 不改）
+    PX_RE = [("2026-11-04 收盤", "2026-11-05 收盤"), ("日線收盤 2026-11-04", "日線收盤 2026-11-05"), ("股價日 2026-11-04", "股價日 2026-11-05")]
+    for ws in wb:
+        for row in ws.iter_rows():
+            for c in row:
+                v = c.value
+                if not isinstance(v, str) or (ws.title, c.row, c.column) in skip or _hist(v) or (ws.title == "README" and c.coordinate == "A1"):
+                    continue
+                w = v
+                for a, b in PX_RE: w = w.replace(a, b)
+                if "現價" in w and "px" in w: w = w.replace("（2026-11-04）", "（2026-11-05）")
+                # (4) 情境名稱改回 情境 A（樂觀）／B（基準）／C（保守）（Andy 2026-11-06 03:14，取代第 23 點）；本模型「順利／平平／不如預期」皆為情境名稱
+                w = w.replace("隱含價（下檔）", "隱含價（保守）").replace("順利", "樂觀").replace("平平", "基準").replace("不如預期", "保守")
+                if w != v: c.value = w
+    # (5) 版本
+    RDw["A1"] = RDw["A1"].value + f"；{ver}（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"
+    RDw.cell(RDw.max_row + 2, 1, f"{ver}：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守")
+    return out
+
+_PX1105 = _px1105(wb, 'v0.3.4', '6146.T', 41450, 47370,
+    {'8035.T': 8753, '6857.T': 29485, '6920.T': 33570, '6525.T': 5400, '7729.T': 12635},
+    {('8035.T', '2026-11-04'): 9663, ('6857.T', '2026-11-04'): 34570, ('6920.T', '2026-11-04'): 39130, ('6525.T', '2026-11-04'): 6400, ('7729.T', '2026-11-04'): 14920})
 wb.save(sys.argv[1])
