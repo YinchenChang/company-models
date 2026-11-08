@@ -1,0 +1,27 @@
+{
+ "company": "cbrs",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "Hardware",
+   "label": "硬體營收（GAAP）",
+   "period": "1Q26（2026-01～03）",
+   "value": 0.110593,
+   "unit": "同模型 Q 頁（US$B）",
+   "source": "見模型 Q 頁該列來源欄"
+  },
+  {
+   "name": "Cloud and other services",
+   "label": "雲端與其他服務營收（GAAP）",
+   "period": "1Q26（2026-01～03）",
+   "value": 0.082813,
+   "unit": "同模型 Q 頁（US$B）",
+   "source": "見模型 Q 頁該列來源欄"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ],
+ "note": "公司以單一營運分部報告，營收依產品別揭露硬體、雲端與其他服務兩類（10-Q）；預測以核心口徑建模"
+}
