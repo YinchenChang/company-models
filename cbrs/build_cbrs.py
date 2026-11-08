@@ -19,7 +19,7 @@ import fcff_dcf as FD
 import apply_in_layout as INL
 from addrow import add_check
 
-VER, VDATE = "v0.1", "2026-11-08"
+VER, VDATE = "v0.1.1", "2026-11-08"
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True)
 HDR = PatternFill("solid", fgColor="DDEBF7"); KEY = PatternFill("solid", fgColor="FFF2CC"); SUB = PatternFill("solid", fgColor="EDEDED")
 SC = ("A", "B", "C"); SCN = {"A": "樂觀", "B": "基準", "C": "保守"}
@@ -398,7 +398,7 @@ r = 4 + FD.summary_rows(True) + 2
 V.cell(r, 1, "0.2 Comparable（市場主流同業前瞻 P/S）").font = BOLD; R_C0 = r; r += 1
 hdr(V, r, ["同業與前瞻 P/S", "代號", "前瞻 P/S（11-05）", "日期", "來源", "標記"]); R_PH = r; r += 1
 PEERS = [("NVIDIA", "NVDA", 8.37, 186.64, "11-06", 181.60), ("AMD", "AMD", 8.76, 449.04, "11-06", 404.40), ("Broadcom", "AVGO", 8.91, 293.69, "11-06", 291.53),
-         ("Marvell", "MRVL", 7.90, 141.20, "11-06", 133.55), ("CoreWeave", "CRWV", 1.54, 54.87, "10-30", 43.66), ("Nebius", "NBIS", 4.94, 129.49, "11-06", 120.37)]
+         ("Marvell", "MRVL", 7.90, 141.20, "11-06", 133.55)]
 R_P1 = r
 for nm, tk_, fps, ppx, pdt, px5 in PEERS:
     V.cell(r, 1, nm); V.cell(r, 2, tk_)
@@ -409,7 +409,7 @@ for nm, tk_, fps, ppx, pdt, px5 in PEERS:
     V.cell(r, 5, f"stockanalysis.com 統計頁 Forward PS {fps}（2026-{pdt} 頁面，價格 {ppx}）× 11-05 收盤 {px5}（{src5}）÷ 頁面價格")
     V.cell(r, 6, "Interested-party（資料商彙整賣方營收預估）"); r += 1
 R_P2 = r - 1
-V.cell(r, 1, "  同業選擇"); V.cell(r, 5, "AI 運算晶片（NVIDIA、AMD、Broadcom、Marvell）＋推論雲端（CoreWeave、Nebius）：Cerebras 2Q26 營收七成為雲端服務、三成為系統銷售。前瞻 P/S＝股價 ÷ 資料商次一會計年度營收預估"); R_PNOTE = r; r += 1
+V.cell(r, 1, "  同業選擇"); V.cell(r, 5, "只用 AI 運算晶片同業（NVIDIA、AMD、Broadcom、Marvell；Andy 2026-11-08 21:21 定：Comparable 只用晶片同業）。推論雲端同業（CoreWeave 前瞻 P/S 1.2、Nebius 4.6）不納入；Cerebras 2Q26 營收七成為雲端服務，此選擇使倍數偏高。前瞻 P/S＝股價 ÷ 資料商次一會計年度營收預估"); R_PNOTE = r; r += 1
 V.cell(r, 1, "同業前瞻 P/S 中位數"); V.cell(r, 2, f"=MEDIAN(C{R_P1}:C{R_P2})").number_format = "0.00"; R_MED = r; r += 1
 V.cell(r, 1, "  各情境 12 個月後的前瞻營收（FY2028）")
 for j, s in enumerate(SC):
@@ -571,7 +571,7 @@ for i, (s_, u_) in enumerate((
         (SFUT, "S-1：OpenAI 主合作協議 750 MW、逾 200 億美元、AWS 條款書、2025 客戶集中"),
         (SPX, "現價（2026-11-05 收盤，Derived）"),
         ("stockanalysis.com 預測頁 https://stockanalysis.com/stocks/cbrs/forecast/ ；統計頁 https://stockanalysis.com/stocks/cbrs/statistics/", "共識營收、EPS、目標價；股數與現金（對照）"),
-        ("stockanalysis.com 各同業統計頁（NVDA、AMD、AVGO、MRVL、CRWV、NBIS；2026-11-08 讀取）", "同業前瞻 P/S"),
+        ("stockanalysis.com 各同業統計頁（NVDA、AMD、AVGO、MRVL；2026-11-08 讀取）", "同業前瞻 P/S"),
         (TKV, "Cerebras 產出比、持有成本比、VR200 持有成本與 IT 資本支出（Recon 與 capex_mw 高值）"),
         ("docs/plan/自算產業β_20261105.md", "自算產業 β"),
         ("docs/plan/個股DCF標準規格.md；tools/fcff_dcf.py v2", "標準版 DCF"),), 3):
@@ -640,7 +640,7 @@ RM_["A45"] = (f'="現金夠不夠？答：情境 B 下 FY2027–FY2029 自由現
 RM_["A46"] = (f'="現價是低估還是合理折價？答：現價隱含情境 B FY2028 P/S "&TEXT(Val!C{T["ps"]},"0.0")&" 倍，低於同業中位數 "&TEXT(Val!B{R_MED},"0.0")&" 倍，Comparable 認為低估；'
                f'但標準版 DCF 只有 "&TEXT({dcf_},"0.00")&"，"&IF({dcf_}<px,"低於現價","高於現價")&"。加權結果為「"&Val!B{T["rec"]}&"」。"')
 RM_["A48"] = "本版要點與版本沿革（HTML 附錄用）"; RM_["A48"].font = BOLD
-RM_["A49"] = f"{VER}（{VDATE}）：新建。格式比照 NVIDIA v0.3.4（README、In、Q、PL、Val、DCF、Recon、Sens、Sources；HTML 版面規格 v1.0）。Tokenomics {TKS['version']} 快照（Cerebras 產出比、持有成本比、VR200 持有成本與 IT 資本支出，只作 Recon 與 Sens 高值）。現價為 2026-11-05 收盤（與 AI半導體 其他個股同日）。"
+RM_["A49"] = "v0.1.1（2026-11-08）：Comparable 同業改為只用晶片同業（NVIDIA、AMD、Broadcom、Marvell；移除 CoreWeave、Nebius；Andy 2026-11-08 21:21）。其他判斷項照預設。｜" + f"v0.1（{VDATE}）：新建。格式比照 NVIDIA v0.3.4（README、In、Q、PL、Val、DCF、Recon、Sens、Sources；HTML 版面規格 v1.0）。Tokenomics {TKS['version']} 快照（Cerebras 產出比、持有成本比、VR200 持有成本與 IT 資本支出，只作 Recon 與 Sens 高值）。現價為 2026-11-05 收盤（與 AI半導體 其他個股同日）。"
 RM_.column_dimensions["A"].width = 160
 
 # ---------------- In 版面、儲存 ----------------

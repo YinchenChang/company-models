@@ -1057,8 +1057,8 @@
      "title": "目標價與現價",
      "items": [
       {
-       "label": "@Val!A43",
-       "value": "@Val!B43",
+       "label": "@Val!A41",
+       "value": "@Val!B41",
        "series": 0
       },
       {
@@ -1067,32 +1067,44 @@
        "series": 1
       },
       {
-       "label": "@Val!A44",
-       "value": "@Val!B44",
+       "label": "@Val!A42",
+       "value": "@Val!B42",
        "series": 2
       },
       {
-       "label": "@Val!A45",
-       "value": "@Val!B45",
+       "label": "@Val!A43",
+       "value": "@Val!B43",
        "series": 1
       }
      ],
      "ref": {
       "label": "現價",
-      "value": "@Val!B59"
+      "value": "@Val!B57"
      },
      "fmt": "n2"
     },
     {
      "type": "table",
-     "caption": "@Val!A41",
+     "caption": "@Val!A39",
      "head": [
-      "@Val!A42",
-      "@Val!B42",
-      "@Val!C42",
-      "@Val!D42"
+      "@Val!A40",
+      "@Val!B40",
+      "@Val!C40",
+      "@Val!D40"
      ],
      "rows": [
+      [
+       "@Val!A41",
+       "@Val!B41|n2",
+       "@Val!E41",
+       ""
+      ],
+      [
+       "@Val!A42",
+       "@Val!B42|n2",
+       "",
+       ""
+      ],
       [
        "@Val!A43",
        "@Val!B43|n2",
@@ -1101,25 +1113,13 @@
       ],
       [
        "@Val!A44",
-       "@Val!B44|n2",
+       "@Val!B44|sp1",
        "",
        ""
       ],
       [
        "@Val!A45",
-       "@Val!B45|n2",
-       "@Val!E45",
-       ""
-      ],
-      [
-       "@Val!A46",
-       "@Val!B46|sp1",
-       "",
-       ""
-      ],
-      [
-       "@Val!A47",
-       "@Val!B47|sp1",
+       "@Val!B45|sp1",
        "",
        ""
       ]
@@ -1130,39 +1130,39 @@
      "collapse": true,
      "summary": "展開：結論的其他項目",
      "head": [
-      "@Val!A42",
-      "@Val!B42",
-      "@Val!C42",
-      "@Val!D42"
+      "@Val!A40",
+      "@Val!B40",
+      "@Val!C40",
+      "@Val!D40"
      ],
      "rows": [
       [
-       "@Val!A48",
-       "@Val!B48",
+       "@Val!A46",
+       "@Val!B46",
        "",
        ""
       ],
       [
+       "@Val!A47",
+       "@Val!B47|sp1",
+       "@Val!C47|x1",
+       "@Val!D47|x1"
+      ],
+      [
+       "@Val!A48",
+       "@Val!B48|n2",
+       "@Val!C48|n2",
+       ""
+      ],
+      [
        "@Val!A49",
-       "@Val!B49|sp1",
+       "@Val!B49|x1",
        "@Val!C49|x1",
        "@Val!D49|x1"
       ],
       [
        "@Val!A50",
-       "@Val!B50|n2",
-       "@Val!C50|n2",
-       ""
-      ],
-      [
-       "@Val!A51",
-       "@Val!B51|x1",
-       "@Val!C51|x1",
-       "@Val!D51|x1"
-      ],
-      [
-       "@Val!A52",
-       "@Val!B52",
+       "@Val!B50",
        "",
        ""
       ]
@@ -1177,35 +1177,35 @@
      ],
      "rows": [
       [
-       "@Val!A67",
-       "@Val!B67|n2"
+       "@Val!A65",
+       "@Val!B65|n2"
       ],
       [
-       "@Val!A68",
-       "@Val!B68|n2"
+       "@Val!A66",
+       "@Val!B66|n2"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Val!A66"
+      "@Val!A64"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Val!A54",
+      "@Val!A52",
       "：",
-      "@Val!B54"
+      "@Val!B52"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Val!A55",
+      "@Val!A53",
       "：",
-      "@Val!B55",
+      "@Val!B53",
       "（依上檔空間固定規則）"
      ]
     },
@@ -1477,7 +1477,7 @@
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "28-33",
+      "rows": "28-31",
       "cols": [
        "A",
        "B",
@@ -1501,7 +1501,7 @@
     {
      "type": "note",
      "parts": [
-      "@Val!E34"
+      "@Val!E32"
      ]
     },
     {
@@ -1515,32 +1515,32 @@
      "caption": "Comparable 彙總：同業倍數 × 前瞻營收",
      "rows": [
       [
+       "@Val!A33",
+       "@Val!B33|x1",
+       "",
+       ""
+      ],
+      [
+       "@Val!A34",
+       "@Val!B34|n2",
+       "@Val!C34|n2",
+       "@Val!D34|n2"
+      ],
+      [
        "@Val!A35",
-       "@Val!B35|x1",
+       "@Val!B35|n2",
        "",
        ""
       ],
       [
        "@Val!A36",
-       "@Val!B36|n2",
-       "@Val!C36|n2",
-       "@Val!D36|n2"
+       "@Val!B36|n3",
+       "",
+       ""
       ],
       [
        "@Val!A37",
        "@Val!B37|n2",
-       "",
-       ""
-      ],
-      [
-       "@Val!A38",
-       "@Val!B38|n3",
-       "",
-       ""
-      ],
-      [
-       "@Val!A39",
-       "@Val!B39|n2",
        "",
        ""
       ]
@@ -1550,14 +1550,26 @@
      "type": "table",
      "caption": "現價與市場隱含倍數",
      "head": [
-      "@Val!A58",
-      "@Val!B58",
-      "@Val!C58",
-      "@Val!D58"
+      "@Val!A56",
+      "@Val!B56",
+      "@Val!C56",
+      "@Val!D56"
      ],
      "collapse": true,
      "summary": "展開：現價與市場隱含倍數",
      "rows": [
+      [
+       "@Val!A57",
+       "@Val!B57|n2",
+       "",
+       ""
+      ],
+      [
+       "@Val!A58",
+       "@Val!B58|n2",
+       "",
+       ""
+      ],
       [
        "@Val!A59",
        "@Val!B59|n2",
@@ -1566,27 +1578,15 @@
       ],
       [
        "@Val!A60",
-       "@Val!B60|n2",
-       "",
-       ""
+       "@Val!B60|x1",
+       "@Val!C60|x1",
+       "@Val!D60|x1"
       ],
       [
        "@Val!A61",
-       "@Val!B61|n2",
-       "",
-       ""
-      ],
-      [
-       "@Val!A62",
-       "@Val!B62|x1",
-       "@Val!C62|x1",
-       "@Val!D62|x1"
-      ],
-      [
-       "@Val!A63",
-       "@Val!B63|x1",
-       "@Val!C63|x1",
-       "@Val!D63|x1"
+       "@Val!B61|x1",
+       "@Val!C61|x1",
+       "@Val!D61|x1"
       ]
      ]
     }
@@ -1967,17 +1967,17 @@
  ],
  "wide_text": true,
  "hero": {
-  "rec": "@Val!B55",
+  "rec": "@Val!B53",
   "tiles": [
    [
     [
-     "@Val!A43",
+     "@Val!A41",
      "（美元）"
     ],
-    "@Val!B43|n2",
+    "@Val!B41|n2",
     [
      "上檔空間 ",
-     "@Val!B46|sp1"
+     "@Val!B44|sp1"
     ]
    ],
    [
@@ -1985,24 +1985,24 @@
      "只看 Comparable 目標價（市場主流同業法）",
      "（美元）"
     ],
-    "@Val!B44|n2",
+    "@Val!B42|n2",
     [
      "上檔空間 ",
-     "@Val!B47|sp1"
+     "@Val!B45|sp1"
     ]
    ],
    [
     [
-     "@Val!A59",
+     "@Val!A57",
      "（美元）"
     ],
-    "@Val!B59|n2",
+    "@Val!B57|n2",
     ""
    ]
   ],
   "note": [
    "投資建議依加權目標價判定：",
-   "@Val!E55"
+   "@Val!E53"
   ]
  }
 }

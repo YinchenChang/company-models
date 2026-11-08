@@ -1,18 +1,20 @@
-# cbrs/ — Cerebras Systems（CBRS）收支與估值模型 v0.1
+# cbrs/ — Cerebras Systems（CBRS）收支與估值模型 v0.1.1
 
 AI 半導體 Project 運算層的新個股（Andy 2026-11-08 要求新增，格式比照 `nvidia/` v0.3.4）。獨立的 Python→Excel 產生器（openpyxl，LibreOffice 重算），HTML 展示層用共用產生器 `tools/company_html/`。
 
-## v0.1（2026-11-08）：新建
+## v0.1.1（2026-11-08）：Comparable 只用晶片同業
+
+Andy 2026-11-08 21:21：Comparable 同業只用晶片同業（NVIDIA、AMD、Broadcom、Marvell），移除 CoreWeave、Nebius；其他判斷項照預設。同業前瞻 P/S 中位數 7.68 → 8.02。
 
 | 項目 | 數值 |
 |---|---|
 | 現價（2026-11-05 收盤） | 81.71 |
 | DCF 目標價（情境加權） | 29.46 |
-| Comparable 目標價（同業前瞻 P/S） | 126.15（上檔 +54.4%） |
-| 加權目標價（DCF 50%） | 77.80（上檔 −4.8%） |
+| Comparable 目標價（同業前瞻 P/S） | 131.67（上檔 +61.1%） |
+| 加權目標價（DCF 50%） | 80.56（上檔 −1.4%） |
 | 投資建議 | 中立 |
 
-- 成品：`dist/20261108_Cerebras個股模型_v0.1.xlsx`、`.html`。驗證：錯誤格 0、重建後逐格差異 0、DCF 檢查列 0、check_company_html、check_in_layout、check_segments 通過。
+- 成品：`dist/20261108_Cerebras個股模型_v0.1.1.xlsx`、`.html`。v0.1（2026-11-08 新建）：加權目標價 77.80（同業含 CoreWeave、Nebius）。驗證：錯誤格 0、重建後逐格差異 0、DCF 檢查列 0、check_company_html、check_in_layout、check_segments 通過。
 
 ## 模型結構
 
@@ -29,7 +31,7 @@ AI 半導體 Project 運算層的新個股（Andy 2026-11-08 要求新增，格�
 
 - FY2026 錨點＝1Q26、2Q26 實績＋3Q26 指引中點＋全年指引中點推得 4Q26（Q 頁）。3Q26 財報 2026-11-12 公布後更新。
 - EBIT 口徑：核心營業損益 − 經常性股票薪酬；不扣客戶認股權證攤銷（認股權證已計入評價股數 3.236 億股）、代墊資料中心收入與 IPO 一次性費用。
-- 估值：標準版 DCF（`tools/fcff_dcf.py` v2；自算產業 β 1.884 重新加槓桿；評價日 2026-12-31；stub 期 FCFF＝2026 下半年，Q 頁 H33）與 Comparable（同業前瞻 P/S 中位數 × FY2028 營收 ÷ 稀釋股數；同業 NVDA、AMD、AVGO、MRVL、CRWV、NBIS）各半；情境權重 0.3／0.5／0.2。上市未滿一年，相對倍數調整係數＝1。
+- 估值：標準版 DCF（`tools/fcff_dcf.py` v2；自算產業 β 1.884 重新加槓桿；評價日 2026-12-31；stub 期 FCFF＝2026 下半年，Q 頁 H33）與 Comparable（同業前瞻 P/S 中位數 × FY2028 營收 ÷ 稀釋股數；同業 NVDA、AMD、AVGO、MRVL（只用晶片同業））各半；情境權重 0.3／0.5／0.2。上市未滿一年，相對倍數調整係數＝1。
 - Tokenomics：`data/tokenomics_snapshot_v22.0.json`（IF_NonNV_Out_CS、IF_NonNV_Hold_CS、IF_HoldEcon、IF_CapexIT 等），只作 Recon 與 capex_mw 高值。
 
 ## 已知衝突（Recon C 節）
