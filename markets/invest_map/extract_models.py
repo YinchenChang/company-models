@@ -241,7 +241,7 @@ def cloud(b):
 
 
 # 半導體個股（AI半導體 模型，估值 v2）：代號 → 模型資料夾。v0.5 起 52 家（2026-10-25 Andy 18:14：個股全部接入）。
-SEMIS_V2 = (("NVDA", "nvidia"), ("AVGO", "avgo"), ("AMD", "amd"), ("2454", "mediatek"), ("MRVL", "mrvl"),
+SEMIS_V2 = (("NVDA", "nvidia"), ("AVGO", "avgo"), ("AMD", "amd"), ("2454", "mediatek"), ("MRVL", "mrvl"), ("CBRS", "cbrs"),
             ("3661", "alchip"), ("3443", "guc"),
             ("000660", "skhynix"), ("005930", "samsung"), ("MU", "micron"), ("285A", "kioxia"), ("SNDK", "sndk"),
             ("ANET", "arista"), ("300308", "innolight"), ("COHR", "cohr"), ("LITE", "lite"), ("300502", "eoptolink"),
@@ -255,7 +255,7 @@ SEMIS_V2 = (("NVDA", "nvidia"), ("AVGO", "avgo"), ("AMD", "amd"), ("2454", "medi
             ("2317", "foxconn"), ("2382", "quanta"), ("3231", "wistron"), ("6669", "wiwynn"), ("DELL", "dell"),
             ("SMCI", "smci"),
             ("2308", "delta"), ("3017", "avc"), ("2301", "liteon"), ("3324", "auras"), ("3653", "jentech"),
-            ("ARM", "arm"), ("3711", "ase"), ("2303", "umc"), ("5347", "vis"), ("6274", "tuc"), ("6223", "mpi"))  # 2026-10-31 新增 6 家（Andy 13:08）
+            ("ARM", "arm"), ("3711", "ase"), ("2303", "umc"), ("5347", "vis"), ("6274", "tuc"), ("6223", "mpi"))  # 2026-10-31 新增 6 家（Andy 13:08）；2026-11-08 新增 Cerebras（Andy 21:38）
 MEMORY_FCF = ("000660", "005930", "MU")   # 收支關卡用 Y 頁自由現金流（其餘先用淨利，待 AI半導體 補自由現金流列）
 
 

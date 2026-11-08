@@ -1,11 +1,11 @@
 {
  "meta": {
-  "version": "v0.6.30",
-  "book": "20261108_AI投資地圖_資料_v0.6.30.xlsx",
+  "version": "v0.6.31",
+  "book": "20261108_AI投資地圖_資料_v0.6.31.xlsx",
   "tk_file": "20261102_Tokenomics_v21.8.xlsx",
   "tk_version": "v21.8",
   "tk_commit": "91db9ac",
-  "cm_commit": "bd2b4979f",
+  "cm_commit": "3c7aa0de",
   "built": "2026-11-08",
   "price_date": "AI半導體 個股用 2026-11-05 收盤（取自各個股模型現價）；算力收支公司用 2026-11-04 收盤（上檔空間＝模型目標價 ÷ 最新收盤 − 1）",
   "last_close_date": "2026-11-05",
@@ -419,6 +419,21 @@
    "rank": 5
   },
   {
+   "tk": "CBRS",
+   "name": "Cerebras",
+   "layer": "L3 IT 設備",
+   "seg": "運算",
+   "imp": 2,
+   "posn": 4,
+   "basis": "晶圓級推論加速器與推論雲端；OpenAI 750 MW 合約，AI 加速器金額份額遠低於 NVIDIA、AMD（本專案未推導份額）",
+   "tag": "[判斷]",
+   "irr_s": 80,
+   "pos_s": 25,
+   "vc_s": 100,
+   "score": 65.75,
+   "rank": 34
+  },
+  {
    "tk": "000660",
    "name": "SK 海力士",
    "layer": "L3 IT 設備",
@@ -551,7 +566,7 @@
    "pos_s": 75,
    "vc_s": 25,
    "score": 58.5,
-   "rank": 43
+   "rank": 44
   },
   {
    "tk": "6857",
@@ -686,7 +701,7 @@
    "pos_s": 100,
    "vc_s": 50,
    "score": 65.5,
-   "rank": 36
+   "rank": 37
   },
   {
    "tk": "NBIS",
@@ -701,7 +716,7 @@
    "pos_s": 75,
    "vc_s": 50,
    "score": 56.75,
-   "rank": 44
+   "rank": 45
   },
   {
    "tk": "WYFI",
@@ -716,7 +731,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 33.25,
-   "rank": 70
+   "rank": 71
   },
   {
    "tk": "OpenAI",
@@ -761,7 +776,7 @@
    "pos_s": 50,
    "vc_s": 75,
    "score": 54.25,
-   "rank": 46
+   "rank": 47
   },
   {
    "tk": "02513",
@@ -776,7 +791,7 @@
    "pos_s": 50,
    "vc_s": 75,
    "score": 54.25,
-   "rank": 46
+   "rank": 47
   },
   {
    "tk": "AMD",
@@ -851,7 +866,7 @@
    "pos_s": 25,
    "vc_s": 100,
    "score": 59.75,
-   "rank": 42
+   "rank": 43
   },
   {
    "tk": "285A",
@@ -896,7 +911,7 @@
    "pos_s": 50,
    "vc_s": 75,
    "score": 60.25,
-   "rank": 39
+   "rank": 40
   },
   {
    "tk": "LITE",
@@ -911,7 +926,7 @@
    "pos_s": 50,
    "vc_s": 75,
    "score": 60.25,
-   "rank": 39
+   "rank": 40
   },
   {
    "tk": "300502",
@@ -926,7 +941,7 @@
    "pos_s": 50,
    "vc_s": 75,
    "score": 60.25,
-   "rank": 39
+   "rank": 40
   },
   {
    "tk": "2345",
@@ -941,7 +956,7 @@
    "pos_s": 25,
    "vc_s": 75,
    "score": 51.5,
-   "rank": 53
+   "rank": 54
   },
   {
    "tk": "FN",
@@ -956,7 +971,7 @@
    "pos_s": 25,
    "vc_s": 75,
    "score": 51.5,
-   "rank": 53
+   "rank": 54
   },
   {
    "tk": "CRDO",
@@ -971,7 +986,7 @@
    "pos_s": 25,
    "vc_s": 75,
    "score": 51.5,
-   "rank": 53
+   "rank": 54
   },
   {
    "tk": "ALAB",
@@ -986,7 +1001,7 @@
    "pos_s": 25,
    "vc_s": 75,
    "score": 45.5,
-   "rank": 64
+   "rank": 65
   },
   {
    "tk": "2449",
@@ -1031,7 +1046,7 @@
    "pos_s": 75,
    "vc_s": 25,
    "score": 64.5,
-   "rank": 37
+   "rank": 38
   },
   {
    "tk": "3037",
@@ -1046,7 +1061,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 55.75,
-   "rank": 45
+   "rank": 46
   },
   {
    "tk": "8046",
@@ -1061,7 +1076,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 47.75,
-   "rank": 57
+   "rank": 58
   },
   {
    "tk": "2368",
@@ -1076,7 +1091,7 @@
    "pos_s": 25,
    "vc_s": 25,
    "score": 39,
-   "rank": 67
+   "rank": 68
   },
   {
    "tk": "3189",
@@ -1091,7 +1106,7 @@
    "pos_s": 25,
    "vc_s": 25,
    "score": 33,
-   "rank": 71
+   "rank": 72
   },
   {
    "tk": "2802",
@@ -1106,7 +1121,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 47.75,
-   "rank": 57
+   "rank": 58
   },
   {
    "tk": "300476",
@@ -1121,7 +1136,7 @@
    "pos_s": 25,
    "vc_s": 25,
    "score": 39,
-   "rank": 67
+   "rank": 68
   },
   {
    "tk": "ASML",
@@ -1196,7 +1211,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 53.25,
-   "rank": 50
+   "rank": 51
   },
   {
    "tk": "TER",
@@ -1211,7 +1226,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 53.25,
-   "rank": 50
+   "rank": 51
   },
   {
    "tk": "BESI",
@@ -1226,7 +1241,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 47.25,
-   "rank": 61
+   "rank": 62
   },
   {
    "tk": "6315",
@@ -1241,7 +1256,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 47.25,
-   "rank": 61
+   "rank": 62
   },
   {
    "tk": "7729",
@@ -1256,7 +1271,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 47.25,
-   "rank": 61
+   "rank": 62
   },
   {
    "tk": "2317",
@@ -1286,7 +1301,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 49.75,
-   "rank": 56
+   "rank": 57
   },
   {
    "tk": "6669",
@@ -1301,7 +1316,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 41.75,
-   "rank": 65
+   "rank": 66
   },
   {
    "tk": "DELL",
@@ -1316,7 +1331,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 41.75,
-   "rank": 65
+   "rank": 66
   },
   {
    "tk": "SMCI",
@@ -1331,7 +1346,7 @@
    "pos_s": 25,
    "vc_s": 25,
    "score": 27,
-   "rank": 73
+   "rank": 74
   },
   {
    "tk": "3017",
@@ -1346,7 +1361,7 @@
    "pos_s": 75,
    "vc_s": 25,
    "score": 64.5,
-   "rank": 37
+   "rank": 38
   },
   {
    "tk": "2301",
@@ -1361,7 +1376,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 47.75,
-   "rank": 57
+   "rank": 58
   },
   {
    "tk": "3324",
@@ -1376,7 +1391,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 47.75,
-   "rank": 57
+   "rank": 58
   },
   {
    "tk": "3653",
@@ -1391,7 +1406,7 @@
    "pos_s": 25,
    "vc_s": 25,
    "score": 33,
-   "rank": 71
+   "rank": 72
   },
   {
    "tk": "ARM",
@@ -1436,7 +1451,7 @@
    "pos_s": 25,
    "vc_s": 75,
    "score": 53.5,
-   "rank": 48
+   "rank": 49
   },
   {
    "tk": "5347",
@@ -1451,7 +1466,7 @@
    "pos_s": 25,
    "vc_s": 75,
    "score": 53.5,
-   "rank": 48
+   "rank": 49
   },
   {
    "tk": "6274",
@@ -1466,7 +1481,7 @@
    "pos_s": 25,
    "vc_s": 25,
    "score": 39,
-   "rank": 67
+   "rank": 68
   },
   {
    "tk": "6223",
@@ -1481,7 +1496,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 53.25,
-   "rank": 50
+   "rank": 51
   }
  ],
  "valuation": [
@@ -1576,6 +1591,52 @@
    "b2src": "",
    "tier6": "−25%～−50%",
    "recsrc": "上檔空間＝模型加權目標價 avgo/dist/20261106_Broadcom個股模型_v0.5.4.xlsx Val!B40 ÷ 最新收盤 − 1，依五級規則自算；對照：模型日上檔空間 -41.6%（avgo/dist/20261106_Broadcom個股模型_v0.5.4.xlsx Val!B43）、模型日投資建議 放空（avgo/dist/20261106_Broadcom個股模型_v0.5.4.xlsx Val!B113）"
+  },
+  {
+   "tk": "CBRS",
+   "name": "Cerebras",
+   "layer": "L3 IT 設備",
+   "seg": "運算",
+   "method": "加權目標價（DCF 50%＋Comparable 50%）",
+   "ccy": "USD",
+   "price": 81.71,
+   "price_date": "2026-11-05",
+   "price_src": "個股模型現價（20261108_Cerebras個股模型_v0.1.1.xlsx，Val!B57；equibles 11-06 收盤 89.68 − 漲跌 7.97）",
+   "price_n": "1",
+   "model_px": 81.71,
+   "model_date": "2026-11-05",
+   "move": 0,
+   "flag": "",
+   "last": 81.71,
+   "last_date": "2026-11-05",
+   "status": "",
+   "mup": -0.014048743808818931,
+   "mtier": "中立",
+   "center": 80.5620771433814,
+   "bear": 0,
+   "cu": -0.0140487438088189,
+   "bu": -1,
+   "tier": "中立",
+   "vtier": "中立",
+   "mfolder": "cbrs",
+   "mfile": "20261108_Cerebras個股模型_v0.1.1.html",
+   "gate": "不通過",
+   "gbasis": "淨利",
+   "glabel": "PL 頁各情境模型年度淨利（不含實績）",
+   "gseries": "19 個情境年度淨利（不含實績），全部含負值",
+   "gsum": 12.6198703114585,
+   "gmin": -1.11548680509185,
+   "gsrc": "[Derived] cbrs/dist/20261108_Cerebras個股模型_v0.1.1.xlsx PL!D28…PL!J96",
+   "alt": null,
+   "altlbl": "",
+   "pe28": "",
+   "note": "DCF 目標價 29.5（Val!B23）；Comparable 目標價 131.7（Val!B42）；市場共識目標價 282.6（Val!B43，外部、僅供對照）；價格帶 C～A 情境 DCF 0.0～69.2",
+   "c1src": "cbrs/dist/20261108_Cerebras個股模型_v0.1.1.xlsx Val!B41",
+   "c2src": "",
+   "b1src": "cbrs/dist/20261108_Cerebras個股模型_v0.1.1.xlsx Val!D20",
+   "b2src": "",
+   "tier6": "0%～−25%",
+   "recsrc": "上檔空間＝模型加權目標價 cbrs/dist/20261108_Cerebras個股模型_v0.1.1.xlsx Val!B41 ÷ 最新收盤 − 1，依五級規則自算；對照：模型日上檔空間 -1.4%（cbrs/dist/20261108_Cerebras個股模型_v0.1.1.xlsx Val!B44）、模型日投資建議 中立（cbrs/dist/20261108_Cerebras個股模型_v0.1.1.xlsx Val!B53）"
   },
   {
    "tk": "000660",
@@ -10243,6 +10304,98 @@
    },
    "missing": []
   },
+  "CBRS": {
+   "meta": {
+    "ticker": "CBRS",
+    "name": "Cerebras",
+    "name_full": "Cerebras Systems Inc.",
+    "listing": "Nasdaq｜CBRS（2026-05-14 上市）",
+    "hq": "美國加州桑尼維爾<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>",
+    "founded": "2016<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：S-1\" aria-label=\"出處\">ⓘ</sup>",
+    "employees": "本專案未建立",
+    "fiscal_year_end": "12 月 31 日（FY＝日曆年）<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：cbrs/README.md\" aria-label=\"出處\">ⓘ</sup>",
+    "asof": "2026-11-08"
+   },
+   "oneliner": "自製「晶圓級」AI 晶片的推論算力供應商：大部分營收來自出租推論算力（雲端），其餘賣整台系統；營收＝平均計費 MW × 每 MW 年營收＋系統銷售<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx README!A3\" aria-label=\"出處\">ⓘ</sup>。",
+   "sections": {
+    "公司在做什麼": "<ul><li>自行設計 WSE-3 晶片：用接近一整片 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\">300</span> 毫米晶圓做成一顆晶片（一般 GPU 是從一片晶圓切出幾十顆），晶片內記憶體大，適合低延遲的推論（執行已訓練好的模型、即時回答）。</li><li>推論雲端：在租來的資料中心放自家系統，按用量或長約出租算力給模型公司與企業，OpenAI 是最大的長約客戶<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx In!B5、Q!A19\" aria-label=\"出處\">ⓘ</sup>。</li><li>系統銷售：把 CS-3 系統直接賣給客戶，主要是阿聯的 MBZUAI 與 G42<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!A50、Q!A51\" aria-label=\"出處\">ⓘ</sup>。</li><li>公司表示，到 2027 年底已上線或已簽約交付的資料中心容量超過 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx In!E81\">600 MW</span>。</li></ul>",
+    "主要產品與營收占比": "<div class=\"ptbl\"><table><thead><tr><th>產品／部門</th><th>內容（白話）</th><th>營收占比</th><th>期間</th></tr></thead><tbody><tr><td>雲端與其他服務</td><td>出租推論算力、支援服務</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!E6、Q!E7，占比為換算\">70.0%</span>（US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!E6、Q!E7，占比為換算\">0.126B</span> ÷ <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!E6、Q!E7，占比為換算\">0.180B</span>，GAAP）</td><td>2Q26</td></tr><tr><td>硬體</td><td>CS-3 系統銷售</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!E5，換算\">30.0%</span>（US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!E5，換算\">0.054B</span>）</td><td>2Q26</td></tr><tr><td>合計</td><td>—</td><td>100%</td><td>2Q26</td></tr></tbody></table></div><ul><li>全年營收：FY2025 US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!C7、In!E45\">0.51B</span>；FY2026 公司指引中點 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!C7、In!E45\">0.885B</span>（核心口徑）。</li><li>季度組合變動大：1Q26 硬體占比較高（核心硬體 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!D18、Q!D19、Q!E18、Q!E19\">0.112B</span>、雲端 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!D18、Q!D19、Q!E18、Q!E19\">0.080B</span>），2Q26 雲端超過硬體。</li><li>核心毛利率 FY2026 指引 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx In!E46、In!E47\">41%</span>–<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx In!E46、In!E47\">43%</span>，核心營業利益率 −<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx In!E46、In!E47\">19%</span>～−<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx In!E46、In!E47\">17%</span>（仍虧損）。</li></ul>",
+    "市場定位與產業位置": "<ul><li>在 AI 運算晶片中屬小型挑戰者：本專案未推導其加速器金額份額；FY2026 營收約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx PL!D44\">0.9B</span>，與 NVIDIA、AMD 差距數量級。</li><li>主打推論速度；與 GPU 不同，主要以自營雲端出售算力，因此同時有晶片公司與算力出租商（neocloud）的特性<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>。</li><li>剩餘履約義務（已簽約未認列營收）US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx In!E78、In!E79\">25.4B</span>，<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx In!E78、In!E79\">22%</span> 預計在 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx In!E78、In!E79\">24</span> 個月內認列。</li><li>上游依賴台積電製造晶圓；擴建算力需大量資本支出，本專案推估每 MW 約 US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx In!B32、Recon!A16\">9M</span>（Tokenomics 隱含值較高）。</li></ul>",
+    "管理層與經營風格": "<div class=\"ptbl\"><table><thead><tr><th>職位</th><th>姓名</th><th>任職起</th><th>背景</th></tr></thead><tbody><tr><td>共同創辦人、執行長兼總裁</td><td>Andrew Feldman</td><td>2016-04</td><td>前 SeaMicro 執行長（2012 年售予 AMD）、前 AMD 副總裁<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：S-1/A，2026-05\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>財務長</td><td>Robert Komin</td><td>2024-03</td><td>前 Sunrun 財務長<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：S-1/A，2026-05\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>共同創辦人、技術長</td><td>Sean Lie</td><td>2016</td><td><sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：S-1/A，2026-05\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>營運長</td><td>Dhiraj Mallick</td><td>—</td><td><sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：S-1/A，2026-05\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div><ul><li>經營風格：本專案尚未研究。</li><li>治理：招股說明書揭露執行長過去的法律程序（2007 年涉會計控制案）<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：S-1「Involvement in Certain Legal Proceedings」經二手轉述\" aria-label=\"出處\">ⓘ</sup>。</li><li>資本配置事實：IPO 於 2026-05 募得約 US$<span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：媒體報導 2026-05-14；本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!E35、Q!E36\">5.55B</span>；2026-06-30 現金與短期投資約 US$<span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：媒體報導 2026-05-14；本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!E35、Q!E36\">7.9B</span>。</li></ul>",
+    "同業與競爭態勢": "<div class=\"ptbl\"><table><thead><tr><th>同業</th><th>重疊領域</th><th>市占或規模</th></tr></thead><tbody><tr><td>NVIDIA</td><td>AI GPU、整櫃系統</td><td>CY2027 加速器金額份額 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261030_NVIDIA個股模型_v0.2.3.xlsx Units!D32\">75.1%</span></td></tr><tr><td>AMD</td><td>AI GPU</td><td>CY2027 加速器金額份額 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261104_AMD模型_v0.3.xlsx Recon!C27\">6.7%</span></td></tr><tr><td>Broadcom、Marvell</td><td>客製 ASIC</td><td>本專案 Comparable 同業<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Val!A28:A31\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>CoreWeave、Nebius</td><td>推論／訓練算力出租</td><td>本專案另有模型<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：coreweave、nebius 模型\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div><ul><li>推論晶片新進者還有 Groq、SambaNova 等（未上市）；各雲端自研 ASIC（TPU、Trainium）也搶推論需求<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>。</li><li>本專案估值用晶片同業前瞻 P/S（中位數約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Val!E32\">8.0 倍</span>），但 Cerebras 七成營收是雲端服務，與 neocloud（約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Val!E32\">1</span>–<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Val!E32\">5 倍</span>）的比較另列在模型說明。</li></ul>",
+    "主要客戶": "<ul><li>財報客戶集中度：FY2025 MBZUAI <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!C50、Q!C51、Q!E50、Q!E51、Q!E52\">62%</span>、G42 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!C50、Q!C51、Q!E50、Q!E51、Q!E52\">24%</span>；2Q26 MBZUAI <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!C50、Q!C51、Q!E50、Q!E51、Q!E52\">34%</span>、G42 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!C50、Q!C51、Q!E50、Q!E51、Q!E52\">9%</span>；2Q26 OpenAI 營收 US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!C50、Q!C51、Q!E50、Q!E51、Q!E52\">0.057B</span>。</li></ul><div class=\"ptbl\"><table><thead><tr><th>客戶</th><th>關係</th><th>依據</th></tr></thead><tbody><tr><td>OpenAI</td><td>主合作協議 750 MW、逾 US$20B，另有 1.25 GW 選擇權；Cerebras 對 OpenAI 發行認股權證、OpenAI 提供營運資金貸款</td><td>S-1、10-Q<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：S-1 經 Futurum、sec-api.io 轉述，2026-04～08\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>MBZUAI（G42 關係人）</td><td>系統採購</td><td>10-Q<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：sec-api.io，2026-08\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>G42</td><td>系統採購；2026-03 CFIUS 審查後持股改為無投票權</td><td>媒體<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：aifundingtracker，2026-05\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>AWS</td><td>Bedrock 上架 Cerebras 推論</td><td>公司新聞稿<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：8-K，2026-08-12\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div>",
+    "前十大股東": "<div class=\"ptbl\"><table><thead><tr><th>排名</th><th>股東</th><th>持股比例</th></tr></thead><tbody><tr><td>1</td><td>Fidelity</td><td>約 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：S-1（2026-03-31 基準）經 aifundingtracker、pipelineroad 轉述\">11.3%</span>（B 類）</td></tr><tr><td>2</td><td>Benchmark</td><td>約 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：同上；Bloomberg 2026-05-14\">9.5%</span>（B 類）；IPO 後約 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：同上；Bloomberg 2026-05-14\">8.1%</span></td></tr><tr><td>3</td><td>Foundation Capital</td><td>約 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：同上\">8.3%</span>（B 類）；IPO 後約 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：同上\">7%</span></td></tr><tr><td>4</td><td>Eclipse</td><td>約 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：同上\">7.3%</span>（B 類）；IPO 後約 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：同上\">6.2%</span></td></tr><tr><td>5</td><td>Alpha Wave</td><td>約 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：同上\">6.5%</span>（B 類）</td></tr></tbody></table></div><ul><li>口徑：招股說明書揭露的 5% 以上股東（IPO 前、B 類普通股），只有五家；13F 前十大股東本專案未建立。</li></ul>",
+    "近期重大事件": "<ul><li>2026-11-12｜公布 3Q26 財報（指引核心營收 US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx In!E42\">0.214</span>–<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx In!E42\">0.216B</span>）｜檢驗 4Q26 與 2027「營收逾三倍」說法</li><li>2026-11-09｜IPO 鎖定期最後解禁｜早期股東可出售，股價 11 月初自約 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：equibles、stockanalysis，2026-11\">110</span> 跌至約 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：equibles、stockanalysis，2026-11\">82</span></li><li>2026-08-12｜2Q26 財報：FY2026 營收指引上修至 US$<span class=\"sv\" tabindex=\"0\" data-src=\"Verified：8-K\">0.880</span>–<span class=\"sv\" tabindex=\"0\" data-src=\"Verified：8-K\">0.890B</span>；RPO US$<span class=\"sv\" tabindex=\"0\" data-src=\"Verified：8-K\">25.4B</span>；AWS Bedrock 合作</li><li>2026-05-14｜Nasdaq 上市，發行價 US$<span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：媒體，2026-05-14\">185</span>、募資約 US$<span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：媒體，2026-05-14\">5.55B</span>，首日收 US$<span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：媒體，2026-05-14\">311.07</span></li><li>2026-01｜OpenAI 合作擴大並提供營運資金貸款（約 US$<span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：sec-api.io 轉述 10-Q\">1.0B</span>，年利率 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：sec-api.io 轉述 10-Q\">6%</span>）</li></ul>",
+    "需要觀察的事項": "<ul><li>平均計費 MW 上線速度｜模型最敏感變數之一（MW ×<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Sens!J5\">0.8</span> 時情境 B 加權價值約 −<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Sens!J5\">20%</span>）｜2026-11-12 財報、每季</li><li>每 MW 年營收（OpenAI 合約單價與期間）｜以五年計時情境 B 加權價值約 −<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Sens!J7\">36%</span>｜合約條款原文待複核</li><li>每 MW 資本支出與現金消耗｜DCF 只有約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Val!B23\">29 美元</span>，主因擴建期自由現金流為負｜每季資本支出與租約揭露</li><li>客戶集中（OpenAI、UAE 客戶）｜任一客戶延後即影響 2027 營收｜每季 10-Q 客戶占比</li><li>與 Tokenomics 的持有成本差距｜合約單價 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Recon!A15\">7.6</span> 低於 Tokenomics 隱含持有成本 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Recon!A15\">12.2</span>，已送算力收支｜Tokenomics 下一版</li></ul>",
+    "來源": "<ol><li>本專案：`cbrs/README.md`；`cbrs/dist/20261108_Cerebras個股模型_v0.1.1.xlsx`（README、In、Q、PL、Val、Recon、Sens）；`nvidia/dist/20261030_NVIDIA個股模型_v0.2.3.xlsx`（Units）；`amd/dist/20261104_AMD模型_v0.3.xlsx`（Recon）</li><li><a href=\"https://www.sec.gov/Archives/edgar/data/0002021728/000162828026056186/cbrsannouncesfinancialresu.htm\" target=\"_blank\" rel=\"noopener\">Cerebras 2Q26 財報新聞稿（8-K）</a>（2026-08-12）</li><li><a href=\"https://www.sec.gov/Archives/edgar/data/0002021728/000162828026029503/cerebras-sx1amay2026.htm\" target=\"_blank\" rel=\"noopener\">Cerebras S-1/A（管理層）</a>（2026-05）</li><li><a href=\"https://sec-api.io/insights/cerebras-cbrs-first-public-quarters\" target=\"_blank\" rel=\"noopener\">sec-api.io：Cerebras 上市後首兩季 10-Q 摘錄</a>（2026-08）</li><li><a href=\"https://futurumgroup.com/insights/cerebras-s-1-teardown-is-the-23b-wafer-scale-ipo-the-end-of-gpu-homogeneity/\" target=\"_blank\" rel=\"noopener\">Futurum：Cerebras S-1 拆解</a>（2026-04-22）</li><li><a href=\"https://www.bloomberg.com/news/articles/2026-05-14/benchmark-eclipse-reap-billions-in-returns-from-cerebras-ipo\" target=\"_blank\" rel=\"noopener\">Bloomberg：Benchmark、Eclipse 自 Cerebras IPO 獲利</a>（2026-05-14）</li><li><a href=\"https://aifundingtracker.com/who-owns-cerebras/\" target=\"_blank\" rel=\"noopener\">aifundingtracker：Who Owns Cerebras</a>（2026-05）</li><li><a href=\"https://siliconangle.com/?p=754850\" target=\"_blank\" rel=\"noopener\">SiliconANGLE：Cerebras IPO 定價 185 美元</a>（2026-05-13）</li></ol>"
+   },
+   "notes": {
+    "基本資料": [
+     "外部・未經本專案檢核",
+     "外部・未經本專案檢核：S-1",
+     "本專案：cbrs/README.md",
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx README!A3"
+    ],
+    "公司在做什麼": [
+     "外部・未經本專案檢核",
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx In!B5、Q!A19",
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!A50、Q!A51",
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx In!E81"
+    ],
+    "主要產品與營收占比": [
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!E6、Q!E7，占比為換算",
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!E5，換算",
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!C7、In!E45",
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!D18、Q!D19、Q!E18、Q!E19",
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx In!E46、In!E47"
+    ],
+    "市場定位與產業位置": [
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx PL!D44",
+     "外部・未經本專案檢核",
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx In!E78、In!E79",
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx In!B32、Recon!A16"
+    ],
+    "管理層與經營風格": [
+     "外部・未經本專案檢核：S-1/A，2026-05",
+     "外部・未經本專案檢核：S-1「Involvement in Certain Legal Proceedings」經二手轉述",
+     "外部・未經本專案檢核：媒體報導 2026-05-14；本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!E35、Q!E36"
+    ],
+    "同業與競爭態勢": [
+     "本專案：20261030_NVIDIA個股模型_v0.2.3.xlsx Units!D32",
+     "本專案：20261104_AMD模型_v0.3.xlsx Recon!C27",
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Val!A28:A31",
+     "本專案：coreweave、nebius 模型",
+     "外部・未經本專案檢核",
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Val!E32"
+    ],
+    "主要客戶": [
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Q!C50、Q!C51、Q!E50、Q!E51、Q!E52",
+     "外部・未經本專案檢核：S-1 經 Futurum、sec-api.io 轉述，2026-04～08",
+     "外部・未經本專案檢核：sec-api.io，2026-08",
+     "外部・未經本專案檢核：aifundingtracker，2026-05",
+     "外部・未經本專案檢核：8-K，2026-08-12"
+    ],
+    "前十大股東": [
+     "外部・未經本專案檢核：S-1（2026-03-31 基準）經 aifundingtracker、pipelineroad 轉述",
+     "外部・未經本專案檢核：同上；Bloomberg 2026-05-14",
+     "外部・未經本專案檢核：同上"
+    ],
+    "近期重大事件": [
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx In!E42",
+     "外部・未經本專案檢核：equibles、stockanalysis，2026-11",
+     "Verified：8-K",
+     "外部・未經本專案檢核：媒體，2026-05-14",
+     "外部・未經本專案檢核：sec-api.io 轉述 10-Q"
+    ],
+    "需要觀察的事項": [
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Sens!J5",
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Sens!J7",
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Val!B23",
+     "本專案：20261108_Cerebras個股模型_v0.1.1.xlsx Recon!A15"
+    ]
+   },
+   "missing": []
+  },
   "COHR": {
    "meta": {
     "ticker": "COHR",
@@ -12332,6 +12485,14 @@
    "date": "2026-11-06",
    "ver": "v0.5.4",
    "xlsx": "20261106_Broadcom個股模型_v0.5.4.xlsx"
+  },
+  "CBRS": {
+   "folder": "cbrs",
+   "file": "20261108_Cerebras個股模型_v0.1.1.html",
+   "title": "Cerebras個股模型",
+   "date": "2026-11-08",
+   "ver": "v0.1.1",
+   "xlsx": "20261108_Cerebras個股模型_v0.1.1.xlsx"
   },
   "000660": {
    "folder": "skhynix",
