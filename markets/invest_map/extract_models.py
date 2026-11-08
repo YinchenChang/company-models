@@ -247,7 +247,7 @@ SEMIS_V2 = (("NVDA", "nvidia"), ("AVGO", "avgo"), ("AMD", "amd"), ("2454", "medi
             ("ANET", "arista"), ("300308", "innolight"), ("COHR", "cohr"), ("LITE", "lite"), ("300502", "eoptolink"),
             ("2345", "accton"), ("FN", "fabrinet"), ("CRDO", "crdo"), ("ALAB", "alab"),
             ("2330", "tsmc"), ("2449", "kyec"), ("AMKR", "amkr"),
-            ("4062", "ibiden"), ("2383", "emc"), ("3037", "unimicron"), ("8046", "nanya_pcb"), ("2368", "gce"),
+            ("4062", "ibiden"), ("2383", "emc"), ("3037", "unimicron"), ("8046", "nanya_pcb"), ("2368", "gce"), ("3189", "kinsus"), ("2802", "ajinomoto"),
             ("300476", "victory_giant"),
             ("ASML", "asml"), ("AMAT", "amat"), ("LRCX", "lrcx"), ("KLAC", "klac"), ("6857", "advantest"),
             ("6146", "disco"), ("042700", "hanmi"), ("TER", "ter"), ("BESI", "besi"), ("6315", "towa"),

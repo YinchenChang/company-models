@@ -108,8 +108,8 @@ AI 模型公司（位於 AI 金流的最上游）：自研 GPT 系列大模型�
 - 2027 Oracle 起跑｜年付款 60bn 讓算力成本一年增加約 88bn [本專案：20261029_OpenAI收支模型_v0_6_4.xlsx Cost!F18、E27、F27]（[Derived]）；Broadcom 自研晶片融資能否落地影響自建比例｜2026 年底前 Broadcom 融資結案
 
 ## 來源
-1. 本專案：`/home/claude/company-models/openai/dist/20261029_OpenAI收支模型_v0_6_4.xlsx`（SRC_OAI、Revenue、Compute、Cost、Funding、Reverse、PxQ）；`openai/docs/reports/20261029_v0.6.4.md`
-2. 本專案：`/home/claude/company-models/anthropic/dist/20261104_Anthropic收支模型_v0_1_9.xlsx`（SRC_ANT、Revenue）；`minimax/dist/20261022_MiniMax收支模型_v0_2.xlsx`（SRC_MM）；`alphabet/data/alphabet_facts_20261008.json`
+1. 本專案：`openai/dist/20261029_OpenAI收支模型_v0_6_4.xlsx`（SRC_OAI、Revenue、Compute、Cost、Funding、Reverse、PxQ）；`openai/docs/reports/20261029_v0.6.4.md`
+2. 本專案：`anthropic/dist/20261104_Anthropic收支模型_v0_1_9.xlsx`（SRC_ANT、Revenue）；`minimax/dist/20261022_MiniMax收支模型_v0_2.xlsx`（SRC_MM）；`alphabet/data/alphabet_facts_20261008.json`
 3. [OpenAI Rumours: punta a 70 miliardi di dollari di ricavi annualizzati entro fine 2026](https://www.borsaitaliana.it/borsa/notizie/teleborsa/finanza/openai-rumours-punta-a-70-miliardi-di-dollari-di-ricavi-annualizzati-entro-fine-2026-37_2026-10-09_TLB.html?lang=it)（Teleborsa，2026-10-09）
 4. [FT: OpenAI Told Investors Annualized Revenue Was Nearing $50B at End of September](https://aiweekly.co/alerts/ft-openai-told-investors-annualized-revenue-was-nearing-50b-at-end-of-september)（AI Weekly，2026-10-08）
 5. [AI news for Thursday, October 8, 2026](https://aiweekly.co/ai-news-today/edition/2026-10-08)（AI Weekly，2026-10-08）

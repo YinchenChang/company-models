@@ -121,8 +121,8 @@ asof: 2026-11-04
 
 ## 來源
 1. 本專案：spacex/dist/20261105_SpaceX個股模型_v0.2.4.xlsx（In、Q、Thesis、CF、Val、Recon、Sens）、spacex/README.md、spacex/docs/reports/20261104_spacex_v0.2.2_TK快照v21.9.md（2026-11-04）
-2. 本專案：/home/claude/wt23/spacex/data/spacex_facts_2026q3.json、spacex_facts_v02.json（2026-10-30）
-3. 本專案：/home/claude/wt23/anthropic/dist/20261104_Anthropic收支模型_v0_1_9.xlsx（SRC_ANT）；/home/claude/wt23/alphabet/data/alphabet_facts_20261008.json、alphabet_facts_2026q3.json
+2. 本專案：spacex/data/spacex_facts_2026q3.json、spacex_facts_v02.json（2026-10-30）
+3. 本專案：anthropic/dist/20261104_Anthropic收支模型_v0_1_9.xlsx（SRC_ANT）；alphabet/data/alphabet_facts_20261008.json、alphabet_facts_2026q3.json
 4. [Anthropic is SpaceX's biggest customer, bringing in a third of revenue（The Next Web，轉述 Bloomberg）](https://thenextweb.com/news/anthropic-spacex-largest-customer-customer-b)（2026-10-29）
 5. [SpaceX and Tesla boards form special committees to review merger（TechCrunch）](https://techcrunch.com/2026/10/20/spacex-and-tesla-boards-form-special-committees-to-review-merger/)（2026-10-20）
 6. [SpaceX AI compute deal（Drive Tesla Canada）](https://driveteslacanada.ca/news/spacex-ai-compute-deal-13-billion-revenue/)（2026-09-10）
