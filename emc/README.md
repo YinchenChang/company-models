@@ -1,4 +1,14 @@
-# emc/ — 台光電（2383）收支與估值模型 v0.5.2
+# emc/ — 台光電（2383）收支與估值模型 v0.5.3
+
+## v0.5.3（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
+
+- 工作單 px1105（Andy 2026-11-06 07:28；情境名稱 03:14，取代第三輪修正第 23 點）。來源：Yahoo Finance 日線收盤 2026-11-05。
+- 現價 4,555 → 4,100 元（2026-11-04 → 11-05 收盤）。
+- Comparable 同業前瞻 P/E＝現行倍數（2026-11-04 口徑）× 11-05 收盤 ÷ 11-04 收盤（共識 EPS 不變）：6274.TWO 20.71 → 18.67、6213.TW 21.65 → 19.49、2368.TW 16.92 → 15.24。
+- 情境名稱：xlsx 各頁（In、Val、DCF、PL、README 等）與 HTML 設定（`html_src.json`）的「情境 A（順利）／B（平平）／C（不如預期）」改回「情境 A（樂觀）／B（基準）／C（保守）」（建置最後的 `px1105_post.py`）。
+- 不改：rf、共識 EPS、預測用匯率、模型假設。
+- 結果：加權目標價 4,108 → 3,843 元（DCF 2,811 → 2,814、Comparable 調整後 5,405 → 4,873），上檔空間 -9.8% → -6.3%，投資建議 中立 → **中立**。
+- 成品：`dist/20261106_*_v0.5.3.xlsx`／`.html`；v0.5.2 移到 `dist/_待刪除/`。
 
 ## v0.5.2（2026-11-06）：第三輪修正（合併前）
 
@@ -82,9 +92,9 @@ AI 半導體 Project 載板與 PCB 次產業（樣板 `ibiden/`）的第一家�
 | 檔案 | 內容 |
 |---|---|
 | `build_emc.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261106_台光電個股模型_v0.5.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261106_台光電個股模型_v0.5.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html_src.json`、`gen_html_json.py`、`html.json` | HTML 展示層設定：`html_src.json` 為原設定，`gen_html_json.py` 套用版面規格 v1.0 產生 `html.json`（勿手改） |
-| `dist/20261106_台光電個股模型_v0.5.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261106_台光電個股模型_v0.5.3.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 emc/build_emc.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）、`tools/valuation_rule.py`；**不修改它們**。
 

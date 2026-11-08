@@ -592,7 +592,7 @@ for i, (nm, tk, pe, dt) in enumerate(PEERS, 28):
     V.cell(i, 1, nm); V.cell(i, 2, tk); c = V.cell(i, 3, pe); c.font = BLUE; c.number_format = "0.0"
     V.cell(i, 4, dt); V.cell(i, 5, "stockanalysis.com forward PE（分析師共識；價格日期如左）"); V.cell(i, 6, "Interested-party")
 PEER_LAST = 27 + len(PEERS)
-V.cell(32, 1, "並列參考（非 A 股，不進目標價）：金像電 2368.TW 前瞻 P/E 16.9x、TTM Technologies TTMI 9.4x（2026-11-04；原 19.57x（10-22）、10.31x（10-23）× 11-04 收盤 ÷ 原報價日收盤）；stockanalysis，Interested-party")
+V.cell(32, 1, "並列參考（非 A 股，不進目標價）：金像電 2368.TW 前瞻 P/E 15.2x、TTM Technologies TTMI 8.0x（2026-11-05；原 2026-11-04 口徑 16.92x、9.44x × 11-05 收盤 ÷ 11-04 收盤（Yahoo Finance 日線收盤）；更早為 19.57x（10-22）、10.31x（10-23））；stockanalysis，Interested-party")
 tset(33, "pmed", "同業前瞻 P/E 中位數", [f"=MEDIAN(C28:C{PEER_LAST})", None, None], "0.0", "A 股 PCB 同業：沪电、深南、生益电子、鹏鼎（券商常用比較組；摩根大通稱 A 股 PCB 同業 2027 年平均約 30x）；景旺电子前瞻 P/E 未找到")
 EPSPL = lambda s_, y: f"PL!{FC[y]}{SUMR[(s_, 'eps')]}"   # v0.4：0.1 節改為 FCFF 摘要後，EPS 直接讀 PL 摘要
 tset(34, "feps", "12 個月後的前瞻 EPS（情境加權）", ["=" + "+".join(f"tp_w{s_}*(2/12*{EPSPL(s_, 2027)}+10/12*{EPSPL(s_, 2028)})" for s_ in SC), None, None], "0.00",
@@ -946,6 +946,12 @@ R3 = dict(PX={"300476.SZ": 135.24, "002463.SZ": 85.95, "002916.SZ": 225.6, "6881
 r3_post.apply(wb, R3)
 RD.cell(RD.max_row + 1, 1, 'v0.4.2（2026-11-06）：第三輪修正（合併前）。(1) 資產負債表改 2026-09-30（2026 年第三季度報告，2026-10-29 公告；中財網三季報資產負債表）：現金與交易性金融資產 188.1 億、借款 127.8 億、其他權益工具投資 33.4 億；stub 期改為 2026-10～12。(2) 期間股利 dps_tgt 0.39 → 1.99 元（依 2026-04 實發 FY2025 股利，第 10 項）。(3) 現價與 Comparable 同業前瞻 P/E 統一為 2026-11-04 收盤（現價 139.04 → 135.24；同業 P/E＝原 P/E × 11-04 收盤 ÷ 原報價日收盤；本公司前瞻 P/E 同法換算，共識前瞻 EPS 不變；並列參考的金像電、TTM 一併換算）。(4) HTML 情境驅動表依 In 頁「情境驅動對照」節標題取列並自檢；情境名稱、收斂法列名、上檔空間級距、stub 說明、g 上限列名、README 舊重點觀察改公式；工具字樣改「未取得」。')
 RD["A1"] = RD["A1"].value + '；v0.4.2（2026-11-06）第三輪修正：資產負債表改 2026-09-30、期間股利校正、現價與同業報價統一為 2026-11-04 收盤、HTML 情境驅動表修正'
+# ---------------- v0.4.3（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守（px1105_post.py；工作單 px1105）----------------
+import px1105_post  # noqa: E402
+P5 = dict(ver="v0.4.3", px="300476.SZ", fpe='fpe',
+          PX4={"300476.SZ": 135.24, "002463.SZ": 85.95, "002916.SZ": 225.6, "688183.SS": 68.59, "002938.SZ": 52.5},
+          PX5={"300476.SZ": 135, "002463.SZ": 81, "002916.SZ": 216, "688183.SS": 67.25, "002938.SZ": 50.63})
+px1105_post.apply(wb, P5)
 wb.save(sys.argv[1])
 if os.environ.get("VG_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
