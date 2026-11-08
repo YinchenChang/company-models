@@ -626,7 +626,7 @@ for i, (nm, tk, pe, dt) in enumerate(PEERS, 28):
     V.cell(i, 1, nm); V.cell(i, 2, tk); c = V.cell(i, 3, pe); c.font = BLUE; c.number_format = "0.0"
     V.cell(i, 4, dt); V.cell(i, 5, "stockanalysis.com forward PE（分析師共識；價格日期如左，臺股頁面為快取日期）"); V.cell(i, 6, "Interested-party")
 PEER_LAST = 27 + len(PEERS)
-V.cell(33, 1, "並列參考（A 股，不進目標價）：勝宏科技 300476.SZ 前瞻 P/E 10.9x、沪电股份 002463.SZ 16.6x（2026-11-04；原 14.84x（10-23）、20.66x（10-22）× 11-04 收盤 ÷ 原報價日收盤）；stockanalysis，Interested-party")
+V.cell(33, 1, "並列參考（A 股，不進目標價）：勝宏科技 300476.SZ 前瞻 P/E 10.9x、沪电股份 002463.SZ 15.6x（2026-11-05；原 2026-11-04 口徑 10.94x、16.60x × 11-05 收盤 ÷ 11-04 收盤（Yahoo Finance 日線收盤）；更早為 14.84x（10-23）、20.66x（10-22））；stockanalysis，Interested-party")
 tset(34, "pmed", "同業前瞻 P/E 中位數", [f"=MEDIAN(C28:C{PEER_LAST})", None, None], "0.0", "臺美伺服器、網通 PCB 同業：健鼎、華通、臻鼎-KY、博智、TTM（臺股媒體與券商常用比較組）；定穎投控、瀚宇博前瞻 P/E 未找到")
 EPSPL = lambda s_, y: f"PL!{FC[y]}{SUMR[(s_, 'eps')]}"   # v0.3：0.1 節改為 FCFF 摘要後，EPS 直接讀 PL 摘要
 tset(35, "feps", "12 個月後的前瞻 EPS（情境加權）", ["=" + "+".join(f"tp_w{s_}*(2/12*{EPSPL(s_, 2027)}+10/12*{EPSPL(s_, 2028)})" for s_ in SC), None, None], "0.00",
@@ -963,6 +963,12 @@ R3 = dict(PX={"2368.TW": 964, "3044.TW": 484, "2313.TW": 182.5, "4958.TW": 433, 
 r3_post.apply(wb, R3)
 RD.cell(RD.max_row + 1, 1, 'v0.3.2（2026-11-06）：第三輪修正（合併前）。(1) Stub 期已宣告股利的股數與評價用股數統一：9.803 元 × 除息時流通股數 0.5119 十億股（＝sh_h2 − Amazon 私募 185.6 萬股；私募 2026-09-29 發行、晚於除息日），原用股本 ÷ 面額 0.517 十億股。(2) 現價與 Comparable 同業前瞻 P/E 統一為 2026-11-04 收盤（現價 1,115 → 964；同業 P/E＝原 P/E × 11-04 收盤 ÷ 原報價日收盤；本公司前瞻 P/E 同法換算，共識前瞻 EPS 不變；並列參考的勝宏、沪电一併換算）。(3) HTML 情境驅動表依 In 頁「情境驅動對照」節標題取列並自檢；情境名稱、收斂法列名、上檔空間級距、stub 說明、g 上限列名、README 舊重點觀察改公式；工具字樣改「未取得」。')
 RD["A1"] = RD["A1"].value + '；v0.3.2（2026-11-06）第三輪修正：stub 期股利股數統一、現價與同業報價統一為 2026-11-04 收盤、HTML 情境驅動表修正'
+# ---------------- v0.3.3（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守（px1105_post.py；工作單 px1105）----------------
+import px1105_post  # noqa: E402
+P5 = dict(ver="v0.3.3", px="2368.TW", fpe='fpe',
+          PX4={"2368.TW": 964, "3044.TW": 484, "2313.TW": 182.5, "4958.TW": 433, "8155.TWO": 267.5, "TTMI": 73.38},
+          PX5={"2368.TW": 868, "3044.TW": 438.5, "2313.TW": 165.5, "4958.TW": 394, "8155.TWO": 241, "TTMI": 62.22})
+px1105_post.apply(wb, P5)
 wb.save(sys.argv[1])
 if os.environ.get("GCE_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

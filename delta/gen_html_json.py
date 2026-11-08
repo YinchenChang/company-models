@@ -55,7 +55,7 @@ VA = lambda lab: f"@Val!A{row('Val', lab)}"
 conc_labels = [("目標價（DCF 與 Comparable 加權）", "n0"), ("DCF 目標價（情境加權）", "n0"), ("Comparable 目標價（相對倍數調整後）", "n0"),
                ("Comparable 目標價（市場主流同業法）", "n0"), ("現價（", "n0"), ("上檔空間：加權目標價", "sp1"), ("上檔空間：Comparable 目標價", "sp1"),
                ("上檔空間級距", ""), ("投資建議", ""), ("市場共識目標價", "n0"), ("與市場共識目標價的差距：EPS 因素", "sp1"),
-               ("與市場共識目標價的差距：倍數因素", "sp1"), ("價格帶（DCF 不如預期～順利）", ""), ("目標價方法", "")]
+               ("與市場共識目標價的差距：倍數因素", "sp1"), ("價格帶（DCF 保守～樂觀）", ""), ("目標價方法", "")]
 conc = {"type": "table", "caption": "目標價、現價與投資建議", "head": ["項目", "數值"], "rows": [[VA(l), V(l, f=f)] for l, f in conc_labels]}
 hist = next(b for b in va if b["type"] == "table" and b.get("caption") == "目標價（DCF 與 Comparable 加權）")   # 原結論表：由上方 conc 取代
 hr_ = row("Val", "歷史倍數檢查")
