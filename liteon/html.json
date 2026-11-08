@@ -6,15 +6,15 @@
  "scenarios": [
   {
    "key": "A",
-   "name": "情境 A（順利）"
+   "name": "情境 A（樂觀）"
   },
   {
    "key": "B",
-   "name": "情境 B（平平）"
+   "name": "情境 B（基準）"
   },
   {
    "key": "C",
-   "name": "情境 C（不如預期）"
+   "name": "情境 C（保守）"
   }
  ],
  "sections": [
@@ -3066,6 +3066,9 @@
       ],
       [
        "@README!A56"
+      ],
+      [
+       "@README!A57"
       ]
      ]
     },
@@ -3128,7 +3131,7 @@
    "；進加權的 Comparable 為相對倍數調整後 ",
    "@Val!B138|n2",
    "（上檔空間 ",
-   "@README!B58|sp1",
+   "@README!B59|sp1",
    "）"
   ]
  }
