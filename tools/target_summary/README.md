@@ -5,7 +5,7 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_summary.py` | 讀各模型 `dist/*.xlsx` 的 Val 頁（標籤同 `markets/invest_map/extract_models.py`）與 README 頁重點觀察 |
-| `universe.csv` | 54 家：資料夾、公司、代號、次產業、市場、本公司代號（`own_ticker`）、v0.2.3 對照值 |
+| `universe.csv` | 61 家（v0.2.7 加 Cerebras）：資料夾、公司、代號、次產業、市場、本公司代號（`own_ticker`）、v0.2.3 對照值 |
 | `peers.csv` | 各模型 Comparable 同業（抄自 Val 頁同業表，2026-10-27） |
 
 工作表：目標價總表（v0.2.4 新增「與前版相比」與「穩健度：共識 EPS」欄）、投資建議統計、市場別分布、相對倍數試算（未套用）、說明。
