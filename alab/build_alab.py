@@ -16,6 +16,18 @@ import fcff_dcf as FD   # v0.3：標準版 DCF（無槓桿自由現金流＋WACC
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
+# v0.3.6／v0.3.7（2026-11-09）：Astera Labs v0.3.5 驗收報告採用項（採用規劃書 Drive 065-ALAB/驗收/20261109_ALAB驗收v0.3.5_採用規劃書.md；
+# Andy 2026-11-09 23:22 確認，J1–J4 照建議預設）。ALAB_STAGE＝0.3.6（展示與治理，數值不變）或 0.3.7（預設；數值改變）。
+STAGE = os.environ.get("ALAB_STAGE", "0.3.7"); V37 = STAGE >= "0.3.7"
+# v0.3.7 的各項數值變更可分開開關（只供 sens_alab.py 做目標價變動拆解）：j1 情境份額路徑、tt 目標時點、sh 評價股數、bs 資產負債 10-Q、gaap GAAP 轉換
+V37P = set(os.environ.get("ALAB_V37_PARTS", "j1,tt,sh,bs,gaap").split(",")) if V37 else set()
+# 環境變數 ALAB_OVERRIDE="鍵=值;…"：只供 alab/sens_alab.py 的整本重算案例使用；CI 與正式建置不設。
+#   In 頁鍵＝值：覆寫基準欄；_relx／_relp＝名稱前綴（三情境共用該份額路徑）；_xk＝Scorpio X 份額相對值乘數；_cl＝1：三情境 PCIe 等相對值再乘（1 − cust_top × cl_loss）；_shorig＝1：評價股數改回公司稀釋股數指引
+OVR = {}
+for _kv in filter(None, os.environ.get("ALAB_OVERRIDE", "").split(";")):
+    _k, _v = _kv.split("=")
+    try: OVR[_k] = float(_v)
+    except ValueError: OVR[_k] = _v
 wb = openpyxl.Workbook()
 def hdr(ws, row, labels):
     for j, h in enumerate(labels, 1):
@@ -268,6 +280,7 @@ for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    if key in OVR: base = OVR[key]
     if any("未找到" in str(x) for x in (item, s1, s2)): s1, s2 = strip_url(s1), strip_url(s2)
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
@@ -361,14 +374,16 @@ def engine(ws, r0, title, **over):
     row("msx", "非 NVIDIA scale-up 交換晶片市場 × 情境顆數係數", "US$B", {c_(y): mkt("msx", y, s, P["mf"], P["wta"]) for y in BU}, fmt="#,##0.00",
         note="AMD、Trainium、其他 ASIC 顆數 × 每顆 scale-up 交換晶片內容（網通模型）；CY2028 起乘顆數係數")
     row("shx0", "Astera Scorpio X 有效份額（FY2026 校準）＝ Scorpio X 營收 ÷ 市場", "%", {"D": f"=a26_x/D{R['msx']}"}, fmt="0.00%", note="Derived")
-    row("relx", "Scorpio X 有效份額相對值（÷ FY2026）", "x", {"D": "=1", **{c_(y): f"={P['relx']}_{y % 100}" for y in F_}}, fmt="0.00")
+    _rx = OVR.get("_relx", P["relx"]); _xk = f"*{OVR['_xk']}" if "_xk" in OVR else ""
+    row("relx", "Scorpio X 有效份額相對值（÷ FY2026）", "x", {"D": "=1", **{c_(y): f"={_rx}_{y % 100}{_xk}" for y in F_}}, fmt="0.00")
     row("shx", "Scorpio X 有效份額", "%", {c_(y): f"=$D${R['shx0']}*{c_(y)}{R['relx']}" for y in BU}, fmt="0.00%")
     row("x", "Scorpio X 營收", "US$B", {"C": "=a25_x", "D": "=a26_x", **{c_(y): f"={c_(y)}{R['msx']}*{c_(y)}{R['shx']}" for y in F_}})
     sec_("B. PCIe 與訊號調節（Aries、Scorpio P、Taurus、Leo）")
     row("u", "AI 加速器顆數 × 情境顆數係數", "百萬顆", {c_(y): mkt("u", y, s, "1", P["wta"]) for y in BU}, fmt="#,##0.00")
     row("mp", "PCIe／CXL／AEC 可服務市場＝顆數 × 每顆內容（c_pcie）", "US$B", {c_(y): f"={c_(y)}{R['u']}*c_pcie/1000" for y in BU}, fmt="#,##0.00", note="c_pcie 只影響份額顯示，校準時抵銷")
     row("shp0", "Astera PCIe 等有效份額（FY2026 校準）＝ 營收 ÷ 可服務市場", "%", {"D": f"=a26_p/D{R['mp']}"}, fmt="0.00%")
-    row("relp", "PCIe 等有效份額 × 每顆內容相對值（÷ FY2026）", "x", {"D": "=1", **{c_(y): f"={P['relp']}_{y % 100}" for y in F_}}, fmt="0.00")
+    _rp = OVR.get("_relp", P["relp"]); _cl = "*(1-cust_top*cl_loss)" if OVR.get("_cl") else ""
+    row("relp", "PCIe 等有效份額 × 每顆內容相對值（÷ FY2026）", "x", {"D": "=1", **{c_(y): f"={_rp}_{y % 100}{_cl}" for y in F_}}, fmt="0.00")
     row("p", "PCIe 與訊號調節營收", "US$B", {"C": "=a25_p", "D": "=a26_p", **{c_(y): f"={c_(y)}{R['mp']}*$D${R['shp0']}*{c_(y)}{R['relp']}" for y in F_}})
     sec_("C. 合計")
     row("rev", "營收", "US$B", {"C": "=a25_rev", **{c_(y): f"={c_(y)}{R['x']}+{c_(y)}{R['p']}" for y in BU}})
@@ -398,7 +413,8 @@ PL["A1"] = "PL — Astera Labs 損益（US$B；non-GAAP）。FY2025A 實績、FY
 PB = {}; r0 = 60
 SCN_T = {"A": "情境 A：順利（顆數係數 1.0）", "B": "情境 B：平平（CY2028 顆數 ×0.8、CY2029 ×0.85）", "C": "情境 C：不如預期（CY2028–29 顆數 ×0.6）"}
 for s in SC:
-    PB[s] = engine(PL, r0, SCN_T[s], scn=s)
+    _j1 = dict(relx={"A": "XHI", "B": "rel_x", "C": "XLO"}[s], relp={"A": "PHI", "B": "rel_p", "C": "PLO"}[s]) if "j1" in V37P else {}   # v0.3.7 J1(b)
+    PB[s] = engine(PL, r0, SCN_T[s], scn=s, **_j1)
     r0 = PB[s]["end"] + 2
 hdr(PL, 3, ["情境／項目", "單位", "FY2025A", "FY2026（錨點）", "FY2027", "FY2028", "FY2029", "說明"])
 sr = 4; SUMR = {}
@@ -544,7 +560,8 @@ for c in "BCDEFGH": V.column_dimensions[c].width = 18
 
 # ---------------- Sens ----------------
 SE = wb.create_sheet("Sens")
-SE["A1"] = "Sens — 一次動一個輸入（情境 A；有效份額在每個案例內依 FY2026 錨點重算，FY2026 恆等於錨點）：對 FY2027、FY2028 的營收、Scorpio X 營收、毛利率與 EPS 的影響。每個案例是一個完整推導區塊（本頁下方）"
+SB0 = "B" if "j1" in V37P else "A"   # v0.3.7：情境 A／C 已帶份額高／低路徑，EPS 敏感度改以情境 B 為基準
+SE["A1"] = f"Sens — 一次動一個輸入（情境 {SB0}；有效份額在每個案例內依 FY2026 錨點重算，FY2026 恆等於錨點）：對 FY2027、FY2028 的營收、Scorpio X 營收、毛利率與 EPS 的影響。每個案例是一個完整推導區塊（本頁下方）"
 hdr(SE, 3, ["案例", "設定", "FY2027 營收", "FY2027 Scorpio X 營收", "FY2027 毛利率", "FY2027 EPS", "FY2027 EPS 相對基準", "FY2028 營收", "FY2028 Scorpio X 營收", "FY2028 毛利率", "FY2028 EPS", "FY2028 EPS 相對基準"])
 cases = [("Scorpio X 份額 低", "Scorpio X 有效份額相對值 FY2027 0.70、FY2028 0.60、FY2029 0.50（Broadcom、NVLink Fusion、其他 UALink 交換晶片搶份額）", dict(relx="XLO")),
          ("Scorpio X 份額 高", "FY2027 1.40、FY2028 1.70、FY2029 2.00（逾 10 家客戶陸續量產）", dict(relx="XHI")),
@@ -565,16 +582,20 @@ def put_case(i, name, setting, R, pre):
         SE[f"{c}{i}"] = f"={pre}{FC[y]}{R[key]}"; SE[f"{c}{i}"].number_format = fmt
     SE[f"G{i}"] = f"=F{i}/F$4-1"; SE[f"L{i}"] = f"=K{i}/K$4-1"
     for c in "GL": SE[f"{c}{i}"].number_format = "0.0%"
-put_case(4, "基準（情境 A）", "PL 區塊 A", PB["A"], "PL!")
+put_case(4, f"基準（情境 {SB0}）", f"PL 區塊 {SB0}", PB[SB0], "PL!")
 base_row = 40; SB = {}
 for nm, setting, ov in cases:
-    SB[nm] = engine(SE, base_row, f"案例區塊：{nm}（情境 A）", scn="A", **ov)
+    SB[nm] = engine(SE, base_row, f"案例區塊：{nm}（情境 {SB0}）", scn=SB0, **ov)
     base_row = SB[nm]["end"] + 2
 for n, (nm, setting, ov) in enumerate(cases):
     put_case(5 + n, nm, setting, SB[nm], "")
 nn = 5 + len(cases)
-put_case(nn, "顆數情境 B", "CY2028 ×0.8、CY2029 ×0.85", PB["B"], "PL!")
-put_case(nn + 1, "顆數情境 C", "CY2028–29 ×0.6", PB["C"], "PL!")
+if "j1" in V37P:
+    put_case(nn, "情境 A（樂觀）", "顆數係數 1.0＋Scorpio X 與 PCIe 等份額高路徑（J1）", PB["A"], "PL!")
+    put_case(nn + 1, "情境 C（保守）", "CY2028–29 顆數 ×0.6＋份額低路徑（J1）", PB["C"], "PL!")
+else:
+    put_case(nn, "顆數情境 B", "CY2028 ×0.8、CY2029 ×0.85", PB["B"], "PL!")
+    put_case(nn + 1, "顆數情境 C", "CY2028–29 ×0.6", PB["C"], "PL!")
 assert nn + 3 < 40
 SENS_N = len(cases)
 SE.cell(nn + 3, 1, "讀法：FY2026 為錨點、各案例相同；顆數情境自 CY2028 起，FY2027 不受影響。Scorpio X 份額高／低是 FY2027–FY2028 EPS 最大的單一變數，其次是 PCIe 等份額與毛利率；顆數情境 C 主要打在 FY2028 起。稅率影響較小。")
@@ -1022,7 +1043,7 @@ _W_V = {"W": f"DCF!$C${RW_['paths']['W']['v12']}", "B": f"DCF!$C${RD_['paths']['
 _W = _wta_tp_t(SE, SB_W["end"] + 1, _ew, _eb, TPT, [(2027, "2/12"), (2028, "10/12")], "#,##0.00", floor=True, dcfmap=_W_V)
 _e = lambda s_, y: f"PL!{FCX[y]}{SUMR[(s_, 'eps')]}"
 _wta_table(SE, _t0, [("FY2027 EPS", "0.00"), ("FY2028 EPS", "0.00"), ("目標價", "#,##0.00")],
-           [("基準（Sens 主表基準＝情境 A；目標價＝情境加權）", [_e("A", 2027), _e("A", 2028), _W["tp_base"]]),
+           [(f"基準（Sens 主表基準＝情境 {SB0}；目標價＝情境加權）", [_e(SB0, 2027), _e(SB0, 2028), _W["tp_base"]]),
             ("情境 B（案例底）", [_e("B", 2027), _e("B", 2028), _W["tp_b"]]),
             ("Wattonomics 錨定（情境 B × wta）", [_ew(2027), _ew(2028), _W["tp_w"]])])
 # ================= v0.3（2026-11-05）：展示層改為個股 HTML 版面規格 v1.0（與標準版 DCF 同一版；docs/plan/個股HTML版面規格.md） =================
@@ -1139,6 +1160,9 @@ for _c in RD["A"]:   # v0.2 時期撰寫的重點觀察 2、3（數字為 v0.2�
 # px1105（2026-11-06）：情境名稱改回樂觀／基準／保守、舊版沿革列固定文字（本資料夾 px1105_post.py）
 import px1105_post  # noqa: E402
 print(px1105_post.apply(wb, a1_append="；v0.3.5：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"))
+# v0.3.6／v0.3.7（2026-11-09）：驗收報告採用項（本資料夾 v036_post.py）
+import v036_post  # noqa: E402
+print(v036_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), dict(STAGE=STAGE, V37=V37, V37P=V37P, OVR=OVR, PB=PB, SUMR=SUMR, FC=FC, SB0=SB0)))
 wb.save(sys.argv[1])
 if os.environ.get("ALAB_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
