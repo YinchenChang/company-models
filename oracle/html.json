@@ -26,20 +26,20 @@
      "type": "kv",
      "items": [
       [
-       "@Val!A80",
-       "@Val!C80"
-      ],
-      [
-       "@Val!A74",
-       "@Val!C74|n2"
+       "@Val!A81",
+       "@Val!C81"
       ],
       [
        "@Val!A75",
        "@Val!C75|n2"
       ],
       [
-       "@Val!A77",
-       "@Val!C77|sp1"
+       "@Val!A76",
+       "@Val!C76|n2"
+      ],
+      [
+       "@Val!A78",
+       "@Val!C78|sp1"
       ],
       [
        "@CF!A4",
@@ -135,45 +135,45 @@
      "type": "table",
      "caption": "情境驅動（三情境並排，進加權目標價；In 頁情境驅動對照）",
      "head": [
-      "@In!B206",
-      "@In!D206",
-      "@In!E206",
-      "@In!F206",
-      "@In!C206",
-      "@In!G206"
+      "@In!B215",
+      "@In!D215",
+      "@In!E215",
+      "@In!F215",
+      "@In!C215",
+      "@In!G215"
      ],
      "rows": [
       [
-       "@In!B207",
-       "@In!D207|n0",
-       "@In!E207|n0",
-       "@In!F207|n0",
-       "@In!C207",
-       "@In!G207|tag"
+       "@In!B216",
+       "@In!D216|n0",
+       "@In!E216|n0",
+       "@In!F216|n0",
+       "@In!C216",
+       "@In!G216|tag"
       ],
       [
-       "@In!B208",
-       "@In!D208|n0",
-       "@In!E208|n0",
-       "@In!F208|n0",
-       "@In!C208",
-       "@In!G208|tag"
+       "@In!B217",
+       "@In!D217|n0",
+       "@In!E217|n0",
+       "@In!F217|n0",
+       "@In!C217",
+       "@In!G217|tag"
       ],
       [
-       "@In!B209",
-       "@In!D209|n0",
-       "@In!E209|n0",
-       "@In!F209|n0",
-       "@In!C209",
-       "@In!G209|tag"
+       "@In!B218",
+       "@In!D218|n0",
+       "@In!E218|n0",
+       "@In!F218|n0",
+       "@In!C218",
+       "@In!G218|tag"
       ],
       [
-       "@In!B210",
-       "@In!D210|p0",
-       "@In!E210|p0",
-       "@In!F210|p0",
-       "@In!C210",
-       "@In!G210|tag"
+       "@In!B219",
+       "@In!D219|p0",
+       "@In!E219|p0",
+       "@In!F219|p0",
+       "@In!C219",
+       "@In!G219|tag"
       ]
      ]
     },
@@ -188,133 +188,133 @@
      ],
      "rows": [
       [
-       "@In!B15",
+       "@In!B16",
        [
-        "@In!E15|n0",
+        "@In!E16|n0",
         " ",
-        "@In!C15"
+        "@In!C16"
        ],
-       "@In!G15|tag",
+       "@In!G16|tag",
        [
         "已連網 AI MW（FY2029 年底）：",
         "@Thesis!G41|n0"
        ]
       ],
       [
-       "@In!B17",
+       "@In!B18",
        [
-        "@In!E17|n0",
+        "@In!E18|n0",
         " ",
-        "@In!C17"
+        "@In!C18"
        ],
-       "@In!G17|tag",
+       "@In!G18|tag",
        [
         "計費 MW（FY2029）：",
         "@Thesis!G45|n0"
        ]
       ],
       [
-       "@In!B52",
+       "@In!B53",
        [
-        "@In!E52|n3",
+        "@In!E53|n3",
         " ",
-        "@In!C52"
+        "@In!C53"
        ],
-       "@In!G52|tag",
+       "@In!G53|tag",
        [
         "每 MW 年收入（FY2029）：",
         "@Thesis!G53|n2"
        ]
       ],
       [
-       "@In!B44",
+       "@In!B45",
        [
-        "@In!E44|n2",
+        "@In!E45|n2",
         " ",
-        "@In!C44"
+        "@In!C45"
        ],
-       "@In!G44|tag",
+       "@In!G45|tag",
        [
         "AI 營運費用（FY2029）：",
         "@Thesis!G56|n1"
        ]
       ],
       [
-       "@In!B56",
+       "@In!B57",
        [
-        "@In!E56|n0",
+        "@In!E57|n0",
         " ",
-        "@In!C56"
+        "@In!C57"
        ],
-       "@In!G56|tag",
+       "@In!G57|tag",
        [
         "AI 機房租金（FY2029）：",
         "@Thesis!G57|n1"
        ]
       ],
       [
-       "@In!B91",
+       "@In!B92",
        [
-        "@In!E91|n1",
+        "@In!E92|n1",
         " ",
-        "@In!C91"
+        "@In!C92"
        ],
-       "@In!G91|tag",
+       "@In!G92|tag",
        [
         "AI 資本支出（FY2028）：",
         "@Thesis!F60|n1"
        ]
       ],
       [
-       "@In!B45",
+       "@In!B46",
        [
-        "@In!E45|n0",
+        "@In!E46|n0",
         " ",
-        "@In!C45"
+        "@In!C46"
        ],
-       "@In!G45|tag",
+       "@In!G46|tag",
        [
         "AI 折舊（FY2029）：",
         "@Thesis!G62|n1"
        ]
       ],
       [
-       "@In!B78",
+       "@In!B79",
        [
-        "@In!E78|p1",
+        "@In!E79|p1",
         " ",
-        "@In!C78"
+        "@In!C79"
        ],
-       "@In!G78|tag",
+       "@In!G79|tag",
        [
         "雲端與軟體分部利潤（FY2029）：",
         "@PL!F63|n1"
        ]
       ],
       [
-       "@In!B70",
+       "@In!B71",
        [
-        "@In!E70|p1",
+        "@In!E71|p1",
         " ",
-        "@In!C70"
+        "@In!C71"
        ],
-       "@In!G70|tag",
+       "@In!G71|tag",
        [
         "SaaS 營收（FY2032）：",
         "@PL!I53|n1"
        ]
       ],
       [
-       "@In!B92",
+       "@In!B93",
        [
-        "@In!E92|p1",
+        "@In!E93|p1",
         " ",
-        "@In!C92"
+        "@In!C93"
        ],
-       "@In!G92|tag",
+       "@In!G93|tag",
        [
         "客戶預付流入（FY2028）：",
-        "@CF!E58|n1"
+        "@CF!E59|n1"
        ]
       ]
      ]
@@ -737,9 +737,9 @@
        "name": "自由現金流（十億美元）",
        "fmt": "n1",
        "rows": {
-        "A": "@CF!D28:I28",
-        "B": "@CF!D64:I64",
-        "C": "@CF!D100:I100"
+        "A": "@CF!D29:I29",
+        "B": "@CF!D66:I66",
+        "C": "@CF!D103:I103"
        },
        "chart": true
       },
@@ -747,18 +747,18 @@
        "name": "自由現金流扣股利（十億美元）",
        "fmt": "n1",
        "rows": {
-        "A": "@CF!D30:I30",
-        "B": "@CF!D66:I66",
-        "C": "@CF!D102:I102"
+        "A": "@CF!D31:I31",
+        "B": "@CF!D68:I68",
+        "C": "@CF!D105:I105"
        }
       },
       {
        "name": "資本支出（十億美元）",
        "fmt": "n1",
        "rows": {
-        "A": "@CF!D27:I27",
-        "B": "@CF!D63:I63",
-        "C": "@CF!D99:I99"
+        "A": "@CF!D28:I28",
+        "B": "@CF!D65:I65",
+        "C": "@CF!D102:I102"
        },
        "chart": true
       },
@@ -766,9 +766,9 @@
        "name": "調整後槓桿（倍）",
        "fmt": "n2",
        "rows": {
-        "A": "@CF!D46:I46",
-        "B": "@CF!D82:I82",
-        "C": "@CF!D118:I118"
+        "A": "@CF!D47:I47",
+        "B": "@CF!D84:I84",
+        "C": "@CF!D121:I121"
        }
       }
      ]
@@ -791,67 +791,67 @@
      "fmt": "n1",
      "items": [
       {
-       "label": "@Val!A74",
-       "value": "@Val!C74",
+       "label": "@Val!A75",
+       "value": "@Val!C75",
        "series": 0
-      },
-      {
-       "label": "@Val!A72",
-       "value": "@Val!C72",
-       "series": 1
       },
       {
        "label": "@Val!A73",
        "value": "@Val!C73",
+       "series": 1
+      },
+      {
+       "label": "@Val!A74",
+       "value": "@Val!C74",
        "series": 2
       },
       {
-       "label": "@Val!A76",
-       "value": "@Val!C76",
+       "label": "@Val!A77",
+       "value": "@Val!C77",
        "series": 1
       }
      ],
      "ref": {
-      "label": "@Val!A75",
-      "value": "@Val!C75"
+      "label": "@Val!A76",
+      "value": "@Val!C76"
      }
     },
     {
      "type": "table",
      "grid": true,
      "head": [
-      "@Val!A69",
-      "@Val!C69",
-      "@Val!D69",
-      "@Val!E69"
+      "@Val!A70",
+      "@Val!C70",
+      "@Val!D70",
+      "@Val!E70"
      ],
      "rows": [
       [
-       "@Val!A70",
-       "@Val!C70:E70|n2"
+       "@Val!A71",
+       "@Val!C71:E71|n2"
       ],
       [
        "@Val!A30",
        "@Val!C30:E30|n2"
       ],
       [
-       "@Val!A64",
-       "@Val!C64:E64|n2"
+       "@Val!A65",
+       "@Val!C65:E65|n2"
       ]
      ]
     },
     {
      "type": "table",
-     "caption": "@Val!A68",
+     "caption": "@Val!A69",
      "grid": true,
      "head": [
-      "@Val!A71",
-      "@Val!C71",
-      "@Val!F71"
+      "@Val!A72",
+      "@Val!C72",
+      "@Val!F72"
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "72-86",
+      "rows": "73-87",
       "cols": [
        "A",
        "C",
@@ -863,22 +863,22 @@
        ""
       ],
       "row_fmt": {
-       "77": {
-        "C": "sp1"
-       },
        "78": {
         "C": "sp1"
        },
-       "84": {
+       "79": {
         "C": "sp1"
        },
        "85": {
+        "C": "sp1"
+       },
+       "86": {
         "C": "p1"
        },
-       "79": {
+       "80": {
         "C": ""
        },
-       "80": {
+       "81": {
         "C": ""
        }
       }
@@ -986,14 +986,14 @@
      "type": "table",
      "grid": true,
      "head": [
-      "@Val!A45",
-      "@Val!C45",
-      "@Val!D45",
-      "@Val!E45"
+      "@Val!A46",
+      "@Val!C46",
+      "@Val!D46",
+      "@Val!E46"
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "46-66",
+      "rows": "47-67",
       "cols": [
        "A",
        "C",
@@ -1007,27 +1007,27 @@
        "n1"
       ],
       "row_fmt": {
-       "62": {
+       "63": {
         "C": "n3",
         "D": "n3",
         "E": "n3"
-       },
-       "63": {
-        "C": "n2",
-        "D": "n2",
-        "E": "n2"
        },
        "64": {
         "C": "n2",
         "D": "n2",
         "E": "n2"
        },
-       "66": {
+       "65": {
+        "C": "n2",
+        "D": "n2",
+        "E": "n2"
+       },
+       "67": {
         "C": "p1",
         "D": "p1",
         "E": "p1"
        },
-       "57": {
+       "58": {
         "C": "p1",
         "D": "p1",
         "E": "p1"
@@ -1038,9 +1038,9 @@
     {
      "type": "note",
      "parts": [
-      "@Val!A88",
+      "@Val!A90",
       "：",
-      "@Val!C88"
+      "@Val!C90"
      ]
     }
    ]
@@ -1064,7 +1064,7 @@
      ],
      "rowgen": {
       "sheet": "Recon",
-      "rows": "4-50",
+      "rows": "4-53",
       "cols": [
        "A",
        "B",
@@ -1182,7 +1182,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準：輸入取低值",
      "sheet": "Sens",
-     "rows": "4-49",
+     "rows": "4-52",
      "label_col": "A",
      "value_col": "D",
      "fmt": "sp1"
@@ -1191,7 +1191,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準：輸入取高值",
      "sheet": "Sens",
-     "rows": "4-49",
+     "rows": "4-52",
      "label_col": "A",
      "value_col": "F",
      "fmt": "sp1"
@@ -1215,7 +1215,7 @@
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "4-49",
+      "rows": "4-52",
       "cols": [
        "A",
        "B",
@@ -1244,17 +1244,17 @@
     },
     {
      "type": "table",
-     "caption": "@Sens!A55",
+     "caption": "@Sens!A58",
      "grid": true,
      "head": [
-      "@Sens!A56",
-      "@Sens!C56",
-      "@Sens!D56",
-      "@Sens!E56"
+      "@Sens!A59",
+      "@Sens!C59",
+      "@Sens!D59",
+      "@Sens!E59"
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "57-59",
+      "rows": "60-62",
       "cols": [
        "A",
        "C",
@@ -1303,7 +1303,7 @@
       ],
       [
        "Tokenomics 快照版本",
-       "@In!H35"
+       "@In!H36"
       ]
      ]
     },

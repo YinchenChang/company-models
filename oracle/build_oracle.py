@@ -1,4 +1,4 @@
-# Oracle（ORCL）個股模型 v0.4.5（v0.4.1＝v0.4＋In 頁情境驅動對照；v0.4.2＝Sens 敏感度覆蓋（原則第 9 節）；v0.4.3＝Tokenomics 快照 v21.9；三者基準數值不變；v0.4.4＝2026-11-02 股債增資納入（In 頁 I2 節）；命題＋營收分部架構；docs/plan/個股模型原則_命題加營收分部.md）
+# Oracle（ORCL）個股模型 v0.4.7（v0.4.7＝Oracle v0.4.6 驗收報告採用項（Andy 2026-11-09 確認採用規劃書，J1–J4 預設）：kd／r_new 改用 2026-11 新債定價、非 AI 營運資金、λ 與經濟汰換壓力 Sens、評等邊界統一、tp_date 公式化；v0.4.5＝v0.4.1＝v0.4＋In 頁情境驅動對照；v0.4.2＝Sens 敏感度覆蓋（原則第 9 節）；v0.4.3＝Tokenomics 快照 v21.9；三者基準數值不變；v0.4.4＝2026-11-02 股債增資納入（In 頁 I2 節）；命題＋營收分部架構；docs/plan/個股模型原則_命題加營收分部.md）
 # 用法：python3 oracle/build_oracle.py raw.xlsx ；再以 LibreOffice headless 重算：
 #   soffice --headless --calc --convert-to xlsx --outdir oracle/dist raw.xlsx
 # 會計年度 FY(t)＝t−1 年 6 月～t 年 5 月（FY2027＝2026-06～2027-05）。金額：十億美元（US$B），MW 為 IT 口徑（MW-IT）。
@@ -17,6 +17,8 @@ TKS = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json
 TK = TKS["items"]
 SENS_F = os.path.join(HERE, "data", "sens_v04.json")
 SENS = json.load(open(SENS_F, encoding="utf-8")) if (os.path.exists(SENS_F) and not OVR) else None
+REV_F = os.path.join(HERE, "data", "reverse_v047.json")   # v0.4.7：反解（scripts/reverse_v047.py）
+REV = json.load(open(REV_F, encoding="utf-8")) if (os.path.exists(REV_F) and not OVR) else None
 # v0.4.4：環境變數 ORCL_WF_FREEZE＝JSON {情境: {欄: [投資級債, 新股, 高息債]}}：瀑布三列改填常數（只供 scripts/decomp_v044.py 拆解用）；成品不設。
 WF_FREEZE = json.loads(os.environ.get("ORCL_WF_FREEZE", "{}"))
 
@@ -63,6 +65,7 @@ CO = "oracle/legacy_v0.3/company.json"
 
 sec("A. 股價、股數")
 inp("px", "現價（2026-11-05 收盤）", "US$", None, 115.16, None, "Verified", "Yahoo Finance ORCL 日線（https://query1.finance.yahoo.com/v8/finance/chart/ORCL?range=5d&interval=1d，2026-11-06 擷取）：2026-11-05 收盤 115.16（11-04 收 123.73，−6.93%）；CNBC 11-05 盤勢「Oracle 跌近 7%」；StockAnalysis 115.19", "v0.4.6 由 2026-11-03 收盤 126.19（FinancialContent）更新（docs/reports/20261105_收盤價_個股換價來源.md）；現價經新股發行價（瀑布 eq／neweq）影響目標價")
+inp("px_date", "現價日（px 的收盤日）", "日期", None, "=DATE(2026,11,5)", None, "Verified", "同 px（Yahoo Finance 日線）", "README、Val 與 tp_date 以本列組字（原則第 10 節第 13、26 條）")
 inp("sh_out", "普通股流通在外（2026-09-07）", "十億股", None, 3.023736, None, "Interested-party", Q10 + " 封面（" + FACTS + " sh.out.20260907）", "Q1 FY27 已含 ATM 發行 1.41 億股；2026-11-04 交割的新股另列 ex_sh（I2 節）")
 inp("opt_dil", "稀釋股數加項（選擇權等）", "十億股", None, 0.034, None, "Derived", "Q1 FY27 稀釋加權 3.000 − 基本加權 2.966（" + FACTS + " sh.dilW／sh.basicW.fy27q1）", "各年沿用")
 inp("mcps_sh", "強制轉換特別股轉換股數（2029-01-15，FY2029 計入）", "十億股", None, 0.031238, None, "Derived", "Series D 50,000 股 × 轉換比率上限 624.7657（" + FACTS + " mcps.convShares）", "沿用 v0.3.1：一律轉股、取稀釋最大")
@@ -77,7 +80,7 @@ for s, p, c, d in (("A", 3333, 8778, 0), ("B", 2833, 8778, 3), ("C", 1000, 6284,
         "2,543 ＋ Oracle 承租五個 Stargate 站點 8.1 GW（Epoch 估計，設施）÷1.2 − 已交付 Abilene 515" + ("；× OpenAI 相關實現 60%（Project Jupiter 不可抗力，2026-09-24；區間 50–70%）" if s == "C" else ""), "沿用 v0.3.1（" + CO + " scenarios.mwPath.contracted）；上限以後不假設新簽站點")
     inp(f"delay_{s}", f"情境 {s}：建設延誤（計費路徑後移月數）", "月", None, d, None, "Assumed",
         "沿用 v0.3.1（" + CO + " scenarios.delayMonths）：保守 6（Jupiter 天然氣管線延後近 6 個月）、基準 3、積極 0", "敏感度 0／3／6／12 月")
-inp("u_bill", "計費比例（計費 MW ÷ 延誤後在役 MW）", "x", 0.90, 0.95, 1.00, "Assumed", "公司稱 AI 基礎設施利用率 97.9%（Q1 FY27 法說，Interested-party）；新交付產能約一季後才全額計費", "v0.3.1 以收斂比例 80–90% 處理（不同口徑）")
+inp("u_bill", "計費比例（計費 MW ÷ 延誤後在役 MW）", "x", 0.90, 0.95, 1.00, "Assumed", "定義：計費 MW ÷ 延誤後在役 MW（模型參數）。公司稱 AI 基礎設施利用率 97.9%（Q1 FY27 法說，Interested-party）——公司指標的分母與計費口徑未揭露，與本參數定義不同，只作參照，不直接當參數；新交付產能約一季後才全額計費", "v0.3.1 以收斂比例 80–90% 處理（不同口徑）；可證偽指標：公司每季揭露的 AI 利用率、RPO 轉營收速度（README 失效條件）")
 
 sec("C. 命題：世代組合（沿用 v0.3.1 fleet；Assumed）")
 for g, v, lo, hi in (("h100", 0.20, 0.10, 0.30), ("gb200", 0.55, 0.45, 0.70), ("gb300", 0.25, 0.10, 0.35)):
@@ -96,8 +99,8 @@ for g in GEN:
     inp(f"cx_{g}", f"每 MW IT 資本支出 IF_CapexIT｜{GNAME[g]}", "US$M／MW", None, round(tkv("IF_CapexIT", g), 4), None, "Derived", "同上 Interface!9 列（只含 IT；機房以租賃取得）", "沿用 v0.3.1 methodology.perMw.capexName")
 for g in GEN:
     inp(f"ox_{g}", f"每 MW 年營運費用（不含折舊；含電費）IF_OpexGW｜{GNAME[g]}", "US$M／MW·年", None, round(tkv("IF_OpexGW", g), 4), None, "Derived", "同上 IF_OpexGW（電費、IT 與廠房維護、人員、稅與保險）", "本版新增：AI 營運成本由 Tokenomics 正向推導（v0.3.1 用 EBITDAR 率）")
-inp("life_ai", "AI 設備折舊年限", "年", 5, 6, 6, "Derived", f"Tokenomics IF_DeprLifeIT｜GB300 基準 {TK['IF_DeprLifeIT']['values']['GB300 NVL72']['基準']:g}（高成本 {TK['IF_DeprLifeIT']['values']['GB300 NVL72']['高成本']:g}；{TKV}）", "Oracle 伺服器與網通設備耐用年限 6 年（10-K，" + FACTS + " ppe.serverLife）")
-inp("p_long", "長約價格證據：IREN–Microsoft GB300 五年約", "US$M／MW·年", 8.9073, 9.70, 12.7247, "Derived", "IREN 新聞稿 2025-11-03：$9.7bn ÷ 5 年 ÷ 200 MW（含 20% 預付）", "沿用 v0.3.1 pricing.anchorMultiple（低／高為 v0.3 的 k 0.70／1.00 × v5.27 錨換成固定價格）")
+inp("life_ai", "AI 設備折舊年限", "年", 5, 6, 6, "Derived", f"Tokenomics IF_DeprLifeIT｜GB300 基準 {TK['IF_DeprLifeIT']['values']['GB300 NVL72']['基準']:g}（高成本 {TK['IF_DeprLifeIT']['values']['GB300 NVL72']['高成本']:g}；{TKV}）。口徑：會計折舊年限，不等於 GPU 經濟競爭壽命；同一年限也驅動穩態汰換資本支出", "Oracle 伺服器與網通設備耐用年限 6 年（10-K，" + FACTS + " ppe.serverLife，會計估計）；Sens：5／7 年＋經濟汰換壓力 4 年（Assumed，待 Tokenomics 登錄，v0.4.7）")
+inp("p_long", "長約價格證據：IREN–Microsoft GB300 五年約", "US$M／MW·年", 8.9073, 9.70, 12.7247, "Derived", "IREN 新聞稿 2025-11-03：$9.7bn ÷ 5 年 ÷ 200 MW（新聞稿明寫 200 MW 為 critical IT load：已是 MW-IT 口徑；全套 GPU 雲端服務，與 OCI AI 同範圍；含 20% 預付）", "低／高沿用 v0.3.1 pricing.anchorMultiple（k 0.70／1.00 × v5.27 錨換成固定價格）。第二類比（v0.4.7）：Nebius–Microsoft 約 $17.4bn 至 2031 年（Nebius 6-K；Reuters 稱五年），Vineland 場址設計 IT 容量 300 MW、合約占用 MW 未揭露 → 若全數占用為 17.4 ÷ 5 ÷ 0.3＝11.6／MW-IT·年（下限：占用越少單價越高）；落在低／高區間內，區間不改。不拆 GPU、機房、電力等成分（公司未揭露，清單 X19）")
 inp("p_spot", "現貨價格證據：H100 Silicon Data 指數", "US$／GPU-hr", None, 2.82, None, "Verified", "Silicon Data H100 Index（2026-10-06）", "沿用 v0.3.1")
 inp("gh_h100", "每 GPU 小時持有成本 IF_GPUhrEcon｜Hopper H100", "US$／GPU-hr", None, round(TK["IF_GPUhrEcon"]["values"]["Hopper H100"]["基準"], 5), None, "Derived", f"Tokenomics {TKV} 快照", "—")
 inp("od_share", "隨需（現貨）占計費產能比例", "%", 0.0, 0.10, 0.20, "Assumed", "公司未揭露長約／隨需比例（找不到）；Oracle 以 take-or-pay 大型容量合約為主", "沿用 v0.3.1 pricing.anchorMultiple.onDemandShare")
@@ -105,7 +108,7 @@ inp("k_long", "長約定價倍數 k_長約（＝長約價 ÷ GB300 持有成本�
 inp("k_spot", "現貨定價倍數 k_現貨", "x", None, "=p_spot/gh_h100", None, "Derived", "H100 現貨指數 ÷ H100 每 GPU 小時持有成本", "—")
 inp("k_mix", "定價倍數 k（隨需占比加權）", "x", None, "=od_share*k_spot+(1-od_share)*k_long", None, "Derived", "k＝隨需占比 × k_現貨 ＋（1 − 隨需占比）× k_長約", "每 MW 年收入＝在役世代加權 IF_HoldEcon × k；不以 Oracle 營收、RPO、指引反推")
 inp("k_adj", "k 調整係數（敏感度用；基準 1）", "x", 0.9, 1.0, 1.2, "Assumed", "敏感度：k ×0.9／×1.2（1.2 約當 Oracle 自身合約隱含 k 1.22）", "—")
-inp("lam", "成長型資本支出提前比例 λ（次期新增產能的設備在本期付款）", "%", None, 0.35, None, "Assumed", "沿用 v0.3.1 defaults.lambda", "—")
+inp("lam", "成長型資本支出提前比例 λ（次期新增產能的設備在本期付款）", "%", 0.20, 0.35, 0.50, "Assumed", "沿用 v0.3.1 defaults.lambda；外部依據：未找到", "Sens 20%／50%（v0.4.7）；可證偽指標：10-Q 在建工程（CIP）÷ 次年新增產能的資本支出")
 
 sec("E. 命題：租賃（未起租 288B；沿用 v0.3.1 leases.uncommenced）")
 inp("lease_unc", "未起租租賃承諾（未折現）", "US$B", None, 288.0, None, "Interested-party", Q10 + " 附註 6（" + FACTS + " lease.uncommenced.fy27q1）", "FY27Q2 至 FY2029 起租、期限 15–19 年")
@@ -157,7 +160,7 @@ inp("debt_q1", "借款本金（FY27Q1 末）", "US$B", None, 125.0, None, "Inter
 inp("int_q1", "利息費用（Q1 FY27）", "US$B", None, "=Q!I26", None, "Interested-party", "Q 頁", "—")
 inp("ii_q1", "利息收入（Q1 FY27）", "US$B", None, 0.306, None, "Interested-party", PR_Q1 + "（" + FACTS + " is.interestIncome.fy27q1）", "Q 頁未列（新聞稿只有 Q1）")
 inp("r_old", "既有借款平均利率（Q1 利息費用年化 ÷ 本金）", "%", None, "=int_q1*4/debt_q1", None, "Derived", PR_Q1 + "：Q1 利息費用 1.428", "—")
-inp("r_new", "新增投資級債利率", "%", 0.05, 0.058, 0.0811, "Assumed", "沿用 v0.3.1 新債票面 5.8%", "高＝6.55% 2046 票據殖利率 8.11%（2026-10-01，Benzinga）")
+inp("r_new", "新增投資級債利率（瀑布補缺口的新債）", "%", 0.07, "=ex_nt_r", 0.0865, "Derived", "v0.4.7（J1）：2026-11-02 五檔新債面額加權票息（發行即市場價；In 頁 ex_nt_r）", "舊值 5.8%（v0.3.1 新債票面）只作歷史對照；Sens 低／高＝本批最短 2029 年 7.00%／最長 2046 年 8.65%")
 inp("r_junk", "高息債利率", "%", None, 0.12, None, "Assumed", "沿用 v0.3.1 defaults.junkRate", "—")
 inp("r_cash", "現金利息收益率", "%", None, "=ii_q1*4/cashonly_q1", None, "Derived", PR_Q1 + "：Q1 利息收入 0.306 ÷ 期末現金 36.369 × 4", "—")
 inp("cashonly_q1", "現金與約當現金（FY27Q1 末）", "US$B", None, 36.369, None, "Interested-party", Q10 + "（" + FACTS + " bs.cash.fy27q1）", "—")
@@ -177,6 +180,14 @@ inp("pref29", "特別股股利：FY2029", "US$B", None, 0.244, None, "Derived", 
 inp("cfo_q1", "營運現金流（Q1 FY27）", "US$B", None, 23.103, None, "Interested-party", Q10 + "（含客戶預付 11.363）", "FY27 全年＝Q1 實績＋Q2–Q4 模型")
 inp("capex_q1", "資本支出（Q1 FY27）", "US$B", None, 28.499, None, "Interested-party", Q10, "—")
 inp("div_q1", "股利支付（普通股＋特別股，Q1 FY27）", "US$B", None, 1.565, None, "Interested-party", Q10, "—")
+K10CF = "Oracle FY2026 10-K 合併現金流量表（https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/R8.htm）"
+for yy, v_, det in ((2024, -0.488, "應收 −0.965、預付及其他資產 ＋0.542、應付及其他負債 −0.594、應付所得稅 −0.127、其他遞延收入 ＋0.656"),
+                    (2025, -1.500, "應收 −0.653、預付及其他資產 ＋0.266、應付及其他負債 −0.608、應付所得稅 −0.659、其他遞延收入 ＋0.154"),
+                    (2026, -0.457, "應收 −2.190、預付及其他資產 ＋2.179、應付及其他負債 −0.240、應付所得稅 −0.256、其他遞延收入 ＋0.050")):
+    inp(f"h_dnwc{yy % 100}", f"歷史：營運資產負債變動的現金效果 FY{yy}（不含有重大財務組成的客戶預付）", "US$B", None, v_, None, "Verified", K10CF + "：" + det, "負＝營運資金增加（耗用現金）；客戶預付 FY2026 ＋4.592 另列（prepay_*）")
+for yy, v_, src_ in ((2023, 49.954, "Oracle FY2024 10-K 損益表"), (2024, 52.961, K10), (2025, 57.399, K10), (2026, 67.357, K10)):
+    inp(f"h_rev{yy % 100}", f"歷史：合併營收 FY{yy}", "US$B", None, v_, None, "Verified", src_ + "（" + FACTS + " is.rev.total）" if yy > 2023 else src_, "—")
+inp("nwc_r", "營運資金增加 ÷ 營收增量（預付除外；公司整體）", "%", "=MIN(-h_dnwc24/(h_rev24-h_rev23),-h_dnwc25/(h_rev25-h_rev24),-h_dnwc26/(h_rev26-h_rev25))", "=-(h_dnwc24+h_dnwc25+h_dnwc26)/(h_rev26-h_rev23)", "=MAX(-h_dnwc24/(h_rev24-h_rev23),-h_dnwc25/(h_rev25-h_rev24),-h_dnwc26/(h_rev26-h_rev25))", "Derived", "FY2024–FY2026 合計：營運資金增加 ÷ 營收增量（DCF 標準規格：FCFF 扣營運資金增加；v0.4.7 新增，驗收報告 M5）", "低／高＝三年各年比率的最小／最大；營收增量扣除預付認列（非現金營收）")
 
 PR_EX = "Oracle 新聞稿 Oracle Announces Pricing of $20 Billion of Common Stock and Senior Notes（PRNewswire 2026-11-02，https://www.prnewswire.com/news-releases/oracle-announces-pricing-of-20-billion-of-common-stock-and-senior-notes-302927244.html）"
 sec("I2. 2026-11-02 股債增資（已發生；2026-11-04 交割＝FY27Q2；評價日 2026-08-31 不動，以 pro forma 計入）")
@@ -201,11 +212,11 @@ inp("beta_r1", "原始 Beta 來源 1（5 年；Seeking Alpha／Yahoo）", "x", N
 inp("beta_r2", "原始 Beta 來源 2（5 年月資料）", "x", None, 1.712, None, "Interested-party", "oracle/data/oracle_facts_20261022.json val.beta.cand1（2026-10 初）", "—")
 inp("beta", "Beta（Blume 調整：0.67 × 原始＋0.33，兩來源中位數）", "x", 1.2, "=MEDIAN(0.67*beta_r1+0.33,0.67*beta_r2+0.33)", 2.0, "Derived", "修正一（F4）：v0.4 原為原始 1.77", "Sens：1.5／2.0")
 inp("erp", "股權風險溢酬", "%", None, 0.05, None, "Assumed", "沿用 v0.3.1", "—")
-inp("kd", "稅前債務成本（約 10 年期）", "%", 0.05, "=r_new", 0.0811, "Assumed", "修正一（F4）：取約 10 年期口徑＝新增投資級債利率 5.8%（2026-02 發行 5.70% 2036 票據票面相近）；ORCL 10 年期票據現行殖利率：未找到", "高＝6.55% 2046 長債殖利率 8.11%（v0.4 原值）")
+inp("kd", "稅前債務成本（約 10 年期）", "%", 0.07, "=ex_c37", 0.0865, "Derived", "v0.4.7（J1）：2026-11-02 發行 8.000% 2037 年到期票據（最接近 10 年期；發行即市場價，In 頁 ex_c37）", "舊值 5.8%（2026-02 發行 5.70% 2036 票據票面）只作歷史對照；Sens 低／高＝本批 2029 年 7.00%／2046 年 8.65%")
 inp("wacc_adj", "WACC 調整（敏感度用；基準 0）", "pt", -0.01, 0.0, 0.01, "Assumed", "Sens：±1 個百分點、WACC × g 格", "—")
 inp("ronic_adj", "永續期新投資報酬率 RONIC − WACC（基準 0）", "pt", None, 0.0, 0.05, "Assumed", "修正一（F5）：RONIC＝WACC（永續成長不創造價值）", "Sens：WACC＋5pt")
 inp("val_date", "評價日（FY27Q1 季末）", "日期", None, "=DATE(2026,8,31)", None, "Verified", "FY27Q1 10-Q 資產負債表日", "—")
-inp("tp_date", "目標價時點（約 12 個月後）", "日期", None, "=DATE(2027,10,31)", None, "Assumed", "今天 2026-10-27 ＋ 約 12 個月", "—")
+inp("tp_date", "目標價時點（現價日＋12 個月）", "日期", None, "=EDATE(px_date,12)", None, "Derived", "現價日＋12 個月（公式；原則第 10 節第 26 條，v0.4.7）", "評價日價值以 ke 推到本日、扣期間股利（不需驗收清單 X20）")
 inp("fy28_end", "FY2028 年底（分部加總錨定日）", "日期", None, "=DATE(2028,5,31)", None, "Verified", "會計年度 5 月底", "—")
 inp("tp_g", "永續成長率", "%", 0.02, 0.03, 0.04, "Assumed", "沿用 v0.3.1 valuation.g", "—")
 inp("w_dcf", "目標價中 DCF 的權重（其餘為分部加總）", "%", 0.3, 0.5, 0.7, "Assumed", "工作單預設 50%（與 AI半導體 v2「DCF＋Comparable 各半」一致；Comparable 在分部層做）", "Andy 可改")
@@ -266,6 +277,7 @@ for srow in rows:
             if not (isinstance(v, str) and v.startswith("=")): c.font = BLUE
             if unit in ("%", "pt"): c.number_format = "0.0%"
             elif unit == "x": c.number_format = "0.000"
+            elif unit == "日期": c.number_format = "yyyy-mm-dd"
     IN.cell(r, 7, tag); IN.cell(r, 8, s1); IN.cell(r, 9, s2)
     dn(key, f"In!$E${r}")
     if lo is not None: dn(key + "_lo", f"In!$D${r}")
@@ -744,7 +756,7 @@ for s in SC:
             CF[f"{c}{r}"] = v; CF[f"{c}{r}"].number_format = fmt
         if note: CF.cell(r, 10, note)
         r += 1
-    rows_spec = ["ni", "da", "sbc", "ppin", "pprec", "cfo", "cxai", "cxna", "cx", "fcf", "div", "fcfd", "L", "cash0", "flow", "exf", "need", "ebr", "lease", "cap", "ig", "eq", "hy", "cash1", "igc", "hyc", "debt", "lev", "sh0", "neweq", "sh1", "shd", "int", "ii"]
+    rows_spec = ["ni", "da", "sbc", "ppin", "pprec", "nwc", "cfo", "cxai", "cxna", "cx", "fcf", "div", "fcfd", "L", "cash0", "flow", "exf", "need", "ebr", "lease", "cap", "ig", "eq", "hy", "cash1", "igc", "hyc", "debt", "lev", "sh0", "neweq", "sh1", "shd", "int", "ii"]
     base = r
     RR = {k: base + i for i, k in enumerate(rows_spec)}
     R.update(RR)
@@ -769,9 +781,12 @@ for s in SC:
             f_ += f"+{x}{F('ppin')}/prepay_yrs*MAX(0,MIN({k_},prepay_yrs)-MIN({k_ - 1},prepay_yrs))"
         v[c] = f_
     crow_("pprec", "預付認列（非現金營收，自營運現金扣除）", v, note="期初餘額自 FY27Q2 起、各年新流入自次年起，皆依 prepay_yrs 年直線（一般化）")
-    crow_("cfo", "營運現金流", {"C": "=Q!L28", "D": f"=cfo_q1+(D{F('ni')}-Q!I27)+(D{F('da')}-Q!I24)+(D{F('sbc')}-sbc_q1)+D{F('ppin')}-D{F('pprec')}",
-                               **{yc(y): f"={yc(y)}{F('ni')}+{yc(y)}{F('da')}+{yc(y)}{F('sbc')}+{yc(y)}{F('ppin')}-{yc(y)}{F('pprec')}" for y in range(2028, 2033)}},
-         note="FY2027＝Q1 實績 23.103＋Q2–Q4；營運資金變動除預付外不建模")
+    crow_("nwc", "營運資金增加（預付除外；公司整體）", {"D": f"=nwc_r*(PL!D{P['rev']}-D{F('pprec')}/D{F('L')}-PL!C{P['rev']})*D{F('L')}",
+                                              **{yc(y): f"=nwc_r*((PL!{yc(y)}{P['rev']}-{yc(y)}{F('pprec')})-(PL!{yc(y-1)}{P['rev']}-{yc(y-1)}{F('pprec')}/{yc(y-1)}{F('L')}))" for y in range(2028, 2033)}},
+          note="v0.4.7：nwc_r ×（營收 − 預付認列）的年增量；FY2027 只計 Q2–Q4（× 0.75），Q1 實績已在營運現金流")
+    crow_("cfo", "營運現金流", {"C": "=Q!L28", "D": f"=cfo_q1+(D{F('ni')}-Q!I27)+(D{F('da')}-Q!I24)+(D{F('sbc')}-sbc_q1)+D{F('ppin')}-D{F('pprec')}-D{F('nwc')}",
+                               **{yc(y): f"={yc(y)}{F('ni')}+{yc(y)}{F('da')}+{yc(y)}{F('sbc')}+{yc(y)}{F('ppin')}-{yc(y)}{F('pprec')}-{yc(y)}{F('nwc')}" for y in range(2028, 2033)}},
+         note="FY2027＝Q1 實績 23.103＋Q2–Q4；v0.4.7 起扣營運資金增加（上一列）")
     crow_("cxai", "資本支出：AI（Thesis）", {yc(y): f"=Thesis!{tc(y)}{T['cx']}" for y in FY})
     crow_("cxna", "資本支出：非 AI", {"D": f"=capex_g27-D{F('cxai')}", **{yc(y): f"=nonai_cx*(PL!{yc(y)}{P['rev']}-Thesis!{tc(y)}{T['rev']})" for y in range(2028, 2033)}})
     crow_("cx", "資本支出合計", {"C": "=Q!L29", **{yc(y): f"={yc(y)}{F('cxai')}+{yc(y)}{F('cxna')}" for y in FY}}, note="FY2027＝公司指引中點 92.5（含 Q1 實績 28.499）")
@@ -852,7 +867,7 @@ CF.freeze_panes = "C4"
 # Val：DCF 50%＋分部加總（SOTP）50%
 # =====================================================================================
 V = wb.create_sheet("Val")
-V["A1"] = "Val — 目標價（約 12 個月後，2027-10）＝DCF（UFCF、WACC）50%＋分部加總 50%（OCI AI 以 AI 模組自身 DCF 計，同業倍數版列對照；SaaS 與 OCI 非 AI × 軟體同業倍數；授權、支援、硬體、服務 × 成熟軟體倍數）；情境權重 A 25%／B 50%／C 25%（判斷預設，Andy 可改）"
+V["A1"] = "Val — 目標價（現價日＋12 個月；日期與期間見第 12、15 列）＝DCF（UFCF、WACC）50%＋分部加總 50%（OCI AI 以 AI 模組自身 DCF 計，同業倍數版列對照；SaaS 與 OCI 非 AI × 軟體同業倍數；授權、支援、硬體、服務 × 成熟軟體倍數）；情境權重 A 25%／B 50%／C 25%（判斷預設，Andy 可改）"
 V["A2"] = "評價日 2026-08-31（FY27Q1 資產負債表）；v0.4.4 起股數、現金、借款以 2026-11-04 交割的股債增資作 pro forma（FY27Q2 資產負債表尚未公布）。SBC 口徑（F2）：DCF 以 GAAP 營業利益計（SBC 視為現金成本、股數不另計稀釋）；分部加總的 EBITDA 加回 SBC（與同業倍數同口徑）。淨借款含融資租賃 9.185；營業租賃不列（UFCF 已扣租金）。永續期：RONIC＝WACC（F5），AI 折舊＝穩態汰換"
 hdr(V, 3, ["項目", "單位", "數值", "", "", "說明"])
 def vrow(row, lab, unit, val, fmt="#,##0.00", note=None):
@@ -860,7 +875,7 @@ def vrow(row, lab, unit, val, fmt="#,##0.00", note=None):
     if val is not None:
         V.cell(row, 3, val).number_format = fmt
     if note: V.cell(row, 6, note)
-vrow(4, "現價（2026-11-05 收盤）", "US$", "=px", note="In 頁 px（Yahoo Finance）；v0.4.5 為 2026-11-03 收盤 126.19、v0.4.3 為 2026-10-26 收盤 126.06")
+vrow(4, "現價", "US$", "=px", note='="In 頁 px（"&TEXT(px_date,"yyyy-mm-dd")&" 收盤，Yahoo Finance）；v0.4.5 為 2026-11-03 收盤 126.19、v0.4.3 為 2026-10-26 收盤 126.06"')
 vrow(5, "股權成本 ke（CAPM：rf＋β × ERP；β 為 Blume 調整）", "%", "=rf+beta*erp", "0.00%")
 vrow(6, "稅後債務成本（約 10 年期）", "%", "=kd*(1-etr)", "0.00%")
 vrow(7, "股權市值（現價 ×（流通股＋2026-11 新股））", "US$B", "=px*(sh_out+ex_sh)", "#,##0.0")
@@ -868,7 +883,8 @@ vrow(8, "負債（借款本金＋2026-11 新票據＋融資租賃）", "US$B", "
 vrow(9, "WACC（＋wacc_adj，敏感度用，基準 0）", "%", "=(C7*C5+C8*C6)/(C7+C8)+wacc_adj", "0.00%", "修正一（F4）：Blume β、約 10 年期 kd、負債含融資租賃（強制轉換特別股視為股權）")
 vrow(10, "淨借款（借款＋新票據＋融資租賃 − 現金 − 增資淨額；FY27Q1 末 pro forma）", "US$B", "=debt_q1+ex_nt_par+finlease_q1-cash_q1-ex_eq_net-ex_nt_net", "#,##0.0", "修正一：含融資租賃（F6）；v0.4.4：加 2026-11-04 增資（票據面額 10.0 − 票據淨額 10.0 − 新股淨額 9.9）")
 vrow(11, "完全稀釋股數（流通＋2026-11 新股＋選擇權＋強制轉換特別股）", "十億股", "=sh_out+ex_sh+opt_dil+mcps_sh", "0.000")
-vrow(12, "目標價時點距評價日", "年", "=(tp_date-val_date)/365.25", "0.000", "In 頁 val_date → tp_date")
+vrow(12, "折現期間：目標價時點距評價日", "年", "=(tp_date-val_date)/365.25", "0.000", "In 頁 val_date → tp_date（評價日＝最近一季資產負債表日）")
+vrow(15, "持有期間：目標價時點距現價日", "年", "=(tp_date-px_date)/365.25", "0.000", '="現價日 "&TEXT(px_date,"yyyy-mm-dd")&" → 目標價時點 "&TEXT(tp_date,"yyyy-mm-dd")&"；上檔空間為此期間的報酬，非年化（原則第 10 節第 5 條）"')
 vrow(13, "FY2028 年底距目標價時點", "年", "=(fy28_end-tp_date)/365.25", "0.000", "分部加總錨定日 → 目標價時點")
 vrow(14, "永續期新投資報酬率 RONIC", "%", "=C9+ronic_adj", "0.00%", "RONIC＝WACC：永續成長不創造價值（F5）；Sens：WACC＋5pt")
 for nm, ref in (("ke", "Val!$C$5"), ("wacc", "Val!$C$9"), ("netdebt0", "Val!$C$10"), ("shfd", "Val!$C$11"), ("t_tp", "Val!$C$12"), ("t_28", "Val!$C$13"), ("ronic", "Val!$C$14")):
@@ -883,9 +899,9 @@ for y in FY:
     for j, s in enumerate(SC):
         P = PR_[s]; T = TR[s]; C_ = CR_[s]; c = yc(y)
         if y == 2027:
-            f = f"=(PL!D{P['oi']}-Q!I21)*(1-etr)+(PL!D{P['da']}-Q!I24)-(CF!D{C_['cx']}-capex_q1)+CF!D{C_['ppin']}-CF!D{C_['pprec']}"
+            f = f"=(PL!D{P['oi']}-Q!I21)*(1-etr)+(PL!D{P['da']}-Q!I24)-(CF!D{C_['cx']}-capex_q1)+CF!D{C_['ppin']}-CF!D{C_['pprec']}-CF!D{C_['nwc']}"
         else:
-            f = f"=PL!{c}{P['oi']}*(1-etr)+PL!{c}{P['da']}-CF!{c}{C_['cx']}+CF!{c}{C_['ppin']}-CF!{c}{C_['pprec']}"
+            f = f"=PL!{c}{P['oi']}*(1-etr)+PL!{c}{P['da']}-CF!{c}{C_['cx']}+CF!{c}{C_['ppin']}-CF!{c}{C_['pprec']}-CF!{c}{C_['nwc']}"
         V.cell(r, 3 + j, f).number_format = "#,##0.00"
     DC[y] = r; r += 1
 V.cell(r, 2, None)
@@ -940,8 +956,10 @@ V.cell(r, 1, "其餘業務同業（軟體）：NTM EV/EBITDA（SBC 加回口徑�
 SW0 = r
 for nm, tk, m in (("Microsoft", "MSFT", "=pm_msft"), ("SAP", "SAP", "=pm_sap"), ("Salesforce", "CRM", "=pm_crm"), ("Adobe", "ADBE", "=pm_adbe"), ("ServiceNow", "NOW", "=pm_now")):
     V.cell(r, 1, nm); V.cell(r, 2, tk); c = V.cell(r, 4, m); c.number_format = "0.00"
-    V.cell(r, 5, "2026-10-07"); V.cell(r, 6, f"oracle/data/oracle_facts_20261007.json val.peer.{tk.lower()}（EV ÷ 共識 EBITDA 時間加權，Derived；2026-10-22 找不到新值）"); r += 1
+    V.cell(r, 5, "2026-10-07"); V.cell(r, 6, f"oracle/data/oracle_facts_20261007.json val.peer.{tk.lower()}（EV ÷ 共識 EBITDA 時間加權，Derived；2026-10-22 找不到新值）；會計口徑："
+                                     + ("IFRS 16（租賃費用不在 EBITDA 內）" if tk == "SAP" else "US GAAP（營業租賃費用在 EBITDA 內）")); r += 1
 SW_PEERS = (SW0, r - 1)
+V.cell(r, 1, "  口徑（v0.4.7）：本模型 EV 只含融資租賃、OCI AI EBITDA 為租金後（US GAAP 營業租賃），與 US GAAP 同業一致；中位數恰為 SAP（IFRS 16），換成 US GAAP 口徑時 SAP 倍數會略高，量化：未取得（租賃負債規模未查）").font = GREY; r += 1
 for _r in range(4, IN.max_row + 1):
     k_ = IN.cell(_r, 1).value
     if k_ == "mult_oci" and "mult_oci" not in OVR: IN.cell(_r, 5).value = f"=MEDIAN(Val!D{OCI_PEERS[0]}:D{OCI_PEERS[1]})"
@@ -999,21 +1017,23 @@ def cr(k, lab, unit, f, fmt="#,##0.00", note=None, d=None, e=None, fill=False):
     CON[k] = r; r += 1
 wsum = lambda row: f"=wA*C{row}+wB*D{row}+wC*E{row}"
 cr("dcf", "DCF 目標價（情境加權）", "US$", wsum(DC["v12"]))
-cr("comp", "Comparable 目標價（市場主流同業法）", "US$", wsum(SO_["v12"]), note="分部加總（OCI AI 以 AI 模組 DCF；SaaS 與 OCI 非 AI × 軟體倍數；傳統業務 × 成熟軟體倍數）情境加權")
+cr("comp", "Comparable 目標價（市場主流同業法）：分部加總混合版——OCI AI 以 AI 模組 DCF", "US$", wsum(SO_["v12"]), note="不是純同業法（v0.4.7 改名，驗收報告 H3）：OCI AI 以 AI 模組 DCF（neocloud 同業只有 2 家，不符「至少 3 家」）；SaaS 與 OCI 非 AI × 軟體倍數；傳統業務 × 成熟軟體倍數；情境加權。純倍數版見下方「對照」列")
 cr("tp", "目標價（DCF 與 Comparable 加權）", "US$", f"=w_dcf*C{r-2}+(1-w_dcf)*C{r-1}", fill=True, note='="DCF 權重 "&TEXT(w_dcf,"0%")&"、分部加總權重 "&TEXT(1-w_dcf,"0%")&"；情境權重 A／B／C "&TEXT(wA,"0%")&"／"&TEXT(wB,"0%")&"／"&TEXT(wC,"0%")')
 cr("px", "現價（2026-11-05）", "US$", "=px", note="v0.4.5：2026-11-03 收盤 126.19；v0.4.3：2026-10-26 收盤 126.06")
 cr("cons", "市場共識目標價", "US$", "=cons_tp", note="S&P（43 家平均，2026-10-20）；Interested-party")
 cr("up", "上檔空間：加權目標價", "%", f"=C{CON['tp']}/px-1", "0.0%", fill=True)
 cr("upc", "上檔空間：Comparable 目標價", "%", f"=C{CON['comp']}/px-1", "0.0%")
-cr("tier", "上檔空間級距", "—", f'=IF(C{CON["up"]}>0.5,"大於 50%",IF(C{CON["up"]}>0.25,"25%–50%",IF(C{CON["up"]}>=0,"0%–25%",IF(C{CON["up"]}>=-0.25,"0%～−25%",IF(C{CON["up"]}>=-0.5,"−25%～−50%","小於 −50%")))))', "@")
-cr("rec", "投資建議", "—", f'=IF(C{CON["up"]}>=0.5,"強力買進",IF(C{CON["up"]}>=0.25,"買進",IF(C{CON["up"]}>-0.25,"中立",IF(C{CON["up"]}>-0.5,"放空","強力放空"))))', "@", fill=True,
-   note="五級固定規則：≥ +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、≤ −50% 強力放空")
+cr("tier", "上檔空間級距", "—", f'=IF(C{CON["up"]}>0.5,"大於 50%",IF(C{CON["up"]}>0.25,"25%–50%",IF(C{CON["up"]}>=0,"0%–25%",IF(C{CON["up"]}>=-0.25,"0%～−25%",IF(C{CON["up"]}>=-0.5,"−25%～−50%","小於 −50%")))))', "@", note="邊界與投資建議、目標價總表工具（tools/target_summary/build_summary.py）相同（v0.4.7，原則第 10 節第 24 條）")
+cr("rec", "投資建議", "—", f'=IF(C{CON["up"]}>0.5,"強力買進",IF(C{CON["up"]}>0.25,"買進",IF(C{CON["up"]}>=-0.25,"中立",IF(C{CON["up"]}>=-0.5,"放空","強力放空"))))', "@", fill=True,
+   note="五級固定規則：> +50% 強力買進、+25%～+50%（含 +50%）買進、−25%～+25%（含兩端）中立、−50%～−25%（含 −50%）放空、< −50% 強力放空；邊界與目標價總表工具相同（v0.4.7）")
 cr("band", "價格帶（DCF 不如預期～順利）", "US$", f"=E{DC['v12']}", d=(f"=C{DC['v12']}", "#,##0.00"), note="C＝情境 C 的 DCF 價值（悲觀情境價）、D＝情境 A 的 DCF 價值（皆推到 12 個月後）")
 cr("bear", "悲觀情境價（情境 C DCF）", "US$", f"=E{DC['v12']}")
 cr("dcfvs", "DCF 情境價值推到 12 個月後（A／B／C）", "US$", f"=C{DC['v12']}", d=(f"=D{DC['v12']}", "#,##0.00"), e=(f"=E{DC['v12']}", "#,##0.00"))
 cr("gcons", "與市場共識目標價的差距", "%", f"=C{CON['tp']}/cons_tp-1", "0.0%")
 cr("tvsh", "DCF 永續價值占比（情境 B）", "%", f"=D{DC['tvsh']}", "0.0%")
 cr("compm", "對照：加權目標價（分部加總的 OCI AI 改用同業倍數）", "US$", f"=w_dcf*C{CON['dcf']}+(1-w_dcf)*({wsum(SO_['v12m'])[1:]})", note="v0.4 原口徑；差額＝AI 資本密集度（F3）")
+cr("aiw", "分部加總中 OCI AI（AI 模組 DCF）占加權目標價", "%", f"=(1-w_dcf)*(wA*C{SO_['ev_oci']}/C{SO_['sh']}+wB*D{SO_['ev_oci']}/D{SO_['sh']}+wC*E{SO_['ev_oci']}/E{SO_['sh']})/(1+ke)^t_28/C{CON['tp']}", "0.0%",
+   note="v0.4.7（驗收報告 H3）：DCF 半邊另含全部 AI 現金流（與其餘業務不可分離），所以 AI 模組 DCF 對目標價的實際影響大於本列；方法權重 50／50 不等於兩個獨立估值")
 cr("wchk", "檢查：情境權重合計（應為 1）", "x", "=ROUND(wA+wB+wC,6)", "0.000")
 cr("meth", "目標價方法", "—", "DCF（UFCF、WACC、永續 g、RONIC＝WACC）與分部加總（FY2029 EBITDA × 同業前瞻倍數；OCI AI 以 AI 模組 DCF）各半；情境 A／B／C 權重 25／50／25。偏誤方向：OCI 同業只有兩家（不符合至少三家，只作對照）；傳統業務倍數取成熟軟體兩家；永續價值占 DCF 比例高，對 WACC 與 g 敏感（Sens 頁）", "@")
 V.column_dimensions["A"].width = 62; V.column_dimensions["B"].width = 12
@@ -1079,6 +1099,16 @@ RC.cell(r, 1, "v0.3.1 情境目標價（積極／基準／保守）"); RC.cell(r
 for c in (3, 5, 7): RC.cell(r, c).number_format = "#,##0.00"
 RC.cell(r, 10, "v0.3.1：DCF 45%＋分部 EV/EBITDA 55%（OCI 6x、傳統事業 15.02x，錨定 FY29）"); r += 1
 RC.cell(r, 1, "差異來源（定性；數字拆解見報告第 6 節）"); RC.cell(r, 10, "(1) 營收結構：SaaS、授權、支援、硬體、服務各自路徑，OCI 拆 AI／非 AI；(2) AI 折舊與租金進分部利潤與 EPS；(3) 評價法：DCF 50%＋分部加總 50%、OCI 倍數改為同業中位數、情境權重 25／50／25；(4) 市場資料：現價 129.13 → 126.06"); r += 1
+RC.cell(r, 1, "E. 反解（v0.4.7；scripts/reverse_v047.py 以整本重算求解，只動 p_long、其餘基準不變；原則第 10 節第 4 條）").font = BOLD; r += 1
+REVR = {}
+if REV:
+    for k_, lab_, note_ in (("eq_px", "支持現價所需的長約價格 p_long（加權目標價＝現價）", "目標價等於現價的點，不是評等門檻"),
+                            ("neutral", "評等由放空翻為中立所需的 p_long（上檔空間＝−25%）", "評等真正翻轉的條件（README 失效條件 (1)）")):
+        RC.cell(r, 1, lab_); RC.cell(r, 2, "=p_long").number_format = "0.00"; RC.cell(r, 3, REV[k_]).number_format = "0.00"; RC.cell(r, 3).font = BLUE
+        RC.cell(r, 4, f"=C{r}/B{r}-1").number_format = "0.0%"; RC.cell(r, 9, f"重算日期 {REV['date']}；B＝現行 p_long、C＝反解值（US$M／MW-IT·年）、D＝需變動幅度"); RC.cell(r, 10, note_)
+        REVR[k_] = r; r += 1
+else:
+    RC.cell(r, 1, "未重算（data/reverse_v047.json 不存在）"); r += 1
 RC.column_dimensions["A"].width = 62
 for c in "BCDEFGH": RC.column_dimensions[c].width = 12
 RC.column_dimensions["I"].width = 36; RC.column_dimensions["J"].width = 80
@@ -1167,10 +1197,10 @@ RD = wb.create_sheet("README", 0)
 B_ = PR_["B"]; TB = TR["B"]; CB = CR_["B"]
 up = f"Val!C{CON['up']}"; tp = f"Val!C{CON['tp']}"
 lines = [
-    ("Oracle（ORCL）個股模型 v0.4.6（命題＋營收分部架構；v0.4.6 換現價 2026-11-05 收盤 115.16；2026-11-02 股債增資納入〔v0.4.4〕；Tokenomics 快照 " + TKV + "〔v0.4.5，基準數值不變〕）　2026-11-06", True),
+    ("Oracle（ORCL）個股模型 v0.4.7（命題＋營收分部架構；v0.4.7 採用 v0.4.6 驗收報告：kd／r_new 改用 2026-11 新債定價、非 AI 營運資金、評等邊界統一；v0.4.6 換現價 2026-11-05 收盤 115.16；2026-11-02 股債增資納入〔v0.4.4〕；Tokenomics 快照 " + TKV + "〔v0.4.5，基準數值不變〕）　2026-11-09", True),
     ("命題：OCI 已簽約的 backlog（RPO 約 6,640 億美元，約一半來自 OpenAI／Stargate）能否以高於資金成本的報酬轉成營收與現金，同時不把資產負債表撐破。命題模組（已連網 MW × 每 MW 年收入〔Tokenomics 持有成本 × 定價倍數 k〕、延誤、租金、AI 折舊）只驅動 Cloud Infrastructure 營收線的「OCI AI 算力」子列；SaaS、授權、支援、硬體、服務各有自己的成長路徑。", False),
     ("核心問題：FY2029 的 OCI 營收與營業利益率，相對於資本支出與租約的擴張，以及 Oracle 的資金缺口（自由現金流為負）要如何補。", False),
-    (f'="投資建議："&Val!C{CON["rec"]}&"（加權目標價 US$"&TEXT({tp},"0.0")&"，現價 US$"&TEXT(px,"0.00")&"〔2026-11-05〕，上檔空間 "&TEXT({up},"+0.0%;-0.0%")&"）"', True),
+    (f'="投資建議："&Val!C{CON["rec"]}&"（加權目標價 US$"&TEXT({tp},"0.0")&"，現價 US$"&TEXT(px,"0.00")&"〔"&TEXT(px_date,"yyyy-mm-dd")&"〕，上檔空間 "&TEXT({up},"+0.0%;-0.0%")&"）——條件式：在長約價格 p_long "&TEXT(p_long,"0.00")&"、計費比例 "&TEXT(u_bill,"0%")&"、AI 設備折舊年限 "&TEXT(life_ai,"0")&" 年（Tokenomics）的基準假設下；失效條件見本頁末"', True),
     (f'="重點觀察 1：情境 B 的 FY2029 OCI 營收 "&TEXT(PL!F{B_["oci"]},"0.0")&" 十億美元（其中 AI 算力 "&TEXT(PL!F{B_["ai"]},"0.0")&"），只有公司路徑 114 的 "&TEXT(Thesis!D{RPO_ROWS[1]},"0%")&"；OCI AI 營業利益率 "&TEXT(Thesis!G{TB["om"]},"0.0%")&"，AI 增量 ROIC "&TEXT(Thesis!G{TB["roic"]},"0.0%")&"，對照 WACC "&TEXT(wacc,"0.0%")&"。"', False),
     (f'="重點觀察 2：收支關卡（FY2027–FY2031 自由現金流扣股利合計）情境 A／B／C 為 "&TEXT(CF!C{GATE},"0")&"／"&TEXT(CF!D{GATE},"0")&"／"&TEXT(CF!E{GATE},"0")&" 十億美元；情境 B 在 2026-11-04 已交割的股債增資 20 之外，另需新增投資級債 "&TEXT(CF!D{GATE+1},"0")&"、新股 "&TEXT(CF!D{GATE+2},"0")&"、高息債 "&TEXT(CF!D{GATE+3},"0")&"，調整後槓桿峰值 "&TEXT(CF!D{GATE+4},"0.00")&" 倍；FY2027–FY2030 模型外部融資合計 "&TEXT(CF!D{GATE+8},"0.0")&"，對照公司上限 "&TEXT(fin_cap,"0")&"（"&IF(CF!D{GATE+10}>eq_tol,"超出 "&TEXT(CF!D{GATE+10},"0.0"),"未超出")&"）。"', False),
     (f'="重點觀察 3：DCF 情境加權 "&TEXT(Val!C{CON["dcf"]},"0.0")&"、分部加總 "&TEXT(Val!C{CON["comp"]},"0.0")&"（OCI AI 以 AI 模組 DCF 計，只占情境 B 分部企業價值的 "&TEXT(Val!D{SO_["oci_sh"]},"0%")&"）。若 OCI AI 改用 neocloud 同業倍數，加權目標價為 "&TEXT(Val!C{CON["compm"]},"0.0")&"：差額就是 AI 的資本密集度（汰換資本支出幾乎吃掉 EBITDA）；市場共識目標價 "&TEXT(cons_tp,"0")&"，高出本模型 "&TEXT(cons_tp/{tp}-1,"0%")&"。"', False),
@@ -1182,11 +1212,27 @@ lines = [
     ("Seg：近四季年增率（Q 頁）→ 線性收斂到長期年增（In 頁 G 節）→ SaaS、授權、支援、硬體、服務；OCI＝Thesis 兩子列 → 三分部 → 合併營收。", False),
     ("PL：分部利潤＝OCI AI 貢獻＋其餘雲端與軟體營收 × m_sw（Q1 FY27 校準，對照 FY2024 64.1%）；硬體、服務 × FY2026 利潤率；− 未分攤費用 → GAAP 營業利益 → 利息（CF 頁）、稅 → 淨利 → EPS。", False),
     ("CF：淨利＋D&A＋SBC＋客戶預付 − 預付認列 → 營運現金；− 資本支出 → 自由現金流；− 股利 → 收支關卡；缺口 → 現金（含 2026-11-04 已發生增資 19.9）→ 投資級債 → 新股 → 高息債（融資瀑布沿用 v0.3.1）→ 股數、淨借款、槓桿；FY2027–FY2030 模型外部融資合計對照公司上限 20（只檢查，不設硬限制）。", False),
-    ("Val：DCF（UFCF、WACC、g 3%）50%＋分部加總（OCI AI × neocloud 倍數、其餘 × 軟體倍數，FY2029 EBITDA）50%；情境 25／50／25；五級投資建議。Recon：共識與公司路徑對照；Sens：一次動一個輸入的完整重算。", False),
+    ('="Val：DCF（UFCF、WACC、g "&TEXT(tp_g,"0%")&"）"&TEXT(w_dcf,"0%")&"＋分部加總（OCI AI 以 AI 模組 DCF、SaaS 與 OCI 非 AI × 軟體倍數、傳統業務 × 成熟軟體倍數，FY2029 EBITDA）"&TEXT(1-w_dcf,"0%")&"；情境 "&TEXT(wA,"0%")&"／"&TEXT(wB,"0%")&"／"&TEXT(wC,"0%")&"；五級投資建議。Recon：共識與公司路徑對照、反解；Sens：一次動一個輸入的完整重算。"', False),
     ("", False),
     ("與 v0.3.1 的差異：v0.3.1 是 CRWV 樣板（OCI MW × 每 MW 收入＋傳統事業四線壓成成長率），本版改為官方分部與六條營收線；AI 營運費用由 Tokenomics 正向推導（取代 EBITDAR 率校準）、AI 折舊與租金進分部利潤與 EPS；評價改為 DCF 50%＋分部加總 50%。舊引擎保留在 oracle/legacy_v0.3/。", False),
     ("標記：Verified、Interested-party、Analogy、Assumed、Derived；SemiAnalysis 未使用。SEC 網站在建置環境被擋，SEC 數字取自 v0.1a 事實總帳。", False),
-    ("已知限制：(1) OCI 的 AI／非 AI 拆分不存在公開資料，Q1 非 AI 為殘差；(2) 季度分部利潤只有 Q1 FY27 與 FY26Q1；(3) OCI 同業倍數只有兩家；(4) 預付與營運資金外的營運資金變動不建模；(5) 在帳租賃負債持平、到期借款以原利率展延；(6) 續約價格衰退不建模（公司稱續約 +20%）。", False),
+    ("已知限制：(1) OCI 的 AI／非 AI 拆分不存在公開資料，Q1 非 AI 為殘差；(2) 季度分部利潤只有 Q1 FY27 與 FY26Q1；(3) OCI 同業倍數只有兩家；(4) 營運資金以 FY2024–FY2026 公司整體比率簡化建模（v0.4.7；不分 AI／非 AI）；(5) 在帳租賃負債持平、到期借款以原利率展延；(6) 續約價格衰退不建模（公司稱續約 +20%）。", False),
+]
+LIFE_ROW = next((SENS_ROWS[0] + i for i, c in enumerate(SENS["cases"]) if c["label"] == "AI 折舊年限"), None) if SENS else None
+NEU = f"Recon!C{REVR['neutral']}" if REV else "NA()"; EQP = f"Recon!C{REVR['eq_px']}" if REV else "NA()"
+lines += [
+    ("", False),
+    ("v0.4.7 變更（Oracle v0.4.6 驗收報告採用項；Andy 2026-11-09 確認採用規劃書、J1–J4 照預設）：kd＝2037 年 8.00% 新債、r_new＝五檔加權 7.77%（舊 5.8% 只作對照）；CF 加營運資金增加；Sens 加 λ、營運資金比率、經濟汰換壓力 4 年；評等邊界與目標價總表一致；tp_date＝現價日＋12 個月；Comparable 列標明為分部加總混合版並揭露 AI 模組 DCF 占比。採用規劃書：Drive 03-AI半導體/Claude outputs/20261109_Oracle驗收v0.4.6_採用規劃書.md。", False),
+    ("失效條件（可觀察；寫的是評等翻轉的條件）", True),
+    (f'="(1) 長約價格：可信的長約價格證據（MW-IT 口徑）達 US$"&TEXT({NEU},"0.00")&"m／MW-IT·年以上（現行 "&TEXT(p_long,"0.00")&"）時，評等由放空翻為中立；達 "&TEXT({EQP},"0.00")&" 時加權目標價等於現價（Recon E 節，整本重算反解）。"', False),
+    ("(2) 計費與交付：公司每季揭露的 AI 利用率、OCI 營收連續兩季高於情境 A 路徑（Thesis 頁），表示延誤與計費比例假設過於保守。", False),
+    ((f'="(3) 設備壽命：Oracle 10-K 伺服器耐用年限或 Tokenomics IF_DeprLifeIT 上修到 7 年時，加權目標價為 "&TEXT(Sens!E{LIFE_ROW},"0.0")&"（Sens）；反之經濟壽命短於 5 年則偏空更強。"' if LIFE_ROW else "(3) 設備壽命：見 Sens 頁 AI 折舊年限列。"), False),
+    ("風險登錄（原則第 10 節第 10、19 條：風險｜是否建模｜理由｜觀察指標）", True),
+    ("R1 未起租 US$288bn 租約可否撤銷｜未建模｜10-Q 未揭露撤銷條款，沒有輸入；情境 C 容量縮減而租金不縮減＝保守｜10-Q 附註 6 租約條款、站點取消或延後公告", False),
+    ("R2 OpenAI 集中（RPO 約一半，二手）｜已建模：情境 C（OpenAI 相關容量實現 60%、延誤 6 個月）｜單一客戶超過一成的事件型風險進情境，不進基準｜OpenAI 融資與付款、Stargate 站點進度", False),
+    ("R3 take-or-pay 強度與客戶預付｜部分建模：客戶出資覆蓋比、預付認列年數 Sens｜合約條款未揭露｜10-Q 客戶預付餘額、RPO 12 個月內認列比例", False),
+    ("R4 融資管道與信評｜已建模：融資瀑布、投資級槓桿上限、公司 20 上限檢查｜—｜Moody's Baa2 負向展望、新債殖利率與利差", False),
+    ("承重 Assumed 驅動的可證偽指標（原則第 10 節第 20 條）：u_bill → 公司揭露的 AI 利用率與計費 MW；λ → 10-Q 在建工程 ÷ 次年新增產能資本支出；od_share → 公司揭露的隨需／長約比例；delay_* → 站點併網與供電公告；nwc_r → 10-Q／10-K 現金流量表營運資產負債變動。", False),
 ]
 for i, (t, b) in enumerate(lines, 1):
     RD.cell(i, 1, t).font = Font(bold=b)
