@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="zh-Hant-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>個股模型驗收｜不需驗收項目 v1.3</title><style>
+<title>個股模型驗收｜不需驗收項目 v1.4</title><style>
 body{font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;max-width:1180px;margin:32px auto;padding:0 20px;color:#1f2328;line-height:1.6}
 h1{font-size:24px;border-bottom:2px solid #1f2328;padding-bottom:8px}h2{font-size:18px;margin-top:28px}
 ul{padding-left:20px}li{margin:2px 0}
@@ -8,9 +8,11 @@ th,td{border:1px solid #d0d7de;padding:8px 10px;vertical-align:top;text-align:le
 th{background:#f3f4f6;position:sticky;top:0}tr:nth-child(even) td{background:#fafbfc}
 td:first-child{font-weight:600;white-space:nowrap}code{background:#eef1f4;padding:1px 4px;border-radius:3px;font-size:13px}
 @media print{th{position:static}}
-</style></head><body><h1>個股模型驗收｜不需驗收項目（排除清單）</h1>
+</style></head><body>
+<h1>個股模型驗收｜不需驗收項目（排除清單）</h1>
 <ul>
-<li>版本：v1.3（2026-11-09）</li>
+<li>版本：v1.4（2026-11-10）</li>
+<li>v1.4 變更：依 AMD 收支與估值模型 v0.4.4 驗收報告（2026-11-09）的不採用項目新增 X26–X28；X2、X4、X14、X15、X16、X17、X19、X25 補列該報告的對應意見。</li>
 <li>v1.3 變更：依 Astera Labs 個股模型 v0.3.5 驗收報告（2026-11-09）的不採用項目新增 X23–X25；X16 補列範圍；X2、X14、X17、X19 補列該報告的對應意見。以 Oracle v0.4.7（PR #440）入庫的 v1.2 為底。</li>
 <li>v1.2 變更：依 Oracle 個股模型 v0.4.6 稽核與驗收報告（2026-11-09）的不採用項目新增 X20–X22；X10、X14、X17、X19 補列 Oracle 報告的對應意見。Andy 2026-11-09 確認 Oracle 採用規劃書時一併生效。</li>
 <li>v1.1 變更：適用範圍擴大到 AI半導體 的個股模型；依 Arm 個股模型 v0.3.3 驗收報告（2026-11-09）的不採用項目新增 X14–X19；X4 註明兩專案的情境權重；X2、X6、X8 補列 Arm 報告的對應意見。</li>
@@ -20,14 +22,7 @@ td:first-child{font-weight:600;white-space:nowrap}code{background:#eef1f4;paddin
 <li>用法：驗收者<strong>不要</strong>把下列事項判為缺失或列為修正建議。可以檢查的部分寫在「仍需驗收」欄；與本清單衝突的意見，請改寫為「建議 Andy 重新考慮某項規則」，不計入通過與否。</li>
 </ul>
 <table>
-<thead>
-<tr>
-<th>#</th>
-<th>不需驗收的事項</th>
-<th>原因（決定者與時間）</th>
-<th>仍需驗收</th>
-</tr>
-</thead>
+<thead><tr><th>#</th><th>不需驗收的事項</th><th>原因（決定者與時間）</th><th>仍需驗收</th></tr></thead>
 <tbody>
 <tr>
 <td>X1</td>
@@ -37,7 +32,7 @@ td:first-child{font-weight:600;white-space:nowrap}code{background:#eef1f4;paddin
 </tr>
 <tr>
 <td>X2</td>
-<td>目標價採 <strong>DCF 50%＋Comparable（SOTP）50%</strong> 加權單一目標價、五級評等；包括要求說明 50／50 的「選擇準則」、改為區間交集，或依兩法的預測誤差設定權重</td>
+<td>目標價採 <strong>DCF 50%＋Comparable（SOTP）50%</strong> 加權單一目標價、五級評等；包括要求說明 50／50 的「選擇準則」、改為區間交集，或依兩法的預測誤差設定權重；以及要求以方法區間取代單點、DCF 權重 0／25／50／75／100 全格列為核心決策敏感度、投資建議不得只由 50／50 權重觸發（AMD 報告 F-03）</td>
 <td>跨模型共同規則（Andy 2026-10-25 11:53；原則第 4 節）；HTML 版面規格 v1.0（Andy 2026-11-05）</td>
 <td>DCF 與 Comparable 是否分別顯示；Sens 是否有 <code>w_dcf</code> 0.3／0.7</td>
 </tr>
@@ -49,7 +44,7 @@ td:first-child{font-weight:600;white-space:nowrap}code{background:#eef1f4;paddin
 </tr>
 <tr>
 <td>X4</td>
-<td>情境權重（算力收支 25／50／25；AI半導體 0.3／0.5／0.2），包括要求歷史校準；<strong>驗收者不得自擬情境機率</strong></td>
+<td>情境權重（算力收支 25／50／25；AI半導體 0.3／0.5／0.2），包括要求歷史校準、要求情境矩陣重做後重新設定權重（AMD 報告 F-02）；<strong>驗收者不得自擬情境機率</strong></td>
 <td>原則第 8 節；AI半導體 目標價規格（Andy 2026-10-25）；數字原則（無證據不給數字）</td>
 <td>情境驅動對照是否完整、權重合計 1</td>
 </tr>
@@ -109,25 +104,25 @@ td:first-child{font-weight:600;white-space:nowrap}code{background:#eef1f4;paddin
 </tr>
 <tr>
 <td>X14</td>
-<td><strong>投資建議依上檔空間的五級固定規則</strong>產生；要求建立交易層（借券費率、可借量、停損、倉位、催化劑時點、期權隱含波動率）才可給評等，或改為「交易建議：未評估」，或以此作為再驗收門檻；以及要求在模型或報告中加註「不得用於下單、基金估值紀錄」等用途限制</td>
+<td><strong>投資建議依上檔空間的五級固定規則</strong>產生；要求建立交易層（借券費率、可借量、停損、倉位、催化劑時點、期權隱含波動率）才可給評等，或改為「交易建議：未評估」，或以此作為再驗收門檻；以及要求在模型或報告中加註「不得用於下單、基金估值紀錄」等用途限制；包括加註「研究原型，可作壓力測試，不可直接下單」，或要求完成某些修正前不得輸出評等（AMD 報告 Judgment）</td>
 <td>Andy 2026-10-25 14:17 固定規則；評等用途是跨個股一致分組，交易執行屬個人部位決策，不在模型範圍</td>
 <td>評等是否與 Val 上檔空間一致；建議句是否寫成條件式（承重假設）並列失效條件；流通量、軋空等是否列在風險登錄</td>
 </tr>
 <tr>
 <td>X15</td>
-<td>永續期 <strong>RONIC＝WACC</strong></td>
+<td>永續期 <strong>RONIC＝WACC</strong>，包括把它稱為人為夾值而要求改設（AMD 報告 F-03）</td>
 <td>Andy 2026-11-05 23:16 定案（所有個股一致、保守）</td>
 <td>Sens 是否有 RONIC＝WACC＋5pt</td>
 </tr>
 <tr>
 <td>X16</td>
-<td><strong>ERP 5%</strong>、<strong>自算產業 β（Blume 調整）</strong>、終值成長 3%（上限為當地 10 年期公債）本身；包括要求把受驗公司從所屬市場的同業組排除、改用兩組同業並列，或把原始月報酬與去槓桿表嵌入活頁簿</td>
+<td><strong>ERP 5%</strong>、<strong>自算產業 β（Blume 調整）</strong>、終值成長 3%（上限為當地 10 年期公債）本身；包括要求把受驗公司從所屬市場的同業組排除、改用兩組同業並列，或把原始月報酬、去槓桿表、各同業迴歸樣本數、R²、標準誤嵌入活頁簿（AMD 報告 F-04；這些放 β 文件，活頁簿只引用）</td>
 <td>Andy 2026-11-05（DCF 標準規格）</td>
 <td>β 依據是否指向 <code>docs/plan/自算產業β_20261105.md</code> 與同業清單（受驗公司在同業組內時是否註明）；Sens 是否有 ERP 4%／6%、β 低／高</td>
 </tr>
 <tr>
 <td>X17</td>
-<td>驗收者在 Judgment 自擬的<strong>情境機率、合理價值區間</strong>被要求寫入模型（例：Oracle 報告的 60／25／15、Astera Labs 報告的 70／20／10）</td>
+<td>驗收者在 Judgment 自擬的<strong>情境機率、合理價值區間</strong>被要求寫入模型（例：Oracle 報告的 60／25／15、Astera Labs 報告的 70／20／10、AMD 報告的 55／25／20）</td>
 <td>數字原則（Andy 2026-11-05「證據到哪，數字到哪」）；驗收報告的機率只作驗收者意見</td>
 <td>—</td>
 </tr>
@@ -139,7 +134,7 @@ td:first-child{font-weight:600;white-space:nowrap}code{background:#eef1f4;paddin
 </tr>
 <tr>
 <td>X19</td>
-<td>把公司<strong>未揭露</strong>的合併假設拆成多個同樣未揭露的分項參數（例：手機每支權利金年增拆成 v9 滲透 × CSS 滲透 × 單位費率；計費比例拆成實體利用率 × 合約覆蓋率 × 計費爬坡；長約單價拆成 GPU、機房、電力、網路、維運、融資成分；交換晶片營收拆成可服務顆數 × 採用率 × 每採用平台內容；股權報酬拆成員工數 × 每人股權報酬）</td>
+<td>把公司<strong>未揭露</strong>的合併假設拆成多個同樣未揭露的分項參數（例：手機每支權利金年增拆成 v9 滲透 × CSS 滲透 × 單位費率；計費比例拆成實體利用率 × 合約覆蓋率 × 計費爬坡；長約單價拆成 GPU、機房、電力、網路、維運、融資成分；交換晶片營收拆成可服務顆數 × 採用率 × 每採用平台內容；股權報酬拆成員工數 × 每人股權報酬；認列係數 k_rec 拆成「GPU／系統配置係數 × 實現 ASP ÷ 標價 × 出貨至認列」；認股權證逐批建模到公司未揭露的各批股數與中間股價門檻；把 MI450 系統 ASP、ROCm 採用、EPYC 交叉銷售各自拆成驅動。合約已揭露的閘門〔數量、最後一批股價、到期日〕仍要建模，見原則第 10 節）</td>
 <td>拆開只是把一個 Assumed 變成多個 Assumed，假精確；數字原則</td>
 <td>每個承重 Assumed 驅動是否對應一個可證偽的公開觀察指標</td>
 </tr>
@@ -175,9 +170,27 @@ td:first-child{font-weight:600;white-space:nowrap}code{background:#eef1f4;paddin
 </tr>
 <tr>
 <td>X25</td>
-<td>上游模型（本 repo 的市場／網通模型、Siliconomics、Tokenomics 快照）以<strong>檔名版本＋工作表儲存格</strong>引用；包括要求在活頁簿 Sources 另封存上游的資料摘要</td>
+<td>上游模型（本 repo 的市場／網通模型、Siliconomics、Tokenomics 快照）以<strong>檔名版本＋工作表儲存格</strong>引用；包括要求在活頁簿 Sources 另封存上游的資料摘要；以及把 repo 路徑引用或「未找到」紀錄判為不可追溯（「未找到」依數字原則是結論，不是缺漏；外部公開輸入的可重建性仍要驗收，見原則第 10 節）</td>
 <td>上游檔在 git 版控，檔名含版本即可重現；另存摘要會形成第二份可改副本（情境卡規則第 13 條：資料只有一個權威位置）</td>
 <td>引用是否含版本檔名與儲存格範圍；該版本檔是否存在於 repo</td>
+</tr>
+<tr>
+<td>X26</td>
+<td>要求以 <strong>GAAP 三表</strong>重建模型、或改以 <strong>GAAP EBIT</strong> 為 DCF 起點</td>
+<td>DCF 標準規格（Andy 2026-11-05）以損益表營業利益起算；non-GAAP 營業利益扣股票薪酬、折舊不含已排除的併購攤銷，口徑一致；三表重建工程量與資訊增量不相稱</td>
+<td>non-GAAP 到 FCFF 的調節橋是否逐項列出（現金／非現金、DCF 如何處理）；折舊攤銷是否與 EBIT 口徑一致；現金稅率是否與 non-GAAP 稅率並列</td>
+</tr>
+<tr>
+<td>X27</td>
+<td>要求<strong>所有</strong>驅動（含稅率、無證據的其他業務成長、營業費用）在情境 A／B／C 中同向變動</td>
+<td>數字原則（Andy 2026-11-05「證據到哪，數字到哪」）：沒有經濟機制或證據的驅動不給情境路徑，只留 Sens；個股情境須與產業情境一致（Andy 2026-10-25）</td>
+<td>有機制的共變驅動是否進情境（依各模型採用規劃書決定）；情境驅動對照是否對未分化的驅動寫「無專屬輸入：理由」</td>
+</tr>
+<tr>
+<td>X28</td>
+<td>承重 Assumed 錨點（例：公司不揭露的 GPU／CPU 營收拆分）<strong>不設基準點值、只用區間</strong></td>
+<td>模型需要一個基準才能產生目標價（X23）；不確定性以 Assumed 標記與 Sens 區間呈現</td>
+<td>錨點是否標 Assumed、是否有 Sens 低／高，且 Sens 會重算由錨點推得的校準係數</td>
 </tr>
 </tbody>
 </table>
@@ -185,4 +198,5 @@ td:first-child{font-weight:600;white-space:nowrap}code{background:#eef1f4;paddin
 <ul>
 <li>本清單隨 Andy 決定增修；撤回某項規則時同步刪除對應列。</li>
 <li>各專案依本清單排除時，在自己的採用規劃書寫明對應的 X 編號。</li>
-</ul></body></html>
+</ul>
+</body></html>
