@@ -1,4 +1,3 @@
-預算：本批已用 US$38.49／上限 140.0；本批以外已用 80.0；本次上限 US$4.00
-週 2026-10-26–2026-11-01；玩家 11；每玩家搜尋上限 6；本次上限 US$4.00
-batch msgbatch_015DePUsiHjMPpR3N56fit6D in_progress 11
-2026-10-26_week 消息 10 US$1.67
+預算：本批已用 US$40.08／上限 140.0；本批以外已用 80.0；本次上限 US$4.00
+週 2026-11-02–2026-11-08；玩家 11；每玩家搜尋上限 6；本次上限 US$4.00
+失敗 2026-11-02_week API HTTP 400: {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."},"request_id":"req_011Cgrxdnxv3heBVqHYLBS31"}
