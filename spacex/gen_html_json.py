@@ -36,7 +36,9 @@ gate = rm["GATE"]
 r1 = find("Recon", "1. 合併層"); r2 = find("Recon", "2. 逐分部"); r3 = find("Recon", "3. S2"); r4 = find("Recon", "4. 每 GW"); r5 = find("Recon", "5. 法說")
 r6 = find("Recon", "6. k 分解")   # v0.2.6
 r5_end = max(r for r in range(r5, r6) if wb["Recon"].cell(r, 1).value)
-r6_end = max(r for r in range(r6, wb["Recon"].max_row + 1) if wb["Recon"].cell(r, 1).value)
+r7 = find("Recon", "7. 同業可比性")   # v0.2.7
+r6_end = max(r for r in range(r6, r7) if wb["Recon"].cell(r, 1).value)
+r7_end = max(r for r in range(r7, wb["Recon"].max_row + 1) if wb["Recon"].cell(r, 1).value)
 se_end = max(x[3] for x in rm["SE_ROWS"])
 _se = wb["Sens"]
 _tv = [abs(_se.cell(x[3], 5).value) for x in rm["SE_ROWS"] if isinstance(_se.cell(x[3], 5).value, (int, float))]
@@ -87,7 +89,7 @@ IN_GROUPS = {
         ("對外出租與定價（k＝每 GW 年營收 ÷ 持有成本）", ["ext_sh", "k30_A", "k30_B", "k30_C", "conv_k", "k0_ovr", "k0_cal"]),
         ("Grok／Cursor／X 其他收入", ["cur_pf", "g27_nr", "gl_nr", "gl_ads", "conv_n", "m_so_adj", "sbc_cur_left", "sbc_cur_yrs"]),
         ("自用 AI 與估值倍數", ["internal_ai_reading", "evs_si", "pm_si_crwv", "pm_si_nbis", "pm_si_orcl", "mult_si_adj"])],
- "co": [("股價、股數與資產負債（評價日）", ["px", "px_val", "sh_out", "sh_dil_9m", "dil_perf", "dil_opt", "dil_rsu", "dil_echo", "dil_x", "cash_0", "cash_ye25", "debt_0", "debt_ye25", "slb_0", "fin_lease", "btc", "legal"]),
+ "co": [("股價、股數與資產負債（評價日）", ["px", "px_val", "sh_out", "sh_dil_9m", "dil_perf", "dil_opt", "dil_rsu", "dil_echo", "opt_cla", "opt_clb", "opt_cur", "rsu_cur", "optk_cla", "optk_clb", "dil_inc", "dil_base", "dil_x", "cash_0", "cash_ye25", "debt_0", "debt_ye25", "slb_0", "fin_lease", "btc", "legal"]),
         ("折現率", ["rf", "beta", "erp", "kd", "tax_w", "wacc_adj", "g_tv", "ronic_sp", "tax_tv"]),
         ("目標價規則", ["mid", "t_val", "t_q4", "tp_wA", "tp_wB", "tp_wC", "w_dcf", "t_tgt", "w_ntm27", "cons_tp", "sbc_add", "tv_alt"]),
         ("稅、利率與股數稀釋", ["tax", "r_cash", "r_debt", "dil", "wc_k", "min_cash", "lev_max", "icr_min"]),
@@ -317,7 +319,11 @@ cfg = {
     + [{"type": "table", "caption": "@Recon!A" + str(r6), "head": ["項目", "B", "C", "D", "說明"],
         "rows": [[f"@Recon!A{r}", f"@Recon!B{r}|{R6_FMT(r)}", f"@Recon!C{r}|{R6_FMT(r)}", f"@Recon!D{r}|{R6_FMT(r)}", f"@Recon!E{r}"]
                  if RW.cell(r, 2).value is not None or RW.cell(r, 5).value else [f"@Recon!A{r}", "", "", "", ""]
-                 for r in range(r6 + 2, r6_end + 1) if RW.cell(r, 1).value]}]},
+                 for r in range(r6 + 2, r6_end + 1) if RW.cell(r, 1).value]},
+       {"type": "table", "collapse": True, "summary": "展開：同業可比性（同一估值日、NTM 口徑）", "caption": "@Recon!A" + str(r7),
+        "head": ["同業", "EV／NTM EBITDA", "營收成長", "EBITDA 率", "淨負債 ÷ EBITDA", "FCF ÷ EBITDA", "說明"],
+        "rows": [[f"@Recon!A{r}", f"@Recon!B{r}|x1", f"@Recon!C{r}|p1", f"@Recon!D{r}|p1", f"@Recon!E{r}|n2", f"@Recon!F{r}|n2", f"@Recon!G{r}"]
+                 for r in range(r7 + 2, r7_end + 1) if RW.cell(r, 1).value]}]},
   {"id": "sens", "title": "敏感度", "intro": "@Sens!A1", "blocks": [
     {"type": "tornado", "title": "加權目標價相對基準的變動（變動達兩位數百分比的案例；一次改一個輸入，整本重算）", "sheet": "Sens", "rows": tor_big, "label_col": "A", "value_col": "E", "fmt": "sp1"},
     {"type": "tornado", "collapse": True, "summary": "展開：變動未達兩位數百分比的案例", "title": "加權目標價相對基準的變動（未達兩位數百分比）", "sheet": "Sens", "rows": tor_small, "label_col": "A", "value_col": "E", "fmt": "sp1"},

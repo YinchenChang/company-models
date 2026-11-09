@@ -9,7 +9,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-VER="${VER:-0.2.6}"; VT="${VER//./}"; VDATE="${VDATE:-20261109}"
+VER="${VER:-0.2.7}"; VT="${VER//./}"; VDATE="${VDATE:-20261109}"
 OUTNAME="${VDATE}_SpaceX個股模型_v${VER}.xlsx"
 SJ="spacex/data/sens_v${VT}_${VDATE}.json"
 python3 spacex/facts_2026q3.py > /dev/null           # 事實總帳（兩讀核對；不一致即失敗）

@@ -32,7 +32,7 @@ F.update({it["id"]: it for it in FD2["items"]})
 STAGE = int(os.environ.get("SPCX_STAGE", "99"))   # 歸因瀑布：1 讀法 2 加回小修、2 融資租賃重扣小修、3 G5 原文、4 G1 Q4 資本支出、5 G1 年底 GW、6 G3 pace（9M 占比）、7 pace 改用 Q4 拆法（二修）、8 v0.2.1 pace 季速改 ÷(1 − fin_sh)、9 v0.2.1 pace 分母改 FY2027 世代組合（預設全部）
 G2C = os.path.join(HERE, "data", "g2cal_v021_20261030.json")   # v0.2.1 重解（pace 改變 FY2027 營收）
 G2CAL = json.load(open(G2C, encoding="utf-8")) if (os.path.exists(G2C) and not os.environ.get("SPCX_NO_G2CAL")) else None   # G2 校準 k0（g2cal_v02.py 解出；只用於 Sens）
-VER = "v0.2.6"
+VER = "v0.2.7"
 # v0.2.6（驗收報告 2026-11-09 採用項）：build_id＝版本＋建置輸入雜湊（建置腳本與 data/ 下非敏感度 json），README、Sens、HTML 三處相同（A1）
 import hashlib
 def _build_id():
@@ -45,8 +45,11 @@ BUILD_ID = _build_id()
 TKV = "v21.10"   # v0.2.2：Tokenomics 快照 v21.7 → v21.9；v0.2.3：v21.9 → v21.10（兩次基準數值都不變）
 TK = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 GEN = {x["code"]: x["name"] for x in TK["source"]["generations"]}
-PSI = json.load(open(os.path.join(HERE, "data", "peers_si_20261030.json"), encoding="utf-8"))
-PCN = json.load(open(os.path.join(HERE, "data", "peers_connectivity_20261030.json"), encoding="utf-8"))
+# v0.2.7（驗收 M5，B3）：同業統一為 2026-11-06 收盤、NTM 口徑（spacex/peers_v027.py 產生；舊檔 *_20261030.json 移 _待刪除/）
+PSI = json.load(open(os.path.join(HERE, "data", "peers_si_20261106.json"), encoding="utf-8"))
+PCN = json.load(open(os.path.join(HERE, "data", "peers_connectivity_20261106.json"), encoding="utf-8"))
+_cn = [p_["ntmEvEbitda"] for p_ in PCN["peers"]]; CN_MED = PCN["median"]; CN_LO = min(_cn); CN_HI = max(_cn)
+_cn_lo_t = next(p_["ticker"] for p_ in PCN["peers"] if p_["ntmEvEbitda"] == CN_LO); _cn_hi_t = next(p_["ticker"] for p_ in PCN["peers"] if p_["ntmEvEbitda"] == CN_HI)
 CONS = json.load(open(os.path.join(HERE, "data", "consensus_spcx_20261030.json"), encoding="utf-8"))
 
 
@@ -132,13 +135,30 @@ inp("px_val", "評價日股價（2026-09-30 收盤；WACC 權益權重用）", "
     "Digrin SPCX 月線 https://www.digrin.com/stocks/detail/SPCX/price（2026 年 9 月收盤 150.86；2026-10-30 讀取）",
     "單一來源（第二來源未取得：StockAnalysis 歷史頁逾時）；只影響 WACC 權重，負債占比 < 2%，對目標價影響極小")
 inp("sh_out", "流通股數（10-Q 封面 2026-10-15，A＋B 股）", "十億股", None, fv("sh.out.AB.20261015") / 1000, None, "Verified", fs("sh.out.AB.20261015"),
-    "A 8,246.5M＋B 5,334.5M（審查第 6 條；稀釋項列 Sens，不進基準）")
+    "A 8,246.5M＋B 5,334.5M；v0.2.7 起評價股數另加 RSU 與選擇權庫藏股法淨股數（dil_base）")
 inp("sh_dil_9m", "9M26 稀釋加權股數", "十億股", None, fv("is.shDil.9m2026") / 1000, None, "Verified", fs("is.shDil.9m2026"), "IPO 在 2026-06，加權股數低於期末")
 inp("dil_perf", "潛在稀釋：績效／市場條件獎酬（未計入稀釋股數）", "十億股", None, fv("sh.perfAwards.20260930") / 1000, None, "Verified", fs("sh.perfAwards.20260930"), "受獎人未見原文；Sens 用")
 inp("dil_opt", "潛在稀釋：選擇權", "十億股", None, fv("sh.options.20260930") / 1000, None, "Verified", fs("sh.options.20260930"), "Sens 用")
 inp("dil_rsu", "潛在稀釋：RSU", "十億股", None, fv("sh.rsu.20260930") / 1000, None, "Verified", fs("sh.rsu.20260930"), "Sens 用")
 inp("dil_echo", "潛在稀釋：EchoStar 頻譜交割發行 A 股（約）", "十億股", None, fv("spectrum.echostar.shares") / 1000, None, "Verified", fs("spectrum.echostar.shares"), "固定每股 42.40；預計 2027-11-30 交割；Sens 用")
-inp("dil_x", "評價股數加入上述潛在稀釋（1＝是；Sens 用）", "x", None, 0, 1, "Assumed", "審查第 6 條：稀釋項列 Sens，不進基準", "高＝四項全部加入（約 2.24B 股，＋16.5%）", judg=True)
+# v0.2.7（驗收 M7，J1 選 b；Andy 2026-11-09 確認）：RSU 與選擇權（庫藏股法）進基準；績效獎酬與 EchoStar 股份仍只作 Sens。
+# Cursor 收購授予的選擇權 65M 與 RSU 28M 不重複計入：其成本已在預測期以收購後服務期股權報酬（sbc_cur_left）扣除
+Q10 = "mag/extract/docs/2026Q3/spacex_2026Q3_10-Q.pdf"; P424 = "mag/extract/docs/2026Q3/spacex_424B4.pdf"
+inp("opt_cla", "流通選擇權：A 股", "十億股", None, 0.158, None, "Verified", f"{Q10} 附註 12 保留股數表：「Outstanding stock options 158 350 —」（A 158M、B 350M）")
+inp("opt_clb", "流通選擇權：B 股", "十億股", None, 0.350, None, "Verified", f"{Q10} 附註 12 保留股數表（同上）")
+inp("opt_cur", "其中：Cursor／Mesh 收購授予的選擇權（A 股；履約價 1.49）", "十億股", None, 0.065, None, "Verified", f"{Q10} 附註 12 Acquisitions 段：「granted 65 million options with a weighted average exercise price of $1.49」",
+    "成本已在 sbc_cur_left（收購後服務期股權報酬）扣除，股數不重複計入")
+inp("rsu_cur", "其中：Cursor／Mesh 收購授予的 RSU", "十億股", None, 0.028, None, "Verified", f"{Q10} 附註 12 Acquisitions 段：「28 million RSUs」", "同上，不重複計入")
+inp("optk_cla", "A 股選擇權加權履約價（扣除收購授予部分）", "US$", None, 27.65, None, "Derived",
+    f"{P424} 不含項目清單：2026-03-31 流通選擇權 A 股加權履約價 27.65（之後的行使、沒收未改變加權值的揭露；以 3-31 值近似 9-30）", "庫藏股法用；誤差對淨股數影響小（深度價內）")
+inp("optk_clb", "B 股選擇權加權履約價", "US$", None, 8.22, None, "Derived", f"{P424} 不含項目清單：2026-03-31 流通選擇權 B 股加權履約價 8.22（同上近似）")
+inp("dil_inc", "評價股數計入 RSU 與選擇權（庫藏股法）（1＝是，基準；Sens 低＝0）", "x", 0, 1, None, "Assumed", "Andy 2026-11-09 確認採用規劃書 J1 選項 b",
+    "0＝回到 v0.2.6 口徑（潛在稀釋全不進基準）", judg=True)
+inp("dil_base", "基準計入的稀釋股數＝(RSU − 收購授予 RSU)＋(A 股選擇權 − 收購授予) × (1 − 履約價 ÷ 現價)＋B 股選擇權 × (1 − 履約價 ÷ 現價)", "十億股", None,
+    "=(dil_rsu-rsu_cur)+(opt_cla-opt_cur)*MAX(0,1-optk_cla/px)+opt_clb*MAX(0,1-optk_clb/px)", None, "Derived", "庫藏股法（行使價款按現價買回）；RSU 全額、未扣沒收率（沒收率未揭露）",
+    "現價 123.62 時約 0.513（＋3.8%）")
+inp("dil_x", "評價股數加入全部潛在稀釋（1＝是；Sens 用）", "x", None, 0, 1, "Assumed", "審查第 6 條：績效獎酬與 EchoStar 股份只列 Sens；高＝四項全額（約 2.24B 股，＋16.5%，取代基準的庫藏股法淨股數）",
+    "EchoStar 股份不單獨進基準：頻譜按成本、價值中性（兩邊都不計），且預計 2027-11-30 交割，晚於目標日", judg=True)
 inp("cash_0", "現金＋有價證券（2026-09-30）", "US$B", None, round(fb("bs.cash.20260930") + fb("bs.mktSec.20260930"), 3), None, "Verified",
     "10-Q 資產負債表：現金 51.294＋有價證券 38.561（事實總帳 bs.cash.20260930、bs.mktSec.20260930）", "6-30 為 100.009")
 inp("cash_ye25", "現金＋有價證券（2025-12-31）", "US$B", None, round(fb("bs.cash.20251231") + fb("bs.mktSec.20251231"), 3), None, "Verified",
@@ -183,16 +203,14 @@ inp("tv_alt", "終值改用 FY2032 無槓桿自由現金流 ×(1＋g)（1＝是�
 
 sec("C. 分部加總（SOTP）倍數（目標時點 NTM EBITDA × 同業 EV/EBITDA；Space 用 EV／營收；SI 對外出租用自身 DCF）")
 for p_ in PCN["peers"]:
-    if p_.get("evEbitdaFy2026") is None: continue
-    inp(f"pm_conn_{p_['ticker'].lower()}", f"Connectivity 同業：{p_['name']}（{p_['ticker']}）EV/EBITDA FY2026", "x", None, p_["evEbitdaFy2026"], None, "Derived",
-        f"{p_['source']} {p_['url']}（{p_['pageQuoteDate']}；data/peers_connectivity_20261030.json）", p_.get("note", ""))
+    inp(f"pm_conn_{p_['ticker'].lower()}", f"Connectivity 同業：{p_['name']}（{p_['ticker']}）EV／NTM EBITDA（2026-11-06）", "x", None, p_["ntmEvEbitda"], None, "Derived",
+        f"MarketScreener {p_['url']}（{PCN['asOf']}）：EV {p_['evCurrent']:,.0f} ÷ NTM EBITDA {p_['ntmEbitda']:,.0f}（{p_['ntmNote']}）；data/peers_connectivity_20261106.json",
+        p_.get("note", "") or "賣方共識 EBITDA（第三方彙整）")
 for p_ in PSI["peers"]:
-    x = p_.get("evEbitdaFy2027", p_.get("ntmEvEbitda"))
-    lab = "EV/EBITDA FY2027" if "evEbitdaFy2027" in p_ else "NTM EV/EBITDA"
-    inp(f"pm_si_{p_['ticker'].lower()}", f"SI 同業（AI 基礎設施／雲）：{p_['name']}（{p_['ticker']}）{lab}", "x", None, x, None, "Derived",
-        f"{p_['source']}（{p_.get('pageQuoteDate', p_.get('asOf', ''))}；data/peers_si_20261030.json）", p_.get("note", ""))
-inp("mult_cn_adj", "Connectivity 倍數＝同業中位數 × 本係數（Sens：同業區間下緣／上緣）", "x", 0.6606, 1.0, 2.3366, "Derived",
-    "data/peers_connectivity_20261030.json：五家 FY2026 EV/EBITDA 區間 4.71（CMCSA）–16.66（SATS），中位數 7.13", "10-30 補 Sens：低／高＝區間下緣／上緣 ÷ 中位數")
+    inp(f"pm_si_{p_['ticker'].lower()}", f"SI 同業（AI 基礎設施／雲）：{p_['name']}（{p_['ticker']}）EV／NTM EBITDA（2026-11-06）", "x", None, p_["ntmEvEbitda"], None, "Derived",
+        f"MarketScreener {p_['url']}（{PSI['asOf']}）：EV {p_['evCurrent']:,.0f} ÷ NTM EBITDA {p_['ntmEbitda']:,.0f}（{p_['ntmNote']}）；data/peers_si_20261106.json", p_.get("note", ""))
+inp("mult_cn_adj", "Connectivity 倍數＝同業中位數 × 本係數（Sens：同業區間下緣／上緣）", "x", round(CN_LO / CN_MED, 4), 1.0, round(CN_HI / CN_MED, 4), "Derived",
+    f"data/peers_connectivity_20261106.json：五家 EV／NTM EBITDA 區間 {CN_LO:.2f}（{_cn_lo_t}）–{CN_HI:.2f}（{_cn_hi_t}），中位數 {CN_MED:.2f}（v0.2.6 為 FY2026 口徑 7.13）", "低／高＝區間下緣／上緣 ÷ 中位數")
 inp("mult_cn_pm", "Connectivity 倍數 ±30%（Starlink 成長型對照倍數無依據時的替代）", "x", 0.7, 1.0, 1.3, "Assumed",
     "10-30 chat 端指示：Starlink 成長型對照倍數無可比上市公司依據（ASTS EBITDA 為負、NM）→ ±30%", "Sens 用")
 inp("mult_si_adj", "讀法 1 自用 AI 增量營運成本扣除的倍數＝SI 同業中位數 × 本係數（v0.2 起只影響讀法 1）", "x", 0.7, 1.0, 1.4, "Assumed",
@@ -1240,7 +1258,7 @@ vput("tvsh", "  其中：終值占 EV（主值）", S3(lambda s: f"=({X3(s)}{VR_
 vput("nc0", "＋淨現金（評價日：現金＋有價證券 − 債務本金 − 融資租賃）", ["=cash_0-debt_0-fin_lease"] * 3)
 vput("hold", "＋數位資產（比特幣帳面）", ["=btc"] * 3)
 vput("dl", "− 類債（訴訟準備）", ["=legal"] * 3, note="EchoStar 頻譜：未來付款與取得的頻譜按成本相抵（價值中性），DCF 兩邊都不計")
-vput("shv", "股數（評價日 A＋B；dil_x＝1 時加潛在稀釋）", ["=sh_out+dil_x*(dil_perf+dil_opt+dil_rsu+dil_echo)"] * 3, "0.000")
+vput("shv", "股數（評價日 A＋B＋RSU 與選擇權庫藏股法淨股數；dil_x＝1 時改為四項全額）", ["=sh_out+dil_inc*dil_base+dil_x*(dil_perf+dil_opt+dil_rsu+dil_echo-dil_inc*dil_base)"] * 3, "0.000")
 BR = lambda ev: (lambda s: "=MAX(0,({0}{1}+{0}{2}+{0}{3}-{0}{4})/{0}{5}*(1+ke)^t_tgt)".format(X3(s), VR_[ev], VR_["nc0"], VR_["hold"], VR_["dl"], VR_["shv"]))
 vput("dcf1", "DCF 每股價值推到目標時點（讀法 1）", S3(BR("ev1")), note="(EV＋淨現金＋數位資產 − 類債) ÷ 股數 ×(1＋ke)^t_tgt；不配息。情境 C 權益為負，被 MAX(0) 截為 0；讀法 1 情境 B 的 EV 低於 Connectivity 分部加總 EV → DCF 隱含 SI 整體價值為負")
 vput("dcf2", "DCF 每股價值推到目標時點（讀法 2）", S3(BR("ev2")))
@@ -1252,12 +1270,12 @@ vput("r_v", "0.15 SI 對外出租價值（FY2027 年底，與分部加總淨現�
 r += 1
 V.cell(r, 1, "0.2 分部加總（SOTP；目標時點 NTM 分部調整後 EBITDA × 同業 EV/EBITDA；＝本模型的 Comparable）").font = BOLD; r += 1
 hdr(V, r, ["同業組／倍數", "倍數", "家數", "", "說明"]); r += 1
-ck = [f"pm_conn_{p_['ticker'].lower()}" for p_ in PCN["peers"] if p_.get("evEbitdaFy2026") is not None]
+ck = [f"pm_conn_{p_['ticker'].lower()}" for p_ in PCN["peers"]]
 sk = [f"pm_si_{p_['ticker'].lower()}" for p_ in PSI["peers"]]
-vput("mult_conn", "Connectivity：衛星與電信同業 EV/EBITDA FY2026 中位數 × mult_cn_adj × mult_cn_pm", ["=MEDIAN(" + ",".join(ck) + ")*mult_cn_adj*mult_cn_pm", len(ck)], ["0.00", "0"], note="data/peers_connectivity_20261030.json（2026-10-08）：" + "、".join(k.split("_")[-1].upper() for k in ck))
+vput("mult_conn", "Connectivity：衛星與電信同業 EV／NTM EBITDA 中位數（2026-11-06） × mult_cn_adj × mult_cn_pm", ["=MEDIAN(" + ",".join(ck) + ")*mult_cn_adj*mult_cn_pm", len(ck)], ["0.00", "0"], note="data/peers_connectivity_20261106.json（2026-11-06 收盤，NTM）：" + "、".join(k.split("_")[-1].upper() for k in ck))
 dn("mult_conn", f"Val!$B${VR_['mult_conn']}")
 vput("mult_si", "讀法 1 自用 AI 營運成本扣除倍數：AI 基礎設施／雲同業中位數 × mult_si_adj", ["=MEDIAN(" + ",".join(sk) + ")*mult_si_adj", len(sk)], ["0.00", "0"],
-     note="data/peers_si_20261030.json：CRWV、NBIS FY2027、ORCL NTM（口徑不一、樣本小；README 註明）")
+     note="data/peers_si_20261106.json：CRWV、NBIS、ORCL 皆 EV／NTM EBITDA（2026-11-06；v0.2.7 統一口徑）")
 dn("mult_si", f"Val!$B${VR_['mult_si']}")
 r += 1
 hdr(V, r, ["分部（NTM 分部調整後 EBITDA；Space 為營收）", "情境 A", "情境 B", "情境 C", "倍數與說明", "EV：A", "EV：B", "EV：C"]); r += 1
@@ -1313,7 +1331,7 @@ else:
     vput("snc", "＋淨現金（FY2027 年底，CF 頁；減融資租賃）", S3(lambda s: f"=CF!H{CR[s]['nc']}-fin_lease"))
 vput("shold", "＋數位資產＋EchoStar 頻譜（按 Q4 26–FY2027 已付成本）", ["=btc+spec_2h+spec_27"] * 3, note="頻譜付款已自淨現金扣除，資產按成本加回（價值中性）")
 vput("sdl", "− 類債", ["=legal"] * 3)
-vput("ssh", "股數（FY2027 年底；dil_x＝1 時加潛在稀釋）", S3(lambda s: f"=PL!H{PR_[s]['she']}+dil_x*(dil_perf+dil_opt+dil_rsu+dil_echo)"), "0.000")
+vput("ssh", "股數（FY2027 年底＋RSU 與選擇權庫藏股法淨股數；dil_x＝1 時改為四項全額）", S3(lambda s: f"=PL!H{PR_[s]['she']}+dil_inc*dil_base+dil_x*(dil_perf+dil_opt+dil_rsu+dil_echo-dil_inc*dil_base)"), "0.000")
 SB2 = lambda ev: (lambda s: "=MAX(0,({0}{1}+{0}{2}+{0}{3}-{0}{4})/{0}{5})".format(X3(s), VR_[ev], VR_["snc"], VR_["shold"], VR_["sdl"], VR_["ssh"]))
 vput("sotp1", "分部加總每股價值（讀法 1）", S3(SB2("sev1")))
 vput("sotp2", "分部加總每股價值（讀法 2）", S3(SB2("sev2")))
@@ -1531,6 +1549,24 @@ rc6("ia_oth", "可歸因：SI 其他收入（Grok／Cursor／X）調整後 EBITD
 rc6("ia_gap", "影子效益 ÷ 可歸因 EBITDA（倍）", [f"=IF({c}{r - 1}>0,{c}{r - 2}/{c}{r - 1},\"可歸因 ≤ 0\")" for c in "BCD"], "0.00",
     "讀法 2 的影子效益相對已可觀察的 AI 產品利潤有多大；倍數越高，主值越依賴假設。讀法 1（只計成本）見 Val 頁")
 R6_END = r - 1
+# v0.2.7（驗收 M5，B3）：7. 同業可比性（同一估值日 2026-11-06、NTM 口徑；成長、利潤率、槓桿、資本強度並列，不做迴歸：每組 3–5 家）
+r += 1
+RC.cell(r, 1, "7. 同業可比性（2026-11-06 收盤，MarketScreener；B＝EV／NTM EBITDA、C＝下一年度營收成長、D＝下一年度 EBITDA 率、E＝下一年度淨負債 ÷ EBITDA、F＝FCF ÷ EBITDA〔資本強度代理〕）").font = BOLD; R7 = r; r += 1
+hdr(RC, r, ["同業", "EV／NTM EBITDA", "營收成長", "EBITDA 率", "淨負債 ÷ EBITDA", "FCF ÷ EBITDA", "說明"]); r += 1
+for grp, D in (("Connectivity", PCN), ("SI（只用於讀法 1）", PSI)):
+    for p_ in D["peers"]:
+        RC.cell(r, 1, f"{grp}：{p_['name']}（{p_['ticker']}）")
+        for j, (k_, f_) in enumerate((("ntmEvEbitda", "0.00"), ("salesGrowthNext", "0.0%"), ("ebitdaMarginNext", "0.0%"), ("netDebtToEbitdaNext", "0.00"), ("fcfToEbitdaNext", "0.00"))):
+            v_ = p_.get(k_)
+            RC.cell(r, 2 + j, v_ if v_ is not None else "未取得").number_format = f_
+        RC.cell(r, 7, p_.get("note") or "Derived（賣方共識彙整）"); r += 1
+    RC.cell(r, 1, f"  {grp} 中位數"); RC.cell(r, 2, D["median"]).number_format = "0.00"; r += 1
+RC.cell(r, 1, "  對照：本模型 Connectivity 情境 B FY2028 分部調整後 EBITDA 率（C 欄）、FY2027→FY2028 分部營收成長（D 欄）")
+RC.cell(r, 3, f"=PL!I{PR_['B']['e_cn']}/PL!I{PR_['B']['conn']}").number_format = "0.0%"
+RC.cell(r, 4, f"=PL!I{PR_['B']['conn']}/PL!H{PR_['B']['conn']}-1").number_format = "0.0%"
+RC.cell(r, 7, "Starlink 成長遠高於電信同業，倍數取中位數偏保守；成長型對照無可比上市公司（ASTS EBITDA 為負），以 mult_cn_pm ±30% 涵蓋"); r += 1
+RC.cell(r, 1, "  資本支出率：MarketScreener 財務頁未列 Capex，未取得；以 FCF ÷ EBITDA 代理。模型現價日 11-05、同業 11-06（差一個交易日）"); r += 1
+R7_END = r - 1
 RC.column_dimensions["A"].width = 76
 for c in "BCDEFG": RC.column_dimensions[c].width = 13
 RC.column_dimensions["E"].width = 40; RC.column_dimensions["H"].width = 70
@@ -1568,8 +1604,8 @@ SENS_CASES = [
     ("erp", "股權風險溢酬", "lo", "hi", "4%／6%"),
     ("g_tv", "永續成長 g", "lo", "hi", "2%／4%"),
     ("ronic_sp", "RONIC＝WACC＋5pt", None, "hi", "RONIC＝WACC → WACC＋5pt"),
-    ("mult_cn_adj", "Connectivity 倍數：同業區間下緣／上緣", "lo", "hi", "7.13× → 4.71×（CMCSA）／16.66×（SATS）"),
-    ("mult_cn_pm", "Connectivity 倍數 ±30%（成長型對照無依據）", "lo", "hi", "7.13× → 4.99×／9.27×"),
+    ("mult_cn_adj", "Connectivity 倍數：同業區間下緣／上緣", "lo", "hi", f"{CN_MED:.2f}× → {CN_LO:.2f}×（{_cn_lo_t}）／{CN_HI:.2f}×（{_cn_hi_t}）"),
+    ("mult_cn_pm", "Connectivity 倍數 ±30%（成長型對照無依據）", "lo", "hi", f"{CN_MED:.2f}× → {CN_MED * 0.7:.2f}×／{CN_MED * 1.3:.2f}×"),
     ("evs_si", "SI 其他 EV／NTM 營收（區間上緣；下緣 5×＝基準）", None, "hi", "5× → 8×"),
     ("mult_si_adj", "讀法 1 自用 AI 營運成本扣除倍數（主值不受影響）", "lo", "hi", "中位數 × 0.7／× 1.4"),
     ("he_all", "Tokenomics IF_HoldEcon 四世代同時", "lo", "hi", "低成本／高成本（k0 隨之重新校準、FY2030 k 固定 → 持有成本同時推動營收）"),
@@ -1588,7 +1624,9 @@ SENS_CASES = [
     ("wc_k", "營運資金 ÷ 營收增量", "lo", "hi", "2.8% → 0／10%"),
     ("evs_space", "Space EV／營收", "lo", "hi", "3× → 2×／6×"),
     ("w_dcf", "DCF 權重", "lo", "hi", "50% → 30%／70%"),
-    ("dil_x", "評價股數加入潛在稀釋（績效獎酬、選擇權、RSU、EchoStar）", None, "hi", "13.58 → 15.82 十億股"),
+    ("dil_x", "評價股數加入全部潛在稀釋（績效獎酬、選擇權、RSU、EchoStar 全額）", None, "hi", "13.58＋庫藏股法淨股數 → 15.82 十億股"),
+    ("dil_inc", "評價股數不計 RSU 與選擇權（v0.2.6 口徑）", "lo", None, "13.58＋庫藏股法淨股數 → 13.58 十億股"),
+    ("fin_constr", "融資受限：FY2027 起建置速度減半（pace × 0.5；驗收 B4）", None, "高", f"pace {pace0:.2f} → {pace0 * 0.5:.2f} GW／年；示意融資不可得時建置內生下降（不做完整內生化）"),
     ("sbc_add", "DCF 加回股權報酬", None, "hi", "不加回 → 加回（稅後）"),
 ]
 def _tkset(case):
@@ -1600,7 +1638,7 @@ def _tkset(case):
     return out
 SE_SPECIAL = {"he_all|低": [(f"he_{nm}", tk("IF_HoldEcon", code, "低成本")) for code, nm in (("H100", "h"), ("GB200", "b2"), ("GB300", "b3"), ("VR200", "vr"))],
               "he_all|高": [(f"he_{nm}", tk("IF_HoldEcon", code, "高成本")) for code, nm in (("H100", "h"), ("GB200", "b2"), ("GB300", "b3"), ("VR200", "vr"))],
-              "tk_all|低": _tkset("低成本"), "tk_all|高": _tkset("高成本"), "k_flat|高": [("conv_k", 1000000)],
+              "tk_all|低": _tkset("低成本"), "tk_all|高": _tkset("高成本"), "k_flat|高": [("conv_k", 1000000)], "fin_constr|高": [("pace", round(pace0 * 0.5, 6))],
               **({"k0_ovr_flat|高": [("k0_ovr", round(G2CAL["k0"], 4)), ("conv_k", 1000000)]} if G2CAL else {})}
 SE["A1"] = "Sens — 一次改一個輸入（In 頁敏感度低／高值），整本活頁簿以 LibreOffice 重算後的加權目標價（Val 頁「目標價（DCF 與 Comparable 加權）」）；由 spacex/make_v02.sh 產生，建置時寫入（數值，屬建置快照）；模型狀態（CURRENT／STALE）與 build_id 見本頁底部"
 SE["A2"] = ("相對基準＝情境目標價 ÷ 基準加權目標價 − 1；龍捲風依絕對值排序（HTML）。基準與各案例的其他輸入相同。"
@@ -1668,7 +1706,7 @@ SRCS = [
     ("Benzinga SPCX 報價", "2026-11-05", "https://www.benzinga.com/quote/SPCX", "Verified", "11-05 4:02 PM 123.58（第二來源）"),
     ("Digrin SPCX 月線", "2026-10-30", "https://www.digrin.com/stocks/detail/SPCX/price", "Derived", "9 月收盤 150.86（評價日股價，單一來源）"),
     ("美國財政部每日殖利率曲線（10 Yr）", "2026-10-27", "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202610", "Verified", "無風險利率 4.99%"),
-    ("同業檔 spacex/data/peers_si_20261030.json、peers_connectivity_20261030.json（MarketScreener）", "2026-10-08／10-23", "repo 內", "Derived", "SOTP 倍數"),
+    ("同業檔 spacex/data/peers_si_20261106.json、peers_connectivity_20261106.json（MarketScreener 估值頁與財務頁；spacex/peers_v027.py）", "2026-11-06", "https://www.marketscreener.com", "Derived", "SOTP 倍數（v0.2.7 統一 NTM 口徑）；同業可比性表（Recon 第 7 節）"),
     ("共識檔 spacex/data/consensus_spcx_20261030.json（MarketBeat、Simply Wall St 過期、Shacknews）", "2026-10-30", "repo 內", "Interested-party", "共識目標價、過期年度共識"),
     ("A 段事實總帳報告 spacex/docs/reports/20261030_spacex_v0.1_A段_事實總帳.md", "2026-10-30", "repo 內", "—", "名目算力口徑、Valor、找不到的項目"),
 ]
@@ -1678,7 +1716,7 @@ for col, w in zip("ABCDEF", [6, 80, 12, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = f"SpaceX（Nasdaq: SPCX，含 xAI）個股模型 {VER}（2026-11-09；build_id {BUILD_ID}；v0.2.6 依 2026-11-09 驗收報告補治理與揭露〔數值不變〕；v0.2.5 只換現價為 2026-11-05 收盤 123.62，目標價不變；v0.2.4 只改展示層：README 頁新增命題分項、白話重點、命題回覆，供 HTML 新版面；v0.2.2／v0.2.3 換 Tokenomics 快照 v21.9／" + TKV + "，基準數值同 v0.2.1；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
+RD["A1"] = f"SpaceX（Nasdaq: SPCX，含 xAI）個股模型 {VER}（2026-11-09；build_id {BUILD_ID}；v0.2.7 依驗收報告：評價股數計入 RSU 與選擇權〔庫藏股法〕、同業統一為 2026-11-06 NTM 口徑、Sens 加融資受限案〔目標價會變〕；v0.2.6 補治理與揭露〔數值不變〕；v0.2.5 只換現價為 2026-11-05 收盤 123.62，目標價不變；v0.2.4 只改展示層：README 頁新增命題分項、白話重點、命題回覆，供 HTML 新版面；v0.2.2／v0.2.3 換 Tokenomics 快照 v21.9／" + TKV + "，基準數值同 v0.2.1；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
 RD["A3"] = ("命題：SI 分部的算力投入（9M26 SI 資本支出約 400 億美元、名目算力 1.7 GW）能否由 SI 營收（對外算力出租＋Grok／Cursor／X）回本；"
             "Connectivity（Starlink）現金流與 IPO 資金能支撐多久；加計 AI 折舊與 Cursor 收購獎酬後的每股價值是否高於現價。")
 RD["A4"] = "核心問題：FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金與以融資取得 PP&E；Valor 失敗售後租回本金列融資，不扣）。"
@@ -1706,8 +1744,9 @@ for row in DRV:
     for j, v in enumerate(row, 1): RD.cell(r, j, v)
     r += 1
 r += 1
-RD.cell(r, 1, "本版要點（v0.2.6；其下為 v0.2.1、v0.2）").font = BOLD; r += 1
-for t in ("v0.2.6（2026-11-09 驗收報告採用項，數值格不變）：build_id 與輸入指紋、模型狀態 CURRENT／STALE（Sens 頁底部，README、HTML 同步）；In、Q 頁每列單一主要標記並新增「來源誘因」欄；Val 頁並列折現期間與持有期間；投資建議改條件式；刪除未查核的小型發射商倍數；Recon 第 6 節：支持現價所需的 k、k 分項、三條 k 路徑對應、自用 AI 影子效益對可歸因利潤；CF 頁融資可行性檢查；README 主要失效條件與風險登錄。",
+RD.cell(r, 1, "本版要點（v0.2.7、v0.2.6；其下為 v0.2.1、v0.2）").font = BOLD; r += 1
+for t in ("v0.2.7（2026-11-09 驗收報告採用項，Andy 確認採用規劃書）：評價股數計入 RSU 與選擇權（庫藏股法；扣除已在股權報酬中扣除的 Cursor 收購授予部分；績效獎酬與 EchoStar 股份仍只列 Sens）；Connectivity 與 SI 同業改為同一估值日 2026-11-06、EV／NTM EBITDA，並新增同業可比性表（Recon 第 7 節）；Sens 新增「融資受限：建置速度減半」與「不計 RSU 與選擇權」兩案；支持現價所需的 k 依新基準重解。",
+          "v0.2.6（2026-11-09 驗收報告採用項，數值格不變）：build_id 與輸入指紋、模型狀態 CURRENT／STALE（Sens 頁底部，README、HTML 同步）；In、Q 頁每列單一主要標記並新增「來源誘因」欄；Val 頁並列折現期間與持有期間；投資建議改條件式；刪除未查核的小型發射商倍數；Recon 第 6 節：支持現價所需的 k、k 分項、三條 k 路徑對應、自用 AI 影子效益對可歸因利潤；CF 頁融資可行性檢查；README 主要失效條件與風險登錄。",
           "驗收不採用項（見 Drive 個股模型／20261109_個股模型驗收_不需驗收項目.md）：取消 DCF 與 Comparable 加權、驗收者自擬情境機率、開檔雜湊；自用 AI 主值維持讀法 2（Andy 2026-10-27）。",):
     RD.cell(r, 1, t); r += 1
 for t in ("v0.2.1 一致性小修：pace 的 SI 投資季速改與 Q4 同法＝Q4 SI 現金資本支出 ÷ (1 − fin_sh)（不再加 9M 以融資取得 PP&E 季均）；分母改 FY2027 新增世代組合每 GW 投資（am_27 GB300／VR200 各半），FY2027 SI 投資＝4 × Q4 26 SI 投資；In 頁 pace 低／高由 build 同一函式產生、check_v02 比對。",

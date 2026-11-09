@@ -1,0 +1,166 @@
+{
+ "_readme": "SpaceX SI 分部同業（v0.2.7；只用於讀法 1 自用 AI 營運成本扣除倍數；統一估值日與 NTM，取代 peers_si_20261030.json 混用 FY2027 與 NTM）",
+ "source": "MarketScreener 估值頁（valuation）與財務頁（finances），以 Andy 電腦上的內建瀏覽器讀取",
+ "retrieved": "2026-11-09",
+ "asOf": "2026-11-06（收盤；頁面 Reference price）",
+ "method": "NTM EV/EBITDA＝當期 EV（頁面當年度欄：現價市值＋該年預估淨負債）÷ NTM EBITDA；NTM＝評估日 2026-11-06 起 12 個月＝當年度剩餘 55/365 × 當年度＋其餘 × 下一年度（12 月年制）；Oracle 財年 5 月：FY2027 剩 205/365",
+ "dateGap": "模型現價日 2026-11-05，同業取 2026-11-06 收盤（差一個交易日；同一來源全組 11-05 資料未取得）",
+ "capex": "資本支出率：MarketScreener 財務頁未列 Capex，未取得；以 FCF ÷ EBITDA 作資本強度代理（Derived）",
+ "group": "si_ai_infra",
+ "label": "AI 基礎設施／雲",
+ "peers": [
+  {
+   "ticker": "CRWV",
+   "name": "CoreWeave",
+   "url": "https://www.marketscreener.com/quote/stock/COREWEAVE-INC-185380761/valuation/",
+   "refPrice": 46.4,
+   "evCurrent": 70817.0,
+   "ebitda": {
+    "2025": 3093.0,
+    "2026": 7554.0,
+    "2027": 16711.0,
+    "2028": 29237.0
+   },
+   "sales": {
+    "2025": 5131.0,
+    "2026": 12873.0,
+    "2027": 26445.0,
+    "2028": 43662.0
+   },
+   "netDebt": {
+    "2025": null,
+    "2026": null,
+    "2027": null,
+    "2028": null
+   },
+   "fcf": {
+    "2025": null,
+    "2026": null,
+    "2027": null,
+    "2028": null
+   },
+   "ntmEbitda": 15331.2,
+   "ntmEvEbitda": 4.619,
+   "salesGrowthNext": 1.0543,
+   "ebitdaMarginNext": 0.6319,
+   "netDebtToEbitdaNext": null,
+   "fcfToEbitdaNext": null,
+   "ntmNote": "55/365 × FY2026＋310/365 × FY2027",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "ticker": "NBIS",
+   "name": "Nebius Group",
+   "url": "https://www.marketscreener.com/quote/stock/NEBIUS-GROUP-8037501/valuation/",
+   "refPrice": 129.49,
+   "evCurrent": 49152.0,
+   "ebitda": {
+    "2021": 424.5,
+    "2022": 859.6,
+    "2023": null,
+    "2024": -266.4,
+    "2025": -64.9,
+    "2026": 1380.0,
+    "2027": 6485.0,
+    "2028": 13418.0
+   },
+   "sales": {
+    "2021": 4704.0,
+    "2022": 6992.0,
+    "2023": null,
+    "2024": 117.5,
+    "2025": 529.8,
+    "2026": 3346.0,
+    "2027": 12281.0,
+    "2028": 23137.0
+   },
+   "netDebt": {
+    "2021": null,
+    "2022": null,
+    "2023": null,
+    "2024": null,
+    "2025": null,
+    "2026": null,
+    "2027": null,
+    "2028": null
+   },
+   "fcf": {
+    "2021": null,
+    "2022": null,
+    "2023": null,
+    "2024": null,
+    "2025": null,
+    "2026": null,
+    "2027": null,
+    "2028": null
+   },
+   "ntmEbitda": 5715.8,
+   "ntmEvEbitda": 8.599,
+   "salesGrowthNext": 2.6704,
+   "ebitdaMarginNext": 0.5281,
+   "netDebtToEbitdaNext": null,
+   "fcfToEbitdaNext": null,
+   "ntmNote": "55/365 × FY2026＋310/365 × FY2027",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "ticker": "ORCL",
+   "name": "Oracle",
+   "url": "https://www.marketscreener.com/quote/stock/ORACLE-CORPORATION-13620698/valuation/",
+   "refPrice": 116.1,
+   "evCurrent": 477563.0,
+   "ebitda": {
+    "2022": 21565.0,
+    "2023": 23428.0,
+    "2024": 26184.0,
+    "2025": 28900.0,
+    "2026": 36549.0,
+    "2027": 52090.0,
+    "2028": 74148.0,
+    "2029": 105490.0
+   },
+   "sales": {
+    "2022": 42440.0,
+    "2023": 49954.0,
+    "2024": 52961.0,
+    "2025": 57399.0,
+    "2026": 67357.0,
+    "2027": 90447.0,
+    "2028": 131819.0,
+    "2029": 184052.0
+   },
+   "netDebt": {
+    "2022": null,
+    "2023": null,
+    "2024": null,
+    "2025": null,
+    "2026": null,
+    "2027": null,
+    "2028": null,
+    "2029": null
+   },
+   "fcf": {
+    "2022": null,
+    "2023": null,
+    "2024": null,
+    "2025": null,
+    "2026": null,
+    "2027": null,
+    "2028": null,
+    "2029": null
+   },
+   "ntmEbitda": 61759.3,
+   "ntmEvEbitda": 7.733,
+   "salesGrowthNext": 0.4574,
+   "ebitdaMarginNext": 0.5625,
+   "netDebtToEbitdaNext": null,
+   "fcfToEbitdaNext": null,
+   "ntmNote": "205/365 × FY2027（至 2027-05）＋160/365 × FY2028",
+   "tag": "[Derived]",
+   "note": "財年 5 月；FY2027＝2026-06～2027-05"
+  }
+ ],
+ "median": 7.733
+}
