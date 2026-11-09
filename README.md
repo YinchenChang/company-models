@@ -7,7 +7,7 @@
 | `nebius/` | Nebius（NBIS） | `YinchenChang/crwv-model` @ `01b13ad`（v4.5） | v0.1 |
 | `coreweave/` | CoreWeave（CRWV） | `YinchenChang/crwv-model` @ `01b13ad`（v4.5；2026-10-07 起在此維護，改接 Tokenomics 中，見 `coreweave/docs/workorders/`） | 改造中 |
 | `openai/` | OpenAI（未上市） | `YinchenChang/openai-model` @ `13c16f0`（v0.6-P1；原 repo 停用，歷史留在原處） | 建置中（v0.6） |
-| `oracle/` | Oracle（ORCL） | `nebius/` @ `642d144`（CRWV v4.5＋Nebius v0.1b）；v0.4 起命題＋官方分部 | v0.4.3（Tokenomics 快照換 v21.9，目標價不變；成品 `oracle/dist/20261104_Oracle個股模型_v0.4.3.xlsx`／`.html`） |
+| `oracle/` | Oracle（ORCL） | `nebius/` @ `642d144`（CRWV v4.5＋Nebius v0.1b）；v0.4 起命題＋官方分部 | v0.4.7（v0.4.6 驗收報告採用項；加權目標價 70.38、放空；成品 `oracle/dist/20261109_Oracle個股模型_v0.4.7.xlsx`／`.html`） |
 | `minimax/` | MiniMax（00100.HK） | 比照 `openai/` 結構（MW 主軸、P×Q 回本比值、TK v19.0 官方快照）；獨立的 Python→Excel 產生器 | v0.2 |
 | `zhipu/` | 智譜（智譜華章，02513.HK） | `openai/` v0.6（`claude/openai-s6-release` @ `e91df57`）的架構；骨架經 Anthropic A0 | v0.1.2（官方分部對帳） |
 | `anthropic/` | Anthropic（未上市） | `openai/`（v0.6，`claude/openai-s6-release` @ `e91df57`）的架構與工具鏈 | v0.1.7（正式 S-1 套用、自建資本支出 GW 法、TK v21.7；成品：`anthropic/dist/20261031_Anthropic收支模型_v0_1_7.html`／`.xlsx`） |
