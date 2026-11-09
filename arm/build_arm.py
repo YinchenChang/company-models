@@ -21,7 +21,8 @@ import fcff_dcf as FD   # noqa: E402  v0.3：標準版 DCF（無槓桿自由現�
 sys.path.insert(0, os.path.join(ROOT, "tools", "in_layout"))
 import apply_in_layout   # noqa: E402
 
-VER, DATE = "v0.3.3", "2026-11-06"
+VER, DATE = "v0.3.4", "2026-11-09"
+LEG, LEGD = "v0.3.3", "2026-11-06"   # v0.3.4：README 舊版文字（版本沿革、A1）先以 v0.3.3 寫入，再由 v034_post.py 改為 v0.3.4
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC"); FADEFILL = PatternFill("solid", fgColor="E7E6E6")
 SC = ("A", "B", "C")
@@ -93,6 +94,12 @@ for s, v in (("A", 0.14), ("B", 0.11), ("C", 0.07)):
         "管理層：v9 CSS 權利金率每代上升；CSS 占權利金 FY2026 進入十幾 %、未來兩年可能逾 50%（3Q26 法說）" if s == "A" else ("同上；情境 B 為基準" if s == "B" else "情境 C：Qualcomm 2026-10-13 陪審團判 Arm 違約（架構授權），Arm 難以要求 Qualcomm 改用較高費率；加上 CSS 推廣較慢"),
         "Qualcomm 訴訟：Paul Weiss 2026-10-13；法官審理部分 10-20 結辯，判決未出" if s == "C" else "—")
 inp("qc_adj", "Qualcomm 相關手機權利金調整（FY2028 起；基準 0）", "%", -0.06, 0.0, 0.02, "Assumed", "陪審團 2026-10-13 判 Arm 違反架構授權、干擾 Qualcomm 與 Meta 的業務關係（Paul Weiss）；陪審團僅判賠 2 美元，權利金與未來授權條件由法官裁定、判決未出（Reuters 2026-11-04 轉載）", "低值＝Qualcomm 擴大自研核心、Arm 失去部分手機權利金；高值＝和解後費率調升")
+# v0.3.4（驗收 B2，Andy 2026-11-09 確認）：事件型尾端風險只進 Sens（基準 0），不進基準
+inp("qc_sh", "Qualcomm 占 FY2026 營收（授權＋權利金）", "%", None, 0.09, None, "Assumed", "TIKR 2026-10-10 轉述 20-F（FY2026）：Qualcomm 約占營收 9%（約 4.43 億美元）；20-F 原文未逐字查核", "含授權費，作為停付金額的上限；只用於 Sens 尾端案例 qc_stop")
+inp("qc_stop", "尾端：Qualcomm 停付權利金的年數（FY2028 起；基準 0）", "年", 2, 0, 1, "Assumed", "Qualcomm 主張合約條款允許違約時停付權利金五年，法官未裁定（TIKR 2026-10-10；Reuters 2026-11-04）", "低＝停付 FY2028–FY2029 兩年（收斂期由 FY2029 延伸，近似停付五年）；高＝只停 FY2028 一年；停付額＝qc_sh × FY2026 營收（上限）")
+inp("cn_s", "Arm China 占 FY2026 營收", "%", None, 0.16, None, "Verified", "20-F（FY2026）：最大單一客戶 Arm China 約占營收 16%（FY2025 17%、FY2024 21%）", "前五大客戶（含 Arm China、SoftBank）合計 57%（20-F）")
+inp("cn_adj", "尾端：Arm China 營收變動（FY2028 起，權利金與授權同幅；基準 0）", "%", -0.2, 0.0, 0.2, "Assumed", "驗收報告 F-04 建議 ±20%；無發生機率證據，只作 Sens", "營收影響＝cn_s × cn_adj（不含 AGI CPU 晶片）")
+inp("sb_lic", "尾端：SoftBank 授權協議到期不續約，FY2029 起每年減少授權收入（基準 0）", "US$B", 0.8, 0.0, 0.0, "Interested-party", "SoftBank 協議 3Q26 認列約 2.0 億美元／季（3Q26 法說，The Motley Fool 逐字稿）；協議期間與續約：未找到", "低＝FY2029 起每年少 0.8（約 4 季）；高＝基準（續約）")
 inp("cpu_gpu", "每顆 NVIDIA 資料中心 GPU 搭配的 Arm CPU（Grace／Vera）", "顆", 0.4, 0.5, 0.5, "Interested-party", "GB200／GB300 NVL72：72 顆 GPU 搭 36 顆 Grace；VR NVL144：72 顆封裝搭 36 顆 Vera（NVIDIA）", "低值反映 HGX（x86 主機）出貨占比")
 for k, lab in (("bw", "Blackwell"), ("rb", "Rubin"), ("ru", "Rubin Ultra")):
     for y, j in ((26, 1), (27, 2), (28, 3), (29, 4)):
@@ -114,7 +121,8 @@ for y, vals in ((28, (1.4, 1.0, 0.5)), (29, (3.0, 2.0, 0.8))):
         inp(f"chip{y}_{s}", f"情境 {s}：Arm AGI CPU 晶片營收 FY20{y}", "US$B", None, v, None, "Assumed",
             "客戶需求 FY2027–28 逾 20 億美元，已取得 10 億美元的產能（股東信 2026-07-29）；公司稱朝此業務 150 億美元的預估前進（4Q26 股東信）" if (y == 28 and s == "A") else "同上",
             "產能為主要限制：第二個 10 億美元的製造產能尚未鎖定（Yahoo Finance 轉述 WSJ）" if (y == 28 and s == "A") else "—")
-inp("chip_gm", "晶片毛利率", "%", 0.35, 0.45, 0.55, "Assumed", "晶片毛利率公司未揭露：未找到", "Analogy：CPU 晶片業者 50–60%；首代晶片、委外製造與客戶議價（Assumed 較低）")
+inp("chip_gm1", "首代晶片毛利率（FY2027–FY2028）", "%", 0.30, 0.35, 0.40, "Interested-party", "公司 CFO：首代 AGI CPU 毛利率約 30%–40%，後續版本目標 50% 以上（2Q27 法說 2026-11-04，Zacks 與 Futurum 轉述）；1Q27 法說「high-30% 到 low-40%」、4Q26 法說「約 30% 以上」", "v0.3.4 新增（驗收 J2 選項 a，Andy 2026-11-09）：首代區間取公司揭露 30–40%；對公司不利的揭露（低毛利）可信度高於對公司有利的目標")
+inp("chip_gm", "晶片毛利率（FY2029 起；後續版本）", "%", 0.35, 0.45, 0.55, "Assumed", "公司後續版本目標 50% 以上（2Q27 法說）為管理層目標，不直接採用；長期晶片業務 EBITDA 率約 35%（4Q26 法說）", "Analogy：CPU 晶片業者 50–60%；委外製造與客戶議價（Assumed 較低）；v0.3.3 起區間不變，v0.3.4 起只用於 FY2029 起")
 
 sec("E. 營業費用、業外、稅與股數（FY2028 起；non-GAAP）")
 inp("g_opx", "non-GAAP 營業費用年增", "%", 0.08, 0.13, 0.18, "Assumed", "FY2026 non-GAAP 營業費用年增 33%（研發 +43%）；FY2027 錨點約 +15%（股東信）", "晶片業務需持續研發與銷售投入")
@@ -123,7 +131,7 @@ inp("tx_f", "non-GAAP 有效稅率", "%", 0.13, 0.15, 0.18, "Derived", "同 q_tx
 inp("sh_g", "稀釋股數年變動", "%", 0.0, 0.008, 0.015, "Assumed", "FY2025 1,063 → FY2026 1,068 → 1Q27 1,078 百萬股（股東信）", "股票薪酬發行；公司未大量買回")
 
 sec("F. 共識與券商（只作 Recon 對帳，不作校準）")
-inp("c_eps27", "共識 FY2027 non-GAAP EPS（S&P Global 平均）", "US$", None, 2.23, None, "Interested-party", SAF + "（stockanalysis，更新 2026-10-21）", "高 2.38、低 2.06")
+inp("c_eps27", "共識 FY2027 non-GAAP EPS（S&P Global 平均；2Q27 財報後）", "US$", None, 2.26, None, "Interested-party", SAF + "（stockanalysis，更新 2026-11-05）", "v0.3.3 為 2.23（2026-10-21，財報前）")
 inp("c_rev27", "共識 FY2027 營收（平均）", "US$B", None, 6.1, None, "Interested-party", SAF, "Hudson Labs：60.58 億美元")
 inp("c_q2rev", "共識 2Q27 營收", "US$B", None, 1.376, None, "Interested-party", HL, "公司指引 13.8 億 ± 0.5 億")
 
@@ -140,8 +148,8 @@ inp("fade_gA", "情境 A（順利）：FY2032 營收年增收斂目標（tp_g＋
 inp("fade_gB", "情境 B（平平）：FY2032 營收年增收斂目標（＝tp_g）", "%", None, "=tp_g", None, "Assumed", "同上", "—")
 inp("fade_gC", "情境 C（不如預期）：FY2032 營收年增收斂目標（tp_g−2pt）", "%", None, "=tp_g-0.02", None, "Assumed", "同上", "—")
 inp("nim10_f", "十年平均淨利率的替代：最後一年（FY2029）淨利率 ×（本值）", "x", None, 0.8, None, "Assumed", "十年平均淨利率：未找到（2023 年 9 月才上市）；依工作單以最後一年 × 0.8 替代", "淨利率收斂目標：A＝FY2029、B＝中點、C＝替代值")
-inp("cons_tp", "市場共識目標價（賣方平均）", "US$", None, 290.71, None, "Interested-party", "stockanalysis forecast 頁（S&P Global）43 位分析師平均 290.71（中位數 278.60），更新 2026-10-21", "UBS 320、RBC 340（marketscreener，2026-07-30）")
-inp("cons_feps", "共識前瞻 12 月 EPS（＝價格 ÷ 前瞻 P/E）", "US$", None, "=225.95/93.52", None, "Interested-party", "stockanalysis 個股頁（2026-10-27）：價格 225.95 ÷ Forward PE 93.52", "賣方共識，只作對帳與差距拆解，不作校準")
+inp("cons_tp", "市場共識目標價（賣方平均；2Q27 財報後）", "US$", None, 273.4, None, "Interested-party", "stockanalysis forecast 頁（S&P Global）43 位分析師平均 273.40（中位數 270），更新 2026-11-05（2Q27 財報 11-04 後）", "v0.3.3 為 290.71（2026-10-21，財報前）")
+inp("cons_feps", "共識前瞻 12 月 EPS（＝價格 ÷ 前瞻 P/E；2Q27 財報後）", "US$", None, "=174.62/67.81", None, "Interested-party", "stockanalysis 統計頁（更新 2026-11-07）：價格 174.62（2026-11-06 收盤）÷ Forward PE 67.81", "賣方共識，只作對帳與差距拆解，不作校準；v0.3.3 為 225.95 ÷ 93.52（2026-10-27，財報前）")
 
 # v0.3（2026-11-05）：標準版 DCF（FCFF＋WACC）參數（tools/fcff_dcf.in_rows；docs/plan/個股DCF標準規格.md）。資產負債 2026-03-31（20-F；季報 6-K 無 XBRL 資產負債表）
 XB = "SEC XBRL companyfacts（CIK 0001973239；https://data.sec.gov/api/xbrl/companyfacts/CIK0001973239.json；20-F FY2024–FY2026；2026-11-05 讀取）"
@@ -151,23 +159,23 @@ for _row in FD.in_rows(dict(
             "FRED DGS10（同一序列）；與 NVIDIA、AMD、Broadcom、邁威爾 DCF 同一值（股價日 2026-10-30 的殖利率未另取）", "無風險利率（美國 10 年期公債殖利率，2026-10-23）"),
         beta_fixed=("=beta_u_lo*(1+(1-tax_w)*beta_de)", "=beta_u*(1+(1-tax_w)*beta_de)", "=beta_u_hi*(1+(1-tax_w)*beta_de)", "Derived",
                     "自算產業 β：US 半導體 同業 13 家中位數（Yahoo Finance 月報酬 2021-11～2026-10，對 ^GSPC（S&P 500） 迴歸，Hamada 去槓桿、現金修正），以本公司市值 D/E 與稅率重新加槓桿（Hamada）", "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）。Sens 低／高（Analogy；v0.3.1 起）：β_u ∓ 0.3（beta_u 低／高欄），各自同式重新加槓桿（工作單第二輪修正，Andy 2026-11-05 23:16 定案；tools/fcff_dcf.py v2 write_sens）"),
-        kd=("=rf+0.01", "Assumed", "美國 10 年期公債＋信用利差 1%（Assumed；公司無金融借款）", "負債只有租賃（0.43 十億美元），占資本不到 0.2%，對 WACC 影響可忽略"),
-        tax_w=("=tx_f", "Derived", "＝In 頁 tx_f（non-GAAP 有效稅率 15%）", "NOPAT 用同一稅率"),
+        kd=("=rf+0.01", "Assumed", "美國 10 年期公債＋信用利差 1%（Assumed；公司無金融借款）", '="負債只有租賃（"&TEXT(lease_v,"0.00")&" 十億美元），占資本不到 "&TEXT(lease_v/(lease_v+px*sh_v),"0.0%")&"，對 WACC 影響可忽略"'),
+        tax_w=("=tx_f", "Derived", "＝In 頁 tx_f（non-GAAP 有效稅率；股東信調節表 1Q27、2Q27 約 15%）", "NOPAT 與稅盾用同一稅率。15% 是 non-GAAP 稅率，用於 NOPAT 是假設（DCF 標準規格只設一個稅率；GAAP 稅率受上市一次性股票薪酬扭曲）；Sens 以 tx_f 低／高 13%／18% 涵蓋（驗收 B5）"),
         debt=(0.0, "Verified", "Arm 6-K 2026-11-04（季度財報，季度結束 2026-09-30；https://www.sec.gov/Archives/edgar/data/1973239/000197323926000142/arm-20260930.htm）資產負債表：無金融借款（2026-09-30）", "20-F 資產負債表（2026-03-31）同"),
-        lease=("=0.045+0.435", "Verified", "Arm 6-K 2026-11-04（季度財報，季度結束 2026-09-30；https://www.sec.gov/Archives/edgar/data/1973239/000197323926000142/arm-20260930.htm）資產負債表：營業租賃負債流動 45＋非流動 435（2026-09-30，US$M）", "2026-03-31 為 432（20-F）；融資租賃（使用權資產 56）不計，同 v0.3 口徑"),
-        cash=("=3.251+0.37", "Verified", "Arm 6-K 2026-11-04（季度財報，季度結束 2026-09-30；https://www.sec.gov/Archives/edgar/data/1973239/000197323926000142/arm-20260930.htm）資產負債表：現金及約當現金 3,251＋短期投資 370（2026-09-30，US$M）", "2026-03-31：2,751＋850（v0.3 用值，20-F）"),
-        inv=(0.599, "Verified", "Arm 6-K 2026-11-04（季度財報，季度結束 2026-09-30；https://www.sec.gov/Archives/edgar/data/1973239/000197323926000142/arm-20260930.htm）資產負債表：Equity investments 599（2026-09-30，US$M；含公允價值選擇權 157）", "2026-03-31 為 387；帳面計入；Sens 測不計"),
+        lease=("=h_lsc_q2+h_lsn_q2", "Derived", "Arm 6-K 2026-11-04（季度財報，季度結束 2026-09-30；https://www.sec.gov/Archives/edgar/data/1973239/000197323926000142/arm-20260930.htm）資產負債表：營業租賃負債流動 45＋非流動 435（2026-09-30，US$M）", "2026-03-31 為 432（20-F）；融資租賃（使用權資產 56）不計，同 v0.3 口徑"),
+        cash=("=h_cash_q2+h_sti_q2", "Derived", "Arm 6-K 2026-11-04（季度財報，季度結束 2026-09-30；https://www.sec.gov/Archives/edgar/data/1973239/000197323926000142/arm-20260930.htm）資產負債表：現金及約當現金 3,251＋短期投資 370（2026-09-30，US$M）", "2026-03-31：2,751＋850（v0.3 用值，20-F）"),
+        inv=("=h_inv_q2", "Verified", "Arm 6-K 2026-11-04（季度財報，季度結束 2026-09-30；https://www.sec.gov/Archives/edgar/data/1973239/000197323926000142/arm-20260930.htm）資產負債表：Equity investments 599（2026-09-30，US$M；含公允價值選擇權 157）", "2026-03-31 為 387；帳面計入；Sens 測不計"),
         mi=(0.0, "Verified", "無少數股權", "—"),
         stub=dict(bs_date="2026-09-30", val_date="2026-12-31", bs_src="Arm 6-K 2026-11-04（季度財報，季度結束 2026-09-30；https://www.sec.gov/Archives/edgar/data/1973239/000197323926000142/arm-20260930.htm）資產負債表（2Q27，最新已公布一季）",
                   div=(0.0, "Verified", "Arm 未發放現金股利（20-F）", "買回無已宣告金額，不扣")),
         dps=(0, "Verified", "Arm 未發放現金股利（20-F）", "—"),
         sh=("=q_sh", "Derived", "＝In 頁 q_sh（2Q27 稀釋股數 1.080 十億股）", "股票薪酬持續發行；回購未建模"),
-        fc_da=(None, "=AVERAGE(0.162/3.233,0.183/4.007,0.249/4.92)", None, "Derived",
+        fc_da=(None, "=AVERAGE(h_da_24/h_rev_24,h_da_25/h_rev_25,h_da_26/h_rev_26)", None, "Derived",
                XB + "：DepreciationDepletionAndAmortization FY2024 162、FY2025 183、FY2026 249 ÷ 營收 3,233、4,007、4,920（US$M）；比例 5.0%、4.6%、5.1%，平均 4.9%", "—"),
-        fc_cx=(None, "=AVERAGE((0.092+0.051)/3.233,(0.219+0.02)/4.007,(0.545+0.03)/4.92)", None, "Derived",
+        fc_cx=(None, "=AVERAGE((h_ppe_24+h_int_24)/h_rev_24,(h_ppe_25+h_int_25)/h_rev_25,(h_ppe_26+h_int_26)/h_rev_26)", None, "Derived",
                XB + "：購置不動產廠房設備＋無形資產 FY2024 92＋51、FY2025 219＋20、FY2026 545＋30（US$M）；比例 4.4%、6.0%、11.7%，平均 7.4%", "FY2026 起 AGI CPU 晶片業務投資增加；Sens 用 fc_cx_d ±1pt"),
         fc_cx_ss=("=MAX(fc_da_ss*(1+g_tv),(fc_cx+fc_da_ss*(1+g_tv))/2)", "Assumed", "FY2029 起線性收斂，FY2032 達到：近期比例與維持水準（折舊 ×（1＋g））的中點，下限為維持水準", "Andy 可改"),
-        fc_wc=(0.0, "=AVERAGE((0.781+0.336+0.24+0.157-0.026-0.298-0.198-0.717-0.835)/3.233,(1.107+0.642+0.346+0.256-0.063-0.14-0.209-0.702-0.426)/4.007,(1.3+0.977+0.32+0.358-0.08-0.154-0.294-0.752-0.447)/4.92)", 0.25, "Derived",
+        fc_wc=(0.0, "=AVERAGE(h_nwc_24/h_rev_24,h_nwc_25/h_rev_25,h_nwc_26/h_rev_26)", 0.25, "Derived",
                "近三年年底營運資金 ÷ 營收平均：應收＋合約資產（流動＋非流動）＋預付 − 應付 − 應付員工 − 合約負債（流動＋非流動）− 其他流動負債（" + XB + "）；比例 −17.3%、20.2%、25.0%，平均 9.3%",
                "合約資產隨權利金與授權認列增加；Sens 低／高 0%／25%（Assumed）"),
         )):
@@ -176,9 +184,9 @@ inp("beta_u", "產業無槓桿 β：自算 US 半導體（同業 13 家中位數
     "自算產業 β：US 半導體 同業 13 家中位數（Yahoo Finance 月報酬 2021-11～2026-10，對 ^GSPC（S&P 500） 迴歸，Hamada 去槓桿、現金修正）：中位數 2.32；Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）：0.67 × 2.32 ＋ 0.33＝1.884（同業表與方法：docs/plan/自算產業β_20261105.md）",
     "低／高＝β_u ∓ 0.3（工作單第二輪修正，Andy 2026-11-05 23:16 定案；v0.3 為中位數 × 0.8 再 Blume 1.574／中位數未調整 2.32；寫成數值供 sens_arm.py 整本重建）；取代 Damodaran 表（Andy 2026-11-05 22:55）")
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 評價股數 sh_v)", "與 WACC 權重同一口徑")
-inp("sbc_rev", "股票薪酬 ÷ 營收（EBIT 扣除；non-GAAP 營業利益排除股票薪酬，標準版 DCF 視為費用）", "%", None, "=AVERAGE(1.037/3.233,0.82/4.007,1.052/4.92)", None, "Derived",
-    XB + "：ShareBasedCompensation FY2024 1,037、FY2025 820、FY2026 1,052 ÷ 營收（US$M）；比例 32.1%、20.5%、21.4%，平均 24.6%",
-    "FY2024 含上市相關一次性股票薪酬；1Q27＋2Q27 股票薪酬 3.43＋3.77 億 ÷ 營收約 26%（股東信）；規格第 1 節：股票薪酬不加回（預設）")
+inp("sbc_rev", "股票薪酬 ÷ 營收（EBIT 扣除；non-GAAP 營業利益排除股票薪酬，標準版 DCF 視為費用）", "%", 0.209, "=AVERAGE(h_sbc_24/h_rev_24,h_sbc_25/h_rev_25,h_sbc_26/h_rev_26)", 0.264, "Derived",
+    "Hist 頁 h_sbc ÷ h_rev（" + XB + "：ShareBasedCompensation ÷ 營收，FY2024–FY2026）",
+    "FY2024 含上市相關一次性股票薪酬；規格第 1 節：股票薪酬不加回（預設）。v0.3.4 Sens（驗收 A6）：低＝FY2025–FY2026 平均 20.9%（排除含上市一次性的 FY2024；一次性金額未取得，以兩年平均代理）；高＝1Q27＋2Q27（3.43＋3.77）÷（12.89＋14.43）＝26.4%（股東信）")
 
 r = 4; INROW = {}
 for srow in rows:
@@ -297,19 +305,19 @@ def engine(ws, r0, title, s):
     row("phrt", "手機每支權利金（美元）＝ 手機權利金 ÷ 出貨", "US$", {"D": f"=ph_s*a26_ro/D{R['phu']}", "E": f"=D{r}*(1+g_ph27)", "F": f"=E{r}*(1+phr_{s})", "G": f"=F{r}*(1+phr_{s})"}, fmt="0.000",
         note=f"FY2026 Derived；FY2028–29 年增＝情境 {s} 的 phr_{s}（v9、CSS 滲透；C 含 Qualcomm 判決影響）")
     row("ph", "權利金：智慧型手機（行動應用處理器）", "US$B", {"C": f"=ph_s*a25_ro", "D": f"=ph_s*a26_ro", "E": f"=E{R['phu']}*E{R['phrt']}",
-        **{c: f"={c}{R['phu']}*{c}{R['phrt']}*(1+qc_adj)" for c in "FG"}}, note="FY2025 拆分沿用 FY2026 比例（Assumed）；FY2028 起 × (1＋qc_adj)")
+        **{c: f"={c}{R['phu']}*{c}{R['phrt']}*(1+qc_adj)*(1+cn_s*cn_adj)-IF(qc_stop>={1 if c == 'F' else 2},qc_sh*a26_rev,0)" for c in "FG"}}, note="FY2025 拆分沿用 FY2026 比例（Assumed）；FY2028 起 × (1＋qc_adj)；Sens 尾端：×（1＋cn_s × cn_adj）、減 Qualcomm 停付額（qc_stop）")
     row("dc", "權利金：資料中心（Neoverse；Grace、Vera、Graviton、Axion、Cobalt 等）", "US$B",
-        {"C": f"=dc_s*a25_ro", "D": f"=dc_s*a26_ro", "E": f"=D{r}*(1+g_dc27)", **{c: f"=$E{r}*{c}{R['dcx']}*{c}{R['dcrx']}" for c in "FG"}}, note="FY2028 起＝FY2027 × CPU 顆數指數 × 每顆權利金率指數")
-    row("au", "權利金：車用", "US$B", {"C": f"=au_s*a25_ro", "D": f"=au_s*a26_ro", "E": f"=D{r}*(1+g_au27)", "F": f"=E{r}*(1+g_au)", "G": f"=F{r}*(1+g_au)"})
+        {"C": f"=dc_s*a25_ro", "D": f"=dc_s*a26_ro", "E": f"=D{r}*(1+g_dc27)", **{c: f"=$E{r}*{c}{R['dcx']}*{c}{R['dcrx']}*(1+cn_s*cn_adj)" for c in "FG"}}, note="FY2028 起＝FY2027 × CPU 顆數指數 × 每顆權利金率指數（Sens 尾端 ×（1＋cn_s × cn_adj））")
+    row("au", "權利金：車用", "US$B", {"C": f"=au_s*a25_ro", "D": f"=au_s*a26_ro", "E": f"=D{r}*(1+g_au27)", "F": f"=E{r}*(1+g_au)*(1+cn_s*cn_adj)", "G": f"=F{r}*(1+g_au)"})
     row("iot", "權利金：物聯網與其他（含 PC、消費電子、嵌入式；FY2027 前為殘差）", "US$B",
-        {"C": f"=a25_ro-C{R['ph']}-C{R['dc']}-C{R['au']}", "D": f"=a26_ro-D{R['ph']}-D{R['dc']}-D{R['au']}", "E": f"=a27_ro-E{R['ph']}-E{R['dc']}-E{R['au']}", "F": f"=E{r}*(1+g_iot)", "G": f"=F{r}*(1+g_iot)"},
+        {"C": f"=a25_ro-C{R['ph']}-C{R['dc']}-C{R['au']}", "D": f"=a26_ro-D{R['ph']}-D{R['dc']}-D{R['au']}", "E": f"=a27_ro-E{R['ph']}-E{R['dc']}-E{R['au']}", "F": f"=E{r}*(1+g_iot)*(1+cn_s*cn_adj)", "G": f"=F{r}*(1+g_iot)"},
         note="FY2025–FY2027 為權利金 − 三個市場（殘差）；FY2028 起依成長率")
     row("ro", "權利金營收（Royalty）", "US$B", {c: f"={c}{R['ph']}+{c}{R['dc']}+{c}{R['au']}+{c}{R['iot']}" for c in "CDEFG"}, note="官方營收類型；FY2025–FY2027 等於財報／錨點")
     row("rog", "  權利金年增", "%", {c: f"={c}{R['ro']}/{p}{R['ro']}-1" for p, c in zip("CDEF", "DEFG")}, fmt="0.0%")
     sec_("C. 授權及其他（含 SoftBank 協議）與 Arm AGI CPU 晶片")
     row("chip", "授權及其他：Arm AGI CPU 晶片營收（公司未揭露所在列，暫列於此）", "US$B", {"C": "=0", "D": "=0", "E": "=chip_27", "F": f"=chip28_{s}", "G": f"=chip29_{s}"},
         note=f"情境 {s}：chip28_{s}、chip29_{s}（Assumed；A 最高、C 最低）")
-    row("lic", "授權及其他：授權（不含晶片；含 SoftBank 協議）", "US$B", {"C": "=a25_lo", "D": "=a26_lo", "E": f"=a27_lo-E{R['chip']}", "F": f"=E{r}*(1+g_lic)", "G": f"=F{r}*(1+g_lic)"})
+    row("lic", "授權及其他：授權（不含晶片；含 SoftBank 協議）", "US$B", {"C": "=a25_lo", "D": "=a26_lo", "E": f"=a27_lo-E{R['chip']}", "F": f"=E{r}*(1+g_lic)*(1+cn_s*cn_adj)", "G": f"=F{r}*(1+g_lic)-sb_lic"}, note="FY2028 起年增 g_lic；Sens 尾端：×（1＋cn_s × cn_adj）、FY2029 起減 sb_lic")
     row("lo", "授權及其他營收（License and other）", "US$B", {c: f"={c}{R['lic']}+{c}{R['chip']}" for c in "CDEFG"}, note="官方營收類型；FY2025–FY2027 等於財報／錨點")
     row("rev", "營收", "US$B", {c: f"={c}{R['lo']}+{c}{R['ro']}" for c in "CDEFG"})
     row("g", "營收年增", "%", {c: f"={c}{R['rev']}/{p}{R['rev']}-1" for p, c in zip("CDEF", "DEFG")}, fmt="0.0%")
@@ -319,14 +327,14 @@ def engine(ws, r0, title, s):
     row("dcsh", "資料中心 ÷ 權利金", "%", {c: f"={c}{R['dc']}/{c}{R['ro']}" for c in "CDEFG"}, fmt="0.0%")
     row("phsh", "智慧型手機 ÷ 權利金", "%", {c: f"={c}{R['ph']}/{c}{R['ro']}" for c in "CDEFG"}, fmt="0.0%")
     sec_("D. 損益（non-GAAP）")
-    row("cogs", "營業成本（IP × cogs_r＋晶片 ×（1 − 晶片毛利率））", "US$B", {"C": "=a25_cogs", "D": "=a26_cogs", "E": f"=a27_cogs+E{R['chip']}*(1-chip_gm-cogs_r)",
-        **{c: f"=({c}{R['rev']}-{c}{R['chip']})*cogs_r+{c}{R['chip']}*(1-chip_gm)" for c in "FG"}}, note="FY2027 錨點的成本以 cogs_r 計，晶片部分另加（毛利率 chip_gm）")
+    row("cogs", "營業成本（IP × cogs_r＋晶片 ×（1 − 晶片毛利率））", "US$B", {"C": "=a25_cogs", "D": "=a26_cogs", "E": f"=a27_cogs+E{R['chip']}*(1-chip_gm1-cogs_r)",
+        **{c: f"=({c}{R['rev']}-{c}{R['chip']})*cogs_r+{c}{R['chip']}*(1-{'chip_gm1' if c == 'F' else 'chip_gm'})" for c in "FG"}}, note="FY2027 錨點的成本以 cogs_r 計，晶片部分另加；晶片毛利率 FY2027–FY2028＝chip_gm1（首代，公司揭露 30–40%），FY2029 起＝chip_gm")
     row("gp", "毛利", "US$B", {c: f"={c}{R['rev']}-{c}{R['cogs']}" for c in "CDEFG"})
     row("gm", "毛利率", "%", {c: f"={c}{R['gp']}/{c}{R['rev']}" for c in "CDEFG"}, fmt="0.0%")
     row("opx", "營業費用（non-GAAP）", "US$B", {"C": "=a25_opx", "D": "=a26_opx", "E": "=a27_opx", "F": f"=E{r}*(1+g_opx)", "G": f"=F{r}*(1+g_opx)"})
     row("oi", "營業利益（non-GAAP）", "US$B", {c: f"={c}{R['gp']}-{c}{R['opx']}" for c in "CDEFG"})
     row("oim", "營業利益率", "%", {c: f"={c}{R['oi']}/{c}{R['rev']}" for c in "CDEFG"}, fmt="0.0%")
-    row("ni", "稅後淨利（non-GAAP）", "US$B", {"C": "=a25_ni", "D": "=a26_ni", "E": f"=a27_ni-E{R['chip']}*(1-chip_gm-cogs_r)*(1-q_tx)", **{c: f"=({c}{R['oi']}+oth_f)*(1-tx_f)" for c in "FG"}},
+    row("ni", "稅後淨利（non-GAAP）", "US$B", {"C": "=a25_ni", "D": "=a26_ni", "E": f"=a27_ni-E{R['chip']}*(1-chip_gm1-cogs_r)*(1-q_tx)", **{c: f"=({c}{R['oi']}+oth_f)*(1-tx_f)" for c in "FG"}},
         note="FY2027＝錨點淨利扣除晶片成本差（晶片含在錨點營收內）")
     row("nim", "淨利率", "%", {c: f"={c}{R['ni']}/{c}{R['rev']}" for c in "CDEFG"}, fmt="0.0%")
     row("sh_", "稀釋股數", "十億股", {"C": "=a25_sh", "D": "=a26_sh", "E": "=a27_sh", "F": f"=E{r}*(1+sh_g)", "G": f"=F{r}*(1+sh_g)"}, fmt="0.0000")
@@ -466,7 +474,7 @@ def _ebit(s_, y):
 DPATHS = [dict(name=s_, label=f"情境 {s_}（{SCN_NAME[s_]}）", rev={y: f"PL!{XC[y]}{XR[s_]['rev']}" for y in YRS6}, rev0=f"PL!{XC[2026]}{XR[s_]['rev']}",
                ebit={y: _ebit(s_, y) for y in YRS6}, tax={y: "tx_f" for y in YRS6}, ebit_note="non-GAAP 營業利益 − sbc_rev × 營收；FY2030 起由淨利還原") for s_ in SC]
 RD_ = FD.write_detail(DCFW, 4, DPATHS, list(YRS6), 0.25, conv_from=2029, title="三情境 FCFF 明細（US$B；會計年度 3 月底；評價日後 FY2027 只計 0.25 年）", fmt="#,##0.000", stub=True)
-RD_["end"] = FD.write_checks(DCFW, RD_["end"], nc_bs="3.251+0.37+0.599-0.045-0.435",
+RD_["end"] = FD.write_checks(DCFW, RD_["end"], nc_bs="h_cash_q2+h_sti_q2+h_inv_q2-h_lsc_q2-h_lsn_q2",
                              nc_note="2026-09-30 資產負債表（US$B；6-K 2026-11-04）：現金 3.251＋短期投資 0.370＋權益投資 0.599 − 營業租賃 0.045 − 0.435") + 1
 DCFW.column_dimensions["A"].width = 58; DCFW.column_dimensions["B"].width = 40
 for _c in "CDEFGH": DCFW.column_dimensions[_c].width = 13
@@ -495,12 +503,18 @@ tset(r_, "pmed", "同業前瞻 P/E 中位數", [f"=MEDIAN(C{P1}:C{P2})", None, N
      "IP 授權與 EDA（Rambus、新思、益華）、手機與資料中心晶片客戶兼競爭者（高通、博通、邁威爾）；Synopsys、Cadence 已在 Bloomberg 前瞻倍數資料外，相對倍數只計 csv 內同業；非 A 股公司不列 A 股"); r_ += 1
 tset(r_, "feps", "12 個月後的前瞻 EPS（情境加權）", ["=" + "+".join(f"tp_w{s}*({5/12}*{_PE(c, 2028)}+{7/12}*{_PE(c, 2029)})" for s, c in zip(SC, "BCD")), None, None], "0.00",
      "約 2027-10 時的未來 12 月（2027-11～2028-10）≈ 5／12 × FY2028＋7／12 × FY2029（會計年度 3 月底）"); r_ += 1
-tset(r_, "comptp", "Comparable 目標價", [f"=B{T['pmed']}*B{T['feps']}", None, None], PXF, "同業中位數 × 上列 EPS"); r_ += 2
+tset(r_, "comptp", "Comparable 目標價", [f"=B{T['pmed']}*B{T['feps']}", None, None], PXF, "同業中位數 × 上列 EPS"); r_ += 1
+# v0.3.4（驗收 B1、J3 選項 a）：依商業模式並列子群中位數與對應 Comparable 目標價（純展示，不進目標價）
+_pr = {tk: P1 + i for i, (_, tk, _, _, _) in enumerate(PEERS)}
+tset(r_, "pm_ip", "參考：IP 授權與 EDA 子群前瞻 P/E 中位數（Rambus、新思、益華）", [f"=MEDIAN(C{_pr['RMBS']},C{_pr['SNPS']},C{_pr['CDNS']})", None, None], "0.0", "純展示，不進目標價（Andy 2026-11-09 驗收 J3 選項 a：目標價維持六家中位數）"); r_ += 1
+tset(r_, "pm_chip", "參考：晶片子群前瞻 P/E 中位數（高通、博通、邁威爾）", [f"=MEDIAN(C{_pr['QCOM']},C{_pr['AVGO']},C{_pr['MRVL']})", None, None], "0.0", "純展示，不進目標價"); r_ += 1
+tset(r_, "ct_ip", "參考：以 IP／EDA 子群中位數計的 Comparable 目標價", [f"=B{T['pm_ip']}*B{T['feps']}", None, None], PXF, "子群只有三家，中位數由單一公司決定"); r_ += 1
+tset(r_, "ct_chip", "參考：以晶片子群中位數計的 Comparable 目標價", [f"=B{T['pm_chip']}*B{T['feps']}", None, None], PXF, "同上"); r_ += 2
 V.cell(r_, 1, "0.3 結論").font = BOLD; r_ += 1
 hdr(V, r_, ["項目", "數值", "", "", "說明"]); T["h3"] = r_; r_ += 1
 tset(r_, "tpw", "目標價（DCF 與 Comparable 加權）", [f"=tp_w_dcf*B{T['dcftp']}+(1-tp_w_dcf)*B{T['comptp']}", None, None], PXF, "tp_w_dcf × DCF 目標價＋（1 − tp_w_dcf）× Comparable 目標價（相對倍數調整後，見第 0.5 節；ARM 無 Bloomberg 前瞻倍數，係數＝1）"); r_ += 1
 tset(r_, "comp2", "Comparable 目標價（市場主流同業法）", [f"=B{T['comptp']}", None, None], PXF, "引用 0.2（未作相對倍數調整）"); r_ += 1
-tset(r_, "cons", "市場共識目標價", ["=cons_tp", None, None], PXF, "stockanalysis（S&P Global）43 位平均 290.71，2026-10-21"); r_ += 1
+tset(r_, "cons", "市場共識目標價", ["=cons_tp", None, None], PXF, "stockanalysis（S&P Global）43 位平均，2026-11-05（2Q27 財報後）"); r_ += 1
 tset(r_, "upw", "上檔空間：加權目標價", [f"=B{T['tpw']}/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-05 收盤）"); r_ += 1
 tset(r_, "upc", "上檔空間：Comparable 目標價", [f"=B{T['comp2']}/px-1", None, None], "0.0%"); r_ += 1
 _u = f"B{T['upw']}"
@@ -523,7 +537,7 @@ V[f"B{r_}"] = ("DCF（v0.3 標準版）：無槓桿自由現金流 FCFF＝NOPAT�
                "終值＝NOPAT(FY2033) ×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC；ke＝rf＋β × ERP，β 為自算美國半導體產業無槓桿 β（同業 13 家中位數、Blume 調整）依市值 D/E 重新加槓桿；EV 加淨現金與投資 ÷ 股數，以 ke 推到 12 個月後（DCF 頁、tools/fcff_dcf.py）。"
                "舊法說明：DCF：股東現金流＝non-GAAP EPS ×（1 − g／ROE），r＝10%、g＝4%、ROE＝近三年平均約 10.5%（GAAP；再投資率約 38%），FY2027–29 驅動因子、FY2030–32 收斂法＋永續；"
                "non-GAAP EPS 排除股票薪酬（FY2026 GAAP EPS 0.85 vs non-GAAP 1.77），DCF 因此偏高估，但 ROE 低使再投資率高、偏低估。Comparable：高通、博通、邁威爾、Rambus、新思、益華前瞻 P/E 中位數；"
-               "Arm 現價約 95 倍共識前瞻 EPS，遠高於同業，Comparable 法等於假設溢價在 12 個月內消失，偏低估。SoftBank 持股約九成、流通股約一成，市場流通量低可能支撐溢價；本模型不作流通量調整（只在方法說明）。"
+               "Arm 現價的前瞻 P/E 遠高於同業（倍數見本頁第 1 節「現價 ÷ 共識前瞻 EPS」），Comparable 法等於假設溢價在 12 個月內消失，偏低估。SoftBank 持股約九成、流通股約一成，市場流通量低可能支撐溢價；本模型不作流通量調整（只在方法說明）。"
                "ARM 無 Bloomberg 前瞻倍數歷史，相對倍數係數＝1。")
 r_ += 1
 V.cell(PEROW, 1, "年底 P/E（歷史分位檢查用；12 月收盤 ÷ 該月所在會計年度的 non-GAAP EPS；2023 年 9 月上市，2016–2022 年無資料）").font = BOLD
@@ -546,7 +560,7 @@ for k_, (lab, y) in enumerate((("現價 ÷ FY2026 EPS（實績）", 2026), ("現
     for j, s in enumerate(SC):
         V[f"{'BCD'[j]}{rr}"] = f"=px/PL!{FC[y]}{SUMR[(s, 'eps')]}"; V[f"{'BCD'[j]}{rr}"].number_format = "0.0"
 rr = v1 + 7
-V.cell(rr, 1, "近 12 月 non-GAAP EPS（3Q26～2Q27）"); V[f"B{rr}"] = "=1.77-0.35-0.39+0.45+0.52"; V[f"B{rr}"].number_format = "0.00"; T["ttm"] = rr
+V.cell(rr, 1, "近 12 月 non-GAAP EPS（3Q26～2Q27）"); V[f"B{rr}"] = "=h_eps_fy26-h_eps_1q26-h_eps_2q26+h_eps_1q27+h_eps_2q27"; V[f"B{rr}"].number_format = "0.00"; T["ttm"] = rr
 V.cell(rr + 1, 1, "  現價 ÷ 近 12 月 non-GAAP EPS"); V[f"B{rr + 1}"] = f"=px/B{rr}"; V[f"B{rr + 1}"].number_format = "0.0"; T["pettm"] = rr + 1
 V.cell(rr + 2, 1, "  現價 ÷ 共識前瞻 EPS"); V[f"B{rr + 2}"] = "=px/cons_feps"; V[f"B{rr + 2}"].number_format = "0.0"; T["pecons"] = rr + 2
 V.cell(rr + 3, 1, "  市值（現價 × 稀釋股數，十億美元）"); V[f"B{rr + 3}"] = "=px*q_sh"; V[f"B{rr + 3}"].number_format = "#,##0"; T["mcap"] = rr + 3
@@ -684,8 +698,8 @@ OBS = [   # 重點觀察（數字取自重算後的 Val／PL／Sens；與 README
  "目標價 US$53.52 → 55.10（DCF 35.51、Comparable 74.68 各半），比現價 228.88（2026-10-30，未更新）低 75.9%，仍小於 −50%、強力放空；Comparable 單獨 −67.4%。差距全部來自倍數：12 個月後前瞻 EPS 2.99 比共識前瞻 EPS 高 23.7%（期間晚約一年），但現價約 94.7 倍共識前瞻 EPS、共識目標價 290.71 隱含 120.3 倍，同業中位數 25.0 倍。"
  "單一參數都翻不過來：DCF 權重 0.3 +14.2%、授權成長 15% +7.2%、營業費用年增 8% +7.3%；授權成長 2% −10.8%、FY2027 晶片營收 4 億 −7.2%（Sens 頁）。SoftBank 持股約九成、流通市值約 247 億美元，流通量低可能撐住溢價，本模型不調整。",
  "可追蹤的三件事：(1) AGI CPU 首批商業出貨按計畫在 4Q27，公司對 FY2027–28 最多 20 億美元營收的信心提高、訂單延伸到 CY2027（模型 FY2027 1.5 億、FY2028 情境 A／B／C 14／10／5 億）；(2) 權利金能否如公司所說加速（2Q27 只 +8%），資料中心占權利金 FY2026 14% → FY2029 情境 B 25.4%；(3) Qualcomm：陪審團 10 月判 Arm 違約但只判賠 2 美元，權利金與未來授權條件由法官裁定、未判（2Q27 股東信未提）。下一個檢驗點：3Q27 財報（2027-02 初）與 Qualcomm 法官判決。"]
-lines = [(f"Arm Holdings（ARM）個股模型 {VER}（AI 半導體 Project：運算次產業；CPU 架構授權與權利金）　{DATE}", True),
- (f"版本：{VER}（{DATE}）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守；v0.3.2 第三輪修正；v0.3.1 換用共用模組 tools/fcff_dcf.py v2（資產負債表改 2026-09-30 並滾到評價日、β 敏感度 β_u ± 0.3）；v0.3 DCF 改標準版；v0.2 滾入 2Q27 實績（2026-11-04 股東信）與 3Q27 公司指引；v0.1（2026-10-31）初版。樣板 crdo/（美股、估值 v2）；敏感度與份額寫法比照 tuc/；行業變數讀 {SNAP}。", False),
+lines = [(f"Arm Holdings（ARM）個股模型 {LEG}（AI 半導體 Project：運算次產業；CPU 架構授權與權利金）　{LEGD}", True),
+ (f"版本：{LEG}（{LEGD}）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守；v0.3.2 第三輪修正；v0.3.1 換用共用模組 tools/fcff_dcf.py v2（資產負債表改 2026-09-30 並滾到評價日、β 敏感度 β_u ± 0.3）；v0.3 DCF 改標準版；v0.2 滾入 2Q27 實績（2026-11-04 股東信）與 3Q27 公司指引；v0.1（2026-10-31）初版。樣板 crdo/（美股、估值 v2）；敏感度與份額寫法比照 tuc/；行業變數讀 {SNAP}。", False),
  ("模型命題：Arm 的權利金＝各市場晶片出貨 × 每顆權利金率：智慧型手機（出貨持平到下滑，成長靠 v9 與 CSS 費率）、資料中心 Neoverse（NVIDIA Grace／Vera 顆數讀 Siliconomics、雲端自研 CPU 年增、每顆費率隨核心數上升）、車用、物聯網與其他；授權及其他＝授權（含 SoftBank 協議）＋自研 Arm AGI CPU 晶片。", False),
  ("核心問題：現價約 95 倍共識前瞻 EPS，市場是否已把資料中心權利金倍增、CSS 費率上升與自研晶片（客戶需求逾 20 億美元）全部算進去；Qualcomm 判決與手機出貨下修會讓權利金少多少。", False),
  ("會計年度：FY(t) 於 t 年 3 月 31 日結束（FY2027＝2026-04～2027-03）；上游日曆年以 9/12 × CY(t−1)＋3/12 × CY(t) 換算。預測期 FY2028–FY2029 由驅動因子推導，FY2030–FY2032 為收斂法。金額：十億美元；EPS：non-GAAP（GAAP EPS 另列）。", False),
@@ -870,8 +884,12 @@ _r3_fix(wb, "v0.3.2", "FY2027＝2026-04～2027-03", extra=[('"（2026-10-30）"'
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import px1105_post  # noqa: E402
 print(px1105_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), "v0.3.3", "v0.3.2", "v0.3.2（2026-11-06）"))
+# ---------------- v0.3.4（2026-11-09）：驗收報告採用項（arm/v034_post.py；Andy 2026-11-09 確認採用規劃書，J1–J4 照建議預設） ----------------
+import v034_post  # noqa: E402
+V34 = v034_post.apply(wb, HERE, dict(VER=VER, DATE=DATE, LEG=LEG, T=T, SDCF=SDCF, SE_LAST=SE.max_row, SJ=SJ, OVR=OVR, INROW=INROW, PB=PB, FC=FC, RECON_LAST=RECON_LAST, OBSROW=OBSROW))
+RECON_LAST = V34["RECON_LAST"]
 wb.save(sys.argv[1])
 if os.environ.get("ARM_ROWMAP"):
     json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK, "XT": XT, "XH": XH, "XR": XR, "T": T, "EPSR": EPSR, "CFR": CFR,
-               "SENS_LAST": SENS_LAST, "SENS_NOTE": SENS_NOTE, "TVS0": _tvs[0] - 2, "TVS1": _tvs[1], "RECON_LAST": RECON_LAST, "UNOTE": UNOTE, "INROW": INROW, "OBSROW": OBSROW, "SENS_KEYS": SENS_KEYS, "QR": QR},
+               "SENS_LAST": SENS_LAST, "SENS_NOTE": SENS_NOTE, "TVS0": _tvs[0] - 2, "TVS1": _tvs[1], "RECON_LAST": RECON_LAST, "UNOTE": UNOTE, "INROW": INROW, "OBSROW": OBSROW, "SENS_KEYS": SENS_KEYS, "QR": QR, "V34": V34},
               open(os.environ["ARM_ROWMAP"], "w"), ensure_ascii=False, indent=1)
