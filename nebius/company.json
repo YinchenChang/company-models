@@ -2,8 +2,8 @@
  "meta": {
   "company": "Nebius",
   "ticker": "NBIS",
-  "updateDate": "2026-10-30",
-  "priceDate": "2026-10-06",
+  "updateDate": "2026-11-06",
+  "priceDate": "2026-11-05",
   "sourceOrderNote": "時序先 Q2 6-K 財報與股東信（8/12），再期後 6-K（7/10 資產擔保融資、8 月可轉債與以股換債）。入帳數字聽 6-K 財報（未經查核）與經查核 20-F；指引聽股東信；法說會只有二手轉述者標明。Q1／Q2 季末 active MW 未揭露，不以營收反推。",
   "consensusFile": "data/consensus_nbis_20261007.json"
  },
@@ -421,8 +421,9 @@
   "cdsLowDate": null,
   "availability": 0.775,
   "price0918": null,
-  "priceLast": 249.87,
-  "priceDate": "2026-10-06",
+  "priceLast": 120.37,
+  "priceDate": "2026-11-05",
+  "priceSource": "Yahoo Finance 日線（https://query1.finance.yahoo.com/v8/finance/chart/NBIS?range=5d&interval=1d）；第二來源 Motley Fool 2026-11-05（−14.95%）；docs/reports/20261105_收盤價_個股換價來源.md",
   "postQShortDated": "2026-07-10 資產擔保定期貸款 $775M（SOFR＋2.50%，2030-10 到期）；2026-08 新發可轉債 $5.75B（0.50% 2030、4.50% 2034）並以約 1,580 萬股交換 $800M 舊債",
   "ttmRev": 1.36,
   "ttmOpInc": -0.612,
@@ -599,7 +600,7 @@
   "debtBacklog": 0.5,
   "ctrTerm": 3,
   "minCash": 2,
-  "eqPx": 249.87,
+  "eqPx": 120.37,
   "eqDisc": 0.1,
   "eqCapPct": 0.2,
   "eqCapShares": 0.3088,
@@ -822,7 +823,7 @@
   ]
  },
  "valuation": {
-  "price": 249.87,
+  "price": 120.37,
   "shares": 0.3193,
   "atmSharesInValuation": 0,
   "netDebt": -13.6754,

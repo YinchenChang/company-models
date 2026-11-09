@@ -502,7 +502,7 @@ r += 1
 
 # ---------------- F 評價 ----------------
 r = section(ws, r, "F｜評價（價格、股數、折現、倍數、權重）")
-PX = gi(r, f"現價（{CO['meta']['priceDate']} 收盤）", "US$", V['price'], f"{CONS['priceReference']['source']}（{CONS['priceReference']['url']}）[Verified]", USD); r += 1
+PX = gi(r, f"現價（{CO['meta']['priceDate']} 收盤）", "US$", V['price'], f"{CO['callFacts'].get('priceSource') or (CONS['priceReference']['source'] + '（' + CONS['priceReference']['url'] + '）')} [Verified]", USD); r += 1
 SH = gi(r, "股數（含 ATM 上限）", "bn", V['shares'], "季末流通 0.2719＋NVIDIA 預付認股權證 0.0211＋以股換債 0.0158＋RSU 0.0062＋選擇權庫藏股法 0.0043 [Derived]", '0.0000'); r += 1
 ND = gi(r, "淨負債（不含可轉債）", "US$bn", V['netDebt'], f"其他借款 − 現金（含期後股權／可轉債募得淨額）；可轉債依稀釋判斷另計（見『評價_DCF與目標價』可轉債區）[Derived]"); r += 1
 _HV = []  # v0.1b：持股（估值 × 持股比例 ×（1 − 折價））與類債項目 → 淨負債調整項

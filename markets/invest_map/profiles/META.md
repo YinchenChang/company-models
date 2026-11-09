@@ -112,9 +112,9 @@ asof: 2026-11-04
 - 每則廣告價格｜2026Q3 價格年增 14%、曝光年增 10%；長期價格年增取 1%／5% 時加權目標價 810.18／879.96 美元 [本專案：20261104_Meta個股模型_v0.1.4.xlsx Q!I48、Q!I47、Sens!D10、Sens!D11]｜各季新聞稿的曝光與價格年增
 
 ## 來源
-1. 本專案：/home/claude/wt23/meta/dist/20261104_Meta個股模型_v0.1.4.xlsx（In、Q、Thesis、PL、CF、Val、Recon、Sens）、meta/README.md、meta/docs/reports/20261104_meta_v0.1.4_TK快照v21.10.md（2026-11-04）
-2. 本專案：/home/claude/wt23/meta/data/meta_facts_2026q3.json（2026-10-30 擷取）
-3. 本專案：/home/claude/wt23/nebius/data/nebius_facts_20261007.json、/home/claude/wt23/coreweave/data/permw_inputs_20261007.json（2026-10-07）
+1. 本專案：meta/dist/20261104_Meta個股模型_v0.1.4.xlsx（In、Q、Thesis、PL、CF、Val、Recon、Sens）、meta/README.md、meta/docs/reports/20261104_meta_v0.1.4_TK快照v21.10.md（2026-11-04）
+2. 本專案：meta/data/meta_facts_2026q3.json（2026-10-30 擷取）
+3. 本專案：nebius/data/nebius_facts_20261007.json、coreweave/data/permw_inputs_20261007.json（2026-10-07）
 4. [Meta Platforms DEF 14A 2026（管理層名單）](https://www.sec.gov/Archives/edgar/data/1326801/000162828026025532/meta-20260416.htm)（2026-04-16）
 5. [Meta Leadership and Governance](https://investor.atmeta.com/leadership-and-governance/default.aspx)（擷取 2026-11-04）
 6. [Meta Platforms DEF 14C（Class C 股票股利、投票權）](https://www.sec.gov/Archives/edgar/data/0001326801/000162828026068935/meta-20261102.htm)（2026-11-02）

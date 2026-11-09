@@ -138,7 +138,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY26 下半年、FY27、FY28、FY29、FY30，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 WhiteFiber v0.2 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 WhiteFiber v0.2.1 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
@@ -146,8 +146,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `meta.company` | 公司名稱 | 文字 | WhiteFiber | 必改 |
 | `meta.ticker` | 股票代號 | 文字 | WYFI | 必改 |
-| `meta.updateDate` | 資料更新日 | 日期 | 2026-10-22 | 必改 |
-| `meta.priceDate` | 股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格） | 日期 | 2026-10-07 | 必改 |
+| `meta.updateDate` | 資料更新日 | 日期 | 2026-11-06 | 必改 |
+| `meta.priceDate` | 股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格） | 日期 | 2026-11-05 | 必改 |
 | `meta.consensusFile` | 市場共識資料檔路徑（v4.3；只讀，由使用者查證後提供；建置時併入 HTML、Excel 讀同一檔） | 路徑 | data/consensus_wyfi_202610… | 必改 |
 | `meta.unit` | 金額單位（WhiteFiber v0.1c）：m＝US$m、股數 m 股；省略或 bn＝US$m、m 股。下表「單位」欄依此顯示；程式內以 US$m 寫的常數（容差、下限）自動換算 | 文字 | m | 檢查 |
 | `meta.factsFile` | 事實總帳路徑（WhiteFiber v0.1b；資料來源，逐筆 value＋單位＋來源＋標記；引擎不讀，只供追溯） | 路徑 | data/whitefiber_facts_2026… | 必改 |
@@ -385,8 +385,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `cdsLowDate` | CDS 低點日期 | 日期 | None | 否 |
 | `availability` | 未動用信用額度 | US$m | 20 | 否 |
 | `price0918` | 9/18 收盤價 | US$ | None | 否 |
-| `priceLast` | 最新收盤價 | US$ | 16.83 | 是 |
-| `priceDate` | 最新收盤價日期 | 日期 | 2026-10-07 | 是 |
+| `priceLast` | 最新收盤價 | US$ | 7.8 | 是 |
+| `priceSource` | 最新收盤價來源 | 文字 | Yahoo Finance 日線（https://q… | 否 |
+| `priceDate` | 最新收盤價日期 | 日期 | 2026-11-05 | 是 |
 | `postQShortDated` | 期後公告摘要 | 文字 | 期後（2026-07～08）：2032 可轉債 31… | 是 |
 | `ttmRev` | 近十二個月營收 | US$m | 94.503 | 是 |
 | `ttmOpInc` | 近十二個月 GAAP 營業損益 | US$m | -39.975 | 是 |
@@ -497,7 +498,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.debtBacklog` | 新債上限：總債務不超過 backlog 的倍數 | 倍 | 0.5 | 檢查 |
 | `defaults.ctrTerm` | 新簽合約的平均年期（決定 backlog 補入量） | 年 | 3 | 檢查 |
 | `defaults.minCash` | 最低現金：每期融資後期末現金不低於此值 | US$m | 30 | 檢查 |
-| `defaults.eqPx` | 新股發行參考價（預設＝現價） | US$ | 16.83 | 必改 |
+| `defaults.eqPx` | 新股發行參考價（預設＝現價） | US$ | 7.8 | 必改 |
 | `defaults.eqDisc` | 新股發行折價 | 比例 | 0.1 | 檢查 |
 | `defaults.eqCapPct` | 每年股權募資上限（占現市值）；輸入 9 以上視為無上限 | 比例 | 0.1 | 檢查 |
 | `defaults.eqCapShares` | 股權年上限的股數基礎：現市值＝發行參考價 × 此股數（5a；評價日時點，列入滾動檢查） | m | 45.1197 | 必改 |
@@ -562,7 +563,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
 | `valuation.postEvents` | 期後事件：[名稱, 日期, 現金, 其他借款, 可轉債, 股數（m）, 說明]；評價日現金（首期 Ⓔ）、淨負債、股數與 CAPM 權重的期後調整（WhiteFiber v0.1b，審查留言第 1 條） | 清單 | 4 筆 | 必改 |
-| `valuation.price` | 現價 | US$ | 16.83 | 必改 |
+| `valuation.price` | 現價 | US$ | 7.8 | 必改 |
 | `valuation.shares` | 評價股數（含期後股權發行上限） | m 股 | 33.06 | 必改 |
 | `valuation.atmSharesInValuation` | 評價股數中「期後股權發行上限」的股數：期後股權／可轉債開關關閉時由評價股數扣回（v0.1b；CRWV 0.035、無此項的公司填 0） | m 股 | 0 | 必改 |
 | `valuation.netDebt` | 淨負債（不含可轉債：其他借款 − 現金，含期後已入帳的股權／可轉債募得淨額；可轉債依 debt.convertibles 另計） | US$m | 29.283 | 必改 |

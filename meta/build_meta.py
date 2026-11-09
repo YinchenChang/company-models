@@ -87,9 +87,9 @@ def inp(key, item, unit, lo, base, hi, tag, src, note="", judg=False):
 CR_ = CONS["priceReference"]; PT_ = CONS["priceTarget"]; AE = CONS["annualEstimates"]
 
 sec("A. 現價、股數與資產負債（評價日 2026-09-30）")
-inp("px", "現價（2026-10-28 收盤；10-29 收盤只找到一個來源）", "US$", None, CR_["close"], None, "Verified",
-    "StockScan https://stockscan.io/stocks/META/price-history（10-28 −1.24%）；Digrin、TipRanks（10-27 620.19 − 7.70）相符（consensus_meta_20261030.json priceReference）",
-    "工作單 M8：10-29 收盤需兩個來源一致；2026-10-30 再查只有 ChartRow「as of close, Oct 29, 2026」624.55（+1.97%）一個來源（https://chartrow.com/quote/meta），故用 10-28。只影響上檔空間與評等")
+inp("px", "現價（2026-11-05 收盤）", "US$", None, 605.08, None, "Verified",
+    "Yahoo Finance META 日線 https://query1.finance.yahoo.com/v8/finance/chart/META?range=5d&interval=1d（11-05 收盤 605.08、前日 630.00）；Motley Fool〈Stock Market Today, Nov. 5〉605.08；MarketAlleys 收盤表 605.08（2026-11-06 讀取）",
+    "三來源一致（docs/reports/20261105_收盤價_個股換價來源.md）；v0.1.5 為 10-28 收盤 612.49（consensus_meta_20261030.json priceReference）。只影響上檔空間與評等")
 inp("px_val", "評價日股價（2026-09-30 收盤；WACC 權益權重用）", "US$", None, 725.18, None, "Verified",
     "TipRanks 歷史股價 https://www.tipranks.com/stocks/meta/historical-prices（2026-10-30 讀取：9/29 738.79、9/30 725.18）；StockScan 9/30 −1.84%（738.79 × 0.9816＝725.20，相符）", "")
 inp("sh_out", "流通股數（2026-10-16，10-Q 封面 Class A＋B）", "十億股", None, round(fv("sh.out.20261016") / 1000, 6), None, "Verified", fs("sh.out.20261016"))
@@ -951,7 +951,7 @@ vput("tpdcf", "DCF 目標價（情境加權）", [f"={W3(VR_['dcf12'])}"], "#,##
 vput("tpcomp", "Comparable 目標價（市場主流同業法）", [f"={W3(VR_['sotp'])}"], "#,##0.00", note="＝分部加總（SOTP）情境加權")
 vput("tp", "目標價（DCF 與 Comparable 加權）", ["=w_dcf*B{0}+(1-w_dcf)*B{1}".format(r - 2, r - 1)], "#,##0.00", bold=True, fill=KEY,
      note='="DCF 權重 "&TEXT(w_dcf,"0%")&"、分部加總 "&TEXT(1-w_dcf,"0%")&"；自用 AI 讀法 "&internal_ai_reading')
-vput("px", "現價（2026-10-28 收盤）", ["=px"], "#,##0.00", note="StockScan、Digrin、TipRanks（In 頁 px）；10-29 收盤只有 ChartRow 一個來源，未採用")
+vput("px", "現價（2026-11-05 收盤）", ["=px"], "#,##0.00", note="Yahoo Finance、Motley Fool、MarketAlleys（In 頁 px）；v0.1.5 為 10-28 收盤 612.49")
 vput("cons", "市場共識目標價", ["=cons_tp"], "#,##0.00", note="MarketBeat 58 位平均（2026-10-22）；只作對照")
 vput("up", "上檔空間：加權目標價", [f"=B{VR_['tp']}/px-1"], "0.0%", bold=True, fill=KEY)
 vput("upc", "上檔空間：Comparable 目標價", [f"=B{VR_['tpcomp']}/px-1"], "0.0%")
@@ -1169,10 +1169,12 @@ SRCS = [
     ("Meta 2026Q3 follow-up call 逐字稿（Andy 提供，不入庫）", "2026-10-21", "Drive 02-算力收支/MAG財報下載/Transcript_follow up call_META_3Q26.pdf", "Interested-party", "自建為主、第三方雲端補近期容量、比例未揭露；Class C 金額為理論上限；未提 MTIA"),
     ("事實總帳 meta/data/meta_facts_2026q3.json（facts_2026q3.py）", "2026-10-30", "repo 內", "各筆標記", "Q 頁全部實績與多數輸入"),
     (f"Tokenomics 快照 meta/data/tokenomics_snapshot_{TKV}.json（{TK['source']['file']}，master {TK['source']['commit'][:7]}；與 alphabet/data/ 同一名稱清單）", TK["source"]["extractedAt"], "repo 內（YinchenChang/Tokenomics）", "Derived", "IF_HoldEcon、IF_OpexGW、IF_CapexIT／Facility、IF_DeprIT"),
-    ("共識檔 meta/data/consensus_meta_20261030.json（MarketBeat、TipRanks、MarketScreener、valueinvesting）", "2026-10-30", "repo 內", "Interested-party", "共識目標價、年度與季度共識、現價 612.49"),
+    ("共識檔 meta/data/consensus_meta_20261030.json（MarketBeat、TipRanks、MarketScreener、valueinvesting）", "2026-10-30", "repo 內", "Interested-party", "共識目標價、年度與季度共識（檔內現價 612.49 為 v0.1.5 用，v0.1.6 起改 11-05 收盤）"),
     ("同業檔 meta/data/peers_ads_20261030.json", "2026-10-07 基準", "repo 內", "Derived", "SOTP 倍數（五家 10-07＋GOOGL）"),
     ("TipRanks META 歷史股價", "2026-10-30", "https://www.tipranks.com/stocks/meta/historical-prices", "Verified", "評價日股價 725.18（9/30）"),
-    ("StockScan META 歷史股價", "2026-10-30", "https://stockscan.io/stocks/META/price-history", "Verified", "10-28 收盤 612.49；9/30 −1.84%"),
+    ("StockScan META 歷史股價", "2026-10-30", "https://stockscan.io/stocks/META/price-history", "Verified", "9/30 −1.84%（評價日股價佐證）；v0.1.5 現價 10-28 收盤 612.49"),
+    ("Yahoo Finance META 日線", "2026-11-05", "https://query1.finance.yahoo.com/v8/finance/chart/META?range=5d&interval=1d", "Verified", "11-05 收盤 605.08（v0.1.6 現價）"),
+    ("Motley Fool〈Stock Market Today, Nov. 5〉", "2026-11-05", "https://www.fool.com/coverage/stock-market-today/2026/11/05/stock-market-today-nov-5-nasdaq-suffers-worst-day-in-18-months-as-ai-trade-comes-under-fire/", "Verified", "META 605.08（第二來源）"),
     ("ChartRow META", "2026-10-30", "https://chartrow.com/quote/meta", "Interested-party", "β 1.24；10-29 收盤 624.55（單一來源，未採用）"),
     ("CoinDataFlow META", "2026-10-30", "https://coindataflow.com/en/stock/META", "Interested-party", "β（5Y Monthly）1.185"),
     ("美國財政部每日殖利率曲線（經 Alphabet v0.3.1）", "2026-10-27", "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202610", "Verified", "rf 4.99%"),
@@ -1183,12 +1185,12 @@ for col, w in zip("ABCDEF", [6, 80, 14, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = "Meta（META）個股模型 v0.1.4（2026-11-04；v0.1.3 之上換 Tokenomics 快照 " + TKV + "，基準數值不變；v0.1.3 加協議應計驗證列與受限現金口徑核對，兩案只進 Sens）— 命題模組＋官方營收分部 → 損益表（完整 10-Q、法說與 follow-up call 補資料缺口）"
+RD["A1"] = "Meta（META）個股模型 v0.1.6（2026-11-06；v0.1.6 只換現價為 2026-11-05 收盤 605.08，目標價不變；v0.1.5 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；v0.1.4 換 Tokenomics 快照 " + TKV + "，基準數值不變；v0.1.3 加協議應計驗證列與受限現金口徑核對，兩案只進 Sens）— 命題模組＋官方營收分部 → 損益表（完整 10-Q、法說與 follow-up call 補資料缺口）"
 RD["A3"] = "命題：Meta 的 AI 資本支出（2026 指引 1,350–1,450 億美元，含融資租賃本金）能否由廣告現金流支撐，且自用算力（GPU＋自研 MTIA）是否帶來足以回本的廣告變現提升。"
 RD["A4"] = "核心問題：FY2028 AI 增量營業利益（讀法 2：自用 AI 影子效益＝自用在役 MW × Tokenomics 每 MW 持有成本）能否覆蓋 AI 資本支出的資金成本；收支關卡＝FY2026–FY2030 自由現金流扣股利合計。"
 VB = lambda k, c="B": f"Val!{c}{VR_[k]}"
 PA_, PC_ = PR_["A"], PR_["C"]
-RD["A5"] = f'="投資建議："&{VB("rec")}&"（加權目標價 US$"&TEXT({VB("tp")},"0.00")&"，上檔空間 "&TEXT({VB("up")},"+0.0%;-0.0%")&"；現價 "&TEXT(px,"0.00")&"，2026-10-28 收盤；每股為 Class C 股票股利前口徑）"'
+RD["A5"] = f'="投資建議："&{VB("rec")}&"（加權目標價 US$"&TEXT({VB("tp")},"0.00")&"，上檔空間 "&TEXT({VB("up")},"+0.0%;-0.0%")&"；現價 "&TEXT(px,"0.00")&"，2026-11-05 收盤；每股為 Class C 股票股利前口徑）"'
 RD["A6"] = (f'="重點觀察 1：目標價 "&TEXT({VB("tp")},"0")&"＝DCF "&TEXT({VB("tpdcf")},"0")&"、分部加總 "&TEXT({VB("tpcomp")},"0")&" 各半；情境 A／B／C 為 "'
             f'&TEXT({VB("scen")},"0")&"／"&TEXT({VB("scen", "C")},"0")&"／"&TEXT({VB("scen", "D")},"0")&"；讀法 1 目標價 "&TEXT({VB("tp_r1")},"0")&"。市場共識目標價 "&TEXT(cons_tp,"0")&"。"')
 RD["A7"] = (f'="重點觀察 2：FY2028 自用 AI 影子效益（B）"&TEXT(Thesis!I{T["B"]["shadow"]},"0.0")&"，對自用 AI 增量成本（營運＋新增 AI 折舊）"&TEXT(Thesis!I{T["B"]["int_cost"]},"0.0")'
@@ -1219,6 +1221,25 @@ for t_ in ("v0.1.3：Recon 5 加驗證列——協議應計可能大於 11.89（
 r += 1
 RD.cell(r, 1, "工作表：README → In → Q → Thesis → Seg → PL → CF → Val → Recon → Sens → Sources。藍字＝輸入、黑字＝公式；黃底＝判斷題。建置：bash meta/make_v01.sh").font = BOLD; r += 1
 RD.cell(r, 1, "數字標記：Verified（公司正式財報或申報文件）／Interested-party（公司指引、賣方、第三方網站）／Analogy／Assumed（給區間）／Derived（換算）。每股數字為 Class C 股票股利（2027-01 下旬，1:1）前的口徑。")
+r += 2
+# v0.1.5（Andy 2026-11-05，個股 HTML 版面規格 v1.0）：展示層與命題回覆（HTML 讀；A3、A5–A8 原文保留）
+_CB = CR["B"]
+_ch = next(rr for rr in range(_CB["cfo"] - 1, 0, -1) if CF.cell(rr, 1).value == "項目")
+_first = lambda row, cond: f'INDEX(CF!H{_ch}:M{_ch},MATCH(1,INDEX((CF!H{row}:M{row}{cond})*1,0),0))'
+_TB = T["B"]
+RD.cell(r, 1, "展示層：命題摘要、命題分項與白話重點（HTML 用）").font = BOLD; r += 1
+RD.cell(r, 1, "命題：Meta 的巨額 AI 資本支出能否由廣告現金流支撐，以及自用算力能否帶來足以回本的廣告變現提升；三個問題如下。"); r += 1
+RD.cell(r, 1, "命題 1｜廣告現金流撐得住嗎：2026 年資本支出指引 1,350–1,450 億美元（含融資租賃本金），廣告本業的現金流能否支撐、是否需要舉債。"); r += 1
+RD.cell(r, 1, "命題 2｜自用算力能否回本：自建 GPU 與自研 MTIA 用在廣告推薦與生成式 AI，帶來的廣告變現提升是否足以覆蓋這些算力的成本。"); r += 1
+RD.cell(r, 1, "命題 3｜每股值多少：把新增 AI 折舊與資本支出算進去之後，每股價值是否仍高於現價。"); r += 1
+RD.cell(r, 1, f'="重點 1｜合理價值高於現價：我們估每股約 "&TEXT({VB("tp")},"0")&" 美元，比現價 "&TEXT(px,"0.00")&" 高 "&TEXT({VB("up")},"0%")&"。兩種算法各占一半：未來現金流折現約 "&TEXT({VB("tpdcf")},"0")&"、分部加總約 "&TEXT({VB("tpcomp")},"0")&"（廣告與 Reality Labs 用數位廣告同業倍數；另含自用 AI 讀法調整，新增 AI 資產按帳面計）；樂觀、基準、保守三種情境約 "&TEXT({VB("scen")},"0")&"、"&TEXT({VB("scen", "C")},"0")&"、"&TEXT({VB("scen", "D")},"0")&"，都高於現價。市場分析師平均目標價約 "&TEXT(cons_tp,"0")&"。"'); r += 1
+RD.cell(r, 1, f'="重點 2｜AI 折舊壓低帳面利潤率，自用算力的價值是關鍵假設：基準情境新增 AI 折舊 2028 年約 "&TEXT(PL!I{PB["da_ai"]}*10,"#,##0")&" 億美元，合併營業利益率從 2025 年 "&TEXT(PL!D{PB["om"]},"0.0%")&" 降到 2028 年 "&TEXT(PL!I{PB["om"]},"0.0%")&"。主值讀法把自用算力的價值設為剛好等於持有成本（視為回本），2028 年這部分影子價值約 "&TEXT(Thesis!I{_TB["shadow"]}*10,"#,##0")&" 億；若只算成本、不算效益，目標價降到 "&TEXT({VB("tp_r1")},"0")&"。"'); r += 1
+RD.cell(r, 1, f'="重點 3｜投資高峰期要短暫舉債：2026–2030 五年自由現金流扣股利合計，樂觀、基準、保守約 "&TEXT(CF!B{GATE}*10,"#,##0")&"、"&TEXT(CF!C{GATE}*10,"#,##0")&"、"&TEXT(CF!D{GATE}*10,"#,##0")&" 億美元；基準情境 2027 年資本支出約 "&TEXT(CF!H{_CB["cx"]}*10,"#,##0")&" 億美元，自用 AI 在役容量由評價日約 "&TEXT(base_tot,"#,##0")&" MW 增至 2028 年底約 "&TEXT(Thesis!I{_TB["end"]},"#,##0")&" MW（基準情境）。"'); r += 1
+r += 1
+RD.cell(r, 1, "命題回覆（HTML 用；依本模型計算回答開頭三個命題）").font = BOLD; r += 1
+RD.cell(r, 1, f'="廣告現金流撐得住嗎？答：基準情境撐得住，但投資高峰期要短暫舉債。基準情境的自由現金流扣股利在 "&CF!G{_ch}&"～"&CF!I{_ch}&" 都是負的（"&CF!H{_ch}&" 最低，約 "&TEXT(CF!H{_CB["fcfd"]}*10,"#,##0")&" 億美元），"&{_first(_CB["plug"], ">0")}&" 新增舉債約 "&TEXT(CF!C{GATE + 1}*10,"#,##0")&" 億美元，淨現金在 "&{_first(_CB["nc"], ">0")}&" 轉正；五年合計約 "&TEXT(CF!C{GATE}*10,"#,##0")&" 億美元。樂觀情境因加碼投資，五年需舉債約 "&TEXT(CF!B{GATE + 1}*10,"#,##0")&" 億、合計 "&TEXT(CF!B{GATE}*10,"#,##0")&" 億；保守情境投資放緩，五年新增舉債 "&TEXT(CF!D{GATE + 1}*10,"#,##0")&" 億美元。"'); r += 1
+RD.cell(r, 1, f'="自用算力能否回本？答：本模型無法直接證明，關鍵在廣告變現是否真的提升。主值讀法把自用算力的價值設為剛好等於它的持有成本（視為回本、價值中性），基準情境 2028 年這部分影子價值約 "&TEXT(Thesis!I{_TB["shadow"]}*10,"#,##0")&" 億美元——這是假設，不是財報營收。若改成只算成本、不算任何效益，目標價降到 "&TEXT({VB("tp_r1")},"0")&"（上檔空間 "&TEXT({VB("tp_r1", "C")},"+0%;-0%")&"），低於現價。換句話說：只要自用算力帶來的廣告變現至少抵得過持有成本，目前的目標價就成立；做不到時，下行空間大約到 "&TEXT({VB("tp_r1")},"0")&"。"'); r += 1
+RD.cell(r, 1, f'="每股值多少？答：每股約 "&TEXT({VB("tp")},"0.00")&" 美元（DCF "&TEXT({VB("tpdcf")},"0.00")&"、Comparable "&TEXT({VB("tpcomp")},"0.00")&" 各半），比現價 "&TEXT(px,"0.00")&" 高 "&TEXT({VB("up")},"0.0%")&"，投資建議"&{VB("rec")}&"；三種情境都高於現價。這已計入新增 AI 折舊（基準情境 2028 年約 "&TEXT(PL!I{PB["da_ai"]}*10,"#,##0")&" 億美元）與 2027 年約 "&TEXT(CF!H{_CB["cx"]}*10,"#,##0")&" 億美元的資本支出。主要下行風險是自用算力的效益不如預期（只計成本時目標價 "&TEXT({VB("tp_r1")},"0")&"）。"'); r += 1
 RD.column_dimensions["A"].width = 120; RD.column_dimensions["B"].width = 60; RD.column_dimensions["C"].width = 60; RD.column_dimensions["D"].width = 60
 for rr in range(3, 9): RD.cell(rr, 1).alignment = Alignment(wrap_text=True, vertical="top")
 

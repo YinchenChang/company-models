@@ -7,6 +7,7 @@
   - R4 橋接 r10：推得上線 GW 2027 36.17 → 34.73；比值 0.735 → 0.766。
 - 2027 NVIDIA 顆數四線交叉：截頂後 9.12M 在營收線區間（8.2–10.4M）內，Rubin Ultra 重複計算不改（只有第三方一句話；且截頂下不影響 2027 部署 GW）。
 - 下游：42 個模型加權目標價變動 −2.2%（Ibiden）到 +4.0%（美超微），投資建議全部不變；cascade 第三輪全部 SAME（jentech 首輪因讀奇鋐成品的順序失敗，第二輪通過）。
+- 合併 main 後重跑（2026-11-09；main 已把 60 家改為 2026-11-05 收盤＋標準 FCFF DCF 新版、舊版移到 `dist/_待刪除/`）：衝突檔全部是 `_待刪除/` 舊版與 markets/overview 產生檔，一律取 main；之後以 v0.18 對新版重跑 cascade 三輪（第一輪 59 CHANGED＋jentech 順序失敗，第二輪 jentech、金像電、勝宏 CHANGED，第三輪 65 個全部 SAME），HTML 全部重產並通過檢核，markets/overview 重跑。相對 main 現值：加權目標價 −2.2%（Ibiden）到 +3.5%（BESI），美超微 +3.2%，Cerebras 逐格不變；上檔空間級距與投資建議全部不變。AI 投資地圖與目標價總表未在本 PR 重產。
 
 ## v0.17（2026-11-05；`model/20261105_Siliconomics_v0.17.xlsx`；Tokenomics v21.10）
 

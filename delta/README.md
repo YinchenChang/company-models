@@ -1,5 +1,54 @@
-# delta/ — 台達電（2308）收支與估值模型 v0.4
+# delta/ — 台達電（2308）收支與估值模型 v0.5.4
 
+## v0.5.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
+
+- 版本沿革：v0.5.4：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守。
+- 現價：2026-11-04 收盤 1,220 → **2026-11-05 收盤 1,130**（Yahoo Finance 日線收盤 2026-11-05）。Comparable 同業 P/E＝現行倍數 × 11-05 收盤 ÷ 11-04 收盤（共識 EPS 不變）。非控制權益：台達泰國（DELTA.BK）股價 195 → 187 泰銖、匯率改 USD/TWD 33.034、USD/THB 33.42（2026-11-05），非控制權益 919.3 → 898.4（十億新台幣）；晶睿（3454）Yahoo 無資料，沿用帳面（在其餘子公司帳面內）。
+- 情境名稱改回「情境 A（樂觀）／B（基準）／C（保守）」（Andy 2026-11-06 03:14，取代第 23 點）；HTML 表頭同步。README 頁 v0.x.3 版本說明凍結為當版數值（原公式會隨現價變動）。
+- 不改：rf、共識 EPS、預測用匯率、模型假設；`tools/fcff_dcf.py` 不改。
+- 結果：DCF 目標價 626 → 635、Comparable（相對倍數調整後）1,380 → 1,313、加權目標價 1,003 → 974、上檔空間 -17.8% → -13.8%，投資建議中立 → **中立**。
+- 成品：`dist/20261106_台達電個股模型_v0.5.4.xlsx`／`.html`；v0.5.3 移到 `dist/_待刪除/`。
+
+## v0.5.3（2026-11-06）：第三輪修正（合併前）
+
+- 現價：2026-10-30 收盤 1,335 → **2026-11-04 收盤 1,220**（Yahoo Finance 日線收盤；全批統一價格日）。Comparable 同業前瞻 P/E 改為 11-04 收盤 ÷ 資料商前瞻 EPS（stockanalysis 統計頁 10-22～10-27 的價格 ÷ Forward PE）：Vertiv 25.9、Eaton 23.3、Schneider 18.7、光寶科 17.4，中位數 21.9 → 21.0。
+- **非控制權益改市值**（上市子公司一律市值；fixes_round3 第 36 項）：台達泰國（DELTA.BK）少數股東 37.8%（＝1 − 台達集團 62.16%，台達泰國官網股東名冊 2026-02-27）× 實收 12,473,816,140 股 × 195 泰銖（11-04 收盤）× 匯率（USD 交叉：32.733 ÷ 33.75）≈ 8,917 億元，其餘子公司帳面約 276 億元（合併帳面 662 億 − 台達泰國少數股東帳面約 386 億），合計約 9,193 億元（帳面 662 億 → 每股多扣約 328 元）。WACC 權重與 β 重新加槓桿的 E＝母公司市值＋非控制權益（第 12 項）。晶睿（3454）等其他上市子公司本版仍以帳面計（在其餘帳面內）。
+- **Stub 期 FCFF**：v0.5.2 誤用各情境 FY2027 FCFF × stub_frac（12.2）；改用模型季度數 4Q26（Q 頁 E 欄）：4Q26 營業利益 ×（1 − tax_w）＋營收 ×（fc_da − fc_cx）− fc_wc × FY2026 營收增量 × stub_frac ＝ 10.7（十億新台幣）。
+- 展示：情境名稱統一 A（順利）／B（平平）／C（不如預期）；In 頁情境驅動對照「FY2032 營收年增收斂目標」列名改中性；Val「上檔空間級距（六級，供分組）」；Sens「永續成長率 g −1pt／上限 rf」；stub 說明改實際口徑；README「重點觀察 1」刪除相對倍數調整前的舊說明；新增「重點 7」（非控制權益市值的影響與上檔空間主因）；HTML DCF 彙總主表直接顯示「＋Stub 期 FCFF」。
+- 結果：DCF 目標價 986 → 626、Comparable（相對倍數調整後）1,442 → 1,380、加權目標價 1,214 → 1,003、上檔空間 −9.1% → −17.8%，投資建議**維持中立**（未跌破 −25%；上檔空間主要由 DCF 決定）。
+- 成品：`dist/20261106_台達電個股模型_v0.5.3.xlsx`／`.html`；v0.5.2 移到 `dist/_待刪除/`。
+
+## v0.5.2（2026-11-05）：第二輪修正（共用模組 tools/fcff_dcf.py v2）
+
+- 模組：`tools/fcff_dcf.py` 換成 v2（tools/fcff_dcf.py v2，md5 23d39844…）。
+- 資產負債表：維持最新已公布一季 2026-09-30（3Q26；stockanalysis 與富邦 e-Broker 季表同值）。淨現金以 stub 期滾到評價日 2026-12-31：淨現金與投資 40.2＋stub 期 FCFF（各情境 FY2027 FCFF × 92／365；情境 B 約 12.2）− 已宣告股利 0（FY2025 股利 11.6 元已於 2026-07-22 發放）＝約 52.4（十億新台幣）。
+- β：組名改「TW 散熱／電源」，β_u 1.201 不變；Sens β 低／高改為 β_u ∓ 0.3 各自重新加槓桿（In 頁新增 beta_du、beta_de）。
+- 新增 Sens「美元口徑折現」（rf＝美國 10 年期 5.00%＋CRP、g＝MIN(3%, 5%)）：加權目標價約 1,089（相對基準 −10.3%）；README 頁「重點 5」以公式帶出。「重點 6」以公式判斷各情境終值占比是否超過 80%（本版三情境 66%–73%，皆未超過）。
+- 資本支出、折舊：本模型沒有逐年資本支出／折舊列，維持占營收比例。
+- 結果：WACC 8.9% 不變、DCF 目標價 981 → 986、加權目標價 1,211 → 1,214、上檔空間 −9.3% → −9.1%，投資建議維持中立。
+- 成品：`dist/20261105_台達電個股模型_v0.5.2.xlsx`／`.html`；v0.5.1 移到 `dist/_待刪除/`。
+
+## v0.5.1（2026-11-05）：β 改為自算產業 β
+
+- Andy 2026-11-05 22:55：β 不再用 Damodaran 表，改用自算產業 β（Yahoo Finance 含股利調整月報酬 2021-11～2026-10，對台灣加權指數迴歸，Hamada 去槓桿、現金修正，取同業中位數後 Blume 調整 0.67β＋0.33）。台達電歸「TW 散熱／電源／探針卡」組（3017 3324 3653 2308 2301 6223，6 家），無槓桿 β 中位數 1.30 → 採用 1.201（原 Damodaran 全球 Electrical Equipment 1.25），依台達電市值 D／E 重新加槓桿約 1.23（原 1.28）。Sens 低／高＝1.027／1.30（Analogy）。
+- 評價日原本就是 2026-12-31（目標時點 2027-12-31），淨現金沿用 2026-09-30 資產負債表；其他模型輸入不變。
+- 結果：WACC 9.2% → 8.9%、DCF 目標價 949 → 981、加權目標價 1,196 → 1,211、上檔空間 −10.4% → −9.3%，投資建議維持中立（README 頁「本版要點」第一列以公式帶出）。
+- 成品：`dist/20261105_台達電個股模型_v0.5.1.xlsx`／`.html`；v0.5 移到 `dist/_待刪除/`。
+
+## v0.5（2026-11-05）：DCF 改為標準版（無槓桿自由現金流 FCFF＋WACC）
+
+- 依 `docs/plan/個股DCF標準規格.md` v1.0 與共用模組 `tools/fcff_dcf.py`（原樣取自 NVIDIA v0.3）：新增 **DCF 頁**（三情境 FY2027–FY2032 的營收、EBIT、NOPAT、折舊、資本支出、營運資金增加、FCFF、折現與終值；檢查列）；Val 0.1 節改為折現率（ke、稅後 kd、權益占比、WACC、g、RONIC）緊接 DCF 彙總（明確期現值、終值現值、EV、淨現金、每股價值、推到 12 個月後、終值占比、隱含終值 EV／EBITDA）；Sens 目標價參數改為 WACC ±1pt、β、ERP、g、RONIC＝WACC＋5pt、資本支出 ±1pt、營運資金、淨現金不含長期投資、終值替代法、DCF 權重。In 頁新增 M2 節，刪除 tp_r、tp_roe（tp_g 只留作 PL 延伸期收斂目標）。
+- 參數：rf＝台灣 10 年期公債 1.98%（2026-11-04）；ERP 5%＋台灣國家風險溢酬 0.78%（Damodaran 2026-01）；β＝Damodaran 全球 Electrical Equipment 無槓桿 β 1.25 依台達電 D／E（市值）重新加槓桿（Hamada）約 1.28；g＝MIN(3%, rf)＝1.98%；RONIC＝WACC。EBIT：FY2027–29 取 PL 營業利益，FY2030 起由淨利還原（淨利 ÷ nir_f − nop_f）；稅率 tax_w（FY2024–25 有效稅率平均）；FCFF 為合併口徑，評價時扣非控制權益帳面值、加長期投資；期間股利以 FY2025 發放率 × FY2026 EPS 扣除。
+- Comparable、情境權重、DCF 權重 50%、投資建議規則不變；數字見 PR 內文與 README 頁「重點 4」（公式帶出）。
+- 成品：`dist/20261105_台達電個股模型_v0.5.xlsx`／`.html`；v0.4.1 移到 `dist/_待刪除/`。
+
+
+## v0.4.1（2026-11-05）：HTML 新版面 v1.0（只改展示層）
+
+- 依 `docs/plan/個股HTML版面規格.md` v1.0：README 頁最後新增「展示層」（命題摘要、命題 1–3、白話重點 1–3）與「命題回覆」兩段，數字全以公式取自各頁；另加「本版要點」與 HTML 橫幅用的 Comparable（相對倍數調整後）上檔空間列。README 以外逐格與 v0.4 相同（`tools/xlsx_diff.py`）。
+- HTML：原設定改名 `html_src.json`（內容不動），`gen_html_json.py` 依列標籤重定位後呼叫 `tools/company_html/relayout.py` 產生 `html.json`。參數分四塊：AI 電源（電源及零組件）／液冷（基礎設施）／非 AI 事業／全公司。
+- 順帶修正（只影響展示）：舊 `html.json` 的情境驅動表與 Sens 目標價參數表列號已過時（v0.4 In、Sens 頁加列後未更新），改由列標籤定位；龍捲風圖標題標明為「情境 A 的 FY2028 EPS」（不是加權目標價）；估值章說明改用 README 的目標價方法列。
+- 成品：`dist/20261105_台達電個股模型_v0.4.1.xlsx`／`.html`；舊版移到 `dist/_待刪除/`。
 
 ## v0.4（2026-11-02）：滾入 3Q26 實績、股價改最新收盤
 
@@ -46,11 +95,11 @@ AI 半導體 Project **電源與散熱次產業的樣板**。AI 電源每 kW 內
 | 檔案 | 內容 |
 |---|---|
 | `build_delta.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_台達電模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
-| `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_台達電模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261106_台達電個股模型_v0.5.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `html_src.json` → `gen_html_json.py` → `html.json` | HTML 展示層設定（原設定 → 版面規格 v1.0 轉換；`html.json` 勿手改，格式見 `tools/company_html/README.md`） |
+| `dist/20261106_台達電個股模型_v0.5.3.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
-建置：`python3 delta/build_delta.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數、機架內液冷）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）；**不修改它們**。
+建置：`python3 delta/build_delta.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數、機架內液冷）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）；**不修改它們**。
 
 ## 驅動因子
 

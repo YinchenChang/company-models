@@ -23,8 +23,8 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.6.28"
-DATE = "20261105"
+VERSION = "v0.6.31"
+DATE = "20261108"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
 YELLOW = PatternFill("solid", fgColor="FFF2CC")
@@ -122,6 +122,7 @@ SEG_BY_NAME = {s[2]: s for s in SEGMENTS}
 POSITION = {
     "NVDA": ("運算", 1, 1, "AI 加速器金額份額 CY2027 約 75–82%（本專案推導）", "[D]"),
     "AVGO": ("運算", 1, 2, "客製 ASIC 約 80–85%（JPMorgan）；運算整體第二", "[IP]"),
+    "CBRS": ("運算", 2, 4, "晶圓級推論加速器與推論雲端；OpenAI 750 MW 合約，AI 加速器金額份額遠低於 NVIDIA、AMD（本專案未推導份額）", "[判斷]"),  # 2026-11-08 新增（Andy 21:38）
     "000660": ("記憶體", 1, 1, "2026 HBM 市占 52–55%（本專案）", "[D]"),
     "005930": ("記憶體", 1, 2, "2026 HBM 市占 28–32%（本專案）", "[D]"),
     "MU": ("記憶體", 1, 3, "2026 HBM 市占 18–20%（本專案）", "[D]"),
@@ -152,6 +153,7 @@ POSITION = {
 COMPANY_META = {
     # 代號：(公司, 掛牌, 幣別, 模型資料夾)
     "NVDA": ("NVIDIA", "美", "USD", "nvidia"), "AVGO": ("Broadcom", "美", "USD", "avgo"),
+    "CBRS": ("Cerebras", "美", "USD", "cbrs"),
     "000660": ("SK 海力士", "韓", "KRW", "skhynix"), "005930": ("三星電子", "韓", "KRW", "samsung"),
     "MU": ("美光", "美", "USD", "micron"), "2330": ("台積電", "台", "TWD", "tsmc"),
     "ANET": ("Arista", "美", "USD", "arista"), "300308": ("中際旭創", "中", "CNY", "innolight"),

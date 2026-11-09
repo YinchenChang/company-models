@@ -62,7 +62,7 @@ FACTS = "oracle/data/oracle_facts_20261007.json"
 CO = "oracle/legacy_v0.3/company.json"
 
 sec("A. 股價、股數")
-inp("px", "現價（2026-11-03 收盤）", "US$", None, 126.19, None, "Verified", "FinancialContent 歷史股價頁（https://www.financialcontent.com/quote/NY%3AORCL/historical，2026-11-04 擷取）：2026-11-03 收盤 126.19（11-02 收 119.22，+5.85%）", "v0.4.4 由 2026-10-26 收盤 126.06（stockanalysis.com）更新；stockanalysis 頁面 2026-11-04 擷取時只到 10-30（130.67，兩站同值）")
+inp("px", "現價（2026-11-05 收盤）", "US$", None, 115.16, None, "Verified", "Yahoo Finance ORCL 日線（https://query1.finance.yahoo.com/v8/finance/chart/ORCL?range=5d&interval=1d，2026-11-06 擷取）：2026-11-05 收盤 115.16（11-04 收 123.73，−6.93%）；CNBC 11-05 盤勢「Oracle 跌近 7%」；StockAnalysis 115.19", "v0.4.6 由 2026-11-03 收盤 126.19（FinancialContent）更新（docs/reports/20261105_收盤價_個股換價來源.md）；現價經新股發行價（瀑布 eq／neweq）影響目標價")
 inp("sh_out", "普通股流通在外（2026-09-07）", "十億股", None, 3.023736, None, "Interested-party", Q10 + " 封面（" + FACTS + " sh.out.20260907）", "Q1 FY27 已含 ATM 發行 1.41 億股；2026-11-04 交割的新股另列 ex_sh（I2 節）")
 inp("opt_dil", "稀釋股數加項（選擇權等）", "十億股", None, 0.034, None, "Derived", "Q1 FY27 稀釋加權 3.000 − 基本加權 2.966（" + FACTS + " sh.dilW／sh.basicW.fy27q1）", "各年沿用")
 inp("mcps_sh", "強制轉換特別股轉換股數（2029-01-15，FY2029 計入）", "十億股", None, 0.031238, None, "Derived", "Series D 50,000 股 × 轉換比率上限 624.7657（" + FACTS + " mcps.convShares）", "沿用 v0.3.1：一律轉股、取稀釋最大")
@@ -860,7 +860,7 @@ def vrow(row, lab, unit, val, fmt="#,##0.00", note=None):
     if val is not None:
         V.cell(row, 3, val).number_format = fmt
     if note: V.cell(row, 6, note)
-vrow(4, "現價（2026-11-03 收盤）", "US$", "=px", note="In 頁 px（FinancialContent）；v0.4.3 為 2026-10-26 收盤 126.06")
+vrow(4, "現價（2026-11-05 收盤）", "US$", "=px", note="In 頁 px（Yahoo Finance）；v0.4.5 為 2026-11-03 收盤 126.19、v0.4.3 為 2026-10-26 收盤 126.06")
 vrow(5, "股權成本 ke（CAPM：rf＋β × ERP；β 為 Blume 調整）", "%", "=rf+beta*erp", "0.00%")
 vrow(6, "稅後債務成本（約 10 年期）", "%", "=kd*(1-etr)", "0.00%")
 vrow(7, "股權市值（現價 ×（流通股＋2026-11 新股））", "US$B", "=px*(sh_out+ex_sh)", "#,##0.0")
@@ -1001,7 +1001,7 @@ wsum = lambda row: f"=wA*C{row}+wB*D{row}+wC*E{row}"
 cr("dcf", "DCF 目標價（情境加權）", "US$", wsum(DC["v12"]))
 cr("comp", "Comparable 目標價（市場主流同業法）", "US$", wsum(SO_["v12"]), note="分部加總（OCI AI 以 AI 模組 DCF；SaaS 與 OCI 非 AI × 軟體倍數；傳統業務 × 成熟軟體倍數）情境加權")
 cr("tp", "目標價（DCF 與 Comparable 加權）", "US$", f"=w_dcf*C{r-2}+(1-w_dcf)*C{r-1}", fill=True, note='="DCF 權重 "&TEXT(w_dcf,"0%")&"、分部加總權重 "&TEXT(1-w_dcf,"0%")&"；情境權重 A／B／C "&TEXT(wA,"0%")&"／"&TEXT(wB,"0%")&"／"&TEXT(wC,"0%")')
-cr("px", "現價（2026-11-03）", "US$", "=px", note="v0.4.3：2026-10-26 收盤 126.06")
+cr("px", "現價（2026-11-05）", "US$", "=px", note="v0.4.5：2026-11-03 收盤 126.19；v0.4.3：2026-10-26 收盤 126.06")
 cr("cons", "市場共識目標價", "US$", "=cons_tp", note="S&P（43 家平均，2026-10-20）；Interested-party")
 cr("up", "上檔空間：加權目標價", "%", f"=C{CON['tp']}/px-1", "0.0%", fill=True)
 cr("upc", "上檔空間：Comparable 目標價", "%", f"=C{CON['comp']}/px-1", "0.0%")
@@ -1139,6 +1139,8 @@ srcs = [("Oracle FY2026 10-K（附註 13 分部、經查核財報）", "2026-06-
         ("Oracle 事實總帳 v0.3.1 增補（現價、共識、美債、同業 EV）", "2026-10-22", "oracle/data/oracle_facts_20261022.json", "Verified／Interested-party"),
         ("市場共識（MarketScreener／S&P、LSEG）", "2026-10-22", "oracle/data/consensus_orcl_20261022.json", "Interested-party"),
         ("現價：FinancialContent 歷史股價（2026-11-03 收盤 126.19；11-02 收盤 119.22）", "2026-11-04", "https://www.financialcontent.com/quote/NY%3AORCL/historical", "Verified"),
+        ("現價：Yahoo Finance ORCL 日線（2026-11-05 收盤 115.16；11-04 收盤 123.73）", "2026-11-06", "https://query1.finance.yahoo.com/v8/finance/chart/ORCL?range=5d&interval=1d", "Verified"),
+        ("現價第二來源：CNBC 2026-11-05 盤勢（Oracle 跌近 7%）", "2026-11-05", "https://www.cnbc.com/2026/11/04/stock-market-today-live-updates.html", "Verified"),
         ("v0.4.3 現價：stockanalysis.com 歷史股價（2026-10-26 收盤 126.06；10-30 收盤 130.67 兩站相同）", "2026-10-27", "https://stockanalysis.com/stocks/orcl/history/", "Verified"),
         ("Oracle 新聞稿：Oracle Announces Pricing of $20 Billion of Common Stock and Senior Notes（股 86,206,897 × $116；票據五檔 10.0；11-04 交割）", "2026-11-02", "https://www.prnewswire.com/news-releases/oracle-announces-pricing-of-20-billion-of-common-stock-and-senior-notes-302927244.html", "Verified"),
         ("Oracle 投資人日新聞稿：Oracle Investor Day 2026: Accelerating Value Creation（FY27–FY30 新增融資上限 20、FY29 自由現金流 ≥30）", "2026-10-28", "https://investor.oracle.com/investor-news/news-details/2026/Oracle-Investor-Day-2026-Accelerating-Value-Creation/default.aspx", "Interested-party"),
@@ -1165,10 +1167,10 @@ RD = wb.create_sheet("README", 0)
 B_ = PR_["B"]; TB = TR["B"]; CB = CR_["B"]
 up = f"Val!C{CON['up']}"; tp = f"Val!C{CON['tp']}"
 lines = [
-    ("Oracle（ORCL）個股模型 v0.4.5（命題＋營收分部架構；2026-11-02 股債增資納入〔v0.4.4〕；Tokenomics 快照 " + TKV + "〔v0.4.5，基準數值不變〕）　2026-11-04", True),
+    ("Oracle（ORCL）個股模型 v0.4.6（命題＋營收分部架構；v0.4.6 換現價 2026-11-05 收盤 115.16；2026-11-02 股債增資納入〔v0.4.4〕；Tokenomics 快照 " + TKV + "〔v0.4.5，基準數值不變〕）　2026-11-06", True),
     ("命題：OCI 已簽約的 backlog（RPO 約 6,640 億美元，約一半來自 OpenAI／Stargate）能否以高於資金成本的報酬轉成營收與現金，同時不把資產負債表撐破。命題模組（已連網 MW × 每 MW 年收入〔Tokenomics 持有成本 × 定價倍數 k〕、延誤、租金、AI 折舊）只驅動 Cloud Infrastructure 營收線的「OCI AI 算力」子列；SaaS、授權、支援、硬體、服務各有自己的成長路徑。", False),
     ("核心問題：FY2029 的 OCI 營收與營業利益率，相對於資本支出與租約的擴張，以及 Oracle 的資金缺口（自由現金流為負）要如何補。", False),
-    (f'="投資建議："&Val!C{CON["rec"]}&"（加權目標價 US$"&TEXT({tp},"0.0")&"，現價 US$"&TEXT(px,"0.00")&"〔2026-11-03〕，上檔空間 "&TEXT({up},"+0.0%;-0.0%")&"）"', True),
+    (f'="投資建議："&Val!C{CON["rec"]}&"（加權目標價 US$"&TEXT({tp},"0.0")&"，現價 US$"&TEXT(px,"0.00")&"〔2026-11-05〕，上檔空間 "&TEXT({up},"+0.0%;-0.0%")&"）"', True),
     (f'="重點觀察 1：情境 B 的 FY2029 OCI 營收 "&TEXT(PL!F{B_["oci"]},"0.0")&" 十億美元（其中 AI 算力 "&TEXT(PL!F{B_["ai"]},"0.0")&"），只有公司路徑 114 的 "&TEXT(Thesis!D{RPO_ROWS[1]},"0%")&"；OCI AI 營業利益率 "&TEXT(Thesis!G{TB["om"]},"0.0%")&"，AI 增量 ROIC "&TEXT(Thesis!G{TB["roic"]},"0.0%")&"，對照 WACC "&TEXT(wacc,"0.0%")&"。"', False),
     (f'="重點觀察 2：收支關卡（FY2027–FY2031 自由現金流扣股利合計）情境 A／B／C 為 "&TEXT(CF!C{GATE},"0")&"／"&TEXT(CF!D{GATE},"0")&"／"&TEXT(CF!E{GATE},"0")&" 十億美元；情境 B 在 2026-11-04 已交割的股債增資 20 之外，另需新增投資級債 "&TEXT(CF!D{GATE+1},"0")&"、新股 "&TEXT(CF!D{GATE+2},"0")&"、高息債 "&TEXT(CF!D{GATE+3},"0")&"，調整後槓桿峰值 "&TEXT(CF!D{GATE+4},"0.00")&" 倍；FY2027–FY2030 模型外部融資合計 "&TEXT(CF!D{GATE+8},"0.0")&"，對照公司上限 "&TEXT(fin_cap,"0")&"（"&IF(CF!D{GATE+10}>eq_tol,"超出 "&TEXT(CF!D{GATE+10},"0.0"),"未超出")&"）。"', False),
     (f'="重點觀察 3：DCF 情境加權 "&TEXT(Val!C{CON["dcf"]},"0.0")&"、分部加總 "&TEXT(Val!C{CON["comp"]},"0.0")&"（OCI AI 以 AI 模組 DCF 計，只占情境 B 分部企業價值的 "&TEXT(Val!D{SO_["oci_sh"]},"0%")&"）。若 OCI AI 改用 neocloud 同業倍數，加權目標價為 "&TEXT(Val!C{CON["compm"]},"0.0")&"：差額就是 AI 的資本密集度（汰換資本支出幾乎吃掉 EBITDA）；市場共識目標價 "&TEXT(cons_tp,"0")&"，高出本模型 "&TEXT(cons_tp/{tp}-1,"0%")&"。"', False),

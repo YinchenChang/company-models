@@ -111,8 +111,8 @@ asof: 2026-10-27
 - OpenAI 集中度｜扣除 OpenAI 後商用 RPO 年增約 25% [本專案：microsoft_facts_20261008.json call.rpoExOAI.fy26q4]｜2026-10-28 財報的 RPO 拆分
 
 ## 來源
-1. 本專案：/home/claude/company-models/microsoft/dist/20261104_Microsoft個股模型_v0.3.5.xlsx（Q、Thesis、CF、Val、Sens）、microsoft/README.md、microsoft/docs/reports/20261027_microsoft_v0.3_分部架構.md（2026-10-27）
-2. 本專案：/home/claude/company-models/microsoft/data/microsoft_facts_20261008.json（2026-10-08）
-3. 本專案：/home/claude/company-models/amazon/data/amazon_facts_20261008.json、/home/claude/company-models/alphabet/data/alphabet_facts_20261008.json、/home/claude/company-models/oracle/data/oracle_facts_20261007.json、/home/claude/company-models/oracle/dist/20261104_Oracle個股模型_v0.4.5.xlsx（Val，CoreWeave 倍數）
+1. 本專案：microsoft/dist/20261104_Microsoft個股模型_v0.3.5.xlsx（Q、Thesis、CF、Val、Sens）、microsoft/README.md、microsoft/docs/reports/20261027_microsoft_v0.3_分部架構.md（2026-10-27）
+2. 本專案：microsoft/data/microsoft_facts_20261008.json（2026-10-08）
+3. 本專案：amazon/data/amazon_facts_20261008.json、alphabet/data/alphabet_facts_20261008.json、oracle/data/oracle_facts_20261007.json、oracle/dist/20261104_Oracle個股模型_v0.4.5.xlsx（Val，CoreWeave 倍數）
 4. [Microsoft Form 10-K FY2026（管理層名單）](https://www.sec.gov/Archives/edgar/data/0000789019/000119312526323660/msft-20260630.htm)（2026-07-29）
 5. [Microsoft announces quarterly earnings release date（Finviz 轉載）](https://finviz.com/news/400058/microsoft-announces-quarterly-earnings-release-date)（2026-10-07）

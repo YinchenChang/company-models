@@ -104,8 +104,8 @@ asof: 2026-10-27
 - 自用 AI 讀法不適用｜Oracle 的 AI 產能幾乎全數對外出租，模型不設自用 AI 讀法 [本專案：oracle/docs/reports/20261027_oracle_v0.4_分部架構.md 修正一]｜—
 
 ## 來源
-1. 本專案：/home/claude/company-models/oracle/dist/20261104_Oracle個股模型_v0.4.5.xlsx（Q、Thesis、CF、Val、Recon、Sens）、oracle/README.md、oracle/docs/reports/20261027_oracle_v0.4_分部架構.md（2026-10-27）
-2. 本專案：/home/claude/company-models/oracle/data/oracle_facts_20261007.json、/home/claude/company-models/oracle/company.json（2026-10-07／22）
-3. 本專案：/home/claude/company-models/microsoft/data/microsoft_facts_20261008.json、/home/claude/company-models/microsoft/data/peers_cloud_20261008.json、/home/claude/company-models/amazon/data/amazon_facts_20261008.json
+1. 本專案：oracle/dist/20261104_Oracle個股模型_v0.4.5.xlsx（Q、Thesis、CF、Val、Recon、Sens）、oracle/README.md、oracle/docs/reports/20261027_oracle_v0.4_分部架構.md（2026-10-27）
+2. 本專案：oracle/data/oracle_facts_20261007.json、oracle/company.json（2026-10-07／22）
+3. 本專案：microsoft/data/microsoft_facts_20261008.json、microsoft/data/peers_cloud_20261008.json、amazon/data/amazon_facts_20261008.json
 4. [Oracle 2026 委託書 DEF 14A（管理層名單）](https://www.sec.gov/Archives/edgar/data/0001341439/000119312526402816/orcl-20260925.htm)（2026-09-25）
 5. [Oracle Stock Drops Thursday: What's Happening?（Benzinga）](https://www.benzinga.com/trading-ideas/movers/26/10/62258380/oracle-stock-drops-thursday-whats-happening)（2026-10-09）

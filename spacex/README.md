@@ -1,10 +1,19 @@
-# spacex/ — SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2.3（命題＋官方營收分部 → 損益表；v0.2.2 Tokenomics 快照 v21.9、v0.2.3 換 v21.10，基準數值同 v0.2.1）
+# spacex/ — SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2.5（命題＋官方營收分部 → 損益表；v0.2.2 Tokenomics 快照 v21.9、v0.2.3 換 v21.10、v0.2.4 只改展示層、v0.2.5 只換現價，基準數值同 v0.2.1）
 
 **命題（一句話）：** SI 分部的算力投入（9M26 SI 資本支出約 400 億美元、名目算力 1.7 GW；Q3 法說：Q4 資本支出 350–400 億、年底 2.5–3 GW）能否由 SI 營收（對外算力出租＋Grok／Cursor／X）回本；Connectivity（Starlink）現金流與 IPO 資金能支撐多久。
 
 **核心問題（S2）：** FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金與以其他融資取得之 PP&E；Valor 失敗售後租回本金列融資、不扣；公司口徑 FCF 並列）。
 
-**投資建議：強力放空**（v0.2.1；加權目標價 US$34.79，比現價 143.89〔2026-10-29 收盤〕低 75.8%；v0.2 為 34.83、v0.1 為 28.76）。主值＝自用 AI 讀法 2；讀法 1 目標價 22.57（−84.3%）。評等邊界：目標價 ≥ 71.95 才離開強力放空。市場共識目標價 244.97（MarketBeat 46 位）。
+**投資建議：強力放空**（v0.2.5；加權目標價 US$34.79，比現價 123.62〔2026-11-05 收盤〕低 71.9%；v0.2.4 現價 143.89〔10-29〕時低 75.8%；v0.2 為 34.83、v0.1 為 28.76）。主值＝自用 AI 讀法 2；讀法 1 目標價 22.57（−84.3%）。評等邊界：目標價 ≥ 71.95 才離開強力放空。市場共識目標價 244.97（MarketBeat 46 位）。
+
+## v0.2.5 改了什麼（2026-11-06；只換現價）
+- Andy 2026-11-06 07:32「請所有個股都換成十一月五號的收盤價」：In 頁 `px` 143.89（10-29）→ 123.62（11-05 收盤；Yahoo Finance、Benzinga 兩來源，`docs/reports/20261105_收盤價_個股換價來源.md`）。
+- WACC 權益權重用評價日股價 `px_val`（9-30 收盤 150.86），不受現價影響，故 DCF、分部加總、加權目標價 34.79 全部不變；上檔空間 −75.8% → −71.9%，強力放空不變；現價隱含 NTM EV/EBITDA 隨之下降。
+- 敏感度整本重跑（`sens_v025_20261106.json`）：93 案目標價逐案與 v0.2.4 相同；評等依新現價重判，`k_flat` 高 由強力放空改為放空。v0.2.4 成品移 `dist/_待刪除/`。
+
+## v0.2.4 改了什麼（2026-11-05；只改展示層，數值格 0 差異）
+- HTML 新版面（Andy 2026-11-05 18:43–19:24，規格 `docs/plan/個股HTML版面規格.md`、`tools/company_html/README.md`）：投資建議橫幅（加權與 Comparable 兩個目標價）置頂；命題分三點、命題回覆摺疊在命題下方；重點觀察白話；參數依業務分「發射／Starlink／xAI 算力／全公司」四塊；估值、對帳、敏感度只列主要項目其餘摺疊；DCF 折現率直接顯示；版本要點與驅動 → 推導對照表移附錄。
+- README 頁新增「展示層」與「命題回覆」兩段（公式帶數字），A3、A6–A8 原文保留給下游。敏感度未重跑（基準不變），`sens_v023_20261104.json` 改名 `sens_v024_20261105.json`；v0.2.3 成品移 `dist/_待刪除/`。
 
 ## v0.2.3 改了什麼（2026-11-04；報告 `docs/reports/20261104_spacex_v0.2.3_TK快照v21.10.md`）
 - Tokenomics 快照 v21.9 → v21.10（`data/tokenomics_snapshot_v21.10.json`，`20261104_Tokenomics_v21.10.xlsx`，master eded8e6；名稱清單同 Alphabet；`--check` 通過）。契約名稱值的變動只在 `IF_NonNV_Out_TPU`（本模型不讀）。
@@ -73,14 +82,14 @@
 | `build_spacex.py` | Python → Excel 產生器（openpyxl，全部活公式；藍字輸入、黑字公式、黃底判斷題） |
 | `facts_2026q3.py` | 10-Q 與新聞稿兩讀 → `data/spacex_facts_2026q3.json`（A 段；B 段依審查修正） |
 | `facts_v02.py` | v0.2 事實增補（424B4、2026Q2 10-Q、法說指引；逐字稿不入庫，本機有逐字稿時重讀核對）→ `data/spacex_facts_v02.json` |
-| `sens_v02.py` | 敏感度：一次改一個 In 頁輸入、整本 LibreOffice 重算 → `data/sens_v023_20261104.json`（v0.2.3；v0.1～v0.2.2 結果在 `data/_待刪除/`） |
+| `sens_v02.py` | 敏感度：一次改一個 In 頁輸入、整本 LibreOffice 重算 → `data/sens_v025_20261106.json`（v0.2.4 沿用 v0.2.3 結果；v0.1～v0.2.2 結果在 `data/_待刪除/`） |
 | `waterfall_v02.py` | 目標價歸因瀑布：`WF=v021`（預設）v0.2 → v0.2.1（SPCX_STAGE 7–9）→ `data/waterfall_v021_20261030.json`；`WF=v02` v0.1 → v0.2（0–7）→ `data/waterfall_v02_20261030.json` |
 | `g2cal_v02.py` | 二修：解 G2 校準 k0（情境 B 的 2027Q1 營收＝35）→ `data/g2cal_v021_20261030.json`（v0.2.1 重解 4.8227；只供 Sens 的 k0_ovr；v0.2 的 4.8197 在 `data/_待刪除/`） |
 | `check_v02.py` | 成品核對：公式錯誤 0、核對列 0（分部對帳、子列、命題子列）、敏感度未過期、固定列標籤存在 |
 | `gen_html_json.py` | 由列號對照產生 `html.json`（勿手改 html.json） |
 | `make_v02.sh` | 一次跑完：事實總帳（v0.1＋v0.2）→（敏感度）→ 建置 → 重算 → check_v02 → check_in_layout → check_sens_coverage → check_segments → HTML 與檢核 |
 | `segments.json` | 官方分部宣告（`tools/segment_check/check_segments.py spacex` 符合） |
-| `dist/20261104_SpaceX個股模型_v0.2.3.xlsx`／`.html` | 成品（v0.1～v0.2.2 成品移 `dist/_待刪除/`） |
+| `dist/20261105_SpaceX個股模型_v0.2.4.xlsx`／`.html` | 成品（v0.1～v0.2.3 成品移 `dist/_待刪除/`） |
 | `docs/reports/20261030_spacex_v0.2.1.md` | v0.2.1 報告；v0.2 報告 `docs/reports/20261030_spacex_v0.2.md`；v0.1 B 段報告 `docs/reports/20261030_spacex_v0.1.md`；A 段事實總帳報告 `docs/reports/20261030_spacex_v0.1_A段_事實總帳.md` |
 
 ## 建置

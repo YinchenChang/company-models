@@ -1,13 +1,13 @@
 # Microsoft v0.3.3 敏感度（整本重算部分）：In 頁有低／高、但 Sens 頁原有活公式案例沒有涵蓋的鍵（含 IF_HoldEcon 四世代同時 he_all），
 # 一次改一個（build_microsoft.py --set），LibreOffice 整本重算後讀 Val 頁加權目標價，寫成 JSON 供 build_microsoft.py 寫入 Sens 頁（原則第 9 節）。
-# 用法：python3 microsoft/sens_v033.py [輸出 JSON]（預設 microsoft/data/sens_v035_20261104.json〔v0.3.5 起〕；環境變數 JOBS＝平行數，預設 2）
+# 用法：python3 microsoft/sens_v033.py [輸出 JSON]（預設 microsoft/data/sens_v037_20261106.json〔v0.3.6 起；v0.3.5 結果改名沿用〕；環境變數 JOBS＝平行數，預設 2）
 import json, os, shutil, subprocess, sys, tempfile
 from concurrent.futures import ThreadPoolExecutor
 import openpyxl
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BUILD = os.path.join(HERE, "build_microsoft.py")
-OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "data", "sens_v035_20261104.json")
+OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "data", "sens_v037_20261106.json")
 WD = tempfile.mkdtemp(prefix="msft_sens_")
 
 
