@@ -23,8 +23,8 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.6.31"
-DATE = "20261108"
+VERSION = "v0.6.32"
+DATE = "20261109"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
 YELLOW = PatternFill("solid", fgColor="FFF2CC")

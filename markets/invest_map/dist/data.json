@@ -1,11 +1,11 @@
 {
  "meta": {
-  "version": "v0.6.31",
-  "book": "20261108_AI投資地圖_資料_v0.6.31.xlsx",
+  "version": "v0.6.32",
+  "book": "20261109_AI投資地圖_資料_v0.6.32.xlsx",
   "tk_file": "20261102_Tokenomics_v21.8.xlsx",
   "tk_version": "v21.8",
   "tk_commit": "91db9ac",
-  "cm_commit": "3c7aa0de",
+  "cm_commit": "6455f830",
   "built": "2026-11-08",
   "price_date": "AI半導體 個股用 2026-11-05 收盤（取自各個股模型現價）；算力收支公司用 2026-11-04 收盤（上檔空間＝模型目標價 ÷ 最新收盤 − 1）",
   "last_close_date": "2026-11-05",
@@ -5684,6 +5684,18 @@
    "imp": "2",
    "pos": "AI 加速器垂直探針卡主要供應者之一（媒體）",
    "tag": "[IP]",
+   "status": "有模型"
+  },
+  {
+   "seg": "運算",
+   "order": "9",
+   "name": "Cerebras",
+   "tk": "CBRS",
+   "listing": "美",
+   "role": "晶圓級推論加速器（WSE）與推論雲端服務",
+   "imp": "2",
+   "pos": "晶圓級推論加速器與推論雲端；OpenAI 750 MW 合約，AI 加速器金額份額遠低於 NVIDIA、AMD（本專案未推導份額）",
+   "tag": "[判斷]",
    "status": "有模型"
   },
   {
