@@ -3,7 +3,7 @@
  "ticker": "SPCX",
  "wide_text": true,
  "hero": {
-  "rec": "@Val!B14",
+  "rec": "@Val!B16",
   "tiles": [
    [
     "@Val!A8",
@@ -28,11 +28,17 @@
    ]
   ],
   "note": [
-   "投資建議依加權目標價判定：",
-   "@Val!E14"
+   "@Val!B17",
+   "。投資建議依加權目標價判定：",
+   "@Val!E16",
+   "。模型狀態：",
+   "@Sens!D101",
+   "（",
+   "@Sens!D102",
+   "）"
   ]
  },
- "thesis": "@README!A32",
+ "thesis": "@README!A34",
  "question": "FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金與以其他融資取得之不動產設備；Valor 失敗售後租回本金列融資、不扣）",
  "scenarios": [
   {
@@ -61,9 +67,9 @@
      "type": "list",
      "ordered": true,
      "items": [
-      "@README!A33",
-      "@README!A34",
-      "@README!A35"
+      "@README!A35",
+      "@README!A36",
+      "@README!A37"
      ]
     },
     {
@@ -72,9 +78,19 @@
      "collapse": true,
      "summary": "展開：命題回覆（依本模型計算的答案；想先看結論可展開，或讀完全文再看）",
      "items": [
-      "@README!A40",
-      "@README!A41",
-      "@README!A42"
+      "@README!A42",
+      "@README!A43",
+      "@README!A44"
+     ]
+    },
+    {
+     "type": "list",
+     "collapse": true,
+     "summary": "展開：主要失效條件（出現任一可觀察證據，結論須重估）",
+     "items": [
+      "@README!A47",
+      "@README!A48",
+      "@README!A49"
      ]
     },
     {
@@ -85,9 +101,9 @@
      "type": "list",
      "ordered": true,
      "items": [
-      "@README!A36",
-      "@README!A37",
-      "@README!A38"
+      "@README!A38",
+      "@README!A39",
+      "@README!A40"
      ]
     }
    ]
@@ -100,37 +116,37 @@
      "type": "table",
      "caption": "情境驅動（三情境並排，進加權目標價；In 頁 J 節）",
      "head": [
-      "@In!B199",
-      "@In!D199",
-      "@In!E199",
-      "@In!F199",
-      "@In!C199",
-      "@In!G199"
+      "@In!B201",
+      "@In!D201",
+      "@In!E201",
+      "@In!F201",
+      "@In!C201",
+      "@In!G201"
      ],
      "rows": [
       [
-       "@In!B200",
-       "@In!D200|n2",
-       "@In!E200|n2",
-       "@In!F200|n2",
-       "@In!C200",
-       "@In!G200|tag"
-      ],
-      [
-       "@In!B201",
-       "@In!D201|n1",
-       "@In!E201|n1",
-       "@In!F201|n1",
-       "@In!C201",
-       "@In!G201|tag"
-      ],
-      [
        "@In!B202",
-       "@In!D202|p0",
-       "@In!E202|p0",
-       "@In!F202|p0",
+       "@In!D202|n2",
+       "@In!E202|n2",
+       "@In!F202|n2",
        "@In!C202",
        "@In!G202|tag"
+      ],
+      [
+       "@In!B203",
+       "@In!D203|n1",
+       "@In!E203|n1",
+       "@In!F203|n1",
+       "@In!C203",
+       "@In!G203|tag"
+      ],
+      [
+       "@In!B204",
+       "@In!D204|p0",
+       "@In!E204|p0",
+       "@In!F204|p0",
+       "@In!C204",
+       "@In!G204|tag"
       ]
      ]
     },
@@ -1804,6 +1820,22 @@
        "@In!F147|p1",
        "@In!C147",
        "@In!G147|tag"
+      ],
+      [
+       "@In!B149",
+       "@In!D149|n2",
+       "@In!E149|n2",
+       "@In!F149|n2",
+       "@In!C149",
+       "@In!G149|tag"
+      ],
+      [
+       "@In!B150",
+       "@In!D150|n2",
+       "@In!E150|n2",
+       "@In!F150|n2",
+       "@In!C150",
+       "@In!G150|tag"
       ]
      ]
     },
@@ -2076,22 +2108,6 @@
        "sub": "債務與融資租賃到期"
       },
       [
-       "@In!B149",
-       "@In!D149|n1",
-       "@In!E149|n1",
-       "@In!F149|n1",
-       "@In!C149",
-       "@In!G149|tag"
-      ],
-      [
-       "@In!B150",
-       "@In!D150|n1",
-       "@In!E150|n1",
-       "@In!F150|n1",
-       "@In!C150",
-       "@In!G150|tag"
-      ],
-      [
        "@In!B151",
        "@In!D151|n1",
        "@In!E151|n1",
@@ -2186,6 +2202,22 @@
        "@In!F162|n1",
        "@In!C162",
        "@In!G162|tag"
+      ],
+      [
+       "@In!B163",
+       "@In!D163|n1",
+       "@In!E163|n1",
+       "@In!F163|n1",
+       "@In!C163",
+       "@In!G163|tag"
+      ],
+      [
+       "@In!B164",
+       "@In!D164|n1",
+       "@In!E164|n1",
+       "@In!F164|n1",
+       "@In!C164",
+       "@In!G164|tag"
       ]
      ]
     }
@@ -2506,8 +2538,8 @@
        "series": 2
       },
       {
-       "label": "@Val!A21",
-       "value": "@Val!B21",
+       "label": "@Val!A24",
+       "value": "@Val!B24",
        "series": 1
       },
       {
@@ -2575,18 +2607,18 @@
        "@Val!E12|"
       ],
       [
-       "@Val!A14|",
-       "@Val!B14|",
-       "@Val!C14|n2",
-       "@Val!D14|n2",
-       "@Val!E14|"
+       "@Val!A16|",
+       "@Val!B16|",
+       "@Val!C16|n2",
+       "@Val!D16|n2",
+       "@Val!E16|"
       ],
       [
-       "@Val!A17|",
-       "@Val!B17|n2",
-       "@Val!C17|n2",
-       "@Val!D17|n2",
-       "@Val!E17|"
+       "@Val!A20|",
+       "@Val!B20|n2",
+       "@Val!C20|n2",
+       "@Val!D20|n2",
+       "@Val!E20|"
       ],
       [
        "@Val!A10|",
@@ -2611,84 +2643,84 @@
      "rows": [
       [
        "@Val!A13|",
-       "@Val!B13|",
+       "@Val!B13|n2",
        "@Val!C13|n2",
        "@Val!D13|n2",
        "@Val!E13|"
       ],
       [
+       "@Val!A14|",
+       "@Val!B14|n2",
+       "@Val!C14|n2",
+       "@Val!D14|n2",
+       "@Val!E14|"
+      ],
+      [
        "@Val!A15|",
-       "@Val!B15|n2",
+       "@Val!B15|",
        "@Val!C15|n2",
        "@Val!D15|n2",
        "@Val!E15|"
       ],
       [
-       "@Val!A16|",
-       "@Val!B16|n2",
-       "@Val!C16|n2",
-       "@Val!D16|n2",
-       "@Val!E16|"
+       "@Val!A17|",
+       "@Val!B17|n2",
+       "@Val!C17|n2",
+       "@Val!D17|n2",
+       "@Val!E17|"
       ],
       [
        "@Val!A18|",
-       "@Val!B18|sp1",
-       "@Val!C18|sp1",
-       "@Val!D18|sp1",
+       "@Val!B18|n2",
+       "@Val!C18|n2",
+       "@Val!D18|n2",
        "@Val!E18|"
       ],
       [
        "@Val!A19|",
-       "@Val!B19|sp1",
-       "@Val!C19|sp1",
-       "@Val!D19|sp1",
+       "@Val!B19|n2",
+       "@Val!C19|n2",
+       "@Val!D19|n2",
        "@Val!E19|"
       ],
       [
-       "@Val!A20|",
-       "@Val!B20|n2",
-       "@Val!C20|sp1",
-       "@Val!D20|",
-       "@Val!E20|"
-      ],
-      [
        "@Val!A21|",
-       "@Val!B21|n2",
+       "@Val!B21|sp1",
        "@Val!C21|sp1",
-       "@Val!D21|",
+       "@Val!D21|sp1",
        "@Val!E21|"
       ],
       [
        "@Val!A22|",
-       "@Val!B22|n2",
-       "@Val!C22|n2",
-       "@Val!D22|n2",
+       "@Val!B22|sp1",
+       "@Val!C22|sp1",
+       "@Val!D22|sp1",
        "@Val!E22|"
       ],
       [
        "@Val!A23|",
        "@Val!B23|n2",
-       "@Val!C23|n2",
-       "@Val!D23|n2",
+       "@Val!C23|sp1",
+       "@Val!D23|",
        "@Val!E23|"
       ],
       [
        "@Val!A24|",
        "@Val!B24|n2",
-       "@Val!C24|n2",
-       "@Val!D24|n2",
+       "@Val!C24|sp1",
+       "@Val!D24|",
        "@Val!E24|"
       ],
       [
        "@Val!A25|",
-       "@Val!B25|n1",
-       "@Val!C25|n1",
-       "@Val!D25|n1",
+       "@Val!B25|n2",
+       "@Val!C25|n2",
+       "@Val!D25|n2",
        "@Val!E25|"
       ],
       [
        "@Val!A26|",
-       "@Val!B26|",
+       "@Val!B26|n2",
        "@Val!C26|n2",
        "@Val!D26|n2",
        "@Val!E26|"
@@ -2702,10 +2734,31 @@
       ],
       [
        "@Val!A28|",
-       "@Val!B28|n3",
-       "@Val!C28|n2",
-       "@Val!D28|n2",
+       "@Val!B28|n1",
+       "@Val!C28|n1",
+       "@Val!D28|n1",
        "@Val!E28|"
+      ],
+      [
+       "@Val!A29|",
+       "@Val!B29|",
+       "@Val!C29|n2",
+       "@Val!D29|n2",
+       "@Val!E29|"
+      ],
+      [
+       "@Val!A30|",
+       "@Val!B30|n2",
+       "@Val!C30|n2",
+       "@Val!D30|n2",
+       "@Val!E30|"
+      ],
+      [
+       "@Val!A31|",
+       "@Val!B31|n3",
+       "@Val!C31|n2",
+       "@Val!D31|n2",
+       "@Val!E31|"
       ]
      ]
     },
@@ -3753,6 +3806,173 @@
        "@Recon!E72|"
       ]
      ]
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A74",
+     "head": [
+      "項目",
+      "B",
+      "C",
+      "D",
+      "說明"
+     ],
+     "rows": [
+      [
+       "@Recon!A76",
+       "",
+       "",
+       "",
+       ""
+      ],
+      [
+       "@Recon!A77",
+       "@Recon!B77|n2",
+       "@Recon!C77|n2",
+       "@Recon!D77|n2",
+       "@Recon!E77"
+      ],
+      [
+       "@Recon!A78",
+       "@Recon!B78|n2",
+       "@Recon!C78|n2",
+       "@Recon!D78|n2",
+       "@Recon!E78"
+      ],
+      [
+       "@Recon!A79",
+       "@Recon!B79|n2",
+       "@Recon!C79|n2",
+       "@Recon!D79|n2",
+       "@Recon!E79"
+      ],
+      [
+       "@Recon!A80",
+       "",
+       "",
+       "",
+       ""
+      ],
+      [
+       "@Recon!A81",
+       "@Recon!B81|n2",
+       "@Recon!C81|n2",
+       "@Recon!D81|n2",
+       "@Recon!E81"
+      ],
+      [
+       "@Recon!A82",
+       "@Recon!B82|n2",
+       "@Recon!C82|n2",
+       "@Recon!D82|n2",
+       "@Recon!E82"
+      ],
+      [
+       "@Recon!A83",
+       "@Recon!B83|n2",
+       "@Recon!C83|n2",
+       "@Recon!D83|n2",
+       "@Recon!E83"
+      ],
+      [
+       "@Recon!A84",
+       "@Recon!B84|n2",
+       "@Recon!C84|n2",
+       "@Recon!D84|n2",
+       "@Recon!E84"
+      ],
+      [
+       "@Recon!A85",
+       "@Recon!B85|",
+       "@Recon!C85|",
+       "@Recon!D85|",
+       "@Recon!E85"
+      ],
+      [
+       "@Recon!A86",
+       "@Recon!B86|",
+       "@Recon!C86|",
+       "@Recon!D86|",
+       "@Recon!E86"
+      ],
+      [
+       "@Recon!A87",
+       "@Recon!B87|",
+       "@Recon!C87|",
+       "@Recon!D87|",
+       "@Recon!E87"
+      ],
+      [
+       "@Recon!A88",
+       "@Recon!B88|",
+       "@Recon!C88|",
+       "@Recon!D88|",
+       "@Recon!E88"
+      ],
+      [
+       "@Recon!A89",
+       "",
+       "",
+       "",
+       ""
+      ],
+      [
+       "@Recon!A90",
+       "@Recon!B90|n2",
+       "@Recon!C90|n2",
+       "@Recon!D90|n2",
+       "@Recon!E90"
+      ],
+      [
+       "@Recon!A91",
+       "@Recon!B91|n2",
+       "@Recon!C91|n2",
+       "@Recon!D91|n2",
+       "@Recon!E91"
+      ],
+      [
+       "@Recon!A92",
+       "@Recon!B92|n2",
+       "@Recon!C92|n2",
+       "@Recon!D92|n2",
+       "@Recon!E92"
+      ],
+      [
+       "@Recon!A93",
+       "@Recon!B93|n2",
+       "@Recon!C93|n2",
+       "@Recon!D93|n2",
+       "@Recon!E93"
+      ],
+      [
+       "@Recon!A94",
+       "",
+       "",
+       "",
+       ""
+      ],
+      [
+       "@Recon!A95",
+       "@Recon!B95|n2",
+       "@Recon!C95|n2",
+       "@Recon!D95|n2",
+       "@Recon!E95"
+      ],
+      [
+       "@Recon!A96",
+       "@Recon!B96|n2",
+       "@Recon!C96|n2",
+       "@Recon!D96|n2",
+       "@Recon!E96"
+      ],
+      [
+       "@Recon!A97",
+       "@Recon!B97|",
+       "@Recon!C97|",
+       "@Recon!D97|",
+       "@Recon!E97"
+      ]
+     ]
     }
    ]
   },
@@ -3843,6 +4063,14 @@
        ]
       ],
       [
+       "build_id",
+       "@Sens!D102"
+      ],
+      [
+       "模型狀態",
+       "@Sens!D101"
+      ],
+      [
        "來源 xlsx",
        "$xlsx"
       ],
@@ -3908,9 +4136,34 @@
      ],
      "rowgen": {
       "sheet": "README",
-      "rows": "20-26",
+      "rows": "20-28",
       "cols": [
        "A"
+      ]
+     }
+    },
+    {
+     "type": "h3",
+     "text": "風險登錄（未進主模型的尾部風險）"
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：風險、是否建模、理由、觀察指標",
+     "head": [
+      "風險",
+      "是否建模",
+      "理由",
+      "觀察指標"
+     ],
+     "rowgen": {
+      "sheet": "README",
+      "rows": "53-57",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D"
       ]
      }
     },

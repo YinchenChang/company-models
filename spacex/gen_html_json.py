@@ -34,7 +34,9 @@ rf_s = {str(VR["tvsh"]): {"B": "p1", "C": "p1", "D": "p1"}, str(VR["shv"]): {"B"
 rf_t = {str(VR["ssh"]): {"B": "n3", "C": "n3", "D": "n3"}, str(VR["simp"]): {"B": "x1", "C": "x1", "D": "x1"}, str(VR["mkt_imp"]): {"B": "x1"}}
 gate = rm["GATE"]
 r1 = find("Recon", "1. 合併層"); r2 = find("Recon", "2. 逐分部"); r3 = find("Recon", "3. S2"); r4 = find("Recon", "4. 每 GW"); r5 = find("Recon", "5. 法說")
-r5_end = max(r for r in range(r5, wb["Recon"].max_row + 1) if wb["Recon"].cell(r, 1).value)
+r6 = find("Recon", "6. k 分解")   # v0.2.6
+r5_end = max(r for r in range(r5, r6) if wb["Recon"].cell(r, 1).value)
+r6_end = max(r for r in range(r6, wb["Recon"].max_row + 1) if wb["Recon"].cell(r, 1).value)
 se_end = max(x[3] for x in rm["SE_ROWS"])
 _se = wb["Sens"]
 _tv = [abs(_se.cell(x[3], 5).value) for x in rm["SE_ROWS"] if isinstance(_se.cell(x[3], 5).value, (int, float))]
@@ -88,7 +90,7 @@ IN_GROUPS = {
  "co": [("股價、股數與資產負債（評價日）", ["px", "px_val", "sh_out", "sh_dil_9m", "dil_perf", "dil_opt", "dil_rsu", "dil_echo", "dil_x", "cash_0", "cash_ye25", "debt_0", "debt_ye25", "slb_0", "fin_lease", "btc", "legal"]),
         ("折現率", ["rf", "beta", "erp", "kd", "tax_w", "wacc_adj", "g_tv", "ronic_sp", "tax_tv"]),
         ("目標價規則", ["mid", "t_val", "t_q4", "tp_wA", "tp_wB", "tp_wC", "w_dcf", "t_tgt", "w_ntm27", "cons_tp", "sbc_add", "tv_alt"]),
-        ("稅、利率與股數稀釋", ["tax", "r_cash", "r_debt", "dil", "wc_k", "min_cash"]),
+        ("稅、利率與股數稀釋", ["tax", "r_cash", "r_debt", "dil", "wc_k", "min_cash", "lev_max", "icr_min"]),
         ("債務與融資租賃到期", ["mat_2H", "mat_27", "mat_28", "mat_29", "mat_30", "mat_31", "mat_32", "lease_2H", "lease_27", "lease_28", "lease_29", "lease_30", "lease_31", "lease_32"])],
 }
 # 每個 In 參數（A–I 節，不含 I2 實績、J0 對照、J 情境對照）須剛好歸入一組，避免漏列
@@ -158,6 +160,9 @@ assert sorted(_cal_used) == list(range(TA, T["ppe_gw"] + 1)), "Thesis A 節校�
 RDW = wb["README"]
 rd_show = find("README", "展示層")
 rd_ans = find("README", "命題回覆")
+rd_inv = find("README", "主要失效條件")   # v0.2.6
+rd_risk = find("README", "風險登錄")
+rd_stat = find("README", "模型狀態（README")
 
 # ─── 估值、對帳、敏感度：主要項目直接列，其餘摺疊（Andy 2026-11-05 第二版） ───
 def vrows(keys, cols, fmts, rf=None):
@@ -181,6 +186,11 @@ SOTP_REST = [k for k in SOTP_ALL if k not in SOTP_MAIN]
 for _a, _m in ((CONC_ALL, CONC_MAIN), (DSUM_ALL, DSUM_MAIN), (SOTP_ALL, SOTP_MAIN)):
     assert set(_m) <= set(_a), set(_m) - set(_a)
 RW = wb["Recon"]
+def R6_FMT(r):   # v0.2.6：第 6 節逐列格式（文字列不套數字格式）
+    v = [RW.cell(r, c).value for c in (2, 3, 4)]
+    if any(isinstance(x, str) and not x.startswith("=") for x in v if x is not None): return ""
+    lab = str(RW.cell(r, 1).value)
+    return "n2" if any(k in lab for k in ("目標價", "EBITDA", "影子效益")) and "倍" not in lab else "n2"
 def rrow(start, end, label, b=None):
     for r in range(start, end + 1):
         if str(RW.cell(r, 1).value or "").strip().startswith(label.strip()) and (b is None or RW.cell(r, 2).value == b): return r
@@ -219,7 +229,7 @@ cfg = {
           "tiles": [[f"@Val!A{VR['tp']}", f"@Val!B{VR['tp']}|n2", ["上檔空間 ", f"@Val!B{VR['up']}|sp1"]],
                     [f"@Val!A{VR['tpcomp']}", f"@Val!B{VR['tpcomp']}|n2", ["上檔空間 ", f"@Val!B{VR['upc']}|sp1"]],
                     [f"@Val!A{VR['px']}", f"@Val!B{VR['px']}|n2", ""]],
-          "note": ["投資建議依加權目標價判定：", f"@Val!E{VR['rec']}"]},
+          "note": [f"@Val!B{VR['rec_cond']}", "。投資建議依加權目標價判定：", f"@Val!E{VR['rec']}", "。模型狀態：", "@Sens!D" + str(rm["SE_STATUS"]), "（", "@Sens!D" + str(rm["SE_BID"]), "）"]},
  "thesis": f"@README!A{rd_show + 1}",
  "question": "FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金與以其他融資取得之不動產設備；Valor 失敗售後租回本金列融資、不扣）",
  "scenarios": [{"key": "A", "name": "情境 A（算力租金維持高檔、Starlink 增長快）"}, {"key": "B", "name": "情境 B（租金向持有成本部分收斂；基準）"}, {"key": "C", "name": "情境 C（租金收斂到持有成本、Starlink 增長放緩）"}],
@@ -229,6 +239,8 @@ cfg = {
     {"type": "list", "ordered": True, "items": [f"@README!A{rd_show + 2}", f"@README!A{rd_show + 3}", f"@README!A{rd_show + 4}"]},
     {"type": "list", "ordered": True, "collapse": True, "summary": "展開：命題回覆（依本模型計算的答案；想先看結論可展開，或讀完全文再看）",
      "items": [f"@README!A{rd_ans + 1}", f"@README!A{rd_ans + 2}", f"@README!A{rd_ans + 3}"]},
+    {"type": "list", "collapse": True, "summary": "展開：主要失效條件（出現任一可觀察證據，結論須重估）",
+     "items": [f"@README!A{rd_inv + 1}", f"@README!A{rd_inv + 2}", f"@README!A{rd_inv + 3}"]},
     {"type": "h3", "text": "重點觀察"},
     {"type": "list", "ordered": True, "items": [f"@README!A{rd_show + 5}", f"@README!A{rd_show + 6}", f"@README!A{rd_show + 7}"]}]},
   {"id": "drivers", "title": "驅動因子 → 推導量", "blocks": [
@@ -301,7 +313,11 @@ cfg = {
               "@Recon!A" + str(r3), "展開：讀法 B 與最近一季校準值")
     + rec_tbl(R4_MAIN, R4_ALL, ["A", "B", "E"], ["", "n1", ""], ["項目", "數值", "說明"], "@Recon!A" + str(r4), "展開：近四季與最近一季的每 GW 投資")
     + rec_tbl(R5_MAIN, R5_ALL, ["A", "B", "C", "D", "E"], ["", "n2", "n2", "n2", ""], ["項目", "情境 A", "情境 B", "情境 C", "說明"],
-              "@Recon!A" + str(r5), "展開：法說指引的換算細節、須為真條件、定價、Backlog、Cursor 對照", R5_RF)},
+              "@Recon!A" + str(r5), "展開：法說指引的換算細節、須為真條件、定價、Backlog、Cursor 對照", R5_RF)
+    + [{"type": "table", "caption": "@Recon!A" + str(r6), "head": ["項目", "B", "C", "D", "說明"],
+        "rows": [[f"@Recon!A{r}", f"@Recon!B{r}|{R6_FMT(r)}", f"@Recon!C{r}|{R6_FMT(r)}", f"@Recon!D{r}|{R6_FMT(r)}", f"@Recon!E{r}"]
+                 if RW.cell(r, 2).value is not None or RW.cell(r, 5).value else [f"@Recon!A{r}", "", "", "", ""]
+                 for r in range(r6 + 2, r6_end + 1) if RW.cell(r, 1).value]}]},
   {"id": "sens", "title": "敏感度", "intro": "@Sens!A1", "blocks": [
     {"type": "tornado", "title": "加權目標價相對基準的變動（變動達兩位數百分比的案例；一次改一個輸入，整本重算）", "sheet": "Sens", "rows": tor_big, "label_col": "A", "value_col": "E", "fmt": "sp1"},
     {"type": "tornado", "collapse": True, "summary": "展開：變動未達兩位數百分比的案例", "title": "加權目標價相對基準的變動（未達兩位數百分比）", "sheet": "Sens", "rows": tor_small, "label_col": "A", "value_col": "E", "fmt": "sp1"},
@@ -309,7 +325,8 @@ cfg = {
      "rowgen": {"sheet": "Sens", "rows": f"4-{se_end}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "", "", "n2", "sp1"]}},
     {"type": "kv", "items": [["@Sens!A" + str(rm["SE_BASE"]), "@Sens!D" + str(rm["SE_BASE"]) + "|n2"], ["@Sens!A" + str(rm["SE_STALE"]), "@Sens!D" + str(rm["SE_STALE"]) + "|n2"]]}]},
   {"id": "status", "title": "資料狀態", "blocks": [
-    {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"],
+    {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["build_id", "@Sens!D" + str(rm["SE_BID"])], ["模型狀態", "@Sens!D" + str(rm["SE_STATUS"])],
+                             ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"],
                              ["Tokenomics 快照", "@Sources!B" + str(find("Sources", "Tokenomics 快照", 2))]]},
     {"type": "h3", "text": "資料與口徑"},
     {"type": "list", "items": ["@Q!A1", "@Q!A2", "@In!A2", "@CF!A2", "@Sens!A2"]},
@@ -319,6 +336,9 @@ cfg = {
     {"type": "h3", "text": "附錄：版本要點"},
     {"type": "table", "collapse": True, "summary": "展開：本版與前版的修改要點", "head": ["要點"],
      "rowgen": {"sheet": "README", "rows": f"{find('README', '本版要點') + 1}-{find('README', '工作表：') - 2}", "cols": ["A"]}},
+    {"type": "h3", "text": "風險登錄（未進主模型的尾部風險）"},
+    {"type": "table", "collapse": True, "summary": "展開：風險、是否建模、理由、觀察指標", "head": ["風險", "是否建模", "理由", "觀察指標"],
+     "rowgen": {"sheet": "README", "rows": f"{rd_risk + 2}-{rd_stat - 2}", "cols": ["A", "B", "C", "D"]}},
     {"type": "h3", "text": "「未找到」清單"},
     {"type": "scan", "needle": "未找到", "collapse": True, "summary": "展開：標為「未找到」的項目", "sheets": {"Recon": ["A", "E", "G"], "In": ["B", "H", "I"]}, "empty": "沒有標為未找到的項目。"}]}
  ]

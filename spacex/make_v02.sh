@@ -1,5 +1,5 @@
 #!/bin/bash
-# SpaceX 個股模型 v0.2.x（沿用 v02 腳本名；版號由 VER 決定，預設 0.2.4 → 成品 v0.2.4、敏感度 data/sens_v024_20261105.json；v0.2.2：Tokenomics 快照 v21.9；v0.2.3：Tokenomics 快照 v21.10；v0.2.4：只改展示層〔README 展示列、HTML 新版面〕，敏感度沿用 v0.2.3 結果改名）：一次跑完 事實總帳 → 敏感度重算（可略）→ 建置 → LibreOffice 重算 → 核對 → In 頁版面 → 敏感度覆蓋 → segment_check → HTML。
+# SpaceX 個股模型 v0.2.x（v0.2.6：KREQ=1 先反解支持現價所需的 k；Sens 記錄輸入指紋、模型狀態與 build_id；沿用 v02 腳本名；版號由 VER 決定，預設 0.2.4 → 成品 v0.2.4、敏感度 data/sens_v024_20261105.json；v0.2.2：Tokenomics 快照 v21.9；v0.2.3：Tokenomics 快照 v21.10；v0.2.4：只改展示層〔README 展示列、HTML 新版面〕，敏感度沿用 v0.2.3 結果改名）：一次跑完 事實總帳 → 敏感度重算（可略）→ 建置 → LibreOffice 重算 → 核對 → In 頁版面 → 敏感度覆蓋 → segment_check → HTML。
 #   bash spacex/make_v02.sh            # 沿用已提交的敏感度結果 spacex/data/sens_v${VT}_${VDATE}.json
 #   SENS=1 bash spacex/make_v02.sh     # 重新跑敏感度（約 95 次整本重算；JOBS＝平行數，預設 2）
 #   G2CAL=1 SENS=1 bash spacex/make_v02.sh   # 先重解 G2 校準 k0（data/g2cal_v021_20261030.json；pace 或營收公式改變時）再跑敏感度
@@ -9,13 +9,16 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-VER="${VER:-0.2.5}"; VT="${VER//./}"; VDATE="${VDATE:-20261106}"
+VER="${VER:-0.2.6}"; VT="${VER//./}"; VDATE="${VDATE:-20261109}"
 OUTNAME="${VDATE}_SpaceX個股模型_v${VER}.xlsx"
 SJ="spacex/data/sens_v${VT}_${VDATE}.json"
 python3 spacex/facts_2026q3.py > /dev/null           # 事實總帳（兩讀核對；不一致即失敗）
 python3 spacex/facts_v02.py                          # v0.2 增補：424B4、2026Q2 10-Q、法說指引（兩讀；FY2025 分部對帳 0）
 if [ "${G2CAL:-0}" = "1" ]; then
   python3 spacex/g2cal_v02.py "$WD/g2" "spacex/data/g2cal_v021_20261030.json"   # 與 build_spacex.py 的 G2C 同檔
+fi
+if [ "${KREQ:-0}" = "1" ]; then
+  python3 spacex/kreq_v02.py "$WD/kreq" "spacex/data/kreq_${VT}.json"   # v0.2.6：支持現價所需的 k（Recon 第 6 節；只作對照）
 fi
 if [ "${SENS:-0}" = "1" ]; then
   python3 spacex/sens_v02.py "$WD/sens" "$SJ"
@@ -31,3 +34,4 @@ python3 tools/segment_check/check_segments.py spacex
 python3 spacex/gen_html_json.py "spacex/dist/$OUTNAME" "$WD/rowmap.json" spacex/html.json
 python3 tools/company_html/build_company_html.py spacex
 python3 tools/company_html/check_company_html.py spacex
+python3 tools/model_governance/check_governance.py "spacex/dist/$OUTNAME" --html "spacex/dist/${OUTNAME%.xlsx}.html"   # v0.2.6：build_id、模型狀態、單一標記與來源誘因

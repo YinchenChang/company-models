@@ -6,7 +6,7 @@
 # 用法：python3 spacex/build_spacex.py raw.xlsx [--sens sens.json] [--set 鍵=值 …]；再以 LibreOffice headless 重算（spacex/make_v02.sh 一次跑完）。
 # 金額：十億美元（US$B）；每股：美元；股數：十億股；GW＝IT 口徑名目算力（nameplate compute，不乘 PUE）。日曆年＝會計年度。
 # 欄位（模型頁共用）：C FY2025（424B4 原文）、D 9M25A、E 9M26A（內部鍵 "1H"）、F Q4 26E（"2H"）、G FY2026E（＝E＋F）、H–M FY2027–FY2032。評價日 2026-09-30。
-import sys, os, json, argparse
+import sys, os, re, json, argparse
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment
 from openpyxl.workbook.defined_name import DefinedName
@@ -32,7 +32,16 @@ F.update({it["id"]: it for it in FD2["items"]})
 STAGE = int(os.environ.get("SPCX_STAGE", "99"))   # 歸因瀑布：1 讀法 2 加回小修、2 融資租賃重扣小修、3 G5 原文、4 G1 Q4 資本支出、5 G1 年底 GW、6 G3 pace（9M 占比）、7 pace 改用 Q4 拆法（二修）、8 v0.2.1 pace 季速改 ÷(1 − fin_sh)、9 v0.2.1 pace 分母改 FY2027 世代組合（預設全部）
 G2C = os.path.join(HERE, "data", "g2cal_v021_20261030.json")   # v0.2.1 重解（pace 改變 FY2027 營收）
 G2CAL = json.load(open(G2C, encoding="utf-8")) if (os.path.exists(G2C) and not os.environ.get("SPCX_NO_G2CAL")) else None   # G2 校準 k0（g2cal_v02.py 解出；只用於 Sens）
-VER = "v0.2.5"
+VER = "v0.2.6"
+# v0.2.6（驗收報告 2026-11-09 採用項）：build_id＝版本＋建置輸入雜湊（建置腳本與 data/ 下非敏感度 json），README、Sens、HTML 三處相同（A1）
+import hashlib
+def _build_id():
+    h = hashlib.sha256()
+    for fn in sorted(["build_spacex.py"] + [os.path.join("data", f) for f in os.listdir(os.path.join(HERE, "data"))
+                                             if f.endswith(".json") and not f.startswith("sens_")]):
+        h.update(fn.encode()); h.update(open(os.path.join(HERE, fn), "rb").read())
+    return f"spacex-{VER}-{h.hexdigest()[:10]}"
+BUILD_ID = _build_id()
 TKV = "v21.10"   # v0.2.2：Tokenomics 快照 v21.7 → v21.9；v0.2.3：v21.9 → v21.10（兩次基準數值都不變）
 TK = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 GEN = {x["code"]: x["name"] for x in TK["source"]["generations"]}
@@ -108,7 +117,7 @@ IN["A1"] = ("In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感�
 IN["A2"] = ("事實來源：spacex/data/spacex_facts_2026q3.json（10-Q 2026Q3 與 Q3／Q2 財報新聞稿兩讀核對）＋spacex/data/spacex_facts_v02.json（v0.2：424B4 FY2025／FY2024 原文、2026Q2 10-Q 附註、"
             "2026Q2／Q3 法說指引〔逐字稿未入庫，只存數字與短句〕）；"
             f"Tokenomics {TKV} 快照 spacex/data/tokenomics_snapshot_{TKV}.json（v0.2.2 由 v21.7 換入 v21.9、v0.2.3 換 v21.10，基準數值不變）。黃底＝判斷題（Andy 可改；報告「待 Project 判斷」逐條列出預設）")
-hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "說明"])
+hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "說明", "來源誘因（只填 Interested-party 列）"])
 ROWS = []
 def sec(t): ROWS.append(("sec", t))
 def inp(key, item, unit, lo, base, hi, tag, src, note="", judg=False):
@@ -194,7 +203,7 @@ inp("evs_si", "SI 其他（Grok／Cursor／X 訂閱、資料授權、API 與廣�
     "對照：Cursor 收購對價 42.474（GAAP）約為其年化營收的 9 倍（Recon）；上市 AI 平台無可比公司（未找到）", judg=True)
 inp("evs_space", "Space EV／NTM 營收", "x", 2.0, 3.0, 6.0, "Assumed",
     "工作單 S9：Space 無直接上市同業；Space 分部調整後 EBITDA 9M26 為負（Starship 開發），EBITDA 倍數不適用，改用 EV／營收（判斷）",
-    "對照：Rocket Lab 等小型發射商 EV／營收約 10× 以上，但規模與獲利不可比（本次未重新查核）", judg=True)
+    "小型發射商（Rocket Lab 等）倍數未查核，不作依據（v0.2.6 依驗收 A5 刪除未查核數字）", judg=True)
 
 sec("D. 命題模組：SI 名目算力（GW，IT 口徑）與資本支出（審查第 3 條）")
 inp("gw_0", "SI 名目算力（2026-09-30）", "GW", None, fv("seg.si.kpi.gw.2026q3"), None, "Interested-party", fs("seg.si.kpi.gw.2026q3"),
@@ -376,6 +385,10 @@ inp("dil", "股數年稀釋（股權報酬）", "%", 0.0, 0.01, 0.02, "Assumed",
 inp("wc_k", "營運資金變動 ÷ 營收增量（流入）", "%", 0.0, round(sum(fv(f"cf.wc.{k}.9m2026") for k in ("ar", "inv", "prepaid", "ap", "dr", "oth")) / (fv("seg.total.rev.9m2026") - fv("seg.total.rev.9m2025")), 4), 0.1, "Derived",
     "9M26 營運資金六列合計 0.375 ÷ 營收增量 13.369（遞延收入 +4.9 被應收、存貨抵銷）")
 inp("min_cash", "最低現金", "US$B", None, 30, None, "Assumed", "判斷：約一季資本支出")
+inp("lev_max", "融資可行性檢查：淨負債 ÷ 合併調整後 EBITDA 上限", "x", 4.0, 4.5, 5.0, "Assumed", "Andy 2026-11-09 同意（驗收 B4、J3）；與 Oracle 模型槓桿檢查 4.5 一致",
+    "只影響 CF 頁檢查列的 WARN，不進目標價（Sens 豁免）", judg=True)
+inp("icr_min", "融資可行性檢查：利息保障倍數（合併調整後 EBITDA ÷ 利息費用）下限", "x", 2.5, 3.0, 4.0, "Assumed", "Andy 2026-11-09 同意（驗收 B4、J3）",
+    "只影響 CF 頁檢查列的 WARN，不進目標價（Sens 豁免）", judg=True)
 for p, v in (("2H", fb("debt.maturity.2026Q4")), (27, fb("debt.maturity.2027")), (28, fb("debt.maturity.2028")), (29, fb("debt.maturity.2029")), (30, fb("debt.maturity.2030")), (31, 5.0), (32, 5.0)):
     inp(f"mat_{p}", f"債務到期（推定主要為 Valor 失敗售後租回本金）{YH[p]}", "US$B", None, v, None, "Verified" if p not in (31, 32) else "Assumed",
         "10-Q 附註 9 到期表；SpaceX Notes 2031-07-15 前無重大本金（MD&A）→ 2026Q4–2030 推定主要為失敗售後租回與設備融資攤還" if p == "2H" else ("FY2031 起 5.0／年（其後 25.2 未分年）" if p == 31 else ""))
@@ -420,6 +433,18 @@ for y in ("2026", "2027", "2028"):
         inp(f"c_{k_}_{y[2:]}", f"過期共識 {lab} FY{y}（Simply Wall St，2026-06-22）", "US$B", None, SWS[f"FY{y}"][k_] / 1000, None, "Interested-party",
             SWS["source"] + "（網址見 data/consensus_spcx_20261030.json）" if (y == "2026" and k_ == "revenue") else "同上", "Q3 後年度共識未找到（A 段已搜尋 MarketBeat、StockAnalysis、S&P MI、Chartmill）；只作方向對照" if (y == "2026" and k_ == "revenue") else "")
 
+# v0.2.6（驗收 M8，A2）：每列單一主要標記。來源字串以「事實總帳 …；標記）」結尾時，若事實總帳標記較弱（Derived／Interested-party），主要標記不得寫 Verified
+TAG_RANK = {"Verified": 0, "Interested-party": 1, "Derived": 2}
+def norm_tag(tag, src):
+    m = re.search(r"事實總帳 [^；]*；([A-Za-z-]+)）$", str(src or ""))
+    if m and tag == "Verified" and m.group(1) in ("Derived", "Interested-party"): return m.group(1)
+    return tag
+def incentive(src):
+    t = str(src or "")
+    if any(k in t for k in ("MarketBeat", "Simply Wall St", "分析師", "共識", "賣方")): return "賣方分析師：評等與交易業務誘因，目標價傾向跟隨股價"
+    if "法說" in t or "逐字稿" in t: return "公司管理層（法說口頭陳述）：募資與股價誘因，未經查核、可能偏樂觀"
+    return "公司自揭（新聞稿／KPI，非財報附註）：呈現成長的誘因，口徑由公司定義"
+
 # 寫入 In
 IN_ROW = {}
 r = 4
@@ -440,11 +465,17 @@ for row in ROWS:
             c = IN.cell(r, j, v)
             if not (isinstance(v, str) and v.startswith("=")): c.font = BLUE
             c.number_format = "0.0%" if unit == "%" else ("0.0000" if unit == "x" else "#,##0.000")
+    tag = norm_tag(tag, src)
     IN.cell(r, 7, tag); IN.cell(r, 8, src); IN.cell(r, 9, note)
+    if tag == "Interested-party":
+        inc = incentive(src)
+        if "只作對照，不進模型" in str(note): inc += "；只作對照，不進模型"
+        IN.cell(r, 10, inc)
     if judg:
         for cc in range(1, 10): IN.cell(r, cc).fill = KEY
     dn(key, f"In!$E${r}")
     r += 1
+IN_LAST = r - 1   # v0.2.6：輸入指紋範圍 In!D4:F{IN_LAST}（情境驅動對照以上）
 SCN_ROWS = [("scn_k", "SI 每 GW 年營收 ÷ Tokenomics 持有成本（k）FY2030 到達", "x", ("k30_A", "k30_B", "k30_C"), "0.00", "Q4 26 起由 2026Q3 校準值 k0 線性收斂"),
             ("scn_n", "Starlink 消費訂戶 FY2027 淨增", "百萬", ("nadd_A", "nadd_B", "nadd_C"), "0.0", "FY2028 起每年遞減 nadd_dec"),
             ("scn_w", "情境權重", "%", ("tp_wA", "tp_wB", "tp_wC"), "0%", "[判斷] 黃底，Andy 可改")]
@@ -457,7 +488,7 @@ for key, item, unit, ks, fmt, note in SCN_ROWS:
         IN.cell(r, j, f"=E{IN_ROW[k_]}" if k_ else 0).number_format = fmt
     IN.cell(r, 7, "Derived"); IN.cell(r, 8, "引用 In 頁 " + "／".join(k_ for k_ in ks if k_) + "；" + note)
     r += 1
-for col, w in zip("ABCDEFGHI", [14, 64, 12, 10, 11, 10, 16, 90, 80]): IN.column_dimensions[col].width = w
+for col, w in zip("ABCDEFGHIJ", [14, 64, 12, 10, 11, 10, 16, 90, 80, 50]): IN.column_dimensions[col].width = w
 IN.freeze_panes = "D4"
 
 # =====================================================================================================
@@ -468,14 +499,16 @@ Q["A2"] = "核對列（實績必須為 0）：子列合計＝分部、分部合�
 QCOLS = ["2025q2", "2025q3", "2026q1", "2026q2", "2026q3", "9m2025", "9m2026", "fy2025", "2025q4"]
 QH = ["2025Q2", "2025Q3", "2026Q1", "2026Q2", "2026Q3", "9M25", "9M26", "FY2025", "2025Q4（衍生）"]
 QC = dict(zip(QCOLS, "BCDEFGHIJ"))
-hdr(Q, 3, ["項目"] + QH + ["標記", "來源"])
+hdr(Q, 3, ["項目"] + QH + ["標記", "來源", "來源誘因（只填 Interested-party 列）"])
 QR = {}
 SRCQ = "10-Q 2026Q3 附註 3、18（四期）；Q3 新聞稿（2026Q2 欄，2026Q2 10-Q 附註 18 互核一致）；Q2 新聞稿（2026Q1、2025Q2）；FY2025＝424B4 原文第 116、131–135 頁（事實總帳 seg.*／is.*）；2025Q4＝FY2025 − 9M25"
 PER5 = ["2025q3", "2026q2", "2026q3", "9m2025", "9m2026"]
 
 
-def qrow(r, key, label, fid=None, scale=1000, neg=False, formula=None, fmt="#,##0.000", tag="Verified／Interested-party（KPI）", src=SRCQ, cols=None):
+def qrow(r, key, label, fid=None, scale=1000, neg=False, formula=None, fmt="#,##0.000", tag=None, src=SRCQ, cols=None):
+    # v0.2.6（驗收 M8，A2）：標記改為單一主要標記——公式列＝Derived；原文列取所用事實總帳標記中最弱者（Interested-party 弱於 Verified）
     Q.cell(r, 1, label); QR[key] = r
+    _tags = set()
     for c in (cols or QCOLS):
         col = QC[c]
         if formula:
@@ -488,11 +521,21 @@ def qrow(r, key, label, fid=None, scale=1000, neg=False, formula=None, fmt="#,##
         else:
             iid = f"{fid}.{c}"
             if iid not in F or F[iid]["value"] is None: continue
-            v = F[iid]["value"]
+            v = F[iid]["value"]; _tags.add((c, F[iid]["tag"].strip("[]")))
             Q[f"{col}{r}"] = (-v if neg else v) / scale
             Q[f"{col}{r}"].font = BLUE
         Q[f"{col}{r}"].number_format = fmt
+    _ip = [QH[QCOLS.index(c)] for c, t in sorted(_tags, key=lambda x: QCOLS.index(x[0])) if t == "Interested-party"]
+    if tag is None:
+        _main = {c: t for c, t in _tags}.get("2026q3") or {c: t for c, t in _tags}.get("9m2026")
+        if formula: tag = "Derived"
+        elif _main: tag = "Derived" if _main not in ("Verified", "Interested-party") else _main   # 主要標記＝最近一期（2026Q3）原文的標記
+        elif _ip: tag = "Interested-party"
+        else: tag = "Verified" if all(t == "Verified" for _, t in _tags) and _tags else "Derived"
     Q.cell(r, 11, tag); Q.cell(r, 12, src)
+    if _ip:
+        Q.cell(r, 13, ("" if tag == "Interested-party" else "Interested-party 欄：" + "、".join(_ip) + "（新聞稿）。")
+               + "公司自揭（新聞稿／KPI）：呈現成長的誘因，口徑由公司定義")
 
 
 r = 4
@@ -1068,6 +1111,19 @@ for s in "ABC":
     r += 1
 widths(CF)
 CF.freeze_panes = "C4"
+# v0.2.6（驗收 M6，B4）：融資可行性檢查——新債以「補足最低現金」機械產生；檢查每年槓桿與利息保障倍數，超過門檻只 WARN、不截斷（完整內生化不做，見不需驗收清單 X9）
+r = CF.max_row + 2
+CF.cell(r, 1, "融資可行性檢查（v0.2.6；門檻 In 頁 lev_max、icr_min；超過只 WARN，不截斷基準）").font = BOLD; r += 1
+FINCHK = {}
+for s in "ABC":
+    P = PR_[s]; C = CR[s]
+    put(CF, r, f"情境 {s}：淨負債 ÷ 合併調整後 EBITDA", "x", {p: f'=IF(PL!{COL[p]}{P["ebitda"]}>0,MAX(0,-{COL[p]}{C["nc"]})/PL!{COL[p]}{P["ebitda"]},"EBITDA≤0")' for p in ANN}, "0.00"); r += 1
+    put(CF, r, f"情境 {s}：利息保障倍數（合併調整後 EBITDA ÷ 利息費用）", "x", {p: f'=IF(PL!{COL[p]}{P["ie"]}>0,PL!{COL[p]}{P["ebitda"]}/PL!{COL[p]}{P["ie"]},"無利息")' for p in ANN}, "0.0"); r += 1
+    put(CF, r, f"情境 {s}：檢查（WARN＝槓桿高於上限或保障倍數低於下限）", "", {p: f'=IF(OR(N({COL[p]}{r - 2})>lev_max,AND(ISNUMBER({COL[p]}{r - 1}),{COL[p]}{r - 1}<icr_min)),"WARN","OK")' for p in ANN}, "@"); r += 1
+    FINCHK[s] = r - 1
+CF.cell(r, 1, "WARN 年數（FY2027–FY2032；A／B／C）")
+for j, s in enumerate("ABC"): CF.cell(r, 3 + j, f'=COUNTIF(H{FINCHK[s]}:M{FINCHK[s]},"WARN")')
+FINCHK["n"] = r
 GL = ["收支關卡：自由現金流（收支關卡口徑，五年合計）", "  對照：公司口徑 FCF（營運現金 − 資本支出，五年合計）", "  其中：五年新增舉債", "  期末淨現金 FY2030",
       "是否需要舉債", "檢查：收支關卡 − 首年起五年逐欄加總（FY2026＋…＋FY2030）"]
 for i, lab in enumerate(GL): CF.cell(GATE + i, 1, lab)
@@ -1276,11 +1332,19 @@ vput("px", "現價（2026-11-05 收盤）", ["=px"], "#,##0.00", note="Yahoo Fin
 vput("cons", "市場共識目標價", ["=cons_tp"], "#,##0.00", note="MarketBeat 46 位分析師平均（含 10-21～10-26 財報後調整）；只作對照")
 vput("up", "上檔空間：加權目標價", [f"=B{VR_['tp']}/px-1"], "0.0%", bold=True, fill=KEY)
 vput("upc", "上檔空間：Comparable 目標價", [f"=B{VR_['tpcomp']}/px-1"], "0.0%")
+# v0.2.6（驗收 M9，A3）：期間並列——模型折現期間由評價日起算，讀者的持有期間由現價日起算（顯示用，不被引用）
+vput("days_disc", "模型折現期間（評價日 2026-09-30 → 目標日 2027-10-30；t_tgt 的天數）", ["=DATE(2027,10,30)-DATE(2026,9,30)"], "0",
+     note="天；t_tgt＝本列 ÷ 365。顯示用")
+vput("days_hold", "持有期間（現價日 2026-11-05 → 目標日 2027-10-30）", ["=DATE(2027,10,30)-DATE(2026,11,5)"], "0",
+     note="天；上檔空間是這段期間（不足 12 個月）的報酬，不是年化。顯示用")
 def tier(u): return f'IF({u}>=0.5,"大於 50%",IF({u}>=0.25,"25%–50%",IF({u}>=0,"0%–25%",IF({u}>-0.25,"0%～−25%",IF({u}>-0.5,"−25%～−50%","小於 −50%")))))'
 def recf(u): return f'IF({u}>=0.5,"強力買進",IF({u}>=0.25,"買進",IF({u}>-0.25,"中立",IF({u}>-0.5,"放空","強力放空"))))'
 U = f"B{VR_['up']}"
 vput("tier", "上檔空間級距", ["=" + tier(U)], "@", note="以「上檔空間：加權目標價」分六級（Andy 2026-10-25 14:00）")
 vput("rec", "投資建議", ["=" + recf(U)], "@", bold=True, fill=KEY, note="五級固定規則：≥ +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、≤ −50% 強力放空")
+# v0.2.6（驗收 §8，A4）：投資建議的條件式寫法（README、HTML 用；顯示用）
+vput("rec_cond", "投資建議（條件式）", [f'="在 k 依情境路徑收斂（FY2030 情境 B k＝"&TEXT(k30_B,"0.00")&"）且自用 AI 採讀法 2（假設自用打平資金成本）的基準假設下："&B{VR_['rec']}'], "@",
+     note="主要失效條件見 README 頁；支持現價所需的 k 見 Recon 第 6 節")
 vput("band", "價格帶（DCF 不如預期～順利）", [f"=D{VR_['dcf12']}", f"=B{VR_['dcf12']}"], "#,##0.00", note="B＝C 情境 DCF、C＝A 情境 DCF（皆推到 12 個月後）")
 vput("pess", "悲觀情境價（C 情境 DCF）", [f"=D{VR_['dcf12']}"], "#,##0.00", note="地圖「悲觀情境空間」＝本列 ÷ 現價 − 1")
 vput("scen", "情境目標價（A／B／C；DCF 與分部加總加權）", S3(lambda s: "=w_dcf*{0}{1}+(1-w_dcf)*{0}{2}".format(X3(s), VR_["dcf12"], VR_["sotp"])), "#,##0.00")
@@ -1421,6 +1485,52 @@ rc3("cur", "G6：Cursor 留任與替換獎酬：法說約 23（約三年）vs 10
     "A＝法說、B＝10-Q 總值、C＝模型尚未認列 22.159（2.65 年）。口徑不同：法說含替換獎酬（10-Q 列收購對價 4.181），以 10-Q 為準（G6）")
 rc3("cur2", "G6：Cursor 股權價值：法說 60 vs 10-Q GAAP 對價 42.474＋收購後服務期 23.376", lambda s: "=g_cur_eq" if s == "A" else (f"={fb('cursor.consideration')}+{fb('cursor.postSvcAwards')}" if s == "B" else None), "#,##0.0",
     "法說口徑（簽約時股價？）與 GAAP（交割日 141.29）不同，只作對照")
+# v0.2.6：6. k 分解、支持現價所需的 k、自用 AI 可歸因現金流（驗收 A6、B1、B2；只作對照、不進基準）
+KRQ_F = os.path.join(HERE, "data", f"kreq_{VER.replace('.', '').lstrip('v')}.json")
+KRQ = json.load(open(KRQ_F, encoding="utf-8")) if os.path.exists(KRQ_F) else None
+SV = lambda k: (SENS.get(k) or {}).get("tp")
+r += 1
+RC.cell(r, 1, "6. k 分解、支持現價所需的 k 與自用 AI 可歸因現金流（v0.2.6；只作對照、不進基準；B／C／D 欄意義見各列說明）").font = BOLD; R6 = r; r += 1
+hdr(RC, r, ["項目", "B", "C", "D", "說明（標記；來源）"]); r += 1
+def rc6(key, label, vals, fmt="0.00", note=""):
+    global r
+    RC.cell(r, 1, label)
+    for j, v in enumerate(vals):
+        if v is not None: RC.cell(r, 2 + j, v).number_format = fmt
+    RC.cell(r, 5, note); RCR[key] = r; r += 1
+RC.cell(r, 1, "6a. 支持現價所需的 k（what must be true；整本重算反解，spacex/kreq_v02.py）").font = BOLD; r += 1
+if KRQ and KRQ["flat"]["solved"]:
+    rc6("kreq_flat", "k 不收斂：三情境 k 由 Q4 26 起維持同一值，加權目標價＝現價所需的 k（B）", [KRQ["flat"]["k"]], "0.00",
+        f"Derived；{os.path.basename(KRQ_F)}（該點加權目標價 {KRQ['flat']['tp']:.2f}）。高於此值且長期維持，結論才翻轉")
+else:
+    rc6("kreq_flat", "k 不收斂：支持現價所需的 k（B）", ["未解（kreq 檔不存在）"], "@", "Derived")
+if KRQ and KRQ["conv"]["solved"]:
+    rc6("kreq_conv", "k 依基準收斂（FY2030 情境值不變）：加權目標價＝現價所需的 Q4 26 起始 k0（B）", [KRQ["conv"]["k"]], "0.00", f"Derived；{os.path.basename(KRQ_F)}")
+elif KRQ:
+    rc6("kreq_conv", "k 依基準收斂（FY2030 情境值不變）：搜尋上限 k0（B）與該點加權目標價（C）", [KRQ["conv"]["k_cap"], KRQ["conv"]["tp_at_cap"]], "0.00",
+        "Derived；收斂路徑下即使起始 k0 達上限，加權目標價仍低於現價——只要 k 向 FY2030 情境值收斂，起點多高都不足以支持現價")
+rc6("k_obs", "對照：2026Q3 校準 k0（B）、2026Q2 校準 k0（C）、2027Q1 營收指引反解 k0（D）", ["=k0", (SENS.get("k0_cal|低") or {}).get("k0"), G2CAL["k0"] if G2CAL else None], "0.00",
+    "B Derived（10-Q）；C Derived（Sens k0_cal 低案的 k0）；D Derived from Interested-party（公司指引，g2cal_v021_20261030.json）")
+RC.cell(r, 1, "6b. k 的分項（k＝每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本；每 GW 年營收＝實收價 × 可售量 × 利用率）——可觀察到哪裡").font = BOLD; r += 1
+rc6("kd_ppw", "公司定價陳述：每瓦 50 美元 ÷ 3 年（B）vs 2026Q3 校準每 GW 年營收（C）（US$B/GW-年）", ["=g_ppw/3", "=rev_gw0"], "0.00",
+    "B Interested-party（法說口頭，口徑未說明）；C Derived。同 Recon 第 5 節定價對照")
+rc6("kd_tk_spot", "Tokenomics v21.8 並列：SpaceX CFO 現貨價約當持有成本倍數（B 低、C 高）", [4.6, 5.2], "0.0",
+    "Derived from Interested-party（CFO 法說；短約、可 90 天終止、短缺期）；Tokenomics docs/workorders/20261102_v21.8_財報季與月度證據.md。只作參照")
+rc6("kd_tk_real", "Tokenomics v21.8 並列：已實現粗估倍數（B 低、C 高）", [1.4, 2.8], "0.0", "Derived；同上。2026Q3 校準 k0 落在此區間內")
+rc6("kd_tk_new", "Tokenomics 計價倍數 AL_SpendBasis：2026 新約區間（B 低、C 高）", [1.36, 2.30], "0.00", "Derived；Tokenomics v21.10。出租方新約相對持有成本的倍數，作長約鎖價的外部參照")
+for lab in ("每 GPU-hour 實收價", "可售利用率（對外出租在役 GW 中實際計費的比例）", "合約期限結構與終止權（法說：雲端合約可 90 天通知終止）", "客戶集中度（Customer B；10-Q 只揭露占比，模型以 72% 衍生）"):
+    rc6("kd_na", f"  未揭露：{lab}", ["未揭露"], "@", "2026Q3 10-Q、新聞稿、法說皆無數字（已查）；以 k 整體校準代替，無法拆分")
+RC.cell(r, 1, "6c. 三條 k 路徑與本模型案例的對應（加權目標價；B）").font = BOLD; r += 1
+rc6("kp_lock_g", "長約鎖價於公司指引水準（k0＝指引反解值且不收斂）＝Sens「G2 校準＋k 不收斂」", [SV("k0_ovr_flat|高")], "#,##0.00", "Sens 案例值；高於現價")
+rc6("kp_lock", "長約鎖價於目前水準（k 維持 2026Q3 校準值）＝Sens「k 不收斂」", [SV("k_flat|高")], "#,##0.00", "Sens 案例值")
+rc6("kp_spot", "現貨收斂（基準：情境 B，FY2030 k＝k30_B）", [f"=Val!C{VR_['scen']}"], "#,##0.00", "情境 B 目標價（Val 頁）")
+rc6("kp_glut", "供給過剩：收斂到持有成本（情境 C，FY2030 k＝k30_C）", [f"=Val!D{VR_['scen']}"], "#,##0.00", "情境 C 目標價（Val 頁）")
+RC.cell(r, 1, "6d. 自用 AI：讀法 2 影子效益 vs 可歸因現金流（情境 B；B＝FY2027、C＝FY2028、D＝FY2029）").font = BOLD; r += 1
+rc6("ia_shadow", "讀法 2 自用 AI 影子效益（自用新增 GW × 持有成本；假設自用打平資金成本，不是可觀察現金流）", [f"=PL!{c}{PR_['B']['shadow']}" for c in "HIJ"], "#,##0.0", "Derived（假設）")
+rc6("ia_oth", "可歸因：SI 其他收入（Grok／Cursor／X）調整後 EBITDA", [f"=PL!{c}{PR_['B']['e_oth']}" for c in "HIJ"], "#,##0.0", "Derived；已在主模型營收與利潤中，不另加")
+rc6("ia_gap", "影子效益 ÷ 可歸因 EBITDA（倍）", [f"=IF({c}{r - 1}>0,{c}{r - 2}/{c}{r - 1},\"可歸因 ≤ 0\")" for c in "BCD"], "0.00",
+    "讀法 2 的影子效益相對已可觀察的 AI 產品利潤有多大；倍數越高，主值越依賴假設。讀法 1（只計成本）見 Val 頁")
+R6_END = r - 1
 RC.column_dimensions["A"].width = 76
 for c in "BCDEFG": RC.column_dimensions[c].width = 13
 RC.column_dimensions["E"].width = 40; RC.column_dimensions["H"].width = 70
@@ -1492,8 +1602,9 @@ SE_SPECIAL = {"he_all|低": [(f"he_{nm}", tk("IF_HoldEcon", code, "低成本")) 
               "he_all|高": [(f"he_{nm}", tk("IF_HoldEcon", code, "高成本")) for code, nm in (("H100", "h"), ("GB200", "b2"), ("GB300", "b3"), ("VR200", "vr"))],
               "tk_all|低": _tkset("低成本"), "tk_all|高": _tkset("高成本"), "k_flat|高": [("conv_k", 1000000)],
               **({"k0_ovr_flat|高": [("k0_ovr", round(G2CAL["k0"], 4)), ("conv_k", 1000000)]} if G2CAL else {})}
-SE["A1"] = "Sens — 一次改一個輸入（In 頁敏感度低／高值），整本活頁簿以 LibreOffice 重算後的加權目標價（Val 頁「目標價（DCF 與 Comparable 加權）」）；由 spacex/make_v02.sh 產生，建置時寫入（數值）"
+SE["A1"] = "Sens — 一次改一個輸入（In 頁敏感度低／高值），整本活頁簿以 LibreOffice 重算後的加權目標價（Val 頁「目標價（DCF 與 Comparable 加權）」）；由 spacex/make_v02.sh 產生，建置時寫入（數值，屬建置快照）；模型狀態（CURRENT／STALE）與 build_id 見本頁底部"
 SE["A2"] = ("相對基準＝情境目標價 ÷ 基準加權目標價 − 1；龍捲風依絕對值排序（HTML）。基準與各案例的其他輸入相同。"
+            "lev_max 不列：只影響 CF 頁融資可行性檢查的 WARN 文字，對加權目標價結構上恆為 0。icr_min 不列：只影響 CF 頁融資可行性檢查的 WARN 文字，對加權目標價結構上恆為 0。"
             "v0.2：gw_ye25、gw_ye24 改用 424B4 原文 KPI、不再給區間，故不列；新增 G1（cx_q4、gw_ye26）、G3（管理層 13 GW）、G4（k0 以 2026Q2 校準）、G2 校準（k0_ovr，二修）")
 hdr(SE, 3, ["驅動", "設定", "方向", "加權目標價", "相對基準", "鍵", "說明", "收支關卡 B（五年）", "FY2028 S2 比值（B）", "FY2027 新增舉債（B）", "投資建議"])
 r = 4
@@ -1521,6 +1632,19 @@ if "base|base" in SENS:
     c = SE.cell(r, 4, SENS["base|base"]["tp"]); c.number_format = "#,##0.00"; c.font = BLUE
     SE.cell(r, 5, f"=D{r}-D{r - 1}").number_format = "0.000"
 SE_STALE = r; r += 1
+# v0.2.6（驗收 M1，A1）：輸入指紋與模型狀態——指紋＝In 頁 D:F（情境驅動對照以上）數值 × (列 × 3＋欄) 的加總；敏感度重算時記下基準檔的指紋，
+# 之後若只在 Excel 改 In 頁而未重跑 make_v02.sh，兩者不同 → STALE（Sens、HTML、README 的數字可能過期）
+FP_RNG = f"In!$D$4:$F${IN_LAST}"
+SE.cell(r, 1, "輸入指紋（本檔即時重算）"); SE.cell(r, 4, f"=SUMPRODUCT({FP_RNG},ROW({FP_RNG})*3+COLUMN({FP_RNG}))").number_format = "0.000000"
+SE_FP = r; r += 1
+SE.cell(r, 1, "輸入指紋（敏感度重算時的基準檔）")
+if "base|base" in SENS and "fp" in SENS["base|base"]:
+    c = SE.cell(r, 4, SENS["base|base"]["fp"]); c.number_format = "0.000000"; c.font = BLUE
+r += 1
+SE.cell(r, 1, "模型狀態（CURRENT＝Sens、HTML、README 與本檔輸入一致；STALE＝In 頁已改、須重跑 bash spacex/make_v02.sh SENS=1）").font = BOLD
+SE.cell(r, 4, f'=IF(AND(ISNUMBER(D{r - 1}),ABS(D{SE_STALE}-D{SE_BASE})<0.005,ABS(D{r - 2}-D{r - 1})<=0.000000001*MAX(1,ABS(D{r - 1}))),"CURRENT","STALE")')
+SE_STATUS = r; r += 1
+SE.cell(r, 1, "build_id（README、Sens、HTML 三處相同）"); SE.cell(r, 4, BUILD_ID); SE_BID = r; r += 1
 SE.column_dimensions["A"].width = 52; SE.column_dimensions["B"].width = 40; SE.column_dimensions["G"].width = 24
 
 # =====================================================================================================
@@ -1554,7 +1678,7 @@ for col, w in zip("ABCDEF", [6, 80, 12, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = "SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2.5（2026-11-06；v0.2.5 只換現價為 2026-11-05 收盤 123.62，目標價不變；v0.2.4 只改展示層：README 頁新增命題分項、白話重點、命題回覆，供 HTML 新版面；v0.2.2／v0.2.3 換 Tokenomics 快照 v21.9／" + TKV + "，基準數值同 v0.2.1；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
+RD["A1"] = f"SpaceX（Nasdaq: SPCX，含 xAI）個股模型 {VER}（2026-11-09；build_id {BUILD_ID}；v0.2.6 依 2026-11-09 驗收報告補治理與揭露〔數值不變〕；v0.2.5 只換現價為 2026-11-05 收盤 123.62，目標價不變；v0.2.4 只改展示層：README 頁新增命題分項、白話重點、命題回覆，供 HTML 新版面；v0.2.2／v0.2.3 換 Tokenomics 快照 v21.9／" + TKV + "，基準數值同 v0.2.1；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
 RD["A3"] = ("命題：SI 分部的算力投入（9M26 SI 資本支出約 400 億美元、名目算力 1.7 GW）能否由 SI 營收（對外算力出租＋Grok／Cursor／X）回本；"
             "Connectivity（Starlink）現金流與 IPO 資金能支撐多久；加計 AI 折舊與 Cursor 收購獎酬後的每股價值是否高於現價。")
 RD["A4"] = "核心問題：FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金與以融資取得 PP&E；Valor 失敗售後租回本金列融資，不扣）。"
@@ -1582,7 +1706,10 @@ for row in DRV:
     for j, v in enumerate(row, 1): RD.cell(r, j, v)
     r += 1
 r += 1
-RD.cell(r, 1, "本版要點（v0.2.1；其下為 v0.2）").font = BOLD; r += 1
+RD.cell(r, 1, "本版要點（v0.2.6；其下為 v0.2.1、v0.2）").font = BOLD; r += 1
+for t in ("v0.2.6（2026-11-09 驗收報告採用項，數值格不變）：build_id 與輸入指紋、模型狀態 CURRENT／STALE（Sens 頁底部，README、HTML 同步）；In、Q 頁每列單一主要標記並新增「來源誘因」欄；Val 頁並列折現期間與持有期間；投資建議改條件式；刪除未查核的小型發射商倍數；Recon 第 6 節：支持現價所需的 k、k 分項、三條 k 路徑對應、自用 AI 影子效益對可歸因利潤；CF 頁融資可行性檢查；README 主要失效條件與風險登錄。",
+          "驗收不採用項（見 Drive 個股模型／20261109_個股模型驗收_不需驗收項目.md）：取消 DCF 與 Comparable 加權、驗收者自擬情境機率、開檔雜湊；自用 AI 主值維持讀法 2（Andy 2026-10-27）。",):
+    RD.cell(r, 1, t); r += 1
 for t in ("v0.2.1 一致性小修：pace 的 SI 投資季速改與 Q4 同法＝Q4 SI 現金資本支出 ÷ (1 − fin_sh)（不再加 9M 以融資取得 PP&E 季均）；分母改 FY2027 新增世代組合每 GW 投資（am_27 GB300／VR200 各半），FY2027 SI 投資＝4 × Q4 26 SI 投資；In 頁 pace 低／高由 build 同一函式產生、check_v02 比對。",
           "G2（2027Q1 營收指引只校準、不硬套）：Andy 2026-10-30 同意（原為預設）。",
           "原文換版（G5）：FY2025 改用 424B4 原文（Space 資本支出 3.832 確認、Connectivity 4.178 解除待核、SI 調整後 EBITDA −1.237）；2025Q4＝FY2025 − 9M25；名目算力 2024 年底 0.3（v0.1 判斷 0.15）。",
@@ -1608,17 +1735,37 @@ RD.cell(r, 1, f'="錢不夠，需要再舉債：2026–2030 五年自由現金�
 CB_ = CR["B"]; _ch = CB_["ni"] - 1
 _g2 = next(x[3] for x in SE_ROWS if x[0] == "k0_ovr_flat" and x[1] == "高")
 _kf = next(x[3] for x in SE_ROWS if x[0] == "k_flat" and x[1] == "高")
+_kreq = f'TEXT(Recon!B{RCR["kreq_flat"]},"0.0")' if KRQ and KRQ["flat"]["solved"] else '"（未解）"'
 _first = lambda row, cond: f'INDEX(CF!H{_ch}:M{_ch},MATCH(1,INDEX((CF!H{row}:M{row}{cond})*1,0),0))'
 RD.cell(r, 1, "命題回覆（HTML 用；依本模型計算回答開頭三個命題）").font = BOLD; r += 1
 RD.cell(r, 1, f'="xAI 算力能否回本？答：在我們假設的租金路徑下，以每 GW 看可以回本，但利潤空間逐年收窄；整體能否回本取決於 xAI 自用算力的價值。2028 年每 GW 收入是持有成本（已含折舊與資金成本）的 "&TEXT({VB("s2")},"0.00")&"／"&TEXT({VB("s2", "C")},"0.00")&"／"&TEXT({VB("s2", "D")},"0.00")&" 倍（樂觀／基準／保守），三種情境都大於 1（保守情境到 2030 年降到 1、即打平）；對外出租算力的價值約 "&TEXT({VB("r_v", "C")}*10,"#,##0")&" 億美元（2027 年底時點；基準；樂觀 "&TEXT({VB("r_v")}*10,"#,##0")&"、保守 "&TEXT({VB("r_v", "D")}*10,"#,##0")&"），2028 年 SI 分部營業利益約 "&TEXT(PL!I{PB_["oi_si"]}*10,"#,##0")&" 億美元。但 xAI 自用的算力（訓練 Grok 等）若只算成本、不算效益，基準情境的 DCF 企業價值是 "&TEXT({VB("ev1", "C")}*10,"#,##0")&" 億美元；租金若再往下壓到持有成本以下（k < 1），對外出租也無法回本。"'); r += 1
 RD.cell(r, 1, f'="Starlink 撐得住多久？答：撐不住，"&{_first(CB_["plug"], ">0")}&" 就要開始舉債。IPO 後 2026-09-30 現金約 "&TEXT(CF!E{CB_["cend"]}*10,"#,##0")&" 億美元；Connectivity（Starlink）"&CF!H{_ch}&" 的調整後 EBITDA 約 "&TEXT(PL!H{PB_["e_cn"]}*10,"#,##0")&" 億美元，但同年全公司資本支出約 "&TEXT(CF!H{CB_["cx"]}*10,"#,##0")&" 億美元，缺口主要來自 xAI。基準情境需新增舉債 "&CF!H{_ch}&" 約 "&TEXT(CF!H{CB_["plug"]}*10,"#,##0")&" 億、"&CF!I{_ch}&" 約 "&TEXT(CF!I{CB_["plug"]}*10,"#,##0")&" 億、"&CF!J{_ch}&" 約 "&TEXT(CF!J{CB_["plug"]}*10,"#,##0")&" 億美元，"&CF!J{_ch}&" 年底債務本金約 "&TEXT(CF!J{CB_["dend"]}*10,"#,##0")&" 億美元（評價日 "&TEXT(CF!E{CB_["dend"]}*10,"#,##0")&" 億）；自由現金流（收支關卡口徑）要到 "&{_first(CB_["fcf"], ">0")}&" 才轉正，五年合計約 "&TEXT(CF!C{GATE}*10,"#,##0")&" 億美元。"'); r += 1
-RD.cell(r, 1, f'="每股值多少？答：每股約 "&TEXT({VB("tp")},"0.00")&" 美元（DCF "&TEXT({VB("tpdcf")},"0.00")&"、Comparable "&TEXT({VB("tpcomp")},"0.00")&" 各半），比現價 "&TEXT(px,"0.00")&" 低 "&TEXT(-{VB("up")},"0%")&"，投資建議"&{VB("rec")}&"；樂觀、基準、保守三種情境 "&TEXT({VB("scen")},"0.0")&"、"&TEXT({VB("scen", "C")},"0.0")&"、"&TEXT({VB("scen", "D")},"0.0")&" 都低於現價。這已計入新增 AI 折舊（2028 年約 "&TEXT(PL!I{PB_["da_ai"]}*10,"#,##0")&" 億美元）與 Cursor 收購獎酬（尚未認列約 "&TEXT(In!E{IN_ROW["sbc_cur_left"]}*10,"#,##0")&" 億美元，約 "&TEXT(In!E{IN_ROW["sbc_cur_yrs"]},"0.0")&" 年攤完）。若 xAI 每 GW 收入只維持目前約 "&TEXT(k0,"0.00")&" 倍、不向成本收斂，目標價約 "&TEXT(Sens!D{_kf},"0.0")&"，仍低於現價；要到持有成本約 "&TEXT(In!F{IN_ROW["k0_ovr"]},"0.0")&" 倍（公司 2027Q1 營收指引隱含的水準）並長期維持，目標價 "&TEXT(Sens!D{_g2},"0.0")&" 才高於現價（敏感度「G2 校準＋k 不收斂」）。"'); r += 1
+RD.cell(r, 1, f'="每股值多少？答：每股約 "&TEXT({VB("tp")},"0.00")&" 美元（DCF "&TEXT({VB("tpdcf")},"0.00")&"、Comparable "&TEXT({VB("tpcomp")},"0.00")&" 各半），比現價 "&TEXT(px,"0.00")&" 低 "&TEXT(-{VB("up")},"0%")&"；在 k 依情境路徑收斂、自用 AI 採讀法 2（假設自用打平資金成本）的基準假設下，投資建議為"&{VB("rec")}&"；樂觀、基準、保守三種情境 "&TEXT({VB("scen")},"0.0")&"、"&TEXT({VB("scen", "C")},"0.0")&"、"&TEXT({VB("scen", "D")},"0.0")&" 都低於現價。這已計入新增 AI 折舊（2028 年約 "&TEXT(PL!I{PB_["da_ai"]}*10,"#,##0")&" 億美元）與 Cursor 收購獎酬（尚未認列約 "&TEXT(In!E{IN_ROW["sbc_cur_left"]}*10,"#,##0")&" 億美元，約 "&TEXT(In!E{IN_ROW["sbc_cur_yrs"]},"0.0")&" 年攤完）。若 xAI 每 GW 收入只維持目前約 "&TEXT(k0,"0.00")&" 倍、不向成本收斂，目標價約 "&TEXT(Sens!D{_kf},"0.0")&"，仍低於現價。反過來算，每 GW 收入要長期維持在持有成本約 "&{_kreq}&" 倍，目標價才等於現價（Recon 第 6 節）；公司 2027Q1 營收指引隱含約 "&TEXT(In!F{IN_ROW["k0_ovr"]},"0.0")&" 倍，若長期維持，目標價 "&TEXT(Sens!D{_g2},"0.0")&"（敏感度「G2 校準＋k 不收斂」）。"'); r += 1
+# v0.2.6（驗收 A6、§8、B5、A1）：主要失效條件、風險登錄、模型狀態（HTML 用）
+r += 1
+RD.cell(r, 1, "主要失效條件（HTML 用；出現下列任一可觀察證據，本模型結論須重估）").font = BOLD; RD_INV = r; r += 1
+RD.cell(r, 1, f'="算力出租價格不收斂：公司揭露可驗證的長約單價、利用率與續約條件，顯示每 GW 收入能長期維持在持有成本約 "&{_kreq}&" 倍以上（目前 2026Q3 約 "&TEXT(k0,"0.00")&" 倍）。"'); r += 1
+RD.cell(r, 1, f'="自用 AI 有可歸因的回報：Grok／API／Cursor／X 的增量利潤足以覆蓋自用算力全成本（2027 年讀法 2 影子效益約為已可觀察 AI 產品調整後 EBITDA 的 "&TEXT(Recon!B{RCR["ia_gap"]},"0.0")&" 倍）。"'); r += 1
+RD.cell(r, 1, f'="融資條件優於模型：外部融資成本與可得量顯著優於模型（模型新債利率 "&TEXT(r_debt,"0.0%")&"、以新債補足最低現金；CF 頁融資可行性檢查情境 B 的 WARN 年數 "&TEXT(CF!D{FINCHK["n"]},"0")&"）。"'); r += 1
+r += 1
+RD.cell(r, 1, "風險登錄（未進主模型的尾部風險；列出以免默認不存在）").font = BOLD; RD_RISK = r; r += 1
+hdr(RD, r, ["風險", "是否建模", "理由", "觀察指標"]); r += 1
+for row in (("客戶集中度壓價（Customer B 等大客戶）", "否", "10-Q 只揭露占比，無合約單價與期限", "大客戶續約條件、10-Q 客戶集中揭露"),
+            ("供應商議價（NVIDIA 等晶片與記憶體供給）", "否（持有成本讀 Tokenomics）", "設備價格屬 Tokenomics 權威，個股不另估", "Tokenomics 持有成本改版、交期"),
+            ("反壟斷／監管（xAI 與 SpaceX、Tesla 關係人交易）", "否", "無可量化輸入", "監管調查、關係人交易揭露"),
+            ("衛星頻譜（EchoStar 頻譜交割 2027-11-30）", "部分（現金按成本、價值中性）", "股權對價與頻譜價值同列 Sens", "交割與 FCC 核准"),
+            ("國防合約尾部風險（政府合約集中、政策變動）", "否", "Space 分部以成長率代表", "政府合約公告、預算")):
+    for j, v in enumerate(row, 1): RD.cell(r, j, v)
+    r += 1
+r += 1
+RD.cell(r, 1, "模型狀態（README、Sens、HTML 三處 build_id 相同；Sens 頁比對輸入指紋）").font = BOLD; RD_STAT = r; r += 1
+RD.cell(r, 1, f'="build_id "&Sens!D{SE_BID}&"；模型狀態 "&Sens!D{SE_STATUS}&"（Sens 與 HTML 為建置快照：只在 Excel 改 In 頁而未重跑 bash spacex/make_v02.sh 時顯示 STALE）"'); r += 1
 RD.column_dimensions["A"].width = 120; RD.column_dimensions["B"].width = 60; RD.column_dimensions["C"].width = 60; RD.column_dimensions["D"].width = 60
 for rr in range(3, 9): RD.cell(rr, 1).alignment = Alignment(wrap_text=True, vertical="top")
 
 if os.environ.get("ROWMAP"):
     json.dump({"T": T, "SR": SR, "PR": PR_, "CR": CR, "VR": VR_, "DC": DC, "GATE": GATE, "SUMROW": SUMROW, "SE_ROWS": SE_ROWS, "SE_BASE": SE_BASE,
-               "SE_STALE": SE_STALE, "SE_SPECIAL": SE_SPECIAL, "IN_ROW": IN_ROW, "RCR": RCR, "QR": QR, "TH_HDR": TH_HDR},
+               "SE_STALE": SE_STALE, "SE_FP": SE_FP, "SE_STATUS": SE_STATUS, "SE_BID": SE_BID, "FINCHK": FINCHK, "SE_SPECIAL": SE_SPECIAL, "IN_ROW": IN_ROW, "RCR": RCR, "QR": QR, "TH_HDR": TH_HDR},
               open(os.environ["ROWMAP"], "w", encoding="utf-8"), ensure_ascii=False, indent=0)
 wb.save(A.out)
 print("saved", A.out)
