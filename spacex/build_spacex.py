@@ -423,10 +423,10 @@ inp("ppefin_9m", "9M26 以其他融資取得 PP&E（非現金，未入資本支�
 inp("lease_1H", "9M26 融資租賃本金", "US$B", None, -fb("cf.flPrin.9m2026"), None, "Verified", fs("cf.flPrin.9m2026"))
 inp("slb_1H", "9M26 失敗售後租回本金償還", "US$B", None, 0.0, None, "Derived", "未單獨揭露（含在償還債務 39.845；主要為過橋貸款與 xAI 舊債清償）→ 0", "資料缺口")
 inp("debt_1H", "9M26 債務淨流入（發行 − 償還 − 發行成本 − 清償溢價）", "US$B", None,
-    round(fb("cf.debtIss.9m2026") + fb("cf.debtRep.9m2026") + fb("cf.debtCost.9m2026") + fb("cf.extPrem.9m2026"), 3), None, "Verified",
+    round(fb("cf.debtIss.9m2026") + fb("cf.debtRep.9m2026") + fb("cf.debtCost.9m2026") + fb("cf.extPrem.9m2026"), 3), None, "Derived",
     "10-Q 現金流量表：發行 51.834 − 償還 39.845 − 成本 − 清償溢價 1.153")
 inp("eq_1H", "9M26 股權淨流入（IPO 淨額＋IPO 前發行＋員工認股 − 買回 − 代扣稅）", "US$B", None,
-    round(fb("cf.ipo.9m2026") + fb("cf.stockIss.9m2026") + fb("cf.espp.9m2026") + fb("cf.buyback.9m2026") + fb("cf.taxNet.9m2026"), 3), None, "Verified",
+    round(fb("cf.ipo.9m2026") + fb("cf.stockIss.9m2026") + fb("cf.espp.9m2026") + fb("cf.buyback.9m2026") + fb("cf.taxNet.9m2026"), 3), None, "Derived",
     "10-Q 現金流量表：IPO 淨額 85.675、IPO 前發行 8.319、買回 −4.426 等")
 inp("sh_dil_1H", "9M26 稀釋加權股數（EPS 用）", "十億股", None, fv("is.shDil.9m2026") / 1000, None, "Verified", fs("is.shDil.9m2026"))
 inp("deemed_1H", "9M26 視同股利（特別股轉換；歸屬普通股淨利扣除）", "US$B", None, fb("is.deemedDiv.9m2026"), None, "Verified", fs("is.deemedDiv.9m2026"))
