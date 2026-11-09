@@ -835,6 +835,14 @@
        "sub": "自由現金流（GAAP 換算、折舊、資本支出、營運資金）"
       },
       [
+       "@In!B166",
+       "@In!D166|n2",
+       "@In!E166|n2",
+       "@In!F166|n2",
+       "@In!C166",
+       "@In!G166|tag"
+      ],
+      [
        "@In!B157",
        "@In!D157|p1",
        "@In!E157|p1",
@@ -1471,14 +1479,6 @@
        "sub": "自由現金流（GAAP 換算、折舊、資本支出、營運資金）"
       },
       [
-       "@In!B166",
-       "@In!D166|n2",
-       "@In!E166|n2",
-       "@In!F166|n2",
-       "@In!C166",
-       "@In!G166|tag"
-      ],
-      [
        "@In!B158",
        "@In!D158|p1",
        "@In!E158|p1",
@@ -1744,6 +1744,33 @@
        "@Val!A41",
        "@Val!B41|n0",
        "@Val!E41"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A80"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "期間並列",
+     "head": [
+      "項目",
+      "數值",
+      "說明"
+     ],
+     "rows": [
+      [
+       "@Val!A153",
+       "@Val!B153|n2",
+       "@Val!E153"
+      ],
+      [
+       "@Val!A154",
+       "@Val!B154|n2",
+       "@Val!E154"
       ]
      ]
     },
@@ -2064,7 +2091,7 @@
     },
     {
      "type": "h3",
-     "text": "參考：舊法（十年本益比規則值）與市場隱含倍數（不進目標價）"
+     "text": "參考：市場隱含倍數（不進目標價）"
     },
     {
      "type": "note",
@@ -2073,52 +2100,6 @@
      ],
      "collapse": true,
      "summary": "展開：本頁原說明"
-    },
-    {
-     "type": "table",
-     "caption": "@Val!A51",
-     "head": [
-      "@Val!A52",
-      "@Val!B52"
-     ],
-     "rows": [
-      [
-       "@Val!A53",
-       "@Val!B53|n0"
-      ],
-      [
-       "@Val!A54",
-       "@Val!B54|sp1"
-      ],
-      [
-       "@Val!A55",
-       "@Val!B55|n0"
-      ],
-      [
-       "@Val!A56",
-       "@Val!B56|n0"
-      ],
-      [
-       "@Val!A57",
-       "@Val!B57|n0"
-      ],
-      [
-       "@Val!A58",
-       [
-        "@Val!B58|p0",
-        "／",
-        "@Val!C58|p0",
-        "／",
-        "@Val!D58|p0"
-       ]
-      ],
-      [
-       "@Val!A59",
-       "@Val!B59"
-      ]
-     ],
-     "collapse": true,
-     "summary": "展開：舊法：規則值情境加權"
     },
     {
      "type": "table",
@@ -2225,9 +2206,7 @@
      "type": "note",
      "parts": [
       "@Val!A92"
-     ],
-     "collapse": true,
-     "summary": "展開：核心問題：市場隱含的 FY2028 EPS 與模型的距離的說明"
+     ]
     },
     {
      "type": "note",
@@ -2236,128 +2215,6 @@
      ],
      "collapse": true,
      "summary": "展開：核心問題：市場隱含的 FY2028 EPS 與模型的距離的說明"
-    },
-    {
-     "type": "table",
-     "caption": "循環位置",
-     "head": [
-      "@Val!A74",
-      "@Val!B74",
-      "@Val!C74",
-      "@Val!D74",
-      "@Val!E74"
-     ],
-     "rowgen": {
-      "sheet": "Val",
-      "rows": "75-77",
-      "cols": [
-       "A",
-       "B",
-       "C",
-       "D",
-       "E"
-      ],
-      "fmts": [
-       "",
-       "yr",
-       "",
-       "x1",
-       ""
-      ]
-     },
-     "collapse": true,
-     "summary": "展開：循環位置"
-    },
-    {
-     "type": "table",
-     "head": [
-      "@Val!A80",
-      "@Val!B80",
-      "@Val!C80",
-      "@Val!D80",
-      "@Val!E80",
-      "@Val!F80",
-      "@Val!G80",
-      "@Val!H80"
-     ],
-     "rowgen": {
-      "sheet": "Val",
-      "rows": "81-83",
-      "cols": [
-       "A",
-       "B",
-       "C",
-       "D",
-       "E",
-       "F",
-       "G",
-       "H"
-      ],
-      "fmts": [
-       "",
-       "n2",
-       "n2",
-       "n2",
-       "x1",
-       "n0",
-       "sp0",
-       "x1"
-      ]
-     },
-     "collapse": true,
-     "summary": "展開：規則值隱含股價"
-    },
-    {
-     "type": "note",
-     "parts": [
-      "@Val!A84"
-     ],
-     "collapse": true,
-     "summary": "展開：規則值隱含股價的說明"
-    },
-    {
-     "type": "bars",
-     "title": "規則值隱含股價與現價",
-     "items": [
-      {
-       "label": "情境 A",
-       "value": "@Val!F81",
-       "series": 0
-      },
-      {
-       "label": "情境 B",
-       "value": "@Val!F82",
-       "series": 1
-      },
-      {
-       "label": "情境 C",
-       "value": "@Val!F83",
-       "series": 2
-      }
-     ],
-     "ref": {
-      "label": "現價",
-      "value": "@Val!B63"
-     },
-     "fmt": "n0",
-     "collapse": true,
-     "summary": "展開：規則值隱含股價與現價"
-    },
-    {
-     "type": "note",
-     "parts": [
-      "@Val!A98"
-     ],
-     "collapse": true,
-     "summary": "展開：規則值隱含股價的說明"
-    },
-    {
-     "type": "note",
-     "parts": [
-      "@Val!A93"
-     ],
-     "collapse": true,
-     "summary": "展開：規則值隱含股價的說明"
     }
    ]
   },
@@ -2642,6 +2499,84 @@
        "@Recon!J26|"
       ]
      ]
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A28",
+     "head": [
+      "@Recon!A31",
+      "@Recon!B31",
+      "@Recon!C31",
+      "@Recon!D31"
+     ],
+     "rows": [
+      [
+       "@Recon!A29",
+       "@Recon!B29|sp0",
+       "",
+       ""
+      ],
+      [
+       "@Recon!A30",
+       "@Recon!B30|sp0",
+       "",
+       ""
+      ],
+      [
+       "@Recon!A32",
+       "@Recon!B32|x1",
+       "@Recon!C32|x1",
+       "@Recon!D32|sp1"
+      ],
+      [
+       "@Recon!A33",
+       "@Recon!B33|n2",
+       "@Recon!C33|n2",
+       "@Recon!D33|sp1"
+      ],
+      [
+       "@Recon!A34",
+       "@Recon!B34|x1",
+       "@Recon!C34|x1",
+       "@Recon!D34|sp1"
+      ],
+      [
+       "@Recon!A35",
+       "@Recon!B35|n2",
+       "@Recon!C35|n2",
+       "@Recon!D35|sp1"
+      ],
+      [
+       "@Recon!A36",
+       "@Recon!B36|x1",
+       "@Recon!C36|x1",
+       "@Recon!D36|sp1"
+      ],
+      [
+       "@Recon!A37",
+       "@Recon!B37|n2",
+       "@Recon!C37|n2",
+       "@Recon!D37|sp1"
+      ],
+      [
+       "@Recon!A38",
+       "@Recon!B38|n2",
+       "@Recon!C38|n2",
+       "@Recon!D38|sp1"
+      ],
+      [
+       "@Recon!A39",
+       "@Recon!B39|n2",
+       "@Recon!C39|n2",
+       "@Recon!D39|sp1"
+      ],
+      [
+       "@Recon!A40",
+       "@Recon!B40|n2",
+       "@Recon!C40|n2",
+       "@Recon!D40|sp1"
+      ]
+     ]
     }
    ]
   },
@@ -2652,7 +2587,7 @@
    "blocks": [
     {
      "type": "tornado",
-     "title": "FY2028 EPS 相對基準的變動（變動達兩位數百分比的案例；情境 A，一次動一個輸入；顆數情境另列）",
+     "title": "FY2028 EPS 相對基準的變動（變動達兩位數百分比的案例；情境 B，一次動一個輸入；顆數情境另列）",
      "sheet": "Sens",
      "rows": "5,6,7,8,9,10,14,15,18,19",
      "label_col": "A",
@@ -2737,7 +2672,9 @@
       "@Sens!D483",
       "@Sens!E483",
       "@Sens!F483",
-      "@Sens!G483"
+      "@Sens!G483",
+      "@Sens!I483",
+      "@Sens!J483"
      ],
      "rowgen": {
       "sheet": "Sens",
@@ -2749,7 +2686,9 @@
        "D",
        "E",
        "F",
-       "G"
+       "G",
+       "I",
+       "J"
       ],
       "fmts": [
        "",
@@ -2758,9 +2697,58 @@
        "sp1",
        "n0",
        "sp1",
-       "n0"
+       "n0",
+       "n2",
+       "n2"
       ]
      }
+    },
+    {
+     "type": "table",
+     "caption": "@Sens!A556",
+     "head": [
+      "@Sens!A558",
+      "@Sens!B558",
+      "@Sens!C558",
+      "@Sens!D558",
+      "@Sens!E558",
+      "@Sens!F558",
+      "@Sens!G558",
+      "@Sens!I558",
+      "@Sens!J558"
+     ],
+     "rowgen": {
+      "sheet": "Sens",
+      "rows": "559-564",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G",
+       "I",
+       "J"
+      ],
+      "fmts": [
+       "",
+       "",
+       "n2",
+       "sp1",
+       "n2",
+       "sp1",
+       "n2",
+       "n2",
+       "n2"
+      ]
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Sens!A557"
+     ]
     },
     {
      "type": "note",
@@ -2825,6 +2813,129 @@
    "id": "status",
    "title": "資料狀態",
    "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "@README!A62"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A63"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "主要失效條件與估值框架並列"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A76",
+      "@README!A77",
+      "@README!A78",
+      "@README!A79",
+      "@README!A80"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "資料基準日與逾期標示"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A64"
+     ]
+    },
+    {
+     "type": "table",
+     "head": [
+      "@README!A65",
+      "@README!B65",
+      "@README!C65"
+     ],
+     "rows": [
+      [
+       "@README!A66",
+       "@README!B66",
+       "@README!C66"
+      ],
+      [
+       "@README!A67",
+       "@README!B67",
+       "@README!C67"
+      ],
+      [
+       "@README!A68",
+       "@README!B68",
+       "@README!C68"
+      ],
+      [
+       "@README!A69",
+       "@README!B69",
+       "@README!C69"
+      ],
+      [
+       "@README!A70",
+       "@README!B70",
+       "@README!C70"
+      ],
+      [
+       "@README!A71",
+       "@README!B71",
+       "@README!C71"
+      ],
+      [
+       "@README!A72",
+       "@README!B72",
+       "@README!C72"
+      ],
+      [
+       "@README!A73",
+       "@README!B73",
+       "@README!C73"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A74"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "風險登錄（是否建模、理由、觀察指標）"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A82",
+      "@README!A83",
+      "@README!A84",
+      "@README!A85",
+      "@README!A86",
+      "@README!A87",
+      "@README!A88"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "主要假設驅動與可證偽的公開指標"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A90",
+      "@README!A91",
+      "@README!A92",
+      "@README!A93",
+      "@README!A94",
+      "@README!A95"
+     ]
+    },
     {
      "type": "kv",
      "items": [
@@ -3062,6 +3173,12 @@
       ],
       [
        "@README!A57"
+      ],
+      [
+       "@README!A58"
+      ],
+      [
+       "@README!A59"
       ]
      ]
     },
@@ -3131,7 +3248,9 @@
    "@Val!B150|n2",
    " 美元（上檔空間 ",
    "@README!B46|sp1",
-   "）。"
+   "）。",
+   "",
+   "@README!A63"
   ]
  }
 }

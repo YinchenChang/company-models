@@ -232,5 +232,88 @@ def _r3_pt(o):
             return f"@In!{m.group(1)}{m.group(2)}|sp1"
     return o
 cfg = _r3_pt(cfg)
+
+# ================= v0.3.6／v0.3.7（2026-11-09）：Astera Labs v0.3.5 驗收報告採用項（alab/v036_post.py） =================
+RDW = wb["README"]
+R_ = lambda p, start=1: lab("README", p, start)
+def _rows_after(head, stop_prefixes):
+    r = R_(head) + 1; out = []
+    while RDW.cell(r, 1).value and not str(RDW.cell(r, 1).value).startswith(stop_prefixes):
+        out.append(r); r += 1
+    return out
+r_state, r_edge, r_asof_h = R_("build_id "), R_("評等"), R_("資料基準日（as_of）")
+r_asof_t = r_asof_h + 1; asof_rows = _rows_after("項目", ("說明：",)) if RDW.cell(r_asof_t, 1).value == "項目" else []
+r_asof_n = R_("說明：rf 與同業")
+fail_rows = _rows_after("主要失效條件", ("估值框架並列",)); r_frame = R_("估值框架並列")
+risk_rows = _rows_after("風險登錄", ("主要假設驅動",)); ind_rows = _rows_after("主要假設驅動與可證偽", ("\u0000",))
+st_add = [{"type": "note", "parts": [f"@README!A{r_state}"]}, {"type": "note", "parts": [f"@README!A{r_edge}"]},
+          {"type": "h3", "text": "主要失效條件與估值框架並列"}, {"type": "list", "items": [f"@README!A{r}" for r in fail_rows] + [f"@README!A{r_frame}"]},
+          {"type": "h3", "text": "資料基準日與逾期標示"}, {"type": "note", "parts": [f"@README!A{r_asof_h}"]},
+          {"type": "table", "head": [f"@README!{c}{r_asof_t}" for c in "ABC"], "rows": [[f"@README!A{r}", f"@README!B{r}", f"@README!C{r}"] for r in asof_rows]},
+          {"type": "note", "parts": [f"@README!A{r_asof_n}"]},
+          {"type": "h3", "text": "風險登錄（是否建模、理由、觀察指標）"}, {"type": "list", "items": [f"@README!A{r}" for r in risk_rows]},
+          {"type": "h3", "text": "主要假設驅動與可證偽的公開指標"}, {"type": "list", "items": [f"@README!A{r}" for r in ind_rows]}]
+sec(cfg, "status")["blocks"] = st_add + sec(cfg, "status")["blocks"]
+# 橫幅附註：評等邊界（J4）
+cfg["hero"]["note"] = cfg["hero"]["note"] + ["", f"@README!A{r_edge}"]
+# 估值章：舊法（十年本益比規則值）不顯示（J3 選項 a）；市場隱含 EPS 讀法展開；期間並列與估值框架
+va = sec(cfg, "valuation")
+def _txt(b):
+    t = str(b.get("summary") or b.get("caption") or b.get("title") or b.get("text") or "")
+    m = re.match(r"^@([^!]+)!([A-Z]+\d+)", t)
+    return str(wb[m.group(1)][m.group(2)].value or "") if m else t
+r_read = V("讀法（公式組字")
+keep = []
+for b in va["blocks"]:
+    t = _txt(b)
+    if b["type"] == "h3" and t.startswith("參考："):
+        keep.append(dict(b, text="參考：市場隱含倍數（不進目標價）")); continue
+    if any(k in t for k in ("規則值", "舊法", "十年", "循環位置")) and not (b["type"] == "note" and b.get("parts") == [f"@Val!A{r_read}"]):
+        continue
+    if b["type"] == "note" and b.get("parts") == [f"@Val!A{r_read}"]:
+        b = {k: v for k, v in b.items() if k not in ("collapse", "summary")}
+    keep.append(b)
+if not any(b.get("parts") == [f"@Val!A{r_read}"] for b in keep):
+    keep.append({"type": "note", "parts": [f"@Val!A{r_read}"]})
+r_p1, r_p2 = V("折現期間："), V("持有期間：")
+i_conc = next(i for i, b in enumerate(keep) if b.get("caption") == "結論（主要項目）")
+keep[i_conc + 1:i_conc + 1] = [{"type": "note", "parts": [f"@README!A{r_frame}"]},
+                               {"type": "table", "caption": "期間並列", "head": ["項目", "數值", "說明"], "rows": [vrow(r_p1, "n2"), vrow(r_p2, "n2")]}]
+va["blocks"] = keep
+# 敏感度章：目標價表加 DCF 單法美元欄；業務主因（整本重算快照）；龍捲風標題的基準情境
+SEW = wb["Sens"]
+se = sec(cfg, "sens")
+sb0 = "B" if "情境 B；" in str(SEW["A1"].value) else "A"
+for b in se["blocks"]:
+    if b["type"] == "tornado" and sb0 == "B":
+        b["title"] = b["title"].replace("情境 A", "情境 B")
+    if b.get("caption") == f"@Sens!A{r_tp}":
+        b["head"] = [f"@Sens!{c}{r_tp + 1}" for c in "ABCDEFGIJ"]
+        b["rowgen"] = {"sheet": "Sens", "rows": f"{r_tp + 2}-{r_end}", "cols": list("ABCDEFGIJ"), "fmts": ["", "", "n0", "sp1", "n0", "sp1", "n0", "n2", "n2"]}
+try:
+    r_bz = lab("Sens", "目標價敏感度：業務主因")
+except KeyError:
+    r_bz = None
+if r_bz:
+    r_bh = r_bz + 2; r_be = r_bh
+    while SEW.cell(r_be + 1, 1).value: r_be += 1
+    i_tp = next(i for i, b in enumerate(se["blocks"]) if b.get("caption") == f"@Sens!A{r_tp}")
+    se["blocks"][i_tp + 1:i_tp + 1] = [{"type": "table", "caption": f"@Sens!A{r_bz}", "head": [f"@Sens!{c}{r_bh}" for c in "ABCDEFGIJ"],
+                                        "rowgen": {"sheet": "Sens", "rows": f"{r_bh + 1}-{r_be}", "cols": list("ABCDEFGIJ"), "fmts": ["", "", "n2", "sp1", "n2", "sp1", "n2", "n2", "n2"]}},
+                                       {"type": "note", "parts": [f"@Sens!A{r_bz + 1}"]}]
+# 對帳章：反解（E 節）
+RCW = wb["Recon"]
+r_e = lab("Recon", "E. 反解")
+r_ee = r_e + 1
+while RCW.cell(r_ee + 1, 1).value: r_ee += 1
+r_eh = next(r for r in range(r_e + 1, r_ee + 1) if RCW.cell(r, 1).value == "項目")
+inv_rows = [r for r in range(r_e + 1, r_ee + 1) if r != r_eh]
+def _rf(r):
+    t = str(RCW.cell(r, 1).value)
+    if t.startswith("評等級距邊界"): return [f"@Recon!A{r}", f"@Recon!B{r}|sp0", "", ""]
+    f = "n2" if ("EPS" in t or "乘數" in t) else "x1"
+    return [f"@Recon!A{r}", f"@Recon!B{r}|{f}", f"@Recon!C{r}|{f}", f"@Recon!D{r}|sp1"]
+sec(cfg, "recon")["blocks"].append({"type": "table", "caption": f"@Recon!A{r_e}", "head": [f"@Recon!{c}{r_eh}" for c in "ABCD"], "rows": [_rf(r) for r in inv_rows]})
+
 json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")
