@@ -120,7 +120,7 @@ IN["A1"] = ("In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感�
 IN["A2"] = ("事實來源：spacex/data/spacex_facts_2026q3.json（10-Q 2026Q3 與 Q3／Q2 財報新聞稿兩讀核對）＋spacex/data/spacex_facts_v02.json（v0.2：424B4 FY2025／FY2024 原文、2026Q2 10-Q 附註、"
             "2026Q2／Q3 法說指引〔逐字稿未入庫，只存數字與短句〕）；"
             f"Tokenomics {TKV} 快照 spacex/data/tokenomics_snapshot_{TKV}.json（v0.2.2 由 v21.7 換入 v21.9、v0.2.3 換 v21.10，基準數值不變）。黃底＝判斷題（Andy 可改；報告「待 Project 判斷」逐條列出預設）")
-hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "說明", "來源誘因（只填 Interested-party 列）"])
+hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "說明", "來源誘因（Interested-party 列；混合來源列寫其他欄位）"])
 ROWS = []
 def sec(t): ROWS.append(("sec", t))
 def inp(key, item, unit, lo, base, hi, tag, src, note="", judg=False):
@@ -142,16 +142,19 @@ inp("dil_opt", "潛在稀釋：選擇權", "十億股", None, fv("sh.options.202
 inp("dil_rsu", "潛在稀釋：RSU", "十億股", None, fv("sh.rsu.20260930") / 1000, None, "Verified", fs("sh.rsu.20260930"), "Sens 用")
 inp("dil_echo", "潛在稀釋：EchoStar 頻譜交割發行 A 股（約）", "十億股", None, fv("spectrum.echostar.shares") / 1000, None, "Verified", fs("spectrum.echostar.shares"), "固定每股 42.40；預計 2027-11-30 交割；Sens 用")
 # v0.2.7（驗收 M7，J1 選 b；Andy 2026-11-09 確認）：RSU 與選擇權（庫藏股法）進基準；績效獎酬與 EchoStar 股份仍只作 Sens。
-# Cursor 收購授予的選擇權 65M 與 RSU 28M 不重複計入：其成本已在預測期以收購後服務期股權報酬（sbc_cur_left）扣除
+# Cursor 收購授予的選擇權 65M 與 RSU 28M：DCF 股數不計（成本已以 sbc_cur_left 在預測期扣除）；分部加總股數計入（調整後 EBITDA 不含股權報酬；獨立核對 11-09）
 Q10 = "mag/extract/docs/2026Q3/spacex_2026Q3_10-Q.pdf"; P424 = "mag/extract/docs/2026Q3/spacex_424B4.pdf"
 inp("opt_cla", "流通選擇權：A 股", "十億股", None, 0.158, None, "Verified", f"{Q10} 附註 12 保留股數表：「Outstanding stock options 158 350 —」（A 158M、B 350M）")
 inp("opt_clb", "流通選擇權：B 股", "十億股", None, 0.350, None, "Verified", f"{Q10} 附註 12 保留股數表（同上）")
 inp("opt_cur", "其中：Cursor／Mesh 收購授予的選擇權（A 股；履約價 1.49）", "十億股", None, 0.065, None, "Verified", f"{Q10} 附註 12 Acquisitions 段：「granted 65 million options with a weighted average exercise price of $1.49」",
-    "成本已在 sbc_cur_left（收購後服務期股權報酬）扣除，股數不重複計入")
-inp("rsu_cur", "其中：Cursor／Mesh 收購授予的 RSU", "十億股", None, 0.028, None, "Verified", f"{Q10} 附註 12 Acquisitions 段：「28 million RSUs」", "同上，不重複計入")
+    "DCF 股數不計（成本已在 sbc_cur_left 扣除）；分部加總股數計入（dil_cur_net）")
+inp("rsu_cur", "其中：Cursor／Mesh 收購授予的 RSU", "十億股", None, 0.028, None, "Verified", f"{Q10} 附註 12 Acquisitions 段：「28 million RSUs」", "同上")
 inp("optk_cla", "A 股選擇權加權履約價（扣除收購授予部分）", "US$", None, 27.65, None, "Derived",
     f"{P424} 不含項目清單：2026-03-31 流通選擇權 A 股加權履約價 27.65（之後的行使、沒收未改變加權值的揭露；以 3-31 值近似 9-30）", "庫藏股法用；誤差對淨股數影響小（深度價內）")
 inp("optk_clb", "B 股選擇權加權履約價", "US$", None, 8.22, None, "Derived", f"{P424} 不含項目清單：2026-03-31 流通選擇權 B 股加權履約價 8.22（同上近似）")
+inp("dil_cur_net", "收購授予的 RSU 與選擇權（庫藏股法）淨股數：只計入分部加總股數", "十億股", None, "=rsu_cur+opt_cur*MAX(0,1-1.49/px)", None, "Derived",
+    "獨立核對 11-09：排除只在 DCF 成立（DCF 以 NOPAT 扣股權報酬，sbc_cur_left 在預測期扣除）；分部加總用調整後 EBITDA（不含股權報酬），須計入股數",
+    "sbc_cur_left 22.159 不能逐筆對應這 93M 股（以交割價 141.29 估約 13.0，另含 RSA 等）；收購前服務的替代獎酬 4.181 進收購對價、不在 sbc_cur_left")
 inp("dil_inc", "評價股數計入 RSU 與選擇權（庫藏股法）（1＝是，基準；Sens 低＝0）", "x", 0, 1, None, "Assumed", "Andy 2026-11-09 確認採用規劃書 J1 選項 b",
     "0＝回到 v0.2.6 口徑（潛在稀釋全不進基準）", judg=True)
 inp("dil_base", "基準計入的稀釋股數＝(RSU − 收購授予 RSU)＋(A 股選擇權 − 收購授予) × (1 − 履約價 ÷ 現價)＋B 股選擇權 × (1 − 履約價 ÷ 現價)", "十億股", None,
@@ -167,7 +170,7 @@ inp("debt_0", "債務本金（2026-09-30；含失敗售後租回 12.897）", "US
     "SpaceX Notes 25.000＋其他融資 12.979（其中 Valor 失敗售後租回 12.897）＋X 票據 0.027")
 inp("debt_ye25", "債務本金（2025-12-31）", "US$B", None, fb("debt.totalDebt.principal.20251231"), None, "Verified", fs("debt.totalDebt.principal.20251231"))
 inp("slb_0", "其中：Valor 失敗售後租回債務（2026-09-30）", "US$B", None, fb("debt.failedSLB.total.20260930"), None, "Verified",
-    "10-Q 附註 9、附註 17：直接寫明為 Valor Transactions（失敗售後租回；審查第 1 條），流動 2.181＋非流動 10.716", "關係人（董事 Antonio Gracias）；利息 2026Q3 0.351")
+    "10-Q 附註 9、附註 17：直接寫明為 Valor Transactions（失敗售後租回；審查第 1 條），流動 2.181、非流動 10.716（原文合計列，單一事實總帳值 debt.failedSLB.total.20260930）", "關係人（董事 Antonio Gracias）；利息 2026Q3 0.351")
 inp("fin_lease", "融資租賃負債（2026-09-30）", "US$B", None, fb("debt.finLease.principal.20260930"), None, "Verified", fs("debt.finLease.principal.20260930"), "計入 WACC 負債與淨負債")
 inp("btc", "數位資產（比特幣 18,712 枚，2026-09-30 帳面）", "US$B", None, fb("bs.digital.20260930"), None, "Verified", fs("bs.digital.20260930"), "評價時加入（類現金持有）")
 inp("legal", "訴訟準備（類債）", "US$B", None, fb("legal.accrual"), None, "Verified", fs("legal.accrual"))
@@ -453,9 +456,12 @@ for y in ("2026", "2027", "2028"):
 
 # v0.2.6（驗收 M8，A2）：每列單一主要標記。來源字串以「事實總帳 …；標記）」結尾時，若事實總帳標記較弱（Derived／Interested-party），主要標記不得寫 Verified
 TAG_RANK = {"Verified": 0, "Interested-party": 1, "Derived": 2}
-def norm_tag(tag, src):
+def norm_tag(tag, src, item=""):
     m = re.search(r"事實總帳 [^；]*；([A-Za-z-]+)）$", str(src or ""))
     if m and tag == "Verified" and m.group(1) in ("Derived", "Interested-party"): return m.group(1)
+    # 獨立核對 11-09：由兩個以上原文數字相加減者（來源或項目寫「＋」「 − 」，或引用兩個以上事實總帳鍵）一律 Derived
+    t = f"{src or ''}｜{item or ''}"
+    if tag == "Verified" and (re.search(r"\d\s*＋|＋\s*\d|\d \− \d", t) or re.search(r"事實總帳 [^）]*、", str(src or ""))): return "Derived"
     return tag
 def incentive(src):
     t = str(src or "")
@@ -483,7 +489,7 @@ for row in ROWS:
             c = IN.cell(r, j, v)
             if not (isinstance(v, str) and v.startswith("=")): c.font = BLUE
             c.number_format = "0.0%" if unit == "%" else ("0.0000" if unit == "x" else "#,##0.000")
-    tag = norm_tag(tag, src)
+    tag = norm_tag(tag, src, item)
     IN.cell(r, 7, tag); IN.cell(r, 8, src); IN.cell(r, 9, note)
     if tag == "Interested-party":
         inc = incentive(src)
@@ -517,7 +523,7 @@ Q["A2"] = "核對列（實績必須為 0）：子列合計＝分部、分部合�
 QCOLS = ["2025q2", "2025q3", "2026q1", "2026q2", "2026q3", "9m2025", "9m2026", "fy2025", "2025q4"]
 QH = ["2025Q2", "2025Q3", "2026Q1", "2026Q2", "2026Q3", "9M25", "9M26", "FY2025", "2025Q4（衍生）"]
 QC = dict(zip(QCOLS, "BCDEFGHIJ"))
-hdr(Q, 3, ["項目"] + QH + ["標記", "來源", "來源誘因（只填 Interested-party 列）"])
+hdr(Q, 3, ["項目"] + QH + ["標記", "來源", "來源誘因（Interested-party 列；混合來源列寫其他欄位）"])
 QR = {}
 SRCQ = "10-Q 2026Q3 附註 3、18（四期）；Q3 新聞稿（2026Q2 欄，2026Q2 10-Q 附註 18 互核一致）；Q2 新聞稿（2026Q1、2025Q2）；FY2025＝424B4 原文第 116、131–135 頁（事實總帳 seg.*／is.*）；2025Q4＝FY2025 − 9M25"
 PER5 = ["2025q3", "2026q2", "2026q3", "9m2025", "9m2026"]
@@ -1331,7 +1337,7 @@ else:
     vput("snc", "＋淨現金（FY2027 年底，CF 頁；減融資租賃）", S3(lambda s: f"=CF!H{CR[s]['nc']}-fin_lease"))
 vput("shold", "＋數位資產＋EchoStar 頻譜（按 Q4 26–FY2027 已付成本）", ["=btc+spec_2h+spec_27"] * 3, note="頻譜付款已自淨現金扣除，資產按成本加回（價值中性）")
 vput("sdl", "− 類債", ["=legal"] * 3)
-vput("ssh", "股數（FY2027 年底＋RSU 與選擇權庫藏股法淨股數；dil_x＝1 時改為四項全額）", S3(lambda s: f"=PL!H{PR_[s]['she']}+dil_inc*dil_base+dil_x*(dil_perf+dil_opt+dil_rsu+dil_echo-dil_inc*dil_base)"), "0.000")
+vput("ssh", "股數（FY2027 年底＋RSU 與選擇權庫藏股法淨股數〔含收購授予部分〕；dil_x＝1 時改為四項全額）", S3(lambda s: f"=PL!H{PR_[s]['she']}+dil_inc*(dil_base+dil_cur_net)+dil_x*(dil_perf+dil_opt+dil_rsu+dil_echo-dil_inc*(dil_base+dil_cur_net))"), "0.000")
 SB2 = lambda ev: (lambda s: "=MAX(0,({0}{1}+{0}{2}+{0}{3}-{0}{4})/{0}{5})".format(X3(s), VR_[ev], VR_["snc"], VR_["shold"], VR_["sdl"], VR_["ssh"]))
 vput("sotp1", "分部加總每股價值（讀法 1）", S3(SB2("sev1")))
 vput("sotp2", "分部加總每股價值（讀法 2）", S3(SB2("sev2")))
@@ -1519,7 +1525,7 @@ def rc6(key, label, vals, fmt="0.00", note=""):
 RC.cell(r, 1, "6a. 支持現價所需的 k（what must be true；整本重算反解，spacex/kreq_v02.py）").font = BOLD; r += 1
 if KRQ and KRQ["flat"]["solved"]:
     rc6("kreq_flat", "k 不收斂：三情境 k 由 Q4 26 起維持同一值，加權目標價＝現價所需的 k（B）", [KRQ["flat"]["k"]], "0.00",
-        f"Derived；{os.path.basename(KRQ_F)}（該點加權目標價 {KRQ['flat']['tp']:.2f}）。高於此值且長期維持，結論才翻轉")
+        f"Derived；{os.path.basename(KRQ_F)}（該點加權目標價 {KRQ['flat']['tp']:.2f}）。這是目標價＝現價的點，不是評等門檻：k 只要不收斂、維持 2026Q3 約 1.87 倍，目標價已升到 Sens「k 不收斂」案、離開強力放空。結論承重的是「收斂」本身")
 else:
     rc6("kreq_flat", "k 不收斂：支持現價所需的 k（B）", ["未解（kreq 檔不存在）"], "@", "Derived")
 if KRQ and KRQ["conv"]["solved"]:
@@ -1545,7 +1551,7 @@ rc6("kp_spot", "現貨收斂（基準：情境 B，FY2030 k＝k30_B）", [f"=Val
 rc6("kp_glut", "供給過剩：收斂到持有成本（情境 C，FY2030 k＝k30_C）", [f"=Val!D{VR_['scen']}"], "#,##0.00", "情境 C 目標價（Val 頁）")
 RC.cell(r, 1, "6d. 自用 AI：讀法 2 影子效益 vs 可歸因現金流（情境 B；B＝FY2027、C＝FY2028、D＝FY2029）").font = BOLD; r += 1
 rc6("ia_shadow", "讀法 2 自用 AI 影子效益（自用新增 GW × 持有成本；假設自用打平資金成本，不是可觀察現金流）", [f"=PL!{c}{PR_['B']['shadow']}" for c in "HIJ"], "#,##0.0", "Derived（假設）")
-rc6("ia_oth", "可歸因：SI 其他收入（Grok／Cursor／X）調整後 EBITDA", [f"=PL!{c}{PR_['B']['e_oth']}" for c in "HIJ"], "#,##0.0", "Derived；已在主模型營收與利潤中，不另加")
+rc6("ia_oth", "可歸因：SI 其他（Grok／Cursor／X 與廣告）調整後 EBITDA（扣自用增量營運費用後）", [f"=PL!{c}{PR_['B']['e_oth']}" for c in "HIJ"], "#,##0.0", "Derived；已在主模型營收與利潤中，不另加")
 rc6("ia_gap", "影子效益 ÷ 可歸因 EBITDA（倍）", [f"=IF({c}{r - 1}>0,{c}{r - 2}/{c}{r - 1},\"可歸因 ≤ 0\")" for c in "BCD"], "0.00",
     "讀法 2 的影子效益相對已可觀察的 AI 產品利潤有多大；倍數越高，主值越依賴假設。讀法 1（只計成本）見 Val 頁")
 R6_END = r - 1
@@ -1679,7 +1685,7 @@ SE.cell(r, 1, "輸入指紋（敏感度重算時的基準檔）")
 if "base|base" in SENS and "fp" in SENS["base|base"]:
     c = SE.cell(r, 4, SENS["base|base"]["fp"]); c.number_format = "0.000000"; c.font = BLUE
 r += 1
-SE.cell(r, 1, "模型狀態（CURRENT＝Sens、HTML、README 與本檔輸入一致；STALE＝In 頁已改、須重跑 bash spacex/make_v02.sh SENS=1）").font = BOLD
+SE.cell(r, 1, "模型狀態（CURRENT＝Sens、HTML、README 與本檔輸入一致；STALE＝In 頁已改、須重跑 SENS=1 bash spacex/make_v02.sh）").font = BOLD
 SE.cell(r, 4, f'=IF(AND(ISNUMBER(D{r - 1}),ABS(D{SE_STALE}-D{SE_BASE})<0.005,ABS(D{r - 2}-D{r - 1})<=0.000000001*MAX(1,ABS(D{r - 1}))),"CURRENT","STALE")')
 SE_STATUS = r; r += 1
 SE.cell(r, 1, "build_id（README、Sens、HTML 三處相同）"); SE.cell(r, 4, BUILD_ID); SE_BID = r; r += 1
@@ -1747,7 +1753,7 @@ r += 1
 RD.cell(r, 1, "本版要點（v0.2.7、v0.2.6；其下為 v0.2.1、v0.2）").font = BOLD; r += 1
 for t in ("v0.2.7（2026-11-09 驗收報告採用項，Andy 確認採用規劃書）：評價股數計入 RSU 與選擇權（庫藏股法；扣除已在股權報酬中扣除的 Cursor 收購授予部分；績效獎酬與 EchoStar 股份仍只列 Sens）；Connectivity 與 SI 同業改為同一估值日 2026-11-06、EV／NTM EBITDA，並新增同業可比性表（Recon 第 7 節）；Sens 新增「融資受限：建置速度減半」與「不計 RSU 與選擇權」兩案；支持現價所需的 k 依新基準重解。",
           "v0.2.6（2026-11-09 驗收報告採用項，數值格不變）：build_id 與輸入指紋、模型狀態 CURRENT／STALE（Sens 頁底部，README、HTML 同步）；In、Q 頁每列單一主要標記並新增「來源誘因」欄；Val 頁並列折現期間與持有期間；投資建議改條件式；刪除未查核的小型發射商倍數；Recon 第 6 節：支持現價所需的 k、k 分項、三條 k 路徑對應、自用 AI 影子效益對可歸因利潤；CF 頁融資可行性檢查；README 主要失效條件與風險登錄。",
-          "驗收不採用項（見 Drive 個股模型／20261109_個股模型驗收_不需驗收項目.md）：取消 DCF 與 Comparable 加權、驗收者自擬情境機率、開檔雜湊；自用 AI 主值維持讀法 2（Andy 2026-10-27）。",):
+          "驗收不採用項（見 company-models docs/plan/個股模型驗收_不需驗收項目.md；Drive 個股模型／ 有閱讀副本）：取消 DCF 與 Comparable 加權、驗收者自擬情境機率、開檔雜湊；自用 AI 主值維持讀法 2（Andy 2026-10-27）。",):
     RD.cell(r, 1, t); r += 1
 for t in ("v0.2.1 一致性小修：pace 的 SI 投資季速改與 Q4 同法＝Q4 SI 現金資本支出 ÷ (1 − fin_sh)（不再加 9M 以融資取得 PP&E 季均）；分母改 FY2027 新增世代組合每 GW 投資（am_27 GB300／VR200 各半），FY2027 SI 投資＝4 × Q4 26 SI 投資；In 頁 pace 低／高由 build 同一函式產生、check_v02 比對。",
           "G2（2027Q1 營收指引只校準、不硬套）：Andy 2026-10-30 同意（原為預設）。",
@@ -1783,7 +1789,7 @@ RD.cell(r, 1, f'="每股值多少？答：每股約 "&TEXT({VB("tp")},"0.00")&" 
 # v0.2.6（驗收 A6、§8、B5、A1）：主要失效條件、風險登錄、模型狀態（HTML 用）
 r += 1
 RD.cell(r, 1, "主要失效條件（HTML 用；出現下列任一可觀察證據，本模型結論須重估）").font = BOLD; RD_INV = r; r += 1
-RD.cell(r, 1, f'="算力出租價格不收斂：公司揭露可驗證的長約單價、利用率與續約條件，顯示每 GW 收入能長期維持在持有成本約 "&{_kreq}&" 倍以上（目前 2026Q3 約 "&TEXT(k0,"0.00")&" 倍）。"'); r += 1
+RD.cell(r, 1, f'="算力出租價格不收斂：公司揭露可驗證的長約單價、利用率與續約條件，顯示每 GW 收入不會向持有成本收斂。只要維持目前 2026Q3 約 "&TEXT(k0,"0.00")&" 倍不收斂，目標價即升到約 "&TEXT(Sens!D{_kf},"0.0")&"、離開強力放空；長期維持約 "&{_kreq}&" 倍時目標價等於現價。"'); r += 1
 RD.cell(r, 1, f'="自用 AI 有可歸因的回報：Grok／API／Cursor／X 的增量利潤足以覆蓋自用算力全成本（2027 年讀法 2 影子效益約為已可觀察 AI 產品調整後 EBITDA 的 "&TEXT(Recon!B{RCR["ia_gap"]},"0.0")&" 倍）。"'); r += 1
 RD.cell(r, 1, f'="融資條件優於模型：外部融資成本與可得量顯著優於模型（模型新債利率 "&TEXT(r_debt,"0.0%")&"、以新債補足最低現金；CF 頁融資可行性檢查情境 B 的 WARN 年數 "&TEXT(CF!D{FINCHK["n"]},"0")&"）。"'); r += 1
 r += 1

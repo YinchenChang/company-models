@@ -89,7 +89,7 @@ IN_GROUPS = {
         ("對外出租與定價（k＝每 GW 年營收 ÷ 持有成本）", ["ext_sh", "k30_A", "k30_B", "k30_C", "conv_k", "k0_ovr", "k0_cal"]),
         ("Grok／Cursor／X 其他收入", ["cur_pf", "g27_nr", "gl_nr", "gl_ads", "conv_n", "m_so_adj", "sbc_cur_left", "sbc_cur_yrs"]),
         ("自用 AI 與估值倍數", ["internal_ai_reading", "evs_si", "pm_si_crwv", "pm_si_nbis", "pm_si_orcl", "mult_si_adj"])],
- "co": [("股價、股數與資產負債（評價日）", ["px", "px_val", "sh_out", "sh_dil_9m", "dil_perf", "dil_opt", "dil_rsu", "dil_echo", "opt_cla", "opt_clb", "opt_cur", "rsu_cur", "optk_cla", "optk_clb", "dil_inc", "dil_base", "dil_x", "cash_0", "cash_ye25", "debt_0", "debt_ye25", "slb_0", "fin_lease", "btc", "legal"]),
+ "co": [("股價、股數與資產負債（評價日）", ["px", "px_val", "sh_out", "sh_dil_9m", "dil_perf", "dil_opt", "dil_rsu", "dil_echo", "opt_cla", "opt_clb", "opt_cur", "rsu_cur", "optk_cla", "optk_clb", "dil_cur_net", "dil_inc", "dil_base", "dil_x", "cash_0", "cash_ye25", "debt_0", "debt_ye25", "slb_0", "fin_lease", "btc", "legal"]),
         ("折現率", ["rf", "beta", "erp", "kd", "tax_w", "wacc_adj", "g_tv", "ronic_sp", "tax_tv"]),
         ("目標價規則", ["mid", "t_val", "t_q4", "tp_wA", "tp_wB", "tp_wC", "w_dcf", "t_tgt", "w_ntm27", "cons_tp", "sbc_add", "tv_alt"]),
         ("稅、利率與股數稀釋", ["tax", "r_cash", "r_debt", "dil", "wc_k", "min_cash", "lev_max", "icr_min"]),
