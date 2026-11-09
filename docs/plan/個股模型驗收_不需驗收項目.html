@@ -1,0 +1,150 @@
+<!DOCTYPE html><html lang="zh-Hant-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>個股模型驗收｜不需驗收項目 v1.1</title><style>
+body{font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;max-width:1180px;margin:32px auto;padding:0 20px;color:#1f2328;line-height:1.6}
+h1{font-size:24px;border-bottom:2px solid #1f2328;padding-bottom:8px}h2{font-size:18px;margin-top:28px}
+ul{padding-left:20px}li{margin:2px 0}
+table{border-collapse:collapse;width:100%;font-size:14px;margin-top:16px}
+th,td{border:1px solid #d0d7de;padding:8px 10px;vertical-align:top;text-align:left}
+th{background:#f3f4f6;position:sticky;top:0}tr:nth-child(even) td{background:#fafbfc}
+td:first-child{font-weight:600;white-space:nowrap}code{background:#eef1f4;padding:1px 4px;border-radius:3px;font-size:13px}
+@media print{th{position:static}}
+</style></head><body><h1>個股模型驗收｜不需驗收項目（排除清單）</h1>
+<ul>
+<li>版本：v1.1（2026-11-09）</li>
+<li>v1.1 變更：適用範圍擴大到 AI半導體 的個股模型；依 Arm 個股模型 v0.3.3 驗收報告（2026-11-09）的不採用項目新增 X14–X19；X4 註明兩專案的情境權重；X2、X6、X8 補列 Arm 報告的對應意見。</li>
+<li>v1.0：SpaceX 個股模型 v0.2.5 驗收報告（2026-11-09）的不採用項目，加上 Andy 已定的規則（Andy 2026-11-09 確認）。</li>
+<li>權威位置：本檔（company-models <code>docs/plan/個股模型驗收_不需驗收項目.md</code>）；Drive <code>02-算力收支/個股模型/</code> 為閱讀副本（md 與 html）。</li>
+<li>適用：算力收支所有個股模型（含 MAG、SpaceX、Meta、Oracle、新雲、OpenAI／Anthropic 等）與 AI半導體 所有個股模型的驗收。標「（算力收支）」或「（AI半導體）」的列只適用該專案。</li>
+<li>用法：驗收者<strong>不要</strong>把下列事項判為缺失或列為修正建議。可以檢查的部分寫在「仍需驗收」欄；與本清單衝突的意見，請改寫為「建議 Andy 重新考慮某項規則」，不計入通過與否。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>不需驗收的事項</th>
+<th>原因（決定者與時間）</th>
+<th>仍需驗收</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>X1</td>
+<td>（算力收支）自用 AI 以<strong>讀法 2</strong>（影子效益，k＝1）為主值</td>
+<td>Andy 2026-10-27 15:03 定案「當然要用讀法2」；原則第 7 節</td>
+<td>讀法 1 是否並列；文字是否寫明這是假設（打平資金成本），不是可觀察現金流</td>
+</tr>
+<tr>
+<td>X2</td>
+<td>目標價採 <strong>DCF 50%＋Comparable（SOTP）50%</strong> 加權單一目標價、五級評等；包括要求說明 50／50 的「選擇準則」或改為區間交集</td>
+<td>跨模型共同規則（Andy 2026-10-25 11:53；原則第 4 節）；HTML 版面規格 v1.0（Andy 2026-11-05）</td>
+<td>DCF 與 Comparable 是否分別顯示；Sens 是否有 <code>w_dcf</code> 0.3／0.7</td>
+</tr>
+<tr>
+<td>X3</td>
+<td>公司<strong>指引不入基準</strong>、不以指引校準基準（例：Musk 13 GW、2027Q1 營收指引）</td>
+<td>Andy 2026-10-30（G2 只校準不硬套）；數字原則（Andy 2026-11-05：指引只作參照）</td>
+<td>指引是否列在 Recon 對照與 Sens 案例；AI半導體 以已公布季度指引作當年錨點者，是否標 Interested-party</td>
+</tr>
+<tr>
+<td>X4</td>
+<td>情境權重（算力收支 25／50／25；AI半導體 0.3／0.5／0.2），包括要求歷史校準；<strong>驗收者不得自擬情境機率</strong></td>
+<td>原則第 8 節；AI半導體 目標價規格（Andy 2026-10-25）；數字原則（無證據不給數字）</td>
+<td>情境驅動對照是否完整、權重合計 1</td>
+</tr>
+<tr>
+<td>X5</td>
+<td>Sens「一次動一個參數」，包括要求新增「高成長高成本」等組合情境</td>
+<td>原則第 8、9 節的設計；聯動走情境 A／B／C 與群組案例（<code>he_all</code> 等）</td>
+<td>敏感度覆蓋（<code>check_sens_coverage.py --require-keycol</code>）是否通過；README 指為主因的變數是否都有 Sens 列</td>
+</tr>
+<tr>
+<td>X6</td>
+<td>Sens 與 HTML 為<strong>建置快照</strong>（非活頁簿公式）本身，包括要求改用 Excel Data Table／LAMBDA 即時計算</td>
+<td>設計：Sens 由建置腳本整本重算後寫入；Data Table 無法承載整本三情境重算</td>
+<td><code>build_id</code> 三處一致、STALE 旗標顯示 CURRENT</td>
+</tr>
+<tr>
+<td>X7</td>
+<td>開檔時算 checksum、公式雜湊等<strong>需巨集</strong>的機制</td>
+<td>xlsx 不用巨集；公式改動以 git 與建置腳本管控</td>
+<td>同 X6</td>
+</tr>
+<tr>
+<td>X8</td>
+<td>同業倍數<strong>迴歸</strong>或成長調整迴歸（每組同業少於 8 家時）</td>
+<td>樣本太小，迴歸無統計意義</td>
+<td>估值日、NTM 期間是否一致；各同業成長率、利潤率、淨負債、資本支出率是否並列；依商業模式的子群中位數是否並列</td>
+</tr>
+<tr>
+<td>X9</td>
+<td>（算力收支）個股模型<strong>完整內生融資模型</strong>（分層利差、評級、股權比例、資產出售、建置延後互相回饋）</td>
+<td>工程量與 Assumed 輸入比例不相稱；只在基準路徑超過融資檢查門檻時才另議</td>
+<td>融資可行性檢查列（淨負債／調整後 EBITDA、利息保障倍數）是否存在、超門檻是否 WARN</td>
+</tr>
+<tr>
+<td>X10</td>
+<td>要求個股模型<strong>重估 Tokenomics 權威參數</strong>（利用率、每 GW 持有成本、電力效率、產出比等）</td>
+<td>三層規則（Andy 2026-11-02）：Tokenomics 只給基準，個股讀快照；權威在 Tokenomics</td>
+<td>快照版本是否與 Interface 契約一致；個股層的拆解是否只引用 TK 值</td>
+</tr>
+<tr>
+<td>X11</td>
+<td><strong>價值中性處理的對價股份</strong>單獨計入基準股數（例：EchoStar 頻譜交割股）</td>
+<td>對應資產未計價時只加股數會重複扣減</td>
+<td>股數與資產兩邊口徑是否一致、是否在 Sens</td>
+</tr>
+<tr>
+<td>X12</td>
+<td>「方向檢查」把 <strong>Andy 已明確決定</strong>的收斂計為模型自行收斂</td>
+<td>決定權在 Andy；屬已定規則，不是缺失</td>
+<td>方向檢查應分開計數：Andy 已定 vs 模型自行選擇</td>
+</tr>
+<tr>
+<td>X13</td>
+<td>每股價值 <strong>MAX(0, …)</strong> 截為 0</td>
+<td>Andy 2026-10-25（有限責任）</td>
+<td>是否註明哪些情境被截斷</td>
+</tr>
+<tr>
+<td>X14</td>
+<td><strong>投資建議依上檔空間的五級固定規則</strong>產生；要求建立交易層（借券費率、可借量、停損、倉位、催化劑時點）才可給評等，或改為「交易建議：未評估」</td>
+<td>Andy 2026-10-25 14:17 固定規則；評等用途是跨個股一致分組，交易執行屬個人部位決策，不在模型範圍</td>
+<td>評等是否與 Val 上檔空間一致；建議句是否寫成條件式（承重假設）並列失效條件；流通量、軋空等是否列在風險登錄</td>
+</tr>
+<tr>
+<td>X15</td>
+<td>永續期 <strong>RONIC＝WACC</strong></td>
+<td>Andy 2026-11-05 23:16 定案（所有個股一致、保守）</td>
+<td>Sens 是否有 RONIC＝WACC＋5pt</td>
+</tr>
+<tr>
+<td>X16</td>
+<td><strong>ERP 5%</strong>、<strong>自算產業 β（Blume 調整）</strong>、終值成長 3%（上限為當地 10 年期公債）本身</td>
+<td>Andy 2026-11-05（DCF 標準規格）</td>
+<td>β 依據是否指向 <code>docs/plan/自算產業β_20261105.md</code> 與同業清單；Sens 是否有 ERP 4%／6%、β 低／高</td>
+</tr>
+<tr>
+<td>X17</td>
+<td>驗收者在 Judgment 自擬的<strong>情境機率、合理價值區間</strong>被要求寫入模型</td>
+<td>數字原則（Andy 2026-11-05「證據到哪，數字到哪」）；驗收報告的機率只作驗收者意見</td>
+<td>—</td>
+</tr>
+<tr>
+<td>X18</td>
+<td>相對倍數調整係數在<strong>資料不足時＝1</strong>（不調整）本身，包括要求改為 <code>NA</code></td>
+<td><code>tools/relative_multiple.py</code> 通用規則（Andy 2026-10-29 採相對倍數調整）；Comparable 必須產出一個數，未調整值就是報告要求呈現的「未調整中位數」</td>
+<td>是否寫明「1.00（未調整：缺…）」並列入承重輸入</td>
+</tr>
+<tr>
+<td>X19</td>
+<td>把公司<strong>未揭露</strong>的合併假設拆成多個同樣未揭露的分項參數（例：手機每支權利金年增拆成 v9 滲透 × CSS 滲透 × 單位費率）</td>
+<td>拆開只是把一個 Assumed 變成多個 Assumed，假精確；數字原則</td>
+<td>每個承重 Assumed 驅動是否對應一個可證偽的公開觀察指標</td>
+</tr>
+</tbody>
+</table>
+<h2>修訂</h2>
+<ul>
+<li>本清單隨 Andy 決定增修；撤回某項規則時同步刪除對應列。</li>
+<li>各專案依本清單排除時，在自己的採用規劃書寫明對應的 X 編號。</li>
+</ul></body></html>
