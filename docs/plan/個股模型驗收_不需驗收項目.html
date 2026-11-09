@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="zh-Hant-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>個股模型驗收｜不需驗收項目 v1.1</title><style>
+<title>個股模型驗收｜不需驗收項目 v1.2</title><style>
 body{font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;max-width:1180px;margin:32px auto;padding:0 20px;color:#1f2328;line-height:1.6}
 h1{font-size:24px;border-bottom:2px solid #1f2328;padding-bottom:8px}h2{font-size:18px;margin-top:28px}
 ul{padding-left:20px}li{margin:2px 0}
@@ -10,7 +10,8 @@ td:first-child{font-weight:600;white-space:nowrap}code{background:#eef1f4;paddin
 @media print{th{position:static}}
 </style></head><body><h1>個股模型驗收｜不需驗收項目（排除清單）</h1>
 <ul>
-<li>版本：v1.1（2026-11-09）</li>
+<li>版本：v1.2（2026-11-09）</li>
+<li>v1.2 變更：依 Astera Labs 個股模型 v0.3.5 驗收報告（2026-11-09）的不採用項目新增 X20–X22；X16、X19 補列範圍與例子；X2、X14、X17 補列該報告的對應意見。</li>
 <li>v1.1 變更：適用範圍擴大到 AI半導體 的個股模型；依 Arm 個股模型 v0.3.3 驗收報告（2026-11-09）的不採用項目新增 X14–X19；X4 註明兩專案的情境權重；X2、X6、X8 補列 Arm 報告的對應意見。</li>
 <li>v1.0：SpaceX 個股模型 v0.2.5 驗收報告（2026-11-09）的不採用項目，加上 Andy 已定的規則（Andy 2026-11-09 確認）。</li>
 <li>權威位置：本檔（company-models <code>docs/plan/個股模型驗收_不需驗收項目.md</code>）；Drive <code>02-算力收支/個股模型/</code> 為閱讀副本（md 與 html）。</li>
@@ -35,7 +36,7 @@ td:first-child{font-weight:600;white-space:nowrap}code{background:#eef1f4;paddin
 </tr>
 <tr>
 <td>X2</td>
-<td>目標價採 <strong>DCF 50%＋Comparable（SOTP）50%</strong> 加權單一目標價、五級評等；包括要求說明 50／50 的「選擇準則」或改為區間交集</td>
+<td>目標價採 <strong>DCF 50%＋Comparable（SOTP）50%</strong> 加權單一目標價、五級評等；包括要求說明 50／50 的「選擇準則」、改為區間交集，或依兩法的預測誤差設定權重</td>
 <td>跨模型共同規則（Andy 2026-10-25 11:53；原則第 4 節）；HTML 版面規格 v1.0（Andy 2026-11-05）</td>
 <td>DCF 與 Comparable 是否分別顯示；Sens 是否有 <code>w_dcf</code> 0.3／0.7</td>
 </tr>
@@ -107,7 +108,7 @@ td:first-child{font-weight:600;white-space:nowrap}code{background:#eef1f4;paddin
 </tr>
 <tr>
 <td>X14</td>
-<td><strong>投資建議依上檔空間的五級固定規則</strong>產生；要求建立交易層（借券費率、可借量、停損、倉位、催化劑時點）才可給評等，或改為「交易建議：未評估」</td>
+<td><strong>投資建議依上檔空間的五級固定規則</strong>產生；要求建立交易層（借券費率、可借量、停損、倉位、催化劑時點、期權隱含波動率）才可給評等，或改為「交易建議：未評估」，或以此作為再驗收門檻</td>
 <td>Andy 2026-10-25 14:17 固定規則；評等用途是跨個股一致分組，交易執行屬個人部位決策，不在模型範圍</td>
 <td>評等是否與 Val 上檔空間一致；建議句是否寫成條件式（承重假設）並列失效條件；流通量、軋空等是否列在風險登錄</td>
 </tr>
@@ -119,13 +120,13 @@ td:first-child{font-weight:600;white-space:nowrap}code{background:#eef1f4;paddin
 </tr>
 <tr>
 <td>X16</td>
-<td><strong>ERP 5%</strong>、<strong>自算產業 β（Blume 調整）</strong>、終值成長 3%（上限為當地 10 年期公債）本身</td>
+<td><strong>ERP 5%</strong>、<strong>自算產業 β（Blume 調整）</strong>、終值成長 3%（上限為當地 10 年期公債）本身；包括要求把受驗公司從所屬市場的同業組排除、改用兩組同業並列，或把原始月報酬與去槓桿表嵌入活頁簿</td>
 <td>Andy 2026-11-05（DCF 標準規格）</td>
-<td>β 依據是否指向 <code>docs/plan/自算產業β_20261105.md</code> 與同業清單；Sens 是否有 ERP 4%／6%、β 低／高</td>
+<td>β 依據是否指向 <code>docs/plan/自算產業β_20261105.md</code> 與同業清單（受驗公司在同業組內時是否註明）；Sens 是否有 ERP 4%／6%、β 低／高</td>
 </tr>
 <tr>
 <td>X17</td>
-<td>驗收者在 Judgment 自擬的<strong>情境機率、合理價值區間</strong>被要求寫入模型</td>
+<td>驗收者在 Judgment 自擬的<strong>情境機率、合理價值區間</strong>（例：基準 70%／替代 20%／10%）被要求寫入模型</td>
 <td>數字原則（Andy 2026-11-05「證據到哪，數字到哪」）；驗收報告的機率只作驗收者意見</td>
 <td>—</td>
 </tr>
@@ -137,9 +138,27 @@ td:first-child{font-weight:600;white-space:nowrap}code{background:#eef1f4;paddin
 </tr>
 <tr>
 <td>X19</td>
-<td>把公司<strong>未揭露</strong>的合併假設拆成多個同樣未揭露的分項參數（例：手機每支權利金年增拆成 v9 滲透 × CSS 滲透 × 單位費率）</td>
+<td>把公司<strong>未揭露</strong>的合併假設拆成多個同樣未揭露的分項參數（例：手機每支權利金年增拆成 v9 滲透 × CSS 滲透 × 單位費率；交換晶片營收拆成可服務顆數 × 採用率 × 每採用平台內容；股權報酬拆成員工數 × 每人股權報酬）</td>
 <td>拆開只是把一個 Assumed 變成多個 Assumed，假精確；數字原則</td>
 <td>每個承重 Assumed 驅動是否對應一個可證偽的公開觀察指標</td>
+</tr>
+<tr>
+<td>X20</td>
+<td>目標價以<strong>單一點值</strong>（美元、兩位小數）呈現為主；包括要求改以區間為主、或因輸入偏弱而降低顯示精度</td>
+<td>Andy 2026-10-25：每個模型須有明確目標價（決定上檔空間與評等）；X2</td>
+<td>DCF 單法、Comparable 單法目標價與 DCF 情境價格帶（保守～樂觀）是否並列；承重輸入是否標 Assumed／Analogy／Derived</td>
+</tr>
+<tr>
+<td>X21</td>
+<td>跨模型共用的市場參數（rf、ERP、自算產業 β、同業前瞻 EPS）在<strong>單一個股改版</strong>時未更新到最新日</td>
+<td>個股模型原則第 10 節第 15 條（Andy 2026-11-09 確認 Arm 採用規劃書）：共用取值逾期時維持跨模型一致，於下次全面改版一併更新</td>
+<td>各參數日期是否列出；與資料基準日相差超過 2 個交易日是否標「逾期」；說明欄的日期是否與實際一致</td>
+</tr>
+<tr>
+<td>X22</td>
+<td>上游模型（本 repo 的市場／網通模型、Siliconomics、Tokenomics 快照）以<strong>檔名版本＋工作表儲存格</strong>引用；包括要求在活頁簿 Sources 另封存上游的資料摘要</td>
+<td>上游檔在 git 版控，檔名含版本即可重現；另存摘要會形成第二份可改副本（情境卡規則第 13 條：資料只有一個權威位置）</td>
+<td>引用是否含版本檔名與儲存格範圍；該版本檔是否存在於 repo</td>
 </tr>
 </tbody>
 </table>
