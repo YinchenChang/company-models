@@ -34,7 +34,8 @@ def tp_of(xlsx, rowmap):
     return {"tp": wb["Val"].cell(rm["VR"]["tp"], 2).value, "gateB": wb["CF"].cell(rm["GATE"], 3).value,
             "s2B": wb["Seg"][f"I{rm['SR']['B']['s2']}"].value, "plug27B": wb["CF"][f"H{rm['CR']['B']['plug']}"].value,
             "rec": wb["Val"].cell(rm["VR"]["rec"], 2).value, "q4revB": wb["PL"][f"F{rm['PR']['B']['rev']}"].value,
-            "q1revB": wb["Recon"].cell(rm["RCR"]["q1_m"], 3).value, "k0": wb["Thesis"].cell(rm["T"]["k0"], 3).value}
+            "q1revB": wb["Recon"].cell(rm["RCR"]["q1_m"], 3).value, "k0": wb["Thesis"].cell(rm["T"]["k0"], 3).value,
+            "fp": wb["Sens"].cell(rm["SE_FP"], 4).value if "SE_FP" in rm else None}   # v0.2.6：基準檔輸入指紋（模型狀態 STALE 判斷用）
 
 
 def run(name, sets):
