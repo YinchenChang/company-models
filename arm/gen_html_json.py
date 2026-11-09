@@ -41,7 +41,7 @@ drivers = [
     drv("g_hc", "p0", "資料中心處理器顆數指數（FY2028，情境 B）：", f"@PL!F{A['dcx']}", "n2", "雲端自研處理器，乘同字母顆數係數；待併入 Siliconomics", unit=False),
     drv("dcr", "p0", "資料中心權利金（FY2028，情境 B）：", f"@PL!F{A['dc']}", "n3", "核心數增加使每顆權利金上升", unit=False),
     drv("g_lic", "p0", "授權（不含晶片，FY2028）：", f"@PL!F{A['lic']}", "n3", "年度合約價值成長；含軟銀協議", unit=False),
-    drv("chip_gm", "p0", "毛利率（FY2028，情境 B）：", f"@PL!F{A['gm']}", "p1", "晶片毛利率遠低於矽智財，晶片占比上升使毛利率下降", unit=False),
+    drv("chip_gm1", "p0", "毛利率（FY2028，情境 B）：", f"@PL!F{A['gm']}", "p1", "首代晶片毛利率取公司揭露區間，遠低於矽智財；晶片占比上升使毛利率下降", unit=False),
     drv("g_opx", "p0", "營業利益率（FY2028，情境 B）：", f"@PL!F{A['oim']}", "p1", "晶片與運算子系統研發持續投入", unit=False),
 ]
 fm = lambda c: c
@@ -111,7 +111,8 @@ val_blocks = [
    "ref": {"label": "現價", "value": f"@Val!B{T['px']}"}, "fmt": "n2"},
   {"type": "table", "caption": f"@Val!A{T['ph'] - 1}", "head": [f"@Val!A{T['ph']}", f"@Val!B{T['ph']}", f"@Val!C{T['ph']}", f"@Val!D{T['ph']}", f"@Val!F{T['ph']}"],
    "rows": [[f"@Val!A{r}", f"@Val!B{r}", f"@Val!C{r}|x1", f"@Val!D{r}", f"@Val!F{r}"] for r in range(T["p1"], T["p2"] + 1)]
-           + [[f"@Val!A{T['pmed']}", f"@Val!B{T['pmed']}|x1", "", "", ""], [f"@Val!A{T['feps']}", f"@Val!B{T['feps']}|n2", "", "", ""], [f"@Val!A{T['comptp']}", f"@Val!B{T['comptp']}|n2", "", "", ""]]},
+           + [[f"@Val!A{T['pmed']}", f"@Val!B{T['pmed']}|x1", "", "", ""], [f"@Val!A{T['feps']}", f"@Val!B{T['feps']}|n2", "", "", ""], [f"@Val!A{T['comptp']}", f"@Val!B{T['comptp']}|n2", "", "", ""]]
+           + [[f"@Val!A{T[k]}", f"@Val!B{T[k]}|{f}", "", "", ""] for k, f in (("pm_ip", "x1"), ("pm_chip", "x1"), ("ct_ip", "n2"), ("ct_chip", "n2"))]},
   {"type": "note", "parts": [f"@Val!E{T['pmed']}"]},
   {"type": "table", "caption": f"@Val!A{T['pe10h']}", "collapse": True, "summary": "展開：十年年底市盈率（分位檢查用）",
    "head": [f"@Val!{c}{T['pe10h']}" for c in "ABCDEFGHIJK"], "rows": [[f"@Val!A{T['pe10']}"] + [f"@Val!{c}{T['pe10']}|x1" for c in "BCDEFGHIJK"]]},
@@ -128,6 +129,7 @@ for r in range(4, RL + 1):
     if "EPS" in lab or "CPU" in lab: rf[str(r)] = {c: "n2" for c in "BCEG"}
     if "營收" in lab and "EPS" not in lab: rf[str(r)] = {c: "n3" for c in "BCEG"}
     if "每支" in lab: rf[str(r)] = {c: "n3" for c in "BCEG"}
+    if lab.startswith(("支持現價所需", "評等翻轉")): rf[str(r)] = {"B": "n2" if "EPS" in lab else "x1", "C": "n2" if "EPS" in lab else "x1", "D": "sp1"}
 html["sections"].append({"id": "recon", "title": "對帳：公司指引、共識與權利金結構", "intro": "@Recon!A1", "blocks": [
   {"type": "table", "head": [f"@Recon!{c}3" for c in "ABCDEFGHIJ"], "rowgen": {"sheet": "Recon", "rows": f"4-{RL}", "cols": list("ABCDEFGHIJ"),
    "fmts": ["", "n3", "n3", "sp1", "n3", "sp1", "n3", "sp1", "", ""], "row_fmt": rf}}]})
@@ -140,7 +142,21 @@ html["sections"].append({"id": "sens", "title": "敏感度", "intro": "@Sens!A1"
   {"type": "note", "parts": [f"@Sens!A{rm['SENS_NOTE']}"]},
   {"type": "table", "caption": f"@Sens!A{rm['TVS0']}", "head": [f"@Sens!{c}{rm['TVS0'] + 1}" for c in "ABCDEFG"],
    "rowgen": {"sheet": "Sens", "rows": f"{rm['TVS0'] + 2}-{rm['TVS1']}", "cols": list("ABCDEFG"), "fmts": ["", "", "n2", "sp1", "n2", "sp1", "n2"]}}]})
+V34 = rm["V34"]["G"]
+RDW = wb["README"]
 html["sections"].append({"id": "status", "title": "資料狀態", "blocks": [
+  {"type": "note", "parts": [f"@README!A{V34['state']}"]},
+  {"type": "h3", "text": "主要失效條件與估值框架並列"},
+  {"type": "note", "parts": [f"@README!A{V34['fail_h']}"]},
+  {"type": "list", "items": [f"@README!A{r}" for r in V34["fail"]] + [f"@README!A{V34['frame']}"]},
+  {"type": "h3", "text": "資料基準日與逾期標示"},
+  {"type": "note", "parts": [f"@README!A{V34['asof_h']}"]},
+  {"type": "table", "head": [f"@README!{c}{V34['asof_t']}" for c in "ABC"], "rows": [[f"@README!A{r}", f"@README!B{r}", f"@README!C{r}"] for r in V34["asof_rows"]]},
+  {"type": "note", "parts": [f"@README!A{V34['asof_n']}"]},
+  {"type": "h3", "text": "風險登錄（是否建模、理由、觀察指標）"},
+  {"type": "list", "items": [f"@README!A{r}" for r in V34["risk"]]},
+  {"type": "h3", "text": "主要假設驅動與可證偽的公開指標"},
+  {"type": "list", "items": [f"@README!A{r}" for r in V34["ind"]]},
   {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋（取代建置 commit）", "$sha"],
                            ["行業變數來源", "@In!A2"]]},
   {"type": "h3", "text": "上游成品（市場層與其他公司模型）"},
@@ -167,11 +183,12 @@ SPEC = {
   ["權利金（智慧型手機、資料中心 Neoverse、車用、物聯網：出貨 × 每顆權利金率）", [
     ["FY2026 基期比例與 FY2027 年增", ["ph_s", "dc_s", "au_s", "ph_u26", "g_ph27", "g_dc27", "g_au27"]],
     ["智慧型手機（出貨、費率、Qualcomm）", ["g_phu28", "g_phu29", "phr_A", "phr_B", "phr_C", "qc_adj"]],
+    ["事件型尾端風險（只進敏感度；Qualcomm 停付、Arm China、SoftBank 授權）", ["qc_sh", "qc_stop", "cn_s", "cn_adj", "sb_lic"]],
     ["資料中心（NVIDIA Grace／Vera 顆數讀 Siliconomics、雲端自研 CPU、每顆權利金率）", ["cpu_gpu"] + [k for k in sorted(IK) if k.startswith(("nvbw_", "nvrb_", "nvru_", "uc28_", "uc29_"))] + ["nv_cy25", "w_nv", "g_hc", "dcr"]],
     ["車用、物聯網與其他", ["g_au", "g_iot"]],
     ["Wattonomics 錨定係數（只進敏感度）", ["wta_27", "wta_28", "wta_29"]]]],
   ["授權及其他（含 SoftBank 協議）與 Arm AGI CPU 晶片", [
-    ["授權成長與晶片營收、毛利率", ["g_lic", "chip28_A", "chip28_B", "chip28_C", "chip29_A", "chip29_B", "chip29_C", "chip_gm", "chip_27"]]]],
+    ["授權成長與晶片營收、毛利率", ["g_lic", "chip28_A", "chip28_B", "chip28_C", "chip29_A", "chip29_B", "chip29_C", "chip_gm1", "chip_gm", "chip_27"]]]],
   ["全公司（FY2027 錨點、費用與稅、股價、目標價規則、折現率與自由現金流）", [
     ["FY2027 錨點（第一、二季實績、第三季指引、第四季假設）", ["q2_lg", "q2_rg", "q3_rev", "q3_rg", "h2_lg", "h2_rg", "q2_opx", "q3_opx", "q4_opx", "cogs_r", "q_oth", "q_tx", "q_sh"]],
     ["營業費用、業外、稅與股數（FY2028 起）", ["g_opx", "oth_f", "tx_f", "sh_g"]],

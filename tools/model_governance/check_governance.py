@@ -37,7 +37,7 @@ else:
 
 def tagcheck(ws, tagcol_name, srccol_name):
     hr = None
-    for r in range(1, 8):
+    for r in range(1, 13):   # 2026-11-09 Arm v0.3.4：apply_in_layout 在 In 頁表頭前加說明列（表頭在第 9 列）
         vals = [str(ws.cell(r, c).value or "") for c in range(1, ws.max_column + 1)]
         if tagcol_name in vals: hr = r; break
     if hr is None: fail.append(f"{ws.title} 頁找不到「{tagcol_name}」欄"); return

@@ -1,4 +1,23 @@
-# arm/ — Arm Holdings（ARM）個股模型 v0.3.3
+# arm/ — Arm Holdings（ARM）個股模型 v0.3.4
+
+## v0.3.4（2026-11-09）：Arm v0.3.3 驗收報告採用項（Andy 2026-11-09 確認採用規劃書，J1–J4 照建議預設）
+
+- 採用規劃書：Drive `07-AI半導體/…/034-Arm/驗收/20261109_Arm驗收v0.3.3_採用規劃書.md`；不採用項目已併入 `docs/plan/個股模型驗收_不需驗收項目.md` v1.1（X14–X19）。衍生原則寫入 `docs/plan/個股模型原則_命題加營收分部.md` 第 10 節第 13–20 條。
+- 治理（數值不變部分）：`build_id`、In 頁輸入指紋、模型狀態 CURRENT／STALE（Sens 頁底部；README A1 與 HTML 同一 build_id；`tools/model_governance/check_governance.py` 通過）；In、Q 頁單一主要標記與「來源誘因」欄；歷史財務移到新的 Hist 頁（定義名稱 `h_*`），In 頁折舊、資本支出、營運資金、股票薪酬比例、租賃與現金、近 12 月 EPS 只引用儲存格；README 核心問題倍數與 In 頁租賃說明改公式組字；資料基準日 2026-11-05 與逾期標示；投資建議改條件式並加註「依上檔空間的估值評等；未評估借券、流通量與時點」（J1 a）；Val 第 0.2 節並列 IP／EDA 與晶片子群中位數（純展示，J3 a）；Recon 第 C 節反解支持現價與評等翻轉所需倍數與 EPS；README 失效條件、估值框架並列、風險登錄、可證偽指標；HTML 資料狀態章新增上述各節。
+- 數值變動：(1) 首代 AGI CPU 晶片毛利率 FY2027–FY2028 改為 30%／35%／40%（新鍵 `chip_gm1`，公司 2Q27 法說揭露首代約 30–40%；J2 a），FY2029 起 `chip_gm` 35／45／55% 不變；(2) 共識目標價 290.71 → 273.40（11-05，財報後）、共識前瞻 EPS 225.95 ÷ 93.52 → 174.62 ÷ 67.81（11-07 頁面），FY2027 共識 EPS 2.23 → 2.26（只作對帳）；(3) Sens 新增 `sbc_rev`（20.9%／26.4%）、`chip_gm1`、尾端 `cn_adj`（Arm China ±20%）、`qc_stop`（Qualcomm 停付兩年／一年）、`sb_lic`（SoftBank 授權 FY2029 起不續約），基準皆為 0（不進目標價）。
+
+| 項目 | v0.3.3 | v0.3.4 |
+|---|---|---|
+| DCF 目標價 | 14.90 | 14.81 |
+| Comparable 目標價 | 63.32 | 62.61 |
+| 加權目標價（上檔空間） | 39.11（−76.5%） | 38.71（−76.8%） |
+| 投資建議 | 強力放空 | 強力放空 |
+| 參考：IP／EDA 子群倍數的 Comparable | — | 73.70 |
+
+- 目標價變動拆解：全部來自 `chip_gm1`（FY2027–FY2028 晶片毛利率 45% → 35%）；共識更新與新增 Sens 列不進目標價。Sens 尾端（加權目標價相對基準）：SoftBank 不續約 −15.0%、Qualcomm 停付兩年 −12.0%／一年 −3.5%、Arm China −20% −6.1%／+20% +6.1%、股票薪酬 20.9% +3.6%／26.4% −1.7%。
+- 成品：`dist/20261109_Arm個股模型_v0.3.4.xlsx`、`.html`；v0.3.3 移到 `dist/_待刪除/`。驗證：錯誤格 0、重建後逐格差異 0、check_company_html、check_in_layout（一個既有類型警告）、check_governance 通過。`check_sens_coverage --require-keycol` 的 β、RONIC、非營業投資三鍵在 v0.3.3 即未通過（閉式表無鍵欄），未在本版處理。
+- 建置：`python3 arm/sens_arm.py`（寫 sens.json，含基準指紋）→ `ARM_ROWMAP=rowmap.json python3 arm/build_arm.py raw.xlsx` → LibreOffice 重算 → `python3 arm/gen_html_json.py <dist xlsx> arm/html.json rowmap.json` → `python3 tools/company_html/build_company_html.py arm`。後處理在 `arm/v034_post.py`。
+
 
 ## v0.3.3（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 

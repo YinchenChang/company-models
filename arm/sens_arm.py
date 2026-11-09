@@ -41,8 +41,13 @@ def read_w(f):   # Sens 頁 Wattonomics 小表的基準列（本活頁簿公式�
     ws_ = openpyxl.load_workbook(f, data_only=True)["Sens"]
     r_ = next(r for r in range(1, ws_.max_row + 1) if str(ws_.cell(r, 1).value or "").startswith("基準（情境 B EPS＝Sens 主表 G4 口徑"))
     return [ws_.cell(r_, c).value for c in (2, 5, 8, 11)]
+def read_fp(f):   # v0.3.4（驗收 A3）：基準檔的 In 頁輸入指紋（Sens 頁底部公式），寫入 sens.json，供正式建置比對 CURRENT／STALE
+    ws_ = openpyxl.load_workbook(f, data_only=True)["Sens"]
+    r_ = next(r for r in range(1, ws_.max_row + 1) if str(ws_.cell(r, 1).value or "").startswith("輸入指紋（本檔即時重算"))
+    return ws_.cell(r_, 4).value
+out["_base"] = {"fp": read_fp(os.path.join(TMP, "rc", "base.xlsx")), "tp": b[0]}
 out["_wta"] = {"B": read_w(os.path.join(TMP, "rc", "_wtaB.xlsx")), "W": read_w(os.path.join(TMP, "rc", "_wtaW.xlsx"))}
 json.dump(out, open(os.path.join(HERE, "sens.json"), "w"), ensure_ascii=False, indent=1)
-print("基準", b, "；案例", len(out) - 1, "；Wattonomics 錨定", out["_wta"])
-for k, v in sorted(((k, v) for k, v in out.items() if k != "_wta"), key=lambda kv: -max(abs(kv[1]["低"][0] / b[0] - 1), abs(kv[1]["高"][0] / b[0] - 1))):
+print("基準", b, "；案例", len(out) - 2, "；Wattonomics 錨定", out["_wta"])
+for k, v in sorted(((k, v) for k, v in out.items() if not k.startswith("_")), key=lambda kv: -max(abs(kv[1]["低"][0] / b[0] - 1), abs(kv[1]["高"][0] / b[0] - 1))):
     print(f"{k:10s} 低 {v['低'][0] / b[0] - 1:+.1%}  高 {v['高'][0] / b[0] - 1:+.1%}")
