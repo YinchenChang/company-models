@@ -3291,84 +3291,84 @@
   }
  },
  "ALAB": {
-  "model": "alab/dist/20261106_Astera Labs個股模型_v0.3.5.xlsx",
+  "model": "alab/dist/20261109_Astera Labs個股模型_v0.3.7.xlsx",
   "v2": true,
   "tp": {
-   "value": 88.4100178337091,
+   "value": 103.664833650663,
    "cell": "Val!B39",
-   "file": "alab/dist/20261106_Astera Labs個股模型_v0.3.5.xlsx"
+   "file": "alab/dist/20261109_Astera Labs個股模型_v0.3.7.xlsx"
   },
   "tp_dcf": {
-   "value": 38.2523451105948,
+   "value": 53.5455004033832,
    "cell": "Val!B24",
-   "file": "alab/dist/20261106_Astera Labs個股模型_v0.3.5.xlsx"
+   "file": "alab/dist/20261109_Astera Labs個股模型_v0.3.7.xlsx"
   },
   "tp_comp": {
-   "value": 138.567690556823,
+   "value": 153.784166897942,
    "cell": "Val!B40",
-   "file": "alab/dist/20261106_Astera Labs個股模型_v0.3.5.xlsx"
+   "file": "alab/dist/20261109_Astera Labs個股模型_v0.3.7.xlsx"
   },
   "tp_cons": {
    "value": 388.36,
    "cell": "Val!B41",
-   "file": "alab/dist/20261106_Astera Labs個股模型_v0.3.5.xlsx"
+   "file": "alab/dist/20261109_Astera Labs個股模型_v0.3.7.xlsx"
   },
   "up": {
-   "value": -0.507382750132562,
+   "value": -0.422383497795383,
    "cell": "Val!B42",
-   "file": "alab/dist/20261106_Astera Labs個股模型_v0.3.5.xlsx"
+   "file": "alab/dist/20261109_Astera Labs個股模型_v0.3.7.xlsx"
   },
   "up_comp": {
-   "value": -0.227906109339592,
+   "value": -0.143120483100563,
    "cell": "Val!B43",
-   "file": "alab/dist/20261106_Astera Labs個股模型_v0.3.5.xlsx"
+   "file": "alab/dist/20261109_Astera Labs個股模型_v0.3.7.xlsx"
   },
   "old_rule": {
-   "value": 614.114904010146,
+   "value": 645.349429372731,
    "cell": "Val!B53",
-   "file": "alab/dist/20261106_Astera Labs個股模型_v0.3.5.xlsx"
+   "file": "alab/dist/20261109_Astera Labs個股模型_v0.3.7.xlsx"
   },
   "tier6": {
-   "value": "小於 −50%",
+   "value": "−25%～−50%",
    "cell": "Val!B129",
-   "file": "alab/dist/20261106_Astera Labs個股模型_v0.3.5.xlsx"
+   "file": "alab/dist/20261109_Astera Labs個股模型_v0.3.7.xlsx"
   },
   "rec": {
-   "value": "強力放空",
+   "value": "放空",
    "cell": "Val!B130",
-   "file": "alab/dist/20261106_Astera Labs個股模型_v0.3.5.xlsx"
+   "file": "alab/dist/20261109_Astera Labs個股模型_v0.3.7.xlsx"
   },
   "dcf_A": {
-   "value": 46.9794261560151,
+   "value": 91.521815520958,
    "cell": "Val!B21",
-   "file": "alab/dist/20261106_Astera Labs個股模型_v0.3.5.xlsx"
+   "file": "alab/dist/20261109_Astera Labs個股模型_v0.3.7.xlsx"
   },
   "dcf_C": {
-   "value": 23.7628537057526,
+   "value": 15.6996664386476,
    "cell": "Val!D21",
-   "file": "alab/dist/20261106_Astera Labs個股模型_v0.3.5.xlsx"
+   "file": "alab/dist/20261109_Astera Labs個股模型_v0.3.7.xlsx"
   },
   "model_px": {
    "value": 179.47,
    "cell": "Val!B63",
-   "file": "alab/dist/20261106_Astera Labs個股模型_v0.3.5.xlsx",
+   "file": "alab/dist/20261109_Astera Labs個股模型_v0.3.7.xlsx",
    "date": "2026-11-05"
   },
   "pe_fy28": [
    {
-    "value": 20.8775798197901,
+    "value": 14.1352719215349,
     "cell": "Val!B66",
-    "file": "alab/dist/20261106_Astera Labs個股模型_v0.3.5.xlsx"
+    "file": "alab/dist/20261109_Astera Labs個股模型_v0.3.7.xlsx"
    },
    {
     "value": 26.8576197038467,
     "cell": "Val!C66",
-    "file": "alab/dist/20261106_Astera Labs個股模型_v0.3.5.xlsx"
+    "file": "alab/dist/20261109_Astera Labs個股模型_v0.3.7.xlsx"
    },
    {
-    "value": 44.5213302196761,
+    "value": 90.6857054792155,
     "cell": "Val!D66",
-    "file": "alab/dist/20261106_Astera Labs個股模型_v0.3.5.xlsx"
+    "file": "alab/dist/20261109_Astera Labs個股模型_v0.3.7.xlsx"
    }
   ],
   "cash": {
@@ -3382,33 +3382,38 @@
     ],
     [
      "FY2027",
-     1.28311410198915,
+     1.71818425688435,
      "PL!E12"
     ],
     [
      "FY2028",
-     1.62858403556768,
+     2.40539364113683,
      "PL!F12"
     ],
     [
      "FY2029",
-     1.84619524925531,
+     3.04681307797507,
      "PL!G12"
     ],
     [
      "FY2030（收斂）",
-     2.04152869780588,
+     3.61169906240881,
      "PL!H12"
     ],
     [
      "FY2031（收斂）",
-     2.21077473938678,
+     4.05485859130996,
      "PL!I12"
     ],
     [
      "FY2032（收斂）",
-     2.34342122374999,
+     4.29815010678856,
      "PL!J12"
+    ],
+    [
+     "FY2027",
+     1.28311410198915,
+     "PL!E24"
     ],
     [
      "FY2028",
@@ -3436,32 +3441,37 @@
      "PL!J24"
     ],
     [
+     "FY2027",
+     0.956811485817749,
+     "PL!E36"
+    ],
+    [
      "FY2028",
-     0.763698951222565,
+     0.374931120799329,
      "PL!F36"
     ],
     [
      "FY2029",
-     0.873019771152612,
+     0.312028923095118,
      "PL!G36"
     ],
     [
      "FY2030（收斂）",
-     0.890164643577773,
+     0.281897176008152,
      "PL!H36"
     ],
     [
      "FY2031（收斂）",
-     0.873064226413089,
+     0.260186349894708,
      "PL!I36"
     ],
     [
      "FY2032（收斂）",
-     0.822023548561247,
+     0.244975455593171,
      "PL!J36"
     ]
    ],
-   "file": "alab/dist/20261106_Astera Labs個股模型_v0.3.5.xlsx"
+   "file": "alab/dist/20261109_Astera Labs個股模型_v0.3.7.xlsx"
   }
  },
  "2330": {

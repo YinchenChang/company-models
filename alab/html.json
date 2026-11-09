@@ -835,6 +835,14 @@
        "sub": "自由現金流（GAAP 換算、折舊、資本支出、營運資金）"
       },
       [
+       "@In!B166",
+       "@In!D166|n2",
+       "@In!E166|n2",
+       "@In!F166|n2",
+       "@In!C166",
+       "@In!G166|tag"
+      ],
+      [
        "@In!B157",
        "@In!D157|p1",
        "@In!E157|p1",
@@ -1471,14 +1479,6 @@
        "sub": "自由現金流（GAAP 換算、折舊、資本支出、營運資金）"
       },
       [
-       "@In!B166",
-       "@In!D166|n2",
-       "@In!E166|n2",
-       "@In!F166|n2",
-       "@In!C166",
-       "@In!G166|tag"
-      ],
-      [
        "@In!B158",
        "@In!D158|p1",
        "@In!E158|p1",
@@ -1750,7 +1750,7 @@
     {
      "type": "note",
      "parts": [
-      "@README!A77"
+      "@README!A80"
      ]
     },
     {
@@ -2504,49 +2504,79 @@
      "type": "table",
      "caption": "@Recon!A28",
      "head": [
-      "@Recon!A29",
-      "@Recon!B29",
-      "@Recon!C29",
-      "@Recon!D29"
+      "@Recon!A31",
+      "@Recon!B31",
+      "@Recon!C31",
+      "@Recon!D31"
      ],
-     "rowgen": {
-      "sheet": "Recon",
-      "rows": "30-33",
-      "cols": [
-       "A",
-       "B",
-       "C",
-       "D"
-      ],
-      "fmts": [
+     "rows": [
+      [
+       "@Recon!A29",
+       "@Recon!B29|sp0",
        "",
-       "n2",
-       "n2",
-       "sp1"
+       ""
       ],
-      "row_fmt": {
-       "30": {
-        "B": "x1",
-        "C": "x1",
-        "D": "sp1"
-       },
-       "31": {
-        "B": "x1",
-        "C": "x1",
-        "D": "sp1"
-       },
-       "32": {
-        "B": "n2",
-        "C": "n2",
-        "D": "sp1"
-       },
-       "33": {
-        "B": "n2",
-        "C": "n2",
-        "D": "sp1"
-       }
-      }
-     }
+      [
+       "@Recon!A30",
+       "@Recon!B30|sp0",
+       "",
+       ""
+      ],
+      [
+       "@Recon!A32",
+       "@Recon!B32|x1",
+       "@Recon!C32|x1",
+       "@Recon!D32|sp1"
+      ],
+      [
+       "@Recon!A33",
+       "@Recon!B33|n2",
+       "@Recon!C33|n2",
+       "@Recon!D33|sp1"
+      ],
+      [
+       "@Recon!A34",
+       "@Recon!B34|x1",
+       "@Recon!C34|x1",
+       "@Recon!D34|sp1"
+      ],
+      [
+       "@Recon!A35",
+       "@Recon!B35|n2",
+       "@Recon!C35|n2",
+       "@Recon!D35|sp1"
+      ],
+      [
+       "@Recon!A36",
+       "@Recon!B36|x1",
+       "@Recon!C36|x1",
+       "@Recon!D36|sp1"
+      ],
+      [
+       "@Recon!A37",
+       "@Recon!B37|n2",
+       "@Recon!C37|n2",
+       "@Recon!D37|sp1"
+      ],
+      [
+       "@Recon!A38",
+       "@Recon!B38|n2",
+       "@Recon!C38|n2",
+       "@Recon!D38|sp1"
+      ],
+      [
+       "@Recon!A39",
+       "@Recon!B39|n2",
+       "@Recon!C39|n2",
+       "@Recon!D39|sp1"
+      ],
+      [
+       "@Recon!A40",
+       "@Recon!B40|n2",
+       "@Recon!C40|n2",
+       "@Recon!D40|sp1"
+      ]
+     ]
     }
    ]
   },
@@ -2557,9 +2587,9 @@
    "blocks": [
     {
      "type": "tornado",
-     "title": "FY2028 EPS 相對基準的變動（變動達兩位數百分比的案例；情境 A，一次動一個輸入；顆數情境另列）",
+     "title": "FY2028 EPS 相對基準的變動（變動達兩位數百分比的案例；情境 B，一次動一個輸入；顆數情境另列）",
      "sheet": "Sens",
-     "rows": "5,6,7,8,9,14,15,18,19",
+     "rows": "5,6,7,8,9,10,14,15,18,19",
      "label_col": "A",
      "value_col": "L",
      "fmt": "sp1"
@@ -2568,7 +2598,7 @@
      "type": "tornado",
      "title": "FY2028 EPS 相對基準的變動（未達兩位數百分比）",
      "sheet": "Sens",
-     "rows": "10,11,12,13,16,17",
+     "rows": "11,12,13,16,17",
      "label_col": "A",
      "value_col": "L",
      "fmt": "sp1",
@@ -2674,6 +2704,53 @@
      }
     },
     {
+     "type": "table",
+     "caption": "@Sens!A556",
+     "head": [
+      "@Sens!A558",
+      "@Sens!B558",
+      "@Sens!C558",
+      "@Sens!D558",
+      "@Sens!E558",
+      "@Sens!F558",
+      "@Sens!G558",
+      "@Sens!I558",
+      "@Sens!J558"
+     ],
+     "rowgen": {
+      "sheet": "Sens",
+      "rows": "559-564",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G",
+       "I",
+       "J"
+      ],
+      "fmts": [
+       "",
+       "",
+       "n2",
+       "sp1",
+       "n2",
+       "sp1",
+       "n2",
+       "n2",
+       "n2"
+      ]
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Sens!A557"
+     ]
+    },
+    {
      "type": "note",
      "parts": [
       "@Sens!A498"
@@ -2739,13 +2816,13 @@
     {
      "type": "note",
      "parts": [
-      "@README!A61"
+      "@README!A62"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@README!A62"
+      "@README!A63"
      ]
     },
     {
@@ -2755,9 +2832,11 @@
     {
      "type": "list",
      "items": [
-      "@README!A75",
       "@README!A76",
-      "@README!A77"
+      "@README!A77",
+      "@README!A78",
+      "@README!A79",
+      "@README!A80"
      ]
     },
     {
@@ -2767,22 +2846,17 @@
     {
      "type": "note",
      "parts": [
-      "@README!A63"
+      "@README!A64"
      ]
     },
     {
      "type": "table",
      "head": [
-      "@README!A64",
-      "@README!B64",
-      "@README!C64"
+      "@README!A65",
+      "@README!B65",
+      "@README!C65"
      ],
      "rows": [
-      [
-       "@README!A65",
-       "@README!B65",
-       "@README!C65"
-      ],
       [
        "@README!A66",
        "@README!B66",
@@ -2817,13 +2891,18 @@
        "@README!A72",
        "@README!B72",
        "@README!C72"
+      ],
+      [
+       "@README!A73",
+       "@README!B73",
+       "@README!C73"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@README!A73"
+      "@README!A74"
      ]
     },
     {
@@ -2833,13 +2912,13 @@
     {
      "type": "list",
      "items": [
-      "@README!A79",
-      "@README!A80",
-      "@README!A81",
       "@README!A82",
       "@README!A83",
       "@README!A84",
-      "@README!A85"
+      "@README!A85",
+      "@README!A86",
+      "@README!A87",
+      "@README!A88"
      ]
     },
     {
@@ -2849,12 +2928,12 @@
     {
      "type": "list",
      "items": [
-      "@README!A87",
-      "@README!A88",
-      "@README!A89",
       "@README!A90",
       "@README!A91",
-      "@README!A92"
+      "@README!A92",
+      "@README!A93",
+      "@README!A94",
+      "@README!A95"
      ]
     },
     {
@@ -3097,6 +3176,9 @@
       ],
       [
        "@README!A58"
+      ],
+      [
+       "@README!A59"
       ]
      ]
     },
@@ -3168,7 +3250,7 @@
    "@README!B46|sp1",
    "）。",
    "",
-   "@README!A62"
+   "@README!A63"
   ]
  }
 }

@@ -119,7 +119,7 @@ def in_set(wb, key, col, val):
     wb["In"].cell(inrow(wb, key), col).value = val
 
 
-def hist_links(wb):
+def hist_links(wb, OVR=None):
     """原則 14：In 頁公式內的歷史常數改引用 Hist（數值不變）"""
     S = {
         ("fc_da", 4): "=h_da_25/h_rev_25", ("fc_da", 6): "=h_da_23/h_rev_23",
@@ -135,6 +135,7 @@ def hist_links(wb):
     }
     for (k, c), f in S.items():
         cell = wb["In"].cell(inrow(wb, k), c)
+        if OVR and k in OVR and c == 5: continue   # sens_alab.py 覆寫的基準值保留
         assert isinstance(cell.value, str) and cell.value.startswith("="), (k, c, cell.value)
         cell.value = f
     in_set(wb, "q2_ninc", 7, "Derived"); in_set(wb, "q1_opx", 7, "Derived")
@@ -279,7 +280,7 @@ def sens_tp(wb, SJ, V37):
             ("最大客戶轉單 15%／50%（尾端；基準 0）", "cl", "三情境 PCIe 等相對值再乘（1 − 最大終端客戶占比 × 轉單比例）；30% 見下一列"),
             ("最大客戶轉單 30%（尾端）", "cl30", "同上，轉單比例 30%（只有低）"),
             ("評價股數原口徑（公司 4Q26 稀釋股數指引）", "shorig", "原則 11 之前的口徑（只有一案，列在「低」）")]
-    r = G["tp_end"] + 3
+    r = SE.max_row + 3
     SE.cell(r, 1, "目標價敏感度：業務主因（整本重算快照；v0.3.7 起，驗收 A6；原則 32）").font = BOLD; r += 1
     SE.cell(r, 1, "每案把 In 頁輸入換掉後整本重建、LibreOffice 重算（alab/sens_alab.py → alab/sens.json），讀加權目標價與 DCF 目標價；不是活頁簿公式，In 頁改過須重跑（模型狀態見本頁底部）"); r += 1
     for j, h in enumerate(["案例", "設定", "低：加權目標價", "低：相對基準", "高：加權目標價", "高：相對基準", "基準加權目標價", "鍵", "低：DCF 變化（美元）", "高：DCF 變化（美元）"], 1):
@@ -314,29 +315,35 @@ def recon(wb, SJ, V37):
     G["adopt"] = r
     r = RC.max_row + 2
     RC.cell(r, 1, "E. 反解：支持現價與評等翻轉所需的值（驗收 A9；原則 4）").font = BOLD; r += 1
-    for j, h in enumerate(["項目", "需要的值", "模型現值", "需要的變動"], 1): RC.cell(r, j, h).font = BOLD
-    r += 1
     V = wb["Val"]
     tp = f"Val!$B${lab(V, '目標價（DCF 與 Comparable 加權）')}"; dcf = f"Val!$B${lab(V, 'DCF 目標價（情境加權）')}"
     feps = f"Val!$B${lab(V, '12 個月後的前瞻 EPS')}"; pmed = f"Val!$B${lab(V, '同業前瞻 P/E 中位數')}"
+    up = f"Val!$B${lab(V, '上檔空間：加權目標價')}"
+    RC.cell(r, 1, "評等級距邊界：升一級（上檔空間）"); RC.cell(r, 2, f"=IF({up}<-0.5,-0.5,IF({up}<-0.25,-0.25,IF({up}<0.25,0.25,IF({up}<0.5,0.5,NA()))))").number_format = "+0%;-0%"
+    RC.cell(r, 10, "級距：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空（Andy 2026-10-25）"); G["e_up"] = r; r += 1
+    RC.cell(r, 1, "評等級距邊界：降一級（上檔空間）"); RC.cell(r, 2, f"=IF({up}>0.5,0.5,IF({up}>0.25,0.25,IF({up}>-0.25,-0.25,IF({up}>-0.5,-0.5,NA()))))").number_format = "+0%;-0%"; G["e_dn"] = r; r += 1
+    for j, h in enumerate(["項目", "需要的值", "模型現值", "需要的變動"], 1): RC.cell(r, j, h).font = BOLD
+    r += 1
     w = "tp_w_dcf"; G["inv"] = {}
-    for k, labl, f, fmt, cur in (
-            ("pe_px", "支持現價所需的 Comparable 採用倍數（同業中位數 × 相對倍數係數；DCF 不變）", f"=(px-{w}*{dcf})/((1-{w})*{feps})", "0.0", f"={pmed}*rm_factor"),
-            ("pe_half", "評等翻轉（加權目標價＝現價 × 0.5）所需的 Comparable 採用倍數", f"=(0.5*px-{w}*{dcf})/((1-{w})*{feps})", "0.0", f"={pmed}*rm_factor"),
-            ("eps_px", "支持現價所需的 12 個月後前瞻 EPS（同業中位數 × 係數；DCF 不變）", f"=(px-{w}*{dcf})/((1-{w})*{pmed}*rm_factor)", "0.00", f"={feps}"),
-            ("eps_half", "評等翻轉所需的 12 個月後前瞻 EPS", f"=(0.5*px-{w}*{dcf})/((1-{w})*{pmed}*rm_factor)", "0.00", f"={feps}")):
-        RC.cell(r, 1, labl); RC.cell(r, 2, f).number_format = fmt; RC.cell(r, 3, cur).number_format = fmt
-        RC.cell(r, 4, f"=B{r}/C{r}-1").number_format = "+0.0%;-0.0%"
-        RC.cell(r, 10, "閉式：加權目標價＝w × DCF＋（1 − w）× 倍數 × EPS；DCF 目標價固定。反解值是目標價＝現價（或＝現價 × 0.5）的點，不是評等門檻以外的判斷")
-        G["inv"][k] = r; r += 1
+    tgt = {"px": "px", "up": f"px*(1+B{G['e_up']})", "dn": f"px*(1+B{G['e_dn']})"}
+    nm = {"px": "支持現價", "up": "評等升一級", "dn": "評等降一級"}
+    for t in ("up", "dn", "px"):
+        for kind, f, fmt, cur in (("pe", f"=({tgt[t]}-{w}*{dcf})/((1-{w})*{feps})", "0.0", f"={pmed}*rm_factor"),
+                                  ("eps", f"=({tgt[t]}-{w}*{dcf})/((1-{w})*{pmed}*rm_factor)", "0.00", f"={feps}")):
+            labl = (f"{nm[t]}所需的 Comparable 採用倍數（同業中位數 × 相對倍數係數；DCF 不變）" if kind == "pe"
+                    else f"{nm[t]}所需的 12 個月後前瞻 EPS（同業中位數 × 係數；DCF 不變）")
+            RC.cell(r, 1, labl); RC.cell(r, 2, f).number_format = fmt; RC.cell(r, 3, cur).number_format = fmt
+            RC.cell(r, 4, f"=B{r}/C{r}-1").number_format = "+0.0%;-0.0%"
+            RC.cell(r, 10, "閉式：加權目標價＝w × DCF＋（1 − w）× 倍數 × EPS；DCF 目標價固定。反解值是目標價等於該點的值")
+            G["inv"][f"{kind}_{t}"] = r; r += 1
     if V37 and SJ and SJ.get("xk"):
         xk = SJ["xk"]
-        for k, labl in (("half", "評等翻轉所需的 Scorpio X 份額相對值乘數（三情境同乘；整本重算內插）"), ("px", "支持現價所需的 Scorpio X 份額相對值乘數（同上）")):
-            v = xk.get(k)
-            RC.cell(r, 1, labl); RC.cell(r, 2, v if v is not None else "超出測試範圍").number_format = "0.00"; RC.cell(r, 3, 1).number_format = "0.00"
+        for t in ("up", "dn", "px"):
+            v = xk.get(t)
+            RC.cell(r, 1, f"{nm[t]}所需的 Scorpio X 份額相對值乘數（三情境同乘；整本重算內插）"); RC.cell(r, 2, v if v is not None else "超出測試範圍").number_format = "0.00"; RC.cell(r, 3, 1).number_format = "0.00"
             if v is not None: RC.cell(r, 4, v - 1).number_format = "+0%;-0%"
             RC.cell(r, 10, "alab/sens_alab.py：乘數 " + "、".join(f"{p['k']:g}" for p in xk["pts"]) + " 各整本重算，線性內插；乘數作用於 FY2027–FY2029 份額相對值（FY2026 錨點不變）")
-            G["inv"]["xk_" + k] = r; r += 1
+            G["inv"]["xk_" + t] = r; r += 1
     return G
 
 
@@ -437,11 +444,13 @@ def readme(wb, ctx, bid, G):
     G["asof_n"] = put("說明：rf 與同業前瞻 P/E 原值逾期，但與其他 AI 半導體個股模型同一取值日，為維持跨模型一致暫不單獨更新（原則 15；不需驗收清單 X24）；同業 P/E 已以 2026-11-05 收盤換算。共識只作對帳，不進目標價。")
     inv = G["recon"]["inv"]
     G["fail_h"] = put("主要失效條件（可觀察；原則 3）", True)
-    fails = [f'="(1) 倍數：Comparable 採用倍數（同業中位數 × 相對倍數係數）升到約 "&TEXT(Recon!B{inv["pe_half"]},"0.0")&" 倍，加權目標價即到現價 × 0.5（目前 "&TEXT({pmed},"0.0")&" 倍 × "&TEXT(rm_factor,"0.00")&"）；支持現價需約 "&TEXT(Recon!B{inv["pe_px"]},"0.0")&" 倍。"',
-             f'="(2) 盈餘：12 個月後前瞻 EPS（情境加權）在同業中位數下需到約 "&TEXT(Recon!B{inv["eps_half"]},"0.00")&" 美元（模型 "&TEXT(Recon!C{inv["eps_half"]},"0.00")&"）才使加權目標價到現價 × 0.5；支持現價需約 "&TEXT(Recon!B{inv["eps_px"]},"0.00")&" 美元。可觀察：4Q26、1Q27 營收與 non-GAAP EPS 對指引、FY2027 指引。"']
-    if "xk_half" in inv:
-        fails.append(f'="(3) Scorpio X 份額：三情境份額相對值同乘約 "&IF(ISNUMBER(Recon!B{inv["xk_half"]}),TEXT(Recon!B{inv["xk_half"]},"0.00"),"（超出測試範圍）")&" 倍時加權目標價到現價 × 0.5；支持現價需約 "&IF(ISNUMBER(Recon!B{inv["xk_px"]}),TEXT(Recon!B{inv["xk_px"]},"0.00"),"超出測試範圍")&" 倍。可觀察：Scorpio X 量產客戶數、公司揭露的 Scorpio 占營收比例。"')
-        fails.append('="(4) GAAP 轉換：GAAP ÷ non-GAAP 營業利益若維持 3Q26 單季水準（"&TEXT(gaap_k_hi,"0%")&"），加權目標價 "&IF(ISNUMBER(Sens!E' + str(G["sens"]["biz0"] + 2) + '),TEXT(Sens!F' + str(G["sens"]["biz0"] + 2) + ',"+0.0%;-0.0%"),"（待重算）")&"。可觀察：每季 10-Q 的 GAAP 與 non-GAAP 營業利益。"')
+    E_up, E_dn = f"Recon!B{G['recon']['e_up']}", f"Recon!B{G['recon']['e_dn']}"
+    fails = [f'="(1) 倍數：Comparable 採用倍數（同業中位數 × 相對倍數係數；目前 "&TEXT({pmed}*rm_factor,"0.0")&" 倍）升到約 "&TEXT(Recon!B{inv["pe_up"]},"0.0")&" 倍，上檔空間到 "&TEXT({E_up},"+0%;-0%")&"、評等升一級；降到約 "&TEXT(Recon!B{inv["pe_dn"]},"0.0")&" 倍則降一級；支持現價需約 "&TEXT(Recon!B{inv["pe_px"]},"0.0")&" 倍。"',
+             f'="(2) 盈餘：12 個月後前瞻 EPS（情境加權；模型 "&TEXT(Recon!C{inv["eps_up"]},"0.00")&" 美元）在同業中位數下需到約 "&TEXT(Recon!B{inv["eps_up"]},"0.00")&" 美元評等才升一級；降到約 "&TEXT(Recon!B{inv["eps_dn"]},"0.00")&" 美元則降一級；支持現價需約 "&TEXT(Recon!B{inv["eps_px"]},"0.00")&" 美元。可觀察：4Q26、1Q27 營收與 non-GAAP EPS 對指引、FY2027 指引。"']
+    if "xk_up" in inv:
+        _x = lambda k: f'IF(ISNUMBER(Recon!B{inv[k]}),TEXT(Recon!B{inv[k]},"0.00")&" 倍","超出測試範圍")'
+        fails.append(f'="(3) Scorpio X 份額：三情境份額相對值同乘約 "&{_x("xk_up")}&"時評等升一級、約 "&{_x("xk_dn")}&"時降一級；支持現價需約 "&{_x("xk_px")}&"。可觀察：Scorpio X 量產客戶數、公司揭露的 Scorpio 占營收比例。"')
+        fails.append('="(4) GAAP 轉換：GAAP ÷ non-GAAP 營業利益若維持 3Q26 單季水準（"&TEXT(gaap_k_hi,"0%")&"），加權目標價 "&IF(ISNUMBER(Sens!E' + str(G["sens"]["biz0"] + 2) + '),TEXT(Sens!F' + str(G["sens"]["biz0"] + 2) + ',"+0.0%;-0.0%"),"（待重算）")&"；回到 FY2025（"&TEXT(gaap_k_lo,"0%")&"）則 "&IF(ISNUMBER(Sens!C' + str(G["sens"]["biz0"] + 2) + '),TEXT(Sens!D' + str(G["sens"]["biz0"] + 2) + ',"+0.0%;-0.0%"),"（待重算）")&"。可觀察：每季 10-Q 的 GAAP 與 non-GAAP 營業利益。"')
     G["fail"] = [put(t) for t in fails]
     G["frame"] = put(f'="估值框架並列（驗收 B8）：100% DCF＝"&TEXT({dcf},"0.00")&" 美元、100% Comparable（相對倍數調整後）＝"&TEXT({cmp_},"0.00")&" 美元、加權（DCF "&TEXT(tp_w_dcf,"0%")&"）＝"&TEXT({tp},"0.00")&" 美元；DCF 情境價格帶 "&{band}&" 美元。"')
     G["risk_h"] = put("風險登錄（原則 10、19；是否建模、理由、觀察指標）", True)
@@ -469,7 +478,7 @@ def apply(wb, here, ctx):
     sj_path = os.path.join(here, "sens.json")
     SJ = json.load(open(sj_path, encoding="utf-8")) if (os.path.exists(sj_path) and not OVR) else None
     if SJ and SJ.get("_stage") != ctx["STAGE"]: SJ = None
-    hist_sheet(wb); hist_links(wb)
+    hist_sheet(wb); hist_links(wb, OVR)
     if V37: v37_values(wb, OVR, ctx["V37P"])
     n = norm_tags(wb)
     # A3：PL 標題、rf 說明、Units 註記、β 依據（B5）

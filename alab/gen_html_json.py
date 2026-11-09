@@ -306,12 +306,14 @@ RCW = wb["Recon"]
 r_e = lab("Recon", "E. 反解")
 r_ee = r_e + 1
 while RCW.cell(r_ee + 1, 1).value: r_ee += 1
-rfm = {}
-for r in range(r_e + 2, r_ee + 1):
+r_eh = next(r for r in range(r_e + 1, r_ee + 1) if RCW.cell(r, 1).value == "項目")
+inv_rows = [r for r in range(r_e + 1, r_ee + 1) if r != r_eh]
+def _rf(r):
     t = str(RCW.cell(r, 1).value)
-    rfm[str(r)] = {"B": "n2" if "EPS" in t or "乘數" in t else "x1", "C": "n2" if "EPS" in t or "乘數" in t else "x1", "D": "sp1"}
-sec(cfg, "recon")["blocks"].append({"type": "table", "caption": f"@Recon!A{r_e}", "head": [f"@Recon!{c}{r_e + 1}" for c in "ABCD"],
-                                    "rowgen": {"sheet": "Recon", "rows": f"{r_e + 2}-{r_ee}", "cols": list("ABCD"), "fmts": ["", "n2", "n2", "sp1"], "row_fmt": rfm}})
+    if t.startswith("評等級距邊界"): return [f"@Recon!A{r}", f"@Recon!B{r}|sp0", "", ""]
+    f = "n2" if ("EPS" in t or "乘數" in t) else "x1"
+    return [f"@Recon!A{r}", f"@Recon!B{r}|{f}", f"@Recon!C{r}|{f}", f"@Recon!D{r}|sp1"]
+sec(cfg, "recon")["blocks"].append({"type": "table", "caption": f"@Recon!A{r_e}", "head": [f"@Recon!{c}{r_eh}" for c in "ABCD"], "rows": [_rf(r) for r in inv_rows]})
 
 json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")

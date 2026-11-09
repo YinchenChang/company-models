@@ -23,7 +23,7 @@ if STAGE >= "0.3.7":
         "cl30__lo": {"ALAB_OVERRIDE": "_cl=1;cl_loss=0.3"},
         "shorig__lo": {"ALAB_OVERRIDE": "_shorig=1"},
     })
-    XK = (1.25, 1.5, 2.0, 3.0)
+    XK = (0.5, 0.75, 1.25, 1.5, 2.0, 3.0)
     for k in XK: JOBS[f"xk_{k}"] = {"ALAB_OVERRIDE": f"_xk={k}"}
     STEPS = [("v0.3.6 口徑", ""), ("目標時點改現價日＋12 個月", "tt"), ("評價股數改流通股＋RSU＋選擇權", "tt,sh"),
              ("資產負債改 10-Q（租賃、現金）", "tt,sh,bs"), ("GAAP 轉換改最近四季（J2）", "tt,sh,bs,gaap"), ("情境 A／C 帶份額高／低路徑（J1）", "tt,sh,bs,gaap,j1")]
@@ -59,14 +59,17 @@ if STAGE >= "0.3.7":
             biz.setdefault(k, {})["低" if side == "lo" else "高"] = {"tp": r["tp"], "dcf": r["dcf"]}
             print(f"{nm:12s} {r['tp'] / b['tp'] - 1:+.1%}  DCF {r['dcf'] - b['dcf']:+.2f}")
     out["biz"] = biz
-    pts = [{"k": 1.0, "tp": b["tp"]}] + [{"k": k, "tp": read(f"xk_{k}")["tp"]} for k in XK]
+    pts = sorted([{"k": 1.0, "tp": b["tp"]}] + [{"k": k, "tp": read(f"xk_{k}")["tp"]} for k in XK], key=lambda p: p["k"])
 
     def solve(target):
         for p0, p1 in zip(pts, pts[1:]):
             if (p0["tp"] - target) * (p1["tp"] - target) <= 0 and p1["tp"] != p0["tp"]:
                 return p0["k"] + (target - p0["tp"]) * (p1["k"] - p0["k"]) / (p1["tp"] - p0["tp"])
         return None
-    out["xk"] = {"pts": pts, "half": solve(0.5 * b["px"]), "px": solve(b["px"])}
+    u = b["tp"] / b["px"] - 1
+    e_up = next((e for e in (-0.5, -0.25, 0.25, 0.5) if e > u), None); e_dn = next((e for e in (0.5, 0.25, -0.25, -0.5) if e < u), None)
+    out["xk"] = {"pts": pts, "up": solve(b["px"] * (1 + e_up)) if e_up is not None else None,
+                 "dn": solve(b["px"] * (1 + e_dn)) if e_dn is not None else None, "px": solve(b["px"])}
     print("xk", out["xk"])
     st = [(lab_, read(f"step{i}")["tp"]) for i, (lab_, _) in enumerate(STEPS)]
     parts = "；".join(f"{l} {t1 - t0:+.2f}" for (_, t0), (l, t1) in zip(st, st[1:]))
