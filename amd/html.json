@@ -1782,6 +1782,33 @@
      "fmt": "n2"
     },
     {
+     "type": "note",
+     "parts": [
+      "@README!A84"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "期間並列",
+     "head": [
+      "項目",
+      "數值",
+      "說明"
+     ],
+     "rows": [
+      [
+       "@Val!A200",
+       "@Val!B200|n2",
+       "@Val!E200"
+      ],
+      [
+       "@Val!A201",
+       "@Val!B201|n2",
+       "@Val!E201"
+      ]
+     ]
+    },
+    {
      "type": "table",
      "caption": "@Val!A38",
      "head": [
@@ -2638,6 +2665,74 @@
      ],
      "collapse": true,
      "summary": "展開：上一版估值內容（保留供對照）"
+    },
+    {
+     "type": "table",
+     "caption": "@DCF!A134",
+     "head": [
+      "@DCF!A135",
+      "@DCF!B135",
+      "@DCF!C135",
+      "@DCF!D135"
+     ],
+     "rows": [
+      [
+       "@DCF!A136",
+       "@DCF!B136|n3",
+       "@DCF!C136",
+       "@DCF!D136"
+      ],
+      [
+       "@DCF!A137",
+       "@DCF!B137|n3",
+       "@DCF!C137",
+       "@DCF!D137"
+      ],
+      [
+       "@DCF!A138",
+       "@DCF!B138|n3",
+       "@DCF!C138",
+       "@DCF!D138"
+      ],
+      [
+       "@DCF!A139",
+       "@DCF!B139|n3",
+       "@DCF!C139",
+       "@DCF!D139"
+      ],
+      [
+       "@DCF!A140",
+       "@DCF!B140|n3",
+       "@DCF!C140",
+       "@DCF!D140"
+      ],
+      [
+       "@DCF!A141",
+       "@DCF!B141|n3",
+       "@DCF!C141",
+       "@DCF!D141"
+      ],
+      [
+       "@DCF!A142",
+       "@DCF!B142|n3",
+       "@DCF!C142",
+       "@DCF!D142"
+      ],
+      [
+       "@DCF!A143",
+       "@DCF!B143|p1",
+       "@DCF!C143",
+       "@DCF!D143"
+      ],
+      [
+       "@DCF!A144",
+       "@DCF!B144|n3",
+       "@DCF!C144",
+       "@DCF!D144"
+      ]
+     ],
+     "collapse": true,
+     "summary": "展開：non-GAAP → FCFF 調節橋與現金稅率"
     }
    ]
   },
@@ -2973,6 +3068,84 @@
        "@Recon!J31|"
       ]
      ]
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A33",
+     "head": [
+      "@Recon!A36",
+      "@Recon!B36",
+      "@Recon!C36",
+      "@Recon!D36"
+     ],
+     "rows": [
+      [
+       "@Recon!A34",
+       "@Recon!B34|sp0",
+       "",
+       ""
+      ],
+      [
+       "@Recon!A35",
+       "@Recon!B35|sp0",
+       "",
+       ""
+      ],
+      [
+       "@Recon!A37",
+       "@Recon!B37|x1",
+       "@Recon!C37|x1",
+       "@Recon!D37|sp1"
+      ],
+      [
+       "@Recon!A38",
+       "@Recon!B38|n2",
+       "@Recon!C38|n2",
+       "@Recon!D38|sp1"
+      ],
+      [
+       "@Recon!A39",
+       "@Recon!B39|n2",
+       "@Recon!C39|n2",
+       "@Recon!D39|sp1"
+      ],
+      [
+       "@Recon!A40",
+       "@Recon!B40|x1",
+       "@Recon!C40|x1",
+       "@Recon!D40|sp1"
+      ],
+      [
+       "@Recon!A41",
+       "@Recon!B41|n2",
+       "@Recon!C41|n2",
+       "@Recon!D41|sp1"
+      ],
+      [
+       "@Recon!A42",
+       "@Recon!B42|n2",
+       "@Recon!C42|n2",
+       "@Recon!D42|sp1"
+      ],
+      [
+       "@Recon!A43",
+       "@Recon!B43|x1",
+       "@Recon!C43|x1",
+       "@Recon!D43|sp1"
+      ],
+      [
+       "@Recon!A44",
+       "@Recon!B44|n2",
+       "@Recon!C44|n2",
+       "@Recon!D44|sp1"
+      ],
+      [
+       "@Recon!A45",
+       "@Recon!B45|n2",
+       "@Recon!C45|n2",
+       "@Recon!D45|sp1"
+      ]
+     ]
     }
    ]
   },
@@ -3074,7 +3247,9 @@
       "@Sens!D25",
       "@Sens!E25",
       "@Sens!F25",
-      "@Sens!G25"
+      "@Sens!G25",
+      "@Sens!I25",
+      "@Sens!J25"
      ],
      "rowgen": {
       "sheet": "Sens",
@@ -3086,7 +3261,9 @@
        "D",
        "E",
        "F",
-       "G"
+       "G",
+       "I",
+       "J"
       ],
       "fmts": [
        "",
@@ -3095,6 +3272,8 @@
        "sp1",
        "n2",
        "sp1",
+       "n2",
+       "n2",
        "n2"
       ]
      }
@@ -3105,6 +3284,135 @@
    "id": "status",
    "title": "資料狀態",
    "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "@README!A65"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A66"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "主要失效條件與估值框架並列"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A80",
+      "@README!A81",
+      "@README!A82",
+      "@README!A83",
+      "@README!A84"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "資料基準日與逾期標示"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A67"
+     ]
+    },
+    {
+     "type": "table",
+     "head": [
+      "@README!A68",
+      "@README!B68",
+      "@README!C68"
+     ],
+     "rows": [
+      [
+       "@README!A69",
+       "@README!B69",
+       "@README!C69"
+      ],
+      [
+       "@README!A70",
+       "@README!B70",
+       "@README!C70"
+      ],
+      [
+       "@README!A71",
+       "@README!B71",
+       "@README!C71"
+      ],
+      [
+       "@README!A72",
+       "@README!B72",
+       "@README!C72"
+      ],
+      [
+       "@README!A73",
+       "@README!B73",
+       "@README!C73"
+      ],
+      [
+       "@README!A74",
+       "@README!B74",
+       "@README!C74"
+      ],
+      [
+       "@README!A75",
+       "@README!B75",
+       "@README!C75"
+      ],
+      [
+       "@README!A76",
+       "@README!B76",
+       "@README!C76"
+      ],
+      [
+       "@README!A77",
+       "@README!B77",
+       "@README!C77"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A78"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "風險登錄（是否建模、理由、觀察指標）"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A86",
+      "@README!A87",
+      "@README!A88",
+      "@README!A89",
+      "@README!A90",
+      "@README!A91",
+      "@README!A92"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "主要假設驅動與可證偽的公開指標"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A94",
+      "@README!A95",
+      "@README!A96",
+      "@README!A97",
+      "@README!A98",
+      "@README!A99",
+      "@README!A100"
+     ]
+    },
     {
      "type": "kv",
      "items": [
@@ -3400,6 +3708,9 @@
       ],
       [
        "@README!A61"
+      ],
+      [
+       "@README!A62"
       ]
      ]
     },
@@ -3472,7 +3783,9 @@
    "@Val!B197|n2",
    "（市場主流同業法 × 相對倍數調整係數 ",
    "@Val!B196|n2",
-   "，已達夾值上限）"
+   "，已達夾值上限）",
+   "",
+   "@README!A66"
   ]
  }
 }
