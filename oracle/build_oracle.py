@@ -1198,7 +1198,7 @@ RD = wb.create_sheet("README", 0)
 B_ = PR_["B"]; TB = TR["B"]; CB = CR_["B"]
 up = f"Val!C{CON['up']}"; tp = f"Val!C{CON['tp']}"
 lines = [
-    ("Oracle（ORCL）個股模型 v0.5.0（命題＋營收分部架構＋收支模組；v0.5.0 新增收支模組六頁，既有頁數值同 v0.4.7；v0.4.7 採用 v0.4.6 驗收報告：kd／r_new 改用 2026-11 新債定價、非 AI 營運資金、評等邊界統一；v0.4.6 換現價 2026-11-05 收盤 115.16；2026-11-02 股債增資納入〔v0.4.4〕；Tokenomics 快照 " + TKV + "〔v0.4.5，基準數值不變〕）　2026-11-10", True),
+    ("Oracle（ORCL）個股模型 v0.5.1（命題＋營收分部架構＋收支模組；v0.5.1 套用 HTML 版面 v1.0〔README 末尾新增展示層與命題回覆，其餘各頁數值同 v0.5.0〕；v0.5.0 新增收支模組六頁，既有頁數值同 v0.4.7；v0.4.7 採用 v0.4.6 驗收報告：kd／r_new 改用 2026-11 新債定價、非 AI 營運資金、評等邊界統一；v0.4.6 換現價 2026-11-05 收盤 115.16；2026-11-02 股債增資納入〔v0.4.4〕；Tokenomics 快照 " + TKV + "〔v0.4.5，基準數值不變〕）　2026-11-10", True),
     ("命題：OCI 已簽約的 backlog（RPO 約 6,640 億美元，約一半來自 OpenAI／Stargate）能否以高於資金成本的報酬轉成營收與現金，同時不把資產負債表撐破。命題模組（已連網 MW × 每 MW 年收入〔Tokenomics 持有成本 × 定價倍數 k〕、延誤、租金、AI 折舊）只驅動 Cloud Infrastructure 營收線的「OCI AI 算力」子列；SaaS、授權、支援、硬體、服務各有自己的成長路徑。", False),
     ("核心問題：FY2029 的 OCI 營收與營業利益率，相對於資本支出與租約的擴張，以及 Oracle 的資金缺口（自由現金流為負）要如何補。", False),
     (f'="投資建議："&Val!C{CON["rec"]}&"（加權目標價 US$"&TEXT({tp},"0.0")&"，現價 US$"&TEXT(px,"0.00")&"〔"&TEXT(px_date,"yyyy-mm-dd")&"〕，上檔空間 "&TEXT({up},"+0.0%;-0.0%")&"）——條件式：在長約價格 p_long "&TEXT(p_long,"0.00")&"、計費比例 "&TEXT(u_bill,"0%")&"、AI 設備折舊年限 "&TEXT(life_ai,"0")&" 年（Tokenomics）的基準假設下；失效條件見本頁末"', True),
@@ -1250,6 +1250,36 @@ REV5 = json.load(open(REV5_F, encoding="utf-8")) if (os.path.exists(REV5_F) and 
 ST5_F = os.path.join(HERE, "data", "stress_v05.json")
 ST5 = json.load(open(ST5_F, encoding="utf-8")) if (os.path.exists(ST5_F) and not OVR) else None
 FUND = funding_v05.add_funding_sheets({"wb": wb, "TR": TR, "PR": PR_, "CR": CR_, "SC": SC, "SCN": SCN, "tc": tc, "CON": CON, "REV5": REV5, "STRESS": ST5})
+# v0.5.1：HTML 版面 v1.0 的展示層與命題回覆（docs/plan/個股HTML版面規格.md「改寫既有個股時的做法」第 1 步）；全部公式帶數字，附在 README 末尾（既有列號不動）
+FS_ = FUND["Fund"]["SUM"]; RRB = FUND["RPO"]["R"]["B"]; RVR = FUND["RevDCF"]["R"]; STR_ = FUND["Fund"]["STRESS"]
+_v = lambda k: f"Val!C{CON[k]}"
+_om, _roic = f"Thesis!G{TB['om']}", f"Thesis!G{TB['roic']}"
+_tr, _ty, _wf, _lev, _exf = (f"Fund!D{FS_[k]}" for k in ("trough", "tyear", "wf", "lev", "exf"))
+_rev_eq = f"RevDCF!E{RVR['p_long']}" if "p_long" in RVR else None
+_rev_neu = f"RevDCF!J{RVR['p_long']}" if "p_long" in RVR else None
+_rev_hi = f"RevDCF!H{RVR['p_long']}" if "p_long" in RVR else None
+_st6 = ((f"Fund!E{STR_['wf'][0] + 2}", f"Fund!E{STR_['eqhy'][0] + 2}", f"Fund!E{STR_['wf'][0] + 3}", f"Fund!E{STR_['eqhy'][0] + 3}")
+        if STR_ else None)   # 延誤 6、9 個月 × 覆蓋比基準（壓力表第 3、4 列，第 2 欄）
+show = [
+    ("展示層（HTML 版面 v1.0 用；公式帶數字，與上方原列並存）", True),
+    ('="OCI 已簽約的 backlog（RPO "&TEXT(rpo,"0")&" 十億美元，約一半來自 OpenAI／Stargate）能否以高於資金成本的報酬轉成營收與現金，同時不把資產負債表撐破。"', False),
+    ('="交付：已簽約站點的 AI 容量（上限 "&TEXT(cap_B,"#,##0")&" MW-IT）能否如期上線、計費；情境 B 依 FY27Q1 交付速度每年新增 "&TEXT(pace_B,"#,##0")&" MW、延誤 "&TEXT(delay_B,"0")&" 個月。"', False),
+    ('="報酬：每 MW 年收入（Tokenomics 持有成本 × 定價倍數 k "&TEXT(k_mix,"0.00")&"）扣掉營運費用、機房租金與設備折舊後，AI 投入資本的報酬能否高於資金成本（WACC "&TEXT(wacc,"0.0%")&"）。"', False),
+    ('="資金：AI 擴張期自由現金流為負，缺口能否在不失去投資級（租賃調整後槓桿上限 "&TEXT(lev_max,"0.0")&" 倍）、不大量發新股的前提下補上。"', False),
+    (f'="結論是"&{_v("rec")}&"：加權目標價 "&TEXT({_v("tp")},"0.0")&" 美元，比現價 "&TEXT(px,"0.00")&" 美元"&IF({_v("up")}<0,"低 "&TEXT(-{_v("up")},"0%"),"高 "&TEXT({_v("up")},"0%"))&"；只看同業比較的目標價 "&TEXT({_v("comp")},"0.0")&" 美元，也"&IF({_v("comp")}<px,"低於","高於")&"現價。"', False),
+    (f'="雲端營收長得快，但 AI 算力賺的錢大多被設備折舊和機房租金吃掉：情境 B 的 FY2029 OCI 營收約 "&TEXT(PL!F{B_["oci"]}*10,"#,##0")&" 億美元，其中 AI 算力的營業利益率只有 "&TEXT({_om},"0.0%")&"，AI 投入資本的報酬 "&TEXT({_roic},"0.0%")&"，"&IF({_roic}<wacc,"低於","高於")&"資金成本 "&TEXT(wacc,"0.0%")&"。"', False),
+    (f'="錢夠不夠用：最缺錢的是 "&{_ty}&"，情境 B 若不再融資，"&IF({_tr}<0,"現金會不夠，缺約 "&TEXT(-{_tr}*10,"#,##0")&" 億美元","現金最低仍有約 "&TEXT({_tr}*10,"#,##0")&" 億美元")&"；11 月已募的約 "&TEXT({_exf}*10,"#,##0")&" 億美元之外，還要再外部融資約 "&TEXT({_wf}*10,"#,##0")&" 億美元；租賃調整後槓桿最高 "&TEXT({_lev},"0.0")&" 倍，"&IF({_lev}>lev_max,"超過","未超過")&"維持投資級的上限 "&TEXT(lev_max,"0.0")&" 倍。"', False),
+    (('="條件式：在長約價格 "&TEXT(p_long,"0.00")&"（百萬美元／MW-IT·年）、計費比例 "&TEXT(u_bill,"0%")&"、AI 設備折舊 "&TEXT(life_ai,"0")&" 年（Tokenomics）的基準假設下成立' + (f'；長約價格達 "&TEXT({_rev_neu},"0.00")&" 時評等翻為中立（反向 DCF）' if _rev_neu else "") + '"'), False),
+    ("命題回覆（HTML 第一章，命題正下方預設摺疊；依模型計算，公式帶數字）", True),
+    (f'="交付能否如期？答：情境 B 的 FY2029 OCI 營收 "&TEXT(PL!F{B_["oci"]},"0.0")&" 十億美元（其中 AI 算力 "&TEXT(PL!F{B_["ai"]},"0.0")&"），是公司路徑 114 的 "&TEXT(Thesis!D{RPO_ROWS[1]},"0%")&"。合約排程能否被交付，公開資料無法判定：FY2029 的交付缺口（須由 OCI 認列的排程 − 模型 OCI 營收）在下限口徑為 "&TEXT(RPO!F{RRB["gap"]},"+0.0;-0.0")&"、上限口徑為 "&TEXT(RPO!F{RRB["gaphi"]},"+0.0;-0.0")&" 十億美元，正負號"&IF(SIGN(RPO!F{RRB["gap"]})=SIGN(RPO!F{RRB["gaphi"]}),"相同","不同")&"（公司未揭露 RPO 的業務別；RPO 頁）。"', False),
+    ((f'="報酬能否高於資金成本？答："&IF({_roic}<wacc,"不能","能")&"。情境 B 的 FY2029 OCI AI 營業利益率 "&TEXT({_om},"0.0%")&"、AI 增量 ROIC "&TEXT({_roic},"0.0%")&"，對照 WACC "&TEXT(wacc,"0.0%")&"。'
+      + (f'反向 DCF：只靠長約價格支持現價，需每 MW-IT 每年 "&TEXT({_rev_eq},"0.00")&" 百萬美元（基準 "&TEXT(p_long,"0.00")&"，敏感度上限 "&TEXT({_rev_hi},"0.00")&"）。' if _rev_eq else "") + '"'), False),
+    ((f'="資金缺口能否在投資級內補上？答：情境 B "&IF({_lev}>lev_max,"不能完全做到","可以")&"。不做任何新融資時，現金在 "&{_ty}&" 降到谷底 "&TEXT({_tr},"0.0")&" 十億美元；2026-11 已交割的增資 "&TEXT({_exf},"0.0")&" 之外，瀑布另需 "&TEXT({_wf},"0.0")&"，調整後槓桿峰值 "&TEXT({_lev},"0.00")&" 倍（上限 "&TEXT(lev_max,"0.0")&"）。'
+      + (f'建設延誤拉長到 6 個月時另需 "&TEXT({_st6[0]},"0.0")&"（其中新股＋高息債 "&TEXT({_st6[1]},"0.0")&"）；拉長到 9 個月時另需 "&TEXT({_st6[2]},"0.0")&"，其中新股＋高息債 "&TEXT({_st6[3]},"0.0")&"：投資級債的額度被槓桿上限用完後，缺口改由新股與高息債補（Fund 頁壓力表）。' if _st6 else "") + '"'), False),
+]
+r0_ = RD.max_row + 2
+for i, (t, b) in enumerate(show):
+    RD.cell(r0_ + i, 1, t).font = Font(bold=b)
 order = ["README", "In", "Q", "Thesis", "Seg", "PL", "CF", "Fund", "RPO", "Sites", "Debt", "Lease", "Val", "RevDCF", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
 wb.save(sys.argv[1])

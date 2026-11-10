@@ -1,7 +1,7 @@
 # 個股 HTML 版面規格（展示層）
 
 **版本：** v1.0（2026-11-05）　**依據：** Andy 2026-11-05 18:43–19:25 於算力收支 SpaceX HTML 審閱（五版草稿後定稿）　**範例：** `spacex/`（v0.2.4；`spacex/gen_html_json.py`、`spacex/dist/20261105_SpaceX個股模型_v0.2.4.html`）
-**適用：** 所有用 `tools/company_html/` 產生 HTML 的個股模型（算力收支與 AI半導體 兩專案）。**例外：** CoreWeave、Nebius、WhiteFiber 等新雲模板版本維持各自格式（Andy 2026-11-05 19:25），直到依收支型樣板重建為止。**收支型個股**（Oracle v0.5.0 起；Andy 2026-11-10 定為新雲與混合業務公司的樣板）另加可選節 `funding`（資金缺口與融資，緊接命題）與 `revdcf`（反向 DCF，緊接估值）。
+**適用：** 所有用 `tools/company_html/` 產生 HTML 的個股模型（算力收支與 AI半導體 兩專案）。**例外：** CoreWeave、Nebius、WhiteFiber 等新雲模板版本維持各自格式（Andy 2026-11-05 19:25），直到依收支型樣板重建為止。**收支型個股**（Oracle v0.5.0 起；Andy 2026-11-10 定為新雲與混合業務公司的樣板）另加可選節 `funding`（資金缺口與融資，緊接命題）與 `revdcf`（反向 DCF，緊接估值），其餘依本規格（Oracle v0.5.1 起）。
 **產生器說明：** `tools/company_html/README.md`（區塊型別、格式碼、檢核）。本檔只寫「頁面要長什麼樣」。
 
 ## 原則
