@@ -10,7 +10,7 @@ import openpyxl
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from sens_v04 import run, HERE   # noqa: E402
 
-TOL = 0.05
+TOL = 0.02
 # id, 標籤, In 鍵（顯示用）, 單位, 型態（abs＝直接設值；scale＝多鍵同乘一個倍數）, 鍵清單, 搜尋下界, 上界, 格式, 說明
 DRV = [
     ("p_long", "長約價格（每 MW-IT 年收入的價格證據）", "p_long", "US$M／MW·年", "abs", ["p_long"], 6.0, 25.0, "0.00", "主導變數：OCI AI 營收＝計費 MW × 持有成本 × k，k 由長約價格決定"),
@@ -65,8 +65,8 @@ def main():
                 inr = "In 頁未設敏感度區間"
             else:
                 inr = "區間內" if min(lo, hi) <= eq <= max(lo, hi) else "區間外"
-            out["drivers"].append({"id": d[0], "label": d[1], "key": d[2], "unit": d[3], "base": b0, "eq_px": None if eq is None else round(eq, 4),
-                                   "neutral": None if neu is None else round(neu, 4), "lo": lo, "hi": hi, "inrange": inr, "fmt": d[8],
+            out["drivers"].append({"id": d[0], "label": d[1], "key": d[2], "unit": d[3], "base": b0, "eq_px": None if eq is None else round(eq, 6),
+                                   "neutral": None if neu is None else round(neu, 6), "lo": lo, "hi": hi, "inrange": inr, "fmt": d[8],
                                    "note": d[9] + f"；搜尋範圍 {d[6]}–{d[7]}"})
         json.dump(out, open(os.path.join(HERE, "data", "reverse_v05.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         for x in out["drivers"]: print(x["id"], x["base"], x["eq_px"], x["neutral"], x["inrange"])

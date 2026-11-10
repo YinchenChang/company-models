@@ -25,7 +25,7 @@ if fu["STRESS"]:
     zero("Fund", f"D{fu['STRESS']['_chk']}", "壓力表快照（瀑布融資）"); zero("Fund", f"D{fu['STRESS']['_chk2']}", "壓力表快照（目標價）")
 else: bad.append("Fund 壓力表不存在（STRESS=1 bash oracle/make_v05.sh）")
 d = F["Debt"]
-for c in "DEFGH": zero("Debt", f"{c}{d['L']['chk']}", "逐檔到期 − 10-Q 申報到期表", 5e-4)
+for c in "DEFGHJ": zero("Debt", f"{c}{d['L']['chk']}", "逐檔到期 − 10-Q 申報到期表", 5e-4)
 zero("Debt", f"E{d['n1'] + 2}", "新票據合計 − ex_nt_par")
 zero("Lease", "D9", "在帳租賃付款總額 − 申報", 5e-4)
 v = wb["RPO"]["D7"].value; n += 1

@@ -66,7 +66,7 @@ cfg = {
             {"type": "h3", "text": "資金缺口壓力表（情境 B；預先算好的組合）"},
         ] + [{"type": "table", "grid": True, "head": [f"@Fund!A{a - 1}", f"@Fund!D{a - 1}", f"@Fund!E{a - 1}", f"@Fund!F{a - 1}"],
               "rowgen": {"sheet": "Fund", "rows": f"{a}-{b}", "cols": ["A", "D", "E", "F"], "fmts": ["", f_, f_, f_]}}
-             for (a, b), f_ in ((FU["STRESS"]["wf"], "n1"), (FU["STRESS"]["trough"], "n1"), (FU["STRESS"]["lev"], "n2"), (FU["STRESS"]["tp"], "n1"))] + [
+             for (a, b), f_ in ((FU["STRESS"]["wf"], "n1"), (FU["STRESS"]["eqhy"], "n1"), (FU["STRESS"]["trough"], "n1"), (FU["STRESS"]["lev"], "n2"), (FU["STRESS"]["tp"], "n1"))] + [
             {"type": "h3", "text": "合約排程對模型交付（RPO；情境 B）"},
             {"type": "table", "grid": True, "head": ["@RPO!A4"] + [f"@RPO!{c}4" for c in "DEFGH"],
              "rowgen": {"sheet": "RPO", "rows": f"6,{RPB['rev']}-{RPB['dbl']}", "cols": ["A", "D", "E", "F", "G", "H"], "fmts": ["", "n1", "n1", "n1", "n1", "n1"],
@@ -74,7 +74,7 @@ cfg = {
             {"type": "note", "parts": ["@RPO!A1"]},
             {"type": "h3", "text": "債務到期表與再融資備忘"},
             {"type": "table", "grid": True, "head": [f"@Debt!A{DB['hdr']}"] + [f"@Debt!{c}{DB['hdr']}" for c in "DEFGHIJ"],
-             "rowgen": {"sheet": "Debt", "rows": f"{DB['L']['old']}-{DB['L']['cum']}", "cols": ["A", "D", "E", "F", "G", "H", "I", "J"], "fmts": ["", "n2", "n2", "n2", "n2", "n2", "n2", "n2"],
+             "rowgen": {"sheet": "Debt", "rows": f"{DB['L']['old']}-{DB['L']['cum']}", "cols": ["A", "D", "E", "F", "G", "H", "I", "J"], "fmts": ["", "n3", "n3", "n3", "n3", "n3", "n3", "n3"],
                         "row_fmt": {str(DB["L"]["cpn"]): {c: "p2" for c in "DEFGHI"}}}},
             {"type": "note", "parts": ["@Debt!A2"]},
             {"type": "table", "collapse": True, "summary": "展開：債務逐檔與新票據", "head": ["@Debt!A4", "@Debt!C4", "@Debt!D4", "@Debt!E4", "@Debt!F4"],
@@ -84,7 +84,7 @@ cfg = {
              "rowgen": {"sheet": "Lease", "rows": f"{LSB['rent']}-{LSB['permw']}", "cols": ["A", "D", "E", "F", "G", "H", "I"], "fmts": ["", "n2", "n2", "n2", "n2", "n2", "n2"],
                         "row_fmt": {str(LSB["ratio"]): {"D": "p1"}}}},
             {"type": "table", "head": ["@Sites!A4", "@Sites!B4", "@Sites!C4", "@Sites!D4", "@Sites!E4", "@Sites!F4"],
-             "rowgen": {"sheet": "Sites", "rows": f"{ST_['s0']}-{ST_['R']['res']}", "cols": ["A", "B", "C", "D", "E", "F"], "fmts": ["", "", "n0", "n0", "", ""]}},
+             "rowgen": {"sheet": "Sites", "rows": f"{ST_['s0']}-{ST_['R']['res']},{ST_['R']['capc']}", "cols": ["A", "B", "C", "D", "E", "F"], "fmts": ["", "", "n0", "n0", "", ""]}},
             {"type": "note", "parts": ["@Sites!A1"]}]},
         {"id": "drivers", "title": "驅動因子 → 推導量", "blocks": [
             {"type": "table", "caption": "情境驅動（三情境並排，進加權目標價；In 頁情境驅動對照）", "head": [f"@In!{c}{SCN_H}" for c in "BDEFCG"],

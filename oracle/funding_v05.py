@@ -37,7 +37,7 @@ def add_funding_sheets(ctx):
     thc = lambda i: "D" if i == 0 else tc(2027 + i)          # Thesis 欄：D＝FY27 Q2–Q4；F..J＝FY2028..FY2032
     QREV = _find(wb["Q"], "合併營收（公司揭露）")
 
-    NCOL = {"Debt": 11, "Lease": 11, "RPO": 11, "Sites": 8, "Fund": 10}
+    NCOL = {"Debt": 11, "Lease": 11, "RPO": 11, "Sites": 7, "Fund": 10}
     def put(ws, r, lab, unit, vals, fmt="#,##0.000", note=None, bold=False, blue=False, ncol=None):
         ncol = ncol or NCOL.get(ws.title, 10)
         ws.cell(r, 1, lab).font = Font(bold=bold); ws.cell(r, 2, unit)
@@ -70,7 +70,8 @@ def add_funding_sheets(ctx):
     put(D, rT + 1, "加權有效利率", None, {"D": f"=F{rT}/E{rT}"}, "0.000%")
     put(D, rT + 2, "對照：In 頁借款本金 debt_q1（CF 頁利息與槓桿用）", None, {"E": "=debt_q1"})
     put(D, rT + 3, "差異：逐檔合計 − debt_q1（面額與 In 頁取值的差；不影響基準）", None, {"E": f"=E{rT}-E{rT+2}"})
-    put(D, rT + 4, "對照：In 頁既有借款平均利率 r_old（Q1 利息費用年化 ÷ 本金）", None, {"D": "=r_old"}, "0.000%")
+    put(D, rT + 4, "對照：In 頁既有借款平均利率 r_old（Q1 利息費用年化 ÷ 本金）", None, {"D": "=r_old"}, "0.000%",
+        note="逐檔票面加權高於 r_old（一年約差 0.3）：Q1 利息費用是損益口徑，可能扣除資本化利息並含其他項目；基準利息用 r_old（v0.4.7 起），本頁不改基準 [Derived]")
     # 新票據
     rn = rT + 7
     D.cell(rn - 1, 1, "2026-11-04 交割的五檔優先無擔保票據（In 頁 I2 節；到期月日找不到，暫列各到期年的 11 月 [Assumed]）").font = BOLD
@@ -111,8 +112,8 @@ def add_funding_sheets(ctx):
     put(D, L["old"], "8/31 存量：排程還本（逐檔＋攤還調整）", "US$B", {c: f"={c}{L['raw']}+{c}{L['tl']}" for c in PC + "J"}, bold=True)
     rep = F["debt"]["reported_ladder"]
     put(D, L["rep"], "10-Q 申報到期表（v0.3.1 事實總帳；FY27 剩餘、FY2028–FY2031、其後）", "US$B",
-        {**{c: rep[i] for i, c in enumerate("DEFGH")}}, blue=True, note="v0.3.1 把這五欄標成曆年，經逐檔對帳確認是會計年度（FY27 剩餘 3.007＝商業本票 0.337＋2027-04 票據 2.25＋定期貸款攤還 0.42）")
-    put(D, L["chk"], "檢查：逐檔推得 − 申報（FY27–FY2031，應為 0）", "US$B", {c: f"={c}{L['old']}-{c}{L['rep']}" for c in "DEFGH"})
+        {**{c: rep[i] for i, c in enumerate("DEFGH")}, "J": F["debt"]["reported_after"]}, blue=True, note="J 欄＝FY2032 以後合計 90.25；v0.3.1 把這五欄標成曆年，經逐檔對帳確認是會計年度（FY27 剩餘 3.007＝商業本票 0.337＋2027-04 票據 2.25＋定期貸款攤還 0.42）")
+    put(D, L["chk"], "檢查：逐檔推得 − 申報（FY27–FY2031 逐期；J 欄＝FY2032 以後合計，應為 0）", "US$B", {**{c: f"={c}{L['old']}-{c}{L['rep']}" for c in "DEFGH"}, "J": f"=I{L['old']}+J{L['old']}-J{L['rep']}"})
     put(D, L["new"], "2026-11 新票據到期", "US$B", {**{c: "=" + sumifs("E", *PDATE[i], n0, n1) for i, c in enumerate(PC)}, "J": f'=SUMIFS(E{n0}:E{n1},C{n0}:C{n1},">"&DATE(2032,5,31))'})
     put(D, L["tot"], "排程還本合計（存量＋新票據）", "US$B", {c: f"={c}{L['old']}+{c}{L['new']}" for c in PC + "J"}, bold=True,
         note="基準假設以原利率展延，不計入 CF 頁融資需求；Fund 頁列為「再融資需求」備忘")
@@ -138,7 +139,7 @@ def add_funding_sheets(ctx):
     # ------------------------------------------------------------------ Lease
     Ls = wb.create_sheet("Lease")
     Ls["A1"] = "Lease — 租賃到期表與未起租承諾（收支模組）。藍字＝申報數字（10-Q FY27Q1 附註 6；v0.3.1 事實總帳）。金額十億美元、未折現。"
-    Ls["A2"] = "在帳租賃付款表依 10-Q 的會計年度分欄（v0.3.1 標成曆年；債務到期表已逐檔確認為會計年度，租賃表無逐筆資料可驗證 [Derived]）。未起租 288 的現金租金路徑引用 Thesis 頁（三情境相同：合約性，不隨 MW 縮放）。"
+    Ls["A2"] = "在帳租賃付款表依 10-Q 的會計年度分欄（v0.3.1 標成曆年；債務到期表已逐檔確認為會計年度，租賃表無逐筆資料可驗證 [Derived]）。未起租 288 的起租路徑三情境相同（合約性，不隨 MW 縮放）；FY2030 起情境 A、B 的租金另含超過已簽範圍的新租約，所以「尚未支付」列 A、B 混入新租約，純 288 部分以情境 C 為準。融資租賃本金償還在 GAAP 屬融資活動，模型的自由現金流與 Fund 頁用途未單獨扣除（v0.4.7 起的設計）。"
     _hdr(Ls, 4, ["項目", "單位", ""] + PER[:5] + ["其後", "", "說明"])
     op, fn = F["leases"]["operating"], F["leases"]["finance"]
     put(Ls, 5, "在帳營業租賃付款", "US$B", {c: op[i] for i, c in enumerate("DEFGHI")}, blue=True, note="I 欄＝FY2032 以後合計")
@@ -179,16 +180,18 @@ def add_funding_sheets(ctx):
         St.cell(r, 3, s_["planned"]).font = BLUE; St.cell(r, 4, s_["accepted"]).font = BLUE
         St.cell(r, 5, s_["date"]); St.cell(r, 6, s_["confidence"]); St.cell(r, 7, s_["status"])
     s1 = s0 + len(sites) - 1; sr = s1 + 1
-    SR_ = {"tot": sr, "cap": sr + 1, "res": sr + 2, "ressh": sr + 3, "acc": sr + 4, "lease": sr + 6, "unc": sr + 7, "sum": sr + 8, "named": sr + 9}
+    SR_ = {"tot": sr, "cap": sr + 1, "res": sr + 2, "ressh": sr + 3, "acc": sr + 4, "capc": sr + 5, "lease": sr + 7, "unc": sr + 8, "sum": sr + 9, "named": sr + 10}
     put(St, sr, "具名站點合計", "MW-IT", {"C": f"=SUM(C{s0}:C{s1})", "D": f"=SUM(D{s0}:D{s1})"}, "#,##0", bold=True)
     put(St, sr + 1, "對照：合約容量上限（情境 A／B；In 頁 cap_B）", "MW-IT", {"C": "=cap_B"}, "#,##0")
     put(St, sr + 2, "未具名容量（上限 − 具名站點）", "MW-IT", {"C": f"=C{sr+1}-C{sr}"}, "#,##0")
     put(St, sr + 3, "未具名容量占上限", "%", {"C": f"=C{sr+2}/C{sr+1}"}, "0.0%")
+    St.cell(sr + 5, 1, "對照：情境 C 合約容量上限（In 頁 cap_C）"); St.cell(sr + 5, 2, "MW-IT"); St[f"C{sr+5}"] = "=cap_C"; St[f"C{sr+5}"].number_format = "#,##0"
+    St.cell(sr + 5, 7, "情境 C 上限低於具名站點合計：保守情境假設部分具名站點（OpenAI 相關）不實現")
     put(St, sr + 4, "對照：FY27Q1 末已連網 AI MW（In 頁 mw_q1）÷ 具名站點已驗收", "x", {"C": f"=mw_q1/D{sr}"}, "0.00", note="已連網 MW 遠多於具名站點已驗收：多數在役產能在未具名的既有機房")
-    put(St, sr + 6, "租賃承諾：在帳（未折現）", "US$B", {"C": F["leases"]["facts"]["onBal"]}, "#,##0.0", blue=True)
-    put(St, sr + 7, "租賃承諾：未起租（未折現）", "US$B", {"C": "=lease_unc"}, "#,##0.0")
-    put(St, sr + 8, "租賃承諾合計", "US$B", {"C": f"=C{sr+6}+C{sr+7}"}, "#,##0.0", bold=True)
-    put(St, sr + 9, "其中可對到具名站點的合約金額", "US$B", {"C": 0}, "#,##0.0", blue=True, note="公司未揭露逐站租約金額 → 0；全部為未對到的殘差（本表不能驗證租金路徑）")
+    put(St, sr + 7, "租賃承諾：在帳（未折現）", "US$B", {"C": F["leases"]["facts"]["onBal"]}, "#,##0.0", blue=True)
+    put(St, sr + 8, "租賃承諾：未起租（未折現）", "US$B", {"C": "=lease_unc"}, "#,##0.0")
+    put(St, sr + 9, "租賃承諾合計", "US$B", {"C": f"=C{sr+7}+C{sr+8}"}, "#,##0.0", bold=True)
+    put(St, sr + 10, "其中可對到具名站點的合約金額", "US$B", {"C": 0}, "#,##0.0", blue=True, note="公司未揭露逐站租約金額 → 0；全部為未對到的殘差（本表不能驗證租金路徑）")
     for col, w in zip("ABCDEFG", [46, 44, 13, 14, 12, 8, 110]): St.column_dimensions[col].width = w
     out["Sites"] = {"s0": s0, "s1": s1, "R": SR_}
 
@@ -243,6 +246,7 @@ def add_funding_sheets(ctx):
         Fu.cell(SUMR[n], 1, lab).font = Font(bold=n in ("trough", "ext")); Fu.cell(SUMR[n], 2, u)
     Fu.cell(SUMR["trough"], 6, "＝MIN（各期末「融資前累積現金」）；五期＝FY27 Q2–Q4 至 FY2031")
     Fu.cell(SUMR["mat"], 6, "Debt 頁到期表；公司的融資上限 20 也不含既有債再融資")
+    Fu.cell(SUMR["ext"], 6, "本頁以增資淨額 19.9、五期到 FY2031 計；CF 頁對照公司上限的那一列以毛額 20.0、到 FY2030 計，兩者口徑不同")
     FR = {}
     r = SUMR["chk"] + 3
     FUH = r
@@ -273,7 +277,7 @@ def add_funding_sheets(ctx):
         put(Fu, k["chk1"], "　檢查：與 CF 頁「融資前現金流」差異（應為 0）", "US$B", {c: f"={c}{k['flow']}-{cf('flow',c)}" for c in PC})
         put(Fu, k["cash0"], "期初現金（首期＝FY27Q1 末）", "US$B", {c: "=" + cf("cash0", c) for c in PC})
         put(Fu, k["cumx"], "融資前累積現金（不做任何新融資，期末）", "US$B", {c: "=cash_q1+" + "+".join(f"{x}{k['flow']}" for x in PC[: i + 1]) for i, c in enumerate(PC)}, bold=True,
-            note="＝Q1 末現金＋累計融資前現金流；不含已發生增資與瀑布融資、也不含其利息影響以外的調整（利息已在營運現金流內）")
+            note="＝Q1 末現金＋累計融資前現金流（不加已發生增資與瀑布融資的本金）。注意：營運現金流已含這些融資的利息支出與增資款的利息收入，所以不是完全乾淨的「沒有融資」反事實（新票據利息約每年 0.78）")
         put(Fu, k["exf"], "＋ 已發生增資淨額（新股 9.9＋票據 10.0）", "US$B", {c: "=" + cf("exf", c) for c in PC})
         put(Fu, k["need"], "外部融資需求（補足到最低現金）", "US$B", {c: "=" + cf("need", c) for c in PC})
         put(Fu, k["ig"], "＋ 瀑布：新增投資級債", "US$B", {c: "=" + cf("ig", c) for c in PC})
@@ -307,14 +311,16 @@ def add_funding_sheets(ctx):
         Fu.cell(r, 1, "資金缺口壓力表（情境 B；預先算好的組合：建設延誤月數 × 客戶出資覆蓋比；整本重算的建置快照，scripts/stress_v05.py）").font = BOLD
         r += 1
         mets = [("wf", "瀑布另需外部融資（五期合計，十億美元）", "#,##0.0"), ("trough", "融資前累積現金谷底（十億美元）", "#,##0.0"),
-                ("lev", "調整後槓桿峰值（倍；投資級上限 4.5）", "0.00"), ("tp", "加權目標價（美元；三情境加權，只動情境 B 的延誤）", "0.0")]
+                ("eqhy", "其中新股＋高息債（十億美元；其餘為投資級債）", "#,##0.0"),
+                ("lev", "調整後槓桿峰值（倍；投資級上限 4.5；峰值多在 FY27 Q2–Q4、瀑布動用前，所以同一延誤下各覆蓋比相同）", "0.00"),
+                ("tp", "加權目標價（美元；三情境加權；延誤只動情境 B，覆蓋比三情境共用）", "0.0")]
         for mk, ml, mf in mets:
             _hdr(Fu, r, [ml, "", ""] + [f"覆蓋比 {c:.1%}" + ("（基準）" if abs(c - 0.243) < 1e-9 else "（客戶不出資）" if c == 0 else "") for c in ST["cov"]])
             STR[mk] = (r + 1, r + len(ST["delay"]))
             for i, dl in enumerate(ST["delay"]):
                 Fu.cell(r + 1 + i, 1, f"延誤 {dl} 個月" + ("（基準）" if dl == 3 else ""))
                 for j_, _ in enumerate(ST["cov"]):
-                    c = Fu.cell(r + 1 + i, 4 + j_, ST["grid"][i][j_][mk]); c.number_format = mf
+                    c = Fu.cell(r + 1 + i, 4 + j_, ST["grid"][i][j_].get(mk)); c.number_format = mf
             r += len(ST["delay"]) + 2
         Fu.cell(r, 1, "快照檢查：壓力表求解時的基準瀑布融資 − 本檔情境 B（應為 0；不為 0 表示快照過期，重跑 scripts/stress_v05.py）")
         c = Fu.cell(r, 4, f"={ST['base']['wf']!r}-D{SUMR['wf']}"); c.number_format = "0.0000"; STR["_chk"] = r

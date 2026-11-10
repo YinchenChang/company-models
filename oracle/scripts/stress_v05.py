@@ -16,9 +16,10 @@ COV = [0.0, 0.243, 0.37]          # prepay_cov；基準 0.243、In 頁敏感度�
 def one(ovr, tag, tmp):
     res = run(ovr, tag, tmp)
     d = os.path.join(tmp, tag)
-    R = json.load(open(os.path.join(d, "rowmap.json"), encoding="utf-8"))["FUND"]["Fund"]["SUM"]
+    FU = json.load(open(os.path.join(d, "rowmap.json"), encoding="utf-8"))["FUND"]["Fund"]; R = FU["SUM"]; K = FU["R"]["B"]
     ws = openpyxl.load_workbook(os.path.join(d, "out", "raw.xlsx"), data_only=True)["Fund"]
-    return {"tp": res["tp"], "trough": ws[f"D{R['trough']}"].value, "wf": ws[f"D{R['wf']}"].value, "lev": ws[f"D{R['lev']}"].value}
+    eqhy = sum(ws[f"{c}{K[k]}"].value or 0 for k in ("eq", "hy") for c in "DEFGH")
+    return {"tp": res["tp"], "trough": ws[f"D{R['trough']}"].value, "wf": ws[f"D{R['wf']}"].value, "eqhy": eqhy, "lev": ws[f"D{R['lev']}"].value}
 
 
 def main():
