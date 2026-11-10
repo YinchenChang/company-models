@@ -128,6 +128,516 @@
    ]
   },
   {
+   "id": "funding",
+   "title": "資金缺口與融資（收支模組）",
+   "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "@Fund!A2"
+     ]
+    },
+    {
+     "type": "table",
+     "grid": true,
+     "caption": "三情境摘要",
+     "head": [
+      "@Fund!A3",
+      "@Fund!C3",
+      "@Fund!D3",
+      "@Fund!E3"
+     ],
+     "rowgen": {
+      "sheet": "Fund",
+      "rows": "4-13",
+      "cols": [
+       "A",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "n1"
+      ],
+      "row_fmt": {
+       "12": {
+        "C": "n2",
+        "D": "n2",
+        "E": "n2"
+       },
+       "5": {
+        "C": "",
+        "D": "",
+        "E": ""
+       }
+      }
+     }
+    },
+    {
+     "type": "pl",
+     "years": "@Fund!D16:I16",
+     "metrics": [
+      {
+       "name": "融資前累積現金：不做任何新融資（十億美元）",
+       "fmt": "n1",
+       "rows": {
+        "A": "@Fund!D36:I36",
+        "B": "@Fund!D70:I70",
+        "C": "@Fund!D104:I104"
+       },
+       "chart": true
+      },
+      {
+       "name": "融資前現金流：營運來源 − 用途（十億美元）",
+       "fmt": "n1",
+       "rows": {
+        "A": "@Fund!D32:I32",
+        "B": "@Fund!D66:I66",
+        "C": "@Fund!D100:I100"
+       },
+       "chart": true
+      },
+      {
+       "name": "外部融資需求（十億美元）",
+       "fmt": "n1",
+       "rows": {
+        "A": "@Fund!D38:I38",
+        "B": "@Fund!D72:I72",
+        "C": "@Fund!D106:I106"
+       }
+      },
+      {
+       "name": "期末現金（十億美元）",
+       "fmt": "n1",
+       "rows": {
+        "A": "@Fund!D42:I42",
+        "B": "@Fund!D76:I76",
+        "C": "@Fund!D110:I110"
+       }
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "grid": true,
+     "caption": "來源、用途、缺口與融資瀑布（情境 B）",
+     "head": [
+      "@Fund!A16",
+      "@Fund!D16",
+      "@Fund!E16",
+      "@Fund!F16",
+      "@Fund!G16",
+      "@Fund!H16",
+      "@Fund!I16"
+     ],
+     "rowgen": {
+      "sheet": "Fund",
+      "rows": "52-83",
+      "cols": [
+       "A",
+       "D",
+       "E",
+       "F",
+       "G",
+       "H",
+       "I"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1"
+      ],
+      "row_fmt": {
+       "52": {
+        "D": "n2",
+        "E": "n2",
+        "F": "n2",
+        "G": "n2",
+        "H": "n2",
+        "I": "n2"
+       },
+       "82": {
+        "D": "n2",
+        "E": "n2",
+        "F": "n2",
+        "G": "n2",
+        "H": "n2",
+        "I": "n2"
+       }
+      }
+     }
+    },
+    {
+     "type": "h3",
+     "text": "資金缺口壓力表（情境 B；預先算好的組合）"
+    },
+    {
+     "type": "table",
+     "grid": true,
+     "head": [
+      "@Fund!A120",
+      "@Fund!D120",
+      "@Fund!E120",
+      "@Fund!F120"
+     ],
+     "rowgen": {
+      "sheet": "Fund",
+      "rows": "121-125",
+      "cols": [
+       "A",
+       "D",
+       "E",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "n1"
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "grid": true,
+     "head": [
+      "@Fund!A134",
+      "@Fund!D134",
+      "@Fund!E134",
+      "@Fund!F134"
+     ],
+     "rowgen": {
+      "sheet": "Fund",
+      "rows": "135-139",
+      "cols": [
+       "A",
+       "D",
+       "E",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "n1"
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "grid": true,
+     "head": [
+      "@Fund!A127",
+      "@Fund!D127",
+      "@Fund!E127",
+      "@Fund!F127"
+     ],
+     "rowgen": {
+      "sheet": "Fund",
+      "rows": "128-132",
+      "cols": [
+       "A",
+       "D",
+       "E",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "n1"
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "grid": true,
+     "head": [
+      "@Fund!A141",
+      "@Fund!D141",
+      "@Fund!E141",
+      "@Fund!F141"
+     ],
+     "rowgen": {
+      "sheet": "Fund",
+      "rows": "142-146",
+      "cols": [
+       "A",
+       "D",
+       "E",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "n2",
+       "n2",
+       "n2"
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "grid": true,
+     "head": [
+      "@Fund!A148",
+      "@Fund!D148",
+      "@Fund!E148",
+      "@Fund!F148"
+     ],
+     "rowgen": {
+      "sheet": "Fund",
+      "rows": "149-153",
+      "cols": [
+       "A",
+       "D",
+       "E",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "n1"
+      ]
+     }
+    },
+    {
+     "type": "h3",
+     "text": "合約排程對模型交付（RPO；情境 B）"
+    },
+    {
+     "type": "table",
+     "grid": true,
+     "head": [
+      "@RPO!A4",
+      "@RPO!D4",
+      "@RPO!E4",
+      "@RPO!F4",
+      "@RPO!G4",
+      "@RPO!H4"
+     ],
+     "rowgen": {
+      "sheet": "RPO",
+      "rows": "6,24-35",
+      "cols": [
+       "A",
+       "D",
+       "E",
+       "F",
+       "G",
+       "H"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1"
+      ],
+      "row_fmt": {
+       "28": {
+        "D": "n2",
+        "E": "n2",
+        "F": "n2",
+        "G": "n2",
+        "H": "n2"
+       },
+       "35": {
+        "D": "n2",
+        "E": "n2",
+        "F": "n2",
+        "G": "n2",
+        "H": "n2"
+       }
+      }
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@RPO!A1"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "債務到期表與再融資備忘"
+    },
+    {
+     "type": "table",
+     "grid": true,
+     "head": [
+      "@Debt!A84",
+      "@Debt!D84",
+      "@Debt!E84",
+      "@Debt!F84",
+      "@Debt!G84",
+      "@Debt!H84",
+      "@Debt!I84",
+      "@Debt!J84"
+     ],
+     "rowgen": {
+      "sheet": "Debt",
+      "rows": "87-96",
+      "cols": [
+       "A",
+       "D",
+       "E",
+       "F",
+       "G",
+       "H",
+       "I",
+       "J"
+      ],
+      "fmts": [
+       "",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3"
+      ],
+      "row_fmt": {
+       "94": {
+        "D": "p2",
+        "E": "p2",
+        "F": "p2",
+        "G": "p2",
+        "H": "p2",
+        "I": "p2"
+       }
+      }
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Debt!A2"
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：債務逐檔與新票據",
+     "head": [
+      "@Debt!A4",
+      "@Debt!C4",
+      "@Debt!D4",
+      "@Debt!E4",
+      "@Debt!F4"
+     ],
+     "rowgen": {
+      "sheet": "Debt",
+      "rows": "5-62,70-75",
+      "cols": [
+       "A",
+       "C",
+       "D",
+       "E",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "d",
+       "p3",
+       "n3",
+       "n3"
+      ]
+     }
+    },
+    {
+     "type": "h3",
+     "text": "租賃承諾與站點"
+    },
+    {
+     "type": "table",
+     "grid": true,
+     "head": [
+      "@Lease!A14",
+      "@Lease!D14",
+      "@Lease!E14",
+      "@Lease!F14",
+      "@Lease!G14",
+      "@Lease!H14",
+      "@Lease!I14"
+     ],
+     "rowgen": {
+      "sheet": "Lease",
+      "rows": "22-27",
+      "cols": [
+       "A",
+       "D",
+       "E",
+       "F",
+       "G",
+       "H",
+       "I"
+      ],
+      "fmts": [
+       "",
+       "n2",
+       "n2",
+       "n2",
+       "n2",
+       "n2",
+       "n2"
+      ],
+      "row_fmt": {
+       "25": {
+        "D": "p1"
+       }
+      }
+     }
+    },
+    {
+     "type": "table",
+     "head": [
+      "@Sites!A4",
+      "@Sites!B4",
+      "@Sites!C4",
+      "@Sites!D4",
+      "@Sites!E4",
+      "@Sites!F4"
+     ],
+     "rowgen": {
+      "sheet": "Sites",
+      "rows": "5-12,15",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "",
+       "n0",
+       "n0",
+       "",
+       ""
+      ]
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Sites!A1"
+     ]
+    }
+   ]
+  },
+  {
    "id": "drivers",
    "title": "驅動因子 → 推導量",
    "blocks": [
@@ -1041,6 +1551,62 @@
       "@Val!A90",
       "：",
       "@Val!C90"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "revdcf",
+   "title": "反向 DCF：現價隱含什麼",
+   "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "@RevDCF!A2"
+     ]
+    },
+    {
+     "type": "table",
+     "grid": true,
+     "head": [
+      "@RevDCF!A4",
+      "@RevDCF!C4",
+      "@RevDCF!D4",
+      "@RevDCF!E4",
+      "@RevDCF!G4",
+      "@RevDCF!H4",
+      "@RevDCF!I4",
+      "@RevDCF!J4"
+     ],
+     "rowgen": {
+      "sheet": "RevDCF",
+      "rows": "5-12",
+      "cols": [
+       "A",
+       "C",
+       "D",
+       "E",
+       "G",
+       "H",
+       "I",
+       "J"
+      ],
+      "fmts": [
+       "",
+       "",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "",
+       "n3"
+      ]
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@RevDCF!A3"
      ]
     }
    ]

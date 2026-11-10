@@ -5,6 +5,7 @@
 # 工作表（順序固定）：README → In → Q → Thesis → Seg → PL → CF → Val → Recon → Sens → Sources
 # 環境變數 SENS_OVR＝JSON {In 鍵: 值}：只替換基準值（敏感度建置用，scripts/sens_v04.py）；成品不設。
 import sys, os, json
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import openpyxl
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
@@ -1197,7 +1198,7 @@ RD = wb.create_sheet("README", 0)
 B_ = PR_["B"]; TB = TR["B"]; CB = CR_["B"]
 up = f"Val!C{CON['up']}"; tp = f"Val!C{CON['tp']}"
 lines = [
-    ("Oracle（ORCL）個股模型 v0.4.7（命題＋營收分部架構；v0.4.7 採用 v0.4.6 驗收報告：kd／r_new 改用 2026-11 新債定價、非 AI 營運資金、評等邊界統一；v0.4.6 換現價 2026-11-05 收盤 115.16；2026-11-02 股債增資納入〔v0.4.4〕；Tokenomics 快照 " + TKV + "〔v0.4.5，基準數值不變〕）　2026-11-09", True),
+    ("Oracle（ORCL）個股模型 v0.5.0（命題＋營收分部架構＋收支模組；v0.5.0 新增收支模組六頁，既有頁數值同 v0.4.7；v0.4.7 採用 v0.4.6 驗收報告：kd／r_new 改用 2026-11 新債定價、非 AI 營運資金、評等邊界統一；v0.4.6 換現價 2026-11-05 收盤 115.16；2026-11-02 股債增資納入〔v0.4.4〕；Tokenomics 快照 " + TKV + "〔v0.4.5，基準數值不變〕）　2026-11-10", True),
     ("命題：OCI 已簽約的 backlog（RPO 約 6,640 億美元，約一半來自 OpenAI／Stargate）能否以高於資金成本的報酬轉成營收與現金，同時不把資產負債表撐破。命題模組（已連網 MW × 每 MW 年收入〔Tokenomics 持有成本 × 定價倍數 k〕、延誤、租金、AI 折舊）只驅動 Cloud Infrastructure 營收線的「OCI AI 算力」子列；SaaS、授權、支援、硬體、服務各有自己的成長路徑。", False),
     ("核心問題：FY2029 的 OCI 營收與營業利益率，相對於資本支出與租約的擴張，以及 Oracle 的資金缺口（自由現金流為負）要如何補。", False),
     (f'="投資建議："&Val!C{CON["rec"]}&"（加權目標價 US$"&TEXT({tp},"0.0")&"，現價 US$"&TEXT(px,"0.00")&"〔"&TEXT(px_date,"yyyy-mm-dd")&"〕，上檔空間 "&TEXT({up},"+0.0%;-0.0%")&"）——條件式：在長約價格 p_long "&TEXT(p_long,"0.00")&"、計費比例 "&TEXT(u_bill,"0%")&"、AI 設備折舊年限 "&TEXT(life_ai,"0")&" 年（Tokenomics）的基準假設下；失效條件見本頁末"', True),
@@ -1234,13 +1235,24 @@ lines += [
     ("R4 融資管道與信評｜已建模：融資瀑布、投資級槓桿上限、公司 20 上限檢查｜—｜Moody's Baa2 負向展望、新債殖利率與利差", False),
     ("承重 Assumed 驅動的可證偽指標（原則第 10 節第 20 條）：u_bill → 公司揭露的 AI 利用率與計費 MW；λ → 10-Q 在建工程 ÷ 次年新增產能資本支出；od_share → 公司揭露的隨需／長約比例；delay_* → 站點併網與供電公告；nwc_r → 10-Q／10-K 現金流量表營運資產負債變動。", False),
 ]
+lines += [
+    ("", False),
+    ("v0.5.0（2026-11-10，收支型個股樣板；Andy 2026-11-10：Oracle 兼有新雲與傳統業務，作為混合業務公司的樣板，補回 RPO、站點、融資、資金瀑布的逐年模型與反向 DCF）：新增 Fund（來源／用途／缺口／瀑布，全部引用 CF 頁）、RPO（合約排程對模型交付，同口徑）、Sites（具名站點）、Debt（逐檔、到期表、再融資備忘）、Lease（租賃到期表與未起租）、RevDCF（反向 DCF）六頁。只新增工作表：既有各頁數值與 v0.4.7 逐格相同，加權目標價、投資建議不變。到期借款在基準仍假設以原利率展延；Debt 頁列出以 r_new 再融資的增額利息作備忘。", False),
+]
 for i, (t, b) in enumerate(lines, 1):
     RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
 
-order = ["README", "In", "Q", "Thesis", "Seg", "PL", "CF", "Val", "Recon", "Sens", "Sources"]
+# v0.5.0：收支模組（Fund、RPO、Sites、Debt、Lease、RevDCF）——只新增工作表，不改既有儲存格（oracle/funding_v05.py）
+import funding_v05
+REV5_F = os.path.join(HERE, "data", "reverse_v05.json")
+REV5 = json.load(open(REV5_F, encoding="utf-8")) if (os.path.exists(REV5_F) and not OVR) else None
+ST5_F = os.path.join(HERE, "data", "stress_v05.json")
+ST5 = json.load(open(ST5_F, encoding="utf-8")) if (os.path.exists(ST5_F) and not OVR) else None
+FUND = funding_v05.add_funding_sheets({"wb": wb, "TR": TR, "PR": PR_, "CR": CR_, "SC": SC, "SCN": SCN, "tc": tc, "CON": CON, "REV5": REV5, "STRESS": ST5})
+order = ["README", "In", "Q", "Thesis", "Seg", "PL", "CF", "Fund", "RPO", "Sites", "Debt", "Lease", "Val", "RevDCF", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
 wb.save(sys.argv[1])
 if os.environ.get("ORCL_ROWMAP"):
-    json.dump({"TR": TR, "SR": SR, "PR": PR_, "CR": CR_, "VAL": VAL, "GATE": GATE, "CFH": CFH, "CHK": [CHK_SEG, CHK_SUB, CHK_SUM], "RPO": RPO_ROWS, "SUM": SUM_ROWS, "SENS": SENS_ROWS, "GRID": SENS_GRID, "CAL": CAL, "SGC": SGC},
+    json.dump({"TR": TR, "SR": SR, "PR": PR_, "CR": CR_, "VAL": VAL, "GATE": GATE, "CFH": CFH, "CHK": [CHK_SEG, CHK_SUB, CHK_SUM], "RPO": RPO_ROWS, "SUM": SUM_ROWS, "SENS": SENS_ROWS, "GRID": SENS_GRID, "CAL": CAL, "SGC": SGC, "FUND": FUND},
               open(os.environ["ORCL_ROWMAP"], "w"), ensure_ascii=False, indent=1)

@@ -1,14 +1,16 @@
 #!/bin/bash
-# Oracle 個股模型 v0.4.7（v0.4.7：v0.4.6 驗收報告採用項；v0.4.5：Tokenomics 快照 v21.10；v0.4.4：2026-11-02 股債增資納入；v0.4.3：Tokenomics 快照 v21.9）：一次跑完 （敏感度）→ 建置 → LibreOffice 重算 → 核對（In 版面、敏感度覆蓋、segment_check）→ HTML。
-#   bash oracle/make_v04.sh            # 沿用已提交的敏感度結果 oracle/data/sens_v04.json
-#   SENS=1 bash oracle/make_v04.sh     # 重跑敏感度（約 100 次整本重算；JOBS＝平行數，預設 4）
+# Oracle 個股模型 v0.5.0（v0.5.0：收支模組六頁＋反向 DCF＋資金缺口壓力表；REV=1 重跑反向 DCF、STRESS=1 重跑壓力表；v0.4.7：v0.4.6 驗收報告採用項；v0.4.5：Tokenomics 快照 v21.10；v0.4.4：2026-11-02 股債增資納入；v0.4.3：Tokenomics 快照 v21.9）：一次跑完 （敏感度）→ 建置 → LibreOffice 重算 → 核對（In 版面、敏感度覆蓋、segment_check）→ HTML。
+#   bash oracle/make_v05.sh            # 沿用已提交的敏感度結果 oracle/data/sens_v04.json
+#   SENS=1 bash oracle/make_v05.sh     # 重跑敏感度（約 100 次整本重算；JOBS＝平行數，預設 4）
 # v0.4.2 起新增本腳本（原 README「建置」各步驟）；敏感度覆蓋核對依個股模型原則第 9 節（--require-keycol）。
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-OUTNAME="20261109_Oracle個股模型_v0.4.7.xlsx"
+OUTNAME="20261110_Oracle個股模型_v0.5.0.xlsx"
 if [ "${SENS:-0}" = "1" ]; then python3 oracle/scripts/sens_v04.py --jobs "${JOBS:-4}"; fi
+if [ "${REV:-0}" = "1" ]; then python3 oracle/scripts/reverse_v05.py --jobs "${JOBS:-4}"; fi
+if [ "${STRESS:-0}" = "1" ]; then python3 oracle/scripts/stress_v05.py --jobs "${JOBS:-4}"; fi
 ORCL_ROWMAP="$WD/rowmap.json" python3 oracle/build_oracle.py "$WD/raw.xlsx"
 mkdir -p "$WD/out"
 soffice -env:UserInstallation=file://"$WD/lo" --headless --calc --convert-to xlsx --outdir "$WD/out" "$WD/raw.xlsx" > /dev/null 2>&1
@@ -24,8 +26,9 @@ st = [r for r in range(1, se.max_row + 1) if str(se.cell(r, 1).value or "").star
 d = se.cell(st[0], 3).value if st else None
 print(f"公式錯誤：{len(err)} 格；Sens 快照差 {d}")
 if err or not isinstance(d, (int, float)) or abs(d) > 1e-6:
-    sys.exit(f"失敗：{err[:10]}；Sens 快照差 {d}（重跑 SENS=1 bash oracle/make_v04.sh）")
+    sys.exit(f"失敗：{err[:10]}；Sens 快照差 {d}（重跑 SENS=1 bash oracle/make_v05.sh）")
 PY
+python3 oracle/scripts/check_funding_v05.py "oracle/dist/$OUTNAME" "$WD/rowmap.json"   # v0.5.0：收支模組恆等式與快照
 python3 tools/in_layout/check_in_layout.py "oracle/dist/$OUTNAME"
 python3 tools/sens_coverage/check_sens_coverage.py "oracle/dist/$OUTNAME" --require-keycol   # 原則第 9 節
 python3 tools/segment_check/check_segments.py oracle

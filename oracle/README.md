@@ -1,4 +1,6 @@
-# Oracle（ORCL）個股模型 v0.4.7（命題＋營收分部架構）
+# Oracle（ORCL）個股模型 v0.5.0（命題＋營收分部架構＋收支模組）
+
+**v0.5.0（2026-11-10，收支型個股樣板）：** Andy 2026-11-10 指示以 Oracle 作為「新雲＋傳統業務」混合型公司的樣板，補回 RPO、站點、融資、資金瀑布的逐年模型與反向 DCF。新增六頁 Fund、RPO、Sites、Debt、Lease、RevDCF（`funding_v05.py`），全部引用既有頁；既有十頁與 v0.4.7 逐格相同，加權目標價 **70.38**、放空不變。建置 `bash oracle/make_v05.sh`（`REV=1` 重跑反向 DCF、`STRESS=1` 重跑壓力表）。HTML 新增「資金缺口與融資」（命題之後）與「反向 DCF」兩節（共用產生器可選節 `funding`、`revdcf`）。到期借款在基準仍假設展延，Debt 頁列再融資備忘。報告 `docs/reports/20261110_oracle_v0.5.0_收支模組.md`；逐列對照 `docs/reports/20261110_oracle_v0.5.0_收支模組逐列對照.xlsx`。v0.4.7 成品移 `dist/_待刪除/`。
 
 **v0.4.7（2026-11-09，v0.4.6 驗收報告採用項）：** Andy 2026-11-09 確認採用規劃書（J1–J4 預設）。kd＝2026-11 新債 2037 年 8.00%、r_new＝五檔加權 7.77%；CF 加營運資金增加（FY2024–FY2026 比率 14.0%）；Sens 加 λ、營運資金比率、經濟汰換壓力 4 年；評等邊界與目標價總表一致；`tp_date`＝現價日＋12 個月；Comparable 列標明為分部加總混合版；README 條件式建議、失效條件、風險登錄；Recon 反解 p_long（`scripts/reverse_v047.py`）。加權目標價 75.31 → **70.38**（kd −2.38、營運資金 −2.63、目標日 +0.09），放空不變。詳見 `docs/reports/20261109_oracle_v0.4.7_驗收採用.md`。
 
@@ -10,7 +12,7 @@
 
 **v0.4.3（2026-11-04，Tokenomics 快照 v21.4 → v21.9，基準數值不變）：** 快照 `data/tokenomics_snapshot_v21.9.json`（`20261103_Tokenomics_v21.9.xlsx`，master 7276259；名稱清單同 v21.4 快照＝`microsoft/data/tokenomics_names.txt`）。v21.4 → v21.9 間，本模型所取名稱的值只有高成本欄改變（v21.8：IT 折舊年限 4 → 5 年）。與 v0.4.2 逐格比對：只有版本與快照說明文字、In 頁 F33:F36（`he_*` 敏感度高）、H45（IF_DeprLifeIT 說明，高成本 4 → 5）、Sens A2（重算日期）與第 33 列不同；加權目標價 73.22、放空與其他數值全部相同。Sens `he_all` 高 86.05 → 81.34（上檔 −35.5%，放空，同級）。`scripts/sens_v04.py` 的 IF_HoldEcon 低／高改讀 v21.9。v21.4 快照移 `data/_待刪除/`（v19.0 保留：`sens_v04.py` 的營運費用基準仍讀）。報告 `docs/reports/20261104_oracle_v0.4.3_TK快照v21.9.md`。
 
-**v0.4.2（2026-10-30，敏感度覆蓋，基準數值不變）：** 依個股模型原則第 9 節補齊 Sens 案例：Sens 頁加 L 欄「鍵」，In 頁 43 個有低／高區間的鍵全部有案例或合格豁免（`tools/sens_coverage/check_sens_coverage.py --require-keycol` 通過）。新增 17 個案例，含 **IF_HoldEcon 四世代同時（鍵 `he_all`）**：低 67.70（−7.5%，上檔 −46.3%，放空）、高 86.05（+17.5%，上檔 −31.7%，放空）；長約價格證據 `p_long` 高端 12.72 時 107.36（上檔 −14.8%，**跨到中立**）。世代占比 `om_*` 以「單一世代移到低／高、差額由相鄰世代吸收、合計 100%」設案例。豁免 1：`mult_oci`（只進 Val 對照列，重算變動 0）；`tp_v031` 寫「只作對照，不進模型」。新增 `make_v04.sh`（建置、核對、HTML 一次跑完）。與 v0.4.1 逐格比對只有 In 頁 A1（版本字串）、I178（tp_v031 說明）與 Sens 頁不同；加權目標價 73.22、放空不變；原 29 個案例與 WACC×g 格重算值逐一相同。報告 `docs/reports/20261030_MAG_Oracle_敏感度補齊.md`；v0.4.1 成品移 `dist/_待刪除/`。
+**v0.4.2（2026-10-30，敏感度覆蓋，基準數值不變）：** 依個股模型原則第 9 節補齊 Sens 案例：Sens 頁加 L 欄「鍵」，In 頁 43 個有低／高區間的鍵全部有案例或合格豁免（`tools/sens_coverage/check_sens_coverage.py --require-keycol` 通過）。新增 17 個案例，含 **IF_HoldEcon 四世代同時（鍵 `he_all`）**：低 67.70（−7.5%，上檔 −46.3%，放空）、高 86.05（+17.5%，上檔 −31.7%，放空）；長約價格證據 `p_long` 高端 12.72 時 107.36（上檔 −14.8%，**跨到中立**）。世代占比 `om_*` 以「單一世代移到低／高、差額由相鄰世代吸收、合計 100%」設案例。豁免 1：`mult_oci`（只進 Val 對照列，重算變動 0）；`tp_v031` 寫「只作對照，不進模型」。新增 `make_v05.sh`（建置、核對、HTML 一次跑完）。與 v0.4.1 逐格比對只有 In 頁 A1（版本字串）、I178（tp_v031 說明）與 Sens 頁不同；加權目標價 73.22、放空不變；原 29 個案例與 WACC×g 格重算值逐一相同。報告 `docs/reports/20261030_MAG_Oracle_敏感度補齊.md`；v0.4.1 成品移 `dist/_待刪除/`。
 
 **v0.4.1（2026-10-29，呈現修正，數值不變）：** In 頁欄名改「敏感度低／高」、頁尾加「L. 情境驅動對照」（併網速度、合約容量上限、建設延誤、情境權重，A／B／C 三欄並排）；HTML 驅動因子一節新增情境驅動表。規格：個股模型原則第 8 節；核對 `tools/in_layout/check_in_layout.py`。與 v0.4 逐格比對只有 In 頁 A1、D3、F3 與新增一節不同；v0.4 成品移 `dist/_待刪除/`。
 
@@ -39,12 +41,12 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_oracle.py` | 獨立 Python → Excel 產生器（openpyxl，全部活公式；藍字輸入、黑字公式） |
-| `dist/20261104_Oracle個股模型_v0.4.5.xlsx` | LibreOffice headless 重算後的成品（公式錯誤 0） |
-| `dist/20261104_Oracle個股模型_v0.4.5.html`、`html.json` | `tools/company_html/build_company_html.py oracle` 產生；`check_company_html.py` 通過 |
+| `dist/20261110_Oracle個股模型_v0.5.0.xlsx` | LibreOffice headless 重算後的成品（公式錯誤 0） |
+| `dist/20261110_Oracle個股模型_v0.5.0.html`、`html.json` | `tools/company_html/build_company_html.py oracle` 產生；`check_company_html.py` 通過 |
 | `segments.json` | 官方分部宣告；`tools/segment_check/check_segments.py oracle` 通過 |
 | `scripts/sens_v04.py` | 敏感度：一次動一個輸入，完整重算（寫 `data/sens_v04.json`，再建置時寫入 Sens 頁；v0.4.2 起涵蓋 In 頁全部有區間的鍵） |
 | `scripts/decomp_v044.py` | v0.4.4 增資拆解：逐步完整重算（瀑布可凍結，環境變數 `ORCL_WF_FREEZE`，成品不設）→ `data/decomp_v044.json` |
-| `make_v04.sh` | 一次跑完：（`SENS=1` 時敏感度）→ 建置 → 重算 → 公式錯誤與 Sens 快照 → In 版面 → 敏感度覆蓋 → segment_check → HTML |
+| `make_v05.sh` | 一次跑完：（`SENS=1` 時敏感度）→ 建置 → 重算 → 公式錯誤與 Sens 快照 → In 版面 → 敏感度覆蓋 → segment_check → HTML |
 | `scripts/make_html_json.py` | 由建置列號對照產生 `html.json` |
 | `data/` | 事實總帳（v0.1a SEC 一手、v0.3.1 增補、v0.4.4 增資與投資人日 `oracle_facts_20261104.json`）、共識、Tokenomics v21.10 快照（v19.0 保留；v21.4、v21.9 在 `data/_待刪除/`） |
 | `legacy_v0.3/` | v0.3.1 舊引擎（CRWV 樣板：HTML＋Excel 雙引擎、company.json、驗證腳本），保留不刪 |
@@ -53,13 +55,13 @@
 ## 建置
 
 ```
-bash oracle/make_v04.sh                 # 沿用已提交的 data/sens_v04.json
-SENS=1 JOBS=6 bash oracle/make_v04.sh   # 有改公式或輸入時，先重跑敏感度
+bash oracle/make_v05.sh                 # 沿用已提交的 data/sens_v04.json
+SENS=1 JOBS=6 bash oracle/make_v05.sh   # 有改公式或輸入時，先重跑敏感度
 ```
 
 ## 工作表與驅動 → 推導對照
 
-順序：README → In → Q → Thesis → Seg → PL → CF → Val → Recon → Sens → Sources。
+順序：README → In → Q → Thesis → Seg → PL → CF → Fund → RPO → Sites → Debt → Lease → Val → RevDCF → Recon → Sens → Sources（v0.5.0 新增 Fund、RPO、Sites、Debt、Lease、RevDCF）。
 
 | 頁 | 輸入 | 推導量 | 因果方向 |
 |---|---|---|---|
