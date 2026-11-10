@@ -17,6 +17,8 @@ TR, PR, CR, VAL = R["TR"], R["PR"], R["CR"], R["VAL"]
 DC, SO, CON = VAL["DC"], VAL["SO"], VAL["CON"]
 TB, PB, CB = TR["B"], PR["B"], CR["B"]
 G = R["GATE"]
+FU = R["FUND"]["Fund"]; FS = FU["SUM"]; FR = FU["R"]; RPB = R["FUND"]["RPO"]["R"]["B"]; DB = R["FUND"]["Debt"]; LSB = R["FUND"]["Lease"]["R"]["B"]; ST_ = R["FUND"]["Sites"]
+RVN = max(v for k, v in R["FUND"]["RevDCF"]["R"].items() if not k.startswith("_"))
 
 
 def drv(key, fmt, out_lab, out_ref):
@@ -49,6 +51,41 @@ cfg = {
              "rowgen": {"sheet": "Thesis", "rows": f"{R['SUM'][0]+1}-{R['SUM'][1]}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "", "n1", "n1", "n1"],
                         "row_fmt": {str(R['SUM'][0] + k): {"C": "p1", "D": "p1", "E": "p1"} for k in (3, 4, 7)}}},
             {"type": "kv", "items": [["會計年度與口徑", "@README!A9"], ["營收分部層", "@README!A10"]]}]},
+        {"id": "funding", "title": "資金缺口與融資（收支模組）", "blocks": [
+            {"type": "note", "parts": ["@Fund!A2"]},
+            {"type": "table", "grid": True, "caption": "三情境摘要", "head": ["@Fund!A3", "@Fund!C3", "@Fund!D3", "@Fund!E3"],
+             "rowgen": {"sheet": "Fund", "rows": f"{FS['trough']}-{FS['chk']}", "cols": ["A", "C", "D", "E"], "fmts": ["", "n1", "n1", "n1"], "row_fmt": {str(FS["lev"]): {"C": "n2", "D": "n2", "E": "n2"}, str(FS["tyear"]): {"C": "", "D": "", "E": ""}}}},
+            {"type": "pl", "years": f"@Fund!D{FU['hdr']}:I{FU['hdr']}", "metrics": [
+                met("融資前累積現金：不做任何新融資（十億美元）", None, "n1", chart=True, rows={s: f"@Fund!D{FR[s]['cumx']}:I{FR[s]['cumx']}" for s in "ABC"}),
+                met("融資前現金流：營運來源 − 用途（十億美元）", None, "n1", chart=True, rows={s: f"@Fund!D{FR[s]['flow']}:I{FR[s]['flow']}" for s in "ABC"}),
+                met("外部融資需求（十億美元）", None, "n1", rows={s: f"@Fund!D{FR[s]['need']}:I{FR[s]['need']}" for s in "ABC"}),
+                met("期末現金（十億美元）", None, "n1", rows={s: f"@Fund!D{FR[s]['cash1']}:I{FR[s]['cash1']}" for s in "ABC"})]},
+            {"type": "table", "grid": True, "caption": "來源、用途、缺口與融資瀑布（情境 B）", "head": [f"@Fund!A{FU['hdr']}"] + [f"@Fund!{c}{FU['hdr']}" for c in "DEFGHI"],
+             "rowgen": {"sheet": "Fund", "rows": f"{FR['B']['L']}-{FR['B']['debt']}", "cols": ["A", "D", "E", "F", "G", "H", "I"], "fmts": ["", "n1", "n1", "n1", "n1", "n1", "n1"],
+                        "row_fmt": {str(FR["B"][k_]): {c: "n2" for c in "DEFGHI"} for k_ in ("L", "lev")}}},
+            {"type": "h3", "text": "資金缺口壓力表（情境 B；預先算好的組合）"},
+        ] + [{"type": "table", "grid": True, "head": [f"@Fund!A{a - 1}", f"@Fund!D{a - 1}", f"@Fund!E{a - 1}", f"@Fund!F{a - 1}"],
+              "rowgen": {"sheet": "Fund", "rows": f"{a}-{b}", "cols": ["A", "D", "E", "F"], "fmts": ["", f_, f_, f_]}}
+             for (a, b), f_ in ((FU["STRESS"]["wf"], "n1"), (FU["STRESS"]["trough"], "n1"), (FU["STRESS"]["lev"], "n2"), (FU["STRESS"]["tp"], "n1"))] + [
+            {"type": "h3", "text": "合約排程對模型交付（RPO；情境 B）"},
+            {"type": "table", "grid": True, "head": ["@RPO!A4"] + [f"@RPO!{c}4" for c in "DEFGH"],
+             "rowgen": {"sheet": "RPO", "rows": f"6,{RPB['rev']}-{RPB['dbl']}", "cols": ["A", "D", "E", "F", "G", "H"], "fmts": ["", "n1", "n1", "n1", "n1", "n1"],
+                        "row_fmt": {str(RPB[k_]): {c: "n2" for c in "DEFGH"} for k_ in ("cov", "dbl")}}},
+            {"type": "note", "parts": ["@RPO!A1"]},
+            {"type": "h3", "text": "債務到期表與再融資備忘"},
+            {"type": "table", "grid": True, "head": [f"@Debt!A{DB['hdr']}"] + [f"@Debt!{c}{DB['hdr']}" for c in "DEFGHIJ"],
+             "rowgen": {"sheet": "Debt", "rows": f"{DB['L']['old']}-{DB['L']['cum']}", "cols": ["A", "D", "E", "F", "G", "H", "I", "J"], "fmts": ["", "n2", "n2", "n2", "n2", "n2", "n2", "n2"],
+                        "row_fmt": {str(DB["L"]["cpn"]): {c: "p2" for c in "DEFGHI"}}}},
+            {"type": "note", "parts": ["@Debt!A2"]},
+            {"type": "table", "collapse": True, "summary": "展開：債務逐檔與新票據", "head": ["@Debt!A4", "@Debt!C4", "@Debt!D4", "@Debt!E4", "@Debt!F4"],
+             "rowgen": {"sheet": "Debt", "rows": f"{DB['r0']}-{DB['tot']},{DB['n0']}-{DB['n1'] + 1}", "cols": ["A", "C", "D", "E", "F"], "fmts": ["", "d", "p3", "n3", "n3"]}},
+            {"type": "h3", "text": "租賃承諾與站點"},
+            {"type": "table", "grid": True, "head": ["@Lease!A14"] + [f"@Lease!{c}14" for c in "DEFGHI"],
+             "rowgen": {"sheet": "Lease", "rows": f"{LSB['rent']}-{LSB['permw']}", "cols": ["A", "D", "E", "F", "G", "H", "I"], "fmts": ["", "n2", "n2", "n2", "n2", "n2", "n2"],
+                        "row_fmt": {str(LSB["ratio"]): {"D": "p1"}}}},
+            {"type": "table", "head": ["@Sites!A4", "@Sites!B4", "@Sites!C4", "@Sites!D4", "@Sites!E4", "@Sites!F4"],
+             "rowgen": {"sheet": "Sites", "rows": f"{ST_['s0']}-{ST_['R']['res']}", "cols": ["A", "B", "C", "D", "E", "F"], "fmts": ["", "", "n0", "n0", "", ""]}},
+            {"type": "note", "parts": ["@Sites!A1"]}]},
         {"id": "drivers", "title": "驅動因子 → 推導量", "blocks": [
             {"type": "table", "caption": "情境驅動（三情境並排，進加權目標價；In 頁情境驅動對照）", "head": [f"@In!{c}{SCN_H}" for c in "BDEFCG"],
              "rows": [[f"@In!B{INR[k]}", f"@In!D{INR[k]}|{f}", f"@In!E{INR[k]}|{f}", f"@In!F{INR[k]}|{f}", f"@In!C{INR[k]}", f"@In!G{INR[k]}|tag"]
@@ -128,6 +165,11 @@ cfg = {
                         "row_fmt": {str(SO["sh"]): {"C": "n3", "D": "n3", "E": "n3"}, str(SO["ps"]): {"C": "n2", "D": "n2", "E": "n2"}, str(SO["v12"]): {"C": "n2", "D": "n2", "E": "n2"},
                                     str(SO["oci_sh"]): {"C": "p1", "D": "p1", "E": "p1"}, str(SO["g_sh"]): {"C": "p1", "D": "p1", "E": "p1"}}}},
             {"type": "note", "parts": [f"@Val!A{CON['meth']}", "：", f"@Val!C{CON['meth']}"]}]},
+        {"id": "revdcf", "title": "反向 DCF：現價隱含什麼", "blocks": [
+            {"type": "note", "parts": ["@RevDCF!A2"]},
+            {"type": "table", "grid": True, "head": [f"@RevDCF!{c}4" for c in "ACDEGHIJ"],
+             "rowgen": {"sheet": "RevDCF", "rows": f"5-{RVN}", "cols": ["A", "C", "D", "E", "G", "H", "I", "J"], "fmts": ["", "", "n3", "n3", "n3", "n3", "", "n3"]}},
+            {"type": "note", "parts": ["@RevDCF!A3"]}]},
         {"id": "recon", "title": "對帳：共識、公司指引、命題檢查", "blocks": [
             {"type": "table", "head": ["@Recon!A3", "@Recon!B3", "@Recon!C3", "@Recon!D3", "@Recon!E3", "@Recon!F3", "@Recon!G3", "@Recon!H3", "@Recon!I3"],
              "rowgen": {"sheet": "Recon", "rows": None, "cols": ["A", "B", "C", "D", "E", "F", "G", "H", "I"], "fmts": ["", "n1", "n1", "sp1", "n1", "sp1", "n1", "sp1", ""], "row_fmt": {}}},
@@ -155,7 +197,7 @@ cfg = {
 # Recon 的列範圍：第 4 列到最後一列
 ws = wb["Recon"]
 last = max(r for r in range(1, ws.max_row + 1) if ws.cell(r, 1).value)
-rg = cfg["sections"][4]["blocks"][0]["rowgen"]
+rg = next(x for x in cfg["sections"] if x["id"] == "recon")["blocks"][0]["rowgen"]
 rg["rows"] = f"4-{last}"
 for r in range(4, last + 1):
     lab = str(ws.cell(r, 1).value or "")

@@ -647,7 +647,7 @@ ol.items{margin:6px 0;padding-left:24px}ol.items li,ul.items li{margin:2px 0}
 """
 
 REQUIRED_IDS = ['thesis', 'drivers', 'pl', 'valuation', 'recon', 'sens', 'status']
-OPTIONAL_IDS = ['conclusion']   # 命題回覆（可選；放在 sens 與 status 之間，Andy 2026-11-05）
+OPTIONAL_IDS = ['conclusion', 'funding', 'revdcf']   # conclusion＝命題回覆（可選；放在 sens 與 status 之間，Andy 2026-11-05）；funding＝收支型個股的資金缺口與融資（緊接 thesis 之後）、revdcf＝反向 DCF（緊接 valuation 之後）（可選；Andy 2026-11-10，首例 Oracle v0.5.0）
 
 
 def find_xlsx(cdir, override=None):
@@ -685,6 +685,9 @@ def build(cdir, xlsx=None, root=None):
     allids = [s['id'] for s in cfg['sections']]
     if 'conclusion' in allids and allids[allids.index('conclusion') - 1:allids.index('conclusion') + 2] != ['sens', 'conclusion', 'status']:
         raise SystemExit(f'conclusion 須放在 sens 與 status 之間，實際 {allids}')
+    for opt, prev in (('funding', 'thesis'), ('revdcf', 'valuation')):
+        if opt in allids and allids[allids.index(opt) - 1] != prev:
+            raise SystemExit(f'{opt} 須緊接在 {prev} 之後，實際 {allids}')
     if ids[:len(REQUIRED_IDS)] != REQUIRED_IDS:
         raise SystemExit(f'sections 的 id 須依序為 {REQUIRED_IDS}，實際 {ids}')
     check_prose(cfg['question'], 'question')

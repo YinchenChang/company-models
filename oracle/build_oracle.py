@@ -1247,7 +1247,9 @@ RD.column_dimensions["A"].width = 170
 import funding_v05
 REV5_F = os.path.join(HERE, "data", "reverse_v05.json")
 REV5 = json.load(open(REV5_F, encoding="utf-8")) if (os.path.exists(REV5_F) and not OVR) else None
-FUND = funding_v05.add_funding_sheets({"wb": wb, "TR": TR, "PR": PR_, "CR": CR_, "SC": SC, "SCN": SCN, "tc": tc, "CON": CON, "REV5": REV5})
+ST5_F = os.path.join(HERE, "data", "stress_v05.json")
+ST5 = json.load(open(ST5_F, encoding="utf-8")) if (os.path.exists(ST5_F) and not OVR) else None
+FUND = funding_v05.add_funding_sheets({"wb": wb, "TR": TR, "PR": PR_, "CR": CR_, "SC": SC, "SCN": SCN, "tc": tc, "CON": CON, "REV5": REV5, "STRESS": ST5})
 order = ["README", "In", "Q", "Thesis", "Seg", "PL", "CF", "Fund", "RPO", "Sites", "Debt", "Lease", "Val", "RevDCF", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
 wb.save(sys.argv[1])

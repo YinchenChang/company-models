@@ -301,10 +301,29 @@ def add_funding_sheets(ctx):
         for n in SUMR:
             if n != "tyear": Fu[f"{c}{SUMR[n]}"].number_format = "0.00" if n == "lev" else "#,##0.0"
         r = k["debt"] + 2
+    # 壓力表（預先算好的組合；scripts/stress_v05.py）
+    ST = ctx.get("STRESS"); STR = {}
+    if ST:
+        Fu.cell(r, 1, "資金缺口壓力表（情境 B；預先算好的組合：建設延誤月數 × 客戶出資覆蓋比；整本重算的建置快照，scripts/stress_v05.py）").font = BOLD
+        r += 1
+        mets = [("wf", "瀑布另需外部融資（五期合計，十億美元）", "#,##0.0"), ("trough", "融資前累積現金谷底（十億美元）", "#,##0.0"),
+                ("lev", "調整後槓桿峰值（倍；投資級上限 4.5）", "0.00"), ("tp", "加權目標價（美元；三情境加權，只動情境 B 的延誤）", "0.0")]
+        for mk, ml, mf in mets:
+            _hdr(Fu, r, [ml, "", ""] + [f"覆蓋比 {c:.1%}" + ("（基準）" if abs(c - 0.243) < 1e-9 else "（客戶不出資）" if c == 0 else "") for c in ST["cov"]])
+            STR[mk] = (r + 1, r + len(ST["delay"]))
+            for i, dl in enumerate(ST["delay"]):
+                Fu.cell(r + 1 + i, 1, f"延誤 {dl} 個月" + ("（基準）" if dl == 3 else ""))
+                for j_, _ in enumerate(ST["cov"]):
+                    c = Fu.cell(r + 1 + i, 4 + j_, ST["grid"][i][j_][mk]); c.number_format = mf
+            r += len(ST["delay"]) + 2
+        Fu.cell(r, 1, "快照檢查：壓力表求解時的基準瀑布融資 − 本檔情境 B（應為 0；不為 0 表示快照過期，重跑 scripts/stress_v05.py）")
+        c = Fu.cell(r, 4, f"={ST['base']['wf']!r}-D{SUMR['wf']}"); c.number_format = "0.0000"; STR["_chk"] = r
+        Fu.cell(r + 1, 1, "快照檢查：壓力表求解時的基準加權目標價 − 本檔（應為 0）")
+        c = Fu.cell(r + 1, 4, f"={ST['base']['tp']!r}-Val!C{ctx['CON']['tp']}"); c.number_format = "0.0000"; STR["_chk2"] = r + 1
     for col, w_ in zip("ABCDEFGHIJ", [64, 8, 13, 13, 13, 13, 13, 13, 13, 90]): Fu.column_dimensions[col].width = w_
     Fu.column_dimensions["F"].width = 14
     Fu.freeze_panes = "C4"
-    out["Fund"] = {"SUM": SUMR, "R": FR, "hdr": FUH}
+    out["Fund"] = {"SUM": SUMR, "R": FR, "hdr": FUH, "STRESS": STR}
 
     # ------------------------------------------------------------------ RevDCF
     Rv = wb.create_sheet("RevDCF")
