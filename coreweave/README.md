@@ -252,7 +252,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `calendar.fiscalYearEndMonth` | 財年結束月份（v4.5；CoreWeave 12、Oracle 5） | 月 | 12 | 必改 |
 | `calendar.latestQuarterFiled` | 最新已申報（10-Q／10-K）的財季，格式 FYyyQn；驅動年度首期滾動與評價日（v4.5） | 文字 | FY26Q2 | 必改 |
-| `calendar.latestQuarterReported` | 最新已公布（財報新聞稿）的財季；驅動季度層，年度首期不受影響（v4.5） | 文字 | FY26Q2 | 必改 |
+| `calendar.latestQuarterReported` | 最新已公布（財報新聞稿）的財季；驅動季度層，年度首期不受影響（v4.5） | 文字 | FY26Q3 | 必改 |
 | `calendar.firstModelFY` | 沒有已申報季度時（例如未上市公司）的首個模型財年，例如 FY26；有已申報季度時填 null（v4.5） | 文字 | None | 檢查 |
 | `calendar.modelYears` | 首期之後的完整財年數（固定期數滾動；Excel 欄位固定 5 期，所以為 4）（v4.5） | 年 | 4 | 可沿用 |
 | `calendar.targetHorizon` | 目標價時點：firstFullYearEnd＝首期之後第一個完整財年末；valuationPlus12m＝評價日＋12 個月（v4.5） | 代碼 | valuationPlus12m | 可沿用 |
@@ -426,22 +426,22 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `yeActiveGw` | 年底主動電力指引 | GW | 1.85 | 是 |
 | `gw2030` | 2030 年電力目標 | GW | 8 | 否 |
 | `dataCenters` | 資料中心數 | 座 | 51 | 否 |
-| `capexLo` | 全年資本支出指引下緣 | US$bn | 35 | 是 |
+| `capexLo` | 全年資本支出指引下緣 | US$bn | 37 | 是 |
 | `capexHi` | 全年資本支出指引上緣 | US$bn | 39 | 是 |
 | `nextQCapexLo` | 下一季資本支出指引下緣 | US$bn | 11.5 | 否 |
 | `nextQCapexHi` | 下一季資本支出指引上緣 | US$bn | 13.5 | 否 |
 | `nextQIntLo` | 下一季利息指引下緣 | US$bn | 0.86 | 否 |
 | `nextQIntHi` | 下一季利息指引上緣 | US$bn | 0.94 | 否 |
-| `revLo` | 全年營收指引下緣 | US$bn | 12.4 | 否 |
-| `revHi` | 全年營收指引上緣 | US$bn | 13.2 | 否 |
+| `revLo` | 全年營收指引下緣 | US$bn | 13 | 否 |
+| `revHi` | 全年營收指引上緣 | US$bn | 13.3 | 否 |
 | `nextQRevLo` | 下一季營收指引下緣 | US$bn | 3.45 | 是 |
 | `nextQRevHi` | 下一季營收指引上緣 | US$bn | 3.6 | 是 |
-| `adjOpLo` | 全年調整後營業利益指引下緣 | US$bn | 0.96 | 否 |
-| `adjOpHi` | 全年調整後營業利益指引上緣 | US$bn | 1.15 | 否 |
+| `adjOpLo` | 全年調整後營業利益指引下緣 | US$bn | 1.275 | 否 |
+| `adjOpHi` | 全年調整後營業利益指引上緣 | US$bn | 1.375 | 否 |
 | `nextQAdjOpLo` | 下一季調整後營業利益指引下緣 | US$bn | 0.2 | 否 |
 | `nextQAdjOpHi` | 下一季調整後營業利益指引上緣 | US$bn | 0.26 | 否 |
-| `arrLo` | 期末年化經常性收入（ARR）指引下緣 | US$bn | 18.5 | 是 |
-| `arrHi` | 期末 ARR 指引上緣 | US$bn | 19.5 | 是 |
+| `arrLo` | 期末年化經常性收入（ARR）指引下緣 | US$bn | 20 | 是 |
+| `arrHi` | 期末 ARR 指引上緣 | US$bn | 21 | 是 |
 | `postQNewCommit` | 季末後新增承諾 | US$bn | 25 | 否 |
 | `priceUp` | 新約漲價幅度 | 比例 | 0.25 | 否 |
 | `marginStep` | 新約貢獻率提升 | 文字 | 5–10 pt | 否 |
@@ -475,6 +475,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `ttmOpLease` | 近十二個月營業租賃成本 | US$bn | 1.377 | 否 |
 | `mktCapLast` | CRWV 市值（Comps 用；與同業同一收盤日 peers.priceDate，v4.3 起不隨現價更新） | US$bn | 47.12 | 是 |
 | `nextEarn` | 下次財報時間 | 文字 | 2026-11 (10-Q 期限 11/16) | 否 |
+| `q3` | 最新一季財報新聞稿的實際數與指引（v4.14：Q3 2026，8-K Ex.99.1；10-Q 前只作季度層、驗證列與校準，不滾動年度首期） | 物件 | 物件（_note、source、revenue、revenue9m、adjEbitda、adjOpInc、adjOpInc9m、opInc、netLoss、interest、da、sbc、cashCapex、cashCapex9m、cfo、cfo9m、cash、restrictedCash、ppeNet、debtTotal、opLeaseLiab、finLeaseLiab、backlog、activeGw、contractedGw、waso、q4IntLo、q4IntHi、prepayNext3m、ddtl55、tag） | 否 |
 
 ### `scenarios`：三個擴張情境
 
@@ -531,7 +532,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.jvCommit` | 已承諾的 JV 出資餘額，各期 | US$bn 清單 | 1.15、0、0、0、0 | 必改 |
 | `defaults.intCal` | 第一期利息校準值（讓模型利息對上公司季度指引） | US$bn | 0.35 | 必改 |
 | `defaults.rpoOpen` | 最新季末 RPO | US$bn | 103.7 | 必改 |
-| `defaults.rpoPendingAdd` | 季末後新簽、尚未進 RPO 的承諾 | US$bn | 25 | 必改 |
+| `defaults.rpoPendingAdd` | 季末後新簽、尚未進 RPO 的承諾 | US$bn | 31.96 | 必改 |
 | `defaults.rp` | RPO 在模型期內認列的比例（百分點；應與 rpo.scheduledShare 一致） | % | 84 | 必改 |
 | `defaults.cash` | 最新季末現金（第一期期初現金） | US$bn | 5.5 | 必改 |
 | `defaults.includeDebt` | 是否依到期表攤還既有債務（true＝是；false＝假設全數再融資） | 是／否 | 是 | 可沿用 |
@@ -643,15 +644,15 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `quarterly._note` | 季度層的說明文字（不進程式） | 文字 | 季度層（v4.4）：由年度模型拆分，只用於追蹤，不影… | 可沿用 |
 | `quarterly.quarters` | 追蹤的季度，一季一列：key 季別代碼（與共識檔 quarterlyEstimates 的鍵相同，例如 2026Q3）、label 顯示名稱、period 所屬模型期（0＝第 1 期…）、reportNote 財報日說明（選填）。季度加總必須等於所屬模型期的年度數字 | 清單 | 6 筆 | 必改 |
 | `quarterly.periodNames` | 各所屬模型期的顯示名稱（依期別順序，例如 2H26、FY27） | 文字清單 | 2H26、FY27 | 必改 |
-| `quarterly.focus` | 焦點季（「季度追蹤」第一屏與一頁摘要驗證點顯示的季度；財報後改為下一季） | 季別代碼 | 2026Q3 | 必改 |
+| `quarterly.focus` | 焦點季（「季度追蹤」第一屏與一頁摘要驗證點顯示的季度；財報後改為下一季） | 季別代碼 | 2026Q4 | 必改 |
 | `quarterly.keyMetrics` | 一頁摘要「驗證點」列出的指標（2–3 項；metrics 的 key） | 文字清單 | revenue、adjOpInc、capex | 檢查 |
 | `quarterly.driver` | 拆分依據：type＝mw 時依 MW 內插（endStart＝第 1 期期初 Accepted MW、endStartNote 來源）；type＝none（沒有 MW 資料的公司）時營收依 revenueSplit、CapEx 平分，MW 列顯示「不適用」 | 物件 | 物件（type、endStart、endStartNote） | 檢查 |
 | `quarterly.revenueSplit` | 各所屬模型期的營收拆法：anchor＝從 revenueAnchor 逐季線性爬升、driverAvg＝依平均在役 MW、equal＝平分 | 文字清單 | anchor、driverAvg | 檢查 |
 | `quarterly.revenueAnchor` | 營收拆法 anchor 的起點（最新一季實際營收）：value、label、tag | 物件 | 物件（value、label、tag） | 必改 |
 | `quarterly.metrics` | 追蹤的指標，一項一列：key（revenue、adjEbitda、ebitdaMargin、adjOpInc、capex、mw 之一）、label、unit（US$bn／%／MW）、gap 差距寫法（ratio＝比例，用於營收、CapEx；diff＝金額差；pt＝百分點）、marginOf 利潤類另列利潤率百分點時的分母指標（revenue）、consensus 共識檔季度欄位名（derived＝由共識 EBITDA ÷ 營收換算）、consensusSecondary／consensusSecondaryLabel 只列不比較的共識欄位、actualLabel 實際數列名稱 | 清單 | 6 筆 | 檢查 |
 | `quarterly.capexSplit` | CapEx 拆法：guidanceAnchor＝有季度指引的季取指引中點、其餘季分配期間餘數（依新增 MW）；driverAdds（或不填）＝全部依新增 MW | 文字 | guidanceAnchor | 檢查 |
-| `quarterly.guidanceText` | 文字型指引（例如「調整後營業利益率 low teens」），{季別: {指標: {text, source, tag}}}：只列不計差距；完整支援（年增率、利潤率區間）列入待辦 5 | 物件 | 物件（2026Q4） | 必改 |
-| `quarterly.guidance` | 季度指引（公司預估），{季別: {指標: [低, 高]}}；沒有指引的季度或公司不填，顯示「不適用」 | 物件 | 物件（2026Q3） | 必改 |
+| `quarterly.guidanceText` | 文字型指引（例如「調整後營業利益率 low teens」），{季別: {指標: {text, source, tag}}}：只列不計差距；完整支援（年增率、利潤率區間）列入待辦 5 | 物件 | 物件（） | 必改 |
+| `quarterly.guidance` | 季度指引（公司預估），{季別: {指標: [低, 高]}}；沒有指引的季度或公司不填，顯示「不適用」 | 物件 | 物件（2026Q3、2026Q4） | 必改 |
 | `quarterly.guidanceMeta` | 季度指引的來源與標記 | 物件 | 物件（source、tag） | 必改 |
 | `quarterly.periodGuidance` | 期間隱含指引，{模型期: {指標: {range: [全年低, 全年高], less: 已實現部分}}}：只用於判斷季度差距是否為「拆法」 | 物件 | 物件（0） | 必改 |
 | `quarterly.periodGuidanceNote` | 上一欄的說明文字 | 文字 | 全年指引 − 1H 實際＝下半年隱含指引 [Deri… | 必改 |

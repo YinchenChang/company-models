@@ -12,7 +12,7 @@
  "calendar": {
   "fiscalYearEndMonth": 12,
   "latestQuarterFiled": "FY26Q2",
-  "latestQuarterReported": "FY26Q2",
+  "latestQuarterReported": "FY26Q3",
   "firstModelFY": null,
   "modelYears": 4,
   "targetHorizon": "valuationPlus12m"
@@ -429,22 +429,22 @@
   "yeActiveGw": 1.85,
   "gw2030": 8,
   "dataCenters": 51,
-  "capexLo": 35,
+  "capexLo": 37,
   "capexHi": 39,
   "nextQCapexLo": 11.5,
   "nextQCapexHi": 13.5,
   "nextQIntLo": 0.86,
   "nextQIntHi": 0.94,
-  "revLo": 12.4,
-  "revHi": 13.2,
+  "revLo": 13.0,
+  "revHi": 13.3,
   "nextQRevLo": 3.45,
   "nextQRevHi": 3.6,
-  "adjOpLo": 0.96,
-  "adjOpHi": 1.15,
+  "adjOpLo": 1.275,
+  "adjOpHi": 1.375,
   "nextQAdjOpLo": 0.2,
   "nextQAdjOpHi": 0.26,
-  "arrLo": 18.5,
-  "arrHi": 19.5,
+  "arrLo": 20,
+  "arrHi": 21,
   "postQNewCommit": 25,
   "priceUp": 0.25,
   "marginStep": "5–10 pt",
@@ -477,7 +477,40 @@
   "ttmDa": 3.991,
   "ttmOpLease": 1.377,
   "mktCapLast": 47.12,
-  "nextEarn": "2026-11 (10-Q 期限 11/16)"
+  "nextEarn": "2026-11 (10-Q 期限 11/16)",
+  "q3": {
+   "_note": "Q3 2026 財報新聞稿（8-K Ex.99.1，2026-11-10）實際數與指引；10-Q 尚未取得，年度首期仍以 Q2 10-Q 為底（路徑 2：季度層財報當天更新，年度首期 10-Q 後滾動）",
+   "source": "CoreWeave Q3 2026 財報新聞稿（8-K Ex.99.1，2026-11-10）https://www.sec.gov/Archives/edgar/data/0001769628/000176962826000461/coreweave3q26earningspress.htm",
+   "revenue": 3.661,
+   "revenue9m": 8.314,
+   "adjEbitda": 2.256,
+   "adjOpInc": 0.379,
+   "adjOpInc9m": 0.528,
+   "opInc": 0.207,
+   "netLoss": -0.709,
+   "interest": 0.846,
+   "da": 1.889,
+   "sbc": 0.16,
+   "cashCapex": 9.441,
+   "cashCapex9m": 23.558,
+   "cfo": 1.975,
+   "cfo9m": 5.638,
+   "cash": 4.122,
+   "restrictedCash": 2.282,
+   "ppeNet": 56.778,
+   "debtTotal": 46.873,
+   "opLeaseLiab": 18.697,
+   "finLeaseLiab": 0.649,
+   "backlog": 132.5,
+   "activeGw": 1.7,
+   "contractedGw": 4.6,
+   "waso": 0.559,
+   "q4IntLo": 1.05,
+   "q4IntHi": 1.15,
+   "prepayNext3m": 9,
+   "ddtl55": 2.6,
+   "tag": "Verified（實績）／Interested-party（指引、backlog、電力、預收款）"
+  }
  },
  "scenarios": {
   "labels": {
@@ -617,7 +650,7 @@
   ],
   "intCal": 0.35,
   "rpoOpen": 103.7,
-  "rpoPendingAdd": 25,
+  "rpoPendingAdd": 31.96,
   "rp": 84,
   "cash": 5.5,
   "includeDebt": true,
@@ -968,7 +1001,7 @@
     "key": "2026Q3",
     "label": "Q3'26",
     "period": 0,
-    "reportNote": "預計 11/9"
+    "reportNote": "已公布 11/10（新聞稿；10-Q 尚未取得）"
    },
    {
     "key": "2026Q4",
@@ -1000,7 +1033,7 @@
    "2H26",
    "FY27"
   ],
-  "focus": "2026Q3",
+  "focus": "2026Q4",
   "keyMetrics": [
    "revenue",
    "adjOpInc",
@@ -1080,24 +1113,34 @@
      11.5,
      13.5
     ]
+   },
+   "2026Q4": {
+    "revenue": [
+     4.686,
+     4.986
+    ],
+    "adjOpInc": [
+     0.747,
+     0.847
+    ]
    }
   },
   "guidanceMeta": {
-   "source": "CNBC 報導 2026-08-11 Q2 財報",
+   "source": "Q3：CNBC 報導 2026-08-11 Q2 財報［Interested-party］；Q4：Q3 財報新聞稿 2026-11-10 全年指引（營收 13.0–13.3、調整後營業利益 1.275–1.375）− 前三季實際（營收 8.314、調整後營業利益 0.528）［Derived；誘因：管理層指引］；Q4 CapEx 無法推得（前三季毛額 CapEx 需 10-Q）",
    "tag": "Interested-party"
   },
   "periodGuidance": {
    "0": {
     "revenue": {
      "range": [
-      12.4,
-      13.2
+      13.0,
+      13.3
      ],
      "less": 4.653
     },
     "capex": {
      "range": [
-      35,
+      37,
       39
      ],
      "less": 16.139
@@ -1166,14 +1209,14 @@
   ],
   "actuals": {
    "2026Q3": {
-    "revenue": null,
-    "adjEbitda": null,
-    "adjOpInc": null,
+    "revenue": 3.661,
+    "adjEbitda": 2.256,
+    "adjOpInc": 0.379,
     "capex": null,
-    "mw": null,
-    "source": null,
-    "date": null,
-    "tag": null
+    "mw": 1700,
+    "source": "CoreWeave Q3 2026 財報新聞稿（8-K Ex.99.1，2026-11-10）https://www.sec.gov/Archives/edgar/data/0001769628/000176962826000461/coreweave3q26earningspress.htm；營收、調整後 EBITDA、調整後營業利益取新聞稿損益表與調節表；季末 active power「over 1.7 GW」取下限；CapEx（毛額，含 OEM 融資與 CIP 調整）需 10-Q，新聞稿只有現金購置 PP&E 9.441（不同口徑，未填）",
+    "date": "2026-11-10",
+    "tag": "Verified"
    },
    "2026Q4": {
     "revenue": null,
@@ -1227,15 +1270,7 @@
    }
   },
   "capexSplit": "guidanceAnchor",
-  "guidanceText": {
-   "2026Q4": {
-    "adjOpInc": {
-     "text": "調整後營業利益率 low teens",
-     "source": "Q2 法說 2026-08-11",
-     "tag": "Interested-party"
-    }
-   }
-  }
+  "guidanceText": {}
  },
  "varianceReasons": {
   "_note": "差異原因（已決定事項 2）：差距超過 methodology.consensusGapTol 的項目必須有原因。「拆法」由程式依條件判定（單季差距超過門檻、所屬期間合計在門檻內）；其餘寫在這裡。{路徑:格式} 由模型數字帶入。 W2：可加 perMw 條件（例如 {\"cost\": \"bottomUp\"}），只在 methodology.perMw 相符時適用；有條件的原因排在前面、優先於同鍵的一般原因。",

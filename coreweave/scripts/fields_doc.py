@@ -340,6 +340,7 @@ CF = {
  'priceDate': ('最新收盤價日期', '日期'), 'postQShortDated': ('期後公告摘要', '文字'), 'ttmRev': ('近十二個月營收', 'US$bn'),
  'ttmOpInc': ('近十二個月 GAAP 營業損益', 'US$bn'), 'ttmDa': ('近十二個月折舊攤銷', 'US$bn'),
  'ttmOpLease': ('近十二個月營業租賃成本', 'US$bn'), 'mktCapLast': ('CRWV 市值（Comps 用；與同業同一收盤日 peers.priceDate，v4.3 起不隨現價更新）', 'US$bn'), 'nextEarn': ('下次財報時間', '文字'),
+ 'q3': ('最新一季財報新聞稿的實際數與指引（v4.14：Q3 2026，8-K Ex.99.1；10-Q 前只作季度層、驗證列與校準，不滾動年度首期）', '物件'),
 }
 
 
