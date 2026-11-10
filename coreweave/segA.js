@@ -1016,7 +1016,7 @@ function runFunding(e) {
     ok: Math.abs(DBT_P - 35.551) < .01,
     severity: `ok`,
     title: `存量利息由既有債務明細推算：加權有效利率 ${(DBT_R*100).toFixed(1)}%`,
-    detail: `16 筆工具合計 ${DBT_P.toFixed(3)}（10-Q 35.551）。存量利息＝本金依到期表遞減的平均值×${(DBT_R*100).toFixed(1)}%×期間長度＋9/17 可轉債 3.7×2.875%＋FY26 校準 ${e.intCal}（對上 Q3 指引 0.86–0.94／季）。五期合計 ${o.reduce((e,t)=>e+t.intStock,0).toFixed(2)}，v1.4 手動值 ${INT_OLD.reduce((e,t)=>e+t,0).toFixed(1)}——舊值未隨還本遞減。限制：利率組合假設不變。`
+    detail: `16 筆工具合計 ${DBT_P.toFixed(3)}（10-Q 35.551）。存量利息＝本金依到期表遞減的平均值×${(DBT_R*100).toFixed(1)}%×期間長度＋9/17 可轉債 ${CONV_P}×2.875%＋FY26 校準 ${e.intCal}（對上 Q3 實際 0.846＋Q4 指引 1.05–1.15）。五期合計 ${o.reduce((e,t)=>e+t.intStock,0).toFixed(2)}，v1.4 手動值 ${INT_OLD.reduce((e,t)=>e+t,0).toFixed(1)}——舊值未隨還本遞減。限制：利率組合假設不變。`
   }), _({
     id: `jv-commit`,
     ok: Math.abs(e.jvCommit.reduce((e,t)=>e+t,0) - 1.15) < .01,

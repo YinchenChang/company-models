@@ -339,7 +339,7 @@
    ]
   ],
   "convertible": {
-   "principal": 3.7,
+   "principal": 4.2,
    "coupon": 0.02875
   }
  },
@@ -451,7 +451,7 @@
   "backlogStarted": 0.5,
   "inferenceArr": 0.25,
   "otherArr": 0.4,
-  "convert": 3.7,
+  "convert": 4.2,
   "convertNet": 3.6,
   "convertCoupon": 0.02875,
   "convertPx": 97.85,
@@ -655,7 +655,7 @@
   "cash": 5.5,
   "includeDebt": true,
   "includeAtm": true,
-  "atm": 6.2,
+  "atm": 6.63,
   "overlay": false,
   "cdsLink": false,
   "cdsBaseBp": 450,

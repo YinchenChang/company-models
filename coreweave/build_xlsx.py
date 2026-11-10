@@ -1100,7 +1100,7 @@ bl_end = FR["期末 backlog"]
 for i in range(1, 5):
     ws.cell(row=bl_beg, column=3 + i, value=f"={COLS[i-1]}{bl_end}")
 frow("既有債務＋9/17 可轉債（期末）", "US$bn",
-     lambda i: "=0", NUM, BLACK, "＝(依到期表遞減的既有本金，若關閉攤還則維持 35.551)＋9/17 可轉債 3.7")
+     lambda i: "=0", NUM, BLACK, f"＝(依到期表遞減的既有本金，若關閉攤還則維持 35.551)＋9/17 可轉債 {CONV_PR}（定價 3.7＋選擇權 0.5）")
 ex_row = FR["既有債務＋9/17 可轉債（期末）"]
 frow("債務上限（債務／backlog × 期末 backlog）", "US$bn", lambda i: f"={KBL}*{COLS[i]}{bl_end}", NUM, BLACK)
 cap_row = FR["債務上限（債務／backlog × 期末 backlog）"]
