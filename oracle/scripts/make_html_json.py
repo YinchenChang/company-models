@@ -46,7 +46,7 @@ IW = wb["In"]
 SEC_SUB = {"B": "已連網 MW 路徑與延誤", "C": "世代組合與汰換", "D": "每 MW 經濟性（Tokenomics 快照）與定價", "E": "機房租賃（未起租承諾）",
            "F": "OCI 其他（非 AI）營收路徑", "G": "其他營收線的長期年增", "H": "分部利潤率、未分攤費用與折舊",
            "I": "現金流與融資瀑布", "I2": "已發生的股債增資", "A": "股價與股數", "J": "折現率、目標價規則與同業倍數"}
-BIZ = {"ai": ["B", "C", "D", "E"], "other": ["F", "G", "H"], "fin": ["I", "I2"], "co": ["A", "J"]}
+BIZ = {"ai": ["B", "C", "D", "E"], "other": ["F", "G", "H"], "co": ["A", "J", "I", "I2"]}   # 全公司參數（股價股數、折現率、目標價規則、稅與融資）放最後一塊
 SECKEYS, _sec = {}, None
 for r in range(4, IW.max_row + 1):
     a_, b_ = IW.cell(r, 1).value, IW.cell(r, 2).value
@@ -105,7 +105,7 @@ def rrow(lab, a, b):
 REC_MAIN_LAB = {"A.": ["合併營收 FY2029", "調整後 EBITDA FY2029", "GAAP EPS FY2029", "自由現金流 FY2029", "FY2027 營收 vs 公司指引"],
                 "B.": ["Cloud Infrastructure（OCI）FY2027", "Cloud Infrastructure（OCI）FY2029"],
                 "B2": ["FY2029 自由現金流", "FY2029 淨借款", "FY2030 合併營收"],
-                "C.": ["FY2029 OCI AI 營業利益率", "FY2029 AI 增量 ROIC"], "D.": [], "E.": ["支持現價所需", "評等由放空翻為中立"]}
+                "C.": ["FY2029 OCI AI 營業利益率", "FY2029 AI 增量 ROIC"], "D.": ["情境目標價 vs v0.3.1", "v0.3.1 情境目標價"], "E.": ["支持現價所需", "評等由放空翻為中立"]}
 REC_HEAD = ["@Recon!A3", "@Recon!B3", "@Recon!C3", "@Recon!D3", "@Recon!E3", "@Recon!F3", "@Recon!G3", "@Recon!H3", "@Recon!I3"]
 REC_COLS, REC_FMT = ["A", "B", "C", "D", "E", "F", "G", "H", "I"], ["", "n1", "n1", "sp1", "n1", "sp1", "n1", "sp1", ""]
 def rec_fmt(r):
@@ -157,7 +157,7 @@ cfg = {
     "wide_text": True,
     "hero": {"rec": f"@Val!C{CON['rec']}",
              "tiles": [[f"@Val!A{CON['tp']}", f"@Val!C{CON['tp']}|n2", ["上檔空間 ", f"@Val!C{CON['up']}|sp1"]],
-                       [f"@Val!A{CON['comp']}", f"@Val!C{CON['comp']}|n2", ["上檔空間 ", f"@Val!C{CON['upc']}|sp1"]],
+                       ["Comparable 目標價（分部加總混合版）", f"@Val!C{CON['comp']}|n2", ["上檔空間 ", f"@Val!C{CON['upc']}|sp1"]],
                        [f"@Val!A{CON['px']}", f"@Val!C{CON['px']}|n2", ""]],
              "note": [f"@README!A{rd_show + 8}", "。投資建議依加權目標價判定：", f"@Val!F{CON['rec']}"]},
     "thesis": f"@README!A{rd_show + 1}",
@@ -186,9 +186,10 @@ cfg = {
                 met("外部融資需求（十億美元）", None, "n1", rows={s: f"@Fund!D{FR[s]['need']}:I{FR[s]['need']}" for s in "ABC"})]},
             {"type": "table", "caption": "資金缺口壓力表：瀑布另需外部融資（情境 B；預先算好的組合）", "head": [f"@Fund!A{FU['STRESS']['wf'][0] - 1}", f"@Fund!D{FU['STRESS']['wf'][0] - 1}", f"@Fund!E{FU['STRESS']['wf'][0] - 1}", f"@Fund!F{FU['STRESS']['wf'][0] - 1}"],
              "rowgen": {"sheet": "Fund", "rows": f"{FU['STRESS']['wf'][0]}-{FU['STRESS']['wf'][1]}", "cols": ["A", "D", "E", "F"], "fmts": ["", "n1", "n1", "n1"]}},
-        ] + [{"type": "table", "collapse": True, "summary": "展開：壓力表的其他指標（融資組成、現金谷底、槓桿、目標價）", "head": [f"@Fund!A{a - 1}", f"@Fund!D{a - 1}", f"@Fund!E{a - 1}", f"@Fund!F{a - 1}"],
+        ] + [{"type": "table", "collapse": True, "summary": sm_, "head": [f"@Fund!A{a - 1}", f"@Fund!D{a - 1}", f"@Fund!E{a - 1}", f"@Fund!F{a - 1}"],
               "rowgen": {"sheet": "Fund", "rows": f"{a}-{b}", "cols": ["A", "D", "E", "F"], "fmts": ["", f_, f_, f_]}}
-             for (a, b), f_ in ((FU["STRESS"]["eqhy"], "n1"), (FU["STRESS"]["trough"], "n1"), (FU["STRESS"]["lev"], "n2"), (FU["STRESS"]["tp"], "n1"))] + [
+             for (a, b), f_, sm_ in ((FU["STRESS"]["eqhy"], "n1", "展開：壓力表：其中新股＋高息債"), (FU["STRESS"]["trough"], "n1", "展開：壓力表：融資前累積現金谷底"),
+                                     (FU["STRESS"]["lev"], "n2", "展開：壓力表：調整後槓桿峰值"), (FU["STRESS"]["tp"], "n1", "展開：壓力表：加權目標價"))] + [
             {"type": "table", "collapse": True, "summary": "展開：來源、用途、缺口與融資瀑布（情境 B，逐年）", "head": [f"@Fund!A{FU['hdr']}"] + [f"@Fund!{c}{FU['hdr']}" for c in "DEFGHI"],
              "rowgen": {"sheet": "Fund", "rows": f"{FR['B']['L']}-{FR['B']['debt']}", "cols": ["A", "D", "E", "F", "G", "H", "I"], "fmts": ["", "n1", "n1", "n1", "n1", "n1", "n1"],
                         "row_fmt": {str(FR["B"][k_]): {c: "n2" for c in "DEFGHI"} for k_ in ("L", "lev")}}},
@@ -227,9 +228,7 @@ cfg = {
             + in_tables("other", "其他營收線與利潤率")
             + [{"type": "table", "caption": "校準：雲端與軟體分部中「OCI AI 以外」的利潤率（以最近一季推得）", "head": ["項目", "數值"],
                 "rows": [[f"@Thesis!A{R['CAL'] + k}", f"@Thesis!C{R['CAL'] + k}|{f}"] for k, f in ((0, "n2"), (1, "n2"), (2, "p1"), (3, "p1"), (4, "p1"))]},
-               {"type": "h3", "text": "三、現金流、融資與已發生增資"}]
-            + in_tables("fin", "現金流與融資")
-            + [{"type": "h3", "text": "四、全公司：股價、股數、折現率與目標價規則"}]
+               {"type": "h3", "text": "三、全公司：股價、股數、折現率、目標價規則、稅與融資"}]
             + in_tables("co", "全公司")},
         {"id": "pl", "title": "三情境損益（分部 → 合併）", "blocks": [
             {"type": "pl", "years": "@PL!D3:I3", "metrics": [

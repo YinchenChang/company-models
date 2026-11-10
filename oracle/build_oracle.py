@@ -1254,7 +1254,9 @@ FUND = funding_v05.add_funding_sheets({"wb": wb, "TR": TR, "PR": PR_, "CR": CR_,
 FS_ = FUND["Fund"]["SUM"]; RRB = FUND["RPO"]["R"]["B"]; RVR = FUND["RevDCF"]["R"]; STR_ = FUND["Fund"]["STRESS"]
 _v = lambda k: f"Val!C{CON[k]}"
 _om, _roic = f"Thesis!G{TB['om']}", f"Thesis!G{TB['roic']}"
-_tr, _ty, _wf, _lev, _exf = (f"Fund!D{FS_[k]}" for k in ("trough", "tyear", "wf", "lev", "exf"))
+_tr, _ty, _wf, _lev, _exf, _sh = (f"Fund!D{FS_[k]}" for k in ("trough", "tyear", "wf", "lev", "exf", "short"))
+_FB = FUND["Fund"]["R"]["B"]; _FH = FUND["Fund"]["hdr"]
+_levy = f'INDEX(Fund!$D${_FH}:$I${_FH},MATCH(MAX(Fund!D{_FB["lev"]}:H{_FB["lev"]}),Fund!D{_FB["lev"]}:H{_FB["lev"]},0))'   # 槓桿峰值所在期間
 _rev_eq = f"RevDCF!E{RVR['p_long']}" if "p_long" in RVR else None
 _rev_neu = f"RevDCF!J{RVR['p_long']}" if "p_long" in RVR else None
 _rev_hi = f"RevDCF!H{RVR['p_long']}" if "p_long" in RVR else None
@@ -1268,13 +1270,13 @@ show = [
     ('="資金：AI 擴張期自由現金流為負，缺口能否在不失去投資級（租賃調整後槓桿上限 "&TEXT(lev_max,"0.0")&" 倍）、不大量發新股的前提下補上。"', False),
     (f'="結論是"&{_v("rec")}&"：加權目標價 "&TEXT({_v("tp")},"0.0")&" 美元，比現價 "&TEXT(px,"0.00")&" 美元"&IF({_v("up")}<0,"低 "&TEXT(-{_v("up")},"0%"),"高 "&TEXT({_v("up")},"0%"))&"；只看同業比較的目標價 "&TEXT({_v("comp")},"0.0")&" 美元，也"&IF({_v("comp")}<px,"低於","高於")&"現價。"', False),
     (f'="雲端營收長得快，但 AI 算力賺的錢大多被設備折舊和機房租金吃掉：情境 B 的 FY2029 OCI 營收約 "&TEXT(PL!F{B_["oci"]}*10,"#,##0")&" 億美元，其中 AI 算力的營業利益率只有 "&TEXT({_om},"0.0%")&"，AI 投入資本的報酬 "&TEXT({_roic},"0.0%")&"，"&IF({_roic}<wacc,"低於","高於")&"資金成本 "&TEXT(wacc,"0.0%")&"。"', False),
-    (f'="錢夠不夠用：最缺錢的是 "&{_ty}&"，情境 B 若不再融資，"&IF({_tr}<0,"現金會不夠，缺約 "&TEXT(-{_tr}*10,"#,##0")&" 億美元","現金最低仍有約 "&TEXT({_tr}*10,"#,##0")&" 億美元")&"；11 月已募的約 "&TEXT({_exf}*10,"#,##0")&" 億美元之外，還要再外部融資約 "&TEXT({_wf}*10,"#,##0")&" 億美元；租賃調整後槓桿最高 "&TEXT({_lev},"0.0")&" 倍，"&IF({_lev}>lev_max,"超過","未超過")&"維持投資級的上限 "&TEXT(lev_max,"0.0")&" 倍。"', False),
+    (f'="錢夠不夠用：最缺錢的是 "&{_ty}&"，情境 B 若不再融資，"&IF({_tr}<0,"現金會比零還少約 "&TEXT(-{_tr}*10,"#,##0")&" 億美元","現金最低仍有約 "&TEXT({_tr}*10,"#,##0")&" 億美元")&"，比要保留的最低現金 "&TEXT(min_cash*10,"#,##0")&" 億美元少約 "&TEXT({_sh}*10,"#,##0")&" 億；這個缺口由 11 月已募的約 "&TEXT({_exf}*10,"#,##0")&" 億美元與再外部融資約 "&TEXT({_wf}*10,"#,##0")&" 億美元補上。租賃調整後槓桿最高 "&TEXT({_lev},"0.0")&" 倍（出現在 "&{_levy}&"，早於這筆新融資），"&IF({_lev}>lev_max,"超過","未超過")&"維持投資級的上限 "&TEXT(lev_max,"0.0")&" 倍。"', False),
     (('="條件式：在長約價格 "&TEXT(p_long,"0.00")&"（百萬美元／MW-IT·年）、計費比例 "&TEXT(u_bill,"0%")&"、AI 設備折舊 "&TEXT(life_ai,"0")&" 年（Tokenomics）的基準假設下成立' + (f'；長約價格達 "&TEXT({_rev_neu},"0.00")&" 時評等翻為中立（反向 DCF）' if _rev_neu else "") + '"'), False),
     ("命題回覆（HTML 第一章，命題正下方預設摺疊；依模型計算，公式帶數字）", True),
-    (f'="交付能否如期？答：情境 B 的 FY2029 OCI 營收 "&TEXT(PL!F{B_["oci"]},"0.0")&" 十億美元（其中 AI 算力 "&TEXT(PL!F{B_["ai"]},"0.0")&"），是公司路徑 114 的 "&TEXT(Thesis!D{RPO_ROWS[1]},"0%")&"。合約排程能否被交付，公開資料無法判定：FY2029 的交付缺口（須由 OCI 認列的排程 − 模型 OCI 營收）在下限口徑為 "&TEXT(RPO!F{RRB["gap"]},"+0.0;-0.0")&"、上限口徑為 "&TEXT(RPO!F{RRB["gaphi"]},"+0.0;-0.0")&" 十億美元，正負號"&IF(SIGN(RPO!F{RRB["gap"]})=SIGN(RPO!F{RRB["gaphi"]}),"相同","不同")&"（公司未揭露 RPO 的業務別；RPO 頁）。"', False),
+    (f'="交付能否如期？答：情境 B 的 FY2029 OCI 營收 "&TEXT(PL!F{B_["oci"]},"0.0")&" 十億美元（其中 AI 算力 "&TEXT(PL!F{B_["ai"]},"0.0")&"），是公司路徑 "&TEXT(go2029,"0")&" 的 "&TEXT(Thesis!D{RPO_ROWS[1]},"0%")&"。合約排程能否被交付，公開資料無法判定：FY2029 的交付缺口（須由 OCI 認列的排程 − 模型 OCI 營收）在下限口徑為 "&TEXT(RPO!F{RRB["gap"]},"+0.0;-0.0")&"、上限口徑為 "&TEXT(RPO!F{RRB["gaphi"]},"+0.0;-0.0")&" 十億美元，正負號"&IF(SIGN(RPO!F{RRB["gap"]})=SIGN(RPO!F{RRB["gaphi"]}),"相同","不同")&"（公司未揭露 RPO 的業務別；RPO 頁）。"', False),
     ((f'="報酬能否高於資金成本？答："&IF({_roic}<wacc,"不能","能")&"。情境 B 的 FY2029 OCI AI 營業利益率 "&TEXT({_om},"0.0%")&"、AI 增量 ROIC "&TEXT({_roic},"0.0%")&"，對照 WACC "&TEXT(wacc,"0.0%")&"。'
       + (f'反向 DCF：只靠長約價格支持現價，需每 MW-IT 每年 "&TEXT({_rev_eq},"0.00")&" 百萬美元（基準 "&TEXT(p_long,"0.00")&"，敏感度上限 "&TEXT({_rev_hi},"0.00")&"）。' if _rev_eq else "") + '"'), False),
-    ((f'="資金缺口能否在投資級內補上？答：情境 B "&IF({_lev}>lev_max,"不能完全做到","可以")&"。不做任何新融資時，現金在 "&{_ty}&" 降到谷底 "&TEXT({_tr},"0.0")&" 十億美元；2026-11 已交割的增資 "&TEXT({_exf},"0.0")&" 之外，瀑布另需 "&TEXT({_wf},"0.0")&"，調整後槓桿峰值 "&TEXT({_lev},"0.00")&" 倍（上限 "&TEXT(lev_max,"0.0")&"）。'
+    ((f'="資金缺口能否在投資級內補上？答：情境 B "&IF({_lev}>lev_max,"不能完全做到","可以")&"。不做任何新融資時，現金在 "&{_ty}&" 降到谷底 "&TEXT({_tr},"0.0")&" 十億美元；2026-11 已交割的增資 "&TEXT({_exf},"0.0")&" 之外，瀑布另需 "&TEXT({_wf},"0.0")&"，調整後槓桿峰值 "&TEXT({_lev},"0.00")&" 倍（出現在 "&{_levy}&"，上限 "&TEXT(lev_max,"0.0")&"）。'
       + (f'建設延誤拉長到 6 個月時另需 "&TEXT({_st6[0]},"0.0")&"（其中新股＋高息債 "&TEXT({_st6[1]},"0.0")&"）；拉長到 9 個月時另需 "&TEXT({_st6[2]},"0.0")&"，其中新股＋高息債 "&TEXT({_st6[3]},"0.0")&"：投資級債的額度被槓桿上限用完後，缺口改由新股與高息債補（Fund 頁壓力表）。' if _st6 else "") + '"'), False),
 ]
 r0_ = RD.max_row + 2
