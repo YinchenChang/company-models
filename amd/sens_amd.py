@@ -7,7 +7,7 @@ import openpyxl
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TMP = sys.argv[1] if len(sys.argv) > 1 else "/tmp/work_amd/sens"
-STAGE = os.environ.get("AMD_STAGE", "0.4.5")
+STAGE = os.environ.get("AMD_STAGE", "0.4.6")
 BUILD = os.path.join(HERE, "build_amd.py")
 env0 = {k: v for k, v in os.environ.items() if k not in ("AMD_OVERRIDE", "AMD_V46_PARTS", "AMD_ROWMAP")}
 env0["AMD_STAGE"] = STAGE
@@ -47,7 +47,9 @@ if STAGE >= "0.4.6":
             "gm_gpu__lo": O("gm_gpu=0.4"), "gm_gpu__hi": O("gm_gpu=0.55"), "cpu__lo": O("_cpu=lo"), "cpu__hi": O("_cpu=hi"),
             "gsh__lo": O("_gsh=0.4"), "gsh__hi": O("_gsh=0.6"), "oseg1__lo": O("_oseg=-1"), "oseg1__hi": O("_oseg=1"),
             "oseg05__lo": O("_oseg=-0.5"), "oseg05__hi": O("_oseg=0.5"), "wf__lo": O("wf=0"), "wf__hi": O("wf=0.5"),
-            "rmhi__hi": O("_rmhi=3"), "tx__lo": O(f"tx_f={b['ctax']}")}
+            "rmhi__hi": O("_rmhi=3"), "tx__lo": O(f"tx_f={b['ctax']}"),
+            "sbc_rev__lo": O(f"sbc_rev={1.513 / 35.166}"), "sbc_rev__hi": O(f"sbc_rev={(1.407 / 25.785 + 1.638 / 34.639 + 1.513 / 35.166) / 3}"),
+            "gw_30__lo": O("gw_30=6"), "gw_30__hi": O("gw_30=10")}
     PK = (0.25, 0.5, 0.8, 1.25, 1.5, 2.0, 3.0, 4.0)
     for k in PK: JOBS[f"pk_{k}"] = O(f"_pgk={k}")
     STEPS = [("v0.4.5 口徑", ""), ("目標時點改現價日＋12 個月", "tt"), ("評價股數改流通股＋庫藏股法", "tt,sh"), ("股票薪酬比率改最近四季", "tt,sh,sbc"),

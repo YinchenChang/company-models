@@ -278,84 +278,84 @@
   }
  },
  "AMD": {
-  "model": "amd/dist/20261106_AMD模型_v0.4.4.xlsx",
+  "model": "amd/dist/20261110_AMD模型_v0.4.6.xlsx",
   "v2": true,
   "tp": {
-   "value": 261.922728892605,
+   "value": 273.319469925118,
    "cell": "Val!B40",
-   "file": "amd/dist/20261106_AMD模型_v0.4.4.xlsx"
+   "file": "amd/dist/20261110_AMD模型_v0.4.6.xlsx"
   },
   "tp_dcf": {
-   "value": 91.6394030834304,
+   "value": 103.230928440543,
    "cell": "Val!B23",
-   "file": "amd/dist/20261106_AMD模型_v0.4.4.xlsx"
+   "file": "amd/dist/20261110_AMD模型_v0.4.6.xlsx"
   },
   "tp_comp": {
-   "value": 216.10302735089,
+   "value": 221.704005704847,
    "cell": "Val!B41",
-   "file": "amd/dist/20261106_AMD模型_v0.4.4.xlsx"
+   "file": "amd/dist/20261110_AMD模型_v0.4.6.xlsx"
   },
   "tp_cons": {
    "value": 637.61,
    "cell": "Val!B42",
-   "file": "amd/dist/20261106_AMD模型_v0.4.4.xlsx"
+   "file": "amd/dist/20261110_AMD模型_v0.4.6.xlsx"
   },
   "up": {
-   "value": -0.352317683252708,
+   "value": -0.324135831045702,
    "cell": "Val!B43",
-   "file": "amd/dist/20261106_AMD模型_v0.4.4.xlsx"
+   "file": "amd/dist/20261110_AMD模型_v0.4.6.xlsx"
   },
   "up_comp": {
-   "value": -0.465620604968126,
+   "value": -0.451770510126492,
    "cell": "Val!B44",
-   "file": "amd/dist/20261106_AMD模型_v0.4.4.xlsx"
+   "file": "amd/dist/20261110_AMD模型_v0.4.6.xlsx"
   },
   "old_rule": {
-   "value": 554.961469271865,
+   "value": 562.314662479133,
    "cell": "Val!B57",
-   "file": "amd/dist/20261106_AMD模型_v0.4.4.xlsx"
+   "file": "amd/dist/20261110_AMD模型_v0.4.6.xlsx"
   },
   "tier6": {
    "value": "−25%～−50%",
    "cell": "Val!B176",
-   "file": "amd/dist/20261106_AMD模型_v0.4.4.xlsx"
+   "file": "amd/dist/20261110_AMD模型_v0.4.6.xlsx"
   },
   "rec": {
    "value": "放空",
    "cell": "Val!B177",
-   "file": "amd/dist/20261106_AMD模型_v0.4.4.xlsx"
+   "file": "amd/dist/20261110_AMD模型_v0.4.6.xlsx"
   },
   "dcf_A": {
-   "value": 103.135143865555,
+   "value": 139.370498649329,
    "cell": "Val!B20",
-   "file": "amd/dist/20261106_AMD模型_v0.4.4.xlsx"
+   "file": "amd/dist/20261110_AMD模型_v0.4.6.xlsx"
   },
   "dcf_C": {
-   "value": 71.8392616085017,
+   "value": 59.4740212469032,
    "cell": "Val!D20",
-   "file": "amd/dist/20261106_AMD模型_v0.4.4.xlsx"
+   "file": "amd/dist/20261110_AMD模型_v0.4.6.xlsx"
   },
   "model_px": {
    "value": 404.4,
    "cell": "Val!B67",
-   "file": "amd/dist/20261106_AMD模型_v0.4.4.xlsx",
+   "file": "amd/dist/20261110_AMD模型_v0.4.6.xlsx",
    "date": "2026-11-05"
   },
   "pe_fy28": [
    {
-    "value": 28.7020307059171,
+    "value": 23.8925122082247,
     "cell": "Val!B70",
-    "file": "amd/dist/20261106_AMD模型_v0.4.4.xlsx"
+    "file": "amd/dist/20261110_AMD模型_v0.4.6.xlsx"
    },
    {
     "value": 30.6184232195288,
     "cell": "Val!C70",
-    "file": "amd/dist/20261106_AMD模型_v0.4.4.xlsx"
+    "file": "amd/dist/20261110_AMD模型_v0.4.6.xlsx"
    },
    {
-    "value": 34.6409386796304,
+    "value": 43.6614995637336,
     "cell": "Val!D70",
-    "file": "amd/dist/20261106_AMD模型_v0.4.4.xlsx"
+    "file": "amd/dist/20261110_AMD模型_v0.4.6.xlsx"
    }
   ],
   "cash": {
@@ -369,18 +369,23 @@
     ],
     [
      "FY2027",
-     18.3258505602002,
+     20.8499892786042,
      "PL!E15"
     ],
     [
      "FY2028",
-     24.9860094481801,
+     30.2864597951697,
      "PL!F15"
     ],
     [
      "FY2029",
-     29.0635285629129,
+     36.7863074583499,
      "PL!G15"
+    ],
+    [
+     "FY2027",
+     18.3258505602002,
+     "PL!E31"
     ],
     [
      "FY2028",
@@ -393,17 +398,22 @@
      "PL!G31"
     ],
     [
+     "FY2027",
+     15.8017118417962,
+     "PL!E47"
+    ],
+    [
      "FY2028",
-     20.4533144136947,
+     16.1189390523036,
      "PL!F47"
     ],
     [
      "FY2029",
-     23.302030974003,
+     17.5018378925801,
      "PL!G47"
     ]
    ],
-   "file": "amd/dist/20261106_AMD模型_v0.4.4.xlsx"
+   "file": "amd/dist/20261110_AMD模型_v0.4.6.xlsx"
   }
  },
  "2454": {

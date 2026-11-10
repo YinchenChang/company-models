@@ -238,7 +238,9 @@ BIZ = [("AMD 顆數係數 ×0.8／×1.2（三情境同乘；認股權證歸屬�
        ("Q4 其他分部合計 −0.5／+0.5（US$B；A2）", "oseg05", "同上"),
        ("認股權證歸屬 0％／50％（股價門檻與條件；J1）", "wf", "wf＝0／0.5（基準 1）"),
        ("Comparable 調整係數不夾值（2.27；J4）", "rmhi", "夾值上限 2.0 → 不夾值（只有高）"),
-       ("non-GAAP 稅率改現金稅率（B4）", "tx", "tx_f 換成 2026 前三季已付所得稅 ÷ non-GAAP 稅前利益（只有低）")]
+       ("non-GAAP 稅率改現金稅率（B4）", "tx", "tx_f 換成 2026 前三季已付所得稅 ÷ non-GAAP 稅前利益（只有低）"),
+       ("股票薪酬 ÷ 營收 低／高（原則 22、35）", "sbc_rev", "低＝2026 前三季、高＝FY2024–2026 前三季三期平均（基準＝最近四季）"),
+       ("2030 年底已歸屬 GW 6／10（原則 22、37）", "gw_30", "到期日前的歸屬路徑：2030 不再增加／年增 4 GW（基準 8）")]
 
 
 def sens_tp(wb, SJ, V46):
@@ -298,9 +300,9 @@ def recon(wb, SJ, V46):
     tgt = {"px": "px", "up": f"px*(1+B{G['e_up']})", "dn": f"px*(1+B{G['e_dn']})"}
     nm = {"px": "支持現價", "up": "評等升一級", "dn": "評等降一級"}
     for t in ("up", "dn", "px"):
-        for kind, f, fmt, cur in (("pe", f"=({tgt[t]}-{w}*{dcf})/((1-{w})*{feps})", "0.0", f"={pmed}*rm_factor"),
+        for kind, f, fmt, cur in [x for x in (("pe", f"=({tgt[t]}-{w}*{dcf})/((1-{w})*{feps})", "0.0", f"={pmed}*rm_factor"),
                                   ("eps", f"=({tgt[t]}-{w}*{dcf})/((1-{w})*{pmed}*rm_factor)", "0.00", f"={feps}"),
-                                  ("dcf", f"=({tgt[t]}-(1-{w})*tp_comp_adj)/{w}", "0.00", f"={dcf}")):
+                                  ("dcf", f"=({tgt[t]}-(1-{w})*tp_comp_adj)/{w}", "0.00", f"={dcf}")) if not (x[0] == "dcf" and t == "dn")]:   # 降一級所需 DCF 為負，不列
             labl = {"pe": f"{nm[t]}所需的 Comparable 採用倍數（同業中位數 × 相對倍數係數；DCF 不變）",
                     "eps": f"{nm[t]}所需的 12 個月後前瞻 EPS（同業中位數 × 係數；DCF 不變）",
                     "dcf": f"{nm[t]}所需的 DCF 目標價（Comparable 不變）"}[kind]
@@ -419,10 +421,10 @@ def readme(wb, ctx, bid, G):
             if "重點 1：加權目標價約" in v and j2:
                 w = w.replace("（三情境相同，時間窗約等於未來 12 個月）", "（情境 B，時間窗約等於未來 12 個月）")
             if "重點 2：FY2027 三情境相同" in v and j2:
-                w = w.replace('="重點 2：FY2027 三情境相同（EPS "&TEXT(' + eps("B", "E") + ',"0.00")&" 美元），分歧從 FY2028 開始：',
-                              '="重點 2：FY2027 EPS 情境 A（樂觀）／B（基準）／C（保守）為 "&TEXT(' + eps("A", "E") + ',"0.00")&"／"&TEXT(' + eps("B", "E") + ',"0.00")&"／"&TEXT(' + eps("C", "E") + ',"0.00")&" 美元（v0.4.6 起情境 A／C 自 FY2027 起帶 AMD 顆數與 CPU 路徑）；')
+                w = re.sub(r'^="重點 2：FY2027 三情境相同（EPS "&TEXT\(PL!E\d+,"0\.00"\)&" 美元），分歧從 FY2028 開始：', lambda m: (
+                           '="重點 2：FY2027 EPS 情境 A（樂觀）／B（基準）／C（保守）為 "&TEXT(' + eps("A", "E") + ',"0.00")&"／"&TEXT(' + eps("B", "E") + ',"0.00")&"／"&TEXT(' + eps("C", "E") + ',"0.00")&" 美元（v0.4.6 起情境 A／C 自 FY2027 起帶 AMD 顆數與 CPU 路徑）；'), w)
             if j2:
-                w = w.replace("以情境 A 為基準", "以情境 B 為基準").replace("敏感度以情境 A 為基準（FY2028 起吸收比例 \"&TEXT(abs_mem_A", "敏感度以情境 B 為基準（FY2028 起吸收比例 \"&TEXT(abs_mem_B")
+                w = w.replace("以情境 A 為基準", "以情境 B 為基準").replace('（FY2028 起吸收比例 "&TEXT(abs_mem_A,', '（FY2028 起吸收比例 "&TEXT(abs_mem_B,')
             if "資料中心營收能否「2027 年逾一倍」" in v:   # A9：條件式
                 if j2:
                     w = w.replace("Recon!C7", "Recon!E7").replace("Recon!D7", "Recon!F7").replace("Recon!C14", "Recon!E14").replace("Recon!C22", "Recon!E22").replace("（十億美元，三情境相同）", "（十億美元，情境 B）")

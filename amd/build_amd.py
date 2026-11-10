@@ -20,7 +20,7 @@ import accel_share as AS          # 加速器金額份額的可重用函式（NV
 # v0.4.5／v0.4.6（2026-11-10）：AMD v0.4.4 驗收報告採用項（採用規劃書 Claude outputs/20261110_AMD驗收v0.4.4_採用規劃書.md；
 # Andy 2026-11-10 07:52 確認「照預設」：J1(a)、J2(b)、J3(b)、J4(a)）。AMD_STAGE＝0.4.5（展示與治理，數值不變）或 0.4.6（預設；數值改變）。
 # AMD_V46_PARTS：v0.4.6 數值項子集（逐項拆解用；預設全部）。AMD_OVERRIDE：敏感度快照用輸入覆寫（amd/sens_amd.py），正式建置不設。
-STAGE = os.environ.get("AMD_STAGE", "0.4.5"); V46 = STAGE >= "0.4.6"
+STAGE = os.environ.get("AMD_STAGE", "0.4.6"); V46 = STAGE >= "0.4.6"
 V46P = set(filter(None, os.environ.get("AMD_V46_PARTS", "tt,sh,sbc,w,j2").split(","))) if V46 else set()
 OVR = {}
 for _kv in filter(None, os.environ.get("AMD_OVERRIDE", "").split(";")):

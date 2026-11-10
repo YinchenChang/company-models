@@ -142,10 +142,10 @@ SPEC = {
     ["各平台每顆售價（讀 NVIDIA 模型）", ["pm_bw", "pm_rb", "pm_ru", "pm_hp", "pa_amd", "pa_tpu", "pa_trn", "pa_oth"]],
     ["GPU 錨點、毛利率與世代售價係數", ["gpu25", "gs_q1", "gs_q2", "ng_q3", "ng_q4", "gm_gpu", "pg_27", "pg_28", "pg_29"]],
     ["HBM 價格路徑與吸收比例", ["hbm_A_26", "hbm_A_27", "hbm_A_28", "hbm_A_29", "hbm_B_26", "hbm_B_27", "hbm_B_28", "hbm_B_29", "hbm_C_26", "hbm_C_27", "hbm_C_28", "hbm_C_29", "abs_mem", "abs_mem_A", "abs_mem_B", "abs_mem_C"]],
-    ["客戶大單認股權證", ["w_tot", "w_gw", "gw_26", "gw_27", "gw_28", "gw_29", "wf"]],
+    ["客戶大單認股權證", ["w_tot", "w_gw", "gw_26", "gw_27", "gw_28", "gw_29"] + ([k for k in ("wf", "gw_30", "w_exp_o", "w_exp_m", "w_val")] if "w_val" in KEY else ["wf"])],
     ["Wattonomics 錨定係數（只進敏感度）", ["wta_27", "wta_28", "wta_29"]]]],
   ["資料中心 CPU 與其他業務（Client、Gaming、Embedded）", [
-    ["成長率（FY2027 起）", ["g_cpu27", "g_cpu28", "g_cpu29", "g_cli", "g_gam", "g_emb"]]]],
+    ["成長率（FY2027 起）", ["g_cpu27", "g_cpu28", "g_cpu29", "g_cli", "g_gam", "g_emb"]]] + ([["樂觀與保守情境的專屬路徑", ["uf_A", "uf_C", "g_cpu27_A", "g_cpu28_A", "g_cpu29_A", "g_cpu27_C", "g_cpu28_C", "g_cpu29_C"]]] if "uf_A" in KEY else [])],
   ["全公司：錨點、費用、稅與股數、股價與目標價規則", [
     ["FY2026 錨點（第三季實績＋第四季指引）", ["q3_rev", "q3_gm", "q3_opx", "q4_oth", "tx_26", "q3_sh", "q3_cli", "q3_gam", "q3_emb", "q4_rev", "q4_cli", "q4_gam", "q4_emb", "q4_gm", "q4_opx", "q4_sh"]],
     ["營業費用、稅與股數", ["phi", "g_opx_min", "opx_adj", "tx_f", "oth_f", "sh_g"]],
