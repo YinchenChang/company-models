@@ -1,10 +1,10 @@
 {
  "source": {
-  "file": "20261021_Tokenomics_v18.0.xlsx",
-  "current": "20261021_Tokenomics_v18.0.xlsx",
-  "version": "v18.0",
-  "commit": "868e2cc552621fcf3a513ecd3a9960bafb318e99",
-  "extractedAt": "2026-10-21",
+  "file": "20261105_Tokenomics_v22.0.xlsx",
+  "current": "20261105_Tokenomics_v22.0.xlsx",
+  "version": "v22.0",
+  "commit": "4a13ba432d32e070fc0bec1a88ac84420f91101f",
+  "extractedAt": "2026-11-11",
   "repo": "YinchenChang/Tokenomics",
   "recalculated": false,
   "optional": [],
@@ -239,7 +239,7 @@
      "高成本": 39.2826064
     },
     "VR200 NVL72": {
-     "低成本": 33.2734032,
+     "低成本": 31.9970232,
      "基準": 37.586352,
      "高成本": 42.6375752
     },
@@ -361,7 +361,7 @@
      "高成本": 55.4686064
     },
     "VR200 NVL72": {
-     "低成本": 43.4854032,
+     "低成本": 42.2090232,
      "基準": 50.256352,
      "高成本": 58.8235752
     },
@@ -409,27 +409,27 @@
     "Hopper H100": {
      "低成本": 5.19000377241587,
      "基準": 7.10411981353067,
-     "高成本": 12.2070705365445
+     "高成本": 10.668219249541
     },
     "GB200 NVL72": {
      "低成本": 5.04951503784896,
      "基準": 6.44917840537967,
-     "高成本": 10.4195985807088
+     "高成本": 9.1725696948478
     },
     "GB300 NVL72": {
      "低成本": 6.47360284700915,
      "基準": 7.98992214647791,
-     "高成本": 13.6330236684808
+     "高成本": 11.8613714888424
     },
     "VR200 NVL72": {
-     "低成本": 7.32251312176997,
+     "低成本": 7.09287829867124,
      "基準": 8.9923042149807,
-     "高成本": 14.5598263108425
+     "高成本": 12.6368644719972
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
      "低成本": 7.78527570436843,
      "基準": 11.3345929943372,
-     "高成本": 20.8704255692031
+     "高成本": 17.9171962499586
     }
    },
    "cells": {
@@ -470,27 +470,27 @@
     "Hopper H100": {
      "低成本": 6.79107465326444,
      "基準": 9.70308728611469,
-     "高成本": 16.6637697337026
+     "高成本": 15.0607832531286
     },
     "GB200 NVL72": {
      "低成本": 6.6118162762144,
      "基準": 8.82816556596761,
-     "高成本": 14.3185748619737
+     "高成本": 13.0195731573887
     },
     "GB300 NVL72": {
      "低成本": 8.42889912085495,
      "基準": 10.8864110021101,
-     "高成本": 18.5346455040469
+     "高成本": 16.6891556141369
     },
     "VR200 NVL72": {
-     "低成本": 9.51207691858967,
+     "低成本": 9.21907146281596,
      "基準": 12.2254710045841,
-     "高成本": 19.7506269894487
+     "高成本": 17.7475212596345
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
      "低成本": 10.1025446864987,
      "基準": 15.3544827030524,
-     "高成本": 28.0302450108258
+     "高成本": 24.953933015791
     }
    },
    "cells": {
@@ -531,27 +531,27 @@
     "Hopper H100": {
      "低成本": 1.07964486018265,
      "基準": 1.54259654785589,
-     "高成本": 2.64920565047995
+     "高成本": 2.39436290422003
     },
     "GB200 NVL72": {
      "低成本": 1.50422814430785,
      "基準": 2.00846099652078,
-     "高成本": 3.25756227849869
+     "高成本": 2.9620315435371
     },
     "GB300 NVL72": {
      "低成本": 1.97574392204647,
      "基準": 2.55178761329595,
-     "高成本": 4.34454282544458
+     "高成本": 3.91195781275103
     },
     "VR200 NVL72": {
-     "低成本": 3.72193954123947,
+     "低成本": 3.60729070051029,
      "基準": 4.78365180724219,
-     "高成本": 7.72813762813851
+     "高成本": 6.9443510287568
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
      "低成本": 5.92143420546319,
      "基準": 8.99976806898525,
-     "高成本": 16.4294498807254
+     "高成本": 14.6263220907122
     }
    },
    "cells": {
@@ -687,7 +687,7 @@
    "cell": "L1!D30",
    "range": {
     "低": 1.50422814430785,
-    "高": 3.25756227849869,
+    "高": 2.9620315435371,
     "def": "成本角落情境（低成本／高成本欄）",
     "cells": {
      "低": "L1!E30",
@@ -711,7 +711,7 @@
    "cell": "L1!D31",
    "range": {
     "低": 1.97574392204647,
-    "高": 4.34454282544458,
+    "高": 3.91195781275103,
     "def": "成本角落情境（低成本／高成本欄）",
     "cells": {
      "低": "L1!E31",
@@ -731,11 +731,11 @@
    "unit": "$B/GW/年",
    "condition": "OpenAI 有效單價、基準成本、基準利用率",
    "kind": "single",
-   "values": 65.9628389770872,
+   "values": 65.2940797058121,
    "cell": "L1!D29",
    "range": {
-    "低": 43.9752259847248,
-    "高": 87.9504519694495,
+    "低": 43.5293864705414,
+    "高": 87.0587729410828,
     "def": "利用率 40–80%（Sens_Rev 情境值；J6 區間）",
     "cells": {
      "低": "L1!E29",
@@ -753,27 +753,27 @@
     "Hopper H100": {
      "低成本": 6,
      "基準": 6,
-     "高成本": 4
+     "高成本": 5
     },
     "GB200 NVL72": {
      "低成本": 6,
      "基準": 6,
-     "高成本": 4
+     "高成本": 5
     },
     "GB300 NVL72": {
      "低成本": 6,
      "基準": 6,
-     "高成本": 4
+     "高成本": 5
     },
     "VR200 NVL72": {
      "低成本": 6,
      "基準": 6,
-     "高成本": 4
+     "高成本": 5
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
      "低成本": 6,
      "基準": 6,
-     "高成本": 4
+     "高成本": 5
     }
    },
    "cells": {
@@ -814,27 +814,27 @@
     "Hopper H100": {
      "低成本": 3.5700449,
      "基準": 4.58503566666667,
-     "高成本": 8.53018585
+     "高成本": 6.82414868
     },
     "GB200 NVL72": {
      "低成本": 3.4398984,
      "基準": 4.002529,
-     "高成本": 6.9125511
+     "高成本": 5.53004088
     },
     "GB300 NVL72": {
      "低成本": 4.7591504,
      "基準": 5.37287066666667,
-     "高成本": 9.8206516
+     "高成本": 7.85652128
     },
     "VR200 NVL72": {
-     "低成本": 5.5455672,
+     "低成本": 5.3328372,
      "基準": 6.264392,
-     "高成本": 10.6593938
+     "高成本": 8.52751504
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
      "低成本": 5.974263,
      "基準": 8.34763,
-     "高成本": 16.3703895
+     "高成本": 13.0963116
     }
    },
    "cells": {
@@ -1058,27 +1058,27 @@
     "Hopper H100": {
      "低成本": 0.219436730882534,
      "基準": 0.43259841019734,
-     "高成本": 0.6226274060112
+     "高成本": 0.789813289007651
     },
     "GB200 NVL72": {
      "低成本": 0.211437133315623,
      "基準": 0.377638868712999,
-     "高成本": 0.504554512175472
+     "高成本": 0.640035846314469
     },
     "GB300 NVL72": {
      "低成本": 0.292526406475813,
      "基準": 0.506930693144573,
-     "高成本": 0.716819883947515
+     "高成本": 0.909298024309077
     },
     "VR200 NVL72": {
-     "低成本": 0.340864378836638,
+     "低成本": 0.327788695737907,
      "基準": 0.591045788314028,
-     "高成本": 0.778040575909124
+     "高成本": 0.986957497063884
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
      "低成本": 0.367214637035091,
      "基準": 0.787599427670528,
-     "高成本": 1.19489227186978
+     "高成本": 1.51574085262531
     }
    },
    "cells": {
@@ -1254,7 +1254,7 @@
      "高成本": 0.4437488512
     },
     "VR200 NVL72": {
-     "低成本": 0.1304562096,
+     "低成本": 0.1266270696,
      "基準": 0.25128176,
      "高成本": 0.4705886016
     },
@@ -1302,27 +1302,27 @@
     "Hopper H100": {
      "低成本": 1.11222553908253,
      "基準": 1.88466748019734,
-     "高成本": 2.8646513532112
+     "高成本": 3.03183723620765
     },
     "GB200 NVL72": {
      "低成本": 1.10188330451562,
      "基準": 1.812232738713,
-     "高成本": 2.69481414737547
+     "高成本": 2.83029548151447
     },
     "GB300 NVL72": {
      "低成本": 1.20671911367581,
      "基準": 1.98263481314457,
-     "高成本": 3.00013873514752
+     "高成本": 3.19261687550908
     },
     "VR200 NVL72": {
-     "低成本": 1.26921258843664,
+     "低成本": 1.25230776533791,
      "基準": 2.09349554831403,
-     "高成本": 3.08819917750912
+     "高成本": 3.29711609866388
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
      "低成本": 1.30327937103509,
      "基準": 2.35254632767053,
-     "高成本": 3.68780273586978
+     "高成本": 4.00865131662531
     }
    },
    "cells": {
@@ -1361,29 +1361,29 @@
    "kind": "gen_cost",
    "values": {
     "Hopper H100": {
-     "低成本": 6.68304023377571,
-     "基準": 6.68304023377571,
-     "高成本": 6.68304023377571
+     "低成本": 6.58444875305292,
+     "基準": 6.58444875305292,
+     "高成本": 6.58444875305292
     },
     "GB200 NVL72": {
-     "低成本": 32.8855044002063,
-     "基準": 32.8855044002063,
-     "高成本": 32.8855044002063
+     "低成本": 32.484131705899,
+     "基準": 32.484131705899,
+     "高成本": 32.484131705899
     },
     "GB300 NVL72": {
-     "低成本": 40.1114652107936,
-     "基準": 40.1114652107936,
-     "高成本": 40.1114652107936
+     "低成本": 39.4752913800993,
+     "基準": 39.4752913800993,
+     "高成本": 39.4752913800993
     },
     "VR200 NVL72": {
-     "低成本": 65.9628389770872,
-     "基準": 65.9628389770872,
-     "高成本": 65.9628389770872
+     "低成本": 65.2940797058121,
+     "基準": 65.2940797058121,
+     "高成本": 65.2940797058121
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": 91.6051270761894,
-     "基準": 91.6051270761894,
-     "高成本": 91.6051270761894
+     "低成本": 90.7887551368056,
+     "基準": 90.7887551368056,
+     "高成本": 90.7887551368056
     }
    },
    "cells": {
@@ -1437,7 +1437,7 @@
      "高成本": 0.392826064
     },
     "VR200 NVL72": {
-     "低成本": 0.083183508,
+     "低成本": 0.079992558,
      "基準": 0.18793176,
      "高成本": 0.426375752
     },
@@ -1498,7 +1498,7 @@
      "高成本": 1.96413032
     },
     "VR200 NVL72": {
-     "低成本": 0.665468064,
+     "低成本": 0.639940464,
      "基準": 1.12759056,
      "高成本": 2.13187876
     },
@@ -1553,29 +1553,29 @@
    "kind": "gen_cost",
    "values": {
     "Hopper H100": {
-     "低成本": 11.1384003896262,
-     "基準": 11.1384003896262,
-     "高成本": 11.1384003896262
+     "低成本": 10.9740812550882,
+     "基準": 10.9740812550882,
+     "高成本": 10.9740812550882
     },
     "GB200 NVL72": {
-     "低成本": 54.8091740003439,
-     "基準": 54.8091740003439,
-     "高成本": 54.8091740003439
+     "低成本": 54.1402195098317,
+     "基準": 54.1402195098317,
+     "高成本": 54.1402195098317
     },
     "GB300 NVL72": {
-     "低成本": 66.8524420179894,
-     "基準": 66.8524420179894,
-     "高成本": 66.8524420179894
+     "低成本": 65.7921523001655,
+     "基準": 65.7921523001655,
+     "高成本": 65.7921523001655
     },
     "VR200 NVL72": {
-     "低成本": 109.938064961812,
-     "基準": 109.938064961812,
-     "高成本": 109.938064961812
+     "低成本": 108.823466176353,
+     "基準": 108.823466176353,
+     "高成本": 108.823466176353
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": 152.675211793649,
-     "基準": 152.675211793649,
-     "高成本": 152.675211793649
+     "低成本": 151.314591894676,
+     "基準": 151.314591894676,
+     "高成本": 151.314591894676
     }
    },
    "cells": {
@@ -1614,29 +1614,29 @@
    "kind": "gen_cost",
    "values": {
     "Hopper H100": {
-     "低成本": 6.68304023377571,
-     "基準": 6.68304023377571,
-     "高成本": 6.68304023377571
+     "低成本": 6.58444875305292,
+     "基準": 6.58444875305292,
+     "高成本": 6.58444875305292
     },
     "GB200 NVL72": {
-     "低成本": 32.8855044002063,
-     "基準": 32.8855044002063,
-     "高成本": 32.8855044002063
+     "低成本": 32.484131705899,
+     "基準": 32.484131705899,
+     "高成本": 32.484131705899
     },
     "GB300 NVL72": {
-     "低成本": 40.1114652107936,
-     "基準": 40.1114652107936,
-     "高成本": 40.1114652107936
+     "低成本": 39.4752913800993,
+     "基準": 39.4752913800993,
+     "高成本": 39.4752913800993
     },
     "VR200 NVL72": {
-     "低成本": 65.9628389770872,
-     "基準": 65.9628389770872,
-     "高成本": 65.9628389770872
+     "低成本": 65.2940797058121,
+     "基準": 65.2940797058121,
+     "高成本": 65.2940797058121
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": 91.6051270761894,
-     "基準": 91.6051270761894,
-     "高成本": 91.6051270761894
+     "低成本": 90.7887551368056,
+     "基準": 90.7887551368056,
+     "高成本": 90.7887551368056
     }
    },
    "cells": {
@@ -1675,29 +1675,29 @@
    "kind": "gen_cost",
    "values": {
     "Hopper H100": {
-     "低成本": 5.01848956376868,
-     "基準": 5.01848956376868,
-     "高成本": 5.01848956376868
+     "低成本": 4.91552254767024,
+     "基準": 4.91552254767024,
+     "高成本": 4.91552254767024
     },
     "GB200 NVL72": {
-     "低成本": 26.277375674595,
-     "基準": 26.277375674595,
-     "高成本": 26.277375674595
+     "低成本": 25.8874403158771,
+     "基準": 25.8874403158771,
+     "高成本": 25.8874403158771
     },
     "GB300 NVL72": {
-     "低成本": 31.7743161074204,
-     "基準": 31.7743161074204,
-     "高成本": 31.7743161074204
+     "低成本": 31.1784199187605,
+     "基準": 31.1784199187605,
+     "高成本": 31.1784199187605
     },
     "VR200 NVL72": {
-     "低成本": 53.1540686485926,
-     "基準": 53.1540686485926,
-     "高成本": 53.1540686485926
+     "低成本": 52.4944736666948,
+     "基準": 52.4944736666948,
+     "高成本": 52.4944736666948
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": 74.0683951910804,
-     "基準": 74.0683951910804,
-     "高成本": 74.0683951910804
+     "低成本": 73.2496538630457,
+     "基準": 73.2496538630457,
+     "高成本": 73.2496538630457
     }
    },
    "cells": {
@@ -1736,29 +1736,29 @@
    "kind": "gen_cost",
    "values": {
     "Hopper H100": {
-     "低成本": 5.01848956376868,
-     "基準": 5.01848956376868,
-     "高成本": 5.01848956376868
+     "低成本": 4.91552254767024,
+     "基準": 4.91552254767024,
+     "高成本": 4.91552254767024
     },
     "GB200 NVL72": {
-     "低成本": 26.277375674595,
-     "基準": 26.277375674595,
-     "高成本": 26.277375674595
+     "低成本": 25.8874403158771,
+     "基準": 25.8874403158771,
+     "高成本": 25.8874403158771
     },
     "GB300 NVL72": {
-     "低成本": 31.7743161074204,
-     "基準": 31.7743161074204,
-     "高成本": 31.7743161074204
+     "低成本": 31.1784199187605,
+     "基準": 31.1784199187605,
+     "高成本": 31.1784199187605
     },
     "VR200 NVL72": {
-     "低成本": 53.1540686485926,
-     "基準": 53.1540686485926,
-     "高成本": 53.1540686485926
+     "低成本": 52.4944736666948,
+     "基準": 52.4944736666948,
+     "高成本": 52.4944736666948
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": 74.0683951910804,
-     "基準": 74.0683951910804,
-     "高成本": 74.0683951910804
+     "低成本": 73.2496538630457,
+     "基準": 73.2496538630457,
+     "高成本": 73.2496538630457
     }
    },
    "cells": {
@@ -1791,7 +1791,7 @@
   },
   "IFC_Use": {
    "sheet": "Interface",
-   "ref": "Interface!S6:S344",
+   "ref": "Interface!S6:S461",
    "label": "Decision Use（公式）",
    "unit": null,
    "kind": "by_name",
@@ -1977,7 +1977,7 @@
     "IF_RevGW_Sol_Life": "情境、相對比較、反轉門檻",
     "IF_RevGW_Astra_Life": "情境、相對比較、反轉門檻",
     "IF_RevGWFleet_Life": "情境、相對比較、反轉門檻",
-    "IF_DeprLifeIT": "情境、相對比較、反轉門檻",
+    "IF_DeprLifeIT": "基準輸入",
     "IF_DeprIT": "情境、相對比較、反轉門檻",
     "IF_DeprFac": "基準輸入",
     "IF_AvgDraw": "基準輸入",
@@ -2053,7 +2053,105 @@
     "IF_TrainFLOP_Astra": "情境、相對比較、反轉門檻",
     "IF_TrainInferShare_Astra": "情境、相對比較、反轉門檻",
     "IF_GMDefault_Astra": "情境、相對比較、反轉門檻",
-    "IF_AmortRevShare": "情境、相對比較、反轉門檻"
+    "IF_AmortRevShare": "情境、相對比較、反轉門檻",
+    "IF_Disc": "基準輸入",
+    "IF_MixPaid_Luna": "基準輸入",
+    "IF_MixPaid_Sol": "基準輸入",
+    "IF_MixPaid_Astra": "基準輸入",
+    "IF_MixFree_Luna": "基準輸入",
+    "IF_MixFree_Sol": "基準輸入",
+    "IF_MixFree_Astra": "基準輸入",
+    "IF_UtilActual": "基準輸入",
+    "IF_ProdDerate": "情境、相對比較、反轉門檻",
+    "IF_FleetProdRatio_VR200": "情境、相對比較、反轉門檻",
+    "IF_PxEffMix": "情境、相對比較、反轉門檻",
+    "IF_PxEffMix25": "基準輸入",
+    "IF_LTotalDisc": "情境、相對比較、反轉門檻",
+    "IF_LTotalFleetVDisc": "情境、相對比較、反轉門檻",
+    "IF_TokGWPaidMix": "情境、相對比較、反轉門檻",
+    "IF_RackPrice": "情境、相對比較、反轉門檻",
+    "IF_ScaleOutShare": "基準輸入",
+    "IF_StoragePerGPU": "基準輸入",
+    "IF_NonNV_Out_AMD": "基準輸入",
+    "IF_NonNV_Out_TPU": "基準輸入",
+    "IF_NonNV_Out_Trn": "基準輸入",
+    "IF_NonNV_Out_CS": "基準輸入",
+    "IF_NonNV_Out_OAI": "基準輸入",
+    "IF_NonNV_Hold_AMD": "基準輸入",
+    "IF_NonNV_Hold_TPU": "基準輸入",
+    "IF_NonNV_Hold_Trn": "基準輸入",
+    "IF_NonNV_Hold_CS": "基準輸入",
+    "IF_NonNV_Hold_OAI": "基準輸入",
+    "IF_NonNV_Out_Ascend": "基準輸入",
+    "IF_NonNV_Out_Maia": "基準輸入",
+    "IF_NonNV_Hold_Ascend": "基準輸入",
+    "IF_NonNV_Hold_Maia": "基準輸入",
+    "IF_TokRack_Terra": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IF_TokRackD_Terra": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IF_TokGW_Terra": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IF_VReq_Terra": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IF_CostPre_Terra": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IF_CostCache_Terra": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IF_CostDec_Terra": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IF_CostDecAcct_Terra": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IF_TokPerJ_Terra": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IF_TrainGPUh_Terra": "情境、相對比較、反轉門檻",
+    "IF_TrainCost_Terra": "情境、相對比較、反轉門檻",
+    "IF_PostShareFLOP_Terra": "情境、相對比較、反轉門檻",
+    "IF_PostShareGPUh_Terra": "情境、相對比較、反轉門檻",
+    "IF_RLMFU_Terra": "情境、相對比較、反轉門檻",
+    "IF_ProgGPUh_Terra": "情境、相對比較、反轉門檻",
+    "IF_ProgCost_Terra": "情境、相對比較、反轉門檻",
+    "IF_ProgGWyr_Terra": "情境、相對比較、反轉門檻",
+    "IF_PriceFresh_Terra": "基準輸入",
+    "IF_PriceCached_Terra": "基準輸入",
+    "IF_PriceThink_Terra": "基準輸入",
+    "IF_PriceOut_Terra": "基準輸入",
+    "IF_PriceRef_Terra": "情境、相對比較、反轉門檻",
+    "IF_FrontRef_Terra": "情境、相對比較、反轉門檻",
+    "IF_FrontModel_Terra": "情境、相對比較、反轉門檻",
+    "IF_Life_Terra": "基準輸入",
+    "IF_CacheStore_Terra": "情境、相對比較、反轉門檻",
+    "IF_AmortBU_Terra": "情境、相對比較、反轉門檻",
+    "IF_AmortTD_Terra": "情境、相對比較、反轉門檻",
+    "IF_FullCost_Terra": "情境、相對比較、反轉門檻",
+    "IF_AmortDefault_Terra": "情境、相對比較、反轉門檻",
+    "IF_AmortRev_Terra": "情境、相對比較、反轉門檻",
+    "IF_FullCostDefault_Terra": "情境、相對比較、反轉門檻",
+    "IF_RevGW_Terra": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IF_RevGWFront_Terra": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IF_RevGWFleet_Terra": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IF_RevGWFleetFront_Terra": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IF_TaskSucc_Terra": "基準輸入",
+    "IF_TaskSuccSel_Terra": "基準輸入",
+    "IF_CostSuccVR_Terra": "情境、相對比較、反轉門檻",
+    "IF_CostSuccGB_Terra": "情境、相對比較、反轉門檻",
+    "IF_RevSucc_Terra": "情境、相對比較、反轉門檻",
+    "IF_HarR_Terra": "情境、相對比較、反轉門檻",
+    "IF_CostAttVR_Terra": "情境、相對比較、反轉門檻",
+    "IF_HzEff_Terra": "基準輸入",
+    "IF_FullCost_Terra_Prod": "情境、相對比較、反轉門檻",
+    "IF_RevGW_Terra_Prod": "情境、相對比較、反轉門檻",
+    "IF_RevGW_Terra_Life": "情境、相對比較、反轉門檻",
+    "IFW_RevGW_Terra_100": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IFW_RevGW_Terra_Util": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IFW_RevGW_Terra_Prod": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IFW_RevGW_Terra_Life": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IFW_RevGWFront_Terra_100": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IFW_RevGWFront_Terra_Util": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IFW_RevGWFront_Terra_Prod": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IFW_RevGWFront_Terra_Life": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IFW_TokGW_Terra_100": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IFW_TokGW_Terra_Util": "情境、相對比較、反轉門檻",
+    "IFW_TokGW_Terra_Prod": "情境、相對比較、反轉門檻",
+    "IFW_TokGW_Terra_Life": "情境、相對比較、反轉門檻",
+    "IFW_RevGW_Terra_LifeSelf": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IFW_RevGWFront_Terra_LifeSelf": "情境、相對比較、反轉門檻；上限，不得作預測",
+    "IF_TrainFLOP_Terra": "情境、相對比較、反轉門檻",
+    "IF_TrainInferShare_Terra": "情境、相對比較、反轉門檻",
+    "IF_GMDefault_Terra": "情境、相對比較、反轉門檻",
+    "IF_MixPaid_Terra": "基準輸入",
+    "IF_MixFree_Terra": "基準輸入"
    },
    "cells": {
     "IF_RacksPerGW": "Interface!S6",
@@ -2313,7 +2411,105 @@
     "IF_TrainFLOP_Astra": "Interface!S341",
     "IF_TrainInferShare_Astra": "Interface!S342",
     "IF_GMDefault_Astra": "Interface!S343",
-    "IF_AmortRevShare": "Interface!S344"
+    "IF_AmortRevShare": "Interface!S344",
+    "IF_Disc": "Interface!S347",
+    "IF_MixPaid_Luna": "Interface!S348",
+    "IF_MixPaid_Sol": "Interface!S349",
+    "IF_MixPaid_Astra": "Interface!S350",
+    "IF_MixFree_Luna": "Interface!S351",
+    "IF_MixFree_Sol": "Interface!S352",
+    "IF_MixFree_Astra": "Interface!S353",
+    "IF_UtilActual": "Interface!S354",
+    "IF_ProdDerate": "Interface!S355",
+    "IF_FleetProdRatio_VR200": "Interface!S356",
+    "IF_PxEffMix": "Interface!S357",
+    "IF_PxEffMix25": "Interface!S358",
+    "IF_LTotalDisc": "Interface!S359",
+    "IF_LTotalFleetVDisc": "Interface!S360",
+    "IF_TokGWPaidMix": "Interface!S361",
+    "IF_RackPrice": "Interface!S364",
+    "IF_ScaleOutShare": "Interface!S365",
+    "IF_StoragePerGPU": "Interface!S366",
+    "IF_NonNV_Out_AMD": "Interface!S369",
+    "IF_NonNV_Out_TPU": "Interface!S370",
+    "IF_NonNV_Out_Trn": "Interface!S371",
+    "IF_NonNV_Out_CS": "Interface!S372",
+    "IF_NonNV_Out_OAI": "Interface!S373",
+    "IF_NonNV_Hold_AMD": "Interface!S374",
+    "IF_NonNV_Hold_TPU": "Interface!S375",
+    "IF_NonNV_Hold_Trn": "Interface!S376",
+    "IF_NonNV_Hold_CS": "Interface!S377",
+    "IF_NonNV_Hold_OAI": "Interface!S378",
+    "IF_NonNV_Out_Ascend": "Interface!S379",
+    "IF_NonNV_Out_Maia": "Interface!S380",
+    "IF_NonNV_Hold_Ascend": "Interface!S381",
+    "IF_NonNV_Hold_Maia": "Interface!S382",
+    "IF_TokRack_Terra": "Interface!S386",
+    "IF_TokRackD_Terra": "Interface!S387",
+    "IF_TokGW_Terra": "Interface!S388",
+    "IF_VReq_Terra": "Interface!S389",
+    "IF_CostPre_Terra": "Interface!S390",
+    "IF_CostCache_Terra": "Interface!S391",
+    "IF_CostDec_Terra": "Interface!S392",
+    "IF_CostDecAcct_Terra": "Interface!S393",
+    "IF_TokPerJ_Terra": "Interface!S394",
+    "IF_TrainGPUh_Terra": "Interface!S396",
+    "IF_TrainCost_Terra": "Interface!S397",
+    "IF_PostShareFLOP_Terra": "Interface!S398",
+    "IF_PostShareGPUh_Terra": "Interface!S399",
+    "IF_RLMFU_Terra": "Interface!S400",
+    "IF_ProgGPUh_Terra": "Interface!S401",
+    "IF_ProgCost_Terra": "Interface!S402",
+    "IF_ProgGWyr_Terra": "Interface!S403",
+    "IF_PriceFresh_Terra": "Interface!S405",
+    "IF_PriceCached_Terra": "Interface!S406",
+    "IF_PriceThink_Terra": "Interface!S407",
+    "IF_PriceOut_Terra": "Interface!S408",
+    "IF_PriceRef_Terra": "Interface!S409",
+    "IF_FrontRef_Terra": "Interface!S410",
+    "IF_FrontModel_Terra": "Interface!S411",
+    "IF_Life_Terra": "Interface!S412",
+    "IF_CacheStore_Terra": "Interface!S413",
+    "IF_AmortBU_Terra": "Interface!S414",
+    "IF_AmortTD_Terra": "Interface!S415",
+    "IF_FullCost_Terra": "Interface!S416",
+    "IF_AmortDefault_Terra": "Interface!S417",
+    "IF_AmortRev_Terra": "Interface!S418",
+    "IF_FullCostDefault_Terra": "Interface!S419",
+    "IF_RevGW_Terra": "Interface!S420",
+    "IF_RevGWFront_Terra": "Interface!S421",
+    "IF_RevGWFleet_Terra": "Interface!S422",
+    "IF_RevGWFleetFront_Terra": "Interface!S423",
+    "IF_TaskSucc_Terra": "Interface!S425",
+    "IF_TaskSuccSel_Terra": "Interface!S426",
+    "IF_CostSuccVR_Terra": "Interface!S427",
+    "IF_CostSuccGB_Terra": "Interface!S428",
+    "IF_RevSucc_Terra": "Interface!S429",
+    "IF_HarR_Terra": "Interface!S430",
+    "IF_CostAttVR_Terra": "Interface!S431",
+    "IF_HzEff_Terra": "Interface!S432",
+    "IF_FullCost_Terra_Prod": "Interface!S434",
+    "IF_RevGW_Terra_Prod": "Interface!S435",
+    "IF_RevGW_Terra_Life": "Interface!S437",
+    "IFW_RevGW_Terra_100": "Interface!S439",
+    "IFW_RevGW_Terra_Util": "Interface!S440",
+    "IFW_RevGW_Terra_Prod": "Interface!S441",
+    "IFW_RevGW_Terra_Life": "Interface!S442",
+    "IFW_RevGWFront_Terra_100": "Interface!S443",
+    "IFW_RevGWFront_Terra_Util": "Interface!S444",
+    "IFW_RevGWFront_Terra_Prod": "Interface!S445",
+    "IFW_RevGWFront_Terra_Life": "Interface!S446",
+    "IFW_TokGW_Terra_100": "Interface!S447",
+    "IFW_TokGW_Terra_Util": "Interface!S448",
+    "IFW_TokGW_Terra_Prod": "Interface!S449",
+    "IFW_TokGW_Terra_Life": "Interface!S450",
+    "IFW_RevGW_Terra_LifeSelf": "Interface!S452",
+    "IFW_RevGWFront_Terra_LifeSelf": "Interface!S453",
+    "IF_TrainFLOP_Terra": "Interface!S455",
+    "IF_TrainInferShare_Terra": "Interface!S456",
+    "IF_GMDefault_Terra": "Interface!S457",
+    "IF_MixPaid_Terra": "Interface!S459",
+    "IF_MixFree_Terra": "Interface!S460"
    }
   },
   "L1_TokMW_Gen_ratio_VR200": {

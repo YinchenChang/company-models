@@ -680,8 +680,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `tokenomics._note` | Tokenomics 取數層的說明（不進程式；W1） | 文字 | 算力相關的產業與物理層資料改引用 Tokenomic… | 可沿用 |
 | `tokenomics.snapshotFile` | Tokenomics 快照檔路徑（tools/tokenomics/import_tokenomics.py 產生；Excel「Tokenomics_取數」分頁讀此檔；W1） | 路徑 | data/tokenomics_snapshot_v… | 可沿用 |
-| `tokenomics.version` | 快照的 Tokenomics 版本（model/CURRENT 的版本號） | 文字 | v18.0 | 可沿用 |
-| `tokenomics.commit` | 快照的 Tokenomics commit SHA | 文字 | 868e2cc552621fcf3a513ecd3a… | 可沿用 |
+| `tokenomics.version` | 快照的 Tokenomics 版本（model/CURRENT 的版本號） | 文字 | v22.0 | 可沿用 |
+| `tokenomics.commit` | 快照的 Tokenomics commit SHA | 文字 | 4a13ba432d32e070fc0bec1a88… | 可沿用 |
 | `tokenomics.names` | 引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW、IF_RevGWFleet、IF_MaintITWarr、IF_MaintITPost、IF_WarrantyYrs、IFW_RevGWFleet_100、IFW_RevGWFleet_Util、IFW_RevGWFleet_Prod、IFW_RevGWFleet_Life、IFC_Use、L1_TokMW_Gen_ratio_VR200、L1_TokMW_Gen_ratio_VR200_Lo、L1_TokMW_Gen_ratio_VR200_Hi、L1_GenPxThr_Rev_VR200、L1_GenPxThr_Rev_VR200_Lo、L1_GenPxThr_Rev_VR200_Hi、L1_GenPxThr_Pay_VR200、L1_GenPxThr_Pay_VR200_Lo、L1_GenPxThr_Pay_VR200_Hi | 檢查 |
 | `tokenomics.optional` | 其中 Tokenomics 尚未提供時記為 missing 的名稱（v5.25 預計新增） | 清單 |  | 檢查 |
 
