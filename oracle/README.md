@@ -1,4 +1,6 @@
-# Oracle（ORCL）個股模型 v0.5.0（命題＋營收分部架構＋收支模組）
+# Oracle（ORCL）個股模型 v0.5.1（命題＋營收分部架構＋收支模組）
+
+**v0.5.1（2026-11-10，HTML 版面 v1.0）：** Andy 2026-11-10 15:12「請套用」。依 `docs/plan/個股HTML版面規格.md`：投資建議橫幅置頂（加權目標價與 Comparable 目標價並列）、命題分點、命題回覆摺疊在命題正下方、白話重點觀察、參數依業務分四塊（有區間的直接顯示、固定輸入摺疊；In 頁 A–J 節每個鍵剛好歸入一組，建置時檢查）、估值與對帳只列主要項目、DCF 折現率直接顯示、龍捲風圖只顯示變動 ≥10% 的案例、附錄摺疊。收支模組一節維持在命題之後，細表改為摺疊。xlsx 只在 README 末尾新增「展示層」與「命題回覆」兩段（公式帶數字），其餘 16 頁與 v0.5.0 逐格相同；加權目標價 70.38、放空不變。v0.5.0 成品移 `dist/_待刪除/`。
 
 **v0.5.0（2026-11-10，收支型個股樣板）：** Andy 2026-11-10 指示以 Oracle 作為「新雲＋傳統業務」混合型公司的樣板，補回 RPO、站點、融資、資金瀑布的逐年模型與反向 DCF。新增六頁 Fund、RPO、Sites、Debt、Lease、RevDCF（`funding_v05.py`），全部引用既有頁；既有十頁與 v0.4.7 逐格相同，加權目標價 **70.38**、放空不變。建置 `bash oracle/make_v05.sh`（`REV=1` 重跑反向 DCF、`STRESS=1` 重跑壓力表）。HTML 新增「資金缺口與融資」（命題之後）與「反向 DCF」兩節（共用產生器可選節 `funding`、`revdcf`）。到期借款在基準仍假設展延，Debt 頁列再融資備忘。報告 `docs/reports/20261110_oracle_v0.5.0_收支模組.md`；逐列對照 `docs/reports/20261110_oracle_v0.5.0_收支模組逐列對照.xlsx`。v0.4.7 成品移 `dist/_待刪除/`。
 
@@ -41,8 +43,8 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_oracle.py` | 獨立 Python → Excel 產生器（openpyxl，全部活公式；藍字輸入、黑字公式） |
-| `dist/20261110_Oracle個股模型_v0.5.0.xlsx` | LibreOffice headless 重算後的成品（公式錯誤 0） |
-| `dist/20261110_Oracle個股模型_v0.5.0.html`、`html.json` | `tools/company_html/build_company_html.py oracle` 產生；`check_company_html.py` 通過 |
+| `dist/20261110_Oracle個股模型_v0.5.1.xlsx` | LibreOffice headless 重算後的成品（公式錯誤 0） |
+| `dist/20261110_Oracle個股模型_v0.5.1.html`、`html.json` | `tools/company_html/build_company_html.py oracle` 產生；`check_company_html.py` 通過 |
 | `segments.json` | 官方分部宣告；`tools/segment_check/check_segments.py oracle` 通過 |
 | `scripts/sens_v04.py` | 敏感度：一次動一個輸入，完整重算（寫 `data/sens_v04.json`，再建置時寫入 Sens 頁；v0.4.2 起涵蓋 In 頁全部有區間的鍵） |
 | `scripts/decomp_v044.py` | v0.4.4 增資拆解：逐步完整重算（瀑布可凍結，環境變數 `ORCL_WF_FREEZE`，成品不設）→ `data/decomp_v044.json` |

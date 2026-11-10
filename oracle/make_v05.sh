@@ -7,7 +7,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-OUTNAME="20261110_Oracle個股模型_v0.5.0.xlsx"
+OUTNAME="20261110_Oracle個股模型_v0.5.1.xlsx"
 if [ "${SENS:-0}" = "1" ]; then python3 oracle/scripts/sens_v04.py --jobs "${JOBS:-4}"; fi
 if [ "${REV:-0}" = "1" ]; then python3 oracle/scripts/reverse_v05.py --jobs "${JOBS:-4}"; fi
 if [ "${STRESS:-0}" = "1" ]; then python3 oracle/scripts/stress_v05.py --jobs "${JOBS:-4}"; fi
