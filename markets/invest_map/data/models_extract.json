@@ -4427,79 +4427,79 @@
   }
  },
  "8046": {
-  "model": "nanya_pcb/dist/20261106_南電個股模型_v0.3.3.xlsx",
+  "model": "nanya_pcb/dist/20261110_南電個股模型_v0.3.4.xlsx",
   "v2": true,
   "tp": {
-   "value": 949.860473223726,
+   "value": 926.101434538773,
    "cell": "Val!B39",
-   "file": "nanya_pcb/dist/20261106_南電個股模型_v0.3.3.xlsx"
+   "file": "nanya_pcb/dist/20261110_南電個股模型_v0.3.4.xlsx"
   },
   "tp_dcf": {
-   "value": 298.728958733939,
+   "value": 290.598042677797,
    "cell": "Val!B24",
-   "file": "nanya_pcb/dist/20261106_南電個股模型_v0.3.3.xlsx"
+   "file": "nanya_pcb/dist/20261110_南電個股模型_v0.3.4.xlsx"
   },
   "tp_comp": {
-   "value": 966.297622864347,
+   "value": 942.525036467322,
    "cell": "Val!B40",
-   "file": "nanya_pcb/dist/20261106_南電個股模型_v0.3.3.xlsx"
+   "file": "nanya_pcb/dist/20261110_南電個股模型_v0.3.4.xlsx"
   },
   "tp_cons": {
    "value": 1651.31,
    "cell": "Val!B41",
-   "file": "nanya_pcb/dist/20261106_南電個股模型_v0.3.3.xlsx"
+   "file": "nanya_pcb/dist/20261110_南電個股模型_v0.3.4.xlsx"
   },
   "up": {
-   "value": -0.0227772909220925,
+   "value": -0.0472207463592871,
    "cell": "Val!B42",
-   "file": "nanya_pcb/dist/20261106_南電個股模型_v0.3.3.xlsx"
+   "file": "nanya_pcb/dist/20261110_南電個股模型_v0.3.4.xlsx"
   },
   "up_comp": {
-   "value": -0.00586664314367547,
+   "value": -0.0303240365562528,
    "cell": "Val!B43",
-   "file": "nanya_pcb/dist/20261106_南電個股模型_v0.3.3.xlsx"
+   "file": "nanya_pcb/dist/20261110_南電個股模型_v0.3.4.xlsx"
   },
   "tier6": {
    "value": "0%～−25%",
    "cell": "Val!B133",
-   "file": "nanya_pcb/dist/20261106_南電個股模型_v0.3.3.xlsx"
+   "file": "nanya_pcb/dist/20261110_南電個股模型_v0.3.4.xlsx"
   },
   "rec": {
    "value": "中立",
    "cell": "Val!B134",
-   "file": "nanya_pcb/dist/20261106_南電個股模型_v0.3.3.xlsx"
+   "file": "nanya_pcb/dist/20261110_南電個股模型_v0.3.4.xlsx"
   },
   "dcf_A": {
-   "value": 383.59516378526,
+   "value": 373.503614487076,
    "cell": "Val!B21",
-   "file": "nanya_pcb/dist/20261106_南電個股模型_v0.3.3.xlsx"
+   "file": "nanya_pcb/dist/20261110_南電個股模型_v0.3.4.xlsx"
   },
   "dcf_C": {
-   "value": 185.934189957993,
+   "value": 180.421959239286,
    "cell": "Val!D21",
-   "file": "nanya_pcb/dist/20261106_南電個股模型_v0.3.3.xlsx"
+   "file": "nanya_pcb/dist/20261110_南電個股模型_v0.3.4.xlsx"
   },
   "model_px": {
    "value": 972,
    "cell": "Val!B53",
-   "file": "nanya_pcb/dist/20261106_南電個股模型_v0.3.3.xlsx",
+   "file": "nanya_pcb/dist/20261110_南電個股模型_v0.3.4.xlsx",
    "date": "2026-11-05"
   },
   "pe_fy28": [
    {
-    "value": 27.0771151312904,
+    "value": 27.7455784208242,
     "cell": "Val!B56",
-    "file": "nanya_pcb/dist/20261106_南電個股模型_v0.3.3.xlsx"
+    "file": "nanya_pcb/dist/20261110_南電個股模型_v0.3.4.xlsx"
    },
    {
-    "value": 31.8257458108263,
+    "value": 32.630074927004,
     "cell": "Val!C56",
-    "file": "nanya_pcb/dist/20261106_南電個股模型_v0.3.3.xlsx"
+    "file": "nanya_pcb/dist/20261110_南電個股模型_v0.3.4.xlsx"
    },
    {
-    "value": 41.7640695297761,
+    "value": 42.8714299870025,
     "cell": "Val!D56",
-    "file": "nanya_pcb/dist/20261106_南電個股模型_v0.3.3.xlsx"
+    "file": "nanya_pcb/dist/20261110_南電個股模型_v0.3.4.xlsx"
    }
   ],
   "cash": {
@@ -4508,101 +4508,101 @@
    "values": [
     [
      "FY2026（錨點）",
-     11.509862075,
+     11.1101650330555,
      "PL!D13"
     ],
     [
      "FY2027",
-     21.3344618023982,
+     20.8139472601127,
      "PL!E13"
     ],
     [
      "FY2028",
-     23.1958699054388,
+     22.6370209506464,
      "PL!F13"
     ],
     [
      "FY2029",
-     24.4444616410927,
+     23.8603993859647,
      "PL!G13"
     ],
     [
      "FY2030（收斂）",
-     26.459478190198,
+     25.827350273954,
      "PL!H13"
     ],
     [
      "FY2031（收斂）",
-     28.3438221730267,
+     27.6667198019523,
      "PL!I13"
     ],
     [
      "FY2032（收斂）",
-     30.0444515034082,
+     29.3267229900695,
      "PL!J13"
     ],
     [
      "FY2027",
-     21.0498196199982,
+     20.5352014651141,
      "PL!E27"
     ],
     [
      "FY2028",
-     19.7348789163755,
+     19.2484155002726,
      "PL!F27"
     ],
     [
      "FY2029",
-     20.647071309729,
+     20.1422699631606,
      "PL!G27"
     ],
     [
      "FY2030（收斂）",
-     21.3820928879693,
+     20.8593385068348,
      "PL!H27"
     ],
     [
      "FY2031（收斂）",
-     21.7937607702021,
+     21.260950912034,
      "PL!I27"
     ],
     [
      "FY2032（收斂）",
-     21.8560286581169,
+     21.3216964860684,
      "PL!J27"
     ],
     [
      "FY2027",
-     20.4805352551982,
+     19.977709875117,
      "PL!E41"
     ],
     [
      "FY2028",
-     15.0386982655559,
+     14.6502516988684,
      "PL!F41"
     ],
     [
      "FY2029",
-     14.5968909818559,
+     14.2183161350592,
      "PL!G41"
     ],
     [
      "FY2030（收斂）",
-     14.1015938588151,
+     13.7358741744055,
      "PL!H41"
     ],
     [
      "FY2031（收斂）",
-     13.4549106362151,
+     13.1059670004748,
      "PL!I41"
     ],
     [
      "FY2032（收斂）",
-     12.6683158605595,
+     12.3397720066009,
      "PL!J41"
     ]
    ],
-   "file": "nanya_pcb/dist/20261106_南電個股模型_v0.3.3.xlsx"
+   "file": "nanya_pcb/dist/20261110_南電個股模型_v0.3.4.xlsx"
   }
  },
  "2368": {
@@ -7517,79 +7517,79 @@
   }
  },
  "SMCI": {
-  "model": "smci/dist/20261106_美超微個股模型_v0.3.5.xlsx",
+  "model": "smci/dist/20261110_美超微個股模型_v0.3.6.xlsx",
   "v2": true,
   "tp": {
-   "value": 72.7666630544306,
+   "value": 67.0138982749444,
    "cell": "Val!B39",
-   "file": "smci/dist/20261106_美超微個股模型_v0.3.5.xlsx"
+   "file": "smci/dist/20261110_美超微個股模型_v0.3.6.xlsx"
   },
   "tp_dcf": {
-   "value": 74.2171445892471,
+   "value": 72.3842699216638,
    "cell": "Val!B24",
-   "file": "smci/dist/20261106_美超微個股模型_v0.3.5.xlsx"
+   "file": "smci/dist/20261110_美超微個股模型_v0.3.6.xlsx"
   },
   "tp_comp": {
-   "value": 76.5782118440709,
+   "value": 66.1918647404524,
    "cell": "Val!B40",
-   "file": "smci/dist/20261106_美超微個股模型_v0.3.5.xlsx"
+   "file": "smci/dist/20261110_美超微個股模型_v0.3.6.xlsx"
   },
   "tp_cons": {
    "value": 43.27,
    "cell": "Val!B41",
-   "file": "smci/dist/20261106_美超微個股模型_v0.3.5.xlsx"
+   "file": "smci/dist/20261110_美超微個股模型_v0.3.6.xlsx"
   },
   "up": {
-   "value": 1.68709981737188,
+   "value": 1.47466389493886,
    "cell": "Val!B42",
-   "file": "smci/dist/20261106_美超微個股模型_v0.3.5.xlsx"
+   "file": "smci/dist/20261110_美超微個股模型_v0.3.6.xlsx"
   },
   "up_comp": {
-   "value": 1.82785124978105,
+   "value": 1.44430815141995,
    "cell": "Val!B43",
-   "file": "smci/dist/20261106_美超微個股模型_v0.3.5.xlsx"
+   "file": "smci/dist/20261110_美超微個股模型_v0.3.6.xlsx"
   },
   "tier6": {
    "value": "大於 50%",
    "cell": "Val!B135",
-   "file": "smci/dist/20261106_美超微個股模型_v0.3.5.xlsx"
+   "file": "smci/dist/20261110_美超微個股模型_v0.3.6.xlsx"
   },
   "rec": {
    "value": "強力買進",
    "cell": "Val!B136",
-   "file": "smci/dist/20261106_美超微個股模型_v0.3.5.xlsx"
+   "file": "smci/dist/20261110_美超微個股模型_v0.3.6.xlsx"
   },
   "dcf_A": {
-   "value": 124.137309384436,
+   "value": 121.06431686335,
    "cell": "Val!B21",
-   "file": "smci/dist/20261106_美超微個股模型_v0.3.5.xlsx"
+   "file": "smci/dist/20261110_美超微個股模型_v0.3.6.xlsx"
   },
   "dcf_C": {
-   "value": 32.1566544540207,
+   "value": 31.3728571506773,
    "cell": "Val!D21",
-   "file": "smci/dist/20261106_美超微個股模型_v0.3.5.xlsx"
+   "file": "smci/dist/20261110_美超微個股模型_v0.3.6.xlsx"
   },
   "model_px": {
    "value": 27.08,
    "cell": "Val!B53",
-   "file": "smci/dist/20261106_美超微個股模型_v0.3.5.xlsx",
+   "file": "smci/dist/20261110_美超微個股模型_v0.3.6.xlsx",
    "date": "2026-11-05"
   },
   "pe_fy28": [
    {
-    "value": 2.70657234898354,
+    "value": 3.14290838187022,
     "cell": "Val!B56",
-    "file": "smci/dist/20261106_美超微個股模型_v0.3.5.xlsx"
+    "file": "smci/dist/20261110_美超微個股模型_v0.3.6.xlsx"
    },
    {
-    "value": 3.90656288223117,
+    "value": 4.51749214845674,
     "cell": "Val!C56",
-    "file": "smci/dist/20261106_美超微個股模型_v0.3.5.xlsx"
+    "file": "smci/dist/20261110_美超微個股模型_v0.3.6.xlsx"
    },
    {
-    "value": 6.79022657468198,
+    "value": 7.77443954745726,
     "cell": "Val!D56",
-    "file": "smci/dist/20261106_美超微個股模型_v0.3.5.xlsx"
+    "file": "smci/dist/20261110_美超微個股模型_v0.3.6.xlsx"
    }
   ],
   "cash": {
@@ -7687,7 +7687,7 @@
      "PL!J38"
     ]
    ],
-   "file": "smci/dist/20261106_美超微個股模型_v0.3.5.xlsx"
+   "file": "smci/dist/20261110_美超微個股模型_v0.3.6.xlsx"
   }
  },
  "2308": {
@@ -9646,68 +9646,68 @@
   }
  },
  "ORCL": {
-  "model": "oracle/dist/20261109_Oracle個股模型_v0.4.7.xlsx",
+  "model": "oracle/dist/20261110_Oracle個股模型_v0.5.1.xlsx",
   "v2": true,
   "seg_model": true,
   "tp": {
    "value": 70.3776276900989,
    "cell": "Val!C75",
-   "file": "oracle/dist/20261109_Oracle個股模型_v0.4.7.xlsx"
+   "file": "oracle/dist/20261110_Oracle個股模型_v0.5.1.xlsx"
   },
   "tp_dcf": {
    "value": 37.6914052790942,
    "cell": "Val!C73",
-   "file": "oracle/dist/20261109_Oracle個股模型_v0.4.7.xlsx"
+   "file": "oracle/dist/20261110_Oracle個股模型_v0.5.1.xlsx"
   },
   "tp_comp": {
    "value": 103.063850101104,
    "cell": "Val!C74",
-   "file": "oracle/dist/20261109_Oracle個股模型_v0.4.7.xlsx"
+   "file": "oracle/dist/20261110_Oracle個股模型_v0.5.1.xlsx"
   },
   "tp_cons": {
    "value": 237.36,
    "cell": "Val!C77",
-   "file": "oracle/dist/20261109_Oracle個股模型_v0.4.7.xlsx"
+   "file": "oracle/dist/20261110_Oracle個股模型_v0.5.1.xlsx"
   },
   "up": {
    "value": -0.388870895362114,
    "cell": "Val!C78",
-   "file": "oracle/dist/20261109_Oracle個股模型_v0.4.7.xlsx"
+   "file": "oracle/dist/20261110_Oracle個股模型_v0.5.1.xlsx"
   },
   "up_comp": {
    "value": -0.105037772654536,
    "cell": "Val!C79",
-   "file": "oracle/dist/20261109_Oracle個股模型_v0.4.7.xlsx"
+   "file": "oracle/dist/20261110_Oracle個股模型_v0.5.1.xlsx"
   },
   "tier6": {
    "value": "−25%～−50%",
    "cell": "Val!C80",
-   "file": "oracle/dist/20261109_Oracle個股模型_v0.4.7.xlsx"
+   "file": "oracle/dist/20261110_Oracle個股模型_v0.5.1.xlsx"
   },
   "rec": {
    "value": "放空",
    "cell": "Val!C81",
-   "file": "oracle/dist/20261109_Oracle個股模型_v0.4.7.xlsx"
+   "file": "oracle/dist/20261110_Oracle個股模型_v0.5.1.xlsx"
   },
   "dcf_A": {
    "value": 52.077348268082,
    "cell": "Val!C30",
-   "file": "oracle/dist/20261109_Oracle個股模型_v0.4.7.xlsx"
+   "file": "oracle/dist/20261110_Oracle個股模型_v0.5.1.xlsx"
   },
   "dcf_C": {
    "value": 15.2344371573875,
    "cell": "Val!E30",
-   "file": "oracle/dist/20261109_Oracle個股模型_v0.4.7.xlsx"
+   "file": "oracle/dist/20261110_Oracle個股模型_v0.5.1.xlsx"
   },
   "model_px": {
    "value": 115.16,
    "cell": "Val!C76",
-   "file": "oracle/dist/20261109_Oracle個股模型_v0.4.7.xlsx",
+   "file": "oracle/dist/20261110_Oracle個股模型_v0.5.1.xlsx",
    "date": "2026-11-05"
   },
   "cash": {
    "basis": "現金流",
-   "file": "oracle/dist/20261109_Oracle個股模型_v0.4.7.xlsx",
+   "file": "oracle/dist/20261110_Oracle個股模型_v0.5.1.xlsx",
    "label": "自由現金流扣股利五年合計（基準情境 B；A 97.1、C -1.7）",
    "values": [
     [
