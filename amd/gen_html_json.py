@@ -142,10 +142,10 @@ SPEC = {
     ["各平台每顆售價（讀 NVIDIA 模型）", ["pm_bw", "pm_rb", "pm_ru", "pm_hp", "pa_amd", "pa_tpu", "pa_trn", "pa_oth"]],
     ["GPU 錨點、毛利率與世代售價係數", ["gpu25", "gs_q1", "gs_q2", "ng_q3", "ng_q4", "gm_gpu", "pg_27", "pg_28", "pg_29"]],
     ["HBM 價格路徑與吸收比例", ["hbm_A_26", "hbm_A_27", "hbm_A_28", "hbm_A_29", "hbm_B_26", "hbm_B_27", "hbm_B_28", "hbm_B_29", "hbm_C_26", "hbm_C_27", "hbm_C_28", "hbm_C_29", "abs_mem", "abs_mem_A", "abs_mem_B", "abs_mem_C"]],
-    ["客戶大單認股權證", ["w_tot", "w_gw", "gw_26", "gw_27", "gw_28", "gw_29", "wf"]],
+    ["客戶大單認股權證", ["w_tot", "w_gw", "gw_26", "gw_27", "gw_28", "gw_29"] + ([k for k in ("wf", "gw_30", "w_exp_o", "w_exp_m", "w_val")] if "w_val" in KEY else ["wf"])],
     ["Wattonomics 錨定係數（只進敏感度）", ["wta_27", "wta_28", "wta_29"]]]],
   ["資料中心 CPU 與其他業務（Client、Gaming、Embedded）", [
-    ["成長率（FY2027 起）", ["g_cpu27", "g_cpu28", "g_cpu29", "g_cli", "g_gam", "g_emb"]]]],
+    ["成長率（FY2027 起）", ["g_cpu27", "g_cpu28", "g_cpu29", "g_cli", "g_gam", "g_emb"]]] + ([["樂觀與保守情境的專屬路徑", ["uf_A", "uf_C", "g_cpu27_A", "g_cpu28_A", "g_cpu29_A", "g_cpu27_C", "g_cpu28_C", "g_cpu29_C"]]] if "uf_A" in KEY else [])],
   ["全公司：錨點、費用、稅與股數、股價與目標價規則", [
     ["FY2026 錨點（第三季實績＋第四季指引）", ["q3_rev", "q3_gm", "q3_opx", "q4_oth", "tx_26", "q3_sh", "q3_cli", "q3_gam", "q3_emb", "q4_rev", "q4_cli", "q4_gam", "q4_emb", "q4_gm", "q4_opx", "q4_sh"]],
     ["營業費用、稅與股數", ["phi", "g_opx_min", "opx_adj", "tx_f", "oth_f", "sh_g"]],
@@ -193,5 +193,77 @@ for i, b in enumerate(st):
 for _t in cfg["hero"]["tiles"]:
     if isinstance(_t[0], str):
         _t[0] = [_t[0], "（美元）"]
+# ================= v0.4.5／v0.4.6（2026-11-10）：AMD v0.4.4 驗收報告採用項（amd/v045_post.py） =================
+SEC = {s["id"]: s for s in cfg["sections"]}
+RDW, SEW, RCW = wb["README"], wb["Sens"], wb["Recon"]
+def _rows_after(head, stop_prefixes):
+    r = find("README", head) + 1; out = []
+    while RDW.cell(r, 1).value and not str(RDW.cell(r, 1).value).startswith(stop_prefixes):
+        out.append(r); r += 1
+    return out
+r_state, r_edge, r_asof_h = find("README", "build_id "), find("README", "評等"), find("README", "資料基準日（as_of）")
+r_asof_t = r_asof_h + 1; asof_rows = _rows_after("項目", ("說明：",))
+r_asof_n = find("README", "說明：rf、同業")
+fail_rows = _rows_after("主要失效條件", ("估值框架並列",)); r_frame = find("README", "估值框架並列")
+risk_rows = _rows_after("風險登錄", ("主要假設驅動",)); ind_rows = _rows_after("主要假設驅動與可證偽", ("\u0000",))
+st_add = [{"type": "note", "parts": [f"@README!A{r_state}"]}, {"type": "note", "parts": [f"@README!A{r_edge}"]},
+          {"type": "h3", "text": "主要失效條件與估值框架並列"}, {"type": "list", "items": [f"@README!A{r}" for r in fail_rows] + [f"@README!A{r_frame}"]},
+          {"type": "h3", "text": "資料基準日與逾期標示"}, {"type": "note", "parts": [f"@README!A{r_asof_h}"]},
+          {"type": "table", "head": [f"@README!{c}{r_asof_t}" for c in "ABC"], "rows": [[f"@README!A{r}", f"@README!B{r}", f"@README!C{r}"] for r in asof_rows]},
+          {"type": "note", "parts": [f"@README!A{r_asof_n}"]},
+          {"type": "h3", "text": "風險登錄（是否建模、理由、觀察指標）"}, {"type": "list", "items": [f"@README!A{r}" for r in risk_rows]},
+          {"type": "h3", "text": "主要假設驅動與可證偽的公開指標"}, {"type": "list", "items": [f"@README!A{r}" for r in ind_rows]}]
+SEC["status"]["blocks"] = st_add + SEC["status"]["blocks"]
+cfg["hero"]["note"] = list(cfg["hero"]["note"]) + ["", f"@README!A{r_edge}"]
+# 估值章：估值框架並列與期間並列
+va = SEC["valuation"]
+r_p1, r_p2 = find("Val", "折現期間："), find("Val", "持有期間：")
+i_c = next((i for i, b in enumerate(va["blocks"]) if b.get("type") == "bars"), 0)
+va["blocks"][i_c + 1:i_c + 1] = [{"type": "note", "parts": [f"@README!A{r_frame}"]},
+                                 {"type": "table", "caption": "期間並列", "head": ["項目", "數值", "說明"],
+                                  "rows": [[f"@Val!A{r}", f"@Val!B{r}|n2", f"@Val!E{r}"] for r in (r_p1, r_p2)]}]
+# 敏感度章：目標價表加 DCF 單法美元欄；業務主因（整本重算快照）
+se = SEC["sens"]
+r_tp = find("Sens", "目標價參數敏感度"); r_end = r_tp + 2
+while SEW.cell(r_end + 1, 1).value and not str(SEW.cell(r_end + 1, 1).value).startswith("檢查"): r_end += 1
+sb0 = "B" if "（情境 B）" in str(SEW["A1"].value) else "A"
+n_tp = 0
+for b in se["blocks"]:
+    if b["type"] == "tornado" and sb0 == "B":
+        b["title"] = b["title"].replace("情境 A", "情境 B")
+    if b.get("type") == "table" and b.get("rowgen", {}).get("sheet") == "Sens" and str(b["rowgen"].get("rows", "")).startswith(f"{r_tp + 2}-"):
+        b["head"] = [f"@Sens!{c}{r_tp + 1}" for c in "ABCDEFGIJ"]
+        b["rowgen"] = {"sheet": "Sens", "rows": f"{r_tp + 2}-{r_end}", "cols": list("ABCDEFGIJ"), "fmts": ["", "", "n2", "sp1", "n2", "sp1", "n2", "n2", "n2"]}; n_tp += 1
+try:
+    r_bz = find("Sens", "目標價敏感度：業務主因")
+except KeyError:
+    r_bz = None
+if r_bz:
+    r_bh = r_bz + 2; r_be = r_bh
+    while SEW.cell(r_be + 1, 1).value: r_be += 1
+    se["blocks"].insert(0, {"type": "table", "caption": f"@Sens!A{r_bz}", "head": [f"@Sens!{c}{r_bh}" for c in "ABCDEFGIJ"],
+                            "rowgen": {"sheet": "Sens", "rows": f"{r_bh + 1}-{r_be}", "cols": list("ABCDEFGIJ"), "fmts": ["", "", "n2", "sp1", "n2", "sp1", "n2", "n2", "n2"]}})
+    se["blocks"].insert(1, {"type": "note", "parts": [f"@Sens!A{r_bz + 1}"]})
+# 對帳章：反解（E 節）
+r_e = find("Recon", "E. 反解")
+r_ee = r_e + 1
+while RCW.cell(r_ee + 1, 1).value: r_ee += 1
+r_eh = next(r for r in range(r_e + 1, r_ee + 1) if RCW.cell(r, 1).value == "項目")
+def _rf(r):
+    t = str(RCW.cell(r, 1).value)
+    if t.startswith("評等級距邊界"): return [f"@Recon!A{r}", f"@Recon!B{r}|sp0", "", ""]
+    f = "x1" if "倍數（" in t else "n2"
+    return [f"@Recon!A{r}", f"@Recon!B{r}|{f}", f"@Recon!C{r}|{f}", f"@Recon!D{r}|sp1"]
+SEC["recon"]["blocks"].append({"type": "table", "caption": f"@Recon!A{r_e}", "head": [f"@Recon!{c}{r_eh}" for c in "ABCD"], "rows": [_rf(r) for r in range(r_e + 1, r_ee + 1) if r != r_eh]})
+# DCF 調節橋（估值章，摺疊）
+DW = wb["DCF"]
+r_bh = find("DCF", "non-GAAP → FCFF 調節橋")
+r_b1 = r_bh + 2; r_b2 = r_b1
+while DW.cell(r_b2 + 1, 1).value: r_b2 += 1
+def _bf(r):
+    t = str(DW.cell(r, 1).value)
+    return [f"@DCF!A{r}", f"@DCF!B{r}|" + ("p1" if "稅率" in t else "n3"), f"@DCF!C{r}", f"@DCF!D{r}"]
+va["blocks"].append({"type": "table", "caption": f"@DCF!A{r_bh}", "head": [f"@DCF!{c}{r_bh + 1}" for c in "ABCD"], "rows": [_bf(r) for r in range(r_b1, r_b2 + 1)],
+                     "collapse": True, "summary": "展開：non-GAAP → FCFF 調節橋與現金稅率"})
 json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")

@@ -17,6 +17,17 @@ import valuation_rule as VR
 import tp_v2 as TP
 import fcff_dcf as FD   # v0.4：標準版 DCF（無槓桿自由現金流＋WACC）共用模組（tools/fcff_dcf.py，原樣取自 NVIDIA v0.3）
 import accel_share as AS          # 加速器金額份額的可重用函式（NVIDIA 模型建立；AMD 為 GPU 側非 NVIDIA 份額）
+# v0.4.5／v0.4.6（2026-11-10）：AMD v0.4.4 驗收報告採用項（採用規劃書 Claude outputs/20261110_AMD驗收v0.4.4_採用規劃書.md；
+# Andy 2026-11-10 07:52 確認「照預設」：J1(a)、J2(b)、J3(b)、J4(a)）。AMD_STAGE＝0.4.5（展示與治理，數值不變）或 0.4.6（預設；數值改變）。
+# AMD_V46_PARTS：v0.4.6 數值項子集（逐項拆解用；預設全部）。AMD_OVERRIDE：敏感度快照用輸入覆寫（amd/sens_amd.py），正式建置不設。
+STAGE = os.environ.get("AMD_STAGE", "0.4.6"); V46 = STAGE >= "0.4.6"
+V46P = set(filter(None, os.environ.get("AMD_V46_PARTS", "tt,sh,sbc,w,j2").split(","))) if V46 else set()
+OVR = {}
+for _kv in filter(None, os.environ.get("AMD_OVERRIDE", "").split(";")):
+    _k, _v = _kv.split("=")
+    try: OVR[_k] = float(_v)
+    except ValueError: OVR[_k] = _v
+_UFS = lambda s_: ("uf*uf_A" if s_ == "A" else "uf*uf_C" if s_ == "C" else "uf") if "j2" in V46P else ("uf" if "w" in V46P else "1")   # PL 情境的 AMD 顆數係數
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -148,7 +159,23 @@ inp("gw_26", "已歸屬 GW 累計：2026 年底", "GW", 0.0, 0.0, 1.0, "Assumed"
 inp("gw_27", "已歸屬 GW 累計：2027 年底", "GW", 1.0, 2.0, 3.0, "Assumed", "假設兩案各完成 1 GW", "股價門檻（OpenAI 最後一批 $600，媒體報導，二手）未模型化")
 inp("gw_28", "已歸屬 GW 累計：2028 年底（情境 B、C 乘顆數係數）", "GW", 2.0, 4.0, 6.0, "Assumed", "無", "—")
 inp("gw_29", "已歸屬 GW 累計：2029 年底（情境 B、C 乘顆數係數）", "GW", 4.0, 6.0, 9.0, "Assumed", "無", "—")
-inp("wf", "認股權證歸屬速度係數（Sens 用）", "x", 0.0, 1.0, 1.5, "Assumed", "0＝不歸屬（股價門檻或里程碑未達）", "—")
+if "w" in V46P:   # v0.4.6 A1／J1(a)：閘門式歸屬（數量＝出貨 GW、期限＝到期日、股價與技術商業條件＝wf）
+    inp("wf", "認股權證股價門檻與技術商業條件的歸屬比例（基準 1＝全數達成；Sens 0／0.5）", "x", 0.0, 1.0, None, "Assumed",
+        "OpenAI 8-K（2025-10-06）、Meta 8-K（2026-02-23）：各批另需 AMD 股價門檻（最後一批 $600，中間門檻未揭露）與技術、商業條件；10-Q（2026-09-26）：尚無任何一批歸屬",
+        "驗收 J1(a)（Andy 2026-11-10）：基準視為全數達成（稀釋最多、最保守；門檻是到期前任一時點達到即可，不能用 12 個月目標價判定），0％／50％ 只進敏感度")
+    inp("gw_30", "已歸屬 GW 累計：2030 年底（情境 B、C 乘 2029 顆數係數；只用於到期日前的歸屬）", "GW", 6.0, 8.0, 10.0, "Assumed",
+        "2029→2030 沿用 2028→2029 的年增 2 GW（gw_29＋(gw_29 − gw_28)）", "低＝2030 不再增加；高＝年增 4 GW")
+    inp("w_exp_o", "OpenAI 認股權證到期日（未歸屬部分失效）", "日期", None, "=DATE(2030,10,5)", None, "Verified",
+        "AMD 8-K 2025-10-06 Item 1.01／Exhibit 4.1：exercisable until 5:00 p.m. Eastern time on October 5, 2030（https://www.sec.gov/Archives/edgar/data/2488/000119312525230895/d28189d8k.htm）", "—")
+    inp("w_exp_m", "Meta 認股權證到期日（未歸屬部分失效）", "日期", None, "=DATE(2031,2,23)", None, "Verified",
+        "AMD 8-K 2026-02-23 Item 1.01：exercisable until 5:00 p.m. Eastern time on February 23, 2031（https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000045/amd-20260223.htm）", "—")
+    _xo = "(w_exp_o-DATE(2029,12,31))/365"; _xm = "(w_exp_m-DATE(2029,12,31))/365"
+    _wv = "+".join(f"tp_w{s_}*(MIN(w_gw/2,0.5*{('um29_' + s_)}*{_UFS(s_)}*(gw_29+{_xo}*(gw_30-gw_29)))+MIN(w_gw/2,0.5*{('um29_' + s_)}*{_UFS(s_)}*(gw_29+{_xm}*(gw_30-gw_29))))" for s_ in SC)
+    inp("w_val", "評價用客戶認股權證股數（到期日前歸屬 GW × 每 GW 股數 × wf；情境權重加權）", "十億股", None, f"=wf*w_tot/w_gw*({_wv})", None, "Derived",
+        "每家 6 GW 上限、兩家各占已歸屬 GW 的一半；到期日前的 GW 由 2029→2030 路徑線性延伸（情境顆數係數與 AMD 顆數係數同乘），超過 6 GW 部分不計",
+        "驗收 A1（原則 37）：PL 股數與 DCF 評價股數同一套歸屬邏輯；v0.4.5 以前 DCF 以上限 0.32 全額計")
+else:
+    inp("wf", "認股權證歸屬速度係數（Sens 用）", "x", 0.0, 1.0, 1.5, "Assumed", "0＝不歸屬（股價門檻或里程碑未達）", "—")
 
 sec("H. 公司指引、大單與共識（只作 Recon 對帳，不作校準）")
 inp("g_dc27", "公司：2027 資料中心營收年增（逾一倍）", "%", None, 1.0, None, "Interested-party", "Q2 2026 法說（MarketBeat、platformaeronaut 摘要，二手）", "逐字稿未取得")
@@ -199,7 +226,7 @@ for _row in FD.in_rows(dict(
         mi=(0.0, "Verified", Q10 + "：無少數股權", "—"),
         stub=dict(bs_date="2026-09-26", val_date="2026-12-31", bs_src="AMD 8-K 2026-11-03 資產負債表（季度結束 2026-09-26，最新已公布一季）；" + Q10,
                   div=(0.0, "Verified", "AMD 未配發現金股利；2026-09-26～2026-12-31 無已宣告股利", "買回：董事會授權額度不是已宣告金額，不扣（股數沿用 Q3 稀釋股數＋認股權證全額，與 FCFF 一致）")),
-        sh=("=Q!I24+w_tot", "Derived", "Q3 2026 稀釋股數 1.661 十億股（Q 頁 I24；8-K）＋客戶認股權證上限 w_tot 0.32（行使價 0.01 美元，視同全額稀釋）",
+        sh=(("=h_shout+h_tsm+" + ("w_val" if "w" in V46P else "w_tot")) if "sh" in V46P else "=Q!I24+w_tot", "Derived", "Q3 2026 稀釋股數 1.661 十億股（Q 頁 I24；8-K）＋客戶認股權證上限 w_tot 0.32（行使價 0.01 美元，視同全額稀釋）",
             "認股權證依 GW 出貨分批歸屬；FCFF 已含這些大單的營收，故以全額稀釋計（PL 頁股數逐年隨歸屬增加，FY2029 起接近全額）；回購由 FCFF 支應"),
         fc_da=(None, "=(0.671/25.785+0.75/34.639+0.666/35.166)/3", None, "Derived",
                "折舊攤銷（不含併購無形資產攤銷，因 EBIT 為 non-GAAP、已排除該攤銷）÷ 營收：FY2024 671／25,785、FY2025 750／34,639（8-K 2026-02-03 現金流量表）、2026 前三季 666／35,166（8-K 2026-11-03）；三期平均",
@@ -223,12 +250,19 @@ sec("K. 情境一致性（v0.2.1 新增，Andy 2026-10-25 13:13「情境與行�
 for s, v, why in (("A", 0.2, "順利：加速器需求強，HBM 漲價轉嫁最多"), ("B", 0.5, "平平：與 v0.2 三情境共用值相同"), ("C", 0.7, "不如預期：需求轉弱，AMD 吸收最多以保份額")):
     inp(f"abs_mem_{s}", f"情境 {s}：HBM 漲價由 AMD 吸收的比例（FY2028 起）", "x", None, v, None, "Assumed", why, "v0.2 為三情境 0.5，HBM 價 A 最高使 EPS B＞A（稽核 2026-10-25）；改為 A 0.2／B 0.5／C 0.7（A 先試 0.3：FY2028 EPS 11.07＜B 11.11，因認股權證稀釋 A 最多，故取 0.2）。轉嫁比例的公開資料：未找到")
 
+if "j2" in V46P:   # v0.4.6 J2(b)：情境 A／C 自 FY2027 起帶 AMD 顆數係數與資料中心 CPU 成長高／低路徑（情境專屬列，不讀敏感度欄）
+    for s_, v_, why in (("A", 1.2, "樂觀：OpenAI、Meta、Anthropic、Oracle 大單提前放量（值同 uf 敏感度高）"), ("C", 0.8, "保守：大單延後（值同 uf 敏感度低）")):
+        inp(f"uf_{s_}", f"情境 {s_}：AMD 顆數係數（FY2027 起；乘以 uf）", "x", None, v_, None, "Assumed", why, "驗收 J2(b)（Andy 2026-11-10）：情境 B 無專屬輸入列（＝1）")
+    for s_, vals, why in (("A", (0.70, 0.40, 0.25), "樂觀：公司說法（2027 伺服器 CPU 逾 70%；法說摘要，二手）"), ("C", (0.30, 0.10, 0.05), "保守：值同敏感度低")):
+        for y_, v_ in zip((27, 28, 29), vals):
+            inp(f"g_cpu{y_}_{s_}", f"情境 {s_}：資料中心非 GPU 年增 FY20{y_}", "%", None, v_, None, "Assumed", why, "驗收 J2(b)：AI 叢集建置帶動 CPU 需求，與加速器顆數共變；情境 B 讀 g_cpu" + str(y_))
 r = 4
 INROW = {}
 for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    if key in OVR: base = OVR[key]
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
         if v is not None:
@@ -404,8 +438,8 @@ def engine(ws, r0, title, **over):
     row("etr", "有效稅率", "%", {"C": "=a25_etr", "D": "=a26_etr", **{c_(fy): "=tx_f" for fy in BU[1:]}}, fmt="0.0%")
     row("ni", "淨利（non-GAAP）", "US$B", {"C": "=a25_ni", "D": "=a26_ni", **{c_(fy): f"=({c_(fy)}{R['oi']}+{c_(fy)}{R['oth']})*(1-{c_(fy)}{R['etr']})" for fy in BU[1:]}})
     row("shb", "稀釋股數（不含客戶認股權證）", "十億股", {"C": "=a25_sh", "D": "=a26_sh", **{c_(fy): f"={c_(fy - 1)}{r}*(1+sh_g)" for fy in BU[1:]}}, fmt="0.000")
-    gwx = lambda fy: {2026: "gw_26", 2027: "gw_27", 2028: f"gw_28*um28_{s}", 2029: f"gw_29*um29_{s}"}[fy] + _wx(fy)
-    row("wsh", "客戶認股權證稀釋股數（年中平均已歸屬 GW × 每 GW 股數）", "十億股", {"C": "=0", "D": "=0", **{c_(fy): f"=w_tot/w_gw*({gwx(fy - 1)}+{gwx(fy)})/2*{P['wf']}" for fy in BU[1:]}}, fmt="0.000", note="OpenAI、Meta 各 160M 股，依 GW 分批歸屬（Assumed 線性）；行使價 $0.01，視同全額稀釋")
+    gwx = lambda fy: {2026: "gw_26", 2027: "gw_27", 2028: f"gw_28*um28_{s}", 2029: f"gw_29*um29_{s}"}[fy] + _wx(fy) + (f"*{P['uf']}" if ("w" in V46P and fy >= 2027) else "")
+    row("wsh", "客戶認股權證稀釋股數（年中平均已歸屬 GW × 每 GW 股數）", "十億股", {"C": "=0", "D": "=0", **{c_(fy): (f"=w_tot/w_gw*MIN(w_gw,({gwx(fy - 1)}+{gwx(fy)})/2)*{P['wf']}" if "w" in V46P else f"=w_tot/w_gw*({gwx(fy - 1)}+{gwx(fy)})/2*{P['wf']}") for fy in BU[1:]}}, fmt="0.000", note="OpenAI、Meta 各 160M 股，依 GW 分批歸屬（Assumed 線性）；行使價 $0.01，視同全額稀釋")
     row("sh", "稀釋股數", "十億股", {c_(fy): f"={c_(fy)}{R['shb']}+{c_(fy)}{R['wsh']}" for fy in FYS}, fmt="0.000")
     row("eps", "EPS（non-GAAP）", "US$", {c_(fy): f"={c_(fy)}{R['ni']}/{c_(fy)}{R['sh']}" for fy in FYS}, fmt="0.00")
     row("epsg", "EPS 年增", "%", {c_(fy): f"={c_(fy)}{R['eps']}/{c_(fy - 1)}{R['eps']}-1" for fy in FYS[1:]}, fmt="0.0%")
@@ -417,8 +451,17 @@ PL = wb.create_sheet("PL")
 PL["A1"] = "PL — AMD 損益（US$B；non-GAAP；FY2025A 實績、FY2026 錨點，FY2027 起為模型）。會計年度＝日曆年。三情境各一個完整推導區塊（本頁下方），頂端為摘要。FY2026、FY2027 三情境相同（情境係數從 CY2028 才開始）"
 PB = {}; r0 = 70
 SCT = {"A": "情境 A：原始顆數（顆數係數 1.0；v0.12 起本庫基準＝情境 B）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85", "C": "情境 C：CY2028–29 顆數 ×0.6"}
+def _pov(s_):   # v0.4.6：PL 情境的覆寫（J2 情境專屬列；敏感度快照的 _pg、_abs、_cpu、_pgk）
+    o = {}
+    if V46P & {"w", "j2"}: o["uf"] = _UFS(s_)
+    if "j2" in V46P and s_ != "B": o["gcpu"] = (lambda y, s_=s_: f"g_cpu{y % 100}_{s_}")
+    if OVR.get("_cpu") in ("lo", "hi"): o["gcpu"] = (lambda y, t=OVR["_cpu"]: f"g_cpu{y % 100}_{t}")
+    if OVR.get("_pg") == "hi": o["pg"] = (lambda y: f"pg_{y % 100}_hi")
+    if "_pgk" in OVR: o["pg"] = (lambda y, k=OVR["_pgk"]: f"pg_{y % 100}*{k}")
+    if OVR.get("_abs") in ("lo", "hi"): o["abs"] = o["abs_s"] = f"abs_mem_{OVR['_abs']}"
+    return o
 for s in SC:
-    PB[s] = engine(PL, r0, SCT[s], scn=s)
+    PB[s] = engine(PL, r0, SCT[s], scn=s, **_pov(s))
     r0 = PB[s]["end"] + 2
 hdr(PL, 3, ["情境／項目", "單位", "FY2025A", "FY2026", "FY2027", "FY2028", "FY2029", "說明"])
 sr = 4; SUMR = {}
@@ -558,8 +601,11 @@ cases = [("AMD 顆數係數 低（×0.8）", "FY2027 起 AMD 認列顆數 ×0.8�
          ("認股權證不歸屬", "OpenAI、Meta 認股權證 0 股", dict(wf="wf_lo")), ("認股權證歸屬加速（×1.5）", "已歸屬 GW ×1.5", dict(wf="wf_hi"))]
 SE.cell(4, 1, "基準（情境 A）"); SE.cell(4, 2, "PL 區塊 A")
 base_row = 40; SB = {}
+SB0 = "B" if "j2" in V46P else "A"   # v0.4.6：情境 A／C 已帶顆數與 CPU 路徑，EPS 敏感度改以情境 B 為基準（同 ALAB v0.3.7）
+if "w" in V46P:
+    cases = [c for c in cases if c[0] != "認股權證歸屬加速（×1.5）"] + [("認股權證歸屬 50％（股價門檻與條件）", "wf＝0.5", dict(wf="0.5"))]
 for nm, setting, ov in cases:
-    SB[nm] = engine(SE, base_row, f"案例區塊：{nm}（情境 A）", scn="A", **ov)
+    SB[nm] = engine(SE, base_row, f"案例區塊：{nm}（情境 {SB0}）", scn=SB0, **({**_pov(SB0), **ov} if V46 else ov))
     base_row = SB[nm]["end"] + 2
 def put_case(i, name, setting, R, pre):
     SE.cell(i, 1, name); SE.cell(i, 2, setting)
@@ -571,11 +617,11 @@ def put_case(i, name, setting, R, pre):
     for c in "DI": SE[f"{c}{i}"].number_format = "0.00"
     for c in "FK": SE[f"{c}{i}"].number_format = "#,##0"
     for c in "EGJL": SE[f"{c}{i}"].number_format = "0.0%"
-put_case(4, "基準（情境 A）", "PL 區塊 A", PB["A"], "PL!")
+put_case(4, f"基準（情境 {SB0}）", f"PL 區塊 {SB0}", PB[SB0], "PL!")
 for n, (nm, setting, ov) in enumerate(cases):
     put_case(5 + n, nm, setting, SB[nm], "")
 nn = 5 + len(cases)
-put_case(nn, "顆數情境 B", "CY2028 ×0.8、CY2029 ×0.85；記憶體 B 路徑", PB["B"], "PL!")
+put_case(nn, "顆數情境 B", "CY2028 ×0.8、CY2029 ×0.85；記憶體 B 路徑", PB["B"], "PL!") if SB0 == "A" else put_case(nn, "情境 A（樂觀）", "情境 A 全部驅動（顆數、HBM 吸收、v0.4.6 起 AMD 顆數與 CPU 路徑）", PB["A"], "PL!")
 put_case(nn + 1, "顆數情境 C", "CY2028–29 ×0.6；記憶體 C 路徑", PB["C"], "PL!")
 SENS_LAST = nn + 1
 SE.cell(nn + 3, 1, "讀法：FY2027 三情境相同；顆數、售價、吸收比例與 CPU 成長從 FY2027 起作用，情境 B、C 從 FY2028 起。隱含價欄＝EPS × 十年 non-GAAP P/E 中位數（與目標價同法），只反映 EPS 變動。")
@@ -999,6 +1045,9 @@ _r3_static(wb, "v0.4.2（2026-11-05）", "v0.4.2（2026-11-05）：換用共用�
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import px1105_post  # noqa: E402
 print(px1105_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), "v0.4.4", "v0.4.3", "v0.4.3（2026-11-06）"))
+# v0.4.5／v0.4.6（2026-11-10）：AMD v0.4.4 驗收報告採用項（本資料夾 v045_post.py）
+import v045_post  # noqa: E402
+print(v045_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), dict(STAGE=STAGE, V46=V46, V46P=V46P, OVR=OVR, PB=PB, SUMR=SUMR, FC=FC, SB0=SB0)))
 wb.save(sys.argv[1])
 if os.environ.get("AMD_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

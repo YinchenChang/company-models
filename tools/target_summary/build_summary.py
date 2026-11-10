@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 import relative_multiple as RM  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VER, VDATE = "v0.2.9", "2026-11-09"   # 每次升版改這裡
+VER, VDATE = "v0.2.10", "2026-11-10"   # 每次升版改這裡
 BOLD = Font(bold=True)
 HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
