@@ -495,6 +495,10 @@ def render_list(cx, blk):
     return f'<{tag} class="items">' + ''.join(f'<li>{cx.cell_html(i)}</li>' for i in blk['items']) + f'</{tag}>'
 
 
+# 只在橫幅有 ai_note 時輸出（HTML 版面規格 v1.1），既有成品逐位元組不變
+AI_CSS = ".hero-ai{font-size:14px;color:#1f2328;font-weight:600}"
+
+
 def render_hero(cx, h):
     """投資建議橫幅（html.json 頂層 hero，可選；Andy 2026-11-05）：全寬、大字、依建議著色。
     hero：{"rec": 投資建議規格, "tiles": [[標籤, 主值規格, 副值規格或空字串], …], "note": 規格或省略,
@@ -645,7 +649,7 @@ ol.items{margin:6px 0;padding-left:24px}ol.items li,ul.items li{margin:2px 0}
 .hero-l{font-size:14px;color:var(--muted)}
 .hero-n{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.3}
 .hero-s{font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
-.hero-note{margin:0;font-size:13px;color:var(--muted)}.hero-ai{font-size:14px;color:#1f2328;font-weight:600}
+.hero-note{margin:0;font-size:13px;color:var(--muted)}
 @media (max-width:640px){table.rt tr.sub th{justify-content:flex-start;text-align:left}.hero-v{font-size:28px}.hero-n{font-size:24px}}
 """
 
@@ -717,7 +721,7 @@ def build(cdir, xlsx=None, root=None):
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
 <title>{esc(title)}</title>
-<style>{CSS}{WIDE_CSS if (cfg.get('wide_text') or cfg.get('hero')) else ''}</style>
+<style>{CSS}{WIDE_CSS if (cfg.get('wide_text') or cfg.get('hero')) else ''}{AI_CSS if (cfg.get('hero') or {}).get('ai_note') else ''}</style>
 </head>
 <body>
 <input type="checkbox" id="refs" class="refs-toggle" aria-label="顯示每個數字的來源儲存格">
