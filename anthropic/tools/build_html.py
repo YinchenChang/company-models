@@ -666,7 +666,13 @@ def section_v020(V: "Values", n, ver: str) -> str:
              g("覆蓋率 2030", "COST_Coverage", Y, "f3"), g("命題 1 持續轉正年", "COST_GapPosSustainYear", None, "yt"),
              g("合約付款 2028（$B）", "COST_ContractPay", 2028, "f2"), g("未歸屬餘額（$B）", "COST_S1Unalloc", None, "f2")]
     alt = [("基準", "base"), ("C4 扣除 Lambda 34.9", "lam_on"), ("超額配售計入", "oa_on"), ("只關 B1（IPO 不進基準）", "v020_no_b1"), ("只關 D1（Q4＝Q3）", "v020_no_d1"),
-           ("只關 E（無 14.2、無下限）", "v020_no_e")]
+           ("只關 E（無 14.2、無下限）", "v020_no_e"),
+           ("最低現金 3 個月", "mc_lo"), ("最低現金 12 個月", "mc_hi"), ("SpaceXAI S-1 路徑（R4）", "r4_on"), ("R4＋最低現金 3 個月", "r4_mc_lo"), ("R4＋最低現金 12 個月", "r4_mc_hi"),
+           ("扣除附條件 186.2（R5d）", "r5d_on"), ("R4＋R5d", "r4_r5d"), ("並列：殘差法", "resid_on"), ("殘差法＋R4", "r4_resid"), ("捐贈只計 Q3 一次", "chr_once"),
+           ("未歸屬餘額舊讀法 快 2027–2031", "s1u_fast"), ("舊讀法 慢 2028–2036", "s1u_slow"), ("舊讀法 慢 2028–2037", "s1u_slow37"), ("未起租起租年 2026", "lease_lo"),
+           ("未起租起租年 2028", "lease_hi"), ("SpaceXAI 以上限 120.5 等比例放大月費", "spx_cap"), ("Google 額外 TPU 計入（中點）", "gaddl_on"), ("Broadcom 起始年 2026", "bcm_2026"),
+           ("AMD＝S-1 下限 20", "amd_s1"), ("只關 W2（Fluidstack 舊法）", "only_w2_off"), ("只關 W4", "only_w4_off"), ("W4 兩者皆不用", "w4_neither"), ("W4 只動 Q3 口徑", "w4_q3only"),
+           ("W4 只動股權報酬", "w4_sbconly"), ("承諾不進基準（W1、W2 皆關）", "commit_off"), ("說明列：只關 W1", "commit_off_w1only")]
     alt_html = "".join(f'<tr class="{"em" if sc == "base" else ""}"><td>{lab}</td><td>{n("FND_ExtNeedCum", Y, "f2", sc)}</td><td>{n("FND_CashNoExtTrough", None, "f2", sc)}</td>'
                        f'<td>{n("COST_PropGap_VR", 2026, "sf2", sc)}</td><td>{n("COST_PropGap_VR", Y, "sf2", sc)}</td><td>{n("COST_GapPosSustainYear", None, "yt", sc)}</td>'
                        f'<td>{n("VAL_TP_W", None, "f2", sc)}</td><td>{n("VAL_Rating", None, "text", sc)}</td></tr>' for lab, sc in alt)
@@ -699,7 +705,7 @@ M 線規格「AI 收支模型不加 DCF 腿」（2026-11-05）因公司掛牌而
 <h3>拆解：只動該項（各自從 v0.1.9 加入）</h3>
 <div class="tw"><table><thead><tr><th>輸出</th>{"".join(f"<th>{l}</th>" for l, _s in cols)}</tr></thead><tbody>{"".join(rows)}</tbody></table></div>
 <p class="note">B1 只改股權流入與現金路徑（自由現金流不變）；B2 只動條件式情境（S2、S3、資金第 3 層），基準不變；C 承諾改讀使未歸屬餘額與付款小幅增加；D1 使 2026Q4 營收 {n("REV_Q4_2026", None, "f2", "v019")} → {n("REV_Q4_2026", None, "f2")}、2027 起營收按校準 token 量同比例上升（2027 營收總額 ÷ 2026Q4 年化＝{n("REV_D2Ratio", None, "f3")}，≥ 1，D2 不立警示）；E 為非現金，只動全成本與估值的 EBIT。</p>
-<h3>替代讀法（每項只改一處）</h3>
+<h3>替代讀法，在 v{ver} 基準下（每項只改一處；v0.1.9 當時的同一組讀法見 ①之八）</h3>
 <div class="tw"><table><thead><tr><th>讀法</th><th>累計外部資金</th><th>現金谷底</th><th>2026 差額</th><th>2030 差額</th><th>命題 1 持續轉正年</th><th>加權目標價</th><th>評等</th></tr></thead><tbody>{alt_html}</tbody></table></div>
 <h3>估值頁（Val）摘要</h3>
 <div class="tw"><table><thead><tr><th>項目</th><th>值</th><th>Excel 具名範圍</th></tr></thead><tbody>{val_html}</tbody></table></div>
