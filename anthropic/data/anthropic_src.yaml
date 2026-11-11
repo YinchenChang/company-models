@@ -9334,7 +9334,7 @@ rows:
   tag: "Verified"
   party: "Anthropic（初步招股說明書；期中未經查核；IPO 定價前）"
   basis: "非現金"
-  note: "v0.2.0（工作單 20261111）。chat 端 2026-11-11 讀 Andy 上傳的 430 頁 PDF，轉錄於 docs/reports/20261111_Prospectus原文摘錄.md 第 3 節；建置代理未直讀原文。"
+  note: "v0.2.0（工作單 20261111）。chat 端 2026-11-11 讀 Andy 上傳的 430 頁 PDF，轉錄於 docs/reports/20261111_Prospectus原文摘錄.md 第 3 節；建置代理未直讀原文。；摘要表 3,300 為四捨五入，損益表內實數 3,255（Q3 1,165；chat 端獨立核對 2026-11-11）"
 - id: SRC_ANT_550
   key: "pros_adjoi_9m26"
   group: "E"
@@ -9361,7 +9361,7 @@ rows:
   hi: null
   unit: "$B"
   period: '2026Q4'
-  source: "Anthropic, PBC 初步招股說明書（Preliminary Prospectus，Subject to Completion，dated 2026-11-10；第 27 頁）"
+  source: "Anthropic, PBC 初步招股說明書（Preliminary Prospectus，Subject to Completion，dated 2026-11-10；第 27–28 頁）"
   url: "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0002130357"
   doc_date: '2026-11-10'
   retrieved: '2026-11-11'
@@ -9463,7 +9463,7 @@ rows:
   hi: null
   unit: "$B/年"
   period: '2026-10-31'
-  source: "Anthropic, PBC 初步招股說明書（Preliminary Prospectus，Subject to Completion，dated 2026-11-10；第 202 頁）"
+  source: "Anthropic, PBC 初步招股說明書（Preliminary Prospectus，Subject to Completion，dated 2026-11-10；第 202 頁；定義第 3 頁；違反使用政策客戶但書第 70 頁）"
   url: "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0002130357"
   doc_date: '2026-11-10'
   retrieved: '2026-11-11'
@@ -9480,7 +9480,7 @@ rows:
   hi: null
   unit: "$B/年"
   period: '2026-10-31'
-  source: "Anthropic, PBC 初步招股說明書（Preliminary Prospectus，Subject to Completion，dated 2026-11-10；第 202 頁）"
+  source: "Anthropic, PBC 初步招股說明書（Preliminary Prospectus，Subject to Completion，dated 2026-11-10；第 202 頁；定義第 3 頁）"
   url: "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0002130357"
   doc_date: '2026-11-10'
   retrieved: '2026-11-11'
@@ -9531,7 +9531,7 @@ rows:
   hi: null
   unit: "$B"
   period: '2026-09-30'
-  source: "Anthropic, PBC 初步招股說明書（Preliminary Prospectus，Subject to Completion，dated 2026-11-10；第 140–141 頁）"
+  source: "Anthropic, PBC 初步招股說明書（Preliminary Prospectus，Subject to Completion，dated 2026-11-10；第 143 頁）"
   url: "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0002130357"
   doc_date: '2026-11-10'
   retrieved: '2026-11-11'
@@ -9548,7 +9548,7 @@ rows:
   hi: null
   unit: "$B"
   period: '2026-09-30'
-  source: "Anthropic, PBC 初步招股說明書（Preliminary Prospectus，Subject to Completion，dated 2026-11-10；第 140–141 頁）"
+  source: "Anthropic, PBC 初步招股說明書（Preliminary Prospectus，Subject to Completion，dated 2026-11-10；第 143 頁）"
   url: "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0002130357"
   doc_date: '2026-11-10'
   retrieved: '2026-11-11'
@@ -9623,7 +9623,7 @@ rows:
   tag: "Verified"
   party: "Anthropic（初步招股說明書；期中未經查核；IPO 定價前）"
   basis: "類債"
-  note: "v0.2.0（工作單 20261111）。chat 端 2026-11-11 讀 Andy 上傳的 430 頁 PDF，轉錄於 docs/reports/20261111_Prospectus原文摘錄.md 第 5 節；建置代理未直讀原文。值取自工作單 20261111 F4（chat 端讀原文）"
+  note: "v0.2.0（工作單 20261111）。chat 端 2026-11-11 讀 Andy 上傳的 430 頁 PDF，轉錄於 docs/reports/20261111_Prospectus原文摘錄.md 第 5 節；建置代理未直讀原文。值取自工作單 20261111 F4（chat 端讀原文）［v0.2.0 獨立核對後：估值改用現值 1.674（SRC_ANT_593，F-35）；本列值不改］"
 - id: SRC_ANT_567
   key: "cmt_pros_total"
   group: "D"
@@ -10066,6 +10066,23 @@ rows:
   party: null
   basis: "市場資料"
   note: "v0.2.0 估值頁（工作單 20261111 F4、F6；chat 端取得，建置代理照用）。2026-11-06 讀取；單一來源"
+- id: SRC_ANT_593
+  key: pros_fin_lease_pv
+  group: F
+  metric: "融資租賃負債（現值；表內，2026-09-30）"
+  value: 1.674
+  lo: null
+  hi: null
+  unit: "$B"
+  period: '2026-09-30'
+  source: "Anthropic, PBC 初步招股說明書（Preliminary Prospectus，Subject to Completion，dated 2026-11-10；F-35）"
+  url: "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0002130357"
+  doc_date: '2026-11-10'
+  retrieved: '2026-11-11'
+  tag: Verified
+  party: "Anthropic（初步招股說明書；期中未經查核；IPO 定價前）"
+  basis: "類債（現值）"
+  note: "v0.2.0 獨立核對（chat 端 2026-11-11）：F-35 融資租賃負債現值 1.674；工作單 F4 的 1.95 為未折現付款額（SRC_ANT_566）。估值頁淨現金改扣本列"
 not_found:
 - item: 2024 年認列營收（直接揭露值）
   tried: Reuters／Fortune／PYMNTS／Khaleej Times 招股書報導；查詢 "Anthropic 2024 revenue prospectus"

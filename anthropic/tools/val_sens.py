@@ -20,7 +20,7 @@ from val_recalc import ROOT, read_names, run_many  # noqa: E402
 # key、案例名稱、低值設定、高值設定（None＝基準）、標籤
 CASES = [
     ("wacc", "WACC ±1pt", {"val_wacc_adj": 0.01}, {"val_wacc_adj": -0.01}, "WACC＋1pt", "WACC−1pt"),
-    ("g", "永續成長率 g 2%／4%", {"val_g": 0.02}, {"val_g": 0.04}, "g 2%", "g 4%"),
+    ("g", "永續成長率 g 2%／4%（RONIC＝WACC 時終值與 g 無關，兩欄同基準）", {"val_g": 0.02}, {"val_g": 0.04}, "g 2%", "g 4%"),
     ("beta", "β 1.6／1.0", {"val_beta_override": 1.6}, {"val_beta_override": 1.0}, "β 1.6", "β 1.0"),
     ("erp", "ERP 6%／4%", {"val_erp": 0.06}, {"val_erp": 0.04}, "ERP 6%", "ERP 4%"),
     ("ronic", "RONIC＝WACC＋5pt", None, {"val_ronic_add": 0.05}, "基準（RONIC＝WACC）", "RONIC＝WACC＋5pt"),
@@ -34,6 +34,9 @@ CASES = [
     ("comp", "Comparable 不調整（倍數不乘 FCF 利益率比例）", None, {"val_comp_adj_switch": 0}, "基準（調整）", "不調整"),
     ("oa", "超額配售計入（現金＋9.1、股數＋123.75M）", None, {"p_overallot_switch": 1}, "基準（不計）", "計入"),
     ("q4p", "2026Q4 EBIT 前九月代理改工作單字面（調整後營業損益 4.081）", {"val_q4_proxy_switch": 0}, None, "字面讀法", "基準（GAAP −1.260）"),
+    ("sbcadd", "EBIT 照扣全部股權報酬（舊讀法：不加回 14.2 與既有獎酬攤銷）", {"val_sbc_addback_switch": 0}, None, "舊讀法", "基準（只扣未來新授）"),
+    ("ntm", "NTM 營收舊讀法 0.25 × FY2026 ＋ 0.75 × FY2027", {"val_ntm_q4_switch": 0}, None, "舊讀法", "基準（2026Q4 實值＋0.75 × FY2027）"),
+    ("q4avg", "2026Q4 營收：10 月取均值（(71＋81) ÷ 2 ÷ 4；情境 A／C 快照不變）", {"p_q4_avg_switch": 1}, None, "10 月均值", "基準（10-31 年化 81 ÷ 4）"),
 ]
 
 

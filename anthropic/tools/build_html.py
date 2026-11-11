@@ -666,7 +666,7 @@ def section_v020(V: "Values", n, ver: str) -> str:
              g("覆蓋率 2030", "COST_Coverage", Y, "f3"), g("命題 1 持續轉正年", "COST_GapPosSustainYear", None, "yt"),
              g("合約付款 2028（$B）", "COST_ContractPay", 2028, "f2"), g("未歸屬餘額（$B）", "COST_S1Unalloc", None, "f2")]
     alt = [("基準", "base"), ("C4 扣除 Lambda 34.9", "lam_on"), ("超額配售計入", "oa_on"), ("只關 B1（IPO 不進基準）", "v020_no_b1"), ("只關 D1（Q4＝Q3）", "v020_no_d1"),
-           ("只關 E（無 14.2、無下限）", "v020_no_e"),
+           ("只關 E（無 RSU 修改一次性、無下限）", "v020_no_e"),
            ("最低現金 3 個月", "mc_lo"), ("最低現金 12 個月", "mc_hi"), ("SpaceXAI S-1 路徑（R4）", "r4_on"), ("R4＋最低現金 3 個月", "r4_mc_lo"), ("R4＋最低現金 12 個月", "r4_mc_hi"),
            ("扣除附條件 186.2（R5d）", "r5d_on"), ("R4＋R5d", "r4_r5d"), ("並列：殘差法", "resid_on"), ("殘差法＋R4", "r4_resid"), ("捐贈只計 Q3 一次", "chr_once"),
            ("未歸屬餘額舊讀法 快 2027–2031", "s1u_fast"), ("舊讀法 慢 2028–2036", "s1u_slow"), ("舊讀法 慢 2028–2037", "s1u_slow37"), ("未起租起租年 2026", "lease_lo"),
@@ -679,9 +679,9 @@ def section_v020(V: "Values", n, ver: str) -> str:
     val = [("無風險利率 rf（10 年美債，11-06）", "VAL_Rf", "pct1"), ("β（同業 5 年中位數 1.37 → Blume）", "VAL_Beta", "f3"), ("ERP", "VAL_ERP", "pct1"),
            ("ke＝rf＋β × ERP", "VAL_Ke", "pct1"), ("稅後債務成本", "VAL_KdAT", "pct1"), ("WACC", "VAL_WACC", "pct1"), ("永續成長率 g", "VAL_g", "pct1"), ("RONIC", "VAL_RONIC", "pct1"),
            ("情境 B：明確期現值（2026Q4–2032）", "VAL_PVExp_B", "f1"), ("情境 B：終值現值", "VAL_PVTV_B", "f1"), ("情境 B：企業價值 EV", "VAL_EV_B", "f1"),
-           ("情境 B：終值占 EV", "VAL_TVShare_B", "pct0"), ("淨現金（pro forma 212.684 − 融資租賃 1.95）", "VAL_NetCash", "f1"), ("評價股數（十億股）", "VAL_Shares", "f3"),
+           ("情境 B：終值占 EV", "VAL_TVShare_B", "pct0"), ("淨現金（pro forma 現金 − 融資租賃現值）", "VAL_NetCash", "f1"), ("評價股數（十億股）", "VAL_Shares", "f3"),
            ("情境 B：股權價值", "VAL_EqV_B", "f1"), ("DCF 每股：情境 A（API 任務數高端）", "VAL_TP_DCF_A", "f2"), ("DCF 每股：情境 B（基準）", "VAL_TP_DCF_B", "f2"),
-           ("DCF 每股：情境 C（低端＋Q4＝Q3）", "VAL_TP_DCF_C", "f2"), ("DCF 目標價（25／50／25）", "VAL_TP_DCF", "f2"),
+           ("DCF 每股：情境 C（低端＋Q4＝Q3）", "VAL_TP_DCF_C", "f2"), ("DCF 目標價（情境權重 A／B／C 見 Inputs INP_260–262）", "VAL_TP_DCF", "f2"),
            ("NTM 營收總額（情境 B）", "VAL_NTMRev", "f2"), ("同業 EV／NTM 營收中位數（倍）", "VAL_PeerMult", "f2"), ("同業 TTM FCF 利益率中位數", "VAL_PeerFCFm", "pct1"),
            ("調整係數（情境 B）", "VAL_AdjFactor", "f3"), ("Comparable：市場主流（未調整）", "VAL_TP_CompMain", "f2"), ("Comparable：調整後（進加權）", "VAL_TP_CompAdj", "f2"),
            ("加權目標價", "VAL_TP_W", "f2"), ("上檔空間（對 $74）", "VAL_Up_W", "pct1"), ("評等", "VAL_Rating", "text")]
@@ -693,10 +693,10 @@ def section_v020(V: "Values", n, ver: str) -> str:
     sens_html = "".join(f'<tr><td>{n(f"Val!A{r}", None, "text")}</td><td>{n(f"Val!B{r}", None, "f2")}</td><td>{n(f"Val!C{r}", None, "f2")}</td></tr>' for r in range(r0, r1 + 1))
     return f"""<section id="s1i"><h2><span class="no">①之九</span>v{ver} 更新了什麼：初步招股說明書（2026-11-10）滾入＋估值頁與評等</h2>
 <p class="lead"><b>兩個命題都沒有翻轉；新增投資建議「{n("VAL_Rating", None, "text")}」。</b>IPO＋同步私募淨額 {n("FND_IPONet", None, "f1")} 進 2026 基準（J1），只靠已到位融資的現金谷底 {n("FND_CashNoExtTrough", None, "f1", "v019")} → {n("FND_CashNoExtTrough", None, "f1")}；
-2026Q4 營收改用 10-31 年化 ÷ 4（J2）使 2027 起營收同比例上升、營運自由現金流 2029 年轉正（持續轉正年 {n("FND_FCFPosSustainYear", None, "yt", "v019")} → {n("FND_FCFPosSustainYear", None, "yt")}）；
-IPO 時 RSU 一次性 14.2（J3）與攤銷下限只加在全成本（非現金），2026 差額 {n("COST_PropGap_VR", 2026, "sf2", "v019")} → {n("COST_PropGap_VR", 2026, "sf2")}，命題 1 持續轉正年 {n("COST_GapPosSustainYear", None, "yt", "v019")} → {n("COST_GapPosSustainYear", None, "yt")}；累計外部資金需求 {n("FND_ExtNeedCum", Y, "f0", "v019")} → {n("FND_ExtNeedCum", Y, "f0")}。
+2026Q4 營收改用 10-31 年化 {n("SRC_ANT_557", None, "f0")} ÷ {n("INP_164", None, "f0")}（J2；中性近似）使 2027 起營收同比例上升、營運自由現金流 {n("FND_FCFPosSustainYear", None, "yt")} 年轉正（持續轉正年 {n("FND_FCFPosSustainYear", None, "yt", "v019")} → {n("FND_FCFPosSustainYear", None, "yt")}）；
+IPO 時 RSU 一次性 {n("SRC_ANT_551", None, "f1")}（J3）與攤銷下限只加在全成本（非現金；估值 EBIT 加回，因這批 RSU 已計入評價股數），2026 差額 {n("COST_PropGap_VR", 2026, "sf2", "v019")} → {n("COST_PropGap_VR", 2026, "sf2")}，命題 1 持續轉正年 {n("COST_GapPosSustainYear", None, "yt", "v019")} → {n("COST_GapPosSustainYear", None, "yt")}；累計外部資金需求 {n("FND_ExtNeedCum", Y, "f0", "v019")} → {n("FND_ExtNeedCum", Y, "f0")}。
 估值（J5–J8）：DCF（FCFF）三情境加權 ${n("VAL_TP_DCF", None, "f2")}、調整後 Comparable ${n("VAL_TP_CompAdj", None, "f2")}，<b>加權目標價 ${n("VAL_TP_W", None, "f2")}，對 IPO 區間中點上檔空間 {n("VAL_Up_W", None, "pct1")}</b>；市場主流（未調整）Comparable ${n("VAL_TP_CompMain", None, "f2")}。
-M 線規格「AI 收支模型不加 DCF 腿」（2026-11-05）因公司掛牌而失效。DCF 情境 B 的終值占 EV {n("VAL_TVShare_B", None, "pct0")}（>80%，明確期 2027–2028 自由現金流為負）；情境 C 的 EBIT 到 2030 仍為負，DCF 每股截為 {n("VAL_TP_DCF_C", None, "f0")}。</p>
+M 線規格「AI 收支模型不加 DCF 腿」（2026-11-05）因公司掛牌而失效。DCF 情境 B 的終值占 EV {n("VAL_TVShare_B", None, "pct0")}（>80%，明確期 2027–2028 自由現金流為負）；情境 C 的 EBIT 到 2030 仍為負，DCF 每股取下限（淨現金每股推到目標時點）{n("VAL_TP_DCF_C", None, "f2")}；DCF 與調整後 Comparable 的下限統一為淨現金每股 {n("VAL_NetCashPS", None, "f2")}（評價日）。</p>
 <p class="note">評等說明：{n("VAL_RatingNote", None, "text")}</p>
 <h3>初步招股說明書與 S-1/A（或前版來源）的差異</h3>
 <div class="tw"><table><thead><tr><th>項目（$B）</th><th>舊值</th><th>初步招股說明書</th></tr></thead><tbody>{diff_html}</tbody></table></div>
@@ -731,7 +731,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
     S = []
     # ── 標頭 ──
     S.append(f"""<header><h1>Anthropic 收支模型 v{ver}｜一頁摘要</h1>
-<div class="meta">{date_disp}｜Excel <code>{html.escape(model.name)}</code>｜Tokenomics {html.escape(str(tk_ver))}（<code>{html.escape(str(tk_sha))[:7]}</code>）｜單位 $B（十億美元），曆年制｜數字游標停留可見 Excel 位置；手機上圖表可左右滑動｜<b>v0.1.7 起正式公開 S-1（2026-10-26）套用於基準：2025 校準、2026 上半年營收、逐家承諾與承諾三段、季度營業損益（非算力成本）。v0.1.7.1：原先二手轉載的 46 列經 chat 端 2026-11-02 以瀏覽器核對 SEC 原文、全部一致，改 Verified；2026 已到位融資依原文更正為 110.4（Google Series G-2 約 10 與 Series H 分開，v0.1.7 少算）。例外：AMD 維持模型 GW 型（S-1 只給下限 >20，另列情境）；股權報酬用 S-1「調整後 − GAAP 營業損益」代理（＝股權報酬 2.185＋非現金捐贈 0.126）；6-30 現金只對照。v0.1.8：S-1/A 第 1 號修訂（2026-11-02）的 2026Q3 實績、承諾總額 895.4 與逐年付款表套用於基準（三段 871.4、未歸屬餘額付款期依 S-1/A 結構）；附條件 213.8 照計、SpaceXAI S-1 路徑並列。v0.1.9：Tokenomics 快照 v21.7 → v21.10（TPU v7、Trainium3 產出比改 FP8 對齊作基準：0.8 → 0.66、0.5 → 0.28），η 重校；只改「每 VR 等值 GW」的換算，合約付款、現金與外部資金需求不變。<span style="color:var(--gap)">v0.2.0：初步招股說明書（2026-11-10；價格區間 $70–78）滾入：IPO＋同步私募淨額進 2026 基準、條件式改讀、承諾 900.9、2026Q4 營收改用 10-31 年化 81 ÷ 4、IPO 時 RSU 一次性股權報酬 14.2 與攤銷下限；新增估值頁（DCF＋Comparable）與評等。</span>見 ①之九、①之八、①之七、①之六、①之五</b></div></header>""")
+<div class="meta">{date_disp}｜Excel <code>{html.escape(model.name)}</code>｜Tokenomics {html.escape(str(tk_ver))}（<code>{html.escape(str(tk_sha))[:7]}</code>）｜單位 $B（十億美元），曆年制｜數字游標停留可見 Excel 位置；手機上圖表可左右滑動｜<b>v0.1.7 起正式公開 S-1（2026-10-26）套用於基準：2025 校準、2026 上半年營收、逐家承諾與承諾三段、季度營業損益（非算力成本）。v0.1.7.1：原先二手轉載的 46 列經 chat 端 2026-11-02 以瀏覽器核對 SEC 原文、全部一致，改 Verified；2026 已到位融資依原文更正為 110.4（Google Series G-2 約 10 與 Series H 分開，v0.1.7 少算）。例外：AMD 維持模型 GW 型（S-1 只給下限 >20，另列情境）；股權報酬用 S-1「調整後 − GAAP 營業損益」代理（＝股權報酬 2.185＋非現金捐贈 0.126）；6-30 現金只對照。v0.1.8：S-1/A 第 1 號修訂（2026-11-02）的 2026Q3 實績、承諾總額 895.4 與逐年付款表套用於基準（三段 871.4、未歸屬餘額付款期依 S-1/A 結構）；附條件 213.8 照計、SpaceXAI S-1 路徑並列。v0.1.9：Tokenomics 快照 v21.7 → v21.10（TPU v7、Trainium3 產出比改 FP8 對齊作基準：0.8 → 0.66、0.5 → 0.28），η 重校；只改「每 VR 等值 GW」的換算，合約付款、現金與外部資金需求不變。<span style="color:var(--gap)">v0.2.0：初步招股說明書（2026-11-10；價格區間 $70–78）滾入：IPO＋同步私募淨額進 2026 基準、條件式改讀、承諾 900.9、2026Q4 營收改用 10-31 年化 ÷ 季數（中性近似）、IPO 時 RSU 一次性股權報酬與攤銷下限；新增估值頁（DCF＋Comparable）與評等。</span>見 ①之九、①之八、①之七、①之六、①之五</b></div></header>""")
 
     # ── ① 命題與結論 ──
     # 只做取值與排序（找谷底年、列出會產生外部資金需求的單一驅動），不做模型計算
@@ -746,7 +746,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
                   f'v0.2.0 起 IPO＋私募淨額進基準，單一讀法不再產生外部資金需求：SpaceXAI 改走 S-1 路徑（爬升後每月 3.1、上限 120.5）→ 累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "r4_on")}、谷底 {n("FND_CashNoExtTrough", None, "f1", "r4_on")}（v0.1.9 時 {n("FND_ExtNeedCum", Y, "f1", "v019_r4_on")}）；未歸屬餘額回到 2027–2031 快付 → {n("FND_ExtNeedCum", Y, "f1", "s1u_fast")}、谷底 {n("FND_CashNoExtTrough", None, "f1", "s1u_fast")}——第 2 個結論更穩，但兩項以上同時落在下緣仍會需要外部資金（見 ⑥）。')
     S.append(f"""<section id="s1"><h2><span class="no">①</span>命題與一句話結論</h2>
 <p class="note">命題（與 OpenAI 同一句）：Anthropic 每 VR 等值 GW 的年營收，能否覆蓋每 GW 年全成本？若不能，缺口要多少外部資金、由誰補？</p>
-<p class="note"><b>v0.2.0 摘要（初步招股說明書 2026-11-10＋估值）</b>：IPO＋同步私募淨額 {n("FND_IPONet", None, "f1")}（淨募資 84.6 − RSU 代扣稅款 3.8，以區間中點 $74）進 2026 基準股權流入，只靠已到位融資的現金谷底 {n("FND_CashNoExtTrough", None, "f1", "v019")} → {n("FND_CashNoExtTrough", None, "f1")}；2026Q4 營收改用 10-31 Run-Rate Revenue 81 ÷ 4＝{n("REV_Q4_2026", None, "f2")}（v0.1.9 Q4＝Q3 {n("REV_Q4_2026", None, "f2", "v019")}），2026 營收總額 {n("REV_GrossCapped", 2026, "f2", "v019")} → {n("REV_GrossCapped", 2026, "f2")}，2027 起按校準 token 量同比例變動；營運自由現金流 2029 年轉正（{n("FND_FCF", 2029, "sf1", "v019")} → {n("FND_FCF", 2029, "sf1")}），持續轉正年 {n("FND_FCFPosSustainYear", None, "yt", "v019")} → {n("FND_FCFPosSustainYear", None, "yt")}；IPO 時 RSU 一次性股權報酬 14.2 與 2027–2028 攤銷下限（非現金）使 2026 差額 {n("COST_PropGap_VR", 2026, "sf2", "v019")} → {n("COST_PropGap_VR", 2026, "sf2")}，命題 1 持續轉正年 {n("COST_GapPosSustainYear", None, "yt")} 不變、命題 2 累計外部資金需求 {n("FND_ExtNeedCum", Y, "f0")} 不變。<b>估值：加權目標價 ${n("VAL_TP_W", None, "f2")}（DCF {n("VAL_TP_DCF", None, "f2")}、調整後 Comparable {n("VAL_TP_CompAdj", None, "f2")} 各半），對 IPO 區間中點 $74 上檔空間 {n("VAL_Up_W", None, "pct1")}，評等「{n("VAL_Rating", None, "text")}」</b>（見 ①之九）。</p>
+<p class="note"><b>v0.2.0 摘要（初步招股說明書 2026-11-10＋估值）</b>：IPO＋同步私募淨額 {n("FND_IPONet", None, "f1")}（淨募資 {n("SRC_ANT_534", None, "f1")} − RSU 代扣稅款 {n("SRC_ANT_537", None, "f1")}，以區間中點 ${n("VAL_Px", None, "f0")}）進 2026 基準股權流入，只靠已到位融資的現金谷底 {n("FND_CashNoExtTrough", None, "f1", "v019")} → {n("FND_CashNoExtTrough", None, "f1")}；2026Q4 營收改用 10-31 Run-Rate Revenue {n("SRC_ANT_557", None, "f0")} ÷ {n("INP_164", None, "f0")}＝{n("REV_Q4_2026", None, "f2")}（v0.1.9 Q4＝Q3 {n("REV_Q4_2026", None, "f2", "v019")}），2026 營收總額 {n("REV_GrossCapped", 2026, "f2", "v019")} → {n("REV_GrossCapped", 2026, "f2")}，2027 起按校準 token 量同比例變動；營運自由現金流 {n("FND_FCFPosSustainYear", None, "yt")} 年轉正（2029 年 {n("FND_FCF", 2029, "sf1", "v019")} → {n("FND_FCF", 2029, "sf1")}），持續轉正年 {n("FND_FCFPosSustainYear", None, "yt", "v019")} → {n("FND_FCFPosSustainYear", None, "yt")}；IPO 時 RSU 一次性股權報酬 {n("SRC_ANT_551", None, "f1")} 與 2027–2028 攤銷下限（非現金）使 2026 差額 {n("COST_PropGap_VR", 2026, "sf2", "v019")} → {n("COST_PropGap_VR", 2026, "sf2")}，命題 1 持續轉正年 {n("COST_GapPosSustainYear", None, "yt")} 不變、命題 2 累計外部資金需求 {n("FND_ExtNeedCum", Y, "f0")} 不變。<b>估值：加權目標價 ${n("VAL_TP_W", None, "f2")}（DCF {n("VAL_TP_DCF", None, "f2")}、調整後 Comparable {n("VAL_TP_CompAdj", None, "f2")} 各 {n("INP_259", None, "pct0")}），對 IPO 區間中點 ${n("VAL_Px", None, "f0")} 上檔空間 {n("VAL_Up_W", None, "pct1")}，評等「{n("VAL_Rating", None, "text")}」</b>（見 ①之九）。</p>
 <p class="lead">在目前需求成長、價格彈性、初步招股說明書揭露的算力承諾（表內 320.0＋未起租 451.2＋9-30 後新簽 105.7＝${n("COST_S1fCommit3", None, "f0")}B；扣除模型逐家合約後的未歸屬餘額 ${n("COST_S1Unalloc", None, "f0")}B 依 S-1/A 付款表結構付款）、2026 年已到位融資（${n("FND_Committed", 2026, "f0")}B）與 IPO＋私募淨額（${n("FND_IPONet", None, "f1")}B）的假設下：<b>2026–2029 年每 VR 等值 GW 營收都不能覆蓋全成本</b>（{n("COST_PropGap_VR", 2026, "sf2")}／{n("COST_PropGap_VR", 2027)}／{n("COST_PropGap_VR", 2028)}／{n("COST_PropGap_VR", 2029)} $B/GW/年；2026 年由 v0.1.7.1 的 {n("COST_PropGap_VR", 2026, "sf2", "v0171")} 轉負：S-1/A 的 Q3 股權報酬 1.070 與非現金捐贈 1.960 依 Q4＝Q3 慣例計入全成本（R5a；皆非現金，不影響現金與命題 2），加上未歸屬餘額依 S-1/A 付款表自 2026Q4 開始付款（R5c）；見 ①之七），<b>{n("COST_GapPosSustainYear", None, "yt")} 年才持續轉正</b>（{n("COST_PropGap_VR", Y, "sf1")}，覆蓋率 {n("COST_Coverage", Y, "pct0")}）；
 {p2_txt}
 營運自由現金流 2026 年為正（{n("FND_FCF", 2026, "sf1")}）、2027–2028 年為負（2029 年 {n("FND_FCF", 2029, "sf1")}），{n("FND_FCFPosSustainYear", None, "yt")} 年起持續為正；若不靠任何融資（第 1 層），2026–2030 累計需外部提供 ${n("FND_L1_ExtTotal", None, "f0")}B；已到位股權（第 2 層）補上全部缺口（第 2 層累計外部資金需求 ${n("FND_L2_ExtTotal", None, "f0")}B，見 ⑤）。
@@ -759,7 +759,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 </div>
 <div class="kpis">
 <div class="kpi"><div class="k">投資建議（評等）</div><div class="v">{n("VAL_Rating", None, "text")}</div><div class="s">加權目標價上檔空間 {n("VAL_Up_W", None, "pct1")}；現價＝IPO 區間中點 ${n("VAL_Px", None, "f2")}（區間 {n("VAL_PxLo", None, "f0")}–{n("VAL_PxHi", None, "f0")}）</div></div>
-<div class="kpi"><div class="k">加權目標價（12 個月）</div><div class="v">${n("VAL_TP_W", None, "f2")}</div><div class="s">DCF {n("VAL_TP_DCF", None, "f2")} × 50%＋調整後 Comparable {n("VAL_TP_CompAdj", None, "f2")} × 50%</div></div>
+<div class="kpi"><div class="k">加權目標價（12 個月）</div><div class="v">${n("VAL_TP_W", None, "f2")}</div><div class="s">DCF {n("VAL_TP_DCF", None, "f2")} × {n("INP_259", None, "pct0")}＋調整後 Comparable {n("VAL_TP_CompAdj", None, "f2")} ×（1 − 權重）</div></div>
 <div class="kpi"><div class="k">市場主流 Comparable 目標價</div><div class="v">${n("VAL_TP_CompMain", None, "f2")}</div><div class="s">同業 EV／NTM 營收中位數 {n("VAL_PeerMult", None, "f2")} 倍（未調整）；上檔空間 {n("VAL_Up_CompMain", None, "pct1")}</div></div>
 <div class="kpi"><div class="k">上檔空間（加權）</div><div class="v">{n("VAL_Up_W", None, "pct1")}</div><div class="s">DCF 單獨 {n("VAL_Up_DCF", None, "pct1")}；WACC {n("VAL_WACC", None, "pct1")}、終值占 EV {n("VAL_TVShare_B", None, "pct0")}（情境 B）</div></div>
 </div>
@@ -1399,8 +1399,8 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 </section>""")
 
     # ── ⑤ 現金與融資 ──
-    scen_rows = [("基準（已到位 110.4）", "FND_CashEnd", "FND_ExtNeedCum"), ("S1 ＋IPO 約 $100B（2026-11）", "Funding!F49", "Funding!F50"),
-                 ("S2 ＋條件式（Amazon、Google、NVIDIA、AMD）", "Funding!F54", "Funding!F55"), ("S3 ＋IPO＋條件式", "Funding!F59", "Funding!F60"),
+    scen_rows = [("基準（已到位＋IPO＋私募淨額，v0.2.0 B1）", "FND_CashEnd", "FND_ExtNeedCum"), ("S1 ＋IPO（v0.2.0：已進基準，與基準相同）", "Funding!F49", "Funding!F50"),
+                 ("S2 ＋條件式（Amazon、Google 剩餘、AMD 剩餘；NVIDIA 已併入私募）", "Funding!F54", "Funding!F55"), ("S3 ＋IPO＋條件式", "Funding!F59", "Funding!F60"),
                  ("S4 逐家錨定招股書金額", "Funding!F64", "Funding!F65"), ("S5 加計機房租約租金", "Funding!F69", "Funding!F70"),
                  ("S6 D22 舊法低估再補足（v0.1.7 基準已以 S-1 校準，本列為再加碼）", "Funding!F74", "Funding!F75"), ("S7 S4＋S5＋S6 合併", "Funding!F79", "Funding!F80")]
     sr = []
@@ -1432,7 +1432,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 <div class="tw"><table><thead><tr><th>情境</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>累計外部資金</th></tr></thead><tbody>
 {"".join(sr)}
 </tbody></table></div>
-<p class="note">條件式（未到位）：Amazon {n("Funding!F22", 2027, "f0")}（依算力交付）、Google {n("Funding!F23", 2027, "f0")}（2026 NPA 剩餘額度；正式 S-1：20，與 IPO 認購選擇權最多 10 互抵、不相加；v0.1.7 為報導 30）、NVIDIA 最高 {n("Funding!F24", 2026, "f0")}、AMD 認股 {n("Funding!F25", 2027, "f0")}；IPO 約 {n("Funding!F21", 2026, "f0")}。全部不計入基準。<b>或有負債（只列示）</b>：A&R 循環信用額度 {n("Funding!F81", None, "f0")}（2031-09 到期；最低流動性條款 {n("SRC_ANT_486", None, "f0")}，自 2026-12-31 起，低於模型最低現金）、Broadcom 租賃融資最高 {n("Funding!F82", None, "f0")}、表外 Google TPU 融資 SPV {n("Funding!F83", None, "f0")}（單一來源，未證實），合計 {n("FND_Contingent", None, "f0")}；合約 2030 年後剩餘承諾 {n("FND_CommitAfter2030", None, "f1")}（招股書稱約 {n("Funding!F86", None, "pct0")} 不可取消）。</p>
+<p class="note">條件式（未到位）：Amazon {n("Funding!F22", 2027, "f0")}（依算力交付）、Google {n("Funding!F23", 2027, "f1")}（初步招股說明書：私募完成後 2026 NPA 剩餘；另 {n("SRC_ANT_526", None, "f1")} 轉入同步私募）、NVIDIA {n("Funding!F24", 2026, "f1")}（併入同步私募 {n("SRC_ANT_527", None, "f1")}）、AMD 認股剩餘 {n("Funding!F25", 2027, "f1")}（另 {n("SRC_ANT_528", None, "f1")} 在私募）；以上條件式不計入基準。IPO＋同步私募淨額 {n("FND_IPONet", None, "f1")}（淨募資 − RSU 代扣稅款；Microsoft 私募 {n("SRC_ANT_531", None, "f1")}、合約下限 {n("SRC_ANT_573", None, "f1")}）已依 B1 計入基準。<b>或有負債（只列示）</b>：A&R 循環信用額度 {n("Funding!F81", None, "f0")}（2031-09 到期；最低流動性條款 {n("SRC_ANT_486", None, "f0")}，自 2026-12-31 起，低於模型最低現金）、Broadcom 租賃融資最高 {n("Funding!F82", None, "f0")}、表外 Google TPU 融資 SPV {n("Funding!F83", None, "f0")}（單一來源，未證實），合計 {n("FND_Contingent", None, "f0")}；合約 2030 年後剩餘承諾 {n("FND_CommitAfter2030", None, "f1")}（招股書稱約 {n("Funding!F86", None, "pct0")} 不可取消）。</p>
 <h3>回流對照（D18：只對照、不沖銷）</h3>
 <div class="tw"><table><thead><tr><th>投資人兼算力供應商</th><th>已到位投資</th><th>條件式（未到位）</th><th>合約總額（招股書）</th><th>模型 2026–30 付款</th><th>已到位 ÷ 付款</th><th>（到位＋條件）÷ 合約</th></tr></thead><tbody>
 {"".join(rt)}

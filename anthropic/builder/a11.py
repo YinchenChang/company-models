@@ -98,7 +98,7 @@ def build(ctx):
     P["peer0"], P["peer1"] = p0, r[0] - 1
 
     # ═══ 1. 折現率 ═══
-    sec("1. 折現率（CAPM；債務只有融資租賃 1.95 → WACC≈ke）")
+    sec("1. 折現率（CAPM；債務只有融資租賃現值 1.674 → WACC≈ke）")
     row("rf", "無風險利率 rf（10 年美債 CMT，2026-11-06）", "比例", [f"={S('mkt_rf_cmt')}"], note="SRC_ANT_576（ycharts 轉 Treasury CMT）；第二來源 Tradeweb 11-09 4.872%（SRC_ANT_577）", fmt="0.00%",
         name="VAL_Rf")
     row("rf2", "對照：rf 第二來源（Tradeweb，2026-11-09）", "比例", [f"={S('mkt_rf_tw')}"], fmt="0.000%")
@@ -127,7 +127,7 @@ def build(ctx):
     row("shares", "評價股數合計", "十億股", [f"=SUM(C{P['sh_post']}:C{P['sh_oa']})"], fmt="0.0000", name="VAL_Shares", bold=True)
     row("cash", "pro forma 現金與短投（9-30；依價格連動；已扣 RSU 代扣稅款）", "$B", [f"=FND_ProFormaCash"], note="Funding 第十六節 p_pfm；SRC_ANT_560")
     row("cash_oa", "＋超額配售淨額（p_overallot_switch；基準 0）", "$B", [f"={I('p_overallot_switch')}*Funding!$D${F.rows['p_oa']}"], note="Funding 第十六節 p_oa")
-    row("debt", "− 融資租賃負債（表內）；循環額度已提領 0", "$B", [f"={S('pros_fin_lease')}"], note="SRC_ANT_566（工作單 F4）")
+    row("debt", "− 融資租賃負債（現值，表內；F-35）；循環額度已提領 0", "$B", [f"={S('pros_fin_lease_pv')}"], note="SRC_ANT_593（F-35 現值 1.674）；工作單 F4 的 1.95 為未折現額（SRC_ANT_566）")
     row("netcash", "淨現金＝現金 ＋ 超額配售 − 融資租賃", "$B", [f"={c('cash')}+{c('cash_oa')}-{c('debt')}"], name="VAL_NetCash", bold=True)
     sec("1b. WACC")
     row("emkt", "股權市值 E＝現價 × 評價股數", "$B", [f"={c('px')}*{c('shares')}"], fmt="#,##0.0")
@@ -174,6 +174,18 @@ def build(ctx):
     row("yn", "年度（數值）", "年", [f"={y}" for y in yrs], fmt="0")
     row("t", "折現年數（評價日起；期中）", "年", [f"={c('stub')}/{I('arith_k2')}"] + [f"={c('stub')}+({col}{P['yn']}-{I('year_2027')})+{c('mid')}" for col in DC[1:]], fmt="0.00")
     row("df", "折現因子 1 ÷ (1＋WACC)^年數", "—", [f"=1/(1+{c('wacc')})^{col}{P['t']}" for col in DC], fmt="0.0000", name="VAL_DF_B", name_span=("C", "J"))
+    # 獨立核對（2026-11-11）：EBIT 只扣「未來新授」股權報酬——加回 2026Q4 一次性 RSU 修改 14.2 與既有獎酬攤銷（2026Q4–2028，以當年模型股權報酬為上限），
+    # 因為這批 RSU（1,026.66M＋47.04M）已全數計入評價股數；val_sbc_addback_switch＝0 為舊讀法（Sens）。三情境共用（股權報酬不隨 API 任務數變動）。
+    Kc = Sheet.all["K"]
+    kcol = {"C": "E", "D": "F", "E": "G"}
+    asw = I("val_sbc_addback_switch")
+    row("sbc_t", "股權報酬（模型；Cost 第五節，2026 為全年）", "$B", [f"=Cost!{kcol[col]}{Kc.rows['sbc']}" for col in "CDE"] + [None] * 5)
+    row("sbc_i", "其中：IPO 時 RSU 修改一次性 14.2（E1）", "$B", [f"=Cost!{kcol[col]}{Kc.rows['p_sbcipo']}" for col in "CDE"] + [None] * 5)
+    row("sbc_a", "既有獎酬（未認列 24.1）攤銷：2026Q4 3.01、2027 12.05、2028 9.04", "$B", [f"=Cost!{kcol[col]}{Kc.rows['p_sbca']}" for col in "CDE"] + [None] * 5)
+    row("sbc_add", "加回 EBIT 的股權報酬＝開關 ×（14.2 ＋ MIN(既有攤銷, 當期模型股權報酬 − 14.2)）；2026Q4 的模型股權報酬＝(全年 − 14.2) × 0.25", "$B",
+        [f"={asw}*(C{r[0] - 2}+MIN(C{r[0] - 1},(C{r[0] - 3}-C{r[0] - 2})*{c('stub')}))"] +
+        [f"={asw}*({col}{r[0] - 2}+MIN({col}{r[0] - 1},{col}{r[0] - 3}-{col}{r[0] - 2}))" for col in "DE"] + [f"={asw}-{asw}"] * 5,
+        note="這批 RSU 已計入評價股數，EBIT 不再扣其費用（避免重複計算）；2029 起 0", name="VAL_SBCAddBack", name_span=("C", "J"))
     q4p = I("val_q4_proxy_switch")
     proxy = f"({q4p}*{S('pros_oi_9m26')}+(1-{q4p})*{S('pros_adjoi_9m26')})"
     BLK = {}
@@ -195,9 +207,9 @@ def build(ctx):
         row(k("m"), "EBIT 利益率（2031–2033＝FY2030 ＋ ext_m_add × 線性）", "比例",
             [f"=C{n_eb}/C{n_rev}"] + [f"={col}{n_eb}/{col}{n_rev}" for col in "DEFG"] +
             [f"=$G{r[0]}+{I('ext_m_add')}*({col}{P['yn']}-{I('year_2030')})/({I('year_2033')}-{I('year_2030')})" for col in "HIJ"], fmt="0.0%")
-        row(k("ebit"), "EBIT（現金口徑；股權報酬不加回）", "$B",
-            [f"={sv('ebit', 0)}-{proxy}"] + [f"={sv('ebit', j)}" for j in range(1, 5)] + [f"={col}{n_rev}*{col}{P[k('m')]}" for col in "HIJ"],
-            note="2026Q4＝FY2026 F06 − 前九月代理（val_q4_proxy_switch＝1：GAAP 營業損益 −1.260〔SRC_ANT_548〕；0：調整後 4.081〔SRC_ANT_550〕）",
+        row(k("ebit"), "EBIT（現金口徑；只扣未來新授股權報酬）", "$B",
+            [f"={sv('ebit', 0)}-{proxy}+C{P['sbc_add']}"] + [f"={sv('ebit', j)}+{DC[j]}{P['sbc_add']}" for j in range(1, 5)] + [f"={col}{n_rev}*{col}{P[k('m')]}" for col in "HIJ"],
+            note="F06＋加回既有獎酬股權報酬（上方 sbc_add）；2026Q4＝FY2026 F06 − 前九月代理（val_q4_proxy_switch＝1：GAAP 營業損益 −1.260〔SRC_ANT_548〕；0：調整後 4.081〔SRC_ANT_550〕）",
             name="VAL_EBIT_B" if s == "B" else None, name_span=("C", "J"))
         n_no = r[0]
         row(k("nolo"), "NOL 期初（2026Q4 起自身虧損累積；之前 NOL 不計）", "$B", [f"=C{n_eb}-C{n_eb}"] + [f"={DC[i - 1]}{n_no + 2}" for i in range(1, 8)])
@@ -231,7 +243,10 @@ def build(ctx):
     row("tvflag", "終值占 EV > 80%（1＝是）", "旗標", s3(lambda s: f"=IF({X[s]}{P['tvsh']}>0.8,1,0)"), fmt="0")
     row("eqv", "股權價值＝EV ＋ 淨現金", "$B", s3(lambda s: f"={X[s]}{P['ev']}+{c('netcash')}"))
     row("ps0", "每股價值（評價日）＝股權價值 ÷ 評價股數", "$/股", s3(lambda s: f"={X[s]}{P['eqv']}/{c('shares')}"), fmt="#,##0.00")
-    row("dcf", "DCF 每股價值（目標時點）＝評價日 ×(1＋ke)^t", "$/股", s3(lambda s: f"=MAX(0,{X[s]}{P['ps0']})*(1+{c('ke')})^{I('val_t_tgt')}"), fmt="#,##0.00", bold=True)
+    row("ncps", "下限：淨現金每股（評價日）＝淨現金 ÷ 評價股數", "$/股", s3(lambda s: f"={c('netcash')}/{c('shares')}"), fmt="#,##0.00",
+        note="DCF 與調整後 Comparable 統一下限（獨立核對 2026-11-11；取代 0）", name="VAL_NetCashPS", name_span=("D", "D"))
+    row("dcf", "DCF 每股價值（目標時點）＝MAX(淨現金每股, 評價日) ×(1＋ke)^t", "$/股", s3(lambda s: f"=MAX({X[s]}{P['ncps']},{X[s]}{P['ps0']})*(1+{c('ke')})^{I('val_t_tgt')}"), fmt="#,##0.00", bold=True)
+    row("dcffl", "DCF 觸及下限（1＝是）", "旗標", s3(lambda s: f"=IF({X[s]}{P['ps0']}<{X[s]}{P['ncps']},1,0)"), fmt="0")
     nm(wb, "VAL_EV_B", f"Val!$D${P['ev']}")
     nm(wb, "VAL_PVExp_B", f"Val!$D${P['pvx']}")
     nm(wb, "VAL_PVTV_B", f"Val!$D${P['pvtv']}")
@@ -240,8 +255,10 @@ def build(ctx):
     for s in SCN:
         nm(wb, f"VAL_TP_DCF_{s}", f"Val!${X[s]}${P['dcf']}")
     # Comparable
-    row("ntm", "NTM 營收總額＝0.25 × FY2026 ＋ 0.75 × FY2027（評價日 2026-09-30）", "$B",
-        s3(lambda s: f"={c('stub')}*$C${P[s + '_gross']}+(1-{c('stub')})*$D${P[s + '_gross']}"))
+    nsw = I("val_ntm_q4_switch")
+    row("ntm", "NTM 營收總額＝2026Q4 實值（FY2026 − 前九月 33.242）＋ 0.75 × FY2027（val_ntm_q4_switch＝0：舊讀法 0.25 × FY2026 ＋ 0.75 × FY2027）", "$B",
+        s3(lambda s: f"={nsw}*($C${P[s + '_gross']}-{S('pros_rev_9m26')})+(1-{nsw})*{c('stub')}*$C${P[s + '_gross']}+(1-{c('stub')})*$D${P[s + '_gross']}"),
+        note="判斷題 J9（獨立核對 2026-11-11）預設＝改")
     nm(wb, "VAL_NTMRev", f"Val!$D${P['ntm']}")
     pe = ",".join(S(f"peer_{k}_evfs") for k, _, _ in PEERS)
     pf = ",".join(S(f"peer_{k}_fcfm") for k, _, _ in PEERS)
@@ -249,12 +266,12 @@ def build(ctx):
         note="stockanalysis.com，2026-11-06 收盤（DDOG 10-30）；EV／遠期營收＝遠期 P/S × EV／市值（chat 端推得）")
     row("pfcf", "同業 TTM FCF 利益率中位數", "比例", [f"=LARGE($D${P['peer0']}:$D${P['peer1']},(COUNT($D${P['peer0']}:$D${P['peer1']})+1)/2)"], fmt="0.0%", name="VAL_PeerFCFm")
     row("cmev", "市場主流 Comparable EV＝倍數 × NTM 營收總額（未調整）", "$B", s3(lambda s: f"={c('mult')}*{X[s]}{P['ntm']}"))
-    row("cmps", "市場主流 Comparable 每股＝(EV ＋ 淨現金) ÷ 股數", "$/股", s3(lambda s: f"=MAX(0,({X[s]}{P['cmev']}+{c('netcash')})/{c('shares')})"), fmt="#,##0.00")
+    row("cmps", "市場主流 Comparable 每股＝(EV ＋ 淨現金) ÷ 股數", "$/股", s3(lambda s: f"=MAX({X[s]}{P['ncps']},({X[s]}{P['cmev']}+{c('netcash')})/{c('shares')})"), fmt="#,##0.00")
     row("adj", "調整係數＝MIN(上限, MAX(0, FY2030 自由現金流率 ÷ 同業 FCF 利益率中位數))（val_comp_adj_switch＝0 時 1）", "倍",
         s3(lambda s: f"=IF({I('val_comp_adj_switch')}=1,MIN({I('val_comp_cap')},MAX(0,$G${P[s + '_fcfm']}/{c('pfcf')})),1)"), fmt="0.000")
     nm(wb, "VAL_AdjFactor", f"Val!$D${P['adj']}")
     row("caev", "調整後 Comparable EV＝倍數 × 調整係數 × NTM 營收總額", "$B", s3(lambda s: f"={c('mult')}*{X[s]}{P['adj']}*{X[s]}{P['ntm']}"))
-    row("caps", "調整後 Comparable 每股", "$/股", s3(lambda s: f"=MAX(0,({X[s]}{P['caev']}+{c('netcash')})/{c('shares')})"), fmt="#,##0.00", bold=True)
+    row("caps", "調整後 Comparable 每股", "$/股", s3(lambda s: f"=MAX({X[s]}{P['ncps']},({X[s]}{P['caev']}+{c('netcash')})/{c('shares')})"), fmt="#,##0.00", bold=True)
     row("scen", "情境目標價＝DCF × 權重 ＋ 調整後 Comparable ×（1 − 權重）", "$/股", s3(lambda s: f"={I('val_w_dcf')}*{X[s]}{P['dcf']}+(1-{I('val_w_dcf')})*{X[s]}{P['caps']}"), fmt="#,##0.00")
     row("scenup", "情境上檔空間", "比例", s3(lambda s: f"={X[s]}{P['scen']}/{c('px')}-1"), fmt="0.0%")
 

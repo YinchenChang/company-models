@@ -324,7 +324,7 @@ rows:
   lo: 0
   hi: 1
   tag: "Decision"
-  basis: "工作單 20261111 v0.2.0 D1、J2 預設＝改用年化（月末年化，不再外推 11–12 月成長，保守）"
+  basis: "工作單 20261111 v0.2.0 D1、J2 預設＝改用年化（月末年化，不再外推 11–12 月成長；中性近似）"
   range_why: "開關"
   note: "q4_growth 保留（開關 0 時用）"
 - key: p_sbc_ipo_switch
@@ -722,4 +722,37 @@ rows:
   tag: "Decision"
   basis: "工作單 20261111 v0.2.0 D2：< 1.0 立 WARN"
   range_why: "定義值"
+  note: ""
+- key: p_q4_avg_switch
+  name: "D1 Q4 營收讀法：10 月取均值（1＝(9-30 年化 71＋10-31 年化 81) ÷ 2 ÷ 季數；0＝基準：10-31 年化 81 ÷ 季數）"
+  index: "—"
+  unit: "開關"
+  value: 0
+  lo: 0
+  hi: 1
+  tag: Decision
+  basis: "獨立核對（2026-11-11）建議並列讀法；只在 p_q4_rr_switch＝1 時有作用"
+  range_why: "開關"
+  note: "Sens"
+- key: val_sbc_addback_switch
+  name: "估值 EBIT 只扣未來新授股權報酬（1＝自 F06 加回 2026Q4 一次性 RSU 修改 14.2 與既有獎酬攤銷〔2026Q4–2028，以當年模型股權報酬為上限〕：這批 RSU 已全數計入評價股數；0＝舊讀法：F06 照扣）"
+  index: "—"
+  unit: "開關"
+  value: 1
+  lo: 0
+  hi: 1
+  tag: Decision
+  basis: "獨立核對（2026-11-11）：避免股權報酬與評價股數重複計算；舊讀法放 Sens"
+  range_why: "開關"
+  note: ""
+- key: val_ntm_q4_switch
+  name: "NTM 營收讀法（1＝2026Q4 實值〔FY2026 − 前九月實際 33.242〕＋0.75 × FY2027；0＝舊讀法 0.25 × FY2026＋0.75 × FY2027）"
+  index: "—"
+  unit: "開關"
+  value: 1
+  lo: 0
+  hi: 1
+  tag: Decision
+  basis: "獨立核對（2026-11-11）判斷題 J9 預設＝改；舊讀法放 Sens"
+  range_why: "開關"
   note: ""

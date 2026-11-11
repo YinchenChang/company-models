@@ -591,7 +591,8 @@
 "peer_snow_beta": "SRC_ANT_589",
 "peer_ddog_evfs": "SRC_ANT_590",
 "peer_ddog_fcfm": "SRC_ANT_591",
-"peer_ddog_beta": "SRC_ANT_592"
+"peer_ddog_beta": "SRC_ANT_592",
+"pros_fin_lease_pv": "SRC_ANT_593"
 },
 "INP": {
 "year_2025": "INP_001",
@@ -865,7 +866,10 @@
 "year_2031": "INP_273",
 "year_2032": "INP_274",
 "year_2033": "INP_275",
-"d2_warn_ratio": "INP_276"
+"d2_warn_ratio": "INP_276",
+"p_q4_avg_switch": "INP_277",
+"val_sbc_addback_switch": "INP_278",
+"val_ntm_q4_switch": "INP_279"
 },
 "CHK": {
 "src_rows": "C01",

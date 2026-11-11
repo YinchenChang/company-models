@@ -621,7 +621,8 @@ def test_v020_val_identities(eng):
     sh = (g("pros_shares_post") - g("pros_pp_shares_mid") + g("pros_pp_total") / px * 1000 + g("pros_options") * max(0, 1 - g("pros_option_strike") / px)
           + g("pros_rsu_unvested") + g("pros_rsu_new") + g("pros_vmo")) / 1000
     assert abs(n("VAL_Shares") - sh) < 1e-9
-    assert abs(n("VAL_NetCash") - (g("pros_cash_pf") - g("pros_fin_lease"))) < 1e-9
+    assert abs(n("VAL_NetCash") - (g("pros_cash_pf") - g("pros_fin_lease_pv"))) < 1e-9
+    assert all(n(f"VAL_TP_DCF_{x}") >= n("VAL_NetCashPS") * (1 + n("VAL_Ke")) - 1e-9 for x in "ABC")          # 下限＝淨現金每股（推到目標時點）
     assert abs(n("VAL_Ke") - (n("VAL_Rf") + n("VAL_Beta") * n("VAL_ERP"))) < 1e-12
     assert abs(n("VAL_EV_B") - (n("VAL_PVExp_B") + n("VAL_PVTV_B"))) < 1e-9
     assert abs(n("VAL_PeerMult") - 26.32) < 1e-12 and abs(n("VAL_PeerFCFm") - 0.298) < 1e-12 and abs(n("VAL_Beta") - (0.67 * 1.37 + 0.33)) < 1e-12
