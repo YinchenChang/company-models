@@ -1093,7 +1093,13 @@
 "p_ppc": "C224",
 "p_ipo": "C225",
 "p_liqc": "C226",
-"p_pf": "C227"
+"p_pf": "C227",
+"v_wsum": "C228",
+"v_tp": "C229",
+"v_rating": "C230",
+"v_tv": "C231",
+"v_snap": "C232",
+"v_sens": "C233"
 },
 "retired_INP": [
 "INP_067",
