@@ -231,9 +231,9 @@ def hero_html(B: Book) -> str:
         f'<div class="hero-t"><div class="hero-l">現價（IPO 價格區間中點；尚未掛牌）</div><div class="hero-n">{span(*px, "n2")}</div>'
         f'<div class="hero-s" style="color:var(--muted)">區間 {span(*lo, "n2")}–{span(*hi, "n2")}</div></div>')
     nt = f'<p class="hero-note">{span(*note)}</p>' if note else ""
+    rule = '<p class="hero-note">投資建議依加權目標價判定：上檔空間 &gt;＋50% 強力買進、&gt;＋25% 買進、≥−25% 中立、≥−50% 放空、其餘強力放空。</p>'
     return (f'<div class="hero {cls}"><div class="hero-rec"><span class="hero-k">投資建議</span><span class="hero-v">{span(rref, rating)}</span></div>'
-            f'<div class="hero-tiles">{tiles}</div>{nt}'
-            '<p class="hero-note">投資建議依加權目標價判定，五級固定規則：上檔空間 &gt;＋50% 強力買進、＋25%～＋50% 買進、−25%～＋25% 中立、−50%～−25% 放空、低於 −50% 強力放空。</p></div>')
+            f'<div class="hero-tiles">{tiles}</div>{nt or rule}</div>')
 
 
 def bars_html(B: Book) -> str:
@@ -281,7 +281,8 @@ def valuation_section(B: Book) -> str:
     main_kv = kv(B, [("加權目標價（DCF 50%＋調整後 Comparable 50%）", "VAL_TP_W", "n2"), ("DCF 目標價（三情境加權）", "VAL_TP_DCF", "n2"),
                      ("Comparable 目標價（調整後）", "VAL_TP_CompAdj", "n2"), ("Comparable 目標價（市場主流，未調整）", "VAL_TP_CompMain", "n2"),
                      ("現價（IPO 區間中點）", "VAL_Px", "n2"), ("上檔空間（加權）", "VAL_Up_W", "sp1"), ("上檔空間（市場主流 Comparable）", "VAL_Up_CompMain", "sp1"),
-                     ("投資建議", "VAL_Rating", "t"), ("情境目標價 A／B／C（DCF）", "VAL_TP_DCF_A", "n2")])
+                     ("投資建議", "VAL_Rating", "t"), ("DCF 情境 A（樂觀，權重 25%）", "VAL_TP_DCF_A", "n2"),
+                     ("DCF 情境 B（基準，權重 50%）", "VAL_TP_DCF_B", "n2"), ("DCF 情境 C（保守，權重 25%；負值取 0）", "VAL_TP_DCF_C", "n2")])
     rates = kv(B, [("無風險利率 rf", "VAL_Rf", "p2"), ("β（同業中位數，Blume 調整）", "VAL_Beta", "n2"), ("股權風險溢酬 ERP", "VAL_ERP", "p1"),
                    ("股東權益成本 ke", "VAL_Ke", "p2"), ("稅後債務成本", "VAL_KdAT", "p2"), ("WACC", "VAL_WACC", "p2"),
                    ("永續期新投資報酬 RONIC", "VAL_RONIC", "p2"), ("永續成長率 g", "VAL_g", "p1")])
@@ -357,7 +358,7 @@ def thesis_section(soup_s1, B: Book, ver: str) -> str:
                f'該年才持續轉正（差額 {span(*B.yr("COST_PropGap_VR", 2030), "sn1")} 十億美元／GW／年，'
                f'覆蓋率 {span(*B.yr("COST_Coverage", 2030), "p0")}；2027、2028 年的差額分別為 {span(*B.yr("COST_PropGap_VR", 2027), "sn1")}、{span(*B.yr("COST_PropGap_VR", 2028), "sn1")}，是承諾付款跳升、缺口最深的兩年）。</li>')
     obs.append(f'<li><b>錢目前夠用：</b>營運自由現金流在承諾付款高峰轉負（2027 年 {span(*B.yr("FND_FCF", 2027), "sn1")}、2028 年 {span(*B.yr("FND_FCF", 2028), "sn1")} 十億美元），'
-               f'但只靠已到位融資，現金谷底仍有 {span(*B.cell("FND_CashNoExtTrough"), "n1")} 十億美元，2026–2030 累計外部資金需求 {span(*B.yr("FND_ExtNeedCum", 2030), "n1")}。'
+               f'加上 IPO 募資與已到位融資，現金谷底仍有 {span(*B.cell("FND_CashNoExtTrough"), "n1")} 十億美元，2026–2030 累計外部資金需求 {span(*B.yr("FND_ExtNeedCum", 2030), "n1")}。'
                f'風險在承諾付款時點與 SpaceXAI 合約路徑，而不是眼前的現金。</li>')
     return (f'<section id="thesis"><h2>命題與核心問題</h2>'
             f'<p class="thesis">命題：Anthropic 的營收能否追上已簽下的算力承諾，以及 IPO 價格是否已反映這件事；三個問題如下。</p>'
