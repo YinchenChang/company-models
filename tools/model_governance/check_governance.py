@@ -4,7 +4,8 @@
 #   3. 標記：In 頁 G 欄、Q 頁「標記」欄每格只能是單一主要標記（Verified／Interested-party／Analogy／Assumed／Derived／—）；
 #      來源字串以「…；Derived）」或「…；Interested-party）」結尾（事實總帳標記）時，主要標記不得為 Verified。
 #   4. Interested-party 列須有「來源誘因」欄文字（欄名含「來源誘因」者；沒有此欄＝失敗）。
-# 用法：python3 tools/model_governance/check_governance.py <重算後 xlsx> [--html <成品 html>]；失敗時結束碼 1。
+# 用法：python3 tools/model_governance/check_governance.py <重算後 xlsx> [--html <成品 html>] [--display <公司資料夾>]；失敗時結束碼 1。
+#   --display：另跑展示層數字一致性檢查（check_display.py，原則第 10 節第 51 條；需 <公司>/display_check.json）。
 import re, sys
 import openpyxl
 
@@ -62,6 +63,10 @@ def tagcheck(ws, tagcol_name, srccol_name):
 
 tagcheck(wb["In"], "標記", "來源")
 if "Q" in wb.sheetnames: tagcheck(wb["Q"], "標記", "來源")
+if "--display" in args:   # 原則 51：展示層數字一致性（check_display.py）
+    import os, subprocess
+    rc = subprocess.run([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), "check_display.py"), args[args.index("--display") + 1]]).returncode
+    if rc: fail.append("展示層數字一致性檢查失敗（check_display.py）")
 print(f"治理核對：build_id {bid}；" + ("全部通過" if not fail else f"失敗 {len(fail)} 項"))
 for f in fail[:30]: print("  -", f)
 sys.exit(1 if fail else 0)

@@ -196,5 +196,91 @@ for i, b in enumerate(st):
 for _t in cfg["hero"]["tiles"]:
     if isinstance(_t[0], str) and not _t[0].endswith("（美元）"):
         _t[0] = [_t[0], "（美元）"]
+# ================= v0.3.5／v0.3.6（2026-11-11）：NVIDIA v0.3.4 驗收採用規劃書（nvidia/v035_post.py；做法同 amd/gen_html_json.py v0.4.5） =================
+SEC = {s["id"]: s for s in cfg["sections"]}
+RDW, SEW, RCW = wb["README"], wb["Sens"], wb["Recon"]
+def _rows_after(head, stop_prefixes):
+    r = find("README", head) + 1; out = []
+    while RDW.cell(r, 1).value and not str(RDW.cell(r, 1).value).startswith(stop_prefixes):
+        out.append(r); r += 1
+    return out
+r_state, r_edge = find("README", "build_id "), find("README", "評等")
+r_a47, r_r47, r_g50 = find("README", "上檔空間三段歸因"), find("README", "現行相對倍數與 10 年比值"), find("README", "基準與公司指引")
+r_asof_h = find("README", "資料基準日（as_of）"); r_asof_t = r_asof_h + 1; asof_rows = _rows_after("項目", ("說明：",))
+r_asof_n = find("README", "說明：rf、同業")
+fail_rows = _rows_after("主要失效條件", ("估值框架並列",)); r_frame = find("README", "估值框架並列")
+risk_rows = _rows_after("風險登錄", ("主要假設驅動",)); ind_rows = _rows_after("主要假設驅動與可證偽", ("\u0000",))
+st_add = [{"type": "note", "parts": [f"@README!A{r_state}"]}, {"type": "note", "parts": [f"@README!A{r_edge}"]},
+          {"type": "h3", "text": "主要失效條件與估值框架並列"}, {"type": "list", "items": [f"@README!A{r}" for r in fail_rows] + [f"@README!A{r_frame}"]},
+          {"type": "h3", "text": "資料基準日與逾期標示"}, {"type": "note", "parts": [f"@README!A{r_asof_h}"]},
+          {"type": "table", "head": [f"@README!{c}{r_asof_t}" for c in "ABC"], "rows": [[f"@README!A{r}", f"@README!B{r}", f"@README!C{r}"] for r in asof_rows]},
+          {"type": "note", "parts": [f"@README!A{r_asof_n}"]},
+          {"type": "h3", "text": "風險登錄（是否建模、理由、觀察指標）"}, {"type": "list", "items": [f"@README!A{r}" for r in risk_rows]},
+          {"type": "h3", "text": "主要假設驅動與可證偽的公開指標"}, {"type": "list", "items": [f"@README!A{r}" for r in ind_rows]}]
+SEC["status"]["blocks"] = st_add + SEC["status"]["blocks"]
+# 橫幅：原則 36 評等邊界、原則 47 三段歸因與現行相對倍數、原則 50 指引差距
+cfg["hero"]["note"] = list(cfg["hero"]["note"]) + ["", f"@README!A{r_edge}", "", f"@README!A{r_a47}", "", f"@README!A{r_r47}", "", f"@README!A{r_g50}"]
+# 第一章：投資建議條件式（README「投資建議：」列）
+r_rec = find("README", "投資建議：")
+SEC["thesis"]["blocks"].insert(0, {"type": "note", "parts": [f"@README!A{r_rec}"]})
+# 估值章：估值框架並列與期間並列、方法占比、子群中位數
+va = SEC["valuation"]
+r_p1, r_p2, r_sh, r_s1, r_s2 = find("Val", "折現期間："), find("Val", "持有期間："), find("Val", "DCF 在加權目標價中的占比"), find("Val", "子群中位數（純展示）：GPU"), find("Val", "子群中位數（純展示）：代工")
+i_c = next((i for i, b in enumerate(va["blocks"]) if b.get("type") == "bars"), 0)
+va["blocks"][i_c + 1:i_c + 1] = [{"type": "note", "parts": [f"@README!A{r_frame}"]},
+                                 {"type": "table", "caption": "期間並列與方法占比", "head": ["項目", "數值", "說明"],
+                                  "rows": [[f"@Val!A{r_p1}", f"@Val!B{r_p1}|n2", f"@Val!E{r_p1}"], [f"@Val!A{r_p2}", f"@Val!B{r_p2}|n2", f"@Val!E{r_p2}"],
+                                           [f"@Val!A{r_sh}", f"@Val!B{r_sh}|p1", f"@Val!E{r_sh}"], [f"@Val!A{r_s1}", f"@Val!B{r_s1}|x1", ""], [f"@Val!A{r_s2}", f"@Val!B{r_s2}|x1", ""]]}]
+# 敏感度章：目標價表加 DCF 單法美元欄；業務主因（整本重算快照）
+se = SEC["sens"]
+r_tp = find("Sens", "目標價參數敏感度"); r_end = r_tp + 2
+while SEW.cell(r_end + 1, 1).value and not str(SEW.cell(r_end + 1, 1).value).startswith("檢查"): r_end += 1
+for b in se["blocks"]:
+    if b.get("type") == "table" and b.get("rowgen", {}).get("sheet") == "Sens" and str(b["rowgen"].get("rows", "")).startswith(f"{r_tp + 2}-"):
+        b["head"] = [f"@Sens!{c}{r_tp + 1}" for c in "ABCDEFGIJ"]
+        b["rowgen"] = {"sheet": "Sens", "rows": f"{r_tp + 2}-{r_end}", "cols": list("ABCDEFGIJ"), "fmts": ["", "", "n2", "sp1", "n2", "sp1", "n2", "n2", "n2"]}
+r_bz = find("Sens", "目標價敏感度：業務主因")
+r_bh = r_bz + 2; r_be = r_bh
+while SEW.cell(r_be + 1, 1).value: r_be += 1
+se["blocks"].insert(0, {"type": "table", "caption": f"@Sens!A{r_bz}", "head": [f"@Sens!{c}{r_bh}" for c in "ABCDEFGIJ"],
+                        "rowgen": {"sheet": "Sens", "rows": f"{r_bh + 1}-{r_be}", "cols": list("ABCDEFGIJ"), "fmts": ["", "", "n2", "sp1", "n2", "sp1", "n2", "n2", "n2"]}})
+# 對帳章：反解（F 節）、毛利率差距分解（G 節）、供應承諾（H 節）
+def _sect(prefix):
+    try:
+        r0 = find("Recon", prefix)
+    except KeyError:
+        return None
+    r1 = r0
+    while RCW.cell(r1 + 1, 1).value and not str(RCW.cell(r1 + 1, 1).value)[:2] in ("G.", "H.", "I."): r1 += 1
+    return r0, r1
+s_f = _sect("F. 反解")
+r_e, r_ee = s_f; r_eh = next(r for r in range(r_e + 1, r_ee + 1) if RCW.cell(r, 1).value == "項目")
+def _rf(r):
+    t = str(RCW.cell(r, 1).value)
+    if t.startswith("評等級距邊界"): return [f"@Recon!A{r}", f"@Recon!B{r}|sp0", "", ""]
+    f = "x1" if "倍數（" in t else "n2"
+    return [f"@Recon!A{r}", f"@Recon!B{r}|{f}", f"@Recon!C{r}|{f}", f"@Recon!D{r}|sp1"]
+SEC["recon"]["blocks"].append({"type": "table", "caption": f"@Recon!A{r_e}", "head": [f"@Recon!{c}{r_eh}" for c in "ABCD"], "rows": [_rf(r) for r in range(r_e + 1, r_ee + 1) if r != r_eh]})
+s_g = _sect("G. FY2028 毛利率")
+if s_g:
+    g0, g1 = s_g
+    rows = []
+    for r in range(g0 + 2, g1 + 1):
+        t = str(RCW.cell(r, 1).value)
+        if t.startswith("k_rec 持續性"): continue
+        f = "n2" if t.startswith(("反解", "檢查")) else "n2"
+        rows.append([f"@Recon!A{r}", f"@Recon!B{r}|{f}", f"@Recon!J{r}"])
+    SEC["recon"]["blocks"].append({"type": "table", "caption": f"@Recon!A{g0}", "head": ["項目", "百分點／值", "說明"], "rows": rows})
+    SEC["recon"]["blocks"].append({"type": "note", "parts": [f"@Recon!A{find('Recon', 'k_rec 持續性')}"]})
+s_h = _sect("H. 供應預付款")
+if s_h:
+    h0, h1 = s_h
+    SEC["recon"]["blocks"].append({"type": "table", "caption": f"@Recon!A{h0}", "head": ["項目", "值", "說明"],
+                                   "rows": [[f"@Recon!A{r}", f"@Recon!B{r}" + ("|n0" if isinstance(RCW.cell(r, 2).value, (int, float)) else ""), f"@Recon!J{r}"] for r in range(h0 + 1, h1 + 1)]})
+# 估值章：EBIT 口徑與現金稅率（摺疊）
+DW = wb["DCF"]
+r_bh = find("DCF", "EBIT 口徑與現金稅率")
+va["blocks"].append({"type": "table", "caption": f"@DCF!A{r_bh}", "head": ["項目", "數值", "對照", "判定"],
+                     "rows": [[f"@DCF!A{r_bh + 2}", f"@DCF!B{r_bh + 2}|p1", f"@DCF!C{r_bh + 2}", f"@DCF!D{r_bh + 2}"]], "collapse": True, "summary": "展開：EBIT 口徑與現金稅率"})
 json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")

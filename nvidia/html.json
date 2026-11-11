@@ -23,6 +23,12 @@
    "title": "命題與核心問題",
    "blocks": [
     {
+     "type": "note",
+     "parts": [
+      "@README!A21"
+     ]
+    },
+    {
      "type": "h3",
      "text": "命題"
     },
@@ -1991,6 +1997,48 @@
      "fmt": "n2"
     },
     {
+     "type": "note",
+     "parts": [
+      "@README!A87"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "期間並列與方法占比",
+     "head": [
+      "項目",
+      "數值",
+      "說明"
+     ],
+     "rows": [
+      [
+       "@Val!A202",
+       "@Val!B202|n2",
+       "@Val!E202"
+      ],
+      [
+       "@Val!A203",
+       "@Val!B203|n2",
+       "@Val!E203"
+      ],
+      [
+       "@Val!A205",
+       "@Val!B205|p1",
+       "@Val!E205"
+      ],
+      [
+       "@Val!A206",
+       "@Val!B206|x1",
+       ""
+      ],
+      [
+       "@Val!A207",
+       "@Val!B207|x1",
+       ""
+      ]
+     ]
+    },
+    {
      "type": "table",
      "caption": "@Val!A38",
      "head": [
@@ -2867,6 +2915,26 @@
      ],
      "collapse": true,
      "summary": "展開：各分位倍數"
+    },
+    {
+     "type": "table",
+     "caption": "@DCF!A134",
+     "head": [
+      "項目",
+      "數值",
+      "對照",
+      "判定"
+     ],
+     "rows": [
+      [
+       "@DCF!A136",
+       "@DCF!B136|p1",
+       "@DCF!C136",
+       "@DCF!D136"
+      ]
+     ],
+     "collapse": true,
+     "summary": "展開：EBIT 口徑與現金稅率"
     }
    ]
   },
@@ -3313,6 +3381,84 @@
        "@Recon!J41|"
       ]
      ]
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A43",
+     "head": [
+      "@Recon!A46",
+      "@Recon!B46",
+      "@Recon!C46",
+      "@Recon!D46"
+     ],
+     "rows": [
+      [
+       "@Recon!A44",
+       "@Recon!B44|sp0",
+       "",
+       ""
+      ],
+      [
+       "@Recon!A45",
+       "@Recon!B45|sp0",
+       "",
+       ""
+      ],
+      [
+       "@Recon!A47",
+       "@Recon!B47|x1",
+       "@Recon!C47|x1",
+       "@Recon!D47|sp1"
+      ],
+      [
+       "@Recon!A48",
+       "@Recon!B48|n2",
+       "@Recon!C48|n2",
+       "@Recon!D48|sp1"
+      ],
+      [
+       "@Recon!A49",
+       "@Recon!B49|n2",
+       "@Recon!C49|n2",
+       "@Recon!D49|sp1"
+      ],
+      [
+       "@Recon!A50",
+       "@Recon!B50|x1",
+       "@Recon!C50|x1",
+       "@Recon!D50|sp1"
+      ],
+      [
+       "@Recon!A51",
+       "@Recon!B51|n2",
+       "@Recon!C51|n2",
+       "@Recon!D51|sp1"
+      ],
+      [
+       "@Recon!A52",
+       "@Recon!B52|n2",
+       "@Recon!C52|n2",
+       "@Recon!D52|sp1"
+      ],
+      [
+       "@Recon!A53",
+       "@Recon!B53|x1",
+       "@Recon!C53|x1",
+       "@Recon!D53|sp1"
+      ],
+      [
+       "@Recon!A54",
+       "@Recon!B54|n2",
+       "@Recon!C54|n2",
+       "@Recon!D54|sp1"
+      ],
+      [
+       "@Recon!A55",
+       "@Recon!B55|n2",
+       "@Recon!C55|n2",
+       "@Recon!D55|sp1"
+      ]
+     ]
     }
    ]
   },
@@ -3321,6 +3467,47 @@
    "title": "敏感度",
    "intro": "@Sens!A1",
    "blocks": [
+    {
+     "type": "table",
+     "caption": "@Sens!A987",
+     "head": [
+      "@Sens!A989",
+      "@Sens!B989",
+      "@Sens!C989",
+      "@Sens!D989",
+      "@Sens!E989",
+      "@Sens!F989",
+      "@Sens!G989",
+      "@Sens!I989",
+      "@Sens!J989"
+     ],
+     "rowgen": {
+      "sheet": "Sens",
+      "rows": "990-1015",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G",
+       "I",
+       "J"
+      ],
+      "fmts": [
+       "",
+       "",
+       "n2",
+       "sp1",
+       "n2",
+       "sp1",
+       "n2",
+       "n2",
+       "n2"
+      ]
+     }
+    },
     {
      "type": "tornado",
      "title": "FY2028 EPS 相對基準的變動（情境 A，一次動一個輸入；未達兩位數百分比）",
@@ -3444,7 +3631,9 @@
       "@Sens!D27",
       "@Sens!E27",
       "@Sens!F27",
-      "@Sens!G27"
+      "@Sens!G27",
+      "@Sens!I27",
+      "@Sens!J27"
      ],
      "rowgen": {
       "sheet": "Sens",
@@ -3456,7 +3645,9 @@
        "D",
        "E",
        "F",
-       "G"
+       "G",
+       "I",
+       "J"
       ],
       "fmts": [
        "",
@@ -3465,6 +3656,8 @@
        "sp1",
        "n2",
        "sp1",
+       "n2",
+       "n2",
        "n2"
       ]
      }
@@ -3475,6 +3668,130 @@
    "id": "status",
    "title": "資料狀態",
    "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "@README!A65"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A66"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "主要失效條件與估值框架並列"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A82",
+      "@README!A83",
+      "@README!A84",
+      "@README!A85",
+      "@README!A86",
+      "@README!A87"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "資料基準日與逾期標示"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A70"
+     ]
+    },
+    {
+     "type": "table",
+     "head": [
+      "@README!A71",
+      "@README!B71",
+      "@README!C71"
+     ],
+     "rows": [
+      [
+       "@README!A72",
+       "@README!B72",
+       "@README!C72"
+      ],
+      [
+       "@README!A73",
+       "@README!B73",
+       "@README!C73"
+      ],
+      [
+       "@README!A74",
+       "@README!B74",
+       "@README!C74"
+      ],
+      [
+       "@README!A75",
+       "@README!B75",
+       "@README!C75"
+      ],
+      [
+       "@README!A76",
+       "@README!B76",
+       "@README!C76"
+      ],
+      [
+       "@README!A77",
+       "@README!B77",
+       "@README!C77"
+      ],
+      [
+       "@README!A78",
+       "@README!B78",
+       "@README!C78"
+      ],
+      [
+       "@README!A79",
+       "@README!B79",
+       "@README!C79"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A80"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "風險登錄（是否建模、理由、觀察指標）"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A89",
+      "@README!A90",
+      "@README!A91",
+      "@README!A92",
+      "@README!A93",
+      "@README!A94"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "主要假設驅動與可證偽的公開指標"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A96",
+      "@README!A97",
+      "@README!A98",
+      "@README!A99",
+      "@README!A100",
+      "@README!A101",
+      "@README!A102"
+     ]
+    },
     {
      "type": "kv",
      "items": [
@@ -3789,6 +4106,9 @@
       ],
       [
        "@README!A61"
+      ],
+      [
+       "@README!A62"
       ]
      ]
     },
@@ -3862,7 +4182,15 @@
    "@Val!B199|n2",
    "（市場主流同業法 × 相對倍數調整係數 ",
    "@Val!B198|n2",
-   "）"
+   "）",
+   "",
+   "@README!A66",
+   "",
+   "@README!A67",
+   "",
+   "@README!A68",
+   "",
+   "@README!A69"
   ]
  }
 }
