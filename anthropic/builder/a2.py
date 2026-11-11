@@ -184,7 +184,7 @@ def build(ctx):
     q3 = f"({sq3}*{S('rev_s1a_2026q3')}+(1-{sq3})*{S('rev_2026_q3')})"
     R.add("target", "營收總額基準（2025＝SRC 認列營收；2026＝上半年實際＋Q3 實際＋Q4〔Q3 ×（1＋成長）〕；開關 0＝v0.1：Q1＋Q2＋2026-07 年化 × 下半年月數 ÷ 12）", "$B",
           [f"={rev25}",
-           f"=«h1act»+{u1}*({q3}+{q3}*(1+{I('q4_growth')}))+(1-{u1})*{S('rev_runrate_2026_07')}*{h2}/{months}"] + [None] * 4,
+           f"=«h1act»+{u1}*({q3}+((1-{I('p_q4_rr_switch')})*{q3}*(1+{I('q4_growth')})+{I('p_q4_rr_switch')}*{S('pros_rr_1031')}/{I('quarters_per_year')}))+(1-{u1})*{S('rev_runrate_2026_07')}*{h2}/{months}"] + [None] * 4,
           "D14；D15 r2（U1）：2026 已有上半年與 Q3 實際，Q4＝Q3 持平（Inputs 成長 0，保守；Decision）；D15 r1 的『下半年＝2026-07 年化 ÷ 2』僅在開關 0 時使用。"
           "v0.1.8 R5a：Q3＝S-1/A 實績 16.956（SRC_ANT_488；s1a_q3_switch＝0 回到報導 16.8，SRC_ANT_384）",
           name="REV_Target", name_cols="DE")

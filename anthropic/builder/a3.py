@@ -51,7 +51,7 @@ CONTRACTS = [
      dict(T="({INP:s1f_commit_switch}*{SRC:cmt_s1f_amazon}+(1-{INP:s1f_commit_switch})*{SRC:cmp_prospectus_amazon})", s="{INP:aws_start}", e="{INP:aws_end}"), "Amazon",
      "金額型：「最多 5 GW」為上限、只作對照；晶片 Trainium2–4，本模型歸 Trainium3（Decision）"),
     ("azure", "Microsoft Azure＋NVIDIA（2025-11；招股書 $31.4B，2026-11～2033-05；最多 1 GW）", "gb300", "amt",
-     dict(T="({INP:s1f_commit_switch}*{SRC:cmt_s1f_msft}+(1-{INP:s1f_commit_switch})*{SRC:cmp_msft_azure_prospectus})", s="{INP:azure_start}", e="{INP:azure_end}"), "Microsoft",
+     dict(T="({INP:s1f_commit_switch}*({INP:p_msft_switch}*{SRC:cmt_pros_msft}+(1-{INP:p_msft_switch})*{SRC:cmt_s1f_msft})+(1-{INP:s1f_commit_switch})*{SRC:cmp_msft_azure_prospectus})", s="{INP:azure_start}", e="{INP:azure_end}"), "Microsoft",
      "金額型：Grace Blackwell 與 Vera Rubin，本模型歸 GB300（Decision）；「最多 1 GW」只作對照"),
     ("amd", "AMD MI455X（2026-07；最多 2 GW；招股書 >$20B）", "mi455", "gw",
      dict(G="{SRC:cmp_amd_gw}_Hi*{INP:upto_share}", s="{INP:amd_start}", term="{INP:amd_term}"), "AMD",
@@ -428,7 +428,7 @@ def build(ctx):
     K.add("sbc_pp", "每人股權報酬", "$M/人/年",
           lambda i, c: f"={I('sbc_pp_2025')}" if i == 0 else (f"={sws}*(«s1s_fy@E»-«s1s_chx@E»)*{m2b}/«hc»+(1-{sws})*«sbc_pp@p»*(1+{I('sbc_pp_g')})" if i == 1 else f"=«sbc_pp@p»*(1+{I('sbc_pp_g')})"),
           "Inputs（Assumed）；v0.1.7：2026 欄＝正式 S-1 股權報酬代理（調整後 − GAAP 營業損益，年化照營收同法；Cost 第二十五節）÷ 人數（s1f_sbc_proxy_switch＝0＝2025 × 年變動率）")
-    K.add("sbc", "股權報酬（單列）", "$B", lambda i, c: f"=«hc»*«sbc_pp»/{m2b}+«s1s_chc»", "人數 × 每人股權報酬；v0.1.8：2026 另加 S-1/A 下半年非現金捐贈（一次性，不進每人基準；Cost 第二十五節）", name="COST_SBC")
+    K.add("sbc", "股權報酬（單列）", "$B", lambda i, c: f"=MAX(«hc»*«sbc_pp»/{m2b}+«s1s_chc»+«p_sbcipo»,«p_sbcfl»)", "人數 × 每人股權報酬；v0.1.8：2026 另加 S-1/A 下半年非現金捐贈（一次性，不進每人基準；Cost 第二十五節）；v0.2.0：2026 另加 pro forma RSU 修改 14.2（E1，一次性）、2027–2028 以未認列股權報酬攤銷為下限（E2；Cost 第二十七節）", name="COST_SBC")
     K.add("ncx", "非算力營運費用（不含股權報酬）", "$B", lambda i, c: "=«nc25x»-«sbc»" if i == 0 else f"=«hc»*«pp»/{m2b}",
           "2025＝說明書（扣抽成）− 股權報酬；2026 起＝人數 × 每人年成本", name="COST_NonCompExSBC")
     swd = I("s1f_d22_switch")

@@ -315,20 +315,20 @@ def build(ctx):
           "D＝招股書下限；E＝已知各輪（不含 2023 年以前各輪，故應 ≥ 招股書下限附近）；只對照")
 
     F.section("三、條件式融資與 IPO（D16 r1：不計入基準，列情境；開關＝1 時 IPO＋Amazon＋Google＋AMD 計入基準）")
-    F.add("c_ipo", "IPO 募資（報導約 $100B，2026-11）", "$B", lambda i, c: f"={S('ipo_raise_size')}*({c}$6={I('ipo_year')})", "SRC_ANT_341（Interested-party）；含 NVIDIA 可能的基石認購")
+    F.add("c_ipo", "IPO 募資（v0.2.0 B1：p_ipo_base_switch＝1 時＝初步招股說明書淨募資〔IPO＋私募〕− RSU 代扣稅款，依 ipo_px 連動；0＝報導約 $100B）", "$B", lambda i, c: f"=({I('p_ipo_base_switch')}*«p_ipo_net@$»+(1-{I('p_ipo_base_switch')})*{S('ipo_raise_size')})*({c}$6={I('ipo_year')})", "SRC_ANT_534、537（初步招股說明書）；舊：SRC_ANT_341（Interested-party）")
     csw = I("s1f_cond_switch")           # v0.1.7.1 V3：條件式額度改讀正式 S-1（0＝v0.1.7）
     F.add("c_amzn", "Amazon 2026 NPA 剩餘額度（依算力交付里程碑，每次 5.0；15.0）", "$B",
           lambda i, c: f"=({csw}*{S('fund_s1f_amzn_npa_rem')}+(1-{csw})*{S('strat_amzn_facility_remaining')})*({c}$6={I('amzn_cond_year')})",
           "SRC_ANT_484（正式 S-1）；舊：SRC_ANT_322（Amazon 10-Q，同值）；以新可轉債提領（屬債務性質）")
     F.add("c_googl", "Google 2026 NPA 剩餘額度（S-1：20.0，與 IPO 認購選擇權最多 10.0 互抵、不相加；開關 0＝v0.1.7 報導 30）", "$B",
-          lambda i, c: f"=({csw}*{S('fund_s1f_googl_npa_rem')}+(1-{csw})*{S('strat_googl_2026_04_conditional')})*({c}$6={I('googl_cond_year')})",
-          "SRC_ANT_482（正式 S-1）；舊：SRC_ANT_329（報導 30）")
+          lambda i, c: f"=({I('p_cond_pp_switch')}*{S('pros_googl_npa_rem')}+(1-{I('p_cond_pp_switch')})*({csw}*{S('fund_s1f_googl_npa_rem')}+(1-{csw})*{S('strat_googl_2026_04_conditional')}))*({c}$6={I('googl_cond_year')})",
+          "v0.2.0 B2：p_cond_pp_switch＝1 時＝初步招股說明書 10.0（SRC_ANT_564；另 10.0 轉入私募）；SRC_ANT_482（正式 S-1，20）；舊：SRC_ANT_329（報導 30）")
     F.add("c_nvda", "NVIDIA 最高 $10B（已到位金額未揭露）", "$B",
-          lambda i, c: f"=({S('strat_msft_nvda_announce')}-{S('strat_msft_funded')})*({c}$6={I('nvda_cond_year')})", "SRC_ANT_330 − 331；與 IPO 基石（SRC_ANT_333）可能同一筆")
-    F.add("c_amd", "AMD 最高 $5B 認股", "$B", lambda i, c: f"={S('strat_amd_commit')}*({c}$6={I('amd_equity_year')})", "SRC_ANT_332")
-    F.add("c_inbase", "計入基準的條件式（開關 × IPO＋Amazon＋Google＋AMD）", "$B", lambda i, c: f"={I('cond_in_base_switch')}*(«c_ipo»+«c_amzn»+«c_googl»+«c_amd»)",
+          lambda i, c: f"=(1-{I('p_cond_pp_switch')})*({S('strat_msft_nvda_announce')}-{S('strat_msft_funded')})*({c}$6={I('nvda_cond_year')})", "SRC_ANT_330 − 331；v0.2.0 B2：p_cond_pp_switch＝1 時歸 0（NVIDIA 10.0 併入同步私募 SRC_ANT_527，避免與 B1 重複）")
+    F.add("c_amd", "AMD 認股（v0.1.9 最高 $5B；v0.2.0 B2 剩餘 2.5，另 2.5 在私募）", "$B", lambda i, c: f"=({I('p_cond_pp_switch')}*{S('pros_amd_eq_rem')}+(1-{I('p_cond_pp_switch')})*{S('strat_amd_commit')})*({c}$6={I('amd_equity_year')})", "SRC_ANT_565；舊：SRC_ANT_332")
+    F.add("c_inbase", "計入基準的條件式（開關 × IPO＋Amazon＋Google＋AMD）", "$B", lambda i, c: f"={I('cond_in_base_switch')}*((1-{I('p_ipo_base_switch')})*«c_ipo»+«c_amzn»+«c_googl»+«c_amd»)",
           "基準開關 0")
-    F.add("eq", "計入基準的股權流入＝已到位＋計入基準的條件式", "$B", lambda i, c: "=«committed»+«c_inbase»", "", name="FND_EquityIn")
+    F.add("eq", "計入基準的股權流入＝已到位＋計入基準的條件式＋（v0.2.0 B1）IPO＋私募淨額", "$B", lambda i, c: "=«committed»+«c_inbase»+«p_ipo_base»", "v0.2.0 B1：第十六節 p_ipo_base", name="FND_EquityIn")
 
     F.section("四、現金與外部資金需求（基準；D17 最低現金；外部資金需求＝年底現金低於最低現金的差額）")
     mcm = I("min_cash_months")
@@ -361,8 +361,8 @@ def build(ctx):
 
     F.section("五、情境（同一規則；基準開關不影響情境列）：S1 IPO、S2 條件式、S3 全部、S4 逐家錨定招股書／S-1 草稿、S5 機房租金、S6 D22 非算力補足、S7 S4＋S5＋S6 合併、S8 談判中新協議（U6）")
     mn = "«min»"
-    waterfall(F, "s1", "S1：＋IPO 約 $100B", "«fcf»", lambda i, c: "«committed»+«c_ipo»", cash25, mn, dict(cum="FND_ExtNeedCumIPO", end="FND_CashEndIPO"))
-    waterfall(F, "s2", "S2：＋條件式（Amazon、Google、NVIDIA、AMD）", "«fcf»", lambda i, c: "«committed»+«c_amzn»+«c_googl»+«c_nvda»+«c_amd»", cash25, mn,
+    waterfall(F, "s1", "S1：＋IPO（v0.2.0 B1 開關 1 時＝招股書淨募資，與基準相同）", "«fcf»", lambda i, c: "«committed»+«c_ipo»", cash25, mn, dict(cum="FND_ExtNeedCumIPO", end="FND_CashEndIPO"))
+    waterfall(F, "s2", "S2：＋條件式（Amazon、Google、NVIDIA、AMD）", "«fcf»", lambda i, c: "«committed»+«p_ipo_base»+«c_amzn»+«c_googl»+«c_nvda»+«c_amd»", cash25, mn,
               dict(cum="FND_ExtNeedCumCond"))
     waterfall(F, "s3", "S3：＋IPO＋條件式（NVIDIA 視為 IPO 基石，不另計）", "«fcf»", lambda i, c: "«committed»+«c_ipo»+«c_amzn»+«c_googl»+«c_amd»", cash25, mn,
               dict(cum="FND_ExtNeedCumAll", end="FND_CashEndAll"))

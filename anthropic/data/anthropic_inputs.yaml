@@ -250,3 +250,476 @@ rows:
 # ── 17. v0.1.8 獨立核對後（2026-11-03 chat 端轉核對結論）
 - {key: s1a_chr_q4_switch, name: R5a 判斷題：S-1/A Q3 非現金捐贈 1.960（一次性）在 2026 全成本的處理（1＝Q4＝Q3 也計一次，保守；0＝只計 Q3 一次）, index: 2026, unit: 開關, value: 1, lo: 0, hi: 1, tag: Decision, basis: 獨立核對：捐贈不進每人股權報酬基準（不沿用到 2027 起）；2026 當年照 Q4＝Q3 慣例保守計入，列為判斷題, range_why: 開關, note: 只影響 2026 股權報酬（命題 1 全成本）；不影響現金}
 - {key: s1a_resid_switch, name: R5c 並列讀法：未歸屬餘額時程＝S-1/A 結構逐年 − 模型逐家合約逐年付款（殘差法；1＝套用，0＝基準：餘額 × S-1/A 結構年度比例）, index: —, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 獨立核對建議並列；基準維持工作單 R5c——上限型合約（SpaceXAI、Nscale）的模型付款可能超過最低承諾，殘差法會低估未歸屬付款，故基準取保守, range_why: 開關, note: 只在 s1a_unalloc_switch＝1 時有作用；累計付款以未歸屬餘額為上限}
+- key: p_ipo_base_switch
+  name: "B1 IPO＋同步私募進基準（1＝2026 股權流入加 淨募資 −RSU 代扣稅款，依 ipo_px 連動；0＝v0.1.9：IPO 只在情境 S1）"
+  index: "—"
+  unit: "開關"
+  value: 1
+  lo: 0
+  hi: 1
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 B1、J1 預設＝進基準：價格區間已申報、私募已簽約（以 IPO 完成為條件）"
+  range_why: "開關"
+  note: "Funding 第十六節；超額配售不計（p_overallot_switch）"
+- key: p_cond_pp_switch
+  name: "B2 條件式融資改讀初步招股說明書（1＝Google NPA 剩餘 10、NVIDIA 併入私募＝0、AMD 2.5；0＝v0.1.9：20／10／5）"
+  index: "—"
+  unit: "開關"
+  value: 1
+  lo: 0
+  hi: 1
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 B2"
+  range_why: "開關"
+  note: "只動情境 S2、S3 與資金第 3 層"
+- key: p_cmt_post_switch
+  name: "C1 9-30 後新簽改讀初步招股說明書 105.7（0＝S-1/A 100.2）"
+  index: "—"
+  unit: "開關"
+  value: 1
+  lo: 0
+  hi: 1
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 C1"
+  range_why: "開關"
+  note: "三段合計 871.4 → 876.9；未歸屬餘額重算"
+- key: p_msft_switch
+  name: "C2 Microsoft 逐家合約改讀初步招股說明書下限 47.2（0＝S-1/A 44.9）"
+  index: "—"
+  unit: "開關"
+  value: 1
+  lo: 0
+  hi: 1
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 C2"
+  range_why: "開關"
+  note: "上限 49.2 只列"
+- key: p_cond_cmt_switch
+  name: "C3 附條件或可終止承諾改讀初步招股說明書 186.2（0＝S-1/A 213.8；只影響扣除讀法與對照）"
+  index: "—"
+  unit: "開關"
+  value: 1
+  lo: 0
+  hi: 1
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 C3"
+  range_why: "開關"
+  note: ""
+- key: p_lambda_deduct_switch
+  name: "C4 Lambda 8 月合約 34.9（目前可終止）讀法（0＝照計，基準；1＝自 W1(b) 三段合計扣除）"
+  index: "—"
+  unit: "開關"
+  value: 0
+  lo: 0
+  hi: 1
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 C4、J4 預設＝照計（公司表示無意終止）"
+  range_why: "開關"
+  note: ""
+- key: p_q4_rr_switch
+  name: "D1 2026Q4 營收（1＝10-31 Run-Rate Revenue 81 ÷ 季數＝20.25；0＝v0.1.9：Q3 ×（1＋q4_growth））"
+  index: "—"
+  unit: "開關"
+  value: 1
+  lo: 0
+  hi: 1
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 D1、J2 預設＝改用年化（月末年化，不再外推 11–12 月成長，保守）"
+  range_why: "開關"
+  note: "q4_growth 保留（開關 0 時用）"
+- key: p_sbc_ipo_switch
+  name: "E1 2026 股權報酬加 pro forma RSU 修改 14.2（一次性，2026Q4；不進每人基準）"
+  index: "—"
+  unit: "開關"
+  value: 1
+  lo: 0
+  hi: 1
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 E1、J3 預設＝計入"
+  range_why: "開關"
+  note: "非現金：不影響自由現金流"
+- key: p_sbc_floor_switch
+  name: "E2 2027、2028 股權報酬下限＝未認列 24.1 ÷ 2.0 年直線攤銷（MAX(模型值, 攤銷)）"
+  index: "—"
+  unit: "開關"
+  value: 1
+  lo: 0
+  hi: 1
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 E2 預設＝下限"
+  range_why: "開關"
+  note: "非現金：不影響自由現金流"
+- key: p_overallot_switch
+  name: "超額配售計入（1＝淨募資加（93.7 − 84.6）× ipo_px ÷ 74、Val 股數加 123.75M；0＝不計，基準）"
+  index: "—"
+  unit: "開關"
+  value: 0
+  lo: 0
+  hi: 1
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 B1：超額配售不計，Sens 計"
+  range_why: "開關"
+  note: ""
+- key: ipo_px
+  name: "現價＝IPO 價格區間中點（上市後改收盤價）"
+  index: "—"
+  unit: "$/股"
+  value: 74
+  lo: 70
+  hi: 78
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F1、J8：初步招股說明書封面區間 70–78（SRC_ANT_522）"
+  range_why: "區間上下緣（Sens）"
+  note: "淨募資與代扣稅款依每 $1 敏感度連動；私募股數＝26.0 ÷ 價格"
+- key: val_tax
+  name: "稅率（美國聯邦法定）"
+  index: "—"
+  unit: "比例"
+  value: 0.21
+  lo: 0.21
+  hi: 0.21
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F2：21% × 正 EBIT"
+  range_why: "定義值"
+  note: ""
+- key: val_nol_inf_switch
+  name: "估值：2026Q4 以前累積的 NOL 視為無限（1＝明確期不繳稅；0＝基準：只抵用 2026Q4 起自身虧損）"
+  index: "—"
+  unit: "開關"
+  value: 0
+  lo: 0
+  hi: 1
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F2 Sens「之前 NOL 無限」"
+  range_why: "開關"
+  note: "終值期 NOPAT 一律課稅"
+- key: val_q4_proxy_switch
+  name: "估值：2026Q4 EBIT 的前九月代理（1＝GAAP 營業損益 −1.260，與 Funding F06 同口徑〔已扣股權報酬與非現金捐贈〕；0＝工作單字面：營業損益＋股權報酬＋非現金捐贈＝調整後 4.081）"
+  index: "—"
+  unit: "開關"
+  value: 1
+  lo: 0
+  hi: 1
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F2；建置代理判斷：F06 已扣股權報酬與非現金捐贈，前九月代理須同口徑（見報告已套用的預設）"
+  range_why: "開關"
+  note: ""
+- key: val_wc_rate
+  name: "估值：營運資金增加 ÷ 營收淨額增量"
+  index: "—"
+  unit: "比例"
+  value: 0
+  lo: -0.05
+  hi: 0.05
+  tag: "Assumed"
+  basis: "工作單 20261111 v0.2.0 F2：營運資金變動 0（Sens ± 營收增量 5%）"
+  range_why: "工作單 Sens"
+  note: ""
+- key: ext_g33
+  name: "估值延伸期：2033 年營收淨額年增率（由 FY2030 值線性收斂）"
+  index: "—"
+  unit: "比例"
+  value: 0.1
+  lo: 0.05
+  hi: 0.15
+  tag: "Assumed"
+  basis: "工作單 20261111 v0.2.0 F3"
+  range_why: "工作單 5–15%"
+  note: ""
+- key: ext_m_add
+  name: "估值延伸期：EBIT 利益率至 2033 年的加碼（線性；0＝維持 FY2030）"
+  index: "—"
+  unit: "比例"
+  value: 0
+  lo: 0
+  hi: 0.1
+  tag: "Assumed"
+  basis: "工作單 20261111 v0.2.0 F3（Sens +5pt／+10pt）"
+  range_why: "工作單 Sens"
+  note: ""
+- key: val_erp
+  name: "股權風險溢酬 ERP"
+  index: "—"
+  unit: "比例"
+  value: 0.05
+  lo: 0.04
+  hi: 0.06
+  tag: "Assumed"
+  basis: "工作單 20261111 v0.2.0 F4；docs/plan/個股DCF標準規格.md 第 2 節"
+  range_why: "規格 4–6%"
+  note: ""
+- key: val_g
+  name: "永續成長率 g"
+  index: "—"
+  unit: "比例"
+  value: 0.03
+  lo: 0.02
+  hi: 0.04
+  tag: "Assumed"
+  basis: "工作單 20261111 v0.2.0 F4；個股DCF標準規格 第 3 節"
+  range_why: "規格 2–4%"
+  note: ""
+- key: val_ronic_add
+  name: "RONIC − WACC（0＝價值中性）"
+  index: "—"
+  unit: "比例"
+  value: 0
+  lo: 0
+  hi: 0.05
+  tag: "Assumed"
+  basis: "工作單 20261111 v0.2.0 F4：RONIC＝WACC（Sens WACC＋5pt）"
+  range_why: "工作單 Sens"
+  note: ""
+- key: val_wacc_adj
+  name: "WACC 加減（Sens 用；基準 0）"
+  index: "—"
+  unit: "比例"
+  value: 0
+  lo: -0.01
+  hi: 0.01
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F9：WACC ±1pt"
+  range_why: "工作單 Sens"
+  note: ""
+- key: val_beta_override
+  name: "β 覆寫（0＝不覆寫：同業 5 年 β 中位數經 Blume 調整；>0＝直接用此值）"
+  index: "—"
+  unit: "倍"
+  value: 0
+  lo: 0
+  hi: 1.6
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F4：Sens β 1.0／1.6"
+  range_why: "Sens 1.0／1.6（Sens 表另設）"
+  note: ""
+- key: val_blume_w
+  name: "Blume 調整權重（調整後 β＝w × 原始 β ＋（1 − w）× 先驗）"
+  index: "—"
+  unit: "比例"
+  value: 0.67
+  lo: 0.67
+  hi: 0.67
+  tag: "Decision"
+  basis: "Blume（1971）慣用權重；個股DCF標準規格 第 2 節"
+  range_why: "定義值"
+  note: ""
+- key: val_blume_prior
+  name: "Blume 調整先驗 β"
+  index: "—"
+  unit: "倍"
+  value: 1
+  lo: 1
+  hi: 1
+  tag: "Decision"
+  basis: "市場 β＝1"
+  range_why: "定義值"
+  note: ""
+- key: val_kd_spread
+  name: "稅前債務成本＝rf ＋ 信用利差"
+  index: "—"
+  unit: "比例"
+  value: 0.02
+  lo: 0.01
+  hi: 0.04
+  tag: "Assumed"
+  basis: "工作單 20261111 v0.2.0 F4：債務只有融資租賃 1.95、循環額度 0 → WACC≈ke；利差無揭露，假設值（對 WACC 影響 <0.01pt）"
+  range_why: "假設區間"
+  note: ""
+- key: val_w_dcf
+  name: "目標價權重：DCF（其餘為調整後 Comparable）"
+  index: "—"
+  unit: "比例"
+  value: 0.5
+  lo: 0.5
+  hi: 0.5
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F8、J5：DCF＋Comparable 50/50"
+  range_why: "判斷題"
+  note: ""
+- key: val_w_a
+  name: "情境權重 A"
+  index: "—"
+  unit: "比例"
+  value: 0.25
+  lo: 0.25
+  hi: 0.25
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F7、J7：25／50／25"
+  range_why: "判斷題"
+  note: ""
+- key: val_w_b
+  name: "情境權重 B（基準）"
+  index: "—"
+  unit: "比例"
+  value: 0.5
+  lo: 0.5
+  hi: 0.5
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F7、J7"
+  range_why: "判斷題"
+  note: ""
+- key: val_w_c
+  name: "情境權重 C"
+  index: "—"
+  unit: "比例"
+  value: 0.25
+  lo: 0.25
+  hi: 0.25
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F7、J7"
+  range_why: "判斷題"
+  note: ""
+- key: val_t_tgt
+  name: "目標時點（評價日後年數；以 ke 推進）"
+  index: "—"
+  unit: "年"
+  value: 1
+  lo: 1
+  hi: 1
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F1：12 個月"
+  range_why: "定義值"
+  note: ""
+- key: val_comp_adj_switch
+  name: "Comparable 調整（1＝倍數 × MIN(上限, Anthropic FY2030 自由現金流率 ÷ 同業 FCF 利益率中位數)；0＝不調整）"
+  index: "—"
+  unit: "開關"
+  value: 1
+  lo: 0
+  hi: 1
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F6、J6"
+  range_why: "開關"
+  note: "Sens：不調整"
+- key: val_comp_cap
+  name: "Comparable 調整係數上限"
+  index: "—"
+  unit: "倍"
+  value: 1
+  lo: 1
+  hi: 1
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F6：上限 1.0"
+  range_why: "定義值"
+  note: ""
+- key: val_pbi_switch
+  name: "估值股數含首次公益發行 846.84M（1＝含，基準；0＝不含）"
+  index: "—"
+  unit: "開關"
+  value: 1
+  lo: 0
+  hi: 1
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F5（Sens 不含）"
+  range_why: "開關"
+  note: ""
+- key: val_vmo_switch
+  name: "估值股數含捐贈配對已歸屬義務 553.44M（1＝含，基準；0＝不含）"
+  index: "—"
+  unit: "開關"
+  value: 1
+  lo: 0
+  hi: 1
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F5（Sens 不含）"
+  range_why: "開關"
+  note: ""
+- key: val_r_sb
+  name: "評等邊界：強力買進（上檔空間 >）"
+  index: "—"
+  unit: "比例"
+  value: 0.5
+  lo: 0.5
+  hi: 0.5
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F8：>+50% 強力買進"
+  range_why: "定義值"
+  note: ""
+- key: val_r_b
+  name: "評等邊界：買進（上檔空間 >）"
+  index: "—"
+  unit: "比例"
+  value: 0.25
+  lo: 0.25
+  hi: 0.25
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F8：>+25% 買進"
+  range_why: "定義值"
+  note: ""
+- key: val_r_n
+  name: "評等邊界：中立（上檔空間 ≥）"
+  index: "—"
+  unit: "比例"
+  value: -0.25
+  lo: -0.25
+  hi: -0.25
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F8：≥−25% 中立"
+  range_why: "定義值"
+  note: ""
+- key: val_r_s
+  name: "評等邊界：放空（上檔空間 ≥；其餘強力放空）"
+  index: "—"
+  unit: "比例"
+  value: -0.5
+  lo: -0.5
+  hi: -0.5
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F8：≥−50% 放空"
+  range_why: "定義值"
+  note: ""
+- key: val_r_near
+  name: "距評等邊界揭露門檻（原則 36）"
+  index: "—"
+  unit: "比例"
+  value: 0.05
+  lo: 0.05
+  hi: 0.05
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 F8：距邊界 5pt 內揭露"
+  range_why: "定義值"
+  note: ""
+- key: year_2031
+  name: "估值延伸年度"
+  index: "延伸 1"
+  unit: "年"
+  value: 2031
+  lo: 2031
+  hi: 2031
+  tag: "Decision"
+  basis: "曆年制（估值頁延伸期）"
+  range_why: "定義值"
+  note: ""
+- key: year_2032
+  name: "估值延伸年度"
+  index: "延伸 2"
+  unit: "年"
+  value: 2032
+  lo: 2032
+  hi: 2032
+  tag: "Decision"
+  basis: "曆年制（估值頁延伸期）"
+  range_why: "定義值"
+  note: ""
+- key: year_2033
+  name: "估值延伸年度"
+  index: "延伸 3"
+  unit: "年"
+  value: 2033
+  lo: 2033
+  hi: 2033
+  tag: "Decision"
+  basis: "曆年制（估值頁延伸期）"
+  range_why: "定義值"
+  note: ""
+- key: d2_warn_ratio
+  name: "D2 門檻：2027 營收總額 ÷ 2026Q4 年化 低於此值立 WARN"
+  index: "—"
+  unit: "倍"
+  value: 1
+  lo: 1
+  hi: 1
+  tag: "Decision"
+  basis: "工作單 20261111 v0.2.0 D2：< 1.0 立 WARN"
+  range_why: "定義值"
+  note: ""

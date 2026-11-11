@@ -40,7 +40,7 @@ STAGE = "v0.1.9"
 REGISTRY_PATH = HERE / "id_registry.json"
 SRC_YAML = ROOT / "data" / "anthropic_src.yaml"
 INP_YAML = ROOT / "data" / "anthropic_inputs.yaml"
-STAGE_MODULES = ("a2", "a3", "a4", "a5", "a6", "a7", "a8", "a9")
+STAGE_MODULES = ("a2", "a3", "a4", "a5", "a6", "a7", "a8", "a9", "a10", "a11")
 CALC_SHEETS = ("Demand", "Revenue", "Compute", "Cost", "Funding", "Reverse")      # E6 掃描與 OAI_Link 隔離的對象
 SRC_COLS = ["SRC_ID", "key", "分組", "項目", "值", "低", "高", "單位", "期間", "日期（序列值）", "口徑", "來源", "網址", "文件日期", "擷取日", "標記",
             "利害方與誘因", "來源等級", "立場", "立場說明", "一手／二手", "處理狀態", "備註",
@@ -68,6 +68,8 @@ DERIVED = {
     # v0.1.1（工作單 20261021 U4）：Q3 隱含算力支出＝Q3 營收 ÷ 每 $1 算力支出的營收；前三季＝上半年 ＋ Q3 隱含
     "cmp_s1_spend_2026_q3_derived": "={SRC:rev_2026_q3}/{SRC:rev_per_compute_2026_q3}",
     "cmp_s1_spend_2026_9m_derived": "={SRC:cmp_s1_spend_2026_h1}+{SRC:cmp_s1_spend_2026_q3_derived}",
+    # v0.2.0（初步招股說明書）：2026-09-30 Run-Rate Revenue＝10-31 值 − 增加額
+    "pros_rr_0930": "={SRC:pros_rr_1031}-{SRC:pros_rr_incr}",
 }
 
 
