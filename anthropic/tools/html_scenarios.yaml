@@ -282,3 +282,4 @@ scenarios:
   v020_no_e: [e_off]
   lam_on: [lam_on]
   oa_on: [oa_on]
+  v019_api_task_lo: [api_task_lo, v020_off]
