@@ -129,3 +129,12 @@
 - HTML：標頭與 ① 加 v0.1.9 摘要；新增「①之八」（TK 新舊值、拆解、反向檢查、敏感度、既有替代讀法在 v0.1.9 基準下、η 各版本）；①之七 改以 v0.1.8 當時輸出呈現（情境 v018、v018_*）；歷史情境加 tk18_back；①之三 η 小表加 v21.7、v21.10 欄；⑦、⑨ 改 TK 版本說明。`tools/build_html.py` 只存值（記憶體）、`ANT_HTML_CACHE`；dist 改 v0_1_9（v0.1.8 dist git rm）。
 - 報告 `docs/reports/20261104_v0.1.9.md`＋`_對照.xlsx`（`tools/make_report_v019.py`）。
 
+
+## v0.2.0 初步招股說明書（2026-11-10）滾入＋估值頁與評等（2026-11-11；Excel `model/20261111_Anthropic_v0.2.0.xlsx`）
+- 工作單 `docs/workorders/20261111_anthropic_v0.2.0_Prospectus與估值.md`；原文摘錄 `docs/reports/20261111_Prospectus原文摘錄.md`；分支 `claude/anthropic-v0.2.0`。
+- SRC_ANT_522–592（71 列：發行條件、股數、pro forma、Run-Rate Revenue、承諾、股權報酬、rf 與同業市場資料）；舊列 332、341、452、482、495、506、508–510、514 備註標「已被取代」（值不改）。Inputs INP_234–276（43 列）。
+- 開關（全關＝v0.1.9 逐位）：B1 `p_ipo_base_switch`（IPO＋私募淨額 80.8 進 2026 基準）、B2 `p_cond_pp_switch`（Google 10、NVIDIA 0、AMD 2.5）、C1–C3（105.7、Microsoft 47.2、附條件 186.2）、C4 Lambda 扣除（基準 0）、D1 `p_q4_rr_switch`（Q4＝81 ÷ 4）、E1 `p_sbc_ipo_switch`（14.2）、E2 `p_sbc_floor_switch`（攤銷下限）、超額配售（基準 0）。新列：Cost 第二十七節（含第二十七之一節 D1／D2）、Funding 第十六節；改式：Revenue 營收基準、Cost 第五節 sbc、Microsoft 合約總額、第二十五節 s1u_raw、第二十六節 s1a_post／s1a_cond、Funding F21–F27、S1／S2。
+- 新頁 Val（`builder/a11.py`）：DCF（FCFF）三情境＋Comparable（市場主流與 FCF 利益率調整）＋評等；情境 A／C 快照 `data/val_scenarios.yaml`（`tools/val_snapshots.py`）、Sens 表 `data/val_sens.yaml`（`tools/val_sens.py`；共用 `tools/val_recalc.py`）。Checks C218–C233。
+- 結果：2026–2030 營收總額 53.49／89.03／133.85／183.31／236.34；F07 10.320／−37.387／−42.210／4.640／56.259（持續轉正 2029）；累計外部資金需求 0；現金谷底 142.21（2028）；命題 1 差額 −11.00／−7.71／−5.54／−0.35／+5.07、持續轉正 2030、覆蓋率 2030 1.281。估值：WACC 11.09%、ke 11.10%、DCF A／B／C 132.07／32.58／0、加權 49.31；Comparable 市場主流 143.39、調整後 103.88；加權目標價 76.60、上檔空間 +3.5%、評等中立。CHK_Errors 0、CHK_Warnings 4（＋C231 終值占 EV > 80%）。
+- 測試：builder 33 項（新增 v0.2.0 回歸與恆等式 5 項；歷史回歸先關 v0.2.0 開關）；parity 情境 70 → 78、workbook_expectations 更新；HTML 新增 ①之九 與 ① 投資建議 kpi，①之八 改以 v0.1.9 當時輸出（情境 v019、v019_*），歷史情境加 v020_off（HTML 情境 177）。
+- 報告 `docs/reports/20261111_v0.2.0.md`＋`_對照.xlsx`（`tools/make_report_v020.py`）。
