@@ -35,10 +35,11 @@ def read(rc, nm):
     wb = openpyxl.load_workbook(os.path.join(rc, f"{nm}.xlsx"), data_only=True)
     V = wb["Val"]; SE = wb["Sens"]; PL = wb["PL"]; IN = wb["In"]
     rb = lab(PL, "情境 B"); rg = lab(PL, "毛利率", rb)
-    g28 = next(IN.cell(r, 5).value for r in range(1, IN.max_row + 1) if IN.cell(r, 1).value == "g28_gm")
+    rg28 = next(r for r in range(1, IN.max_row + 1) if IN.cell(r, 1).value == "g28_gm")
+    g28, g28lo = IN.cell(rg28, 5).value, IN.cell(rg28, 4).value
     return dict(tp=V.cell(lab(V, "目標價（DCF 與 Comparable 加權）"), 2).value, dcf=V.cell(lab(V, "DCF 目標價（情境加權）"), 2).value,
                 fp=SE.cell(lab(SE, "輸入指紋（本檔即時重算"), 4).value, px=V.cell(lab(V, "現價（"), 2).value,
-                gm28=PL.cell(rg, 5).value, gm27=PL.cell(rg, 4).value, g28=g28)
+                gm28=PL.cell(rg, 5).value, gm27=PL.cell(rg, 4).value, g28=g28, g28lo=g28lo)
 
 
 rc0 = run({"base": {}}, "base")
@@ -72,7 +73,7 @@ if STAGE >= "0.3.6":
     out["gm"] = {"total": g0 - b["g28"], "abs": g0 - ga, "hbm": ga - gh, "lp": gh - gc, "mix": gc - b["gm27"], "anchor": b["gm27"] - b["g28"]}
     print("毛利率分解", {k: round(v * 100, 3) for k, v in out["gm"].items()})
     pts = sorted([(0.0, R["abs_mem__lo"]["gm28"]), (0.5, g0), (1.0, R["abs_mem__hi"]["gm28"])])
-    tgt = 0.72
+    tgt = b["g28lo"]   # 公司指引下緣（In 頁 g28_gm 敏感度低欄）
     (x0, y0), (x1, y1) = (pts[0], pts[1]) if tgt >= pts[1][1] else (pts[1], pts[2])
     out["abs72"] = x0 + (tgt - y0) * (x1 - x0) / (y1 - y0)
     print("abs_mem for 72%:", out["abs72"], pts)

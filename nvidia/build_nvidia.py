@@ -21,7 +21,7 @@ import fcff_dcf as FD   # v0.3：標準版 DCF（無槓桿自由現金流＋WACC
 # v0.3.5／v0.3.6（2026-11-11）：NVIDIA v0.3.4 驗收採用規劃書（原則第 10 節 1–51 條；本資料夾 v035_post.py）。
 # NV_STAGE＝0.3.5（展示與治理，數值不變）或 0.3.6（預設；數值改變）。NV_V36_PARTS：v0.3.6 數值項子集（逐項拆解用；預設全部 sh,tt,ratio,mw）。
 # NV_OVERRIDE：敏感度快照用輸入覆寫（nvidia/sens_nvidia.py；「鍵=值;…」，值 @lo／@hi＝In 頁敏感度低／高欄；_P:參數=式＝引擎參數；_krdecay、_hbmflat、_cdxflat），正式建置不設。
-STAGE = os.environ.get("NV_STAGE", "0.3.5"); V36 = STAGE >= "0.3.6"
+STAGE = os.environ.get("NV_STAGE", "0.3.6"); V36 = STAGE >= "0.3.6"
 V36P = set(os.environ.get("NV_V36_PARTS", "sh,tt,ratio,mw").split(",")) - {""} if V36 else set()
 OVR = dict(x.split("=", 1) for x in os.environ.get("NV_OVERRIDE", "").split(";") if x)
 MW = "mw" in V36P   # 原則 49：FY(t)＝11/12 × CY(t−1)＋1/12 × CY(t)

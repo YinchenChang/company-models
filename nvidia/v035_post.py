@@ -388,23 +388,23 @@ def recon(wb, SJ, ctx):
         gm = (SJ or {}).get("gm", {})
         for j, h in enumerate(["項目", "百分點", "", "", "", "", "", "", "來源", "說明"], 1): RC.cell(r, j, h).font = BOLD
         r += 1; G["gm0"] = r
-        rows = [("FY2028 毛利率（情境 B）− 公司指引中點 72.5%", "total", "合計＝以下五項之和"),
+        rows = [("FY2028 毛利率（情境 B）− 公司 FY2028 毛利率指引中點（In 頁 g28_gm）", "total", "合計＝以下五項之和"),
                 ("① HBM／LPDDR 吸收比例（abs_mem 0.5 vs 全額轉嫁 0）", "abs", "基準吸收一半漲價；全額轉嫁時毛利率較高"),
                 ("② HBM 價格（全額轉嫁下，HBM 價格路徑 vs 持平在 2026）", "hbm", "轉嫁後售價與成本同額上升，毛利率仍被稀釋"),
                 ("③ LPDDR 價格（全額轉嫁、HBM 持平下，一般 DRAM 價格路徑 vs 持平）", "lp", "同上"),
                 ("④ 世代與顆數組合、網通與 Edge 占比（記憶體價格持平時 FY2028 − FY2027 錨點；餘項）", "mix", "Rubin／Rubin Ultra 占比與 c_nh 校準"),
-                ("⑤ FY2027 錨點毛利率 − 指引中點", "anchor", "錨點＝Q1、Q2 實績＋Q3 指引＋Q4 假設")]
+                ("⑤ FY2027 錨點毛利率 − 指引中點（g28_gm）", "anchor", "錨點＝Q1、Q2 實績＋Q3 指引＋Q4 假設")]
         for labl, k, note in rows:
             RC.cell(r, 1, labl); v = gm.get(k)
             if v is not None: RC.cell(r, 2, v * 100).number_format = "+0.00;-0.00"
             else: RC.cell(r, 2, "—")
             RC.cell(r, 9, "nvidia/sens.json（整本重算）"); RC.cell(r, 10, note); G["gm_" + k] = r; r += 1
-        RC.cell(r, 1, "檢查：① 至 ⑤ 合計 − 合計列（百分點，應為 0）"); RC.cell(r, 2, f"=SUM(B{G['gm_abs']}:B{G['gm_anchor']})-B{G['gm_total']}").number_format = "0.0000"; G["gm_chk"] = r; r += 1
+        RC.cell(r, 1, "檢查：① 至 ⑤ 合計 − 合計列（百分點，應為 0）"); RC.cell(r, 2, f"=SUM(B{G['gm_abs']}:B{G['gm_anchor']})-N(B{G['gm_total']})").number_format = "0.0000"; G["gm_chk"] = r; r += 1
         sv = (SJ or {}).get("abs72")
-        RC.cell(r, 1, "反解：FY2028 毛利率（情境 B）達指引下緣 72% 所需的 abs_mem（三情境同用；只展示，基準維持 0.5）")
+        RC.cell(r, 1, '="反解：FY2028 毛利率（情境 B）達指引下緣 "&TEXT(g28_gm_lo,"0%")&" 所需的 abs_mem（三情境同用；只展示，基準維持 "&TEXT(abs_mem,"0.0")&"）"')
         RC.cell(r, 2, sv if sv is not None else "—").number_format = "0.00"; RC.cell(r, 3, "=abs_mem").number_format = "0.00"
         RC.cell(r, 9, "nvidia/sens.json：abs_mem 0／0.5／1 整本重算，線性內插或外推")
-        RC.cell(r, 10, '=IF(ISNUMBER(B' + str(r) + '),IF(B' + str(r) + '<0,"所需值小於 0：即使記憶體漲價全額轉嫁，毛利率仍低於 72%；要達到指引需售價漲幅超過記憶體成本增加，或非記憶體成本下降","所需值落在 0 以上"),"—")')
+        RC.cell(r, 10, '=IF(ISNUMBER(B' + str(r) + '),IF(B' + str(r) + '<0,"所需值小於 0：即使記憶體漲價全額轉嫁，毛利率仍低於指引下緣；要達到指引需售價漲幅超過記憶體成本增加，或非記憶體成本下降","所需值落在 0 以上"),"—")')
         G["abs72"] = r; r += 1
         RC.cell(r, 1, "k_rec 持續性（原則 48）：基準假設校準殘差 k_rec 自 FY2028 起持續；Sens 業務主因表有「FY2028 起線性衰減、FY2030 回到 1」案例。基準選持續的理由：k_rec 是顆數層與售價層的合併係數（Recon B2 各候選來源皆未驗證），沒有證據顯示缺口會收斂；收斂到 1 等於假設市場層顆數 × 橋接表售價在 FY2030 完全實現，對目標價是上偏")
         G["krec"] = r; r += 1
@@ -595,7 +595,7 @@ def readme(wb, ctx, bid, G, SJ):
     G["state"] = put(f'="build_id "&Sens!D{G["gov"]["bid"]}&"；模型狀態 "&Sens!D{G["gov"]["st"]}&"（Sens 業務主因表與 HTML 為建置快照：只在 Excel 改 In 頁而未重跑 python3 nvidia/sens_nvidia.py 與建置時顯示 STALE）"')
     u = up; e = f"IF({u}<-0.375,-0.5,IF({u}<0,-0.25,IF({u}<0.375,0.25,0.5)))"; d = f"ABS({u}-{e})"
     G["edge"] = put(f'=IF({d}<0.05,"評等貼近級距邊界（原則 36）：加權目標價上檔空間 "&TEXT({u},{SG})&" 距 "&TEXT({e},"+0%;-0%")&" 邊界只有 "&TEXT({d}*100,"0.0")&" 個百分點；加權目標價達 "&TEXT(px*(1+{e}),"0.00")&" 美元（目前 "&TEXT({tp},"0.00")&"）即翻轉評等為"&IF({u}<{e},IF({e}=0.5,"強力買進",IF({e}=0.25,"買進","中立")),IF({e}=-0.5,"強力放空",IF({e}=-0.25,"放空","中立")))&"。",'
-                    f'"評等邊界（原則 36）：上檔空間距最近級距邊界 "&TEXT({d}*100,"0.0")&" 個百分點（5 個百分點以上，評等不貼近邊界）；加權目標價 "&TEXT(px*(1+{e}),"0.00")&" 美元時翻轉。")')
+                    f'"評等邊界（原則 36）：上檔空間距最近級距邊界 "&TEXT({d}*100,"0.0")&" 個百分點（5 個百分點以上，評等不貼近邊界）；加權目標價達 "&TEXT(px*(1+{e}),"0.00")&" 美元時翻轉。")')
     # 原則 47：上檔空間三段歸因與現行相對倍數
     G["attr47"] = put(f'="上檔空間三段歸因（原則 47）：加權上檔空間 "&TEXT({up},{SG})&"＝DCF 貢獻 "&TEXT(tp_w_dcf*({dcf}-px)/px,{SG})&"＋未調整 Comparable 貢獻 "&TEXT((1-tp_w_dcf)*({cu}-px)/px,{SG})&"＋相對倍數調整貢獻 "&TEXT((1-tp_w_dcf)*(tp_comp_adj-{cu})/px,{SG})&"。'
                       f'移除相對倍數調整時加權目標價 "&TEXT({noadj},"0.00")&"（"&TEXT({noadj}/px-1,{SG})&"），評等由"&{rec}&IF({REC5(noadj + "/px-1")}={rec},"維持不變","翻轉為"&{REC5(noadj + "/px-1")})&"。"')

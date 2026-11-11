@@ -1456,6 +1456,22 @@
        "sub": "自由現金流（折舊、資本支出、營運資金）"
       },
       [
+       "@In!B202",
+       "@In!D202|p1",
+       "@In!E202|p1",
+       "@In!F202|p1",
+       "@In!C202",
+       "@In!G202|tag"
+      ],
+      [
+       "@In!B203",
+       "@In!D203|p1",
+       "@In!E203|p1",
+       "@In!F203|p1",
+       "@In!C203",
+       "@In!G203|tag"
+      ],
+      [
        "@In!B195",
        "@In!D195|n1",
        "@In!E195|n1",
@@ -1769,22 +1785,6 @@
        "sub": "自由現金流（折舊、資本支出、營運資金）"
       },
       [
-       "@In!B202",
-       "@In!D202|p1",
-       "@In!E202|p1",
-       "@In!F202|p1",
-       "@In!C202",
-       "@In!G202|tag"
-      ],
-      [
-       "@In!B203",
-       "@In!D203|p1",
-       "@In!E203|p1",
-       "@In!F203|p1",
-       "@In!C203",
-       "@In!G203|tag"
-      ],
-      [
        "@In!B190",
        "@In!D190|p1",
        "@In!E190|p1",
@@ -1999,7 +1999,7 @@
     {
      "type": "note",
      "parts": [
-      "@README!A87"
+      "@README!A89"
      ]
     },
     {
@@ -3459,6 +3459,84 @@
        "@Recon!D55|sp1"
       ]
      ]
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A57",
+     "head": [
+      "項目",
+      "百分點／值",
+      "說明"
+     ],
+     "rows": [
+      [
+       "@Recon!A59",
+       "@Recon!B59|n2",
+       "@Recon!J59"
+      ],
+      [
+       "@Recon!A60",
+       "@Recon!B60|n2",
+       "@Recon!J60"
+      ],
+      [
+       "@Recon!A61",
+       "@Recon!B61|n2",
+       "@Recon!J61"
+      ],
+      [
+       "@Recon!A62",
+       "@Recon!B62|n2",
+       "@Recon!J62"
+      ],
+      [
+       "@Recon!A63",
+       "@Recon!B63|n2",
+       "@Recon!J63"
+      ],
+      [
+       "@Recon!A64",
+       "@Recon!B64|n2",
+       "@Recon!J64"
+      ],
+      [
+       "@Recon!A65",
+       "@Recon!B65|n2",
+       "@Recon!J65"
+      ],
+      [
+       "@Recon!A66",
+       "@Recon!B66|n2",
+       "@Recon!J66"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Recon!A67"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A69",
+     "head": [
+      "項目",
+      "值",
+      "說明"
+     ],
+     "rows": [
+      [
+       "@Recon!A70",
+       "@Recon!B70|n0",
+       "@Recon!J70"
+      ],
+      [
+       "@Recon!A71",
+       "@Recon!B71",
+       "@Recon!J71"
+      ]
+     ]
     }
    ]
   },
@@ -3483,7 +3561,7 @@
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "990-1015",
+      "rows": "990-1019",
       "cols": [
        "A",
        "B",
@@ -3671,13 +3749,13 @@
     {
      "type": "note",
      "parts": [
-      "@README!A65"
+      "@README!A67"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@README!A66"
+      "@README!A68"
      ]
     },
     {
@@ -3687,12 +3765,12 @@
     {
      "type": "list",
      "items": [
-      "@README!A82",
-      "@README!A83",
       "@README!A84",
       "@README!A85",
       "@README!A86",
-      "@README!A87"
+      "@README!A87",
+      "@README!A88",
+      "@README!A89"
      ]
     },
     {
@@ -3702,27 +3780,17 @@
     {
      "type": "note",
      "parts": [
-      "@README!A70"
+      "@README!A72"
      ]
     },
     {
      "type": "table",
      "head": [
-      "@README!A71",
-      "@README!B71",
-      "@README!C71"
+      "@README!A73",
+      "@README!B73",
+      "@README!C73"
      ],
      "rows": [
-      [
-       "@README!A72",
-       "@README!B72",
-       "@README!C72"
-      ],
-      [
-       "@README!A73",
-       "@README!B73",
-       "@README!C73"
-      ],
       [
        "@README!A74",
        "@README!B74",
@@ -3752,13 +3820,23 @@
        "@README!A79",
        "@README!B79",
        "@README!C79"
+      ],
+      [
+       "@README!A80",
+       "@README!B80",
+       "@README!C80"
+      ],
+      [
+       "@README!A81",
+       "@README!B81",
+       "@README!C81"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@README!A80"
+      "@README!A82"
      ]
     },
     {
@@ -3768,12 +3846,12 @@
     {
      "type": "list",
      "items": [
-      "@README!A89",
-      "@README!A90",
       "@README!A91",
       "@README!A92",
       "@README!A93",
-      "@README!A94"
+      "@README!A94",
+      "@README!A95",
+      "@README!A96"
      ]
     },
     {
@@ -3783,13 +3861,13 @@
     {
      "type": "list",
      "items": [
-      "@README!A96",
-      "@README!A97",
       "@README!A98",
       "@README!A99",
       "@README!A100",
       "@README!A101",
-      "@README!A102"
+      "@README!A102",
+      "@README!A103",
+      "@README!A104"
      ]
     },
     {
@@ -4109,6 +4187,12 @@
       ],
       [
        "@README!A62"
+      ],
+      [
+       "@README!A63"
+      ],
+      [
+       "@README!A64"
       ]
      ]
     },
@@ -4184,13 +4268,13 @@
    "@Val!B198|n2",
    "）",
    "",
-   "@README!A66",
-   "",
-   "@README!A67",
-   "",
    "@README!A68",
    "",
-   "@README!A69"
+   "@README!A69",
+   "",
+   "@README!A70",
+   "",
+   "@README!A71"
   ]
  }
 }
