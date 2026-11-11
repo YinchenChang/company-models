@@ -1,0 +1,216 @@
+{
+ "_說明": "展示層數字一致性檢查設定（tools/model_governance/check_display.py、version_table.py；原則第 10 節第 51 條）",
+ "history_re": "^(v\\d|2026-10-29：)",
+ "items": [
+  {
+   "name": "加權目標價",
+   "sheet": "Val",
+   "find": "目標價（DCF 與 Comparable 加權）",
+   "col": "B",
+   "fmt": "n2",
+   "patterns": [
+    "(?<!調整時)加權目標價約? ?([0-9]+\\.[0-9]{2})",
+    "加權（DCF [0-9]+%）＝([0-9.]+)"
+   ]
+  },
+  {
+   "name": "DCF 目標價",
+   "sheet": "Val",
+   "find": "DCF 目標價（情境加權）",
+   "col": "B",
+   "fmt": "n2",
+   "patterns": [
+    "DCF 目標價(?:降為)? ?([0-9]+\\.[0-9]{2})",
+    "100% DCF＝([0-9.]+)"
+   ]
+  },
+  {
+   "name": "Comparable（未調整）",
+   "sheet": "Val",
+   "find": "Comparable 目標價（市場主流同業法）",
+   "col": "B",
+   "fmt": "n2",
+   "patterns": [
+    "只看 Comparable（未調整）([0-9.]+)"
+   ]
+  },
+  {
+   "name": "Comparable（相對倍數調整後）",
+   "sheet": "Val",
+   "find": "Comparable 目標價（相對倍數調整後）",
+   "col": "B",
+   "fmt": "n2",
+   "patterns": [
+    "相對倍數調整後）＝([0-9.]+)"
+   ]
+  },
+  {
+   "name": "上檔空間",
+   "sheet": "Val",
+   "find": "上檔空間：加權目標價",
+   "col": "B",
+   "fmt": "sp1",
+   "patterns": [
+    "加權(?:目標價)?上檔空間 ?([+-][0-9]+\\.[0-9]%)"
+   ]
+  },
+  {
+   "name": "投資建議",
+   "sheet": "Val",
+   "find": "投資建議",
+   "col": "B",
+   "fmt": "text"
+  },
+  {
+   "name": "FY2028 EPS（情境 B）",
+   "sheet": "PL",
+   "after": "情境 B",
+   "find": "EPS（",
+   "col": "E",
+   "fmt": "n2"
+  },
+  {
+   "name": "FY2029 EPS（情境 B）",
+   "sheet": "PL",
+   "after": "情境 B",
+   "find": "EPS（",
+   "col": "F",
+   "fmt": "n2"
+  },
+  {
+   "name": "FY2030 EPS（情境 B）",
+   "sheet": "PL",
+   "after": "情境 B",
+   "find": "EPS（",
+   "col": "G",
+   "fmt": "n2"
+  },
+  {
+   "name": "FY2028 毛利率（情境 B）",
+   "sheet": "PL",
+   "after": "情境 B",
+   "find": "毛利率",
+   "col": "E",
+   "fmt": "p1"
+  },
+  {
+   "name": "相對倍數調整係數（10 年比值）",
+   "sheet": "Val",
+   "find": "相對倍數調整係數",
+   "col": "B",
+   "fmt": "x2"
+  },
+  {
+   "name": "現行相對倍數",
+   "sheet": "Val",
+   "find": "現行相對倍數",
+   "col": "B",
+   "fmt": "x2"
+  },
+  {
+   "name": "現價 ÷ FY2028 EPS（情境 B）",
+   "sheet": "Val",
+   "find": "現價 ÷ FY2028 EPS（模型）",
+   "col": "C",
+   "fmt": "x1"
+  }
+ ],
+ "table_rows": [
+  {
+   "title": "現價",
+   "sheet": "Val",
+   "find": "現價（",
+   "col": "B",
+   "fmt": "n2"
+  },
+  {
+   "title": "DCF 目標價",
+   "sheet": "Val",
+   "find": "DCF 目標價（情境加權）",
+   "col": "B",
+   "fmt": "n2"
+  },
+  {
+   "title": "Comparable 目標價（未調整）",
+   "sheet": "Val",
+   "find": "Comparable 目標價（市場主流同業法）",
+   "col": "B",
+   "fmt": "n2"
+  },
+  {
+   "title": "Comparable 目標價（相對倍數調整後）",
+   "sheet": "Val",
+   "find": "Comparable 目標價（相對倍數調整後）",
+   "col": "B",
+   "fmt": "n2"
+  },
+  {
+   "title": "加權目標價（上檔空間）",
+   "sheet": "Val",
+   "find": "目標價（DCF 與 Comparable 加權）",
+   "col": "B",
+   "fmt": "n2",
+   "with": {
+    "sheet": "Val",
+    "find": "上檔空間：加權目標價",
+    "col": "B",
+    "fmt": "sp1"
+   }
+  },
+  {
+   "title": "投資建議",
+   "sheet": "Val",
+   "find": "投資建議",
+   "col": "B",
+   "fmt": "text"
+  },
+  {
+   "title": "EPS 情境 A（FY2028／FY2029／FY2030）",
+   "sheet": "PL",
+   "after": "情境 A",
+   "find": "EPS（",
+   "col": "E,F,G",
+   "fmt": "n2"
+  },
+  {
+   "title": "EPS 情境 B（FY2028／FY2029／FY2030）",
+   "sheet": "PL",
+   "after": "情境 B",
+   "find": "EPS（",
+   "col": "E,F,G",
+   "fmt": "n2"
+  },
+  {
+   "title": "EPS 情境 C（FY2028／FY2029／FY2030）",
+   "sheet": "PL",
+   "after": "情境 C",
+   "find": "EPS（",
+   "col": "E,F,G",
+   "fmt": "n2"
+  },
+  {
+   "title": "FY2028 毛利率（情境 A）",
+   "sheet": "PL",
+   "after": "情境 A",
+   "find": "毛利率",
+   "col": "E",
+   "fmt": "p2"
+  },
+  {
+   "title": "FY2028 毛利率（情境 B）",
+   "sheet": "PL",
+   "after": "情境 B",
+   "find": "毛利率",
+   "col": "E",
+   "fmt": "p2"
+  },
+  {
+   "title": "FY2028 毛利率（情境 C）",
+   "sheet": "PL",
+   "after": "情境 C",
+   "find": "毛利率",
+   "col": "E",
+   "fmt": "p2"
+  }
+ ]
+}
