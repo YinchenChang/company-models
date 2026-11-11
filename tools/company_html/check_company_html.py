@@ -62,10 +62,10 @@ class P(HTMLParser):
             self.svg_charts += 1
         if tag == 'i' and a.get('style') and re.search(r'width:', a['style']):
             self.bar_widths.append(float(re.search(r'width:([\d.]+)%', a['style']).group(1)))
-        if tag == 'circle' and 'pt' in cls:
+        if tag in ('circle', 'rect') and 'pt' in cls and 'data-ref' in a:
             self.items.append(['pt', a, ''])
             self.cur = self.items[-1]
-        if tag == 'title' and self.stack and self.stack[-1][0] == 'circle':
+        if tag == 'title' and self.stack and self.stack[-1][0] in ('circle', 'rect'):
             self.title_depth += 1
         for k in ('x', 'lbl', 'na'):
             if k in cls and 'data-ref' in a:
