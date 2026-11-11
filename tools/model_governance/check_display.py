@@ -25,7 +25,11 @@ def fmt(v, f):
 
 
 def main(folder):
-    cfg = json.load(open(os.path.join(folder, "display_check.json"), encoding="utf-8"))
+    cp = os.path.join(folder, "display_check.json")
+    if not os.path.exists(cp):   # 尚未套用原則 51 的公司：不適用
+        print(f"展示層數字一致性（{folder}）：不適用（沒有 display_check.json）")
+        return 0
+    cfg = json.load(open(cp, encoding="utf-8"))
     xs = glob.glob(os.path.join(folder, "dist", "*.xlsx")); assert len(xs) == 1, xs
     X = xs[0]; HT = X[:-5] + ".html"
     wb = openpyxl.load_workbook(X, data_only=True)

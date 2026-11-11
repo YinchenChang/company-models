@@ -2022,18 +2022,18 @@
        "@Val!E203"
       ],
       [
-       "@Val!A205",
-       "@Val!B205|p1",
-       "@Val!E205"
-      ],
-      [
        "@Val!A206",
-       "@Val!B206|x1",
-       ""
+       "@Val!B206|p1",
+       "@Val!E206"
       ],
       [
        "@Val!A207",
        "@Val!B207|x1",
+       ""
+      ],
+      [
+       "@Val!A208",
+       "@Val!B208|x1",
        ""
       ]
      ]
@@ -3508,18 +3508,23 @@
        "@Recon!A66",
        "@Recon!B66|n2",
        "@Recon!J66"
+      ],
+      [
+       "@Recon!A67",
+       "@Recon!B67|n2",
+       "@Recon!J67"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Recon!A67"
+      "@Recon!A68"
      ]
     },
     {
      "type": "table",
-     "caption": "@Recon!A69",
+     "caption": "@Recon!A70",
      "head": [
       "項目",
       "值",
@@ -3527,14 +3532,14 @@
      ],
      "rows": [
       [
-       "@Recon!A70",
-       "@Recon!B70|n0",
-       "@Recon!J70"
+       "@Recon!A71",
+       "@Recon!B71|n0",
+       "@Recon!J71"
       ],
       [
-       "@Recon!A71",
-       "@Recon!B71",
-       "@Recon!J71"
+       "@Recon!A72",
+       "@Recon!B72",
+       "@Recon!J72"
       ]
      ]
     }

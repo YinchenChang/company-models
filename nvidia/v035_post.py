@@ -61,6 +61,7 @@ HIST_P = [  # (鍵, 項目, 值, 標記, 來源)
     ("cx_q4fy26", "Q4 FY26 資本支出（全年 6,042 − 前三季 4,758）", "=6.042-4.758", "Derived", K10N + "、" + Q3_10Q),
     ("cx_h1fy27", "H1 FY27 資本支出", 4.434, "Verified", Q10N + " 現金流量表 " + Q10),
     ("rev_h1fy27", "H1 FY27 營收（Q 頁 G4＋H4）", "=Q!G4+Q!H4", "Derived", "Q 頁（公司 8-K 與 10-Q 同值）"),
+    ("rev_q4fy26", "Q4 FY26 營收（Q 頁 E4）", "=Q!E4", "Derived", "Q 頁（公司 8-K）"),
     ("rev_ltm", "最近四季營收（Q3 FY26～Q2 FY27；Q 頁 D4＋E4＋G4＋H4）", "=Q!D4+Q!E4+Q!G4+Q!H4", "Derived", "Q 頁"),
     ("shout", "流通股數（2026-07-26，十億股）", 24.147, "Verified", Q10N + " 股東權益變動表「Balances as of Jul 26, 2026」24,147 百萬股；封面 2026-08-21 為 24.1 billion（四捨五入） " + Q10),
     ("rsu", "未既得 RSU、PSU 與市場型 PSU（2026-07-26，十億股）", 0.168, "Verified", Q10N + " Note 2 Equity Award Activity：Balance as of Jul 26, 2026 168 百萬股（加權授予日公允價值 120.41 美元）"),
@@ -162,12 +163,13 @@ def hist_links(wb, ctx):
     for k, ttl in (("da_rev", "折舊 ÷ 營收"), ("cx_rev", "資本支出 ÷ 營收")):
         r = inrow(wb, k); hk = k[:2]
         if "ratio" in P:
-            IN.cell(r, 4, f"=h_{hk}_h1fy27/h_rev_h1fy27"); IN.cell(r, 6, f"=h_{hk}_26/h_rev_26")
+            IN.cell(r, 4, f"=h_{hk}_h1fy27/h_rev_h1fy27" if hk == "da" else "=h_cx_q4fy26/h_rev_q4fy26"); IN.cell(r, 6, f"=h_{hk}_26/h_rev_26")
             dn(wb, k + "_lo", f"In!$D${r}"); dn(wb, k + "_hi", f"In!$F${r}")
             for c in (4, 6): IN.cell(r, c).number_format = "0.00%"
             IN.cell(r, 7, "Derived")
             IN.cell(r, 8, f"原則 35（v0.3.6）：{ttl}，最近四季（Q3 FY26～Q2 FY27）實績、全期持平：(Q3 FY26＋Q4 FY26＋H1 FY27) ÷ 最近四季營收（Hist 頁；{Q10N}、{K10N}、{Q3_10Q}）")
-            IN.cell(r, 9, "並列歷年：FY2025 " + ("1.43%" if hk == "da" else "2.48%") + "、FY2026（v0.3.5 以前的基準）見敏感度高欄；敏感度低＝H1 FY27。收斂路徑無證據，只作 Sens")
+            IN.cell(r, 9, "並列歷年：FY2025 " + ("1.43%" if hk == "da" else "2.48%") + "、FY2026（v0.3.5 以前的基準）見敏感度高欄；敏感度低＝"
+                    + ("H1 FY27（低於基準）" if hk == "da" else "最近四季中最低的一季 Q4 FY26（1,284 ÷ 68,127；H1 FY27 的 2.49% 高於基準，不能當低）") + "。收斂路徑無證據，只作 Sens")
         else:
             IN.cell(r, 7, "Derived")
 
@@ -301,7 +303,7 @@ BIZ = [("NVIDIA 顆數係數 ×0.9／×1.1（FY2028 起，三情境同乘）", "
        ("Q3、Q4 FY27 股數季變動 低／高（錨點）", "q_sh", "同上")]
 BIZ36 = [("k_rec 自 FY2028 起線性衰減、FY2030 回到 1（原則 48；基準＝持續）", "krdecay", "只有高：k_rec＝校準值 → FY2028 +1/3、FY2029 +2/3、FY2030 回到 1 的差距（整本重算）"),
          ("折舊 ÷ 營收 低／高（原則 35）", "da_rev", "低＝H1 FY27、高＝FY2026（v0.3.5 基準）；基準＝最近四季"),
-         ("資本支出 ÷ 營收 低／高（原則 35）", "cx_rev", "低＝H1 FY27、高＝FY2026（v0.3.5 基準）；基準＝最近四季"),
+         ("資本支出 ÷ 營收 低／高（原則 35）", "cx_rev", "低＝Q4 FY26（最近四季最低季）、高＝FY2026（v0.3.5 基準）；基準＝最近四季"),
          ("評價股數只計流通股（原則 11 原口徑）", "sh_v", "只有低：不計 RSU（潛在稀釋全不計）")]
 EXEMPT = ("pa_amd、pa_tpu、pa_trn、pa_oth 不列：只決定 Units 頁金額份額展示與「ASIC 金額份額 ±5pt」案例的份額基數，不進基準目標價，對加權目標價結構上恆為 0。"
           "r_disc 不列：只用於舊法規則值的折現參考欄，舊法不進結論，對加權目標價結構上恆為 0。"
@@ -355,7 +357,21 @@ def sens_tp(wb, SJ, ctx):
 
 # ---------- Recon：同口徑註記、反解（原則 4、33、36）；毛利率差距分解與 abs_mem 反解（原則 50，v0.3.6）----------
 def recon(wb, SJ, ctx):
-    RC = wb["Recon"]; G = {}; V = wb["Val"]
+    RC = wb["Recon"]; G = {}; V = wb["Val"]; PB = ctx["PB"]
+    # 驗收核對（2026-11-11）：B2 候選來源①「可查」欄的 10-Q 殘留說法
+    r = lab(RC, "① Rubin CY2026 出貨時點")
+    RC.cell(r, 10).value = str(RC.cell(r, 10).value).replace("（財務長書面說明、10-Q 未取得）", "（10-Q 已讀取，未揭露 Rubin 季別顆數；財務長書面說明未取得）")
+    assert "10-Q 未取得" not in str(RC.cell(r, 10).value)
+    # 情境 B／C 欄改引用各自的推導區塊（16–18、21 列；21 列未校準運算＝認列後 ÷ k_rec）
+    for prefix, f in (("認列後 FY2027 Data Center 營收 vs 錨點", lambda s_: f"=PL!D{PB[s_]['comp']}+PL!D{PB[s_]['net']}"),
+                      ("認列後 FY2027 毛利率 vs 錨點毛利率", lambda s_: f"=PL!D{PB[s_]['bugm']}"),
+                      ("認列顆數（百萬顆）：k_rec × 市場層", lambda s_: f"=PL!D{PB[s_]['nvu']}"),
+                      ("運算：未校準由下而上 vs 錨點", lambda s_: f"=PL!D{PB[s_]['comp']}/k_rec")):
+        rr = lab(RC, prefix)
+        for s_, col in (("B", 5), ("C", 7)): RC.cell(rr, col).value = f(s_)
+        if ctx["MW"] and not prefix.startswith("認列顆數"):
+            RC.cell(rr, 10).value = (str(RC.cell(rr, 10).value or "") + "；B、C 欄引用各自推導區塊。v0.3.6 起月數加權使 B、C 的 FY2027 含 1/12 的各自 CY2027 一般 DRAM 價格指數，"
+                                     "而 k_rec、c_nh 只以情境 A 校準，故 B、C 與錨點有小差額（PL 頁情境 B／C 核對列）")
     r = lab(RC, "2027 年 NVIDIA 金額份額（加速器晶片")
     RC.cell(r, 10, str(RC.cell(r, 10).value or "") + "（原則 33、50：模型輸出——由 Assumed／Interested-party 的 ASIC 每顆金額與市場層顆數推得，非獨立證據；與命題同為模組層級金額份額）")
     r = RC.max_row + 2
@@ -399,6 +415,10 @@ def recon(wb, SJ, ctx):
             if v is not None: RC.cell(r, 2, v * 100).number_format = "+0.00;-0.00"
             else: RC.cell(r, 2, "—")
             RC.cell(r, 9, "nvidia/sens.json（整本重算）"); RC.cell(r, 10, note); G["gm_" + k] = r; r += 1
+        RC.cell(r, 1, "HBM 單項（② HBM 價格＋① 吸收比例中按 ②／(②＋③) 分攤的 HBM 份額；命題 2 判定用）")
+        RC.cell(r, 2, f'=IF(AND(ISNUMBER(B{G["gm_hbm"]}),ISNUMBER(B{G["gm_lp"]}),ISNUMBER(B{G["gm_abs"]})),B{G["gm_hbm"]}+B{G["gm_abs"]}*B{G["gm_hbm"]}/(B{G["gm_hbm"]}+B{G["gm_lp"]}),"—")').number_format = "+0.00;-0.00"
+        RC.cell(r, 9, "本節①②③"); RC.cell(r, 10, "命題 2 只問 HBM 漲價：取 HBM 價格單項，加上吸收比例效果中屬於 HBM 的份額（以②、③ 比例分攤；LPDDR 份額不計）")
+        G["gm_hbm1"] = r; r += 1
         RC.cell(r, 1, "檢查：① 至 ⑤ 合計 − 合計列（百分點，應為 0）"); RC.cell(r, 2, f"=SUM(B{G['gm_abs']}:B{G['gm_anchor']})-N(B{G['gm_total']})").number_format = "0.0000"; G["gm_chk"] = r; r += 1
         sv = (SJ or {}).get("abs72")
         RC.cell(r, 1, '="反解：FY2028 毛利率（情境 B）達指引下緣 "&TEXT(g28_gm_lo,"0%")&" 所需的 abs_mem（三情境同用；只展示，基準維持 "&TEXT(abs_mem,"0.0")&"）"')
@@ -444,6 +464,8 @@ def val(wb, ctx):
     V.cell(r, 5, '="現價日 "&TEXT(h_asof,"yyyy-mm-dd")&"；目標時點 "&TEXT(h_valdate+t_tgt*365,"yyyy-mm-dd")&"；上檔空間是這段期間的價格變化，不是年化報酬"'); G["per2"] = r; r += 1
     tp = lab(V, "目標價（DCF 與 Comparable 加權）"); dcf = lab(V, "DCF 目標價（情境加權）")
     fe, pm = lab(V, "12 個月後的前瞻 EPS（情境加權）"), lab(V, "同業前瞻 P/E 中位數")
+    V.cell(r, 1, "現價 ÷ 12 個月前瞻 EPS（情境加權；統一分母，原則 43）"); V.cell(r, 2, f"=px/B{fe}").number_format = "0.0"
+    V.cell(r, 5, '="現價日 "&TEXT(h_asof,"yyyy-mm-dd")&"；前瞻 EPS＝3/12 × FY2028＋9/12 × FY2029（情境加權），與同業前瞻 P/E 同口徑"'); G["pe12"] = r; r += 1
     V.cell(r, 1, "現行相對倍數（現價 ÷ 12 個月前瞻 EPS ÷ 同業前瞻 P/E 中位數；原則 47）"); V.cell(r, 2, f"=px/B{fe}/B{pm}").number_format = "0.00"
     V.cell(r, 5, '="10 年相對倍數比（調整係數）"&TEXT(rm_factor,"0.00")&"；調整後 Comparable 需要的相對重估 "&TEXT(rm_factor/B' + str(r) + ',"0.0")&" 倍"'); G["rel"] = r; r += 1
     V.cell(r, 1, "DCF 在加權目標價中的占比（金額）"); V.cell(r, 2, f"=tp_w_dcf*B{dcf}/B{tp}").number_format = "0.0%"
@@ -505,6 +527,7 @@ def readme(wb, ctx, bid, G, SJ):
     SG = '"+0.0%;-0.0%"'
     rmrel = f"Val!B{lab(V, '現行相對倍數')}"           # 現行相對倍數（Val 0.6 節）
     noadj = f"(tp_w_dcf*{dcf}+(1-tp_w_dcf)*{cu})"
+    FW = f'''"現價約為 12 個月前瞻 EPS（情境加權 "&TEXT({feps},"0.00")&"，"&TEXT(h_asof,"yyyy-mm-dd")&" 起 12 個月）的 "&TEXT(px/{feps},"0.0")&" 倍（分母統一用 12 個月前瞻情境加權 EPS，與同業前瞻 P/E 同口徑；以 FY2028 情境 B EPS 為分母為 "&TEXT(px/{eps("B", "E")},"0.0")&" 倍；擁有者原命題寫 "&TEXT(th_mult,"0.0")&" 倍，原文分母為「2027 年 EPS」）"'''
     REC5 = lambda x: f'IF({x}>0.5,"強力買進",IF({x}>0.25,"買進",IF({x}>=-0.25,"中立",IF({x}>=-0.5,"放空","強力放空"))))'
     # 原則 41：首列三個日期＋build_id（公式）
     a1 = str(RD["A1"].value)
@@ -518,7 +541,7 @@ def readme(wb, ctx, bid, G, SJ):
         w = v
         if v.startswith("模型命題：") and "現價約為 2027 年 EPS 的 13.5 倍" in v:   # 原則 13、43
             a, b = v.split("現價約為 2027 年 EPS 的 13.5 倍", 1)
-            w = ("=" + lit(a) + f'&"現價約為 2027 年（FY2028）EPS 的 "&TEXT(px/{eps("B", "E")},"0.0")&" 倍（分母：本模型情境 B FY2028 EPS "&TEXT({eps("B", "E")},"0.00")&"，FY 口徑；現價 "&TEXT(px,"0.00")&"，"&TEXT(h_asof,"yyyy-mm-dd")&"；12 個月前瞻 EPS 口徑為 "&TEXT(px/{feps},"0.0")&" 倍；擁有者原命題寫 "&TEXT(th_mult,"0.0")&" 倍）"&' + lit(b))
+            w = ("=" + lit(a) + f'&{FW}&' + lit(b))
         elif v.startswith("會計年度：FY(t)") and MW:   # 原則 49
             w = ("會計年度：FY(t)＝t−1 年 2 月～t 年 1 月（FY2027＝2026-02～2027-01）。上游市場層是日曆年，v0.3.6 起以月數加權：FY(t)＝11/12 × CY(t−1)＋1/12 × CY(t)（原則 49），"
                  "顆數、HBM 與一般 DRAM 價格指數、每顆 HBM 容量、網通金額各自加權（數量 × 單價的交叉項不分年，近似）；上游只到 CY2029，FY2030 的 1/12 以 CY2029 代替（持平近似，不引入新假設）。"
@@ -543,7 +566,11 @@ def readme(wb, ctx, bid, G, SJ):
                      f'&"、FY2030 為 "&TEXT({eps("A", "G")},"0.00")&"／"&TEXT({eps("B", "G")},"0.00")&"／"&TEXT({eps("C", "G")},"0.00")&"，DCF 價格帶 "&TEXT(Val!B{band},"0")&"～"&TEXT(Val!C{band},"0")&"（標準版 DCF）。核心問題（CY2028 顆數持平後 EPS 能否成長）在情境 B 的答案是 FY2029 "'
                      f'&TEXT({eps("B", "F")}/{eps("B", "E")}-1,{SG})&"、FY2030 "&TEXT({eps("B", "G")}/{eps("B", "F")}-1,{SG})&"。"')
             if v.startswith('="命題 4：'):   # 原則 43
-                w = (f'="命題 4：現價約為 2027 年（FY2028）EPS 的 "&TEXT(px/{eps("B", "E")},"0.0")&" 倍（分母：本模型情境 B FY2028 EPS，FY 口徑；現價 "&TEXT(h_asof,"yyyy-mm-dd")&"；擁有者原命題寫 "&TEXT(th_mult,"0.0")&" 倍），這是低估，還是見頂前的折價。"')
+                w = (f'="命題 4："&{FW}&"，這是低估，還是見頂前的折價。"')
+            if v.startswith('="現價是低估，還是見頂前的折價？'):   # 原則 43：與同業同一分母
+                w = re.sub(r'&" 約為本模型情境 B FY2028 EPS 的 "&TEXT\(Val!C\d+,"0\.0"\)&" 倍，低於同業前瞻本益比中位數 "&TEXT\((Val!B\d+),"0\.0"\)&" 倍（同業為目前的未來 12 個月口徑，與 FY2028 時點相近但不完全相同）。',
+                           lambda m: (f'&" 約為 12 個月前瞻 EPS（情境加權 "&TEXT({feps},"0.00")&"）的 "&TEXT(px/{feps},"0.0")&" 倍，"&IF(px/{feps}<{m.group(1)},"低於","高於")&"同業前瞻本益比中位數 "&TEXT({m.group(1)},"0.0")&" 倍（同一 12 個月前瞻口徑；以 FY2028 情境 B EPS 為分母為 "&TEXT(px/{eps("B", "E")},"0.0")&" 倍）。'), v)
+                assert w != v
             if v.startswith('="重點 2：三種情境在 FY2028 幾乎一樣'):   # 原則 31：方向詞由表格判定
                 w = re.sub(r'^="重點 2：三種情境在 FY2028 幾乎一樣、分歧從 FY2029 開始：FY2028 EPS 約 "&TEXT\(PL!E\d+,"0\.00"\)&" 美元；',
                            lambda m: (f'="重點 2：FY2028 EPS 情境 A／B／C 為 "&TEXT({eps("A", "E")},"0.00")&"／"&TEXT({eps("B", "E")},"0.00")&"／"&TEXT({eps("C", "E")},"0.00")&" 美元（三情境差 "'
@@ -556,12 +583,17 @@ def readme(wb, ctx, bid, G, SJ):
             if v.startswith('="HBM 漲價會把毛利率壓低多少？'):   # 原則 50：命題回覆依模型結果寫明支持或否定
                 rg = lab(RC, "FY2028 毛利率 vs 指引"); rh = lab(RC, "HBM 成本占由下而上營收")
                 dA, dB, dC = (f"({gmr(s, 'E')}-{gmr(s, 'D')})" for s in "ABC")
-                w = (f'="HBM 漲價會把毛利率壓低多少？答："&IF(-{dB}>0.03,"命題被否定（降幅大於命題的 2～3 個百分點）",IF(-{dB}>=0.02,"命題被支持（降幅在 2～3 個百分點內）","命題被否定（降幅小於 2 個百分點）"))'
-                     f'&"：FY2028 毛利率情境 A "&TEXT({gmr("A", "E")},"0.00%")&"、B "&TEXT({gmr("B", "E")},"0.00%")&"、C "&TEXT({gmr("C", "E")},"0.00%")&"，比 FY2027 錨點 "&TEXT({gmr("B", "D")},"0.00%")&" 低 "'
-                     f'&TEXT(-{dA}*100,"0.0")&"／"&TEXT(-{dB}*100,"0.0")&"／"&TEXT(-{dC}*100,"0.0")&" 個百分點；情境 B "&IF(Recon!F{rg}<0,"低於","高於")&"公司 FY2028 指引中點 "&TEXT(g28_gm,"0.0%")&" "&TEXT(ABS(Recon!F{rg})*100,"0.0")&" 個百分點'
-                     f'（指引區間 "&TEXT(g28_gm_lo,"0%")&"～"&TEXT(g28_gm_hi,"0%")&"）。同期 HBM 成本占營收（吸收前）上升 "&TEXT(Recon!E{rh}*100,"0.0")&" 個百分點。這是模型輸出、非獨立證據：毛利率由 Assumed 的吸收比例 abs_mem（"&TEXT(abs_mem,"0.0")&"，公司未揭露）與上游記憶體價格路徑推得；'
-                     f'全額轉嫁時 FY2028 EPS "&TEXT(Sens!E{lab(SE, "HBM／LPDDR 吸收比例 0")},{SG})&"，全額吸收時 "&TEXT(Sens!E{lab(SE, "HBM／LPDDR 吸收比例 1")},{SG})&"。"'
-                     + (f'&"差距分解與 abs_mem 反解見 Recon G 節。"' if V36 else "") )
+                tail = (f'"&"FY2028 毛利率情境 A "&TEXT({gmr("A", "E")},"0.00%")&"、B "&TEXT({gmr("B", "E")},"0.00%")&"、C "&TEXT({gmr("C", "E")},"0.00%")&"，比 FY2027 錨點 "&TEXT({gmr("B", "D")},"0.00%")&" 總降幅 "'
+                        f'&TEXT(-{dA}*100,"0.0")&"／"&TEXT(-{dB}*100,"0.0")&"／"&TEXT(-{dC}*100,"0.0")&" 個百分點；情境 B "&IF(Recon!F{rg}<0,"低於","高於")&"公司 FY2028 指引中點 "&TEXT(g28_gm,"0.0%")&" "&TEXT(ABS(Recon!F{rg})*100,"0.0")&" 個百分點'
+                        f'（指引區間 "&TEXT(g28_gm_lo,"0%")&"～"&TEXT(g28_gm_hi,"0%")&"）。同期 HBM 成本占營收（吸收前）上升 "&TEXT(Recon!E{rh}*100,"0.0")&" 個百分點。這是模型輸出、非獨立證據：毛利率由 Assumed 的吸收比例 abs_mem（"&TEXT(abs_mem,"0.0")&"，公司未揭露）與上游記憶體價格路徑推得；'
+                        f'全額轉嫁時 FY2028 EPS "&TEXT(Sens!E{lab(SE, "HBM／LPDDR 吸收比例 0")},{SG})&"，全額吸收時 "&TEXT(Sens!E{lab(SE, "HBM／LPDDR 吸收比例 1")},{SG})&"。"')
+                if V36 and G["recon"].get("gm_hbm1"):
+                    h1 = f"Recon!B{G['recon']['gm_hbm1']}"   # 百分點（負值＝壓低）
+                    w = (f'="HBM 漲價會把毛利率壓低多少？答："&IF(-{h1}>3,"命題被否定（HBM 單項降幅 "&TEXT(-{h1},"0.0")&" 個百分點，高於命題的 2～3 個百分點）",IF(-{h1}>=2,"命題被支持（HBM 單項降幅 "&TEXT(-{h1},"0.0")&" 個百分點，在 2～3 個百分點內）","命題被否定（HBM 單項降幅 "&TEXT(-{h1},"0.0")&" 個百分點，小於 2 個百分點）"))'
+                         f'&IF(ABS(-{h1}-3)<1,"；結論臨界：距命題上緣 3 個百分點只有 "&TEXT(ABS(-{h1}-3),"0.0")&" 個百分點","")'
+                         f'&"（HBM 單項＝HBM 價格效果加吸收比例效果中屬 HBM 的份額，情境 B，Recon G 節）。總降幅另含 LPDDR 與組合：' + tail + '&"差距分解與 abs_mem 反解見 Recon G 節。"')
+                else:
+                    w = (f'="HBM 漲價會把毛利率壓低多少？答："&IF(-{dB}>0.03,"命題被否定（降幅大於命題的 2～3 個百分點）",IF(-{dB}>=0.02,"命題被支持（降幅在 2～3 個百分點內）","命題被否定（降幅小於 2 個百分點）"))&"：' + tail)
             if v.startswith('="顆數持平以後 EPS 還能不能成長？'):   # 原則 31：方向詞由表格判定
                 sf = lab(SE, "CY2029 顆數與 CY2028 持平"); e8, e9, e0 = eps("B", "E"), eps("B", "F"), eps("B", "G")
                 w = (f'="顆數持平以後 EPS 還能不能成長？答："&IF(Sens!N{sf}<=0,"不能",IF(Sens!N{sf}<0.05,"能，但幅度小","能"))&"。敏感度案例「CY2029 顆數與 CY2028 持平」（以情境 A 為底、網通同步持平）中，FY2030 EPS 比 FY2029 "&TEXT(Sens!N{sf},{SG})&"（情境 A 原本為 "&TEXT(Sens!N4,{SG})&"）。'
@@ -662,7 +694,9 @@ def apply(wb, here, ctx):
     IN = wb["In"]
     IN["A2"].value = ("標記：每列單一主要標記 Verified／Interested-party／Analogy／Assumed／Derived（v0.3.5 起，原則 2；Interested-party 列見 J 欄「來源誘因」）；Analogy、Assumed 給低／高區間。SemiAnalysis 未單獨使用。"
                       "公司原文＝NVIDIA 8-K 新聞稿與 SEC 10-Q／10-K（資產負債與股數以 10-Q 為主來源，原則 34；歷史財務在 Hist 頁）；CFO 書面說明與法說逐字稿未取得")
-    r = inrow(wb, "th_mult"); IN.cell(r, 9, "現行值：Val 頁「現價 ÷ FY2028 EPS（模型）」與「現價 ÷ 共識 FY2028 EPS」（公式；原則 6：舊說明「約 13.4–13.5x」已過時，刪除）")
+    r = inrow(wb, "th_mult"); IN.cell(r, 9, "命題原文分母為「2027 年 EPS」（未標情境）。現行值統一以 12 個月前瞻情境加權 EPS 為分母（Val 0.6 節「現價 ÷ 12 個月前瞻 EPS」）；各情境 FY2028 口徑見 Val 第 1 節（原則 6、43：舊說明「約 13.4–13.5x」已過時，刪除）")
+    RC = wb["Recon"]; rr = lab(RC, "現價 ÷ FY2028 EPS vs 命題")
+    RC.cell(rr, 10).value = "分母：C／E／G 欄＝各情境 FY2028 EPS（FY 口徑，2026-11-05 現價）；統一口徑（12 個月前瞻情境加權 EPS）的倍數見 Val 0.6 節。EPS 越高，現價越便宜"
     r = inrow(wb, "rf"); IN.cell(r, 9, str(IN.cell(r, 9).value or "") + "。期限：10 年期；取值日 2026-10-23（股價日 2026-11-05，逾期；與其他個股模型同一取值日，見 README 資料基準日表，X24）")
     r = inrow(wb, "px"); IN.cell(r, 9, str(IN.cell(r, 9).value or "") + "。定位：Yahoo Finance NVDA 日線 2026-11-05 Close 181.60（未調整；原則 45）")
     for k, add in (("q3_rev", "定位：Q2 FY27 新聞稿 Outlook 段：Revenue is expected to be $108.0 billion, plus or minus 2%（原則 45）"),
@@ -676,6 +710,13 @@ def apply(wb, here, ctx):
                  (Q3_10Q + "（前三季折舊與資本支出）[Verified]", SEC + "000104581025000230/"), ("SEC XBRL companyfacts（CIK 0001045810；第二來源）", "https://data.sec.gov/api/xbrl/companyfacts/CIK0001045810.json")):
         SO.cell(sr, 1, a); SO.cell(sr, 2, b); sr += 1
     PLs = wb["PL"]
+    if ctx["MW"]:   # 驗收核對（2026-11-11）：情境 B／C 的 FY2027 校準恆等式差額
+        r = PLs.max_row + 2; PB = ctx["PB"]
+        PLs.cell(r, 1, "核對（情境 B／C；v0.3.6 起）：FY2027 由下而上毛利率 − 錨點毛利率；FY2027 由下而上營收 − 錨點營收。k_rec、c_nh 只以情境 A 校準（上方核對列為 0）；"
+                       "月數加權後 FY2027 含 1/12 的 CY2027，B、C 的一般 DRAM 價格指數 cdx 與 A 不同，故有小差額（不影響報告值：FY2027 報告值三情境皆為錨點）").font = BOLD; r += 1
+        for s_ in "BC":
+            PLs.cell(r, 1, f"  情境 {s_}：毛利率差"); PLs[f"D{r}"] = f"=D{PB[s_]['bugm']}-D{PB[s_]['gm']}"; PLs[f"D{r}"].number_format = "0.0000"; r += 1
+            PLs.cell(r, 1, f"  情境 {s_}：營收差（US$B）"); PLs[f"D{r}"] = f"=D{PB[s_]['bur']}-a27_rev"; PLs[f"D{r}"].number_format = "0.0000"; r += 1
     if ctx["MW"]:
         PLs["A1"].value = ("PL — NVIDIA 損益（US$B；FY2026A、FY2027 為實績與錨點，FY2028 起為模型，顆數用認列顆數＝市場層顆數 × k_rec）。v0.3.6 起 FY(t)＝11/12 × CY(t−1)＋1/12 × CY(t)（原則 49；FY2030 的 1/12 以 CY2029 代替）。"
                            "三情境各一個完整推導區塊（本頁下方），頂端為摘要。FY2028 含 1/12 的 CY2028，情境係數自 FY2028 起部分作用")
