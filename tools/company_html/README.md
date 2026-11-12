@@ -48,4 +48,4 @@ Excel 是計算事實的來源；HTML 只負責呈現，給 Andy 與投資處同
   - `compare`：對照長條，每組自有尺度（`groups`：`name`、`fmt`、`items`〔`name`、`v`、`ref: true`＝指引或共識，灰色〕）。
   - 長條段（`rect.pt`）、折線點（`circle.pt`）、數值標籤（`text.x`）都帶 `data-ref`／`data-v`，檢核一併比對。
   - 只有用到這兩種區塊的公司才輸出額外 CSS，其餘公司 HTML 逐位元組不變。
-  - NVIDIA 樣板設定：`samples/nvidia_theme_sample_html.json`（四張：加速器市場金額與份額 → `drivers`；營收分部 × 三情境、毛利率 vs HBM 成本占比 → `pl`；FY2028 模型 vs 指引 vs 共識 → `recon`）。Andy 認可後併入 `nvidia/html.json` 並重建。
+  - 範例：NVIDIA（`nvidia/gen_html_json.py` 的 `_theme_blocks()`；四張：加速器市場金額與份額 → `drivers`；營收分部 × 三情境、毛利率 vs HBM 成本占比 → `pl`；FY2028 模型 vs 指引 vs 共識 → `recon`）；Andy 2026-11-12 認可）。
