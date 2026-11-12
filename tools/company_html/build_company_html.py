@@ -495,9 +495,14 @@ def render_list(cx, blk):
     return f'<{tag} class="items">' + ''.join(f'<li>{cx.cell_html(i)}</li>' for i in blk['items']) + f'</{tag}>'
 
 
+# 只在橫幅有 ai_note 時輸出（HTML 版面規格 v1.1），既有成品逐位元組不變
+AI_CSS = ".hero-ai{font-size:14px;color:#1f2328;font-weight:600}"
+
+
 def render_hero(cx, h):
     """投資建議橫幅（html.json 頂層 hero，可選；Andy 2026-11-05）：全寬、大字、依建議著色。
-    hero：{"rec": 投資建議規格, "tiles": [[標籤, 主值規格, 副值規格或空字串], …], "note": 規格或省略}"""
+    hero：{"rec": 投資建議規格, "tiles": [[標籤, 主值規格, 副值規格或空字串], …], "note": 規格或省略,
+           "ai_note": 規格或省略（自用 AI 讀法 2 的依賴度一行，HTML 版面規格 v1.1；原則第 10 節第 52 條）}"""
     rec_txt = cx.text_of(h['rec'])
     tone = 'neg' if '放空' in rec_txt else 'pos' if '買進' in rec_txt else 'neu'
     o = [f'<div class="hero hero-{tone}"><div class="hero-rec"><span class="hero-k">投資建議</span>'
@@ -506,10 +511,124 @@ def render_hero(cx, h):
         o.append(f'<div class="hero-t"><div class="hero-l">{cx.cell_html(lab)}</div><div class="hero-n">{cx.cell_html(main)}</div>'
                  + (f'<div class="hero-s">{cx.cell_html(sub)}</div>' if sub else '') + '</div>')
     o.append('</div>')
+    if h.get('ai_note'):
+        o.append(f'<p class="hero-note hero-ai">{cx.cell_html(h["ai_note"])}</p>')
     if h.get('note'):
         o.append(f'<p class="hero-note">{cx.cell_html(h["note"])}</p>')
     o.append('</div>')
     return ''.join(o)
+
+
+THEME_COLORS = ['#0b7a80', '#10a0a7', '#6fc7cb', '#b7e3e4', '#c29a2b', '#6f6bae', '#b4472f', '#8a8c8c', '#d9b65c', '#a3a1d0']
+
+
+def render_theme(cx, blk):
+    """分區主題圖（大圖，Andy 2026-11-11）：長條（stack＝true 堆疊，否則並列）＋折線；折線可用右軸（axis＝'r'）。
+    每個長條段與點帶 data-ref／data-v（class pt）供檢核。"""
+    xs = blk['x'] if isinstance(blk['x'], list) else [str(v) for v in cx.values(split_spec(blk['x'])[0])]
+    for lab in (blk['x'] if isinstance(blk['x'], list) else []):
+        check_prose(lab, 'x 軸標籤')
+    n = len(xs)
+    bars = blk.get('bars', [])
+    lines = blk.get('lines', [])
+    f, fr = blk.get('fmt', 'n0'), blk.get('fmt_r', blk.get('fmt', 'n0'))
+    stack = blk.get('stack', True)
+    W, H, L, R, T, B = 900, 360, 60, 60 if any(l.get('axis') == 'r' for l in lines) else 20, 16, 34
+    bvals = [[cx.b.cell(a, c) for a, c in cx.b.expand(split_spec(b['y'])[0])] for b in bars]
+    bvals = [[(v or 0) for v in row] for row in bvals]
+    lvals = [[cx.b.cell(a, c) for a, c in cx.b.expand(split_spec(l['y'])[0])] for l in lines]
+    left = [v for row in bvals for v in row] + [v for l, row in zip(lines, lvals) if l.get('axis') != 'r' for v in row if v is not None]
+    if bars and stack:
+        left += [sum(row[i] for row in bvals) for i in range(n)]
+    right = [v for l, row in zip(lines, lvals) if l.get('axis') == 'r' for v in row if v is not None]
+    tl = nice_ticks(min(0.0, min(left)) if left else 0.0, (max(left) if left else 1.0) * blk.get('pad', 1.0), 5)   # pad：左軸上方留白（讓右軸折線不壓到長條）
+    tr = nice_ticks(min(0.0, min(right)), max(right), 5) if right else None
+    lo, hi = tl[0], tl[-1]
+    py = lambda v: T + (H - T - B) * (1 - (v - lo) / (hi - lo))
+    pyr = (lambda v: T + (H - T - B) * (1 - (v - tr[0]) / (tr[-1] - tr[0]))) if tr else None
+    cw = (W - L - R) / n
+    px = lambda i: L + cw * (i + 0.5)
+    o = [f'<svg viewBox="0 0 {W} {H}" class="chart big" role="img" aria-label="{esc(cx.text_of(blk["title"]))}">']
+    for t in tl:
+        o.append(f'<line x1="{L}" x2="{W - R}" y1="{py(t):.1f}" y2="{py(t):.1f}" class="grid"/>'
+                 f'<text x="{L - 6}" y="{py(t) + 3.5:.1f}" class="ax" text-anchor="end">{fmt_value(t, f)}</text>')
+    if tr:
+        for t in tr:
+            o.append(f'<text x="{W - R + 6}" y="{pyr(t) + 3.5:.1f}" class="ax">{fmt_value(t, fr)}</text>')
+    for i, lab in enumerate(xs):
+        o.append(f'<text x="{px(i):.1f}" y="{H - 12}" class="ax" text-anchor="middle">{esc(lab)}</text>')
+    bw = cw * 0.62
+    for i in range(n):
+        base = 0.0
+        for k, (b, row) in enumerate(zip(bars, bvals)):
+            refs = cx.b.expand(split_spec(b['y'])[0])
+            sh, co = refs[i]
+            raw = cx.b.cell(sh, co)
+            v = row[i]
+            if stack:
+                x0, w, y0, y1 = px(i) - bw / 2, bw, base + v, base
+                base += v
+            else:
+                w = bw / len(bars)
+                x0, y0, y1 = px(i) - bw / 2 + k * w, v, 0.0
+            ref = f'{sh}!{co}'
+            cx.used.add(ref)
+            col = b.get('color', THEME_COLORS[k % len(THEME_COLORS)])
+            dv = '' if raw is None else f' data-ref="{ref}" data-v="{raw!r}" data-f="{f}"'
+            o.append(f'<rect x="{x0:.1f}" y="{py(max(y0, y1)):.1f}" width="{w:.1f}" height="{abs(py(y0) - py(y1)):.1f}" fill="{col}" class="pt bar"{dv}>'
+                     f'<title>{esc(cx.text_of(b["name"]))}｜{esc(xs[i])}：{fmt_value(v, f)}（{ref}）</title></rect>')
+        if stack and blk.get('total') and bars:      # 合計標籤須取自 xlsx 的合計列（不在產生器內加總）
+            tsh, tco = cx.b.expand(split_spec(blk['total'])[0])[i]
+            tv = cx.b.cell(tsh, tco)
+            cx.used.add(f'{tsh}!{tco}')
+            o.append(f'<text x="{px(i):.1f}" y="{py(base) - 5:.1f}" class="tot x" text-anchor="middle" data-ref="{tsh}!{tco}" data-v="{tv!r}" data-f="{f}">{fmt_value(tv, f)}</text>')
+    for k, (l, row) in enumerate(zip(lines, lvals)):
+        yf = pyr if l.get('axis') == 'r' else py
+        ff = fr if l.get('axis') == 'r' else f
+        refs = cx.b.expand(split_spec(l['y'])[0])
+        col = l.get('color', ['#3b3838', '#c29a2b', '#6f6bae', '#b4472f'][k % 4])
+        dash = ' stroke-dasharray="6 4"' if l.get('dash') else ''
+        pts = [(px(i + l.get('offset', 0)), yf(v)) for i, v in enumerate(row) if v is not None]
+        o.append(f'<polyline points="{" ".join(f"{a:.1f},{b:.1f}" for a, b in pts)}" fill="none" stroke="{col}" stroke-width="2.4"{dash}/>')
+        nm = cx.text_of(l['name'])
+        j = 0
+        for i, ((sh, co), v) in enumerate(zip(refs, row)):
+            if v is None:
+                continue
+            ref = f'{sh}!{co}'
+            cx.used.add(ref)
+            x = px(i + l.get('offset', 0))
+            o.append(f'<circle cx="{x:.1f}" cy="{yf(v):.1f}" r="4" fill="{col}" class="pt" data-ref="{ref}" data-v="{v!r}" data-f="{ff}">'
+                     f'<title>{esc(nm)}｜{esc(xs[i + l.get("offset", 0)])}：{fmt_value(v, ff)}（{ref}）</title></circle>')
+            if l.get('labels'):
+                o.append(f'<text x="{x:.1f}" y="{yf(v) + (18 if l.get('labels') == 'below' else -8):.1f}" class="vl x" text-anchor="middle" fill="{col}" data-ref="{ref}" data-v="{v!r}" data-f="{ff}">{fmt_value(v, ff)}</text>')
+    o.append('</svg>')
+    leg = ''.join(f'<li><i style="background:{b.get("color", THEME_COLORS[k % len(THEME_COLORS)])}"></i>{cx.cell_html(b["name"])}</li>' for k, b in enumerate(bars))
+    leg += ''.join(f'<li><i class="ln" style="border-color:{l.get("color", ["#3b3838", "#c29a2b", "#6f6bae", "#b4472f"][k % 4])}{";border-top-style:dashed" if l.get("dash") else ""}"></i>'
+                   f'{cx.cell_html(l["name"])}{"（右軸）" if l.get("axis") == "r" else ""}</li>' for k, l in enumerate(lines))
+    cap = f'<p class="tcap">{cx.cell_html(blk["caption"])}</p>' if blk.get('caption') else ''
+    return (f'<figure class="theme"><figcaption>{cx.cell_html(blk["title"])}</figcaption><div class="tsc">{"".join(o)}</div>'
+            f'<ul class="tleg">{leg}</ul>{cap}</figure>')
+
+
+def render_compare(cx, blk):
+    """對照長條（每組自有尺度）：groups＝[{name, fmt, items:[{name, v, ref:true?}]}]；標記 ref 的項目（指引、共識）以灰色顯示。"""
+    out = [f'<figure class="theme"><figcaption>{cx.cell_html(blk["title"])}</figcaption><div class="cmp">']
+    for g in blk['groups']:
+        f = g.get('fmt', 'n0')
+        vals = [cx.values(split_spec(it['v'])[0])[0] for it in g['items']]
+        mx = max(abs(v) for v in vals if isinstance(v, (int, float))) or 1
+        out.append(f'<div class="cg"><div class="cgh">{cx.cell_html(g["name"])}</div>')
+        for it, v in zip(g['items'], vals):
+            w = abs(v) / mx * 100
+            cls = 'r' if it.get('ref') else 'm'
+            refs, _ = split_spec(it['v'])
+            out.append(f'<div class="br"><span>{cx.cell_html(it["name"])}</span><div class="bt"><i class="{cls}" style="width:{w:.2f}%"></i></div>'
+                       f'<span class="bv">{cx.cell_html(refs and "@" + refs + "|" + f)}</span></div>')
+        out.append('</div>')
+    cap = f'<p class="tcap">{cx.cell_html(blk["caption"])}</p>' if blk.get('caption') else ''
+    out.append(f'</div>{cap}</figure>')
+    return ''.join(out)
 
 
 def render_block(cx, blk, cfg, root):
@@ -538,6 +657,10 @@ def render_block(cx, blk, cfg, root):
         return render_list(cx, blk)
     if t == 'lines':
         return render_lines(cx, blk, cfg['scenarios'])
+    if t == 'theme':
+        return render_theme(cx, blk)
+    if t == 'compare':
+        return render_compare(cx, blk)
     if t == 'h3':
         return f'<h3>{cx.cell_html(blk["text"])}</h3>'
     raise ValueError(f'未知區塊型別：{t}')
@@ -628,6 +751,10 @@ footer{margin:24px 0 0;padding-top:10px;border-top:1px solid var(--line);font-si
 """
 
 # html.json 頂層 wide_text=true：說明文字（命題、核心問題、各章說明、note）延伸到頁面全寬（Andy 2026-11-05，SpaceX 版面）
+THEME_CSS = """
+.theme{margin:6px 0 16px;padding:14px 16px;border:1px solid var(--line);border-radius:6px;background:var(--surface)}.theme figcaption{font-weight:600;font-size:15px;margin-bottom:6px}.tsc{overflow-x:auto}svg.chart.big{max-width:900px;min-width:560px;margin:0 auto}svg.chart .tot{font-size:11px;fill:var(--ink);font-weight:600}svg.chart .vl{font-size:11px;font-weight:600}.tleg{display:flex;flex-wrap:wrap;gap:4px 16px;list-style:none;margin:6px 0 0;padding:0;font-size:13px;color:var(--muted)}.tleg i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-1px}.tleg i.ln{width:22px;height:0;border-top:2.4px solid;border-radius:0;vertical-align:4px}.tcap{font-size:13px;color:var(--muted);margin:6px 0 0}.cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:12px 28px}.cgh{font-weight:600;font-size:14px;margin:4px 0}.bt i.r{background:var(--axis)}.bt i.m{background:var(--c0)}
+"""
+
 WIDE_CSS = """
 .thesis,.q,.note{max-width:none}
 ol.items{margin:6px 0;padding-left:24px}ol.items li,ul.items li{margin:2px 0}
@@ -714,7 +841,7 @@ def build(cdir, xlsx=None, root=None):
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
 <title>{esc(title)}</title>
-<style>{CSS}{WIDE_CSS if (cfg.get('wide_text') or cfg.get('hero')) else ''}</style>
+<style>{CSS}{WIDE_CSS if (cfg.get('wide_text') or cfg.get('hero')) else ''}{AI_CSS if (cfg.get('hero') or {}).get('ai_note') else ''}{THEME_CSS if any(b.get('type') in ('theme', 'compare') for sc in cfg['sections'] for b in sc['blocks']) else ''}</style>
 </head>
 <body>
 <input type="checkbox" id="refs" class="refs-toggle" aria-label="顯示每個數字的來源儲存格">

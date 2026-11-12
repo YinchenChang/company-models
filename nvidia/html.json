@@ -23,6 +23,12 @@
    "title": "命題與核心問題",
    "blocks": [
     {
+     "type": "note",
+     "parts": [
+      "@README!A21"
+     ]
+    },
+    {
      "type": "h3",
      "text": "命題"
     },
@@ -93,6 +99,61 @@
    "id": "drivers",
    "title": "驅動因子 → 推導量",
    "blocks": [
+    {
+     "type": "theme",
+     "title": "加速器市場金額（情境 A，US$B）與 NVIDIA 金額份額",
+     "x": "@Units!C3:F3",
+     "fmt": "n0",
+     "fmt_r": "p0",
+     "stack": true,
+     "pad": 1.35,
+     "total": "@Units!C24:F24",
+     "bars": [
+      {
+       "name": "@Units!A16",
+       "y": "@Units!C16:F16"
+      },
+      {
+       "name": "@Units!A17",
+       "y": "@Units!C17:F17"
+      },
+      {
+       "name": "@Units!A18",
+       "y": "@Units!C18:F18"
+      },
+      {
+       "name": "@Units!A19",
+       "y": "@Units!C19:F19"
+      },
+      {
+       "name": "@Units!A20",
+       "y": "@Units!C20:F20"
+      },
+      {
+       "name": "@Units!A21",
+       "y": "@Units!C21:F21"
+      },
+      {
+       "name": "@Units!A22",
+       "y": "@Units!C22:F22"
+      },
+      {
+       "name": "@Units!A23",
+       "y": "@Units!C23:F23"
+      }
+     ],
+     "lines": [
+      {
+       "name": [
+        "NVIDIA 金額份額"
+       ],
+       "y": "@Units!C32:F32",
+       "axis": "r",
+       "labels": true
+      }
+     ],
+     "caption": "堆疊＝各平台加速器金額（顆數 × 每顆售價，模組層級）；折線＝NVIDIA 占加速器總金額的比例（右軸）。"
+    },
     {
      "type": "table",
      "caption": "情境驅動（三情境並排，進加權目標價；取自 In 頁最後一節「情境驅動對照」）",
@@ -1450,6 +1511,22 @@
        "sub": "自由現金流（折舊、資本支出、營運資金）"
       },
       [
+       "@In!B202",
+       "@In!D202|p1",
+       "@In!E202|p1",
+       "@In!F202|p1",
+       "@In!C202",
+       "@In!G202|tag"
+      ],
+      [
+       "@In!B203",
+       "@In!D203|p1",
+       "@In!E203|p1",
+       "@In!F203|p1",
+       "@In!C203",
+       "@In!G203|tag"
+      ],
+      [
        "@In!B195",
        "@In!D195|n1",
        "@In!E195|n1",
@@ -1763,22 +1840,6 @@
        "sub": "自由現金流（折舊、資本支出、營運資金）"
       },
       [
-       "@In!B202",
-       "@In!D202|p1",
-       "@In!E202|p1",
-       "@In!F202|p1",
-       "@In!C202",
-       "@In!G202|tag"
-      ],
-      [
-       "@In!B203",
-       "@In!D203|p1",
-       "@In!E203|p1",
-       "@In!F203|p1",
-       "@In!C203",
-       "@In!G203|tag"
-      ],
-      [
        "@In!B190",
        "@In!D190|p1",
        "@In!E190|p1",
@@ -1819,6 +1880,101 @@
    "title": "三情境損益",
    "intro": "FY2026 為實績，FY2027 為錨點（第一、二季實績＋第三季指引＋第四季假設），FY2028 起為模型；顆數用認列顆數（市場層顆數乘以 FY2027 校準的係數）。三情境在 FY2027 相同、FY2028 幾乎相同；情境差異從 FY2029 起出現（顆數係數從日曆年 2028 開始）。",
    "blocks": [
+    {
+     "type": "theme",
+     "title": "營收分部（情境 B）與三情境營收（US$B）",
+     "x": "@PL!C3:G3",
+     "fmt": "n0",
+     "stack": true,
+     "bars": [
+      {
+       "name": "@PL!A19",
+       "y": "@PL!C19:G19"
+      },
+      {
+       "name": "@PL!A20",
+       "y": "@PL!C20:G20",
+       "color": "#c29a2b"
+      }
+     ],
+     "lines": [
+      {
+       "name": [
+        "@PL!A4",
+        "營收"
+       ],
+       "y": "@PL!C5:G5",
+       "color": "#0b7a80",
+       "dash": true
+      },
+      {
+       "name": [
+        "@PL!A16",
+        "營收"
+       ],
+       "y": "@PL!C17:G17",
+       "color": "#3b3838",
+       "labels": true
+      },
+      {
+       "name": [
+        "@PL!A28",
+        "營收"
+       ],
+       "y": "@PL!C29:G29",
+       "color": "#b4472f",
+       "dash": true
+      }
+     ],
+     "caption": "堆疊長條＝情境 B 的 Data Center 與 Edge Computing；三條線＝情境 A／B／C 的合併營收。FY2026A 為實績、FY2027 為錨點。"
+    },
+    {
+     "type": "theme",
+     "title": "毛利率（三情境）與 HBM 成本占營收（情境 B）",
+     "x": "@PL!D3:G3",
+     "fmt": "p0",
+     "stack": false,
+     "bars": [
+      {
+       "name": [
+        "@PL!A164",
+        "（情境 B）"
+       ],
+       "y": "@PL!D164:G164",
+       "color": "#c29a2b"
+      }
+     ],
+     "lines": [
+      {
+       "name": [
+        "@PL!A4",
+        "毛利率"
+       ],
+       "y": "@PL!D9:G9",
+       "color": "#0b7a80",
+       "dash": true
+      },
+      {
+       "name": [
+        "@PL!A16",
+        "毛利率"
+       ],
+       "y": "@PL!D21:G21",
+       "color": "#3b3838",
+       "labels": "below"
+      },
+      {
+       "name": [
+        "@PL!A28",
+        "毛利率"
+       ],
+       "y": "@PL!D33:G33",
+       "color": "#b4472f",
+       "dash": true
+      }
+     ],
+     "caption": "HBM 成本占營收是毛利率的主要變動來源之一；兩者並列，可看記憶體漲價對毛利的壓力在哪一年最大。"
+    },
     {
      "type": "pl",
      "years": "@PL!C3:G3",
@@ -1989,6 +2145,48 @@
       "value": "@Val!B57"
      },
      "fmt": "n2"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A89"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "期間並列與方法占比",
+     "head": [
+      "項目",
+      "數值",
+      "說明"
+     ],
+     "rows": [
+      [
+       "@Val!A202",
+       "@Val!B202|n2",
+       "@Val!E202"
+      ],
+      [
+       "@Val!A203",
+       "@Val!B203|n2",
+       "@Val!E203"
+      ],
+      [
+       "@Val!A206",
+       "@Val!B206|p1",
+       "@Val!E206"
+      ],
+      [
+       "@Val!A207",
+       "@Val!B207|x1",
+       ""
+      ],
+      [
+       "@Val!A208",
+       "@Val!B208|x1",
+       ""
+      ]
+     ]
     },
     {
      "type": "table",
@@ -2867,6 +3065,26 @@
      ],
      "collapse": true,
      "summary": "展開：各分位倍數"
+    },
+    {
+     "type": "table",
+     "caption": "@DCF!A134",
+     "head": [
+      "項目",
+      "數值",
+      "對照",
+      "判定"
+     ],
+     "rows": [
+      [
+       "@DCF!A136",
+       "@DCF!B136|p1",
+       "@DCF!C136",
+       "@DCF!D136"
+      ]
+     ],
+     "collapse": true,
+     "summary": "展開：EBIT 口徑與現金稅率"
     }
    ]
   },
@@ -2875,6 +3093,119 @@
    "title": "對帳：由上而下與由下而上",
    "intro": "@Recon!A1",
    "blocks": [
+    {
+     "type": "compare",
+     "title": "FY2028：模型 vs 公司指引 vs 市場共識",
+     "groups": [
+      {
+       "name": [
+        "營收（US$B）"
+       ],
+       "fmt": "n0",
+       "items": [
+        {
+         "name": [
+          "公司指引推算"
+         ],
+         "v": "@Recon!B5",
+         "ref": true
+        },
+        {
+         "name": [
+          "市場共識推算"
+         ],
+         "v": "@Recon!B7",
+         "ref": true
+        },
+        {
+         "name": [
+          "模型 情境 A"
+         ],
+         "v": "@Recon!C5"
+        },
+        {
+         "name": [
+          "模型 情境 B"
+         ],
+         "v": "@Recon!E5"
+        },
+        {
+         "name": [
+          "模型 情境 C"
+         ],
+         "v": "@Recon!G5"
+        }
+       ]
+      },
+      {
+       "name": [
+        "毛利率"
+       ],
+       "fmt": "p1",
+       "items": [
+        {
+         "name": [
+          "公司指引中點"
+         ],
+         "v": "@Recon!B8",
+         "ref": true
+        },
+        {
+         "name": [
+          "模型 情境 A"
+         ],
+         "v": "@Recon!C8"
+        },
+        {
+         "name": [
+          "模型 情境 B"
+         ],
+         "v": "@Recon!E8"
+        },
+        {
+         "name": [
+          "模型 情境 C"
+         ],
+         "v": "@Recon!G8"
+        }
+       ]
+      },
+      {
+       "name": [
+        "EPS（US$）"
+       ],
+       "fmt": "n2",
+       "items": [
+        {
+         "name": [
+          "市場共識"
+         ],
+         "v": "@Recon!B10",
+         "ref": true
+        },
+        {
+         "name": [
+          "模型 情境 A"
+         ],
+         "v": "@Recon!C10"
+        },
+        {
+         "name": [
+          "模型 情境 B"
+         ],
+         "v": "@Recon!E10"
+        },
+        {
+         "name": [
+          "模型 情境 C"
+         ],
+         "v": "@Recon!G10"
+        }
+       ]
+      }
+     ],
+     "caption": "灰色＝公司指引或市場共識；青綠＝本模型三情境。對照只作事後檢查，校準時未使用。"
+    },
     {
      "type": "table",
      "head": [
@@ -3313,6 +3644,167 @@
        "@Recon!J41|"
       ]
      ]
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A43",
+     "head": [
+      "@Recon!A46",
+      "@Recon!B46",
+      "@Recon!C46",
+      "@Recon!D46"
+     ],
+     "rows": [
+      [
+       "@Recon!A44",
+       "@Recon!B44|sp0",
+       "",
+       ""
+      ],
+      [
+       "@Recon!A45",
+       "@Recon!B45|sp0",
+       "",
+       ""
+      ],
+      [
+       "@Recon!A47",
+       "@Recon!B47|x1",
+       "@Recon!C47|x1",
+       "@Recon!D47|sp1"
+      ],
+      [
+       "@Recon!A48",
+       "@Recon!B48|n2",
+       "@Recon!C48|n2",
+       "@Recon!D48|sp1"
+      ],
+      [
+       "@Recon!A49",
+       "@Recon!B49|n2",
+       "@Recon!C49|n2",
+       "@Recon!D49|sp1"
+      ],
+      [
+       "@Recon!A50",
+       "@Recon!B50|x1",
+       "@Recon!C50|x1",
+       "@Recon!D50|sp1"
+      ],
+      [
+       "@Recon!A51",
+       "@Recon!B51|n2",
+       "@Recon!C51|n2",
+       "@Recon!D51|sp1"
+      ],
+      [
+       "@Recon!A52",
+       "@Recon!B52|n2",
+       "@Recon!C52|n2",
+       "@Recon!D52|sp1"
+      ],
+      [
+       "@Recon!A53",
+       "@Recon!B53|x1",
+       "@Recon!C53|x1",
+       "@Recon!D53|sp1"
+      ],
+      [
+       "@Recon!A54",
+       "@Recon!B54|n2",
+       "@Recon!C54|n2",
+       "@Recon!D54|sp1"
+      ],
+      [
+       "@Recon!A55",
+       "@Recon!B55|n2",
+       "@Recon!C55|n2",
+       "@Recon!D55|sp1"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A57",
+     "head": [
+      "項目",
+      "百分點／值",
+      "說明"
+     ],
+     "rows": [
+      [
+       "@Recon!A59",
+       "@Recon!B59|n2",
+       "@Recon!J59"
+      ],
+      [
+       "@Recon!A60",
+       "@Recon!B60|n2",
+       "@Recon!J60"
+      ],
+      [
+       "@Recon!A61",
+       "@Recon!B61|n2",
+       "@Recon!J61"
+      ],
+      [
+       "@Recon!A62",
+       "@Recon!B62|n2",
+       "@Recon!J62"
+      ],
+      [
+       "@Recon!A63",
+       "@Recon!B63|n2",
+       "@Recon!J63"
+      ],
+      [
+       "@Recon!A64",
+       "@Recon!B64|n2",
+       "@Recon!J64"
+      ],
+      [
+       "@Recon!A65",
+       "@Recon!B65|n2",
+       "@Recon!J65"
+      ],
+      [
+       "@Recon!A66",
+       "@Recon!B66|n2",
+       "@Recon!J66"
+      ],
+      [
+       "@Recon!A67",
+       "@Recon!B67|n2",
+       "@Recon!J67"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Recon!A68"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A70",
+     "head": [
+      "項目",
+      "值",
+      "說明"
+     ],
+     "rows": [
+      [
+       "@Recon!A71",
+       "@Recon!B71|n0",
+       "@Recon!J71"
+      ],
+      [
+       "@Recon!A72",
+       "@Recon!B72",
+       "@Recon!J72"
+      ]
+     ]
     }
    ]
   },
@@ -3321,6 +3813,47 @@
    "title": "敏感度",
    "intro": "@Sens!A1",
    "blocks": [
+    {
+     "type": "table",
+     "caption": "@Sens!A987",
+     "head": [
+      "@Sens!A989",
+      "@Sens!B989",
+      "@Sens!C989",
+      "@Sens!D989",
+      "@Sens!E989",
+      "@Sens!F989",
+      "@Sens!G989",
+      "@Sens!I989",
+      "@Sens!J989"
+     ],
+     "rowgen": {
+      "sheet": "Sens",
+      "rows": "990-1019",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G",
+       "I",
+       "J"
+      ],
+      "fmts": [
+       "",
+       "",
+       "n2",
+       "sp1",
+       "n2",
+       "sp1",
+       "n2",
+       "n2",
+       "n2"
+      ]
+     }
+    },
     {
      "type": "tornado",
      "title": "FY2028 EPS 相對基準的變動（情境 A，一次動一個輸入；未達兩位數百分比）",
@@ -3444,7 +3977,9 @@
       "@Sens!D27",
       "@Sens!E27",
       "@Sens!F27",
-      "@Sens!G27"
+      "@Sens!G27",
+      "@Sens!I27",
+      "@Sens!J27"
      ],
      "rowgen": {
       "sheet": "Sens",
@@ -3456,7 +3991,9 @@
        "D",
        "E",
        "F",
-       "G"
+       "G",
+       "I",
+       "J"
       ],
       "fmts": [
        "",
@@ -3465,6 +4002,8 @@
        "sp1",
        "n2",
        "sp1",
+       "n2",
+       "n2",
        "n2"
       ]
      }
@@ -3475,6 +4014,130 @@
    "id": "status",
    "title": "資料狀態",
    "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "@README!A67"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A68"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "主要失效條件與估值框架並列"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A84",
+      "@README!A85",
+      "@README!A86",
+      "@README!A87",
+      "@README!A88",
+      "@README!A89"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "資料基準日與逾期標示"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A72"
+     ]
+    },
+    {
+     "type": "table",
+     "head": [
+      "@README!A73",
+      "@README!B73",
+      "@README!C73"
+     ],
+     "rows": [
+      [
+       "@README!A74",
+       "@README!B74",
+       "@README!C74"
+      ],
+      [
+       "@README!A75",
+       "@README!B75",
+       "@README!C75"
+      ],
+      [
+       "@README!A76",
+       "@README!B76",
+       "@README!C76"
+      ],
+      [
+       "@README!A77",
+       "@README!B77",
+       "@README!C77"
+      ],
+      [
+       "@README!A78",
+       "@README!B78",
+       "@README!C78"
+      ],
+      [
+       "@README!A79",
+       "@README!B79",
+       "@README!C79"
+      ],
+      [
+       "@README!A80",
+       "@README!B80",
+       "@README!C80"
+      ],
+      [
+       "@README!A81",
+       "@README!B81",
+       "@README!C81"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A82"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "風險登錄（是否建模、理由、觀察指標）"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A91",
+      "@README!A92",
+      "@README!A93",
+      "@README!A94",
+      "@README!A95",
+      "@README!A96"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "主要假設驅動與可證偽的公開指標"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A98",
+      "@README!A99",
+      "@README!A100",
+      "@README!A101",
+      "@README!A102",
+      "@README!A103",
+      "@README!A104"
+     ]
+    },
     {
      "type": "kv",
      "items": [
@@ -3789,6 +4452,15 @@
       ],
       [
        "@README!A61"
+      ],
+      [
+       "@README!A62"
+      ],
+      [
+       "@README!A63"
+      ],
+      [
+       "@README!A64"
       ]
      ]
     },
@@ -3862,7 +4534,15 @@
    "@Val!B199|n2",
    "（市場主流同業法 × 相對倍數調整係數 ",
    "@Val!B198|n2",
-   "）"
+   "）",
+   "",
+   "@README!A68",
+   "",
+   "@README!A69",
+   "",
+   "@README!A70",
+   "",
+   "@README!A71"
   ]
  }
 }

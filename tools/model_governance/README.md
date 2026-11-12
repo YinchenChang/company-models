@@ -12,3 +12,15 @@
 | 來源誘因 | 沒有「來源誘因」欄，或 Interested-party 列該欄空白 |
 
 已套用：SpaceX v0.2.6。其他個股於下次改版時加入建置腳本（做法照 `spacex/build_spacex.py` 的 `BUILD_ID`、`norm_tag`、Sens 指紋三段）。
+
+## 展示層數字一致性（原則第 10 節第 51 條；2026-11-11 起，首例 NVIDIA v0.3.5）
+
+`python3 tools/model_governance/check_display.py <公司資料夾>`（或 `check_governance.py <xlsx> --html <html> --display <公司資料夾>`）
+
+| 檢查 | 失敗條件 |
+|---|---|
+| README 頁 | 關鍵數字（`display_check.json` 的 items：目標價、上檔空間、EPS、倍數等）的格式化值未出現在非沿革列；pattern 擷取到與來源儲存格不同的數字（手寫舊數字） |
+| HTML | 指向來源儲存格的數字 data-v 與來源不同；關鍵數字未出現；HTML 內 README 頁文字與 xlsx 快取值不同 |
+| repo README.md | 版本表（`<!-- version-table: … -->` 標記）與成品重算不一致；沒有以目前 dist 成品為最後一欄的版本表 |
+
+版本表由 `python3 tools/model_governance/version_table.py <公司資料夾> --update` 從 dist（及 `_待刪除/`）的成品產生，不手寫。設定檔 `<公司>/display_check.json`（items、history_re、table_rows）。其他個股於下次改版時加入。
