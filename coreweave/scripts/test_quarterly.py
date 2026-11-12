@@ -72,6 +72,7 @@ ACT = {"revenue": 3.50, "adjEbitda": 2.00, "adjOpInc": 0.22, "capex": 12.0, "mw"
 d = copy_repo('qtest_actual')
 co = json.load(open(os.path.join(d, 'company.json'), encoding='utf-8'))
 co['quarterly']['actuals']['2026Q3'] = ACT
+co['quarterly']['focus'] = '2026Q3'  # v4.14：repo 焦點季已改為 2026Q4；本測試以 Q3 為焦點驗證差距計算
 json.dump(co, open(os.path.join(d, 'company.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 X = build_and_compare(d, '測試 A')
 H = html_quarterly(d)
