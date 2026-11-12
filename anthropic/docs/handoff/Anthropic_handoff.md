@@ -26,6 +26,20 @@
 - **2026-11-04 v0.1.9（TK v21.7 → v21.10；工作單 `docs/workorders/20261104_anthropic_v0.1.9_TK21.10.md`；分支 `claude/anthropic-v0.1.9`，PR 待 chat 端驗收）**：TPU v7、Trainium3 產出比改 FP8 對齊（0.8 → 0.66、0.5 → 0.28）；η 0.468 → 0.604；每 VR 等值 GW 差額絕對值放大（2030 +3.27 → +3.65），覆蓋率、持續轉正年、現金、外部資金需求逐位不變；兩個命題在 TK 低端／高端敏感度下都不翻轉。
 - **Wattonomics 注意（v0.1.9）**：Funding F07／F03 與 v0.1.8 逐位相同；`MODEL_OVERRIDE` 合併後改指 `dist/20261104_Anthropic收支模型_v0_1_9.xlsx`（v0.1.8 dist 已 git rm）。
 
+## 3+. 模型狀態：**v0.2.0**（2026-11-11；初步招股說明書 2026-11-10 滾入＋估值頁 Val 與評等；分支 `claude/anthropic-v0.2.0`，待 chat 端驗收）
+| 項目 | 現況 |
+|---|---|
+| Excel | `model/20261111_Anthropic_v0.2.0.xlsx`（`model/CURRENT`）；v0.1.9 已移 `model/archive/`；成品副本 `dist/20261111_Anthropic收支模型_v0_2_0.xlsx` |
+| HTML | `dist/20261111_Anthropic收支模型_v0_2_0.html`（①之九＝v0.2.0；① 加投資建議 kpi；①之八 以 v0.1.9 當時輸出〔v019、v019_*〕） |
+| 報告 | `docs/reports/20261111_v0.2.0.md`、`20261111_v0.2.0_對照.xlsx`（`tools/make_report_v020.py`） |
+| Tokenomics／OpenAI | v21.10（`eded8e6`，不升）／OpenAI v0.6.4 |
+| 規模 | 16 頁（新增 Val）；SRC_ANT 593；Inputs 275；具名範圍 1,715；公式格 9,262；Checks C01–C233（CHK_Errors 0、CHK_Warnings 4：C69、C70、C89、C231）；parity 情境 78；HTML 情境 177 |
+
+**v0.2.0 結果**：命題 1 差額 2026–2030 −11.00／−7.71／−5.54／−0.35／+5.07、持續轉正 2030、覆蓋率 2030 1.281；命題 2 累計外部資金需求 0、谷底 142.21（2028）；F07 10.320／−37.387／−42.210／4.640／56.259（持續轉正 2029）。估值（獨立核對後）：加權目標價 82.71（DCF 54.37 × 50%＋調整後 Comparable 111.06 × 50%）、市場主流 Comparable 153.44、現價 74（IPO 區間中點）、上檔空間 +11.8%、**評等中立**（修正前 76.60、+3.5%）。開關 INP_234–243（全關＝v0.1.9 逐位）。
+**估值維護**：`ipo_px` 改收盤價或任何 Inputs 改動後，依序跑 `tools/val_snapshots.py <模型>` → 重建 → `tools/val_sens.py <模型>` → 重建（Checks C232／C233 提示過期）。
+**待決**：F2 前九月代理口徑（本版 GAAP −1.260，工作單字面為調整後 4.081，目標價差 −0.10）；DCF 終值占 EV 91.5%；Lambda 34.9 終止則命題 1 提前到 2029；EV／NTM 毛利 Sens 缺同業毛利率。
+**Wattonomics 注意（v0.2.0）**：F07 改變（見上）；`MODEL_OVERRIDE` 合併後改指 `dist/20261111_Anthropic收支模型_v0_2_0.xlsx`（v0.1.9 dist 已 git rm）。
+
 ## 3. 模型狀態：**v0.1.9**（2026-11-04；Tokenomics v21.10 同步，分支 `claude/anthropic-v0.1.9`，不合併，待 chat 端驗收）
 | 項目 | 現況 |
 |---|---|

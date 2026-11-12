@@ -74,7 +74,7 @@ def build(ctx):
     # ── R5b 承諾總額
     K.add("s1a_tbl", "R5b S-1/A：表內合約義務合計（2026-09-30；營運租賃＋融資租賃＋採購承諾）", "$B", only25(f"={S('cmt_s1a_table')}"), "SRC_ANT_496")
     K.add("s1a_lnc", "R5b S-1/A：已簽未起租租賃（表外）", "$B", only25(f"={S('cmt_s1a_leases_nc')}"), "SRC_ANT_504")
-    K.add("s1a_post", "R5b S-1/A：9-30 後新簽或修訂", "$B", only25(f"={S('cmt_s1a_post0930')}"), "SRC_ANT_506")
+    K.add("s1a_post", "R5b S-1/A：9-30 後新簽或修訂（v0.2.0 C1：開關 p_cmt_post_switch＝1 改讀初步招股說明書 105.7）", "$B", only25(f"={I('p_cmt_post_switch')}*{S('cmt_pros_post0930')}+(1-{I('p_cmt_post_switch')})*{S('cmt_s1a_post0930')}"), "SRC_ANT_572；舊：SRC_ANT_506（100.2）")
     K.add("s1a_seg", "R5b S-1/A 三段合計（進基準）＝表內＋未起租＋9-30 後", "$B", only25("=«s1a_tbl@$»+«s1a_lnc@$»+«s1a_post@$»"),
           "s1a_commit_switch＝1 時為第二十五節 W1(b) 三段合計；短期 17.4、期後短期 6.6 照 N2 不進基準", name="COST_S1aCommit3", name_cols="D")
     K.add("s1a_short", "R5b 對照：短期承諾（一年內可無罰取消）＋9-30 後短期（不進基準）", "$B", only25(f"={S('cmt_s1a_short')}+{S('cmt_s1a_post0930_short')}"), "SRC_ANT_503＋507")
@@ -90,7 +90,7 @@ def build(ctx):
     K.add("s1a_nofx", "R5f 對照：無固定金額的其他算力安排估計付款（低 D／高 E；不在總額內，含 Google 額外 TPU 與 AMD；不進基準）", "$B",
           [f"={S('cmt_s1a_nofixed')}_Lo", f"={S('cmt_s1a_nofixed')}_Hi", None, None, None, None], "SRC_ANT_511；欄位不是年度")
     # ── R5d 附條件 213.8
-    K.add("s1a_cond", "R5d S-1/A：附條件或可終止承諾", "$B", only25(f"={S('cmt_s1a_conditional')}"), "SRC_ANT_508")
+    K.add("s1a_cond", "R5d S-1/A：附條件或可終止承諾（v0.2.0 C3：開關 p_cond_cmt_switch＝1 改讀初步招股說明書 186.2）", "$B", only25(f"={I('p_cond_cmt_switch')}*{S('cmt_pros_cond')}+(1-{I('p_cond_cmt_switch')})*{S('cmt_s1a_conditional')}"), "SRC_ANT_569；舊：SRC_ANT_508（213.8）")
     K.add("s1a_cdd", "R5d 自三段合計扣除的附條件額（開關 × 213.8；基準 0＝計入）", "$B", only25(f"={I('s1a_cond_deduct_switch')}*«s1a_cond@$»"),
           "第二十五節 s1u_raw 減本列", name="COST_S1aCondDeduct", name_cols="D")
 
@@ -169,6 +169,6 @@ def checks(ctx):
         ("i1_c930", "v0.1.8 R5e：S-1/A 9-30 現金 − 模型近似（$B）", "=FND_Cash0930Gap", None, "info", "只對照"),
         ("i1_c930r", "v0.1.8 R5e：9-30 差額拆解的其餘項（$B）", "=FND_Cash0930Resid", None, "info", "只對照"),
         ("i1_sbcx", "v0.1.8 核對後：2026 每人股權報酬基準 × 人數 −（股權報酬代理 − 下半年非現金捐贈）（$B；應為 0＝捐贈不沿用到 2027 起）",
-         f"={I('s1f_sbc_proxy_switch')}*({K.name}!$E${K.rows['sbc']}-{K.name}!$E${K.rows['s1s_chc']}-({K.name}!$E${K.rows['s1s_fy']}-{K.name}!$E${K.rows['s1s_chx']}))", 0, "tol", "只在股權報酬代理開關 1 時成立；Checks"),
+         f"={I('s1f_sbc_proxy_switch')}*({K.name}!$E${K.rows['sbc']}-{K.name}!$E${K.rows['s1s_chc']}-{K.name}!$E${K.rows['p_sbcipo']}-({K.name}!$E${K.rows['s1s_fy']}-{K.name}!$E${K.rows['s1s_chx']}))", 0, "tol", "只在股權報酬代理開關 1 時成立；Checks"),
         ("i1_eq", "v0.1.8 R5f：2026 已到位融資 − S-1/A 前九月特別股收入 110.432（$B）", "=FND_CommittedS1aGap", I("s1f_cmt_tol"), "warn", "Q3 無新股權；|差| ≤ 0.5 為 OK"),
     ]
