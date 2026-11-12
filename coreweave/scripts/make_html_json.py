@@ -188,15 +188,15 @@ cfg = {
              "rows": V3(["2026", "2027", "2028", "2029", "2030", "2031", "2032", "tvb", "tv", "nol"], DC, {})},
             {"type": "table", "caption": "Comparable（三情境；主要項目）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
              "rows": V3(["eb", "ev", "nd27", "sh27", "v12"], CO, {"sh27": "n3", "v12": "n2"})},
-            {"type": "table", "collapse": True, "summary": "展開：同業倍數", "head": [f"@Val!{c}{R['PEERH']}" for c in "ABCDEF"],
-             "rowgen": {"sheet": "Val", "rows": f"{R['PEERS'][0]}-{VR['mult']}", "cols": list("ABCDEF"), "fmts": ["", "", "n1", "n2", "", ""]}}]},
+            {"type": "table", "collapse": True, "summary": "展開：同業倍數", "head": [f"@Val!{c}{R['PEERH']}" for c in "ABCDEGHIJ"],
+             "rowgen": {"sheet": "Val", "rows": f"{R['PEERS'][0]}-{VR['mult']}", "cols": list("ABCDEGHIJ"), "fmts": ["", "", "n1", "n2", "", "p1", "n2", "p1", "p1"]}}]},
         {"id": "revdcf", "title": "反向 DCF：現價隱含什麼", "intro": "@RevDCF!A2", "blocks": [
             {"type": "table", "head": [f"@RevDCF!{c}4" for c in "ABCDGHIJ"],
              "rowgen": {"sheet": "RevDCF", "rows": f"5-{RVN['dn'] if 'dn' in RVN else RVN['px']}", "cols": list("ABCDGHIJ"), "fmts": ["", "", "n2", "n3", "n2", "n2", "sp1", "n1"]}},
             {"type": "note", "parts": ["@RevDCF!A3"]}]},
         {"id": "recon", "title": "對帳：公司指引、公司實況、公司宣稱、容量", "intro": "@Recon!A1", "blocks": [
             {"type": "table", "caption": "@Recon!A4", "head": REC_HEAD, "rows": rrows(["rev26", "rev26pos", "aoi26", "aoi26pos", "cx26", "cxq4", "cxq4pos", "rev4req"])},
-            {"type": "table", "collapse": True, "summary": "展開：指引的其他項目", "head": REC_HEAD, "rows": rrows(["arr", "int4", "int4r", "rev4mw"], {"int4r": "p2", "rev4mw": "n0"})},
+            {"type": "table", "collapse": True, "summary": "展開：指引的其他項目", "head": REC_HEAD, "rows": rrows(["arr", "int4", "int4pos", "intnew", "int4r", "aoiq4", "depq4", "rev4mw"], {"int4r": "p2", "rev4mw": "n0", "depq4": "p1"})},
             {"type": "table", "caption": "公司實況驗證與公司宣稱的新約價格", "head": REC_HEAD, "rows": rrows(["q9rev", "q3pm", "q3eb", "j4m", "j4tk", "j4s"] + (["j4req"] if "j4req" in RCR else []), {"q3eb": "p1"})},
             {"type": "table", "collapse": True, "summary": "展開：RPO、類比、Wattonomics、舊法", "head": REC_HEAD, "rows": rrows(["rpo27", "rpo29", "iren", "wat26", "wat30", "old", "cons"], {"wat26": "n0", "wat30": "n0"})}]},
         {"id": "sens", "title": "敏感度", "intro": "@Sens!A1", "blocks": tor("D", "加權目標價相對基準：輸入取低值") + tor("F", "加權目標價相對基準：輸入取高值") + [
@@ -216,7 +216,7 @@ cfg = {
             {"type": "h3", "text": "附錄：版本要點與目標價變動拆解"},
             {"type": "list", "collapse": True, "summary": "展開：版本要點", "items": [f"@README!A{RL['v50']}"] + ([f"@README!A{RL['dec']}"] if "dec" in RL else [])},
             {"type": "h3", "text": "風險登錄（未進主模型的尾部風險）"},
-            {"type": "list", "collapse": True, "summary": "展開：風險、是否建模、理由、觀察指標", "items": [f"@README!A{RL['risk'] + k}" for k in range(1, 6)]},
+            {"type": "list", "collapse": True, "summary": "展開：風險、是否建模、理由、觀察指標", "items": [f"@README!A{RL['risk'] + k}" for k in range(1, 7)]},
             {"type": "h3", "text": "「未取得」與「找不到」清單"},
             {"type": "scan", "needle": "找不到", "collapse": True, "summary": "展開：標為「找不到」的輸入與來源", "sheets": {"In": ["H", "I"], "Val": ["A"]}, "empty": "沒有標為找不到的項目。"}]},
     ],
