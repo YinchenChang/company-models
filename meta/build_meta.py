@@ -686,6 +686,8 @@ for s in "ABC":
     d = _m(dep_row(it_src, "life_it"), dep_row(it_g, "life_it", True)); d["26"] = f"=F{r}"; tput("da_it", "新增 AI 折舊：IT（含在建工程；成長與汰換批次 dep_lag 年後起提，基準 0）", "US$B", d, "#,##0.00")
     d = _m(dep_row(fac_src, "life_fac"), dep_row(fac_g, "life_fac", True)); d["26"] = f"=F{r}"; tput("da_fac", "新增 AI 折舊：機房（含在建工程；同上）", "US$B", d, "#,##0.00")
     tput("da_ai", "新增 AI 折舊合計（含在建工程轉入）", "US$B", {p: f"={COL[p]}{TS['da_it']}+{COL[p]}{TS['da_fac']}" for p in FC + ["26"]}, "#,##0.00", bold=True)
+    _d0i = _m(dep_row(it_src, "life_it"), dep_row(it_g, "life_it")); _d0f = _m(dep_row(fac_src, "life_fac"), dep_row(fac_g, "life_fac"))
+    tput("da_ai0", "  對照：新增 AI 折舊（dep_lag＝0；終值 NOPAT 用，使 dep_lag 只作用於明確期）", "US$B", {p: _d0i[p] + "+" + _d0f[p][1:] for p in FC}, "#,##0.00")
     TH.cell(r, 1, "E. 自用 AI 增量營運成本（相對評價日在役機隊；基準機隊成本已在 FoA 利益率內）").font = BOLD; r += 1
     SUMOP = lambda c: "+".join(f"{c}{TS['avg_' + b]}*opx_{b}" for b, _ in BK)
     tput("int_opex", "自用 AI 增量營運費用（Tokenomics IF_OpexGW）", "US$B", {**{p: f"=(({SUMOP(COL[p])})-base_tot*opx0)/1000*{LEN[p]}" for p in FC}, "26": f"=F{r}"}, "#,##0.00")
@@ -1009,6 +1011,7 @@ for s in "ABC":
     drow("cx", "− 資本支出（含融資租賃本金）", lambda p: f"=CF!{COL[p]}{C['cx']}")
     drow("wc", "＋營運資金變動", lambda p: f"=CF!{COL[p]}{C['wc']}")
     drow("ag", "＋協議付款（負值；不可抵稅）", lambda p: f"=CF!{COL[p]}{C['ag']}")
+    drow("dadf", "終值調整：未延後新增 AI 折舊 − 本列折舊（dep_lag＝0 時為 0）", lambda p: f"=Thesis!{COL[p]}{TS['da_ai0']}-Thesis!{COL[p]}{TS['da_ai']}")
     drow("ufcf", "無槓桿自由現金流（財報口徑）", lambda p: f"={VC[p]}{D['nopat']}+{VC[p]}{D['da']}-{VC[p]}{D['cx']}+{VC[p]}{D['wc']}+{VC[p]}{D['ag']}")
     drow("shd", "自用 AI 影子效益＋租用算力租金加回 × k（稅後；讀法 2 加入）", lambda p: f"=(PL!{COL[p]}{P['shadow']}+k_ai*Thesis!{COL[p]}{TS['rentl']})*(1-tax)")
     drow("t", "折現年數（評價日 2026-09-30 起，期中）", lambda p: "=t_q4" if p == "2H" else f"={PY[p]}+mid-t_val", "0.00")
@@ -1020,7 +1023,7 @@ V.cell(r, 1, "DCF 彙總").font = BOLD; r += 1
 hdr(V, r, ["項目", "情境 A", "情境 B", "情境 C", "說明"]); r += 1
 TV_T = lambda s: f"($M${DC[s]['t']}+mid)"
 vput("pvx", "明確期現值合計（財報口徑）", S3(lambda s: f"=SUM(F{DC[s]['pv']}:M{DC[s]['pv']})"))
-vput("tvv", "終值（FY2032 年底，財報口徑）", S3(lambda s: f"=IF(tv_alt=1,(M{DC[s]['ufcf']}-M{DC[s]['ag']})*(1+g_tv)/(wacc-g_tv),M{DC[s]['nopat']}*(1+g_tv)*(1-g_tv/ronic)/(wacc-g_tv))"),
+vput("tvv", "終值（FY2032 年底，財報口徑；折舊用未延後值，dep_lag 只作用於明確期）", S3(lambda s: f"=IF(tv_alt=1,(M{DC[s]['ufcf']}-M{DC[s]['ag']}+M{DC[s]['dadf']}*tax)*(1+g_tv)/(wacc-g_tv),(M{DC[s]['nopat']}-M{DC[s]['dadf']}*(1-tax))*(1+g_tv)*(1-g_tv/ronic)/(wacc-g_tv))"),
      note="價值驅動：NOPAT(FY2033) ×(1 − g ÷ RONIC) ÷ (WACC − g)；協議付款 FY2033 以後列類債")
 vput("pvtv", "終值現值", S3(lambda s: f"={X3(s)}{VR_['tvv']}/(1+wacc)^{TV_T(s)}"))
 vput("ev1", "企業價值 EV（讀法 1：只計自用 AI 成本）", S3(lambda s: f"={X3(s)}{VR_['pvx']}+{X3(s)}{VR_['pvtv']}"))
@@ -1486,6 +1489,7 @@ SE.cell(r, 1, "模型狀態（CURRENT＝Sens、HTML、README 與本檔輸入一�
 SE.cell(r, 4, f'=IF(AND(ISNUMBER(D{r - 1}),ISNUMBER(D{SE_STALE}),ABS(D{SE_STALE}-D{SE_BASE})<0.005,ABS(D{r - 2}-D{r - 1})<=0.000000001*MAX(1,ABS(D{r - 1}))),"CURRENT","STALE")')
 SE_STATUS = r; r += 1
 SE.cell(r, 1, "build_id（README、Sens、HTML 三處相同）"); SE.cell(r, 4, BUILD_ID); SE_BID = r; r += 1
+SE.cell(r, 1, "龍捲風圖（HTML）：|變動| ≤ 0.01% 的案例只列在下方全部案例表"); SE_TORN = r; r += 1
 for _k, _sd, _v, _r in SE_ROWS:                      # v0.1.3：Recon 驗證列取 Sens 重算值
     if _k == "ag_acc_x": RC.cell(RCM["agaccv"], 2, f"=Sens!D{_r}-Sens!D{SE_BASE}").number_format = "+#,##0.00"
 SE.column_dimensions["A"].width = 46; SE.column_dimensions["B"].width = 36; SE.column_dimensions["G"].width = 24
@@ -1618,7 +1622,7 @@ for rr in range(1, 9): RD.cell(rr, 1).alignment = Alignment(wrap_text=True, vert
 
 if os.environ.get("ROWMAP"):
     json.dump({"T": T, "T0": T0, "SR": SR, "PR": PR_, "CR": CR, "VR": VR_, "DC": DC, "GATE": GATE, "SUMROW": SUMROW, "SE_ROWS": SE_ROWS, "SE_BASE": SE_BASE,
-               "SE_STALE": SE_STALE, "SE_FP": SE_FP, "SE_STATUS": SE_STATUS, "SE_BID": SE_BID, "FINCHK": FINCHK, "RC6": RC6, "RC7": RC7, "RC8": RC8, "IN_ROW": IN_ROW, "RCR": RCR, "RCM": RCM, "QR": QR},
+               "SE_STALE": SE_STALE, "SE_FP": SE_FP, "SE_STATUS": SE_STATUS, "SE_BID": SE_BID, "SE_TORN": SE_TORN, "FINCHK": FINCHK, "RC6": RC6, "RC7": RC7, "RC8": RC8, "IN_ROW": IN_ROW, "RCR": RCR, "RCM": RCM, "QR": QR},
               open(os.environ["ROWMAP"], "w", encoding="utf-8"), ensure_ascii=False, indent=0)
 wb.save(A.out)
 print("saved", A.out)

@@ -195,6 +195,10 @@ SPEC = {
           "1. 合併層": ["營收|FY2027", "營收|FY2028", "營業利益（財報口徑）|FY2028", "自由現金流|FY2027"]},
 }
 cfg = relayout(cfg, X, SPEC)
+for _sec in cfg["sections"]:   # 龍捲風排除門檻說明（取自 Sens 頁；relayout 會改寫龍捲風標題，故另加說明區塊）
+    if _sec["id"] == "sens":
+        _i = next(i for i, b in enumerate(_sec["blocks"]) if b["type"] == "tornado")
+        _sec["blocks"].insert(_i, {"type": "note", "parts": [f"@Sens!A{rm['SE_TORN']}"]})
 
 
 # HTML 版面規格 v1.2：分區主題圖（照 nvidia/gen_html_json.py 的 _theme_blocks()；列號依標籤找、數字全取 xlsx）
