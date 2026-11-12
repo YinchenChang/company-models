@@ -1278,6 +1278,12 @@ for key, lab, note in (("kreq", "支持現價所需 k（加權目標價＝現價
     elif o:
         RC.cell(r, 2, f"> {o.get('k_cap')}"); RC.cell(r, 3, o.get("tp_at_cap"))
     RC.cell(r, 4, note); RC6[key] = r; r += 1
+# HTML 版面規格 v1.2 主題圖用橫列（數字取自上方 6a、6b；不另加總）
+RC.cell(r, 1, "  主題圖橫列：k"); [RC.cell(r, 2 + i, f"=A{RC6[f'k{kv:.2f}']}") for i, kv in enumerate((0, 0.25, 0.5, 0.75, 1.0, 1.25))]; RC6["hk"] = r; r += 1
+RC.cell(r, 1, "  主題圖橫列：加權目標價"); [RC.cell(r, 2 + i, f"=B{RC6[f'k{kv:.2f}']}") for i, kv in enumerate((0, 0.25, 0.5, 0.75, 1.0, 1.25))]; RC6["htp"] = r; r += 1
+RC.cell(r, 1, "  主題圖橫列：現價"); [RC.cell(r, 2 + i, "=px") for i in range(6)]; RC6["hpx"] = r; r += 1
+RC.cell(r, 1, "  主題圖橫列：買進門檻（現價 ×(1＋25%)）"); [RC.cell(r, 2 + i, "=px*1.25") for i in range(6)]; RC6["hbuy"] = r; r += 1
+RC.cell(r, 1, "  主題圖圖說"); RC.cell(r, 2, f'="長條＝各 k 的加權目標價（整本重算）；灰線＝現價、虛線＝買進門檻。支持現價所需 k＝"&IF(ISNUMBER(B{RC6["kreq"]}),TEXT(B{RC6["kreq"]},"0.00"),"未重算")&"、評等翻轉 k＝"&IF(ISNUMBER(B{RC6["kflip"]}),TEXT(B{RC6["kflip"]},"0.00"),"未重算")&"；主值 k＝"&TEXT(k_ai,"0.00")&"（讀法 2，假設）。"'); RC6["hcap"] = r; r += 1
 RC.cell(r, 1, "  對照：線性近似 (現價 − 讀法 1) ÷ (主值 − 讀法 1)（驗收報告 0.425；正式值以上列整本重算為準）")
 RC.cell(r, 2, f"=(px-Val!B{VR_['tp_r1']})/(Val!B{VR_['tp']}-Val!B{VR_['tp_r1']})").number_format = "0.000"; RC6["klin"] = r; r += 1
 RC.cell(r, 1, "  k 梯度的建置基準檢查：k＝1 列 − 本檔加權目標價（應約為 0；不為 0 表示 kreq 快照過期）")
@@ -1327,6 +1333,9 @@ RC.cell(r, 1, "Wattonomics：WIF_PlayerGW_YE_meta（主路徑，上線年底）"
 for j, y in enumerate(range(2026, 2033)):
     c = RC.cell(r, 2 + j, WAT["names"][f"WIF_PlayerGW_YE_meta_{y}"]); c.number_format = "0.00"; c.font = BLUE
 RC.cell(r, 9, f"wattonomics/data/{WAT_FN}（Interface!F27:L27；Wattonomics 由資本支出付款年轉上線年推得，讀 In Y9 個股模型基準）"); RC7["wat"] = r; r += 1
+RC.cell(r, 1, "AI 資本支出（情境 B，含汰換；US$B）")
+for j, mc in enumerate("GHIJKLM"): RC.cell(r, 2 + j, (f"=aicx_9m+Thesis!F{TB['cx_ai']}" if mc == "G" else f"=Thesis!{mc}{TB['cx_ai']}")).number_format = "0.0"
+RC.cell(r, 9, "Thesis 情境 B；FY2026＝9M 實績（aicx_9m）＋Q4 26（主題圖用）"); RC7["cxai"] = r; r += 1
 RC.cell(r, 1, "Wattonomics：WIF_PlayerGW_YE_meta_SiteOnly（純站點證據）")
 for j, y in enumerate(range(2026, 2033)):
     c = RC.cell(r, 2 + j, WAT["names"][f"WIF_PlayerGW_YE_meta_SiteOnly_{y}"]); c.number_format = "0.00"; c.font = BLUE

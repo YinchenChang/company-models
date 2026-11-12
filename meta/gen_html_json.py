@@ -42,7 +42,7 @@ RC6, RC7, RC8 = rm["RC6"], rm["RC7"], rm["RC8"]
 rend = wb["Recon"].max_row
 RC6_q = find("Recon", "反解：達到指引中點")
 se_end = max(x[3] for x in rm["SE_ROWS"])
-TOR_ROWS = ",".join(str(x[3]) for x in rm["SE_ROWS"] if abs(wb["Sens"].cell(x[3], 5).value or 0) > 1e-6)
+TOR_ROWS = ",".join(str(x[3]) for x in rm["SE_ROWS"] if abs(wb["Sens"].cell(x[3], 5).value or 0) > 1e-4)
 TB = T["B"]
 thh = TB["adds"] - 2
 th_rows = ",".join(str(TB[k]) for k in ("adds", "end", "avg_inc", "cx_ai", "cx_tot", "da_ai", "int_opex", "int_cost", "da_b", "shadow", "sh_vs"))
@@ -176,7 +176,8 @@ SPEC = {
   ["自用 AI 算力", [
     ["資本支出與 AI 占比", ["cx_na", "cx_23", "ai_23", "cx_24", "cx_25", "capex_9m", "capex_g", "cx27_k", "cx27_up", "cx27_B", "cx27_A", "cx27_C", "a28", "conv_mw", "bd_delay"]],
     ["機隊組成與機房", ["selfb", "am_26", "am_27", "am_28"]],
-    ["在建工程與折舊", ["cip_0", "cip_q", "cip_ai", "cip_it", "life_it", "ec_press", "life_fac", "life_na", "phi_0", "phi_q4", "da_base"]],
+    ["自用在役容量（Wattonomics 上線時程）", ["mw_src", "wif_2026", "wif_2027", "wif_2028", "wif_2029", "wif_2030", "wif_2031", "wif_2032"]],
+    ["在建工程與折舊", ["cip_0", "cip_q", "cipd_q4", "cip_ai", "cip_it", "life_it", "ec_press", "life_fac", "life_na", "phi_0", "phi_q4", "da_base"]],
     ["租用算力（只進敏感度）", ["rent_l"]],
     ["每 MW 成本（Tokenomics 快照）", ["he_h", "he_b2", "he_b3", "he_vr", "opx_h", "opx_b2", "opx_b3", "opx_vr", "cit_h", "cit_b2", "cit_b3", "cit_vr", "dpi_h", "dpi_b2", "dpi_b3", "cfac"]],
     ["自用 AI 讀法", ["internal_ai_reading", "k_ai"]]]],
@@ -194,5 +195,41 @@ SPEC = {
           "1. 合併層": ["營收|FY2027", "營收|FY2028", "營業利益（財報口徑）|FY2028", "自由現金流|FY2027"]},
 }
 cfg = relayout(cfg, X, SPEC)
+
+
+# HTML 版面規格 v1.2：分區主題圖（照 nvidia/gen_html_json.py 的 _theme_blocks()；列號依標籤找、數字全取 xlsx）
+def _theme_blocks():
+    h7 = r7 + 1
+    drv = {"type": "theme", "title": "自用 AI 在役容量（模型 vs Wattonomics，GW，右軸）與 AI 資本支出（情境 B，US$B）", "x": f"@Recon!B{h7}:H{h7}",
+           "fmt": "n0", "fmt_r": "n1", "stack": False, "pad": 1.25,
+           "bars": [{"name": f"@Recon!A{RC7['cxai']}", "y": f"@Recon!B{RC7['cxai']}:H{RC7['cxai']}", "color": "#c29a2b"}],
+           "lines": [{"name": f"@Recon!A{RC7['mod']}", "y": f"@Recon!B{RC7['mod']}:H{RC7['mod']}", "axis": "r", "color": "#3b3838", "labels": True},
+                     {"name": f"@Recon!A{RC7['cx']}", "y": f"@Recon!B{RC7['cx']}:H{RC7['cx']}", "axis": "r", "color": "#b4472f", "dash": True}],
+           "caption": "長條＝情境 B 的 AI 資本支出；實線＝本模型在役容量（讀 Wattonomics 上線時程）；虛線＝資本支出當年轉在役的原口徑（只作敏感度與對照）。"}
+    hp = PR["A"]["ads"] - 1
+    plc = {"type": "theme", "title": "Family of Apps 營收（長條）與營業利益（線，右軸）× 情境 A／B／C（US$B）", "x": f"@PL!G{hp}:M{hp}",
+           "fmt": "n0", "fmt_r": "n0", "stack": False, "pad": 1.2,
+           "bars": [{"name": ["情境 ", s, "：營收"], "y": f"@PL!G{PR[s]['foa']}:M{PR[s]['foa']}", "color": c}
+                    for s, c in (("A", "#7fb8bb"), ("B", "#3b3838"), ("C", "#d9a08f"))],
+           "lines": [{"name": ["情境 ", s, "：營業利益"], "y": f"@PL!G{PR[s]['oi_foa']}:M{PR[s]['oi_foa']}", "axis": "r", "color": c, "dash": s != "B", "labels": s == "B"}
+                     for s, c in (("A", "#0b7a80"), ("B", "#3b3838"), ("C", "#b4472f"))],
+           "caption": "長條＝三情境的 Family of Apps 營收；線＝Family of Apps 營業利益（財報口徑，已扣自用 AI 增量成本與新增 AI 折舊）。"}
+    val = {"type": "theme", "title": "k 梯度：加權目標價 vs 現價（US$／股）", "x": f"@Recon!B{RC6['hk']}:G{RC6['hk']}", "fmt": "n0", "stack": False, "pad": 1.1,
+           "bars": [{"name": f"@Recon!A{RC6['htp']}", "y": f"@Recon!B{RC6['htp']}:G{RC6['htp']}", "color": "#0b7a80"}],
+           "lines": [{"name": f"@Recon!A{RC6['hpx']}", "y": f"@Recon!B{RC6['hpx']}:G{RC6['hpx']}", "color": "#3b3838"},
+                     {"name": f"@Recon!A{RC6['hbuy']}", "y": f"@Recon!B{RC6['hbuy']}:G{RC6['hbuy']}", "color": "#b4472f", "dash": True}],
+           "caption": f"@Recon!B{RC6['hcap']}"}
+    hc = CR["B"]["ni"] - 1
+    gate_ = {"type": "theme", "title": "收支關卡：逐年自由現金流扣股利（長條）與新增舉債（線）× 情境 A／B／C（US$B）", "x": f"@CF!G{hc}:K{hc}", "fmt": "n0", "stack": False,
+             "bars": [{"name": ["情境 ", s, "：自由現金流扣股利"], "y": f"@CF!G{CR[s]['fcfd']}:K{CR[s]['fcfd']}", "color": c} for s, c in (("A", "#7fb8bb"), ("B", "#3b3838"), ("C", "#d9a08f"))],
+             "lines": [{"name": ["情境 ", s, "：新增舉債"], "y": f"@CF!G{CR[s]['plug']}:K{CR[s]['plug']}", "color": c, "dash": s != "B", "labels": s == "B"} for s, c in (("A", "#0b7a80"), ("B", "#c29a2b"), ("C", "#b4472f"))],
+             "caption": "長條＝各情境逐年自由現金流扣股利（收支關卡為其五年合計）；線＝現金低於最低現金時補足的新增舉債。"}
+    S = {s_["id"]: s_ for s_ in cfg["sections"]}
+    S["drivers"]["blocks"].insert(0, drv)
+    S["pl"]["blocks"][0:0] = [plc, gate_]
+    S["valuation"]["blocks"].insert(0, val)
+
+
+_theme_blocks()
 json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")
