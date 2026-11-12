@@ -229,6 +229,14 @@ inp("cip_ai", "在建工程中 AI 占比", "%", 0.8, 0.9, 1.0, "Assumed", "判�
 inp("cip_it", "在建工程中 IT（伺服器與網通）占比", "%", 0.5, 0.6, 0.7, "Assumed", "判斷：Meta 未揭露；Alphabet 2026Q2 約 60%", "IT 依 life_it、其餘依 life_fac 折舊")
 inp("life_it", "AI IT 折舊年限（年；汰換週期）", "年", 5, 6, 7, "Assumed", "Tokenomics IF_DeprLifeIT 6 年；Meta 自 2025 起伺服器耐用年限 5.5 年（公開資訊，未入事實總帳）",
     "整數年（汰換排程用）。完整 10-Q 未載耐用年限（只寫會計政策與 10-K 相比無重大變動，PDF 第 12 頁）→ 不改；10-Q 隱含：Q3 伺服器折舊 5.34 × 4 ÷ 伺服器毛額 133.6 ≈ 6.3 年（含未滿一年資產，粗估）")
+inp("cipd_q4", "在建工程折舊起提：1＝Q4 26 全額起提（v0.2.0 初版做法，只進 Sens）；0＝隨 A2 轉在役時程", "x", None, 0, 1, "Assumed",
+    "Andy 2026-11-12 09:05 照預設：折舊跟著轉入在役時程起提（與 cip_q 同步）", "", judg=True)
+inp("mw_src", "自用在役容量來源：1＝Wattonomics 上線時程（基準）；0＝資本支出當年轉在役（Sens）", "x", 0, 1, None, "Assumed",
+    "Andy 2026-11-12 09:05 照預設對帳單選項 (a)；原則第 10 節第 54 條（改寫）：自用在役容量讀 Wattonomics 上線時程，資本支出推得的 MW 只作 Sens 與對照",
+    "成本端（資本支出、折舊基礎）仍由資本支出推得；情境 A／C 以累計 AI 成長資本支出比例縮放", judg=True)
+for _y in range(2026, 2033):
+    inp(f"wif_{_y}", f"Wattonomics Meta 上線 GW（年底）{_y}：WIF_PlayerGW_YE_meta_{_y}", "GW", None, WAT["names"][f"WIF_PlayerGW_YE_meta_{_y}"], None, "Derived",
+        f"wattonomics/data/{WAT_FN}（{WAT['source']['file']}，Interface!{'DEFGHIJKL'[_y - 2024]}27）", "上游權威（三層規則）；個股不改值" if _y == 2026 else "")
 inp("ec_press", "經濟汰換壓力：GPU 經濟壽命 4 年（IT 汰換提前 2 年；1＝是，只進 Sens）", "x", None, 0, 1, "Assumed",
     "原則第 10 節第 27 條：會計年限（life_it，Tokenomics IF_DeprLifeIT 6 年）與經濟壽命分開看；4 年為壓力值，待 Tokenomics 登錄（證據經 交流/ 送 Tokenomics）",
     "只改汰換排程（汰換資本支出與基礎折舊遞減提前 2 年）；會計折舊年限不變。不需驗收清單 X10：不在個股層改 TK 年限", judg=True)
@@ -623,21 +631,31 @@ for s in "ABC":
             q = COL[prevp(p)]
             v[p] = f"={q}{r}+{COL[p]}{ADDS}*{addmix(p, b)}" + (f"+{CIPB[b]}*({COL[p]}${CIPF_END}-{q}${CIPF_END})" if CIPB[b] else "")
         v["26"] = f"=F{r}"
-        tput("end_" + b, f"期末在役 MW：{nm}", "MW", v, note="9M26 欄＝評價日在役；之後＋新增 MW＋在建工程轉入（A2 時程）" if b == "h" else None)
+        tput("ecx_" + b, f"支出推得期末 MW（資本支出當年轉在役）：{nm}", "MW", v, note="9M26 欄＝評價日在役；之後＋新增 MW＋在建工程轉入（A2 時程）；v0.2.0 起只作 Sens（mw_src＝0）與對照" if b == "h" else None)
     assert r == END
-    tput("end", "期末在役 MW（自用 AI；9M26 欄＝評價日在役）", "MW", {p: "=" + "+".join(f"{COL[p]}{TS['end_' + b]}" for b, _ in BK) for p in ["1H"] + FC + ["26"]})
+    tput("end_cx", "支出推得期末 MW 合計（資本支出當年轉在役；Sens 與對照）", "MW", {p: "=" + "+".join(f"{COL[p]}{TS['ecx_' + b]}" for b, _ in BK) for p in ["1H"] + FC + ["26"]})
+    TS["cum"] = r; r += 1   # 累計 AI 成長資本支出：C 節建完後回填
+    TS["end"] = r; r += 1   # 期末在役 MW（自用 AI）：所有情境建完後回填（Wattonomics 上線時程 × 累計資本支出比例）
+    for b, nm in BK:
+        v = {"1H": f"=E{TS['ecx_' + b]}"}
+        for p in FC: v[p] = f"=IF({COL[p]}{TS['end_cx']}>0,{COL[p]}{TS['ecx_' + b]}*{COL[p]}{TS['end']}/{COL[p]}{TS['end_cx']},0)"
+        v["26"] = f"=F{r}"
+        tput("end_" + b, f"期末在役 MW：{nm}（世代組合同支出推得路徑）", "MW", v)
     for b, nm in BK:
         v = {}
         for p in FC:
             q = COL[prevp(p)]
-            v[p] = f"=({q}{TS['end_' + b]}+{COL[p]}{TS['end_' + b]})/2" + (f"+{CIPB[b]}*({COL[p]}${CIPF_AVG}-({q}${CIPF_END}+{COL[p]}${CIPF_END})/2)" if CIPB[b] else "")
-        tput("avg_" + b, f"平均在役 MW：{nm}", "MW", v, note="期初與期末平均；在建工程轉入部分改用逐季平均（A2）" if b == "h" else None)
+            v[p] = f"=({q}{TS['end_' + b]}+{COL[p]}{TS['end_' + b]})/2" + (f"+(mw_src=0)*{CIPB[b]}*({COL[p]}${CIPF_AVG}-({q}${CIPF_END}+{COL[p]}${CIPF_END})/2)" if CIPB[b] else "")
+        tput("avg_" + b, f"平均在役 MW：{nm}", "MW", v, note="期初與期末平均；mw_src＝0 時在建工程轉入部分改用逐季平均（A2）" if b == "h" else None)
     tput("avg", "平均在役自用 AI MW", "MW", {p: "=" + "+".join(f"{COL[p]}{TS['avg_' + b]}" for b, _ in BK) for p in FC})
     tput("avg_inc", "  其中：相對評價日在役機隊的增量 MW", "MW", {p: f"={COL[p]}{TS['avg']}-base_tot" for p in FC})
     TH.cell(r, 1, "C. AI 資本支出（新增 MW × 每 MW；汰換只換 IT，VR200 錨）").font = BOLD; r += 1
     SUMADD = lambda p: "+".join(f"{addmix(p, b)}*cit_{b}" for b, _ in BK)
     tput("cx_it", "AI IT 資本支出（成長）", "US$B", {**{p: f"={COL[p]}{ADDS}*({SUMADD(p)})/1000" for p in FC}, "26": f"=F{r}"}, "#,##0.00")
     tput("cx_fac", "AI 機房資本支出（自建比例 × IF_CapexFacility）", "US$B", {**{p: f"={COL[p]}{ADDS}*selfb*cfac/1000" for p in FC}, "26": f"=F{r}"}, "#,##0.00")
+    put(TH, TS["cum"], "累計 AI 成長資本支出（FY2024 起，不含汰換；情境縮放 Wattonomics 路徑用）", "US$B",
+        {p: f"=aicx_24+aicx_25+aicx_9m+SUM($F{TS['cx_it']}:{COL[p]}{TS['cx_it']})+SUM($F{TS['cx_fac']}:{COL[p]}{TS['cx_fac']})" + ("" if p == "2H" else f"-$G{TS['cx_it']}-$G{TS['cx_fac']}") for p in FC}, "#,##0.0",
+        note="G 欄（FY2026＝Q4 26）不重複計入")
     tput("retire", "汰換 MW（經濟壽命到期的 MW，換成 VR200 錨 IT；ec_press＝1 時提前 2 年）", "MW",
          {"2H": 0, 27: "=IF(ec_press=1,mw_pre24,0)", 28: "=IF(ec_press=1,mw_24,0)", 29: "=IF(ec_press=1,mw_25,mw_pre24)", 30: f"=IF(ec_press=1,mw_9m+F{ADDS},mw_24)",
           31: f"=IF(ec_press=1,H{ADDS},mw_25)", 32: f"=IF(ec_press=1,I{ADDS},mw_9m+F{ADDS})", "26": f"=F{r}"},
@@ -652,12 +670,13 @@ for s in "ABC":
     tput("chk_m6", "檢查：FY2027 資本支出 − 情境 FY2027 資本支出（M6；bd_delay、ec_press 為 Sens 調整）", "US$B",
          {27: f"=H{TS['cx_tot']}-(Seg!H{R['cxn']}+({cx27}-Seg!H{R['cxn']})*bd_delay)-H{TS['cx_ref']}"}, "0.000")
     TH.cell(r, 1, "D. 新增 AI 折舊（在建工程 Q4 26 轉入；新增資本支出依年限直線攤提；當期 × phi_0、最後一年 1 − phi_0；Q4 26 欄 × 0.25）").font = BOLD; r += 1
-    tput("cip_itv", "在建工程轉入：IT", "US$B", {"2H": "=cip_0*cip_it"}, "#,##0.00")
-    tput("cip_facv", "在建工程轉入：機房", "US$B", {"2H": "=cip_0*(1-cip_it)"}, "#,##0.00")
+    _cf = lambda p: f"IF(cipd_q4=1,{1 if p == '2H' else 0},{COL[p]}${CIPF_END}-{COL[prevp(p)]}${CIPF_END})"
+    tput("cip_itv", "在建工程轉入：IT（隨 A2 轉在役時程起提折舊；cipd_q4＝1 時 Q4 26 全額）", "US$B", {p: f"=cip_0*cip_it*{_cf(p)}" for p in FC}, "#,##0.00")
+    tput("cip_facv", "在建工程轉入：機房（同上）", "US$B", {p: f"=cip_0*(1-cip_it)*{_cf(p)}" for p in FC}, "#,##0.00")
     tput("v_it", "IT 批次金額（成長＋汰換）", "US$B", {p: f"={COL[p]}{TS['cx_it']}+{COL[p]}{TS['cx_ref']}" for p in FC}, "#,##0.00")
     tput("v_fac", "機房批次金額", "US$B", {p: f"={COL[p]}{TS['cx_fac']}" for p in FC}, "#,##0.00")
-    it_src = [(f"$F${TS['cip_itv']}", 2026)] + [(f"${COL[p]}${TS['v_it']}", PY[p]) for p in FC]
-    fac_src = [(f"$F${TS['cip_facv']}", 2026)] + [(f"${COL[p]}${TS['v_fac']}", PY[p]) for p in FC]
+    it_src = [(f"${COL[p]}${TS['cip_itv']}", PY[p]) for p in FC] + [(f"${COL[p]}${TS['v_it']}", PY[p]) for p in FC]
+    fac_src = [(f"${COL[p]}${TS['cip_facv']}", PY[p]) for p in FC] + [(f"${COL[p]}${TS['v_fac']}", PY[p]) for p in FC]
     d = dep_row(it_src, "life_it"); d["26"] = f"=F{r}"; tput("da_it", "新增 AI 折舊：IT（含在建工程）", "US$B", d, "#,##0.00")
     d = dep_row(fac_src, "life_fac"); d["26"] = f"=F{r}"; tput("da_fac", "新增 AI 折舊：機房（含在建工程）", "US$B", d, "#,##0.00")
     tput("da_ai", "新增 AI 折舊合計（含在建工程轉入）", "US$B", {p: f"={COL[p]}{TS['da_it']}+{COL[p]}{TS['da_fac']}" for p in FC + ["26"]}, "#,##0.00", bold=True)
@@ -683,6 +702,13 @@ for s in "ABC":
          note="原則第 7 節：只進評價口徑（PL「營業利益（評價口徑）」、Val）；營收列與分部對帳不動")
     tput("sh_vs", "  影子效益 ÷ 自用 AI 增量成本", "x", {p: f"={COL[p]}{TS['shadow']}/{COL[p]}{TS['int_cost']}" for p in FC}, "0.00", note="接近 1＝價值中性")
     r += 1
+# v0.2.0（Andy 2026-11-12 09:05 對帳單選項 a；原則第 54 條改寫）：期末在役 MW＝Wattonomics 上線時程（情境 B）× 各情境累計 AI 成長資本支出 ÷ 情境 B；mw_src＝0 時改回資本支出當年轉在役
+WY = {"2H": 2026, 27: 2027, 28: 2028, 29: 2029, 30: 2030, 31: 2031, 32: 2032}
+for s in "ABC":
+    TS = T[s]
+    put(TH, TS["end"], "期末在役 MW（自用 AI；Wattonomics 上線時程 × 累計資本支出比例；9M26 欄＝評價日在役）", "MW",
+        {"1H": "=base_tot", **{p: f"=IF(mw_src=1,wif_{WY[p]}*1000*{COL[p]}{TS['cum']}/Thesis!{COL[p]}{T['B']['cum']},{COL[p]}{TS['end_cx']})" for p in FC}, "26": f"=F{TS['end']}"},
+        "#,##0.0", note=f"Wattonomics {WAT['source']['version']} WIF_PlayerGW_YE_meta_yyyy（In 頁 wif_*）；情境 A／C 以累計 AI 成長資本支出比例縮放（多投資多上線）", bold=True)
 widths(TH)
 TH.freeze_panes = "C4"
 
@@ -1293,7 +1319,10 @@ hdr(RC, r, ["項目", "FY2026", "FY2027", "FY2028", "FY2029", "FY2030", "FY2031"
 WCOL = dict(zip(range(2026, 2033), "FGHIJKL"))
 RC.cell(r, 1, "本模型：期末在役 GW（自用 AI，情境 B）")
 for j, (y, mc) in enumerate(zip(range(2026, 2033), "FHIJKLM")): RC.cell(r, 2 + j, f"=Thesis!{mc}{TB['end']}/1000").number_format = "0.00"
-RC.cell(r, 9, "Thesis 期末在役 MW ÷ 1000；FY2026 含在建工程轉入 1／cip_q"); RC7 = {"mod": r}; r += 1
+RC.cell(r, 9, "Thesis 期末在役 MW ÷ 1000；v0.2.0 起情境 B＝Wattonomics 上線時程（mw_src＝1），差距應為 0"); RC7 = {"mod": r}; r += 1
+RC.cell(r, 1, "本模型：支出推得期末 MW（資本支出當年轉在役；mw_src＝0 的 Sens 口徑，v0.2.0 初版原口徑）")
+for j, mc in enumerate("FHIJKLM"): RC.cell(r, 2 + j, f"=Thesis!{mc}{TB['end_cx']}/1000").number_format = "0.00"
+RC.cell(r, 9, "對照：原口徑差距見下方第二列差距"); RC7["cx"] = r; r += 1
 RC.cell(r, 1, "Wattonomics：WIF_PlayerGW_YE_meta（主路徑，上線年底）")
 for j, y in enumerate(range(2026, 2033)):
     c = RC.cell(r, 2 + j, WAT["names"][f"WIF_PlayerGW_YE_meta_{y}"]); c.number_format = "0.00"; c.font = BLUE
@@ -1305,9 +1334,12 @@ RC.cell(r, 9, "同上 Interface!F43:L43；只作參考"); RC7["site"] = r; r += 
 RC.cell(r, 1, "差距：本模型 ÷ Wattonomics 主路徑 − 1")
 for j in range(7): RC.cell(r, 2 + j, f"={'BCDEFGH'[j]}{RC7['mod']}/{'BCDEFGH'[j]}{RC7['wat']}-1").number_format = "+0%;-0%"
 RC7["gap"] = r; r += 1
+RC.cell(r, 1, "對照：支出推得 ÷ Wattonomics 主路徑 − 1（原口徑差距；對帳單依據）")
+for j in range(7): RC.cell(r, 2 + j, f"={'BCDEFGH'[j]}{RC7['cx']}/{'BCDEFGH'[j]}{RC7['wat']}-1").number_format = "+0%;-0%"
+RC7["gapcx"] = r; r += 1
 RC.cell(r, 1, "判定（容差 ±15%）")
 for j in range(7): RC.cell(r, 2 + j, f'=IF(ABS({"BCDEFGH"[j]}{RC7["gap"]})>0.15,"超過 15%：寫對帳單","一致")')
-RC.cell(r, 9, "口徑差：Wattonomics 以付款年轉上線年（含延遲），本模型以資本支出 ÷ 每 MW 資本支出（Tokenomics 世代組合）並扣在建工程；個股不改 Wattonomics 值（三層規則）"); RC7["flag"] = r; r += 1
+RC.cell(r, 9, "判定對象＝本模型在役 GW（第一列）；原口徑（支出推得）FY2027–FY2030 超過 15%，已依 Andy 2026-11-12 09:05 對帳單選項 (a) 改讀 Wattonomics；個股不改 Wattonomics 值（三層規則）"); RC7["flag"] = r; r += 1
 RC.cell(r, 1, "超過 15% 的年數（FY2026–FY2032）"); RC.cell(r, 2, f'=COUNTIF(B{RC7["flag"]}:H{RC7["flag"]},"超過*")'); RC7["n"] = r; r += 2
 # ---------------------------------------------------------------------------------------------------
 # v0.2.0（原則第 10 節第 7、18、30 條；A7）：同業可比性（只作展示）
@@ -1357,6 +1389,8 @@ SENS_CASES = [
     ("cip_ai", "在建工程中 AI 占比", "lo", "hi", "80%／100%"),
     ("cip_ai", "在建工程不另增 MW（cip_ai＝0；對齊 Alphabet 修正三的 MW 處理）", "zero", None, "90% → 0（在建工程仍照時程折舊）"),
     ("cip_q", "在建工程轉在役季數（J2）", "lo", "hi", "4 季 → 2 季／8 季"),
+    ("mw_src", "自用在役容量改回資本支出當年轉在役（v0.2.0 初版口徑）", "lo", None, "Wattonomics 上線時程 → 資本支出推得"),
+    ("cipd_q4", "在建工程折舊改為 Q4 26 全額起提", None, "hi", "隨轉入時程 → Q4 26 全額"),
     ("ec_press", "經濟汰換壓力：GPU 經濟壽命 4 年（待 Tokenomics 登錄）", None, "hi", "IT 汰換提前 2 年（2027 起）；會計年限不變"),
     ("bd_delay", "融資受限：建置延後（FY2027–FY2028 新增 MW 減半）", "lo", None, "1 → 0.5（資本支出等比例下降；不補回）"),
     ("dil_inc", "評價股數不計 RSU（v0.1.6 口徑）", "lo", None, "流通股＋RSU 全額 → Q3 稀釋加權口徑"),
