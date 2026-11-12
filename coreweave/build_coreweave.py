@@ -128,7 +128,7 @@ for k, y, v in (("ret29", 2029, 70), ("ret30", 2030, 290), ("ret31", 2031, 490))
 inp("ret32", "2032 年汰換 MW（2026 年新增批次）", "MW", None, "=mw_ye26-mw_ye25", None, "Derived", "2026 年新增＝2026 年底 − 2025 年底在役", "—")
 inp("v25_h100", "2025 年新增批次中 H100（H200）占比", "%", None, 0.1, None, "Assumed", "沿用 v4.13 fleet.vintages（GB200 70%／GB300 20%／H200 10%）", "—")
 inp("v25_gb200", "2025 年新增批次中 GB200 占比", "%", None, 0.7, None, "Assumed", "同上", "—")
-inp("v26_gb300", "2026 年新增批次中 GB300 占比（其餘 GB200）", "%", None, 0.83, None, "Assumed", "1H26 650 MW × 85%＋2H26 350 MW × 80%（v4.13 fleet.vintages、newMix）", "—")
+inp("v26_gb300", "2026 年新增批次中 GB300 占比（其餘 GB200）", "%", None, 0.835, None, "Assumed", "1H26 650 MW × 85%＋2H26 350 MW × 80%＝83.3%（v4.13 fleet.vintages、newMix）", "取 83.5%：使期初占比推得的 GB200 存量在 2032 年汰換後不為負（兩組 Assumed 占比的捨入差）")
 
 sec(f"D. 命題：每 MW 經濟性（Tokenomics {TKV} 快照，基準成本情境）與定價")
 TKSRC = f"coreweave/data/tokenomics_snapshot_{TKV}.json（Tokenomics {TKV}，{TKS['source']['commit'][:7]}）"
@@ -169,6 +169,7 @@ for k, fid, item in (("rev9m", "9m.rev", "營收（9M26）"), ("oi9m", "9m.oi", 
 inp("cx_q3_def", "公司口徑資本支出（Q3 2026；含應付設備款、OEM 融資）", "US$B", None, fv("q3.capex_def"), None, "Interested-party", CALL + f"（{FACTS_F} q3.capex_def）", "新聞稿只有現金購置 9.441；待 Q3 10-Q 核對")
 inp("cx_1h_def", "公司口徑資本支出（1H26）", "US$B", None, fv("1h.capex_def"), None, "Verified", Q2Q + "：PP&E 增加＋融資租賃 − CIP 變動（legacy_v4/company.json ytdActual.capex）", "與全年指引同口徑")
 inp("cx9m_def", "公司口徑資本支出（9M26）＝1H 實績＋Q3", "US$B", None, "=cx_1h_def+cx_q3_def", None, "Derived", "16.139＋14.511（J5）", "FY2026 公司口徑＝本列＋Q4 模型")
+inp("ppe_q3", "PP&E 淨額（2026-09-30）", "US$B", None, fv("q3.ppe"), None, "Verified", PRQ3, "Thesis 投入資本起點")
 inp("cip_q2", "在建工程（2026-06-30；Q4 起分 6 年折舊）", "US$B", None, 11.9, None, "Verified", Q2Q + "（legacy_v4/company.json latestQuarter.cip）", "Q3 值待 Q3 10-Q")
 inp("def_open", "遞延收入（客戶預付）餘額（2026-06-30）", "US$B", None, 9.692, None, "Verified", Q2Q + "（latestQuarter.deferredTotal）", "自 Q4 起依 prepay_yrs 年直線認列（非現金營收）；Q3 值待 Q3 10-Q")
 
@@ -435,7 +436,7 @@ for s in SC:
     put(TH, rei, "營業利益（GAAP）", "US$B", {"C": "=oi9m", "D": f"=D{re_}-D{rsb}-D{rdp}", "E": f"=C{rei}+D{rei}", **{c: f"={c}{re_}-{c}{rsb}-{c}{rdp}" for c in FC}}, "#,##0.000")
     put(TH, nr("om"), "  營業利益率", "%", {c: f"=IF({c}{rr_}=0,0,{c}{rei}/{c}{rr_})" for c in "CDEFGHIJK"}, "0.0%")
     rcap = nr("capb")
-    put(TH, rcap, "累計投入資本（PP&E 淨額＋其後資本支出 − 折舊，期末）", "US$B", {"C": "=56.778", "D": f"=C{rcap}+D{rcx}-D{rdp}", "E": f"=D{rcap}", **{c: f"={PREV[c]}{rcap}+{c}{rcx}-{c}{rdp}" for c in FC}}, "#,##0.0", "2026-09-30 PP&E 淨額 56.778（新聞稿）")
+    put(TH, rcap, "累計投入資本（PP&E 淨額＋其後資本支出 − 折舊，期末）", "US$B", {"C": "=ppe_q3", "D": f"=C{rcap}+D{rcx}-D{rdp}", "E": f"=D{rcap}", **{c: f"={PREV[c]}{rcap}+{c}{rcx}-{c}{rdp}" for c in FC}}, "#,##0.0", "2026-09-30 PP&E 淨額 56.778（新聞稿）")
     put(TH, nr("roic"), "  稅後 ROIC（營業利益 ×（1 − 稅率）÷ 期初投入資本）", "%", {c: f"=IF({PREV[c]}{rcap}<=0,0,{c}{rei}*(1-tax_lt)/{PREV[c]}{rcap})" for c in FC}, "0.0%", "對照 Val 頁 WACC")
     TR[s] = R
     r += 1
@@ -574,7 +575,8 @@ for s in SC:
         CF.cell(R[k], 1, lab); CF.cell(R[k], 2, unit)
         for c, v in vals.items():
             if v is None: continue
-            CF[f"{c}{R[k]}"] = v; CF[f"{c}{R[k]}"].number_format = fmt
+            CF[f"{c}{R[k]}"] = v
+            if fmt: CF[f"{c}{R[k]}"].number_format = fmt
         if note: CF.cell(R[k], 11, note)
     F_ = lambda k: R[k]
     cw("ni", "淨利", {c: f"=PL!{c}{P['ni']}" for c in WF})
@@ -920,7 +922,9 @@ CON = {}
 def crow(k, lab, unit, val, fmt="#,##0.00", note=None, d=None):
     global r
     CON[k] = r; V.cell(r, 1, lab); V.cell(r, 2, unit)
-    if val is not None: V.cell(r, 3, val).number_format = fmt
+    if val is not None:
+        x_ = V.cell(r, 3, val)
+        if fmt: x_.number_format = fmt
     if d is not None: V.cell(r, 4, d).number_format = fmt
     if note: V.cell(r, 6, note)
     r += 1
@@ -956,7 +960,7 @@ crow("v413", "v4.13 加權目標價（舊法；現價 43.66）", "US$", "=tp_v41
 crow("chg", "目標價變動：v5.0 − v4.13", "US$", f"=C{CON['tp']}-C{CON['v413']}")
 crow("tvsh", "情境 B：永續價值占企業價值", "%", f"=D{DC['tvsh']}", "0.0%")
 # 橫幅與白話字串（公式組字；原則 13、31、57、60）
-crow("bn_scn", "橫幅：擴張與目標價", "—", f'=IF(AND(C{CON["tps"]}<D{CON["tps"]},D{CON["tps"]}<E{CON["tps"]}),"A 情境擴張最多但目標價最低："&TEXT(C{CON["tps"]},"0.00")&"／"&TEXT(D{CON["tps"]},"0.00")&"／"&TEXT(E{CON["tps"]},"0.00")&"（A／B／C）；每增加 1 GW（A 對 B）DCF 企業價值變動 "&TEXT(C{CON["npvAB"]},"+0.0;-0.0")&" 十億美元",IF(C{CON["tps"]}>D{CON["tps"]},"擴張越多目標價越高："&TEXT(C{CON["tps"]},"0.00")&"／"&TEXT(D{CON["tps"]},"0.00")&"／"&TEXT(E{CON["tps"]},"0.00")&"（A／B／C）","情境目標價 "&TEXT(C{CON["tps"]},"0.00")&"／"&TEXT(D{CON["tps"]},"0.00")&"／"&TEXT(E{CON["tps"]},"0.00")&"（A／B／C；非單調）"))', None)
+crow("bn_scn", "橫幅：擴張與目標價", "—", f'=IF(AND(C{CON["tps"]}<D{CON["tps"]},D{CON["tps"]}<E{CON["tps"]}),"A 情境擴張最多但目標價最低："&TEXT(C{CON["tps"]},"0.00")&"／"&TEXT(D{CON["tps"]},"0.00")&"／"&TEXT(E{CON["tps"]},"0.00")&"（A／B／C）；每增加 1 GW（A 對 B）DCF 企業價值變動 "&TEXT(C{CON["npvAB"]},"+0.0;-0.0")&" 十億美元",IF(C{CON["tps"]}>D{CON["tps"]},"擴張越多目標價越高："&TEXT(C{CON["tps"]},"0.00")&"／"&TEXT(D{CON["tps"]},"0.00")&"／"&TEXT(E{CON["tps"]},"0.00")&"（A／B／C）","情境目標價 "&TEXT(C{CON["tps"]},"0.00")&"／"&TEXT(D{CON["tps"]},"0.00")&"／"&TEXT(E{CON["tps"]},"0.00")&"（A／B／C；非單調）"))&IF(C{CON["npvAB"]}<0,"；但 DCF 口徑每增加 1 GW（A 對 B）企業價值 "&TEXT(C{CON["npvAB"]},"+0.0;-0.0")&" 十億美元、（B 對 C）"&TEXT(C{CON["npvBC"]},"+0.0;-0.0")&"：擴張價值為負，情境目標價的差異來自 Comparable 的 EBITDA 倍數","")', None)
 crow("bn_edge", "橫幅：距級距邊界", "—", f'=IF(C{CON["dist"]}<0.05,"距最近級距邊界 "&TEXT(C{CON["dist"]}*100,"0.0")&" 個百分點（目標價達 "&TEXT(C{CON["px"]}*(1+IF(C{CON["up"]}>0.25,0.25,IF(C{CON["up"]}>-0.25,IF(C{CON["up"]}>0,0.25,-0.25),-0.25))),"0.00")&" 即翻轉）","距最近級距邊界 "&TEXT(C{CON["dist"]}*100,"0.0")&" 個百分點")', None)
 crow("bn_dcf", "橫幅：DCF 有效性", "—", f'=C{CON["dvalid"]}', None)
 V.column_dimensions["A"].width = 64; V.column_dimensions["B"].width = 11
@@ -1001,11 +1005,14 @@ def rsec(t):
 def rline(k, lab, ref, f, note="", fmt="#,##0.00", gap=True):
     global r
     RCR[k] = r; RC.cell(r, 1, lab)
-    if ref is not None: RC.cell(r, 2, ref).number_format = fmt
+    if ref is not None:
+        x_ = RC.cell(r, 2, ref)
+        if fmt: x_.number_format = fmt
     for j, s in enumerate(SC):
         v = f(s) if callable(f) else f
         if v is None: continue
-        RC.cell(r, 3 + 2 * j, v).number_format = fmt
+        x_ = RC.cell(r, 3 + 2 * j, v)
+        if fmt: x_.number_format = fmt
         if gap and ref is not None: RC.cell(r, 4 + 2 * j, f'=IF(B{r}=0,"N/M",{CL(3 + 2 * j)}{r}/B{r}-1)').number_format = "+0.0%;-0.0%"
     RC.cell(r, 9, note); r += 1
 rsec("A. 公司 FY2026 指引 vs 模型（原則 50：基準落在區間外時標示並分解；指引不作界值，原則 59）")
@@ -1019,6 +1026,8 @@ rline("cxq4pos", "  Q4 資本支出：相對指引隱含區間", None, lambda s:
 rline("arr", "2026 年底 ARR vs 指引中點（模型＝Q4 營收 × 4）", "=(g_arr_lo+g_arr_hi)/2", lambda s: f"=Thesis!D{TR[s]['rev']}*4", "口徑不同：公司 ARR 為年底月營收 × 12（含 12 月新上線），模型為 Q4 平均 × 4 → 只列隱含值（原則 33）")
 rline("int4", "Q4 2026 利息費用 vs 指引中點", "=(g_int_lo+g_int_hi)/2", lambda s: f"=CF!D{CR_[s]['int']}", "模型＝Q3 平均利率 × Q3 借款 × 0.25；指引高出代表 Q4 舉債增加或利率上升（反解：Q4 平均利率需 "  + "見下列）")
 rline("int4r", "  達到指引中點所需的年化利率（÷ Q3 借款）", "=kd_co", lambda s: "=(g_int_lo+g_int_hi)/2*4/debt_q3", "對照：公司稱加權債務成本 7.9%（Interested-party）；只展示、不校準（X3）", "0.00%")
+rline("rev4req", "  達到 FY2026 營收指引中點所需的 Q4 每 MW 年收入（÷ Q4 計費 MW；反解，只展示、不校準）", f"=Thesis!D{TR['B']['pm']}", lambda s: f"=((g_rev_lo+g_rev_hi)/2-rev9m)/(Thesis!D{TR[s]['bill']}*0.25)*1000", "原則 50：模型低於指引主要來自每 MW 年收入（模型＝Tokenomics 錨 × k；公司稱 7 月起漲價、新約價格較高，Interested-party）")
+rline("rev4mw", "  或：維持模型每 MW 收入時所需的 Q4 平均計費 MW", f"=Thesis!D{TR['B']['bill']}", lambda s: f"=((g_rev_lo+g_rev_hi)/2-rev9m)/(Thesis!D{TR[s]['pme']}*0.25)*1000", "對照：公司年底在役 >1.85 GW", "#,##0")
 rsec("B. RPO 與 backlog（同口徑：RPO 排程 vs 模型營收）")
 rline("rpo27", "FY2027：RPO 排程 vs 模型營收", f"=RPO!E{RPB['sched']}", lambda s: f"=RPO!E{RPB['rev' + s]}", "RPO 排程為平均攤分（Interested-party 分桶）")
 rline("rpo29", "FY2029：RPO 排程 vs 模型營收", f"=RPO!G{RPB['sched']}", lambda s: f"=RPO!G{RPB['rev' + s]}", "")
@@ -1047,7 +1056,7 @@ for c in "BCDEFGH": RC.column_dimensions[c].width = 11
 # =====================================================================================
 SE = wb.create_sheet("Sens")
 SE["A1"] = "Sens — 一次動一個輸入（低／高），整本重建並以 LibreOffice 重算，讀加權目標價、DCF 單法目標價、收支關卡（scripts/sens_v50.py → data/sens_v50.json；建置時寫入此頁）"
-SE["A2"] = ("重算日期 " + SENS["date"] + f"；基準加權目標價 {SENS['base']['tp']:.4f}" if SENS else "敏感度快照未產生（先跑 scripts/sens_v50.py）") + "。豁免：fac_life 不列：自建比例 15%、年限只影響自建機房折舊，重算變動小於 0.1%（判斷）；kd 只動 WACC 與新債利率，另見 WACC 案；mw*_xx 情境路徑由 Val 頁情境目標價呈現，不另列。"
+SE["A2"] = ("重算日期 " + SENS["date"] + f"；基準加權目標價 {SENS['base']['tp']:.4f}" if SENS else "敏感度快照未產生（先跑 scripts/sens_v50.py）") + "。In 頁每個有低／高區間的鍵都有案例（L 欄「鍵」）；情境路徑 mw*_xx 由 Val 頁情境目標價呈現。"
 hdr(SE, 3, ["輸入", "低／高設定", "低：加權目標價", "低：相對基準", "高：加權目標價", "高：相對基準", "最大絕對變動", "低：DCF 目標價", "高：DCF 目標價", "低：收支關卡（B）", "高：收支關卡（B）", "鍵", "低：評等", "高：評等"])
 SENS_R = [4, 4]
 r = 4
@@ -1115,11 +1124,12 @@ lines = [
     ("thesis", '="命題：CoreWeave 已簽約的 backlog（"&TEXT(backlog,"0.0")&" 十億美元；RPO "&TEXT(rpo,"0.0")&"）能否以高於資金成本的報酬轉成營收與現金，同時不讓資金缺口失控。命題模組（在役 MW × 每 MW 年收入〔Tokenomics 持有成本 × 定價倍數 k〕、營運費用、租金、資本支出與折舊）驅動唯一的報告分部 AI 雲端平台"'),
     ("q", "核心問題：每增加 1 GW 的產能，是否創造高於資金成本的價值；資金缺口（自由現金流為負）要靠多少新債與新股補，股東被稀釋多少。"),
     ("rec", f'="投資建議："&{VC("rec")}&"（加權目標價 US$"&TEXT({VC("tp")},"0.00")&"，現價 US$"&TEXT(px,"0.00")&"〔"&TEXT(px_date,"yyyy-mm-dd")&"〕，上檔空間 "&TEXT({VC("up")},"+0.0%;-0.0%")&"）——條件式：在每 MW 年收入＝Tokenomics 持有成本 × k "&TEXT(k_mix,"0.000")&"（IREN 長約 Analogy 9.70 與 H100 現貨）、計費比例 "&TEXT(u_bill,"0%")&"、AI 設備折舊 "&TEXT(life_ai,"0")&" 年（Tokenomics）的基準假設下；失效條件見本頁末"'),
-    ("o1", f'="重點觀察 1：DCF 情境加權 "&TEXT({VC("dcf")},"0.00")&"、Comparable "&TEXT({VC("comp")},"0.00")&"（同業中位數 "&TEXT(mult,"0.00")&" 倍 × FY2028 調整後 EBITDA）；"&{VC("bn_dcf")}&"。上檔空間 "&TEXT({VC("up")},"+0.0%;-0.0%")&"＝DCF 貢獻 "&TEXT({VC("dcfup")},"+0.0%;-0.0%")&"＋Comparable 貢獻 "&TEXT({VC("cmpup")},"+0.0%;-0.0%")&"＋相對倍數調整 "&TEXT({VC("adjup")},"+0.0%;-0.0%")"'),
+    ("o1", f'="重點觀察 1：DCF 情境加權 "&TEXT({VC("dcf")},"0.00")&"、Comparable "&TEXT({VC("comp")},"0.00")&"（同業中位數 "&TEXT(mult,"0.00")&" 倍 × FY2028 調整後 EBITDA）；"&{VC("bn_dcf")}&"。上檔空間 "&TEXT({VC("up")},"+0.0%;-0.0%")&"＝DCF 貢獻 "&TEXT({VC("dcfup")},"+0.0%;-0.0%")&"＋Comparable 貢獻 "&TEXT({VC("cmpup")},"+0.0%;-0.0%")&"＋相對倍數調整 "&TEXT({VC("adjup")},"+0.0%;-0.0%")'),
     ("o2", f'="重點觀察 2："&{VC("bn_scn")}&"。情境 B 的 FY2029 稅後 ROIC "&TEXT(Thesis!D{SUM_ROWS[0] + 5},"0.0%")&"，對照 WACC "&TEXT(wacc,"0.0%")&"。"'),
     ("o3", f'="重點觀察 3：收支關卡（FY2026–FY2030 自由現金流合計）情境 A／B／C 為 "&TEXT(Fund!C{FS["gate"]},"0.0")&"／"&TEXT(Fund!D{FS["gate"]},"0.0")&"／"&TEXT(Fund!E{FS["gate"]},"0.0")&" 十億美元；情境 B 期間最大單年新增舉債 "&TEXT(Fund!D{FS["maxb"]},"0.0")&"、最低年末現金 "&TEXT(Fund!D{FS["minc"]},"0.0")&"、淨負債 ÷ EBITDA 最差 "&TEXT(Fund!D{FS["ndmax"]},"0.00")&" 倍、利息保障最差 "&TEXT(Fund!D{FS["icmin"]},"0.00")&" 倍（"&Fund!D{FS["warn"]}&"）；2030 年底累計稀釋 "&TEXT(Fund!D{FS["dil"]},"0.0%")'),
     ("o4", '="J4：公司稱新簽 4–5 年約每 MW 年收入 US$"&TEXT(p_claim_lo,"0")&"–"&TEXT(p_claim_hi,"0")&"m（Interested-party），是本模型 FY2027 情境 B 每 MW 年收入 "&TEXT(Thesis!F' + str(TR["B"]["pm"]) + ',"0.00")&" 的 "&TEXT((p_claim_lo+p_claim_hi)/2/Thesis!F' + str(TR["B"]["pm"]) + ',"0.0")&" 倍；新增產能改用公司宣稱中點的 Sens 見 Sens 頁 p_new_ovr 列；不改基準 k"'),
     ("o5", f'="橫幅："&{VC("bn_edge")}'),
+    ("o6", f'="指引對照（原則 50）：模型 FY2026 營收 "&TEXT(PL!D{PR_["B"]["rev"]},"0.00")&"，"&Recon!E{RCR["rev26pos"]}&"（指引 "&TEXT(g_rev_lo,"0.0")&"–"&TEXT(g_rev_hi,"0.0")&"）；調整後營業利益 "&TEXT(PL!D{PR_["B"]["aoi"]},"0.000")&"，"&Recon!E{RCR["aoi26pos"]}&"；差距主要來自每 MW 年收入：達到營收指引中點需 Q4 每 MW 年收入 "&TEXT(Recon!E{RCR["rev4req"]},"0.00")&"（模型 "&TEXT(Recon!B{RCR["rev4req"]},"0.00")&"，模型輸出，非獨立證據）"'),
 ]
 for i, (k, f) in enumerate(lines):
     RD.cell(2 + i, 1, f); RL[k] = 2 + i
