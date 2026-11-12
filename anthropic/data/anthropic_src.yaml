@@ -9469,7 +9469,7 @@ rows:
   retrieved: '2026-11-11'
   tag: "Verified"
   party: "Anthropic（初步招股說明書；期中未經查核；IPO 定價前）"
-  basis: "訂閱月額 × 12＋用量計費近 28 天年化（第 6 頁定義；公司註明不等於營收預測）"
+  basis: "訂閱月額 × 12＋用量計費近 28 天 × 13（第 3 頁定義；公司註明不等於營收預測）"
   note: "v0.2.0（工作單 20261111）。chat 端 2026-11-11 讀 Andy 上傳的 430 頁 PDF，轉錄於 docs/reports/20261111_Prospectus原文摘錄.md 第 4 節；建置代理未直讀原文。"
 - id: SRC_ANT_558
   key: "pros_rr_incr"

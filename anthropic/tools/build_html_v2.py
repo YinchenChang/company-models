@@ -278,11 +278,11 @@ def valuation_section(B: Book) -> str:
                 '情境 A／B／C 25／50／25、評等依 IPO 價格）。</p></section>')
     meth = B.cell("VAL_Method") if B.has("VAL_Method") else None
     intro = f'<p class="note">{span(*meth)}</p>' if meth else ""
-    main_kv = kv(B, [("加權目標價（DCF 50%＋調整後 Comparable 50%）", "VAL_TP_W", "n2"), ("DCF 目標價（三情境加權）", "VAL_TP_DCF", "n2"),
+    main_kv = kv(B, [("加權目標價（DCF 與調整後 Comparable 加權）", "VAL_TP_W", "n2"), ("DCF 目標價（三情境加權）", "VAL_TP_DCF", "n2"),
                      ("Comparable 目標價（調整後）", "VAL_TP_CompAdj", "n2"), ("Comparable 目標價（市場主流，未調整）", "VAL_TP_CompMain", "n2"),
                      ("現價（IPO 區間中點）", "VAL_Px", "n2"), ("上檔空間（加權）", "VAL_Up_W", "sp1"), ("上檔空間（市場主流 Comparable）", "VAL_Up_CompMain", "sp1"),
-                     ("投資建議", "VAL_Rating", "t"), ("DCF 情境 A（樂觀，權重 25%）", "VAL_TP_DCF_A", "n2"),
-                     ("DCF 情境 B（基準，權重 50%）", "VAL_TP_DCF_B", "n2"), ("DCF 情境 C（保守，權重 25%；負值取 0）", "VAL_TP_DCF_C", "n2")])
+                     ("投資建議", "VAL_Rating", "t"), ("DCF 情境 A（樂觀）", "VAL_TP_DCF_A", "n2"),
+                     ("DCF 情境 B（基準）", "VAL_TP_DCF_B", "n2"), ("DCF 情境 C（保守；下限＝淨現金每股）", "VAL_TP_DCF_C", "n2")])
     rates = kv(B, [("無風險利率 rf", "VAL_Rf", "p2"), ("β（同業中位數，Blume 調整）", "VAL_Beta", "n2"), ("股權風險溢酬 ERP", "VAL_ERP", "p1"),
                    ("股東權益成本 ke", "VAL_Ke", "p2"), ("稅後債務成本", "VAL_KdAT", "p2"), ("WACC", "VAL_WACC", "p2"),
                    ("永續期新投資報酬 RONIC", "VAL_RONIC", "p2"), ("永續成長率 g", "VAL_g", "p1")])

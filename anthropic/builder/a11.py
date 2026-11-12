@@ -2,7 +2,7 @@
 
 M 線規格例外「AI 收支模型不加 DCF 腿」（2026-11-05）因公司掛牌而失效（J5 預設：DCF＋Comparable 各半）。
 - 評價日 2026-09-30（pro forma 資產負債表日）；目標時點 12 個月（以 ke 推進）；現價＝ipo_px（IPO 區間中點 74）。
-- FCFF＝EBIT（現金口徑＝Funding F06：營收淨額 − 算力現金 − 非算力〔不含股權報酬〕− 股權報酬；股權報酬不加回）− 稅 − 自建資本支出 − 營運資金增加。
+- FCFF＝EBIT（現金口徑＝Funding F06：營收淨額 − 算力現金 − 非算力〔不含股權報酬〕− 股權報酬；股權報酬只扣未來新授：IPO 一次性 RSU 與既有獎酬攤銷加回，因該批 RSU 已計入評價股數）− 稅 − 自建資本支出 − 營運資金增加。
   算力為服務／租賃付款，已在 EBIT 扣除 → 折舊 − 資本支出＝0（F03 自建資本支出另扣）。稅＝21% × 正 EBIT，扣除 2026Q4 起自身虧損累積的 NOL。
 - 欄：2026Q4（＝FY2026 − 前九月實際代理）、2027–2030（模型）、2031–2033（延伸：營收淨額年增由 FY2030 值線性收斂到 ext_g33；EBIT 利益率維持 FY2030＋ext_m_add 線性）。
   明確期現值到 2032；終值＝NOPAT(2033) ×(1 − g ÷ RONIC) ÷ (WACC − g)，以 2032 年底折現。
@@ -41,7 +41,7 @@ def build(ctx):
     sens = yaml.safe_load(SENS_YAML.read_text(encoding="utf-8")) if SENS_YAML.exists() else {}
     ws = wb.create_sheet("Val")
     title(ws, "Val — 估值頁（v0.2.0；工作單 20261111 F）：DCF（FCFF）50%＋調整後 Comparable 50%；情境 A／B／C 25／50／25；評價日 2026-09-30、目標時點 12 個月；現價＝IPO 區間中點",
-          "FCFF＝EBIT（現金口徑＝Funding F06，股權報酬不加回）− 稅（21% × 正 EBIT，扣 2026Q4 起自身 NOL）− 自建資本支出 − 營運資金增加；算力為服務／租賃付款已在 EBIT 扣除（折舊 − 資本支出＝0）。"
+          "FCFF＝EBIT（現金口徑＝Funding F06；股權報酬只扣未來新授，IPO 一次性 RSU 與既有獎酬攤銷加回，因該批 RSU 已計入評價股數）− 稅（21% × 正 EBIT，扣 2026Q4 起自身 NOL）− 自建資本支出 − 營運資金增加；算力為服務／租賃付款已在 EBIT 扣除（折舊 − 資本支出＝0）。"
           "終值＝NOPAT(2033) ×(1 − g ÷ RONIC) ÷ (WACC − g)。情境 A、C 為快照值（藍字；tools/val_snapshots.py），B 為活公式。M 線規格例外「AI 收支模型不加 DCF 腿」因掛牌失效（J5）。",
           "本頁不被任何計算頁引用（Checks 除外）。單位：$B、十億股、$／股。")
     P = {}
@@ -325,7 +325,7 @@ def build(ctx):
               + c("near") + '=1,"（5pt 內：評等對假設敏感，揭露）","（不在 5pt 內）")')
     row("rnote", "評等說明（含距邊界揭露）", "—", [note_f], fmt="@", name="VAL_RatingNote")
     row("pricez", "IPO 價格區間 70／78 下的上檔空間（加權目標價不變的近似；精確值見 Sens）", "比例", [f"={c('tpw')}/{c('pxlo')}-1", f"={c('tpw')}/{c('pxhi')}-1"], fmt="0.0%")
-    row("meth", "方法", "—", ["DCF（FCFF；EBIT＝Funding F06 現金口徑、股權報酬不加回；稅 21% 扣自身 NOL；WACC≈ke；終值 RONIC＝WACC、g 3%）50%＋調整後 Comparable"
+    row("meth", "方法", "—", ["DCF（FCFF；EBIT＝Funding F06 現金口徑、股權報酬只扣未來新授；稅 21% 扣自身 NOL；WACC≈ke；終值 RONIC＝WACC、g 3%）50%＋調整後 Comparable"
                               "（同業 EV／NTM 營收中位數 × MIN(1, FY2030 自由現金流率 ÷ 同業 FCF 利益率中位數)）50%；情境 A／B／C 25／50／25；現價＝IPO 區間中點 74（J8）；"
                               "判斷題 J5 DCF＋Comparable、J6 FCF 利益率調整、J7 API 任務數高／低端＋Q4 讀法、J8 區間中點"], fmt="@", name="VAL_Method")
     row("wsum", "檢查：情境權重合計 − 1", "—", [f"={I('val_w_a')}+{I('val_w_b')}+{I('val_w_c')}-1"], fmt="0.000000")

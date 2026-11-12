@@ -144,7 +144,7 @@ def test_dist_xlsx_is_current_model():
     assert XLSX.exists()
     h = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()  # noqa: E731
     assert h(XLSX) == h(MODEL)
-    others = [p.name for p in (REPO / "dist").glob("*.html") if p != HTML]
+    others = [p.name for p in (REPO / "dist").glob("*.html") if p != HTML and p.name != HTML.name.replace("收支模型", "個股模型")]  # 新版面（tools/build_html_v2.py，Andy 2026-11-11）
     assert not others, f"dist 有非現行版本的 HTML：{others}"
 
 
