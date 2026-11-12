@@ -316,7 +316,7 @@ for i, (lab, k, vals, tag, note) in enumerate(QD):
     Q.cell(rr, 11, INC_CO if tag == "Interested-party" else "")
 rr = 4 + len(QD)
 Q.cell(rr, 1, "檢查：Q1＋Q2＋Q3 營收 − 9M 營收（應為 0）"); Q.cell(rr, 5, "=B4+C4+D4-E4").number_format = "0.000"; Q.cell(rr, 8, "—"); QR["chk"] = rr
-Q.cell(rr + 1, 1, "檢查：9M 調整後 EBITDA − 營業利益 − 股票薪酬 − 折舊攤銷（其他調整，應接近 0）"); Q.cell(rr + 1, 5, "=E6-E5-E11-E10").number_format = "0.000"; Q.cell(rr + 1, 8, "—")
+Q.cell(rr + 1, 1, "對照：9M 調整後 EBITDA − 營業利益 − 股票薪酬 − 折舊攤銷（其他調整）"); Q.cell(rr + 1, 5, "=E6-E5-E11-E10").number_format = "0.000"; Q.cell(rr + 1, 8, "—")
 Q.cell(rr + 2, 1, "季增在役 MW ÷ 季營收年化（每 MW 年營收，Q3：營收 × 4 ÷ 平均在役 MW）"); Q.cell(rr + 2, 4, "=D4*4/((mw_q2+mw_q3)/2)*1000").number_format = "0.00"; Q.cell(rr + 2, 8, "Derived"); QR["permw"] = rr + 2
 Q.cell(rr + 2, 10, "公司實況驗證（CLAUDE.md 第 15 條）：與 Thesis 每 MW 年收入 × 計費比例對照，見 Recon")
 Q.column_dimensions["A"].width = 58
@@ -715,7 +715,7 @@ RPB["cov"] = r; r += 1
 RP.cell(r, 1, "模型營收中未被 RPO 覆蓋的部分（情境 B；需新簽或隨需）"); RP.cell(r, 2, "US$B")
 for c in "DEFGHIJ": RP[f"{c}{r}"] = f"=MAX(0,{c}{RPB['revB']}-{c}{RPB['sched']})"; RP[f"{c}{r}"].number_format = "#,##0.0"
 RPB["gap"] = r; r += 1
-RP.cell(r, 1, "檢查：RPO 排程合計 − RPO（2026Q4–2032 只到 48 個月後桶的一半；應為 −RPO × 48 個月後 × 1/2 − 2026Q4 前移）"); RP.cell(r, 2, "US$B")
+RP.cell(r, 1, "對照：2026Q4–2032 RPO 排程合計 − RPO（負值＝2033 年後才認列的部分）"); RP.cell(r, 2, "US$B")
 RP[f"D{r}"] = f"=SUM(D{RPB['sched']}:J{RPB['sched']})-rpo"; RP[f"D{r}"].number_format = "#,##0.0"; RPB["chk"] = r
 RP.column_dimensions["A"].width = 62
 for c in "DEFGHIJ": RP.column_dimensions[c].width = 11
@@ -1048,6 +1048,17 @@ rline("wat30", "Wattonomics 2030 年底上線 MW vs 模型", "=wat30", lambda s:
 rsec("F. 舊法與舊版（只作對照）")
 rline("old", "v4.13 融資調整 DCF（舊法，不進結論）vs v5.0 加權目標價", "=dcf_v413", lambda s: f"=Val!C{CON['tps']}".replace("C", "CDE"[SC.index(s)], 1) if False else f"=Val!{'CDE'[SC.index(s)]}{CON['tps']}", "B1：舊法保留為對照")
 rline("cons", "市場共識 FY2027 EBITDA（財報前）vs 模型", "=cons_eb27", lambda s: f"=PL!E{PR_[s]['aeb']}", "財報前，只作歷史對照（原則 15）")
+r += 1
+RC.cell(r, 1, "G. 圖表資料：每 MW 年收入（情境 B；US$M／MW·年；HTML 主題圖一）").font = BOLD; r += 1
+RCR["chart_h"] = r
+for j, y in enumerate(FYM): RC.cell(r, 3 + j, f"FY{y}").font = BOLD
+r += 1
+for k, lab, f in (("ch_m", "模型：Tokenomics 錨 × k（基準）", lambda y: f"=Thesis!{TCOL[y]}{TR['B']['pm']}"),
+                  ("ch_tk", "Tokenomics 錨：在役世代加權 IF_HoldEcon", lambda y: f"=Thesis!{TCOL[y]}{TR['B']['anc']}"),
+                  ("ch_cl", "公司宣稱新約中點（Interested-party）", lambda y: "=(p_claim_lo+p_claim_hi)/2")) + ((("ch_req", "支持現價所需（RevDCF 反解 k_adj × 模型）", lambda y: f"=Thesis!{TCOL[y]}{TR['B']['pm']}*RevDCF!D{RVN['px']}"),) if REV else ()):
+    RCR[k] = r; RC.cell(r, 1, lab)
+    for j, y in enumerate(FYM): RC.cell(r, 3 + j, f(y)).number_format = "0.00"
+    r += 1
 RC.column_dimensions["A"].width = 70; RC.column_dimensions["I"].width = 70
 for c in "BCDEFGH": RC.column_dimensions[c].width = 11
 
