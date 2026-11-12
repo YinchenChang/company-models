@@ -42,3 +42,10 @@ Excel 是計算事實的來源；HTML 只負責呈現，給 Andy 與投資處同
 - 產生器可選功能：表格 `rows` 內 `{"sub": "小標"}` 分組列；日期格（datetime）以 YYYY-MM-DD 文字標籤顯示、檢核比對同一格式（Microsoft v0.3.6 起）；`list` 的 `ordered: true` 編號；頂層 `wide_text`、`hero`（`rec`、`tiles`、`note`、`ai_note`〔v1.1，自用 AI 讀法 2 一行〕）；可選章節 `conclusion`（須在 `sens` 與 `status` 之間）。
 
 - 可選節（2026-11-10）：`funding`（收支型個股的資金缺口與融資，須緊接 `thesis`）、`revdcf`（反向 DCF，須緊接 `valuation`）。首例 Oracle v0.5.0；未使用的公司輸出不變。
+
+- 分區主題圖（2026-11-11，Andy 於 Anthropic 新版面後要求套到硬體個股；樣板 NVIDIA）：
+  - `theme`：大圖（寬 900，手機可左右滑），放在章節開頭。`bars`（`stack: true` 堆疊，否則並列；每段 `name`、`y`、可選 `color`）＋`lines`（`axis: "r"` 用右軸、`fmt_r` 右軸格式、`dash`、`labels: true|"below"` 顯示數值）；`total` 指向 xlsx 合計列（產生器不自行加總）；`pad` 左軸上方留白倍數；`caption` 圖說。
+  - `compare`：對照長條，每組自有尺度（`groups`：`name`、`fmt`、`items`〔`name`、`v`、`ref: true`＝指引或共識，灰色〕）。
+  - 長條段（`rect.pt`）、折線點（`circle.pt`）、數值標籤（`text.x`）都帶 `data-ref`／`data-v`，檢核一併比對。
+  - 只有用到這兩種區塊的公司才輸出額外 CSS，其餘公司 HTML 逐位元組不變。
+  - 範例：NVIDIA（`nvidia/gen_html_json.py` 的 `_theme_blocks()`；四張：加速器市場金額與份額 → `drivers`；營收分部 × 三情境、毛利率 vs HBM 成本占比 → `pl`；FY2028 模型 vs 指引 vs 共識 → `recon`）；Andy 2026-11-12 認可）。
