@@ -495,9 +495,14 @@ def render_list(cx, blk):
     return f'<{tag} class="items">' + ''.join(f'<li>{cx.cell_html(i)}</li>' for i in blk['items']) + f'</{tag}>'
 
 
+# 只在橫幅有 ai_note 時輸出（HTML 版面規格 v1.1），既有成品逐位元組不變
+AI_CSS = ".hero-ai{font-size:14px;color:#1f2328;font-weight:600}"
+
+
 def render_hero(cx, h):
     """投資建議橫幅（html.json 頂層 hero，可選；Andy 2026-11-05）：全寬、大字、依建議著色。
-    hero：{"rec": 投資建議規格, "tiles": [[標籤, 主值規格, 副值規格或空字串], …], "note": 規格或省略}"""
+    hero：{"rec": 投資建議規格, "tiles": [[標籤, 主值規格, 副值規格或空字串], …], "note": 規格或省略,
+           "ai_note": 規格或省略（自用 AI 讀法 2 的依賴度一行，HTML 版面規格 v1.1；原則第 10 節第 52 條）}"""
     rec_txt = cx.text_of(h['rec'])
     tone = 'neg' if '放空' in rec_txt else 'pos' if '買進' in rec_txt else 'neu'
     o = [f'<div class="hero hero-{tone}"><div class="hero-rec"><span class="hero-k">投資建議</span>'
@@ -506,6 +511,8 @@ def render_hero(cx, h):
         o.append(f'<div class="hero-t"><div class="hero-l">{cx.cell_html(lab)}</div><div class="hero-n">{cx.cell_html(main)}</div>'
                  + (f'<div class="hero-s">{cx.cell_html(sub)}</div>' if sub else '') + '</div>')
     o.append('</div>')
+    if h.get('ai_note'):
+        o.append(f'<p class="hero-note hero-ai">{cx.cell_html(h["ai_note"])}</p>')
     if h.get('note'):
         o.append(f'<p class="hero-note">{cx.cell_html(h["note"])}</p>')
     o.append('</div>')
@@ -714,7 +721,7 @@ def build(cdir, xlsx=None, root=None):
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
 <title>{esc(title)}</title>
-<style>{CSS}{WIDE_CSS if (cfg.get('wide_text') or cfg.get('hero')) else ''}</style>
+<style>{CSS}{WIDE_CSS if (cfg.get('wide_text') or cfg.get('hero')) else ''}{AI_CSS if (cfg.get('hero') or {}).get('ai_note') else ''}</style>
 </head>
 <body>
 <input type="checkbox" id="refs" class="refs-toggle" aria-label="顯示每個數字的來源儲存格">

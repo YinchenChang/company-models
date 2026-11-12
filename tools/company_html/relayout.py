@@ -223,7 +223,21 @@ def _hero(w):
                    [f"@Val!A{px}", f"@Val!B{px}|n2", ""]]}
     if w.v("Val", f"E{rec}"):
         h["note"] = ["投資建議依加權目標價判定：", f"@Val!E{rec}"]
+    # HTML 版面規格 v1.1（Andy 2026-11-11 Meta 採用規劃書 J1）：自用 AI 讀法 2 的模型，
+    # Val 頁 A 欄「橫幅：自用 AI 讀法」列的 B 欄（公式組字：讀法 1 目標價與評等、支持現價所需 k、評等翻轉 k）放在橫幅。
+    ai = f("橫幅：自用 AI 讀法")
+    if ai:
+        h["ai_note"] = f"@Val!B{ai}"
+    elif "internal_ai_reading" in _in_keys(w):
+        print("警告：In 頁有 internal_ai_reading，但 Val 頁缺「橫幅：自用 AI 讀法」列（HTML 版面規格 v1.1、原則第 10 節第 52 條；下次改版補上）")
     return h
+
+
+def _in_keys(w):
+    if "In" not in w.wb.sheetnames:
+        return set()
+    ws = w.wb["In"]
+    return {str(ws[f"A{r}"].value).strip() for r in range(1, ws.max_row + 1) if ws[f"A{r}"].value}
 
 
 def _readme(w):
