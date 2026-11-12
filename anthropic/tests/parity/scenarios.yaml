@@ -218,8 +218,8 @@ scenarios:
     inputs: {"INP_168": 0, "INP_218": 0}
     expect_warn: true
   - id: jr_v3_off
-    description: v0.1.7.1 V3 關閉（INP_219 s1f_cond_switch 1 → 0）：條件式 Google 回到報導 30，情境 S2／S3、資金三層第 ③ 層與回流對照 E 欄改變（基準不變）
-    inputs: {"INP_219": 0}
+    description: v0.1.7.1 V3 關閉（INP_219 s1f_cond_switch 1 → 0）：條件式 Google 回到報導 30，情境 S2／S3、資金三層第 ③ 層與回流對照 E 欄改變（基準不變）。v0.2.0 起 B2（INP_235）優先讀初步招股說明書，V3 只在 B2 關閉時生效，故本情境同時關 B2
+    inputs: {"INP_219": 0, "INP_235": 0}
   - id: js_r4_spacex_path
     description: v0.1.8 R4 SpaceXAI S-1 路徑（INP_221 s1f_spacex_fee_switch 0 → 1）：SpaceX 付款改爬升後每月 3.1、上限 120.5，SpaceX 合約總額 45 → 120.5、未歸屬餘額減少、Hopper 供給 GW 改變
     inputs: {"INP_221": 1}
