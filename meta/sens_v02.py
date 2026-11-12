@@ -54,7 +54,7 @@ for key, side, val, _r in rm["SE_ROWS"]:
         continue
     if val in ("lo", "hi") and IN.cell(row[key], 4 if val == "lo" else 6).value is None: raise SystemExit(f"{key} 缺 {val}")
     v = 1 if val == "hi1" else (0 if val == "zero" else IN.cell(row[key], 4 if val == "lo" else 6).value)
-    jobs[f"{key}|{side}|{val}"] = [(key, v)]
+    jobs[f"{key}|{side}|{val}"] = [(key, v)] + ([("mw_src", 0)] if (key == "cip_ai" and val == "zero") else [])   # v0.2.0：不另增 MW 案搭配資本支出推得口徑
 res = {}
 with ThreadPoolExecutor(max_workers=int(os.environ.get("JOBS", "2"))) as ex:
     futs = {k: ex.submit(run, f"c{i:02d}", sets) for i, (k, sets) in enumerate(jobs.items())}

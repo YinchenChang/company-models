@@ -141,7 +141,7 @@ cfg = {
     {"type": "table", "collapse": True, "summary": "展開：同業可比性與商業模式子群中位數（只作展示）", "head": ["@Recon!A" + str(r8 + 1), "@Recon!B" + str(r8 + 1), "@Recon!C" + str(r8 + 1), "@Recon!D" + str(r8 + 1), "@Recon!E" + str(r8 + 1), "@Recon!F" + str(r8 + 1), "@Recon!G" + str(r8 + 1)],
      "rowgen": {"sheet": "Recon", "rows": f"{r8 + 2}-{rend}", "cols": ["A", "B", "C", "D", "E", "F", "G"], "fmts": ["", "", "x2", "", "", "", ""]}}]},
   {"id": "sens", "title": "敏感度", "intro": "@Sens!A1", "blocks": [
-    {"type": "tornado", "title": "加權目標價相對基準的變動（一次改一個輸入，整本重算；變動為 0 的案例只列在下方全部案例表）", "sheet": "Sens", "rows": TOR_ROWS, "label_col": "A", "value_col": "E", "fmt": "sp1"},
+    {"type": "tornado", "title": "加權目標價相對基準的變動（一次改一個輸入，整本重算；|變動| ≤ 0.01% 的案例只列在下方）", "sheet": "Sens", "rows": TOR_ROWS, "label_col": "A", "value_col": "E", "fmt": "sp1"},
     {"type": "table", "collapse": True, "summary": "展開：全部案例（含 DCF 單法、評等與收支關卡 B）", "head": ["驅動", "設定", "方向", "加權目標價", "相對基準", "DCF 目標價", "DCF 變動（美元）", "投資建議", "收支關卡 B"],
      "rowgen": {"sheet": "Sens", "rows": f"4-{se_end}", "cols": ["A", "B", "C", "D", "E", "J", "K", "L", "H"], "fmts": ["", "", "", "n2", "sp1", "n2", "n2", "", "n1"]}},
     {"type": "kv", "items": [["@Sens!A" + str(rm["SE_BASE"]), "@Sens!D" + str(rm["SE_BASE"]) + "|n2"], ["@Sens!A" + str(rm["SE_STALE"]), "@Sens!D" + str(rm["SE_STALE"]) + "|n2"],
@@ -177,7 +177,7 @@ SPEC = {
     ["資本支出與 AI 占比", ["cx_na", "cx_23", "ai_23", "cx_24", "cx_25", "capex_9m", "capex_g", "cx27_k", "cx27_up", "cx27_B", "cx27_A", "cx27_C", "a28", "conv_mw", "bd_delay"]],
     ["機隊組成與機房", ["selfb", "am_26", "am_27", "am_28"]],
     ["自用在役容量（Wattonomics 上線時程）", ["mw_src", "wif_2026", "wif_2027", "wif_2028", "wif_2029", "wif_2030", "wif_2031", "wif_2032"]],
-    ["在建工程與折舊", ["cip_0", "cip_q", "cipd_q4", "cip_ai", "cip_it", "life_it", "ec_press", "life_fac", "life_na", "phi_0", "phi_q4", "da_base"]],
+    ["在建工程與折舊", ["cip_0", "cip_q", "cipd_q4", "dep_lag", "cip_ai", "cip_it", "life_it", "ec_press", "life_fac", "life_na", "phi_0", "phi_q4", "da_base"]],
     ["租用算力（只進敏感度）", ["rent_l"]],
     ["每 MW 成本（Tokenomics 快照）", ["he_h", "he_b2", "he_b3", "he_vr", "opx_h", "opx_b2", "opx_b3", "opx_vr", "cit_h", "cit_b2", "cit_b3", "cit_vr", "dpi_h", "dpi_b2", "dpi_b3", "cfac"]],
     ["自用 AI 讀法", ["internal_ai_reading", "k_ai"]]]],
@@ -200,7 +200,7 @@ cfg = relayout(cfg, X, SPEC)
 # HTML 版面規格 v1.2：分區主題圖（照 nvidia/gen_html_json.py 的 _theme_blocks()；列號依標籤找、數字全取 xlsx）
 def _theme_blocks():
     h7 = r7 + 1
-    drv = {"type": "theme", "title": "自用 AI 在役容量（模型 vs Wattonomics，GW，右軸）與 AI 資本支出（情境 B，US$B）", "x": f"@Recon!B{h7}:H{h7}",
+    drv = {"type": "theme", "title": "自用 AI 在役容量（＝Wattonomics）vs 原口徑（資本支出推得），GW 右軸；AI 資本支出（情境 B，US$B）", "x": f"@Recon!B{h7}:H{h7}",
            "fmt": "n0", "fmt_r": "n1", "stack": False, "pad": 1.25,
            "bars": [{"name": f"@Recon!A{RC7['cxai']}", "y": f"@Recon!B{RC7['cxai']}:H{RC7['cxai']}", "color": "#c29a2b"}],
            "lines": [{"name": f"@Recon!A{RC7['mod']}", "y": f"@Recon!B{RC7['mod']}:H{RC7['mod']}", "axis": "r", "color": "#3b3838", "labels": True},
