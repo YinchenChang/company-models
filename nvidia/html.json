@@ -100,6 +100,61 @@
    "title": "驅動因子 → 推導量",
    "blocks": [
     {
+     "type": "theme",
+     "title": "加速器市場金額（情境 A，US$B）與 NVIDIA 金額份額",
+     "x": "@Units!C3:F3",
+     "fmt": "n0",
+     "fmt_r": "p0",
+     "stack": true,
+     "pad": 1.35,
+     "total": "@Units!C24:F24",
+     "bars": [
+      {
+       "name": "@Units!A16",
+       "y": "@Units!C16:F16"
+      },
+      {
+       "name": "@Units!A17",
+       "y": "@Units!C17:F17"
+      },
+      {
+       "name": "@Units!A18",
+       "y": "@Units!C18:F18"
+      },
+      {
+       "name": "@Units!A19",
+       "y": "@Units!C19:F19"
+      },
+      {
+       "name": "@Units!A20",
+       "y": "@Units!C20:F20"
+      },
+      {
+       "name": "@Units!A21",
+       "y": "@Units!C21:F21"
+      },
+      {
+       "name": "@Units!A22",
+       "y": "@Units!C22:F22"
+      },
+      {
+       "name": "@Units!A23",
+       "y": "@Units!C23:F23"
+      }
+     ],
+     "lines": [
+      {
+       "name": [
+        "NVIDIA 金額份額"
+       ],
+       "y": "@Units!C32:F32",
+       "axis": "r",
+       "labels": true
+      }
+     ],
+     "caption": "堆疊＝各平台加速器金額（顆數 × 每顆售價，模組層級）；折線＝NVIDIA 占加速器總金額的比例（右軸）。"
+    },
+    {
      "type": "table",
      "caption": "情境驅動（三情境並排，進加權目標價；取自 In 頁最後一節「情境驅動對照」）",
      "head": [
@@ -1826,6 +1881,101 @@
    "intro": "FY2026 為實績，FY2027 為錨點（第一、二季實績＋第三季指引＋第四季假設），FY2028 起為模型；顆數用認列顆數（市場層顆數乘以 FY2027 校準的係數）。三情境在 FY2027 相同、FY2028 幾乎相同；情境差異從 FY2029 起出現（顆數係數從日曆年 2028 開始）。",
    "blocks": [
     {
+     "type": "theme",
+     "title": "營收分部（情境 B）與三情境營收（US$B）",
+     "x": "@PL!C3:G3",
+     "fmt": "n0",
+     "stack": true,
+     "bars": [
+      {
+       "name": "@PL!A19",
+       "y": "@PL!C19:G19"
+      },
+      {
+       "name": "@PL!A20",
+       "y": "@PL!C20:G20",
+       "color": "#c29a2b"
+      }
+     ],
+     "lines": [
+      {
+       "name": [
+        "@PL!A4",
+        "營收"
+       ],
+       "y": "@PL!C5:G5",
+       "color": "#0b7a80",
+       "dash": true
+      },
+      {
+       "name": [
+        "@PL!A16",
+        "營收"
+       ],
+       "y": "@PL!C17:G17",
+       "color": "#3b3838",
+       "labels": true
+      },
+      {
+       "name": [
+        "@PL!A28",
+        "營收"
+       ],
+       "y": "@PL!C29:G29",
+       "color": "#b4472f",
+       "dash": true
+      }
+     ],
+     "caption": "堆疊長條＝情境 B 的 Data Center 與 Edge Computing；三條線＝情境 A／B／C 的合併營收。FY2026A 為實績、FY2027 為錨點。"
+    },
+    {
+     "type": "theme",
+     "title": "毛利率（三情境）與 HBM 成本占營收（情境 B）",
+     "x": "@PL!D3:G3",
+     "fmt": "p0",
+     "stack": false,
+     "bars": [
+      {
+       "name": [
+        "@PL!A164",
+        "（情境 B）"
+       ],
+       "y": "@PL!D164:G164",
+       "color": "#c29a2b"
+      }
+     ],
+     "lines": [
+      {
+       "name": [
+        "@PL!A4",
+        "毛利率"
+       ],
+       "y": "@PL!D9:G9",
+       "color": "#0b7a80",
+       "dash": true
+      },
+      {
+       "name": [
+        "@PL!A16",
+        "毛利率"
+       ],
+       "y": "@PL!D21:G21",
+       "color": "#3b3838",
+       "labels": "below"
+      },
+      {
+       "name": [
+        "@PL!A28",
+        "毛利率"
+       ],
+       "y": "@PL!D33:G33",
+       "color": "#b4472f",
+       "dash": true
+      }
+     ],
+     "caption": "HBM 成本占營收是毛利率的主要變動來源之一；兩者並列，可看記憶體漲價對毛利的壓力在哪一年最大。"
+    },
+    {
      "type": "pl",
      "years": "@PL!C3:G3",
      "metrics": [
@@ -2943,6 +3093,119 @@
    "title": "對帳：由上而下與由下而上",
    "intro": "@Recon!A1",
    "blocks": [
+    {
+     "type": "compare",
+     "title": "FY2028：模型 vs 公司指引 vs 市場共識",
+     "groups": [
+      {
+       "name": [
+        "營收（US$B）"
+       ],
+       "fmt": "n0",
+       "items": [
+        {
+         "name": [
+          "公司指引推算"
+         ],
+         "v": "@Recon!B5",
+         "ref": true
+        },
+        {
+         "name": [
+          "市場共識推算"
+         ],
+         "v": "@Recon!B7",
+         "ref": true
+        },
+        {
+         "name": [
+          "模型 情境 A"
+         ],
+         "v": "@Recon!C5"
+        },
+        {
+         "name": [
+          "模型 情境 B"
+         ],
+         "v": "@Recon!E5"
+        },
+        {
+         "name": [
+          "模型 情境 C"
+         ],
+         "v": "@Recon!G5"
+        }
+       ]
+      },
+      {
+       "name": [
+        "毛利率"
+       ],
+       "fmt": "p1",
+       "items": [
+        {
+         "name": [
+          "公司指引中點"
+         ],
+         "v": "@Recon!B8",
+         "ref": true
+        },
+        {
+         "name": [
+          "模型 情境 A"
+         ],
+         "v": "@Recon!C8"
+        },
+        {
+         "name": [
+          "模型 情境 B"
+         ],
+         "v": "@Recon!E8"
+        },
+        {
+         "name": [
+          "模型 情境 C"
+         ],
+         "v": "@Recon!G8"
+        }
+       ]
+      },
+      {
+       "name": [
+        "EPS（US$）"
+       ],
+       "fmt": "n2",
+       "items": [
+        {
+         "name": [
+          "市場共識"
+         ],
+         "v": "@Recon!B10",
+         "ref": true
+        },
+        {
+         "name": [
+          "模型 情境 A"
+         ],
+         "v": "@Recon!C10"
+        },
+        {
+         "name": [
+          "模型 情境 B"
+         ],
+         "v": "@Recon!E10"
+        },
+        {
+         "name": [
+          "模型 情境 C"
+         ],
+         "v": "@Recon!G10"
+        }
+       ]
+      }
+     ],
+     "caption": "灰色＝公司指引或市場共識；青綠＝本模型三情境。對照只作事後檢查，校準時未使用。"
+    },
     {
      "type": "table",
      "head": [

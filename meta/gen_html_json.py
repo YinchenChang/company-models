@@ -21,6 +21,11 @@ def met(name, key, fmt, chart=False, sheet="PL", d=PR, ymin=None):
 conc0 = VR["tpdcf"]; conc1 = VR["chk_rd"]
 rowfmt_conc = {}
 for k in ("up", "upc", "scenup", "tvsh2"): rowfmt_conc[str(VR[k])] = {"B": "sp1", "C": "sp1", "D": "sp1"}
+rowfmt_conc[str(VR["per"])] = {"B": "n3", "C": "n3"}; rowfmt_conc[str(VR["bdist"])] = {"B": "n1", "C": "n2", "D": "n2"}; rowfmt_conc[str(VR["uattr"])] = {"B": "sp1", "C": "sp1", "D": "sp1"}
+for k in ("dep_dcf", "dep_sotp"): rowfmt_conc[str(VR[k])] = {"B": "n2", "C": "p1", "D": "n1"}
+rowfmt_conc[str(VR["dep_tot"])] = {"B": "n2", "C": "p1"}; rowfmt_conc[str(VR["banner"])] = {"B": ""}
+for k in ("liq55", "liq55c"): rowfmt_conc[str(VR[k])] = {"B": "n1", "C": "n1", "D": "n1"}
+rowfmt_conc[str(VR["liq55l"])] = {c: "n2" for c in "BCD"}; rowfmt_conc[str(VR["liq55i"])] = {c: "n1" for c in "BCD"}
 rowfmt_conc[str(VR["tier"])] = {"B": ""}; rowfmt_conc[str(VR["rec"])] = {"B": ""}; rowfmt_conc[str(VR["meth"])] = {"B": ""}
 for k in ("tp_r2", "tp_r1"): rowfmt_conc[str(VR[k])] = {"B": "n2", "C": "sp1", "D": ""}
 for k in ("tp_dcf12", "tp_sotp12"): rowfmt_conc[str(VR[k])] = {"B": "n2", "C": "n2"}
@@ -30,9 +35,14 @@ sotp0 = VR["s_foa"]; sotp1 = VR["simp"]
 rf_s = {str(VR["tvsh"]): {"B": "p1", "C": "p1", "D": "p1"}, str(VR["shv"]): {"B": "n3", "C": "n3", "D": "n3"}, str(VR["ppref"]): {"B": "n2", "C": "n2", "D": "n2"}}
 rf_t = {str(VR["ssh"]): {"B": "n3", "C": "n3", "D": "n3"}, str(VR["simp"]): {"B": "x1", "C": "x1", "D": "x1"}}
 gate = rm["GATE"]
-r1 = find("Recon", "1. 合併層"); r2 = find("Recon", "2. 逐分部"); r3 = find("Recon", "3. M4"); r4 = find("Recon", "4. 一次性")
+r1 = find("Recon", "1. 合併層"); r2 = find("Recon", "2. 逐分部"); r3 = find("Recon", "3. M4"); r4 = find("Recon", "4. 一次性"); r5 = find("Recon", "5. v0.1.1")
+r5b = find("Recon", "5b. 指引差距"); r6 = find("Recon", "6. 自用 AI 讀法 2"); r6b = find("Recon", "6b. 反解"); r6c = find("Recon", "6c. 隱含"); r6d = find("Recon", "6d. 可觀察")
+r7 = find("Recon", "7. 自用在役容量"); r8 = find("Recon", "8. 同業可比性")
+RC6, RC7, RC8 = rm["RC6"], rm["RC7"], rm["RC8"]
 rend = wb["Recon"].max_row
+RC6_q = find("Recon", "反解：達到指引中點")
 se_end = max(x[3] for x in rm["SE_ROWS"])
+TOR_ROWS = ",".join(str(x[3]) for x in rm["SE_ROWS"] if abs(wb["Sens"].cell(x[3], 5).value or 0) > 1e-6)
 TB = T["B"]
 thh = TB["adds"] - 2
 th_rows = ",".join(str(TB[k]) for k in ("adds", "end", "avg_inc", "cx_ai", "cx_tot", "da_ai", "int_opex", "int_cost", "da_b", "shadow", "sh_vs"))
@@ -49,7 +59,7 @@ cfg = {
  "company": "Meta Platforms",
  "ticker": "META",
  "thesis": "@README!A3",
- "question": "FY2028 AI 增量營業利益（主值讀法：自用 AI 影子效益＝自用增量在役 MW × Tokenomics 每 MW 持有成本）能否覆蓋 AI 資本支出的資金成本；收支關卡＝FY2026 到 FY2030 自由現金流扣股利合計",
+ "question": "FY2028 AI 增量營業利益（主值讀法：自用 AI 影子效益＝自用增量在役 MW × Tokenomics 每 MW 持有成本 × k）能否覆蓋 AI 資本支出的資金成本；收支關卡＝FY2026 到 FY2030 自由現金流扣股利合計",
  "scenarios": [{"key": "A", "name": "情境 A（AI 提高每則廣告價格）"}, {"key": "B", "name": "情境 B（近四季成長收斂；基準）"}, {"key": "C", "name": "情境 C（AI 價格提升消退）"}],
  "sections": [
   {"id": "thesis", "title": "命題與核心問題", "blocks": [
@@ -64,7 +74,7 @@ cfg = {
     {"type": "table", "caption": "單一參數區間（In 頁；基準進主模型，敏感度低／高只用於敏感度頁、不進目標價；三情境共用）", "head": ["@In!B3", "@In!D3", "@In!E3", "@In!F3", "@In!C3", "@In!G3"],
      "rows": [[f"@In!B{INK[k]}", f"@In!D{INK[k]}|{f}", f"@In!E{INK[k]}|{f}", f"@In!F{INK[k]}|{f}", f"@In!C{INK[k]}", f"@In!G{INK[k]}|tag"]
               for k, f in (("capex_g", "n0"), ("cx27_k", "n2"), ("a28", "n2"), ("cx_na", "p0"), ("cip_ai", "p0"), ("selfb", "p0"), ("life_it", "n0"), ("rent_l", "n1"),
-                           ("gl_impr", "p0"), ("gl_price", "p0"), ("gl_other", "p0"), ("rl_loss32", "n1"), ("internal_ai_reading", "n0"), ("beta", "n3"), ("g_tv", "p0"), ("w_dcf", "p0"), ("contg", "n1"))]},
+                           ("gl_impr", "p0"), ("gl_price", "p0"), ("gl_other", "p0"), ("rl_loss32", "n1"), ("cip_q", "n0"), ("internal_ai_reading", "n0"), ("beta", "n3"), ("g_tv", "p0"), ("w_dcf", "p0"), ("contg", "n1"))]},
     {"type": "table", "caption": "命題模組：期初機隊（資本支出換算 MW）", "head": ["項目", "單位", "數值"],
      "rowgen": {"sheet": "Thesis", "rows": t0_rows, "cols": ["A", "B", "C"], "fmts": ["", "", "n0"], "row_fmt": t0_fmt}},
     {"type": "table", "caption": "命題模組：自用 AI 容量、資本支出、折舊與影子效益（情境 B）", "head": ["項目", "單位"] + [f"@Thesis!{c}{thh}" for c in "EFGHIJKLM"],
@@ -82,7 +92,8 @@ cfg = {
     {"type": "table", "caption": "分部對帳（三情境 × 全部年度取絕對值最大者，應為零）", "head": ["項目"] + [f"@PL!{c}5" for c in "CDEFGHIJKLM"],
      "rowgen": {"sheet": "PL", "rows": f"{rm['SUMROW']}-{rm['SUMROW'] + 2}", "cols": ["A", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"], "fmts": [""] + ["n3"] * 11}},
     {"type": "table", "caption": "收支關卡", "head": ["項目", "情境 A", "情境 B", "情境 C"],
-     "rowgen": {"sheet": "CF", "rows": f"{gate}-{gate + 3}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"], "row_fmt": {str(gate + 3): {"B": "", "C": "", "D": ""}}}},
+     "rowgen": {"sheet": "CF", "rows": f"{gate}-{gate + 3},{gate + 5}-{gate + 13}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"],
+                "row_fmt": {**{str(gate + i): {"B": "", "C": "", "D": ""} for i in (3, 6, 8, 10, 12)}, str(gate + 9): {c: "n2" for c in "BCD"}, str(gate + 13): {c: "n0" for c in "BCD"}}}},
     {"type": "table", "collapse": True, "summary": "展開：情境 B 的現金流、股東回饋與融資", "head": ["項目"] + [f"@CF!{c}{CR['B']['ni'] - 1}" for c in "EFGHIJKLM"],
      "rowgen": {"sheet": "CF", "rows": cf_rows, "cols": ["A", "E", "F", "G", "H", "I", "J", "K", "L", "M"], "fmts": [""] + ["n1"] * 9}}]},
   {"id": "valuation", "title": "估值", "intro": "@Val!A1", "blocks": [
@@ -110,17 +121,40 @@ cfg = {
     {"type": "table", "caption": "@Recon!A" + str(r3), "head": ["項目", "數值", "說明"],
      "rowgen": {"sheet": "Recon", "rows": f"{r3 + 2}-{r4 - 2}", "cols": ["A", "B", "C"], "fmts": ["", "n1", ""]}},
     {"type": "table", "caption": "@Recon!A" + str(r4), "head": ["項目", "財報口徑", "排除一次性", "差額", "說明"],
-     "rowgen": {"sheet": "Recon", "rows": f"{r4 + 2}-{rend}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n2", "n2", "n2", ""]}}]},
+     "rowgen": {"sheet": "Recon", "rows": f"{r4 + 2}-{r5 - 2}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n2", "n2", "n2", ""]}},
+    {"type": "table", "collapse": True, "summary": "展開：季報新事實與法說方向（只作對照）", "head": ["項目", "數值", "說明"],
+     "rowgen": {"sheet": "Recon", "rows": f"{r5 + 2}-{r5b - 2}", "cols": ["A", "B", "C"], "fmts": ["", "n2", ""]}},
+    {"type": "table", "caption": "@Recon!A" + str(r5b), "head": ["項目", "數值", "說明"],
+     "rowgen": {"sheet": "Recon", "rows": f"{r5b + 2}-{r6 - 2}", "cols": ["A", "B", "C"], "fmts": ["", "n2", ""], "row_fmt": {str(RC6_q): {"B": "p1"}}}},
+    {"type": "table", "caption": "@Recon!A" + str(r6 + 1), "head": ["@Recon!A" + str(r6 + 2), "@Recon!B" + str(r6 + 2), "@Recon!C" + str(r6 + 2), "@Recon!D" + str(r6 + 2), "@Recon!E" + str(r6 + 2), "@Recon!F" + str(r6 + 2), "@Recon!G" + str(r6 + 2)],
+     "rowgen": {"sheet": "Recon", "rows": f"{r6 + 3}-{r6b - 1}", "cols": ["A", "B", "C", "D", "E", "F", "G"], "fmts": ["n2", "n2", "sp1", "", "n2", "n2", ""]}},
+    {"type": "table", "caption": "@Recon!A" + str(r6b), "head": ["@Recon!A" + str(r6b + 1), "@Recon!B" + str(r6b + 1), "@Recon!C" + str(r6b + 1), "@Recon!D" + str(r6b + 1)],
+     "rowgen": {"sheet": "Recon", "rows": f"{r6b + 2}-{RC6['kchk']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n3", "n2", ""]}},
+    {"type": "table", "caption": "@Recon!A" + str(r6c), "head": ["@Recon!A" + str(r6c + 1), "@Recon!B" + str(r6c + 1), "@Recon!C" + str(r6c + 1), "@Recon!D" + str(r6c + 1), "@Recon!E" + str(r6c + 1), "@Recon!F" + str(r6c + 1), "@Recon!G" + str(r6c + 1)],
+     "rowgen": {"sheet": "Recon", "rows": f"{r6c + 2}-{r6d - 1}", "cols": ["A", "B", "C", "D", "E", "F", "G"], "fmts": ["", "", "n1", "n1", "n1", "n1", ""],
+                "row_fmt": {str(RC6["att_" + s_][k]): {c: "p0" for c in "CDEF"} for s_ in "ABC" for k in ("ratio", "ratio2")}}},
+    {"type": "table", "caption": "@Recon!A" + str(r6d), "head": ["@Recon!A" + str(r6d + 1), "@Recon!B" + str(r6d + 1), "@Recon!C" + str(r6d + 1), "@Recon!D" + str(r6d + 1), "@Recon!E" + str(r6d + 1), "@Recon!F" + str(r6d + 1), "@Recon!G" + str(r6d + 1)],
+     "rowgen": {"sheet": "Recon", "rows": f"{r6d + 2}-{r7 - 2}", "cols": ["A", "B", "C", "D", "E", "F", "G"], "fmts": ["", "p0", "p0", "p0", "p0", "", ""]}},
+    {"type": "table", "caption": "@Recon!A" + str(r7), "head": ["@Recon!A" + str(r7 + 1), "@Recon!B" + str(r7 + 1), "@Recon!C" + str(r7 + 1), "@Recon!D" + str(r7 + 1), "@Recon!E" + str(r7 + 1), "@Recon!F" + str(r7 + 1), "@Recon!G" + str(r7 + 1), "@Recon!H" + str(r7 + 1), "@Recon!I" + str(r7 + 1)],
+     "rowgen": {"sheet": "Recon", "rows": f"{r7 + 2}-{RC7['n']}", "cols": ["A", "B", "C", "D", "E", "F", "G", "H", "I"], "fmts": ["", "n2", "n2", "n2", "n2", "n2", "n2", "n2", ""],
+                "row_fmt": {str(RC7["gap"]): {c: "sp1" for c in "BCDEFGH"}, str(RC7["flag"]): {c: "" for c in "BCDEFGH"}, str(RC7["n"]): {"B": "n0"}}}},
+    {"type": "table", "collapse": True, "summary": "展開：同業可比性與商業模式子群中位數（只作展示）", "head": ["@Recon!A" + str(r8 + 1), "@Recon!B" + str(r8 + 1), "@Recon!C" + str(r8 + 1), "@Recon!D" + str(r8 + 1), "@Recon!E" + str(r8 + 1), "@Recon!F" + str(r8 + 1), "@Recon!G" + str(r8 + 1)],
+     "rowgen": {"sheet": "Recon", "rows": f"{r8 + 2}-{rend}", "cols": ["A", "B", "C", "D", "E", "F", "G"], "fmts": ["", "", "x2", "", "", "", ""]}}]},
   {"id": "sens", "title": "敏感度", "intro": "@Sens!A1", "blocks": [
-    {"type": "tornado", "title": "加權目標價相對基準的變動（一次改一個輸入，整本重算）", "sheet": "Sens", "rows": f"4-{se_end}", "label_col": "A", "value_col": "E", "fmt": "sp1"},
-    {"type": "table", "collapse": True, "summary": "展開：全部案例（含收支關卡 B）", "head": ["驅動", "設定", "方向", "加權目標價", "相對基準", "收支關卡 B"],
-     "rowgen": {"sheet": "Sens", "rows": f"4-{se_end}", "cols": ["A", "B", "C", "D", "E", "H"], "fmts": ["", "", "", "n2", "sp1", "n1"]}},
-    {"type": "kv", "items": [["@Sens!A" + str(rm["SE_BASE"]), "@Sens!D" + str(rm["SE_BASE"]) + "|n2"], ["@Sens!A" + str(rm["SE_STALE"]), "@Sens!D" + str(rm["SE_STALE"]) + "|n2"]]}]},
+    {"type": "tornado", "title": "加權目標價相對基準的變動（一次改一個輸入，整本重算；變動為 0 的案例只列在下方全部案例表）", "sheet": "Sens", "rows": TOR_ROWS, "label_col": "A", "value_col": "E", "fmt": "sp1"},
+    {"type": "table", "collapse": True, "summary": "展開：全部案例（含 DCF 單法、評等與收支關卡 B）", "head": ["驅動", "設定", "方向", "加權目標價", "相對基準", "DCF 目標價", "DCF 變動（美元）", "投資建議", "收支關卡 B"],
+     "rowgen": {"sheet": "Sens", "rows": f"4-{se_end}", "cols": ["A", "B", "C", "D", "E", "J", "K", "L", "H"], "fmts": ["", "", "", "n2", "sp1", "n2", "n2", "", "n1"]}},
+    {"type": "kv", "items": [["@Sens!A" + str(rm["SE_BASE"]), "@Sens!D" + str(rm["SE_BASE"]) + "|n2"], ["@Sens!A" + str(rm["SE_STALE"]), "@Sens!D" + str(rm["SE_STALE"]) + "|n2"],
+                             ["模型狀態", "@Sens!D" + str(rm["SE_STATUS"])], ["build_id", "@Sens!D" + str(rm["SE_BID"])]]}]},
   {"id": "status", "title": "資料狀態", "blocks": [
-    {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"],
+    {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期（資料截止日、成品日、股價基準日）", "@README!A1"], ["build_id", "@Sens!D" + str(rm["SE_BID"])], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"],
                              ["Tokenomics 快照", "@Sources!B" + str(find("Sources", "Tokenomics 快照", 2))]]},
     {"type": "h3", "text": "資料與口徑"},
     {"type": "list", "items": ["@Q!A1", "@Q!A2", "@In!A2", "@Sens!A2"]},
+    {"type": "h3", "text": "市場資料日期、失效條件與風險登錄"},
+    {"type": "list", "items": [f"@README!A{r}" for r in list(range(find("README", "市場資料日期") + 1, find("README", "主要失效條件"))) + list(range(find("README", "主要失效條件") + 1, find("README", "風險登錄"))) if wb["README"].cell(r, 1).value]},
+    {"type": "table", "caption": "風險登錄", "head": ["風險", "是否建模", "理由", "觀察指標"],
+     "rowgen": {"sheet": "README", "rows": f"{find('README', '風險登錄') + 2}-{find('README', '工作表：') - 2}", "cols": ["A", "B", "C", "D"]}},
     {"type": "h3", "text": "「未找到」清單"},
     {"type": "scan", "needle": "未找到", "collapse": True, "summary": "展開：標為「未找到」的項目", "sheets": {"Recon": ["A", "C", "F"], "In": ["B", "H", "I"]}, "empty": "沒有標為未找到的項目。"}]}
  ]
@@ -140,18 +174,19 @@ SPEC = {
   ["Reality Labs", [
     ["營收與虧損", ["gl_rl", "rl_loss26", "rl_loss27", "rl_loss32", "rl_da_sh", "rl_mode"]]]],
   ["自用 AI 算力", [
-    ["資本支出與 AI 占比", ["cx_na", "cx_23", "ai_23", "cx_24", "cx_25", "capex_9m", "capex_g", "cx27_k", "cx27_up", "cx27_B", "cx27_A", "cx27_C", "a28", "conv_mw"]],
+    ["資本支出與 AI 占比", ["cx_na", "cx_23", "ai_23", "cx_24", "cx_25", "capex_9m", "capex_g", "cx27_k", "cx27_up", "cx27_B", "cx27_A", "cx27_C", "a28", "conv_mw", "bd_delay"]],
     ["機隊組成與機房", ["selfb", "am_26", "am_27", "am_28"]],
-    ["在建工程與折舊", ["cip_0", "cip_ai", "cip_it", "life_it", "life_fac", "life_na", "phi_0", "phi_q4", "da_base"]],
+    ["在建工程與折舊", ["cip_0", "cip_q", "cip_ai", "cip_it", "life_it", "ec_press", "life_fac", "life_na", "phi_0", "phi_q4", "da_base"]],
     ["租用算力（只進敏感度）", ["rent_l"]],
     ["每 MW 成本（Tokenomics 快照）", ["he_h", "he_b2", "he_b3", "he_vr", "opx_h", "opx_b2", "opx_b3", "opx_vr", "cit_h", "cit_b2", "cit_b3", "cit_vr", "dpi_h", "dpi_b2", "dpi_b3", "cfac"]],
-    ["自用 AI 讀法", ["internal_ai_reading"]]]],
+    ["自用 AI 讀法", ["internal_ai_reading", "k_ai"]]]],
   ["全公司：資產負債、折現率、目標價規則、稅與現金流", [
-    ["股價、股數與資產負債（評價日）", ["px", "px_val", "sh_out", "sh_dil_q3", "sh_basic_q3", "cash_0", "cash_ye25", "debt_0", "debt_ye25", "fin_lease", "legal_oth", "ag_acc_x", "esc_in"]],
+    ["日期（資料截止、股價基準、評價、目標時點）", ["data_date", "px_date", "val_date", "tp_date"]],
+    ["股價、股數與資產負債（評價日）", ["px", "px_val", "sh_out", "sh_dil_q3", "sh_basic_q3", "rsu_unv", "opt_n", "opt_k", "dil_inc", "dil_base", "cash_0", "cash_ye25", "debt_0", "debt_ye25", "fin_lease", "legal_oth", "ag_acc_x", "esc_in"]],
     ["特別股與遠期出售", ["mcps", "conv_sh", "pref_2H", "pref_27", "pref_28", "pref_29", "fwd_on", "fwd_sh", "fwd_cash"]],
     ["折現率", ["rf", "beta_cr", "beta_cd", "blume_a", "beta", "erp", "kd_sp", "kd", "wacc_adj", "g_tv", "ronic_sp"]],
-    ["目標價規則", ["mid", "t_val", "t_q4", "tp_wA", "tp_wB", "tp_wC", "w_dcf", "t_tgt", "w_ntm27", "cons_tp", "dps_tgt", "sbc_add", "tv_alt"]],
-    ["稅、股利、回購與現金", ["tax", "r_cash", "r_debt", "sbc_r", "dil", "wc_k", "dps", "dps_g", "bb_t", "min_cash", "mat_27"]],
+    ["目標價規則", ["mid", "t_val", "t_q4", "tp_wA", "tp_wB", "tp_wC", "w_dcf", "t_tgt", "t_hold", "w_ntm27", "cons_tp", "dps_tgt", "sbc_add", "tv_alt"]],
+    ["稅、股利、回購與現金", ["tax", "r_cash", "r_debt", "sbc_r", "dil", "wc_k", "dps", "dps_g", "bb_t", "min_cash", "mat_27", "lev_max", "icr_min"]],
     ["多州檢察長協議", ["ag_pay", "ag_y1", "ag_rest", "contg"]]]]],
  "blocks_to": {"命題模組": "自用 AI 算力", "@Thesis!A1": "自用 AI 算力", "@Thesis!A2": "自用 AI 算力", "@Seg!A2": "廣告本業（Family of Apps）"},
  "main": {"DCF 彙總": ["明確期現值", "終值現值", "企業價值 EV（主值", "＋淨現金", "DCF 情境價值推到 12 個月後"],

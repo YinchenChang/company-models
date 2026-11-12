@@ -282,5 +282,61 @@ DW = wb["DCF"]
 r_bh = find("DCF", "EBIT 口徑與現金稅率")
 va["blocks"].append({"type": "table", "caption": f"@DCF!A{r_bh}", "head": ["項目", "數值", "對照", "判定"],
                      "rows": [[f"@DCF!A{r_bh + 2}", f"@DCF!B{r_bh + 2}|p1", f"@DCF!C{r_bh + 2}", f"@DCF!D{r_bh + 2}"]], "collapse": True, "summary": "展開：EBIT 口徑與現金稅率"})
+
+# v0.3.6（2026-11-12）：分區主題圖（Andy 2026-11-11 選定四張、11-12 08:38 認可樣板）；列號依標籤找，不寫死
+def _find_after(sh, start, prefix, col="A"):
+    ws = wb[sh]
+    for r in range(start, ws.max_row + 1):
+        v = ws[f"{col}{r}"].value
+        if isinstance(v, str) and v.strip().startswith(prefix):
+            return r
+    raise KeyError((sh, start, prefix))
+
+
+def _theme_blocks():
+    ua = find("Units", "情境 A")
+    amt = _find_after("Units", ua, "金額（顆數")
+    tot = _find_after("Units", amt + 1, "合計")
+    shr = _find_after("Units", tot, "金額份額")
+    units = {"type": "theme", "title": "加速器市場金額（情境 A，US$B）與 NVIDIA 金額份額", "x": "@Units!C3:F3",
+             "fmt": "n0", "fmt_r": "p0", "stack": True, "pad": 1.35, "total": f"@Units!C{tot}:F{tot}",
+             "bars": [{"name": f"@Units!A{r}", "y": f"@Units!C{r}:F{r}"} for r in range(amt + 1, tot)],
+             "lines": [{"name": ["NVIDIA 金額份額"], "y": f"@Units!C{shr + 1}:F{shr + 1}", "axis": "r", "labels": True}],
+             "caption": "堆疊＝各平台加速器金額（顆數 × 每顆售價，模組層級）；折線＝NVIDIA 占加速器總金額的比例（右軸）。"}
+    pa, pb, pc = find("PL", "情境 A"), find("PL", "情境 B"), find("PL", "情境 C")
+    rev = {k: _find_after("PL", v, "營收") for k, v in (("A", pa), ("B", pb), ("C", pc))}
+    gm = {k: _find_after("PL", v, "毛利率") for k, v in (("A", pa), ("B", pb), ("C", pc))}
+    dc, edge = _find_after("PL", pb, "Data Center"), _find_after("PL", pb, "Edge Computing")
+    hbm = _find_after("PL", find("PL", "情境 B："), "HBM 成本占由下而上營收")
+    pl = {"type": "theme", "title": "營收分部（情境 B）與三情境營收（US$B）", "x": "@PL!C3:G3", "fmt": "n0", "stack": True,
+          "bars": [{"name": f"@PL!A{dc}", "y": f"@PL!C{dc}:G{dc}"}, {"name": f"@PL!A{edge}", "y": f"@PL!C{edge}:G{edge}", "color": "#c29a2b"}],
+          "lines": [{"name": [f"@PL!A{pa}", "營收"], "y": f"@PL!C{rev['A']}:G{rev['A']}", "color": "#0b7a80", "dash": True},
+                    {"name": [f"@PL!A{pb}", "營收"], "y": f"@PL!C{rev['B']}:G{rev['B']}", "color": "#3b3838", "labels": True},
+                    {"name": [f"@PL!A{pc}", "營收"], "y": f"@PL!C{rev['C']}:G{rev['C']}", "color": "#b4472f", "dash": True}],
+          "caption": "堆疊長條＝情境 B 的 Data Center 與 Edge Computing；三條線＝情境 A／B／C 的合併營收。FY2026A 為實績、FY2027 為錨點。"}
+    gmc = {"type": "theme", "title": "毛利率（三情境）與 HBM 成本占營收（情境 B）", "x": "@PL!D3:G3", "fmt": "p0", "stack": False,
+           "bars": [{"name": [f"@PL!A{hbm}", "（情境 B）"], "y": f"@PL!D{hbm}:G{hbm}", "color": "#c29a2b"}],
+           "lines": [{"name": [f"@PL!A{pa}", "毛利率"], "y": f"@PL!D{gm['A']}:G{gm['A']}", "color": "#0b7a80", "dash": True},
+                     {"name": [f"@PL!A{pb}", "毛利率"], "y": f"@PL!D{gm['B']}:G{gm['B']}", "color": "#3b3838", "labels": "below"},
+                     {"name": [f"@PL!A{pc}", "毛利率"], "y": f"@PL!D{gm['C']}:G{gm['C']}", "color": "#b4472f", "dash": True}],
+           "caption": "HBM 成本占營收是毛利率的主要變動來源之一；兩者並列，可看記憶體漲價對毛利的壓力在哪一年最大。"}
+    rg, rc = find("Recon", "FY2028 營收 vs 指引"), find("Recon", "FY2028 營收 vs 共識")
+    mg, ep = find("Recon", "FY2028 毛利率 vs 指引"), find("Recon", "FY2028 EPS vs 共識")
+    cmp = {"type": "compare", "title": "FY2028：模型 vs 公司指引 vs 市場共識", "groups": [
+        {"name": ["營收（US$B）"], "fmt": "n0", "items": [{"name": ["公司指引推算"], "v": f"@Recon!B{rg}", "ref": True}, {"name": ["市場共識推算"], "v": f"@Recon!B{rc}", "ref": True},
+                                                       {"name": ["模型 情境 A"], "v": f"@Recon!C{rg}"}, {"name": ["模型 情境 B"], "v": f"@Recon!E{rg}"}, {"name": ["模型 情境 C"], "v": f"@Recon!G{rg}"}]},
+        {"name": ["毛利率"], "fmt": "p1", "items": [{"name": ["公司指引中點"], "v": f"@Recon!B{mg}", "ref": True},
+                                                 {"name": ["模型 情境 A"], "v": f"@Recon!C{mg}"}, {"name": ["模型 情境 B"], "v": f"@Recon!E{mg}"}, {"name": ["模型 情境 C"], "v": f"@Recon!G{mg}"}]},
+        {"name": ["EPS（US$）"], "fmt": "n2", "items": [{"name": ["市場共識"], "v": f"@Recon!B{ep}", "ref": True},
+                                                      {"name": ["模型 情境 A"], "v": f"@Recon!C{ep}"}, {"name": ["模型 情境 B"], "v": f"@Recon!E{ep}"}, {"name": ["模型 情境 C"], "v": f"@Recon!G{ep}"}]}],
+        "caption": "灰色＝公司指引或市場共識；青綠＝本模型三情境。對照只作事後檢查，校準時未使用。"}
+    S = {s["id"]: s for s in cfg["sections"]}
+    S["drivers"]["blocks"].insert(0, units)
+    S["pl"]["blocks"][0:0] = [pl, gmc]
+    S["recon"]["blocks"].insert(0, cmp)
+
+
+_theme_blocks()
+
 json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")
