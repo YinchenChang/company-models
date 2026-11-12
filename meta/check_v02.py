@@ -65,6 +65,13 @@ for r in range(1, rc.max_row + 1):
     if str(rc.cell(r, 1).value or "").strip().startswith("k 梯度的建置基準檢查"):
         d = rc.cell(r, 2).value
         if not isinstance(d, (int, float)) or abs(d) > 0.01: fail.append(f"Recon k 梯度快照過期或缺：{d}")
+import re   # v0.2.0（原則第 53 條）：README 頁每個「數字 MW」前 40 字內須帶口徑字樣（在役／支出口徑／在建）
+RD = wb["README"]
+for r in range(1, RD.max_row + 1):
+    t = str(RD.cell(r, 1).value or "")
+    if re.match(r"^v\d", t): continue
+    for m in re.finditer(r"[0-9][0-9,]*\s*MW", t):
+        if not re.search(r"在役|支出口徑|在建", t[max(0, m.start() - 40):m.start()]): fail.append(f"README!A{r} 容量數字未帶口徑字樣：…{t[max(0, m.start() - 30):m.end()]}")
 tp = V.cell(labs["目標價（DCF 與 Comparable 加權）"], 2).value
 up = V.cell(labs["上檔空間：加權目標價"], 2).value
 rec = V.cell(labs["投資建議"], 2).value
