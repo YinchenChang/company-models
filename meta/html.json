@@ -2,7 +2,7 @@
  "company": "Meta Platforms",
  "ticker": "META",
  "thesis": "@README!A57",
- "question": "FY2028 AI 增量營業利益（主值讀法：自用 AI 影子效益＝自用增量在役 MW × Tokenomics 每 MW 持有成本）能否覆蓋 AI 資本支出的資金成本；收支關卡＝FY2026 到 FY2030 自由現金流扣股利合計",
+ "question": "FY2028 AI 增量營業利益（主值讀法：自用 AI 影子效益＝自用增量在役 MW × Tokenomics 每 MW 持有成本 × k）能否覆蓋 AI 資本支出的資金成本；收支關卡＝FY2026 到 FY2030 自由現金流扣股利合計",
  "scenarios": [
   {
    "key": "A",
@@ -2069,8 +2069,8 @@
        "series": 2
       },
       {
-       "label": "@Val!A30",
-       "value": "@Val!B30",
+       "label": "@Val!A32",
+       "value": "@Val!B32",
        "series": 1
       },
       {
@@ -2265,42 +2265,42 @@
       ],
       [
        "@Val!A28|",
-       "@Val!B28|",
+       "@Val!B28|n2",
        "@Val!C28|n2",
        "@Val!D28|n2",
        "@Val!E28|"
       ],
       [
        "@Val!A29|",
-       "@Val!B29|n2",
-       "@Val!C29|sp1",
-       "@Val!D29|",
+       "@Val!B29|n1",
+       "@Val!C29|n1",
+       "@Val!D29|n1",
        "@Val!E29|"
       ],
       [
        "@Val!A30|",
-       "@Val!B30|n2",
-       "@Val!C30|sp1",
-       "@Val!D30|",
+       "@Val!B30|",
+       "@Val!C30|n2",
+       "@Val!D30|n2",
        "@Val!E30|"
       ],
       [
        "@Val!A31|",
        "@Val!B31|n2",
-       "@Val!C31|n2",
-       "@Val!D31|n2",
+       "@Val!C31|sp1",
+       "@Val!D31|",
        "@Val!E31|"
       ],
       [
        "@Val!A32|",
        "@Val!B32|n2",
-       "@Val!C32|n2",
-       "@Val!D32|n2",
+       "@Val!C32|sp1",
+       "@Val!D32|",
        "@Val!E32|"
       ],
       [
        "@Val!A33|",
-       "@Val!B33|",
+       "@Val!B33|n2",
        "@Val!C33|n2",
        "@Val!D33|n2",
        "@Val!E33|"
@@ -2314,10 +2314,24 @@
       ],
       [
        "@Val!A35|",
-       "@Val!B35|n3",
+       "@Val!B35|",
        "@Val!C35|n2",
        "@Val!D35|n2",
        "@Val!E35|"
+      ],
+      [
+       "@Val!A36|",
+       "@Val!B36|n2",
+       "@Val!C36|n2",
+       "@Val!D36|n2",
+       "@Val!E36|"
+      ],
+      [
+       "@Val!A37|",
+       "@Val!B37|n3",
+       "@Val!C37|n2",
+       "@Val!D37|n2",
+       "@Val!E37|"
       ]
      ]
     },
@@ -3997,6 +4011,6 @@
    "投資建議依加權目標價判定：",
    "@Val!E14"
   ],
-  "ai_note": "@Val!B28"
+  "ai_note": "@Val!B30"
  }
 }

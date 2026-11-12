@@ -45,7 +45,7 @@
 ## 結構（三層）
 | 層 | 內容 | 頁 |
 |---|---|---|
-| 命題模組 | 自用 AI MW。期初機隊＝FY2023–2026 年 9M 的 AI 資本支出，按當年錨世代的每 MW 資本支出（Tokenomics IF_CapexIT＋自建比例 × IF_CapexFacility）換算。評價日支出口徑 MW（含在建）與評價日在役 MW 分開命名（原則第 53 條；數值見成品 Thesis 頁）。<br>Q4 26 新增 MW＝(2026 指引中點 − 9M 實績 − 非 AI) ÷ 每 MW（C10 公式解）。FY2027＝(情境 FY2027 資本支出〔M6〕− 非 AI) ÷ 每 MW。FY2028 同速，FY2029 起收斂。<br>MW 再推出新增 AI 折舊、自用 AI 增量營運成本（相對評價日在役機隊）與讀法 2 影子效益（× `k_ai`，主值 1）。<br>**v0.2.0（J2）**：在建工程對應 MW 自 Q4 26 起分 `cip_q`（4）季線性轉入在役；Sens 2／8 季與不另增 MW（`cip_ai`＝0）。Alphabet、Amazon、Microsoft 下次改版同規則（原則第 54 條） | Thesis |
+| 命題模組 | 自用 AI 容量：支出口徑 MW（含在建）與在役 MW 分開命名。期初機隊＝FY2023–2026 年 9M 的 AI 資本支出，按當年錨世代的每 MW 資本支出（Tokenomics IF_CapexIT＋自建比例 × IF_CapexFacility）換算。評價日支出口徑 MW（含在建）與評價日在役 MW 分開命名（原則第 53 條；數值見成品 Thesis 頁）。<br>Q4 26 新增 MW＝(2026 指引中點 − 9M 實績 − 非 AI) ÷ 每 MW（C10 公式解）。FY2027＝(情境 FY2027 資本支出〔M6〕− 非 AI) ÷ 每 MW。FY2028 同速，FY2029 起收斂。<br>MW 再推出新增 AI 折舊、自用 AI 增量營運成本（相對評價日在役機隊）與讀法 2 影子效益（× `k_ai`，主值 1）。<br>**v0.2.0（J2）**：在建工程對應 MW 自 Q4 26 起分 `cip_q`（4）季線性轉入在役；Sens 2／8 季與不另增 MW（`cip_ai`＝0）。Alphabet、Amazon、Microsoft 下次改版同規則（原則第 54 條） | Thesis |
 | 營收分部 | **Family of Apps**（子列 **Advertising**、**Other revenue**）＋**Reality Labs**。<br>Advertising＝曝光數 × 每則平均價格。兩者的近四季年增各自在 FY2030 收斂到長期值；起始價格年增由廣告金額年增反推。<br>**情境軸＝AI 對每則價格的提升**：A +10%、C −10%，相對 B 路徑，FY2030 到位 | Seg |
 | 損益表 | FoA EBITDA＝(FoA 營收 − 價格情境差額) × 9M26 EBITDA 率（55.1%，排除一次性）＋差額 × 85% − 自用 AI 增量營運成本。<br>減去折舊（基礎 28.6／年＋新增 AI＋新增非 AI）得 FoA 營業利益。RL＝指引與法說路徑（2026 −18.5、2027 −15、FY2032 −5）。<br>由此推到合併營業利益、業外、稅（16%）、EPS（財報口徑／排除一次性／評價口徑） | PL |
 
@@ -57,11 +57,11 @@
 ## 驅動 → 推導對照表
 | 頁 | 輸入（In 頁鍵） | 推導量 | 因果方向 |
 |---|---|---|---|
-| Thesis | capex_g、cx27_A／B／C、cx27_k、cx_na、selfb、a28、cip_0、cip_ai、Tokenomics IF_CapexIT／Facility／OpexGW／HoldEcon（he_*，區間取 Tokenomics 低／高成本欄）／DeprIT | 自用 AI MW、AI 資本支出、新增 AI 折舊、增量營運成本、影子效益 | 資本支出 → MW（C10）→ 折舊與營運成本 → FoA 營業利益；MW → 影子效益 |
+| Thesis | capex_g、cx27_A／B／C、cx27_k、cx_na、selfb、a28、cip_0、cip_ai、cip_q、bd_delay、ec_press、k_ai、Tokenomics IF_CapexIT／Facility／OpexGW／HoldEcon（he_*，區間取 Tokenomics 低／高成本欄）／DeprIT | 在役 MW、支出口徑 MW（含在建）、AI 資本支出、新增 AI 折舊、增量營運成本、影子效益 | 資本支出 → MW（C10）→ 折舊與營運成本 → FoA 營業利益；MW → 影子效益 |
 | Seg | 近四季年增（Q 頁）、gl_impr、gl_price、pA／pC、gl_other、gl_rl、conv_n、g0_q | Advertising（曝光 × 價格）、Other revenue、FoA、RL；非 AI 資本支出與折舊 | 近四季年增 → 長期值；Advertising＝B 路徑 ×(1＋價格情境調整) |
 | PL | m_foa（Q 頁）、inc_m、rl_loss26／27／32、rl_da_sh、tax、ot_*、phi_q4 | 分部 EBITDA 與營業利益、合併營業利益、三種 EPS | 分部營收 → EBITDA − 折舊 → 營業利益 → EPS |
-| CF | sbc_r、wc_k、ag_pay、ag_y1、ag_rest、dps、bb_t、min_cash、mcps、fwd_cash、fwd_on | 自由現金流、股利、回購、新債、淨現金、收支關卡 | 淨利＋折舊 − 協議付款 − 資本支出 → 自由現金流 → 股利 → 回購／舉債 |
-| Val | rf、beta、erp、kd_sp、g_tv、ronic_sp、同業倍數、ads_mode、rl_mode、tp_w*、w_dcf、legal_oth、ag_acc_x、contg、fin_lease、esc_in | DCF、分部加總、目標價、上檔空間、評等 | 無槓桿 FCF 折現＋分部 EBITDA × 倍數 → 情境加權 → 50／50 |
+| CF | sbc_r、wc_k、ag_pay、ag_y1、ag_rest、dps、bb_t、min_cash、mcps、fwd_cash、fwd_on、r_cash、r_debt、dps_g、lev_max、icr_min | 自由現金流、股利、回購、新債、淨現金、收支關卡 | 淨利＋折舊 − 協議付款 − 資本支出 → 自由現金流 → 股利 → 回購／舉債 |
+| Val | rf、beta、erp、kd_sp、g_tv、ronic_sp、同業倍數、ads_mode、rl_mode、tp_w*、w_dcf、legal_oth、ag_acc_x、contg、fin_lease、esc_in、rsu_unv、opt_n、opt_k、dil_inc、px_date、tp_date | DCF、分部加總、目標價、上檔空間、評等 | 無槓桿 FCF 折現＋分部 EBITDA × 倍數 → 情境加權 → 50／50 |
 | Sens | In 頁敏感度低／高 | 加權目標價、DCF 目標價、投資建議、收支關卡 B、FY2027 資本支出 B（含 IF_HoldEcon 四世代同時取低／高） | 一次改一個輸入、整本重算 |
 
 **情境驅動對照（In 頁 J 節）：**
@@ -76,7 +76,7 @@ In 頁 D／F 欄＝敏感度低／高，只用於 Sens 頁（原則第 8 節）�
 - **現價**：v0.1.6 起為 2026-11-05 收盤 605.08（Yahoo Finance、Motley Fool、MarketAlleys 一致；`docs/reports/20261105_收盤價_個股換價來源.md`）。v0.1.5 以前為 2026-10-28 收盤 612.49（StockScan、Digrin、TipRanks 相符）。工作單 M8 要 10-29 收盤，且需兩個來源一致。2026-10-30 只找到 ChartRow 一個來源（624.55，+1.97%），故不採用。
 - **評價日股價**：2026-09-30 收盤 725.18（TipRanks；StockScan 9/30 −1.84% 相符）。用於 WACC 權益權重與回購價。
 - **同業倍數（M7）**：`data/peers_ads_20261030.json` 的六家中位數 9.41×。其中 PINS、TTD、APP、RDDT、SNAP 為 **2026-10-07 基準，未更新**；GOOGL 以 repo 內 Alphabet 資料推算，同基準日。META 自身 8.99×（2026-10-28）只作對照。
-- **β**：只取得兩個公開頁面，未能取得 StockAnalysis（讀取被擋）。兩個來源為 ChartRow 1.24（期間未載）與 CoinDataFlow 5Y Monthly 1.185，Blume 調整後中位數 1.143。
+- **β**：只取得兩個公開頁面，未能取得 StockAnalysis（讀取被擋）。兩個來源為 ChartRow 1.24（期間未載）與 CoinDataFlow 5Y Monthly 1.185，Blume 調整後中位數 1.142（In 頁 beta＝1.142375）。
 - **rf**：沿用 Alphabet v0.3.1 讀取的 2026-10-27 10 年美債 4.99%，因本次重讀財政部網頁被擋。
 - **共識**：MarketScreener 年度共識的頁面日期為 2026-10-08，在 Q3 財報之前。
 

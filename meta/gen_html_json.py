@@ -25,6 +25,7 @@ rowfmt_conc[str(VR["per"])] = {"B": "n3", "C": "n3"}; rowfmt_conc[str(VR["bdist"
 for k in ("dep_dcf", "dep_sotp"): rowfmt_conc[str(VR[k])] = {"B": "n2", "C": "p1", "D": "n1"}
 rowfmt_conc[str(VR["dep_tot"])] = {"B": "n2", "C": "p1"}; rowfmt_conc[str(VR["banner"])] = {"B": ""}
 for k in ("liq55", "liq55c"): rowfmt_conc[str(VR[k])] = {"B": "n1", "C": "n1", "D": "n1"}
+rowfmt_conc[str(VR["liq55l"])] = {c: "n2" for c in "BCD"}; rowfmt_conc[str(VR["liq55i"])] = {c: "n1" for c in "BCD"}
 rowfmt_conc[str(VR["tier"])] = {"B": ""}; rowfmt_conc[str(VR["rec"])] = {"B": ""}; rowfmt_conc[str(VR["meth"])] = {"B": ""}
 for k in ("tp_r2", "tp_r1"): rowfmt_conc[str(VR[k])] = {"B": "n2", "C": "sp1", "D": ""}
 for k in ("tp_dcf12", "tp_sotp12"): rowfmt_conc[str(VR[k])] = {"B": "n2", "C": "n2"}
@@ -58,7 +59,7 @@ cfg = {
  "company": "Meta Platforms",
  "ticker": "META",
  "thesis": "@README!A3",
- "question": "FY2028 AI 增量營業利益（主值讀法：自用 AI 影子效益＝自用增量在役 MW × Tokenomics 每 MW 持有成本）能否覆蓋 AI 資本支出的資金成本；收支關卡＝FY2026 到 FY2030 自由現金流扣股利合計",
+ "question": "FY2028 AI 增量營業利益（主值讀法：自用 AI 影子效益＝自用增量在役 MW × Tokenomics 每 MW 持有成本 × k）能否覆蓋 AI 資本支出的資金成本；收支關卡＝FY2026 到 FY2030 自由現金流扣股利合計",
  "scenarios": [{"key": "A", "name": "情境 A（AI 提高每則廣告價格）"}, {"key": "B", "name": "情境 B（近四季成長收斂；基準）"}, {"key": "C", "name": "情境 C（AI 價格提升消退）"}],
  "sections": [
   {"id": "thesis", "title": "命題與核心問題", "blocks": [
