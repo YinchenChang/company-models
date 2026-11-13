@@ -2,7 +2,7 @@
 ticker: Anthropic
 name: Anthropic
 name_full: Anthropic PBC
-listing: 未上市
+listing: 美（待掛牌，Nasdaq：ANT〔anthropic/docs/reports/20261111_Prospectus原文摘錄.md 第 1 節〕）
 hq: 美國加州舊金山 [外部・未經本專案檢核]
 founded: 2021 [外部・未經本專案檢核]
 employees: 約 3,500（2026-06，公司口述）[本專案：20261104_Anthropic收支模型_v0_1_9.xlsx SRC_ANT!E299]
@@ -54,7 +54,7 @@ AI 模型公司（位於 AI 金流的最上游）：自研 Claude 系列大模�
 - 股權與治理（本專案可見部分）：共同創辦人經 Founder LLC 掌握 50.1% 投票權 [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx SRC_ANT!E315]。
 - 資本募集：公開 S-1 列 2026 年 Series G-1／G-2 30.2bn、Series H-1／H-2 65.2bn，另 Google 與 Amazon 於 Q2 認購 Series G-2 共 15.0bn；上半年特別股發行收入 110.4bn，Q3 無新股權 [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx SRC_ANT!E477–E478、E482、E476、E525]；模型 2026 已到位融資 110.4bn [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx Funding!E26]。新聞稿口徑投後估值 Series G 380bn、Series H 965bn，成立以來私募累計 >125bn [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx SRC_ANT!E307、E303、E308]（[Interested-party]）。
 - 現金：2025 年底 20.28bn、2026-06-30 131.65bn、2026-09-30 131.9bn（另受限現金 2.6bn）[本專案：20261104_Anthropic收支模型_v0_1_9.xlsx SRC_ANT!E309、E448、E520–E521]；循環信用額度 2026-09 擴為 15.0bn [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx SRC_ANT!E489]。
-- IPO：報導預計 2026-11 募資約 100bn、目標估值 2,000bn [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx SRC_ANT!E345、E314]（[Interested-party]）；S-1/A 發行價區間與股數仍留白 [本專案：anthropic/docs/reports/20261103_S1A原文摘錄.md]；Google 可在 IPO 時以發行價認購最多 10bn，與其剩餘 20bn 認購額度互抵 [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx SRC_ANT!E486、G487]。
+- IPO（初步招股說明書 2026-11-10）：價格區間每股 70–78 美元 [本專案：20261111_Anthropic收支模型_v0_2_0.xlsx Val（VAL_PxLo、VAL_PxHi）]、中點 74 [本專案：20261111_Anthropic收支模型_v0_2_0.xlsx SRC_ANT!E526]；公司新股加同步私募淨募資約 84.6bn [本專案：20261111_Anthropic收支模型_v0_2_0.xlsx SRC_ANT!E538]，其中私募 26.0bn 由 Google、NVIDIA、AMD 等以 IPO 價認購 [本專案：20261111_Anthropic收支模型_v0_2_0.xlsx SRC_ANT!E529–E534]；發行後股數 13,086.7 百萬股 [本專案：20261111_Anthropic收支模型_v0_2_0.xlsx SRC_ANT!E543]；2026-10-31 年化營收（Run-Rate Revenue）約 81bn [本專案：20261111_Anthropic收支模型_v0_2_0.xlsx SRC_ANT!E561]。本專案以區間中點計：加權目標價 82.71、上檔 +11.8%、中立 [本專案：20261111_Anthropic收支模型_v0_2_0.xlsx Val（VAL_TP_W、VAL_Up_W、VAL_Rating）]。
 
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |

@@ -34,6 +34,13 @@ if os.path.exists(_sf):
     with open(_sf, encoding="utf-8") as _f:
         STATUS = {r["ticker"]: r["status"] for r in _csv.DictReader(_f)}
 
+def pick_html(folder):
+    """模型成品 HTML：有新版面（檔名含「個股模型」，2026-11-11 起收支型個股）就用新版面，否則用唯一的那份。"""
+    fs = sorted(glob.glob(os.path.join(ROOT, folder, "dist", "*.html")))
+    new = [f for f in fs if "個股模型" in os.path.basename(f)]
+    return os.path.basename((new or fs)[0])
+
+
 def rec5(u):
     """五級規則（與活頁簿 REC 公式相同）。"""
     return "強力買進" if u > 0.5 else "買進" if u > 0.25 else "中立" if u >= -0.25 else "放空" if u >= -0.5 else "強力放空"
@@ -106,7 +113,7 @@ def main():
         folder = v_["model"].split("/")[0] if "/" in v_["model"] else None
         if folder and glob.glob(os.path.join(ROOT, folder, "dist", "*.html")):
             MFOLDER[tk_] = folder
-            MFILE[tk_] = os.path.basename(glob.glob(os.path.join(ROOT, folder, "dist", "*.html"))[0])
+            MFILE[tk_] = pick_html(folder)
         else:
             MFILE[tk_] = os.path.basename(v_["model"])
     valuation = []
@@ -148,7 +155,7 @@ def main():
                  "tk_commit": snap["commit"][:7], "cm_commit": cm, "built": BUILT,
                  "price_date": PRICE_NOTE, "last_close_date": LAST_CLOSE,
                  "pages": "https://yinchenchang.github.io/company-models/",
-                 "private_models": {k: os.path.basename(glob.glob(os.path.join(ROOT, k, "dist", "*.html"))[0])
+                 "private_models": {k: pick_html(k)
                                     for k in ("openai", "anthropic") if glob.glob(os.path.join(ROOT, k, "dist", "*.html"))}},
         "pergw": pergw, "segments": segments, "position": position, "valuation": valuation,
         "nodes": nodes, "params": params,
@@ -187,6 +194,9 @@ def model_files(valuation):
         if not m:
             continue
         h = os.path.splitext(m)[0] + ".html"
+        alt = h.replace("收支模型", "個股模型")      # 收支型個股新版面（2026-11-11 Andy 認可）優先
+        if alt != h and os.path.exists(os.path.join(ROOT, alt)):
+            h = alt
         if not os.path.exists(os.path.join(ROOT, h)):
             print("警告：找不到模型 HTML", h)
             continue
