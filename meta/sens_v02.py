@@ -1,6 +1,6 @@
-# Meta v0.1 敏感度：一次改一個 In 頁輸入（敏感度低／高），整本以 LibreOffice 重算，讀 Val 頁加權目標價、收支關卡 B、FY2027 資本支出 B，
+# Meta 敏感度（v0.1 起；v0.2.0：加 DCF 目標價、投資建議與基準檔輸入指紋 fp，供模型狀態 STALE 判斷）：一次改一個 In 頁輸入（敏感度低／高），整本以 LibreOffice 重算，讀 Val 頁加權目標價、收支關卡 B、FY2027 資本支出 B，
 # 寫成 JSON 供 build_meta.py --sens 使用（鍵＝「鍵|低或高|設定」）。
-# 用法：python3 meta/sens_v01.py <工作資料夾> <輸出 sens.json>（環境變數 JOBS＝平行數，預設 2）
+# 用法：python3 meta/sens_v02.py <工作資料夾> <輸出 sens.json>（環境變數 JOBS＝平行數，預設 2）
 import json, os, subprocess, sys, shutil, tempfile
 from concurrent.futures import ThreadPoolExecutor
 import openpyxl
@@ -33,7 +33,9 @@ def tp_of(xlsx, rowmap):
     rm = json.load(open(rowmap, encoding="utf-8"))
     wb = openpyxl.load_workbook(xlsx, data_only=True)
     cf = wb["CF"]
-    return {"tp": wb["Val"].cell(rm["VR"]["tp"], 2).value, "gateB": cf.cell(rm["GATE"], 3).value, "cx27B": cf[f"H{rm['CR']['B']['cx']}"].value}
+    return {"tp": wb["Val"].cell(rm["VR"]["tp"], 2).value, "tpdcf": wb["Val"].cell(rm["VR"]["tpdcf"], 2).value, "rec": wb["Val"].cell(rm["VR"]["rec"], 2).value,
+            "gateB": cf.cell(rm["GATE"], 3).value, "cx27B": cf[f"H{rm['CR']['B']['cx']}"].value,
+            "fp": wb["Sens"].cell(rm["SE_FP"], 4).value}
 
 
 def run(name, sets):
@@ -50,8 +52,9 @@ for key, side, val, _r in rm["SE_ROWS"]:
     if key == "he_all":                                  # IF_HoldEcon 四世代同時取低／高
         jobs[f"{key}|{side}|{val}"] = [(k, IN.cell(row[k], 4 if val == "lo" else 6).value) for k in ("he_h", "he_b2", "he_b3", "he_vr")]
         continue
+    if val in ("lo", "hi") and IN.cell(row[key], 4 if val == "lo" else 6).value is None: raise SystemExit(f"{key} 缺 {val}")
     v = 1 if val == "hi1" else (0 if val == "zero" else IN.cell(row[key], 4 if val == "lo" else 6).value)
-    jobs[f"{key}|{side}|{val}"] = [(key, v)]
+    jobs[f"{key}|{side}|{val}"] = [(key, v)] + ([("mw_src", 0)] if (key == "cip_ai" and val == "zero") else [])   # v0.2.0：不另增 MW 案搭配資本支出推得口徑
 res = {}
 with ThreadPoolExecutor(max_workers=int(os.environ.get("JOBS", "2"))) as ex:
     futs = {k: ex.submit(run, f"c{i:02d}", sets) for i, (k, sets) in enumerate(jobs.items())}
