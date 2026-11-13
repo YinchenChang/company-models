@@ -1,23 +1,17 @@
 {
  "company": "CoreWeave",
  "ticker": "CRWV",
- "model_sheet": "損益",
+ "model_sheet": "PL",
+ "fiscal_year_end": "12 月（日曆年）",
  "official_segments": [
-  {
-   "name": "單一分部（AI 雲端）",
-   "label": "總營收",
-   "period": "FY2025",
-   "source": "10-Q 2026Q2：one operating segment"
-  }
+  {"name": "AI 雲端平台（唯一應報導部門）", "label": "分部：AI 雲端平台", "period": "FY2025", "value": 5.131, "unit": "US$B",
+   "source": "CoreWeave FY2025 10-K（2026-02-26；單一營運分部）；2026 9M 營收 8.314（Q3 新聞稿 2026-11-10）",
+   "note": "公司未揭露其他營收線（不存在）"}
  ],
  "sublines": [
-  {
-   "parent": "單一分部（AI 雲端）",
-   "labels": [
-    "算力收入",
-    "非算力服務"
-   ]
-  }
+  {"parent": "分部：AI 雲端平台", "labels": ["AI 雲端：命題模組（在役 MW × 每 MW 年收入）"], "kind": "命題子列（合計＝分部）"}
  ],
- "check_labels": []
+ "thesis_sublines": ["AI 雲端：命題模組（在役 MW × 每 MW 年收入）"],
+ "check_labels": ["檢查：分部合計 − 合併營收", "檢查：命題子列 − 分部"],
+ "history_checks": {"sheet": "Q", "labels": ["檢查：Q1＋Q2＋Q3 營收 − 9M 營收（應為 0）"]}
 }

@@ -1,0 +1,23 @@
+{
+ "company": "CoreWeave",
+ "ticker": "CRWV",
+ "model_sheet": "損益",
+ "official_segments": [
+  {
+   "name": "單一分部（AI 雲端）",
+   "label": "總營收",
+   "period": "FY2025",
+   "source": "10-Q 2026Q2：one operating segment"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "單一分部（AI 雲端）",
+   "labels": [
+    "算力收入",
+    "非算力服務"
+   ]
+  }
+ ],
+ "check_labels": []
+}
