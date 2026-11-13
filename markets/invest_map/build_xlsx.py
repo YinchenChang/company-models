@@ -23,8 +23,8 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.6.39"
-DATE = "20261111"
+VERSION = "v0.6.40"
+DATE = "20261113"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
 YELLOW = PatternFill("solid", fgColor="FFF2CC")
@@ -531,8 +531,8 @@ def main():
             else:
                 note = (f"DCF 目標價 {m['tp_dcf']['value']:,.1f}（{m['tp_dcf']['cell']}）；"
                         f"Comparable 目標價 {m['tp_comp']['value']:,.1f}（{m['tp_comp']['cell']}）；"
-                        f"市場共識目標價 {m['tp_cons']['value']:,.1f}（{m['tp_cons']['cell']}，外部、僅供對照）；"
-                        f"價格帶 C～A 情境 DCF {m['dcf_C']['value']:,.1f}～{m['dcf_A']['value']:,.1f}")
+                        + (f"市場共識目標價 {m['tp_cons']['value']:,.1f}（{m['tp_cons']['cell']}，外部、僅供對照）；" if "tp_cons" in m else "")
+                        + f"價格帶 C～A 情境 DCF {m['dcf_C']['value']:,.1f}～{m['dcf_A']['value']:,.1f}")
         elif tk in ("MSFT", "AMZN", "GOOGL", "ORCL", "CRWV", "NBIS", "WYFI"):
             method = "模型加權目標價"   # v0.5.1（Andy 2026-10-26）：不顯示模型自身評等（含「賣出」），改用本地圖五級
             c1 = m["target"]

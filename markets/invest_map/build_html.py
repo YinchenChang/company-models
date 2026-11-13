@@ -24,7 +24,7 @@ ROOT = os.path.dirname(os.path.dirname(HERE))
 
 # v0.6.19：頁首日期改在此集中維護（原本寫死在 data 組裝處，換版時漏改）
 BUILT = "2026-11-11"
-PRICE_NOTE = ("AI半導體 個股與 Oracle 用 2026-11-05 收盤（取自各個股模型現價）；其他算力收支公司用 2026-11-04 收盤（上檔空間＝模型目標價 ÷ 最新收盤 − 1）")
+PRICE_NOTE = ("AI半導體 個股、Oracle、Meta 用 2026-11-05 收盤、CoreWeave 用 2026-11-11 收盤（取自各個股模型現價）；Anthropic 用 IPO 價格區間中點；其他算力收支公司用 2026-11-04 收盤（上檔空間＝模型目標價 ÷ 最新收盤 − 1）")
 LAST_CLOSE = "2026-11-05"
 # 模型狀態註記（data/model_status.csv：代號, 狀態）——偏離旗標旁顯示：最近／下次財報與模型更新計畫
 STATUS = {}
