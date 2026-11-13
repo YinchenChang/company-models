@@ -91,9 +91,9 @@ def cell(b, sheet, c, v):
 # 估值 v2（AI半導體 2026-10-25，company-models #133–#140）：Val 頁「0. 目標價」區塊的統一列標籤
 V2_TP = r"^目標價（DCF 與 Comparable 加權）"
 V2_DCF = r"^DCF 目標價（情境加權）"
-V2_COMP = r"^Comparable 目標價（市場主流同業法）"
-V2_CONS = r"^市場共識目標價"
-V2_SCEN12 = r"DCF 情境價值推到 12 個月後"          # A／B／C 三欄（部分樣板無此列 → 改讀價格帶）
+V2_COMP = r"^Comparable 目標價（(市場主流同業法|未調整，情境加權)）"   # v0.6.40：CoreWeave v5.0（Oracle 收支型樣板）寫「未調整，情境加權」
+V2_CONS = r"^市場共識目標價(?!.*歷史對照)"   # v0.6.40：只作歷史對照的舊共識（CoreWeave v5.0）不讀
+V2_SCEN12 = r"DCF 情境價值推到( 12 個月後|目標價時點)"          # A／B／C 三欄（部分樣板無此列 → 改讀價格帶）
 V2_BAND = r"^價格帶（DCF 不如預期～順利）"          # 數值版：C 情境、A 情境
 V2_OLD = r"^(規則值情境加權價|舊法隱含價（情境加權)"
 V2_UP = r"^上檔空間：加權目標價"                    # 模型自算（÷ 模型現價 − 1）；網站直接引用
@@ -115,7 +115,7 @@ def text_cell(b, sheet, pat):
 
 def semis_px(b):
     """模型現價（上檔空間的分母）：Val 頁「現價（日期…）」優先；記憶體、台積電等放 In 頁。"""
-    for sheet, pat in (("Val", r"^現價（\d{4}-\d{2}-\d{2}"), ("In", r"股價（"), ("In", r"現價（"), ("Val", r"^現價（")):
+    for sheet, pat in (("Val", r"^現價（\d{4}-\d{2}-\d{2}"), ("Val", r"^現價$"), ("In", r"股價（"), ("In", r"現價（"), ("Val", r"^現價（")):
         if sheet not in b.wb.sheetnames:
             continue
         try:
@@ -130,7 +130,12 @@ def semis_v2(b):
     out = {}
     for k, pat in (("tp", V2_TP), ("tp_dcf", V2_DCF), ("tp_comp", V2_COMP), ("tp_cons", V2_CONS),
                    ("up", V2_UP), ("up_comp", V2_UPC)):
-        c, v = first_num_row(b, "Val", pat)[0]
+        try:
+            c, v = first_num_row(b, "Val", pat)[0]
+        except KeyError:
+            if k == "tp_cons":                            # v0.6.40：部分模型（CoreWeave v5.0）無市場共識目標價列
+                continue
+            raise
         out[k] = cell(b, "Val", c, v)
     try:
         c, v = first_num_row(b, "Val", V2_OLD)[0]
@@ -281,18 +286,21 @@ def main():
             # v0.6（2026-10-27）：依「個股模型原則」重建的模型（MAG v0.3、Oracle v0.4）沿用估值 v2 列標籤；
             # 收支關卡讀 CF 頁「收支關卡：自由現金流扣股利（五年合計）」基準情境 B（A、C 列在說明）
             out[tk] = {"model": b.rel, "v2": True, "seg_model": True, **semis_v2(b)}
-            ws = b.wb["CF"]
+            # v0.6.40：Oracle 收支型樣板（CoreWeave v5.0）把收支關卡列放在 Fund 頁（「地圖收支關卡讀這一列」）
+            ws = b.wb["Fund"] if ("Fund" in b.wb.sheetnames and any(isinstance(r[0].value, str) and r[0].value.startswith("收支關卡：")
+                                                                    for r in b.wb["Fund"].iter_rows(max_row=10))) else b.wb["CF"]
             for row in ws.iter_rows():
-                if isinstance(row[0].value, str) and row[0].value.startswith("收支關卡：自由現金流"):   # SpaceX 列名為「自由現金流（收支關卡口徑，五年合計）」
+                if isinstance(row[0].value, str) and (row[0].value.startswith("收支關卡：自由現金流") or row[0].value.startswith("收支關卡：FY2026–FY2030 自由現金流")):   # SpaceX 列名為「自由現金流（收支關卡口徑，五年合計）」
                     nums = [(c.coordinate, c.value) for c in row[1:] if isinstance(c.value, (int, float))][:3]
+                    sheet_g = ws.title
                     # 關卡依基準情境 B 的五年合計（Andy 10-25：模型期間現金收支合計 < 0 即入不敷出）；A、C 寫進列名供對照
                     (ca, va), (cb, vb), (cc, vc) = nums
                     out[tk]["cash"] = {"basis": "現金流", "file": b.rel,
                                        "label": ("自由現金流扣股利五年合計" if "扣股利" in row[0].value else "自由現金流五年合計（收支關卡口徑）") + f"（基準情境 B；A {va:,.1f}、C {vc:,.1f}）",
-                                       "values": [("情境 B 五年合計", vb, f"CF!{cb}")]}
+                                       "values": [("情境 B 五年合計", vb, f"{sheet_g}!{cb}")]}
                     break
             else:
-                raise KeyError(f"{b.rel} CF 頁找不到收支關卡列")
+                raise KeyError(f"{b.rel} CF／Fund 頁找不到收支關卡列")
         else:
             out[tk] = {"model": b.rel, **cloud(b)}
 

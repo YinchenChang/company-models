@@ -1,12 +1,12 @@
 ticker,close,currency,date,source,sources_count
-CRWV,48.42,USD,2026-11-04,massive；marketbeat,2
+CRWV,60.77,USD,2026-11-11,個股模型現價（20261112_CoreWeave個股模型_v5.0.xlsx，Val!C4；In 頁 px 2026-11-11 收盤）,1
 NBIS,141.52,USD,2026-11-04,massive；marketbeat,2
 WYFI,9.15,USD,2026-11-04,massive；marketbeat,2
 ORCL,115.16,USD,2026-11-05,個股模型現價（20261110_Oracle個股模型_v0.5.1.xlsx，In!E5；模型出處 Yahoo Finance 日線 115.16、StockAnalysis 115.19）,2
 MSFT,555.80,USD,2026-11-04,massive；marketbeat,2
 AMZN,266.03,USD,2026-11-04,massive（marketbeat 266.31，03:59 PM）,1
 GOOGL,288.93,USD,2026-11-04,massive；marketbeat,2
-META,630.00,USD,2026-11-04,massive；marketbeat,2
+META,605.08,USD,2026-11-05,個股模型現價（20261111_Meta個股模型_v0.2.0.xlsx，Val!B9）,1
 SPCX,135.92,USD,2026-11-04,massive；marketbeat,2
 00100,167.30,HKD,2026-11-04,etnet（04/11/2026 17:59）,1
 02513,484.20,HKD,2026-11-04,etnet（04/11/2026 17:59）,1
