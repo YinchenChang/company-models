@@ -23,7 +23,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.6.38"
+VERSION = "v0.6.39"
 DATE = "20261111"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
@@ -166,7 +166,7 @@ COMPANY_META = {
     "CRWV": ("CoreWeave", "美", "USD", "coreweave"), "NBIS": ("Nebius", "美", "USD", "nebius"),
     "WYFI": ("WhiteFiber", "美", "USD", "whitefiber"),
     "00100": ("MiniMax", "港", "HKD", "minimax"), "02513": ("智譜", "港", "HKD", "zhipu"),
-    "OpenAI": ("OpenAI", "未上市", "USD", "openai"), "Anthropic": ("Anthropic", "未上市", "USD", "anthropic"),
+    "OpenAI": ("OpenAI", "未上市", "USD", "openai"), "Anthropic": ("Anthropic", "美（待掛牌）", "USD", "anthropic"),
 }
 
 # v0.5（2026-10-25 Andy 18:14）：AI半導體 其餘個股全部接入。公司名、掛牌、次產業、重要性、地位依據取自候選母體；
@@ -523,10 +523,16 @@ def main():
             if "old_rule" in m:
                 alt = (f"={m['old_rule']['value']}/N{i}-1", )
                 altlbl = f"舊法：規則值情境加權價（參考，{m['old_rule']['cell']}）"
-            note = (f"DCF 目標價 {m['tp_dcf']['value']:,.1f}（{m['tp_dcf']['cell']}）；"
-                    f"Comparable 目標價 {m['tp_comp']['value']:,.1f}（{m['tp_comp']['cell']}）；"
-                    f"市場共識目標價 {m['tp_cons']['value']:,.1f}（{m['tp_cons']['cell']}，外部、僅供對照）；"
-                    f"價格帶 C～A 情境 DCF {m['dcf_C']['value']:,.1f}～{m['dcf_A']['value']:,.1f}")
+            if m.get("ipo"):   # v0.6.39 Anthropic：尚未掛牌，現價＝IPO 價格區間中點；無市場共識
+                note = (f"IPO 價格區間中點計（尚未掛牌）；DCF 目標價 {m['tp_dcf']['value']:,.1f}（{m['tp_dcf']['cell']}）；"
+                        f"Comparable 目標價（調整後，進加權）{m['tp_comp']['value']:,.1f}（{m['tp_comp']['cell']}）；"
+                        f"市場主流 Comparable（未調整）{m['tp_comp_main']['value']:,.1f}（{m['tp_comp_main']['cell']}）；"
+                        f"價格帶 C～A 情境 DCF {m['dcf_C']['value']:,.1f}～{m['dcf_A']['value']:,.1f}")
+            else:
+                note = (f"DCF 目標價 {m['tp_dcf']['value']:,.1f}（{m['tp_dcf']['cell']}）；"
+                        f"Comparable 目標價 {m['tp_comp']['value']:,.1f}（{m['tp_comp']['cell']}）；"
+                        f"市場共識目標價 {m['tp_cons']['value']:,.1f}（{m['tp_cons']['cell']}，外部、僅供對照）；"
+                        f"價格帶 C～A 情境 DCF {m['dcf_C']['value']:,.1f}～{m['dcf_A']['value']:,.1f}")
         elif tk in ("MSFT", "AMZN", "GOOGL", "ORCL", "CRWV", "NBIS", "WYFI"):
             method = "模型加權目標價"   # v0.5.1（Andy 2026-10-26）：不顯示模型自身評等（含「賣出」），改用本地圖五級
             c1 = m["target"]
