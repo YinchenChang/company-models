@@ -9,7 +9,10 @@
   "PX": "debelegger.nl CRWV 頁（2026-11-11 最新收盤 60.77）；Motley Fool、heygotrade（獨立核對代理 2026-11-12 確認 11-11 收盤 60.77）",
   "UST": "CAPP Notes Closing Look 2026-11-10（https://cappnotes.substack.com/p/closing-look-tuesday-november-10：「The 10-year yield rose 10 bps to 4.98%」）；heygotrade 2026-11-11（https://www.heygotrade.com/en/news/coreweave-crwv-stock-news-november-11-2026/，引 IBD：+10bp 至 4.98%）；CNBC 11-10「races back to 5%」",
   "IREN": "IREN 新聞稿 2025-11-03 IREN Secures $9.7bn AI Cloud Contract with Microsoft（https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-97bn-ai-cloud-contract-microsoft）",
-  "WAT": "wattonomics/data/wattonomics_snapshot_v0.3.json（20261105_Wattonomics_v0.3.xlsx，sha256 c91aedf1…）列 mw_crwv"
+  "WAT": "wattonomics/data/wattonomics_snapshot_v0.3.json（20261105_Wattonomics_v0.3.xlsx，sha256 c91aedf1…）列 mw_crwv",
+  "NBIS_6K": "Nebius Q3 2026 6-K 附件 99.1（2026-11-12）https://www.sec.gov/Archives/edgar/data/0001513845/000110465926126008/tm2629571d1_ex99-1.htm",
+  "IREN_Q1": "IREN Reports Q1 FY27 Results（2026-11-05）https://globenewswire.com/news-release/2026/11/05/3397020/0/en/iren-reports-q1-fy27-results.html",
+  "MS": "MarketScreener 共識與報價（chat 端內建瀏覽器擷取 2026-11-13）https://www.marketscreener.com/quote/stock/{NEBIUS-GROUP-8037501|IREN-LIMITED-129472358|ORACLE-CORPORATION-13620698}/finances/"
  },
  "items": [
   {

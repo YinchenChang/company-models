@@ -55,7 +55,7 @@ def met(name, rows, fmt, chart=False):
     if chart: m["chart"] = True
     return m
 V3 = lambda keys, src, f: [[f"@Val!A{src[k]}", f"@Val!C{src[k]}|{f.get(k, 'n1')}", f"@Val!D{src[k]}|{f.get(k, 'n1')}", f"@Val!E{src[k]}|{f.get(k, 'n1')}"] for k in keys]
-CONF = {"up": "sp1", "upc": "sp1", "dist": "p1", "dcfup": "sp1", "cmpup": "sp1", "adjup": "sp1", "tvsh": "p1", "rec": "", "inr": "", "dvalid": "", "bn_scn": "", "bn_edge": "", "bn_dcf": "", "upchk": "p1"}
+CONF = {"mup": "x1", "mdn": "x1", "up": "sp1", "upc": "sp1", "dist": "p1", "dcfup": "sp1", "cmpup": "sp1", "adjup": "sp1", "tvsh": "p1", "rec": "", "inr": "", "dvalid": "", "bn_scn": "", "bn_edge": "", "bn_dcf": "", "upchk": "p1"}
 def ctab(keys):
     return [[f"@Val!A{CON[k]}", f"@Val!C{CON[k]}|{CONF.get(k, 'n2')}" if CONF.get(k, 'n2') else f"@Val!C{CON[k]}"] for k in keys]
 RW = wb["Recon"]
@@ -177,7 +177,7 @@ cfg = {
             {"type": "table", "caption": "結論（主要項目）", "head": ["項目", "數值"], "rows": ctab(["tp", "dcf", "comp", "px", "up", "upc", "rec", "dvalid", "cons"])},
             {"type": "kv", "items": [[f"@Val!A{CON['tps']}", [f"@Val!C{CON['tps']}|n2", "／", f"@Val!D{CON['tps']}|n2", "／", f"@Val!E{CON['tps']}|n2", "（情境 A／B／C）"]]]},
             {"type": "table", "collapse": True, "summary": "展開：結論的其他項目（上檔空間歸因、區間、增量價值、級距距離、舊版對照）", "head": ["項目", "數值"],
-             "rows": ctab(["comp0", "dcfup", "cmpup", "adjup", "upchk", "lo", "hi", "inr", "npvAB", "npvBC", "npvps", "dist", "v413", "chg", "tvsh"])},
+             "rows": ctab(["mup", "mdn", "comp0", "dcfup", "cmpup", "adjup", "upchk", "lo", "hi", "inr", "npvAB", "npvBC", "npvps", "dist", "v413", "chg", "tvsh"])},
             {"type": "table", "caption": "DCF 折現率（主要項目）", "head": ["項目", "數值"],
              "rows": [[f"@Val!A{VR[k]}", f"@Val!C{VR[k]}|p2"] for k in ("wacc", "ke", "kdat", "ronic")] + [[f"@In!B{INR['tp_g']}", f"@In!E{INR['tp_g']}|p1"]]},
             {"type": "table", "collapse": True, "summary": "展開：折現率組成（股權市值、負債、無風險利率、β、股權風險溢酬、稅前債務成本、稅率）", "head": ["項目", "數值"],
