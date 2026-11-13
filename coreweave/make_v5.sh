@@ -6,7 +6,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-OUTNAME="20261112_CoreWeave個股模型_v5.0.xlsx"
+OUTNAME="20261113_CoreWeave個股模型_v5.0.1.xlsx"
 if [ "${SENS:-0}" = "1" ]; then python3 coreweave/scripts/sens_v50.py --jobs "${JOBS:-2}"; fi
 if [ "${REV:-0}" = "1" ]; then python3 coreweave/scripts/reverse_v50.py --jobs "${JOBS:-2}"; fi
 if [ "${DEC:-0}" = "1" ]; then python3 coreweave/scripts/decomp_v50.py; fi
@@ -30,3 +30,4 @@ python3 coreweave/scripts/make_html_json.py "$WD/rowmap.json"
 python3 tools/company_html/build_company_html.py coreweave
 python3 tools/company_html/check_company_html.py coreweave
 python3 tools/model_governance/check_governance.py "coreweave/dist/$OUTNAME" --html "coreweave/dist/${OUTNAME%.xlsx}.html" --display coreweave
+python3 tools/model_governance/check_rating_gate.py "coreweave/dist/$OUTNAME" --strict        # 原則 63：收支關卡不通過不得為買進

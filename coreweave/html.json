@@ -3,7 +3,7 @@
  "ticker": "CRWV",
  "wide_text": true,
  "hero": {
-  "rec": "@Val!C68",
+  "rec": "@Val!C71",
   "tiles": [
    [
     "@Val!A64",
@@ -28,17 +28,17 @@
    ]
   ],
   "note": [
-   "@Val!C90",
-   "。",
-   "@Val!C88",
+   "@Val!C94",
    "。",
    "@Val!C91",
    "。",
-   "@Val!C85",
+   "@Val!C95",
    "。",
-   "@Val!C89",
-   "。投資建議依加權目標價判定：",
-   "@Val!F68"
+   "@Val!C88",
+   "。",
+   "@Val!C92",
+   "。",
+   "@Val!F71"
   ]
  },
  "thesis": "@README!A2",
@@ -2474,8 +2474,8 @@
        "series": 2
       },
       {
-       "label": "@Val!A81",
-       "value": "@Val!C81",
+       "label": "@Val!A84",
+       "value": "@Val!C84",
        "series": 0
       }
      ],
@@ -2517,16 +2517,16 @@
        "@Val!C67|sp1"
       ],
       [
-       "@Val!A68",
-       "@Val!C68"
+       "@Val!A71",
+       "@Val!C71"
       ],
       [
-       "@Val!A77",
-       "@Val!C77"
+       "@Val!A80",
+       "@Val!C80"
       ],
       [
-       "@Val!A81",
-       "@Val!C81|n2"
+       "@Val!A84",
+       "@Val!C84|n2"
       ]
      ]
     },
@@ -2556,44 +2556,36 @@
      ],
      "rows": [
       [
-       "@Val!A86",
-       "@Val!C86|x1"
+       "@Val!A89",
+       "@Val!C89|x1"
       ],
       [
-       "@Val!A87",
-       "@Val!C87|x1"
+       "@Val!A90",
+       "@Val!C90|x1"
       ],
       [
        "@Val!A63",
        "@Val!C63|n2"
       ],
       [
-       "@Val!A70",
-       "@Val!C70|sp1"
-      ],
-      [
-       "@Val!A71",
-       "@Val!C71|sp1"
-      ],
-      [
-       "@Val!A72",
-       "@Val!C72|sp1"
-      ],
-      [
        "@Val!A73",
-       "@Val!C73|p1"
+       "@Val!C73|sp1"
       ],
       [
        "@Val!A74",
-       "@Val!C74|n2"
+       "@Val!C74|sp1"
       ],
       [
        "@Val!A75",
-       "@Val!C75|n2"
+       "@Val!C75|sp1"
       ],
       [
        "@Val!A76",
-       "@Val!C76"
+       "@Val!C76|p1"
+      ],
+      [
+       "@Val!A77",
+       "@Val!C77|n2"
       ],
       [
        "@Val!A78",
@@ -2601,15 +2593,11 @@
       ],
       [
        "@Val!A79",
-       "@Val!C79|n2"
+       "@Val!C79"
       ],
       [
-       "@Val!A80",
-       "@Val!C80|n2"
-      ],
-      [
-       "@Val!A69",
-       "@Val!C69|p1"
+       "@Val!A81",
+       "@Val!C81|n2"
       ],
       [
        "@Val!A82",
@@ -2620,8 +2608,20 @@
        "@Val!C83|n2"
       ],
       [
-       "@Val!A84",
-       "@Val!C84|p1"
+       "@Val!A72",
+       "@Val!C72|p1"
+      ],
+      [
+       "@Val!A85",
+       "@Val!C85|n2"
+      ],
+      [
+       "@Val!A86",
+       "@Val!C86|n2"
+      ],
+      [
+       "@Val!A87",
+       "@Val!C87|p1"
       ]
      ]
     },
@@ -3548,7 +3548,8 @@
      "summary": "展開：版本要點",
      "items": [
       "@README!A48",
-      "@README!A49"
+      "@README!A49",
+      "@README!A50"
      ]
     },
     {

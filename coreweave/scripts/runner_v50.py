@@ -21,7 +21,7 @@ def read(path):
     tb = _find(T, "情境 B（基準")
     pm_r = next(r for r in range(tb, T.max_row + 1) if str(T.cell(r, 1).value or "").startswith("每 MW 年收入（錨"))
     return {"tp": g(V, "目標價（DCF 與 Comparable 加權）"), "dcf": g(V, "DCF 目標價（情境加權）"), "comp": g(V, "Comparable 目標價（情境加權）"),
-            "rec": g(V, "投資建議"), "gate": g(F, "收支關卡：", 4), "fp": g(S, "輸入指紋（本檔即時重算", 4), "pm30": T.cell(pm_r, 9).value}
+            "rec": g(V, "估值評等（只看上檔空間"), "gate": g(F, "收支關卡：", 4), "fp": g(S, "輸入指紋（本檔即時重算", 4), "pm30": T.cell(pm_r, 9).value}
 
 
 def run(cases, jobs=2):
