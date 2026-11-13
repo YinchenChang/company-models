@@ -189,7 +189,8 @@ cfg = {
             {"type": "table", "caption": "Comparable（三情境；主要項目）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
              "rows": V3(["eb", "ev", "nd27", "sh27", "v12"], CO, {"sh27": "n3", "v12": "n2"})},
             {"type": "table", "collapse": True, "summary": "展開：同業倍數", "head": [f"@Val!{c}{R['PEERH']}" for c in "ABCDEGHIJ"],
-             "rowgen": {"sheet": "Val", "rows": f"{R['PEERS'][0]}-{VR['mult']}", "cols": list("ABCDEGHIJ"), "fmts": ["", "", "n1", "n2", "", "p1", "n2", "p1", "p1"]}}]},
+             "rowgen": {"sheet": "Val", "rows": f"{R['PEERS'][0]}-{VR['mult']}", "cols": list("ABCDEGHIJ"), "fmts": ["", "", "n1", "n2", "", "p1", "n2", "p1", "p1"],
+                        "row_fmt": {str(VR["altm"]): {"C": "n2", "D": "n2", "E": "n2"}}}}]},
         {"id": "revdcf", "title": "反向 DCF：現價隱含什麼", "intro": "@RevDCF!A2", "blocks": [
             {"type": "table", "head": [f"@RevDCF!{c}4" for c in "ABCDGHIJ"],
              "rowgen": {"sheet": "RevDCF", "rows": f"5-{RVN['dn'] if 'dn' in RVN else RVN['px']}", "cols": list("ABCDGHIJ"), "fmts": ["", "", "n2", "n3", "n2", "n2", "sp1", "n1"]}},

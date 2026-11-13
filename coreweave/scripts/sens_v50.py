@@ -27,7 +27,7 @@ CASES = [
     one("r_junk", "高息債利率（A12）"), one("lev_max", "投資級債上限（借款 ÷ EBITDA）"), one("kd", "稅前債務成本 kd（WACC 與新債利率）"),
     one("tax_lt", "長期現金稅率（B3）"), one("rsu_net", "RSU＋選擇權淨股數（待 Q3 10-Q）"),
     one("beta_u", "無槓桿 β（自算產業 β ±0.3）"), one("erp", "股權風險溢酬"), one("wacc_adj", "WACC ±1pt"), one("ronic_adj", "RONIC − WACC"), one("tp_g", "永續成長率 g"),
-    one("w_dcf", "DCF 權重（A1）"), one("mult_adj", "Comparable 倍數 ±20%"),
+    one("w_dcf", "DCF 權重（A1）"), one("peer_nd_mode", "同業淨負債改用 MarketScreener 當年度預估（替代口徑）"), one("mult_adj", "Comparable 倍數 ±20%"),
     ("mwB_27 mwB_28 mwB_29 mwB_30", "融資受限：建置延後一年（情境 B 路徑後移；原則 9）", "B 路徑 2,475／3,100／4,000／4,800", {"mwB_27": 2475, "mwB_28": 3100, "mwB_29": 4000, "mwB_30": 4800}, None),
 ]
 runs = [("base", {}, {})]
