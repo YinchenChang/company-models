@@ -1,13 +1,13 @@
 {
  "meta": {
   "version": "v0.6.40",
-  "book": "20261111_AI投資地圖_資料_v0.6.40.xlsx",
+  "book": "20261113_AI投資地圖_資料_v0.6.40.xlsx",
   "tk_file": "20261102_Tokenomics_v21.8.xlsx",
   "tk_version": "v21.8",
   "tk_commit": "91db9ac",
-  "cm_commit": "7cb3a07",
+  "cm_commit": "b0f21cd",
   "built": "2026-11-11",
-  "price_date": "AI半導體 個股與 Oracle 用 2026-11-05 收盤（取自各個股模型現價）；其他算力收支公司用 2026-11-04 收盤（上檔空間＝模型目標價 ÷ 最新收盤 − 1）",
+  "price_date": "AI半導體 個股、Oracle、Meta 用 2026-11-05 收盤、CoreWeave 用 2026-11-11 收盤（取自各個股模型現價）；Anthropic 用 IPO 價格區間中點；其他算力收支公司用 2026-11-04 收盤（上檔空間＝模型目標價 ÷ 最新收盤 − 1）",
   "last_close_date": "2026-11-05",
   "pages": "https://yinchenchang.github.io/company-models/",
   "private_models": {
