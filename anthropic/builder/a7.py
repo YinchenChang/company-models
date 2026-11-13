@@ -44,7 +44,7 @@ def build(ctx):
           only25(f"={I('s1a_commit_switch')}*«s1a_seg@$»+(1-{I('s1a_commit_switch')})*(«s1u_l@$»+«s1u_p@$»+«s1u_n@$»)"), "Cost 第二十六節（S-1/A 三段）", name="COST_S1fCommit3", name_cols="D")
     K.add("s1u_mod", "W1(b) 模型逐家合約總額（第十一節；W1(a) 後；不含 AMD〔不在 S-1 承諾表內〕）", "$B",
           only25("=" + "+".join(f"«tot_{k}@$»" for k in IN_TABLE)), "Google、Broadcom、Amazon、Microsoft、SpaceX、Nscale、Lambda、Volta、Akamai", name="COST_S1fCommitModel", name_cols="D")
-    K.add("s1u_raw", "W1(b) 差額＝S-1 三段合計 −（R5d 扣除讀法時）附條件 213.8 − 模型逐家合約總額", "$B", only25("=«s1u_sum@$»-«s1a_cdd@$»-«s1u_mod@$»"),
+    K.add("s1u_raw", "W1(b) 差額＝S-1 三段合計 −（R5d 扣除讀法時）附條件 213.8 − 模型逐家合約總額", "$B", only25("=«s1u_sum@$»-«s1a_cdd@$»-«p_lamd@$»-«s1u_mod@$»"),
           "負＝模型逐家已超過 S-1 合計（未歸屬餘額取 0）；v0.1.8 R5d：基準附條件扣除額 0（s1a_cond_deduct_switch＝0）")
     K.add("s1u_tot", "W1(b) S-1 承諾未歸屬餘額（進基準；開關 × MAX(0, 差額)）", "$B", only25(f"={sw}*MAX({zero},«s1u_raw@$»)"),
           "工作單 W1(b)；s1f_commit_switch＝0 時為 0", name="COST_S1Unalloc", name_cols="D")

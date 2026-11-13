@@ -144,7 +144,7 @@ def test_dist_xlsx_is_current_model():
     assert XLSX.exists()
     h = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()  # noqa: E731
     assert h(XLSX) == h(MODEL)
-    others = [p.name for p in (REPO / "dist").glob("*.html") if p != HTML]
+    others = [p.name for p in (REPO / "dist").glob("*.html") if p != HTML and p.name != HTML.name.replace("收支模型", "個股模型")]  # 新版面（tools/build_html_v2.py，Andy 2026-11-11）
     assert not others, f"dist 有非現行版本的 HTML：{others}"
 
 
@@ -163,11 +163,15 @@ def test_narrative_claims(engine):
     com = engine.get_name("FND_Committed")[1]
     assert abs(engine.get_name("FND_CommittedS1Gap")) <= engine.get_name("INP_220") and com > 110, "『已到位融資 110.4、與 S-1 特別股收入一致』不成立"
     assert abs(engine.get_name("FND_CommittedS1aGap")) <= engine.get_name("INP_220"), "『S-1/A：Q3 無新股權、已到位融資不變』不成立"
-    assert engine.get_name("COST_GapPosSustainYear") == 2030 and engine.get_name("FND_FCFPosSustainYear") == 2030, "『2030 持續轉正』不成立"
+    assert engine.get_name("COST_GapPosSustainYear") == 2030, "『命題 1：2030 持續轉正』不成立"
+    assert engine.get_name("FND_FCFPosSustainYear") == 2029, "『v0.2.0：營運自由現金流 2029 年起持續為正』不成立"
     fcf = dict(zip(YEARS, engine.get_name("FND_FCF")))
-    assert fcf[2026] > 0 and all(fcf[y] < 0 for y in (2027, 2028, 2029)) and fcf[2030] > 0, "『營運自由現金流 2026 正、2027–2029 負、2030 正』不成立"
+    assert fcf[2026] > 0 and all(fcf[y] < 0 for y in (2027, 2028)) and fcf[2029] > 0 and fcf[2030] > 0, "『營運自由現金流 2026 正、2027–2028 負、2029 起正』不成立"
     cash = dict(zip(YEARS, engine.get_name("FND_CashNoExt")))
-    assert cash[2029] == engine.get_name("FND_CashNoExtTrough")
+    assert cash[2028] == engine.get_name("FND_CashNoExtTrough"), "『v0.2.0：現金谷底在 2028』不成立"
+    up = engine.get_name("VAL_Up_W")                                     # v0.2.0：評等規則與上檔空間一致
+    want = "強力買進" if up > 0.5 else "買進" if up > 0.25 else "中立" if up >= -0.25 else "放空" if up >= -0.5 else "強力放空"
+    assert engine.get_name("VAL_Rating") == want
     sup = dict(zip(YEARS, engine.get_name("CMP_SupplyGW")))
     assert sup[2030] < sup[2028], "『供給 2028 年後遞減』不成立"
     assert all(g < 0 for g in engine.get_name("OAI_COST_PropGap_VR")), "『OpenAI 每年差額皆為負』不成立"
@@ -181,8 +185,10 @@ def test_single_driver_claims(engine, loc):
     single = [k for k, g in load_scenarios()["scenarios"].items() if len(g) == 1]
     need = {sc: _scenario_values(engine, loc, sc, [("FND_ExtNeedCum", 2030)])[("FND_ExtNeedCum", 2030)] for sc in single}
     base = engine.get_name("FND_ExtNeedCum")[-1]
-    for sc in ("api_task_lo", "elast_weak", "r4_on", "s1u_fast"):          # ① 備註所列（v0.1.8：合約價 20 不再產生外部資金需求，改列 R4）
-        assert need[sc] > base, sc
+    tr = {sc: _scenario_values(engine, loc, sc, [("FND_CashNoExtTrough", None)])[("FND_CashNoExtTrough", None)] for sc in ("api_task_lo", "elast_weak", "r4_on", "s1u_fast")}
+    base_tr = engine.get_name("FND_CashNoExtTrough")
+    for sc in ("api_task_lo", "elast_weak", "r4_on", "s1u_fast"):          # ① 備註所列：v0.2.0 起 IPO 淨額進基準，單一驅動只降低谷底、不產生外部資金需求
+        assert need[sc] in (None, "", 0) and tr[sc] < base_tr, sc
     assert need["price_hi"] in (None, "", 0)
     assert need["mc_hi"] in (None, "", 0) and need["mc_lo"] in (None, "", 0)          # v0.1.8：最低現金 12 個月也不需要
     assert need["r5d_on"] in (None, "", 0)
@@ -190,6 +196,6 @@ def test_single_driver_claims(engine, loc):
     assert v0171 in (None, "", 0)
     for sc, pos in (("combo1", True), ("v016", False), ("v017", True), ("v0171_v2only_off", True), ("v017_w4_q3only", True), ("v017_w4_sbconly", False),
                     ("v017_mc_hi", True), ("v017_mc_lo", False), ("v0171_mc_hi", True), ("v0171_mc_lo", False), ("wf8_b", True), ("wf8_a", False), ("wf8_c", False),
-                    ("r4_mc_hi", True)):
+                    ("r4_mc_hi", False), ("v018_r4_mc_hi", True), ("combo1", True)):
         v = _scenario_values(engine, loc, sc, [("FND_ExtNeedCum", 2030)])[("FND_ExtNeedCum", 2030)]
         assert (v > 0) if pos else (v in (None, "", 0)), (sc, v)

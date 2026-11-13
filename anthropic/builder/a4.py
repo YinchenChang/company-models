@@ -269,7 +269,7 @@ def build(ctx):
     F = Sheet(wb, "Funding", "F", "F", years,
               "Funding — 融資：自由現金流、已到位融資、最低現金與外部資金需求、條件式與 IPO 情境、敏感度情境、或有負債、回流對照（D18）",
               "規格 D16 r1、D17、D18、D21：自由現金流＝營收淨額（截頂後）− 算力成本（現金）− 非算力成本（不含股權報酬；股權報酬非現金，加回）。來源順序：①2025 年底現金 → ②2026 已宣布且已交割的股權 → "
-              "③外部資金（新股權、債務或延後承諾；補足至最低現金）。條件式與 IPO 不計入基準（情境）；循環信貸與表外融資只列或有。",
+              "③外部資金（新股權、債務或延後承諾；補足至最低現金）。IPO＋同步私募淨額進基準（v0.2.0 B1，區間中點）；其餘條件式不計入基準（情境）；循環信貸與表外融資只列或有。",
               "D–I＝2025–2030；2025 為實際年：只列年底現金（SRC）與自由現金流對照，現金流自 2026 起。$B＝十億美元。")
     F.section("一、自由現金流（A3 交接：COST_GapCash ＋ 股權報酬加回；D21：2025 非現金費用不計）")
     F.add("rev", "營收淨額（截頂後；扣雲端平台抽成）", "$B", lambda i, c: "=«R:net_c»", "REV_NetCapped")
@@ -314,21 +314,21 @@ def build(ctx):
            f"+«in_googl@E»+({I('s1f_round_switch')})*({S('fund_s1f_series_g_q1')}-{S('fund_series_g_amount')}+{S('fund_s1f_series_h_q2')}-{S('fund_series_h_amount')})"] + [None] * 4,
           "D＝招股書下限；E＝已知各輪（不含 2023 年以前各輪，故應 ≥ 招股書下限附近）；只對照")
 
-    F.section("三、條件式融資與 IPO（D16 r1：不計入基準，列情境；開關＝1 時 IPO＋Amazon＋Google＋AMD 計入基準）")
-    F.add("c_ipo", "IPO 募資（報導約 $100B，2026-11）", "$B", lambda i, c: f"={S('ipo_raise_size')}*({c}$6={I('ipo_year')})", "SRC_ANT_341（Interested-party）；含 NVIDIA 可能的基石認購")
+    F.section("三、條件式融資與 IPO（D16 r1：條件式不計入基準，列情境；v0.2.0 B1：IPO＋同步私募淨額已由 p_ipo_base_switch 計入基準〔第十六節〕）")
+    F.add("c_ipo", "IPO 募資（v0.2.0 B1：p_ipo_base_switch＝1 時＝初步招股說明書淨募資〔IPO＋私募〕− RSU 代扣稅款，依 ipo_px 連動；0＝報導約 $100B）", "$B", lambda i, c: f"=({I('p_ipo_base_switch')}*«p_ipo_net@$»+(1-{I('p_ipo_base_switch')})*{S('ipo_raise_size')})*({c}$6={I('ipo_year')})", "SRC_ANT_534、537（初步招股說明書）；舊：SRC_ANT_341（Interested-party）")
     csw = I("s1f_cond_switch")           # v0.1.7.1 V3：條件式額度改讀正式 S-1（0＝v0.1.7）
     F.add("c_amzn", "Amazon 2026 NPA 剩餘額度（依算力交付里程碑，每次 5.0；15.0）", "$B",
           lambda i, c: f"=({csw}*{S('fund_s1f_amzn_npa_rem')}+(1-{csw})*{S('strat_amzn_facility_remaining')})*({c}$6={I('amzn_cond_year')})",
           "SRC_ANT_484（正式 S-1）；舊：SRC_ANT_322（Amazon 10-Q，同值）；以新可轉債提領（屬債務性質）")
     F.add("c_googl", "Google 2026 NPA 剩餘額度（S-1：20.0，與 IPO 認購選擇權最多 10.0 互抵、不相加；開關 0＝v0.1.7 報導 30）", "$B",
-          lambda i, c: f"=({csw}*{S('fund_s1f_googl_npa_rem')}+(1-{csw})*{S('strat_googl_2026_04_conditional')})*({c}$6={I('googl_cond_year')})",
-          "SRC_ANT_482（正式 S-1）；舊：SRC_ANT_329（報導 30）")
+          lambda i, c: f"=({I('p_cond_pp_switch')}*{S('pros_googl_npa_rem')}+(1-{I('p_cond_pp_switch')})*({csw}*{S('fund_s1f_googl_npa_rem')}+(1-{csw})*{S('strat_googl_2026_04_conditional')}))*({c}$6={I('googl_cond_year')})",
+          "v0.2.0 B2：p_cond_pp_switch＝1 時＝初步招股說明書 10.0（SRC_ANT_564；另 10.0 轉入私募）；SRC_ANT_482（正式 S-1，20）；舊：SRC_ANT_329（報導 30）")
     F.add("c_nvda", "NVIDIA 最高 $10B（已到位金額未揭露）", "$B",
-          lambda i, c: f"=({S('strat_msft_nvda_announce')}-{S('strat_msft_funded')})*({c}$6={I('nvda_cond_year')})", "SRC_ANT_330 − 331；與 IPO 基石（SRC_ANT_333）可能同一筆")
-    F.add("c_amd", "AMD 最高 $5B 認股", "$B", lambda i, c: f"={S('strat_amd_commit')}*({c}$6={I('amd_equity_year')})", "SRC_ANT_332")
-    F.add("c_inbase", "計入基準的條件式（開關 × IPO＋Amazon＋Google＋AMD）", "$B", lambda i, c: f"={I('cond_in_base_switch')}*(«c_ipo»+«c_amzn»+«c_googl»+«c_amd»)",
+          lambda i, c: f"=(1-{I('p_cond_pp_switch')})*({S('strat_msft_nvda_announce')}-{S('strat_msft_funded')})*({c}$6={I('nvda_cond_year')})", "SRC_ANT_330 − 331；v0.2.0 B2：p_cond_pp_switch＝1 時歸 0（NVIDIA 10.0 併入同步私募 SRC_ANT_527，避免與 B1 重複）")
+    F.add("c_amd", "AMD 認股（v0.1.9 最高 $5B；v0.2.0 B2 剩餘 2.5，另 2.5 在私募）", "$B", lambda i, c: f"=({I('p_cond_pp_switch')}*{S('pros_amd_eq_rem')}+(1-{I('p_cond_pp_switch')})*{S('strat_amd_commit')})*({c}$6={I('amd_equity_year')})", "SRC_ANT_565；舊：SRC_ANT_332")
+    F.add("c_inbase", "計入基準的條件式（開關 × IPO＋Amazon＋Google＋AMD）", "$B", lambda i, c: f"={I('cond_in_base_switch')}*((1-{I('p_ipo_base_switch')})*«c_ipo»+«c_amzn»+«c_googl»+«c_amd»)",
           "基準開關 0")
-    F.add("eq", "計入基準的股權流入＝已到位＋計入基準的條件式", "$B", lambda i, c: "=«committed»+«c_inbase»", "", name="FND_EquityIn")
+    F.add("eq", "計入基準的股權流入＝已到位＋計入基準的條件式＋（v0.2.0 B1）IPO＋私募淨額", "$B", lambda i, c: "=«committed»+«c_inbase»+«p_ipo_base»", "v0.2.0 B1：第十六節 p_ipo_base", name="FND_EquityIn")
 
     F.section("四、現金與外部資金需求（基準；D17 最低現金；外部資金需求＝年底現金低於最低現金的差額）")
     mcm = I("min_cash_months")
@@ -361,8 +361,8 @@ def build(ctx):
 
     F.section("五、情境（同一規則；基準開關不影響情境列）：S1 IPO、S2 條件式、S3 全部、S4 逐家錨定招股書／S-1 草稿、S5 機房租金、S6 D22 非算力補足、S7 S4＋S5＋S6 合併、S8 談判中新協議（U6）")
     mn = "«min»"
-    waterfall(F, "s1", "S1：＋IPO 約 $100B", "«fcf»", lambda i, c: "«committed»+«c_ipo»", cash25, mn, dict(cum="FND_ExtNeedCumIPO", end="FND_CashEndIPO"))
-    waterfall(F, "s2", "S2：＋條件式（Amazon、Google、NVIDIA、AMD）", "«fcf»", lambda i, c: "«committed»+«c_amzn»+«c_googl»+«c_nvda»+«c_amd»", cash25, mn,
+    waterfall(F, "s1", "S1：＋IPO（v0.2.0：IPO＋私募淨額已進基準，本情境與基準相同；開關 0 時為報導約 $100B）", "«fcf»", lambda i, c: "«committed»+«c_ipo»", cash25, mn, dict(cum="FND_ExtNeedCumIPO", end="FND_CashEndIPO"))
+    waterfall(F, "s2", "S2：＋條件式（Amazon、Google、NVIDIA、AMD）", "«fcf»", lambda i, c: "«committed»+«p_ipo_base»+«c_amzn»+«c_googl»+«c_nvda»+«c_amd»", cash25, mn,
               dict(cum="FND_ExtNeedCumCond"))
     waterfall(F, "s3", "S3：＋IPO＋條件式（NVIDIA 視為 IPO 基石，不另計）", "«fcf»", lambda i, c: "«committed»+«c_ipo»+«c_amzn»+«c_googl»+«c_amd»", cash25, mn,
               dict(cum="FND_ExtNeedCumAll", end="FND_CashEndAll"))
@@ -391,19 +391,21 @@ def build(ctx):
     def paysum(keys):
         return "+".join(f"SUM(Cost!$E${kr['pay_' + k]}:$I${kr['pay_' + k]})" for k in keys)
 
+    ipw, ppw = I("p_ipo_base_switch"), I("p_cond_pp_switch")      # v0.2.0：已到位加同步私募（B1）、條件式改讀（B2）
     rows = [
         ("amzn", "Amazon（可轉債 8＋Series G 5＋Series H 5）", f"={S('strat_amzn_funded_cum_2026h1')}",
          f"={I('s1f_cond_switch')}*{S('fund_s1f_amzn_npa_rem')}+(1-{I('s1f_cond_switch')})*{S('strat_amzn_facility_remaining')}",
          f"={S('cmp_prospectus_amazon')}", "=" + paysum(["aws"]), "既有雲端（2025 前簽）中付 AWS 的部分未拆分，未計入"),
-        ("googl", "Google（2025-03 前 ≥3＋2026 Series G-2 10＋Series H 10）", f"={S('strat_googl_cum_2025_03')}+{S('strat_googl_2026_04_upfront')}+{I('s1f_round_switch')}*{S('fund_s1f_googl_series_h')}",
-         f"={I('s1f_cond_switch')}*{S('fund_s1f_googl_npa_rem')}+(1-{I('s1f_cond_switch')})*{S('strat_googl_2026_04_conditional')}",
+        ("googl", "Google（2025-03 前 ≥3＋2026 Series G-2 10＋Series H 10；v0.2.0 ＋同步私募 10；條件式剩餘 10）", f"={S('strat_googl_cum_2025_03')}+{S('strat_googl_2026_04_upfront')}+{I('s1f_round_switch')}*{S('fund_s1f_googl_series_h')}+{ipw}*{S('pros_pp_google')}",
+         f"={ppw}*{S('pros_googl_npa_rem')}+(1-{ppw})*({I('s1f_cond_switch')}*{S('fund_s1f_googl_npa_rem')}+(1-{I('s1f_cond_switch')})*{S('strat_googl_2026_04_conditional')})",
          f"={S('cmp_prospectus_google')}_Lo", "=" + paysum(["google"]), "v0.1.7.1：正式 S-1 Note 4、9、10：G-2 10（SRC_ANT_328 同額）與 Series H 10（SRC_ANT_480）分開；條件式改 S-1 剩餘 20（開關 0＝v0.1.7：13、30）"),
-        ("bcm", "Broadcom（股權 0；租賃融資最高 42 屬債務）", None, f"={S('cmp_broadcom_financing_42b')}_Hi", f"={S('cmp_prospectus_broadcom')}", "=" + paysum(["broadcom"]),
+        ("bcm", "Broadcom（v0.2.0 同步私募 1.0；租賃融資最高 42 屬債務）", f"={ipw}*{S('pros_pp_avgo')}", f"={S('cmp_broadcom_financing_42b')}_Hi", f"={S('cmp_prospectus_broadcom')}", "=" + paysum(["broadcom"]),
          "TPU 設備租賃；融資為可轉換票據"),
-        ("msft", "Microsoft（2025-11，$5B）", f"={S('strat_msft_funded')}", None, f"={S('cmp_msft_azure_prospectus')}", "=" + paysum(["azure"]), ""),
-        ("nvda", "NVIDIA（最高 $10B，已到位未揭露）", None, f"={S('strat_msft_nvda_announce')}-{S('strat_msft_funded')}", None, "=" + paysum(NVDA_FAMILY),
+        ("msft", "Microsoft（2025-11，$5B；v0.2.0 ＋同步私募 1.0；合約改初步招股說明書 47.2）", f"={S('strat_msft_funded')}+{ipw}*{S('pros_pp_msft')}", None,
+         f"={I('p_msft_switch')}*{S('cmt_pros_msft')}+(1-{I('p_msft_switch')})*{S('cmp_msft_azure_prospectus')}", "=" + paysum(["azure"]), ""),
+        ("nvda", "NVIDIA（v0.1.9：最高 $10B 條件式；v0.2.0：併入同步私募 10.0，條件式 0）", f"={ipw}*{S('pros_pp_nvda')}", f"=(1-{ppw})*({S('strat_msft_nvda_announce')}-{S('strat_msft_funded')})", None, "=" + paysum(NVDA_FAMILY),
          "無直接合約：G＝以 NVIDIA 晶片為主的合約付款（Azure、SpaceX、Nscale、Lambda、Volta、Akamai；與 Microsoft 列重複 Azure）"),
-        ("amd", "AMD（最高 $5B 認股）", None, f"={S('strat_amd_commit')}", f"={S('cmp_amd_usd_prospectus')}_Lo", "=" + paysum(["amd"]), ""),
+        ("amd", "AMD（v0.1.9：最高 $5B 認股；v0.2.0：同步私募 2.5＋剩餘 2.5）", f"={ipw}*{S('pros_pp_amd')}", f"={ppw}*{S('pros_amd_eq_rem')}+(1-{ppw})*{S('strat_amd_commit')}", f"={S('cmp_amd_usd_prospectus')}_Lo", "=" + paysum(["amd"]), ""),
     ]
     for key, zh, d_, e_, f_, g_, note in rows:
         h_ = f"=«rt_{key}@D»/«rt_{key}@G»" if d_ else None
@@ -427,7 +429,7 @@ def build(ctx):
               "Cost 第二十節（新增付款；營收不因新增供給增加）")
 
 
-    F.section("十、v0.1.3 資金三層（外部驗收 Priority 4）：①營運自由現金流能否自給（不靠任何融資）②加已到位股權（現行基準）③再加條件式與談判中（IPO、Amazon、Google、NVIDIA、AMD；NVIDIA 與 IPO 基石可能重複 → 上緣）。列放在本節，使既有列編號不變")
+    F.section("十、v0.1.3 資金三層（外部驗收 Priority 4）：①營運自由現金流能否自給（不靠任何融資）②加已到位股權（現行基準）③再加條件式與談判中（v0.2.0 起 IPO＋私募已在基準；剩 Amazon、Google、AMD）。列放在本節，使既有列編號不變")
     F.add("l1_open", "第 1 層起算現金（Inputs：1＝計入 2025 年底現金；基準 0＝純營運現金流）", "$B", only25(f"={cash25}*{I('l1_incl_cash')}"),
           "2025 年底現金是過去融資所得 → 第 1 層預設不計", name="FND_L1_OpenCash", name_cols="D")
     F.add("fcf_cum", "自由現金流累計（2026 起）", "$B", lambda i, c: None if i == 0 else ("=«fcf»" if i == 1 else "=«fcf_cum@p»+«fcf»"),

@@ -249,7 +249,9 @@ def test_s1f_w2_and_eta_unchanged(eng):
     i = {r["key"]: REG["INP"][r["key"]] for r in INP}
     assert eng.get_name(i["s1f_switch"]) == 1 and eng.get_name(i["u1_switch"]) == 1
     q3 = eng.get_name(s["rev_s1a_2026q3"]) if eng.get_name(i["s1a_q3_switch"]) == 1 else eng.get_name(s["rev_2026_q3"])     # v0.1.8 R5a：Q3 改 S-1/A 實績
-    tgt = eng.get_name(s["rev_s1f_2026h1"]) + q3 * (2 + eng.get_name(i["q4_growth"]))
+    sq4 = eng.get_name(i["p_q4_rr_switch"])                  # v0.2.0 D1：Q4＝10-31 Run-Rate Revenue ÷ 季數
+    q4 = sq4 * eng.get_name(s["pros_rr_1031"]) / eng.get_name(i["quarters_per_year"]) + (1 - sq4) * q3 * (1 + eng.get_name(i["q4_growth"]))
+    tgt = eng.get_name(s["rev_s1f_2026h1"]) + q3 + q4
     assert abs(eng.get_name("REV_Target")[1] - tgt) < 1e-9
     assert abs(eng.get_name("CMP_Eta2025") - 0.603958469653879) < 1e-9          # v0.1.9：TK v21.10（v0.1.7–v0.1.8 為 0.46763641507486053）
     assert eng.get_name("COST_Eta2026H1") > 0
@@ -263,12 +265,29 @@ def _ids():
     return {r["key"]: r["id"] for r in SRC}, {r["key"]: REG["INP"][r["key"]] for r in INP}
 
 
+# v0.2.0（初步招股說明書）的新開關：全關＝v0.1.9；歷史回歸一律先關閉（C4 Lambda 扣除與超額配售基準已為 0）
+V020_SWITCHES = ("p_ipo_base_switch", "p_cond_pp_switch", "p_cmt_post_switch", "p_msft_switch", "p_cond_cmt_switch", "p_q4_rr_switch",
+                 "p_sbc_ipo_switch", "p_sbc_floor_switch")
+
+
+def _v020_off():
+    _s, i = _ids()
+    return {i[k]: 0 for k in V020_SWITCHES}
+
+
+def _post0930(eng):
+    """C1：9-30 後新簽（開關 1＝初步招股說明書 105.7；0＝S-1/A 100.2）。"""
+    s, i = _ids()
+    sw = eng.get_name(i["p_cmt_post_switch"])
+    return sw * eng.get_name(s["cmt_pros_post0930"]) + (1 - sw) * eng.get_name(s["cmt_s1a_post0930"])
+
+
 def test_v017_w1_unallocated_balance(eng):
     """W1(b)：未歸屬餘額＝S-1 三段合計 − 模型逐家合約總額（不含 AMD）；供給 GW＝付款 ÷ VR200 合約價。
     v0.1.8：三段改 S-1/A 9-30 口徑（R5b：表內＋未起租＋9-30 後），付款＝餘額 × S-1/A 結構合成年度比例（R5c）；附條件扣除額基準 0（R5d）。"""
     s, i = _ids()
     assert eng.get_name(i["s1a_commit_switch"]) == 1 and eng.get_name(i["s1a_unalloc_switch"]) == 1 and eng.get_name(i["s1a_cond_deduct_switch"]) == 0
-    seg = sum(eng.get_name(s[k]) for k in ("cmt_s1a_table", "cmt_s1a_leases_nc", "cmt_s1a_post0930"))
+    seg = sum(eng.get_name(s[k]) for k in ("cmt_s1a_table", "cmt_s1a_leases_nc")) + _post0930(eng)
     assert abs(seg - eng.get_name("COST_S1fCommit3")) < 1e-9 and abs(seg - eng.get_name("COST_S1aCommit3")) < 1e-9
     bal = eng.get_name("COST_S1Unalloc")
     assert abs(bal - max(0.0, seg - eng.get_name("COST_S1fCommitModel"))) < 1e-9 and bal > 0
@@ -296,7 +315,7 @@ def test_v017_w4_noncompute_calibration(eng):
     sbc_h1 = g("adjoi_s1f_2026h1") - g("oi_s1f_2026h1")
     sbc_q3 = g("sbc_s1a_2026q3") + g("charity_s1a_2026q3")
     assert abs(eng.get_name("COST_S1fSBCProxy2026") - (sbc_h1 + 2 * sbc_q3)) < 1e-9
-    assert abs(eng.get_name("COST_SBC")[1] - (sbc_h1 + 2 * sbc_q3)) < 1e-9
+    assert abs(eng.get_name("COST_SBC")[1] - eng.get_name("COST_SBC_IPO")[1] - (sbc_h1 + 2 * sbc_q3)) < 1e-9     # v0.2.0 E1：另加 RSU 修改 14.2
     q3 = g("rev_s1a_2026q3") - g("ci_s1a_2026q3") - g("oi_s1a_2026q3") - g("sbc_s1a_2026q3") - g("charity_s1a_2026q3")
     assert abs(eng.get_name("COST_S1aQ3NonComp") - q3) < 1e-9
     h1 = g("rev_s1f_2026h1") - g("ci_s1f_2026h1") - g("oi_s1f_2026h1") - sbc_h1
@@ -304,7 +323,8 @@ def test_v017_w4_noncompute_calibration(eng):
     assert abs(eng.get_name("COST_S1fNonComp2026") - want) < 1e-9
     assert abs(eng.get_name("COST_NonCompExSBC")[1] - want) < 1e-9
     assert eng.get_name("COST_S1fAMDFactor") == 1                       # 基準：AMD 維持模型 GW 型
-    assert abs(eng.get_name("REV_Target")[1] - (g("rev_s1f_2026h1") + 2 * g("rev_s1a_2026q3"))) < 1e-9     # R5a：營收基準 Q3 實績、Q4＝Q3
+    q4 = g("pros_rr_1031") / eng.get_name(i["quarters_per_year"]) if eng.get_name(i["p_q4_rr_switch"]) == 1 else g("rev_s1a_2026q3")
+    assert abs(eng.get_name("REV_Target")[1] - (g("rev_s1f_2026h1") + g("rev_s1a_2026q3") + q4)) < 1e-9     # R5a：Q3 實績；v0.2.0 D1：Q4＝81 ÷ 4
 
 
 def test_v017_switches_off_reproduce_v016(eng):
@@ -316,6 +336,7 @@ def test_v017_switches_off_reproduce_v016(eng):
     ov = {i[k]: 0 for k in ("s1f_commit_switch", "own_capex_method", "s1f_cal25_switch", "s1f_d22_switch", "s1f_d22_q3_switch", "s1f_sbc_proxy_switch",
                             "googl_upfront_switch", "s1f_round_switch", "s1f_cond_switch",          # v0.1.7.1：V2、V3 開關一併關閉
                             "s1a_q3_switch", "s1a_commit_switch", "s1a_unalloc_switch")}             # v0.1.8：R5a–R5c 開關一併關閉（R4、R5d 基準已為 0）
+    ov.update(_v020_off())                                                                           # v0.2.0：B1–E2 開關一併關閉
     for n, d in wo.defined_names.items():
         if not n.startswith("TK_") or n in ("TK_File", "TK_Version", "TK_Commit", "TK_ReadDate", "TK_HdrGen", "TK_HdrCost") or n not in eng.names:
             continue
@@ -367,6 +388,7 @@ def test_v0171_switches_off_reproduce_v017(eng):
     _s, i = _ids()
     ov = {i[k]: 0 for k in ("googl_upfront_switch", "s1f_round_switch", "s1f_cond_switch", "s1a_q3_switch", "s1a_commit_switch", "s1a_unalloc_switch")}  # v0.1.8 開關一併關閉
     ov.update(_tk_ov(eng, V018_XLSX))   # v0.1.9：TK 快照回到 v21.7（v0.1.7 當時；值取自 v0.1.8 Excel）
+    ov.update(_v020_off())              # v0.2.0：B1–E2 開關一併關閉
     from engine import resolve_key
     orig = {k: eng.get(*resolve_key(eng.names, k)) for k in ov}
     n_cmp = 0
@@ -450,6 +472,7 @@ def test_v018_switches_off_reproduce_v0171(eng):
     assert eng.get_name(i["s1f_spacex_fee_switch"]) == 0 and eng.get_name(i["s1a_cond_deduct_switch"]) == 0
     ov = {i[k]: 0 for k in ("s1a_q3_switch", "s1a_commit_switch", "s1a_unalloc_switch")}
     ov.update(_tk_ov(eng, V018_XLSX))   # v0.1.9：TK 快照回到 v21.7（v0.1.7.1 當時）
+    ov.update(_v020_off())              # v0.2.0
     n_cmp = _reproduce(eng, REPO / "model" / "archive" / "20261102_Anthropic_v0.1.7.1.xlsx", ov)
     assert n_cmp > 1700          # v0.1.7.1 的計算具名範圍值
 
@@ -458,10 +481,10 @@ def test_v018_r5c_shares_and_r4_path(eng):
     """R5c：年度比例＝（表內逐年＋未起租與 9-30 後〔起租年起、加權租期〕）÷ 三段合計，全期合計 1；R4：S-1 路徑合計＝上限 120.5，開關 1 時進 SpaceX 付款與合約總額。"""
     s, i = _ids()
     g = lambda k: eng.get_name(s[k])  # noqa: E731
-    seg = g("cmt_s1a_table") + g("cmt_s1a_leases_nc") + g("cmt_s1a_post0930")
+    seg = g("cmt_s1a_table") + g("cmt_s1a_leases_nc") + _post0930(eng)
     tb = [0.0] + [g(k) for k in ("cmt_s1a_tbl_2026q4", "cmt_s1a_tbl_2027", "cmt_s1a_tbl_2028", "cmt_s1a_tbl_2029", "cmt_s1a_tbl_2030")]
     ls, wt = eng.get_name(i["s1a_lease_start"]), g("cmt_s1a_lease_wterm")
-    lpy = (g("cmt_s1a_leases_nc") + g("cmt_s1a_post0930")) / wt
+    lpy = (g("cmt_s1a_leases_nc") + _post0930(eng)) / wt
     for y, t, w in zip(range(2025, 2031), tb, eng.get_name("COST_S1aUnallocShare")):
         assert abs(w - (t + (lpy if ls <= y < ls + wt else 0)) / seg) < 1e-12
     assert abs((sum(tb) + g("cmt_s1a_tbl_after") + lpy * wt) / seg - 1) < 1e-9
@@ -491,9 +514,10 @@ def test_v018_charity_not_in_per_person_base(eng):
     g = lambda k: eng.get_name(s[k])  # noqa: E731
     chr_ = g("charity_s1a_2026q3")
     sbc, chc, proxy = eng.get_name("COST_SBC"), eng.get_name("COST_S1aCharityInCost"), eng.get_name("COST_S1fSBCProxy2026")
+    ipo = eng.get_name("COST_SBC_IPO")[1]                               # v0.2.0 E1：RSU 修改 14.2（一次性，不進每人基準）
     assert abs(chc[1] - 2 * chr_) < 1e-9 and all(v == 0 for k, v in enumerate(chc) if k != 1)
-    assert abs((sbc[1] - chc[1]) - (proxy - 2 * chr_)) < 1e-9          # 每人基準 × 人數＝代理 − 捐贈
-    assert abs(sbc[1] - proxy) < 1e-9                                   # 基準（Q4 亦計）2026 當年仍含捐贈
+    assert abs((sbc[1] - chc[1] - ipo) - (proxy - 2 * chr_)) < 1e-9    # 每人基準 × 人數＝代理 − 捐贈
+    assert abs(sbc[1] - ipo - proxy) < 1e-9                                   # 基準（Q4 亦計）2026 當年仍含捐贈
     from engine import resolve_key
     k = i["s1a_chr_q4_switch"]
     orig = eng.get(*resolve_key(eng.names, k))
@@ -501,14 +525,16 @@ def test_v018_charity_not_in_per_person_base(eng):
     try:
         eng.set_key(k, 0)
         s2 = eng.get_name("COST_SBC")
-        assert abs(s2[1] - (proxy - chr_)) < 1e-9 and all(abs(a - b) < 1e-12 for a, b in zip(s2[2:], later))
+        assert abs(s2[1] - ipo - (proxy - chr_)) < 1e-9 and all(abs(a - b) < 1e-12 for a, b in zip(s2[2:], later))
     finally:
         eng.set_key(k, orig)
 
 
 def test_v019_tk_back_reproduces_v018(eng):
     """v0.1.9：TK 快照回到 v21.7（TK_Link 全部具名值取自 v0.1.8 Excel）時，v0.1.8 的全部計算具名範圍逐位相同（公式未改；差異只來自 TK）。"""
-    n_cmp = _reproduce(eng, V018_XLSX, _tk_ov(eng, V018_XLSX))
+    ov = _tk_ov(eng, V018_XLSX)
+    ov.update(_v020_off())              # v0.2.0
+    n_cmp = _reproduce(eng, V018_XLSX, ov)
     assert n_cmp > 1700
 
 
@@ -519,14 +545,99 @@ def test_v019_contract_pay_and_cash_unchanged(eng):
     names = [n for n in wo.defined_names if n.startswith("COST_Pay_")] + [
         "COST_ContractPay", "COST_Compute", "CMP_SupplyGW", "REV_NetCapped", "FND_FCF", "FND_CashNoExt", "FND_CashNoExtTrough", "FND_ExtNeedCum",
         "FND_MinCash", "FND_FirstGapYear", "COST_Coverage", "COST_GapPosSustainYear"]
-    for n in names:
-        sh, ref = wo.defined_names[n].attr_text.split("!")
-        cells = wv[sh][ref.replace("$", "")]
-        want = [c.value for row in cells for c in row] if isinstance(cells, tuple) else [cells.value]
-        got = eng.get_name(n)
-        got = got if isinstance(got, list) else [got]
-        for a, b in zip(got, want):
-            if isinstance(b, (int, float)) and not isinstance(b, bool):
-                assert abs(a - b) <= 1e-9 * max(1, abs(b)), (n, a, b)
-            else:
-                assert (a in (None, "") and b in (None, "")) or a == b, (n, a, b)
+    from engine import resolve_key
+    ov = _v020_off()                    # v0.2.0：B1–E2 開關關閉（v0.1.9 的「應不變」以 v0.1.9 口徑驗證）
+    orig = {k: eng.get(*resolve_key(eng.names, k)) for k in ov}
+    try:
+        for k, v in ov.items():
+            eng.set_key(k, v)
+        for n in names:
+            sh, ref = wo.defined_names[n].attr_text.split("!")
+            cells = wv[sh][ref.replace("$", "")]
+            want = [c.value for row in cells for c in row] if isinstance(cells, tuple) else [cells.value]
+            got = eng.get_name(n)
+            got = got if isinstance(got, list) else [got]
+            for a, b in zip(got, want):
+                if isinstance(b, (int, float)) and not isinstance(b, bool):
+                    assert abs(a - b) <= 1e-9 * max(1, abs(b)), (n, a, b)
+                else:
+                    assert (a in (None, "") and b in (None, "")) or a == b, (n, a, b)
+    finally:
+        for k, v in orig.items():
+            eng.set_key(k, v)
+
+
+# ═════════════ v0.2.0：初步招股說明書（2026-11-10）＋估值頁 ═════════════
+V019_XLSX = REPO / "model" / "archive" / "20261104_Anthropic_v0.1.9.xlsx"
+
+
+def test_v020_switches_off_reproduce_v019(eng):
+    """v0.2.0 工作單：全部新開關關閉 → v0.1.9 的全部計算具名範圍（DEM_／REV_／CMP_／COST_／FND_／RVS_）逐位重現（估值頁除外）；CHK_Errors 仍 0。"""
+    n_cmp = _reproduce(eng, V019_XLSX, _v020_off())
+    assert n_cmp > 1700
+
+
+def test_v020_b1_ipo_in_base(eng):
+    """B1：2026 股權流入＝已到位 110.40 ＋（淨募資 84.6 − RSU 代扣稅款 3.8，依 ipo_px 每 $1 ±0.793／±0.052）；S2 不重複計入 NVIDIA（B2）。"""
+    s, i = _ids()
+    g = lambda k: eng.get_name(s[k])  # noqa: E731
+    px = eng.get_name(i["ipo_px"])
+    net = g("pros_net_proceeds") + g("pros_net_per_dollar") * (px - g("pros_px_mid")) - (g("pros_rsu_withhold") + g("pros_rsu_withhold_per_dollar") * (px - g("pros_px_mid")))
+    assert abs(eng.get_name("FND_IPONet") - net) < 1e-9 and abs(net - 80.8) < 1e-9
+    eq = eng.get_name("FND_EquityIn")
+    assert abs(eq[1] - (eng.get_name("FND_Committed")[1] + net)) < 1e-9 and all(v == 0 for k, v in enumerate(eq) if k != 1)
+    assert abs(eng.get_name("FND_ProFormaCash") - g("pros_cash_pf")) < 1e-9            # 價格 74 時＝原文 212.684
+
+
+def test_v020_d1_q4_and_e_sbc(eng):
+    """D1：2026Q4＝81 ÷ 4＝20.25；E1：2026 股權報酬含 14.2（只 2026）；E2：2027、2028 股權報酬 ≥ 攤銷 12.05、9.0375，攤銷合計 24.1。"""
+    s, _i = _ids()
+    assert abs(eng.get_name("REV_Q4_2026") - 20.25) < 1e-9
+    ipo = eng.get_name("COST_SBC_IPO")
+    assert abs(ipo[1] - eng.get_name(s["pros_sbc_pf_mod"])) < 1e-9 and all(v == 0 for k, v in enumerate(ipo) if k != 1)
+    am, fl, sbc = eng.get_name("COST_SBC_Amort"), eng.get_name("COST_SBC_Floor"), eng.get_name("COST_SBC")
+    assert abs(sum(am) - eng.get_name(s["pros_sbc_unrec"])) < 1e-9 and abs(am[2] - 12.05) < 1e-9 and abs(am[3] - 9.0375) < 1e-9
+    assert fl[1] == 0 and fl[4] == 0 and fl[5] == 0 and sbc[2] >= fl[2] and sbc[3] >= fl[3]
+    fcf = eng.get_name("FND_FCF")                                                        # 股權報酬為非現金：自由現金流不受 E1、E2 影響
+    rev, cc, ncx = eng.get_name("REV_NetCapped"), eng.get_name("COST_Compute"), eng.get_name("COST_NonCompExSBC")
+    assert all(abs(f - (a - b - c)) < 1e-9 for f, a, b, c in zip(fcf[1:], rev[1:], cc[1:], ncx[1:]))
+
+
+def test_v020_val_identities(eng):
+    """Val：加權目標價＝50% DCF（三情境 25／50／25）＋50% 調整後 Comparable；上檔空間、評等邊界（>、>=）；股數與淨現金組成；Sens 快照基準＝活公式。"""
+    s, i = _ids()
+    g = lambda k: eng.get_name(s[k])  # noqa: E731
+    n = lambda k: eng.get_name(k)  # noqa: E731
+    w = [eng.get_name(i[k]) for k in ("val_w_a", "val_w_b", "val_w_c")]
+    dcf = sum(a * n(f"VAL_TP_DCF_{x}") for a, x in zip(w, "ABC"))
+    assert abs(n("VAL_TP_DCF") - dcf) < 1e-9
+    wd = eng.get_name(i["val_w_dcf"])
+    assert abs(n("VAL_TP_W") - (wd * n("VAL_TP_DCF") + (1 - wd) * n("VAL_TP_CompAdj"))) < 1e-9
+    up = n("VAL_TP_W") / n("VAL_Px") - 1
+    assert abs(n("VAL_Up_W") - up) < 1e-12
+    want = "強力買進" if up > 0.5 else "買進" if up > 0.25 else "中立" if up >= -0.25 else "放空" if up >= -0.5 else "強力放空"
+    assert n("VAL_Rating") == want
+    px = n("VAL_Px")
+    sh = (g("pros_shares_post") - g("pros_pp_shares_mid") + g("pros_pp_total") / px * 1000 + g("pros_options") * max(0, 1 - g("pros_option_strike") / px)
+          + g("pros_rsu_unvested") + g("pros_rsu_new") + g("pros_vmo")) / 1000
+    assert abs(n("VAL_Shares") - sh) < 1e-9
+    assert abs(n("VAL_NetCash") - (g("pros_cash_pf") - g("pros_fin_lease_pv"))) < 1e-9
+    assert all(n(f"VAL_TP_DCF_{x}") >= n("VAL_NetCashPS") * (1 + n("VAL_Ke")) - 1e-9 for x in "ABC")          # 下限＝淨現金每股（推到目標時點）
+    assert abs(n("VAL_Ke") - (n("VAL_Rf") + n("VAL_Beta") * n("VAL_ERP"))) < 1e-12
+    assert abs(n("VAL_EV_B") - (n("VAL_PVExp_B") + n("VAL_PVTV_B"))) < 1e-9
+    assert abs(n("VAL_PeerMult") - 26.32) < 1e-12 and abs(n("VAL_PeerFCFm") - 0.298) < 1e-12 and abs(n("VAL_Beta") - (0.67 * 1.37 + 0.33)) < 1e-12
+    assert abs(n("VAL_SensBase") - n("VAL_TP_W")) < 1e-9
+    assert n("VAL_Yr")[0] == "2026Q4" and n("VAL_Yr")[-1] == 2033
+
+
+def test_v020_val_not_fed_back(wb):
+    """Val 只被 Checks 引用（不回饋計算頁）。"""
+    bad = []
+    for ws in wb.worksheets:
+        if ws.title in ("Val", "Checks"):
+            continue
+        for row in ws.iter_rows():
+            for c in row:
+                if isinstance(c.value, str) and c.value.startswith("=") and re.search(r"\bVal!|\bVAL_", c.value):
+                    bad.append(f"{ws.title}!{c.coordinate}")
+    assert not bad, bad[:10]
