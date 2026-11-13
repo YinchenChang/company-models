@@ -504,7 +504,7 @@ def render_hero(cx, h):
     hero：{"rec": 投資建議規格, "tiles": [[標籤, 主值規格, 副值規格或空字串], …], "note": 規格或省略,
            "ai_note": 規格或省略（自用 AI 讀法 2 的依賴度一行，HTML 版面規格 v1.1；原則第 10 節第 52 條）}"""
     rec_txt = cx.text_of(h['rec'])
-    tone = 'neg' if '放空' in rec_txt else 'pos' if '買進' in rec_txt else 'neu'
+    tone = 'neg' if ('放空' in rec_txt or '收支不足' in rec_txt) else 'pos' if '買進' in rec_txt else 'neu'
     o = [f'<div class="hero hero-{tone}"><div class="hero-rec"><span class="hero-k">投資建議</span>'
          f'<span class="hero-v">{cx.cell_html(h["rec"])}</span></div><div class="hero-tiles">']
     for lab, main, sub in h['tiles']:

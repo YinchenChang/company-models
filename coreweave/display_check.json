@@ -6,7 +6,7 @@
   {"name": "DCF 目標價", "sheet": "Val", "find": "DCF 目標價（情境加權）", "col": "C", "fmt": "n2", "patterns": ["DCF 情境加權 ([0-9]+\\.[0-9]{2})"]},
   {"name": "Comparable 目標價", "sheet": "Val", "find": "Comparable 目標價（情境加權）", "col": "C", "fmt": "n2", "patterns": ["Comparable ([0-9]+\\.[0-9]{2})（"]},
   {"name": "上檔空間", "sheet": "Val", "find": "上檔空間：加權目標價", "col": "C", "fmt": "sp1", "patterns": ["上檔空間 ([+-][0-9]+\\.[0-9]%)）"]},
-  {"name": "投資建議", "sheet": "Val", "find": "投資建議", "col": "C", "fmt": "text", "patterns": ["投資建議：(\\S\\S)（"]}
+  {"name": "投資建議", "sheet": "Val", "find": "投資建議", "col": "C", "fmt": "text", "patterns": ["投資建議：([^（〔]+)[（〔]"]}
  ],
  "table_rows": [
   {"title": "加權目標價（上檔空間）", "sheet": "Val", "find": "目標價（DCF 與 Comparable 加權）", "col": "C", "fmt": "n2", "with": {"sheet": "Val", "find": "上檔空間：加權目標價", "col": "C", "fmt": "sp1"}},

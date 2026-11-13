@@ -24,3 +24,7 @@
 | repo README.md | 版本表（`<!-- version-table: … -->` 標記）與成品重算不一致；沒有以目前 dist 成品為最後一欄的版本表 |
 
 版本表由 `python3 tools/model_governance/version_table.py <公司資料夾> --update` 從 dist（及 `_待刪除/`）的成品產生，不手寫。設定檔 `<公司>/display_check.json`（items、history_re、table_rows）。其他個股於下次改版時加入。
+
+## 收支關卡評等檢查（原則第 10 節第 63 條）
+
+`python3 tools/model_governance/check_rating_gate.py <成品.xlsx>`：基準情境收支合計為負而「投資建議」為買進或強力買進時失敗（應為「收支不足」）；沒有「收支關卡」列的模型回報「不適用」。`--map markets/invest_map/dist/data.json` 盤點地圖判定關卡不通過、估值評等卻為買進以上的公司。新建與改版的個股模型在建置腳本內必跑。

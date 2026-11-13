@@ -11,7 +11,7 @@ from openpyxl.workbook.defined_name import DefinedName
 from openpyxl.utils import get_column_letter as CL
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VER = "v5.0"
+VER = "v5.0.1"
 BUILT = "2026-11-12"
 OVR = json.loads(os.environ.get("SENS_OVR", "{}"))
 TKV = os.environ.get("CRWV_TKV", "v22.0")
@@ -94,7 +94,7 @@ sec("A. 股價、股數、日期")
 inp("px", "現價（2026-11-11 收盤）", "US$", None, fv("px.1111"), None, "Verified", SRCF["PX"] + "：最新收盤 60.77", "v4.13 為 2026-11-05 收盤 43.66；第二來源：Motley Fool、heygotrade（獨立核對代理 2026-11-12 確認 11-11 收盤 60.77）；11-10 收盤 48.73（heygotrade），財報後單日 +24.7%")
 inp("px_date", "現價日（px 的收盤日）", "日期", None, "=DATE(2026,11,11)", None, "Verified", "同 px", "README、Val 與 tp_date 以本列組字（原則第 10 節第 26、41 條）")
 inp("cutoff", "資料截止日（Q3 新聞稿）", "日期", None, "=DATE(2026,11,10)", None, "Verified", PRQ3, "原則第 10 節第 41 條：三個日期分列")
-inp("built", "成品日", "日期", None, "=DATE(2026,11,12)", None, "Verified", "建置日", "—")
+inp("built", "成品日", "日期", None, "=DATE(2026,11,13)", None, "Verified", "建置日", "—")
 inp("sh_out", "普通股流通在外（Q3 基本加權股數代理）", "十億股", None, fv("q3.waso"), None, "Verified", PRQ3 + "：Q3 基本加權 559 百萬股（" + FACTS_F + " q3.waso）", "期末流通股數待 Q3 10-Q 封面（Q2 10-Q 期末 0.5515）；ATM（上限 35 百萬股、約 6.63 十億美元）已發行數未揭露、未計入（資料缺口，待 Q3 10-Q）")
 inp("rsu_net", "RSU＋選擇權庫藏股法淨股數", "十億股", None, 0, 0.03, "Assumed", "找不到：Q3 10-Q 在建置環境無法開啟（SEC 被擋），RSU 與選擇權餘額未取得", "DCF 標準規格第 3 節要求計入；暫以 0 並設 Sens 高 0.03（約 5%，Assumed）；資料缺口")
 inp("val_date", "評價日（Q3 資產負債表日）", "日期", None, "=DATE(2026,9,30)", None, "Verified", PRQ3, "—")
@@ -144,7 +144,7 @@ inp("fac_life", "自建機房折舊年限", "年", None, 20, None, "Assumed", "�
 inp("p_long", "長約價格證據：IREN–Microsoft GB300 五年約（Analogy）", "US$M／MW·年", 8.9073, 9.70, 12.7247, "Analogy", "IREN 新聞稿 2025-11-03：$9.7bn ÷ 5 年 ÷ 200 MW（critical IT；全套 GPU 雲端服務；含 20% 預付）", "原則第 10 節第 61 條：他家合約換算一律標 Analogy；與 CoreWeave 差異：客戶（Microsoft 對 OpenAI／Meta 等）、世代同為 GB300、IREN 自有機房（含設施成本）、預付 20%；第二類比 IREN–NVIDIA 氣冷 Blackwell 11.33（同一供應商）。低／高沿用 v4.13 pricing.anchorMultiple")
 inp("p_spot", "現貨價格證據：H100 Silicon Data 指數", "US$／GPU-hr", None, 2.82, None, "Verified", "Silicon Data H100 Index（2026-10-06；沿用 v4.13 pricing.marketRefs）", "—")
 inp("gh_h100", "每 GPU 小時持有成本 IF_GPUhrEcon｜Hopper H100", "US$／GPU-hr", None, round(TK["IF_GPUhrEcon"]["values"]["Hopper H100"]["基準"], 5), None, "Derived", TKSRC, "—")
-inp("od_share", "隨需（現貨）占計費產能比例", "%", 0.0, 0.10, 0.20, "Assumed", "公司未揭露長約／隨需比例（找不到；10-K：已承諾合約加權年期約 5 年）", "沿用 v4.13 pricing")
+inp("od_share", "隨需（現貨）占計費產能比例", "%", 0.0, 0.10, 0.20, "Assumed", "公司未揭露長約／隨需比例（找不到；10-K：已承諾合約加權年期約 5 年）", "v4.13 基準 0%（10%、20% 只作敏感度）；v5.0 起基準改 10%，此變更未列入 v4.13 驗收採用規劃書（2026-11-13 稽核指出，基準值待 Andy 決定；回到 0% 見 Sens 低值）")
 inp("k_long", "長約定價倍數 k_長約（＝長約價 ÷ GB300 持有成本）", "x", None, "=p_long/he_gb300", None, "Derived", "CLAUDE.md 第 14 條：每 MW 收入＝IF_HoldEcon × 公司因素 k；不以營收、ARR、RPO 反推 k", "—")
 inp("k_spot", "現貨定價倍數 k_現貨", "x", None, "=p_spot/gh_h100", None, "Derived", "H100 現貨指數 ÷ H100 每 GPU 小時持有成本", "—")
 inp("k_mix", "定價倍數 k（隨需占比加權；單一 k，CLAUDE.md 第 16(3) 條）", "x", None, "=od_share*k_spot+(1-od_share)*k_long", None, "Derived", "k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約", "J4：公司宣稱的新約價格不改基準 k")
@@ -207,22 +207,22 @@ inp("w_dcf", "目標價中 DCF 的權重（其餘 Comparable）", "%", 0.3, 0.5,
 for s, w in (("A", 0.25), ("B", 0.5), ("C", 0.25)):
     inp(f"w{s}", f"目標價情境權重 {s}", "%", None, w, None, "Assumed", "A14：25／50／25", "Andy 可改")
 PEER_D = "2026-11-11"
-inp("pn_px", "Nebius 股價（2026-11-11 收盤）", "US$", None, 154.69, None, "Verified", "MarketScreener 共識，擷取 2026-11-13（https://www.marketscreener.com/quote/stock/NEBIUS-GROUP-8037501/finances/、/valuation/、/quotes/；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）：Nasdaq 5 日表 11-11 154.69（11-10 134.00、11-12 128.64）", "同業估值日＝現價日 2026-11-11（原則 7、15）")
-inp("pn_sh", "Nebius 普通股流通在外（2026-09-30；A 股 259.597＋B 股 33.305 百萬股）", "十億股", None, 0.292902405, None, "Verified", "Nebius Q3 2026 6-K 附件 99.1（2026-11-12；https://www.sec.gov/Archives/edgar/data/0001513845/000110465926126008/tm2629571d1_ex99-1.htm）：292,902,405 股（不含庫藏 29.1 百萬股）", "口徑：基本股數配含可轉債（列為負債）的淨負債；MarketScreener 274,099 千股與 Nebius v0.5.3 評價股數 0.3193（含可轉債轉股）均未採用")
-inp("pn_nd", "Nebius 淨負債：最新申報（2026-09-30；借款含可轉債 − 現金；受限現金不扣）", "US$B", None, "=14.1908-7.4256", None, "Derived", "Nebius Q3 2026 6-K 附件 99.1（2026-11-12；https://www.sec.gov/Archives/edgar/data/0001513845/000110465926126008/tm2629571d1_ex99-1.htm）：借款 流動 0.1875＋非流動 14.0033＝14.1908；現金與約當現金 7.4256；受限現金 1.2155 不扣（與 CoreWeave 自身口徑一致）", "融資租賃負債：新聞稿未列（找不到）；10 月 Citi 3.5 額度為期後")
-inp("pn_ndf", "Nebius 淨負債：MarketScreener 2026 年預估", "US$B", None, 13.659, None, "Interested-party", "MarketScreener 共識，擷取 2026-11-13（https://www.marketscreener.com/quote/stock/NEBIUS-GROUP-8037501/finances/、/valuation/、/quotes/；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）", "替代口徑（Val 並列、Sens peer_nd_mode）", INC_SELL)
-inp("pn_eb", "Nebius NTM 共識 EBITDA（2026 × 1.6/12＋2027 × 10.4/12；12 月制）", "US$B", None, "=1.348*1.6/12+6.556*10.4/12", None, "Interested-party", "MarketScreener 共識，擷取 2026-11-13（https://www.marketscreener.com/quote/stock/NEBIUS-GROUP-8037501/finances/、/valuation/、/quotes/；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）：2026 1,348、2027 6,556、2028 13,700（US$M）", "原則 49：自 2026-11-11 起月份加權", INC_SELL)
-inp("ir_px", "IREN 股價（2026-11-11 收盤）", "US$", None, 20.84, None, "Verified", "MarketScreener 共識，擷取 2026-11-13（https://www.marketscreener.com/quote/stock/IREN-LIMITED-129472358/finances/、/valuation/、/quotes/；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）：Nasdaq 5 日表 11-11 20.84（11-10 19.73、11-12 19.48）", "—")
-inp("ir_sh", "IREN 股數（Nbr of stocks）", "十億股", None, 0.424357, None, "Derived", "MarketScreener 共識，擷取 2026-11-13（https://www.marketscreener.com/quote/stock/IREN-LIMITED-129472358/finances/、/valuation/、/quotes/；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）：424,357 千股", "口徑：基本股數配含可轉債的淨負債（10-Q 股數：找不到，用 MarketScreener）")
-inp("ir_nd", "IREN 淨負債：最新申報（2026-09-30；借款＋融資租賃 − 現金；受限現金不扣）", "US$B", None, "=10.208-3.522", None, "Derived", "IREN Q1 FY27 新聞稿（2026-11-05；https://globenewswire.com/news-release/2026/11/05/3397020/0/en/iren-reports-q1-fy27-results.html）：GAAP 借款含融資租賃 10.208（公司自列）；現金與約當現金 3.522；受限現金 2.256 不扣（與 CoreWeave 自身口徑一致；公司自算淨負債 4.430 有扣受限現金）", "替代口徑見 ir_ndf")
-inp("ir_ndf", "IREN 淨負債：MarketScreener FY2027 預估", "US$B", None, 18.889, None, "Interested-party", "MarketScreener 共識，擷取 2026-11-13（https://www.marketscreener.com/quote/stock/IREN-LIMITED-129472358/finances/、/valuation/、/quotes/；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）", "替代口徑", INC_SELL)
-inp("ir_eb", "IREN NTM 共識 EBITDA（FY27 × 7.6/12＋FY28 × 4.4/12；6 月制）", "US$B", None, "=1.395*7.6/12+5.123*4.4/12", None, "Interested-party", "MarketScreener 共識，擷取 2026-11-13（https://www.marketscreener.com/quote/stock/IREN-LIMITED-129472358/finances/、/valuation/、/quotes/；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）：FY2027 1,395、FY2028 5,123、FY2029 9,826（US$M）", "原則 49 月份加權；v5.0 初版曾用 chartmill（FY27 2.21），兩來源差異大，改用與另兩家同源的 MarketScreener", INC_SELL)
+inp("pn_px", "Nebius 股價（2026-11-11 收盤）", "US$", None, 154.69, None, "Verified", "MarketScreener 共識，擷取 2026-11-13（URL 見 Sources MS；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）：Nasdaq 5 日表 11-11 154.69（11-10 134.00、11-12 128.64）", "同業估值日＝現價日 2026-11-11（原則 7、15）")
+inp("pn_sh", "Nebius 普通股流通在外（2026-09-30；A 股 259.597＋B 股 33.305 百萬股）", "十億股", None, 0.292902405, None, "Verified", "Nebius Q3 2026 6-K 附件 99.1（2026-11-12；URL 見 Sources NBIS_6K）：292,902,405 股（不含庫藏 29.1 百萬股）", "口徑：基本股數配含可轉債（列為負債）的淨負債；MarketScreener 274,099 千股與 Nebius v0.5.3 評價股數 0.3193（含可轉債轉股）均未採用")
+inp("pn_nd", "Nebius 淨負債：最新申報（2026-09-30；借款含可轉債 − 現金；受限現金不扣）", "US$B", None, "=14.1908-7.4256", None, "Derived", "Nebius Q3 2026 6-K 附件 99.1（2026-11-12；URL 見 Sources NBIS_6K）：借款 流動 0.1875＋非流動 14.0033＝14.1908；現金與約當現金 7.4256；受限現金 1.2155 不扣（與 CoreWeave 自身口徑一致）", "融資租賃負債：找不到（6-K 未列）；計入只會提高 Nebius 倍數，Nebius 已高於中位數，不影響中位數。10 月 Citi 額度為期後")
+inp("pn_ndf", "Nebius 淨負債：MarketScreener 2026 年預估", "US$B", None, 13.659, None, "Interested-party", "MarketScreener 共識，擷取 2026-11-13（URL 見 Sources MS；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）", "替代口徑（Val 並列、Sens peer_nd_mode）", INC_SELL)
+inp("pn_eb", "Nebius NTM 共識 EBITDA（2026 × 1.6/12＋2027 × 10.4/12；12 月制）", "US$B", None, "=1.348*1.6/12+6.556*10.4/12", None, "Interested-party", "MarketScreener 共識，擷取 2026-11-13（URL 見 Sources MS；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）：2026 1,348、2027 6,556、2028 13,700（US$M）", "原則 49：自 2026-11-11 起月份加權", INC_SELL)
+inp("ir_px", "IREN 股價（2026-11-11 收盤）", "US$", None, 20.84, None, "Verified", "MarketScreener 共識，擷取 2026-11-13（URL 見 Sources MS；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）：Nasdaq 5 日表 11-11 20.84（11-10 19.73、11-12 19.48）", "—")
+inp("ir_sh", "IREN 股數（Nbr of stocks）", "十億股", None, 0.424357, None, "Derived", "MarketScreener 共識，擷取 2026-11-13（URL 見 Sources MS；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）：424,357 千股", "口徑：基本股數配含可轉債的淨負債（10-Q 股數：找不到，用 MarketScreener）")
+inp("ir_nd", "IREN 淨負債：最新申報（2026-09-30；借款＋融資租賃 − 現金；受限現金不扣）", "US$B", None, "=10.208-3.522", None, "Derived", "IREN Q1 FY27 新聞稿（2026-11-05；URL 見 Sources IREN_Q1）：GAAP 借款含融資租賃 10.208（公司自列）；現金與約當現金 3.522；受限現金 2.256 不扣（與 CoreWeave 自身口徑一致；公司自算淨負債 4.430 有扣受限現金）", "替代口徑見 ir_ndf")
+inp("ir_ndf", "IREN 淨負債：MarketScreener FY2027 預估", "US$B", None, 18.889, None, "Interested-party", "MarketScreener 共識，擷取 2026-11-13（URL 見 Sources MS；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）", "替代口徑", INC_SELL)
+inp("ir_eb", "IREN NTM 共識 EBITDA（FY27 × 7.6/12＋FY28 × 4.4/12；6 月制）", "US$B", None, "=1.395*7.6/12+5.123*4.4/12", None, "Interested-party", "MarketScreener 共識，擷取 2026-11-13（URL 見 Sources MS；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）：FY2027 1,395、FY2028 5,123、FY2029 9,826（US$M）", "原則 49 月份加權；v5.0 初版曾用 chartmill（FY27 2.21），兩來源差異大，改用與另兩家同源的 MarketScreener", INC_SELL)
 inp("ir_use", "IREN 進同業中位數（1＝是；拆解用）", "—", None, 1, None, "Assumed", "2026-11-13 起取得同日股價、股數與共識", "—")
-inp("po_px", "Oracle 股價（2026-11-11 收盤）", "US$", None, 128.38, None, "Verified", "MarketScreener 共識，擷取 2026-11-13（https://www.marketscreener.com/quote/stock/ORACLE-CORPORATION-13620698/finances/、/valuation/、/quotes/；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）：NYSE 5 日表 11-11 128.38（11-10 117.98、11-12 127.11）", "—")
-inp("po_sh", "Oracle 股數（Nbr of stocks）", "十億股", None, 3.117708, None, "Derived", "MarketScreener 共識，擷取 2026-11-13（https://www.marketscreener.com/quote/stock/ORACLE-CORPORATION-13620698/finances/、/valuation/、/quotes/；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）：3,117,708 千股（含 2026-11-04 新股）", "—")
+inp("po_px", "Oracle 股價（2026-11-11 收盤）", "US$", None, 128.38, None, "Verified", "MarketScreener 共識，擷取 2026-11-13（URL 見 Sources MS；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）：NYSE 5 日表 11-11 128.38（11-10 117.98、11-12 127.11）", "—")
+inp("po_sh", "Oracle 股數（Nbr of stocks）", "十億股", None, 3.117708, None, "Derived", "MarketScreener 共識，擷取 2026-11-13（URL 見 Sources MS；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）：3,117,708 千股（含 2026-11-04 新股）", "—")
 inp("po_nd", "Oracle 淨負債：最新實際（含融資租賃；2026-11 增資 pro forma）", "US$B", None, 87.208, None, "Derived", "Oracle v0.5.1 Val!C10", "主口徑；MarketScreener FY2026 實際 97.647（增資前）")
-inp("po_ndf", "Oracle 淨負債：MarketScreener FY2027 預估", "US$B", None, 115.597, None, "Interested-party", "MarketScreener 共識，擷取 2026-11-13（https://www.marketscreener.com/quote/stock/ORACLE-CORPORATION-13620698/finances/、/valuation/、/quotes/；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）", "替代口徑", INC_SELL)
-inp("po_eb", "Oracle NTM 共識 EBITDA（FY27 × 6.6/12＋FY28 × 5.4/12；5 月制）", "US$B", None, "=52.09*6.6/12+74.148*5.4/12", None, "Interested-party", "MarketScreener 共識，擷取 2026-11-13（https://www.marketscreener.com/quote/stock/ORACLE-CORPORATION-13620698/finances/、/valuation/、/quotes/；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）：FY2027 52,090、FY2028 74,148（US$M）", "原則 49 月份加權", INC_SELL)
+inp("po_ndf", "Oracle 淨負債：MarketScreener FY2027 預估", "US$B", None, 115.597, None, "Interested-party", "MarketScreener 共識，擷取 2026-11-13（URL 見 Sources MS；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）", "替代口徑", INC_SELL)
+inp("po_eb", "Oracle NTM 共識 EBITDA（FY27 × 6.6/12＋FY28 × 5.4/12；5 月制）", "US$B", None, "=52.09*6.6/12+74.148*5.4/12", None, "Interested-party", "MarketScreener 共識，擷取 2026-11-13（URL 見 Sources MS；chat 端內建瀏覽器擷取，頁面「Market Closed 2026-11-12」）：FY2027 52,090、FY2028 74,148（US$M）", "原則 49 月份加權", INC_SELL)
 inp("peer_nd_mode", "同業淨負債口徑（0＝最新實際；1＝MarketScreener 當年度預估）", "—", None, 0, 1, "Assumed", "主口徑同 Oracle 樣板（EV 以估值日的資產負債計）", "Sens：改用預估口徑（IREN 差異最大：1.752 → 18.889）")
 inp("pn_rev", "Nebius NTM 共識營收（FY26 × 2/12＋FY27 × 10/12）", "US$B", None, "=3.379*2/12+11.43*10/12", None, "Interested-party", "nebius/data/consensus_nbis_20261007.json（FY27 營收由 EBITDA 6.194 ÷ EBITDA 率 54.2% 推得）", "同業表成長與利潤率欄", INC_SELL)
 inp("po_rev", "Oracle NTM 共識營收（FY27 × 7/12＋FY28 × 5/12）", "US$B", None, "=90.423*7/12+131.711*5/12", None, "Interested-party", "oracle/data/consensus_orcl_20261022.json", "同業表成長與利潤率欄", INC_SELL)
@@ -904,7 +904,7 @@ P0 = r
 for nm, tk, ev, eb, src, mg, nd, cx_, gr in (
         ("Nebius", "NBIS", "pn_px*pn_sh+IF(peer_nd_mode=1,pn_ndf,pn_nd)", "pn_eb", "US GAAP；MarketScreener 共識（擷取 2026-11-13）；Derived＝EV ÷ NTM EBITDA", "=pn_eb/pn_rev", "=IF(peer_nd_mode=1,pn_ndf,pn_nd)/pn_eb", "未取得", "=6.556/1.348-1"),
         ("Oracle（混合業務）", "ORCL", "po_px*po_sh+IF(peer_nd_mode=1,po_ndf,po_nd)", "po_eb", "US GAAP；MarketScreener 共識（擷取 2026-11-13）；SaaS 與授權占多數", "=po_eb/po_rev", "=IF(peer_nd_mode=1,po_ndf,po_nd)/po_eb", "=po_cx/po_rev", "=74.148/52.09-1"),
-        ("IREN", "IREN", "ir_px*ir_sh+IF(peer_nd_mode=1,ir_ndf,ir_nd)", "ir_eb", "US GAAP（10-K）；MarketScreener 共識（擷取 2026-11-13）；最新實際淨負債為 2026-06，之後的擴建融資未計入", None, "=IF(peer_nd_mode=1,ir_ndf,ir_nd)/ir_eb", "未取得", "=5.123/1.395-1")):
+        ("IREN", "IREN", "ir_px*ir_sh+IF(peer_nd_mode=1,ir_ndf,ir_nd)", "ir_eb", "US GAAP（10-K）；MarketScreener 共識（擷取 2026-11-13）；淨負債為 2026-09-30 申報口徑：借款含融資租賃 10.208 − 現金 3.522＝6.686（受限現金 2.256 不扣，與 CoreWeave 一致；公司自算 4.430 有扣受限現金）", None, "=IF(peer_nd_mode=1,ir_ndf,ir_nd)/ir_eb", "未取得", "=5.123/1.395-1")):
     V.cell(r, 1, nm); V.cell(r, 2, tk)
     if ev:
         V.cell(r, 3, "=" + ev).number_format = "#,##0.0"; V.cell(r, 4, f'=IF(ir_use=0,"不納入",({ev})/{eb})' if tk == "IREN" else f"=({ev})/{eb}").number_format = "0.00"
@@ -974,8 +974,11 @@ crow("px", "現價", "US$", "=px")
 crow("up", "上檔空間：加權目標價", "%", f"=C{CON['tp']}/C{CON['px']}-1", "0.0%")
 crow("upc", "上檔空間：Comparable 目標價", "%", f"=C{CON['comp']}/C{CON['px']}-1", "0.0%")
 RATE = lambda x: f'IF({x}>0.5,"強力買進",IF({x}>0.25,"買進",IF({x}>=-0.25,"中立",IF({x}>=-0.5,"放空","強力放空"))))'
-crow("rec", "投資建議", "—", "=" + RATE(f"C{CON['up']}"), None, "評等五級：> +50% 強力買進、> +25% 買進、≥ −25% 中立、≥ −50% 放空、其餘強力放空（原則 24、57）")
-V.cell(CON["rec"], 6, "五級規則：上檔空間 > +50% 強力買進、> +25% 買進、≥ −25% 中立、≥ −50% 放空、其餘強力放空")
+crow("valrec", "估值評等（只看上檔空間；未套收支關卡）", "—", "=" + RATE(f"C{CON['up']}"), None, "五級規則：上檔空間 > +50% 強力買進、> +25% 買進、≥ −25% 中立、≥ −50% 放空、其餘強力放空（原則 24、57）")
+crow("gatev", "入不敷出判定用：情境 B 的 FY2026–FY2030 自由現金流合計（＝Fund 頁收支關卡）", "US$B", f"=Fund!D{FS['gate']}", "#,##0.0", "原則 63：合計 < 0＝入不敷出＝收支關卡不通過（判準與 AI 投資地圖相同；本模型無容忍帶）")
+crow("gatep", "入不敷出判定結果（原則 63）", "—", f'=IF(C{CON["gatev"]}<0,"不通過","通過")', None)
+crow("rec", "投資建議", "—", f'=IF(AND(C{CON["gatep"]}="不通過",OR(C{CON["valrec"]}="強力買進",C{CON["valrec"]}="買進")),"收支不足",C{CON["valrec"]})', None)
+V.cell(CON["rec"], 6, "先看收支、再看估值（原則 63；Andy 2026-10-25、10-26、11-13）：收支關卡不通過時，估值評等為買進以上者一律改列「收支不足」，中立、放空、強力放空維持；估值評等五級：上檔空間 > +50% 強力買進、> +25% 買進、≥ −25% 中立、≥ −50% 放空、其餘強力放空")
 crow("dist", "距最近級距邊界（百分點；原則 36）", "pt", f"=MIN(ABS(C{CON['up']}-0.5),ABS(C{CON['up']}-0.25),ABS(C{CON['up']}+0.25),ABS(C{CON['up']}+0.5))", "0.0%")
 crow("dcfup", "上檔空間歸因：DCF 貢獻（w_dcf ×(DCF ÷ 現價 − 1)）", "%", f"=w_dcf*(C{CON['dcf']}/C{CON['px']}-1)", "0.0%", "原則 47：三段相加＝加權上檔空間")
 crow("cmpup", "上檔空間歸因：未調整 Comparable 貢獻", "%", f"=(1-w_dcf)*(C{CON['comp0']}/C{CON['px']}-1)", "0.0%")
@@ -1002,6 +1005,17 @@ crow("mup", "升一級所需同業倍數（其他不變；Comparable 每股未�
 crow("mdn", "降一級所需同業倍數", "x", MREQ(LB.replace("NA()","-0.5"), f'C{CON["up"]}<-0.5'), "0.00", "反解加權目標價＝降一級邊界（現行邊界）")
 crow("bn_edge", "橫幅：距級距邊界", "—", f'=IF(C{CON["dist"]}<0.05,"接近級距邊界：","")&"距最近級距邊界 "&TEXT(C{CON["dist"]}*100,"0.0")&" 個百分點；同業倍數 "&TEXT(mult,"0.00")&" 倍，升一級需 "&IF(ISNUMBER(C{CON["mup"]}),TEXT(C{CON["mup"]},"0.00")&" 倍","—（已最高級）")&"、降一級需 "&IF(ISNUMBER(C{CON["mdn"]}),TEXT(C{CON["mdn"]},"0.00")&" 倍","—")', None)
 crow("bn_dcf", "橫幅：DCF 有效性", "—", f'=C{CON["dvalid"]}', None)
+crow("val_lab", "估值評等標示（距邊界 <5pt 時加「邊界」）", "—", f'=C{CON["valrec"]}&IF(C{CON["dist"]}<0.05,"（邊界，±"&TEXT(C{CON["dist"]}*100,"0.0")&"pt）","")', None)
+crow("rec_lab", "評等標示（收支不足時並列估值評等與收支合計）", "—", f'=IF(C{CON["rec"]}="收支不足","收支不足〔估值評等："&C{CON["val_lab"]}&"；情境 B 的 FY2026–FY2030 自由現金流合計 "&TEXT(C{CON["gatev"]},"0.0")&" 十億美元，入不敷出〕",C{CON["val_lab"]})', None)
+_flip = []
+if SENS:
+    _brec = SENS["cases"][0]["lo"]["rec"]
+    _LOW = ("中立", "放空", "強力放空")
+    _flip = [4 + i for i, c in enumerate(SENS["cases"]) if any(c.get(sd) and c[sd]["rec"] in _LOW for sd in ("lo", "hi"))]
+_SR = [4, 3 + len(SENS['cases'])] if SENS else [4, 4]
+_med = f'IF(ABS(mult-D{P0})<1E-9,A{P0},IF(ABS(mult-D{P0 + 1})<1E-9,A{P0 + 1},A{P0 + 2}))'
+crow("bn_frag", "橫幅：評等脆弱點（原則 36）", "—", '=IF(C{d}<0.05,"評等脆弱點：(a) 同業中位數剛好是 "&{m}&"（"&TEXT(mult,"0.00")&" 倍）；(b) Nebius 淨負債用 11-12 公布的 9-30 申報（晚估值日一天，屬已發生事件的最新申報口徑）；(c) Sens 單一案例中有 "&TEXT({n},"0")&" 案的估值評等會由買進降為中立或更低"{lst},"")'.format(
+    d=CON["dist"], m=_med, n=f'SUMPRODUCT(--((ISNUMBER(MATCH(Sens!M{_SR[0]}:M{_SR[1]},{{"中立","放空","強力放空"}},0))+ISNUMBER(MATCH(Sens!N{_SR[0]}:N{_SR[1]},{{"中立","放空","強力放空"}},0)))>0))' if SENS else "0", lst=('&"（如 "&' + '&"、"&'.join(f"Sens!L{x}" for x in _flip[:6]) + ('&" 等）"' if len(_flip) > 6 else '&"）"')) if _flip else ''), None)
 V.column_dimensions["A"].width = 64; V.column_dimensions["B"].width = 11
 for c in "CDE": V.column_dimensions[c].width = 12
 V.column_dimensions["F"].width = 80
@@ -1111,7 +1125,7 @@ for c in "BCDEFGH": RC.column_dimensions[c].width = 11
 SE = wb.create_sheet("Sens")
 SE["A1"] = "Sens — 一次動一個輸入（低／高），整本重建並以 LibreOffice 重算，讀加權目標價、DCF 單法目標價、收支關卡（scripts/sens_v50.py → data/sens_v50.json；建置時寫入此頁）"
 SE["A2"] = ("重算日期 " + SENS["date"] + f"；基準加權目標價 {SENS['base']['tp']:.4f}" if SENS else "敏感度快照未產生（先跑 scripts/sens_v50.py）") + "。In 頁每個有低／高區間的鍵都有案例（L 欄「鍵」）；情境路徑 mw*_xx 由 Val 頁情境目標價呈現。"
-hdr(SE, 3, ["輸入", "低／高設定", "低：加權目標價", "低：相對基準", "高：加權目標價", "高：相對基準", "最大絕對變動", "低：DCF 目標價", "高：DCF 目標價", "低：收支關卡（B）", "高：收支關卡（B）", "鍵", "低：評等", "高：評等"])
+hdr(SE, 3, ["輸入", "低／高設定", "低：加權目標價", "低：相對基準", "高：加權目標價", "高：相對基準", "最大絕對變動", "低：DCF 目標價", "高：DCF 目標價", "低：收支關卡（B）", "高：收支關卡（B）", "鍵", "低：估值評等", "高：估值評等"])
 SENS_R = [4, 4]
 r = 4
 if SENS:
@@ -1179,12 +1193,12 @@ ALT_SENT = (f'&"；同業淨負債改用 MarketScreener 年底預估（替代口
 lines = [
     ("thesis", '="命題：CoreWeave 已簽約的 backlog（"&TEXT(backlog,"0.0")&" 十億美元；RPO "&TEXT(rpo,"0.0")&"）能否以高於資金成本的報酬轉成營收與現金，同時不讓資金缺口失控。命題模組（在役 MW × 每 MW 年收入〔Tokenomics 持有成本 × 定價倍數 k〕、營運費用、租金、資本支出與折舊）驅動唯一的報告分部 AI 雲端平台"'),
     ("q", "核心問題：每增加 1 GW 的產能，是否創造高於資金成本的價值；資金缺口（自由現金流為負）要靠多少新債與新股補，股東被稀釋多少。"),
-    ("rec", f'="投資建議："&{VC("rec")}&"（加權目標價 US$"&TEXT({VC("tp")},"0.00")&"，現價 US$"&TEXT(px,"0.00")&"〔"&TEXT(px_date,"yyyy-mm-dd")&"〕，上檔空間 "&TEXT({VC("up")},"+0.0%;-0.0%")&"）——條件式：在每 MW 年收入＝Tokenomics 持有成本 × k "&TEXT(k_mix,"0.000")&"（IREN 長約 Analogy 9.70 與 H100 現貨）、計費比例 "&TEXT(u_bill,"0%")&"、AI 設備折舊 "&TEXT(life_ai,"0")&" 年（Tokenomics）的基準假設下；失效條件見本頁末"'),
+    ("rec", f'="投資建議："&{VC("rec_lab")}&"（加權目標價 US$"&TEXT({VC("tp")},"0.00")&"，現價 US$"&TEXT(px,"0.00")&"〔"&TEXT(px_date,"yyyy-mm-dd")&"〕，上檔空間 "&TEXT({VC("up")},"+0.0%;-0.0%")&"）——條件式：在每 MW 年收入＝Tokenomics 持有成本 × k "&TEXT(k_mix,"0.000")&"（IREN 長約 Analogy 9.70 與 H100 現貨）、計費比例 "&TEXT(u_bill,"0%")&"、AI 設備折舊 "&TEXT(life_ai,"0")&" 年（Tokenomics）的基準假設下；失效條件見本頁末"'),
     ("o1", f'="重點觀察 1：DCF 情境加權 "&TEXT({VC("dcf")},"0.00")&"、Comparable "&TEXT({VC("comp")},"0.00")&"（同業中位數 "&TEXT(mult,"0.00")&" 倍 × FY2028 調整後 EBITDA）；"&{VC("bn_dcf")}&"。上檔空間 "&TEXT({VC("up")},"+0.0%;-0.0%")&"＝DCF 貢獻 "&TEXT({VC("dcfup")},"+0.0%;-0.0%")&"＋Comparable 貢獻 "&TEXT({VC("cmpup")},"+0.0%;-0.0%")&"＋相對倍數調整 "&TEXT({VC("adjup")},"+0.0%;-0.0%"){ALT_SENT}'),
     ("o2", f'="重點觀察 2："&{VC("bn_scn")}&"。情境 B 的 FY2029 稅後 ROIC "&TEXT(Thesis!D{SUM_ROWS[0] + 5},"0.0%")&"，對照 WACC "&TEXT(wacc,"0.0%")&"。"'),
     ("o3", f'="重點觀察 3：收支關卡（FY2026–FY2030 自由現金流合計）情境 A／B／C 為 "&TEXT(Fund!C{FS["gate"]},"0.0")&"／"&TEXT(Fund!D{FS["gate"]},"0.0")&"／"&TEXT(Fund!E{FS["gate"]},"0.0")&" 十億美元；情境 B 期間最大單年新增舉債 "&TEXT(Fund!D{FS["maxb"]},"0.0")&"、最低年末現金 "&TEXT(Fund!D{FS["minc"]},"0.0")&"、淨負債 ÷ EBITDA 最差 "&TEXT(Fund!D{FS["ndmax"]},"0.00")&" 倍、利息保障最差 "&TEXT(Fund!D{FS["icmin"]},"0.00")&" 倍（"&IF(Fund!D{FS["ndmax"]}>lev_max,"淨負債 ÷ EBITDA 觸發 WARN","淨負債 ÷ EBITDA 未觸發")&"、"&IF(Fund!D{FS["icmin"]}<icov_min,"利息保障觸發 WARN","利息保障未觸發")&"）；2030 年底累計稀釋 "&TEXT(Fund!D{FS["dil"]},"0.0%")'),
     ("o4", '="J4：公司稱新簽 4–5 年約每 MW 年收入 US$"&TEXT(p_claim_lo,"0")&"–"&TEXT(p_claim_hi,"0")&"m（Interested-party），是本模型 FY2027 情境 B 每 MW 年收入 "&TEXT(Thesis!F' + str(TR["B"]["pm"]) + ',"0.00")&" 的 "&TEXT((p_claim_lo+p_claim_hi)/2/Thesis!F' + str(TR["B"]["pm"]) + ',"0.0")&" 倍；新增產能改用公司宣稱中點的 Sens 見 Sens 頁 p_new_ovr 列；不改基準 k"'),
-    ("o5", f'="橫幅："&{VC("bn_edge")}'),
+    ("o5", f'="橫幅："&{VC("bn_edge")}&IF({VC("bn_frag")}="","","。"&{VC("bn_frag")})'),
     ("o6", f'="指引對照（原則 50）：模型 FY2026 營收 "&TEXT(PL!D{PR_["B"]["rev"]},"0.00")&"，"&Recon!E{RCR["rev26pos"]}&"（指引 "&TEXT(g_rev_lo,"0.0")&"–"&TEXT(g_rev_hi,"0.0")&"）；調整後營業利益 "&TEXT(PL!D{PR_["B"]["aoi"]},"0.000")&"，"&Recon!E{RCR["aoi26pos"]}&"；差距主要來自每 MW 年收入：達到營收指引中點需 Q4 每 MW 年收入 "&TEXT(Recon!E{RCR["rev4req"]},"0.00")&"（模型 "&TEXT(Recon!B{RCR["rev4req"]},"0.00")&"，模型輸出，非獨立證據）"'),
 ]
 for i, (k, f) in enumerate(lines):
@@ -1208,7 +1222,7 @@ for t in ("1. 客戶集中（Q2 10-Q：最大客戶 36%、次大 26%）：是否
     RD.cell(r, 1, t); r += 1
 r += 1
 RD.cell(r, 1, "已知限制").font = BOLD; r += 1
-RD.cell(r, 1, "Q3 10-Q 在建置環境無法開啟（SEC 被擋）：債務逐檔、到期表、租賃、在建工程、期末股數、RSU 與選擇權沿用 Q2 10-Q 或標待補；Q3 公司口徑資本支出 14.511、RPO 分桶、加權債務成本 7.9% 為法說數（新聞稿未見）。Comparable 有 EV 的同業只有 2 家（Nebius、Oracle），不符至少 3 家規格；IREN 只取得 NTM EBITDA 共識、11-11 同日 EV 未取得；同業股價為 2026-11-05（逾期 4 個交易日）。β 以 US 伺服器／EMS 組代理（新雲無自算組）。kd 為 2032 票據發行票面，市場殖利率未取得。"); RL["lim"] = r; r += 2
+RD.cell(r, 1, "Q3 10-Q 在建置環境無法開啟（SEC 被擋）：債務逐檔、到期表、租賃、在建工程、期末股數、RSU 與選擇權沿用 Q2 10-Q 或標待補；Q3 公司口徑資本支出 14.511、RPO 分桶、加權債務成本 7.9% 為法說數（新聞稿未見）。Comparable 同業 3 家（Nebius、Oracle、IREN；MarketScreener 共識，估值日 2026-11-11），少於 8 家不做迴歸；中位數落在 Oracle（混合業務），淨負債口徑影響大（Val 並列兩口徑）。β 以 US 伺服器／EMS 組代理（新雲無自算組）。kd 為 2032 票據發行票面，市場殖利率未取得。"); RL["lim"] = r; r += 2
 RD.cell(r, 1, "驅動 → 推導對照（每頁輸入、推導量、因果方向）").font = BOLD; RL["drv"] = r; r += 1
 for t in ("In：一列一鍵（值、單位、標記、來源、說明、來源誘因）→ 所有公式以鍵名引用",
           "Thesis：在役 MW 路徑 × 每 MW 年收入（Tokenomics × k）→ 營收；Tokenomics 營運費用、租金、管銷 → 調整後 EBITDA；新增 MW × IF_CapexIT → 資本支出 → 折舊 → 營業利益",
@@ -1231,6 +1245,7 @@ if REV:
 else:
     RD.cell(r, 1, "3. 公司說法？答：反解快照未產生"); r += 1
 r += 1
+RD.cell(r, 1, "v5.0.1（2026-11-13）：Andy 2026-11-13「个股模型还是要遵守这个收之不过就不能买进的这个规则……个股模型这边还是要用相同的原则来评断它的評等」→ 投資建議加上收支關卡（原則 63）：情境 B 的 FY2026–FY2030 自由現金流合計為負、而估值評等為買進以上時，改列「收支不足」。加權目標價與所有數值不變（76.20）；另更正已知限制中過時的同業家數與 In 頁隨需占比說明。"); RL["v501"] = r; r += 1
 RD.cell(r, 1, "v5.0（2026-11-12）：Andy 2026-11-12「Coreweave 已经公布财报了，所以要更新 Coreweave 的财报。再将 html 的版面套用 Oracle 最新的版本。」＋確認 v4.13 驗收採用規劃書 J1–J5。舊 JS 雙引擎（v4.13）移 coreweave/legacy_v4/；成品 v4.13 移 dist/_待刪除/。"); RL["v50"] = r; r += 1
 if DEC:
     RD.cell(r, 1, "目標價變動拆解（scripts/decomp_v50.py）：" + "；".join(f"{d['label']} {d['delta']:+.2f}" for d in DEC["steps"]) + f"；合計 {DEC['total']:+.2f}"); RL["dec"] = r; r += 1

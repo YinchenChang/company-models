@@ -55,7 +55,7 @@ def met(name, rows, fmt, chart=False):
     if chart: m["chart"] = True
     return m
 V3 = lambda keys, src, f: [[f"@Val!A{src[k]}", f"@Val!C{src[k]}|{f.get(k, 'n1')}", f"@Val!D{src[k]}|{f.get(k, 'n1')}", f"@Val!E{src[k]}|{f.get(k, 'n1')}"] for k in keys]
-CONF = {"up": "sp1", "upc": "sp1", "dist": "p1", "dcfup": "sp1", "cmpup": "sp1", "adjup": "sp1", "tvsh": "p1", "rec": "", "inr": "", "dvalid": "", "bn_scn": "", "bn_edge": "", "bn_dcf": "", "upchk": "p1"}
+CONF = {"mup": "x1", "mdn": "x1", "up": "sp1", "upc": "sp1", "dist": "p1", "dcfup": "sp1", "cmpup": "sp1", "adjup": "sp1", "tvsh": "p1", "rec": "", "inr": "", "dvalid": "", "bn_scn": "", "bn_edge": "", "bn_dcf": "", "upchk": "p1"}
 def ctab(keys):
     return [[f"@Val!A{CON[k]}", f"@Val!C{CON[k]}|{CONF.get(k, 'n2')}" if CONF.get(k, 'n2') else f"@Val!C{CON[k]}"] for k in keys]
 RW = wb["Recon"]
@@ -109,7 +109,7 @@ cfg = {
              "tiles": [[f"@Val!A{CON['tp']}", f"@Val!C{CON['tp']}|n2", ["上檔空間 ", f"@Val!C{CON['up']}|sp1"]],
                        [f"@Val!A{CON['comp']}", f"@Val!C{CON['comp']}|n2", ["上檔空間 ", f"@Val!C{CON['upc']}|sp1"]],
                        [f"@Val!A{CON['px']}", f"@Val!C{CON['px']}|n2", ""]],
-             "note": [f"@Val!C{CON['bn_scn']}", "。", f"@Val!C{CON['bn_dcf']}", "。", f"@Val!C{CON['bn_edge']}", "。投資建議依加權目標價判定：", f"@Val!F{CON['rec']}"]},
+             "note": [f"@Val!C{CON['rec_lab']}", "。", f"@Val!C{CON['bn_edge']}", "。", f"@Val!C{CON['bn_frag']}", "。", f"@Val!C{CON['bn_scn']}", "。", f"@Val!C{CON['bn_dcf']}", "。", f"@Val!F{CON['rec']}"]},
     "thesis": f"@README!A{RL['thesis']}",
     "question": "每增加一 GW 的產能，是否創造高於資金成本的價值；資金缺口要靠多少新債與新股補、股東被稀釋多少",
     "scenarios": [{"key": "A", "name": "情境 A（樂觀）"}, {"key": "B", "name": "情境 B（基準）"}, {"key": "C", "name": "情境 C（保守）"}],
@@ -177,7 +177,7 @@ cfg = {
             {"type": "table", "caption": "結論（主要項目）", "head": ["項目", "數值"], "rows": ctab(["tp", "dcf", "comp", "px", "up", "upc", "rec", "dvalid", "cons"])},
             {"type": "kv", "items": [[f"@Val!A{CON['tps']}", [f"@Val!C{CON['tps']}|n2", "／", f"@Val!D{CON['tps']}|n2", "／", f"@Val!E{CON['tps']}|n2", "（情境 A／B／C）"]]]},
             {"type": "table", "collapse": True, "summary": "展開：結論的其他項目（上檔空間歸因、區間、增量價值、級距距離、舊版對照）", "head": ["項目", "數值"],
-             "rows": ctab(["comp0", "dcfup", "cmpup", "adjup", "upchk", "lo", "hi", "inr", "npvAB", "npvBC", "npvps", "dist", "v413", "chg", "tvsh"])},
+             "rows": ctab(["mup", "mdn", "comp0", "dcfup", "cmpup", "adjup", "upchk", "lo", "hi", "inr", "npvAB", "npvBC", "npvps", "dist", "v413", "chg", "tvsh"])},
             {"type": "table", "caption": "DCF 折現率（主要項目）", "head": ["項目", "數值"],
              "rows": [[f"@Val!A{VR[k]}", f"@Val!C{VR[k]}|p2"] for k in ("wacc", "ke", "kdat", "ronic")] + [[f"@In!B{INR['tp_g']}", f"@In!E{INR['tp_g']}|p1"]]},
             {"type": "table", "collapse": True, "summary": "展開：折現率組成（股權市值、負債、無風險利率、β、股權風險溢酬、稅前債務成本、稅率）", "head": ["項目", "數值"],
@@ -215,7 +215,7 @@ cfg = {
             {"type": "h3", "text": "附錄：驅動 → 推導對照表（查核用）"},
             {"type": "list", "collapse": True, "summary": "展開：每頁的輸入、推導量與因果方向", "items": [f"@README!A{RL['drv'] + k}" for k in range(1, 6)]},
             {"type": "h3", "text": "附錄：版本要點與目標價變動拆解"},
-            {"type": "list", "collapse": True, "summary": "展開：版本要點", "items": [f"@README!A{RL['v50']}"] + ([f"@README!A{RL['dec']}"] if "dec" in RL else [])},
+            {"type": "list", "collapse": True, "summary": "展開：版本要點", "items": [f"@README!A{RL['v501']}", f"@README!A{RL['v50']}"] + ([f"@README!A{RL['dec']}"] if "dec" in RL else [])},
             {"type": "h3", "text": "風險登錄（未進主模型的尾部風險）"},
             {"type": "list", "collapse": True, "summary": "展開：風險、是否建模、理由、觀察指標", "items": [f"@README!A{RL['risk'] + k}" for k in range(1, 7)]},
             {"type": "h3", "text": "「未取得」與「找不到」清單"},
