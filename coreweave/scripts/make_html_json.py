@@ -109,7 +109,7 @@ cfg = {
              "tiles": [[f"@Val!A{CON['tp']}", f"@Val!C{CON['tp']}|n2", ["上檔空間 ", f"@Val!C{CON['up']}|sp1"]],
                        [f"@Val!A{CON['comp']}", f"@Val!C{CON['comp']}|n2", ["上檔空間 ", f"@Val!C{CON['upc']}|sp1"]],
                        [f"@Val!A{CON['px']}", f"@Val!C{CON['px']}|n2", ""]],
-             "note": [f"@Val!C{CON['bn_scn']}", "。", f"@Val!C{CON['bn_dcf']}", "。", f"@Val!C{CON['bn_edge']}", "。投資建議依加權目標價判定：", f"@Val!F{CON['rec']}"]},
+             "note": [f"@Val!C{CON['rec_lab']}", "。", f"@Val!C{CON['bn_edge']}", "。", f"@Val!C{CON['bn_frag']}", "。", f"@Val!C{CON['bn_scn']}", "。", f"@Val!C{CON['bn_dcf']}", "。投資建議依加權目標價判定：", f"@Val!F{CON['rec']}"]},
     "thesis": f"@README!A{RL['thesis']}",
     "question": "每增加一 GW 的產能，是否創造高於資金成本的價值；資金缺口要靠多少新債與新股補、股東被稀釋多少",
     "scenarios": [{"key": "A", "name": "情境 A（樂觀）"}, {"key": "B", "name": "情境 B（基準）"}, {"key": "C", "name": "情境 C（保守）"}],
