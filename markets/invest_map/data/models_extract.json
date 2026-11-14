@@ -2636,84 +2636,84 @@
   }
  },
  "LITE": {
-  "model": "lite/dist/20261115_Lumentum個股模型_v0.5.5.xlsx",
+  "model": "lite/dist/20261115_Lumentum個股模型_v0.5.6.xlsx",
   "v2": true,
   "tp": {
    "value": 377.713401686131,
    "cell": "Val!B39",
-   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.5.xlsx"
+   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.6.xlsx"
   },
   "tp_dcf": {
    "value": 251.455141714523,
    "cell": "Val!B24",
-   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.5.xlsx"
+   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.6.xlsx"
   },
   "tp_comp": {
    "value": 613.858534268457,
    "cell": "Val!B40",
-   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.5.xlsx"
+   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.6.xlsx"
   },
   "tp_cons": {
    "value": 1165.03,
    "cell": "Val!B41",
-   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.5.xlsx"
+   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.6.xlsx"
   },
   "up": {
    "value": -0.25894957487516,
    "cell": "Val!B42",
-   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.5.xlsx"
+   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.6.xlsx"
   },
   "up_comp": {
    "value": 0.204352627562207,
    "cell": "Val!B43",
-   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.5.xlsx"
+   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.6.xlsx"
   },
   "old_rule": {
    "value": 431.621249940822,
    "cell": "Val!B53",
-   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.5.xlsx"
+   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.6.xlsx"
   },
   "tier6": {
    "value": "−25%～−50%",
    "cell": "Val!B49",
-   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.5.xlsx"
+   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.6.xlsx"
   },
   "rec": {
    "value": "放空",
    "cell": "Val!B50",
-   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.5.xlsx"
+   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.6.xlsx"
   },
   "dcf_A": {
    "value": 366.638150555454,
    "cell": "Val!B21",
-   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.5.xlsx"
+   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.6.xlsx"
   },
   "dcf_C": {
    "value": 155.570622300958,
    "cell": "Val!D21",
-   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.5.xlsx"
+   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.6.xlsx"
   },
   "model_px": {
    "value": 509.7,
    "cell": "Val!B63",
-   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.5.xlsx",
+   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.6.xlsx",
    "date": "2026-11-05"
   },
   "pe_fy28": [
    {
     "value": 15.070362337582,
     "cell": "Val!B66",
-    "file": "lite/dist/20261115_Lumentum個股模型_v0.5.5.xlsx"
+    "file": "lite/dist/20261115_Lumentum個股模型_v0.5.6.xlsx"
    },
    {
     "value": 17.3296819430612,
     "cell": "Val!C66",
-    "file": "lite/dist/20261115_Lumentum個股模型_v0.5.5.xlsx"
+    "file": "lite/dist/20261115_Lumentum個股模型_v0.5.6.xlsx"
    },
    {
     "value": 19.7096453664421,
     "cell": "Val!D66",
-    "file": "lite/dist/20261115_Lumentum個股模型_v0.5.5.xlsx"
+    "file": "lite/dist/20261115_Lumentum個股模型_v0.5.6.xlsx"
    }
   ],
   "cash": {
@@ -2841,7 +2841,7 @@
      "PL!J231"
     ]
    ],
-   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.5.xlsx"
+   "file": "lite/dist/20261115_Lumentum個股模型_v0.5.6.xlsx"
   }
  },
  "300502": {

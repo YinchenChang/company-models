@@ -1,7 +1,7 @@
 ticker,close,currency,date,source,sources_count
 CRWV,60.77,USD,2026-11-11,個股模型現價（20261114_CoreWeave個股模型_v5.0.3.xlsx，Val!C4；In 頁 px 2026-11-11 收盤）,1
-NBIS,141.52,USD,2026-11-04,massive；marketbeat,2
-WYFI,9.15,USD,2026-11-04,massive；marketbeat,2
+NBIS,128.64,USD,2026-11-12,個股模型現價（20261115_Nebius個股模型_v0.6.0.xlsx，Val!C4；In 頁 px 2026-11-12 收盤）,1
+WYFI,9.21,USD,2026-11-10,個股模型現價（20261115_WhiteFiber個股模型_v0.4.0.xlsx，Val!C4；In 頁 px 2026-11-10 收盤）,1
 ORCL,115.16,USD,2026-11-05,個股模型現價（20261115_Oracle個股模型_v0.5.2.xlsx，In!E5；模型出處 Yahoo Finance 日線 115.16、StockAnalysis 115.19）,2
 MSFT,555.80,USD,2026-11-04,massive；marketbeat,2
 AMZN,266.03,USD,2026-11-04,massive（marketbeat 266.31，03:59 PM）,1
@@ -18,7 +18,7 @@ MRVL,133.55,USD,2026-11-05,個股模型現價（20261115_邁威爾個股模型_v
 ANET,159.16,USD,2026-11-05,個股模型現價（20261115_Arista個股模型_v0.5.5.xlsx，Val!B57）,1
 SNDK,806.43,USD,2026-11-05,個股模型現價（20261115_SanDisk個股模型_v0.5.5.xlsx，Val!B82）,1
 COHR,169.76,USD,2026-11-05,個股模型現價（20261114_Coherent個股模型_v0.4.5.xlsx，Val!B64）,1
-LITE,509.7,USD,2026-11-05,個股模型現價（20261115_Lumentum個股模型_v0.5.5.xlsx，Val!B63）,1
+LITE,509.7,USD,2026-11-05,個股模型現價（20261115_Lumentum個股模型_v0.5.6.xlsx，Val!B63）,1
 2330,2240,TWD,2026-11-05,個股模型現價（20261115_台積電個股模型_v0.5.5.xlsx，In!E166）,1
 2454,3460,TWD,2026-11-05,個股模型現價（20261115_聯發科個股模型_v0.3.4.xlsx，Val!B53）,1
 2308,1130,TWD,2026-11-05,個股模型現價（20261114_台達電個股模型_v0.5.7.xlsx，Val!B6）,1

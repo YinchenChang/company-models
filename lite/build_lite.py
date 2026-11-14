@@ -1148,6 +1148,15 @@ if _CR and not OVR:
     import v055_post  # noqa: E402
     print(v055_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR))
     COORD.stamp(wb, "v0.5.4", "v0.5.5", "2026-11-15")
+    # v0.5.6（2026-11-15，main 合併後整理）：In 頁 mrvl_tp（MRVL 模型加權目標價，只供 Val 0.6 換股價值對照、不進加權目標價）67.36 → 64.73（MRVL v0.3.5）；
+    # 只改 mrvl_tp 與連帶格（Val 0.6 對照列、README 重點 1 同一換算值）及版本字串；加權目標價、評等不變
+    _V56 = "v0.5.6（2026-11-15）：MRVL 模型加權目標價對照值 67.36 → 64.73（MRVL v0.3.5；Siliconomics v0.19 下游重建後的值），只影響 Val 0.6 換股價值對照列，不進加權目標價；估值與評等不變"
+    _RD = wb["README"]; _a1 = _RD["A1"].value; _h = _a1.split("；", 1)[0]
+    assert "v0.5.5" in _h, _h
+    _RD["A1"].value = _h.replace("v0.5.5", "v0.5.6", 1) + _a1[len(_h):] + "；" + _V56
+    _vr = [r for r in range(1, _RD.max_row + 1) if str(_RD.cell(r, 1).value or "").startswith("v0.5.5（2026-11-15）：個股 HTML 版面規格 v1.3")]
+    assert len(_vr) == 1, _vr
+    _RD.cell(_vr[0], 1).value = _V56 + "。" + _RD.cell(_vr[0], 1).value
 wb.save(sys.argv[1])
 if os.environ.get("LITE_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
