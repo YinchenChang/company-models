@@ -191,7 +191,7 @@ MRVPR = "https://www.sec.gov/Archives/edgar/data/0001835632/000119312526442714/d
 inp("px", "股價（2026-11-05 收盤）", "US$", None, 509.7, None, "Interested-party", "Yahoo Finance 日線收盤 2026-11-05", "v0.5.3 為 2026-11-04 收盤 626.75；原 v0.5.2：756.17（2026-10-23）")
 inp("mrg_x", "併購換股比例（每股 LITE 換 MRVL 普通股）", "股", None, 4.5, None, "Verified", "Marvell 8-K（2026-11-02 申報；" + MRV8K + "）：每股 Lumentum 普通股轉換為 4.500 股 Marvell 普通股（全股票；零股付現）", "Lumentum 8-K（" + MRG + "）；公司公告隱含約 1,132 美元／股（2026-10-28 收盤）；外部日 2027-11-01（可延至 2028-08-01），預計 2028 上半年完成")
 inp("mrvl_px", "MRVL 股價（2026-11-05 收盤；換股價值用）", "US$", None, 133.55, None, "Interested-party", "Yahoo Finance 日線收盤 2026-11-05", "v0.5.3 為 2026-11-04 收盤 159.80")
-inp("mrvl_tp", "MRVL 模型加權目標價（mrvl/ v0.3.4）", "US$", None, 67.36, None, "Derived", "mrvl/dist/20261106_邁威爾個股模型_v0.3.4.xlsx Val 頁「目標價（DCF 與 Comparable 加權）」67.36（現價 133.55，2026-11-05）；v0.5.3 為 v0.3.3 的 72.35（現價 159.80，2026-11-04）", "MRVL 模型本版未做合併後 pro forma（列為下一版）；本列只作對照，不進 LITE 加權目標價")
+inp("mrvl_tp", "MRVL 模型加權目標價（mrvl/ v0.3.5）", "US$", None, 64.73, None, "Derived", "mrvl/dist/20261115_邁威爾個股模型_v0.3.5.xlsx Val 頁「目標價（DCF 與 Comparable 加權）」64.73（現價 133.55，2026-11-05；v0.3.4 建置時為 67.36，Siliconomics v0.19 下游重建後 64.73）；v0.5.3 為 v0.3.3 的 72.35（現價 159.80，2026-11-04）", "MRVL 模型本版未做合併後 pro forma（列為下一版）；本列只作對照，不進 LITE 加權目標價")
 inp("px_hi", "2026 年內高點", "US$", None, 1143, None, "Interested-party", IVS + "：2026 年內低點 317.61、高點 1,143", "52 週高點：未找到（以年內高點代用）")
 inp("sh_basic", "普通股股數（2026-08-14）", "百萬股", None, 89.7, None, "Verified", K10 + "：8,970 萬股", "—")
 for s, w in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
@@ -992,7 +992,7 @@ V.cell(MRG_R["xv"], 3, f"=B{MRG_R['xv']}/px-1").number_format = "+0.0%;-0.0%"
 V.cell(MRG_R["xv"], 5, "Marvell 8-K（2026-11-02）：每股換 4.500 股 MRVL；MRVL 2026-11-05 收盤（In 頁 mrvl_px）")
 V.cell(MRG_R["xt"], 1, "換股比例 × MRVL 模型加權目標價"); V.cell(MRG_R["xt"], 2, "=mrg_x*mrvl_tp").number_format = "#,##0.00"
 V.cell(MRG_R["xt"], 3, f"=B{MRG_R['xt']}/px-1").number_format = "+0.0%;-0.0%"
-V.cell(MRG_R["xt"], 5, "MRVL 模型 v0.3.4 加權目標價（In 頁 mrvl_tp；未做合併後 pro forma）")
+V.cell(MRG_R["xt"], 5, "MRVL 模型 v0.3.5 加權目標價（In 頁 mrvl_tp；未做合併後 pro forma）")
 V.cell(MRG_R["tp"], 1, "對照：LITE 獨立估值加權目標價（基準）"); V.cell(MRG_R["tp"], 2, f"=B{TPT['tpw']}").number_format = "#,##0.00"
 V.cell(MRG_R["tp"], 3, f"=B{MRG_R['tp']}/px-1").number_format = "+0.0%;-0.0%"
 V.cell(MRG_R["note"], 1, f'="併購協議（Marvell 8-K 2026-11-02）：每股 LITE 換 "&TEXT(mrg_x,"0.0")&" 股 MRVL（全股票），預計 2028 上半年完成；協議下 LITE 股價主要跟隨換股價值 "&TEXT(B{MRG_R["xv"]},"0.00")&" 美元（以 MRVL 模型加權目標價換算 "&TEXT(B{MRG_R["xt"]},"0.00")&"）；投資建議仍依獨立估值規則判定"')
@@ -1148,6 +1148,15 @@ if _CR and not OVR:
     import v055_post  # noqa: E402
     print(v055_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR))
     COORD.stamp(wb, "v0.5.4", "v0.5.5", "2026-11-15")
+    # v0.5.6（2026-11-15，main 合併後整理）：In 頁 mrvl_tp（MRVL 模型加權目標價，只供 Val 0.6 換股價值對照、不進加權目標價）67.36 → 64.73（MRVL v0.3.5）；
+    # 只改 mrvl_tp 與連帶格（Val 0.6 對照列、README 重點 1 同一換算值）及版本字串；加權目標價、評等不變
+    _V56 = "v0.5.6（2026-11-15）：MRVL 模型加權目標價對照值 67.36 → 64.73（MRVL v0.3.5；Siliconomics v0.19 下游重建後的值），只影響 Val 0.6 換股價值對照列，不進加權目標價；估值與評等不變"
+    _RD = wb["README"]; _a1 = _RD["A1"].value; _h = _a1.split("；", 1)[0]
+    assert "v0.5.5" in _h, _h
+    _RD["A1"].value = _h.replace("v0.5.5", "v0.5.6", 1) + _a1[len(_h):] + "；" + _V56
+    _vr = [r for r in range(1, _RD.max_row + 1) if str(_RD.cell(r, 1).value or "").startswith("v0.5.5（2026-11-15）：個股 HTML 版面規格 v1.3")]
+    assert len(_vr) == 1, _vr
+    _RD.cell(_vr[0], 1).value = _V56 + "。" + _RD.cell(_vr[0], 1).value
 wb.save(sys.argv[1])
 if os.environ.get("LITE_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
