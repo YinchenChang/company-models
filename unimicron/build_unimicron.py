@@ -250,10 +250,16 @@ inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新�
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 股數 sh_v)", "與 WACC 權重同一口徑")
 
 r = 4; INROW = {}
+# UN_OVERRIDE（v0.4.4 起；敏感度快照用，unimicron/sens_unimicron.py；「鍵=值;…」，值 @lo／@hi＝In 頁低／高欄；正式建置不設）
+OVR = dict(kv.split("=", 1) for kv in os.environ.get("UN_OVERRIDE", "").split(";") if "=" in kv)
 for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    if key in OVR:   # v0.4.4：敏感度快照用覆寫（unimicron/sens_unimicron.py；正式建置不設 UN_OVERRIDE）
+        ov = OVR[key]
+        base = {"@lo": lo, "@hi": hi}[ov] if ov.startswith("@") else float(ov)
+        assert base is not None, (key, ov)
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
         if v is not None:
@@ -330,6 +336,8 @@ DEFP = dict(scn="A", ga="g_asp", pp="ibpp_{y}", vot="v_ot", shnv="sh_nv_{y}", sh
             cx="cx{y}_{s}", life="life", phi="phi", nonop="nonop{y}", tax="tax", mf="1", fg="fade_g{s}", fm="fade_m{s}")
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["mf"] == "1" and s != "A":   # v0.4.4 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 產業量 × wta（＝另一側讀數比值）；情境 A 不縮放
+        P["mf"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     p = lambda k, y=None: P[k].format(y=(y % 100 if y else ""), s=s)
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -1000,6 +1008,65 @@ P5 = dict(ver="v0.4.3", px="3037.TW", fpe='fpe',
           PX4={"3037.TW": 888, "4062.T": 8037, "8046.TW": 1080, "3189.TW": 822, "009150.KS": 1115000, "ATS.VI": 130.6},
           PX5={"3037.TW": 800, "4062.T": 6726, "8046.TW": 972, "3189.TW": 740, "009150.KS": 944000, "ATS.VI": 110.2})
 px1105_post.apply(wb, P5)
+# ---------------- v0.4.4（2026-11-15）：三層協調 C4 兩讀數（tools/coord/；快照 unimicron/coord_alt.json）＋個股 HTML 版面規格 v1.3＋C0（實績）（v044_post.py；只新增頁與列，既有數值格不變）----------------
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    COORD.stamp(wb, "v0.4.3", "v0.4.4", "2026-11-15")
+    if not os.environ.get("UN_OVERRIDE") and not os.environ.get("UN_SNAP"):
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import v044_post  # noqa: E402
+
+        def _drv(P_, pb_):
+            g_ = lambda p_: f"PL!F{v044_post.lab(P_, p_, pb_)}"
+            T_, TX_ = v044_post.T, v044_post.TX
+            return (T_("分部營收推導（情境 B）：ABF 載板＝MIN（需求，產能）；需求＝加速器載板（顆數 × 每顆金額 × 份額 × 溢價 × 漲價年度化）＋其他 AI 載板（隨 AI 資本支出成長）＋非 AI；"
+                       "BT 載板、HDI／PCB、軟板各依成長率推算；四項相加為合併營收。FY2028 ABF 載板 "), TX_(g_("ABF 載板營收 ＝"), "0"), T_("、BT 載板 "), TX_(g_("BT 載板"), "0"),
+                    T_("、HDI／PCB "), TX_(g_("HDI／PCB 營收"), "0"), T_("、軟板與其他 "), TX_(g_("軟板與其他"), "0"), T_("，合計 "), TX_(f"PL!F{v044_post.lab(P_, '營收', pb_, exact=True)}", "0"), T_(" 十億元。"))
+        _H = "公司 IFRS 合併綜合損益表（經 stockanalysis.com 年度損益表轉載，網址見 Sources 頁；百萬元換算十億元；MOPS 原文待人工複核）"
+        CO44 = dict(
+            ver="0.4.4", name="欣興", cur="元", folder="unimicron", sens_py="sens_unimicron.py",
+            pl_a="情境 A（樂觀）：", pl_b="情境 B（基準）：", pl_ni="歸屬母公司淨利",
+            pl_gaap_extra="PL 情境區塊的 FY2025 營業外淨額以「淨利 − 營業利益」近似，本表歷史欄改用財報稅前利益（Hist 頁）。",
+            pl_tax_label="所得稅（預測期含非控制權益）", pl_tax_note="實績＝所得稅費用（非控制權益另列備註）；預測期＝稅前利益 − 歸屬母公司淨利（模型合併所得稅與非控制權益）",
+            hist_src=_H,
+            hist=[("rev", "營收", [140.489, 104.036, 115.373, "=a25_rev"]), ("cogs", "營業成本", [90.056, 83.735, 99.058, 112.949]),
+                  ("gp", "毛利", [50.433, 20.302, 16.315, "=a25_gp"]), ("opx", "營業費用（推銷、管理、研發與其他）", [12.261, 11.382, 11.198, "=a25_opx"]),
+                  ("oi", "營業利益", [38.172, 8.920, 5.117, "=a25_oi"]), ("pti", "稅前利益", [39.875, 15.575, 7.321, 8.827]),
+                  ("tax", "所得稅費用", [8.649, 3.350, 1.765, 1.277]), ("nci", "非控制權益損益", [1.607, 0.245, 0.474, 0.877]),
+                  ("ni", "稅後淨利（歸屬母公司）", [29.619, 11.980, 5.082, "=a25_ni"]), ("eps", "EPS 基本（元）", [20.08, 7.88, 3.34, "=a25_eps"]),
+                  ("epsd", "EPS 稀釋（元）", [19.29, 7.78, 3.31, 4.34])],
+            sil_reads=[*[(f"sh_nv_{y}", f"欣興占 NVIDIA 加速器載板 20{y}", f"abf_un_nv_{y}") for y in (26, 27, 28, 29)],
+                       *[(f"sh_ot_{y}", f"欣興占非 NVIDIA 加速器載板（金額）20{y}", f"abf_un_ot_{y}") for y in (26, 27, 28, 29)],
+                       *[(f"cap_{y}", f"欣興 ABF 產能指數 20{y}", f"abfcap_un_{y}") for y in (27, 28, 29)],
+                       ("v_ot", "非 NVIDIA 加速器每顆載板金額 ÷ NVIDIA", "abf_vot"), ("ib_sh26", "Ibiden 占 NVIDIA 加速器載板 2026", "abf_ibsh26"), ("fx", "匯率（新台幣 ÷ 美元）", "fx_twd")],
+            sil_use="PL 引擎 A、B 節（份額、產能、每顆金額、匯率）",
+            peer_reads=[("v26", "FY2026 每顆 NVIDIA 加速器載板金額（US$）", "ibiden/dist Units 頁（Ibiden 模型權威）"), ("g_asp", "每顆載板金額年增", "ibiden/dist In 頁 g_asp"),
+                        *[(f"ibpp_{y}", f"ABF 價格溢價指數 20{y}", f"ibiden/dist In 頁 pp_{y}") for y in (27, 28, 29)]],
+            c0_nocomp_note="無可比層級量的項目：欣興 ABF、AI 載板營收（層級 abfrev_un26 由本模型推得，見本頁 4. C0（實績））；AI IT 資本支出（itc_* 唯讀上游，與 Siliconomics 部署 GW × 每 GW IT 資本支出同源，等於顆數核對的重述）。",
+            act=dict(cum=151.972, q3="=q3_rev", sil_key="abfrev_un26", sil_fx=32.5,
+                     sil_note="欣興模型 Q!G19：FY2026 ABF 營收 NT$99.8B ÷ 32.5（2026-10-27 dist）",
+                     cum_src="TechNews 財報助手 2026-11-06：10 月合併營收 189.86 億元（月增 1.8%、年增 67.6%）、前 10 月累計 1,519.72 億元（年增 40.9%；網址見 Sources 頁）；"
+                             "驗算：前 9 月 1,329.86 億（TechNews 2026-10-08，In 頁 q3_rev 來源）＋ 10 月 189.86 億 ＝ 1,519.72 億",
+                     q3_src="In 頁 q3_rev（連格）：526.5 億元＝前 9 月 1,329.86 億 − 1H26 803.36 億；公司 3Q26 財報（鉅亨經優分析 2026-10-27：單季營收 526.5 億、前三季 1,329.86 億、單季 EPS 6.15；網址見 Sources 頁）同值",
+                     sh_src="公司 2Q26 法說產品組合 ABF 52%（工商時報 2026-07-29，In 頁 mx_abf 來源）推全年 53%；也是 Siliconomics abfrev_un26 推導用的占比（同源）",
+                     scope_note="同口徑對象是合併營收（ABF＋BT 載板、HDI／PCB、軟板）；ABF 或加速器載板單獨營收：無可比實績（公司只在法說揭露產品別占比，未揭露金額；口述占比 × 營收屬 Assumed）。",
+                     concl="層級值 abfrev_un26 由本模型 FY2026 ABF 營收（FY2026 營收錨點 × ABF 占比 53%）÷ 32.5 推得，換算回合併營收時 ABF 占比與匯率往返消去，本表等於「實績 vs 本模型 FY2026 營收錨點」，"
+                           "不檢驗 Siliconomics 的獨立估計；缺 ABF／加速器載板單獨營收揭露。對帳中 0，不開對帳單",
+                     read="讀法：公司實績是月營收與季報原文、本身獨立；層級值 abfrev_un26 由本模型 FY2026 ABF 營收推得（欣興份額 abf_un_* 也來自本模型），本表換算回合併營收時 ABF 占比與匯率消去，只剩「實績 vs 本模型錨點」；"
+                          "錨點本身含 1–3Q26 實績，所以主讀數差距主要反映 4Q26 假設與線性時差，不是層級檢驗。判定標參考（同源校準），C0（實績）結論為無可比實績（層級值同源）。"),
+            sens_o3=("ABF 價格溢價路徑", "欣興加速器載板份額"), sens_o3_txt=("ABF 價格溢價快速回落／延續 ", "加速器載板份額流失／提升 "),
+            drv_parts=_drv,
+            ver_line="v0.4.4（2026-11-15）：個股 HTML 版面規格 v1.3（樣板 NVIDIA、Ibiden）、三層協調兩讀數（tools/coord）與 C0（實績）。新增 Hist 頁（損益表歷史 FY2022–FY2025）、RevDCF 頁（反向 DCF）、PL 頁末標準損益表（FY2023A–FY2025A 實績＋FY2026E–FY2030E 情境 B，GAAP）、"
+                     "Val 頁末 0.7 四個目標價、Sens 頁末加權目標價相對基準（業務主因整本重算快照）、Coord 頁（兩讀數、讀取層級、C0（實績）：2026 年 1–10 月營收與 3Q26 營收 vs Siliconomics 欣興 ABF 營收換算值；層級值同源，無可比實績）、README 頁末 v1.3 白話列。"
+                     "既有數值格不變，加權目標價與評等不變",
+            a1_old="收支與估值模型 v0.1.1（AI 半導體 Project", a1_oldver="v0.1.1",
+            pl_b_title='="情境 B（基準）：CY2028 顆數 ×"&TEXT(um28_B,"0.00")&"、CY2029 ×"&TEXT(um29_B,"0.00")&"（讀 Siliconomics 基準係數）；資本支出 480／420／380 億"',
+            sources=[("公司（C0 實績）：TechNews 財報助手 2026-11-06（10 月營收 189.86 億、前 10 月累計 1,519.72 億）", "https://finance.technews.tw/2026/11/06/unimicron-3037-202610-financial-report/"),
+                     ("公司（3Q26 財報，鉅亨經優分析 2026-10-27：3Q26 營收 526.5 億、毛利率 28.85%、EPS 6.15）", "https://uanalyze.com.tw/articles/2603257795"),
+                     ("Hist 頁：stockanalysis.com 年度損益表（FY2021–FY2025，公司財報轉載）", "https://stockanalysis.com/quote/tpe/3037/financials/income-statement/")])
+        print(v044_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR, CO44))
 wb.save(sys.argv[1])
 if os.environ.get("UNIMICRON_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

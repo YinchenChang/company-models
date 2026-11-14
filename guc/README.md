@@ -1,4 +1,15 @@
-# guc/：創意電子（3443.TW）收支與估值模型 v0.3.3
+# guc/：創意電子（3443.TW）收支與估值模型 v0.3.4
+
+## v0.3.4（2026-11-15）：版面 v1.3、兩讀數（C4）、C0 公司實績對帳（數值不變）
+
+- 基準：Siliconomics v0.19（對帳中年份 CY2027–29；RECO_FLAG 2026 為 0、2027–29 為 1）。只新增列、頁與版本字串，既有數值格逐格比對 0 差異；加權目標價 2,852.38、評等強力放空不變。另一側讀數（C4）加權目標價 2,602.99；快照 `guc/coord_alt.json`（CURRENT）。
+- 做法：`guc/v034_post.py` 在建檔程式存檔前加 Hist（損益表歷史 FY2022–FY2025）、PL 頁末標準損益表（FY2023A–FY2031E，TIFRS）、RevDCF（反向 DCF）、Val 0.7（四個目標價）、Sens 頁末「加權目標價相對基準」（整本重算快照 `guc/sens.json`，由 `guc/sens_guc.py` 產生；改輸入後須重跑，否則狀態顯示 STALE）、Coord 頁 A–E 節、README v1.3 白話列。`guc/gen_html_json.py` 尾段重排成 v1.3 八章。
+- 實績與出處：月營收 2026 年 1–10 月累計 52.532（科技新報 2026-11-05：10 月 8.433、前 10 月累計 525.32 億）；3Q26 18.754（前三季 44.099 − 1H26 25.345）；1Q26 11.448（前 3 月累計 114.48 億）。歷史損益表 FY2022–FY2024 取 stockanalysis 年度損益表（百萬元四捨五入，Verified／Interested-party 彙整）。
+- C0 判定（規則 v1.4.2；主讀數＝1–10 月累計 vs 層級 CY2026 × 10 ÷ 12；第二讀數＝3Q26 × 4 vs 層級 CY2026）：合併營收＝無可比實績（Siliconomics 沒有創意營收或份額）；Google CPU 量產與 AI ASIC 量產＝參考（同源校準），結論「無可比實績（層級值同源）」，層級隱含 33.320、2.083 NT$B 等於錨點；車用與其他＝無可比實績。對帳中 0 項。相消的量：TPU 顆數（或其他 ASIC 顆數）× 創意份額（含 CPU 對 TPU 配比）× 每顆營收／核心售價 被校準係數 k_c、k_o 完全吸收。缺獨立揭露：創意 CPU、AI ASIC 營收或出貨顆數。
+- 參考（不判定）：十月實績 × 3＝25.299 vs 本模型 4Q26 假設 25.318（−0.1%）。
+- 與舊節的關係：下方舊節若引用 Siliconomics 或台積電成品的數字，可能與現行 dist 不符（Siliconomics 全下游重建原地更新造成）；以 xlsx 為準，舊節不改寫。
+- 驗證：`python3 tools/xlsx_diff.py <新> <舊> --tol 1e-9`（差異只有 README 版本字串與新增格）；`python3 tools/company_html/check_company_html.py guc` 全過；`python3 tools/company_html/check_layout_v13.py <html> --xlsx <xlsx>` ok（參數代號僅警告）；`python3 tools/baseline_coordination/check.py` 0 項不符。
+- 待 Siliconomics 側：`coord_meta` 的 `hardware_companies` 加入 guc、alchip，並重建 `baseline_status.json`（本 PR 不改 coord_meta）。
 
 ## v0.3.3（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 

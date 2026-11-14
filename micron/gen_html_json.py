@@ -5,4 +5,5 @@ import os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "tools", "memory_model"))
 import html_layout  # noqa: E402
-html_layout.build(HERE, sys.argv[1], nm_block=False, pfmt="n2")
+html_layout.build(HERE, sys.argv[1], nm_block=False, pfmt="n2",
+                  v13=dict(ccy="美元", cur="十億美元", fxu="美元／美元", seg_base="FY2026E 為基準年（四季皆為實績）"))   # v0.5.5 起：版面 v1.3

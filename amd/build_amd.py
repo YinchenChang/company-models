@@ -382,6 +382,8 @@ BU = (2026, 2027, 2028, 2029)
 DEFP = dict(scn="A", uf="1", pg=lambda y: f"pg_{y % 100}", abs="abs_mem", abs_s=None, gmg="gm_gpu", gcpu=lambda y: f"g_cpu{y % 100}", opxa="0", wf="wf", wta=None)
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["wta"] is None and s != "A":   # v0.4.7 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 於 CY2027 起 AMD 認列顆數（與認股權證歸屬 GW）× wta（＝另一側讀數比值）；情境 A＝供給側讀數不縮放
+        P["wta"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     _wx = lambda y: (f"*{P['wta'][y]}" if P["wta"] and y in P["wta"] else "")   # Wattonomics 錨定（Sens 案例；預設 None＝不乘）
     absy = lambda fy: P["abs"] if fy <= 2027 else (P["abs_s"] or f"abs_mem_{s}")   # v0.2.1：FY2027 三情境共用 abs_mem；FY2028 起讀 abs_mem_{s}
     ws.cell(r0, 1, title).font = BOLD
@@ -1048,6 +1050,12 @@ print(px1105_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), "v0.4.4"
 # v0.4.5／v0.4.6（2026-11-10）：AMD v0.4.4 驗收報告採用項（本資料夾 v045_post.py）
 import v045_post  # noqa: E402
 print(v045_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), dict(STAGE=STAGE, V46=V46, V46P=V46P, OVR=OVR, PB=PB, SUMR=SUMR, FC=FC, SB0=SB0)))
+# v0.4.7（2026-11-15）：三層協調 C4 兩讀數（tools/coord/；快照 amd/coord_alt.json）＋個股 HTML 版面 v1.3 與 C0（實績）（本資料夾 v047_post.py；只新增頁與列，既有數值格不變）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = None if OVR else COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+import v047_post  # noqa: E402
+print(v047_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR))
 wb.save(sys.argv[1])
 if os.environ.get("AMD_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

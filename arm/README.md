@@ -1,4 +1,27 @@
-# arm/ — Arm Holdings（ARM）個股模型 v0.3.4
+# arm/ — Arm Holdings（ARM）個股模型 v0.3.5
+
+## v0.3.5（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（兩讀數目標價、讀取層級、C0 實績）
+
+- 依據：`docs/workorders/20261114_第二批13家_v1.3與三層協調.md`、`docs/workorders/20261114_C0實績對帳補列_七家.md`、`docs/plan/三層基準協調規則.md` v1.4.2（C0 第 2 點、C4）、`docs/plan/個股HTML版面規格.md` v1.3、`tools/coord/README.md`。樣板：avgo v0.5.6／v0.5.7、amd v0.4.7、crdo v0.3.6。
+- 只新增，既有數值格不變：與 v0.3.4 dist 逐格比對，既有格只有 README A1、A2（版號）、A44 與 Sens D129（build_id 前綴與雜湊，因 build_arm.py 改動）四格變動；目標價、評等不變。
+- `arm/v035_post.py`（build_arm.py 存檔前呼叫；`COORD_RUN`、`ARM_OVERRIDE` 建置略過）：
+  - Hist 頁末新節「損益表歷史」（`hp_*`）：FY2024 non-GAAP 損益（Arm 6-K 2025-05-07 股東信調節表：營收 3.233、營業成本 0.102、營業費用 1.723、營業利益 1.408、其他收入 0.121、稅前 1.529、所得稅 0.205、淨利 1.324、稀釋股數 1.044、EPS 1.27；GAAP 淨利 0.306、EPS 0.29）；FY2025、FY2026 連 Q 頁，其他收入、稅前、所得稅與 GAAP 取自股東信調節表；FY2023 營收 2.679、non-GAAP 淨利 0.657 作年增率基期。
+  - PL 頁末標準損益表：FY2024A–FY2026A 實績＋FY2027E–FY2032E 情境 B（Non-GAAP）；FY2030E–FY2032E 收斂期毛利率、營業費用率沿用 FY2029E，營業利益由淨利反推（同 DCF 頁），兩種推法差額列核對。
+  - RevDCF 頁（反向 DCF）：現價需要 EV 放大約 17 倍；折現率降到搜尋下限（3.5%）仍不足；Comparable 需約 57 倍前瞻本益比（同業中位數 21.2 倍）。
+  - Val 0.7（四個目標價與現價）；Sens 頁末「加權目標價相對基準」（低案、高案並列；營運輸入引用 Sens 主表整本重算快照，估值框架封閉式，主表沒有的折現參數引用目標價參數表）。
+  - Coord 頁（`tools/coord`）A–E 節兩讀數目標價；F 讀取層級、G 讀取層級核對、H 層級之間（參考）、I 損益表年度標示、J C0（實績）。具名範圍 `SIF_RecoFlag_<年>` 指向 Coord 旗標列（Arm FY(t)≈CY(t−1)）。
+- 主引擎掛鉤（build_arm.py）：`SIL.COORD_ALT` 時情境 B、C 的 CY2027 起 NVIDIA 顆數與雲端自研 CPU 顆數指數 × `wta_27`／`wta_28`／`wta_29`（FY2027 錨點欄不縮放）；`python3 tools/coord/alt_run.py arm` → `arm/coord_alt.json`。
+
+| 讀數 | 加權目標價 | DCF | Comparable（未調整） | 上檔空間 | 投資建議 |
+|---|---|---|---|---|---|
+| 現行基準（Siliconomics v0.19） | 38.56 | 14.70 | 62.42 | −76.9% | 強力放空 |
+| 另一側（Wattonomics 換算 GW；CY2027–CY2029 對帳中） | 36.45 | 13.78 | 59.12 | −78.1% | 強力放空 |
+
+- C0（實績）：層級只透過 NVIDIA 資料中心 GPU 顆數（→ Grace／Vera CPU）驅動 FY2028 起資料中心權利金中 NVIDIA 的部分（Assumed 占 35%）。Arm 不揭露資料中心權利金金額（只口述 1Q27「逾一倍」、2Q27「一倍」年增；FY2026 比重只有「十幾到接近 20%」區間），層級也沒有 Arm 的權利金歸屬 → 判定「無可比實績」，對帳中項目 0。參考列（不判定）：公司口述年增約 100% vs 層級隱含 NVIDIA Grace／Vera 顆數年增 FY2027 +21.2%（口徑不同，差距 −39.4%）；公司口述 vs 本模型 FY2027 資料中心權利金年增假設 70%（水準低 15.0%，屬本模型假設複核，不計 C0）。出處：Arm 6-K 2026-07-29、2026-11-04 股東信（EX-99.2）。
+- 下游：無其他模型讀 `arm/dist`（Siliconomics、各個股皆未讀本模型），不需 cascade。`siliconomics/builder/seed/coord_meta_v*.json` 的 `hardware_companies` 未改（由主控代理統一加入 arm）。
+- 舊節數字註記：v0.3.4 節表格的 DCF 14.81、Comparable 62.61、加權目標價 38.71 與 v0.3.4 dist（14.70、62.42、38.56）不符（v0.3.4 dist 為最終建置值）；本版不改寫歷史，以 dist 為準。
+- 成品：`dist/20261115_Arm個股模型_v0.3.5.xlsx`、`.html`；v0.3.4 移到 `dist/_待刪除/`。驗證：錯誤格 0；xlsx_diff 既有格只列上述四格；check_company_html 全過；check_layout_v13 --xlsx 通過（G、H 位置與 I 對帳中標示；只有參數代號警告）；baseline_coordination/check.py 0 項不符。
+- 建置：`python3 arm/sens_arm.py`（In 頁改動時）→ `LO_PROFILE=file:///tmp/lo_arm python3 tools/coord/alt_run.py arm`（Siliconomics 升版或輸入改動時）→ `ARM_ROWMAP=rowmap.json python3 arm/build_arm.py raw.xlsx` → LibreOffice 重算 → `python3 arm/gen_html_json.py <dist xlsx> arm/html.json rowmap.json` → `python3 tools/company_html/build_company_html.py arm`。
 
 ## v0.3.4（2026-11-09）：Arm v0.3.3 驗收報告採用項（Andy 2026-11-09 確認採用規劃書，J1–J4 照建議預設）
 
