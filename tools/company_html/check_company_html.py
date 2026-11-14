@@ -9,7 +9,7 @@
  3. 無手寫數字：標籤與數字以外的文字，除年度（FY／CY 加四位數）與日期外不得含阿拉伯數字
     （圖軸刻度 class ax、中繼資料 class meta 例外；meta 另以檔案實際內容核對）。
  4. 自含：不含外部網址、script、link、img、iframe、@import。
- 5. 結構：七個必備章節依序出現；每張圖有資料點；每個長條有寬度。
+ 5. 結構：七個必備章節依序出現（html.json 頂層 layout 為 v1.3 時改依 v1.3 順序）；每張圖有資料點；每個長條有寬度。
 結束碼：0 通過；1 有失敗。
 """
 import glob
@@ -171,7 +171,11 @@ def check_company(cdir, errs):
     if re.search(r'https?://|@import|url\(', text):
         errs.append(f'{name}：含外部網址或 @import／url()')
     # 5. 結構
-    if [i for i in ps.section_ids if i not in B.OPTIONAL_IDS][:len(REQUIRED)] != REQUIRED:
+    if cfg.get('layout') == 'v1.3':      # 版面規格 v1.3（可選）
+        e = B.v13_order_error(ps.section_ids)
+        if e:
+            errs.append(f'{name}：{e}')
+    elif [i for i in ps.section_ids if i not in B.OPTIONAL_IDS][:len(REQUIRED)] != REQUIRED:
         errs.append(f'{name}：章節順序 {ps.section_ids} 不符 {REQUIRED}')
     if ps.svg_charts == 0 or n_pt == 0:
         errs.append(f'{name}：沒有折線圖資料點')
