@@ -29,8 +29,11 @@ C0 比較層級值前，先確認層級值有沒有讀本公司的實績或目�
 python3 tools/coord/trace_wattonomics.py wattonomics/model/<Wattonomics>.xlsx <公司資料夾>/data/wattonomics_trace_<版>.json --player <碼> [--year 2026] [--roots "名稱:說明,..."] [--manual "鍵=標記"] [--md]
 ```
 - `--player`：玩家碼（googl、msft、meta、orcl…）；旗標鍵 gcap_/cap_/act26_/w1_/obs_<碼> 由此組出。`--roots` 省略時追六個預設輸出（當年新增 GW、AI／非 AI 資本支出、前一年與當年底上線 GW、個股模型 AI 資本支出回寫）。
-- 範圍參照（如 `Pipeline!$L$5:$L$150`）逐格展開並用正確工作表解析；Pipeline 頁只展開本玩家園區列（鍵含 `_<碼>_`），命中的園區列標「園區列」，其 In 頁輸入列標「園區輸入列（人工確認：多為公司公告）」（Microsoft Fairwater、Meta Prometheus 等）；JSON 的 `campus_rows` 列出命中的 Pipeline 列號。
-- 每列輸出：`cell`、`parent`（上層格）、公式、值、`label`（In 頁鍵與名稱）、`flag`（同源旗標）、`status`：生效＝值沿此路徑傳到輸出；條件讀取＝只出現在 IF 條件、不傳值（例：Gap!G107 空白時 G104→G106→In!K172 營業現金流）；分支未生效＝IF 未取到的分支（目前只判頂層 IF；巢狀 IF 視為生效，須人工看）。
-- 關鍵字誤觸者（如 `cap_g_ext` 外推年增、`ai_sh`）預設標「人工確認：不同源」，可用 `--manual 鍵=標記` 增補；`flag` 為「人工確認」者須人工判定，不自動當同源。與其他玩家無關的 In 頁列不追、不列。
-- 反向查詢 `act26_readers`：哪些公式讀 `act26_<碼>`（公司已公布實績）；若只有 Compare 頁，代表實績未進 GW／資本支出路徑。
+- **生效判斷**：IF 的條件用快取值遞迴計算（`ref<>""`、`ref=""`、常數比較如 `2026>=2026`、`INT(名稱)=年`、AND／OR／NOT／N／ISNUMBER 等），巢狀 IF 逐層處理；條件為真只取第一支、為假只取第二支，沒取到的分支標「分支未生效」，條件本身標「條件讀取」。算不出來（不支援的函數、範圍）時兩支都當生效並在輸出 `unparsed` 或須人工確認。驗證例：msft 的 CapexGW!G35＝`IF(2026>=2026,F35+G34,N(Players!G30))` 中 Players!G30 為分支未生效；msft 2025 年底 GW（Players!F23＝chip_msft × 倍數，不同源）生效，obs_msft 與 Pipeline 園區列為分支未生效。
+- **SUMIFS／COUNTIFS／SUMIF** 依條件欄逐列判斷：文字相等條件（營運者欄＝玩家碼、鍵欄＝園區鍵）不符的列整列不追（用公式裡的條件欄，不靠鍵名猜）；年度、納入等數值或比較條件不符的列標「條件讀取」。已對 googl、msft、meta、oai、neo、sov 驗證：命中的 Pipeline 列與營運者欄＝該玩家的列完全一致。
+- **Pipeline／FundRaw**：兩頁的格子都標旗標（Pipeline＝園區列，其 In 輸入列標「園區輸入列（人工確認：多為公司公告）」，如 Microsoft Fairwater、Meta Prometheus；FundRaw＝公司實績〔10-K／10-Q〕）。其他範圍參照在這兩頁只展開列內有玩家碼的列。JSON 的 `campus_rows` 列出命中的 Pipeline 列號。
+- 每列輸出：`cell`、`parent`（上層格）、公式、值、`label`（In 頁鍵與名稱）、`flag`、`status`（生效＝值沿此路徑傳到輸出；條件讀取＝只在 IF 條件或 SUMIFS 條件欄；分支未生效＝IF 沒取到的分支；例：Gap!G107 空白時 G104→G106→In!K172 營業現金流為條件讀取）。
+- 旗標鍵由 `--player` 組出（gcap_／cap_／act26_／w1_／obs_ 加玩家碼）。鍵含本玩家碼的跨玩家列（ctr_msft_ant、xc_nbis_msft、al_orcl_oai）保留；只含其他玩家碼的 In 列不追。關鍵字誤觸者（`cap_g_ext`、`ai_sh`）預設標「人工確認：不同源」，可用 `--manual 鍵=標記` 增補；`flag` 為「人工確認」者須人工判定。g_ITtoFac 等不含玩家碼的共用係數不標園區輸入。
+- 反向查詢 `act26_readers`：哪些公式讀 `act26_<碼>`；只有 Compare 頁，代表實績未進 GW／資本支出路徑。
+- 限制：不支援整欄參照（`A:A`）與未列的函數；上線 GW 根的生效判斷若有 `unparsed`，須人工確認。無 Gap 名稱的玩家（neo、sov 等）用 `--roots` 指定根。
 - 判定仍靠人：同源旗標只標「路徑上讀到公司輸入」，要看 `status` 是否生效、再把結論寫進 Coord 追公式列（整列同源→「參考（同源校準）」、「無可比實績（層級值同源）」；部分同源→改比每 GW）。
