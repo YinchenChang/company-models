@@ -1,6 +1,28 @@
-# cbrs/ — Cerebras Systems（CBRS）收支與估值模型 v0.1.1
+# cbrs/ — Cerebras Systems（CBRS）收支與估值模型 v0.1.2
 
 AI 半導體 Project 運算層的新個股（Andy 2026-11-08 要求新增，格式比照 `nvidia/` v0.3.4）。獨立的 Python→Excel 產生器（openpyxl，LibreOffice 重算），HTML 展示層用共用產生器 `tools/company_html/`。
+
+## v0.1.2（2026-11-15）：個股 HTML 版面 v1.3＋三層協調（讀取層級、兩讀數判定、C0 實績）
+
+**依據：** `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`（第 2 節）、`docs/workorders/20261114_C0實績對帳補列_七家.md`、`docs/plan/三層基準協調規則.md` v1.4.2（C0 第 2 點、C4）、`docs/plan/個股HTML版面規格.md` v1.3。樣板：AMD v0.4.7（`amd/v047_post.py`）、NVIDIA v0.3.10。
+
+**做法：** `build_cbrs.py` 存檔前呼叫 `v012_post.apply()`（只新增頁與列）：PL 頁末標準損益表（FY2024A–FY2025A GAAP 實績＋FY2026E–FY2032E 情境 B，GAAP 近似口徑）、RevDCF 頁（反向 DCF；Comparable 部分為前瞻 P/S）、Val 頁 0.7（四個目標價）、Sens 頁末「加權目標價相對基準」（營運案例只套用情境 B：基準加權目標價＋情境 B 權重 ×（案例的情境 B 加權價值 − 基準））、Coord 頁、README 頁末 v1.3 白話列。`build_cbrs.py --html` 改寫 `html_src.json`，`gen_html_json.py <xlsx>` 轉成 v1.3 章節順序的 `html.json`。
+
+**兩讀數（C4）：不適用。** 本模型是唯一不讀 Siliconomics 的硬體個股（量＝平均計費 MW，由公司合約與揭露推得）；Siliconomics 對帳中年份（CY2027–CY2029）沒有傳導路徑，另一側讀數（只換產業部署 GW）與現行逐格相同。Coord B 節並列兩欄（另一側欄引用現行欄）並寫明理由；不建 `co_flag`、不跑 `alt_run.py`、橫幅不加另一側讀數格；`coord_meta` 的 `hardware_companies` 不需加入 cbrs。
+
+**讀取層級（Coord A 節）：** Tokenomics v22.0 快照（Cerebras 產出比、持有成本比、VR200 每 GW 持有成本與 IT 資本支出；只作 Recon 對照與每 MW 資本支出敏感度高值）；Siliconomics v0.19、Wattonomics v0.3.2 皆未讀（Wattonomics 的 Cerebras（OpenAI）750 MW 園區列不納入加總、無 Cerebras 玩家）。
+
+**C0（實績）與出處（Coord D 節）：**
+
+| 實績（2026 已公布期間） | 值（十億美元） | 出處 |
+|---|---|---|
+| 營收合計（GAAP）1Q26＋2Q26 | 0.1934＋0.1801＝0.3735 | Cerebras 10-Q（2026-03-31）、8-K 2026-08-12（Q 頁第 7 列） |
+| 核心雲端營收 1Q26＋2Q26 | 0.0798＋0.1277＝0.2075（2Q26 × 4＝0.511） | 8-K（1Q26、2Q26 財報新聞稿；Q 頁第 19 列） |
+| 資本支出 1H26 | 0.549 | 10-Q（2026-06-30）現金流量表（Q 頁第 48 列） |
+
+**判定：** 三列皆「無可比實績」——Siliconomics 無晶圓級加速器（Cerebras）顆數或份額；Wattonomics 無 Cerebras 玩家；Tokenomics 只有每 GW 收支，換成營收需在役／計費 MW（公司未揭露）。對帳中項目 0。Recon C 節「合約每 MW 年營收 vs Tokenomics 持有成本」屬合約與層級假設之比較，只列參考。3Q26（2026-11-12 公布）本版未取得原文，主讀數只到 1H26（6 個月）。
+
+**不變性與驗證：** 既有數值、目標價（加權 80.56、DCF 29.46、Comparable 131.67）、評等（中立）不變；`tools/xlsx_diff.py` 新版 vs v0.1.1 只差 README A1 版號與日期、新增頁（RevDCF、Coord）與新增列。錯誤格 0；`check_layout_v13 --xlsx` 通過（警告只剩既有估值與對帳說明中的參數代號）、`check_company_html cbrs` 通過；`tools/baseline_coordination/check.py` 的不符項皆為其他公司（本機 sparse 工作樹缺其 HTML），與本公司無關。歷史只有兩年（FY2023 GAAP 損益本版未取得原文，待補）。
 
 ## v0.1.1（2026-11-08）：Comparable 只用晶片同業
 
@@ -41,8 +63,9 @@ OpenAI 合約隱含每 MW 年營收 7.62，低於 Tokenomics 隱含的 Cerebras 
 ## 建置
 
 ```
-python3 cbrs/build_cbrs.py raw.xlsx --html        # --html 另寫 cbrs/html.json
+python3 cbrs/build_cbrs.py raw.xlsx --html        # --html 另寫 cbrs/html_src.json（v0.1.2 起）
 soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir out raw.xlsx
 cp out/raw.xlsx cbrs/dist/<日期>_Cerebras個股模型_v<版本>.xlsx
+python3 cbrs/gen_html_json.py cbrs/dist/<日期>_Cerebras個股模型_v<版本>.xlsx   # 版面 v1.3 → cbrs/html.json
 python3 tools/company_html/build_company_html.py cbrs
 ```

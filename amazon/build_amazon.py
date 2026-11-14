@@ -20,7 +20,7 @@ from openpyxl.workbook.defined_name import DefinedName
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 AP = argparse.ArgumentParser()
-AP.add_argument("out", nargs="?", default=os.path.join(HERE, "dist", "20261106_Amazon個股模型_v0.3.6.xlsx"))
+AP.add_argument("out", nargs="?", default=os.path.join(HERE, "dist", "20261115_Amazon個股模型_v0.3.7.xlsx"))
 AP.add_argument("--set", action="append", default=[], help="覆寫 In 頁基準值：鍵=值（敏感度與拆解重算用；值可為數字或以 = 開頭的公式）")
 AP.add_argument("--sens", help="敏感度與拆解鏈的重算結果（amazon/sens_v031.py 產生）")
 AP.add_argument("--q3v03", action="append", default=[], help="變動拆解用：以 JSON 的事實值取代事實總帳（{\"facts\": {事實 id: 值}}；可重複；v0.3.3 拆解鏈以此把 10-Q 值改回 v0.3.2（＝v0.3.1）的推導或沿用值）")
@@ -1360,7 +1360,7 @@ SO.column_dimensions["A"].width = 8; SO.column_dimensions["B"].width = 90; SO.co
 RD = wb.create_sheet("README", 0)
 B_ = lambda blk, key, col: tk_("B", blk, key, col)
 lines = [
-    (f"Amazon（AMZN）個股模型 v0.3.6（命題模組＋官方營收分部 → 損益表；v0.3.6 只換現價為 2026-11-05 收盤 260.21，目標價不變；v0.3.5 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；2026Q3 季度滾動、10-Q 補入、Tokenomics 快照 {TKV}）　2026-11-06", True),
+    (f"Amazon（AMZN）個股模型 v0.3.7（命題模組＋官方營收分部 → 損益表；v0.3.7 只改展示層並新增頁〔HTML 版面規格 v1.3、Coord 三層協調〕，數值不變；v0.3.6 只換現價為 2026-11-05 收盤 260.21，目標價不變；v0.3.5 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；2026Q3 季度滾動、10-Q 補入、Tokenomics 快照 {TKV}）　2026-11-15", True),
     (f"版本：v0.3.4（Tokenomics 快照 v21.9 → {TKV}，基準數值同 v0.3.3）；v0.3.3（2026Q3 10-Q 補入；v0.3.2 為 2026-11-04 Tokenomics 快照 v21.9〔基準同 v0.3.1〕，v0.3.1 為 2026-10-31，v0.3 為 2026-10-27）。資料截至 2026-09-30（2026Q3 新聞稿與 10-Q）；FY2026＝9M 實績＋Q4 模型；Tokenomics " + TKV + "（Trainium 改讀 IF_NonNV_Hold_Trn）。v0.3.3 只以 10-Q 取代 v0.3.2 沿用自 v0.3.1 的推導與沿用值（債務面額、融資租賃、融資義務〔改本金口徑〕、分部折舊；股數維持 9/30 資產負債表），評價日、現價、共識、Tokenomics、情境與權重不動。", False),
     ("命題：AWS 的 AI 容量（Trainium＋NVIDIA）能否以高於資金成本的報酬變現，零售與廣告的現金流能否支應資本支出。", True),
     ("核心問題：FY2028 AWS 營業利益率與自由現金流（扣股利後）是否轉正並維持。", True),
@@ -1411,10 +1411,19 @@ for ws in wb.worksheets:
         for c in "CDEFGHIJKLMNO": ws.column_dimensions[c].width = 11
         ws.freeze_panes = "C4"
 resolve_all()
+# v0.3.7（2026-11-15）：版面規格 v1.3 全套＋Coord 頁三層協調（amazon/v037_post.py；只新增列與頁，既有格不動；敏感度與拆解重算〔--set、--q3v03〕不跑）
+V37 = None
+if not ARGS.set and not ARGS.q3v03:
+    import v037_post
+    _VW = wb["Val"]
+    _r1 = {k: next(r_ for r_ in range(1, 60) if str(_VW.cell(r_, 1).value or "").startswith(p_)) for k, p_ in (("tp", "讀法 1：加權目標價"), ("up", "讀法 1：上檔空間"), ("rec", "讀法 1：投資建議"))}
+    V37 = v037_post.apply(wb, dict(B={k: REG[(E_["B"]["L"], k)][1] for k in ("tot", "oi", "oi_v", "pretax", "taxx", "ni", "sh", "eps_fin", "na", "intl", "aws_o", "aws_ai")},
+                                   BV={k: REG[(E_["B"]["V"], k)][1] for k in ("ev", "nd26", "hold", "ps", "dcf12", "df", "ufcf", "nopat", "sotp", "sev", "nd27", "e_ads", "e_rt", "e_awso", "e_ai")},
+                                   CB=None, QR=QR, VR=VR, R1=_r1, SENS_LAST=SENS_LAST, HERE=HERE, tk=tk, SNAP=SNAP, FACTS=FACTS, TKV=TKV))
 os.makedirs(os.path.dirname(os.path.abspath(OUT)), exist_ok=True)
 wb.save(OUT)
 ROWMAP = {"REG": {f"{a}|{b}": v for (a, b), v in REG.items()}, "INROW": INROW, "QR": QR, "VR": VR, "SENS_LAST": SENS_LAST, "SE_STALE": SE_STALE, "SE_BASE": SE_BASE,
-          "SE_JOBS": SE_JOBS, "SE_ROWS": SE_ROWS, "RECON_LAST": RECON_LAST, "JROWS": JROWS,
+          "SE_JOBS": SE_JOBS, "SE_ROWS": SE_ROWS, "V37": V37, "RECON_LAST": RECON_LAST, "JROWS": JROWS,
           "CX27B": f"CF!H{REG[(E_['B']['C'], 'cx')][1]}", "Q4": {s_: {k: f"{sh}!F{REG[(E_[s_][b], k)][1]}" for b, k, sh in (("L", "tot", "PL"), ("L", "oi", "PL"), ("L", "aws", "PL"))} for s_ in SC}}
 for _env in ("AMZN_ROWMAP", "ROWMAP"):
     if os.environ.get(_env):

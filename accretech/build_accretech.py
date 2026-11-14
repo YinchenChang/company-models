@@ -43,6 +43,15 @@ for r in ws_.iter_rows():
                 EQ[(blk, key)] = ([r[2 + j].value for j in range(5)], f"{rel(EQ_F)}｜Mkt!C{r[0].row}:G{r[0].row}")
 assert len(EQ) == 12 and all(v is not None for k in EQ for v in EQ[k][0]), sorted(EQ)
 PEAK, PEAK_SRC = CP.peak_years(ROOT)
+sys.path.insert(0, os.path.join(ROOT, "siliconomics")); import reader as SIL   # v0.3.5：三層協調 C4 另一側讀數建置（SIL.COORD_ALT）在主引擎使用，故提前讀入
+_AIS = {}   # v0.3.5：設備市場模型各情境的 AI 晶圓前段分項（先進邏輯〔AI〕＋DRAM〔AI〕；CY2025–CY2029），只用於另一側讀數建置
+_bk2 = None
+for _r2 in ws_.iter_rows():
+    _a2 = _r2[0].value
+    if isinstance(_a2, str) and _a2[:3] in ("5A.", "5B.", "5C."): _bk2 = _a2[1]; continue
+    if _bk2 and _a2 in ("先進邏輯（台積電設備＋其他代工中屬先進者）〔AI〕", "DRAM（含 HBM）〔AI〕"):
+        _AIS.setdefault(_bk2, {}).setdefault(_a2, [_r2[2 + j].value for j in range(5)])
+assert all(len(_AIS[k]) == 2 for k in "ABC"), _AIS
 
 # ---------------- In ----------------
 IN = wb.active; IN.title = "In"
@@ -171,11 +180,21 @@ inp("beta_u", "產業無槓桿 β（採用）：自算 JP 半導體設備 同業
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 稀釋股數 sh_v)", "與 WACC 權重同一口徑")
 inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新加槓桿）", "x", None, 0.3, None, "Assumed", "工作單第二輪修正（Andy 2026-11-05 23:16 定案）：β 敏感度改為 β_u ± 0.3", "取代上一版的「中位數 × 0.8 再 Blume／中位數未調整」")
 
+# ACC_OVERRIDE（v0.3.5 起，敏感度快照用，accretech/sens_accretech.py；「鍵=@lo／@hi／*倍數／數值；…」＝該鍵的基準欄改取 In 頁低／高欄、乘倍數或改數值；正式建置不設）
+OVR = dict(kv.split("=", 1) for kv in os.environ.get("ACC_OVERRIDE", "").split(";") if "=" in kv)
 r = 4
 for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    if key in OVR:
+        ov = OVR[key]
+        if ov.startswith("*"):
+            assert isinstance(base, (int, float)), (key, base); _new = base * float(ov[1:])
+        else:
+            _new = {"@lo": lo, "@hi": hi}[ov] if ov.startswith("@") else float(ov)
+        assert _new is not None, (key, ov)
+        base = _new
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
         if v is not None:
@@ -191,6 +210,7 @@ r += 1
 IN.cell(r, 1, "J. 目標價（DCF 與 Comparable 加權）與 FY2030–32 收斂法參數（黃底＝Assumed，Andy 可改）").font = BOLD; r += 1
 def inrow(key, item, unit, base, tag, s1, s2, fmt=None, yellow=False):
     global r
+    if key in OVR: base = float(OVR[key])   # v0.3.5：敏感度快照（情境權重案例）
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     c = IN.cell(r, 5, base)
     if not (isinstance(base, str) and base.startswith("=")): c.font = BLUE
@@ -288,6 +308,11 @@ DEFP = dict(tail="g_tail", wpr="w_pr", wcmp="w_cmp", chn="chn", vs="v_s", vm="v_
             exc=None, chh=None, gmet=None, madj=None, ovr=None, den26=None)   # v0.13：Wattonomics 錨定案例用；預設不變（ovr＝設備市場列替換、den26＝FY2026 指數分母）
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["ovr"] is None and s != "A":   # v0.3.5 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 於 CY2027 起設備市場 AI 分項 × wta（＝另一側讀數比值；同 Sens 頁 Wattonomics 錨定的做法）；情境 A 不縮放
+        _ai = lambda y: sum(v[y - 2025] for v in _AIS[s].values())
+        P["ovr"] = {**{("apk", y): f"=apk{s}_{y % 100}*wta_{y % 100}" for y in (2027, 2028, 2029)},
+                    **{("wfe", y): f"=wfe{s}_{y % 100}-{_ai(y)!r}*(1-wta_{y % 100})" for y in (2027, 2028, 2029)}}
+        P["den26"] = {"wfe": f"(0.75*wfe{s}_26+0.25*wfe{s}_27)", "apk": f"(0.75*apk{s}_26+0.25*apk{s}_27)"}   # FY2026 指數分母維持未縮放（錨點）
     exc = P["exc"] or f"exc_{s}"; chh = P["chh"] or f"chh_{s}"; gmet = P["gmet"] or f"gmet_{s}"
     madj = P["madj"] or ("madjC" if s == "C" else "0")
     ws.cell(r0, 1, title).font = BOLD
@@ -1195,4 +1220,15 @@ def _px1105(wb, tk, ver, subs=(), static=None, formula_subs=()):
     return out
 R4_PE = _px1105(wb, "7729.T", "v0.3.4")
 
+# ---------------- v0.3.5（2026-11-15）：三層協調 C4 兩讀數（Coord 頁；快照 accretech/coord_alt.json）、個股 HTML 版面 v1.3、C0（公司實績） ----------------
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    COORD.stamp(wb, "v0.3.4", "v0.3.5", "2026-11-15")
+    if not os.environ.get("ACC_OVERRIDE") and not os.environ.get("ACC_SNAP"):
+        # v0.3.5：個股 HTML 版面規格 v1.3、三層協調 C0（含公司實績）與兩讀數（accretech/v035_post.py；只新增頁與列，既有數值格不變）
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import v035_post  # noqa: E402
+        print(v035_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR, PB, EQ_F))
 wb.save(sys.argv[1])

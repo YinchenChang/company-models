@@ -1,0 +1,605 @@
+{
+"_readme": "Nebius（NBIS）事實總帳 v0.6.0（2026-11-15）：Q3 2026 6-K 附件 99.1（財報）、99.2（股東信）逐筆；金額 US$B（股數十億股、每 MW 百萬美元）。標記：Verified＝財報數字（6-K 財報為公司編製、未經查核季報，依 CoreWeave 樣板視同法定揭露）；Interested-party＝股東信、指引、營運指標、非 GAAP。",
+"sources": {
+"PR_Q3": "Nebius Q3 2026 6-K 附件 99.1（財報新聞稿與財務報表，2026-11-12）https://www.sec.gov/Archives/edgar/data/0001513845/000110465926126008/tm2629571d1_ex99-1.htm",
+"LTR_Q3": "Nebius Q3 2026 6-K 附件 99.2（股東信，2026-11-12）https://www.sec.gov/Archives/edgar/data/1513845/000110465926126008/tm2629571d1_ex99-2.htm",
+"Q2_6K": "Nebius Q2 2026 6-K 附件 99.1（2026-08-12；數字經 legacy_v05/company.json latestQuarter、nebius_facts_20261007.json 登錄）https://www.sec.gov/Archives/edgar/data/1513845/000110465926094568/tm2622968d1_ex99-1.htm",
+"Q1_6K": "Nebius Q1 2026 6-K 附件 99.1（2026-05-13）https://www.sec.gov/Archives/edgar/data/1513845/000110465926059872/tm2614392d1_ex99-1.htm",
+"F20_25": "Nebius FY2025 Form 20-F（2026-04-30；經查核合併財報）https://www.sec.gov/Archives/edgar/data/1513845/000110465926052948/nbis-20251231x20f.htm",
+"MS": "MarketScreener 共識與報價（chat 端內建瀏覽器擷取 2026-11-13；經 coreweave/build_coreweave.py In 頁 pn_／po_／ir_ 列登錄）https://www.marketscreener.com/quote/stock/{NEBIUS-GROUP-8037501|IREN-LIMITED-129472358|ORACLE-CORPORATION-13620698}/finances/",
+"CRWV_PR": "CoreWeave Q3 2026 新聞稿（2026-11-10；經 coreweave/data/coreweave_facts_20261112.json 登錄）https://investors.coreweave.com/news/news-details/2026/CoreWeave-Reports-Strong-Third-Quarter-2026-Results/default.aspx",
+"UST": "CAPP Notes Closing Look 2026-11-10（10 年期收 4.98%；經 coreweave In rf 列登錄）https://cappnotes.substack.com/p/closing-look-tuesday-november-10",
+"IREN": "IREN 新聞稿 2025-11-03 IREN Secures $9.7bn AI Cloud Contract with Microsoft https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-97bn-ai-cloud-contract-microsoft",
+"IREN_Q1": "IREN Reports Q1 FY27 Results（2026-11-05）https://globenewswire.com/news-release/2026/11/05/3397020/0/en/iren-reports-q1-fy27-results.html",
+"CONS_NBIS": "nebius/data/consensus_nbis_20261007.json（S&P 經 StockAnalysis、MarketScreener；財報前，只作歷史對照）",
+"CONS_CRWV": "nebius/data/consensus_crwv_20260925.json（MarketScreener；CoreWeave 財報前共識）"
+},
+"items": [
+{
+"id": "q3.rev",
+"v": 0.9808,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Revenues"
+},
+{
+"id": "9m.rev",
+"v": 1.9621,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Revenues 9M"
+},
+{
+"id": "q3.oi",
+"v": 0.0504,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Income from operations"
+},
+{
+"id": "9m.oi",
+"v": -0.2535,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Loss from operations 9M"
+},
+{
+"id": "q3.aebitda",
+"v": 0.4658,
+"tag": "Interested-party",
+"src": "PR_Q3",
+"note": "Adjusted EBITDA（非 GAAP）"
+},
+{
+"id": "9m.aebitda",
+"v": 0.8315,
+"tag": "Interested-party",
+"src": "PR_Q3",
+"note": "Adjusted EBITDA 9M（非 GAAP）"
+},
+{
+"id": "q3.ni",
+"v": -0.0375,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Net loss continuing"
+},
+{
+"id": "9m.ni",
+"v": 0.3933,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Net income 9M（含權益證券重估利益 0.7806）"
+},
+{
+"id": "q3.da",
+"v": 0.3547,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "D&A"
+},
+{
+"id": "9m.da",
+"v": 0.8264,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "D&A 9M"
+},
+{
+"id": "q3.sbc",
+"v": 0.0587,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "SBC"
+},
+{
+"id": "9m.sbc",
+"v": 0.1965,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "SBC 9M"
+},
+{
+"id": "q3.intexp",
+"v": 0.1125,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Interest expense"
+},
+{
+"id": "9m.intexp",
+"v": 0.2953,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Interest expense 9M"
+},
+{
+"id": "q3.intinc",
+"v": 0.0302,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Interest income"
+},
+{
+"id": "9m.intinc",
+"v": 0.0685,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Interest income 9M"
+},
+{
+"id": "9m.cogs",
+"v": 0.4571,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Cost of revenues 9M"
+},
+{
+"id": "9m.opex_tot",
+"v": 2.2156,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Total operating costs and expenses 9M"
+},
+{
+"id": "9m.pti",
+"v": 0.376,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Income before taxes 9M"
+},
+{
+"id": "9m.tax",
+"v": -0.0173,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Income tax benefit 9M"
+},
+{
+"id": "q3.sga",
+"v": 0.2374,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "SG&A Q3"
+},
+{
+"id": "q3.rd",
+"v": 0.1186,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Product development Q3"
+},
+{
+"id": "9m.sga",
+"v": 0.5551,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "SG&A 9M"
+},
+{
+"id": "9m.rd",
+"v": 0.377,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Product development 9M"
+},
+{
+"id": "9m.cfo",
+"v": 4.2311,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Net cash from operating activities 9M"
+},
+{
+"id": "q3.cfo",
+"v": -0.273,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Net cash from operating activities Q3"
+},
+{
+"id": "9m.cashcapex",
+"v": 15.4307,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Purchases of property and equipment and intangible assets 9M"
+},
+{
+"id": "q3.cashcapex",
+"v": 7.3004,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "同上 Q3"
+},
+{
+"id": "q3.cash",
+"v": 7.4256,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Cash and cash equivalents 2026-09-30"
+},
+{
+"id": "q3.rcash",
+"v": 1.2155,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Restricted cash 2026-09-30"
+},
+{
+"id": "q3.ppe",
+"v": 19.3419,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "PP&E net 2026-09-30"
+},
+{
+"id": "q3.debt",
+"v": 14.1908,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Debt current 0.1875＋non-current 14.0033"
+},
+{
+"id": "q3.debt_cur",
+"v": 0.1875,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Debt, current"
+},
+{
+"id": "q3.oplease",
+"v": 1.7688,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Operating lease liabilities, non-current（流動部分併入應付與應計，未單列）"
+},
+{
+"id": "q3.defrev",
+"v": 9.4092,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Deferred revenue current 1.4455＋non-current 7.9637"
+},
+{
+"id": "q3.invest",
+"v": 1.6039,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Investments in non-marketable equity securities"
+},
+{
+"id": "q3.sh",
+"v": 0.292902405,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Shares outstanding A 259,597,352＋B 33,305,053（不含庫藏 29,138,539）"
+},
+{
+"id": "q3.waso",
+"v": 0.298010566,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "Q3 加權平均基本股數"
+},
+{
+"id": "9m.shd",
+"v": 0.284347081,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "9M 加權平均稀釋股數"
+},
+{
+"id": "9m.epsd",
+"v": 1.39,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "9M EPS diluted（US$）"
+},
+{
+"id": "9m.defchg",
+"v": 7.829,
+"tag": "Verified",
+"src": "PR_Q3",
+"note": "9M 現金流量表遞延營收變動"
+},
+{
+"id": "q3.ai_rev",
+"v": 0.9738,
+"tag": "Interested-party",
+"src": "LTR_Q3",
+"note": "Nebius AI Cloud revenue Q3（股東信）"
+},
+{
+"id": "q3.nonrec",
+"v": 0.325,
+"tag": "Interested-party",
+"src": "LTR_Q3",
+"note": "Non-recurring asset-light revenue about $325M（股東信；約數）"
+},
+{
+"id": "q3.ai_aeb",
+"v": 0.5182,
+"tag": "Interested-party",
+"src": "LTR_Q3",
+"note": "AI Cloud adjusted EBITDA 518.2（53.2%）"
+},
+{
+"id": "q3.rpo",
+"v": 38.7,
+"tag": "Interested-party",
+"src": "LTR_Q3",
+"note": "RPO US$38.7B（2026-09-30）"
+},
+{
+"id": "q3.arr",
+"v": 6.4,
+"tag": "Interested-party",
+"src": "LTR_Q3",
+"note": "ARR US$6.4B（2026-09 月）"
+},
+{
+"id": "q3.ctr_mw",
+"v": 4000,
+"tag": "Interested-party",
+"src": "LTR_Q3",
+"note": "more than 4 GW contracted（口徑未說明）"
+},
+{
+"id": "ye26.ctr_mw",
+"v": 5000,
+"tag": "Interested-party",
+"src": "LTR_Q3",
+"note": "5 GW of contracted power by year-end 2026"
+},
+{
+"id": "claim.acv",
+"v": 25,
+"tag": "Interested-party",
+"src": "LTR_Q3",
+"note": "ACV per MW above $25M in Q3（1–5 年加權；Q2 above $20M）"
+},
+{
+"id": "claim.short_x",
+"v": 2,
+"tag": "Interested-party",
+"src": "LTR_Q3",
+"note": "Short-term clusters priced at more than twice the reserved rate"
+},
+{
+"id": "g26.rev",
+"v": [
+3.0,
+3.4
+],
+"tag": "Interested-party",
+"src": "LTR_Q3",
+"note": "2026 revenue at the low end of $3.0–3.4B"
+},
+{
+"id": "g26.ebm",
+"v": 0.4,
+"tag": "Interested-party",
+"src": "LTR_Q3",
+"note": "2026 adjusted EBITDA margin approximately 40%"
+},
+{
+"id": "g26.capex",
+"v": 27,
+"tag": "Interested-party",
+"src": "LTR_Q3",
+"note": "2026 capex approximately $27B（above prior $20–25B）"
+},
+{
+"id": "g27.rev",
+"v": [
+12,
+13
+],
+"tag": "Interested-party",
+"src": "LTR_Q3",
+"note": "2027 revenue $12–13B"
+},
+{
+"id": "g27.capex",
+"v": [
+40,
+45
+],
+"tag": "Interested-party",
+"src": "LTR_Q3",
+"note": "2027 capex $40–45B, sized for more than 1 GW of new capacity"
+},
+{
+"id": "pp.2026",
+"v": 10,
+"tag": "Interested-party",
+"src": "LTR_Q3",
+"note": "Committed customer prepayments about $10B expected in 2026"
+},
+{
+"id": "pp.2027",
+"v": [
+17,
+20
+],
+"tag": "Interested-party",
+"src": "LTR_Q3",
+"note": "rising to $17–20B in 2027"
+},
+{
+"id": "q2.ai_rev",
+"v": 0.5749,
+"tag": "Interested-party",
+"src": "Q2_6K",
+"note": "Revenues by operating segment：Nebius AI cloud Q2"
+},
+{
+"id": "q1.ai_rev",
+"v": 0.3897,
+"tag": "Interested-party",
+"src": "Q1_6K",
+"note": "Revenues by operating segment：Nebius AI cloud Q1"
+},
+{
+"id": "q2.rev",
+"v": 0.5823,
+"tag": "Interested-party",
+"src": "Q2_6K",
+"note": ""
+},
+{
+"id": "q2.oi",
+"v": -0.1759,
+"tag": "Interested-party",
+"src": "Q2_6K",
+"note": ""
+},
+{
+"id": "q2.aebitda",
+"v": 0.2362,
+"tag": "Interested-party",
+"src": "Q2_6K",
+"note": ""
+},
+{
+"id": "q2.ni",
+"v": -0.1904,
+"tag": "Interested-party",
+"src": "Q2_6K",
+"note": ""
+},
+{
+"id": "q2.da",
+"v": 0.2597,
+"tag": "Interested-party",
+"src": "Q2_6K",
+"note": ""
+},
+{
+"id": "q2.sbc",
+"v": 0.1025,
+"tag": "Interested-party",
+"src": "Q2_6K",
+"note": ""
+},
+{
+"id": "q2.intexp",
+"v": 0.1191,
+"tag": "Interested-party",
+"src": "Q2_6K",
+"note": ""
+},
+{
+"id": "q2.cashcapex",
+"v": 5.6574,
+"tag": "Interested-party",
+"src": "Q2_6K",
+"note": ""
+},
+{
+"id": "1h.cfo",
+"v": 4.5041,
+"tag": "Interested-party",
+"src": "Q2_6K",
+"note": ""
+},
+{
+"id": "q1.rev",
+"v": 0.399,
+"tag": "Interested-party",
+"src": "Q1_6K",
+"note": ""
+},
+{
+"id": "q1.cashcapex",
+"v": 2.4729,
+"tag": "Interested-party",
+"src": "Q1_6K",
+"note": ""
+},
+{
+"id": "q2.cip",
+"v": 7.8364,
+"tag": "Interested-party",
+"src": "Q2_6K",
+"note": "Assets not yet in use（附註 7）"
+},
+{
+"id": "q2.lease_nc",
+"v": 12.0541,
+"tag": "Interested-party",
+"src": "Q2_6K",
+"note": "已簽約未起租租賃（未折現）"
+},
+{
+"id": "ye25.active_mw",
+"v": 170,
+"tag": "Interested-party",
+"src": "F20_25",
+"note": "active power ~170 MW（2025-12-31；20-F 業務章節與股東信）"
+},
+{
+"id": "fy25.rev",
+"v": 0.5298,
+"tag": "Verified",
+"src": "F20_25",
+"note": ""
+},
+{
+"id": "fy24.rev",
+"v": 0.0915,
+"tag": "Verified",
+"src": "F20_25",
+"note": ""
+},
+{
+"id": "fy25.oi",
+"v": -0.6117,
+"tag": "Verified",
+"src": "F20_25",
+"note": ""
+},
+{
+"id": "fy24.oi",
+"v": -0.3996,
+"tag": "Verified",
+"src": "F20_25",
+"note": ""
+},
+{
+"id": "fy25.ni",
+"v": 0.0098,
+"tag": "Verified",
+"src": "F20_25",
+"note": "continuing ops"
+},
+{
+"id": "fy24.ni",
+"v": -0.352,
+"tag": "Verified",
+"src": "F20_25",
+"note": "continuing ops"
+},
+{
+"id": "fy25.cashcapex",
+"v": 4.066,
+"tag": "Verified",
+"src": "F20_25",
+"note": ""
+},
+{
+"id": "px.1112",
+"v": 128.64,
+"tag": "Verified",
+"src": "MS",
+"note": "Nasdaq 5 日表 11-12 收盤 128.64（11-11 154.69、11-10 134.00）"
+},
+{
+"id": "ust10.1110",
+"v": 0.0498,
+"tag": "Verified",
+"src": "UST",
+"note": ""
+}
+]
+}

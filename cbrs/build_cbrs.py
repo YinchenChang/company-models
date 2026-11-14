@@ -1,6 +1,6 @@
 # Cerebras Systems（CBRS）收支與估值模型 v0.1（AI 半導體 Project：運算層；格式比照 nvidia/ v0.3.4）
 # 用法：python3 cbrs/build_cbrs.py raw.xlsx [--html] ；再以 LibreOffice headless 重算（CI：ai-semis-build）
-#   --html：另寫 cbrs/html.json（HTML 展示層設定；列號由本腳本產生，與 xlsx 同步）
+#   --html：另寫 cbrs/html_src.json（v0.1.2 起；再由 cbrs/gen_html_json.py <xlsx> 轉成版面 v1.3 的 html.json）
 # 會計年度＝日曆年（FY2026＝CY2026）。金額：十億美元（US$B）；每 MW 年營收：百萬美元／MW／年（＝US$B／GW／年）；股數：十億股。
 # 營收＝推論雲端（平均計費 MW × 每 MW 年營收）＋系統（硬體）銷售；成本、費用、股票薪酬、資本支出（新增 MW × 每 MW 資本支出）→ EBIT、FCFF。
 # 估值：標準版 DCF（tools/fcff_dcf.py v2）與 Comparable（同業前瞻 P/S；上市未滿一年、獲利為負，市場主流用營收倍數）各半。
@@ -19,7 +19,7 @@ import fcff_dcf as FD
 import apply_in_layout as INL
 from addrow import add_check
 
-VER, VDATE = "v0.1.1", "2026-11-08"
+VER, VDATE = "v0.1.2", "2026-11-08"   # v0.1.2（2026-11-15）：版面 v1.3＋三層協調（v012_post.py）；VDATE＝v0.1 建檔日（版本沿革用）
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True)
 HDR = PatternFill("solid", fgColor="DDEBF7"); KEY = PatternFill("solid", fgColor="FFF2CC"); SUB = PatternFill("solid", fgColor="EDEDED")
 SC = ("A", "B", "C"); SCN = {"A": "樂觀", "B": "基準", "C": "保守"}
@@ -644,9 +644,13 @@ RM_["A49"] = "v0.1.1（2026-11-08）：Comparable 同業改為只用晶片同業
 RM_.column_dimensions["A"].width = 160
 
 # ---------------- In 版面、儲存 ----------------
-INL.apply(wb, VER, VDATE)
+INL.apply(wb, "v0.1.1", VDATE)   # v0.1.2 起固定：In 頁版面說明與 README 版本沿革句屬 v0.1.1 的變更（不隨版號改寫）
 for ws in (PL, V, DCFW, SE):
     ws.freeze_panes = "B3" if ws is not V else None
+# v0.1.2（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（本資料夾 v012_post.py；只新增頁與列，既有數值格不變）
+sys.path.insert(0, HERE)
+import v012_post  # noqa: E402
+print(v012_post.apply(wb, PR, TKV))
 out = sys.argv[1]
 wb.save(out)
 
@@ -828,4 +832,4 @@ if "--html" in sys.argv:
                             [["只看 Comparable 目標價（市場主流同業法）", "（美元）"], f"@Val!B{T['comp']}|n2", ["上檔空間 ", f"@Val!B{T['upc']}|sp1"]],
                             [[f"@Val!A{T['px']}", "（美元）"], f"@Val!B{T['px']}|n2", ""]],
                   "note": ["投資建議依加權目標價判定：", f"@Val!E{T['rec']}"]}}
-    json.dump(H, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    json.dump(H, open(os.path.join(HERE, "html_src.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)   # v0.1.2：html.json 由 gen_html_json.py <xlsx> 依版面 v1.3 轉出

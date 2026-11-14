@@ -1,0 +1,838 @@
+{
+"_readme": "WhiteFiber（WYFI）事實總帳 v0.4.0（2026-11-15）：金額 US$M、股數百萬股、MW 為 IT 口徑。數字轉錄自 open PR #451 分支的事實總帳（原文 10-Q 2026 Q3、10-K FY2025、法說二手逐字稿；見 sources.PR451），id 沿用原總帳；標記同原總帳（10-Q 實績 Verified；指引與 KPI Interested-party）。",
+"sources": {
+"Q3_10Q": "WhiteFiber Form 10-Q 2026 Q3（季末 2026-09-30；SEC EDGAR accession 0001213900-26-117728）https://www.sec.gov/Archives/edgar/data/0002042022/000121390026117728/ea0310427-10q_whitefiber.htm",
+"CALL_Q3": "WhiteFiber 2026 Q3 法說（二手逐字稿：Investing.com、Motley Fool；全文不入庫）",
+"K10_25": "WhiteFiber Form 10-K FY2025（經查核合併財報）",
+"Q2_10Q": "WhiteFiber Form 10-Q 2026 Q2（季末 2026-06-30）",
+"Q1_10Q": "WhiteFiber Form 10-Q 2026 Q1（季末 2026-03-31）",
+"PX": "Investing.com WYFI 歷史價格（日線 2026-11-10 收 9.21）；第二來源 Stockscan",
+"MS_WYFI": "MarketScreener（S&P Capital IQ）WYFI 新聞頁（2026-11-10；分析師平均目標價 40.45，11 家）",
+"PR451": "資料蒐集沿用 open PR #451（claude/whitefiber-2026q3，head ca4898f）whitefiber/data/whitefiber_facts_20261008.json 群組「8_2026Q3滾入」與「1_SEC一手文件」登錄值（原文出處見各列 source／url）；本檔只轉錄，未改數字",
+"MS": "MarketScreener 共識與報價（chat 端內建瀏覽器擷取 2026-11-13；經 coreweave/build_coreweave.py In 頁 pn_／po_／ir_ 列登錄）https://www.marketscreener.com/quote/stock/{NEBIUS-GROUP-8037501|IREN-LIMITED-129472358|ORACLE-CORPORATION-13620698}/finances/",
+"CRWV_PR": "CoreWeave Q3 2026 新聞稿（2026-11-10；經 coreweave/data/coreweave_facts_20261112.json 登錄）",
+"NBIS_6K": "Nebius Q3 2026 6-K 附件 99.1（2026-11-12）https://www.sec.gov/Archives/edgar/data/0001513845/000110465926126008/tm2629571d1_ex99-1.htm",
+"UST": "CAPP Notes Closing Look 2026-11-10（10 年期收 4.98%；經 coreweave In rf 列登錄）",
+"IREN": "IREN 新聞稿 2025-11-03 IREN Secures $9.7bn AI Cloud Contract with Microsoft",
+"IREN_Q1": "IREN Reports Q1 FY27 Results（2026-11-05）",
+"CONS_CRWV": "coreweave/data/consensus_crwv_20260925.json（MarketScreener；CoreWeave 財報前共識）"
+},
+"items": [
+{
+"id": "is.rev.2026Q3",
+"v": 24.017,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "總營收",
+"orig": "is.rev.2026Q3"
+},
+{
+"id": "is.cloud.2026Q3",
+"v": 18.106,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "雲端服務營收（含 Initial Customer 終止費追加 3.4）",
+"orig": "is.cloud.2026Q3"
+},
+{
+"id": "is.colo.2026Q3",
+"v": 5.617,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "託管服務營收（含 NC-1 租賃收入 1.1）",
+"orig": "is.colo.2026Q3"
+},
+{
+"id": "is.other.2026Q3",
+"v": 0.294,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "其他營收",
+"orig": "is.other.2026Q3"
+},
+{
+"id": "is.cogsCloud.2026Q3",
+"v": 7.907,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "營業成本－雲端",
+"orig": "is.cogsCloud.2026Q3"
+},
+{
+"id": "is.cogsColo.2026Q3",
+"v": 2.438,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "營業成本－託管",
+"orig": "is.cogsColo.2026Q3"
+},
+{
+"id": "is.da.2026Q3",
+"v": 8.077,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "折舊與攤銷",
+"orig": "is.da.2026Q3"
+},
+{
+"id": "is.ga.2026Q3",
+"v": 17.998,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "一般及管理費用",
+"orig": "is.ga.2026Q3"
+},
+{
+"id": "is.opInc.2026Q3",
+"v": -12.403,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "營業損失",
+"orig": "is.opInc.2026Q3"
+},
+{
+"id": "is.int3p.2026Q3",
+"v": 6.426,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "利息費用－第三方",
+"orig": "is.int3p.2026Q3"
+},
+{
+"id": "is.intRP.2026Q3",
+"v": 3.987,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "利息費用－關係人",
+"orig": "is.intRP.2026Q3"
+},
+{
+"id": "is.induced.2026Q3",
+"v": 80.767,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "誘導轉換費用",
+"orig": "is.induced.2026Q3"
+},
+{
+"id": "is.pretax.2026Q3",
+"v": -103.204,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "稅前損失",
+"orig": "is.pretax.2026Q3"
+},
+{
+"id": "is.ni.2026Q3",
+"v": -101.435,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "淨損",
+"orig": "is.ni.2026Q3"
+},
+{
+"id": "is.eps.2026Q3",
+"v": -2.44,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "每股淨損（基本＝稀釋，USD）",
+"orig": "is.eps.2026Q3"
+},
+{
+"id": "is.waso.2026Q3",
+"v": 41.652795,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "加權平均股數（m）",
+"orig": "is.waso.2026Q3"
+},
+{
+"id": "is.tax.2026Q3",
+"v": 1.769,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "所得稅（利益）",
+"orig": "is.tax.2026Q3"
+},
+{
+"id": "is.rev.9M26",
+"v": 74.779,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "總營收",
+"orig": "is.rev.9M26"
+},
+{
+"id": "is.cloud.9M26",
+"v": 58.679,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "雲端服務營收",
+"orig": "is.cloud.9M26"
+},
+{
+"id": "is.colo.9M26",
+"v": 15.117,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "託管服務營收",
+"orig": "is.colo.9M26"
+},
+{
+"id": "is.opInc.9M26",
+"v": -32.678,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "營業損失",
+"orig": "is.opInc.9M26"
+},
+{
+"id": "is.ni.9M26",
+"v": -128.453,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "淨損",
+"orig": "is.ni.9M26"
+},
+{
+"id": "is.da.9M26",
+"v": 21.085,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "折舊與攤銷",
+"orig": "is.da.9M26"
+},
+{
+"id": "is.int.9M26",
+"v": 18.424,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "利息費用（第三方 12.999＋關係人 5.425）",
+"orig": "is.int.9M26"
+},
+{
+"id": "is.eps.9M26",
+"v": -3.25,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "每股淨損（USD）",
+"orig": "is.eps.9M26"
+},
+{
+"id": "is.waso.9M26",
+"v": 39.581712,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "加權平均股數（m）",
+"orig": "is.waso.9M26"
+},
+{
+"id": "bs.cash.2026Q3",
+"v": 138.544,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "現金及約當現金",
+"orig": "bs.cash.2026Q3"
+},
+{
+"id": "bs.restricted.2026Q3",
+"v": 9.012,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "受限現金",
+"orig": "bs.restricted.2026Q3"
+},
+{
+"id": "bs.ppe.2026Q3",
+"v": 746.735,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "PP&E 淨額",
+"orig": "bs.ppe.2026Q3"
+},
+{
+"id": "bs.cip.2026Q3",
+"v": 312.326,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "在建工程",
+"orig": "bs.cip.2026Q3"
+},
+{
+"id": "bs.ppeDeposit.2026Q3",
+"v": 158.437,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "PP&E 訂金",
+"orig": "bs.ppeDeposit.2026Q3"
+},
+{
+"id": "bs.defRevCur.2026Q3",
+"v": 54.636,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "遞延營收－流動",
+"orig": "bs.defRevCur.2026Q3"
+},
+{
+"id": "bs.defRevNonCur.2026Q3",
+"v": 251.398,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "遞延營收－非流動",
+"orig": "bs.defRevNonCur.2026Q3"
+},
+{
+"id": "bs.convNet.2026Q3",
+"v": 330.088,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "可轉債帳面淨額",
+"orig": "bs.convNet.2026Q3"
+},
+{
+"id": "bs.stDebt3p.2026Q3",
+"v": 11.873,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "短期與一年內到期借款－第三方（淨）",
+"orig": "bs.stDebt3p.2026Q3"
+},
+{
+"id": "bs.stDebtRP.2026Q3",
+"v": 29.989,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "短期借款－關係人（淨；DDTL）",
+"orig": "bs.stDebtRP.2026Q3"
+},
+{
+"id": "bs.ltDebt3p.2026Q3",
+"v": 30.683,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "長期借款－第三方（淨）",
+"orig": "bs.ltDebt3p.2026Q3"
+},
+{
+"id": "bs.opLeaseLiab.2026Q3",
+"v": 69.252,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "營業租賃負債（流動 12.955＋非流動 56.297）",
+"orig": "bs.opLeaseLiab.2026Q3"
+},
+{
+"id": "bs.sharesOut.2026Q3",
+"v": 45.281436,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "流通股數（m）",
+"orig": "bs.sharesOut.2026Q3"
+},
+{
+"id": "cf.cfo.9M26",
+"v": 211.312,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "營運現金流",
+"orig": "cf.cfo.9M26"
+},
+{
+"id": "cf.capex.9M26",
+"v": 549.804,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "購置 PP&E 與設備訂金",
+"orig": "cf.capex.9M26"
+},
+{
+"id": "cf.defRev.9M26",
+"v": 226.524,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "遞延營收增加（客戶預付）",
+"orig": "cf.defRev.9M26"
+},
+{
+"id": "cf.sbc.9M26",
+"v": 14.94,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "股份基礎給付",
+"orig": "cf.sbc.9M26"
+},
+{
+"id": "rev.termFee.2026Q3",
+"v": 3.4,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "Initial Customer 終止費追加（12.3 → 15.7，Q3 認列差額）",
+"orig": "rev.termFee.2026Q3"
+},
+{
+"id": "rev.cloudRecurring.2026Q3",
+"v": 14.706,
+"tag": "Derived",
+"src": "Q3_10Q",
+"note": "經常性雲端營收（扣終止費）",
+"orig": "rev.cloudRecurring.2026Q3"
+},
+{
+"id": "rev.ncl1Lease.2026Q3",
+"v": 1.1,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "NC-1 租賃收入",
+"orig": "rev.ncl1Lease.2026Q3"
+},
+{
+"id": "seg.cloudGP.2026Q3",
+"v": 10.17,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "雲端分部毛利",
+"orig": "seg.cloudGP.2026Q3"
+},
+{
+"id": "seg.coloGP.2026Q3",
+"v": 3.208,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "託管分部毛利",
+"orig": "seg.coloGP.2026Q3"
+},
+{
+"id": "rpo.total.2026Q3",
+"v": 728.982,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "RPO 合計（ASC 606）",
+"orig": "rpo.total.2026Q3"
+},
+{
+"id": "rpo.cloud.2026Q3",
+"v": 716.285,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "雲端 RPO",
+"orig": "rpo.cloud.2026Q3"
+},
+{
+"id": "rpo.colo.2026Q3",
+"v": 12.697,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "託管 RPO（ASC 606，不含租賃）",
+"orig": "rpo.colo.2026Q3"
+},
+{
+"id": "lease.receipts.2026Q3",
+"v": 421.49,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "營業租賃與轉租未來收款（出租方；NC-1 第一期等）",
+"orig": "lease.receipts.2026Q3"
+},
+{
+"id": "lease.notCommenced.2026Q3",
+"v": 34.0,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "未起租加拿大託管租約（2.7 MW、60 個月、每月 0.6）",
+"orig": "lease.notCommenced.2026Q3"
+},
+{
+"id": "debt.conv2031.2026Q3",
+"v": 31.85,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "2031 可轉債剩餘本金",
+"orig": "debt.conv2031.2026Q3"
+},
+{
+"id": "debt.conv2032.2026Q3",
+"v": 310.0,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "2032 可轉債本金",
+"orig": "debt.conv2032.2026Q3"
+},
+{
+"id": "debt.ddtl.2026Q3",
+"v": 30.0,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "Bit Digital DDTL 已動用本金",
+"orig": "debt.ddtl.2026Q3"
+},
+{
+"id": "debt.iceland.2026Q3",
+"v": 17.8,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "Landsbankinn 冰島擔保貸款餘額",
+"orig": "debt.iceland.2026Q3"
+},
+{
+"id": "debt.rbc.2026Q3",
+"v": 26.2,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "RBC 聯貸已動用（CAD 36.8）",
+"orig": "debt.rbc.2026Q3"
+},
+{
+"id": "debt.zeroStrike",
+"v": 5.905511,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "零履約價買權股數（m）",
+"orig": "debt.zeroStrike"
+},
+{
+"id": "post.ddtl.20261027",
+"v": 70.0,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "期後：DDTL 追加動用",
+"orig": "post.ddtl.20261027"
+},
+{
+"id": "post.yadkin.20261028",
+"v": 60.0,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "期後：NC-2／NC-3（Yadkinville）收購完成，現金",
+"orig": "post.yadkin.20261028"
+},
+{
+"id": "post.nc1Credit.20261109",
+"v": 300.0,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "期後：NC-1 信用協議（初始定期貸款 200＋延遲動用 100）",
+"orig": "post.nc1Credit.20261109"
+},
+{
+"id": "ng.adjEbitda.2026Q3",
+"v": -0.024,
+"tag": "Interested-party",
+"src": "Q3_10Q",
+"note": "調整後 EBITDA（公司定義）",
+"orig": "ng.adjEbitda.2026Q3"
+},
+{
+"id": "ng.adjEbitda.9M26",
+"v": 8.512,
+"tag": "Interested-party",
+"src": "Q3_10Q",
+"note": "調整後 EBITDA（公司定義）",
+"orig": "ng.adjEbitda.9M26"
+},
+{
+"id": "is.adjEbitda.2026Q1",
+"v": 3.001,
+"tag": "Interested-party",
+"src": "Q1_10Q",
+"note": "調整後 EBITDA（公司定義：EBITDA＋減損＋處分損益＋SBC）",
+"orig": "is.adjEbitda.2026Q1"
+},
+{
+"id": "is.adjEbitda.2026Q2",
+"v": 5.535,
+"tag": "Interested-party",
+"src": "Q2_10Q",
+"note": "調整後 EBITDA（公司定義：EBITDA＋減損＋處分損益＋SBC）",
+"orig": "is.adjEbitda.2026Q2"
+},
+{
+"id": "is.sbc.2026Q1",
+"v": 7.346,
+"tag": "Interested-party",
+"src": "Q1_10Q",
+"note": "股份基礎給付（調整後 EBITDA 調節表口徑）",
+"orig": "is.sbc.2026Q1"
+},
+{
+"id": "is.sbc.2026Q2",
+"v": 3.671,
+"tag": "Interested-party",
+"src": "Q2_10Q",
+"note": "股份基礎給付（調整後 EBITDA 調節表口徑）",
+"orig": "is.sbc.2026Q2"
+},
+{
+"id": "is.cloud.2026Q1",
+"v": 16.767,
+"tag": "Interested-party",
+"src": "Q1_10Q",
+"note": "雲端服務營收",
+"orig": "is.cloud.2026Q1"
+},
+{
+"id": "is.cloud.2026Q2",
+"v": 23.806,
+"tag": "Interested-party",
+"src": "Q2_10Q",
+"note": "雲端服務營收",
+"orig": "is.cloud.2026Q2"
+},
+{
+"id": "is.rev.2026Q1",
+"v": 21.923,
+"tag": "Interested-party",
+"src": "Q1_10Q",
+"note": "總營收",
+"orig": "is.rev.2026Q1"
+},
+{
+"id": "is.rev.2026Q2",
+"v": 28.839,
+"tag": "Interested-party",
+"src": "Q2_10Q",
+"note": "總營收",
+"orig": "is.rev.2026Q2"
+},
+{
+"id": "is.ni.2026Q1",
+"v": -12.042,
+"tag": "Interested-party",
+"src": "Q1_10Q",
+"note": "淨損益",
+"orig": "is.ni.2026Q1"
+},
+{
+"id": "is.ni.2026Q2",
+"v": -14.976,
+"tag": "Interested-party",
+"src": "Q2_10Q",
+"note": "淨損益",
+"orig": "is.ni.2026Q2"
+},
+{
+"id": "is.da.2026Q1",
+"v": 6.441,
+"tag": "Interested-party",
+"src": "Q1_10Q",
+"note": "折舊與攤銷",
+"orig": "is.da.2026Q1"
+},
+{
+"id": "is.da.2026Q2",
+"v": 6.567,
+"tag": "Interested-party",
+"src": "Q2_10Q",
+"note": "折舊與攤銷",
+"orig": "is.da.2026Q2"
+},
+{
+"id": "is.intTP.2026Q1",
+"v": 1.995,
+"tag": "Interested-party",
+"src": "Q1_10Q",
+"note": "利息費用－第三方",
+"orig": "is.intTP.2026Q1"
+},
+{
+"id": "is.intTP.2026Q2",
+"v": 4.578,
+"tag": "Interested-party",
+"src": "Q2_10Q",
+"note": "利息費用－第三方",
+"orig": "is.intTP.2026Q2"
+},
+{
+"id": "is.intRP.2026Q2",
+"v": 1.438,
+"tag": "Interested-party",
+"src": "Q2_10Q",
+"note": "利息費用－關係人",
+"orig": "is.intRP.2026Q2"
+},
+{
+"id": "is.rev.FY2024",
+"v": 47.639,
+"tag": "Verified",
+"src": "K10_25",
+"note": "總營收",
+"orig": "is.rev.FY2024"
+},
+{
+"id": "is.rev.FY2025",
+"v": 79.164,
+"tag": "Verified",
+"src": "K10_25",
+"note": "總營收",
+"orig": "is.rev.FY2025"
+},
+{
+"id": "is.cloud.FY2024",
+"v": 45.728,
+"tag": "Verified",
+"src": "K10_25",
+"note": "雲端服務營收",
+"orig": "is.cloud.FY2024"
+},
+{
+"id": "is.cloud.FY2025",
+"v": 68.754,
+"tag": "Verified",
+"src": "K10_25",
+"note": "雲端服務營收",
+"orig": "is.cloud.FY2025"
+},
+{
+"id": "is.ni.FY2024",
+"v": 1.37,
+"tag": "Verified",
+"src": "K10_25",
+"note": "淨損益",
+"orig": "is.ni.FY2024"
+},
+{
+"id": "is.ni.FY2025",
+"v": -24.683,
+"tag": "Verified",
+"src": "K10_25",
+"note": "淨損益",
+"orig": "is.ni.FY2025"
+},
+{
+"id": "cf.cfo.FY2025",
+"v": 45.655,
+"tag": "Verified",
+"src": "K10_25",
+"note": "營運現金流",
+"orig": "cf.cfo.FY2025"
+},
+{
+"id": "cf.capex.FY2025",
+"v": 268.403,
+"tag": "Verified",
+"src": "K10_25",
+"note": "購置 PP&E 與設備訂金（資本支出）",
+"orig": "cf.capex.FY2025"
+},
+{
+"id": "kpi.totalGpus",
+"v": 20000.0,
+"tag": "Interested-party",
+"src": "CALL_Q3",
+"note": "已簽專用運算 GPU 合計（約）",
+"orig": "kpi.totalGpus"
+},
+{
+"id": "kpi.newGpus",
+"v": 13000.0,
+"tag": "Interested-party",
+"src": "CALL_Q3",
+"note": "2026 年新簽專用運算 GPU 數（約）",
+"orig": "kpi.newGpus"
+},
+{
+"id": "guid.arr2027",
+"v": 365.0,
+"tag": "Interested-party",
+"src": "CALL_Q3",
+"note": "簽約雲端組合全部上線後年化營收目標（2027 年中）",
+"orig": "guid.arr2027"
+},
+{
+"id": "guid.q4Cloud",
+"v": 18.1,
+"tag": "Interested-party",
+"src": "CALL_Q3",
+"note": "Q4 2026 雲端營收預期（約與 Q3 18.1 持平）",
+"orig": "guid.q4Cloud"
+},
+{
+"id": "guid.managedArr",
+"v": 50.0,
+"tag": "Interested-party",
+"src": "CALL_Q3",
+"note": "託管服務年化經常性營收目標（2027 Q1 底）",
+"orig": "guid.managedArr"
+},
+{
+"id": "kpi.prepayCover",
+"v": 0.4,
+"tag": "Interested-party",
+"src": "CALL_Q3",
+"note": "已簽未上線專用運算的合約預付占估計資本支出",
+"orig": "kpi.prepayCover"
+},
+{
+"id": "kpi.prepayCover.9M",
+"v": 0.412,
+"tag": "Derived",
+"src": "Q3_10Q",
+"note": "9M26 客戶預付（遞延營收增加）÷ 資本支出",
+"orig": "kpi.prepayCover.9M"
+},
+{
+"id": "kpi.custConc.9M",
+"v": 0.5,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "最大客戶占 9M26 雲端營收",
+"orig": "kpi.custConc.9M"
+},
+{
+"id": "own.bitdigital",
+"v": 0.597,
+"tag": "Verified",
+"src": "Q3_10Q",
+"note": "Bit Digital 持股",
+"orig": "own.bitdigital"
+},
+{
+"id": "mkt.price.20261110",
+"v": 9.21,
+"tag": "Verified",
+"src": "PX",
+"note": "WYFI 收盤價",
+"orig": "mkt.price.20261110"
+},
+{
+"id": "mkt.consensusTp.20261110",
+"v": 40.45,
+"tag": "Interested-party",
+"src": "MS_WYFI",
+"note": "分析師平均目標價（11 家，MarketScreener／S&P Capital IQ）",
+"orig": "mkt.consensusTp.20261110"
+},
+{
+"id": "site.nc1.billing",
+"v": 40.0,
+"tag": "Interested-party",
+"src": "CALL_Q3",
+"note": "NC-1 計費：第一期 20 MW 9/23 恢復計費（8 月中曾起算後中斷）；第二期 20 MW 11/09 全額計費",
+"orig": "site.nc1.billing"
+},
+{
+"id": "site.nc23.mw",
+"v": 60.0,
+"tag": "Interested-party",
+"src": "Q3_10Q",
+"note": "NC-2／NC-3 初始毛容量",
+"orig": "site.nc23.mw"
+},
+{
+"id": "kpi.newTcv",
+"v": 750.0,
+"tag": "Interested-party",
+"src": "CALL_Q3",
+"note": "新簽雲端合約價值（五家客戶；另一處說 >700）",
+"orig": "kpi.newTcv"
+},
+{
+"id": "kpi.newContracted10Q",
+"v": 1447.0,
+"tag": "Interested-party",
+"src": "Q3_10Q",
+"note": "2026 年初至申報日新簽合約營收（6 個月至 5 年）",
+"orig": "kpi.newContracted10Q"
+}
+]
+}
