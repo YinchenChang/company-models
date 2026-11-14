@@ -387,3 +387,9 @@ CONFIG["version"] = "v0.7.4"
 CONFIG["date"] = "2026-11-06"
 CONFIG["a1_note"] = CONFIG["a1_note"] + "；v0.7.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"
 CONFIG["readme_tail"] = CONFIG["readme_tail"] + ["v0.7.4：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"]
+
+# v0.7.5（2026-11-14）：三層協調——對帳中標示與兩讀數目標價（共用工具 tools/coord/；記憶體樣板）
+CONFIG["version"] = "v0.7.5"
+CONFIG["date"] = "2026-11-14"
+CONFIG["a1_note"] = CONFIG["a1_note"] + "；v0.7.5（2026-11-14）：三層協調——Coord 頁並列兩讀數目標價（三層基準協調規則 v1.4 C4；HBM 需求位元情境 B、C 自 2027 起 × 另一側讀數比值）；既有數值不變"
+CONFIG["readme_tail"] = CONFIG["readme_tail"] + ["v0.7.5：三層協調——Coord 頁並列兩讀數目標價（規則 v1.4 C4）；既有數值不變"]

@@ -290,5 +290,9 @@ def build(co_dir, xlsx, nm_block=False, pfmt="n0", recon_main=None):
             db.remove(nt)
             db.insert(0, nt)
     db.insert(0, {"type": "note", "parts": ["情境定義：", f"@README!A{scen_r}"]})
+    # 三層協調 C4（規則 v1.4；tools/coord/coord.py）：xlsx 有 Coord 頁時，橫幅另一側讀數一格與揭露句、估值章開頭兩讀數表與長條圖
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "coord"))
+    import coord as COORD  # noqa: E402
+    COORD.inject_html(cfg, xlsx)
     json.dump(cfg, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("ok", out)

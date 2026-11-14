@@ -875,5 +875,11 @@ def _pres(wb, C):
 
 
 _pres(wb, C)
+# 三層協調 C4（規則 v1.4；tools/coord/）：已列入 coord_meta 硬體個股清單者，對帳中年份並列兩讀數目標價（Coord 頁；快照 <公司>/coord_alt.json）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD
+_cdir = os.path.dirname(os.path.abspath(sys.argv[1]))
+if COORD.enabled(os.path.basename(_cdir)):   # 版號與說明由各公司 company.py 的 CONFIG 管理
+    COORD.add_sheet(wb, _cdir, SIL)
 wb.save(sys.argv[2])
 print("saved", sys.argv[2])
