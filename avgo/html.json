@@ -4594,8 +4594,60 @@
      ]
     },
     {
+     "type": "note",
+     "parts": [
+      "@Coord!A74"
+     ]
+    },
+    {
      "type": "table",
-     "caption": "由下往上對帳（只算 Broadcom 自己的量對它讀的層級值；差距超過門檻標「對帳中」，不改上游值）",
+     "caption": "實績對帳（對帳判定）：公司實績 vs 層級隱含值（AI 半導體營收；Broadcom 季度新聞稿已公布期間對層級隱含的 XPU 由下而上加網通歸屬；兩讀數判定）",
+     "head": [
+      "項目",
+      "公司實績",
+      "層級隱含",
+      "差距",
+      "判定",
+      "說明"
+     ],
+     "rows": [
+      [
+       "@Coord!A87",
+       "@Coord!B87|n1",
+       "@Coord!C87|n1",
+       "@Coord!D87|sp1",
+       "@Coord!E87",
+       "@Coord!I87"
+      ],
+      [
+       "@Coord!A88",
+       "@Coord!B88|n1",
+       "@Coord!C88|n1",
+       "@Coord!D88|sp1",
+       "@Coord!E88",
+       "@Coord!I88"
+      ],
+      [
+       "@Coord!A89",
+       "",
+       "",
+       "",
+       "@Coord!E89",
+       "@Coord!I89"
+      ],
+      [
+       "@Coord!A90",
+       "@Coord!B90|n1",
+       "@Coord!C90|n1",
+       "@Coord!D90|sp1",
+       "@Coord!E90",
+       "@Coord!I90"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "讀取層級（同源，不判定）與推估錨點（參考）：個股讀入的層級值與層級值必然相同，不進實績對帳判定、不計對帳中",
      "head": [
       "項目",
       "本模型值",

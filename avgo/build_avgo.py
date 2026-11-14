@@ -1040,6 +1040,8 @@ if COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL):
     COORD.stamp(wb, "v0.5.4", "v0.5.5", "2026-11-14")
     import v056_post
     print(v056_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL))
+    import v057_post   # v0.5.7：C0（實績）對帳補列
+    print(v057_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL))
 wb.save(sys.argv[1])
 if os.environ.get("AVGO_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
