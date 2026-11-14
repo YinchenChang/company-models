@@ -10,6 +10,7 @@
 - 出處：公司 8-K Ex.99.1（SEC EDGAR）。網址見 Hist 頁來源欄；FY2027 Q1 見 Table 5。
 - 版本之間的 coord_meta：需在 `siliconomics/builder/seed/coord_meta_v0.19.json` 的 `hardware_companies` 加入 `cohr` 並重匯入 `baseline_status.json`（本 PR 不改該檔，列在 PR 說明）。
 - 驗證：`xlsx_diff`（只有版號字串與新增格）、`check_company_html`、`check_layout_v13 --xlsx`、`baseline_coordination/check.py` 全過；LibreOffice 重算後錯誤格 0、各核對列 0（延伸期 FY2030E–FY2032E 的「毛利 − 營業費用 − 營業利益」推法差額另列，占營收 0.9%／1.8%／2.7%，不影響目標價）。
+- 註：v0.4.4 表中加權目標價 234.74 為 11-06 建置值；v0.4.4 dist 其後經 Siliconomics 下游重建原地更新（11-09 233.02；11-14 v0.19 重建後 227.30，即 v0.4.5 不變性基準）。
 - 成品：`dist/20261114_Coherent個股模型_v0.4.5.xlsx`、`.html`；v0.4.4 移到 `dist/_待刪除/`。
 
 ## v0.4.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守

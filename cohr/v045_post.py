@@ -73,7 +73,7 @@ HIS = [
 def hist_sheet(wb):
     H = wb.create_sheet("Hist", index=wb.sheetnames.index("Q") + 1)
     H["A1"] = ("Hist — 損益表歷史（v0.4.5 起；PL 頁「標準損益表」的歷史三年與年增率基期用）。會計年度 FY(t)＝t−1 年 7 月～t 年 6 月。金額十億美元；EPS 美元；股數十億股。"
-               "non-GAAP 口徑：公司於 FY2025 起調整非 GAAP 定義（FY2024 毛利 1,696.1→1,615.7、營業利益 709.5→618.0、淨利 381.2→310.7、EPS 1.67→1.21 百萬美元，新聞稿比較欄已重編）；"
+               "non-GAAP 口徑：公司於 FY2025 起調整非 GAAP 定義（FY2024 毛利 1,696.1→1,615.7、營業利益 709.5→618.0、淨利 381.2→310.7、EPS 1.67→1.21 美元，新聞稿比較欄已重編）；"
                "FY2023 只有舊口徑，故 C、D 欄（舊口徑）只用來算 FY2024 的同口徑年增，E–G 欄（新口徑）進標準損益表。FY2025、FY2026 欄連到 In 頁 G 節與 Q 頁（已核實）")
     H["A1"].font = BOLD
     for j, h in enumerate(["鍵", "項目", "FY2023（舊口徑）", "FY2024（舊口徑）", "FY2024（新口徑）", "FY2025", "FY2026", "標記", "來源"], 1):
@@ -505,7 +505,7 @@ def coord_c0(wb, SIL):
     C.cell(r, 2, f"=B{b['q3']}+B{b['q4']}+B{b['q1']}").number_format = "#,##0.000"
     C.cell(r, 3, f"=B{b['L']}*B{b['mo']}/12").number_format = "#,##0.000"
     C.cell(r, 4, f"=B{r}/C{r}-1").number_format = pct
-    C.cell(r, 5, f'=IF(ABS(D{r})>0.15,"超過 ±15%","在 ±15% 內")')
+    C.cell(r, 5, f'=IF(ABS(D{r})>0.15,"超過 ±15%（參考）","在 ±15% 內（參考）")')
     C.cell(r, 6, "US$B；公司實績＝DCC 三季加總；層級＝CY2026 全年 × 9 ÷ 12")
     C.cell(r, 7, "公司：Coherent 8-K（Q3、Q4 見 FY2026 Q4 新聞稿；FY2027 Q1 見 Table 5）；層級：markets/network × 本模型校準份額（同源）＋通訊（Q 頁，Derived）")
     C.cell(r, 8, "Verified（公司）／Derived（層級隱含、線性時差）")
@@ -514,7 +514,7 @@ def coord_c0(wb, SIL):
     C.cell(r, 2, f"=B{b['q1']}*4").number_format = "#,##0.000"
     C.cell(r, 3, f"=B{b['L']}").number_format = "#,##0.000"
     C.cell(r, 4, f"=B{r}/C{r}-1").number_format = pct
-    C.cell(r, 5, f'=IF(ABS(D{r})>0.15,"超過 ±15%","在 ±15% 內")')
+    C.cell(r, 5, f'=IF(ABS(D{r})>0.15,"超過 ±15%（參考）","在 ±15% 內（參考）")')
     C.cell(r, 6, "US$B；FY2027 Q1（2026-07～09）單季 × 4（年化）；層級＝CY2026 全年")
     C.cell(r, 7, "公司：Coherent 8-K FY2027 Q1 新聞稿 Table 5；層級同上")
     C.cell(r, 8, "Verified（公司）／Derived（層級隱含、年化）")
