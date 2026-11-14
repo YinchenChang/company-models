@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 import relative_multiple as RM  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VER, VDATE = "v0.2.12", "2026-11-14"   # 每次升版改這裡（v0.2.12：Siliconomics v0.19 全下游重建、NVIDIA v0.3.8）
+VER, VDATE = "v0.2.13", "2026-11-14"   # 每次升版改這裡（v0.2.13：七家版面 v1.3＋三層協調合併；加另一側讀數欄；Comparable 欄標明未調整）
 BOLD = Font(bold=True)
 HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -69,6 +69,20 @@ def read_model(folder):
         if m:
             obs[int(m.group(1))] = a[m.end():]
     out["obs"] = obs
+    # v0.2.13：三層協調 Coord 頁（有對帳中年份的硬體股）——另一側讀數的加權目標價、上檔空間、投資建議
+    if "Coord" in wb.sheetnames:
+        alt = {}
+        for r in wb["Coord"].iter_rows(values_only=True):
+            a = str(r[0] or "")
+            if len(r) < 3:
+                continue
+            for k, pre in (("tp", "加權目標價"), ("up", "上檔空間（加權目標價"), ("rec", "投資建議（五級")):
+                if k not in alt and a.startswith(pre) and r[2] is not None and (k == "rec" or isinstance(r[2], (int, float))):
+                    alt[k] = r[2]
+            if "yrs" not in alt and a.startswith("對帳中年份") and r[1]:
+                alt["yrs"] = str(r[1])
+        if {"tp", "up", "rec"} <= set(alt):
+            out["alt"] = alt
     return out
 
 
@@ -117,12 +131,13 @@ def main():
     ws["A1"] = (f"AI半導體 目標價總表 {VER}（{VDATE}；DCF 50%＋Comparable 50%；數字取自 company-models main 各模型 dist 的 Val 頁，"
                 "重點觀察取自 README 頁；由 tools/target_summary/build_summary.py 產生）")
     ws["A1"].font = BOLD
-    H = ["次產業", "公司", "代號", "市場", "幣別", "現價", "DCF 目標價", "Comparable 目標價", "加權目標價", "市場共識目標價",
+    H = ["次產業", "公司", "代號", "市場", "幣別", "現價", "DCF 目標價", "Comparable 目標價（市場主流同業法；未調整）", "加權目標價", "市場共識目標價",
          "上檔空間：加權", "上檔空間：Comparable", "上檔空間：市場共識", "加權 ÷ 共識 − 1", "DCF ÷ 現價",
          "上檔空間級距（六級）", "投資建議（固定規則）", "模型 Val 頁投資建議", "級距與建議一致",
          "前版上檔空間：加權", "前版投資建議", "與前版相比",
          "本模型前瞻 EPS ÷ 共識前瞻 EPS − 1", "穩健度：共識 EPS 下加權目標價", "穩健度：共識 EPS 下上檔空間", "穩健度：共識 EPS 下投資建議", "穩健度：評等是否相同",
-         "重點觀察 1", "重點觀察 2", "重點觀察 3", "模型檔案"]
+         "重點觀察 1", "重點觀察 2", "重點觀察 3", "模型檔案",
+         "另一側讀數：加權目標價", "另一側讀數：上檔空間", "另一側讀數：投資建議", "兩讀數評等是否相同", "對帳中年份"]
     for j, h in enumerate(H, 1):
         c = ws.cell(2, j, h)
         c.font = BOLD
@@ -140,6 +155,8 @@ def main():
                 ("不變" if pv.get("rec") == rr else f"{pv.get('rec')} → {rr}") if pv else "前版無",
                 r.get("geps"), r["tp_c"], r["up_c"], rec(r["up_c"]), ("是" if rec(r["up_c"]) == rr else "否") if r["up_c"] is not None else "無資料",
                 r["obs"].get(1), r["obs"].get(2), r["obs"].get(3), r["file"]]
+        al = r.get("alt")
+        vals += ([al["tp"], al["up"], al["rec"], "是" if al["rec"] == rr else "否", al.get("yrs")] if al else [None, None, None, None, "無對帳中年份"])
         for j, v in enumerate(vals, 1):
             c = ws.cell(i, j, v)
             if j in (6, 7, 8, 9, 10, 24):
@@ -148,7 +165,11 @@ def main():
                 c.number_format = "0.0%"
             if j == 15:
                 c.number_format = "0.00"
-            if j in (26, 27) and v == "否":
+            if j == 32:
+                c.number_format = "#,##0.00"
+            if j == 33:
+                c.number_format = "0.0%"
+            if j in (26, 27, 35) and v == "否":
                 c.fill = KEY
     last = 2 + len(rows)
     ws.freeze_panes = "C3"
@@ -341,6 +362,8 @@ def main():
         "本模型的「12 個月後前瞻 EPS」比共識前瞻 EPS 晚約一年，成長股的差距有一部分是期間差，所以本欄偏保守。用途：看評等是否主要靠 EPS 假設撐起來。",
         "市場別分布（新增）：各市場評等分布與買進率；台股另依次產業拆分。",
         "相對倍數調整（2026-10-29 起已進目標價）：見該頁第 2 列。資料檔 tools/data/fwd_mult_hist.csv（Bloomberg 前瞻倍數年度窗口中位數；10-27 落後代理 rel_mult_hist.csv 保留對照）、規則 tools/relative_multiple.py。",
+        "Comparable 目標價欄（v0.2.13 改名）：市場主流同業法的未調整值；進加權目標價的是相對倍數調整後的值（見「相對倍數調整」頁），故加權目標價不等於本欄與 DCF 的簡單平均。",
+        "另一側讀數（v0.2.13 新增，AF–AJ 欄）：三層基準協調規則 C4——估值依賴 Siliconomics「對帳中」年份的硬體股，並列只換產業部署 GW（Wattonomics 換算值）的另一側讀數目標價；取自各模型 Coord 頁，主欄（加權目標價、投資建議）仍為現行基準讀數。無 Coord 頁者在對帳中年份欄（AJ）標「無對帳中年份」。",
         "投資建議固定規則（Andy 2026-10-25 14:17）：> +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、< −50% 強力放空。",
     ], 1):
         ex.cell(k, 1, t)
