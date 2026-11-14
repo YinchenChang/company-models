@@ -1,5 +1,5 @@
 # 三層協調 C4：另一側讀數整本重建 → <資料夾>/coord_alt.json（tools/coord/coord.py 說明流程）。
-# 用法：python3 tools/coord/alt_run.py <資料夾> [暫存資料夾，預設 /tmp/work_coord/<資料夾>]
+# 用法：python3 tools/coord/alt_run.py <資料夾> [暫存資料夾，預設 /tmp/work_coord/<資料夾>]；並行時設 LO_PROFILE＝file:///tmp/lo_<名>（LibreOffice 私有設定檔）
 # 建檔指令取自 .github/workflows/ai-semis-build.yml 的 targets（與 CI 相同）。建置兩次：現行（COORD_RUN＝1）與另一側（另加 SIL_COORD_ALT＝1），
 # LibreOffice 重算後讀 Val 頁加權目標價、DCF、Comparable（市場主流同業法）、上檔空間；錯誤格須為 0。
 import glob, json, os, re, shutil, subprocess, sys
@@ -20,7 +20,7 @@ env0 = {k: v for k, v in os.environ.items() if k not in ("SIL_COORD_ALT",)}
 env0["COORD_RUN"] = "1"; env0["PYTHONDONTWRITEBYTECODE"] = "1"
 for nm, extra in (("base", {}), ("alt", {"SIL_COORD_ALT": "1"})):
     subprocess.run(cmd + [os.path.join(TMP, "raw", f"{nm}.xlsx")], check=True, cwd=ROOT, env={**env0, **extra}, stdout=subprocess.DEVNULL)
-subprocess.run(["soffice", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", os.path.join(TMP, "rc")]
+subprocess.run(["soffice"] + ([f"-env:UserInstallation={os.environ['LO_PROFILE']}"] if os.environ.get("LO_PROFILE") else []) + ["--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", os.path.join(TMP, "rc")]
                + sorted(glob.glob(os.path.join(TMP, "raw", "*.xlsx"))), check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 ERR = ("#REF!", "#DIV/0!", "#VALUE!", "#NAME?", "#N/A", "#NUM!", "#NULL!", "Err:502")
 
