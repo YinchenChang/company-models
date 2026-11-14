@@ -4,7 +4,7 @@
 
 > **只給基準（v0.2 起）**：三層只給基準（Andy 2026-11-02 15:58）。基準＝上線時點「公司公告時程＋已確認延遲」；v0.2 起需求 B、C 與延遲 D1、D2 已全部刪除。新名稱 `WIF_MktGW_<YE|Avg|Add>_<yyyy>`（無情境字樣）；舊名 `*_A_D0_*` 同值保留（A_D0 為舊名，v0.3 刪）。
 >
-> **v0.3.1 起三層基準協調看證據比例 `WIF_Evidence_<yyyy>`**（規則 v1.1 全市場分母；見「三層基準協調（v0.3.1）」）；舊 `WIF_Coverage_<yyyy>` 保留不改義。
+> **v0.3.1 起三層基準協調看證據比例 `WIF_Evidence_<yyyy>`**（規則 v1.1 全市場分母；見「三層基準協調（v0.3.1）」）；舊 `WIF_Coverage_<yyyy>` 保留不改義。**v0.3.2 起七家以外買方（新雲、主權）由 W-1 路徑入主路徑**（見「七家以外買方路徑（v0.3.2）」）。
 >
 > **下游取用 2027 年後數值前看覆蓋率**（`WIF_Coverage_<yyyy>`＝有證據支撐的新增 GW ÷ 主路徑新增 GW；< 0.5 時 Checks WARN）。2026 起主路徑七家（MSFT、GOOGL、AMZN、META、ORCL、CRWV、NBIS）由資本支出推得（甲2，讀 In Y9 個股模型基準，付款年轉上線年），xAI 由 SpaceX 個股模型 AI 資本支出推得，「其他（企業、學研）」隨市場成長；純站點證據版另出 `_SiteOnly`。
 
@@ -116,6 +116,15 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 - **調整後比值**（H4）：（年新增＋④＋W2）÷ `SIF_DeployGW_Base`，④ 兩讀法並列。**NVIDIA 對帳點（W-3）**：(5) 為每 IT GW NVIDIA 營收（R7 營收口徑，VR200 低 19.67／基準 26.13）；2027 對 NVIDIA 指引只作參照列、不作校準目標；2026 實績校準保留。**W-4**（H5）：五家資本支出與 Siliconomics 逐買方份額、自研顆數、S33 係數並排。
 - **Z1 財報季證據**：`evidence_raw/Z1_earnings_20261114.md`（核對 `Z1_earnings_20261114_verify.md`：屬實 51、小誤 1、部分子項無法核對 6、錯誤 0）。入基準只有 IREN Childress Horizon 2–4（150 MW IT）延至 2027-01（T2 cp_neo_iren M＝1，公司自揭；`mw_neo` 2026 同步扣 150，已確認延遲只移動時點、不增加總量）；Nebius 新澤西、共置站點與 Microsoft 第三方容量量未揭露，只在 Delay 頁追蹤。CoreWeave（現金 23.558）、Nebius（現金 15.431）Q1–Q3 實績入證據比例（`z1_act_on`＝1）；未核對子項不入分子。
 
+### 七家以外買方路徑（v0.3.2）（工作單 20261114 W-1；X1–X8；證據 `evidence_raw/20261114_W1/`）
+
+- **取代 neo、sov 站點路徑**：新雲（其他新雲＝IREN、TeraWulf、Cipher、Hut 8、Nscale、Crusoe 等；**不含 CoreWeave、Nebius**，兩家仍在甲2 資本支出路徑，Compare I 節只作容量交叉檢核）與主權（中國以外）的 2026–2029 主路徑由 In T2 納入列推得；`mw_neo` 2026 輸入清空（原 1,150）。OEM（Dell、HPE、Supermicro、Lenovo）AI 伺服器營收與在手訂單只作交叉檢核列（Compare I 節線 3，不入基準）。
+- **入基準的只有實績與已簽約（等級 1、2）及已確認站點（等級 3，只撐到上線年）**；計畫、目標、MOU、指引、媒體標題只入 Sens（Compare I 節 Sens(a)）。主權：只有已簽約站點入基準（E12）。2028–29 只有實績與已簽約撐住的部分入基準，其餘 [Assumed]＋區間；外部預測只入 Sens。
+- **與七家去重（X2）**：先扣已公開的對七家合約（T2 納入＝0，改回 1 即還原；Compare I 節 Sens(b) 列還原量）；其餘未揭露客戶部分基準取 50%（`w1_und`，區間 0–100%，Compare I 節 Sens(c)）。Assumed 部分入主路徑但不算證據，自證據比例分子 1 扣除（Compare H2 `evw1u`）。**Anthropic 經 Fluidstack 租用（TeraWulf、Cipher、Hut 8；Google 擔保只是信用支持）算 Anthropic（七家以外）**；出租方與承租方同一批 MW 只算一次（以最終使用者計）。
+- **口徑**：MW 未標口徑者基準取 IT 讀法；Crusoe 原文明寫 gross，× 0.66（Galaxy 526 MW IT ÷ 800 MW 毛電力，Analogy）換 IT；Abilene 為 OpenAI 站點全額扣除。
+- **④ 的 (b3) 主權、(b4) 其他新雲與 Anthropic 夥伴改 0**（已入主路徑，原值保留在 In 說明欄）；W2 維持；「NVIDIA 稱約占一半」查無直接引語，只作參照列。`coord_cov_done`＝1（覆蓋視為補齊）。
+- **新名稱**（Interface K 節）：`WIF_W1_NeoAdd_<yyyy>`、`WIF_W1_SovAdd_<yyyy>`、`WIF_W1_Lo_<yyyy>`、`WIF_W1_Hi_<yyyy>`（2026–2029）。Checks `E-W1`（T2 MW 與 S13 參數一致）、`E-W2`（基準內無七家使用者列）。Decisions GL01-93 至 GL01-100。
+
 ### 承租玩家只算 IT（Andy 2026-11-04；工作單 20261104 V1、V1b）
 
 - 原話（11-04 08:06）：「要，這才是Oracle真正付出的資本開支，其他的改租賃->營業現金流降低這條線」；（11-04 08:21）融資租賃「處理上應該就要走資本開支那條線」。
@@ -160,6 +169,8 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 ## 版本紀錄（摘要；完整見活頁簿 README 頁）
 
 - 2026-11-05（不改版）：`tools/import_gap_models.py` 的 Anthropic `MODEL_OVERRIDE` 改指 `anthropic/dist/20261104_Anthropic收支模型_v0_1_9.xlsx`（#327 已移除 v0_1_8）；重跑 `--only ant` 與 `builder/seed/gap_models_v0.2.1.json` 逐項相同（Funding F07／F03 2026–2030 與 v0.1.8 逐位相同，只有 file／commit 欄不同），種子與成品不重建。
+
+- v0.3.2（2026-11-14）：W-1 七家以外買方路徑——新雲與主權主路徑改由 T2 納入列推得（先扣對七家合約、未揭露客戶 × 50%、Anthropic 經 Fluidstack 算七家以外、Crusoe gross × 0.66）；OEM 交叉檢核；④ 的 (b3)(b4) 改 0；證據比例分子扣 Assumed 部分；`coord_cov_done`＝1。報告 `docs/verify/20261114_v0.3.2_build.md`。
 
 - v0.3.1（2026-11-14）：三層基準協調規則 v1.1 落地——④ 兩讀法（Z2）、SIL v0.18 與逐年協調狀態、調整後比值、W-3、W-4（Z3）、`WIF_Evidence_2026–2030`（Z4）、Z5 個股模型 2028–29 推法查核、Z1 證據已核對（IREN H2–4 延遲入基準：2026 年底 −0.156、2027 年新增 +0.156，2027 起年底與 v0.3 相同）。報告 `docs/verify/20261114_v0.3.1_build.md`。
 

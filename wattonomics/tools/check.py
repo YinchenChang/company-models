@@ -157,6 +157,11 @@ def main():
     if f"（{SIL_REQ}，" not in a1: bad.append(f"SIL 快照版本不是 {SIL_REQ}：{a1[:80]}")
     else: print(f"  SIL_In：Siliconomics 快照 {SIL_REQ}")
     if "E-K1" not in [x_[0] for x_ in rows]: bad.append("Checks 缺 E-K1（v0.3.1）")
+    for cid in ("E-W1", "E-W2"):
+        if cid not in [x_[0] for x_ in rows]: bad.append(f"Checks 缺 {cid}（v0.3.2）")
+    w1b = [f"WIF_W1_{k_}_{y}" for k_ in ("NeoAdd", "SovAdd", "Lo", "Hi") for y in range(2026, 2030) if not isinstance(val(f"WIF_W1_{k_}_{y}"), (int, float)) or val(f"WIF_W1_{k_}_{y}") < -1e-9]
+    if w1b: bad.append(f"WIF_W1_* 缺值或為負：{w1b[:4]}")
+    else: print("  WIF_W1_*（七家以外三線 2026–2029）：齊全、非負")
     for cid in ("C-K1", "R-K1", "R-K2", "X4-K1", "X4-K2"):
         if cid not in [x_[0] for x_ in rows]: bad.append(f"Checks 缺 {cid}（v0.2）")
     if same:
@@ -190,7 +195,9 @@ def main():
                # v0.3
                "SIF_nvsh_", "SIF_NVContentGW_", "SIF_CapOnlineGW_Base",
                # v0.3.1（工作單 20261114 Z7）
-               "### 三層基準協調（v0.3.1）", "WIF_Evidence_<yyyy>", "實績下限讀法", "對帳中"):
+               "### 三層基準協調（v0.3.1）", "WIF_Evidence_<yyyy>", "實績下限讀法", "對帳中",
+               # v0.3.2（工作單 20261114 W-1）
+               "### 七家以外買方路徑（v0.3.2）", "WIF_W1_NeoAdd_<yyyy>", "Anthropic 經 Fluidstack 租用"):
         if kw not in txt: bad.append(f"wattonomics/README.md 缺固定規格：{kw}")
     print(f"{os.path.basename(x)}：頁面 {len(wb.sheetnames)}、具名範圍 {len(names)}（WIF_ {len(gif)}）、Checks {len(rows)} 項（OK {nok}／WARN {len(cw)}／ERROR {len(ce)}／INFO {ninfo}）、"
           f"In 輸入列 {nrow}（待證據 {pend}）、錯誤格 {nerr}")
