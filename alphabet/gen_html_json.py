@@ -301,11 +301,15 @@ def _v13():
     t1 = {"type": "table", "caption": f"@Coord!A{f1h}", "collapse": True, "summary": "展開：本模型讀取的 Tokenomics 名稱與 Wattonomics 對照名稱、值與版本",
           "head": ["名稱", "年度", "層級值", "本模型採用值", "單位", "層級與版本"],
           "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}|n3", f"@Coord!D{r}|n3", f"@Coord!E{r}", f"@Coord!F{r}"] for r in range(F1a + 1, F1e + 1)]}
+    d0, d1 = CRD["rdump"]
+    dump_t = {"type": "table", "caption": "展開：追公式傾印（腳本輸出：每格公式與值）", "collapse": True, "summary": "展開：追公式傾印（每格公式與值；腳本 trace_wattonomics.py 的輸出）",
+              "head": ["儲存格（縮排＝依賴深度）", "值", "標記", "公式"],
+              "rows": [[f"@Coord!A{r}", f"@Coord!D{r}|n3", f"@Coord!G{r}", f"@Coord!H{r}"] for r in range(d0, d1 + 1)]}
     S["recon"]["blocks"].extend([
         {"type": "h3", "text": "三層協調：讀取層級與實績對帳"},
         {"type": "note", "parts": [f"@Coord!D{CRD['rs']}"]}, capx, nocmp, d3,
         {"type": "note", "parts": [f"@Coord!B{CRD['rr']}"]}, {"type": "note", "parts": [f"@Coord!B{CRD['rsame']}"]}, {"type": "note", "parts": [f"@Coord!B{CRD['rk']}"]},
-        {"type": "h3", "text": "追公式：層級值是否讀公司實績或目標"}, trc, {"type": "note", "parts": [f"@Coord!A{r_tr}"]}, t1])
+        {"type": "h3", "text": "追公式：層級值是否讀公司實績或目標"}, trc, {"type": "note", "parts": [f"@Coord!A{r_tr}"]}, dump_t, t1])
     # ---- 8. 資料狀態：本版要點 ----
     S["status"]["blocks"][0:0] = [{"type": "h3", "text": "本版要點"}, {"type": "note", "parts": [f"@README!A{RM_['ver']}"]}]
     order = ["thesis", "valuation", "sens", "revdcf", "pl", "drivers", "recon", "status"]

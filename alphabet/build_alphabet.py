@@ -1508,7 +1508,7 @@ SRCS = [
     ("MAG 命題與驅動對照表 r1（C1–C23）", "2026-10-08", "mag/docs/plan/20261008_MAG_命題與驅動對照表_r1.md", "—", "已決定的口徑"),
     ("Gartner 新聞稿：2026 年搜尋引擎查詢量因 AI 聊天機器人減少 25%（預測）", "2024-02-19", "https://www.gartner.com/en/newsroom（本次未重新查核）", "Interested-party", "情境 C 分流幅度的參考（第三方預測）"),
     ("Apple Eddy Cue 美國司法部 Google 案證詞（媒體轉述）", "2025-05-07", "（媒體轉述；本次未重新查核）", "Interested-party", "情境 C：Safari 搜尋 2025-04 首次下滑"),
-    ("Wattonomics v0.3.2 快照 alphabet/data/wattonomics_c0_v0.3.2.json（20261114_Wattonomics_v0.3.2.xlsx）", "2026-11-14", "repo 內（YinchenChang/Tokenomics；wattonomics/data/wattonomics_snapshot_v0.3.2.json）", "Derived", "Coord 頁 C0（實績）層級隱含值：玩家資本支出、上線 GW（不進模型）"),
+    ("Wattonomics v0.3.2 快照 alphabet/data/wattonomics_c0_v0.3.2.json（20261114_Wattonomics_v0.3.2.xlsx）", "2026-11-14", "repo 內（YinchenChang/company-models；wattonomics/data/wattonomics_snapshot_v0.3.2.json）", "Derived", "Coord 頁 C0（實績）層級隱含值：玩家資本支出、上線 GW（不進模型）"),
 ]
 for i, (doc, dt, url, tag, use) in enumerate(SRCS, 1):
     for j, v in enumerate((f"S{i:02d}", doc, dt, url, tag, use), 1): SO.cell(3 + i, j, v)
