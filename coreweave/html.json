@@ -23,7 +23,7 @@
     ]
    ],
    [
-    "@Val!A65",
+    "@README!A64",
     "@Val!C65|n2",
     ""
    ]
@@ -221,30 +221,76 @@
    "intro": "@Val!A1",
    "blocks": [
     {
-     "type": "bars",
-     "title": "目標價與現價",
-     "fmt": "n1",
-     "items": [
+     "type": "table",
+     "caption": [
+      "四個目標價（現價 ",
+      "@Val!C65|n2",
+      "，",
+      "@In!E6",
+      " 收盤）"
+     ],
+     "head": [
+      "@Val!A98",
+      "@Val!C98",
+      "@Val!G98",
+      "@Val!F98"
+     ],
+     "rows": [
+      [
+       "@Val!A99",
+       "@Val!C99|n2",
+       "@Val!G99|sp1",
+       "@Val!F99"
+      ],
+      [
+       "@Val!A100",
+       "@Val!C100|n2",
+       "@Val!G100|sp1",
+       "@Val!F100"
+      ],
+      [
+       "@Val!A101",
+       "@Val!C101|n2",
+       "@Val!G101|sp1",
+       "@Val!F101"
+      ],
+      [
+       "@Val!A102",
+       "@Val!C102|n2",
+       "@Val!G102|sp1",
+       "@Val!F102"
+      ],
+      [
+       "@Val!A103",
+       "@Val!C103|n2",
+       "@Val!G103|sp1",
+       "@Val!F103"
+      ]
+     ]
+    },
+    {
+     "type": "theme",
+     "title": "四個目標價與現價（美元）",
+     "x": "@Val!E99:E102",
+     "fmt": "n0",
+     "stack": false,
+     "pad": 1.1,
+     "bars": [
       {
-       "label": "@Val!A62",
-       "value": "@Val!C62",
-       "series": 1
-      },
-      {
-       "label": "@Val!A64",
-       "value": "@Val!C64",
-       "series": 2
-      },
-      {
-       "label": "@Val!A84",
-       "value": "@Val!C84",
-       "series": 0
+       "name": "目標價",
+       "y": "@Val!C99:C102",
+       "color": "#0b7a80"
       }
      ],
-     "ref": {
-      "label": "@Val!A65",
-      "value": "@Val!C65"
-     }
+     "lines": [
+      {
+       "name": "@README!A64",
+       "y": "@Val!D99:D102",
+       "color": "#b4472f",
+       "dash": true
+      }
+     ],
+     "caption": "長條＝四個目標價（DCF、Comparable 情境加權、兩者加權、市場共識）；紅虛線＝現價。DCF 長條為零時代表三情境 DCF 失效、每股取零，見上表說明。市場共識為賣方平均，只作對照、不進目標價。"
     },
     {
      "type": "table",
@@ -287,8 +333,8 @@
        "@Val!C80"
       ],
       [
-       "@Val!A84",
-       "@Val!C84|n2"
+       "@Val!A102",
+       "@Val!C102|n2"
       ]
      ]
     },
@@ -330,6 +376,10 @@
       "數值"
      ],
      "rows": [
+      [
+       "@Val!A84",
+       "@Val!C84|n2"
+      ],
       [
        "@Val!A89",
        "@Val!C89|x1"
@@ -3457,7 +3507,7 @@
   {
    "id": "funding",
    "title": "資金缺口與融資（收支模組）",
-   "intro": "@README!A64",
+   "intro": "@README!A65",
    "blocks": [
     {
      "type": "theme",
@@ -4262,7 +4312,7 @@
      "collapse": true,
      "summary": "展開：版本要點",
      "items": [
-      "@README!A66",
+      "@README!A67",
       "@README!A48",
       "@README!A49",
       "@README!A50"

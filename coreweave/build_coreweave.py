@@ -1281,9 +1281,28 @@ for rr in range(SENS_R[0], SENS_R[1] + 1):
         for x_, y_ in PLAIN: a_ = a_.replace(x_, y_)
         SE.cell(rr, 15, a_)
 SE.column_dimensions["O"].width = 50
+# ---- Val：估值章四個目標價（版面規格 v1.3 G 節，Andy 2026-11-14 09:03；附加在 Val 頁最後，不移動既有列）
+r = V.max_row + 2
+V.cell(r, 1, "估值章四個目標價（v5.0.2 新增；HTML 估值章表與圖；E 欄＝圖上簡稱）").font = BOLD; CON["t4_title"] = r; r += 1
+hdr(V, r, ["項目", "單位", "目標價", "現價", "簡稱", "說明", "相對現價"]); CON["t4_hdr"] = r; r += 1
+def t4(k, lab, val, short, note, inp=False):
+    global r
+    CON[k] = r; V.cell(r, 1, lab); V.cell(r, 2, "US$")
+    c_ = V.cell(r, 3, val); c_.number_format = "#,##0.00"
+    if inp: c_.font = BLUE
+    V.cell(r, 4, "=px").number_format = "#,##0.00"; V.cell(r, 5, short); V.cell(r, 6, note)
+    V.cell(r, 7, f"=C{r}/D{r}-1").number_format = "+0.0%;-0.0%"
+    r += 1
+t4("t4_dcf", "DCF 目標價（單純 DCF，情境加權）", f"=C{CON['dcf']}", "DCF", f'=IF(C{CON["dcf"]}=0,"三情境 DCF 皆失效（企業價值 ≤ 0），每股取 0（有限責任）","DCF 有效性："&C{CON["dvalid"]})')
+t4("t4_comp", "Comparable 目標價（情境加權）", f"=C{CON['comp']}", "Comparable", "新雲同業前瞻 EV/EBITDA 中位數 × FY2028 調整後 EBITDA，情境 25／50／25 加權")
+t4("t4_tp", "加權目標價（DCF 與 Comparable 加權；橫幅主值）", f"=C{CON['tp']}", "加權", f'="DCF "&TEXT(w_dcf,"0%")&"＋Comparable "&TEXT(1-w_dcf,"0%")&"；投資建議依此判定（再套收支關卡）"')
+t4("t4_cons", "市場共識目標價（TIKR 平均目標價，2026-11-11，Q3 財報後）", 132, "市場共識",
+   "TIKR 文章「Stifel Just Cut Its CoreWeave Target From $120 to $60, Even After a Raised Outlook」（2026-11-11）：The Street's average target … to $132；TIKR 追蹤 42 位分析師（文中未明示平均值的家數）；賣方共識（Interested-party），只作對照，不進目標價；出處見 Sources 頁（TIKR 共識列）", True)
+t4("t4_comp0", "Comparable 目標價（未調整，情境加權）", f"=C{CON['comp0']}", "Comparable（未調整）", f'=IF(ABS(C{CON["comp0"]}-C{CON["comp"]})<1E-9,"相對倍數係數＝1，與調整後相同","相對倍數調整前")')
 # ---- Sources：SEC XBRL
 r = SO.max_row + 1
 SO.cell(r, 1, HIST["source_key"]); SO.cell(r, 2, HIST["source"] + "；URL：https://data.sec.gov/api/xbrl/companyfacts/CIK0001769628.json；資料檔 coreweave/data/coreweave_is_hist_20261114.json")
+SO.cell(r + 1, 1, "TIKR_CONS"); SO.cell(r + 1, 2, "TIKR 部落格〈Stifel Just Cut Its CoreWeave Target From $120 to $60, Even After a Raised Outlook〉（2026-11-11 發布與更新；https://www.tikr.com/blog/stifel-just-cut-its-coreweave-target-from-120-to-60-even-after-a-raised-outlook）：分析師平均目標價 US$132（一年前 US$144）；TIKR 追蹤 42 位分析師；擷取 2026-11-14。對照：MarketScreener 共識頁快取為 2026-10-09（平均 141.47、42 家）、Investing.com 快取為 2026-10-23（135.82），皆早於 Q3 財報，未採用")
 
 # =====================================================================================
 # README（最後建，最前排；文字中的數字一律公式組字）
@@ -1372,6 +1391,7 @@ L13 = [
     ("plb13", '="FY2026 欄的淨利含前三季實際所得稅 "&TEXT(PL!K' + str(PLS["tax"]) + ',"0.000")&" 與其他收入 "&TEXT(PL!K' + str(PLS["oth"]) + ',"0.000")&"；本表的稅前利益與所得稅列只含模型項，所以 FY2026 稅前 − 所得稅 ≠ 淨利。完整對照見本章標準損益表。"'),
     ("drv13", "驅動主線：在役 MW（情境路徑）× 計費比例＝計費 MW；計費 MW × 每 MW 年收入（Tokenomics 每 MW 持有成本 × 定價倍數）＝營收；營運費用與機房租金依在役 MW 計，資本支出＝新增 MW × 每 MW 設備成本，折舊依會計年限攤提。下方先看分部營收推導，再看每 MW 年收入與 backlog 兩張圖，參數明細收在摺疊。"),
     ("seg13", '="分部營收推導：CoreWeave 只有一個報導分部（AI 雲端平台），本模型依合約型態拆成長約與隨需。長約每 MW 年收入＝持有成本 × "&TEXT(k_long,"0.000")&"（IREN–Microsoft 長約類比），隨需＝持有成本 × "&TEXT(k_spot,"0.000")&"（H100 現貨指數），隨需占計費產能 "&TEXT(od_share,"0%")&"（假設，公司未揭露）；兩者各乘上計費 MW 後加總＝分部營收＝合併營收。FY2026 只拆第四季，前三季為未拆分實績。"'),
+    ("px13", '="現價（"&TEXT(px_date,"yyyy-mm-dd")&" 收盤）"'),
     ("fund13", '="收支模組：基準情境 FY2026–FY2030 自由現金流合計 "&TEXT(Fund!D' + str(FS["gate"]) + ',"0.0")&" 十億美元；缺口依序以現金、投資級債（借款不超過 EBITDA 的 "&TEXT(lev_max,"0.0")&" 倍）、新股（每年不超過市值 "&TEXT(eq_cap,"0%")&"）、高息債補足。"'),
 ]
 for k, t in L13:
