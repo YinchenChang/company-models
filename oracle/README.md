@@ -1,4 +1,12 @@
-# Oracle（ORCL）個股模型 v0.5.1（命題＋營收分部架構＋收支模組）
+# Oracle（ORCL）個股模型 v0.5.2（命題＋營收分部架構＋收支模組）
+
+**v0.5.2（2026-11-15，HTML 版面 v1.3 補缺項＋Coord 三層協調；既有數值不變）：** 工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`、`20261114_C0實績對帳補列_七家.md`；規則 `docs/plan/三層基準協調規則.md` v1.4.2 C0 第 2 點；樣板 Alphabet v0.3.9（`alphabet/v039_post.py`）。`oracle/v052_post.py` 在存檔前新增（只新增，不改既有格；與 v0.5.1 逐格比對只有 README 第 1 列版號與日期不同，加權目標價 70.38、放空不變）：
+- **IS 頁（新）**：標準損益表（GAAP；FY2024A–FY2026A 為 10-K FY2026 實績，輸入列在頁尾、標 Verified；FY2027E–FY2032E 為情境 B）、淨利年增率、核對列（毛利 − 費用 − 營業利益、稅前、稅後、營收、EPS 皆 0）、營收分部（圖表用）。預測期營業成本＝（營收 − OCI AI 營收）× 非 AI 營業成本率（FY2024 營業成本扣非 AI 折舊占營收，約 22.7%，假設列）＋AI 營運費用＋AI 機房租金＋折舊（D&A 扣攤銷）；營業費用＝毛利 − 營業利益（殘差）。營業利益、稅前、稅後與 EPS 取自 PL 頁，不因此改變。
+- **Sens 頁末**：加權目標價相對基準（白話標籤，龍捲風圖用）；README 頁末 v1.3 展示層（橫幅、重點觀察 5 點、營收推導、版本沿革）。
+- **Coord 頁（新）**：F1 讀取層級（Tokenomics v21.10 十四個名稱，採用值與層級值核對；Wattonomics v0.3.2 不進模型，只列對照名稱與輸入列，並核對 Wattonomics 讀入的本模型資本支出寫回值未過期）；F1b 追公式（`tools/coord/trace_wattonomics.py --player orcl`，輸出存 `data/wattonomics_trace_v0.3.2.json`，頁內只貼生效格與旗標格）；F2 C0（實績）。
+- **C0 口徑與結果**：會計年度 5 月底，2026 日曆年已公布期間＝FY26 Q3（2025-12～2026-02，扣除 2025-12 一個月：Q3 × 1/3，線性分攤，占比 25%–40% 時 8 個月累計 56.2–59.0）、FY26 Q4、FY27 Q1。資本支出用現金流量表「Capital expenditures」（FY26 Q3 18.635、Q4 16.493、FY27 Q1 28.499；FY27 Q1 為本輪查證 10-Q 原值）；融資租賃判斷：個股側用現金資本支出（與 Wattonomics `act26_orcl` 同口徑），融資租賃新增使用權資產（FY27 Q1 1.539，約 5%，非現金）不加回，加回只使第二讀數差距再擴大約 10 個百分點，不改結論；營業租賃由房東出資，兩邊皆不計。主讀數＝1–8 月累計 57.4 對層級 CY2026（Interface 頁 AI＋非 AI 62.70）× 8/12＝41.8，差距 +37%；第二讀數＝FY27 Q1 × 4＝114.0 對 62.70，差距 +82%。但追公式顯示層級的 CY2026 資本支出與新增 GW 由公司 FY26 資本支出實績（In!K193）、FY27 指引中點（In!L193，本模型寫回）以日曆年權重 5/12、7/12 合成（CapexGW!G142＝77.15），2025 年底 GW 才來自 Epoch（不同源）；故判定「參考（同源校準）」、結論「無可比實績（層級值同源）」，對帳中 0、時差邊界 0。OCI AI 營收（層級隱含 18.9）與在役 MW（公司換算 2,543 vs 層級內插 2,244，+13%）只列參考；公司不揭露 AI 營收與在役總量，列「無可比實績」。證據回饋（層級輸出 62.70 比其輸入側流量 77.15 低 19%；公司實績速率高於層級輸出）走對帳單，不改上游。
+- HTML：章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→收支模組→對帳→資料狀態（`layout: v1.3`）；不做兩讀數目標價。v0.5.1 成品移 `dist/_待刪除/`。
+- 驗證：`make_v05.sh`（公式錯誤 0、收支模組核對 51 項 0 失敗、In 版面、敏感度覆蓋、segment_check、`check_company_html.py`）；`tools/company_html/check_layout_v13.py <html> --xlsx <xlsx>`；`tools/xlsx_diff.py`；`tools/baseline_coordination/check.py`。
 
 **v0.5.1（2026-11-10，HTML 版面 v1.0）：** Andy 2026-11-10 15:12「請套用」。依 `docs/plan/個股HTML版面規格.md`：投資建議橫幅置頂（加權目標價與 Comparable 目標價並列）、命題分點、命題回覆摺疊在命題正下方、白話重點觀察、參數依業務分四塊（有區間的直接顯示、固定輸入摺疊；In 頁 A–J 節每個鍵剛好歸入一組，建置時檢查）、估值與對帳只列主要項目、DCF 折現率直接顯示、龍捲風圖只顯示變動 ≥10% 的案例、附錄摺疊。收支模組一節維持在命題之後，細表改為摺疊。xlsx 只在 README 末尾新增「展示層」與「命題回覆」兩段（公式帶數字），其餘 16 頁與 v0.5.0 逐格相同；加權目標價 70.38、放空不變。v0.5.0 成品移 `dist/_待刪除/`。
 
@@ -43,8 +51,8 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_oracle.py` | 獨立 Python → Excel 產生器（openpyxl，全部活公式；藍字輸入、黑字公式） |
-| `dist/20261110_Oracle個股模型_v0.5.1.xlsx` | LibreOffice headless 重算後的成品（公式錯誤 0） |
-| `dist/20261110_Oracle個股模型_v0.5.1.html`、`html.json` | `tools/company_html/build_company_html.py oracle` 產生；`check_company_html.py` 通過 |
+| `dist/20261115_Oracle個股模型_v0.5.2.xlsx` | LibreOffice headless 重算後的成品（公式錯誤 0） |
+| `dist/20261115_Oracle個股模型_v0.5.2.html`、`html.json` | `tools/company_html/build_company_html.py oracle` 產生；`check_company_html.py` 通過 |
 | `segments.json` | 官方分部宣告；`tools/segment_check/check_segments.py oracle` 通過 |
 | `scripts/sens_v04.py` | 敏感度：一次動一個輸入，完整重算（寫 `data/sens_v04.json`，再建置時寫入 Sens 頁；v0.4.2 起涵蓋 In 頁全部有區間的鍵） |
 | `scripts/decomp_v044.py` | v0.4.4 增資拆解：逐步完整重算（瀑布可凍結，環境變數 `ORCL_WF_FREEZE`，成品不設）→ `data/decomp_v044.json` |
@@ -52,7 +60,9 @@
 | `scripts/make_html_json.py` | 由建置列號對照產生 `html.json` |
 | `data/` | 事實總帳（v0.1a SEC 一手、v0.3.1 增補、v0.4.4 增資與投資人日 `oracle_facts_20261104.json`）、共識、Tokenomics v21.10 快照（v19.0 保留；v21.4、v21.9 在 `data/_待刪除/`） |
 | `legacy_v0.3/` | v0.3.1 舊引擎（CRWV 樣板：HTML＋Excel 雙引擎、company.json、驗證腳本），保留不刪 |
-| `dist/_待刪除/` | v0.4.3、v0.4.2、v0.4.1、v0.4、v0.3.1 舊成品 |
+| `v052_post.py` | v0.5.2：IS 頁、Sens 白話標籤、README 展示層、Coord 頁（`build_oracle.py` 存檔前呼叫） |
+| `scripts/extract_wattonomics_c0.py` | 由 Wattonomics 快照摘錄 Oracle C0 用的名稱與 In 列 → `data/wattonomics_c0_v0.3.2.json`；追公式輸出 `data/wattonomics_trace_v0.3.2.json` |
+| `dist/_待刪除/` | v0.5.1、v0.5.0、v0.4.x、v0.3.1 舊成品 |
 
 ## 建置
 
@@ -63,7 +73,7 @@ SENS=1 JOBS=6 bash oracle/make_v05.sh   # 有改公式或輸入時，先重跑�
 
 ## 工作表與驅動 → 推導對照
 
-順序：README → In → Q → Thesis → Seg → PL → CF → Fund → RPO → Sites → Debt → Lease → Val → RevDCF → Recon → Sens → Sources（v0.5.0 新增 Fund、RPO、Sites、Debt、Lease、RevDCF）。
+順序：README → In → Q → Thesis → Seg → PL → IS → CF → Fund → RPO → Sites → Debt → Lease → Val → RevDCF → Recon → Coord → Sens → Sources（v0.5.0 新增 Fund、RPO、Sites、Debt、Lease、RevDCF；v0.5.2 新增 IS、Coord）。
 
 | 頁 | 輸入 | 推導量 | 因果方向 |
 |---|---|---|---|
