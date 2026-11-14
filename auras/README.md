@@ -1,4 +1,17 @@
-# auras/ — 雙鴻（3324）收支與估值模型 v0.2.4
+# auras/ — 雙鴻（3324）收支與估值模型 v0.2.5
+## v0.2.5（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（兩讀數目標價、讀取層級、C0 公司實績對帳）
+
+- **依據：** 工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`（推廣輪：電源散熱）、`docs/workorders/20261114_C0實績對帳補列_七家.md`；規則 `docs/plan/三層基準協調規則.md` v1.4.2 C0 第 2 點；`tools/coord/README.md`。樣板：台達電 v0.5.7、奇鋐 v0.3.5（同次產業，PR #538）、NVIDIA v0.3.10。
+- **做法：** 主引擎掛鉤（`SIL.COORD_ALT` 時情境 B、C 的 AI IT 資本支出 CY2027 起 × wta_27／28／29；情境 A 不縮放）→ `tools/coord/alt_run.py auras` → `auras/coord_alt.json`；建檔程式存檔前 `COORD.add_sheet` 後呼叫 `auras/v13_post.py`（共通步驟 `auras/c13.py`，電源散熱四家同一份）：Hist 頁（FY2022–FY2025）、PL 頁末標準損益表（FY2023A–FY2031E，GAAP）、RevDCF 頁、Val 0.7、Sens 末「加權目標價相對基準」、Coord 頁三層協調 C0、README 頁末 v1.3 白話列；`gen_html_json.py` 最後呼叫 `auras/html13.py`（v1.3 章節、G、H 位置、`COORD.inject_html`）。`co_flag` 具名範圍未建。
+- **兩讀數：** 現行基準 1,712.80（+46.4%，買進）；另一側讀數 1,439.91（+23.1%，中立）——**評等不同**，橫幅揭露。Coord 快照狀態 CURRENT。
+- **實績與出處（Coord 第 4a 節；Verified）：** 月營收 2026-09 28.84 億元、累計前 9 月 270.40 億元（TechNews 2026-10-08，https://finance.technews.tw/2026/10/08/auras-3324-202609-financial-report/）；2026-10 33.72 億元、累計前 10 月 304.12 億元（TechNews 2026-11-06，https://finance.technews.tw/2026/11/06/auras-3324-202610-financial-report/）；3Q26 營收＝7–9 月月營收合計 97.91 億元（In 頁 q3_rev，HiStock）。**3Q26 財報與法說截至 2026-11-15 未找到；公司未揭露液冷營收金額或占比**（2025 年 34%、1H26 55%、2026 年 60% 皆凱基估計）。Hist 頁 FY2022–FY2025：stockanalysis 年度損益表（百萬元；https://stockanalysis.com/quote/tpex/3324/financials/income-statement/ ），FY2025 與 Q 頁一致。
+- **層級隱含：** Siliconomics v0.19 AI 液冷市場 CY2026 US$4.514B × 雙鴻有效份額 15.9%（lc_aush_26）× 匯率 32＝NT$22.92B；主讀數層級 × 10 ÷ 12＝19.10、第二讀數 22.92。
+- **判定：** **C0（實績）結論：無可比實績（層級值同源）**——公司未揭露液冷營收；Siliconomics 的雙鴻份額由本模型以券商液冷占比 60% × FY2026 營收錨點校準後寫入，市場大小在比式中被約掉。參考列（券商 60% × 實績營收）主讀數 −4.5%、第二讀數 +2.5%，代數上只等於「實績營收 ÷ 營收錨點 − 1」，標「參考（同源校準）」、不判定。上限檢查：層級隱含液冷占主讀數期間營收 63%，通過。C0 對帳中項目 0 項。讀取層級五項差距皆 0（同源，不判定）；已建模份額加總（雙鴻＋奇鋐）殘差 34%–44%；層級之間（參考）：部署 GW 對 Wattonomics 側讀數 CY2027–29 高 62%／50%／50%。
+- **README 舊節數字說明：** 下方 v0.2.4 節寫的加權目標價 1,799、上檔空間 +53.8%（強力買進）是當時成品值；之後 Siliconomics 全下游重建（原地更新 dist）使現行 dist 為 1,712.80、+46.4%（買進）。本版不改寫舊節，以本節與 xlsx 為準。
+- **驗證：** `tools/xlsx_diff.py` 對 v0.2.4（_待刪除）逐格：既有格只有 README A1（標題版號更正 v0.1.2 → v0.2.5、日期、本版說明）不同，其餘皆為新增頁／新增列；加權目標價 1,712.80、評等買進不變；錯誤格 0。`check_company_html`、`check_layout_v13 --xlsx`（A–I 全過，含 G、H 位置；無警告）、`tools/baseline_coordination/check.py` 通過。
+- **未做：** `coord_meta_v0.19.json` 的 `hardware_companies` 未加入 auras（由主控統一加入）；3Q26 財報公布後再補第二讀數的財報來源與損益（不變性：本版不改錨點）。
+- 成品 `dist/20261115_雙鴻個股模型_v0.2.5.xlsx`／`.html`；v0.2.4 移 `dist/_待刪除/`。
+
 ## v0.2.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 
 - 版本沿革：v0.2.4：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守。
