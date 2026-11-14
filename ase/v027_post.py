@@ -36,12 +36,12 @@ def coord_actuals(wb, SIL):
     C.cell(r, 1, "比較方法：個股側只用公司已公布實績（SEC 6-K 新聞稿與簡報，Verified）；層級側用 Siliconomics v0.19 同口徑隱含值。時差：層級值為日曆年 CY2026，日月光會計年度＝日曆年；"
                  "主讀數＝2026 年 1–3Q 累計實績 vs 層級 CY2026 × 9 ÷ 12（線性時差近似，Derived）；第二讀數＝3Q26 × 4 vs 層級 CY2026。成長年中主讀數偏低、第二讀數偏高，兩者夾住真值。"
                  "判定：兩讀數差距都超過 ±15% 且同號＝對帳中；只有一個超過＝時差邊界（參考）；都在內＝一致；層級側沒有同口徑隱含值＝無可比實績（不以模型預測或同源值補位）。"
-                 "公司指引、賣方估計只列參考，不判定。"); R["note"] = r; r += 1
+                 "公司指引、賣方估計只列參考，不判定。本表「無可比實績」是指層級側沒有同口徑值（ATM、封裝、測試的公司實績都存在）；LEAP 則是公司側也沒有實績。"); R["note"] = r; r += 1
     for j, h in enumerate(["項目", "公司實績：2026 年 1–3Q 累計（主讀數）", "公司實績：3Q26 × 4（第二讀數）", "層級隱含：CY2026 全年", "判定（±15%）", "口徑、出處與證據等級", "主讀數差距（實績 ÷（層級 × 9÷12）− 1）", "第二讀數差距（實績 ÷ 層級 − 1）"], 1):
         c = C.cell(r, j, h); c.font = BOLD; c.fill = HDR
     R["hdr"] = r; r += 1
     R["first"] = r
-    r_in = r + 6                       # 輸入區標題列（表 4 列＋判定摘要＋空列之後）
+    r_in = r + 7                       # 輸入區標題列（表 4 列＋判定摘要＋空列之後）
     r_pk, r_ts = r_in + 2, r_in + 3    # 封裝、測試分項輸入列
 
     def row(label, b, c, d, src, nb="0.000"):
@@ -60,7 +60,7 @@ def coord_actuals(wb, SIL):
     row("LEAP（AI 先進封裝）營收（US$B）", "無實績", "無實績", "無同口徑隱含值",
         "公司只揭露 FY2025 全年 US$1.6B（4Q25 法說）與 FY2026 指引（2Q26 簡報第 3 頁：LEAP 營收「tracking ahead of prior guidance of US$3.5 billion」；3Q26 法說：逾 US$4B），"
         "季度與 2026 年累計金額未揭露（2Q26 6-K 第 3、4 頁；3Q26 6-K 無 LEAP 金額）；本模型 Q 頁 1Q–3Q26 的 LEAP 為 BofA 占比推得（Interested-party／Derived），不是公司實績，不用。"
-        "層級側 Siliconomics 沒有 AI 先進封裝的美元市場值：只有委外封測（日月光＋艾克爾合計）補充 CoWoS 月產能（占台積電產能 10% × 2026 年底 130 千片／月，Assumed），缺每片價格與日月光自己的份額，無法換算美元。"
+        "層級側 Siliconomics 沒有 AI 先進封裝的美元市場值：只有委外封測（日月光＋艾克爾合計）補充 CoWoS 月產能（2026 年底 130 千片／月為 Interested-party；委外占台積電產能 10% 為 Assumed），缺每片價格與日月光自己的份額，無法換算美元。"
         "兩側皆缺，寫無可比實績；改用最接近的已揭露分部（下列封測 ATM 與其封裝、測試分項）。橋接參考（LEAP 核心營收 ÷ 委外補充產能）見 B 節，不判定")
     row("封測（ATM）營收（NT$B；封裝、測試、材料）", "=SUM(Q!C5:E5)", "=Q!E5*4", "無同口徑隱含值",
         "公司實績：ATM 分部營收 1Q26 112.434、2Q26 126.148、3Q26 151.485（SEC 6-K 2026-07-30 第 7 頁、2026-10-29 第 5 頁，ATM 分部損益表；Q 頁 C5:E5；Verified；含集團內沖銷前口徑）。"
@@ -70,6 +70,17 @@ def coord_actuals(wb, SIL):
     row("封測（ATM）：測試（Testing）營收（NT$B）", f"=SUM(B{r_ts}:D{r_ts})", f"=D{r_ts}*4", "無同口徑隱含值",
         "公司實績：ATM 分部測試營收（輸入區，公司分部損益表；Verified）。層級側只有測試機設備市場（Advantest、泰瑞達的設備銷售，CY2026 SoC 測試機市場約 US$11.5B；Interested-party），是設備商營收，不是 OSAT 的測試服務營收，口徑不同，不可比；無可比實績")
     R["last"] = r - 1
+    gw0 = SIL.NAMES["SIF_DeployGW_Base"][0]
+    C.cell(r, 1, "參考（不判定）：外部估計 OSAT 先進封裝市場 ÷ 公司 LEAP 指引（US$B）")
+    c = C.cell(r, 2, f"=0.5*{gw0}"); c.number_format = "0.0"; c.font = BLUE
+    c = C.cell(r, 3, "=In!E35"); c.number_format = "0.0"
+    C.cell(r, 4, "—")
+    C.cell(r, 5, "參考（不判定）")
+    C.cell(r, 6, f"B 欄＝外部估計 OSAT 先進封裝市場約 US$0.5B／GW（艾克爾投資人日，Interested-party）× Siliconomics v0.19 SIF_DeployGW_Base CY2026（{gw0:.2f} GW）；C 欄＝公司 FY2026 LEAP 指引（逾 US$4B，In 頁 leap26，Interested-party）。"
+                 "C ÷ B 見 G 欄。這是外部估計對公司指引，不是公司實績對層級隱含值，不是 C0 證據、不判定。若要可判定，需 Siliconomics 補 OSAT 先進封裝美元市場（或委外 CoWoS 每片價格）與日月光份額。")
+    C.cell(r, 7, f'=TEXT(C{r}/B{r},"0%")&"（指引 ÷ 外部估計）"')
+    C.cell(r, 8, "—")
+    R["ref"] = r; r += 1
     C.cell(r, 1, "判定摘要"); R["sum"] = r
     rg = f'E{R["first"]}:E{R["last"]}'
     C.cell(r, 2, F(T("C0（實績）共 "), f'COUNTA({rg})', T(" 項：可判定 "), f'COUNT(G{R["first"]}:G{R["last"]})', T(" 項、對帳中 "), f'COUNTIF({rg},"對帳中")', T(" 項、時差邊界 "), f'COUNTIF({rg},"時差邊界（參考）")',
