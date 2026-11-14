@@ -82,9 +82,9 @@ def reco_info(xlsx):
         C = wb['Coord']
         for r in range(1, C.max_row + 1):
             a = str(C.cell(r, 1).value or '')
-            if a == '加權目標價':
+            if a == '加權目標價' and info['tp'] is None:   # 兩讀數表（B 節）為第一次出現；之後的敏感度表不採用
                 info['tp'] = (C.cell(r, 2).value, C.cell(r, 3).value)
-            if a.startswith('投資建議'):
+            if a.startswith('投資建議') and info['rec'] is None:
                 info['rec'] = (C.cell(r, 2).value, C.cell(r, 3).value)
     return info
 

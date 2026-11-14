@@ -1442,6 +1442,137 @@
      "summary": "展開：敏感度頁原文說明（含模型參數代號）"
     },
     {
+     "type": "table",
+     "caption": "@Coord!A47",
+     "head": [
+      "@Coord!A48",
+      "@Coord!B48",
+      "@Coord!C48",
+      "@Coord!D48",
+      "@Coord!E48"
+     ],
+     "rows": [
+      [
+       "@Coord!A49",
+       "@Coord!B49|n2",
+       "@Coord!C49|n2",
+       "@Coord!D49|n2",
+       "@Coord!E49|n2"
+      ],
+      [
+       "@Coord!A50",
+       "@Coord!B50|n2",
+       "@Coord!C50|n2",
+       "@Coord!D50|n2",
+       "@Coord!E50|n2"
+      ],
+      [
+       "@Coord!A51",
+       "@Coord!B51|n2",
+       "@Coord!C51|n2",
+       "@Coord!D51|n2",
+       "@Coord!E51|n2"
+      ],
+      [
+       "@Coord!A52",
+       "@Coord!B52|n2",
+       "@Coord!C52|n2",
+       "@Coord!D52|n2",
+       "@Coord!E52|n2"
+      ],
+      [
+       "@Coord!A53",
+       "@Coord!B53|n2",
+       "@Coord!C53|n2",
+       "@Coord!D53|n2",
+       "@Coord!E53|n2"
+      ],
+      [
+       "@Coord!A54",
+       "@Coord!B54|n2",
+       "@Coord!C54|n2",
+       "@Coord!D54|n2",
+       "@Coord!E54|n2"
+      ],
+      [
+       "@Coord!A55",
+       "@Coord!B55|n2",
+       "@Coord!C55|n2",
+       "@Coord!D55|n2",
+       "@Coord!E55|n2"
+      ],
+      [
+       "@Coord!A56",
+       "@Coord!B56|n2",
+       "@Coord!C56|n2",
+       "@Coord!D56|n2",
+       "@Coord!E56|n2"
+      ],
+      [
+       "@Coord!A57",
+       "@Coord!B57|n2",
+       "@Coord!C57|n2",
+       "@Coord!D57|n2",
+       "@Coord!E57|n2"
+      ],
+      [
+       "@Coord!A58",
+       "@Coord!B58|p1",
+       "@Coord!C58|p1",
+       "@Coord!D58|p1",
+       "@Coord!E58|p1"
+      ],
+      [
+       "@Coord!A59",
+       "@Coord!B59|n2",
+       "@Coord!C59|n2",
+       "@Coord!D59|n2",
+       "@Coord!E59|n2"
+      ],
+      [
+       "@Coord!A60",
+       "@Coord!B60|sp1",
+       "@Coord!C60|sp1",
+       "@Coord!D60|sp1",
+       "@Coord!E60|sp1"
+      ],
+      [
+       "@Coord!A61",
+       "@Coord!B61|p1",
+       "@Coord!C61|p1",
+       "@Coord!D61|p1",
+       "@Coord!E61|p1"
+      ],
+      [
+       "@Coord!A62",
+       "@Coord!B62|p1",
+       "@Coord!C62|p1",
+       "@Coord!D62|p1",
+       "@Coord!E62|p1"
+      ],
+      [
+       "@Coord!A63",
+       "@Coord!B63|p1",
+       "@Coord!C63|p1",
+       "@Coord!D63|p1",
+       "@Coord!E63|p1"
+      ],
+      [
+       "@Coord!A64",
+       "@Coord!B64|p1",
+       "@Coord!C64|p1",
+       "@Coord!D64|p1",
+       "@Coord!E64|p1"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!A65"
+     ]
+    },
+    {
      "type": "tornado",
      "sheet": "Sens",
      "label_col": "A",
@@ -4854,33 +4985,6 @@
        "@In!G149|tag"
       ],
       {
-       "sub": "Wattonomics 錨定係數（只進敏感度）"
-      },
-      [
-       "@In!B221",
-       "@In!D221|n2",
-       "@In!E221|n2",
-       "@In!F221|n2",
-       "@In!C221",
-       "@In!G221|tag"
-      ],
-      [
-       "@In!B222",
-       "@In!D222|n2",
-       "@In!E222|n2",
-       "@In!F222|n2",
-       "@In!C222",
-       "@In!G222|tag"
-      ],
-      [
-       "@In!B223",
-       "@In!D223|n2",
-       "@In!E223|n2",
-       "@In!F223|n2",
-       "@In!C223",
-       "@In!G223|tag"
-      ],
-      {
        "sub": "三層協調：產業部署 GW 兩讀數與對帳中旗標（只進兩讀數目標價；試作）"
       },
       [
@@ -4916,6 +5020,38 @@
        "@In!G229|tag"
       ],
       [
+       "@In!B234",
+       "@In!D234|n2",
+       "@In!E234|n2",
+       "@In!F234|n2",
+       "@In!C234",
+       "@In!G234|tag"
+      ],
+      [
+       "@In!B235",
+       "@In!D235|n2",
+       "@In!E235|n2",
+       "@In!F235|n2",
+       "@In!C235",
+       "@In!G235|tag"
+      ],
+      [
+       "@In!B236",
+       "@In!D236|n2",
+       "@In!E236|n2",
+       "@In!F236|n2",
+       "@In!C236",
+       "@In!G236|tag"
+      ],
+      [
+       "@In!B237",
+       "@In!D237|n2",
+       "@In!E237|n2",
+       "@In!F237|n2",
+       "@In!C237",
+       "@In!G237|tag"
+      ],
+      [
        "@In!B230",
        "@In!D230|n2",
        "@In!E230|n2",
@@ -4948,68 +5084,60 @@
        "@In!G233|tag"
       ],
       [
-       "@In!B234",
-       "@In!D234|n1",
-       "@In!E234|n1",
-       "@In!F234|n1",
-       "@In!C234",
-       "@In!G234|tag"
-      ],
-      [
-       "@In!B235",
-       "@In!D235|n1",
-       "@In!E235|n1",
-       "@In!F235|n1",
-       "@In!C235",
-       "@In!G235|tag"
-      ],
-      [
-       "@In!B236",
-       "@In!D236|n1",
-       "@In!E236|n1",
-       "@In!F236|n1",
-       "@In!C236",
-       "@In!G236|tag"
-      ],
-      [
-       "@In!B237",
-       "@In!D237|n1",
-       "@In!E237|n1",
-       "@In!F237|n1",
-       "@In!C237",
-       "@In!G237|tag"
-      ],
-      [
        "@In!B238",
-       "@In!D238|n2",
-       "@In!E238|n2",
-       "@In!F238|n2",
+       "@In!D238|n1",
+       "@In!E238|n1",
+       "@In!F238|n1",
        "@In!C238",
        "@In!G238|tag"
       ],
       [
        "@In!B239",
-       "@In!D239|n2",
-       "@In!E239|n2",
-       "@In!F239|n2",
+       "@In!D239|n1",
+       "@In!E239|n1",
+       "@In!F239|n1",
        "@In!C239",
        "@In!G239|tag"
       ],
       [
        "@In!B240",
-       "@In!D240|n2",
-       "@In!E240|n2",
-       "@In!F240|n2",
+       "@In!D240|n1",
+       "@In!E240|n1",
+       "@In!F240|n1",
        "@In!C240",
        "@In!G240|tag"
       ],
       [
        "@In!B241",
-       "@In!D241|n2",
-       "@In!E241|n2",
-       "@In!F241|n2",
+       "@In!D241|n1",
+       "@In!E241|n1",
+       "@In!F241|n1",
        "@In!C241",
        "@In!G241|tag"
+      ],
+      [
+       "@In!B248",
+       "@In!D248|p1",
+       "@In!E248|p1",
+       "@In!F248|p1",
+       "@In!C248",
+       "@In!G248|tag"
+      ],
+      [
+       "@In!B249",
+       "@In!D249|p1",
+       "@In!E249|p1",
+       "@In!F249|p1",
+       "@In!C249",
+       "@In!G249|tag"
+      ],
+      [
+       "@In!B250",
+       "@In!D250|p1",
+       "@In!E250|p1",
+       "@In!F250|p1",
+       "@In!C250",
+       "@In!G250|tag"
       ],
       [
        "@In!B242",
@@ -5034,6 +5162,38 @@
        "@In!F244|n2",
        "@In!C244",
        "@In!G244|tag"
+      ],
+      [
+       "@In!B245",
+       "@In!D245|n2",
+       "@In!E245|n2",
+       "@In!F245|n2",
+       "@In!C245",
+       "@In!G245|tag"
+      ],
+      [
+       "@In!B246",
+       "@In!D246|n2",
+       "@In!E246|n2",
+       "@In!F246|n2",
+       "@In!C246",
+       "@In!G246|tag"
+      ],
+      [
+       "@In!B247",
+       "@In!D247|n2",
+       "@In!E247|n2",
+       "@In!F247|n2",
+       "@In!C247",
+       "@In!G247|tag"
+      ],
+      [
+       "@In!B251",
+       "@In!D251|n2",
+       "@In!E251|n2",
+       "@In!F251|n2",
+       "@In!C251",
+       "@In!G251|tag"
       ]
      ]
     },

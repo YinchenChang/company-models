@@ -145,9 +145,8 @@ SPEC = {
     ["競爭對手顆數與每顆金額（份額計算）", ["u_amd_26", "u_amd_27", "u_amd_28", "g29_amd", "u_tpu_26", "u_tpu_27", "u_tpu_28", "g29_tpu", "u_trn_26", "u_trn_27", "u_trn_28", "g29_trn",
                                      "u_oth_26", "u_oth_27", "u_oth_28", "g29_oth", "pa_amd", "pa_tpu", "pa_trn", "pa_oth", "dsh"]],
     ["中國資料中心運算（只進敏感度）", ["cn_amt"]],
-    ["Wattonomics 錨定係數（只進敏感度）", ["wta_27", "wta_28", "wta_29"]],
     ["三層協調：產業部署 GW 兩讀數與對帳中旗標（只進兩讀數目標價；試作）", ["co_gwb_26", "co_gwb_27", "co_gwb_28", "co_gwb_29", "co_gwa_26", "co_gwa_27", "co_gwa_28", "co_gwa_29",
-                                     "co_flag_2026", "co_flag_2027", "co_flag_2028", "co_flag_2029", "co_r_26", "co_r_27", "co_r_28", "co_r_29", "co_ucoef_28", "co_ucoef_29", "co_chk_r"]]]],
+                                     "co_gws_26", "co_gws_27", "co_gws_28", "co_gws_29", "co_flag_2026", "co_flag_2027", "co_flag_2028", "co_flag_2029", "co_ns_27", "co_ns_28", "co_ns_29", "co_r_26", "co_r_27", "co_r_28", "co_r_29", "co_ucoef_28", "co_ucoef_29", "co_chk_r"]]]],
   ["網通（InfiniBand、Spectrum-X、NVLink）", [
     ["網通營收與成本", ["net_26", "net_27", "net_28", "net_29", "rep_nv26", "net_q1", "c_net"]]]],
   ["Edge Computing（遊戲、PC、工作站、車用與機器人）", [
@@ -679,6 +678,12 @@ def _coord():
             "head": ["項目", f"@Coord!B{r_cur}", f"@Coord!C{r_cur - 1}" if False else f"@Coord!B{r_alt}", "另一側相對現行"],
             "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|n2", f"@Coord!C{r}|n2", f"@Coord!D{r}|sp1"] for r in range(cr("NVIDIA 認列顆數（情境 B）FY2028"), cr("12 個月後前瞻 EPS"))]}
     S["valuation"]["blocks"][0:0] = [{"type": "h3", "text": "對帳中：兩讀數目標價"}, {"type": "note", "parts": [f"@Coord!B{r_note}"]}, tbl, bars, full]
+    # 敏感度章：總量缺口全由 NVIDIA 吸收（Coord 頁 E 節；兩讀數各一）
+    e0 = cr("E. 敏感度：總量缺口全由 NVIDIA 吸收"); eh = e0 + 1; r_feas = cr("全吸收是否可行")
+    fe = lambda r: "sp1" if "全吸收相對" in str(CW.cell(r, 1).value) else ("p1" if ("上檔空間" in str(CW.cell(r, 1).value) or "缺口 ÷" in str(CW.cell(r, 1).value)) else "n2")
+    S["sens"]["blocks"].insert(1, {"type": "table", "caption": f"@Coord!A{e0}", "head": [f"@Coord!{c}{eh}" for c in "ABCDE"],
+                                   "rows": [[f"@Coord!A{r}"] + [f"@Coord!{c}{r}|{fe(r)}" for c in "BCDE"] for r in range(eh + 1, r_feas + 1)]})
+    S["sens"]["blocks"].insert(2, {"type": "note", "parts": [f"@Coord!A{r_feas + 1}"]})
     # 標準損益表：預測年度欄標「對帳中」（FY2027E–FY2031E＝PL F–J 欄）
     n = 0
     for b in S["pl"]["blocks"]:

@@ -1,7 +1,7 @@
 # NVIDIA 三層協調試作（2026-11-14）：另一側讀數整本重建快照 → nvidia/coord_alt.json（正式建置的 Coord 頁讀入）。
-# 做法：同一個建置程式，NV_OVERRIDE="_coord=1"——三情境 CY2027 起運算顆數與網通營收 × co_r_<yy>（In 頁 Y 節：另一側 ÷ 現行基準），
+# 做法：同一個建置程式，NV_OVERRIDE="_coord=1"——三情境 CY2027 起運算顆數與網通營收 × co_r_<yy>（In 頁 Z 節：另一側 ÷ 現行基準），
 # 其他輸入不變；LibreOffice 重算後讀加權目標價、DCF、Comparable（調整後）、前瞻 EPS、三情境 EPS、情境 B 營收與顆數。基準檔同時重建一次作核對。
-# In 頁 Y 節（coord_inputs.json 或 Siliconomics 快照）改動後先重跑本檔，再正式建置（否則 Coord 頁快照狀態顯示 STALE）。
+# In 頁 Z 節（coord_inputs.json 或 Siliconomics 快照）改動後先重跑本檔，再正式建置（否則 Coord 頁快照狀態顯示 STALE）。
 # 用法：python3 nvidia/coord_alt.py [暫存資料夾，預設 /tmp/work_nvidia/coord]
 import glob, json, os, shutil, subprocess, sys
 import openpyxl
@@ -14,7 +14,10 @@ import coord_post as CO  # noqa: E402
 env0 = {k: v for k, v in os.environ.items() if k not in ("NV_OVERRIDE", "NV_V36_PARTS", "NV_ROWMAP")}
 raw, rc = os.path.join(TMP, "raw"), os.path.join(TMP, "rc")
 shutil.rmtree(TMP, ignore_errors=True); os.makedirs(raw); os.makedirs(rc)
-for nm, ov in (("base", "_noop=1"), ("alt", "_coord=1")):   # 兩者都設覆寫（不跑 v037 以後的展示層後處理），只差 _coord
+JOBS = [("base", "_noop=1"), ("alt", "_coord=1"), ("absorb", "_absorb=1")]   # 皆設覆寫（不跑展示層後處理）
+# 另一側讀數＋全吸收：先以基準檔判斷可行性（各年 (1 − 情境 B 係數 × 比值) ÷ NVIDIA 占原始顆數 ≤ 1）；不可行時不建（NVIDIA 顆數 < 0，模型除以零）
+FEAS = None
+for nm, ov in JOBS:
     subprocess.run([sys.executable, os.path.join(HERE, "build_nvidia.py"), os.path.join(raw, f"{nm}.xlsx")], check=True,
                    env={**env0, "NV_OVERRIDE": ov}, stdout=subprocess.DEVNULL)
 subprocess.run(["soffice"] + ([f"-env:UserInstallation={os.environ['LO_PROFILE']}"] if os.environ.get("LO_PROFILE") else [])
@@ -34,10 +37,22 @@ def read(nm):
     return out, ratio, errs   # README 頁在覆寫建置有一格依賴 Sens 快照的文字公式（#VALUE!），不影響數值；不計
 
 
-b, rb, eb = read("base"); a, ra, ea = read("alt")
-assert eb == 0 and ea == 0, (eb, ea)
+def feas(nm):
+    wb = openpyxl.load_workbook(os.path.join(rc, f"{nm}.xlsx"), data_only=True)
+    def nv(k):
+        sh, co = next(iter(wb.defined_names[k].destinations)); return wb[sh][co.replace("$", "")].value
+    return {y: (1 - (1 if y == 2027 else nv(f"um{y % 100}_B")) * nv(f"co_r_{y % 100}")) / nv(f"co_ns_{y % 100}") for y in CO.APPLY}
+FEAS = feas("base"); print("另一側讀數全吸收：缺口 ÷ NVIDIA 原始顆數", {y: round(v, 3) for y, v in FEAS.items()})
+if max(FEAS.values()) <= 1:
+    subprocess.run([sys.executable, os.path.join(HERE, "build_nvidia.py"), os.path.join(raw, "alt_absorb.xlsx")], check=True, env={**env0, "NV_OVERRIDE": "_coord=1;_absorb=1"}, stdout=subprocess.DEVNULL)
+    subprocess.run(["soffice", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", rc, os.path.join(raw, "alt_absorb.xlsx")], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    JOBS.append(("alt_absorb", ""))
+RES = {nm: read(nm) for nm, _ in JOBS}
+assert all(e == 0 for _, _, e in RES.values()), {k: v[2] for k, v in RES.items()}
+b, rb, _ = RES["base"]; a, ra, _ = RES["alt"]
 assert rb == ra
-out = {"_說明": "另一側讀數整本重建快照（nvidia/coord_alt.py）；Coord 頁 B 節讀入", "ratio": ra, "base": b, "alt": a}
+out = {"_說明": "兩讀數與「總量缺口全由 NVIDIA 吸收」敏感度的整本重建快照（nvidia/coord_alt.py）；Coord 頁 B、E 節讀入", "ratio": ra,
+       "base": b, "alt": a, "absorb": RES["absorb"][0], "alt_absorb": RES["alt_absorb"][0] if "alt_absorb" in RES else None, "alt_absorb_gap": {str(y): v for y, v in FEAS.items()}}
 json.dump(out, open(os.path.join(HERE, "coord_alt.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 for k in ("tp", "dcf", "comp", "fwd", "up", "eps_B_2028", "eps_B_2029", "eps_B_2030", "rev_B_2028", "nvu_B_2028"):
-    print(f"{k:12s} 現行 {b[k]:10.4f}  另一側 {a[k]:10.4f}  {a[k] / b[k] - 1:+.2%}")
+    print(f"{k:12s} 現行 {b[k]:10.4f}  另一側 {a[k]:10.4f}  吸收(現行) {out['absorb'][k]:10.4f}  吸收(另一側) {(out['alt_absorb'] or {}).get(k, float('nan')):10.4f}")
