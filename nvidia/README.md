@@ -14,7 +14,7 @@
 - **HTML 對帳章：** 加「三層協調：讀取層級與由下往上對帳」——摘要句、對帳表（兩邊原值與差距、狀態）、摺疊的口徑與證據等級表、摺疊的讀取層級表；全由 Coord 頁取數（`gen_html_json.py` 的 `_coord_c0()`）。
 - **驗證：** 與 v0.3.8 逐格比對（`tools/xlsx_diff.py` 的快取值）：既有格差異只有 README!A1（版本字串與 F 節說明）、README!A67 與 Sens!D984（build_id）；新增格全在 Coord 頁 F 節（第 74 列起）；錯誤格 0；加權目標價 248.46（+36.8%）、買進、兩讀數（另一側 194.68）、三情境 EPS 皆不變。`coord_alt.json`、`sens.json`、In 頁未動（輸入未變，不必重跑 `coord_alt.py`、`sens_nvidia.py`）。
 - 未做：未改任何上游值（Siliconomics、Tokenomics、Wattonomics）；下游（avgo、amd 讀本檔名）未動，由主控重建。
-- **合併前補（2026-11-14 晚；Andy 17:47 選項 A）：** 損益章在標準損益表後加一句 FY2029 營收下滑說明（Coord 頁 C 節「損益章說明：FY2029 營收下滑」，全由公式取數）：情境 B FY2029E 營收較 FY2028E −6.8%，因 2028 年 Siliconomics 基準顆數係數仍為「待定」、維持現行 0.80 並等比例套用到各平台，而 NVIDIA 原始顆數 CY2027→CY2028 只增 4.1%，乘係數後認列顆數 −15.6%；屬 2028 狀態未定造成的斷層，待 2026-11-19（NVIDIA FY27Q3）與 2026-11-30（財報季結束）重判後更新，屆時一併評估 2028 改套連續法（選項 B）或總量缺口改依各平台成長分配（選項 C）。Coord 頁自該列起下移一列；其他數值格逐格不變（含 SK 海力士來源檔名文字隨 main 更新）。
+- **合併前補（2026-11-14 晚；Andy 17:47 選項 A）：** 損益章在標準損益表後加一句 FY2029 營收下滑說明（Coord 頁 C 節「損益章說明：FY2029 營收下滑」，全由公式取數）：情境 B FY2029E 營收較 FY2028E −6.8%，因 2028 年 Siliconomics 基準顆數係數仍為「待定」、維持現行 0.80 並等比例套用到各平台，而 NVIDIA 原始顆數 CY2027→CY2028 只增 4.1%（全市場原始顆數 +18.9%，成長主要來自其他平台），乘係數後認列顆數 −15.6%；屬 2028 狀態未定造成的斷層，待 2026-11-19（NVIDIA FY27Q3）與 2026-11-30（財報季結束）重判後更新，屆時一併評估 2028 改套連續法（選項 B）或總量缺口改依各平台成長分配（選項 C）。Coord 頁自該列起下移一列；其他數值格逐格不變（含 SK 海力士來源檔名文字隨 main 更新）。
 - 建置：`python3 nvidia/build_nvidia.py raw.xlsx` → LibreOffice（私有設定檔）重算 → `dist/` → `python3 nvidia/gen_html_json.py` → `python3 tools/company_html/build_company_html.py nvidia` → `python3 tools/model_governance/version_table.py nvidia --update`。`gen_html_json.py`、`coord_post.py` 都納入 build_id 雜湊，改動後須整本重建。
 
 <!-- version-table: dist/_待刪除/20261114_NVIDIA個股模型_v0.3.8.xlsx｜dist/20261114_NVIDIA個股模型_v0.3.9.xlsx -->
