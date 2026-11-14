@@ -416,6 +416,30 @@ def thesis_section(soup_s1, B: Book, ver: str, P: dict) -> str:
             f'<details class="more"><summary>展開：本版與前版摘要</summary>{hist_notes}</details></section>')
 
 
+def coord_c0_generic(B: Book) -> str:
+    """對帳章「三層協調」表（讀 xlsx Coord 頁具名範圍 COORD_C0／COORD_C0Sum／COORD_C0Verdict；數字全由 xlsx 取；無 COORD_C0 則不輸出）。"""
+    if not B.has("COORD_C0"):
+        return ""
+    def c(cell, f):
+        return span(cell[0], cell[1], f) if cell[1] is not None else "—"
+    trs = ""
+    for g in B.grid("COORD_C0"):
+        unit = g[1][1]
+        f = "n2" if unit == "GW" else "n1"
+        trs += (f'<tr><td>{span(*g[0], "t")}</td><td>{c(g[2], f)}</td><td>{c(g[3], f)}</td><td>{c(g[4], "sp1")}</td>'
+                f'<td>{c(g[5], f)}</td><td>{c(g[6], f)}</td><td>{c(g[7], "sp1")}</td><td><b>{span(*g[8], "t")}</b></td></tr>')
+    sm = B.grid("COORD_C0Sum")
+    return ('<h3>三層協調：公司揭露對層級隱含值（C0）</h3>'
+            '<p class="note">OpenAI 未上市，比較基準是公司揭露（告知投資人、CFO 部落格、合作方公告）。層級隱含營收＝Tokenomics 每 GW 營收 × Wattonomics 配置給 OpenAI 的 GW；'
+            'Tokenomics 的 m 由 OpenAI 營收校準，所以營收列屬同源，只列參考、不判定。本模型自層級讀入的值只列在 Coord 頁「讀取層級」節。'
+            '兩讀數都超過門檻且同號才標「對帳中」；本表單位依列而異（營收十億美元，算力吉瓦）。</p>'
+            '<div class="tw"><table class="tp"><thead><tr><th>項目</th><th>公司揭露（主）</th><th>層級隱含（主）</th><th>差距</th>'
+            '<th>公司揭露（第二）</th><th>層級隱含（第二）</th><th>第二讀數差距</th><th>判定</th></tr></thead><tbody>' + trs + '</tbody></table></div>'
+            f'<p class="note">判定摘要：可判定 {span(*sm[0][0], "n0")} 項、對帳中 {span(*sm[1][0], "n0")} 項、時差邊界 {span(*sm[2][0], "n0")} 項、'
+            f'參考（同源校準） {span(*sm[3][0], "n0")} 項、無可比實績 {span(*sm[4][0], "n0")} 項。</p>'
+            f'<p class="note">{span(*B.cell("COORD_C0Verdict"), "t")}</p>')
+
+
 def build(html_in: Path, xlsx: Path, out: Path, profile: str = "anthropic"):
     P = PROFILES[profile]
     if P.get("layout") == "v13":
@@ -450,6 +474,10 @@ def build(html_in: Path, xlsx: Path, out: Path, profile: str = "anthropic"):
     parts.append(sens_html)
     recon = soup.new_tag("section", id="recon")
     h = soup.new_tag("h2"); h.string = P["recon_title"]; recon.append(h)
+    _c = coord_c0_generic(B)
+    if _c:
+        for el in list(BeautifulSoup(_c, "html.parser").children):
+            recon.append(el)
     for sid, lab in P["recon"]:
         r = regroup(secs[sid], soup, "x", lab, keep_first_table=True)
         h3 = soup.new_tag("h3"); h3.string = lab; recon.append(h3)

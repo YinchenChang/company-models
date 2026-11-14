@@ -1,7 +1,7 @@
 # Parity 情境檔（CLAUDE.md 第 3 節）。每個情境：改寫輸入 → LibreOffice 重算（基準）→ 與 engine 比對全部公式格。
 # 輸入一律以具名範圍設定（SRC_OAI_nnn、INP_nnn、TK_*）。v0.6-P1 只有檢查頁有公式；v0.6-P2 起 Demand、Revenue 頁的公式也由情境驅動（h 起為 P2 情境）。
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
-  sheets: [README, SRC_OAI, TK_Link, Inputs, Derived_V9, Demand, Revenue, Compute, Cost, Funding, Reverse, PxQ, Checks, Map_v05, _Defaults]
+  sheets: [README, SRC_OAI, TK_Link, Inputs, Derived_V9, Demand, Revenue, Compute, Cost, Funding, Reverse, PxQ, Coord, Checks, Map_v05, _Defaults]
   formula_cells: 4948             # v0.6.4：4858 → 4948（PxQ 第 8.4 節與第九節、Inputs 公式列 W4、Checks C178–C180 等）；P2：652 → 1260；P3：→ 1989（Compute 頁、Revenue 第八節、Inputs 新列檢查欄、Checks C40–C66）；P4：→ 2629（Cost 頁、Compute 第十三節、Inputs／SRC 新列檢查欄、Checks C67–C90）；v0.6.1：→ 3898（PxQ 頁、Inputs／SRC 新列檢查欄、Checks C131–C154）；P5：→ 3063（Funding 192、Reverse 184、Inputs 新列檢查欄 5、Checks C91–C130 共 53）
   defined_names: 754              # v0.6.4：740 − 3（SRC_OAI_141–143 退役）＋ 17（INP_308–320 共 13、SRC_OAI_146–148 共 3、PXQ_D2ReconBad 1）＝754；S1：426；P2：＋16 SRC_OAI＋10 INP＋64 DEM_／REV_；P3：＋6 INP＋35 CMP_＋5 REV_；P4：＋9 SRC_OAI＋9 INP＋1 TK＋2 CMP_＋36 COST_；P5：＋5 INP＋14 FND_＋8 RVS_；v0.6.1：＋3 SRC_OAI＋13 INP＋TK_FileSHA256＋TK_ 35（5 meta＋2 表頭＋28 名稱）＋PXQ_ 21（合計 73 個新名稱）；v0.6.2：719 − TKQ_ 35 ＋ TK_ 新名稱 25（22 取數名稱＋RNG_ 3）＝ 709
   src_rows: 139                   # SRC_OAI 筆數（與報告一致）；P2：106＋16（價格事件數值與公告日）；P4：＋9（SRC_OAI_129–137：2025 銷售／管理／營業損失、人數、股權報酬）；v0.6.1：＋3（SRC_OAI_138–140：Epoch 16、Brockman 50、Epoch 服務占比 0.5）

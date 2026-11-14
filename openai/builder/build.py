@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """產生 OpenAI 收支模型 Excel（v0.6-P1）。
 
-用法：python3 builder/build.py --tk-dir <Tokenomics repo（master model/CURRENT；v0.6.4＝v21.7）> --out model/<YYYYMMDD>_OpenAI_v0.6.4.xlsx [--base <前一版>] [--date 2026-10-29] [--tk-date 2026-10-08]
+用法：python3 builder/build.py --tk-dir <Tokenomics repo（master model/CURRENT；v0.6.4＝v21.7）> --out model/<YYYYMMDD>_OpenAI_v0.6.5.xlsx [--base <前一版>] [--date 2026-10-29] [--tk-date 2026-10-08]
   --base：前一版 xlsx；有給時依 Excel 優先規則保留 Excel 內已改過的藍字輸入（builder/preserve.py）。
 輸出經 LibreOffice 重算後才寫到 --out（內含快取值；engine 仍會強制重算）。同目錄寫 restore_log.txt、leafmap.csv、build_summary.json。
 """
@@ -28,8 +28,9 @@ import p3  # noqa: E402
 import p4  # noqa: E402
 import p5  # noqa: E402
 import p6  # noqa: E402
+import p7  # noqa: E402
 
-VERSION = "v0.6.4"
+VERSION = "v0.6.5"
 KIND_LABEL = {"SRC": "SRC_OAI", "INP": "Inputs", "FORMULA": "公式（後續工作包）", "DUP": "重複併入", "SKIP": "不遷入", "TK": "不遷入；改取 TK_Link"}
 SRC_COLS = ["SRC_ID", "指標", "數值", "低", "高", "單位", "口徑", "適用對象", "日期", "出處（v0.5 原文）", "來源等級", "立場", "立場說明",
             "一手／二手", "狀態", "取代者", "v0.5 標記", "查核狀態（v0.5 chk）", "v0.5 路徑", "模型使用位置", "備註",
@@ -260,7 +261,7 @@ def sheet_derived(wb, R):
     ws.column_dimensions["G"].width = 70
 
 
-def sheet_checks(wb, R, n_src, n_inp, n_pending, P2, P3, P4, P5, P6):
+def sheet_checks(wb, R, n_src, n_inp, n_pending, P2, P3, P4, P5, P6, P7=None):
     ws = wb.create_sheet("Checks")
     title(ws, "Checks — P1–P5 檢查（公式；結果 ERR 的格數＝CHK_Errors）",
           "OK／ERR：比對期望值；INFO：只列示。編號（C##）由 builder/id_registry.json 固定：新檢查取下一個號碼，退役號碼不重用（F1）。期望值為 builder 寫入的常數（黑字）。")
@@ -317,6 +318,8 @@ def sheet_checks(wb, R, n_src, n_inp, n_pending, P2, P3, P4, P5, P6):
     rows += p4_checks(R, P3, P4, S, rowof)
     rows += p5_checks(R, P2, P3, P4, P5, S, rowof)
     rows += p6_checks(R, P6, S, rowof)
+    if P7:
+        rows += p7.p7_checks(P7)
     # F1：Checks 編號納入穩定 ID registry（label → C##）
     reg = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
     known = reg.setdefault("CHK", {})
@@ -611,6 +614,7 @@ def sheet_readme(wb, snap, date, summary, tkdate=None):
         ("SRC_OAI", f"{summary['src']} 列；v0.5『已取得的原始訊息』逐筆遷入（Interested-party／Verified）。"),
         ("TK_Link", f"單一快照（v0.6.2 起；TK_PxQ 併入，TKQ_ 前綴退役）：Tokenomics {snap['version']}（{snap['file']}），master 提交 {snap['sha'][:7]}，讀取日 {tkdate or date}；{summary['tk_ok']} 個名稱有值、{summary['tk_pending']} 個待 Tokenomics 提供。"),
         ("PxQ", "v0.6.4（v0.6.3 起）P×Q 與回本比值：實際 m×L ÷ 所需 m×L（＝營收 ÷ 算力成本）；11 欄＝2025 指數／線性 + 2026 三口徑（Q2 年化營收÷Q2 季平均 GW；FY2026 營收÷全年平均 GW；9 月底 run-rate÷年底 GW）× 低／基準／高；頂部主輸出（比值、倍數、持平門檻）、中間量、敏感度 4.1–4.7、外部支出對照、證據對帳（6B）、Fairwater 六情境（J7）、GW 路線 token 帳（具名範圍 PXQ_*）；v0.6.4 新增第 8.4 節 D2 推導式（Codex 份額 × ChatGPT token 量；候選因子，不進基準 token 帳）與第九節 Microsoft 10-Q 對照。"),
+        ("v0.6.5 變動", "三層協調：新頁 Coord（讀取層級〔同源，不判定〕；C0 公司揭露 vs 層級隱含值；層級之間〔參考〕），只列示、不被計算頁引用；Checks 新增 2 列。其餘工作表數值與 v0.6.4 逐格相同。"),
         ("v0.6.4 變動", "W1 口徑一 Q2 季平均 GW 2.34→2.26（2.17–2.35；Tokenomics B 段 Fairwater 占比 f＝0.4／0.65／0.9）；W2 PxQ 第 8.4 節 D2 推導式；W3 INP_303 註記；W4 SRC_OAI_141–143 移入 Inputs（公式）；W5 TK_Link 快照 v21.4→v21.7；W6 Microsoft FY27 Q1 10-Q 對照。"),
         ("Inputs", f"{summary['inp']} 列；v0.5 Assumed／Analogy／Decision 項目（長表）。"),
         ("Map_v05", f"v0.5 JSON {summary['leaves']} 個葉節點的去處。"),
@@ -679,7 +683,8 @@ def main():
     P4 = p4.build_p4(wb, R, lambda m: sid(R, m), lambda n, i=None: inp_id(R, n, i), lambda iid: inp_row(R, iid), P2, P3, snap)
     P5 = p5.build_p5(wb, R, lambda m: sid(R, m), lambda n, i=None: inp_id(R, n, i), lambda iid: inp_row(R, iid), P2, P3, P4)
     P6 = p6.build_p6(wb, R, lambda m: sid(R, m), lambda n, i=None: inp_id(R, n, i), nm, snap)
-    sheet_checks(wb, R, len(R.src_rows), len(R.inp_rows), summary["tk_pending"], P2, P3, P4, P5, P6)
+    P7 = p7.build_p7(wb, R, lambda m: sid(R, m), lambda n, i=None: inp_id(R, n, i), nm, snap, a.tk_dir)
+    sheet_checks(wb, R, len(R.src_rows), len(R.inp_rows), summary["tk_pending"], P2, P3, P4, P5, P6, P7)
     sheet_map(wb, R)
     preserve.write_defaults(wb, final)
     raw = Path(tempfile.mkdtemp()) / a.out.name
