@@ -389,9 +389,9 @@ for _k, _v in OVR.items():
     if _k.startswith("_P:"): DEFP[_k[3:]] = _v
 if "_krdecay" in OVR:   # 原則 48：k_rec 自 FY2028 起線性衰減、FY2030 回到 1（Sens 案例）
     DEFP["krpath"] = {2027: "k_rec", 2028: "(k_rec+(1-k_rec)/3)", 2029: "(k_rec+2*(1-k_rec)/3)", 2030: "1"}
-import coord_post as CO   # 三層協調試作（2026-11-14；規則 v1.1 C4）：另一側讀數建置（nvidia/coord_alt.py）三情境 CY2027 起產業量 × co_r_<yy>
-if "_coord" in OVR:
-    DEFP["wta"] = dict(CO.WTA_CO)
+import coord_post as CO   # 三層協調試作（2026-11-14；規則 v1.1 C4）：另一側讀數建置（nvidia/coord_alt.py）情境 B、C 於 CY2027 起產業量 × co_r_<yy>（情境 A 不縮放）
+if "_coord" in OVR:   # 另一側讀數：情境 B、C 的產業量 × co_r；情境 A 定義即供給側讀數，不隨讀數縮放（chat 端 2026-11-14）
+    DEFP["wta"] = dict(CO.WTA_CO); DEFP["wta_skipA"] = True
 if "_absorb" in OVR:
     DEFP["nvs"] = (lambda c, s_, _alt="_coord" in OVR: CO.absorb_factor(c, s_, _alt))
 def W(fy, f):
@@ -422,7 +422,7 @@ def engine(ws, r0, title, **over):
         if cy(fy) >= 2027:
             parts.append(P["uf"])
             if P["nvm"]: parts.append(P["nvm"](cy(fy)))
-            if P["wta"]: parts.append(P["wta"][cy(fy)])   # Wattonomics 錨定（Sens 案例；預設 None＝不乘）
+            if P["wta"] and not (P.get("wta_skipA") and s == "A"): parts.append(P["wta"][cy(fy)])   # Wattonomics 錨定／另一側讀數（情境 A＝供給側讀數，另一側讀數建置不縮放）
             if P.get("nvs"): parts.append(P["nvs"](cy(fy), s))   # v0.3.8 試作：總量缺口全由 NVIDIA 吸收（coord_alt.py 的 _absorb 建置）
         return "*".join(parts) or "1"
     row("ufac", "NVIDIA 認列顆數乘數（k_rec × Sens 乘數）", "x", {c_(fy): "=" + ufx(fy) for fy in BU}, fmt="0.000")

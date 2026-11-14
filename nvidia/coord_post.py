@@ -3,7 +3,7 @@
 #   write_inputs(wb, SIL)：In 頁末新增「Y. 三層協調」一節——現行基準 GW（Siliconomics SIF_DeployGW_Base）、另一側讀數 GW、對帳中旗標、
 #                          兩者比值 co_r_<yy>（具名範圍）。正式建置與另一側讀數建置都呼叫（另一側讀數建置的顆數乘數讀 co_r_27..29）。
 #   write_sheet(wb, here)：新增 Coord 頁——兩讀數 GW、兩讀數目標價與評等、橫幅揭露文字、損益表年度標示（HTML 用）、快照一致性核對。
-#   另一側讀數的數值由 nvidia/coord_alt.py 整本重建（NV_OVERRIDE="_coord=1"：三情境 CY2027 起產業量 × co_r，其他輸入不變）後寫入 coord_alt.json。
+#   另一側讀數的數值由 nvidia/coord_alt.py 整本重建（NV_OVERRIDE="_coord=1"：情境 B、C 於 CY2027 起產業量 × co_r（情境 A＝供給側讀數不縮放），其他輸入不變）後寫入 coord_alt.json。
 # 集中輸入：load()。Siliconomics 快照有 SIF_DeployGW_Demand_<yyyy>／SIF_RecoFlag_<yyyy> 時改讀快照；否則讀 coord_inputs.json 的暫值（標「暫值，待 Siliconomics 試作分支」）。
 import json, os
 from openpyxl.styles import Font
@@ -94,7 +94,7 @@ def write_inputs(wb, SIL):
             "1＝兩層對帳未結案：依賴本年的數字標「對帳中」，估值章並列兩讀數目標價（規則 C4）" if y == 2026 else "同上", inp=C["temp"])
     for y in YEARS:
         put(f"co_r_{y % 100}", f"另一側 ÷ 現行基準 CY{y}", "x", C["ratio"][y] if C["ratio"] else f"=co_gwa_{y % 100}/co_gwb_{y % 100}", "Derived", C["src_ratio"],
-            "另一側讀數建置：CY2027 起三情境產業量（運算顆數與網通）× 本比值；CY2026 不套用（FY2027 為錨點，見 Coord 頁說明）" if y == 2026 else
+            "另一側讀數建置：CY2027 起情境 B、C 產業量（運算顆數與網通）× 本比值（情境 A＝供給側讀數，不縮放）；CY2026 不套用（FY2027 為錨點，見 Coord 頁說明）" if y == 2026 else
             ("另一側讀數建置的顆數乘數" if y == 2027 else "同上"))
     for y in (2028, 2029):
         put(f"co_ucoef_{y % 100}", f"基準顆數係數 CY{y}（情境 B＝Siliconomics 基準；um{y % 100}_B 讀本列）", "x", C["ucoef"][y], "Derived", C["src_ucoef"],
@@ -221,7 +221,7 @@ def write_sheet(wb, C):
                 "個股不裁決：基準只讀 Siliconomics 現行基準；對帳未結案的年份並列「現行基準讀數」與「另一側讀數」兩個目標價。")
     ws["A1"].font = BOLD
     ws["A2"] = (("另一側讀數為暫值，待 Siliconomics 試作分支（SIF_DeployGW_Alt_<yyyy>、SIF_RecoFlag_<yyyy>）；集中輸入 nvidia/coord_inputs.json，In 頁 Z 節。" if C["temp"] else f"兩讀數、對帳中旗標與基準顆數係數取自 {C['status']}（集中輸入 nvidia/coord_inputs.json，In 頁 Z 節）。")
-                + "另一側讀數＝只換產業部署 GW 一個輸入：三情境 CY2027 起運算顆數與網通營收 × 另一側 ÷ 現行基準（FY2027 為錨點不變；k_rec、價格、份額、折現率、情境權重與 Comparable 倍數皆不變），整本重建後讀 Val 與 PL（nvidia/coord_alt.py 快照）。")
+                + "另一側讀數＝只換產業部署 GW 一個輸入：情境 B、C 於 CY2027 起運算顆數與網通營收 × 另一側 ÷ 現行基準（情境 A＝供給側讀數，兩讀數相同）（FY2027 為錨點不變；k_rec、價格、份額、折現率、情境權重與 Comparable 倍數皆不變），整本重建後讀 Val 與 PL（nvidia/coord_alt.py 快照）。")
     r = 4
     ws.cell(r, 1, "A. 產業部署 GW 兩讀數（日曆年）").font = BOLD; r += 1
     for j, h in enumerate(["年度", "現行基準 GW", "另一側讀數 GW", "另一側 ÷ 現行", "對帳中（1＝是）", "估值是否依賴（1＝是）", "依賴的會計年度", "Siliconomics 狀態／主導層", "供給側讀數 GW（情境 A）", "改前現行基準 GW"], 1): ws.cell(r, j, h).font = BOLD
@@ -275,7 +275,7 @@ def write_sheet(wb, C):
     RC["lab_cur"] = r; ws.cell(r, 1, "目標價區標籤：現行基準讀數"); ws.cell(r, 2, "現行基準讀數（Siliconomics 基準；橫幅主值）"); r += 1
     RC["lab_alt"] = r; ws.cell(r, 1, "目標價區標籤：另一側讀數"); ws.cell(r, 2, '="另一側讀數（Wattonomics 換算的產業 GW"&IF(' + ("TRUE" if C["temp"] else "FALSE") + ',"；暫值","；Siliconomics 試作")&"）"'); r += 1
     RC["note"] = r; ws.cell(r, 1, "目標價區說明")
-    ws.cell(r, 2, f'="兩讀數只差產業部署 GW 一個輸入：CY2027–CY2029 另一側讀數為現行基準的 "&TEXT(co_r_27,"0.00")&"／"&TEXT(co_r_28,"0.00")&"／"&TEXT(co_r_29,"0.00")&" 倍（運算顆數與網通營收同乘），其他假設不變。個股不裁決哪一側正確，對帳在 Siliconomics 對帳單處理；結案前兩個目標價並列。"' + ('&"另一側讀數目前為暫值，待 Siliconomics 試作分支提供。"' if C["temp"] else '&"兩讀數取自 Siliconomics 協調試作分支（未合併）。"')); r += 1
+    ws.cell(r, 2, f'="兩讀數只差產業部署 GW 一個輸入：CY2027–CY2029 另一側讀數為現行基準的 "&TEXT(co_r_27,"0.00")&"／"&TEXT(co_r_28,"0.00")&"／"&TEXT(co_r_29,"0.00")&" 倍（情境 B、C 的運算顆數與網通營收同乘；情境 A＝供給側讀數不變），其他假設不變。個股不裁決哪一側正確，對帳在 Siliconomics 對帳單處理；結案前兩個目標價並列。"' + ('&"另一側讀數目前為暫值，待 Siliconomics 試作分支提供。"' if C["temp"] else '&"兩讀數取自 Siliconomics 協調試作分支（未合併）。"')); r += 1
     RC["pl"] = r; ws.cell(r, 1, "損益表年度標示（FY2027E–FY2031E）")
     for j, fy in enumerate(range(2027, 2032)):
         cy = next(y for y, fs in FY_OF.items() if fy in fs)

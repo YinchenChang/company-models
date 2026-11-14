@@ -1,5 +1,5 @@
 # NVIDIA 三層協調試作（2026-11-14）：另一側讀數整本重建快照 → nvidia/coord_alt.json（正式建置的 Coord 頁讀入）。
-# 做法：同一個建置程式，NV_OVERRIDE="_coord=1"——三情境 CY2027 起運算顆數與網通營收 × co_r_<yy>（In 頁 Z 節：另一側 ÷ 現行基準），
+# 做法：同一個建置程式，NV_OVERRIDE="_coord=1"——情境 B、C 於 CY2027 起（情境 A＝供給側讀數，不縮放）運算顆數與網通營收 × co_r_<yy>（In 頁 Z 節：另一側 ÷ 現行基準），
 # 其他輸入不變；LibreOffice 重算後讀加權目標價、DCF、Comparable（調整後）、前瞻 EPS、三情境 EPS、情境 B 營收與顆數。基準檔同時重建一次作核對。
 # In 頁 Z 節（coord_inputs.json 或 Siliconomics 快照）改動後先重跑本檔，再正式建置（否則 Coord 頁快照狀態顯示 STALE）。
 # 用法：python3 nvidia/coord_alt.py [暫存資料夾，預設 /tmp/work_nvidia/coord]
