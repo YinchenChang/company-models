@@ -702,14 +702,14 @@ def _coord_c0():
     CW = wb["Coord"]
     cr = lambda p, start=1: next(r for r in range(start, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith(p))
     f0, f1h = cr("F. 三層協調"), cr("F1. 本模型讀取")
-    f2h = cr("F2. C0 由下往上對帳"); r_tol = cr("對帳門檻"); rh = r_tol + 1
-    r_sum = cr("C0 對帳摘要"); r_read = cr("讀法：認列顆數"); r_n = cr("對帳中項目數"); r_chk = cr("F1 核對")
+    f2h = cr("F2. C0 由下往上對帳"); r_tol = cr("對帳門檻"); rh = r_tol + 2
+    r_sum = cr("對帳摘要（HTML"); r_read = cr("讀法：營收校準"); r_n = cr("對帳中項目數"); r_chk = cr("F1 核對")
     S = {x["id"]: x for x in cfg["sections"]}
     # F2 主表：項目、年度、單位、本模型值、層級值、差距、狀態（數值格式依列：顆數 n2、營收 n1、單價 n1；無可比列為文字）
     rows = []
     for r in range(rh + 1, r_n):
         u = str(CW.cell(r, 3).value or "")
-        f = "n2" if "顆" in u else "n1"
+        f = "n2" if "顆" in u else ("n3" if u.startswith("x") else "n1")
         rows.append([f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}", f"@Coord!D{r}|{f}", f"@Coord!E{r}|{f}", f"@Coord!F{r}|sp1", f"@Coord!G{r}"])
     t2 = {"type": "table", "caption": f"@Coord!A{f2h}", "head": ["項目", "年度", "單位", "本模型", "Siliconomics", "差距", "狀態"], "rows": rows}
     d2 = {"type": "table", "caption": "展開：由下往上對帳每列的口徑、來源與證據等級（兩邊原值見上表）", "collapse": True, "summary": "展開：由下往上對帳的口徑、來源與證據等級",
