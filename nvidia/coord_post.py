@@ -304,6 +304,10 @@ def write_sheet(wb, C):
     for j, fy in enumerate(range(2027, 2032)):
         cy = next(y for y, fs in FY_OF.items() if fy in fs)
         ws.cell(r, 2 + j, f'=IF(AND(co_flag_{cy}=1,co_dep_{cy}=1),"FY{fy}E（對帳中）","FY{fy}E")')
+    r += 1
+    # v0.3.9（Andy 11-14 17:47 選項 A）：損益章 FY2029 下滑說明——2028 基準係數待定維持現行、等比例套用；重判後更新
+    RC["pl29"] = r; ws.cell(r, 1, "損益章說明：FY2029 營收下滑（2028 係數待定；選項 A）")
+    ws.cell(r, 2, f'="FY2029E 營收較 FY2028E "&TEXT(B{RB["rev_B_2029"]}/B{RB["rev_B_2028"]}-1,"+0.0%;-0.0%")&"：2028 年 Siliconomics 基準顆數係數仍為「待定」，依規則維持現行 "&TEXT(co_ucoef_28,"0.00")&"（2027 年為 1），並等比例套用到各平台；NVIDIA 原始顆數 CY2027→CY2028 只增 "&TEXT((u_bw_28+u_rb_28+u_ru_28+u_hp_28)/(u_bw_27+u_rb_27+u_ru_27+u_hp_27)-1,"0.0%")&"，乘係數後認列顆數 FY2028→FY2029 "&TEXT(B{RB["nvu_B_2029"]}/B{RB["nvu_B_2028"]}-1,"+0.0%;-0.0%")&"。這是 2028 年狀態未定造成的斷層，不是需求轉弱的判斷；待 NVIDIA FY27Q3 財報（2026-11-19）與財報季結束（2026-11-30）重判 2028 年狀態後更新，屆時一併評估 2028 年改套連續法、或總量缺口改依各平台成長分配兩案。"')
     r += 2
     ws.cell(r, 1, "E. 敏感度：總量缺口全由 NVIDIA 吸收（規則 v1.2 C3；其他平台維持原始顆數，NVIDIA 承擔全部總量缺口，下限 0；兩讀數各算一次；整本重建快照）").font = BOLD; r += 1
     for j, h in enumerate(["項目", "現行基準讀數：等比例分配", "現行基準讀數：NVIDIA 全吸收", "另一側讀數：等比例分配", "另一側讀數：NVIDIA 全吸收"], 1): ws.cell(r, j, h).font = BOLD

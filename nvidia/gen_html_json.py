@@ -690,6 +690,11 @@ def _coord():
         if b.get("type") == "table" and isinstance(b.get("head"), list) and len(b["head"]) == 9 and str(b["head"][4]).startswith("@PL!F"):
             b["head"][4:9] = [f"@Coord!{c}{r_pl}" for c in "BCDEF"]; n += 1
     assert n == 1, n
+    # v0.3.9：損益章在標準損益表後加 FY2029 下滑說明（Coord 頁 C 節；Andy 11-14 17:47 選項 A）
+    r_pl29 = cr("損益章說明：FY2029 營收下滑")
+    pb = S["pl"]["blocks"]
+    i_is = next(i for i, b in enumerate(pb) if b.get("type") == "table" and str(b.get("caption", "")).startswith("標準損益表（十億美元"))
+    pb.insert(i_is + 1, {"type": "note", "parts": [f"@Coord!B{r_pl29}"]})
 
 
 _coord()

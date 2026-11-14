@@ -1471,22 +1471,15 @@
     },
     {
      "type": "table",
-     "caption": "@Coord!A47",
+     "caption": "@Coord!A48",
      "head": [
-      "@Coord!A48",
-      "@Coord!B48",
-      "@Coord!C48",
-      "@Coord!D48",
-      "@Coord!E48"
+      "@Coord!A49",
+      "@Coord!B49",
+      "@Coord!C49",
+      "@Coord!D49",
+      "@Coord!E49"
      ],
      "rows": [
-      [
-       "@Coord!A49",
-       "@Coord!B49|n2",
-       "@Coord!C49|n2",
-       "@Coord!D49|n2",
-       "@Coord!E49|n2"
-      ],
       [
        "@Coord!A50",
        "@Coord!B50|n2",
@@ -1545,31 +1538,31 @@
       ],
       [
        "@Coord!A58",
-       "@Coord!B58|p1",
-       "@Coord!C58|p1",
-       "@Coord!D58|p1",
-       "@Coord!E58|p1"
+       "@Coord!B58|n2",
+       "@Coord!C58|n2",
+       "@Coord!D58|n2",
+       "@Coord!E58|n2"
       ],
       [
        "@Coord!A59",
-       "@Coord!B59|n2",
-       "@Coord!C59|n2",
-       "@Coord!D59|n2",
-       "@Coord!E59|n2"
+       "@Coord!B59|p1",
+       "@Coord!C59|p1",
+       "@Coord!D59|p1",
+       "@Coord!E59|p1"
       ],
       [
        "@Coord!A60",
-       "@Coord!B60|sp1",
-       "@Coord!C60|sp1",
-       "@Coord!D60|sp1",
-       "@Coord!E60|sp1"
+       "@Coord!B60|n2",
+       "@Coord!C60|n2",
+       "@Coord!D60|n2",
+       "@Coord!E60|n2"
       ],
       [
        "@Coord!A61",
-       "@Coord!B61|p1",
-       "@Coord!C61|p1",
-       "@Coord!D61|p1",
-       "@Coord!E61|p1"
+       "@Coord!B61|sp1",
+       "@Coord!C61|sp1",
+       "@Coord!D61|sp1",
+       "@Coord!E61|sp1"
       ],
       [
        "@Coord!A62",
@@ -1591,13 +1584,20 @@
        "@Coord!C64|p1",
        "@Coord!D64|p1",
        "@Coord!E64|p1"
+      ],
+      [
+       "@Coord!A65",
+       "@Coord!B65|p1",
+       "@Coord!C65|p1",
+       "@Coord!D65|p1",
+       "@Coord!E65|p1"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A65"
+      "@Coord!A66"
      ]
     },
     {
@@ -3420,6 +3420,12 @@
        "@PL!I374|p1",
        "@PL!J374|p1"
       ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!B46"
      ]
     },
     {
@@ -6641,12 +6647,12 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!D149"
+      "@Coord!D150"
      ]
     },
     {
      "type": "table",
-     "caption": "@Coord!A124",
+     "caption": "@Coord!A125",
      "head": [
       "項目",
       "年度",
@@ -6658,20 +6664,11 @@
      ],
      "rows": [
       [
-       "@Coord!A128",
-       "@Coord!B128",
-       "@Coord!C128",
-       "@Coord!D128|n3",
-       "@Coord!E128|n3",
-       "@Coord!F128|sp1",
-       "@Coord!G128"
-      ],
-      [
        "@Coord!A129",
        "@Coord!B129",
        "@Coord!C129",
-       "@Coord!D129|n2",
-       "@Coord!E129|n2",
+       "@Coord!D129|n3",
+       "@Coord!E129|n3",
        "@Coord!F129|sp1",
        "@Coord!G129"
       ],
@@ -6742,8 +6739,8 @@
        "@Coord!A137",
        "@Coord!B137",
        "@Coord!C137",
-       "@Coord!D137|n1",
-       "@Coord!E137|n1",
+       "@Coord!D137|n2",
+       "@Coord!E137|n2",
        "@Coord!F137|sp1",
        "@Coord!G137"
       ],
@@ -6818,6 +6815,15 @@
        "@Coord!E145|n1",
        "@Coord!F145|sp1",
        "@Coord!G145"
+      ],
+      [
+       "@Coord!A146",
+       "@Coord!B146",
+       "@Coord!C146",
+       "@Coord!D146|n1",
+       "@Coord!E146|n1",
+       "@Coord!F146|sp1",
+       "@Coord!G146"
       ]
      ]
     },
@@ -6834,13 +6840,6 @@
       "Siliconomics 證據等級"
      ],
      "rows": [
-      [
-       "@Coord!A128",
-       "@Coord!H128",
-       "@Coord!I128",
-       "@Coord!J128",
-       "@Coord!K128"
-      ],
       [
        "@Coord!A129",
        "@Coord!H129",
@@ -6959,18 +6958,25 @@
        "@Coord!I145",
        "@Coord!J145",
        "@Coord!K145"
+      ],
+      [
+       "@Coord!A146",
+       "@Coord!H146",
+       "@Coord!I146",
+       "@Coord!J146",
+       "@Coord!K146"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A150"
+      "@Coord!A151"
      ]
     },
     {
      "type": "table",
-     "caption": "@Coord!A77",
+     "caption": "@Coord!A78",
      "collapse": true,
      "summary": "展開：本模型讀取的 Siliconomics 名稱、值與版本（含 Tokenomics 鏡像）",
      "head": [
@@ -6982,14 +6988,6 @@
       "層級與版本"
      ],
      "rows": [
-      [
-       "@Coord!A79",
-       "@Coord!B79",
-       "@Coord!C79|n3",
-       "@Coord!D79|n3",
-       "@Coord!F79",
-       "@Coord!G79"
-      ],
       [
        "@Coord!A80",
        "@Coord!B80",
@@ -7325,6 +7323,14 @@
        "@Coord!D121|n3",
        "@Coord!F121",
        "@Coord!G121"
+      ],
+      [
+       "@Coord!A122",
+       "@Coord!B122",
+       "@Coord!C122|n3",
+       "@Coord!D122|n3",
+       "@Coord!F122",
+       "@Coord!G122"
       ]
      ]
     }
