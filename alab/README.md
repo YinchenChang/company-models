@@ -11,6 +11,7 @@
 - **對帳中項目數：** 本公司 0 項（Coord 頁 F 節讀取層級、G 節層級之間、I 節參考列均不計）；G 節產業部署 GW 於 CY2027–CY2029 為 Siliconomics 對帳中，只列參考。
 - **目標價與評等不變：** 加權目標價 101.3185、評等放空；DCF 48.85、Comparable 153.78。與 v0.3.7 逐格比對（`tools/xlsx_diff.py`、重算值）：既有儲存格只差 README A1 版號、README A62 與 Sens D553 的 build_id；其餘皆為新增頁、列。
 - **檢查：** `check_company_html.py alab`、`check_layout_v13.py --xlsx`（I 項實際檢查）、`tools/baseline_coordination/check.py` 全過；LibreOffice 重算錯誤格 0。
+- **前版：** v0.3.7 成品已於 11-14 隨 Siliconomics v0.19 全下游重建更新為 101.32（DCF 48.85），v0.3.8 對此版不變。
 - **未做／待判斷：** (1) `tools/coord` 的硬體清單（Siliconomics coord_meta）若尚未列入 alab，須由 Siliconomics 側加入（本輪不改該檔，見 PR 說明）；(2) RevDCF：折現率單獨降到搜尋下限（永續成長率＋0.5 個百分點）仍不足以支持現價，頁面標示「無解」；(3) 下方 v0.3.6／v0.3.7 以前各節引用的目標價（103.66 等）為當時數字，現值見 Val 頁。
 - 成品：`dist/20261114_Astera Labs個股模型_v0.3.8.xlsx`、`.html`；v0.3.7 移到 `dist/_待刪除/`。本公司無 `display_check.json`，不跑 `version_table.py`。
 

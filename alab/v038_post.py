@@ -301,7 +301,7 @@ def revdcf(wb):
         for c in (2, 3, 4): RV.cell(r, c).number_format = "0.0000%"
         RV.cell(r, 5).number_format = "0.00"
         r += 1
-    kv("w1", "現價隱含的 WACC", f"=D{r - 1}", "0.00%", "搜尋區間：永續成長率＋0.5 個百分點～40%；若下一列核對不為零，表示到下限仍低於現價所需值（折現率單獨無法支持現價）")
+    kv("w1", "現價隱含的 WACC", f"=D{r - 1}", "0.00%", f'="搜尋區間：永續成長率＋0.5 個百分點～40%。若下方核對列為負，表示無解：永續期新投資報酬率＝WACC，終值＝NOPAT ÷ WACC，降折現率不產生成長價值；折現率降到下限時每股約 "&TEXT(E{r - 1},"0")&" 美元，仍低於所需 "&TEXT(B{A["v0"]},"0")&" 美元"')
     kv("w0", "模型 WACC", "=wacc", "0.00%")
     kv("w_chk", "核對：以模型 WACC 代入同一公式 − DCF 頁情境 B 評價日每股價值（應為 0）", "=" + val_at("wacc") + f"-DCF!$C${ps}", "0.000000")
     kv("w_res", "核對：隱含 WACC 下的每股價值 − 支持現價所需值（美元；接近 0＝已解出，為負＝搜尋到下限仍不足以支持現價）", f"=E{r - 4}-B{A['v0']}", "0.000000")
@@ -326,7 +326,7 @@ def revdcf(wb):
     RV.cell(r, 1, "C. 摘要（HTML 用；公式帶數字）").font = BOLD; r += 1
     RV.cell(r, 1, F(T("現金流折現法：以情境 B 的現金流與 "), 'TEXT(wacc,"0.0%")', T(" 的折現率，每股價值 "), f'TEXT(B{A["v_b"]},"0.00")',
                      T(" 美元；要支持現價 "), 'TEXT(px,"0.00")', T(" 美元，企業價值須放大為 "), f'TEXT(B{A["evx"]},"0.00")',
-                     T(" 倍。單靠一個因素達成時，需要："), f'IF(B{A["w_res"]}<-0.01,"折現率即使降到搜尋下限 "&TEXT(B{A["w1"]},"0.0%")&" 仍不足","折現率降到 "&TEXT(B{A["w1"]},"0.0%"))', T("；或 FY2028–FY2032 營收全面放大 "),
+                     T(" 倍。單靠一個因素達成時，需要："), f'IF(B{A["w_res"]}<-0.01,"折現率即使降到搜尋下限 "&TEXT(B{A["w1"]},"0.0%")&" 仍不足（永續期新投資報酬率等於 WACC，降折現率不增加成長價值）","折現率降到 "&TEXT(B{A["w1"]},"0.0%"))', T("；或 FY2028–FY2032 營收全面放大 "),
                      f'TEXT(B{A["s1"]},"0.00")', T(" 倍（FY2028 營收 "), f'TEXT(B{A["rv1"]},"#,##0.0")', T(" 十億美元，模型為 "), f'TEXT(B{A["rv0"]},"#,##0.0")', T("）；或 EBIT 率提高到 "),
                      f'TEXT(B{A["m1"]},"0%")', T("（模型等效約 "), f'TEXT(B{A["m0"]},"0%")', T("，終值年權重大）"),
                      f'IF(B{A["m1"]}>1,"，超過 100%，不可能單靠利益率達成","")', T("。")))
@@ -490,7 +490,7 @@ def coord_sections(wb, SIL):
     C.cell(r, 1, "方法：個股側＝Astera Labs 8-K 已公布的 2026 年季度營收（1Q26、2Q26、3Q26；公司揭露，Verified；公司指引不算實績，只列參考）。層級側＝同口徑的層級隱含值＝市場層值 × 份額："
                  "非 NVIDIA scale-up 交換晶片市場（markets/network，CY2026）× Scorpio X 有效份額＋AI 加速器顆數 × 每顆 PCIe 等內容（本模型 Assumed）× PCIe 等有效份額。"
                  "時差：Astera Labs 會計年度＝日曆年，1Q26–3Q26＝2026-01～2026-09（9 個月）。主讀數＝三季累計實績 vs 層級 CY2026 × 9 ÷ 12（線性時差近似，Derived）；"
-                 "第二讀數＝最近一季（3Q26）× 4 vs 層級 CY2026。成長年中，主讀數偏低（後段季度較大）；3Q26 的季中點（2026-08）晚於年中，第二讀數偏高。"
+                 "第二讀數＝最近一季（3Q26）× 4 vs 層級 CY2026。營收逐季成長的年度，全年層級值線性分攤到前九個月會偏高（後段季度較大），主讀數因此偏低；3Q26 的季中點（2026-08）晚於年中，第二讀數偏高。"
                  "判定規則：兩讀數差距都超過 ±15% 且同號 → 對帳中；只有一個超過 → 時差邊界（參考）；都在內 → 一致。不用模型預測、同源值或賣方估計補位。")
     C.cell(r, 1).alignment = Alignment(wrap_text=True, vertical="top"); r += 1
     C.cell(r, 1, "同源校準（本表實際檢驗什麼）：Astera Labs 沒有揭露產品線營收與市占，層級（markets/network）也沒有 Astera 份額的獨立來源。本模型的有效份額＝FY2026 錨點營收 ÷ 市場，"
@@ -535,24 +535,24 @@ def coord_sections(wb, SIL):
     C.cell(r, 4, f"=B{r}/C{r}-1").number_format = pct
     C.cell(r, 5, SAME)
     C.cell(r, 6, "US$B；公司實績＝三季營收加總；層級＝CY2026 全年 × 9 ÷ 12")
-    C.cell(r, 7, "公司：Astera Labs 8-K（In 頁 q1_rev、q2_rev、q3_rev）；層級：markets/network 市場 × 本模型校準份額（Siliconomics " + SIL.VERSION + " 顆數係數）")
+    C.cell(r, 7, "公司：Astera Labs 8-K（In 頁 q1_rev、q2_rev、q3_rev）；層級：markets/network 市場（CY2026 未乘 Siliconomics 係數）× 本模型校準份額")
     C.cell(r, 8, "Verified（公司）／Derived（層，同源校準）／Derived（線性時差）")
-    C.cell(r, 9, f'="成長年中，線性分攤的層級值偏高（後段季度較大），主讀數偏低："&TEXT(B{r},"0.000")&" vs "&TEXT(C{r},"0.000")&"。同源校準，只說明錨點與實績的時差型態，不構成層級對帳"'); rm = r; r += 1
+    C.cell(r, 9, f'="營收逐季成長的年度，全年層級值線性分攤到前九個月會偏高（後段季度較大），所以累計實績相對偏低："&TEXT(B{r},"0.000")&" vs "&TEXT(C{r},"0.000")&"。同源校準，只說明錨點與實績的時差型態，不構成層級對帳"'); rm = r; r += 1
     C.cell(r, 1, "第二讀數：營收，最近一季（3Q26）× 4 vs 層級 CY2026")
     C.cell(r, 2, f"=B{b['q3']}*4").number_format = "#,##0.000"
     C.cell(r, 3, f"=B{b['L']}").number_format = "#,##0.000"
     C.cell(r, 4, f"=B{r}/C{r}-1").number_format = pct
     C.cell(r, 5, SAME)
     C.cell(r, 6, "US$B；3Q26 單季 × 4（年化）；層級＝CY2026 全年")
-    C.cell(r, 7, "公司：Astera Labs 8-K（In 頁 q3_rev）；層級同上")
+    C.cell(r, 7, "公司：Astera Labs 8-K（In 頁 q3_rev）；層級同上（CY2026 未乘 Siliconomics 係數）")
     C.cell(r, 8, "Verified（公司）／Derived（層，同源校準）／Derived（年化）")
-    C.cell(r, 9, "3Q26 的季中點（2026-08）晚於年中，成長年中最近一季年化偏高；同源校準，不構成層級對帳"); rs = r; r += 1
+    C.cell(r, 9, "3Q26 的季中點（2026-08）晚於年中，營收逐季成長的年度，最近一季年化會偏高；同源校準，不構成層級對帳"); rs = r; r += 1
     C.cell(r, 1, "機械結果（依判定規則；僅供參考，同源校準故不判定、不計入）")
     C.cell(r, 5, f'=IF(AND(ABS(D{rm})>0.15,ABS(D{rs})>0.15,SIGN(D{rm})=SIGN(D{rs})),"對帳中",IF(OR(ABS(D{rm})>0.15,ABS(D{rs})>0.15),"時差邊界（參考）","一致"))')
     C.cell(r, 9, f'="兩讀數反向（主讀數 "&TEXT(D{rm},"+0.0%;-0.0%")&"、第二讀數 "&TEXT(D{rs},"+0.0%;-0.0%")&"）：實績在層級隱含的兩側，不是同向偏離；即使不同源也不會判對帳中"'); rmech = r; r += 1
     C.cell(r, 1, "C0（實績）判定：營收 2026").font = BOLD
     C.cell(r, 5, "無可比實績（層級值同源）").font = BOLD
-    C.cell(r, 6, "公司未揭露產品線營收與市占；層級無 Astera 份額的獨立來源；層級隱含值由本模型 FY2026 錨點校準，市場值消去")
+    C.cell(r, 6, "公司未揭露產品線營收與市占；層級無本公司份額（份額為本模型錨點反推）；層級隱含值由 FY2026 錨點校準，市場值消去")
     C.cell(r, 9, "不開對帳單、不改上游值；待公司揭露 Scorpio X 或各產品線營收，或有獨立的 scale-up 交換晶片市占資料時，才能對層級值做 C0 判定"); rv = r; r += 1
     C.cell(r, 1, "參考：FY2026 全年（1Q26–3Q26 實績＋4Q26 公司指引）vs 層級 CY2026（含指引，同源，不判定）")
     C.cell(r, 2, f"=B{b['an']}").number_format = "#,##0.000"; C.cell(r, 2).font = GREEN
@@ -629,6 +629,8 @@ def apply(wb, here, SIL):
     if os.environ.get("COORD_RUN") == "1":
         return "v038_post：略過（alt_run 建置）"
     RD = wb["README"]
+    import re as _re
+    RD["A1"].value = _re.sub(r"；build_id alab-v0\.3\.8-[0-9a-f]+(?=；v0\.3\.8（)", "（build_id 見 README 狀態列）", str(RD["A1"].value))
     hist_block(wb)
     PLA = pl_standard(wb)
     RVA = revdcf(wb)
