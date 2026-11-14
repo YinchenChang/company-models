@@ -35,12 +35,12 @@ from common import F_BOLD, F_CALC, F_IN, F_NOTE, e6_violations, header, lo_recal
 from oai_link import read_oai  # noqa: E402
 from tk_link import NONNV_STATUS, PENDING_NOTE, V17_NAMES, V19B_NAMES, read_nonnv, read_snapshot  # noqa: E402
 
-VERSION = "v0.2.0"
-STAGE = "v0.2.0"
+VERSION = "v0.2.1"
+STAGE = "v0.2.1"
 REGISTRY_PATH = HERE / "id_registry.json"
 SRC_YAML = ROOT / "data" / "anthropic_src.yaml"
 INP_YAML = ROOT / "data" / "anthropic_inputs.yaml"
-STAGE_MODULES = ("a2", "a3", "a4", "a5", "a6", "a7", "a8", "a9", "a10", "a11")
+STAGE_MODULES = ("a2", "a3", "a4", "a5", "a6", "a7", "a8", "a9", "a10", "a11", "a12")
 CALC_SHEETS = ("Demand", "Revenue", "Compute", "Cost", "Funding", "Reverse")      # E6 掃描與 OAI_Link 隔離的對象
 SRC_COLS = ["SRC_ID", "key", "分組", "項目", "值", "低", "高", "單位", "期間", "日期（序列值）", "口徑", "來源", "網址", "文件日期", "擷取日", "標記",
             "利害方與誘因", "來源等級", "立場", "立場說明", "一手／二手", "處理狀態", "備註",
@@ -228,6 +228,8 @@ def sheet_readme(ctx, summary):
                         "每項皆有 Inputs 開關，全關＝v0.1.9（逐位）：B1 IPO＋私募淨額進基準（p_ipo_base_switch；淨募資 84.6 − RSU 代扣稅款 3.8，依 ipo_px 連動）、B2 條件式改讀（Google 10、NVIDIA 併入私募、AMD 2.5）、"
                         "C1 9-30 後新簽 105.7、C2 Microsoft 47.2、C3 附條件 186.2、C4 Lambda 34.9 扣除讀法（基準照計）、D1 2026Q4 營收＝81 ÷ 4、E1 RSU 修改 14.2、E2 2027–2028 股權報酬攤銷下限。"
                         "新頁 Val（DCF〔FCFF〕50%＋調整後 Comparable 50%；情境 A／B／C；評等）；新列：Cost 第二十七節、Funding 第十六節。"),
+        ("v0.2.1 更新", "個股 HTML 版面規格 v1.3 試作：新頁 PL（標準損益表，GAAP；歷史 2023–2025 與 2026 前九月取 S-1/A，2026–2030 取本模型基準情境；只列示，不被任何計算頁引用）；"
+                        "新增 SRC_ANT_594–621（S-1/A 損益表）、Inputs pl_cash_yield、pl_q4_oth_other。其餘工作表數值與 v0.2.0 逐格相同（目標價、評等不變）。"),
         ("層級對應", "Haiku→低層（Tokenomics Luna）、Sonnet→中層（Sol）、Opus→頂層（Astra）；具名範圍沿用 OpenAI 的 Top／Mid／Low。"),
         ("標記", "Verified／Interested-party／Analogy／Assumed／Derived／Decision（Analogy、Assumed 一律附區間）。"),
         ("分層", "公司財務原始數據→SRC_ANT；AI 技術與算力→TK_Link（取自 Tokenomics）；假設→Inputs；OpenAI 對照→OAI_Link（不進計算）。"),
@@ -390,11 +392,11 @@ def base_checks(ctx, n_src, n_inp):
     fams = sorted({x.split("_")[2] for x in nnv})
     order = "+".join(f"(TK_NNV_{f}_{a}Lo>TK_NNV_{f}_{a})+(TK_NNV_{f}_{a}>TK_NNV_{f}_{a}Hi)" for f in fams for a in ("Out", "Hold"))
     rows = [
-        ("src_rows", "SRC_ANT 列數", "=SUMPRODUCT(--(LEN(SRC_ANT!$A$5:$A$600)>0))", n_src, "eq", "A1 376 列＋A2 新增 3 列（SRC_ANT_377–379）＋v0.1.1 新增 30 列（SRC_ANT_380–409）＋v0.1.6 新增 55 列（SRC_ANT_410–464，正式 S-1）＋v0.1.7 新增 7 列（465–471）＋v0.1.7.1 新增 16 列（472–487）＋v0.1.8 新增 34 列（488–521，S-1/A）＋v0.2.0 新增 71 列（522–592，初步招股說明書與市場資料）"),
-        ("src_missing", "SRC_ANT 缺值列數", "=SUM(SRC_ANT!$X$5:$X$600)", 0, "eq", "值、低、高皆空且非定性／文字／日期列"),
-        ("src_nosource", "SRC_ANT 缺出處或網址列數", "=SUM(SRC_ANT!$Y$5:$Y$600)", 0, "eq", ""),
-        ("src_order", "SRC_ANT 區間順序異常列數", "=SUM(SRC_ANT!$Z$5:$Z$600)", 0, "eq", "低 ≤ 值 ≤ 高"),
-        ("src_derived", "SRC_ANT 標記 Derived 但未處理（仍為觀測）列數", "=SUM(SRC_ANT!$AA$5:$AA$600)", 0, "eq", "yaml 檔頭：Derived 列改公式或移入 Inputs"),
+        ("src_rows", "SRC_ANT 列數", "=SUMPRODUCT(--(LEN(SRC_ANT!$A$5:$A$800)>0))", n_src, "eq", "A1 376 列＋A2 新增 3 列（SRC_ANT_377–379）＋v0.1.1 新增 30 列（SRC_ANT_380–409）＋v0.1.6 新增 55 列（SRC_ANT_410–464，正式 S-1）＋v0.1.7 新增 7 列（465–471）＋v0.1.7.1 新增 16 列（472–487）＋v0.1.8 新增 34 列（488–521，S-1/A）＋v0.2.0 新增 71 列（522–592，初步招股說明書與市場資料；593 為融資租賃現值）＋v0.2.1 新增 28 列（594–621，S-1/A 損益表，PL 頁用）"),
+        ("src_missing", "SRC_ANT 缺值列數", "=SUM(SRC_ANT!$X$5:$X$800)", 0, "eq", "值、低、高皆空且非定性／文字／日期列"),
+        ("src_nosource", "SRC_ANT 缺出處或網址列數", "=SUM(SRC_ANT!$Y$5:$Y$800)", 0, "eq", ""),
+        ("src_order", "SRC_ANT 區間順序異常列數", "=SUM(SRC_ANT!$Z$5:$Z$800)", 0, "eq", "低 ≤ 值 ≤ 高"),
+        ("src_derived", "SRC_ANT 標記 Derived 但未處理（仍為觀測）列數", "=SUM(SRC_ANT!$AA$5:$AA$800)", 0, "eq", "yaml 檔頭：Derived 列改公式或移入 Inputs"),
         ("inp_rows", "Inputs 列數", "=SUMPRODUCT(--(LEN(Inputs!$A$5:$A$600)>0))", n_inp, "eq", ""),
         ("inp_order", "Inputs 區間順序異常列數", "=SUM(Inputs!$L$5:$L$600)", 0, "eq", "低 ≤ 值 ≤ 高（有三值者）"),
         ("inp_norange", "Inputs Analogy／Assumed 缺區間列數", "=SUM(Inputs!$M$5:$M$600)", 0, "eq", "共同規則第 4 節：Analogy／Assumed 一律給區間"),
