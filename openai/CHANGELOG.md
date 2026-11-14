@@ -2,13 +2,13 @@
 
 每次同步記錄：Excel 版本、工作包、commit 與變動摘要。
 
-## 20261115_OpenAI_v0.6.5.xlsx — v0.6.5（三層協調 Coord 頁；TK 快照仍 v21.7）
+## 20261115_OpenAI_v0.6.5.xlsx — v0.6.5（三層協調 Coord 頁、PL 頁、未上市版面 v1.3；TK 快照仍 v21.7）
 
-- 新頁 `Coord`（builder/p7.py）：讀取層級（同源，不判定）、C0（公司揭露 vs 層級隱含值；營收「參考（同源校準）」）、層級之間（參考）；只列示，不被計算頁引用。具名範圍 COORD_C0、COORD_C0Sum、COORD_C0Verdict；Checks 新增 2 列（C181、C182）。
-- 既有計算頁逐格不變（`tools/xlsx_diff.py` 對 v0.6.4：差異只在 README 列位移、Coord、Checks）。對帳中 0。
-- 測試：scenarios.yaml 期望值（sheets 加 Coord、formula_cells 5003、defined_names 757）；新增 `test_v065_coord_not_fed_back`。
+- 新頁 `Coord`（builder/p7.py）：讀取層級（同源，不判定）、C0（公司揭露 vs 層級隱含值；營收「參考（同源校準）」）、層級之間（參考）；只列示，不被計算頁引用。具名範圍 COORD_C0、COORD_C0Sum、COORD_C0Verdict；Checks 新增 2 列（C181、C182）。新頁 `PL`（builder/p8.py；標準損益表；Checks C183、C184）。
+- 既有計算頁逐格不變（`tools/xlsx_diff.py` 對 v0.6.4：差異只在 README 列位移、Coord、PL、Checks）。對帳中 0。
+- 測試：scenarios.yaml 期望值（sheets 加 Coord、PL，formula_cells 5062、defined_names 774）；新增 `test_v065_coord_not_fed_back`。
 - HTML：`fundmodel_v2.py` 新增對帳章三層協調表（`coord_c0_generic`）；`dist/` 重產，v0.6.4 成品移 `dist/_待刪除/`，xlsx 移 `model/archive/`。
-- 版面 v1.3 未做（缺 Val、PL、RevDCF；見 README v0.6.5）。
+- 版面 v1.3（未上市、無市場價格；規格 J 節，主控決定）：估值章「不適用」、無反向 DCF 章；新生成器 `fundmodel_v13u.py`；`check_layout_v13.py` 支援豁免；OpenAI 個股頁全過。
 
 ## 20261029_OpenAI_v0.6.4.xlsx — v0.6.4（口徑一 Q2 GW 採 B／C 段、D2 推導式、衍生值移 Inputs、TK 快照 v21.7）
 

@@ -395,7 +395,8 @@ PROFILES = {
         plan=[("s5", "funding", "資金：現金與外部資金需求", "資金"), ("s2", "unit", "每 VR 等值 GW：營收 vs 全成本", "每 GW 收支"),
               ("s3", "revenue", "營收結構與管理層目標", "營收"), ("s4", "compute", "算力：總需求 vs 合約＋自建", "算力"),
               ("s6b", "payback", "回本比值（實際 m×L ÷ 門檻）", "回本比值")],
-        recon=[("s7", "最該審的預設")], status="s8", recon_title="對帳：最該審的預設"),
+        recon=[("s7", "最該審的預設")], status="s8", recon_title="對帳：最該審的預設",
+        layout="v13u"),   # 個股 HTML 版面規格 v1.3 J 節：未上市、無市場價格的模型（tools/company_html/fundmodel_v13u.py）
 }
 
 
@@ -445,6 +446,9 @@ def build(html_in: Path, xlsx: Path, out: Path, profile: str = "anthropic"):
     if P.get("layout") == "v13":
         from fundmodel_v13 import build_v13
         return build_v13(html_in, xlsx, out, P, sys.modules[__name__])
+    if P.get("layout") == "v13u":
+        from fundmodel_v13u import build_v13u
+        return build_v13u(html_in, xlsx, out, P, sys.modules[__name__])
     src = html_in.read_text(encoding="utf-8")
     soup = BeautifulSoup(src, "lxml")
     B = Book(xlsx)

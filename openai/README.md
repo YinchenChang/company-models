@@ -9,7 +9,7 @@ OpenAI 收支模型（v0.6，建置中）。2026-10-07 由 `YinchenChang/openai-
 
 ## v0.6.5 三層協調（Coord 頁）：模型商（複製自 Anthropic v0.2.2）
 
-**依據：** 三層基準協調規則 v1.4.2 C0 第 2 點（Andy 2026-11-14 17:40）；工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`。數值計算頁逐格不變（與 v0.6.4 比對：既有計算頁 0 差異；只新增 Coord 頁、Checks 2 列、README 列位移）。TK_Link 仍為 Tokenomics v21.7（master 現為 v22.0，本輪不換快照）。建置：`python3 builder/build.py --tk-dir <Tokenomics checkout@8309fdb> --out model/20261115_OpenAI_v0.6.5.xlsx --base model/archive/20261029_OpenAI_v0.6.4.xlsx --date 2026-11-15 --tk-date 2026-10-29`。
+**依據：** 三層基準協調規則 v1.4.2 C0 第 2 點（Andy 2026-11-14 17:40）；工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`。數值計算頁逐格不變（與 v0.6.4 比對：既有計算頁 0 差異；只新增 Coord 頁、PL 頁、Checks 4 列、README 列位移）。TK_Link 仍為 Tokenomics v21.7（master 現為 v22.0，本輪不換快照）。建置：`python3 builder/build.py --tk-dir <Tokenomics checkout@8309fdb> --out model/20261115_OpenAI_v0.6.5.xlsx --base model/archive/20261029_OpenAI_v0.6.4.xlsx --date 2026-11-15 --tk-date 2026-10-29`。
 
 **Coord 頁（builder/p7.py；只列示，不被計算頁引用）：** A 參數；B 讀取層級（同源，不判定：Tokenomics v21.7；Wattonomics 讀本模型的自有資本支出、營業現金流、2025 年底現金，與本模型現值差皆為 0）；C 層級隱含值（Wattonomics T1 配置給 OpenAI 的年底 GW：2025 年底 0、2026 年底 0.824〔Oracle Abilene〕，2026 年平均 0.412 GW × Tokenomics L1_RevGW_PQ_VR200 49.5（36.2–78.5）＝CY2026 隱含營收 20.4）；D C0；E 層級之間（參考）。
 
@@ -24,7 +24,7 @@ OpenAI 收支模型（v0.6，建置中）。2026-10-07 由 `YinchenChang/openai-
 
 **HTML：** `tools/company_html/fundmodel_v2.py` 新增 `coord_c0_generic`（有 `COORD_C0` 才輸出；其他版本逐位元組不變，已以 v0.6.4 重建驗證）；對帳章新增三層協調表，數字全取自 xlsx。
 
-**版面 v1.3：未完成（待 Project 判斷）。** OpenAI 無 Val（估值）、PL（標準損益表）、RevDCF 頁：未上市、無現價與目標價，且歷史三年損益缺（只有 FY2024 營收、FY2025 外流財報一年）；補這三頁需要新的估值參數與損益口徑（判斷類），本輪未動。`check_layout_v13` 對現行個股頁仍有 A（缺 revdcf／pl／drivers 章）、F、G、H 必修項。
+**版面 v1.3（未上市、無市場價格；主控決定，Andy 授權照建議進行，2026-11-15）：** OpenAI 未上市，無市場價格與目標價，依 `docs/plan/個股HTML版面規格.md` J 節處理：估值章改為「估值：不適用（未上市、無市場價格）」（只列已到位融資 87 十億美元為參考，不給目標價與評等）；反向 DCF 章不適用；G、H 位置規定不適用；其餘章節照做。新增 `PL` 頁（builder/p8.py；FY2023–FY2030 標準損益表；歷史只放外流財報有揭露者：FY2024 營收、FY2025 營收／營業成本／營業費用／營業損失，其餘標「未揭露」，預測的其他收入至稅後淨利標「未建模」、EPS「不適用」；營業利益預測＝Cost 差額，Checks C183／C184 核對）；個股 HTML 由新版面生成器 `tools/company_html/fundmodel_v13u.py` 產生（profile `openai` 的 `layout="v13u"`）：命題、估值（不適用）、敏感度（對累計外部資金需求的案例長條圖）、損益（含圖）、驅動因子（分部營收推導：用戶×ARPU、token×單價，含圖）、資金／每 GW 收支／算力／回本比值（新增回本比值圖）、對帳（含 C0）、資料狀態。`check_layout_v13.py` 支援豁免（估值章帶 `data-unlisted`），OpenAI 個股頁全過（只剩 recon 章層級名稱的參數代號警告）；其他 68 份既有個股頁的檢查輸出與改動前逐字相同。
 
 ## v0.6.4：口徑一 Q2 GW 採 B／C 段、D2 推導式、衍生值移 Inputs（Tokenomics v21.7）
 - 口徑一 Q2 季平均 GW 2.26（2.17–2.35）；`PxQ` 新增第 8.4 節（D2 推導式，候選因子）與第九節（Microsoft 10-Q 對照）；SRC_OAI_141–143 退役、改為 Inputs 公式列；`TK_Link` 改取 v21.7。建置：`python3 builder/build.py --tk-dir <Tokenomics checkout@8309fdb> --out model/20261029_OpenAI_v0.6.4.xlsx --base model/archive/20261025_OpenAI_v0.6.3.xlsx --date 2026-10-29 --tk-date 2026-10-29`。範圍外變動比較：`python3 tools/diff_v064.py <v0.6.3> <v0.6.4>`。報告 `docs/reports/20261029_v0.6.4.md`。
