@@ -337,7 +337,7 @@ def main():
     same_dir = sum(1 for a, b, c in both if (ORD.index(b) - ORD.index(a)) * (ORD.index(c) - ORD.index(a)) > 0)
     same_rec = sum(1 for a, b, c in both if b == c)
     agree = sum(1 for a, b, c in TR if b == c)
-    rm["A2"] = (f"{VDATE} 改用 Bloomberg 前瞻倍數（BEST_PE_RATIO／記憶體 BEST_PX_BPS_RATIO，BF＝未來 12 個月；2015-12 起月底資料，"
+    rm["A2"] = ("2026-11-14 改用 Bloomberg 前瞻倍數（BEST_PE_RATIO／記憶體 BEST_PX_BPS_RATIO，BF＝未來 12 個月；2015-12 起月底資料，"
                 "最後一點為抓取當日的最新值、非 10 月月底）：每年窗口（前一年 11 月～當年 10 月）取月值中位數，再取 2017–2026 十個窗口的中位數。"
                 "口徑與 Comparable（現在的同業前瞻倍數）一致，10-27 落後 P/E 試算的谷底年度雜訊已排除。"
                 f"結果：10 年窗翻轉 {f10} 檔、近 5 年窗（2022–2026、門檻 4 年）翻轉 {f5} 檔；兩種窗口都翻轉 {len(both)} 檔，"

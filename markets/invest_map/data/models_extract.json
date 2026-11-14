@@ -11099,21 +11099,21 @@
   }
  },
  "00100": {
-  "model": "minimax/dist/20261106_MiniMax收支模型_v0_2_1.xlsx",
+  "model": "minimax/dist/20261115_MiniMax收支模型_v0_2_2.xlsx",
   "price": {
    "value": 170.2,
    "cell": "Valuation!D7",
-   "file": "minimax/dist/20261106_MiniMax收支模型_v0_2_1.xlsx"
+   "file": "minimax/dist/20261115_MiniMax收支模型_v0_2_2.xlsx"
   },
   "price_date": "2026-10-21",
   "disc_ratio": {
    "value": 0.887953824674089,
    "cell": "Valuation!I21",
-   "file": "minimax/dist/20261106_MiniMax收支模型_v0_2_1.xlsx"
+   "file": "minimax/dist/20261115_MiniMax收支模型_v0_2_2.xlsx"
   },
   "cash": {
    "basis": "現金流",
-   "file": "minimax/dist/20261106_MiniMax收支模型_v0_2_1.xlsx",
+   "file": "minimax/dist/20261115_MiniMax收支模型_v0_2_2.xlsx",
    "label": "F06 營運燒錢（經調整淨利）＋F07 算力預付與自建資本支出",
    "values": [
     [
