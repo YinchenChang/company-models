@@ -389,19 +389,22 @@ def _v13():
     S["drivers"]["title"] = "驅動因子：分部營收推導"
     S["drivers"].pop("intro", None)
     # ---- 7. 對帳：三層協調 C0（Coord 頁）＋公司指引對照 ----
-    cb = cr("B. C0"); ch = cb + 1; r_f, r_l = cr("AI 加速器顆數（情境 B）CY2026"), cr("產業部署 GW CY2029")
+    cb = cr("B. C0"); ch = cb + 1; r_f, r_l = cr("AI 加速器顆數（情境 B）CY2026"), cr("AI 加速器顆數（情境 B）CY2029")
+    r_g0, r_g1 = cr("產業部署 GW CY2026"), cr("產業部署 GW CY2029"); r_b2 = cr("層級之間（參考")
     r_nc = cr("日月光 LEAP 營收（FY2026"); r_br0, r_br1 = cr("參考：LEAP 核心營收 ÷ 層級委外補充 CoWoS 月產能 CY2026"), cr("參考：LEAP 核心營收 ÷ 層級委外補充 CoWoS 月產能 CY2029")
     r_sum = cr("判定摘要"); r_c1, r_c2, r_c3 = cr("對帳中年份：CY"), cr("口徑註記"), cr("C0 結論")
     ca = cr("A. 讀哪一層"); cah = ca + 1; r_a1, r_a2 = cah + 1, cr("Wattonomics：本模型不直接讀")
-    gfm = lambda r: "n2" if "GW" in str(CW.cell(r, 1).value) else "n3"
+    gfm = lambda r: "n3"
     c0_tbl = {"type": "table", "caption": f"@Coord!A{cb}", "head": [f"@Coord!{c}{ch}" for c in "ABCDEF"],
-              "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|{gfm(r)}", f"@Coord!C{r}|{gfm(r)}", f"@Coord!D{r}|sp1", f"@Coord!E{r}", f"@Coord!F{r}" if r in (r_f, r_f + 4) else ""] for r in range(r_f, r_l + 1)]
+              "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|{gfm(r)}", f"@Coord!C{r}|{gfm(r)}", f"@Coord!D{r}|sp1", f"@Coord!E{r}", f"@Coord!F{r}" if r == r_f else ""] for r in range(r_f, r_l + 1)]
                       + [[f"@Coord!A{r_nc}", f"@Coord!B{r_nc}", f"@Coord!C{r_nc}", f"@Coord!D{r_nc}", f"@Coord!E{r_nc}", f"@Coord!F{r_nc}"]]}
+    gw_tbl = {"type": "table", "caption": f"@Coord!A{r_b2}", "head": [f"@Coord!{c}{r_b2 + 1}" for c in "ABCDEF"],
+              "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|n2", f"@Coord!C{r}|n2", f"@Coord!D{r}|sp1", f"@Coord!E{r}", f"@Coord!F{r}" if r == r_g0 else ""] for r in range(r_g0, r_g1 + 1)]}
     br_tbl = {"type": "table", "collapse": True, "summary": "展開：橋接參考（日月光 LEAP 核心營收 ÷ 層級委外補充 CoWoS 月產能；不判定）", "head": [f"@Coord!{c}{ch}" for c in "ABCDE"],
               "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|n3", f"@Coord!C{r}|n1", f"@Coord!D{r}", f"@Coord!E{r}"] for r in range(r_br0, r_br1 + 1)]}
     a_tbl = {"type": "table", "collapse": True, "summary": "展開：本模型讀哪一層、哪一版（Siliconomics 版本與讀入項目）", "caption": f"@Coord!A{ca}", "head": [f"@Coord!{c}{cah}" for c in "ABCDEF"],
              "rows": [[f"@Coord!A{r}"] + [f"@Coord!{c}{r}|{'n2' if '顆數' in str(CW.cell(r, 1).value) else 'p0' if 'CPO' in str(CW.cell(r, 1).value) else 'n3'}" for c in "BCDE"] + [f"@Coord!F{r}"] for r in range(r_a1, r_a2)]}
-    c0_blocks = [{"type": "h3", "text": "三層協調：由下往上對帳（本模型的產業量 vs 層級對應值）"}, {"type": "note", "parts": [f"@Coord!B{r_sum}"]}, c0_tbl,
+    c0_blocks = [{"type": "h3", "text": "三層協調：由下往上對帳（日月光自己的量 vs 它讀的層級值）"}, {"type": "note", "parts": [f"@Coord!B{r_sum}"]}, c0_tbl, gw_tbl,
                  {"type": "note", "parts": [f"@Coord!A{r_c1}"]}, {"type": "note", "parts": [f"@Coord!A{r_c2}"]}, {"type": "note", "parts": [f"@Coord!A{r_c3}"]}, br_tbl, a_tbl,
                  {"type": "note", "parts": [f"@Coord!A{r_a2}"]}, {"type": "h3", "text": "本模型與公司指引、公司說法、券商的對照"}]
     S["recon"]["blocks"] = c0_blocks + S["recon"]["blocks"]

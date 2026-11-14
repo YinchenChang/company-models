@@ -1496,11 +1496,11 @@
       "@PL!D220",
       "@PL!E220",
       "@PL!F220",
-      "@Coord!B64",
-      "@Coord!C64",
-      "@Coord!D64",
-      "@Coord!E64",
-      "@Coord!F64"
+      "@Coord!B67",
+      "@Coord!C67",
+      "@Coord!D67",
+      "@Coord!E67",
+      "@Coord!F67"
      ],
      "rows": [
       [
@@ -3928,12 +3928,12 @@
    "blocks": [
     {
      "type": "h3",
-     "text": "三層協調：由下往上對帳（本模型的產業量 vs 層級對應值）"
+     "text": "三層協調：由下往上對帳（日月光自己的量 vs 它讀的層級值）"
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!B52"
+      "@Coord!B48"
      ]
     },
     {
@@ -3982,62 +3982,76 @@
       ],
       [
        "@Coord!A43",
-       "@Coord!B43|n2",
-       "@Coord!C43|n2",
-       "@Coord!D43|sp1",
+       "@Coord!B43",
+       "@Coord!C43",
+       "@Coord!D43",
        "@Coord!E43",
        "@Coord!F43"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Coord!A50",
+     "head": [
+      "@Coord!A51",
+      "@Coord!B51",
+      "@Coord!C51",
+      "@Coord!D51",
+      "@Coord!E51",
+      "@Coord!F51"
+     ],
+     "rows": [
+      [
+       "@Coord!A52",
+       "@Coord!B52|n2",
+       "@Coord!C52|n2",
+       "@Coord!D52|sp1",
+       "@Coord!E52",
+       "@Coord!F52"
       ],
       [
-       "@Coord!A44",
-       "@Coord!B44|n2",
-       "@Coord!C44|n2",
-       "@Coord!D44|sp1",
-       "@Coord!E44",
+       "@Coord!A53",
+       "@Coord!B53|n2",
+       "@Coord!C53|n2",
+       "@Coord!D53|sp1",
+       "@Coord!E53",
        ""
       ],
       [
-       "@Coord!A45",
-       "@Coord!B45|n2",
-       "@Coord!C45|n2",
-       "@Coord!D45|sp1",
-       "@Coord!E45",
+       "@Coord!A54",
+       "@Coord!B54|n2",
+       "@Coord!C54|n2",
+       "@Coord!D54|sp1",
+       "@Coord!E54",
        ""
       ],
       [
-       "@Coord!A46",
-       "@Coord!B46|n2",
-       "@Coord!C46|n2",
-       "@Coord!D46|sp1",
-       "@Coord!E46",
+       "@Coord!A55",
+       "@Coord!B55|n2",
+       "@Coord!C55|n2",
+       "@Coord!D55|sp1",
+       "@Coord!E55",
        ""
-      ],
-      [
-       "@Coord!A47",
-       "@Coord!B47",
-       "@Coord!C47",
-       "@Coord!D47",
-       "@Coord!E47",
-       "@Coord!F47"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A55"
+      "@Coord!A58"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A56"
+      "@Coord!A59"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A57"
+      "@Coord!A60"
      ]
     },
     {
@@ -4053,32 +4067,32 @@
      ],
      "rows": [
       [
-       "@Coord!A48",
-       "@Coord!B48|n3",
-       "@Coord!C48|n1",
-       "@Coord!D48",
-       "@Coord!E48"
+       "@Coord!A44",
+       "@Coord!B44|n3",
+       "@Coord!C44|n1",
+       "@Coord!D44",
+       "@Coord!E44"
       ],
       [
-       "@Coord!A49",
-       "@Coord!B49|n3",
-       "@Coord!C49|n1",
-       "@Coord!D49",
-       "@Coord!E49"
+       "@Coord!A45",
+       "@Coord!B45|n3",
+       "@Coord!C45|n1",
+       "@Coord!D45",
+       "@Coord!E45"
       ],
       [
-       "@Coord!A50",
-       "@Coord!B50|n3",
-       "@Coord!C50|n1",
-       "@Coord!D50",
-       "@Coord!E50"
+       "@Coord!A46",
+       "@Coord!B46|n3",
+       "@Coord!C46|n1",
+       "@Coord!D46",
+       "@Coord!E46"
       ],
       [
-       "@Coord!A51",
-       "@Coord!B51|n3",
-       "@Coord!C51|n1",
-       "@Coord!D51",
-       "@Coord!E51"
+       "@Coord!A47",
+       "@Coord!B47|n3",
+       "@Coord!C47|n1",
+       "@Coord!D47",
+       "@Coord!E47"
       ]
      ]
     },

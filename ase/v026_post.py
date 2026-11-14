@@ -432,7 +432,7 @@ def coord_c0(wb, SIL):
     arow("另一側讀數 ÷ 現行基準（對帳中年份；兩讀數目標價用）", [f"={'BCDE'[i]}{r_ratio}" for i in range(4)], f"{ver}：SIF_DeployGW_AltRatio_<年>（Wattonomics 換算的產業 GW ÷ Siliconomics 基準）；上方 Coord 第 6 列")
     C.cell(r, 1, "Wattonomics：本模型不直接讀 Wattonomics 數字；現行版本 v0.3.2，僅經 Siliconomics 的 R4 比值（Sens 錨定案例）與另一側讀數比值（對帳中年份兩讀數）間接使用。其餘產業量皆讀 Siliconomics 基準。"); R["A_note"] = r; r += 2
     # ---- B. C0 由下往上對帳 ----
-    C.cell(r, 1, "B. C0 由下往上對帳：本模型自己的產業相關量 vs 該層對應值（差距 > ±15% 標「對帳中」；不改上游值，由主控開對帳單；規則 v1.4.1 C0 第 2 點）").font = BOLD; R["B"] = r; r += 1
+    C.cell(r, 1, "B. C0 由下往上對帳：日月光自己的量 vs 它讀的 Siliconomics 值（差距 > ±15% 標「對帳中」；不改上游值，由主控開對帳單；規則 v1.4.1 C0 第 2 點）").font = BOLD; R["B"] = r; r += 1
     for j, h in enumerate(["項目（年）", "本模型原值", "層級對應值", "差距（本模型 ÷ 層級 − 1）", "判定（±15%）", "口徑、來源與證據等級"], 1):
         c = C.cell(r, j, h); c.font = BOLD; c.fill = HDR
     R["B_hdr"] = r; r += 1
@@ -447,15 +447,6 @@ def coord_c0(wb, SIL):
         C.cell(r, 5, f'=IF(ABS(D{r})>0.15,"對帳中","一致")')
         C.cell(r, 6, f"本模型：PL 頁情境 B 顆數（原始顆數 × 基準係數）；層：{ver} SIF_UnitsPlat_Total_Base（供給側基準顆數）。同源讀取故差距 0；日月光不公布加速器顆數，兩邊都沒有證據（等級：Assumed／Interested-party），依 C0 第 3 點層的值先成立"
                      if i == 0 else "同上")
-        r += 1
-    for i, y in enumerate((2026, 2027, 2028, 2029)):
-        C.cell(r, 1, f"產業部署 GW CY{y}（本模型讀 Siliconomics 基準 ÷ Wattonomics 換算；GW）")
-        c = C.cell(r, 2, gw_b[i]); c.number_format = "0.00"; c.font = BLUE
-        c = C.cell(r, 3, SIL.NAMES[f"SIF_DeployGW_Alt_{y}"]); c.number_format = "0.00"; c.font = BLUE
-        C.cell(r, 4, f"=B{r}/C{r}-1").number_format = "+0.0%;-0.0%"
-        C.cell(r, 5, f'=IF(ABS(D{r})>0.15,"對帳中","一致")')
-        C.cell(r, 6, (f"本模型讀值＝{ver} SIF_DeployGW_Base（供給側部署 GW；本模型顆數、每 GW 的 LEAP 營收皆依此）；層級對應＝Wattonomics 換算 SIF_DeployGW_Alt_<年>（需求側）。"
-                      "這是層與層的差距，已由 Siliconomics 標對帳中（Coord 第 7 列）；本模型依 C4 並列兩讀數目標價，不裁決") if i == 0 else "同上")
         r += 1
     R["B_last"] = r - 1
     C.cell(r, 1, "日月光 LEAP 營收（FY2026–FY2029）vs 層級量"); C.cell(r, 2, "—"); C.cell(r, 3, "無可比的層級量"); C.cell(r, 4, "—"); C.cell(r, 5, "不判定")
@@ -474,11 +465,26 @@ def coord_c0(wb, SIL):
     R["B_end"] = r - 1
     C.cell(r, 1, "判定摘要"); R["B_sum"] = r
     nB = f'COUNTIF(E{R["B_first"]}:E{R["B_last"]},"對帳中")'
-    yrs = "&".join(f'IF(E{R["B_first"] + 4 + i}="對帳中","CY{y} ","")' for i, y in enumerate((2026, 2027, 2028, 2029)))
-    C.cell(r, 2, f'="可判定的 8 項中，"&{nB}&" 項差距超過 ±15%（對帳中）：產業部署 GW "&TRIM({yrs})&"；加速器顆數（同源）一致。對帳單由主控與 Siliconomics 層處理，本模型不改上游值。"'); r += 2
+    C.cell(r, 2, f'="本公司 C0 可判定的 4 項（日月光自己的量對它讀的 Siliconomics 值）中，"&{nB}&" 項差距超過 ±15%：加速器顆數同源讀取，一致；LEAP 營收無可比層級量，不判定。下方「層級之間」的產業部署 GW 差距只列參考，不計入。對帳單由主控與 Siliconomics 層處理，本模型不改上游值。"'); r += 2
+    C.cell(r, 1, "層級之間（參考；Siliconomics 對帳單 r3 處理，不計入本公司 C0）").font = BOLD; R["B2"] = r; r += 1
+    for j, h in enumerate(["項目（年）", "Siliconomics 基準", "外部估計（Wattonomics 換算）", "差距（基準 ÷ 外部 − 1）", "判定", "口徑、來源與證據等級"], 1):
+        c = C.cell(r, j, h); c.font = BOLD; c.fill = HDR
+    r += 1
+    R["B2_first"] = r
+    for i, y in enumerate((2026, 2027, 2028, 2029)):
+        C.cell(r, 1, f"產業部署 GW CY{y}（本模型讀 Siliconomics 基準 ÷ Wattonomics 換算；GW）")
+        c = C.cell(r, 2, gw_b[i]); c.number_format = "0.00"; c.font = BLUE
+        c = C.cell(r, 3, SIL.NAMES[f"SIF_DeployGW_Alt_{y}"]); c.number_format = "0.00"; c.font = BLUE
+        C.cell(r, 4, f"=B{r}/C{r}-1").number_format = "+0.0%;-0.0%"
+        C.cell(r, 5, "參考")
+        C.cell(r, 6, (f"本模型讀值＝{ver} SIF_DeployGW_Base（供給側部署 GW；本模型顆數、每 GW 的 LEAP 營收皆依此）；外部估計（參考）＝Wattonomics 換算 SIF_DeployGW_Alt_<年>（需求側）。"
+                      "這是層與層之間的差距，不是日月光自己的量對層級的比較；由 Siliconomics 對帳單 r3 處理，不計入本公司 C0 項目數；本模型依 C4 並列兩讀數目標價，不裁決") if i == 0 else "同上")
+        r += 1
+    R["B2_last"] = r - 1
+    r += 1
     # ---- C. 口徑註記 ----
     C.cell(r, 1, "C. 對帳中年份處理與口徑註記（C4）").font = BOLD; R["C"] = r; r += 1
-    C.cell(r, 1, F(T("對帳中年份：CY2027、CY2028、CY2029（Siliconomics 標示）。兩讀數目標價並列於上方（現行基準讀數 "), f'TEXT(B{lab(C, "加權目標價")},"0.00")', T(" 元、另一側讀數 "), f'TEXT(C{lab(C, "加權目標價")},"0.00")',
+    C.cell(r, 1, F(T("對帳中年份：CY2027、CY2028、CY2029（Siliconomics 標示；本公司 C0 自身項目無超限）。兩讀數目標價並列於上方（現行基準讀數 "), f'TEXT(B{lab(C, "加權目標價")},"0.00")', T(" 元、另一側讀數 "), f'TEXT(C{lab(C, "加權目標價")},"0.00")',
                     T(" 元），評等同為"), f'B{lab(C, "投資建議（五級")}', T("。個股不裁決（C4）；Siliconomics 與 Wattonomics 的差距由對帳單處理（期限 2027-02-28）。")))
     R["C_1"] = r; r += 1
     C.cell(r, 1, F(T("口徑註記（不改模型）：全流程（CoWoS full process，FY2027 錨點）與 CPO 2027 是固定錨點（公司指引：全流程逾 US$1B、CPO 逾 US$0.5B），不隨另一側讀數縮放；另一側讀數下 CY2027 顆數 ×"),
@@ -550,7 +556,7 @@ def readme13(wb, RVA, PLA):
         T("；股東自由現金流 FY2029 仍為負，約 −"), f'TEXT(-PL!G{fcf["B"]},"0")', T(" 十億元。標準版 DCF 直接扣這段資本支出，DCF 目標價因此只有 "), f'TEXT({dcf},"0")', T(" 元。"))
     put("o4", T("反向推算（情境 B）：要支持現價，折現率須降到 "), f'TEXT({rv("w1")},"0.0%")', T("（模型 "), 'TEXT(wacc,"0.0%")', T("），或 FY2027 起營收全面放大 "), f'TEXT({rv("s1")},"0.0")',
         T(" 倍。同業比較法：現價相當於前瞻 EPS 的 "), f'TEXT(RevDCF!B{RVA["pe1"]},"0.0")', T(" 倍，高於同業中位數 "), f'TEXT({pmed},"0.0")', T(" 倍。"))
-    put("o5", T("對帳中：Siliconomics 與 Wattonomics 的產業 GW 在 CY2027–29 差 3～4 成，另一側讀數目標價 "), f'TEXT(Coord!C{lab(wb["Coord"], "加權目標價（DCF 與 Comparable 加權）")},"0.00")',
+    put("o5", T("對帳中年份（CY2027–29，Siliconomics 標示；層與層的差距由對帳單處理，非本公司 C0 項目）：另一側讀數目標價 "), f'TEXT(Coord!C{lab(wb["Coord"], "加權目標價（DCF 與 Comparable 加權）")},"0.00")',
         T(" 元，評等不變。最敏感：AI 部署 ×0.8／×1.2 使加權目標價 "), f'TEXT({tr("AI 部署顆數", "B")},"+0%;-0%")', T("／"), f'TEXT({tr("AI 部署顆數", "C")},"+0%;-0%")',
         T("，現金流通率 40%／60% 使 "), f'TEXT({tr("現金流通率", "B")},"+0%;-0%")', T("／"), f'TEXT({tr("現金流通率", "C")},"+0%;-0%")', T("。"))
     put("drv", T("分部營收推導（情境 B）：合併營收＝封測（ATM）＋EMS（環旭）＋沖銷。封測＝主流封測（依成長率）＋LEAP 先進封裝；LEAP＝AI 加速器顆數 × 封裝面積指數 × 委外與份額相對值 × 每顆核心內容（美元），"
@@ -579,6 +585,9 @@ def apply(wb, here, SIL):
     a1 = RD["A1"].value
     assert "個股模型 v0.1（AI 半導體" in a1, a1[:80]
     RD["A1"].value = a1.replace("個股模型 v0.1（AI 半導體", f"個股模型 v{VER}（AI 半導體", 1)
+    a2 = str(RD["A2"].value)
+    assert a2.startswith("版本：v0.1（2026-10-31：初版）。"), a2[:40]
+    RD["A2"].value = a2.replace("版本：v0.1（2026-10-31：初版）。", f"版本：v{VER}（{BUILT}；初版 v0.1，2026-10-31）。", 1)
     order = ["README", "In", "Q", "Hist", "Units", "PL", "Val", "DCF", "RevDCF", "Recon", "Sens", "Sources", "Coord"]
     wb._sheets = [wb[n] for n in order]
     return f"v026_post：Hist {len(HR)} 列；PL 標準損益表 {PLA['start']} 起；RevDCF；Val 0.7；Sens 相對基準；Coord C0；README v1.3 {len(RMA)} 列"
