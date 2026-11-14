@@ -1,17 +1,25 @@
 {
- "_note": "v0.19-trial 試作（不合併）：由 siliconomics/tools/export_baseline_status.py 自 20261114_Siliconomics_v0.19-trial.xlsx 匯出；換算值與 Wattonomics 證據比例為暫值（待 Wattonomics v0.3.2）",
+ "_note": "v0.19-trial 試作（不合併）：由 siliconomics/tools/export_baseline_status.py 自 20261114_Siliconomics_v0.19-trial.xlsx 匯出；換算值與 Wattonomics 證據比例取自 Wattonomics v0.3.2 r1（核對中）；continuity＝規則 v1.4 連續法（基準＝前一年基準 × 換算值成長率，非換算值本身）",
  "source": "20261114_Siliconomics_v0.19-trial.xlsx",
  "threshold": 0.5,
  "wattonomics_coverage_complete": true,
  "years": {
   "2026": {
    "wattonomics": {
-    "evidence_share": 0.874,
+    "evidence_share": {
+     "lo": 0.874,
+     "base": 0.874,
+     "hi": 0.874
+    },
     "prev_has_evidence": true
    },
    "siliconomics": {
-    "evidence_share": 0.789,
-    "prev_has_evidence": false
+    "evidence_share": {
+     "lo": 0.597,
+     "base": 0.789,
+     "hi": 0.892
+    },
+    "prev_has_evidence": null
    },
    "status": "甲",
    "lead": null,
@@ -20,6 +28,7 @@
    "supply_side": 23.3995380420639,
    "current_s33": 23.3995380420639,
    "use_converted": false,
+   "continuity": false,
    "reconciling": false,
    "recon_doc": null,
    "deadline": null,
@@ -28,12 +37,20 @@
   },
   "2027": {
    "wattonomics": {
-    "evidence_share": 0.463,
+    "evidence_share": {
+     "lo": 0.463,
+     "base": 0.463,
+     "hi": 0.463
+    },
     "prev_has_evidence": false
    },
    "siliconomics": {
-    "evidence_share": 0.448,
-    "prev_has_evidence": false
+    "evidence_share": {
+     "lo": 0.303,
+     "base": 0.448,
+     "hi": 0.749
+    },
+    "prev_has_evidence": null
    },
    "status": "待定",
    "lead": null,
@@ -42,6 +59,7 @@
    "supply_side": 39.1637387089335,
    "current_s33": 39.1637387089335,
    "use_converted": false,
+   "continuity": false,
    "reconciling": true,
    "recon_doc": null,
    "deadline": null,
@@ -50,50 +68,75 @@
   },
   "2028": {
    "wattonomics": {
-    "evidence_share": 0.52,
+    "evidence_share": {
+     "lo": 0.52,
+     "base": 0.52,
+     "hi": 0.52
+    },
     "prev_has_evidence": true
    },
    "siliconomics": {
-    "evidence_share": 0.236,
-    "prev_has_evidence": false
+    "evidence_share": {
+     "lo": 0.161,
+     "base": 0.236,
+     "hi": 0.541
+    },
+    "prev_has_evidence": null
    },
-   "status": "乙",
-   "lead": "wattonomics",
-   "label": "改用換算值",
+   "status": "待定",
+   "lead": null,
+   "label": "待定（對帳中）",
    "converted": 28.092,
    "supply_side": 52.792138191248,
    "current_s33": 42.2337105529984,
-   "use_converted": true,
-   "reconciling": false,
+   "use_converted": false,
+   "continuity": false,
+   "reconciling": true,
    "recon_doc": null,
    "deadline": null,
    "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
-   "sil_base": 28.092
+   "sil_base": 42.2337105529984
   },
   "2029": {
    "wattonomics": {
-    "evidence_share": 0.201,
+    "evidence_share": {
+     "lo": 0.201,
+     "base": 0.201,
+     "hi": 0.201
+    },
     "prev_has_evidence": false
    },
    "siliconomics": {
-    "evidence_share": 0.079,
-    "prev_has_evidence": false
+    "evidence_share": {
+     "lo": 0.03,
+     "base": 0.079,
+     "hi": 0.181
+    },
+    "prev_has_evidence": null
    },
    "status": "丙",
    "lead": null,
-   "label": "改用換算值",
+   "label": "連續法（換算值成長率）",
    "converted": 28.407,
    "supply_side": 60.1385917361115,
    "current_s33": 51.1178029756948,
    "use_converted": true,
+   "continuity": true,
    "reconciling": false,
    "recon_doc": null,
    "deadline": null,
    "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
-   "sil_base": 28.407
+   "sil_base": 42.7072837704337
   }
  },
- "level_coefficients": [],
+ "level_coefficients": [
+  {
+   "name": "um28_B（S33；經 crd_k_28 帶入 2028 基準）",
+   "year": 2028,
+   "tag": "Assumed",
+   "note": "覆蓋未補齊、該年維持現行（對帳中）；改用換算值後不再在基準鏈上"
+  }
+ ],
  "hardware_companies": [
   "nvidia"
  ],

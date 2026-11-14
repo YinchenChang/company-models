@@ -23,6 +23,13 @@ def main():
     for f in sorted(glob.glob(os.path.join(SIL, "builder", "seed", "coord_meta_v*.json"))):
         meta.update(json.load(open(f, encoding="utf-8")))
     prev = lambda k: None if v(k) in (None, "") else bool(v(k))
+
+    def three(k):
+        """證據比例三值（規則 v1.3；check.py 接受 {lo, base, hi}）；沒有 _lo／_hi 名稱時以點值代入。"""
+        b = v(k)
+        lo = v(k + "_lo") if k + "_lo" in wb.defined_names else b
+        hi = v(k + "_hi") if k + "_hi" in wb.defined_names else b
+        return {"lo": b if lo is None else lo, "base": b, "hi": b if hi is None else hi}
     years = {}
     coefs = []
     for y in YRS:
@@ -30,8 +37,8 @@ def main():
         st = v(f"SIF_RecoStatus_{y}")
         lead = v(f"SIF_RecoLead_{y}")
         rec = {
-            "wattonomics": {"evidence_share": v(f"SIF_crd_ew_{yy}"), "prev_has_evidence": prev(f"SIF_crd_prevw_{yy}")},
-            "siliconomics": {"evidence_share": v(f"SIF_crd_es_{yy}"), "prev_has_evidence": prev(f"SIF_crd_prevs_{yy}")},
+            "wattonomics": {"evidence_share": three(f"SIF_crd_ew_{yy}"), "prev_has_evidence": prev(f"SIF_crd_prevw_{yy}")},
+            "siliconomics": {"evidence_share": three(f"SIF_crd_es_{yy}"), "prev_has_evidence": prev(f"SIF_crd_prevs_{yy}")},
             "status": st,
             "lead": ("wattonomics" if lead == "Wattonomics" else "siliconomics") if st == "乙" else None,
             "label": v(f"SIF_RecoLabel_{y}"),
@@ -39,6 +46,7 @@ def main():
             "supply_side": v(f"SIF_DeployGW_Supply_{y}"),
             "current_s33": v(f"SIF_DeployGW_Current_{y}"),
             "use_converted": bool(v(f"SIF_RecoUseConv_{y}")),
+            "continuity": bool(v(f"SIF_RecoChain_{y}")) if f"SIF_RecoChain_{y}" in wb.defined_names else False,
             "reconciling": bool(v(f"SIF_RecoFlag_{y}")),
             "recon_doc": meta.get("recon_doc", {}).get(str(y)),
             "deadline": meta.get("deadline", {}).get(str(y)),
@@ -53,7 +61,7 @@ def main():
             coefs.append({"name": f"um{yy}_B（S33；經 crd_k_{yy} 帶入 {y} 基準）", "year": y, "tag": "Assumed",
                           "note": "覆蓋未補齊、該年維持現行（對帳中）；改用換算值後不再在基準鏈上"})
     st = {
-        "_note": "v0.19-trial 試作（不合併）：由 siliconomics/tools/export_baseline_status.py 自 " + os.path.basename(x) + " 匯出；換算值與 Wattonomics 證據比例為暫值（待 Wattonomics v0.3.2）",
+        "_note": "v0.19-trial 試作（不合併）：由 siliconomics/tools/export_baseline_status.py 自 " + os.path.basename(x) + " 匯出；換算值與 Wattonomics 證據比例取自 Wattonomics v0.3.2 r1（核對中）；continuity＝規則 v1.4 連續法（基準＝前一年基準 × 換算值成長率，非換算值本身）",
         "source": os.path.basename(x),
         "threshold": v("SIF_crd_thr"),
         "wattonomics_coverage_complete": bool(v("SIF_crd_cov_done")),
