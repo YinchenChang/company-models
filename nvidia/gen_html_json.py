@@ -370,6 +370,16 @@ def _v13():
     # ---- 2. 估值：橫幅原有的評等規則、相對倍數調整與歸因說明移到這裡（摺疊）----
     va = S["valuation"]["blocks"]
     i_bar = next(i for i, b in enumerate(va) if b["type"] == "bars")
+    # 版面規格 v1.3 G 節（Andy 2026-11-14 09:03）：估值章開頭並排四個目標價（表＋長條圖，現價線）；數字取自 Val 頁 0.7 節
+    g0 = find("Val", "0.7 估值並列"); gr = list(range(g0 + 2, g0 + 7)); r_px = find("Val", "現價（2026")
+    va[i_bar] = {"type": "bars", "title": "四個目標價與現價（美元；豎線＝現價）", "fmt": "n2",
+                 "items": [{"label": lb, "value": f"@Val!B{r}", "series": sr} for r, sr, lb in zip(gr, (1, 2, 2, 0, 1),
+                           ("DCF 目標價", "Comparable（調整後，進加權）", "Comparable（未調整，不進加權）", "加權目標價（橫幅主值）", "市場共識目標價"))],
+                 "ref": {"label": f"@Val!A{r_px}", "value": f"@Val!B{r_px}"}}
+    va.insert(i_bar, {"type": "table", "caption": f"@Val!A{g0}", "head": [f"@Val!{c}{g0 + 1}" for c in "ABCD"],
+                      "rows": [[f"@Val!A{r}", f"@Val!B{r}|n2", f"@Val!C{r}|sp1", f"@Val!D{r}"] for r in gr]
+                              + [[f"@Val!A{g0 + 7}", f"@Val!B{g0 + 7}|n2", "", f"@Val!D{g0 + 7}"]]})
+    i_bar += 1
     va.insert(i_bar + 1, {"type": "note", "parts": old_note[:7]})
     va.insert(i_bar + 2, {"type": "list", "items": [p for p in old_note[7:] if p], "collapse": True,
                           "summary": "展開：評等邊界、上檔空間三段歸因、現行相對倍數與公司指引對照"})

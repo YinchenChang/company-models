@@ -393,6 +393,29 @@ def readme13(wb, RVA, PLA):
     return out
 
 
+# ---------- Val：估值並列四個目標價（版面規格 v1.3 G 節；Andy 2026-11-14 09:03；只新增列） ----------
+def val_g(wb):
+    V = wb["Val"]
+    vb = lambda p: f"Val!$B${lab(V, p)}"
+    dcf, cu, cadj, tp, cons = vb("DCF 目標價（情境加權）"), vb("Comparable 目標價（市場主流同業法）"), vb("Comparable 目標價（相對倍數調整後）"), vb("目標價（DCF 與 Comparable 加權）"), vb("市場共識目標價")
+    feps, pmed, coef = vb("12 個月後的前瞻 EPS（情境加權）"), vb("同業前瞻 P/E 中位數"), vb("相對倍數調整係數")
+    cons_src = f"Val!$E${lab(V, '市場共識目標價')}"
+    r = V.max_row + 3
+    V.cell(r, 1, "0.7 估值並列：四個目標價（v0.3.7 起；個股 HTML 版面規格 v1.3 G 節，Andy 2026-11-14 09:03；只引用上方各格，不回饋計算）").font = BOLD; r0 = r; r += 1
+    for j, h in enumerate(["目標價", "美元", "相對現價", "說明"], 1):
+        c = V.cell(r, j, h); c.font = BOLD; c.fill = HDR
+    r += 1
+    rows = [("① DCF 目標價（單純 DCF，情境加權）", dcf, F(T("三情境 DCF 價值（推到 12 個月後）以情境權重 A "), 'TEXT(tp_wA,"0.0")', T("／B "), 'TEXT(tp_wB,"0.0")', T("／C "), 'TEXT(tp_wC,"0.0")', T(" 加權"))),
+            ("② Comparable 目標價（情境加權；相對倍數調整後，進加權）", cadj, F(T("同業前瞻本益比中位數 "), f'TEXT({pmed},"0.0")', T(" 倍 × 相對倍數調整係數 "), f'TEXT({coef},"0.00")', T(" × 12 個月後前瞻 EPS（情境加權）"), f'TEXT({feps},"0.00")', T(" 美元；進加權目標價"))),
+            ("②' Comparable 目標價（情境加權；未調整，市場主流同業法，不進加權）", cu, F(T("同業前瞻本益比中位數 "), f'TEXT({pmed},"0.0")', T(" 倍 × 12 個月後前瞻 EPS（情境加權）；只供對照，不進加權目標價"))),
+            ("③ 加權目標價（DCF 與 Comparable 加權；橫幅主值，評等依此判定）", tp, F(T("DCF "), 'TEXT(tp_w_dcf,"0%")', T("＋Comparable（相對倍數調整後）"), 'TEXT(1-tp_w_dcf,"0%")')),
+            ("④ 市場共識目標價", cons, "=" + cons_src)]
+    for labl, ref, note in rows:
+        V.cell(r, 1, labl); V.cell(r, 2, "=" + ref).number_format = "0.00"; V.cell(r, 3, f"=B{r}/px-1").number_format = "+0.0%;-0.0%"; V.cell(r, 4, note); r += 1
+    V.cell(r, 1, "現價（股價基準日收盤）"); V.cell(r, 2, "=px").number_format = "0.00"; V.cell(r, 4, '="Yahoo Finance 日線收盤，"&TEXT(h_asof,"yyyy-mm-dd")'); r += 1
+    return r0
+
+
 def build_id(here):
     h = hashlib.sha256(VER.encode())
     for fn in sorted(["build_nvidia.py", "v035_post.py", "v037_post.py", "px1105_post.py", "tp_v2.py", "accel_share.py", "sens.json", "segments.json", "hist_frozen.json"]):
@@ -422,6 +445,7 @@ def apply(wb, here):
     HR = hist_is(wb)
     PLA = pl_standard(wb)
     RVA = revdcf(wb)
+    VG = val_g(wb)
     RMA = readme13(wb, RVA, PLA)
     old, new, n = version(wb, here)
     wb._v037 = dict(PL=PLA, RV=RVA, RM=RMA)

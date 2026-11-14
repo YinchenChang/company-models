@@ -153,40 +153,88 @@
    "intro": "@Val!A1",
    "blocks": [
     {
+     "type": "table",
+     "caption": "@Val!A212",
+     "head": [
+      "@Val!A213",
+      "@Val!B213",
+      "@Val!C213",
+      "@Val!D213"
+     ],
+     "rows": [
+      [
+       "@Val!A214",
+       "@Val!B214|n2",
+       "@Val!C214|sp1",
+       "@Val!D214"
+      ],
+      [
+       "@Val!A215",
+       "@Val!B215|n2",
+       "@Val!C215|sp1",
+       "@Val!D215"
+      ],
+      [
+       "@Val!A216",
+       "@Val!B216|n2",
+       "@Val!C216|sp1",
+       "@Val!D216"
+      ],
+      [
+       "@Val!A217",
+       "@Val!B217|n2",
+       "@Val!C217|sp1",
+       "@Val!D217"
+      ],
+      [
+       "@Val!A218",
+       "@Val!B218|n2",
+       "@Val!C218|sp1",
+       "@Val!D218"
+      ],
+      [
+       "@Val!A219",
+       "@Val!B219|n2",
+       "",
+       "@Val!D219"
+      ]
+     ]
+    },
+    {
      "type": "bars",
-     "title": "目標價與現價",
+     "title": "四個目標價與現價（美元；豎線＝現價）",
+     "fmt": "n2",
      "items": [
       {
-       "label": "@Val!A40",
-       "value": "@Val!B40",
-       "series": 0
-      },
-      {
-       "label": "@Val!A23",
-       "value": "@Val!B23",
+       "label": "DCF 目標價",
+       "value": "@Val!B214",
        "series": 1
       },
       {
-       "label": "@Val!A36",
-       "value": "@Val!B36",
+       "label": "Comparable（調整後，進加權）",
+       "value": "@Val!B215",
        "series": 2
       },
       {
-       "label": "@Val!A199",
-       "value": "@Val!B199",
+       "label": "Comparable（未調整，不進加權）",
+       "value": "@Val!B216",
        "series": 2
       },
       {
-       "label": "@Val!A42",
-       "value": "@Val!B42",
+       "label": "加權目標價（橫幅主值）",
+       "value": "@Val!B217",
+       "series": 0
+      },
+      {
+       "label": "市場共識目標價",
+       "value": "@Val!B218",
        "series": 1
       }
      ],
      "ref": {
-      "label": "現價",
+      "label": "@Val!A57",
       "value": "@Val!B57"
-     },
-     "fmt": "n2"
+     }
     },
     {
      "type": "note",
