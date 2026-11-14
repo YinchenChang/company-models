@@ -140,6 +140,23 @@ def main():
         badr += [k_ for k_ in nsh if not k_.endswith(("_lo", "_hi")) and not (sil.get(k_ + "_lo", 0) <= sil[k_] <= sil.get(k_ + "_hi", 1))]
         if badr: bad.append(f"SIL 內容或份額 低 ≤ 基準 ≤ 高 不成立：{badr}")
         else: print(f"  SIL_In：nvsh {len(nsh)} 名、NVContent 6 世代齊全，低 ≤ 基準 ≤ 高")
+    # v0.3.1 Z7（工作單 20261114）：WIF_Evidence_2026–2030 存在且 0–1；Compare 不再出現「兩邊都不錨定」；SIL 快照版本＝v0.18
+    evb = []
+    for y in range(2026, 2031):
+        n_ = f"WIF_Evidence_{y}"
+        if n_ not in names: evb.append(f"缺 {n_}"); continue
+        v_ = val(n_)
+        if not isinstance(v_, (int, float)) or not (0 <= v_ <= 1): evb.append(f"{n_}＝{v_!r}")
+    if evb: bad.append(f"WIF_Evidence 不合規：{evb}")
+    else: print("  WIF_Evidence_2026–2030：齊全、皆在 0–1（" + "／".join(f"{val(f'WIF_Evidence_{y}'):.3f}" for y in range(2026, 2031)) + "）")
+    nanc = sum(1 for row in wf["Compare"].iter_rows() for c in row if isinstance(c.value, str) and "兩邊都不錨定" in c.value)
+    if nanc: bad.append(f"Compare 仍出現「兩邊都不錨定」{nanc} 格（協調規則 v1.1 改寫）")
+    else: print("  Compare：無「兩邊都不錨定」")
+    SIL_REQ = "v0.18"
+    a1 = str(wf["SIL_In"]["A1"].value or "")
+    if f"（{SIL_REQ}，" not in a1: bad.append(f"SIL 快照版本不是 {SIL_REQ}：{a1[:80]}")
+    else: print(f"  SIL_In：Siliconomics 快照 {SIL_REQ}")
+    if "E-K1" not in [x_[0] for x_ in rows]: bad.append("Checks 缺 E-K1（v0.3.1）")
     for cid in ("C-K1", "R-K1", "R-K2", "X4-K1", "X4-K2"):
         if cid not in [x_[0] for x_ in rows]: bad.append(f"Checks 缺 {cid}（v0.2）")
     if same:
@@ -171,7 +188,9 @@ def main():
                # v0.2.2
                "SIF_DeployGW_Base", "SIF_CapGW_Base",
                # v0.3
-               "SIF_nvsh_", "SIF_NVContentGW_", "SIF_CapOnlineGW_Base"):
+               "SIF_nvsh_", "SIF_NVContentGW_", "SIF_CapOnlineGW_Base",
+               # v0.3.1（工作單 20261114 Z7）
+               "### 三層基準協調（v0.3.1）", "WIF_Evidence_<yyyy>", "實績下限讀法", "對帳中"):
         if kw not in txt: bad.append(f"wattonomics/README.md 缺固定規格：{kw}")
     print(f"{os.path.basename(x)}：頁面 {len(wb.sheetnames)}、具名範圍 {len(names)}（WIF_ {len(gif)}）、Checks {len(rows)} 項（OK {nok}／WARN {len(cw)}／ERROR {len(ce)}／INFO {ninfo}）、"
           f"In 輸入列 {nrow}（待證據 {pend}）、錯誤格 {nerr}")
