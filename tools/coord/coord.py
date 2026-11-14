@@ -18,7 +18,7 @@ LAB = {  # Val 頁列標籤（與 tools/target_summary/build_summary.py、market
     "up": r"^上檔空間：加權目標價",
 }
 KEYS = ("tp", "dcf", "comp", "up")
-NAMES = {"tp": "加權目標價（DCF 與 Comparable 加權）", "dcf": "DCF 目標價（情境加權）", "comp": "Comparable 目標價（市場主流同業法；未調整）", "up": "上檔空間（加權目標價 ÷ 現價 − 1）"}
+NAMES = {"tp": "加權目標價（DCF 與 Comparable 加權）", "dcf": "DCF 目標價（情境加權）", "comp": "Comparable 目標價（市場主流同業法；未調整）", "up": "上檔空間（加權目標價 ÷ 現價 − 1；相對現行欄＝百分點差）"}
 REC = lambda c: f'IF({c}>0.5,"強力買進",IF({c}>0.25,"買進",IF({c}>=-0.25,"中立",IF({c}>=-0.5,"放空","強力放空"))))'   # Val 頁五級固定規則
 
 
