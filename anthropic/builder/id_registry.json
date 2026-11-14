@@ -1137,7 +1137,9 @@
 "v_rating": "C230",
 "v_tv": "C231",
 "v_snap": "C232",
-"v_sens": "C233"
+"v_sens": "C233",
+"coord_c0_num": "C234",
+"coord_c0_nobad": "C235"
 },
 "retired_INP": [
 "INP_067",

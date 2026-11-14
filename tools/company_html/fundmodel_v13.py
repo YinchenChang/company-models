@@ -220,7 +220,9 @@ def valuation_v13(B, M):
             + r4("3", "加權目標價（DCF 與 Comparable 各半；橫幅主值）", "VAL_TP_W", "VAL_Up_W", "評等依此判定")
             + '<tr><td>4</td><td>市場共識目標價</td><td>不適用</td><td>—</td><td class="note">尚未掛牌，無分析師共識目標價；掛牌後補進 Val 頁（附來源、家數、日期）</td></tr>'
             + f'</tbody></table></div><p class="refline">現價 {sp(*px, "n2")} 美元＝IPO 價格區間中點（初步招股說明書 {sp(*pxd)}）。下圖黑線為現價。</p>')
-    sec = sec.replace("<h3>目標價與現價</h3>", f"{four}<h3>目標價與現價（圖）</h3>", 1)
+    # 檢查 G：估值章標題後第一個區塊必須是圖（含「目標價」「現價」）；四個目標價表與說明放在圖下方
+    bars = M.bars_html(B)
+    sec = sec.replace(f"<h3>目標價與現價</h3>{bars}", f'<div class="figblk"><h3>四個目標價與現價（圖）</h3>{bars}</div>{four}', 1)
     return sec.replace("<h3>結論主要項目</h3>", f"{extra}<h3>結論主要項目</h3>", 1)
 
 
@@ -258,7 +260,8 @@ def sens_v13(B, M, s6_html: str):
             + "</tbody></table></div>")
     intro = (f'<p class="note">一次只動一個輸入（取低值或高值），整本模型重算，看加權目標價（基準 {sp(bref, base, "n2")} 美元）相對基準變動多少。'
              '長條依影響大小排序；只直接列出變動達 10% 的案例，其餘收在摺疊；變動為 0 的案例不畫長條，只列在全部案例表。</p>')
-    return ('<section id="sens"><h2>敏感度</h2>' + intro + fig("plo", "lo", "輸入取低值") + fig("phi", "hi", "輸入取高值")
+    # 檢查 H：敏感度章標題後前兩個區塊是低案、高案主圖；說明放在圖下方
+    return ('<section id="sens"><h2>敏感度</h2><div class="figblk">' + fig("plo", "lo", "輸入取低值") + '</div><div class="figblk">' + fig("phi", "hi", "輸入取高值") + '</div>' + intro
             + f'<details class="more"><summary>展開：全部案例表（{len(rows)} 項）</summary>{allt}</details>'
             + f'<details class="more"><summary>展開：收支命題的敏感度（每 GW 差額、外部資金需求與「要成立必須…」）</summary>{s6_html}</details></section>')
 
@@ -418,6 +421,30 @@ def drivers_v13(B, M, rev_sec_html: str):
             f'<details class="more"><summary>展開：原收支頁「營收結構與年化營收里程碑」</summary>{rev_sec_html}</details></section>')
 
 
+
+def coord_v13(B, M):
+    """對帳章「三層協調」：C0（實績）公司實績 vs 層級隱含值（讀 xlsx Coord 頁具名範圍 COORD_C0／COORD_C0Sum／COORD_C0Verdict；數字全由 xlsx 取）。"""
+    if not B.has("COORD_C0"):
+        return ""
+    sp = M.span
+    g = B.grid("COORD_C0")
+    rev, capex, commit = g[0], g[1], g[2]
+    rows = (
+        f'<tr><td>{sp(*rev[0], "t")}</td><td>{sp(*rev[2], "n1")}</td><td>{sp(*rev[3], "n1")}</td><td>{sp(*rev[4], "sp1")}</td>'
+        f'<td>{sp(*rev[5], "n1")}</td><td>{sp(*rev[6], "n1")}</td><td>{sp(*rev[7], "sp1")}</td><td><b>{sp(*rev[8], "t")}</b></td></tr>'
+        f'<tr><td>{sp(*capex[0], "t")}</td><td>{sp(*capex[2], "n2")}</td><td>{sp(*capex[3], "n2")}</td><td>—</td><td>—</td><td>—</td><td>—</td><td>{sp(*capex[8], "t")}</td></tr>'
+        f'<tr><td>{sp(*commit[0], "t")}</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>{sp(*commit[8], "t")}</td></tr>')
+    return (
+        '<h3>三層協調：公司實績對層級隱含值（C0）</h3>'
+        '<p class="note">拿公司實績（S-1/A 季度損益與現金流量表）去對層級值：層級隱含營收＝Tokenomics 每 GW 年營收 × Wattonomics 配置給 Anthropic 的 GW（年底值簡單平均）。'
+        '兩者都不讀本模型的輸出，所以有檢驗力；本模型自層級讀入的值只列在 Coord 頁「讀取層級」節，不判定。'
+        '主讀數＝2026 前九月累計對層級 CY2026 × 9/12；第二讀數＝Q3 × 4 對層級 CY2026。兩個差距都超過 ±15% 且同號才標「對帳中」，只有一個超過標「時差邊界（參考）」。</p>'
+        '<div class="tw"><table class="tp"><thead><tr><th>項目</th><th>實績（前九月，十億美元）</th><th>層級隱含（×9/12）</th><th>差距</th>'
+        '<th>Q3 實績</th><th>層級隱含（CY2026）</th><th>Q3×4 差距</th><th>判定</th></tr></thead><tbody>' + rows + '</tbody></table></div>'
+        f'<p class="note">判定摘要：可判定 {sp(*B.grid("COORD_C0Sum")[0][0], "n0")} 項、對帳中 {sp(*B.grid("COORD_C0Sum")[1][0], "n0")} 項、'
+        f'時差邊界 {sp(*B.grid("COORD_C0Sum")[2][0], "n0")} 項、無可比實績或無法判定 {sp(*B.grid("COORD_C0Sum")[3][0], "n0")} 項。</p>'
+        f'<p class="note">{sp(*B.cell("COORD_C0Verdict"), "t")}</p>')
+
 # ── 組裝 ────────────────────────────────────────────────────────────────
 def build_v13(html_in: Path, xlsx: Path, out: Path, P: dict, M):
     src = html_in.read_text(encoding="utf-8")
@@ -455,6 +482,10 @@ def build_v13(html_in: Path, xlsx: Path, out: Path, P: dict, M):
     h = soup.new_tag("h2")
     h.string = P["recon_title"]
     recon.append(h)
+    _c = coord_v13(B, M)
+    if _c:
+        for el in list(BeautifulSoup(_c, "html.parser").children):
+            recon.append(el)
     for sid, lab in P["recon"]:
         r = M.regroup(secs[sid], soup, "x", lab, keep_first_table=True)
         h3 = soup.new_tag("h3")

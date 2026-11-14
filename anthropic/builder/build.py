@@ -35,12 +35,12 @@ from common import F_BOLD, F_CALC, F_IN, F_NOTE, e6_violations, header, lo_recal
 from oai_link import read_oai  # noqa: E402
 from tk_link import NONNV_STATUS, PENDING_NOTE, V17_NAMES, V19B_NAMES, read_nonnv, read_snapshot  # noqa: E402
 
-VERSION = "v0.2.1"
-STAGE = "v0.2.1"
+VERSION = "v0.2.2"
+STAGE = "v0.2.2"
 REGISTRY_PATH = HERE / "id_registry.json"
 SRC_YAML = ROOT / "data" / "anthropic_src.yaml"
 INP_YAML = ROOT / "data" / "anthropic_inputs.yaml"
-STAGE_MODULES = ("a2", "a3", "a4", "a5", "a6", "a7", "a8", "a9", "a10", "a11", "a12")
+STAGE_MODULES = ("a2", "a3", "a4", "a5", "a6", "a7", "a8", "a9", "a10", "a11", "a12", "a13")
 CALC_SHEETS = ("Demand", "Revenue", "Compute", "Cost", "Funding", "Reverse")      # E6 掃描與 OAI_Link 隔離的對象
 SRC_COLS = ["SRC_ID", "key", "分組", "項目", "值", "低", "高", "單位", "期間", "日期（序列值）", "口徑", "來源", "網址", "文件日期", "擷取日", "標記",
             "利害方與誘因", "來源等級", "立場", "立場說明", "一手／二手", "處理狀態", "備註",
@@ -230,6 +230,8 @@ def sheet_readme(ctx, summary):
                         "新頁 Val（DCF〔FCFF〕50%＋調整後 Comparable 50%；情境 A／B／C；評等）；新列：Cost 第二十七節、Funding 第十六節。"),
         ("v0.2.1 更新", "個股 HTML 版面規格 v1.3 試作：新頁 PL（標準損益表，GAAP；歷史 2023–2025 與 2026 前九月取 S-1/A，2026–2030 取本模型基準情境；只列示，不被任何計算頁引用）；"
                         "新增 SRC_ANT_594–621（S-1/A 損益表）、Inputs pl_cash_yield、pl_q4_oth_other。其餘工作表數值與 v0.2.0 逐格相同（目標價、評等不變）。"),
+        ("v0.2.2 更新", "版面 v1.3 收尾＋三層協調（工作單 20261114 第二批 13 家）：新頁 Coord（讀取層級〔同源，不判定〕；C0（實績）：S-1/A 營收、資本支出 vs Tokenomics 每 GW 營收 × Wattonomics 配置 GW；層級之間〔參考〕）；"
+                        "只列示，不被任何計算頁引用；新增 Checks 2 列。其餘工作表數值與 v0.2.1 逐格相同（目標價、評等不變）。"),
         ("層級對應", "Haiku→低層（Tokenomics Luna）、Sonnet→中層（Sol）、Opus→頂層（Astra）；具名範圍沿用 OpenAI 的 Top／Mid／Low。"),
         ("標記", "Verified／Interested-party／Analogy／Assumed／Derived／Decision（Analogy、Assumed 一律附區間）。"),
         ("分層", "公司財務原始數據→SRC_ANT；AI 技術與算力→TK_Link（取自 Tokenomics）；假設→Inputs；OpenAI 對照→OAI_Link（不進計算）。"),
