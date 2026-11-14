@@ -339,7 +339,7 @@ def revdcf(wb):
     kv("sh", "評價用稀釋股數（兆股）", "=sh_v", "0.000000")
     kv("evr", "支持現價所需的企業價值 EV（兆韓元）", f"=B{r - 3}*B{r - 1}-B{r - 2}", "#,##0.0")
     kv("ev", "模型企業價值 EV（情境 B；兆韓元）", f"=DCF!$C${ev}", "#,##0.0")
-    kv("evx", "EV 需放大為模型的倍數", f"=B{A['evr']}/B{A['ev']}", "0.00")
+    kv("evx", "EV 須調整為模型的倍數（小於 1 為縮小）", f"=B{A['evr']}/B{A['ev']}", "0.00")
     kv("v_b", "模型：情境 B 評價日每股價值（韓元）", f"=DCF!$C${ps}", "#,##0")
     r += 1
     yh = r
@@ -377,7 +377,7 @@ def revdcf(wb):
     kv("m1", "現價隱含的營業利益率", f"=(B{A['evr']}-B{A['E0']})/B{A['S']}", "0.0%")
     kv("m_chk", "判讀", f'=IF(B{A["m1"]}>1,"超過 100%：單靠營業利益率無法支持現價",IF(B{A["m1"]}>MAX(D{Y["m"]}:G{Y["m"]}),"高於模型預測期任一年","在模型預測期範圍內"))', "@")
     r += 1
-    RV.cell(r, 1, "(b) 現價隱含的營收規模（2028E–2032E 營收等比例放大；營業利益率、稅率、折舊、資本支出、營運資金比率不變）").font = BOLD
+    RV.cell(r, 1, "(b) 現價隱含的營收規模（2028E–2032E 營收等比例調整；營業利益率、稅率、折舊、資本支出、營運資金比率不變）").font = BOLD
     r += 1
     kv("a", "不隨營收倍數變動的 EV（兆韓元）", f"=B{Y['pv']}+fc_wc*B{Y['rev']}*C{Y['fr']}*C{Y['df']}", "#,##0.0", "2027E 現值＋2028E 營運資金增加中屬 2027E 營收的部分")
     kv("b", "隨營收倍數等比例變動的 EV（兆韓元）",
@@ -447,9 +447,9 @@ def revdcf(wb):
     RV.cell(r, 1, "C. 摘要（HTML 用；公式帶數字）").font = BOLD
     r += 1
     RV.cell(r, 1, F(T("現金流折現法：以情境 B 的現金流與 "), 'TEXT(wacc,"0.0%")', T(" 的折現率，每股價值 "), f'TEXT(B{A["v_b"]},"#,##0")',
-                     T(" 韓元；要支持現價 "), 'TEXT(px,"#,##0")', T(" 韓元，企業價值須放大為 "), f'TEXT(B{A["evx"]},"0.00")',
-                     T(" 倍。單靠一個因素達成時，需要：折現率降到 "), f'TEXT(B{A["w1"]},"0.0%")', T("；或 2028E–2032E 營收全面放大 "),
-                     f'TEXT(B{A["s1"]},"0.00")', T(" 倍（2028E 營收 "), f'TEXT(B{A["rv1"]},"#,##0")', T(" 兆韓元，模型為 "), f'TEXT(B{A["rv0"]},"#,##0")',
+                     T(" 韓元；要支持現價 "), 'TEXT(px,"#,##0")', T(" 韓元，企業價值須"), f'IF(B{A["evx"]}<1,"縮小為 ","放大為 ")&TEXT(B{A["evx"]},"0.00")',
+                     T(" 倍。單靠一個因素達成時，需要：折現率降到 "), f'TEXT(B{A["w1"]},"0.0%")', T("；或 2028E–2032E 營收全面"),
+                     f'IF(B{A["s1"]}<1,"縮小為 ","放大為 ")&TEXT(B{A["s1"]},"0.00")', T(" 倍（2028E 營收 "), f'TEXT(B{A["rv1"]},"#,##0")', T(" 兆韓元，模型為 "), f'TEXT(B{A["rv0"]},"#,##0")',
                      T("）；或營業利益率提高到 "), f'TEXT(B{A["m1"]},"0%")', T("（模型等效約 "), f'TEXT(B{A["m0"]},"0%")', T("，終值年權重大）"),
                      f'IF(B{A["m1"]}>1,"，超過 100%，不可能單靠利益率達成","")', T("。")))
     A["sum_dcf"] = r
@@ -575,7 +575,7 @@ def sens_rel(wb, here):
     S.cell(r, 1, "快照狀態")
     if snap:
         S.cell(r, 2, f'=IF(ABS(Val!$B${vb}-{snap["base_tp"]!r})<=1E-6*ABS({snap["base_tp"]!r}),"CURRENT","STALE")')
-        S.cell(r, 3, f"快照 {snap['snapshot']}；建置時基準加權目標價 {snap['base_tp']:.6g}；與 Val 頁不同即 STALE（改輸入後須重跑 skhynix/sens_run.py）")
+        S.cell(r, 3, f"快照 {snap['snapshot']}；建置時基準加權目標價 {snap['base_tp']:,.0f} 韓元；與 Val 頁不同即 STALE（改輸入後須重跑 skhynix/sens_run.py）")
     else:
         S.cell(r, 2, "無快照")
     r += 1
@@ -675,11 +675,11 @@ def coord_c0(wb, SIL):
     Co.cell(r, 1, "C0 恆等式：HBM 市占合計（SK 海力士＋三星＋美光＋未建模殘差）＝1")
     Co.cell(r, 2, "%")
     for y in cols:
-        v = f"={SIL.V['hbmsh_skh_%d' % (y - 2000)]['base']}+{SIL.V['hbmsh_ss_%d' % (y - 2000)]['base']}+{SIL.V['hbmsh_mu_%d' % (y - 2000)]['base']}"
+        v = f"={cols[y]}{L['sh'][1]}+{SIL.V['hbmsh_ss_%d' % (y - 2000)]['base']}+{SIL.V['hbmsh_mu_%d' % (y - 2000)]['base']}"
         Co[f"{cols[y]}{r}"] = v
         Co[f"{cols[y]}{r}"].number_format = "0.0%"
         Co[f"{cols[y]}{r}"].font = BLUE
-    Co.cell(r, 7, "層的三家市占（SK 海力士 hbmsh_skh、三星 hbmsh_ss、美光 hbmsh_mu，Siliconomics）合計；殘差＝1 − 合計，層另列 SIF_HBMShareSum")
+    Co.cell(r, 7, "SK 海力士取上方層列（連到格）加層的三星 hbmsh_ss、美光 hbmsh_mu（Siliconomics 常數）合計；殘差＝1 − 合計，層另列 SIF_HBMShareSum")
     L["shsum"] = r
     r += 1
     Co.cell(r, 1, "C0 恆等式：未建模殘差（1 − 三家合計）")
@@ -711,10 +711,22 @@ def coord_c0(wb, SIL):
         Co.cell(r + 1, 1, f"  狀態：{name}")
         L["ev"].append((r - 1, r, r + 1))
         r += 2
-    # 另一側讀數
-    Co.cell(r, 1, "另一側讀數（Wattonomics 換算的產業 GW）對 HBM 出貨位元的影響（情境 B；情境 A 不縮放）").font = BOLD
+    # 摘要
+    Co.cell(r, 1, "C0 摘要（HTML 用；公式帶數字）")
+    stat_rows = [L[k] for k in ("mkt_s", "bit_s", "k1_s", "sh_s", "rev_s")]
+    n_own = "+".join(f'COUNTIF(C{x}:F{x},"對帳中")' for x in stat_rows)
+    n_ev = "+".join(f'COUNTIF(C{x[2]}:F{x[2]},"超出*")' for x in L["ev"])
+    Co.cell(r, 2, F(T("本模型與層（Siliconomics）對應量："), f'IF(({n_own})=0,"HBM 市場規模、出貨位元、顆數係數、市占與 HBM 營收逐年一致（本模型讀層，差距為 0）","有 "&({n_own})&" 個格子超過容差")',
+                    T("；對外證據："), f'IF(({n_ev})=0,"三筆外部估計都在容差內","有 "&({n_ev})&" 筆外部估計與層差距超過 ±15%（見下表，皆為賣方或公司自估，非逐顆證據）")'))
+    L["sum"] = r
     r += 1
-    Co.cell(r, 1, "另一側讀數 ÷ 現行基準（上方 Coord 頁；只在對帳中年份套用，其他年份＝1）")
+    # 另一側讀數
+    r += 1
+    Co.cell(r, 1, "層級之間（參考；Siliconomics 對帳單 r3 處理，不計入本公司 C0）：另一側讀數（Wattonomics 換算的產業 GW）對 HBM 出貨位元的影響（情境 B；情境 A 不縮放）").font = BOLD
+    Co.cell(r, 7, "這是 Wattonomics 與 Siliconomics 兩層之間的差距，不是本公司對它讀的層值的差距；本公司只並列兩讀數，不裁決、不以 ±15% 判定本公司對帳中")
+    L["lay"] = r
+    r += 1
+    Co.cell(r, 1, "另一側讀數 ÷ 現行基準（上方 Coord 頁；只在 Siliconomics 旗標年份套用，其他年份＝1）")
     Co.cell(r, 2, "x")
     for y in cols:
         Co[f"{cols[y]}{r}"] = f"=IF({ccol[y]}{flag}=1,{ccol[y]}{ratio},1)"
@@ -759,11 +771,11 @@ def coord_c0(wb, SIL):
         Co[f"{cc}{r}"].number_format = "+0.0%;-0.0%"
     L["altd"] = r
     r += 1
-    Co.cell(r, 1, "另一側讀數：狀態")
+    Co.cell(r, 1, "層級之間：Siliconomics 對帳中旗標")
     for y in cols:
         cc = cols[y]
-        Co[f"{cc}{r}"] = f'=IF(ABS({cc}{L["altd"]})>$B${tol},"對帳中","一致（±15% 內）")'
-    Co.cell(r, 7, "與 Siliconomics 對帳中旗標（上方 CY2027–CY2029＝1）一致；對帳單由主控開立，期限見上方目標價區說明")
+        Co[f"{cc}{r}"] = f'=IF({ccol[y]}{flag}=1,"對帳中（Siliconomics 旗標）","—")'
+    Co.cell(r, 7, "取自上方 Coord 頁旗標列；對帳單由主控開立（Siliconomics 對帳單 r3），期限見上方目標價區說明")
     L["alt_s"] = r
     r += 1
     Co.cell(r, 1, "另一側讀數：情境 B HBM 市場（出貨位元 × 單價，Mkt 頁）")
@@ -774,17 +786,11 @@ def coord_c0(wb, SIL):
         Co[f"{cc}{r}"].number_format = "#,##0.0"
     L["altmkt"] = r
     r += 1
-    # 摘要
-    Co.cell(r, 1, "C0 摘要（HTML 用；公式帶數字）")
-    stat_rows = [L[k] for k in ("mkt_s", "bit_s", "k1_s", "sh_s", "rev_s")]
-    n_own = "+".join(f'COUNTIF(C{x}:F{x},"對帳中")' for x in stat_rows)
-    n_ev = "+".join(f'COUNTIF(C{x[2]}:F{x[2]},"超出*")' for x in L["ev"])
-    Co.cell(r, 2, F(T("本模型與層（Siliconomics）對應量："), f'IF(({n_own})=0,"HBM 市場規模、出貨位元、顆數係數、市占與 HBM 營收逐年一致（本模型讀層，差距為 0）","有 "&({n_own})&" 個格子超過容差")',
-                    T("；對外證據："), f'IF(({n_ev})=0,"三筆外部估計都在容差內","有 "&({n_ev})&" 筆外部估計與層差距超過 ±15%（見上表，皆為賣方或公司自估，非逐顆證據）")',
-                    T("；另一側讀數（Wattonomics 換算）使情境 B 的 HBM 出貨位元 CY2027 由 "), f'TEXT(D{L["cur"]},"0.00")', T(" 降到 "), f'TEXT(D{L["alt"]},"0.00")',
+    Co.cell(r, 1, "層級之間摘要（HTML 用；公式帶數字）")
+    Co.cell(r, 2, F(T("另一側讀數（Wattonomics 換算）使情境 B 的 HBM 出貨位元 CY2027 由 "), f'TEXT(D{L["cur"]},"0.00")', T(" 降到 "), f'TEXT(D{L["alt"]},"0.00")',
                     T(" EB（"), f'TEXT(D{L["altd"]},"+0%;-0%")', T("），CY2028 "), f'TEXT(E{L["altd"]},"+0%;-0%")', T("，CY2029 "), f'TEXT(F{L["altd"]},"+0%;-0%")',
-                    T("，超過容差，維持對帳中、不改上游值。")))
-    L["sum"] = r
+                    T("。這是兩層之間的差距（Siliconomics 對帳單 r3 處理），不計入本公司對帳；個股兩讀數並列、不改上游值。")))
+    L["lay_sum"] = r
     r += 1
     Co.column_dimensions["G"].width = 100
     Co.column_dimensions["F"].width = 22

@@ -43,6 +43,21 @@ def transform(cfg, wb):
     # COORD.inject_html 已在最前面插入：h3、note、table、bars（兩讀數）
     coord_blocks = va[0:4]
     assert coord_blocks[0]["type"] == "h3" and coord_blocks[3]["type"] == "bars", [b["type"] for b in coord_blocks]
+    def _int(x):
+        if isinstance(x, str):
+            return x[:-3] + "|n0" if x.endswith("|n2") else x
+        if isinstance(x, list):
+            return [_int(i) for i in x]
+        if isinstance(x, dict):
+            return {k: ("n0" if k == "fmt" and v == "n2" else _int(v)) for k, v in x.items()}
+        return x
+    coord_blocks = _int(coord_blocks)
+    r_tpc = next(r for r in range(1, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith("加權目標價") and isinstance(CW.cell(r, 2).value, (int, float)))
+    coord_blocks.append({"type": "table", "caption": "兩讀數加權目標價的精確值（韓元，兩位小數；供與 xlsx 核對，上表四捨五入為整數）", "collapse": True,
+                         "summary": "展開：兩讀數加權目標價的精確值（兩位小數）", "head": ["項目", "現行基準讀數", "另一側讀數"],
+                         "rows": [[f"@Coord!A{r_tpc}", f"@Coord!B{r_tpc}|n2", f"@Coord!C{r_tpc}|n2"]]})
+    for t_ in cfg["hero"]["tiles"]:
+        t_[:] = _int(t_)
     rest = va[4:]
     rest = [b for b in rest if not (b["type"] == "bars" and str(b.get("title", "")).startswith("目標價與現價"))]
     bar4 = {"type": "bars", "title": "四個目標價與現價（韓元；豎線＝現價）", "fmt": "n0",
@@ -51,7 +66,10 @@ def transform(cfg, wb):
             "ref": {"label": f"@Val!A{r_px}", "value": f"@Val!B{r_px}"}}
     tbl4 = {"type": "table", "caption": f"@Val!A{g0}", "head": [f"@Val!{c}{g0 + 1}" for c in "ABCD"],
             "rows": [[f"@Val!A{r}", f"@Val!B{r}|n0", f"@Val!C{r}|sp1", f"@Val!D{r}"] for r in gr]}
-    va_new = [bar4, {"type": "note", "parts": [f"@README!A{RM['rec']}"]}, tbl4, {"type": "note", "parts": old_note[:7]}] + coord_blocks + rest
+    _on = [p_ for p_ in old_note[:7] if not (str(p_).startswith("@") and "固定規則" in str(wb[str(p_)[1:].split("!")[0]][str(p_)[1:].split("!")[1].split("|")[0]].value or "")) and "投資建議依" not in str(p_)]
+    if _on and isinstance(_on[0], str) and _on[0].startswith("。"):
+        _on[0] = _on[0][1:]
+    va_new = [bar4, {"type": "note", "parts": [f"@README!A{RM['rec']}"]}, tbl4, {"type": "note", "parts": _on}] + coord_blocks + rest
     S["valuation"]["blocks"] = va_new
     S["valuation"].pop("intro", None)
     # ---- 3. 敏感度：加權目標價相對基準（低案、高案）置頂 ----
@@ -83,7 +101,9 @@ def transform(cfg, wb):
     for b in sb:
         if b["type"] == "tornado":
             b["collapse"] = True
-            b["summary"] = "展開：對照：營業利益對各收入線同幅變動的敏感度（每個年度與情境）"
+            tl = b.get("title")
+            tail = tl[-1] if isinstance(tl, list) and tl and isinstance(tl[-1], str) and not tl[-1].startswith("@") else ""
+            b["summary"] = "展開：對照：營業利益對各收入線同幅變動的敏感度" + tail
     main_idx = [i for i, b in enumerate(out) if b["type"] == "tornado" and not b.get("collapse")]
     top = [out[i] for i in main_idx]
     intro = {"type": "note", "parts": ["主圖為加權目標價相對基準的變動（輸入取低值、取高值各一張，一次動一個輸入，整本重算；達兩位數百分比者直接顯示）。"
@@ -93,7 +113,7 @@ def transform(cfg, wb):
     S["sens"].pop("intro", None)
     # ---- 4. 反向 DCF ----
     A = {}
-    for key, pref in (("a", "A. DCF"), ("a_v0", "支持現價所需的評價日每股價值"), ("evr", "支持現價所需的企業價值"), ("ev", "模型企業價值 EV"), ("evx", "EV 需放大"), ("vb", "模型：情境 B 評價日"),
+    for key, pref in (("a", "A. DCF"), ("a_v0", "支持現價所需的評價日每股價值"), ("evr", "支持現價所需的企業價值"), ("ev", "模型企業價值 EV"), ("evx", "EV 須調整"), ("vb", "模型：情境 B 評價日"),
                       ("yh", "項目（情境 B）"), ("ra", "(a)"), ("rb", "(b)"), ("rc", "(c)"), ("cmp", "B. Comparable"), ("sum", "C. 摘要")):
         A[key] = lab("RevDCF", pref)
     f_ = lambda p, start: lab("RevDCF", p, start)
@@ -191,23 +211,31 @@ def transform(cfg, wb):
     # ---- 7. 對帳：C0 在最前面 ----
     c0 = lab("Coord", "C0 由下往上對帳")
     hdr = lab("Coord", "項目", c0)
-    c_end = lab("Coord", "另一側讀數：情境 B HBM 市場", hdr)
+    sum_r = lab("Coord", "C0 摘要", hdr)
+    lay = lab("Coord", "層級之間（參考", sum_r)
+    lay_end = lab("Coord", "另一側讀數：情境 B HBM 市場", lay)
     cf = lambda r: ("sp1" if "差距" in str(CW.cell(r, 1).value) else "p1" if str(CW.cell(r, 2).value) == "%" else "n3" if str(CW.cell(r, 2).value) == "x" else "n2" if str(CW.cell(r, 2).value) == "EB" else "n1")
-    crow = []
-    for r in range(hdr + 1, c_end + 1):
-        a, bb = CW.cell(r, 1).value, CW.cell(r, 2).value
-        if a is None:
-            continue
-        if bb is None and all(CW.cell(r, c).value is None for c in range(3, 7)):
-            crow.append({"sub": f"@Coord!A{r}"})
-        else:
-            crow.append([f"@Coord!A{r}", f"@Coord!B{r}"] + [f"@Coord!{c}{r}|{cf(r)}" if not isinstance(CW[f"{c}{r}"].value, str) else f"@Coord!{c}{r}" for c in "CDEF"])
-    note_rows = [r for r in range(hdr + 1, c_end + 1) if CW.cell(r, 7).value]
+
+    def crows(r0, r1):
+        out = []
+        for r in range(r0, r1 + 1):
+            a, bb = CW.cell(r, 1).value, CW.cell(r, 2).value
+            if a is None:
+                continue
+            if bb is None and all(CW.cell(r, c).value is None for c in range(3, 7)):
+                out.append({"sub": f"@Coord!A{r}"})
+            else:
+                out.append([f"@Coord!A{r}", f"@Coord!B{r}"] + [f"@Coord!{c}{r}|{cf(r)}" if not isinstance(CW[f"{c}{r}"].value, str) else f"@Coord!{c}{r}" for c in "CDEF"])
+        return out
+    note_rows = [r for r in range(hdr + 1, sum_r) if CW.cell(r, 7).value]
     c0_blocks = [{"type": "h3", "text": "由下往上對帳：本模型的產業量與 Siliconomics 的對應值"},
-                 {"type": "note", "parts": [f"@Coord!B{c_end + 1}"]},
-                 {"type": "table", "caption": "由下往上對帳表（差距超過容差標「對帳中」；本模型讀層，故前五項為零差距）", "head": [f"@Coord!{c}{hdr}" for c in "ABCDEF"], "rows": crow},
+                 {"type": "note", "parts": [f"@Coord!B{sum_r}"]},
+                 {"type": "table", "caption": "由下往上對帳表（只含本公司自己的量對它讀的 Siliconomics 值；差距超過容差標「對帳中」；本模型讀層，故前五項為零差距）", "head": [f"@Coord!{c}{hdr}" for c in "ABCDEF"], "rows": crows(hdr + 1, sum_r - 1)},
                  {"type": "table", "caption": "對帳的口徑、來源與證據等級", "collapse": True, "summary": "展開：口徑、來源與證據等級", "head": ["項目", "口徑、來源與證據等級"],
                   "rows": [[f"@Coord!A{r}", f"@Coord!G{r}"] for r in note_rows]},
+                 {"type": "h3", "text": "層級之間（參考；Siliconomics 對帳單處理，不計入本公司對帳）"},
+                 {"type": "note", "parts": [f"@Coord!B{lay_end + 1}"]},
+                 {"type": "table", "caption": "另一側讀數對 HBM 出貨位元的影響（Wattonomics 與 Siliconomics 兩層之間的差距；本公司並列、不裁決）", "head": [f"@Coord!{c}{hdr}" for c in "ABCDEF"], "rows": crows(lay + 1, lay_end)},
                  {"type": "h3", "text": "與共識、公司指引的對照"}]
     S["recon"]["blocks"] = c0_blocks + S["recon"]["blocks"]
     S["recon"].pop("intro", None)

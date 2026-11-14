@@ -180,9 +180,7 @@
     {
      "type": "note",
      "parts": [
-      "投資建議依加權目標價判定：",
-      "@Val!E185",
-      "。進加權的 Comparable 為相對倍數調整後 ",
+      "進加權的 Comparable 為相對倍數調整後 ",
       "@Val!B204|n0",
       "（上檔空間 ",
       "@README!B54|sp1",
@@ -215,20 +213,20 @@
      "rows": [
       [
        "@Coord!A11",
-       "@Coord!B11|n2",
-       "@Coord!C11|n2",
+       "@Coord!B11|n0",
+       "@Coord!C11|n0",
        "@Coord!D11|sp1"
       ],
       [
        "@Coord!A12",
-       "@Coord!B12|n2",
-       "@Coord!C12|n2",
+       "@Coord!B12|n0",
+       "@Coord!C12|n0",
        "@Coord!D12|sp1"
       ],
       [
        "@Coord!A13",
-       "@Coord!B13|n2",
-       "@Coord!C13|n2",
+       "@Coord!B13|n0",
+       "@Coord!C13|n0",
        "@Coord!D13|sp1"
       ],
       [
@@ -248,7 +246,7 @@
     {
      "type": "bars",
      "title": "兩讀數的加權目標價與現價（豎線＝現價）",
-     "fmt": "n2",
+     "fmt": "n0",
      "items": [
       {
        "label": "@Coord!B19",
@@ -265,6 +263,24 @@
       "label": "@Coord!A22",
       "value": "@Coord!B22"
      }
+    },
+    {
+     "type": "table",
+     "caption": "兩讀數加權目標價的精確值（韓元，兩位小數；供與 xlsx 核對，上表四捨五入為整數）",
+     "collapse": true,
+     "summary": "展開：兩讀數加權目標價的精確值（兩位小數）",
+     "head": [
+      "項目",
+      "現行基準讀數",
+      "另一側讀數"
+     ],
+     "rows": [
+      [
+       "@Coord!A11",
+       "@Coord!B11|n2",
+       "@Coord!C11|n2"
+      ]
+     ]
     },
     {
      "type": "table",
@@ -1365,7 +1381,7 @@
      "value_col": "E",
      "fmt": "sp1",
      "collapse": true,
-     "summary": "展開：對照：營業利益對各收入線同幅變動的敏感度（每個年度與情境）"
+     "summary": "展開：對照：營業利益對各收入線同幅變動的敏感度（變動達兩位數百分比的案例）"
     },
     {
      "type": "tornado",
@@ -1380,7 +1396,7 @@
      "value_col": "E",
      "fmt": "sp1",
      "collapse": true,
-     "summary": "展開：對照：營業利益對各收入線同幅變動的敏感度（每個年度與情境）"
+     "summary": "展開：對照：營業利益對各收入線同幅變動的敏感度（變動未達兩位數百分比的案例）"
     },
     {
      "type": "table",
@@ -5348,12 +5364,12 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!B69"
+      "@Coord!B60"
      ]
     },
     {
      "type": "table",
-     "caption": "由下往上對帳表（差距超過容差標「對帳中」；本模型讀層，故前五項為零差距）",
+     "caption": "由下往上對帳表（只含本公司自己的量對它讀的 Siliconomics 值；差距超過容差標「對帳中」；本模型讀層，故前五項為零差距）",
      "head": [
       "@Coord!A27",
       "@Coord!B27",
@@ -5613,73 +5629,6 @@
        "@Coord!D59",
        "@Coord!E59|n1",
        "@Coord!F59|n1"
-      ],
-      {
-       "sub": "@Coord!A60"
-      },
-      [
-       "@Coord!A61",
-       "@Coord!B61",
-       "@Coord!C61|n3",
-       "@Coord!D61|n3",
-       "@Coord!E61|n3",
-       "@Coord!F61|n3"
-      ],
-      [
-       "@Coord!A62",
-       "@Coord!B62",
-       "@Coord!C62|n2",
-       "@Coord!D62|n2",
-       "@Coord!E62|n2",
-       "@Coord!F62|n2"
-      ],
-      [
-       "@Coord!A63",
-       "@Coord!B63",
-       "@Coord!C63|n2",
-       "@Coord!D63|n2",
-       "@Coord!E63|n2",
-       "@Coord!F63|n2"
-      ],
-      [
-       "@Coord!A64",
-       "@Coord!B64",
-       "@Coord!C64|n2",
-       "@Coord!D64|n2",
-       "@Coord!E64|n2",
-       "@Coord!F64|n2"
-      ],
-      [
-       "@Coord!A65",
-       "@Coord!B65",
-       "@Coord!C65|n2",
-       "@Coord!D65|n2",
-       "@Coord!E65|n2",
-       "@Coord!F65|n2"
-      ],
-      [
-       "@Coord!A66",
-       "@Coord!B66",
-       "@Coord!C66|p1",
-       "@Coord!D66|p1",
-       "@Coord!E66|p1",
-       "@Coord!F66|p1"
-      ],
-      [
-       "@Coord!A67",
-       "@Coord!B67",
-       "@Coord!C67",
-       "@Coord!D67",
-       "@Coord!E67",
-       "@Coord!F67"
-      ],
-      [
-       "@Coord!A68",
-       "@Coord!B68",
-       "@Coord!C68|n1",
-       "@Coord!D68|n1",
-       "@Coord!E68|n1",
-       "@Coord!F68|n1"
       ]
      ]
     },
@@ -5744,14 +5693,94 @@
       [
        "@Coord!A50",
        "@Coord!G50"
+      ]
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "層級之間（參考；Siliconomics 對帳單處理，不計入本公司對帳）"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!B71"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "另一側讀數對 HBM 出貨位元的影響（Wattonomics 與 Siliconomics 兩層之間的差距；本公司並列、不裁決）",
+     "head": [
+      "@Coord!A27",
+      "@Coord!B27",
+      "@Coord!C27",
+      "@Coord!D27",
+      "@Coord!E27",
+      "@Coord!F27"
+     ],
+     "rows": [
+      [
+       "@Coord!A63",
+       "@Coord!B63",
+       "@Coord!C63|n3",
+       "@Coord!D63|n3",
+       "@Coord!E63|n3",
+       "@Coord!F63|n3"
+      ],
+      [
+       "@Coord!A64",
+       "@Coord!B64",
+       "@Coord!C64|n2",
+       "@Coord!D64|n2",
+       "@Coord!E64|n2",
+       "@Coord!F64|n2"
       ],
       [
        "@Coord!A65",
-       "@Coord!G65"
+       "@Coord!B65",
+       "@Coord!C65|n2",
+       "@Coord!D65|n2",
+       "@Coord!E65|n2",
+       "@Coord!F65|n2"
+      ],
+      [
+       "@Coord!A66",
+       "@Coord!B66",
+       "@Coord!C66|n2",
+       "@Coord!D66|n2",
+       "@Coord!E66|n2",
+       "@Coord!F66|n2"
       ],
       [
        "@Coord!A67",
-       "@Coord!G67"
+       "@Coord!B67",
+       "@Coord!C67|n2",
+       "@Coord!D67|n2",
+       "@Coord!E67|n2",
+       "@Coord!F67|n2"
+      ],
+      [
+       "@Coord!A68",
+       "@Coord!B68",
+       "@Coord!C68|p1",
+       "@Coord!D68|p1",
+       "@Coord!E68|p1",
+       "@Coord!F68|p1"
+      ],
+      [
+       "@Coord!A69",
+       "@Coord!B69",
+       "@Coord!C69",
+       "@Coord!D69",
+       "@Coord!E69",
+       "@Coord!F69"
+      ],
+      [
+       "@Coord!A70",
+       "@Coord!B70",
+       "@Coord!C70|n1",
+       "@Coord!D70|n1",
+       "@Coord!E70|n1",
+       "@Coord!F70|n1"
       ]
      ]
     },
@@ -6096,7 +6125,7 @@
     [
      "另一側讀數目標價（對帳中）"
     ],
-    "@Coord!C11|n2",
+    "@Coord!C11|n0",
     [
      "上檔空間 ",
      "@Coord!C14|sp1",
