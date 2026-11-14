@@ -81,14 +81,14 @@
 "key": "2029 B",
 "year": 2029,
 "scenario": "B",
-"ai_rev": 89.8,
-"rev": 262.1,
+"ai_rev": 75.0,
+"rev": 247.3,
 "non_ai_rev": 172.3,
-"ai_share": 0.343,
+"ai_share": 0.303,
 "gm": 0.56,
-"eps": 137.21,
+"eps": 129.47,
 "capex": 95,
-"pe_now": 16.3
+"pe_now": 17.3
 },
 {
 "key": "2027 C",
