@@ -1056,6 +1056,9 @@ if _CR:
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import v056_post as P56
     print(P56.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR))
+    # v0.5.7（2026-11-14）：C0 實績對帳（規則 v1.4.2）：Coord 頁第 4 節；同源四項改標讀取層級；只動 Coord 頁與版本文字
+    import v057_post as P57
+    print(P57.apply(wb, P56))
 wb.save(sys.argv[1])
 if os.environ.get("DELTA_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

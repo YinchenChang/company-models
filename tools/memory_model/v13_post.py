@@ -592,7 +592,7 @@ def sens_rel(wb, here):
 
 
 # ---------------- Coord：C0 對帳 ----------------
-def coord_c0(wb, SIL):
+def coord_c0(wb, SIL, here=None):
     Co, Mk, Y, V = wb["Coord"], wb["Mkt"], wb["Y"], wb["Val"]
     m = lambda p: lab(Mk, p)
     m25, m31, m34, m22, m17, m19 = (m("出貨＝MIN(需求, 供給)（B）"), m("HBM 單價（B）"), m("HBM 市場（B）"), m("需求 × 出貨係數（B）"),
@@ -607,8 +607,8 @@ def coord_c0(wb, SIL):
     ccol = {2026: "B", 2027: "C", 2028: "D", 2029: "E"}   # Coord 上半部年度欄
     ycol = {2026: "C", 2027: "G", 2028: "H", 2029: "I"}
     r = Co.max_row + 2
-    Co.cell(r, 1, ("C0 由下往上對帳（三層基準協調規則 v1.4.1 C0；v0.7.6 新增）：本模型自己的產業相關量（HBM 市場規模與出貨位元、基準顆數係數 K1、HBM 營收市占、HBM 營收），"
-                   f"與 Siliconomics {SIL.VERSION} 對應值比較；差距超過 ±15% 標「對帳中」，不改上游值（個股不裁決，C4）。"
+    Co.cell(r, 1, ("C0 由下往上對帳：讀取層級（同源，不判定；三層基準協調規則 v1.4.2 C0 第 2 點，v0.7.7 改標）：本模型自己的產業相關量（HBM 市場規模與出貨位元、基準顆數係數 K1、HBM 營收市占、HBM 營收），"
+                   f"與 Siliconomics {SIL.VERSION} 對應值並列。本模型直接讀層，差距恆為 0、無檢驗力，故不判定、不計入對帳中；有檢驗力的對帳見本頁末「C0（實績）」節（公司實績 vs 層級隱含值）。"
                    "層的值為建置時由 siliconomics/reader.py 讀入的常數（藍字），本模型的值為活公式")).font = BOLD
     top = r
     r += 1
@@ -654,7 +654,7 @@ def coord_c0(wb, SIL):
             Co.cell(r, 1, f"{name}：狀態")
             for y in cols:
                 cc = cols[y]
-                Co[f"{cc}{r}"] = f'=IF({cc}{rd}="","",IF(ABS({cc}{rd})>$B${tol},"對帳中","一致（±15% 內）"))'
+                Co[f"{cc}{r}"] = f'=IF({cc}{rd}="","","讀取層級（同源，不判定）")'
             L[key + "_s"] = r
             r += 1
         L[key] = (ro, rl, rd)
@@ -707,17 +707,15 @@ def coord_c0(wb, SIL):
         Co.cell(r, 2, "%")
         Co[f"{cols[y]}{r}"] = f"={cols[y]}{L['mkt'][1]}/{cols[y]}{r - 1}-1"
         Co[f"{cols[y]}{r}"].number_format = "+0.0%;-0.0%"
-        Co[f"{cols[y]}{r + 1}"] = f'=IF(ABS({cols[y]}{r})>$B${tol},"超出容差（外部估計，不開單）","一致（±15% 內）")'
+        Co[f"{cols[y]}{r + 1}"] = f'=IF(ABS({cols[y]}{r})>$B${tol},"參考：超出容差（外部估計，不判定、不開單）","參考：在容差內（外部估計，不判定）")'
         Co.cell(r + 1, 1, f"  狀態：{name}")
         L["ev"].append((r - 1, r, r + 1))
         r += 2
     # 摘要
     Co.cell(r, 1, "C0 摘要（HTML 用；公式帶數字）")
-    stat_rows = [L[k] for k in ("mkt_s", "bit_s", "k1_s", "sh_s", "rev_s")]
-    n_own = "+".join(f'COUNTIF(C{x}:F{x},"對帳中")' for x in stat_rows)
-    n_ev = "+".join(f'COUNTIF(C{x[2]}:F{x[2]},"超出*")' for x in L["ev"])
-    Co.cell(r, 2, F(T("本模型與層（Siliconomics）對應量："), f'IF(({n_own})=0,"HBM 市場規模、出貨位元、顆數係數、市占與 HBM 營收逐年一致（本模型讀層，差距為 0）","有 "&({n_own})&" 個格子超過容差")',
-                    T("；對外證據："), f'IF(({n_ev})=0,"三筆外部估計都在容差內","有 "&({n_ev})&" 筆外部估計與層差距超過 ±15%（見下表，皆為賣方或公司自估，非逐顆證據）")'))
+    n_ev = "+".join(f'COUNTIF(C{x[2]}:F{x[2]},"*超出*")' for x in L["ev"])
+    Co.cell(r, 2, F(T("讀取層級（同源，不判定、不計入對帳中）：HBM 市場規模、出貨位元、顆數係數、市占與 HBM 營收本模型直接讀層，差距恆為 0，無檢驗力；對帳以本頁末「C0（實績）」節的公司實績對層級隱含值為準。"),
+                    T("對外證據（參考，不判定）："), f'IF(({n_ev})=0,"三筆外部估計都在容差內","有 "&({n_ev})&" 筆外部估計與層差距超過 ±15%（見下表，皆為賣方或公司自估，非逐顆證據）")'))
     L["sum"] = r
     r += 1
     # 另一側讀數
@@ -795,6 +793,14 @@ def coord_c0(wb, SIL):
     Co.column_dimensions["G"].width = 100
     Co.column_dimensions["F"].width = 22
     L.update(top=top, hdr=hr, tol=tol)
+    # C0（實績）：公司實績 vs 層級隱含值（公司資料夾有 c0_actuals.py 才做；附在 Coord 頁尾，不位移既有列）
+    import importlib.util
+    _py = os.path.join(here, "c0_actuals.py") if here else None
+    if _py and os.path.exists(_py):
+        spec = importlib.util.spec_from_file_location("c0_actuals_co", _py)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        L["act"] = mod.add(wb, Co, L, F, T)
     return L
 
 
@@ -879,6 +885,6 @@ def apply(wb, C, SIL, here):
     RVA = revdcf(wb)
     V07 = val07(wb)
     SNA = sens_rel(wb, here)
-    C0 = coord_c0(wb, SIL)
+    C0 = coord_c0(wb, SIL, here)
     RM = readme13(wb, PLA, S_, G_, RVA, SNA, C0, C["v13_ver"])
     return dict(hist=HR, pl=PLA, rd=RM, rv=RVA, val07=V07, sens=SNA, c0=C0)

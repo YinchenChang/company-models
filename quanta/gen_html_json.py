@@ -299,7 +299,7 @@ S = {s_["id"]: s_ for s_ in cfg["sections"]}
 RD, PLW, RV = WBF["README"], WBF["PL"], WBF["RevDCF"]
 r13 = find("README", "v1.3 展示層")
 RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
-assert str(RD[f"A{RM['ver']}"].value).startswith("v0.4.7"), RD[f"A{RM['ver']}"].value
+assert str(RD[f"A{RM['ver']}"].value).startswith("v0.4.8"), RD[f"A{RM['ver']}"].value
 cfg["layout"] = "v1.3"
 old_note = cfg["hero"]["note"]
 cfg["hero"]["note"] = [f"@README!A{RM['hero']}"]            # 橫幅只留 ≤200 字白話；評等規則與相對倍數調整說明移到估值章
@@ -441,11 +441,15 @@ seg_chart = {"type": "theme", "title": "分部營收（情境 B，十億元）�
 S["drivers"]["blocks"] = [{"type": "note", "parts": [f"@README!A{RM['drv']}"]}, seg_chart, seg_tbl, {"type": "h3", "text": "情境驅動與單一參數"}] + S["drivers"]["blocks"]
 S["drivers"]["title"] = "驅動因子：分部營收推導"
 
-# ---- 8. 對帳：C0 由下往上對帳 ----
+# ---- 8. 對帳：C0（實績）＋讀取層級（同源，不判定） ----
 if "Coord" in WBF.sheetnames:
     CW = WBF["Coord"]
     cr = lambda p, start=1: next(r for r in range(start, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith(p))
-    c0 = cr("C0 由下往上對帳"); c1 = cr("1. 讀哪一層", c0); c2 = cr("2. C0 對帳表", c0); c3 = cr("3. 結論", c0); r_cc = cr("C0 結論（白話）", c3)
+    c0 = cr("C0 由下往上對帳"); c1 = cr("1. 讀哪一層", c0); c2 = cr("2. 讀取層級", c0); c3 = cr("3. 結論", c0); r_cc = cr("C0 結論（白話）", c3)
+    c4 = cr("4. C0（實績）", c3); r_m = cr("4.1 公司實績", c4); r_p = cr("4.2 口徑換算", c4); r_cmp = cr("4.3 對帳", c4)
+    r_meth = cr("方法：", c4); r_rem = cr("為什麼不判定", c4); r_end = CW.max_row
+    nfmt = lambda r: next((CW[f"{c}{r}"].number_format for c in "BCDE" if isinstance(CW[f"{c}{r}"].value, (int, float)) or (isinstance(CW[f"{c}{r}"].value, str) and CW[f"{c}{r}"].value.startswith("=") and c in "BC")), "General")
+    fcode = lambda a, nf: "" if ("判定：" in a or "是否都在" in a) else ("sp1" if nf.startswith("+") else "p1" if "%" in nf else "n3" if nf == "0.000" else "n2" if nf == "0.00" else "n1")
     lay_rows = []
     for r in range(c1 + 2, c2 - 1):
         if CW.cell(r, 1).value:
@@ -462,9 +466,36 @@ if "Coord" in WBF.sheetnames:
         f_ = "" if "判定" in a else ("sp1" if nf.startswith("+") else "p1" if "%" in nf else "n4" if nf == "0.0000" else "n2" if nf == "0.00" else "n1")
         cx = lambda c: f"@Coord!{c}{r}" if CW[f"{c}{r}"].value else ""
         c0_rows.append([f"@Coord!A{r}"] + [f"@Coord!{c}{r}|{f_}" for c in "BCDE"] + [cx("F"), cx("G")])
-    c0_blocks = [{"type": "h3", "text": "三層協調：本模型與 Siliconomics 層的由下往上對帳"},
+    act_rows = []
+    for r in range(r_cmp + 1, r_end + 1):
+        a = str(CW.cell(r, 1).value or "")
+        if not a:
+            continue
+        f_ = fcode(a, nfmt(r))
+        act_rows.append([f"@Coord!A{r}", f"@Coord!B{r}|{f_}", (f"@Coord!C{r}|{f_}" if CW[f"C{r}"].value is not None and not (isinstance(CW[f"C{r}"].value, str) and not CW[f"C{r}"].value.startswith("=")) else ""),
+                         (f"@Coord!D{r}" if CW[f"D{r}"].value else ""), (f"@Coord!E{r}" if CW[f"E{r}"].value else "")])
+    in_rows = []
+    for r in range(r_m + 1, r_cmp):
+        a = str(CW.cell(r, 1).value or "")
+        if not a:
+            continue
+        if not a.startswith("\u3000"):
+            in_rows.append({"sub": f"@Coord!A{r}"})
+            continue
+        f_ = fcode(a, nfmt(r))
+        if "核對" in a:
+            f_ = "n3"
+        in_rows.append([f"@Coord!A{r}", f"@Coord!B{r}|{f_}", (f"@Coord!D{r}" if CW[f"D{r}"].value else ""), (f"@Coord!E{r}" if CW[f"E{r}"].value else "")])
+    c0_blocks = [{"type": "h3", "text": "三層協調：公司實績對照（無可比實績，不判定）"},
                  {"type": "note", "parts": [f"@Coord!B{r_cc}"]},
-                 {"type": "table", "caption": "由下往上對帳表（日曆年與會計年相同；情境 B 基準對 Siliconomics 基準；金額十億美元；差距超過門檻標對帳中）", "head": ["項目", "CY2026", "CY2027", "CY2028", "CY2029", "單位與口徑", "來源與證據等級"], "rows": c0_rows},
+                 {"type": "note", "parts": [f"@Coord!A{r_meth}"]},
+                 {"type": "table", "caption": "公司實績對照（參考，不判定：層級份額由本模型錨點反推，無可比實績）：2026 年已公布月營收與法說揭露比例換算的 AI 伺服器營收，對層級隱含值與錨點的差（金額十億新台幣）",
+                  "head": ["項目", "主讀數（已公布月份累計）", "第二讀數（最近一季年化）", "單位與口徑", "來源與證據等級"], "rows": act_rows},
+                 {"type": "note", "parts": [f"@Coord!A{r_rem}"]},
+                 {"type": "table", "caption": "實績輸入與口徑換算參數（逐月營收、核對列、法說揭露比例）", "head": ["項目", "值", "單位與口徑", "來源與證據等級"], "rows": in_rows,
+                  "collapse": True, "summary": "展開：逐月營收實績、核對列與換算比例的出處"},
+                 {"type": "table", "caption": "讀取層級（同源，不判定）：本模型自 Siliconomics 層讀入的值與層級值必然相同，差距恆為零，無檢驗力，不計入對帳中（情境 B 基準對 Siliconomics 基準；金額十億美元）", "head": ["項目", "CY2026", "CY2027", "CY2028", "CY2029", "單位與口徑", "來源與證據等級"], "rows": c0_rows,
+                  "collapse": True, "summary": "展開：讀取層級（同源，不判定）與層級之間的參考差距"},
                  {"type": "table", "caption": "讀哪一層、哪一版（下游只註明版本、不自行重估）", "head": ["項目", "值", "版本／檔案", "本模型用途", "備註"], "rows": lay_rows,
                   "collapse": True, "summary": "展開：本模型讀哪一層、哪一版（名稱、值、版本）"},
                  {"type": "h3", "text": "券商估計與櫃數份額的對照"}]

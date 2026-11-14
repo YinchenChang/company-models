@@ -990,6 +990,9 @@ if COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL):
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import v026_post as V26  # noqa: E402
 print(V26.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL))
+# v0.2.7（2026-11-14）：C0 實績對帳補列（規則 v1.4.2；ase/v027_post.py）
+import v027_post as V27  # noqa: E402
+print(V27.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL))
 wb.save(sys.argv[1])
 if os.environ.get("ASE_ROWMAP"):
     import json
