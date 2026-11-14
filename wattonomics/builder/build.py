@@ -95,6 +95,38 @@ W1_IN = [
      "W1_verify 第四節（IREN Q1 FY27 後與未具名 Leading Frontier AI Lab 擴約，0.3 GW IT 的計畫支撐 >4B ARR；客戶是不是七家未揭露，依 X2 處理）"),
     ("w1_bp1", "Hut 8 Beacon Point 容量（IT；承租方未揭露）", "MW", None, 352, None, "Interested-party",
      "A#（I 段部分確認：352 MW-IT 屬實；承租方未揭露；W1 證據表無簽約資料）"),
+    ("w1_crwv_q3", "CoreWeave 2026Q3 在役電力（critical IT load；2026 年底下限）", "MW", None, 1700, None, "Verified",
+     "r1 第 5 項（chat 端 2026-11-14）：CoreWeave 2026Q3 新聞稿『Added more than 200 MWs of active power to reach over 1.7 GW』，CFO『more than 1.7 gigawatts of critical IT load』（evidence_raw/Z1_earnings_20261114.md A2-1；W1_verify #1 屬實；已獨立核對）。模型 CoreWeave 2026 年底（CapexGW 資本支出路徑）原為 1.498 GW → 依證據至少 1.7 GW：CapexGW crwv 2026 年新增＝MAX（資本支出路徑, 本值 − 2025 年底）；2027 年起沿用資本支出路徑年新增"),
+    ("coord_enter", "協調規則 v1.1 緩衝區：由無證據進入有證據的門檻（第二次判定起）", "%", 0.50, 0.55, 0.60, "Assumed",
+     "r1 第 7 項（chat 端）：規則 v1.1 C3 第二次判定起 55%／45% 緩衝；退出門檻＝coord_thr 低（45%）"),
+    ("coord_buf_on", "協調規則緩衝區開關（1＝套緩衝；0＝回首次判定 coord_thr 50%）", "旗標", None, 1, None, "Derived",
+     "r1 第 7 項：v0.3.1 為首次判定（門檻 50%），v0.3.2 為第二次判定，套緩衝"),
+    ("prev_ev_w_2026", "上次判定（v0.3.1）Wattonomics 該年是否有證據（1＝是）", "旗標", None, 1, None, "Derived",
+     "v0.3.1 WIF_Evidence_2026＝0.887（門檻 50%）→ 有證據；r1 第 7 項"),
+    ("prev_ev_w_2027", "上次判定（v0.3.1）Wattonomics 該年是否有證據（1＝是）", "旗標", None, 0, None, "Derived",
+     "v0.3.1 WIF_Evidence_2027＝0.494（門檻 50%）→ 無證據；r1 第 7 項"),
+    ("prev_ev_w_2028", "上次判定（v0.3.1）Wattonomics 該年是否有證據（1＝是）", "旗標", None, 1, None, "Derived",
+     "v0.3.1 WIF_Evidence_2028＝0.535（門檻 50%）→ 有證據；r1 第 7 項"),
+    ("prev_ev_w_2029", "上次判定（v0.3.1）Wattonomics 該年是否有證據（1＝是）", "旗標", None, 0, None, "Derived",
+     "v0.3.1 WIF_Evidence_2029＝0.202（門檻 50%）→ 無證據；r1 第 7 項"),
+    ("prev_ev_w_2030", "上次判定（v0.3.1）Wattonomics 該年是否有證據（1＝是）", "旗標", None, 0, None, "Derived",
+     "v0.3.1 WIF_Evidence_2030＝0.218（門檻 50%）→ 無證據；r1 第 7 項"),
+    ("prev_ev_s_2026", "上次判定（v0.3.1）Siliconomics 該年是否有證據（1＝是）", "旗標", None, 0, None, "Derived",
+     "v0.3.1 csil（In sil_ev）2026＝0.44（< 50%）→ 無證據；r1 第 7 項"),
+    ("prev_ev_s_2027", "上次判定（v0.3.1）Siliconomics 該年是否有證據（1＝是）", "旗標", None, 0, None, "Derived",
+     "v0.3.1 csil（In sil_ev）2027＝0（< 50%）→ 無證據；r1 第 7 項"),
+    ("prev_ev_s_2028", "上次判定（v0.3.1）Siliconomics 該年是否有證據（1＝是）", "旗標", None, 0, None, "Derived",
+     "v0.3.1 csil（In sil_ev）2028＝0（< 50%）→ 無證據；r1 第 7 項"),
+    ("prev_ev_s_2029", "上次判定（v0.3.1）Siliconomics 該年是否有證據（1＝是）", "旗標", None, 0, None, "Derived",
+     "v0.3.1 csil（In sil_ev）2029＝0（< 50%）→ 無證據；r1 第 7 項"),
+    ("prev_ev_s_2030", "上次判定（v0.3.1）Siliconomics 該年是否有證據（1＝是）", "旗標", None, 0, None, "Derived",
+     "v0.3.1 csil（In sil_ev）2030＝0（< 50%）→ 無證據；r1 第 7 項"),
+    ("xc_crwv_oai", "CoreWeave 對 OpenAI 累計承諾合約", "US$B", None, 22.4, None, "Interested-party", "W1#7（核對屬實：11.9B〔2025-03〕＋4B〔2025-05〕＋6.5B〔2025-09-25〕；二手＋既有知識）。X2 交叉檢核用，不入基準"),
+    ("xc_crwv_meta", "CoreWeave 對 Meta 合約（14.2B 至 2031＋2026-04 追加約 21B 至 2032）", "US$B", None, 35.2, None, "Interested-party", "W1#8（核對屬實：14.2B〔2025-09-30 8-K〕；21B〔2026-04-09〕）。X2 交叉檢核用，不入基準"),
+    ("xc_crwv_bl", "CoreWeave backlog（RPO 加其他承諾）", "US$B", None, 132.5, None, "Verified", "W1#6（核對屬實：IR 約 132.5B）"),
+    ("xc_nbis_msft", "Nebius 對 Microsoft 合約（17.4B，最高可到 19.4B）", "US$B", 17.4, 17.4, 19.4, "Interested-party", "W1#16（核對小誤：簽約日 2025-09-08；17.4B 最高 19.4B 屬實；合約沒有寫 300 MW）。X2 交叉檢核用，不入基準"),
+    ("xc_nbis_meta", "Nebius 對 Meta 合約（5 年）", "US$B", None, 3.0, None, "Interested-party", "W1#17（核對屬實：Nebius Q3'25 股東信）"),
+    ("xc_nbis_rpo", "Nebius RPO", "US$B", None, 38.7, None, "Verified", "W1#15（核對屬實：6-K RPO 38.7B）"),
     ("oem_dell", "Dell FY27（2026-02～2027-01）AI 伺服器營收指引", "US$B", None, 74, None, "Interested-party",
      "W1#58（核對屬實：raised by $14 billion to $74 billion）；OEM 交叉檢核列，不入基準（X1(3)）"),
     ("oem_smci", "Supermicro FY27（2026-07～2027-06）全年營收指引（含非 AI）", "US$B", 72, 77, 82, "Interested-party",
@@ -1070,7 +1102,10 @@ def main():
                 CX.cell(rows["s_lag" + sx], col, f'=IF({cur}="","",({PIT}/({PIT}+{PFA})*{cur}+{PFA}/({PIT}+{PFA})*({W[0]}*{cur}+{W[1]}*{A1}+{W[2]}*{A2}))/({PIT}+{PFA}))').number_format = "0.000"
             CX.cell(rows["site"], col, f"=Players!{c}{PR[p]['add']}").font = GREEN
             online_rows(rows, y, col, c)
-            CX.cell(rows["main"], col, f'=IF({y}>=2026,{c}{rows["on"]},{c}{rows["site"]})').number_format = "0.000"
+            if p == "crwv" and y == 2026:   # v0.3.2 r1 第 5 項：2026Q3 在役 >1.7 GW（Verified）→ 2026 年底至少 1.7 GW
+                CX.cell(rows["main"], col, f'=MAX({c}{rows["on"]},w1_crwv_q3/1000-{pc}{rows["ye"]})').number_format = "0.000"
+            else:
+                CX.cell(rows["main"], col, f'=IF({y}>=2026,{c}{rows["on"]},{c}{rows["site"]})').number_format = "0.000"
             if pc is None:
                 CX.cell(rows["ye"], col, f"=N(Players!{c}{PR[p]['tk']})").number_format = "0.000"
             else:
@@ -1101,6 +1136,21 @@ def main():
         PTK = f"Players!{c}{PR[p]['tk']}"
         CX.cell(rows["ye"], col, (f'=IF({y}>=2026,{pc}{rows["ye"]}+{c}{rows["main"]},IF({PTK}="","",{PTK}))' if pc else f'=IF({PTK}="","",{PTK})')).number_format = "0.000"
     XRX[p] = rows; r += 1
+    # ---- r1 X6：新雲、主權（七家以外）：主路徑＝MAX（有證據撐住的年增量, 原 ④ Assumed 年增）；Players 維持站點（SiteOnly 不含 Assumed 補差額） ----
+    for p in ("neo", "sov"):
+        CX.cell(r, 1, PN[p] + "（r1 X6：主路徑＝MAX（證據, Assumed 年增）；Compare I 節）").font = BOLD; CX.cell(r, 2, p)
+        CX.cell(r, 14, "site＝Players（T2 納入列；SiteOnly）；main＝Compare I 節 X6 基準年新增（開關關閉年＝T2 納入列）；adj 由 main − site 進 Deploy 主路徑調整（2026–2029），與七家 甲2 同機制")
+        r += 1
+        rows = {}
+        for k, lab, unit in (("site", "甲 年新增 IT GW（Players；T2 納入列）", "GW"), ("main", "主路徑 年新增 IT GW（X6：MAX（證據, Assumed））", "GW"), ("ye", "主路徑 年底 IT GW", "GW")):
+            rows[k] = r; CX.cell(r, 1, "　" + lab); CX.cell(r, 2, f"{p}_{k}"); CX.cell(r, 3, unit); r += 1
+        for i, y in enumerate(YEARS):
+            c = YC[y]; col = i + 4; pc = YC.get(y - 1)
+            CX.cell(rows["site"], col, f"=Players!{c}{PR[p]['add']}").font = GREEN
+            CX.cell(rows["main"], col, (f"=@@X6B_{p}_{y}@@" if y >= 2026 else f"={c}{rows['site']}")).number_format = "0.000"
+            PTK = f"Players!{c}{PR[p]['tk']}"
+            CX.cell(rows["ye"], col, (f'=IF({y}>=2026,{pc}{rows["ye"]}+{c}{rows["main"]},IF({PTK}="","",{PTK}))' if pc else f'=IF({PTK}="","",{PTK})')).number_format = "0.000"
+        XRX[p] = rows; r += 1
     # ---- 其他（企業、學研）：2026 起隨市場（不含「其他」）年底 GW 成長率 × oth_gmult（R4 d5；工作單 20261102 E9；Analogy） ----
     p = "oth"
     CX.cell(r, 1, PN[p] + "（v0.1.8：2026 起隨市場成長；工作單 E9；Analogy）").font = BOLD; CX.cell(r, 2, p)
@@ -1112,7 +1162,7 @@ def main():
         rows[k] = r; CX.cell(r, 1, "　" + lab); CX.cell(r, 2, f"{p}_{k}"); CX.cell(r, 3, unit); r += 1
     for i, y in enumerate(YEARS):
         c = YC[y]; col = i + 4; pc = YC.get(y - 1)
-        adj_ = "+".join(f"(N({c}{R_['ye']})-N(Players!{c}{PR[q]['tk']}))" for q, R_ in list(XR.items()) + [("xai", XRX["xai"])])
+        adj_ = "+".join(f"(N({c}{R_['ye']})-N(Players!{c}{PR[q]['tk']}))" for q, R_ in list(XR.items()) + [("xai", XRX["xai"]), ("neo", XRX["neo"]), ("sov", XRX["sov"])])
         CX.cell(rows["mx"], col, f"=Players!{c}{TOT['ye']}-N(Players!{c}{PR['oth']['tk']})+{adj_}").number_format = "0.000"
         CX.cell(rows["g"], col, (f"=IF(N({pc}{rows['mx']})=0,0,{c}{rows['mx']}/{pc}{rows['mx']}-1)" if pc else "=0")).number_format = "0.0%"
         CX.cell(rows["site"], col, f"=Players!{c}{PR[p]['add']}").font = GREEN
@@ -1677,20 +1727,20 @@ def main():
         if bold: CP.cell(r, 1).font = BOLD
         G4R[key] = r; r += 1
     B4 = ("g4_b1", "g4_b2", "g4_b3", "g4_b4")
-    SB4 = "+".join(B4)
+    SB4 = "+".join(("g4_b1", "g4_b2"))   # v0.3.2 r1 X6：(b3)(b4) 已入主路徑（Assumed 點值補差額），不再進 ④ 合計
     g4row("g4a", "(a) 七家資本支出高於 Y9（實績下限讀法＝10-Q 實績外推下限）", {4: "=g4_a_orig_lo", 5: "=g4_a_orig", 6: "=g4_a_orig_hi", 7: "=g4_a_w2_lo", 8: "=g4_a_w2", 9: "=g4_a_w2_hi"},
           "原值：無（指引、共識）；下限讀法：等級 1 實績外推", "升級：2026Q4 10-K 與 2027 資本支出指引（2027-01／02）；W-2 原檔未入 repo")
     g4row("g4a_crwv", "　其中 CoreWeave（實績下限讀法）", {8: "未取得"}, "未取得（不是 0）", "CoreWeave 2026Q3 10-Q（2026-11-10）未取得；Z1 證據到後補（下限讀法 0.06 不含 CoreWeave）")
     CP.cell(G4R["g4a_crwv"], 8).number_format = "General"
     for k_, lab_, lev_, note_ in (("g4_b1", "(b1) Oracle／Stargate 園區超出 Oracle 資本支出", "Interested-party（公司公告時程）", "與 Oracle 資本支出部分重疊（下方扣重疊讀法）；升級：Oracle FY27Q2 10-Q（2026-12）、Stargate 站點已上線 MW"),
                                   ("g4_b2", "(b2) xAI", "Interested-party（xAI 宣稱）", "升級：Colossus 2 已上線 MW、電力合約文件（等級 2）"),
-                                  ("g4_b3", "(b3) 主權 AI（v0.3.2 已由 W-1 路徑取代，＝0）", "已入主路徑（W-1）", "v0.3.2 X7：改由 In T2 主權列取代（只有已簽約站點入基準；無合格站點 → 主權基準＝0，目標與 MOU 只入 Compare I 節 Sens）"),
-                                  ("g4_b4", "(b4) 其他新雲與 Anthropic 夥伴（v0.3.2 已由 W-1 路徑取代，＝0）", "已入主路徑（W-1）", "v0.3.2 X7：改由 In T2 新雲列取代（實績＋已簽約 MW；未揭露客戶 × 50%）；CoreWeave、Nebius 仍在甲2 資本支出路徑")):
+                                  ("g4_b3", "(b3) 主權 AI（r1 X6：已入主路徑，不在 ④ 合計）", "Assumed（入主路徑）", "r1 X6：主權基準＝MAX（已簽約站點證據年增, 本列 Assumed 年增）；Assumed 部分入基準、不入證據比例分子、留在分母；本列不在下方 ④ 合計（Compare I 節 X6）"),
+                                  ("g4_b4", "(b4) 其他新雲與 Anthropic 夥伴（r1 X6：已入主路徑，不在 ④ 合計）", "Assumed（入主路徑）", "r1 X6：新雲基準＝MAX（實績與已簽約站點證據年增〔含 Anthropic 夥伴〕, 本列 Assumed 年增）；證據先算、Assumed 只補差額；CoreWeave、Nebius 仍在甲2 資本支出路徑")):
         g4row(k_, lab_, {4: f"={k_}_lo", 5: f"={k_}", 6: f"={k_}_hi", 7: f"={k_}_lo", 8: f"={k_}", 9: f"={k_}_hi"}, lev_, note_)
     g4row("g4res", "殘差（只進高端讀法）", {6: "=g4_resid", 9: "=g4_resid"}, "無（無法分配）", "2027 時差來源診斷：殘差可能在 GW、每 GW 內容或 NVIDIA 指引；基準不分配")
     g4row("g4tot", "④ 合計（低＝只計 (a)；基準＝(a)＋Σ(b)；高＝基準＋殘差）",
           {4: "=g4_a_orig", 5: f"=g4_a_orig+{SB4}", 6: f"=g4_a_orig+{SB4}+g4_resid", 7: "=g4_a_w2", 8: f"=g4_a_w2+{SB4}", 9: f"=g4_a_w2_hi+{SB4}+g4_resid"},
-          "合計以 Assumed 為主", "原值 1.84／4.81／8.28；實績下限讀法 0.06／3.03／7.36（Siliconomics baseline_bridge In cov4 同值）", True)
+          "合計以 Assumed 為主", "r1 X6：(b3)(b4) 已入主路徑、不在本合計（避免分母重複）＝(a)＋b1＋b2；v0.3.1 含 b3、b4 的舊讀法：原值 1.84／4.81／8.28、實績下限讀法 0.06／3.03／7.36（Siliconomics baseline_bridge In cov4 同值）", True)
     T4 = G4R["g4tot"]
     g4row("g4ovl", "　扣 Oracle 重疊（b1）讀法", {4: f"=D{T4}", 5: f"=E{T4}-g4_b1", 6: f"=F{T4}-g4_b1", 7: f"=G{T4}", 8: f"=H{T4}-g4_b1", 9: f"=I{T4}-g4_b1"},
           "", "低讀法不含 (b)，不扣；原值基準 4.04（同 R4 r4_bridge 註記）、實績下限讀法基準 2.26")
@@ -1741,11 +1791,17 @@ def main():
     hdr(CP, r, ["項目", "鍵", "單位"] + [str(y) for y in YEARS] + ["說明"]); r += 1
     nrow("csil", "Siliconomics 證據比例（In sil_ev；Siliconomics 下一版自量）", "比", {y: f"=sil_ev_{y}" for y in EY}, "AI半導體 橋接表 In scov；非 NVIDIA 視同 NVIDIA 比例、等級 2、3 未量化（規則 v1.1 已知限制）", "0.0%")
     EVc = lambda y: f"{YC[y]}{NVR['ev']}"; SVc = lambda y: f"{YC[y]}{NVR['csil']}"
+    # r1 第 7 項：緩衝區（規則 v1.1 C3 第二次判定起）：上次無證據 → 須 ≥ coord_enter（55%）才進入；上次有證據 → 須 < coord_thr 低（45%）才退出
+    bf = lambda ev_, pv_: f'IF(coord_buf_on=1,IF({pv_}=1,{ev_}>=coord_thr_lo,{ev_}>=coord_enter),{ev_}>=coord_thr)'
+    nrow("cpw", "上次判定（v0.3.1）Wattonomics 是否有證據（In prev_ev_w_*；1＝是）", "旗標", {y: f"=prev_ev_w_{y}" for y in EY}, "以 v0.3.1 結果填（WIF_Evidence 0.887／0.494／0.535／0.202／0.218；門檻 50%）", "0")
+    nrow("cps", "上次判定（v0.3.1）Siliconomics 是否有證據（In prev_ev_s_*；1＝是）", "旗標", {y: f"=prev_ev_s_{y}" for y in EY}, "v0.3.1 csil 0.44／0／0／0／0（< 50%）", "0")
+    nrow("cfw", "本次 Wattonomics 有證據（緩衝：進入 ≥ coord_enter 55%、退出 < 45%）", "旗標", {y: f"=IF({bf(EVc(y), YC[y] + str(NVR['cpw']))},1,0)" for y in EY}, "規則 v1.1 C3：第二次判定起套 55%／45% 緩衝；coord_buf_on＝0 回首次判定 50%", "0")
+    nrow("cfs", "本次 Siliconomics 有證據（同緩衝）", "旗標", {y: f"=IF({bf(SVc(y), YC[y] + str(NVR['cps']))},1,0)" for y in EY}, "", "0")
     stf = lambda y, t: f'=IF(AND({EVc(y)}>={t},{SVc(y)}>={t}),"甲",IF(OR({EVc(y)}>={t},{SVc(y)}>={t}),"乙","丙"))'
-    nrow("cst", "狀態（門檻 coord_thr＝50%）", "—", {y: stf(y, "coord_thr") for y in EY}, "甲＝兩層都有證據；乙＝只有一層；丙＝兩層都是外推", "General")
+    nrow("cst", "狀態（有證據旗標：緩衝區 55%／45%；甲乙丙）", "—", {y: f'=IF(AND({YC[y]}{NVR["cfw"]}=1,{YC[y]}{NVR["cfs"]}=1),"甲",IF(OR({YC[y]}{NVR["cfw"]}=1,{YC[y]}{NVR["cfs"]}=1),"乙","丙"))' for y in EY}, "甲＝兩層都有證據；乙＝只有一層；丙＝兩層都是外推", "General")
     for c_ in range(4, 14): CP.cell(NVR["cst"], c_).fill = KEY
     nrow("cst67", "　狀態（門檻 67%；對照）", "—", {y: stf(y, "coord_thr_hi") for y in EY}, "", "General")
-    nrow("clead", "　乙狀態時有證據的一層", "—", {y: f'=IF({YC[y]}{NVR["cst"]}="乙",IF({EVc(y)}>=coord_thr,"Wattonomics","Siliconomics"),"—")' for y in EY}, "", "General")
+    nrow("clead", "　乙狀態時有證據的一層", "—", {y: f'=IF({YC[y]}{NVR["cst"]}="乙",IF({YC[y]}{NVR["cfw"]}=1,"Wattonomics","Siliconomics"),"—")' for y in EY}, "", "General")
     tagf = lambda y: (f'=IF({YC[y]}{NVR["cst"]}="甲","甲：兩層都有證據，±15% 容差對帳（橋接表 ③；不在容差內則對帳中、待診斷）",'
                       f'IF(AND({YC[y]}{NVR["cst"]}="乙",{YC[y]}{NVR["clead"]}="Siliconomics"),"乙（Siliconomics 有證據）：Siliconomics 為準；Wattonomics 只經對帳單吸收下游實績（C5）",'
                       f'IF(coord_cov_done=1,IF({YC[y]}{NVR["cst"]}="乙","乙（Wattonomics 有證據）：Wattonomics 為準","丙：上游約束（Wattonomics 換算值）"),'
@@ -1785,30 +1841,57 @@ def main():
     hdr(CP, r, ["項目", "鍵", "單位"] + [str(y) for y in YEARS] + ["說明"]); r += 1
     W1Y = (2026, 2027, 2028, 2029)
     PLN, PLS = PR["neo"], PR["sov"]
-    nrow("w1n_ye", "線 1 新雲（其他新雲；不含 CoreWeave、Nebius）：年底上線 IT GW", "GW", {y: f"=N(Players!{YC[y]}{PLN['tk']})" for y in YEARS}, "2024、2025 為既有存量輸入（500 MW 2025，Assumed）；2026 起＝前年＋T2 納入列", "0.000")
-    nrow("w1n_add", "　年新增 IT GW（基準）", "GW", {y: f"=Players!{YC[y]}{PLN['add']}" for y in YEARS if y >= 2026}, "", "0.000")
-    nrow("w1n_asm", "　　其中 Assumed：未揭露客戶 × w1_und（不計證據）", "GW", {y: f"={YC[y]}{NVR['evw1u']}" for y in EY if y <= 2029}, "cp_neo_iren27、cp_neo_bp1、cp_w1u_crusoe27–29（含 Crusoe 分期 [Assumed]）", "0.000")
-    nrow("w1n_ev", "　　其中 實績或已簽約、已確認站點（有證據）", "GW", {y: f"={YC[y]}{NVR['w1n_add']}-{YC[y]}{NVR['w1n_asm']}" for y in W1Y}, "cp_w1_lmar26（等級 1）、cp_neo_twf1／twf2／barber／lmar／cpx_neo_hut8（Anthropic；等級 2、3）、cpx_sov_mis（Mistral 96 MW，等級 3）", "0.000")
-    nrow("w1s_ye", "線 2 主權（中國以外）：年底上線 IT GW", "GW", {y: f"=N(Players!{YC[y]}{PLS['tk']})" for y in YEARS}, "無合格已簽約站點 → 基準 0（HUMAIN＝目標／framework、Reliance＝指引、KDDI＝標題、Stargate UAE＝OpenAI 七家）；主權的一般成長在「其他」玩家（隨市場）", "0.000")
-    nrow("w1s_add", "　年新增 IT GW（基準）", "GW", {y: f"=Players!{YC[y]}{PLS['add']}" for y in YEARS if y >= 2026}, "", "0.000")
+    X6Y = tuple(y for y in YEARS if y >= 2026)
+    nrow("x6_on", "X6 開關：Assumed 補差額年（④ 起算年 g4_y0 起；2027–2029＝1；2030 依 gap_carry30；2031 起＝0）", "—", {y: (f"={yon(y, 'g4_y0')}" if y <= 2030 else "=0") for y in X6Y},
+         "r1 第 1 項（chat 端 2026-11-14；Andy 11:26『沒有證據時先靠該層非證據的估計，證據到哪就到哪』、規則 v1.1『覆蓋缺口不得當需求不足』）：七家以外每條線、每年，基準＝MAX（有證據撐住的年增量, 原 ④ 的 Assumed 年增）", "0")
+    for L_, p_, bk_, nm_ in (("n", "neo", "g4_b4", "新雲（其他新雲，不含 CoreWeave、Nebius）"), ("s", "sov", "g4_b3", "主權（中國以外）")):
+        nrow(f"x6{L_}_cp", f"X6 {nm_}：T2 納入列年新增（Players 當年 T2 園區上線）", "GW", {y: f"=Players!{YC[y]}{PR[p_]['cp']}" for y in X6Y}, "", "0.000")
+        nrow(f"x6{L_}_u", "　其中 X2 未揭露客戶 × w1_und（T2 Assumed 列；不是證據）", "GW", {y: (f"={YC[y]}{NVR['evw1u']}" if (L_ == "n" and y <= 2030) else "=0") for y in X6Y},
+             "cp_neo_iren27、cp_neo_bp1、cp_w1u_crusoe27–29" if L_ == "n" else "主權無未揭露客戶列", "0.000")
+        nrow(f"x6{L_}_e", "　E＝有證據撐住的年增量（等級 1 實績、等級 2 已簽約、等級 3 已確認站點）", "GW", {y: f"={YC[y]}{NVR['x6' + L_ + '_cp']}-{YC[y]}{NVR['x6' + L_ + '_u']}" for y in X6Y}, "", "0.000")
+        nrow(f"x6{L_}_a", f"　A＝原 ④ 的 Assumed 年增（{bk_}）", "GW", {y: f"={YC[y]}{NVR['x6_on']}*{bk_}" for y in X6Y}, f"{bk_}：基準 0.65（主權）／0.80（新雲），低 0、高 2.71／2.00（Assumed；診斷 (b3)(b4)）", "0.000")
+        nrow(f"x6{L_}_base", "　基準年新增＝MAX（E, A）；開關關閉年＝T2 納入列", "GW", {y: f"=IF({YC[y]}{NVR['x6_on']}=0,{YC[y]}{NVR['x6' + L_ + '_cp']},MAX({YC[y]}{NVR['x6' + L_ + '_e']},{bk_}))" for y in X6Y},
+             "證據比 Assumed 大時用證據；證據部分（含已入基準的 Anthropic 夥伴）先算，Assumed 只補差額（不重複）", "0.000")
+        nrow(f"x6{L_}_top", "　補差額＝基準 − T2 納入列（進 CapexGW 主路徑與 Deploy 主路徑調整；可為負：T2 的 50% 未揭露客戶列被 MAX 取代）", "GW", {y: f"={YC[y]}{NVR['x6' + L_ + '_base']}-{YC[y]}{NVR['x6' + L_ + '_cp']}" for y in X6Y}, "", "0.000")
+        nrow(f"x6{L_}_asm", "　Assumed 部分＝基準 − E（入基準、不入證據比例分子、留在分母）", "GW", {y: f"={YC[y]}{NVR['x6' + L_ + '_base']}-{YC[y]}{NVR['x6' + L_ + '_e']}" for y in X6Y}, "", "0.000")
+        nrow(f"x6{L_}_hix", "　高端增量＝MAX（E, A 高）− 基準", "GW", {y: f"=IF({YC[y]}{NVR['x6_on']}=0,0,MAX({YC[y]}{NVR['x6' + L_ + '_e']},{bk_}_hi)-{YC[y]}{NVR['x6' + L_ + '_base']})" for y in X6Y}, "高值＝原區間高（2.71／2.00）", "0.000")
+
+    nrow("w1n_ye", "線 1 新雲（其他新雲；不含 CoreWeave、Nebius）：年底上線 IT GW", "GW", {y: f"=N(CapexGW!{YC[y]}{XRX['neo']['ye']})" for y in YEARS}, "2024、2025 為既有存量輸入（500 MW 2025，Assumed）；2026 起＝前年＋T2 納入列＋X6 補差額", "0.000")
+    nrow("w1n_add", "　年新增 IT GW（基準）", "GW", {y: f"=CapexGW!{YC[y]}{XRX['neo']['main']}" for y in YEARS if y >= 2026}, "", "0.000")
+    nrow("w1n_asm", "　　其中 Assumed（X6：MAX 補差額；不計證據）", "GW", {y: f"={YC[y]}{NVR['x6n_asm']}" for y in EY}, "", "0.000")
+    nrow("w1n_ev", "　　其中 有證據撐住（實績、已簽約、已確認站點）", "GW", {y: f"={YC[y]}{NVR['x6n_e']}" for y in EY}, "cp_w1_lmar26（63 MW；已扣 2025 年底已運轉 39 MW）、cp_w1_abern、cp_neo_twf1／twf2、cp_neo_lmar（CB-5）、cp_w1_lmar_cb4、cp_neo_barber（168）、cpx_neo_hut8（Anthropic；等級 2、3）", "0.000")
+    nrow("w1s_ye", "線 2 主權（中國以外）：年底上線 IT GW", "GW", {y: f"=N(CapexGW!{YC[y]}{XRX['sov']['ye']})" for y in YEARS}, "無已簽約站點證據（HUMAIN＝目標／framework、Reliance＝指引、KDDI＝標題、Stargate UAE＝OpenAI 七家、Mistral 96 MW＝公司公告）→ E＝0，基準＝Assumed 年增（g4_b3）", "0.000")
+    nrow("w1s_add", "　年新增 IT GW（基準）", "GW", {y: f"=CapexGW!{YC[y]}{XRX['sov']['main']}" for y in YEARS if y >= 2026}, "", "0.000")
+    nrow("w1s_asm", "　　其中 Assumed（X6）", "GW", {y: f"={YC[y]}{NVR['x6s_asm']}" for y in EY}, "", "0.000")
+    nrow("w1s_ev", "　　其中 有證據撐住", "GW", {y: f"={YC[y]}{NVR['x6s_e']}" for y in EY}, "", "0.000")
     nrow("w1_tot", "線 1＋線 2 年新增 IT GW（基準）", "GW", {y: f"={YC[y]}{NVR['w1n_add']}+{YC[y]}{NVR['w1s_add']}" for y in W1Y}, "", "0.000")
     kl = lambda keys, y, onlyinc=False: "+".join(f'SUMIFS(Pipeline!$L${CR0}:$L${CR1},Pipeline!$A${CR0}:$A${CR1},"{k_}",Pipeline!$N${CR0}:$N${CR1},{y}' + (f',Pipeline!$O${CR0}:$O${CR1},1' if onlyinc else '') + ')' for k_ in keys)
-    SENS_A = ["cp_neo_monarch1", "cpx_neo_nexus", "cpx_neo_gsyd1", "cp_sov_hum1", "cp_sov_hum2", "cp_sov_hum3", "cp_w1s_reliance", "cp_w1s_kddi", "cpx_sov_ajm", "cpx_sov_esgiga"]
+    SENS_A = ["cp_neo_monarch1", "cpx_neo_nexus", "cpx_neo_gsyd1", "cp_sov_hum1", "cp_sov_hum2", "cp_sov_hum3", "cp_w1s_reliance", "cp_w1s_kddi", "cpx_sov_ajm", "cpx_sov_esgiga", "cp_w1s_barber39", "cpx_sov_mis"]
     SENS_B = ["cp_neo_iren", "cp_neo_sines", "cp_neo_pf2", "cp_w1d_nscale_tx", "cp_w1d_nscale_narvik", "cp_w1d_aws_cipher", "cp_w1d_df2", "cpx_sov_uae", "cpx_neo_cer"]
     nrow("w1_sa", "Sens(a) 只入 Sens 的七家以外容量（計畫、目標、指引、媒體標題；若全部計入的年新增）", "GW", {y: "=" + kl(SENS_A, y) for y in W1Y},
          "cp_neo_monarch1（Nscale Monarch 1,350 MW）、Nexus Hubbard 500 MW（Anthropic；MW 未揭露）、GreenSquareDC 15 MW、HUMAIN 三列（目標）、Reliance 120 MW（指引）、KDDI 48 MW（標題）、Khazna Ajman 30 MW、西班牙 Gigafactory 55 MW；上線年依公告時程（HUMAIN 2026-12／2027／2030 不在 2026–2029 內者只計對應年）", "0.000")
     nrow("w1_sb", "Sens(b) X2 去重還原：對七家合約（若改納入＝1 的年新增）", "GW", {y: "=" + kl(SENS_B, y) for y in W1Y},
          "IREN→Microsoft H2–4（已確認延遲，基準年 2027）、Nscale Sines／Texas／Narvik→Microsoft、Applied Digital PF2／DF2（視為七家）、Cipher→AWS 300 MW、Stargate UAE（OpenAI）、Cerebras 750 MW（OpenAI）", "0.000")
-    nrow("w1_sc_lo", "Sens(c) 未揭露客戶比例 w1_und 低（0%）對基準的差", "GW", {y: f"={YC[y]}{NVR['w1n_asm']}*(w1_und_lo/w1_und-1)" for y in W1Y}, "", "0.000")
-    nrow("w1_sc_hi", "Sens(c) 未揭露客戶比例 w1_und 高（100%）對基準的差", "GW", {y: f"={YC[y]}{NVR['w1n_asm']}*(w1_und_hi/w1_und-1)" for y in W1Y}, "", "0.000")
-    nrow("w1_lo", "七家以外年新增：低＝基準＋Sens(c) 低", "GW", {y: f"={YC[y]}{NVR['w1_tot']}+{YC[y]}{NVR['w1_sc_lo']}" for y in W1Y}, "", "0.000")
-    nrow("w1_hi", "七家以外年新增：高＝基準＋Sens(c) 高＋Sens(a)＋Sens(b)", "GW", {y: f"={YC[y]}{NVR['w1_tot']}+{YC[y]}{NVR['w1_sc_hi']}+{YC[y]}{NVR['w1_sa']}+{YC[y]}{NVR['w1_sb']}" for y in W1Y}, "高端含全部 Sens 列與去重還原（上限）", "0.000")
+    nrow("w1_alt", "對照：若基準＝MAX（E ＋ T2 的 50% 未揭露客戶列, A）的年新增差（新雲；不入基準）", "GW", {y: f"=IF({YC[y]}{NVR['x6_on']}=0,0,MAX({YC[y]}{NVR['x6n_e']}+{YC[y]}{NVR['x6n_u']},{YC[y]}{NVR['x6n_a']}/{YC[y]}{NVR['x6_on']})-{YC[y]}{NVR['x6n_base']})" for y in W1Y},
+         "r1 之前（v0.3.2 首版）基準＝T2 納入列（含 50% 未揭露客戶）；r1 改 MAX（E, A），本列顯示兩讀法差", "0.000")
+    nrow("w1_lo", "七家以外年新增：低＝只有證據（E）", "GW", {y: f"={YC[y]}{NVR['x6n_e']}+{YC[y]}{NVR['x6s_e']}" for y in W1Y}, "", "0.000")
+    nrow("w1_hi", "七家以外年新增：高＝原區間高（MAX（E, A 高））", "GW", {y: f"={YC[y]}{NVR['w1_tot']}+{YC[y]}{NVR['x6n_hix']}+{YC[y]}{NVR['x6s_hix']}" for y in W1Y}, "Sens(a)(b) 是另一讀法（證據層級放寬），不加總；見上列", "0.000")
     nrow("w1_oem", "線 3 OEM 交叉檢核：AI 伺服器營收（Dell FY27 指引＋Supermicro FY27 中點＋HPE 年化；US$B；不入基準）", "US$B", {2026: "=oem_dell+oem_smci+oem_hpe"},
          "Supermicro 含非 AI、營收含銷給七家與新雲者；Dell／Supermicro／HPE 財年錯開（約 CY2026 至 2027H1）；只作上限交叉檢核（X1(3)）", "0.0")
     nrow("w1_oemgw", "　隱含 GW 上限＝營收 ÷ 每 IT GW IT capex（NVIDIA 世代加權；2026 值）", "GW", {2026: f"={YC[2026]}{NVR['w1_oem']}/CapexGW!{YC[2026]}{XIT}"},
          "伺服器只是 IT capex 的一部分（其餘為網路、儲存）→ 此值是 OEM 路徑 GW 的上限讀法", "0.00")
     nrow("w1_oemr", "　七家以外基準年新增 ÷ OEM 隱含 GW 上限", "比", {2026: f"={YC[2026]}{NVR['w1_tot']}/{YC[2026]}{NVR['w1_oemgw']}"},
          "新雲、主權在 OEM 出貨中的占比越低，基準越可能低估（NVIDIA 稱新雲、主權、企業等約占資料中心一半：只有轉載、無直接引語，參照列 W1#67）", "0.0%")
+    # r1 X6：CapexGW neo／sov 主路徑年新增改為 Compare 儲存格參照
+    import re as _re
+    _tm = {}
+    for L_, p_ in (("n", "neo"), ("s", "sov")):
+        for y in X6Y:
+            _tm[f"X6B_{p_}_{y}"] = f"Compare!{YC[y]}{NVR['x6' + L_ + '_base']}"
+    for _row in CX.iter_rows():
+        for _c in _row:
+            if isinstance(_c.value, str) and "@@" in _c.value:
+                _c.value = _re.sub(r"@@(X6B_[a-z]+_\d{4})@@", lambda m: _tm[m.group(1)], _c.value)
     CP_LAST = r
     CP.column_dimensions["A"].width = 40; CP.column_dimensions["N"].width = 60
 
@@ -2732,7 +2815,8 @@ def main():
     # ---- K. 七家以外買方路徑（v0.3.2 W-1；Compare I 節）：新名稱，不改既有名稱 ----
     IF.cell(r, 1, "K. 七家以外買方路徑（v0.3.2 W-1；Compare I 節）：新雲（其他新雲，不含 CoreWeave、Nebius）、主權年新增 IT GW（基準），及低／高（未揭露客戶比例 0／100% 與 Sens 列）；2026–2029").font = BOLD; r += 1
     for k_, lab_, key_ in (("W1_NeoAdd", "新雲年新增 IT GW（基準）", "w1n_add"), ("W1_SovAdd", "主權年新增 IT GW（基準）", "w1s_add"),
-                           ("W1_Lo", "七家以外年新增（新雲＋主權）低＝未揭露客戶比例 0%", "w1_lo"), ("W1_Hi", "七家以外年新增 高＝未揭露客戶比例 100%＋Sens(a)＋Sens(b)", "w1_hi")):
+                           ("W1_Lo", "七家以外年新增（新雲＋主權）低＝只有證據（r1 X6）", "w1_lo"), ("W1_Hi", "七家以外年新增 高＝原區間高（MAX（證據, Assumed 高）；r1 X6）", "w1_hi"),
+                           ("W1_NeoAsm", "新雲年新增中的 Assumed 部分（X6；不計證據）", "w1n_asm"), ("W1_SovAsm", "主權年新增中的 Assumed 部分（X6；不計證據）", "w1s_asm")):
         IF.cell(r, 1, k_); IF.cell(r, 2, lab_); IF.cell(r, 3, "GW")
         for y in (2026, 2027, 2028, 2029):
             j = OUTY.index(y); c = IF.cell(r, 4 + j, f"=Compare!{YC[y]}{NVR[key_]}"); c.font = GREEN; c.number_format = "0.000"
@@ -3132,6 +3216,12 @@ def main():
         {"id": "GL01-98", "cat": "判斷", "item": "取代 ④ 的 (b3)、(b4)；W2 不動（X7）", "decision": "④ 的 (b3) 主權 AI、(b4) 其他新雲與 Anthropic 夥伴低／基準／高由 0／0.65／2.71、0／0.8／2 改 0／0／0（已入主路徑，原值逐字保留在 In 說明欄）；④ 合計 實績下限讀法基準 3.03→1.58、原值讀法 4.81→3.36；證據比例分母隨之變動。W2（2029 年增歸零的揭露，Assumed 0–1.95）維持：新路徑 2029 只有 Crusoe 分期，站點與已簽約仍在 2029 年結束。『NVIDIA 稱約占一半』查無直接引語（W1#67），只作參照列（Compare I 節線 3 說明）。Siliconomics baseline_bridge In cov4 需同步（該檔在 siliconomics/，本代理不寫）", "date": "2026-11-14", "quote": QA32 + "；" + WO32 + " X7；補充 6", "status": "預設、可撤回"},
         {"id": "GL01-99", "cat": "判斷", "item": "覆蓋視為補齊、協調狀態重算（補充 7）", "decision": "coord_cov_done 0→1（規則 v1.1：覆蓋視為補齊）：逐年協調標示不再標『對帳中（待覆蓋補齊）』，改為『乙（Wattonomics 有證據）：Wattonomics 為準』或『丙：上游約束（Wattonomics 換算值）』。基準的實際改動在 Siliconomics 下一次升版（C6）。首次判定門檻 50%；2028 證據比例 0.530 離緩衝區進入線 55% 還差 0.02，第二次判定起可能由乙退為丙", "date": "2026-11-14", "quote": QA32 + "；補充 7；規則 v1.1 C3、C6", "status": "預設、可撤回"},
         {"id": "GL01-100", "cat": "工程", "item": "2026 年底 neo 由輸入改為推得（X7 工程）", "decision": "In mw_neo 2026（1,150，v0.3.1 r2 前 1,300；A.md 其他新雲最佳估計 Assumed）清空，改由 2025 年底存量 500 ＋ T2 納入列（2026＝cp_w1_lmar26 TeraWulf Lake Mariner 102 MW 已產生收入）推得＝602 MW；2024、2025 存量不動。cp_w1_lmar26 取 102 MW 全額為 2026 增量（上限）：2025 年底存量可能已含 CB-1–3，增量未揭露。T2 新增 cp_w1_*／cp_w1u_*／cp_w1s_*／cp_w1d_*（來源 SRC_GL_346）；既有 cpx_neo_hut8 由 B#35（未抽查、不入）改為 W1#31 核對屬實、納入 1、上線 2028-06 [Assumed]", "date": "2026-11-14", "quote": WO32 + " X7", "status": "執行"},
+        {"id": "GL01-101", "cat": "判斷", "item": "X6：七家以外每條線 Assumed 點值入基準＋區間（r1 第 1 項）", "decision": "新雲、主權 2027–2029（2030 依 gap_carry30）每年基準年新增＝MAX（有證據撐住的年增量 E, 原 ④ Assumed 年增：主權 g4_b3＝0.65〔0–2.71〕、新雲 g4_b4＝0.80〔0–2.00〕）；E＝T2 納入列年新增 − X2 未揭露客戶 × w1_und 列；證據比 Assumed 大時用證據；證據部分（含已入基準的 Anthropic 夥伴 TeraWulf、Hut 8 等）先算，Assumed 只補差額（不與 b4 重複）。補差額寫入 Players 年底 GW（Compare I 節 X6 列）；Assumed 部分入基準、不入證據比例分子、留在分母（④ 合計移除 b3、b4 避免分母重複）；低＝只有證據、高＝原區間高。2026 不補（g4_y0＝2027）。v0.3.2 首版把 g4_b3、g4_b4 歸 0（『主權基準＝0』）與規則 v1.1『覆蓋缺口不得當需求不足』衝突，r1 撤回", "date": "2026-11-14", "quote": "chat 端 r1（Andy 11:26『沒有證據時先靠該層非證據的估計，證據到哪就到哪』；規則 v1.1）", "status": "已定（chat 端）"},
+        {"id": "GL01-102", "cat": "判斷", "item": "mw_neo 2025 年底 500 MW 與 Lake Mariner 重複查核（r1 第 3 項）", "decision": "TeraWulf Q4／FY2025 新聞稿（2026-02-26）：『39 critical IT MW HPC capacity online』（CB1 16 MW、CB2A 已運轉）＝2025 年底已運轉量，已含在 mw_neo 2025（其他新雲合計，含 TeraWulf）→ cp_w1_lmar26 由 102 改 63 MW（2026 增量＝102 − 39；原值保留於 T2 說明欄），與 2026 年清空 mw_neo 2026 的理由一致（2026 年底＝2025 存量＋2026 增量）。假設：A.md 的 500 含 TeraWulf 已運轉量 [Assumed]", "date": "2026-11-14", "quote": "chat 端 r1 第 3 項", "status": "已定（chat 端）"},
+        {"id": "GL01-103", "cat": "判斷", "item": "Mistral 96 MW 移 Sens（r1 第 4 項）", "decision": "cpx_sov_mis 為 v0.1.2 起既有站點列（S#153、S#154：Bpifrance 新聞稿『2028 初營運 96 MW、可擴至 200 MW』，屬實＝公司公告）；沒有已簽約客戶合約或這 96 MW 的融資文件（Mistral 自建自用；2026-03 的 8.3 億美元債務融資對應約 44 MW、巴黎近郊首期，未入 T2）→ 納入 1→0，進 Compare I 節 Sens(a)。主權 E＝0", "date": "2026-11-14", "quote": "chat 端 r1 第 4 項", "status": "已定（chat 端）"},
+        {"id": "GL01-104", "cat": "判斷", "item": "CoreWeave 2026 年底至少 1.7 GW（r1 第 5 項）", "decision": "CoreWeave 2026Q3 在役 >1.7 GW（IT；CFO critical IT load；已獨立核對）高於資本支出路徑 2026 年底 1.498 → 新增 In w1_crwv_q3（1,700 MW，Verified），CapexGW crwv 2026 年新增＝MAX（資本支出路徑, 本值 − 2025 年底）；2027 年起沿用路徑年新增（年底整體 +0.2 GW）。Compare I2 節列 CoreWeave、Nebius 容量交叉檢核；Nebius Q3 未揭露在役 MW → 不調整。X2：CoreWeave、Nebius 不在 neo，各自是玩家（營運者計一次）；對 OpenAI、Meta、Microsoft 合約占比列示量級，不自買方扣（理由與待判斷見 Compare I2 節）", "date": "2026-11-14", "quote": "chat 端 r1 第 5 項", "status": "已定（chat 端）；去重理由待判斷"},
+        {"id": "GL01-105", "cat": "判斷", "item": "Lake Mariner、Barber Lake、Abernathy 原文核對（r1 第 6 項）", "decision": "（1）Lake Mariner：TeraWulf Q4／FY2025 新聞稿 CB3 42、CB4 168（原預計 2026Q3 通電）、CB5 168（2026Q4）MW；Fluidstack 租約 380 MW。cp_neo_lmar 168＝CB-5（等級 2）保留；新增 cp_w1_lmar_cb4 168 MW（2027-01 [Assumed]，Q3 新聞稿仍列建設中）。（2）Barber Lake：Cipher 新聞稿 168 MW 關鍵 IT（最多 244 MW gross）、10 年約 3B、Fluidstack、預計 2026-09 交付；原文沒有 39 MW → cp_neo_barber 207→168，39 MW 新列 cp_w1s_barber39 入 Sens。（3）Abernathy：TeraWulf 新聞稿（2025-10-28）168 MW 關鍵 IT、25 年約 9.5B、2026 下半年交付、Fluidstack 合資；X3 算 Anthropic（七家以外）→ 新列 cp_w1_abern 168 MW（2026-12）入基準", "date": "2026-11-14", "quote": "chat 端 r1 第 6 項", "status": "已定（chat 端）；時點待判斷"},
+        {"id": "GL01-106", "cat": "判斷", "item": "協調緩衝區寫進公式（r1 第 7 項）", "decision": "Compare H3 新增 In 輸入：prev_ev_w_／prev_ev_s_（上次判定〔v0.3.1〕該層該年是否有證據；Wattonomics 1／0／1／0／0、Siliconomics 0／0／0／0／0）、coord_enter 55%、coord_buf_on。本次有證據＝上次有 → ≥ 45%（coord_thr 低）仍有；上次無 → ≥ 55% 才有。狀態甲乙丙由兩層旗標推得。coord_buf_on＝0 回首次判定 50%", "date": "2026-11-14", "quote": "chat 端 r1 第 7 項；規則 v1.1 C3", "status": "已定（chat 端）"},
     ]
     for d in decisions:
         if d["id"] == "GL01-21":
@@ -3280,7 +3370,7 @@ def main():
         ("v0.2.1（2026-11-04）：W1 NVIDIA 對帳點非 NVIDIA 占比改殘差法（$ 占比換 GW 占比；逐家值維持）；W2 新納入存量汰換攤到 6 個年份（移除暫定）；W3 Oracle Port Washington、Saline、Jupiter 改 Epoch IT 容量（902／988／1,750）；W4 Anthropic 取數 v0.1.8；W5 TK 快照已是 v21.9。基準 GW 不變。Decisions GL01-71 至 GL01-74。報告 docs/verify/20261104_v0.2.1_build.md。", True),
         ("v0.2.2（2026-11-04）：X1 Siliconomics 改讀 v0.13 基準名稱 *_Base；X2 Deploy 不再乘 Siliconomics 顆數係數（原 A＝1）；X3 Compare F3 改讀 Siliconomics 出貨年；X4 Compare G 節供給上限與 Checks X4-K1。基準 GW 不變。Decisions GL01-75 至 GL01-78。報告 docs/verify/20261104_v0.2.2_build.md。", True),
         ("v0.3（2026-11-05）：Y1 Siliconomics v0.13.1、Tokenomics v21.10；Y2 NVIDIA 內容改讀 R7 分世代值；Y3 非 NVIDIA 占比改讀逐買方 NVIDIA 份額（金額換 GW）；Y4 供給上限主檢查改可支撐上線 GW；基準 GW 不變。Decisions GL01-79 至 GL01-83。報告 docs/verify/20261105_v0.3_build.md。", True),
-        ("v0.3.2（2026-11-14）：W-1 七家以外買方路徑（工作單 20261114_Wattonomics_v0.3.2.md）——新雲（其他新雲，不含 CoreWeave、Nebius）與主權的主路徑改由 In T2 納入列推得，取代 mw_neo 2026 輸入與 HUMAIN 等目標列；先扣已公開對七家合約（納入＝0）、未揭露客戶 × 50%（w1_und，0–100%）；Anthropic 經 Fluidstack 租用算七家以外；Crusoe gross × 0.66 換 IT；OEM 只作交叉檢核；④ 的 (b3)(b4) 改 0；證據比例分子扣 Assumed 部分；coord_cov_done＝1。新增 Compare I 節、Interface K 節（WIF_W1_*）、Checks E-W1／E-W2、Decisions GL01-93 至 GL01-100。報告 docs/verify/20261114_v0.3.2_build.md。", True),
+        ("v0.3.2（2026-11-14）：W-1 七家以外買方路徑（工作單 20261114_Wattonomics_v0.3.2.md）——新雲（其他新雲，不含 CoreWeave、Nebius）與主權的主路徑改由 In T2 納入列推得，取代 mw_neo 2026 輸入與 HUMAIN 等目標列；先扣已公開對七家合約（納入＝0）、未揭露客戶 × 50%（w1_und，0–100%）；Anthropic 經 Fluidstack 租用算七家以外；Crusoe gross × 0.66 換 IT；OEM 只作交叉檢核；④ 的 (b3)(b4) 移入主路徑（r1 X6：Assumed 點值補差額，基準＝MAX（證據, Assumed））；證據比例分子扣 Assumed 部分；coord_cov_done＝1；r1：CoreWeave 2026 年底至少 1.7 GW、Mistral 移 Sens、Lake Mariner／Barber Lake／Abernathy 原文核對、協調緩衝區進公式（Decisions GL01-101 至 106）。新增 Compare I 節、Interface K 節（WIF_W1_*）、Checks E-W1／E-W2、Decisions GL01-93 至 GL01-100。報告 docs/verify/20261114_v0.3.2_build.md。", True),
         ("v0.3.1（2026-11-14）：三層基準協調規則 v1.1 落地（工作單 20261114_Wattonomics_v0.3.1.md）——Z2 Compare H1 ④ 覆蓋缺口兩讀法（原值 4.81、實績下限 3.03；扣 Oracle 重疊另列；不入基準）；Z3 SIL_In 讀 Siliconomics v0.18、H3 逐年協調狀態（門檻 50%、對帳中）、H4 ④＋W2 調整後比值、F 節 NVIDIA 每 GW 營收區間與指引只作參照（W-3）、H5 五家資本支出與 Siliconomics 顆數並排（W-4）；Z4 新名稱 WIF_Evidence_2026–2030（規則 v1.1 全市場分母；舊 WIF_Coverage 保留）；Checks E-K1。Z1 財報季證據經未參與代理核對：IREN Childress H2–4 延至 2027-01 入基準（T2 擴為 150 MW、M＝1；mw_neo 2026 扣 150、總量不增），Nebius 延遲只追蹤；CoreWeave、Nebius Q1–Q3 實績入證據比例。Decisions GL01-84 至 GL01-92。報告 docs/verify/20261114_v0.3.1_build.md。", True),
         ("顏色：藍字＝輸入；黑字＝公式；綠字＝跨頁或外部鏡像；淡黃底＝關鍵輸出；亮黃底＝待證據或預設待決。", False),
         ("Excel 優先：要改輸入，直接改 In 頁藍字；builder 重建時讀回（--base）。公式頁不要手改。下游只讀 Interface 的 WIF_ 名稱（經快照）。", False),

@@ -5,7 +5,7 @@
    "name": "TeraWulf Lake Mariner 已產生收入的關鍵 IT 容量（Fluidstack、Core42 等承租；非七家）",
    "op": "neo",
    "user": null,
-   "mw": 102,
+   "mw": 63,
    "basis": "IT",
    "year": 2026,
    "month": 9,
@@ -14,7 +14,7 @@
    "sec": 0,
    "tag": "Verified",
    "src": "SRC_GL_346",
-   "note": "W1#24（核對屬實，Q3'26 新聞稿原文：102 MW revenue-generating critical IT capacity；等級 1 實績）。承租方 Fluidstack／Core42，非七家，全額計入。[Assumed] 2025 年底存量 mw_neo 500 可能已含其中一部分（CB-1–3 2025 年租約），本列取 102 MW 全額為 2026 增量（上限）；增量未揭露，待 2026Q4 10-K"
+   "note": "W1#24（核對屬實，Q3'26 新聞稿原文：102 MW revenue-generating critical IT capacity；等級 1 實績）。承租方 Fluidstack／Core42，非七家。【r1（2026-11-14）X6 第 3 項】重複查核：TeraWulf Q4／FY2025 新聞稿（2026-02-26）「39 critical IT MW HPC capacity online」（CB1 16 MW、CB2A 已運轉）＝2025 年底已運轉量，已含在 mw_neo 2025 年底存量 500（其他新雲合計，含 TeraWulf）→ 2026 增量＝102 − 39＝63 MW（原值 102 保留於此）；與 2026 年清空 mw_neo 2026 的理由一致（2026 年底＝2025 存量＋2026 增量）"
   },
   {
    "key": "cp_w1u_crusoe27",
@@ -159,6 +159,54 @@
    "tag": "Interested-party",
    "src": "SRC_GL_346",
    "note": "W1#23（核對小誤：簽約日 2026-06-08；210 MW、15 年、約 5.2B；承租方 tier-one investment grade hyperscaler，與七家重疊極高；補充 5：視為七家）。上線年 [Assumed] 2028（原文未分年）→ 納入＝0"
+  },
+  {
+   "op": "neo",
+   "user": "ant",
+   "basis": "IT",
+   "delay": null,
+   "inc": 1,
+   "sec": 0,
+   "tag": "Interested-party",
+   "src": "SRC_GL_346",
+   "key": "cp_w1_lmar_cb4",
+   "name": "TeraWulf Lake Mariner CB-4（Fluidstack 租約；Anthropic 鏈）",
+   "mw": 168,
+   "year": 2027,
+   "month": 1,
+   "note": "r1 第 6 項（2026-11-14）：TeraWulf Q4／FY2025 新聞稿（2026-02-26）原文「CB4 (168 MW) – Energization expected Q3 2026」；Fluidstack 租約 380 MW（CB3 42＋CB4 168＋CB5 168）；Q3 新聞稿（2026-11-06）仍列 CB-4／CB-5 共 336 MW 建設中（102 MW 已產生收入＝CB1–3）。X3：Anthropic 經 Fluidstack 租用算七家以外。等級 2（已簽約、建設中）。上線 2027-01 為 [Assumed]（公司原定 2026Q3 已落後；現時點無新公告）"
+  },
+  {
+   "op": "neo",
+   "user": "ant",
+   "basis": "IT",
+   "delay": null,
+   "inc": 1,
+   "sec": 0,
+   "tag": "Interested-party",
+   "src": "SRC_GL_346",
+   "key": "cp_w1_abern",
+   "name": "TeraWulf×Fluidstack Abernathy TX 合資（168 MW IT；X3：Anthropic 鏈）",
+   "mw": 168,
+   "year": 2026,
+   "month": 12,
+   "note": "r1 第 6 項（2026-11-14）：TeraWulf 新聞稿（2025-10-28，seekingalpha PR 20281887）原文「168 MW of critical IT load at the Abernathy, Texas campus」、25 年約 9.5B（註：期間可縮為 20 或 15 年）、「expected to be delivered in the second half of 2026」、TeraWulf 51％／Fluidstack 其餘（其後 TeraWulf 出售其 50.1% 權益予 Fluidstack 主導投資人，見 Justified Data 新聞稿）。承租方為 Fluidstack，X3 算 Anthropic（七家以外）。與 Cipher Barber Lake 168 MW 是不同站點。上線 2026-12 取公司『2026 下半年』的年底；Q3 財報季沒有找到交付或延遲新證據（列待判斷）。等級 2"
+  },
+  {
+   "op": "neo",
+   "user": null,
+   "basis": "IT",
+   "delay": null,
+   "inc": 0,
+   "sec": 0,
+   "tag": "Assumed",
+   "src": "SRC_GL_346",
+   "key": "cp_w1s_barber39",
+   "name": "Cipher Barber Lake 增量 39 MW（原文未揭露；Sens）",
+   "mw": 39,
+   "year": 2027,
+   "month": 3,
+   "note": "r1 第 6 項（2026-11-14）：原 cp_neo_barber 207＝168＋39；Cipher 新聞稿（2025-09-25）只有 168 MW，39 MW 沒有原文 → 移 Sens（納入 0）"
   }
  ],
  "sources": [

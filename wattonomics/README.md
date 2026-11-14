@@ -122,8 +122,9 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 - **入基準的只有實績與已簽約（等級 1、2）及已確認站點（等級 3，只撐到上線年）**；計畫、目標、MOU、指引、媒體標題只入 Sens（Compare I 節 Sens(a)）。主權：只有已簽約站點入基準（E12）。2028–29 只有實績與已簽約撐住的部分入基準，其餘 [Assumed]＋區間；外部預測只入 Sens。
 - **與七家去重（X2）**：先扣已公開的對七家合約（T2 納入＝0，改回 1 即還原；Compare I 節 Sens(b) 列還原量）；其餘未揭露客戶部分基準取 50%（`w1_und`，區間 0–100%，Compare I 節 Sens(c)）。Assumed 部分入主路徑但不算證據，自證據比例分子 1 扣除（Compare H2 `evw1u`）。**Anthropic 經 Fluidstack 租用（TeraWulf、Cipher、Hut 8；Google 擔保只是信用支持）算 Anthropic（七家以外）**；出租方與承租方同一批 MW 只算一次（以最終使用者計）。
 - **口徑**：MW 未標口徑者基準取 IT 讀法；Crusoe 原文明寫 gross，× 0.66（Galaxy 526 MW IT ÷ 800 MW 毛電力，Analogy）換 IT；Abilene 為 OpenAI 站點全額扣除。
-- **④ 的 (b3) 主權、(b4) 其他新雲與 Anthropic 夥伴改 0**（已入主路徑，原值保留在 In 說明欄）；W2 維持；「NVIDIA 稱約占一半」查無直接引語，只作參照列。`coord_cov_done`＝1（覆蓋視為補齊）。
-- **新名稱**（Interface K 節）：`WIF_W1_NeoAdd_<yyyy>`、`WIF_W1_SovAdd_<yyyy>`、`WIF_W1_Lo_<yyyy>`、`WIF_W1_Hi_<yyyy>`（2026–2029）。Checks `E-W1`（T2 MW 與 S13 參數一致）、`E-W2`（基準內無七家使用者列）。Decisions GL01-93 至 GL01-100。
+- **④ 的 (b3) 主權、(b4) 其他新雲與 Anthropic 夥伴：r1 改為「Assumed 點值入基準＋區間」（X6）**：新雲、主權每年基準年新增＝MAX（有證據撐住的年增量, 原 ④ Assumed 年增：主權 0.65〔0–2.71〕、新雲 0.80〔0–2.00〕），2027–2029 起算（2030 起由主路徑年增率延續）；證據部分先算、Assumed 只補差額；Assumed 部分入基準、不入證據比例分子、留在分母；b3、b4 自 ④ 合計移出避免分母重複；低＝只有證據、高＝原區間高；Players 維持站點（SiteOnly 不含 Assumed），補差額走 CapexGW 主路徑調整（與七家 甲2 同機制）。W2 維持；「NVIDIA 稱約占一半」查無直接引語，只作參照列。`coord_cov_done`＝1（覆蓋視為補齊）。
+- **r1 其他**：CoreWeave 2026 年底至少 1.7 GW（2026Q3 在役 >1.7 GW，In `w1_crwv_q3`）；Mistral 96 MW 移 Sens；Lake Mariner CB-4／CB-5、Barber Lake 168、Abernathy 168 依原文入列；協調緩衝區 55%／45% 進公式（In `prev_ev_w_*`、`prev_ev_s_*`、`coord_enter`、`coord_buf_on`）；Compare I2 節 CoreWeave、Nebius 容量交叉檢核與 X2 去重可見性。Decisions GL01-101 至 GL01-106。
+- **新名稱**（Interface K 節）：`WIF_W1_NeoAdd_<yyyy>`、`WIF_W1_SovAdd_<yyyy>`、`WIF_W1_Lo_<yyyy>`、`WIF_W1_Hi_<yyyy>`（2026–2029）、`WIF_W1_NeoAsm_<yyyy>`、`WIF_W1_SovAsm_<yyyy>`（Assumed 部分；r1）。Checks `E-W1`（T2 MW 與 S13 參數一致）、`E-W2`（基準內無七家使用者列）。Decisions GL01-93 至 GL01-100。
 
 ### 承租玩家只算 IT（Andy 2026-11-04；工作單 20261104 V1、V1b）
 
