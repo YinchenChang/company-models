@@ -1,6 +1,6 @@
 {
- "_note": "v0.19-trial 試作（不合併）：由 siliconomics/tools/export_baseline_status.py 自 20261114_Siliconomics_v0.19-trial_cov1.xlsx 匯出；換算值與 Wattonomics 證據比例為暫值（待 Wattonomics v0.3.2）",
- "source": "20261114_Siliconomics_v0.19-trial_cov1.xlsx",
+ "_note": "v0.19-trial 試作（不合併）：由 siliconomics/tools/export_baseline_status.py 自 20261114_協調試作_cov_done1.xlsx 匯出；換算值與 Wattonomics 證據比例為暫值（待 Wattonomics v0.3.2）",
+ "source": "20261114_協調試作_cov_done1.xlsx",
  "threshold": 0.5,
  "wattonomics_coverage_complete": true,
  "years": {
@@ -10,21 +10,21 @@
     "prev_has_evidence": null
    },
    "siliconomics": {
-    "evidence_share": 0.44,
+    "evidence_share": 0.789,
     "prev_has_evidence": null
    },
-   "status": "乙",
-   "lead": "wattonomics",
-   "label": "改用換算值",
+   "status": "甲",
+   "lead": null,
+   "label": "一致",
    "converted": 23.017,
    "supply_side": 23.3995380420639,
    "current_s33": 23.3995380420639,
-   "use_converted": true,
+   "use_converted": false,
    "reconciling": false,
    "recon_doc": null,
    "deadline": null,
    "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
-   "sil_base": 23.017
+   "sil_base": 23.3995380420639
   },
   "2027": {
    "wattonomics": {
@@ -32,7 +32,7 @@
     "prev_has_evidence": null
    },
    "siliconomics": {
-    "evidence_share": 0,
+    "evidence_share": 0.448,
     "prev_has_evidence": null
    },
    "status": "丙",
@@ -54,7 +54,7 @@
     "prev_has_evidence": null
    },
    "siliconomics": {
-    "evidence_share": 0,
+    "evidence_share": 0.236,
     "prev_has_evidence": null
    },
    "status": "乙",
@@ -76,7 +76,7 @@
     "prev_has_evidence": null
    },
    "siliconomics": {
-    "evidence_share": 0,
+    "evidence_share": 0.079,
     "prev_has_evidence": null
    },
    "status": "丙",
