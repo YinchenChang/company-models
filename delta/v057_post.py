@@ -11,7 +11,7 @@ BOLD = Font(bold=True); BLUE = Font(color="0000FF"); HDR = PatternFill("solid", 
 SAME = "讀取層級（同源，不判定）"
 M_OCT = "https://finance.technews.tw/2026/11/09/delta-2308-202610-financial-report/"
 M_SEP = "https://finance.technews.tw/2026/10/12/delta-2308-202609-financial-report/"
-M_JUL = "https://statementdog.com/news/18020"
+M_JUL = "https://finance.technews.tw/2026/08/10/delta-2308-202607-financial-report/"
 TR3 = "https://filecenter.deltaww.com/IR/download/calendar/3Q26_Transcript.pdf"
 SL3 = "https://filecenter.deltaww.com/ir/download/calendar/3Q26_Analyst Meeting.pdf"
 TOL = 0.15
@@ -53,11 +53,11 @@ def coord_c0_actuals(wb, G):
     R = {"title": r}; r += 1
     C.cell(r, 1, ("方法：個股側＝台達電已公布實績或法說揭露；層級側＝Siliconomics 現行版 AI 電源市場 × 台達電有效份額（連到本頁層級值列）換成新台幣。層級值是日曆年，"
                   "故主讀數＝2026-01～10 累計實績 vs 層級 CY2026 × 10 ÷ 12（線性時差近似，Derived）；第二讀數＝3Q26 × 4 vs 層級 CY2026。"
-                  "判定：兩讀數差距都超過 ±15% 且同號 → 對帳中；只有一個超過 → 時差邊界（參考）；都在內 → 一致。"
+                  "判定規則：兩讀數差距都超過 ±15% 且同號 → 對帳中；只有一個超過 → 時差邊界（參考）；都在內 → 一致；但層級份額由本公司占比校準的列只列參考、不判定（見限制）。"
                   "公司沒有揭露 AI 電源金額，只在 3Q26 法說口述占比（電源相關約 25%、AI 資料中心相關約 50%、液冷約 NT$25B 即 13%）：以占比 × 公司已公布營收換算，期間未明，套用於累計與當季屬 Assumed。"))
     R["method"] = r; r += 1
-    C.cell(r, 1, ("限制：本模型的台達電有效份額（讀自 Siliconomics 的 2026 年份額）本來就由「FY2026 AI 相關占比 26% × 營收錨點」校準（Derived），因此第一列主要檢驗「營收錨點與占比讀法」，"
-                  "不獨立檢驗 Siliconomics 市場大小（顆數 × 每 kW 內容）；公司若揭露 AI 電源金額，才能獨立檢驗市場大小。"))
+    C.cell(r, 1, ("限制：本模型的台達電有效份額（讀自 Siliconomics 的 2026 年份額）本來就由「FY2026 AI 相關占比 26% × 營收錨點」校準（Derived），層級隱含＝26% × 營收錨點，兩讀數代數上等於（25% ÷ 26%）×（實績 ÷ 錨點）− 1，Siliconomics 市場大小被約掉；且個股側是口述約數 × 營收（Assumed），不是揭露金額。"
+                  "故第一列只列參考、不判定；結論＝無可比實績（Siliconomics AI 電源市場）：缺 AI 電源營收金額揭露，份額由本公司校準。公司若揭露 AI 電源金額，才能獨立檢驗市場大小。"))
     R["limit"] = r; r += 2
 
     def hdr(cols):
@@ -88,7 +88,7 @@ def coord_c0_actuals(wb, G):
     # 4a 公司實績輸入
     C.cell(r, 1, "4a. 公司已公布實績與揭露（輸入；藍字＝來自原文的常數）").font = BOLD; r += 1
     hdr(["項目", "值", "", "", "", "單位", "口徑、來源、證據等級", "來源網址"])
-    R["jul"] = row("月營收：2026-07", 67.073, None, "NT$B", "Verified：月營收公告 670.73 億元（statementdog 2026-11-10 讀取；標題轉述）", blue=True, url=M_JUL)
+    R["jul"] = row("月營收：2026-07", 67.073, None, "NT$B", "Verified：月營收公告 670.73 億元，年增 47.8%，累計前 7 月 4,096.82 億元（TechNews 2026-08-10）", blue=True, url=M_JUL)
     R["sep"] = row("月營收：2026-09", 65.400, None, "NT$B", "Verified：月營收公告 654.00 億元，累計前 9 月 5,396.68 億元（TechNews 2026-10-12）", blue=True, url=M_SEP)
     R["oct"] = row("月營收：2026-10", 74.666, None, "NT$B", "Verified：月營收公告 746.66 億元，月增 14.2%、年增 30.1%（TechNews 2026-11-09）", blue=True, url=M_OCT)
     R["aug"] = row("月營收：2026-08（3Q26 營收 − 7 月 − 9 月）", f"=q3_rev-B{R['jul']}-B{R['sep']}", None, "NT$B", "Derived：In 頁 q3_rev（3Q26 月營收合計 197.059）扣 7 月、9 月；與 9 月月增 1.3% 相容")
@@ -110,7 +110,7 @@ def coord_c0_actuals(wb, G):
     C.cell(r, 1, "4b. 層級隱含值（Siliconomics 現行版；連到本頁層級值列）").font = BOLD; r += 1
     hdr(["項目", "CY2026", "", "", "", "單位", "口徑、來源、證據等級"])
     R["lmkt"] = row("AI 電源市場（層級值）", f"=B{G['mkt'][1]}", None, "US$B", "Derived：本頁第 2 節 Siliconomics SIF_PwrMkt_Base（CY2026）", fmt="#,##0.000")
-    R["lsh"] = row("台達電有效份額（層級值）", f"=B{G['sh'][1]}", None, "%", "Interested-party／Assumed：本頁第 2 節層級值快照（pwr_dsh_26；由 FY2026 AI 相關占比 26% 校準）", fmt="0.0%")
+    R["lsh"] = row("台達電有效份額（層級值）", f"=B{G['sh'][1]}", None, "%", "Derived（本公司校準值，Siliconomics 快照）：pwr_dsh_26，由 FY2026 AI 相關占比 26% × 營收錨點校準", fmt="0.0%")
     R["lpwr"] = row("層級隱含：台達電 AI 電源營收（市場 × 份額 × 匯率）", f"=B{R['lmkt']}*B{R['lsh']}*fx", None, "NT$B", "Derived：匯率 In 頁 fx", fmt="#,##0.0")
     R["lliq"] = row("本模型 Units：台達電液冷營收（CY2026；非 Siliconomics）", f"=Units!C{lab(U, '台達電液冷營收')}*fx", None, "NT$B",
                     "Derived：本模型 Units 頁（部署 GW × 每 GW 液冷營收，FY2026 以液冷占比 12.5% 校準）；Siliconomics M19 液冷市場不含台達電機架外 CDU 與 Liquid-to-Air，故不是層級值", fmt="#,##0.0")
@@ -133,7 +133,7 @@ def coord_c0_actuals(wb, G):
     l = row("AI 電源（電源相關約 25%）：層級隱含", f"=B{R['lpwr']}*{fr}", f"=B{R['lpwr']}", "NT$B", "Derived：層級隱含 AI 電源營收（4b）；主讀數 × 10 ÷ 12", fmt="#,##0.0")
     g = row("AI 電源（電源相關約 25%）：差距（實績 ÷ 層級隱含 − 1）", f"=B{a}/B{l}-1", f"=C{a}/C{l}-1", fmt=pct)
     R["gap_pwr"] = g
-    R["j_pwr"] = row("AI 電源（電源相關約 25%）：判定（±15%）", judge(g), None, "", "兩讀數都在內 → 一致", fmt="General")
+    R["j_pwr"] = row("AI 電源（電源相關約 25%）：判定", "參考（同源校準）：不判定", None, "", "層級份額由本公司 26% 占比 × 營收錨點校準；兩讀數落在 ±15% 內只是校準與錨點一致，不是層級市場大小的證據", fmt="General")
     # 敏感度：28%
     s28 = row("AI 電源敏感度（參考）：占比取 28% 時的差距（BigGo 摘要稱朝 28% 目標，非實績）", f"=B{R['cum10']}*0.28/B{l}-1", f"=B{R['q3']}*0.28*4/C{l}-1", "", "Interested-party：占比 28% 只作敏感度，不用於判定", fmt=pct)
     R["s28"] = s28
@@ -154,6 +154,7 @@ def coord_c0_actuals(wb, G):
     # 列 4：上限檢查
     a4 = row("上限檢查：電源及零組件部門營收（3Q26 × 4；Verified 部門數）", None, f"=B{R['pe']}*4", "NT$B", "Verified：3Q26 法說簡報部門營收表；部門含非 AI（一般伺服器電源、消費與工業電源、零組件）", fmt="#,##0.0")
     R["ub"] = row("上限檢查：層級隱含 AI 電源 ÷ 電源及零組件部門年化（應 ≤ 100%）", None, f"=B{R['lpwr']}/C{a4}", "%", "Derived：層級 AI 電源不得超過其所屬部門；通過＝合理，不是一致性判定", fmt="0.0%")
+    R["ub2"] = row("上限檢查（參考）：層級隱含 AI 電源 ÷（電源及零組件＋基礎設施）部門年化", None, f"=B{R['lpwr']}/(({'B'}{R['pe']}+B{R['inf']})*4)", "%", "Derived：公司「電源相關」可能含 CP（如 UPS），屬基礎設施部門，故另列兩部門合計", fmt="0.0%")
     R["j_ub"] = row("上限檢查：結果", None, f'=IF(C{R["ub"]}<=1,"通過","不通過")', "", "", fmt="General")
     r += 1
     # 本模型營收錨點對月營收（參考）
@@ -164,21 +165,26 @@ def coord_c0_actuals(wb, G):
     r += 1
     # 結果摘要
     C.cell(r, 1, "C0（實績）結果摘要（HTML 用；公式帶數字）").font = BOLD; r += 1
-    nopen = f'COUNTIF(B{R["j_pwr"]},"對帳中")'
+    nopen = f'COUNTIF(B{R["j_pwr"]}:B{R["j_liq"]},"對帳中")'
     C.cell(r, 1, "=" + "&".join([
-        lit("C0（實績）對帳中項目 "), f'{nopen}', lit(" 項。AI 電源（公司口述電源相關約 25% 換算）：主讀數差距 "), f'TEXT(B{R["gap_pwr"]},"+0.0%;-0.0%")',
-        lit("、第二讀數差距 "), f'TEXT(C{R["gap_pwr"]},"+0.0%;-0.0%")', lit("，判定"), f'B{R["j_pwr"]}',
-        lit("；占比取 28% 時為 "), f'TEXT(B{R["s28"]},"+0.0%;-0.0%")', lit("／"), f'TEXT(C{R["s28"]},"+0.0%;-0.0%")', f'IF(MAX(ABS(B{R["s28"]}),ABS(C{R["s28"]}))<={TOL},"（仍在範圍內）。","（超出範圍）。")']))
+        lit("C0（實績）結論：無可比實績（Siliconomics AI 電源市場）：缺 AI 電源營收金額揭露；層級份額由本公司 26% 占比校準。對帳中項目 "), nopen,
+        lit(" 項。參考：以公司口述電源相關約 25% 換算，差距主讀數 "), f'TEXT(B{R["gap_pwr"]},"+0.0%;-0.0%")', lit("、第二讀數 "), f'TEXT(C{R["gap_pwr"]},"+0.0%;-0.0%")',
+        lit("，只反映營收錨點與占比讀法，不判定；占比取 28% 時為 "), f'TEXT(B{R["s28"]},"+0.0%;-0.0%")', lit("／"), f'TEXT(C{R["s28"]},"+0.0%;-0.0%")', lit("。")]))
     R["sum1"] = r; r += 1
     C.cell(r, 1, "=" + "&".join([
         lit("口徑落差（參考，不判定）：公司口述 AI 資料中心相關約 50% 換成金額比層級的 AI 電源加液冷高 "), f'TEXT(B{R["gap_ai"]},"0%")', lit("／"), f'TEXT(C{R["gap_ai"]},"0%")',
         lit("，差在公司口徑含層級沒有市場的 AI 相關業務（占營收約 "), f'TEXT(B{R["res"]},"0%")', lit("，金額未揭露）；液冷 3Q26 年化對本模型 Units 差 "), f'TEXT(C{R["gap_liq"]},"+0.0%;-0.0%")',
-        lit("（單一讀數）。電源及零組件部門年化 "), f'TEXT(C{a4},"#,##0")', lit(" 十億元，層級 AI 電源占其 "), f'TEXT(C{R["ub"]},"0%")', lit("，上限檢查"), f'C{R["j_ub"]}', lit("。")]))
+        lit("（單一讀數）。電源及零組件部門年化 "), f'TEXT(C{a4},"#,##0")', lit(" 十億元，層級 AI 電源占其 "), f'TEXT(C{R["ub"]},"0%")', lit("；兩部門（加基礎設施）合計年化占 "), f'TEXT(C{R["ub2"]},"0%")', lit("；上限檢查"), f'C{R["j_ub"]}', lit("（電源相關約四分之一可能含 CP，如 UPS，屬基礎設施部門）。")]))
     R["sum2"] = r; r += 1
-    C.cell(r, 1, ("限制與待查：公司未揭露 AI 電源金額，占比為口述約數；本版層級份額由 26% 占比校準，故一致不等於市場大小已獨立驗證；"
+    C.cell(r, 1, ("限制與待查：公司未揭露 AI 電源金額，占比為口述約數；本版層級份額由 26% 占比校準，故不能視為市場大小已獨立驗證；"
                   "3Q26 法說「AI 相關約 50%」與 2Q26 的「超過 25%」口徑不同，是否需重校準份額屬 Siliconomics 對帳單範圍（C5：個股不改上游值）。"))
     R["sum3"] = r; r += 1
     R["end"] = r - 1
+    for rr in range(1, C.max_row + 1):   # 份額等級統一（Coord 第 51、71 列）
+        a = str(C.cell(rr, 1).value or "")
+        if a.startswith(("台達電有效份額：層級值", "層級值快照輸入：台達電有效份額")):
+            g = str(C.cell(rr, 7).value or "")
+            C.cell(rr, 7).value = "Derived（本公司校準值，Siliconomics 快照）：" + g.split("：", 1)[-1]
     return R
 
 
@@ -193,7 +199,7 @@ def version_text(wb, RM):
     rv = RD.cell(RM["ver"], 1)
     t = rv.value
     assert isinstance(t, str) and t.startswith("v0.5.6"), t[:40]
-    rv.value = (f"v{VER}（{BUILT}）：C0 改以公司實績對帳：Coord 頁新增「C0（實績）」（月營收 2026-01～10、3Q26 法說占比與部門營收對 Siliconomics AI 電源市場 × 份額），同源四項改標讀取層級、不判定；數值與目標價不變。"
+    rv.value = (f"v{VER}（{BUILT}）：C0 改以公司實績對帳（結論：無可比實績，缺 AI 電源金額揭露、份額由本公司校準，不判定）：Coord 頁新增「C0（實績）」（月營收 2026-01～10、3Q26 法說占比與部門營收對 Siliconomics AI 電源市場 × 份額），同源四項改標讀取層級、不判定；數值與目標價不變。"
                 "前一版：" + t)
 
 
