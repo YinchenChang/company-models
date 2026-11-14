@@ -1,0 +1,4423 @@
+{
+ "source": "wattonomics/model/20261114_Wattonomics_v0.3.2.xlsx",
+ "roots": [
+  {
+   "name": "WIF_Gap_Player_googl_2026_AddGW",
+   "desc": "2026 年新增 IT GW",
+   "cell": "Interface!F617"
+  },
+  {
+   "name": "WIF_Gap_Player_googl_2026_CapexAI",
+   "desc": "2026 年 AI 資本支出",
+   "cell": "Interface!F609"
+  },
+  {
+   "name": "WIF_Gap_Player_googl_2026_CapexNonAI",
+   "desc": "2026 年非 AI 資本支出",
+   "cell": "Interface!F610"
+  },
+  {
+   "name": "WIF_PlayerGW_YE_googl_2025",
+   "desc": "2025 年底上線 IT GW",
+   "cell": "Interface!E25"
+  },
+  {
+   "name": "WIF_PlayerGW_YE_googl_2026",
+   "desc": "2026 年底上線 IT GW",
+   "cell": "Interface!F25"
+  },
+  {
+   "name": "WIF_Gap_Player_googl_2026_CapexAIModel",
+   "desc": "個股模型 AI 資本支出回寫（2026）",
+   "cell": "Interface!F614"
+  }
+ ],
+ "rows": [
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 0,
+   "cell": "Interface!F617",
+   "formula": "=IF(Gap!G84=\"\",\"\",Gap!G84)",
+   "value": 2.87171383102733,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 1,
+   "cell": "Gap!G84",
+   "formula": "=CapexGW!G65",
+   "value": 2.87171383102733,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 2,
+   "cell": "CapexGW!G65",
+   "formula": "=IF(2026>=2026,G63,G64)",
+   "value": 2.87171383102733,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 3,
+   "cell": "CapexGW!G63",
+   "formula": "=(1-(lag_on/12))*G62+(lag_on/12)*F62-inv_on*(G62-F62)",
+   "value": 2.87171383102733,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 4,
+   "cell": "CapexGW!G62",
+   "formula": "=IF(G61=\"\",G64,G61)",
+   "value": 3.74469414665129,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 5,
+   "cell": "CapexGW!G61",
+   "formula": "=IF(G60=\"\",\"\",G60/(G53+G56))",
+   "value": 3.74469414665129,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 6,
+   "cell": "CapexGW!G60",
+   "formula": "=IF(G52=\"\",\"\",G53/(G53+G56)*G52+G56/(G53+G56)*(CapexGW!$D$4*G52+CapexGW!$E$4*G57+CapexGW!$F$4*G58))",
+   "value": 141.822348617894,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 7,
+   "cell": "CapexGW!G52",
+   "formula": "=IF(G49=\"\",\"\",G49*ai_sh)",
+   "value": 170,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "CapexGW!G49",
+   "formula": "=IF(OR(G48=\"\",AND(fye_googl<12,H48=\"\")),\"\",G48*fye_googl/12+IF(fye_googl<12,H48,0)*(12-fye_googl)/12)",
+   "value": 200,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "CapexGW!G48",
+   "formula": "=IF(G44<>\"\",G44,IF(F46>0,F48*(1+cap_g_ext),\"\"))",
+   "value": 200,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "CapexGW!G44",
+   "formula": "=IF(G42<>\"\",G42,IF(G43<>\"\",G43,\"\"))",
+   "value": 200,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "CapexGW!G42",
+   "formula": "=IF(In!K175=\"\",\"\",In!K175)",
+   "value": 200,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!K175",
+   "formula": null,
+   "value": 200,
+   "label": "gcap_googl｜Alphabet 資本支出合計（模型；對照）（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "CapexGW!G43",
+   "formula": "=IF(In!K122=\"\",\"\",In!K122)",
+   "value": 200,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!K122",
+   "formula": null,
+   "value": 200,
+   "label": "cap_googl｜Alphabet（Google；TPU＋NVIDIA） 資本支出（財年）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "CapexGW!F46",
+   "formula": "=(F44<>\"\")+E46",
+   "value": 2,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "CapexGW!F44",
+   "formula": "=IF(F42<>\"\",F42,IF(F43<>\"\",F43,\"\"))",
+   "value": 91.447,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "CapexGW!F42",
+   "formula": "=IF(In!J175=\"\",\"\",In!J175)",
+   "value": 91.447,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "In!J175",
+   "formula": null,
+   "value": 91.447,
+   "label": "gcap_googl｜Alphabet 資本支出合計（模型；對照）（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "CapexGW!F43",
+   "formula": "=IF(In!J122=\"\",\"\",In!J122)",
+   "value": 91.447,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "In!J122",
+   "formula": null,
+   "value": 91.447,
+   "label": "cap_googl｜Alphabet（Google；TPU＋NVIDIA） 資本支出（財年）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "CapexGW!E46",
+   "formula": "=(E44<>\"\")+D46",
+   "value": 1,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "CapexGW!E44",
+   "formula": "=IF(E42<>\"\",E42,IF(E43<>\"\",E43,\"\"))",
+   "value": 52.535,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "CapexGW!E42",
+   "formula": "=IF(In!I175=\"\",\"\",In!I175)",
+   "value": 52.535,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "In!I175",
+   "formula": null,
+   "value": 52.535,
+   "label": "gcap_googl｜Alphabet 資本支出合計（模型；對照）（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "CapexGW!E43",
+   "formula": "=IF(In!I122=\"\",\"\",In!I122)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "In!I122",
+   "formula": null,
+   "value": null,
+   "label": "cap_googl｜Alphabet（Google；TPU＋NVIDIA） 資本支出（財年）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "CapexGW!D46",
+   "formula": "=(D44<>\"\")",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "CapexGW!D44",
+   "formula": "=IF(D42<>\"\",D42,IF(D43<>\"\",D43,\"\"))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "CapexGW!D42",
+   "formula": "=IF(In!H175=\"\",\"\",In!H175)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "CapexGW!D43",
+   "formula": "=IF(In!H122=\"\",\"\",In!H122)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "CapexGW!F48",
+   "formula": "=IF(F44<>\"\",F44,IF(E46>0,E48*(1+cap_g_ext),\"\"))",
+   "value": 91.447,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "CapexGW!E48",
+   "formula": "=IF(E44<>\"\",E44,IF(D46>0,D48*(1+cap_g_ext),\"\"))",
+   "value": 52.535,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "CapexGW!D48",
+   "formula": "=IF(D44<>\"\",D44,IF(0>0,\"\"*(1+cap_g_ext),\"\"))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "In!I15",
+   "formula": null,
+   "value": 0.1,
+   "label": "cap_g_ext｜個股模型最後一年之後的資本支出年增（甲2 外推）",
+   "flag": "人工確認（列文字含個股模型或指引字樣）",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "CapexGW!H48",
+   "formula": "=IF(H44<>\"\",H44,IF(G46>0,G48*(1+cap_g_ext),\"\"))",
+   "value": 290.36514,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "CapexGW!H44",
+   "formula": "=IF(H42<>\"\",H42,IF(H43<>\"\",H43,\"\"))",
+   "value": 290.36514,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "CapexGW!H42",
+   "formula": "=IF(In!L175=\"\",\"\",In!L175)",
+   "value": 290.36514,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!L175",
+   "formula": null,
+   "value": 290.36514,
+   "label": "gcap_googl｜Alphabet 資本支出合計（模型；對照）（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "CapexGW!H43",
+   "formula": "=IF(In!L122=\"\",\"\",In!L122)",
+   "value": 300.979,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!L122",
+   "formula": null,
+   "value": 300.979,
+   "label": "cap_googl｜Alphabet（Google；TPU＋NVIDIA） 資本支出（財年）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "CapexGW!G46",
+   "formula": "=(G44<>\"\")+F46",
+   "value": 3,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "In!I86",
+   "formula": null,
+   "value": 12,
+   "label": "fye_googl｜Alphabet（Google；TPU＋NVIDIA） 財年結束月",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "In!I13",
+   "formula": null,
+   "value": 0.85,
+   "label": "ai_sh｜資本支出 AI 占比（全公司資本支出中用於 AI 資料中心的比例；各家未覆寫者）",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 7,
+   "cell": "CapexGW!G53",
+   "formula": "=(1-Players!G57)*G$7+Players!G57*TK_NonNV_Hold_TPU*TK_CapexIT_VR200",
+   "value": 28.06503208272,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "Players!G57",
+   "formula": "=nnv_googl",
+   "value": 0.753,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "In!I78",
+   "formula": null,
+   "value": 0.753,
+   "label": "nnv_googl｜Alphabet（Google；TPU＋NVIDIA） 新增 GW 非 NVIDIA 占比",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "CapexGW!G7",
+   "formula": "=Players!G5*TK_CapexIT_H100+Players!G6*TK_CapexIT_GB200+Players!G7*TK_CapexIT_GB300+Players!G8*TK_CapexIT_VR200+Players!G9*TK_CapexIT_RU",
+   "value": 33.41403216,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Players!G5",
+   "formula": "=IF(In!$K$159<>\"\",In!$K$159,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "In!K159",
+   "formula": null,
+   "value": null,
+   "label": "mix_H100｜新增 GW 世代占比：Hopper H100",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Players!G6",
+   "formula": "=IF(In!$K$160<>\"\",In!$K$160,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "In!K160",
+   "formula": null,
+   "value": null,
+   "label": "mix_GB200｜新增 GW 世代占比：GB200 NVL72",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Players!G7",
+   "formula": "=IF(In!$K$161<>\"\",In!$K$161,(1-SIL_vr26))",
+   "value": 0.78,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "In!K161",
+   "formula": null,
+   "value": null,
+   "label": "mix_GB300｜新增 GW 世代占比：GB300 NVL72",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "SIL_In!D5",
+   "formula": null,
+   "value": 0.22,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Players!G8",
+   "formula": "=IF(In!$K$162<>\"\",In!$K$162,SIL_vr26)",
+   "value": 0.22,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "In!K162",
+   "formula": null,
+   "value": null,
+   "label": "mix_VR200｜新增 GW 世代占比：VR200 NVL72",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Players!G9",
+   "formula": "=IF(In!$K$163<>\"\",In!$K$163,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "In!K163",
+   "formula": null,
+   "value": null,
+   "label": "mix_RU｜新增 GW 世代占比：Rubin Ultra",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "TK_In!E15",
+   "formula": null,
+   "value": 27.510214,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "TK_In!E16",
+   "formula": null,
+   "value": 24.015174,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "TK_In!E17",
+   "formula": null,
+   "value": 32.237224,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "TK_In!E18",
+   "formula": null,
+   "value": 37.586352,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "TK_In!E19",
+   "formula": null,
+   "value": 50.08578,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "TK_In!E53",
+   "formula": null,
+   "value": 0.7,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 7,
+   "cell": "CapexGW!G56",
+   "formula": "=G55*G54",
+   "value": 9.807847,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "CapexGW!G55",
+   "formula": null,
+   "value": 1,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "CapexGW!G54",
+   "formula": "=(1-Players!G57)*G$8+Players!G57*TK_NonNV_Hold_TPU*TK_CapexFacility_VR200",
+   "value": 9.807847,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "CapexGW!G8",
+   "formula": "=Players!G5*TK_CapexFacility_H100+Players!G6*TK_CapexFacility_GB200+Players!G7*TK_CapexFacility_GB300+Players!G8*TK_CapexFacility_VR200+Players!G9*TK_CapexFacility_RU",
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "TK_In!E20",
+   "formula": null,
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "TK_In!E21",
+   "formula": null,
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "TK_In!E22",
+   "formula": null,
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "TK_In!E23",
+   "formula": null,
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "TK_In!E24",
+   "formula": null,
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 7,
+   "cell": "CapexGW!D4",
+   "formula": "=MAX(0,1-lag_bldg/12)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "In!I10",
+   "formula": null,
+   "value": 18,
+   "label": "lag_bldg｜建物資本支出提前入帳月數",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 7,
+   "cell": "CapexGW!E4",
+   "formula": "=MAX(0,MIN(lag_bldg/12,2-lag_bldg/12))",
+   "value": 0.5,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 7,
+   "cell": "CapexGW!G57",
+   "formula": "=IF(G52=\"\",\"\",IF(F52=\"\",G52,F52))",
+   "value": 77.72995,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "CapexGW!F52",
+   "formula": "=IF(F49=\"\",\"\",F49*ai_sh)",
+   "value": 77.72995,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "CapexGW!F49",
+   "formula": "=IF(OR(F48=\"\",AND(fye_googl<12,G48=\"\")),\"\",F48*fye_googl/12+IF(fye_googl<12,G48,0)*(12-fye_googl)/12)",
+   "value": 91.447,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 7,
+   "cell": "CapexGW!F4",
+   "formula": "=MAX(0,MIN(1,lag_bldg/12-1))",
+   "value": 0.5,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 7,
+   "cell": "CapexGW!G58",
+   "formula": "=IF(G52=\"\",\"\",IF(OR(F52=\"\",E52=\"\"),G57,E52))",
+   "value": 44.65475,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "CapexGW!E52",
+   "formula": "=IF(E49=\"\",\"\",E49*ai_sh)",
+   "value": 44.65475,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "CapexGW!E49",
+   "formula": "=IF(OR(E48=\"\",AND(fye_googl<12,F48=\"\")),\"\",E48*fye_googl/12+IF(fye_googl<12,F48,0)*(12-fye_googl)/12)",
+   "value": 52.535,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 5,
+   "cell": "CapexGW!G64",
+   "formula": "=Players!G55",
+   "value": 1.29267912772586,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 6,
+   "cell": "Players!G55",
+   "formula": "=IF(AND(F49<>\"\",G49<>\"\"),G49-F49,0)",
+   "value": 1.29267912772586,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 7,
+   "cell": "Players!F49",
+   "formula": "=IF(F43<>\"\",F43,IF(AND(F44<>\"\",F46<>\"\"),F44+(F46-F44)*(2025-F45)/(F47-F45),IF(E49<>\"\",E49+F48,\"\")))",
+   "value": 4.3,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "Players!F43",
+   "formula": "=IF(F41<>\"\",F41,IF(F42<>\"\",F42,IF(INT(obsd_googl)=2025,obschip_googl*Players!$D$15/1000+SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"googl\",Pipeline!$O$5:$O$150,1,Pipeline!$M$5:$M$150,\">\"&obsd_googl,Pipeline!$M$5:$M$150,\"<=\"&2026),\"\")))",
+   "value": 4.3,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Players!F41",
+   "formula": "=IF(In!$J$106=\"\",\"\",IF(In!$C$106=\"設施\",In!$J$106/1000/F$13,In!$J$106/1000))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "In!J106",
+   "formula": null,
+   "value": null,
+   "label": "mw_googl｜Alphabet（Google；TPU＋NVIDIA） 年底上線 MW",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "In!C106",
+   "formula": null,
+   "value": "IT",
+   "label": "mw_googl｜Alphabet（Google；TPU＋NVIDIA） 年底上線 MW",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Players!F13",
+   "formula": "=F5*TK_FacilityGW_H100+F6*TK_FacilityGW_GB200+F7*TK_FacilityGW_GB300+F8*TK_FacilityGW_VR200+F9*TK_FacilityGW_RU",
+   "value": 1.2,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!F5",
+   "formula": "=IF(In!$J$159<>\"\",In!$J$159,0)",
+   "value": 0.1,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!J159",
+   "formula": null,
+   "value": 0.1,
+   "label": "mix_H100｜新增 GW 世代占比：Hopper H100",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!F6",
+   "formula": "=IF(In!$J$160<>\"\",In!$J$160,0)",
+   "value": 0.7,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!J160",
+   "formula": null,
+   "value": 0.7,
+   "label": "mix_GB200｜新增 GW 世代占比：GB200 NVL72",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!F7",
+   "formula": "=IF(In!$J$161<>\"\",In!$J$161,0)",
+   "value": 0.2,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!J161",
+   "formula": null,
+   "value": 0.2,
+   "label": "mix_GB300｜新增 GW 世代占比：GB300 NVL72",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!F8",
+   "formula": "=IF(In!$J$162<>\"\",In!$J$162,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!J162",
+   "formula": null,
+   "value": null,
+   "label": "mix_VR200｜新增 GW 世代占比：VR200 NVL72",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!F9",
+   "formula": "=IF(In!$J$163<>\"\",In!$J$163,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!J163",
+   "formula": null,
+   "value": null,
+   "label": "mix_RU｜新增 GW 世代占比：Rubin Ultra",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "TK_In!E59",
+   "formula": null,
+   "value": 1.2,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "TK_In!E60",
+   "formula": null,
+   "value": 1.2,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "TK_In!E61",
+   "formula": null,
+   "value": 1.2,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "TK_In!E62",
+   "formula": null,
+   "value": 1.2,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "TK_In!E63",
+   "formula": null,
+   "value": 1.2,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Players!F42",
+   "formula": "=IF(In!$J$99=\"\",\"\",In!$J$99*Players!$D$15/1000)",
+   "value": 4.3,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "In!J99",
+   "formula": null,
+   "value": 2953.2,
+   "label": "chip_googl｜Alphabet（Google；TPU＋NVIDIA） 擁有 AI 晶片功耗（年底）",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Players!D15",
+   "formula": "=ovr25_googl/In!$J$99",
+   "value": 1.45604767709603,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "In!I35",
+   "formula": null,
+   "value": 4300,
+   "label": "ovr25_googl｜Google 2025 年底 AI IT（C 段 5.1 更正）",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Pipeline!L5",
+   "formula": "=IF(E5=\"\",0,IF(F5=\"設施\",E5/1000/INDEX(Players!$D$13:$M$13,1,MAX(1,MIN(10,H5-2022))),E5/1000*g_ITtoFac))",
+   "value": 0.321,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Pipeline!E5",
+   "formula": "=IF(In!J250=\"\",\"\",In!J250)",
+   "value": 321,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "In!J250",
+   "formula": null,
+   "value": 321,
+   "label": "cp_msft_atl｜Fairwater Atlanta",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Pipeline!F5",
+   "formula": "=In!C250",
+   "value": "IT",
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "In!C250",
+   "formula": null,
+   "value": "IT",
+   "label": "cp_msft_atl｜Fairwater Atlanta",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Players!D13",
+   "formula": "=D5*TK_FacilityGW_H100+D6*TK_FacilityGW_GB200+D7*TK_FacilityGW_GB300+D8*TK_FacilityGW_VR200+D9*TK_FacilityGW_RU",
+   "value": 1.2,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!D5",
+   "formula": "=IF(In!$H$159<>\"\",In!$H$159,0)",
+   "value": 1,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!H159",
+   "formula": null,
+   "value": 1,
+   "label": "mix_H100｜新增 GW 世代占比：Hopper H100",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!D6",
+   "formula": "=IF(In!$H$160<>\"\",In!$H$160,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!H160",
+   "formula": null,
+   "value": null,
+   "label": "mix_GB200｜新增 GW 世代占比：GB200 NVL72",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!D7",
+   "formula": "=IF(In!$H$161<>\"\",In!$H$161,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!H161",
+   "formula": null,
+   "value": null,
+   "label": "mix_GB300｜新增 GW 世代占比：GB300 NVL72",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!D8",
+   "formula": "=IF(In!$H$162<>\"\",In!$H$162,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!H162",
+   "formula": null,
+   "value": null,
+   "label": "mix_VR200｜新增 GW 世代占比：VR200 NVL72",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!D9",
+   "formula": "=IF(In!$H$163<>\"\",In!$H$163,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!H163",
+   "formula": null,
+   "value": null,
+   "label": "mix_RU｜新增 GW 世代占比：Rubin Ultra",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Pipeline!M13",
+   "formula": "=IF(K13>asof,K13+N(J13)/12,K13)",
+   "value": 2027.58333333333,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Pipeline!K13",
+   "formula": "=IF(OR(H13=\"\",I13=\"\"),9999,H13+I13/12)",
+   "value": 2027.58333333333,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Pipeline!H13",
+   "formula": "=IF(In!K258=\"\",\"\",In!K258)",
+   "value": 2027,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "In!K258",
+   "formula": null,
+   "value": 2027,
+   "label": "cp_meta_pro3｜Prometheus 2027-07 增量",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Pipeline!I13",
+   "formula": "=IF(In!L258=\"\",\"\",In!L258)",
+   "value": 7,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "In!L258",
+   "formula": null,
+   "value": 7,
+   "label": "cp_meta_pro3｜Prometheus 2027-07 增量",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Pipeline!J13",
+   "formula": "=N(In!M258)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!M258",
+   "formula": null,
+   "value": null,
+   "label": "cp_meta_pro3｜Prometheus 2027-07 增量",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Pipeline!H5",
+   "formula": "=IF(In!K250=\"\",\"\",In!K250)",
+   "value": 2025,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "In!K250",
+   "formula": null,
+   "value": 2025,
+   "label": "cp_msft_atl｜Fairwater Atlanta",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "In!I6",
+   "formula": null,
+   "value": 1,
+   "label": "g_ITtoFac｜公司 IT 值 → GW 帳主口徑（IT→IT）換算係數",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Players!L150",
+   "formula": "=IF(AND(K144<>\"\",L144<>\"\"),L144-K144,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Players!K144",
+   "formula": "=IF(K138<>\"\",K138,IF(AND(K139<>\"\",K141<>\"\"),K139+(K141-K139)*(2030-K140)/(K142-K140),IF(J144<>\"\",J144+K143,\"\")))",
+   "value": 1.303,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!K138",
+   "formula": "=IF(K136<>\"\",K136,IF(K137<>\"\",K137,\"\"))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!K136",
+   "formula": "=IF(In!$O$111=\"\",\"\",IF(In!$C$111=\"設施\",In!$O$111/1000/K$13,In!$O$111/1000))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "In!O111",
+   "formula": null,
+   "value": null,
+   "label": "mw_nbis｜Nebius 年底上線 MW",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "In!C111",
+   "formula": null,
+   "value": "未說明",
+   "label": "mw_nbis｜Nebius 年底上線 MW",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!K13",
+   "formula": "=K5*TK_FacilityGW_H100+K6*TK_FacilityGW_GB200+K7*TK_FacilityGW_GB300+K8*TK_FacilityGW_VR200+K9*TK_FacilityGW_RU",
+   "value": 1.2,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!K5",
+   "formula": "=IF(In!$O$159<>\"\",In!$O$159,J5)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!K6",
+   "formula": "=IF(In!$O$160<>\"\",In!$O$160,J6)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!K7",
+   "formula": "=IF(In!$O$161<>\"\",In!$O$161,J7)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!K8",
+   "formula": "=IF(In!$O$162<>\"\",In!$O$162,J8)",
+   "value": 0.700284773845187,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!K9",
+   "formula": "=IF(In!$O$163<>\"\",In!$O$163,J9)",
+   "value": 0.299715226154813,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!K137",
+   "formula": "=\"\"",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!K139",
+   "formula": "=IF(K138<>\"\",K138,J139)",
+   "value": 0.9,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!J139",
+   "formula": "=IF(J138<>\"\",J138,I139)",
+   "value": 0.9,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!J138",
+   "formula": "=IF(J136<>\"\",J136,IF(J137<>\"\",J137,\"\"))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!J136",
+   "formula": "=IF(In!$N$111=\"\",\"\",IF(In!$C$111=\"設施\",In!$N$111/1000/J$13,In!$N$111/1000))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!J137",
+   "formula": "=\"\"",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!I139",
+   "formula": "=IF(I138<>\"\",I138,H139)",
+   "value": 0.9,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!I138",
+   "formula": "=IF(I136<>\"\",I136,IF(I137<>\"\",I137,\"\"))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!H139",
+   "formula": "=IF(H138<>\"\",H138,G139)",
+   "value": 0.9,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!K141",
+   "formula": "=IF(K138<>\"\",K138,L141)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!L141",
+   "formula": "=IF(L138<>\"\",L138,M141)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!L138",
+   "formula": "=IF(L136<>\"\",L136,IF(L137<>\"\",L137,\"\"))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!L136",
+   "formula": "=IF(In!$P$111=\"\",\"\",IF(In!$C$111=\"設施\",In!$P$111/1000/L$13,In!$P$111/1000))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!L137",
+   "formula": "=\"\"",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!M141",
+   "formula": "=IF(M138<>\"\",M138,\"\")",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!M138",
+   "formula": "=IF(M136<>\"\",M136,IF(M137<>\"\",M137,\"\"))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!K140",
+   "formula": "=IF(K138<>\"\",2030,J140)",
+   "value": 2026,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!J140",
+   "formula": "=IF(J138<>\"\",2029,I140)",
+   "value": 2026,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!I140",
+   "formula": "=IF(I138<>\"\",2028,H140)",
+   "value": 2026,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!H140",
+   "formula": "=IF(H138<>\"\",2027,G140)",
+   "value": 2026,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!K142",
+   "formula": "=IF(K138<>\"\",2030,L142)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!L142",
+   "formula": "=IF(L138<>\"\",2031,M142)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!M142",
+   "formula": "=IF(M138<>\"\",2032,\"\")",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!J144",
+   "formula": "=IF(J138<>\"\",J138,IF(AND(J139<>\"\",J141<>\"\"),J139+(J141-J139)*(2029-J140)/(J142-J140),IF(I144<>\"\",I144+J143,\"\")))",
+   "value": 1.303,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!J141",
+   "formula": "=IF(J138<>\"\",J138,K141)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!J142",
+   "formula": "=IF(J138<>\"\",2029,K142)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!I144",
+   "formula": "=IF(I138<>\"\",I138,IF(AND(I139<>\"\",I141<>\"\"),I139+(I141-I139)*(2028-I140)/(I142-I140),IF(H144<>\"\",H144+I143,\"\")))",
+   "value": 1.303,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!I141",
+   "formula": "=IF(I138<>\"\",I138,J141)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!I142",
+   "formula": "=IF(I138<>\"\",2028,J142)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!H144",
+   "formula": "=IF(H138<>\"\",H138,IF(AND(H139<>\"\",H141<>\"\"),H139+(H141-H139)*(2027-H140)/(H142-H140),IF(G144<>\"\",G144+H143,\"\")))",
+   "value": 1.303,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!H138",
+   "formula": "=IF(H136<>\"\",H136,IF(H137<>\"\",H137,\"\"))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!H141",
+   "formula": "=IF(H138<>\"\",H138,I141)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!H142",
+   "formula": "=IF(H138<>\"\",2027,I142)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!G144",
+   "formula": "=IF(G138<>\"\",G138,IF(AND(G139<>\"\",G141<>\"\"),G139+(G141-G139)*(2026-G140)/(G142-G140),IF(F144<>\"\",F144+G143,\"\")))",
+   "value": 0.9,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!H143",
+   "formula": "=SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"nbis\",Pipeline!$O$5:$O$150,1,Pipeline!$N$5:$N$150,2027)",
+   "value": 0.403,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!I143",
+   "formula": "=SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"nbis\",Pipeline!$O$5:$O$150,1,Pipeline!$N$5:$N$150,2028)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Pipeline!C5",
+   "formula": "=IF(In!H250=\"\",\"\",In!H250)",
+   "value": "msft",
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!C150",
+   "formula": null,
+   "value": "GW",
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Pipeline!O5",
+   "formula": "=IF(AND(N(G5)=1,K5<9999,L5>0),1,0)",
+   "value": 1,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!O150",
+   "formula": null,
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Pipeline!N5",
+   "formula": "=IF(K5=9999,\"\",ROUNDUP(M5,0)-1)",
+   "value": 2025,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!N150",
+   "formula": null,
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!J143",
+   "formula": "=SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"nbis\",Pipeline!$O$5:$O$150,1,Pipeline!$N$5:$N$150,2029)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!K143",
+   "formula": "=SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"nbis\",Pipeline!$O$5:$O$150,1,Pipeline!$N$5:$N$150,2030)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Players!L144",
+   "formula": "=IF(L138<>\"\",L138,IF(AND(L139<>\"\",L141<>\"\"),L139+(L141-L139)*(2031-L140)/(L142-L140),IF(K144<>\"\",K144+L143,\"\")))",
+   "value": 1.303,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!L139",
+   "formula": "=IF(L138<>\"\",L138,K139)",
+   "value": 0.9,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!L140",
+   "formula": "=IF(L138<>\"\",2031,K140)",
+   "value": 2026,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!L143",
+   "formula": "=SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"nbis\",Pipeline!$O$5:$O$150,1,Pipeline!$N$5:$N$150,2031)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Pipeline!M5",
+   "formula": "=IF(K5>asof,K5+N(J5)/12,K5)",
+   "value": 2025.83333333333,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Pipeline!K5",
+   "formula": "=IF(OR(H5=\"\",I5=\"\"),9999,H5+I5/12)",
+   "value": 2025.83333333333,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Pipeline!I5",
+   "formula": "=IF(In!L250=\"\",\"\",In!L250)",
+   "value": 10,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!L250",
+   "formula": null,
+   "value": 10,
+   "label": "cp_msft_atl｜Fairwater Atlanta",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Pipeline!J5",
+   "formula": "=N(In!M250)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "In!M250",
+   "formula": null,
+   "value": null,
+   "label": "cp_msft_atl｜Fairwater Atlanta",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Players!M150",
+   "formula": "=IF(AND(L144<>\"\",M144<>\"\"),M144-L144,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Players!M144",
+   "formula": "=IF(M138<>\"\",M138,IF(AND(M139<>\"\",M141<>\"\"),M139+(M141-M139)*(2032-M140)/(M142-M140),IF(L144<>\"\",L144+M143,\"\")))",
+   "value": 1.303,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!M139",
+   "formula": "=IF(M138<>\"\",M138,L139)",
+   "value": 0.9,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!M140",
+   "formula": "=IF(M138<>\"\",2032,L140)",
+   "value": 2026,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!M143",
+   "formula": "=SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"nbis\",Pipeline!$O$5:$O$150,1,Pipeline!$N$5:$N$150,2032)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "In!I25",
+   "formula": null,
+   "value": 2026.5,
+   "label": "obsd_googl｜Alphabet 觀測時點",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "In!I24",
+   "formula": null,
+   "value": 3841,
+   "label": "obschip_googl｜Alphabet 晶片功耗（2026Q2；× Google 倍數＝IT）",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "Players!F44",
+   "formula": "=IF(F43<>\"\",F43,E44)",
+   "value": 4.3,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Players!E44",
+   "formula": "=IF(E43<>\"\",E43,D44)",
+   "value": 1.89038669917378,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Players!E43",
+   "formula": "=IF(E41<>\"\",E41,IF(E42<>\"\",E42,IF(INT(obsd_googl)=2024,obschip_googl*Players!$D$15/1000+SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"googl\",Pipeline!$O$5:$O$150,1,Pipeline!$M$5:$M$150,\">\"&obsd_googl,Pipeline!$M$5:$M$150,\"<=\"&2025),\"\")))",
+   "value": 1.89038669917378,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!E41",
+   "formula": "=IF(In!$I$106=\"\",\"\",IF(In!$C$106=\"設施\",In!$I$106/1000/E$13,In!$I$106/1000))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!I106",
+   "formula": null,
+   "value": null,
+   "label": "mw_googl｜Alphabet（Google；TPU＋NVIDIA） 年底上線 MW",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!E13",
+   "formula": "=E5*TK_FacilityGW_H100+E6*TK_FacilityGW_GB200+E7*TK_FacilityGW_GB300+E8*TK_FacilityGW_VR200+E9*TK_FacilityGW_RU",
+   "value": 1.2,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!E5",
+   "formula": "=IF(In!$I$159<>\"\",In!$I$159,0)",
+   "value": 1,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "In!I159",
+   "formula": null,
+   "value": 1,
+   "label": "mix_H100｜新增 GW 世代占比：Hopper H100",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!E6",
+   "formula": "=IF(In!$I$160<>\"\",In!$I$160,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "In!I160",
+   "formula": null,
+   "value": null,
+   "label": "mix_GB200｜新增 GW 世代占比：GB200 NVL72",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!E7",
+   "formula": "=IF(In!$I$161<>\"\",In!$I$161,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "In!I161",
+   "formula": null,
+   "value": null,
+   "label": "mix_GB300｜新增 GW 世代占比：GB300 NVL72",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!E8",
+   "formula": "=IF(In!$I$162<>\"\",In!$I$162,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "In!I162",
+   "formula": null,
+   "value": null,
+   "label": "mix_VR200｜新增 GW 世代占比：VR200 NVL72",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!E9",
+   "formula": "=IF(In!$I$163<>\"\",In!$I$163,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "In!I163",
+   "formula": null,
+   "value": null,
+   "label": "mix_RU｜新增 GW 世代占比：Rubin Ultra",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!E42",
+   "formula": "=IF(In!$I$99=\"\",\"\",In!$I$99*Players!$D$15/1000)",
+   "value": 1.89038669917378,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!I99",
+   "formula": null,
+   "value": 1298.3,
+   "label": "chip_googl｜Alphabet（Google；TPU＋NVIDIA） 擁有 AI 晶片功耗（年底）",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Players!D44",
+   "formula": "=IF(D43<>\"\",D43,\"\")",
+   "value": 0.560578355681972,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!D43",
+   "formula": "=IF(D41<>\"\",D41,IF(D42<>\"\",D42,IF(INT(obsd_googl)=2023,obschip_googl*Players!$D$15/1000+SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"googl\",Pipeline!$O$5:$O$150,1,Pipeline!$M$5:$M$150,\">\"&obsd_googl,Pipeline!$M$5:$M$150,\"<=\"&2024),\"\")))",
+   "value": 0.560578355681972,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!D41",
+   "formula": "=IF(In!$H$106=\"\",\"\",IF(In!$C$106=\"設施\",In!$H$106/1000/D$13,In!$H$106/1000))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "In!H106",
+   "formula": null,
+   "value": null,
+   "label": "mw_googl｜Alphabet（Google；TPU＋NVIDIA） 年底上線 MW",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!D42",
+   "formula": "=IF(In!$H$99=\"\",\"\",In!$H$99*Players!$D$15/1000)",
+   "value": 0.560578355681972,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "In!H99",
+   "formula": null,
+   "value": 385,
+   "label": "chip_googl｜Alphabet（Google；TPU＋NVIDIA） 擁有 AI 晶片功耗（年底）",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "Players!F46",
+   "formula": "=IF(F43<>\"\",F43,G46)",
+   "value": 4.3,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Players!G46",
+   "formula": "=IF(G43<>\"\",G43,H46)",
+   "value": 5.59267912772586,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Players!G43",
+   "formula": "=IF(G41<>\"\",G41,IF(G42<>\"\",G42,IF(INT(obsd_googl)=2026,obschip_googl*Players!$D$15/1000+SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"googl\",Pipeline!$O$5:$O$150,1,Pipeline!$M$5:$M$150,\">\"&obsd_googl,Pipeline!$M$5:$M$150,\"<=\"&2027),\"\")))",
+   "value": 5.59267912772586,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!G41",
+   "formula": "=IF(In!$K$106=\"\",\"\",IF(In!$C$106=\"設施\",In!$K$106/1000/G$13,In!$K$106/1000))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!K106",
+   "formula": null,
+   "value": null,
+   "label": "mw_googl｜Alphabet（Google；TPU＋NVIDIA） 年底上線 MW",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!G13",
+   "formula": "=G5*TK_FacilityGW_H100+G6*TK_FacilityGW_GB200+G7*TK_FacilityGW_GB300+G8*TK_FacilityGW_VR200+G9*TK_FacilityGW_RU",
+   "value": 1.2,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!G42",
+   "formula": "=IF(In!$K$99=\"\",\"\",In!$K$99*Players!$D$15/1000)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "In!K99",
+   "formula": null,
+   "value": null,
+   "label": "chip_googl｜Alphabet（Google；TPU＋NVIDIA） 擁有 AI 晶片功耗（年底）",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Players!H46",
+   "formula": "=IF(H43<>\"\",H43,I46)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!H43",
+   "formula": "=IF(H41<>\"\",H41,IF(H42<>\"\",H42,IF(INT(obsd_googl)=2027,obschip_googl*Players!$D$15/1000+SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"googl\",Pipeline!$O$5:$O$150,1,Pipeline!$M$5:$M$150,\">\"&obsd_googl,Pipeline!$M$5:$M$150,\"<=\"&2028),\"\")))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!H41",
+   "formula": "=IF(In!$L$106=\"\",\"\",IF(In!$C$106=\"設施\",In!$L$106/1000/H$13,In!$L$106/1000))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "In!L106",
+   "formula": null,
+   "value": null,
+   "label": "mw_googl｜Alphabet（Google；TPU＋NVIDIA） 年底上線 MW",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!H13",
+   "formula": "=H5*TK_FacilityGW_H100+H6*TK_FacilityGW_GB200+H7*TK_FacilityGW_GB300+H8*TK_FacilityGW_VR200+H9*TK_FacilityGW_RU",
+   "value": 1.2,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!H5",
+   "formula": "=IF(In!$L$159<>\"\",In!$L$159,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!H6",
+   "formula": "=IF(In!$L$160<>\"\",In!$L$160,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!H7",
+   "formula": "=IF(In!$L$161<>\"\",In!$L$161,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!H8",
+   "formula": "=IF(In!$L$162<>\"\",In!$L$162,(1-H$11))",
+   "value": 0.939674183983797,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!H9",
+   "formula": "=IF(In!$L$163<>\"\",In!$L$163,H$11)",
+   "value": 0.0603258160162031,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!H42",
+   "formula": "=IF(In!$L$99=\"\",\"\",In!$L$99*Players!$D$15/1000)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "In!L99",
+   "formula": null,
+   "value": null,
+   "label": "chip_googl｜Alphabet（Google；TPU＋NVIDIA） 擁有 AI 晶片功耗（年底）",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!I46",
+   "formula": "=IF(I43<>\"\",I43,J46)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!I43",
+   "formula": "=IF(I41<>\"\",I41,IF(I42<>\"\",I42,IF(INT(obsd_googl)=2028,obschip_googl*Players!$D$15/1000+SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"googl\",Pipeline!$O$5:$O$150,1,Pipeline!$M$5:$M$150,\">\"&obsd_googl,Pipeline!$M$5:$M$150,\"<=\"&2029),\"\")))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!I41",
+   "formula": "=IF(In!$M$106=\"\",\"\",IF(In!$C$106=\"設施\",In!$M$106/1000/I$13,In!$M$106/1000))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "In!M106",
+   "formula": null,
+   "value": null,
+   "label": "mw_googl｜Alphabet（Google；TPU＋NVIDIA） 年底上線 MW",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!I13",
+   "formula": "=I5*TK_FacilityGW_H100+I6*TK_FacilityGW_GB200+I7*TK_FacilityGW_GB300+I8*TK_FacilityGW_VR200+I9*TK_FacilityGW_RU",
+   "value": 1.2,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!I42",
+   "formula": "=IF(In!$M$99=\"\",\"\",In!$M$99*Players!$D$15/1000)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "In!M99",
+   "formula": null,
+   "value": null,
+   "label": "chip_googl｜Alphabet（Google；TPU＋NVIDIA） 擁有 AI 晶片功耗（年底）",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!J46",
+   "formula": "=IF(J43<>\"\",J43,K46)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!J43",
+   "formula": "=IF(J41<>\"\",J41,IF(J42<>\"\",J42,IF(INT(obsd_googl)=2029,obschip_googl*Players!$D$15/1000+SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"googl\",Pipeline!$O$5:$O$150,1,Pipeline!$M$5:$M$150,\">\"&obsd_googl,Pipeline!$M$5:$M$150,\"<=\"&2030),\"\")))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!J41",
+   "formula": "=IF(In!$N$106=\"\",\"\",IF(In!$C$106=\"設施\",In!$N$106/1000/J$13,In!$N$106/1000))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!J42",
+   "formula": "=IF(In!$N$99=\"\",\"\",In!$N$99*Players!$D$15/1000)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!K46",
+   "formula": "=IF(K43<>\"\",K43,L46)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!K43",
+   "formula": "=IF(K41<>\"\",K41,IF(K42<>\"\",K42,IF(INT(obsd_googl)=2030,obschip_googl*Players!$D$15/1000+SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"googl\",Pipeline!$O$5:$O$150,1,Pipeline!$M$5:$M$150,\">\"&obsd_googl,Pipeline!$M$5:$M$150,\"<=\"&2031),\"\")))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!L46",
+   "formula": "=IF(L43<>\"\",L43,M46)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "Players!F45",
+   "formula": "=IF(F43<>\"\",2025,E45)",
+   "value": 2025,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Players!E45",
+   "formula": "=IF(E43<>\"\",2024,D45)",
+   "value": 2024,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Players!D45",
+   "formula": "=IF(D43<>\"\",2023,\"\")",
+   "value": 2023,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "Players!F47",
+   "formula": "=IF(F43<>\"\",2025,G47)",
+   "value": 2025,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Players!G47",
+   "formula": "=IF(G43<>\"\",2026,H47)",
+   "value": 2026,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Players!H47",
+   "formula": "=IF(H43<>\"\",2027,I47)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 11,
+   "cell": "Players!I47",
+   "formula": "=IF(I43<>\"\",2028,J47)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 12,
+   "cell": "Players!J47",
+   "formula": "=IF(J43<>\"\",2029,K47)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 13,
+   "cell": "Players!K47",
+   "formula": "=IF(K43<>\"\",2030,L47)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 14,
+   "cell": "Players!L47",
+   "formula": "=IF(L43<>\"\",2031,M47)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "Players!E49",
+   "formula": "=IF(E43<>\"\",E43,IF(AND(E44<>\"\",E46<>\"\"),E44+(E46-E44)*(2024-E45)/(E47-E45),IF(D49<>\"\",D49+E48,\"\")))",
+   "value": 1.89038669917378,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Players!E46",
+   "formula": "=IF(E43<>\"\",E43,F46)",
+   "value": 1.89038669917378,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Players!E47",
+   "formula": "=IF(E43<>\"\",2024,F47)",
+   "value": 2024,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Players!D49",
+   "formula": "=IF(D43<>\"\",D43,IF(AND(D44<>\"\",D46<>\"\"),D44+(D46-D44)*(2023-D45)/(D47-D45),\"\"))",
+   "value": 0.560578355681972,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Players!D46",
+   "formula": "=IF(D43<>\"\",D43,E46)",
+   "value": 0.560578355681972,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 10,
+   "cell": "Players!D47",
+   "formula": "=IF(D43<>\"\",2023,E47)",
+   "value": 2023,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "Players!E48",
+   "formula": "=SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"googl\",Pipeline!$O$5:$O$150,1,Pipeline!$N$5:$N$150,2024)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "Players!F48",
+   "formula": "=SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"googl\",Pipeline!$O$5:$O$150,1,Pipeline!$N$5:$N$150,2025)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 7,
+   "cell": "Players!G49",
+   "formula": "=IF(G43<>\"\",G43,IF(AND(G44<>\"\",G46<>\"\"),G44+(G46-G44)*(2026-G45)/(G47-G45),IF(F49<>\"\",F49+G48,\"\")))",
+   "value": 5.59267912772586,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "Players!G44",
+   "formula": "=IF(G43<>\"\",G43,F44)",
+   "value": 5.59267912772586,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "Players!G45",
+   "formula": "=IF(G43<>\"\",2026,F45)",
+   "value": 2026,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "Players!G48",
+   "formula": "=SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"googl\",Pipeline!$O$5:$O$150,1,Pipeline!$N$5:$N$150,2026)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 4,
+   "cell": "CapexGW!F62",
+   "formula": "=IF(F61=\"\",F64,F61)",
+   "value": 1.90684085060084,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 5,
+   "cell": "CapexGW!F61",
+   "formula": "=IF(F60=\"\",\"\",F60/(F53+F56))",
+   "value": 1.90684085060084,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 6,
+   "cell": "CapexGW!F60",
+   "formula": "=IF(F52=\"\",\"\",F53/(F53+F56)*F52+F56/(F53+F56)*(CapexGW!$D$4*F52+CapexGW!$E$4*F57+CapexGW!$F$4*F58))",
+   "value": 68.7299006096821,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 7,
+   "cell": "CapexGW!F53",
+   "formula": "=(1-Players!F57)*F$7+Players!F57*TK_NonNV_Hold_TPU*TK_CapexIT_VR200",
+   "value": 26.2360108752,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "Players!F57",
+   "formula": "=nnv_googl",
+   "value": 0.753,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "CapexGW!F7",
+   "formula": "=Players!F5*TK_CapexIT_H100+Players!F6*TK_CapexIT_GB200+Players!F7*TK_CapexIT_GB300+Players!F8*TK_CapexIT_VR200+Players!F9*TK_CapexIT_RU",
+   "value": 26.009088,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 7,
+   "cell": "CapexGW!F56",
+   "formula": "=F55*F54",
+   "value": 9.807847,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "CapexGW!F55",
+   "formula": null,
+   "value": 1,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "CapexGW!F54",
+   "formula": "=(1-Players!F57)*F$8+Players!F57*TK_NonNV_Hold_TPU*TK_CapexFacility_VR200",
+   "value": 9.807847,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "CapexGW!F8",
+   "formula": "=Players!F5*TK_CapexFacility_H100+Players!F6*TK_CapexFacility_GB200+Players!F7*TK_CapexFacility_GB300+Players!F8*TK_CapexFacility_VR200+Players!F9*TK_CapexFacility_RU",
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 7,
+   "cell": "CapexGW!F57",
+   "formula": "=IF(F52=\"\",\"\",IF(E52=\"\",F52,E52))",
+   "value": 44.65475,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 7,
+   "cell": "CapexGW!F58",
+   "formula": "=IF(F52=\"\",\"\",IF(OR(E52=\"\",D52=\"\"),F57,D52))",
+   "value": 44.65475,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 8,
+   "cell": "CapexGW!D52",
+   "formula": "=IF(D49=\"\",\"\",D49*ai_sh)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 9,
+   "cell": "CapexGW!D49",
+   "formula": "=IF(OR(D48=\"\",AND(fye_googl<12,E48=\"\")),\"\",D48*fye_googl/12+IF(fye_googl<12,E48,0)*(12-fye_googl)/12)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 5,
+   "cell": "CapexGW!F64",
+   "formula": "=Players!F55",
+   "value": 2.40961330082622,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 6,
+   "cell": "Players!F55",
+   "formula": "=IF(AND(E49<>\"\",F49<>\"\"),F49-E49,0)",
+   "value": 2.40961330082622,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 4,
+   "cell": "In!I94",
+   "formula": null,
+   "value": 4.5,
+   "label": "lag_on｜甲2 付款（出貨）到上線延遲（付款年 → 上線年平移）",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_AddGW",
+   "depth": 4,
+   "cell": "In!I95",
+   "formula": null,
+   "value": 0.1,
+   "label": "inv_on｜甲2 未上線庫存 ÷ 年出貨（庫存增量自上線扣除）",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 0,
+   "cell": "Interface!F609",
+   "formula": "=IF(Gap!G108=\"\",\"\",Gap!G108)",
+   "value": 132.872934457364,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 1,
+   "cell": "Gap!G108",
+   "formula": "=IF(G107<>\"\",G102,G91)",
+   "value": 132.872934457364,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 2,
+   "cell": "Gap!G107",
+   "formula": "=IF(AND(ABS(G91)<0.000000001,G106<>\"\",ISNUMBER(G102)),IF(N(G102)>0,\"模型值替代（無 GW 證據）\",\"\"),\"\")",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 3,
+   "cell": "Gap!G91",
+   "formula": "=G88+G89+G90",
+   "value": 132.872934457364,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 4,
+   "cell": "Gap!G88",
+   "formula": "=G84*(G85+Gap!$D$6*G86)",
+   "value": 80.5947408001727,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 5,
+   "cell": "Gap!G85",
+   "formula": "=CapexGW!G53",
+   "value": 28.06503208272,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 5,
+   "cell": "Gap!D6",
+   "formula": "=CapexGW!$D$4",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 5,
+   "cell": "Gap!G86",
+   "formula": "=CapexGW!G56",
+   "value": 9.807847,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 4,
+   "cell": "Gap!G89",
+   "formula": "=Gap!$E$6*H84*H86",
+   "value": 22.9466751465647,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 5,
+   "cell": "Gap!E6",
+   "formula": "=CapexGW!$E$4",
+   "value": 0.5,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 5,
+   "cell": "Gap!H84",
+   "formula": "=CapexGW!H65",
+   "value": 4.67924818700062,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 6,
+   "cell": "CapexGW!H65",
+   "formula": "=IF(2027>=2026,H63,H64)",
+   "value": 4.67924818700062,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 7,
+   "cell": "CapexGW!H63",
+   "formula": "=(1-(lag_on/12))*H62+(lag_on/12)*G62-inv_on*(H62-G62)",
+   "value": 4.67924818700062,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 8,
+   "cell": "CapexGW!H62",
+   "formula": "=IF(H61=\"\",H64,H61)",
+   "value": 5.52479708065001,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 9,
+   "cell": "CapexGW!H61",
+   "formula": "=IF(H60=\"\",\"\",H60/(H53+H56))",
+   "value": 5.52479708065001,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 10,
+   "cell": "CapexGW!H60",
+   "formula": "=IF(H52=\"\",\"\",H53/(H53+H56)*H52+H56/(H53+H56)*(CapexGW!$D$4*H52+CapexGW!$E$4*H57+CapexGW!$F$4*H58))",
+   "value": 215.962602527465,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 11,
+   "cell": "CapexGW!H52",
+   "formula": "=IF(H49=\"\",\"\",H49*ai_sh)",
+   "value": 246.810369,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 12,
+   "cell": "CapexGW!H49",
+   "formula": "=IF(OR(H48=\"\",AND(fye_googl<12,I48=\"\")),\"\",H48*fye_googl/12+IF(fye_googl<12,I48,0)*(12-fye_googl)/12)",
+   "value": 290.36514,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 13,
+   "cell": "CapexGW!I48",
+   "formula": "=IF(I44<>\"\",I44,IF(H46>0,H48*(1+cap_g_ext),\"\"))",
+   "value": 317.398835,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 14,
+   "cell": "CapexGW!I44",
+   "formula": "=IF(I42<>\"\",I42,IF(I43<>\"\",I43,\"\"))",
+   "value": 317.398835,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 14,
+   "cell": "CapexGW!H46",
+   "formula": "=(H44<>\"\")+G46",
+   "value": 4,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 11,
+   "cell": "CapexGW!H53",
+   "formula": "=(1-Players!H57)*H$7+Players!H57*TK_NonNV_Hold_TPU*TK_CapexIT_VR200",
+   "value": 29.2818425170774,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 12,
+   "cell": "Players!H57",
+   "formula": "=nnv_googl",
+   "value": 0.753,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 12,
+   "cell": "CapexGW!H7",
+   "formula": "=Players!H5*TK_CapexIT_H100+Players!H6*TK_CapexIT_GB200+Players!H7*TK_CapexIT_GB300+Players!H8*TK_CapexIT_VR200+Players!H9*TK_CapexIT_RU",
+   "value": 38.3403901938358,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 11,
+   "cell": "CapexGW!H56",
+   "formula": "=H55*H54",
+   "value": 9.807847,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 12,
+   "cell": "CapexGW!H55",
+   "formula": null,
+   "value": 1,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 12,
+   "cell": "CapexGW!H54",
+   "formula": "=(1-Players!H57)*H$8+Players!H57*TK_NonNV_Hold_TPU*TK_CapexFacility_VR200",
+   "value": 9.807847,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 13,
+   "cell": "CapexGW!H8",
+   "formula": "=Players!H5*TK_CapexFacility_H100+Players!H6*TK_CapexFacility_GB200+Players!H7*TK_CapexFacility_GB300+Players!H8*TK_CapexFacility_VR200+Players!H9*TK_CapexFacility_RU",
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 11,
+   "cell": "CapexGW!H57",
+   "formula": "=IF(H52=\"\",\"\",IF(G52=\"\",H52,G52))",
+   "value": 170,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 11,
+   "cell": "CapexGW!H58",
+   "formula": "=IF(H52=\"\",\"\",IF(OR(G52=\"\",F52=\"\"),H57,F52))",
+   "value": 77.72995,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 9,
+   "cell": "CapexGW!H64",
+   "formula": "=Players!H55",
+   "value": 1.626,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 10,
+   "cell": "Players!H55",
+   "formula": "=IF(AND(G49<>\"\",H49<>\"\"),H49-G49,0)",
+   "value": 1.626,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 11,
+   "cell": "Players!H49",
+   "formula": "=IF(H43<>\"\",H43,IF(AND(H44<>\"\",H46<>\"\"),H44+(H46-H44)*(2027-H45)/(H47-H45),IF(G49<>\"\",G49+H48,\"\")))",
+   "value": 7.21867912772586,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 12,
+   "cell": "Players!H44",
+   "formula": "=IF(H43<>\"\",H43,G44)",
+   "value": 5.59267912772586,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 12,
+   "cell": "Players!H45",
+   "formula": "=IF(H43<>\"\",2027,G45)",
+   "value": 2026,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 12,
+   "cell": "Players!H48",
+   "formula": "=SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"googl\",Pipeline!$O$5:$O$150,1,Pipeline!$N$5:$N$150,2027)",
+   "value": 1.626,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 5,
+   "cell": "Gap!H86",
+   "formula": "=CapexGW!H56",
+   "value": 9.807847,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 4,
+   "cell": "Gap!G90",
+   "formula": "=Gap!$F$6*I84*I86",
+   "value": 29.3315185106267,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 5,
+   "cell": "Gap!F6",
+   "formula": "=CapexGW!$F$4",
+   "value": 0.5,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 5,
+   "cell": "Gap!I84",
+   "formula": "=CapexGW!I65",
+   "value": 5.98123492559106,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 6,
+   "cell": "CapexGW!I65",
+   "formula": "=IF(2028>=2026,I63,I64)",
+   "value": 5.98123492559106,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 7,
+   "cell": "CapexGW!I63",
+   "formula": "=(1-(lag_on/12))*I62+(lag_on/12)*H62-inv_on*(I62-H62)",
+   "value": 5.98123492559106,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 8,
+   "cell": "CapexGW!I62",
+   "formula": "=IF(I61=\"\",I64,I61)",
+   "value": 6.39420249958534,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 9,
+   "cell": "CapexGW!I61",
+   "formula": "=IF(I60=\"\",\"\",I60/(I53+I56))",
+   "value": 6.39420249958534,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 10,
+   "cell": "CapexGW!I60",
+   "formula": "=IF(I52=\"\",\"\",I53/(I53+I56)*I52+I56/(I53+I56)*(CapexGW!$D$4*I52+CapexGW!$E$4*I57+CapexGW!$F$4*I58))",
+   "value": 254.673223880033,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 11,
+   "cell": "CapexGW!I52",
+   "formula": "=IF(I49=\"\",\"\",I49*ai_sh)",
+   "value": 269.78900975,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 12,
+   "cell": "CapexGW!I49",
+   "formula": "=IF(OR(I48=\"\",AND(fye_googl<12,J48=\"\")),\"\",I48*fye_googl/12+IF(fye_googl<12,J48,0)*(12-fye_googl)/12)",
+   "value": 317.398835,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 13,
+   "cell": "CapexGW!J48",
+   "formula": "=IF(J44<>\"\",J44,IF(I46>0,I48*(1+cap_g_ext),\"\"))",
+   "value": 292.560872,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 14,
+   "cell": "CapexGW!J44",
+   "formula": "=IF(J42<>\"\",J42,IF(J43<>\"\",J43,\"\"))",
+   "value": 292.560872,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 14,
+   "cell": "CapexGW!I46",
+   "formula": "=(I44<>\"\")+H46",
+   "value": 5,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 11,
+   "cell": "CapexGW!I53",
+   "formula": "=(1-Players!I57)*I$7+Players!I57*TK_NonNV_Hold_TPU*TK_CapexIT_VR200",
+   "value": 30.020923498987,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 12,
+   "cell": "Players!I57",
+   "formula": "=nnv_googl",
+   "value": 0.753,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 12,
+   "cell": "CapexGW!I7",
+   "formula": "=Players!I5*TK_CapexIT_H100+Players!I6*TK_CapexIT_GB200+Players!I7*TK_CapexIT_GB300+Players!I8*TK_CapexIT_VR200+Players!I9*TK_CapexIT_RU",
+   "value": 41.3326208898258,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 13,
+   "cell": "Players!I5",
+   "formula": "=IF(In!$M$159<>\"\",In!$M$159,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 14,
+   "cell": "In!M159",
+   "formula": null,
+   "value": null,
+   "label": "mix_H100｜新增 GW 世代占比：Hopper H100",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 13,
+   "cell": "Players!I6",
+   "formula": "=IF(In!$M$160<>\"\",In!$M$160,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 14,
+   "cell": "In!M160",
+   "formula": null,
+   "value": null,
+   "label": "mix_GB200｜新增 GW 世代占比：GB200 NVL72",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 13,
+   "cell": "Players!I7",
+   "formula": "=IF(In!$M$161<>\"\",In!$M$161,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 14,
+   "cell": "In!M161",
+   "formula": null,
+   "value": null,
+   "label": "mix_GB300｜新增 GW 世代占比：GB300 NVL72",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 13,
+   "cell": "Players!I8",
+   "formula": "=IF(In!$M$162<>\"\",In!$M$162,(1-I$11))",
+   "value": 0.700284773845187,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 14,
+   "cell": "In!M162",
+   "formula": null,
+   "value": null,
+   "label": "mix_VR200｜新增 GW 世代占比：VR200 NVL72",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 14,
+   "cell": "Players!I11",
+   "formula": "=(SIL_In!$I$135/TK_GPUsPerGW_RU)/(SIL_In!$I$134/TK_GPUsPerGW_VR200+SIL_In!$I$135/TK_GPUsPerGW_RU)",
+   "value": 0.299715226154813,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 13,
+   "cell": "Players!I9",
+   "formula": "=IF(In!$M$163<>\"\",In!$M$163,I$11)",
+   "value": 0.299715226154813,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 14,
+   "cell": "In!M163",
+   "formula": null,
+   "value": null,
+   "label": "mix_RU｜新增 GW 世代占比：Rubin Ultra",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 11,
+   "cell": "CapexGW!I56",
+   "formula": "=I55*I54",
+   "value": 9.807847,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 12,
+   "cell": "CapexGW!I55",
+   "formula": null,
+   "value": 1,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 12,
+   "cell": "CapexGW!I54",
+   "formula": "=(1-Players!I57)*I$8+Players!I57*TK_NonNV_Hold_TPU*TK_CapexFacility_VR200",
+   "value": 9.807847,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 13,
+   "cell": "CapexGW!I8",
+   "formula": "=Players!I5*TK_CapexFacility_H100+Players!I6*TK_CapexFacility_GB200+Players!I7*TK_CapexFacility_GB300+Players!I8*TK_CapexFacility_VR200+Players!I9*TK_CapexFacility_RU",
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 11,
+   "cell": "CapexGW!I57",
+   "formula": "=IF(I52=\"\",\"\",IF(H52=\"\",I52,H52))",
+   "value": 246.810369,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 11,
+   "cell": "CapexGW!I58",
+   "formula": "=IF(I52=\"\",\"\",IF(OR(H52=\"\",G52=\"\"),I57,G52))",
+   "value": 170,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 9,
+   "cell": "CapexGW!I64",
+   "formula": "=Players!I55",
+   "value": 0.833333333333334,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 10,
+   "cell": "Players!I55",
+   "formula": "=IF(AND(H49<>\"\",I49<>\"\"),I49-H49,0)",
+   "value": 0.833333333333334,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 11,
+   "cell": "Players!I49",
+   "formula": "=IF(I43<>\"\",I43,IF(AND(I44<>\"\",I46<>\"\"),I44+(I46-I44)*(2028-I45)/(I47-I45),IF(H49<>\"\",H49+I48,\"\")))",
+   "value": 8.05201246105919,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 12,
+   "cell": "Players!I44",
+   "formula": "=IF(I43<>\"\",I43,H44)",
+   "value": 5.59267912772586,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 12,
+   "cell": "Players!I45",
+   "formula": "=IF(I43<>\"\",2028,H45)",
+   "value": 2026,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 12,
+   "cell": "Players!I48",
+   "formula": "=SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"googl\",Pipeline!$O$5:$O$150,1,Pipeline!$N$5:$N$150,2028)",
+   "value": 0.833333333333333,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 5,
+   "cell": "Gap!I86",
+   "formula": "=CapexGW!I56",
+   "value": 9.807847,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 3,
+   "cell": "Gap!G106",
+   "formula": "=G104",
+   "value": 188.487287,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 4,
+   "cell": "Gap!G104",
+   "formula": "=IF(In!K172<>\"\",In!K172,\"\")",
+   "value": 188.487287,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 5,
+   "cell": "In!K172",
+   "formula": null,
+   "value": 188.487287,
+   "label": "gocf_googl｜Alphabet 營業現金流（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 3,
+   "cell": "Gap!G102",
+   "formula": "=G101",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 4,
+   "cell": "Gap!G101",
+   "formula": "=IF(In!K173<>\"\",In!K173,\"\")",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAI",
+   "depth": 5,
+   "cell": "In!K173",
+   "formula": null,
+   "value": null,
+   "label": "gcapai_googl｜Alphabet AI 資本支出（模型；對照）（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "leaf": true
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexNonAI",
+   "depth": 0,
+   "cell": "Interface!F610",
+   "formula": "=IF(Gap!G98=\"\",\"\",Gap!G98)",
+   "value": 30,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexNonAI",
+   "depth": 1,
+   "cell": "Gap!G98",
+   "formula": "=IF(G96<>\"\",G96,IF(CapexGW!G49<>\"\",CapexGW!G49*(1-ai_sh),0))",
+   "value": 30,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexNonAI",
+   "depth": 2,
+   "cell": "Gap!G96",
+   "formula": "=G95",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexNonAI",
+   "depth": 3,
+   "cell": "Gap!G95",
+   "formula": "=IF(In!K174<>\"\",In!K174,\"\")",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexNonAI",
+   "depth": 4,
+   "cell": "In!K174",
+   "formula": null,
+   "value": null,
+   "label": "gnai_googl｜Alphabet 非 AI 資本支出（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "leaf": true
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 0,
+   "cell": "Interface!E25",
+   "formula": "=CapexGW!F66",
+   "value": 4.3,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 1,
+   "cell": "CapexGW!F66",
+   "formula": "=IF(2025>=2026,E66+F65,N(Players!F49))",
+   "value": 4.3,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 2,
+   "cell": "CapexGW!E66",
+   "formula": "=IF(2024>=2026,D66+E65,N(Players!E49))",
+   "value": 1.89038669917378,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 3,
+   "cell": "CapexGW!D66",
+   "formula": "=N(Players!D49)",
+   "value": 0.560578355681972,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 3,
+   "cell": "CapexGW!E65",
+   "formula": "=IF(2024>=2026,E63,E64)",
+   "value": 1.32980834349181,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 4,
+   "cell": "CapexGW!E63",
+   "formula": "=(1-(lag_on/12))*E62+(lag_on/12)*D62-inv_on*(E62-D62)",
+   "value": 0.643800030070399,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 5,
+   "cell": "CapexGW!E62",
+   "formula": "=IF(E61=\"\",E64,E61)",
+   "value": 1.22628577156267,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 6,
+   "cell": "CapexGW!E61",
+   "formula": "=IF(E60=\"\",\"\",E60/(E53+E56))",
+   "value": 1.22628577156267,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 7,
+   "cell": "CapexGW!E60",
+   "formula": "=IF(E52=\"\",\"\",E53/(E53+E56)*E52+E56/(E53+E56)*(CapexGW!$D$4*E52+CapexGW!$E$4*E57+CapexGW!$F$4*E58))",
+   "value": 44.65475,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 8,
+   "cell": "CapexGW!E53",
+   "formula": "=(1-Players!E57)*E$7+Players!E57*TK_NonNV_Hold_TPU*TK_CapexIT_VR200",
+   "value": 26.6067889972,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 9,
+   "cell": "Players!E57",
+   "formula": "=nnv_googl",
+   "value": 0.753,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 9,
+   "cell": "CapexGW!E7",
+   "formula": "=Players!E5*TK_CapexIT_H100+Players!E6*TK_CapexIT_GB200+Players!E7*TK_CapexIT_GB300+Players!E8*TK_CapexIT_VR200+Players!E9*TK_CapexIT_RU",
+   "value": 27.510214,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 8,
+   "cell": "CapexGW!E56",
+   "formula": "=E55*E54",
+   "value": 9.807847,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 9,
+   "cell": "CapexGW!E55",
+   "formula": null,
+   "value": 1,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 9,
+   "cell": "CapexGW!E54",
+   "formula": "=(1-Players!E57)*E$8+Players!E57*TK_NonNV_Hold_TPU*TK_CapexFacility_VR200",
+   "value": 9.807847,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 10,
+   "cell": "CapexGW!E8",
+   "formula": "=Players!E5*TK_CapexFacility_H100+Players!E6*TK_CapexFacility_GB200+Players!E7*TK_CapexFacility_GB300+Players!E8*TK_CapexFacility_VR200+Players!E9*TK_CapexFacility_RU",
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 8,
+   "cell": "CapexGW!E57",
+   "formula": "=IF(E52=\"\",\"\",IF(D52=\"\",E52,D52))",
+   "value": 44.65475,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 8,
+   "cell": "CapexGW!E58",
+   "formula": "=E57",
+   "value": 44.65475,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 6,
+   "cell": "CapexGW!E64",
+   "formula": "=Players!E55",
+   "value": 1.32980834349181,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 7,
+   "cell": "Players!E55",
+   "formula": "=IF(AND(D49<>\"\",E49<>\"\"),E49-D49,0)",
+   "value": 1.32980834349181,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 5,
+   "cell": "CapexGW!D62",
+   "formula": "=IF(D61=\"\",D64,D61)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 6,
+   "cell": "CapexGW!D61",
+   "formula": "=IF(D60=\"\",\"\",D60/(D53+D56))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 7,
+   "cell": "CapexGW!D60",
+   "formula": "=IF(D52=\"\",\"\",D53/(D53+D56)*D52+D56/(D53+D56)*(CapexGW!$D$4*D52+CapexGW!$E$4*D57+CapexGW!$F$4*D58))",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 8,
+   "cell": "CapexGW!D53",
+   "formula": "=(1-Players!D57)*D$7+Players!D57*TK_NonNV_Hold_TPU*TK_CapexIT_VR200",
+   "value": 26.6067889972,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 9,
+   "cell": "Players!D57",
+   "formula": "=nnv_googl",
+   "value": 0.753,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 9,
+   "cell": "CapexGW!D7",
+   "formula": "=Players!D5*TK_CapexIT_H100+Players!D6*TK_CapexIT_GB200+Players!D7*TK_CapexIT_GB300+Players!D8*TK_CapexIT_VR200+Players!D9*TK_CapexIT_RU",
+   "value": 27.510214,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 8,
+   "cell": "CapexGW!D56",
+   "formula": "=D55*D54",
+   "value": 9.807847,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 9,
+   "cell": "CapexGW!D55",
+   "formula": null,
+   "value": 1,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 9,
+   "cell": "CapexGW!D54",
+   "formula": "=(1-Players!D57)*D$8+Players!D57*TK_NonNV_Hold_TPU*TK_CapexFacility_VR200",
+   "value": 9.807847,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 10,
+   "cell": "CapexGW!D8",
+   "formula": "=Players!D5*TK_CapexFacility_H100+Players!D6*TK_CapexFacility_GB200+Players!D7*TK_CapexFacility_GB300+Players!D8*TK_CapexFacility_VR200+Players!D9*TK_CapexFacility_RU",
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 8,
+   "cell": "CapexGW!D57",
+   "formula": "=IF(D52=\"\",\"\",D52)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 8,
+   "cell": "CapexGW!D58",
+   "formula": "=D57",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 6,
+   "cell": "CapexGW!D64",
+   "formula": "=Players!D55",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 7,
+   "cell": "Players!D55",
+   "formula": null,
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "leaf": true
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 2,
+   "cell": "CapexGW!F65",
+   "formula": "=IF(2025>=2026,F63,F64)",
+   "value": 2.40961330082622,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2025",
+   "depth": 3,
+   "cell": "CapexGW!F63",
+   "formula": "=(1-(lag_on/12))*F62+(lag_on/12)*E62-inv_on*(F62-E62)",
+   "value": 1.58357718805771,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2026",
+   "depth": 0,
+   "cell": "Interface!F25",
+   "formula": "=CapexGW!G66",
+   "value": 7.17171383102733,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_PlayerGW_YE_googl_2026",
+   "depth": 1,
+   "cell": "CapexGW!G66",
+   "formula": "=IF(2026>=2026,F66+G65,N(Players!G49))",
+   "value": 7.17171383102733,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  },
+  {
+   "root": "WIF_Gap_Player_googl_2026_CapexAIModel",
+   "depth": 0,
+   "cell": "Interface!F614",
+   "formula": "=IF(Gap!G102=\"\",\"\",Gap!G102)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "leaf": false
+  }
+ ],
+ "act26_readers": [
+  "Compare!D231",
+  "Compare!E231",
+  "Compare!F231",
+  "Compare!G231",
+  "Compare!H231",
+  "Compare!I231",
+  "Compare!J231",
+  "Compare!K231",
+  "Compare!L231",
+  "Compare!M231"
+ ],
+ "flagged": [
+  "In!K175",
+  "In!K122",
+  "In!J175",
+  "In!J122",
+  "In!I175",
+  "In!I122",
+  "In!I15",
+  "In!L175",
+  "In!L122",
+  "In!K172",
+  "In!K173",
+  "In!K174"
+ ]
+}

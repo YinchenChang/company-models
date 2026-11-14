@@ -1,0 +1,179 @@
+{
+ "source": {
+  "file": "20261114_Wattonomics_v0.3.2.xlsx",
+  "version": "v0.3.2",
+  "sha256": "3041b1961ffdbc38d4d6a5b16722d8402c6e194af979168d9ef4b22399391278",
+  "snapshot": "wattonomics/data/wattonomics_snapshot_v0.3.2.json（main，2026-11-14）",
+  "note": "Alphabet C0 對帳用的最小摘錄（只讀 WIF_ 名稱值與 In 列；不進模型計算）"
+ },
+ "names": {
+  "WIF_Gap_Player_googl_2025_CapexAI": 100.247980853318,
+  "WIF_Gap_Player_googl_2025_CapexNonAI": 13.71705,
+  "WIF_Gap_Player_googl_2025_AddGW": 2.40961330082622,
+  "WIF_Gap_Player_googl_2025_CapexAIGW": 100.247980853318,
+  "WIF_Gap_Player_googl_2025_CapexAIMC": 100.247980853318,
+  "WIF_Gap_Player_googl_2026_CapexAI": 132.872934457364,
+  "WIF_Gap_Player_googl_2026_CapexNonAI": 30,
+  "WIF_Gap_Player_googl_2026_AddGW": 2.87171383102733,
+  "WIF_Gap_Player_googl_2026_CapexAIGW": 132.872934457364,
+  "WIF_Gap_Player_googl_2026_CapexAIMC": 132.872934457364,
+  "WIF_Gap_Player_googl_2027_CapexAI": 197.470766153216,
+  "WIF_Gap_Player_googl_2027_CapexNonAI": 54.772619,
+  "WIF_Gap_Player_googl_2027_AddGW": 4.67924818700062,
+  "WIF_Gap_Player_googl_2027_CapexAIGW": 197.470766153216,
+  "WIF_Gap_Player_googl_2027_CapexAIMC": 235.592521,
+  "WIF_PlayerGW_YE_googl_2024": 1.89038669917378,
+  "WIF_PlayerGW_YE_googl_2025": 4.3,
+  "WIF_PlayerGW_YE_googl_2026": 7.17171383102733,
+  "WIF_PlayerGW_YE_googl_2027": 11.8509620180279,
+  "WIF_PlayerGW_YE_googl_2028": 17.832196943619,
+  "WIF_PlayerGW_YE_googl_2029": 24.178592667883,
+  "WIF_PlayerGW_YE_googl_2030": 30.3083327917578,
+  "WIF_PlayerGW_YE_googl_2031": 36.1474155506243,
+  "WIF_PlayerGW_YE_googl_2032": 41.9178972417407,
+  "WIF_PlayerGW_YE_googl_SiteOnly_2025": 4.3,
+  "WIF_PlayerGW_YE_googl_SiteOnly_2026": 5.59267912772586
+ },
+ "rows": {
+  "act26_googl": {
+   "label": "Alphabet（Google；TPU＋NVIDIA） 2026 已公布資本支出實績（Q1–Q3；與 In Y9 同口徑）",
+   "basis": "—",
+   "unit": "US$B",
+   "tag": "Verified",
+   "src": "SRC_GL_342",
+   "note": "9M2026 PP&E 購置（FundRaw F#240，Q 段核對；Alphabet 融資租賃極小）",
+   "values": [
+    null,
+    131.953,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ]
+  },
+  "cap_googl": {
+   "label": "Alphabet（Google；TPU＋NVIDIA） 資本支出（財年）",
+   "basis": "—",
+   "unit": "US$B",
+   "tag": "Interested-party",
+   "src": "SRC_GL_021",
+   "note": "2025 實際 91.4（現金購置）；2026 指引 195–205 中點 200（法說）；2027–28 MarketScreener 共識；PR #190 未合併",
+   "values": [
+    null,
+    null,
+    91.447,
+    200,
+    300.979,
+    339.451,
+    null,
+    null,
+    null,
+    null
+   ]
+  },
+  "al_googl_self": {
+   "label": "Alphabet（Google；TPU＋NVIDIA） → 自用",
+   "basis": "IT",
+   "unit": "比",
+   "tag": "Assumed",
+   "src": "SRC_GL_020",
+   "note": "自用＝1 − 對外 30%（alphabet scenarios.mwPath.note）",
+   "values": [
+    "googl",
+    "self",
+    "比",
+    0.7,
+    0.7,
+    0.7,
+    null,
+    null,
+    null,
+    null
+   ]
+  },
+  "nnv_googl": {
+   "label": "Alphabet（Google；TPU＋NVIDIA） 新增 GW 非 NVIDIA 占比",
+   "basis": "—",
+   "unit": "%",
+   "tag": "Derived",
+   "src": "SRC_GL_020",
+   "note": "texts.mwFacts：Epoch 2025 年底 TPU 2,223 MW ÷（2,223＋730）",
+   "values": [
+    null,
+    0.753,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ]
+  },
+  "ctr_googl_ant": {
+   "label": "Anthropic–Google Cloud TPU（2026 上線）",
+   "basis": "未說明",
+   "unit": "GW",
+   "tag": "Interested-party",
+   "src": "SRC_GL_200",
+   "note": "A#29（屬實；well over 1 GW）",
+   "values": [
+    null,
+    1,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ]
+  },
+  "ovr25_googl": {
+   "label": "Google 2025 年底 AI IT（C 段 5.1 更正）",
+   "basis": "IT",
+   "unit": "MW",
+   "tag": "Derived",
+   "src": "SRC_GL_203",
+   "note": "C 段 5.1：TPU × 1.45、NVIDIA × 1.65 再酌減部署落差；4.9 只作上緣。Google 倍數＝本值 ÷ 2025 晶片功耗，用於 2023–24 與 2026 觀測",
+   "values": [
+    3900,
+    4300,
+    4900,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ]
+  },
+  "gcap_googl": {
+   "label": "Alphabet 資本支出合計（模型；對照）（財年，基準情境）",
+   "basis": "—",
+   "unit": "US$B",
+   "tag": "Derived（個股模型基準情境 B；FY2024A–2025A 為財報，FY2026E 含 9M 實績）",
+   "src": "SRC_GL_311",
+   "note": "alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx（commit 64f5ccb）；FY2024 CF!C53、FY2025 CF!D53、FY2026 CF!G53、FY2027 CF!H53、FY2028 CF!I53、FY2029 CF!J53、FY2030 CF!K53、FY2031 CF!L53、FY2032 CF!M53；標籤 CF!A–C53「資本支出合計」；財年結束月 12",
+   "values": [
+    null,
+    52.535,
+    91.447,
+    200,
+    290.36514,
+    317.398835,
+    292.560872,
+    271.669537,
+    263.299609,
+    274.287594
+   ]
+  }
+ }
+}
