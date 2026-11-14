@@ -12,7 +12,10 @@
   全頁（警告）：摺疊（details）與附錄以外的可見文字出現參數代號。
   I 對帳中（--xlsx 時；規格 I 節、三層基準協調規則 v1.1 C4 與第 10 節第 6 項）：xlsx 有任一日曆年「對帳中」（SIF_RecoFlag_<yyyy> 或 co_flag_<yyyy>＝1）
     且估值依賴（co_dep_<yyyy>，缺時視為 1）時：橫幅含「對帳中」；兩讀數評等不同時橫幅含「評等不同」；估值章含「現行基準讀數」「另一側讀數」「對帳中」
-    與兩個加權目標價數字（Coord 頁「加權目標價」列 B、C 欄，兩位小數）；損益章表頭每個依賴會計年度（FY(t) 對 CY(t−1)，末年另含延伸期一年）標「對帳中」。
+    與兩個加權目標價數字（Coord 頁「加權目標價」列 B、C 欄，兩位小數）；損益章表頭每個依賴會計年度（FY(t) 對 CY(t−lag)，末年另含延伸期一年）標「對帳中」。
+    lag：具名格旗標（NVIDIA 樣板）預設 1；Coord 頁旗標預設 0（會計年度＝日曆年）。會計年度與日曆年錯開的公司在 xlsx 宣告 co_fy_lag
+    （具名格 co_fy_lag，或 Coord 頁 A 欄「會計年度對應（FY 減 CY）」列的 B 欄）覆寫預設；例 Dell FY(t)≈CY(t−1) 設 1，
+    依賴 CY2027–CY2029 的會計年度為 FY2028–FY2030，另加延伸期 FY2031。
 
 用法：python3 tools/company_html/check_layout_v13.py <html>... [--xlsx <xlsx>]   結束碼：0＝全過；1＝有必修。
 """
@@ -56,6 +59,23 @@ def vis_text(el):
     return re.sub(r'\s+', '', el.get_text())
 
 
+FY_LAG_LABEL = '會計年度對應（FY 減 CY）'
+
+
+def co_fy_lag(wb, nv):
+    """會計年度對應 co_fy_lag（規格 I 節：依賴的會計年度＝FY(t) 對 CY(t − co_fy_lag)）。
+    先讀具名格 co_fy_lag，其次 Coord 頁 A 欄以「會計年度對應（FY 減 CY）」開頭的列之 B 欄；都沒有回傳 None（呼叫端用預設）。
+    例：Dell FY(t)＝t−1 年 2 月～t 年 1 月，FY(t) 依賴 CY(t−1)，設 1；會計年度＝日曆年設 0。"""
+    v = nv('co_fy_lag')
+    if v is None and 'Coord' in wb.sheetnames:
+        C = wb['Coord']
+        r = next((r for r in range(1, C.max_row + 1) if str(C.cell(r, 1).value or '').startswith(FY_LAG_LABEL)), None)
+        v = C.cell(r, 2).value if r else None
+    if v is None or v == '':
+        return None
+    return int(round(float(v)))
+
+
 def reco_info(xlsx):
     """xlsx 的對帳中年份與兩讀數（規格 I 節）。回傳 None＝無依賴的對帳中年份。"""
     import openpyxl
@@ -76,12 +96,15 @@ def reco_info(xlsx):
         if float(f) == 1 and (dep is None or float(dep) == 1):
             flagged.append(y)
     lag = 1   # 具名格旗標（NVIDIA 樣板）：FY(t) 對 CY(t−1)
-    if not flagged and 'Coord' in wb.sheetnames:   # 共用工具 tools/coord/coord.py 的 Coord 頁：「年」列（CY2026…）＋「對帳中旗標」列；會計年度＝日曆年（lag 0）
+    fy_lag = co_fy_lag(wb, nv)   # 公司宣告的會計年度對應（FY 減 CY）；未宣告為 None
+    if flagged and fy_lag is not None:
+        lag = fy_lag
+    if not flagged and 'Coord' in wb.sheetnames:   # 共用工具 tools/coord/coord.py 的 Coord 頁：「年」列（CY2026…）＋「對帳中旗標」列；會計年度預設＝日曆年（lag 0），co_fy_lag 可改
         C = wb['Coord']
         yr_row = next((r for r in range(1, min(C.max_row, 60) + 1) if C.cell(r, 1).value == '年'), None)
         fl_row = next((r for r in range(1, min(C.max_row, 60) + 1) if str(C.cell(r, 1).value or '').startswith('對帳中旗標')), None)
         if yr_row and fl_row:
-            lag = 0
+            lag = 0 if fy_lag is None else fy_lag
             for c in range(2, C.max_column + 1):
                 m = re.match(r'CY(20\d\d)', str(C.cell(yr_row, c).value or ''))
                 v = C.cell(fl_row, c).value
