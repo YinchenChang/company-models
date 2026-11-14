@@ -1,4 +1,4 @@
-# Microsoft（MSFT）個股模型 v0.3.7 — 命題＋官方營收分部 → 損益表（v0.3.7 只換現價；v0.3.6 只改展示層〔個股 HTML 版面規格 v1.0〕；v0.3.4：Tokenomics 快照 v21.9；v0.3.5：換 v21.10；基準數值同 v0.3.1）
+# Microsoft（MSFT）個股模型 v0.3.8 — 命題＋官方營收分部 → 損益表（v0.3.8 只改展示層並新增頁〔HTML 版面規格 v1.3、Coord 三層協調〕，數值不變；v0.3.7 只換現價；v0.3.6 只改展示層〔個股 HTML 版面規格 v1.0〕；v0.3.4：Tokenomics 快照 v21.9；v0.3.5：換 v21.10；基準數值同 v0.3.1）
 
 更新日 2026-10-29（v0.3.1 季度滾動：工作單 `mag/docs/workorders/20261029_MAG_v0.3.1_季度滾動_2026Q3.md`；架構工作單 `mag/docs/workorders/20261027_MAG_v0.3_個股模型重建_分部架構.md`；固定規格 `docs/plan/個股模型原則_命題加營收分部.md`）。資料截至 **FY27Q1**（2026-09-30；財報 2026-10-28：新聞稿、IR 財務報表、10-Q、FY27Q2 展望簡報、法說）。評價日 2026-09-30、目標價時點 2027-10-29。財年結束於 6/30（FY2027＝2026-07～2027-06）。金額十億美元（US$B）。
 
@@ -78,6 +78,15 @@ bash microsoft/make_v03.sh          # SENS=1 時先重跑 C10 重解、變動拆
 README → In（輸入一鍵一列、標記與區間）→ Q（FY25Q2–FY27Q1 八季、FY2026 四季合計、FY2027 年初至今與 FY2025、FY2026 年度值，核對列 0）→ Thesis → Seg → PL（最上方四列三情境核對列）→ CF（最上方收支關卡表與核對列）→ Val（0. 目標價；列 70 起各情境明細）→ Recon（共識、指引、FY27Q1 實績對 v0.3、v0.3 → v0.3.1 拆解、v0.3.1 vs v0.2.2）→ Sens（30 個案例的龍捲風＋判斷預設替代；列 80 起各案例完整引擎區塊）→ Sources。
 
 地圖抽數用的列標籤：Val「目標價（DCF 與 Comparable 加權）」「DCF 目標價（情境加權）」「Comparable 目標價（市場主流同業法）」（＝分部加總 SOTP）「市場共識目標價」「現價（2026-10-28 收盤）」「上檔空間：加權目標價」「上檔空間級距」「投資建議」「DCF 情境價值推到 12 個月後（A／B／C）」；CF「收支關卡：自由現金流扣股利（五年合計）」（B／C／D 欄＝A／B／C 情境）。
+
+## v0.3.8（2026-11-15，HTML 版面規格 v1.3＋三層協調 C0，數值不變）
+- 依工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`（樣板 Alphabet v0.3.9）；既有數值格逐格比對 0 差異（只有 README!A1 版本字樣不同），加權目標價 384.07、評等放空、讀法 1 目標價均不變。
+- `microsoft/v038_post.py`（由 `build_microsoft.py` 在 README 之後、存檔前呼叫；`--set` 變體與非 v21.10 快照不跑）新增：PL 頁末標準損益表（GAAP；FY2024A–FY2026A 實績、FY2027E–FY2032E 情境 B、最右欄 FY27Q1A；營業成本與費用在預測期以「非折舊成本率＋折舊」與殘差推導，營業利益至 EPS 全取自 PL 情境 B；核對列全為 0）、RevDCF 頁（反向 DCF：現價隱含的營業利益率、營收規模、WACC〔二分法 40 次，核對列＝0〕與分部加總隱含倍數；無頁引用本頁）、Sens 頁末「加權目標價相對基準」低／高對照（龍捲風圖用，白話標籤）、Coord 頁、README 頁末 v1.3 白話列（橫幅、投資建議、重點觀察 5 點、分部營收推導、本版要點）。
+- `microsoft/gen_html_v13.py` 在 `relayout.py` 之後把 `html.json` 轉成 v1.3（章節：命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；估值章首為四個目標價與現價圖，敏感度章首為兩張相對基準龍捲風圖）。`make_v03.sh` 加此步驟、`ROWMAP` 與版面檢查。
+- Coord 頁（三層協調）：F1 讀取層級（Tokenomics v21.10 十七列，Σ|採用−層級值|＝0；Wattonomics v0.3.2 只作對帳列）；F1b 追公式（`tools/coord/trace_wattonomics.py --player msft`：788 格追蹤、207 格生效、148 格有旗標；結論見下）；F2 C0（實績）。
+- C0 結果：資本支出（公司口徑，含融資租賃）CY2026 已公布三季（FY26Q3 31.9、FY26Q4 41.0、FY27Q1 45.2；公司 IR 財務報表 CapEx 工作表，Verified）合計 118.1；層級（Wattonomics CY2026 AI 119.96＋非 AI 32.97＝152.93）× 9/12＝114.70，**主讀數 +3.0%**；最近一季 × 4＝180.8 對 152.93，**第二讀數 +18.2%**。但 Wattonomics 2026 年 Microsoft 資本支出與新增 GW 由公司資本支出（In!K169 FY2026 實績 145.3、L169 個股模型寫回 FY2027 204.2、K168／L168 非 AI）換算，屬同源，故判定「參考（同源校準）／無可比實績（層級值同源）」，對帳中 0 項；2025 年底 GW 來自 Epoch（不同源）；`act26_msft` 只被 Wattonomics Compare 頁讀。現金 PP&E（FY27Q1 10-Q 39.367，Verified）只作口徑參考；公司指引約 170 對層級 152.93、Wattonomics 輸入 174.75 對輸出 152.93（−12.5%）只列參考。AI 營收（公司 AI 年化 >37 含 Copilot）與在役 MW 公司不揭露，無可比實績。
+- 資料：`data/wattonomics_c0_v0.3.2.json`、`data/wattonomics_trace_v0.3.2.json`（`extract_wattonomics_c0.py` 由 Wattonomics v0.3.2 快照與主分支追公式工具產生）。Tokenomics 仍讀 v21.10（工作單所列 v22.0 未換快照）。
+- 驗證：`check_v03.py`、`mag/check_in_layout.py`、敏感度覆蓋、segment_check、`check_company_html.py` 全過；`check_layout_v13.py --xlsx` 全過（只有全頁參數代號警告）；`tools/baseline_coordination/check.py` 0 項不符。v0.3.7 成品移 `dist/_待刪除/`。
 
 ## v0.3.7（2026-11-06，只換現價）
 - Andy 2026-11-06 07:32「請所有個股都換成十一月五號的收盤價」：In 頁 `px` 531.01（10-28）→ 535.93（11-05 收盤；Yahoo Finance、Motley Fool、MarketAlleys，`docs/reports/20261105_收盤價_個股換價來源.md`）。
