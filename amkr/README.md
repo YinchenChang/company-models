@@ -1,4 +1,4 @@
-# amkr/ — Amkor Technology（AMKR，艾克爾）收支與估值模型 v0.4
+# amkr/ — Amkor Technology（AMKR，艾克爾）收支與估值模型 v0.4.4
 
 ## v0.4.4（2026-11-14）：HTML 版面規格 v1.3＋三層協調（兩讀數、讀取層級、C0 實績）
 
@@ -20,7 +20,7 @@ C0（實績）：公司實績取 SEC 10-Q（1Q26、2Q26、3Q26）。層級（Sil
 
 外部估計參考（不判定）：OSAT 先進封裝可服務市場約 0.5 US$B／GW（艾克爾投資人日，Interested-party，單一來源）× 層級 CY2026 部署 23.4 GW ≈ 11.7 US$B；本模型 FY2026 AI 先進封裝營收 0.78 US$B（模型值，不是實績），約為外部估計的 6.7%。終端市場比重在 10-Q 只揭露整數百分比，美元值有約 ±0.5 個百分點的捨入誤差。
 
-驗證：`tools/xlsx_diff.py` 對 v0.4.3 比對，差異只在新增頁、新增列與 README 版本字串（A1 標題段版號、A2 版本列）；加權目標價 40.5678 美元、評等買進、另一側讀數 35.44 美元、中立皆不變。錯誤格 0。`check_company_html.py amkr` 全過；`check_layout_v13.py --xlsx` 無必修；`baseline_coordination/check.py` 0 項不符。
+驗證：`tools/xlsx_diff.py` 對 v0.4.3 比對，差異只在新增頁、新增列與 README 版本字串（A1 標題段版號、A2 版本列）；加權目標價 40.5678 美元、評等買進、另一側讀數 35.44 美元（中立）為本版新增。錯誤格 0。`check_company_html.py amkr` 全過；`check_layout_v13.py --xlsx` 無必修；`baseline_coordination/check.py` 0 項不符。
 
 ## v0.4.3（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 

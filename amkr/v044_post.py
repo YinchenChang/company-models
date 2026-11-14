@@ -473,7 +473,7 @@ def coord_c0(wb, SIL):
         col = "DEFG"[i]
         C.cell(r, 1, f"AI 加速器顆數（情境 B）CY{y}（百萬顆）")
         C.cell(r, 2, f"=PL!{col}{r_u}").number_format = "0.000"
-        c = C.cell(r, 3, units_L[i + 1]); c.number_format = "0.000"; c.font = BLUE
+        c = C.cell(r, 3, f"=In!E{ikey[f'units_{y % 100}']}" + (f"*In!E{ikey[f'um{y % 100}_B']}" if y >= 2028 else "")); c.number_format = "0.000"
         C.cell(r, 4, f"=B{r}/C{r}-1").number_format = "+0.0%;-0.0%"
         C.cell(r, 5, "讀取層級（同源，不判定）")
         C.cell(r, 6, f"本模型：PL 頁情境 B 顆數（原始顆數 × 基準係數；來自台積電個股成品）；層：{ver} SIF_UnitsPlat_Total_Base（供給側基準顆數）。同源讀取故差距 0；艾克爾不公布加速器顆數，兩邊都沒有公司實績（等級：Assumed／Interested-party）"
@@ -493,7 +493,7 @@ def coord_c0(wb, SIL):
     for i, y in enumerate((2026, 2027, 2028, 2029)):
         C.cell(r, 1, f"產業部署 GW CY{y}（Siliconomics 基準 ÷ Wattonomics 換算；GW）")
         c = C.cell(r, 2, gw_b[i]); c.number_format = "0.00"; c.font = BOLD if False else BLUE
-        c = C.cell(r, 3, SIL.NAMES[f"SIF_DeployGW_Alt_{y}"]); c.number_format = "0.00"; c.font = BLUE
+        c = C.cell(r, 3, f"=B{r}*{'BCDE'[i]}{r_ratio}"); c.number_format = "0.00"
         C.cell(r, 4, f"=B{r}/C{r}-1").number_format = "+0.0%;-0.0%"
         C.cell(r, 5, "參考")
         C.cell(r, 6, (f"基準＝{ver} SIF_DeployGW_Base（供給側部署 GW）；外部估計（參考）＝Wattonomics 換算 SIF_DeployGW_Alt_<年>（需求側）。"
@@ -579,7 +579,7 @@ def coord_c0(wb, SIL):
     C.cell(r, 4, "—")
     C.cell(r, 5, "參考（不判定）")
     C.cell(r, 6, "B 欄＝外部估計 OSAT 先進封裝可服務市場約 US$0.5B／GW（艾克爾投資人日；In 頁 tam_gw，Interested-party；第二來源未找到）× Siliconomics v0.19 SIF_DeployGW_Base CY2026（上方「層級之間」第一列，約 23.4 GW）；"
-                 "C 欄＝本模型 FY2026 AI 先進封裝營收（情境 B，PL 頁，Derived：模型值、不是公司實績）。C ÷ B 見 G 欄（同 Recon 頁 C 節）。這是模型值對外部估計，不是公司實績對層級隱含值，不是 C0 證據、不判定。"
+                 "該說法的投影片為 2025–2030E 口徑，套用到 CY2026 有時間口徑落差；C 欄＝本模型 FY2026 AI 先進封裝營收（情境 B，PL 頁，Derived：模型值、不是公司實績）。C ÷ B 見 G 欄（同 Recon 頁 C 節）。這是模型值對外部估計，不是公司實績對層級隱含值，不是 C0 證據、不判定。"
                  "若要可判定，需 Siliconomics 補 OSAT 先進封裝美元市場（或委外 CoWoS 每片價格）與艾克爾份額，或公司揭露 AI 先進封裝金額。")
     C.cell(r, 7, f'=TEXT(C{r}/B{r},"0.0%")&"（模型 ÷ 外部估計）"')
     C.cell(r, 8, "—")
@@ -708,6 +708,9 @@ def apply(wb, here, SIL):
     a1 = RD["A1"].value
     assert "收支與估值模型 v0.2.2（AI 半導體" in a1, a1[:80]
     RD["A1"].value = a1.replace("收支與估值模型 v0.2.2（AI 半導體", f"收支與估值模型 v{VER}（AI 半導體", 1)
+    a1 = RD["A1"].value
+    assert "\u30002026-10-25；" in a1
+    RD["A1"].value = a1.replace("\u30002026-10-25；", f"\u3000{BUILT}；", 1) + "；版面 v1.3 與 C0（實績）"
     a2 = str(RD["A2"].value)
     assert a2.startswith("版本：v0.2.1（2026-10-25："), a2[:40]
     RD["A2"].value = a2.replace("版本：v0.2.1（", f"版本：v{VER}（{BUILT}：版面規格 v1.3、三層協調 C0 與兩讀數；前版 v0.4.3，2026-11-06）；v0.2.1（", 1)
