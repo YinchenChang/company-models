@@ -23,7 +23,7 @@ BLUE = Font(color="0000FF"); BOLD = Font(bold=True)
 HDR = PatternFill("solid", fgColor="DDEBF7"); KEY = PatternFill("solid", fgColor="FFF2CC"); SUB = PatternFill("solid", fgColor="E2EFDA")
 wb = openpyxl.Workbook()
 
-VER = "v0.2.0"; VDATE = "2026-11-11"   # 成品日（README 首列「成品日」）
+VER = "v0.2.1"; VDATE = "2026-11-15"   # 成品日（README 首列「成品日」）
 # v0.2.0（原則第 10 節第 1 條）：build_id＝版本＋建置輸入雜湊（建置腳本與 data/ 下非敏感度、非 k 反解 json），README!A1、Sens、HTML 三處相同
 def _build_id():
     h = hashlib.sha256()
@@ -41,8 +41,10 @@ CONS = json.load(open(os.path.join(HERE, "data", "consensus_meta_20261030.json")
 PEER = json.load(open(os.path.join(HERE, "data", "peers_ads_20261030.json"), encoding="utf-8"))
 KREQ = json.load(open(A.kreq, encoding="utf-8")) if A.kreq and os.path.exists(A.kreq) else {}
 # v0.2.0（原則第 54 條）：Wattonomics 現行快照（repo wattonomics/data/CURRENT_SNAPSHOT；只讀，不改）
-WAT_DIR = os.path.join(HERE, "..", "wattonomics", "data")
-WAT_FN = open(os.path.join(WAT_DIR, "CURRENT_SNAPSHOT"), encoding="utf-8").read().strip()
+# v0.2.1：固定讀 Wattonomics v0.3 快照（v0.2.0 所讀；main 的 CURRENT_SNAPSHOT 已升 v0.3.2，v0.3 檔移到 archive/）。工作單 20261114：模型仍讀舊快照者寫明版本、本輪不換快照；
+# 與 v0.3.2 的 Meta 上線 GW 差 ≤ 6e-8（2027–2032），2026 以前相同。C0／追公式用現行 v0.3.2（Coord 頁）。
+WAT_DIR = os.path.join(HERE, "..", "wattonomics", "data", "archive")
+WAT_FN = "wattonomics_snapshot_v0.3.json"
 WAT = json.load(open(os.path.join(WAT_DIR, WAT_FN), encoding="utf-8"))
 def tk(name, code=None):
     v = TK["items"][name]["values"]
@@ -1355,10 +1357,10 @@ RC7["gap"] = r; r += 1
 RC.cell(r, 1, "對照：支出推得 ÷ Wattonomics 主路徑 − 1（原口徑差距；對帳單依據）")
 for j in range(7): RC.cell(r, 2 + j, f"={'BCDEFGH'[j]}{RC7['cx']}/{'BCDEFGH'[j]}{RC7['wat']}-1").number_format = "+0%;-0%"
 RC7["gapcx"] = r; r += 1
-RC.cell(r, 1, "判定（容差 ±15%；判定對象＝支出推得 vs Wattonomics）")
-for j in range(7): RC.cell(r, 2 + j, f'=IF(ABS({"BCDEFGH"[j]}{RC7["gapcx"]})>0.15,"超過 15%：寫對帳單","一致")')
+RC.cell(r, 1, "參考（讀取層級，不判定；容差 ±15%；對照對象＝支出推得 vs Wattonomics）")
+for j in range(7): RC.cell(r, 2 + j, f'=IF(ABS({"BCDEFGH"[j]}{RC7["gapcx"]})>0.15,"參考（讀取層級，不判定）：差距超過 15%","參考（讀取層級，不判定）：一致")')
 RC.cell(r, 9, "判定對象＝上一列（支出推得 ÷ Wattonomics）；本模型在役 GW 已＝Wattonomics（差距 0）。原口徑（支出推得）FY2027–FY2030 超過 15%，已依 Andy 2026-11-12 09:05 對帳單選項 (a) 改讀 Wattonomics；個股不改 Wattonomics 值（三層規則）"); RC7["flag"] = r; r += 1
-RC.cell(r, 1, "超過 15% 的年數（FY2026–FY2032）"); RC.cell(r, 2, f'=COUNTIF(B{RC7["flag"]}:H{RC7["flag"]},"超過*")'); RC7["n"] = r; r += 2
+RC.cell(r, 1, "參考：差距超過 15% 的年數（FY2026–FY2032；讀取層級，不計入對帳中項目數）"); RC.cell(r, 2, f'=COUNTIF(B{RC7["flag"]}:H{RC7["flag"]},"*超過 15%")'); RC7["n"] = r; r += 2
 # ---------------------------------------------------------------------------------------------------
 # v0.2.0（原則第 10 節第 7、18、30 條；A7）：同業可比性（只作展示）
 RC.cell(r, 1, "8. 同業可比性與商業模式子群中位數（原則第 7、18、30 條；只作展示，主值仍用全體中位數，不需驗收清單 X8）").font = BOLD; r += 1
@@ -1518,6 +1520,8 @@ SRCS = [
     ("ChartRow META", "2026-10-30", "https://chartrow.com/quote/meta", "Interested-party", "β 1.24；10-29 收盤 624.55（單一來源，未採用）"),
     ("CoinDataFlow META", "2026-10-30", "https://coindataflow.com/en/stock/META", "Interested-party", "β（5Y Monthly）1.185"),
     ("美國財政部每日殖利率曲線（經 Alphabet v0.3.1）", "2026-10-27", "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202610", "Verified", "rf 4.99%"),
+    ("Wattonomics v0.3.2 快照與追公式（meta/data/wattonomics_c0_v0.3.2.json、wattonomics_trace_v0.3.2.json；wattonomics/model/20261114_Wattonomics_v0.3.2.xlsx，tools/coord/trace_wattonomics.py --player meta）", "2026-11-14", "repo 內（YinchenChang/company-models）", "Derived", "Coord 頁 F1b 追公式與 F2 C0（實績）對帳的層級側（Meta 2026 年資本支出、新增 GW、上線 GW）；本模型仍讀 v0.3 快照"),
+    ("Meta 2023Q4 財報新聞稿（8-K 附件 99.1）FY2023 欄", "2024-02-01", "https://investor.atmeta.com/investor-news/press-release-details/2024/Meta-Reports-Fourth-Quarter-and-Full-Year-2023-Results-Initiates-Quarterly-Dividend/", "Verified", "PL 頁標準損益表 FY2023A 欄（營收 134.902、營業利益 46.751、淨利 39.098、EPS 14.87 等；IR 頁與 SEC EDGAR 0001326801-24-000010 各讀一次）")
 ]
 for i, (doc, dt, url, tag, use) in enumerate(SRCS, 1):
     for j, v in enumerate((f"S{i:02d}", doc, dt, url, tag, use), 1): SO.cell(3 + i, j, v)
@@ -1538,8 +1542,8 @@ _allup = f'IF(MIN({VB("scen")},{VB("scen", "C")},{VB("scen", "D")})>px,"三種�
 _near = f'IF({VB("bdist")}<5,"；距最近評等邊界 "&TEXT({VB("bdist")},"0.0")&" 個百分點（目標價升至 "&TEXT({VB("bdist", "C")},"0.00")&" 升級、降至 "&TEXT({VB("bdist", "D")},"0.00")&" 降級）","")'
 V.cell(VR_["banner"], 2, f'="讀法 1（只計成本）目標價 "&TEXT({VB("tp_r1")},"0.00")&"（"&TEXT({VB("tp_r1", "C")},"+0.0%;-0.0%")&"，"&{VB("tp_r1", "D")}&"）；支持現價所需 k＝"&{_KT("kreq")}&"；評等翻轉 k＝"&{_KT("kflip")}&"（買進／中立邊界；主值 k＝"&TEXT(k_ai,"0.00")&"）"&{_near}')
 RD["A1"] = (f'="Meta（META）個股模型 {VER}｜build_id {BUILD_ID}｜資料截止日 "&TEXT(data_date,"yyyy-mm-dd")&"｜成品日 {VDATE}｜股價基準日 "&TEXT(px_date,"yyyy-mm-dd")'
-            f'&"｜評價日 "&TEXT(val_date,"yyyy-mm-dd")&"｜目標時點 "&TEXT(tp_date,"yyyy-mm-dd")&"（v0.2.0：v0.1.6 驗收採用＋原則第 10 節第 1–55 條＋DCF 標準規格；命題模組＋官方營收分部 → 損益表）"')
-RD["A2"] = "v0.2.0 要點：Tokenomics 快照 v22.0；目標時點公式化（股價基準日＋12 個月）；評價股數計入未歸屬 RSU；在建工程對應 MW 與折舊分 4 季轉入在役（J2）；自用在役容量讀 Wattonomics 上線時程（Andy 11-12 選項 a）；k 梯度、支持現價所需 k、隱含 AI 歸因比例；融資可行性檢查與期間流動性；Wattonomics 對照；build_id 與 STALE 旗標。逐項目標價歸因見 meta/docs/reports/20261111_meta_v0.2.0_驗收採用.md"
+            f'&"｜評價日 "&TEXT(val_date,"yyyy-mm-dd")&"｜目標時點 "&TEXT(tp_date,"yyyy-mm-dd")&"（v0.2.1：v0.2.0 ＋ 版面規格 v1.3 ＋ Coord 三層協調；命題模組＋官方營收分部 → 損益表）"')
+RD["A2"] = "v0.2.1 要點：只改展示層與新增頁——個股 HTML 版面規格 v1.3（章節重排、RevDCF 反向 DCF、標準損益表）與 Coord 三層協調（讀取層級、追公式、C0 實績對帳）；數值與目標價不變。v0.2.0 要點：Tokenomics 快照 v22.0；目標時點公式化（股價基準日＋12 個月）；評價股數計入未歸屬 RSU；在建工程對應 MW 與折舊分 4 季轉入在役（J2）；自用在役容量讀 Wattonomics 上線時程（Andy 11-12 選項 a）；k 梯度、支持現價所需 k、隱含 AI 歸因比例；融資可行性檢查與期間流動性；Wattonomics 對照；build_id 與 STALE 旗標。逐項目標價歸因見 meta/docs/reports/20261111_meta_v0.2.0_驗收採用.md"
 RD["A3"] = f'="命題：Meta 的 AI 資本支出（2026 指引 "&TEXT(Recon!C{RC2["2026 資本支出（含融資租賃本金）"]}*10,"#,##0")&"–"&TEXT(Recon!D{RC2["2026 資本支出（含融資租賃本金）"]}*10,"#,##0")&" 億美元，含融資租賃本金）能否由廣告現金流支撐，且自用算力（GPU＋自研 MTIA）是否帶來足以回本的廣告變現提升。"'
 RD["A4"] = "核心問題：FY2028 AI 增量營業利益（讀法 2：自用 AI 影子效益＝自用增量在役 MW × Tokenomics 每 MW 持有成本 × k）能否覆蓋 AI 資本支出的資金成本；收支關卡＝FY2026–FY2030 自由現金流扣股利合計，旁列期間流動性。"
 RD["A5"] = (f'="投資建議："&{VB("rec")}&"——在自用 AI 採讀法 2（k＝"&TEXT(k_ai,"0.00")&"：自用 AI 報酬剛好等於資金成本，這是假設，不是可觀察現金流）的基準假設下；加權目標價 US$"&TEXT({VB("tp")},"0.00")&"，上檔空間 "&TEXT({VB("up")},"+0.0%;-0.0%")'
@@ -1597,7 +1601,7 @@ for row in (("AI 資本支出屬防守性必要支出：影子效益含避免營
     for j, v in enumerate(row, 1): RD.cell(r, j, v)
     r += 1
 r += 1
-RD.cell(r, 1, "工作表：README → In → Q → Thesis → Seg → PL → CF → Val → Recon → Sens → Sources。藍字＝輸入、黑字＝公式；黃底＝判斷題。建置：bash meta/make_v02.sh").font = BOLD; r += 1
+RD.cell(r, 1, "工作表：README → In → Q → Thesis → Seg → PL → CF → Val → RevDCF → Recon → Coord → Sens → Sources。藍字＝輸入、黑字＝公式；黃底＝判斷題。建置：bash meta/make_v02.sh").font = BOLD; r += 1
 RD.cell(r, 1, "數字標記：Verified（公司正式財報或申報文件）／Interested-party（公司指引、賣方、第三方網站）／Analogy／Assumed（給區間）／Derived（換算）。每股數字為 Class C 股票股利（2027-01 下旬，1:1）前的口徑。"); r += 1
 RD.cell(r, 1, "模型狀態（README、Sens、HTML 三處 build_id 相同；Sens 頁比對輸入指紋）").font = BOLD; r += 1
 RD.cell(r, 1, f'="build_id "&Sens!D{SE_BID}&"；模型狀態 "&Sens!D{SE_STATUS}&"（Sens、k 梯度與 HTML 為建置快照：只在 Excel 改 In 頁而未重跑 bash meta/make_v02.sh 時顯示 STALE）"'); r += 2
@@ -1620,9 +1624,12 @@ RD.cell(r, 1, f'="每股值多少？答：在讀法 2 的基準假設下，每�
 RD.column_dimensions["A"].width = 120; RD.column_dimensions["B"].width = 60; RD.column_dimensions["C"].width = 60; RD.column_dimensions["D"].width = 60
 for rr in range(1, 9): RD.cell(rr, 1).alignment = Alignment(wrap_text=True, vertical="top")
 
+sys.path.insert(0, HERE)
+import v021_post
+V = v021_post.apply(wb, dict(PR=PR_, QR=QR, F=F, TK=TK, TKV=TKV, tk=tk, GEN=GEN, HERE=HERE, VR=VR_, DC=DC, SE_ROWS=SE_ROWS, GATE=GATE, T=T, RC6=RC6, WAT=WAT, WAT_FN=WAT_FN))
 if os.environ.get("ROWMAP"):
     json.dump({"T": T, "T0": T0, "SR": SR, "PR": PR_, "CR": CR, "VR": VR_, "DC": DC, "GATE": GATE, "SUMROW": SUMROW, "SE_ROWS": SE_ROWS, "SE_BASE": SE_BASE,
-               "SE_STALE": SE_STALE, "SE_FP": SE_FP, "SE_STATUS": SE_STATUS, "SE_BID": SE_BID, "SE_TORN": SE_TORN, "FINCHK": FINCHK, "RC6": RC6, "RC7": RC7, "RC8": RC8, "IN_ROW": IN_ROW, "RCR": RCR, "RCM": RCM, "QR": QR},
+               "SE_STALE": SE_STALE, "SE_FP": SE_FP, "SE_STATUS": SE_STATUS, "SE_BID": SE_BID, "SE_TORN": SE_TORN, "FINCHK": FINCHK, "RC6": RC6, "RC7": RC7, "RC8": RC8, "IN_ROW": IN_ROW, "RCR": RCR, "RCM": RCM, "QR": QR, "V": V},
               open(os.environ["ROWMAP"], "w", encoding="utf-8"), ensure_ascii=False, indent=0)
 wb.save(A.out)
 print("saved", A.out)
