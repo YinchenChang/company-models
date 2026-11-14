@@ -256,6 +256,8 @@ def main(xlsx, out, player, year, roots, manual, md=False):
             if f == "N":
                 v = ev(a[0], sh)
                 return float(v) if isinstance(v, (int, float)) and not isinstance(v, bool) else 0.0
+            if f in ("COUNTIFS", "SUMIFS", "SUMIF"):
+                return agg_eval(f, a, sh)
             if f == "ISNUMBER":
                 v = ev(a[0], sh)
                 return isinstance(v, (int, float)) and not isinstance(v, bool)
@@ -265,6 +267,36 @@ def main(xlsx, out, player, year, roots, manual, md=False):
                 v = [num(ev(x, sh)) for x in a]
                 return max(v) if f == "MAX" else min(v)
         raise Unknown(k)
+
+    def agg_eval(f, a, sh):
+        # 用快取值計算 COUNTIFS／SUMIFS／SUMIF（條件比對同 crit_match）；算不出來丟 Unknown
+        if f == "SUMIF":
+            pairs, sum_r = [(a[0], a[1])], (a[2] if len(a) > 2 else a[0])
+        elif f == "COUNTIFS":
+            pairs, sum_r = [(a[i], a[i + 1]) for i in range(0, len(a) - 1, 2)], None
+        else:
+            sum_r, pairs = a[0], [(a[i], a[i + 1]) for i in range(1, len(a) - 1, 2)]
+        rs = []
+        for crn, cn in pairs:
+            m = REFP.match(crn[1]) if crn[0] == "ref" else None
+            if not m or not m.group(5):
+                raise Unknown("crit-range")
+            rs.append((m.group(1) or m.group(2) or sh, m, ev(cn, sh)))
+        sm = None
+        if sum_r is not None:
+            sm = REFP.match(sum_r[1]) if sum_r[0] == "ref" else None
+            if not sm or not sm.group(5):
+                raise Unknown("sum-range")
+        base = rs[0][1]
+        cnt, tot = 0, 0.0
+        for cc, rr in rng_cells(rs[0][0], base):
+            if all(crit_match(cached(s2, f"{m.group(3)}{rr - int(base.group(4)) + int(m.group(4))}"), crit) for s2, m, crit in rs):
+                cnt += 1
+                if sm is not None:
+                    v = cached(sm.group(1) or sm.group(2) or sh, f"{sm.group(3)}{rr - int(base.group(4)) + int(sm.group(4))}")
+                    if isinstance(v, (int, float)) and not isinstance(v, bool):
+                        tot += v
+        return float(cnt) if f == "COUNTIFS" else tot
 
     # ---------- 參照收集 ----------
     def numlike(x):
@@ -346,6 +378,8 @@ def main(xlsx, out, player, year, roots, manual, md=False):
                     cond = bool(c)
                 except Unknown:
                     cond = None
+                if force_both[0]:
+                    cond = None
                 collect(a[0], sh, low("條件讀取", status), out)
                 for idx, br in ((1, True), (2, False)):
                     if idx < len(a):
@@ -423,6 +457,41 @@ def main(xlsx, out, player, year, roots, manual, md=False):
         return label, "", other
 
     best, rows, order, zero_hits, extra_unparsed = {}, [], {}, {}, []
+    force_both = [False]
+
+    def norm_val(x):
+        if x is None or x == "":
+            return ""
+        nl = numlike(x)
+        return nl if nl is not None else str(x).strip().lower()
+
+    def same_val(a, b):
+        a, b = norm_val(a), norm_val(b)
+        if isinstance(a, float) and isinstance(b, float):
+            return abs(a - b) <= 1e-6 * max(1.0, abs(a), abs(b))
+        return a == b
+
+    def pick_result(ast, sh):
+        # 沿著可判定的 IF 取出實際被選的分支節點；條件算不出來回傳 None
+        node = ast
+        while node[0] == "fn" and node[1] == "IF":
+            try:
+                c = ev(node[2][0], sh)
+                if isinstance(c, str):
+                    return None
+                node = node[2][1] if bool(c) else (node[2][2] if len(node[2]) > 2 else ("str", ""))
+            except Unknown:
+                return None
+        return node
+
+    def sumifs_in(nd):
+        if nd[0] == "fn":
+            if nd[1] in ("SUMIFS", "SUMIF") and zero_hits.get(id(nd)):
+                return True
+            return any(sumifs_in(x) for x in nd[2])
+        if nd[0] == "bin":
+            return sumifs_in(nd[2]) or sumifs_in(nd[3])
+        return False
 
     def walk(sh, c, depth, root, parent, status):
         key = (sh, c)
@@ -450,6 +519,7 @@ def main(xlsx, out, player, year, roots, manual, md=False):
             rec["roots"] = {}
             order[key] = len(rows); rows.append(rec)
         rec["roots"][root] = status if RANK[status] > RANK.get(rec["roots"].get(root, "分支未生效"), -1) or root not in rec["roots"] else rec["roots"][root]
+        rec["status"] = max(rec["roots"].values(), key=lambda x: RANK[x])      # 最上層狀態取各根中最高者；逐根狀態看 roots
         if not isf or sh == "In" or depth >= 16:
             return
         me = f"{sh}!{c}"
@@ -462,15 +532,30 @@ def main(xlsx, out, player, year, roots, manual, md=False):
             return
         refs = []
         zero_hits.clear()
+        force_both[0] = False
         collect(ast, sh, status, refs)
-        res_node = ast
-        while res_node[0] == "fn" and res_node[1] == "IF":      # 公式的結果直接就是 SUMIFS 時才檢查（SUMIFS 只是其中一項的加總不查）
+        node = pick_result(ast, sh)
+        has_val = val not in (None, "", 0, 0.0)
+        if node is not None and node[0] in ("num", "str", "ref", "name"):
             try:
-                cv = ev(res_node[2][0], sh)
-                res_node = res_node[2][1] if bool(cv) else (res_node[2][2] if len(res_node[2]) > 2 else ("str", ""))
+                if not same_val(ev(node, sh), val):          # 選出的分支（常數或單一參照）與快取值矛盾：判斷有誤，兩支都當生效
+                    rec["note"] = "IF 選出的分支與快取值不一致（條件判斷可能與 Excel 不同）：兩支都當生效，須人工確認"
+                    force_both[0] = True
+                    refs = []
+                    zero_hits.clear()
+                    collect(ast, sh, status, refs)
+                    force_both[0] = False
+                    if has_val and ast[0] == "fn" and ast[1] == "IF" and any(sumifs_in(x) for x in ast[2][1:]):
+                        rec["note"] += "；IF 分支內的 SUMIFS 零命中"
             except Unknown:
-                break
-        if res_node[0] == "fn" and res_node[1] in ("SUMIFS", "SUMIF") and zero_hits.get(id(res_node)) and val not in (None, "", 0, 0.0):
+                pass
+        if not rec.get("note") and node is not None and node[0] == "fn" and node[1] in ("SUMIFS", "SUMIF"):
+            try:
+                if not same_val(ev(node, sh), val):
+                    rec["note"] = "SUMIFS 以快取值重算與該格快取值不一致（條件比對可能與 Excel 不同）：須人工確認"
+            except Unknown:
+                pass
+        if has_val and not rec.get("note") and node is not None and node[0] == "fn" and node[1] in ("SUMIFS", "SUMIF") and zero_hits.get(id(node)):
             rec["note"] = "SUMIFS／COUNTIFS 條件全不符，但快取值非零非空：條件比對可能與 Excel 不一致，須人工確認"
         for s2, c2, st in refs:
             walk(s2, c2, depth + 1, root, me, st)
@@ -499,12 +584,12 @@ def main(xlsx, out, player, year, roots, manual, md=False):
             for c in row:
                 if isinstance(c.value, str) and c.value.startswith("=") and re.search(rf"act26_{player}(?![A-Za-z0-9_])", c.value):
                     rev.append(f"{ws.title}!{c.coordinate}")
-    flagged = [r["cell"] for r in rows if r["flag"] and r["flag"] not in FILTER_SHEETS.values()]
+    flagged = [r["cell"] for r in rows if r["flag"] and r["flag"] != FILTER_SHEETS["Pipeline"]]
     campus = sorted({int(re.sub(r"[A-Z!a-z]", "", r["cell"].split("!")[1])) for r in rows if r["cell"].startswith("Pipeline!")})
     root_flags = {}
     for r in rows:
         for rt, st in r["roots"].items():
-            if r["flag"] and r["flag"] not in FILTER_SHEETS.values():
+            if r["flag"] and r["flag"] != FILTER_SHEETS["Pipeline"]:
                 root_flags.setdefault(rt, []).append(dict(cell=r["cell"], flag=r["flag"], status=st))
     res = dict(root_flags=root_flags, source=xlsx, player=player, roots=[dict(name=n, desc=d, cell="!".join(resolve(n))) for n, d in roots], rows=rows, act26_readers=rev, flagged=flagged, campus_rows=campus,
                unparsed=[r["cell"] for r in rows if r.get("note")])
