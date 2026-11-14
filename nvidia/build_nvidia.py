@@ -1153,6 +1153,10 @@ print(px1105_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), "v0.3.4"
 # ---------------- v0.3.5／v0.3.6（2026-11-11）：NVIDIA v0.3.4 驗收採用規劃書（本資料夾 v035_post.py） ----------------
 import v035_post  # noqa: E402
 print(v035_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), dict(STAGE=STAGE, V36=V36, V36P=V36P, OVR=OVR, MW=MW, PB=PB, SUMR=SUMR, FC=FC, XC=XC, XR=XR, TPL=TPL, SB=SB, K_ROW=K_ROW, REC_ROW=REC_ROW, SDCF=SDCF, W_TP=_W["tp_w"])))
+# ---------------- v0.3.7（2026-11-14）：個股 HTML 版面規格 v1.3 試作——標準損益表、反向 DCF 頁、README 白話列（本資料夾 v037_post.py；只新增，既有數值格不變） ----------------
+if V36 and not OVR:
+    import v037_post  # noqa: E402
+    print(v037_post.apply(wb, os.path.dirname(os.path.abspath(__file__))))
 wb.save(sys.argv[1])
 if os.environ.get("NV_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
