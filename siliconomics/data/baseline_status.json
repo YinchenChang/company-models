@@ -7,9 +7,9 @@
   "2026": {
    "wattonomics": {
     "evidence_share": {
-     "lo": 0.874,
-     "base": 0.874,
-     "hi": 0.874
+     "lo": 0.866,
+     "base": 0.866,
+     "hi": 0.866
     },
     "prev_has_evidence": true
    },
@@ -24,7 +24,7 @@
    "status": "甲",
    "lead": null,
    "label": "一致",
-   "converted": 20.553,
+   "converted": 20.64,
    "supply_side": 23.3995380420639,
    "current_s33": 23.3995380420639,
    "use_converted": false,
@@ -38,9 +38,9 @@
   "2027": {
    "wattonomics": {
     "evidence_share": {
-     "lo": 0.463,
-     "base": 0.463,
-     "hi": 0.463
+     "lo": 0.464,
+     "base": 0.464,
+     "hi": 0.464
     },
     "prev_has_evidence": false
    },
@@ -100,9 +100,9 @@
   "2029": {
    "wattonomics": {
     "evidence_share": {
-     "lo": 0.201,
-     "base": 0.201,
-     "hi": 0.201
+     "lo": 0.208,
+     "base": 0.208,
+     "hi": 0.208
     },
     "prev_has_evidence": false
    },
@@ -117,7 +117,7 @@
    "status": "丙",
    "lead": null,
    "label": "連續法（換算值成長率）",
-   "converted": 28.407,
+   "converted": 28.405,
    "supply_side": 60.1385917361115,
    "current_s33": 51.1178029756948,
    "use_converted": true,
@@ -126,7 +126,7 @@
    "recon_doc": null,
    "deadline": null,
    "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
-   "sil_base": 42.7072837704337
+   "sil_base": 42.7042769563548
   }
  },
  "level_coefficients": [

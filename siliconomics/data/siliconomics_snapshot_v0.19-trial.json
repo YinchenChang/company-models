@@ -2,7 +2,7 @@
  "source": {
   "file": "20261114_Siliconomics_v0.19-trial.xlsx",
   "version": "v0.19-trial",
-  "sha256": "dcad15e902c16fb8608bf7977a69be95afdaaa3414b295b99777bea22a769271",
+  "sha256": "efc5ec1332a4ca5c8a5b6e97d693de890526621a21d727b17f97c234ebe9b4c2",
   "note": "Siliconomics 快照（試作，不得供 main 下游使用）：SGOV_Errors＝1，以 --allow-trial-sgov 放行（K1 SK 海力士／記憶體市場尚未跟新係數，屬三層基準協調步驟 5b）",
   "trial": true
  },
@@ -6822,7 +6822,7 @@
    "base": 1,
    "hi": null,
    "tag": "Derived",
-   "src": "Wattonomics v0.3.2 r1（分支 claude/wattonomics-v0.3.2 @ 3983c39；v0.3.2 r1 核對中）：W-1 七家以外買方入主路徑、X6 新雲與主權 Assumed 年增入基準 → 覆蓋已補齊（規則 v1.1 C3 前提）",
+   "src": "Wattonomics v0.3.2 r2（分支 claude/wattonomics-v0.3.2 @ 15ef217；v0.3.2 r2 核對中）：W-1 七家以外買方入主路徑、X6 新雲與主權 Assumed 年增入基準 → 覆蓋已補齊（規則 v1.1 C3 前提）",
    "src2": "試作：0 與 1 各建一次比較（報告 docs/reports/20261114_協調試作_build.md）"
   },
   {
@@ -6863,10 +6863,10 @@
    "label": "2026 Wattonomics 換算值（平滑法 x2，補覆蓋；成本等值、出貨年）＝需求側讀數",
    "unit": "GW",
    "lo": null,
-   "base": 20.553,
+   "base": 20.64,
    "hi": null,
    "tag": "Derived",
-   "src": "v0.3.2 r1 核對中：siliconomics/tools/baseline_bridge.py 讀 Wattonomics v0.3.2 r1（3983c39）＋本試作現行基準重算，Bridge x2（平滑法，k＝4.5÷12＋10%；覆蓋缺口＝0）；結果檔 docs/reports/20261114_協調橋接_v0.3.2r1.xlsx",
+   "src": "v0.3.2 r2 核對中：siliconomics/tools/baseline_bridge.py 讀 Wattonomics v0.3.2 r2（15ef217）＋本試作現行基準重算，Bridge x2（平滑法，k＝4.5÷12＋10%；覆蓋缺口＝0）；結果檔 docs/reports/20261114_協調橋接_v0.3.2r2.xlsx",
    "src2": "docs/plan/三層基準協調規則.md v1.1 C3 換算方法（平滑法）"
   },
   {
@@ -6877,7 +6877,7 @@
    "base": 24.213,
    "hi": null,
    "tag": "Derived",
-   "src": "v0.3.2 r1 核對中：siliconomics/tools/baseline_bridge.py 讀 Wattonomics v0.3.2 r1（3983c39）＋本試作現行基準重算，Bridge x2（平滑法，k＝4.5÷12＋10%；覆蓋缺口＝0）；結果檔 docs/reports/20261114_協調橋接_v0.3.2r1.xlsx",
+   "src": "v0.3.2 r2 核對中：siliconomics/tools/baseline_bridge.py 讀 Wattonomics v0.3.2 r2（15ef217）＋本試作現行基準重算，Bridge x2（平滑法，k＝4.5÷12＋10%；覆蓋缺口＝0）；結果檔 docs/reports/20261114_協調橋接_v0.3.2r2.xlsx",
    "src2": "docs/plan/三層基準協調規則.md v1.1 C3 換算方法（平滑法）"
   },
   {
@@ -6888,7 +6888,7 @@
    "base": 28.092,
    "hi": null,
    "tag": "Derived",
-   "src": "v0.3.2 r1 核對中：siliconomics/tools/baseline_bridge.py 讀 Wattonomics v0.3.2 r1（3983c39）＋本試作現行基準重算，Bridge x2（平滑法，k＝4.5÷12＋10%；覆蓋缺口＝0）；結果檔 docs/reports/20261114_協調橋接_v0.3.2r1.xlsx",
+   "src": "v0.3.2 r2 核對中：siliconomics/tools/baseline_bridge.py 讀 Wattonomics v0.3.2 r2（15ef217）＋本試作現行基準重算，Bridge x2（平滑法，k＝4.5÷12＋10%；覆蓋缺口＝0）；結果檔 docs/reports/20261114_協調橋接_v0.3.2r2.xlsx",
    "src2": "docs/plan/三層基準協調規則.md v1.1 C3 換算方法（平滑法）"
   },
   {
@@ -6896,32 +6896,32 @@
    "label": "2029 Wattonomics 換算值（平滑法 x2，補覆蓋；成本等值、出貨年）＝需求側讀數",
    "unit": "GW",
    "lo": null,
-   "base": 28.407,
+   "base": 28.405,
    "hi": null,
    "tag": "Derived",
-   "src": "v0.3.2 r1 核對中：siliconomics/tools/baseline_bridge.py 讀 Wattonomics v0.3.2 r1（3983c39）＋本試作現行基準重算，Bridge x2（平滑法，k＝4.5÷12＋10%；覆蓋缺口＝0）；結果檔 docs/reports/20261114_協調橋接_v0.3.2r1.xlsx",
+   "src": "v0.3.2 r2 核對中：siliconomics/tools/baseline_bridge.py 讀 Wattonomics v0.3.2 r2（15ef217）＋本試作現行基準重算，Bridge x2（平滑法，k＝4.5÷12＋10%；覆蓋缺口＝0）；結果檔 docs/reports/20261114_協調橋接_v0.3.2r2.xlsx",
    "src2": "docs/plan/三層基準協調規則.md v1.1 C3 換算方法（平滑法）"
   },
   {
    "id": "crd_ew_26",
    "label": "2026 Wattonomics 證據比例（WIF_Evidence 口徑；全市場分母）",
    "unit": "%",
-   "lo": 0.874,
-   "base": 0.874,
-   "hi": 0.874,
+   "lo": 0.866,
+   "base": 0.866,
+   "hi": 0.866,
    "tag": "Derived",
-   "src": "v0.3.2 r1 核對中：Wattonomics v0.3.2 r1 WIF_Evidence_2026（3983c39）。模型只有點值，低＝基準＝高（以點值當三值）；分子＝站點證據＋七家實績支撐，W-1 Assumed 部分留在分母",
+   "src": "v0.3.2 r2 核對中：Wattonomics v0.3.2 r2 WIF_Evidence_2026（15ef217）。模型只有點值，低＝基準＝高（以點值當三值；待判斷 9）；r2：主權 2026 補 Assumed、Barber Lake +39 MW、W2 不入分母",
    "src2": "docs/plan/三層基準協調規則.md v1.1 C3 證據種類與分母"
   },
   {
    "id": "crd_ew_27",
    "label": "2027 Wattonomics 證據比例（WIF_Evidence 口徑；全市場分母）",
    "unit": "%",
-   "lo": 0.463,
-   "base": 0.463,
-   "hi": 0.463,
+   "lo": 0.464,
+   "base": 0.464,
+   "hi": 0.464,
    "tag": "Derived",
-   "src": "v0.3.2 r1 核對中：Wattonomics v0.3.2 r1 WIF_Evidence_2027（3983c39）。模型只有點值，低＝基準＝高（以點值當三值）；分子＝站點證據＋七家實績支撐，W-1 Assumed 部分留在分母",
+   "src": "v0.3.2 r2 核對中：Wattonomics v0.3.2 r2 WIF_Evidence_2027（15ef217）。模型只有點值，低＝基準＝高（以點值當三值；待判斷 9）；r2：主權 2026 補 Assumed、Barber Lake +39 MW、W2 不入分母",
    "src2": "docs/plan/三層基準協調規則.md v1.1 C3 證據種類與分母"
   },
   {
@@ -6932,18 +6932,18 @@
    "base": 0.52,
    "hi": 0.52,
    "tag": "Derived",
-   "src": "v0.3.2 r1 核對中：Wattonomics v0.3.2 r1 WIF_Evidence_2028（3983c39）。模型只有點值，低＝基準＝高（以點值當三值）；分子＝站點證據＋七家實績支撐，W-1 Assumed 部分留在分母",
+   "src": "v0.3.2 r2 核對中：Wattonomics v0.3.2 r2 WIF_Evidence_2028（15ef217）。模型只有點值，低＝基準＝高（以點值當三值；待判斷 9）；r2：主權 2026 補 Assumed、Barber Lake +39 MW、W2 不入分母",
    "src2": "docs/plan/三層基準協調規則.md v1.1 C3 證據種類與分母"
   },
   {
    "id": "crd_ew_29",
    "label": "2029 Wattonomics 證據比例（WIF_Evidence 口徑；全市場分母）",
    "unit": "%",
-   "lo": 0.201,
-   "base": 0.201,
-   "hi": 0.201,
+   "lo": 0.208,
+   "base": 0.208,
+   "hi": 0.208,
    "tag": "Derived",
-   "src": "v0.3.2 r1 核對中：Wattonomics v0.3.2 r1 WIF_Evidence_2029（3983c39）。模型只有點值，低＝基準＝高（以點值當三值）；分子＝站點證據＋七家實績支撐，W-1 Assumed 部分留在分母",
+   "src": "v0.3.2 r2 核對中：Wattonomics v0.3.2 r2 WIF_Evidence_2029（15ef217）。模型只有點值，低＝基準＝高（以點值當三值；待判斷 9）；r2：主權 2026 補 Assumed、Barber Lake +39 MW、W2 不入分母",
    "src2": "docs/plan/三層基準協調規則.md v1.1 C3 證據種類與分母"
   },
   {
@@ -7131,7 +7131,7 @@
    1,
    1.27702657966174,
    1.35604155784815,
-   1.47768243897061
+   1.47762888706322
   ],
   "SIF_ABFFilmIdx": [
    1,
@@ -7152,7 +7152,7 @@
    0.0900000000000001,
    0.123004008131583,
    -0.00863786526793242,
-   -0.0694596227454906
+   -0.0694933459669269
   ],
   "SIF_abfm_25": 7.72,
   "SIF_abfm_g26": 0.32,
@@ -7315,7 +7315,7 @@
    781.872916666667,
    1472.02206875,
    1587.41111111111,
-   1605.21100075941
+   1605.09798558704
   ],
   "SIF_al27_B": 0.5,
   "SIF_al27_Base": 0.5,
@@ -7351,7 +7351,7 @@
    634.616531285011,
    1071.16741742804,
    1155.13421733506,
-   1168.08691840513
+   1168.00467903326
   ],
   "SIF_AsmShareSum": [
    0.430493339841029,
@@ -7427,13 +7427,13 @@
    23.3995380420639,
    39.1637358065787,
    42.2337105529984,
-   42.7072837704337
+   42.7042769563548
   ],
   "SIF_CapGW_CoWoS_Base": [
    28.9257993103646,
    43.0232683968707,
    59.834228018654,
-   73.4815291940477
+   73.480847899419
   ],
   "SIF_CapGW_HBM_Base": [
    23.3995380420639,
@@ -7445,7 +7445,7 @@
    0,
    -7.41082158972617e-08,
    0.176629494853435,
-   0.376484854644527
+   0.376581773134556
   ],
   "SIF_CapOnlineGW_Base": [
    20.805525896637,
@@ -7457,19 +7457,19 @@
    25.7191601625155,
    38.1477110683678,
    64.0210279981148,
-   89.3079303455401
+   89.3133904396365
   ],
   "SIF_CapOnlineGW_HBM_Base": [
    20.805525896637,
    34.7255551141699,
    53.170644087377,
-   71.4472022585927
+   71.4522328660391
   ],
   "SIF_CCLMkt_Base": [
    8.18983831472237,
    20.6588721689624,
    25.720329726776,
-   28.2935754979124
+   28.291583483585
   ],
   "SIF_CCLperGW": [
    350,
@@ -7523,7 +7523,7 @@
    0.808950438706787,
    0.910292038895448,
    0.705845332204028,
-   0.581197536834783
+   0.581162005844144
   ],
   "SIF_CPOShareSum": [
    0.5,
@@ -7662,18 +7662,18 @@
   "SIF_crd_es_29": 0.079,
   "SIF_crd_es_29_hi": 0.181,
   "SIF_crd_es_29_lo": 0.03,
-  "SIF_crd_ew_26": 0.874,
-  "SIF_crd_ew_26_hi": 0.874,
-  "SIF_crd_ew_26_lo": 0.874,
-  "SIF_crd_ew_27": 0.463,
-  "SIF_crd_ew_27_hi": 0.463,
-  "SIF_crd_ew_27_lo": 0.463,
+  "SIF_crd_ew_26": 0.866,
+  "SIF_crd_ew_26_hi": 0.866,
+  "SIF_crd_ew_26_lo": 0.866,
+  "SIF_crd_ew_27": 0.464,
+  "SIF_crd_ew_27_hi": 0.464,
+  "SIF_crd_ew_27_lo": 0.464,
   "SIF_crd_ew_28": 0.52,
   "SIF_crd_ew_28_hi": 0.52,
   "SIF_crd_ew_28_lo": 0.52,
-  "SIF_crd_ew_29": 0.201,
-  "SIF_crd_ew_29_hi": 0.201,
-  "SIF_crd_ew_29_lo": 0.201,
+  "SIF_crd_ew_29": 0.208,
+  "SIF_crd_ew_29_hi": 0.208,
+  "SIF_crd_ew_29_lo": 0.208,
   "SIF_crd_exit": 0.45,
   "SIF_crd_exit_hi": 0.45,
   "SIF_crd_exit_lo": 0.45,
@@ -7688,10 +7688,10 @@
   "SIF_crd_thr": 0.5,
   "SIF_crd_thr_hi": 0.67,
   "SIF_crd_thr_lo": 0.5,
-  "SIF_crd_x2_26": 20.553,
+  "SIF_crd_x2_26": 20.64,
   "SIF_crd_x2_27": 24.213,
   "SIF_crd_x2_28": 28.092,
-  "SIF_crd_x2_29": 28.407,
+  "SIF_crd_x2_29": 28.405,
   "SIF_cw_capend25": 77.5,
   "SIF_cw_capend26": 130,
   "SIF_cw_capend27": 200,
@@ -7906,30 +7906,30 @@
    24.8162236118955,
    43.677681716908,
    44.1056990559948,
-   44.5508346994823
+   44.547698089865
   ],
-  "SIF_DeployGW_AltRatio_2026": 0.878350673549757,
+  "SIF_DeployGW_AltRatio_2026": 0.882068695668126,
   "SIF_DeployGW_AltRatio_2027": 0.618250473478847,
   "SIF_DeployGW_AltRatio_2028": 0.665155858487684,
   "SIF_DeployGW_AltRatio_2029": 0.665155858487684,
-  "SIF_DeployGW_Alt_2026": 20.553,
+  "SIF_DeployGW_Alt_2026": 20.64,
   "SIF_DeployGW_Alt_2027": 24.213,
   "SIF_DeployGW_Alt_2028": 28.092,
-  "SIF_DeployGW_Alt_2029": 28.407,
+  "SIF_DeployGW_Alt_2029": 28.405,
   "SIF_DeployGW_Base": [
    23.3995380420639,
    39.1637387089335,
    42.2337105529984,
-   42.7072837704337
+   42.7042769563548
   ],
   "SIF_DeployGW_Current_2026": 23.3995380420639,
   "SIF_DeployGW_Current_2027": 39.1637387089335,
   "SIF_DeployGW_Current_2028": 42.2337105529984,
   "SIF_DeployGW_Current_2029": 51.1178029756948,
-  "SIF_DeployGW_Demand_2026": 20.553,
+  "SIF_DeployGW_Demand_2026": 20.64,
   "SIF_DeployGW_Demand_2027": 24.213,
   "SIF_DeployGW_Demand_2028": 28.092,
-  "SIF_DeployGW_Demand_2029": 28.407,
+  "SIF_DeployGW_Demand_2029": 28.405,
   "SIF_DeployGW_Supply_2026": 23.3995380420639,
   "SIF_DeployGW_Supply_2027": 39.1637387089335,
   "SIF_DeployGW_Supply_2028": 52.792138191248,
@@ -8057,7 +8057,7 @@
    595.486111111111,
    1100.24325416667,
    1050.55555555556,
-   1058.66257588575
+   1058.58804055461
   ],
   "SIF_GWvsWT_Base": [
    0.0566305218882024,
@@ -8170,7 +8170,7 @@
    1,
    1.00000007410822,
    0.849885205473762,
-   0.726488196819461
+   0.726437048285873
   ],
   "SIF_hbm_dem29": 0.3,
   "SIF_hbm_dem29_hi": 0.45,
@@ -8215,7 +8215,7 @@
    0,
    4.94500000058906e-07,
    -1.452417271,
-   -3.57254534318834
+   -3.57321343302342
   ],
   "SIF_HBM_GBperUnit": [
    null,
@@ -8253,7 +8253,7 @@
    55.227347,
    175.3578721944,
    162.0745416,
-   187.032407401161
+   187.019239350512
   ],
   "SIF_hbm_p26": 14.6,
   "SIF_hbm_p26_hi": 16,
@@ -8285,7 +8285,7 @@
    3.782695,
    6.67267398,
    8.22296,
-   9.48921397266166
+   9.48854588282658
   ],
   "SIF_hbm_stk_25": 10,
   "SIF_hbm_stk_25_hi": 12,
@@ -8405,7 +8405,7 @@
    4.5136875859587,
    9.59289931607778,
    12.6260448229601,
-   13.5186592690087
+   13.5177074853449
   ],
   "SIF_LiqPen_Base": [
    0.55,
@@ -8800,7 +8800,7 @@
    10.5297921189288,
    26.7096697994926,
    33.4490987579747,
-   37.4542878666704
+   37.4516508907231
   ],
   "SIF_PCBperGW": [
    450,
@@ -8851,7 +8851,7 @@
    10.5297921189288,
    23.4982432253601,
    28.7189231760389,
-   30.7492443147123
+   30.7470794085755
   ],
   "SIF_PwrShareSum_Base": [
    0.759815255723819,
@@ -9038,7 +9038,7 @@
    11.5,
    15.529869463218,
    15.5246455357743,
-   15.825622214995
+   15.8248485530797
   ],
   "SIF_TestWFE_SEMI": [
    0.0999119405439528,
@@ -9052,7 +9052,7 @@
    0.0799166087560806,
    0.0886053046280429,
    0.077629710458362,
-   0.0732728884595082
+   0.0732693063922466
   ],
   "SIF_TK_CapexFacility_GB200": 12.67,
   "SIF_TK_CapexFacility_GB200_hi": 16.186,
@@ -9279,7 +9279,7 @@
    1,
    1,
    0.8,
-   0.710147719418399
+   0.710097721339093
   ],
   "SIF_UnitsGrowth29": 0.137735849056604,
   "SIF_UnitsPlat_amd": [
@@ -9336,7 +9336,7 @@
    15.2,
    22.286978,
    21.2,
-   21.4109537404647
+   21.4094462983737
   ],
   "SIF_UnitsPlat_tpu": [
    null,
