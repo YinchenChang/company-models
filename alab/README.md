@@ -1,4 +1,19 @@
-# alab/ — Astera Labs（ALAB）收支與估值模型 v0.3.7
+# alab/ — Astera Labs（ALAB）收支與估值模型 v0.3.8
+
+## v0.3.8（2026-11-14）：個股 HTML 版面規格 v1.3＋三層協調兩讀數＋C0（實績）
+
+依據：`docs/workorders/20261114_第二批13家_v1.3與三層協調.md`、`docs/workorders/20261114_C0實績對帳補列_七家.md`、三層基準協調規則 v1.4.2（C4、C0 第 2 點）、`docs/plan/個股HTML版面規格.md` v1.3；樣板 NVIDIA v0.3.10、Broadcom v0.5.6／v0.5.7。本輪不改 Siliconomics；本公司屬 Siliconomics 整本敏感度快照個股（Siliconomics 升版時須重跑 `alab/sens_alab.py`）。實作：`v038_post.py`（存檔前後處理，`build_alab.py` 在 `tools/coord` 之後呼叫）、`gen_html_json.py`（`_v13`、`_sens_tor`、`_top_first`、`COORD.inject_html`）。
+
+- **版面 v1.3：** 章節改為命題 → 估值 → 敏感度 → 反向 DCF → 損益（標準損益表）→ 驅動因子（分部營收推導）→ 對帳 → 資料狀態。估值章第一個區塊為四個目標價與現價圖，敏感度章前兩個區塊為加權目標價相對基準的低案、高案龍捲風圖；橫幅說明 200 字內且無參數代號；重點觀察 5 點；損益表 FY2023A–FY2032E，FY2027E 起（依賴對帳中日曆年）標「對帳中」。數字與文字全取自 xlsx（README 頁末 v1.3 白話列、Hist 頁末損益表歷史、PL 頁末標準損益表、RevDCF 頁、Val 0.7、Sens 末表、Coord 頁）。
+- **xlsx 新增（既有格數值 0 變動，只有版號與 build_id）：** Hist 頁末損益表歷史（FY2022–FY2025 non-GAAP 與 GAAP，公司 8-K）、PL 頁末標準損益表（FY2030E–FY2032E 毛利率與營業費用率沿用 FY2029E，營業利益由淨利倒推並列差額核對）、RevDCF 頁（現價隱含的 EBIT 率、營收規模、WACC；Comparable 所需倍數）、Val 0.7 四個目標價並列、Sens 末加權目標價相對基準、Coord 頁。
+- **兩讀數（C4）：** 現行基準讀數＝加權目標價 101.32（−43.5%，放空）；另一側讀數（Wattonomics 換算的產業部署 GW，CY2027–CY2029 為現行的 0.62／0.67／0.67 倍，只動情境 B、C 的顆數）＝82.40（−54.1%，強力放空）。評等不同；對帳中年份 CY2027–CY2029。`alab/coord_alt.json` 記錄兩讀數（`tools/coord/alt_run.py`；建置時另一側讀數若落到最低評級，評等邊界的 `NA()` 在 `COORD_RUN=1` 暫代為 −0.75，正式建置不受影響）。
+- **C0（實績）：** Coord 頁 I 節。個股側＝公司 8-K 已公布的營收：1Q26 0.3084、2Q26 0.3924、3Q26 0.5849（US$B，Verified）；三季累計 1.2857。層級側＝非 NVIDIA scale-up 交換晶片市場（markets/network，CY2026 2.025）× Scorpio X 有效份額 ＋ AI 加速器顆數 × 每顆 PCIe 等內容 × PCIe 等有效份額＝1.5192（CY2026 × 9 ÷ 12）。主讀數 1.2857 vs 1.5192＝−15.4%；第二讀數 3Q26 × 4＝2.3396 vs 層級 CY2026 2.0257＝+15.5%。兩讀數反向（實績在層級隱含的兩側），機械結果為時差邊界（參考），不是對帳中。**但本公司未揭露產品線營收與市占，層級沒有 Astera 份額的獨立來源；有效份額由 FY2026 錨點校準，市場值在乘積中消去，層級隱含值恆等於 FY2026 錨點，故判定「參考（同源校準）」、結論「無可比實績（層級值同源）」，不開對帳單、不改上游值、對帳中 C0 項目 0 項。** 待公司揭露 Scorpio X 或各產品線營收，或有獨立的 scale-up 交換晶片份額資料時才能對層級值做 C0 判定。公司 4Q26 指引中點 0.74 只列參考。
+- **對帳中項目數：** 本公司 0 項（Coord 頁 F 節讀取層級、G 節層級之間、I 節參考列均不計）；G 節產業部署 GW 於 CY2027–CY2029 為 Siliconomics 對帳中，只列參考。
+- **目標價與評等不變：** 加權目標價 101.3185、評等放空；DCF 48.85、Comparable 153.78。與 v0.3.7 逐格比對（`tools/xlsx_diff.py`、重算值）：既有儲存格只差 README A1 版號、README A62 與 Sens D553 的 build_id；其餘皆為新增頁、列。
+- **檢查：** `check_company_html.py alab`、`check_layout_v13.py --xlsx`（I 項實際檢查）、`tools/baseline_coordination/check.py` 全過；LibreOffice 重算錯誤格 0。
+- **前版：** v0.3.7 成品已於 11-14 隨 Siliconomics v0.19 全下游重建更新為 101.32（DCF 48.85），v0.3.8 對此版不變。
+- **未做／待判斷：** (1) `tools/coord` 的硬體清單（Siliconomics coord_meta）若尚未列入 alab，須由 Siliconomics 側加入（本輪不改該檔，見 PR 說明）；(2) RevDCF：折現率單獨降到搜尋下限（永續成長率＋0.5 個百分點）仍不足以支持現價，頁面標示「無解」；(3) 下方 v0.3.6／v0.3.7 以前各節引用的目標價（103.66 等）為當時數字，現值見 Val 頁。
+- 成品：`dist/20261114_Astera Labs個股模型_v0.3.8.xlsx`、`.html`；v0.3.7 移到 `dist/_待刪除/`。本公司無 `display_check.json`，不跑 `version_table.py`。
 
 ## v0.3.6／v0.3.7（2026-11-09）：Astera Labs v0.3.5 驗收報告採用項
 

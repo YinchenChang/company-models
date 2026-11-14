@@ -230,10 +230,10 @@ def norm_tags(wb):
 # ---------- 原則 1：build_id、輸入指紋、模型狀態 ----------
 def build_id(here, stage):
     h = hashlib.sha256(stage.encode())
-    for fn in sorted(["build_alab.py", "v036_post.py", "px1105_post.py", "sens.json", "segments.json"]):
+    for fn in sorted(["build_alab.py", "v036_post.py", "v038_post.py", "px1105_post.py", "sens.json", "segments.json", "coord_alt.json"]):   # v0.3.8：加 v038_post.py、coord_alt.json
         p = os.path.join(here, fn)
         if os.path.exists(p): h.update(fn.encode()); h.update(open(p, "rb").read())
-    return f"alab-v{stage}-{h.hexdigest()[:10]}"
+    return f"alab-v0.3.8-{h.hexdigest()[:10]}"   # v0.3.8 起標籤改版號（數值邏輯仍由 ALAB_STAGE＝0.3.7 控制，見 build_alab.py）
 
 
 def governance(wb, SJ, bid, OVR):

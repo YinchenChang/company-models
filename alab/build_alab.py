@@ -357,6 +357,8 @@ def mkt(base, y, s, mf, wta=None):
 DEFP = dict(scn="A", relx="rel_x", relp="rel_p", gm="gm", tx="tx", mf="1", opxa="0", phi="phi", wta=None)
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and ws.title == "PL" and P["wta"] is None and s != "A":   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：PL 頁情境 B、C 產業量（顆數與非 NVIDIA scale-up 交換晶片市場）CY2027 起 × wta（＝另一側讀數比值）；情境 A＝供給側讀數不縮放
+        P["wta"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
     hdr(ws, r, ["項目", "單位", "FY2025A", "FY2026（錨點）", "FY2027", "FY2028", "FY2029", "說明"]); r += 1
@@ -1163,6 +1165,17 @@ print(px1105_post.apply(wb, a1_append="；v0.3.5：現價與同業報價改 2026
 # v0.3.6／v0.3.7（2026-11-09）：驗收報告採用項（本資料夾 v036_post.py）
 import v036_post  # noqa: E402
 print(v036_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), dict(STAGE=STAGE, V37=V37, V37P=V37P, OVR=OVR, PB=PB, SUMR=SUMR, FC=FC, SB0=SB0)))
+if os.environ.get("COORD_RUN") == "1":   # alt_run.py 的另一側讀數建置：評等落在最高或最低級時 Recon 反解的級距邊界為 NA()（正式建置不經此處）；另一側讀數可能落在強力放空，改為數值占位，避免 alt_run 的錯誤格檢查誤報（只讀 Val 頁）
+    for _c in wb["Recon"]["B"]:
+        if isinstance(_c.value, str) and "NA()" in _c.value:
+            _c.value = _c.value.replace("NA()", "-0.75")
+# 三層協調 C4（規則 v1.4.2；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 alab/coord_alt.json）；v0.3.8：版面 v1.3、讀取層級與 C0（實績）（v038_post.py）
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools", "coord"))
+import coord as COORD  # noqa: E402
+if COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL):
+    COORD.stamp(wb, "v0.3.7", "v0.3.8", "2026-11-14")
+    import v038_post  # noqa: E402
+    print(v038_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL))
 wb.save(sys.argv[1])
 if os.environ.get("ALAB_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
