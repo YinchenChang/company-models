@@ -249,11 +249,15 @@ inp("tm_sh", "達明（4585）流通股數", "十億股", None, 0.10461, None, "
 inp("tm_hold", "廣達集團持有達明股數（經廣明）", "十億股", None, 0.069757, None, "Interested-party", "Simply Wall St 4585 股東表：Quanta Storage 69,757,000 股（66.7%）、OMRON 9.46%（網址見 Sources 頁；2026-11-06 讀取）", "廣達直接持股：未找到（股東表未列）；若有直接持股，非控制權益市值會略低")
 inp("tm_px", "達明股價（2026-11-05 收盤）", "NT$", None, 220, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（4585.TW；與 px 同日）", "與 px 同日；v0.4.4 為 2026-11-04 收盤 231（Yahoo Finance）")
 
+_OVR = dict(kv.split("=") for kv in os.environ.get("QUANTA_OVR", "").split(";") if kv)
 r = 4
 for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    if key in _OVR:   # v0.4.7：敏感度快照（quanta/sens_quanta.py）以環境變數 QUANTA_OVR 把輸入改為敏感度低／高值；正式建置不設
+        base = {"lo": lo, "hi": hi}.get(_OVR[key]) if _OVR[key] in ("lo", "hi") else base * float(_OVR[key].lstrip("x"))   # lo／hi＝敏感度低／高欄；x0.8＝基準 × 0.8
+        assert base is not None, (key, _OVR[key])
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
         if v is not None:
@@ -1070,8 +1074,13 @@ for _k, _c in enumerate(_old5):   # 第 22 點：舊版撰寫、帶舊版數字�
 # 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 quanta/coord_alt.json）
 sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
 import coord as COORD
-if COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL):
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_CR = COORD.add_sheet(wb, _HERE, SIL)
+if _CR:
     COORD.stamp(wb, "v0.4.5", "v0.4.6", "2026-11-14")
+# v0.4.7（2026-11-14）：版面規格 v1.3（標準損益表、反向 DCF、四個目標價、敏感度主圖）＋三層協調 C0 由下往上對帳（quanta/v047_post.py；只新增，既有數值不變）
+import v047_post as V47
+V47.apply(wb, SIL, _HERE, _CR)
 wb.save(sys.argv[1])
 if os.environ.get("R4_NOOP"): pass
 if os.environ.get("QUANTA_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
