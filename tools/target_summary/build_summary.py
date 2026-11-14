@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 import relative_multiple as RM  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VER, VDATE = "v0.2.11", "2026-11-11"   # 每次升版改這裡
+VER, VDATE = "v0.2.12", "2026-11-14"   # 每次升版改這裡（v0.2.12：Siliconomics v0.19 全下游重建、NVIDIA v0.3.8）
 BOLD = Font(bold=True)
 HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
