@@ -199,6 +199,20 @@ inp("beta_u_med", "產業無槓桿 β 中位數（自算 TW 半導體，Blume �
     "自算產業 β：TW 半導體 同業 13 家中位數（Yahoo Finance 月報酬 2021-11～2026-10，對 臺灣加權指數 ^TWII 迴歸，Hamada 去槓桿、現金修正）", "只用於計算 beta_u；v0.5.1 起 β 敏感度改 β_u ± beta_du（v0.5 為中位數 × 0.8 再 Blume／中位數未調整）")
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 股數 sh_v)；與 WACC 權重同一口徑")
 inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新加槓桿）", "x", None, 0.3, None, "Assumed", "工作單第二輪修正（Andy 2026-11-05 23:16 定案）：β 敏感度改為 β_u ± 0.3", "取代 v0.5 的低＝中位數 × 0.8 再 Blume、高＝中位數未調整")
+# TSMC_OVERRIDE（敏感度快照用，tsmc/sens_tsmc.py；「鍵=規格；…」：@lo／@hi＝改取 In 頁低／高欄；x<數>＝基準乘以該數；d<數>＝基準加該數（可為負）；其他＝數值。
+# 低／高欄是公式者照原式代入；基準是公式者以括號包住再乘／加；正式建置不設）
+OVR = dict(kv.split("=", 1) for kv in os.environ.get("TSMC_OVERRIDE", "").split(";") if "=" in kv)
+USCALE = float(OVR.pop("_units_x", "1"))   # 2027–2028 加速器顆數（各平台）同乘係數（敏感度快照用；2026 為錨點不動）
+def _ovr_val(key, lo, base, hi):
+    ov = OVR[key]
+    if ov in ("@lo", "@hi"):
+        new = lo if ov == "@lo" else hi
+        assert new is not None, (key, ov)
+        return new
+    if ov[0] in "xd" and ov[1:].replace(".", "").replace("-", "").replace("+", "").isdigit():
+        m = float(ov[1:]); op = "*" if ov[0] == "x" else "+"
+        return f"=({base[1:]}){op}{m}" if isinstance(base, str) and base.startswith("=") else (float(base) * m if op == "*" else float(base) + m)
+    return float(ov)
 TPKEYS = ["tp_wA", "tp_wB", "tp_wC", "tp_g", "tp_w_dcf", "nim10", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fade_mB", "fade_mC", "cons_tp", "cons_feps27", "cons_feps28"]
 YEL = PatternFill("solid", fgColor="FFF2CC")
 INROW = {}
@@ -207,6 +221,7 @@ for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, src = srow[:8]
+    if key in OVR: base = _ovr_val(key, lo, base, hi)
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     if len(srow) > 8 and srow[8]: IN.cell(r, 9, srow[8])
     for j, v in ((4, lo), (5, base), (6, hi)):
@@ -227,6 +242,7 @@ IN.freeze_panes = "D4"
 
 def u(k, y, s="A"):
     base = f"u_{k}_{y}" if y < 29 else f"u_{k}_28*(1+g29_{k})"
+    if USCALE != 1 and y >= 27: base = f"{base}*{USCALE}"   # 敏感度快照：2027 起顆數同乘（2029 由 2028 成長，隨之縮放）
     if y == 28: return f"{base}*um28_{s}"
     if y == 29: return f"{base}*um29_{s}"
     return base
@@ -278,6 +294,8 @@ def pxf(y):
 for col, lab, s, y in cols:
     s_ = s or "A"
     acc = "(" + "+".join(f"{u(k, y, s_)}*ct_{PLAT[k][y]}" for k, *_ in MEM.UNITS) + f")*{pxf(y)}"
+    if SIL.COORD_ALT and s in ("B", "C") and y >= 27:   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 於 CY2027 起 AI 加速器內容 × wta（＝另一側讀數比值；其他 AI 與顆數成正比隨之縮放）；情境 A 不縮放
+        acc = f"({acc})*wta_{y}"
     PL[f"{col}{PR['ai_acc']}"] = "=" + acc
     PL[f"{col}{PR['ai']}"] = f"={col}{PR['ai_acc']}*(1+ai_oth)"
     if y == 26:
@@ -970,4 +988,14 @@ RD.cell(_R + 2, 1, XF("重點觀察 1：目標價 NT$", (f'TEXT({_V("tpw")},"#,#
                       (f'IF({_V("upw")}>=0,"高 "&TEXT({_V("upw")},"0.0%"),"低 "&TEXT(-{_V("upw")},"0.0%"))',), "，級距 ", (f"Val!B{_G}",), "、投資建議 ", (_rec,), "。相對倍數調整係數 ", ('TEXT(rm_factor,"0.00")',), "（Val 第 0.5 節）；Comparable 單獨（市場主流同業法、未調整）為 ", (f'TEXT({_V("upc")},"+0.0%;-0.0%")',),
                       "。與共識目標價 ", ('TEXT(cons_tp,"#,##0")',), " 的差距 ", (f'TEXT({_gap},"+#,##0;-#,##0")',), " 元中，DCF 部分 ", (f'TEXT({_gd},"+#,##0;-#,##0")',), "、Comparable 部分 ", (f'TEXT({_gc},"+#,##0;-#,##0")',),
                       "；Comparable 內本模型前瞻 EPS ", (f'TEXT({_V("feps")},"0.0")',), " 比共識前瞻 EPS 低 ", (f'TEXT(-{_V("geps")},"0.0%")',), "、倍數因素 ", (f'TEXT({_V("gmul")},"+0.0%;-0.0%")',), "（共識目標價隱含 ", ('TEXT(cons_tp/(2/12*cons_feps27+10/12*cons_feps28),"0.0")',), " 倍，同業中位數 ", (f'TEXT({_V("pmed")},"0.0")',), " 倍）。"))
+# 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 tsmc/coord_alt.json）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    COORD.stamp(wb, "v0.4", "v0.5.5", "2026-11-15")
+    # v0.5.5（2026-11-15）：個股 HTML 版面規格 v1.3、三層協調讀取層級與 C0（含公司實績，規則 v1.4.2）、硬體股兩讀數（tsmc/v055_post.py；只新增頁與列，既有數值格不變）
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import v055_post  # noqa: E402
+    print(v055_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR, [k for k, *_ in MEM.UNITS], PR, COLOF, SC))
 wb.save(sys.argv[1]); print("saved")
