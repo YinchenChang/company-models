@@ -139,3 +139,14 @@
 - 測試：builder 33 項（新增 v0.2.0 回歸與恆等式 5 項；歷史回歸先關 v0.2.0 開關）；parity 情境 70 → 78、workbook_expectations 更新；HTML 新增 ①之九 與 ① 投資建議 kpi，①之八 改以 v0.1.9 當時輸出（情境 v019、v019_*），歷史情境加 v020_off（HTML 情境 177）。
 - 報告 `docs/reports/20261111_v0.2.0.md`＋`_對照.xlsx`（`tools/make_report_v020.py`）。
 - 獨立核對後修正（2026-11-11）：估值 EBIT 加回既有獎酬股權報酬（`val_sbc_addback_switch`）、NTM 改 2026Q4 實值（`val_ntm_q4_switch`，J9）、DCF 與 Comparable 下限改淨現金每股、融資租賃改現值 1.674（SRC_ANT_593）、D18 回流對照與 HTML 資金節隨 B1／B2、HTML 數字綁 SRC／INP、Q4 均值讀法 `p_q4_avg_switch`（Sens）、原文摘錄頁碼更正。估值改為：DCF A／B／C 133.99／34.60／14.28、加權 54.37；Comparable 153.44／111.06；加權目標價 82.71、上檔空間 +11.8%、評等中立（修正前 76.60、+3.5%）。命題 1、2 與 F07 不變。SRC_ANT 593、Inputs 275、公式格 9,262、具名範圍 1,715。
+
+## v0.2.1 個股 HTML 版面規格 v1.3 試作（2026-11-14；Excel `model/20261114_Anthropic_v0.2.1.xlsx`；v0.2.0 移至 `model/archive/`）
+- 依據：Andy 2026-11-14 08:11 指示、`docs/plan/個股HTML版面規格.md` v1.3（試作版，請勿合併）。只改展示層＋補標準損益表；目標價、評等與既有數值格不變。
+- 新頁 PL（`builder/a12.py`）：標準損益表（GAAP），2023–2025 與 2026 前九月取 S-1/A，2026–2030 取基準情境（營收＝營收總額截頂後；營業成本＝推論算力；營業利益＝Funding F06；其他收入＝現金利息；所得稅抵用 NOL；EPS＝淨利 ÷ 評價股數）；情境 A／B／C 營收與營業利益對照；歷史淨利勾稽列（應為 0）。只列示，不被任何計算頁引用。
+- 新增 SRC_ANT_594–621（28 列；S-1/A 損益表：營收成本、營業損益、其他收入、所得稅、淨損、每股淨損、加權股數、利息收入、9-30 現金、聯邦 NOL）；Inputs pl_cash_yield（4%，3–4.5%，Assumed）、pl_q4_oth_other（0，Decision）。Checks 列數上限改 800 列。
+- 逐格比對（v0.2.0 → v0.2.1，既有 33,473 格、其中數值 11,375 格）：數值差異只有 Checks 的 SRC_ANT／Inputs 列數（593 → 621、275 → 277）；其餘為版本字串、README、讀取日期與 OAI_Link 建置提交。Val、Funding、Cost 等計算頁 0 差異；加權目標價 82.71、評等中立不變。
+- 成品：`dist/20261114_Anthropic個股模型_v0_2_1.html`（v1.3 版面，產生器 `tools/company_html/fundmodel_v13.py`，由 `fundmodel_v2.py --profile anthropic` 呼叫；OpenAI 輸出逐位不變）、`dist/20261114_Anthropic收支模型_v0_2_1.html／.xlsx`；v0.2.0 三檔移 `dist/_待刪除/`。
+- 追加（同日，Andy 11-14 09:03／09:16）：
+  - 新頁 RevDCF（`builder/a12.py` build_revdcf）：以現價（IPO 區間中點 74）反解 (a) 隱含 WACC 5.1%（模型 11.1%；二分法）、(b) 隱含營收倍數 2.97（2030 營收總額 701 對 236；二分法，虧損扣抵逐年重算）、(c) 隱含終值期營業利益率 68.4%（模型 21.9%；封閉解）、(d) Comparable 隱含 EV／NTM 營收 11.54 倍（模型調整後 21.02、同業中位數 26.32；係數 0.44 對 0.80）；各段核對列＝0。只列示，不被任何頁引用。Inputs 新增二分法區間 4 列（INP_282–285）。
+  - Val 敏感度表新增 F–J 欄（加權目標價相對基準 %、白話標籤；白話標籤來源 `data/val_sens_plain.yaml`），具名 VAL_SensPct；既有格不變。
+  - HTML：橫幅現價附依據與日期；估值章並排四個目標價（市場共識：不適用，尚未掛牌）；敏感度主圖改為加權目標價相對基準的雙向長條（輸入取低值／取高值各一張，v1.3 H 節）；反向 DCF 章改為現價隱含表，管理層目標反推移至摺疊。

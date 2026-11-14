@@ -92,7 +92,7 @@ jobs:
     name: structure-recalc（結構性測試＋函數語意＋兩條重算）
     needs: engine-cache
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 50   # v0.2.1：＋PL、RevDCF 頁（約 1,300 公式格），原 30 分鐘（實測 25–29 分）已不夠
     env:
       PARITY_RESULTS: tests/parity/_results_structure.json
     steps:
