@@ -5,4 +5,4 @@ import os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "tools", "memory_model"))
 import html_layout  # noqa: E402
-html_layout.build(HERE, sys.argv[1], nm_block=False, pfmt="n0")
+html_layout.build(HERE, sys.argv[1], nm_block=False, pfmt="n0", v13=True)   # v0.7.6 起：版面 v1.3
