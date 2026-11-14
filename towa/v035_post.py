@@ -451,7 +451,7 @@ def coord_c0(wb, SIL, CR, HR, PB, EQ_F):
                     T(" 日圓（"), f"C{CR['rec']}", T("）；兩讀數只差產業部署 GW 一個輸入（情境 B、C 的 HBM 出貨位元與 CoWoS 片數 × 另一側比值；情境 A 不縮放），個股不裁決，對帳在 Siliconomics 對帳單處理。")))
     ROW["s3"] = r; r += 1
     CW.cell(r, 1, F(T("兩讀數的縮放比值：CY2027 "), TX(f"C{CR['ratio']}", "0.000"), T("、CY2028 "), TX(f"D{CR['ratio']}", "0.000"), T("、CY2029 "), TX(f"E{CR['ratio']}", "0.000"),
-                    T("（另一側 ÷ 現行基準）。另一側讀數直接縮放 HBM 出貨位元（不再與供給取小）與 CoWoS 片數；校準係數 kH、kL 沿用情境 A 的 FY2025 校準（FY2025 是實績，不重新校準）；非 AI 封膠（SEMI 封裝設備）、切割與雷射（設備總額）未縮放。")))
+                    T("（另一側 ÷ 現行基準）。另一側讀數直接縮放 HBM 出貨位元（不再與供給取小）與 CoWoS 片數；校準係數 kH、kL 與指數分母不重算（與現行建置同一情境相同）；FY2025 是實績、FY2026 是錨點，已實現與錨點期間不受縮放影響（FY2025 的 1/4 CY2026 新機需求讀未縮放的 CY2027 堆疊數與片數）；非 AI 封膠（SEMI 封裝設備）、切割與雷射（設備總額）未縮放。")))
     ROW["s3b"] = r; r += 1
     CW.column_dimensions["F"].width = 18; CW.column_dimensions["G"].width = 26; CW.column_dimensions["H"].width = 110; CW.column_dimensions["I"].width = 40
     # ---- 4. C0 ----

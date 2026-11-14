@@ -569,7 +569,8 @@ PL["A1"] = (f"PL — {C['name']}損益（十億新台幣；EPS 新台幣、基�
             "FY2030–FY2032 為收斂法。FY(t)＝CY(t)。三情境各一個完整推導區塊（本頁下方），頂端為摘要")
 PB = {}; r0 = 60
 for s in SC:
-    PB[s] = engine(PL, r0, C["scn_t"][s], scn=s)
+    # v0.2.4 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py；SIL.COORD_ALT）：情境 B、C 於 CY2027 起 AI 相關營收 × wta（＝另一側讀數比值，只在對帳中年份；其他年份＝1）；情境 A 不縮放。正式建置不乘（wm=None，公式與前版相同）
+    PB[s] = engine(PL, r0, C["scn_t"][s], scn=s, wm=({2027: "wta_27", 2028: "wta_28", 2029: "wta_29"} if (SIL.COORD_ALT and KIND == "umc" and s in ("B", "C")) else None))
     r0 = PB[s]["end"] + 2
 hdr(PL, 3, ["情境／項目", "單位", "FY2025A", "FY2026（錨點）", "FY2027", "FY2028", "FY2029", "FY2030（收斂）", "FY2031（收斂）", "FY2032（收斂）", "說明"])
 sr = 4; SUMR = {}
@@ -1059,6 +1060,16 @@ RD.cell(r, 1, f'="每股值多少？答：加權目標價約 "&{_T(_B("tpw"), "0
 r += 1
 RD.cell(r, 1, "展示層輔助：Comparable 目標價（相對倍數調整後）的上檔空間（HTML 估值表用；加權目標價使用的 Comparable 即此值；投資建議橫幅中間格放只看 Comparable〔市場主流同業法〕，見 Val 頁）")
 RD.cell(r, 2, "=tp_comp_adj/px-1").number_format = "0.0%"
+# 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 umc/coord_alt.json）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    COORD.stamp(wb, "v0.2.3", "v0.2.4", "2026-11-15")
+    # v0.2.4（2026-11-15）：個股 HTML 版面規格 v1.3、三層協調讀取層級與 C0（含公司實績，規則 v1.4.2）、硬體股兩讀數（umc/v024_post.py；只新增頁與列，既有數值格不變）
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import v024_post  # noqa: E402
+    print(v024_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR, dict(PB=PB, C=C, SENS_ROWS=SENS_ROWS, TP_ROWS=TP_ROWS)))
 wb.save(sys.argv[1])
 if os.environ.get("ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK, "VAL": VAL, "INROW": INROW,
