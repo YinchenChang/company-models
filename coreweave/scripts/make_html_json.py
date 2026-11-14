@@ -281,5 +281,45 @@ cfg = {
             {"type": "scan", "needle": "找不到", "collapse": True, "summary": "展開：標為「找不到」的輸入與來源", "sheets": {"In": ["H", "I"], "Val": ["A"]}, "empty": "沒有標為找不到的項目。"}]},
     ],
 }
+
+# v5.0.3：對帳章新增 Coord 頁的實績對帳（C0）與讀取層級（數字與文字全取自 xlsx；設定檔文字不含數字）
+_CO = R["COORD"]
+_rec = next(x for x in cfg["sections"] if x["id"] == "recon")
+_rows = []
+for _k in ("m1", "m2", "j1", "c1", "c2", "j2", "w1", "w2", "j3"):
+    _r = _CO[_k]
+    _f = "n0" if _k in ("w1", "w2") else "n1"
+    _j = _k.startswith("j")
+    _rows.append([f"@Coord!A{_r}", f"@Coord!B{_r}", "" if _j else f"@Coord!D{_r}|{_f}", "" if _j else f"@Coord!E{_r}|{_f}", "" if _j else f"@Coord!F{_r}|sp1", f"@Coord!G{_r}"])
+_rows.append([f"@Coord!A{_CO['ctr']}", f"@Coord!B{_CO['ctr']}", f"@Coord!D{_CO['ctr']}|n0", "", "", f"@Coord!G{_CO['ctr']}"])
+_t_c0 = {"type": "table", "caption": f"@Coord!A{_CO['G2h']}", "head": ["讀數", "期間／口徑", "公司實績", "層級隱含", "差距", "狀態／判定"], "rows": _rows}
+_d_c0 = {"type": "table", "caption": "展開：實績對帳的口徑、出處與證據等級", "collapse": True, "summary": "展開：實績對帳的口徑、出處與證據等級",
+         "head": ["項目", "期間／口徑", "公司實績口徑與出處", "公司實績等級", "層級口徑與出處", "層級等級"],
+         "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!H{r}", f"@Coord!I{r}", f"@Coord!J{r}", f"@Coord!K{r}"] for r in range(_CO["mo"], _CO["G2b"] + 1)]}
+_ref = {"type": "table", "caption": "參考列（不判定）：公司口徑資本支出、每 MW 年收入與在役電力流量", "head": ["項目", "期間／口徑", "實績", "層級", "差距", "狀態"],
+        "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!D{r}|n2", f"@Coord!E{r}|n2", f"@Coord!F{r}|sp1", f"@Coord!G{r}"] for r in (_CO["cxd"], _CO["xd"], _CO["wf"])]}
+_t_g1 = {"type": "table", "caption": f"@Coord!A{_CO['G1h']}", "collapse": True, "summary": "展開：本模型讀取的層級名稱、版本與同源值（不判定）",
+         "head": ["名稱", "層級與版本", "單位", "本模型（或公司目標）", "層級值", "差距", "狀態"],
+         "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}", f"@Coord!D{r}|n2", f"@Coord!E{r}|n2", f"@Coord!F{r}|sp1", f"@Coord!G{r}"] for r in range(_CO["G1a"], _CO["G1b"] + 1)]}
+_rec["blocks"][0:0] = [{"type": "h3", "text": "實績對帳：公司已公布實績對層級隱含值"}, {"type": "note", "parts": [f"@Coord!D{_CO['sum']}"]}, _t_c0, _d_c0, _ref,
+                       {"type": "note", "parts": [f"@Coord!B{_CO['k']}"]}, {"type": "note", "parts": [f"@Coord!B{_CO['org']}"]},
+                       {"type": "h3", "text": "三層協調：讀取層級（同源，不判定）"}, {"type": "note", "parts": [f"@Coord!A{_CO['g1note']}"]}, _t_g1]
+for _b in cfg["sections"]:
+    if _b["id"] == "status":
+        for _x in _b["blocks"]:
+            if _x.get("summary") == "展開：版本要點":
+                _x["items"].insert(0, f"@README!A{RL['v503']}")
+
+# v5.0.3（版面 v1.3 G、H 位置；Andy 2026-11-14 12:47）：估值章第一個區塊＝四個目標價與現價圖，敏感度章前兩個區塊＝低案、高案主圖；章節說明放在圖下方
+def _move_intro_below(sec_id, n_lead):
+    sec = next(x for x in cfg["sections"] if x["id"] == sec_id)
+    intro = sec.pop("intro", None)
+    if intro:
+        sec["blocks"].insert(n_lead, {"type": "note", "parts": [intro]})
+_va = next(x for x in cfg["sections"] if x["id"] == "valuation")
+_i = next(i for i, b in enumerate(_va["blocks"]) if b["type"] == "theme")
+_va["blocks"].insert(0, _va["blocks"].pop(_i))
+_move_intro_below("valuation", 1)
+_move_intro_below("sens", 2)
 json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("html.json written", X)
