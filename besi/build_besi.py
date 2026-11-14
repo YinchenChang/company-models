@@ -171,11 +171,21 @@ inp("lt_hi", "公司長期營收目標 上緣", "€M", None, 2200, None, "Inter
 inp("hb_cum25", "混合鍵合累計訂單 2025 年底", "台", None, 150, None, "Verified", "公司 Q4-25 新聞稿：18 家客戶、累計 150＋台", "—")
 inp("hb_cum26q3", "混合鍵合累計訂單 2026 年第三季", "台", None, 215, None, "Interested-party", "investing.com Q3-26 簡報摘要：23 家客戶、累計 215＋台", "gurufocus 法說摘要同")
 
+# BESI_OVERRIDE（v0.2.4 起，敏感度快照用，besi/sens_besi.py；「鍵=@lo／@hi／*倍數／數值；…」＝該鍵的基準欄改取 In 頁低／高欄、乘倍數或改數值；正式建置不設）
+OVR = dict(kv.split("=", 1) for kv in os.environ.get("BESI_OVERRIDE", "").split(";") if "=" in kv)
 r = 4
 for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    if key in OVR:
+        ov = OVR[key]
+        if ov.startswith("*"):
+            assert isinstance(base, (int, float)), (key, base); _new = base * float(ov[1:])
+        else:
+            _new = {"@lo": lo, "@hi": hi}[ov] if ov.startswith("@") else float(ov)
+        assert _new is not None, (key, ov)
+        base = _new
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
         if v is not None:
@@ -236,6 +246,10 @@ DEFP = dict(scn="A", den="", stk="", beta="beta_stk", dlt="dlt", gt="g_tail", hb
 
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["hsx"] is None and P["cwm"] is None and s != "A":   # v0.2.4 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 於 CY2027 起 HBM 出貨位元與 CoWoS 晶圓需求 × wta（＝另一側讀數比值）；情境 A 不縮放
+        P["hsx"] = {y: (f"hs{s}_{y % 100}*wta_{y % 100}" if y >= 2027 else f"hs{s}_{y % 100}") for y in YRS}
+        P["cwm"] = {y: f"wta_{y % 100}" for y in (2027, 2028, 2029)}
+        P["kfix"] = True   # 校準係數 k 的分母用未縮放的 CY2027 CoWoS（FY2026 錨點是已發生的實績，另一側讀數只改 CY2027 起的部署，不重新校準 k）
     hb = P["hb"] if P["hb"] is not None else HB[s]
     att = P["att"] or ("att" + s + "_{y}")
     shm = P["shm"] or f"shm_{s}"; shl = P["shl"] or f"shl_{s}"
@@ -267,7 +281,7 @@ def engine(ws, r0, title, **over):
     ws.cell(r, 1, "C. 損益（會計年度；FY2026＝錨點）").font = BOLD; r += 1
     row("hbm", "HBM 混合鍵合營收＝新機 × 單價 × BESI 份額", "€M", {2025: "=0", 2026: "=hbm26", **{y: f"={COL[y]}{R['newt']}*{P['asp']}*{shm}" for y in (2027, 2028, 2029)}}, note="FY2025–26 尚未量產（Assumed 0）")
     row("lgc", "邏輯與其他混合鍵合營收", "€M", {2025: "=hb25", 2026: f"={P['rev26']}*{P['hbsh']}-hbm26", **{y: f"=$D{r + 1}*{COL[y]}{R['newl']}*{shl}" for y in (2027, 2028, 2029)}}, note="FY2026＝錨點營收 × 混合鍵合占比；FY2027 起＝k × 新機需求指數 × 相對份額")
-    row("k", "校準係數 k＝FY2026 邏輯混合鍵合營收 ÷ FY2026 新機需求指數", "€M／千片當量", {2026: f"=D{R['lgc']}/D{R['newl']}"}, fmt="0.000", note="只用 FY2026（台積電 CoWoS 需求自 2026 起）；不使用共識")
+    row("k", "校準係數 k＝FY2026 邏輯混合鍵合營收 ÷ FY2026 新機需求指數", "€M／千片當量", {2026: (f"=D{R['lgc']}/(MAX(0,cow_27*E{R['att']}-D{R['idx']})+{P['dlt']}*D{R['idx']})" if P.get("kfix") else f"=D{R['lgc']}/D{R['newl']}")}, fmt="0.000", note="只用 FY2026（台積電 CoWoS 需求自 2026 起）；不使用共識")
     row("hbr", "混合鍵合營收合計", "€M", {y: f"={COL[y]}{R['hbm']}+{COL[y]}{R['lgc']}" for y in YRS})
     row("main", "主流業務營收（晶粒貼合、封裝、電鍍、TC 鍵合）", "€M", {2025: "=a25_rev-hb25", 2026: f"={P['rev26']}-D{R['hbr']}", **{y: f"={COL[y-1]}{r}*(1+{P['el']}*eqg{s}_{y % 100})" for y in (2027, 2028, 2029)}}, note="FY2027 起＝前一年 ×（1＋彈性 × 設備總額年增，markets/equipment 同字母）")
     row("rev", "營收", "€M", {y: f"={COL[y]}{R['hbr']}+{COL[y]}{R['main']}" for y in YRS})
@@ -997,6 +1011,17 @@ def _px1105(wb, ver, tk, px5, px4, peer5, peer_old):
 _PX1105 = _px1105(wb, 'v0.2.3', 'BESI.AS', 140.9, 152,
     {'ASM.AS': 635.8, '0522.HK': 101, 'KLIC': 59.83, '6146.T': 41450, '042700.KS': 169100},
     {('ASM.AS', '2026-11-04'): 683.6, ('0522.HK', '2026-09-23'): (171, '2026-09-23 收盤 HK$171.00 取自 TOWA 模型 Val 同業列（stockanalysis 取得日價格）'), ('KLIC', '2026-11-04'): 68.44, ('6146.T', '2026-11-04'): 47370, ('042700.KS', '2026-11-04'): 186100})
+# ---------------- v0.2.4（2026-11-15）：三層協調 C4 兩讀數（Coord 頁；快照 besi/coord_alt.json）、個股 HTML 版面 v1.3、C0（公司實績） ----------------
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    COORD.stamp(wb, "v0.2.3", "v0.2.4", "2026-11-15")
+    if not os.environ.get("BESI_OVERRIDE") and not os.environ.get("BESI_SNAP"):
+        # v0.2.4：個股 HTML 版面規格 v1.3、三層協調 C0（含公司實績）與兩讀數（besi/v024_post.py；只新增頁與列，既有數值格不變）
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import v024_post  # noqa: E402
+        print(v024_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR, PB, SUMR, EQ_F))
 wb.save(sys.argv[1])
 print("PB", {s: PB[s] for s in SC}); print("SUMR", SUMR); print("VAL", VAL, "PXROW", PXROW, "fwd rows to", fr, "SENS_LAST", SENS_LAST, "Recon last", rr_)
 print("UR", UR)
