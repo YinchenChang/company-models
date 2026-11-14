@@ -62,7 +62,10 @@ def add(SP, wb, Co, L, F, T):
         A[row["key"]] = r
         r += 1
     A["miss"] = []
-    for nm, un, nt in SP["missing"]:
+    for mi in SP["missing"]:   # (名稱, 單位, 說明[, 網址（H 欄，不入 HTML）])
+        nm, un, nt = mi[:3]
+        if len(mi) > 3:
+            Co.cell(r, 8, mi[3])
         Co.cell(r, 1, f"{nm}（公司揭露）")
         Co.cell(r, 2, un)
         for c in "CDE":

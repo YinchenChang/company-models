@@ -165,7 +165,9 @@ def pl_sheet(wb, HR):
     if K["nm"]:   # 有非記憶體事業（三星）：Y 頁營業成本、營業費用只含記憶體；合併口徑＝記憶體＋非記憶體成本（營收 − 營業利益）按 k 分攤，合計仍等於合併營收 − 合併營業利益
         nmr, nmo = yr("非記憶體事業營收"), yr("非記憶體事業營業利益")
         P["A4"] = ("非記憶體事業成本分攤（Assumed）：Y 頁營業成本、營業費用只含記憶體事業；合併營業成本＝Y 頁記憶體營業成本＋（非記憶體事業營收 − 營業利益）× k，營業費用＝合併營收 − 合併營業成本 − 合併營業利益"
-                   f"（合計與 Y 頁相同）。k＝非記憶體事業成本中計入營業成本的比例，取 2025 年合併營業成本 ÷（合併營業成本＋銷管費用）＝{K['nm_k']:.3f}（Hist 頁，Derived；三星未揭露非記憶體事業的成本結構）")
+                   f"（合計與 Y 頁相同）。k＝非記憶體事業成本中計入營業成本的比例，取 2025 年合併營業成本 ÷（合併營業成本＋銷管費用）＝{K['nm_k']:.3f}（Hist 頁，Derived；三星未揭露非記憶體事業的成本結構）。"
+                   "k 為建置時寫死的常數（company.py，不隨 Hist 頁連動）；合併比例含記憶體事業（銷管費用占比低），非記憶體事業（裝置、顯示器等）銷管占比可能較高，"
+                   "若是則 k 偏高：PL 頁營業成本偏高、毛利率與營業費用偏低（偏誤方向），營業利益合計不受影響；本版不改值")
         NMK = K["nm_k"]
         def y(k):
             if k == "cogs":
@@ -508,8 +510,9 @@ def val07(wb):
         V.cell(r, 3, f"=B{r}/px-1").number_format = "+0.0%;-0.0%"
         V.cell(r, 4, note)
         r += 1
-    V.cell(r, 1, "現價")
-    V.cell(r, 1).value = "=In!B6"
+    _I = wb["In"]   # 現價標籤取 In 頁 px 列（鍵在 A 欄）；美光 In 頁 px 在第 5 列（第 6 列為匯率），不能寫死 B6
+    _pr = next((rr for rr in range(1, _I.max_row + 1) if _I.cell(rr, 1).value == "px"), 6)
+    V.cell(r, 1).value = f"=In!B{_pr}"
     V.cell(r, 2, "=px").number_format = "#,##0"
     V.cell(r, 4, "In 頁 px（價格日見項目名稱）")
     r += 1
@@ -624,7 +627,11 @@ def coord_c0(wb, SIL, here=None):
     ycol = {2026: "C", 2027: "G", 2028: "H", 2029: "I"}
     r = Co.max_row + 2
     Co.cell(r, 1, ("C0 由下往上對帳：讀取層級（同源，不判定；三層基準協調規則 v1.4.2 C0 第 2 點，v0.7.7 改標）：本模型自己的產業相關量（HBM 市場規模與出貨位元、基準顆數係數 K1、HBM 營收市占、HBM 營收），"
-                   f"與 Siliconomics {SIL.VERSION} 對應值並列。本模型直接讀層，差距恆為 0、無檢驗力，故不判定、不計入對帳中；有檢驗力的對帳見本頁末「C0（實績）」節（公司實績 vs 層級隱含值）。"
+                   f"與 Siliconomics {SIL.VERSION} 對應值並列。" + (
+                   "HBM 市場規模、出貨位元、K1、市占四項本模型直接讀層，差距為 0；HBM 營收列本模型為會計年度（" + K["fyp"] + "，非日曆年）、層為日曆年（CY），"
+                   "差距是期間口徑差（模型會計年度 vs 層級日曆年），不是估計差異；皆無檢驗力，故不判定、不計入對帳中；" if K["fyp"] else
+                   "本模型直接讀層，差距恆為 0、無檢驗力，故不判定、不計入對帳中；") +
+                   "有檢驗力的對帳見本頁末「C0（實績）」節（公司實績 vs 層級隱含值）。"
                    "層的值為建置時由 siliconomics/reader.py 讀入的常數（藍字），本模型的值為活公式")).font = BOLD
     top = r
     r += 1
@@ -637,7 +644,7 @@ def coord_c0(wb, SIL, here=None):
     r += 1
     L = {}
 
-    def three(key, name, unit, own_f, layer_vals, fmt, own_note, layer_note, grade, state=True):
+    def three(key, name, unit, own_f, layer_vals, fmt, own_note, layer_note, grade, state=True, st_text="讀取層級（同源，不判定）"):
         """本模型一列、層一列、差距一列、狀態一列。"""
         nonlocal r
         Co.cell(r, 1, f"{name}：本模型")
@@ -670,7 +677,7 @@ def coord_c0(wb, SIL, here=None):
             Co.cell(r, 1, f"{name}：狀態")
             for y in cols:
                 cc = cols[y]
-                Co[f"{cc}{r}"] = f'=IF({cc}{rd}="","","讀取層級（同源，不判定）")'
+                Co[f"{cc}{r}"] = f'=IF({cc}{rd}="","","{st_text}")'
             L[key + "_s"] = r
             r += 1
         L[key] = (ro, rl, rd)
@@ -686,7 +693,9 @@ def coord_c0(wb, SIL, here=None):
           "In 頁 sh26–sh29（讀層）", f"Siliconomics M24 市占表 hbmsh_{K['own']}", "層為 Interested-party（Counterpoint、IDC、UBS 位元市占）")
     three("rev", f"{K['name']} HBM 營收", "US$B", lambda y: f"=Y!{ycol[y]}{lab(Y, '  HBM')}/({K['ccy_per_usdB']})",
           lambda y: f"={cols[y]}{L['mkt'][1]}*{cols[y]}{L['sh'][1]}", "#,##0.0",
-          "Y 頁情境 B HBM 營收 ÷ 匯率（韓元兆 → US$B）", "層：HBM 市場 × 層的市占（Σ 個股加總的一部分）", "由上兩列相乘（Derived）")
+          ("Y 頁情境 B HBM 營收（" + K["fyp"] + " 會計年度，置於同名日曆年欄；美元計價，無匯率換算）；層為日曆年，差距是期間口徑差（模型會計年度 vs 層級日曆年），不判定" if K["fyp"]
+           else "Y 頁情境 B HBM 營收 ÷ 匯率（韓元兆 → US$B）"), "層：HBM 市場 × 層的市占（Σ 個股加總的一部分）", "由上兩列相乘（Derived）",
+          st_text="讀取層級（同源；期間口徑差，不判定）" if K["fyp"] else "讀取層級（同源，不判定）")
     # 恆等式：已建模個股加總＋殘差＝市場
     Co.cell(r, 1, "C0 恆等式：HBM 市占合計（SK 海力士＋三星＋美光＋未建模殘差）＝1")
     Co.cell(r, 2, "%")
@@ -730,7 +739,12 @@ def coord_c0(wb, SIL, here=None):
     # 摘要
     Co.cell(r, 1, "C0 摘要（HTML 用；公式帶數字）")
     n_ev = "+".join(f'COUNTIF(C{x[2]}:F{x[2]},"*超出*")' for x in L["ev"])
-    Co.cell(r, 2, F(T("讀取層級（同源，不判定、不計入對帳中）：HBM 市場規模、出貨位元、顆數係數、市占與 HBM 營收本模型直接讀層，差距恆為 0，無檢驗力；對帳以本頁末「C0（實績）」節的公司實績對層級隱含值為準。"),
+    _rd = L["rev"][2]
+    _hd = (T("讀取層級（同源，不判定、不計入對帳中）：HBM 市場規模、出貨位元、顆數係數、市占本模型直接讀層，差距為 0；HBM 營收列本模型為會計年度（" + K["fyp"] + "）、層為日曆年，差距 "),
+           f'TEXT(C{_rd},"+0.0%;-0.0%")&"／"&TEXT(D{_rd},"+0.0%;-0.0%")&"／"&TEXT(E{_rd},"+0.0%;-0.0%")&"／"&TEXT(F{_rd},"+0.0%;-0.0%")',
+           T("（CY2026–CY2029）是期間口徑差（模型會計年度 vs 層級日曆年），不是估計差異。皆無檢驗力；對帳以本頁末「C0（實績）」節的公司實績對層級隱含值為準。")) if K["fyp"] else \
+          (T("讀取層級（同源，不判定、不計入對帳中）：HBM 市場規模、出貨位元、顆數係數、市占與 HBM 營收本模型直接讀層，差距恆為 0，無檢驗力；對帳以本頁末「C0（實績）」節的公司實績對層級隱含值為準。"),)
+    Co.cell(r, 2, F(*_hd,
                     T("對外證據（參考，不判定）："), f'IF(({n_ev})=0,"三筆外部估計都在容差內","有 "&({n_ev})&" 筆外部估計與層差距超過 ±15%（見下表，皆為賣方或公司自估，非逐顆證據）")'))
     L["sum"] = r
     r += 1
@@ -846,8 +860,12 @@ def readme13(wb, PLA, S_, G_, RVA, SNA, C0, ver_text):
     rows = {}
     r += 1
     rows["hero"] = r
-    RD.cell(r, 1, F(T("投資建議"), rec, T("：加權目標價 "), f'TEXT({tp},"#,##0")', T(" 韓元，較現價高 "), f'TEXT({up},"0.0%")',
-                    T("；DCF 與同業 P/B 兩法都"), f'IF(AND({dcf}>px,{ca}>px),"高於","並非都高於")', T("現價。對帳中（"), yrs, T("）：另一側讀數目標價 "),
+    # 依上檔空間正負號改寫（美光 v0.5.5 核對：上檔空間為負時不可寫「較現價高 −x%」）；正值時字樣與 v0.5.5 前相同
+    hilo = f'IF({up}>=0,"高 ","低 ")&TEXT(ABS({up}),"0.0%")'
+    both = (f'IF(AND({dcf}>px,{ca}>px),"高於",IF(AND({dcf}<px,{ca}<px),"低於",'
+            f'"不在同一側（DCF "&IF({dcf}>px,"高於","低於")&"、同業 P/B 法"&IF({ca}>px,"高於","低於")&"）"))')
+    RD.cell(r, 1, F(T("投資建議"), rec, T("：加權目標價 "), f'TEXT({tp},"#,##0")', T(" 韓元，較現價"), hilo,
+                    T("；DCF 與同業 P/B 兩法都"), both, T("現價。對帳中（"), yrs, T("）：另一側讀數目標價 "),
                     f'TEXT({c_tp},"#,##0")', T("（"), c_rec, T("）"), f'IF({b_rec}<>{c_rec},"，與現行基準讀數（"&{b_rec}&"）評等不同","")', T("。")))
     r += 1
     rows["rec"] = r
@@ -857,9 +875,12 @@ def readme13(wb, PLA, S_, G_, RVA, SNA, C0, ver_text):
                     T("。對帳中的另一側讀數上檔空間 "), f'TEXT({c_up},"0.0%")', T("，評等"), c_rec, T("。")))
     r += 1
     rows["o1"] = r
-    RD.cell(r, 1, F(T("合理價值高於現價：加權目標價 "), f'TEXT({tp},"#,##0")', T(" 韓元（DCF "), f'TEXT({dcf},"#,##0")', T("、同業 P/B 法〔相對倍數調整後〕"), f'TEXT({ca},"#,##0")',
-                    T("），較現價高 "), f'TEXT({up},"0.0%")', T("；上檔由 DCF 與同業比較約各半貢獻（DCF "), f'TEXT({dcsh},"0%")',
-                    T("）。賣方共識目標價 "), f'TEXT({cons},"#,##0")', T("，本模型較共識"), f'IF({tp}<{cons},"低 ","高 ")&TEXT(ABS({tp}/{cons}-1),"0%")', T("。")))
+    contrib = (f'IF(AND({dcf}>px,{ca}>px),"上檔由 DCF 與同業比較約各半貢獻（DCF "&TEXT({dcsh},"0%")&"）",'
+               f'IF(AND({dcf}<px,{ca}<px),"兩法都低於現價，下檔由 DCF 與同業比較共同貢獻（DCF 占 "&TEXT({dcsh},"0%")&"）",'
+               f'"兩法不在現價同一側（DCF "&IF({dcf}>px,"高於","低於")&"、同業 P/B 法"&IF({ca}>px,"高於","低於")&"現價），不拆分貢獻"))')
+    RD.cell(r, 1, F(f'IF({tp}>=px,"合理價值高於現價","合理價值低於現價")', T("：加權目標價 "), f'TEXT({tp},"#,##0")', T(" 韓元（DCF "), f'TEXT({dcf},"#,##0")', T("、同業 P/B 法〔相對倍數調整後〕"), f'TEXT({ca},"#,##0")',
+                    T("），較現價"), hilo, T("；"), contrib,
+                    T("。賣方共識目標價 "), f'TEXT({cons},"#,##0")', T("，本模型較共識"), f'IF({tp}<{cons},"低 ","高 ")&TEXT(ABS({tp}/{cons}-1),"0%")', T("。")))
     r += 1
     rows["o2"] = r
     RD.cell(r, 1, F(T("盈餘高點看情境、不是單一預測：基準情境淨利 2027 年 "), f'TEXT(PL!E{ni["B"]},"#,##0")', T(" 兆韓元，2028 年降到 "), f'TEXT(PL!F{ni["B"]},"#,##0")',

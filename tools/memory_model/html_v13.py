@@ -250,7 +250,9 @@ def transform(cfg, wb, co_dir=None, opts=None, pfmt="n0"):
     c0_blocks = act_blocks + [
                  {"type": "h3", "text": "讀取層級（同源，不判定）：本模型讀入的 Siliconomics 值"},
                  {"type": "note", "parts": [f"@Coord!B{sum_r}"]},
-                 {"type": "table", "caption": "讀取層級對照表（本模型直接讀層，差距恆為零、無檢驗力，故不判定、不計入對帳中；公司實績對帳見上表）", "head": [f"@Coord!{c}{hdr}" for c in "ABCDEF"], "rows": crows(hdr + 1, sum_r - 1)},
+                 {"type": "table", "caption": ("讀取層級對照表（HBM 市場、出貨位元、顆數係數、市占本模型直接讀層，差距為零；HBM 營收列本模型為會計年度、層為日曆年，差距是期間口徑差，不判定、不計入對帳中；公司實績對帳見上表）"
+                             if any("期間口徑差" in str(CW.cell(r, c).value or "") for r in range(hdr + 1, sum_r) for c in range(3, 7)) else
+                             "讀取層級對照表（本模型直接讀層，差距恆為零、無檢驗力，故不判定、不計入對帳中；公司實績對帳見上表）"), "head": [f"@Coord!{c}{hdr}" for c in "ABCDEF"], "rows": crows(hdr + 1, sum_r - 1)},
                  {"type": "table", "caption": "對帳的口徑、來源與證據等級", "collapse": True, "summary": "展開：口徑、來源與證據等級", "head": ["項目", "口徑、來源與證據等級"],
                   "rows": [[f"@Coord!A{r}", f"@Coord!G{r}"] for r in note_rows]},
                  {"type": "h3", "text": "層級之間（參考；Siliconomics 對帳單處理，不計入本公司對帳）"},
