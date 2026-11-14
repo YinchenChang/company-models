@@ -296,8 +296,8 @@ _t_c0 = {"type": "table", "caption": f"@Coord!A{_CO['G2h']}", "head": ["讀數",
 _d_c0 = {"type": "table", "caption": "展開：實績對帳的口徑、出處與證據等級", "collapse": True, "summary": "展開：實績對帳的口徑、出處與證據等級",
          "head": ["項目", "期間／口徑", "公司實績口徑與出處", "公司實績等級", "層級口徑與出處", "層級等級"],
          "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!H{r}", f"@Coord!I{r}", f"@Coord!J{r}", f"@Coord!K{r}"] for r in range(_CO["mo"], _CO["G2b"] + 1)]}
-_ref = {"type": "table", "caption": "參考列（不判定）：公司口徑資本支出與每 MW 年收入", "head": ["項目", "期間／口徑", "實績", "層級", "差距", "狀態"],
-        "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!D{r}|n2", f"@Coord!E{r}|n2", f"@Coord!F{r}|sp1", f"@Coord!G{r}"] for r in (_CO["cxd"], _CO["xd"])]}
+_ref = {"type": "table", "caption": "參考列（不判定）：公司口徑資本支出、每 MW 年收入與在役電力流量", "head": ["項目", "期間／口徑", "實績", "層級", "差距", "狀態"],
+        "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!D{r}|n2", f"@Coord!E{r}|n2", f"@Coord!F{r}|sp1", f"@Coord!G{r}"] for r in (_CO["cxd"], _CO["xd"], _CO["wf"])]}
 _t_g1 = {"type": "table", "caption": f"@Coord!A{_CO['G1h']}", "collapse": True, "summary": "展開：本模型讀取的層級名稱、版本與同源值（不判定）",
          "head": ["名稱", "層級與版本", "單位", "本模型（或公司目標）", "層級值", "差距", "狀態"],
          "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}", f"@Coord!D{r}|n2", f"@Coord!E{r}|n2", f"@Coord!F{r}|sp1", f"@Coord!G{r}"] for r in range(_CO["G1a"], _CO["G1b"] + 1)]}

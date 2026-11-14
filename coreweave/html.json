@@ -3874,7 +3874,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!D45"
+      "@Coord!D53"
      ]
     },
     {
@@ -3890,84 +3890,84 @@
      ],
      "rows": [
       [
-       "@Coord!A28",
-       "@Coord!B28",
-       "@Coord!D28|n1",
-       "@Coord!E28|n1",
-       "@Coord!F28|sp1",
-       "@Coord!G28"
-      ],
-      [
-       "@Coord!A29",
-       "@Coord!B29",
-       "@Coord!D29|n1",
-       "@Coord!E29|n1",
-       "@Coord!F29|sp1",
-       "@Coord!G29"
-      ],
-      [
-       "@Coord!A30",
-       "@Coord!B30",
-       "",
-       "",
-       "",
-       "@Coord!G30"
-      ],
-      [
-       "@Coord!A31",
-       "@Coord!B31",
-       "@Coord!D31|n1",
-       "@Coord!E31|n1",
-       "@Coord!F31|sp1",
-       "@Coord!G31"
-      ],
-      [
-       "@Coord!A32",
-       "@Coord!B32",
-       "@Coord!D32|n1",
-       "@Coord!E32|n1",
-       "@Coord!F32|sp1",
-       "@Coord!G32"
-      ],
-      [
-       "@Coord!A33",
-       "@Coord!B33",
-       "",
-       "",
-       "",
-       "@Coord!G33"
-      ],
-      [
-       "@Coord!A34",
-       "@Coord!B34",
-       "@Coord!D34|n0",
-       "@Coord!E34|n0",
-       "@Coord!F34|sp1",
-       "@Coord!G34"
-      ],
-      [
        "@Coord!A35",
        "@Coord!B35",
-       "@Coord!D35|n0",
-       "@Coord!E35|n0",
+       "@Coord!D35|n1",
+       "@Coord!E35|n1",
        "@Coord!F35|sp1",
        "@Coord!G35"
       ],
       [
        "@Coord!A36",
        "@Coord!B36",
-       "",
-       "",
-       "",
+       "@Coord!D36|n1",
+       "@Coord!E36|n1",
+       "@Coord!F36|sp1",
        "@Coord!G36"
       ],
       [
        "@Coord!A37",
        "@Coord!B37",
-       "@Coord!D37|n0",
+       "",
        "",
        "",
        "@Coord!G37"
+      ],
+      [
+       "@Coord!A38",
+       "@Coord!B38",
+       "@Coord!D38|n1",
+       "@Coord!E38|n1",
+       "@Coord!F38|sp1",
+       "@Coord!G38"
+      ],
+      [
+       "@Coord!A39",
+       "@Coord!B39",
+       "@Coord!D39|n1",
+       "@Coord!E39|n1",
+       "@Coord!F39|sp1",
+       "@Coord!G39"
+      ],
+      [
+       "@Coord!A40",
+       "@Coord!B40",
+       "",
+       "",
+       "",
+       "@Coord!G40"
+      ],
+      [
+       "@Coord!A41",
+       "@Coord!B41",
+       "@Coord!D41|n0",
+       "@Coord!E41|n0",
+       "@Coord!F41|sp1",
+       "@Coord!G41"
+      ],
+      [
+       "@Coord!A42",
+       "@Coord!B42",
+       "@Coord!D42|n0",
+       "@Coord!E42|n0",
+       "@Coord!F42|sp1",
+       "@Coord!G42"
+      ],
+      [
+       "@Coord!A43",
+       "@Coord!B43",
+       "",
+       "",
+       "",
+       "@Coord!G43"
+      ],
+      [
+       "@Coord!A45",
+       "@Coord!B45",
+       "@Coord!D45|n0",
+       "",
+       "",
+       "@Coord!G45"
       ]
      ]
     },
@@ -4168,12 +4168,76 @@
        "@Coord!I39",
        "@Coord!J39",
        "@Coord!K39"
+      ],
+      [
+       "@Coord!A40",
+       "@Coord!B40",
+       "@Coord!H40",
+       "@Coord!I40",
+       "@Coord!J40",
+       "@Coord!K40"
+      ],
+      [
+       "@Coord!A41",
+       "@Coord!B41",
+       "@Coord!H41",
+       "@Coord!I41",
+       "@Coord!J41",
+       "@Coord!K41"
+      ],
+      [
+       "@Coord!A42",
+       "@Coord!B42",
+       "@Coord!H42",
+       "@Coord!I42",
+       "@Coord!J42",
+       "@Coord!K42"
+      ],
+      [
+       "@Coord!A43",
+       "@Coord!B43",
+       "@Coord!H43",
+       "@Coord!I43",
+       "@Coord!J43",
+       "@Coord!K43"
+      ],
+      [
+       "@Coord!A44",
+       "@Coord!B44",
+       "@Coord!H44",
+       "@Coord!I44",
+       "@Coord!J44",
+       "@Coord!K44"
+      ],
+      [
+       "@Coord!A45",
+       "@Coord!B45",
+       "@Coord!H45",
+       "@Coord!I45",
+       "@Coord!J45",
+       "@Coord!K45"
+      ],
+      [
+       "@Coord!A46",
+       "@Coord!B46",
+       "@Coord!H46",
+       "@Coord!I46",
+       "@Coord!J46",
+       "@Coord!K46"
+      ],
+      [
+       "@Coord!A47",
+       "@Coord!B47",
+       "@Coord!H47",
+       "@Coord!I47",
+       "@Coord!J47",
+       "@Coord!K47"
       ]
      ]
     },
     {
      "type": "table",
-     "caption": "參考列（不判定）：公司口徑資本支出與每 MW 年收入",
+     "caption": "參考列（不判定）：公司口徑資本支出、每 MW 年收入與在役電力流量",
      "head": [
       "項目",
       "期間／口徑",
@@ -4184,33 +4248,41 @@
      ],
      "rows": [
       [
-       "@Coord!A38",
-       "@Coord!B38",
-       "@Coord!D38|n2",
-       "@Coord!E38|n2",
-       "@Coord!F38|sp1",
-       "@Coord!G38"
+       "@Coord!A46",
+       "@Coord!B46",
+       "@Coord!D46|n2",
+       "@Coord!E46|n2",
+       "@Coord!F46|sp1",
+       "@Coord!G46"
       ],
       [
-       "@Coord!A39",
-       "@Coord!B39",
-       "@Coord!D39|n2",
-       "@Coord!E39|n2",
-       "@Coord!F39|sp1",
-       "@Coord!G39"
+       "@Coord!A47",
+       "@Coord!B47",
+       "@Coord!D47|n2",
+       "@Coord!E47|n2",
+       "@Coord!F47|sp1",
+       "@Coord!G47"
+      ],
+      [
+       "@Coord!A44",
+       "@Coord!B44",
+       "@Coord!D44|n2",
+       "@Coord!E44|n2",
+       "@Coord!F44|sp1",
+       "@Coord!G44"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!B47"
+      "@Coord!B55"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!B46"
+      "@Coord!B54"
      ]
     },
     {
