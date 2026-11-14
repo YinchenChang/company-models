@@ -214,5 +214,20 @@ ins = next(i for i, b in enumerate(st) if b["type"] == "h3" and "未找到" in s
 st[ins:ins] = [{"type": "h3", "text": "附錄：版本要點"},
                {"type": "table", "collapse": True, "summary": "展開：各版的修改要點", "head": ["要點"], "rows": ver_rows}]
 
+# ---- v0.5.5（2026-11-15）：三層協調 C4（tools/coord/coord.py：橫幅另一側讀數一格與揭露句、估值章開頭兩讀數表與長條圖）＋個股 HTML 版面規格 v1.3（sndk/v13_html.py）----
+sys.path.insert(0, os.path.join(HERE, "..", "tools", "coord"))
+import coord as COORD  # noqa: E402
+COORD.inject_html(cfg, X)
+sys.path.insert(0, HERE)
+import v13_html  # noqa: E402
+v13_html.apply(cfg, wb, seg_note=dict(
+    segs=["資料中心", "邊緣", "消費"],
+    caption="堆疊＝情境 B（基準）的三個官方分部（資料中心、邊緣、消費），頂端數字＝情境 B 合併營收；虛線＝情境 A、情境 C 的合併營收。FY2025A、FY2026A 為實績（FY2025 無分部）；三情境的差異來自 NAND 價格路徑、加速器顆數與合資群份額。",
+    is_caption="標準損益表（十億美元；EPS 為美元、GAAP 稀釋、分割前）：FY2024A–FY2026A 實績（空白＝未找到）、FY2027E–FY2032E 情境 B（基準；美國 GAAP）",
+    drv_rows=["營收", "資料中心", "資料中心：AI 相關", "邊緣", "消費", "毛利率", "營業利益", "營業利益率", "淨利", "EPS", "每股淨值", "自由現金流"],
+    drv_caption="分部營收推導（情境 B；十億美元）：營收＝市場層 SanDisk 營收 × 公司口徑係數；資料中心、消費依占比，邊緣為差額；AI 相關為資料中心的子列",
+    drv_chart_caption="長條＝情境 B 的三個官方分部（會計年度）；折線＝毛利率與營業利益率（右軸）。營收隨市場層 NAND 價格與位元同向，成本隨每位元成本年降下降。",
+    c0_caption="SanDisk 合併營收：公司財報實績 vs 市場層（讀 Siliconomics）SanDisk CY2026 營收（主讀數、第二讀數；層級值與本公司財報同數或由其反推而同源，標參考、不判定）"))
+
 json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok", OUT)

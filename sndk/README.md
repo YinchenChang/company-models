@@ -1,5 +1,21 @@
 # sndk/ — SanDisk（SNDK US）收支與估值模型 v0.1（2026-10-25）
 
+## v0.5.5（2026-11-15）：個股 HTML 版面 v1.3＋三層協調（兩讀數目標價、C0 公司實績對層級隱含值）
+
+- **依據：** 工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`、`20261114_C0實績對帳補列_七家.md`、`20261114_版面v1.3與三層協調推廣_共用工作單.md`；規則 `docs/plan/三層基準協調規則.md` v1.4.2 C0 第 2 點；`tools/coord/README.md`。樣板 NVIDIA v0.3.10、Advantest v0.7.5、Kioxia v0.5.5（同結構，PR #565）、記憶體 SK 海力士 v0.7.7、三星／美光 v0.5.5（PR #525，本分支以其為底）。
+- **上游：** 美光 v0.5.5（PR #525）改版後重建，本模型對 v0.5.4 成品只有美光來源檔名 4 格不同（In!H95、Val!C96、Val!C126、Sources!A11），數值 0 差異。
+- **做法：** (1) 版面 v1.3：`sndk/v055_post.py` 新增 Hist（損益表歷史）、PL 頁末標準損益表（FY2024A–FY2032E，情境 B；美國 GAAP、稀釋 EPS、一股分八股前）、RevDCF（反向 DCF；Comparable 反解前瞻 P/B；隱含 WACC 加「是否有解」判讀）、Val 0.7 四個目標價、Sens 頁末「加權目標價相對基準」（業務主因整本重算快照 `sndk/sens.json`，由 `sndk/sens_sndk.py` 產生，10 個案例；狀態 CURRENT）、README 頁末 v1.3 白話列；`sndk/v13_html.py` 把 HTML 章節改為 命題 → 估值 → 敏感度 → 反向 DCF → 損益 → 驅動 → 對帳 → 資料狀態。建檔程式新增 `SNDK_OVERRIDE`（只供快照，正式建置不設）。
+  (2) 兩讀數：主引擎掛鉤——`SIL.COORD_ALT` 時情境 B、C 的市場層 SanDisk 營收與位元 × 季度出貨比（AI 企業級 SSD 位元需求 CY2027 起 × wta → MIN(需求, 供給) → 季度位元；與 Sens「Wattonomics 錨定」同一算法，各情境讀自己的 Ann 列；情境 A 不縮放）。`tools/coord/alt_run.py sndk` 產生 `coord_alt.json`；Coord 頁快照 CURRENT。現行 $705.67（中立）、另一側 $662.50（中立），評等相同。比值 CY2027 0.618、CY2028／CY2029 0.665。coord_meta 的 `hardware_companies` 加入 sndk 由主控統一改（本 PR 未提交該檔）。
+  (3) C0（實績）：Coord 頁「4. C0（實績）」與 HTML 對帳章。
+- **實績與出處：** FQ3 FY26（2026-01-03～04-03）5.950、FQ4 FY26（04-04～07-03）8.965（SanDisk FQ4 FY26 新聞稿 8-K 2026-08-05；In 頁 q3_rev、q4_rev）；FQ1 FY27（07-04～10-02）11.031（2026-10-29 新聞稿與法說，Benzinga／Motley Fool 逐字稿、Investing.com 轉載；In 頁 g_rev；8-K 原文本輪未重開——網路讀取未獲核准）。三季合計 25.946（US$B）。
+- **層級隱含：** 市場層 markets/nand v0.3（讀 Siliconomics v0.19）SanDisk CY2026 營收 38.417（三情境相同）＝2026Q1 5.95（nd_rv_sd_4）＋2026Q2 8.97（nd_rv_sd_5）＋2026Q3 11.037＋2026Q4 12.460。主讀數（× 9/12＝28.813）→ −9.9%；第二讀數（11.031 × 4＝44.124）→ +14.9%。
+- **同源檢查：** 2026Q3 份額由 FQ1 FY27 實績反推（核對列：層級 2026Q3 × 市場層公司口徑係數 0.99944 − 11.031＝0）；2026Q1–Q2 的 TrendForce 數與公司 8-K 營收同數（Siliconomics 註記）；2026Q4 份額＝2026Q3 實績份額與 FQ2 FY27 指引份額平均。→ **判定「參考（同源校準）」，結論「無可比實績（層級值同源）」，對帳中 0 個**，不開對帳單。缺：不以 SanDisk 財報校準的市場與份額獨立揭露；層級無 SanDisk 資料中心份額。
+- **其他：** 讀取層級核對（Units 頁 vs markets/nand Ann、nd_rv_sd_4／5、wta）全為 0，標「讀取層級（同源，不判定）」；層級之間（參考）：AI 企業級 SSD 位元需求 Siliconomics 基準比 Wattonomics 換算值高 50–62%。反向 DCF：情境 B 路徑下單靠折現率無法支持現價（搜尋區間內無解），FY2028 起現金流需為模型的 1.90 倍。
+- **未找到（本輪留空，未補）：** Hist 頁 FY2024 全年（分拆前）、FY2025 營業成本至營業利益、FY2024–FY2026 稅前利益與所得稅（repo 無原文；本輪無法連網）；FQ1 FY27 GAAP 營業利益、淨利。
+- **驗證：** `tools/xlsx_diff.py` 對 v0.5.4（1e-9）：既有格只有 README!A1 版號與上述 4 格美光來源檔名；加權目標價 $705.67、評等中立不變。`check_company_html`、`check_layout_v13 --xlsx` 全過（參數代號警告為既有命題、估值、驅動章文字）；`baseline_coordination/check.py` 0 項不符（本機暫把 sndk 加入 coord_meta 驗證後還原）。
+- **舊版 README 數字：** 下方 v0.5.4 節（加權目標價 707.95、上檔空間 −12.2% 等）為當時成品值；Siliconomics v0.19 全下游重建後現行 v0.5.4 成品（與本版逐格相同）為加權目標價 705.67、上檔空間 −12.5%。歷史不改寫。
+- 成品 `dist/20261115_SanDisk個股模型_v0.5.5.xlsx`／`.html`；v0.5.4 移 `dist/_待刪除/`。
+
 ## v0.5.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 
 - 工作單 px1105（第 35 點價格；Andy 2026-11-06 03:14 情境名稱改回，取代第 23 點）。來源：Yahoo Finance 日線收盤 2026-11-05。rf、共識 EPS、預測用匯率與模型假設不變。同業前瞻 P/B 與 P/E 並列參考（美光、SK 海力士、三星、Kioxia、WDC）依 11-05 收盤換算；共識每股淨值與 EPS 不變。上游：micron v0.5.4（PR #422）。
