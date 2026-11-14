@@ -1,4 +1,23 @@
-# unimicron/ — 欣興電子（3037.TW）收支與估值模型 v0.4.3
+# unimicron/ — 欣興電子（3037.TW）收支與估值模型 v0.4.4
+
+## v0.4.4（2026-11-15）：個股 HTML 版面規格 v1.3、三層協調兩讀數與 C0（實績）
+
+- **依據：** 工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`（推廣到其餘個股）、`docs/workorders/20261114_C0實績對帳補列_七家.md`（核對教訓）、規則 `docs/plan/三層基準協調規則.md` v1.4.2（C0 第 2 點、C4）、`tools/coord/README.md`；同次產業樣板 Ibiden v0.5.6。三項同輪完成（11-14 退件教訓）。
+- **做法（只新增，既有數值格不變）：**
+  - 兩讀數（`tools/coord`）：主引擎在 `SIL_COORD_ALT` 時情境 B、C 的 CY2027 起產業量（NVIDIA、非 NVIDIA 顆數與其他 AI 載板）× `wta_27`／`wta_28`／`wta_29`（沿用既有「Wattonomics 錨定」的 `mf` 年別乘數；情境 A 不縮放）；`alt_run.py unimicron`（`LO_PROFILE` 私有設定檔）產生 `coord_alt.json`；建檔程式 `COORD.add_sheet`＋`stamp`；`gen_html_json.py` 呼叫 `COORD.inject_html`。
+  - 版面 v1.3（`v044_post.py`、`gen_html_json.py`）：Hist 頁（FY2022–FY2025 損益表）、RevDCF 頁、PL 頁末標準損益表（FY2023A–FY2025A＋FY2026E–FY2030E 情境 B，GAAP；FY2027E 起標「對帳中」）、Val 0.7 四個目標價、Sens 頁末加權目標價相對基準（`sens_unimicron.py` 整本重算快照 `sens.json`，16 個業務案例＋目標價參數表）、README 頁末 v1.3 白話列；章節改為命題 → 估值 → 敏感度 → 反向 DCF → 損益 → 驅動因子 → 對帳 → 資料狀態。建檔程式新增 `UN_OVERRIDE`／`UN_SNAP`（只供敏感度快照，正式建置不設）。
+  - Coord 頁 C0：1. 讀取層級（Siliconomics v0.19、Wattonomics v0.3.2、Ibiden 模型讀入值）；2. 讀取層級核對（顆數、份額、產能指數等 22 列，全部標「讀取層級（同源，不判定）」，不計入對帳中）；層級之間（參考）；3. 對帳中年份；4. C0（實績）。
+- **實績與出處（4. C0（實績））：**
+  - 2026 年 1–10 月合併營收累計 1,519.72 億元（TechNews 財報助手 2026-11-06：10 月 189.86 億、年增 67.6%；驗算前 9 月 1,329.86 億＋10 月 189.86 億），Verified。
+  - 3Q26 合併營收 526.5 億元（公司 3Q26 財報，鉅亨經優分析 2026-10-27；＝前 9 月 1,329.86 − 1H26 803.36；In 頁 q3_rev 連格），Verified。
+  - Hist 頁 FY2022–FY2025：公司 IFRS 合併損益表（經 stockanalysis.com 年度損益表轉載，百萬元換算十億元；FY2025 營收、毛利、營業利益、淨利、EPS 連 Q 頁既有值；MOPS 原文待人工複核）。
+- **層級隱含與判定：** 層級值＝Siliconomics v0.19 `abfrev_un26` 3.07 US$B × 32.5（該列原註換算值）÷ ABF 占營收 53%（In 頁 mx_abf）＝188.3 十億元。主讀數 1–10 月 152.0 vs 188.3 × 10 ÷ 12 ＝ 156.9，差距 −3.1%；第二讀數 3Q26 × 4 ＝ 210.6 vs 188.3，差距 +11.9%（3Q26 中點晚於年中，成長年中偏高）。**判定：參考（同源校準）；C0（實績）結論＝無可比實績（層級值同源）**——`abfrev_un26` 由本模型 FY2026 ABF 營收（營收錨點 × 53%）÷ 32.5 推得，換算回合併營收時 ABF 占比與匯率消去，本表等於「實績 vs 本模型 FY2026 營收錨點」；缺 ABF／加速器載板單獨營收揭露。機械判定（參考）為一致。對帳中項目數 0。
+- **兩讀數：** 現行基準讀數 469.27 元（放空，−41.3%）；另一側讀數 358.18 元（強力放空，−55.2%），**評等不同**，橫幅已明說。另一側比值 CY2027–2029 為 0.618／0.665／0.665。
+- **不變：** 加權目標價 469.27、DCF 242.58、Comparable（調整後）695.96、評等放空。`tools/xlsx_diff.py`（及逐格比對既有非空格）對 v0.4.3：既有格只有 README A1 版號文字（標題段 v0.1.1 → v0.4.4，並附本版說明）與 PL!A118 情境 B 標題（舊字「CY2029 ×0.85」改讀 Siliconomics 基準係數，顯示 0.71；文字列，不影響計算）不同，其餘為新增頁與新增格。
+- **README 舊節數字：** 下方 v0.4.3 以前各節的目標價等數字（例如 v0.4.1 節「加權目標價 648」、結果表 EPS）是當時版本的值；Siliconomics 全下游重建在原地更新 dist 後，現行 dist 為加權目標價 469.27、FY2027 EPS 27.55 等，舊節不改寫，以本節與 xlsx 為準。
+- **驗證：** 建置 → LibreOffice（`-env:UserInstallation=file:///tmp/lo_unimicron`）錯誤格 0；`check_layout_v13 --xlsx` 全過（含 G、H 位置與 I 對帳中）；`check_company_html unimicron` 全過；`tools/baseline_coordination/check.py` 0 項不符；Coord 另一側讀數快照 CURRENT、Sens 快照 CURRENT。
+- **coord_meta：** 依工作單，`siliconomics/builder/seed/coord_meta_v0.19.json` 的 `hardware_companies` 未在本分支修改，由主控合併時加入 `unimicron`。
+- 成品：`dist/20261115_欣興個股模型_v0.4.4.xlsx`、`.html`；v0.4.3 移到 `dist/_待刪除/`。
 
 ## v0.4.3（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 
