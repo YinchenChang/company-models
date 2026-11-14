@@ -462,7 +462,7 @@ def _v13(cfg):
     ot = fnd(CW, "其他公司實績"); oh = next(r for r in range(ot, CW.max_row + 1) if CW.cell(r, 1).value == "項目"); oe = next(r for r in range(oh, CW.max_row + 2) if not CW.cell(r + 1, 1).value)
     oth_rows = [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}", f"@Coord!D{r}|n1", f"@Coord!E{r}|n1", f"@Coord!G{r}"] for r in range(oh + 1, oe + 1)]
     act_blocks = [{"type": "h3", "text": "公司實績對層級隱含值（實績對帳）"}, {"type": "note", "parts": [f"@Coord!A{a4 + 1}"]}, {"type": "note", "parts": [f"@Coord!A{a4 + 2}"]},
-                  {"type": "table", "caption": "SoC 測試機營收：公司季報實績 vs Siliconomics 基準隱含值（主讀數、第二讀數；層級隱含值與公司實績大致獨立，其他廠份額部分同源）", "head": [f"@Coord!{c}{mh}" for c in "ABCDEFG"], "rows": act_rows},
+                  {"type": "table", "caption": "SoC 測試機營收：公司季報實績 vs Siliconomics 基準隱含值（主讀數、第二讀數；其他廠份額由泰瑞達反推而同源，標參考、不判定）", "head": [f"@Coord!{c}{mh}" for c in "ABCDEFG"], "rows": act_rows},
                   {"type": "note", "parts": [f"@Coord!A{a4e - 1}"]},
                   {"type": "note", "parts": ["對帳中項目數：", f"@Coord!G{a4e}|n0", "。"]},
                   {"type": "table", "caption": "實績與層級隱含值的輸入、等級與出處（展開看）", "collapse": True, "summary": "展開：實績、層級值、換算參數與出處", "head": [f"@Coord!{c}{ih}" for c in "ABCDE"] + [f"@Coord!H{ih}"], "rows": in_rows},

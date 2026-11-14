@@ -4139,7 +4139,7 @@
     },
     {
      "type": "table",
-     "caption": "SoC 測試機營收：公司季報實績 vs Siliconomics 基準隱含值（主讀數、第二讀數；層級隱含值與公司實績大致獨立，其他廠份額部分同源）",
+     "caption": "SoC 測試機營收：公司季報實績 vs Siliconomics 基準隱含值（主讀數、第二讀數；其他廠份額由泰瑞達反推而同源，標參考、不判定）",
      "head": [
       "@Coord!A89",
       "@Coord!B89",
