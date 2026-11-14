@@ -214,7 +214,7 @@ def _v13():
     RD, PLW, RV = wb["README"], wb["PL"], wb["RevDCF"]
     r13 = row("README", "v1.3 展示層")
     RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
-    assert str(RD[f"A{RM['ver']}"].value).startswith("v0.5.6"), RD[f"A{RM['ver']}"].value
+    assert str(RD[f"A{RM['ver']}"].value).startswith("v0.5.7"), RD[f"A{RM['ver']}"].value
     cfg["layout"] = "v1.3"
     old_note = list(cfg["hero"]["note"])
     cfg["hero"]["note"] = [f"@README!A{RM['hero']}"]   # 橫幅只留白話說明（≤200 字）；評等邊界與相對倍數調整移到估值章
@@ -421,7 +421,7 @@ def _v13_post(RM):
     # 對帳章：三層協調 C0（Coord 頁）
     CW = wb["Coord"]
     cr = lambda p, start=1: next(r for r in range(start, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith(p))
-    c0, s1, s2, s3 = cr("三層協調 C0"), cr("1. 本模型讀哪一層"), cr("2. C0 由下往上對帳"), cr("3. 對帳結果")
+    c0, s1, s2, s3 = cr("三層協調 C0"), cr("1. 本模型讀哪一層"), cr("2. 讀取層級"), cr("3. 對帳結果")
     def f2(r, c):
         lab, u = str(CW.cell(r, 1).value), str(CW.cell(r, 6).value or "")
         if "差距" in lab:
@@ -429,14 +429,34 @@ def _v13_post(RM):
         if "判定" in lab:
             return ""
         return {"GW": "n1", "US$B": "n1", "%": "p1", "US$/kW": "n0"}.get(u, "n2")
-    c0t = {"type": "table", "caption": "由下往上對帳：本模型的產業量與 Siliconomics 層級值逐年對照（差距＝本模型相對層級值的百分比；本公司自己的量超過正負一成五標「對帳中」，不改上游值；下方「層級之間」列僅供參考）",
+    c0t = {"type": "table", "caption": "讀取層級（同源，不判定）：本模型的產業量直接讀自 Siliconomics，與層級值逐年對照的差距恆為零，無檢驗力，不計入對帳中；下方「層級之間」列僅供參考",
            "head": [f"@Coord!{c}{s2 + 1}" for c in "ABCDE"],
            "rows": [({"sub": f"@Coord!A{r}"} if CW.cell(r, 2).value is None else [f"@Coord!A{r}"] + [f"@Coord!{c}{r}|{f2(r, c)}" for c in "BCDE"]) for r in range(s2 + 2, s3 - 1)]}
     c0d = {"type": "table", "caption": f"@Coord!A{s2}", "collapse": True, "summary": "展開：各列的單位、口徑、來源與證據等級", "head": [f"@Coord!{c}{s2 + 1}" for c in "AFG"],
            "rows": [[f"@Coord!A{r}", f"@Coord!F{r}|", f"@Coord!G{r}|"] for r in range(s2 + 2, s3 - 1) if CW.cell(r, 6).value or CW.cell(r, 7).value]}
     lay = {"type": "table", "caption": f"@Coord!A{s1}", "collapse": True, "summary": "展開：本模型讀哪一層、哪一版、用在哪裡", "head": [f"@Coord!{c}{s1 + 1}" for c in "ABCD"],
            "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|", f"@Coord!C{r}|", f"@Coord!D{r}|"] for r in range(s1 + 2, s2 - 1)]}
-    c0b = [{"type": "h3", "text": "三層協調：本模型由下往上對帳 Siliconomics"}, {"type": "note", "parts": [f"@Coord!A{c0 + 1}"]}]
+    # C0（實績）：公司實績對層級隱含值（第 4 節；規則 v1.4.2）
+    s4 = cr("4. C0（實績）")
+    t4 = cr("C0（實績）：公司實績 vs 層級隱含值", s4)
+    e4 = cr("C0（實績）結果摘要", t4)
+    a4 = cr("4a. 公司已公布實績", s4)
+    b4 = cr("4b. 層級隱含值", a4)
+    fm4 = lambda r, c: ("" if any(k in str(CW.cell(r, 1).value) for k in ("判定", "結果")) else "sp1" if "差距" in str(CW.cell(r, 1).value) or "敏感度" in str(CW.cell(r, 1).value) else
+                        "p1" if CW.cell(r, 6).value == "%" else "n1")
+    c0a = {"type": "table", "caption": f"@Coord!A{t4}", "head": [f"@Coord!{c}{t4 + 1}" for c in "ABC"],
+           "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|{fm4(r, 'B')}" if isinstance(CW.cell(r, 2).value, (int, float)) or str(CW.cell(r, 2).value).startswith("=") else f"@Coord!B{r}|",
+                     f"@Coord!C{r}|{fm4(r, 'C')}" if isinstance(CW.cell(r, 3).value, (int, float)) or str(CW.cell(r, 3).value).startswith("=") else f"@Coord!C{r}|"]
+                    for r in range(t4 + 2, e4 - 1) if CW.cell(r, 1).value and "：" in str(CW.cell(r, 1).value) and (CW.cell(r, 2).value is not None or CW.cell(r, 3).value is not None)
+                    and not str(CW.cell(r, 1).value).startswith(("FY2026 營收錨點", "錨點隱含", "隱含月均"))]}
+    c0in = {"type": "table", "caption": f"@Coord!A{a4}", "collapse": True, "summary": "展開：公司已公布實績與揭露（月營收、法說占比、部門營收）的數值、來源與證據等級", "head": [f"@Coord!{c}{a4 + 1}" for c in "ABFG"],
+            "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|{'p1' if CW.cell(r, 6).value == '%' else 'n3'}", f"@Coord!F{r}|", f"@Coord!G{r}|"] for r in range(a4 + 2, b4 - 1) if CW.cell(r, 1).value]}
+    c0det = {"type": "table", "caption": "展開：公司實績對照各列的單位、口徑、來源與證據等級", "collapse": True, "summary": "展開：公司實績對照各列的單位、口徑、來源與證據等級", "head": [f"@Coord!{c}{t4 + 1}" for c in "AFG"],
+             "rows": [[f"@Coord!A{r}", f"@Coord!F{r}|", f"@Coord!G{r}|"] for r in range(t4 + 2, e4 - 1) if CW.cell(r, 7).value]}
+    c0b = [{"type": "h3", "text": "三層協調：公司實績對層級隱含值"}, {"type": "note", "parts": [f"@Coord!A{s4 + 1}"]},
+           {"type": "note", "parts": [f"@Coord!A{e4 + 1}"]}, {"type": "note", "parts": [f"@Coord!A{e4 + 2}"]}, {"type": "note", "parts": [f"@Coord!A{e4 + 3}"]},
+           c0a, c0det, c0in, {"type": "note", "parts": [f"@Coord!A{s4 + 2}"]},
+           {"type": "h3", "text": "讀取層級（同源，不判定）與層級之間（參考）"}, {"type": "note", "parts": [f"@Coord!A{c0 + 1}"]}]
     c0b += [{"type": "note", "parts": [f"@Coord!A{r}"]} for r in range(s3 + 1, s3 + 5)]
     c0b += [c0t, c0d, lay, {"type": "h3", "text": "券商、研調市場與份額對照（原有）"}]
     S["recon"]["blocks"] = c0b + S["recon"]["blocks"]

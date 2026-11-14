@@ -4006,7 +4006,7 @@
    "blocks": [
     {
      "type": "h3",
-     "text": "三層協調：本模型與 Siliconomics 層的由下往上對帳"
+     "text": "三層協調：公司實績對照（無可比實績，不判定）"
     },
     {
      "type": "note",
@@ -4015,8 +4015,289 @@
      ]
     },
     {
+     "type": "note",
+     "parts": [
+      "@Coord!A81"
+     ]
+    },
+    {
      "type": "table",
-     "caption": "由下往上對帳表（日曆年與會計年相同；情境 B 基準對 Siliconomics 基準；金額十億美元；差距超過門檻標對帳中）",
+     "caption": "公司實績對照（參考，不判定：層級份額由本模型錨點反推，無可比實績）：2026 年已公布月營收與法說揭露比例換算的 AI 伺服器營收，對層級隱含值與錨點的差（金額十億新台幣）",
+     "head": [
+      "項目",
+      "主讀數（已公布月份累計）",
+      "第二讀數（最近一季年化）",
+      "單位與口徑",
+      "來源與證據等級"
+     ],
+     "rows": [
+      [
+       "@Coord!A107",
+       "@Coord!B107|n1",
+       "@Coord!C107|n1",
+       "@Coord!D107",
+       "@Coord!E107"
+      ],
+      [
+       "@Coord!A108",
+       "@Coord!B108|p1",
+       "@Coord!C108|p1",
+       "@Coord!D108",
+       "@Coord!E108"
+      ],
+      [
+       "@Coord!A109",
+       "@Coord!B109|n1",
+       "@Coord!C109|n1",
+       "@Coord!D109",
+       "@Coord!E109"
+      ],
+      [
+       "@Coord!A110",
+       "@Coord!B110|n1",
+       "@Coord!C110|n1",
+       "@Coord!D110",
+       "@Coord!E110"
+      ],
+      [
+       "@Coord!A111",
+       "@Coord!B111|p1",
+       "@Coord!C111|p1",
+       "@Coord!D111",
+       "@Coord!E111"
+      ],
+      [
+       "@Coord!A112",
+       "@Coord!B112|n1",
+       "@Coord!C112|n1",
+       "@Coord!D112",
+       "@Coord!E112"
+      ],
+      [
+       "@Coord!A113",
+       "@Coord!B113|n1",
+       "@Coord!C113|n1",
+       "@Coord!D113",
+       "@Coord!E113"
+      ],
+      [
+       "@Coord!A114",
+       "@Coord!B114|n3",
+       "@Coord!C114|n3",
+       "@Coord!D114",
+       "@Coord!E114"
+      ],
+      [
+       "@Coord!A115",
+       "@Coord!B115|n1",
+       "@Coord!C115|n1",
+       "@Coord!D115",
+       "@Coord!E115"
+      ],
+      [
+       "@Coord!A116",
+       "@Coord!B116|p1",
+       "@Coord!C116|p1",
+       "@Coord!D116",
+       ""
+      ],
+      [
+       "@Coord!A117",
+       "@Coord!B117|",
+       "",
+       "@Coord!D117",
+       "@Coord!E117"
+      ],
+      [
+       "@Coord!A118",
+       "@Coord!B118|",
+       "",
+       "@Coord!D118",
+       ""
+      ],
+      [
+       "@Coord!A119",
+       "@Coord!B119|p1",
+       "@Coord!C119|p1",
+       "@Coord!D119",
+       ""
+      ],
+      [
+       "@Coord!A120",
+       "@Coord!B120|p1",
+       "@Coord!C120|p1",
+       "@Coord!D120",
+       ""
+      ],
+      [
+       "@Coord!A121",
+       "@Coord!B121|p1",
+       "",
+       "@Coord!D121",
+       "@Coord!E121"
+      ],
+      [
+       "@Coord!A122",
+       "@Coord!B122|p1",
+       "",
+       "@Coord!D122",
+       "@Coord!E122"
+      ],
+      [
+       "@Coord!A123",
+       "@Coord!B123|p1",
+       "",
+       "@Coord!D123",
+       "@Coord!E123"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!A82"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "實績輸入與口徑換算參數（逐月營收、核對列、法說揭露比例）",
+     "head": [
+      "項目",
+      "值",
+      "單位與口徑",
+      "來源與證據等級"
+     ],
+     "rows": [
+      [
+       "@Coord!A85",
+       "@Coord!B85|n1",
+       "@Coord!D85",
+       "@Coord!E85"
+      ],
+      [
+       "@Coord!A86",
+       "@Coord!B86|n1",
+       "@Coord!D86",
+       "@Coord!E86"
+      ],
+      [
+       "@Coord!A87",
+       "@Coord!B87|n1",
+       "@Coord!D87",
+       "@Coord!E87"
+      ],
+      [
+       "@Coord!A88",
+       "@Coord!B88|n1",
+       "@Coord!D88",
+       "@Coord!E88"
+      ],
+      [
+       "@Coord!A89",
+       "@Coord!B89|n1",
+       "@Coord!D89",
+       "@Coord!E89"
+      ],
+      [
+       "@Coord!A90",
+       "@Coord!B90|n1",
+       "@Coord!D90",
+       "@Coord!E90"
+      ],
+      [
+       "@Coord!A91",
+       "@Coord!B91|n1",
+       "@Coord!D91",
+       "@Coord!E91"
+      ],
+      [
+       "@Coord!A92",
+       "@Coord!B92|n1",
+       "@Coord!D92",
+       "@Coord!E92"
+      ],
+      [
+       "@Coord!A93",
+       "@Coord!B93|n1",
+       "@Coord!D93",
+       "@Coord!E93"
+      ],
+      [
+       "@Coord!A94",
+       "@Coord!B94|n1",
+       "@Coord!D94",
+       "@Coord!E94"
+      ],
+      [
+       "@Coord!A95",
+       "@Coord!B95|n1",
+       "@Coord!D95",
+       "@Coord!E95"
+      ],
+      [
+       "@Coord!A96",
+       "@Coord!B96|n1",
+       "@Coord!D96",
+       "@Coord!E96"
+      ],
+      [
+       "@Coord!A97",
+       "@Coord!B97|n3",
+       "@Coord!D97",
+       "@Coord!E97"
+      ],
+      [
+       "@Coord!A98",
+       "@Coord!B98|n3",
+       "@Coord!D98",
+       "@Coord!E98"
+      ],
+      [
+       "@Coord!A99",
+       "@Coord!B99|n3",
+       "@Coord!D99",
+       "@Coord!E99"
+      ],
+      {
+       "sub": "@Coord!A100"
+      },
+      [
+       "@Coord!A101",
+       "@Coord!B101|p1",
+       "@Coord!D101",
+       "@Coord!E101"
+      ],
+      [
+       "@Coord!A102",
+       "@Coord!B102|p1",
+       "@Coord!D102",
+       "@Coord!E102"
+      ],
+      [
+       "@Coord!A103",
+       "@Coord!B103|p1",
+       "@Coord!D103",
+       "@Coord!E103"
+      ],
+      [
+       "@Coord!A104",
+       "@Coord!B104|p1",
+       "@Coord!D104",
+       "@Coord!E104"
+      ],
+      [
+       "@Coord!A105",
+       "@Coord!B105|p1",
+       "@Coord!D105",
+       "@Coord!E105"
+      ]
+     ],
+     "collapse": true,
+     "summary": "展開：逐月營收實績、核對列與換算比例的出處"
+    },
+    {
+     "type": "table",
+     "caption": "讀取層級（同源，不判定）：本模型自 Siliconomics 層讀入的值與層級值必然相同，差距恆為零，無檢驗力，不計入對帳中（情境 B 基準對 Siliconomics 基準；金額十億美元）",
      "head": [
       "項目",
       "CY2026",
@@ -4309,7 +4590,9 @@
        "",
        ""
       ]
-     ]
+     ],
+     "collapse": true,
+     "summary": "展開：讀取層級（同源，不判定）與層級之間的參考差距"
     },
     {
      "type": "table",

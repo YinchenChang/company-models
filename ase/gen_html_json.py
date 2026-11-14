@@ -389,7 +389,7 @@ def _v13():
     S["drivers"]["title"] = "驅動因子：分部營收推導"
     S["drivers"].pop("intro", None)
     # ---- 7. 對帳：三層協調 C0（Coord 頁）＋公司指引對照 ----
-    cb = cr("B. C0"); ch = cb + 1; r_f, r_l = cr("AI 加速器顆數（情境 B）CY2026"), cr("AI 加速器顆數（情境 B）CY2029")
+    cb = cr("B. 讀取層級"); ch = cb + 1; r_f, r_l = cr("AI 加速器顆數（情境 B）CY2026"), cr("AI 加速器顆數（情境 B）CY2029")
     r_g0, r_g1 = cr("產業部署 GW CY2026"), cr("產業部署 GW CY2029"); r_b2 = cr("層級之間（參考")
     r_nc = cr("日月光 LEAP 營收（FY2026"); r_br0, r_br1 = cr("參考：LEAP 核心營收 ÷ 層級委外補充 CoWoS 月產能 CY2026"), cr("參考：LEAP 核心營收 ÷ 層級委外補充 CoWoS 月產能 CY2029")
     r_sum = cr("判定摘要"); r_c1, r_c2, r_c3 = cr("對帳中年份：CY"), cr("口徑註記"), cr("C0 結論")
@@ -404,12 +404,19 @@ def _v13():
               "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|n3", f"@Coord!C{r}|n1", f"@Coord!D{r}", f"@Coord!E{r}"] for r in range(r_br0, r_br1 + 1)]}
     a_tbl = {"type": "table", "collapse": True, "summary": "展開：本模型讀哪一層、哪一版（Siliconomics 版本與讀入項目）", "caption": f"@Coord!A{ca}", "head": [f"@Coord!{c}{cah}" for c in "ABCDEF"],
              "rows": [[f"@Coord!A{r}"] + [f"@Coord!{c}{r}|{'n2' if '顆數' in str(CW.cell(r, 1).value) else 'p0' if 'CPO' in str(CW.cell(r, 1).value) else 'n3'}" for c in "BCDE"] + [f"@Coord!F{r}"] for r in range(r_a1, r_a2)]}
-    c0_blocks = [{"type": "h3", "text": "三層協調：由下往上對帳（日月光自己的量 vs 它讀的層級值）"}, {"type": "note", "parts": [f"@Coord!B{r_sum}"]}, c0_tbl, gw_tbl,
+    # v0.2.7：C0（實績）表（Coord E 節；公司實績 vs 層級隱含值）；同源的讀取層級表改摺疊
+    ce = cr("E. C0（實績）"); ceh = ce + 2; ce0 = ceh + 1; ce1 = cr("判定摘要", ceh) - 1; ce_sum = ce1 + 1; ce_note = ce + 1
+    c0a_tbl = {"type": "table", "caption": f"@Coord!A{ce}", "head": [f"@Coord!{c}{ceh}" for c in "ABCDGHEF"],
+               "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|n1" if r > ce0 else f"@Coord!B{r}", f"@Coord!C{r}|n1" if r > ce0 else f"@Coord!C{r}", f"@Coord!D{r}",
+                         f"@Coord!G{r}", f"@Coord!H{r}", f"@Coord!E{r}", f"@Coord!F{r}"] for r in range(ce0, ce1 + 1)]}
+    c0_tbl["collapse"] = True; c0_tbl["summary"] = "展開：讀取層級（同源，不判定）：日月光讀入的 Siliconomics 值 vs 層級值"
+    c0_blocks = [{"type": "h3", "text": "三層協調：公司實績對帳（公司實績 vs 層級隱含值）"}, {"type": "note", "parts": [f"@Coord!B{ce_sum}"]}, {"type": "note", "parts": [f"@Coord!A{ce_note}"]}, c0a_tbl,
+                 {"type": "note", "parts": [f"@Coord!B{r_sum}"]}, c0_tbl, gw_tbl,
                  {"type": "note", "parts": [f"@Coord!A{r_c1}"]}, {"type": "note", "parts": [f"@Coord!A{r_c2}"]}, {"type": "note", "parts": [f"@Coord!A{r_c3}"]}, br_tbl, a_tbl,
                  {"type": "note", "parts": [f"@Coord!A{r_a2}"]}, {"type": "h3", "text": "本模型與公司指引、公司說法、券商的對照"}]
     S["recon"]["blocks"] = c0_blocks + S["recon"]["blocks"]
     # ---- 9. 資料狀態：本版要點 ----
-    S["status"]["blocks"][0:0] = [{"type": "h3", "text": "本版要點"}, {"type": "note", "parts": [f"@README!A{RM['ver']}"]}]
+    S["status"]["blocks"][0:0] = [{"type": "h3", "text": "本版要點"}, {"type": "note", "parts": [f"@README!A{row_of('README', 'v0.2.7（')}"]}, {"type": "note", "parts": [f"@README!A{RM['ver']}"]}]
     order = ["thesis", "valuation", "sens", "revdcf", "pl", "drivers", "recon", "status"]
     cfg["sections"] = [S[k] for k in order]
 
