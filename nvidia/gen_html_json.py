@@ -145,7 +145,7 @@ SPEC = {
     ["競爭對手顆數與每顆金額（份額計算）", ["u_amd_26", "u_amd_27", "u_amd_28", "g29_amd", "u_tpu_26", "u_tpu_27", "u_tpu_28", "g29_tpu", "u_trn_26", "u_trn_27", "u_trn_28", "g29_trn",
                                      "u_oth_26", "u_oth_27", "u_oth_28", "g29_oth", "pa_amd", "pa_tpu", "pa_trn", "pa_oth", "dsh"]],
     ["中國資料中心運算（只進敏感度）", ["cn_amt"]],
-    ["三層協調：產業部署 GW 兩讀數與對帳中旗標（只進兩讀數目標價；試作）", ["co_gwb_26", "co_gwb_27", "co_gwb_28", "co_gwb_29", "co_gwa_26", "co_gwa_27", "co_gwa_28", "co_gwa_29",
+    ["三層協調：產業部署 GW 兩讀數與對帳中旗標（只進兩讀數目標價）", ["co_gwb_26", "co_gwb_27", "co_gwb_28", "co_gwb_29", "co_gwa_26", "co_gwa_27", "co_gwa_28", "co_gwa_29",
                                      "co_gws_26", "co_gws_27", "co_gws_28", "co_gws_29", "co_flag_2026", "co_flag_2027", "co_flag_2028", "co_flag_2029", "co_ns_27", "co_ns_28", "co_ns_29", "co_r_26", "co_r_27", "co_r_28", "co_r_29", "co_ucoef_28", "co_ucoef_29", "co_chk_r"]]]],
   ["網通（InfiniBand、Spectrum-X、NVLink）", [
     ["網通營收與成本", ["net_26", "net_27", "net_28", "net_29", "rep_nv26", "net_q1", "c_net"]]]],

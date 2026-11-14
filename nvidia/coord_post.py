@@ -1,5 +1,5 @@
 # NVIDIA 三層基準協調試作（2026-11-14）：對帳中標示與兩讀數目標價（三層基準協調規則 v1.1 C4；個股 HTML 版面規格 v1.3 I 節）。
-# 試作，請勿合併（步驟 5a 前置；base＝claude/nvidia-v0.3.7-layout13）。
+# 2026-11-14 13:06 Andy 確認試作後轉正式（Siliconomics v0.19 PR #487 合併後讀正式快照）。
 #   write_inputs(wb, SIL)：In 頁末新增「Y. 三層協調」一節——現行基準 GW（Siliconomics SIF_DeployGW_Base）、另一側讀數 GW、對帳中旗標、
 #                          兩者比值 co_r_<yy>（具名範圍）。正式建置與另一側讀數建置都呼叫（另一側讀數建置的顆數乘數讀 co_r_27..29）。
 #   write_sheet(wb, here)：新增 Coord 頁——兩讀數 GW、兩讀數目標價與評等、橫幅揭露文字、損益表年度標示（HTML 用）、快照一致性核對。
@@ -72,7 +72,7 @@ def extract(snap, branch, sha):
 
 def write_inputs(wb, SIL):
     C = load(SIL); ws = wb["In"]; r = ws.max_row + 2
-    ws.cell(r, 1, "Z. 三層協調：產業部署 GW 兩讀數、對帳中旗標與基準顆數係數（三層基準協調規則 v1.1 C4；試作；來源：" + C["status"] + "）").font = BOLD; r += 1
+    ws.cell(r, 1, "Z. 三層協調：產業部署 GW 兩讀數、對帳中旗標與基準顆數係數（三層基準協調規則 v1.4 C4；來源：" + C["status"] + "）").font = BOLD; r += 1
     def put(key, label, unit, val, tag, src, note="", inp=False):
         nonlocal r
         for j, v in enumerate((key, label, unit, None, val, None, tag, src, note), 1):
@@ -98,7 +98,7 @@ def write_inputs(wb, SIL):
             ("另一側讀數建置的顆數乘數" if y == 2027 else "同上"))
     for y in (2028, 2029):
         put(f"co_ucoef_{y % 100}", f"基準顆數係數 CY{y}（情境 B＝Siliconomics 基準；um{y % 100}_B 讀本列）", "x", C["ucoef"][y], "Derived", C["src_ucoef"],
-            "Siliconomics 協調試作起，情境 B 的顆數係數改讀 Siliconomics 基準係數（cov_done＝1：2029 由規則以連續法決定）；情境 A＝供給側讀數、情境 C 仍為個股自訂" if y == 2028 else "同上")
+            "Siliconomics v0.19 起，情境 B 的顆數係數改讀 Siliconomics 基準係數（cov_done＝1：2029 由規則以連續法決定）；情境 A＝供給側讀數、情境 C 仍為個股自訂" if y == 2028 else "同上")
     if C["supply"]:   # 敏感度「總量缺口全由 NVIDIA 吸收」用：NVIDIA 占原始顆數的比例（規則 v1.2 C3：總量依原始顆數等比例分配）
         NVK, OTK = ("bw", "rb", "ru", "hp"), ("amd", "tpu", "trn", "oth")
         u = lambda k, y: f"u_{k}_{y % 100}" if y <= 2028 else f"u_{k}_28*(1+g29_{k})"
@@ -120,7 +120,7 @@ def write_inputs(wb, SIL):
                 if not C["supply"]: continue
                 row[4].value = f"=co_gws_{yy}/(co_gwb_{yy}/co_ucoef_{yy})"; src = f"{C['src_supply']} ÷ 原始顆數 GW（In 頁 Z 節）"
             row[6].value = "Derived"
-            row[8].value = f"Siliconomics 協調試作（v{VER}）：改讀 {src}；原值 {old}（Assumed，原說明：{row[8].value or ''}）"
+            row[8].value = f"Siliconomics 三層協調（NVIDIA v{VER}）：改讀 {src}；原值 {old}（Assumed，原說明：{row[8].value or ''}）"
     return C
 
 
@@ -225,9 +225,9 @@ def relabel(wb):
     IN = wb["In"]
     r = next(r for r in range(4, IN.max_row + 1) if IN.cell(r, 1).value == "um29_C")
     old = IN.cell(r, 9).value
-    assert "×0.706（基準係數 0.85）" in str(old), old
-    IN.cell(r, 9).value = ('="個股自訂情境 C：＝Siliconomics 基準 ×"&TEXT(um29_C/co_ucoef_29,"0.000")&"（基準係數 "&TEXT(co_ucoef_29,"0.000")&"，SIF_UnitsCoef_Base，2029 連續法；v0.3.8 試作）；2029 產業 GW 相對另一側讀數（Wattonomics 換算值）"'
-                           '&TEXT(co_gws_29*um29_C/co_gwa_29-1,"+0%;-0%")&"（現行基準 "&TEXT(co_gwb_29/co_gwa_29-1,"+0%;-0%")&"）。原說明（v0.18 口徑）：' + str(old).replace('"', '""') + '"')
+    assert ("×0.706（基準係數 0.85）" in str(old)) or ("基準係數 0.71" in str(old)), old   # v0.18 口徑或 v0.19 reader 口徑
+    IN.cell(r, 9).value = ('="個股自訂情境 C：＝Siliconomics 基準 ×"&TEXT(um29_C/co_ucoef_29,"0.000")&"（基準係數 "&TEXT(co_ucoef_29,"0.000")&"，SIF_UnitsCoef_Base，2029 連續法；v0.3.8）；2029 產業 GW 相對另一側讀數（Wattonomics 換算值）"'
+                           '&TEXT(co_gws_29*um29_C/co_gwa_29-1,"+0%;-0%")&"（現行基準 "&TEXT(co_gwb_29/co_gwa_29-1,"+0%;-0%")&"）。原說明（Siliconomics reader 產生）：' + str(old).replace('"', '""') + '"')
     n += 1
     return n
 
@@ -241,7 +241,7 @@ def write_sheet(wb, C):
     ws = wb.create_sheet("Coord", index=wb.sheetnames.index("Val") + 1)
     ws.column_dimensions["A"].width = 58
     for c in "BCDEFG": ws.column_dimensions[c].width = 18
-    ws["A1"] = ("Coord — 三層協調：對帳中標示與兩讀數目標價（三層基準協調規則 v1.1 C4；個股 HTML 版面規格 v1.3 I 節）。試作，請勿合併。"
+    ws["A1"] = ("Coord — 三層協調：對帳中標示與兩讀數目標價（三層基準協調規則 v1.4 C4；個股 HTML 版面規格 v1.3 I 節）。"
                 "個股不裁決：基準只讀 Siliconomics 現行基準；對帳未結案的年份並列「現行基準讀數」與「另一側讀數」兩個目標價。")
     ws["A1"].font = BOLD
     ws["A2"] = (("另一側讀數為暫值，待 Siliconomics 試作分支（SIF_DeployGW_Alt_<yyyy>、SIF_RecoFlag_<yyyy>）；集中輸入 nvidia/coord_inputs.json，In 頁 Z 節。" if C["temp"] else f"兩讀數、對帳中旗標與基準顆數係數取自 {C['status']}（集中輸入 nvidia/coord_inputs.json，In 頁 Z 節）。")
@@ -297,9 +297,9 @@ def write_sheet(wb, C):
     RC["hero"] = r; ws.cell(r, 1, "橫幅揭露（≤ 90 字）")
     ws.cell(r, 2, f'=IF({anyf},"對帳中（"&B{RC["years"]}&" 產業 GW）：另一側讀數目標價 "&TEXT(C{RB["tp"]},"0.00")&" 美元（"&C{RB["rec"]}&"）"&IF(B{RB["same"]}="相同","，評等與現行基準讀數相同。","，與現行基準讀數（"&B{RB["rec"]}&"）評等不同。"),"")'); r += 1
     RC["lab_cur"] = r; ws.cell(r, 1, "目標價區標籤：現行基準讀數"); ws.cell(r, 2, "現行基準讀數（Siliconomics 基準；橫幅主值）"); r += 1
-    RC["lab_alt"] = r; ws.cell(r, 1, "目標價區標籤：另一側讀數"); ws.cell(r, 2, '="另一側讀數（Wattonomics 換算的產業 GW"&IF(' + ("TRUE" if C["temp"] else "FALSE") + ',"；暫值","；Siliconomics 試作")&"）"'); r += 1
+    RC["lab_alt"] = r; ws.cell(r, 1, "目標價區標籤：另一側讀數"); ws.cell(r, 2, '="另一側讀數（Wattonomics 換算的產業 GW"&IF(' + ("TRUE" if C["temp"] else "FALSE") + ',"；暫值","")&"）"'); r += 1
     RC["note"] = r; ws.cell(r, 1, "目標價區說明")
-    ws.cell(r, 2, f'="兩讀數只差產業部署 GW 一個輸入：CY2027–CY2029 另一側讀數為現行基準的 "&TEXT(co_r_27,"0.00")&"／"&TEXT(co_r_28,"0.00")&"／"&TEXT(co_r_29,"0.00")&" 倍（情境 B、C 的運算顆數與網通營收同乘；情境 A＝供給側讀數不變），其他假設不變。個股不裁決哪一側正確，對帳在 Siliconomics 對帳單處理；結案前兩個目標價並列。"' + ('&"另一側讀數目前為暫值，待 Siliconomics 試作分支提供。"' if C["temp"] else '&"兩讀數取自 Siliconomics 協調試作分支（未合併）。"')); r += 1
+    ws.cell(r, 2, f'="兩讀數只差產業部署 GW 一個輸入：CY2027–CY2029 另一側讀數為現行基準的 "&TEXT(co_r_27,"0.00")&"／"&TEXT(co_r_28,"0.00")&"／"&TEXT(co_r_29,"0.00")&" 倍（情境 B、C 的運算顆數與網通營收同乘；情境 A＝供給側讀數不變），其他假設不變。個股不裁決哪一側正確，對帳在 Siliconomics 對帳單處理；結案前兩個目標價並列。"' + ('&"另一側讀數目前為暫值，待 Siliconomics 試作分支提供。"' if C["temp"] else ('&"兩讀數取自 Siliconomics 協調試作分支（未合併）。"' if C["mode"] == "trial" else '&"兩讀數取自 ' + C["status_txt"] + '（對帳單 Drive 02-AI供應鏈/對帳/，期限 2027-02-28）。"'))); r += 1
     RC["pl"] = r; ws.cell(r, 1, "損益表年度標示（FY2027E–FY2031E）")
     for j, fy in enumerate(range(2027, 2032)):
         cy = next(y for y, fs in FY_OF.items() if fy in fs)
@@ -362,8 +362,8 @@ def stamp(wb):
                     c.value = c.value.replace(old, new); n += 1
     a1 = RD["A1"].value
     assert "個股模型 v0.3.7" in a1, a1[:80]
-    RD["A1"].value = a1.replace("個股模型 v0.3.7", f"個股模型 v{VER}（試作，請勿合併）", 1).replace(
-        "標準損益表、反向 DCF 頁）", f"標準損益表、反向 DCF 頁）；v{VER} 試作：三層協調——對帳中標示與兩讀數目標價（規則 v1.1 C4；Coord 頁、In 頁 Z 節；基準數值不變）", 1)
+    RD["A1"].value = a1.replace("個股模型 v0.3.7", f"個股模型 v{VER}", 1).replace(
+        "標準損益表、反向 DCF 頁）", f"標準損益表、反向 DCF 頁）；v{VER}：三層協調——對帳中標示與兩讀數目標價（規則 v1.4 C4；Coord 頁、In 頁 Z 節；基準數值不變）", 1)
     return f"build_id {old} → {new}（{n} 格）"
 
 
