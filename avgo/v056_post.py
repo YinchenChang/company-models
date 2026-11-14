@@ -4,7 +4,7 @@
 #   PL 頁末：標準損益表（FY2023A–FY2025A 實績＋FY2026E–FY2032E 情境 B；Non-GAAP＝模型口徑）、比率區、GAAP 對照、核對列
 #   RevDCF 頁（新）：反向 DCF——現價隱含的營業利益率、營收規模、WACC（情境 B 路徑）與 Comparable 倍數；只讀其他頁，無任何頁引用本頁
 #   Val 頁末 0.7：四個目標價；Sens 頁末：加權目標價相對基準（整本重算快照 avgo/sens.json＋Val 頁封閉式案例）
-#   Coord 頁末 F 節：三層協調——讀哪一層哪一版、C0 由下往上對帳表、損益表年度標示；具名範圍 co_flag_<年>
+#   Coord 頁末 F 節：三層協調——讀哪一層哪一版、C0 由下往上對帳表、損益表年度標示（對帳中旗標列直接引用，不另設具名範圍）
 #   README 頁末：v1.3 展示層白話列
 # build_avgo.py 在 COORD.add_sheet 之後、存檔前呼叫 apply(wb, here, SIL)。環境變數 COORD_RUN／AVGO_SENS 設定時（alt_run.py、sens_avgo.py 的建置）不執行。
 import json, os
@@ -439,8 +439,6 @@ def coord_c0(wb, SIL, T_):
     r = C.max_row + 2
     ys = (2026, 2027, 2028, 2029)
     r_flag = lab(C, "對帳中旗標")
-    for j, y in enumerate(ys):
-        dn(wb, f"co_flag_{y}", f"Coord!${'BCDE'[j]}${r_flag}")
     src_in = lambda key: str(I.cell(lab(I, key, col=1, exact=True), 8).value or "")
     C.cell(r, 1, "F. 三層協調（共用工作單 D 節，2026-11-14）：本模型讀哪一層、哪一版").font = BOLD; r += 1
     for j, h in enumerate(["項目", "層", "版本", "本模型用在哪裡", "值／範圍"], 1):
@@ -510,22 +508,31 @@ def coord_c0(wb, SIL, T_):
        "%；Broadcom 份額 ＋ 聯發科（SIF_mtk_oth_27）", f"Siliconomics {SIL.VERSION}（SIF_ASICShareSum_oth）", "Assumed",
        "殘差大（Marvell、Alchip／GUC 等未建模或由其他模型負責），明列不吸收", kind="identity", fmt="0.0%")
     # 營收口徑：FY2026 XPU
-    c0("FY2026 XPU 營收：公司實績推估（錨點）vs 層級由下而上（顆數 × 份額 × 核心售價＋代購 HBM，未校準）", f"=PL!D{r_xpu}", f"=PL!D{r_ku}", "US$B；FY2026＝CY2026；差距＝校準係數 k_x − 1",
+    c0("FY2026 XPU 營收：公司實績推估（錨點）vs 層級由下而上（顆數 × 份額 × 核心售價＋代購 HBM，未校準）", f"=PL!D{r_xpu}", f"=PL!D{r_ku}", "US$B；FY2026＝CY2026；差距＝XPU 校準係數 − 1",
        f"Siliconomics {SIL.VERSION} 顆數、份額、核心售價（層）；錨點＝Q 頁（AI 營收 57.6 − 網通 17.6）", "Verified（AI 營收，公司）／Derived（XPU＝AI − 網通）",
        "±15% 內：層級由下而上與公司實績相容；校準係數只用於 FY2026 之後的縮放", fmt="#,##0.0")
-    c0("FY2026 AI 網通營收：公司實績推估（錨點）vs 市場層歸屬值（markets/network）", "=a26_net", "=net_26", "US$B；FY2026；差距＝校準係數 k_n − 1",
+    c0("FY2026 AI 網通營收：公司實績推估（錨點）vs 市場層歸屬值（markets/network）", "=a26_net", "=net_26", "US$B；FY2026；差距＝網通校準係數 − 1",
        f"{net_v}（net_26：Broadcom 歸屬）", "Derived（錨點：法說 XPU 占 AI 73%，二手）／Assumed（層：廠商歸屬比例）",
-       "超過 +15%：市場層的 Broadcom 歸屬比例偏低（Assumed），本模型以 k_n 校準到推估；不改上游值，列對帳單候選（由網通層處理）", fmt="#,##0.0")
-    # 產業部署 GW：個股依賴的層級量（現行基準 vs 另一側讀數）
-    for j, y in enumerate(ys):
-        if y == 2026:
-            pass
-        c0(f"產業部署 GW CY{y}（個股依賴的層級量）：Siliconomics 現行基準 vs 另一側讀數（Wattonomics 換算）", N["SIF_DeployGW_Base"][j], N[f"SIF_DeployGW_Alt_{y}"],
-           "GW；Siliconomics 基準（SIF_DeployGW_Base）vs 另一側讀數（SIF_DeployGW_Alt_<年>）", f"Siliconomics {SIL.VERSION}（旗標 SIF_RecoFlag_{y}＝{int(SIL.RECO_FLAG[y])}；{SIL.NAMES.get(f'SIF_RecoLabel_{y}', '')}）",
-           "Derived（基準）／Wattonomics 換算（另一側）", "層與層之間的對帳（Siliconomics 對帳單處理）；本模型依 C4 並列兩讀數目標價，不裁決" if y > 2026 else "2026 兩層一致（甲狀態）", fmt="#,##0.00")
+       "超過 +15%：市場層的 Broadcom 歸屬比例偏低（Assumed），本模型以網通校準係數校準到推估；不改上游值，列對帳單候選（由網通層處理）", fmt="#,##0.0")
     G1 = r - 1
     r += 1
-    C.cell(r, 1, "H. 對帳中年份與損益表年度標示（C4；FY(t)＝CY(t)，FY2030E–FY2032E 為 FY2029E 之後的延伸期，依賴 CY2029）").font = BOLD; r += 1
+    C.cell(r, 1, "層級之間（參考；Siliconomics 對帳單 r3 處理，不計入本公司 C0）：產業部署 GW，Siliconomics 現行基準 vs 另一側讀數（Wattonomics 換算）。這是兩層之間的差距，不是 Broadcom 自己的量對層級值；Siliconomics 已標對帳中，本公司不標、不計入對帳中項目數，依 C4 並列兩讀數目標價").font = BOLD; r += 1
+    for j, h in enumerate(["項目", "Siliconomics 基準", "另一側讀數", "差距", "狀態", "單位與口徑", "對照來源", "證據等級", "說明"], 1):
+        c = C.cell(r, j, h); c.font = BOLD; c.fill = HDR
+    r += 1
+    L0 = r
+    for j, y in enumerate(ys):
+        C.cell(r, 1, f"產業部署 GW CY{y}")
+        C.cell(r, 2, N["SIF_DeployGW_Base"][j]).number_format = "#,##0.00"; C.cell(r, 3, N[f"SIF_DeployGW_Alt_{y}"]).number_format = "#,##0.00"
+        C.cell(r, 4, f"=B{r}/C{r}-1").number_format = pct
+        C.cell(r, 5, "層間參考（Siliconomics 標對帳中；本公司不計）" if SIL.RECO_FLAG[y] else "層間參考（兩層一致）")
+        C.cell(r, 6, "GW；SIF_DeployGW_Base vs SIF_DeployGW_Alt_<年>")
+        C.cell(r, 7, f"Siliconomics {SIL.VERSION}（旗標 SIF_RecoFlag_{y}＝{int(SIL.RECO_FLAG[y])}）；Siliconomics 對帳單 r3")
+        C.cell(r, 8, "Derived（基準）／Wattonomics 換算（另一側）"); C.cell(r, 9, "兩層之間的差距，不裁決；本模型 Coord 頁 A–E 節並列兩讀數目標價")
+        r += 1
+    L1 = r - 1
+    r += 1
+    C.cell(r, 1, "I. 對帳中年份與損益表年度標示（C4；FY(t)＝CY(t)，FY2030E–FY2032E 為 FY2029E 之後的延伸期，依賴 CY2029）").font = BOLD; r += 1
     for j, h in enumerate(["項目"] + [f"FY{y}E" for y in range(2026, 2033)], 1):
         c = C.cell(r, j, h); c.font = BOLD; c.fill = HDR
     r += 1
@@ -538,17 +545,14 @@ def coord_c0(wb, SIL, T_):
     C.cell(r, 1, "損益表年度標示（FY2026E–FY2032E）")
     for j, fy in enumerate(range(2026, 2033)):
         cy = dep[j]
-        C.cell(r, 2 + j, f'=IF(co_flag_{cy}=1,"FY{fy}E（對帳中）","FY{fy}E")')
+        C.cell(r, 2 + j, f'=IF({"$"+"BCDE"[cy-2026]+"$"+str(r_flag)}=1,"FY{fy}E（對帳中）","FY{fy}E")')
     r += 1
-    C.cell(r, 1, "對帳中的 C0 項目數（本節 G 表）"); C.cell(r, 2, f'=COUNTIF(E{G0}:E{G1},"對帳中")'); r_cnt = r; r += 1
-    C.cell(r, 1, "加權目標價")      # 摘要列（供 tools/company_html/check_layout_v13.py 與下游讀兩讀數；值取上方 A–E 節，不重算）
-    r_tp = lab(C, "加權目標價（DCF 與 Comparable 加權）")
-    C.cell(r, 2, f"=B{r_tp}").number_format = "#,##0.00"; C.cell(r, 3, f"=C{r_tp}").number_format = "#,##0.00"; C.cell(r, 4, "摘要列：同 A–E 節加權目標價列（現行基準讀數；另一側讀數）"); r += 1
+    C.cell(r, 1, "對帳中的 C0 項目數（G 表；不含層級之間參考列）"); C.cell(r, 2, f'=COUNTIF(E{G0}:E{G1},"對帳中")'); r_cnt = r; r += 1
     C.cell(r, 1, "說明：標「對帳中」的 C0 項目不改上游值；個股修正方向依證據（C0 第 3 點）：AI 網通 FY2026 為個股有實績推估、層（市場層歸屬比例）為 Assumed → 下次升版由層吸收，由主控開對帳單；"
-                 "產業部署 GW 為層與層之間的對帳，本模型並列兩讀數目標價（Coord 頁 A–E 節），不裁決。"); r_note = r; r += 1
+                 "產業部署 GW 為層與層之間的差距（參考列，Siliconomics 對帳單 r3 處理），本模型並列兩讀數目標價（Coord 頁 A–E 節），不裁決，也不計入本公司對帳中項目數。"); r_note = r; r += 1
     for col, w in zip("FGHI", (40, 60, 40, 70)):
         C.column_dimensions[col].width = max(C.column_dimensions[col].width or 0, w)
-    return dict(F1=F1, G0=G0, G1=G1, H_PL=H_PL, cnt=r_cnt, note=r_note)
+    return dict(F1=F1, G0=G0, G1=G1, L0=L0, L1=L1, H_PL=H_PL, cnt=r_cnt, note=r_note)
 
 
 # ---------- README：v1.3 展示層白話列 ----------
@@ -598,10 +602,10 @@ def readme13(wb, RVA, PLA, SEN, CO):
                  "AI 網通＝市場層歸屬金額 × 情境顆數係數 × 校準係數；非 AI 半導體與基礎架構軟體各以固定年增率推算。四者相加為合併營收。FY2028：XPU "), f'TEXT(PL!F{xpu_b},"0")', T("、AI 網通 "), f'TEXT(PL!F{net_b},"0")',
         T("、非 AI 半導體 "), f'TEXT(PL!F{nai_b},"0")', T("、軟體 "), f'TEXT(PL!F{sw_b},"0")', T("，合計 "), f'TEXT(PL!F{rev_b},"0")', T(" 十億美元。"))
     put("coord", T("三層協調：本模型的產業顆數、份額與對帳中旗標讀 Siliconomics "), f"Coord!C{CO['F1']}", T("（見 Coord 頁 F 節）。C0 由下往上對帳共 "), f'TEXT(COUNTA(Coord!A{CO["G0"]}:A{CO["G1"]}),"0")', T(" 項，其中「對帳中」"),
-        f'TEXT(Coord!B{CO["cnt"]},"0")', T(" 項；對帳中年份 CY2027–CY2029 依 C4 並列兩讀數目標價。"))
+        f'TEXT(Coord!B{CO["cnt"]},"0")', T(" 項（只算 Broadcom 自己的量對它讀的層級值）；產業部署 GW 兩層差距另列參考、不計入；對帳中年份 CY2027–CY2029 依 C4 並列兩讀數目標價。"))
     RD.cell(r, 1, f"v{VER}（{BUILT}）：個股 HTML 版面規格 v1.3 與三層協調新機制（共用工作單 D 節）——章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；新增 Hist 頁（損益表歷史）、PL 頁末標準損益表"
                   "（FY2023A–FY2025A 實績＋FY2026E–FY2032E 情境 B，Non-GAAP）、RevDCF 頁（反向 DCF）、Val 頁 0.7（四個目標價）、Sens 頁末加權目標價相對基準（整本重算快照 avgo/sens.json）、"
-                  "Coord 頁 F–H 節（讀哪一層哪一版、C0 由下往上對帳、損益表年度標示）；既有數值格不變（新增列、新增頁與版本字串以外逐格比對 0 差異），目標價與評等不變")
+                  "Coord 頁 F–I 節（讀哪一層哪一版、C0 由下往上對帳、損益表年度標示）；既有數值格不變（新增列、新增頁與版本字串以外逐格比對 0 差異），目標價與評等不變")
     out["ver"] = r; r += 1
     for k, rr in out.items():
         RD.cell(rr, 1).alignment = Alignment(wrap_text=True, vertical="top")
@@ -614,7 +618,7 @@ def version(wb):
     head = a1.split("；", 1)[0]
     assert "v0.5.5" in head, head[:120]
     RD["A1"].value = head.replace("v0.5.5", f"v{VER}", 1) + a1[len(head):] + (
-        f"；v{VER}（{BUILT}）：個股 HTML 版面規格 v1.3 與三層協調新機制（Coord 頁 F–H 節 C0 對帳；Hist、RevDCF 頁；PL 標準損益表；Val 0.7；Sens 加權目標價相對基準），既有數值不變")
+        f"；v{VER}（{BUILT}）：個股 HTML 版面規格 v1.3 與三層協調新機制（Coord 頁 F–I 節 C0 對帳；Hist、RevDCF 頁；PL 標準損益表；Val 0.7；Sens 加權目標價相對基準），既有數值不變")
 
 
 def apply(wb, here, SIL):
@@ -630,4 +634,4 @@ def apply(wb, here, SIL):
     RMA = readme13(wb, RVA, PLA, SEN, CO)
     version(wb)
     wb._v056 = dict(PL=PLA, RV=RVA, RM=RMA, SEN=SEN, CO=CO, VG=VG)
-    return f"v056_post：Hist {len(HR)} 列；PL 標準損益表 {PLA['start']} 起；RevDCF 頁；Val 0.7 第 {VG} 列；Sens 加權目標價相對基準 {SEN['t0']} 起；Coord F–H 節；README v1.3 白話列 {len(RMA)} 列"
+    return f"v056_post：Hist {len(HR)} 列；PL 標準損益表 {PLA['start']} 起；RevDCF 頁；Val 0.7 第 {VG} 列；Sens 加權目標價相對基準 {SEN['t0']} 起；Coord F–I 節；README v1.3 白話列 {len(RMA)} 列"

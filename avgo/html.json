@@ -2048,13 +2048,13 @@
       "@PL!C279",
       "@PL!D279",
       "@PL!E279",
-      "@Coord!B57",
-      "@Coord!C57",
-      "@Coord!D57",
-      "@Coord!E57",
-      "@Coord!F57",
-      "@Coord!G57",
-      "@Coord!H57"
+      "@Coord!B60",
+      "@Coord!C60",
+      "@Coord!D60",
+      "@Coord!E60",
+      "@Coord!F60",
+      "@Coord!G60",
+      "@Coord!H60"
      ],
      "rows": [
       [
@@ -4590,6 +4590,141 @@
        "@Recon!H35|sp1",
        "@Recon!I35|",
        "@Recon!J35|"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "由下往上對帳（只算 Broadcom 自己的量對它讀的層級值；差距超過門檻標「對帳中」，不改上游值）",
+     "head": [
+      "項目",
+      "本模型值",
+      "層級對照值",
+      "差距",
+      "狀態",
+      "說明"
+     ],
+     "rows": [
+      [
+       "@Coord!A39",
+       "@Coord!B39|n3",
+       "@Coord!C39|n3",
+       "@Coord!D39|sp1",
+       "@Coord!E39",
+       "@Coord!I39"
+      ],
+      [
+       "@Coord!A40",
+       "@Coord!B40|n3",
+       "@Coord!C40|n3",
+       "@Coord!D40|sp1",
+       "@Coord!E40",
+       "@Coord!I40"
+      ],
+      [
+       "@Coord!A41",
+       "@Coord!B41|n3",
+       "@Coord!C41|n3",
+       "@Coord!D41|sp1",
+       "@Coord!E41",
+       "@Coord!I41"
+      ],
+      [
+       "@Coord!A42",
+       "@Coord!B42|p1",
+       "@Coord!C42|p1",
+       "@Coord!D42|sp1",
+       "@Coord!E42",
+       "@Coord!I42"
+      ],
+      [
+       "@Coord!A43",
+       "@Coord!B43|p1",
+       "@Coord!C43|p1",
+       "@Coord!D43|sp1",
+       "@Coord!E43",
+       "@Coord!I43"
+      ],
+      [
+       "@Coord!A44",
+       "@Coord!B44|n1",
+       "@Coord!C44|n1",
+       "@Coord!D44|sp1",
+       "@Coord!E44",
+       "@Coord!I44"
+      ],
+      [
+       "@Coord!A45",
+       "@Coord!B45|p1",
+       "@Coord!C45|p1",
+       "@Coord!D45|sp1",
+       "@Coord!E45",
+       "@Coord!I45"
+      ],
+      [
+       "@Coord!A46",
+       "@Coord!B46|p1",
+       "@Coord!C46|p1",
+       "@Coord!D46|sp1",
+       "@Coord!E46",
+       "@Coord!I46"
+      ],
+      [
+       "@Coord!A47",
+       "@Coord!B47|n1",
+       "@Coord!C47|n1",
+       "@Coord!D47|sp1",
+       "@Coord!E47",
+       "@Coord!I47"
+      ],
+      [
+       "@Coord!A48",
+       "@Coord!B48|n1",
+       "@Coord!C48|n1",
+       "@Coord!D48|sp1",
+       "@Coord!E48",
+       "@Coord!I48"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "層級之間（參考；Siliconomics 對帳單處理，不計入本公司對帳中項目）：產業部署 GW，Siliconomics 基準對另一側讀數",
+     "head": [
+      "項目",
+      "Siliconomics 基準",
+      "另一側讀數",
+      "差距",
+      "狀態"
+     ],
+     "rows": [
+      [
+       "@Coord!A52",
+       "@Coord!B52|n2",
+       "@Coord!C52|n2",
+       "@Coord!D52|sp1",
+       "@Coord!E52"
+      ],
+      [
+       "@Coord!A53",
+       "@Coord!B53|n2",
+       "@Coord!C53|n2",
+       "@Coord!D53|sp1",
+       "@Coord!E53"
+      ],
+      [
+       "@Coord!A54",
+       "@Coord!B54|n2",
+       "@Coord!C54|n2",
+       "@Coord!D54|sp1",
+       "@Coord!E54"
+      ],
+      [
+       "@Coord!A55",
+       "@Coord!B55|n2",
+       "@Coord!C55|n2",
+       "@Coord!D55|sp1",
+       "@Coord!E55"
       ]
      ]
     },

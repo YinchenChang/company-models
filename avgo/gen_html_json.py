@@ -360,6 +360,23 @@ def _v13():
                {"type": "h3", "text": "三層協調：讀哪一層哪一版、由下往上對帳"}, {"type": "note", "parts": [f"@README!A{RM['coord']}"]},
                {"type": "h3", "text": "會計年度"}, {"type": "note", "parts": [f"@README!A{find('README', '會計年度：')}"]}]
     S["revdcf"] = rev_
+    # ---- 7. 對帳章：C0 由下往上對帳（Broadcom 自己的量對它讀的層級值）與層級之間參考 ----
+    c0r = next(r for r in range(1, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith("G. C0"))
+    c0h = c0r + 1; c0e = c0h
+    while CW.cell(c0e + 1, 1).value and not str(CW.cell(c0e + 1, 1).value).startswith("層級之間"): c0e += 1
+    lr = next(r for r in range(c0e, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith("層級之間"))
+    lh = lr + 1; le = lh
+    while CW.cell(le + 1, 1).value: le += 1
+    def _fm(r, c):
+        nf = CW.cell(r, c).number_format
+        return "p1" if "%" in nf else "n3" if nf == "0.000" else "n2" if nf == "#,##0.00" else "n1"
+    c0_tbl = {"type": "table", "caption": "由下往上對帳（只算 Broadcom 自己的量對它讀的層級值；差距超過門檻標「對帳中」，不改上游值）",
+              "head": ["項目", "本模型值", "層級對照值", "差距", "狀態", "說明"],
+              "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|{_fm(r, 2)}", f"@Coord!C{r}|{_fm(r, 3)}", f"@Coord!D{r}|sp1", f"@Coord!E{r}", f"@Coord!I{r}"] for r in range(c0h + 1, c0e + 1)]}
+    lay_tbl = {"type": "table", "caption": "層級之間（參考；Siliconomics 對帳單處理，不計入本公司對帳中項目）：產業部署 GW，Siliconomics 基準對另一側讀數",
+               "head": ["項目", "Siliconomics 基準", "另一側讀數", "差距", "狀態"],
+               "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|n2", f"@Coord!C{r}|n2", f"@Coord!D{r}|sp1", f"@Coord!E{r}"] for r in range(lh + 1, le + 1)]}
+    S["recon"]["blocks"][1:1] = [c0_tbl, lay_tbl]
     cfg["sections"] = [S[k] for k in ["thesis", "valuation", "sens", "revdcf", "pl", "drivers", "recon", "status"]]
 
 
