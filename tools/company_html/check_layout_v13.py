@@ -75,16 +75,27 @@ def reco_info(xlsx):
         dep = nv(f'co_dep_{y}')
         if float(f) == 1 and (dep is None or float(dep) == 1):
             flagged.append(y)
+    lag = 1   # 具名格旗標（NVIDIA 樣板）：FY(t) 對 CY(t−1)
+    if not flagged and 'Coord' in wb.sheetnames:   # 共用工具 tools/coord/coord.py 的 Coord 頁：「年」列（CY2026…）＋「對帳中旗標」列；會計年度＝日曆年（lag 0）
+        C = wb['Coord']
+        yr_row = next((r for r in range(1, min(C.max_row, 60) + 1) if C.cell(r, 1).value == '年'), None)
+        fl_row = next((r for r in range(1, min(C.max_row, 60) + 1) if str(C.cell(r, 1).value or '').startswith('對帳中旗標')), None)
+        if yr_row and fl_row:
+            lag = 0
+            for c in range(2, C.max_column + 1):
+                m = re.match(r'CY(20\d\d)', str(C.cell(yr_row, c).value or ''))
+                v = C.cell(fl_row, c).value
+                if m and v is not None and float(v) == 1:
+                    flagged.append(int(m.group(1)))
     if not flagged:
         return None
-    fys = sorted({y + 1 for y in flagged} | ({max(flagged) + 2} if max(flagged) == max(
-        y for y in range(2024, 2036) if nv(f'co_flag_{y}') is not None or nv(f'SIF_RecoFlag_{y}') is not None) else set()))
+    fys = sorted({y + lag for y in flagged} | {max(flagged) + lag + 1})   # 末年另含延伸期一年
     info = {'cy': flagged, 'fy': fys, 'tp': None, 'rec': None}
     if 'Coord' in wb.sheetnames:
         C = wb['Coord']
         for r in range(1, C.max_row + 1):
             a = str(C.cell(r, 1).value or '')
-            if a == '加權目標價' and info['tp'] is None:   # 兩讀數表（B 節）為第一次出現；之後的敏感度表不採用
+            if a.startswith('加權目標價') and info['tp'] is None and isinstance(C.cell(r, 2).value, (int, float)):   # 兩讀數表為第一次出現
                 info['tp'] = (C.cell(r, 2).value, C.cell(r, 3).value)
             if a.startswith('投資建議') and info['rec'] is None:
                 info['rec'] = (C.cell(r, 2).value, C.cell(r, 3).value)
