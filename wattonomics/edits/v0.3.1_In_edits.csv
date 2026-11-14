@@ -1,3 +1,4 @@
 key,col,old,new,source,reason
-cp_neo_iren,P,,Z1#A1-3、A1-4,wattonomics/evidence_raw/Z1_earnings_20261114.md,Z1：IREN Q1 FY27 公司揭露延遲（待核對）
-cp_neo_iren,Q,,待核對：公司揭露 2026-12 → 2027-01（可能 02），Microsoft 要求網路設計變更；E12 候選，核對屬實前 M 不寫,wattonomics/evidence_raw/Z1_earnings_20261114.md,Z1（工作單 20261114；chat 端 11-14 通知）
+cp_neo_iren,M,,1,wattonomics/evidence_raw/Z1_earnings_20261114_verify.md,Z1 已核對：IREN 10-Q 公司自揭 Horizon 2–4 由 2026Q4 延至 2027-01（2026-12 → 2027-01＝1 個月）
+cp_neo_iren,P,,Z1#A1-3、A1-4,wattonomics/evidence_raw/Z1_earnings_20261114.md,Z1：IREN Q1 FY27 公司揭露延遲
+cp_neo_iren,Q,,已確認（屬實；公司自揭 10-Q，未參與代理核對 2026-11-14）：Horizon 2–4 由 2026Q4 延至 2027-01（可能 02），Microsoft 要求網路設計變更、無延遲補償；本列只含 H3–4 100 MW IT,wattonomics/evidence_raw/Z1_earnings_20261114_verify.md,Z1（chat 端 11-14 核對後指示）

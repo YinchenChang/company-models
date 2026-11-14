@@ -110,8 +110,8 @@ ACT26 = {
 }
 # v0.3.1 Z1：CoreWeave、Nebius 2026Q3 實績（evidence_raw/Z1_earnings_20261114.md B13、B15；待未參與代理核對，z1_act_on＝0 時不採用）
 ACT26Z1 = {
-    "crwv": (30.7, "Z1 B13：公司口徑 CapEx（應計）Q1 6.8（二手，付費牆摘要）＋Q2 9.4＋Q3 14.5（CFO 公布）＝30.7；現金九個月 23.558（10-Q）。與 Y9 同為公司口徑"),
-    "nbis": (15.4307, "Z1 B15：現金（PP&E 與無形資產購置）九個月 15,430.7 US$M（6-K Ex.99.1）；2026 指引已上調至約 27（公司口徑未定義）"),
+    "crwv": (23.558, "Z1 B13（已核對）：現金 PP&E 購置九個月 7,695＋6,422＋9,441＝23,558 US$M（10-Q、XBRL）。採現金口徑：公司口徑（應計）Q1 6.8 屬未核對子項，不入分子；分母 In Y9 為個股模型 CapEx，現金低於應計 → 比例偏低（保守）"),
+    "nbis": (15.4307, "Z1 B15（已核對）：現金（PP&E 與無形資產購置）九個月 2,472.9＋5,657.4＋7,300.4＝15,430.7 US$M（6-K Ex.99.1）；2026 指引已上調至約 27（公司口徑未定義）"),
 }
 
 DATE = "20261102"
@@ -163,12 +163,12 @@ GEN_NAME = {"H100": "Hopper H100", "GB200": "GB200 NVL72", "GB300": "GB300 NVL72
 # 延遲候選中沒有對應 T2 列者（工作單 20261102 E13；判定見 evidence_raw/D_review_20261102.md）
 DELAY_TRACK = [
     ("D#16", "Oracle × OpenAI 部分站點（未指明哪些站）", "Bloomberg 報導 2027→2028（勞工與材料短缺）；Oracle 公開否認合約所需站點延遲", "報導、公司否認（E12：M＝0；無對應 T2 列）"),
-    ("D#19", "Nebius／DataOne 新澤西首期 50 MW", "SemiAnalysis：目標 4 個月、實際約 10–11 個月（延約 6–7 個月）；單一來源。EQ#8（11-04，Aterio 衛星判讀）：約 140 MW 可能滑到 2027。v0.3.1 Z1（A3-3）：Nebius 2026Q3 股東信（公司揭露）稱 Microsoft 合約容量年底交付過半、剩餘批次延至 2Q27（DataOne 臨時發電退役、改燃料電池）", "Z1 公司揭露，符合 E12 候選；待未參與代理核對（T2 無對應列，核對後再決定是否新增 T2 列與 M）"),
+    ("D#19", "Nebius／DataOne 新澤西首期 50 MW", "SemiAnalysis：目標 4 個月、實際約 10–11 個月（延約 6–7 個月）；單一來源。EQ#8（11-04，Aterio 衛星判讀）：約 140 MW 可能滑到 2027。v0.3.1 Z1（A3-3）：Nebius 2026Q3 股東信（公司揭露）稱 Microsoft 合約容量年底交付過半、剩餘批次延至 2Q27（DataOne 臨時發電退役、改燃料電池）", "已核對屬實（2026-11-14）：剩餘批次（不到一半，量未揭露）由 2026 年底延至 2Q27，約延 4–6 個月；MW 未揭露 → 不新增 T2 列、不改基準，只追蹤"),
     # v0.3.1 Z1（工作單 20261114；證據 evidence_raw/Z1_earnings_20261114.md；全部待核對、不入基準）
-    ("Z1#A1-3", "IREN Childress Horizon 2–4（Microsoft；T2 cp_neo_iren）", "IREN Q1 FY27 新聞稿與 10-Q（2026-11-05；公司揭露）：0.3 GW（IT）原訂 2026 年底完成，改 2027-01、可能延到 2027-02；10-Q 載明係 Microsoft 要求的網路設計變更（交付日延後、無延遲抵免）。EQ#7（Aterio 衛星判讀）佐證", "待核對（公司揭露，符合 E12 候選；核對屬實後 cp_neo_iren M 欄約 1–2 月）"),
-    ("Z1#A3-4", "Nebius 第三方共置站點（未逐站指名；含新澤西剩餘批次）", "Nebius 2026Q3 股東信（2026-11-12）：數個共置站點交付日移到 2027 上半年；自有站點準時或提前；2026 營收落在區間低端、ARR 目標約延 2 個月", "待核對（公司揭露但未指站點、未給 MW；只追蹤）"),
-    ("Z1#A2-6", "CoreWeave（全公司）", "CoreWeave 2026Q3 新聞稿、10-Q 與逐字稿：無第三方資料中心延遲揭露；CEO 稱「delivering capacity ahead of plan」、2027 交付無重大風險；Q3 capex 因 Q4 交付提前而超出指引", "無延遲（只追蹤）"),
-    ("EQ#5（Z1 A4）", "Microsoft 第三方容量（IREN、Nebius 等）", "Microsoft FY27Q1 法說（10-28）：第三方容量交付延到 FY27 H2（2027-01～06）；日曆年 2026 資本支出指引 175 → 約 170。Z1 A4-5：IREN（A1-4）、Nebius 新澤西（A3-3）兩筆公司揭露的延遲都落在 FY27 H2，與此一致", "待核對（交叉驗證；Microsoft 未指站點、未給 MW，不能寫入特定 T2 列）"),
+    ("Z1#A1-3", "IREN Childress Horizon 2–4（Microsoft；T2 cp_neo_iren）", "IREN Q1 FY27 新聞稿與 10-Q（2026-11-05；公司揭露）：0.3 GW（IT）原訂 2026 年底完成，改 2027-01、可能延到 2027-02；10-Q 載明係 Microsoft 要求的網路設計變更（交付日延後、無延遲抵免）。EQ#7（Aterio 衛星判讀）佐證", "已核對屬實（2026-11-14）：入基準——T2 cp_neo_iren（H3–4 100 MW IT）M＝1（2026-12 → 2027-01；可能再延到 02，不計）。延遲量是 Horizon 2–4（3 × 50 MW IT），不是 0.3 GW 計畫規模；Horizon 2 的 50 MW 不在 T2 列（含在 In mw_neo 年底輸入），未延"),
+    ("Z1#A3-4", "Nebius 第三方共置站點（未逐站指名；含新澤西剩餘批次）", "Nebius 2026Q3 股東信（2026-11-12）：數個共置站點交付日移到 2027 上半年；自有站點準時或提前；2026 營收落在區間低端、ARR 目標約延 2 個月", "已核對屬實：部分共置站點由 2026 延至 1H27（約延 1–6 個月），量未揭露 → 只追蹤、不改基準"),
+    ("Z1#A2-6", "CoreWeave（全公司）", "CoreWeave 2026Q3 新聞稿、10-Q 與逐字稿：無第三方資料中心延遲揭露；CEO 稱「delivering capacity ahead of plan」、2027 交付無重大風險；Q3 capex 因 Q4 交付提前而超出指引", "已核對：無延遲"),
+    ("EQ#5（Z1 A4）", "Microsoft 第三方容量（IREN、Nebius 等）", "Microsoft FY27Q1 法說（10-28）：第三方容量交付延到 FY27 H2（2027-01～06）；日曆年 2026 資本支出指引 175 → 約 170。Z1 A4-5：IREN（A1-4）、Nebius 新澤西（A3-3）兩筆公司揭露的延遲都落在 FY27 H2，與此一致", "二手（一致）：Microsoft 第三方容量移至 FY27 H2（2027-01～06），無 MW、未指站點 → 只列 EQ#5 追蹤"),
 ]
 
 
@@ -482,11 +482,12 @@ def main():
         scalar(dict(key=k_, label=lab_, unit=unit_, lo=lo_, base=b_, hi=hi_, tag=tag_, src=src_, note=note_))
     for p_, (v_, note_) in ACT26.items():
         scalar(dict(key=f"act26_{p_}", label=f"{PN[p_]} 2026 已公布資本支出實績（Q1–Q3；與 In Y9 同口徑）", unit="US$B", base=v_,
-                    tag=("Verified（只到 H1；Q3 待 Z1 證據）" if p_ in ("crwv", "nbis") else "Verified"), src="SRC_GL_342", note=note_))
+                    tag=("Verified（只到 H1；z1_act_on＝1 時改用 act26z1）" if p_ in ("crwv", "nbis") else
+                         "Verified／二手（一致）：FY27Q1 公司口徑 45.2 為逐字稿轉載" if p_ == "msft" else "Verified"), src="SRC_GL_342", note=note_))
     for p_, (v_, note_) in ACT26Z1.items():
-        scalar(dict(key=f"act26z1_{p_}", label=f"{PN[p_]} 2026 Q1–Q3 資本支出實績（Z1 財報季證據）", unit="US$B", base=v_, tag=("Verified（CFO 公布；Q1 二手）／待核對（Z1）" if p_ == "crwv" else "Verified（6-K）／待核對（Z1）"), src="SRC_GL_345", note=note_))
-    scalar(dict(key="z1_act_on", label="Z1 CoreWeave、Nebius Q1–Q3 實績是否採用（1＝核對屬實後採用；0＝沿用 H1）", unit="旗標", base=0, tag="Derived（待核對旗標）", src="SRC_GL_345",
-                note="工作單 Z1：新證據列須經未參與代理核對才入；核對後只改本旗標與 act26z1_* 標記"))
+        scalar(dict(key=f"act26z1_{p_}", label=f"{PN[p_]} 2026 Q1–Q3 資本支出實績（Z1 財報季證據）", unit="US$B", base=v_, tag=("Verified（10-Q 現金；已核對 Z1）" if p_ == "crwv" else "Verified（6-K 現金；已核對 Z1）"), src="SRC_GL_345", note=note_))
+    scalar(dict(key="z1_act_on", label="Z1 CoreWeave、Nebius Q1–Q3 實績是否採用（1＝核對屬實後採用；0＝沿用 H1）", unit="旗標", base=1, tag="Derived（核對旗標）", src="SRC_GL_345",
+                note="工作單 Z1：新證據列須經未參與代理核對才入；2026-11-14 未參與代理核對屬實（evidence_raw/Z1_earnings_20261114_verify.md）→ 1"))
     IN_LAST = r - 1
     for col, w in zip("ABCDEFGHIJKLMNOPQRS", (16, 50, 8, 7, 18, 12, 70) + (9,) * 11 + (5,)):
         IN.column_dimensions[col].width = w
@@ -3035,12 +3036,12 @@ def main():
         {"id": "GL01-83", "cat": "判斷", "item": "W1 殘差法不套到每 GW 成本", "decision": "v0.2.1 待判斷 C1（是否把殘差法套到 CapexGW 每 GW 成本）：Y3 改讀逐買方份額後已不需要，殘差法在對帳點也已停用；每 GW 成本口徑維持 In S5 與市場 $ 占比。汰換權重與 C2–C4 排 v0.4", "date": "2026-11-05", "quote": QA + "；" + WO3 + " 不做", "status": "預設、可撤回"},
         {"id": "GL01-84", "cat": "判斷", "item": "④ 覆蓋缺口兩讀法並列、不入基準（Z2）", "decision": "Compare H1：④（七家以外買方未入）原值 1.84／4.81／8.28 與實績下限讀法 0.06／3.03／7.36（(a) 七家多花改 10-Q 實績外推下限 0.06〔0–0.92〕）兩欄並列；另列扣 Oracle 重疊 0.77 讀法（4.04／2.26）；每項寫證據等級與升級觀察點；CoreWeave 項標『未取得』（不是 0），Z1 證據到後補。④ 不入基準；證據比例分母用實績下限讀法基準", "date": "2026-11-14", "quote": QA31 + "；" + WO31 + " Z2", "status": "預設、可撤回"},
         {"id": "GL01-85", "cat": "判斷", "item": "Compare 依協調規則 v1.1 逐年列協調狀態（Z3）", "decision": "Compare H3：狀態（甲／乙／丙）只看證據比例，門檻 coord_thr 50%（首次判定；67% 對照）；Siliconomics 證據比例暫讀 In sil_ev（AI半導體 橋接表 scov），Siliconomics 下一版自量後改讀其快照；覆蓋未補齊（coord_cov_done＝0，v0.3.2 前）時，丙與 Wattonomics 有證據的乙標『對帳中』、基準維持現值。H4 並列（＋④＋W2）調整後比值兩讀法：工作單『W1＋W2』依 Siliconomics r4_bridge p5 讀為 ④＋W2（待判斷）。SIL_In 讀 Siliconomics v0.18", "date": "2026-11-14", "quote": QA31 + "；" + WO31 + " Z3；docs/plan/三層基準協調規則.md v1.1 C3、C6", "status": "預設、可撤回"},
-        {"id": "GL01-86", "cat": "判斷", "item": "證據比例改規則 v1.1 口徑（Z4）", "decision": "新名稱 WIF_Evidence_<2026–2030>＝MIN(1,（站點證據年新增 SiteOnly ＋ 七家實績支撐超出該家站點證據的部分）÷（主路徑年新增＋④ 實績下限讀法基準＋W2））。七家實績支撐：付款年比例＝ev_actyr 之前 1、當年 Q1–Q3 實績（In act26_<p>，與 Y9 同口徑）÷ 曆年路徑資本支出、之後 0，× 甲2 付款年 GW，經 lag_on、inv_on 轉上線年（同主路徑）。工作單字面為兩者相加；同一批七家 GW 既有站點又有資本支出實績，相加會重複，故逐家取較大者（字面讀法列為對照，待判斷）。CoreWeave、Nebius 只到 H1（Q3 待 Z1）；Microsoft、Oracle 以季度實績對齊曆年（Oracle 差 1 個月）。2030 ④、W2 延續 2029（gap_carry30＝1，待判斷）。舊 WIF_Coverage_* 保留不改義", "date": "2026-11-14", "quote": QA31 + "；" + WO31 + " Z4；規則 v1.1 C3 分母與已知限制", "status": "預設、可撤回"},
+        {"id": "GL01-86", "cat": "判斷", "item": "證據比例改規則 v1.1 口徑（Z4）", "decision": "新名稱 WIF_Evidence_<2026–2030>＝MIN(1,（站點證據年新增 SiteOnly ＋ 七家實績支撐超出該家站點證據的部分）÷（主路徑年新增＋④ 實績下限讀法基準＋W2））。七家實績支撐：付款年比例＝ev_actyr 之前 1、當年 Q1–Q3 實績（In act26_<p>，與 Y9 同口徑）÷ 曆年路徑資本支出、之後 0，× 甲2 付款年 GW，經 lag_on、inv_on 轉上線年（同主路徑）。去重：逐家取站點證據與資本支出實績的較大者（chat 端 2026-11-14 定案：工作單字面相加會把同一批 GW 算兩次，不符規則「證據比例」的意思；字面讀法只列對照）。CoreWeave、Nebius 用 Z1 已核對 Q1–Q3 實績（z1_act_on＝1；CoreWeave 採現金口徑 23.558，公司口徑 Q1 未核對不入）；Microsoft、Oracle 以季度實績對齊曆年（Oracle 差 1 個月）。2030 ④、W2 延續 2029（gap_carry30＝1；chat 端 11-14 同意）。2027 證據比例接近 50% 門檻：於 NVIDIA FY27Q3（11-19）後與 2026Q4 財報季結束（2027-02 底）重判，套緩衝區。舊 WIF_Coverage_* 保留不改義", "date": "2026-11-14", "quote": QA31 + "；" + WO31 + " Z4；規則 v1.1 C3 分母與已知限制；chat 端 11-14 核對後指示（去重定案）", "status": "已定（chat 端，去重）"},
         {"id": "GL01-87", "cat": "判斷", "item": "NVIDIA 對帳每 GW 營收改區間、指引只作參照（W-3）", "decision": "Compare F (5) 改稱每 IT GW NVIDIA 營收（R7 營收口徑，Siliconomics v0.18 決策 S44），VR200 低 19.67／基準 26.13／高 29.30；2027 欄（FY2027 共識 × FY2028 指引年增）只作參照列，(8) 判定與 (13) 校準後比值標『參照（不判定）』，不作校準目標；2026 實績校準（λ）保留", "date": "2026-11-14", "quote": QA31 + "；" + WO31 + " Z3（W-3）", "status": "預設、可撤回"},
         {"id": "GL01-88", "cat": "工程", "item": "五家資本支出與 Siliconomics 顆數並排（W-4）", "decision": "Compare H5：Microsoft、Alphabet、Amazon、Meta、Oracle 的曆年資本支出、AI 資本支出、甲2 付款年 GW，與 Siliconomics 逐買方 NVIDIA 金額份額（至 2027）、自研加速器顆數（TPU、Trainium；Maia、MTIA 只有『其他 ASIC』合計）、S33 係數與原始顆數讀數並排；只並列", "date": "2026-11-14", "quote": WO31 + " Z3（W-4）", "status": "執行"},
         {"id": "GL01-89", "cat": "查核", "item": "五家個股模型 2028–29 資本支出推法（Z5）", "decision": "查 import_gap_models.py 現行指向的個股模型（Y9 取數版的 dist 檔已不在 repo，淺層 clone 取不到歷史，改查同家現行版）：Microsoft＝在役 AI MW 每年新增 pace（反解使 FY2027 資本支出＝公司指引下限）逐年延續 × 每 MW 成本；Alphabet＝pace（反解使 FY2026＝指引中點 200）2027–28 延續、2029 起收斂到 g × 期初 MW；Amazon＝對外 MW 每年新增 pace_A 3,733（公司『2027 年底容量為 2025 年兩倍』與 MS 推估，Interested-party）延續；Meta＝FY2027 由資本支出指引反解 MW，FY2028＝FY2027 × a28（Assumed 1.0，0.8–1.2），2029 起收斂；Oracle＝已連網 MW＝MIN（已簽站點容量 cap_A 8,778 MW，前期＋pace 3,333），FY2028 起觸頂。五家都不是『只向共識收斂』，In Y9 標記不改；四家為指引反解後的步調延續、Meta 2028 為 Assumed 倍數，皆非 C3 證據（2027 起實績＝0 與此一致）", "date": "2026-11-14", "quote": WO31 + " Z5", "status": "查核結果"},
         {"id": "GL01-90", "cat": "工程", "item": "SIL_In 改讀 Siliconomics v0.18（Z6、Z3）", "decision": "SIL_In 隨 siliconomics/data/CURRENT_SNAPSHOT 讀 v0.18：*_Base（DeployGW、AIITCapex、UnitsCoef）、Cap（CapGW、CapHead、CoWoSUtil、HBMUtil、CapOnlineGW）、R7 每 GW NVIDIA 營收（營收口徑）、逐買方份額。另仍讀平台顆數 SIF_UnitsPlat_*、每顆 IT capex SIF_it_*、SIF_vr26、SIF_nv_content、SIF_ITCapexPerGW：只用於比例與單價（世代組合、非 NVIDIA 占比），係數同乘不影響比例；改讀會改變基準 GW，本版不做（待判斷）。2028–29 診斷與 W-2 原檔未入 repo，待 Andy 電腦上線後由 chat 端放", "date": "2026-11-14", "quote": WO31 + " Z6", "status": "執行"},
-        {"id": "GL01-91", "cat": "工程", "item": "財報季證據（Z1）", "decision": "證據 evidence_raw/Z1_earnings_20261114.md（58 列）全部標『待核對』、不入基準：Delay 頁追蹤加 Z1#A1-3（IREN Childress Horizon 2–4 延至 2027-01／02，Microsoft 要求網路設計變更）、D#19 更新（Nebius 新澤西 Microsoft 剩餘批次延至 2Q27）、Z1#A3-4（Nebius 共置站點延至 1H27）、Z1#A2-6（CoreWeave 無延遲揭露）、EQ#5 更新（Microsoft 第三方容量 FY27 H2，與 IREN、Nebius 兩筆一致）；IREN、Nebius 兩筆為公司自揭、符合 E12 候選，核對屬實前 T2 M 欄不寫；T2 cp_neo_iren P／Q 欄記證據 ID 與『待核對』（edits/v0.3.1_In_edits.csv）。證據比例的 CoreWeave、Nebius Q1–Q3 實績列 act26z1_*，旗標 z1_act_on＝0（沿用 H1）；核對後只改旗標與標記", "date": "2026-11-14", "quote": WO31 + " Z1；chat 端 11-14 通知（新證據一律待核對）", "status": "待核對"},
+        {"id": "GL01-91", "cat": "判斷", "item": "財報季證據（Z1）", "decision": "證據 evidence_raw/Z1_earnings_20261114.md（58 列）經未參與代理核對（Z1_earnings_20261114_verify.md：屬實 51、小誤 1〔A1-13 IREN 資本支出 5,146 → 5,226 已更正〕、部分子項無法核對 6、錯誤 0）。入基準：IREN Childress Horizon 2–4 延至 2027-01（公司自揭，Microsoft 要求網路設計變更），寫入 T2 cp_neo_iren（H3–4 100 MW IT）M＝1；延遲量是 3 × 50 MW，不是 0.3 GW 計畫規模；Horizon 2 的 50 MW 不在 T2 列（mw_neo 輸入），未延。只追蹤：Nebius 新澤西剩餘批次延至 2Q27、共置站點部分延至 1H27（量未揭露，不新增 T2 列）；Microsoft 第三方容量移至 FY27H2（EQ#5，二手一致）；CoreWeave 無延遲。證據比例：z1_act_on＝1（CoreWeave 現金 23.558、Nebius 現金 15.431）；A2-11、B5、B8、B12、B13–B14 未核對子項不入分子", "date": "2026-11-14", "quote": WO31 + " Z1；chat 端 11-14 核對後指示", "status": "已核對、已入"},
     ]
     for d in decisions:
         if d["id"] == "GL01-21":
@@ -3189,7 +3190,7 @@ def main():
         ("v0.2.1（2026-11-04）：W1 NVIDIA 對帳點非 NVIDIA 占比改殘差法（$ 占比換 GW 占比；逐家值維持）；W2 新納入存量汰換攤到 6 個年份（移除暫定）；W3 Oracle Port Washington、Saline、Jupiter 改 Epoch IT 容量（902／988／1,750）；W4 Anthropic 取數 v0.1.8；W5 TK 快照已是 v21.9。基準 GW 不變。Decisions GL01-71 至 GL01-74。報告 docs/verify/20261104_v0.2.1_build.md。", True),
         ("v0.2.2（2026-11-04）：X1 Siliconomics 改讀 v0.13 基準名稱 *_Base；X2 Deploy 不再乘 Siliconomics 顆數係數（原 A＝1）；X3 Compare F3 改讀 Siliconomics 出貨年；X4 Compare G 節供給上限與 Checks X4-K1。基準 GW 不變。Decisions GL01-75 至 GL01-78。報告 docs/verify/20261104_v0.2.2_build.md。", True),
         ("v0.3（2026-11-05）：Y1 Siliconomics v0.13.1、Tokenomics v21.10；Y2 NVIDIA 內容改讀 R7 分世代值；Y3 非 NVIDIA 占比改讀逐買方 NVIDIA 份額（金額換 GW）；Y4 供給上限主檢查改可支撐上線 GW；基準 GW 不變。Decisions GL01-79 至 GL01-83。報告 docs/verify/20261105_v0.3_build.md。", True),
-        ("v0.3.1（2026-11-14）：三層基準協調規則 v1.1 落地（工作單 20261114_Wattonomics_v0.3.1.md）——Z2 Compare H1 ④ 覆蓋缺口兩讀法（原值 4.81、實績下限 3.03；扣 Oracle 重疊另列；不入基準）；Z3 SIL_In 讀 Siliconomics v0.18、H3 逐年協調狀態（門檻 50%、對帳中）、H4 ④＋W2 調整後比值、F 節 NVIDIA 每 GW 營收區間與指引只作參照（W-3）、H5 五家資本支出與 Siliconomics 顆數並排（W-4）；Z4 新名稱 WIF_Evidence_2026–2030（規則 v1.1 全市場分母；舊 WIF_Coverage 保留）；Checks E-K1。Z1 財報季證據入 evidence_raw 並列 Delay 追蹤（全部待核對、不入基準）。基準 GW 不變。Decisions GL01-84 至 GL01-91。報告 docs/verify/20261114_v0.3.1_build.md。", True),
+        ("v0.3.1（2026-11-14）：三層基準協調規則 v1.1 落地（工作單 20261114_Wattonomics_v0.3.1.md）——Z2 Compare H1 ④ 覆蓋缺口兩讀法（原值 4.81、實績下限 3.03；扣 Oracle 重疊另列；不入基準）；Z3 SIL_In 讀 Siliconomics v0.18、H3 逐年協調狀態（門檻 50%、對帳中）、H4 ④＋W2 調整後比值、F 節 NVIDIA 每 GW 營收區間與指引只作參照（W-3）、H5 五家資本支出與 Siliconomics 顆數並排（W-4）；Z4 新名稱 WIF_Evidence_2026–2030（規則 v1.1 全市場分母；舊 WIF_Coverage 保留）；Checks E-K1。Z1 財報季證據經未參與代理核對：IREN Childress H3–4 延至 2027-01 入基準（T2 M＝1），Nebius 延遲只追蹤；CoreWeave、Nebius Q1–Q3 實績入證據比例。Decisions GL01-84 至 GL01-91。報告 docs/verify/20261114_v0.3.1_build.md。", True),
         ("顏色：藍字＝輸入；黑字＝公式；綠字＝跨頁或外部鏡像；淡黃底＝關鍵輸出；亮黃底＝待證據或預設待決。", False),
         ("Excel 優先：要改輸入，直接改 In 頁藍字；builder 重建時讀回（--base）。公式頁不要手改。下游只讀 Interface 的 WIF_ 名稱（經快照）。", False),
         ("版本命名：YYYYMMDD_Wattonomics_vX.Y.xlsx；model/CURRENT 記錄現行檔名；data/CURRENT_SNAPSHOT 指向現行快照。", False),

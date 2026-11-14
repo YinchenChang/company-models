@@ -114,7 +114,7 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 - **證據比例 `WIF_Evidence_<yyyy>`（2026–2030；Compare H2）**＝MIN(1,（站點證據年新增〔SiteOnly，等級 3，按上線年〕＋七家已公布資本支出實績支撐、超出該家站點證據的部分）÷（主路徑年新增＋④〔實績下限讀法基準〕＋W2））。七家實績：付款年比例＝`ev_actyr` 之前 1、當年＝年初至今實績（In `act26_<p>`）÷ 同口徑曆年路徑資本支出、之後 0，× 甲2 付款年 GW，再經 `lag_on`、`inv_on` 轉上線年。**不跨口徑相加金額**：Microsoft 含融資租賃、Meta 含融資租賃本金、Amazon 現金淨額、CoreWeave 公司口徑（應計）、Alphabet／Oracle／Nebius 現金；Oracle 財年錯開 1 個月。逐家取站點與實績較大者（不重複計入）；工作單字面讀法（相加）列為對照。2030 的 ④、W2 延續 2029（`gap_carry30`）。Checks E-K1：0–1。
 - **逐年協調狀態**（Compare H3）：甲／乙／丙只看證據比例，門檻 `coord_thr` 50%（首次判定；67% 對照）；Siliconomics 證據比例暫讀 In `sil_ev_<yyyy>`（AI半導體 橋接表），Siliconomics 自量後改讀其快照。覆蓋未補齊（`coord_cov_done`＝0，v0.3.2 前）時，丙與 Wattonomics 有證據的乙標「對帳中」，基準維持現值。舊「2028–29 只警示」的判定已取消。
 - **調整後比值**（H4）：（年新增＋④＋W2）÷ `SIF_DeployGW_Base`，④ 兩讀法並列。**NVIDIA 對帳點（W-3）**：(5) 為每 IT GW NVIDIA 營收（R7 營收口徑，VR200 低 19.67／基準 26.13）；2027 對 NVIDIA 指引只作參照列、不作校準目標；2026 實績校準保留。**W-4**（H5）：五家資本支出與 Siliconomics 逐買方份額、自研顆數、S33 係數並排。
-- **Z1 財報季證據**：`evidence_raw/Z1_earnings_20261114.md`；未參與代理核對前一律「待核對」、不入基準（Delay 頁追蹤；CoreWeave、Nebius Q1–Q3 實績 `act26z1_*` 由旗標 `z1_act_on` 控制，預設 0）。
+- **Z1 財報季證據**：`evidence_raw/Z1_earnings_20261114.md`（核對 `Z1_earnings_20261114_verify.md`：屬實 51、小誤 1、部分子項無法核對 6、錯誤 0）。入基準只有 IREN Childress H3–4 延至 2027-01（T2 cp_neo_iren M＝1，公司自揭）；Nebius 新澤西、共置站點與 Microsoft 第三方容量量未揭露，只在 Delay 頁追蹤。CoreWeave（現金 23.558）、Nebius（現金 15.431）Q1–Q3 實績入證據比例（`z1_act_on`＝1）；未核對子項不入分子。
 
 ### 承租玩家只算 IT（Andy 2026-11-04；工作單 20261104 V1、V1b）
 
@@ -161,7 +161,7 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 
 - 2026-11-05（不改版）：`tools/import_gap_models.py` 的 Anthropic `MODEL_OVERRIDE` 改指 `anthropic/dist/20261104_Anthropic收支模型_v0_1_9.xlsx`（#327 已移除 v0_1_8）；重跑 `--only ant` 與 `builder/seed/gap_models_v0.2.1.json` 逐項相同（Funding F07／F03 2026–2030 與 v0.1.8 逐位相同，只有 file／commit 欄不同），種子與成品不重建。
 
-- v0.3.1（2026-11-14）：三層基準協調規則 v1.1 落地——④ 兩讀法（Z2）、SIL v0.18 與逐年協調狀態、調整後比值、W-3、W-4（Z3）、`WIF_Evidence_2026–2030`（Z4）、Z5 個股模型 2028–29 推法查核、Z1 證據待核對。基準 GW 不變。報告 `docs/verify/20261114_v0.3.1_build.md`。
+- v0.3.1（2026-11-14）：三層基準協調規則 v1.1 落地——④ 兩讀法（Z2）、SIL v0.18 與逐年協調狀態、調整後比值、W-3、W-4（Z3）、`WIF_Evidence_2026–2030`（Z4）、Z5 個股模型 2028–29 推法查核、Z1 證據已核對（IREN 延遲入基準：2027 年新增 +0.104、2027 起年底 +0.1；與 mw_neo 2026 輸入的重複計入待判斷）。報告 `docs/verify/20261114_v0.3.1_build.md`。
 
 - v0.3（2026-11-05）：Siliconomics v0.13.1、Tokenomics v21.10（Y1）；R7 分世代內容（Y2）；逐買方 NVIDIA 份額（Y3）；供給上限主檢查改可支撐上線 GW（Y4）。基準 GW 不變。報告 `docs/verify/20261105_v0.3_build.md`。
 
