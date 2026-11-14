@@ -18,7 +18,10 @@ import argparse
 import copy
 import html
 import re
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import openpyxl
 from bs4 import BeautifulSoup, NavigableString
@@ -379,7 +382,8 @@ PROFILES = {
         obs=_obs_anthropic,
         plan=[("s5", "funding", "資金：現金路徑與融資", "資金"), ("s2", "unit", "每 VR 等值 GW：營收 vs 全成本", "每 GW 收支"),
               ("s3", "revenue", "營收結構與年化營收", "營收"), ("s4", "compute", "算力：需求 vs 已簽合約與自建供給", "算力")],
-        recon=[("s7", "與 OpenAI 並排"), ("s8", "最該審的預設")], status="s9", recon_title="對帳：OpenAI 並排與最該審的預設"),
+        recon=[("s7", "與 OpenAI 並排"), ("s8", "最該審的預設")], status="s9", recon_title="對帳：OpenAI 並排與最該審的預設",
+        layout="v13"),   # 個股 HTML 版面規格 v1.3（2026-11-14 試作；tools/company_html/fundmodel_v13.py）
     "openai": dict(
         name="OpenAI", meta="未上市（收支模型；尚無估值頁）",
         thesis="命題：OpenAI 的營收能否追上已簽下的算力承諾；若追不上，缺口要多少外部資金、由誰補。",
@@ -414,6 +418,9 @@ def thesis_section(soup_s1, B: Book, ver: str, P: dict) -> str:
 
 def build(html_in: Path, xlsx: Path, out: Path, profile: str = "anthropic"):
     P = PROFILES[profile]
+    if P.get("layout") == "v13":
+        from fundmodel_v13 import build_v13
+        return build_v13(html_in, xlsx, out, P, sys.modules[__name__])
     src = html_in.read_text(encoding="utf-8")
     soup = BeautifulSoup(src, "lxml")
     B = Book(xlsx)

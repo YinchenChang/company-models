@@ -756,3 +756,31 @@ rows:
   basis: "獨立核對（2026-11-11）判斷題 J9 預設＝改；舊讀法放 Sens"
   range_why: "開關"
   note: ""
+# ── 18. v0.2.1 標準損益表（個股 HTML 版面 v1.3；PL 頁只列示，不被任何計算頁引用）
+- key: pl_cash_yield
+  name: "PL 現金與短期投資收益率（利息收入＝收益率 × 期初期末平均現金）"
+  index: "2026Q4–2030"
+  unit: "比例"
+  value: 0.04
+  lo: 0.03
+  hi: 0.045
+  tag: Assumed
+  basis: "2026 前九月利息收入 2.359（SRC_ANT_619）年化約 3.15 ÷ 期初期末平均現金與短投約 76（2025 年底 20.28、2026-09-30 131.845〔SRC_ANT_620〕）≈ 4.1%；取 4%"
+  range_why: "下緣：降息至 3%；上緣：維持近期 10 年美債水準約 4.5%"
+  note: "只進 PL 頁的其他收入；不影響命題、現金流與估值"
+- key: pl_q4_oth_other
+  name: "PL 2026Q4 其他收入中利息以外項目（可轉債公允價值變動與其他；IPO 時轉換，金額未揭露）"
+  index: "2026"
+  unit: "$B"
+  value: 0
+  lo: 0
+  hi: 0
+  tag: Decision
+  basis: "可轉債與衍生負債於 IPO 時轉換；2026-10-01 至轉換日的公允價值變動未揭露，暫以 0 計（判斷題；實際可能為大額非現金損失）"
+  range_why: "金額未揭露；Decision 以低＝高＝值表示（不給區間）"
+  note: "只進 PL 頁 2026 年其他收入與淨利"
+# ── 19. v0.2.1 反向 DCF（RevDCF 頁；二分法搜尋區間，定義值）
+- {key: val_bisect_lo_add, name: "RevDCF 隱含 WACC 二分法下界＝永續成長率 ＋ 本列", index: "—", unit: "比例", value: 0.005, lo: 0.005, hi: 0.005, tag: Decision, basis: "定義值（WACC 必須大於永續成長率）", range_why: "定義值", note: "只用於 RevDCF 頁"}
+- {key: val_bisect_w_hi, name: "RevDCF 隱含 WACC 二分法上界", index: "—", unit: "比例", value: 0.4, lo: 0.4, hi: 0.4, tag: Decision, basis: "定義值（遠高於任何合理折現率）", range_why: "定義值", note: "只用於 RevDCF 頁"}
+- {key: val_bisect_s_lo, name: "RevDCF 隱含營收倍數二分法下界", index: "—", unit: "倍", value: 0.1, lo: 0.1, hi: 0.1, tag: Decision, basis: "定義值", range_why: "定義值", note: "只用於 RevDCF 頁"}
+- {key: val_bisect_s_hi, name: "RevDCF 隱含營收倍數二分法上界", index: "—", unit: "倍", value: 10, lo: 10, hi: 10, tag: Decision, basis: "定義值", range_why: "定義值", note: "只用於 RevDCF 頁"}

@@ -1252,7 +1252,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 <div class="tw"><table><thead><tr><th>因子（η 的方向）</th><th>基準</th><th>低</th><th>高</th><th>依據</th></tr></thead><tbody>
 {eta_rows}
 </tbody></table></div>
-<p class="note">前三項合起來預期 η 約 {n("ETA_Prod", None, "f2")}，實際只有 {n("ETA_Eta", None, "f2")}，差 {n("ETA_Resid", None, "f2")} 倍沒有被解釋（殘差；含輸入輸出組合、每任務 token 倍數、任務數與支出的口徑差等），倒數 {cell(V, erow("殘差倒數"), None, "f2")}（TK 方向；TK 在 OpenAI 口徑的同類項 L1_GapUnexplained {cell(V, erow("TK 落差 5"), None, "f2")}、區間 {cell(V, erow("TK 落差 5") + ":E", None, "f1")}–{cell(V, erow("TK 落差 5") + ":F", None, "f1")}，只作並排）。TK 的 Tokenomics 版本由 v5.26 換到 v18.0 時，η 由 {n("CMP_Eta2025", None, "f3", "v011")} 降到 {n("CMP_Eta2025", None, "f3", "v012")}（見 <code>docs/reports/20261022_v0.1.3.md</code> ④）；v0.1.4 的 {tk_ver} 使 η 再降到 {n("CMP_Eta2025", None, "f3")}（見 <code>{report}</code> ③）。</p>
+<p class="note">前三項合起來預期 η 約 {n("ETA_Prod", None, "f2")}，實際只有 {n("ETA_Eta", None, "f2")}，差 {n("ETA_Resid", None, "f2")} 倍沒有被解釋（殘差；含輸入輸出組合、每任務 token 倍數、任務數與支出的口徑差等），倒數 {cell(V, erow("殘差倒數"), None, "f2")}（TK 方向；TK 在 OpenAI 口徑的同類項 L1_GapUnexplained {cell(V, erow("TK 落差 5"), None, "f2")}、區間 {cell(V, erow("TK 落差 5") + ":E", None, "f1")}–{cell(V, erow("TK 落差 5") + ":F", None, "f1")}，只作並排）。TK 的 Tokenomics 版本由 v5.26 換到 v18.0 時，η 由 {n("CMP_Eta2025", None, "f3", "v011")} 降到 {n("CMP_Eta2025", None, "f3", "v012")}（見 <code>docs/reports/20261022_v0.1.3.md</code> ④）；v0.1.4 的 {tk_ver} 使 η 再降到 {n("CMP_Eta2025", None, "f3")}（見 <code>docs/reports/20261022_v0.1.4.md</code> ③）。</p>
 <h3>需求 → token → GW → 成本逐層對照（Bridge 頁，唯讀）</h3>
 <div class="tw"><table><thead><tr><th>層</th><th>單位</th><th>2025</th><th>2030</th><th>2030 低</th><th>2030 高</th></tr></thead><tbody>
 {bridge_rows}
@@ -1505,7 +1505,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 <li><b>2026 非算力成本與股權報酬（W4；v0.1.8 起下半年＝S-1/A Q3 實際，Q4＝Q3）</b>：非算力（不含股權報酬）{n("COST_S1fNonComp2026", None, "f1")}；股權報酬代理 {n("COST_S1fSBCProxy2026", None, "f2")}（含 Q3 非現金捐贈 1.960，Q4 亦計一次——保守；捐贈不進每人股權報酬基準，只影響命題 1 的 2026 全成本；只計一次 → 2026 差額 {n("COST_PropGap_VR", 2026, "sf1", "chr_once")}，2027–2030 不變）；整個 W4 關閉 → 2026 差額 {n("COST_PropGap_VR", 2026, "sf1", "only_w4_off")}、谷底 {n("FND_CashNoExtTrough", None, "f1", "only_w4_off")}。</li>
 <li><b>最低現金月數（D17；Andy 未決）與每 GW 年合約價 12（D9）</b>：最低現金 3／6／12 個月在 v0.1.8 基準下皆不需外部資金（谷底 {n("FND_CashNoExtTrough", None, "f1")} 對 12 個月的 2029 最低現金 {n("FND_MinCash", 2029, "f1", "mc_hi")}）；合約價 20 → 谷底 {n("FND_CashNoExtTrough", None, "f1", "price_hi")}、2027 差額 {n("COST_PropGap_VR", 2027, "sf1", "price_hi")}。</li>
 </ol>
-<p class="note">A1–A4 共 75 項建置預設與規格 D1–D23 的全表：<code>docs/reports/20261008_v0.1.md</code> 第 ④ 節、<code>docs/reports/20261008_v0.1_對照.xlsx</code> 第 ④ 頁；v0.1.1 新增預設（U1–U8）見 <code>docs/reports/20261021_v0.1.1.md</code>；v0.1.2（Tokenomics v18.0）的語意核對與待 Andy 事項見 <code>{report}</code>。</p>
+<p class="note">A1–A4 共 75 項建置預設與規格 D1–D23 的全表：<code>docs/reports/20261008_v0.1.md</code> 第 ④ 節、<code>docs/reports/20261008_v0.1_對照.xlsx</code> 第 ④ 頁；v0.1.1 新增預設（U1–U8）見 <code>docs/reports/20261021_v0.1.1.md</code>；v0.1.2（Tokenomics v18.0）的語意核對與待 Andy 事項見 <code>docs/reports/20261021_v0.1.2.md</code>。</p>
 {V.src("COST_D22Under", "COST_PropGap_VR_D22", "COST_CloudGMPct")}
 </section>""")
 
