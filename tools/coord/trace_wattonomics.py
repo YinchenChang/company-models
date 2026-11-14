@@ -174,6 +174,9 @@ def main(xlsx, out, player, year, roots, manual, md=False):
     players.discard(player)
 
     def resolve(n):
+        m0 = re.fullmatch(r"(?:'([^']+)'|([A-Za-z][A-Za-z0-9_]*))!\$?([A-Z]{1,3})\$?(\d+)", n)
+        if m0:                                    # --roots 也可直接給 工作表!儲存格
+            return (m0.group(1) or m0.group(2)), f"{m0.group(3)}{m0.group(4)}"
         t = names.get(n)
         if not t or "!" not in t or ":" in t:
             return None
@@ -264,19 +267,36 @@ def main(xlsx, out, player, year, roots, manual, md=False):
         raise Unknown(k)
 
     # ---------- 參照收集 ----------
+    def numlike(x):
+        """數字，或數字樣文字（FundRaw 的期間、採用欄是文字 '2026'、'1'）→ float；否則 None。"""
+        if isinstance(x, bool):
+            return None
+        if isinstance(x, (int, float)):
+            return float(x)
+        if isinstance(x, str):
+            try:
+                return float(x.strip())
+            except ValueError:
+                return None
+        return None
+
     def crit_match(cv, crit):
+        """與 Excel 的 *IFS 條件一致：數字條件（含 '2026' 字串）也比對數字樣文字；文字條件比對文字（不分大小寫）。"""
         if isinstance(crit, (int, float)) and not isinstance(crit, bool):
-            return isinstance(cv, (int, float)) and cv == crit
+            return numlike(cv) is not None and numlike(cv) == float(crit)
         crit = "" if crit is None else str(crit)
         m = re.match(r"^(<>|<=|>=|=|<|>)(.*)$", crit)
         op, rhs = (m.group(1), m.group(2)) if m else ("=", crit)
-        try:
-            rv = float(rhs)
-        except ValueError:
-            rv = rhs
-        if isinstance(rv, float) and not isinstance(cv, (int, float)):
-            return op == "<>"
-        return compare(op, cv, rv)
+        rn = numlike(rhs)
+        if rn is not None:
+            if op in ("=", "<>"):
+                eq = numlike(cv) is not None and numlike(cv) == rn
+                return eq if op == "=" else not eq
+            return isinstance(cv, (int, float)) and not isinstance(cv, bool) and compare(op, float(cv), rn)
+        if op in ("=", "<>"):
+            eq = (str(cv).lower() == rhs.lower()) if cv is not None else rhs == ""
+            return eq if op == "=" else not eq
+        return isinstance(cv, str) and compare(op, cv, rhs)
 
     def rng_cells(sh, m):
         c1, r1, c2, r2 = m.group(3), int(m.group(4)), m.group(5), int(m.group(6))
@@ -332,12 +352,12 @@ def main(xlsx, out, player, year, roots, manual, md=False):
                         st = status if cond is None or cond == br else low("分支未生效", status)
                         collect(a[idx], sh, st, out)
             elif f in ("SUMIFS", "COUNTIFS", "SUMIF"):
-                sumifs_collect(f, a, sh, status, out)
+                sumifs_collect(f, a, sh, status, out, id(n))
             else:
                 for x in a:
                     collect(x, sh, status, out)
 
-    def sumifs_collect(f, a, sh, status, out):
+    def sumifs_collect(f, a, sh, status, out, nid):
         if f == "SUMIF":
             pairs, sum_r = [(a[0], a[1])], (a[2] if len(a) > 2 else a[0])
         elif f == "COUNTIFS":
@@ -361,22 +381,26 @@ def main(xlsx, out, player, year, roots, manual, md=False):
                 collect(x, sh, status, out)
             return
         base = rs[0][1]
+        matched = [0]
         for cc, rr in rng_cells(rs[0][0], base):
             ok_player, ok_other = True, True
             for s2, m, crit in rs:
                 cv = cached(s2, f"{m.group(3)}{rr - int(base.group(4)) + int(m.group(4))}")
                 match = crit_match(cv, crit)
-                if isinstance(crit, str) and crit.strip() and not re.match(r"^(<>|<=|>=|=|<|>)", crit.strip()):
+                if isinstance(crit, str) and crit.strip() and not re.match(r"^(<>|<=|>=|=|<|>)", crit.strip()) and numlike(crit) is None:
                     ok_player = ok_player and match      # 文字等於條件（玩家碼、園區鍵）：不符的列與本玩家無關，整列不追
                 else:
                     ok_other = ok_other and match
             if not ok_player:
                 continue
+            if ok_other:
+                matched[0] += 1
             st = status if ok_other else ("條件讀取" if RANK["條件讀取"] < RANK[status] else status)
             if sm is not None:
                 out.append((rs[0][0] if False else (sm.group(1) or sm.group(2) or sh), f"{sm.group(3)}{rr - int(base.group(4)) + int(sm.group(4))}", st))
             for s2, m, crit in rs:
                 out.append((s2, f"{m.group(3)}{rr - int(base.group(4)) + int(m.group(4))}", "條件讀取" if RANK["條件讀取"] < RANK[status] else status))
+        zero_hits[nid] = matched[0] == 0
 
     # ---------- 輸入列資訊與旗標 ----------
     def in_info(sh, c):
@@ -398,7 +422,7 @@ def main(xlsx, out, player, year, roots, manual, md=False):
             return label, "人工確認（列文字含個股模型、指引或公告字樣）", other
         return label, "", other
 
-    best, rows, order = {}, [], {}
+    best, rows, order, zero_hits, extra_unparsed = {}, [], {}, {}, []
 
     def walk(sh, c, depth, root, parent, status):
         key = (sh, c)
@@ -417,9 +441,15 @@ def main(xlsx, out, player, year, roots, manual, md=False):
             flag = "園區輸入列（人工確認：多為公司公告）"
         rec = dict(root=root, depth=depth, cell=f"{sh}!{c}", parent=parent, formula=v if isf else None, value=val, label=label, flag=flag, status=status, leaf=(not isf) or sh == "In")
         if key in order:
-            rows[order[key]] = rec
+            old = rows[order[key]]
+            if old["root"] == root:           # 同根內狀態升級：換成較強的狀態，保留各根記錄
+                rec["roots"] = old["roots"]; rows[order[key]] = rec
+            else:                              # 另一條根也走到這格：只補各根狀態，結構沿用第一條根
+                rec = old
         else:
+            rec["roots"] = {}
             order[key] = len(rows); rows.append(rec)
+        rec["roots"][root] = status if RANK[status] > RANK.get(rec["roots"].get(root, "分支未生效"), -1) or root not in rec["roots"] else rec["roots"][root]
         if not isf or sh == "In" or depth >= 16:
             return
         me = f"{sh}!{c}"
@@ -431,7 +461,17 @@ def main(xlsx, out, player, year, roots, manual, md=False):
                 walk(s2, c2, depth + 1, root, me, status)
             return
         refs = []
+        zero_hits.clear()
         collect(ast, sh, status, refs)
+        res_node = ast
+        while res_node[0] == "fn" and res_node[1] == "IF":      # 公式的結果直接就是 SUMIFS 時才檢查（SUMIFS 只是其中一項的加總不查）
+            try:
+                cv = ev(res_node[2][0], sh)
+                res_node = res_node[2][1] if bool(cv) else (res_node[2][2] if len(res_node[2]) > 2 else ("str", ""))
+            except Unknown:
+                break
+        if res_node[0] == "fn" and res_node[1] in ("SUMIFS", "SUMIF") and zero_hits.get(id(res_node)) and val not in (None, "", 0, 0.0):
+            rec["note"] = "SUMIFS／COUNTIFS 條件全不符，但快取值非零非空：條件比對可能與 Excel 不一致，須人工確認"
         for s2, c2, st in refs:
             walk(s2, c2, depth + 1, root, me, st)
 
@@ -451,6 +491,7 @@ def main(xlsx, out, player, year, roots, manual, md=False):
     for nm, desc in roots:
         t = resolve(nm)
         assert t, nm
+        best.clear()
         walk(t[0], t[1], 0, nm, None, "生效")
     rev = []
     for ws in wb:
@@ -460,7 +501,12 @@ def main(xlsx, out, player, year, roots, manual, md=False):
                     rev.append(f"{ws.title}!{c.coordinate}")
     flagged = [r["cell"] for r in rows if r["flag"] and r["flag"] not in FILTER_SHEETS.values()]
     campus = sorted({int(re.sub(r"[A-Z!a-z]", "", r["cell"].split("!")[1])) for r in rows if r["cell"].startswith("Pipeline!")})
-    res = dict(source=xlsx, player=player, roots=[dict(name=n, desc=d, cell="!".join(resolve(n))) for n, d in roots], rows=rows, act26_readers=rev, flagged=flagged, campus_rows=campus,
+    root_flags = {}
+    for r in rows:
+        for rt, st in r["roots"].items():
+            if r["flag"] and r["flag"] not in FILTER_SHEETS.values():
+                root_flags.setdefault(rt, []).append(dict(cell=r["cell"], flag=r["flag"], status=st))
+    res = dict(root_flags=root_flags, source=xlsx, player=player, roots=[dict(name=n, desc=d, cell="!".join(resolve(n))) for n, d in roots], rows=rows, act26_readers=rev, flagged=flagged, campus_rows=campus,
                unparsed=[r["cell"] for r in rows if r.get("note")])
     with open(out, "w", encoding="utf-8") as fh:
         json.dump(res, fh, ensure_ascii=False, indent=1, default=str)

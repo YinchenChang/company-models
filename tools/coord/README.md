@@ -35,5 +35,7 @@ python3 tools/coord/trace_wattonomics.py wattonomics/model/<Wattonomics>.xlsx <�
 - 每列輸出：`cell`、`parent`（上層格）、公式、值、`label`（In 頁鍵與名稱）、`flag`、`status`（生效＝值沿此路徑傳到輸出；條件讀取＝只在 IF 條件或 SUMIFS 條件欄；分支未生效＝IF 沒取到的分支；例：Gap!G107 空白時 G104→G106→In!K172 營業現金流為條件讀取）。
 - 旗標鍵由 `--player` 組出（gcap_／cap_／act26_／w1_／obs_ 加玩家碼）。鍵含本玩家碼的跨玩家列（ctr_msft_ant、xc_nbis_msft、al_orcl_oai）保留；只含其他玩家碼的 In 列不追。關鍵字誤觸者（`cap_g_ext`、`ai_sh`）預設標「人工確認：不同源」，可用 `--manual 鍵=標記` 增補；`flag` 為「人工確認」者須人工判定。g_ITtoFac 等不含玩家碼的共用係數不標園區輸入。
 - 反向查詢 `act26_readers`：哪些公式讀 `act26_<碼>`；只有 Compare 頁，代表實績未進 GW／資本支出路徑。
+- **SUMIFS 條件比對與 Excel 一致**：數值條件（含字串 '2026'）同時比對數字與看起來是數字的文字；文字條件不分大小寫比對文字或數字。FundRaw 的期間欄、採用欄是文字（'2026'、'1'），因此能正確命中。若公式的結果直接就是 SUMIFS／SUMIF、條件全不符、快取值卻非 0 非空，該公式列入 `unparsed`（防止列被靜默丟棄）。驗證例：`--player msft --roots "Funding!E7:x"` 追到 FundRaw 第 16 列（G16＝182.935），標「公司實績（10-K／10-Q，FundRaw）」。
+- **多根記錄**：每格的 `roots` 記錄經過該格的每個根及其在該根下的狀態；JSON 另有 `root_flags`（各根下被旗標的輸入格與狀態），避免誤讀「某根看不到公司輸入」。`--roots` 可直接給 `Sheet!Cell`。
 - 限制：不支援整欄參照（`A:A`）與未列的函數；上線 GW 根的生效判斷若有 `unparsed`，須人工確認。無 Gap 名稱的玩家（neo、sov 等）用 `--roots` 指定根。
 - 判定仍靠人：同源旗標只標「路徑上讀到公司輸入」，要看 `status` 是否生效、再把結論寫進 Coord 追公式列（整列同源→「參考（同源校準）」、「無可比實績（層級值同源）」；部分同源→改比每 GW）。
