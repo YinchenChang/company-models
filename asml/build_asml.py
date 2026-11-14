@@ -10,6 +10,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import cycle_position as CP
 import fcff_dcf as FD   # v0.3：標準版 DCF（無槓桿自由現金流＋WACC）共用模組
+sys.path.insert(0, os.path.join(ROOT, "siliconomics")); import reader as SIL   # v0.3.5：三層協調 C4 另一側讀數建置（SIL.COORD_ALT）在主引擎使用，故提前讀入
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -182,11 +183,23 @@ inp("beta_u", "產業無槓桿 β（採用）：自算 EU 半導體設備 同業
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 稀釋股數 sh_v)", "與 WACC 權重同一口徑")
 inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新加槓桿）", "x", None, 0.3, None, "Assumed", "工作單第二輪修正（Andy 2026-11-05 23:16 定案）：β 敏感度改為 β_u ± 0.3", "取代上一版的「中位數 × 0.8 再 Blume／中位數未調整」")
 
+# ASML_OVERRIDE（v0.3.5 起，敏感度快照用，asml/sens_asml.py；「鍵=@lo／@hi／*倍數／數值；…」＝該鍵的基準欄改取 In 頁低／高欄、乘倍數或改數值；低／高欄是參照本鍵的公式者以基準式代入；正式建置不設）
+OVR = dict(kv.split("=", 1) for kv in os.environ.get("ASML_OVERRIDE", "").split(";") if "=" in kv)
 r = 4; INROW = {}
 for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    if key in OVR:
+        ov = OVR[key]
+        if ov.startswith("*"):
+            assert isinstance(base, (int, float)), (key, base); _new = base * float(ov[1:])
+        else:
+            _new = {"@lo": lo, "@hi": hi}[ov] if ov.startswith("@") else float(ov)
+        assert _new is not None, (key, ov)
+        if isinstance(_new, str) and _new.startswith("=") and key in _new:   # 例："=gm_b*0.5"：把本鍵換成基準式
+            _new = "=" + _new[1:].replace(key, "(" + base[1:] + ")")
+        base = _new
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
         if v is not None:
@@ -288,6 +301,9 @@ FYC = YC
 DEFP = dict(gi="g_int", cn="cn_sh26", gcn=None, gibm=None, c28="cap_28", c27="cap_27", gmb="gm_b", phi="phi", nioi="nioi", bb="bb", scn="A", lix=None, mix=None)   # v0.13：Wattonomics 錨定案例用；預設不變（lix／mix＝年→邏輯／記憶體指數儲存格）
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["lix"] is None and P["mix"] is None and s != "A":   # v0.3.5 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 於 CY2027 起設備市場 AI 分項 × wta（＝另一側讀數比值）；情境 A 不縮放
+        P["lix"] = {y: f"(la{s}_{y % 100}*wta_{y % 100}+lo{s}_{y % 100})/(la{s}_26+lo{s}_26)" for y in (2027, 2028, 2029)}
+        P["mix"] = {y: f"(dr{s}_{y % 100}*wta_{y % 100}+na{s}_{y % 100})/(dr{s}_26+na{s}_26)" for y in (2027, 2028, 2029)}
     gcn = P["gcn"] or f"g_cn_{s}"; gibm = P["gibm"] or f"g_ibm_{s}"
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -1192,4 +1208,15 @@ def _px1105(wb, ver, tk, px5, px4, peer5, peer_old):
 _PX1105 = _px1105(wb, 'v0.3.4', 'ASML.AS', 1250, 1337.6,
     {'AMAT': 319.25, 'LRCX': 185.2, 'KLAC': 129.8, '8035.T': 8753, 'ASM.AS': 635.8},
     {('AMAT', '2026-11-04'): 369.4, ('LRCX', '2026-11-04'): 221.43, ('KLAC', '2026-11-04'): 149.79, ('8035.T', '2026-11-04'): 9663, ('ASM.AS', '2026-11-04'): 683.6})
+# ---------------- v0.3.5（2026-11-15）：三層協調 C4 兩讀數（Coord 頁；快照 asml/coord_alt.json）、個股 HTML 版面 v1.3、C0（公司實績） ----------------
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    COORD.stamp(wb, "v0.3.4", "v0.3.5", "2026-11-15")
+    if not os.environ.get("ASML_OVERRIDE") and not os.environ.get("ASML_SNAP"):
+        # v0.3.5：個股 HTML 版面規格 v1.3、三層協調 C0（含公司實績）與兩讀數（asml/v035_post.py；只新增頁與列，既有數值格不變）
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import v035_post  # noqa: E402
+        print(v035_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR, PB, EQ_F))
 wb.save(sys.argv[1])
