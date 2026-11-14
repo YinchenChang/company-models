@@ -362,7 +362,7 @@ def engine(ws, r0, title, **over):
     if SIL.COORD_ALT and P["hsx"] is None and P["cwm"] is None and s != "A":   # v0.3.5 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 於 CY2027 起 HBM 出貨位元與 CoWoS 片數 × wta（＝另一側讀數比值）；情境 A 不縮放
         P["hsx"] = {y: (f"hs{s}_{y % 100}*wta_{y % 100}" if y >= 2027 else f"hs{s}_{y % 100}") for y in range(2025, 2030)}
         P["cwm"] = {y: f"wta_{y % 100}" for y in (2027, 2028, 2029)}
-        P["kfix"] = True   # 校準係數 kH、kL 沿用情境 A（未縮放）的 FY2025 校準：FY2025 是實績，另一側讀數不重新校準
+        P["kfix"] = True   # 不重算校準係數：FY2025 是實績，另一側讀數不重新校準。v0.3.5 修正：FY2025 已實現期間讀未縮放的 CY2026 新機需求（xh0／xl0），校準係數 kH、kL 與現行建置同一情境相同、FY2025 營收＝實績（tools/coord/README.md 兩讀數規格；同 Disco v0.3.5）
     shl = P["shl"] or f"shl_{s}"; ima = P["ima"] or f"ima_{s}"
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -388,10 +388,15 @@ def engine(ws, r0, title, **over):
     row("pk", "非 AI 封裝設備指數（SEMI 封裝 × 非 AI 設備 s ÷ 非 AI 設備 A）", "US$B", {**{CYC[y]: f"=pk_{y % 100}*(eqt{s}_{y % 100}-eqa{s}_{y % 100})/(eqtA_{y % 100}-eqaA_{y % 100})" for y in Y5},
                                                                       "H": f"=G{r}*(1+{P['pkt']})"}, fmt="0.00", note="markets/equipment；CY2030 以 g_pk_tail 外推")
     row("eqt", "設備總額（同字母情境）", "US$B", {**{CYC[y]: f"=eqt{s}_{y % 100}" for y in Y5}, "H": f"=G{r}*(1+{P['pkt']})"}, fmt="0.0", note="切割與雷射用")
+    if P.get("kfix"):   # v0.3.5 修正：另一側讀數的已實現期間不縮放——FY2025 的 1/4 CY2026 新機需求讀「未縮放」的 CY2027 堆疊數與片數（＝縮放後 ÷ wta_27；兩者與 HBM 位元、片數成正比），使 FY2025 營收＝實績（檢查列與現行相同）
+        row("xh0", "HBM 封膠新機需求 CY2026（未縮放；另一側讀數 FY2025 已實現期間用）", "十億個", {"D": f"=MAX(0,E{R['st']}/wta_27-D{R['st']})+{P['dlt']}*D{R['st']}"}, fmt="0.0000", note="CY2027 堆疊數 ÷ wta_27 還原未縮放值；FY2025 是實績，不受另一側縮放影響")
+        row("xl0", "2.5D 封膠新機需求 CY2026（未縮放；同上）", "千片", {"D": f"=MAX(0,E{R['vl']}/wta_27-D{R['vl']})+{P['dlt']}*D{R['vl']}"}, fmt="#,##0")
     ws.cell(r, 1, "B. 校準（只用 FY2025 AI 錨點；FY(t)＝3/4×CY(t)＋1/4×CY(t+1)）").font = BOLD; r += 1
-    fw = lambda key, y: f"(0.75*{CYC[y]}{R[key]}+0.25*{CYC[y+1]}{R[key]})"
-    row("kh", "HBM：每單位新機需求的封膠營收 kH", "¥B／十億個", {"C": ("=kh_A" if P.get("kfix") else f"={P['ai']}*{P['w']}/{fw('xh', 2025)}")}, fmt="0.0", note="＝AI 錨點 × HBM 比重 ÷ FY2025 新機需求")
-    row("kl", "2.5D：每千片新機需求的封膠營收 kL", "¥B／千片", {"C": ("=kl_A" if P.get("kfix") else f"={P['ai']}*(1-{P['w']})/{fw('xl', 2025)}")}, fmt="0.00000")
+    _fw = lambda key, y: f"(0.75*{CYC[y]}{R[key]}+0.25*{CYC[y+1]}{R[key]})"
+    fw = lambda key, y: (f"(0.75*C{R[key]}+0.25*D{R[key + '0']})" if (P.get("kfix") and y == 2025 and key in ("xh", "xl")) else _fw(key, y))
+    # 另一側讀數（kfix）：fw(…, 2025) 讀未縮放值，校準係數因此與現行建置同一情境完全相同（不因縮放重算）
+    row("kh", "HBM：每單位新機需求的封膠營收 kH", "¥B／十億個", {"C": f"={P['ai']}*{P['w']}/{fw('xh', 2025)}"}, fmt="0.0", note="＝AI 錨點 × HBM 比重 ÷ FY2025 新機需求")
+    row("kl", "2.5D：每千片新機需求的封膠營收 kL", "¥B／千片", {"C": f"={P['ai']}*(1-{P['w']})/{fw('xl', 2025)}"}, fmt="0.00000")
     ws.cell(r, 1, "C. 會計年度驅動推導（C＝FY2025 … G＝FY2029）").font = BOLD; r += 1
     FY1 = range(2026, 2030)
     row("shf", "AI 封膠市占係數（相對 2025）", "x", {FYC[y]: f"=1-{shl}/sh*{(y - 2025) / 4}" for y in Y5}, fmt="0.000", note="公司特有：A 最有利、C 最不利")
