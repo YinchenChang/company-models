@@ -31,7 +31,7 @@ CSS_V13 = """
 .lg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--muted);margin:2px 0 4px}
 .lg i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 .charts2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:12px}
-table.pl td,table.pl th{white-space:nowrap}table.pl td:first-child,table.pl th:first-child{position:sticky;left:0;background:#fff;z-index:1}table.pl tr.sec td{position:static}table.pl tr.b td{font-weight:600}table.pl tr.r td{color:var(--muted)}
+table.tp td:nth-child(2),table.tp td:nth-child(5),table.tp th:nth-child(2),table.tp th:nth-child(5){text-align:left}table.pl td,table.pl th{white-space:nowrap}table.pl td:first-child,table.pl th:first-child{position:sticky;left:0;background:#fff;z-index:1}table.pl tr.sec td{position:static}table.pl tr.b td{font-weight:600}table.pl tr.r td{color:var(--muted)}
 table.pl td.fc,table.pl th.fc{background:#f4f9f9}
 table.pl tr.sec td{background:var(--soft);font-weight:600;color:var(--accent)}
 .basis{border-left:3px solid var(--teal);background:var(--soft);padding:6px 12px;margin:6px 0 10px;font-size:14px}
@@ -61,6 +61,15 @@ def find_row(B, sheet: str, code: str) -> int:
         if ws.cell(r, 1).value == code:
             return r
     raise KeyError(f"{sheet} 找不到列 {code}")
+
+
+def src_docdate(B, key: str):
+    """SRC_ANT 某 key 的文件日期（N 欄）→ (ref, value)。"""
+    ws = B.wb["SRC_ANT"]
+    for r in range(5, ws.max_row + 1):
+        if ws.cell(r, 2).value == key:
+            return at(B, f"SRC_ANT!N{r}")
+    raise KeyError(key)
 
 
 # ── 圖表（SVG；只做幾何） ────────────────────────────────────────────────
@@ -157,12 +166,13 @@ def hero_v13(B, M):
     w, uw = B.cell("VAL_TP_W"), B.cell("VAL_Up_W")
     c, uc = B.cell("VAL_TP_CompMain"), B.cell("VAL_Up_CompMain")
     px, lo, hi = B.cell("VAL_Px"), B.cell("VAL_PxLo"), B.cell("VAL_PxHi")
+    pxd = src_docdate(B, "pros_px_mid")
     tiles = (
         f'<div class="hero-t"><div class="hero-l">目標價（DCF 與同業倍數各半）</div><div class="hero-n">{sp(*w, "n2")}</div>'
         f'<div class="hero-s">上檔空間 {sp(*uw, "sp1")}</div></div>'
         f'<div class="hero-t"><div class="hero-l">市場主流同業倍數法（未調整）</div><div class="hero-n">{sp(*c, "n2")}</div>'
         f'<div class="hero-s">上檔空間 {sp(*uc, "sp1")}</div></div>'
-        f'<div class="hero-t"><div class="hero-l">現價（IPO 價格區間中點；尚未掛牌）</div><div class="hero-n">{sp(*px, "n2")}</div>'
+        f'<div class="hero-t"><div class="hero-l">現價（IPO 價格區間中點；初步招股說明書 {sp(*pxd)}；尚未掛牌）</div><div class="hero-n">{sp(*px, "n2")}</div>'
         f'<div class="hero-s" style="color:var(--muted)">區間 {sp(*lo, "n2")}–{sp(*hi, "n2")}</div></div>')
     note = (f'以 IPO 區間中點 {sp(*px, "n0")} 美元計，目標價 {sp(*w, "n2")} 美元、上檔空間 {sp(*uw, "sp1")}，評等{sp(rref, rating)}。'
             f'DCF 只有 {sp(*B.cell("VAL_TP_DCF"), "n2")} 美元，市場主流同業倍數法卻到 {sp(*c, "n2")} 美元，兩者落差是本檔核心爭議。'
@@ -195,8 +205,22 @@ def valuation_v13(B, M):
     meth = B.cell("VAL_Method") if B.has("VAL_Method") else None
     if meth:
         sec = sec.replace(f'<p class="note">{sp(*meth)}</p>', "", 1)
-    extra = (f'<h3>評等規則與邊界揭露</h3>{rule}{rn}'
+    extra = (f'<h3>評等規則與邊界揭露</h3>{rn or rule}'
              + (f'<details class="more"><summary>展開：估值方法（模型原文）</summary><p class="note">{sp(*meth)}</p></details>' if meth else ""))
+    # v1.3 G 節：估值章開頭並排四個目標價（表＋長條圖〔原 bars_html，含現價線〕）
+    px, pxd = B.cell("VAL_Px"), src_docdate(B, "pros_px_mid")
+
+    def r4(no, lab, nm_, up, note):
+        u = sp(*B.cell(up), "sp1") if up and B.has(up) else "—"
+        return f"<tr><td>{no}</td><td>{lab}</td><td>{sp(*B.cell(nm_), 'n2')}</td><td>{u}</td><td class=\"note\">{note}</td></tr>"
+    four = ('<h3>四個目標價（美元／股）</h3><div class="tw"><table class="tp"><thead><tr><th></th><th>目標價</th><th>值</th><th>對現價上檔空間</th><th>說明</th></tr></thead><tbody>'
+            + r4("1", "DCF 目標價（單純 DCF，三情境加權）", "VAL_TP_DCF", "VAL_Up_DCF", "無槓桿自由現金流折現；價值多在 2030 年後的終值")
+            + r4("2", "Comparable 目標價（三情境加權；調整後，進加權）", "VAL_TP_CompAdj", None, "同業營收倍數 × 依 2030 年自由現金流率調降的係數")
+            + r4("2a", "　Comparable 未調整值（市場主流做法）", "VAL_TP_CompMain", "VAL_Up_CompMain", "同業營收倍數直接套用，不調整")
+            + r4("3", "加權目標價（DCF 與 Comparable 各半；橫幅主值）", "VAL_TP_W", "VAL_Up_W", "評等依此判定")
+            + '<tr><td>4</td><td>市場共識目標價</td><td>不適用</td><td>—</td><td class="note">尚未掛牌，無分析師共識目標價；掛牌後補進 Val 頁（附來源、家數、日期）</td></tr>'
+            + f'</tbody></table></div><p class="refline">現價 {sp(*px, "n2")} 美元＝IPO 價格區間中點（初步招股說明書 {sp(*pxd)}）。下圖黑線為現價。</p>')
+    sec = sec.replace("<h3>目標價與現價</h3>", f"{four}<h3>目標價與現價（圖）</h3>", 1)
     return sec.replace("<h3>結論主要項目</h3>", f"{extra}<h3>結論主要項目</h3>", 1)
 
 
