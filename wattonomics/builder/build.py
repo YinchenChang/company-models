@@ -31,6 +31,8 @@ def _sil_r1_on():
 SIL_R1_ON = _sil_r1_on()
 # 獨立核對 R2：markets/chip_bridge 的分世代 NVIDIA 內容（只作備忘）
 CB_FILE = os.path.join(ROOT, "markets", "chip_bridge", "dist", "20261027_晶片內容橋接表_v0.2.2.xlsx")
+if not os.path.exists(CB_FILE):   # v0.3.1：v0.2.2 已由 v0.2.3 取代（main 7fd5ccb）；第 44、7 列同義、B–D 值相同；只作備忘，In 值以 --base 為準
+    CB_FILE = os.path.join(ROOT, "markets", "chip_bridge", "dist", "20261105_晶片內容橋接表_v0.2.3.xlsx")
 
 
 def _cb_nvc():
