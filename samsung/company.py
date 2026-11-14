@@ -462,3 +462,38 @@ CONFIG["version"] = "v0.5.4"
 CONFIG["date"] = "2026-11-06"
 CONFIG["a1_note"] = CONFIG["a1_note"] + "；v0.5.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"
 CONFIG["readme_tail"] = CONFIG["readme_tail"] + ["v0.5.4：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"]
+
+# v0.5.5（2026-11-15）：個股 HTML 版面 v1.3、三層協調（兩讀數＋C0 公司實績）。共用建檔 tools/memory_model/（build.py、v13_post.py、html_v13.py）以 CONFIG["v13"] 啟用；
+# 既有數值、目標價與評等不變。C0 實績在 samsung/c0_actuals.py；敏感度快照 samsung/sens_run.py → sens_snapshot.json；另一側讀數 samsung/coord_alt.json（tools/coord/alt_run.py）。
+_SS = ("三星電子 IR 合併損益表 2025Q4（https://images.samsung.com/is/content/samsung/assets/global/ir/docs/2025_con_quarter04_soi.pdf；2025、2024 年）與 2024Q4（https://images.samsung.com.cn/is/content/samsung/assets/global/ir/docs/2024_con_quarter04_soi.pdf；2024、2023 年）；"
+       "2022 年營收 302.23 兆：三星 FY2022 財報新聞稿（https://news.samsung.com/be_fr/samsung-electronics-announces-fourth-quarter-and-fy-2022-results）；單位百萬韓元÷1e6。EPS 為普通股稀釋 EPS（2023、2024 年與基本相同）；本期損益含非控制權益")
+CONFIG["v13"] = True
+CONFIG["version"] = "v0.5.5"
+CONFIG["date"] = "2026-11-15"
+CONFIG["v13_co"] = dict(
+    name="三星電子", own="ss", others=("skh", "mu"), folder="samsung", nm=True, nm_k=202.235513 / (202.235513 + 87.769374),
+    hist_unit="兆韓元，K-IFRS 合併（含非記憶體事業）；EPS 韓元（普通股）", hist_ver="v0.5.5", hist_src=_SS,
+    hist_rows=[
+        ("rev", "營收", 258.935494, 300.870903, 333.605938, 302.23, "Verified"),
+        ("cogs", "營業成本", 180.388580, 186.562268, 202.235513, None, "Verified"),
+        ("gp", "毛利（＝營收 − 營業成本）", "=C{rev}-C{cogs}", "=D{rev}-D{cogs}", "=E{rev}-E{cogs}", None, "Derived"),
+        ("oi", "營業利益", 6.566976, 32.725961, 43.601051, 43.38, "Verified"),
+        ("opx", "營業費用（銷管費用＝毛利 − 營業利益）", "=C{gp}-C{oi}", "=D{gp}-D{oi}", "=E{gp}-E{oi}", None, "Derived"),
+        ("pti", "稅前利益", 11.006265, 37.529734, 49.481471, None, "Verified"),
+        ("oth", "其他收入（淨額）＝稅前利益 − 營業利益（含財務損益、其他營業外、關聯企業）", "=C{pti}-C{oi}", "=D{pti}-D{oi}", "=E{pti}-E{oi}", None, "Derived"),
+        ("tax", "所得稅（負值＝稅額利益）", -4.480835, 3.078383, 4.274666, None, "Verified"),
+        ("ni", "本期淨利（稅前 − 所得稅；合併，含非控制權益）", "=C{pti}-C{tax}", "=D{pti}-D{tax}", "=E{pti}-E{tax}", None, "Derived"),
+        ("nic", "歸屬母公司淨利", 14.473401, 33.621363, 44.260956, None, "Verified"),
+        ("eps", "EPS（普通股稀釋；韓元）", 2131.0, 4950.0, 6603.0, None, "Verified"),
+    ],
+    hist_checks=[("核對：2025 年毛利（本頁推算）− 公告毛利 131.370425 兆（應為 0）", "=E{gp}-131.370425"),
+                 ("核對：2025 年本期淨利（本頁推算）− 公告 45.206805 兆（應為 0）", "=E{ni}-45.206805"),
+                 ("核對：2024 年本期淨利（本頁推算）− 公告 34.451351 兆（應為 0）", "=D{ni}-34.451351")],
+    pl_note="口徑：GAAP（K-IFRS 合併財報，含非記憶體事業；三星只公布 IFRS 損益）。歷史本期淨利含非控制權益（2025 年 0.946 兆，約 2%），預測取模型的歸屬母公司淨利，兩者差約 2%。"
+            "歷史股數＝歸屬母公司淨利 ÷ 普通股稀釋 EPS 的反推，含特別股，與預測的期末流通股數（普通股＋特別股）口徑近似。",
+    pl_fc="預測：2026E 為基準年（上半年實績、第三季依 10-08 初步財報校準、第四季推估）、2027E–2029E 為情境 B 由驅動因子推導、2030E 為收斂法（只推營收與淨利）。",
+)
+CONFIG["v13_ver"] = ("v0.5.5（2026-11-15）：個股 HTML 版面 v1.3 與三層協調（兩讀數目標價、C0 公司實績 vs 層級隱含值）。公司未揭露 HBM 營收金額、占記憶體營收比與位元（2026 年第一至第三季；3Q26 法說只給 HBM4 營收季增 3 倍以上、HBM4 占 HBM 營收約 60% 等成長率與內部組成，列為參考），"
+                     "故 HBM 列判定為「無可比實績」；已揭露的記憶體事業營收只做上限檢查（參考、不判定）。既有數值、目標價與評等不變。")
+CONFIG["a1_note"] = CONFIG["a1_note"] + "；v0.5.5（2026-11-15）：版面 v1.3＋兩讀數＋C0（實績）；新增 Hist、PL、RevDCF 頁與 Val 0.7、Sens、Coord、README 新增列；既有數值不變"
+CONFIG["readme_tail"] = CONFIG["readme_tail"] + ["v0.5.5：版面 v1.3＋兩讀數＋C0（實績）；既有數值不變"]

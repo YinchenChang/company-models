@@ -1,0 +1,3325 @@
+{
+ "source": "wattonomics/model/20261114_Wattonomics_v0.3.2.xlsx",
+ "player": "msft",
+ "roots": [
+  {
+   "name": "WIF_Gap_Player_msft_2026_AddGW",
+   "desc": "2026 年新增 IT GW",
+   "cell": "Interface!F604"
+  },
+  {
+   "name": "WIF_Gap_Player_msft_2026_CapexAI",
+   "desc": "2026 年 AI 資本支出",
+   "cell": "Interface!F596"
+  },
+  {
+   "name": "WIF_Gap_Player_msft_2026_CapexNonAI",
+   "desc": "2026 年非 AI 資本支出",
+   "cell": "Interface!F597"
+  },
+  {
+   "name": "WIF_PlayerGW_YE_msft_2025",
+   "desc": "2025 年底上線 IT GW",
+   "cell": "Interface!E24"
+  },
+  {
+   "name": "WIF_PlayerGW_YE_msft_2026",
+   "desc": "2026 年底上線 IT GW",
+   "cell": "Interface!F24"
+  },
+  {
+   "name": "WIF_Gap_Player_msft_2026_CapexAIModel",
+   "desc": "個股模型 AI 資本支出回寫（2026）",
+   "cell": "Interface!F601"
+  }
+ ],
+ "rows": [
+  {
+   "depth": 0,
+   "cell": "Interface!F604",
+   "formula": "=IF(Gap!G38=\"\",\"\",Gap!G38)",
+   "value": 2.63167589361114,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 1,
+   "cell": "Gap!G38",
+   "formula": "=CapexGW!G34",
+   "value": 2.63167589361114,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "cell": "CapexGW!G34",
+   "formula": "=IF(2026>=2026,G32,G33)",
+   "value": 2.63167589361114,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 3,
+   "cell": "CapexGW!G32",
+   "formula": "=(1-(lag_on/12))*G31+(lag_on/12)*F31-inv_on*(G31-F31)",
+   "value": 2.63167589361114,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 4,
+   "cell": "In!I94",
+   "formula": null,
+   "value": 4.5,
+   "label": "lag_on｜甲2 付款（出貨）到上線延遲（付款年 → 上線年平移）",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 4,
+   "cell": "CapexGW!G31",
+   "formula": "=IF(G30=\"\",G33,G30)",
+   "value": 3.08083757093276,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 5,
+   "cell": "CapexGW!G30",
+   "formula": "=IF(G29=\"\",\"\",G29/(G22+G25))",
+   "value": 3.08083757093276,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 6,
+   "cell": "CapexGW!G29",
+   "formula": "=IF(G21=\"\",\"\",G22/(G22+G25)*G21+G25/(G22+G25)*(CapexGW!$D$4*G21+CapexGW!$E$4*G26+CapexGW!$F$4*G27))",
+   "value": 126.598197248779,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 7,
+   "cell": "CapexGW!G21",
+   "formula": "=IF(G18=\"\",\"\",G18*ai_sh)",
+   "value": 148.5375,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 8,
+   "cell": "CapexGW!G18",
+   "formula": "=IF(OR(G17=\"\",AND(fye_msft<12,H17=\"\")),\"\",G17*fye_msft/12+IF(fye_msft<12,H17,0)*(12-fye_msft)/12)",
+   "value": 174.75,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 9,
+   "cell": "CapexGW!G17",
+   "formula": "=IF(G13<>\"\",G13,IF(F15>0,F17*(1+cap_g_ext),\"\"))",
+   "value": 145.3,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 10,
+   "cell": "CapexGW!G13",
+   "formula": "=IF(G11<>\"\",G11,IF(G12<>\"\",G12,\"\"))",
+   "value": 145.3,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 11,
+   "cell": "CapexGW!G11",
+   "formula": "=IF(In!K169=\"\",\"\",In!K169)",
+   "value": 145.3,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 12,
+   "cell": "In!K169",
+   "formula": null,
+   "value": 145.3,
+   "label": "gcap_msft｜Microsoft 資本支出合計（模型；對照）（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 12,
+   "cell": "In!K121",
+   "formula": null,
+   "value": 115.948,
+   "label": "cap_msft｜Microsoft（自有＋融資租賃 AI 在役） 資本支出（財年）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 11,
+   "cell": "CapexGW!F13",
+   "formula": "=IF(F11<>\"\",F11,IF(F12<>\"\",F12,\"\"))",
+   "value": 64.551,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 13,
+   "cell": "In!J169",
+   "formula": null,
+   "value": null,
+   "label": "gcap_msft｜Microsoft 資本支出合計（模型；對照）（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "條件讀取",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 12,
+   "cell": "CapexGW!F12",
+   "formula": "=IF(In!J121=\"\",\"\",In!J121)",
+   "value": 64.551,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 13,
+   "cell": "In!J121",
+   "formula": null,
+   "value": 64.551,
+   "label": "cap_msft｜Microsoft（自有＋融資租賃 AI 在役） 資本支出（財年）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 11,
+   "cell": "CapexGW!E13",
+   "formula": "=IF(E11<>\"\",E11,IF(E12<>\"\",E12,\"\"))",
+   "value": 44.477,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 13,
+   "cell": "In!I169",
+   "formula": null,
+   "value": null,
+   "label": "gcap_msft｜Microsoft 資本支出合計（模型；對照）（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "條件讀取",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 12,
+   "cell": "CapexGW!E12",
+   "formula": "=IF(In!I121=\"\",\"\",In!I121)",
+   "value": 44.477,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 13,
+   "cell": "In!I121",
+   "formula": null,
+   "value": 44.477,
+   "label": "cap_msft｜Microsoft（自有＋融資租賃 AI 在役） 資本支出（財年）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 13,
+   "cell": "In!H169",
+   "formula": null,
+   "value": null,
+   "label": "gcap_msft｜Microsoft 資本支出合計（模型；對照）（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "條件讀取",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 13,
+   "cell": "In!H121",
+   "formula": null,
+   "value": null,
+   "label": "cap_msft｜Microsoft（自有＋融資租賃 AI 在役） 資本支出（財年）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "條件讀取",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "CapexGW!F17",
+   "formula": "=IF(F13<>\"\",F13,IF(E15>0,E17*(1+cap_g_ext),\"\"))",
+   "value": 64.551,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 10,
+   "cell": "CapexGW!E17",
+   "formula": "=IF(E13<>\"\",E13,IF(D15>0,D17*(1+cap_g_ext),\"\"))",
+   "value": 44.477,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 13,
+   "cell": "In!I15",
+   "formula": null,
+   "value": 0.1,
+   "label": "cap_g_ext｜個股模型最後一年之後的資本支出年增（甲2 外推）",
+   "flag": "人工確認：不同源",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 9,
+   "cell": "In!I85",
+   "formula": null,
+   "value": 6,
+   "label": "fye_msft｜Microsoft（自有＋融資租賃 AI 在役） 財年結束月",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 9,
+   "cell": "CapexGW!H17",
+   "formula": "=IF(H13<>\"\",H13,IF(G15>0,G17*(1+cap_g_ext),\"\"))",
+   "value": 204.2,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 10,
+   "cell": "CapexGW!H13",
+   "formula": "=IF(H11<>\"\",H11,IF(H12<>\"\",H12,\"\"))",
+   "value": 204.2,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 11,
+   "cell": "CapexGW!H11",
+   "formula": "=IF(In!L169=\"\",\"\",In!L169)",
+   "value": 204.2,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 12,
+   "cell": "In!L169",
+   "formula": null,
+   "value": 204.2,
+   "label": "gcap_msft｜Microsoft 資本支出合計（模型；對照）（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 12,
+   "cell": "In!L121",
+   "formula": null,
+   "value": 192.827,
+   "label": "cap_msft｜Microsoft（自有＋融資租賃 AI 在役） 資本支出（財年）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 8,
+   "cell": "In!I13",
+   "formula": null,
+   "value": 0.85,
+   "label": "ai_sh｜資本支出 AI 占比（全公司資本支出中用於 AI 資料中心的比例；各家未覆寫者）",
+   "flag": "人工確認：不同源",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 7,
+   "cell": "CapexGW!G22",
+   "formula": "=(1-Players!G38)*G$7+Players!G38*TK_NonNV_Hold_Maia*TK_CapexIT_VR200",
+   "value": 29.9311970319981,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 8,
+   "cell": "Players!G38",
+   "formula": "=G$12",
+   "value": 0.238210067173108,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 9,
+   "cell": "Players!G12",
+   "formula": "=IF(In!$K$164<>\"\",In!$K$164,(SIL_In!$G$137*SIL_it_AMD8+SIL_In!$G$138*SIL_it_TPU+SIL_In!$G$139*SIL_it_TRN+SIL_In!$G$140*SIL_it_ASIC)/((SIL_In!$G$137*SIL_it_AMD8+SIL_In!$G$138*SIL_it_TPU+SIL_In!$G$139*SIL_it_TRN+SIL_In!$G$140*SIL_it_ASIC)+(SIL_In!$G$133*SIL_it_GB+SIL_In!$G$134*SIL_it_VR+SIL_In!$G$135*SIL_it_RU+SIL_In!$G$136*SIL_it_HP)))",
+   "value": 0.238210067173108,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 10,
+   "cell": "SIL_In!G137",
+   "formula": null,
+   "value": 0.75,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "SIL_In!D12",
+   "formula": null,
+   "value": 40,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "SIL_In!G138",
+   "formula": null,
+   "value": 3.85,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "SIL_In!D14",
+   "formula": null,
+   "value": 25,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "SIL_In!G139",
+   "formula": null,
+   "value": 2,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "SIL_In!D15",
+   "formula": null,
+   "value": 20,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "SIL_In!G140",
+   "formula": null,
+   "value": 1,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "SIL_In!D16",
+   "formula": null,
+   "value": 20,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "SIL_In!G133",
+   "formula": null,
+   "value": 5.4,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "SIL_In!D8",
+   "formula": null,
+   "value": 66.1944444444444,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "SIL_In!G134",
+   "formula": null,
+   "value": 1.7,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "SIL_In!D9",
+   "formula": null,
+   "value": 128.833333333333,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "SIL_In!G135",
+   "formula": null,
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "SIL_In!D10",
+   "formula": null,
+   "value": 257.166666666667,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "SIL_In!G136",
+   "formula": null,
+   "value": 0.5,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "SIL_In!D11",
+   "formula": null,
+   "value": 38.3125,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 8,
+   "cell": "CapexGW!G7",
+   "formula": "=Players!G5*TK_CapexIT_H100+Players!G6*TK_CapexIT_GB200+Players!G7*TK_CapexIT_GB300+Players!G8*TK_CapexIT_VR200+Players!G9*TK_CapexIT_RU",
+   "value": 33.41403216,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 9,
+   "cell": "Players!G5",
+   "formula": "=IF(In!$K$159<>\"\",In!$K$159,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 9,
+   "cell": "TK_In!E15",
+   "formula": null,
+   "value": 27.510214,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 9,
+   "cell": "Players!G6",
+   "formula": "=IF(In!$K$160<>\"\",In!$K$160,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 9,
+   "cell": "TK_In!E16",
+   "formula": null,
+   "value": 24.015174,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 9,
+   "cell": "Players!G7",
+   "formula": "=IF(In!$K$161<>\"\",In!$K$161,(1-SIL_vr26))",
+   "value": 0.78,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 10,
+   "cell": "SIL_In!D5",
+   "formula": null,
+   "value": 0.22,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 9,
+   "cell": "TK_In!E17",
+   "formula": null,
+   "value": 32.237224,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 9,
+   "cell": "Players!G8",
+   "formula": "=IF(In!$K$162<>\"\",In!$K$162,SIL_vr26)",
+   "value": 0.22,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 9,
+   "cell": "TK_In!E18",
+   "formula": null,
+   "value": 37.586352,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 9,
+   "cell": "Players!G9",
+   "formula": "=IF(In!$K$163<>\"\",In!$K$163,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 9,
+   "cell": "TK_In!E19",
+   "formula": null,
+   "value": 50.08578,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 8,
+   "cell": "TK_In!E58",
+   "formula": null,
+   "value": 0.5,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 7,
+   "cell": "CapexGW!G25",
+   "formula": "=G24*G23",
+   "value": 11.1609392244584,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 8,
+   "cell": "CapexGW!G24",
+   "formula": null,
+   "value": 1,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 8,
+   "cell": "CapexGW!G23",
+   "formula": "=(1-Players!G38)*G$8+Players!G38*TK_NonNV_Hold_Maia*TK_CapexFacility_VR200",
+   "value": 11.1609392244584,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 9,
+   "cell": "CapexGW!G8",
+   "formula": "=Players!G5*TK_CapexFacility_H100+Players!G6*TK_CapexFacility_GB200+Players!G7*TK_CapexFacility_GB300+Players!G8*TK_CapexFacility_VR200+Players!G9*TK_CapexFacility_RU",
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 10,
+   "cell": "TK_In!E20",
+   "formula": null,
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "TK_In!E21",
+   "formula": null,
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "TK_In!E22",
+   "formula": null,
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "TK_In!E23",
+   "formula": null,
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "TK_In!E24",
+   "formula": null,
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 7,
+   "cell": "CapexGW!D4",
+   "formula": "=MAX(0,1-lag_bldg/12)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 8,
+   "cell": "In!I10",
+   "formula": null,
+   "value": 18,
+   "label": "lag_bldg｜建物資本支出提前入帳月數",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 7,
+   "cell": "CapexGW!E4",
+   "formula": "=MAX(0,MIN(lag_bldg/12,2-lag_bldg/12))",
+   "value": 0.5,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 7,
+   "cell": "CapexGW!G26",
+   "formula": "=IF(G21=\"\",\"\",IF(F21=\"\",G21,F21))",
+   "value": 89.186675,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 8,
+   "cell": "CapexGW!F21",
+   "formula": "=IF(F18=\"\",\"\",F18*ai_sh)",
+   "value": 89.186675,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 9,
+   "cell": "CapexGW!F18",
+   "formula": "=IF(OR(F17=\"\",AND(fye_msft<12,G17=\"\")),\"\",F17*fye_msft/12+IF(fye_msft<12,G17,0)*(12-fye_msft)/12)",
+   "value": 104.9255,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 7,
+   "cell": "CapexGW!F4",
+   "formula": "=MAX(0,MIN(1,lag_bldg/12-1))",
+   "value": 0.5,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 7,
+   "cell": "CapexGW!G27",
+   "formula": "=IF(G21=\"\",\"\",IF(OR(F21=\"\",E21=\"\"),G26,E21))",
+   "value": 46.3369,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 8,
+   "cell": "CapexGW!E21",
+   "formula": "=IF(E18=\"\",\"\",E18*ai_sh)",
+   "value": 46.3369,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 9,
+   "cell": "CapexGW!E18",
+   "formula": "=IF(OR(E17=\"\",AND(fye_msft<12,F17=\"\")),\"\",E17*fye_msft/12+IF(fye_msft<12,F17,0)*(12-fye_msft)/12)",
+   "value": 54.514,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 7,
+   "cell": "Players!F30",
+   "formula": "=IF(F24<>\"\",F24,IF(AND(F25<>\"\",F27<>\"\"),F25+(F27-F25)*(2025-F26)/(F28-F26),IF(E30<>\"\",E30+F29,\"\")))",
+   "value": 3.729045,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "2025",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 8,
+   "cell": "Players!F24",
+   "formula": "=IF(F22<>\"\",F22,IF(F23<>\"\",F23,IF(INT(obsd_msft)=2025,obs_msft/1000+SUMIFS(Pipeline!$L$5:$L$150,Pipeline!$C$5:$C$150,\"msft\",Pipeline!$O$5:$O$150,1,Pipeline!$M$5:$M$150,\">\"&obsd_msft,Pipeline!$M$5:$M$150,\"<=\"&2026),\"\")))",
+   "value": 3.729045,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "2025",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 9,
+   "cell": "Players!F5",
+   "formula": "=IF(In!$J$159<>\"\",In!$J$159,0)",
+   "value": 0.1,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 10,
+   "cell": "In!J159",
+   "formula": null,
+   "value": 0.1,
+   "label": "mix_H100｜新增 GW 世代占比：Hopper H100",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 9,
+   "cell": "Players!F6",
+   "formula": "=IF(In!$J$160<>\"\",In!$J$160,0)",
+   "value": 0.7,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 10,
+   "cell": "In!J160",
+   "formula": null,
+   "value": 0.7,
+   "label": "mix_GB200｜新增 GW 世代占比：GB200 NVL72",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 9,
+   "cell": "Players!F7",
+   "formula": "=IF(In!$J$161<>\"\",In!$J$161,0)",
+   "value": 0.2,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 10,
+   "cell": "In!J161",
+   "formula": null,
+   "value": 0.2,
+   "label": "mix_GB300｜新增 GW 世代占比：GB300 NVL72",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 9,
+   "cell": "Players!F8",
+   "formula": "=IF(In!$J$162<>\"\",In!$J$162,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 9,
+   "cell": "Players!F9",
+   "formula": "=IF(In!$J$163<>\"\",In!$J$163,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 9,
+   "cell": "Players!F23",
+   "formula": "=IF(In!$J$98=\"\",\"\",In!$J$98*Players!$D$14/1000)",
+   "value": 3.729045,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "2025",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 10,
+   "cell": "In!J98",
+   "formula": null,
+   "value": 2015.7,
+   "label": "chip_msft｜Microsoft（自有＋融資租賃 AI 在役） 擁有 AI 晶片功耗（年底）",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "2025",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "Players!D14",
+   "formula": "=k_chip2it",
+   "value": 1.85,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "2025",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 11,
+   "cell": "In!I7",
+   "formula": null,
+   "value": 1.85,
+   "label": "k_chip2it｜Epoch 晶片功耗 → IT 電力換算係數",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "2025",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 9,
+   "cell": "In!I22",
+   "formula": null,
+   "value": 4500,
+   "label": "obs_msft｜Microsoft 自有 AI 在役 MW-IT（FY26 末）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 11,
+   "cell": "Players!H5",
+   "formula": "=IF(In!$L$159<>\"\",In!$L$159,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 11,
+   "cell": "Players!H6",
+   "formula": "=IF(In!$L$160<>\"\",In!$L$160,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 11,
+   "cell": "Players!H7",
+   "formula": "=IF(In!$L$161<>\"\",In!$L$161,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 11,
+   "cell": "Players!H8",
+   "formula": "=IF(In!$L$162<>\"\",In!$L$162,(1-H$11))",
+   "value": 0.939674183983797,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 12,
+   "cell": "Players!H11",
+   "formula": "=(SIL_In!$H$135/TK_GPUsPerGW_RU)/(SIL_In!$H$134/TK_GPUsPerGW_VR200+SIL_In!$H$135/TK_GPUsPerGW_RU)",
+   "value": 0.0603258160162031,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 13,
+   "cell": "SIL_In!H135",
+   "formula": null,
+   "value": 0.282114,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 13,
+   "cell": "TK_In!E14",
+   "formula": null,
+   "value": 194760,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 13,
+   "cell": "SIL_In!H134",
+   "formula": null,
+   "value": 6.582652,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 13,
+   "cell": "TK_In!E13",
+   "formula": null,
+   "value": 291744,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 11,
+   "cell": "Players!H9",
+   "formula": "=IF(In!$L$163<>\"\",In!$L$163,H$11)",
+   "value": 0.0603258160162031,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 11,
+   "cell": "Players!I5",
+   "formula": "=IF(In!$M$159<>\"\",In!$M$159,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 11,
+   "cell": "Players!I6",
+   "formula": "=IF(In!$M$160<>\"\",In!$M$160,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 11,
+   "cell": "Players!I7",
+   "formula": "=IF(In!$M$161<>\"\",In!$M$161,0)",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 11,
+   "cell": "Players!I8",
+   "formula": "=IF(In!$M$162<>\"\",In!$M$162,(1-I$11))",
+   "value": 0.700284773845187,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 12,
+   "cell": "Players!I11",
+   "formula": "=(SIL_In!$I$135/TK_GPUsPerGW_RU)/(SIL_In!$I$134/TK_GPUsPerGW_VR200+SIL_In!$I$135/TK_GPUsPerGW_RU)",
+   "value": 0.299715226154813,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 13,
+   "cell": "SIL_In!I135",
+   "formula": null,
+   "value": 2,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 13,
+   "cell": "SIL_In!I134",
+   "formula": null,
+   "value": 7,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 11,
+   "cell": "Players!I9",
+   "formula": "=IF(In!$M$163<>\"\",In!$M$163,I$11)",
+   "value": 0.299715226154813,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 4,
+   "cell": "CapexGW!F31",
+   "formula": "=IF(F30=\"\",F33,F30)",
+   "value": 2.13523403972935,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 5,
+   "cell": "CapexGW!F30",
+   "formula": "=IF(F29=\"\",\"\",F29/(F22+F25))",
+   "value": 2.13523403972935,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 6,
+   "cell": "CapexGW!F29",
+   "formula": "=IF(F21=\"\",\"\",F22/(F22+F25)*F21+F25/(F22+F25)*(CapexGW!$D$4*F21+CapexGW!$E$4*F26+CapexGW!$F$4*F27))",
+   "value": 75.6964474421926,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 7,
+   "cell": "CapexGW!F22",
+   "formula": "=(1-Players!F38)*F$7+Players!F38*TK_NonNV_Hold_Maia*TK_CapexIT_VR200",
+   "value": 24.2901851177648,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 8,
+   "cell": "Players!F38",
+   "formula": "=F$12",
+   "value": 0.238210067173108,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 9,
+   "cell": "Players!F12",
+   "formula": "=IF(In!$J$164<>\"\",In!$J$164,G12)",
+   "value": 0.238210067173108,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 8,
+   "cell": "CapexGW!F7",
+   "formula": "=Players!F5*TK_CapexIT_H100+Players!F6*TK_CapexIT_GB200+Players!F7*TK_CapexIT_GB300+Players!F8*TK_CapexIT_VR200+Players!F9*TK_CapexIT_RU",
+   "value": 26.009088,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 7,
+   "cell": "CapexGW!F25",
+   "formula": "=F24*F23",
+   "value": 11.1609392244584,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 8,
+   "cell": "CapexGW!F24",
+   "formula": null,
+   "value": 1,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 8,
+   "cell": "CapexGW!F23",
+   "formula": "=(1-Players!F38)*F$8+Players!F38*TK_NonNV_Hold_Maia*TK_CapexFacility_VR200",
+   "value": 11.1609392244584,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 9,
+   "cell": "CapexGW!F8",
+   "formula": "=Players!F5*TK_CapexFacility_H100+Players!F6*TK_CapexFacility_GB200+Players!F7*TK_CapexFacility_GB300+Players!F8*TK_CapexFacility_VR200+Players!F9*TK_CapexFacility_RU",
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 7,
+   "cell": "CapexGW!F26",
+   "formula": "=IF(F21=\"\",\"\",IF(E21=\"\",F21,E21))",
+   "value": 46.3369,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 7,
+   "cell": "CapexGW!F27",
+   "formula": "=IF(F21=\"\",\"\",IF(OR(E21=\"\",D21=\"\"),F26,D21))",
+   "value": 46.3369,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 4,
+   "cell": "In!I95",
+   "formula": null,
+   "value": 0.1,
+   "label": "inv_on｜甲2 未上線庫存 ÷ 年出貨（庫存增量自上線扣除）",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "AddGW",
+    "CapexAI",
+    "2026"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 0,
+   "cell": "Interface!F596",
+   "formula": "=IF(Gap!G62=\"\",\"\",Gap!G62)",
+   "value": 119.96243924198,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 1,
+   "cell": "Gap!G62",
+   "formula": "=IF(G61<>\"\",G56,G45)",
+   "value": 119.96243924198,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "cell": "Gap!G45",
+   "formula": "=G42+G43+G44",
+   "value": 119.96243924198,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 3,
+   "cell": "Gap!G42",
+   "formula": "=G38*(G39+Gap!$D$6*G40)",
+   "value": 78.7692096960345,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 4,
+   "cell": "Gap!G39",
+   "formula": "=CapexGW!G22",
+   "value": 29.9311970319981,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 4,
+   "cell": "Gap!D6",
+   "formula": "=CapexGW!$D$4",
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 4,
+   "cell": "Gap!G40",
+   "formula": "=CapexGW!G25",
+   "value": 11.1609392244584,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 3,
+   "cell": "Gap!G43",
+   "formula": "=Gap!$E$6*H38*H40",
+   "value": 19.0649942560046,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 4,
+   "cell": "Gap!E6",
+   "formula": "=CapexGW!$E$4",
+   "value": 0.5,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 4,
+   "cell": "Gap!H38",
+   "formula": "=CapexGW!H34",
+   "value": 3.48540560239922,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 5,
+   "cell": "CapexGW!H34",
+   "formula": "=IF(2027>=2026,H32,H33)",
+   "value": 3.48540560239922,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 6,
+   "cell": "CapexGW!H32",
+   "formula": "=(1-(lag_on/12))*H31+(lag_on/12)*G31-inv_on*(H31-G31)",
+   "value": 3.48540560239922,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 7,
+   "cell": "CapexGW!H31",
+   "formula": "=IF(H30=\"\",H33,H30)",
+   "value": 3.8514433451546,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 8,
+   "cell": "CapexGW!H30",
+   "formula": "=IF(H29=\"\",\"\",H29/(H22+H25))",
+   "value": 3.8514433451546,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 9,
+   "cell": "CapexGW!H29",
+   "formula": "=IF(H21=\"\",\"\",H22/(H22+H25)*H21+H25/(H22+H25)*(CapexGW!$D$4*H21+CapexGW!$E$4*H26+CapexGW!$F$4*H27))",
+   "value": 169.239777746452,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 10,
+   "cell": "CapexGW!H21",
+   "formula": "=IF(H18=\"\",\"\",H18*ai_sh)",
+   "value": 185.939575275,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 11,
+   "cell": "CapexGW!H18",
+   "formula": "=IF(OR(H17=\"\",AND(fye_msft<12,I17=\"\")),\"\",H17*fye_msft/12+IF(fye_msft<12,I17,0)*(12-fye_msft)/12)",
+   "value": 218.7524415,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 12,
+   "cell": "CapexGW!I17",
+   "formula": "=IF(I13<>\"\",I13,IF(H15>0,H17*(1+cap_g_ext),\"\"))",
+   "value": 233.304883,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 13,
+   "cell": "CapexGW!I13",
+   "formula": "=IF(I11<>\"\",I11,IF(I12<>\"\",I12,\"\"))",
+   "value": 233.304883,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 14,
+   "cell": "CapexGW!I11",
+   "formula": "=IF(In!M169=\"\",\"\",In!M169)",
+   "value": 233.304883,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 15,
+   "cell": "In!M169",
+   "formula": null,
+   "value": 233.304883,
+   "label": "gcap_msft｜Microsoft 資本支出合計（模型；對照）（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 16,
+   "cell": "In!M121",
+   "formula": null,
+   "value": 216.787,
+   "label": "cap_msft｜Microsoft（自有＋融資租賃 AI 在役） 資本支出（財年）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "CapexGW!H22",
+   "formula": "=(1-Players!H38)*H$7+Players!H38*TK_NonNV_Hold_Maia*TK_CapexIT_VR200",
+   "value": 33.0020103027978,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 11,
+   "cell": "Players!H38",
+   "formula": "=H$12",
+   "value": 0.273101826076139,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 12,
+   "cell": "Players!H12",
+   "formula": "=IF(In!$L$164<>\"\",In!$L$164,(SIL_In!$H$137*SIL_it_AMDR+SIL_In!$H$138*SIL_it_TPU+SIL_In!$H$139*SIL_it_TRN+SIL_In!$H$140*SIL_it_ASIC)/((SIL_In!$H$137*SIL_it_AMDR+SIL_In!$H$138*SIL_it_TPU+SIL_In!$H$139*SIL_it_TRN+SIL_In!$H$140*SIL_it_ASIC)+(SIL_In!$H$133*SIL_it_GB+SIL_In!$H$134*SIL_it_VR+SIL_In!$H$135*SIL_it_RU+SIL_In!$H$136*SIL_it_HP)))",
+   "value": 0.273101826076139,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 13,
+   "cell": "SIL_In!H137",
+   "formula": null,
+   "value": 1.410568,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 13,
+   "cell": "SIL_In!D13",
+   "formula": null,
+   "value": 100,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 13,
+   "cell": "SIL_In!H138",
+   "formula": null,
+   "value": 5.172083,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 13,
+   "cell": "SIL_In!H139",
+   "formula": null,
+   "value": 2.350947,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 13,
+   "cell": "SIL_In!H140",
+   "formula": null,
+   "value": 4.231705,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 13,
+   "cell": "SIL_In!H133",
+   "formula": null,
+   "value": 2.256909,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 13,
+   "cell": "SIL_In!H136",
+   "formula": null,
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 11,
+   "cell": "CapexGW!H7",
+   "formula": "=Players!H5*TK_CapexIT_H100+Players!H6*TK_CapexIT_GB200+Players!H7*TK_CapexIT_GB300+Players!H8*TK_CapexIT_VR200+Players!H9*TK_CapexIT_RU",
+   "value": 38.3403901938358,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 10,
+   "cell": "CapexGW!H25",
+   "formula": "=H24*H23",
+   "value": 10.9398999318077,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 11,
+   "cell": "CapexGW!H24",
+   "formula": null,
+   "value": 1,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 11,
+   "cell": "CapexGW!H23",
+   "formula": "=(1-Players!H38)*H$8+Players!H38*TK_NonNV_Hold_Maia*TK_CapexFacility_VR200",
+   "value": 10.9398999318077,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 12,
+   "cell": "CapexGW!H8",
+   "formula": "=Players!H5*TK_CapexFacility_H100+Players!H6*TK_CapexFacility_GB200+Players!H7*TK_CapexFacility_GB300+Players!H8*TK_CapexFacility_VR200+Players!H9*TK_CapexFacility_RU",
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 10,
+   "cell": "CapexGW!H26",
+   "formula": "=IF(H21=\"\",\"\",IF(G21=\"\",H21,G21))",
+   "value": 148.5375,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 10,
+   "cell": "CapexGW!H27",
+   "formula": "=IF(H21=\"\",\"\",IF(OR(G21=\"\",F21=\"\"),H26,F21))",
+   "value": 89.186675,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 4,
+   "cell": "Gap!H40",
+   "formula": "=CapexGW!H25",
+   "value": 10.9398999318077,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 3,
+   "cell": "Gap!G44",
+   "formula": "=Gap!$F$6*I38*I40",
+   "value": 22.1282352899404,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 4,
+   "cell": "Gap!F6",
+   "formula": "=CapexGW!$F$4",
+   "value": 0.5,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 4,
+   "cell": "Gap!I38",
+   "formula": "=CapexGW!I34",
+   "value": 4.03728139749165,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 5,
+   "cell": "CapexGW!I34",
+   "formula": "=IF(2028>=2026,I32,I33)",
+   "value": 4.03728139749165,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 6,
+   "cell": "CapexGW!I32",
+   "formula": "=(1-(lag_on/12))*I31+(lag_on/12)*H31-inv_on*(I31-H31)",
+   "value": 4.03728139749165,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 7,
+   "cell": "CapexGW!I31",
+   "formula": "=IF(I30=\"\",I33,I30)",
+   "value": 4.20542058770136,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 8,
+   "cell": "CapexGW!I30",
+   "formula": "=IF(I29=\"\",\"\",I29/(I22+I25))",
+   "value": 4.20542058770136,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 9,
+   "cell": "CapexGW!I29",
+   "formula": "=IF(I21=\"\",\"\",I22/(I22+I25)*I21+I25/(I22+I25)*(CapexGW!$D$4*I21+CapexGW!$E$4*I26+CapexGW!$F$4*I27))",
+   "value": 194.363827290552,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 10,
+   "cell": "CapexGW!I21",
+   "formula": "=IF(I18=\"\",\"\",I18*ai_sh)",
+   "value": 202.7978586,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 11,
+   "cell": "CapexGW!I18",
+   "formula": "=IF(OR(I17=\"\",AND(fye_msft<12,J17=\"\")),\"\",I17*fye_msft/12+IF(fye_msft<12,J17,0)*(12-fye_msft)/12)",
+   "value": 238.585716,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 12,
+   "cell": "CapexGW!J17",
+   "formula": "=IF(J13<>\"\",J13,IF(I15>0,I17*(1+cap_g_ext),\"\"))",
+   "value": 243.866549,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 13,
+   "cell": "CapexGW!J13",
+   "formula": "=IF(J11<>\"\",J11,IF(J12<>\"\",J12,\"\"))",
+   "value": 243.866549,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 14,
+   "cell": "CapexGW!J11",
+   "formula": "=IF(In!N169=\"\",\"\",In!N169)",
+   "value": 243.866549,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 15,
+   "cell": "In!N169",
+   "formula": null,
+   "value": 243.866549,
+   "label": "gcap_msft｜Microsoft 資本支出合計（模型；對照）（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 16,
+   "cell": "In!N121",
+   "formula": null,
+   "value": 251.173,
+   "label": "cap_msft｜Microsoft（自有＋融資租賃 AI 在役） 資本支出（財年）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 10,
+   "cell": "CapexGW!I22",
+   "formula": "=(1-Players!I38)*I$7+Players!I38*TK_NonNV_Hold_Maia*TK_CapexIT_VR200",
+   "value": 35.2555042907785,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 11,
+   "cell": "Players!I38",
+   "formula": "=I$12",
+   "value": 0.269621396123668,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 12,
+   "cell": "Players!I12",
+   "formula": "=IF(In!$M$164<>\"\",In!$M$164,(SIL_In!$I$137*SIL_it_AMDR+SIL_In!$I$138*SIL_it_TPU+SIL_In!$I$139*SIL_it_TRN+SIL_In!$I$140*SIL_it_ASIC)/((SIL_In!$I$137*SIL_it_AMDR+SIL_In!$I$138*SIL_it_TPU+SIL_In!$I$139*SIL_it_TRN+SIL_In!$I$140*SIL_it_ASIC)+(SIL_In!$I$133*SIL_it_GB+SIL_In!$I$134*SIL_it_VR+SIL_In!$I$135*SIL_it_RU+SIL_In!$I$136*SIL_it_HP)))",
+   "value": 0.269621396123668,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 13,
+   "cell": "SIL_In!I137",
+   "formula": null,
+   "value": 2,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 13,
+   "cell": "SIL_In!I138",
+   "formula": null,
+   "value": 7,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 13,
+   "cell": "SIL_In!I139",
+   "formula": null,
+   "value": 3,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 13,
+   "cell": "SIL_In!I140",
+   "formula": null,
+   "value": 5,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 13,
+   "cell": "SIL_In!I133",
+   "formula": null,
+   "value": 0.5,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 13,
+   "cell": "SIL_In!I136",
+   "formula": null,
+   "value": 0,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 11,
+   "cell": "CapexGW!I7",
+   "formula": "=Players!I5*TK_CapexIT_H100+Players!I6*TK_CapexIT_GB200+Players!I7*TK_CapexIT_GB300+Players!I8*TK_CapexIT_VR200+Players!I9*TK_CapexIT_RU",
+   "value": 41.3326208898258,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 10,
+   "cell": "CapexGW!I25",
+   "formula": "=I24*I23",
+   "value": 10.9619484555566,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 11,
+   "cell": "CapexGW!I24",
+   "formula": null,
+   "value": 1,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 11,
+   "cell": "CapexGW!I23",
+   "formula": "=(1-Players!I38)*I$8+Players!I38*TK_NonNV_Hold_Maia*TK_CapexFacility_VR200",
+   "value": 10.9619484555566,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 12,
+   "cell": "CapexGW!I8",
+   "formula": "=Players!I5*TK_CapexFacility_H100+Players!I6*TK_CapexFacility_GB200+Players!I7*TK_CapexFacility_GB300+Players!I8*TK_CapexFacility_VR200+Players!I9*TK_CapexFacility_RU",
+   "value": 12.67,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 10,
+   "cell": "CapexGW!I26",
+   "formula": "=IF(I21=\"\",\"\",IF(H21=\"\",I21,H21))",
+   "value": 185.939575275,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 10,
+   "cell": "CapexGW!I27",
+   "formula": "=IF(I21=\"\",\"\",IF(OR(H21=\"\",G21=\"\"),I26,G21))",
+   "value": 148.5375,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 4,
+   "cell": "Gap!I40",
+   "formula": "=CapexGW!I25",
+   "value": 10.9619484555566,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 5,
+   "cell": "In!K166",
+   "formula": null,
+   "value": 182.935,
+   "label": "gocf_msft｜Microsoft 營業現金流（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "條件讀取",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!C4",
+   "formula": null,
+   "value": "msft",
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!E4",
+   "formula": null,
+   "value": "2024",
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!F4",
+   "formula": null,
+   "value": "ocf",
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!O4",
+   "formula": null,
+   "value": 0,
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!C10",
+   "formula": null,
+   "value": "msft",
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!E10",
+   "formula": null,
+   "value": "2025",
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!F10",
+   "formula": null,
+   "value": "ocf",
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!O10",
+   "formula": null,
+   "value": 1,
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!C16",
+   "formula": null,
+   "value": "msft",
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!E16",
+   "formula": null,
+   "value": "2026",
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!F16",
+   "formula": null,
+   "value": "ocf",
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!O16",
+   "formula": null,
+   "value": 1,
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!C230",
+   "formula": null,
+   "value": "msft",
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!E230",
+   "formula": null,
+   "value": "post",
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!F230",
+   "formula": null,
+   "value": "ocf",
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!O230",
+   "formula": null,
+   "value": 1,
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!G4",
+   "formula": null,
+   "value": 118.548,
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!G10",
+   "formula": null,
+   "value": 136.162,
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!G16",
+   "formula": null,
+   "value": 182.935,
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 6,
+   "cell": "FundRaw!G230",
+   "formula": null,
+   "value": 58,
+   "label": "",
+   "flag": "公司實績（10-K／10-Q，FundRaw）",
+   "status": "分支未生效",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 5,
+   "cell": "In!L166",
+   "formula": null,
+   "value": 219.596057,
+   "label": "gocf_msft｜Microsoft 營業現金流（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "條件讀取",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 5,
+   "cell": "In!K167",
+   "formula": null,
+   "value": null,
+   "label": "gcapai_msft｜Microsoft AI 資本支出（模型；對照）（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "條件讀取",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 5,
+   "cell": "In!L167",
+   "formula": null,
+   "value": 168.453904,
+   "label": "gcapai_msft｜Microsoft AI 資本支出（模型；對照）（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "條件讀取",
+   "roots": [],
+   "leaf": true
+  },
+  {
+   "depth": 0,
+   "cell": "Interface!F597",
+   "formula": "=IF(Gap!G52=\"\",\"\",Gap!G52)",
+   "value": 32.9653775,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexNonAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 1,
+   "cell": "Gap!G52",
+   "formula": "=IF(G50<>\"\",G50,IF(CapexGW!G18<>\"\",CapexGW!G18*(1-ai_sh),0))",
+   "value": 32.9653775,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexNonAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "cell": "Gap!G50",
+   "formula": "=IF(OR(G49=\"\",H49=\"\"),\"\",G49*6/12+H49*6/12)",
+   "value": 32.9653775,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexNonAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 3,
+   "cell": "Gap!G49",
+   "formula": "=IF(In!K168<>\"\",In!K168,\"\")",
+   "value": 30.184659,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexNonAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 4,
+   "cell": "In!K168",
+   "formula": null,
+   "value": 30.184659,
+   "label": "gnai_msft｜Microsoft 非 AI 資本支出（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "生效",
+   "roots": [
+    "CapexNonAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 3,
+   "cell": "Gap!H49",
+   "formula": "=IF(In!L168<>\"\",In!L168,\"\")",
+   "value": 35.746096,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexNonAI"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 4,
+   "cell": "In!L168",
+   "formula": null,
+   "value": 35.746096,
+   "label": "gnai_msft｜Microsoft 非 AI 資本支出（財年，基準情境）",
+   "flag": "公司實績／指引／個股模型寫回",
+   "status": "生效",
+   "roots": [
+    "CapexNonAI"
+   ],
+   "leaf": true
+  },
+  {
+   "depth": 0,
+   "cell": "Interface!E24",
+   "formula": "=CapexGW!F35",
+   "value": 3.729045,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "2025"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 1,
+   "cell": "CapexGW!F35",
+   "formula": "=IF(2025>=2026,E35+F34,N(Players!F30))",
+   "value": 3.729045,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "2025",
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 0,
+   "cell": "Interface!F24",
+   "formula": "=CapexGW!G35",
+   "value": 6.36072089361114,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 1,
+   "cell": "CapexGW!G35",
+   "formula": "=IF(2026>=2026,F35+G34,N(Players!G30))",
+   "value": 6.36072089361114,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "2026"
+   ],
+   "leaf": false
+  },
+  {
+   "depth": 0,
+   "cell": "Interface!F601",
+   "formula": "=IF(Gap!G56=\"\",\"\",Gap!G56)",
+   "value": null,
+   "label": "",
+   "flag": "",
+   "status": "生效",
+   "roots": [
+    "CapexAIModel"
+   ],
+   "leaf": false
+  }
+ ],
+ "act26_readers": [
+  "Compare!D227",
+  "Compare!E227",
+  "Compare!F227",
+  "Compare!G227",
+  "Compare!H227",
+  "Compare!I227",
+  "Compare!J227",
+  "Compare!K227",
+  "Compare!L227",
+  "Compare!M227"
+ ],
+ "flagged": 148,
+ "n_total": 788,
+ "n_campus_flag": 285,
+ "n_effective": 207
+}

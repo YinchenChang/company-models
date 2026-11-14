@@ -168,19 +168,23 @@ def check(path, xlsx=None):
     must, warn = [], []
     secs = [x for x in s.find_all('section') if x.get('id')]
     ids = [x['id'] for x in secs]
+    # 未上市、無市場價格的模型（規格「未上市、無市場價格的模型」一節）：估值章帶 data-unlisted，A 節不要求反向 DCF 章，估值章免圖，G、H 位置不適用
+    unl = s.select_one('section#valuation[data-unlisted]') is not None
+    req_head = [x for x in REQUIRED_HEAD if not (unl and x == 'revdcf')]
+    no_chart = NO_CHART | ({'valuation'} if unl else set())
     # A 章節順序
-    head, tail = ids[:len(REQUIRED_HEAD)], ids[-len(REQUIRED_TAIL):] if len(ids) >= 2 else ids
-    if head != REQUIRED_HEAD:
-        must.append(f'A 章節開頭應為 {REQUIRED_HEAD}，實際 {ids}')
+    head, tail = ids[:len(req_head)], ids[-len(REQUIRED_TAIL):] if len(ids) >= 2 else ids
+    if head != req_head:
+        must.append(f'A 章節開頭應為 {req_head}，實際 {ids}')
     if tail != REQUIRED_TAIL:
         must.append(f'A 章節結尾應為 {REQUIRED_TAIL}，實際 {ids}')
-    for r in REQUIRED_HEAD + REQUIRED_TAIL:
+    for r in req_head + REQUIRED_TAIL:
         if ids.count(r) != 1:
             must.append(f'A 章節 {r} 出現 {ids.count(r)} 次')
     toc = [a.get('href', '').lstrip('#') for a in s.select('nav.toc a')]
     if toc and toc != ids:
         must.append(f'A 目錄順序與章節不一致：目錄 {toc}；章節 {ids}')
-    modules = ids[len(REQUIRED_HEAD):-len(REQUIRED_TAIL)] if len(ids) > 8 else []
+    modules = ids[len(req_head):-len(REQUIRED_TAIL)] if len(ids) > len(req_head) + len(REQUIRED_TAIL) else []
     # B 橫幅
     hn = s.select_one('.hero-note')
     if hn is None:
@@ -233,12 +237,13 @@ def check(path, xlsx=None):
             must.append(f'D 損益表年份欄 {len(years)} 個 < 8（歷史 3＋未來 5）：{sorted(years)}')
     # F 圖表
     for x in secs:
-        if x['id'] in NO_CHART:
+        if x['id'] in no_chart:
             continue
         if not (x.find_all('svg') or x.select('.ttr, .bt, canvas')):
             must.append(f'F 章節 {x["id"]} 沒有圖表')
     # G、H 位置
-    check_position(s, must)
+    if not unl:
+        check_position(s, must)
     # 全頁參數代號（警告）
     main = s.find('main') or s.body
     for x in secs:
