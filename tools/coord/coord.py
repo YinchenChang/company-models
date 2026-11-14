@@ -154,5 +154,8 @@ def stamp(wb, old_ver, new_ver, date):
     RD = wb["README"]
     a1 = RD["A1"].value
     assert isinstance(a1, str) and old_ver in a1, ("README A1 無版號", old_ver)
-    RD["A1"].value = a1.replace(old_ver, new_ver, 1) + (f"；{new_ver}（{date}）：三層協調——Coord 頁並列兩讀數目標價（三層基準協調規則 v1.4 C4；"
+    head = a1.split("；", 1)[0]   # 只改標題段的版號；標題沒有現行版號時（舊檔標題未更新）只在末尾加說明，不動版本沿革
+    if old_ver in head:
+        a1 = head.replace(old_ver, new_ver, 1) + a1[len(head):]
+    RD["A1"].value = a1 + (f"；{new_ver}（{date}）：三層協調——Coord 頁並列兩讀數目標價（三層基準協調規則 v1.4 C4；"
                                                       "Siliconomics v0.19 對帳中年份；tools/coord/），HTML 橫幅與估值章加另一側讀數；既有數值不變")

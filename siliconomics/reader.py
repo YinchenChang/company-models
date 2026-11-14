@@ -84,6 +84,7 @@ ALT_RATIO = {y: NAMES.get(f"SIF_DeployGW_AltRatio_{y}") for y in RECO_YEARS}
 # （只在對帳中年份；其他年份＝1），主引擎情境 B、C 於 CY2027 起產業量 × wta（情境 A＝供給側讀數，不縮放；規則 v1.4 C4、J5）。
 COORD_ALT = os.environ.get("SIL_COORD_ALT") == "1"
 if COORD_ALT:
+    assert os.environ.get("COORD_RUN") == "1", "SIL_COORD_ALT＝1 只能由 tools/coord/alt_run.py 設定（同時設 COORD_RUN＝1）；環境中誤留此變數會讓正式建置讀到另一側比值"
     assert all(v is not None for v in ALT_RATIO.values()), "快照沒有 SIF_DeployGW_AltRatio_<年>（需 Siliconomics v0.19 以後）"
     WTA = {y: (ALT_RATIO[y] if RECO_FLAG[y] == 1 else 1) for y in RECO_YEARS}
     WTA_SRC = f"Siliconomics {VERSION} SIF_DeployGW_AltRatio_<年>（另一側讀數建置；只在對帳中年份）"
