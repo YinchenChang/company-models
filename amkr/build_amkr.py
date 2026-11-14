@@ -338,6 +338,8 @@ DEFP = dict(scn="A", out="out_{y}", sh="sh_{y}", el="el", tri="tri", gpc26="g_pc
             phi="phi", nonop="nonop{y}", tax="tax", fg="fade_g{s}", fm="fade_m{s}")
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["mf"] == "1" and s != "A":   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 顆數 × wta（＝另一側讀數比值）；情境 A＝供給側讀數不縮放
+        P["mf"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     p = lambda k, y=None: P[k].format(y=(y % 100 if y else ""), s=s)
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -426,6 +428,8 @@ def engine(ws, r0, title, **over):
     return R
 
 # ---------------- PL ----------------
+import json as _json
+_SENS_OV = _json.loads(os.environ.get("AMKR_P", "{}")) if os.environ.get("AMKR_SENS") == "1" else {}   # sens_amkr.py 整本重算快照：三情境同時套用案例覆寫（正式建置不設）
 PL = wb.create_sheet("PL")
 PL["A1"] = "PL — Amkor 損益（百萬美元；EPS 美元、稀釋；歸屬母公司）。FY2025A 實績、FY2026 錨點（1H26 實績＋3Q26 指引＋4Q26 假設；三情境相同），FY2027 起為模型。FY(t)＝CY(t)。三情境各一個完整推導區塊（本頁下方），頂端為摘要"
 PB = {}; r0 = 60
@@ -433,7 +437,7 @@ SCN_T = {"A": "情境 A：顆數基準；通訊 FY2027 +3%、之後 +4%；亞利
          "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85；通訊 FY2027 0%、之後 +3%；亞利桑那 100／400",
          "C": "情境 C：CY2028–29 顆數 ×0.6；通訊 FY2027 −6%、之後 0%（Apple 分散供應）；亞利桑那 50／250"}
 for s in SC:
-    PB[s] = engine(PL, r0, SCN_T[s], scn=s)
+    PB[s] = engine(PL, r0, SCN_T[s], scn=s, **_SENS_OV)
     r0 = PB[s]["end"] + 2
 hdr(PL, 3, ["情境／項目", "單位", "FY2025A", "FY2026（錨點）", "FY2027", "FY2028", "FY2029", "FY2030（收斂）", "FY2031（收斂）", "FY2032（收斂）", "說明"])
 sr = 4; SUMR = {}
@@ -960,6 +964,15 @@ RD.cell(r, 1, XF("每股值多少？答：加權目標價約 ", (f'TEXT({_B("tpw
 r += 1
 RD.cell(r, 1, "展示層輔助：Comparable 目標價（相對倍數調整後）的上檔空間（HTML 估值表用；加權目標價使用的 Comparable 即此值）")
 RD.cell(r, 2, "=tp_comp_adj/px-1").number_format = "0.0%"
+# 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 amkr/coord_alt.json）；v0.4.4 起版面 v1.3、C0 實績（amkr/v044_post.py）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD
+if COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL):
+    COORD.stamp(wb, "v0.4.3", "v0.4.4", "2026-11-14")
+if os.environ.get("AMKR_SENS") != "1":
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import v044_post as V44
+    print(V44.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL))
 wb.save(sys.argv[1])
 if os.environ.get("AMKR_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
