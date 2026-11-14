@@ -425,7 +425,7 @@ def write_c0(ws, wb, r, L):
     r_comp, r_net = fr("運算營收（Σ", rb0), fr("NVIDIA 網通營收", rb0)
     SUBT = "同一缺口的分項，不另計"
     F2a = r
-    def f2(item, y, unit, mv, sv, mfmt, mdesc, mtag, sdesc, stag, judge=True, sub=False, main=False):
+    def f2(item, y, unit, mv, sv, mfmt, mdesc, mtag, sdesc, stag, judge=True, sub=False, main=False, status=None):
         nonlocal r
         ws.cell(r, 1, item); ws.cell(r, 2, y); ws.cell(r, 3, unit)
         ws.cell(r, 4, mv).number_format = mfmt
@@ -433,7 +433,7 @@ def write_c0(ws, wb, r, L):
         numeric = not isinstance(sv, str) or sv.startswith("=")
         if judge and numeric:
             ws.cell(r, 6, f"=D{r}/E{r}-1").number_format = GAP
-            ws.cell(r, 7, f'=IF(ABS(F{r})>{TOL},"{SUBT if sub else "對帳中"}","一致")')
+            ws.cell(r, 7, status if status else f'=IF(ABS(F{r})>{TOL},"{SUBT if sub else "對帳中"}","一致")')   # v0.3.10：status 給定者不判定（同源或實績＋指引混合），判定改由 F3 C0（實績）表
         else:
             ws.cell(r, 6, "—"); ws.cell(r, 7, "不判定（口徑不同）" if numeric else "無可比的層級量")
         ws.cell(r, 8, mdesc); ws.cell(r, 9, mtag); ws.cell(r, 10, sdesc); ws.cell(r, 11, stag); r += 1
@@ -447,29 +447,29 @@ def write_c0(ws, wb, r, L):
     # (0) 唯一的對帳項目：認列係數校準缺口（對帳中判定只算一次）
     f2("營收校準認列係數缺口：Siliconomics 由下而上推得的 NVIDIA 顆數與營收高於公司錨點", "FY2027 錨點校準", "x（本模型 ÷ 層級）", "=k_rec", 1, "0.000",
        "認列係數 k_rec＝公司 FY2027 資料中心營收錨點 ÷ 未校準由下而上營收（Derived）；Recon 頁 B 節。差距＝k_rec − 1；層級值＝1 表示層級顆數、每顆內容照單全收", "Derived（錨點為公司實績，Verified／Assumed）",
-       f"{SL}：NVIDIA 平台顆數（賣方與研調估計）與 R4 隱含營收（n5 比值：CY2026＝{NVD_I[2026] / NVD_C[2026]:.3f}、CY2027＝{NVD_I[2027] / NVD_C[2027]:.3f}，未加權即高於公司值約 {100 * (NVD_I[2026] / NVD_C[2026] - 1):.0f}–{100 * (NVD_I[2027] / NVD_C[2027] - 1):.0f}%；FY 月數加權後 FY2027 高約 {100 * ((11 / 12 * NVD_I[2026] + NVD_I[2027] / 12) / NVD_C[2026] - 1):.0f}%）", "Interested-party／Derived", main=True)
+       f"{SL}：NVIDIA 平台顆數（賣方與研調估計）與 R4 隱含營收（n5 比值：CY2026＝{NVD_I[2026] / NVD_C[2026]:.3f}、CY2027＝{NVD_I[2027] / NVD_C[2027]:.3f}，未加權即高於公司值約 {100 * (NVD_I[2026] / NVD_C[2026] - 1):.0f}–{100 * (NVD_I[2027] / NVD_C[2027] - 1):.0f}%；FY 月數加權後 FY2027 高約 {100 * ((11 / 12 * NVD_I[2026] + NVD_I[2027] / 12) / NVD_C[2026] - 1):.0f}%）", "Interested-party／Derived", main=True, status="參考（實績＋指引混合，不判定；判定見 F3）")
     # (1) 市場層顆數（讀同一份）
     for y in YEARS:
         f2("NVIDIA 平台顆數（市場層，認列係數前）", f"CY{y}", "百萬顆", "=" + u_m(y), "=" + C1(PL_, y), "0.000",
-           "In 頁 u_bw／rb／ru／hp（markets/memory UNITS ← 台積電模型 In 頁）；2029＝2028 ×（1＋g29，Assumed）；日曆年", "Interested-party", SU + "；原始顆數（未乘基準係數）；日曆年", st_u)
+           "In 頁 u_bw／rb／ru／hp（markets/memory UNITS ← 台積電模型 In 頁）；2029＝2028 ×（1＋g29，Assumed）；日曆年", "Interested-party", SU + "；原始顆數（未乘基準係數）；日曆年", st_u, status="讀取層級（同源，不判定）")
     # (2) 營收校準等值顆數（情境 B）vs 基準顆數（FY 月數加權）：差距來源＝認列係數校準缺口
     for y, c in zip(YEARS, "DEFG"):
         f2("營收校準等值顆數（情境 B；非實體顆數）vs Siliconomics 基準 NVIDIA 平台顆數（FY 月數加權）", f"FY{y + 1}（CY{y}）", "百萬顆", f"=PL!{c}{r_nvu}", "=" + fy_w(y), "0.000",
            "PL 頁情境 B：k_rec × 市場層顆數 × 基準係數（市場層已依 FY 月數加權）。是為對上公司營收錨點而校準出的等值顆數，不是實體出貨顆數；與層級值的差距＝認列係數校準缺口（k_rec − 1），不是新證據", "Derived（由營收錨點反推）",
-           SU + " × SIF_UnitsCoef_Base，換成同一 FY 月數加權口徑：FY(t+1)＝" + "11/12 × CY(t)＋1/12 × CY(t+1)" + ("（FY2030 缺 CY2030 層級值，只用 CY2029；本列差距仍等於認列係數 − 1，與是否加權無關）" if y == 2029 else ""), st_u, sub=True)
+           SU + " × SIF_UnitsCoef_Base，換成同一 FY 月數加權口徑：FY(t+1)＝" + "11/12 × CY(t)＋1/12 × CY(t+1)" + ("（FY2030 缺 CY2030 層級值，只用 CY2029；本列差距仍等於認列係數 − 1，與是否加權無關）" if y == 2029 else ""), st_u, sub=True, status="參考（認列係數缺口的分項，不判定）")
     # (3) 資料中心營收：同一缺口的分項
     f2("資料中心營收 FY2027 錨點 vs R4 公司錨點（同一輸入）", "FY2027（CY2026）", "US$B", "=a27_dc", "=" + C1(CMP, 2026), "#,##0.0",
        "Q 頁 FY2027 錨點＝Q1、Q2 公司實績＋Q3 指引中點＋Q4 假設（Q!K5）", "Verified／Assumed（Q4 為假設）",
-       f"{SL} Recon 快照 nv_dc.company（R4 橋接 r11 n4＝nv_dc_26）", "Verified／Assumed")
+       f"{SL} Recon 快照 nv_dc.company（R4 橋接 r11 n4＝nv_dc_26）", "Verified／Assumed", status="讀取層級（同源，不判定）")
     f2("資料中心營收 FY2027 錨點 vs Siliconomics 隱含（FY 月數加權；R4 n5 比值的另一面，不是個股新證據）", "FY2027（CY2026／CY2027 加權）", "US$B", "=a27_dc", f"={WC}*{C1(IMP, 2026)}+(1-{WC})*{C1(IMP, 2027)}", "#,##0.0",
        "同上（公司實績加指引的錨點）", "Verified／Assumed",
-       f"{SL} Recon 快照 nv_dc.implied（R4 n3）換成 FY 月數加權：11/12 × CY2026＋1/12 × CY2027；R4 本身以 FY2027≈CY2026 比（差距 −16%，口徑差約 4 個百分點）", "Derived（顆數、每 GW 內容多屬 Interested-party）", sub=True)
+       f"{SL} Recon 快照 nv_dc.implied（R4 n3）換成 FY 月數加權：11/12 × CY2026＋1/12 × CY2027；R4 本身以 FY2027≈CY2026 比（差距 −16%，口徑差約 4 個百分點）", "Derived（顆數、每 GW 內容多屬 Interested-party）", sub=True, status="參考（實績＋指引混合，不判定；判定見 F3）")
     f2("資料中心營收 FY2028 公司指引推得 vs R4 公司值", "FY2028（CY2027）", "US$B", "=a27_dc*(1+g28_gr)", "=" + C1(CMP, 2027), "#,##0.0",
        "FY2027 錨點 ×（1＋公司 FY2028 營收年增指引 70%）；假設資料中心占比同 FY2027", "Interested-party（指引二手報導）",
-       f"{SL} Recon 快照 nv_dc.company（nv_dc_27＝FY2028 營收約 +70% × 資料中心 92.5%）", "Derived（Interested-party 指引）")
+       f"{SL} Recon 快照 nv_dc.company（nv_dc_27＝FY2028 營收約 +70% × 資料中心 92.5%）", "Derived（Interested-party 指引）", status="讀取層級（同源，不判定）")
     f2("資料中心營收 FY2028 情境 B（運算＋網通）vs Siliconomics 隱含（未加權）", "FY2028（CY2027）", "US$B", f"=PL!E{r_comp}+PL!E{r_net}", "=" + C1(IMP, 2027), "#,##0.0",
        "PL 頁情境 B：運算營收（認列顆數 × 每顆售價）＋網通營收（中國為 0）", "Derived（情境 B 為模型基準）",
-       f"{SL} Recon 快照 nv_dc.implied（n1 × n2，VR200 2027 HBM 價內容）；缺 CY2028 層級值故未做 FY 月數加權，FY2028 有 1/12 屬 CY2028，口徑差預期約 1–2 個百分點", "Derived（顆數、每 GW 內容多屬 Interested-party）", sub=True)
+       f"{SL} Recon 快照 nv_dc.implied（n1 × n2，VR200 2027 HBM 價內容）；缺 CY2028 層級值故未做 FY 月數加權，FY2028 有 1/12 屬 CY2028，口徑差預期約 1–2 個百分點", "Derived（顆數、每 GW 內容多屬 Interested-party）", sub=True, status="參考（無實績，模型預測；不判定）")
     f2("資料中心營收 FY2029（CY2028）情境 B", "FY2029（CY2028）", "US$B", f"=PL!F{r_comp}+PL!F{r_net}", "無可比的層級量", "#,##0.0",
        "PL 頁情境 B FY2029 運算＋網通（FY2030 以後見 PL 頁）", "Derived", f"{SL} R4 橋接 nv_dc 對帳點只到 CY2027（Recon 快照 implied 2028、2029＝空）；CY2028 以後只能靠上列顆數對帳", "—")
     # (4) 模組價 vs Tokenomics 機架價
@@ -483,15 +483,68 @@ def write_c0(ws, wb, r, L):
     f2("產業部署 GW 與 NVIDIA 成本等值 GW", "CY2026–2029", "GW", "不自建（只讀 Siliconomics）", "無可比的層級量", "0.0",
        "本模型以顆數建模，GW 只經 F1 的 Z 節讀入並用於兩讀數比值", "—", "R4 橋接 n1（NVIDIA 成本等值 GW）未進 Recon 快照，無法對帳", "—")
     F2b = r - 1
-    ws.cell(r, 1, "對帳中項目數（差距超過門檻；同一缺口只算一次）"); ws.cell(r, 4, f'=COUNTIF(G{F2a}:G{F2b},"對帳中")'); RF_n = r; r += 1
-    ws.cell(r, 1, "同一缺口的分項數（不另計）"); ws.cell(r, 4, f'=COUNTIF(G{F2a}:G{F2b},"{SUBT}")'); RF_sub = r; r += 1
-    ws.cell(r, 1, "有判定的項目數（一致＋對帳中；分項不計）"); ws.cell(r, 4, f'=COUNTIF(G{F2a}:G{F2b},"一致")+COUNTIF(G{F2a}:G{F2b},"對帳中")'); RF_j = r; r += 1
-    ws.cell(r, 1, "對帳摘要（HTML 用）")
-    ws.cell(r, 4, f'="由下往上對帳：有判定 "&D{RF_j}&" 項、對帳中 "&D{RF_n}&" 項（差距超過 ±"&TEXT({TOL},"0%")&"）。唯一的對帳中項目是營收校準認列係數缺口（認列係數 "&TEXT(k_rec,"0.000")&"，即 Siliconomics 由下而上推得的 NVIDIA 顆數與營收高於公司錨點：顆數面認列係數比層級值低 "&TEXT(1-k_rec,"0%")&"，R4 營收面隱含值（FY 月數加權）高於公司錨點約 "&TEXT(({WC}*{C1(IMP, 2026)}+(1-{WC})*{C1(IMP, 2027)})/a27_dc-1,"0%")&"；未加權的 R4 比值為 "&TEXT({C1(IMP, 2026)}/{C1(CMP, 2026)}-1,"0%")&"／"&TEXT({C1(IMP, 2027)}/{C1(CMP, 2027)}-1,"0%")&"）；營收校準等值顆數與資料中心營收的 "&D{RF_sub}&" 列差距是同一缺口的分項，不另計。市場層顆數、公司錨點與指引推得值與 Siliconomics 一致。個股不裁決，不改上游值；證據回饋走對帳單（C5）。"'); RF_s = r; r += 1
-    ws.cell(r, 1, "讀法：營收校準等值顆數＝營收校準係數 × Siliconomics 顆數，所以顆數差距必然等於係數 − 1（循環，不是獨立證據）；資料中心營收的差距是 Siliconomics 內部 R4 的 n5 比值（本模型錨點＝R4 公司值）。證據方向（公司實績 vs 賣方與研調估計）依規則 C0 第 1 點由主控依對帳單處理；層級值已換成與本模型相同的 FY 月數加權口徑（FY2028 營收與 FY2030 顆數因缺後一年層級值未加權；FY2030 顆數差距仍等於係數 − 1，FY2028 營收口徑差預期約 1–2 個百分點）。")
-    return {"F1": (F1a, F1b), "F1chk": RF_chk, "F2h": RF_h, "F2": (F2a, F2b), "n": RF_n, "sum": RF_s}
+    ws.cell(r, 1, "對帳中項目數（C0 實績表 F3 的判定；F2 各列自 v0.3.10 起不判定、不計）"); RF_n = r; r += 1
+    ws.cell(r, 1, "F2 參考列數（實績＋指引混合、無實績預測或分項；不判定）"); ws.cell(r, 4, f'=COUNTIF(G{F2a}:G{F2b},"參考*")'); RF_sub = r; r += 1
+    ws.cell(r, 1, "F2 讀取層級列數（同源，不判定、不計入對帳）"); ws.cell(r, 4, f'=COUNTIF(G{F2a}:G{F2b},"讀取層級*")'); RF_rd = r; r += 1
+    ws.cell(r, 1, "有判定的項目數（F3 的 C0（實績）判定；F2 的一致／對帳中判定已移除）"); RF_j = r; r += 1
+    ws.cell(r, 1, "對帳摘要（HTML 用）"); RF_s = r; r += 1
+    ws.cell(r, 1, "讀法：F2 各列自 v0.3.10 起都不判定（規則 v1.4.2 C0 第 2 點：個股側須為公司實績，同源值與指引不是實績）。「營收校準等值顆數」＝營收校準係數 × Siliconomics 顆數，所以差距必然等於係數 − 1（循環，不是獨立證據）；資料中心營收各列的錨點含 Q3 指引與 Q4 假設，不算實績。唯一的 C0 判定在 F3，只用已公布季度實績。層級值已換成與本模型相同的 FY 月數加權口徑（FY2028 營收與 FY2030 顆數因缺後一年層級值未加權）。")
+    RF_read = r; r += 2
 
-VER = "0.3.9"
+    # ---------- F3：C0（實績）----------
+    ws.cell(r, 1, "F3. C0（實績）：公司已公布實績 vs Siliconomics 層級隱含值（規則 v1.4.2 C0 第 2 點；工作單 2026-11-14「C0 實績對帳補列」）").font = BOLD; F3h = r; r += 1
+    ws.cell(r, 1, "方法：個股側只用已公布期間的公司實績（FY2027 Q1、Q2＝2026-02～2026-07 的資料中心營收，8-K 新聞稿；Q3 於 2026-11-19 才公布，不用；指引與 Q4 假設不算實績）。層級側＝Siliconomics R4 橋接 n3 隱含 NVIDIA 資料中心營收 CY2026（NVIDIA 成本等值 GW × 每 IT GW NVIDIA 營收），"
+                  "做同期間換算：主讀數＝已公布期間累計實績 vs 層級 CY2026 × 已公布月數 ÷ 12（線性時差近似，Derived）；第二讀數＝最近一季 × 4 vs 層級 CY2026。成長年中主讀數偏低、第二讀數偏高，兩者夾住真值。"
+                  "判定：兩讀數差距都超過 ±門檻且同號＝對帳中；只有一個超過＝時差邊界（參考）；都在內＝一致。"); r += 1
+    hdr(r, ["項目", "期間／口徑", "單位", "公司實績", "層級隱含（同期間換算）", "差距 %", "狀態／判定", "公司實績口徑與出處", "公司實績等級", "層級口徑與出處", "層級等級"]); F3hh = r; r += 1
+    F3a = r
+    PRU = "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-"
+    def inrow(item, per, unit, val, fmt, src, tag, lsrc="", ltag="", blue=False):
+        nonlocal r
+        ws.cell(r, 1, item); ws.cell(r, 2, per); ws.cell(r, 3, unit); ws.cell(r, 4, val).number_format = fmt
+        if blue: ws.cell(r, 4).font = BLUE
+        ws.cell(r, 8, src); ws.cell(r, 9, tag); ws.cell(r, 10, lsrc); ws.cell(r, 11, ltag); r += 1; return r - 1
+    rq1 = inrow("資料中心營收 FY2027 Q1（公司實績）", "2026-02～2026-04（季底 2026-04-26）", "US$B", "=Q!G5", "#,##0.0",
+                "NVIDIA 8-K 新聞稿「NVIDIA Announces Financial Results for First Quarter Fiscal 2027」（nvidianews.nvidia.com，2026-05 發布；Q 頁 G5；公司揭露四捨五入到 0.1）", "Verified")
+    rq2 = inrow("資料中心營收 FY2027 Q2（公司實績）", "2026-05～2026-07（季底 2026-07-26）", "US$B", "=Q!H5", "#,##0.0",
+                "NVIDIA 8-K 新聞稿「NVIDIA Announces Financial Results for Second Quarter Fiscal 2027」（nvidianews.nvidia.com，2026-08 發布；Q 頁 H5；本次另以網頁原文確認 89.0；10-Q 未取得）", "Verified")
+    rmo = inrow("已公布月數", "FY2027 Q1＋Q2", "月", 6, "0", "2026-02～2026-07（FY2027 Q3 於 2026-11-19 才公布，不用）", "Verified", blue=True)
+    rim = inrow("層級隱含 NVIDIA 資料中心營收 CY2026", "CY2026（出貨年）", "US$B", "=" + C1(IMP, 2026), "#,##0.0", "",
+                "", f"{SL} Recon 快照 nv_dc.implied（R4 橋接 n3＝n1 NVIDIA 成本等值 GW × n2 每 IT GW NVIDIA 營收；連 F1 列）", "Derived（顆數、每 GW 內容多屬 Interested-party）")
+    rd1 = r
+    ws.cell(r, 1, "主讀數：已公布期間累計實績 vs 層級 CY2026 × 已公布月數 ÷ 12"); ws.cell(r, 2, "FY2027 Q1＋Q2（2026-02～2026-07）累計"); ws.cell(r, 3, "US$B")
+    ws.cell(r, 4, f"=D{rq1}+D{rq2}").number_format = "#,##0.0"; ws.cell(r, 5, f"=D{rim}*D{rmo}/12").number_format = "#,##0.0"
+    ws.cell(r, 6, f"=D{r}/E{r}-1").number_format = GAP; ws.cell(r, 7, f'=IF(ABS(F{r})>{TOL},"超過門檻","門檻內")')
+    ws.cell(r, 8, "Q1＋Q2 公司實績累計（8-K）"); ws.cell(r, 9, "Verified"); ws.cell(r, 10, "層級 CY2026 隱含值 × 6 ÷ 12（線性時差近似；成長年中偏低）"); ws.cell(r, 11, "Derived"); r += 1
+    rd2 = r
+    ws.cell(r, 1, "第二讀數：最近一季（Q2）× 4 vs 層級 CY2026"); ws.cell(r, 2, "FY2027 Q2（2026-05～2026-07）年化"); ws.cell(r, 3, "US$B")
+    ws.cell(r, 4, f"=D{rq2}*4").number_format = "#,##0.0"; ws.cell(r, 5, f"=D{rim}").number_format = "#,##0.0"
+    ws.cell(r, 6, f"=D{r}/E{r}-1").number_format = GAP; ws.cell(r, 7, f'=IF(ABS(F{r})>{TOL},"超過門檻","門檻內")')
+    ws.cell(r, 8, "Q2 公司實績 × 4（8-K；成長年中偏高）"); ws.cell(r, 9, "Verified／Derived"); ws.cell(r, 10, "層級 CY2026 隱含值（全年）"); ws.cell(r, 11, "Derived"); r += 1
+    rjd = r
+    ws.cell(r, 1, "C0（實績）判定").font = BOLD; ws.cell(r, 2, "兩讀數都超過門檻且同號＝對帳中")
+    ws.cell(r, 7, f'=IF(AND(ABS(F{rd1})>{TOL},ABS(F{rd2})>{TOL},SIGN(F{rd1})=SIGN(F{rd2})),"對帳中",IF(OR(ABS(F{rd1})>{TOL},ABS(F{rd2})>{TOL}),"時差邊界（參考）","一致"))')
+    r += 1
+    F3b = r - 1
+    # 主計數與摘要（回填）
+    ws.cell(RF_n, 4, f'=IF(G{rjd}="對帳中",1,0)'); ws.cell(RF_j, 4, f'=IF(OR(G{rjd}="對帳中",G{rjd}="一致"),1,0)+COUNTIF(G{F2a}:G{F2b},"一致")+COUNTIF(G{F2a}:G{F2b},"對帳中")')
+    ws.cell(RF_s, 4, f'="C0（實績）對帳：公司已公布實績（FY2027 Q1、Q2 資料中心營收合計 US$"&TEXT(D{rd1},"0.0")&"B；Q2 年化 US$"&TEXT(D{rd2},"0.0")&"B）比層級 CY2026 隱含值（US$"&TEXT(D{rim},"0.0")&"B；同期間換算 US$"&TEXT(E{rd1},"0.0")&"B）低 "&TEXT(-F{rd1},"0%")&"（主讀數）、低 "&TEXT(-F{rd2},"0%")&"（第二讀數）；判定："&G{rjd}&"（門檻 ±"&TEXT({TOL},"0%")&"）。個股不裁決，不改上游值；證據回饋走對帳單（C5）。F2 既有各列（讀取層級、實績＋指引混合錨點、模型預測）自本版起不判定，不計入對帳中。"')
+    r += 1
+    RF3N = r
+    ws.cell(r, 1, "F3 與 F2 既有「營收校準認列係數缺口」列的關係")
+    ws.cell(r, 2, f'="F2 該列比較的是認列係數（"&TEXT(k_rec,"0.000")&"，缺口 "&TEXT(k_rec-1,"+0.0%;-0.0%")&"）與 1：認列係數＝FY2027 錨點 ÷ 未校準由下而上營收，而錨點 US$"&TEXT(a27_dc,"0.0")&"B 只有 "&TEXT((D{rq1}+D{rq2})/a27_dc,"0%")&" 是已公布實績（Q1＋Q2），其餘是 Q3 指引中點與 Q4 假設；指引與假設不算實績（規則 v1.4.2 C0 第 2 點），所以該列自 v0.3.10 起改標參考、不判定，列保留。F3 取代它做判定：只用 Q1、Q2 實績，主讀數與第二讀數與該列缺口同方向（個股實績低於層級隱含）。對帳中計數只算 F3 一次，F2 該列與其分項列不再計。"')
+    r += 1
+    RF3S = r
+    ws.cell(r, 1, "F3 同源檢查（哪些部分同源、什麼會消去、這張表實際檢驗什麼）")
+    ws.cell(r, 2, "同源檢查：（一）本模型沒有把任何校準值寫入 Siliconomics：認列係數 認列係數、FY2027 錨點與份額都只留在本模型。層級隱含值 n3＝n1（SIF_DeployGW_Base 減非 NVIDIA 成本等值 GW；顆數 × 每顆 IT capex ÷ 每 GW IT capex）× n2（晶片內容橋接表 v0.2.3 的每 IT GW NVIDIA 營收，由 Tokenomics 機架價往下推），不含 認列係數，也不含任何 FY2027 實績。"
+                 "Siliconomics R4 的公司值 n4（375.46）是本模型錨點的複本，只用於 n4–n9 對照列與 2025 年出貨換算，不進 n3。"
+                 "（二）共用上游但不是校準：顆數（markets/memory UNITS，兩邊同一份）、Tokenomics 機架價經 晶片內容橋接表 往下推（本模型 GPU 模組價 Blackwell、Rubin 的 GPU 模組價 與 Siliconomics n2 同一上游）。這些共用輸入沒有用公司實績校準過。"
+                 "（三）F2 該列的缺口＝錨點 ÷ 本模型由下而上營收 − 1，層級值固定為 1，本模型由下而上營收與層級共用顆數與機架價，所以它檢驗的是含指引的錨點對本模型自己的由下而上，不是公司實績對層級。F3 不用 認列係數 或校準後營收，直接用公司已公布實績對 Siliconomics 未校準隱含值，共用的顆數與機架價不消去，所以不是恆等式，有檢驗力。"
+                 "（四）這張表實際檢驗的是：Siliconomics 的顆數與機架級每 GW 內容（Tokenomics 路徑）能不能產出公司已公布的資料中心營收；它不能拆出差距來自顆數、每 GW 內容、GW 換算，還是出貨與認列的時差。結論：F3 的層級側與本模型實績不同源，判定計入。")
+    r += 1
+    return {"F1": (F1a, F1b), "F1chk": RF_chk, "F2h": RF_h, "F2": (F2a, F2b), "n": RF_n, "sum": RF_s, "F3": (F3h, F3hh, F3a, F3b, rd1, rd2, rjd, RF3N, RF3S, RF_read)}
+
+VER = "0.3.10"
 NOTE_VER = "0.3.8"   # In 頁既有說明欄的版本字樣維持 v0.3.8（本版只新增 Coord 頁 F 節）
 
 
@@ -514,7 +567,7 @@ def stamp(wb):
     a1 = RD["A1"].value
     assert "個股模型 v0.3.7" in a1, a1[:80]
     RD["A1"].value = a1.replace("個股模型 v0.3.7", f"個股模型 v{VER}", 1).replace(
-        "標準損益表、反向 DCF 頁）", f"標準損益表、反向 DCF 頁）；v0.3.8：三層協調——對帳中標示與兩讀數目標價（規則 v1.4 C4；Coord 頁、In 頁 Z 節；基準數值不變）；v{VER}：Coord 頁新增 F 節「三層協調：讀取層級與 C0 由下往上對帳」（只新增；數值不變）", 1)
+        "標準損益表、反向 DCF 頁）", f"標準損益表、反向 DCF 頁）；v0.3.8：三層協調——對帳中標示與兩讀數目標價（規則 v1.4 C4；Coord 頁、In 頁 Z 節；基準數值不變）；v0.3.9：Coord 頁新增 F 節「三層協調：讀取層級與 C0 由下往上對帳」（只新增；數值不變）；v{VER}：Coord 頁 F3 新增「C0（實績）」（公司已公布實績 vs 層級隱含值），F2 既有列改標讀取層級／參考、不判定（只新增與改標；數值不變）", 1)
     return f"build_id {old} → {new}（{n} 格）"
 
 

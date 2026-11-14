@@ -6642,13 +6642,138 @@
     },
     {
      "type": "h3",
-     "text": "三層協調：讀取層級與由下往上對帳"
+     "text": "實績對帳：公司已公布實績對層級隱含值"
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!D150"
+      "@Coord!D151"
      ]
+    },
+    {
+     "type": "table",
+     "caption": "@Coord!A154",
+     "head": [
+      "讀數",
+      "期間／口徑",
+      "公司實績（US$B）",
+      "層級隱含（US$B）",
+      "差距",
+      "狀態／判定"
+     ],
+     "rows": [
+      [
+       "@Coord!A161",
+       "@Coord!B161",
+       "@Coord!D161|n1",
+       "@Coord!E161|n1",
+       "@Coord!F161|sp1",
+       "@Coord!G161"
+      ],
+      [
+       "@Coord!A162",
+       "@Coord!B162",
+       "@Coord!D162|n1",
+       "@Coord!E162|n1",
+       "@Coord!F162|sp1",
+       "@Coord!G162"
+      ],
+      [
+       "@Coord!A163",
+       "@Coord!B163",
+       "",
+       "",
+       "",
+       "@Coord!G163"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "展開：實績對帳的輸入、口徑、出處與證據等級",
+     "collapse": true,
+     "summary": "展開：實績對帳的輸入、出處與證據等級",
+     "head": [
+      "項目",
+      "期間／口徑",
+      "數值",
+      "公司實績口徑與出處",
+      "公司實績等級",
+      "層級口徑與出處",
+      "層級等級"
+     ],
+     "rows": [
+      [
+       "@Coord!A157",
+       "@Coord!B157",
+       "@Coord!D157|n1",
+       "@Coord!H157",
+       "@Coord!I157",
+       "@Coord!J157",
+       "@Coord!K157"
+      ],
+      [
+       "@Coord!A158",
+       "@Coord!B158",
+       "@Coord!D158|n1",
+       "@Coord!H158",
+       "@Coord!I158",
+       "@Coord!J158",
+       "@Coord!K158"
+      ],
+      [
+       "@Coord!A159",
+       "@Coord!B159",
+       "@Coord!D159|n1",
+       "@Coord!H159",
+       "@Coord!I159",
+       "@Coord!J159",
+       "@Coord!K159"
+      ],
+      [
+       "@Coord!A160",
+       "@Coord!B160",
+       "@Coord!D160|n1",
+       "@Coord!H160",
+       "@Coord!I160",
+       "@Coord!J160",
+       "@Coord!K160"
+      ],
+      [
+       "@Coord!A161",
+       "@Coord!B161",
+       "@Coord!D161|n1",
+       "@Coord!H161",
+       "@Coord!I161",
+       "@Coord!J161",
+       "@Coord!K161"
+      ],
+      [
+       "@Coord!A162",
+       "@Coord!B162",
+       "@Coord!D162|n1",
+       "@Coord!H162",
+       "@Coord!I162",
+       "@Coord!J162",
+       "@Coord!K162"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!B166"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!B165"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "三層協調：讀取層級與由下往上對帳（參考列；不判定）"
     },
     {
      "type": "table",
@@ -6971,7 +7096,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!A151"
+      "@Coord!A152"
      ]
     },
     {
