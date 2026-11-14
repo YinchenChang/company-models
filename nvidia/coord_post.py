@@ -120,7 +120,7 @@ def write_inputs(wb, SIL):
                 if not C["supply"]: continue
                 row[4].value = f"=co_gws_{yy}/(co_gwb_{yy}/co_ucoef_{yy})"; src = f"{C['src_supply']} ÷ 原始顆數 GW（In 頁 Z 節）"
             row[6].value = "Derived"
-            row[8].value = f"Siliconomics 三層協調（NVIDIA v{VER}）：改讀 {src}；原值 {old}（Assumed，原說明：{row[8].value or ''}）"
+            row[8].value = f"Siliconomics 三層協調（NVIDIA v{NOTE_VER}）：改讀 {src}；原值 {old}（Assumed，原說明：{row[8].value or ''}）"
     return C
 
 
@@ -338,10 +338,141 @@ def write_sheet(wb, C):
         ws.cell(r, 1, f"快照所用比值 − 現行比值 CY{y}（應為 0）"); ws.cell(r, 2, f"={A['ratio'][str(y)]}-co_r_{y % 100}").number_format = "0.000000"; chk.append(f"ABS(B{r})<1E-9"); r += 1
     ws.cell(r, 1, "快照的現行基準加權目標價 − 本檔加權目標價（應為 0）"); ws.cell(r, 2, f"={A['base']['tp']}-B{RB['tp']}").number_format = "0.000000"; chk.append(f"ABS(B{r})<0.005"); r += 1
     RC["state"] = r; ws.cell(r, 1, "另一側讀數快照狀態").font = BOLD; ws.cell(r, 2, f'=IF(AND({",".join(chk)}),"CURRENT","STALE")'); r += 1
-    return {"RA": RA, "RB": RB, "RC": RC, "RE": RE}
+    r += 1
+    RF = write_c0(ws, wb, r, L)
+    return {"RA": RA, "RB": RB, "RC": RC, "RE": RE, "RF": RF}
 
 
-VER = "0.3.8"
+
+def write_c0(ws, wb, r, L):
+    """F 節（v0.3.9）：三層協調——讀取層級與 C0 由下往上對帳（只新增；個股不裁決、不改上游值）。
+    F1 逐項列出本模型讀的 Siliconomics 名稱、值、版本與 Tokenomics 鏡像值；F2 本模型自己的量 vs Siliconomics 對應值（差距超過 ±15% 標「對帳中」）。"""
+    import reader as SIL   # Siliconomics 快照（與 build_nvidia 同一份）
+    N, V = SIL.NAMES, SIL.VERSION
+    TKV = "Tokenomics v21.10"   # Siliconomics v0.19 鏡像的 Tokenomics 版本（siliconomics/CHANGELOG v0.19 標題）
+    rp = os.path.join(os.path.dirname(os.path.abspath(SIL.__file__)), "data", f"recon_snapshot_{V}.json")
+    NVD = json.load(open(rp, encoding="utf-8"))["markets"]["nv_dc"]
+    NVD_I = dict(zip(NVD["years"], NVD["implied"])); NVD_C = dict(zip(NVD["years"], NVD["company"]))
+    yy = lambda y: y % 100
+    ix = lambda y: y - 2025   # 年度陣列：[None, 2026, 2027, 2028, 2029]
+    GAP = '+0.0%;-0.0%'
+    def hdr(row, cols):
+        for j, h in enumerate(cols, 1): ws.cell(row, j, h).font = BOLD
+    ws.cell(r, 1, f"F. 三層協調：讀取層級與 C0 由下往上對帳（三層基準協調規則 v1.4 C0、C4、C5；Siliconomics {V}、{TKV} 鏡像；只新增，不改任何上游值或既有格）").font = BOLD; r += 1
+    ws.cell(r, 1, "層級：Tokenomics（權威：每 GW 顆數、機架價）→ Wattonomics（產業部署 GW）→ Siliconomics（行業變數；本模型只讀它）→ 個股。下游只註明版本、不自行重估（Instructions 第 3 條）；"
+                  "差距超過門檻者標「對帳中」，個股不裁決、不改上游，證據回饋走對帳單（C5）。"); r += 2
+    ws.cell(r, 1, "F1. 本模型讀取的 Siliconomics 名稱、值與版本").font = BOLD; r += 1
+    hdr(r, ["名稱／項目", "年度", f"層級值（Siliconomics {V} 快照）", "本模型採用值（讀取格）", "採用 − 層級值（應為 0）", "單位", "層級與版本", "讀取方式與說明"]); r += 1
+    F1a = r
+    def f1(name, y, val, cell, unit, layer, how, fmt="0.000"):
+        nonlocal r
+        ws.cell(r, 1, name); ws.cell(r, 2, y if isinstance(y, str) else f"CY{y}")
+        ws.cell(r, 3, val).number_format = fmt
+        if cell is not None:
+            ws.cell(r, 4, cell).number_format = fmt
+            ws.cell(r, 5, f"=D{r}-C{r}").number_format = "0.000000"
+        else:
+            ws.cell(r, 4, "不直接讀取")
+        ws.cell(r, 6, unit); ws.cell(r, 7, layer); ws.cell(r, 8, how); r += 1
+    SL = f"Siliconomics {V}"
+    for y in YEARS:
+        f1("SIF_DeployGW_Base", y, N["SIF_DeployGW_Base"][YEARS.index(y)], f"=co_gwb_{yy(y)}", "GW", SL, "In 頁 Z 節 co_gwb_<yy>；現行基準產業部署 GW（兩讀數的分母）")
+    for y in YEARS:
+        f1("SIF_DeployGW_Supply_<yyyy>", y, N[f"SIF_DeployGW_Supply_{y}"], f"=co_gws_{yy(y)}", "GW", SL, "In 頁 Z 節 co_gws_<yy>；供給側讀數（情境 A）")
+    for y in YEARS:
+        f1("SIF_DeployGW_Alt_<yyyy>", y, N[f"SIF_DeployGW_Alt_{y}"], f"=co_gwa_{yy(y)}", "GW", SL + "（Wattonomics v0.3.2 換算值）", "In 頁 Z 節 co_gwa_<yy>；另一側讀數，只進兩讀數目標價")
+    for y in YEARS:
+        f1("SIF_DeployGW_AltRatio_<yyyy>", y, N[f"SIF_DeployGW_AltRatio_{y}"], f"=co_r_{yy(y)}", "x", SL, "In 頁 Z 節 co_r_<yy>；另一側 ÷ 現行基準")
+    for y in YEARS:
+        f1("SIF_RecoFlag_<yyyy>", y, N[f"SIF_RecoFlag_{y}"], f"=co_flag_{y}", "旗標", SL, "In 頁 Z 節 co_flag_<yyyy>；1＝對帳中（Siliconomics 對帳單期限 2027-02-28）", "0")
+    for y in (2028, 2029):
+        f1("SIF_UnitsCoef_Base", y, N["SIF_UnitsCoef_Base"][ix(y)], f"=co_ucoef_{yy(y)}", "x", SL, "In 頁 Z 節 co_ucoef_<yy> → um<yy>_B（情境 B 顆數係數；2026–27 係數固定為 1）")
+    NV = ("bw", "rb", "ru", "hp")
+    u_m = lambda y: "+".join((f"u_{k}_{yy(y)}" if y <= 2028 else f"u_{k}_28*(1+g29_{k})") for k in NV)
+    for y in YEARS:
+        f1("SIF_UnitsPlat_bw＋rb＋ru＋hp（NVIDIA 平台顆數，原始）", y, sum(N[f"SIF_UnitsPlat_{k}"][ix(y)] for k in NV), "=" + u_m(y), "百萬顆", SL,
+           "間接讀：In 頁 u_<平台>_<yy>（markets/memory UNITS ← 台積電模型 In 頁；2029＝2028 ×（1＋g29））；與快照逐值相同", "0.0000")
+    for k, nm in (("amd", "AMD"), ("tpu", "TPU"), ("trn", "Trainium"), ("oth", "其他 ASIC")):
+        f1(f"SIF_pa_{k}（{nm} 每顆售價，基準）", "—", N[f"SIF_pa_{k}"], f"=pa_{k}", "US$K", SL, f"In 頁 pa_{k}（SIL.row9）；份額計算用", "0.0")
+    for g, rk in (("GB300", "bw"), ("VR200", "rb"), ("RU", "ru")):
+        f1(f"SIF_TK_RackPrice_{g}", "—", N[f"SIF_TK_RackPrice_{g}"], None, "US$M／機架", f"{TKV}（Siliconomics 鏡像）", "本模型不直接讀；GPU 模組價 pm_" + rk + " 讀 chip_bridge v0.2.3（由 Tokenomics 機架價往下推），見 F2 對照", "0.0")
+        f1(f"SIF_TK_GPUsPerGW_{g}", "—", N[f"SIF_TK_GPUsPerGW_{g}"], None, "顆／GW", f"{TKV}（Siliconomics 鏡像）", "本模型不直接讀（只用顆數，不換 GW；GW 由 Siliconomics 供給）", "#,##0")
+        f1(f"SIF_TK_RacksPerGW_{g}", "—", N[f"SIF_TK_RacksPerGW_{g}"], None, "機架／GW", f"{TKV}（Siliconomics 鏡像）", "同上；機架價 ÷（每 GW 顆數 ÷ 每 GW 機架數）＝每顆機架級金額", "#,##0")
+    F1b = r - 1
+    ws.cell(r, 1, "F1 核對：Σ|採用 − 層級值|（應為 0）"); ws.cell(r, 5, f"=SUMPRODUCT(ABS(E{F1a}:E{F1b}))").number_format = "0.000000"; RF_chk = r; r += 2
+
+    # ---------- F2 ----------
+    ws.cell(r, 1, "F2. C0 由下往上對帳：本模型自己的量 vs Siliconomics 對應值（差距＝本模型 ÷ Siliconomics − 1；超過門檻標「對帳中」；不改上游）").font = BOLD; r += 1
+    ws.cell(r, 1, "對帳門檻（±）"); ws.cell(r, 4, 0.15).number_format = "0%"; ws.cell(r, 4).font = BLUE; ws.cell(r, 8, "三層基準協調規則 C0／工作單：差距超過 ±15% 標「對帳中」；門檻為輸入（藍字）"); TOL = f"$D${r}"; r += 1
+    hdr(r, ["項目", "年度（日曆年／會計年度）", "單位", "本模型值", "Siliconomics 值", "差距 %", "狀態", "本模型口徑與來源", "本模型證據等級", "Siliconomics 口徑與來源", "Siliconomics 證據等級"]); RF_h = r; r += 1
+    ra = lambda k: int("".join(c for c in L[k][1] if c.isdigit()))
+    r_nvu = ra("nvu_B_2028")
+    # 情境 B 的運算與網通營收列（依標籤自情境 B 區塊起找）
+    def fr(prefix, start):
+        sh = wb["PL"]
+        return next(x for x in range(start, sh.max_row + 1) if isinstance(sh.cell(x, 1).value, str) and sh.cell(x, 1).value.strip().startswith(prefix))
+    rb0 = next(x for x in range(1, wb["PL"].max_row + 1) if isinstance(wb["PL"].cell(x, 1).value, str) and wb["PL"].cell(x, 1).value.startswith("情境 B："))
+    r_comp, r_net = fr("運算營收（Σ", rb0), fr("NVIDIA 網通營收", rb0)
+    F2a = r
+    def f2(item, y, unit, mv, sv, mfmt, mdesc, mtag, sdesc, stag, judge=True):
+        nonlocal r
+        ws.cell(r, 1, item); ws.cell(r, 2, y); ws.cell(r, 3, unit)
+        ws.cell(r, 4, mv).number_format = mfmt
+        ws.cell(r, 5, sv).number_format = mfmt
+        if judge and not isinstance(sv, str):
+            ws.cell(r, 6, f"=D{r}/E{r}-1").number_format = GAP
+            ws.cell(r, 7, f'=IF(ABS(F{r})>{TOL},"對帳中","一致")')
+        else:
+            ws.cell(r, 6, "—"); ws.cell(r, 7, "不判定（口徑不同）" if not isinstance(sv, str) else "無可比的層級量")
+        ws.cell(r, 8, mdesc); ws.cell(r, 9, mtag); ws.cell(r, 10, sdesc); ws.cell(r, 11, stag); r += 1
+    SU = f"Siliconomics {V} In 頁 M6 起的 UNITS（SIF_UnitsPlat_bw／rb／ru／hp）"
+    st_u = "Interested-party（賣方與研調估計；Rubin Ultra 為 Assumed）"
+    # (1) 市場層顆數（讀同一份）
+    for y in YEARS:
+        f2("NVIDIA 平台顆數（市場層，認列係數前）", f"CY{y}", "百萬顆", "=" + u_m(y), sum(N[f"SIF_UnitsPlat_{k}"][ix(y)] for k in NV), "0.000",
+           "In 頁 u_bw／rb／ru／hp（markets/memory UNITS ← 台積電模型 In 頁）；2029＝2028 ×（1＋g29，Assumed）", "Interested-party", SU + "；原始顆數（未乘基準係數）", st_u)
+    # (2) 認列顆數（情境 B）vs 基準顆數（原始 × 基準係數）
+    for y, c in zip(YEARS, "DEFG"):
+        coef = N["SIF_UnitsCoef_Base"][ix(y)]
+        f2("NVIDIA 認列顆數（情境 B）vs Siliconomics 基準 NVIDIA 平台顆數", f"CY{y}／FY{y + 1}", "百萬顆", f"=PL!{c}{r_nvu}",
+           sum(N[f"SIF_UnitsPlat_{k}"][ix(y)] for k in NV) * (coef if coef is not None else 1), "0.000",
+           "PL 頁情境 B 認列顆數＝k_rec（以 FY2027 資料中心營收錨點校準，Derived）× 市場層顆數 × 情境 B 顆數係數（＝基準係數）；會計年度 FY(t+1)≈CY(t)",
+           "Derived（錨點 Verified／Interested-party）", SU + f" × SIF_UnitsCoef_Base（2026–27＝1、2028＝{N['SIF_UnitsCoef_Base'][3]:.2f}、2029＝{N['SIF_UnitsCoef_Base'][4]:.3f}）；模組層級出貨年", st_u)
+    # (3) 資料中心營收
+    f2("資料中心營收 FY2027 錨點 vs R4 公司錨點（同一輸入）", "CY2026／FY2027", "US$B", "=a27_dc", NVD_C[2026], "#,##0.0",
+       "Q 頁 FY2027 錨點＝Q1、Q2 公司實績＋Q3 指引中點＋Q4 假設（Q!K5）", "Verified／Assumed（Q4 為假設）",
+       f"{SL} Recon 快照 nv_dc.company（R4 橋接 r11 n4＝nv_dc_26）", "Verified／Assumed")
+    f2("資料中心營收 FY2027 錨點 vs Siliconomics 隱含（R4 n3；n5 比值＝%.3f）" % (NVD_I[2026] / NVD_C[2026]), "CY2026／FY2027", "US$B", "=a27_dc", NVD_I[2026], "#,##0.0",
+       "同上（公司實績加指引的錨點）", "Verified／Assumed",
+       f"{SL} Recon 快照 nv_dc.implied＝NVIDIA 成本等值 GW × 每 GW 營收內容（R4 橋接 n1 × n2；出貨年口徑）", "Derived（顆數、每 GW 內容多屬 Interested-party）")
+    f2("資料中心營收 FY2028 公司指引推得 vs R4 公司值", "CY2027／FY2028", "US$B", "=a27_dc*(1+g28_gr)", NVD_C[2027], "#,##0.0",
+       "FY2027 錨點 ×（1＋公司 FY2028 營收年增指引 70%）；假設資料中心占比同 FY2027", "Interested-party（指引二手報導）",
+       f"{SL} Recon 快照 nv_dc.company（nv_dc_27＝FY2028 營收約 +70% × 資料中心 92.5%）", "Derived（Interested-party 指引）")
+    f2("資料中心營收 FY2028 情境 B（運算＋網通）vs Siliconomics 隱含", "CY2027／FY2028", "US$B", f"=PL!E{r_comp}+PL!E{r_net}", NVD_I[2027], "#,##0.0",
+       "PL 頁情境 B：運算營收（認列顆數 × 每顆售價）＋網通營收（中國為 0）", "Derived（情境 B 為模型基準）",
+       f"{SL} Recon 快照 nv_dc.implied（n1 × n2，VR200 2027 HBM 價內容）", "Derived（顆數、每 GW 內容多屬 Interested-party）")
+    f2("資料中心營收 FY2029（CY2028）情境 B", "CY2028／FY2029", "US$B", f"=PL!F{r_comp}+PL!F{r_net}", "無可比的層級量", "#,##0.0",
+       "PL 頁情境 B FY2029 運算＋網通（FY2030 以後見 PL 頁）", "Derived", f"{SL} R4 橋接 nv_dc 對帳點只到 CY2027（Recon 快照 implied 2028、2029＝空）；CY2028 以後只能靠上列顆數對帳", "—")
+    # (4) 模組價 vs Tokenomics 機架價
+    for g, k, pm in (("GB300", "bw", "pm_bw"), ("VR200", "rb", "pm_rb")):
+        per = N[f"SIF_TK_RackPrice_{g}"] * 1000 / (N[f"SIF_TK_GPUsPerGW_{g}"] / N[f"SIF_TK_RacksPerGW_{g}"])
+        f2(f"GPU 每顆金額：模組價 vs Tokenomics 機架價 ÷ 每機架顆數（{g}）", "2026", "US$K", f"={pm}", per, "0.0",
+           "In 頁（chip_bridge v0.2.3 Rack 頁）：GPU 模組售價（NVIDIA 對買方）", "Derived", f"{TKV} 鏡像：SIF_TK_RackPrice_{g} × 1000 ÷（SIF_TK_GPUsPerGW ÷ SIF_TK_RacksPerGW）；整機架口徑（含 CPU、網通、機櫃）", "Interested-party（Tokenomics 機架價估計）", judge=False)
+    # (5) 無可比
+    f2("供應與產能承諾（10-Q Note 10）vs 層級量", "2026-07-26", "US$B", "=h_supply_c", "無可比的層級量", "#,##0",
+       "Hist 頁 h_supply_c（NVIDIA 10-Q 供應承諾，多年期、含非 GPU 項目）", "Verified", "Siliconomics 無採購承諾變數；承諾金額為多年累計義務，與任一年的顆數或營收不同口徑", "—")
+    f2("產業部署 GW 與 NVIDIA 成本等值 GW", "CY2026–2029", "GW", "不自建（只讀 Siliconomics）", "無可比的層級量", "0.0",
+       "本模型以顆數建模，GW 只經 F1 的 Z 節讀入並用於兩讀數比值", "—", "R4 橋接 n1（NVIDIA 成本等值 GW）未進 Recon 快照，無法對帳", "—")
+    F2b = r - 1
+    ws.cell(r, 1, "對帳中項目數（差距超過門檻）"); ws.cell(r, 4, f'=COUNTIF(G{F2a}:G{F2b},"對帳中")'); RF_n = r; r += 1
+    ws.cell(r, 1, "有判定的項目數"); ws.cell(r, 4, f'=COUNTIF(G{F2a}:G{F2b},"一致")+COUNTIF(G{F2a}:G{F2b},"對帳中")'); RF_j = r; r += 1
+    ws.cell(r, 1, "C0 對帳摘要（HTML 用）")
+    ws.cell(r, 4, f'="C0 由下往上對帳：有判定 "&D{RF_j}&" 項、對帳中 "&D{RF_n}&" 項（差距超過 ±"&TEXT({TOL},"0%")&"）；市場層顆數與錨點與 Siliconomics 一致；認列顆數低於層級顆數、層級隱含資料中心營收高於公司錨點，兩者方向一致（認列顆數係數校準 ≈ "&TEXT(k_rec,"0.00")&"）。個股不裁決，不改上游值；證據回饋走對帳單（C5）。"'); RF_s = r; r += 1
+    ws.cell(r, 1, "讀法：認列顆數偏低與層級隱含營收偏高同向，指向 Siliconomics 的 NVIDIA 顆數或每 GW 內容偏高，或模型 FY↔CY 對照與認列時點造成的差；依 C0 第 1 點，修正方向取決於證據（本模型錨點為公司實績，顆數層為賣方與研調估計），由主控依對帳單處理。")
+    return {"F1": (F1a, F1b), "F1chk": RF_chk, "F2h": RF_h, "F2": (F2a, F2b), "n": RF_n, "sum": RF_s}
+
+VER = "0.3.9"
+NOTE_VER = "0.3.8"   # In 頁既有說明欄的版本字樣維持 v0.3.8（本版只新增 Coord 頁 F 節）
 
 
 def stamp(wb):
@@ -363,7 +494,7 @@ def stamp(wb):
     a1 = RD["A1"].value
     assert "個股模型 v0.3.7" in a1, a1[:80]
     RD["A1"].value = a1.replace("個股模型 v0.3.7", f"個股模型 v{VER}", 1).replace(
-        "標準損益表、反向 DCF 頁）", f"標準損益表、反向 DCF 頁）；v{VER}：三層協調——對帳中標示與兩讀數目標價（規則 v1.4 C4；Coord 頁、In 頁 Z 節；基準數值不變）", 1)
+        "標準損益表、反向 DCF 頁）", f"標準損益表、反向 DCF 頁）；v0.3.8：三層協調——對帳中標示與兩讀數目標價（規則 v1.4 C4；Coord 頁、In 頁 Z 節；基準數值不變）；v{VER}：Coord 頁新增 F 節「三層協調：讀取層級與 C0 由下往上對帳」（只新增；數值不變）", 1)
     return f"build_id {old} → {new}（{n} 格）"
 
 

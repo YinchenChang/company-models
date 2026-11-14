@@ -695,6 +695,40 @@ def _coord():
 _coord()
 
 
+# ================= v0.3.9（2026-11-14）：對帳章加「三層協調：讀取層級與 C0 由下往上對帳」（Coord 頁 F 節；數字與文字全取自 xlsx） =================
+def _coord_c0():
+    if "Coord" not in wb.sheetnames:
+        return
+    CW = wb["Coord"]
+    cr = lambda p, start=1: next(r for r in range(start, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith(p))
+    f0, f1h = cr("F. 三層協調"), cr("F1. 本模型讀取")
+    f2h = cr("F2. C0 由下往上對帳"); r_tol = cr("對帳門檻"); rh = r_tol + 1
+    r_sum = cr("C0 對帳摘要"); r_read = cr("讀法：認列顆數"); r_n = cr("對帳中項目數"); r_chk = cr("F1 核對")
+    S = {x["id"]: x for x in cfg["sections"]}
+    # F2 主表：項目、年度、單位、本模型值、層級值、差距、狀態（數值格式依列：顆數 n2、營收 n1、單價 n1；無可比列為文字）
+    rows = []
+    for r in range(rh + 1, r_n):
+        u = str(CW.cell(r, 3).value or "")
+        f = "n2" if "顆" in u else "n1"
+        rows.append([f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}", f"@Coord!D{r}|{f}", f"@Coord!E{r}|{f}", f"@Coord!F{r}|sp1", f"@Coord!G{r}"])
+    t2 = {"type": "table", "caption": f"@Coord!A{f2h}", "head": ["項目", "年度", "單位", "本模型", "Siliconomics", "差距", "狀態"], "rows": rows}
+    d2 = {"type": "table", "caption": "展開：由下往上對帳每列的口徑、來源與證據等級（兩邊原值見上表）", "collapse": True, "summary": "展開：由下往上對帳的口徑、來源與證據等級",
+          "head": ["項目", "本模型口徑與來源", "本模型證據等級", "Siliconomics 口徑與來源", "Siliconomics 證據等級"],
+          "rows": [[f"@Coord!A{r}", f"@Coord!H{r}", f"@Coord!I{r}", f"@Coord!J{r}", f"@Coord!K{r}"] for r in range(rh + 1, r_n)]}
+    # F1：讀取層級（名稱、年度、層級值、採用值、單位、層級與版本）
+    F1a = f1h + 2; F1b = next(r for r in range(F1a, r_chk) if r == r_chk - 1)
+    t1 = {"type": "table", "caption": f"@Coord!A{f1h}", "collapse": True, "summary": "展開：本模型讀取的 Siliconomics 名稱、值與版本（含 Tokenomics 鏡像）",
+          "head": ["名稱", "年度", "層級值", "本模型採用值", "單位", "層級與版本"],
+          "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}|n3", f"@Coord!D{r}|n3", f"@Coord!F{r}", f"@Coord!G{r}"] for r in range(F1a, F1b + 1)]}
+    blocks = [{"type": "h3", "text": "三層協調：讀取層級與由下往上對帳"},
+              {"type": "note", "parts": [f"@Coord!D{r_sum}"]}, t2, d2,
+              {"type": "note", "parts": [f"@Coord!A{r_read}"]}, t1]
+    S["recon"]["blocks"].extend(blocks)
+
+
+_coord_c0()
+
+
 # ================= v0.3.8 試作 r5（Andy 2026-11-14 12:47；版面規格 v1.3 G、H 節「位置」）：主圖置頂、說明放圖下 =================
 # 估值章：第一個區塊＝四個目標價與現價長條圖；章節說明（原 intro）、四個目標價表與說明放在圖下；其後才是對帳中兩讀數目標價區與其餘內容。
 # 敏感度章：前兩個區塊＝加權目標價相對基準的低案、高案主圖（變動達兩位數者）；章節說明、未達兩位數的摺疊圖、全吸收表與其他內容放在下方。
