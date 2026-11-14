@@ -133,7 +133,7 @@ def pl_sheet(wb, HR):
     P["A3"] = ("2030E：毛利率與營業費用率沿用 2029E 推算營業成本、毛利與營業費用；營業利益取 DCF 頁情境 B（由淨利反推）。兩種推法的差額見表末核對列（目標價用延伸期淨利，不受影響）。"
                "對帳中：Siliconomics 標對帳中的日曆年（Coord 頁）在欄位標題標示；2030E 由 2029E 收斂而來，一併標示")
     hr = 5
-    hdr = ["項目", "單位"] + [f"=\"{y}\"&IF(Coord!{c}{flag}=1,\"（對帳中）\",\"\")" if c else y
+    hdr = ["項目", "單位"] + [f"=\"FY{y}\"&IF(Coord!{c}{flag}=1,\"（對帳中）\",\"\")" if c else f"FY{y}"
                            for y, c in zip(YLABEL, [None, None, None, None, "C", "D", "E", "E"])] + ["說明"]
     hdr_row(P, hr, hdr)
     # 2026E 欄的對帳中旗標＝Coord B 欄（CY2026＝0）：不標

@@ -64,11 +64,13 @@ def transform(cfg, wb):
     any_big = any(max(mags(c) + [0]) >= 0.1 for c in "BC")
     th_main = 0.1 if any_big else 0.01
     for col, side in (("B", "低"), ("C", "高")):
-        big = [r for r in range(r1, r2 + 1) if num(col, r) and abs(SEW[f"{col}{r}"].value) >= th_main]
-        small = [r for r in range(r1, r2 + 1) if num(col, r) and 0.0005 <= abs(SEW[f"{col}{r}"].value) < th_main]
+        cand = [r for r in range(r1, r2 + 1) if num(col, r) and abs(SEW[f"{col}{r}"].value) >= 0.0005]
+        cand.sort(key=lambda r: -abs(SEW[f"{col}{r}"].value))
+        big = [r for r in cand if abs(SEW[f"{col}{r}"].value) >= th_main] if any_big else cand[:10]
+        small = [r for r in cand if r not in big]
         base = {"type": "tornado", "sheet": "Sens", "label_col": "A", "value_col": col, "fmt": "sp1"}
         ttl = (f"加權目標價相對基準：輸入取{side}值，變動達兩位數百分比的案例" if any_big
-               else f"加權目標價相對基準：輸入取{side}值（沒有任何案例達兩位數百分比，列變動較大的案例）")
+               else f"加權目標價相對基準：輸入取{side}值（無案例達兩位數，列影響最大者）")
         out.append(dict(base, title=ttl, rows=",".join(map(str, big))))
         out.append(dict(base, title=f"加權目標價相對基準：輸入取{side}值（其餘案例）", rows=",".join(map(str, small)), collapse=True,
                         summary=f"展開：輸入取{side}值，其餘案例（變動較小；幾乎為零者見全部案例表）"))
