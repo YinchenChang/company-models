@@ -329,7 +329,7 @@
       [
        "@Val!A105",
        "@Val!B105|n0",
-       "@Val!E105"
+       "三個情境的價值（已推到目標時點）依 In 頁權重加權"
       ],
       [
        "@Val!A156",
@@ -443,22 +443,22 @@
        "@Val!E89"
       ],
       [
-       "@Val!A90",
+       "權益占資本 E ÷（E＋D）（市值；E＝母公司市值＋非控制權益市值，D＝債務＋租賃）",
        "@Val!B90|p1",
        "@Val!E90"
       ],
       [
        "@Val!A91",
        "@Val!B91|p2",
-       "@Val!E91"
+       "股權成本與稅後債務成本以市值權重加權；WACC 調整只用於敏感度（基準為零）"
       ],
       [
-       "@Val!A92",
+       "永續成長率（長期成長上限與無風險利率取小者）",
        "@Val!B92|p2",
        "@Val!E92"
       ],
       [
-       "@Val!A93",
+       "永續期新投資報酬率 RONIC（＝WACC＋超額報酬差）",
        "@Val!B93|p2",
        "@Val!E93"
       ],
@@ -524,7 +524,7 @@
        "@Val!B98|n1",
        "@Val!C98|n1",
        "@Val!D98|n1",
-       "@Val!E98"
+       "資產負債表日與評價日之間的零頭期間；含零頭期的會計年度（FY2026）自由現金流乘以該期間占全年的比例"
       ],
       [
        "@Val!A99",
@@ -534,7 +534,7 @@
        "@Val!E99"
       ],
       [
-       "@Val!A102",
+       "DCF 情境價值推到目標時點（以股權成本複利、扣除期間股利）",
        "@Val!B102|n0",
        "@Val!C102|n0",
        "@Val!D102|n0",
@@ -545,7 +545,7 @@
        "@Val!B105|n0",
        "",
        "",
-       "@Val!E105"
+       "三個情境的價值（已推到目標時點）依 In 頁權重加權"
       ]
      ]
     },
@@ -1470,7 +1470,7 @@
     {
      "type": "note",
      "parts": [
-      "@Sens!A849"
+      "Wattonomics 錨定：以情境 B 為底，產業量自 CY2027 起乘以 Wattonomics 與 Siliconomics 的比值；FY2026 維持錨點。個股基準暫不改，待雲端資本支出指引後再決定。"
      ]
     },
     {
@@ -2802,14 +2802,14 @@
        "@In!C146"
       ],
       [
-       "@In!B147",
+       "FY2032 營收年增收斂目標（情境 A＝長期目標加兩個百分點；情境 B＝長期目標；情境 C＝長期目標減兩個百分點）",
        "@In!D147|p1",
        "@In!E147|p1",
        "@In!F147|p1",
        "@In!C147"
       ],
       [
-       "@In!B148",
+       "FY2032 淨利率收斂目標（情境 A＝本情境 FY2029；情境 B＝FY2029 與十年平均替代值的中點；情境 C＝十年平均替代值）",
        "@In!D148|p2",
        "@In!E148|p2",
        "@In!F148|p2",
@@ -3498,7 +3498,7 @@
        "@In!G104|tag"
       ],
       [
-       "@In!B106",
+       "永續成長率（最後一年後；長期成長上限與無風險利率取小者）",
        "@In!D106|p1",
        "@In!E106|p1",
        "@In!F106|p1",
@@ -4022,7 +4022,9 @@
       "CY2026",
       "CY2027",
       "CY2028",
-      "CY2029"
+      "CY2029",
+      "單位與口徑",
+      "來源與證據等級"
      ],
      "rows": [
       {
@@ -4033,28 +4035,36 @@
        "@Coord!B39|n1",
        "@Coord!C39|n1",
        "@Coord!D39|n1",
-       "@Coord!E39|n1"
+       "@Coord!E39|n1",
+       "@Coord!F39",
+       "@Coord!G39"
       ],
       [
        "@Coord!A40",
        "@Coord!B40|n1",
        "@Coord!C40|n1",
        "@Coord!D40|n1",
-       "@Coord!E40|n1"
+       "@Coord!E40|n1",
+       "",
+       ""
       ],
       [
        "@Coord!A41",
-       "@Coord!B41|sp1",
-       "@Coord!C41|sp1",
-       "@Coord!D41|sp1",
-       "@Coord!E41|sp1"
+       "@Coord!B41|p1",
+       "@Coord!C41|p1",
+       "@Coord!D41|p1",
+       "@Coord!E41|p1",
+       "",
+       ""
       ],
       [
        "@Coord!A42",
        "@Coord!B42|",
        "@Coord!C42|",
        "@Coord!D42|",
-       "@Coord!E42|"
+       "@Coord!E42|",
+       "",
+       ""
       ],
       {
        "sub": "@Coord!A43"
@@ -4064,28 +4074,36 @@
        "@Coord!B44|n2",
        "@Coord!C44|n2",
        "@Coord!D44|n2",
-       "@Coord!E44|n2"
+       "@Coord!E44|n2",
+       "@Coord!F44",
+       "@Coord!G44"
       ],
       [
        "@Coord!A45",
        "@Coord!B45|n2",
        "@Coord!C45|n2",
        "@Coord!D45|n2",
-       "@Coord!E45|n2"
+       "@Coord!E45|n2",
+       "",
+       ""
       ],
       [
        "@Coord!A46",
-       "@Coord!B46|sp1",
-       "@Coord!C46|sp1",
-       "@Coord!D46|sp1",
-       "@Coord!E46|sp1"
+       "@Coord!B46|p1",
+       "@Coord!C46|p1",
+       "@Coord!D46|p1",
+       "@Coord!E46|p1",
+       "",
+       ""
       ],
       [
        "@Coord!A47",
        "@Coord!B47|",
        "@Coord!C47|",
        "@Coord!D47|",
-       "@Coord!E47|"
+       "@Coord!E47|",
+       "",
+       ""
       ],
       {
        "sub": "@Coord!A48"
@@ -4095,28 +4113,36 @@
        "@Coord!B49|n1",
        "@Coord!C49|n1",
        "@Coord!D49|n1",
-       "@Coord!E49|n1"
+       "@Coord!E49|n1",
+       "@Coord!F49",
+       "@Coord!G49"
       ],
       [
        "@Coord!A50",
        "@Coord!B50|n1",
        "@Coord!C50|n1",
        "@Coord!D50|n1",
-       "@Coord!E50|n1"
+       "@Coord!E50|n1",
+       "",
+       ""
       ],
       [
        "@Coord!A51",
-       "@Coord!B51|sp1",
-       "@Coord!C51|sp1",
-       "@Coord!D51|sp1",
-       "@Coord!E51|sp1"
+       "@Coord!B51|p1",
+       "@Coord!C51|p1",
+       "@Coord!D51|p1",
+       "@Coord!E51|p1",
+       "",
+       ""
       ],
       [
        "@Coord!A52",
        "@Coord!B52|",
        "@Coord!C52|",
        "@Coord!D52|",
-       "@Coord!E52|"
+       "@Coord!E52|",
+       "",
+       ""
       ],
       {
        "sub": "@Coord!A53"
@@ -4126,28 +4152,36 @@
        "@Coord!B54|n2",
        "@Coord!C54|n2",
        "@Coord!D54|n2",
-       "@Coord!E54|n2"
+       "@Coord!E54|n2",
+       "@Coord!F54",
+       "@Coord!G54"
       ],
       [
        "@Coord!A55",
        "@Coord!B55|n2",
        "@Coord!C55|n2",
        "@Coord!D55|n2",
-       "@Coord!E55|n2"
+       "@Coord!E55|n2",
+       "",
+       ""
       ],
       [
        "@Coord!A56",
-       "@Coord!B56|sp1",
-       "@Coord!C56|sp1",
-       "@Coord!D56|sp1",
-       "@Coord!E56|sp1"
+       "@Coord!B56|p1",
+       "@Coord!C56|p1",
+       "@Coord!D56|p1",
+       "@Coord!E56|p1",
+       "",
+       ""
       ],
       [
        "@Coord!A57",
        "@Coord!B57|",
        "@Coord!C57|",
        "@Coord!D57|",
-       "@Coord!E57|"
+       "@Coord!E57|",
+       "",
+       ""
       ],
       {
        "sub": "@Coord!A58"
@@ -4157,56 +4191,72 @@
        "@Coord!B59|p1",
        "@Coord!C59|p1",
        "@Coord!D59|p1",
-       "@Coord!E59|p1"
+       "@Coord!E59|p1",
+       "@Coord!F59",
+       "@Coord!G59"
       ],
       [
-       "@Coord!A60",
+       "　廣達有效份額（Siliconomics 份額表：FY2026 基準份額 × 份額相對值）",
        "@Coord!B60|p1",
        "@Coord!C60|p1",
        "@Coord!D60|p1",
-       "@Coord!E60|p1"
+       "@Coord!E60|p1",
+       "",
+       ""
       ],
       [
        "@Coord!A61",
-       "@Coord!B61|sp1",
-       "@Coord!C61|sp1",
-       "@Coord!D61|sp1",
-       "@Coord!E61|sp1"
+       "@Coord!B61|p1",
+       "@Coord!C61|p1",
+       "@Coord!D61|p1",
+       "@Coord!E61|p1",
+       "",
+       ""
       ],
       [
-       "@Coord!A62",
+       "　已建模 ODM 份額合計（廣達、鴻海、緯創、緯穎）",
        "@Coord!B62|p1",
        "@Coord!C62|p1",
        "@Coord!D62|p1",
-       "@Coord!E62|p1"
+       "@Coord!E62|p1",
+       "",
+       "@Coord!G62"
       ],
       [
        "@Coord!A63",
        "@Coord!B63|p1",
        "@Coord!C63|p1",
        "@Coord!D63|p1",
-       "@Coord!E63|p1"
+       "@Coord!E63|p1",
+       "",
+       ""
       ],
       [
        "@Coord!A64",
-       "@Coord!B64|p1",
-       "@Coord!C64|p1",
-       "@Coord!D64|p1",
-       "@Coord!E64|p1"
+       "@Coord!B64|n4",
+       "@Coord!C64|n4",
+       "@Coord!D64|n4",
+       "@Coord!E64|n4",
+       "",
+       ""
       ],
       [
        "@Coord!A65",
        "@Coord!B65|p1",
        "@Coord!C65|p1",
        "@Coord!D65|p1",
-       "@Coord!E65|p1"
+       "@Coord!E65|p1",
+       "",
+       ""
       ],
       [
        "@Coord!A66",
-       "@Coord!B66|p1",
-       "@Coord!C66|p1",
-       "@Coord!D66|p1",
-       "@Coord!E66|p1"
+       "@Coord!B66|n1",
+       "@Coord!C66|n1",
+       "@Coord!D66|n1",
+       "@Coord!E66|n1",
+       "",
+       "@Coord!G66"
       ],
       {
        "sub": "@Coord!A68"
@@ -4216,7 +4266,9 @@
        "@Coord!B69|n1",
        "@Coord!C69|n1",
        "@Coord!D69|n1",
-       "@Coord!E69|n1"
+       "@Coord!E69|n1",
+       "",
+       ""
       ],
       {
        "sub": "@Coord!A70"
@@ -4226,28 +4278,36 @@
        "@Coord!B71|n2",
        "@Coord!C71|n2",
        "@Coord!D71|n2",
-       "@Coord!E71|n2"
+       "@Coord!E71|n2",
+       "@Coord!F71",
+       "@Coord!G71"
       ],
       [
        "@Coord!A72",
        "@Coord!B72|n2",
        "@Coord!C72|n2",
        "@Coord!D72|n2",
-       "@Coord!E72|n2"
+       "@Coord!E72|n2",
+       "",
+       ""
       ],
       [
        "@Coord!A73",
-       "@Coord!B73|sp1",
-       "@Coord!C73|sp1",
-       "@Coord!D73|sp1",
-       "@Coord!E73|sp1"
+       "@Coord!B73|p1",
+       "@Coord!C73|p1",
+       "@Coord!D73|p1",
+       "@Coord!E73|p1",
+       "",
+       ""
       ],
       [
        "@Coord!A74",
        "@Coord!B74|",
        "@Coord!C74|",
        "@Coord!D74|",
-       "@Coord!E74|"
+       "@Coord!E74|",
+       "",
+       ""
       ]
      ]
     },

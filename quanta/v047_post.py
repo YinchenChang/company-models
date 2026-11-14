@@ -547,13 +547,13 @@ def coord_c0(wb, SIL, R):
             flags.append(r); r += 1
         return m, l, d
     dg = lambda k: [N[k][i] for i in range(4)]
-    block("(1) AI IT 資本支出（情境 B）", lambda c: f"=PL!{c}{gb('AI IT 資本支出 × 情境顆數係數')}", dg("SIF_AIITCapex_Base"), "US$B；加速器顆數 × 每顆 IT capex（含 ASIC）× 顆數係數", "Siliconomics SIF_AIITCapex_Base；Derived（markets/network v0.2.3 讀入）")
-    block("(2) 部署 GW（IT 電力；情境 B）", lambda c: f"=PL!{c}{gb('部署 GW（IT 電力）')}", dg("SIF_DeployGW_Base"), "GW；AI IT 資本支出 ÷ 每 GW IT 資本支出", "Siliconomics SIF_DeployGW_Base；Derived", "0.00")
+    block("(1) AI IT 資本支出（情境 B）", lambda c: f"=PL!{c}{gb('AI IT 資本支出 × 情境顆數係數')}", dg("SIF_AIITCapex_Base"), "US$B；加速器顆數 × 每顆 IT capex（含 ASIC）× 顆數係數", "Siliconomics 基準層（AI IT 資本支出）；Derived（markets/network v0.2.3 讀入）")
+    block("(2) 部署 GW（IT 電力；情境 B）", lambda c: f"=PL!{c}{gb('部署 GW（IT 電力）')}", dg("SIF_DeployGW_Base"), "GW；AI IT 資本支出 ÷ 每 GW IT 資本支出", "Siliconomics 基準層（部署 GW）；Derived", "0.00")
     m3, l3, d3 = block("(3) 整櫃組裝市場（ODM 價；情境 B）", lambda c: f"=PL!{c}{gb('AI 伺服器組裝市場（ODM 價，美元）')}", dg("SIF_AsmMkt_Base"), "US$B；部署 GW × 每 GW ODM 整櫃價值（含 ASIC 機架，Assumed：每 GW 價值相同）",
-                       "Siliconomics SIF_AsmMkt_Base；Derived／Assumed（每 GW 價值）")
-    block("(4) 部署 GW（情境 A；供給側讀數）", lambda c: f"=PL!{c}{ga('部署 GW（IT 電力）')}", [N[f"SIF_DeployGW_Supply_{y}"] for y in (2026, 2027, 2028, 2029)], "GW；情境 A＝原始顆數（供給側）", "Siliconomics SIF_DeployGW_Supply_<yyyy>；Derived", "0.00")
+                       "Siliconomics 基準層（整櫃組裝市場）；Derived／Assumed（每 GW 價值）")
+    block("(4) 部署 GW（情境 A；供給側讀數）", lambda c: f"=PL!{c}{ga('部署 GW（IT 電力）')}", [N[f"SIF_DeployGW_Supply_{y}"] for y in (2026, 2027, 2028, 2029)], "GW；情境 A＝原始顆數（供給側）", "Siliconomics 供給側部署 GW 逐年值；Derived", "0.00")
     # 份額與未建模殘差
-    C.cell(r, 1, "(6) 份額與恆等式（已建模 ODM 加總＋未建模殘差＝市場）").font = BOLD; r += 1
+    C.cell(r, 1, "(5) 份額與恆等式（已建模 ODM 加總＋未建模殘差＝市場）").font = BOLD; r += 1
     qs = SIL.V["asm_qush_26"]["base"]; qrel = [1.0] + [SIL.V[f"asm_qurel_{y}"]["base"] for y in (27, 28, 29)]
     C.cell(r, 1, "　廣達有效份額（本模型，情境 B）"); C.cell(r, 6, "%；廣達 AI 伺服器毛額價值 ÷ 組裝市場"); C.cell(r, 7, "PL 有效份額；FY2026 由公司揭露比例校準（Derived），2027–29 為份額相對值（Assumed）")
     for k, c in enumerate(YC):
@@ -570,7 +570,7 @@ def coord_c0(wb, SIL, R):
     C.cell(r, 1, "　已建模 ODM 份額合計（廣達、鴻海、緯創、緯穎；SIF_AsmShareSum）")
     for k, c in enumerate(YC):
         C[f"{c}{r}"] = N["SIF_AsmShareSum"][k]; C[f"{c}{r}"].number_format = "0.0%"; C[f"{c}{r}"].font = BLUE
-    rs_s = r; C.cell(r, 7, "Siliconomics SIF_AsmShareSum；Derived／Assumed"); r += 1
+    rs_s = r; C.cell(r, 7, "Siliconomics 已建模份額合計；Derived／Assumed"); r += 1
     C.cell(r, 1, "　未建模殘差（1 − 合計；Dell、Supermicro、Celestica 等；明列，不為 0）")
     for c in YC:
         C[f"{c}{r}"] = f"=1-{c}{rs_s}"; C[f"{c}{r}"].number_format = "0.0%"
@@ -589,8 +589,8 @@ def coord_c0(wb, SIL, R):
     C.cell(r, 7, "本模型：PL 情境 B 組裝市場 × 有效份額；上限為市場（恆等式：加總不得超過上層）"); r += 2
     C.cell(r, 1, "層級之間（參考；Siliconomics 對帳單 r3 處理，不計入本公司 C0）").font = BOLD; r += 1
     C.cell(r, 1, "　下列差距是 Wattonomics 與 Siliconomics 兩層之間的差距，不是廣達自己的量對其所讀 Siliconomics 值的差距；本公司依 C4 並列兩讀數，不裁決、不改上游。"); r += 1
-    m5, l5, d5 = block("(7) 部署 GW（情境 B）對 Wattonomics 換算值（兩層之間的差距）", lambda c: f"=PL!{c}{gb('部署 GW（IT 電力）')}", [N[f"SIF_DeployGW_Alt_{y}"] for y in (2026, 2027, 2028, 2029)],
-                       "GW；Siliconomics SIF_DeployGW_Alt_<yyyy>＝Wattonomics 資本支出與電力路徑換算的需求側讀數", "Wattonomics v0.3.2 經 Siliconomics 換算；Derived（需求側）", "0.00", layer_label="Wattonomics 換算值（需求側）", ref=True)
+    m5, l5, d5 = block("(6) 部署 GW（情境 B）對 Wattonomics 換算值（兩層之間的差距）", lambda c: f"=PL!{c}{gb('部署 GW（IT 電力）')}", [N[f"SIF_DeployGW_Alt_{y}"] for y in (2026, 2027, 2028, 2029)],
+                       "GW；Siliconomics 的需求側部署 GW 逐年值＝Wattonomics 資本支出與電力路徑換算的需求側讀數", "Wattonomics v0.3.2 經 Siliconomics 換算；Derived（需求側）", "0.00", layer_label="Wattonomics 換算值（需求側）", ref=True)
     r += 1
     C.cell(r, 1, "3. 結論（C0）").font = BOLD; r += 1
     flag_cells = ",".join(f"B{x}:E{x}" for x in flags)

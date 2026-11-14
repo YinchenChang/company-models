@@ -458,13 +458,13 @@ if "Coord" in WBF.sheetnames:
         if not a.startswith("\u3000"):
             c0_rows.append({"sub": f"@Coord!A{r}"}); blk = a
             continue
-        f_ = "sp1" if "差距（本模型" in a else "" if "判定" in a else "p1" if ("份額" in a or "殘差" in a or "占已建模" in a) else "n4" if "恆等式" in a else "n2" if ("GW" in blk) else "n1"
-        if "差距（百分點）" in a:
-            f_ = "sp1"
-        c0_rows.append([f"@Coord!A{r}"] + [f"@Coord!{c}{r}|{f_}" for c in "BCDE"])
+        nf = next((CW[f"{c}{r}"].number_format for c in "BCDE" if CW[f"{c}{r}"].value is not None), "General")
+        f_ = "" if "判定" in a else ("sp1" if nf.startswith("+") else "p1" if "%" in nf else "n4" if nf == "0.0000" else "n2" if nf == "0.00" else "n1")
+        cx = lambda c: f"@Coord!{c}{r}" if CW[f"{c}{r}"].value else ""
+        c0_rows.append([f"@Coord!A{r}"] + [f"@Coord!{c}{r}|{f_}" for c in "BCDE"] + [cx("F"), cx("G")])
     c0_blocks = [{"type": "h3", "text": "三層協調：本模型與 Siliconomics 層的由下往上對帳"},
                  {"type": "note", "parts": [f"@Coord!B{r_cc}"]},
-                 {"type": "table", "caption": "由下往上對帳表（日曆年與會計年相同；情境 B 基準對 Siliconomics 基準；金額十億美元；差距超過門檻標對帳中）", "head": ["項目", "CY2026", "CY2027", "CY2028", "CY2029"], "rows": c0_rows},
+                 {"type": "table", "caption": "由下往上對帳表（日曆年與會計年相同；情境 B 基準對 Siliconomics 基準；金額十億美元；差距超過門檻標對帳中）", "head": ["項目", "CY2026", "CY2027", "CY2028", "CY2029", "單位與口徑", "來源與證據等級"], "rows": c0_rows},
                  {"type": "table", "caption": "讀哪一層、哪一版（下游只註明版本、不自行重估）", "head": ["項目", "值", "版本／檔案", "本模型用途", "備註"], "rows": lay_rows,
                   "collapse": True, "summary": "展開：本模型讀哪一層、哪一版（名稱、值、版本）"},
                  {"type": "h3", "text": "券商估計與櫃數份額的對照"}]
@@ -518,5 +518,39 @@ if len(va) > n_before:                                           # inject_html �
     inj, rest = va[:4], va[4:]
     assert inj[0].get("type") == "h3" and inj[3].get("type") == "bars", inj
     S["valuation"]["blocks"] = rest[:3] + inj + rest[3:]
+# 全頁可見文字（摺疊與資料狀態以外）不出現參數代號：含代號的儲存格改用白話（設定檔文字，不含數字）；xlsx 原文不改
+PLAIN = {
+    "Val!A90": "權益占資本 E ÷（E＋D）（市值；E＝母公司市值＋非控制權益市值，D＝債務＋租賃）",
+    "Val!E91": "股權成本與稅後債務成本以市值權重加權；WACC 調整只用於敏感度（基準為零）",
+    "Val!A92": "永續成長率（長期成長上限與無風險利率取小者）",
+    "Val!A93": "永續期新投資報酬率 RONIC（＝WACC＋超額報酬差）",
+    "Val!E98": "資產負債表日與評價日之間的零頭期間；含零頭期的會計年度（FY2026）自由現金流乘以該期間占全年的比例",
+    "Val!A102": "DCF 情境價值推到目標時點（以股權成本複利、扣除期間股利）",
+    "Val!E105": "三個情境的價值（已推到目標時點）依 In 頁權重加權",
+    "In!B147": "FY2032 營收年增收斂目標（情境 A＝長期目標加兩個百分點；情境 B＝長期目標；情境 C＝長期目標減兩個百分點）",
+    "In!B148": "FY2032 淨利率收斂目標（情境 A＝本情境 FY2029；情境 B＝FY2029 與十年平均替代值的中點；情境 C＝十年平均替代值）",
+    "Sens!A849": "Wattonomics 錨定：以情境 B 為底，產業量自 CY2027 起乘以 Wattonomics 與 Siliconomics 的比值；FY2026 維持錨點。個股基準暫不改，待雲端資本支出指引後再決定。",
+    "In!B106": "永續成長率（最後一年後；長期成長上限與無風險利率取小者）",
+    "Coord!A60": "\u3000廣達有效份額（Siliconomics 份額表：FY2026 基準份額 × 份額相對值）",
+    "Coord!A62": "\u3000已建模 ODM 份額合計（廣達、鴻海、緯創、緯穎）",
+}
+
+
+def _plain(x):
+    if isinstance(x, list):
+        return [_plain(i) for i in x]
+    if isinstance(x, dict):
+        return {k: _plain(v) for k, v in x.items()}
+    if isinstance(x, str) and x.startswith("@") and x[1:].split("|")[0] in PLAIN:
+        return PLAIN[x[1:].split("|")[0]]
+    return x
+
+
+for _s in cfg["sections"]:
+    if _s["id"] != "status":
+        _s["blocks"] = _plain(_s["blocks"])
+        if "intro" in _s:
+            _s["intro"] = _plain(_s["intro"])
+
 json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")
