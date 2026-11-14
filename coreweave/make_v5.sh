@@ -6,7 +6,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-OUTNAME="20261114_CoreWeave個股模型_v5.0.2.xlsx"
+OUTNAME="20261114_CoreWeave個股模型_v5.0.3.xlsx"
 if [ "${SENS:-0}" = "1" ]; then python3 coreweave/scripts/sens_v50.py --jobs "${JOBS:-2}"; fi
 if [ "${REV:-0}" = "1" ]; then python3 coreweave/scripts/reverse_v50.py --jobs "${JOBS:-2}"; fi
 if [ "${DEC:-0}" = "1" ]; then python3 coreweave/scripts/decomp_v50.py; fi
