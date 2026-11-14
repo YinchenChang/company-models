@@ -16,7 +16,7 @@ for ws in wb:
                 n_err += 1
                 if n_err <= 10: fail.append(f"公式錯誤 {ws.title}!{c.coordinate} {c.value}")
 print(f"公式錯誤：{n_err} 格")
-need_sheets = ["README", "In", "Q", "Thesis", "Seg", "PL", "CF", "Val", "Recon", "Sens", "Sources"]
+need_sheets = ["README", "In", "Q", "Thesis", "Seg", "PL", "CF", "Val", "RevDCF", "Recon", "Coord", "Sens", "Sources"]   # v0.3.7：新增 RevDCF、Coord（版面 v1.3、三層協調）
 if wb.sheetnames != need_sheets:
     fail.append(f"工作表順序不符：{wb.sheetnames}")
 
