@@ -1,6 +1,6 @@
 # tools/coord — 三層協調 C4：對帳中標示與兩讀數目標價（共用工具）
 
-規則：`docs/plan/三層基準協調規則.md` v1.4 C4（個股不裁決；估值依賴對帳中年份的硬體個股並列兩讀數目標價）。樣板 NVIDIA v0.3.8（`nvidia/coord_post.py`，專用）；Broadcom v0.5.5 起用本工具。
+規則：`docs/plan/三層基準協調規則.md` v1.4.2 C4（C0 對帳表見下節）（個股不裁決；估值依賴對帳中年份的硬體個股並列兩讀數目標價）。樣板 NVIDIA v0.3.8（`nvidia/coord_post.py`，專用）；Broadcom v0.5.5 起用本工具。
 
 ## 每家要做的事
 1. **主引擎掛鉤（每家一處，依該模型的 Wattonomics 錨定參數名）：** `SIL.COORD_ALT`（環境變數 `SIL_COORD_ALT=1`）時，情境 B、C 於 CY2027 起產業量 × `wta_27`／`wta_28`／`wta_29`；情境 A 不縮放。該模式下 `siliconomics/reader.py` 的 `WTA` 改為另一側讀數比值（只在對帳中年份，其他年份＝1）。
@@ -8,6 +8,15 @@
 3. 建檔程式存檔前：`COORD.add_sheet(wb, <資料夾>, SIL)`（新增 Coord 頁；回傳非 None 時 `COORD.stamp(...)` 升版號）。
 4. `gen_html_json.py` 最後：`COORD.inject_html(cfg, xlsx)`（橫幅一格＋揭露句、估值章開頭兩讀數表與長條圖）。
 5. `siliconomics/builder/seed/coord_meta_v*.json` 的 `hardware_companies` 加入該資料夾，重匯 `baseline_status.json`；`tools/baseline_coordination/check.py` 第 6 項須通過。
+
+## C0 由下往上對帳表（規則 v1.4.2 C0 第 2 點；Andy 11-14 17:40 固定規格）
+每家 Coord 頁的 C0 對帳表：
+- **個股側＝公司實績或法定揭露**（季報、年報、月營收、法說揭露的分部數字），寫明期間、口徑、出處（文件名與頁／表）。
+- **層級側＝同口徑下由層級值推得的隱含值**（顆數 × 售價、份額 × 市場值等），連到層級值儲存格；口徑換算（會計年度、含不含網通、認列時差）另列並標等級。
+- 差距超過 ±15% 標「對帳中」、開對帳單（Drive `02-AI供應鏈/對帳/`），不改上游。
+- **不得用同源值：** 個股自層級讀入的值只列在「讀取層級」節，不進 C0 表（差距恆為 0，無檢驗力）。
+- **兩層之間的差距**只列在「層級之間（參考）」節；**外部估計**（賣方、研調、指引）只列參考；兩者都不計入個股 C0。
+- 沒有可比實績時寫「無可比實績」與缺哪一項揭露；遠年不做 C0。
 
 ## 重跑時機
 Siliconomics 升版、該模型輸入改變後：先 `alt_run.py`，再正式建置；否則 Coord 頁「另一側讀數快照狀態」顯示 STALE。

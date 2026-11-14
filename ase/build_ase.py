@@ -986,6 +986,10 @@ sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
 import coord as COORD
 if COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL):
     COORD.stamp(wb, "v0.2.4", "v0.2.5", "2026-11-14")
+# v0.2.6（2026-11-14）：版面規格 v1.3＋三層協調新機制（C0）；只新增列／頁（ase/v026_post.py）
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import v026_post as V26  # noqa: E402
+print(V26.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL))
 wb.save(sys.argv[1])
 if os.environ.get("ASE_ROWMAP"):
     import json
