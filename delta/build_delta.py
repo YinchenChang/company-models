@@ -1049,8 +1049,13 @@ RD["A1"] = RD["A1"].value + "；v0.5.4：現價與同業報價改 2026-11-05 收
 # 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 delta/coord_alt.json）
 sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
 import coord as COORD
-if COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL):
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
     COORD.stamp(wb, "v0.5.4", "v0.5.5", "2026-11-14")
+    # v0.5.6（2026-11-14）：個股 HTML 版面規格 v1.3（標準損益表、RevDCF 頁、四個目標價、加權目標價敏感度）＋三層協調 C0（Coord 頁新增一節）；只新增，既有數值格不變
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import v056_post as P56
+    print(P56.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR))
 wb.save(sys.argv[1])
 if os.environ.get("DELTA_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
