@@ -4178,7 +4178,248 @@
    "blocks": [
     {
      "type": "h3",
-     "text": "三層協調：由下往上對帳（模型對各層）"
+     "text": "三層協調：由下往上對帳（公司實績對各層）"
+    },
+    {
+     "type": "h3",
+     "text": "公司實績對層級隱含值（實績對帳）"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!A90"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!A91"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "電子事業營收：決算短信實績 vs Siliconomics 基準隱含值（主讀數、第二讀數；差距超過正負十五個百分點且同號標「對帳中」）",
+     "head": [
+      "@Coord!A107",
+      "@Coord!B107",
+      "@Coord!C107",
+      "@Coord!D107",
+      "@Coord!E107",
+      "@Coord!F107",
+      "@Coord!G107"
+     ],
+     "rows": [
+      [
+       "@Coord!A108",
+       "@Coord!B108",
+       "@Coord!C108",
+       "@Coord!D108|n1",
+       "@Coord!E108|n1",
+       "@Coord!F108|sp1",
+       "@Coord!G108"
+      ],
+      [
+       "@Coord!A109",
+       "@Coord!B109",
+       "@Coord!C109",
+       "@Coord!D109|n1",
+       "@Coord!E109|n1",
+       "@Coord!F109|sp1",
+       "@Coord!G109"
+      ],
+      [
+       "@Coord!A110",
+       "@Coord!B110",
+       "@Coord!C110",
+       "@Coord!D110|n1",
+       "@Coord!E110|n1",
+       "@Coord!F110|sp1",
+       "@Coord!G110"
+      ],
+      [
+       "@Coord!A111",
+       "@Coord!B111",
+       "@Coord!C111",
+       "@Coord!D111|n1",
+       "@Coord!E111|n1",
+       "@Coord!F111|sp1",
+       "@Coord!G111"
+      ],
+      [
+       "@Coord!A112",
+       "@Coord!B112",
+       "@Coord!C112",
+       "@Coord!D112|n1",
+       "@Coord!E112|n1",
+       "@Coord!F112|sp1",
+       "@Coord!G112"
+      ],
+      [
+       "@Coord!A113",
+       "@Coord!B113",
+       "@Coord!C113",
+       "@Coord!D113|n1",
+       "@Coord!E113|n1",
+       "@Coord!F113|sp1",
+       "@Coord!G113"
+      ],
+      [
+       "@Coord!A114",
+       "@Coord!B114",
+       "@Coord!C114",
+       "@Coord!D114|n1",
+       "@Coord!E114|n1",
+       "@Coord!F114|sp1",
+       "@Coord!G114"
+      ],
+      [
+       "@Coord!A115",
+       "@Coord!B115",
+       "@Coord!C115",
+       "@Coord!D115|n1",
+       "@Coord!E115|n1",
+       "@Coord!F115|p1",
+       "@Coord!G115"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "對帳中項目數：",
+      "@Coord!G116|n0",
+      "。"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "實績與層級隱含值的輸入、等級與出處（展開看）",
+     "collapse": true,
+     "summary": "展開：實績、層級值、換算參數與出處",
+     "head": [
+      "@Coord!A92",
+      "@Coord!B92",
+      "@Coord!C92",
+      "@Coord!D92",
+      "@Coord!E92",
+      "@Coord!H92"
+     ],
+     "rows": [
+      [
+       "@Coord!A93",
+       "@Coord!B93",
+       "@Coord!C93",
+       "@Coord!D93|n1",
+       "@Coord!E93",
+       "@Coord!H93"
+      ],
+      [
+       "@Coord!A94",
+       "@Coord!B94",
+       "@Coord!C94",
+       "@Coord!D94|n1",
+       "@Coord!E94",
+       "@Coord!H94"
+      ],
+      [
+       "@Coord!A95",
+       "@Coord!B95",
+       "@Coord!C95",
+       "@Coord!D95|n1",
+       "@Coord!E95",
+       "@Coord!H95"
+      ],
+      [
+       "@Coord!A96",
+       "@Coord!B96",
+       "@Coord!C96",
+       "@Coord!D96|n0",
+       "@Coord!E96",
+       "@Coord!H96"
+      ],
+      [
+       "@Coord!A97",
+       "@Coord!B97",
+       "@Coord!C97",
+       "@Coord!D97|n3",
+       "@Coord!E97",
+       "@Coord!H97"
+      ],
+      [
+       "@Coord!A98",
+       "@Coord!B98",
+       "@Coord!C98",
+       "@Coord!D98|n3",
+       "@Coord!E98",
+       "@Coord!H98"
+      ],
+      [
+       "@Coord!A99",
+       "@Coord!B99",
+       "@Coord!C99",
+       "@Coord!D99|n3",
+       "@Coord!E99",
+       "@Coord!H99"
+      ],
+      [
+       "@Coord!A100",
+       "@Coord!B100",
+       "@Coord!C100",
+       "@Coord!D100|n1",
+       "@Coord!E100",
+       "@Coord!H100"
+      ],
+      [
+       "@Coord!A101",
+       "@Coord!B101",
+       "@Coord!C101",
+       "@Coord!D101|p1",
+       "@Coord!E101",
+       "@Coord!H101"
+      ],
+      [
+       "@Coord!A102",
+       "@Coord!B102",
+       "@Coord!C102",
+       "@Coord!D102|n1",
+       "@Coord!E102",
+       "@Coord!H102"
+      ],
+      [
+       "@Coord!A103",
+       "@Coord!B103",
+       "@Coord!C103",
+       "@Coord!D103|n1",
+       "@Coord!E103",
+       "@Coord!H103"
+      ],
+      [
+       "@Coord!A104",
+       "@Coord!B104",
+       "@Coord!C104",
+       "@Coord!D104|n1",
+       "@Coord!E104",
+       "@Coord!H104"
+      ],
+      [
+       "@Coord!A105",
+       "@Coord!B105",
+       "@Coord!C105",
+       "@Coord!D105|n1",
+       "@Coord!E105",
+       "@Coord!H105"
+      ]
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "讀取層級核對（同源，不判定）"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!A46"
+     ]
     },
     {
      "type": "note",
@@ -4188,7 +4429,9 @@
     },
     {
      "type": "table",
-     "caption": "由下往上對帳：模型自己的產業相關量 vs 層的對應值（差距超過正負十五個百分點標「對帳中」；不改上游值，由主控開對帳單）",
+     "caption": "讀取層級核對：個股讀入的層級值 vs 層級值（同源，不判定、不計入對帳中；有檢驗力的對帳見上表「公司實績 vs 層級隱含值」）",
+     "collapse": true,
+     "summary": "展開：讀取層級核對（同源，不判定）",
      "head": [
       "@Coord!A48",
       "@Coord!B48",
@@ -4411,9 +4654,6 @@
     {
      "type": "note",
      "parts": [
-      "對帳中項目數：",
-      "@Coord!G73|n0",
-      "。",
       "@Coord!A74"
      ]
     },
