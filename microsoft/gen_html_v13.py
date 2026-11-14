@@ -140,10 +140,10 @@ nocmp = {"type": "table", "caption": "沒有可比公司實績的項目（參考
                   [f"@Coord!A{rcu}", "", "", "", "", f"@Coord!G{rcu}"], [f"@Coord!A{rmw}", f"@Coord!B{rmw}", "", "", "", f"@Coord!G{rmw}"]]}
 G = CRD["rgw"]
 gw_t = {"type": "table", "caption": "新增容量（公司法說口頭揭露 vs Wattonomics 新增 IT GW；參考，口徑無法對齊）", "head": ["讀數", "期間／口徑", "公司", "層級隱含", "差距", "狀態／判定"],
-        "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!D{r}|n2", f"@Coord!E{r}|n2", f"@Coord!F{r}|sp1", f"@Coord!G{r}"] for r in (G["d1"], G["d2"], G["b1"], G["b2"], G["y25"])]
+        "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!D{r}|n2", f"@Coord!E{r}|n2", f"@Coord!F{r}|sp1", f"@Coord!G{r}"] for r in (G["d1"], G["d2"], G["b1"], G["b2"], G["y25"], G["b25"])]
                 + [[f"@Coord!A{G['pg']}", f"@Coord!B{G['pg']}", f"@Coord!D{G['pg']}|n1", f"@Coord!E{G['pg']}|n1", f"@Coord!F{G['pg']}|sp1", f"@Coord!G{G['pg']}"],
                    [f"@Coord!A{G['j']}", f"@Coord!B{G['j']}", "", "", "", f"@Coord!G{G['j']}"], [f"@Coord!A{G['jr']}", "", "", "", "", f"@Coord!G{G['jr']}"]]}
-gw_note = {"type": "note", "parts": [f"@Coord!H{G['j']}"]}
+gw_note = {"type": "note", "parts": [f"@Coord!H{G['j']}", "　", f"@Coord!A{CRD['rfb']}", "：", f"@Coord!B{CRD['rfb']}"]}
 d3 = {"type": "table", "caption": "展開：實績對帳的輸入、口徑、出處與證據等級", "collapse": True, "summary": "展開：實績對帳的輸入、出處與證據等級",
       "head": ["項目", "期間／口徑", "公司實績口徑與出處", "公司實績等級", "層級口徑與出處", "層級等級"],
       "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!H{r}", f"@Coord!I{r}", f"@Coord!J{r}", f"@Coord!K{r}"] for r in list(rq) + list(rp) + [rd1, rd2, rg, rl] + list(ra) + [rai, rcu, rmw] + list(G["q"]) + [G["l"], G["d1"], G["d2"], G["fac"], G["ais"], G["pg"], G["y25"]]]}
