@@ -22,3 +22,15 @@
 
 ## 重跑時機
 Siliconomics 升版、該模型輸入改變後：先 `alt_run.py`，再正式建置；否則 Coord 頁「另一側讀數快照狀態」顯示 STALE。
+
+## 追公式工具 trace_wattonomics.py（C0 之前必跑；MAG 類與其他算力買賣方共用）
+C0 比較層級值前，先確認層級值有沒有讀本公司的實績或目標（同源）。工具把 Wattonomics xlsx 的某玩家輸出名稱沿公式追到輸入，Coord 頁追公式表貼它的輸出，不手寫。
+```
+python3 tools/coord/trace_wattonomics.py wattonomics/model/<Wattonomics>.xlsx <公司資料夾>/data/wattonomics_trace_<版>.json --player <碼> [--year 2026] [--roots "名稱:說明,..."] [--manual "鍵=標記"] [--md]
+```
+- `--player`：玩家碼（googl、msft、meta、orcl…）；旗標鍵 gcap_/cap_/act26_/w1_/obs_<碼> 由此組出。`--roots` 省略時追六個預設輸出（當年新增 GW、AI／非 AI 資本支出、前一年與當年底上線 GW、個股模型 AI 資本支出回寫）。
+- 範圍參照（如 `Pipeline!$L$5:$L$150`）逐格展開並用正確工作表解析；Pipeline 頁只展開本玩家園區列（鍵含 `_<碼>_`），命中的園區列標「園區列」，其 In 頁輸入列標「園區輸入列（人工確認：多為公司公告）」（Microsoft Fairwater、Meta Prometheus 等）；JSON 的 `campus_rows` 列出命中的 Pipeline 列號。
+- 每列輸出：`cell`、`parent`（上層格）、公式、值、`label`（In 頁鍵與名稱）、`flag`（同源旗標）、`status`：生效＝值沿此路徑傳到輸出；條件讀取＝只出現在 IF 條件、不傳值（例：Gap!G107 空白時 G104→G106→In!K172 營業現金流）；分支未生效＝IF 未取到的分支（目前只判頂層 IF；巢狀 IF 視為生效，須人工看）。
+- 關鍵字誤觸者（如 `cap_g_ext` 外推年增、`ai_sh`）預設標「人工確認：不同源」，可用 `--manual 鍵=標記` 增補；`flag` 為「人工確認」者須人工判定，不自動當同源。與其他玩家無關的 In 頁列不追、不列。
+- 反向查詢 `act26_readers`：哪些公式讀 `act26_<碼>`（公司已公布實績）；若只有 Compare 頁，代表實績未進 GW／資本支出路徑。
+- 判定仍靠人：同源旗標只標「路徑上讀到公司輸入」，要看 `status` 是否生效、再把結論寫進 Coord 追公式列（整列同源→「參考（同源校準）」、「無可比實績（層級值同源）」；部分同源→改比每 GW）。
