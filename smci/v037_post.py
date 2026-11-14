@@ -1,4 +1,4 @@
-# 美超微 v0.3.7（2026-11-15）後處理：個股 HTML 版面規格 v1.3（樣板 NVIDIA v0.3.10、Broadcom、Astera Labs；同 lineage 緯穎 v0.2.6 wiwynn/v026_post.py）＋三層協調 C0（實績）公司實績對帳（規則 v1.4.2）。
+# 美超微 v0.3.7（2026-11-15）後處理：個股 HTML 版面規格 v1.3（樣板 NVIDIA v0.3.10、Broadcom、Astera Labs；同 lineage 緯穎 v0.2.6 wiwynn/v026_post.py）＋三層協調 C0（實績）對帳（實績營收 × 口述占比換算，Assumed；規則 v1.4.2）。
 # 只新增，不改既有數值格（以 tools/xlsx_diff.py 對 v0.3.6 逐格比對）：
 #   Hist 頁（新）：GAAP 損益表歷史 FY2023–FY2025（S&P Global 經 stockanalysis；FY2022 營收與淨利只供年增率）
 #   PL 頁末：標準損益表（FY2023A–FY2026A 實績＋FY2027E–FY2031E 情境 B；公司 non-GAAP 口徑（與模型一致），歷史另列 GAAP 稀釋 EPS 對照）、比率區、核對列
@@ -6,7 +6,7 @@
 #   Val 頁末：0.7 四個目標價並列（HTML 用）
 #   Sens 頁末：目標價敏感度：業務主因（整本重算快照 smci/sens.json）與「加權目標價相對基準」白話表（HTML 敏感度主圖用）
 #   README 頁末：v1.3 展示層白話列（橫幅說明、重點觀察 ≤5 點、分部營收推導說明、本版要點）
-#   Coord 頁末：C0 由下往上對帳（讀哪一層、哪一版；讀取層級同源列不判定）＋第 4 節 C0（實績）：2026 年 1–9 月 AI GPU 平台營收（季報×公司揭露 AI 占比） vs 層級隱含值（同源校準，無可比實績）
+#   Coord 頁末：C0 由下往上對帳（讀哪一層、哪一版；讀取層級同源列不判定）＋第 4 節 C0（實績）：2026 年 1–9 月 AI GPU 平台營收（季報 × 公司口述 AI 占比，Assumed） vs 層級隱含值（同源校準，無可比實績）
 # build_smci.py 在 COORD.add_sheet 之後、存檔前呼叫 apply(wb, SIL, here, coord_rows)。
 import hashlib, json, os, re
 from openpyxl.styles import Font, PatternFill
@@ -546,7 +546,7 @@ def readme13(wb, SIL, PLA, RVA, coord_rows):
     if coord_rows:
         CR = coord_rows
         put("o5", F(T("5｜對帳中：Siliconomics 標示 CY"), 'Coord!B' + str(CR["yrs"]), T(" 對帳中；另一側讀數（Wattonomics 換算的部署量）目標價 "), f'TEXT(Coord!C{CR["tp"]},"0")', T(" 美元（"), f'Coord!C{CR["rec"]}', T("），現行 "),
-                    f'TEXT(Coord!B{CR["tp"]},"0")', T(" 美元（"), f'Coord!B{CR["rec"]}', T("）；個股不裁決。公司實績（AI GPU 平台營收）對層級：份額同源校準，無可比實績。")))
+                    f'TEXT(Coord!B{CR["tp"]},"0")', T(" 美元（"), f'Coord!B{CR["rec"]}', T("）；個股不裁決。AI GPU 平台營收（實績營收 × 口述占比，Assumed）對層級：份額同源校準，無可比實績。")))
     else:
         put("o5", "5｜本次建置不含 Coord 頁（三層協調兩讀數快照重建用）。")
     pr = lambda p: lab(P, p, rb_, exact=True)
@@ -554,32 +554,32 @@ def readme13(wb, SIL, PLA, RVA, coord_rows):
                  f'TEXT(PL!F{pr("AI GPU 平台營收")},"#,##0.0")', T(" 十億美元。非 AI（企業、儲存、邊緣）由 FY2026 實績乘成長率；FY2028 為 "), f'TEXT(PL!F{pr("非 AI（企業、儲存、邊緣等）")},"#,##0.0")',
                  T(" 十億美元。合計＝合併營收 "), f'TEXT(PL!F{PLA["R"]["rev"]},"#,##0.0")', T(" 十億美元。")))
     put("ver", F(T("v0.3.7（2026-11-15）：版面規格 v1.3 全面改版（章節順序、橫幅 ≤200 字、重點觀察 ≤5 點、標準損益表 FY2023A–FY2031E、反向 DCF 頁、四個目標價與現價圖、敏感度改加權目標價相對基準低案／高案主圖）；"
-                 "三層協調：Coord 頁並列兩讀數目標價，並新增 C0（實績）：2026 年 1–9 月 AI GPU 平台營收對層級隱含值，列兩讀數但不判定（份額由本公司實績校準，無可比實績）；同源列標「讀取層級（同源，不判定）」。"
+                 "三層協調：Coord 頁並列兩讀數目標價，並新增 C0（實績）：2026 年 1–9 月 AI GPU 平台營收（實績營收 × 口述占比換算，Assumed）對層級隱含值，列兩讀數但不判定（份額由本公司換算值校準，無可比實績）；同源列標「讀取層級（同源，不判定）」。"
                  "xlsx 只新增 Hist、RevDCF、Coord 頁與各頁末新增區塊，既有數值、加權目標價與投資建議不變。"
                  "舊 README 內文（下方各節）與 v0.3.6 沿革節的數字早於 Siliconomics v0.19 全下游重建，與現行不符；現行值以 Val 頁與本展示層為準。")))
     return M
 
 
-# ---------- Coord：C0（實績）——公司實績 vs 層級隱含值（規則 v1.4.2 C0 第 2 點；v0.3.7 新增） ----------
-VERIF = "Verified（公司 10-Q／新聞稿營收）× 公司揭露 AI 占比（Interested-party）"
+# ---------- Coord：C0（實績）——實績營收 × 口述占比（換算，Assumed）vs 層級隱含值（規則 v1.4.2 C0 第 2 點；v0.3.7 新增） ----------
+VERIF = "Assumed（營收 Verified × 口述占比 Assumed）"   # tools/coord/README.md：口述占比 × 營收屬 Assumed，不算公司實績
 
 
 def c0_actuals(wb, C, r, lay):
     out = {"sec": r}
-    C.cell(r, 1, "4. C0（實績）：公司實績 vs 層級隱含值（規則 v1.4.2 C0 第 2 點；v0.3.7 新增）。結論：無可比實績（層級值同源）——層級沒有美超微份額的獨立來源，2H FY26 有效份額由本模型以 2026 年 1–6 月公司實績校準；下表只作參考，不判定、不計對帳中").font = BOLD; r += 1
-    C.cell(r, 1, ("方法：公司實績側＝公司季營收（財報）× 公司揭露的 AI 占營收比例（3Q FY26 約八成、4Q FY26 約 59%～60%、1Q FY27 約 71%；比例為公司口述，Interested-party）＝AI GPU 平台營收。"
+    C.cell(r, 1, "4. C0（實績）：實績營收 × 公司口述 AI solutions 占比（換算）vs 層級隱含值（規則 v1.4.2 C0 第 2 點；v0.3.7 新增）。結論：無可比實績（層級值同源）——層級沒有美超微份額的獨立來源，2H FY26 有效份額由本模型以 2026 年 1–6 月換算值校準；缺 AI 營收金額揭露（口述占比屬 Assumed）；下表只作參考，不判定、不計對帳中").font = BOLD; r += 1
+    C.cell(r, 1, ("方法：個股換算側＝公司季營收（財報，Verified）× 公司口述 AI solutions 占營收比例（3Q FY26 約八成、4Q FY26 約 59%～60%、1Q FY27 約 71%；口述占比屬 Assumed）＝AI GPU 平台營收（換算，Assumed，不算公司實績；公司未揭露 AI 營收金額）。"
                   "層級側＝商用 GPU 系統市場（Siliconomics 基準層，CY2026）× 美超微 2H FY26 有效份額＝CY2026 全年隱含 AI GPU 平台營收。"
                   "主讀數＝2026 年已公布期間（1–9 月：3Q FY26、4Q FY26、1Q FY27）累計 vs 層級 CY2026 × 9 ÷ 12（線性時差近似，Derived）；第二讀數＝最近一季（1Q FY27，2026-07～09）× 4 vs 層級 CY2026。"
                   "最近一季落在年度後半，第二讀數偏高。"))
     r += 1
-    C.cell(r, 1, ("為什麼不判定：2H FY26 有效份額＝2026 年 1–6 月 AI 營收實績 ÷（½ × CY2026 市場），所以層級 CY2026 全年隱含值＝2 × 上半年實績（見下方核對列），市場值在比式中消去；"
+    C.cell(r, 1, ("為什麼不判定：2H FY26 有效份額＝2026 年 1–6 月 AI 營收換算值 ÷（½ × CY2026 市場），所以層級 CY2026 全年隱含值＝2 × 上半年換算值（見下方核對列），市場值在比式中消去；"
                   "前兩季（1–6 月）就是校準輸入，只有 1Q FY27 是新資訊，表中差距實際反映的是美超微下半年相對上半年的成長，而不是 Siliconomics 市場的誤差。"
                   "本模型 FY2027 份額另以公司全年營收指引重新校準（為 2H FY26 份額的 1.57 倍，見 Recon）。本表實際檢驗的是錨點：(a) 1Q FY27 AI 營收對上半年季均；(b) 1Q FY27 營收對 FY2027 指引季均；(c) 1Q FY27 AI 占比對模型 FY2027。"))
     r += 1
     for j, h in enumerate(["項目", "主讀數（2026 年 1–9 月累計）", "第二讀數（1Q FY27 × 4）", "單位與口徑", "來源與證據等級", "出處網址（只在 xlsx）"], 1):
         c = C.cell(r, j, h); c.font = BOLD; c.fill = HDR
     out["head"] = r; r += 1
-    C.cell(r, 1, "4.1 公司實績：AI GPU 平台營收（US$B；＝季營收 × 公司揭露 AI 占比）").font = BOLD; r += 1
+    C.cell(r, 1, "4.1 實績營收 × 公司口述 AI solutions 占比（換算）：AI GPU 平台營收（US$B；Assumed，不算公司實績）").font = BOLD; r += 1
     m0 = r
     C.cell(r, 1, "　3Q FY26（2026-01～03）AI GPU 平台營收"); C[f"B{r}"] = "=Q!D16"; C[f"B{r}"].number_format = "#,##0.000"
     C.cell(r, 4, "US$B；本模型 Q 頁：營收 10.2427 × AI 占比 80%（公司口述）"); C.cell(r, 5, VERIF); r += 1
@@ -590,7 +590,7 @@ def c0_actuals(wb, C, r, lay):
     C.cell(r, 1, "　1Q FY27 AI 占營收（公司口述）"); C[f"B{r}"] = 0.71; C[f"B{r}"].font = BLUE; C[f"B{r}"].number_format = "0.0%"
     C.cell(r, 4, "公司 1Q FY27 預備講稿：AI solutions 約占營收 71%（4Q FY26 為 59%）"); C.cell(r, 5, "Interested-party（公司口述比例）"); C.cell(r, 6, PRQ127); rsh = r; r += 1
     C.cell(r, 1, "　1Q FY27（2026-07～09）AI GPU 平台營收"); C[f"B{r}"] = f"=B{rq1}*B{rsh}"; C[f"B{r}"].number_format = "#,##0.000"
-    C.cell(r, 4, "US$B；＝營收 × 公司揭露 AI 占比"); C.cell(r, 5, "Derived"); q3 = r; r += 1
+    C.cell(r, 4, "US$B；＝營收 × 公司口述 AI 占比"); C.cell(r, 5, VERIF); q3 = r; r += 1
     C.cell(r, 1, "　2026-01～09 AI GPU 平台營收累計（主讀數用）"); C[f"B{r}"] = f"=B{m0}+B{m0 + 1}+B{q3}"; C[f"B{r}"].number_format = "#,##0.000"
     C.cell(r, 4, "US$B；三季合計"); C.cell(r, 5, "Derived（加總）"); cum = r; r += 1
     C.cell(r, 1, "　核對：1–6 月 AI 營收 − Q 頁 2H FY26 AI（份額校準用）"); C[f"B{r}"] = f"=B{m0}+B{m0 + 1}-a26_aih2"; C[f"B{r}"].number_format = "0.000"
@@ -601,7 +601,7 @@ def c0_actuals(wb, C, r, lay):
     C.cell(r, 4, "US$B；公司 1Q FY27 財報上調為 72–82（指引，非實績）"); C.cell(r, 5, "Interested-party"); C.cell(r, 6, PRQ127); g27 = r; r += 1
     C.cell(r, 1, "　參考：本模型 FY2027 AI 占營收（情境 B）"); C[f"B{r}"] = f"=PL!E{lay['aish']}"; C[f"B{r}"].number_format = "0.0%"
     C.cell(r, 4, "本模型預測（非實績）"); C.cell(r, 5, "Derived"); aim = r; r += 1
-    C.cell(r, 1, "4.3 對帳（實績側 vs 層級隱含）").font = BOLD; r += 1
+    C.cell(r, 1, "4.3 對帳（換算側 vs 層級隱含）").font = BOLD; r += 1
 
     def row2(label, fb, fc, fmt, unit, src, bold=False):
         nonlocal r
@@ -612,23 +612,23 @@ def c0_actuals(wb, C, r, lay):
         if bold:
             for c in "ABC": C[f"{c}{r}"].font = BOLD
         r += 1; return r - 1
-    a_rev = row2("　公司實績：AI GPU 平台營收（主：2026 年 1–9 月累計；第二：1Q FY27 × 4）", f"=B{cum}", f"=B{q3}*4", "#,##0.00", "US$B；主讀數為 9 個月累計、第二讀數為年化", VERIF, True)
+    a_rev = row2("　實績營收 × 公司口述 AI solutions 占比（換算；主：2026 年 1–9 月累計；第二：1Q FY27 × 4）", f"=B{cum}", f"=B{q3}*4", "#,##0.00", "US$B；主讀數為 9 個月累計、第二讀數為年化", VERIF, True)
     l_mk = row2("　層級：商用 GPU 系統市場 CY2026（Siliconomics 基準層）", f"=B{lay['l_mk']}", f"=B{lay['l_mk']}", "#,##0.0", "US$B；連到下方「讀取層級」第 (1) 項的 Siliconomics 層列", "Siliconomics v0.19（商用 GPU 系統市場基準值）；Derived")
-    l_sh = row2("　× 美超微有效份額（2H FY26 校準）", f"=PL!D{lay['sh0']}", f"=PL!D{lay['sh0']}", "0.00%", "＝2026 年 1–6 月 AI 營收實績 ÷（½ × CY2026 市場）（同源）", "Derived（由本模型 2H FY26 實績校準）")
+    l_sh = row2("　× 美超微有效份額（2H FY26 校準）", f"=PL!D{lay['sh0']}", f"=PL!D{lay['sh0']}", "0.00%", "＝2026 年 1–6 月 AI 營收換算值 ÷（½ × CY2026 市場）（同源）", "Derived（由本模型 2H FY26 實績校準）")
     l_fy = row2("　＝ 層級隱含 CY2026 全年 AI GPU 平台營收", f"=B{l_mk}*B{l_sh}", f"=C{l_mk}*C{l_sh}", "#,##0.00", "US$B；全年", "Derived", True)
     l_tf = row2("　× 期間係數（主：已公布月數 ÷ 12；第二：1）", "=9/12", "=1", "0.000", "線性時差近似（層級值為日曆年）", "Derived")
     l_pd = row2("　＝ 層級側同期隱含 AI GPU 平台營收", f"=B{l_fy}*B{l_tf}", f"=C{l_fy}*C{l_tf}", "#,##0.00", "US$B", "Derived", True)
     out["fy"] = l_fy
-    C.cell(r, 1, "　差距（實績側 ÷ 層級側 − 1）"); C[f"B{r}"] = f"=B{a_rev}/B{l_pd}-1"; C[f"C{r}"] = f"=C{a_rev}/C{l_pd}-1"
+    C.cell(r, 1, "　差距（換算側 ÷ 層級側 − 1）"); C[f"B{r}"] = f"=B{a_rev}/B{l_pd}-1"; C[f"C{r}"] = f"=C{a_rev}/C{l_pd}-1"
     for c in "BC": C[f"{c}{r}"].number_format = "+0.0%;-0.0%"; C[f"{c}{r}"].font = BOLD
-    C.cell(r, 4, "正值＝公司實績高於層級隱含"); out["d"] = r; d = r; r += 1
-    C.cell(r, 1, "　判定：無可比實績（層級值同源）——份額由本公司上半年實績同源校準，本表不檢驗 GPU 系統市場；參考（同源校準），不判定、不計對帳中")
+    C.cell(r, 4, "正值＝個股換算值高於層級隱含"); out["d"] = r; d = r; r += 1
+    C.cell(r, 1, "　判定：無可比實績（層級值同源）——份額由本公司上半年換算值同源校準，本表不檢驗 GPU 系統市場；參考（同源校準），不判定、不計對帳中")
     C[f"B{r}"] = "無可比實績（不判定）"; C[f"B{r}"].font = BOLD
-    C.cell(r, 4, "缺：美超微在商用 GPU 系統市場份額的獨立揭露（規則 v1.4.2：沒有可比實績時不以同源值補位）"); C.cell(r, 5, "規則 v1.4.2 C0 第 2 點、工作單 20261114"); out["judge"] = r; r += 1
+    C.cell(r, 4, "缺：AI 營收金額揭露（口述占比屬 Assumed）；美超微在商用 GPU 系統市場份額的獨立揭露（規則 v1.4.2：沒有可比實績時不以同源值補位）"); C.cell(r, 5, "規則 v1.4.2 C0 第 2 點、工作單 20261114"); out["judge"] = r; r += 1
     C.cell(r, 1, "　參考：兩讀數是否都在 ±15% 內（僅描述，不構成判定）"); C[f"B{r}"] = f'=IF(AND(ABS(B{d})<=0.15,ABS(C{d})<=0.15),"都在 ±15% 內","有讀數超過 ±15%")'
-    C.cell(r, 4, "描述用；層級側＝2 × 上半年實績（見下方核對列）；差距反映下半年相對上半年的成長"); out["ref_in"] = r; r += 1
-    C.cell(r, 1, "　核對：層級隱含 CY2026 全年 − 2 × 2026 年 1–6 月 AI 營收實績（應為 0）"); C[f"B{r}"] = f"=B{l_fy}-2*a26_aih2"; C[f"B{r}"].number_format = "0.000000"
-    C.cell(r, 4, "US$B；為 0＝層級隱含值與本公司實績同源（市場消去）"); C.cell(r, 5, "核對列"); out["ck_same"] = r; r += 1
+    C.cell(r, 4, "描述用；層級側＝2 × 上半年換算值（見下方核對列）；差距反映下半年相對上半年的成長"); out["ref_in"] = r; r += 1
+    C.cell(r, 1, "　核對：層級隱含 CY2026 全年 − 2 × 2026 年 1–6 月 AI 營收換算值（應為 0）"); C[f"B{r}"] = f"=B{l_fy}-2*a26_aih2"; C[f"B{r}"].number_format = "0.000000"
+    C.cell(r, 4, "US$B；為 0＝層級隱含值與本公司換算值同源（市場消去）"); C.cell(r, 5, "核對列"); out["ck_same"] = r; r += 1
     C.cell(r, 1, "　實際檢驗 (a)：1Q FY27 AI 營收 ÷ 2026 上半年季均 AI 營收 − 1"); C[f"B{r}"] = f"=B{q3}/(a26_aih2/2)-1"; C[f"B{r}"].number_format = "+0.0%;-0.0%"
     C.cell(r, 4, "比；正值＝下半年首季高於上半年季均（層級線性分配假設全年均勻）"); C.cell(r, 5, "Derived"); out["ref_a"] = r; r += 1
     C.cell(r, 1, "　實際檢驗 (b)：1Q FY27 營收 ÷（FY2027 指引中點 ÷ 4）− 1"); C[f"B{r}"] = f"=B{rq1}/(B{g27}/4)-1"; C[f"B{r}"].number_format = "+0.0%;-0.0%"
@@ -647,7 +647,7 @@ def coord_c0(wb, SIL, R):
     rb = lab(P, K["PLB"]); g = lambda p: lab(P, p, rb, exact=True)
     N = SIL.NAMES
     r = C.max_row + 3
-    C.cell(r, 1, "C0 由下往上對帳（三層基準協調規則 v1.4.2 C0 第 2 點；v0.3.7 新增）：比較基準是公司實績（第 4 節 C0〔實績〕：AI GPU 平台營收 vs 層級隱含值）；本模型自層級讀入的同源值只列在第 2 節「讀取層級」，不判定、不計對帳中。差距超過 ±15% 標「對帳中」，不改上游值，由主控開對帳單。").font = BOLD
+    C.cell(r, 1, "C0 由下往上對帳（三層基準協調規則 v1.4.2 C0 第 2 點；v0.3.7 新增）：比較基準是公司實績（第 4 節 C0〔實績〕：本公司缺 AI 營收金額揭露，改列實績營收 × 公司口述 AI solutions 占比〔換算，Assumed〕vs 層級隱含值）；本模型自層級讀入的同源值只列在第 2 節「讀取層級」，不判定、不計對帳中。差距超過 ±15% 標「對帳中」，不改上游值，由主控開對帳單。").font = BOLD
     c0 = r; r += 1
     C.cell(r, 1, "1. 讀哪一層、哪一版").font = BOLD; r += 1
     for j, h in enumerate(["項目", "值", "版本／檔案", "本模型用途", "備註"], 1):
@@ -718,8 +718,8 @@ def coord_c0(wb, SIL, R):
     c0_concl = r; r += 2
     A4 = c0_actuals(wb, C, r, lay)
     C[f"B{n_other}"] = f'=IF(B{A4["judge"]}="對帳中",1,0)'
-    C[f"B{c0_concl}"] = F(T("C0（實績）：無可比實績（層級值同源）——層級沒有美超微份額的獨立來源，不判定、不計對帳中（對帳中項目數 0）。"
-                          "2H FY26 有效份額是本模型以 2026 年 1–6 月 AI 營收實績反推，層級 CY2026 隱含值＝上半年實績的兩倍，GPU 系統市場在比式中消去，不得讀成層級獲得獨立驗證。"
+    C[f"B{c0_concl}"] = F(T("C0（實績）：無可比實績（層級值同源）——層級沒有美超微份額的獨立來源，且缺 AI 營收金額揭露（口述占比屬 Assumed，實績營收 × 口述占比只是換算值，不算公司實績），不判定、不計對帳中（對帳中項目數 0）。"
+                          "2H FY26 有效份額是本模型以 2026 年 1–6 月 AI 營收換算值反推，層級 CY2026 隱含值＝上半年換算值的兩倍，GPU 系統市場在比式中消去，不得讀成層級獲得獨立驗證。"
                           "第 4 節表實際檢驗的是錨點：1Q FY27 AI 營收比上半年季均 "), f'TEXT(B{A4["ref_a"]},"+0.0%;-0.0%")',
                           T("；1Q FY27 營收比 FY2027 指引季均 "), f'TEXT(B{A4["ref_b"]},"+0.0%;-0.0%")', T("；1Q FY27 AI 占比比模型 FY2027 "), f'TEXT(B{A4["ref_c"]}*100,"+0.0;-0.0")', T(" 個百分點"),
                           T("。（描述：1–9 月累計對層級同期隱含值 "), f'TEXT(B{A4["d"]},"+0.0%;-0.0%")', T("、最近一季年化對全年 "), f'TEXT(C{A4["d"]},"+0.0%;-0.0%")', T("，兩者都超過 ±15%，但層級份額同源校準，只反映下半年成長，不構成對帳中。）"
@@ -736,8 +736,8 @@ def version(wb, here, coord_rows):
     head = a1.split("；", 1)[0]
     if f"v{VER}" not in head:   # 標題段版號未隨版更新（舊檔）：改為本版（版本沿革文字不動）
         a1 = re.sub(r"v\d+\.\d+(\.\d+)?", f"v{VER}", head, count=1) + a1[len(head):]
-    a1 += (f"；v{VER}（{BUILT}）同版另：版面規格 v1.3 全面改版（新增 Hist、RevDCF 頁，PL、Val、Sens、README 頁末新增區塊）與三層協調 C0（實績）補公司實績對帳"
-           "（Coord 頁末「C0〔實績〕」：2026 年 1–9 月 AI GPU 平台營收 vs 層級隱含值，份額由本公司上半年實績校準→無可比實績，不判定；同源列標「讀取層級（同源，不判定）」）；既有數值、加權目標價與評等不變")
+    a1 += (f"；v{VER}（{BUILT}）同版另：版面規格 v1.3 全面改版（新增 Hist、RevDCF 頁，PL、Val、Sens、README 頁末新增區塊）與三層協調 C0（實績）對帳"
+           "（Coord 頁末「C0〔實績〕」：2026 年 1–9 月 AI GPU 平台營收〔實績營收 × 口述占比換算，Assumed；缺 AI 營收金額揭露〕vs 層級隱含值，份額由本公司上半年換算值校準→無可比實績，不判定；同源列標「讀取層級（同源，不判定）」）；既有數值、加權目標價與評等不變")
     RD["A1"].value = a1
     return a1
 

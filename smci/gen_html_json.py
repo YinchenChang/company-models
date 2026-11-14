@@ -401,7 +401,7 @@ if "Coord" in WBF.sheetnames:
     CW = WBF["Coord"]
     cr = lambda p, start=1: next(r for r in range(start, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith(p))
     c0 = cr("C0 由下往上對帳"); c1 = cr("1. 讀哪一層", c0); c2 = cr("2. 讀取層級", c0); c3 = cr("3. 結論", c0); r_cc = cr("C0 結論（白話）", c3)
-    c4 = cr("4. C0（實績）", c3); r_m = cr("4.1 公司實績", c4); r_p = cr("4.2 口徑換算", c4); r_cmp = cr("4.3 對帳", c4)
+    c4 = cr("4. C0（實績）", c3); r_m = cr("4.1 實績營收", c4); r_p = cr("4.2 口徑換算", c4); r_cmp = cr("4.3 對帳", c4)
     r_meth = cr("方法：", c4); r_rem = cr("為什麼不判定", c4); r_end = CW.max_row
     nfmt = lambda r: next((CW[f"{c}{r}"].number_format for c in "BCDE" if isinstance(CW[f"{c}{r}"].value, (int, float)) or (isinstance(CW[f"{c}{r}"].value, str) and CW[f"{c}{r}"].value.startswith("=") and c in "BC")), "General")
     fcode = lambda a, nf: "" if ("判定：" in a or "是否都在" in a) else ("sp1" if nf.startswith("+") else "p1" if "%" in nf else "n3" if nf == "0.000" else "n2" if nf == "0.00" else "n1")
@@ -441,14 +441,14 @@ if "Coord" in WBF.sheetnames:
         if "核對" in a:
             f_ = "n3"
         in_rows.append([f"@Coord!A{r}", f"@Coord!B{r}|{f_}", (f"@Coord!D{r}" if CW[f"D{r}"].value else ""), (f"@Coord!E{r}" if CW[f"E{r}"].value else "")])
-    c0_blocks = [{"type": "h3", "text": "三層協調：公司實績對照（無可比實績，不判定）"},
+    c0_blocks = [{"type": "h3", "text": "三層協調：實績營收 × 口述占比對照（無可比實績，不判定）"},
                  {"type": "note", "parts": [f"@Coord!B{r_cc}"]},
                  {"type": "note", "parts": [f"@Coord!A{r_meth}"]},
-                 {"type": "table", "caption": "公司實績對照（參考，不判定：美超微份額由本公司上半年實績反推，無可比實績）：2026 年已公布三季 AI GPU 平台營收對層級隱含值的差（金額十億美元）",
+                 {"type": "table", "caption": "實績營收 × 公司口述 AI solutions 占比（換算，Assumed）對照（參考，不判定：缺 AI 營收金額揭露，美超微份額由本公司上半年換算值反推，無可比實績）：2026 年已公布三季 AI GPU 平台營收對層級隱含值的差（金額十億美元）",
                   "head": ["項目", "主讀數（已公布季度累計）", "第二讀數（最近一季年化）", "單位與口徑", "來源與證據等級"], "rows": act_rows},
                  {"type": "note", "parts": [f"@Coord!A{r_rem}"]},
-                 {"type": "table", "caption": "實績輸入（逐季 AI GPU 平台營收、核對列）與參考值", "head": ["項目", "值", "單位與口徑", "來源與證據等級"], "rows": in_rows,
-                  "collapse": True, "summary": "展開：逐季實績、核對列與出處"},
+                 {"type": "table", "caption": "換算輸入（逐季實績營收 × 口述占比、核對列）與參考值", "head": ["項目", "值", "單位與口徑", "來源與證據等級"], "rows": in_rows,
+                  "collapse": True, "summary": "展開：逐季換算值、核對列與出處"},
                  {"type": "table", "caption": "讀取層級（同源，不判定）：本模型自 Siliconomics 層讀入的值與層級值必然相同，差距恆為零，無檢驗力，不計入對帳中（情境 B 基準對 Siliconomics 基準；金額十億美元）", "head": ["項目", "CY2026", "CY2027", "CY2028", "CY2029", "單位與口徑", "來源與證據等級"], "rows": c0_rows,
                   "collapse": True, "summary": "展開：讀取層級（同源，不判定）與層級之間的參考差距"},
                  {"type": "table", "caption": "讀哪一層、哪一版（下游只註明版本、不自行重估）", "head": ["項目", "值", "版本／檔案", "本模型用途", "備註"], "rows": lay_rows,
