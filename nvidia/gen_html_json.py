@@ -417,13 +417,16 @@ def _v13():
     rowx = lambda r: [f"@PL!A{r}"] + [f"@PL!{c}{r}|{fmt(PLW.cell(r, 2).value)}" for c in "CDEFGHIJ"]
     r_ratio = plr("比率"); r_gaap = next(r for r in range(ph, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("GAAP 對照"))
     r_chk = plr("核對（應為 0）")
+    r_d31 = next(r for r in range(r_chk, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("差額（FY2031E）：毛利"))
     is_tbl = {"type": "table", "caption": "標準損益表（十億美元；EPS 為美元）：FY2024A–FY2026A 實績、FY2027E–FY2031E 情境 B（基準）",
               "head": [f"@PL!A{ph}"] + [f"@PL!{c}{ph}" for c in "CDEFGHIJ"],
-              "rows": [rowx(plr(k)) for k in keys] + [{"sub": f"@PL!A{r_ratio}"}] + [rowx(r) for r in range(r_ratio + 1, r_gaap)]}
+              "rows": [rowx(plr(k)) for k in keys] + [{"sub": f"@PL!A{r_ratio}"}] + [rowx(r) for r in range(r_ratio + 1, r_gaap)]
+                      + [{"sub": "核對：FY2031E 兩種推法的營業利益差額（毛利率與營業費用率沿用 FY2030，Andy 決定）"}]
+                      + [rowx(r) for r in (r_d31, r_d31 + 1)]}
     gaap_tbl = {"type": "table", "caption": f"@PL!A{r_gaap}", "head": [f"@PL!A{ph}"] + [f"@PL!{c}{ph}" for c in "CDE"], "collapse": True,
                 "summary": "展開：GAAP 對照（含權益證券損益；只列實績）與核對列",
                 "rows": [[f"@PL!A{r}"] + [f"@PL!{c}{r}|{fmt(PLW.cell(r, 2).value)}" for c in "CDE"] for r in range(r_gaap + 1, r_chk)]
-                        + [{"sub": f"@PL!A{r_chk}"}] + [[f"@PL!A{r}"] + [f"@PL!{c}{r}|n3" for c in "CDE"] for r in range(r_chk + 1, r_chk + 5)]}
+                        + [{"sub": f"@PL!A{r_chk}"}] + [[f"@PL!A{r}"] + [f"@PL!{c}{r}|n3" for c in "CDE"] for r in range(r_chk + 1, r_chk + 7) if r not in (r_d31, r_d31 + 1)]}
     rv_, gm_, opm_, nm_ = plr("營收"), plr("毛利率"), plr("營業利益率"), plr("淨利率")
     is_chart = {"type": "theme", "title": "營收（十億美元）與毛利率、營業利益率、淨利率：FY2024A–FY2031E（情境 B）", "x": f"@PL!C{ph}:J{ph}",
                 "fmt": "n0", "fmt_r": "p0", "stack": True, "pad": 1.6,
@@ -431,7 +434,7 @@ def _v13():
                 "lines": [{"name": f"@PL!A{gm_}", "y": f"@PL!C{gm_}:J{gm_}", "axis": "r", "color": "#0b7a80", "labels": True},
                           {"name": f"@PL!A{opm_}", "y": f"@PL!C{opm_}:J{opm_}", "axis": "r", "color": "#c29a2b"},
                           {"name": f"@PL!A{nm_}", "y": f"@PL!C{nm_}:J{nm_}", "axis": "r", "color": "#6f6bae", "dash": True}],
-                "caption": "長條＝營收；三條線＝毛利率、營業利益率、淨利率（右軸，Non-GAAP 模型口徑）。FY2031E 為延伸期，只推營收與淨利率，未拆毛利率。"}
+                "caption": "長條＝營收；三條線＝毛利率、營業利益率、淨利率（右軸，Non-GAAP 模型口徑）。FY2031E 為延伸期：營收與淨利率由收斂法推得，毛利率與營業費用率沿用 FY2030（Andy 決定）。"}
     x0 = find("PL", "三情境延伸到 FY2032"); xh = x0 + 2
     xa, xb, xc = (next(r for r in range(x0, PLW.max_row + 1) if PLW.cell(r, 1).value == f"情境 {k}") for k in "ABC")
     xr = lambda base, lab_: next(r for r in range(base, PLW.max_row + 1) if PLW.cell(r, 1).value == lab_)

@@ -115,7 +115,8 @@ def pl_standard(wb):
                    'TEXT(ABS(MIN(Q!B' + str(q_eps_chk) + ':I' + str(q_eps_chk) + ')),"0.00")',
                    T(" 美元，Q 頁）。FY2024–FY2026 與公司當年公告的 Non-GAAP EPS 不同：當年公司口徑排除股票薪酬，本表照列為費用。GAAP 合計列在本表下方對照。FY2024、FY2025 的稅後淨利＝（營業利益＋不含權益證券損益的其他收益）×（1 − GAAP 有效稅率）；FY2026 為 Q 頁四季合計（各季有效稅率）。")))
     r_note = r; r += 1
-    P.cell(r, 1, "FY2027E＝錨點（第一、二季實績＋第三季指引＋第四季假設）；FY2028E–FY2030E＝情境 B 由下而上；FY2031E＝延伸期（收斂法只推營收與淨利率，營業利益＝淨利 ÷（1 − 稅率）− 其他收益，同 DCF 頁；不拆營業成本、毛利與營業費用，該三列留白）")
+    P.cell(r, 1, "FY2027E＝錨點（第一、二季實績＋第三季指引＋第四季假設）；FY2028E–FY2030E＝情境 B 由下而上；FY2031E＝延伸期（收斂法只推營收與淨利率，營業利益＝淨利 ÷（1 − 稅率）− 其他收益，同 DCF 頁）。"
+                 "FY2031E 毛利率與營業費用率沿用 FY2030（Andy 11-14 決定），據以算出營業成本、毛利與營業費用；與延伸期營業利益的差額見表末核對列（目標價用延伸期淨利，不受影響）")
     r_note2 = r; r += 1
     hdr = ["項目", "單位"] + YEARS + ["說明"]
     for j, h in enumerate(hdr, 1):
@@ -136,11 +137,14 @@ def pl_standard(wb):
     fc = lambda key: [f"=PL!{c}{R[key]}" for c in "CDEFG"]       # FY2026A–FY2030E（PL 情境 B 區塊 C–G 欄）
     row("rev", "營收", "US$B", ["=h_is_rev_24", "=h_is_rev_25"] + fc("rev") + [f"=PL!H{X['rev']}"], M)
     row("yoy", "營收年增率（YoY）", "%", ["=C{rev}/h_is_rev_23-1".format(**L)] + [f"={c}{L['rev']}/{p}{L['rev']}-1" for p, c in zip(COLS, COLS[1:])], PCT)
-    row("cogs", "營業成本（COGS）", "US$B", ["=h_is_cogs_24", "=h_is_cogs_25"] + [f"=PL!{c}{R['rev']}-PL!{c}{R['gp']}" for c in "CDEFG"] + [None], M)
-    row("gp", "毛利", "US$B", ["=h_is_gp_24", "=h_is_gp_25"] + fc("gp") + [None], M)
-    row("gm", "毛利率", "%", [f"={c}{L['gp']}/{c}{L['rev']}" for c in COLS[:7]] + [None], PCT)
-    row("opx", "營業費用（研發＋銷管）", "US$B", ["=h_is_opx_24", "=h_is_opx_25"] + fc("opx") + [None], M)
-    row("oi", "營業利益", "US$B", ["=h_is_oi_24", "=h_is_oi_25"] + fc("oi") + [f"=DCF!G{d_ebit}"], M, "FY2031E 取 DCF 頁情境 B 的營業利益（延伸期反推）")
+    r_c = r   # FY2031E：毛利率與營業費用率沿用 FY2030（Andy 2026-11-14 08:57 決定）
+    row("cogs", "營業成本（COGS）", "US$B", ["=h_is_cogs_24", "=h_is_cogs_25"] + [f"=PL!{c}{R['rev']}-PL!{c}{R['gp']}" for c in "CDEFG"] + [f"=J{r_c - 2}*(1-I{r_c + 2})"], M,
+        "FY2031E＝營收 ×（1 − FY2030 毛利率）")
+    row("gp", "毛利", "US$B", ["=h_is_gp_24", "=h_is_gp_25"] + fc("gp") + [f"=J{L['rev']}-J{L['cogs']}"], M)
+    row("gm", "毛利率", "%", [f"={c}{L['gp']}/{c}{L['rev']}" for c in COLS], PCT, "FY2031E＝FY2030（沿用）")
+    row("opx", "營業費用（研發＋銷管）", "US$B", ["=h_is_opx_24", "=h_is_opx_25"] + fc("opx") + [f"=J{L['rev']}*I{r_c + 3}/I{L['rev']}"], M,
+        "FY2031E＝營收 × FY2030 營業費用率")
+    row("oi", "營業利益", "US$B", ["=h_is_oi_24", "=h_is_oi_25"] + fc("oi") + [f"=DCF!G{d_ebit}"], M, "FY2031E 取 DCF 頁情境 B 的營業利益（延伸期由淨利反推；不改）")
     row("opm", "營業利益率", "%", [f"={c}{L['oi']}/{c}{L['rev']}" for c in COLS], PCT)
     row("oth", "其他收入（淨額，不含權益證券損益）", "US$B", ["=h_is_nonop_24-h_is_eqg_24", "=h_is_nonop_25-h_is_eqg_25"] + fc("oth") + ["=oth_f"], M, "利息收入 − 利息費用 ± 其他；權益證券損益排除")
     row("pti", "稅前利益", "US$B", [f"={c}{L['oi']}+{c}{L['oth']}" for c in COLS], M)
@@ -152,7 +156,7 @@ def pl_standard(wb):
     row("eps", "EPS（完全稀釋）", "US$", [f"=C{L['ni']}/C{L['sh']}", f"=D{L['ni']}/D{L['sh']}"] + fc("eps") + [f"=PL!H{X['eps']}"], "0.00")
     P.cell(r, 1, "比率").font = BOLD; r_ratio = r; r += 1
     row("r_yoy", "營收年增率", "%", [f"={c}{L['yoy']}" for c in COLS], PCT)
-    row("r_gm", "毛利率", "%", [f"={c}{L['gm']}" for c in COLS[:7]] + [None], PCT)
+    row("r_gm", "毛利率", "%", [f"={c}{L['gm']}" for c in COLS], PCT)
     row("r_opm", "營業利益率", "%", [f"={c}{L['opm']}" for c in COLS], PCT)
     row("r_nm", "淨利率", "%", [f"={c}{L['nm']}" for c in COLS], PCT)
     ni23 = "((h_is_oi_23+h_is_nonop_23-h_is_eqg_23)*(1-h_is_tax_23/h_is_pti_23))"
@@ -167,6 +171,9 @@ def pl_standard(wb):
     P.cell(r, 1, "核對（應為 0）").font = BOLD; r += 1
     row("c1", "核對：營收 − 營業成本 − 毛利", "US$B", [f"={c}{L['rev']}-{c}{L['cogs']}-{c}{L['gp']}" for c in COLS[:7]] + [None], "0.000")
     row("c2", "核對：毛利 − 營業費用 − 營業利益", "US$B", [f"={c}{L['gp']}-{c}{L['opx']}-{c}{L['oi']}" for c in COLS[:7]] + [None], "0.000")
+    row("c2b", "差額（FY2031E）：毛利 − 營業費用（沿用 FY2030 比率推算）− 延伸期營業利益（由淨利反推）；不為 0 表示兩種推法不一致，目標價用延伸期淨利", "US$B",
+        [None] * 7 + [f"=J{L['gp']}-J{L['opx']}-J{L['oi']}"], "0.000")
+    row("c2c", "差額（FY2031E）占營收", "%", [None] * 7 + [f"=J{L['c2b']}/J{L['rev']}"], PCT)
     row("c3", "核對：稅後淨利 − 情境 B 摘要（FY2026A–FY2030E）／延伸表（FY2031E）", "US$B",
         [None, None] + [f"={c}{L['ni']}-PL!{s}{R['ni']}" for c, s in zip(COLS[2:7], "CDEFG")] + [f"=J{L['ni']}-PL!H{X['ni']}"], "0.000")
     row("c4", "核對：GAAP 稅後淨利 − 本表稅後淨利 − 權益證券損益 ×（1 − GAAP 有效稅率）（FY2024、FY2025）", "US$B",
