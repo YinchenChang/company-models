@@ -7,7 +7,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-OUTNAME="20261106_Alphabet個股模型_v0.3.8.xlsx"
+OUTNAME="20261114_Alphabet個股模型_v0.3.9.xlsx"
 SJ="alphabet/data/sens_v038_20261106.json"
 python3 alphabet/facts_2026q3.py                       # 2026Q3 事實總帳（兩讀核對；不一致即失敗）
 if [ "${CALIB:-0}" = "1" ]; then python3 alphabet/calib_pace_v031.py "$WD/calib"; fi   # C10 速度重解（改了資本支出相關輸入時）
