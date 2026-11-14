@@ -297,6 +297,6 @@ def build(co_dir, xlsx, nm_block=False, pfmt="n0", recon_main=None, v13=False):
     if v13:   # SK 海力士 v0.7.6 起：個股 HTML 版面規格 v1.3（tools/memory_model/html_v13.py）；美光、三星不傳，輸出不變
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
         import html_v13  # noqa: E402
-        cfg = html_v13.transform(cfg, wb)
+        cfg = html_v13.transform(cfg, wb, co_dir)
     json.dump(cfg, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("ok", out)

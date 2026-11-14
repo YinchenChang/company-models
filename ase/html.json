@@ -3928,7 +3928,85 @@
    "blocks": [
     {
      "type": "h3",
-     "text": "三層協調：由下往上對帳（日月光自己的量 vs 它讀的層級值）"
+     "text": "三層協調：公司實績對帳（公司實績 vs 層級隱含值）"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!B78"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!A71"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Coord!A70",
+     "head": [
+      "@Coord!A72",
+      "@Coord!B72",
+      "@Coord!C72",
+      "@Coord!D72",
+      "@Coord!G72",
+      "@Coord!H72",
+      "@Coord!E72",
+      "@Coord!F72"
+     ],
+     "rows": [
+      [
+       "@Coord!A73",
+       "@Coord!B73",
+       "@Coord!C73",
+       "@Coord!D73",
+       "@Coord!G73",
+       "@Coord!H73",
+       "@Coord!E73",
+       "@Coord!F73"
+      ],
+      [
+       "@Coord!A74",
+       "@Coord!B74|n1",
+       "@Coord!C74|n1",
+       "@Coord!D74",
+       "@Coord!G74",
+       "@Coord!H74",
+       "@Coord!E74",
+       "@Coord!F74"
+      ],
+      [
+       "@Coord!A75",
+       "@Coord!B75|n1",
+       "@Coord!C75|n1",
+       "@Coord!D75",
+       "@Coord!G75",
+       "@Coord!H75",
+       "@Coord!E75",
+       "@Coord!F75"
+      ],
+      [
+       "@Coord!A76",
+       "@Coord!B76|n1",
+       "@Coord!C76|n1",
+       "@Coord!D76",
+       "@Coord!G76",
+       "@Coord!H76",
+       "@Coord!E76",
+       "@Coord!F76"
+      ],
+      [
+       "@Coord!A77",
+       "@Coord!B77|n1",
+       "@Coord!C77|n1",
+       "@Coord!D77",
+       "@Coord!G77",
+       "@Coord!H77",
+       "@Coord!E77",
+       "@Coord!F77"
+      ]
+     ]
     },
     {
      "type": "note",
@@ -3988,7 +4066,9 @@
        "@Coord!E43",
        "@Coord!F43"
       ]
-     ]
+     ],
+     "collapse": true,
+     "summary": "展開：讀取層級（同源，不判定）：日月光讀入的 Siliconomics 值 vs 層級值"
     },
     {
      "type": "table",
@@ -4403,6 +4483,12 @@
     {
      "type": "note",
      "parts": [
+      "@README!A62"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
       "@README!A61"
      ]
     },
@@ -4492,6 +4578,9 @@
       ],
       [
        "@README!A61"
+      ],
+      [
+       "@README!A62"
       ]
      ]
     },
