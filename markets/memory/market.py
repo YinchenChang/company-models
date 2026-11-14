@@ -11,6 +11,11 @@ SNAPSHOT_FILE = open(os.path.join(_SIL, "CURRENT_SNAPSHOT"), encoding="utf-8").r
 SNAP = json.load(open(os.path.join(_SIL, SNAPSHOT_FILE), encoding="utf-8"))
 SIL_VERSION = SNAP["source"]["version"]
 _ROWS = SNAP["rows"]
+# 三層基準協調規則 v1.4：情境 B 基準顆數係數改讀 SIF_UnitsCoef_Base（siliconomics/coef_rule.py；與 reader、scen 同一函式）
+import sys as _sys0
+_sys0.path.insert(0, os.path.join(os.path.dirname(_SIL)))
+import coef_rule as _CR
+_CR.apply(_ROWS, SNAP["names"], SIL_VERSION)
 # Excel 不分整數與浮點數；下游有把數值寫進說明文字者（例如「× 1.0／1.0」），故依單位還原原本的型別：
 # 比例、倍數、百萬顆、單價一律浮點數；GB、$B、$K 為整數值時用整數（與 2026-10-27 前 market.py 的寫法相同）
 _FLOAT_UNITS = {"%", "x", "百萬顆", "$/GB"}

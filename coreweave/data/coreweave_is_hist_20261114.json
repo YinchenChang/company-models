@@ -1,0 +1,12 @@
+{
+ "_readme": "CoreWeave 標準損益表（GAAP）歷史與 9M 2026 實績，十億美元（EPS 美元、股數十億股）。來源：SEC EDGAR XBRL companyfacts（https://data.sec.gov/api/xbrl/companyfacts/CIK0001769628.json，擷取 2026-11-14）；FY2023–FY2025 取自 FY2025 10-K（accession 0001769628-26-000104，2026-03-02 申報；三年比較損益表），9M 2026 取自 Q3 2026 10-Q（accession 0001769628-26-000465，2026-11-12 申報）。營業成本＝公司損益表 Cost of revenue（不含折舊；折舊列在 Technology and infrastructure）；營業費用＝Total operating expenses − Cost of revenue；其他收入（淨額）＝Other income (expense), net＋公允價值調整損益（XBRL UnrealizedGainLossOnDerivatives：FY2023 −0.534、FY2024 −0.756、FY2025 +0.027、9M 2026 0；三項加總與 XBRL 稅前損益逐年相符）；利息費用淨額＝Interest expense, net（負值＝費用）。EPS 為歸屬普通股東淨損 ÷ 稀釋加權股數（FY2024 起含優先股股利與贖回影響）。",
+ "source_key": "SEC_XBRL",
+ "source": "SEC EDGAR XBRL companyfacts CIK0001769628（擷取 2026-11-14）：FY2025 10-K（0001769628-26-000104，2026-03-02）三年損益表；Q3 2026 10-Q（0001769628-26-000465，2026-11-12）9M 損益表",
+ "years": {
+  "FY2023": {"rev": 0.229, "cogs": 0.069, "opex": 0.174, "oi": -0.014, "int": -0.028, "oth": -0.516, "pti": -0.558, "tax": 0.036, "ni": -0.594, "eps": -3.09, "sh": 0.192},
+  "FY2024": {"rev": 1.915, "cogs": 0.493, "opex": 1.098, "oi": 0.324, "int": -0.361, "oth": -0.707, "pti": -0.744, "tax": 0.119, "ni": -0.863, "eps": -4.30, "sh": 0.218},
+  "FY2025": {"rev": 5.131, "cogs": 1.453, "opex": 3.724, "oi": -0.046, "int": -1.229, "oth": 0.060, "pti": -1.215, "tax": -0.048, "ni": -1.167, "eps": -2.81, "sh": 0.436},
+  "9M2026": {"rev": 8.314, "cogs": 2.778, "opex": 5.522, "oi": 0.014, "int": -2.022, "oth": 0.162, "pti": -1.846, "tax": 0.229, "ni": -2.075, "eps": -3.80, "sh": 0.546}
+ },
+ "xbrl_tags": {"rev": "RevenueFromContractWithCustomerExcludingAssessedTax", "cogs": "CostOfGoodsAndServicesSold", "opex": "CostsAndExpenses − CostOfGoodsAndServicesSold", "oi": "OperatingIncomeLoss", "int": "InterestIncomeExpenseNonoperatingNet", "oth": "OtherNonoperatingIncomeExpense＋UnrealizedGainLossOnDerivatives（損益表 Gain (loss) on fair value adjustments）", "pti": "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest", "tax": "IncomeTaxExpenseBenefit", "ni": "NetIncomeLoss", "eps": "EarningsPerShareDiluted", "sh": "WeightedAverageNumberOfDilutedSharesOutstanding"}
+}

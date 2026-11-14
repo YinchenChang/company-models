@@ -1,0 +1,151 @@
+{
+ "_note": "由 siliconomics/tools/export_baseline_status.py 自 20261114_Siliconomics_v0.19.xlsx 匯出；換算值與 Wattonomics 證據比例取自 Wattonomics v0.3.2（main，PR #480）；continuity＝規則 v1.4 連續法（基準＝前一年基準 × 換算值成長率，非換算值本身）",
+ "source": "20261114_Siliconomics_v0.19.xlsx",
+ "threshold": 0.5,
+ "wattonomics_coverage_complete": true,
+ "years": {
+  "2026": {
+   "wattonomics": {
+    "evidence_share": {
+     "lo": 0.866,
+     "base": 0.866,
+     "hi": 0.866
+    },
+    "prev_has_evidence": true
+   },
+   "siliconomics": {
+    "evidence_share": {
+     "lo": 0.597,
+     "base": 0.789,
+     "hi": 0.892
+    },
+    "prev_has_evidence": null
+   },
+   "status": "甲",
+   "lead": null,
+   "label": "一致",
+   "converted": 20.64,
+   "supply_side": 23.3995380420639,
+   "current_s33": 23.3995380420639,
+   "use_converted": false,
+   "continuity": false,
+   "reconciling": false,
+   "recon_doc": null,
+   "deadline": null,
+   "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
+   "sil_base": 23.3995380420639
+  },
+  "2027": {
+   "wattonomics": {
+    "evidence_share": {
+     "lo": 0.464,
+     "base": 0.464,
+     "hi": 0.464
+    },
+    "prev_has_evidence": false
+   },
+   "siliconomics": {
+    "evidence_share": {
+     "lo": 0.303,
+     "base": 0.448,
+     "hi": 0.749
+    },
+    "prev_has_evidence": null
+   },
+   "status": "待定",
+   "lead": null,
+   "label": "待定（對帳中）",
+   "converted": 24.213,
+   "supply_side": 39.1637387089335,
+   "current_s33": 39.1637387089335,
+   "use_converted": false,
+   "continuity": false,
+   "reconciling": true,
+   "recon_doc": "Drive 02-AI供應鏈/對帳/20261114_對帳單_Siliconomics基準對Wattonomics換算_2026-2029.md（r3）",
+   "deadline": "2027-02-28",
+   "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
+   "sil_base": 39.1637387089335
+  },
+  "2028": {
+   "wattonomics": {
+    "evidence_share": {
+     "lo": 0.52,
+     "base": 0.52,
+     "hi": 0.52
+    },
+    "prev_has_evidence": true
+   },
+   "siliconomics": {
+    "evidence_share": {
+     "lo": 0.161,
+     "base": 0.236,
+     "hi": 0.541
+    },
+    "prev_has_evidence": null
+   },
+   "status": "待定",
+   "lead": null,
+   "label": "待定（對帳中）",
+   "converted": 28.092,
+   "supply_side": 52.792138191248,
+   "current_s33": 42.2337105529984,
+   "use_converted": false,
+   "continuity": false,
+   "reconciling": true,
+   "recon_doc": "Drive 02-AI供應鏈/對帳/20261114_對帳單_Siliconomics基準對Wattonomics換算_2026-2029.md（r3）",
+   "deadline": "2027-02-28",
+   "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
+   "sil_base": 42.2337105529984
+  },
+  "2029": {
+   "wattonomics": {
+    "evidence_share": {
+     "lo": 0.208,
+     "base": 0.208,
+     "hi": 0.208
+    },
+    "prev_has_evidence": false
+   },
+   "siliconomics": {
+    "evidence_share": {
+     "lo": 0.03,
+     "base": 0.079,
+     "hi": 0.181
+    },
+    "prev_has_evidence": null
+   },
+   "status": "丙",
+   "lead": null,
+   "label": "連續法（前一年待定，對帳中）",
+   "converted": 28.405,
+   "supply_side": 60.1385917361115,
+   "current_s33": 51.1178029756948,
+   "use_converted": true,
+   "continuity": true,
+   "reconciling": true,
+   "recon_doc": "Drive 02-AI供應鏈/對帳/20261114_對帳單_Siliconomics基準對Wattonomics換算_2026-2029.md（r3）",
+   "deadline": "2027-02-28",
+   "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
+   "sil_base": 42.7042769563548
+  }
+ },
+ "level_coefficients": [
+  {
+   "name": "um28_B（S33；經 crd_k_28 帶入 2028 基準）",
+   "year": 2028,
+   "tag": "Assumed",
+   "note": "覆蓋未補齊、該年維持現行（對帳中）；改用換算值後不再在基準鏈上"
+  }
+ ],
+ "hardware_companies": [
+  "nvidia"
+ ],
+ "depends_on_years": {
+  "nvidia": [
+   "2026",
+   "2027",
+   "2028",
+   "2029"
+  ]
+ }
+}
