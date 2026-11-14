@@ -1,4 +1,4 @@
-# 三層基準協調 橋接表（步驟 3 量測；規則 docs/plan/三層基準協調規則.md）
+# 三層基準協調 橋接表（步驟 3 量測；規則 docs/plan/三層基準協調規則.md v1.1：平滑法、乙前提、全市場分母）
 # 方向：Wattonomics 上線 GW →（C2 ② 時差與庫存反推）實體出貨 GW →（本庫實體／成本等值比）成本等值出貨 GW，
 #       與 Siliconomics 現行基準、原始顆數讀數（供給側）並排；差距拆 C2 三類；每年標 C3 狀態（門檻 50%、67%）。
 # 用法：python3 siliconomics/tools/baseline_bridge.py <輸出 xlsx>   之後以 LibreOffice 重算。本工具不改任何模型。
@@ -62,7 +62,8 @@ def inp(key, label, unit, yr, lo, base, hi, tag, src):
 lag = w_in("lag_on"); inv = w_in("inv_on")
 inp("lag_on", "付款（出貨）到上線延遲", "月", None, lag[0], lag[1], lag[2], "Assumed", f"{wt_f} In lag_on（權威層＝Wattonomics，協調規則 J3）")
 inp("inv_on", "未上線庫存 ÷ 年出貨", "比", None, inv[0], inv[1], inv[2], "Assumed", f"{wt_f} In inv_on（同上）")
-inp("thr", "「有證據」門檻（基準 50%；高＝67% 對照）", "比", None, None, 0.5, 0.67, "Assumed", "協調規則 C3、J2")
+inp("thr", "「有證據」門檻（基準 50%；高＝67% 對照）", "比", None, None, 0.5, 0.67, "Assumed", "協調規則 C3、J2；首次判定用；緩衝區 55%／45% 自第二次起適用（v1.1）")
+inp("cov_done", "Wattonomics 覆蓋是否已補齊（1＝是）", "旗標", None, None, 0, None, "Derived", "v0.3 未含七家以外買方路徑（v0.3.2 W-1）；協調規則 v1.1：丙與上游有證據的乙須為 1 才改基準")
 dep = cells(S, "SIF_DeployGW_Base"); coef = cells(S, "SIF_UnitsCoef_Base")[1:]
 phys = cells(S, "SIF_DeployGWPhys_Base"); capon = cells(S, "SIF_CapOnlineGW_Base")
 for i, y in enumerate(YRS):
@@ -188,31 +189,35 @@ def trow(key, label, note, f, fmt="0.00", fill=None):
 
 
 st = lambda w, s, t: f'=IF(AND({w}>={t},{s}>={t}),"甲",IF(OR({w}>={t},{s}>={t}),"乙","丙"))'
-trow("ew", "Wattonomics 證據比例", "WIF_Coverage", lambda y: f"=wcov_{y}", "0%")
+trow("ew0", "Wattonomics 證據比例（自身路徑分母；v1.0 量法）", "WIF_Coverage", lambda y: f"=wcov_{y}", "0%")
+trow("ew", "Wattonomics 證據比例（全市場分母；v1.1）", "WIF_Coverage × 主路徑 ÷（主路徑＋覆蓋缺口）", lambda y: f"=wcov_{y}*wt_{y}/(wt_{y}+cov4_{y}+cov2_{y})", "0%")
 trow("es", "Siliconomics 證據比例（基準）", "In scov", lambda y: f"=scov_{y}", "0%")
 trow("esh", "Siliconomics 證據比例（高；NVIDIA Q3 公布後）", "", lambda y: f"=scov_{y}_hi", "0%")
-trow("t50", "狀態（門檻 50%）", "", lambda y: st(f"wcov_{y}", f"scov_{y}", "thr"), "@", KEY)
-trow("t67", "狀態（門檻 67%）", "", lambda y: st(f"wcov_{y}", f"scov_{y}", "thr_hi"), "@")
-trow("t50h", "狀態（門檻 50%；Siliconomics 取高值）", "", lambda y: st(f"wcov_{y}", f"scov_{y}_hi", "thr"), "@")
-trow("lead", "乙狀態時有證據的一層", "", lambda y: f'=IF({CL(TC[y])}{TR["t50"]}="乙",IF(wcov_{y}>=thr,"Wattonomics","Siliconomics"),"—")', "@")
+EW = lambda y: f"{CL(TC[y])}{TR['ew']}"
+trow("t50", "狀態（門檻 50%；首次判定）", "", lambda y: st(EW(y), f"scov_{y}", "thr"), "@", KEY)
+trow("t67", "狀態（門檻 67%）", "", lambda y: st(EW(y), f"scov_{y}", "thr_hi"), "@")
+trow("t50h", "狀態（門檻 50%；Siliconomics 取高值）", "", lambda y: st(EW(y), f"scov_{y}_hi", "thr"), "@")
+trow("lead", "乙狀態時有證據的一層", "", lambda y: f'=IF({CL(TC[y])}{TR["t50"]}="乙",IF({EW(y)}>=thr,"Wattonomics","Siliconomics"),"—")', "@")
 
 
-def cand(tcell):
-    # 甲：現行基準（殘差超容差則需診斷）；乙且 Wattonomics 有證據、或丙：換算值；乙且 Siliconomics 有證據：現行基準
-    return lambda y: (f'=IF({CL(TC[y])}{tcell}="丙",Bridge!{C(y)}{R["x1"]},IF(AND({CL(TC[y])}{tcell}="乙",wcov_{y}>=thr),'
-                      f'Bridge!{C(y)}{R["x1"]},sil_{y}))')
+def up(tc, thrn):
+    """v1.1：丙，或乙且有證據的是 Wattonomics → 由上游定基準。"""
+    return lambda y: f'OR({CL(TC[y])}{tc}="丙",AND({CL(TC[y])}{tc}="乙",{EW(y)}>={thrn}))'
 
 
-trow("b50", "依規則的基準候選（門檻 50%）", "丙或乙（Wattonomics 有證據）＝換算值 x1；其餘＝現行基準", cand(TR["t50"]), fill=KEY)
-trow("b67", "依規則的基準候選（門檻 67%）", "同上", lambda y: (f'=IF({CL(TC[y])}{TR["t67"]}="丙",Bridge!{C(y)}{R["x1"]},IF(AND({CL(TC[y])}{TR["t67"]}="乙",wcov_{y}>=thr_hi),Bridge!{C(y)}{R["x1"]},sil_{y}))'))
-trow("b50s", "對照：候選改用平滑法換算（門檻 50%）", "方法選擇待 Andy", lambda y: (f'=IF({CL(TC[y])}{TR["t50"]}="甲",sil_{y},IF(AND({CL(TC[y])}{TR["t50"]}="乙",scov_{y}>=thr),sil_{y},Bridge!{C(y)}{R["x2"]}))'))
+trow("b50", "依規則 v1.1 的基準（門檻 50%）", "上游定基準且覆蓋已補齊＝平滑法換算值 x2；上游定基準但覆蓋未補齊＝現行（標對帳中）；其餘＝現行",
+     lambda y: f'=IF(AND({up(TR["t50"], "thr")(y)},cov_done=1),Bridge!{C(y)}{R["x2"]},sil_{y})', fill=KEY)
+trow("tag", "　該年標示", "", lambda y: f'=IF({up(TR["t50"], "thr")(y)},IF(cov_done=1,"改用換算值","對帳中（待覆蓋補齊）"),IF({CL(TC[y])}{TR["t50"]}="甲",IF(ABS(Bridge!{C(y)}{R["g3p"]})<=0.15,"一致","對帳中（甲、待診斷）"),"維持"))', "@")
+trow("b50s", "假設覆蓋已補齊時的基準（門檻 50%；平滑法）", "＝覆蓋補齊後預期值；v0.3.2 後以實績覆蓋重跑", lambda y: f'=IF({up(TR["t50"], "thr")(y)},Bridge!{C(y)}{R["x2"]},sil_{y})', fill=KEY)
+trow("b67", "同上（門檻 67%）", "", lambda y: f'=IF({up(TR["t67"], "thr_hi")(y)},Bridge!{C(y)}{R["x2"]},sil_{y})')
+trow("b50r", "對照：v1.0 遞迴反推換算（已停用）", "", lambda y: f'=IF({up(TR["t50"], "thr")(y)},Bridge!{C(y)}{R["x1"]},sil_{y})')
 trow("cur", "現行基準", "", lambda y: f"=sil_{y}")
 trow("raw", "原始顆數讀數（供給側；情境 A，J5）", "", lambda y: f"=sil_{y}/coef_{y}")
-trow("chg", "候選 ÷ 現行 − 1（門檻 50%）", "", lambda y: f"={CL(TC[y])}{TR['b50']}/{CL(TC[y])}{TR['cur']}-1", "0.0%")
+trow("chg", "覆蓋補齊後基準 ÷ 現行 − 1", "", lambda y: f"={CL(TC[y])}{TR['b50s']}/{CL(TC[y])}{TR['cur']}-1", "0.0%")
 trow("gcur", "年增：現行基準", "斷崖檢查", lambda y: "" if y == 2026 else f"={CL(TC[y])}{TR['cur']}/{CL(TC[y]-1)}{TR['cur']}-1", "0.0%")
-trow("g50", "年增：候選（門檻 50%）", "", lambda y: "" if y == 2026 else f"={CL(TC[y])}{TR['b50']}/{CL(TC[y]-1)}{TR['b50']}-1", "0.0%")
-trow("g67", "年增：候選（門檻 67%）", "", lambda y: "" if y == 2026 else f"={CL(TC[y])}{TR['b67']}/{CL(TC[y]-1)}{TR['b67']}-1", "0.0%")
-trow("g50s", "年增：候選平滑法（門檻 50%）", "", lambda y: "" if y == 2026 else f"={CL(TC[y])}{TR['b50s']}/{CL(TC[y]-1)}{TR['b50s']}-1", "0.0%")
+trow("g67", "年增：覆蓋補齊後基準（門檻 67%）", "", lambda y: "" if y == 2026 else f"={CL(TC[y])}{TR['b67']}/{CL(TC[y]-1)}{TR['b67']}-1", "0.0%")
+trow("g50s", "年增：覆蓋補齊後基準（門檻 50%）", "", lambda y: "" if y == 2026 else f"={CL(TC[y])}{TR['b50s']}/{CL(TC[y]-1)}{TR['b50s']}-1", "0.0%")
+trow("g50r", "年增：v1.0 遞迴（停用，對照）", "", lambda y: "" if y == 2026 else f"={CL(TC[y])}{TR['b50r']}/{CL(TC[y]-1)}{TR['b50r']}-1", "0.0%")
 trow("graw", "年增：原始顆數", "", lambda y: "" if y == 2026 else f"={CL(TC[y])}{TR['raw']}/{CL(TC[y]-1)}{TR['raw']}-1", "0.0%")
 T.column_dimensions["A"].width = 6; T.column_dimensions["B"].width = 44; T.column_dimensions["C"].width = 50
 for y in YRS:
