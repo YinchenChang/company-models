@@ -5359,7 +5359,251 @@
    "blocks": [
     {
      "type": "h3",
-     "text": "由下往上對帳：本模型的產業量與 Siliconomics 的對應值"
+     "text": "實績對帳：公司實績與層級隱含值"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!B105"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Coord!A77",
+     "head": [
+      "@Coord!A78",
+      "@Coord!B78",
+      "@Coord!C78",
+      "@Coord!D78",
+      "@Coord!E78",
+      "@Coord!F78"
+     ],
+     "rows": [
+      [
+       "@Coord!A79",
+       "@Coord!B79",
+       "@Coord!C79|n3",
+       "@Coord!D79|n3",
+       "@Coord!E79|n3",
+       "@Coord!F79|n3"
+      ],
+      [
+       "@Coord!A80",
+       "@Coord!B80",
+       "@Coord!C80|p1",
+       "@Coord!D80|p1",
+       "@Coord!E80|p1",
+       "@Coord!F80|p1"
+      ],
+      [
+       "@Coord!A81",
+       "@Coord!B81",
+       "@Coord!C81|n1",
+       "@Coord!D81|n1",
+       "@Coord!E81|n1",
+       "@Coord!F81|n1"
+      ],
+      [
+       "@Coord!A82",
+       "@Coord!B82",
+       "@Coord!C82",
+       "@Coord!D82",
+       "@Coord!E82",
+       "@Coord!F82|n1"
+      ],
+      [
+       "@Coord!A83",
+       "@Coord!B83",
+       "@Coord!C83",
+       "@Coord!D83",
+       "@Coord!E83",
+       "@Coord!F83|p1"
+      ],
+      [
+       "@Coord!A84",
+       "@Coord!B84",
+       "@Coord!C84",
+       "@Coord!D84",
+       "@Coord!E84",
+       "@Coord!F84|n1"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Coord!A86",
+     "head": [
+      "@Coord!A87",
+      "@Coord!B87",
+      "@Coord!C87",
+      "@Coord!D87",
+      "@Coord!E87",
+      "@Coord!F87"
+     ],
+     "rows": [
+      [
+       "@Coord!A88",
+       "@Coord!B88",
+       "@Coord!C88",
+       "@Coord!D88|n1",
+       "@Coord!E88",
+       "@Coord!F88"
+      ],
+      [
+       "@Coord!A89",
+       "@Coord!B89",
+       "@Coord!C89",
+       "@Coord!D89|n1",
+       "@Coord!E89",
+       "@Coord!F89"
+      ],
+      [
+       "@Coord!A90",
+       "—",
+       "@Coord!C90",
+       "—",
+       "—",
+       "—"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Coord!A93",
+     "head": [
+      "項目",
+      "單位",
+      "值"
+     ],
+     "rows": [
+      [
+       "@Coord!A94",
+       "@Coord!B94",
+       "@Coord!C94|n1"
+      ],
+      [
+       "@Coord!A95",
+       "@Coord!B95",
+       "@Coord!C95|n1"
+      ],
+      [
+       "@Coord!A96",
+       "@Coord!B96",
+       "@Coord!C96|p1"
+      ],
+      [
+       "@Coord!A97",
+       "@Coord!B97",
+       "@Coord!C97|p1"
+      ],
+      [
+       "@Coord!A98",
+       "@Coord!B98",
+       "@Coord!C98"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Coord!A100",
+     "head": [
+      "項目",
+      "單位",
+      "值"
+     ],
+     "rows": [
+      [
+       "@Coord!A101",
+       "@Coord!B101",
+       "@Coord!C101|p1"
+      ],
+      [
+       "@Coord!A102",
+       "@Coord!B102",
+       "@Coord!C102|p1"
+      ],
+      [
+       "@Coord!A103",
+       "@Coord!B103",
+       "@Coord!C103|sp1"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "實績對帳的口徑、出處與證據等級",
+     "collapse": true,
+     "summary": "展開：實績出處、口徑與判定規則",
+     "head": [
+      "項目",
+      "出處、口徑與證據等級"
+     ],
+     "rows": [
+      [
+       "@Coord!A79",
+       "@Coord!G79"
+      ],
+      [
+       "@Coord!A80",
+       "@Coord!G80"
+      ],
+      [
+       "@Coord!A81",
+       "@Coord!G81"
+      ],
+      [
+       "@Coord!A82",
+       "@Coord!G82"
+      ],
+      [
+       "@Coord!A83",
+       "@Coord!G83"
+      ],
+      [
+       "@Coord!A84",
+       "@Coord!G84"
+      ],
+      [
+       "@Coord!A87",
+       "@Coord!G87"
+      ],
+      [
+       "@Coord!A88",
+       "@Coord!G88"
+      ],
+      [
+       "@Coord!A89",
+       "@Coord!G89"
+      ],
+      [
+       "@Coord!A90",
+       "@Coord!G90"
+      ],
+      [
+       "@Coord!A93",
+       "@Coord!G93"
+      ],
+      [
+       "@Coord!A98",
+       "@Coord!G98"
+      ],
+      [
+       "@Coord!A100",
+       "@Coord!G100"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!G74"
+     ],
+     "collapse": true,
+     "summary": "展開：比較方法"
+    },
+    {
+     "type": "h3",
+     "text": "讀取層級（同源，不判定）：本模型讀入的 Siliconomics 值"
     },
     {
      "type": "note",
@@ -5369,7 +5613,7 @@
     },
     {
      "type": "table",
-     "caption": "由下往上對帳表（只含本公司自己的量對它讀的 Siliconomics 值；差距超過容差標「對帳中」；本模型讀層，故前五項為零差距）",
+     "caption": "讀取層級對照表（本模型直接讀層，差距恆為零、無檢驗力，故不判定、不計入對帳中；公司實績對帳見上表）",
      "head": [
       "@Coord!A27",
       "@Coord!B27",
