@@ -282,10 +282,16 @@ inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新�
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v+mi_v)", None, "Derived", "＝(債務 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 股數 sh_v ＋ 非控制權益市值 mi_v)；E 含晶碩非控制權益市值（第三輪修正第 12 項）", "與 WACC 權重同一口徑")
 
 r = 4; INROW = {}
+# KS_OVERRIDE（v0.4.4 起；敏感度快照用，kinsus/sens_kinsus.py；「鍵=值;…」，值 @lo／@hi＝In 頁低／高欄；正式建置不設）
+OVR = dict(kv.split("=", 1) for kv in os.environ.get("KS_OVERRIDE", "").split(";") if "=" in kv)
 for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    if key in OVR:   # v0.4.4：敏感度快照用覆寫（kinsus/sens_kinsus.py；正式建置不設 KS_OVERRIDE）
+        ov = OVR[key]
+        base = {"@lo": lo, "@hi": hi}[ov] if ov.startswith("@") else float(ov)
+        assert base is not None, (key, ov)
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
         if v is not None:
@@ -369,6 +375,8 @@ DEFP = dict(scn="A", ga="g_asp", pp="ibpp_{y}", vot="v_ot", shnv="sh_nv_{y}", sh
             mf="1", fg="fade_g{s}", fm="fade_m{s}")
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["mf"] == "1" and s != "A":   # v0.4.4 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 產業量 × wta（＝另一側讀數比值）；情境 A 不縮放
+        P["mf"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     p = lambda k, y=None: P[k].format(y=(y % 100 if y else ""), s=s)
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -1042,6 +1050,68 @@ P5 = dict(ver="v0.4.3", px="3189.TW", fpe='fpe',
           PX4={"3189.TW": 822, "3037.TW": 888, "8046.TW": 1080, "4062.T": 8037, "009150.KS": 1115000, "ATS.VI": 130.6},
           PX5={"3189.TW": 740, "3037.TW": 800, "8046.TW": 972, "4062.T": 6726, "009150.KS": 944000, "ATS.VI": 110.2})
 px1105_post.apply(wb, P5)
+# ---------------- v0.4.4（2026-11-15）：三層協調 C4 兩讀數（tools/coord/；快照 kinsus/coord_alt.json）＋個股 HTML 版面規格 v1.3＋C0（實績）（v044_post.py；只新增頁與列，既有數值格不變）----------------
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    COORD.stamp(wb, "v0.4.3", "v0.4.4", "2026-11-15")
+    if not os.environ.get("KS_OVERRIDE") and not os.environ.get("KS_SNAP"):
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import v044_post  # noqa: E402
+
+        def _drv(P_, pb_):
+            g_ = lambda p_: f"PL!F{v044_post.lab(P_, p_, pb_)}"
+            T_, TX_ = v044_post.T, v044_post.TX
+            return (T_("分部營收推導（情境 B）：ABF 載板＝MIN（需求，產能）；需求＝加速器與 NVIDIA CPU 載板（顆數 × 每顆金額 × 份額 × 溢價 × 漲價年度化）＋其他 AI 載板（隨交換晶片與交換器市場成長）＋非 AI；"
+                       "BT 與其他載板依情境別年增、晶碩（隱形眼鏡）依成長率推算；三項相加為合併營收。FY2028 ABF 載板 "), TX_(g_("ABF 載板營收 ＝"), "0.0"), T_("、BT 與其他載板 "), TX_(g_("BT 與其他載板"), "0.0"),
+                    T_("、晶碩 "), TX_(g_("晶碩（隱形眼鏡）"), "0.0"), T_("，合計 "), TX_(f"PL!F{v044_post.lab(P_, '營收', pb_, exact=True)}", "0.0"), T_(" 十億元。"))
+        _H = "公司 IFRS 合併綜合損益表（含晶碩；經 stockanalysis.com 年度損益表轉載，網址見 Sources 頁；百萬元換算十億元；FY2025 與 Q 頁既有值相符；MOPS 原文待人工複核）"
+        CO44 = dict(
+            ver="0.4.4", name="景碩", cur="元", folder="kinsus", sens_py="sens_kinsus.py",
+            pl_a="情境 A（樂觀）：", pl_b="情境 B（基準）：", pl_ni="歸屬母公司淨利", pl_cni="合併淨利（含非控制權益）",
+            pl_gaap_extra="景碩合併晶碩（隱形眼鏡），晶碩淨利約七成屬非控制權益，故歸屬母公司淨利明顯低於合併淨利；本表另列非控制權益。",
+            pl_tax_label="所得稅", pl_tax_note="實績＝所得稅費用；預測期＝稅前利益 − 合併淨利（PL 情境 B）；FY2030E 合併淨利＝歸屬淨利 × FY2029 合併 ÷ 歸屬（同 DCF 頁）",
+            hist_src=_H,
+            hist=[("rev", "營收（含晶碩）", [42.441, 26.832, 30.535, "=a25_rev"]), ("cogs", "營業成本", [26.729, 20.075, 21.867, 31.037]),
+                  ("gp", "毛利", [15.712, 6.758, 8.668, "=a25_gp"]), ("opx", "營業費用（推銷、管理、研發）", [6.135, 5.715, 7.572, "=a25_opx"]),
+                  ("oi", "營業利益", [9.576, 1.042, 1.095, "=a25_oi"]), ("pti", "稅前利益", [10.092, 1.426, 1.603, 3.087]),
+                  ("tax", "所得稅費用", [2.158, 0.256, 0.272, 0.370]), ("nci", "非控制權益損益（主要為晶碩）", [0.957, 1.123, 1.282, "=a25_nci"]),
+                  ("ni", "稅後淨利（歸屬母公司）", [6.977, 0.048, 0.049, "=a25_ni"]), ("eps", "EPS 基本（元）", [15.47, 0.11, 0.11, "=a25_eps"]),
+                  ("epsd", "EPS 稀釋（元）", [15.07, 0.10, 0.11, 3.49])],
+            hist_sh=[0.451, 0.452, 0.454, None],
+            sil_reads=[*[(f"sh_nv_{y}", f"景碩占 NVIDIA 加速器（GPU）載板 20{y}", f"abf_ks_nv_{y}") for y in (26, 27, 28, 29)],
+                       *[(f"sh_ot_{y}", f"景碩占非 NVIDIA 加速器載板（金額）20{y}", f"abf_ks_ot_{y}") for y in (26, 27, 28, 29)],
+                       *[(f"cap_{y}", f"景碩 ABF 產能指數 20{y}", f"abfcap_ks_{y}") for y in (27, 28, 29)],
+                       ("v_ot", "非 NVIDIA 加速器每顆載板金額 ÷ NVIDIA", "abf_vot"), ("ib_sh26", "Ibiden 占 NVIDIA 加速器載板 2026", "abf_ibsh26"), ("fx", "匯率（新台幣 ÷ 美元）", "fx_twd")],
+            sil_use="PL 引擎 A、B 節（份額、產能、每顆金額、匯率）",
+            peer_reads=[("v26", "FY2026 每顆 NVIDIA 加速器載板金額（US$）", "ibiden/dist Units 頁（Ibiden 模型權威）"), ("g_asp", "每顆載板金額年增", "ibiden/dist In 頁 g_asp"),
+                        *[(f"ibpp_{y}", f"ABF 價格溢價指數 20{y}", f"ibiden/dist In 頁 pp_{y}") for y in (27, 28, 29)],
+                        *[(f"un_nv_{y}", f"欣興占 NVIDIA 加速器載板 20{y}（份額合計檢查用）", "unimicron/dist In 頁") for y in (26, 27, 28, 29)],
+                        *[(f"np_nv_{y}", f"南電占 NVIDIA 加速器載板 20{y}（份額合計檢查用）", "nanya_pcb/dist In 頁") for y in (26, 27, 28, 29)],
+                        *[(f"swm_{y}", f"交換晶片與交換器市場 20{y}（US$B）", "markets/network/dist Mkt 頁") for y in (26, 27, 28, 29)]],
+            c0_nocomp_note="無可比層級量的項目：景碩 ABF、AI 載板營收（層級 abfrev_ks26 由本模型推得，見本頁 4. C0（實績））；NVIDIA CPU（Grace／Vera）載板份額與每顆金額（Siliconomics 無對應值）；交換器市場 swm_*（唯讀 markets/network）。",
+            act=dict(cum=43.509, q3="=q3_rev", sil_key="abfrev_ks26", sil_fx=32.5,
+                     sil_note="景碩模型 Q!G22：FY2026 ABF 營收 NT$22.9B ÷ 32.5（2026-10-27 dist）",
+                     cum_src="TechNews 財報助手 2026-11-06：10 月合併營收 53.68 億元（月增 3.6%、年增 49.0%）、前 10 月累計 435.09 億元（年增 35.4%；網址見 Sources 頁）；"
+                             "驗算：前 9 月 381.41 億（TechNews 2026-10-06）＋ 10 月 53.68 億 ＝ 435.09 億；合併營收含晶碩",
+                     q3_src="In 頁 q3_rev（連格）：145.40 億元，公司 2026-10-30 重大訊息「董事會通過 115 年第 3 季合併財務報告」與 3Q26 綜合損益表（Yahoo 股市轉載）；前三季 381.41 億與月營收一致",
+                     sh_src="MoneyDJ 2026-01-19：ABF 約 30–40%；富果 2Q25 法說摘要：2Q25 ABF 約 40%（In 頁 mx_abf 來源，Interested-party）；也是 Siliconomics abfrev_ks26 推導用的占比（同源）",
+                     scope_note="同口徑對象是合併營收（ABF、BT 與其他載板、晶碩隱形眼鏡）；ABF 或加速器載板單獨營收：無可比實績（公司未揭露產品別金額，占比為法說口述或法人估計；占比 × 營收屬 Assumed）。",
+                     concl="層級值 abfrev_ks26 由本模型 FY2026 ABF 營收（FY2026 營收錨點 × ABF 占比 42%）÷ 32.5 推得，換算回合併營收時 ABF 占比與匯率往返消去，本表等於「實績 vs 本模型 FY2026 營收錨點」，"
+                           "不檢驗 Siliconomics 的獨立估計；缺 ABF／加速器與 CPU 載板單獨營收揭露。對帳中 0，不開對帳單",
+                     read="讀法：公司實績是月營收與季報原文、本身獨立；層級值 abfrev_ks26 由本模型 FY2026 ABF 營收推得（景碩份額 abf_ks_* 也來自本模型），本表換算回合併營收時 ABF 占比與匯率消去，只剩「實績 vs 本模型錨點」（層級值四捨五入到 0.70 US$B，與錨點差約 0.5%）；"
+                          "錨點本身含 1–3Q26 實績，所以主讀數差距主要反映 4Q26 假設與線性時差，不是層級檢驗。判定標參考（同源校準），C0（實績）結論為無可比實績（層級值同源）。"),
+            sens_o3=("ABF 價格溢價路徑", "ABF 漲價年度化"), sens_o3_txt=("ABF 價格溢價快速回落／延續 ", "漲價年度化 8%／22% "),
+            drv_parts=_drv,
+            ver_line="v0.4.4（2026-11-15）：個股 HTML 版面規格 v1.3（樣板 NVIDIA、Ibiden、欣興、南電）、三層協調兩讀數（tools/coord）與 C0（實績）。新增 Hist 頁（損益表歷史 FY2022–FY2025）、RevDCF 頁（反向 DCF）、PL 頁末標準損益表（FY2023A–FY2025A 實績＋FY2026E–FY2030E 情境 B，GAAP，另列晶碩非控制權益）、"
+                     "Val 頁末 0.7 四個目標價、Sens 頁末加權目標價相對基準（業務主因整本重算快照）、Coord 頁（兩讀數、讀取層級、C0（實績）：2026 年 1–10 月營收與 3Q26 營收 vs Siliconomics 景碩 ABF 營收換算值；層級值同源，無可比實績）、README 頁末 v1.3 白話列。"
+                     "既有數值格不變，加權目標價與評等不變",
+            a1_old="收支與估值模型 v0.3（AI 半導體 Project", a1_oldver="v0.3",
+            pl_b_title='="情境 B（基準）：tsmc 顆數係數 B（CY2028 ×"&TEXT(um28_B,"0.00")&"、CY2029 ×"&TEXT(um29_B,"0.00")&"；讀 Siliconomics 基準係數）；BT 與其他載板年增 20%／5%／3%"',
+            sources=[("公司（C0 實績）：TechNews 財報助手 2026-11-06（10 月營收 53.68 億、前 10 月累計 435.09 億）", "https://finance.technews.tw/2026/11/06/kinsus-3189-202610-financial-report/"),
+                     ("Hist 頁：stockanalysis.com 年度損益表（FY2022–FY2025，公司財報轉載）", "https://stockanalysis.com/quote/tpe/3189/financials/income-statement/")])
+        print(v044_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR, CO44))
 wb.save(sys.argv[1])
 if os.environ.get("KINSUS_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

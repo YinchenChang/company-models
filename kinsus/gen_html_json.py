@@ -266,5 +266,229 @@ else:
 # 第三輪修正（2026-11-06）：情境驅動表依節標題取列並自檢、情境定義 kv 自檢、DCF 明細比例列格式、橫幅幣別（r3_html.py）
 import r3_html  # noqa: E402
 r3_html.post(cfg, wb, '新台幣')
+# v0.4.4：三層協調 C4（tools/coord/coord.py）：橫幅另一側讀數一格與揭露句、估值章開頭兩讀數表與長條圖
+sys.path.insert(0, os.path.join(HERE, "..", "tools", "coord"))
+import coord as COORD  # noqa: E402
+COORD.inject_html(cfg, X)
+
+
+# ================= v0.4.4（2026-11-15）：個股 HTML 版面規格 v1.3（樣板 NVIDIA v0.3.10、Ibiden v0.5.6、欣興 v0.4.4、南電 v0.3.5；docs/plan/個股HTML版面規格.md「v1.3 規格」） =================
+# 章節：命題 → 估值 → 敏感度 → 反向 DCF → 損益（標準損益表）→ 驅動因子（分部營收推導）→ 對帳（含 C0）→ 資料狀態；無個別模組。
+# 數字一律取自 xlsx（README 頁末 v1.3 白話列、PL 頁末標準損益表、RevDCF 頁、Val 0.7、Sens 頁末相對基準表、Coord 頁；kinsus/v044_post.py 產生）。列號依標籤找。
+def _v13(cfg):
+    S = {x["id"]: x for x in cfg["sections"]}
+    RD, PLW, RV, SW, CW = wb["README"], wb["PL"], wb["RevDCF"], wb["Sens"], wb["Coord"]
+    fnd = lambda ws, p, start=1: next(r for r in range(start, ws.max_row + 1) if str(ws.cell(r, 1).value or "").strip().startswith(p))
+    r13 = find("README", "v1.3 展示層")
+    RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
+    assert str(RD[f"A{RM['ver']}"].value).startswith("v0.4.4"), RD[f"A{RM['ver']}"].value
+    cfg["layout"] = "v1.3"
+    fmt_u = lambda u: {"%": "p1", "元": "n2", "十億股": "n3", "x": "n3", "百萬顆": "n2"}.get(str(u).strip(), "n1")
+    # ---- 橫幅：≤200 字白話＋對帳中揭露句；評等規則與相對倍數說明移到估值章 ----
+    old_note = list(cfg["hero"]["note"])
+    i_cd = len(old_note) - 2
+    assert old_note[i_cd] == " " and str(old_note[i_cd + 1]).startswith("@Coord!B"), old_note
+    cfg["hero"]["note"] = [f"@README!A{RM['hero']}"] + old_note[i_cd:]
+    # ---- 1. 命題：主圖＝情境 B 分部營收（堆疊）與三情境營收 ----
+    pa, pc = find("PL", "情境 A"), find("PL", "情境 C")
+    fa = lambda base, lab_: next(r for r in range(base, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").strip() == lab_)
+    rb = find("PL", "情境 B（基準）：")
+    hdrB = rb + 1
+    prow = lambda lab_: next(r for r in range(rb, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").strip().startswith(lab_))
+    r_abf, r_bt, r_lens = prow("ABF 載板營收 ＝"), prow("BT 與其他載板"), prow("晶碩（隱形眼鏡）")
+    r_rev = next(r for r in range(prow("C. 其他產品"), PLW.max_row + 1) if PLW.cell(r, 1).value == "營收")
+    revA, revC = fa(pa, "營收"), fa(pc, "營收")
+    th = S["thesis"]["blocks"]
+    chart1 = {"type": "theme", "title": "營收分部（情境 B）與三情境營收（十億元）", "x": f"@PL!D{hdrB}:G{hdrB}", "fmt": "n0", "stack": True, "pad": 1.35,
+              "total": f"@PL!D{r_rev}:G{r_rev}",
+              "bars": [{"name": "ABF 載板", "y": f"@PL!D{r_abf}:G{r_abf}", "color": "#0b7a80"},
+                       {"name": "BT 與其他載板", "y": f"@PL!D{r_bt}:G{r_bt}", "color": "#6fc7cb"},
+                       {"name": f"@PL!A{r_lens}", "y": f"@PL!D{r_lens}:G{r_lens}", "color": "#c29a2b"}],
+              "lines": [{"name": [f"@PL!A{pa}", "營收"], "y": f"@PL!D{revA}:G{revA}", "color": "#0b7a80", "dash": True},
+                        {"name": [f"@PL!A{pc}", "營收"], "y": f"@PL!D{revC}:G{revC}", "color": "#b4472f", "dash": True}],
+              "caption": "堆疊＝情境 B（基準）的三個分部（ABF、BT 與其他載板、晶碩隱形眼鏡），頂端數字＝情境 B 合併營收；虛線＝情境 A、情境 C 的合併營收。FY2026 為前三季實績＋第四季假設的錨點；三情境差異來自加速器顆數與 BT 載板成長。"}
+    i_obs = next(i for i, b in enumerate(th) if b["type"] == "h3" and b.get("text") == "重點觀察")
+    th[i_obs + 1] = {"type": "list", "ordered": True, "items": [f"@README!A{RM[k]}" for k in ("o1", "o2", "o3", "o4", "o5")]}
+    th.insert(0, chart1)
+    th.insert(1, {"type": "note", "parts": [f"@README!A{RM['rec']}"]})
+    for b in th:
+        if b["type"] == "h3" and b.get("text") == "情境定義與口徑":
+            b["text"] = "情境定義"
+    # ---- 2. 估值：第一個區塊＝四個目標價與現價（G 位置）；規則與相對倍數說明放圖下 ----
+    va = S["valuation"]["blocks"]
+    g0 = find("Val", "0.7 估值並列"); gr = list(range(g0 + 2, g0 + 7)); r_pxg = g0 + 7
+    four = {"type": "bars", "title": "四個目標價與現價（元；豎線＝現價）", "fmt": "n2",
+            "items": [{"label": lb, "value": f"@Val!B{r}", "series": sr} for r, sr, lb in zip(gr, (1, 2, 2, 0, 1),
+                      ("DCF 目標價", "Comparable（調整後，進加權）", "Comparable（未調整，不進加權）", "加權目標價（橫幅主值）", "市場共識目標價"))],
+            "ref": {"label": f"@Val!A{r_pxg}", "value": f"@Val!B{r_pxg}"}}
+    tbl4 = {"type": "table", "caption": f"@Val!A{g0}", "head": [f"@Val!{c}{g0 + 1}" for c in "ABCD"],
+            "rows": [[f"@Val!A{r}", f"@Val!B{r}|n2", f"@Val!C{r}|sp1", f"@Val!D{r}"] for r in gr] + [[f"@Val!A{r_pxg}", f"@Val!B{r_pxg}|n2", "", f"@Val!D{r_pxg}"]]}
+    keep = [b for b in va if not (b.get("type") == "bars" and b.get("title") == "目標價與現價")]
+    assert any(b.get("type") == "h3" and b.get("text") == "對帳中：兩讀數目標價" for b in keep)
+    head_note = {"type": "note", "parts": old_note[:i_cd]}
+    S["valuation"]["blocks"] = [four, head_note, tbl4] + keep
+    intro = S["valuation"].pop("intro", None)
+    if intro:
+        S["valuation"]["blocks"].insert(2, {"type": "note", "parts": [intro]})
+    # ---- 3. 敏感度：主圖＝加權目標價相對基準（H 位置）----
+    se = S["sens"]["blocks"]
+    t0 = find("Sens", "加權目標價相對基準（HTML"); r1 = t0 + 2; r2 = r1
+    while SW.cell(r2 + 1, 1).value and not str(SW.cell(r2 + 1, 1).value).startswith("快照狀態"):
+        r2 += 1
+    tor = []
+    for col, side in (("B", "低"), ("C", "高")):
+        vals = {r: SW[f"{col}{r}"].value for r in range(r1, r2 + 1) if isinstance(SW[f"{col}{r}"].value, (int, float))}
+        big = [r for r, v in vals.items() if abs(v) >= 0.1]
+        small = [r for r, v in vals.items() if 0.0005 <= abs(v) < 0.1]
+        base = {"type": "tornado", "sheet": "Sens", "label_col": "A", "value_col": col, "fmt": "sp1"}
+        tor.append(dict(base, title=f"加權目標價相對基準：輸入取{side}值，變動達兩位數百分比的案例", rows=",".join(map(str, big))))
+        tor.append(dict(base, title=f"加權目標價相對基準：輸入取{side}值", rows=",".join(map(str, small)), collapse=True,
+                        summary=f"展開：加權目標價相對基準：輸入取{side}值，變動未達兩位數百分比的案例（幾乎為零者見全部案例表）"))
+    full = {"type": "table", "caption": f"@Sens!A{t0}", "collapse": True, "summary": "展開：全部案例的加權目標價相對基準（低案、高案）",
+            "head": [f"@Sens!{c}{t0 + 1}" for c in "ABC"], "rows": [[f"@Sens!A{r}", f"@Sens!B{r}|sp1", f"@Sens!C{r}|sp1"] for r in range(r1, r2 + 1)]}
+    snap = fnd(SW, "快照狀態", t0)
+    for b in se:
+        if b.get("type") == "tornado":
+            b["summary"] = "展開：對照：" + str(b.get("title", "EPS 相對基準的變動")).split("：")[0] + ("（未達兩位數的案例）" if b.get("collapse") else "（達兩位數的案例；情境 A，一次動一個輸入）")
+            b["collapse"] = True
+        if b.get("type") == "table" and not b.get("collapse"):
+            b["collapse"] = True
+            b["summary"] = "展開：目標價參數表（WACC、β、ERP、永續成長率等）"
+    intro_s = {"type": "note", "parts": ["主圖為加權目標價相對基準的變動（低案、高案分開，一次動一個輸入；變動達兩位數百分比者直接顯示，其餘摺疊）。業務主因為整本重算快照，快照狀態：",
+                                          f"@Sens!B{snap}", "；目標價參數取 Sens 頁「目標價參數敏感度」表。下方摺疊為全部案例與 EPS 敏感度對照。"]}
+    S["sens"].pop("intro", None)
+    S["sens"]["blocks"] = tor[:1] + tor[2:3] + [intro_s, tor[1], tor[3], full] + se
+    # ---- 4. 反向 DCF（新）----
+    rv = lambda p, start=1: next(r for r in range(start, RV.max_row + 1) if str(RV.cell(r, 1).value or "").strip().startswith(p))
+    ra, rcmp, rsum, yh = rv("A. DCF"), rv("B. Comparable"), rv("C. 摘要"), rv("項目（情境 B）")
+    rb_, rbb, rcc = rv("(a)"), rv("(b)"), rv("(c)")
+    m1, m0 = rv("現價隱含的營業利益率", rb_), rv("模型：基準的等效營業利益率", rb_)
+    s1, rv1, rv0, g1, g0b = rv("現價隱含的放大倍數", rbb), rv("現價隱含的 FY2028 營收", rbb), rv("模型：FY2028 營收", rbb), rv("現價隱含的 FY2028 營收年增率", rbb), rv("模型：FY2028 營收年增率", rbb)
+    w1, w0 = rv("現價隱含的 WACC", rcc), rv("模型 WACC", rcc)
+    a_rows = [rv(p, ra) for p in ("支持現價所需的評價日每股價值", "淨現金滾到評價日", "評價用稀釋股數", "支持現價所需的企業價值", "模型企業價值", "EV 需放大", "模型：情境 B 評價日每股價值")]
+    afmt = ["n2", "n1", "n3", "n1", "n1", "x1", "n2"]
+    pe1, rc1, pe2 = rv("只看 Comparable：支持現價所需的前瞻本益比", rcmp), rv("只看 Comparable：所需的相對倍數係數", rcmp), rv("加權（DCF 不變）", rcmp)
+    yrs_rows = list(range(yh + 1, yh + 12))
+    yfmt = ["n1", "n1", "p1", "p1", "n3", "n3", "n3", "n3", "n1", "n1", "n1"]
+    rev_ = {"id": "revdcf", "title": "反向 DCF：現價隱含什麼", "intro": "@RevDCF!A2",
+            "blocks": [
+                {"type": "note", "parts": [f"@RevDCF!A{rsum + 1}"]},
+                {"type": "note", "parts": [f"@RevDCF!A{rsum + 2}"]},
+                {"type": "table", "caption": "現金流折現法（情境 B 路徑）：一次只動一個因素，反解到現價", "head": ["項目", "現價隱含", "模型基準"],
+                 "rows": [["預測期營業利益率（FY2028–FY2032 統一一個值；模型欄為等效值，終值年權重大）", f"@RevDCF!B{m1}|p1", f"@RevDCF!B{m0}|p1"],
+                          ["現金流放大倍數（FY2028 起各年同乘；模型基準為一倍）", f"@RevDCF!B{s1}|n2", "—"],
+                          ["FY2028 營收（十億元）", f"@RevDCF!B{rv1}|n0", f"@RevDCF!B{rv0}|n0"],
+                          ["FY2028 營收年增率", f"@RevDCF!B{g1}|p1", f"@RevDCF!B{g0b}|p1"],
+                          ["折現率（WACC）", f"@RevDCF!B{w1}|p2", f"@RevDCF!B{w0}|p2"]]},
+                {"type": "table", "caption": f"@RevDCF!A{ra}", "head": ["項目", "值"], "rows": [[f"@RevDCF!A{r}", f"@RevDCF!B{r}|{f}"] for r, f in zip(a_rows, afmt)]},
+                {"type": "table", "caption": f"@RevDCF!A{rcmp}", "head": [f"@RevDCF!{c}{rcmp + 1}" for c in "ABCD"],
+                 "rows": [[f"@RevDCF!A{r}", f"@RevDCF!B{r}|{f}", f"@RevDCF!C{r}|{f}", f"@RevDCF!D{r}|sp1"] for r, f in ((pe1, "n1"), (rc1, "n2"), (pe2, "n1"))]},
+                {"type": "table", "caption": f"@RevDCF!A{yh}", "head": [f"@RevDCF!{c}{yh}" for c in "ABCDEFG"], "collapse": True,
+                 "summary": "展開：情境 B 各年數字（反解的計算基礎；演算過程見 RevDCF 頁）",
+                 "rows": [[f"@RevDCF!A{r}"] + [f"@RevDCF!{c}{r}|{f}" for c in "BCDEFG"] for r, f in zip(yrs_rows, yfmt)]}]}
+    # ---- 5. 損益：標準損益表 ----
+    p0 = find("PL", "標準損益表（v0.4.4")
+    ph = next(r for r in range(p0, PLW.max_row + 1) if PLW.cell(r, 1).value == "項目")
+    plr = lambda lab_, start=ph: next(r for r in range(start, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").strip() == lab_)
+    keys = ["營收", "營收年增率（YoY）", "營業成本（COGS）", "毛利", "毛利率", "營業費用（含研發）", "營業利益", "營業利益率", "其他收入（淨額；營業外收支）", "稅前利益",
+            "所得稅", "稅後淨利（歸屬母公司）", "淨利率", "加權股數（十億股）", "EPS（基本）"]
+    PC = "CDEFGHIJ"
+    rowx = lambda r: [f"@PL!A{r}"] + [f"@PL!{c}{r}|{fmt_u(PLW.cell(r, 2).value)}" for c in PC]
+    r_ratio = plr("比率"); r_chk = next(r for r in range(r_ratio, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("核對（應為 0"))
+    r_end = next(r for r in range(r_chk, PLW.max_row + 1) if not PLW.cell(r, 1).value) - 1
+    r_dil = plr("（備註）EPS 完全稀釋（公司財報；只列實績）"); r_nci = plr("（備註）非控制權益損益（主要為晶碩）")
+    is_tbl = {"type": "table", "caption": "標準損益表（十億元；EPS 為元）：FY2023A–FY2025A 實績、FY2026E–FY2030E 情境 B（基準；GAAP＝台灣 IFRS）",
+              "head": [f"@PL!A{ph}"] + [f"@PL!{c}{ph}" for c in PC],
+              "rows": [rowx(plr(k)) for k in keys] + [[f"@PL!A{r_dil}"] + [f"@PL!{c}{r_dil}|n2" for c in "CDE"] + [""] * 5]
+                      + [[f"@PL!A{r_nci}"] + [f"@PL!{c}{r_nci}|n1" for c in PC]]
+                      + [{"sub": f"@PL!A{r_ratio}"}] + [rowx(r) for r in range(r_ratio + 1, r_chk)]}
+    chk_tbl = {"type": "table", "caption": f"@PL!A{r_chk}", "head": [f"@PL!A{ph}"] + [f"@PL!{c}{ph}" for c in PC], "collapse": True,
+               "summary": "展開：核對列（歷史捨入差、預測期對 PL 情境 B、FY2030E 的推法差額）",
+               "rows": [[f"@PL!A{r}"] + [f"@PL!{c}{r}|{'p1' if '占營收' in str(PLW.cell(r, 1).value) else 'n3'}" for c in PC] for r in range(r_chk + 1, r_end + 1)]}
+    rv_, gm_, opm_, nm_ = plr("營收"), plr("毛利率"), plr("營業利益率"), plr("淨利率")
+    is_chart = {"type": "theme", "title": "營收（十億元）與毛利率、營業利益率、淨利率：FY2023A–FY2030E（情境 B）", "x": f"@PL!C{ph}:J{ph}",
+                "fmt": "n0", "fmt_r": "p0", "stack": True, "pad": 1.6,
+                "bars": [{"name": f"@PL!A{rv_}", "y": f"@PL!C{rv_}:J{rv_}", "color": "#6fc7cb"}],
+                "lines": [{"name": f"@PL!A{gm_}", "y": f"@PL!C{gm_}:J{gm_}", "axis": "r", "color": "#0b7a80", "labels": True},
+                          {"name": f"@PL!A{opm_}", "y": f"@PL!C{opm_}:J{opm_}", "axis": "r", "color": "#c29a2b"},
+                          {"name": f"@PL!A{nm_}", "y": f"@PL!C{nm_}:J{nm_}", "axis": "r", "color": "#6f6bae", "dash": True}],
+                "caption": "長條＝營收；三條線＝毛利率、營業利益率、淨利率（右軸，GAAP）。FY2026E 為前三季財報實績＋第四季假設；稅後淨利為歸屬母公司（晶碩約七成淨利屬非控制權益）；FY2030E 為收斂法延伸期（毛利率與營業費用率沿用前一年）。"}
+    old_pl = S["pl"]["blocks"]
+    pls = [b for b in old_pl if b["type"] == "pl"]
+    assert len(pls) == 2, [b["type"] for b in old_pl]
+    old_blocks = [dict(pls[0], collapse=True, summary="展開：三情境損益摘要（FY2025A–FY2029）")]
+    old_blocks += [dict(b, collapse=True, summary="展開：三情境損益補充列") for b in old_pl if b["type"] not in ("pl",)]
+    old_blocks += [dict(pls[1], collapse=True, summary="展開：三情境延伸到 FY2032（收斂法）")]
+    S["pl"].pop("intro", None)
+    S["pl"].update(title="損益（標準損益表）",
+                   blocks=[{"type": "note", "parts": [f"@PL!A{p0 + 1}"]}, is_chart, is_tbl, {"type": "note", "parts": [f"@PL!A{p0 + 2}"]}, {"type": "note", "parts": [f"@PL!A{r_end + 2}"]}, chk_tbl] + old_blocks)
+    # ---- 6. 驅動因子：分部營收推導（情境 B）----
+    seg = lambda rs: [[f"@PL!A{r}", f"@PL!B{r}"] + [f"@PL!{c}{r}|{fmt_u(PLW.cell(r, 2).value)}" for c in "DEFG"] for r in rs]
+    r_acc = prow("景碩加速器與 CPU 載板營收（新台幣）"); r_oai = prow("其他 AI 載板需求"); r_nai = prow("非 AI ABF 需求"); r_dem = prow("ABF 需求合計"); r_cap = prow("ABF 產能上限")
+    a_rows6 = [prow(p_) for p_ in ("NVIDIA 加速器顆數", "非 NVIDIA 加速器顆數", "NVIDIA CPU（Grace／Vera）顆數", "每顆載板面積與層數指數", "ABF 價格溢價指數", "景碩漲價年度化", "每顆 NVIDIA 加速器載板金額", "景碩份額：NVIDIA 加速器", "景碩份額：非 NVIDIA", "景碩份額：NVIDIA CPU")] + [r_acc]
+    b_rows6 = [r_oai, r_nai, r_dem, r_cap, r_abf, prow("需求滿足率")]
+    c_rows6 = [r_bt, r_lens, r_rev, prow("營收年增")]
+    d_rows6 = [prow("毛利率"), prow("營業利益"), prow("營業利益率"), prow("合併淨利（含非控制權益）"), prow("非控制權益 ＝"), prow("歸屬母公司淨利"), prow("EPS（基本）")]
+    seg_tbl = {"type": "table", "caption": "分部營收推導（情境 B；十億元）：ABF＋BT 與其他載板＋晶碩＝合併營收", "head": [f"@PL!A{hdrB}", "單位"] + [f"@PL!{c}{hdrB}" for c in "DEFG"],
+               "rows": [{"sub": "一、加速器與 NVIDIA CPU 載板＝顆數 × 每顆金額（面積層數 × 溢價）× 景碩份額 × 漲價年度化"}] + seg(a_rows6)
+                       + [{"sub": "二、ABF 載板＝MIN（加速器＋其他 AI＋非 AI 需求，產能上限）"}] + seg(b_rows6)
+                       + [{"sub": "三、BT 與其他載板、晶碩與合併"}] + seg(c_rows6)
+                       + [{"sub": "四、毛利與損益（晶碩非控制權益）"}] + seg(d_rows6)}
+    seg_chart = {"type": "theme", "title": "ABF 載板需求組成與產能上限（情境 B，十億元）", "x": f"@PL!D{hdrB}:G{hdrB}", "fmt": "n0", "stack": True, "pad": 1.25,
+                 "total": f"@PL!D{r_dem}:G{r_dem}",
+                 "bars": [{"name": "加速器與 CPU 載板", "y": f"@PL!D{r_acc}:G{r_acc}", "color": "#0b7a80"}, {"name": "其他 AI 載板", "y": f"@PL!D{r_oai}:G{r_oai}", "color": "#6fc7cb"},
+                          {"name": "非 AI ABF", "y": f"@PL!D{r_nai}:G{r_nai}", "color": "#8a8c8c"}],
+                 "lines": [{"name": "ABF 產能上限", "y": f"@PL!D{r_cap}:G{r_cap}", "color": "#b4472f", "dash": True, "labels": True}],
+                 "caption": "堆疊＝ABF 載板需求的三個組成（加速器與 NVIDIA CPU 載板、其他 AI 載板、非 AI），頂端數字＝需求合計；虛線＝產能上限（FY2026 營收 × 產能指數 × 組合 × 溢價）。ABF 營收取兩者較小值；FY2026 為校準年。"}
+    dr = S["drivers"]["blocks"]
+    S["drivers"].update(title="驅動因子：分部營收推導")
+    S["drivers"].pop("intro", None)
+    S["drivers"]["blocks"] = [{"type": "note", "parts": [f"@README!A{RM['drv']}"]}, seg_chart, seg_tbl, {"type": "h3", "text": "情境驅動與單一參數"}] + dr
+    # ---- 7. 對帳：C0 ----
+    c1 = fnd(CW, "1. 讀哪一層"); c2 = fnd(CW, "2. C0"); c3 = fnd(CW, "3. 對帳中年份")
+    h1, h2 = c1 + 1, next(r for r in range(c2, CW.max_row + 1) if CW.cell(r, 1).value == "項目")
+    cnt = fnd(CW, "讀取層級列數")
+    cunit = lambda r: str(CW.cell(r, 2).value or "")
+    cf = lambda r: "n3"
+    c0_rows = [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}", f"@Coord!D{r}|{cf(r)}", f"@Coord!E{r}|{cf(r)}", f"@Coord!F{r}|sp1", f"@Coord!G{r}"]
+               for r in range(h2 + 1, cnt) if CW.cell(r, 4).value is not None]
+    c0_tbl = {"type": "table", "caption": "讀取層級核對：個股讀入的層級值 vs 層級值（同源，不判定、不計入對帳中；有檢驗力的對帳見上表「公司實績 vs 層級隱含值」）", "collapse": True, "summary": "展開：讀取層級核對（同源，不判定）", "head": [f"@Coord!{c}{h2}" for c in "ABCDEFG"], "rows": c0_rows}
+    a4 = fnd(CW, "4. C0（實績）"); ih = next(r for r in range(a4, CW.max_row + 1) if CW.cell(r, 1).value == "項目"); mh = next(r for r in range(ih, CW.max_row + 1) if CW.cell(r, 1).value == "讀數")
+    a4e = next(r for r in range(mh, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith("對帳中項目數"))
+    fm = lambda r: "p1" if str(CW.cell(r, 2).value) == "%" else "n3" if str(CW.cell(r, 2).value) == "US$B" else "n0" if str(CW.cell(r, 2).value) == "月" else "n1"
+    act_rows = [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}", f"@Coord!D{r}|n1", f"@Coord!E{r}|n1", (f"@Coord!F{r}|p1" if r == a4e - 2 else f"@Coord!F{r}|sp1"), f"@Coord!G{r}"]
+                for r in range(mh + 1, a4e - 1)]
+    in_rows = [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}", f"@Coord!D{r}|" + fm(r), f"@Coord!E{r}", f"@Coord!H{r}"] for r in range(ih + 1, mh - 1) if CW.cell(r, 1).value]
+    act_blocks = [{"type": "h3", "text": "公司實績對層級隱含值（實績對帳）"}, {"type": "note", "parts": [f"@Coord!A{a4 + 1}"]}, {"type": "note", "parts": [f"@Coord!A{a4 + 2}"]},
+                  {"type": "table", "caption": "合併營收：月營收與季報實績 vs Siliconomics 基準隱含值（主讀數、第二讀數；層級值由本模型校準，判定標參考）", "head": [f"@Coord!{c}{mh}" for c in "ABCDEFG"], "rows": act_rows},
+                  {"type": "note", "parts": [f"@Coord!A{a4e - 1}"]},
+                  {"type": "note", "parts": ["對帳中項目數：", f"@Coord!G{a4e}|n0", "。"]},
+                  {"type": "table", "caption": "實績與層級隱含值的輸入、等級與出處（展開看）", "collapse": True, "summary": "展開：實績、層級值、換算參數與出處", "head": [f"@Coord!{c}{ih}" for c in "ABCDE"] + [f"@Coord!H{ih}"], "rows": in_rows}]
+    c0_note = [{"type": "h3", "text": "讀取層級核對（同源，不判定）"}, {"type": "note", "parts": [f"@Coord!A{c2}"]}, {"type": "note", "parts": [f"@Coord!A{c2 + 1}"]}, c0_tbl, {"type": "note", "parts": [f"@Coord!A{cnt + 1}"]}]
+    c0_src = {"type": "table", "caption": "層級名稱、版本、口徑與證據等級（每列的來源；展開看）", "collapse": True, "summary": "展開：每列的層級名稱、版本、口徑與證據等級",
+              "head": ["項目", "年度", "層級名稱與版本／口徑／證據等級／備註"], "rows": [[f"@Coord!A{r}", f"@Coord!C{r}", f"@Coord!H{r}"] for r in range(h2 + 1, cnt) if CW.cell(r, 8).value]}
+
+    def _rd(r):
+        v = CW.cell(r, 2).value
+        return [f"@Coord!A{r}", f"@Coord!B{r}" + ("|n3" if isinstance(v, (int, float)) and not isinstance(v, bool) else ""), f"@Coord!C{r}", f"@Coord!D{r}", f"@Coord!E{r}"]
+    rd_tbl = {"type": "table", "caption": f"@Coord!A{c1}", "head": [f"@Coord!{c}{h1}" for c in "ABCDE"], "collapse": True, "summary": "展開：本模型讀哪一層、哪一版（下游只註明版本、不自行重估）",
+              "rows": [_rd(r) for r in range(h1 + 1, c2 - 1) if CW.cell(r, 1).value]}
+    rf0 = fnd(CW, "層級之間"); rfh = next(r for r in range(rf0, CW.max_row + 1) if CW.cell(r, 1).value == "項目"); rfe = next(r for r in range(rfh, CW.max_row + 1) if not CW.cell(r + 1, 1).value)
+    ref_blocks = [{"type": "h3", "text": f"@Coord!A{rf0}"}, {"type": "note", "parts": [f"@Coord!A{rf0 + 1}"]},
+                  {"type": "table", "head": [f"@Coord!{c}{rfh}" for c in "ABCDEFG"],
+                   "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}", f"@Coord!D{r}|n3", f"@Coord!E{r}|n3", f"@Coord!F{r}|sp1", f"@Coord!G{r}"] for r in range(rfh + 1, rfe + 1)]}]
+    c3_notes = [{"type": "note", "parts": [f"@Coord!A{c3 + 1}"]}]
+    S["recon"]["blocks"] = [{"type": "h3", "text": "三層協調：由下往上對帳（公司實績對各層）"}] + act_blocks + c0_note + ref_blocks + c3_notes + [c0_src, rd_tbl] + [{"type": "h3", "text": "券商、共識與市場口徑"}] + S["recon"]["blocks"]
+    # ---- 8. 資料狀態 ----
+    st = S["status"]["blocks"]
+    st[0:0] = [{"type": "h3", "text": "本版要點"}, {"type": "note", "parts": [f"@README!A{RM['ver']}"]}]
+    order = ["thesis", "valuation", "sens", "revdcf", "pl", "drivers", "recon", "status"]
+    S["revdcf"] = rev_
+    cfg["sections"] = [S[k] for k in order]
+
+
+_v13(cfg)
 json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+print("ok", OUT)
+
 print("ok", OUT)
