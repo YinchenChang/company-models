@@ -20,7 +20,7 @@ def transform(cfg, wb):
     # ---- README v1.3 展示層列 ----
     r13 = lab("README", "v1.3 展示層")
     RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
-    assert str(RD[f"A{RM['ver']}"].value).startswith("v0.7.6"), RD[f"A{RM['ver']}"].value
+    assert str(RD[f"A{RM['ver']}"].value).startswith("v0.7."), RD[f"A{RM['ver']}"].value
     # ---- 橫幅：只留白話（含對帳中揭露）----
     old_note = list(cfg["hero"]["note"])
     cfg["hero"]["note"] = [f"@README!A{RM['hero']}"]
@@ -228,9 +228,16 @@ def transform(cfg, wb):
                 out.append([f"@Coord!A{r}", f"@Coord!B{r}"] + [f"@Coord!{c}{r}|{cf(r)}" if not isinstance(CW[f"{c}{r}"].value, str) else f"@Coord!{c}{r}" for c in "CDEF"])
         return out
     note_rows = [r for r in range(hdr + 1, sum_r) if CW.cell(r, 7).value]
-    c0_blocks = [{"type": "h3", "text": "由下往上對帳：本模型的產業量與 Siliconomics 的對應值"},
+    import importlib.util
+    import os
+    _sp = importlib.util.spec_from_file_location("skh_c0_actuals", os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "skhynix", "c0_actuals.py"))
+    _m = importlib.util.module_from_spec(_sp)
+    _sp.loader.exec_module(_m)
+    act_blocks = _m.html_blocks(CW, lab)
+    c0_blocks = act_blocks + [
+                 {"type": "h3", "text": "讀取層級（同源，不判定）：本模型讀入的 Siliconomics 值"},
                  {"type": "note", "parts": [f"@Coord!B{sum_r}"]},
-                 {"type": "table", "caption": "由下往上對帳表（只含本公司自己的量對它讀的 Siliconomics 值；差距超過容差標「對帳中」；本模型讀層，故前五項為零差距）", "head": [f"@Coord!{c}{hdr}" for c in "ABCDEF"], "rows": crows(hdr + 1, sum_r - 1)},
+                 {"type": "table", "caption": "讀取層級對照表（本模型直接讀層，差距恆為零、無檢驗力，故不判定、不計入對帳中；公司實績對帳見上表）", "head": [f"@Coord!{c}{hdr}" for c in "ABCDEF"], "rows": crows(hdr + 1, sum_r - 1)},
                  {"type": "table", "caption": "對帳的口徑、來源與證據等級", "collapse": True, "summary": "展開：口徑、來源與證據等級", "head": ["項目", "口徑、來源與證據等級"],
                   "rows": [[f"@Coord!A{r}", f"@Coord!G{r}"] for r in note_rows]},
                  {"type": "h3", "text": "層級之間（參考；Siliconomics 對帳單處理，不計入本公司對帳）"},
