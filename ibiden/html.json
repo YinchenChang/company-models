@@ -1453,7 +1453,7 @@
      "label_col": "A",
      "value_col": "L",
      "fmt": "sp1",
-     "summary": "展開：對照：FY2028 EPS 相對基準的變動（情境 A，一次動一個輸入）",
+     "summary": "展開：對照：FY2028 EPS 相對基準的變動達兩位數百分比的案例（情境 A，一次動一個輸入）",
      "collapse": true
     },
     {
@@ -1465,7 +1465,7 @@
      "value_col": "L",
      "fmt": "sp1",
      "collapse": true,
-     "summary": "展開：對照：FY2028 EPS 相對基準的變動（情境 A，一次動一個輸入）"
+     "summary": "展開：對照：FY2028 EPS 相對基準的變動未達兩位數百分比的案例（情境 A）"
     },
     {
      "type": "table",
@@ -4387,6 +4387,24 @@
        "@Coord!E70|n3",
        "@Coord!F70|sp1",
        "@Coord!G70"
+      ],
+      [
+       "@Coord!A71",
+       "@Coord!B71",
+       "@Coord!C71",
+       "@Coord!D71|n3",
+       "@Coord!E71|n3",
+       "@Coord!F71|sp1",
+       "@Coord!G71"
+      ],
+      [
+       "@Coord!A72",
+       "@Coord!B72",
+       "@Coord!C72",
+       "@Coord!D72|n3",
+       "@Coord!E72|n3",
+       "@Coord!F72|sp1",
+       "@Coord!G72"
       ]
      ]
     },
@@ -4394,51 +4412,33 @@
      "type": "note",
      "parts": [
       "對帳中項目數：",
-      "@Coord!G71|n0",
+      "@Coord!G73|n0",
       "。",
-      "@Coord!A72"
+      "@Coord!A74"
      ]
     },
     {
      "type": "h3",
-     "text": "@Coord!A73"
+     "text": "@Coord!A75"
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A74"
+      "@Coord!A76"
      ]
     },
     {
      "type": "table",
      "head": [
-      "@Coord!A75",
-      "@Coord!B75",
-      "@Coord!C75",
-      "@Coord!D75",
-      "@Coord!E75",
-      "@Coord!F75",
-      "@Coord!G75"
+      "@Coord!A77",
+      "@Coord!B77",
+      "@Coord!C77",
+      "@Coord!D77",
+      "@Coord!E77",
+      "@Coord!F77",
+      "@Coord!G77"
      ],
      "rows": [
-      [
-       "@Coord!A76",
-       "@Coord!B76",
-       "@Coord!C76",
-       "@Coord!D76|n3",
-       "@Coord!E76|n3",
-       "@Coord!F76|sp1",
-       "@Coord!G76"
-      ],
-      [
-       "@Coord!A77",
-       "@Coord!B77",
-       "@Coord!C77",
-       "@Coord!D77|n3",
-       "@Coord!E77|n3",
-       "@Coord!F77|sp1",
-       "@Coord!G77"
-      ],
       [
        "@Coord!A78",
        "@Coord!B78",
@@ -4456,19 +4456,37 @@
        "@Coord!E79|n3",
        "@Coord!F79|sp1",
        "@Coord!G79"
+      ],
+      [
+       "@Coord!A80",
+       "@Coord!B80",
+       "@Coord!C80",
+       "@Coord!D80|n3",
+       "@Coord!E80|n3",
+       "@Coord!F80|sp1",
+       "@Coord!G80"
+      ],
+      [
+       "@Coord!A81",
+       "@Coord!B81",
+       "@Coord!C81",
+       "@Coord!D81|n3",
+       "@Coord!E81|n3",
+       "@Coord!F81|sp1",
+       "@Coord!G81"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A83"
+      "@Coord!A85"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A84"
+      "@Coord!A86"
      ]
     },
     {
@@ -4591,6 +4609,16 @@
        "@Coord!A70",
        "@Coord!C70",
        "@Coord!H70"
+      ],
+      [
+       "@Coord!A71",
+       "@Coord!C71",
+       "@Coord!H71"
+      ],
+      [
+       "@Coord!A72",
+       "@Coord!C72",
+       "@Coord!H72"
       ]
      ]
     },

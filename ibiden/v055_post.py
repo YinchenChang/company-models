@@ -5,7 +5,7 @@
 #   RevDCF 頁（新）：反向 DCF——現價隱含的營業利益率、營收規模、WACC（DCF 情境 B 路徑）與 Comparable 倍數
 #   Val 頁末：0.7 估值並列四個目標價
 #   Sens 頁末：加權目標價相對基準（低案、高案；業務主因整本重算快照 ibiden/sens.json＋目標價參數表）
-#   Coord 頁末：三層協調 C0（讀哪一層哪一版、由下往上對帳、對帳中年份處理、FY(t) 對 CY(t) 口徑近似）；co_flag_<yyyy> 具名範圍
+#   Coord 頁末：三層協調 C0（讀哪一層哪一版、由下往上對帳、對帳中年份處理、FY(t) 對 CY(t) 口徑近似）
 #   In 頁末：N 節（標準損益表推算假設 opx_el）
 #   README 頁末：v1.3 展示層白話列；A1 標題段版號更正為現行版號
 import json, os, re
@@ -144,7 +144,7 @@ HC = {"C": "D", "D": "E", "E": "F"}   # 標準損益表歷史欄 → Hist 欄（
 FLAGY = {"F": 2026, "G": 2027, "H": 2028, "I": 2029, "J": 2029, "K": 2029}   # 預測欄依賴的 Siliconomics 日曆年（FY(t) 對 CY(t)；FY2030–31 延伸期沿用 FY2029 之後的路徑）
 
 
-def pl_standard(wb, HR):
+def pl_standard(wb, HR, CR):
     P = wb["PL"]
     rb = lab(P, "情境 B：")
     g = lambda label: lab(P, label, rb, exact=True)
@@ -168,7 +168,7 @@ def pl_standard(wb, HR):
         c = P.cell(r, j, h); c.font = BOLD; c.fill = HDR
     for col in "FGHIJK":   # 預測欄標題：依賴 Siliconomics 對帳中年份者加「（對帳中）」（co_flag_<yyyy> 在 Coord 頁）
         yr = YEARS[COLS.index(col)]
-        P[f"{col}{r}"] = f'="{yr}"&IF(co_flag_{FLAGY[col]}=1,"（對帳中）","")'
+        P[f"{col}{r}"] = f'="{yr}"&IF(Coord!${"BCDE"[FLAGY[col]-2026]}${CR["flag"]}=1,"（對帳中）","")'
     r_hdr = r; r += 1
     L = {}
 
@@ -451,8 +451,6 @@ def coord_c0(wb, SIL, CR, HR, PLA):
     from openpyxl.worksheet.worksheet import Worksheet  # noqa: F401
     CW = wb["Coord"]
     # 具名範圍：對帳中旗標鏡像（co_flag_<yyyy>；check_layout_v13 與 PL 標題用）
-    for j, y in enumerate((2026, 2027, 2028, 2029)):
-        dn(wb, f"co_flag_{y}", f"Coord!${'BCDE'[j]}${CR['flag']}")
     P = wb["PL"]; U = wb["Units"]; V = wb["Val"]
     rb = lab(P, "情境 B：")
     g = lambda label: lab(P, label, rb, exact=False)
@@ -553,14 +551,32 @@ def coord_c0(wb, SIL, CR, HR, PLA):
     line("NVIDIA 每顆載板金額 FY2026（美元）：模型 Units 頁 vs 層（加速器載板市場 ÷ 等效顆數）", "US$", "FY2026／CY2026", f"=Units!C{ur_asp}",
          f"=E{r_mkt}*1000/({nv26}+{vot}*{ot26})", "#,##0.0",
          f"層值＝市場 ÷（NVIDIA 顆數 ＋ abf_vot × 非 NVIDIA 顆數）；同源註記：同上（abf_accsh26 由本模型 US$215 推得）。先驗比對推導區間 $150–300（Recon 頁）")
-    # 產能指數
+    # 產能指數：口徑不可比（獨立核對 2026-11-14）——只列參考，不判對帳中
+    cap_ext = dict(cap); cap_ext[2026] = 1.0
+    WNOTE = ("不可比，只列參考：(a) 模型只算 AI 載板，層的指數涵蓋全部 ABF 產能；(b) 模型量是需求（顆數 × 份額 × 金額指數），層是產能；(c) FY(t) 與 CY(t) 重疊 9 個月。")
     for y in (2027, 2028, 2029):
         c = ycol[y]
-        wm = f"(0.75*{cap[y]}+0.25*{cap[y + 1]})" if y + 1 in cap else None
-        note = (f"{nb} abfcap_ib_{y % 100}（Ibiden ABF 產能指數，2026＝1；Assumed，依公司路線圖「2028 年產能為 2024 年 2.5–2.8 倍」）；模型值＝有效顆數 × 份額相對值 × 金額指數 ÷ FY2026 有效顆數"
-                "（面積與層數隨金額指數，不含短缺溢價），情境 B；口徑：層的指數涵蓋全部 ABF 產能，模型值只含 AI 載板，且 FY(t) 與 CY(t) 重疊 9 個月，可比性中")
-        if wm: note += f"；月數加權層值 {wm.replace('0.75*', '0.75×').replace('0.25*', '0.25×')}＝{0.75 * cap[y] + 0.25 * cap[y + 1]:.3f}"
-        line("Ibiden AI 載板實體量指數（情境 B）vs Ibiden ABF 產能指數", "x（FY2026＝1）", f"FY{y}／CY{y}", f"=PL!{c}{R['ueff']}*PL!{c}{R['rel']}*PL!{c}{R['asp']}/PL!$D${R['ueff']}", cap[y], "0.000", note)
+        if y + 1 in cap:
+            wm = (0.75 * cap[y] + 0.25 * cap[y + 1]) / (0.75 * cap_ext[y - 1] + 0.25 * cap[y])
+            wtxt = (f"；月數加權（基期一併換算）層值＝(0.75×{cap[y]}＋0.25×{cap[y + 1]})÷(0.75×{cap_ext[y - 1]:g}＋0.25×{cap[y]})＝{wm:.3f}，"
+                    "")
+        else:
+            wtxt = ""
+        note = (f"{nb} abfcap_ib_{y % 100}（Ibiden ABF 產能指數，2026＝1；Assumed，依公司路線圖「2028 年產能為 2024 年 2.5–2.8 倍」）；模型值＝有效顆數 × 份額相對值 × 金額指數 ÷ FY2026 有效顆數（不含短缺溢價），情境 B。"
+                + WNOTE + wtxt)
+        rr = line("Ibiden AI 載板實體量指數（情境 B）vs Ibiden ABF 產能指數", "x（FY2026＝1）", f"FY{y}／CY{y}", f"=PL!{c}{R['ueff']}*PL!{c}{R['rel']}*PL!{c}{R['asp']}/PL!$D${R['ueff']}", cap[y], "0.000", note)
+        CW.cell(rr, 7, "不可比（只列參考）")
+        if y == 2027:
+            ROW["cap27"] = rr
+            CW.cell(rr, 8, note.replace("模型值對它的差距 0", "") )
+            for sh in (0.65, 0.85):
+                CW.cell(r, 1, f"參考：全 ABF 口徑 FY2027 實體量指數（AI 占 ABF {sh:.0%}、非 AI 部分量不變的假設）vs 月數加權層值"); CW.cell(r, 2, "x（FY2026＝1）"); CW.cell(r, 3, "FY2027／CY2027")
+                CW.cell(r, 4, f"={sh}*D{rr}+(1-{sh})").number_format = "0.000"
+                CW.cell(r, 5, f"=(0.75*{cap[2027]}+0.25*{cap[2028]})/(0.75*1+0.25*{cap[2027]})").number_format = "0.000"
+                CW.cell(r, 6, f"=D{r}/E{r}-1").number_format = "+0.0%;-0.0%"
+                CW.cell(r, 7, f'=IF(ABS(F{r})>0.15,"參考：超過 15%","參考：未超過 15%")')
+                CW.cell(r, 8, "AI 占比為假設（Assumed，65%–85%；公司未揭露）；非 AI 部分量不變亦為假設。判定在區間內翻轉，故本比較不作對帳依據")
+                r += 1
     last = r - 1
     ROW["first"], ROW["last"] = first, last
     CW.cell(r, 1, "對帳中項目數（|差距| > 15%）"); CW.cell(r, 7, f'=COUNTIF(G{first}:G{last},"對帳中")'); ROW["cnt"] = r; r += 1
@@ -657,11 +673,14 @@ def apply(wb, here, SIL, CR):
     HR = hist_is(wb)
     in_n(wb)
     CO = coord_c0(wb, SIL, CR, HR, None)
-    PLA = pl_standard(wb, HR)
+    PLA = pl_standard(wb, HR, CR)
     RVA = revdcf(wb)
     VG = val_g(wb)
     SNS = sens_tor(wb, here)
     RMA = readme13(wb, HR, PLA, RVA, SNS, CR, CO)
     version(wb)
+    # PL 情境 B 標題的顆數係數舊字（CY2029 ×0.85）改讀 Siliconomics 基準係數（獨立核對 2026-11-14）；放最後，前面各步仍以文字找列
+    _pl = wb["PL"]; _r = lab(_pl, "情境 B：")
+    _pl.cell(_r, 1).value = '="情境 B：CY2028 顆數 ×"&TEXT(um28_B,"0.00")&"、CY2029 ×"&TEXT(um29_B,"0.00")&"（讀 Siliconomics 基準係數）"'
     wb._v055 = dict(HR=HR, PL=PLA, RV=RVA, VG=VG, SNS=SNS, RM=RMA, CO=CO)
     return f"v055_post：Hist 頁；PL 標準損益表 {PLA['start']} 起；RevDCF 頁；Val 0.7 {VG} 起；Sens 加權目標價相對基準 {SNS['t0']} 起；Coord C0 {CO['first']}–{CO['last']}；README v1.3 白話列 {len(RMA)} 列"

@@ -276,7 +276,7 @@ def _v13():
     snap = fnd(SW, "快照狀態")
     for b in se:
         if b.get("type") == "tornado":
-            b["summary"] = "展開：對照：FY2028 EPS 相對基準的變動（情境 A，一次動一個輸入）"
+            b["summary"] = ("展開：對照：FY2028 EPS 相對基準的變動未達兩位數百分比的案例（情境 A）" if b.get("collapse") else "展開：對照：FY2028 EPS 相對基準的變動達兩位數百分比的案例（情境 A，一次動一個輸入）")
             b["collapse"] = True
         if b.get("type") == "table" and not b.get("collapse"):
             b["collapse"] = True
