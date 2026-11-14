@@ -11,6 +11,7 @@
 - coord_meta：需在 `siliconomics/builder/seed/coord_meta_v0.19.json` 的 `hardware_companies` 加入 `lite`（本 PR 不改，列在 PR 說明）。
 - 驗證：`xlsx_diff`（只有 README A1 版號字串與新增格）、`check_company_html`、`check_layout_v13 --xlsx`、`baseline_coordination/check.py` 全過；錯誤格 0、各核對列 0（Hist EPS 捨入差 ±0.004；FY2025、FY2026 模型營業利益與公司揭露差 0.001 為模型毛利率捨入）。
 - 成品：`dist/20261115_Lumentum個股模型_v0.5.5.xlsx`、`.html`；v0.5.4 移到 `dist/_待刪除/`。
+- **同版重建（2026-11-15，合併後整理）**：In 頁 `mrvl_tp`（MRVL 模型加權目標價，只供 Val 0.6 節換股價值對照、不進 LITE 加權目標價）67.36 → 64.73，來源改指 `mrvl/dist/20261115_邁威爾個股模型_v0.3.5.xlsx`（67.36 是 MRVL v0.3.4 建置當時的值；Siliconomics v0.19 下游重建後 v0.3.4 原地更新為 64.73，v0.3.5 相同）。逐格比對只有 8 格變動：In!B113／E113／H113、Val!A157、Val!B155（4.5 × MRVL 模型目標價 303.12 → 291.29）、Val!C155（−40.5% → −42.9%）、Val!E155、README!A33（重點 1 文字中的同一換算值）；加權目標價 377.71、DCF、Comparable、上檔空間、評等「放空」皆不變，故不升版。
 
 ## v0.5.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 
