@@ -727,7 +727,7 @@ def _coord_c0():
           "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}|n3", f"@Coord!D{r}|n3", f"@Coord!F{r}", f"@Coord!G{r}"] for r in range(F1a, F1b + 1)]}
     # v0.3.10：C0（實績）表（Coord 頁 F3）放在最前；其後為 F2 既有列（讀取層級、參考；不判定）
     f3h, f3a = cr("F3. C0（實績）"), cr("資料中心營收 FY2027 Q1（公司實績）")
-    r_d1, r_d2, r_j = cr("主讀數：已公布期間"), cr("第二讀數：最近一季"), cr("C0（實績）判定"); r_rel, r_org = cr("F3 與 F2 既有"), cr("F3 同源檢查")
+    r_d1, r_d2, r_j = cr("主讀數：已公布期間"), cr("第二讀數：最近一季"), cr("C0（實績）判定"); r_rel, r_org = cr("F3 與 F2 既有"), cr("F3 同源檢查"); r_k, r_s1 = cr("口徑換算"), cr("n2 敏感度")
     t3 = {"type": "table", "caption": f"@Coord!A{f3h}", "head": ["讀數", "期間／口徑", "公司實績（US$B）", "層級隱含（US$B）", "差距", "狀態／判定"],
           "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!D{r}|n1", f"@Coord!E{r}|n1", f"@Coord!F{r}|sp1", f"@Coord!G{r}"] for r in (r_d1, r_d2)] + [[f"@Coord!A{r_j}", f"@Coord!B{r_j}", "", "", "", f"@Coord!G{r_j}"]]}
     d3 = {"type": "table", "caption": "展開：實績對帳的輸入、口徑、出處與證據等級", "collapse": True, "summary": "展開：實績對帳的輸入、出處與證據等級",
@@ -735,6 +735,9 @@ def _coord_c0():
           "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!D{r}|n1", f"@Coord!H{r}", f"@Coord!I{r}", f"@Coord!J{r}", f"@Coord!K{r}"] for r in range(f3a, r_d1 + 2)]}
     blocks = [{"type": "h3", "text": "實績對帳：公司已公布實績對層級隱含值"},
               {"type": "note", "parts": [f"@Coord!D{r_sum}"]}, t3, d3,
+              {"type": "note", "parts": [f"@Coord!B{r_k}"]},
+              {"type": "table", "caption": "實績對帳敏感度：只換層級每 IT GW 內容，出貨 GW 與實績不變", "head": ["內容取值", "每 IT GW 內容（US$B／GW）", "層級隱含（US$B）", "主讀數差距", "第二讀數差距", "判定"],
+               "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|n3", f"@Coord!C{r}|n1", f"@Coord!D{r}|sp1", f"@Coord!E{r}|sp1", f"@Coord!F{r}"] for r in range(r_s1 + 2, r_s1 + 5)]},
               {"type": "note", "parts": [f"@Coord!B{r_org}"]}, {"type": "note", "parts": [f"@Coord!B{r_rel}"]},
               {"type": "h3", "text": "三層協調：讀取層級與由下往上對帳（參考列；不判定）"}, t2, d2,
               {"type": "note", "parts": [f"@Coord!A{r_read}"]}, t1]

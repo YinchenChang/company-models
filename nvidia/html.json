@@ -6762,13 +6762,57 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!B166"
+      "@Coord!B165"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "實績對帳敏感度：只換層級每 IT GW 內容，出貨 GW 與實績不變",
+     "head": [
+      "內容取值",
+      "每 IT GW 內容（US$B／GW）",
+      "層級隱含（US$B）",
+      "主讀數差距",
+      "第二讀數差距",
+      "判定"
+     ],
+     "rows": [
+      [
+       "@Coord!A168",
+       "@Coord!B168|n3",
+       "@Coord!C168|n1",
+       "@Coord!D168|sp1",
+       "@Coord!E168|sp1",
+       "@Coord!F168"
+      ],
+      [
+       "@Coord!A169",
+       "@Coord!B169|n3",
+       "@Coord!C169|n1",
+       "@Coord!D169|sp1",
+       "@Coord!E169|sp1",
+       "@Coord!F169"
+      ],
+      [
+       "@Coord!A170",
+       "@Coord!B170|n3",
+       "@Coord!C170|n1",
+       "@Coord!D170|sp1",
+       "@Coord!E170|sp1",
+       "@Coord!F170"
+      ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!B165"
+      "@Coord!B174"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!B173"
      ]
     },
     {
