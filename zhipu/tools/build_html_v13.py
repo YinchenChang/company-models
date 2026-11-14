@@ -3,7 +3,8 @@
 
 - 數字一律經 build_html.Values 取自 LibreOffice 重算後的 xlsx（基準與 html_scenarios.yaml 各情境），每個數字帶 data-ref／data-sc／data-fmt／data-v，
   tests/test_html.py 以 engine（pycel）逐一比對（與一頁摘要同一套檢查）。本檔不做模型計算，只做排版與 SVG 幾何。
-- 本模型沒有目標價與評等（Reverse 只作反向對照），估值章標「不適用」並帶 data-unlisted（沿用規格 J 節的檢查豁免；J 節原文只寫未上市，見 README v0.1.5 節）。
+- 本模型沒有目標價與評等（Reverse 只作反向對照），估值章標「估值：不適用（本模型未建目標價）」並帶 data-novaluation（規格 J 節 (b)：已上市但本模型未建估值；
+  必列現價、市值、EV 與反向檢驗，至少一張反向檢驗圖）。
 - 章節：命題 → 估值（不適用）→ 敏感度（對 2030 覆蓋率）→ 損益（PL 頁）→ 驅動因子（分部營收推導）→ 算力 → 資金 → 與 OpenAI 並排 → 對帳（Coord 頁 C0）→ 資料狀態。
 
 用法：python3 tools/build_html_v13.py [--outdir dist]（會先跑 build_html.build() 產生一頁摘要與 dist xlsx，再輸出 <日期>_智譜個股頁_v<版本>.html）
@@ -79,9 +80,9 @@ def hero(V):
     tiles = (f'<div class="hero-t"><div class="hero-l">現價（2026-11-05 收盤，港元）</div><div class="hero-n">{V.n("Reverse!X38", None, "f0")}</div></div>'
              f'<div class="hero-t"><div class="hero-l">FY2030 覆蓋率（營收 ÷ 全成本）</div><div class="hero-n">{V.n("COST_Coverage", 2030, "pct0")}</div></div>'
              f'<div class="hero-t"><div class="hero-l">首次外部資金缺口年</div><div class="hero-n">{V.n("FND_FirstGapYear", None, "yrt")}</div></div>')
-    note = (f'本模型是收支模型，沒有建目標價與評等。基準情境下 FY2030 營收只覆蓋全成本的 {V.n("COST_Coverage", 2030, "pct0")}，'
+    note = (f'本模型未建目標價與評等（收支模型）。基準情境下 FY2030 營收只覆蓋全成本的 {V.n("COST_Coverage", 2030, "pct0")}，'
             f'已到位融資撐到 {V.n("FND_FirstGapYear", None, "yrt")} 年才出現外部資金缺口。')
-    return (f'<div class="hero"><div class="hero-rec"><span class="hero-k">投資建議</span><span class="hero-v">不給評等（模型未建目標價）</span></div>'
+    return (f'<div class="hero"><div class="hero-rec"><span class="hero-k">投資建議</span><span class="hero-v">本模型未建目標價與評等</span></div>'
             f'<div class="hero-tiles">{tiles}</div><p class="hero-note">{note}</p></div>')
 
 
@@ -107,16 +108,47 @@ def thesis(V):
             f'<h3>重點觀察</h3><ol>{"".join(obs)}</ol></section>')
 
 
+def chart_revcheck(V):
+    """反向檢驗圖：模型營收（直條）vs 市值隱含年營收（虛線）與分析師共識（點）；數字全取自 xlsx。"""
+    W, H, L, R, T, B = 700, 300, 52, 10, 26, 34
+    imp = V.get("RVS_MktImpliedRev")
+    rev = [V.get("REV_NetCapped", y) for y in YEARS]
+    tgt = [V.get("RVS_Target", y) for y in YEARS]
+    ymax = nice_max(max(rev + tgt + [imp]) * 1.1)
+    o = [f'<svg viewBox="0 0 {W} {H}" role="img" aria-label="反向檢驗：模型營收對市值隱含年營收">']
+    o += axis(W, H, L, R, T, B, 0, ymax, 4, "RMB 億")
+    slot = (W - L - R) / len(YEARS)
+    bw = slot * 0.42
+    for i, y in enumerate(YEARS):
+        xc = L + slot * i + slot / 2
+        yv, y0 = ymap(rev[i], H, T, B, 0, ymax), ymap(0, H, T, B, 0, ymax)
+        o.append(f'<rect x="{xc - bw / 2:.1f}" y="{yv:.1f}" width="{bw:.1f}" height="{max(y0 - yv, 0.5):.1f}" style="fill:var(--rev)"/>')
+        o.append(V.t("REV_NetCapped", y, "f1", x=f"{xc:.1f}", y=f"{yv - 5:.1f}", text_anchor="middle", style="font-size:10.5px"))
+        if y >= 2026:
+            yt = ymap(tgt[i], H, T, B, 0, ymax)
+            o.append(f'<circle cx="{xc + bw / 2 + 8:.1f}" cy="{yt:.1f}" r="4" style="fill:var(--tgt)"/>')
+        o.append(f'<text class="tick" x="{xc:.1f}" y="{H - 12}" text-anchor="middle">{y}</text>')
+    yi = ymap(imp, H, T, B, 0, ymax)
+    o.append(f'<line x1="{L}" x2="{W - R}" y1="{yi:.1f}" y2="{yi:.1f}" style="stroke:var(--gap);stroke-width:2;stroke-dasharray:6 4"/>')
+    o.append(V.t("RVS_MktImpliedRev", None, "f1", x=f"{L + 6}", y=f"{yi - 6:.1f}", style="font-size:11px;fill:var(--gap)"))
+    o.append("</svg>")
+    return '<div class="cw">' + "\n".join(o) + "</div>"
+
+
 def valuation(V):
     rows = "".join(f'<tr><td>{lab}</td><td>{V.n(ref, None, f)}</td></tr>' for lab, ref, f in (
-        ("收盤價（港元，2026-11-05）", "Reverse!X38", "f0"), ("市值（人民幣億元）", "RVS_MktCap", "f0"), ("淨現金（估計，人民幣億元）", "RVS_NetCash", "f0"),
-        ("企業價值（人民幣億元）", "RVS_EV", "f0"), ("同業（MiniMax）企業價值 ÷ 年化營收（倍）", "RVS_PeerMult", "f1"),
+        ("現價：收盤價（港元，2026-11-05）", "Reverse!X38", "f0"), ("市值（人民幣億元）", "RVS_MktCap", "f0"), ("淨現金（估計，人民幣億元）", "RVS_NetCash", "f0"),
+        ("企業價值 EV（人民幣億元）", "RVS_EV", "f0"), ("同業（MiniMax）企業價值 ÷ 年化營收（倍）", "RVS_PeerMult", "f1"),
         ("市值隱含年營收（人民幣億元）", "RVS_MktImpliedRev", "f1"), ("模型營收首次達到的年度", "RVS_MktImpliedYear", "yrt")))
-    return ('<section id="valuation" data-unlisted="1" data-novaluation="1"><h2>估值：不適用（本模型未建目標價）</h2>'
-            '<p class="note">智譜已在港股上市、有市場價格，但本模型是收支模型：沒有 DCF、同業倍數加權與評等，因此不給目標價。'
-            '版面規格 v1.3 的四個目標價圖、加權目標價敏感度與反向 DCF 章不適用；本章改列市值、企業價值與反向對照（市值隱含營收）。若要給目標價，需另建估值頁（判斷類，待決定）。</p>'
-            f'<div class="tw"><table><thead><tr><th>市值與反向對照</th><th>值</th></tr></thead><tbody>{rows}</tbody></table></div>'
-            f'{year_table(V, [("正向營收 ÷ 市值隱含營收（倍）", "RVS_FwdOverImplied", "f2", ""), ("分析師共識營收（人民幣億元）", "RVS_Target", "f1", "")])}</section>')
+    return ('<section id="valuation" data-novaluation="1"><h2>估值：不適用（本模型未建目標價）</h2>'
+            '<p class="note">本模型未建目標價與評等。智譜已在港股上市、有市場價格，但本模型是收支模型：沒有 DCF、同業倍數加權與評等，因此不給目標價。'
+            '版面規格 v1.3 的四個目標價圖、加權目標價敏感度與反向 DCF 章不適用（規格 J 節 (b)）；本章改列現價、市值、企業價值與反向檢驗（市值隱含營收）。'
+            '若要給目標價需另建估值頁（判斷類，待 Andy 決定）。</p>'
+            f'<h3>反向檢驗：模型營收（藍）vs 市值隱含年營收（紅虛線 {V.n("RVS_MktImpliedRev", None, "f1")} 億元），紫點＝分析師共識營收</h3>{chart_revcheck(V)}'
+            f'<div class="tw"><table><thead><tr><th>現價、市值與反向檢驗</th><th>值</th></tr></thead><tbody>{rows}</tbody></table></div>'
+            f'{year_table(V, [("正向營收 ÷ 市值隱含營收（倍）", "RVS_FwdOverImplied", "f2", ""), ("分析師共識營收（人民幣億元；FY2029–FY2030 為沿用值）", "RVS_Target", "f1", "")])}'
+            f'<p class="note">分析師共識只到 FY2028；FY2029–FY2030 沿用 FY2028 共識平均，乘上反向模式年增率假設 {V.n("INP_134", None, "pct0")}（基準為 0，故三年同值），不是券商預測。</p>'
+            '</section>')
 
 
 def sens(V, cfg):

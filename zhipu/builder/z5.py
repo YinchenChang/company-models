@@ -112,7 +112,7 @@ def build_pl(wb, D, Z):
         [f"={c}{ni}-{c}{i_}-{c}{t_}" for c in "CDE"], note="[Derived] 年度公告摘要未拆的項目合計；不是模型輸入")
     row("chk_fc", "核對：稅前（預測）− Funding 自由現金流（應為 0）", [None, None, None] + [f"={c}{p_}-{ix('FND_FCF', y)}" for c, y in zip("FGHIJ", fc)])
     row("chk_oi", "核對：營業利益（預測）− Cost 差額（含股權報酬）− 股權報酬（應為 0）",
-        [None, None, None] + [f"=ROUND({c}{i_}-{ix('COST_GapCash', y)}-{ix('COST_SBC', y)},9)" for c, y in zip("FGHIJ", fc)])
+        [None, None, None] + [f"=IF(ABS({c}{i_}-{ix('COST_GapCash', y)}-{ix('COST_SBC', y)})<1E-9,0,{c}{i_}-{ix('COST_GapCash', y)}-{ix('COST_SBC', y)})" for c, y in zip("FGHIJ", fc)])
     row("chk_25", "核對：FY2025 營收、營業成本、營業費用合計 − 本模型 2025 校準值（Cost 全成本 − 股權報酬）（應為 0）",
         [None, None, f"=E{c_}+E{o_}-({ix('COST_FullCash', 2025)}-{ix('COST_SBC', 2025)})"])
     for nm_, key in (("PL_Rev", "rev"), ("PL_RevYoY", "yoy"), ("PL_COGS", "cogs"), ("PL_GP", "gp"), ("PL_GPM", "gpm"), ("PL_Opex", "opex"), ("PL_OI", "oi"),
@@ -177,7 +177,7 @@ def build_coord(wb, D, Z, snap):
     row("tkv", "Tokenomics（TK_Link 快照）", [f"{snap['version']}｜{snap['file']}｜提交 {snap['sha'][:7]}"], "",
         "TK_Link 頁 77 個具名範圍＋7 列讀表（README）。Tokenomics master 現行為 v22.0；本輪不換快照（工作單：模型仍讀舊快照者寫明版本、不在本輪換）。TK 值只作算力物理與對照，不回饋 Tokenomics", cols="C")
     row("wtv", "Wattonomics", [f"本模型不讀 Wattonomics；本頁對照用快照 {W['version']}｜{W['file']}"], "",
-        f"快照檔 wattonomics/data/{W['snap']}（SHA-256 {W['sha']}）。Wattonomics 玩家名單（年底上線 GW 的玩家代號）：{'、'.join(W['players'])}；沒有智譜，中國只有合計列 cn（Rystad 容量 × AI 占比）", cols="C")
+        f"快照檔 wattonomics/data/{W['snap']}（SHA-256 {W['sha']}）。Wattonomics 玩家名單（年底上線 GW 的玩家代號）：{'、'.join(W['players'])}；沒有智譜，中國只有合計列 cn（Rystad 容量 × AI 占比）；Wattonomics Decisions D43（GL01-37，Andy 2026-10-31 已定）已將智譜移出 Gap（資金缺口收支只算 11 家代表玩家，不含中國）", cols="C")
     row("wtr", "Wattonomics 是否讀本模型", [f"否（快照全文出現智譜／Zhipu／Z.ai／GLM 字樣 {W['hits']} 次）"], "", "同源檢查：層級沒有讀入本模型的任何值，本頁不存在同源校準列", cols="C")
     row("sif", "Siliconomics", ["不適用（算力買方，非硬體供應鏈個股）"], "", "算力買賣方讀 Tokenomics／Wattonomics", cols="C")
 
