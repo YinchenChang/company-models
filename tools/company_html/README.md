@@ -49,3 +49,8 @@ Excel 是計算事實的來源；HTML 只負責呈現，給 Andy 與投資處同
   - 長條段（`rect.pt`）、折線點（`circle.pt`）、數值標籤（`text.x`）都帶 `data-ref`／`data-v`，檢核一併比對。
   - 只有用到這兩種區塊的公司才輸出額外 CSS，其餘公司 HTML 逐位元組不變。
   - 範例：NVIDIA（`nvidia/gen_html_json.py` 的 `_theme_blocks()`；四張：加速器市場金額與份額 → `drivers`；營收分部 × 三情境、毛利率 vs HBM 成本占比 → `pl`；FY2028 模型 vs 指引 vs 共識 → `recon`）；Andy 2026-11-12 認可）。
+
+## 版面規格 v1.3 檢查（`check_layout_v13.py`）
+`python3 tools/company_html/check_layout_v13.py <html>...`：依 `docs/plan/個股HTML版面規格.md` v1.3 檢查章節順序（命題→估值→敏感度→反向 DCF→損益→驅動→個別模組→對帳→資料狀態）、橫幅說明 ≤200 字且無參數代號、重點觀察 ≤5 點且 ≤750 字、標準損益表必備列與 3＋5 年、除反向 DCF／對帳／資料狀態外每章至少一張圖。v1.3 試作公司（Anthropic、CoreWeave、NVIDIA）必過；其餘公司下次改版套用後必過。
+
+- 頂層 `"layout": "v1.3"`（可選，2026-11-14，首例 CoreWeave v5.0.2）：產生器與 `check_company_html.py` 改依 v1.3 章節順序檢查（`thesis → valuation → sens → revdcf → pl → drivers →` 個別模組 0 到多個（id 自訂）`→ recon → status`；函式 `v13_order_error`）。未設此鍵的公司沿用七章順序，輸出逐位元組不變。
