@@ -4,10 +4,15 @@
 
 ## 每家要做的事
 1. **主引擎掛鉤（每家一處，依該模型的 Wattonomics 錨定參數名）：** `SIL.COORD_ALT`（環境變數 `SIL_COORD_ALT=1`）時，情境 B、C 於 CY2027 起產業量 × `wta_27`／`wta_28`／`wta_29`；情境 A 不縮放。該模式下 `siliconomics/reader.py` 的 `WTA` 改為另一側讀數比值（只在對帳中年份，其他年份＝1）。
-2. `python3 tools/coord/alt_run.py <資料夾>` → `<資料夾>/coord_alt.json`（建置兩次、LibreOffice 重算、讀 Val 頁；檢查另一側建置的 wta 列確實＝比值、錯誤格 0）。
+2. `python3 tools/coord/alt_run.py <資料夾>` → `<資料夾>/coord_alt.json`（建置兩次、LibreOffice 重算、讀 Val 頁；檢查另一側建置的 wta 列確實＝比值、錯誤格 0；檢查列與現行建置不同時警告，見下節）。
 3. 建檔程式存檔前：`COORD.add_sheet(wb, <資料夾>, SIL)`（新增 Coord 頁；回傳非 None 時 `COORD.stamp(...)` 升版號）。
 4. `gen_html_json.py` 最後：`COORD.inject_html(cfg, xlsx)`（橫幅一格＋揭露句、估值章開頭兩讀數表與長條圖）。
 5. `siliconomics/builder/seed/coord_meta_v*.json` 的 `hardware_companies` 加入該資料夾，重匯 `baseline_status.json`；`tools/baseline_coordination/check.py` 第 6 項須通過。
+
+## 兩讀數：另一側讀數的口徑（固定規格，2026-11-15）
+- **另一側讀數不重算校準係數與指數分母；已實現與錨點期間不受縮放影響。** 理由：校準分母含 CY2026→CY2027 增量，縮放會使係數虛增、方向反轉。實作：校準與指數分母讀未縮放值（例：Disco v0.3.5 的 FY2025＝3/4 CY2025＋1/4 CY2026 新機需求，CY2026 新機需求讀未縮放的 CY2027 產能＝縮放後 ÷ `wta_27`）；另一側建置的實績與錨點檢查列須與現行建置相同（通常為 0）。
+- 若兩讀數評等不同且取決於此口徑，Coord 頁與 HTML 揭露「若重算校準」時的另一側讀數目標價與評等（只列揭露、不進兩讀數表）。
+- `alt_run.py` 讀兩次建置各頁「檢查」「核對」列（A 或 B 欄標題以此開頭，或含「應為 0」「應約 0」；以標題對應，不靠列號），另一側建置非 0 且與現行建置不同時印警告（不擋）。
 
 ## C0 由下往上對帳表（規則 v1.4.2 C0 第 2 點；Andy 11-14 17:40 固定規格）
 每家 Coord 頁的 C0 對帳表：
