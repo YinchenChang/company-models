@@ -342,6 +342,8 @@ def uref(k, y, s, mf):
 DEFP = dict(scn="A", tt="", ex="", rel="rel", pp="pp", mf="1", ais="ai_26", gn="g_nai", v="v_cc", dr="dr", ret="ret", m="m_cx", phi="phi", nir="nir_f", opxa="0")
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["mf"] == "1" and s != "A":   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 於 CY2027 起加速器顆數 × wta（＝另一側讀數比值）；情境 A 不縮放
+        P["mf"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
     hdr(ws, r, ["項目", "單位", "FY2025A", "FY2026（錨點）", "FY2027", "FY2028", "FY2029", "說明"]); r += 1
@@ -1222,6 +1224,15 @@ def _px1105(wb, tk, ver, subs=(), static=None, formula_subs=()):
     RDw.cell(RDw.max_row + 2, 1, f"{ver}：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守")
     return out
 R4_PE = _px1105(wb, "2449.TW", "v0.4.4", subs=(('&"（2026-11-04）"&', '&"（2026-11-05）"&'),), static={("README", "A48"): 'v0.4.3（2026-11-06）第三輪修正（合併前）：(1) 現價改 2026-11-04 收盤 248.5 元（Yahoo Finance；原 2026-10-22 收盤 262.5）；Comparable 同業前瞻 P/E 改為 11-04 收盤 ÷ 資料商前瞻 EPS（中位數 16.1 倍，原 22.1 倍）；(2) In 頁情境驅動對照：情境 B 的 FY2032 營收年增收斂目標原寫死 0，改引用 tp_g；兩列收斂法列名刪除「情境 C」；(3) 命題回覆 3 更正：本模型與共識前瞻 EPS 為同一時間窗（原誤寫「時間窗不同」），註明 FactSet 共識資料日期 2026-04-06；(4) 情境名稱統一為 A（順利）／B（平平）／C（不如預期）、級距列名、Sens g 列名。stub 期 FCFF 原已用 Q 頁 2H26 季度數，不變。DCF 目標價 62.9 → 63.0 元、加權目標價 132.7 → 105.3 元、上檔空間 −49.4% → -57.6%、投資建議放空 → 強力放空。'})
+
+# v0.4.5（2026-11-15）：三層協調 C4（規則 v1.4.2；tools/coord/）兩讀數目標價（Coord 頁；快照 kyec/coord_alt.json）＋個股 HTML 版面規格 v1.3＋C0（實績）（kyec/v045_post.py）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import v045_post as P45  # noqa: E402
+    print(P45.apply(wb, SIL, _CR))
 
 wb.save(sys.argv[1])
 if os.environ.get("KYEC_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
