@@ -1,4 +1,23 @@
-# crdo/ — Credo（CRDO）收支與估值模型 v0.3.5
+# crdo/ — Credo（CRDO）收支與估值模型 v0.3.6
+
+## v0.3.6（2026-11-15）：個股 HTML 版面 v1.3、三層協調讀取層級與 C0（公司實績）、硬體股兩讀數
+
+依據：工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md` 第 2 節、`docs/workorders/20261114_C0實績對帳補列_七家.md`（同源校準教訓）、`docs/plan/三層基準協調規則.md` v1.4.2（C0 第 2 點、C4）、`docs/plan/個股HTML版面規格.md` v1.3、`tools/coord/README.md`。樣板：Broadcom v0.5.6／v0.5.7、AMD v0.4.7、Marvell v0.3.5。後處理在 `v036_post.py`；`build_crdo.py` 只加 `CRDO_P` 覆寫（敏感度整本重算）、主引擎掛鉤與呼叫；`sens_crdo.py` 產生 `sens.json`；`gen_html_json.py` 末段為 v1.3 版面（用法不變：`python3 crdo/gen_html_json.py <xlsx> crdo/html_src.json crdo/html.json`）。
+
+- **版面 v1.3：** 章節 命題 → 估值 → 敏感度 → 反向 DCF → 損益（標準損益表）→ 驅動因子 → 對帳 → 資料狀態。估值章第一個區塊＝四個目標價與現價；敏感度章前兩個區塊＝加權目標價相對基準（低案、高案）；損益表 FY2028E 起標「對帳中」。`check_layout_v13 --xlsx` 通過（剩餘警告為估值章與參數表的既有參數代號）。
+- **xlsx 新增（只新增，不回饋計算）：** Hist 頁（FY2024 non-GAAP、FY2024–FY2026 GAAP，Credo 8-K 新聞稿；FY2025–FY2026 non-GAAP 連 Q 頁）；PL 頁末標準損益表（FY2024A–FY2026A＋FY2027E–FY2032E 情境 B，Non-GAAP；FY2030E 起為收斂期）；RevDCF 頁；Val 0.7 四個目標價；Sens 頁末加權目標價相對基準（營運輸入 8 案＝整本重算快照、估值框架為封閉式、折現參數引用既有表；相對倍數係數＝1〔上市未滿十年〕，不另設係數案例）；Coord 頁（A–E 兩讀數、F–J）；README 頁末 v1.3 白話列；README A1 標題段舊版號 v0.2.3 改為本版。
+- **具名範圍 SIF_RecoFlag_2026–2029：** 指向 Coord 頁旗標列。Credo FY(t)＝8/12 × CY(t−1)＋4/12 × CY(t)，FY2027 為錨點（另一側讀數不縮放），版面檢查依具名旗標以會計年度對應（FY2028E–FY2031E 須標對帳中）；未建 `co_flag`。
+- **兩讀數（C4）：** 主引擎掛鉤：`SIL.COORD_ALT` 時情境 B、C 的 AI 銅纜與光模組市場在 FY2028 起的 CY2027 起成分 × wta（0.618／0.665／0.665）；情境 A 不縮放。`alt_run.py crdo` → `coord_alt.json`。現行基準加權目標價 121.57 美元（中立，+8.2%）；另一側讀數 94.29 美元（中立，−16.1%），評等相同；對帳中年份 CY2027–CY2029。
+- **C0（實績）與出處：** 個股側＝Credo 8-K 營收（Verified；公司不揭露 AEC、光學產品線營收）：1Q27（2026-05-03～08-01）0.479（8-K 2026-09-01 EX-99.1 `000162828026059795/credoq12027ex-991.htm`，Revenue 479,003 千美元；Q 頁 D4）；參考 4Q26（2026-02～05-02）0.437（8-K 2026-06-01 EX-99.1，不在 FY2027）。層級側＝markets/network AI 銅纜市場 FY2027 33.32 × AEC 有效份額 5.29%＋可插拔光模組市場 36.98 × 光學有效份額 1.62%＋其他 0.108＝2.47。
+- **判定：無可比實績（層級值同源）。** Credo 有效份額由本模型以 FY2027 錨點校準（錨點 ÷ 層級市場），層級市場在比式中消去，層級隱含恆等於錨點（Coord 核對列差 0）；層級（markets/network、Siliconomics）沒有 Credo 份額或營收歸屬。主讀數 1Q27 0.479 vs 層級 × 3 ÷ 12＝0.618（−22.4%）、第二讀數 1Q27 × 4＝1.916 vs 2.47（−22.4%）只反映錨點的季節與成長形狀（公司說的下半年加速；1Q27 季中點 2026-06 早於會計年度中點，成長年偏低），標「參考（同源校準）」，不開對帳單。缺的獨立揭露：AEC 營收或非本模型校準的 Credo 份額。對帳中項目 0。
+- **讀取層級：** AI 銅纜、scale-out 銅纜、可插拔光模組市場（markets/network v0.2.3 成品）；情境顆數係數 um28／um29（Siliconomics v0.19，經台積電成品）；對帳中旗標與另一側比值（Siliconomics v0.19）。同源核對列只列 G 節。
+- **Hist 實績出處：** FY2024（2024-04-27 止）營收 0.19297、non-GAAP 毛利 0.120562、營業費用 0.117833、營業利益 0.002729、其他收益 0.014313、淨利 0.01457、稀釋股數 0.170143、EPS 0.09；GAAP 淨損 −0.028369、EPS −0.18（8-K 2024-05-29 與 2025-06-02 EX-99.1）。FY2025、FY2026 GAAP 淨利 0.052183、0.472279，EPS 0.29、2.51（8-K 2025-06-02、2026-06-01）。FY2023 基期：營收 0.184194、non-GAAP 淨利 0.008687。
+- **不變性：** 對 v0.3.5 dist 逐格比對（容差 1e-9）：既有格只有 README A1（版號）；其餘為新增頁（Hist、RevDCF、Coord）與既有頁新增格。加權目標價 121.57、評等中立不變。
+- **舊 README 數字：** 上方 v0.3.5 節的表（加權目標價 122.06、上檔 +8.7%）與現行 dist 不同：v0.3.5 成品在 Siliconomics 全下游重建時原地更新，現行 v0.3.5（與本版逐格相同）為加權目標價 121.57、DCF 49.14、Comparable 194.01、上檔 +8.2%、評等中立。歷史不改寫。
+- **下游：** 無其他模型讀本資料夾 dist。
+- **驗證：** `check_company_html.py crdo` 全過；`check_layout_v13.py --xlsx` 通過；`tools/baseline_coordination/check.py` 0 項不符；Coord 與 Sens 快照 CURRENT。本公司無 `display_check.json`。
+- **未列入本 PR：** Siliconomics `coord_meta` 的 `hardware_companies` 需加入 `crdo`（主控合併時統一加入並重匯 `baseline_status.json`）。
+- 成品：`dist/20261115_Credo個股模型_v0.3.6.xlsx`、`.html`；v0.3.5 移到 `dist/_待刪除/`。
 
 ## v0.3.5（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 
