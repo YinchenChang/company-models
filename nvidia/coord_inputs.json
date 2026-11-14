@@ -1,0 +1,98 @@
+{
+ "_說明": "三層基準協調規則 v1.1 C4（對帳中標示與兩讀數目標價）的集中輸入。本檔是 NVIDIA 模型讀『另一側讀數』與『對帳中』旗標的唯一一處；Siliconomics 試作分支提供 SIF_DeployGW_Demand_<yyyy>、SIF_RecoFlag_<yyyy> 之後，coord_post.load() 會自動改讀快照名稱，本檔的暫值不再使用（之後只換這一處）。",
+ "status": "暫值，待 Siliconomics 試作分支",
+ "source": "Wattonomics 換算值（三層基準協調規則 v1.1 C3 平滑法；橋接表 v0.1 量測，Drive 02-AI供應鏈/對帳/20261114_三層基準協調_橋接表_v0.1.xlsx）；派工訊息 2026-11-14 給定",
+ "future_names": {
+  "alt": "SIF_DeployGW_Demand_<yyyy>",
+  "flag": "SIF_RecoFlag_<yyyy>",
+  "base": "SIF_DeployGW_Base"
+ },
+ "years": [
+  2026,
+  2027,
+  2028,
+  2029
+ ],
+ "alt_gw": {
+  "2026": 23.017,
+  "2027": 27.921,
+  "2028": 31.104,
+  "2029": 30.851
+ },
+ "base_gw_expected": {
+  "2026": 23.4,
+  "2027": 39.164,
+  "2028": 42.234,
+  "2029": 51.118
+ },
+ "reco_flag": {
+  "2026": 1,
+  "2027": 1,
+  "2028": 1,
+  "2029": 1
+ },
+ "mode": "trial",
+ "trial": {
+  "branch": "claude/siliconomics-coord-trial",
+  "sha": "c5b363c",
+  "file": "sil_trial3.json",
+  "version": "v0.19-trial",
+  "xlsx_sha256": "7e2aa1cd64704151437afa78a5735772b307b94b6bc6ef6e3a1a133372043a90",
+  "names": {
+   "SIF_DeployGW_AltRatio_2026": 0.882068695668126,
+   "SIF_DeployGW_AltRatio_2027": 0.618250473478847,
+   "SIF_DeployGW_AltRatio_2028": 0.665155858487684,
+   "SIF_DeployGW_AltRatio_2029": 0.665155858487684,
+   "SIF_DeployGW_Alt_2026": 20.64,
+   "SIF_DeployGW_Alt_2027": 24.213,
+   "SIF_DeployGW_Alt_2028": 28.092,
+   "SIF_DeployGW_Alt_2029": 28.405,
+   "SIF_DeployGW_Base": [
+    23.3995380420639,
+    39.1637387089335,
+    42.2337105529984,
+    42.7042769563548
+   ],
+   "SIF_DeployGW_Current_2026": 23.3995380420639,
+   "SIF_DeployGW_Current_2027": 39.1637387089335,
+   "SIF_DeployGW_Current_2028": 42.2337105529984,
+   "SIF_DeployGW_Current_2029": 51.1178029756948,
+   "SIF_DeployGW_Demand_2026": 20.64,
+   "SIF_DeployGW_Demand_2027": 24.213,
+   "SIF_DeployGW_Demand_2028": 28.092,
+   "SIF_DeployGW_Demand_2029": 28.405,
+   "SIF_DeployGW_Supply_2026": 23.3995380420639,
+   "SIF_DeployGW_Supply_2027": 39.1637387089335,
+   "SIF_DeployGW_Supply_2028": 52.792138191248,
+   "SIF_DeployGW_Supply_2029": 60.1385917361115,
+   "SIF_RecoFlag_2026": 0,
+   "SIF_RecoFlag_2027": 1,
+   "SIF_RecoFlag_2028": 1,
+   "SIF_RecoFlag_2029": 1,
+   "SIF_RecoLabel_2026": "一致",
+   "SIF_RecoLabel_2027": "待定（對帳中）",
+   "SIF_RecoLabel_2028": "待定（對帳中）",
+   "SIF_RecoLabel_2029": "連續法（前一年待定，對帳中）",
+   "SIF_RecoLead_2026": "兩層對帳（證據等級高者）",
+   "SIF_RecoLead_2027": "待定（維持現行；下次重判）",
+   "SIF_RecoLead_2028": "待定（維持現行；下次重判）",
+   "SIF_RecoLead_2029": "Wattonomics（上游約束）",
+   "SIF_RecoStatus_2026": "甲",
+   "SIF_RecoStatus_2027": "待定",
+   "SIF_RecoStatus_2028": "待定",
+   "SIF_RecoStatus_2029": "丙",
+   "SIF_RecoUseConv_2026": 0,
+   "SIF_RecoUseConv_2027": 0,
+   "SIF_RecoUseConv_2028": 0,
+   "SIF_RecoUseConv_2029": 1,
+   "SIF_UnitsCoef_Base": [
+    null,
+    1,
+    1,
+    0.8,
+    0.710097721339093
+   ],
+   "SIF_crd_cov_done": 1
+  }
+ }
+}
