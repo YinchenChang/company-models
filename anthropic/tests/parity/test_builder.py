@@ -631,13 +631,26 @@ def test_v020_val_identities(eng):
 
 
 def test_v020_val_not_fed_back(wb):
-    """Val 只被 Checks 引用（不回饋計算頁）。"""
+    """Val 只被 Checks 與 PL（v0.2.1 標準損益表，只列示）引用（不回饋計算頁）。"""
     bad = []
     for ws in wb.worksheets:
-        if ws.title in ("Val", "Checks"):
+        if ws.title in ("Val", "Checks", "PL"):
             continue
         for row in ws.iter_rows():
             for c in row:
                 if isinstance(c.value, str) and c.value.startswith("=") and re.search(r"\bVal!|\bVAL_", c.value):
+                    bad.append(f"{ws.title}!{c.coordinate}")
+    assert not bad, bad[:10]
+
+
+def test_v021_pl_not_fed_back(wb):
+    """v0.2.1 PL（標準損益表）只列示：不被任何其他工作表引用。"""
+    bad = []
+    for ws in wb.worksheets:
+        if ws.title == "PL":
+            continue
+        for row in ws.iter_rows():
+            for c in row:
+                if isinstance(c.value, str) and c.value.startswith("=") and re.search(r"\bPL!|\bPL_", c.value):
                     bad.append(f"{ws.title}!{c.coordinate}")
     assert not bad, bad[:10]
