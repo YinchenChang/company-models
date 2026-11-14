@@ -1,4 +1,39 @@
-# nvidia/ — NVIDIA（NVDA）個股模型 v0.3.8
+# nvidia/ — NVIDIA（NVDA）個股模型 v0.3.9
+
+## v0.3.9（2026-11-14）：Coord 頁新增 F 節「三層協調：讀取層級與 C0 由下往上對帳」（只新增；數值、目標價、評等、兩讀數不變）
+
+依據：共用工作單 D 節第 1、2 點（Andy 2026-11-14 16:53、16:55：新機制要更新進 Excel 與 HTML）；`docs/plan/三層基準協調規則.md` v1.4 C0（個股與層的一致性、由下往上對帳）、C4（個股不裁決）、C5（往上回饋只有證據）。base＝v0.3.8（PR #468 系列，main eff8f957）。
+
+- **F1 讀取層級：** 逐項列出本模型讀的 Siliconomics v0.19 名稱（`SIF_DeployGW_Base`／`_Supply_`／`_Alt_`／`_AltRatio_`、`SIF_RecoFlag_`、`SIF_UnitsCoef_Base`、NVIDIA 平台顆數 `SIF_UnitsPlat_bw／rb／ru／hp`、`SIF_pa_amd／tpu／trn／oth`）的層級值、本模型採用格與差（全為 0；核對列），以及 Siliconomics 鏡像的 Tokenomics v21.10 機架價、每 GW 顆數、每 GW 機架數（本模型不直接讀，供模組價對照）。
+- **F2 C0 由下往上對帳（Opus 獨立核對後修正，同版）：** 本模型自己的量 vs Siliconomics 對應值，列兩邊原值、單位、口徑、來源、證據等級與差距 %；門檻 ±15%（Coord 頁輸入格）。Siliconomics 值一律連到 F1 的格（F1 增列 Recon 快照 nv_dc 隱含值與公司值），不寫死。
+  - **對帳中只有一項：「營收校準認列係數缺口」**（認列係數 k_rec 0.787 vs 層級值 1，差 −21.3%；Siliconomics 由下而上推得的 NVIDIA 顆數與營收高於公司錨點，R4 n5 比值未加權 1.194／1.174＝高約 17–19%；FY 月數加權後 FY2027 隱含營收 472.98，高於錨點約 26%）。對帳中判定只算一次。
+  - **同一缺口的分項，不另計（6 列）：** 營收校準等值顆數（情境 B；＝k_rec × Siliconomics 顆數，非實體顆數，差距必為 k_rec − 1，循環）FY2027–FY2030 四列；資料中心營收 FY2027 錨點 vs 隱含（R4 n5 的另一面，本模型錨點＝R4 公司值，非個股新證據）與 FY2028 情境 B vs 隱含。
+  - **期間口徑：** 本模型 FY(t+1)＝11/12 CY(t)＋1/12 CY(t+1)；層級值已換成同一月數加權口徑（權重為輸入格）。FY2028 營收與 FY2030 顆數缺後一年層級值，未加權（FY2030 顆數差距仍等於係數 − 1，與加權無關；FY2028 營收口徑差預期約 1–2 個百分點，已在列內註明）。FY2027 隱含營收加權後 472.98（差 −20.6%；R4 以 FY≈CY 比為 −16.3%）。
+  - 一致：市場層 NVIDIA 平台顆數 CY2026–2029、FY2027 錨點 vs R4 公司值、FY2028 指引推得 638.3 vs R4 公司值 633.7（+0.7%）。有判定 7 項、對帳中 1 項。
+  - 不判定：GPU 模組價 vs Tokenomics 機架價 ÷ 每機架顆數（GB300 40.4 vs 59.7、VR200 55 vs 116.7 US$K；整機架口徑）。無可比的層級量：FY2029 以後資料中心營收（R4 對帳點只到 CY2027）、10-Q 供應承諾 279 US$B、NVIDIA 成本等值 GW。
+- **HTML 對帳章：** 加「三層協調：讀取層級與由下往上對帳」——摘要句、對帳表（兩邊原值與差距、狀態）、摺疊的口徑與證據等級表、摺疊的讀取層級表；全由 Coord 頁取數（`gen_html_json.py` 的 `_coord_c0()`）。
+- **驗證：** 與 v0.3.8 逐格比對（`tools/xlsx_diff.py` 的快取值）：既有格差異只有 README!A1（版本字串與 F 節說明）、README!A67 與 Sens!D984（build_id）；新增格全在 Coord 頁 F 節（第 74 列起）；錯誤格 0；加權目標價 248.46（+36.8%）、買進、兩讀數（另一側 194.68）、三情境 EPS 皆不變。`coord_alt.json`、`sens.json`、In 頁未動（輸入未變，不必重跑 `coord_alt.py`、`sens_nvidia.py`）。
+- 未做：未改任何上游值（Siliconomics、Tokenomics、Wattonomics）；下游（avgo、amd 讀本檔名）未動，由主控重建。
+- **合併前補（2026-11-14 晚；Andy 17:47 選項 A）：** 損益章在標準損益表後加一句 FY2029 營收下滑說明（Coord 頁 C 節「損益章說明：FY2029 營收下滑」，全由公式取數）：情境 B FY2029E 營收較 FY2028E −6.8%，因 2028 年 Siliconomics 基準顆數係數仍為「待定」、維持現行 0.80 並等比例套用到各平台，而 NVIDIA 原始顆數 CY2027→CY2028 只增 4.1%（全市場原始顆數 +18.9%，成長主要來自其他平台），乘係數後認列顆數 −15.6%；屬 2028 狀態未定造成的斷層，待 2026-11-19（NVIDIA FY27Q3）與 2026-11-30（財報季結束）重判後更新，屆時一併評估 2028 改套連續法（選項 B）或總量缺口改依各平台成長分配（選項 C）。Coord 頁自該列起下移一列；其他數值格逐格不變（含 SK 海力士來源檔名文字隨 main 更新）。
+- 建置：`python3 nvidia/build_nvidia.py raw.xlsx` → LibreOffice（私有設定檔）重算 → `dist/` → `python3 nvidia/gen_html_json.py` → `python3 tools/company_html/build_company_html.py nvidia` → `python3 tools/model_governance/version_table.py nvidia --update`。`gen_html_json.py`、`coord_post.py` 都納入 build_id 雜湊，改動後須整本重建。
+
+<!-- version-table: dist/_待刪除/20261114_NVIDIA個股模型_v0.3.8.xlsx｜dist/20261114_NVIDIA個股模型_v0.3.9.xlsx -->
+| 項目 | v0.3.8 | v0.3.9 |
+|---|---|---|
+| 現價 | 181.60 | 181.60 |
+| DCF 目標價 | 107.96 | 107.96 |
+| Comparable 目標價（未調整） | 220.35 | 220.35 |
+| Comparable 目標價（相對倍數調整後） | 388.95 | 388.95 |
+| 加權目標價（上檔空間） | 248.46（+36.8%） | 248.46（+36.8%） |
+| 投資建議 | 買進 | 買進 |
+| EPS 情境 A（FY2028／FY2029／FY2030） | 13.40／15.35／17.60 | 13.40／15.35／17.60 |
+| EPS 情境 B（FY2028／FY2029／FY2030） | 13.24／12.78／12.95 | 13.24／12.78／12.95 |
+| EPS 情境 C（FY2028／FY2029／FY2030） | 13.01／9.73／11.07 | 13.01／9.73／11.07 |
+| FY2028 毛利率（情境 A） | 68.84% | 68.84% |
+| FY2028 毛利率（情境 B） | 69.47% | 69.47% |
+| FY2028 毛利率（情境 C） | 69.71% | 69.71% |
+<!-- /version-table -->
+
 
 ## v0.3.8（2026-11-14）：三層協調——新基準、對帳中標示與兩讀數目標價
 
@@ -16,7 +51,7 @@
 - **r5 版面位置（Andy 2026-11-14 12:47；版面規格 v1.3 G、H 節「位置」）：** 估值章第一個區塊改為四個目標價與現價長條圖，章節說明、四個目標價表與評等說明移到圖下，兩讀數目標價區接在其後；敏感度章前兩個區塊改為加權目標價相對基準低案、高案兩張主圖，章節說明、全吸收表與其餘摺疊內容移到圖下（`gen_html_json.py` 的 `_top_first()`，只改區塊順序）。xlsx 只有 build_id 三格改變（含產生器雜湊）；兩章區塊內容集合與其他章節逐字相同。`check_layout_v13.py` 新增 G、H 位置檢查。
 - 建置：`python3 nvidia/coord_alt.py` →（In 頁或基準改動時）`python3 nvidia/sens_nvidia.py` → `python3 nvidia/build_nvidia.py raw.xlsx` → LibreOffice 重算 → `dist/` → `python3 nvidia/gen_html_json.py` → `python3 tools/company_html/build_company_html.py nvidia`。
 
-<!-- version-table: dist/_待刪除/20261114_NVIDIA個股模型_v0.3.7.xlsx｜dist/20261114_NVIDIA個股模型_v0.3.8.xlsx -->
+<!-- version-table: dist/_待刪除/20261114_NVIDIA個股模型_v0.3.7.xlsx｜dist/_待刪除/20261114_NVIDIA個股模型_v0.3.8.xlsx -->
 | 項目 | v0.3.7 | v0.3.8 |
 |---|---|---|
 | 現價 | 181.60 | 181.60 |

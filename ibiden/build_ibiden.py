@@ -999,6 +999,9 @@ if _CR:
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
         import v055_post  # noqa: E402
         print(v055_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR))
+        # v0.5.6（2026-11-14）：C0 補公司實績對帳（規則 v1.4.2；ibiden/v056_post.py；只新增與改標，既有數值格不變）
+        import v056_post  # noqa: E402
+        print(v056_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, wb._v055["CO"]))
 wb.save(sys.argv[1])
 if os.environ.get("IBIDEN_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
