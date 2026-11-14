@@ -1,4 +1,23 @@
-# nanya_pcb/ — 南亞電路板（南電，8046.TW）收支與估值模型 v0.3.4
+# nanya_pcb/ — 南亞電路板（南電，8046.TW）收支與估值模型 v0.3.5
+
+## v0.3.5（2026-11-15）：個股 HTML 版面規格 v1.3、三層協調兩讀數與 C0（實績）
+
+- **依據：** 工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`、`docs/workorders/20261114_C0實績對帳補列_七家.md`、規則 `docs/plan/三層基準協調規則.md` v1.4.2（C0 第 2 點、C4）、`tools/coord/README.md`；同次產業樣板 Ibiden v0.5.6、欣興 v0.4.4（PR #540）。三項同輪完成。
+- **做法（只新增，既有數值格不變）：**
+  - 兩讀數（`tools/coord`）：主引擎在 `SIL_COORD_ALT` 時情境 B、C 的 CY2027 起產業量（NVIDIA、非 NVIDIA 顆數與交換器等其他 AI 載板）× `wta_27`／`wta_28`／`wta_29`（沿用既有 `mf` 年別乘數；情境 A 不縮放）；`alt_run.py nanya_pcb`（`LO_PROFILE` 私有設定檔）→ `coord_alt.json`；`COORD.add_sheet`＋`stamp`；`gen_html_json.py` 呼叫 `COORD.inject_html`。
+  - 版面 v1.3（`v035_post.py`、`gen_html_json.py`）：Hist 頁（FY2022–FY2025 損益表）、RevDCF 頁、PL 頁末標準損益表（FY2023A–FY2025A＋FY2026E–FY2030E 情境 B，GAAP；FY2027E 起標「對帳中」）、Val 0.7 四個目標價、Sens 頁末加權目標價相對基準（`sens_nanya_pcb.py` 整本重算 17 個業務案例＋目標價參數表；快照 `sens.json`）、README 頁末 v1.3 白話列；章節改為命題 → 估值 → 敏感度 → 反向 DCF → 損益 → 驅動因子 → 對帳 → 資料狀態。建檔程式新增 `NP_OVERRIDE`／`NP_SNAP`（只供敏感度快照）。
+  - Coord 頁 C0：讀取層級（Siliconomics v0.19、Wattonomics v0.3.2、Ibiden／欣興／網通市場模型讀入值）；讀取層級核對 22 列全部「讀取層級（同源，不判定）」；層級之間（參考）；對帳中年份；4. C0（實績）。
+- **實績與出處：**
+  - 2026 年 1–10 月合併營收累計 474.20 億元（TechNews 財報助手 2026-11-03：10 月 62.89 億、年增 69.7%；驗算前 9 月 411.31＋10 月 62.89），Verified。
+  - 3Q26 合併營收 163.78 億元（公開資訊觀測站 115 年第三季財報，經富邦 e 點通季表；In 頁 q3_rev 連格；月營收加總 163.79 億相符），Verified。
+  - Hist 頁 FY2022–FY2025：公司 IFRS 合併損益表（經 stockanalysis.com 年度損益表轉載；FY2025 連 Q 頁既有值；加權股數用來源基本股數，因 FY2024 EPS 0.32 元以淨利 ÷ EPS 反推誤差大；MOPS 原文待人工複核）。南電無重大非控制權益。
+- **層級隱含與判定：** 層級值＝Siliconomics v0.19 `abfrev_np26` 1.06 US$B × 32.5（該列原註）÷ ABF 占營收 58%（In 頁 mx_abf）＝59.4 十億元。主讀數 1–10 月 47.4 vs 59.4 × 10 ÷ 12 ＝ 49.5，差距 −4.2%；第二讀數 3Q26 × 4 ＝ 65.5 vs 59.4，差距 +10.3%（3Q26 中點晚於年中，成長年中偏高）。**判定：參考（同源校準）；C0（實績）結論＝無可比實績（層級值同源）**——`abfrev_np26` 由本模型 FY2026 ABF 營收推得，ABF 占比與匯率消去，本表等於「實績 vs 本模型 FY2026 營收錨點」（層級值四捨五入致差約 0.4%）；缺 ABF／加速器載板單獨營收揭露。對帳中 0。
+- **兩讀數：** 現行基準讀數 914.48 元（中立，−5.9%）；另一側讀數 758.91 元（中立，−21.9%），評等相同。
+- **不變：** 加權目標價 914.48、DCF 267.35、評等中立。逐格比對 v0.3.4 既有非空格：只有 README!A1（標題版號 v0.1.1 → v0.3.5，並附本版說明）與 PL!A114（情境 B 標題舊字「CY2029 ×0.85」改讀基準係數 0.71，文字列）不同；其餘為新增頁與新增格。
+- **README 舊節數字：** 下方 v0.3.4 節「加權目標價 926.10」等為當時值；之後 Siliconomics／Ibiden／欣興下游重建原地更新 dist，現行為 914.48（中立不變），舊節不改寫，以本節與 xlsx 為準。
+- **驗證：** LibreOffice（`-env:UserInstallation=file:///tmp/lo_nanya_pcb`）錯誤格 0；`check_layout_v13 --xlsx` 全過；`check_company_html nanya_pcb` 全過；`tools/baseline_coordination/check.py` 0 項不符；Coord 另一側讀數快照 CURRENT、Sens 快照 CURRENT。
+- **coord_meta：** `hardware_companies` 未在本分支修改，由主控合併時加入 `nanya_pcb`。
+- 成品：`dist/20261115_南電個股模型_v0.3.5.xlsx`、`.html`；v0.3.4 移到 `dist/_待刪除/`。
 
 ## v0.3.4（2026-11-10）：滾入 3Q26 財報；稅率改最近四季實績
 
