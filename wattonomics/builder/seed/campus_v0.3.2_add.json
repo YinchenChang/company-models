@@ -194,19 +194,19 @@
   },
   {
    "op": "neo",
-   "user": null,
+   "user": "ant",
    "basis": "IT",
    "delay": null,
-   "inc": 0,
+   "inc": 1,
    "sec": 0,
-   "tag": "Assumed",
+   "tag": "Interested-party",
    "src": "SRC_GL_346",
    "key": "cp_w1s_barber39",
-   "name": "Cipher Barber Lake 增量 39 MW（原文未揭露；Sens）",
+   "name": "Cipher Barber Lake 增量 39 MW（Fluidstack；Anthropic 鏈）",
    "mw": 39,
    "year": 2027,
-   "month": 3,
-   "note": "r1 第 6 項（2026-11-14）：原 cp_neo_barber 207＝168＋39；Cipher 新聞稿（2025-09-25）只有 168 MW，39 MW 沒有原文 → 移 Sens（納入 0）"
+   "month": 1,
+   "note": "r2（2026-11-14）：Cipher 新聞稿 2025-11-20『Cipher Mining Signs Additional 56 MW, 10-Year AI Hosting Agreement with Fluidstack』原文：「Cipher will deliver an additional 39 MW of critical IT load, supported by a maximum of 56 MW of additional gross capacity」、約 830M 合約收入（10 年）、「Expected Delivery of Additional 39 MW of Critical IT Load at Barber Lake by January 2027」。r1 曾因找不到 39 MW 原文移 Sens，r2 依 chat 端核對改納入＝1、2027-01 上線；X3：Fluidstack 鏈算 Anthropic（七家以外）。等級 2（已簽約）"
   }
  ],
  "sources": [
