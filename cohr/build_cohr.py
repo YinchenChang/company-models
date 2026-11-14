@@ -242,10 +242,15 @@ inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新�
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 稀釋股數 sh_v)", "與 WACC 權重同一口徑")
 
 r = 4
+# CO_OVERRIDE（敏感度整本重算用，cohr/sens_cohr.py；「鍵=@lo;鍵=@hi;…」，@lo／@hi＝In 頁低／高欄；正式建置不設）
+OVR = dict(kv.split("=", 1) for kv in os.environ.get("CO_OVERRIDE", "").split(";") if "=" in kv)
 for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    if key in OVR:
+        base = {"@lo": lo, "@hi": hi}[OVR[key]]
+        assert base is not None, (key, OVR[key])
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
         if v is not None:
@@ -318,6 +323,9 @@ BU = (2026, 2027, 2028, 2029)
 umx = lambda y, s: {2026: "1", 2027: "1", 2028: f"um28_{s}", 2029: f"um29_{s}"}[y]
 mk = lambda b, y, s: f"{b}_{y % 100}" if s == "A" else f"{b}{s}_{y % 100}"   # 網通 CPO 三情境：情境 A 讀 A 節，B、C 讀同字母列
 DEFP = dict(scn="A", rel="rel", cpo="cpo", pxr="pxr", gm="gm", mf="1", hw="hw", gc="g_com", opxa="0", wta=None)
+for _k, _p in (("mf", "mf"), ("opx_adj", "opxa")):   # 主引擎的 mf、opxa 預設為常數（只在 Sens 案例動）：敏感度快照時改讀 In 頁低／高欄（正式建置不進此分支）
+    if _k in OVR: DEFP[_p] = _k + OVR[_k].replace("@", "_")
+WTA_ALT = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}   # v0.4.5：三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 的日曆年 AI 光學市場 CY2027 起 × wta（＝另一側讀數比值；情境 A 不縮放）
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]; hw = P["hw"]
     _wx = lambda y: (f"*{P['wta'][y]}" if P["wta"] and y in P["wta"] else "")   # Wattonomics 錨定（Sens 案例；鍵＝日曆年；預設 None＝不乘）
@@ -379,7 +387,7 @@ PL["A1"] = "PL — Coherent 損益（US$B；non-GAAP）。FY2025A、FY2026A（�
 PB = {}; r0 = 60
 SCN_T = {"A": "情境 A：原始顆數（顆數係數 1.0；v0.12 起本庫基準＝情境 B）；網通 CPO 情境 A（替代快）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85；網通 CPO 情境 B", "C": "情境 C：CY2028–29 顆數 ×0.6；網通 CPO 情境 C（替代慢）"}
 for s in SC:
-    PB[s] = engine(PL, r0, SCN_T[s], scn=s)
+    PB[s] = engine(PL, r0, SCN_T[s], scn=s, **({"wta": WTA_ALT} if SIL.COORD_ALT and s != "A" else {}))
     r0 = PB[s]["end"] + 2
 hdr(PL, 3, ["情境／項目", "單位", "FY2025A", "FY2026A（錨點）", "FY2027", "FY2028", "FY2029", "說明"])
 sr = 4; SUMR = {}
@@ -1109,6 +1117,16 @@ print(r3_post.apply(wb, stub_note='="資產負債表日 "&bs_date&"；stub FCFF�
 # px1105（2026-11-06）：情境名稱改回樂觀／基準／保守、舊版沿革列固定文字（本資料夾 px1105_post.py）
 import px1105_post  # noqa: E402
 print(px1105_post.apply(wb))
+# 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 cohr/coord_alt.json）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR and not OVR:
+    # v0.4.5（2026-11-14）：個股 HTML 版面規格 v1.3、三層協調（讀取層級、C0 實績）、兩讀數（cohr/v045_post.py；只新增頁與列，既有數值格不變）
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import v045_post  # noqa: E402
+    print(v045_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR))
+    COORD.stamp(wb, "v0.4.4", "v0.4.5", "2026-11-14")
 wb.save(sys.argv[1])
 if os.environ.get("COHR_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
