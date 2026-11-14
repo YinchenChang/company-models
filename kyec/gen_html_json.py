@@ -264,3 +264,39 @@ SPEC = {
 }
 cfg = relayout(cfg, X, SPEC)
 post(cfg)
+# ───────── v0.4.5（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（兩讀數、C0（實績））；共通步驟 kyec/html13.py（與電源散熱四家同一份；樣板 NVIDIA、Advantest、泰瑞達） ─────────
+import html13  # noqa: E402
+_AI = "AI 加速器測試營收 ＝ 每加權顆營收 × 加權顆數 × 份額 × 單價"
+H = {
+    "ver": "v0.4.5",
+    "units_chart": lambda pB, hB: {
+        "type": "theme", "title": "AI 加速器測試與非 AI 營收（情境 B，十億元）與 AI 測試占營收（右軸）", "x": f"@PL!D{hB}:G{hB}",
+        "fmt": "n1", "fmt_r": "p0", "stack": True, "pad": 1.25, "total": f"@PL!D{pB('營收')}:G{pB('營收')}",
+        "bars": [{"name": ["AI 加速器測試（GPU、ASIC 最終測試與燒機）"], "y": f"@PL!D{pB(_AI)}:G{pB(_AI)}", "color": "#0b7a80"},
+                 {"name": ["非 AI 測試"], "y": f"@PL!D{pB('非 AI 營收')}:G{pB('非 AI 營收')}", "color": "#b9b4a6"}],
+        "lines": [{"name": ["AI 加速器測試占營收"], "y": f"@PL!D{pB('AI 加速器測試 ÷ 營收')}:G{pB('AI 加速器測試 ÷ 營收')}", "axis": "r", "color": "#3b3838", "labels": True}],
+        "caption": "堆疊＝AI 加速器測試與非 AI 測試營收，頂端數字＝營收；折線＝AI 測試占營收（右軸）。回答命題：AI 測試量能否吸收 2026 年擴產；FY2026 為校準年（AI 占比為券商估計）。"},
+    "sc_caption": "三情境 FY2026–FY2027 相同，差在 CY2028 起的加速器顆數係數（A 原始顆數、B 基準、C 低）；FY2030 起為延伸期（收斂法）。",
+    "seg": [("一、AI 加速器測試需求（加權顆數 → 營收）", "A. AI 加速器測試需求", "B. 資本支出與折舊"), ("二、資本支出與折舊", "B. 資本支出與折舊", "C. 損益"),
+            ("三、損益", "C. 損益", "情境 C")],
+    "seg_caption": "分部營收推導（情境 B；十億元新台幣）：AI 加速器測試＝每加權顆營收 × 加權顆數 × 份額 × 單價；加非 AI 得營收；資本支出與折舊決定毛利率",
+    "gw_chart": lambda pB, hB: {
+        "type": "theme", "title": "加權顆數（百萬顆，堆疊：NVIDIA、AMD 與 ASIC）與加速器顆數合計（未加權，右軸）：情境 B", "x": f"@PL!D{hB}:G{hB}",
+        "fmt": "n1", "fmt_r": "n1", "stack": True, "pad": 1.3,
+        "bars": [{"name": ["NVIDIA 加權顆數"], "y": f"@PL!D{pB('NVIDIA 加權顆數')}:G{pB('NVIDIA 加權顆數')}", "color": "#0b7a80"},
+                 {"name": ["AMD 與 ASIC 加權顆數（× 曝險）"], "y": f"@PL!D{pB('AMD 與 ASIC 加權顆數（× 曝險）')}:G{pB('AMD 與 ASIC 加權顆數（× 曝險）')}", "color": "#6fc7cb"}],
+        "lines": [{"name": ["加速器顆數合計（未加權）"], "y": f"@PL!D{pB('加速器顆數合計（未加權）')}:G{pB('加速器顆數合計（未加權）')}", "axis": "r", "color": "#c29a2b", "labels": True}],
+        "caption": "AI 測試營收的產業輸入：加速器顆數（讀 Siliconomics 基準，經台積電模型，情境 B 顆數係數）× 每顆測試時間（含燒機）× 京元電曝險＝加權顆數；乘每加權顆營收、份額與單價即 AI 測試營收。"},
+    "recon_h3": "共識、券商與公司揭露的結構對照（原有）",
+    "plain": {f"Val!E{row('Val', 'WACC', exact=True)}": "股權成本與稅後債務成本以市值權重加權；WACC 調整只用於敏感度（基準為零）",
+              f"Val!A{row('Val', '永續成長率 g')}": "永續成長率 g（長期成長上限與無風險利率取小者）",
+              f"Val!A{row('Val', '永續期 RONIC')}": "永續期 RONIC（＝WACC＋超額報酬差）",
+              f"Val!A{row('Val', 'DCF 情境價值推到 12 個月後')}": "DCF 情境價值推到目標時點（以股權成本複利，扣除期間股利）",
+              f"In!B{INK['g_tv']}": "永續成長率 g（最後一年之後；長期成長上限與無風險利率取小者）",
+              f"In!B{INK['scn_fade_g']}": "FY2032 營收年增收斂目標（A 為基準加兩個百分點、B 為基準、C 為基準減兩個百分點）"},
+    "fold": {"DCF!A2": "展開：DCF 的營業利益與自由現金流口徑"},
+    "ext": lambda row_: (3, {k: (row_("PL", "營收", row_("PL", f"情境 {k}", 1, True), True), row_("PL", "EPS", row_("PL", f"情境 {k}", 1, True), True)) for k in "ABC"}),
+}
+html13.apply(cfg, wb, X, H, os.path.join(HERE, ".."))
+json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+print("v1.3 ok", os.path.relpath(X, HERE))

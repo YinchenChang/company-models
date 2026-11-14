@@ -282,3 +282,42 @@ if _adj and abs((wb["Val"][f"B{_adj}"].value or 0) - (wb["Val"][f"B{row('Val', '
     if "；進加權的 Comparable 為相對倍數調整後 " in _n:
         _c["hero"]["note"] = _n[:_n.index("；進加權的 Comparable 為相對倍數調整後 ")]
     json.dump(_c, open(_p, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+# ───────── v0.2.5（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（兩讀數、C0（實績））；共通步驟 mpi/html13.py（與電源散熱四家同一份；樣板 NVIDIA、Advantest、泰瑞達、京元電） ─────────
+import html13  # noqa: E402
+cfg = json.load(open(os.path.join(HERE, "html.json"), encoding="utf-8"))   # 取補充規則 A 處理後的設定
+_AI = "AI／HPC 探針卡（VPC、MEMS；命題子列）"
+H = {
+    "ver": "v0.2.5",
+    "units_chart": lambda pB, hB: {
+        "type": "theme", "title": "AI／HPC 探針卡、其他探針卡、設備與其他營收（情境 B，十億元）與 AI／HPC 探針卡占營收（右軸）", "x": f"@PL!D{hB}:G{hB}",
+        "fmt": "n1", "fmt_r": "p0", "stack": True, "pad": 1.25, "total": f"@PL!D{pB('營收')}:G{pB('營收')}",
+        "bars": [{"name": ["AI／HPC 探針卡（垂直、MEMS）"], "y": f"@PL!D{pB(_AI)}:G{pB(_AI)}", "color": "#0b7a80"},
+                 {"name": ["其他探針卡（懸臂等）"], "y": f"@PL!D{pB('其他探針卡（CPC 等）')}:G{pB('其他探針卡（CPC 等）')}", "color": "#6fc7cb"},
+                 {"name": ["設備（AST、溫控、光電與 CPO 測試）"], "y": f"@PL!D{pB('設備')}:G{pB('設備')}", "color": "#c29a2b"},
+                 {"name": ["其他"], "y": f"@PL!D{pB('其他')}:G{pB('其他')}", "color": "#b9b4a6"}],
+        "lines": [{"name": ["AI／HPC 探針卡占營收"], "y": f"@PL!D{pB('AI／HPC 探針卡 ÷ 營收')}:G{pB('AI／HPC 探針卡 ÷ 營收')}", "axis": "r", "color": "#3b3838", "labels": True}],
+        "caption": "堆疊＝四塊營收，頂端數字＝營收；折線＝AI／HPC 探針卡占營收（右軸）。回答命題：AI 加速器晶圓測試量帶動高階探針卡，旺矽份額與每顆內容能否守住決定成長；FY2026 為校準年（AI 占比為假設）。"},
+    "sc_caption": "三情境 FY2027 起差在份額與價格相對值、毛利率與設備情境係數，顆數係數的差異自 CY2028 起；FY2030 起為延伸期（收斂法）。",
+    "seg": [("一、AI 加速器 → 晶圓測試量", "A. AI 加速器", "B. 營收分部"), ("二、營收分部", "B. 營收分部", "C. 毛利與損益"), ("三、毛利與損益", "C. 毛利與損益", "情境 C")],
+    "seg_caption": "分部營收推導（情境 B；十億元新台幣）：AI／HPC 探針卡＝FY2026 × 晶圓測試量指數 × 份額與價格相對值 × 內容指數；加其他探針卡、設備與其他得營收",
+    "gw_chart": lambda pB, hB: {
+        "type": "theme", "title": "AI 加速器顆數（百萬顆，長條）與晶圓測試量指數（右軸）：情境 B", "x": f"@PL!D{hB}:G{hB}",
+        "fmt": "n1", "fmt_r": "n2", "stack": False, "pad": 1.3,
+        "bars": [{"name": ["AI 加速器顆數（含情境係數）"], "y": f"@PL!D{pB('AI 加速器顆數（含情境係數）')}:G{pB('AI 加速器顆數（含情境係數）')}", "color": "#0b7a80"}],
+        "lines": [{"name": ["晶圓測試量指數（以 FY2026 為基期）"], "y": f"@PL!D{pB('晶圓測試量指數（2026＝1）')}:G{pB('晶圓測試量指數（2026＝1）')}", "axis": "r", "color": "#c29a2b", "labels": True}],
+        "caption": "AI 探針卡的產業輸入：加速器顆數（讀 Siliconomics 基準，情境 B 顆數係數）× 每顆測試時間 × 旺矽曝險＝晶圓測試量指數；乘份額與價格相對值、每顆內容即 AI／HPC 探針卡營收。"},
+    "recon_h3": "公司指引、券商預估與 Siliconomics 的對照（原有）",
+    "plain": {f"Val!E{row('Val', 'WACC', exact=True)}": "股權成本與稅後債務成本以市值權重加權；WACC 調整只用於敏感度（基準為零）",
+              f"Val!A{row('Val', '永續成長率 g')}": "永續成長率 g（長期成長上限與無風險利率取小者）",
+              f"Val!A{row('Val', '永續期 RONIC')}": "永續期 RONIC（＝WACC＋超額報酬差）",
+              f"Val!A{row('Val', 'DCF 情境價值推到 12 個月後')}": "DCF 情境價值推到目標時點（以股權成本複利，扣除期間股利）",
+              f"In!B{INK['g_tv']}": "永續成長率 g（最後一年之後；長期成長上限與無風險利率取小者）",
+              f"In!B{INK['scn_fade_g']}": "FY2032 營收年增收斂目標（A 為基準加兩個百分點、B 為基準、C 為基準減兩個百分點）",
+              f"README!A{row('README', '預估期間：')}": "預估期間：FY2027–FY2029 由驅動因子推導；FY2030 起為收斂法，非驅動因子推導（營收年增與淨利率由 FY2029 線性收斂到長期目標，FY2032 達到；PL 頁灰底）。",
+              f"Units!A{row('Units', '讀法：AI／HPC 探針卡')}": "讀法：AI／HPC 探針卡 FY2026 以 AI 占探針卡比例（Assumed）校準，不是公司揭露數字；晶圓測試量用 Siliconomics 的每顆測試時間係數加權，NVIDIA 部分再乘旺矽曝險。份額與價格相對值是 Assumed，只有相對變化影響 FY2027 起的營收。"},
+    "fold": {"DCF!A2": "展開：DCF 的營業利益與自由現金流口徑", f"Units!A{row('Units', '讀法：AI／HPC 探針卡')}": "展開：AI／HPC 探針卡的校準與晶圓測試量讀法"},
+    "ext": lambda row_: (3, {k: (row_("PL", "營收", row_("PL", f"情境 {k}", 1, True), True), row_("PL", "EPS", row_("PL", f"情境 {k}", 1, True), True)) for k in "ABC"}),
+}
+html13.apply(cfg, wb, X, H, os.path.join(HERE, ".."))
+json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+print("v1.3 ok", os.path.relpath(X, HERE))

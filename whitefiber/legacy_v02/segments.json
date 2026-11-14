@@ -1,0 +1,33 @@
+{
+ "company": "WhiteFiber",
+ "ticker": "WYFI",
+ "model_sheet": "損益",
+ "official_segments": [
+  {
+   "name": "Cloud services",
+   "label": "算力收入",
+   "period": "FY2025",
+   "value": 68.8,
+   "unit": "US$M",
+   "source": "FY2025 10-K、2026Q2 新聞稿",
+   "note": "雲端服務＝算力收入＋非算力服務；下一版改列名"
+  },
+  {
+   "name": "Colocation services",
+   "label": "託管",
+   "period": "FY2025",
+   "value": 8.9,
+   "unit": "US$M",
+   "source": "同上"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "Cloud services",
+   "labels": [
+    "非算力服務"
+   ]
+  }
+ ],
+ "check_labels": []
+}

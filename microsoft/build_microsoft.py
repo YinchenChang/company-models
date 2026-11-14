@@ -1453,6 +1453,9 @@ SRC = [
 ]
 for i, (d, dt, u, t) in enumerate(SRC, 2):
     SO.cell(i, 1, i - 1); SO.cell(i, 2, d); SO.cell(i, 3, dt); SO.cell(i, 4, u); SO.cell(i, 5, t)
+for _c, _v in enumerate(("Wattonomics v0.3.2 快照（Coord 頁 C0 對帳與追公式用；不進模型）", "2026-11-14", "microsoft/data/wattonomics_c0_v0.3.2.json、wattonomics_trace_v0.3.2.json（microsoft/extract_wattonomics_c0.py、tools/coord/trace_wattonomics.py --player msft 產生）", "Derived"), 2):
+    SO.cell(len(SRC) + 2, _c, _v)   # v0.3.8：放在原空白列，不移動既有列
+SO.cell(len(SRC) + 2, 1, len(SRC) + 1)
 SO.cell(len(SRC) + 3, 1, "未找到：產品線層級市場共識；財報後（2026-10-28 以後）更新的共識；Copilot 營收與 FY2024、FY2025 年底座席；M365 商用座席數（只有年增 5%）；Azure 中 AI 占比；MSFT 個別長債殖利率；遊戲與 PC 同業 NTM 倍數（改用 TTM）")
 SO.column_dimensions["B"].width = 90; SO.column_dimensions["C"].width = 22; SO.column_dimensions["D"].width = 80; SO.column_dimensions["E"].width = 24
 
@@ -1461,7 +1464,7 @@ SO.column_dimensions["B"].width = 90; SO.column_dimensions["C"].width = 22; SO.c
 # =====================================================================================
 RD = WS["README"]
 RB = BL["B"]
-RD["A1"] = "Microsoft（MSFT）個股模型 v0.3.7 — 命題＋官方營收分部 → 損益表（2026-11-06；v0.3.7 只換現價為 2026-11-05 收盤 535.93；v0.3.6 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；數值同 v0.3.1〔2026-10-29 季度滾動〕；資料截至 FY27Q1〔2026-09-30〕；評價日 2026-09-30、目標價時點 2027-10-29）"
+RD["A1"] = "Microsoft（MSFT）個股模型 v0.3.8 — 命題＋官方營收分部 → 損益表（2026-11-15；v0.3.8 只改展示層並新增 RevDCF、Coord 頁與標準損益表〔個股 HTML 版面規格 v1.3；三層協調 C0 實績對帳〕，數值不變；v0.3.7 只換現價為 2026-11-05 收盤 535.93；v0.3.6 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；數值同 v0.3.1〔2026-10-29 季度滾動〕；資料截至 FY27Q1〔2026-09-30〕；評價日 2026-09-30、目標價時點 2027-10-29）"
 RD["A2"] = "工作表：README → In → Q → Thesis → Seg → PL → CF → Val → Recon → Sens → Sources。金額十億美元；財年 6 月結束（FY2027＝2026-07～2027-06）"
 RD["A3"] = "命題：AI 能否同時在 Azure（算力）與 Microsoft 365（Copilot 應用）變現，撐住翻倍的資本支出。"
 RD["A4"] = "核心問題：FY2029 的 AI 增量營業利益能否覆蓋 AI 資本支出的資金成本（AI 增量 ROIC 對 WACC），且自由現金流不需停止回購。"
@@ -1564,6 +1567,12 @@ SW.column_dimensions["L"].width = 50
 for c_ in "GHIJK": SW.column_dimensions[c_].width = 11
 for c_ in "FGHIJK": VW.column_dimensions[c_].width = 11
 VW.column_dimensions["L"].width = 60
+
+V38 = None
+if not SETS and Q1ON and ARGS.snap == "v21.10":
+    # v0.3.8：版面規格 v1.3 全套＋Coord 頁（只新增、不改既有格）
+    import v038_post
+    V38 = v038_post.apply(wb, dict(BR=BL["B"].R, BC={k: b.R for k, b in BL.items()}, QR=QR, F=F, fb=fb, VR=VR_, SENS_LAST=SENS_LAST, GEN=GEN, SNAP=SNAP, TKV=TKV, TKN=TKN, tk=tk, tkv=tkv, HERE=HERE))
 
 out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "build", "raw", "microsoft.xlsx")
 os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
@@ -1685,5 +1694,5 @@ RM = os.environ.get("ROWMAP")
 if RM:
     json.dump({"tp": VR_["tp"], "tp_r1": VR_["tp_r1"], "up": VR_["up"], "rec": VR_["rec"], "gap27": BL["B"].R["gap27"][1], "gapA": BL["A"].R["gap27"][1], "gapC": BL["C"].R["gap27"][1],
                "segB": {k: BL["B"].R[k][1] for k in ("ai_seg", "azure", "m365", "lic", "ind", "fro", "dc", "srch", "xbox", "win", "tot", "ai_oi", "dc_oi", "oi")},
-               "cxB": BL["B"].R["capex"][1], "RCASES": [[k, sd, sets] for k, sd, _l, _g, sets, _n in RCASES], "SENS_STALE": SENS_STALE}, open(RM, "w"), indent=1)
+               "cxB": BL["B"].R["capex"][1], "RB": {k: list(v) for k, v in BL["B"].R.items()}, "V38": V38, "VR": VR_, "RCASES": [[k, sd, sets] for k, sd, _l, _g, sets, _n in RCASES], "SENS_STALE": SENS_STALE}, open(RM, "w"), indent=1)
 print("寫出", out, "與 microsoft/html.json")

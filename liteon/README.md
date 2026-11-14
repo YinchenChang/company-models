@@ -1,4 +1,17 @@
-# liteon/ — 光寶科（2301.TW）收支與估值模型 v0.4.4
+# liteon/ — 光寶科（2301.TW）收支與估值模型 v0.4.5
+## v0.4.5（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（兩讀數目標價、讀取層級、C0 公司實績對帳）
+
+- **依據：** 工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`（推廣輪：電源散熱）、`docs/workorders/20261114_C0實績對帳補列_七家.md`；規則 `docs/plan/三層基準協調規則.md` v1.4.2 C0 第 2 點；`tools/coord/README.md`。樣板：台達電 v0.5.7（同為 AI 電源，C0 做法相同）、奇鋐 v0.3.5（#538）、NVIDIA v0.3.10。
+- **做法：** 主引擎掛鉤（`SIL.COORD_ALT` 時情境 B、C 的 AI IT 資本支出 CY2027 起 × wta_27／28／29；情境 A 不縮放）→ `tools/coord/alt_run.py liteon` → `liteon/coord_alt.json`；建檔程式存檔前 `COORD.add_sheet` 後呼叫 `liteon/v13_post.py`（共通步驟 `liteon/c13.py`）：Hist 頁、PL 頁末標準損益表（FY2023A–FY2031E；延伸期取 PL 頁上方摘要表 H–I 欄，股數＝淨利 ÷ EPS）、RevDCF 頁、Val 0.7、Sens 末「加權目標價相對基準」、Coord 頁三層協調 C0、README 頁末 v1.3 白話列；`gen_html_json.py` 最後呼叫 `liteon/html13.py`。`co_flag` 具名範圍未建。
+- **兩讀數：** 現行基準 282.21（+33.4%，買進）；另一側讀數 247.44（+17.0%，中立）——**評等不同**，橫幅揭露。Coord 快照狀態 CURRENT。
+- **實績與出處（Coord 第 4a 節；Verified）：** 月營收 2026-09 188.48 億元、累計前 9 月 1,535.59 億元（TechNews 2026-10-08，https://finance.technews.tw/2026/10/08/ltc-2301-202609-financial-report/）；2026-10 200.71 億元、累計前 10 月 1,736.30 億元（TechNews 2026-11-09，https://finance.technews.tw/2026/11/09/ltc-2301-202610-financial-report/）；3Q26 法說（2026-10-30；股感 https://www.stockfeel.com.tw/?p=278632 ）：營收 574.03 億元、毛利率 25.9%、營業利益 86.55 億元、歸屬母公司淨利 74.29 億元、EPS 3.27 元；雲端及物聯網部門營收 337.53 億元（占 59%）；口述「2026 年 AI 相關營收占比超過 30%」。**公司未揭露 AI 電源營收金額。** Hist 頁 FY2022–FY2025：stockanalysis 年度損益表（https://stockanalysis.com/quote/tpe/2301/financials/income-statement/ ）。
+- **層級隱含：** Siliconomics v0.19 AI 電源市場 CY2026 US$10.53B × 光寶有效份額 17.6%（pwr_lsh_26）× 匯率 32＝NT$59.35B；主讀數層級 × 10 ÷ 12＝49.46、第二讀數 59.35。
+- **判定：** **C0（實績）結論：無可比實績（層級值同源）**——公司未揭露 AI 電源金額；Siliconomics 的光寶份額由本模型以 AI 相關占比 31% ×（1 − 非電源占比 10%）× 營收錨點校準後寫入，市場大小在比式中被約掉。參考列（31% × 90% × 實績營收）主讀數 −2.1%、第二讀數 +7.9%（占比取口述下限 30% 時 −5.2%／+4.5%），代數上只檢驗營收錨點，標「參考（同源校準）」、不判定。上限檢查：層級隱含 AI 電源每季 14.8 十億元占雲端及物聯網部門 3Q26 營收 44%，通過。C0 對帳中項目 0 項。讀取層級四項差距皆 0（同源，不判定）；已建模份額加總（光寶＋台達電）殘差 24%–33%；層級之間（參考）：部署 GW 對 Wattonomics 側讀數 CY2027–29 高 62%／50%／50%。
+- **README 舊節數字說明：** 下方 v0.4.4 節寫的加權目標價 294.4、上檔空間 +39.2% 是當時成品值；之後 Siliconomics 全下游重建（原地更新 dist）使現行 dist 為 282.21、+33.4%（評等仍買進）。本版不改寫舊節，以本節與 xlsx 為準。
+- **驗證：** `tools/xlsx_diff.py` 對 v0.4.4（_待刪除）逐格：既有格只有 README A1（標題版號更正 v0.2 → v0.4.5、日期、本版說明）不同，其餘皆新增；加權目標價 282.21、評等買進不變；錯誤格 0。`check_company_html`、`check_layout_v13 --xlsx`（A–I 全過，含 G、H 位置；無警告）、`tools/baseline_coordination/check.py` 通過。
+- **未做：** `coord_meta_v0.19.json` 的 `hardware_companies` 未加入 liteon（由主控統一加入）。
+- 成品 `dist/20261115_光寶個股模型_v0.4.5.xlsx`／`.html`；v0.4.4 移 `dist/_待刪除/`。
+
 ## v0.4.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 
 - 版本沿革：v0.4.4：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守。

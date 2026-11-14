@@ -229,4 +229,66 @@ SPEC = {
           "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"]},
  "n_recon": 4,
 }
-dump(hero_rule_a(run(SPEC)))
+_out = hero_rule_a(run(SPEC))
+# ───────── v0.4.4（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（兩讀數、C0（實績））；共通步驟 hanmi/html13.py（與電源散熱四家同一份；樣板 NVIDIA、Advantest、泰瑞達）。
+# html13 的新台幣字樣在本檔最後改為韓元（設定檔文字，不含數字） ─────────
+import html13  # noqa: E402
+_HB = "HBM TC 鍵合機營收（三大記憶體廠）"
+_OT = "其他業務營收（中國 TC 鍵合機、MSVP、EMI、2.5D 等）"
+_CAP = "TC 鍵合產能需求（晶粒 × 層數加權 ×（1 − 混合鍵合））"
+
+
+def _ext(row_):
+    x0 = row_("PL", "情境（延伸）")
+    return x0, {k: (row_("PL", "營收", row_("PL", f"情境 {k}（", x0), True), row_("PL", "EPS（延伸）", row_("PL", f"情境 {k}（", x0), True)) for k in "ABC"}
+
+
+H = {
+    "ver": "v0.4.4",
+    "units_chart": lambda pB, hB: {
+        "type": "theme", "title": "HBM TC 鍵合機與其他業務營收（情境 B，億韓元）與 HBM TC 鍵合機占營收（右軸）", "x": f"@PL!D{hB}:G{hB}",
+        "fmt": "n0", "fmt_r": "p0", "stack": True, "pad": 1.25, "total": f"@PL!D{pB('營收')}:G{pB('營收')}",
+        "bars": [{"name": ["HBM TC 鍵合機（三大記憶體廠）"], "y": f"@PL!D{pB(_HB)}:G{pB(_HB)}", "color": "#0b7a80"},
+                 {"name": ["其他業務（中國 TC 鍵合機、MSVP、EMI 等）"], "y": f"@PL!D{pB(_OT)}:G{pB(_OT)}", "color": "#b9b4a6"}],
+        "lines": [{"name": ["HBM TC 鍵合機占營收"], "y": f"@PL!D{pB('HBM TC 鍵合機占營收')}:G{pB('HBM TC 鍵合機占營收')}", "axis": "r", "color": "#3b3838", "labels": True}],
+        "caption": "堆疊＝HBM TC 鍵合機與其他業務營收，頂端數字＝營收；折線＝HBM TC 鍵合機占營收（右軸）。回答命題：HBM 位元成長與混合鍵合導入下，韓美在三家記憶體廠的份額能否守住；FY2026 為校準年。"},
+    "sc_caption": "三情境 FY2027 起差在 HBM 位元（顆數係數）、混合鍵合導入速度與韓美份額；FY2030 起為延伸期（收斂法）。",
+    "seg": [("一、日曆年鍵合產能需求", "A. 日曆年鍵合產能需求", "B. 損益"), ("二、損益（會計年度）", "B. 損益", "情境 C")],
+    "seg_caption": "分部營收推導（情境 B；億韓元）：HBM 位元 → 核心晶粒 × 層數加權 ×（扣混合鍵合）→ 新機需求 × 三家記憶體廠占比與韓美份額 × 校準係數＝HBM TC 鍵合機營收；加其他業務得營收",
+    "gw_chart": lambda pB, hB: {
+        "type": "theme", "title": "HBM 出貨位元（EB，長條）與 TC 鍵合產能需求（百萬顆當量，右軸）：情境 B", "x": f"@PL!D{hB}:G{hB}",
+        "fmt": "n1", "fmt_r": "n0", "stack": False, "pad": 1.3,
+        "bars": [{"name": ["HBM 出貨位元"], "y": f"@PL!D{pB('HBM 出貨位元')}:G{pB('HBM 出貨位元')}", "color": "#0b7a80"}],
+        "lines": [{"name": ["TC 鍵合產能需求（百萬顆當量）"], "y": f"@PL!D{pB(_CAP)}:G{pB(_CAP)}", "axis": "r", "color": "#c29a2b", "labels": True}],
+        "caption": "鍵合機需求的產業輸入：HBM 出貨位元（記憶體市場層）÷ 晶粒容量 × 層數加權 ×（扣混合鍵合，Siliconomics）＝TC 鍵合產能需求；產能增量與汰換決定新機需求。"},
+    "recon_h3": "由上而下與由下而上的對照（原有）",
+    "plain": {f"Val!E{row_of('Val', '目標價（DCF 與 Comparable 加權）', need_num=True)}": "DCF 目標價與 Comparable 目標價依 DCF 權重加權（權重見 In 頁）",
+              f"Val!E{row_of('Val', 'WACC', exact=True)}": "股權成本與稅後債務成本以市值權重加權；WACC 調整只用於敏感度（基準為零）",
+              f"Val!A{row_of('Val', '永續成長率 g')}": "永續成長率 g（長期成長上限與無風險利率取小者）",
+              f"Val!A{row_of('Val', '永續期 RONIC')}": "永續期 RONIC（＝WACC＋超額報酬差）",
+              f"Val!A{row_of('Val', 'DCF 情境價值推到 12 個月後')}": "DCF 情境價值推到目標時點（以股權成本複利，扣除期間股利）",
+              f"In!B{IN_ROW['beta_stk']}": "堆疊層數對每顆晶粒鍵合時間的影響（每多四層，鍵合時間增加的比例）",
+              f"In!B{IN_ROW['g_tv']}": "永續成長率 g（最後一年後；長期成長上限與無風險利率取小者）"},
+    "fold": {"DCF!A2": "展開：DCF 的營業利益與自由現金流口徑"},
+    "ext": _ext,
+}
+html13.apply(_out, WB, X, H, os.path.join(HERE, ".."))
+_m = f"@Val!B{row_of('Val', 'DCF（標準版）', col=2)}"   # 目標價方法說明（多段 note，含參數代號）：摺疊
+for _s in _out["sections"]:
+    for _b in _s["blocks"]:
+        if _b.get("type") == "note" and _m in _b.get("parts", []) and not _b.get("collapse"):
+            _b.update(collapse=True, summary="展開：目標價方法（DCF 標準版的口徑說明）")
+_CCY = (("十億元新台幣", "億韓元"), ("新台幣元", "韓元"), ("新台幣", "韓元"), ("十億元", "億韓元"))
+
+
+def _ccy(o):
+    if isinstance(o, str):
+        for a, b in _CCY:
+            o = o.replace(a, b)
+        return o
+    if isinstance(o, list):
+        return [_ccy(x) for x in o]
+    if isinstance(o, dict):
+        return {k: _ccy(v) for k, v in o.items()}
+    return o
+dump(_ccy(_out))

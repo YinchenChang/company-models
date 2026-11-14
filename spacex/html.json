@@ -28,14 +28,7 @@
    ]
   ],
   "note": [
-   "@Val!B17",
-   "。投資建議依加權目標價判定：",
-   "@Val!E16",
-   "。模型狀態：",
-   "@Sens!D103",
-   "（",
-   "@Sens!D104",
-   "）"
+   "@README!A64"
   ]
  },
  "thesis": "@README!A35",
@@ -59,6 +52,57 @@
    "id": "thesis",
    "title": "命題與核心問題",
    "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "@README!A65"
+     ]
+    },
+    {
+     "type": "theme",
+     "title": "營收（十億美元，依分部堆疊）與營業利益率：FY2023A–FY2032E（情境 B）",
+     "x": "@PL!C203:L203",
+     "fmt": "n0",
+     "fmt_r": "p0",
+     "stack": true,
+     "pad": 1.3,
+     "total": "@PL!C204:L204",
+     "bars": [
+      {
+       "name": [
+        "@PL!A231"
+       ],
+       "y": "@PL!C231:L231",
+       "color": "#6fa8dc"
+      },
+      {
+       "name": [
+        "@PL!A232"
+       ],
+       "y": "@PL!C232:L232",
+       "color": "#0b7a80"
+      },
+      {
+       "name": [
+        "@PL!A233"
+       ],
+       "y": "@PL!C233:L233",
+       "color": "#c29a2b"
+      }
+     ],
+     "lines": [
+      {
+       "name": [
+        "@PL!A211"
+       ],
+       "y": "@PL!C211:L211",
+       "axis": "r",
+       "color": "#3b3838",
+       "labels": true
+      }
+     ],
+     "caption": "堆疊＝Space、Connectivity、SI（xAI 算力出租與 Grok、Cursor、X）三個分部；折線＝合併營業利益率（右軸，財報口徑）。FY2026E 起為情境 B（基準）；FY2023A–FY2025A 為招股書實績（已追溯重編納入 xAI 與 X）。"
+    },
     {
      "type": "h3",
      "text": "命題"
@@ -101,17 +145,2054 @@
      "type": "list",
      "ordered": true,
      "items": [
-      "@README!A39",
-      "@README!A40",
-      "@README!A41"
+      "@README!A66",
+      "@README!A67",
+      "@README!A68",
+      "@README!A69",
+      "@README!A70"
      ]
     }
    ]
   },
   {
-   "id": "drivers",
-   "title": "驅動因子 → 推導量",
+   "id": "valuation",
+   "title": "估值",
    "blocks": [
+    {
+     "type": "bars",
+     "title": "四個目標價與現價（美元；豎線＝現價）",
+     "fmt": "n2",
+     "items": [
+      {
+       "label": "@Val!A6",
+       "value": "@Val!B6",
+       "series": 1
+      },
+      {
+       "label": "@Val!A7",
+       "value": "@Val!B7",
+       "series": 2
+      },
+      {
+       "label": "@Val!A8",
+       "value": "@Val!B8",
+       "series": 0
+      },
+      {
+       "label": "@Val!A10",
+       "value": "@Val!B10",
+       "series": 1
+      }
+     ],
+     "ref": {
+      "label": "@Val!A9",
+      "value": "@Val!B9"
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Val!A1"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Val!B17",
+      "。投資建議依加權目標價判定：",
+      "@Val!E16",
+      "。模型狀態：",
+      "@Sens!D103",
+      "（",
+      "@Sens!D104",
+      "）"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "結論（主要項目）",
+     "head": [
+      "項目",
+      "數值",
+      "對照",
+      "對照",
+      "說明"
+     ],
+     "rows": [
+      [
+       "@Val!A8|",
+       "@Val!B8|n2",
+       "@Val!C8|n2",
+       "@Val!D8|n2",
+       "@Val!E8|"
+      ],
+      [
+       "@Val!A6|",
+       "@Val!B6|n2",
+       "@Val!C6|n2",
+       "@Val!D6|n2",
+       "@Val!E6|"
+      ],
+      [
+       "@Val!A7|",
+       "@Val!B7|n2",
+       "@Val!C7|n2",
+       "@Val!D7|n2",
+       "@Val!E7|"
+      ],
+      [
+       "@Val!A9|",
+       "@Val!B9|n2",
+       "@Val!C9|n2",
+       "@Val!D9|n2",
+       "@Val!E9|"
+      ],
+      [
+       "@Val!A11|",
+       "@Val!B11|sp1",
+       "@Val!C11|sp1",
+       "@Val!D11|sp1",
+       "@Val!E11|"
+      ],
+      [
+       "@Val!A12|",
+       "@Val!B12|sp1",
+       "@Val!C12|sp1",
+       "@Val!D12|sp1",
+       "@Val!E12|"
+      ],
+      [
+       "@Val!A16|",
+       "@Val!B16|",
+       "@Val!C16|n2",
+       "@Val!D16|n2",
+       "@Val!E16|"
+      ],
+      [
+       "@Val!A20|",
+       "@Val!B20|n2",
+       "@Val!C20|n2",
+       "@Val!D20|n2",
+       "@Val!E20|"
+      ],
+      [
+       "@Val!A10|",
+       "@Val!B10|n2",
+       "@Val!C10|n2",
+       "@Val!D10|n2",
+       "@Val!E10|"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：結論的其他項目（價格帶、讀法一／二、核心問題比值、收支關卡、檢查列）",
+     "head": [
+      "項目",
+      "數值",
+      "對照",
+      "對照",
+      "說明"
+     ],
+     "rows": [
+      [
+       "@Val!A13|",
+       "@Val!B13|n2",
+       "@Val!C13|n2",
+       "@Val!D13|n2",
+       "@Val!E13|"
+      ],
+      [
+       "@Val!A14|",
+       "@Val!B14|n2",
+       "@Val!C14|n2",
+       "@Val!D14|n2",
+       "@Val!E14|"
+      ],
+      [
+       "@Val!A15|",
+       "@Val!B15|",
+       "@Val!C15|n2",
+       "@Val!D15|n2",
+       "@Val!E15|"
+      ],
+      [
+       "@Val!A17|",
+       "@Val!B17|n2",
+       "@Val!C17|n2",
+       "@Val!D17|n2",
+       "@Val!E17|"
+      ],
+      [
+       "@Val!A18|",
+       "@Val!B18|n2",
+       "@Val!C18|n2",
+       "@Val!D18|n2",
+       "@Val!E18|"
+      ],
+      [
+       "@Val!A19|",
+       "@Val!B19|n2",
+       "@Val!C19|n2",
+       "@Val!D19|n2",
+       "@Val!E19|"
+      ],
+      [
+       "@Val!A21|",
+       "@Val!B21|sp1",
+       "@Val!C21|sp1",
+       "@Val!D21|sp1",
+       "@Val!E21|"
+      ],
+      [
+       "@Val!A22|",
+       "@Val!B22|sp1",
+       "@Val!C22|sp1",
+       "@Val!D22|sp1",
+       "@Val!E22|"
+      ],
+      [
+       "@Val!A23|",
+       "@Val!B23|n2",
+       "@Val!C23|sp1",
+       "@Val!D23|",
+       "@Val!E23|"
+      ],
+      [
+       "@Val!A24|",
+       "@Val!B24|n2",
+       "@Val!C24|sp1",
+       "@Val!D24|",
+       "@Val!E24|"
+      ],
+      [
+       "@Val!A25|",
+       "@Val!B25|n2",
+       "@Val!C25|n2",
+       "@Val!D25|n2",
+       "@Val!E25|"
+      ],
+      [
+       "@Val!A26|",
+       "@Val!B26|n2",
+       "@Val!C26|n2",
+       "@Val!D26|n2",
+       "@Val!E26|"
+      ],
+      [
+       "@Val!A27|",
+       "@Val!B27|n2",
+       "@Val!C27|n2",
+       "@Val!D27|n2",
+       "@Val!E27|"
+      ],
+      [
+       "@Val!A28|",
+       "@Val!B28|n1",
+       "@Val!C28|n1",
+       "@Val!D28|n1",
+       "@Val!E28|"
+      ],
+      [
+       "@Val!A29|",
+       "@Val!B29|",
+       "@Val!C29|n2",
+       "@Val!D29|n2",
+       "@Val!E29|"
+      ],
+      [
+       "@Val!A30|",
+       "@Val!B30|n2",
+       "@Val!C30|n2",
+       "@Val!D30|n2",
+       "@Val!E30|"
+      ],
+      [
+       "@Val!A31|",
+       "@Val!B31|n3",
+       "@Val!C31|n2",
+       "@Val!D31|n2",
+       "@Val!E31|"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "DCF 折現率（主要項目）",
+     "head": [
+      "項目",
+      "數值"
+     ],
+     "rows": [
+      [
+       "@Val!A39",
+       "@Val!B39|p2"
+      ],
+      [
+       "@Val!A37",
+       "@Val!B37|p2"
+      ],
+      [
+       "@Val!A38",
+       "@Val!B38|p2"
+      ],
+      [
+       "@Val!A40",
+       "@Val!B40|p2"
+      ],
+      [
+       "@In!B38",
+       "@In!E38|p1"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：折現率的組成（股權市值、負債、無風險利率、β、股權風險溢酬、稅前債務成本）",
+     "head": [
+      "項目",
+      "數值"
+     ],
+     "rows": [
+      [
+       "@Val!A35",
+       "@Val!B35|n0"
+      ],
+      [
+       "@Val!A36",
+       "@Val!B36|n1"
+      ],
+      [
+       "@In!B32",
+       "@In!E32|p2"
+      ],
+      [
+       "@In!B33",
+       "@In!E33|n2"
+      ],
+      [
+       "@In!B34",
+       "@In!E34|p1"
+      ],
+      [
+       "@In!B35",
+       "@In!E35|p2"
+      ],
+      [
+       "@In!B36",
+       "@In!E36|p0"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "DCF 彙總與 SI 對外出租模組（三情境；主要項目）",
+     "head": [
+      "項目",
+      "情境 A",
+      "情境 B",
+      "情境 C"
+     ],
+     "rows": [
+      [
+       "@Val!A117|",
+       "@Val!B117|n1",
+       "@Val!C117|n1",
+       "@Val!D117|n1"
+      ],
+      [
+       "@Val!A119|",
+       "@Val!B119|n1",
+       "@Val!C119|n1",
+       "@Val!D119|n1"
+      ],
+      [
+       "@Val!A124|",
+       "@Val!B124|n1",
+       "@Val!C124|n1",
+       "@Val!D124|n1"
+      ],
+      [
+       "@Val!A126|",
+       "@Val!B126|n1",
+       "@Val!C126|n1",
+       "@Val!D126|n1"
+      ],
+      [
+       "@Val!A132|",
+       "@Val!B132|n1",
+       "@Val!C132|n1",
+       "@Val!D132|n1"
+      ],
+      [
+       "@Val!A135|",
+       "@Val!B135|n1",
+       "@Val!C135|n1",
+       "@Val!D135|n1"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：DCF 彙總的其他項目（讀法一／二、自用 AI 影子效益、股數等）",
+     "head": [
+      "項目",
+      "情境 A",
+      "情境 B",
+      "情境 C"
+     ],
+     "rows": [
+      [
+       "@Val!A118|",
+       "@Val!B118|n1",
+       "@Val!C118|n1",
+       "@Val!D118|n1"
+      ],
+      [
+       "@Val!A120|",
+       "@Val!B120|n1",
+       "@Val!C120|n1",
+       "@Val!D120|n1"
+      ],
+      [
+       "@Val!A121|",
+       "@Val!B121|n1",
+       "@Val!C121|n1",
+       "@Val!D121|n1"
+      ],
+      [
+       "@Val!A122|",
+       "@Val!B122|n1",
+       "@Val!C122|n1",
+       "@Val!D122|n1"
+      ],
+      [
+       "@Val!A123|",
+       "@Val!B123|n1",
+       "@Val!C123|n1",
+       "@Val!D123|n1"
+      ],
+      [
+       "@Val!A125|",
+       "@Val!B125|p1",
+       "@Val!C125|p1",
+       "@Val!D125|p1"
+      ],
+      [
+       "@Val!A127|",
+       "@Val!B127|n1",
+       "@Val!C127|n1",
+       "@Val!D127|n1"
+      ],
+      [
+       "@Val!A128|",
+       "@Val!B128|n1",
+       "@Val!C128|n1",
+       "@Val!D128|n1"
+      ],
+      [
+       "@Val!A129|",
+       "@Val!B129|n3",
+       "@Val!C129|n3",
+       "@Val!D129|n3"
+      ],
+      [
+       "@Val!A130|",
+       "@Val!B130|n1",
+       "@Val!C130|n1",
+       "@Val!D130|n1"
+      ],
+      [
+       "@Val!A131|",
+       "@Val!B131|n1",
+       "@Val!C131|n1",
+       "@Val!D131|n1"
+      ],
+      [
+       "@Val!A133|",
+       "@Val!B133|n1",
+       "@Val!C133|n1",
+       "@Val!D133|n1"
+      ],
+      [
+       "@Val!A134|",
+       "@Val!B134|n1",
+       "@Val!C134|n1",
+       "@Val!D134|n1"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "分部加總（主要項目；目標時點 NTM 分部調整後 EBITDA × 同業倍數，Space 為營收 × EV／營收）",
+     "head": [
+      "分部",
+      "情境 A",
+      "情境 B",
+      "情境 C",
+      "倍數",
+      "EV：A",
+      "EV：B",
+      "EV：C"
+     ],
+     "rows": [
+      [
+       "@Val!A143|",
+       "@Val!B143|n1",
+       "@Val!C143|n1",
+       "@Val!D143|n1",
+       "@Val!E143|",
+       "@Val!F143|n0",
+       "@Val!G143|n0",
+       "@Val!H143|n0"
+      ],
+      [
+       "@Val!A144|",
+       "@Val!B144|n1",
+       "@Val!C144|n1",
+       "@Val!D144|n1",
+       "@Val!E144|",
+       "@Val!F144|n0",
+       "@Val!G144|n0",
+       "@Val!H144|n0"
+      ],
+      [
+       "@Val!A145|",
+       "@Val!B145|n1",
+       "@Val!C145|n1",
+       "@Val!D145|n1",
+       "@Val!E145|",
+       "@Val!F145|n0",
+       "@Val!G145|n0",
+       "@Val!H145|n0"
+      ],
+      [
+       "@Val!A146|",
+       "@Val!B146|n1",
+       "@Val!C146|n1",
+       "@Val!D146|n1",
+       "@Val!E146|",
+       "@Val!F146|n0",
+       "@Val!G146|n0",
+       "@Val!H146|n0"
+      ],
+      [
+       "@Val!A158|",
+       "@Val!B158|n1",
+       "@Val!C158|n1",
+       "@Val!D158|n1",
+       "@Val!E158|",
+       "@Val!F158|n0",
+       "@Val!G158|n0",
+       "@Val!H158|n0"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：分部加總的其他項目（EV 小計、淨現金、股數、隱含倍數）",
+     "head": [
+      "分部",
+      "情境 A",
+      "情境 B",
+      "情境 C",
+      "倍數",
+      "EV：A",
+      "EV：B",
+      "EV：C"
+     ],
+     "rows": [
+      [
+       "@Val!A147|",
+       "@Val!B147|n1",
+       "@Val!C147|n1",
+       "@Val!D147|n1",
+       "@Val!E147|",
+       "@Val!F147|n0",
+       "@Val!G147|n0",
+       "@Val!H147|n0"
+      ],
+      [
+       "@Val!A148|",
+       "@Val!B148|n1",
+       "@Val!C148|n1",
+       "@Val!D148|n1",
+       "@Val!E148|",
+       "@Val!F148|n0",
+       "@Val!G148|n0",
+       "@Val!H148|n0"
+      ],
+      [
+       "@Val!A149|",
+       "@Val!B149|n1",
+       "@Val!C149|n1",
+       "@Val!D149|n1",
+       "@Val!E149|",
+       "@Val!F149|n0",
+       "@Val!G149|n0",
+       "@Val!H149|n0"
+      ],
+      [
+       "@Val!A150|",
+       "@Val!B150|n1",
+       "@Val!C150|n1",
+       "@Val!D150|n1",
+       "@Val!E150|",
+       "@Val!F150|n0",
+       "@Val!G150|n0",
+       "@Val!H150|n0"
+      ],
+      [
+       "@Val!A151|",
+       "@Val!B151|n1",
+       "@Val!C151|n1",
+       "@Val!D151|n1",
+       "@Val!E151|",
+       "@Val!F151|n0",
+       "@Val!G151|n0",
+       "@Val!H151|n0"
+      ],
+      [
+       "@Val!A152|",
+       "@Val!B152|n1",
+       "@Val!C152|n1",
+       "@Val!D152|n1",
+       "@Val!E152|",
+       "@Val!F152|n0",
+       "@Val!G152|n0",
+       "@Val!H152|n0"
+      ],
+      [
+       "@Val!A153|",
+       "@Val!B153|n1",
+       "@Val!C153|n1",
+       "@Val!D153|n1",
+       "@Val!E153|",
+       "@Val!F153|n0",
+       "@Val!G153|n0",
+       "@Val!H153|n0"
+      ],
+      [
+       "@Val!A154|",
+       "@Val!B154|n1",
+       "@Val!C154|n1",
+       "@Val!D154|n1",
+       "@Val!E154|",
+       "@Val!F154|n0",
+       "@Val!G154|n0",
+       "@Val!H154|n0"
+      ],
+      [
+       "@Val!A155|",
+       "@Val!B155|n3",
+       "@Val!C155|n3",
+       "@Val!D155|n3",
+       "@Val!E155|",
+       "@Val!F155|n0",
+       "@Val!G155|n0",
+       "@Val!H155|n0"
+      ],
+      [
+       "@Val!A156|",
+       "@Val!B156|n1",
+       "@Val!C156|n1",
+       "@Val!D156|n1",
+       "@Val!E156|",
+       "@Val!F156|n0",
+       "@Val!G156|n0",
+       "@Val!H156|n0"
+      ],
+      [
+       "@Val!A157|",
+       "@Val!B157|n1",
+       "@Val!C157|n1",
+       "@Val!D157|n1",
+       "@Val!E157|",
+       "@Val!F157|n0",
+       "@Val!G157|n0",
+       "@Val!H157|n0"
+      ],
+      [
+       "@Val!A159|",
+       "@Val!B159|n1",
+       "@Val!C159|n1",
+       "@Val!D159|n1",
+       "@Val!E159|",
+       "@Val!F159|n0",
+       "@Val!G159|n0",
+       "@Val!H159|n0"
+      ],
+      [
+       "@Val!A160|",
+       "@Val!B160|x1",
+       "@Val!C160|x1",
+       "@Val!D160|x1",
+       "@Val!E160|",
+       "@Val!F160|n0",
+       "@Val!G160|n0",
+       "@Val!H160|n0"
+      ],
+      [
+       "@Val!A161|",
+       "@Val!B161|x1",
+       "@Val!C161|n1",
+       "@Val!D161|n1",
+       "@Val!E161|",
+       "@Val!F161|n0",
+       "@Val!G161|n0",
+       "@Val!H161|n0"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：同業倍數中位數",
+     "head": [
+      "同業組",
+      "中位數",
+      "家數"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "139-140",
+      "cols": [
+       "A",
+       "B",
+       "C"
+      ],
+      "fmts": [
+       "",
+       "x1",
+       "n0"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sens",
+   "title": "敏感度",
+   "blocks": [
+    {
+     "type": "tornado",
+     "sheet": "Sens",
+     "label_col": "A",
+     "value_col": "B",
+     "fmt": "sp1",
+     "title": "加權目標價相對基準：輸入取低值，變動達兩位數百分比的案例",
+     "rows": "109,113,119,134,135,136,143,144,158"
+    },
+    {
+     "type": "tornado",
+     "sheet": "Sens",
+     "label_col": "A",
+     "value_col": "C",
+     "fmt": "sp1",
+     "title": "加權目標價相對基準：輸入取高值，變動達兩位數百分比的案例",
+     "rows": "112,114,115,119,135,136,139,143,144,146,158,159,161,162"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Sens!A1"
+     ]
+    },
+    {
+     "type": "tornado",
+     "sheet": "Sens",
+     "label_col": "A",
+     "value_col": "B",
+     "fmt": "sp1",
+     "title": "加權目標價相對基準：輸入取低值",
+     "rows": "110,111,116,117,118,120,121,122,123,124,125,126,127,128,129,130,131,132,133,137,139,140,145,147,149,150,151,155,156,157,160",
+     "collapse": true,
+     "summary": "展開：加權目標價相對基準：輸入取低值，變動未達兩位數百分比的案例"
+    },
+    {
+     "type": "tornado",
+     "sheet": "Sens",
+     "label_col": "A",
+     "value_col": "C",
+     "fmt": "sp1",
+     "title": "加權目標價相對基準：輸入取高值",
+     "rows": "110,111,116,117,118,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,137,138,140,141,145,148,149,150,155,156,157",
+     "collapse": true,
+     "summary": "展開：加權目標價相對基準：輸入取高值，變動未達兩位數百分比的案例"
+    },
+    {
+     "type": "table",
+     "caption": "@Sens!A107",
+     "collapse": true,
+     "summary": "展開：全部案例的加權目標價相對基準（低案、高案）",
+     "head": [
+      "@Sens!A108",
+      "@Sens!B108",
+      "@Sens!C108"
+     ],
+     "rows": [
+      [
+       "@Sens!A109",
+       "@Sens!B109|sp1",
+       "@Sens!C109|sp1"
+      ],
+      [
+       "@Sens!A110",
+       "@Sens!B110|sp1",
+       "@Sens!C110|sp1"
+      ],
+      [
+       "@Sens!A111",
+       "@Sens!B111|sp1",
+       "@Sens!C111|sp1"
+      ],
+      [
+       "@Sens!A112",
+       "@Sens!B112|sp1",
+       "@Sens!C112|sp1"
+      ],
+      [
+       "@Sens!A113",
+       "@Sens!B113|sp1",
+       "@Sens!C113|sp1"
+      ],
+      [
+       "@Sens!A114",
+       "@Sens!B114|sp1",
+       "@Sens!C114|sp1"
+      ],
+      [
+       "@Sens!A115",
+       "@Sens!B115|sp1",
+       "@Sens!C115|sp1"
+      ],
+      [
+       "@Sens!A116",
+       "@Sens!B116|sp1",
+       "@Sens!C116|sp1"
+      ],
+      [
+       "@Sens!A117",
+       "@Sens!B117|sp1",
+       "@Sens!C117|sp1"
+      ],
+      [
+       "@Sens!A118",
+       "@Sens!B118|sp1",
+       "@Sens!C118|sp1"
+      ],
+      [
+       "@Sens!A119",
+       "@Sens!B119|sp1",
+       "@Sens!C119|sp1"
+      ],
+      [
+       "@Sens!A120",
+       "@Sens!B120|sp1",
+       "@Sens!C120|sp1"
+      ],
+      [
+       "@Sens!A121",
+       "@Sens!B121|sp1",
+       "@Sens!C121|sp1"
+      ],
+      [
+       "@Sens!A122",
+       "@Sens!B122|sp1",
+       "@Sens!C122|sp1"
+      ],
+      [
+       "@Sens!A123",
+       "@Sens!B123|sp1",
+       "@Sens!C123|sp1"
+      ],
+      [
+       "@Sens!A124",
+       "@Sens!B124|sp1",
+       "@Sens!C124|sp1"
+      ],
+      [
+       "@Sens!A125",
+       "@Sens!B125|sp1",
+       "@Sens!C125|sp1"
+      ],
+      [
+       "@Sens!A126",
+       "@Sens!B126|sp1",
+       "@Sens!C126|sp1"
+      ],
+      [
+       "@Sens!A127",
+       "@Sens!B127|sp1",
+       "@Sens!C127|sp1"
+      ],
+      [
+       "@Sens!A128",
+       "@Sens!B128|sp1",
+       "@Sens!C128|sp1"
+      ],
+      [
+       "@Sens!A129",
+       "@Sens!B129|sp1",
+       "@Sens!C129|sp1"
+      ],
+      [
+       "@Sens!A130",
+       "@Sens!B130|sp1",
+       "@Sens!C130|sp1"
+      ],
+      [
+       "@Sens!A131",
+       "@Sens!B131|sp1",
+       "@Sens!C131|sp1"
+      ],
+      [
+       "@Sens!A132",
+       "@Sens!B132|sp1",
+       "@Sens!C132|sp1"
+      ],
+      [
+       "@Sens!A133",
+       "@Sens!B133|sp1",
+       "@Sens!C133|sp1"
+      ],
+      [
+       "@Sens!A134",
+       "@Sens!B134|sp1",
+       "@Sens!C134|sp1"
+      ],
+      [
+       "@Sens!A135",
+       "@Sens!B135|sp1",
+       "@Sens!C135|sp1"
+      ],
+      [
+       "@Sens!A136",
+       "@Sens!B136|sp1",
+       "@Sens!C136|sp1"
+      ],
+      [
+       "@Sens!A137",
+       "@Sens!B137|sp1",
+       "@Sens!C137|sp1"
+      ],
+      [
+       "@Sens!A138",
+       "@Sens!B138|sp1",
+       "@Sens!C138|sp1"
+      ],
+      [
+       "@Sens!A139",
+       "@Sens!B139|sp1",
+       "@Sens!C139|sp1"
+      ],
+      [
+       "@Sens!A140",
+       "@Sens!B140|sp1",
+       "@Sens!C140|sp1"
+      ],
+      [
+       "@Sens!A141",
+       "@Sens!B141|sp1",
+       "@Sens!C141|sp1"
+      ],
+      [
+       "@Sens!A142",
+       "@Sens!B142|sp1",
+       "@Sens!C142|sp1"
+      ],
+      [
+       "@Sens!A143",
+       "@Sens!B143|sp1",
+       "@Sens!C143|sp1"
+      ],
+      [
+       "@Sens!A144",
+       "@Sens!B144|sp1",
+       "@Sens!C144|sp1"
+      ],
+      [
+       "@Sens!A145",
+       "@Sens!B145|sp1",
+       "@Sens!C145|sp1"
+      ],
+      [
+       "@Sens!A146",
+       "@Sens!B146|sp1",
+       "@Sens!C146|sp1"
+      ],
+      [
+       "@Sens!A147",
+       "@Sens!B147|sp1",
+       "@Sens!C147|sp1"
+      ],
+      [
+       "@Sens!A148",
+       "@Sens!B148|sp1",
+       "@Sens!C148|sp1"
+      ],
+      [
+       "@Sens!A149",
+       "@Sens!B149|sp1",
+       "@Sens!C149|sp1"
+      ],
+      [
+       "@Sens!A150",
+       "@Sens!B150|sp1",
+       "@Sens!C150|sp1"
+      ],
+      [
+       "@Sens!A151",
+       "@Sens!B151|sp1",
+       "@Sens!C151|sp1"
+      ],
+      [
+       "@Sens!A152",
+       "@Sens!B152|sp1",
+       "@Sens!C152|sp1"
+      ],
+      [
+       "@Sens!A153",
+       "@Sens!B153|sp1",
+       "@Sens!C153|sp1"
+      ],
+      [
+       "@Sens!A154",
+       "@Sens!B154|sp1",
+       "@Sens!C154|sp1"
+      ],
+      [
+       "@Sens!A155",
+       "@Sens!B155|sp1",
+       "@Sens!C155|sp1"
+      ],
+      [
+       "@Sens!A156",
+       "@Sens!B156|sp1",
+       "@Sens!C156|sp1"
+      ],
+      [
+       "@Sens!A157",
+       "@Sens!B157|sp1",
+       "@Sens!C157|sp1"
+      ],
+      [
+       "@Sens!A158",
+       "@Sens!B158|sp1",
+       "@Sens!C158|sp1"
+      ],
+      [
+       "@Sens!A159",
+       "@Sens!B159|sp1",
+       "@Sens!C159|sp1"
+      ],
+      [
+       "@Sens!A160",
+       "@Sens!B160|sp1",
+       "@Sens!C160|sp1"
+      ],
+      [
+       "@Sens!A161",
+       "@Sens!B161|sp1",
+       "@Sens!C161|sp1"
+      ],
+      [
+       "@Sens!A162",
+       "@Sens!B162|sp1",
+       "@Sens!C162|sp1"
+      ]
+     ]
+    },
+    {
+     "type": "tornado",
+     "title": "加權目標價相對基準的變動（變動達兩位數百分比的案例；一次改一個輸入，整本重算）",
+     "sheet": "Sens",
+     "rows": "4,9,10,11,12,19,20,49,51,52,53,54,59,65,66,67,68,71,92,93,94,96,97",
+     "label_col": "A",
+     "value_col": "E",
+     "fmt": "sp1",
+     "collapse": true,
+     "summary": "展開：對照：加權目標價相對基準（原圖，標籤為模型輸入名稱）"
+    },
+    {
+     "type": "tornado",
+     "collapse": true,
+     "summary": "展開：對照：加權目標價相對基準（原圖，標籤為模型輸入名稱）",
+     "title": "加權目標價相對基準的變動（未達兩位數百分比）",
+     "sheet": "Sens",
+     "rows": "5,6,7,8,13,14,15,16,17,18,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,47,48,50,55,56,57,58,60,61,62,69,70,72,73,74,75,76,77,86,87,88,89,90,91,95",
+     "label_col": "A",
+     "value_col": "E",
+     "fmt": "sp1"
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：全部案例",
+     "head": [
+      "驅動",
+      "設定",
+      "方向",
+      "加權目標價",
+      "相對基準"
+     ],
+     "rowgen": {
+      "sheet": "Sens",
+      "rows": "4-97",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "",
+       "",
+       "n2",
+       "sp1"
+      ]
+     }
+    },
+    {
+     "type": "kv",
+     "items": [
+      [
+       "@Sens!A99",
+       "@Sens!D99|n2"
+      ],
+      [
+       "@Sens!A100",
+       "@Sens!D100|n2"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "revdcf",
+   "title": "反向 DCF：現價隱含什麼",
+   "intro": "@RevDCF!A2",
+   "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "@RevDCF!A94"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@RevDCF!A95"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "現金流折現法（情境 B 路徑）：現價隱含值與模型基準",
+     "head": [
+      "項目",
+      "現價隱含",
+      "模型基準"
+     ],
+     "rows": [
+      [
+       "預測期營業利益率（FY2028–FY2032 統一一個值；模型欄為等效值，終值年權重大）",
+       "@RevDCF!B27|p1",
+       "@RevDCF!B26|p1"
+      ],
+      [
+       "營收規模（FY2028 起各年同乘的倍數）",
+       "@RevDCF!B32|n2",
+       "—"
+      ],
+      [
+       "FY2028 營收（十億美元）",
+       "@RevDCF!B33|n0",
+       "@RevDCF!B34|n0"
+      ],
+      [
+       "FY2028 營收年增率",
+       "@RevDCF!B35|p1",
+       "@RevDCF!B36|p1"
+      ],
+      [
+       "折現率（WACC）",
+       "@RevDCF!B80|p2",
+       "@RevDCF!B81|p2"
+      ],
+      [
+       "折現率反解結果",
+       "@RevDCF!B82",
+       ""
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "分部加總法：現價隱含的倍數與模型",
+     "head": [
+      "項目",
+      "現價隱含",
+      "模型",
+      "差距（現價隱含相對模型）"
+     ],
+     "rows": [
+      [
+       "@RevDCF!A88",
+       "@RevDCF!B88|n2",
+       "@RevDCF!C88|n2",
+       "@RevDCF!D88|sp1"
+      ],
+      [
+       "@RevDCF!A89",
+       "@RevDCF!B89|n0",
+       "@RevDCF!C89|n0",
+       "@RevDCF!D89|sp1"
+      ],
+      [
+       "@RevDCF!A90",
+       "@RevDCF!B90|n1",
+       "@RevDCF!C90|n1",
+       "@RevDCF!D90|sp1"
+      ],
+      [
+       "@RevDCF!A91",
+       "@RevDCF!B91|n2",
+       "@RevDCF!C91|n2",
+       "@RevDCF!D91|sp1"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "現金流折現法：現價隱含的企業價值與模型",
+     "head": [
+      "項目",
+      "值"
+     ],
+     "rows": [
+      [
+       "@RevDCF!A6",
+       "@RevDCF!B6|n2"
+      ],
+      [
+       "@RevDCF!A7",
+       "@RevDCF!B7|n2"
+      ],
+      [
+       "@RevDCF!A10",
+       "@RevDCF!B10|n0"
+      ],
+      [
+       "@RevDCF!A11",
+       "@RevDCF!B11|n0"
+      ],
+      [
+       "@RevDCF!A12",
+       "@RevDCF!B12|n2"
+      ],
+      [
+       "@RevDCF!A13",
+       "@RevDCF!B13|n2"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@RevDCF!A15",
+     "head": [
+      "@RevDCF!A15",
+      "@RevDCF!B15",
+      "@RevDCF!C15",
+      "@RevDCF!D15",
+      "@RevDCF!E15",
+      "@RevDCF!F15",
+      "@RevDCF!G15",
+      "@RevDCF!H15"
+     ],
+     "collapse": true,
+     "summary": "展開：情境 B 各年數字與反解係數（封閉解的計算過程）",
+     "rows": [
+      [
+       "@RevDCF!A16",
+       "@RevDCF!B16|n1",
+       "@RevDCF!C16|n1",
+       "@RevDCF!D16|n1",
+       "@RevDCF!E16|n1",
+       "@RevDCF!F16|n1",
+       "@RevDCF!G16|n1",
+       "@RevDCF!H16|n1"
+      ],
+      [
+       "@RevDCF!A17",
+       "@RevDCF!B17|n1",
+       "@RevDCF!C17|n1",
+       "@RevDCF!D17|n1",
+       "@RevDCF!E17|n1",
+       "@RevDCF!F17|n1",
+       "@RevDCF!G17|n1",
+       "@RevDCF!H17|n1"
+      ],
+      [
+       "@RevDCF!A18",
+       "@RevDCF!B18|p1",
+       "@RevDCF!C18|p1",
+       "@RevDCF!D18|p1",
+       "@RevDCF!E18|p1",
+       "@RevDCF!F18|p1",
+       "@RevDCF!G18|p1",
+       "@RevDCF!H18|p1"
+      ],
+      [
+       "@RevDCF!A19",
+       "@RevDCF!B19|n3",
+       "@RevDCF!C19|n3",
+       "@RevDCF!D19|n3",
+       "@RevDCF!E19|n3",
+       "@RevDCF!F19|n3",
+       "@RevDCF!G19|n3",
+       "@RevDCF!H19|n3"
+      ],
+      [
+       "@RevDCF!A20",
+       "@RevDCF!B20|n3",
+       "@RevDCF!C20|n3",
+       "@RevDCF!D20|n3",
+       "@RevDCF!E20|n3",
+       "@RevDCF!F20|n3",
+       "@RevDCF!G20|n3",
+       "@RevDCF!H20|n3"
+      ],
+      [
+       "@RevDCF!A21",
+       "@RevDCF!B21|n3",
+       "@RevDCF!C21|n3",
+       "@RevDCF!D21|n3",
+       "@RevDCF!E21|n3",
+       "@RevDCF!F21|n3",
+       "@RevDCF!G21|n3",
+       "@RevDCF!H21|n3"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pl",
+   "title": "損益（標準損益表）",
+   "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "@PL!A201"
+     ]
+    },
+    {
+     "type": "theme",
+     "title": "營收（十億美元）與毛利率、營業利益率、淨利率：FY2023A–FY2032E（情境 B）",
+     "x": "@PL!C203:L203",
+     "fmt": "n0",
+     "fmt_r": "p0",
+     "stack": true,
+     "pad": 1.6,
+     "bars": [
+      {
+       "name": [
+        "@PL!A204"
+       ],
+       "y": "@PL!C204:L204",
+       "color": "#6fc7cb"
+      }
+     ],
+     "lines": [
+      {
+       "name": [
+        "@PL!A208"
+       ],
+       "y": "@PL!C208:L208",
+       "axis": "r",
+       "color": "#0b7a80",
+       "labels": true
+      },
+      {
+       "name": [
+        "@PL!A211"
+       ],
+       "y": "@PL!C211:L211",
+       "axis": "r",
+       "color": "#c29a2b"
+      },
+      {
+       "name": [
+        "@PL!A216"
+       ],
+       "y": "@PL!C216:L216",
+       "axis": "r",
+       "color": "#6f6bae",
+       "dash": true
+      }
+     ],
+     "caption": "長條＝營收；三條線＝毛利率、營業利益率、淨利率（右軸，GAAP）。預測期毛利率是營業成本占成本費用合計之比固定的結果（模型未分列營業成本），營業利益率才是模型推導量；FY2023A 含大額減損，FY2026E 起 AI 折舊上升壓低營業利益率。"
+    },
+    {
+     "type": "table",
+     "caption": "標準損益表（GAAP；十億美元，EPS 為美元）：FY2023A–FY2025A 實績、FY2026E–FY2032E 情境 B（基準）、最右欄為 2026 年前三季累計實績",
+     "head": [
+      "@PL!A203",
+      "@PL!C203",
+      "@PL!D203",
+      "@PL!E203",
+      "@PL!F203",
+      "@PL!G203",
+      "@PL!H203",
+      "@PL!I203",
+      "@PL!J203",
+      "@PL!K203",
+      "@PL!L203",
+      "@PL!M203"
+     ],
+     "rows": [
+      [
+       "@PL!A204",
+       "@PL!C204|n1",
+       "@PL!D204|n1",
+       "@PL!E204|n1",
+       "@PL!F204|n1",
+       "@PL!G204|n1",
+       "@PL!H204|n1",
+       "@PL!I204|n1",
+       "@PL!J204|n1",
+       "@PL!K204|n1",
+       "@PL!L204|n1",
+       "@PL!M204|n1"
+      ],
+      [
+       "@PL!A205",
+       "@PL!C205|p1",
+       "@PL!D205|p1",
+       "@PL!E205|p1",
+       "@PL!F205|p1",
+       "@PL!G205|p1",
+       "@PL!H205|p1",
+       "@PL!I205|p1",
+       "@PL!J205|p1",
+       "@PL!K205|p1",
+       "@PL!L205|p1",
+       "@PL!M205|p1"
+      ],
+      [
+       "@PL!A206",
+       "@PL!C206|n1",
+       "@PL!D206|n1",
+       "@PL!E206|n1",
+       "@PL!F206|n1",
+       "@PL!G206|n1",
+       "@PL!H206|n1",
+       "@PL!I206|n1",
+       "@PL!J206|n1",
+       "@PL!K206|n1",
+       "@PL!L206|n1",
+       "@PL!M206|n1"
+      ],
+      [
+       "@PL!A207",
+       "@PL!C207|n1",
+       "@PL!D207|n1",
+       "@PL!E207|n1",
+       "@PL!F207|n1",
+       "@PL!G207|n1",
+       "@PL!H207|n1",
+       "@PL!I207|n1",
+       "@PL!J207|n1",
+       "@PL!K207|n1",
+       "@PL!L207|n1",
+       "@PL!M207|n1"
+      ],
+      [
+       "@PL!A208",
+       "@PL!C208|p1",
+       "@PL!D208|p1",
+       "@PL!E208|p1",
+       "@PL!F208|p1",
+       "@PL!G208|p1",
+       "@PL!H208|p1",
+       "@PL!I208|p1",
+       "@PL!J208|p1",
+       "@PL!K208|p1",
+       "@PL!L208|p1",
+       "@PL!M208|p1"
+      ],
+      [
+       "@PL!A209",
+       "@PL!C209|n1",
+       "@PL!D209|n1",
+       "@PL!E209|n1",
+       "@PL!F209|n1",
+       "@PL!G209|n1",
+       "@PL!H209|n1",
+       "@PL!I209|n1",
+       "@PL!J209|n1",
+       "@PL!K209|n1",
+       "@PL!L209|n1",
+       "@PL!M209|n1"
+      ],
+      [
+       "@PL!A210",
+       "@PL!C210|n1",
+       "@PL!D210|n1",
+       "@PL!E210|n1",
+       "@PL!F210|n1",
+       "@PL!G210|n1",
+       "@PL!H210|n1",
+       "@PL!I210|n1",
+       "@PL!J210|n1",
+       "@PL!K210|n1",
+       "@PL!L210|n1",
+       "@PL!M210|n1"
+      ],
+      [
+       "@PL!A211",
+       "@PL!C211|p1",
+       "@PL!D211|p1",
+       "@PL!E211|p1",
+       "@PL!F211|p1",
+       "@PL!G211|p1",
+       "@PL!H211|p1",
+       "@PL!I211|p1",
+       "@PL!J211|p1",
+       "@PL!K211|p1",
+       "@PL!L211|p1",
+       "@PL!M211|p1"
+      ],
+      [
+       "@PL!A212",
+       "@PL!C212|n1",
+       "@PL!D212|n1",
+       "@PL!E212|n1",
+       "@PL!F212|n1",
+       "@PL!G212|n1",
+       "@PL!H212|n1",
+       "@PL!I212|n1",
+       "@PL!J212|n1",
+       "@PL!K212|n1",
+       "@PL!L212|n1",
+       "@PL!M212|n1"
+      ],
+      [
+       "@PL!A213",
+       "@PL!C213|n1",
+       "@PL!D213|n1",
+       "@PL!E213|n1",
+       "@PL!F213|n1",
+       "@PL!G213|n1",
+       "@PL!H213|n1",
+       "@PL!I213|n1",
+       "@PL!J213|n1",
+       "@PL!K213|n1",
+       "@PL!L213|n1",
+       "@PL!M213|n1"
+      ],
+      [
+       "@PL!A214",
+       "@PL!C214|n1",
+       "@PL!D214|n1",
+       "@PL!E214|n1",
+       "@PL!F214|n1",
+       "@PL!G214|n1",
+       "@PL!H214|n1",
+       "@PL!I214|n1",
+       "@PL!J214|n1",
+       "@PL!K214|n1",
+       "@PL!L214|n1",
+       "@PL!M214|n1"
+      ],
+      [
+       "@PL!A215",
+       "@PL!C215|n1",
+       "@PL!D215|n1",
+       "@PL!E215|n1",
+       "@PL!F215|n1",
+       "@PL!G215|n1",
+       "@PL!H215|n1",
+       "@PL!I215|n1",
+       "@PL!J215|n1",
+       "@PL!K215|n1",
+       "@PL!L215|n1",
+       "@PL!M215|n1"
+      ],
+      [
+       "@PL!A216",
+       "@PL!C216|p1",
+       "@PL!D216|p1",
+       "@PL!E216|p1",
+       "@PL!F216|p1",
+       "@PL!G216|p1",
+       "@PL!H216|p1",
+       "@PL!I216|p1",
+       "@PL!J216|p1",
+       "@PL!K216|p1",
+       "@PL!L216|p1",
+       "@PL!M216|p1"
+      ],
+      [
+       "@PL!A217",
+       "@PL!C217|n2",
+       "@PL!D217|n2",
+       "@PL!E217|n2",
+       "@PL!F217|n2",
+       "@PL!G217|n2",
+       "@PL!H217|n2",
+       "@PL!I217|n2",
+       "@PL!J217|n2",
+       "@PL!K217|n2",
+       "@PL!L217|n2",
+       "@PL!M217|n2"
+      ],
+      [
+       "@PL!A218",
+       "@PL!C218|n2",
+       "@PL!D218|n2",
+       "@PL!E218|n2",
+       "@PL!F218|n2",
+       "@PL!G218|n2",
+       "@PL!H218|n2",
+       "@PL!I218|n2",
+       "@PL!J218|n2",
+       "@PL!K218|n2",
+       "@PL!L218|n2",
+       "@PL!M218|n2"
+      ],
+      {
+       "sub": "@PL!A219"
+      },
+      [
+       "@PL!A220",
+       "@PL!C220|p1",
+       "@PL!D220|p1",
+       "@PL!E220|p1",
+       "@PL!F220|p1",
+       "@PL!G220|p1",
+       "@PL!H220|p1",
+       "@PL!I220|p1",
+       "@PL!J220|p1",
+       "@PL!K220|p1",
+       "@PL!L220|p1",
+       "@PL!M220|p1"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@PL!A202"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "核對（應為零）",
+     "collapse": true,
+     "summary": "展開：標準損益表核對列",
+     "head": [
+      "@PL!A203",
+      "@PL!C203",
+      "@PL!D203",
+      "@PL!E203",
+      "@PL!F203",
+      "@PL!G203",
+      "@PL!H203",
+      "@PL!I203",
+      "@PL!J203",
+      "@PL!K203",
+      "@PL!L203",
+      "@PL!M203"
+     ],
+     "rows": [
+      [
+       "@PL!A222",
+       "@PL!C222|n1",
+       "@PL!D222|n1",
+       "@PL!E222|n1",
+       "@PL!F222|n1",
+       "@PL!G222|n1",
+       "@PL!H222|n1",
+       "@PL!I222|n1",
+       "@PL!J222|n1",
+       "@PL!K222|n1",
+       "@PL!L222|n1",
+       "@PL!M222|n1"
+      ],
+      [
+       "@PL!A223",
+       "@PL!C223|n1",
+       "@PL!D223|n1",
+       "@PL!E223|n1",
+       "@PL!F223|n1",
+       "@PL!G223|n1",
+       "@PL!H223|n1",
+       "@PL!I223|n1",
+       "@PL!J223|n1",
+       "@PL!K223|n1",
+       "@PL!L223|n1",
+       "@PL!M223|n1"
+      ],
+      [
+       "@PL!A224",
+       "@PL!C224|n1",
+       "@PL!D224|n1",
+       "@PL!E224|n1",
+       "@PL!F224|n1",
+       "@PL!G224|n1",
+       "@PL!H224|n1",
+       "@PL!I224|n1",
+       "@PL!J224|n1",
+       "@PL!K224|n1",
+       "@PL!L224|n1",
+       "@PL!M224|n1"
+      ],
+      [
+       "@PL!A225",
+       "@PL!C225|n1",
+       "@PL!D225|n1",
+       "@PL!E225|n1",
+       "@PL!F225|n1",
+       "@PL!G225|n1",
+       "@PL!H225|n1",
+       "@PL!I225|n1",
+       "@PL!J225|n1",
+       "@PL!K225|n1",
+       "@PL!L225|n1",
+       "@PL!M225|n1"
+      ],
+      [
+       "@PL!A226",
+       "@PL!C226|n1",
+       "@PL!D226|n1",
+       "@PL!E226|n1",
+       "@PL!F226|n1",
+       "@PL!G226|n1",
+       "@PL!H226|n1",
+       "@PL!I226|n1",
+       "@PL!J226|n1",
+       "@PL!K226|n1",
+       "@PL!L226|n1",
+       "@PL!M226|n1"
+      ],
+      [
+       "@PL!A227",
+       "@PL!C227|n1",
+       "@PL!D227|n1",
+       "@PL!E227|n1",
+       "@PL!F227|n1",
+       "@PL!G227|n1",
+       "@PL!H227|n1",
+       "@PL!I227|n1",
+       "@PL!J227|n1",
+       "@PL!K227|n1",
+       "@PL!L227|n1",
+       "@PL!M227|n1"
+      ],
+      [
+       "@PL!A228",
+       "@PL!C228|n1",
+       "@PL!D228|n1",
+       "@PL!E228|n1",
+       "@PL!F228|n1",
+       "@PL!G228|n1",
+       "@PL!H228|n1",
+       "@PL!I228|n1",
+       "@PL!J228|n1",
+       "@PL!K228|n1",
+       "@PL!L228|n1",
+       "@PL!M228|n1"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@PL!A2"
+     ],
+     "collapse": true,
+     "summary": "展開：三情境損益頁說明"
+    },
+    {
+     "type": "pl",
+     "years": "@PL!G14:M14",
+     "metrics": [
+      {
+       "name": "合併營收（十億美元）",
+       "fmt": "n0",
+       "rows": {
+        "A": "@PL!G26:M26",
+        "B": "@PL!G88:M88",
+        "C": "@PL!G150:M150"
+       },
+       "chart": true
+      },
+      {
+       "name": "SI 分部營收（十億美元）",
+       "fmt": "n0",
+       "rows": {
+        "A": "@PL!G25:M25",
+        "B": "@PL!G87:M87",
+        "C": "@PL!G149:M149"
+       },
+       "chart": true
+      },
+      {
+       "name": "SI 對外雲端服務（十億美元）",
+       "fmt": "n0",
+       "rows": {
+        "A": "@PL!G22:M22",
+        "B": "@PL!G84:M84",
+        "C": "@PL!G146:M146"
+       }
+      },
+      {
+       "name": "Connectivity 分部營收（十億美元）",
+       "fmt": "n0",
+       "rows": {
+        "A": "@PL!G20:M20",
+        "B": "@PL!G82:M82",
+        "C": "@PL!G144:M144"
+       }
+      },
+      {
+       "name": "合併營業利益率",
+       "fmt": "p1",
+       "rows": {
+        "A": "@PL!G58:M58",
+        "B": "@PL!G120:M120",
+        "C": "@PL!G182:M182"
+       },
+       "chart": true,
+       "ymin": "auto"
+      },
+      {
+       "name": "EPS（GAAP 稀釋，美元）",
+       "fmt": "n2",
+       "rows": {
+        "A": "@PL!G72:M72",
+        "B": "@PL!G134:M134",
+        "C": "@PL!G196:M196"
+       },
+       "chart": true,
+       "ymin": "auto"
+      },
+      {
+       "name": "自由現金流（收支關卡口徑，十億美元）",
+       "fmt": "n0",
+       "rows": {
+        "A": "@CF!G31:M31",
+        "B": "@CF!G63:M63",
+        "C": "@CF!G95:M95"
+       }
+      }
+     ],
+     "collapse": true,
+     "summary": "展開：三情境損益（A／B／C 並列，含折線）"
+    },
+    {
+     "type": "table",
+     "caption": "分部對帳（三情境 × 全部年度取絕對值最大者，應為零）",
+     "head": [
+      "項目",
+      "@PL!C5",
+      "@PL!D5",
+      "@PL!E5",
+      "@PL!F5",
+      "@PL!G5",
+      "@PL!H5",
+      "@PL!I5",
+      "@PL!J5",
+      "@PL!K5",
+      "@PL!L5",
+      "@PL!M5"
+     ],
+     "rowgen": {
+      "sheet": "PL",
+      "rows": "6-11",
+      "cols": [
+       "A",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G",
+       "H",
+       "I",
+       "J",
+       "K",
+       "L",
+       "M"
+      ],
+      "fmts": [
+       "",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3"
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：情境 B 的分部、子列與合併損益（含實績年度）",
+     "head": [
+      "項目",
+      "@PL!C76",
+      "@PL!D76",
+      "@PL!E76",
+      "@PL!F76",
+      "@PL!G76",
+      "@PL!H76",
+      "@PL!I76",
+      "@PL!J76",
+      "@PL!K76",
+      "@PL!L76",
+      "@PL!M76"
+     ],
+     "rowgen": {
+      "sheet": "PL",
+      "rows": "77,78,79,80,81,82,83,84,85,86,87,88,96,97,100,101,105,111,112,113,114,116,120,128,134",
+      "cols": [
+       "A",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G",
+       "H",
+       "I",
+       "J",
+       "K",
+       "L",
+       "M"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1"
+      ],
+      "row_fmt": {
+       "120": {
+        "C": "p1",
+        "D": "p1",
+        "E": "p1",
+        "F": "p1",
+        "G": "p1",
+        "H": "p1",
+        "I": "p1",
+        "J": "p1",
+        "K": "p1",
+        "L": "p1",
+        "M": "p1"
+       },
+       "134": {
+        "C": "n2",
+        "D": "n2",
+        "E": "n2",
+        "F": "n2",
+        "G": "n2",
+        "H": "n2",
+        "I": "n2",
+        "J": "n2",
+        "K": "n2",
+        "L": "n2",
+        "M": "n2"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "drivers",
+   "title": "驅動因子：分部營收推導",
+   "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "@README!A71"
+     ]
+    },
+    {
+     "type": "theme",
+     "title": "營收推導堆疊（情境 B，十億美元）：發射、Starlink 消費與企業政府、SI 對外雲端服務、Grok／Cursor／X 與廣告",
+     "x": "@PL!G14:M14",
+     "fmt": "n0",
+     "fmt_r": "p0",
+     "stack": true,
+     "pad": 1.2,
+     "total": "@PL!G88:M88",
+     "bars": [
+      {
+       "name": [
+        "@PL!A79"
+       ],
+       "y": "@PL!G79:M79",
+       "color": "#6fa8dc"
+      },
+      {
+       "name": [
+        "@PL!A80"
+       ],
+       "y": "@PL!G80:M80",
+       "color": "#0b7a80"
+      },
+      {
+       "name": [
+        "@PL!A81"
+       ],
+       "y": "@PL!G81:M81",
+       "color": "#45b0b5"
+      },
+      {
+       "name": [
+        "@PL!A84"
+       ],
+       "y": "@PL!G84:M84",
+       "color": "#c29a2b"
+      },
+      {
+       "name": [
+        "@PL!A85"
+       ],
+       "y": "@PL!G85:M85",
+       "color": "#e69138"
+      },
+      {
+       "name": [
+        "@PL!A83"
+       ],
+       "y": "@PL!G83:M83",
+       "color": "#999999"
+      }
+     ],
+     "caption": "堆疊＝Space、Consumer、Enterprise & Government、SI 對外雲端服務、Grok／Cursor／X 訂閱與資料授權、Advertising；頂端數字＝合併營收。SI 對外雲端服務是營收規模與目標價最大的驅動。"
+    },
     {
      "type": "table",
      "caption": "情境驅動（三情境並排，進加權目標價；In 頁 J 節）",
@@ -2296,213 +4377,45 @@
    ]
   },
   {
-   "id": "pl",
-   "title": "三情境損益",
-   "intro": "@PL!A2",
+   "id": "funding",
+   "title": "資金：收支關卡與融資",
    "blocks": [
     {
-     "type": "pl",
-     "years": "@PL!G14:M14",
-     "metrics": [
+     "type": "theme",
+     "title": "情境 B 營運現金流、資本支出與自由現金流（十億美元）：FY2026E–FY2032E",
+     "x": "@CF!G46:M46",
+     "fmt": "n0",
+     "fmt_r": "n0",
+     "stack": false,
+     "pad": 1.2,
+     "bars": [
       {
-       "name": "合併營收（十億美元）",
-       "fmt": "n0",
-       "rows": {
-        "A": "@PL!G26:M26",
-        "B": "@PL!G88:M88",
-        "C": "@PL!G150:M150"
-       },
-       "chart": true
+       "name": [
+        "@CF!A52"
+       ],
+       "y": "@CF!G52:M52",
+       "color": "#0b7a80"
       },
       {
-       "name": "SI 分部營收（十億美元）",
-       "fmt": "n0",
-       "rows": {
-        "A": "@PL!G25:M25",
-        "B": "@PL!G87:M87",
-        "C": "@PL!G149:M149"
-       },
-       "chart": true
-      },
-      {
-       "name": "SI 對外雲端服務（十億美元）",
-       "fmt": "n0",
-       "rows": {
-        "A": "@PL!G22:M22",
-        "B": "@PL!G84:M84",
-        "C": "@PL!G146:M146"
-       }
-      },
-      {
-       "name": "Connectivity 分部營收（十億美元）",
-       "fmt": "n0",
-       "rows": {
-        "A": "@PL!G20:M20",
-        "B": "@PL!G82:M82",
-        "C": "@PL!G144:M144"
-       }
-      },
-      {
-       "name": "合併營業利益率",
-       "fmt": "p1",
-       "rows": {
-        "A": "@PL!G58:M58",
-        "B": "@PL!G120:M120",
-        "C": "@PL!G182:M182"
-       },
-       "chart": true,
-       "ymin": "auto"
-      },
-      {
-       "name": "EPS（GAAP 稀釋，美元）",
-       "fmt": "n2",
-       "rows": {
-        "A": "@PL!G72:M72",
-        "B": "@PL!G134:M134",
-        "C": "@PL!G196:M196"
-       },
-       "chart": true,
-       "ymin": "auto"
-      },
-      {
-       "name": "自由現金流（收支關卡口徑，十億美元）",
-       "fmt": "n0",
-       "rows": {
-        "A": "@CF!G31:M31",
-        "B": "@CF!G63:M63",
-        "C": "@CF!G95:M95"
-       }
+       "name": [
+        "@CF!A56"
+       ],
+       "y": "@CF!G56:M56",
+       "color": "#c29a2b"
       }
-     ]
-    },
-    {
-     "type": "table",
-     "collapse": true,
-     "summary": "展開：情境 B 的分部、子列與合併損益（含實績年度）",
-     "head": [
-      "項目",
-      "@PL!C76",
-      "@PL!D76",
-      "@PL!E76",
-      "@PL!F76",
-      "@PL!G76",
-      "@PL!H76",
-      "@PL!I76",
-      "@PL!J76",
-      "@PL!K76",
-      "@PL!L76",
-      "@PL!M76"
      ],
-     "rowgen": {
-      "sheet": "PL",
-      "rows": "77,78,79,80,81,82,83,84,85,86,87,88,96,97,100,101,105,111,112,113,114,116,120,128,134",
-      "cols": [
-       "A",
-       "C",
-       "D",
-       "E",
-       "F",
-       "G",
-       "H",
-       "I",
-       "J",
-       "K",
-       "L",
-       "M"
-      ],
-      "fmts": [
-       "",
-       "n1",
-       "n1",
-       "n1",
-       "n1",
-       "n1",
-       "n1",
-       "n1",
-       "n1",
-       "n1",
-       "n1",
-       "n1"
-      ],
-      "row_fmt": {
-       "120": {
-        "C": "p1",
-        "D": "p1",
-        "E": "p1",
-        "F": "p1",
-        "G": "p1",
-        "H": "p1",
-        "I": "p1",
-        "J": "p1",
-        "K": "p1",
-        "L": "p1",
-        "M": "p1"
-       },
-       "134": {
-        "C": "n2",
-        "D": "n2",
-        "E": "n2",
-        "F": "n2",
-        "G": "n2",
-        "H": "n2",
-        "I": "n2",
-        "J": "n2",
-        "K": "n2",
-        "L": "n2",
-        "M": "n2"
-       }
+     "lines": [
+      {
+       "name": [
+        "@CF!A63"
+       ],
+       "y": "@CF!G63:M63",
+       "axis": "l",
+       "color": "#3b3838",
+       "labels": true
       }
-     }
-    },
-    {
-     "type": "table",
-     "caption": "分部對帳（三情境 × 全部年度取絕對值最大者，應為零）",
-     "head": [
-      "項目",
-      "@PL!C5",
-      "@PL!D5",
-      "@PL!E5",
-      "@PL!F5",
-      "@PL!G5",
-      "@PL!H5",
-      "@PL!I5",
-      "@PL!J5",
-      "@PL!K5",
-      "@PL!L5",
-      "@PL!M5"
      ],
-     "rowgen": {
-      "sheet": "PL",
-      "rows": "6-11",
-      "cols": [
-       "A",
-       "C",
-       "D",
-       "E",
-       "F",
-       "G",
-       "H",
-       "I",
-       "J",
-       "K",
-       "L",
-       "M"
-      ],
-      "fmts": [
-       "",
-       "n3",
-       "n3",
-       "n3",
-       "n3",
-       "n3",
-       "n3",
-       "n3",
-       "n3",
-       "n3",
-       "n3",
-       "n3"
-      ]
-     }
+     "caption": "長條＝營運現金流與現金資本支出；折線＝自由現金流（收支關卡口徑，扣融資租賃本金與以其他融資取得之不動產設備）。資本支出高於營運現金流的缺口由融資補足（見下方現金流與融資表）。"
     },
     {
      "type": "table",
@@ -2579,713 +4492,6 @@
        "n1",
        "n1",
        "n1"
-      ]
-     }
-    }
-   ]
-  },
-  {
-   "id": "valuation",
-   "title": "估值",
-   "intro": "@Val!A1",
-   "blocks": [
-    {
-     "type": "bars",
-     "title": "目標價與現價",
-     "fmt": "n0",
-     "items": [
-      {
-       "label": "@Val!A6",
-       "value": "@Val!B6",
-       "series": 0
-      },
-      {
-       "label": "@Val!A7",
-       "value": "@Val!B7",
-       "series": 1
-      },
-      {
-       "label": "@Val!A8",
-       "value": "@Val!B8",
-       "series": 2
-      },
-      {
-       "label": "@Val!A24",
-       "value": "@Val!B24",
-       "series": 1
-      },
-      {
-       "label": "@Val!A10",
-       "value": "@Val!B10",
-       "series": 0
-      }
-     ],
-     "ref": {
-      "label": "@Val!A9",
-      "value": "@Val!B9"
-     }
-    },
-    {
-     "type": "table",
-     "caption": "結論（主要項目）",
-     "head": [
-      "項目",
-      "數值",
-      "對照",
-      "對照",
-      "說明"
-     ],
-     "rows": [
-      [
-       "@Val!A8|",
-       "@Val!B8|n2",
-       "@Val!C8|n2",
-       "@Val!D8|n2",
-       "@Val!E8|"
-      ],
-      [
-       "@Val!A6|",
-       "@Val!B6|n2",
-       "@Val!C6|n2",
-       "@Val!D6|n2",
-       "@Val!E6|"
-      ],
-      [
-       "@Val!A7|",
-       "@Val!B7|n2",
-       "@Val!C7|n2",
-       "@Val!D7|n2",
-       "@Val!E7|"
-      ],
-      [
-       "@Val!A9|",
-       "@Val!B9|n2",
-       "@Val!C9|n2",
-       "@Val!D9|n2",
-       "@Val!E9|"
-      ],
-      [
-       "@Val!A11|",
-       "@Val!B11|sp1",
-       "@Val!C11|sp1",
-       "@Val!D11|sp1",
-       "@Val!E11|"
-      ],
-      [
-       "@Val!A12|",
-       "@Val!B12|sp1",
-       "@Val!C12|sp1",
-       "@Val!D12|sp1",
-       "@Val!E12|"
-      ],
-      [
-       "@Val!A16|",
-       "@Val!B16|",
-       "@Val!C16|n2",
-       "@Val!D16|n2",
-       "@Val!E16|"
-      ],
-      [
-       "@Val!A20|",
-       "@Val!B20|n2",
-       "@Val!C20|n2",
-       "@Val!D20|n2",
-       "@Val!E20|"
-      ],
-      [
-       "@Val!A10|",
-       "@Val!B10|n2",
-       "@Val!C10|n2",
-       "@Val!D10|n2",
-       "@Val!E10|"
-      ]
-     ]
-    },
-    {
-     "type": "table",
-     "collapse": true,
-     "summary": "展開：結論的其他項目（價格帶、讀法一／二、核心問題比值、收支關卡、檢查列）",
-     "head": [
-      "項目",
-      "數值",
-      "對照",
-      "對照",
-      "說明"
-     ],
-     "rows": [
-      [
-       "@Val!A13|",
-       "@Val!B13|n2",
-       "@Val!C13|n2",
-       "@Val!D13|n2",
-       "@Val!E13|"
-      ],
-      [
-       "@Val!A14|",
-       "@Val!B14|n2",
-       "@Val!C14|n2",
-       "@Val!D14|n2",
-       "@Val!E14|"
-      ],
-      [
-       "@Val!A15|",
-       "@Val!B15|",
-       "@Val!C15|n2",
-       "@Val!D15|n2",
-       "@Val!E15|"
-      ],
-      [
-       "@Val!A17|",
-       "@Val!B17|n2",
-       "@Val!C17|n2",
-       "@Val!D17|n2",
-       "@Val!E17|"
-      ],
-      [
-       "@Val!A18|",
-       "@Val!B18|n2",
-       "@Val!C18|n2",
-       "@Val!D18|n2",
-       "@Val!E18|"
-      ],
-      [
-       "@Val!A19|",
-       "@Val!B19|n2",
-       "@Val!C19|n2",
-       "@Val!D19|n2",
-       "@Val!E19|"
-      ],
-      [
-       "@Val!A21|",
-       "@Val!B21|sp1",
-       "@Val!C21|sp1",
-       "@Val!D21|sp1",
-       "@Val!E21|"
-      ],
-      [
-       "@Val!A22|",
-       "@Val!B22|sp1",
-       "@Val!C22|sp1",
-       "@Val!D22|sp1",
-       "@Val!E22|"
-      ],
-      [
-       "@Val!A23|",
-       "@Val!B23|n2",
-       "@Val!C23|sp1",
-       "@Val!D23|",
-       "@Val!E23|"
-      ],
-      [
-       "@Val!A24|",
-       "@Val!B24|n2",
-       "@Val!C24|sp1",
-       "@Val!D24|",
-       "@Val!E24|"
-      ],
-      [
-       "@Val!A25|",
-       "@Val!B25|n2",
-       "@Val!C25|n2",
-       "@Val!D25|n2",
-       "@Val!E25|"
-      ],
-      [
-       "@Val!A26|",
-       "@Val!B26|n2",
-       "@Val!C26|n2",
-       "@Val!D26|n2",
-       "@Val!E26|"
-      ],
-      [
-       "@Val!A27|",
-       "@Val!B27|n2",
-       "@Val!C27|n2",
-       "@Val!D27|n2",
-       "@Val!E27|"
-      ],
-      [
-       "@Val!A28|",
-       "@Val!B28|n1",
-       "@Val!C28|n1",
-       "@Val!D28|n1",
-       "@Val!E28|"
-      ],
-      [
-       "@Val!A29|",
-       "@Val!B29|",
-       "@Val!C29|n2",
-       "@Val!D29|n2",
-       "@Val!E29|"
-      ],
-      [
-       "@Val!A30|",
-       "@Val!B30|n2",
-       "@Val!C30|n2",
-       "@Val!D30|n2",
-       "@Val!E30|"
-      ],
-      [
-       "@Val!A31|",
-       "@Val!B31|n3",
-       "@Val!C31|n2",
-       "@Val!D31|n2",
-       "@Val!E31|"
-      ]
-     ]
-    },
-    {
-     "type": "table",
-     "caption": "DCF 折現率（主要項目）",
-     "head": [
-      "項目",
-      "數值"
-     ],
-     "rows": [
-      [
-       "@Val!A39",
-       "@Val!B39|p2"
-      ],
-      [
-       "@Val!A37",
-       "@Val!B37|p2"
-      ],
-      [
-       "@Val!A38",
-       "@Val!B38|p2"
-      ],
-      [
-       "@Val!A40",
-       "@Val!B40|p2"
-      ],
-      [
-       "@In!B38",
-       "@In!E38|p1"
-      ]
-     ]
-    },
-    {
-     "type": "table",
-     "collapse": true,
-     "summary": "展開：折現率的組成（股權市值、負債、無風險利率、β、股權風險溢酬、稅前債務成本）",
-     "head": [
-      "項目",
-      "數值"
-     ],
-     "rows": [
-      [
-       "@Val!A35",
-       "@Val!B35|n0"
-      ],
-      [
-       "@Val!A36",
-       "@Val!B36|n1"
-      ],
-      [
-       "@In!B32",
-       "@In!E32|p2"
-      ],
-      [
-       "@In!B33",
-       "@In!E33|n2"
-      ],
-      [
-       "@In!B34",
-       "@In!E34|p1"
-      ],
-      [
-       "@In!B35",
-       "@In!E35|p2"
-      ],
-      [
-       "@In!B36",
-       "@In!E36|p0"
-      ]
-     ]
-    },
-    {
-     "type": "table",
-     "caption": "DCF 彙總與 SI 對外出租模組（三情境；主要項目）",
-     "head": [
-      "項目",
-      "情境 A",
-      "情境 B",
-      "情境 C"
-     ],
-     "rows": [
-      [
-       "@Val!A117|",
-       "@Val!B117|n1",
-       "@Val!C117|n1",
-       "@Val!D117|n1"
-      ],
-      [
-       "@Val!A119|",
-       "@Val!B119|n1",
-       "@Val!C119|n1",
-       "@Val!D119|n1"
-      ],
-      [
-       "@Val!A124|",
-       "@Val!B124|n1",
-       "@Val!C124|n1",
-       "@Val!D124|n1"
-      ],
-      [
-       "@Val!A126|",
-       "@Val!B126|n1",
-       "@Val!C126|n1",
-       "@Val!D126|n1"
-      ],
-      [
-       "@Val!A132|",
-       "@Val!B132|n1",
-       "@Val!C132|n1",
-       "@Val!D132|n1"
-      ],
-      [
-       "@Val!A135|",
-       "@Val!B135|n1",
-       "@Val!C135|n1",
-       "@Val!D135|n1"
-      ]
-     ]
-    },
-    {
-     "type": "table",
-     "collapse": true,
-     "summary": "展開：DCF 彙總的其他項目（讀法一／二、自用 AI 影子效益、股數等）",
-     "head": [
-      "項目",
-      "情境 A",
-      "情境 B",
-      "情境 C"
-     ],
-     "rows": [
-      [
-       "@Val!A118|",
-       "@Val!B118|n1",
-       "@Val!C118|n1",
-       "@Val!D118|n1"
-      ],
-      [
-       "@Val!A120|",
-       "@Val!B120|n1",
-       "@Val!C120|n1",
-       "@Val!D120|n1"
-      ],
-      [
-       "@Val!A121|",
-       "@Val!B121|n1",
-       "@Val!C121|n1",
-       "@Val!D121|n1"
-      ],
-      [
-       "@Val!A122|",
-       "@Val!B122|n1",
-       "@Val!C122|n1",
-       "@Val!D122|n1"
-      ],
-      [
-       "@Val!A123|",
-       "@Val!B123|n1",
-       "@Val!C123|n1",
-       "@Val!D123|n1"
-      ],
-      [
-       "@Val!A125|",
-       "@Val!B125|p1",
-       "@Val!C125|p1",
-       "@Val!D125|p1"
-      ],
-      [
-       "@Val!A127|",
-       "@Val!B127|n1",
-       "@Val!C127|n1",
-       "@Val!D127|n1"
-      ],
-      [
-       "@Val!A128|",
-       "@Val!B128|n1",
-       "@Val!C128|n1",
-       "@Val!D128|n1"
-      ],
-      [
-       "@Val!A129|",
-       "@Val!B129|n3",
-       "@Val!C129|n3",
-       "@Val!D129|n3"
-      ],
-      [
-       "@Val!A130|",
-       "@Val!B130|n1",
-       "@Val!C130|n1",
-       "@Val!D130|n1"
-      ],
-      [
-       "@Val!A131|",
-       "@Val!B131|n1",
-       "@Val!C131|n1",
-       "@Val!D131|n1"
-      ],
-      [
-       "@Val!A133|",
-       "@Val!B133|n1",
-       "@Val!C133|n1",
-       "@Val!D133|n1"
-      ],
-      [
-       "@Val!A134|",
-       "@Val!B134|n1",
-       "@Val!C134|n1",
-       "@Val!D134|n1"
-      ]
-     ]
-    },
-    {
-     "type": "table",
-     "caption": "分部加總（主要項目；目標時點 NTM 分部調整後 EBITDA × 同業倍數，Space 為營收 × EV／營收）",
-     "head": [
-      "分部",
-      "情境 A",
-      "情境 B",
-      "情境 C",
-      "倍數",
-      "EV：A",
-      "EV：B",
-      "EV：C"
-     ],
-     "rows": [
-      [
-       "@Val!A143|",
-       "@Val!B143|n1",
-       "@Val!C143|n1",
-       "@Val!D143|n1",
-       "@Val!E143|",
-       "@Val!F143|n0",
-       "@Val!G143|n0",
-       "@Val!H143|n0"
-      ],
-      [
-       "@Val!A144|",
-       "@Val!B144|n1",
-       "@Val!C144|n1",
-       "@Val!D144|n1",
-       "@Val!E144|",
-       "@Val!F144|n0",
-       "@Val!G144|n0",
-       "@Val!H144|n0"
-      ],
-      [
-       "@Val!A145|",
-       "@Val!B145|n1",
-       "@Val!C145|n1",
-       "@Val!D145|n1",
-       "@Val!E145|",
-       "@Val!F145|n0",
-       "@Val!G145|n0",
-       "@Val!H145|n0"
-      ],
-      [
-       "@Val!A146|",
-       "@Val!B146|n1",
-       "@Val!C146|n1",
-       "@Val!D146|n1",
-       "@Val!E146|",
-       "@Val!F146|n0",
-       "@Val!G146|n0",
-       "@Val!H146|n0"
-      ],
-      [
-       "@Val!A158|",
-       "@Val!B158|n1",
-       "@Val!C158|n1",
-       "@Val!D158|n1",
-       "@Val!E158|",
-       "@Val!F158|n0",
-       "@Val!G158|n0",
-       "@Val!H158|n0"
-      ]
-     ]
-    },
-    {
-     "type": "table",
-     "collapse": true,
-     "summary": "展開：分部加總的其他項目（EV 小計、淨現金、股數、隱含倍數）",
-     "head": [
-      "分部",
-      "情境 A",
-      "情境 B",
-      "情境 C",
-      "倍數",
-      "EV：A",
-      "EV：B",
-      "EV：C"
-     ],
-     "rows": [
-      [
-       "@Val!A147|",
-       "@Val!B147|n1",
-       "@Val!C147|n1",
-       "@Val!D147|n1",
-       "@Val!E147|",
-       "@Val!F147|n0",
-       "@Val!G147|n0",
-       "@Val!H147|n0"
-      ],
-      [
-       "@Val!A148|",
-       "@Val!B148|n1",
-       "@Val!C148|n1",
-       "@Val!D148|n1",
-       "@Val!E148|",
-       "@Val!F148|n0",
-       "@Val!G148|n0",
-       "@Val!H148|n0"
-      ],
-      [
-       "@Val!A149|",
-       "@Val!B149|n1",
-       "@Val!C149|n1",
-       "@Val!D149|n1",
-       "@Val!E149|",
-       "@Val!F149|n0",
-       "@Val!G149|n0",
-       "@Val!H149|n0"
-      ],
-      [
-       "@Val!A150|",
-       "@Val!B150|n1",
-       "@Val!C150|n1",
-       "@Val!D150|n1",
-       "@Val!E150|",
-       "@Val!F150|n0",
-       "@Val!G150|n0",
-       "@Val!H150|n0"
-      ],
-      [
-       "@Val!A151|",
-       "@Val!B151|n1",
-       "@Val!C151|n1",
-       "@Val!D151|n1",
-       "@Val!E151|",
-       "@Val!F151|n0",
-       "@Val!G151|n0",
-       "@Val!H151|n0"
-      ],
-      [
-       "@Val!A152|",
-       "@Val!B152|n1",
-       "@Val!C152|n1",
-       "@Val!D152|n1",
-       "@Val!E152|",
-       "@Val!F152|n0",
-       "@Val!G152|n0",
-       "@Val!H152|n0"
-      ],
-      [
-       "@Val!A153|",
-       "@Val!B153|n1",
-       "@Val!C153|n1",
-       "@Val!D153|n1",
-       "@Val!E153|",
-       "@Val!F153|n0",
-       "@Val!G153|n0",
-       "@Val!H153|n0"
-      ],
-      [
-       "@Val!A154|",
-       "@Val!B154|n1",
-       "@Val!C154|n1",
-       "@Val!D154|n1",
-       "@Val!E154|",
-       "@Val!F154|n0",
-       "@Val!G154|n0",
-       "@Val!H154|n0"
-      ],
-      [
-       "@Val!A155|",
-       "@Val!B155|n3",
-       "@Val!C155|n3",
-       "@Val!D155|n3",
-       "@Val!E155|",
-       "@Val!F155|n0",
-       "@Val!G155|n0",
-       "@Val!H155|n0"
-      ],
-      [
-       "@Val!A156|",
-       "@Val!B156|n1",
-       "@Val!C156|n1",
-       "@Val!D156|n1",
-       "@Val!E156|",
-       "@Val!F156|n0",
-       "@Val!G156|n0",
-       "@Val!H156|n0"
-      ],
-      [
-       "@Val!A157|",
-       "@Val!B157|n1",
-       "@Val!C157|n1",
-       "@Val!D157|n1",
-       "@Val!E157|",
-       "@Val!F157|n0",
-       "@Val!G157|n0",
-       "@Val!H157|n0"
-      ],
-      [
-       "@Val!A159|",
-       "@Val!B159|n1",
-       "@Val!C159|n1",
-       "@Val!D159|n1",
-       "@Val!E159|",
-       "@Val!F159|n0",
-       "@Val!G159|n0",
-       "@Val!H159|n0"
-      ],
-      [
-       "@Val!A160|",
-       "@Val!B160|x1",
-       "@Val!C160|x1",
-       "@Val!D160|x1",
-       "@Val!E160|",
-       "@Val!F160|n0",
-       "@Val!G160|n0",
-       "@Val!H160|n0"
-      ],
-      [
-       "@Val!A161|",
-       "@Val!B161|x1",
-       "@Val!C161|n1",
-       "@Val!D161|n1",
-       "@Val!E161|",
-       "@Val!F161|n0",
-       "@Val!G161|n0",
-       "@Val!H161|n0"
-      ]
-     ]
-    },
-    {
-     "type": "table",
-     "collapse": true,
-     "summary": "展開：同業倍數中位數",
-     "head": [
-      "同業組",
-      "中位數",
-      "家數"
-     ],
-     "rowgen": {
-      "sheet": "Val",
-      "rows": "139-140",
-      "cols": [
-       "A",
-       "B",
-       "C"
-      ],
-      "fmts": [
-       "",
-       "x1",
-       "n0"
       ]
      }
     }
@@ -4170,74 +5376,3275 @@
        "@Recon!G112"
       ]
      ]
-    }
-   ]
-  },
-  {
-   "id": "sens",
-   "title": "敏感度",
-   "intro": "@Sens!A1",
-   "blocks": [
-    {
-     "type": "tornado",
-     "title": "加權目標價相對基準的變動（變動達兩位數百分比的案例；一次改一個輸入，整本重算）",
-     "sheet": "Sens",
-     "rows": "4,9,10,11,12,19,20,49,51,52,53,54,59,65,66,67,68,71,92,93,94,96,97",
-     "label_col": "A",
-     "value_col": "E",
-     "fmt": "sp1"
     },
     {
-     "type": "tornado",
-     "collapse": true,
-     "summary": "展開：變動未達兩位數百分比的案例",
-     "title": "加權目標價相對基準的變動（未達兩位數百分比）",
-     "sheet": "Sens",
-     "rows": "5,6,7,8,13,14,15,16,17,18,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,47,48,50,55,56,57,58,60,61,62,69,70,72,73,74,75,76,77,86,87,88,89,90,91,95",
-     "label_col": "A",
-     "value_col": "E",
-     "fmt": "sp1"
+     "type": "h3",
+     "text": "三層協調：讀取層級與實績對帳"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!D471"
+     ]
     },
     {
      "type": "table",
-     "collapse": true,
-     "summary": "展開：全部案例",
+     "caption": "名目算力（公司揭露 vs Wattonomics 隱含 2025 年底上線 GW；GW）",
      "head": [
-      "驅動",
-      "設定",
-      "方向",
-      "加權目標價",
-      "相對基準"
+      "讀數",
+      "期間／口徑",
+      "公司實績",
+      "層級隱含",
+      "差距",
+      "狀態／判定"
      ],
-     "rowgen": {
-      "sheet": "Sens",
-      "rows": "4-97",
-      "cols": [
-       "A",
-       "B",
-       "C",
-       "D",
-       "E"
+     "rows": [
+      [
+       "@Coord!A449",
+       "@Coord!B449",
+       "@Coord!D449|n2",
+       "@Coord!E449|n2",
+       "@Coord!F449|sp1",
+       "@Coord!G449"
       ],
-      "fmts": [
+      [
+       "@Coord!A450",
+       "@Coord!B450",
+       "@Coord!D450|n2",
+       "@Coord!E450|n2",
+       "@Coord!F450|sp1",
+       "@Coord!G450"
+      ],
+      [
+       "@Coord!A451",
+       "@Coord!B451",
        "",
        "",
        "",
-       "n2",
-       "sp1"
+       "@Coord!G451"
+      ],
+      [
+       "@Coord!A452",
+       "@Coord!B452",
+       "@Coord!D452|n2",
+       "@Coord!E452|n2",
+       "@Coord!F452|sp1",
+       "@Coord!G452"
       ]
-     }
+     ]
     },
     {
-     "type": "kv",
-     "items": [
+     "type": "note",
+     "parts": [
+      "口徑：",
+      "@Coord!B453"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "資本支出（公司已公布實績 vs Wattonomics 隱含值；US$B；層級值同源，參考）",
+     "head": [
+      "讀數",
+      "期間／口徑",
+      "公司實績",
+      "層級隱含",
+      "差距",
+      "狀態／判定"
+     ],
+     "rows": [
       [
-       "@Sens!A99",
-       "@Sens!D99|n2"
+       "@Coord!A456",
+       "@Coord!B456",
+       "@Coord!D456|n1",
+       "@Coord!E456|n1",
+       "@Coord!F456|sp1",
+       "@Coord!G456"
       ],
       [
-       "@Sens!A100",
-       "@Sens!D100|n2"
+       "@Coord!A457",
+       "@Coord!B457",
+       "@Coord!D457|n1",
+       "@Coord!E457|n1",
+       "@Coord!F457|sp1",
+       "@Coord!G457"
+      ],
+      [
+       "@Coord!A460",
+       "@Coord!B460",
+       "@Coord!D460|n1",
+       "@Coord!E460|n1",
+       "@Coord!F460|sp1",
+       "@Coord!G460"
+      ],
+      [
+       "@Coord!A458",
+       "@Coord!B458",
+       "",
+       "",
+       "",
+       "@Coord!G458"
+      ],
+      [
+       "@Coord!A459",
+       "",
+       "",
+       "",
+       "",
+       "@Coord!G459"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "沒有可比公司實績的項目與並列讀法（參考；不判定）",
+     "head": [
+      "項目",
+      "期間／口徑",
+      "公司值",
+      "層級隱含",
+      "差距",
+      "狀態"
+     ],
+     "rows": [
+      [
+       "@Coord!A463",
+       "@Coord!B463",
+       "@Coord!D463|n2",
+       "@Coord!E463|n2",
+       "@Coord!F463|sp1",
+       "@Coord!G463"
+      ],
+      [
+       "@Coord!A465",
+       "@Coord!B465",
+       "@Coord!D465|n2",
+       "@Coord!E465|n2",
+       "@Coord!F465|sp1",
+       "@Coord!G465"
+      ],
+      [
+       "@Coord!A466",
+       "@Coord!B466",
+       "@Coord!D466|n2",
+       "@Coord!E466|n2",
+       "@Coord!F466|sp1",
+       "@Coord!G466"
+      ],
+      [
+       "@Coord!A467",
+       "@Coord!B467",
+       "@Coord!D467|n2",
+       "@Coord!E467|n2",
+       "@Coord!F467|sp1",
+       "@Coord!G467"
+      ],
+      [
+       "@Coord!A462",
+       "@Coord!B462",
+       "",
+       "",
+       "",
+       "@Coord!G462"
+      ],
+      [
+       "@Coord!A464",
+       "@Coord!B464",
+       "",
+       "",
+       "",
+       "@Coord!G464"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "展開：實績對帳的輸入、出處與證據等級",
+     "collapse": true,
+     "summary": "展開：實績對帳的輸入、出處與證據等級",
+     "head": [
+      "項目",
+      "期間／口徑",
+      "公司實績口徑與出處",
+      "公司實績等級",
+      "層級口徑與出處",
+      "層級等級"
+     ],
+     "rows": [
+      [
+       "@Coord!A449",
+       "@Coord!B449",
+       "@Coord!H449",
+       "@Coord!I449",
+       "@Coord!J449",
+       "@Coord!K449"
+      ],
+      [
+       "@Coord!A450",
+       "@Coord!B450",
+       "@Coord!H450",
+       "@Coord!I450",
+       "@Coord!J450",
+       "@Coord!K450"
+      ],
+      [
+       "@Coord!A451",
+       "@Coord!B451",
+       "@Coord!H451",
+       "@Coord!I451",
+       "@Coord!J451",
+       "@Coord!K451"
+      ],
+      [
+       "@Coord!A452",
+       "@Coord!B452",
+       "@Coord!H452",
+       "@Coord!I452",
+       "@Coord!J452",
+       "@Coord!K452"
+      ],
+      [
+       "@Coord!A455",
+       "@Coord!B455",
+       "@Coord!H455",
+       "@Coord!I455",
+       "@Coord!J455",
+       "@Coord!K455"
+      ],
+      [
+       "@Coord!A456",
+       "@Coord!B456",
+       "@Coord!H456",
+       "@Coord!I456",
+       "@Coord!J456",
+       "@Coord!K456"
+      ],
+      [
+       "@Coord!A457",
+       "@Coord!B457",
+       "@Coord!H457",
+       "@Coord!I457",
+       "@Coord!J457",
+       "@Coord!K457"
+      ],
+      [
+       "@Coord!A460",
+       "@Coord!B460",
+       "@Coord!H460",
+       "@Coord!I460",
+       "@Coord!J460",
+       "@Coord!K460"
+      ],
+      [
+       "@Coord!A462",
+       "@Coord!B462",
+       "@Coord!H462",
+       "@Coord!I462",
+       "@Coord!J462",
+       "@Coord!K462"
+      ],
+      [
+       "@Coord!A463",
+       "@Coord!B463",
+       "@Coord!H463",
+       "@Coord!I463",
+       "@Coord!J463",
+       "@Coord!K463"
+      ],
+      [
+       "@Coord!A464",
+       "@Coord!B464",
+       "@Coord!H464",
+       "@Coord!I464",
+       "@Coord!J464",
+       "@Coord!K464"
+      ],
+      [
+       "@Coord!A465",
+       "@Coord!B465",
+       "@Coord!H465",
+       "@Coord!I465",
+       "@Coord!J465",
+       "@Coord!K465"
+      ],
+      [
+       "@Coord!A466",
+       "@Coord!B466",
+       "@Coord!H466",
+       "@Coord!I466",
+       "@Coord!J466",
+       "@Coord!K466"
+      ],
+      [
+       "@Coord!A467",
+       "@Coord!B467",
+       "@Coord!H467",
+       "@Coord!I467",
+       "@Coord!J467",
+       "@Coord!K467"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!B472"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!B473"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!B474"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "追公式：層級值是否讀公司實績或目標"
+    },
+    {
+     "type": "table",
+     "caption": "@Coord!A40",
+     "head": [
+      "輸出名稱 ← 公式鏈",
+      "同源判定",
+      "讀到什麼"
+     ],
+     "rows": [
+      [
+       "@Coord!A42",
+       "@Coord!G42",
+       "@Coord!H42"
+      ],
+      [
+       "@Coord!A43",
+       "@Coord!G43",
+       "@Coord!H43"
+      ],
+      [
+       "@Coord!A44",
+       "@Coord!G44",
+       "@Coord!H44"
+      ],
+      [
+       "@Coord!A45",
+       "@Coord!G45",
+       "@Coord!H45"
+      ],
+      [
+       "@Coord!A46",
+       "@Coord!G46",
+       "@Coord!H46"
+      ],
+      [
+       "@Coord!A47",
+       "@Coord!G47",
+       "@Coord!H47"
+      ],
+      [
+       "@Coord!A48",
+       "@Coord!G48",
+       "@Coord!H48"
+      ],
+      [
+       "@Coord!A49",
+       "@Coord!G49",
+       "@Coord!H49"
+      ],
+      [
+       "@Coord!A50",
+       "@Coord!G50",
+       "@Coord!H50"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!A51"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "展開：追公式傾印（腳本輸出：每格公式與值）",
+     "collapse": true,
+     "summary": "展開：追公式傾印（每格公式與值；腳本 trace_wattonomics.py 的輸出）",
+     "head": [
+      "儲存格（縮排＝依賴深度）",
+      "值",
+      "狀態",
+      "標記",
+      "公式"
+     ],
+     "rows": [
+      [
+       "@Coord!A53",
+       "@Coord!D53|n3",
+       "@Coord!B53",
+       "@Coord!G53",
+       "@Coord!H53"
+      ],
+      [
+       "@Coord!A54",
+       "@Coord!D54|n3",
+       "@Coord!B54",
+       "@Coord!G54",
+       "@Coord!H54"
+      ],
+      [
+       "@Coord!A55",
+       "@Coord!D55|n3",
+       "@Coord!B55",
+       "@Coord!G55",
+       "@Coord!H55"
+      ],
+      [
+       "@Coord!A56",
+       "@Coord!D56|n3",
+       "@Coord!B56",
+       "@Coord!G56",
+       "@Coord!H56"
+      ],
+      [
+       "@Coord!A57",
+       "@Coord!D57|n3",
+       "@Coord!B57",
+       "@Coord!G57",
+       "@Coord!H57"
+      ],
+      [
+       "@Coord!A58",
+       "@Coord!D58|n3",
+       "@Coord!B58",
+       "@Coord!G58",
+       "@Coord!H58"
+      ],
+      [
+       "@Coord!A59",
+       "@Coord!D59|n3",
+       "@Coord!B59",
+       "@Coord!G59",
+       "@Coord!H59"
+      ],
+      [
+       "@Coord!A60",
+       "@Coord!D60|n3",
+       "@Coord!B60",
+       "@Coord!G60",
+       "@Coord!H60"
+      ],
+      [
+       "@Coord!A61",
+       "@Coord!D61|n3",
+       "@Coord!B61",
+       "@Coord!G61",
+       "@Coord!H61"
+      ],
+      [
+       "@Coord!A62",
+       "@Coord!D62|n3",
+       "@Coord!B62",
+       "@Coord!G62",
+       "@Coord!H62"
+      ],
+      [
+       "@Coord!A63",
+       "@Coord!D63|n3",
+       "@Coord!B63",
+       "@Coord!G63",
+       "@Coord!H63"
+      ],
+      [
+       "@Coord!A64",
+       "@Coord!D64|n3",
+       "@Coord!B64",
+       "@Coord!G64",
+       "@Coord!H64"
+      ],
+      [
+       "@Coord!A65",
+       "@Coord!D65|n3",
+       "@Coord!B65",
+       "@Coord!G65",
+       "@Coord!H65"
+      ],
+      [
+       "@Coord!A66",
+       "@Coord!D66|n3",
+       "@Coord!B66",
+       "@Coord!G66",
+       "@Coord!H66"
+      ],
+      [
+       "@Coord!A67",
+       "@Coord!D67|n3",
+       "@Coord!B67",
+       "@Coord!G67",
+       "@Coord!H67"
+      ],
+      [
+       "@Coord!A68",
+       "@Coord!D68|n3",
+       "@Coord!B68",
+       "@Coord!G68",
+       "@Coord!H68"
+      ],
+      [
+       "@Coord!A69",
+       "@Coord!D69|n3",
+       "@Coord!B69",
+       "@Coord!G69",
+       "@Coord!H69"
+      ],
+      [
+       "@Coord!A70",
+       "@Coord!D70|n3",
+       "@Coord!B70",
+       "@Coord!G70",
+       "@Coord!H70"
+      ],
+      [
+       "@Coord!A71",
+       "@Coord!D71|n3",
+       "@Coord!B71",
+       "@Coord!G71",
+       "@Coord!H71"
+      ],
+      [
+       "@Coord!A72",
+       "@Coord!D72|n3",
+       "@Coord!B72",
+       "@Coord!G72",
+       "@Coord!H72"
+      ],
+      [
+       "@Coord!A73",
+       "@Coord!D73|n3",
+       "@Coord!B73",
+       "@Coord!G73",
+       "@Coord!H73"
+      ],
+      [
+       "@Coord!A74",
+       "@Coord!D74|n3",
+       "@Coord!B74",
+       "@Coord!G74",
+       "@Coord!H74"
+      ],
+      [
+       "@Coord!A75",
+       "@Coord!D75|n3",
+       "@Coord!B75",
+       "@Coord!G75",
+       "@Coord!H75"
+      ],
+      [
+       "@Coord!A76",
+       "@Coord!D76|n3",
+       "@Coord!B76",
+       "@Coord!G76",
+       "@Coord!H76"
+      ],
+      [
+       "@Coord!A77",
+       "@Coord!D77|n3",
+       "@Coord!B77",
+       "@Coord!G77",
+       "@Coord!H77"
+      ],
+      [
+       "@Coord!A78",
+       "@Coord!D78|n3",
+       "@Coord!B78",
+       "@Coord!G78",
+       "@Coord!H78"
+      ],
+      [
+       "@Coord!A79",
+       "@Coord!D79|n3",
+       "@Coord!B79",
+       "@Coord!G79",
+       "@Coord!H79"
+      ],
+      [
+       "@Coord!A80",
+       "@Coord!D80|n3",
+       "@Coord!B80",
+       "@Coord!G80",
+       "@Coord!H80"
+      ],
+      [
+       "@Coord!A81",
+       "@Coord!D81|n3",
+       "@Coord!B81",
+       "@Coord!G81",
+       "@Coord!H81"
+      ],
+      [
+       "@Coord!A82",
+       "@Coord!D82|n3",
+       "@Coord!B82",
+       "@Coord!G82",
+       "@Coord!H82"
+      ],
+      [
+       "@Coord!A83",
+       "@Coord!D83|n3",
+       "@Coord!B83",
+       "@Coord!G83",
+       "@Coord!H83"
+      ],
+      [
+       "@Coord!A84",
+       "@Coord!D84|n3",
+       "@Coord!B84",
+       "@Coord!G84",
+       "@Coord!H84"
+      ],
+      [
+       "@Coord!A85",
+       "@Coord!D85|n3",
+       "@Coord!B85",
+       "@Coord!G85",
+       "@Coord!H85"
+      ],
+      [
+       "@Coord!A86",
+       "@Coord!D86|n3",
+       "@Coord!B86",
+       "@Coord!G86",
+       "@Coord!H86"
+      ],
+      [
+       "@Coord!A87",
+       "@Coord!D87|n3",
+       "@Coord!B87",
+       "@Coord!G87",
+       "@Coord!H87"
+      ],
+      [
+       "@Coord!A88",
+       "@Coord!D88|n3",
+       "@Coord!B88",
+       "@Coord!G88",
+       "@Coord!H88"
+      ],
+      [
+       "@Coord!A89",
+       "@Coord!D89|n3",
+       "@Coord!B89",
+       "@Coord!G89",
+       "@Coord!H89"
+      ],
+      [
+       "@Coord!A90",
+       "@Coord!D90|n3",
+       "@Coord!B90",
+       "@Coord!G90",
+       "@Coord!H90"
+      ],
+      [
+       "@Coord!A91",
+       "@Coord!D91|n3",
+       "@Coord!B91",
+       "@Coord!G91",
+       "@Coord!H91"
+      ],
+      [
+       "@Coord!A92",
+       "@Coord!D92|n3",
+       "@Coord!B92",
+       "@Coord!G92",
+       "@Coord!H92"
+      ],
+      [
+       "@Coord!A93",
+       "@Coord!D93|n3",
+       "@Coord!B93",
+       "@Coord!G93",
+       "@Coord!H93"
+      ],
+      [
+       "@Coord!A94",
+       "@Coord!D94|n3",
+       "@Coord!B94",
+       "@Coord!G94",
+       "@Coord!H94"
+      ],
+      [
+       "@Coord!A95",
+       "@Coord!D95|n3",
+       "@Coord!B95",
+       "@Coord!G95",
+       "@Coord!H95"
+      ],
+      [
+       "@Coord!A96",
+       "@Coord!D96|n3",
+       "@Coord!B96",
+       "@Coord!G96",
+       "@Coord!H96"
+      ],
+      [
+       "@Coord!A97",
+       "@Coord!D97|n3",
+       "@Coord!B97",
+       "@Coord!G97",
+       "@Coord!H97"
+      ],
+      [
+       "@Coord!A98",
+       "@Coord!D98|n3",
+       "@Coord!B98",
+       "@Coord!G98",
+       "@Coord!H98"
+      ],
+      [
+       "@Coord!A99",
+       "@Coord!D99|n3",
+       "@Coord!B99",
+       "@Coord!G99",
+       "@Coord!H99"
+      ],
+      [
+       "@Coord!A100",
+       "@Coord!D100|n3",
+       "@Coord!B100",
+       "@Coord!G100",
+       "@Coord!H100"
+      ],
+      [
+       "@Coord!A101",
+       "@Coord!D101|n3",
+       "@Coord!B101",
+       "@Coord!G101",
+       "@Coord!H101"
+      ],
+      [
+       "@Coord!A102",
+       "@Coord!D102|n3",
+       "@Coord!B102",
+       "@Coord!G102",
+       "@Coord!H102"
+      ],
+      [
+       "@Coord!A103",
+       "@Coord!D103|n3",
+       "@Coord!B103",
+       "@Coord!G103",
+       "@Coord!H103"
+      ],
+      [
+       "@Coord!A104",
+       "@Coord!D104|n3",
+       "@Coord!B104",
+       "@Coord!G104",
+       "@Coord!H104"
+      ],
+      [
+       "@Coord!A105",
+       "@Coord!D105|n3",
+       "@Coord!B105",
+       "@Coord!G105",
+       "@Coord!H105"
+      ],
+      [
+       "@Coord!A106",
+       "@Coord!D106|n3",
+       "@Coord!B106",
+       "@Coord!G106",
+       "@Coord!H106"
+      ],
+      [
+       "@Coord!A107",
+       "@Coord!D107|n3",
+       "@Coord!B107",
+       "@Coord!G107",
+       "@Coord!H107"
+      ],
+      [
+       "@Coord!A108",
+       "@Coord!D108|n3",
+       "@Coord!B108",
+       "@Coord!G108",
+       "@Coord!H108"
+      ],
+      [
+       "@Coord!A109",
+       "@Coord!D109|n3",
+       "@Coord!B109",
+       "@Coord!G109",
+       "@Coord!H109"
+      ],
+      [
+       "@Coord!A110",
+       "@Coord!D110|n3",
+       "@Coord!B110",
+       "@Coord!G110",
+       "@Coord!H110"
+      ],
+      [
+       "@Coord!A111",
+       "@Coord!D111|n3",
+       "@Coord!B111",
+       "@Coord!G111",
+       "@Coord!H111"
+      ],
+      [
+       "@Coord!A112",
+       "@Coord!D112|n3",
+       "@Coord!B112",
+       "@Coord!G112",
+       "@Coord!H112"
+      ],
+      [
+       "@Coord!A113",
+       "@Coord!D113|n3",
+       "@Coord!B113",
+       "@Coord!G113",
+       "@Coord!H113"
+      ],
+      [
+       "@Coord!A114",
+       "@Coord!D114|n3",
+       "@Coord!B114",
+       "@Coord!G114",
+       "@Coord!H114"
+      ],
+      [
+       "@Coord!A115",
+       "@Coord!D115|n3",
+       "@Coord!B115",
+       "@Coord!G115",
+       "@Coord!H115"
+      ],
+      [
+       "@Coord!A116",
+       "@Coord!D116|n3",
+       "@Coord!B116",
+       "@Coord!G116",
+       "@Coord!H116"
+      ],
+      [
+       "@Coord!A117",
+       "@Coord!D117|n3",
+       "@Coord!B117",
+       "@Coord!G117",
+       "@Coord!H117"
+      ],
+      [
+       "@Coord!A118",
+       "@Coord!D118|n3",
+       "@Coord!B118",
+       "@Coord!G118",
+       "@Coord!H118"
+      ],
+      [
+       "@Coord!A119",
+       "@Coord!D119|n3",
+       "@Coord!B119",
+       "@Coord!G119",
+       "@Coord!H119"
+      ],
+      [
+       "@Coord!A120",
+       "@Coord!D120|n3",
+       "@Coord!B120",
+       "@Coord!G120",
+       "@Coord!H120"
+      ],
+      [
+       "@Coord!A121",
+       "@Coord!D121|n3",
+       "@Coord!B121",
+       "@Coord!G121",
+       "@Coord!H121"
+      ],
+      [
+       "@Coord!A122",
+       "@Coord!D122|n3",
+       "@Coord!B122",
+       "@Coord!G122",
+       "@Coord!H122"
+      ],
+      [
+       "@Coord!A123",
+       "@Coord!D123|n3",
+       "@Coord!B123",
+       "@Coord!G123",
+       "@Coord!H123"
+      ],
+      [
+       "@Coord!A124",
+       "@Coord!D124|n3",
+       "@Coord!B124",
+       "@Coord!G124",
+       "@Coord!H124"
+      ],
+      [
+       "@Coord!A125",
+       "@Coord!D125|n3",
+       "@Coord!B125",
+       "@Coord!G125",
+       "@Coord!H125"
+      ],
+      [
+       "@Coord!A126",
+       "@Coord!D126|n3",
+       "@Coord!B126",
+       "@Coord!G126",
+       "@Coord!H126"
+      ],
+      [
+       "@Coord!A127",
+       "@Coord!D127|n3",
+       "@Coord!B127",
+       "@Coord!G127",
+       "@Coord!H127"
+      ],
+      [
+       "@Coord!A128",
+       "@Coord!D128|n3",
+       "@Coord!B128",
+       "@Coord!G128",
+       "@Coord!H128"
+      ],
+      [
+       "@Coord!A129",
+       "@Coord!D129|n3",
+       "@Coord!B129",
+       "@Coord!G129",
+       "@Coord!H129"
+      ],
+      [
+       "@Coord!A130",
+       "@Coord!D130|n3",
+       "@Coord!B130",
+       "@Coord!G130",
+       "@Coord!H130"
+      ],
+      [
+       "@Coord!A131",
+       "@Coord!D131|n3",
+       "@Coord!B131",
+       "@Coord!G131",
+       "@Coord!H131"
+      ],
+      [
+       "@Coord!A132",
+       "@Coord!D132|n3",
+       "@Coord!B132",
+       "@Coord!G132",
+       "@Coord!H132"
+      ],
+      [
+       "@Coord!A133",
+       "@Coord!D133|n3",
+       "@Coord!B133",
+       "@Coord!G133",
+       "@Coord!H133"
+      ],
+      [
+       "@Coord!A134",
+       "@Coord!D134|n3",
+       "@Coord!B134",
+       "@Coord!G134",
+       "@Coord!H134"
+      ],
+      [
+       "@Coord!A135",
+       "@Coord!D135|n3",
+       "@Coord!B135",
+       "@Coord!G135",
+       "@Coord!H135"
+      ],
+      [
+       "@Coord!A136",
+       "@Coord!D136|n3",
+       "@Coord!B136",
+       "@Coord!G136",
+       "@Coord!H136"
+      ],
+      [
+       "@Coord!A137",
+       "@Coord!D137|n3",
+       "@Coord!B137",
+       "@Coord!G137",
+       "@Coord!H137"
+      ],
+      [
+       "@Coord!A138",
+       "@Coord!D138|n3",
+       "@Coord!B138",
+       "@Coord!G138",
+       "@Coord!H138"
+      ],
+      [
+       "@Coord!A139",
+       "@Coord!D139|n3",
+       "@Coord!B139",
+       "@Coord!G139",
+       "@Coord!H139"
+      ],
+      [
+       "@Coord!A140",
+       "@Coord!D140|n3",
+       "@Coord!B140",
+       "@Coord!G140",
+       "@Coord!H140"
+      ],
+      [
+       "@Coord!A141",
+       "@Coord!D141|n3",
+       "@Coord!B141",
+       "@Coord!G141",
+       "@Coord!H141"
+      ],
+      [
+       "@Coord!A142",
+       "@Coord!D142|n3",
+       "@Coord!B142",
+       "@Coord!G142",
+       "@Coord!H142"
+      ],
+      [
+       "@Coord!A143",
+       "@Coord!D143|n3",
+       "@Coord!B143",
+       "@Coord!G143",
+       "@Coord!H143"
+      ],
+      [
+       "@Coord!A144",
+       "@Coord!D144|n3",
+       "@Coord!B144",
+       "@Coord!G144",
+       "@Coord!H144"
+      ],
+      [
+       "@Coord!A145",
+       "@Coord!D145|n3",
+       "@Coord!B145",
+       "@Coord!G145",
+       "@Coord!H145"
+      ],
+      [
+       "@Coord!A146",
+       "@Coord!D146|n3",
+       "@Coord!B146",
+       "@Coord!G146",
+       "@Coord!H146"
+      ],
+      [
+       "@Coord!A147",
+       "@Coord!D147|n3",
+       "@Coord!B147",
+       "@Coord!G147",
+       "@Coord!H147"
+      ],
+      [
+       "@Coord!A148",
+       "@Coord!D148|n3",
+       "@Coord!B148",
+       "@Coord!G148",
+       "@Coord!H148"
+      ],
+      [
+       "@Coord!A149",
+       "@Coord!D149|n3",
+       "@Coord!B149",
+       "@Coord!G149",
+       "@Coord!H149"
+      ],
+      [
+       "@Coord!A150",
+       "@Coord!D150|n3",
+       "@Coord!B150",
+       "@Coord!G150",
+       "@Coord!H150"
+      ],
+      [
+       "@Coord!A151",
+       "@Coord!D151|n3",
+       "@Coord!B151",
+       "@Coord!G151",
+       "@Coord!H151"
+      ],
+      [
+       "@Coord!A152",
+       "@Coord!D152|n3",
+       "@Coord!B152",
+       "@Coord!G152",
+       "@Coord!H152"
+      ],
+      [
+       "@Coord!A153",
+       "@Coord!D153|n3",
+       "@Coord!B153",
+       "@Coord!G153",
+       "@Coord!H153"
+      ],
+      [
+       "@Coord!A154",
+       "@Coord!D154|n3",
+       "@Coord!B154",
+       "@Coord!G154",
+       "@Coord!H154"
+      ],
+      [
+       "@Coord!A155",
+       "@Coord!D155|n3",
+       "@Coord!B155",
+       "@Coord!G155",
+       "@Coord!H155"
+      ],
+      [
+       "@Coord!A156",
+       "@Coord!D156|n3",
+       "@Coord!B156",
+       "@Coord!G156",
+       "@Coord!H156"
+      ],
+      [
+       "@Coord!A157",
+       "@Coord!D157|n3",
+       "@Coord!B157",
+       "@Coord!G157",
+       "@Coord!H157"
+      ],
+      [
+       "@Coord!A158",
+       "@Coord!D158|n3",
+       "@Coord!B158",
+       "@Coord!G158",
+       "@Coord!H158"
+      ],
+      [
+       "@Coord!A159",
+       "@Coord!D159|n3",
+       "@Coord!B159",
+       "@Coord!G159",
+       "@Coord!H159"
+      ],
+      [
+       "@Coord!A160",
+       "@Coord!D160|n3",
+       "@Coord!B160",
+       "@Coord!G160",
+       "@Coord!H160"
+      ],
+      [
+       "@Coord!A161",
+       "@Coord!D161|n3",
+       "@Coord!B161",
+       "@Coord!G161",
+       "@Coord!H161"
+      ],
+      [
+       "@Coord!A162",
+       "@Coord!D162|n3",
+       "@Coord!B162",
+       "@Coord!G162",
+       "@Coord!H162"
+      ],
+      [
+       "@Coord!A163",
+       "@Coord!D163|n3",
+       "@Coord!B163",
+       "@Coord!G163",
+       "@Coord!H163"
+      ],
+      [
+       "@Coord!A164",
+       "@Coord!D164|n3",
+       "@Coord!B164",
+       "@Coord!G164",
+       "@Coord!H164"
+      ],
+      [
+       "@Coord!A165",
+       "@Coord!D165|n3",
+       "@Coord!B165",
+       "@Coord!G165",
+       "@Coord!H165"
+      ],
+      [
+       "@Coord!A166",
+       "@Coord!D166|n3",
+       "@Coord!B166",
+       "@Coord!G166",
+       "@Coord!H166"
+      ],
+      [
+       "@Coord!A167",
+       "@Coord!D167|n3",
+       "@Coord!B167",
+       "@Coord!G167",
+       "@Coord!H167"
+      ],
+      [
+       "@Coord!A168",
+       "@Coord!D168|n3",
+       "@Coord!B168",
+       "@Coord!G168",
+       "@Coord!H168"
+      ],
+      [
+       "@Coord!A169",
+       "@Coord!D169|n3",
+       "@Coord!B169",
+       "@Coord!G169",
+       "@Coord!H169"
+      ],
+      [
+       "@Coord!A170",
+       "@Coord!D170|n3",
+       "@Coord!B170",
+       "@Coord!G170",
+       "@Coord!H170"
+      ],
+      [
+       "@Coord!A171",
+       "@Coord!D171|n3",
+       "@Coord!B171",
+       "@Coord!G171",
+       "@Coord!H171"
+      ],
+      [
+       "@Coord!A172",
+       "@Coord!D172|n3",
+       "@Coord!B172",
+       "@Coord!G172",
+       "@Coord!H172"
+      ],
+      [
+       "@Coord!A173",
+       "@Coord!D173|n3",
+       "@Coord!B173",
+       "@Coord!G173",
+       "@Coord!H173"
+      ],
+      [
+       "@Coord!A174",
+       "@Coord!D174|n3",
+       "@Coord!B174",
+       "@Coord!G174",
+       "@Coord!H174"
+      ],
+      [
+       "@Coord!A175",
+       "@Coord!D175|n3",
+       "@Coord!B175",
+       "@Coord!G175",
+       "@Coord!H175"
+      ],
+      [
+       "@Coord!A176",
+       "@Coord!D176|n3",
+       "@Coord!B176",
+       "@Coord!G176",
+       "@Coord!H176"
+      ],
+      [
+       "@Coord!A177",
+       "@Coord!D177|n3",
+       "@Coord!B177",
+       "@Coord!G177",
+       "@Coord!H177"
+      ],
+      [
+       "@Coord!A178",
+       "@Coord!D178|n3",
+       "@Coord!B178",
+       "@Coord!G178",
+       "@Coord!H178"
+      ],
+      [
+       "@Coord!A179",
+       "@Coord!D179|n3",
+       "@Coord!B179",
+       "@Coord!G179",
+       "@Coord!H179"
+      ],
+      [
+       "@Coord!A180",
+       "@Coord!D180|n3",
+       "@Coord!B180",
+       "@Coord!G180",
+       "@Coord!H180"
+      ],
+      [
+       "@Coord!A181",
+       "@Coord!D181|n3",
+       "@Coord!B181",
+       "@Coord!G181",
+       "@Coord!H181"
+      ],
+      [
+       "@Coord!A182",
+       "@Coord!D182|n3",
+       "@Coord!B182",
+       "@Coord!G182",
+       "@Coord!H182"
+      ],
+      [
+       "@Coord!A183",
+       "@Coord!D183|n3",
+       "@Coord!B183",
+       "@Coord!G183",
+       "@Coord!H183"
+      ],
+      [
+       "@Coord!A184",
+       "@Coord!D184|n3",
+       "@Coord!B184",
+       "@Coord!G184",
+       "@Coord!H184"
+      ],
+      [
+       "@Coord!A185",
+       "@Coord!D185|n3",
+       "@Coord!B185",
+       "@Coord!G185",
+       "@Coord!H185"
+      ],
+      [
+       "@Coord!A186",
+       "@Coord!D186|n3",
+       "@Coord!B186",
+       "@Coord!G186",
+       "@Coord!H186"
+      ],
+      [
+       "@Coord!A187",
+       "@Coord!D187|n3",
+       "@Coord!B187",
+       "@Coord!G187",
+       "@Coord!H187"
+      ],
+      [
+       "@Coord!A188",
+       "@Coord!D188|n3",
+       "@Coord!B188",
+       "@Coord!G188",
+       "@Coord!H188"
+      ],
+      [
+       "@Coord!A189",
+       "@Coord!D189|n3",
+       "@Coord!B189",
+       "@Coord!G189",
+       "@Coord!H189"
+      ],
+      [
+       "@Coord!A190",
+       "@Coord!D190|n3",
+       "@Coord!B190",
+       "@Coord!G190",
+       "@Coord!H190"
+      ],
+      [
+       "@Coord!A191",
+       "@Coord!D191|n3",
+       "@Coord!B191",
+       "@Coord!G191",
+       "@Coord!H191"
+      ],
+      [
+       "@Coord!A192",
+       "@Coord!D192|n3",
+       "@Coord!B192",
+       "@Coord!G192",
+       "@Coord!H192"
+      ],
+      [
+       "@Coord!A193",
+       "@Coord!D193|n3",
+       "@Coord!B193",
+       "@Coord!G193",
+       "@Coord!H193"
+      ],
+      [
+       "@Coord!A194",
+       "@Coord!D194|n3",
+       "@Coord!B194",
+       "@Coord!G194",
+       "@Coord!H194"
+      ],
+      [
+       "@Coord!A195",
+       "@Coord!D195|n3",
+       "@Coord!B195",
+       "@Coord!G195",
+       "@Coord!H195"
+      ],
+      [
+       "@Coord!A196",
+       "@Coord!D196|n3",
+       "@Coord!B196",
+       "@Coord!G196",
+       "@Coord!H196"
+      ],
+      [
+       "@Coord!A197",
+       "@Coord!D197|n3",
+       "@Coord!B197",
+       "@Coord!G197",
+       "@Coord!H197"
+      ],
+      [
+       "@Coord!A198",
+       "@Coord!D198|n3",
+       "@Coord!B198",
+       "@Coord!G198",
+       "@Coord!H198"
+      ],
+      [
+       "@Coord!A199",
+       "@Coord!D199|n3",
+       "@Coord!B199",
+       "@Coord!G199",
+       "@Coord!H199"
+      ],
+      [
+       "@Coord!A200",
+       "@Coord!D200|n3",
+       "@Coord!B200",
+       "@Coord!G200",
+       "@Coord!H200"
+      ],
+      [
+       "@Coord!A201",
+       "@Coord!D201|n3",
+       "@Coord!B201",
+       "@Coord!G201",
+       "@Coord!H201"
+      ],
+      [
+       "@Coord!A202",
+       "@Coord!D202|n3",
+       "@Coord!B202",
+       "@Coord!G202",
+       "@Coord!H202"
+      ],
+      [
+       "@Coord!A203",
+       "@Coord!D203|n3",
+       "@Coord!B203",
+       "@Coord!G203",
+       "@Coord!H203"
+      ],
+      [
+       "@Coord!A204",
+       "@Coord!D204|n3",
+       "@Coord!B204",
+       "@Coord!G204",
+       "@Coord!H204"
+      ],
+      [
+       "@Coord!A205",
+       "@Coord!D205|n3",
+       "@Coord!B205",
+       "@Coord!G205",
+       "@Coord!H205"
+      ],
+      [
+       "@Coord!A206",
+       "@Coord!D206|n3",
+       "@Coord!B206",
+       "@Coord!G206",
+       "@Coord!H206"
+      ],
+      [
+       "@Coord!A207",
+       "@Coord!D207|n3",
+       "@Coord!B207",
+       "@Coord!G207",
+       "@Coord!H207"
+      ],
+      [
+       "@Coord!A208",
+       "@Coord!D208|n3",
+       "@Coord!B208",
+       "@Coord!G208",
+       "@Coord!H208"
+      ],
+      [
+       "@Coord!A209",
+       "@Coord!D209|n3",
+       "@Coord!B209",
+       "@Coord!G209",
+       "@Coord!H209"
+      ],
+      [
+       "@Coord!A210",
+       "@Coord!D210|n3",
+       "@Coord!B210",
+       "@Coord!G210",
+       "@Coord!H210"
+      ],
+      [
+       "@Coord!A211",
+       "@Coord!D211|n3",
+       "@Coord!B211",
+       "@Coord!G211",
+       "@Coord!H211"
+      ],
+      [
+       "@Coord!A212",
+       "@Coord!D212|n3",
+       "@Coord!B212",
+       "@Coord!G212",
+       "@Coord!H212"
+      ],
+      [
+       "@Coord!A213",
+       "@Coord!D213|n3",
+       "@Coord!B213",
+       "@Coord!G213",
+       "@Coord!H213"
+      ],
+      [
+       "@Coord!A214",
+       "@Coord!D214|n3",
+       "@Coord!B214",
+       "@Coord!G214",
+       "@Coord!H214"
+      ],
+      [
+       "@Coord!A215",
+       "@Coord!D215|n3",
+       "@Coord!B215",
+       "@Coord!G215",
+       "@Coord!H215"
+      ],
+      [
+       "@Coord!A216",
+       "@Coord!D216|n3",
+       "@Coord!B216",
+       "@Coord!G216",
+       "@Coord!H216"
+      ],
+      [
+       "@Coord!A217",
+       "@Coord!D217|n3",
+       "@Coord!B217",
+       "@Coord!G217",
+       "@Coord!H217"
+      ],
+      [
+       "@Coord!A218",
+       "@Coord!D218|n3",
+       "@Coord!B218",
+       "@Coord!G218",
+       "@Coord!H218"
+      ],
+      [
+       "@Coord!A219",
+       "@Coord!D219|n3",
+       "@Coord!B219",
+       "@Coord!G219",
+       "@Coord!H219"
+      ],
+      [
+       "@Coord!A220",
+       "@Coord!D220|n3",
+       "@Coord!B220",
+       "@Coord!G220",
+       "@Coord!H220"
+      ],
+      [
+       "@Coord!A221",
+       "@Coord!D221|n3",
+       "@Coord!B221",
+       "@Coord!G221",
+       "@Coord!H221"
+      ],
+      [
+       "@Coord!A222",
+       "@Coord!D222|n3",
+       "@Coord!B222",
+       "@Coord!G222",
+       "@Coord!H222"
+      ],
+      [
+       "@Coord!A223",
+       "@Coord!D223|n3",
+       "@Coord!B223",
+       "@Coord!G223",
+       "@Coord!H223"
+      ],
+      [
+       "@Coord!A224",
+       "@Coord!D224|n3",
+       "@Coord!B224",
+       "@Coord!G224",
+       "@Coord!H224"
+      ],
+      [
+       "@Coord!A225",
+       "@Coord!D225|n3",
+       "@Coord!B225",
+       "@Coord!G225",
+       "@Coord!H225"
+      ],
+      [
+       "@Coord!A226",
+       "@Coord!D226|n3",
+       "@Coord!B226",
+       "@Coord!G226",
+       "@Coord!H226"
+      ],
+      [
+       "@Coord!A227",
+       "@Coord!D227|n3",
+       "@Coord!B227",
+       "@Coord!G227",
+       "@Coord!H227"
+      ],
+      [
+       "@Coord!A228",
+       "@Coord!D228|n3",
+       "@Coord!B228",
+       "@Coord!G228",
+       "@Coord!H228"
+      ],
+      [
+       "@Coord!A229",
+       "@Coord!D229|n3",
+       "@Coord!B229",
+       "@Coord!G229",
+       "@Coord!H229"
+      ],
+      [
+       "@Coord!A230",
+       "@Coord!D230|n3",
+       "@Coord!B230",
+       "@Coord!G230",
+       "@Coord!H230"
+      ],
+      [
+       "@Coord!A231",
+       "@Coord!D231|n3",
+       "@Coord!B231",
+       "@Coord!G231",
+       "@Coord!H231"
+      ],
+      [
+       "@Coord!A232",
+       "@Coord!D232|n3",
+       "@Coord!B232",
+       "@Coord!G232",
+       "@Coord!H232"
+      ],
+      [
+       "@Coord!A233",
+       "@Coord!D233|n3",
+       "@Coord!B233",
+       "@Coord!G233",
+       "@Coord!H233"
+      ],
+      [
+       "@Coord!A234",
+       "@Coord!D234|n3",
+       "@Coord!B234",
+       "@Coord!G234",
+       "@Coord!H234"
+      ],
+      [
+       "@Coord!A235",
+       "@Coord!D235|n3",
+       "@Coord!B235",
+       "@Coord!G235",
+       "@Coord!H235"
+      ],
+      [
+       "@Coord!A236",
+       "@Coord!D236|n3",
+       "@Coord!B236",
+       "@Coord!G236",
+       "@Coord!H236"
+      ],
+      [
+       "@Coord!A237",
+       "@Coord!D237|n3",
+       "@Coord!B237",
+       "@Coord!G237",
+       "@Coord!H237"
+      ],
+      [
+       "@Coord!A238",
+       "@Coord!D238|n3",
+       "@Coord!B238",
+       "@Coord!G238",
+       "@Coord!H238"
+      ],
+      [
+       "@Coord!A239",
+       "@Coord!D239|n3",
+       "@Coord!B239",
+       "@Coord!G239",
+       "@Coord!H239"
+      ],
+      [
+       "@Coord!A240",
+       "@Coord!D240|n3",
+       "@Coord!B240",
+       "@Coord!G240",
+       "@Coord!H240"
+      ],
+      [
+       "@Coord!A241",
+       "@Coord!D241|n3",
+       "@Coord!B241",
+       "@Coord!G241",
+       "@Coord!H241"
+      ],
+      [
+       "@Coord!A242",
+       "@Coord!D242|n3",
+       "@Coord!B242",
+       "@Coord!G242",
+       "@Coord!H242"
+      ],
+      [
+       "@Coord!A243",
+       "@Coord!D243|n3",
+       "@Coord!B243",
+       "@Coord!G243",
+       "@Coord!H243"
+      ],
+      [
+       "@Coord!A244",
+       "@Coord!D244|n3",
+       "@Coord!B244",
+       "@Coord!G244",
+       "@Coord!H244"
+      ],
+      [
+       "@Coord!A245",
+       "@Coord!D245|n3",
+       "@Coord!B245",
+       "@Coord!G245",
+       "@Coord!H245"
+      ],
+      [
+       "@Coord!A246",
+       "@Coord!D246|n3",
+       "@Coord!B246",
+       "@Coord!G246",
+       "@Coord!H246"
+      ],
+      [
+       "@Coord!A247",
+       "@Coord!D247|n3",
+       "@Coord!B247",
+       "@Coord!G247",
+       "@Coord!H247"
+      ],
+      [
+       "@Coord!A248",
+       "@Coord!D248|n3",
+       "@Coord!B248",
+       "@Coord!G248",
+       "@Coord!H248"
+      ],
+      [
+       "@Coord!A249",
+       "@Coord!D249|n3",
+       "@Coord!B249",
+       "@Coord!G249",
+       "@Coord!H249"
+      ],
+      [
+       "@Coord!A250",
+       "@Coord!D250|n3",
+       "@Coord!B250",
+       "@Coord!G250",
+       "@Coord!H250"
+      ],
+      [
+       "@Coord!A251",
+       "@Coord!D251|n3",
+       "@Coord!B251",
+       "@Coord!G251",
+       "@Coord!H251"
+      ],
+      [
+       "@Coord!A252",
+       "@Coord!D252|n3",
+       "@Coord!B252",
+       "@Coord!G252",
+       "@Coord!H252"
+      ],
+      [
+       "@Coord!A253",
+       "@Coord!D253|n3",
+       "@Coord!B253",
+       "@Coord!G253",
+       "@Coord!H253"
+      ],
+      [
+       "@Coord!A254",
+       "@Coord!D254|n3",
+       "@Coord!B254",
+       "@Coord!G254",
+       "@Coord!H254"
+      ],
+      [
+       "@Coord!A255",
+       "@Coord!D255|n3",
+       "@Coord!B255",
+       "@Coord!G255",
+       "@Coord!H255"
+      ],
+      [
+       "@Coord!A256",
+       "@Coord!D256|n3",
+       "@Coord!B256",
+       "@Coord!G256",
+       "@Coord!H256"
+      ],
+      [
+       "@Coord!A257",
+       "@Coord!D257|n3",
+       "@Coord!B257",
+       "@Coord!G257",
+       "@Coord!H257"
+      ],
+      [
+       "@Coord!A258",
+       "@Coord!D258|n3",
+       "@Coord!B258",
+       "@Coord!G258",
+       "@Coord!H258"
+      ],
+      [
+       "@Coord!A259",
+       "@Coord!D259|n3",
+       "@Coord!B259",
+       "@Coord!G259",
+       "@Coord!H259"
+      ],
+      [
+       "@Coord!A260",
+       "@Coord!D260|n3",
+       "@Coord!B260",
+       "@Coord!G260",
+       "@Coord!H260"
+      ],
+      [
+       "@Coord!A261",
+       "@Coord!D261|n3",
+       "@Coord!B261",
+       "@Coord!G261",
+       "@Coord!H261"
+      ],
+      [
+       "@Coord!A262",
+       "@Coord!D262|n3",
+       "@Coord!B262",
+       "@Coord!G262",
+       "@Coord!H262"
+      ],
+      [
+       "@Coord!A263",
+       "@Coord!D263|n3",
+       "@Coord!B263",
+       "@Coord!G263",
+       "@Coord!H263"
+      ],
+      [
+       "@Coord!A264",
+       "@Coord!D264|n3",
+       "@Coord!B264",
+       "@Coord!G264",
+       "@Coord!H264"
+      ],
+      [
+       "@Coord!A265",
+       "@Coord!D265|n3",
+       "@Coord!B265",
+       "@Coord!G265",
+       "@Coord!H265"
+      ],
+      [
+       "@Coord!A266",
+       "@Coord!D266|n3",
+       "@Coord!B266",
+       "@Coord!G266",
+       "@Coord!H266"
+      ],
+      [
+       "@Coord!A267",
+       "@Coord!D267|n3",
+       "@Coord!B267",
+       "@Coord!G267",
+       "@Coord!H267"
+      ],
+      [
+       "@Coord!A268",
+       "@Coord!D268|n3",
+       "@Coord!B268",
+       "@Coord!G268",
+       "@Coord!H268"
+      ],
+      [
+       "@Coord!A269",
+       "@Coord!D269|n3",
+       "@Coord!B269",
+       "@Coord!G269",
+       "@Coord!H269"
+      ],
+      [
+       "@Coord!A270",
+       "@Coord!D270|n3",
+       "@Coord!B270",
+       "@Coord!G270",
+       "@Coord!H270"
+      ],
+      [
+       "@Coord!A271",
+       "@Coord!D271|n3",
+       "@Coord!B271",
+       "@Coord!G271",
+       "@Coord!H271"
+      ],
+      [
+       "@Coord!A272",
+       "@Coord!D272|n3",
+       "@Coord!B272",
+       "@Coord!G272",
+       "@Coord!H272"
+      ],
+      [
+       "@Coord!A273",
+       "@Coord!D273|n3",
+       "@Coord!B273",
+       "@Coord!G273",
+       "@Coord!H273"
+      ],
+      [
+       "@Coord!A274",
+       "@Coord!D274|n3",
+       "@Coord!B274",
+       "@Coord!G274",
+       "@Coord!H274"
+      ],
+      [
+       "@Coord!A275",
+       "@Coord!D275|n3",
+       "@Coord!B275",
+       "@Coord!G275",
+       "@Coord!H275"
+      ],
+      [
+       "@Coord!A276",
+       "@Coord!D276|n3",
+       "@Coord!B276",
+       "@Coord!G276",
+       "@Coord!H276"
+      ],
+      [
+       "@Coord!A277",
+       "@Coord!D277|n3",
+       "@Coord!B277",
+       "@Coord!G277",
+       "@Coord!H277"
+      ],
+      [
+       "@Coord!A278",
+       "@Coord!D278|n3",
+       "@Coord!B278",
+       "@Coord!G278",
+       "@Coord!H278"
+      ],
+      [
+       "@Coord!A279",
+       "@Coord!D279|n3",
+       "@Coord!B279",
+       "@Coord!G279",
+       "@Coord!H279"
+      ],
+      [
+       "@Coord!A280",
+       "@Coord!D280|n3",
+       "@Coord!B280",
+       "@Coord!G280",
+       "@Coord!H280"
+      ],
+      [
+       "@Coord!A281",
+       "@Coord!D281|n3",
+       "@Coord!B281",
+       "@Coord!G281",
+       "@Coord!H281"
+      ],
+      [
+       "@Coord!A282",
+       "@Coord!D282|n3",
+       "@Coord!B282",
+       "@Coord!G282",
+       "@Coord!H282"
+      ],
+      [
+       "@Coord!A283",
+       "@Coord!D283|n3",
+       "@Coord!B283",
+       "@Coord!G283",
+       "@Coord!H283"
+      ],
+      [
+       "@Coord!A284",
+       "@Coord!D284|n3",
+       "@Coord!B284",
+       "@Coord!G284",
+       "@Coord!H284"
+      ],
+      [
+       "@Coord!A285",
+       "@Coord!D285|n3",
+       "@Coord!B285",
+       "@Coord!G285",
+       "@Coord!H285"
+      ],
+      [
+       "@Coord!A286",
+       "@Coord!D286|n3",
+       "@Coord!B286",
+       "@Coord!G286",
+       "@Coord!H286"
+      ],
+      [
+       "@Coord!A287",
+       "@Coord!D287|n3",
+       "@Coord!B287",
+       "@Coord!G287",
+       "@Coord!H287"
+      ],
+      [
+       "@Coord!A288",
+       "@Coord!D288|n3",
+       "@Coord!B288",
+       "@Coord!G288",
+       "@Coord!H288"
+      ],
+      [
+       "@Coord!A289",
+       "@Coord!D289|n3",
+       "@Coord!B289",
+       "@Coord!G289",
+       "@Coord!H289"
+      ],
+      [
+       "@Coord!A290",
+       "@Coord!D290|n3",
+       "@Coord!B290",
+       "@Coord!G290",
+       "@Coord!H290"
+      ],
+      [
+       "@Coord!A291",
+       "@Coord!D291|n3",
+       "@Coord!B291",
+       "@Coord!G291",
+       "@Coord!H291"
+      ],
+      [
+       "@Coord!A292",
+       "@Coord!D292|n3",
+       "@Coord!B292",
+       "@Coord!G292",
+       "@Coord!H292"
+      ],
+      [
+       "@Coord!A293",
+       "@Coord!D293|n3",
+       "@Coord!B293",
+       "@Coord!G293",
+       "@Coord!H293"
+      ],
+      [
+       "@Coord!A294",
+       "@Coord!D294|n3",
+       "@Coord!B294",
+       "@Coord!G294",
+       "@Coord!H294"
+      ],
+      [
+       "@Coord!A295",
+       "@Coord!D295|n3",
+       "@Coord!B295",
+       "@Coord!G295",
+       "@Coord!H295"
+      ],
+      [
+       "@Coord!A296",
+       "@Coord!D296|n3",
+       "@Coord!B296",
+       "@Coord!G296",
+       "@Coord!H296"
+      ],
+      [
+       "@Coord!A297",
+       "@Coord!D297|n3",
+       "@Coord!B297",
+       "@Coord!G297",
+       "@Coord!H297"
+      ],
+      [
+       "@Coord!A298",
+       "@Coord!D298|n3",
+       "@Coord!B298",
+       "@Coord!G298",
+       "@Coord!H298"
+      ],
+      [
+       "@Coord!A299",
+       "@Coord!D299|n3",
+       "@Coord!B299",
+       "@Coord!G299",
+       "@Coord!H299"
+      ],
+      [
+       "@Coord!A300",
+       "@Coord!D300|n3",
+       "@Coord!B300",
+       "@Coord!G300",
+       "@Coord!H300"
+      ],
+      [
+       "@Coord!A301",
+       "@Coord!D301|n3",
+       "@Coord!B301",
+       "@Coord!G301",
+       "@Coord!H301"
+      ],
+      [
+       "@Coord!A302",
+       "@Coord!D302|n3",
+       "@Coord!B302",
+       "@Coord!G302",
+       "@Coord!H302"
+      ],
+      [
+       "@Coord!A303",
+       "@Coord!D303|n3",
+       "@Coord!B303",
+       "@Coord!G303",
+       "@Coord!H303"
+      ],
+      [
+       "@Coord!A304",
+       "@Coord!D304|n3",
+       "@Coord!B304",
+       "@Coord!G304",
+       "@Coord!H304"
+      ],
+      [
+       "@Coord!A305",
+       "@Coord!D305|n3",
+       "@Coord!B305",
+       "@Coord!G305",
+       "@Coord!H305"
+      ],
+      [
+       "@Coord!A306",
+       "@Coord!D306|n3",
+       "@Coord!B306",
+       "@Coord!G306",
+       "@Coord!H306"
+      ],
+      [
+       "@Coord!A307",
+       "@Coord!D307|n3",
+       "@Coord!B307",
+       "@Coord!G307",
+       "@Coord!H307"
+      ],
+      [
+       "@Coord!A308",
+       "@Coord!D308|n3",
+       "@Coord!B308",
+       "@Coord!G308",
+       "@Coord!H308"
+      ],
+      [
+       "@Coord!A309",
+       "@Coord!D309|n3",
+       "@Coord!B309",
+       "@Coord!G309",
+       "@Coord!H309"
+      ],
+      [
+       "@Coord!A310",
+       "@Coord!D310|n3",
+       "@Coord!B310",
+       "@Coord!G310",
+       "@Coord!H310"
+      ],
+      [
+       "@Coord!A311",
+       "@Coord!D311|n3",
+       "@Coord!B311",
+       "@Coord!G311",
+       "@Coord!H311"
+      ],
+      [
+       "@Coord!A312",
+       "@Coord!D312|n3",
+       "@Coord!B312",
+       "@Coord!G312",
+       "@Coord!H312"
+      ],
+      [
+       "@Coord!A313",
+       "@Coord!D313|n3",
+       "@Coord!B313",
+       "@Coord!G313",
+       "@Coord!H313"
+      ],
+      [
+       "@Coord!A314",
+       "@Coord!D314|n3",
+       "@Coord!B314",
+       "@Coord!G314",
+       "@Coord!H314"
+      ],
+      [
+       "@Coord!A315",
+       "@Coord!D315|n3",
+       "@Coord!B315",
+       "@Coord!G315",
+       "@Coord!H315"
+      ],
+      [
+       "@Coord!A316",
+       "@Coord!D316|n3",
+       "@Coord!B316",
+       "@Coord!G316",
+       "@Coord!H316"
+      ],
+      [
+       "@Coord!A317",
+       "@Coord!D317|n3",
+       "@Coord!B317",
+       "@Coord!G317",
+       "@Coord!H317"
+      ],
+      [
+       "@Coord!A318",
+       "@Coord!D318|n3",
+       "@Coord!B318",
+       "@Coord!G318",
+       "@Coord!H318"
+      ],
+      [
+       "@Coord!A319",
+       "@Coord!D319|n3",
+       "@Coord!B319",
+       "@Coord!G319",
+       "@Coord!H319"
+      ],
+      [
+       "@Coord!A320",
+       "@Coord!D320|n3",
+       "@Coord!B320",
+       "@Coord!G320",
+       "@Coord!H320"
+      ],
+      [
+       "@Coord!A321",
+       "@Coord!D321|n3",
+       "@Coord!B321",
+       "@Coord!G321",
+       "@Coord!H321"
+      ],
+      [
+       "@Coord!A322",
+       "@Coord!D322|n3",
+       "@Coord!B322",
+       "@Coord!G322",
+       "@Coord!H322"
+      ],
+      [
+       "@Coord!A323",
+       "@Coord!D323|n3",
+       "@Coord!B323",
+       "@Coord!G323",
+       "@Coord!H323"
+      ],
+      [
+       "@Coord!A324",
+       "@Coord!D324|n3",
+       "@Coord!B324",
+       "@Coord!G324",
+       "@Coord!H324"
+      ],
+      [
+       "@Coord!A325",
+       "@Coord!D325|n3",
+       "@Coord!B325",
+       "@Coord!G325",
+       "@Coord!H325"
+      ],
+      [
+       "@Coord!A326",
+       "@Coord!D326|n3",
+       "@Coord!B326",
+       "@Coord!G326",
+       "@Coord!H326"
+      ],
+      [
+       "@Coord!A327",
+       "@Coord!D327|n3",
+       "@Coord!B327",
+       "@Coord!G327",
+       "@Coord!H327"
+      ],
+      [
+       "@Coord!A328",
+       "@Coord!D328|n3",
+       "@Coord!B328",
+       "@Coord!G328",
+       "@Coord!H328"
+      ],
+      [
+       "@Coord!A329",
+       "@Coord!D329|n3",
+       "@Coord!B329",
+       "@Coord!G329",
+       "@Coord!H329"
+      ],
+      [
+       "@Coord!A330",
+       "@Coord!D330|n3",
+       "@Coord!B330",
+       "@Coord!G330",
+       "@Coord!H330"
+      ],
+      [
+       "@Coord!A331",
+       "@Coord!D331|n3",
+       "@Coord!B331",
+       "@Coord!G331",
+       "@Coord!H331"
+      ],
+      [
+       "@Coord!A332",
+       "@Coord!D332|n3",
+       "@Coord!B332",
+       "@Coord!G332",
+       "@Coord!H332"
+      ],
+      [
+       "@Coord!A333",
+       "@Coord!D333|n3",
+       "@Coord!B333",
+       "@Coord!G333",
+       "@Coord!H333"
+      ],
+      [
+       "@Coord!A334",
+       "@Coord!D334|n3",
+       "@Coord!B334",
+       "@Coord!G334",
+       "@Coord!H334"
+      ],
+      [
+       "@Coord!A335",
+       "@Coord!D335|n3",
+       "@Coord!B335",
+       "@Coord!G335",
+       "@Coord!H335"
+      ],
+      [
+       "@Coord!A336",
+       "@Coord!D336|n3",
+       "@Coord!B336",
+       "@Coord!G336",
+       "@Coord!H336"
+      ],
+      [
+       "@Coord!A337",
+       "@Coord!D337|n3",
+       "@Coord!B337",
+       "@Coord!G337",
+       "@Coord!H337"
+      ],
+      [
+       "@Coord!A338",
+       "@Coord!D338|n3",
+       "@Coord!B338",
+       "@Coord!G338",
+       "@Coord!H338"
+      ],
+      [
+       "@Coord!A339",
+       "@Coord!D339|n3",
+       "@Coord!B339",
+       "@Coord!G339",
+       "@Coord!H339"
+      ],
+      [
+       "@Coord!A340",
+       "@Coord!D340|n3",
+       "@Coord!B340",
+       "@Coord!G340",
+       "@Coord!H340"
+      ],
+      [
+       "@Coord!A341",
+       "@Coord!D341|n3",
+       "@Coord!B341",
+       "@Coord!G341",
+       "@Coord!H341"
+      ],
+      [
+       "@Coord!A342",
+       "@Coord!D342|n3",
+       "@Coord!B342",
+       "@Coord!G342",
+       "@Coord!H342"
+      ],
+      [
+       "@Coord!A343",
+       "@Coord!D343|n3",
+       "@Coord!B343",
+       "@Coord!G343",
+       "@Coord!H343"
+      ],
+      [
+       "@Coord!A344",
+       "@Coord!D344|n3",
+       "@Coord!B344",
+       "@Coord!G344",
+       "@Coord!H344"
+      ],
+      [
+       "@Coord!A345",
+       "@Coord!D345|n3",
+       "@Coord!B345",
+       "@Coord!G345",
+       "@Coord!H345"
+      ],
+      [
+       "@Coord!A346",
+       "@Coord!D346|n3",
+       "@Coord!B346",
+       "@Coord!G346",
+       "@Coord!H346"
+      ],
+      [
+       "@Coord!A347",
+       "@Coord!D347|n3",
+       "@Coord!B347",
+       "@Coord!G347",
+       "@Coord!H347"
+      ],
+      [
+       "@Coord!A348",
+       "@Coord!D348|n3",
+       "@Coord!B348",
+       "@Coord!G348",
+       "@Coord!H348"
+      ],
+      [
+       "@Coord!A349",
+       "@Coord!D349|n3",
+       "@Coord!B349",
+       "@Coord!G349",
+       "@Coord!H349"
+      ],
+      [
+       "@Coord!A350",
+       "@Coord!D350|n3",
+       "@Coord!B350",
+       "@Coord!G350",
+       "@Coord!H350"
+      ],
+      [
+       "@Coord!A351",
+       "@Coord!D351|n3",
+       "@Coord!B351",
+       "@Coord!G351",
+       "@Coord!H351"
+      ],
+      [
+       "@Coord!A352",
+       "@Coord!D352|n3",
+       "@Coord!B352",
+       "@Coord!G352",
+       "@Coord!H352"
+      ],
+      [
+       "@Coord!A353",
+       "@Coord!D353|n3",
+       "@Coord!B353",
+       "@Coord!G353",
+       "@Coord!H353"
+      ],
+      [
+       "@Coord!A354",
+       "@Coord!D354|n3",
+       "@Coord!B354",
+       "@Coord!G354",
+       "@Coord!H354"
+      ],
+      [
+       "@Coord!A355",
+       "@Coord!D355|n3",
+       "@Coord!B355",
+       "@Coord!G355",
+       "@Coord!H355"
+      ],
+      [
+       "@Coord!A356",
+       "@Coord!D356|n3",
+       "@Coord!B356",
+       "@Coord!G356",
+       "@Coord!H356"
+      ],
+      [
+       "@Coord!A357",
+       "@Coord!D357|n3",
+       "@Coord!B357",
+       "@Coord!G357",
+       "@Coord!H357"
+      ],
+      [
+       "@Coord!A358",
+       "@Coord!D358|n3",
+       "@Coord!B358",
+       "@Coord!G358",
+       "@Coord!H358"
+      ],
+      [
+       "@Coord!A359",
+       "@Coord!D359|n3",
+       "@Coord!B359",
+       "@Coord!G359",
+       "@Coord!H359"
+      ],
+      [
+       "@Coord!A360",
+       "@Coord!D360|n3",
+       "@Coord!B360",
+       "@Coord!G360",
+       "@Coord!H360"
+      ],
+      [
+       "@Coord!A361",
+       "@Coord!D361|n3",
+       "@Coord!B361",
+       "@Coord!G361",
+       "@Coord!H361"
+      ],
+      [
+       "@Coord!A362",
+       "@Coord!D362|n3",
+       "@Coord!B362",
+       "@Coord!G362",
+       "@Coord!H362"
+      ],
+      [
+       "@Coord!A363",
+       "@Coord!D363|n3",
+       "@Coord!B363",
+       "@Coord!G363",
+       "@Coord!H363"
+      ],
+      [
+       "@Coord!A364",
+       "@Coord!D364|n3",
+       "@Coord!B364",
+       "@Coord!G364",
+       "@Coord!H364"
+      ],
+      [
+       "@Coord!A365",
+       "@Coord!D365|n3",
+       "@Coord!B365",
+       "@Coord!G365",
+       "@Coord!H365"
+      ],
+      [
+       "@Coord!A366",
+       "@Coord!D366|n3",
+       "@Coord!B366",
+       "@Coord!G366",
+       "@Coord!H366"
+      ],
+      [
+       "@Coord!A367",
+       "@Coord!D367|n3",
+       "@Coord!B367",
+       "@Coord!G367",
+       "@Coord!H367"
+      ],
+      [
+       "@Coord!A368",
+       "@Coord!D368|n3",
+       "@Coord!B368",
+       "@Coord!G368",
+       "@Coord!H368"
+      ],
+      [
+       "@Coord!A369",
+       "@Coord!D369|n3",
+       "@Coord!B369",
+       "@Coord!G369",
+       "@Coord!H369"
+      ],
+      [
+       "@Coord!A370",
+       "@Coord!D370|n3",
+       "@Coord!B370",
+       "@Coord!G370",
+       "@Coord!H370"
+      ],
+      [
+       "@Coord!A371",
+       "@Coord!D371|n3",
+       "@Coord!B371",
+       "@Coord!G371",
+       "@Coord!H371"
+      ],
+      [
+       "@Coord!A372",
+       "@Coord!D372|n3",
+       "@Coord!B372",
+       "@Coord!G372",
+       "@Coord!H372"
+      ],
+      [
+       "@Coord!A373",
+       "@Coord!D373|n3",
+       "@Coord!B373",
+       "@Coord!G373",
+       "@Coord!H373"
+      ],
+      [
+       "@Coord!A374",
+       "@Coord!D374|n3",
+       "@Coord!B374",
+       "@Coord!G374",
+       "@Coord!H374"
+      ],
+      [
+       "@Coord!A375",
+       "@Coord!D375|n3",
+       "@Coord!B375",
+       "@Coord!G375",
+       "@Coord!H375"
+      ],
+      [
+       "@Coord!A376",
+       "@Coord!D376|n3",
+       "@Coord!B376",
+       "@Coord!G376",
+       "@Coord!H376"
+      ],
+      [
+       "@Coord!A377",
+       "@Coord!D377|n3",
+       "@Coord!B377",
+       "@Coord!G377",
+       "@Coord!H377"
+      ],
+      [
+       "@Coord!A378",
+       "@Coord!D378|n3",
+       "@Coord!B378",
+       "@Coord!G378",
+       "@Coord!H378"
+      ],
+      [
+       "@Coord!A379",
+       "@Coord!D379|n3",
+       "@Coord!B379",
+       "@Coord!G379",
+       "@Coord!H379"
+      ],
+      [
+       "@Coord!A380",
+       "@Coord!D380|n3",
+       "@Coord!B380",
+       "@Coord!G380",
+       "@Coord!H380"
+      ],
+      [
+       "@Coord!A381",
+       "@Coord!D381|n3",
+       "@Coord!B381",
+       "@Coord!G381",
+       "@Coord!H381"
+      ],
+      [
+       "@Coord!A382",
+       "@Coord!D382|n3",
+       "@Coord!B382",
+       "@Coord!G382",
+       "@Coord!H382"
+      ],
+      [
+       "@Coord!A383",
+       "@Coord!D383|n3",
+       "@Coord!B383",
+       "@Coord!G383",
+       "@Coord!H383"
+      ],
+      [
+       "@Coord!A384",
+       "@Coord!D384|n3",
+       "@Coord!B384",
+       "@Coord!G384",
+       "@Coord!H384"
+      ],
+      [
+       "@Coord!A385",
+       "@Coord!D385|n3",
+       "@Coord!B385",
+       "@Coord!G385",
+       "@Coord!H385"
+      ],
+      [
+       "@Coord!A386",
+       "@Coord!D386|n3",
+       "@Coord!B386",
+       "@Coord!G386",
+       "@Coord!H386"
+      ],
+      [
+       "@Coord!A387",
+       "@Coord!D387|n3",
+       "@Coord!B387",
+       "@Coord!G387",
+       "@Coord!H387"
+      ],
+      [
+       "@Coord!A388",
+       "@Coord!D388|n3",
+       "@Coord!B388",
+       "@Coord!G388",
+       "@Coord!H388"
+      ],
+      [
+       "@Coord!A389",
+       "@Coord!D389|n3",
+       "@Coord!B389",
+       "@Coord!G389",
+       "@Coord!H389"
+      ],
+      [
+       "@Coord!A390",
+       "@Coord!D390|n3",
+       "@Coord!B390",
+       "@Coord!G390",
+       "@Coord!H390"
+      ],
+      [
+       "@Coord!A391",
+       "@Coord!D391|n3",
+       "@Coord!B391",
+       "@Coord!G391",
+       "@Coord!H391"
+      ],
+      [
+       "@Coord!A392",
+       "@Coord!D392|n3",
+       "@Coord!B392",
+       "@Coord!G392",
+       "@Coord!H392"
+      ],
+      [
+       "@Coord!A393",
+       "@Coord!D393|n3",
+       "@Coord!B393",
+       "@Coord!G393",
+       "@Coord!H393"
+      ],
+      [
+       "@Coord!A394",
+       "@Coord!D394|n3",
+       "@Coord!B394",
+       "@Coord!G394",
+       "@Coord!H394"
+      ],
+      [
+       "@Coord!A395",
+       "@Coord!D395|n3",
+       "@Coord!B395",
+       "@Coord!G395",
+       "@Coord!H395"
+      ],
+      [
+       "@Coord!A396",
+       "@Coord!D396|n3",
+       "@Coord!B396",
+       "@Coord!G396",
+       "@Coord!H396"
+      ],
+      [
+       "@Coord!A397",
+       "@Coord!D397|n3",
+       "@Coord!B397",
+       "@Coord!G397",
+       "@Coord!H397"
+      ],
+      [
+       "@Coord!A398",
+       "@Coord!D398|n3",
+       "@Coord!B398",
+       "@Coord!G398",
+       "@Coord!H398"
+      ],
+      [
+       "@Coord!A399",
+       "@Coord!D399|n3",
+       "@Coord!B399",
+       "@Coord!G399",
+       "@Coord!H399"
+      ],
+      [
+       "@Coord!A400",
+       "@Coord!D400|n3",
+       "@Coord!B400",
+       "@Coord!G400",
+       "@Coord!H400"
+      ],
+      [
+       "@Coord!A401",
+       "@Coord!D401|n3",
+       "@Coord!B401",
+       "@Coord!G401",
+       "@Coord!H401"
+      ],
+      [
+       "@Coord!A402",
+       "@Coord!D402|n3",
+       "@Coord!B402",
+       "@Coord!G402",
+       "@Coord!H402"
+      ],
+      [
+       "@Coord!A403",
+       "@Coord!D403|n3",
+       "@Coord!B403",
+       "@Coord!G403",
+       "@Coord!H403"
+      ],
+      [
+       "@Coord!A404",
+       "@Coord!D404|n3",
+       "@Coord!B404",
+       "@Coord!G404",
+       "@Coord!H404"
+      ],
+      [
+       "@Coord!A405",
+       "@Coord!D405|n3",
+       "@Coord!B405",
+       "@Coord!G405",
+       "@Coord!H405"
+      ],
+      [
+       "@Coord!A406",
+       "@Coord!D406|n3",
+       "@Coord!B406",
+       "@Coord!G406",
+       "@Coord!H406"
+      ],
+      [
+       "@Coord!A407",
+       "@Coord!D407|n3",
+       "@Coord!B407",
+       "@Coord!G407",
+       "@Coord!H407"
+      ],
+      [
+       "@Coord!A408",
+       "@Coord!D408|n3",
+       "@Coord!B408",
+       "@Coord!G408",
+       "@Coord!H408"
+      ],
+      [
+       "@Coord!A409",
+       "@Coord!D409|n3",
+       "@Coord!B409",
+       "@Coord!G409",
+       "@Coord!H409"
+      ],
+      [
+       "@Coord!A410",
+       "@Coord!D410|n3",
+       "@Coord!B410",
+       "@Coord!G410",
+       "@Coord!H410"
+      ],
+      [
+       "@Coord!A411",
+       "@Coord!D411|n3",
+       "@Coord!B411",
+       "@Coord!G411",
+       "@Coord!H411"
+      ],
+      [
+       "@Coord!A412",
+       "@Coord!D412|n3",
+       "@Coord!B412",
+       "@Coord!G412",
+       "@Coord!H412"
+      ],
+      [
+       "@Coord!A413",
+       "@Coord!D413|n3",
+       "@Coord!B413",
+       "@Coord!G413",
+       "@Coord!H413"
+      ],
+      [
+       "@Coord!A414",
+       "@Coord!D414|n3",
+       "@Coord!B414",
+       "@Coord!G414",
+       "@Coord!H414"
+      ],
+      [
+       "@Coord!A415",
+       "@Coord!D415|n3",
+       "@Coord!B415",
+       "@Coord!G415",
+       "@Coord!H415"
+      ],
+      [
+       "@Coord!A416",
+       "@Coord!D416|n3",
+       "@Coord!B416",
+       "@Coord!G416",
+       "@Coord!H416"
+      ],
+      [
+       "@Coord!A417",
+       "@Coord!D417|n3",
+       "@Coord!B417",
+       "@Coord!G417",
+       "@Coord!H417"
+      ],
+      [
+       "@Coord!A418",
+       "@Coord!D418|n3",
+       "@Coord!B418",
+       "@Coord!G418",
+       "@Coord!H418"
+      ],
+      [
+       "@Coord!A419",
+       "@Coord!D419|n3",
+       "@Coord!B419",
+       "@Coord!G419",
+       "@Coord!H419"
+      ],
+      [
+       "@Coord!A420",
+       "@Coord!D420|n3",
+       "@Coord!B420",
+       "@Coord!G420",
+       "@Coord!H420"
+      ],
+      [
+       "@Coord!A421",
+       "@Coord!D421|n3",
+       "@Coord!B421",
+       "@Coord!G421",
+       "@Coord!H421"
+      ],
+      [
+       "@Coord!A422",
+       "@Coord!D422|n3",
+       "@Coord!B422",
+       "@Coord!G422",
+       "@Coord!H422"
+      ],
+      [
+       "@Coord!A423",
+       "@Coord!D423|n3",
+       "@Coord!B423",
+       "@Coord!G423",
+       "@Coord!H423"
+      ],
+      [
+       "@Coord!A424",
+       "@Coord!D424|n3",
+       "@Coord!B424",
+       "@Coord!G424",
+       "@Coord!H424"
+      ],
+      [
+       "@Coord!A425",
+       "@Coord!D425|n3",
+       "@Coord!B425",
+       "@Coord!G425",
+       "@Coord!H425"
+      ],
+      [
+       "@Coord!A426",
+       "@Coord!D426|n3",
+       "@Coord!B426",
+       "@Coord!G426",
+       "@Coord!H426"
+      ],
+      [
+       "@Coord!A427",
+       "@Coord!D427|n3",
+       "@Coord!B427",
+       "@Coord!G427",
+       "@Coord!H427"
+      ],
+      [
+       "@Coord!A428",
+       "@Coord!D428|n3",
+       "@Coord!B428",
+       "@Coord!G428",
+       "@Coord!H428"
+      ],
+      [
+       "@Coord!A429",
+       "@Coord!D429|n3",
+       "@Coord!B429",
+       "@Coord!G429",
+       "@Coord!H429"
+      ],
+      [
+       "@Coord!A430",
+       "@Coord!D430|n3",
+       "@Coord!B430",
+       "@Coord!G430",
+       "@Coord!H430"
+      ],
+      [
+       "@Coord!A431",
+       "@Coord!D431|n3",
+       "@Coord!B431",
+       "@Coord!G431",
+       "@Coord!H431"
+      ],
+      [
+       "@Coord!A432",
+       "@Coord!D432|n3",
+       "@Coord!B432",
+       "@Coord!G432",
+       "@Coord!H432"
+      ],
+      [
+       "@Coord!A433",
+       "@Coord!D433|n3",
+       "@Coord!B433",
+       "@Coord!G433",
+       "@Coord!H433"
+      ],
+      [
+       "@Coord!A434",
+       "@Coord!D434|n3",
+       "@Coord!B434",
+       "@Coord!G434",
+       "@Coord!H434"
+      ],
+      [
+       "@Coord!A435",
+       "@Coord!D435|n3",
+       "@Coord!B435",
+       "@Coord!G435",
+       "@Coord!H435"
+      ],
+      [
+       "@Coord!A436",
+       "@Coord!D436|n3",
+       "@Coord!B436",
+       "@Coord!G436",
+       "@Coord!H436"
+      ],
+      [
+       "@Coord!A437",
+       "@Coord!D437|n3",
+       "@Coord!B437",
+       "@Coord!G437",
+       "@Coord!H437"
+      ],
+      [
+       "@Coord!A438",
+       "@Coord!D438|n3",
+       "@Coord!B438",
+       "@Coord!G438",
+       "@Coord!H438"
+      ],
+      [
+       "@Coord!A439",
+       "@Coord!D439|n3",
+       "@Coord!B439",
+       "@Coord!G439",
+       "@Coord!H439"
+      ],
+      [
+       "@Coord!A440",
+       "@Coord!D440|n3",
+       "@Coord!B440",
+       "@Coord!G440",
+       "@Coord!H440"
+      ],
+      [
+       "@Coord!A441",
+       "@Coord!D441|n3",
+       "@Coord!B441",
+       "@Coord!G441",
+       "@Coord!H441"
+      ],
+      [
+       "@Coord!A442",
+       "@Coord!D442|n3",
+       "@Coord!B442",
+       "@Coord!G442",
+       "@Coord!H442"
+      ],
+      [
+       "@Coord!A443",
+       "@Coord!D443|n3",
+       "@Coord!B443",
+       "@Coord!G443",
+       "@Coord!H443"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Coord!A5",
+     "collapse": true,
+     "summary": "展開：本模型讀取的 Tokenomics 名稱與 Wattonomics 對照名稱、值與版本",
+     "head": [
+      "名稱",
+      "年度",
+      "層級值",
+      "本模型採用值",
+      "單位",
+      "層級與版本"
+     ],
+     "rows": [
+      [
+       "@Coord!A8",
+       "@Coord!B8",
+       "@Coord!C8|n3",
+       "@Coord!D8|n3",
+       "@Coord!E8",
+       "@Coord!F8"
+      ],
+      [
+       "@Coord!A9",
+       "@Coord!B9",
+       "@Coord!C9|n3",
+       "@Coord!D9|n3",
+       "@Coord!E9",
+       "@Coord!F9"
+      ],
+      [
+       "@Coord!A10",
+       "@Coord!B10",
+       "@Coord!C10|n3",
+       "@Coord!D10|n3",
+       "@Coord!E10",
+       "@Coord!F10"
+      ],
+      [
+       "@Coord!A11",
+       "@Coord!B11",
+       "@Coord!C11|n3",
+       "@Coord!D11|n3",
+       "@Coord!E11",
+       "@Coord!F11"
+      ],
+      [
+       "@Coord!A12",
+       "@Coord!B12",
+       "@Coord!C12|n3",
+       "@Coord!D12|n3",
+       "@Coord!E12",
+       "@Coord!F12"
+      ],
+      [
+       "@Coord!A13",
+       "@Coord!B13",
+       "@Coord!C13|n3",
+       "@Coord!D13|n3",
+       "@Coord!E13",
+       "@Coord!F13"
+      ],
+      [
+       "@Coord!A14",
+       "@Coord!B14",
+       "@Coord!C14|n3",
+       "@Coord!D14|n3",
+       "@Coord!E14",
+       "@Coord!F14"
+      ],
+      [
+       "@Coord!A15",
+       "@Coord!B15",
+       "@Coord!C15|n3",
+       "@Coord!D15|n3",
+       "@Coord!E15",
+       "@Coord!F15"
+      ],
+      [
+       "@Coord!A16",
+       "@Coord!B16",
+       "@Coord!C16|n3",
+       "@Coord!D16|n3",
+       "@Coord!E16",
+       "@Coord!F16"
+      ],
+      [
+       "@Coord!A17",
+       "@Coord!B17",
+       "@Coord!C17|n3",
+       "@Coord!D17|n3",
+       "@Coord!E17",
+       "@Coord!F17"
+      ],
+      [
+       "@Coord!A18",
+       "@Coord!B18",
+       "@Coord!C18|n3",
+       "@Coord!D18|n3",
+       "@Coord!E18",
+       "@Coord!F18"
+      ],
+      [
+       "@Coord!A19",
+       "@Coord!B19",
+       "@Coord!C19|n3",
+       "@Coord!D19|n3",
+       "@Coord!E19",
+       "@Coord!F19"
+      ],
+      [
+       "@Coord!A20",
+       "@Coord!B20",
+       "@Coord!C20|n3",
+       "@Coord!D20|n3",
+       "@Coord!E20",
+       "@Coord!F20"
+      ],
+      [
+       "@Coord!A21",
+       "@Coord!B21",
+       "@Coord!C21|n3",
+       "@Coord!D21|n3",
+       "@Coord!E21",
+       "@Coord!F21"
       ]
      ]
     }
@@ -4247,6 +8654,16 @@
    "id": "status",
    "title": "資料狀態",
    "blocks": [
+    {
+     "type": "h3",
+     "text": "本版要點"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A72"
+     ]
+    },
     {
      "type": "kv",
      "items": [
@@ -4389,5 +8806,6 @@
     }
    ]
   }
- ]
+ ],
+ "layout": "v1.3"
 }

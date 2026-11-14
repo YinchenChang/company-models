@@ -349,5 +349,161 @@ cfg = {
     {"type": "scan", "needle": "未找到", "collapse": True, "summary": "展開：標為「未找到」的項目", "sheets": {"Recon": ["A", "E", "G"], "In": ["B", "H", "I"]}, "empty": "沒有標為未找到的項目。"}]}
  ]
 }
+
+def _v13():
+    """v0.2.8：個股 HTML 版面規格 v1.3（章節順序、命題圖、估值首圖、敏感度龍捲風、反向 DCF、標準損益表、驅動因子圖、資金模組、三層協調）。"""
+    V28 = rm["V28"]; PLA, RVA, CRD, RMA = V28["PL"], V28["RV"], V28["CRD"], V28["RM"]
+    S = {x["id"]: x for x in cfg["sections"]}
+    PLW = wb["PL"]
+    assert str(wb["README"][f"A{RMA['ver']}"].value).startswith("v0.2.8"), wb["README"][f"A{RMA['ver']}"].value
+    cfg["layout"] = "v1.3"
+    old_note = cfg["hero"]["note"]
+    cfg["hero"]["note"] = [f"@README!A{RMA['hero']}"]
+    ph = PLA["hdr"]; ix = PLA["idx"]; sx = PLA["sidx"]
+    # ---- 1. 命題 ----
+    th = S["thesis"]["blocks"]
+    i_obs = next(i for i, b in enumerate(th) if b["type"] == "h3" and b.get("text") == "重點觀察")
+    th[i_obs + 1] = {"type": "list", "ordered": True, "items": [f"@README!A{RMA[k]}" for k in ("o1", "o2", "o3", "o4", "o5")]}
+    th_chart = {"type": "theme", "title": "營收（十億美元，依分部堆疊）與營業利益率：FY2023A–FY2032E（情境 B）", "x": f"@PL!C{ph}:L{ph}",
+                "fmt": "n0", "fmt_r": "p0", "stack": True, "pad": 1.3, "total": f"@PL!C{ix['rev']}:L{ix['rev']}",
+                "bars": [{"name": [f"@PL!A{sx['s_sp']}"], "y": f"@PL!C{sx['s_sp']}:L{sx['s_sp']}", "color": "#6fa8dc"},
+                         {"name": [f"@PL!A{sx['s_cn']}"], "y": f"@PL!C{sx['s_cn']}:L{sx['s_cn']}", "color": "#0b7a80"},
+                         {"name": [f"@PL!A{sx['s_si']}"], "y": f"@PL!C{sx['s_si']}:L{sx['s_si']}", "color": "#c29a2b"}],
+                "lines": [{"name": [f"@PL!A{ix['opm']}"], "y": f"@PL!C{ix['opm']}:L{ix['opm']}", "axis": "r", "color": "#3b3838", "labels": True}],
+                "caption": "堆疊＝Space、Connectivity、SI（xAI 算力出租與 Grok、Cursor、X）三個分部；折線＝合併營業利益率（右軸，財報口徑）。FY2026E 起為情境 B（基準）；FY2023A–FY2025A 為招股書實績（已追溯重編納入 xAI 與 X）。"}
+    th[0:0] = [{"type": "note", "parts": [f"@README!A{RMA['rec']}"]}, th_chart]
+    # ---- 2. 估值：四個目標價與現價置頂 ----
+    va = S["valuation"]["blocks"]
+    i_bar = next(i for i, b in enumerate(va) if b["type"] == "bars")
+    va[i_bar] = {"type": "bars", "title": "四個目標價與現價（美元；豎線＝現價）", "fmt": "n2",
+                 "items": [{"label": f"@Val!A{VR[k]}", "value": f"@Val!B{VR[k]}", "series": sr} for k, sr in (("tpdcf", 1), ("tpcomp", 2), ("tp", 0), ("cons", 1))],
+                 "ref": {"label": f"@Val!A{VR['px']}", "value": f"@Val!B{VR['px']}"}}
+    bar = va.pop(i_bar)
+    S["valuation"]["blocks"] = [bar, {"type": "note", "parts": [S["valuation"].pop("intro")]}, {"type": "note", "parts": list(old_note)}] + va
+    # ---- 3. 敏感度：加權目標價相對基準龍捲風圖置頂 ----
+    SW = wb["Sens"]; t0 = find("Sens", "加權目標價相對基準（HTML"); r1_ = t0 + 2; r2_ = r1_
+    while SW.cell(r2_ + 1, 1).value: r2_ += 1
+    tors = []
+    for col, side in (("B", "低"), ("C", "高")):
+        big = [r for r in range(r1_, r2_ + 1) if isinstance(SW[f"{col}{r}"].value, (int, float)) and abs(SW[f"{col}{r}"].value) >= 0.1]
+        small = [r for r in range(r1_, r2_ + 1) if isinstance(SW[f"{col}{r}"].value, (int, float)) and 0.0005 <= abs(SW[f"{col}{r}"].value) < 0.1]
+        base = {"type": "tornado", "sheet": "Sens", "label_col": "A", "value_col": col, "fmt": "sp1"}
+        assert big, (col, "無達兩位數的案例")
+        tors.append(dict(base, title=f"加權目標價相對基準：輸入取{side}值，變動達兩位數百分比的案例", rows=",".join(map(str, big))))
+        if small:
+            tors.append(dict(base, title=f"加權目標價相對基準：輸入取{side}值", rows=",".join(map(str, small)), collapse=True,
+                             summary=f"展開：加權目標價相對基準：輸入取{side}值，變動未達兩位數百分比的案例"))
+    tors.append({"type": "table", "caption": f"@Sens!A{t0}", "collapse": True, "summary": "展開：全部案例的加權目標價相對基準（低案、高案）",
+                 "head": [f"@Sens!{c}{t0 + 1}" for c in "ABC"], "rows": [[f"@Sens!A{r}", f"@Sens!B{r}|sp1", f"@Sens!C{r}|sp1"] for r in range(r1_, r2_ + 1)]})
+    sb = S["sens"]["blocks"]
+    for b in sb:
+        if b["type"] == "tornado":
+            b["collapse"] = True; b["summary"] = "展開：對照：加權目標價相對基準（原圖，標籤為模型輸入名稱）"
+    first2 = [t for t in tors if not t.get("collapse")]
+    S["sens"]["blocks"] = first2 + [{"type": "note", "parts": [S["sens"].pop("intro")]}] + [t for t in tors if t.get("collapse")] + sb
+    # ---- 4. 反向 DCF（新）----
+    A_ = RVA; yh = A_["yh"]
+    yr_fmt = {"y_rev": "n1", "y_ebit": "n1", "y_m": "p1", "y_df": "n3", "y_tvf": "n3", "y_k": "n3"}
+    rev_ = {"id": "revdcf", "title": "反向 DCF：現價隱含什麼", "intro": "@RevDCF!A2", "blocks": [
+        {"type": "note", "parts": [f"@RevDCF!A{A_['sum_dcf']}"]}, {"type": "note", "parts": [f"@RevDCF!A{A_['sum_cmp']}"]},
+        {"type": "table", "caption": "現金流折現法（情境 B 路徑）：現價隱含值與模型基準", "head": ["項目", "現價隱含", "模型基準"],
+         "rows": [["預測期營業利益率（FY2028–FY2032 統一一個值；模型欄為等效值，終值年權重大）", f"@RevDCF!B{A_['m1']}|p1", f"@RevDCF!B{A_['m0']}|p1"],
+                  ["營收規模（FY2028 起各年同乘的倍數）", f"@RevDCF!B{A_['s1']}|n2", "—"],
+                  ["FY2028 營收（十億美元）", f"@RevDCF!B{A_['rv1']}|n0", f"@RevDCF!B{A_['rv0']}|n0"],
+                  ["FY2028 營收年增率", f"@RevDCF!B{A_['g1']}|p1", f"@RevDCF!B{A_['g0']}|p1"],
+                  ["折現率（WACC）", f"@RevDCF!B{A_['w1']}|p2", f"@RevDCF!B{A_['w0']}|p2"],
+                  ["折現率反解結果", f"@RevDCF!B{A_['w_ok']}", ""]]},
+        {"type": "table", "caption": "分部加總法：現價隱含的倍數與模型", "head": ["項目", "現價隱含", "模型", "差距（現價隱含相對模型）"],
+         "rows": [[f"@RevDCF!A{A_[k]}", f"@RevDCF!B{A_[k]}|{f}", f"@RevDCF!C{A_[k]}|{f}", f"@RevDCF!D{A_[k]}|sp1"] for k, f in (("sps", "n2"), ("sev", "n0"), ("smul", "n1"), ("scmp", "n2"))]},
+        {"type": "table", "caption": "現金流折現法：現價隱含的企業價值與模型", "head": ["項目", "值"],
+         "rows": [[f"@RevDCF!A{A_[k]}", f"@RevDCF!B{A_[k]}|{f}"] for k, f in (("px", "n2"), ("v0", "n2"), ("evr", "n0"), ("ev", "n0"), ("evx", "n2"), ("v_b", "n2"))]},
+        {"type": "table", "caption": f"@RevDCF!A{yh}", "head": [f"@RevDCF!{c}{yh}" for c in "ABCDEFGH"], "collapse": True,
+         "summary": "展開：情境 B 各年數字與反解係數（封閉解的計算過程）",
+         "rows": [[f"@RevDCF!A{A_[k]}"] + [f"@RevDCF!{c}{A_[k]}|{f}" for c in "BCDEFGH"] for k, f in yr_fmt.items()]}]}
+    # ---- 5. 損益：標準損益表 ----
+    fmtu = lambda u: {"%": "p1", "US$": "n2", "十億股": "n2"}.get(u, "n1")
+    rowx = lambda r, cols="CDEFGHIJKLM": [f"@PL!A{r}"] + [f"@PL!{c}{r}|{fmtu(PLW.cell(r, 2).value)}" for c in cols]
+    head = [f"@PL!A{ph}"] + [f"@PL!{c}{ph}" for c in "CDEFGHIJKLM"]
+    keys = ["rev", "yoy", "cogs", "gp", "gm", "opx", "oi", "opm", "oth", "pti", "tax", "ni", "nm", "sh", "eps"]
+    rid = PLA["ridx"]
+    is_tbl = {"type": "table", "caption": "標準損益表（GAAP；十億美元，EPS 為美元）：FY2023A–FY2025A 實績、FY2026E–FY2032E 情境 B（基準）、最右欄為 2026 年前三季累計實績", "head": head,
+              "rows": [rowx(ix[k]) for k in keys] + [{"sub": f"@PL!A{PLA['ratio']}"}] + [rowx(rid[k]) for k in ("r_niy",)]}
+    chk_tbl = {"type": "table", "caption": "核對（應為零）", "collapse": True, "summary": "展開：標準損益表核對列", "head": head,
+               "rows": [rowx(r) for r in range(PLA["chk"] + 1, PLA["chk"] + 8)]}
+    rv_, gm_, opm_, nm_ = ix["rev"], ix["gm"], ix["opm"], ix["nm"]
+    is_chart = {"type": "theme", "title": "營收（十億美元）與毛利率、營業利益率、淨利率：FY2023A–FY2032E（情境 B）", "x": f"@PL!C{ph}:L{ph}", "fmt": "n0", "fmt_r": "p0", "stack": True, "pad": 1.6,
+                "bars": [{"name": [f"@PL!A{rv_}"], "y": f"@PL!C{rv_}:L{rv_}", "color": "#6fc7cb"}],
+                "lines": [{"name": [f"@PL!A{gm_}"], "y": f"@PL!C{gm_}:L{gm_}", "axis": "r", "color": "#0b7a80", "labels": True},
+                          {"name": [f"@PL!A{opm_}"], "y": f"@PL!C{opm_}:L{opm_}", "axis": "r", "color": "#c29a2b"},
+                          {"name": [f"@PL!A{nm_}"], "y": f"@PL!C{nm_}:L{nm_}", "axis": "r", "color": "#6f6bae", "dash": True}],
+                "caption": "長條＝營收；三條線＝毛利率、營業利益率、淨利率（右軸，GAAP）。預測期毛利率是營業成本占成本費用合計之比固定的結果（模型未分列營業成本），營業利益率才是模型推導量；FY2023A 含大額減損，FY2026E 起 AI 折舊上升壓低營業利益率。"}
+    old = S["pl"]["blocks"]
+    seg_old = next(b for b in old if b.get("type") == "table" and str(b.get("summary", "")).startswith("展開：情境 B 的分部"))
+    cf_old = next(b for b in old if b.get("type") == "table" and str(b.get("summary", "")).startswith("展開：情境 B 的現金流"))
+    gate_old = next(b for b in old if b.get("type") == "table" and b.get("caption") == "收支關卡")
+    rest = [b for b in old if b not in (seg_old, cf_old, gate_old)]
+    for b in rest:
+        if b.get("type") == "pl":
+            b["collapse"] = True; b["summary"] = "展開：三情境損益（A／B／C 並列，含折線）"
+    S["pl"].update(title="損益（標準損益表）", blocks=[{"type": "note", "parts": [f"@PL!A{PLA['note']}"]}, is_chart, is_tbl, {"type": "note", "parts": [f"@PL!A{PLA['note2']}"]}, chk_tbl,
+                                                          {"type": "note", "parts": ["@PL!A2"], "collapse": True, "summary": "展開：三情境損益頁說明"}] + rest + [dict(seg_old)])
+    S["pl"].pop("intro", None)
+    # ---- 6. 驅動因子：分部營收推導圖 ----
+    pbk = PR["B"]
+    segs = [("space", "#6fa8dc"), ("cons", "#0b7a80"), ("eg", "#45b0b5"), ("rent", "#c29a2b"), ("nr", "#e69138"), ("ads", "#999999")]
+    seg_chart = {"type": "theme", "title": "營收推導堆疊（情境 B，十億美元）：發射、Starlink 消費與企業政府、SI 對外雲端服務、Grok／Cursor／X 與廣告", "x": f"@PL!G{hA}:M{hA}", "fmt": "n0", "fmt_r": "p0", "stack": True, "pad": 1.2,
+                 "total": f"@PL!G{pbk['rev']}:M{pbk['rev']}",
+                 "bars": [{"name": [f"@PL!A{pbk[k]}"], "y": f"@PL!G{pbk[k]}:M{pbk[k]}", "color": c} for k, c in segs],
+                 "caption": "堆疊＝Space、Consumer、Enterprise & Government、SI 對外雲端服務、Grok／Cursor／X 訂閱與資料授權、Advertising；頂端數字＝合併營收。SI 對外雲端服務是營收規模與目標價最大的驅動。"}
+    S["drivers"]["blocks"] = [{"type": "note", "parts": [f"@README!A{RMA['drv']}"]}, seg_chart] + S["drivers"]["blocks"]
+    S["drivers"]["title"] = "驅動因子：分部營收推導"
+    # ---- 6b. 資金模組（由損益章移出：收支關卡與情境 B 現金流）----
+    cb = CR["B"]
+    fund_chart = {"type": "theme", "title": "情境 B 營運現金流、資本支出與自由現金流（十億美元）：FY2026E–FY2032E", "x": f"@CF!G{cb['ni'] - 1}:M{cb['ni'] - 1}", "fmt": "n0", "fmt_r": "n0", "stack": False, "pad": 1.2,
+                  "bars": [{"name": [f"@CF!A{cb['cfo']}"], "y": f"@CF!G{cb['cfo']}:M{cb['cfo']}", "color": "#0b7a80"},
+                           {"name": [f"@CF!A{cb['cx']}"], "y": f"@CF!G{cb['cx']}:M{cb['cx']}", "color": "#c29a2b"}],
+                  "lines": [{"name": [f"@CF!A{cb['fcf']}"], "y": f"@CF!G{cb['fcf']}:M{cb['fcf']}", "axis": "l", "color": "#3b3838", "labels": True}],
+                  "caption": "長條＝營運現金流與現金資本支出；折線＝自由現金流（收支關卡口徑，扣融資租賃本金與以其他融資取得之不動產設備）。資本支出高於營運現金流的缺口由融資補足（見下方現金流與融資表）。"}
+    funding = {"id": "funding", "title": "資金：收支關卡與融資", "blocks": [fund_chart, gate_old, cf_old]}
+    # ---- 7. 對帳：三層協調 ----
+    CW = wb["Coord"]
+    cr = lambda p_, start=1: next(r for r in range(start, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith(p_))
+    f1h, f1b, f2h = cr("F1. 本模型讀取"), cr("F1b. 追公式"), cr("F2. C0（實績）")
+    F1a, F1e = CRD["F1"]; r_tr = CRD["rtr"]
+    rg1, rg2, rgj = CRD["rg"]; rc1, rc2, rcj, rcjr, rcn = CRD["rc"]; rn1, rn2, rn3, rn4, rn5, rn6 = CRD["rn"]; rl = CRD["rl"]
+    gw_t = {"type": "table", "caption": "名目算力（公司揭露 vs Wattonomics 隱含 2025 年底上線 GW；GW）", "head": ["讀數", "期間／口徑", "公司實績", "層級隱含", "差距", "狀態／判定"],
+            "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!D{r}|n2", f"@Coord!E{r}|n2", f"@Coord!F{r}|sp1", f"@Coord!G{r}"] for r in (rg1, rg2)] + [[f"@Coord!A{rgj}", f"@Coord!B{rgj}", "", "", "", f"@Coord!G{rgj}"]]
+                    + [[f"@Coord!A{CRD['rgr']}", f"@Coord!B{CRD['rgr']}", f"@Coord!D{CRD['rgr']}|n2", f"@Coord!E{CRD['rgr']}|n2", f"@Coord!F{CRD['rgr']}|sp1", f"@Coord!G{CRD['rgr']}"]]}
+    capx = {"type": "table", "caption": "資本支出（公司已公布實績 vs Wattonomics 隱含值；US$B；層級值同源，參考）", "head": ["讀數", "期間／口徑", "公司實績", "層級隱含", "差距", "狀態／判定"],
+            "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!D{r}|n1", f"@Coord!E{r}|n1", f"@Coord!F{r}|sp1", f"@Coord!G{r}"] for r in (rc1, rc2, rcn)]
+                    + [[f"@Coord!A{rcj}", f"@Coord!B{rcj}", "", "", "", f"@Coord!G{rcj}"], [f"@Coord!A{rcjr}", "", "", "", "", f"@Coord!G{rcjr}"]]}
+    nocmp = {"type": "table", "caption": "沒有可比公司實績的項目與並列讀法（參考；不判定）", "head": ["項目", "期間／口徑", "公司值", "層級隱含", "差距", "狀態"],
+             "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!D{r}|n2", f"@Coord!E{r}|n2", f"@Coord!F{r}|sp1", f"@Coord!G{r}"] for r in (rn2, rn4, rn5, rn6)]
+                     + [[f"@Coord!A{r}", f"@Coord!B{r}", "", "", "", f"@Coord!G{r}"] for r in (rn1, rn3)]}
+    d3 = {"type": "table", "caption": "展開：實績對帳的輸入、出處與證據等級", "collapse": True, "summary": "展開：實績對帳的輸入、出處與證據等級",
+          "head": ["項目", "期間／口徑", "公司實績口徑與出處", "公司實績等級", "層級口徑與出處", "層級等級"],
+          "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!H{r}", f"@Coord!I{r}", f"@Coord!J{r}", f"@Coord!K{r}"] for r in [rg1, rg2, rgj, CRD["rgr"], rl, rc1, rc2, rcn, rn1, rn2, rn3, rn4, rn5, rn6]]}
+    trc = {"type": "table", "caption": f"@Coord!A{f1b}", "head": ["輸出名稱 ← 公式鏈", "同源判定", "讀到什麼"],
+           "rows": [[f"@Coord!A{r}", f"@Coord!G{r}", f"@Coord!H{r}"] for r in range(f1b + 2, r_tr)]}
+    t1 = {"type": "table", "caption": f"@Coord!A{f1h}", "collapse": True, "summary": "展開：本模型讀取的 Tokenomics 名稱與 Wattonomics 對照名稱、值與版本",
+          "head": ["名稱", "年度", "層級值", "本模型採用值", "單位", "層級與版本"],
+          "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}|n3", f"@Coord!D{r}|n3", f"@Coord!E{r}", f"@Coord!F{r}"] for r in range(F1a + 1, F1e + 1)]}
+    d0, d1 = CRD["rdump"]
+    dump_t = {"type": "table", "caption": "展開：追公式傾印（腳本輸出：每格公式與值）", "collapse": True, "summary": "展開：追公式傾印（每格公式與值；腳本 trace_wattonomics.py 的輸出）",
+              "head": ["儲存格（縮排＝依賴深度）", "值", "狀態", "標記", "公式"],
+              "rows": [[f"@Coord!A{r}", f"@Coord!D{r}|n3", f"@Coord!B{r}", f"@Coord!G{r}", f"@Coord!H{r}"] for r in range(d0, d1 + 1)]}
+    S["recon"]["blocks"].extend([
+        {"type": "h3", "text": "三層協調：讀取層級與實績對帳"},
+        {"type": "note", "parts": [f"@Coord!D{CRD['rs']}"]}, gw_t, {"type": "note", "parts": ["口徑：", f"@Coord!B{CRD['rkq']}"]}, capx, nocmp, d3,
+        {"type": "note", "parts": [f"@Coord!B{CRD['rr']}"]}, {"type": "note", "parts": [f"@Coord!B{CRD['rsame']}"]}, {"type": "note", "parts": [f"@Coord!B{CRD['rk']}"]},
+        {"type": "h3", "text": "追公式：層級值是否讀公司實績或目標"}, trc, {"type": "note", "parts": [f"@Coord!A{r_tr}"]}, dump_t, t1])
+    # ---- 8. 資料狀態：本版要點 ----
+    S["status"]["blocks"][0:0] = [{"type": "h3", "text": "本版要點"}, {"type": "note", "parts": [f"@README!A{RMA['ver']}"]}]
+    S["revdcf"] = rev_; S["funding"] = funding
+    order = ["thesis", "valuation", "sens", "revdcf", "pl", "drivers", "funding", "recon", "status"]
+    cfg["sections"] = [S[k] for k in order]
+
+
+_v13()
 json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")

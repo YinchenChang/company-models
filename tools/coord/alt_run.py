@@ -2,6 +2,7 @@
 # 用法：python3 tools/coord/alt_run.py <資料夾> [暫存資料夾，預設 /tmp/work_coord/<資料夾>]；並行時設 LO_PROFILE＝file:///tmp/lo_<名>（LibreOffice 私有設定檔）
 # 建檔指令取自 .github/workflows/ai-semis-build.yml 的 targets（與 CI 相同）。建置兩次：現行（COORD_RUN＝1）與另一側（另加 SIL_COORD_ALT＝1），
 # LibreOffice 重算後讀 Val 頁加權目標價、DCF、Comparable（市場主流同業法）、上檔空間；錯誤格須為 0。
+# 另一側建置的「檢查」「核對」列（A 或 B 欄標題以此開頭，或含「應為 0」）非 0 且與現行建置不同時印警告（不擋；以標題對應，不靠列號）。
 import glob, json, os, re, shutil, subprocess, sys
 import openpyxl
 
@@ -25,12 +26,30 @@ subprocess.run(["soffice"] + ([f"-env:UserInstallation={os.environ['LO_PROFILE']
 ERR = ("#REF!", "#DIV/0!", "#VALUE!", "#NAME?", "#N/A", "#NUM!", "#NULL!", "Err:502")
 
 
+def checks(wb, tol=1e-6):
+    """各頁 A 或 B 欄標題以「檢查」「核對」開頭（或含「應為 0」「應約 0」）的列：回傳 {(頁, 標題, 同頁同標題第幾次): (該列數值格最大絕對值, 列號)}
+    （以標題而非列號對應兩次建置：另一側建置可能多出列；只收數值格；不擋，只供警告）"""
+    out = {}
+    for ws in wb:
+        seen = {}
+        for row in ws.iter_rows():
+            lab = next((x.value for x in row[:2] if isinstance(x.value, str) and x.value.strip()), None)
+            if not lab or not (lab.strip().startswith(("檢查", "核對")) or "應為 0" in lab or "應約 0" in lab):   # 只收「應為 0」型核對列（不含「歷史倍數檢查」這類判讀列）
+                continue
+            nums = [abs(x.value) for x in row[1:] if isinstance(x.value, (int, float)) and not isinstance(x.value, bool)]
+            if nums:
+                n = seen[lab] = seen.get(lab, 0) + 1
+                out[(ws.title, lab, n)] = (max(nums), row[0].row)
+    return out
+
+
 def read(nm):
     wb = openpyxl.load_workbook(os.path.join(TMP, "rc", f"{nm}.xlsx"), data_only=True)
     V = CO.val_rows(wb["Val"])
     out = {k: wb["Val"].cell(V[k], 2).value for k in CO.KEYS}
     out["rec"] = CO.rec(out["up"])
     out["errors"] = sum(1 for ws in wb for row in ws.iter_rows() for x in row if isinstance(x.value, str) and x.value in ERR)
+    out["checks"] = checks(wb)
     w = {y: wb.defined_names.get(f"wta_{y % 100}") for y in (2027, 2028, 2029)}
     out["wta"] = {}
     for y, d in w.items():
@@ -41,6 +60,16 @@ def read(nm):
 
 B, A = read("base"), read("alt")
 assert B["errors"] == 0 and A["errors"] == 0, (B["errors"], A["errors"])
+# 另一側建置的「檢查／核對」列：非 0 時警告（不擋）。已實現與錨點期間不應受縮放影響（README 兩讀數規格），現行建置為 0、另一側非 0 的列最可疑
+_TOL = 1e-6
+_new = [(k, v) for k, v in A["checks"].items() if v[0] > _TOL and abs(v[0] - B["checks"].get(k, (0,))[0]) > _TOL]
+_old = [k for k, v in A["checks"].items() if v[0] > _TOL and abs(v[0] - B["checks"].get(k, (0,))[0]) <= _TOL]
+for (sh, lab, _), (v, rr) in _new:
+    print(f"警告：另一側建置 {sh}!{rr} 檢查列非 0 且與現行建置不同（最大 {v:.6g}；現行 {B['checks'].get((sh, lab, _), (0,))[0]:.6g}）：{lab[:60]}", file=sys.stderr)
+if _old:
+    print(f"提醒：另有 {len(_old)} 列檢查列非 0，但與現行建置相同（捨入或既有差額），不另列", file=sys.stderr)
+if not _new:
+    print("檢查列：另一側建置與現行建置一致（無新增非 0）", file=sys.stderr)
 sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
 import reader as SIL  # noqa: E402
 exp = {str(y): (SIL.ALT_RATIO[y] if SIL.RECO_FLAG[y] == 1 else 1) for y in (2027, 2028, 2029)}

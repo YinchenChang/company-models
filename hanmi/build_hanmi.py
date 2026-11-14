@@ -31,6 +31,14 @@ DSC_F = only("disco/dist/*.xlsx"); EQ_F = only("markets/equipment/dist/*.xlsx")
 rel = lambda f: os.path.relpath(f, ROOT)
 
 ws_ = openpyxl.load_workbook(SKH_F, data_only=True)["Mkt"]
+ALT_DEM, ALT_SUP = {}, {}   # 三層協調 C4 另一側讀數建置用（SIL.COORD_ALT 時才進公式）：HBM 需求 × 出貨係數（A／B／C）與供給（三情境相同），SK 海力士模型成品 Mkt 頁
+for _r in ws_.iter_rows():
+    _l = str(_r[0].value or "")
+    if _l in ("需求 × 出貨係數（A）", "需求 × 出貨係數（B）", "需求 × 出貨係數（C）") and _l[-2] not in ALT_DEM:
+        ALT_DEM[_l[-2]] = {y: _r[2 + j].value for j, y in enumerate(YRS)}
+    if _l == "供給（三情境相同）" and not ALT_SUP:
+        ALT_SUP = {y: _r[2 + j].value for j, y in enumerate(YRS)}
+assert sorted(ALT_DEM) == ["A", "B", "C"] and ALT_SUP
 SHIP = {}   # HBM 出貨位元（EB），三情境各一列（markets/memory v0.4 起隨情境顆數係數變動）
 for r in ws_.iter_rows():
     lab = str(r[0].value or "")
@@ -216,6 +224,9 @@ DEFP = dict(scn="A", den="", stk="", beta="beta_stk", dlt="dlt", gt="g_tail", hb
 
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["hsx"] is None and s != "A":   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 於 CY2027 起 HBM 需求位元 × wta（＝另一側讀數比值），出貨＝MIN(需求 × wta, 供給)（同 Sens「Wattonomics 錨定」案例）；情境 A 不縮放
+        P["hsx"] = {y: (f"hs{s}_{y % 100}" if y < 2027 else f"MIN({ALT_DEM[s][y]!r}*wta_{y % 100},{ALT_SUP[y]!r})") for y in YRS}
+        P["hsA28"] = f"MIN({ALT_DEM['A'][2028]!r}*wta_28,{ALT_SUP[2028]!r})"
     hb = P["hb"] if P["hb"] is not None else HB[s]
     hby = lambda y: (P["hb"] if P["hb"] is not None else ("hbp_{y}" if y <= 2027 else HB[s])).format(y=y % 100)   # 情境分歧自 CY2028
     hb28p = (P["hb"] if P["hb"] is not None else "hbp_{y}").format(y=28)   # CY2027 購機的共同前提：CY2028 混合鍵合取基準
@@ -1015,5 +1026,13 @@ def _px1105(wb, ver, tk, px5, px4, peer5, peer_old):
 _PX1105 = _px1105(wb, 'v0.4.3', '042700.KS', 169100, 186100,
     {'BESI.AS': 140.9, '0522.HK': 101, 'KLIC': 59.83, '6146.T': 41450},
     {('BESI.AS', '2026-11-04'): 152, ('0522.HK', '2026-09-23'): (171, '2026-09-23 收盤 HK$171.00 取自 TOWA 模型 Val 同業列（stockanalysis 取得日價格）'), ('KLIC', '2026-11-04'): 68.44, ('6146.T', '2026-11-04'): 47370})
+# v0.4.4（2026-11-15）：三層協調 C4（規則 v1.4.2；tools/coord/）兩讀數目標價（Coord 頁；快照 hanmi/coord_alt.json）＋個股 HTML 版面規格 v1.3＋C0（實績）（hanmi/v044_post.py）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import v044_post as P44  # noqa: E402
+    print(P44.apply(wb, SIL, _CR))
 wb.save(sys.argv[1])
 print("PB", {s: PB[s] for s in SC}); print("SUMR", SUMR); print("VAL", VAL, "fwd rows to", fr, "SENS_LAST", SENS_LAST, "Recon last", rr_)

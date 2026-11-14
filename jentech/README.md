@@ -1,4 +1,17 @@
-# jentech/ — 健策精密（3653.TW）收支與估值模型 v0.2.4
+# jentech/ — 健策精密（3653.TW）收支與估值模型 v0.2.5
+## v0.2.5（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（兩讀數目標價、讀取層級、C0 公司實績對帳）
+
+- **依據：** 工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`（推廣輪：電源散熱）、`docs/workorders/20261114_C0實績對帳補列_七家.md`；規則 `docs/plan/三層基準協調規則.md` v1.4.2 C0 第 2 點；`tools/coord/README.md`。樣板：台達電 v0.5.7、奇鋐 v0.3.5（#538）、NVIDIA v0.3.10。
+- **做法：** 主引擎掛鉤（`SIL.COORD_ALT` 時情境 B、C 的**加速器顆數** CY2027 起 × wta_27／28／29；情境 A 不縮放；本模型不讀部署 GW，產業量即顆數）→ `tools/coord/alt_run.py jentech` → `jentech/coord_alt.json`；建檔程式存檔前 `COORD.add_sheet` 後呼叫 `jentech/v13_post.py`（共通步驟 `jentech/c13.py`）：Hist 頁、PL 頁末標準損益表（FY2023A–FY2031E；延伸期取推導區塊 H–I 欄）、RevDCF 頁、Val 0.7、Sens 末「加權目標價相對基準」、Coord 頁三層協調 C0、README 頁末 v1.3 白話列；`gen_html_json.py` 最後呼叫 `jentech/html13.py`。`co_flag` 具名範圍未建。
+- **兩讀數：** 現行基準 4,109.23（−29.2%，放空）；另一側讀數 3,559.15（−38.7%，放空）——評等相同。Coord 快照狀態 CURRENT。
+- **實績與出處（Coord 第 4a 節；Verified）：** 月營收 2026-09 30.54 億元、累計前 9 月 220.73 億元（TechNews 2026-10-08，https://finance.technews.tw/2026/10/08/jentech-3653-202609-financial-report/）；2026-10 30.73 億元、累計前 10 月 251.46 億元（TechNews 2026-11-06，https://finance.technews.tw/2026/11/06/jentech-3653-202610-financial-report/）；3Q26 營收＝7–9 月 94.93 億元（In 頁 q3_rev）；3Q26 EPS 19.70 元（HiStock 每股盈餘表 https://histock.tw/stock/3653/每股盈餘 ；3Q26 財報細項截至 2026-11-15 未取得）。**公司未揭露 AI 加速器均熱片或液冷冷板元件營收。** Hist 頁：FY2022–FY2023 取公司 113 年股東常會議事錄附 112 年度合併財報（仟元，https://jentech.com.tw/_files/ugd/e8883b_d59bb0c172834f49962b5206aa2ce044.pdf ）；FY2024 取 stockanalysis（https://stockanalysis.com/quote/tpe/3653/financials/ ；稅前由稅前利益率推得）與 HiStock 各季 EPS 加總 24.15；FY2025 同 Q 頁。FY2024–FY2025 所得稅與非控制權益未拆分（所得稅列含非控制權益，非控制權益列記 0）。
+- **層級隱含：** Siliconomics 沒有均熱片同口徑量（市場、每顆金額、健策份額；本模型均熱片市場＝網通市場模型顆數 × 本公司每顆金額）；液冷冷板元件份額 lc_jtsh 只從 CY2027 起（CY2026 為 0）。
+- **判定：** **C0（實績）結論：無可比實績**——缺公司 AI 均熱片與液冷冷板元件營收揭露，且 Siliconomics 沒有均熱片同口徑量（若 Siliconomics 新增均熱片市場與份額，才能以公司散熱或均熱片營收做 C0）。C0 對帳中項目 0 項。讀取層級兩項（液冷市場、健策液冷份額）差距 0（同源，不判定）；層級之間（參考）：本模型不讀部署 GW，另一側讀數比值 CY2027–29 為 0.62／0.67／0.67。參考（模型對實績）：營收錨點隱含 11–12 月月均 36.8 億元，較 10 月 +20%。
+- **README 舊節數字說明：** 下方 v0.2.4 節寫的加權目標價 4,252、上檔空間 −26.8% 是當時成品值；之後 Siliconomics 全下游重建（原地更新 dist）使現行 dist 為 4,109.23、−29.2%（評等仍放空）。本版不改寫舊節，以本節與 xlsx 為準。
+- **驗證：** `tools/xlsx_diff.py` 對 v0.2.4（_待刪除）逐格：既有格只有 README A1（標題版號更正 v0.1.2 → v0.2.5、日期、本版說明）不同，其餘皆新增；加權目標價 4,109.23、評等放空不變；錯誤格 0。`check_company_html`、`check_layout_v13 --xlsx`（A–I 全過，含 G、H 位置；無警告）、`tools/baseline_coordination/check.py` 通過。
+- **未做：** `coord_meta_v0.19.json` 的 `hardware_companies` 未加入 jentech（由主控統一加入）；3Q26 損益未滾入錨點（不變性）。
+- 成品 `dist/20261115_健策個股模型_v0.2.5.xlsx`／`.html`；v0.2.4 移 `dist/_待刪除/`。
+
 ## v0.2.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 
 - 版本沿革：v0.2.4：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守。

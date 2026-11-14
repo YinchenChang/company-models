@@ -156,12 +156,19 @@ inp("cons_bv29", "共識每股淨值 FY2029 年底（2029-06）", PXU, None, 650
 inp("cons_ni27", "共識淨利 FY2027", U, None, 33.336, None, "Interested-party", MS, "")
 inp("cons_ni28", "共識淨利 FY2028", U, None, 38.384, None, "Interested-party", MS, "")
 IN_ROW = {}; r = 4
+# v0.5.5：SNDK_OVERRIDE（敏感度快照用，sndk/sens_sndk.py；「鍵=@lo／@hi／數值；…」＝該鍵的基準欄改取 In 頁低／高欄或指定數值；
+# 特殊鍵 pxm／shm＝主引擎市場層營收價格係數／份額係數，三情境同時受影響；正式建置不設）
+OVR = dict(kv.split("=", 1) for kv in os.environ.get("SNDK_OVERRIDE", "").split(";") if "=" in kv)
 def flush():
     global r
     for srow in rows:
         if srow[0] == "sec":
             IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
         key, item, unit, lo, base, hi, tag, s1, s2 = srow
+        if key in OVR:
+            ov = OVR[key]
+            base = {"@lo": lo, "@hi": hi}[ov] if ov.startswith("@") else float(ov)
+            assert base is not None, (key, ov)
         IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
         for j, v in ((4, lo), (5, base), (6, hi)):
             if v is not None:
@@ -298,6 +305,8 @@ Q.column_dimensions["I"].width = 70
 QC = {q: GL(3 + i) for i, q in enumerate(QL)}            # C..R
 FYC = {2025: "C", 2026: "D", 2027: "E", 2028: "F", 2029: "G"}
 DEFP = dict(cd=None, oxv="ox_var", oxg="ox_g", tax="tax", gm="g_gm", pay="payout", capr="cap_r", pxm="1", shm="1", vq=None)
+for _k in ("pxm", "shm"):
+    if _k in OVR: DEFP[_k] = str(float(OVR[_k]))
 def engine(ws, r0, title, s, **over):
     p = dict(DEFP); p.update(over); cd = p["cd"] or f"cd_{s}"
     R = {}; rr = [r0]
@@ -372,8 +381,49 @@ PL = wb.create_sheet("PL")
 PL["A1"] = f"PL — {NAME} 損益（$B；FY2026 實績；FY2027–FY2029 由市場層 markets/nand 驅動；FY2030–FY2032 收斂法見底部）。頂端摘要，下方三情境各一個完整推導區塊"
 TITLES = {s: f"情境 {s}（{SCN[s]}）：markets/nand 情境 {s}（價格路徑 {s}、2028–29 顆數係數 {s}、合資群份額 {s}）；每位元成本年降 cd_{s}" for s in SC}
 PB = {}; r0 = 56
+# v0.5.5 三層協調 C4 主引擎掛鉤（tools/coord/alt_run.py 另一側讀數建置；SIL.COORD_ALT 時才有）：情境 B、C 的市場層營收與位元 × 季度出貨比
+# （AI 企業級 SSD 位元需求 CY2027 起 × wta（＝另一側讀數比值；CY2030 沿用 wta_29）→ 需求合計 → MIN(需求, 供給) → 季度位元，與 Sens「Wattonomics 錨定」同一算法，各情境讀自己的 Ann 列）；情境 A 不縮放。正式建置不建本頁。
+ALTVQ = {}
+if SIL.COORD_ALT:
+    AW = wb.create_sheet("CoordAlt")
+    AW["A1"] = "CoordAlt — 三層協調另一側讀數建置專用（正式建置無本頁）：情境 B、C 的季度出貨比（另一側 ÷ 原情境）"
+    _AC = {y: GL(3 + y - 2026) for y in range(2026, 2031)}
+    ar = 3
+    for s_ in ("B", "C"):
+        _L = {}; _sc_ = None
+        for r_x in wn["Ann"].iter_rows():
+            a_ = str(r_x[0].value or "")
+            if a_.startswith("情境 ") and len(a_) > 3 and a_[3] in SC: _sc_ = a_[3]
+            if _sc_ == s_ and a_ in ("  需求：AI 企業級 SSD", "位元需求合計", "位元供給", "位元出貨") and a_ not in _L:
+                _L[a_] = [r_x[4 + j].value for j in range(5)]
+        assert len(_L) == 4, (s_, _L)
+        AR = {}
+        AW.cell(ar, 1, f"情境 {s_}").font = BOLD; ar += 1
+        for key, f_ in (("f", {2026: 1, 2027: "=wta_27", 2028: "=wta_28", 2029: "=wta_29", 2030: "=wta_29"}),
+                        ("dai", dict(zip(range(2026, 2031), _L["  需求：AI 企業級 SSD"]))), ("dem", dict(zip(range(2026, 2031), _L["位元需求合計"]))),
+                        ("sup", dict(zip(range(2026, 2031), _L["位元供給"]))), ("ship", dict(zip(range(2026, 2031), _L["位元出貨"])))):
+            AW.cell(ar, 1, key)
+            for y, v in f_.items(): AW[f"{_AC[y]}{ar}"] = v if isinstance(v, str) else float(v)
+            AR[key] = ar; ar += 1
+        AW.cell(ar, 1, "demw")
+        for y in range(2026, 2031): AW[f"{_AC[y]}{ar}"] = f"={_AC[y]}{AR['dem']}-{_AC[y]}{AR['dai']}*(1-{_AC[y]}{AR['f']})"
+        AR["demw"] = ar; ar += 1
+        AW.cell(ar, 1, "shipw")
+        for y in range(2026, 2031): AW[f"{_AC[y]}{ar}"] = f"=MIN({_AC[y]}{AR['demw']},{_AC[y]}{AR['sup']})"
+        AR["shipw"] = ar; ar += 1
+        def _bq(shp, q):
+            y, k = int(q[:4]), int(q[-1]); g = f"({_AC[y]}{AR[shp]}/{_AC[y - 1]}{AR[shp]})"
+            return f"={_AC[y]}{AR[shp]}/4*{g}^(({k}-2.5)/4)/(({g}^(-0.375)+{g}^(-0.125)+{g}^(0.125)+{g}^(0.375))/4)"
+        for key, shp in (("bqb", "ship"), ("bqw", "shipw")):
+            AW.cell(ar, 1, key)
+            for q in CYQS:
+                if int(q[:4]) >= 2027: AW[f"{UCOL[q]}{ar}"] = _bq(shp, q)
+            AR[key] = ar; ar += 1
+        AW.cell(ar, 1, "vq")
+        for q in CYQS: AW[f"{UCOL[q]}{ar}"] = f"={UCOL[q]}{AR['bqw']}/{UCOL[q]}{AR['bqb']}" if int(q[:4]) >= 2027 else 1
+        ALTVQ[s_] = {q: f"CoordAlt!${UCOL[cyq(*q)]}${ar}" for q in QL}; ar += 2
 for s in SC:
-    PB[s] = engine(PL, r0, TITLES[s], s); r0 = PB[s]["end"] + 2
+    PB[s] = engine(PL, r0, TITLES[s], s, **({"vq": ALTVQ[s]} if s in ALTVQ else {})); r0 = PB[s]["end"] + 2
 hdr(PL, 3, ["情境／項目", "單位", "FY2025A", "FY2026A", "FY2027", "FY2028", "FY2029", "說明"])
 sr = 4; SUMR = {}
 for s in SC:
@@ -728,7 +778,7 @@ RD.column_dimensions["A"].width = 200
 README_ROWS = {"thesis": 2, "obs": [4, 5, 6], "rec": 7, "drivers": [10, 11, 12, 13], "limits": 17}
 assert RD.cell(17, 1).value.startswith("十年歷史不足") and RD.cell(9, 1).value.startswith("驅動因子")
 
-order = ["README", "In", "Q", "Units", "PL", "Val", "DCF", "Recon", "Sens", "Sources"]
+order = ["README", "In", "Q", "Units", "PL", "Val", "DCF", "Recon", "Sens", "Sources"] + (["CoordAlt"] if SIL.COORD_ALT else [])
 wb._sheets = [wb[n] for n in order]
 # 相對倍數調整（Andy 2026-10-27「照建議做」；tools/relative_multiple.py，2026-10-29 接入）
 import os, sys  # noqa: E401
@@ -866,6 +916,17 @@ for _s in SC:
                 if isinstance(_cc.value, str) and _pat in _cc.value:
                     _cc.value = _cc.value.replace(_pat, _new)
 
+# ---------------- v0.5.5（2026-11-15）：三層協調 C4 兩讀數（tools/coord；快照 sndk/coord_alt.json）＋個股 HTML 版面規格 v1.3＋C0（公司實績）；sndk/v055_post.py 只新增頁與列 ----------------
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    COORD.stamp(wb, "v0.1", "v0.5.5", "2026-11-15")
+    if not os.environ.get("SNDK_OVERRIDE") and not os.environ.get("SNDK_SNAP"):
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import v055_post  # noqa: E402
+        print(v055_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR,
+                              dict(PB=PB, EXT=EXT, SUMR=SUMR, FYC=FYC, EXTC=EXTC, QC=QC, T=T, TS=_TS, UR=UR, UCOL=UCOL, NAND_F=rel(NAND_F))))
 wb.save(sys.argv[1])
 RULER = [i for i in range(nr, tr) if isinstance(V.cell(i, 1).value, str) and V.cell(i, 1).value.startswith("規則值：")]
 RULEH = RULER[0] - 1
