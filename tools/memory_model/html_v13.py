@@ -4,7 +4,7 @@
 # 只由 html_layout.build(..., v13=True) 呼叫（美光、三星不呼叫）。
 
 
-def transform(cfg, wb):
+def transform(cfg, wb, co_dir=None):
     S = {s["id"]: s for s in cfg["sections"]}
 
     def lab(sh, prefix, start=1, col=1, exact=False):
@@ -230,10 +230,13 @@ def transform(cfg, wb):
     note_rows = [r for r in range(hdr + 1, sum_r) if CW.cell(r, 7).value]
     import importlib.util
     import os
-    _sp = importlib.util.spec_from_file_location("skh_c0_actuals", os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "skhynix", "c0_actuals.py"))
-    _m = importlib.util.module_from_spec(_sp)
-    _sp.loader.exec_module(_m)
-    act_blocks = _m.html_blocks(CW, lab)
+    act_blocks = []
+    _py = os.path.join(co_dir, "c0_actuals.py") if co_dir else None
+    if _py and os.path.exists(_py):   # 公司資料夾有 c0_actuals.py 才加實績對帳區塊
+        _sp = importlib.util.spec_from_file_location("c0_actuals_co", _py)
+        _m = importlib.util.module_from_spec(_sp)
+        _sp.loader.exec_module(_m)
+        act_blocks = _m.html_blocks(CW, lab)
     c0_blocks = act_blocks + [
                  {"type": "h3", "text": "讀取層級（同源，不判定）：本模型讀入的 Siliconomics 值"},
                  {"type": "note", "parts": [f"@Coord!B{sum_r}"]},

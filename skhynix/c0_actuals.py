@@ -15,6 +15,7 @@ LBL = dict(
     cmp="實績與層級隱含值比較（HBM 營收）",
     bound="上限檢查（參考，不判定）：層級隱含 HBM 營收 ÷ 公司揭露 DRAM（含 HBM）營收",
     sumr="C0（實績）摘要",
+    ext="外部估計（參考，不判定）：IDC 市占對層級市占",
 )
 
 
@@ -49,7 +50,7 @@ def add(wb, Co, L, F, T, hdr_row=None):
     Co.cell(r, 1, LBL["ledger"]).font = BOLD
     A["ledger"] = r
     r += 1
-    _hdr(Co, r, ["項目", "單位", "2026Q1", "2026Q2", "2026Q3", "2026 年 1–6 月", "出處、口徑與證據等級", "網址（不入 HTML）"])
+    _hdr(Co, r, ["項目", "單位", "2026Q1", "2026Q2", "2026Q3", "2026 年 1–9 月", "出處、口徑與證據等級", "網址（不入 HTML）"])
     A["lh"] = r
     r += 1
     # 營收（連 Q 頁既有實績輸入）
@@ -58,36 +59,38 @@ def add(wb, Co, L, F, T, hdr_row=None):
     for c, q in zip("CDE", "FGH"):
         Co[f"{c}{r}"] = f"=Q!{q}4"
         Co[f"{c}{r}"].number_format = "0.000"
-    Co[f"F{r}"] = f"=C{r}+D{r}"
+    Co[f"F{r}"] = f"=C{r}+D{r}+E{r}"
     Co[f"F{r}"].number_format = "0.000"
-    Co.cell(r, 7, "Verified。2026Q1 52,576,287 百萬韓元與 2026Q2 79,318,746 百萬韓元：SK hynix 6-K 半年報（2026-08-18）第 II.5.A.(1) 節；"
+    Co.cell(r, 7, "Verified。2026Q1 52,576,287 百萬韓元與 2026Q2 79,318,746 百萬韓元：SK hynix 6-K 半年報（2026-08-18）第 II.1.C.a 節；"
                   "2026Q3 1,046,155 億韓元：SK hynix 3Q26 財報新聞稿（2026-10-28）；Q 頁為三位小數；網址見 H 欄")
     Co.cell(r, 8, "https://www.sec.gov/Archives/edgar/data/2120882/000119312526354777/d147827d6k.htm ； https://news.skhynix.co.kr/q3-2026-business-results/")
     A["rev"] = r
     r += 1
     Co.cell(r, 1, "DRAM（含 HBM）占營收比（公司揭露）")
     Co.cell(r, 2, "%")
-    for c, v in (("C", 0.773), ("D", 0.73)):
+    for c, v in (("C", 0.773), ("D", 0.73), ("E", 0.75)):
         Co[f"{c}{r}"] = v
         Co[f"{c}{r}"].font = BLUE
         Co[f"{c}{r}"].number_format = "0.0%"
-    Co[f"E{r}"] = "未取得"
-    Co.cell(r, 7, "Verified。2026Q1 77.3%：SK hynix 424B4（2026-07）第 18 頁（風險因素第一項）；"
-                  "2026Q2 73%（整數捨入，誤差約 ±0.5 個百分點）：公司 2Q26 簡報，經 ITmedia（福田昭，2026-08-07）與 Blocks & Files（2026-07-29）引述；"
-                  "2026Q3：新聞稿與法說沒有營收分部（Q 頁的 75.7% 是推估 Derived，不當實績）；網址見 H 欄")
+    Co.cell(r, 7, "2026Q1 77.3%：SK hynix 424B4（2026-07）第 18 頁（風險因素第一項），Verified；"
+                  "2026Q2 73%：公司 2Q26 連結決算新聞稿（7-29），經 ITmedia（福田昭，2026-08-07，圖說）與 Blocks & Files（2026-07-29）引述，整數捨入、二手；"
+                  "2026Q3 75%（NAND 24%）：BizWatch（2026-10-28）報導 3Q26 財報，整數捨入、二手（Q 頁的 75.7% 是推估 Derived，不當實績）。"
+                  "三季口徑不完全相同（424B4 的 1Q 為 77.3%，2Q 簡報口徑下的 1Q 為 78%），故占比誤差約 ±1 個百分點；等級：Q1 Verified，Q2、Q3 為 Interested-party 二手；網址見 H 欄")
     Co.cell(r, 8, "https://www.sec.gov/Archives/edgar/data/2120882/000119312526299963/d32785d424b4.htm ； https://eetimes.itmedia.co.jp/ee/spv/2608/07/news029_2.html ； "
-                  "https://www.blocksandfiles.com/flash/2026/07/29/sk-hynix-announces-extraordinarily-high-revenues-but-misses-expectations/5280499")
+                  "https://www.blocksandfiles.com/flash/2026/07/29/sk-hynix-announces-extraordinarily-high-revenues-but-misses-expectations/5280499 ； "
+                  "https://news.bizwatch.co.kr/article/industry/2026/10/28/0011/")
     A["dsh"] = r
     r += 1
     Co.cell(r, 1, "DRAM（含 HBM）營收＝營收 × 占比")
     Co.cell(r, 2, "兆韓元")
-    for c in "CD":
+    Co["C%d" % r] = 40.659   # 424B4 直接揭露：1Q26 DRAM 營收 W40,659bn
+    Co["C%d" % r].font = BLUE
+    for c in "DE":
         Co[f"{c}{r}"] = f"={c}{A['rev']}*{c}{A['dsh']}"
+    for c in "CDEF":
         Co[f"{c}{r}"].number_format = "0.0"
-    Co[f"E{r}"] = "—"
-    Co[f"F{r}"] = f"=C{r}+D{r}"
-    Co[f"F{r}"].number_format = "0.0"
-    Co.cell(r, 7, "Derived（營收 × 公司揭露占比；2026Q2 含捨入誤差約 ±0.4 兆韓元）。公司不在 DRAM 內拆 HBM：此為 DRAM 加 HBM 合計")
+    Co[f"F{r}"] = f"=C{r}+D{r}+E{r}"
+    Co.cell(r, 7, "2026Q1＝424B4 直接揭露的 DRAM 營收 40,659 十億韓元（Verified）；2026Q2、Q3＝營收 × 二手占比（Derived；整數捨入誤差約 ±0.5 個百分點 × 營收，Q2 約 ±0.4、Q3 約 ±0.5 兆韓元）。公司不在 DRAM 內拆 HBM：此為 DRAM 加 HBM 合計")
     A["dram"] = r
     r += 1
     miss = [("HBM 營收", "兆韓元", "424B4 與 6-K 均將 DRAM 營收不拆 HBM（Blocks & Files 2026-07-09 對 F-1 的說明相同）；3Q26 新聞稿只說 HBM4 量產出貨、第四季 HBM4 在出貨量與營收都將超過 HBM3E，沒有金額"),
@@ -140,30 +143,30 @@ def add(wb, Co, L, F, T, hdr_row=None):
     r += 2
     # ---- 上限檢查 ----
     Co.cell(r, 1, LBL["bound"]).font = BOLD
-    Co.cell(r, 7, "公司揭露的是 DRAM（含 HBM）營收，HBM 營收必然小於它；用已揭露期間（2026 年 1–6 月；3Q26 無分部）檢查層級隱含值是否超過上限。這只是合理性檢查，不是實績對帳，不判定高低")
+    Co.cell(r, 7, "公司揭露的是 DRAM（含 HBM）營收，HBM 營收必然小於它；用已揭露期間（2026 年 1–9 月；Q1 取 424B4，Q2、Q3 為二手占比）檢查層級隱含值是否超過上限。這只是合理性檢查，不是實績對帳，不判定高低")
     A["bound"] = r
     r += 1
-    Co.cell(r, 1, "層級隱含 HBM 營收（CY2026 × 6 ÷ 12；韓元＝US$B × 匯率，匯率為 In 頁 fx，Derived）")
+    Co.cell(r, 1, "層級隱含 HBM 營收（CY2026 × 9 ÷ 12；韓元＝US$B × 匯率，匯率為 In 頁 fx，Derived）")
     Co.cell(r, 2, "兆韓元")
-    Co[f"C{r}"] = f"=C{rev_l}*6/12*fx/1000"
+    Co[f"C{r}"] = f"=C{rev_l}*9/12*fx/1000"
     Co[f"C{r}"].number_format = "0.0"
     A["b1"] = r
     r += 1
-    Co.cell(r, 1, "公司揭露 DRAM（含 HBM）營收（2026 年 1–6 月）")
+    Co.cell(r, 1, "公司揭露 DRAM（含 HBM）營收（2026 年 1–9 月）")
     Co.cell(r, 2, "兆韓元")
     Co[f"C{r}"] = f"=F{A['dram']}"
     Co[f"C{r}"].number_format = "0.0"
     A["b2"] = r
     r += 1
-    Co.cell(r, 1, "層級隱含 HBM 營收 ÷ DRAM（含 HBM）營收：1–6 月（主）")
+    Co.cell(r, 1, "層級隱含 HBM 營收 ÷ DRAM（含 HBM）營收：1–9 月（主）")
     Co.cell(r, 2, "%")
     Co[f"C{r}"] = f"=C{A['b1']}/C{A['b2']}"
     Co[f"C{r}"].number_format = "0.0%"
     A["b3"] = r
     r += 1
-    Co.cell(r, 1, "層級隱含 HBM 營收 ÷ DRAM（含 HBM）營收：2026Q2 × 4 vs 層級 CY2026（第二）")
+    Co.cell(r, 1, "層級隱含 HBM 營收 ÷ DRAM（含 HBM）營收：2026Q3 × 4 vs 層級 CY2026（第二）")
     Co.cell(r, 2, "%")
-    Co[f"C{r}"] = f"=C{rev_l}*fx/1000/(D{A['dram']}*4)"
+    Co[f"C{r}"] = f"=C{rev_l}*fx/1000/(E{A['dram']}*4)"
     Co[f"C{r}"].number_format = "0.0%"
     A["b4"] = r
     r += 1
@@ -172,11 +175,36 @@ def add(wb, Co, L, F, T, hdr_row=None):
     Co.cell(r, 7, "參考、不判定：公司未揭露 HBM 占 DRAM 的實際比例，無法判斷隱含比例偏高或偏低；若主控要驗證層級的 HBM 市場與市占，需新的揭露（例如法說給 HBM 占比或位元）")
     A["bs"] = r
     r += 2
+    # ---- 外部估計（參考，不判定）----
+    Co.cell(r, 1, LBL["ext"]).font = BOLD
+    Co.cell(r, 7, "外部估計只列參考，不判定、不開對帳單（規則 v1.4.2）。IDC 的 1Q26 HBM 營收市占由 424B4 摘要引用（Interested-party）")
+    A["ext"] = r
+    r += 1
+    Co.cell(r, 1, "IDC 2026Q1 HBM 營收市占：SK 海力士（424B4 引用）")
+    Co.cell(r, 2, "%")
+    Co[f"C{r}"] = 0.564
+    Co[f"C{r}"].font = BLUE
+    Co[f"C{r}"].number_format = "0.0%"
+    A["e1"] = r
+    r += 1
+    Co.cell(r, 1, "層級：SK 海力士 HBM 營收市占 CY2026（上方 C0 表層列）")
+    Co.cell(r, 2, "%")
+    Co[f"C{r}"] = f"=C{L['sh'][1]}"
+    Co[f"C{r}"].number_format = "0.0%"
+    A["e2"] = r
+    r += 1
+    Co.cell(r, 1, "  差距：IDC ÷ 層級 − 1（參考，不判定）")
+    Co.cell(r, 2, "%")
+    Co[f"C{r}"] = f"=C{A['e1']}/C{A['e2']}-1"
+    Co[f"C{r}"].number_format = "+0.0%;-0.0%"
+    Co.cell(r, 7, "單季（1Q）對全年市占的時差與口徑差未調整；賣方與研調為參考")
+    A["e3"] = r
+    r += 2
     # ---- 摘要 ----
     Co.cell(r, 1, LBL["sumr"] + "（HTML 用；公式帶數字）")
     Co.cell(r, 2, F(T("公司未揭露 SK 海力士的 HBM 營收、HBM 占 DRAM 營收比與 HBM 位元出貨（2026 年第一至第三季），HBM 營收列判定為「"), f"C{A['j']}",
                     T("」，不計入對帳中（對帳中項目 "), f'C{A["n"]}', T(" 個）。已揭露的 DRAM（含 HBM）營收只做上限檢查：層級隱含 HBM 營收約為 DRAM（含 HBM）營收的 "),
-                    f'TEXT(C{A["b3"]},"0%")', T("（1–6 月）與 "), f'TEXT(C{A["b4"]},"0%")', T("（2026Q2 × 4），"), f'C{A["bs"]}', T("（參考，不判定）。")))
+                    f'TEXT(C{A["b3"]},"0%")', T("（1–9 月）與 "), f'TEXT(C{A["b4"]},"0%")', T("（2026Q3 × 4），"), f'C{A["bs"]}', T("（參考，不判定）。")))
     A["sum"] = r
     r += 1
     Co.cell(r, 1, "C0（實績）狀態旗標（核對：HBM 營收判定不是「對帳中」時為 0）")
@@ -212,13 +240,16 @@ def html_blocks(CW, lab):
     for r in range(bd + 1, lab("Coord", "上限檢查狀態") + 1):
         f = "p1" if CW.cell(r, 2).value == "%" else "n1"
         bound_rows.append([f"@Coord!A{r}", f"@Coord!B{r}", fm("C", r, f)])
-    notes = [r for r in range(lh + 1, lab("Coord", "上限檢查狀態") + 1) if CW.cell(r, 7).value]
+    ex = lab("Coord", LBL["ext"])
+    ext_rows = [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}|" + ("sp1" if "差距" in str(CW.cell(r, 1).value) else "p1")] for r in range(ex + 1, ex + 4)]
+    notes = [r for r in range(lh + 1, lab("Coord", "上限檢查狀態") + 1) if CW.cell(r, 7).value] + [lab("Coord", LBL["ext"])]
     return [
         {"type": "h3", "text": "實績對帳：公司實績與層級隱含值"},
         {"type": "note", "parts": [f"@Coord!B{sm}"]},
         {"type": "table", "caption": f"@Coord!A{lab('Coord', LBL['ledger'])}", "head": [f"@Coord!{c}{lh}" for c in "ABCDEF"], "rows": ledger_rows},
         {"type": "table", "caption": f"@Coord!A{lab('Coord', LBL['cmp'])}", "head": [f"@Coord!{c}{ch}" for c in "ABCDEF"], "rows": cmp_rows},
         {"type": "table", "caption": f"@Coord!A{bd}", "head": ["項目", "單位", "值"], "rows": bound_rows},
+        {"type": "table", "caption": f"@Coord!A{ex}", "head": ["項目", "單位", "值"], "rows": ext_rows},
         {"type": "table", "caption": "實績對帳的口徑、出處與證據等級", "collapse": True, "summary": "展開：實績出處、口徑與判定規則",
          "head": ["項目", "出處、口徑與證據等級"], "rows": [[f"@Coord!A{r}", f"@Coord!G{r}"] for r in notes]},
         {"type": "note", "parts": [f"@Coord!G{lab('Coord', '比較方法')}"], "collapse": True, "summary": "展開：比較方法"},

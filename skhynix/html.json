@@ -5364,7 +5364,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!B100"
+      "@Coord!B105"
      ]
     },
     {
@@ -5392,7 +5392,7 @@
        "@Coord!B80",
        "@Coord!C80|p1",
        "@Coord!D80|p1",
-       "@Coord!E80",
+       "@Coord!E80|p1",
        "@Coord!F80|p1"
       ],
       [
@@ -5400,7 +5400,7 @@
        "@Coord!B81",
        "@Coord!C81|n1",
        "@Coord!D81|n1",
-       "@Coord!E81",
+       "@Coord!E81|n1",
        "@Coord!F81|n1"
       ],
       [
@@ -5505,6 +5505,32 @@
     },
     {
      "type": "table",
+     "caption": "@Coord!A100",
+     "head": [
+      "項目",
+      "單位",
+      "值"
+     ],
+     "rows": [
+      [
+       "@Coord!A101",
+       "@Coord!B101",
+       "@Coord!C101|p1"
+      ],
+      [
+       "@Coord!A102",
+       "@Coord!B102",
+       "@Coord!C102|p1"
+      ],
+      [
+       "@Coord!A103",
+       "@Coord!B103",
+       "@Coord!C103|sp1"
+      ]
+     ]
+    },
+    {
+     "type": "table",
      "caption": "實績對帳的口徑、出處與證據等級",
      "collapse": true,
      "summary": "展開：實績出處、口徑與判定規則",
@@ -5560,6 +5586,10 @@
       [
        "@Coord!A98",
        "@Coord!G98"
+      ],
+      [
+       "@Coord!A100",
+       "@Coord!G100"
       ]
      ]
     },

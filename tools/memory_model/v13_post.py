@@ -793,12 +793,14 @@ def coord_c0(wb, SIL, here=None):
     Co.column_dimensions["G"].width = 100
     Co.column_dimensions["F"].width = 22
     L.update(top=top, hdr=hr, tol=tol)
-    # C0（實績）：公司實績 vs 層級隱含值（SK 海力士專屬，skhynix/c0_actuals.py；附在 Coord 頁尾，不位移既有列）
+    # C0（實績）：公司實績 vs 層級隱含值（公司資料夾有 c0_actuals.py 才做；附在 Coord 頁尾，不位移既有列）
     import importlib.util
-    spec = importlib.util.spec_from_file_location("skh_c0_actuals", os.path.join(here, "c0_actuals.py"))
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    L["act"] = mod.add(wb, Co, L, F, T)
+    _py = os.path.join(here, "c0_actuals.py") if here else None
+    if _py and os.path.exists(_py):
+        spec = importlib.util.spec_from_file_location("c0_actuals_co", _py)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        L["act"] = mod.add(wb, Co, L, F, T)
     return L
 
 
