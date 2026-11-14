@@ -466,7 +466,7 @@ def coord(wb, C):
     ws.cell(r, 1, "Wattonomics v0.3.2 快照名稱與 In 列（只供 C0 對帳列；不進模型）").font = BOLD; r += 1
     wrows = {}
     for nm_, key, un, nt in (
-            ("WIF_Gap_Player_msft_2026_CapexAI", "capai", "US$B", "Microsoft 2026 AI 資料中心資本支出（Gap!G91 系列：新增 GW × Tokenomics 每 GW 成本＋次年、後年廠房提前；新增 GW 由 CapexGW 從公司資本支出（FY2026 實績 145.3、FY2027 個股模型寫回 204.2）反推，見下方追公式）"),
+            ("WIF_Gap_Player_msft_2026_CapexAI", "capai", "US$B", "Microsoft 2026 AI 資料中心資本支出（Interface!F596 ← Gap!G62 ← G45＝G42＋G43＋G44：新增 GW × Tokenomics 每 GW 成本＋次年、後年廠房提前；新增 GW 由 CapexGW 從公司資本支出（FY2026 實績 145.3、FY2027 個股模型寫回 204.2）反推，見下方追公式）"),
             ("WIF_Gap_Player_msft_2026_CapexNonAI", "capnai", "US$B", "非 AI 資本支出（Gap!G52＝G50＝（In!K168＋In!L168）× 6/12，讀個股模型寫回的 FY2026、FY2027 非 AI 資本支出；同源）"),
             ("WIF_Gap_Player_msft_2026_AddGW", "addgw", "GW", "2026 年新增 IT GW（Gap!G38←CapexGW!G34←G32←G31←G30←G29←G21＝G18 × AI 占比；輸入為公司資本支出 FY2026 實績 145.3 與個股模型寫回 FY2027 204.2，見追公式；不是 Epoch 或園區證據推得）"),
             ("WIF_PlayerGW_YE_msft_2025", "ye25", "GW", "Microsoft 2025 年底上線 IT GW（Interface!E24←CapexGW!F35←Players!F30←F24←F23＝Epoch 晶片功耗 In!J98 2,015.7 MW × k_chip2it 1.85；與公司資本支出無關，不同源）"),
@@ -495,23 +495,25 @@ def coord(wb, C):
          "公司實績：FY2026 資本支出 145.3（In!K169 gcap_msft，個股模型基準寫回，＝10-K／法說的公司口徑含融資租賃）、FY2025 64.551（In!J121）、FY2024 44.477（In!I121，現金 PP&E，10-K）；"
          "個股模型寫回：FY2027 204.2（In!L169，Microsoft 個股模型基準：Q1 實績＋指引推估）。G18＝145.3 × 6/12＋204.2 × 6/12＝174.75；× AI 占比 ai_sh（In!I13，0.85，Assumed）進 AI 路徑。"
          "GW＝資金 ÷ 每 GW 成本（Tokenomics），所以 2026 年新增 GW 是公司資本支出換算，不是獨立的物理證據"),
-        ("WIF_Gap_Player_msft_2026_CapexAI ← Interface!F596 ← Gap!G91 ←（G88＋G89＋G90；G88＝2026 新增 GW 上列 ×（每 GW IT 成本＋廠房）；G89、G90＝2027、2028 年廠房提前）← In!L169、M169、N169", "同源（同上）",
-         "新增 GW 同上；廠房提前入帳讀 CapexGW 2027、2028 年輸入，來自 In!M169、N169（個股模型寫回 FY2028、FY2029）；Gap!G102（個股模型 AI 資本支出 In!K167）2026 空白，不替代"),
+        ("WIF_Gap_Player_msft_2026_CapexAI ← Interface!F596 ← Gap!G62（＝IF(G61<>\"\",G56,G45)；G61 空白，取 G45）← G45＝G42＋G43＋G44（G42＝2026 新增 GW Gap!G38 ×（每 GW IT 成本 G39＋廠房 G40 × D6）；G43＝E6 × H38 × H40、G44＝F6 × I38 × I40＝2027、2028 年廠房提前）← CapexGW!H34、I34 ← In!L169、M169、N169", "同源（同上）",
+         "新增 GW 同上；廠房提前入帳讀 CapexGW 2027、2028 年新增 GW（Gap!H38、I38），其輸入來自 In!L169、M169、N169（個股模型寫回 FY2027–FY2029）；Gap!G56（個股模型 AI 資本支出，← G55 ← In!K167）2026 空白，G62 不改取它"),
         ("WIF_Gap_Player_msft_2026_CapexNonAI ← Interface!F597 ← Gap!G52 ← G50（＝G49 × 6/12＋H49 × 6/12）← G49 ← In!K168；H49 ← In!L168", "同源（個股模型寫回）",
          "In!K168（FY2026 非 AI 資本支出 30.18）與 In!L168（FY2027 35.75）都是 Microsoft 個股模型基準寫回值（gnai_msft）；日曆年換算＝兩者各半＝32.97；Gap!G50 有值，所以不走 CapexGW!G18 × 0.15 的備援路徑"),
         ("WIF_PlayerGW_YE_msft_2025 ← Interface!E24 ← CapexGW!F35 ← Players!F30 ← F24 ← F23（＝In!J98 chip_msft × Players!D14）", "不同源（Epoch 晶片功耗 × 倍數）",
          "2025 年底 3.729 GW＝Epoch 晶片功耗 2,015.7 MW（In!J98）× k_chip2it 1.85（In!I7，Analogy）；與公司資本支出無關，也不讀公司實績（obs_msft 備援分支未生效）"),
         ("WIF_PlayerGW_YE_msft_2026 ← Interface!F24 ← CapexGW!G35＝F35＋G34", "部分同源",
-         "2025 年底（Epoch 推得，不同源）＋2026 年增量 G34（同源於公司資本支出，見第一列）。層級另有 SiteOnly 路徑 WIF_PlayerGW_YE_msft_SiteOnly_2026（Epoch 加園區證據，4.5 GW），但公司不揭露 GW，仍不能做 C0"),
+         "2025 年底（Epoch 推得，不同源）＋2026 年增量 G34（同源於公司資本支出，見第一列）。層級另有 SiteOnly 路徑 WIF_PlayerGW_YE_msft_SiteOnly_2026（Epoch 加園區證據，4.5 GW）；公司不揭露年底在役容量存量，存量不做 C0。2026 年增量 G34 部分同源（公司資本支出 ÷ Tokenomics 每 GW 成本），依規則改比每 GW／新增 GW 物理量：公司法說口頭揭露各季新增容量（見 F2「公司口頭揭露新增容量」列）"),
         ("act26_msft（Wattonomics In 頁 act26_msft；2026 年已公布三季資本支出實績 118.1）", "未進 GW／資本支出路徑",
          "反向查詢：公式讀 act26_msft 的只有 " + "、".join(sorted({x.split("!")[0] for x in TR["act26_readers"]})) + " 頁（" + str(nrd) + " 格；Compare 頁第 227 列），不回饋 CapexGW、Gap、Interface 的 Microsoft 值；本表直接以公司新聞稿與 IR 財務報表的同一實績為個股側，不經 Wattonomics"),
-        ("WIF_Gap_Player_msft_2026_CapexAIModel ← Gap!G102 ← G101 ← In!K167", "空白（無回寫值）",
+        ("WIF_Gap_Player_msft_2026_CapexAIModel ← Interface!F601 ← Gap!G56 ← G55 ← In!K167", "空白（無回寫值）",
          "2026 年個股模型 AI 資本支出 In!K167 為空（FY2026 未拆 AI／非 AI 寫回），所以這一欄不替代 GW 推算；2027 年起的並列讀法才讀個股模型（本表不用）"),
     ]
     for a_, j_, t_ in TRC:
         ws.cell(r, 1, a_); ws.cell(r, 7, j_); ws.cell(r, 8, t_); r += 1
     ws.cell(r, 1, "追公式結論：Wattonomics 2026 年 Microsoft 的資本支出（AI＋非 AI）與新增 GW 由公司資本支出（FY2026 實績 145.3、FY2025 與 FY2024 現金 PP&E、個股模型寫回的 FY2027 204.2 與非 AI 資本支出）換算，整列同源；2025 年底 GW 來自 Epoch，不同源；公司實績 act26_msft 未進路徑（只被 Compare 頁讀）。"
-                 "層級有 SiteOnly 路徑（4.5 GW，Epoch 加園區），但公司不揭露 GW，每 GW 資本支出也不可比；因此資本支出列標「參考（同源校準）」，結論「無可比實績（層級值同源）」。若 Wattonomics 改為只用 Epoch／園區證據推 2026 GW，才恢復比較（證據回饋走對帳單 C5）。")
+                 "因此資本支出列標「參考（同源校準）」，結論「無可比實績（層級值同源）」。新增 GW 是部分同源（公司資本支出 ÷ Tokenomics 每 GW 成本，加上線時差），依規則改比每 GW 物理量："
+                 "公司法說逐季口頭揭露新增容量（FY26Q2 約 1 GW、FY26Q3 再 1 GW、FY26Q4 31 座資料中心約 1 GW；FY27Q1 只說新增 24 座資料中心、未給 GW），見 F2「公司口頭揭露新增容量」列；"
+                 "這個比較消去的是公司資本支出，實際檢驗的是 Tokenomics 每 GW 成本、AI 占比與上線時差。證據回饋走對帳單（C5）。")
     rtr_conc = r; r += 1
     ws.cell(r, 1, "追公式傾印（由 tools/coord/trace_wattonomics.py --player msft 產生，貼生效格與有旗標格；園區旗標格只計數；來源 " + TR["source"].split("/")[-1] + "；縮排＝依賴深度）").font = BOLD
     ws.cell(r, 7, "標記"); ws.cell(r, 8, "公式（省略開頭等號）"); ws.cell(r, 4, "值"); r += 1
@@ -558,7 +560,8 @@ def coord(wb, C):
     rp9 = inp("資本支出 CY2026 已公布三季累計（現金 PP&E）", "CY2026Q1–Q3（9 個月）", "US$B", f"=D{rp1}+D{rp2}+D{rp3}", SRC_CASH, GR_CASH, url="")
     rl = inp("層級 CY2026 玩家資本支出：AI＋非 AI（Wattonomics）", "CY2026（全年）", "US$B", None, "—", "—",
              f"=C{wrows['capai']}+C{wrows['capnai']}", f"{WV}：Gap 頁 Microsoft 2026 AI 資本支出（新增 {WN['WIF_Gap_Player_msft_2026_AddGW']:.2f} GW × Tokenomics 每 GW 成本，含廠房提前）＋非 AI 資本支出（連 F1 兩列）；"
-             "兩者的輸入都是公司資本支出（FY2026 實績與個股模型寫回 FY2027），屬同源（見下方追公式）", "Derived；輸入同源於公司資本支出")
+             "兩者的輸入都是公司資本支出（FY2026 實績與個股模型寫回 FY2027），屬同源（見下方追公式）", "Derived；輸入同源於公司資本支出",
+             url=f"wattonomics/model/{WS['file']}；快照 {WS['snapshot']}（repo 內路徑；層級值出處）")
     ws.cell(rl, 4).value = None
     ws.cell(r, 1, "主讀數：已公布期間（CY2026Q1–Q3）累計 vs 層級 CY2026 × 9 ÷ 12"); ws.cell(r, 2, "9M 累計實績（公司口徑）；層級 × 9/12（線性時差近似）"); ws.cell(r, 3, "US$B")
     ws.cell(r, 4, f"=D{rq9}").number_format = "#,##0.0"; ws.cell(r, 5, f"=E{rl}*9/12").number_format = "#,##0.0"; ws.cell(r, 6, f"=D{r}/E{r}-1").number_format = "+0.0%;-0.0%"
@@ -606,18 +609,85 @@ def coord(wb, C):
     rai = r; r += 1
     ws.cell(r, 1, "上限檢查（層級隱含 Azure AI 營收不得高於 Azure 分部實績年化）"); ws.cell(r, 7, f'=IF(E{ra5}<=Q!I{QR["azure"]}*4,"通過","不通過：層級隱含 Azure AI 營收高於 Azure 分部實績年化")')
     ws.cell(r, 8, "Azure 分部營收 FY27Q1 × 4（Q 頁第 " + str(QR["azure"]) + " 列；Verified）"); rcu = r; r += 1
-    ws.cell(r, 1, "在役／簽約電力 MW（公司實績）"); ws.cell(r, 2, "無可比實績"); ws.cell(r, 7, "無可比實績")
-    ws.cell(r, 8, "Microsoft 不揭露自家在役或簽約 AI 電力（MW／GW）；Epoch AI 晶片功耗與園區估計是第三方估計，不算公司實績；本模型 AI 在役 MW 為假設（Assumed）再以資本支出指引重解速度（C10）")
-    ws.cell(r, 9, "—"); ws.cell(r, 10, "Wattonomics 上線 GW：2025、2026 年底見 F1；層級值只供參考"); ws.cell(r, 11, "Derived"); rmw = r; r += 1
+    ws.cell(r, 1, "在役／簽約電力 MW 存量（公司實績）"); ws.cell(r, 2, "無可比實績（存量）"); ws.cell(r, 7, "無可比實績（存量）")
+    ws.cell(r, 8, "Microsoft 不揭露年底在役或簽約容量存量（MW／GW）；法說只口頭揭露各季新增容量（見下方「公司口頭揭露新增容量」列）與「兩年內整體容量約翻倍」；Epoch AI 晶片功耗與園區估計是第三方估計，不算公司實績；本模型 AI 在役 MW 為假設（Assumed）再以資本支出指引重解速度（C10）")
+    ws.cell(r, 9, "—"); ws.cell(r, 10, "Wattonomics 上線 GW：2025、2026 年底見 F1；存量只供參考"); ws.cell(r, 11, "Derived"); rmw = r; r += 1
+    # ---- 新增容量 GW：公司法說口頭揭露 vs 層級新增 IT GW（新增 GW 部分同源→改比每 GW 物理量；規則 tools/coord/README.md）----
+    ws.cell(r, 1, "公司口頭揭露新增容量 GW（Interested-party，法說）vs 層級新增 IT GW（新增 GW 部分同源：公司資本支出 ÷ Tokenomics 每 GW 成本，所以改比 GW 物理量）").font = BOLD; r += 1
+    U_MB = "https://www.marketbeat.com/instant-alerts/microsoft-q3-earnings-call-highlights-2026-04-29/"
+    U_NP = "https://www.nextplatform.com/cloud/2026/05/04/microsoft-committed-to-doubling-ai-infrastructure-in-two-years/5219208"
+    U_DCD = "https://www.datacenterdynamics.com/en/news/microsoft-brought-88-data-centers-online-in-fy2026/"
+    U_Q1 = "https://www.webull.com/news/15828153888932864"
+    GR_GW = "Interested-party（公司法說口頭約數；二手轉述）"
+    LGW = f"{WV}：WIF_Gap_Player_msft_2026_AddGW（Gap!G38←CapexGW!G34；2026 年上線 IT GW，含上線時差）"
+
+    def gwrow(label, per, val, src, url, unit="GW"):
+        nonlocal r
+        ws.cell(r, 1, label); ws.cell(r, 2, per); ws.cell(r, 3, unit)
+        if val is not None:
+            c = ws.cell(r, 4, val); c.number_format = "0.0"; c.font = BLUE
+        ws.cell(r, 8, src); ws.cell(r, 9, GR_GW if val is not None else "—"); ws.cell(r, 12, url)
+        r += 1
+        return r - 1
+    rgw25 = gwrow("參考：CY2025 全年新增容量（公司）vs 層級 2025 新增 IT GW（不在 CY2026 C0 期間）", "CY2025（全年）", 2.0,
+                  "FY26Q4 法說（2026-07）轉述：2025 年全年上線約 2 GW；FY26Q2（2025-10～12）約 1 GW（DCD 轉述「前兩季各約 1 GW」）；口徑同下方各季（整體容量，未說明 AI／IT）", U_DCD)
+    ws.cell(rgw25, 5, WN["WIF_Gap_Player_msft_2025_AddGW"]).number_format = "0.000"
+    ws.cell(rgw25, 6, f"=D{rgw25}/E{rgw25}-1").number_format = "+0.0%;-0.0%"; ws.cell(rgw25, 7, "參考（2025 年，不判定）")
+    ws.cell(rgw25, 10, f"{WV}：WIF_Gap_Player_msft_2025_AddGW（2025 年新增 IT GW）"); ws.cell(rgw25, 11, "Derived")
+    rgq1 = gwrow("新增容量 CY2026Q1＝FY26Q3（公司口頭揭露）", "CY2026Q1（2026-01～03）", 1.0,
+                 "FY26Q3 法說（2026-04-29）Nadella：本季「another gigawatt of capacity」／「added 1 gigawatt of additional capacity in the March quarter」（MarketBeat、NextPlatform 轉述）；未說明 AI 或整體、IT 或電力口徑", U_MB + "；" + U_NP)
+    rgq2 = gwrow("新增容量 CY2026Q2＝FY26Q4（公司口頭揭露）", "CY2026Q2（04～06）", 1.0,
+                 "FY26Q4 法說（2026-07）Nadella：上一季新增 31 座資料中心（五大洲），「contributing 1GW of capacity」；FY2026 全年上線 88 座；「roughly double our overall capacity in just two years」（DCD 轉述）", U_DCD)
+    rgq3 = gwrow("新增容量 CY2026Q3＝FY27Q1（公司口頭揭露）", "CY2026Q3（07～09）：未揭露 GW", None,
+                 "FY27Q1 法說（2026-10-28）Nadella：本季新增 24 座資料中心（五大洲），交機到上線時間季減約 20%；未給 GW／MW（本輪查逐字稿轉載與報導：Webull 逐字稿、Windows Forum「did not give locations or megawatt figures」）", U_Q1)
+    rgl = r; ws.cell(r, 1, "層級 CY2026 新增 IT GW（Wattonomics）"); ws.cell(r, 2, "CY2026（全年）"); ws.cell(r, 3, "GW")
+    ws.cell(r, 5, f"=C{wrows['addgw']}").number_format = "0.000"; ws.cell(r, 8, "—"); ws.cell(r, 9, "—")
+    ws.cell(r, 10, LGW + "；＝公司資本支出日曆年 × AI 占比 ÷ 每 GW 成本（IT＋廠房）再依上線時差加權；部分同源（公司資本支出），GW 物理量本身不是公司揭露")
+    ws.cell(r, 11, "Derived；部分同源"); ws.cell(r, 12, f"wattonomics/model/{WS['file']}；快照 {WS['snapshot']}"); r += 1
+    rgd1 = r; ws.cell(r, 1, "主讀數（GW）：CY2026 已揭露季合計（Q1＋Q2，6 個月）vs 層級 CY2026 新增 GW × 6 ÷ 12"); ws.cell(r, 2, "6 個月合計（公司口頭）；層級 × 6/12"); ws.cell(r, 3, "GW")
+    ws.cell(r, 4, f"=D{rgq1}+D{rgq2}").number_format = "0.00"; ws.cell(r, 5, f"=E{rgl}*6/12").number_format = "0.000"; ws.cell(r, 6, f"=D{r}/E{r}-1").number_format = "+0.0%;-0.0%"
+    ws.cell(r, 8, "CY2026Q1＋Q2（上列；Q3 公司未揭露 GW，所以月數取 6）"); ws.cell(r, 9, GR_GW); ws.cell(r, 10, "層級 CY2026 新增 IT GW × 6 ÷ 12（線性時差近似）"); ws.cell(r, 11, "Derived"); r += 1
+    rgd2 = r; ws.cell(r, 1, "第二讀數（GW）：最近揭露一季（CY2026Q2＝FY26Q4）× 4 vs 層級 CY2026 新增 GW"); ws.cell(r, 2, "CY2026Q2 × 4（該季中點年化）"); ws.cell(r, 3, "GW")
+    ws.cell(r, 4, f"=D{rgq2}*4").number_format = "0.00"; ws.cell(r, 5, f"=E{rgl}").number_format = "0.000"; ws.cell(r, 6, f"=D{r}/E{r}-1").number_format = "+0.0%;-0.0%"
+    ws.cell(r, 8, "CY2026Q2 單季 × 4（Derived；季中點 5 月中，接近年中，時點偏誤小）"); ws.cell(r, 9, GR_GW); ws.cell(r, 10, "層級 CY2026 全年"); ws.cell(r, 11, "Derived"); r += 1
+    rfac = r; ws.cell(r, 1, "橋接參數：每 IT GW 對應設施電力（Tokenomics 基準；區間 1.1–1.3）"); ws.cell(r, 3, "GW／IT GW")
+    c = ws.cell(r, 4, tk("IF_FacilityGW", "gb300")); c.number_format = "0.00"; c.font = BLUE
+    ws.cell(r, 8, "若公司口頭的 GW 是設施（電網）電力而非 IT 關鍵電力，÷ 本值換成 IT GW；公司未說明口徑，此換算為假設"); ws.cell(r, 9, "Assumed（Tokenomics IF_FacilityGW）"); r += 1
+    rais = r; ws.cell(r, 1, "橋接參數：AI 占比（Wattonomics 資本支出 AI 占比，借用為容量 AI 占比）"); ws.cell(r, 3, "比")
+    c = ws.cell(r, 4, WR["ai_sh"]["values"][1]); c.number_format = "0.00"; c.font = BLUE
+    ws.cell(r, 8, "公司容量為整體容量（含 Azure 一般雲端、Microsoft 365 等非 AI 負載）；以 Wattonomics ai_sh 0.85（區間 0.75–0.95，資本支出口徑）近似容量中的 AI 占比；非 AI 機房每 GW 成本較低，容量口徑的 AI 占比可能更低"); ws.cell(r, 9, "Assumed（Wattonomics ai_sh）"); r += 1
+    rgb1 = r; ws.cell(r, 1, "口徑橋接後主讀數（參考）：已揭露季合計 ÷ 設施電力係數 × AI 占比 vs 層級 × 6 ÷ 12"); ws.cell(r, 2, "橋接（Assumed）"); ws.cell(r, 3, "GW")
+    ws.cell(r, 4, f"=D{rgd1}/D{rfac}*D{rais}").number_format = "0.000"; ws.cell(r, 5, f"=E{rgd1}").number_format = "0.000"; ws.cell(r, 6, f"=D{r}/E{r}-1").number_format = "+0.0%;-0.0%"
+    ws.cell(r, 7, "參考（橋接參數 Assumed）"); ws.cell(r, 8, "未扣租用的第三方託管與 neocloud 容量（層級只算自有＋融資租賃；租用容量歸出租方），扣除後會更低"); ws.cell(r, 9, "Assumed（橋接）"); ws.cell(r, 10, "同主讀數"); ws.cell(r, 11, "Derived"); r += 1
+    rgb2 = r; ws.cell(r, 1, "口徑橋接後第二讀數（參考）：最近揭露一季 × 4 ÷ 設施電力係數 × AI 占比 vs 層級 CY2026"); ws.cell(r, 2, "橋接（Assumed）"); ws.cell(r, 3, "GW")
+    ws.cell(r, 4, f"=D{rgd2}/D{rfac}*D{rais}").number_format = "0.000"; ws.cell(r, 5, f"=E{rgd2}").number_format = "0.000"; ws.cell(r, 6, f"=D{r}/E{r}-1").number_format = "+0.0%;-0.0%"
+    ws.cell(r, 7, "參考（橋接參數 Assumed）"); ws.cell(r, 8, "同上"); ws.cell(r, 9, "Assumed（橋接）"); ws.cell(r, 10, "同第二讀數"); ws.cell(r, 11, "Derived"); r += 1
+    rgj = r; ws.cell(r, 1, "C0（實績）判定：新增容量 GW").font = BOLD
+    ws.cell(r, 2, "公司口徑無法與層級對齊：參考，不判定"); ws.cell(r, 7, "參考（口徑無法對齊）")
+    ws.cell(r, 8, F_(T("口徑無法對齊的原因：（1）公司說的是整體容量（兩年內整體容量約翻倍），含非 AI 負載，層級是 AI 的 IT GW；（2）公司未說明是設施電力或 IT 電力，層級是 IT 關鍵電力；"
+                       "（3）新增的資料中心可能含向第三方租用的託管機房與 neocloud 容量，層級只算自有＋融資租賃；（4）公司數字是口頭約數（1 GW、another gigawatt），FY27Q1 未揭露，CY2026 只有兩季。"
+                       "未換算時兩讀數為 "), f'TEXT(F{rgd1},"+0%;-0%")', T(" 與 "), f'TEXT(F{rgd2},"+0%;-0%")', T("（同號、都超過 ±15%）；以設施電力係數 "), f'TEXT(D{rfac},"0.0")', T(" 與 AI 占比 "), f'TEXT(D{rais},"0.00")',
+                    T(" 橋接後為 "), f'TEXT(F{rgb1},"+0%;-0%")', T(" 與 "), f'TEXT(F{rgb2},"+0%;-0%")', T("（門檻內）；設施電力係數取區間 1.1–1.3 時主讀數為 "),
+                    f'TEXT(D{rgd1}/1.3*D{rais}/E{rgd1}-1,"+0%;-0%")', T(" 至 "), f'TEXT(D{rgd1}/1.1*D{rais}/E{rgd1}-1,"+0%;-0%")',
+                    T("，且租用容量未扣。結論隨 Assumed 的橋接參數跨過門檻，所以列參考、不計入對帳中；公司若揭露 AI 或 IT 口徑、自有與租用拆分，再依兩讀數規則判定。")))
+    ws.cell(r, 9, GR_GW); ws.cell(r, 10, "Wattonomics 新增 IT GW（部分同源；比的是每 GW 成本、AI 占比與上線時差）"); ws.cell(r, 11, "Derived（部分同源）"); r += 1
+    rgjr = r; ws.cell(r, 1, "參考：未換算時兩讀數規則會得到什麼（不計入判定）")
+    ws.cell(r, 7, f'=IF(AND(ABS(F{rgd1})>{TOL},ABS(F{rgd2})>{TOL},SIGN(F{rgd1})=SIGN(F{rgd2})),"參考（口徑未對齊）：兩讀數都超過 ±門檻且同號",IF(OR(ABS(F{rgd1})>{TOL},ABS(F{rgd2})>{TOL}),"參考（口徑未對齊）：只一個讀數超過門檻（時差邊界）","參考（口徑未對齊）：兩讀數都在門檻內"))'); r += 1
+    rgpg = r; ws.cell(r, 1, "每 GW 資本支出（參考）：公司口徑資本支出 CY2026Q1＋Q2 ÷ 公司口頭揭露新增 GW vs Tokenomics 每 IT GW 建置成本（IT＋廠房）"); ws.cell(r, 2, "CY2026 上半年"); ws.cell(r, 3, "US$B／GW")
+    ws.cell(r, 4, f"=(D{rq1}+D{rq2})/(D{rgq1}+D{rgq2})").number_format = "0.0"
+    ws.cell(r, 5, tcell("CapexGW!G22")["value"] + tcell("CapexGW!G25")["value"]).number_format = "0.0"; ws.cell(r, 6, f"=D{r}/E{r}-1").number_format = "+0.0%;-0.0%"
+    ws.cell(r, 7, "參考（口徑無法對齊）")
+    ws.cell(r, 8, "公司側＝公司口徑資本支出（含融資租賃、含非 AI、付款早於上線）÷ 口頭揭露新增容量（整體容量、口徑不明）；兩者期間與口徑都不一致，只看量級"); ws.cell(r, 9, GR_GW)
+    ws.cell(r, 10, f"{WV}：CapexGW!G22（每 IT GW 的 IT 資本支出，含 Maia 調整）＋G25（每 IT GW 廠房），追公式傾印值"); ws.cell(r, 11, "Derived"); r += 1
     F2b = r - 1
     ws.cell(r, 1, "對帳中項目數（F2 的 C0（實績）判定）"); ws.cell(r, 4, f'=COUNTIF(G{F2a}:G{F2b},"對帳中")'); rn = r; r += 1
     ws.cell(r, 1, "時差邊界（參考）項目數"); ws.cell(r, 4, f'=COUNTIF(G{F2a}:G{F2b},"時差邊界（參考）")'); rnb = r; r += 1
-    ws.cell(r, 1, "無可比實績列數（資本支出 1、AI 營收 1、在役 MW 1）"); ws.cell(r, 4, f'=COUNTIF(G{F2a}:G{F2b},"無可比實績*")+COUNTIF(G{F2a}:G{F2b},"參考（無可比實績*")'); rnc = r; r += 1
+    ws.cell(r, 1, "無可比實績列數（資本支出 1、AI 營收 1、在役 MW 存量 1；新增容量 GW 列為「參考（口徑無法對齊）」，不在此計）"); ws.cell(r, 4, f'=COUNTIF(G{F2a}:G{F2b},"無可比實績*")+COUNTIF(G{F2a}:G{F2b},"參考（無可比實績*")'); rnc = r; r += 1
     ws.cell(r, 1, "對帳摘要（HTML 用；公式帶數字）")
     ws.cell(r, 4, F_(T("C0（實績）對帳：公司已公布資本支出（公司口徑，CY2026 年 Q1–Q3 累計 "), f'TEXT(D{rd1},"0.0")', T(" 十億美元）與層級 CY2026 隱含值（"), f'TEXT(E{rl},"0.0")', T("；同期間換算 "), f'TEXT(E{rd1},"0.0")', T("）相差 "),
                      f'TEXT(F{rd1},"+0%;-0%")', T("（主讀數）；最近一季年化 "), f'TEXT(D{rd2},"0.0")', T(" 十億美元，相差 "), f'TEXT(F{rd2},"+0%;-0%")',
                      T("（第二讀數）。但 Wattonomics 的 Microsoft 2026 年資本支出與新增 GW 由公司資本支出（FY2026 實績與個股模型寫回的 FY2027）換算（追公式：CapexGW!G17、H17←In!K169、L169），屬同源，判定："), f'G{rj}',
-                     T("（參考，不計入對帳中）。AI 營收與在役電力沒有可比的公司實績（公司不揭露），不判定。個股不裁決，不改上游值；證據回饋走對帳單（C5）。")))
+                     T("（參考，不計入對帳中）。新增容量：公司法說口頭揭露 CY2026 上半年約 "), f'TEXT(D{rgd1},"0.0")', T(" GW，比層級同期 "), f'TEXT(E{rgd1},"0.00")', T(" GW "), f'IF(F{rgd1}<0,"低 ","高 ")', f'TEXT(ABS(F{rgd1}),"0%")', T("（最近揭露一季年化 "), f'TEXT(F{rgd2},"+0%;-0%")', T("），但公司為整體容量、未說明 AI 或 IT 口徑、可能含租用，以假設參數橋接後 "), f'TEXT(F{rgb1},"+0%;-0%")', T("，結論隨橋接參數跨過門檻，判定："), f'G{rgj}', T("。AI 營收（公司只揭露含 Copilot 的 AI 年化）與在役容量存量沒有可比的公司實績，不判定。個股不裁決，不改上游值；證據回饋走對帳單（C5）。")))
     rs = r; r += 1
     ws.cell(r, 1, "讀法：兩個讀數的偏誤方向（依季中點）")
     ws.cell(r, 2, F_(T("資本支出是流量，逐季上升（Q1 "), f'TEXT(D{rq1},"0.0")', T("、Q2 "), f'TEXT(D{rq2},"0.0")', T("、Q3 "), f'TEXT(D{rq3},"0.0")',
@@ -626,10 +696,10 @@ def coord(wb, C):
                       T("，來自 GW 換算與廠房提前入帳的時點，以及層級以財年換算日曆年。這裡全部用流量（資本支出）比較，不拿 9 月底存量對年底存量。")))
     rr_ = r; r += 1
     ws.cell(r, 1, "F2 同源檢查（哪些部分同源、什麼會消去、這張表實際檢驗什麼）")
-    ws.cell(r, 2, ("（一）資本支出列：追公式（F1b）顯示 Wattonomics 2026 年 Microsoft AI 資本支出（Gap!G108 系列）與非 AI 資本支出（Gap!G52）的輸入是公司資本支出（CapexGW!G17←In!K169 FY2026 實績 145.3；H17←In!L169 個股模型寫回 FY2027 204.2；非 AI 讀 In!K168、L168 個股模型寫回）；"
-                   "新增 GW 也由此換算（CapexGW!G34）。層級值因此同源於公司資本支出與個股模型，不是獨立證據：整列標「參考（同源校準）」，結論「無可比實績（層級值同源）」；每 GW 資本支出同樣無可比（公司不揭露 GW）。公司已公布實績 act26_msft 沒有進 Microsoft 的 GW 或資本支出路徑（只在 Compare 頁作權重）。"
+    ws.cell(r, 2, ("（一）資本支出列：追公式（F1b）顯示 Wattonomics 2026 年 Microsoft AI 資本支出（Interface!F596 ← Gap!G62 ← G45＝G42＋G43＋G44）與非 AI 資本支出（Gap!G52）的輸入是公司資本支出（CapexGW!G17←In!K169 FY2026 實績 145.3；H17←In!L169 個股模型寫回 FY2027 204.2；非 AI 讀 In!K168、L168 個股模型寫回）；"
+                   "新增 GW 也由此換算（CapexGW!G34）。層級值因此同源於公司資本支出與個股模型，不是獨立證據：整列標「參考（同源校準）」，結論「無可比實績（層級值同源）」。公司已公布實績 act26_msft 沒有進 Microsoft 的 GW 或資本支出路徑（只在 Compare 頁作權重）。"
                    "（二）AI 營收列：用到上述 GW（同源）、對外比例 60%（沿用 Microsoft 舊模型，同源）、期初世代組合（本模型假設）；公司只揭露含 Copilot 的 AI 年化營收（>37），不揭露 Azure AI 單獨營收，所以只列層級隱含值占公司 AI 年化的比例與上限檢查，不判定。"
-                   "（三）在役 MW：公司不揭露，列「無可比實績」。（四）所以本頁 C0 在 Microsoft 無檢驗力：對帳中為 0 不代表兩層一致，只代表層級值是由公司資本支出換算而來。要恢復檢驗，需 Wattonomics 改以 Epoch 或園區證據獨立推 2026 年 GW。"))
+                   "（三）新增容量 GW 列：層級新增 GW＝公司資本支出 × AI 占比 ÷ Tokenomics 每 GW 成本再加上線時差，屬部分同源；拿公司法說口頭揭露的新增 GW 比，公司資本支出不再是比較對象，實際檢驗的是每 GW 成本、AI 占比與上線時差（每 GW 物理檢驗）。但公司 GW 為整體容量、口徑（電力或 IT、自有或租用）未說明，橋接參數為假設且結論跨過門檻，所以列「參考（口徑無法對齊）」。在役容量存量公司不揭露，列「無可比實績（存量）」。""（四）所以本頁 C0 在 Microsoft 對帳中為 0：資本支出列同源、新增 GW 列口徑無法對齊，不代表兩層一致。若公司揭露 AI 或 IT 口徑的新增容量，或 Wattonomics 改以 Epoch／園區證據獨立推 2026 年 GW，再依兩讀數規則判定。"))
     rsame = r; r += 1
     ws.cell(r, 1, "口徑換算（層級 vs 公司資本支出）")
     ws.cell(r, 2, ("公司口徑資本支出＝現金購置不動產與設備＋融資租賃增添（公司 IR 財務報表 CapEx 工作表）；層級資本支出＝新增 GW × 每 GW 建置成本（IT＋廠房）＋非 AI 資本支出，屬完工口徑近似。"
@@ -644,7 +714,7 @@ def coord(wb, C):
     ws.cell(r, 1, "版本與快照狀態：Tokenomics 本模型讀 v21.10（工作單所列現行 v22.0 未換；換 v22.0 另走 Tokenomics 同步通知）；Wattonomics v0.3.2 也讀 Tokenomics v21.10，兩側版本一致。Microsoft 模型值曾被 Wattonomics 讀入（資本支出寫回，In!K169、L169、K168、L168），本表只列層級值與追公式，不用該回饋判定。")
     r += 1
     return dict(F1=(F1a, F1b), F1chk=F1chk, F2h=F2h, F2hh=F2hh, F2=(F2a, F2b), rq=(rq1, rq2, rq3, rq9), rp=(rp1, rp2, rp3, rp9), rl=rl, rd1=rd1, rd2=rd2, rj=rj, rjr=rjr, rtr=rtr_conc, rdump=(rdump0, rdump1), rdump_note=rdump_note,
-                rg=rg, rc9=rc9, rc3=rc3, ra=(ra1, ra2, ra3, ra5), rai=rai, rcu=rcu, rmw=rmw, rn=rn, rnb=rnb, rnc=rnc, rs=rs, rr=rr_, rsame=rsame, rk=rk, rb=rb_, wrows=wrows, tol=TOL)
+                rg=rg, rgw=dict(y25=rgw25, q=(rgq1, rgq2, rgq3), l=rgl, d1=rgd1, d2=rgd2, fac=rfac, ais=rais, b1=rgb1, b2=rgb2, j=rgj, jr=rgjr, pg=rgpg), rc9=rc9, rc3=rc3, ra=(ra1, ra2, ra3, ra5), rai=rai, rcu=rcu, rmw=rmw, rn=rn, rnb=rnb, rnc=rnc, rs=rs, rr=rr_, rsame=rsame, rk=rk, rb=rb_, wrows=wrows, tol=TOL)
 
 
 # =====================================================================================================
@@ -679,7 +749,7 @@ def readme13(wb, C, RVA, PLA, CRD):
     put("o4", T("真正壓力在 AI 折舊與現金：基準情境新增 AI 折舊 FY2028 "), f'TEXT({PLB("p_aida", "G")},"0")', T(" 十億美元，毛利率由 FY2026 "), f'TEXT(PL!E{ix["gm"]},"0.0%")', T(" 降到 FY2028 "),
         f'TEXT(PL!G{ix["gm"]},"0.0%")', T("；五年自由現金流扣股利合計 "), 'TEXT(CF!C5,"0.0")', T(" 十億美元（基準），"), 'CF!C6', T("。"))
     put("o5", T("實績對帳（本版新增）：CY2026 前三季（FY26Q3 至 FY27Q1）公司口徑資本支出 "), f'TEXT(Coord!D{CRD["rd1"]},"0.0")', T(" 十億美元，與 Wattonomics 隱含的同期間值相差 "), f'TEXT(Coord!F{CRD["rd1"]},"+0%;-0%")',
-        T("（最近一季年化 "), f'TEXT(Coord!F{CRD["rd2"]},"+0%;-0%")', T("），但該層級值由公司資本支出換算（同源），結論："), f'Coord!G{CRD["rj"]}', T("；AI 營收與在役電力公司不揭露，無可比實績。"))
+        T("（最近一季年化 "), f'TEXT(Coord!F{CRD["rd2"]},"+0%;-0%")', T("），但層級值由公司資本支出換算（同源），列參考。公司法說口頭揭露上半年新增約 "), f'TEXT(Coord!D{CRD["rgw"]["d1"]},"0")', T(" GW，比層級同期"), f'IF(Coord!F{CRD["rgw"]["d1"]}<0,"低 ","高 ")', f'TEXT(ABS(Coord!F{CRD["rgw"]["d1"]}),"0%")', T("，但公司說的是整體容量，口徑無法對齊，只列參考。"))
     put("drv", T("分部營收推導（情境 B）：Agents and Infra＝Azure（Azure AI〔在役 AI MW × 每 MW 持有成本 × k〕＋Azure 其他〔近四季年增向長期值收斂〕）＋Microsoft 365 cloud（基礎＋Copilot〔座席 × 月費〕）＋授權、Industry solutions、Frontier；"
                  "Devices and Consumer＝Search and advertising、XBOX、Windows OEM；兩分部加總為合併營收。FY2028 Agents and Infra "),
         f'TEXT({PLB("p_ai_seg", "G")},"0")', T("（其中 Azure AI "), f'TEXT({PLB("p_s_azai", "G")},"0")', T("、Copilot "), f'TEXT({PLB("p_cop", "G")},"0")', T("）、Devices and Consumer "), f'TEXT({PLB("p_dc", "G")},"0")',

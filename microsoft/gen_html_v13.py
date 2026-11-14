@@ -138,9 +138,15 @@ capx = {"type": "table", "caption": "資本支出（公司已公布實績 vs Wat
 nocmp = {"type": "table", "caption": "沒有可比公司實績的項目（參考；不判定）", "head": ["項目", "期間／口徑", "公司實績", "層級隱含", "層級占公司實績", "狀態"],
          "rows": [[f"@Coord!A{rai}", f"@Coord!B{rai}", f"@Coord!D{rai}|n1", f"@Coord!E{rai}|n1", f"@Coord!F{rai}|p0", f"@Coord!G{rai}"],
                   [f"@Coord!A{rcu}", "", "", "", "", f"@Coord!G{rcu}"], [f"@Coord!A{rmw}", f"@Coord!B{rmw}", "", "", "", f"@Coord!G{rmw}"]]}
+G = CRD["rgw"]
+gw_t = {"type": "table", "caption": "新增容量（公司法說口頭揭露 vs Wattonomics 新增 IT GW；參考，口徑無法對齊）", "head": ["讀數", "期間／口徑", "公司", "層級隱含", "差距", "狀態／判定"],
+        "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!D{r}|n2", f"@Coord!E{r}|n2", f"@Coord!F{r}|sp1", f"@Coord!G{r}"] for r in (G["d1"], G["d2"], G["b1"], G["b2"], G["y25"])]
+                + [[f"@Coord!A{G['pg']}", f"@Coord!B{G['pg']}", f"@Coord!D{G['pg']}|n1", f"@Coord!E{G['pg']}|n1", f"@Coord!F{G['pg']}|sp1", f"@Coord!G{G['pg']}"],
+                   [f"@Coord!A{G['j']}", f"@Coord!B{G['j']}", "", "", "", f"@Coord!G{G['j']}"], [f"@Coord!A{G['jr']}", "", "", "", "", f"@Coord!G{G['jr']}"]]}
+gw_note = {"type": "note", "parts": [f"@Coord!H{G['j']}"]}
 d3 = {"type": "table", "caption": "展開：實績對帳的輸入、口徑、出處與證據等級", "collapse": True, "summary": "展開：實績對帳的輸入、出處與證據等級",
       "head": ["項目", "期間／口徑", "公司實績口徑與出處", "公司實績等級", "層級口徑與出處", "層級等級"],
-      "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!H{r}", f"@Coord!I{r}", f"@Coord!J{r}", f"@Coord!K{r}"] for r in list(rq) + list(rp) + [rd1, rd2, rg, rl] + list(ra) + [rai, rcu, rmw]]}
+      "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!H{r}", f"@Coord!I{r}", f"@Coord!J{r}", f"@Coord!K{r}"] for r in list(rq) + list(rp) + [rd1, rd2, rg, rl] + list(ra) + [rai, rcu, rmw] + list(G["q"]) + [G["l"], G["d1"], G["d2"], G["fac"], G["ais"], G["pg"], G["y25"]]]}
 trc = {"type": "table", "caption": f"@Coord!A{f1b}", "head": ["輸出名稱 ← 公式鏈", "同源判定", "讀到什麼"],
        "rows": [[f"@Coord!A{r}", f"@Coord!G{r}", f"@Coord!H{r}"] for r in range(f1b + 2, r_tr)]}
 t1 = {"type": "table", "caption": f"@Coord!A{f1h}", "collapse": True, "summary": "展開：本模型讀取的 Tokenomics 名稱與 Wattonomics 對照名稱、值與版本",
@@ -152,7 +158,7 @@ dump_t = {"type": "table", "caption": "展開：追公式傾印（腳本輸出�
           "rows": [[f"@Coord!A{r}", f"@Coord!D{r}|n3", f"@Coord!G{r}", f"@Coord!H{r}"] for r in range(d0, d1 + 1)]}
 S["recon"]["blocks"].extend([
     {"type": "h3", "text": "三層協調：讀取層級與實績對帳"},
-    {"type": "note", "parts": [f"@Coord!D{CRD['rs']}"]}, capx, nocmp, d3,
+    {"type": "note", "parts": [f"@Coord!D{CRD['rs']}"]}, capx, nocmp, gw_t, gw_note, d3,
     {"type": "note", "parts": [f"@Coord!B{CRD['rr']}"]}, {"type": "note", "parts": [f"@Coord!B{CRD['rsame']}"]}, {"type": "note", "parts": [f"@Coord!B{CRD['rk']}"]},
     {"type": "h3", "text": "追公式：層級值是否讀公司實績或目標"}, trc, {"type": "note", "parts": [f"@Coord!A{r_tr}"]}, dump_t, t1])
 # ---- 8. 資料狀態：本版要點 ----

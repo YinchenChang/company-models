@@ -4771,7 +4771,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!D324"
+      "@Coord!D339"
      ]
     },
     {
@@ -4880,6 +4880,90 @@
        "",
        "@Coord!G320"
       ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "新增容量（公司法說口頭揭露 vs Wattonomics 新增 IT GW；參考，口徑無法對齊）",
+     "head": [
+      "讀數",
+      "期間／口徑",
+      "公司",
+      "層級隱含",
+      "差距",
+      "狀態／判定"
+     ],
+     "rows": [
+      [
+       "@Coord!A327",
+       "@Coord!B327",
+       "@Coord!D327|n2",
+       "@Coord!E327|n2",
+       "@Coord!F327|sp1",
+       "@Coord!G327"
+      ],
+      [
+       "@Coord!A328",
+       "@Coord!B328",
+       "@Coord!D328|n2",
+       "@Coord!E328|n2",
+       "@Coord!F328|sp1",
+       "@Coord!G328"
+      ],
+      [
+       "@Coord!A331",
+       "@Coord!B331",
+       "@Coord!D331|n2",
+       "@Coord!E331|n2",
+       "@Coord!F331|sp1",
+       "@Coord!G331"
+      ],
+      [
+       "@Coord!A332",
+       "@Coord!B332",
+       "@Coord!D332|n2",
+       "@Coord!E332|n2",
+       "@Coord!F332|sp1",
+       "@Coord!G332"
+      ],
+      [
+       "@Coord!A322",
+       "@Coord!B322",
+       "@Coord!D322|n2",
+       "@Coord!E322|n2",
+       "@Coord!F322|sp1",
+       "@Coord!G322"
+      ],
+      [
+       "@Coord!A335",
+       "@Coord!B335",
+       "@Coord!D335|n1",
+       "@Coord!E335|n1",
+       "@Coord!F335|sp1",
+       "@Coord!G335"
+      ],
+      [
+       "@Coord!A333",
+       "@Coord!B333",
+       "",
+       "",
+       "",
+       "@Coord!G333"
+      ],
+      [
+       "@Coord!A334",
+       "",
+       "",
+       "",
+       "",
+       "@Coord!G334"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!H333"
      ]
     },
     {
@@ -5047,25 +5131,105 @@
        "@Coord!I320",
        "@Coord!J320",
        "@Coord!K320"
+      ],
+      [
+       "@Coord!A323",
+       "@Coord!B323",
+       "@Coord!H323",
+       "@Coord!I323",
+       "@Coord!J323",
+       "@Coord!K323"
+      ],
+      [
+       "@Coord!A324",
+       "@Coord!B324",
+       "@Coord!H324",
+       "@Coord!I324",
+       "@Coord!J324",
+       "@Coord!K324"
+      ],
+      [
+       "@Coord!A325",
+       "@Coord!B325",
+       "@Coord!H325",
+       "@Coord!I325",
+       "@Coord!J325",
+       "@Coord!K325"
+      ],
+      [
+       "@Coord!A326",
+       "@Coord!B326",
+       "@Coord!H326",
+       "@Coord!I326",
+       "@Coord!J326",
+       "@Coord!K326"
+      ],
+      [
+       "@Coord!A327",
+       "@Coord!B327",
+       "@Coord!H327",
+       "@Coord!I327",
+       "@Coord!J327",
+       "@Coord!K327"
+      ],
+      [
+       "@Coord!A328",
+       "@Coord!B328",
+       "@Coord!H328",
+       "@Coord!I328",
+       "@Coord!J328",
+       "@Coord!K328"
+      ],
+      [
+       "@Coord!A329",
+       "@Coord!B329",
+       "@Coord!H329",
+       "@Coord!I329",
+       "@Coord!J329",
+       "@Coord!K329"
+      ],
+      [
+       "@Coord!A330",
+       "@Coord!B330",
+       "@Coord!H330",
+       "@Coord!I330",
+       "@Coord!J330",
+       "@Coord!K330"
+      ],
+      [
+       "@Coord!A335",
+       "@Coord!B335",
+       "@Coord!H335",
+       "@Coord!I335",
+       "@Coord!J335",
+       "@Coord!K335"
+      ],
+      [
+       "@Coord!A322",
+       "@Coord!B322",
+       "@Coord!H322",
+       "@Coord!I322",
+       "@Coord!J322",
+       "@Coord!K322"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!B325"
+      "@Coord!B340"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!B326"
+      "@Coord!B341"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!B327"
+      "@Coord!B342"
      ]
     },
     {
