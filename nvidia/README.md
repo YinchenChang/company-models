@@ -4,13 +4,13 @@
 
 依據：`docs/plan/三層基準協調規則.md` v1.4（C3 連續法、v1.2 C3 總量分配與「缺口全由該公司吸收」敏感度、C4 個股不裁決；分支 `claude/baseline-rules-v1.4`）、版面規格 v1.3 I 節（本分支）；三層協調落地步驟 5a。base＝`claude/nvidia-v0.3.7-layout13`（PR #468）。chat 端 2026-11-14 預設：橫幅主值用基準讀數、另一側揭露；CY2026 不縮放；情境 A＝供給側讀數、C 沿用自訂；網通同比例、Edge 不縮放；刪除舊「Wattonomics 錨定」敏感度案例；新增「總量缺口全由 NVIDIA 吸收」敏感度。
 
-- **集中輸入（唯一一處）：** `coord_inputs.json`＋`coord_post.load()`。來源依序：Siliconomics 現行快照已有協調名稱時自動改讀（合併後）→ `mode: "trial"`：Siliconomics 協調試作分支 `claude/siliconomics-coord-trial`@2cffaa6（v0.19-trial，cov_done＝1）快照摘錄（`python3 nvidia/coord_post.py extract <快照> <分支> <SHA>`）→ 暫值。
-- **改讀的 Siliconomics 名稱：** `SIF_DeployGW_Base`（現行基準 GW，2029＝42.70 連續法）、`SIF_DeployGW_Supply_<yyyy>`（供給側讀數＝情境 A）、`SIF_DeployGW_Alt_<yyyy>`、`SIF_DeployGW_AltRatio_<yyyy>`（另一側讀數與縮放比）、`SIF_RecoFlag_<yyyy>`（2026＝0、2027＝1、2028＝1、2029＝0）、`SIF_RecoStatus_<yyyy>`／`SIF_RecoLead_<yyyy>`（顯示）、`SIF_DeployGW_Current_<yyyy>`（改前現行值，只對照）、`SIF_UnitsCoef_Base`（情境 B 係數 1／1／0.80／0.710）。In 頁 `um28_B`、`um29_B` 改讀 `co_ucoef_28`／`co_ucoef_29`；`um28_A`、`um29_A` 改為供給側讀數 ÷ 原始顆數 GW（＝1）；原值逐字保留在說明欄。
+- **集中輸入（唯一一處）：** `coord_inputs.json`＋`coord_post.load()`。來源依序：Siliconomics 現行快照已有協調名稱時自動改讀（合併後）→ `mode: "trial"`：Siliconomics 協調試作分支 `claude/siliconomics-coord-trial`@c5b363c（v0.19-trial，cov_done＝1）快照摘錄（`python3 nvidia/coord_post.py extract <快照> <分支> <SHA>`）→ 暫值。
+- **改讀的 Siliconomics 名稱：** `SIF_DeployGW_Base`（現行基準 GW，2029＝42.70 連續法）、`SIF_DeployGW_Supply_<yyyy>`（供給側讀數＝情境 A）、`SIF_DeployGW_Alt_<yyyy>`、`SIF_DeployGW_AltRatio_<yyyy>`（另一側讀數與縮放比）、`SIF_RecoFlag_<yyyy>`（2026＝0、2027–2029＝1）、`SIF_RecoStatus_<yyyy>`／`SIF_RecoLead_<yyyy>`（顯示）、`SIF_DeployGW_Current_<yyyy>`（改前現行值，只對照）、`SIF_UnitsCoef_Base`（情境 B 係數 1／1／0.80／0.710）。In 頁 `um28_B`、`um29_B` 改讀 `co_ucoef_28`／`co_ucoef_29`；`um28_A`、`um29_A` 改為供給側讀數 ÷ 原始顆數 GW（＝1）；原值逐字保留在說明欄。
 - **基準變動：** 2029 係數 0.85 → 0.710，加權目標價 254.26 → 248.46（上檔空間 +40.0% → +36.8%，買進不變）；FY2028 不變，FY2029、FY2030 情境 B EPS 13.01／15.60 → 12.78／12.95。
 - **In 頁 Z 節**（兩讀數 GW、供給側 GW、比值、旗標、基準係數、NVIDIA 占原始顆數比例、核對列）；**Coord 頁**：A 兩讀數 GW 與狀態、B 兩讀數目標價、C 展示層文字、E「總量缺口全由 NVIDIA 吸收」敏感度（只作用於情境 B；另一側讀數下缺口大於 NVIDIA 全部顆數，標不可行）、D 快照一致性。
 - **刪除舊 Wattonomics 錨定案例：** Sens 第 895–976 列與主表第 23 列、DCF 第 99–131 列、In 頁原 Z 節與具名範圍 wta_27..29 清空（保留空白以維持列號，首列留說明），README 重點 3 的錨定句刪除；建置時掃描殘留引用（0）。
-- **另一側讀數與敏感度：** `coord_alt.py` 整本重建 base／alt（`_coord`）／absorb（`_absorb`）三檔 → `coord_alt.json` → Coord 頁。`sens.json` 以新基準重跑（`sens_nvidia.py`），v0.3.6 版本沿革的 steps／attr 保留原值。
-- **HTML：** 橫幅加「另一側讀數目標價」一格與揭露句；估值章開頭兩讀數表與長條圖；敏感度章加全吸收表；標準損益表 FY2028E、FY2029E 標「對帳中」。
+- **另一側讀數與敏感度：** 另一側讀數只縮放情境 B、C；情境 A＝供給側讀數，兩讀數相同。`coord_alt.py` 整本重建 base／alt（`_coord`）／absorb（`_absorb`）三檔 → `coord_alt.json` → Coord 頁。`sens.json` 以新基準重跑（`sens_nvidia.py`），v0.3.6 版本沿革的 steps／attr 保留原值。
+- **HTML：** 橫幅加「另一側讀數目標價」一格與揭露句；估值章開頭兩讀數表與長條圖；敏感度章加全吸收表；標準損益表 FY2028E–FY2031E 標「對帳中」。
 - 建置：`python3 nvidia/coord_alt.py` →（In 頁或基準改動時）`python3 nvidia/sens_nvidia.py` → `python3 nvidia/build_nvidia.py raw.xlsx` → LibreOffice 重算 → `dist/` → `python3 nvidia/gen_html_json.py` → `python3 tools/company_html/build_company_html.py nvidia`。
 
 <!-- version-table: dist/_待刪除/20261114_NVIDIA個股模型_v0.3.7.xlsx｜dist/20261114_NVIDIA個股模型_v0.3.8.xlsx -->
