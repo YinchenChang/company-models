@@ -438,7 +438,7 @@ def coord_c0(wb, SIL, CR, HR, PB, EQ_F):
     ROW["first"], ROW["last"] = first, r - 1
     CW.cell(r, 1, "對帳中項目數（讀取層級核對：同源列不判定、不計；以本頁「4. C0（實績）」判定為準）"); CW.cell(r, 7, 0)
     ROW["cnt"] = r; r += 1
-    CW.cell(r, 1, "無可比層級量的項目：Disco 研削／切割裝置市占（層級沒有；模型 In 頁 sh 為 Interested-party 說法）；AI 出貨錨點、HBM 比重、消耗品（公司說明資料或 Assumed）；非 AI 裝置與消耗品成長（Assumed）。")
+    CW.cell(r, 1, "無可比層級量的項目：Disco 研削／切割裝置市占（層級沒有；模型 In 頁 sh 為 Interested-party 說法）；AI 出貨錨點（券商估計，Interested-party）、HBM 比重、消耗品（公司說明資料或 Assumed）；非 AI 裝置與消耗品成長（Assumed）。")
     r += 1
     CW.cell(r, 1, "層級之間（參考；Siliconomics 對帳單 r3 處理，不計入本公司對帳中項目數）").font = BOLD; ROW["ref"] = r; r += 1
     CW.cell(r, 1, "以下是 Siliconomics 現行基準（HBM 出貨位元、CoWoS 片數，情境 B）與 Wattonomics 換算值兩層之間的差距，不是 Disco 自己的量對層級的比較；本公司不裁決（C4），只在兩讀數目標價並列。")
@@ -463,8 +463,16 @@ def coord_c0(wb, SIL, CR, HR, PB, EQ_F):
                     T(" 日圓（"), f"C{CR['rec']}", T("）；兩讀數只差產業部署 GW 一個輸入（情境 B、C 的 HBM 出貨位元與 CoWoS 片數 × 另一側比值；情境 A 不縮放），個股不裁決，對帳在 Siliconomics 對帳單處理。")))
     ROW["s3"] = r; r += 1
     CW.cell(r, 1, F(T("兩讀數的縮放比值：CY2027 "), TX(f"C{CR['ratio']}", "0.000"), T("、CY2028 "), TX(f"D{CR['ratio']}", "0.000"), T("、CY2029 "), TX(f"E{CR['ratio']}", "0.000"),
-                    T("（另一側 ÷ 現行基準）。另一側讀數直接縮放 HBM 出貨位元（不再與供給取小）與 CoWoS 片數，CY2027 購機看的 CY2028 共同前提同乘比值；校準係數 kH、kL 沿用情境 A 的 FY2025 校準（FY2025 是實績，不重新校準）；非 AI 裝置與消耗品未縮放。")))
+                    T("（另一側 ÷ 現行基準）。另一側讀數直接縮放 HBM 出貨位元（不再與供給取小）與 CoWoS 片數，CY2027 購機看的 CY2028 共同前提同乘比值；校準係數 kH、kL 與 AI 工序量指數分母不重算（與現行建置同一情境相同）；FY2025 是實績、FY2026 是錨點，已實現與錨點期間不受縮放影響（FY2025 的 1/4 CY2026 新機需求讀未縮放的 CY2027 產能；tools/coord/README.md 兩讀數規格）；非 AI 裝置與消耗品未縮放。")))
     ROW["s3b"] = r; r += 1
+    # v0.3.5 合併前修正：評等不同取決於「另一側讀數不重算校準係數」口徑——揭露重算校準時的讀數（tools/coord/alt_run.py 另一側建置改為以縮放後 FY2025 新機需求重算 kH、kL 的一次性試算）
+    CW.cell(r, 4, 31830.4676656835).number_format = "#,##0"; CW.cell(r, 4).font = BLUE
+    CW.cell(r, 1, F(T("口徑揭露：兩讀數評等不同（現行基準讀數"), f"B{CR['rec']}", T("、另一側讀數"), f"C{CR['rec']}",
+                    T("）取決於「另一側讀數不重算校準係數」這個口徑。若照 Sens 錨定案例的做法重算校準（kH、kL 以縮放後的 FY2025 新機需求重新校準），另一側讀數加權目標價為 "),
+                    TX(f"D{r}", "#,##0"), T(" 日圓（"), REC5(f"(D{r}/px-1)"), T("），與現行基準讀數評等"), f'IF({REC5(f"(D{r}/px-1)")}=B{CR["rec"]},"相同","不同")',
+                    T("。本模型採不重算口徑（校準分母含 CY2026→CY2027 增量，縮放會使係數虛增、方向反轉），重算值只列揭露、不進兩讀數表。")))
+    CW.cell(r, 8, "D 欄：tools/coord/alt_run.py 另一側建置（Siliconomics v0.19 對帳中比值）改為重算校準的一次性試算（2026-11-15；Derived），加權目標價 31,830.47 日圓；本模型正式另一側讀數不採此口徑")
+    ROW["s3c"] = r; r += 1
     CW.column_dimensions["F"].width = 18; CW.column_dimensions["G"].width = 26; CW.column_dimensions["H"].width = 110; CW.column_dimensions["I"].width = 40
     # ---- 4. C0 ----
     r += 1
@@ -478,7 +486,7 @@ def coord_c0(wb, SIL, CR, HR, PB, EQ_F):
                   "下表以「份額沿用 FY2025 實績」（FY2025 營收 ÷ SEMI CY2025 組裝與封裝設備，匯率不變；FY 與 CY 錯開三個月，近似）換算：層級隱含值＝FY2025 營收 × 市場 CY2026 ÷ CY2025。份額不變是假設、不是層級值，故只列參考、不判定；結論「無可比實績（層級無 Disco 份額）」，對帳中維持 0。")
     ROW["same"] = r; r += 1
     CW.cell(r, 1, "缺的獨立揭露：(1) 層級的研削／切割設備市場或 Disco 份額（模型市占 70% 為 Morningstar 等說法，Interested-party，不是層級值）；(2) 口徑差：Disco 營收含消耗品（刀片、砂輪）與其他，SEMI 組裝與封裝設備只含設備；SEMI 以美元計、Disco 以日圓計。"
-                  "AI 相關出貨額為公司說明資料數字（FY2025 75.0 十億日圓），層級沒有對應量，列為其他實績。")
+                  "生成 AI 相關出貨額 FY2025 約 75.0 十億日圓是券商估計（樂天證券今中能夫，Interested-party；公司不揭露金額），不是公司實績，層級也沒有對應量，只列對照。")
     ROW["none"] = r; r += 1
     for j, h in enumerate(["項目", "單位", "期間", "數值", "等級", "", "", "出處／口徑"], 1):
         c = CW.cell(r, j, h); c.font = BOLD; c.fill = HDR
@@ -541,7 +549,7 @@ def coord_c0(wb, SIL, CR, HR, PB, EQ_F):
               ("營業利益", "¥B", "=q26h1_oi", "=Q!H5", "無可比實績（層級無對應量）", f"In 頁 q26h1_oi（{FR1022} 116,639 百萬日圓）；Q2＝Q 頁 H5"),
               ("毛利", "¥B", "=q26h1_gp", None, "無可比實績（層級無對應量）", f"In 頁 q26h1_gp（{FR1022} 183,917 百萬日圓）；單季毛利見 Q 頁毛利率列"),
               ("稅後淨利（歸屬母公司）", "¥B", "=q26h1_ni", "=Q!H6", "無可比實績（層級無對應量）", f"In 頁 q26h1_ni（{FR1022} 80,366 百萬日圓）"),
-              ("生成 AI 相關出貨額 FY2025（全年，最近公布）", "¥B", "=ai_25", None, "無可比實績（層級無對應量）", "In 頁 ai_25（公司 FY2025 說明資料 75.0；D 欄為 FY2025 全年）；模型以此校準 AI 裝置每單位新機需求的營收")]
+              ("生成 AI 相關出貨額 FY2025（券商估計，非公司實績；只列對照）", "¥B", "=ai_25", None, "無可比實績（層級無對應量）", "In 頁 ai_25（樂天證券今中能夫估計約 75.0，Interested-party，與 In 頁等級相同；公司不揭露金額；D 欄為 FY2025 全年）；模型以此校準 AI 裝置每單位新機需求的營收")]
     ROW["oth0"] = r
     for nm, u, a9, a3, judge, miss in others:
         CW.cell(r, 1, nm); CW.cell(r, 2, u); CW.cell(r, 3, "2026-04～09／2026-07～09" if "FY2025" not in nm else "2025-04～2026-03")

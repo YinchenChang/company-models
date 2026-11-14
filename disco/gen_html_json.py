@@ -465,7 +465,7 @@ def _v13(cfg):
                   {"type": "note", "parts": [f"@Coord!A{a4e - 1}"]},
                   {"type": "note", "parts": ["對帳中項目數：", f"@Coord!G{a4e}|n0", "。"]},
                   {"type": "table", "caption": "實績與層級隱含值的輸入、等級與出處（展開看）", "collapse": True, "summary": "展開：實績、層級值、換算參數與出處", "head": [f"@Coord!{c}{ih}" for c in "ABCDE"] + [f"@Coord!H{ih}"], "rows": in_rows},
-                  {"type": "table", "caption": f"@Coord!A{ot}", "collapse": True, "summary": "展開：出貨額、營業利益、毛利、淨利與 AI 相關出貨額的實績（層級無可比量，列示供對照）", "head": [f"@Coord!{c}{oh}" for c in "ABCDE"] + [f"@Coord!G{oh}"], "rows": oth_rows}]
+                  {"type": "table", "caption": f"@Coord!A{ot}", "collapse": True, "summary": "展開：出貨額、營業利益、毛利、淨利的實績與 AI 相關出貨額（券商估計）（層級無可比量，列示供對照）", "head": [f"@Coord!{c}{oh}" for c in "ABCDE"] + [f"@Coord!G{oh}"], "rows": oth_rows}]
     c0_note = [{"type": "h3", "text": "讀取層級核對（同源，不判定）"}, {"type": "note", "parts": [f"@Coord!A{c2}"]}, {"type": "note", "parts": [f"@Coord!A{c2 + 1}"]}, c0_tbl, {"type": "note", "parts": [f"@Coord!A{cnt + 1}"]}]
     c0_src = {"type": "table", "caption": "層級名稱、版本、口徑與證據等級（每列的來源；展開看）", "collapse": True, "summary": "展開：每列的層級名稱、版本、口徑與證據等級",
               "head": ["項目", "年度", "層級名稱與版本／口徑／證據等級／備註"], "rows": [[f"@Coord!A{r}", f"@Coord!C{r}", f"@Coord!H{r}"] for r in range(h2 + 1, cnt) if CW.cell(r, 8).value]}
@@ -479,7 +479,13 @@ def _v13(cfg):
     ref_blocks = [{"type": "h3", "text": f"@Coord!A{rf0}"}, {"type": "note", "parts": [f"@Coord!A{rf0 + 1}"]},
                   {"type": "table", "head": [f"@Coord!{c}{rfh}" for c in "ABCDEFG"],
                    "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}", f"@Coord!D{r}|n3", f"@Coord!E{r}|n3", f"@Coord!F{r}|sp1", f"@Coord!G{r}"] for r in range(rfh + 1, rfe + 1)]}]
-    c3_notes = [{"type": "note", "parts": [f"@Coord!A{c3 + 1}"]}, {"type": "note", "parts": [f"@Coord!A{c3 + 2}"]}]
+    c3_notes = [{"type": "note", "parts": [f"@Coord!A{c3 + 1}"]}, {"type": "note", "parts": [f"@Coord!A{c3 + 2}"]}, {"type": "note", "parts": [f"@Coord!A{c3 + 3}"]}]
+    assert "口徑揭露" in str(CW.cell(c3 + 3, 1).value), CW.cell(c3 + 3, 1).value
+    # 估值章兩讀數表與長條圖之後：揭露評等不同取決於「不重算校準係數」口徑（重算校準時的另一側讀數）
+    vb = S["valuation"]["blocks"]
+    i_tw = next(i for i, b in enumerate(vb) if b.get("type") == "h3" and b.get("text") == "對帳中：兩讀數目標價")
+    assert vb[i_tw + 3].get("type") == "bars", vb[i_tw + 3]
+    vb.insert(i_tw + 4, {"type": "note", "parts": [f"@Coord!A{c3 + 3}"]})
     S["recon"]["blocks"] = [{"type": "h3", "text": "三層協調：由下往上對帳（公司實績對各層）"}] + act_blocks + c0_note + ref_blocks + c3_notes + [c0_src, rd_tbl] + [{"type": "h3", "text": "公司目標、先驗比對與校準"}] + S["recon"]["blocks"]
     S["recon"]["title"] = "對帳：三層協調、公司實績與先驗比對"
     # ---- 8. 資料狀態 ----

@@ -329,6 +329,12 @@
      }
     },
     {
+     "type": "note",
+     "parts": [
+      "@Coord!A76"
+     ]
+    },
+    {
      "type": "table",
      "caption": "@Val!A105",
      "head": [
@@ -4111,12 +4117,6 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!A78"
-     ]
-    },
-    {
-     "type": "note",
-     "parts": [
       "@Coord!A79"
      ]
     },
@@ -4127,27 +4127,24 @@
      ]
     },
     {
+     "type": "note",
+     "parts": [
+      "@Coord!A81"
+     ]
+    },
+    {
      "type": "table",
      "caption": "營收：公司決算短信實績 vs 層級隱含值（層級沒有 Disco 份額；份額沿用 FY2025 實績的兩列為假設，只列參考、不判定）",
      "head": [
-      "@Coord!A93",
-      "@Coord!B93",
-      "@Coord!C93",
-      "@Coord!D93",
-      "@Coord!E93",
-      "@Coord!F93",
-      "@Coord!G93"
+      "@Coord!A94",
+      "@Coord!B94",
+      "@Coord!C94",
+      "@Coord!D94",
+      "@Coord!E94",
+      "@Coord!F94",
+      "@Coord!G94"
      ],
      "rows": [
-      [
-       "@Coord!A94",
-       "@Coord!B94",
-       "@Coord!C94",
-       "@Coord!D94|n1",
-       "@Coord!E94|n1",
-       "@Coord!F94|sp1",
-       "@Coord!G94"
-      ],
       [
        "@Coord!A95",
        "@Coord!B95",
@@ -4172,22 +4169,31 @@
        "@Coord!C97",
        "@Coord!D97|n1",
        "@Coord!E97|n1",
-       "@Coord!F97|p1",
+       "@Coord!F97|sp1",
        "@Coord!G97"
+      ],
+      [
+       "@Coord!A98",
+       "@Coord!B98",
+       "@Coord!C98",
+       "@Coord!D98|n1",
+       "@Coord!E98|n1",
+       "@Coord!F98|p1",
+       "@Coord!G98"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A98"
+      "@Coord!A99"
      ]
     },
     {
      "type": "note",
      "parts": [
       "對帳中項目數：",
-      "@Coord!G99|n0",
+      "@Coord!G100|n0",
       "。"
      ]
     },
@@ -4197,22 +4203,14 @@
      "collapse": true,
      "summary": "展開：實績、層級值、換算參數與出處",
      "head": [
-      "@Coord!A81",
-      "@Coord!B81",
-      "@Coord!C81",
-      "@Coord!D81",
-      "@Coord!E81",
-      "@Coord!H81"
+      "@Coord!A82",
+      "@Coord!B82",
+      "@Coord!C82",
+      "@Coord!D82",
+      "@Coord!E82",
+      "@Coord!H82"
      ],
      "rows": [
-      [
-       "@Coord!A82",
-       "@Coord!B82",
-       "@Coord!C82",
-       "@Coord!D82|n1",
-       "@Coord!E82",
-       "@Coord!H82"
-      ],
       [
        "@Coord!A83",
        "@Coord!B83",
@@ -4241,7 +4239,7 @@
        "@Coord!A86",
        "@Coord!B86",
        "@Coord!C86",
-       "@Coord!D86|n0",
+       "@Coord!D86|n1",
        "@Coord!E86",
        "@Coord!H86"
       ],
@@ -4249,7 +4247,7 @@
        "@Coord!A87",
        "@Coord!B87",
        "@Coord!C87",
-       "@Coord!D87|n3",
+       "@Coord!D87|n0",
        "@Coord!E87",
        "@Coord!H87"
       ],
@@ -4265,7 +4263,7 @@
        "@Coord!A89",
        "@Coord!B89",
        "@Coord!C89",
-       "@Coord!D89|n1",
+       "@Coord!D89|n3",
        "@Coord!E89",
        "@Coord!H89"
       ],
@@ -4284,31 +4282,31 @@
        "@Coord!D91|n1",
        "@Coord!E91",
        "@Coord!H91"
+      ],
+      [
+       "@Coord!A92",
+       "@Coord!B92",
+       "@Coord!C92",
+       "@Coord!D92|n1",
+       "@Coord!E92",
+       "@Coord!H92"
       ]
      ]
     },
     {
      "type": "table",
-     "caption": "@Coord!A101",
+     "caption": "@Coord!A102",
      "collapse": true,
-     "summary": "展開：出貨額、營業利益、毛利、淨利與 AI 相關出貨額的實績（層級無可比量，列示供對照）",
+     "summary": "展開：出貨額、營業利益、毛利、淨利的實績與 AI 相關出貨額（券商估計）（層級無可比量，列示供對照）",
      "head": [
-      "@Coord!A102",
-      "@Coord!B102",
-      "@Coord!C102",
-      "@Coord!D102",
-      "@Coord!E102",
-      "@Coord!G102"
+      "@Coord!A103",
+      "@Coord!B103",
+      "@Coord!C103",
+      "@Coord!D103",
+      "@Coord!E103",
+      "@Coord!G103"
      ],
      "rows": [
-      [
-       "@Coord!A103",
-       "@Coord!B103",
-       "@Coord!C103",
-       "@Coord!D103|n1",
-       "@Coord!E103|n1",
-       "@Coord!G103"
-      ],
       [
        "@Coord!A104",
        "@Coord!B104",
@@ -4340,6 +4338,14 @@
        "@Coord!D107|n1",
        "@Coord!E107|n1",
        "@Coord!G107"
+      ],
+      [
+       "@Coord!A108",
+       "@Coord!B108",
+       "@Coord!C108",
+       "@Coord!D108|n1",
+       "@Coord!E108|n1",
+       "@Coord!G108"
       ]
      ]
     },
@@ -4641,6 +4647,12 @@
      "type": "note",
      "parts": [
       "@Coord!A75"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!A76"
      ]
     },
     {

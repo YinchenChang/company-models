@@ -342,7 +342,7 @@ def engine(ws, r0, title, **over):
         P["hsx"] = {y: (f"hs{s}_{y % 100}*wta_{y % 100}" if y >= 2027 else f"hs{s}_{y % 100}") for y in range(2025, 2030)}
         P["cwm"] = {y: f"wta_{y % 100}" for y in (2027, 2028, 2029)}
         P["vh28"] = "vhA_28*wta_28"; P["cw28"] = "cw_28*um28_A*wta_28"   # CY2027 購機的 CY2028 共同前提同乘比值（產能需求與 HBM 位元成正比）
-        P["kfix"] = True   # 校準係數 kH、kL 沿用情境 A（未縮放）的 FY2025 校準：FY2025 錨點是實績，另一側讀數只改 CY2027 起的部署，不重新校準
+        P["kfix"] = True   # 不重算校準係數：FY2025 錨點是實績，另一側讀數只改 CY2027 起的部署。v0.3.5 修正：FY2025 已實現期間讀未縮放的 CY2026 新機需求（xh0／xl0），校準係數 kH、kL 與現行建置同一情境相同、FY2025 營收＝實績（tools/coord/README.md 兩讀數規格）
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
     hdr(ws, r, ["項目", "單位", "CY2025／FY2025", "CY2026／FY2026", "CY2027／FY2027", "CY2028／FY2028", "CY2029／FY2029", "CY2030", "CY2031", "說明"]); r += 1
@@ -367,10 +367,15 @@ def engine(ws, r0, title, **over):
     row("vl", "CoWoS 片數需求", "千片", {"C": f"={P['cw25']}", **{CYC[y]: f"=cw_{y % 100}{um.get(y, '')}" + (f"*{P['cwm'][y]}" if P['cwm'] and y in P['cwm'] else "") for y in range(2026, 2030)}, "H": f"=G{r}*(1+{P['tail']})", "I": f"=H{r}*(1+{P['tail']})"}, fmt="#,##0", note="台積電模型；B、C 的 2028–29 × 情境係數")
     nxl = lambda y: (P['cw28'] if y == 2027 else f"{CYC[y+1]}{R['vl']}")   # v0.2.1：CY2027 的下一年（CY2028）片數讀情境 A
     row("xl", "先進封裝新機需求（下一年片數增量＋汰換；CY2027 的下一年片數讀情境 A）", "千片", {CYC[y]: f"=MAX(0,{nxl(y)}-{CYC[y]}{R['vl']})+{P['dlt']}*{CYC[y]}{R['vl']}" for y in range(2025, 2031)}, fmt="#,##0", note="v0.2.1：CY2027 購機用 cw_28 × um28_A（情境 A），2027 三情境相同")
+    if P.get("kfix"):   # v0.3.5 修正：另一側讀數的已實現期間不縮放——FY2025 的 1/4 CY2026 新機需求讀「未縮放」的 CY2027 產能（＝縮放後 ÷ wta_27；產能需求與 HBM 位元、片數成正比），使 FY2025 營收＝實績（檢查列 0）
+        row("xh0", "HBM 新機需求 CY2026（未縮放；另一側讀數 FY2025 已實現期間用）", "十億次", {"D": f"=MAX(0,E{R['vh']}/wta_27-D{R['vh']})+{P['dlt']}*D{R['vh']}"}, note="CY2027 產能 ÷ wta_27 還原未縮放值；FY2025 是實績，不受另一側縮放影響")
+        row("xl0", "先進封裝新機需求 CY2026（未縮放；同上）", "千片", {"D": f"=MAX(0,E{R['vl']}/wta_27-D{R['vl']})+{P['dlt']}*D{R['vl']}"}, fmt="#,##0")
     ws.cell(r, 1, "B. 校準（只用 FY2025 AI 出貨錨點；FY(t)＝3/4×CY(t)＋1/4×CY(t+1)）").font = BOLD; r += 1
-    fw = lambda key, y: f"(0.75*{CYC[y]}{R[key]}+0.25*{CYC[y+1]}{R[key]})"
-    row("kh", "HBM：每單位新機需求的裝置營收 kH", "¥B／十億次", {"C": ("=kh_A" if P.get("kfix") else f"={P['ai']}*{P['w']}/{fw('xh', 2025)}")}, fmt="0.000", note="＝AI 出貨 × HBM 比重 ÷ FY2025 新機需求")
-    row("kl", "先進封裝：每千片新機需求的裝置營收 kL", "¥B／千片", {"C": ("=kl_A" if P.get("kfix") else f"={P['ai']}*(1-{P['w']})/{fw('xl', 2025)}")}, fmt="0.0000")
+    _fw = lambda key, y: f"(0.75*{CYC[y]}{R[key]}+0.25*{CYC[y+1]}{R[key]})"
+    fw = lambda key, y: (f"(0.75*C{R[key]}+0.25*D{R[key + '0']})" if (P.get("kfix") and y == 2025 and key in ("xh", "xl")) else _fw(key, y))
+    # 另一側讀數（kfix）：fw(…, 2025) 讀未縮放的 CY2026 新機需求（xh0／xl0），校準係數因此與現行建置同一情境的係數完全相同（不因縮放重算）
+    row("kh", "HBM：每單位新機需求的裝置營收 kH", "¥B／十億次", {"C": f"={P['ai']}*{P['w']}/{fw('xh', 2025)}"}, fmt="0.000", note="＝AI 出貨 × HBM 比重 ÷ FY2025 新機需求")
+    row("kl", "先進封裝：每千片新機需求的裝置營收 kL", "¥B／千片", {"C": f"={P['ai']}*(1-{P['w']})/{fw('xl', 2025)}"}, fmt="0.0000")
     ws.cell(r, 1, "C. 會計年度（C＝FY2025 … G＝FY2029）").font = BOLD; r += 1
     FY = range(2025, 2030); FY1 = range(2026, 2030)
     row("shf", "市占係數（相對 2025）", "x", {FYC[y]: f"=1-{P['shl']}/sh*{(y - 2025) / 4}" for y in FY}, fmt="0.000")
