@@ -1,4 +1,37 @@
-# nvidia/ — NVIDIA（NVDA）個股模型 v0.3.6
+# nvidia/ — NVIDIA（NVDA）個股模型 v0.3.7
+
+## v0.3.7（2026-11-14）：個股 HTML 版面規格 v1.3 試作（只改展示層；目標價、評等與既有數值格不變；試作，請勿合併）
+
+依據：Andy 2026-11-14 08:11（章節順序、反向 DCF 必備、橫幅說明 ≤200 字且無參數名稱、重點觀察 ≤5 點且 ≤750 字、每章至少一張圖、標準損益表、驅動因子含分部營收推導）；規格 `docs/plan/個股HTML版面規格.md`「v1.3 規格」一節；檢查 `tools/company_html/check_layout_v13.py`。
+
+- **HTML 章節：** 命題與核心問題 → 估值 → 敏感度 → 反向 DCF（新）→ 損益（標準損益表，取代三情境損益）→ 驅動因子（分部營收推導）→ 對帳 → 資料狀態。無個別模組（加速器市場與份額是命題一的答案，放命題章的圖；份額的參數仍在驅動因子章）。`html.json` 頂層 `"layout": "v1.3"`。
+- **xlsx 只新增（`v037_post.py`）：** RevDCF 頁（反向 DCF）；PL 頁末「標準損益表」（FY2024A–FY2026A 實績＋FY2027E–FY2031E 情境 B、比率區、GAAP 對照與核對列）；Hist 頁末「損益表歷史」（SEC XBRL companyfacts 10-K 年度值，FY2023–FY2026）；README 頁末「v1.3 展示層」白話列（橫幅說明、投資建議前提、重點觀察五點、分部營收推導說明、本版要點）。
+- **損益口徑：** Non-GAAP（模型口徑）。NVIDIA 財測與市場共識以 Non-GAAP 為主；本表營收、毛利、營業費用同 GAAP，稅前與稅後排除權益證券損益，股票薪酬照列費用（與公司 FY2027 起的 Non-GAAP 新口徑相近，Q 頁 EPS 差每季 0.01～0.03 美元）。FY2031E 為延伸期（收斂法只推營收與淨利率），營業成本、毛利、營業費用留白。GAAP 合計在摺疊對照列。
+- **反向 DCF（RevDCF 頁，全為公式；只讀其他頁）：** 以情境 B 路徑反解「DCF 價值推到 12 個月後＝現價 181.60」：所需企業價值為模型的 1.61 倍；單一因素達成需折現率 8.92%（模型 14.40%，二分法）、或 FY2028 起營收全面 ×1.63（FY2028 營收 1,002 vs 模型 615 十億美元，封閉解）、或 FY2028–FY2032 統一營業利益率 87.8%（模型等效 55.0%）。Comparable：只看 Comparable 需 13.9 倍（模型採用 29.9 倍、同業中位數 16.9 倍，現價隱含相對係數 0.82 vs 1.77）；加權（DCF 不變）需 18.8 倍。
+- **參數代號：** 讀者可見文字（摺疊與資料狀態以外）不出現參數代號：含代號的儲存格在 `gen_html_json.py` 的 `PLAIN` 改白話（xlsx 原文不改），含代號的整段說明改摺疊。
+- **共用產生器（只加可選功能）：** `build_company_html.py`、`check_company_html.py` 新增 `layout: "v1.3"` 的章節順序檢查（`V13_HEAD`、`V13_TAIL`、`v13_order_error`）；未設 `layout` 的公司輸出逐位元組不變。
+- **驗證：** v0.3.6 → v0.3.7 舊版每一格（12,850 格）逐格比對，差異只有 README!A1（版本字串與成品日）、README!A67 與 Sens!D984（build_id）、Hist!C56（成品日）；錯誤格 0；加權目標價 254.26、評等買進不變。
+- 建置：`python3 nvidia/build_nvidia.py raw.xlsx` → LibreOffice 重算 → `dist/` → `python3 nvidia/gen_html_json.py` → `python3 tools/company_html/build_company_html.py nvidia` → `python3 tools/model_governance/version_table.py nvidia --update`。核對：`check_governance.py --html --display nvidia`、`check_company_html.py nvidia`、`check_layout_v13.py`、`layout_check.py`。敏感度沿用 v0.3.6 快照（數值不變）。
+
+<!-- version-table: dist/_待刪除/20261111_NVIDIA個股模型_v0.3.6.xlsx｜dist/20261114_NVIDIA個股模型_v0.3.7.xlsx -->
+| 項目 | v0.3.6 | v0.3.7 |
+|---|---|---|
+| 現價 | 181.60 | 181.60 |
+| DCF 目標價 | 117.04 | 117.04 |
+| Comparable 目標價（未調整） | 221.79 | 221.79 |
+| Comparable 目標價（相對倍數調整後） | 391.48 | 391.48 |
+| 加權目標價（上檔空間） | 254.26（+40.0%） | 254.26（+40.0%） |
+| 投資建議 | 買進 | 買進 |
+| EPS 情境 A（FY2028／FY2029／FY2030） | 13.40／15.35／17.60 | 13.40／15.35／17.60 |
+| EPS 情境 B（FY2028／FY2029／FY2030） | 13.24／13.01／15.60 | 13.24／13.01／15.60 |
+| EPS 情境 C（FY2028／FY2029／FY2030） | 13.01／9.73／11.07 | 13.01／9.73／11.07 |
+| FY2028 毛利率（情境 A） | 68.84% | 68.84% |
+| FY2028 毛利率（情境 B） | 69.47% | 69.47% |
+| FY2028 毛利率（情境 C） | 69.71% | 69.71% |
+<!-- /version-table -->
+
+- 成品：`dist/20261114_NVIDIA個股模型_v0.3.7.xlsx`、`.html`；v0.3.6 移到 `dist/_待刪除/`。
+
 
 ## v0.3.6（2026-11-11）：驗收採用規劃書——數值項
 
@@ -22,7 +55,7 @@
 
 - 上檔空間 +45.5% → +40.0%，評等 買進 → 買進（未翻轉）；距最近級距邊界 +50% 為 10.0 個百分點（加權目標價 272.40 美元時翻轉）。
 
-<!-- version-table: dist/_待刪除/20261111_NVIDIA個股模型_v0.3.5.xlsx｜dist/20261111_NVIDIA個股模型_v0.3.6.xlsx -->
+<!-- version-table: dist/_待刪除/20261111_NVIDIA個股模型_v0.3.5.xlsx｜dist/_待刪除/20261111_NVIDIA個股模型_v0.3.6.xlsx -->
 | 項目 | v0.3.5 | v0.3.6 |
 |---|---|---|
 | 現價 | 181.60 | 181.60 |
@@ -39,7 +72,7 @@
 | FY2028 毛利率（情境 C） | 68.84% | 69.71% |
 <!-- /version-table -->
 
-- 成品：`dist/20261111_NVIDIA個股模型_v0.3.6.xlsx`、`.html`；v0.3.5 移到 `dist/_待刪除/`。建置：`python3 nvidia/sens_nvidia.py` → `python3 nvidia/build_nvidia.py raw.xlsx` → LibreOffice 重算 → `dist/` → `python3 nvidia/gen_html_json.py` → `python3 tools/company_html/build_company_html.py nvidia` → `python3 tools/model_governance/version_table.py nvidia --update`。核對：`check_governance.py --html --display nvidia`、`check_sens_coverage.py --require-keycol`、`check_in_layout.py`、`check_company_html.py nvidia`。
+- 成品：`dist/20261111_NVIDIA個股模型_v0.3.6.xlsx`、`.html`（v0.3.7 起移到 `dist/_待刪除/`）；v0.3.5 移到 `dist/_待刪除/`。建置：`python3 nvidia/sens_nvidia.py` → `python3 nvidia/build_nvidia.py raw.xlsx` → LibreOffice 重算 → `dist/` → `python3 nvidia/gen_html_json.py` → `python3 tools/company_html/build_company_html.py nvidia` → `python3 tools/model_governance/version_table.py nvidia --update`。核對：`check_governance.py --html --display nvidia`、`check_sens_coverage.py --require-keycol`、`check_in_layout.py`、`check_company_html.py nvidia`。
 
 ## v0.3.5（2026-11-11）：NVIDIA v0.3.4 驗收採用規劃書——展示與治理（數值不變）
 

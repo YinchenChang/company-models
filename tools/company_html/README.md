@@ -52,3 +52,5 @@ Excel 是計算事實的來源；HTML 只負責呈現，給 Andy 與投資處同
 
 ## 版面規格 v1.3 檢查（`check_layout_v13.py`）
 `python3 tools/company_html/check_layout_v13.py <html>...`：依 `docs/plan/個股HTML版面規格.md` v1.3 檢查章節順序（命題→估值→敏感度→反向 DCF→損益→驅動→個別模組→對帳→資料狀態）、橫幅說明 ≤200 字且無參數代號、重點觀察 ≤5 點且 ≤750 字、標準損益表必備列與 3＋5 年、除反向 DCF／對帳／資料狀態外每章至少一張圖。v1.3 試作公司（Anthropic、CoreWeave、NVIDIA）必過；其餘公司下次改版套用後必過。
+
+- 可選頂層 `"layout": "v1.3"`（2026-11-14，NVIDIA v0.3.7 試作起）：產生器與 `check_company_html.py` 改依 v1.3 章節順序檢查（`V13_HEAD`＝命題、估值、敏感度、反向 DCF、損益、驅動因子；個別模組；`V13_TAIL`＝對帳、資料狀態）。未設 `layout` 的公司照舊檢查七章順序，輸出逐位元組不變。

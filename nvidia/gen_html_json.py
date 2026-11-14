@@ -338,5 +338,272 @@ def _theme_blocks():
 
 _theme_blocks()
 
+
+# ================= v0.3.7（2026-11-14）：個股 HTML 版面規格 v1.3 試作（Andy 2026-11-14 08:11；docs/plan/個股HTML版面規格.md「v1.3 規格」） =================
+# 章節：命題 → 估值 → 敏感度 → 反向 DCF → 損益（標準損益表）→ 驅動因子（分部營收推導）→ 對帳 → 資料狀態；NVIDIA 無個別模組。
+# 數字一律取自 xlsx（README 頁末 v1.3 白話列、PL 頁末標準損益表、RevDCF 頁；nvidia/v037_post.py 產生）。列號依標籤找。
+def _v13():
+    S = {s["id"]: s for s in cfg["sections"]}
+    RD, PLW, RV = wb["README"], wb["PL"], wb["RevDCF"]
+    r13 = find("README", "v1.3 展示層")
+    RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
+    assert str(RD[f"A{RM['ver']}"].value).startswith("v0.3.7"), RD[f"A{RM['ver']}"].value
+    cfg["layout"] = "v1.3"
+    # ---- 橫幅：只留 ≤200 字白話（規則與歸因移到估值章）----
+    old_note = cfg["hero"]["note"]
+    cfg["hero"]["note"] = [f"@README!A{RM['hero']}"]
+    # ---- 1. 命題與核心問題 ----
+    th = S["thesis"]["blocks"]
+    units = next(b for b in S["drivers"]["blocks"] if b["type"] == "theme")
+    S["drivers"]["blocks"].remove(units)
+    units["caption"] = ("堆疊＝各平台加速器金額（顆數 × 每顆售價，模組層級）；折線＝NVIDIA 占加速器總金額的比例（右軸）。"
+                        "回答命題一（ASIC 會把 NVIDIA 的金額份額壓到多少）；情境 A 為上游原始顆數，基準情境 B 的顆數在 CY2028 起較低。")
+    kv = next(b for b in th if b["type"] == "kv")
+    kv["items"] = [it for it in kv["items"] if it[0] != "會計年度"]
+    i_obs = next(i for i, b in enumerate(th) if b["type"] == "h3" and b.get("text") == "重點觀察")
+    th[i_obs + 1] = {"type": "list", "ordered": True, "items": [f"@README!A{RM[k]}" for k in ("o1", "o2", "o3", "o4", "o5")]}
+    th[0] = {"type": "note", "parts": [f"@README!A{RM['rec']}"]}           # 投資建議條件式（白話；原 README「投資建議：」列移到資料狀態）
+    th.insert(0, units)
+    for b in th:
+        if b["type"] == "h3" and b.get("text") == "情境定義與會計年度":
+            b["text"] = "情境定義"
+    # ---- 2. 估值：橫幅原有的評等規則、相對倍數調整與歸因說明移到這裡（摺疊）----
+    va = S["valuation"]["blocks"]
+    i_bar = next(i for i, b in enumerate(va) if b["type"] == "bars")
+    va.insert(i_bar + 1, {"type": "note", "parts": old_note[:7]})
+    va.insert(i_bar + 2, {"type": "list", "items": [p for p in old_note[7:] if p], "collapse": True,
+                          "summary": "展開：評等邊界、上檔空間三段歸因、現行相對倍數與公司指引對照"})
+    # ---- 4. 反向 DCF（新）----
+    rv = lambda p, start=1: next(r for r in range(start, RV.max_row + 1) if str(RV.cell(r, 1).value or "").startswith(p))
+    ra = rv("A. DCF"); rb_ = rv("(a)"); rbb = rv("(b)"); rc = rv("(c)"); rcmp = rv("B. Comparable"); rsum = rv("C. 摘要")
+    yh = rv("項目（情境 B）")
+    R = lambda p, start: rv(p, start)
+    m1, m0 = R("現價隱含的營業利益率", rb_), R("模型：基準的等效營業利益率", rb_)
+    s1, rv1, rv0, g1, g0 = R("現價隱含的營收倍數", rbb), R("現價隱含的 FY2028 營收", rbb), R("模型：FY2028 營收", rbb), R("現價隱含的 FY2028 營收年增率", rbb), R("模型：FY2028 營收年增率", rbb)
+    w1, w0 = R("現價隱含的 WACC", rc), R("模型 WACC", rc)
+    rev_ = {
+        "id": "revdcf", "title": "反向 DCF：現價隱含什麼", "intro": f"@RevDCF!A2",
+        "blocks": [
+            {"type": "note", "parts": [f"@RevDCF!A{rsum + 1}"]},
+            {"type": "note", "parts": [f"@RevDCF!A{rsum + 2}"]},
+            {"type": "table", "caption": "現金流折現法（情境 B 路徑）：現價隱含值與模型基準", "head": ["項目", "現價隱含", "模型基準"],
+             "rows": [["預測期營業利益率（FY2028–FY2032 統一一個值）", f"@RevDCF!B{m1}|p1", f"@RevDCF!B{m0}|p1"],
+                      ["營收規模（FY2028 起各年同乘的倍數）", f"@RevDCF!B{s1}|n2", "—"],
+                      ["FY2028 營收（十億美元）", f"@RevDCF!B{rv1}|n0", f"@RevDCF!B{rv0}|n0"],
+                      ["FY2028 營收年增率", f"@RevDCF!B{g1}|p1", f"@RevDCF!B{g0}|p1"],
+                      ["折現率（WACC）", f"@RevDCF!B{w1}|p2", f"@RevDCF!B{w0}|p2"]]},
+            {"type": "table", "caption": f"@RevDCF!A{ra}", "head": ["項目", "值"],
+             "rows": [[f"@RevDCF!A{r}", f"@RevDCF!B{r}|" + ("n2" if r in (ra + 2, ra + 3, ra + 9) else "n3" if r == ra + 5 else "x1" if r == ra + 8 else "n1")]
+                      for r in range(ra + 2, ra + 10)]},
+            {"type": "table", "caption": f"@RevDCF!A{rcmp}", "head": [f"@RevDCF!{c}{rcmp + 1}" for c in "ABCD"],
+             "rows": [[f"@RevDCF!A{rcmp + 2}", "—", f"@RevDCF!C{rcmp + 2}|n2", "—"]]
+                     + [[f"@RevDCF!A{r}", f"@RevDCF!B{r}|" + ("n2" if k == 1 else "n1"), f"@RevDCF!C{r}|" + ("n2" if k == 1 else "n1"), f"@RevDCF!D{r}|sp1"] for k, r in enumerate(range(rcmp + 3, rcmp + 6))]
+                     + [[f"@RevDCF!A{rcmp + 6}", "—", f"@RevDCF!C{rcmp + 6}|n1", "—"]]},
+            {"type": "table", "caption": f"@RevDCF!A{yh}", "head": [f"@RevDCF!{c}{yh}" for c in "ABCDEFG"], "collapse": True,
+             "summary": "展開：情境 B 各年數字與反解係數（封閉解的計算過程）",
+             "rows": [[f"@RevDCF!A{r}"] + [f"@RevDCF!{c}{r}|" + ("p1" if r in (yh + 3, yh + 4) else "n3" if r in (yh + 5, yh + 6, yh + 7, yh + 8) else "n1") for c in "BCDEFG"]
+                      for r in range(yh + 1, rb_ - 1)]
+                     + [{"sub": f"@RevDCF!A{rb_}"}] + [[f"@RevDCF!A{r}", f"@RevDCF!B{r}|" + ("p1" if "利益率" in str(RV.cell(r, 1).value) else "n1"), "", "", "", "", ""] for r in range(rb_ + 1, rb_ + 5)]
+                     + [{"sub": f"@RevDCF!A{rbb}"}] + [[f"@RevDCF!A{r}", f"@RevDCF!B{r}|" + ("p1" if "年增率" in str(RV.cell(r, 1).value) else "n2" if "倍數" in str(RV.cell(r, 1).value) else "n3" if "核對" in str(RV.cell(r, 1).value) else "n1"), "", "", "", "", ""] for r in range(rbb + 1, rc - 1)]
+                     + [{"sub": f"@RevDCF!A{rc}"}] + [[f"@RevDCF!A{r}", f"@RevDCF!B{r}|" + ("p2" if "WACC" in str(RV.cell(r, 1).value)[:12] else "n3"), "", "", "", "", ""] for r in range(w1, w1 + 4)]},
+        ]}
+    # ---- 5. 損益（標準損益表）----
+    p0 = find("PL", "標準損益表（v0.3.7")
+    ph = next(r for r in range(p0, PLW.max_row + 1) if PLW.cell(r, 1).value == "項目")
+    plr = lambda lab_, start=ph: next(r for r in range(start, PLW.max_row + 1) if PLW.cell(r, 1).value == lab_)
+    keys = ["營收", "營收年增率（YoY）", "營業成本（COGS）", "毛利", "毛利率", "營業費用（研發＋銷管）", "營業利益", "營業利益率",
+            "其他收入（淨額，不含權益證券損益）", "稅前利益", "所得稅", "稅後淨利", "淨利率", "稀釋股數", "EPS（完全稀釋）"]
+    fmt = lambda u: {"%": "p1", "US$": "n2", "十億股": "n2"}.get(u, "n1")
+    rowx = lambda r: [f"@PL!A{r}"] + [f"@PL!{c}{r}|{fmt(PLW.cell(r, 2).value)}" for c in "CDEFGHIJ"]
+    r_ratio = plr("比率"); r_gaap = next(r for r in range(ph, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("GAAP 對照"))
+    r_chk = plr("核對（應為 0）")
+    is_tbl = {"type": "table", "caption": "標準損益表（十億美元；EPS 為美元）：FY2024A–FY2026A 實績、FY2027E–FY2031E 情境 B（基準）",
+              "head": [f"@PL!A{ph}"] + [f"@PL!{c}{ph}" for c in "CDEFGHIJ"],
+              "rows": [rowx(plr(k)) for k in keys] + [{"sub": f"@PL!A{r_ratio}"}] + [rowx(r) for r in range(r_ratio + 1, r_gaap)]}
+    gaap_tbl = {"type": "table", "caption": f"@PL!A{r_gaap}", "head": [f"@PL!A{ph}"] + [f"@PL!{c}{ph}" for c in "CDE"], "collapse": True,
+                "summary": "展開：GAAP 對照（含權益證券損益；只列實績）與核對列",
+                "rows": [[f"@PL!A{r}"] + [f"@PL!{c}{r}|{fmt(PLW.cell(r, 2).value)}" for c in "CDE"] for r in range(r_gaap + 1, r_chk)]
+                        + [{"sub": f"@PL!A{r_chk}"}] + [[f"@PL!A{r}"] + [f"@PL!{c}{r}|n3" for c in "CDE"] for r in range(r_chk + 1, r_chk + 5)]}
+    rv_, gm_, opm_, nm_ = plr("營收"), plr("毛利率"), plr("營業利益率"), plr("淨利率")
+    is_chart = {"type": "theme", "title": "營收（十億美元）與毛利率、營業利益率、淨利率：FY2024A–FY2031E（情境 B）", "x": f"@PL!C{ph}:J{ph}",
+                "fmt": "n0", "fmt_r": "p0", "stack": True, "pad": 1.6,
+                "bars": [{"name": f"@PL!A{rv_}", "y": f"@PL!C{rv_}:J{rv_}", "color": "#6fc7cb"}],
+                "lines": [{"name": f"@PL!A{gm_}", "y": f"@PL!C{gm_}:J{gm_}", "axis": "r", "color": "#0b7a80", "labels": True},
+                          {"name": f"@PL!A{opm_}", "y": f"@PL!C{opm_}:J{opm_}", "axis": "r", "color": "#c29a2b"},
+                          {"name": f"@PL!A{nm_}", "y": f"@PL!C{nm_}:J{nm_}", "axis": "r", "color": "#6f6bae", "dash": True}],
+                "caption": "長條＝營收；三條線＝毛利率、營業利益率、淨利率（右軸，Non-GAAP 模型口徑）。FY2031E 為延伸期，只推營收與淨利率，未拆毛利率。"}
+    x0 = find("PL", "三情境延伸到 FY2032"); xh = x0 + 2
+    xa, xb, xc = (next(r for r in range(x0, PLW.max_row + 1) if PLW.cell(r, 1).value == f"情境 {k}") for k in "ABC")
+    xr = lambda base, lab_: next(r for r in range(base, PLW.max_row + 1) if PLW.cell(r, 1).value == lab_)
+    sc_chart = {"type": "theme", "title": "三情境並列：營收（長條，十億美元）與 EPS（折線，美元，右軸）", "x": f"@PL!C{xh}:H{xh}",
+                "fmt": "n0", "fmt_r": "n2", "stack": False, "pad": 1.1,
+                "bars": [{"name": [f"@PL!A{xa}", " 營收"], "y": f"@PL!C{xr(xa, '營收')}:H{xr(xa, '營收')}", "color": "#b7e3e4"},
+                         {"name": [f"@PL!A{xb}", " 營收"], "y": f"@PL!C{xr(xb, '營收')}:H{xr(xb, '營收')}", "color": "#10a0a7"},
+                         {"name": [f"@PL!A{xc}", " 營收"], "y": f"@PL!C{xr(xc, '營收')}:H{xr(xc, '營收')}", "color": "#8a8c8c"}],
+                "lines": [{"name": [f"@PL!A{xa}", " EPS"], "y": f"@PL!C{xr(xa, 'EPS（延伸表）')}:H{xr(xa, 'EPS（延伸表）')}", "axis": "r", "color": "#0b7a80", "dash": True},
+                          {"name": [f"@PL!A{xb}", " EPS"], "y": f"@PL!C{xr(xb, 'EPS（延伸表）')}:H{xr(xb, 'EPS（延伸表）')}", "axis": "r", "color": "#3b3838", "labels": True},
+                          {"name": [f"@PL!A{xc}", " EPS"], "y": f"@PL!C{xr(xc, 'EPS（延伸表）')}:H{xr(xc, 'EPS（延伸表）')}", "axis": "r", "color": "#b4472f", "dash": True}],
+                "caption": "情境 A（樂觀）、B（基準）、C（保守）在 FY2027 相同（錨點），差異自 FY2028 起出現、主要從 FY2029 起；FY2031 起為延伸期（收斂法）。"}
+    old_pl = S["pl"]["blocks"]
+    gmc = next(b for b in old_pl if b["type"] == "theme" and "毛利率" in str(b.get("title")))
+    old_rest = [b for b in old_pl if b["type"] != "theme"]
+    pls = [b for b in old_rest if b["type"] == "pl"]
+    notes = [p_ for b in old_rest if b["type"] == "note" for p_ in b["parts"]]
+    assert len(pls) == 2 and len(notes) == 2, (len(pls), notes)
+    old_blocks = [dict(pls[0], collapse=True, summary="展開：三情境摘要表與折線（FY2026–FY2030；營收、毛利率、營業利益、EPS）"),
+                  {"type": "list", "items": notes, "collapse": True, "summary": "展開：延伸期（FY2031–FY2032）的收斂法說明"},
+                  dict(pls[1], collapse=True, summary="展開：三情境延伸到 FY2032（收斂法）")]
+    pl_blocks = ([{"type": "note", "parts": [f"@PL!A{p0 + 1}"]}, is_chart, is_tbl, {"type": "note", "parts": [f"@PL!A{p0 + 2}"]}, sc_chart, gaap_tbl]
+                 + old_blocks)
+    S["pl"].update(title="損益（標準損益表）", blocks=pl_blocks)
+    S["pl"].pop("intro", None)
+    # ---- 6. 驅動因子：分部營收推導（情境 B）----
+    rbB = find("PL", "情境 B："); pr = lambda lab_: next(r for r in range(rbB, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith(lab_))
+    hdrB = rbB + 1
+    gens = [r for r in range(rbB, rbB + 30) if str(PLW.cell(r, 1).value or "").endswith(" 認列顆數") and str(PLW.cell(r, 1).value).startswith("NVIDIA ")]
+    prices = [r for r in range(rbB, rbB + 30) if str(PLW.cell(r, 1).value or "").endswith(" 每顆售價")]
+    comp = [r for r in range(rbB, rbB + 30) if str(PLW.cell(r, 1).value or "").endswith(" 運算營收")]
+    r_ut, r_cm, r_cn, r_nt, r_ed, r_bu = pr("NVIDIA 認列顆數合計"), pr("運算營收（Σ"), pr("中國資料中心運算營收"), pr("NVIDIA 網通營收"), pr("Edge Computing 營收"), pr("由下而上營收合計")
+    r_rep = next(r for r in range(r_bu, PLW.max_row + 1) if PLW.cell(r, 1).value == "營收")
+    r_dc, r_eg = r_rep + 1, r_rep + 2
+    seg_rows = lambda rs, f: [[f"@PL!A{r}", f"@PL!B{r}"] + [f"@PL!{c}{r}|{f}" for c in "DEFG"] for r in rs]
+    seg_tbl = {"type": "table", "caption": "分部營收推導（情境 B；十億美元）：資料中心運算＋網通＋中國＋Edge Computing＝合併營收",
+               "head": [f"@PL!A{hdrB}", f"@PL!B{hdrB}"] + [f"@PL!{c}{hdrB}" for c in "DEFG"],
+               "rows": [{"sub": "一、資料中心運算＝各世代認列顆數 × 每顆售價"}] + seg_rows(gens + [r_ut], "n2") + seg_rows(prices, "n1") + seg_rows(comp + [r_cm], "n1")
+                       + [{"sub": "二、網通（隨 NVIDIA 顆數同比例縮放）"}] + seg_rows([r_nt], "n1")
+                       + [{"sub": "三、中國資料中心（基準為零，只進敏感度）"}] + seg_rows([r_cn], "n1")
+                       + [{"sub": "四、Edge Computing（遊戲、PC、工作站、車用與機器人）"}] + seg_rows([r_ed], "n1")
+                       + [{"sub": "合計：由下而上與報告值（FY2027 報告值為錨點）"}] + seg_rows([r_bu, r_rep, r_dc, r_eg], "n1")}
+    seg_chart = {"type": "theme", "title": "分部營收（情境 B，十億美元）與 NVIDIA 認列顆數（百萬顆，右軸）", "x": f"@PL!D{hdrB}:G{hdrB}",
+                 "fmt": "n0", "fmt_r": "n1", "stack": True, "pad": 1.2, "total": f"@PL!D{r_bu}:G{r_bu}",
+                 "bars": [{"name": ["資料中心運算"], "y": f"@PL!D{r_cm}:G{r_cm}", "color": "#0b7a80"},
+                          {"name": ["網通"], "y": f"@PL!D{r_nt}:G{r_nt}", "color": "#6fc7cb"},
+                          {"name": ["Edge Computing"], "y": f"@PL!D{r_ed}:G{r_ed}", "color": "#c29a2b"}],
+                 "lines": [{"name": [f"@PL!A{r_ut}"], "y": f"@PL!D{r_ut}:G{r_ut}", "axis": "r", "color": "#3b3838", "labels": True}],
+                 "caption": "堆疊＝資料中心運算、網通、Edge Computing 三個分部（中國基準為零，未畫）；頂端數字＝由下而上合計；折線＝NVIDIA 認列顆數。FY2027 為錨點年（由下而上校準到公司實績與指引）。"}
+    gmc["caption"] = "HBM 成本占營收是毛利率的主要變動來源之一；兩者並列，可看記憶體漲價對毛利率的壓力在哪一年最大（模型假設漲價有一半由 NVIDIA 吸收）。"
+    dr = S["drivers"]["blocks"]
+    S["drivers"]["blocks"] = [{"type": "note", "parts": [f"@README!A{RM['drv']}"]}, seg_chart, seg_tbl, {"type": "h3", "text": "毛利率的驅動：HBM 與 LPDDR 成本"}, gmc,
+                              {"type": "h3", "text": "情境驅動與單一參數"}] + dr
+    S["drivers"]["title"] = "驅動因子：分部營收推導"
+    # ---- 9. 資料狀態：會計年度、原投資建議條件式、本版要點 ----
+    st = S["status"]["blocks"]
+    st[0:0] = [{"type": "h3", "text": "本版要點"}, {"type": "note", "parts": [f"@README!A{RM['ver']}"]},
+               {"type": "h3", "text": "會計年度與原投資建議條件式（模型原文）"}, {"type": "note", "parts": [f"@README!A{find('README', '會計年度：')}"]},
+               {"type": "note", "parts": [f"@README!A{find('README', '投資建議：')}"]}]
+    order = ["thesis", "valuation", "sens", "revdcf", "pl", "drivers", "recon", "status"]
+    S["revdcf"] = rev_
+    cfg["sections"] = [S[k] for k in order]
+
+
+_v13()
+
+
+# v0.3.7：全頁可見文字（摺疊與資料狀態以外）不出現參數代號（版面規格 v1.3 B 節原則）：
+#   含代號的儲存格改用白話（設定檔文字，不含數字）；含代號的整段說明改為摺疊。xlsx 原文不改（逐格比對 0 差異）。
+PLAIN = {
+    "Val!A10": "永續成長率（長期成長上限與無風險利率取小者）",
+    "Val!A11": "永續期新投資報酬率 RONIC（＝WACC＋超額報酬差）",
+    "Val!A20": "DCF 情境價值推到目標時點（以股權成本複利、扣除期間股利）",
+    "Val!E9": "股權成本與稅後債務成本以市值權重加權；WACC 調整只用於敏感度（基準為零）",
+    "Val!E40": "DCF 與 Comparable 加權（權重見 In 頁目標價規則，Andy 可改）",
+    "Val!E202": "DCF 每股價值以股權成本由評價日推到目標時點",
+    "In!B176": "永續成長率（最後一年之後；長期成長上限與無風險利率取小者）",
+    "Sens!B37": "DCF 權重 低／高",
+    "Sens!B991": "所有 NVIDIA 世代顆數同乘 低／高",
+    "Sens!A1002": "營業費用彈性（營業費用年增 ÷ 營收年增）低／高",
+    "Sens!B992": "售價改變後，FY2027 校準係數整本重算",
+    "Sens!A996": "匣級加價保留比例（全不保留／全保留）",
+    "Sens!B996": "校準係數隨之重算",
+    "Sens!A997": "HBM／LPDDR 漲價吸收比例（全額轉嫁／全額吸收；三情境）",
+    "Sens!B1001": "資料中心錨點＝總營收 − Edge；Edge 誤差傳到錨點與校準係數",
+    "Sens!B1004": "營業費用額外增減占營收的比例 低／高",
+    "Sens!A1005": "有效稅率 低／高（公司 FY2027 指引區間）",
+    "Sens!B1005": "公司 FY2027 指引區間",
+    "Sens!B1008": "錨點改變，校準係數整本重算",
+    "Sens!A1016": "FY2027 校準缺口自 FY2028 起逐年收斂、FY2030 消失（基準＝缺口持續）",
+    "Sens!B1016": "只有高（整本重算）",
+    "Recon!A59": "FY2028 毛利率（情境 B）− 公司 FY2028 毛利率指引中點",
+    "Recon!A60": "① HBM／LPDDR 吸收比例（基準吸收一半 vs 全額轉嫁）",
+    "Recon!J63": "Rubin／Rubin Ultra 占比與非 HBM 成本係數校準",
+    "Recon!A64": "⑤ FY2027 錨點毛利率 − 指引中點",
+    "Recon!A67": "反解：FY2028 毛利率（情境 B）達指引下緣所需的漲價吸收比例（只展示，基準不變）",
+    "Recon!J72": "公司未單獨揭露供應預付，含在預付及其他流動資產與其他資產內；營運資金比率因此無法剔除供應預付",
+}
+FOLD = {"DCF!A2": "展開：DCF 的營業利益與自由現金流口徑", "Sens!A24": "展開：敏感度讀法（月數加權與售價案例的口徑）",
+        "Recon!A68": "展開：FY2027 校準缺口的持續性假設"}
+
+
+def _plain(spec):
+    if isinstance(spec, list):
+        return [_plain(x) for x in spec]
+    if isinstance(spec, str) and spec.startswith("@"):
+        ref = spec[1:].split("|")[0]
+        if ref in PLAIN:
+            return PLAIN[ref]
+    return spec
+
+
+def _rowgen_rows(b):
+    g = b.pop("rowgen"); ws = wb[g["sheet"]]; fm = g.get("fmts", [""] * len(g["cols"])); rows = []
+    a, z = (int(x) for x in str(g["rows"]).split("-"))
+    for r in range(a, z + 1):
+        vals = [ws[f"{c}{r}"].value for c in g["cols"]]
+        cells = [f"@{g['sheet']}!{c}{r}|{f}" for c, f in zip(g["cols"], fm)]
+        rows.append({"sub": cells[0]} if (len(vals) > 1 and vals[0] is not None and all(v is None for v in vals[1:])) else cells)
+    b["rows"] = rows
+
+
+for sec in cfg["sections"]:
+    if sec["id"] == "status":
+        continue
+    nb = []
+    for b in sec["blocks"]:
+        if b.get("type") == "table" and "rowgen" in b and b["rowgen"].get("sheet") == "Sens":
+            _rowgen_rows(b)
+        if b.get("type") == "table":
+            b["rows"] = [({"sub": _plain(r["sub"])} if isinstance(r, dict) else _plain(r)) for r in b.get("rows", [])]
+            if "head" in b: b["head"] = _plain(b["head"])
+        if b.get("type") == "note" and not b.get("collapse") and len(b["parts"]) == 1 and str(b["parts"][0])[1:] in FOLD:
+            b = dict(b, collapse=True, summary=FOLD[str(b["parts"][0])[1:]])
+        nb.append(b)
+    sec["blocks"] = nb
+_S = {s["id"]: s for s in cfg["sections"]}
+_S["sens"]["intro"] = "上方表為加權目標價的敏感度（業務主因整本重算、目標價參數）；下方龍捲風圖為 FY2028 EPS 的敏感度（以情境 A 為底，一次動一個輸入）。"
+_S["sens"]["blocks"].insert(0, {"type": "note", "parts": ["@Sens!A1"], "collapse": True, "summary": "展開：敏感度頁原文說明（含模型參數代號）"})
+# 敏感度章的主圖：加權目標價在主要案例下的值（長條）與基準（豎線）；案例取業務主因表與目標價參數表中相對基準變動達門檻者
+def _sens_bars(th=0.02, top=10):
+    SW = wb["Sens"]; cand = []
+    for t0 in ("目標價敏感度：業務主因", "目標價參數敏感度"):
+        r0 = find("Sens", t0); hr = next(r for r in range(r0, r0 + 4) if SW.cell(r, 1).value in ("案例", "參數"))
+        r = hr + 1
+        while SW.cell(r, 1).value and not str(SW.cell(r, 1).value).startswith("檢查"):
+            lo, hi = SW.cell(r, 4).value, SW.cell(r, 6).value
+            mags = [abs(v) for v in (lo, hi) if isinstance(v, (int, float))]
+            if mags and max(mags) >= th:
+                cand.append((max(mags), r, lo, hi))
+            r += 1
+    cand.sort(key=lambda t: (-t[0], t[1]))
+    items = []
+    SHORT = {"相對倍數係數＝1": ("同業比較法不加歷史溢價", None), "DCF 權重": ("DCF 權重調低", "DCF 權重調高"),
+             "k_rec 自 FY2028 起": (None, "FY2027 校準缺口逐年收斂"), "NVIDIA 顆數係數": ("NVIDIA 顆數少一成", "NVIDIA 顆數多一成"),
+             "中國恢復": ("中國恢復（低）", "中國恢復（高）"), "GPU 模組售價：Blackwell": ("Blackwell 售價低", "Blackwell 售價高"),
+             "GPU 模組售價：Rubin Ultra": ("Rubin Ultra 售價低", "Rubin Ultra 售價高"), "GPU 模組售價：Rubin 低": ("Rubin 售價低", "Rubin 售價高"),
+             "匣級加價保留比例": ("匣級加價全不保留", "匣級加價全保留"), "營業費用率": ("營業費用率調低", "營業費用率調高"),
+             "ERP": ("股權風險溢酬低", "股權風險溢酬高"), "WACC": ("WACC 調低", "WACC 調高"), "β": ("β 低", "β 高"),
+             "HBM／LPDDR 吸收比例": ("漲價全額轉嫁", "漲價全額吸收"), "永續成長率": ("永續成長率低", "永續成長率高")}
+    for _, r, lo, hi in cand[:top]:
+        t = str(SW.cell(r, 1).value)
+        lh = next((v for k, v in SHORT.items() if t.startswith(k)), None)
+        for i, (col, v) in enumerate((("C", lo), ("E", hi))):
+            if isinstance(v, (int, float)):
+                labl = lh[i] if (lh and lh[i]) else [PLAIN.get(f"Sens!A{r}", f"@Sens!A{r}"), ("（低）", "（高）")[i]]
+                items.append({"label": labl, "value": f"@Sens!{col}{r}", "series": 0 if v > 0 else 1})
+    return {"type": "bars", "title": "加權目標價的主要敏感度（長條＝該案例下的加權目標價；豎線＝基準加權目標價；依影響大小排序）",
+            "fmt": "n2", "items": items, "ref": {"label": "基準加權目標價", "value": f"@Val!B{find('Val', '目標價（DCF 與 Comparable 加權）')}"}}
+
+
+_S["sens"]["blocks"].insert(1, _sens_bars())
+
 json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")
