@@ -1,7 +1,7 @@
 {
 "source": {
 "file": "20261114_Wattonomics_v0.3.1.xlsx",
-"sha256": "1e5827c2f534aeddf6b62da0fddb13124483a79c76f3f945d29d91af05496c81",
+"sha256": "038d4e7b750139e5600f464eca7b15b8c1611c9598d357d482bc18ac45778d55",
 "note": "Wattonomics（瓦帳）互動頁取數；扁平紀錄，kind 欄區分種類；單位 IT GW（＝TK GW）；下游取用 2027 年後數值前看 coverage",
 "wgov_errors": 0
 },
@@ -53,7 +53,7 @@
 "scen": "A",
 "delay": "D0",
 "year": 2026,
-"value": 45.0275890148166,
+"value": 44.8714255962943,
 "unit": "IT GW",
 "tag": "Derived",
 "src": "Deploy",
@@ -65,7 +65,7 @@
 "scen": "A",
 "delay": "D0",
 "year": 2027,
-"value": 71.728493297965,
+"value": 71.6243843522835,
 "unit": "IT GW",
 "tag": "Derived",
 "src": "Deploy",
@@ -77,7 +77,7 @@
 "scen": "A",
 "delay": "D0",
 "year": 2028,
-"value": 101.508481263799,
+"value": 101.404372318117,
 "unit": "IT GW",
 "tag": "Derived",
 "src": "Deploy",
@@ -89,7 +89,7 @@
 "scen": "A",
 "delay": "D0",
 "year": 2029,
-"value": 129.478717528696,
+"value": 129.374608583014,
 "unit": "IT GW",
 "tag": "Derived",
 "src": "Deploy",
@@ -101,7 +101,7 @@
 "scen": "A",
 "delay": "D0",
 "year": 2030,
-"value": 157.579553149515,
+"value": 157.47724899776,
 "unit": "IT GW",
 "tag": "Derived",
 "src": "Deploy",
@@ -113,7 +113,7 @@
 "scen": "A",
 "delay": "D0",
 "year": 2031,
-"value": 182.558318342635,
+"value": 182.454647259499,
 "unit": "IT GW",
 "tag": "Derived",
 "src": "Deploy",
@@ -125,7 +125,7 @@
 "scen": "A",
 "delay": "D0",
 "year": 2032,
-"value": 200.814150176899,
+"value": 200.700111985449,
 "unit": "IT GW",
 "tag": "Derived",
 "src": "Deploy",
@@ -161,7 +161,7 @@
 "scen": "A",
 "delay": "D0",
 "year": 2026,
-"value": 37.8525147943925,
+"value": 37.7025147943925,
 "unit": "IT GW",
 "tag": "Derived",
 "src": "Deploy",
@@ -173,7 +173,7 @@
 "scen": "A",
 "delay": "D0",
 "year": 2027,
-"value": 51.524382252233,
+"value": 51.424382252233,
 "unit": "IT GW",
 "tag": "Derived",
 "src": "Deploy",
@@ -185,7 +185,7 @@
 "scen": "A",
 "delay": "D0",
 "year": 2028,
-"value": 69.0758739798087,
+"value": 68.9758739798087,
 "unit": "IT GW",
 "tag": "Derived",
 "src": "Deploy",
@@ -197,7 +197,7 @@
 "scen": "A",
 "delay": "D0",
 "year": 2029,
-"value": 75.5488953108062,
+"value": 75.4488953108062,
 "unit": "IT GW",
 "tag": "Derived",
 "src": "Deploy",
@@ -209,7 +209,7 @@
 "scen": "A",
 "delay": "D0",
 "year": 2030,
-"value": 82.5679503328541,
+"value": 82.4679503328541,
 "unit": "IT GW",
 "tag": "Derived",
 "src": "Deploy",
@@ -221,7 +221,7 @@
 "scen": "A",
 "delay": "D0",
 "year": 2031,
-"value": 86.1407964867002,
+"value": 86.0407964867002,
 "unit": "IT GW",
 "tag": "Derived",
 "src": "Deploy",
@@ -233,7 +233,7 @@
 "scen": "A",
 "delay": "D0",
 "year": 2032,
-"value": 91.076027255931,
+"value": 90.976027255931,
 "unit": "IT GW",
 "tag": "Derived",
 "src": "Deploy",
@@ -265,8 +265,8 @@
 {
 "year": 2026,
 "retire": 2.44470178249906,
-"add_net": 17.2457438989842,
-"add_gross": 19.6904456814833,
+"add_net": 17.0895804804619,
+"add_gross": 19.534282262961,
 "unit": "IT GW",
 "tag": "Derived（壽命 life_ret，Assumed 5–7）",
 "src": "Deploy",
@@ -276,8 +276,8 @@
 {
 "year": 2027,
 "retire": 2.44470178249906,
-"add_net": 24.2562025006493,
-"add_gross": 26.7009042831484,
+"add_net": 24.3082569734901,
+"add_gross": 26.7529587559891,
 "unit": "IT GW",
 "tag": "Derived（壽命 life_ret，Assumed 5–7）",
 "src": "Deploy",
@@ -299,7 +299,7 @@
 "year": 2029,
 "retire": 2.44470178249906,
 "add_net": 25.5255344823979,
-"add_gross": 27.9702362648969,
+"add_gross": 27.970236264897,
 "unit": "IT GW",
 "tag": "Derived（壽命 life_ret，Assumed 5–7）",
 "src": "Deploy",
@@ -309,8 +309,8 @@
 {
 "year": 2030,
 "retire": 3.95941373337721,
-"add_net": 24.1414218874424,
-"add_gross": 28.1008356208197,
+"add_net": 24.1432266813688,
+"add_gross": 28.102640414746,
 "unit": "IT GW",
 "tag": "Derived（壽命 life_ret，Assumed 5–7）",
 "src": "Deploy",
@@ -320,8 +320,8 @@
 {
 "year": 2031,
 "retire": 10.7288965170694,
-"add_net": 14.2498686760505,
-"add_gross": 24.9787651931198,
+"add_net": 14.2485017446692,
+"add_gross": 24.9773982617386,
 "unit": "IT GW",
 "tag": "Derived（壽命 life_ret，Assumed 5–7）",
 "src": "Deploy",
@@ -330,9 +330,9 @@
 },
 {
 "year": 2032,
-"retire": 19.6904456814833,
-"add_net": -1.43461384721975,
-"add_gross": 18.2558318342635,
+"retire": 19.534282262961,
+"add_net": -1.2888175370111,
+"add_gross": 18.2454647259499,
 "unit": "IT GW",
 "tag": "Derived（壽命 life_ret，Assumed 5–7）",
 "src": "Deploy",
@@ -361,7 +361,7 @@
 },
 {
 "year": 2026,
-"value": 0.635606306912013,
+"value": 0.6330087430192,
 "unit": "比",
 "tag": "Derived",
 "src": "Deploy",
@@ -371,7 +371,7 @@
 },
 {
 "year": 2027,
-"value": 0.512037619132966,
+"value": 0.512910275943539,
 "unit": "比",
 "tag": "Derived",
 "src": "Deploy",
@@ -381,7 +381,7 @@
 },
 {
 "year": 2028,
-"value": 0.589372022168456,
+"value": 0.589372022168455,
 "unit": "比",
 "tag": "Derived",
 "src": "Deploy",
@@ -401,7 +401,7 @@
 },
 {
 "year": 2030,
-"value": 0.249781007111673,
+"value": 0.249764965798903,
 "unit": "比",
 "tag": "Derived",
 "src": "Deploy",
@@ -411,7 +411,7 @@
 },
 {
 "year": 2031,
-"value": 0.1430353392661,
+"value": 0.143043167122783,
 "unit": "比",
 "tag": "Derived",
 "src": "Deploy",
@@ -421,7 +421,7 @@
 },
 {
 "year": 2032,
-"value": 0.270337216843117,
+"value": 0.270490822972109,
 "unit": "比",
 "tag": "Derived",
 "src": "Deploy",
@@ -2834,7 +2834,7 @@
 "player_name": "其他新雲合計（IREN、TeraWulf、Lambda、Nscale、Crusoe 雲等）",
 "path": "main",
 "year": 2026,
-"value": 1.3,
+"value": 1.15,
 "unit": "IT GW",
 "tag": "Assumed",
 "src": "SRC_GL_205",
@@ -2846,7 +2846,7 @@
 "player_name": "其他新雲合計（IREN、TeraWulf、Lambda、Nscale、Crusoe 雲等）",
 "path": "main",
 "year": 2027,
-"value": 2.875,
+"value": 2.775,
 "unit": "IT GW",
 "tag": "Assumed",
 "src": "SRC_GL_205",
@@ -2858,7 +2858,7 @@
 "player_name": "其他新雲合計（IREN、TeraWulf、Lambda、Nscale、Crusoe 雲等）",
 "path": "main",
 "year": 2028,
-"value": 4.778,
+"value": 4.678,
 "unit": "IT GW",
 "tag": "Assumed",
 "src": "SRC_GL_205",
@@ -2870,7 +2870,7 @@
 "player_name": "其他新雲合計（IREN、TeraWulf、Lambda、Nscale、Crusoe 雲等）",
 "path": "main",
 "year": 2029,
-"value": 4.778,
+"value": 4.678,
 "unit": "IT GW",
 "tag": "Assumed",
 "src": "SRC_GL_205",
@@ -2882,7 +2882,7 @@
 "player_name": "其他新雲合計（IREN、TeraWulf、Lambda、Nscale、Crusoe 雲等）",
 "path": "main",
 "year": 2030,
-"value": 4.778,
+"value": 4.678,
 "unit": "IT GW",
 "tag": "Assumed",
 "src": "SRC_GL_205",
@@ -2894,7 +2894,7 @@
 "player_name": "其他新雲合計（IREN、TeraWulf、Lambda、Nscale、Crusoe 雲等）",
 "path": "main",
 "year": 2031,
-"value": 4.778,
+"value": 4.678,
 "unit": "IT GW",
 "tag": "Assumed",
 "src": "SRC_GL_205",
@@ -2906,7 +2906,7 @@
 "player_name": "其他新雲合計（IREN、TeraWulf、Lambda、Nscale、Crusoe 雲等）",
 "path": "main",
 "year": 2032,
-"value": 4.778,
+"value": 4.678,
 "unit": "IT GW",
 "tag": "Assumed",
 "src": "SRC_GL_205",
@@ -2942,7 +2942,7 @@
 "player_name": "其他新雲合計（IREN、TeraWulf、Lambda、Nscale、Crusoe 雲等）",
 "path": "site_only",
 "year": 2026,
-"value": 1.3,
+"value": 1.15,
 "unit": "IT GW",
 "tag": "Assumed",
 "src": "SRC_GL_205",
@@ -2954,7 +2954,7 @@
 "player_name": "其他新雲合計（IREN、TeraWulf、Lambda、Nscale、Crusoe 雲等）",
 "path": "site_only",
 "year": 2027,
-"value": 2.875,
+"value": 2.775,
 "unit": "IT GW",
 "tag": "Assumed",
 "src": "SRC_GL_205",
@@ -2966,7 +2966,7 @@
 "player_name": "其他新雲合計（IREN、TeraWulf、Lambda、Nscale、Crusoe 雲等）",
 "path": "site_only",
 "year": 2028,
-"value": 4.778,
+"value": 4.678,
 "unit": "IT GW",
 "tag": "Assumed",
 "src": "SRC_GL_205",
@@ -2978,7 +2978,7 @@
 "player_name": "其他新雲合計（IREN、TeraWulf、Lambda、Nscale、Crusoe 雲等）",
 "path": "site_only",
 "year": 2029,
-"value": 4.778,
+"value": 4.678,
 "unit": "IT GW",
 "tag": "Assumed",
 "src": "SRC_GL_205",
@@ -2990,7 +2990,7 @@
 "player_name": "其他新雲合計（IREN、TeraWulf、Lambda、Nscale、Crusoe 雲等）",
 "path": "site_only",
 "year": 2030,
-"value": 4.778,
+"value": 4.678,
 "unit": "IT GW",
 "tag": "Assumed",
 "src": "SRC_GL_205",
@@ -3002,7 +3002,7 @@
 "player_name": "其他新雲合計（IREN、TeraWulf、Lambda、Nscale、Crusoe 雲等）",
 "path": "site_only",
 "year": 2031,
-"value": 4.778,
+"value": 4.678,
 "unit": "IT GW",
 "tag": "Assumed",
 "src": "SRC_GL_205",
@@ -3014,7 +3014,7 @@
 "player_name": "其他新雲合計（IREN、TeraWulf、Lambda、Nscale、Crusoe 雲等）",
 "path": "site_only",
 "year": 2032,
-"value": 4.778,
+"value": 4.678,
 "unit": "IT GW",
 "tag": "Assumed",
 "src": "SRC_GL_205",
@@ -3482,7 +3482,7 @@
 "player_name": "其他（主權、企業、學研；Epoch Other 扣新雲）",
 "path": "main",
 "year": 2026,
-"value": 1.77713755739696,
+"value": 1.77097413887468,
 "unit": "IT GW",
 "tag": "Analogy（隨市場成長）",
 "src": "SRC_GL_203",
@@ -3494,7 +3494,7 @@
 "player_name": "其他（主權、企業、學研；Epoch Other 扣新雲）",
 "path": "main",
 "year": 2027,
-"value": 2.83096213153594,
+"value": 2.82685318585442,
 "unit": "IT GW",
 "tag": "Analogy（隨市場成長）",
 "src": "SRC_GL_203",
@@ -3506,7 +3506,7 @@
 "player_name": "其他（主權、企業、學研；Epoch Other 扣新雲）",
 "path": "main",
 "year": 2028,
-"value": 4.00631120597779,
+"value": 4.00220226029627,
 "unit": "IT GW",
 "tag": "Analogy（隨市場成長）",
 "src": "SRC_GL_203",
@@ -3518,7 +3518,7 @@
 "player_name": "其他（主權、企業、學研；Epoch Other 扣新雲）",
 "path": "main",
 "year": 2029,
-"value": 5.11023345549593,
+"value": 5.10612450981441,
 "unit": "IT GW",
 "tag": "Analogy（隨市場成長）",
 "src": "SRC_GL_203",
@@ -3530,7 +3530,7 @@
 "player_name": "其他（主權、企業、學研；Epoch Other 扣新雲）",
 "path": "main",
 "year": 2030,
-"value": 6.17722351541636,
+"value": 6.17311456973485,
 "unit": "IT GW",
 "tag": "Analogy（隨市場成長）",
 "src": "SRC_GL_203",
@@ -3542,7 +3542,7 @@
 "player_name": "其他（主權、企業、學研；Epoch Other 扣新雲）",
 "path": "main",
 "year": 2031,
-"value": 7.14723608763244,
+"value": 7.14312714195092,
 "unit": "IT GW",
 "tag": "Analogy（隨市場成長）",
 "src": "SRC_GL_203",
@@ -3554,7 +3554,7 @@
 "player_name": "其他（主權、企業、學研；Epoch Other 扣新雲）",
 "path": "main",
 "year": 2032,
-"value": 8.08298919514662,
+"value": 8.0788802494651,
 "unit": "IT GW",
 "tag": "Analogy（隨市場成長）",
 "src": "SRC_GL_203",
@@ -4051,10 +4051,10 @@
 },
 {
 "key": "cp_neo_iren",
-"name_": "IREN Childress H3–4（Microsoft）",
+"name_": "IREN Childress H2–4（Microsoft）",
 "operator": "neo",
 "user": "msft",
-"mw": 100,
+"mw": 150,
 "basis": "IT",
 "online_year": 2026,
 "online_month": 12,
@@ -4062,10 +4062,10 @@
 "included": 1,
 "power_secured": 0,
 "delay_evidence": "Z1#A1-3、A1-4",
-"delay_grade": "已確認（屬實；公司自揭 10-Q，未參與代理核對 2026-11-14）：Horizon 2–4 由 2026Q4 延至 2027-01（可能 02），Microsoft 要求網路設計變更、無延遲補償；本列只含 H3–4 100 MW IT",
+"delay_grade": "已確認（屬實；公司自揭 10-Q，未參與代理核對 2026-11-14）：Horizon 2–4（3 × 50 MW IT）由 2026Q4 延至 2027-01（可能 02），Microsoft 要求網路設計變更、無延遲補償",
 "tag": "Interested-party",
 "src": "SRC_GL_200",
-"note": "A#104（屬實；2026Q4 目標）；使用者＝Microsoft（與 T1 al_neo_msft 一致）",
+"note": "A#104（屬實；2026Q4 目標）；使用者＝Microsoft（與 T1 al_neo_msft 一致）。【v0.3.1 r2（2026-11-14，chat 端決定；Decisions GL01-92）】列範圍由 H3–4（原值 MW＝100）擴為 H2–4（150 MW IT）；H2 原含在 mw_neo 2026 年底輸入",
 "kind": "campus"
 },
 {
@@ -15150,7 +15150,7 @@
 {
 "item": "mkt_q_gen",
 "year": 2026,
-"value": 31.5047130903732,
+"value": 31.2548516207376,
 "unit": "GW",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15160,7 +15160,7 @@
 {
 "item": "mkt_q_gen",
 "year": 2027,
-"value": 42.7214468530374,
+"value": 42.8047340095826,
 "unit": "GW",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15180,7 +15180,7 @@
 {
 "item": "mkt_q_gen",
 "year": 2029,
-"value": 44.7523780238351,
+"value": 44.7523780238352,
 "unit": "GW",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15190,7 +15190,7 @@
 {
 "item": "mkt_q_gen",
 "year": 2030,
-"value": 44.9613369933115,
+"value": 44.9642246635935,
 "unit": "GW",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15200,7 +15200,7 @@
 {
 "item": "mkt_q_gen",
 "year": 2031,
-"value": 39.9660243089918,
+"value": 39.9638372187817,
 "unit": "GW",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15210,7 +15210,7 @@
 {
 "item": "mkt_q_gen",
 "year": 2032,
-"value": 29.2093309348216,
+"value": 29.1927435615198,
 "unit": "GW",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15240,7 +15240,7 @@
 {
 "item": "mkt_q_self",
 "year": 2026,
-"value": 5.67084835626718,
+"value": 5.62587329173276,
 "unit": "GW",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15250,7 +15250,7 @@
 {
 "item": "mkt_q_self",
 "year": 2027,
-"value": 7.68986043354674,
+"value": 7.70485212172487,
 "unit": "GW",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15270,7 +15270,7 @@
 {
 "item": "mkt_q_self",
 "year": 2029,
-"value": 8.05542804429032,
+"value": 8.05542804429033,
 "unit": "GW",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15280,7 +15280,7 @@
 {
 "item": "mkt_q_self",
 "year": 2030,
-"value": 8.09304065879606,
+"value": 8.09356043944684,
 "unit": "GW",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15290,7 +15290,7 @@
 {
 "item": "mkt_q_self",
 "year": 2031,
-"value": 7.19388437561852,
+"value": 7.19349069938071,
 "unit": "GW",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15300,7 +15300,7 @@
 {
 "item": "mkt_q_self",
 "year": 2032,
-"value": 5.25767956826789,
+"value": 5.25469384107357,
 "unit": "GW",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15780,7 +15780,7 @@
 {
 "item": "fac_bldg",
 "year": 2026,
-"value": 33.4737576585216,
+"value": 33.2082798470337,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15790,7 +15790,7 @@
 {
 "item": "fac_bldg",
 "year": 2027,
-"value": 45.3915372813523,
+"value": 45.4800298851815,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15820,7 +15820,7 @@
 {
 "item": "fac_bldg",
 "year": 2030,
-"value": 47.7714205553934,
+"value": 47.7744887050681,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15830,7 +15830,7 @@
 {
 "item": "fac_bldg",
 "year": 2031,
-"value": 42.4639008283037,
+"value": 42.4615770449556,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15840,7 +15840,7 @@
 {
 "item": "fac_bldg",
 "year": 2032,
-"value": 31.034914118248,
+"value": 31.0172900341148,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15870,7 +15870,7 @@
 {
 "item": "fac_cool",
 "year": 2026,
-"value": 37.4118467948182,
+"value": 37.1151362996259,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15880,7 +15880,7 @@
 {
 "item": "fac_cool",
 "year": 2027,
-"value": 50.7317181379819,
+"value": 50.8306216363794,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15910,7 +15910,7 @@
 {
 "item": "fac_cool",
 "year": 2030,
-"value": 53.3915876795573,
+"value": 53.3950167880173,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15920,7 +15920,7 @@
 {
 "item": "fac_cool",
 "year": 2031,
-"value": 47.4596538669277,
+"value": 47.4570566973033,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15930,7 +15930,7 @@
 {
 "item": "fac_cool",
 "year": 2032,
-"value": 34.6860804851007,
+"value": 34.6663829793048,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15960,7 +15960,7 @@
 {
 "item": "fac_dist",
 "year": 2026,
-"value": 50.2106364877823,
+"value": 49.8124197705505,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15970,7 +15970,7 @@
 {
 "item": "fac_dist",
 "year": 2027,
-"value": 68.0873059220284,
+"value": 68.2200448277723,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -15990,7 +15990,7 @@
 {
 "item": "fac_dist",
 "year": 2029,
-"value": 71.3241024754872,
+"value": 71.3241024754873,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16000,7 +16000,7 @@
 {
 "item": "fac_dist",
 "year": 2030,
-"value": 71.6571308330901,
+"value": 71.6617330576022,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16010,7 +16010,7 @@
 {
 "item": "fac_dist",
 "year": 2031,
-"value": 63.6958512424556,
+"value": 63.6923655674334,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16020,7 +16020,7 @@
 {
 "item": "fac_dist",
 "year": 2032,
-"value": 46.552371177372,
+"value": 46.5259350511722,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16050,7 +16050,7 @@
 {
 "item": "fac_gen",
 "year": 2026,
-"value": 31.5047130903732,
+"value": 31.2548516207376,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16060,7 +16060,7 @@
 {
 "item": "fac_gen",
 "year": 2027,
-"value": 42.7214468530374,
+"value": 42.8047340095826,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16080,7 +16080,7 @@
 {
 "item": "fac_gen",
 "year": 2029,
-"value": 44.7523780238351,
+"value": 44.7523780238352,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16090,7 +16090,7 @@
 {
 "item": "fac_gen",
 "year": 2030,
-"value": 44.9613369933115,
+"value": 44.9642246635935,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16100,7 +16100,7 @@
 {
 "item": "fac_gen",
 "year": 2031,
-"value": 39.9660243089918,
+"value": 39.9638372187817,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16110,7 +16110,7 @@
 {
 "item": "fac_gen",
 "year": 2032,
-"value": 29.2093309348216,
+"value": 29.1927435615198,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16140,7 +16140,7 @@
 {
 "item": "fac_labor",
 "year": 2026,
-"value": 58.0868147603757,
+"value": 57.6261326757349,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16150,7 +16150,7 @@
 {
 "item": "fac_labor",
 "year": 2027,
-"value": 78.7676676352878,
+"value": 78.921228330168,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16170,7 +16170,7 @@
 {
 "item": "fac_labor",
 "year": 2029,
-"value": 82.512196981446,
+"value": 82.5121969814461,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16180,7 +16180,7 @@
 {
 "item": "fac_labor",
 "year": 2030,
-"value": 82.897465081418,
+"value": 82.9027892235006,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16190,7 +16190,7 @@
 {
 "item": "fac_labor",
 "year": 2031,
-"value": 73.6873573197035,
+"value": 73.6833248721288,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16200,7 +16200,7 @@
 {
 "item": "fac_labor",
 "year": 2032,
-"value": 53.8547039110774,
+"value": 53.8241209415522,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16230,7 +16230,7 @@
 {
 "item": "fac_land",
 "year": 2026,
-"value": 3.93808913629665,
+"value": 3.9068564525922,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16240,7 +16240,7 @@
 {
 "item": "fac_land",
 "year": 2027,
-"value": 5.34018085662968,
+"value": 5.35059175119783,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16270,7 +16270,7 @@
 {
 "item": "fac_land",
 "year": 2030,
-"value": 5.62016712416393,
+"value": 5.62052808294919,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16280,7 +16280,7 @@
 {
 "item": "fac_land",
 "year": 2031,
-"value": 4.99575303862397,
+"value": 4.99547965234772,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16290,7 +16290,7 @@
 {
 "item": "fac_land",
 "year": 2032,
-"value": 3.6511663668527,
+"value": 3.64909294518998,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16410,7 +16410,7 @@
 {
 "item": "fac_net",
 "year": 2026,
-"value": 5.90713370444498,
+"value": 5.8602846788883,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16420,7 +16420,7 @@
 {
 "item": "fac_net",
 "year": 2027,
-"value": 8.01027128494452,
+"value": 8.02588762679674,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16440,7 +16440,7 @@
 {
 "item": "fac_net",
 "year": 2029,
-"value": 8.39107087946908,
+"value": 8.39107087946909,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16450,7 +16450,7 @@
 {
 "item": "fac_net",
 "year": 2030,
-"value": 8.4302506862459,
+"value": 8.43079212442379,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16460,7 +16460,7 @@
 {
 "item": "fac_net",
 "year": 2031,
-"value": 7.49362955793595,
+"value": 7.49321947852158,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16470,7 +16470,7 @@
 {
 "item": "fac_net",
 "year": 2032,
-"value": 5.47674955027906,
+"value": 5.47363941778497,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16500,7 +16500,7 @@
 {
 "item": "fac_prof",
 "year": 2026,
-"value": 13.7833119770383,
+"value": 13.6739975840727,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16510,7 +16510,7 @@
 {
 "item": "fac_prof",
 "year": 2027,
-"value": 18.6906329982039,
+"value": 18.7270711291924,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16540,7 +16540,7 @@
 {
 "item": "fac_prof",
 "year": 2030,
-"value": 19.6705849345738,
+"value": 19.6718482903222,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16550,7 +16550,7 @@
 {
 "item": "fac_prof",
 "year": 2031,
-"value": 17.4851356351839,
+"value": 17.484178783217,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16560,7 +16560,7 @@
 {
 "item": "fac_prof",
 "year": 2032,
-"value": 12.7790822839845,
+"value": 12.7718253081649,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16590,7 +16590,7 @@
 {
 "item": "fac_resid",
 "year": 2026,
-"value": 0.393808913629692,
+"value": 0.390685645259246,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16600,7 +16600,7 @@
 {
 "item": "fac_resid",
 "year": 2027,
-"value": 0.534018085663004,
+"value": 0.535059175119819,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16630,7 +16630,7 @@
 {
 "item": "fac_resid",
 "year": 2030,
-"value": 0.562016712416431,
+"value": 0.562052808294957,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16640,7 +16640,7 @@
 {
 "item": "fac_resid",
 "year": 2031,
-"value": 0.499575303862431,
+"value": 0.499547965234805,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16650,7 +16650,7 @@
 {
 "item": "fac_resid",
 "year": 2032,
-"value": 0.365116636685295,
+"value": 0.364909294519022,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16680,7 +16680,7 @@
 {
 "item": "fac_sum",
 "year": 2026,
-"value": 249.477946784393,
+"value": 247.499356271716,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16690,7 +16690,7 @@
 {
 "item": "fac_sum",
 "year": 2027,
-"value": 338.30045726749,
+"value": 338.959987438383,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16710,7 +16710,7 @@
 {
 "item": "fac_sum",
 "year": 2029,
-"value": 354.382893476244,
+"value": 354.382893476245,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16720,7 +16720,7 @@
 {
 "item": "fac_sum",
 "year": 2030,
-"value": 356.037587315785,
+"value": 356.060454054831,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16730,7 +16730,7 @@
 {
 "item": "fac_sum",
 "year": 2031,
-"value": 316.480954996828,
+"value": 316.463635976228,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16740,7 +16740,7 @@
 {
 "item": "fac_sum",
 "year": 2032,
-"value": 231.301389340119,
+"value": 231.170038077785,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16770,7 +16770,7 @@
 {
 "item": "fac_ups",
 "year": 2026,
-"value": 14.7678342611125,
+"value": 14.6507116972207,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16780,7 +16780,7 @@
 {
 "item": "fac_ups",
 "year": 2027,
-"value": 20.0256782123613,
+"value": 20.0647190669919,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16810,7 +16810,7 @@
 {
 "item": "fac_ups",
 "year": 2030,
-"value": 21.0756267156147,
+"value": 21.0769803110595,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16820,7 +16820,7 @@
 {
 "item": "fac_ups",
 "year": 2031,
-"value": 18.7340738948399,
+"value": 18.7330486963039,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16830,7 +16830,7 @@
 {
 "item": "fac_ups",
 "year": 2032,
-"value": 13.6918738756976,
+"value": 13.6840985444624,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16860,7 +16860,7 @@
 {
 "item": "it_compute",
 "year": 2026,
-"value": 319.573847748925,
+"value": 317.03933200753,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16870,7 +16870,7 @@
 {
 "item": "it_compute",
 "year": 2027,
-"value": 478.733181513999,
+"value": 479.666490855541,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16900,7 +16900,7 @@
 {
 "item": "it_compute",
 "year": 2030,
-"value": 535.585571872834,
+"value": 535.619970194655,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16910,7 +16910,7 @@
 {
 "item": "it_compute",
 "year": 2031,
-"value": 476.080726607378,
+"value": 476.054673690824,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16920,7 +16920,7 @@
 {
 "item": "it_compute",
 "year": 2032,
-"value": 347.945529624187,
+"value": 347.747938573524,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16950,7 +16950,7 @@
 {
 "item": "it_foundry",
 "year": 2026,
-"value": 33.4437747644224,
+"value": 33.1785347449741,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16960,7 +16960,7 @@
 {
 "item": "it_foundry",
 "year": 2027,
-"value": 50.0999841119302,
+"value": 50.197656019766,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -16990,7 +16990,7 @@
 {
 "item": "it_foundry",
 "year": 2030,
-"value": 56.0496528704128,
+"value": 56.0532526947895,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17000,7 +17000,7 @@
 {
 "item": "it_foundry",
 "year": 2031,
-"value": 49.8224016217024,
+"value": 49.8196751536909,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17010,7 +17010,7 @@
 {
 "item": "it_foundry",
 "year": 2032,
-"value": 36.4129042629963,
+"value": 36.3922261297874,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17040,7 +17040,7 @@
 {
 "item": "it_memory",
 "year": 2026,
-"value": 83.6094369110559,
+"value": 82.9463368624352,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17050,7 +17050,7 @@
 {
 "item": "it_memory",
 "year": 2027,
-"value": 125.249960279825,
+"value": 125.494140049415,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17080,7 +17080,7 @@
 {
 "item": "it_memory",
 "year": 2030,
-"value": 140.124132176032,
+"value": 140.133131736974,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17090,7 +17090,7 @@
 {
 "item": "it_memory",
 "year": 2031,
-"value": 124.556004054256,
+"value": 124.549187884227,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17100,7 +17100,7 @@
 {
 "item": "it_memory",
 "year": 2032,
-"value": 91.0322606574907,
+"value": 90.9805653244685,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17130,7 +17130,7 @@
 {
 "item": "it_network",
 "year": 2026,
-"value": 108.382603403221,
+"value": 107.52302926612,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17140,7 +17140,7 @@
 {
 "item": "it_network",
 "year": 2027,
-"value": 162.361059621996,
+"value": 162.677588952945,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17160,7 +17160,7 @@
 {
 "item": "it_network",
 "year": 2029,
-"value": 180.79820586805,
+"value": 180.798205868051,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17170,7 +17170,7 @@
 {
 "item": "it_network",
 "year": 2030,
-"value": 181.642393561523,
+"value": 181.65405965904,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17180,7 +17180,7 @@
 {
 "item": "it_network",
 "year": 2031,
-"value": 161.461486736999,
+"value": 161.452650961035,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17190,7 +17190,7 @@
 {
 "item": "it_network",
 "year": 2032,
-"value": 118.004782333784,
+"value": 117.937769865052,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17220,7 +17220,7 @@
 {
 "item": "it_power_thermal",
 "year": 2026,
-"value": 39.0177372251594,
+"value": 38.7082905358031,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17230,7 +17230,7 @@
 {
 "item": "it_power_thermal",
 "year": 2027,
-"value": 58.4499814639185,
+"value": 58.5639320230603,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17250,7 +17250,7 @@
 {
 "item": "it_power_thermal",
 "year": 2029,
-"value": 65.0873541124981,
+"value": 65.0873541124982,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17260,7 +17260,7 @@
 {
 "item": "it_power_thermal",
 "year": 2030,
-"value": 65.3912616821483,
+"value": 65.3954614772544,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17270,7 +17270,7 @@
 {
 "item": "it_power_thermal",
 "year": 2031,
-"value": 58.1261352253195,
+"value": 58.1229543459727,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17280,7 +17280,7 @@
 {
 "item": "it_power_thermal",
 "year": 2032,
-"value": 42.4817216401623,
+"value": 42.4575971514186,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17310,7 +17310,7 @@
 {
 "item": "it_server",
 "year": 2026,
-"value": 28.4891414659894,
+"value": 28.2631962642372,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17320,7 +17320,7 @@
 {
 "item": "it_server",
 "year": 2027,
-"value": 42.677764243496,
+"value": 42.7609662390599,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17340,7 +17340,7 @@
 {
 "item": "it_server",
 "year": 2029,
-"value": 47.5240998281732,
+"value": 47.5240998281733,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17350,7 +17350,7 @@
 {
 "item": "it_server",
 "year": 2030,
-"value": 47.7460005933146,
+"value": 47.7490671103762,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17360,7 +17360,7 @@
 {
 "item": "it_server",
 "year": 2031,
-"value": 42.4413050851539,
+"value": 42.4389825383293,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17370,7 +17370,7 @@
 {
 "item": "it_server",
 "year": 2032,
-"value": 31.0183999277376,
+"value": 31.0007852216707,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17400,7 +17400,7 @@
 {
 "item": "it_storage",
 "year": 2026,
-"value": 4.95463329843294,
+"value": 4.9153384807369,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17410,7 +17410,7 @@
 {
 "item": "it_storage",
 "year": 2027,
-"value": 7.42221986843409,
+"value": 7.43668978070607,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17430,7 +17430,7 @@
 {
 "item": "it_storage",
 "year": 2029,
-"value": 8.2650608396823,
+"value": 8.26506083968231,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17440,7 +17440,7 @@
 {
 "item": "it_storage",
 "year": 2030,
-"value": 8.3036522770982,
+"value": 8.30418558441326,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17450,7 +17450,7 @@
 {
 "item": "it_storage",
 "year": 2031,
-"value": 7.3810965365485,
+"value": 7.38069261536161,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17460,7 +17460,7 @@
 {
 "item": "it_storage",
 "year": 2032,
-"value": 5.39450433525871,
+"value": 5.39144090811665,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17490,7 +17490,7 @@
 {
 "item": "it_substrate",
 "year": 2026,
-"value": 1.85798748691235,
+"value": 1.84325193027634,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17500,7 +17500,7 @@
 {
 "item": "it_substrate",
 "year": 2027,
-"value": 2.78333245066279,
+"value": 2.78875866776478,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17520,7 +17520,7 @@
 {
 "item": "it_substrate",
 "year": 2029,
-"value": 3.09939781488086,
+"value": 3.09939781488087,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17530,7 +17530,7 @@
 {
 "item": "it_substrate",
 "year": 2030,
-"value": 3.11386960391182,
+"value": 3.11406959415497,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17540,7 +17540,7 @@
 {
 "item": "it_substrate",
 "year": 2031,
-"value": 2.76791120120569,
+"value": 2.7677597307606,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17550,7 +17550,7 @@
 {
 "item": "it_substrate",
 "year": 2032,
-"value": 2.02293912572202,
+"value": 2.02179034054374,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17580,7 +17580,7 @@
 {
 "item": "it_sum",
 "year": 2026,
-"value": 619.329162304117,
+"value": 614.417310092113,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17590,7 +17590,7 @@
 {
 "item": "it_sum",
 "year": 2027,
-"value": 927.777483554262,
+"value": 929.586222588259,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17620,7 +17620,7 @@
 {
 "item": "it_sum",
 "year": 2030,
-"value": 1037.95653463727,
+"value": 1038.02319805166,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17630,7 +17630,7 @@
 {
 "item": "it_sum",
 "year": 2031,
-"value": 922.637067068563,
+"value": 922.586576920201,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17640,7 +17640,7 @@
 {
 "item": "it_sum",
 "year": 2032,
-"value": 674.313041907339,
+"value": 673.930113514581,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17670,7 +17670,7 @@
 {
 "item": "self_gen",
 "year": 2026,
-"value": 9.07335737002749,
+"value": 9.00139726677242,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17680,7 +17680,7 @@
 {
 "item": "self_gen",
 "year": 2027,
-"value": 12.3037766936748,
+"value": 12.3277633947598,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17710,7 +17710,7 @@
 {
 "item": "self_gen",
 "year": 2030,
-"value": 12.9488650540737,
+"value": 12.9496967031149,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17720,7 +17720,7 @@
 {
 "item": "self_gen",
 "year": 2031,
-"value": 11.5102150009896,
+"value": 11.5095851190091,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17730,7 +17730,7 @@
 {
 "item": "self_gen",
 "year": 2032,
-"value": 8.41228730922863,
+"value": 8.40751014571771,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17760,7 +17760,7 @@
 {
 "item": "total",
 "year": 2026,
-"value": 877.880466458538,
+"value": 870.918063630601,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17770,7 +17770,7 @@
 {
 "item": "total",
 "year": 2027,
-"value": 1278.38171751543,
+"value": 1280.8739734214,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17800,7 +17800,7 @@
 {
 "item": "total",
 "year": 2030,
-"value": 1406.94298700713,
+"value": 1407.0333488096,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17810,7 +17810,7 @@
 {
 "item": "total",
 "year": 2031,
-"value": 1250.62823706638,
+"value": 1250.55979801544,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17820,7 +17820,7 @@
 {
 "item": "total",
 "year": 2032,
-"value": 914.026718556686,
+"value": 913.507661738084,
 "unit": "US$B",
 "tag": "Derived",
 "src": "Spend／Facility（SRC_GL_301、SRC_GL_303）",
@@ -17835,7 +17835,7 @@
 "values": {
 "mkt_add": 1.61980834349181,
 "ratio": 1,
-"share11": 0.720101096983301,
+"share11": 0.723219275993733,
 "need": 226.562182270902,
 "need_own": 152.241187270902,
 "short": -146.911817729098,
@@ -17873,7 +17873,7 @@
 "values": {
 "mkt_add": 9.04912429484716,
 "ratio": 1,
-"share11": 0.771800894968999,
+"share11": 0.772741382393735,
 "need": 493.612179463555,
 "need_own": 387.766336463555,
 "short": -354.392487203112,
@@ -17909,9 +17909,9 @@
 "delay": "D0",
 "year": 2026,
 "values": {
-"mkt_add": 19.6904456814833,
+"mkt_add": 19.534282262961,
 "ratio": 1,
-"share11": 0.678957395888762,
+"share11": 0.682286732768459,
 "need": 820.50222547009,
 "need_own": 641.686360803423,
 "short": 22.3581938808703,
@@ -17947,9 +17947,9 @@
 "delay": "D0",
 "year": 2027,
 "values": {
-"mkt_add": 26.7009042831484,
+"mkt_add": 26.7529587559891,
 "ratio": 1,
-"share11": 0.704382846443799,
+"share11": 0.703373887916623,
 "need": 1099.72568179325,
 "need_own": 888.173085926587,
 "short": 193.51557355644,
@@ -17987,7 +17987,7 @@
 "values": {
 "mkt_add": 29.7799879658337,
 "ratio": 1,
-"share11": 0.715864402540221,
+"share11": 0.71585917303836,
 "need": 1262.73558214282,
 "need_own": 1019.81400869282,
 "short": 157.842403424731,
@@ -18023,9 +18023,9 @@
 "delay": "D0",
 "year": 2029,
 "values": {
-"mkt_add": 27.9702362648969,
+"mkt_add": 27.970236264897,
 "ratio": 1,
-"share11": 0.745014069043584,
+"share11": 0.745012664507914,
 "need": 1269.5730290546,
 "need_own": 997.770606554598,
 "short": -88.7393245190757,
@@ -18061,9 +18061,9 @@
 "delay": "D0",
 "year": 2030,
 "values": {
-"mkt_add": 28.1008356208197,
+"mkt_add": 28.102640414746,
 "ratio": 1,
-"share11": 0.724862660145496,
+"share11": 0.724863220331696,
 "need": 1227.35616065965,
 "need_own": 933.18873809298,
 "short": -355.008993829644,
@@ -21389,11 +21389,11 @@
 "coverage": {
 "2024": 1,
 "2025": 1,
-"2026": 0.635606306912013,
-"2027": 0.512037619132966,
-"2028": 0.589372022168456,
+"2026": 0.6330087430192,
+"2027": 0.512910275943539,
+"2028": 0.589372022168455,
 "2029": 0.231425336192858,
-"2030": 0.249781007111673
+"2030": 0.249764965798903
 },
 "tag": "Derived",
 "src": "Gap",
@@ -21403,10 +21403,10 @@
 {
 "player": "Mkt",
 "values": {
-"AnnGW": 35.1776666666667,
-"DelayedGW": 0.1,
+"AnnGW": 35.2276666666667,
+"DelayedGW": 0.15,
 "AvgMo": 1,
-"Share": 0.00284271270597823
+"Share": 0.00425801689959596
 },
 "unit": "IT GW（AvgMo＝月；Share＝比）",
 "tag": "Derived",
@@ -21417,10 +21417,10 @@
 {
 "player": "Rest",
 "values": {
-"AnnGW": 5.674,
-"DelayedGW": 0.1,
+"AnnGW": 5.724,
+"DelayedGW": 0.15,
 "AvgMo": 1,
-"Share": 0.0176242509693338
+"Share": 0.0262054507337526
 },
 "unit": "IT GW（AvgMo＝月；Share＝比）",
 "tag": "Derived",
