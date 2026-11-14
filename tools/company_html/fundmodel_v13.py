@@ -422,6 +422,18 @@ def drivers_v13(B, M, rev_sec_html: str):
 
 
 
+def sens_coord(B, M):
+    """Coord D2 敏感度表：同一組公司實績，只換層級側取法（讀 COORD_Sens、COORD_SensNote）。"""
+    if not B.has("COORD_Sens"):
+        return ""
+    sp = M.span
+    trs = "".join(f'<tr><td>{sp(*r[0], "t")}</td><td>{sp(*r[6], "n1")}</td><td>{sp(*r[4], "sp1")}</td><td>{sp(*r[7], "sp1")}</td><td>{sp(*r[8], "t")}</td></tr>'
+                  for r in B.grid("COORD_Sens"))
+    return ('<h3>層級側取法的敏感度（不計入判定）</h3>'
+            '<div class="tw"><table class="tp"><thead><tr><th>層級側取法</th><th>層級隱含 CY2026（十億美元）</th><th>主讀數差距</th><th>Q3×4 差距</th><th>若採此取法的判定</th></tr></thead>'
+            f'<tbody>{trs}</tbody></table></div><p class="note">{sp(*B.cell("COORD_SensNote"), "t")}</p>')
+
+
 def coord_v13(B, M):
     """對帳章「三層協調」：C0（實績）公司實績 vs 層級隱含值（讀 xlsx Coord 頁具名範圍 COORD_C0／COORD_C0Sum／COORD_C0Verdict；數字全由 xlsx 取）。"""
     if not B.has("COORD_C0"):
@@ -443,7 +455,7 @@ def coord_v13(B, M):
         '<th>Q3 實績</th><th>層級隱含（CY2026）</th><th>Q3×4 差距</th><th>判定</th></tr></thead><tbody>' + rows + '</tbody></table></div>'
         f'<p class="note">判定摘要：可判定 {sp(*B.grid("COORD_C0Sum")[0][0], "n0")} 項、對帳中 {sp(*B.grid("COORD_C0Sum")[1][0], "n0")} 項、'
         f'時差邊界 {sp(*B.grid("COORD_C0Sum")[2][0], "n0")} 項、無可比實績或無法判定 {sp(*B.grid("COORD_C0Sum")[3][0], "n0")} 項。</p>'
-        f'<p class="note">{sp(*B.cell("COORD_C0Verdict"), "t")}</p>')
+        f'<p class="note">{sp(*B.cell("COORD_C0Verdict"), "t")}</p>' + sens_coord(B, M))
 
 # ── 組裝 ────────────────────────────────────────────────────────────────
 def build_v13(html_in: Path, xlsx: Path, out: Path, P: dict, M):

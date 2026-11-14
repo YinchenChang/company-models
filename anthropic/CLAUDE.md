@@ -42,6 +42,7 @@ dist/             成品（HTML 一頁摘要＋xlsx）
 ## 4. 建置與同步（每段）
 
 1. `python3 builder/build.py --tk-dir <Tokenomics checkout> --oai-xlsx <OpenAI v0.6 xlsx> --out model/<新檔名>.xlsx [--base model/<現行>.xlsx]`；舊版以 `git mv` 移入 `model/archive/`；更新 `model/CURRENT`。
+1b. `--tk-dir` 須是 Tokenomics 在本模型讀取版本的 checkout（v0.2.2 為 commit `eded8e6`，v21.10；master 現為 v22.0，不可直接用）；Coord 頁另讀 `../wattonomics/data/CURRENT_SNAPSHOT` 指的快照。
 2. 執行 parity 與 `tools/check_tk_snapshot.py`；有意識地更新 `tests/parity/scenarios.yaml`。
 3. `CHANGELOG.md` 記錄 Excel 版本、段別（`v0.1-A2`…）、commit 與變動摘要。
 4. 發現 Excel 本身的錯誤（`#REF!`、`#DIV/0!`、循環參照、單位不一致）：修正公式（工程類）並在報告列出；不在 Python 端修補數值。

@@ -24,8 +24,16 @@ Anthropic 每 VR 等值 GW 的年營收能否覆蓋每 GW 年全成本；若不�
 - 層級側只用「不讀本模型輸出」的值：Tokenomics 每 GW 營收（以 OpenAI 營收與牌價校準，非 Anthropic 值）、Wattonomics T1 配置 GW。追溯 Wattonomics 公式後確認：T1 是輸入列（只進 Matrix）、玩家路徑自建＝0、Gap 頁只匯入本模型現金流（影響資金缺口，不影響 GW）；Google 1 GW 為公司公告的規劃容量（公司揭露，非本模型輸出）。OpenAI 複製時須重新追溯（OpenAI 在 Wattonomics 有玩家 oai 與 usr_oai，查是否有公司目標寫入 GW）。
 - 本模型自層級讀入的值（TK_Link、Inputs 的 Wattonomics 值）只放 B 節，差距恆為 0 或屬匯入落後，不判定、不計入對帳中。
 - 偏誤方向依期間中點說明（主讀數期間中點 5 月中，早於全年中點；Q3 × 4 是 8 月中的年化速率，晚於全年中點），不寫成「夾住真值」。
-- 已知限制（可見說明已寫）：Tokenomics 自註每 GW 營收若誤差全在產能側，實際約為該值 ÷ 2.0–2.1（OpenAI 口徑），此時第二讀數會轉為明顯正差距，判定會變；故營收列是量級檢驗，不是精確對帳。
+- 已知限制與敏感度（Coord D2 節、HTML 對帳章同表，不計入判定）：同一組實績只換層級側取法，判定都翻成「對帳中」：
+  - 每 GW 營收 ÷ 2.0（Tokenomics 自註「誤差全在產能側時實際約為該值 ÷ 2.0–2.1」，OpenAI 2026 口徑）：主讀數 ＋34.5%、Q3×4 ＋105.8%。
+  - 機隊以 Trainium／TPU 為主：每 GW 營收是 VR200 口徑，用 Tokenomics NonNV 產出比（Trainium3 0.28、TPU v7 0.66）換算，AWS 配置全當 Trainium3、Google 全當 TPU v7（下界估計），年平均約 0.56 GW 等值（C 節），兩讀數約 ＋59%、＋143%。
+  - GW 改取 Wattonomics 報導值 usr_ant（2026 年底 5 GW，NYT 轉述目標）：兩讀數 −72%、−57%。
+  判定對 GW 取法與每 GW 營收口徑敏感，所以營收列只作量級檢驗，維持「時差邊界（參考）」，不據以開對帳單。
+- 實績為 GAAP 總額（含雲端市集銷售，未扣平台抽成），層級每 GW 營收的 m 以 OpenAI 營收口徑校準，兩者口徑不同，差距含口徑差（Coord 營收列說明已寫）。
+- Coord 的 T1 配置 GW 由 builder 依鍵（al_amzn_ant、al_googl_ant、al_neo_ant；使用者＝ant、形式＝GW）從 wattonomics 快照 JSON 讀入，並以斷言確認鍵與欄位。
 - HTML 對帳章新增「三層協調」表（`fundmodel_v13.py` 的 `coord_v13`），數字全由 xlsx 具名範圍 COORD_C0、COORD_C0Sum、COORD_C0Verdict 取值。
+- **OpenAI 複製注意（同源）：** Tokenomics 的 m 由 OpenAI 營收 ÷（付費 token × 牌價）校準，OpenAI 的營收 C0 與層級每 GW 營收同源，OpenAI 營收列應標「參考（同源校準）」、結論「無可比實績（層級值同源）」，改比不同源的量（例如資本支出、在役 MW、算力承諾）。
+- **建置前提：** 本模型建置須 Tokenomics checkout 在 commit `eded8e6`（v21.10；`--tk-dir` 指向該 checkout，`model/CURRENT` 為 `20261104_Tokenomics_v21.10.xlsx`），並以 `--base` 指向現行 xlsx；CI 重建只作比對，須固定此 ref，不可取 Tokenomics master（現為 v22.0，TK_Link 值會變）。
 - 不做兩讀數目標價（模型商，非硬體股）。
 
 **驗證：** 見 CHANGELOG v0.2.2。xlsx 逐格比對 v0.2.1：既有計算頁 0 差異（加權目標價 82.71、評等中立不變）；新增 Coord 頁與 Checks 2 列；README 列位移。

@@ -68,8 +68,9 @@ def build(ctx):
     row("qx", "季化倍數（最近一季 × 本值＝年化速率）", [4], "倍", "第二讀數＝2026 Q3 × 本值 vs 層級 CY2026", fmt="0")
     row("m9", "2026 已公布月數", [f"={I('m_9m')}"], "月", "Inputs 定義常數；S-1/A 期中財報涵蓋 2026-01～09", fmt="0")
     row("m12", "每年月數", [f"={I('months_per_year')}"], "月", "Inputs 定義常數", fmt="0")
+    row("tkdiv", "敏感度：Tokenomics 自註每 GW 營收折算係數（每 GW 營收 ÷ 本值）", [2.0], "倍", "Tokenomics L1_RevGW_PQ_VR200 自註「若誤差全在每 GW 產能側，實際營收約為本列 ÷ 2.0–2.1」（OpenAI 2026 口徑）；取下緣 2.0，只用於 D2 敏感度", fmt="0.0")
     row("k2", "平均除數", [f"={I('arith_k2')}"], "—", "Inputs 定義常數；年底值平均＝（期初＋期末）÷ 本值", fmt="0")
-    TH, QX, M9, M12, K2 = (f"$C${P[k]}" for k in ("th", "qx", "m9", "m12", "k2"))
+    TH, QX, M9, M12, K2, TKD = (f"$C${P[k]}" for k in ("th", "qx", "m9", "m12", "k2", "tkdiv"))
 
     # ── B. 讀取層級 ──
     r[0] += 1
@@ -108,6 +109,7 @@ def build(ctx):
 
     def t1(rid):
         v = R[rid]["values"]
+        assert v[1] == "ant" and v[2] == "GW", (rid, v[:3])      # 依鍵確認：使用者＝ant、形式＝GW（T1：K／L／M＝2025／2026／2027 年底＝索引 3、4、5）
         return v[3], v[4]            # K＝2025 年底、L＝2026 年底（空白＝層級未計入，以 0 計）
     z = lambda x: 0 if x is None else x  # noqa: E731
     for rid, lab in (("al_amzn_ant", "Amazon（AWS；Trainium＋NVIDIA）→ Anthropic"), ("al_googl_ant", "Alphabet（Google TPU）→ Anthropic"),
@@ -126,6 +128,16 @@ def build(ctx):
     row("cy", "層級隱含 CY2026 營收（每 GW 營收 × 2026 年平均 GW；低／基準／高）",
         [f"=C{P['pq']}*{GWAVG}", f"=D{P['pq']}*{GWAVG}", f"=E{P['pq']}*{GWAVG}"], "$B", "層級隱含值，連到上方儲存格；不含本模型任何輸出", cols="CDE")
 
+    row("fleet_ye", "機隊產出比換算：GW 等值（AWS×Trainium3＋Google×TPU v7＋新雲×1；年底）",
+        [f"=C{P['al_amzn_ant']}*TK_NNV_Trn3_Out+C{P['al_googl_ant']}*TK_NNV_TPUv7_Out+C{P['al_neo_ant']}",
+         f"=D{P['al_amzn_ant']}*TK_NNV_Trn3_Out+D{P['al_googl_ant']}*TK_NNV_TPUv7_Out+D{P['al_neo_ant']}"], "GW 等值（VR200）",
+        "Tokenomics NonNV 產出比（權威值：TPU v7、Trainium3 相對 VR200）；假設 AWS 配置全為 Trainium3、Google 全為 TPU v7（AWS 實際含 NVIDIA 與 Trainium2，故為下界估計）；只用於 D2 敏感度", cols="CD")
+    row("fleet_avg", "機隊 GW 等值：2026 年平均", [None, f"=(C{P['fleet_ye']}+D{P['fleet_ye']})/{K2}"], "GW 等值", "[Derived]；同 2026 年平均做法", cols="CD")
+    u_ = R["usr_ant"]["values"]
+    row("usr_ye", "Wattonomics 報導值 usr_ant（年底；2025、2026）", [u_[2], u_[3]], "GW",
+        f"Y4 usr_ant（{R['usr_ant']['tag']}；2026 為 NYT 轉述的目標，非實績；2025 值取自本模型 Compute，同源）；只用於 D2 敏感度", cols="CD")
+    row("usr_avg", "報導值：2026 年平均", [None, f"=(C{P['usr_ye']}+D{P['usr_ye']})/{K2}"], "GW", "[Derived]", cols="CD")
+
     # ── D. C0（實績） ──
     r[0] += 1
     sec("D. C0（實績）：公司實績 vs 層級隱含值（規則 v1.4.2 C0 第 2 點；Andy 11-14 17:40 固定規格）")
@@ -138,8 +150,8 @@ def build(ctx):
         [f"={S('pros_rev_9m26')}", f"=$D${P['cy']}*{M9}/{M12}", f"=C{n}/D{n}-1", f"={S('rev_s1a_2026q3')}", f"=$D${P['cy']}", f"=F{n}*{QX}/G{n}-1",
          f'=IF(AND(ISNUMBER(E{n}),ISNUMBER(H{n})),IF(AND(ABS(E{n})>{TH},ABS(H{n})>{TH},SIGN(E{n})=SIGN(H{n})),"對帳中",IF(OR(ABS(E{n})>{TH},ABS(H{n})>{TH}),"時差邊界（參考）","一致")),"無可比實績")',
          "Anthropic S-1/A（Amendment No. 1，2026-11-02）季度損益：2026 前九月 33.242、Q3 16.956（SRC_ANT_547、488）；GAAP 總額",
-         "Verified（一手；期中未經查核）",
-         "偏誤方向依期間中點：主讀數的實績期間（1–9 月）中點在 5 月中，早於全年中點（7 月 1 日），營收上升時 1–9 月累計占全年比例低於 9/12，主讀數會偏負；第二讀數 Q3 × 4 是 8 月中的年化速率，晚於全年中點，上升時會偏正。兩者方向相反是機械結果，不得讀成「夾住真值」。層級 GW 為年底值的簡單平均，上線時點未知。判定依規則：兩者都超過且同號才對帳中。實績不含公司指引與 run-rate 新聞值（只列參考，見 SRC_ANT_023）"],
+         "Verified（一手；期中未經查核）；實績為 GAAP 總額（含雲端市集銷售，未扣平台抽成）",
+         "實績為 GAAP 總額（含市集銷售）；層級每 GW 營收的 m 以 OpenAI 營收口徑校準（Tokenomics L1），兩者口徑不同，差距含口徑差。偏誤方向依期間中點：主讀數的實績期間（1–9 月）中點在 5 月中，早於全年中點（7 月 1 日），營收上升時 1–9 月累計占全年比例低於 9/12，主讀數會偏負；第二讀數 Q3 × 4 是 8 月中的年化速率，晚於全年中點，上升時會偏正。兩者方向相反是機械結果，不得讀成「夾住真值」。層級 GW 為年底值的簡單平均，上線時點未知。判定依規則：兩者都超過且同號才對帳中。實績不含公司指引與 run-rate 新聞值（只列參考，見 SRC_ANT_023）"],
         "$B", fmt="#,##0.000", cols="CDEFGHIJKL")
     for c in "EH":
         ws[f"{c}{n}"].number_format = "0.0%"
@@ -179,10 +191,35 @@ def build(ctx):
     r[0] = n + 4
     put(ws, f"A{r[0]}", "C0 結論", F_BOLD)
     put(ws, f"C{r[0]}", ("營收（唯一可判定的實績項）：主讀數偏負（1–9 月期間中點早於全年中點）、第二讀數接近零，兩者未同時超過門檻，判為「時差邊界（參考）」，不開對帳單、不改 Tokenomics 或 Wattonomics。"
-                         "此結論有兩項限制：(1) 層級 GW 取年底值簡單平均；(2) Tokenomics 自註每 GW 營收可能高估約一倍（誤差全在產能側時），若成立則第二讀數會轉為明顯正差距，故本列是量級檢驗，不是精確對帳。"
+                         "此結論對層級側取法敏感，見 D2 節（每 GW 營收 ÷ 2.0、機隊產出比換算、報導值三種取法都翻成「對帳中」），故本列是量級檢驗，不是精確對帳；層級 GW 另取年底值簡單平均。"
                          "資本支出（層級值為 0）與算力承諾（美元 vs GW 口徑）無可比實績。往上回饋只有證據（C5）：待 2026 Q4 與 2027 年報的營收與算力揭露，Q4 實績出來後可重判。"), F_CALC)
     nm(wb, "COORD_C0Verdict", f"Coord!$C${r[0]}")
     P["verdict"] = r[0]
+    r[0] += 1
+
+    # ── D2. 敏感度（不計入判定） ──
+    r[0] += 1
+    sec("D2. 敏感度：層級隱含值對取法敏感（不計入 C0 判定；同一組公司實績，只換層級側取法）")
+    header(ws, r[0], ["層級側取法", "單位", "公司實績（主）", "層級隱含（主：× 9/12）", "差距（主）", "公司實績（第二：Q3）", "層級隱含（CY2026）", "差距（第二）", "判定（若採此取法）", "取法說明"])
+    r[0] += 1
+    c0 = P["c0_rev"]
+    sens0 = r[0]
+    for key, lab, L_, why in (
+            ("s_base", "基準（C 節）：配置 GW 年平均 × 每 GW 營收", f"=$D${P['cy']}", "與 D 節營收列相同，列此作對照"),
+            ("s_div", "每 GW 營收 ÷ Tokenomics 自註折算係數（A 節）", f"=$D${P['cy']}/{TKD}", "Tokenomics 自註：誤差全在產能側時，實際營收約為該值 ÷ 2.0–2.1"),
+            ("s_fleet", "機隊以 Trainium／TPU 為主：GW 改為產出比換算後的 GW 等值", f"=$D${P['pq']}*$D${P['fleet_avg']}", "每 GW 營收是 VR200 口徑，Trainium3 0.28、TPU v7 0.66 的產出比（Tokenomics NonNV）使同樣 GW 的營收較低；換算後的年平均 GW 等值見 C 節"),
+            ("s_usr", "GW 改取 Wattonomics 報導的 Anthropic 使用算力 GW 年平均（2025 年底與 2026 年底；2026 為目標）", f"=$D${P['pq']}*$D${P['usr_avg']}", "報導值 2026 年底約為 T1 配置的兩倍以上；是公司對投資人說明的目標，非實績")):
+        n = r[0]
+        row(key, lab, [f"=$C${c0}", f"=G{n}*{M9}/{M12}", f"=C{n}/D{n}-1", f"=$F${c0}", L_, f"=F{n}*{QX}/G{n}-1",
+                       f'=IF(AND(ISNUMBER(E{n}),ISNUMBER(H{n})),IF(AND(ABS(E{n})>{TH},ABS(H{n})>{TH},SIGN(E{n})=SIGN(H{n})),"對帳中",IF(OR(ABS(E{n})>{TH},ABS(H{n})>{TH}),"時差邊界（參考）","一致")),"無可比實績")', why],
+            "$B", cols="CDEFGHIJ")
+        for c in "EH":
+            ws[f"{c}{n}"].number_format = "0.0%"
+    nm(wb, "COORD_Sens", f"Coord!$A${sens0}:$J${r[0] - 1}")
+    put(ws, f"A{r[0]}", "D2 讀法", F_BOLD)
+    put(ws, f"C{r[0]}", "判定對層級側取法敏感：基準取法為時差邊界；每 GW 營收 ÷ 2.0（Tokenomics 自註下緣）或機隊產出比換算後，兩個讀數都轉為明顯正差距，翻成「對帳中」；改取 Wattonomics 報導的使用算力 GW（目標）則兩個讀數都轉為負差距，也是「對帳中」。"
+                         "因此營收列是量級檢驗，只列「時差邊界（參考）」，不據以開對帳單；待 Tokenomics 每 GW 營收的產能側誤差釐清，且 Wattonomics 配置 GW 有實測（非公告）更新後重判。", F_CALC)
+    nm(wb, "COORD_SensNote", f"Coord!$C${r[0]}")
     r[0] += 1
 
     # ── E. 層級之間（參考） ──
@@ -209,6 +246,6 @@ def checks(ctx):
     P = ctx.P["a13"]["P"]
     n = P["c0_rev"]
     return [
-        ("coord_c0_num", "Coord：C0 營收主、第二讀數差距皆為數值", f"=--AND(ISNUMBER(Coord!$E${n}),ISNUMBER(Coord!$H${n}))", 1, "eq", "三層協調（v0.2.2）；只列示，不回饋計算"),
+        ("coord_c0_num", "Coord：C0 營收主、第二讀數差距皆為數值", f"=IF(AND(ISNUMBER(Coord!$E${n}),ISNUMBER(Coord!$H${n})),1,0)", 1, "eq", "三層協調（v0.2.2）；只列示，不回饋計算"),
         ("coord_c0_nobad", "Coord：C0（實績）對帳中項目數（資訊）", "=INDEX(COORD_C0Sum,2)", None, "info", "對帳中＝兩讀數都超過 ±15% 且同號；開對帳單、不改上游"),
     ]
