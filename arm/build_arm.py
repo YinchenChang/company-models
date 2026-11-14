@@ -273,7 +273,8 @@ cyc = lambda y, s: (f"uc{y}_{s}" if y in (28, 29) else "1")
 # Wattonomics 錨定（決策 S37）：只在 sens_arm.py 的案例重建（ARM_OVERRIDE 含 _wta=1）時，情境 B 的 CY2027 起顆數再乘 wta_27／28／29；
 # 只用於 FY2028 起的欄（F、G）；FY2027 錨點欄（E，指數分母）不乘。正式建置不設，結果逐格不變。
 WTA_ON = OVR.get("_wta") == 1
-_wx = lambda y, s: (f"*wta_{y}" if WTA_ON and s == "B" and y >= 27 else "")
+# v0.3.5 三層協調 C4（tools/coord/README.md 第 1 點）：SIL.COORD_ALT（只由 tools/coord/alt_run.py 設定）時，情境 B、C 的 CY2027 起顆數 × wta（另一側讀數比值）；情境 A 不縮放。正式建置不設，逐格不變。
+_wx = lambda y, s: (f"*wta_{y}" if ((WTA_ON and s == "B") or (SIL.COORD_ALT and s in ("B", "C"))) and y >= 27 else "")
 cyuw = lambda y, s: f"({cyu(y, s)}{_wx(y, s)})" if _wx(y, s) else cyu(y, s)
 cycw = lambda y, s: f"({cyc(y, s)}{_wx(y, s)})" if _wx(y, s) else cyc(y, s)
 def engine(ws, r0, title, s):
@@ -888,6 +889,14 @@ print(px1105_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), "v0.3.3"
 import v034_post  # noqa: E402
 V34 = v034_post.apply(wb, HERE, dict(VER=VER, DATE=DATE, LEG=LEG, T=T, SDCF=SDCF, SE_LAST=SE.max_row, SJ=SJ, OVR=OVR, INROW=INROW, PB=PB, FC=FC, RECON_LAST=RECON_LAST, OBSROW=OBSROW))
 RECON_LAST = V34["RECON_LAST"]
+# ---------------- v0.3.5（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（Coord 頁兩讀數、讀取層級、C0 實績；arm/v035_post.py；只新增，既有數值不變） ----------------
+# COORD_RUN（tools/coord/alt_run.py）與 ARM_OVERRIDE（sens_arm.py）建置不加 Coord 頁與 v1.3 頁面
+if os.environ.get("COORD_RUN") != "1" and not OVR:
+    sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+    import coord as COORD  # noqa: E402
+    CR = COORD.add_sheet(wb, "arm", SIL)
+    import v035_post  # noqa: E402
+    print(v035_post.apply(wb, HERE, SIL, CR))
 wb.save(sys.argv[1])
 if os.environ.get("ARM_ROWMAP"):
     json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK, "XT": XT, "XH": XH, "XR": XR, "T": T, "EPSR": EPSR, "CFR": CFR,
