@@ -1508,6 +1508,7 @@ SRCS = [
     ("MAG 命題與驅動對照表 r1（C1–C23）", "2026-10-08", "mag/docs/plan/20261008_MAG_命題與驅動對照表_r1.md", "—", "已決定的口徑"),
     ("Gartner 新聞稿：2026 年搜尋引擎查詢量因 AI 聊天機器人減少 25%（預測）", "2024-02-19", "https://www.gartner.com/en/newsroom（本次未重新查核）", "Interested-party", "情境 C 分流幅度的參考（第三方預測）"),
     ("Apple Eddy Cue 美國司法部 Google 案證詞（媒體轉述）", "2025-05-07", "（媒體轉述；本次未重新查核）", "Interested-party", "情境 C：Safari 搜尋 2025-04 首次下滑"),
+    ("Wattonomics v0.3.2 快照 alphabet/data/wattonomics_c0_v0.3.2.json（20261114_Wattonomics_v0.3.2.xlsx）", "2026-11-14", "repo 內（YinchenChang/company-models；wattonomics/data/wattonomics_snapshot_v0.3.2.json）", "Derived", "Coord 頁 C0（實績）層級隱含值：玩家資本支出、上線 GW（不進模型）"),
 ]
 for i, (doc, dt, url, tag, use) in enumerate(SRCS, 1):
     for j, v in enumerate((f"S{i:02d}", doc, dt, url, tag, use), 1): SO.cell(3 + i, j, v)
@@ -1515,7 +1516,7 @@ for col, w in zip("ABCDEF", [6, 80, 12, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = "Alphabet（GOOGL）個股模型 v0.3.8（2026-11-06；v0.3.8 只換現價為 2026-11-05 收盤 282.57，目標價不變；v0.3.7 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；v0.3.6：2026Q3 季度滾動＋10-Q 補入＋Tokenomics " + TKV + "）— 命題模組＋官方營收分部 → 損益表"
+RD["A1"] = "Alphabet（GOOGL）個股模型 v0.3.9（2026-11-14；v0.3.9 版面 v1.3＋RevDCF 頁＋Coord 頁〔三層協調〕，數值不變；v0.3.8 只換現價為 2026-11-05 收盤 282.57，目標價不變；v0.3.7 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；v0.3.6：2026Q3 季度滾動＋10-Q 補入＋Tokenomics " + TKV + "）— 命題模組＋官方營收分部 → 損益表"
 RD["A3"] = "命題：AI 改變搜尋之後，Google Search 的變現能否守住，同時 Google Cloud（含 TPU）能否把翻倍的資本支出變成營收；資本支出與 2026 年股權發行後的每股價值是否高於現價。"
 RD["A4"] = "核心問題：Search & other 在 C 情境（AI 助理分流、每次查詢變現下降）下 FY2028 營收與利益率會掉多少，Cloud 的 AI 營收能否抵銷；加計 AI 折舊與股權發行後的每股價值。"
 VB = lambda k, c="B": f"Val!{c}{VR_[k]}"
@@ -1551,7 +1552,7 @@ for t in ("v0.3.5 只把 v0.3.1 暫用的推導值與沿用 2026Q2 的值換成 
           "Recon 頁第 4 節為 v0.3.4 → v0.3.5 逐項拆解（每步整本重算）；10-Q 承諾 802.1、已簽未起租租賃 130.5、TPU 回購保證 6.6、能源保證 16.2、Waymo 期後貸款 5.0 列在 Recon 第 2 節後的驗證列。"):
     RD.cell(r, 1, t); r += 1
 r += 1
-RD.cell(r, 1, "工作表：README → In → Q → Thesis → Seg → PL → CF → Val → Recon → Sens → Sources。藍字＝輸入、黑字＝公式；黃底＝判斷題。建置：bash alphabet/make_v03.sh").font = BOLD; r += 1
+RD.cell(r, 1, "工作表：README → In → Q → Thesis → Seg → PL → CF → Val → RevDCF → Recon → Coord → Sens → Sources（RevDCF、Coord 為 v0.3.9 新增）。藍字＝輸入、黑字＝公式；黃底＝判斷題。建置：bash alphabet/make_v03.sh").font = BOLD; r += 1
 RD.cell(r, 1, "數字標記：Verified（經查核）／Interested-party（公司或賣方自述）／Analogy／Assumed（給區間）／Derived（換算）。本模型是研究整理，不是投資建議以外的保證。")
 r += 2
 # v0.3.7（Andy 2026-11-05，個股 HTML 版面規格 v1.0）：展示層與命題回覆（HTML 讀；A3、A5–A8 原文保留）
@@ -1573,10 +1574,13 @@ RD.cell(r, 1, f'="每股值多少？答：每股約 "&TEXT({VB("tp")},"0.00")&" 
 RD.column_dimensions["A"].width = 120; RD.column_dimensions["B"].width = 60; RD.column_dimensions["C"].width = 60; RD.column_dimensions["D"].width = 60
 for rr in range(3, 9): RD.cell(rr, 1).alignment = Alignment(wrap_text=True, vertical="top")
 
+# v0.3.9（2026-11-14）：版面 v1.3＋Coord 頁（v039_post.py；只新增列與頁，既有格不動）
+import v039_post
+V39 = v039_post.apply(wb, dict(PR=PR_, QR=QR, F=F, TK=TK, TKV=TKV, tk=tk, GEN=GEN, HERE=HERE, VR=VR_, DC=DC, SE_ROWS=SE_ROWS, GATE=GATE))
 # 列號對照（make_v03.sh、html.json 撰寫用）
 if os.environ.get("ROWMAP"):
     json.dump({"T": T, "SR": SR, "PR": PR_, "CR": CR, "VR": VR_, "DC": DC, "GATE": GATE, "SUMROW": SUMROW, "SE_ROWS": SE_ROWS, "SE_BASE": SE_BASE,
-               "SE_STALE": SE_STALE, "IN_ROW": IN_ROW, "RCR": RCR, "RCV": RCV, "RC_ATT": RC_ATT, "QR": QR},
+               "SE_STALE": SE_STALE, "IN_ROW": IN_ROW, "RCR": RCR, "RCV": RCV, "RC_ATT": RC_ATT, "QR": QR, "V39": V39},
               open(os.environ["ROWMAP"], "w", encoding="utf-8"), ensure_ascii=False, indent=0)
 wb.save(A.out)
 print("saved", A.out)

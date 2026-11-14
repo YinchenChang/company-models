@@ -1,4 +1,4 @@
-# alphabet/ — Alphabet（GOOGL）個股模型 v0.3.8（命題＋營收分部；v0.3.8 只換現價為 2026-11-05 收盤；v0.3.7 只改展示層〔個股 HTML 版面規格 v1.0〕；2026Q3 季度滾動；v0.3.4 Tokenomics 快照 v21.9；v0.3.5 2026Q3 10-Q 補入；v0.3.6 Tokenomics 快照 v21.10，基準數值同 v0.3.5）
+# alphabet/ — Alphabet（GOOGL）個股模型 v0.3.9（命題＋營收分部；v0.3.9 版面 v1.3＋RevDCF 頁＋Coord 頁〔三層協調〕，數值不變；v0.3.8 只換現價為 2026-11-05 收盤；v0.3.7 只改展示層〔個股 HTML 版面規格 v1.0〕；2026Q3 季度滾動；v0.3.4 Tokenomics 快照 v21.9；v0.3.5 2026Q3 10-Q 補入；v0.3.6 Tokenomics 快照 v21.10，基準數值同 v0.3.5）
 
 **命題（一句話）：** AI 改變搜尋之後，Google Search 的變現能否守住，同時 Google Cloud（含 TPU）能否把翻倍的資本支出變成營收；加計 AI 折舊與 2026 年股權發行後，每股價值是否高於現價。
 
@@ -39,6 +39,23 @@
 - 評價由 DCF 45%＋EV/EBITDA 55%（錨定 2029）改為 DCF 50%＋分部加總 50%（各分部同業倍數）；評等改五級（上檔空間）。
 - 融資瀑布、站點、租賃承諾、RPO 等 CRWV 頁面移除；舊引擎保留在 `legacy_v0.2/`（未刪），舊成品在 `dist/_待刪除/`。
 - 目標價：v0.2.2 讀法 1 加權 147.54 → v0.3 初版 135.28 → 修正一 251.68 → 修正二 253.30 → 修正三 258.70（讀法 1 → 2 +64.3；見報告「修正三」）。
+
+## v0.3.9（2026-11-14，版面 v1.3＋Coord「三層協調」；數值不變）
+**做了什麼（既有數值格 0 差異，只新增列與頁；目標價 257.76、評等中立不變）**
+- 版面 v1.3（`docs/plan/個股HTML版面規格.md`）：章節順序 命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；估值章第一塊＝DCF／Comparable／加權／共識四個目標價與現價圖；敏感度章前兩塊＝加權目標價相對基準的低案、高案龍捲風圖（|變動|≥10%，來源 Sens 頁末「加權目標價相對基準」表）；橫幅 ≤200 字、重點觀察 5 點 ≤750 字（README 頁末「v1.3 展示層」公式列）；損益章＝標準損益表（PL 頁末，FY2023A–FY2025A 實績＋FY2026E–FY2032E 情境 B，GAAP，最右欄 9M26A）；驅動因子章＝分部營收推導（表＋堆疊圖）。
+- RevDCF 頁（新）：情境 B 路徑下，現價隱含的 FY2028–FY2032 營業利益率、營收規模、WACC（封閉解與二分法，皆公式）；分部加總隱含的 EV÷NTM EBITDA。無任何頁引用本頁。
+- Coord 頁（新）：F1 讀取層級（Tokenomics v21.10 名稱與採用值，核對 Σ|差|＝0；Wattonomics v0.3.2 只列對帳用名稱）、F1b 追公式、F2 C0（實績）。
+
+**Coord 設計（MAG 類樣板；Microsoft、Meta、SpaceX、Oracle 複製時照此）**
+1. 讀取層級（F1）：列「本模型實際讀」的 Tokenomics／Wattonomics 名稱、年度、層級值、本模型採用值（連到 In 頁）、層級版本與快照檔；Σ|採用−層級值|必為 0。本模型不讀的層（Alphabet 不讀 Wattonomics）寫明「不讀」，只列 C0 要用的名稱。
+2. 追公式（F1b，**必做，先於比較**）：對每個要比較的 Wattonomics 名稱，沿 xlsx 公式一路追到輸入，檢查有沒有讀公司實績或目標（`w1_*`、`obs_*`、Players 覆寫、CapexAIModel／個股模型回寫值〔In 頁 gcap_*、gcapai_*〕、公司資本支出指引、`act26_*`）。有讀者，該部分同源：GW 量同源 → 資本支出列標「部分同源」，改比每 GW 資本支出；整列同源 → 狀態「參考（同源校準）」、結論「無可比實績（層級值同源）」。可見說明寫明哪個公式、哪個輸入（本頁 F1b 表）。**追公式表由程式產生，不手寫**：`python3 alphabet/trace_wattonomics.py <Wattonomics xlsx> alphabet/data/wattonomics_trace_<版>.json [--md]` 沿具名範圍與儲存格參照遞迴傾印每格公式與值，標出讀到 In 頁公司資本支出列（`gcap_*`、`cap_*`、`act26_*` 等，換公司改腳本內 ROOTS 與 KEYS）的輸入，並反向列出哪些公式讀 `act26_<玩家>`；`v039_post.py` 的 Coord 頁直接貼這份 JSON（傾印表＋人工判定列）。Alphabet 實例：2026 年新增 GW（CapexGW!G65）與資本支出（Gap!G91、G98）＝公司指引（In!K175＝2026 中點 200）＋公司 2024–25 實績（G57、G58 廠房提前入帳、G63 上線時差加權）＋個股模型 2027–28 寫回（Gap!G89、G90 讀 In!L175、M175），整列同源；2025 年底 4.3 GW＝Epoch 晶片功耗 × 倍數（ovr25_googl，不同源）；`act26_googl` 只在 Compare 頁作權重，不進路徑；層級有 SiteOnly 路徑（約 5.59 GW），公司不揭露 GW，仍不能做 C0。
+3. C0（實績，F2）：公司側只用已公布實績（新聞稿／10-Q 財報表，標等級；指引與賣方估計只列參考）；層級側取同期間隱含值。主讀數＝已公布累計期間 vs 層級 CY2026 × 月數 ÷ 12；第二讀數＝最近一季 × 4 vs 層級 CY2026。**會計年度換算**：層級是日曆年（CY2026），公司若非曆年財年要先寫明 CY2026 已公布期間對應哪幾季——例如 Microsoft（財年 6 月）CY2026 已公布期間為 FY26 Q3（2026 年 1–3 月）、FY26 Q4（4–6 月）、FY27 Q1（7–9 月）；Oracle（財年 5 月）為 FY26 Q3（2025-12 至 2026-02，含 2025-12 一個月需扣除或註明）、FY26 Q4（3–5 月）、FY27 Q1（6–8 月）。一律逐季對到日曆月，月數＝已公布涵蓋的 2026 日曆月數，不可直接用財年累計。Alphabet 財年＝曆年，Q1–Q3＝9 個月。兩讀數都超過 ±門檻（輸入格，預設 15%）且同號＝對帳中；只一個超過＝時差邊界（參考）；都在內＝一致。偏誤方向依季中點說明（流量逐季上升時累計速率偏低、單季年化偏高），時點量不用「9/30 存量 vs 年底存量」，改用流量。
+4. 無可比實績：公司不揭露的項目（AI 營收、TPU 系統銷售、在役 MW）列「無可比實績」並寫明缺什麼揭露；層級隱含值只作參考與上限檢查（層級隱含 Cloud AI 營收 ≤ Cloud 分部實績）。
+5. 算力買方不做兩讀數目標價；Coord 頁**不用**「年」與「對帳中旗標」列標籤（`check_layout_v13.py` 以這兩個標籤判定是否有兩讀數）。
+6. 版本句：Coord 寫明本模型實際讀的 Tokenomics／Wattonomics 版本，須依各家實際讀的版本寫（Alphabet 讀 TK v21.10，v21.10→v22.0 只影響 IFW_RevGWFleet_Util 約 −2%、只作上限檢查；Meta 已讀 v22.0）；並寫明 Wattonomics 讀的 TK 版本是否與本模型一致。口徑換算列的「融資租賃極小不調整」只適用 Alphabet（9M 為 1.95），其他公司須逐家判斷。公司實績出處引 10-Q／財報表並標 Verified；網址放 Coord 頁 L 欄（HTML 不顯示外部網址）。
+7. HTML 對帳章：摘要、資本支出對帳表、無可比實績表、口徑與出處（摺疊）、偏誤方向說明、同源檢查、追公式表、讀取層級表（摺疊）；數字全取自 xlsx，設定檔文字不含年份與日期以外的數字。個股不裁決，證據回饋走對帳單。
+
+**本版 C0 結果**：對帳中 0；資本支出 9M26A 131.953 vs 層級（同期間換算）122.15（+8.0%）、Q3×4 205.42 vs 162.87（+26.1%）——只一個超過門檻，但層級值同源於公司指引，故結論「無可比實績（層級值同源）」；Cloud AI 營收、TPU、MW 無可比實績。Tokenomics 讀 v21.10（工作單所列 v22.0 未換）。
 
 ## v0.3.8（2026-11-06，只換現價）
 - Andy 2026-11-06 07:32「請所有個股都換成十一月五號的收盤價」：In 頁 `px` 324.89（10-28）→ 282.57（11-05 收盤；Yahoo Finance、MarketAlleys，`docs/reports/20261105_收盤價_個股換價來源.md`）；`t_px0` 2026.82 → 2026.85（只作對照）。
@@ -94,7 +111,9 @@
 | `gen_html_json.py` | 由列號對照產生 `html.json`（勿手改 html.json） |
 | `make_v03.sh` | 一次跑完：事實總帳 → （C10）→（敏感度）→ 建置 → 重算 → 核對 → segment_check → HTML |
 | `segments.json` | 官方分部宣告（`tools/segment_check/check_segments.py alphabet` 通過） |
-| `dist/20261105_Alphabet個股模型_v0.3.7.xlsx`／`.html` | 成品（LibreOffice 重算，公式錯誤 0；HTML 檢核通過） |
+| `v039_post.py` | v0.3.9 後處理（只新增列與頁）：PL 標準損益表、RevDCF 頁、Sens 相對基準表、README v1.3 白話列、Coord 頁 |
+| `data/wattonomics_c0_v0.3.2.json` | Wattonomics v0.3.2 快照中 Alphabet 的 Coord 對帳列所需名稱與輸入列（只供 Coord，不進模型） |
+| `dist/20261114_Alphabet個股模型_v0.3.9.xlsx`／`.html` | 成品（LibreOffice 重算，公式錯誤 0；HTML 檢核通過） |
 | `data/` | 事實總帳（SEC 一手＋2026Q3 新聞稿）、Tokenomics v21.10 快照、k 證據、共識、同業倍數、C10 解、敏感度結果；舊版在 `data/_待刪除/` |
 | `docs/reports/20261104_alphabet_v0.3.5_10Q補入.md` | 本版報告（結論、10-Q 逐項拆解、新發現、資料缺口、待決） |
 | `docs/reports/20261104_alphabet_v0.3.4_TK快照v21.9.md` | v0.3.4 Tokenomics 快照 v21.9 報告 |
@@ -109,4 +128,4 @@ CALIB=1 SENS=1 JOBS=6 bash alphabet/make_v03.sh   # 改了資本支出相關輸�
 ```
 `tools/segment_check/check_segments.py` 尚未在 main 時，以 `SEGCHECK=<路徑>` 指定（來源分支 `claude/geguxing-model-principle`）。
 
-**工作表**：README → In → Q → Thesis → Seg → PL → CF → Val → Recon → Sens → Sources。金額十億美元（US$B）；日曆年＝會計年度；FY2026＝9M 實績＋Q4 模型（欄 E＝9M26A、F＝Q4 26E）；明確期到 FY2032。
+**工作表**：README → In → Q → Thesis → Seg → PL → CF → Val → RevDCF → Recon → Coord → Sens → Sources（RevDCF、Coord 為 v0.3.9 新增）。金額十億美元（US$B）；日曆年＝會計年度；FY2026＝9M 實績＋Q4 模型（欄 E＝9M26A、F＝Q4 26E）；明確期到 FY2032。
