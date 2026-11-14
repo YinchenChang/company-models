@@ -208,6 +208,30 @@ def delete_wta(wb):
     return n, cleared, left
 
 
+def relabel(wb):
+    """只改文字（數值不變）：情境 B 標籤與情境 C 說明改為讀 Siliconomics 基準係數（SIF_UnitsCoef_Base；2029 連續法）。標籤以公式帶入係數。"""
+    lab = '"情境 B：{p}2028 顆數 ×"&TEXT(um28_B,"0.0#")&"、{p}2029 ×"&TEXT(um29_B,"0.000")&"（Siliconomics 基準係數；2029 連續法）"'
+    T = [("Units", "A38", "情境 B：2028 顆數 ×0.8、2029 ×0.85", "=" + lab.format(p="")),
+         ("PL", "A127", "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85", "=" + lab.format(p="CY")),
+         ("Sens", "B20", "CY2028 ×0.8、CY2029 ×0.85；記憶體 B 路徑", '="CY2028 ×"&TEXT(um28_B,"0.0#")&"、CY2029 ×"&TEXT(um29_B,"0.000")&"（Siliconomics 基準係數）；記憶體 B 路徑"')]
+    n = 0
+    for sh, c, old, new in T:
+        assert wb[sh][c].value == old, (sh, c, wb[sh][c].value)
+        wb[sh][c].value = new; n += 1
+    RD = wb["README"]; v = RD["A19"].value; o = "B＝基準（CY2028 顆數 ×0.8、CY2029 ×0.85）"
+    assert isinstance(v, str) and o in v, v
+    i = v.index(o)
+    RD["A19"].value = '="' + v[:i].replace('"', '""') + 'B＝基準（CY2028 顆數 ×"&TEXT(um28_B,"0.0#")&"、CY2029 ×"&TEXT(um29_B,"0.000")&"，Siliconomics 基準係數；2029 連續法）' + v[i + len(o):].replace('"', '""') + '"'; n += 1
+    IN = wb["In"]
+    r = next(r for r in range(4, IN.max_row + 1) if IN.cell(r, 1).value == "um29_C")
+    old = IN.cell(r, 9).value
+    assert "×0.706（基準係數 0.85）" in str(old), old
+    IN.cell(r, 9).value = ('="個股自訂情境 C：＝Siliconomics 基準 ×"&TEXT(um29_C/co_ucoef_29,"0.000")&"（基準係數 "&TEXT(co_ucoef_29,"0.000")&"，SIF_UnitsCoef_Base，2029 連續法；v0.3.8 試作）；2029 產業 GW 相對另一側讀數（Wattonomics 換算值）"'
+                           '&TEXT(co_gws_29*um29_C/co_gwa_29-1,"+0%;-0%")&"（現行基準 "&TEXT(co_gwb_29/co_gwa_29-1,"+0%;-0%")&"）。原說明（v0.18 口徑）：' + str(old).replace('"', '""') + '"')
+    n += 1
+    return n
+
+
 REC = lambda c: f'IF({c}>0.5,"強力買進",IF({c}>0.25,"買進",IF({c}>=-0.25,"中立",IF({c}>=-0.5,"放空","強力放空"))))'   # 同 Val 頁「投資建議」五級固定規則
 
 

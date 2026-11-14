@@ -1168,6 +1168,7 @@ _CO = CO.write_inputs(wb, SIL)
 if V36 and not OVR:
     print("coord_post：", CO.write_sheet(wb, _CO)["RC"])
     _dn, _dc, _dl = CO.delete_wta(wb); print("delete_wta：清空", _dn, "格", _dc, "殘留引用", _dl); assert not _dl, _dl
+    print("relabel：", CO.relabel(wb), "格（只改文字）")
     print(CO.stamp(wb))
 wb.save(sys.argv[1])
 if os.environ.get("NV_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
