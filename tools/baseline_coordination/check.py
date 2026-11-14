@@ -66,6 +66,10 @@ def check_status(st, today):
         # 2. 丙狀態：Siliconomics 基準＝換算值（以供給上限為頂）
         if tag == "丙" and st.get("wattonomics_coverage_complete"):
             conv = min(y["converted"], y.get("supply_cap", float("inf")))
+            if y.get("continuity"):  # v1.4 連續法：前一年基準 × 換算值成長率
+                py = st["years"].get(str(int(yr) - 1), {})
+                if py.get("sil_base") and py.get("converted"):
+                    conv = py["sil_base"] * y["converted"] / py["converted"]
             if abs(y["sil_base"] - conv) > TOL * abs(conv):
                 errs.append(f"[2] {yr} 丙狀態基準 {y['sil_base']} ≠ 換算值 {conv}")
         # 5. 對帳中：須有對帳單且未逾期
