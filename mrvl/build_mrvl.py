@@ -361,8 +361,13 @@ umx = lambda c, s: {2026: "1", 2027: "1", 2028: f"um28_{s}", 2029: f"um29_{s}"}[
 mk = lambda b, y, s: f"{b}_{y % 100}" if s == "A" else f"{b}{s}_{y % 100}"   # 網通 CPO 三情境：情境 A 讀 A 節，B、C 讀同字母列
 DEFP = dict(scn="A", uf="1", sht="0", sho="0", shp="0", pfc="1", fh="f_hbm", mh="m_hbm", of="1", dspf="1", lpoa="0", shd="0",
             a28="att28", gsw28="g_sw28", gco28="g_co28", opxa="0", flat=False, wta=None)
+if os.environ.get("MRVL_P"):   # v0.3.5：敏感度整本重算（mrvl/sens_mrvl.py）：三情境主引擎一律套用案例覆寫（正式建置不設此變數）
+    import json as _json_sens
+    DEFP.update(_json_sens.loads(os.environ["MRVL_P"]))
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["wta"] is None and s != "A":   # v0.3.5 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 於 CY2027 起產業量（XPU 顆數、光模組市場、attach、交換器、AEC）× wta（＝另一側讀數比值）；情境 A 不縮放
+        P["wta"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     _wx = lambda c: (f"*{P['wta'][c]}" if P["wta"] and c in P["wta"] else "")   # Wattonomics 錨定（Sens 案例；鍵＝日曆年；預設 None＝不乘）
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -1084,6 +1089,14 @@ _r3_static(wb, "v0.3.2（2026-11-05）", "v0.3.2（2026-11-05）：換用共用�
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import px1105_post  # noqa: E402
 print(px1105_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), "v0.3.4", "v0.3.3", "v0.3.3（2026-11-06）", keep=('B＝平平、C＝慢',)))
+# v0.3.5（2026-11-15）：三層協調 C4 兩讀數（tools/coord/；快照 mrvl/coord_alt.json）＋個股 HTML 版面 v1.3 與 C0（實績）（本資料夾 v035_post.py；只新增頁與列，既有數值格不變）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = None if os.environ.get("MRVL_SENS") == "1" else COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    COORD.stamp(wb, "v0.3.4", "v0.3.5", "2026-11-15")
+    import v035_post  # noqa: E402
+    print(v035_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR))
 wb.save(sys.argv[1])
 
 if os.environ.get("MRVL_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數

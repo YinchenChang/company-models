@@ -1,0 +1,173 @@
+{
+ "source": {
+  "file": "20261114_Wattonomics_v0.3.2.xlsx",
+  "version": "v0.3.2",
+  "sha256": "3041b1961ffdbc38d4d6a5b16722d8402c6e194af979168d9ef4b22399391278",
+  "snapshot": "wattonomics/data/wattonomics_snapshot_v0.3.2.json（main，2026-11-14）",
+  "note": "SpaceX C0 對帳用的最小摘錄（只讀 WIF_ 名稱值與 In 列；不進模型計算）"
+ },
+ "names": {
+  "WIF_PlayerGW_YE_xai_2025": 0.5698,
+  "WIF_PlayerGW_YE_xai_2026": 2.17682342066936,
+  "WIF_PlayerGW_YE_xai_SiteOnly_2026": 2,
+  "WIF_Gap_Player_xai_2026_AddGW": 1.60702342066936,
+  "WIF_Gap_Player_xai_2026_CapexAI": 81.8486091748129,
+  "WIF_Gap_Player_xai_2026_CapexNonAI": 11.510881,
+  "WIF_Gap_Player_xai_2026_CapexAIModel": 74.058119,
+  "WIF_Gap_Player_xai_2025_CapexAI": 22.8926814996717
+ },
+ "rows": {
+  "chip_xai": {
+   "label": "SpaceX／xAI（Colossus；兼出租） 擁有 AI 晶片功耗（年底）",
+   "unit": "MW",
+   "tag": "Analogy",
+   "src": "SRC_GL_203",
+   "note": "C 段 6.2（Epoch Colossus 308 MW 晶片）",
+   "values": [
+    null,
+    null,
+    308,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ]
+  },
+  "k_chip2it": {
+   "label": "Epoch 晶片功耗 → IT 電力換算係數",
+   "unit": "x",
+   "tag": "Analogy",
+   "src": "SRC_GL_203",
+   "note": "低 1.65＝repo mw.conv.itPerTdp；高 2.08＝Epoch 設施係數 2.5 ÷ 1.2；C 段 6.4：A 段 × 1.98 與 Epoch × 2.5 不一致",
+   "values": [
+    1.65,
+    1.85,
+    2.08,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ]
+  },
+  "obs_xai": {
+   "label": "SpaceX／xAI nameplate compute（2026Q2）",
+   "unit": "MW",
+   "tag": "Interested-party",
+   "src": "SRC_GL_201",
+   "note": "B#46（屬實；SpaceX 季報，剛上市）；2026 年底已有目標值，本觀測不進計算",
+   "values": [
+    null,
+    1400,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ]
+  },
+  "mw_xai": {
+   "label": "SpaceX／xAI（Colossus；兼出租） 年底上線 MW",
+   "unit": "MW",
+   "tag": "Interested-party",
+   "src": "SRC_GL_201",
+   "note": "2025 年底由 Epoch 晶片 × k（Y0）；2026 年底目標 >2 GW（B#46 屬實；nameplate compute）；2027「接近 10 GW」未納入（S4 tgt_xai_27）",
+   "values": [
+    null,
+    null,
+    null,
+    2000,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ]
+  },
+  "al_xai_googl": {
+   "label": "SpaceX／xAI（Colossus；兼出租） → Google（租用）",
+   "unit": "GW",
+   "tag": "Derived",
+   "src": "SRC_GL_201",
+   "note": "A#33（C 段更正方向）、B#49（屬實）：Google 租 Colossus 2 約 11 萬顆 GPU（153–226 MW-IT 取中 190），2026-10 起；使用者＝Google。Anthropic >300 MW（B#34 無法核對）未分配",
+   "values": [
+    "xai",
+    "googl",
+    "GW",
+    null,
+    0.19,
+    0.19,
+    null,
+    null,
+    null,
+    null
+   ]
+  },
+  "gcapai_xai": {
+   "label": "SpaceX／xAI AI 資本支出（模型；對照）（財年，基準情境）",
+   "unit": "US$B",
+   "tag": "Derived（SpaceX 個股模型基準情境 B，合併 xAI；FY2026E 含 9M 實績）",
+   "src": "SRC_GL_318",
+   "note": "spacex/dist/20261030_SpaceX個股模型_v0.2.1.xlsx（commit 246d492）；FY2026 CF!G55、FY2027 CF!H55、FY2028 CF!I55、FY2029 CF!J55、FY2030 CF!K55、FY2031 CF!L55、FY2032 CF!M55；標籤 CF!A–C55「資本支出：SI（現金）」；財年結束月 12；SI（xAI 算力）＝AI",
+   "values": [
+    null,
+    null,
+    null,
+    74.058119,
+    136.252477,
+    144.12072,
+    111.172527,
+    90.160889,
+    66.690036,
+    86.295421
+   ]
+  },
+  "gnai_xai": {
+   "label": "SpaceX／xAI 非 AI 資本支出（財年，基準情境）",
+   "unit": "US$B",
+   "tag": "Derived（SpaceX 個股模型基準情境 B，合併 xAI；FY2026E 含 9M 實績）",
+   "src": "SRC_GL_318",
+   "note": "spacex/dist/20261030_SpaceX個股模型_v0.2.1.xlsx（commit 246d492）；FY2026 CF!G53＋CF!G54、FY2027 CF!H53＋CF!H54、FY2028 CF!I53＋CF!I54、FY2029 CF!J53＋CF!J54、FY2030 CF!K53＋CF!K54、FY2031 CF!L53＋CF!L54、FY2032 CF!M53＋CF!M54；標籤 CF!A–C53「資本支出：Space」；CF!A–C54「資本支出：Connectivity」；財年結束月 12；Space＋Connectivity（Starlink）",
+   "values": [
+    null,
+    null,
+    null,
+    11.510881,
+    14.509095,
+    16.71983,
+    18.386119,
+    19.017069,
+    20.845147,
+    22.609799
+   ]
+  },
+  "tgt_xai_27": {
+   "label": "xAI 2027 年底宣稱（Musk「接近 10 GW」；不入主路徑，只作 Compare 敏感度）",
+   "unit": "GW",
+   "tag": "Interested-party",
+   "src": "SRC_GL_201",
+   "note": "B#46（屬實為引述正確；Interested-party 單一說法，SpaceX 剛上市；Musk 自稱 20 GW 不會達成）。主路徑 xAI 2027 起＝2026 年底 2 GW＋T2 園區（無）；Compare 頁列『主路徑＋xAI 宣稱增量』",
+   "values": [
+    null,
+    10,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ]
+  }
+ }
+}

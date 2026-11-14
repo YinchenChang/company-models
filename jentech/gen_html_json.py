@@ -242,3 +242,49 @@ SPEC = {
 }
 cfg = relayout(cfg, X, SPEC)
 post(cfg)
+# ───────── v0.2.5（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（兩讀數、C0（實績））；共通步驟 jentech/html13.py（樣板 delta/gen_html_json.py、avc） ─────────
+import html13  # noqa: E402
+OTH = "其他散熱營收（CPU 均熱片、交換器加強環、CPO、ILM、車用水冷）"
+PER = "每顆加速器健策 AI 均熱片營收（全部加速器平均）"
+
+
+def _blk(k):
+    PLW = wb["PL"]
+    return next(r for r in range(1, PLW.max_row) if str(PLW.cell(r, 1).value or "").startswith(f"情境 {k}（") and PLW.cell(r + 1, 1).value == "項目")
+
+
+H = {
+    "ver": "v0.2.5",
+    "units_chart": lambda pB, hB: {
+        "type": "theme", "title": "AI 加速器均熱片、液冷冷板元件、其他散熱、導線架與其他營收（情境 B，十億元）與健策 NVIDIA 均熱片份額（右軸）", "x": f"@PL!D{hB}:G{hB}",
+        "fmt": "n1", "fmt_r": "p1", "stack": True, "pad": 1.25, "total": f"@PL!D{pB('營收')}:G{pB('營收')}",
+        "bars": [{"name": ["AI 加速器均熱片"], "y": f"@PL!D{pB('AI 加速器均熱片營收')}:G{pB('AI 加速器均熱片營收')}", "color": "#0b7a80"},
+                 {"name": ["液冷冷板元件"], "y": f"@PL!D{pB('液冷冷板元件營收（MCL、MLCP）')}:G{pB('液冷冷板元件營收（MCL、MLCP）')}", "color": "#6fc7cb"},
+                 {"name": ["其他散熱"], "y": f"@PL!D{pB(OTH)}:G{pB(OTH)}", "color": "#c29a2b"},
+                 {"name": ["導線架、精密沖壓與其他"], "y": f"@PL!D{pB('導線架、精密沖壓與其他營收')}:G{pB('導線架、精密沖壓與其他營收')}", "color": "#b9b4a6"}],
+        "lines": [{"name": ["健策 NVIDIA 均熱片份額"], "y": f"@PL!D{pB('健策 NVIDIA 均熱片份額')}:G{pB('健策 NVIDIA 均熱片份額')}", "axis": "r", "color": "#3b3838", "labels": True}],
+        "caption": "堆疊＝四塊營收，頂端數字＝合併營收；折線＝健策 NVIDIA 均熱片份額（右軸）。回答命題：Rubin 世代每顆均熱片金額上升帶動 AI 均熱片營收，份額逐年小降。FY2026 為校準年。"},
+    "sc_caption": "三情境 FY2027 起差在可拆式上蓋單價、份額與液冷份額（A 高、B 基準、C 低），顆數係數的差異自 CY2028 起；FY2030 起為延伸期（收斂法）。",
+    "ext": lambda row: (_blk("B") + 1, {k: (row("PL", "營收", _blk(k), True), row("PL", "EPS", _blk(k), True)) for k in "ABC"}),
+    "seg": [("一、AI 加速器顆數與均熱片", "A. AI 加速器顆數", "B. 液冷冷板元件"), ("二、液冷冷板元件", "B. 液冷冷板元件", "C. 其他散熱"), ("三、其他散熱、導線架與合併營收", "C. 其他散熱", "D. 損益")],
+    "seg_caption": "分部營收推導（情境 B；十億元新台幣）：AI 均熱片＝各世代顆數 × 每顆金額 × 健策份額；液冷冷板元件＝液冷市場 × 健策份額；加其他散熱、導線架與其他得合併營收",
+    "gw_chart": lambda pB, hB: {
+        "type": "theme", "title": "AI 加速器均熱片市場（長條，十億美元）與每顆加速器健策均熱片營收（折線，美元，右軸）：情境 B", "x": f"@PL!D{hB}:G{hB}",
+        "fmt": "n2", "fmt_r": "n0", "stack": False, "pad": 1.3,
+        "bars": [{"name": ["AI 加速器均熱片市場"], "y": f"@PL!D{pB('AI 加速器均熱片市場合計')}:G{pB('AI 加速器均熱片市場合計')}", "color": "#0b7a80"}],
+        "lines": [{"name": ["每顆加速器健策均熱片營收"], "y": f"@PL!D{pB(PER)}:G{pB(PER)}", "axis": "r", "color": "#c29a2b", "labels": True}],
+        "caption": "均熱片營收的產業輸入：加速器顆數（網通市場模型，乘情境 B 顆數係數）× 每顆均熱片金額（本公司變數）＝均熱片市場；乘上健策份額即為 AI 均熱片營收。"},
+    "recon_h3": "券商、研調與液冷市場對照（原有）",
+    "plain": {f"Val!E{row('Val', 'WACC', exact=True)}": "股權成本與稅後債務成本以市值權重加權；WACC 調整只用於敏感度（基準為零）",
+              f"Val!A{row('Val', '永續成長率 g')}": "永續成長率 g（長期成長上限與無風險利率取小者）",
+              f"Val!A{row('Val', '永續期 RONIC')}": "永續期 RONIC（＝WACC＋超額報酬差）",
+              f"Val!A{row('Val', 'DCF 情境價值推到 12 個月後')}": "DCF 情境價值推到目標時點（以股權成本複利，扣除期間股利）",
+              f"In!B{INK['g_tv']}": "永續成長率 g（最後一年之後；長期成長上限與無風險利率取小者）",
+              f"In!B{INK['scn_fade_g']}": "FY2032 營收年增收斂目標（A 為基準加兩個百分點、B 為基準、C 為基準減兩個百分點）",
+              f"In!B{INK['scn_fade_m']}": "FY2032 淨利率收斂目標（各情境）",
+              f"README!A{row('README', '預估期間：')}": "預估期間：FY2027–FY2029 由驅動因子推導；FY2030 起為收斂法，非驅動因子推導（營收年增與淨利率由 FY2029 線性收斂到長期目標，FY2032 達到）"},
+    "fold": {"DCF!A2": "展開：DCF 的營業利益與自由現金流口徑"},
+}
+html13.apply(cfg, wb, X, H, os.path.join(HERE, ".."))
+json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+print("v1.3 ok", os.path.relpath(X, HERE))

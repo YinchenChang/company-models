@@ -9,6 +9,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import cycle_position as CP
 import fcff_dcf as FD   # v0.4：標準版 DCF（無槓桿自由現金流＋WACC）共用模組
+sys.path.insert(0, os.path.join(ROOT, "siliconomics")); import reader as SIL   # v0.4.5：三層協調 C4 另一側讀數建置（SIL.COORD_ALT）在主引擎使用，故提前讀入
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -141,11 +142,25 @@ inp("beta_u", "產業無槓桿 β（採用）：自算 US 半導體設備 同業
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 稀釋股數 sh_v)", "與 WACC 權重同一口徑")
 inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新加槓桿）", "x", None, 0.3, None, "Assumed", "工作單第二輪修正（Andy 2026-11-05 23:16 定案）：β 敏感度改為 β_u ± 0.3", "取代上一版的「中位數 × 0.8 再 Blume／中位數未調整」")
 
+# KLAC_OVERRIDE（v0.4.5 起，敏感度快照用，klac/sens_klac.py；「鍵=@lo／@hi／*倍數／數值／=公式；…」＝該鍵的基準欄改取 In 頁低／高欄、乘倍數、改數值或改公式；特殊鍵 _eqm＝Units 頁設備市場 CY2027–2029 乘倍數；正式建置不設）
+OVR = dict(kv.split("=", 1) for kv in os.environ.get("KLAC_OVERRIDE", "").split(";") if "=" in kv)
 r = 4; INROW = {}
 for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    if key in OVR:
+        ov = OVR[key]
+        if ov.startswith("*"):
+            assert isinstance(base, (int, float)), (key, base); _new = base * float(ov[1:])
+        elif ov.startswith("="):
+            _new = ov
+        else:
+            _new = {"@lo": lo, "@hi": hi}[ov] if ov.startswith("@") else float(ov)
+        assert _new is not None, (key, ov)
+        if isinstance(_new, str) and _new.startswith("=") and not ov.startswith("=") and key in _new:
+            _new = "=" + _new[1:].replace(key, "(" + base[1:] + ")")
+        base = _new
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
         if v is not None:
@@ -227,6 +242,8 @@ for s in SC:
         vals, src = EQ[(s, k)]
         UN.cell(ur, 1, "  " + NM[k]); UN.cell(ur, 2, "US$B")
         for j, v in enumerate(vals):
+            if "_eqm" in OVR and j >= 2 and k != "T":   # 敏感度快照：CY2027–2029 設備市場乘倍數（設備總額列不進引擎）
+                v = v * float(OVR["_eqm"])
             c = UN.cell(ur, 3 + j, v); c.font = BLUE; c.number_format = "0.00"
         UN.cell(ur, 8, src); UR[(s, k)] = ur; ur += 1
         if k == "L3":
@@ -262,6 +279,8 @@ DEFP = dict(m="m_mem", u="pc_u", kap="k_ap", ap26="ap26", h2="h2up", cut="chn_cu
             gsh2="g_svc_h2", go26="g_oth26", opq="opex27", scn="A", gsvc=None, goth=None, gopx=None, wf=None)   # v0.13：Wattonomics 錨定案例用；預設不變（wf＝年→AI 分項係數儲存格）
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["wf"] is None and s != "A":   # v0.4.5 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 於 CY2027 起設備市場 AI 分項（先進邏輯、DRAM 含 HBM、先進封裝）× wta（＝另一側讀數比值）；情境 A 不縮放
+        P["wf"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     gsvc = P["gsvc"] or f"g_svc_{s}"; goth = P["goth"] or f"g_oth_{s}"; gopx = P["gopx"] or f"g_opex_{s}"
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -1270,4 +1289,15 @@ def _px1105(wb, tk, ver, subs=(), static=None, formula_subs=()):
     return out
 R4_PE = _px1105(wb, "KLAC", "v0.4.4")
 
+# ---------------- v0.4.5（2026-11-15）：三層協調 C4 兩讀數（Coord 頁；快照 klac/coord_alt.json）、個股 HTML 版面 v1.3、C0（公司實績） ----------------
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    COORD.stamp(wb, "v0.4.4", "v0.4.5", "2026-11-15")
+    if not os.environ.get("KLAC_OVERRIDE") and not os.environ.get("KLAC_SNAP"):
+        # v0.4.5：個股 HTML 版面規格 v1.3、三層協調 C0（含公司實績）與兩讀數（klac/v045_post.py；只新增頁與列，既有數值格不變）
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import v045_post  # noqa: E402
+        print(v045_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR, PB, EQ_F))
 wb.save(sys.argv[1])

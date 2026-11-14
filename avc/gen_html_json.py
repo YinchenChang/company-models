@@ -265,3 +265,38 @@ SPEC = {
 }
 cfg = relayout(cfg, X, SPEC)
 post(cfg)
+# ───────── v0.3.5（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（兩讀數、C0（實績））；共通步驟 avc/html13.py（樣板 delta/gen_html_json.py） ─────────
+import html13  # noqa: E402
+_PL = wb["PL"]
+H = {
+    "ver": "v0.3.5",
+    "units_chart": lambda pB, hB: {
+        "type": "theme", "title": "液冷、AI 氣冷與機構、一般伺服器與網通、非伺服器營收（情境 B，十億元）與奇鋐液冷有效份額（右軸）", "x": f"@PL!D{hB}:G{hB}",
+        "fmt": "n0", "fmt_r": "p1", "stack": True, "pad": 1.25, "total": f"@PL!D{pB('營收')}:G{pB('營收')}",
+        "bars": [{"name": ["液冷"], "y": f"@PL!D{pB('液冷營收')}:G{pB('液冷營收')}", "color": "#0b7a80"},
+                 {"name": ["AI 氣冷與機構"], "y": f"@PL!D{pB('AI 氣冷與機構營收')}:G{pB('AI 氣冷與機構營收')}", "color": "#6fc7cb"},
+                 {"name": ["一般伺服器與網通"], "y": f"@PL!D{pB('一般伺服器與網通營收')}:G{pB('一般伺服器與網通營收')}", "color": "#c29a2b"},
+                 {"name": ["非伺服器（消費電子、系統、富世達）"], "y": f"@PL!D{pB('非伺服器營收（3C、系統、富世達）')}:G{pB('非伺服器營收（3C、系統、富世達）')}", "color": "#b9b4a6"}],
+        "lines": [{"name": ["奇鋐在 AI 液冷市場的有效份額"], "y": f"@PL!D{pB('奇鋐有效份額')}:G{pB('奇鋐有效份額')}", "axis": "r", "color": "#3b3838", "labels": True}],
+        "caption": "堆疊＝四塊營收，頂端數字＝合併營收；折線＝奇鋐液冷有效份額（右軸）。回答命題：液冷滲透率與每架液冷內容上升帶動液冷營收，份額逐年下滑抵銷一部分成長。FY2026 為校準年。"},
+    "sc_caption": "三情境 FY2027 起只差液冷滲透率（A 高、B 基準、C 低），顆數係數的差異自 CY2028 起；FY2030 起為延伸期（收斂法）。",
+    "seg": [("一、AI 部署與液冷市場", "A. AI 部署與液冷市場", "B. AI 氣冷"), ("二、AI 氣冷、一般伺服器、非伺服器與合併營收", "B. AI 氣冷", "C. 損益")],
+    "seg_caption": "分部營收推導（情境 B；十億元新台幣）：液冷＝部署 GW × 液冷滲透率 × 每 GW 液冷內容 × 奇鋐有效份額；AI 氣冷與機構＝部署 GW × 每 GW 營收；加一般伺服器與網通、非伺服器得合併營收",
+    "gw_chart": lambda pB, hB: {
+        "type": "theme", "title": "部署 GW（IT 電力，長條）與 AI 液冷市場（折線，十億美元，右軸）：情境 B", "x": f"@PL!D{hB}:G{hB}",
+        "fmt": "n0", "fmt_r": "n1", "stack": False, "pad": 1.3,
+        "bars": [{"name": ["部署 GW（IT 電力）"], "y": f"@PL!D{pB('部署 GW（IT 電力）')}:G{pB('部署 GW（IT 電力）')}", "color": "#0b7a80"}],
+        "lines": [{"name": ["AI 液冷市場（奇鋐可做部分）"], "y": f"@PL!D{pB('AI 液冷市場（奇鋐可做部分；美元）')}:G{pB('AI 液冷市場（奇鋐可做部分；美元）')}", "axis": "r", "color": "#c29a2b", "labels": True}],
+        "caption": "液冷營收的產業輸入：部署量（讀 Siliconomics 基準，再乘情境 B 顆數係數）× 液冷滲透率 × 每 GW 液冷內容（讀 Siliconomics）＝液冷市場；乘上奇鋐有效份額即為液冷營收。"},
+    "recon_h3": "券商、研調滲透率與台達電液冷對照（原有）",
+    "plain": {f"Val!E{row('Val', 'WACC', exact=True)}": "股權成本與稅後債務成本以市值權重加權；WACC 調整只用於敏感度（基準為零）",
+              f"Val!A{row('Val', '永續成長率 g')}": "永續成長率 g（長期成長上限與無風險利率取小者）",
+              f"Val!A{row('Val', '永續期 RONIC')}": "永續期 RONIC（＝WACC＋超額報酬差）",
+              f"Val!A{row('Val', 'DCF 情境價值推到 12 個月後')}": "DCF 情境價值推到目標時點（以股權成本複利，扣除期間股利）",
+              f"In!B{INK['g_tv']}": "永續成長率 g（最後一年之後；長期成長上限與無風險利率取小者）",
+              f"In!B{INK['scn_fade_g']}": "FY2032 營收年增收斂目標（A 為基準加兩個百分點、B 為基準、C 為基準減兩個百分點）"},
+    "fold": {"DCF!A2": "展開：DCF 的營業利益與自由現金流口徑"},
+}
+html13.apply(cfg, wb, X, H, os.path.join(HERE, ".."))
+json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+print("v1.3 ok", os.path.relpath(X, HERE))

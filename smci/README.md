@@ -1,4 +1,19 @@
-# smci/ — 美超微 Super Micro Computer（SMCI US）收支與估值模型 v0.3.6
+# smci/ — 美超微 Super Micro Computer（SMCI US）收支與估值模型 v0.3.7
+
+## v0.3.7（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調兩讀數＋C0（實績）
+
+- **依據：** `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`、`docs/workorders/20261114_C0實績對帳補列_七家.md`、三層基準協調規則 v1.4.2（C4、C0 第 2 點）、`docs/plan/個股HTML版面規格.md` v1.3；樣板廣達、緯穎 v0.2.6、戴爾 v0.2.6（PR #550）。本輪不改 Siliconomics。
+- **做法：** `build_smci.py` 主引擎掛鉤（`SIL_COORD_ALT=1` 時情境 B、C 的商用 GPU 顆數 CY2027 起 × 另一側比值，會計年度市場各取半；情境 A 不縮放）→ `COORD.add_sheet`＋`stamp` → `v037_post.py`（Hist〔GAAP，S&P Global 經 stockanalysis〕、PL 頁末標準損益表 FY2023A–FY2031E〔GAAP、兩類法 EPS；特別股股利列〕、RevDCF、Val 0.7、Sens 業務主因與相對基準表、README v1.3、Coord C0）。`sens_smci.py`（`SMCI_OVR`；10 案 × 低／高整本重算 → `sens.json`）、`tools/coord/alt_run.py smci`（→ `coord_alt.json`）。`gen_html_json.py` 末段套 v1.3 版面與 `COORD.inject_html`。
+- **兩讀數（C4）：** 現行基準讀數＝加權目標價 65.18（+140.7%，強力買進）；另一側讀數（CY2027–CY2029 為現行的 0.62／0.67／0.67 倍）＝55.72（+105.8%，強力買進）。評等相同；對帳中年份 CY2027–CY2029；快照 CURRENT。
+- **C0（實績）與出處：** 個股側＝實績營收 × 公司口述 AI solutions 占比（換算）＝AI GPU 平台營收（證據等級 Assumed：營收 Verified × 口述占比 Assumed；依 `tools/coord/README.md`「口述占比 × 營收屬 Assumed，不算公司實績」，公司未揭露 AI 營收金額）：3Q FY26（2026-01～03）8.194、4Q FY26（2026-04～06）6.672（本模型 Q 頁，公司財報 × 約 80%／60%）、1Q FY27（2026-07～09）營收 19.946（公司財報 2026-11-03）× AI 約 71%（預備講稿 https://s204.q4cdn.com/707617056/files/content_files/FQ127-Prepared-Remarks.pdf，Interested-party）＝14.162；1–9 月累計 29.028（十億美元）。層級側＝商用 GPU 系統市場（Siliconomics SIF_GPUSysMkt_Base，CY2026 595.49）× 2H FY26 有效份額（4.99%）＝29.73。主讀數 29.028 vs 22.299（×9/12）＝+30.2%；第二讀數 1Q FY27 × 4＝56.65 vs 29.73＝+90.5%。兩者都超過 +15%，**但 2H FY26 份額＝2026 年 1–6 月 AI 營收實績 ÷（½ × CY2026 市場），層級 CY2026 隱含值恆等於上半年實績的兩倍（核對列＝0），市場消去；前兩季即校準輸入，差距只反映美超微下半年相對上半年的成長，故判定「參考（同源校準）」、結論「無可比實績（層級值同源）」，對帳中 C0 項目 0 項。** 結論另註：缺 AI 營收金額揭露（口述占比屬 Assumed）。 本模型 FY2027 份額另以公司營收指引重新校準（2H FY26 份額的 1.57 倍）。實際檢驗錨點：1Q FY27 AI 營收比上半年季均 +90.5%；1Q FY27 營收比 FY2027 指引中點季均 +3.6%（公司已上調指引至 72–82）；1Q FY27 AI 占比 71% 比模型 FY2027（86.3%）低 15.3 個百分點。缺：AI 營收金額揭露（口述占比屬 Assumed）；美超微在商用 GPU 系統市場份額的獨立揭露。
+- **獨立核對修正（同版，只改文字）：** Coord 頁 C0 第 4 節逐季與合計列（4.1 標題、4.3「實績營收 × 公司口述 AI solutions 占比（換算）」列）原標「公司實績」「Verified × Interested-party」，改標 Assumed（營收 Verified × 口述占比 Assumed）；結論、HTML 對帳章標題與表名同步改為「實績營收 × 口述占比（換算）」。數值、加權目標價與評等不變（`tools/xlsx_diff.py` 對修正前成品：只有文字格不同）。
+- **讀取層級（同源，不判定）：** 商用 GPU 系統市場（日曆年，情境 B）與 Siliconomics v0.19 差距 0。層級之間（參考）：Siliconomics 基準部署 GW 對 Wattonomics 換算值 CY2027–CY2029 +62%／+50%／+50%（Siliconomics 對帳單 r3）。
+- **Hist 出處：** S&P Global Market Intelligence 經 stockanalysis.com 損益表頁（https://stockanalysis.com/stocks/smci/financials/income-statement/；2026-08-31 更新）FY2022–FY2025（GAAP）；FY2025 與 Q 頁一致。
+- **不變性：** `tools/xlsx_diff.py` 對 v0.3.6 逐格（容差 1e-9）：既有儲存格只差 README A1（版號與本版說明），其餘皆為新增。加權目標價 65.18、DCF 69.65、Comparable（未調整）65.19、評等強力買進不變。EPS 口徑：GAAP 稀釋（兩類法）。
+- **README 舊節數字加註：** 下方 v0.3.6 以前各節的目標價與上檔空間早於 Siliconomics v0.19 全下游重建，與現行 dist 不符；現行值見上（不改寫歷史）。
+- **驗證：** LibreOffice 重算錯誤格 0；`check_company_html.py smci`、`check_layout_v13.py --xlsx`（A–I 全過；剩既有參數代號警告）、`tools/baseline_coordination/check.py` 0 項不符。
+- **未解：** (1) Siliconomics `coord_meta_v0.19.json` 的 `hardware_companies` 尚未列入 smci（本輪不改，見 PR 說明）；(2) 標準損益表 FY2026A 的其他收入、所得稅為模型拆分（與實績稅前利益有差），FY2026 特別股股利依模型為 0（實績 0.035）。
+- 成品：`dist/20261115_美超微個股模型_v0.3.7.xlsx`、`.html`；v0.3.6 移到 `dist/_待刪除/`。
 
 ## v0.3.6（2026-11-10）：稀釋股數口徑修正（1Q FY27 10-Q；數值改變）
 

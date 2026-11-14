@@ -1,4 +1,18 @@
-# arista/ — Arista Networks（ANET）收支與估值模型 v0.5.4
+# arista/ — Arista Networks（ANET）收支與估值模型 v0.5.5
+
+## v0.5.5（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調兩讀數＋C0（實績）
+
+- **依據：** `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`、`docs/workorders/20261114_C0實績對帳補列_七家.md`、三層基準協調規則 v1.4.2（C4、C0 第 2 點）、`docs/plan/個股HTML版面規格.md` v1.3；樣板 NVIDIA v0.3.10、Broadcom、Astera Labs（網通），同 lineage 智邦 v0.4.5（PR #536）。本輪不改 Siliconomics 與網通市場層。
+- **做法：** `build_arista.py` 主引擎掛鉤（`SIL_COORD_ALT=1` 時情境 B、C 的 AI 後端交換器市場 CY2027 起 × 另一側比值；情境 A 不縮放）→ `COORD.add_sheet`＋`stamp` → `v055_post.py`（Hist〔non-GAAP，公司 8-K〕、PL 頁末標準損益表〔Non-GAAP 口徑，表末 GAAP 稀釋 EPS 對照〕、RevDCF、Val 0.7、Sens 業務主因與相對基準表、README v1.3 白話列、Coord C0）。`sens_arista.py`（`ARISTA_OVR`；9 個業務主因 × 低／高整本重算 → `sens.json`）、`tools/coord/alt_run.py arista`（→ `coord_alt.json`）。`gen_html_json.py` 末段套 v1.3 版面與 `COORD.inject_html`。
+- **兩讀數（C4）：** 現行基準讀數＝加權目標價 122.28（−23.2%，中立）；另一側讀數（Wattonomics 換算的產業部署 GW，CY2027–CY2029 為現行的 0.62／0.67／0.67 倍）＝113.95（−28.4%，放空）。**評等不同**；對帳中年份 CY2027–CY2029；快照 CURRENT。
+- **C0（實績）與出處：** 個股側＝公司季營收（8-K，Verified）：1Q26 2.7090、2Q26 3.0357（本模型 Q 頁，前期新聞稿）、3Q26 3.6576（3Q26 新聞稿 2026-11-03，https://www.sec.gov/Archives/edgar/data/0001596532/000159653226000252/ex991q326-earningsrelease.htm；前九月 9.4023 十億美元，核對 0）。層級側＝AI 後端乙太網路交換器市場（網通市場層 × 乙太網路占比）× Arista 有效份額＋非 AI 營收＝13.3523（CY2026 全年）。主讀數 9.4023 vs 10.0142（×9/12）＝−6.1%；第二讀數 3Q26 × 4＝14.6304 vs 13.3523＝+9.6%（季中點晚於年中、成長年偏高）。**Arista 不揭露各季 AI 營收；有效份額由公司 FY2026 AI 營收目標（至少 35 億美元，指引）校準，層級隱含值恆等於錨點營收（核對列＝0），故判定「參考（同源校準）」、結論「無可比實績（層級值同源）」，對帳中 C0 項目 0 項。** 實際檢驗錨點：前三季已實現錨點全年的 70.4%；錨點 4Q（指引中點 3.95）比 3Q 實績 +8.0%；3Q26 non-GAAP EPS 1.20 與模型 3Q 相差 +0.2%（四捨五入）。缺：各季 AI 營收或 AI 後端交換器份額的獨立揭露。
+- **讀取層級（同源，不判定）：** AI IT 資本支出（情境 B）與 Siliconomics v0.19 差距 0；交換器市場只在網通市場層 markets/network v0.2.3。層級之間（參考）：Siliconomics 基準部署 GW 對 Wattonomics 換算值 CY2027–CY2029 +62%／+50%／+50%（Siliconomics 對帳單 r3）。
+- **Hist 出處：** 4Q24 新聞稿（https://www.sec.gov/Archives/edgar/data/1596532/000159653225000018/ex991q424-earningsrelease.htm；FY2023、FY2024 non-GAAP，拆股還原）、4Q23 新聞稿（FY2022 營收 4,381.3、non-GAAP 淨利 1,448.3 百萬美元）、4Q25 新聞稿（FY2025 GAAP 稀釋 EPS 2.75）；non-GAAP 營業費用、稅前利益與所得稅為推得列（其他收益沿用 GAAP 列，與 Q 頁口徑相同）。
+- **不變性：** `tools/xlsx_diff.py` 對 v0.5.4 逐格（容差 1e-9）：既有儲存格只差 README A1（版號與本版說明），其餘皆為新增。加權目標價 122.28、DCF 65.47、Comparable（未調整）89.55、評等中立不變。EPS 口徑：non-GAAP 稀釋。
+- **README 舊節數字加註：** 下方 v0.5.4 以前各節的目標價與上檔空間早於 Siliconomics v0.19 全下游重建，與現行 dist 不符；現行值見上（不改寫歷史）。
+- **驗證：** LibreOffice 重算錯誤格 0；`check_company_html.py arista`、`check_layout_v13.py --xlsx`（A–I 全過；剩既有參數代號警告）、`tools/baseline_coordination/check.py` 0 項不符。
+- **未解：** (1) Siliconomics `coord_meta_v0.19.json` 的 `hardware_companies` 尚未列入 arista（本輪不改，見 PR 說明）；(2) 敏感度「FY2026 AI 營收錨點」低值＝基準（公司目標為「至少」3.5），只有高案。
+- 成品：`dist/20261115_Arista個股模型_v0.5.5.xlsx`、`.html`；v0.5.4 移到 `dist/_待刪除/`。
 
 ## v0.5.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 
