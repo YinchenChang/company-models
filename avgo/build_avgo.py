@@ -308,6 +308,9 @@ def uexp(k, y, s):
     return f"u_{k}_28*(1+g29_{k})*um29_{s}"
 umx = lambda y, s: {2026: "1", 2027: "1", 2028: f"um28_{s}", 2029: f"um29_{s}"}[y]
 DEFP = dict(scn="A", uf="1", sht="0", sho="0", pfc="1", fh="f_hbm", mh="m_hbm", nf="1", gs27="g_sw27", gs="g_sw", opxa="0", flat29=False, wta=None)
+import json as _json_sens
+if os.environ.get("AVGO_P"):   # v0.5.6：敏感度整本重算（avgo/sens_avgo.py）：三情境主引擎一律套用案例覆寫（正式建置不設此變數）
+    DEFP.update(_json_sens.loads(os.environ["AVGO_P"]))
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
     if SIL.COORD_ALT and P["wta"] is None and s != "A":   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 產業量 × wta（＝另一側讀數比值）；情境 A＝供給側讀數不縮放
@@ -1035,6 +1038,8 @@ sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
 import coord as COORD
 if COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL):
     COORD.stamp(wb, "v0.5.4", "v0.5.5", "2026-11-14")
+    import v056_post
+    print(v056_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL))
 wb.save(sys.argv[1])
 if os.environ.get("AVGO_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
