@@ -32,4 +32,5 @@
 - PL 核對列「營業利益（預測）− Cost 差額 − 股權報酬」原為 `ROUND(…, 9)`；pycel 的 ROUND 在 1 GW 資料中心情境（`w_dc1gw_on`、`aq_owned_opex_amort`）遇 numpy 浮點數無法轉 Decimal（InvalidOperation），parity 失敗 6 項。改為 `IF(ABS(x)<1E-9, 0, x)`（同義：誤差小於 1E-9 視為 0）；其他核對列（稅前 − 自由現金流、FY2025 校準）本來就不含 ROUND，全簿無其他 ROUND。數值逐格不變（xlsx_diff 對修正前只差 Coord!L15 說明文字，見下）。
 - 規格 J 節擴為「無目標價的模型」：(a) 未上市 `data-unlisted`（OpenAI）；(b) 已上市但本模型未建目標價 `data-novaluation`（智譜、MiniMax）。`tools/company_html/check_layout_v13.py` 兩旗標同組豁免（不要求反向 DCF 章、略過 G、H），(b) 估值章仍須至少一張圖。智譜個股頁估值章改帶 `data-novaluation`、補反向檢驗圖、橫幅改「本模型未建目標價與評等」。
 - Coord「Wattonomics」列說明補：Wattonomics Decisions D43（GL01-37，Andy 2026-10-31 已定）已將智譜移出 Gap（資金缺口收支只算 11 家代表玩家，不含中國）。
+- 驗證：完整 parity（tests/parity，47 情境）全過——情境一致性 47／47、快取等價 47／47、結構與效能測試通過；`test_scenarios_actually_change_outputs`、`test_scenario_expected_results` 在本機單一行程記憶體不足（7 GB 上限，pycel 引擎未即時回收），改以同一斷言分段執行（每情境後回收記憶體）全過。test_builder、test_html 通過；`tools/baseline_coordination/check.py` 0 項不符。
 - 檢查：main 版 `check_layout_v13` 對本頁不過（main 版只認 `data-unlisted`；本分支合併後即為新版）；新版全過。repo 內其他既有 HTML（77 份）main 版與新版輸出逐字相同。
