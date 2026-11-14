@@ -78,9 +78,9 @@ def check_company_reads(st):
         for f in (ROOT / co).glob("*.py"):
             for m in pat.finditer(f.read_text(encoding="utf-8", errors="ignore")):
                 errs.append(f"[4] {co}/{f.name} 讀非基準名稱 {m.group(0)}")
-    recon_years = {yr for yr, y in st["years"].items() if y.get("reconciling")}
+    recon_years = {str(yr) for yr, y in st["years"].items() if y.get("reconciling")}
     for co, years in st.get("depends_on_years", {}).items():
-        if not recon_years & set(years):
+        if not recon_years & {str(x) for x in years}:  # 年份鍵一律轉字串比對（整數、字串皆可）
             continue
         htmls = sorted((ROOT / co / "dist").glob("*.html"))
         if not htmls:
