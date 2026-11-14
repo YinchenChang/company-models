@@ -515,6 +515,14 @@ def coord_c0(wb, SIL, CR, HR, PLA):
         CW.cell(r, 8, note)
         r += 1
         return r - 1
+    def line_ref(label, unit, yr_, f_a, f_b, fmt, note):
+        nonlocal r
+        CW.cell(r, 1, label); CW.cell(r, 2, unit); CW.cell(r, 3, yr_)
+        CW.cell(r, 4, f_a).number_format = fmt; CW.cell(r, 5, f_b).number_format = fmt
+        CW.cell(r, 6, f"=D{r}/E{r}-1").number_format = "+0.0%;-0.0%"
+        CW.cell(r, 7, f'=IF(ABS(F{r})>0.15,"層間差距（參考）","一致")')
+        CW.cell(r, 8, note)
+        r += 1
     ycol = {2026: "D", 2027: "E", 2028: "F", 2029: "G"}   # PL 引擎欄（FY2026–FY2029）
     nb = f"Siliconomics {SIL.VERSION}"
     for i, y in enumerate((2026, 2027, 2028, 2029)):
@@ -525,11 +533,6 @@ def coord_c0(wb, SIL, CR, HR, PLA):
         c = ycol[y]
         line("加速器顆數合計（情境 A，原始顆數）vs Siliconomics 原始顆數", "百萬顆", f"CY{y}", f"=PL!{c}{RA['unv']}+PL!{c}{RA['uot']}", raw_tot[i + 1], "#,##0.000",
              f"{nb} SIF_UnitsPlat_Total；Derived；來源 markets/network（AI 網通市場模型 v0.2.3）")
-    ratio = lambda y: f"{'BCDE'[(y - 2026)]}${CR['ratio']}"
-    for i, y in enumerate((2026, 2027, 2028, 2029)):
-        c = ycol[y]
-        line("加速器顆數合計（情境 B）vs Wattonomics 換算值（另一側讀數）", "百萬顆", f"CY{y}", f"=PL!{c}{R['unv']}+PL!{c}{R['uot']}", f"=E{first + i}*{ratio(y)}", "#,##0.000",
-             f"Wattonomics {wat_ver} 經 Siliconomics SIF_DeployGW_AltRatio_{y}（另一側 ÷ 現行基準）換算；Derived（層推導值）；對帳中年份依 C4 並列兩讀數目標價（本頁 B 節），個股不裁決")
     for lbl, key, silv in (("非 NVIDIA 加速器權重", "w_ot", Vs["abf_wot_ib"]["base"]), ("每顆載板金額年增", "g_asp", Vs["abf_gasp"]["base"]), ("Ibiden 份額相對值 2027", "rel_27", Vs["abf_ibrel_27"]["base"]),
                            ("Ibiden 份額相對值 2028", "rel_28", Vs["abf_ibrel_28"]["base"]), ("Ibiden 份額相對值 2029", "rel_29", Vs["abf_ibrel_29"]["base"]),
                            ("價格溢價指數 2027", "pp_27", Vs["abf_pp_27"]["base"]), ("價格溢價指數 2028", "pp_28", Vs["abf_pp_28"]["base"]), ("價格溢價指數 2029", "pp_29", Vs["abf_pp_29"]["base"])):
@@ -562,6 +565,20 @@ def coord_c0(wb, SIL, CR, HR, PLA):
     ROW["first"], ROW["last"] = first, last
     CW.cell(r, 1, "對帳中項目數（|差距| > 15%）"); CW.cell(r, 7, f'=COUNTIF(G{first}:G{last},"對帳中")'); ROW["cnt"] = r; r += 1
     CW.cell(r, 1, "無可比層級量的項目：AI IT 資本支出（模型 itc_* 由顆數 × 每顆 IT capex 推得，與 Siliconomics 部署 GW × 每 GW IT capex 同源，等於顆數核對的重述）；每 GW Ibiden 營收（Units 頁，為輸出而非輸入，層沒有對應值）；Ibiden 實際營收（層不持有）。")
+    r += 1
+    CW.cell(r, 1, "層級之間（參考；Siliconomics 對帳單 r3 處理，不計入本公司對帳中項目數）").font = BOLD; ROW["ref"] = r; r += 1
+    CW.cell(r, 1, "以下是 Siliconomics 現行基準與 Wattonomics 換算值兩層之間的差距，不是 Ibiden 自己的量對層級的比較；本公司不裁決（C4），只在兩讀數目標價並列。")
+    r += 1
+    for j_, h in enumerate(["項目", "單位", "年度", "Siliconomics 基準", "Wattonomics 換算值", "差距（基準 ÷ 換算值 − 1）", "判定", "層級名稱與版本"], 1):
+        c = CW.cell(r, j_, h); c.font = BOLD; c.fill = HDR
+    ROW["refh"] = r; r += 1
+    ROW["ref1"] = r
+    ratio = lambda y: f"{'BCDE'[(y - 2026)]}${CR['ratio']}"
+    for i, y in enumerate((2026, 2027, 2028, 2029)):
+        c = ycol[y]
+        line_ref("加速器顆數合計：Siliconomics 基準 vs Wattonomics 換算值", "百萬顆", f"CY{y}", f"=E{first + i}", f"=E{first + i}*{ratio(y)}", "#,##0.000",
+             f"Wattonomics {wat_ver} 經 Siliconomics SIF_DeployGW_AltRatio_{y}（另一側 ÷ 現行基準）換算；Derived（層推導值）；對帳中年份依 C4 並列兩讀數目標價（本頁 B 節），個股不裁決")
+    ROW["ref2"] = r - 1
     r += 2
     # ---- 3. 對帳中年份 ----
     CW.cell(r, 1, "3. 對帳中年份與兩讀數（C4）").font = BOLD; r += 1
