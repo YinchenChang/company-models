@@ -125,7 +125,7 @@ theme_seg = {"type": "theme", "title": "分部營收推導（情境 B）：計�
                       {"name": "隨需營收", "y": f"@Seg!C{SEGD['spot']}:H{SEGD['spot']}", "color": "#c29a2b"}],
              "lines": [{"name": "計費 MW", "y": f"@Seg!C{SEGD['bill']}:H{SEGD['bill']}", "axis": "r", "color": "#6f6bae", "labels": True}],
              "fmt_r": "n0",
-             "caption": "灰＝實績（公司未揭露長約／隨需拆分；FY2026 為前三季）；青綠＝長約營收；金＝隨需營收；標籤為合計＝合併營收。紫線＝計費 MW（右軸）。"}
+             "caption": "灰＝實績（公司未揭露長約／隨需拆分；FY2026 為前三季）；青綠＝長約營收；金＝隨需營收；標籤為合計＝合併營收。紫線＝計費 MW（右軸；FY2026 為第四季值）。"}
 SEG_ROWS = [SEGD[k] for k in ("bill", "anc", "pl", "ps", "od", "act", "long", "spot", "ovr", "tot", "lsh", "chk")]
 SEG_FMT = {SEGD["bill"]: "n0", SEGD["anc"]: "n2", SEGD["pl"]: "n2", SEGD["ps"]: "n2", SEGD["od"]: "p0", SEGD["lsh"]: "p1", SEGD["chk"]: "n3"}
 def segrow(r_):
@@ -211,7 +211,7 @@ cfg = {
             {"type": "pl", "collapse": True, "summary": "展開：三情境損益（營收、調整後 EBITDA、營業利益率、EPS）", "years": "@PL!D3:J3", "metrics": [
                 met("營收（十億美元）", pl3("rev"), "n1", True), met("調整後 EBITDA（十億美元）", pl3("aeb"), "n1", True),
                 met("調整後 EBITDA 率", pl3("aebm"), "p1"), met("營業利益率（GAAP）", pl3("oim"), "p1", True), met("EPS（GAAP 稀釋，美元）", pl3("eps"), "n2")]},
-            {"type": "table", "collapse": True, "summary": "展開：情境 B 的損益明細（模型列，含調整後 EBITDA 與 NOL）", "head": [f"@PL!{c}3" for c in "ACDEFGHIJ"],
+            {"type": "table", "collapse": True, "summary": "展開：情境 B 的損益明細（模型列，含調整後 EBITDA 與 NOL）", "caption": f"@README!A{RL['plb13']}", "head": [f"@PL!{c}3" for c in "ACDEFGHIJ"],
              "rowgen": {"sheet": "PL", "rows": f"{PB['ai']}-{PB['eps']}", "cols": list("ACDEFGHIJ"), "fmts": ["", "n2", "n2", "n2", "n2", "n2", "n2", "n2", "n2"],
                         "row_fmt": {str(PB[k]): {c: "p1" for c in "CDEFGHIJ"} for k in ("revg", "aebm", "oim")}}},
             {"type": "table", "collapse": True, "summary": "展開：分部核對（三情境合計絕對差，應為零）", "head": [f"@PL!{c}3" for c in "ACDEFGHIJ"],

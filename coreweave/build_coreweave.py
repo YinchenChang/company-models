@@ -517,7 +517,7 @@ SG.column_dimensions["K"].width = 60
 # =====================================================================================
 PL = wb.create_sheet("PL")
 PL["A1"] = "PL — 三情境損益（十億美元；EPS 美元）。營收（Seg）→ 營運費用、租金、管銷（Thesis）→ 調整後 EBITDA → 減股票薪酬、折舊＝GAAP 營業利益 → 利息（CF）→ 稅（NOL 80% 上限）→ 淨利 → EPS"
-PL["A2"] = "FY2025 為實績（10-K）；FY2026＝9M 實績（新聞稿）＋Q4 模型，費用明細只列 FY2027 起（9M 拆分待 Q3 10-Q）。所得稅：長期現金稅率 × MAX(0, 稅前 − NOL 使用)；FY2026 依模型（Q3 實際 GAAP 稅費 0.083 未模型化）"
+PL["A2"] = "FY2025 為實績（10-K）；FY2026＝9M 實績（新聞稿）＋Q4 模型，上方費用明細只列 FY2027 起（9M 營業成本、其他收入、所得稅已由 Q3 10-Q XBRL 拆分，見本頁末標準損益表）。所得稅：長期現金稅率 × MAX(0, 稅前 − NOL 使用)；上方 FY2026 的稅前與所得稅列只含模型項，淨利＝9M 實際淨損（已含 9M 實際所得稅與其他收入）＋Q4 模型"
 hdr(PL, 3, YH)
 r = 4
 PL.cell(r, 1, "分部核對（三情境合計絕對差；每年度應為 0）").font = BOLD; r += 1
@@ -1236,10 +1236,10 @@ SRC_K = "10-K（FY2023–FY2025）／10-Q（9M 2026）經 SEC XBRL，見 Sources
 plrow("rev", "營收", "US$B", {"C": HY["FY2023"]["rev"], "D": "=Q!F4", "E": "=Q!G4", **{MC[y]: f"={yc(y)}{PB_['rev']}" for y in MC}, "K": "=rev9m"}, inputs="C", note="FY2023：" + SRC_K + "；FY2024–FY2025：Q 頁；預測：上方情境 B 合併營收")
 plrow("revg", "營收年增率（YoY）", "%", {c: f"={c}{PLS['rev']}/{p}{PLS['rev']}-1" for p, c in zip("CDEFGHI", "DEFGHIJ")}, "0.0%")
 plrow("cogs", "營業成本（COGS，不含折舊）", "US$B", {**hin("cogs", ("FY2023", "FY2024", "FY2025", "9M2026")), "F": f"=K{r}+Thesis!D{TB_['opex']}+Thesis!D{TB_['rent']}",
-      **{MC[y]: f"={yc(y)}{PB_['opex']}+{yc(y)}{PB_['rent']}" for y in range(2027, 2031)}}, inputs="CDEK", note="歷史：" + SRC_K + "；預測＝營運費用（Tokenomics）＋機房租金；FY2026＝9M 實績＋第四季模型")
+      **{MC[y]: f"={yc(y)}{PB_['opex']}+{yc(y)}{PB_['rent']}" for y in range(2027, 2031)}}, inputs="CDEK", note="歷史：" + SRC_K + "；預測＝營運費用（Tokenomics）＋機房租金；FY2026＝9M 實績（公司口徑）＋第四季模型口徑，毛利率的變動部分來自口徑差異")
 plrow("gp", "毛利", "US$B", {c: f"={c}{PLS['rev']}-{c}{PLS['cogs']}" for c in ALLC})
 plrow("gpm", "毛利率", "%", {c: f"={c}{PLS['gp']}/{c}{PLS['rev']}" for c in ALLC}, "0.0%")
-plrow("opx", "營業費用（技術與基礎設施含折舊、銷售行銷、一般管理）", "US$B", {**hin("opex", ("FY2023", "FY2024", "FY2025", "9M2026")), "F": f"=K{r}+Thesis!D{TB_['sga']}+Thesis!D{TB_['sbc']}+Thesis!D{TB_['dep']}",
+plrow("opx", "營業費用（技術與基礎設施含折舊、研發、銷售行銷、一般管理）", "US$B", {**hin("opex", ("FY2023", "FY2024", "FY2025", "9M2026")), "F": f"=K{r}+Thesis!D{TB_['sga']}+Thesis!D{TB_['sbc']}+Thesis!D{TB_['dep']}",
       **{MC[y]: f"={yc(y)}{PB_['sga']}+{yc(y)}{PB_['sbc']}+{yc(y)}{PB_['da']}" for y in range(2027, 2031)}}, inputs="CDEK", note="歷史＝Total operating expenses − Cost of revenue（" + SRC_K + "）；預測＝管銷（扣 SBC）＋股票薪酬＋折舊攤銷")
 plrow("oi", "營業利益", "US$B", {"C": HY["FY2023"]["oi"], "D": "=Q!F5", "E": "=Q!G5", **{MC[y]: f"={yc(y)}{PB_['oi']}" for y in MC}, "K": "=oi9m"}, inputs="C", note="預測：上方情境 B 營業利益（GAAP）")
 plrow("oim", "營業利益率", "%", {c: f"={c}{PLS['oi']}/{c}{PLS['rev']}" for c in ALLC}, "0.0%")
@@ -1328,7 +1328,7 @@ for t in ("1. 客戶集中（Q2 10-Q：最大客戶 36%、次大 26%）：是否
     RD.cell(r, 1, t); r += 1
 r += 1
 RD.cell(r, 1, "已知限制").font = BOLD; r += 1
-RD.cell(r, 1, "Q3 10-Q 在建置環境無法開啟（SEC 被擋）：債務逐檔、到期表、租賃、在建工程、期末股數、RSU 與選擇權沿用 Q2 10-Q 或標待補；Q3 公司口徑資本支出 14.511、RPO 分桶、加權債務成本 7.9% 為法說數（新聞稿未見）。Comparable 同業 3 家（Nebius、Oracle、IREN；MarketScreener 共識，估值日 2026-11-11），少於 8 家不做迴歸；中位數落在 Oracle（混合業務），淨負債口徑影響大（Val 並列兩口徑）。β 以 US 伺服器／EMS 組代理（新雲無自算組）。kd 為 2032 票據發行票面，市場殖利率未取得。"); RL["lim"] = r; r += 2
+RD.cell(r, 1, "Q3 10-Q（2026-11-12 申報）：損益數字已經 SEC XBRL 取得並用於標準損益表（9M 營業成本、營業費用、其他收入、所得稅）；10-Q 原文未逐行對讀，債務逐檔、到期表、租賃、在建工程、期末股數、RSU 與選擇權仍沿用 Q2 10-Q 或標待補；Q3 公司口徑資本支出 14.511、RPO 分桶、加權債務成本 7.9% 為法說數（新聞稿未見）。Comparable 同業 3 家（Nebius、Oracle、IREN；MarketScreener 共識，估值日 2026-11-11），少於 8 家不做迴歸；中位數落在 Oracle（混合業務），淨負債口徑影響大（Val 並列兩口徑）。β 以 US 伺服器／EMS 組代理（新雲無自算組）。kd 為 2032 票據發行票面，市場殖利率未取得。"); RL["lim"] = r; r += 2
 RD.cell(r, 1, "驅動 → 推導對照（每頁輸入、推導量、因果方向）").font = BOLD; RL["drv"] = r; r += 1
 for t in ("In：一列一鍵（值、單位、標記、來源、說明、來源誘因）→ 所有公式以鍵名引用",
           "Thesis：在役 MW 路徑 × 每 MW 年收入（Tokenomics × k）→ 營收；Tokenomics 營運費用、租金、管銷 → 調整後 EBITDA；新增 MW × IF_CapexIT → 資本支出 → 折舊 → 營業利益",
@@ -1366,9 +1366,10 @@ L13 = [
     ("ob2", f'="目標價全部來自同業倍數：DCF 情境加權每股 "&TEXT({_V("dcf")},"0.00")&" 美元，同業倍數法 "&TEXT({_V("comp")},"0.00")&" 美元（同業中位數 "&TEXT(mult,"0.00")&" 倍 × FY2028 調整後 EBITDA），各占 "&TEXT(w_dcf,"0%")&" 得 "&TEXT({_V("tp")},"0.00")&" 美元；同業倍數降到 "&TEXT({_V("mdn")},"0.00")&" 倍，估值評等就降一級。"'),
     ("ob3", f'=IF({_V("npvAB")}<0,"擴張越多、價值越低：樂觀相對基準情境每多 1 GW，DCF 企業價值減少 "&TEXT(-{_V("npvAB")},"0.0"),"擴張創造價值：樂觀相對基準情境每多 1 GW，DCF 企業價值增加 "&TEXT({_V("npvAB")},"0.0"))&" 十億美元；基準情境 FY2029 稅後投入資本報酬率 "&TEXT(Thesis!D{SUM_ROWS[0] + 5},"0.0%")&"，"&IF(Thesis!D{SUM_ROWS[0] + 5}<wacc,"遠低於","高於")&"資金成本 "&TEXT(wacc,"0.0%")&"。"'),
     ("ob4", f'="缺口靠舉債與增資補：基準情境 2026 年第四季至 FY2030 需外部融資 "&TEXT(Fund!D{FS["cum"]},"0.0")&" 十億美元（投資級債 "&TEXT(Fund!D{FS["ig"]},"0.0")&"、新股 "&TEXT(Fund!D{FS["eq"]},"0.0")&"、高息債 "&TEXT(Fund!D{FS["hy"]},"0.0")&"），2030 年底股東累計稀釋 "&TEXT(Fund!D{FS["dil"]},"0.0%")&"；淨負債對 EBITDA 最差 "&TEXT(Fund!D{FS["ndmax"]},"0.00")&" 倍"&IF(Fund!D{FS["ndmax"]}>lev_max,"，超過 "&TEXT(lev_max,"0.0")&" 倍警戒","")&"。"'),
-    ("ob5", '="公司說的新約價格是模型的 "&TEXT((p_claim_lo+p_claim_hi)/2/Thesis!F' + str(TR["B"]["pm"]) + ',"0.0")&" 倍，但現價用不到那麼高：公司稱新約每 MW 年收入 "&TEXT(p_claim_lo,"0")&"–"&TEXT(p_claim_hi,"0")&" 百萬美元，模型 FY2027 為 "&TEXT(Thesis!F' + str(TR["B"]["pm"]) + ',"0.00")&"' + (f'；支撐現價只需 FY2030 每 MW 年收入 "&TEXT(RevDCF!G{RVN["px"]},"0.00")&"' if REV else '') + f'。另 FY2026 營收 "&TEXT(PL!D{PR_["B"]["rev"]},"0.00")&" 十億美元，"&Recon!E{RCR["rev26pos"]}&"。"'),
+    ("ob5", '="公司說的新約價格是模型的 "&TEXT((p_claim_lo+p_claim_hi)/2/Thesis!I' + str(TR["B"]["pm"]) + ',"0.0")&" 倍，但現價用不到那麼高：公司稱新約每 MW 年收入 "&TEXT(p_claim_lo,"0")&"–"&TEXT(p_claim_hi,"0")&" 百萬美元，模型 FY2030 為 "&TEXT(Thesis!I' + str(TR["B"]["pm"]) + ',"0.00")&"' + (f'；支撐現價只需 "&TEXT(RevDCF!G{RVN["px"]},"0.00")&"（同為 FY2030）' if REV else '') + f'。另 FY2026 營收 "&TEXT(PL!D{PR_["B"]["rev"]},"0.00")&" 十億美元，"&Recon!E{RCR["rev26pos"]}&"。"'),
     ("rev13", (f'="反向 DCF 問的是：現價 "&TEXT(px,"0.00")&" 美元隱含每 MW 年收入要多少。其他條件不變，FY2030 基準情境每 MW 年收入 "&TEXT(RevDCF!G{RVN["px"]},"0.00")&" 百萬美元即可支撐現價，"&IF(RevDCF!I{RVN["px"]}<0,"比模型基準 "&TEXT(RevDCF!H{RVN["px"]},"0.00")&" 低 "&TEXT(-RevDCF!I{RVN["px"]},"0.0%"),"比模型基準 "&TEXT(RevDCF!H{RVN["px"]},"0.00")&" 高 "&TEXT(RevDCF!I{RVN["px"]},"0.0%"))&"；估值評等升一級需 "&TEXT(RevDCF!G{RVN["up"]},"0.00")&"、降一級的邊界在 "&TEXT(RevDCF!G{RVN["dn"]},"0.00")&"。公司宣稱新約中點 "&TEXT(RevDCF!J{RVN["px"]},"0.00")&"，"&IF(RevDCF!J{RVN["px"]}>RevDCF!G{RVN["up"]},"遠高於支撐現價所需：現價並未反映公司說法。","並未明顯高於支撐現價所需。")' if REV else "反解快照未產生")),
-    ("pl13", "口徑：GAAP。CoreWeave 財報的損益表與每股盈餘以 GAAP 為主，公司另揭露的調整後指標是調整後 EBITDA 與調整後營業利益（不是調整後 EPS），因此本表用 GAAP、EPS 為完全稀釋。公司的營業成本不含折舊（折舊列在營業費用的技術與基礎設施項下），所以毛利率偏高，營業利益率才是可比的獲利指標。FY2023–FY2025 為 10-K 實績，FY2026 為前三季實績加第四季模型，FY2027 起為基準情境模型；預測期其他收入設為零。"),
+    ("pl13", '="口徑：GAAP。CoreWeave 財報的損益表與每股盈餘以 GAAP 為主，公司另揭露的調整後指標是調整後 EBITDA 與調整後營業利益（不是調整後 EPS），因此本表用 GAAP、EPS 為完全稀釋。公司的營業成本不含折舊（折舊列在營業費用的技術與基礎設施項下），所以毛利率偏高，營業利益率才是可比的獲利指標。FY2023–FY2025 為 10-K 實績，FY2026 為前三季實績加第四季模型，FY2027 起為基準情境模型；預測期其他收入設為零。FY2026 的營業成本是前三季公司口徑加第四季模型口徑（營運費用＋機房租金），毛利率的變動部分來自口徑差異。歷史 EPS 以歸屬普通股東淨損計算（含優先股股利等調整），不等於淨利 ÷ 股數：例如 FY2024 淨利 "&TEXT(PL!D' + str(PLS["ni"]) + ',"0.000")&" ÷ 稀釋股數 "&TEXT(PL!D' + str(PLS["sh"]) + ',"0.000")&"＝"&TEXT(PL!D' + str(PLS["ni"]) + '/PL!D' + str(PLS["sh"]) + ',"0.00")&"，報導 EPS 為 "&TEXT(PL!D' + str(PLS["eps"]) + ',"0.00")&"。"'),
+    ("plb13", '="FY2026 欄的淨利含前三季實際所得稅 "&TEXT(PL!K' + str(PLS["tax"]) + ',"0.000")&" 與其他收入 "&TEXT(PL!K' + str(PLS["oth"]) + ',"0.000")&"；本表的稅前利益與所得稅列只含模型項，所以 FY2026 稅前 − 所得稅 ≠ 淨利。完整對照見本章標準損益表。"'),
     ("drv13", "驅動主線：在役 MW（情境路徑）× 計費比例＝計費 MW；計費 MW × 每 MW 年收入（Tokenomics 每 MW 持有成本 × 定價倍數）＝營收；營運費用與機房租金依在役 MW 計，資本支出＝新增 MW × 每 MW 設備成本，折舊依會計年限攤提。下方先看分部營收推導，再看每 MW 年收入與 backlog 兩張圖，參數明細收在摺疊。"),
     ("seg13", '="分部營收推導：CoreWeave 只有一個報導分部（AI 雲端平台），本模型依合約型態拆成長約與隨需。長約每 MW 年收入＝持有成本 × "&TEXT(k_long,"0.000")&"（IREN–Microsoft 長約類比），隨需＝持有成本 × "&TEXT(k_spot,"0.000")&"（H100 現貨指數），隨需占計費產能 "&TEXT(od_share,"0%")&"（假設，公司未揭露）；兩者各乘上計費 MW 後加總＝分部營收＝合併營收。FY2026 只拆第四季，前三季為未拆分實績。"'),
     ("fund13", '="收支模組：基準情境 FY2026–FY2030 自由現金流合計 "&TEXT(Fund!D' + str(FS["gate"]) + ',"0.0")&" 十億美元；缺口依序以現金、投資級債（借款不超過 EBITDA 的 "&TEXT(lev_max,"0.0")&" 倍）、新股（每年不超過市值 "&TEXT(eq_cap,"0%")&"）、高息債補足。"'),

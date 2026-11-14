@@ -1365,6 +1365,7 @@
      "type": "table",
      "collapse": true,
      "summary": "展開：情境 B 的損益明細（模型列，含調整後 EBITDA 與 NOL）",
+     "caption": "@README!A61",
      "head": [
       "@PL!A3",
       "@PL!C3",
@@ -1482,7 +1483,7 @@
   {
    "id": "drivers",
    "title": "驅動因子 → 推導量",
-   "intro": "@README!A61",
+   "intro": "@README!A62",
    "blocks": [
     {
      "type": "h3",
@@ -1491,7 +1492,7 @@
     {
      "type": "note",
      "parts": [
-      "@README!A62"
+      "@README!A63"
      ]
     },
     {
@@ -1529,7 +1530,7 @@
       }
      ],
      "fmt_r": "n0",
-     "caption": "灰＝實績（公司未揭露長約／隨需拆分；FY2026 為前三季）；青綠＝長約營收；金＝隨需營收；標籤為合計＝合併營收。紫線＝計費 MW（右軸）。"
+     "caption": "灰＝實績（公司未揭露長約／隨需拆分；FY2026 為前三季）；青綠＝長約營收；金＝隨需營收；標籤為合計＝合併營收。紫線＝計費 MW（右軸；FY2026 為第四季值）。"
     },
     {
      "type": "table",
@@ -3456,7 +3457,7 @@
   {
    "id": "funding",
    "title": "資金缺口與融資（收支模組）",
-   "intro": "@README!A63",
+   "intro": "@README!A64",
    "blocks": [
     {
      "type": "theme",
@@ -4261,7 +4262,7 @@
      "collapse": true,
      "summary": "展開：版本要點",
      "items": [
-      "@README!A65",
+      "@README!A66",
       "@README!A48",
       "@README!A49",
       "@README!A50"
