@@ -7,6 +7,8 @@
   C 重點觀察：thesis 章「重點觀察」≤ 5 點、合計 ≤ 750 字。
   D 損益：pl 章含 GAAP／Non-GAAP 標示與必備列；表頭至少 3 個歷史年＋5 個預測年（以年份欄位計）。
   F 圖表：除 revdcf、recon、status 外，每章至少一張圖（svg、長條 .ttr／.bt 或 canvas）。
+  G 橫幅現價附日期；估值章含 DCF、Comparable、加權、市場共識四個目標價。
+  H 敏感度章主圖為「加權目標價相對基準」。
   全頁（警告）：摺疊（details）與附錄以外的可見文字出現參數代號。
 
 用法：python3 tools/company_html/check_layout_v13.py <html>...   結束碼：0＝全過；1＝有必修。
@@ -119,6 +121,22 @@ def check(path):
                     years.add(m.group(1))
         if len(years) < 8:
             must.append(f'D 損益表年份欄 {len(years)} 個 < 8（歷史 3＋未來 5）：{sorted(years)}')
+    # G 現價日期與四個目標價
+    hero = s.select_one('.hero')
+    if hero is not None:
+        ht = re.sub(r'\s+', '', hero.get_text())
+        if not re.search(r'現價[^0-9]{0,40}20\d\d-\d\d-\d\d', ht):
+            must.append('G 橫幅現價未附日期（YYYY-MM-DD）')
+    val = s.find('section', id='valuation')
+    if val is not None:
+        vt = re.sub(r'\s+', '', val.get_text())
+        for name, rx in [('DCF 目標價', r'DCF'), ('Comparable 目標價', r'Comparable|同業'), ('加權目標價', r'加權'), ('市場共識目標價', r'共識')]:
+            if not re.search(rx, vt):
+                must.append(f'G 估值章缺 {name}')
+    # H 敏感度主圖
+    sens = s.find('section', id='sens')
+    if sens is not None and '相對基準' not in vis_text(sens):
+        must.append('H 敏感度章主圖未以「加權目標價相對基準」呈現')
     # F 圖表
     for x in secs:
         if x['id'] in NO_CHART:
