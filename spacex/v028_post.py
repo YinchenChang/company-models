@@ -188,7 +188,7 @@ def revdcf(wb, C):
     RV["A1"].font = BOLD
     RV["A2"] = ("讀法：以情境 B（基準）路徑反解「情境 B 的 DCF 每股價值推到目標時點＝現價」（與目標價同一時點口徑：評價日每股價值 ×（1＋股權成本）^年數；本模型無股利；自用 AI 依 In 頁讀法）；"
                 "分部加總部分反解「情境 B 分部加總每股價值＝現價」。反解值超出合理範圍時照實列出，不外推。營業利益率與營收規模兩項只動 FY2028 起的財報口徑營業利益（FY2026 Q4 與 FY2027 為錨點不動；折舊、資本支出、營運資金、自用 AI 影子效益不變）。"
-                "SpaceX 預測期自由現金流多年為負，企業價值對折現率不單調，WACC 反解若無解會明列。")
+                "WACC 反解的搜尋下界為永續成長率＋0.01 個百分點（WACC 趨近永續成長率時終值發散，每股價值趨於無限大，故區間內必有解）；隱含 WACC 若幾乎等於永續成長率，照實列出並註明不具經濟意義。")
     r = 4
     RV.cell(r, 1, "A. DCF（情境 B 路徑）：支持現價所需的企業價值").font = BOLD; r += 1
     for j, h in enumerate(["項目", "值", "說明"], 1):
@@ -261,7 +261,7 @@ def revdcf(wb, C):
     for i in range(40):
         RV.cell(r, 1, i + 1)
         if i == 0:
-            RV.cell(r, 2, "=g_tv+0.005"); RV.cell(r, 3, "=0.4")
+            RV.cell(r, 2, "=g_tv+0.0001"); RV.cell(r, 3, "=0.4")
         else:
             RV.cell(r, 2, f"=IF(E{r - 1}>$B${A['v0']},D{r - 1},B{r - 1})"); RV.cell(r, 3, f"=IF(E{r - 1}>$B${A['v0']},C{r - 1},D{r - 1})")
         RV.cell(r, 4, f"=(B{r}+C{r})/2"); RV.cell(r, 5, f"=({ev_at(f'D{r}')}+$B${A['oth']})/$B${A['sh']}")
@@ -269,9 +269,9 @@ def revdcf(wb, C):
             RV.cell(r, c).number_format = "0.0000%"
         RV.cell(r, 5).number_format = "0.00"
         r += 1
-    kv("w1", "現價隱含的 WACC（無解時為搜尋區間端點）", f"=D{r - 1}", "0.00%", "搜尋區間：永續成長率＋0.5 個百分點～40%")
+    kv("w1", "現價隱含的 WACC（無解時為搜尋區間端點）", f"=D{r - 1}", "0.00%", "搜尋區間：永續成長率＋0.01 個百分點～40%（v0.2.8 獨立核對：原下界＋0.5 個百分點使解落在區間外，誤判為無解）")
     kv("w0", "模型 WACC", "=wacc", "0.00%")
-    kv("w_ok", "判讀：二分法收斂（隱含 WACC 下的每股價值 ≈ 支持現價所需值）", f'=IF(ABS(E{b0 + 39}-B{A["v0"]})<0.05,"有解","無解：折現率在區間內無法使每股價值等於現價（自由現金流多年為負，企業價值對折現率不單調）")', "@")
+    kv("w_ok", "判讀：二分法收斂（隱含 WACC 下的每股價值 ≈ 支持現價所需值）", f'=IF(ABS(E{b0 + 39}-B{A["v0"]})<0.05,"有解："&TEXT(B{A["w1"]},"0.00%")&IF(B{A["w1"]}-g_tv<0.01,"，幾乎等於永續成長率 "&TEXT(g_tv,"0.0%")&"，不具經濟意義",""),"無解：隱含 WACC 低於搜尋下界 "&TEXT(g_tv+0.0001,"0.00%")&"（幾乎等於永續成長率 "&TEXT(g_tv,"0.0%")&"，不具經濟意義）")&"；模型 "&TEXT(wacc,"0.0%")', "@")
     kv("w_chk", "核對：以模型 WACC 代入同一公式的 EV − Val 頁情境 B EV（應為 0）", f"={ev_at('wacc')}-B{A['ev']}", "0.000000")
     kv("w_res", "核對：隱含 WACC 下的評價日每股價值 − 支持現價所需值（美元；無解時不為 0）", f"=E{b0 + 39}-B{A['v0']}", "0.000000")
     r += 1
@@ -295,7 +295,7 @@ def revdcf(wb, C):
     RV.cell(r, 1, "C. 摘要（HTML 用；公式帶數字）").font = BOLD; r += 1
     RV.cell(r, 1, F(T("現金流折現法：情境 B 的企業價值 "), f'TEXT(B{A["ev"]},"#,##0")', T(" 十億美元，每股價值 "), f'TEXT(B{A["v_b"]},"0.00")', T(" 美元（評價日）；要支持現價 "), 'TEXT(px,"0.00")',
                     T(" 美元，企業價值須放大為 "), f'TEXT(B{A["evx"]},"0.0")', T(" 倍。單靠一個因素達成時，需要："),
-                    f'IF(LEFT(B{A["w_ok"]},2)="有解","折現率降到 "&TEXT(B{A["w1"]},"0.0%")&"（模型 "&TEXT(B{A["w0"]},"0.0%")&"）","折現率無解（自由現金流多年為負，降折現率補不回來）")',
+                    f'IF(LEFT(B{A["w_ok"]},2)="有解","折現率降到 "&TEXT(B{A["w1"]},"0.00%"),"折現率低於 "&TEXT(g_tv+0.0001,"0.00%"))&IF(B{A["w1"]}-g_tv<0.01,"（幾乎等於永續成長率 "&TEXT(g_tv,"0%")&"，不具經濟意義；模型 "&TEXT(B{A["w0"]},"0.0%")&"）","（模型 "&TEXT(B{A["w0"]},"0.0%")&"）")',
                     T("；或 FY2028–FY2032 營收與營業利益全面放大 "), f'TEXT(B{A["s1"]},"0.0")', T(" 倍（FY2028 營收 "), f'TEXT(B{A["rv1"]},"#,##0")', T(" 十億美元，模型為 "), f'TEXT(B{A["rv0"]},"#,##0")',
                     T("）；或預測期營業利益率提高到 "), f'TEXT(B{A["m1"]},"0%")', T("（模型等效約 "), f'TEXT(B{A["m0"]},"0%")', T("，終值年權重大）"),
                     f'IF(B{A["m1"]}>1,"，超過 100%，不可能單靠利益率達成","")', T("。")))
@@ -420,43 +420,43 @@ def coord(wb, C):
     wrows["tgt"] = f1("In 列 mw_xai｜2026 年底目標", "2026", WR["mw_xai"]["values"][3] / 1000.0, None, "GW", WV, "公司目標「2026 年底 >2 GW」（Interested-party；目標不是實績）", "0.00")
     wrows["gog"] = f1("In 列 al_xai_googl｜出租給 Google", "2026", WR["al_xai_googl"]["values"][4], None, "GW", WV, "Google 租用 Colossus 2（約 11 萬顆 GPU，153–226 MW-IT 取中 190；新聞與 Wattonomics 證據；公司未揭露客戶別 MW）", "0.00")
     r += 1
-    ws.cell(r, 1, "F1b. 追公式：Wattonomics 的 xai（SpaceX／xAI）玩家路徑是否讀公司實績或目標（20261114_Wattonomics_v0.3.2.xlsx；規則：有讀者的部分屬同源，不當獨立證據）").font = BOLD; r += 1
+    ws.cell(r, 1, "F1b. 追公式：Wattonomics 的 xai（SpaceX／xAI）玩家路徑是否讀公司實績或目標（20261114_Wattonomics_v0.3.2.xlsx；追公式工具為 main 版 tools/coord/trace_wattonomics.py；規則：有讀者的部分屬同源，不當獨立證據）").font = BOLD; r += 1
     for j, h in enumerate(["輸出名稱 ← 公式鏈", "", "", "", "", "", "同源判定", "讀到什麼（輸入、公式、儲存格）"], 1):
         c = ws.cell(r, j, h); c.font = BOLD; c.fill = HDR
     r += 1
     TR = json.load(open(os.path.join(C["HERE"], "data", "wattonomics_trace_v0.3.2.json"), encoding="utf-8"))
     TRC = [
-        ("WIF_Gap_Player_xai_2026_AddGW ← Interface!F707 ← Gap!G409 ← CapexGW!G239 ← G237（上線時差加權；lag_on、inv_on）← G236 ← G235 ← G234 ← G228 ← In!K215（gcapai_xai）",
+        ("WIF_Gap_Player_xai_2026_AddGW ← Interface!F707 ← Gap!G409 ← CapexGW!G239 ← G237（上線時差加權）← G236 ← G235 ← G234 ← G228 ← In!K215（AI 資本支出寫回）",
          "同源（個股模型 v0.2.1 基準寫回）",
-         "In!K215 gcapai_xai＝SpaceX 個股模型基準情境 B 的 FY2026E SI 資本支出 74.058（CF!G55；含 9M26 實績，Wattonomics 標 Derived，來源 SRC_GL_318，commit 246d492）；追公式標記「公司實績／指引／個股模型寫回」。GW＝資金 ÷ 每 GW 成本（Tokenomics；xai 世代組合全為 NVIDIA、GB300 78%／VR200 22%），所以 2026 年新增 1.607 GW 是個股模型資本支出的換算，不是獨立的物理證據。本模型 v0.2.7 的 CF!G55 仍為 74.058（與寫回值一致，無過期差）"),
+         "In!K215（AI 資本支出寫回）＝SpaceX 個股模型基準情境 B 的 FY2026E SI 資本支出 74.058（CF!G55；含 9M26 實績，Wattonomics 標 Derived，來源編號 GL-318，commit 246d492）；追公式標記「公司實績／指引／個股模型寫回」。GW＝資金 ÷ 每 GW 成本（Tokenomics；xai 世代組合全為 NVIDIA、GB300 78%／VR200 22%），所以 2026 年新增 1.607 GW 是個股模型資本支出的換算，不是獨立的物理證據。本模型 v0.2.7 的 CF!G55 仍為 74.058（與寫回值一致，無過期差）"),
         ("WIF_Gap_Player_xai_2026_CapexAI ← Interface!F699 ← Gap!G431 ← G415（＝G412＋G413＋G414）", "同源（同上）",
          "G412＝2026 新增 GW × 每 GW 成本；G413、G414＝2027、2028 新增 GW 的廠房提前入帳，讀 CapexGW!H239、I239←In!L215、M215（個股模型 2027–28 寫回 136.252、144.121）；G426（個股模型回寫）74.058 並列，不替代"),
-        ("WIF_Gap_Player_xai_2026_CapexNonAI ← Interface!F700 ← Gap!G422 ← G419 ← In!K216（gnai_xai）", "同源（個股模型寫回）",
+        ("WIF_Gap_Player_xai_2026_CapexNonAI ← Interface!F700 ← Gap!G422 ← G419 ← In!K216（非 AI 資本支出寫回）", "同源（個股模型寫回）",
          "In!K216＝個股模型 Space＋Connectivity 資本支出 11.511（CF!G53＋G54）；Wattonomics 對 xai 不另估非 AI"),
-        ("WIF_PlayerGW_YE_xai_2025 ← Interface!E32 ← CapexGW!F240 ← Players!F182 ← F176 ← F175（＝In!J103 chip_xai × k_chip2it）", "不同源（Epoch 晶片功耗 × 換算係數）",
-         "2025 年底 0.570 GW＝Epoch Colossus 晶片功耗 308 MW × 1.85（k_chip2it，Assumed 區間 1.65–2.08）；F174（In!J113 mw_xai 2025）空白，不走公司揭露分支；F176 內的 obs_xai 分支（INT(obsd_xai)=2025）不成立（觀測時點 2026.5）。因此這是 xai 路徑上唯一與公司揭露獨立的量"),
+        ("WIF_PlayerGW_YE_xai_2025 ← Interface!E32 ← CapexGW!F240 ← Players!F182 ← F176 ← F175（＝In!J103 Epoch 晶片功耗 × 換算係數）", "不同源（Epoch 晶片功耗 × 換算係數）",
+         "2025 年底 0.570 GW＝Epoch Colossus 晶片功耗 308 MW × 1.85（換算係數，Assumed 區間 1.65–2.08）；F174（In!J113 公司揭露 MW 2025）空白，不走公司揭露分支；F176 內的公司觀測值分支（條件：觀測年＝2025）不成立（觀測時點 2026.5）。因此這是 xai 路徑上唯一與公司揭露獨立的量"),
         ("WIF_PlayerGW_YE_xai_2026 ← Interface!F32 ← CapexGW!G240＝F240＋G239", "部分同源",
-         "2025 年底（Epoch，不同源）＋2026 新增 GW（同源於個股模型寫回）＝2.177 GW；層級另有 SiteOnly 路徑 2 GW（採 mw_xai 公司目標 2026 年底 >2 GW：目標，不是實績）"),
+         "2025 年底（Epoch，不同源）＋2026 新增 GW（同源於個股模型寫回）＝2.177 GW；層級另有只計園區的路徑 2 GW（採公司目標 2026 年底 >2 GW：目標，不是實績）"),
         ("WIF_Gap_Player_xai_2025_CapexAI ← Interface!E699 ← Gap!F431 ← F415", "同源（個股模型寫回）",
          "2025 新增 GW＝0（Gap!F412＝0）；22.893 全部是 Gap!F413、F414（2026、2027 新增 GW 的廠房提前入帳，讀 G409、H409←個股模型寫回）。所以層級對 2025 年資本支出的值不是 2025 年的獨立估計，不能拿公司 FY2025 資本支出當獨立 C0 對照"),
-        ("act26_xai（Wattonomics In 頁 act26_xai；公司已公布實績）", "未進路徑（無此列）",
-         "反向查詢：公式讀 act26_xai 的 0 格；Wattonomics 沒有 xai 的 act26 列，公司 9M26 實績不進 xai 的 GW 或資本支出路徑"),
-        ("tgt_xai_27（In 頁；Musk「2027 年底接近 10 GW」）、mw_xai 2026（>2 GW）", "公司目標（不進主路徑或只作 SiteOnly）",
-         "tgt_xai_27 不入主路徑，只作 Compare 敏感度；mw_xai 2026 年底 2,000 MW 只進 SiteOnly 路徑。目標不是實績，不能當 C0 的個股側"),
+        ("公司已公布實績列（Wattonomics In 頁；本玩家無此列）", "未進路徑（無此列）",
+         "反向查詢：讀公司已公布實績列的公式 0 格；Wattonomics 沒有 xai 的 act26 列，公司 9M26 實績不進 xai 的 GW 或資本支出路徑"),
+        ("公司目標列（In 頁：Musk「2027 年底接近 10 GW」、2026 年底 >2 GW）", "公司目標（不進主路徑或只作 SiteOnly）",
+         "2027 年目標不入主路徑，只作比較敏感度；2026 年底 2,000 MW 目標只進只計園區的路徑。目標不是實績，不能當 C0 的個股側"),
         ("追公式限制（人工確認）", "已人工確認",
-         "(1) 追公式旗標以關鍵字（個股模型、指引、法說、act26、公告）判斷，漏掉「目標」字樣：本表以人工補標 mw_xai、tgt_xai_27 為公司目標（Interested-party）。(2) 工具的條件讀取判斷以快取值遞迴：2026 根的 IF 條件皆可算（無「不確定」）。(3) xai 玩家碼確認為 xai（Wattonomics 名稱 WIF_*_xai_*；不是 spacex、spcx）；非 AI 資本支出 In!K216 由個股模型 Space＋Connectivity 寫回，Wattonomics 另無獨立估計"),
+         "(1) 追公式旗標以關鍵字（個股模型、指引、法說、act26、公告）判斷，漏掉「目標」字樣：本表以人工補標 2026 年底 MW 目標與 2027 年目標兩列為公司目標（Interested-party）。(2) 工具的條件讀取判斷以快取值遞迴：2026 根的 IF 條件皆可算（無「不確定」）。(3) 玩家碼確認為 xai（不是 spacex、spcx）；非 AI 資本支出 In!K216 由個股模型 Space＋Connectivity 寫回，Wattonomics 另無獨立估計"),
     ]
     for a_, j_, t_ in TRC:
         ws.cell(r, 1, a_); ws.cell(r, 7, j_); ws.cell(r, 8, t_); r += 1
     ws.cell(r, 1, "追公式結論：Wattonomics 對 SpaceX／xAI 的 2026 年資本支出（AI＋非 AI）與新增 GW 全由個股模型 v0.2.1 寫回值換算，2025 年的資本支出也是 2026–27 寫回值的廠房提前，整列同源；只有 2025 年底上線 GW 0.570（Epoch 晶片功耗 × 係數）與公司揭露獨立。因此資本支出列標「參考（同源校準）」，結論「無可比實績（層級值同源）」；名目算力 2025 年底是唯一可做獨立 C0 的量。")
     rtr_conc = r; r += 1
-    ws.cell(r, 1, "追公式傾印（由 tools/coord/trace_wattonomics.py --player xai --year 2026 產生；每格公式與值；來源 " + TR["source"].split("/")[-1] + "；縮排＝依賴深度）").font = BOLD
-    ws.cell(r, 7, "標記"); ws.cell(r, 8, "公式（省略開頭等號）"); ws.cell(r, 4, "值"); r += 1
+    ws.cell(r, 1, "追公式傾印（由 main 版 tools/coord/trace_wattonomics.py --player xai --year 2026 產生；每格公式、值與生效狀態；來源 " + TR["source"].split("/")[-1] + "；縮排＝依賴深度）").font = BOLD
+    ws.cell(r, 7, "標記"); ws.cell(r, 8, "公式（省略開頭等號）"); ws.cell(r, 4, "值"); ws.cell(r, 2, "狀態（生效／條件讀取／分支未生效）"); r += 1
     rdump0 = r
     for x in TR["rows"]:
         ws.cell(r, 1, ("　" * x["depth"]) + x["cell"] + (("｜" + x["label"]) if x["label"] else ""))
         ws.cell(r, 4, x["value"] if isinstance(x["value"], (int, float)) else (None if x["value"] is None else str(x["value"])))
-        ws.cell(r, 7, x["flag"]); ws.cell(r, 8, x["formula"][1:] if x["formula"] else "（輸入或常數）")
+        ws.cell(r, 2, x.get("status", "")); ws.cell(r, 7, x["flag"]); ws.cell(r, 8, x["formula"][1:] if x["formula"] else "（輸入或常數）")
         r += 1
     rdump1 = r - 1
     r += 1
@@ -473,13 +473,13 @@ def coord(wb, C):
     GR_G = "Interested-party（公司自訂 KPI；見公司口徑說明）"
     # ---- 區塊 1：名目算力 2025 年底（唯一獨立 C0）----
     ws.cell(r, 1, "A. 名目算力（IT GW；期末存量）：公司揭露 vs 層級 xai 2025 年底上線 GW（Epoch 晶片功耗，不同源）").font = BOLD; r += 1
-    ws.cell(r, 1, "主讀數：2025-12-31 名目算力（公司）vs 層級 2025 年底上線 IT GW（基準 k＝1.85）"); ws.cell(r, 2, "2025-12-31 期末（同日，無時差）"); ws.cell(r, 3, "GW")
+    ws.cell(r, 1, "主讀數：2025-12-31 名目算力（公司）vs 層級 2025 年底上線 IT GW（基準換算係數 1.85）"); ws.cell(r, 2, "2025-12-31 期末（同日，無時差）"); ws.cell(r, 3, "GW")
     ws.cell(r, 4, f"=Q!I{QR['gw']}").number_format = "0.000"; ws.cell(r, 5, f"=C{wrows['ye25']}").number_format = "0.000"; ws.cell(r, 6, f"=D{r}/E{r}-1").number_format = "+0.0%;-0.0%"
     ws.cell(r, 8, SRC_G); ws.cell(r, 9, GR_G); ws.cell(r, 10, "Wattonomics WIF_PlayerGW_YE_xai_2025（連 F1；Epoch 308 MW × 1.85；追公式：不同源）"); ws.cell(r, 11, "Analogy／Assumed（換算係數）")
     rg1 = r; r += 1
-    ws.cell(r, 1, "第二讀數：同一公司值 vs 層級區間上緣（k＝2.08；換算係數 Assumed 區間高端，對公司最有利的讀法）"); ws.cell(r, 2, "2025-12-31；層級＝308 MW × 2.08"); ws.cell(r, 3, "GW")
+    ws.cell(r, 1, "替代讀數（存量無時差，改用係數區間上緣）：同一公司值 vs 層級換算係數區間上緣 2.08（Assumed 區間高端；差距最小、最保守的讀法）"); ws.cell(r, 2, "2025-12-31；層級＝308 MW × 2.08"); ws.cell(r, 3, "GW")
     ws.cell(r, 4, f"=Q!I{QR['gw']}").number_format = "0.000"; ws.cell(r, 5, f"=C{wrows['chip']}/1000*C{wrows['khi']}").number_format = "0.000"; ws.cell(r, 6, f"=D{r}/E{r}-1").number_format = "+0.0%;-0.0%"
-    ws.cell(r, 8, "同上（同一日期的公司值）"); ws.cell(r, 9, GR_G); ws.cell(r, 10, "層級 Epoch 晶片功耗 308 MW × In!k_chip2it 高端 2.08（連 F1）；層級側沒有第二個獨立日期（2026 起同源於個股模型寫回），故以換算係數區間端點取代時間差的第二讀數"); ws.cell(r, 11, "Analogy／Assumed")
+    ws.cell(r, 8, "同上（同一日期的公司值）"); ws.cell(r, 9, GR_G); ws.cell(r, 10, "層級 Epoch 晶片功耗 308 MW × In!k_chip2it 高端 2.08（連 F1）；層級側沒有第二個獨立日期（2026 起同源於個股模型寫回），故以換算係數區間端點取代時間差的第二讀數（偏離工作單第 2 節「第二讀數取不同時點」的做法）"); ws.cell(r, 11, "Analogy／Assumed")
     rg2 = r; r += 1
     ws.cell(r, 1, "C0（實績）判定：名目算力（2025 年底）").font = BOLD
     ws.cell(r, 2, "兩讀數（基準、區間上緣）都超過 ±門檻且同號＝對帳中")
@@ -487,8 +487,16 @@ def coord(wb, C):
     ws.cell(r, 8, "判定列；SpaceX 估值不讀層級 GW（本模型自用公司揭露的名目算力與 Tokenomics 單位成本），故不觸發兩讀數目標價，只標示並列入對帳單候選（證據：公司 424B4 揭露 0.8 GW；層級 Epoch 308 MW 晶片功耗）。公司揭露為 Interested-party（公司自訂 KPI），但為法定文件揭露的期末值")
     ws.cell(r, 9, GR_G); ws.cell(r, 10, "層級修正方向由 C0 第 3 點決定：個股（公司揭露）有證據、層（Epoch 估計）無同日獨立證據 → 層在下一次升版吸收；對帳單由主控代理開，本模型不改層級值"); ws.cell(r, 11, "Analogy")
     rgj = r; r += 1
-    ws.cell(r, 1, "公司值與層級的口徑差（參考）：公司名目算力＝GPU 數 × 全載功耗；層級＝Epoch 晶片功耗 × 1.85（含伺服器與網通等 IT 負載）；若公司口徑已含部分系統功耗，則差距較小。兩側都未含設施負載（冷卻、配電），故不再乘設施係數")
-    r += 1
+    ws.cell(r, 1, "捨入穩健性（參考）：公司值取 0.75 GW（揭露 0.8 為一位小數，捨入下限）"); ws.cell(r, 3, "GW")
+    ws.cell(r, 4, 0.75).number_format = "0.000"; ws.cell(r, 4).font = BLUE; ws.cell(r, 5, f"=E{rg1}").number_format = "0.000"; ws.cell(r, 6, f"=D{r}/E{r}-1").number_format = "+0.0%;-0.0%"
+    ws.cell(r, 2, F(T("主讀數 "), f'TEXT(D{r}/E{rg1}-1,"+0%;-0%")', T("、替代讀數 "), f'TEXT(D{r}/E{rg2}-1,"+0%;-0%")'))
+    ws.cell(r, 7, f'=IF(AND(ABS(D{r}/E{rg1}-1)>{TOL},ABS(D{r}/E{rg2}-1)>{TOL},SIGN(D{r}/E{rg1}-1)=SIGN(F{rg1})),"參考（捨入穩健性）：判定不變","參考（捨入穩健性）：判定改變")')
+    ws.cell(r, 8, "424B4 揭露 0.8 GW 為一位小數；取捨入下限 0.75 重算兩讀數，看判定是否改變"); ws.cell(r, 9, GR_G); ws.cell(r, 10, "同主讀數與替代讀數的層級值"); ws.cell(r, 11, "Analogy／Assumed")
+    rgr = r; r += 1
+    ws.cell(r, 1, "公司值與層級的口徑差（參考）")
+    ws.cell(r, 2, F(T("兩側皆 IT 口徑（公司＝GPU 數 × 全載功耗；層級＝Epoch 晶片功耗 × 換算係數 1.85，含伺服器與網通；兩側都未含冷卻、配電等設施負載）；換算係數需 "),
+                    f'TEXT(D{rg1}/(C{wrows["chip"]}/1000),"0.00")', T("（> Epoch 設施係數 2.5）才補足，口徑無法解釋，差距主要來自範圍（含 Colossus II）或 Epoch 時點。")))
+    rkq = r; r += 1
     # ---- 區塊 2：資本支出（同源，參考）----
     ws.cell(r, 1, "B. 資本支出（流量）：公司 9M26 實績 vs 層級 CY2026（同源於個股模型寫回，參考不判定）").font = BOLD; r += 1
     ws.cell(r, 1, "層級 CY2026 xai AI 資本支出（Wattonomics；同源）"); ws.cell(r, 2, "CY2026（全年）"); ws.cell(r, 3, "US$B"); ws.cell(r, 5, f"=C{wrows['capai']}").number_format = "#,##0.0"
@@ -511,7 +519,7 @@ def coord(wb, C):
     rcjr = r; r += 1
     ws.cell(r, 1, "非 AI 資本支出（Space＋Connectivity）2026Q1–Q3 累計 vs 層級 CY2026 × 9 ÷ 12（同源，參考）"); ws.cell(r, 2, "9M 累計"); ws.cell(r, 3, "US$B")
     ws.cell(r, 4, f"=Q!H{QR['capex_space']}+Q!H{QR['capex_conn']}").number_format = "#,##0.0"; ws.cell(r, 5, f"=C{wrows['capnai']}*9/12").number_format = "#,##0.0"; ws.cell(r, 6, f"=D{r}/E{r}-1").number_format = "+0.0%;-0.0%"
-    ws.cell(r, 7, "參考（同源校準），無可比實績（層級值同源）"); ws.cell(r, 8, SRC_Q); ws.cell(r, 9, GR_Q); ws.cell(r, 10, "Wattonomics In!K216 gnai_xai（個股模型寫回）；層級 CY2026 × 9/12"); ws.cell(r, 11, "Derived（同源校準）")
+    ws.cell(r, 7, "無可比實績（層級值同源；參考同源校準）"); ws.cell(r, 8, SRC_Q); ws.cell(r, 9, GR_Q); ws.cell(r, 10, "Wattonomics In!K216 gnai_xai（個股模型寫回）；層級 CY2026 × 9/12"); ws.cell(r, 11, "Derived（同源校準）")
     rcn = r; r += 1
     # ---- 區塊 3：無可比實績與並列 ----
     ws.cell(r, 1, "C. 沒有可比公司實績的項目與並列讀法（參考；不判定）").font = BOLD; r += 1
@@ -533,16 +541,16 @@ def coord(wb, C):
     F2b = r - 1
     ws.cell(r, 1, "對帳中項目數（F2 的 C0（實績）判定）"); ws.cell(r, 4, f'=COUNTIF(G{F2a}:G{F2b},"對帳中")'); rn = r; r += 1
     ws.cell(r, 1, "時差邊界（參考）項目數"); ws.cell(r, 4, f'=COUNTIF(G{F2a}:G{F2b},"時差邊界（參考）")'); rnb = r; r += 1
-    ws.cell(r, 1, "無可比實績列數（含同源參考）"); ws.cell(r, 4, f'=COUNTIF(G{F2a}:G{F2b},"無可比實績*")+COUNTIF(G{F2a}:G{F2b},"參考（同源校準）*")'); rnc = r; r += 1
+    ws.cell(r, 1, "無可比實績列數（不含參考列）"); ws.cell(r, 4, f'=COUNTIF(G{F2a}:G{F2b},"無可比實績*")'); rnc = r; r += 1
     ws.cell(r, 1, "對帳摘要（HTML 用；公式帶數字）")
     ws.cell(r, 4, F(T("C0（實績）對帳：公司揭露 2025 年底名目算力 "), f'TEXT(D{rg1},"0.00")', T(" GW，層級 xai 2025 年底上線 GW（Epoch 晶片功耗 × 換算係數，與公司揭露獨立）"), f'TEXT(E{rg1},"0.00")', T(" GW，相差 "), f'TEXT(F{rg1},"+0%;-0%")',
-                    T("（主讀數）；即使取換算係數區間上緣（"), f'TEXT(E{rg2},"0.00")', T(" GW）仍差 "), f'TEXT(F{rg2},"+0%;-0%")', T("（第二讀數），判定："), f'G{rgj}',
+                    T("（主讀數）；即使取換算係數區間上緣（"), f'TEXT(E{rg2},"0.00")', T(" GW）仍差 "), f'TEXT(F{rg2},"+0%;-0%")', T("（替代讀數，差距最小、最保守），判定："), f'G{rgj}', T("；公司值取捨入下限 0.75 GW 時兩讀數為 "), f'B{rgr}', T("，判定不變"),
                     T("。資本支出的層級值（xai 2026 年 "), f'TEXT(E{rl},"0.0")', T(" 十億美元）由本公司模型 v0.2.1 寫回值換算（追公式：CapexGW!G228←In!K215），屬同源，判定：無可比實績（層級值同源），不計入對帳中。"
                     "2026 年底算力、客戶別出租與 Anthropic 付款讀法沒有可比的公司實績；每月 1.25 × 36＝45 為既定基準，S-1 月費路徑只並列。個股不裁決，不改上游值；證據回饋走對帳單（C5）。")))
     rs = r; r += 1
     ws.cell(r, 1, "讀法：兩個讀數的偏誤方向")
     ws.cell(r, 2, F(T("名目算力是同日期末存量，沒有時差：公司揭露 2025-12-31 為 "), f'TEXT(D{rg1},"0.0")', T(" GW，之後 2026Q1 "), f'TEXT(Q!D{QR["gw"]},"0.0")', T("、Q2 "), f'TEXT(Q!E{QR["gw"]},"0.0")', T("、Q3 "), f'TEXT(Q!F{QR["gw"]},"0.0")',
-                    T(" GW。層級 2025 年底 0.57 GW 低於公司揭露，方向是層級偏低（Epoch 晶片功耗可能未涵蓋 Colossus 2 已安裝或在途的 GPU，或換算係數偏低）；"
+                    T(" GW。層級 2025 年底 0.57 GW 低於公司揭露，方向是層級偏低（Epoch 晶片功耗可能未涵蓋 Colossus II 已安裝或在途的 GPU，或 Epoch 資料時點較早；換算係數需高於設施係數才補足，口徑差無法解釋）；"
                       "公司口徑（GPU 數 × 全載功耗）是安裝量，不代表實際用電或稼動。資本支出的兩讀數（SI 9M 累計與 Q3 年化）都低於層級 CY2026，但層級值同源於個股模型 FY2026E，差距反映的是個股模型 Q4 26E 與 FY2027–28 廠房提前入帳，不是公司實績與獨立證據的差距。")))
     rr_ = r; r += 1
     ws.cell(r, 1, "F2 同源檢查（哪些部分同源、什麼會消去、這張表實際檢驗什麼）")
@@ -564,7 +572,7 @@ def coord(wb, C):
     ws.cell(r, 1, "外部估計（賣方、研調、指引）只列參考，不判定：公司 2026Q4 指引、2026 年底 >2 GW 目標、Musk「2027 年底接近 10 GW」不進 C0。"); r += 1
     ws.cell(r, 1, "版本與快照狀態：Tokenomics 本模型讀 v21.10（工作單所列現行 v22.0 本輪未換；兩版對本模型所讀名稱數值相同）；Wattonomics v0.3.2 也讀 Tokenomics v21.10，兩側版本一致。SpaceX 個股模型值曾被 Wattonomics 讀入（營業現金流、資本支出寫回），本表只列層級值與追公式，不用該回饋判定。")
     r += 1
-    return dict(F1=(F1a, F1b), F1chk=F1chk, F2h=F2h, F2=(F2a, F2b), rg=(rg1, rg2, rgj), rl=rl, rc=(rc1, rc2, rcj, rcjr, rcn), rtr=rtr_conc, rdump=(rdump0, rdump1),
+    return dict(F1=(F1a, F1b), F1chk=F1chk, F2h=F2h, F2=(F2a, F2b), rg=(rg1, rg2, rgj), rgr=rgr, rkq=rkq, rl=rl, rc=(rc1, rc2, rcj, rcjr, rcn), rtr=rtr_conc, rdump=(rdump0, rdump1),
                 rn=(rn1, rn2, rn3, rn4, rn5, rn6), rncount=rn, rnb=rnb, rnc=rnc, rs=rs, rr=rr_, rsame=rsame, rk=rk, rb=(rb_, rb2), wrows=wrows, tol=TOL)
 
 
@@ -588,7 +596,7 @@ def readme13(wb, C, RVA, PLA, CRD):
         RD.cell(r, 1, F(*parts)); out[key] = r; r += 1
     put("hero", T("加權目標價 "), f'TEXT({tp},"0")', T(" 美元，比現價 "), 'TEXT(px,"0.00")', f'IF({up}<0," 低 "," 高 ")', f'TEXT(ABS({up}),"0%")', T("，評等"), rec, T("：現金流折現 "), f'TEXT({dcf},"0")',
         T(" 與分部加總 "), f'TEXT({cmpv},"0")', T(" 各占一半。xAI 算力出租撐起營收，但 AI 資本支出使五年自由現金流合計 "), f'TEXT({G_},"0")', T(" 十億美元。"))
-    put("rec", T("投資建議「"), rec, T("」的前提：自用 AI 採價值中性（讀法 2）；改為只計成本（讀法 1）時加權目標價 "), f'TEXT(Val!B{VR["tp_r1"]},"0")', T(" 美元；每 GW 年營收相對持有成本的倍數（k）依情境路徑收斂；現價 "), 'TEXT(px,"0.00")', T(" 美元為 2026-11-05 收盤。"))
+    put("rec", T("投資建議「"), rec, T("」的前提：自用 AI 採價值中性（讀法 2）；改為只計成本（讀法 1）時加權目標價 "), f'TEXT(Val!B{VR["tp_r1"]},"0")', T(" 美元；每 GW 年營收相對持有成本的倍數依情境路徑收斂；現價 "), 'TEXT(px,"0.00")', T(" 美元為 2026-11-05 收盤。"))
     put("o1", T("目標價 "), f'TEXT({tp},"0")', T("＝現金流折現 "), f'TEXT({dcf},"0")', T("、分部加總 "), f'TEXT({cmpv},"0")', T(" 各半，比現價 "), f'IF({up}<0,"低 ","高 ")', f'TEXT(ABS({up}),"0%")',
         T("；市場共識 "), f'TEXT({cons},"0")', T("。三個情境（"), f'TEXT({vb("scen")},"0")', T("／"), f'TEXT({vb("scen", "C")},"0")', T("／"), f'TEXT({vb("scen", "D")},"0")', T("）都低於現價。"))
     put("o2", T("反向推算（情境 B）：要支持現價，企業價值須放大 "), f'TEXT({rv("evx")},"0.0")', T(" 倍，或 FY2028 起營收與營業利益全面放大 "), f'TEXT({rv("s1")},"0.0")', T(" 倍；分部加總隱含 "),
@@ -597,7 +605,7 @@ def readme13(wb, C, RVA, PLA, CRD):
     srow = lambda pre: next(x for x in range(1, SEw.max_row + 1) if str(SEw.cell(x, 1).value or "").startswith(pre))
     r_knc, r_he = srow("k 不收斂（三情境"), srow("Tokenomics IF_HoldEcon 四世代同時")
     put("o3", T("核心問題：FY2028 每 GW 年營收 ÷ 持有成本，情境 A／B／C 為 "), f'TEXT({vb("s2")},"0.00")', T("／"), f'TEXT({vb("s2", "C")},"0.00")', T("／"), f'TEXT({vb("s2", "D")},"0.00")',
-        T("；若 k 不收斂（維持 2026Q3 校準值），加權目標價相對基準 "), f'TEXT(Sens!E{r_knc},"+0%;-0%")', T("，是影響最大的單一假設之一。"))
+        T("；若這個倍數不收斂（維持 2026Q3 校準值），加權目標價相對基準 "), f'TEXT(Sens!E{r_knc},"+0%;-0%")', T("，是影響最大的單一假設之一。"))
     put("o4", T("資金：FY2026–FY2030 自由現金流合計（收支關卡）情境 A／B／C 為 "), f'TEXT(CF!B{C["GATE"]},"0")', T("／"), f'TEXT({G_},"0")', T("／"), f'TEXT(CF!D{C["GATE"]},"0")',
         T(" 十億美元，三情境皆為負，需外部融資；Tokenomics 四個世代的持有成本同時取低值時，加權目標價相對基準 "), f'TEXT(Sens!E{r_he},"+0%;-0%")', T("。"))
     put("o5", T("實績對帳（本版新增）：公司揭露 2025 年底名目算力 "), f'TEXT(Coord!D{CRD["rg"][0]},"0.00")', T(" GW，層級 Epoch 推得 "), f'TEXT(Coord!E{CRD["rg"][0]},"0.00")', T(" GW（相差 "), f'TEXT(Coord!F{CRD["rg"][0]},"+0%;-0%")',
@@ -605,7 +613,7 @@ def readme13(wb, C, RVA, PLA, CRD):
     put("drv", T("營收推導（情境 B）：Space＝客戶發射 × 每次收入＋發射與開發；Connectivity＝平均訂戶 × ARPU ×（含 Kits 的調整）＋企業與政府；SI＝對外雲端服務（在役 GW × 對外比例 × 每 GW 年營收）＋Grok／Cursor／X 訂閱、資料授權與 API＋廣告，加總為合併營收。FY2028 Space "),
         f'TEXT(PL!I{PRB["space"]},"0.0")', T("、Connectivity "), f'TEXT(PL!I{PRB["conn"]},"0")', T("、SI "), f'TEXT(PL!I{PRB["si"]},"0")', T("，合計 "), f'TEXT(PL!I{PRB["rev"]},"0")', T(" 十億美元。"))
     RD.cell(r, 1, f"v{VER}（{BUILT}）：只改展示層與新增頁——個股 HTML 版面規格 v1.3：章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；新增 RevDCF 頁（反向 DCF）、PL 頁末標準損益表"
-                  "（FY2023A–FY2025A 實績＋FY2026E–FY2032E 情境 B，GAAP）、Sens 頁末加權目標價相對基準（龍捲風圖用）、README 頁末 v1.3 白話列；新增 Coord 頁「三層協調」（F1 讀取層級；F1b 追公式；F2 C0（實績））。"
+                  "（FY2023A–FY2025A 實績＋FY2026E–FY2032E 情境 B，GAAP）、Sens 頁末加權目標價相對基準（龍捲風圖用）、README 頁末 v1.3 白話列；新增 Coord 頁「三層協調」（F1 讀取層級；F1b 追公式〔main 版 tools/coord/trace_wattonomics.py〕；F2 C0（實績））。"
                   "既有數值格不變（新增列與新增頁以外逐格比對 0 差異），目標價與評等不變")
     out["ver"] = r; r += 1
     return out

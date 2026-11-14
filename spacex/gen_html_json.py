@@ -411,8 +411,8 @@ def _v13():
                   ["營收規模（FY2028 起各年同乘的倍數）", f"@RevDCF!B{A_['s1']}|n2", "—"],
                   ["FY2028 營收（十億美元）", f"@RevDCF!B{A_['rv1']}|n0", f"@RevDCF!B{A_['rv0']}|n0"],
                   ["FY2028 營收年增率", f"@RevDCF!B{A_['g1']}|p1", f"@RevDCF!B{A_['g0']}|p1"],
-                  ["折現率（WACC；無解時列搜尋區間端點）", f"@RevDCF!B{A_['w1']}|p2", f"@RevDCF!B{A_['w0']}|p2"],
-                  ["折現率反解是否有解", f"@RevDCF!B{A_['w_ok']}", ""]]},
+                  ["折現率（WACC）", f"@RevDCF!B{A_['w1']}|p2", f"@RevDCF!B{A_['w0']}|p2"],
+                  ["折現率反解結果", f"@RevDCF!B{A_['w_ok']}", ""]]},
         {"type": "table", "caption": "分部加總法：現價隱含的倍數與模型", "head": ["項目", "現價隱含", "模型", "差距（現價隱含相對模型）"],
          "rows": [[f"@RevDCF!A{A_[k]}", f"@RevDCF!B{A_[k]}|{f}", f"@RevDCF!C{A_[k]}|{f}", f"@RevDCF!D{A_[k]}|sp1"] for k, f in (("sps", "n2"), ("sev", "n0"), ("smul", "n1"), ("scmp", "n2"))]},
         {"type": "table", "caption": "現金流折現法：現價隱含的企業價值與模型", "head": ["項目", "值"],
@@ -472,7 +472,8 @@ def _v13():
     F1a, F1e = CRD["F1"]; r_tr = CRD["rtr"]
     rg1, rg2, rgj = CRD["rg"]; rc1, rc2, rcj, rcjr, rcn = CRD["rc"]; rn1, rn2, rn3, rn4, rn5, rn6 = CRD["rn"]; rl = CRD["rl"]
     gw_t = {"type": "table", "caption": "名目算力（公司揭露 vs Wattonomics 隱含 2025 年底上線 GW；GW）", "head": ["讀數", "期間／口徑", "公司實績", "層級隱含", "差距", "狀態／判定"],
-            "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!D{r}|n2", f"@Coord!E{r}|n2", f"@Coord!F{r}|sp1", f"@Coord!G{r}"] for r in (rg1, rg2)] + [[f"@Coord!A{rgj}", f"@Coord!B{rgj}", "", "", "", f"@Coord!G{rgj}"]]}
+            "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!D{r}|n2", f"@Coord!E{r}|n2", f"@Coord!F{r}|sp1", f"@Coord!G{r}"] for r in (rg1, rg2)] + [[f"@Coord!A{rgj}", f"@Coord!B{rgj}", "", "", "", f"@Coord!G{rgj}"]]
+                    + [[f"@Coord!A{CRD['rgr']}", f"@Coord!B{CRD['rgr']}", f"@Coord!D{CRD['rgr']}|n2", f"@Coord!E{CRD['rgr']}|n2", f"@Coord!F{CRD['rgr']}|sp1", f"@Coord!G{CRD['rgr']}"]]}
     capx = {"type": "table", "caption": "資本支出（公司已公布實績 vs Wattonomics 隱含值；US$B；層級值同源，參考）", "head": ["讀數", "期間／口徑", "公司實績", "層級隱含", "差距", "狀態／判定"],
             "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!D{r}|n1", f"@Coord!E{r}|n1", f"@Coord!F{r}|sp1", f"@Coord!G{r}"] for r in (rc1, rc2, rcn)]
                     + [[f"@Coord!A{rcj}", f"@Coord!B{rcj}", "", "", "", f"@Coord!G{rcj}"], [f"@Coord!A{rcjr}", "", "", "", "", f"@Coord!G{rcjr}"]]}
@@ -481,7 +482,7 @@ def _v13():
                      + [[f"@Coord!A{r}", f"@Coord!B{r}", "", "", "", f"@Coord!G{r}"] for r in (rn1, rn3)]}
     d3 = {"type": "table", "caption": "展開：實績對帳的輸入、出處與證據等級", "collapse": True, "summary": "展開：實績對帳的輸入、出處與證據等級",
           "head": ["項目", "期間／口徑", "公司實績口徑與出處", "公司實績等級", "層級口徑與出處", "層級等級"],
-          "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!H{r}", f"@Coord!I{r}", f"@Coord!J{r}", f"@Coord!K{r}"] for r in [rg1, rg2, rgj, rl, rc1, rc2, rcn, rn1, rn2, rn3, rn4, rn5, rn6]]}
+          "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!H{r}", f"@Coord!I{r}", f"@Coord!J{r}", f"@Coord!K{r}"] for r in [rg1, rg2, rgj, CRD["rgr"], rl, rc1, rc2, rcn, rn1, rn2, rn3, rn4, rn5, rn6]]}
     trc = {"type": "table", "caption": f"@Coord!A{f1b}", "head": ["輸出名稱 ← 公式鏈", "同源判定", "讀到什麼"],
            "rows": [[f"@Coord!A{r}", f"@Coord!G{r}", f"@Coord!H{r}"] for r in range(f1b + 2, r_tr)]}
     t1 = {"type": "table", "caption": f"@Coord!A{f1h}", "collapse": True, "summary": "展開：本模型讀取的 Tokenomics 名稱與 Wattonomics 對照名稱、值與版本",
@@ -489,11 +490,11 @@ def _v13():
           "rows": [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}|n3", f"@Coord!D{r}|n3", f"@Coord!E{r}", f"@Coord!F{r}"] for r in range(F1a + 1, F1e + 1)]}
     d0, d1 = CRD["rdump"]
     dump_t = {"type": "table", "caption": "展開：追公式傾印（腳本輸出：每格公式與值）", "collapse": True, "summary": "展開：追公式傾印（每格公式與值；腳本 trace_wattonomics.py 的輸出）",
-              "head": ["儲存格（縮排＝依賴深度）", "值", "標記", "公式"],
-              "rows": [[f"@Coord!A{r}", f"@Coord!D{r}|n3", f"@Coord!G{r}", f"@Coord!H{r}"] for r in range(d0, d1 + 1)]}
+              "head": ["儲存格（縮排＝依賴深度）", "值", "狀態", "標記", "公式"],
+              "rows": [[f"@Coord!A{r}", f"@Coord!D{r}|n3", f"@Coord!B{r}", f"@Coord!G{r}", f"@Coord!H{r}"] for r in range(d0, d1 + 1)]}
     S["recon"]["blocks"].extend([
         {"type": "h3", "text": "三層協調：讀取層級與實績對帳"},
-        {"type": "note", "parts": [f"@Coord!D{CRD['rs']}"]}, gw_t, capx, nocmp, d3,
+        {"type": "note", "parts": [f"@Coord!D{CRD['rs']}"]}, gw_t, {"type": "note", "parts": ["口徑：", f"@Coord!B{CRD['rkq']}"]}, capx, nocmp, d3,
         {"type": "note", "parts": [f"@Coord!B{CRD['rr']}"]}, {"type": "note", "parts": [f"@Coord!B{CRD['rsame']}"]}, {"type": "note", "parts": [f"@Coord!B{CRD['rk']}"]},
         {"type": "h3", "text": "追公式：層級值是否讀公司實績或目標"}, trc, {"type": "note", "parts": [f"@Coord!A{r_tr}"]}, dump_t, t1])
     # ---- 8. 資料狀態：本版要點 ----
