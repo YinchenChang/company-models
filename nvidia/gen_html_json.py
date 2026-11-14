@@ -145,7 +145,9 @@ SPEC = {
     ["競爭對手顆數與每顆金額（份額計算）", ["u_amd_26", "u_amd_27", "u_amd_28", "g29_amd", "u_tpu_26", "u_tpu_27", "u_tpu_28", "g29_tpu", "u_trn_26", "u_trn_27", "u_trn_28", "g29_trn",
                                      "u_oth_26", "u_oth_27", "u_oth_28", "g29_oth", "pa_amd", "pa_tpu", "pa_trn", "pa_oth", "dsh"]],
     ["中國資料中心運算（只進敏感度）", ["cn_amt"]],
-    ["Wattonomics 錨定係數（只進敏感度）", ["wta_27", "wta_28", "wta_29"]]]],
+    ["Wattonomics 錨定係數（只進敏感度）", ["wta_27", "wta_28", "wta_29"]],
+    ["三層協調：產業部署 GW 兩讀數與對帳中旗標（只進兩讀數目標價；試作）", ["co_gwb_26", "co_gwb_27", "co_gwb_28", "co_gwb_29", "co_gwa_26", "co_gwa_27", "co_gwa_28", "co_gwa_29",
+                                     "co_flag_2026", "co_flag_2027", "co_flag_2028", "co_flag_2029", "co_r_26", "co_r_27", "co_r_28", "co_r_29", "co_ucoef_28", "co_ucoef_29", "co_chk_r"]]]],
   ["網通（InfiniBand、Spectrum-X、NVLink）", [
     ["網通營收與成本", ["net_26", "net_27", "net_28", "net_29", "rep_nv26", "net_q1", "c_net"]]]],
   ["Edge Computing（遊戲、PC、工作站、車用與機器人）", [
@@ -645,6 +647,47 @@ for _b in _sb:
         _b["summary"] = "展開：對照：FY2028 EPS 相對基準的變動（情境 A，一次動一個輸入）"
 _S["sens"]["blocks"] = _sb[:1] + _sens_tor() + _sb[1:]
 _S["sens"]["intro"] = "主圖為加權目標價相對基準的變動（低案、高案分開，一次動一個輸入；變動達兩位數百分比者直接顯示，其餘摺疊）；下方摺疊為全部案例、業務主因與目標價參數明細，以及 FY2028 EPS 敏感度對照。"
+
+# ================= v0.3.8 試作（2026-11-14）：三層協調——對帳中標示與兩讀數目標價（三層基準協調規則 v1.1 C4；版面規格 v1.3 I 節） =================
+# 數字與文字全部取自 xlsx 的 Coord 頁（coord_post.py）：橫幅加「另一側讀數」一格與揭露句；估值章開頭並列兩讀數（表＋長條圖）；標準損益表預測年度欄標「對帳中」。
+def _coord():
+    if "Coord" not in wb.sheetnames:
+        return
+    CW = wb["Coord"]
+    cr = lambda p, start=1: next(r for r in range(start, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith(p))
+    if CW[f"B{cr('是否有估值依賴的對帳中年份')}"].value != "是":
+        return
+    S = {x["id"]: x for x in cfg["sections"]}
+    r_tp, r_up, r_rec = cr("加權目標價"), cr("上檔空間（加權目標價"), cr("投資建議（五級")
+    r_hero, r_cur, r_alt, r_note, r_pl, r_yrs = cr("橫幅揭露"), cr("目標價區標籤：現行"), cr("目標價區標籤：另一側"), cr("目標價區說明"), cr("損益表年度標示"), cr("對帳中年份")
+    # 橫幅：另一側讀數一格＋揭露句（≤200 字合計）
+    cfg["hero"]["tiles"].append([["另一側讀數目標價（對帳中；美元）"], f"@Coord!C{r_tp}|n2", ["上檔空間 ", f"@Coord!C{r_up}|sp1", "；", f"@Coord!C{r_rec}"]])
+    cfg["hero"]["note"] = list(cfg["hero"]["note"]) + [" ", f"@Coord!B{r_hero}"]
+    # 估值章開頭：兩讀數目標價
+    rows_ = [cr("NVIDIA 認列顆數（情境 B）FY2028"), cr("營收（情境 B）FY2028"), cr("EPS 情境 B（基準）FY2028"), cr("EPS 情境 B（基準）FY2029"), cr("EPS 情境 B（基準）FY2030"),
+             cr("12 個月後前瞻 EPS"), cr("DCF 目標價（情境加權）"), cr("Comparable 目標價（進加權"), r_tp, r_up]
+    fm = lambda r: "p1" if r == r_up else "n2"
+    tbl = {"type": "table", "caption": ["兩讀數目標價（對帳中：", f"@Coord!B{r_yrs}", "）——現行基準讀數與另一側讀數並列"],
+           "head": ["項目", f"@Coord!B{r_cur}", f"@Coord!B{r_alt}", "另一側相對現行"],
+           "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|{fm(r)}", f"@Coord!C{r}|{fm(r)}", f"@Coord!D{r}|sp1"] for r in rows_]
+                   + [[f"@Coord!A{r_rec}", f"@Coord!B{r_rec}", f"@Coord!C{r_rec}", ""]]}
+    r_px = find("Val", "現價（2026")
+    bars = {"type": "bars", "title": "兩讀數的加權目標價與現價（美元；豎線＝現價）", "fmt": "n2",
+            "items": [{"label": f"@Coord!B{r_cur}", "value": f"@Coord!B{r_tp}", "series": 0}, {"label": f"@Coord!B{r_alt}", "value": f"@Coord!C{r_tp}", "series": 2}],
+            "ref": {"label": f"@Val!A{r_px}", "value": f"@Val!B{r_px}"}}
+    full = {"type": "table", "caption": "展開：兩讀數的三情境 EPS 與情境 B 顆數、營收（Coord 頁 B 節）", "collapse": True, "summary": "展開：兩讀數的三情境 EPS 與情境 B 顆數、營收",
+            "head": ["項目", f"@Coord!B{r_cur}", f"@Coord!C{r_cur - 1}" if False else f"@Coord!B{r_alt}", "另一側相對現行"],
+            "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|n2", f"@Coord!C{r}|n2", f"@Coord!D{r}|sp1"] for r in range(cr("NVIDIA 認列顆數（情境 B）FY2028"), cr("12 個月後前瞻 EPS"))]}
+    S["valuation"]["blocks"][0:0] = [{"type": "h3", "text": "對帳中：兩讀數目標價"}, {"type": "note", "parts": [f"@Coord!B{r_note}"]}, tbl, bars, full]
+    # 標準損益表：預測年度欄標「對帳中」（FY2027E–FY2031E＝PL F–J 欄）
+    n = 0
+    for b in S["pl"]["blocks"]:
+        if b.get("type") == "table" and isinstance(b.get("head"), list) and len(b["head"]) == 9 and str(b["head"][4]).startswith("@PL!F"):
+            b["head"][4:9] = [f"@Coord!{c}{r_pl}" for c in "BCDEF"]; n += 1
+    assert n == 1, n
+
+
+_coord()
 
 json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")

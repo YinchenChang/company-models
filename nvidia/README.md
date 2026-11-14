@@ -1,4 +1,34 @@
-# nvidia/ — NVIDIA（NVDA）個股模型 v0.3.7
+# nvidia/ — NVIDIA（NVDA）個股模型 v0.3.8（試作，請勿合併）
+
+## v0.3.8（2026-11-14）：三層協調試作——對帳中標示與兩讀數目標價（只新增；基準目標價、評等與既有數值格不變；試作，請勿合併）
+
+依據：`docs/plan/三層基準協調規則.md` v1.1 C4（個股不裁決；分支 `claude/baseline-rules-v1.1`）、版面規格 v1.3 I 節（本分支）；三層協調落地步驟 5a 前置。base＝`claude/nvidia-v0.3.7-layout13`（PR #468）。
+
+- **集中輸入（唯一一處）：** `coord_inputs.json`＋`coord_post.load()`。來源依序：Siliconomics 現行快照已有協調名稱時自動改讀（合併後）→ `mode: "trial"`：Siliconomics 協調試作分支 `claude/siliconomics-coord-trial`（draft PR #477）快照摘錄（`python3 nvidia/coord_post.py extract <快照> <分支> <SHA>`）→ 暫值（派工訊息給定，標「暫值，待 Siliconomics 試作分支」）。目前為 trial。
+- **改讀的 Siliconomics 名稱：** `SIF_DeployGW_Current_<yyyy>`（現行基準 GW）、`SIF_DeployGW_Alt_<yyyy>`（另一側讀數 GW）、`SIF_DeployGW_AltRatio_<yyyy>`（另一側 ÷ 基準，另一側讀數的縮放比）、`SIF_RecoFlag_<yyyy>`（對帳中旗標）、`SIF_RecoStatus_<yyyy>`／`SIF_RecoLead_<yyyy>`（Coord 頁顯示）、`SIF_UnitsCoef_Base`（情境 B 基準顆數係數：In 頁 `um28_B`、`um29_B` 由數值改為讀 Y 節 `co_ucoef_28`／`co_ucoef_29`；cov_done＝0 時值 0.8／0.85 不變）。
+- **In 頁 Y 節：** 兩讀數 GW、比值 `co_r_<yy>`、對帳中旗標 `co_flag_<yyyy>`、基準係數、核對列。**Coord 頁（新）：** 兩讀數 GW 與狀態、顆數 → 營收 → EPS → 目標價兩讀數、評等、橫幅揭露句、損益表年度標示、快照一致性（CURRENT／STALE）。
+- **另一側讀數：** `coord_alt.py` 以 `NV_OVERRIDE=_coord=1` 整本重建：三情境 CY2027 起運算顆數與網通營收 × 比值（FY2027 錨點不變），其他輸入不變 → `coord_alt.json` → Coord 頁。
+- **HTML：** 橫幅加「另一側讀數目標價」一格與揭露句；估值章開頭「對帳中：兩讀數目標價」表與長條圖；標準損益表 FY2027E–FY2031E 欄標「對帳中」。
+- **驗證：** 與 v0.3.7 逐格比較：既有格只有 README!A1、README!A67、Sens!D984（版本與 build_id）、In!G39／I39／G40／I40（um28_B、um29_B 的標記與說明；值不變）改變；錯誤格 0。
+- 建置：`python3 nvidia/coord_alt.py` → `python3 nvidia/build_nvidia.py raw.xlsx` → LibreOffice 重算 → `dist/` → `python3 nvidia/gen_html_json.py` → `python3 tools/company_html/build_company_html.py nvidia`。核對：`check_layout_v13.py <html> --xlsx <xlsx>`（含 I 項）、`check_company_html.py nvidia`、`check_governance.py`、`check_display.py nvidia`、`layout_check.py`。
+
+<!-- version-table: dist/_待刪除/20261114_NVIDIA個股模型_v0.3.7.xlsx｜dist/20261114_NVIDIA個股模型_v0.3.8.xlsx -->
+| 項目 | v0.3.7 | v0.3.8 |
+|---|---|---|
+| 現價 | 181.60 | 181.60 |
+| DCF 目標價 | 117.04 | 117.04 |
+| Comparable 目標價（未調整） | 221.79 | 221.79 |
+| Comparable 目標價（相對倍數調整後） | 391.48 | 391.48 |
+| 加權目標價（上檔空間） | 254.26（+40.0%） | 254.26（+40.0%） |
+| 投資建議 | 買進 | 買進 |
+| EPS 情境 A（FY2028／FY2029／FY2030） | 13.40／15.35／17.60 | 13.40／15.35／17.60 |
+| EPS 情境 B（FY2028／FY2029／FY2030） | 13.24／13.01／15.60 | 13.24／13.01／15.60 |
+| EPS 情境 C（FY2028／FY2029／FY2030） | 13.01／9.73／11.07 | 13.01／9.73／11.07 |
+| FY2028 毛利率（情境 A） | 68.84% | 68.84% |
+| FY2028 毛利率（情境 B） | 69.47% | 69.47% |
+| FY2028 毛利率（情境 C） | 69.71% | 69.71% |
+<!-- /version-table -->
+
 
 ## v0.3.7（2026-11-14）：個股 HTML 版面規格 v1.3 試作（只改展示層；目標價、評等與既有數值格不變；試作，請勿合併）
 
@@ -16,7 +46,7 @@
 - **驗證：** v0.3.6 → v0.3.7 舊版每一格（12,850 格）逐格比對，差異只有 README!A1（版本字串與成品日）、README!A67 與 Sens!D984（build_id）、Hist!C56（成品日）；錯誤格 0；加權目標價 254.26、評等買進不變。
 - 建置：`python3 nvidia/build_nvidia.py raw.xlsx` → LibreOffice 重算 → `dist/` → `python3 nvidia/gen_html_json.py` → `python3 tools/company_html/build_company_html.py nvidia` → `python3 tools/model_governance/version_table.py nvidia --update`。核對：`check_governance.py --html --display nvidia`、`check_company_html.py nvidia`、`check_layout_v13.py`、`layout_check.py`。敏感度沿用 v0.3.6 快照（數值不變）。
 
-<!-- version-table: dist/_待刪除/20261111_NVIDIA個股模型_v0.3.6.xlsx｜dist/20261114_NVIDIA個股模型_v0.3.7.xlsx -->
+<!-- version-table: dist/_待刪除/20261111_NVIDIA個股模型_v0.3.6.xlsx｜dist/_待刪除/20261114_NVIDIA個股模型_v0.3.7.xlsx -->
 | 項目 | v0.3.6 | v0.3.7 |
 |---|---|---|
 | 現價 | 181.60 | 181.60 |

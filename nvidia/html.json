@@ -153,6 +153,223 @@
    "intro": "@Val!A1",
    "blocks": [
     {
+     "type": "h3",
+     "text": "對帳中：兩讀數目標價"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!B44"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": [
+      "兩讀數目標價（對帳中：",
+      "@Coord!B40",
+      "）——現行基準讀數與另一側讀數並列"
+     ],
+     "head": [
+      "項目",
+      "@Coord!B42",
+      "@Coord!B43",
+      "另一側相對現行"
+     ],
+     "rows": [
+      [
+       "@Coord!A14",
+       "@Coord!B14|n2",
+       "@Coord!C14|n2",
+       "@Coord!D14|sp1"
+      ],
+      [
+       "@Coord!A17",
+       "@Coord!B17|n2",
+       "@Coord!C17|n2",
+       "@Coord!D17|sp1"
+      ],
+      [
+       "@Coord!A23",
+       "@Coord!B23|n2",
+       "@Coord!C23|n2",
+       "@Coord!D23|sp1"
+      ],
+      [
+       "@Coord!A24",
+       "@Coord!B24|n2",
+       "@Coord!C24|n2",
+       "@Coord!D24|sp1"
+      ],
+      [
+       "@Coord!A25",
+       "@Coord!B25|n2",
+       "@Coord!C25|n2",
+       "@Coord!D25|sp1"
+      ],
+      [
+       "@Coord!A29",
+       "@Coord!B29|n2",
+       "@Coord!C29|n2",
+       "@Coord!D29|sp1"
+      ],
+      [
+       "@Coord!A30",
+       "@Coord!B30|n2",
+       "@Coord!C30|n2",
+       "@Coord!D30|sp1"
+      ],
+      [
+       "@Coord!A31",
+       "@Coord!B31|n2",
+       "@Coord!C31|n2",
+       "@Coord!D31|sp1"
+      ],
+      [
+       "@Coord!A32",
+       "@Coord!B32|n2",
+       "@Coord!C32|n2",
+       "@Coord!D32|sp1"
+      ],
+      [
+       "@Coord!A33",
+       "@Coord!B33|p1",
+       "@Coord!C33|p1",
+       "@Coord!D33|sp1"
+      ],
+      [
+       "@Coord!A34",
+       "@Coord!B34",
+       "@Coord!C34",
+       ""
+      ]
+     ]
+    },
+    {
+     "type": "bars",
+     "title": "兩讀數的加權目標價與現價（美元；豎線＝現價）",
+     "fmt": "n2",
+     "items": [
+      {
+       "label": "@Coord!B42",
+       "value": "@Coord!B32",
+       "series": 0
+      },
+      {
+       "label": "@Coord!B43",
+       "value": "@Coord!C32",
+       "series": 2
+      }
+     ],
+     "ref": {
+      "label": "@Val!A57",
+      "value": "@Val!B57"
+     }
+    },
+    {
+     "type": "table",
+     "caption": "展開：兩讀數的三情境 EPS 與情境 B 顆數、營收（Coord 頁 B 節）",
+     "collapse": true,
+     "summary": "展開：兩讀數的三情境 EPS 與情境 B 顆數、營收",
+     "head": [
+      "項目",
+      "@Coord!B42",
+      "@Coord!B43",
+      "另一側相對現行"
+     ],
+     "rows": [
+      [
+       "@Coord!A14",
+       "@Coord!B14|n2",
+       "@Coord!C14|n2",
+       "@Coord!D14|sp1"
+      ],
+      [
+       "@Coord!A15",
+       "@Coord!B15|n2",
+       "@Coord!C15|n2",
+       "@Coord!D15|sp1"
+      ],
+      [
+       "@Coord!A16",
+       "@Coord!B16|n2",
+       "@Coord!C16|n2",
+       "@Coord!D16|sp1"
+      ],
+      [
+       "@Coord!A17",
+       "@Coord!B17|n2",
+       "@Coord!C17|n2",
+       "@Coord!D17|sp1"
+      ],
+      [
+       "@Coord!A18",
+       "@Coord!B18|n2",
+       "@Coord!C18|n2",
+       "@Coord!D18|sp1"
+      ],
+      [
+       "@Coord!A19",
+       "@Coord!B19|n2",
+       "@Coord!C19|n2",
+       "@Coord!D19|sp1"
+      ],
+      [
+       "@Coord!A20",
+       "@Coord!B20|n2",
+       "@Coord!C20|n2",
+       "@Coord!D20|sp1"
+      ],
+      [
+       "@Coord!A21",
+       "@Coord!B21|n2",
+       "@Coord!C21|n2",
+       "@Coord!D21|sp1"
+      ],
+      [
+       "@Coord!A22",
+       "@Coord!B22|n2",
+       "@Coord!C22|n2",
+       "@Coord!D22|sp1"
+      ],
+      [
+       "@Coord!A23",
+       "@Coord!B23|n2",
+       "@Coord!C23|n2",
+       "@Coord!D23|sp1"
+      ],
+      [
+       "@Coord!A24",
+       "@Coord!B24|n2",
+       "@Coord!C24|n2",
+       "@Coord!D24|sp1"
+      ],
+      [
+       "@Coord!A25",
+       "@Coord!B25|n2",
+       "@Coord!C25|n2",
+       "@Coord!D25|sp1"
+      ],
+      [
+       "@Coord!A26",
+       "@Coord!B26|n2",
+       "@Coord!C26|n2",
+       "@Coord!D26|sp1"
+      ],
+      [
+       "@Coord!A27",
+       "@Coord!B27|n2",
+       "@Coord!C27|n2",
+       "@Coord!D27|sp1"
+      ],
+      [
+       "@Coord!A28",
+       "@Coord!B28|n2",
+       "@Coord!C28|n2",
+       "@Coord!D28|sp1"
+      ]
+     ]
+    },
+    {
      "type": "table",
      "caption": "@Val!A212",
      "head": [
@@ -2807,11 +3024,11 @@
       "@PL!C342",
       "@PL!D342",
       "@PL!E342",
-      "@PL!F342",
-      "@PL!G342",
-      "@PL!H342",
-      "@PL!I342",
-      "@PL!J342"
+      "@Coord!B45",
+      "@Coord!C45",
+      "@Coord!D45",
+      "@Coord!E45",
+      "@Coord!F45"
      ],
      "rows": [
       [
@@ -4662,6 +4879,161 @@
        "@In!F223|n2",
        "@In!C223",
        "@In!G223|tag"
+      ],
+      {
+       "sub": "三層協調：產業部署 GW 兩讀數與對帳中旗標（只進兩讀數目標價；試作）"
+      },
+      [
+       "@In!B226",
+       "@In!D226|n2",
+       "@In!E226|n2",
+       "@In!F226|n2",
+       "@In!C226",
+       "@In!G226|tag"
+      ],
+      [
+       "@In!B227",
+       "@In!D227|n2",
+       "@In!E227|n2",
+       "@In!F227|n2",
+       "@In!C227",
+       "@In!G227|tag"
+      ],
+      [
+       "@In!B228",
+       "@In!D228|n2",
+       "@In!E228|n2",
+       "@In!F228|n2",
+       "@In!C228",
+       "@In!G228|tag"
+      ],
+      [
+       "@In!B229",
+       "@In!D229|n2",
+       "@In!E229|n2",
+       "@In!F229|n2",
+       "@In!C229",
+       "@In!G229|tag"
+      ],
+      [
+       "@In!B230",
+       "@In!D230|n2",
+       "@In!E230|n2",
+       "@In!F230|n2",
+       "@In!C230",
+       "@In!G230|tag"
+      ],
+      [
+       "@In!B231",
+       "@In!D231|n2",
+       "@In!E231|n2",
+       "@In!F231|n2",
+       "@In!C231",
+       "@In!G231|tag"
+      ],
+      [
+       "@In!B232",
+       "@In!D232|n2",
+       "@In!E232|n2",
+       "@In!F232|n2",
+       "@In!C232",
+       "@In!G232|tag"
+      ],
+      [
+       "@In!B233",
+       "@In!D233|n2",
+       "@In!E233|n2",
+       "@In!F233|n2",
+       "@In!C233",
+       "@In!G233|tag"
+      ],
+      [
+       "@In!B234",
+       "@In!D234|n1",
+       "@In!E234|n1",
+       "@In!F234|n1",
+       "@In!C234",
+       "@In!G234|tag"
+      ],
+      [
+       "@In!B235",
+       "@In!D235|n1",
+       "@In!E235|n1",
+       "@In!F235|n1",
+       "@In!C235",
+       "@In!G235|tag"
+      ],
+      [
+       "@In!B236",
+       "@In!D236|n1",
+       "@In!E236|n1",
+       "@In!F236|n1",
+       "@In!C236",
+       "@In!G236|tag"
+      ],
+      [
+       "@In!B237",
+       "@In!D237|n1",
+       "@In!E237|n1",
+       "@In!F237|n1",
+       "@In!C237",
+       "@In!G237|tag"
+      ],
+      [
+       "@In!B238",
+       "@In!D238|n2",
+       "@In!E238|n2",
+       "@In!F238|n2",
+       "@In!C238",
+       "@In!G238|tag"
+      ],
+      [
+       "@In!B239",
+       "@In!D239|n2",
+       "@In!E239|n2",
+       "@In!F239|n2",
+       "@In!C239",
+       "@In!G239|tag"
+      ],
+      [
+       "@In!B240",
+       "@In!D240|n2",
+       "@In!E240|n2",
+       "@In!F240|n2",
+       "@In!C240",
+       "@In!G240|tag"
+      ],
+      [
+       "@In!B241",
+       "@In!D241|n2",
+       "@In!E241|n2",
+       "@In!F241|n2",
+       "@In!C241",
+       "@In!G241|tag"
+      ],
+      [
+       "@In!B242",
+       "@In!D242|n2",
+       "@In!E242|n2",
+       "@In!F242|n2",
+       "@In!C242",
+       "@In!G242|tag"
+      ],
+      [
+       "@In!B243",
+       "@In!D243|n2",
+       "@In!E243|n2",
+       "@In!F243|n2",
+       "@In!C243",
+       "@In!G243|tag"
+      ],
+      [
+       "@In!B244",
+       "@In!D244|n2",
+       "@In!E244|n2",
+       "@In!F244|n2",
+       "@In!C244",
+       "@In!G244|tag"
       ]
      ]
     },
@@ -6635,10 +7007,24 @@
     ],
     "@Val!B57|n2",
     ""
+   ],
+   [
+    [
+     "另一側讀數目標價（對帳中；美元）"
+    ],
+    "@Coord!C32|n2",
+    [
+     "上檔空間 ",
+     "@Coord!C33|sp1",
+     "；",
+     "@Coord!C34"
+    ]
    ]
   ],
   "note": [
-   "@README!A107"
+   "@README!A107",
+   " ",
+   "@Coord!B41"
   ]
  },
  "layout": "v1.3"
