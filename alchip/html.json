@@ -3798,7 +3798,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!B74"
+      "@Coord!B75"
      ]
     },
     {
@@ -3865,6 +3865,17 @@
        "@Coord!E73",
        "@Coord!F73",
        "@Coord!I73"
+      ],
+      [
+       "@Coord!A74",
+       "@Coord!B74",
+       "@Coord!C74",
+       "@Coord!D74",
+       "@Coord!G74",
+       "@Coord!H74",
+       "@Coord!E74",
+       "@Coord!F74",
+       "@Coord!I74"
       ]
      ]
     },
