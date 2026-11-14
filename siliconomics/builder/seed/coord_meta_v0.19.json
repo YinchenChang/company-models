@@ -1,0 +1,7 @@
+{
+ "_note": "v0.19-trial 試作：三層基準協調狀態檔的判斷類欄位。對帳單位置與診斷期限（規則 C6 第 3 點：下一個財報季結束）未定，留空待 Project 判斷；硬體個股清單試作只放 NVIDIA（步驟 5a 只重建 NVIDIA），依賴年份暫列 2026–2029（DCF 明確期涵蓋）；年份寫成字串以與 years 的鍵一致（check.py 第 6 項以集合交集比對，整數不會命中）",
+ "recon_doc": {},
+ "deadline": {},
+ "hardware_companies": ["nvidia"],
+ "depends_on_years": {"nvidia": ["2026", "2027", "2028", "2029"]}
+}
