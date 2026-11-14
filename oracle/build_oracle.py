@@ -1239,6 +1239,10 @@ lines += [
     ("", False),
     ("v0.5.0（2026-11-10，收支型個股樣板；Andy 2026-11-10：Oracle 兼有新雲與傳統業務，作為混合業務公司的樣板，補回 RPO、站點、融資、資金瀑布的逐年模型與反向 DCF）：新增 Fund（來源／用途／缺口／瀑布，全部引用 CF 頁）、RPO（合約排程對模型交付，同口徑）、Sites（具名站點）、Debt（逐檔、到期表、再融資備忘）、Lease（租賃到期表與未起租）、RevDCF（反向 DCF）六頁。只新增工作表：既有各頁數值與 v0.4.7 逐格相同，加權目標價、投資建議不變。到期借款在基準仍假設以原利率展延；Debt 頁列出以 r_new 再融資的增額利息作備忘。", False),
 ]
+# v0.5.2：README 第 1 列版本文字（只改版號與日期；其餘文字不動）
+_t0 = lines[0][0]
+assert "個股模型 v0.5.1（命題＋營收分部架構＋收支模組；" in _t0 and _t0.endswith("　2026-11-10"), _t0[-40:]
+lines[0] = (_t0.replace("個股模型 v0.5.1（命題＋營收分部架構＋收支模組；", "個股模型 v0.5.2（命題＋營收分部架構＋收支模組；v0.5.2 套用 HTML 版面 v1.3 並新增 IS、Coord 兩頁〔既有各頁數值同 v0.5.1〕；", 1)[:-len("2026-11-10")] + "2026-11-15", lines[0][1])
 for i, (t, b) in enumerate(lines, 1):
     RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
@@ -1282,9 +1286,15 @@ show = [
 r0_ = RD.max_row + 2
 for i, (t, b) in enumerate(show):
     RD.cell(r0_ + i, 1, t).font = Font(bold=b)
-order = ["README", "In", "Q", "Thesis", "Seg", "PL", "CF", "Fund", "RPO", "Sites", "Debt", "Lease", "Val", "RevDCF", "Recon", "Sens", "Sources"]
+# v0.5.2：HTML 版面 v1.3 補缺項（IS 頁、Sens 白話標籤、README 展示層列）與 Coord 頁「三層協調」（oracle/v052_post.py；只新增，不改既有格）
+import v052_post
+assert _rev_neu and _rev_eq and _rev_hi, "RevDCF p_long 列不存在"
+V052 = v052_post.apply(wb, {"HERE": HERE, "TKS": TKS, "TKV": TKV, "GEN": GEN, "GNAME": GNAME, "QR": {"capex": 29, "oci": 4}, "PR": PR_, "TR": TR, "CR": CR_, "CON": CON, "GATE": GATE,
+                            "SENS_ROWS": SENS_ROWS, "REV_NEU": _rev_neu, "REV_EQ": _rev_eq, "REV_HI": _rev_hi, "FB_LEV": _FB["lev"], "OCI_SH": f"Val!D{SO_['oci_sh']}",
+                            "TPS_A": f"Val!C{SO_['tps']}", "TPS_B": f"Val!D{SO_['tps']}", "TPS_C": f"Val!E{SO_['tps']}"})
+order = ["README", "In", "Q", "Thesis", "Seg", "PL", "IS", "CF", "Fund", "RPO", "Sites", "Debt", "Lease", "Val", "RevDCF", "Recon", "Coord", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
 wb.save(sys.argv[1])
 if os.environ.get("ORCL_ROWMAP"):
-    json.dump({"TR": TR, "SR": SR, "PR": PR_, "CR": CR_, "VAL": VAL, "GATE": GATE, "CFH": CFH, "CHK": [CHK_SEG, CHK_SUB, CHK_SUM], "RPO": RPO_ROWS, "SUM": SUM_ROWS, "SENS": SENS_ROWS, "GRID": SENS_GRID, "CAL": CAL, "SGC": SGC, "FUND": FUND},
+    json.dump({"TR": TR, "SR": SR, "PR": PR_, "CR": CR_, "VAL": VAL, "GATE": GATE, "CFH": CFH, "CHK": [CHK_SEG, CHK_SUB, CHK_SUM], "RPO": RPO_ROWS, "SUM": SUM_ROWS, "SENS": SENS_ROWS, "GRID": SENS_GRID, "CAL": CAL, "SGC": SGC, "FUND": FUND, "V052": V052},
               open(os.environ["ORCL_ROWMAP"], "w"), ensure_ascii=False, indent=1)
