@@ -9,8 +9,8 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 
-VERSION = 'v0.2.1'
-DATE = '2026-11-06'
+VERSION = 'v0.2.2'
+DATE = '2026-11-15'
 YEARS = [2025, 2026, 2027, 2028, 2029, 2030]
 YCOL = {y: get_column_letter(4 + i) for i, y in enumerate(YEARS)}  # D..I
 
@@ -142,6 +142,35 @@ SRC = [
     ('S112', '海螺 Hailuo 儲值營收', '9M2025', 3.317, '$M', 'Verified', '一手', PROS),
     # ── v0.2.1（2026-11-06）：Andy 要求所有個股換 2026-11-05 收盤（repo 根 docs/reports/20261105_收盤價_個股換價來源.md）
     ('S113', '收盤價', '2026-11-05', 170.2, 'HK$/股', 'Verified', '二手', 'Yahoo Finance 0100.HK 日線 https://query1.finance.yahoo.com/v8/finance/chart/0100.HK?range=5d&interval=1d；StockAnalysis HKG:0100 歷史頁同值（+1.73%，前收 167.30）'),
+    # ── v0.2.2（2026-11-15）：版面 v1.3 標準損益表（PL 頁）所需的 FY2023–FY2024 歷史列與 FY2025 補列（研究底稿 data/research/financials.md 第 1 節；一手）
+    ('S114', '營收', 'FY2023', 3.460, '$M', 'Verified', '一手', PROS + '（Summary 損益表）'),
+    ('S115', '銷售成本', 'FY2023', 4.314, '$M', 'Verified', '一手', PROS + '；附錄一附註 7'),
+    ('S116', '銷售成本', 'FY2024', 26.785, '$M', 'Verified', '一手', PROS + '；附錄一附註 7'),
+    ('S117', '銷售及分銷費用', 'FY2023', 22.827, '$M', 'Verified', '一手', PROS),
+    ('S118', '銷售及分銷費用', 'FY2024', 86.995, '$M', 'Verified', '一手', PROS),
+    ('S119', '行政費用', 'FY2023', 7.615, '$M', 'Verified', '一手', PROS),
+    ('S120', '行政費用', 'FY2024', 14.384, '$M', 'Verified', '一手', PROS),
+    ('S121', '研發費用', 'FY2023', 70.002, '$M', 'Verified', '一手', PROS),
+    ('S122', '研發費用', 'FY2024', 188.979, '$M', 'Verified', '一手', PROS),
+    ('S123', '其他收入及收益淨額', 'FY2023', 8.942, '$M', 'Verified', '一手', PROS),
+    ('S124', '其他收入及收益淨額', 'FY2024', 36.151, '$M', 'Verified', '一手', PROS),
+    ('S125', '財務成本', 'FY2023', 0.061, '$M', 'Verified', '一手', PROS),
+    ('S126', '財務成本', 'FY2024', 0.509, '$M', 'Verified', '一手', PROS),
+    ('S127', '財務成本', 'FY2025', 0.672, '$M', 'Verified', '一手', FY25),
+    ('S128', '金融資產減值損失', 'FY2023', 0.003, '$M', 'Verified', '一手', PROS),
+    ('S129', '金融資產減值損失', 'FY2024', 0.088, '$M', 'Verified', '一手', PROS),
+    ('S130', '金融資產減值損失', 'FY2025', 0.063, '$M', 'Verified', '一手', FY25),
+    ('S131', '金融負債（優先股）公允價值變動損失', 'FY2023', 176.826, '$M', 'Verified', '一手', PROS),
+    ('S132', '金融負債（優先股）公允價值變動損失', 'FY2024', 214.172, '$M', 'Verified', '一手', PROS),
+    ('S133', '金融負債（優先股）公允價值變動損失', 'FY2025', 1589.850, '$M', 'Verified', '一手', FY25),
+    ('S134', '淨虧損（IFRS）', 'FY2023', 269.246, '$M', 'Verified', '一手', PROS),
+    ('S135', '淨虧損（IFRS）', 'FY2024', 465.238, '$M', 'Verified', '一手', PROS),
+    ('S136', '股份支付（非 IFRS 調節）', 'FY2023', 3.346, '$M', 'Verified', '一手', PROS + '（非 IFRS 調節表）'),
+    ('S137', '股份支付（非 IFRS 調節）', 'FY2024', 6.823, '$M', 'Verified', '一手', PROS + '（非 IFRS 調節表）'),
+    ('S138', '上市開支（非 IFRS 調節）', 'FY2023', 0, '$M', 'Verified', '一手', PROS + '（非 IFRS 調節表：FY2023 無此項）'),
+    ('S139', '上市開支（非 IFRS 調節）', 'FY2024', 0, '$M', 'Verified', '一手', PROS + '（非 IFRS 調節表：FY2024 無此項）'),
+    ('S140', '經調整淨虧損（非 IFRS）', 'FY2023', 89.074, '$M', 'Verified', '一手', PROS + '（非 IFRS 調節表）'),
+    ('S141', '經調整淨虧損（非 IFRS）', 'FY2024', 244.243, '$M', 'Verified', '一手', PROS + '（非 IFRS 調節表）'),
 ]
 
 # ───────────────────────── TK_Link：Tokenomics 官方快照（scripts/tk_snapshot.py 產生；本檔不寫死任何 TK 數值） ─────────────────────────
@@ -771,11 +800,21 @@ def build(out):
         ('', None),
         ('已知限制（下一版）：季度層；自建集群規模（找不到）與其持有成本；2026 消費端付費人數 × ARPPU（缺一手資料）；1H26 現金流量表（找不到）；Tokenomics 缺口：中國晶片世代與租價、GPU／MW 官方值、服務端落差分解的 IF_ 名稱、中國 API 有效牌價。A 股上市情境、多情境加權（D5）不做。', None),
         ('研究底稿與來源：minimax/data/research/financials.md、operations.md（repo YinchenChang/company-models）。', None),
+        ('', None),
+        ('v0.2.2（2026-11-15）：版面 v1.3 與三層協調（工作單 docs/workorders/20261114_第二批13家_v1.3與三層協調.md；規則 v1.4.2）', BOLD),
+        ('新增 PL 頁：標準損益表 FY2023–FY2030（非 IFRS 經調整口徑；FY2023–FY2025 取招股書與業績公告，SRC_MM S114–S141 為新增歷史列；FY2026 起引用 PnL 頁），只列示。', None),
+        ('新增 Coord 頁：讀取層級（Tokenomics 快照、Wattonomics 不讀、Siliconomics 不適用）與 C0（實績）表；Wattonomics 玩家名單沒有 MiniMax，C0 各列「無可比實績（層級無此玩家）」，對帳中 0。', None),
+        ('既有計算頁、Inputs、Checks、Sensitivity 數值不變（tools/xlsx_diff.py 逐格比對）。本模型沒有目標價與評等（Valuation 頁只有市值、EV 與反向檢驗），版面 v1.3 的估值章以「不適用」呈現。', None),
     ]
     for i, (t, f) in enumerate(lines, 1):
         c = R.cell(i, 1, t); c.alignment = WRAP
         if f: c.font = f
     R.column_dimensions['A'].width = 160
+
+    # ── v0.2.2：PL（版面 v1.3 標準損益表）與 Coord（三層協調：讀取層級、C0 實績）；只列示，不被既有計算頁引用
+    from coord_pl import build_pl, build_coord
+    build_pl(wb, REG, YCOL)
+    build_coord(wb, REG, YCOL, dict(SNAP, snap=os.path.basename(SNAP_PATH)), len(TK))
 
     # 敏感度頁佔位（由 sensitivity.py 以重算結果填入）
     wb.create_sheet('Sensitivity')
