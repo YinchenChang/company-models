@@ -283,6 +283,8 @@ DEFP = dict(scn="A", mf="1", exnv="ex_nv", rel="rel{y}_{s}", gct="g_ct", gna="g_
             eqk="eqk{y}_{s}", ai26="a26_ai", npc26="a26_npc", gm27="gm27_{s}", gmL="gmL_{s}", gmadj="gm_adj", phi="phi", nioi="ni_oi", fg="fade_g{s}", fm="fade_m{s}")
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["mf"] == "1" and s != "A":   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 於 CY2027 起加速器顆數 × wta（＝另一側讀數比值）；情境 A 不縮放
+        P["mf"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     p = lambda k, y=None: P[k].format(y=(y % 100 if y else ""), s=s)
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -974,6 +976,15 @@ def _px1105(wb, tk, ver, subs=(), static=None, formula_subs=()):
     RDw.cell(RDw.max_row + 2, 1, f"{ver}：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守")
     return out
 R4_PE = _px1105(wb, "6223.TWO", "v0.2.4", subs=(("現價 4,135（2026-11-04 收盤；第三輪修正起全批統一價格日）", "現價 3,725（2026-11-05 收盤；工作單 px1105 起全批統一價格日）"), ('&"（2026-11-04）"&', '&"（2026-11-05）"&'), ("v0.2.3 起現價為 Yahoo Finance 日線收盤 2026-11-04（4,135）", "v0.2.3 起現價為 Yahoo Finance 日線收盤 2026-11-04（4,135）；v0.2.4 起為 2026-11-05（3,725）")), static={("README", "A46"): 'v0.2.3（2026-11-06）第三輪修正（合併前）：(1) 現價改 2026-11-04 收盤 4,135 元（Yahoo Finance；原 2026-10-30 收盤 4,610）；Comparable 同業前瞻 P/E 改為 11-04 收盤 ÷ 資料商前瞻 EPS（中位數 24.1 倍，原 30.3 倍）；(2) stub 期 FCFF 改用含 stub 期的會計年度 FY2026 FCFF × stub_frac（情境 B 0.29；原 FY2027 FCFF × 0.504＝1.33；Sens 各案例同式）；(3) 重點 2 的 DCF 主因改寫為終值（RONIC＝WACC、g、隱含終值倍數）與擴產期資本支出／營運資金，不是折現率；(4) 刪除 v0.1 撰寫的重點觀察 2、3（舊 DCF 數字）；情境名稱統一為 A（順利）／B（平平）／C（不如預期）、級距列名、Sens g 列名、stub 口徑說明。DCF 目標價 1,484 → 1,473 元、加權目標價 2,386 → 2,040 元、上檔空間 −48.2% → -50.7%、投資建議放空 → 強力放空。'})
+
+# v0.2.5（2026-11-15）：三層協調 C4（規則 v1.4.2；tools/coord/）兩讀數目標價（Coord 頁；快照 mpi/coord_alt.json）＋個股 HTML 版面規格 v1.3＋C0（實績）（mpi/v025_post.py）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import v025_post as P25  # noqa: E402
+    print(P25.apply(wb, SIL, _CR))
 
 wb.save(sys.argv[1])
 if os.environ.get("MPI_ROWMAP"):
