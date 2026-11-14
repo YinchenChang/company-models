@@ -429,9 +429,9 @@ def _v13_post(RM):
         if "判定" in lab:
             return ""
         return {"GW": "n1", "US$B": "n1", "%": "p1", "US$/kW": "n0"}.get(u, "n2")
-    c0t = {"type": "table", "caption": "由下往上對帳：本模型的產業量與 Siliconomics 層級值逐年對照（差距＝本模型相對層級值的百分比；超過正負一成五標「對帳中」，不改上游值）",
+    c0t = {"type": "table", "caption": "由下往上對帳：本模型的產業量與 Siliconomics 層級值逐年對照（差距＝本模型相對層級值的百分比；本公司自己的量超過正負一成五標「對帳中」，不改上游值；下方「層級之間」列僅供參考）",
            "head": [f"@Coord!{c}{s2 + 1}" for c in "ABCDE"],
-           "rows": [[f"@Coord!A{r}"] + [f"@Coord!{c}{r}|{f2(r, c)}" for c in "BCDE"] for r in range(s2 + 2, s3 - 1)]}
+           "rows": [({"sub": f"@Coord!A{r}"} if CW.cell(r, 2).value is None else [f"@Coord!A{r}"] + [f"@Coord!{c}{r}|{f2(r, c)}" for c in "BCDE"]) for r in range(s2 + 2, s3 - 1)]}
     c0d = {"type": "table", "caption": f"@Coord!A{s2}", "collapse": True, "summary": "展開：各列的單位、口徑、來源與證據等級", "head": [f"@Coord!{c}{s2 + 1}" for c in "AFG"],
            "rows": [[f"@Coord!A{r}", f"@Coord!F{r}|", f"@Coord!G{r}|"] for r in range(s2 + 2, s3 - 1) if CW.cell(r, 6).value or CW.cell(r, 7).value]}
     lay = {"type": "table", "caption": f"@Coord!A{s1}", "collapse": True, "summary": "展開：本模型讀哪一層、哪一版、用在哪裡", "head": [f"@Coord!{c}{s1 + 1}" for c in "ABCD"],

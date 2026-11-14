@@ -4169,12 +4169,6 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!A72"
-     ]
-    },
-    {
-     "type": "note",
-     "parts": [
       "@Coord!A73"
      ]
     },
@@ -4191,8 +4185,14 @@
      ]
     },
     {
+     "type": "note",
+     "parts": [
+      "@Coord!A76"
+     ]
+    },
+    {
      "type": "table",
-     "caption": "由下往上對帳：本模型的產業量與 Siliconomics 層級值逐年對照（差距＝本模型相對層級值的百分比；超過正負一成五標「對帳中」，不改上游值）",
+     "caption": "由下往上對帳：本模型的產業量與 Siliconomics 層級值逐年對照（差距＝本模型相對層級值的百分比；本公司自己的量超過正負一成五標「對帳中」，不改上游值；下方「層級之間」列僅供參考）",
      "head": [
       "@Coord!A41",
       "@Coord!B41",
@@ -4341,13 +4341,9 @@
        "@Coord!D61|p1",
        "@Coord!E61|p1"
       ],
-      [
-       "@Coord!A62",
-       "@Coord!B62|n1",
-       "@Coord!C62|n1",
-       "@Coord!D62|n1",
-       "@Coord!E62|n1"
-      ],
+      {
+       "sub": "@Coord!A62"
+      },
       [
        "@Coord!A63",
        "@Coord!B63|n1",
@@ -4357,24 +4353,24 @@
       ],
       [
        "@Coord!A64",
-       "@Coord!B64|sp1",
-       "@Coord!C64|sp1",
-       "@Coord!D64|sp1",
-       "@Coord!E64|sp1"
+       "@Coord!B64|n1",
+       "@Coord!C64|n1",
+       "@Coord!D64|n1",
+       "@Coord!E64|n1"
       ],
       [
        "@Coord!A65",
-       "@Coord!B65|",
-       "@Coord!C65|",
-       "@Coord!D65|",
-       "@Coord!E65|"
+       "@Coord!B65|sp1",
+       "@Coord!C65|sp1",
+       "@Coord!D65|sp1",
+       "@Coord!E65|sp1"
       ],
       [
        "@Coord!A66",
-       "@Coord!B66|n1",
-       "@Coord!C66|n1",
-       "@Coord!D66|n1",
-       "@Coord!E66|n1"
+       "@Coord!B66|",
+       "@Coord!C66|",
+       "@Coord!D66|",
+       "@Coord!E66|"
       ],
       [
        "@Coord!A67",
@@ -4385,17 +4381,24 @@
       ],
       [
        "@Coord!A68",
-       "@Coord!B68|sp1",
-       "@Coord!C68|sp1",
-       "@Coord!D68|sp1",
-       "@Coord!E68|sp1"
+       "@Coord!B68|n1",
+       "@Coord!C68|n1",
+       "@Coord!D68|n1",
+       "@Coord!E68|n1"
       ],
       [
        "@Coord!A69",
-       "@Coord!B69|",
-       "@Coord!C69|",
-       "@Coord!D69|",
-       "@Coord!E69|"
+       "@Coord!B69|sp1",
+       "@Coord!C69|sp1",
+       "@Coord!D69|sp1",
+       "@Coord!E69|sp1"
+      ],
+      [
+       "@Coord!A70",
+       "@Coord!B70|",
+       "@Coord!C70|",
+       "@Coord!D70|",
+       "@Coord!E70|"
       ]
      ]
     },
@@ -4466,24 +4469,24 @@
        "@Coord!G61|"
       ],
       [
-       "@Coord!A62",
-       "@Coord!F62|",
-       "@Coord!G62|"
-      ],
-      [
        "@Coord!A63",
        "@Coord!F63|",
        "@Coord!G63|"
       ],
       [
-       "@Coord!A66",
-       "@Coord!F66|",
-       "@Coord!G66|"
+       "@Coord!A64",
+       "@Coord!F64|",
+       "@Coord!G64|"
       ],
       [
        "@Coord!A67",
        "@Coord!F67|",
        "@Coord!G67|"
+      ],
+      [
+       "@Coord!A68",
+       "@Coord!F68|",
+       "@Coord!G68|"
       ]
      ]
     },

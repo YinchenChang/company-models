@@ -503,14 +503,14 @@ def coord_c0(wb, SIL, CR, PLA):
        f"{ver}（比值列見本頁上方 B 節）", "兩讀數目標價（上方 B 節）只換產業部署 GW 一個輸入")
     r += 1
     # 2. C0 由下往上對帳
-    C.cell(r, 1, "2. C0 由下往上對帳：本模型自己的產業量與層級值（逐年；差距＝本模型 ÷ 層級值 − 1；超過 ±15% 標「對帳中」，不改上游值）").font = BOLD; r += 1
+    C.cell(r, 1, "2. C0 由下往上對帳：本模型自己的產業量與層級值（逐年；差距＝本模型 ÷ 層級值 − 1；本公司自己的量超過 ±15% 標「對帳中」，不改上游值）").font = BOLD; r += 1
     for j, h in enumerate(["項目", "CY2026", "CY2027", "CY2028", "CY2029", "單位", "口徑、來源、證據等級"], 1):
         c = C.cell(r, j, h); c.font = BOLD; c.fill = HDR
     C_h = r; r += 1
     N = SIL.NAMES
     G = {}
 
-    def block(key, title, unit, model, layer, note_m, note_l, fmt, gapfmt="+0.0%;-0.0%", lay_is_formula=False, judge_extra=""):
+    def block(key, title, unit, model, layer, note_m, note_l, fmt, gapfmt="+0.0%;-0.0%", lay_is_formula=False, judge_extra="", tag="對帳中"):
         nonlocal r
         C.cell(r, 1, f"{title}：本模型（情境 B；PL 頁）"); C.cell(r, 6, unit); C.cell(r, 7, note_m)
         for j, f in enumerate(model):
@@ -528,7 +528,7 @@ def coord_c0(wb, SIL, CR, PLA):
         rg = r; r += 1
         C.cell(r, 1, f"{title}：判定（±15%）")
         for j, col in enumerate("BCDE"):
-            C.cell(r, 2 + j, f'=IF(ABS({col}{rg})>0.15,"對帳中{judge_extra}","一致")')
+            C.cell(r, 2 + j, f'=IF(ABS({col}{rg})>0.15,"{tag}{judge_extra}","一致")')
         rj = r; r += 1
         G[key] = (rm, rl, rg, rj)
     pc = lambda label: [f"=PL!{c}{pb(label)}" for c in "DEFG"]
@@ -561,10 +561,11 @@ def coord_c0(wb, SIL, CR, PLA):
     for j, col in enumerate("BCDE"):
         C.cell(r, 2 + j, f"=1-{col}{rm}").number_format = "0.0%"
     G["resid"] = r; r += 1
-    # 外部對照：Wattonomics 側（另一側讀數）與 UBS
+    # 層級之間與外部估計：參考，不計入本公司 C0（主控 2026-11-14：Siliconomics 對帳單 r3 處理）
+    C.cell(r, 1, "層級之間（參考；Siliconomics 對帳單 r3 處理，不計入本公司 C0）：Wattonomics 側讀數與外部估計").font = BOLD; r += 1
     alt = [N[f"SIF_DeployGW_Alt_{y}"] for y in (2026, 2027, 2028, 2029)]
     block("alt", "部署 GW 對 Wattonomics 側讀數", "GW", pc("部署 GW（IT 電力）"), alt,
-          "同上（本模型情境 B）", f"Derived：Siliconomics {SIL.VERSION} SIF_DeployGW_Alt_<年>（Wattonomics 換算值；需求側讀數）", "0.00", judge_extra="（Siliconomics 標對帳中，已並列兩讀數）")
+          "同上（本模型情境 B）", f"Derived：Siliconomics {SIL.VERSION} SIF_DeployGW_Alt_<年>（Wattonomics 換算值；需求側讀數）", "0.00", judge_extra="（Siliconomics 與 Wattonomics 兩層之間的差距，已並列兩讀數）", tag="參考：層級之間")
     ubs = [SIL.V["pwr_ubs_26"]["base"], SIL.V["pwr_ubs_27"]["base"]]
     rm = r; C.cell(r, 1, "AI 電源市場對 UBS 估計：層級值（US$B）"); C.cell(r, 6, "US$B"); C.cell(r, 7, "Derived：同上（SIF_PwrMkt_Base）")
     for j, col in enumerate("BC"):
@@ -578,9 +579,9 @@ def coord_c0(wb, SIL, CR, PLA):
     for j, col in enumerate("BC"):
         C.cell(r, 2 + j, f"={col}{rm}/{col}{rl}-1").number_format = "+0.0%;-0.0%"
     rg = r; r += 1
-    C.cell(r, 1, "AI 電源市場對 UBS 估計：判定（±15%）")
+    C.cell(r, 1, "AI 電源市場對 UBS 估計：判定（±15%；僅參考）")
     for j, col in enumerate("BC"):
-        C.cell(r, 2 + j, f'=IF(ABS({col}{rg})>0.15,"對帳中（候選；UBS 口徑未知，未改值）","一致")')
+        C.cell(r, 2 + j, f'=IF(ABS({col}{rg})>0.15,"參考（外部估計，口徑未知，未改值）","一致")')
     G["ubs"] = (rm, rl, rg, r); r += 2
     # 3. 結果摘要
     C.cell(r, 1, "3. 對帳結果（HTML 用；公式帶數字）").font = BOLD; r += 1
@@ -590,12 +591,12 @@ def coord_c0(wb, SIL, CR, PLA):
                    T("（±15% 內，一致）；已建模個股加總之外的殘差為 "), f'TEXT(MIN(B{G["resid"]}:E{G["resid"]}),"0%")', T("–"), f'TEXT(MAX(B{G["resid"]}:E{G["resid"]}),"0%")',
                    T("，不為空。")))
     G["sum1"] = r; r += 1
-    C.cell(r, 1, F(T("對帳中：與 Wattonomics 側讀數相比，本模型的部署 GW 在 CY2027–CY2029 高出 "), f'TEXT(-C{G["alt"][2]}/(1+C{G["alt"][2]}),"0%")', T("／"), f'TEXT(-D{G["alt"][2]}/(1+D{G["alt"][2]}),"0%")', T("／"),
-                   f'TEXT(-E{G["alt"][2]}/(1+E{G["alt"][2]}),"0%")', T("（以 Wattonomics 側為基準），超過 ±15%；這是 Siliconomics 與 Wattonomics 兩層之間的對帳中年份（已並列兩讀數目標價），"
-                                                                    "不是本模型自己的差距，本模型不改上游值、不裁決。")))
+    C.cell(r, 1, F(T("層級之間（參考）：與 Wattonomics 側讀數相比，本模型的部署 GW 在 CY2027–CY2029 高出 "), f'TEXT(-C{G["alt"][2]}/(1+C{G["alt"][2]}),"0%")', T("／"), f'TEXT(-D{G["alt"][2]}/(1+D{G["alt"][2]}),"0%")', T("／"),
+                   f'TEXT(-E{G["alt"][2]}/(1+E{G["alt"][2]}),"0%")', T("（以 Wattonomics 側為基準），超過 ±15%；這是 Siliconomics 與 Wattonomics 兩層之間的差距（Siliconomics 對帳單 r3 處理；已並列兩讀數目標價），"
+                                                                    "不是本模型自己的差距，不計入本公司 C0，本模型不改上游值、不裁決。")))
     G["sum2"] = r; r += 1
-    C.cell(r, 1, F(T("對帳候選：Siliconomics 的 AI 電源市場對 UBS 估計低 "), f'TEXT(-B{G["ubs"][2]},"0%")', T("（CY2026）、"), f'TEXT(-C{G["ubs"][2]},"0%")',
-                   T("（CY2027）；UBS 為 Interested-party、口徑未知，本模型不改值；列入報告由主控評估是否開對帳單。")))
+    C.cell(r, 1, F(T("外部估計（參考）：Siliconomics 的 AI 電源市場對 UBS 估計低 "), f'TEXT(-B{G["ubs"][2]},"0%")', T("（CY2026）、"), f'TEXT(-C{G["ubs"][2]},"0%")',
+                   T("（CY2027）；UBS 為 Interested-party、口徑未知，只列參考，不計入本公司 C0，本模型不改值。")))
     G["sum3"] = r; r += 1
     C.cell(r, 1, "C4／C5：本模型不裁決兩層的對帳中年份；本版沒有可往上回饋的新證據（往上回饋只有實績、法定文件揭露的承諾、已簽約或已確認站點，個股預測與公司指引不往上流）。"); G["sum4"] = r; r += 1
     # co_flag 鏡像（讓 check_layout_v13 的 I 項與讀者在 xlsx 內可直接看見旗標）
@@ -625,7 +626,6 @@ def apply(wb, here, SIL, CR):
     ST = sens_tor(wb, CR)
     G = coord_c0(wb, SIL, CR, PLA)
     RMA = readme13(wb, RVA, PLA, ST, CR)
-    wb['Coord'].cell(CR['tp'], 1).value = '加權目標價'
     version(wb)
     wb._v056 = dict(HR=HR, PL=PLA, RV=RVA, VG=VG, ST=ST, G=G, RM=RMA)
     return f"v056_post：Hist {len(HR)} 列；PL 標準損益表 {PLA['start']} 起；RevDCF 頁；Val 0.7 第 {VG} 列；Sens 加權目標價相對基準第 {ST['t0']} 列；Coord C0；README v1.3 白話列 {len(RMA)} 列"
