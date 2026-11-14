@@ -191,11 +191,20 @@ inp("beta_u", "產業無槓桿 β（採用）：自算 US 半導體設備 同業
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 稀釋股數 sh_v)", "與 WACC 權重同一口徑")
 inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新加槓桿）", "x", None, 0.3, None, "Assumed", "工作單第二輪修正（Andy 2026-11-05 23:16 定案）：β 敏感度改為 β_u ± 0.3", "取代上一版的「中位數 × 0.8 再 Blume／中位數未調整」")
 
+# TER_OVERRIDE（敏感度快照用，ter/sens_ter.py；「鍵=@lo／@hi；…」＝該鍵的基準欄改取 In 頁低／高欄；低／高欄是參照本鍵的公式者（例：市占 ± 5 個百分點）以基準式代入；正式建置不設）
+OVR = dict(kv.split("=", 1) for kv in os.environ.get("TER_OVERRIDE", "").split(";") if "=" in kv)
 r = 4
 for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    if key in OVR:
+        ov = OVR[key]
+        _new = {"@lo": lo, "@hi": hi}[ov] if ov.startswith("@") else float(ov)
+        assert _new is not None, (key, ov)
+        if isinstance(_new, str) and _new.startswith("=") and key in _new:   # 例："=s_soc-0.05"：把本鍵換成基準式
+            _new = "=" + _new[1:].replace(key, "(" + base[1:] + ")")
+        base = _new
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
         if v is not None:
@@ -341,6 +350,8 @@ FYC = {y: chr(ord("C") + y - 2025) for y in range(2025, 2030)}   # FY2025＝C �
 DEFP = dict(sh="s_soc", shm="s_mem", msoc="m_soc", gpt=None, grob="g_rob", rm="", inc="t_inc", fix="t_fix", etr="etr", bb="bb", scn="A", wm=None)
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["wm"] is None and s != "A":   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 於 CY2027 起 AI SoC 測試機市場 × wta（＝另一側讀數比值）；情境 A 不縮放
+        P["wm"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     gpt = P["gpt"] or f"g_pt_{s}"
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -923,6 +934,8 @@ def wta_in_rows():
     SIL.wta_rows(_inp)
     for j, y in enumerate((2027, 2028, 2029), 1):   # Advantest 模型情境 B 的 AI SoC 測試機市場（CY；唯讀）
         _inp(f"adv_aiB_{y % 100}", f"Advantest 模型 AI SoC 測試機市場 CY{y}（B；Wattonomics 錨定案例用）", "US$B", None, ADVAI["B"][0][j], None, "Derived", ADVAI["B"][1] if j == 1 else "同上", "只用於 Sens 頁 Wattonomics 錨定案例")
+    for j, y in enumerate((2027, 2028, 2029), 1):   # v0.4.5：兩讀數另一側讀數建置（情境 C 的 AI SoC 測試機市場 × 比值；只在 tools/coord/alt_run.py 另一側建置時被引用）
+        _inp(f"adv_aiC_{y % 100}", f"Advantest 模型 AI SoC 測試機市場 CY{y}（C；兩讀數另一側建置用）", "US$B", None, ADVAI["C"][0][j], None, "Derived", ADVAI["C"][1] if j == 1 else "同上", "只用於 tools/coord/alt_run.py 的另一側讀數建置（情境 C）；正式建置不引用")
 def wta_sens():
     t0 = SE.max_row + 3; b0 = t0 + 11
     RW = engine(SE, b0, "案例區塊：Wattonomics 錨定（情境 B；FY2027 起 AI SoC 測試機市場 × wta_27／wta_28／wta_29）", scn="B", wm=WTA_MF)
@@ -1276,4 +1289,15 @@ def _px1105(wb, tk, ver, subs=(), static=None, formula_subs=()):
     return out
 R4_PE = _px1105(wb, "TER", "v0.4.4", subs=(("€22.62 ÷ 0.8923 €/US$（Yahoo Finance 日線收盤 2026-11-04", "€20.52 ÷ 0.8904 €/US$（Yahoo Finance 日線收盤 2026-11-05；工作單 px1105：原 €22.62 ÷ 0.8923，2026-11-04"), ("Technoprobe 市值（65.33M 股 × €22.62 ÷ 0.8923）", "Technoprobe 市值（65.33M 股 × €20.52 ÷ 0.8904，2026-11-05）")), formula_subs=(("65.326087*22.62/0.8923", "65.326087*20.52/0.8904"),))
 
+# 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 ter/coord_alt.json）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    COORD.stamp(wb, "v0.4", "v0.4.5", "2026-11-14")
+    if not os.environ.get("TER_OVERRIDE") and not os.environ.get("TER_SNAP"):
+        # v0.4.5（2026-11-14）：個股 HTML 版面規格 v1.3、三層協調 C0（含公司實績）與兩讀數（ter/v045_post.py；只新增頁與列，既有數值格不變）
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import v045_post  # noqa: E402
+        print(v045_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR, PB))
 wb.save(sys.argv[1])
