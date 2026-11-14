@@ -389,6 +389,11 @@ for _k, _v in OVR.items():
     if _k.startswith("_P:"): DEFP[_k[3:]] = _v
 if "_krdecay" in OVR:   # 原則 48：k_rec 自 FY2028 起線性衰減、FY2030 回到 1（Sens 案例）
     DEFP["krpath"] = {2027: "k_rec", 2028: "(k_rec+(1-k_rec)/3)", 2029: "(k_rec+2*(1-k_rec)/3)", 2030: "1"}
+import coord_post as CO   # 三層協調試作（2026-11-14；規則 v1.1 C4）：另一側讀數建置（nvidia/coord_alt.py）情境 B、C 於 CY2027 起產業量 × co_r_<yy>（情境 A 不縮放）
+if "_coord" in OVR:   # 另一側讀數：情境 B、C 的產業量 × co_r；情境 A 定義即供給側讀數，不隨讀數縮放（chat 端 2026-11-14）
+    DEFP["wta"] = dict(CO.WTA_CO); DEFP["wta_skipA"] = True
+if "_absorb" in OVR:
+    DEFP["nvs"] = (lambda c, s_, _alt="_coord" in OVR: CO.absorb_factor(c, s_, _alt))
 def W(fy, f):
     """原則 49：會計年度值＝11/12 × CY(t−1)＋1/12 × CY(t)；上游只到 CY2029，FY2030 的 1/12 以 CY2029 代替（持平近似，不引入新假設）"""
     c0 = fy - 1; c1 = min(c0 + 1, 2029)
@@ -417,7 +422,8 @@ def engine(ws, r0, title, **over):
         if cy(fy) >= 2027:
             parts.append(P["uf"])
             if P["nvm"]: parts.append(P["nvm"](cy(fy)))
-            if P["wta"]: parts.append(P["wta"][cy(fy)])   # Wattonomics 錨定（Sens 案例；預設 None＝不乘）
+            if P["wta"] and not (P.get("wta_skipA") and s == "A"): parts.append(P["wta"][cy(fy)])   # Wattonomics 錨定／另一側讀數（情境 A＝供給側讀數，另一側讀數建置不縮放）
+            if P.get("nvs"): parts.append(P["nvs"](cy(fy), s))   # v0.3.8 試作：總量缺口全由 NVIDIA 吸收（coord_alt.py 的 _absorb 建置）
         return "*".join(parts) or "1"
     row("ufac", "NVIDIA 認列顆數乘數（k_rec × Sens 乘數）", "x", {c_(fy): "=" + ufx(fy) for fy in BU}, fmt="0.000")
     for p in NVP:
@@ -1153,6 +1159,17 @@ print(px1105_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), "v0.3.4"
 # ---------------- v0.3.5／v0.3.6（2026-11-11）：NVIDIA v0.3.4 驗收採用規劃書（本資料夾 v035_post.py） ----------------
 import v035_post  # noqa: E402
 print(v035_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), dict(STAGE=STAGE, V36=V36, V36P=V36P, OVR=OVR, MW=MW, PB=PB, SUMR=SUMR, FC=FC, XC=XC, XR=XR, TPL=TPL, SB=SB, K_ROW=K_ROW, REC_ROW=REC_ROW, SDCF=SDCF, W_TP=_W["tp_w"])))
+# ---------------- v0.3.7（2026-11-14）：個股 HTML 版面規格 v1.3 試作——標準損益表、反向 DCF 頁、README 白話列（本資料夾 v037_post.py；只新增，既有數值格不變） ----------------
+if V36 and not OVR:
+    import v037_post  # noqa: E402
+    print(v037_post.apply(wb, os.path.dirname(os.path.abspath(__file__))))
+# ---------------- 三層協調試作（2026-11-14；規則 v1.1 C4、版面規格 v1.3 I 節）：In 頁 Z 節（兩讀數 GW、對帳中旗標）＋Coord 頁（兩讀數目標價；只新增） ----------------
+_CO = CO.write_inputs(wb, SIL)
+if V36 and not OVR:
+    print("coord_post：", CO.write_sheet(wb, _CO)["RC"])
+    _dn, _dc, _dl = CO.delete_wta(wb); print("delete_wta：清空", _dn, "格", _dc, "殘留引用", _dl); assert not _dl, _dl
+    print("relabel：", CO.relabel(wb), "格（只改文字）")
+    print(CO.stamp(wb))
 wb.save(sys.argv[1])
 if os.environ.get("NV_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

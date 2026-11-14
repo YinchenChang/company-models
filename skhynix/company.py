@@ -387,3 +387,30 @@ CONFIG["version"] = "v0.7.4"
 CONFIG["date"] = "2026-11-06"
 CONFIG["a1_note"] = CONFIG["a1_note"] + "；v0.7.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"
 CONFIG["readme_tail"] = CONFIG["readme_tail"] + ["v0.7.4：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"]
+
+# v0.7.5（2026-11-14）：三層協調——對帳中標示與兩讀數目標價（共用工具 tools/coord/；記憶體樣板）
+CONFIG["version"] = "v0.7.5"
+CONFIG["date"] = "2026-11-14"
+CONFIG["a1_note"] = CONFIG["a1_note"] + "；v0.7.5（2026-11-14）：三層協調——Coord 頁並列兩讀數目標價（三層基準協調規則 v1.4 C4；HBM 需求位元情境 B、C 自 2027 起 × 另一側讀數比值）；既有數值不變"
+CONFIG["readme_tail"] = CONFIG["readme_tail"] + ["v0.7.5：三層協調——Coord 頁並列兩讀數目標價（規則 v1.4 C4）；既有數值不變"]
+
+# v0.7.6（2026-11-14）：版面 v1.3 與三層協調 C0 對帳（審閱退件 v0.7.5：只在舊版面加兩讀數，沒有改成 v1.3、沒有 C0 對帳；樣板 NVIDIA）
+# 新增（只新增，既有數值不變）：Hist（損益歷史）、PL（標準損益表、三情境並列、分部營收推導）、RevDCF（反向 DCF）三頁；Val 0.7 估值並列；Sens 加權目標價相對基準（含整本重建快照）；
+# Coord 頁 C0 由下往上對帳；README v1.3 展示層白話列。共用建檔 tools/memory_model/build.py 只在 CONFIG["v13"] 為真時呼叫 tools/memory_model/v13_post.py（美光、三星不變）。
+CONFIG["v13"] = True
+CONFIG["version"] = "v0.7.6"
+CONFIG["date"] = "2026-11-14"
+CONFIG["v13_ver"] = ("v0.7.6（2026-11-14）：個股 HTML 版面 v1.3 與三層協調 C0 對帳（審閱退件 v0.7.5 後重做；樣板 NVIDIA）。新增 Hist、PL、RevDCF 頁，Val 0.7 估值並列，Sens 加權目標價相對基準，"
+                     "Coord 頁 C0 由下往上對帳，README v1.3 展示層；既有數值、目標價與評等不變。更正 v0.7.5 說明：另一側讀數下，情境 B 的 HBM 出貨位元會大幅下降（CY2027 由 6.67 降到 4.13 EB，−38%），"
+                     "只有情境 A 因不縮放而維持供給限制。")
+CONFIG["a1_note"] = CONFIG["a1_note"] + "；v0.7.6（2026-11-14）：版面 v1.3＋C0 對帳（新增 Hist、PL、RevDCF 頁與 Val 0.7、Sens、Coord、README 新增列）；既有數值不變"
+CONFIG["readme_tail"] = CONFIG["readme_tail"] + ["v0.7.6：版面 v1.3＋C0 對帳；既有數值不變（更正 v0.7.5 說明：另一側讀數下情境 B 的 HBM 出貨位元 2027 年 6.67 → 4.13 EB，−38%）"]
+
+# v0.7.7（2026-11-14）：C0（實績）——公司實績 vs 層級隱含值（規則 v1.4.2 C0 第 2 點；工作單 20261114_C0實績對帳補列_七家）
+# 只在 Coord 頁新增「C0（實績）」節（附在頁尾，不位移既有列）；既有 C0 表五項同源列改標「讀取層級（同源，不判定）」並不計入對帳中；既有數值、目標價、評等不變。
+# 實績節的程式在 skhynix/c0_actuals.py（SK 海力士專屬），由 tools/memory_model/v13_post.py 呼叫。
+CONFIG["version"] = "v0.7.7"
+CONFIG["v13_ver"] = ("v0.7.7（2026-11-14）：C0 改用公司實績對層級隱含值（三層基準協調規則 v1.4.2）。公司未揭露 HBM 營收、HBM 占 DRAM 營收比、HBM 位元出貨（2026 年第一至第三季），"
+                     "故 HBM 列判定為「無可比實績」；已揭露的 DRAM（含 HBM）營收只做上限檢查（參考、不判定）。既有的同源列改標「讀取層級（同源，不判定）」；既有數值、目標價與評等不變。"
+                     "前一版（v0.7.6）：個股 HTML 版面 v1.3 與三層協調 C0 對帳；另一側讀數下，情境 B 的 HBM 出貨位元 CY2027 由 6.67 降到 4.13 EB（−38%），只有情境 A 因不縮放而維持供給限制。")
+CONFIG["a1_note"] = CONFIG["a1_note"] + "；v0.7.7（2026-11-14）：Coord 頁新增 C0（實績）節（HBM：無可比實績；DRAM 上限檢查）；既有數值不變"

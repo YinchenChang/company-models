@@ -18,6 +18,7 @@
 4. 情境（v0.12 起；工作方式 v1.7，Andy 2026-11-02 15:58；v0.16 完成過渡）：本庫只給基準（＝原情境 B），下游基準讀 `*_Base` 名稱。產業情境 A、C 的參考值自 v0.16 起由市場層 `markets/scen/`（`scen.py`、`industry_scen_v*.json`）持有，本庫 In 頁與各推導頁不再有 A／C（決策 S41）。公司模型的 A／C 預設讀市場層同字母情境（Andy 2026-10-25 情境一致性），覆寫時在說明欄寫明相對市場層的倍數與產業 GW 相對 Wattonomics 基準 ±%（`reader.scen_note()`、`SIF_GWvsWT_Base`）。行業變數的基準值仍不得在公司模型內另訂一套。
 5. Tokenomics 的量：經本庫 `SIF_TK_*` 取（值＝Tokenomics 現行快照，版本見 Interface 第 2 列），或直接讀 Tokenomics 快照；兩者不得混用不同版本。
 6. 公司模型發現行業變數需要修正：改本庫 In 頁（同一 repo 的 PR），不在公司模型覆寫。
+7. 三層基準協調（2026-11-14，Andy 確認；規則本文 `docs/plan/三層基準協調規則.md`，本條只摘要）：本庫基準的取法依各年份證據狀態（甲：兩層都有證據→對帳；乙：一層有證據→以它為準；丙：兩層都外推→本庫基準＝Wattonomics 上線 GW 經橋接換算的出貨量，以供給上限為頂），不看數值高低。原始顆數保留為「供給側讀數」，不再乘 [Assumed] 係數作基準（取代決策 S33，數值於規則落地步驟 5 才改）。對帳未結案的年份標「對帳中」，依賴該年份的公司模型並列兩個讀數的目標價；公司模型不在兩層之間自行取值。
 
 ## 3. 版本與引用
 
@@ -42,3 +43,11 @@
 版本號：只改證據、標記、文字為修補版（v0.1.x）；輸入值或公式改變為次版（v0.x）；Interface 名稱刪除或定義改變為主版（v1.0 前只新增名稱以次版處理）。
 | v0.12 | 2026-11-03 | 新增 `*_Base`（57 組，等同原 B 名稱，例 `SIF_DeployGW_Base`、`SIF_um28_Base`、`SIF_cpo_Base_27`、`SIF_cqBase_8`）、`SIF_GWvsWT_Base`（2026–2029）；A／B／C 名稱標停用過渡（v0.13 刪） | 35 個公司模型與 tsmc 的情境係數列改標「個股自訂」，說明欄由 `reader.scen_note()` 產生；數值不變（cascade 第二輪 64 個全部 SAME） |
 | v0.16 | 2026-11-05 | 刪除 In 頁層情境名稱 `SIF_cqA_*`／`SIF_cqC_*`、`SIF_nqA_*`／`SIF_nqC_*`、`SIF_um28_A`／`_C`、`SIF_um29_A`／`_C`、`SIF_hbm_p28_A`／`_C`、`SIF_hbm_p29_A`／`_C`、`SIF_al27_A`／`_C`、`SIF_al28_A`／`_C`、`SIF_cpo_A_*`／`SIF_cpo_C_*`、`SIF_eq_ck_C_*`（含 `_lo`／`_hi`；值移到 `markets/scen`）；新增 `SIF_CapGW_CoWoS_Base`、`SIF_CapGW_HBM_Base`、`SIF_CapOnlineGW_CoWoS_Base`、`SIF_CapOnlineGW_HBM_Base`；`SIF_TestWFE_SoC` 2028–29 改為基準；`SIF_TK_*` 鏡像改 Tokenomics v21.10 | market.py 以 `markets/scen` 合併列序（記憶體公司 In 頁逐列相同）；network、ase、mpi、alchip、tuc、arm、umc、vis 改讀 `markets/scen`；下游數值不變（cascade 第二輪 SAME） |
+| v0.19-trial（試作，不合併） | 2026-11-14 | 新增 Interface E 節逐年名稱 `SIF_DeployGW_Supply_<年>`（供給側讀數＝原始顆數）、`SIF_DeployGW_Demand_<年>`（需求側讀數＝Wattonomics 換算值）、`SIF_DeployGW_Current_<年>`（S33 取法）、`SIF_DeployGW_Alt_<年>`／`SIF_DeployGW_AltRatio_<年>`（另一側讀數，C4 兩讀數目標價用）、`SIF_RecoStatus／Lead／Label／Flag／UseConv_<年>`；輸入 `SIF_crd_*`。`SIF_DeployGW_Base` 等 *_Base 改由規則決定（`SIF_UnitsCoef_Base`＝依規則的基準係數）；cov_done＝0 時逐值同 v0.18 | 試作；NVIDIA 只確認名稱可讀，未改 |
+
+## v0.19：情境 B 基準顆數係數（三層基準協調規則 v1.4）
+
+- 下游讀 `um28_B`、`um29_B`（經 `siliconomics/reader.py`、`markets/scen/scen.py`、`markets/memory/market.py`）時，基準值＝`SIF_UnitsCoef_Base` 的 2028、2029 值（`siliconomics/coef_rule.py`）；In 頁同名列保留原 S33 值只作參照。低、高依同比例縮放。
+- 新建檔程式一律經上述讀取點取值，不得直接讀 In 頁或快照 rows 的 um28_B／um29_B 原值。
+- 對帳中年份（`SIF_RecoFlag_<年>`＝1）的硬體個股，依規則 C4 並列兩讀數目標價（`SIF_DeployGW_AltRatio_<年>`；樣板 NVIDIA v0.3.8）。
+

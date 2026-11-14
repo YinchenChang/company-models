@@ -132,7 +132,7 @@ def _find(ws, prefix, col=1):
     raise KeyError((ws.title, prefix))
 
 
-def build(co_dir, xlsx, nm_block=False, pfmt="n0", recon_main=None):
+def build(co_dir, xlsx, nm_block=False, pfmt="n0", recon_main=None, v13=False):
     src = os.path.join(co_dir, "html_src.json")
     out = os.path.join(co_dir, "html.json")
     cfg = json.load(open(src, encoding="utf-8"))
@@ -290,5 +290,13 @@ def build(co_dir, xlsx, nm_block=False, pfmt="n0", recon_main=None):
             db.remove(nt)
             db.insert(0, nt)
     db.insert(0, {"type": "note", "parts": ["情境定義：", f"@README!A{scen_r}"]})
+    # 三層協調 C4（規則 v1.4；tools/coord/coord.py）：xlsx 有 Coord 頁時，橫幅另一側讀數一格與揭露句、估值章開頭兩讀數表與長條圖
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "coord"))
+    import coord as COORD  # noqa: E402
+    COORD.inject_html(cfg, xlsx)
+    if v13:   # SK 海力士 v0.7.6 起：個股 HTML 版面規格 v1.3（tools/memory_model/html_v13.py）；美光、三星不傳，輸出不變
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import html_v13  # noqa: E402
+        cfg = html_v13.transform(cfg, wb, co_dir)
     json.dump(cfg, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("ok", out)

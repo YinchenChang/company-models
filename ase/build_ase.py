@@ -314,6 +314,8 @@ DEFP = dict(scn="A", mf="1", rel="rel{y}_{s}", el="el", fp27="fp27_{s}", fpg="fp
             capex27="capex27", capi="capi", life="life", ft="ft", phi="phi", nonop="nonop_f", tax="tax", fg="fade_g{s}", fm="fade_m{s}")
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["mf"] == "1" and s != "A":   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 顆數 × wta（＝另一側讀數比值）；情境 A＝供給側讀數不縮放
+        P["mf"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     p = lambda k, y=None: P[k].format(y=(y % 100 if y else ""), s=s)
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -979,6 +981,18 @@ RD.cell(r, 1, XF("每股值多少？答：加權目標價約 ", (f'TEXT({_B("tpw
 r += 1
 RD.cell(r, 1, "展示層輔助：Comparable 目標價（相對倍數調整後）的上檔空間（HTML 估值表用；加權目標價使用的 Comparable 即此值）")
 RD.cell(r, 2, "=tp_comp_adj/px-1").number_format = "0.0%"
+# 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 ase/coord_alt.json）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD
+if COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL):
+    COORD.stamp(wb, "v0.2.4", "v0.2.5", "2026-11-14")
+# v0.2.6（2026-11-14）：版面規格 v1.3＋三層協調新機制（C0）；只新增列／頁（ase/v026_post.py）
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import v026_post as V26  # noqa: E402
+print(V26.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL))
+# v0.2.7（2026-11-14）：C0 實績對帳補列（規則 v1.4.2；ase/v027_post.py）
+import v027_post as V27  # noqa: E402
+print(V27.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL))
 wb.save(sys.argv[1])
 if os.environ.get("ASE_ROWMAP"):
     import json

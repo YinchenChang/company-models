@@ -1,0 +1,261 @@
+[
+ {
+  "after_section_end": "M29.",
+  "section": "M30. 三層基準協調（v0.19-trial 試作；規則 docs/plan/三層基準協調規則.md v1.1 C3：依各年證據狀態決定基準；Coord 頁）",
+  "rows": [
+   {
+    "id": "crd_cov_done",
+    "label": "Wattonomics 覆蓋是否已補齊（1＝是；上游定基準的年份只有為 1 時才改用換算值）",
+    "unit": "旗標",
+    "lo": null,
+    "base": 0,
+    "hi": null,
+    "tag": "Derived",
+    "src": "Wattonomics v0.3 未含七家以外買方路徑（v0.3.2 W-1 處理中）；docs/plan/三層基準協調規則.md v1.1 C3「丙（及上游有證據的乙）的前提：Wattonomics 覆蓋已補齊」。暫值 0",
+    "src2": "試作：0 與 1 各建一次比較（報告 docs/reports/20261114_協調試作_build.md）"
+   },
+   {
+    "id": "crd_thr",
+    "label": "「有證據」門檻（首次判定）",
+    "unit": "%",
+    "lo": 0.5,
+    "base": 0.5,
+    "hi": 0.67,
+    "tag": "Assumed",
+    "src": "docs/plan/三層基準協調規則.md v1.1 C3、J2（[Assumed]；量測時並列 67%）"
+   },
+   {
+    "id": "crd_enter",
+    "label": "緩衝區：原無證據者進入「有證據」的門檻",
+    "unit": "%",
+    "lo": 0.55,
+    "base": 0.55,
+    "hi": 0.55,
+    "tag": "Assumed",
+    "src": "docs/plan/三層基準協調規則.md v1.1 C3 緩衝區（規則定值，無區間）"
+   },
+   {
+    "id": "crd_exit",
+    "label": "緩衝區：原有證據者退出「有證據」的門檻（低於此值才退出）",
+    "unit": "%",
+    "lo": 0.45,
+    "base": 0.45,
+    "hi": 0.45,
+    "tag": "Assumed",
+    "src": "docs/plan/三層基準協調規則.md v1.1 C3 緩衝區（規則定值，無區間）"
+   },
+   {
+    "id": "crd_x2_26",
+    "label": "2026 Wattonomics 換算值（平滑法 x2，補覆蓋；成本等值、出貨年）＝需求側讀數",
+    "unit": "GW",
+    "lo": null,
+    "base": 23.017,
+    "hi": null,
+    "tag": "Derived",
+    "src": "暫值，待 Wattonomics v0.3.2 後重算：siliconomics/tools/baseline_bridge.py 以 Siliconomics v0.18、Wattonomics v0.3 算出的 Bridge x2（實體出貨ₜ≈上線ₜ＋k×(上線ₜ₊₁−上線ₜ)，k＝lag_on÷12＋inv_on，÷ 本庫實體／成本等值比；含 ① 覆蓋缺口 Assumed）",
+    "src2": "docs/plan/三層基準協調規則.md v1.1 C3 換算方法（平滑法）"
+   },
+   {
+    "id": "crd_x2_27",
+    "label": "2027 Wattonomics 換算值（平滑法 x2，補覆蓋；成本等值、出貨年）＝需求側讀數",
+    "unit": "GW",
+    "lo": null,
+    "base": 27.921,
+    "hi": null,
+    "tag": "Derived",
+    "src": "暫值，待 Wattonomics v0.3.2 後重算：siliconomics/tools/baseline_bridge.py 以 Siliconomics v0.18、Wattonomics v0.3 算出的 Bridge x2（實體出貨ₜ≈上線ₜ＋k×(上線ₜ₊₁−上線ₜ)，k＝lag_on÷12＋inv_on，÷ 本庫實體／成本等值比；含 ① 覆蓋缺口 Assumed）",
+    "src2": "docs/plan/三層基準協調規則.md v1.1 C3 換算方法（平滑法）"
+   },
+   {
+    "id": "crd_x2_28",
+    "label": "2028 Wattonomics 換算值（平滑法 x2，補覆蓋；成本等值、出貨年）＝需求側讀數",
+    "unit": "GW",
+    "lo": null,
+    "base": 31.104,
+    "hi": null,
+    "tag": "Derived",
+    "src": "暫值，待 Wattonomics v0.3.2 後重算：siliconomics/tools/baseline_bridge.py 以 Siliconomics v0.18、Wattonomics v0.3 算出的 Bridge x2（實體出貨ₜ≈上線ₜ＋k×(上線ₜ₊₁−上線ₜ)，k＝lag_on÷12＋inv_on，÷ 本庫實體／成本等值比；含 ① 覆蓋缺口 Assumed）",
+    "src2": "docs/plan/三層基準協調規則.md v1.1 C3 換算方法（平滑法）"
+   },
+   {
+    "id": "crd_x2_29",
+    "label": "2029 Wattonomics 換算值（平滑法 x2，補覆蓋；成本等值、出貨年）＝需求側讀數",
+    "unit": "GW",
+    "lo": null,
+    "base": 30.851,
+    "hi": null,
+    "tag": "Derived",
+    "src": "暫值，待 Wattonomics v0.3.2 後重算：siliconomics/tools/baseline_bridge.py 以 Siliconomics v0.18、Wattonomics v0.3 算出的 Bridge x2（實體出貨ₜ≈上線ₜ＋k×(上線ₜ₊₁−上線ₜ)，k＝lag_on÷12＋inv_on，÷ 本庫實體／成本等值比；含 ① 覆蓋缺口 Assumed）",
+    "src2": "docs/plan/三層基準協調規則.md v1.1 C3 換算方法（平滑法）"
+   },
+   {
+    "id": "crd_ew_26",
+    "label": "2026 Wattonomics 證據比例（WIF_Evidence 口徑；全市場分母）",
+    "unit": "%",
+    "lo": null,
+    "base": 0.888,
+    "hi": null,
+    "tag": "Derived",
+    "src": "暫值，待 Wattonomics v0.3.2 WIF_Evidence 正式值（含七家資本支出實績等級 1、已簽約等級 2、已確認站點等級 3）",
+    "src2": "docs/plan/三層基準協調規則.md v1.1 C3 證據種類與分母"
+   },
+   {
+    "id": "crd_ew_27",
+    "label": "2027 Wattonomics 證據比例（WIF_Evidence 口徑；全市場分母）",
+    "unit": "%",
+    "lo": null,
+    "base": 0.494,
+    "hi": null,
+    "tag": "Derived",
+    "src": "暫值，待 Wattonomics v0.3.2 WIF_Evidence 正式值（含七家資本支出實績等級 1、已簽約等級 2、已確認站點等級 3）",
+    "src2": "docs/plan/三層基準協調規則.md v1.1 C3 證據種類與分母"
+   },
+   {
+    "id": "crd_ew_28",
+    "label": "2028 Wattonomics 證據比例（WIF_Evidence 口徑；全市場分母）",
+    "unit": "%",
+    "lo": null,
+    "base": 0.535,
+    "hi": null,
+    "tag": "Derived",
+    "src": "暫值，待 Wattonomics v0.3.2 WIF_Evidence 正式值（含七家資本支出實績等級 1、已簽約等級 2、已確認站點等級 3）",
+    "src2": "docs/plan/三層基準協調規則.md v1.1 C3 證據種類與分母"
+   },
+   {
+    "id": "crd_ew_29",
+    "label": "2029 Wattonomics 證據比例（WIF_Evidence 口徑；全市場分母）",
+    "unit": "%",
+    "lo": null,
+    "base": 0.202,
+    "hi": null,
+    "tag": "Derived",
+    "src": "暫值，待 Wattonomics v0.3.2 WIF_Evidence 正式值（含七家資本支出實績等級 1、已簽約等級 2、已確認站點等級 3）",
+    "src2": "docs/plan/三層基準協調規則.md v1.1 C3 證據種類與分母"
+   },
+   {
+    "id": "crd_es_26",
+    "label": "2026 Siliconomics 證據比例（原始顆數讀數中由實績、已簽約、已確認產能支撐的比例）",
+    "unit": "%",
+    "lo": 0.44,
+    "base": 0.44,
+    "hi": 0.65,
+    "tag": "Assumed",
+    "src": "NVIDIA FY2027 資料中心 Q1＋Q2 實績 75.2＋89.0＝164.2 ÷ 錨點 375.46＝0.44（Verified ÷ 錨點）；高＝FY27Q3（11-19 公布）後約 0.65；非 NVIDIA 實績本庫未建，視同 NVIDIA 比例；等級 2、3 未量化",
+    "src2": "步驟 3 橋接表 In scov（siliconomics/tools/baseline_bridge.py）"
+   },
+   {
+    "id": "crd_es_27",
+    "label": "2027 Siliconomics 證據比例（原始顆數讀數中由實績、已簽約、已確認產能支撐的比例）",
+    "unit": "%",
+    "lo": 0,
+    "base": 0,
+    "hi": 0.1,
+    "tag": "Assumed",
+    "src": "無實績；CoWoS／HBM 產能是供給上限、不是需求證據；等級 2（法定文件承諾、長約新聞稿）未量化（規則 v1.1 已知限制）",
+    "src2": "步驟 3 橋接表 In scov（siliconomics/tools/baseline_bridge.py）"
+   },
+   {
+    "id": "crd_es_28",
+    "label": "2028 Siliconomics 證據比例（原始顆數讀數中由實績、已簽約、已確認產能支撐的比例）",
+    "unit": "%",
+    "lo": 0,
+    "base": 0,
+    "hi": 0,
+    "tag": "Assumed",
+    "src": "無實績、無已量化的已簽約",
+    "src2": "步驟 3 橋接表 In scov（siliconomics/tools/baseline_bridge.py）"
+   },
+   {
+    "id": "crd_es_29",
+    "label": "2029 Siliconomics 證據比例（原始顆數讀數中由實績、已簽約、已確認產能支撐的比例）",
+    "unit": "%",
+    "lo": 0,
+    "base": 0,
+    "hi": 0,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "步驟 3 橋接表 In scov（siliconomics/tools/baseline_bridge.py）"
+   },
+   {
+    "id": "crd_prevw_26",
+    "label": "2026 上次判定 Wattonomics 是否有證據（1／0；空白＝首次判定）",
+    "unit": "旗標",
+    "lo": null,
+    "base": null,
+    "hi": null,
+    "tag": "Derived",
+    "src": "docs/plan/三層基準協調規則.md v1.1 C3 緩衝區；首次判定留空"
+   },
+   {
+    "id": "crd_prevs_26",
+    "label": "2026 上次判定 Siliconomics 是否有證據（1／0；空白＝首次判定）",
+    "unit": "旗標",
+    "lo": null,
+    "base": null,
+    "hi": null,
+    "tag": "Derived",
+    "src": "docs/plan/三層基準協調規則.md v1.1 C3 緩衝區；首次判定留空"
+   },
+   {
+    "id": "crd_prevw_27",
+    "label": "2027 上次判定 Wattonomics 是否有證據（1／0；空白＝首次判定）",
+    "unit": "旗標",
+    "lo": null,
+    "base": null,
+    "hi": null,
+    "tag": "Derived",
+    "src": "docs/plan/三層基準協調規則.md v1.1 C3 緩衝區；首次判定留空"
+   },
+   {
+    "id": "crd_prevs_27",
+    "label": "2027 上次判定 Siliconomics 是否有證據（1／0；空白＝首次判定）",
+    "unit": "旗標",
+    "lo": null,
+    "base": null,
+    "hi": null,
+    "tag": "Derived",
+    "src": "docs/plan/三層基準協調規則.md v1.1 C3 緩衝區；首次判定留空"
+   },
+   {
+    "id": "crd_prevw_28",
+    "label": "2028 上次判定 Wattonomics 是否有證據（1／0；空白＝首次判定）",
+    "unit": "旗標",
+    "lo": null,
+    "base": null,
+    "hi": null,
+    "tag": "Derived",
+    "src": "docs/plan/三層基準協調規則.md v1.1 C3 緩衝區；首次判定留空"
+   },
+   {
+    "id": "crd_prevs_28",
+    "label": "2028 上次判定 Siliconomics 是否有證據（1／0；空白＝首次判定）",
+    "unit": "旗標",
+    "lo": null,
+    "base": null,
+    "hi": null,
+    "tag": "Derived",
+    "src": "docs/plan/三層基準協調規則.md v1.1 C3 緩衝區；首次判定留空"
+   },
+   {
+    "id": "crd_prevw_29",
+    "label": "2029 上次判定 Wattonomics 是否有證據（1／0；空白＝首次判定）",
+    "unit": "旗標",
+    "lo": null,
+    "base": null,
+    "hi": null,
+    "tag": "Derived",
+    "src": "docs/plan/三層基準協調規則.md v1.1 C3 緩衝區；首次判定留空"
+   },
+   {
+    "id": "crd_prevs_29",
+    "label": "2029 上次判定 Siliconomics 是否有證據（1／0；空白＝首次判定）",
+    "unit": "旗標",
+    "lo": null,
+    "base": null,
+    "hi": null,
+    "tag": "Derived",
+    "src": "docs/plan/三層基準協調規則.md v1.1 C3 緩衝區；首次判定留空"
+   }
+  ]
+ }
+]

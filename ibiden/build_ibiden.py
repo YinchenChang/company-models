@@ -241,11 +241,17 @@ inp("cxs_28", "資本支出 FY2028（排程）", "¥B", None, "=(cxs_3y-cxs_26)/
 inp("das_26", "折舊攤銷 FY2026（公司計畫）", "¥B", None, 81, None, "Interested-party", "公司：2027 年 3 月期第 1 四半期決算補足資料：通期減價償卻費 810 億（" + SUPQ1_URL + "）", TDQ2 + "：中間期實績 358.77 億")
 inp("life_s", "新增資產平均折舊年限（排程用）", "年", None, 8, None, "Assumed", "載板設備與廠房混合；與欣興、南電、景碩模型同值", "FY2027 起折舊＝前一年 ×（1 − 1／年限）＋前一年資本支出 ÷ 年限；FY2029 起由 FY2028 折舊 ÷ 營收線性收斂到 fc_da_ss")
 
+# IB_OVERRIDE（敏感度快照用，ibiden/sens_ibiden.py；「鍵=值;…」，值 @lo／@hi＝In 頁低／高欄；正式建置不設）
+OVR = dict(kv.split("=", 1) for kv in os.environ.get("IB_OVERRIDE", "").split(";") if "=" in kv)
 r = 4
 for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    if key in OVR:
+        ov = OVR[key]
+        base = {"@lo": lo, "@hi": hi}[ov] if ov.startswith("@") else float(ov)
+        assert base is not None, (key, ov)
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
         if v is not None:
@@ -306,6 +312,8 @@ def units_f(g, y):
 DEFP = dict(scn="A", w="w_ot", aie="ai_e", ga="g_asp", rel="rel", pp="pp", mne="m_ne", gne="g_ne", gcer="g_cer", goth="g_oth", nioi="ni_oi", shg="sh_g", wm=None)
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["wm"] is None and s != "A":   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 產業量 × wta（＝另一側讀數比值）；情境 A 不縮放
+        P["wm"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     wmf = lambda y: f"*{P['wm'][y]}" if P["wm"] and y >= 2027 else ""   # v0.13：Wattonomics 錨定（年別乘數 dict；預設 None＝不乘）
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -980,6 +988,20 @@ P5 = dict(ver="v0.5.3", px="4062.T", fpe="pe_fwd_sa",
           PX4={"4062.T": 8037, "3037.TW": 888, "8046.TW": 1080, "3189.TW": 822, "009150.KS": 1115000, "ATS.VI": 130.6},
           PX5={"4062.T": 6726, "3037.TW": 800, "8046.TW": 972, "3189.TW": 740, "009150.KS": 944000, "ATS.VI": 110.2})
 px1105_post.apply(wb, P5)
+# 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 ibiden/coord_alt.json）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    COORD.stamp(wb, "v0.5.3", "v0.5.4", "2026-11-14")
+    if not os.environ.get("IB_OVERRIDE") and not os.environ.get("IB_SNAP"):
+        # v0.5.5（2026-11-14）：個股 HTML 版面規格 v1.3 與三層協調 C0（ibiden/v055_post.py；只新增頁與列，既有數值格不變）
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import v055_post  # noqa: E402
+        print(v055_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR))
+        # v0.5.6（2026-11-14）：C0 補公司實績對帳（規則 v1.4.2；ibiden/v056_post.py；只新增與改標，既有數值格不變）
+        import v056_post  # noqa: E402
+        print(v056_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, wb._v055["CO"]))
 wb.save(sys.argv[1])
 if os.environ.get("IBIDEN_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

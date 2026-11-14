@@ -11,6 +11,11 @@ SNAPSHOT_FILE = open(os.path.join(_SIL, "CURRENT_SNAPSHOT"), encoding="utf-8").r
 SNAP = json.load(open(os.path.join(_SIL, SNAPSHOT_FILE), encoding="utf-8"))
 SIL_VERSION = SNAP["source"]["version"]
 _ROWS = SNAP["rows"]
+# 三層基準協調規則 v1.4：情境 B 基準顆數係數改讀 SIF_UnitsCoef_Base（siliconomics/coef_rule.py；與 reader、scen 同一函式）
+import sys as _sys0
+_sys0.path.insert(0, os.path.join(os.path.dirname(_SIL)))
+import coef_rule as _CR
+_CR.apply(_ROWS, SNAP["names"], SIL_VERSION)
 # Excel 不分整數與浮點數；下游有把數值寫進說明文字者（例如「× 1.0／1.0」），故依單位還原原本的型別：
 # 比例、倍數、百萬顆、單價一律浮點數；GB、$B、$K 為整數值時用整數（與 2026-10-27 前 market.py 的寫法相同）
 _FLOAT_UNITS = {"%", "x", "百萬顆", "$/GB"}
@@ -155,7 +160,9 @@ def write(wb, hdr, Font, scen=None):
         M.cell(rr, 3 + j, f).number_format = "0.00"
     # 情境層：顆數係數 → 需求 → 出貨 → 缺口（供給不變，需求隨情境）
     for s in SCEN:
-        put(f"顆數係數（{s}；2028–29 ÷ 基準，與台積電、Advantest 同一套）", "x", [None, 1, 1, f"=um28_{s}", f"=um29_{s}"], key="cf" + s, fmt="0.00", note="2026–27 無情境差異")
+        _alt = os.environ.get("SIL_COORD_ALT") == "1" and os.environ.get("COORD_RUN") == "1" and s != "A"   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：B、C 自 2027 起 × wta（＝另一側讀數比值）
+        put(f"顆數係數（{s}；2028–29 ÷ 基準，與台積電、Advantest 同一套）", "x",
+            [None, 1, "=wta_27", f"=um28_{s}*wta_28", f"=um29_{s}*wta_29"] if _alt else [None, 1, 1, f"=um28_{s}", f"=um29_{s}"], key="cf" + s, fmt="0.00", note="2026–27 無情境差異")
     for s in SCEN:
         put(f"需求 × 出貨係數（{s}）", "EB", [None] + [f"={YC[y]}{MK['demg']}*{YC[y]}{MK['cf' + s]}" for y in (26, 27, 28, 29)], key="demg" + s)
     for s in SCEN:

@@ -1,6 +1,8 @@
 # Siliconomics 取數工具：把重算後活頁簿的 Interface（SIF_ 具名範圍）與 In 頁輸入列匯成版本固定的快照 JSON。
 # 用法：
 #   匯出：python3 siliconomics/tools/export_snapshot.py <重算後的 Siliconomics xlsx> <輸出 snapshot.json>
+#   試作：python3 siliconomics/tools/export_snapshot.py <xlsx> <snapshot.json> --allow-trial-sgov
+#         只在檔名版本含「-trial」時放行 SGOV_Errors ≠ 0（三層基準協調試作：K1 SK 海力士／記憶體市場尚未跟新係數，屬步驟 5b）；快照標「試作」。main 版本行為不變
 #   檢查：python3 siliconomics/tools/export_snapshot.py --check <snapshot.json> [<xlsx>]
 #         重新讀取快照記錄的 xlsx（預設 siliconomics/model/<快照記錄的檔名>），任何值差異即以代碼 1 結束。
 # 下游（markets/memory/market.py 等）只讀快照，不直接讀 xlsx；快照記錄檔名、版本、sha256。
@@ -64,13 +66,20 @@ def main():
             print("快照與活頁簿不一致：", bad[:20]); sys.exit(1)
         print(f"快照與 {os.path.basename(x)} 一致（{len(names)} 個名稱）"); return
     x, out = sys.argv[1], sys.argv[2]
+    allow_trial = "--allow-trial-sgov" in sys.argv[3:]
     names, rows, groups, scen, desc = read(x)
     fn = os.path.basename(x)
     ver = fn.split("_v")[-1].rsplit(".xlsx", 1)[0] if "_v" in fn else "?"
+    trial = allow_trial and "-trial" in ver and bool(names.get("SGOV_Errors"))
     snap = dict(source=dict(file=fn, version="v" + ver, sha256=hashlib.sha256(open(x, "rb").read()).hexdigest(),
-                            note="Siliconomics 快照；下游只讀本檔。SGOV_Errors 須為 0"),
+                            note=("Siliconomics 快照（試作，不得供 main 下游使用）：SGOV_Errors＝%s，以 --allow-trial-sgov 放行（K1 SK 海力士／記憶體市場尚未跟新係數，屬三層基準協調步驟 5b）" % names.get("SGOV_Errors"))
+                            if trial else "Siliconomics 快照；下游只讀本檔。SGOV_Errors 須為 0"),
                 scen=scen, scen_desc=desc, unit_groups=groups, rows=rows, names=names)
-    if names.get("SGOV_Errors"):
+    if trial:
+        snap["source"]["trial"] = True
+    if names.get("SGOV_Errors") and not trial:
+        if allow_trial:
+            print("--allow-trial-sgov 只適用於版號含 -trial 的試作檔")
         print("SGOV_Errors ≠ 0，拒絕匯出"); sys.exit(1)
     json.dump(snap, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"快照：{out}（{fn}；{len(names)} 個名稱、{sum(1 for r in rows if 'id' in r)} 個輸入列）")

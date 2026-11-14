@@ -7,9 +7,14 @@
   C 重點觀察：thesis 章「重點觀察」≤ 5 點、合計 ≤ 750 字。
   D 損益：pl 章含 GAAP／Non-GAAP 標示與必備列；表頭至少 3 個歷史年＋5 個預測年（以年份欄位計）。
   F 圖表：除 revdcf、recon、status 外，每章至少一張圖（svg、長條 .ttr／.bt 或 canvas）。
+  G 位置（Andy 2026-11-14 12:47）：估值章標題後第一個區塊是圖，且含「目標價」與「現價」（四個目標價與現價圖）。
+  H 位置（同上）：敏感度章標題後前兩個區塊都是圖，且含「相對基準」（加權目標價相對基準的低案、高案主圖）。
   全頁（警告）：摺疊（details）與附錄以外的可見文字出現參數代號。
+  I 對帳中（--xlsx 時；規格 I 節、三層基準協調規則 v1.1 C4 與第 10 節第 6 項）：xlsx 有任一日曆年「對帳中」（SIF_RecoFlag_<yyyy> 或 co_flag_<yyyy>＝1）
+    且估值依賴（co_dep_<yyyy>，缺時視為 1）時：橫幅含「對帳中」；兩讀數評等不同時橫幅含「評等不同」；估值章含「現行基準讀數」「另一側讀數」「對帳中」
+    與兩個加權目標價數字（Coord 頁「加權目標價」列 B、C 欄，兩位小數）；損益章表頭每個依賴會計年度（FY(t) 對 CY(t−1)，末年另含延伸期一年）標「對帳中」。
 
-用法：python3 tools/company_html/check_layout_v13.py <html>...   結束碼：0＝全過；1＝有必修。
+用法：python3 tools/company_html/check_layout_v13.py <html>... [--xlsx <xlsx>]   結束碼：0＝全過；1＝有必修。
 """
 import re
 import sys
@@ -51,7 +56,114 @@ def vis_text(el):
     return re.sub(r'\s+', '', el.get_text())
 
 
-def check(path):
+def reco_info(xlsx):
+    """xlsx 的對帳中年份與兩讀數（規格 I 節）。回傳 None＝無依賴的對帳中年份。"""
+    import openpyxl
+    wb = openpyxl.load_workbook(xlsx, data_only=True)
+    def nv(name):
+        if name not in wb.defined_names:
+            return None
+        sh, co = next(iter(wb.defined_names[name].destinations))
+        return wb[sh][co.replace('$', '')].value
+    flagged = []
+    for y in range(2024, 2036):
+        f = nv(f'SIF_RecoFlag_{y}')
+        if f is None:
+            f = nv(f'co_flag_{y}')
+        if f is None:
+            continue
+        dep = nv(f'co_dep_{y}')
+        if float(f) == 1 and (dep is None or float(dep) == 1):
+            flagged.append(y)
+    lag = 1   # 具名格旗標（NVIDIA 樣板）：FY(t) 對 CY(t−1)
+    if not flagged and 'Coord' in wb.sheetnames:   # 共用工具 tools/coord/coord.py 的 Coord 頁：「年」列（CY2026…）＋「對帳中旗標」列；會計年度＝日曆年（lag 0）
+        C = wb['Coord']
+        yr_row = next((r for r in range(1, min(C.max_row, 60) + 1) if C.cell(r, 1).value == '年'), None)
+        fl_row = next((r for r in range(1, min(C.max_row, 60) + 1) if str(C.cell(r, 1).value or '').startswith('對帳中旗標')), None)
+        if yr_row and fl_row:
+            lag = 0
+            for c in range(2, C.max_column + 1):
+                m = re.match(r'CY(20\d\d)', str(C.cell(yr_row, c).value or ''))
+                v = C.cell(fl_row, c).value
+                if m and v is not None and float(v) == 1:
+                    flagged.append(int(m.group(1)))
+    if not flagged:
+        return None
+    fys = sorted({y + lag for y in flagged} | {max(flagged) + lag + 1})   # 末年另含延伸期一年
+    info = {'cy': flagged, 'fy': fys, 'tp': None, 'rec': None}
+    if 'Coord' in wb.sheetnames:
+        C = wb['Coord']
+        for r in range(1, C.max_row + 1):
+            a = str(C.cell(r, 1).value or '')
+            if a.startswith('加權目標價') and info['tp'] is None and isinstance(C.cell(r, 2).value, (int, float)):   # 兩讀數表為第一次出現
+                info['tp'] = (C.cell(r, 2).value, C.cell(r, 3).value)
+            if a.startswith('投資建議') and info['rec'] is None:
+                info['rec'] = (C.cell(r, 2).value, C.cell(r, 3).value)
+    return info
+
+
+def check_reco(s, info, must):
+    hero = s.select_one('.hero')
+    ht = re.sub(r'\s+', '', hero.get_text()) if hero else ''
+    if '對帳中' not in ht:
+        must.append(f'I 橫幅未標示「對帳中」（對帳中日曆年 {info["cy"]}）')
+    if info['rec'] and info['rec'][0] != info['rec'][1] and '評等不同' not in ht:
+        must.append(f'I 兩讀數評等不同（{info["rec"][0]}／{info["rec"][1]}），橫幅未明說「評等不同」')
+    va = s.find('section', id='valuation')
+    vt = re.sub(r'\s+', '', va.get_text()) if va else ''
+    for w in ('現行基準讀數', '另一側讀數', '對帳中'):
+        if w not in vt:
+            must.append(f'I 估值章缺「{w}」')
+    if info['tp'] is None:
+        must.append('I xlsx 沒有 Coord 頁「加權目標價」兩讀數列')
+    else:
+        for lab, v in zip(('現行基準讀數', '另一側讀數'), info['tp']):
+            if not isinstance(v, (int, float)) or f'{v:,.2f}' not in vt:
+                must.append(f'I 估值章沒有{lab}目標價 {v}')
+    pl = s.find('section', id='pl')
+    heads = []
+    if pl:
+        for tr in pl.find_all('tr')[:3]:
+            heads += [re.sub(r'\s+', '', c.get_text()) for c in tr.find_all(['th', 'td'])]
+    for fy in info['fy']:
+        hit = [h for h in heads if f'FY{fy}' in h]
+        if hit and not any('對帳中' in h for h in hit):
+            must.append(f'I 損益表 FY{fy} 欄未標「對帳中」')
+        if not hit:
+            must.append(f'I 損益表找不到 FY{fy} 欄')
+
+
+def is_chart(el):
+    return el.name == 'figure' or bool(el.find_all('svg') or el.select('.ttr, .bt, canvas'))
+
+
+def lead_blocks(sec, n):
+    """章節標題之後的前 n 個可見區塊（直接子元素；略過 h2、script、style、hidden）。"""
+    out = []
+    for el in sec.find_all(recursive=False):
+        if el.name in ('h2', 'script', 'style') or el.has_attr('hidden'):
+            continue
+        out.append(el)
+        if len(out) == n:
+            break
+    return out
+
+
+def check_position(s, must):
+    va = s.find('section', id='valuation')
+    if va:
+        b = lead_blocks(va, 1)
+        t = re.sub(r'\s+', '', b[0].get_text()) if b else ''
+        if not (b and is_chart(b[0]) and '目標價' in t and '現價' in t):
+            must.append('G 估值章第一個區塊不是「四個目標價與現價」圖（說明請放在圖下方）')
+    se = s.find('section', id='sens')
+    if se:
+        b = lead_blocks(se, 2)
+        if not (len(b) == 2 and all(is_chart(x) and '相對基準' in x.get_text() for x in b)):
+            must.append('H 敏感度章前兩個區塊不是「加權目標價相對基準」低案、高案兩張主圖（說明與其他內容請放在圖下方）')
+
+
+def check(path, xlsx=None):
     s = BeautifulSoup(open(path, encoding='utf-8').read(), 'lxml')
     must, warn = [], []
     secs = [x for x in s.find_all('section') if x.get('id')]
@@ -125,6 +237,8 @@ def check(path):
             continue
         if not (x.find_all('svg') or x.select('.ttr, .bt, canvas')):
             must.append(f'F 章節 {x["id"]} 沒有圖表')
+    # G、H 位置
+    check_position(s, must)
     # 全頁參數代號（警告）
     main = s.find('main') or s.body
     for x in secs:
@@ -133,6 +247,13 @@ def check(path):
         p = PARAM_RE.findall(vis_text(x))
         if p:
             warn.append(f'全頁 {x["id"]} 可見文字含參數代號 {sorted(set(p))[:8]}')
+    # I 對帳中
+    if xlsx:
+        info = reco_info(xlsx)
+        if info:
+            check_reco(s, info, must)
+    else:
+        warn.append('I 未給 --xlsx，跳過對帳中檢查')
     print(('FAIL ' if must else 'ok   ') + path + f'（章節 {ids}；個別模組 {modules}）')
     for m in must:
         print('  必修', m)
@@ -142,5 +263,9 @@ def check(path):
 
 
 if __name__ == '__main__':
-    ok = all([check(p) for p in sys.argv[1:]])
+    args = sys.argv[1:]
+    xl = None
+    if '--xlsx' in args:
+        i = args.index('--xlsx'); xl = args[i + 1]; del args[i:i + 2]
+    ok = all([check(p, xl) for p in args])
     sys.exit(0 if ok else 1)
