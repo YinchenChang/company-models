@@ -71,6 +71,7 @@ for r in ws_.iter_rows():
         PKG = ([r[2 + j].value for j in range(5)], f"{rel(EQ_F)}｜Mkt!C{r[0].row}:G{r[0].row}")
 assert PKG and sorted(EQT) == list(SC) and sorted(EQAI) == list(SC)
 PEAK, PEAK_SRC = CP.peak_years(ROOT)
+sys.path.insert(0, os.path.join(ROOT, "siliconomics")); import reader as SIL   # v0.3.5：三層協調 C4 另一側讀數建置（SIL.COORD_ALT）在主引擎使用，故提前讀入
 
 # ---------------- In ----------------
 IN = wb.active; IN.title = "In"
@@ -176,11 +177,21 @@ for s_, w_ in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
     inp(f"tp_w{s_}", f"目標價情境權重 {s_}", "%", None, w_, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 A 0.3／B 0.5／C 0.2）", "三者合計應為 100%")
 
 IN_ROW = {}
+# TOWA_OVERRIDE（v0.3.5 起，敏感度快照用，towa/sens_towa.py；「鍵=@lo／@hi／*倍數／數值；…」＝該鍵的基準欄改取 In 頁低／高欄、乘倍數或改數值；正式建置不設）
+OVR = dict(kv.split("=", 1) for kv in os.environ.get("TOWA_OVERRIDE", "").split(";") if "=" in kv)
 r = 4
 for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    if key in OVR:
+        ov = OVR[key]
+        if ov.startswith("*"):
+            assert isinstance(base, (int, float)), (key, base); _new = base * float(ov[1:])
+        else:
+            _new = {"@lo": lo, "@hi": hi}[ov] if ov.startswith("@") else float(ov)
+        assert _new is not None, (key, ov)
+        base = _new
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
         if v is not None:
@@ -195,6 +206,7 @@ for srow in rows:
 # J 節續：估值 v2 參數（黃底）
 def inrow(key, item, unit, base, tag, s1, s2, fmt=None, yellow=False):
     global r
+    if key in OVR: base = float(OVR[key])   # v0.3.5：敏感度快照（情境權重案例）
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     c = IN.cell(r, 5, base)
     if not (isinstance(base, str) and base.startswith("=")): c.font = BLUE
@@ -347,6 +359,10 @@ DEFP = dict(dlt="dlt", tail="g_tail", den="", stk="", cw25="cw_25", ai="ai_25", 
             hsx=None, cwm=None)   # v0.13：Wattonomics 錨定案例用（hsx＝HBM 位元替換、cwm＝CoWoS 片數乘數）；預設不變
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["hsx"] is None and P["cwm"] is None and s != "A":   # v0.3.5 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 於 CY2027 起 HBM 出貨位元與 CoWoS 片數 × wta（＝另一側讀數比值）；情境 A 不縮放
+        P["hsx"] = {y: (f"hs{s}_{y % 100}*wta_{y % 100}" if y >= 2027 else f"hs{s}_{y % 100}") for y in range(2025, 2030)}
+        P["cwm"] = {y: f"wta_{y % 100}" for y in (2027, 2028, 2029)}
+        P["kfix"] = True   # 校準係數 kH、kL 沿用情境 A（未縮放）的 FY2025 校準：FY2025 是實績，另一側讀數不重新校準
     shl = P["shl"] or f"shl_{s}"; ima = P["ima"] or f"ima_{s}"
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -374,8 +390,8 @@ def engine(ws, r0, title, **over):
     row("eqt", "設備總額（同字母情境）", "US$B", {**{CYC[y]: f"=eqt{s}_{y % 100}" for y in Y5}, "H": f"=G{r}*(1+{P['pkt']})"}, fmt="0.0", note="切割與雷射用")
     ws.cell(r, 1, "B. 校準（只用 FY2025 AI 錨點；FY(t)＝3/4×CY(t)＋1/4×CY(t+1)）").font = BOLD; r += 1
     fw = lambda key, y: f"(0.75*{CYC[y]}{R[key]}+0.25*{CYC[y+1]}{R[key]})"
-    row("kh", "HBM：每單位新機需求的封膠營收 kH", "¥B／十億個", {"C": f"={P['ai']}*{P['w']}/{fw('xh', 2025)}"}, fmt="0.0", note="＝AI 錨點 × HBM 比重 ÷ FY2025 新機需求")
-    row("kl", "2.5D：每千片新機需求的封膠營收 kL", "¥B／千片", {"C": f"={P['ai']}*(1-{P['w']})/{fw('xl', 2025)}"}, fmt="0.00000")
+    row("kh", "HBM：每單位新機需求的封膠營收 kH", "¥B／十億個", {"C": ("=kh_A" if P.get("kfix") else f"={P['ai']}*{P['w']}/{fw('xh', 2025)}")}, fmt="0.0", note="＝AI 錨點 × HBM 比重 ÷ FY2025 新機需求")
+    row("kl", "2.5D：每千片新機需求的封膠營收 kL", "¥B／千片", {"C": ("=kl_A" if P.get("kfix") else f"={P['ai']}*(1-{P['w']})/{fw('xl', 2025)}")}, fmt="0.00000")
     ws.cell(r, 1, "C. 會計年度驅動推導（C＝FY2025 … G＝FY2029）").font = BOLD; r += 1
     FY1 = range(2026, 2030)
     row("shf", "AI 封膠市占係數（相對 2025）", "x", {FYC[y]: f"=1-{shl}/sh*{(y - 2025) / 4}" for y in Y5}, fmt="0.000", note="公司特有：A 最有利、C 最不利")
@@ -423,7 +439,7 @@ PB = {}; r0 = 60
 for s in SC:
     PB[s] = engine(PL, r0, TITLES[s], scn=s)
     r0 = PB[s]["end"] + 2
-    if s == "A": defname("sc_A", f"PL!$D${PB['A']['sc']}")
+    if s == "A": defname("sc_A", f"PL!$D${PB['A']['sc']}"); defname("kh_A", f"PL!$C${PB['A']['kh']}"); defname("kl_A", f"PL!$C${PB['A']['kl']}")
 hdr(PL, 3, ["情境／項目", "單位", "FY2025A", "FY2026", "FY2027", "FY2028", "FY2029", "說明"])
 sr = 4; SUMR = {}
 for s in SC:
@@ -1040,6 +1056,17 @@ def _px1105(wb, ver, tk, px5, px4, peer5, peer_old):
 _PX1105 = _px1105(wb, 'v0.3.4', '6315.T', 1877, 2097,
     {'6146.T': 41450, '7729.T': 12635, '0522.HK': 101, 'BESI.AS': 140.9, 'KLIC': 59.83},
     {('6146.T', '2026-11-04'): 47370, ('7729.T', '2026-11-04'): 14920, ('0522.HK', '2026-11-04'): 112.6, ('BESI.AS', '2026-11-04'): 152, ('KLIC', '2026-11-04'): 68.44})
+# ---------------- v0.3.5（2026-11-15）：三層協調 C4 兩讀數（Coord 頁；快照 towa/coord_alt.json）、個股 HTML 版面 v1.3、C0（公司實績） ----------------
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    COORD.stamp(wb, "v0.3.4", "v0.3.5", "2026-11-15")
+    if not os.environ.get("TOWA_OVERRIDE") and not os.environ.get("TOWA_SNAP"):
+        # v0.3.5：個股 HTML 版面規格 v1.3、三層協調 C0（含公司實績）與兩讀數（towa/v035_post.py；只新增頁與列，既有數值格不變）
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import v035_post  # noqa: E402
+        print(v035_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR, PB, EQ_F))
 wb.save(sys.argv[1])
 if os.environ.get("TOWA_ROWS"):
     json.dump(dict(IN=IN_ROW, SUMR={f"{a}|{b}": v for (a, b), v in SUMR.items()}, PB=PB, EXT=EXT, T=T, EPSR=EPSR, PL_CHK=PL_CHK,
