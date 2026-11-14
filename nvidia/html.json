@@ -1214,7 +1214,7 @@
   {
    "id": "sens",
    "title": "敏感度",
-   "intro": "上方表為加權目標價的敏感度（業務主因整本重算、目標價參數）；下方龍捲風圖為 FY2028 EPS 的敏感度（以情境 A 為底，一次動一個輸入）。",
+   "intro": "主圖為加權目標價相對基準的變動（低案、高案分開，一次動一個輸入；變動達兩位數百分比者直接顯示，其餘摺疊）；下方摺疊為全部案例、業務主因與目標價參數明細，以及 FY2028 EPS 敏感度對照。",
    "blocks": [
     {
      "type": "note",
@@ -1225,105 +1225,257 @@
      "summary": "展開：敏感度頁原文說明（含模型參數代號）"
     },
     {
-     "type": "bars",
-     "title": "加權目標價的主要敏感度（長條＝該案例下的加權目標價；豎線＝基準加權目標價；依影響大小排序）",
-     "fmt": "n2",
-     "items": [
-      {
-       "label": "同業比較法不加歷史溢價",
-       "value": "@Sens!C990",
-       "series": 1
-      },
-      {
-       "label": "DCF 權重調低",
-       "value": "@Sens!C37",
-       "series": 0
-      },
-      {
-       "label": "DCF 權重調高",
-       "value": "@Sens!E37",
-       "series": 1
-      },
-      {
-       "label": "FY2027 校準缺口逐年收斂",
-       "value": "@Sens!E1016",
-       "series": 0
-      },
-      {
-       "label": "NVIDIA 顆數少一成",
-       "value": "@Sens!C991",
-       "series": 1
-      },
-      {
-       "label": "NVIDIA 顆數多一成",
-       "value": "@Sens!E991",
-       "series": 0
-      },
-      {
-       "label": "中國恢復（低）",
-       "value": "@Sens!C998",
-       "series": 0
-      },
-      {
-       "label": "中國恢復（高）",
-       "value": "@Sens!E998",
-       "series": 0
-      },
-      {
-       "label": "Blackwell 售價低",
-       "value": "@Sens!C992",
-       "series": 0
-      },
-      {
-       "label": "Blackwell 售價高",
-       "value": "@Sens!E992",
-       "series": 1
-      },
-      {
-       "label": "Rubin Ultra 售價低",
-       "value": "@Sens!C994",
-       "series": 1
-      },
-      {
-       "label": "Rubin Ultra 售價高",
-       "value": "@Sens!E994",
-       "series": 0
-      },
-      {
-       "label": "匣級加價全不保留",
-       "value": "@Sens!C996",
-       "series": 1
-      },
-      {
-       "label": "匣級加價全保留",
-       "value": "@Sens!E996",
-       "series": 0
-      },
-      {
-       "label": "營業費用率調低",
-       "value": "@Sens!C1004",
-       "series": 0
-      },
-      {
-       "label": "營業費用率調高",
-       "value": "@Sens!E1004",
-       "series": 1
-      },
-      {
-       "label": "股權風險溢酬低",
-       "value": "@Sens!C30",
-       "series": 0
-      },
-      {
-       "label": "股權風險溢酬高",
-       "value": "@Sens!E30",
-       "series": 1
-      }
+     "type": "tornado",
+     "sheet": "Sens",
+     "label_col": "A",
+     "value_col": "B",
+     "fmt": "sp1",
+     "title": "加權目標價相對基準：輸入取低值，變動達兩位數百分比的案例",
+     "rows": "1025,1064"
+    },
+    {
+     "type": "tornado",
+     "sheet": "Sens",
+     "label_col": "A",
+     "value_col": "B",
+     "fmt": "sp1",
+     "title": "加權目標價相對基準：輸入取低值",
+     "rows": "1026,1027,1028,1029,1030,1031,1032,1033,1034,1035,1037,1038,1039,1040,1041,1042,1043,1044,1045,1046,1047,1050,1053,1054,1055,1056,1057,1058,1060,1061,1062",
+     "collapse": true,
+     "summary": "展開：加權目標價相對基準：輸入取低值，變動未達兩位數百分比的案例（幾乎為零者見全部案例表）"
+    },
+    {
+     "type": "tornado",
+     "sheet": "Sens",
+     "label_col": "A",
+     "value_col": "C",
+     "fmt": "sp1",
+     "title": "加權目標價相對基準：輸入取高值，變動達兩位數百分比的案例",
+     "rows": "1051,1064"
+    },
+    {
+     "type": "tornado",
+     "sheet": "Sens",
+     "label_col": "A",
+     "value_col": "C",
+     "fmt": "sp1",
+     "title": "加權目標價相對基準：輸入取高值",
+     "rows": "1026,1027,1028,1029,1030,1031,1032,1033,1034,1035,1037,1038,1039,1040,1041,1042,1043,1044,1045,1046,1047,1050,1053,1055,1056,1057,1058,1059,1060,1061,1063",
+     "collapse": true,
+     "summary": "展開：加權目標價相對基準：輸入取高值，變動未達兩位數百分比的案例（幾乎為零者見全部案例表）"
+    },
+    {
+     "type": "table",
+     "caption": "@Sens!A1023",
+     "collapse": true,
+     "summary": "展開：全部案例的加權目標價相對基準（低案、高案）",
+     "head": [
+      "@Sens!A1024",
+      "@Sens!B1024",
+      "@Sens!C1024"
      ],
-     "ref": {
-      "label": "基準加權目標價",
-      "value": "@Val!B40"
-     }
+     "rows": [
+      [
+       "@Sens!A1025",
+       "@Sens!B1025|sp1",
+       "@Sens!C1025|sp1"
+      ],
+      [
+       "@Sens!A1026",
+       "@Sens!B1026|sp1",
+       "@Sens!C1026|sp1"
+      ],
+      [
+       "@Sens!A1027",
+       "@Sens!B1027|sp1",
+       "@Sens!C1027|sp1"
+      ],
+      [
+       "@Sens!A1028",
+       "@Sens!B1028|sp1",
+       "@Sens!C1028|sp1"
+      ],
+      [
+       "@Sens!A1029",
+       "@Sens!B1029|sp1",
+       "@Sens!C1029|sp1"
+      ],
+      [
+       "@Sens!A1030",
+       "@Sens!B1030|sp1",
+       "@Sens!C1030|sp1"
+      ],
+      [
+       "@Sens!A1031",
+       "@Sens!B1031|sp1",
+       "@Sens!C1031|sp1"
+      ],
+      [
+       "@Sens!A1032",
+       "@Sens!B1032|sp1",
+       "@Sens!C1032|sp1"
+      ],
+      [
+       "@Sens!A1033",
+       "@Sens!B1033|sp1",
+       "@Sens!C1033|sp1"
+      ],
+      [
+       "@Sens!A1034",
+       "@Sens!B1034|sp1",
+       "@Sens!C1034|sp1"
+      ],
+      [
+       "@Sens!A1035",
+       "@Sens!B1035|sp1",
+       "@Sens!C1035|sp1"
+      ],
+      [
+       "@Sens!A1036",
+       "@Sens!B1036|sp1",
+       "@Sens!C1036|sp1"
+      ],
+      [
+       "@Sens!A1037",
+       "@Sens!B1037|sp1",
+       "@Sens!C1037|sp1"
+      ],
+      [
+       "@Sens!A1038",
+       "@Sens!B1038|sp1",
+       "@Sens!C1038|sp1"
+      ],
+      [
+       "@Sens!A1039",
+       "@Sens!B1039|sp1",
+       "@Sens!C1039|sp1"
+      ],
+      [
+       "@Sens!A1040",
+       "@Sens!B1040|sp1",
+       "@Sens!C1040|sp1"
+      ],
+      [
+       "@Sens!A1041",
+       "@Sens!B1041|sp1",
+       "@Sens!C1041|sp1"
+      ],
+      [
+       "@Sens!A1042",
+       "@Sens!B1042|sp1",
+       "@Sens!C1042|sp1"
+      ],
+      [
+       "@Sens!A1043",
+       "@Sens!B1043|sp1",
+       "@Sens!C1043|sp1"
+      ],
+      [
+       "@Sens!A1044",
+       "@Sens!B1044|sp1",
+       "@Sens!C1044|sp1"
+      ],
+      [
+       "@Sens!A1045",
+       "@Sens!B1045|sp1",
+       "@Sens!C1045|sp1"
+      ],
+      [
+       "@Sens!A1046",
+       "@Sens!B1046|sp1",
+       "@Sens!C1046|sp1"
+      ],
+      [
+       "@Sens!A1047",
+       "@Sens!B1047|sp1",
+       "@Sens!C1047|sp1"
+      ],
+      [
+       "@Sens!A1048",
+       "@Sens!B1048|sp1",
+       "@Sens!C1048|sp1"
+      ],
+      [
+       "@Sens!A1049",
+       "@Sens!B1049|sp1",
+       "@Sens!C1049|sp1"
+      ],
+      [
+       "@Sens!A1050",
+       "@Sens!B1050|sp1",
+       "@Sens!C1050|sp1"
+      ],
+      [
+       "@Sens!A1051",
+       "@Sens!B1051|sp1",
+       "@Sens!C1051|sp1"
+      ],
+      [
+       "@Sens!A1052",
+       "@Sens!B1052|sp1",
+       "@Sens!C1052|sp1"
+      ],
+      [
+       "@Sens!A1053",
+       "@Sens!B1053|sp1",
+       "@Sens!C1053|sp1"
+      ],
+      [
+       "@Sens!A1054",
+       "@Sens!B1054|sp1",
+       "@Sens!C1054|sp1"
+      ],
+      [
+       "@Sens!A1055",
+       "@Sens!B1055|sp1",
+       "@Sens!C1055|sp1"
+      ],
+      [
+       "@Sens!A1056",
+       "@Sens!B1056|sp1",
+       "@Sens!C1056|sp1"
+      ],
+      [
+       "@Sens!A1057",
+       "@Sens!B1057|sp1",
+       "@Sens!C1057|sp1"
+      ],
+      [
+       "@Sens!A1058",
+       "@Sens!B1058|sp1",
+       "@Sens!C1058|sp1"
+      ],
+      [
+       "@Sens!A1059",
+       "@Sens!B1059|sp1",
+       "@Sens!C1059|sp1"
+      ],
+      [
+       "@Sens!A1060",
+       "@Sens!B1060|sp1",
+       "@Sens!C1060|sp1"
+      ],
+      [
+       "@Sens!A1061",
+       "@Sens!B1061|sp1",
+       "@Sens!C1061|sp1"
+      ],
+      [
+       "@Sens!A1062",
+       "@Sens!B1062|sp1",
+       "@Sens!C1062|sp1"
+      ],
+      [
+       "@Sens!A1063",
+       "@Sens!B1063|sp1",
+       "@Sens!C1063|sp1"
+      ],
+      [
+       "@Sens!A1064",
+       "@Sens!B1064|sp1",
+       "@Sens!C1064|sp1"
+      ]
+     ]
     },
     {
      "type": "table",
@@ -1670,7 +1822,9 @@
        "@Sens!I1019|n2",
        "@Sens!J1019|n2"
       ]
-     ]
+     ],
+     "collapse": true,
+     "summary": "展開：業務主因表（整本重算快照；加權目標價與 DCF 單法變化）"
     },
     {
      "type": "tornado",
@@ -1681,7 +1835,7 @@
      "value_col": "E",
      "fmt": "sp1",
      "collapse": true,
-     "summary": "展開：FY2028 EPS 變動未達兩位數百分比的案例"
+     "summary": "展開：對照：FY2028 EPS 相對基準的變動（情境 A，一次動一個輸入）"
     },
     {
      "type": "h3",
@@ -2182,7 +2336,9 @@
        "@Sens!I37|n2",
        "@Sens!J37|n2"
       ]
-     ]
+     ],
+     "collapse": true,
+     "summary": "展開：目標價參數表（WACC、β、ERP、永續成長率等）"
     }
    ]
   },

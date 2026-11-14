@@ -416,6 +416,41 @@ def val_g(wb):
     return r0
 
 
+# ---------- Sens：加權目標價相對基準（HTML 龍捲風圖用；版面規格 v1.3 H 節，Andy 2026-11-14 09:16，樣板 CoreWeave v5.0.2；只新增列） ----------
+TOR_LABEL = {"相對倍數係數＝1": "同業比較法不加歷史溢價（相對倍數係數＝1）",
+             "匣級加價保留比例": "匣級加價保留比例 0／1（全不保留／全保留）",
+             "HBM／LPDDR 吸收比例": "HBM／LPDDR 漲價吸收比例 0／1（全額轉嫁／全額吸收）",
+             "營業費用彈性": "營業費用彈性（營業費用年增 ÷ 營收年增）低／高",
+             "有效稅率": "有效稅率 16%／18%",
+             "k_rec 自 FY2028": "FY2027 校準缺口自 FY2028 起逐年收斂、FY2030 消失（基準＝持續）"}
+
+
+def sens_tor(wb):
+    import re
+    SE = wb["Sens"]
+    src = []
+    for t0, hdr in (("目標價敏感度：業務主因", "案例"), ("目標價參數敏感度", "參數")):
+        r0 = lab(SE, t0); hr = next(r for r in range(r0, r0 + 4) if SE.cell(r, 1).value == hdr); r = hr + 1
+        while SE.cell(r, 1).value and not str(SE.cell(r, 1).value).startswith("檢查"):
+            src.append(r); r += 1
+    r = SE.max_row + 3
+    SE.cell(r, 1, "加權目標價相對基準（HTML 敏感度主圖用；v0.3.7 起，版面規格 v1.3 H 節；只引用上方「業務主因」與「目標價參數」兩表，白話標籤，不回饋計算）").font = BOLD; r0 = r; r += 1
+    for j, h in enumerate(["案例（白話）", "低案：加權目標價相對基準", "高案：加權目標價相對基準", "來源列"], 1):
+        c = SE.cell(r, j, h); c.font = BOLD; c.fill = HDR
+    r += 1
+    for sr in src:
+        t = str(SE.cell(sr, 1).value)
+        labl = next((v for k, v in TOR_LABEL.items() if t.startswith(k)), t)
+        assert not re.search(r"(?<![A-Za-z0-9])[A-Za-z][A-Za-z0-9]*_[A-Za-z0-9_]+", labl), labl
+        SE.cell(r, 1, labl)
+        for col, scol in ((2, "D"), (3, "F")):
+            v = SE[f"{scol}{sr}"].value
+            if v is None or v == "—": continue
+            SE.cell(r, col, f"=Sens!{scol}{sr}").number_format = "+0.0%;-0.0%"
+        SE.cell(r, 4, f"Sens!A{sr}"); r += 1
+    return r0
+
+
 def build_id(here):
     h = hashlib.sha256(VER.encode())
     for fn in sorted(["build_nvidia.py", "v035_post.py", "v037_post.py", "px1105_post.py", "tp_v2.py", "accel_share.py", "sens.json", "segments.json", "hist_frozen.json"]):
@@ -446,6 +481,7 @@ def apply(wb, here):
     PLA = pl_standard(wb)
     RVA = revdcf(wb)
     VG = val_g(wb)
+    ST = sens_tor(wb)
     RMA = readme13(wb, RVA, PLA)
     old, new, n = version(wb, here)
     wb._v037 = dict(PL=PLA, RV=RVA, RM=RMA)

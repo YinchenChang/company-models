@@ -618,7 +618,33 @@ def _sens_bars(th=0.02, top=10):
             "fmt": "n2", "items": items, "ref": {"label": "基準加權目標價", "value": f"@Val!B{find('Val', '目標價（DCF 與 Comparable 加權）')}"}}
 
 
-_S["sens"]["blocks"].insert(1, _sens_bars())
+# v0.3.7（Andy 2026-11-14 09:16，樣板 CoreWeave v5.0.2；版面規格 v1.3 H 節）：敏感度主圖改為「加權目標價相對基準」龍捲風圖（低案、高案各一，
+# |變動| ≥ 10% 直接顯示，未達者摺疊；全部案例表摺疊）。資料取 Sens 頁末「加權目標價相對基準」表（v037_post.sens_tor）。原 top 10 長條圖刪除，FY2028 EPS 龍捲風圖改摺疊對照。
+def _sens_tor():
+    SW = wb["Sens"]; t0 = find("Sens", "加權目標價相對基準（HTML"); r1 = t0 + 2; r2 = r1
+    while SW.cell(r2 + 1, 1).value: r2 += 1
+    out = []
+    for col, side in (("B", "低"), ("C", "高")):
+        big = [r for r in range(r1, r2 + 1) if isinstance(SW[f"{col}{r}"].value, (int, float)) and abs(SW[f"{col}{r}"].value) >= 0.1]
+        small = [r for r in range(r1, r2 + 1) if isinstance(SW[f"{col}{r}"].value, (int, float)) and 0.0005 <= abs(SW[f"{col}{r}"].value) < 0.1]   # 未達 0.05% 的案例不畫（長條寬度為零），只在全部案例表
+        base = {"type": "tornado", "sheet": "Sens", "label_col": "A", "value_col": col, "fmt": "sp1"}
+        out.append(dict(base, title=f"加權目標價相對基準：輸入取{side}值，變動達兩位數百分比的案例", rows=",".join(map(str, big))))
+        out.append(dict(base, title=f"加權目標價相對基準：輸入取{side}值", rows=",".join(map(str, small)), collapse=True,
+                        summary=f"展開：加權目標價相對基準：輸入取{side}值，變動未達兩位數百分比的案例（幾乎為零者見全部案例表）"))
+    out.append({"type": "table", "caption": f"@Sens!A{t0}", "collapse": True, "summary": "展開：全部案例的加權目標價相對基準（低案、高案）",
+                "head": [f"@Sens!{c}{t0 + 1}" for c in "ABC"], "rows": [[f"@Sens!A{r}", f"@Sens!B{r}|sp1", f"@Sens!C{r}|sp1"] for r in range(r1, r2 + 1)]})
+    return out
+
+
+_sb = _S["sens"]["blocks"]
+for _b in _sb:
+    if _b.get("type") == "table" and not _b.get("collapse") and str(_b.get("caption", "")).startswith(("@Sens!A987", "@Sens!A26")):
+        _b["collapse"] = True
+        _b["summary"] = "展開：業務主因表（整本重算快照；加權目標價與 DCF 單法變化）" if _b["caption"] == "@Sens!A987" else "展開：目標價參數表（WACC、β、ERP、永續成長率等）"
+    if _b.get("type") == "tornado":
+        _b["summary"] = "展開：對照：FY2028 EPS 相對基準的變動（情境 A，一次動一個輸入）"
+_S["sens"]["blocks"] = _sb[:1] + _sens_tor() + _sb[1:]
+_S["sens"]["intro"] = "主圖為加權目標價相對基準的變動（低案、高案分開，一次動一個輸入；變動達兩位數百分比者直接顯示，其餘摺疊）；下方摺疊為全部案例、業務主因與目標價參數明細，以及 FY2028 EPS 敏感度對照。"
 
 json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")
