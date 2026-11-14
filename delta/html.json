@@ -4158,7 +4158,350 @@
    "blocks": [
     {
      "type": "h3",
-     "text": "三層協調：本模型由下往上對帳 Siliconomics"
+     "text": "三層協調：公司實績對層級隱含值"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!A81"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!A137"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!A138"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!A139"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Coord!A110",
+     "head": [
+      "@Coord!A111",
+      "@Coord!B111",
+      "@Coord!C111"
+     ],
+     "rows": [
+      [
+       "@Coord!A112",
+       "@Coord!B112|n1",
+       "@Coord!C112|n1"
+      ],
+      [
+       "@Coord!A113",
+       "@Coord!B113|n1",
+       "@Coord!C113|n1"
+      ],
+      [
+       "@Coord!A114",
+       "@Coord!B114|sp1",
+       "@Coord!C114|sp1"
+      ],
+      [
+       "@Coord!A115",
+       "@Coord!B115|",
+       "@Coord!C115|"
+      ],
+      [
+       "@Coord!A116",
+       "@Coord!B116|sp1",
+       "@Coord!C116|sp1"
+      ],
+      [
+       "@Coord!A117",
+       "@Coord!B117|n1",
+       "@Coord!C117|n1"
+      ],
+      [
+       "@Coord!A118",
+       "@Coord!B118|n1",
+       "@Coord!C118|n1"
+      ],
+      [
+       "@Coord!A119",
+       "@Coord!B119|sp1",
+       "@Coord!C119|sp1"
+      ],
+      [
+       "@Coord!A120",
+       "@Coord!B120|",
+       "@Coord!C120|"
+      ],
+      [
+       "@Coord!A121",
+       "@Coord!B121|p1",
+       "@Coord!C121|"
+      ],
+      [
+       "@Coord!A122",
+       "@Coord!B122|",
+       "@Coord!C122|n1"
+      ],
+      [
+       "@Coord!A123",
+       "@Coord!B123|",
+       "@Coord!C123|n1"
+      ],
+      [
+       "@Coord!A124",
+       "@Coord!B124|",
+       "@Coord!C124|sp1"
+      ],
+      [
+       "@Coord!A125",
+       "@Coord!B125|",
+       "@Coord!C125|"
+      ],
+      [
+       "@Coord!A126",
+       "@Coord!B126|",
+       "@Coord!C126|n1"
+      ],
+      [
+       "@Coord!A127",
+       "@Coord!B127|",
+       "@Coord!C127|p1"
+      ],
+      [
+       "@Coord!A128",
+       "@Coord!B128|",
+       "@Coord!C128|p1"
+      ],
+      [
+       "@Coord!A129",
+       "@Coord!B129|",
+       "@Coord!C129|"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "展開：公司實績對照各列的單位、口徑、來源與證據等級",
+     "collapse": true,
+     "summary": "展開：公司實績對照各列的單位、口徑、來源與證據等級",
+     "head": [
+      "@Coord!A111",
+      "@Coord!F111",
+      "@Coord!G111"
+     ],
+     "rows": [
+      [
+       "@Coord!A112",
+       "@Coord!F112|",
+       "@Coord!G112|"
+      ],
+      [
+       "@Coord!A113",
+       "@Coord!F113|",
+       "@Coord!G113|"
+      ],
+      [
+       "@Coord!A115",
+       "@Coord!F115|",
+       "@Coord!G115|"
+      ],
+      [
+       "@Coord!A116",
+       "@Coord!F116|",
+       "@Coord!G116|"
+      ],
+      [
+       "@Coord!A117",
+       "@Coord!F117|",
+       "@Coord!G117|"
+      ],
+      [
+       "@Coord!A118",
+       "@Coord!F118|",
+       "@Coord!G118|"
+      ],
+      [
+       "@Coord!A120",
+       "@Coord!F120|",
+       "@Coord!G120|"
+      ],
+      [
+       "@Coord!A121",
+       "@Coord!F121|",
+       "@Coord!G121|"
+      ],
+      [
+       "@Coord!A122",
+       "@Coord!F122|",
+       "@Coord!G122|"
+      ],
+      [
+       "@Coord!A123",
+       "@Coord!F123|",
+       "@Coord!G123|"
+      ],
+      [
+       "@Coord!A125",
+       "@Coord!F125|",
+       "@Coord!G125|"
+      ],
+      [
+       "@Coord!A126",
+       "@Coord!F126|",
+       "@Coord!G126|"
+      ],
+      [
+       "@Coord!A127",
+       "@Coord!F127|",
+       "@Coord!G127|"
+      ],
+      [
+       "@Coord!A128",
+       "@Coord!F128|",
+       "@Coord!G128|"
+      ],
+      [
+       "@Coord!A132",
+       "@Coord!F132|",
+       "@Coord!G132|"
+      ],
+      [
+       "@Coord!A133",
+       "@Coord!F133|",
+       "@Coord!G133|"
+      ],
+      [
+       "@Coord!A134",
+       "@Coord!F134|",
+       "@Coord!G134|"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Coord!A84",
+     "collapse": true,
+     "summary": "展開：公司已公布實績與揭露（月營收、法說占比、部門營收）的數值、來源與證據等級",
+     "head": [
+      "@Coord!A85",
+      "@Coord!B85",
+      "@Coord!F85",
+      "@Coord!G85"
+     ],
+     "rows": [
+      [
+       "@Coord!A86",
+       "@Coord!B86|n3",
+       "@Coord!F86|",
+       "@Coord!G86|"
+      ],
+      [
+       "@Coord!A87",
+       "@Coord!B87|n3",
+       "@Coord!F87|",
+       "@Coord!G87|"
+      ],
+      [
+       "@Coord!A88",
+       "@Coord!B88|n3",
+       "@Coord!F88|",
+       "@Coord!G88|"
+      ],
+      [
+       "@Coord!A89",
+       "@Coord!B89|n3",
+       "@Coord!F89|",
+       "@Coord!G89|"
+      ],
+      [
+       "@Coord!A90",
+       "@Coord!B90|n3",
+       "@Coord!F90|",
+       "@Coord!G90|"
+      ],
+      [
+       "@Coord!A91",
+       "@Coord!B91|n3",
+       "@Coord!F91|",
+       "@Coord!G91|"
+      ],
+      [
+       "@Coord!A92",
+       "@Coord!B92|n3",
+       "@Coord!F92|",
+       "@Coord!G92|"
+      ],
+      [
+       "@Coord!A93",
+       "@Coord!B93|n3",
+       "@Coord!F93|",
+       "@Coord!G93|"
+      ],
+      [
+       "@Coord!A94",
+       "@Coord!B94|n3",
+       "@Coord!F94|",
+       "@Coord!G94|"
+      ],
+      [
+       "@Coord!A95",
+       "@Coord!B95|n3",
+       "@Coord!F95|",
+       "@Coord!G95|"
+      ],
+      [
+       "@Coord!A96",
+       "@Coord!B96|n3",
+       "@Coord!F96|",
+       "@Coord!G96|"
+      ],
+      [
+       "@Coord!A97",
+       "@Coord!B97|p1",
+       "@Coord!F97|",
+       "@Coord!G97|"
+      ],
+      [
+       "@Coord!A98",
+       "@Coord!B98|p1",
+       "@Coord!F98|",
+       "@Coord!G98|"
+      ],
+      [
+       "@Coord!A99",
+       "@Coord!B99|n3",
+       "@Coord!F99|",
+       "@Coord!G99|"
+      ],
+      [
+       "@Coord!A100",
+       "@Coord!B100|p1",
+       "@Coord!F100|",
+       "@Coord!G100|"
+      ],
+      [
+       "@Coord!A101",
+       "@Coord!B101|n3",
+       "@Coord!F101|",
+       "@Coord!G101|"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!A82"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "讀取層級（同源，不判定）與層級之間（參考）"
     },
     {
      "type": "note",
@@ -4192,7 +4535,7 @@
     },
     {
      "type": "table",
-     "caption": "由下往上對帳：本模型的產業量與 Siliconomics 層級值逐年對照（差距＝本模型相對層級值的百分比；本公司自己的量超過正負一成五標「對帳中」，不改上游值；下方「層級之間」列僅供參考）",
+     "caption": "讀取層級（同源，不判定）：本模型的產業量直接讀自 Siliconomics，與層級值逐年對照的差距恆為零，無檢驗力，不計入對帳中；下方「層級之間」列僅供參考",
      "head": [
       "@Coord!A41",
       "@Coord!B41",
