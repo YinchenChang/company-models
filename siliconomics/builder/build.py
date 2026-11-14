@@ -522,7 +522,7 @@ def main():
     if COORD and DP is not None:
         CO = wb.create_sheet("Coord", index=wb.sheetnames.index("Path"))
         CO["A1"] = ("Coord — 三層基準協調（試作 v0.19-trial；規則 v1.1 C3）：每年依兩層證據比例判定狀態（甲：兩層都有證據；乙：一層；丙：兩層都外推；含緩衝區），"
-                    "決定由誰定基準。上游定基準（丙，或 Wattonomics 有證據的乙）且 Wattonomics 覆蓋已補齊（crd_cov_done＝1）→ 基準＝Wattonomics 換算值；"
+                    "區間跨線即待定（規則 v1.3：兩層證據比例低／基準／高任一端點與基準值落在門檻兩側 → 待定，維持現行、標對帳中）。決定由誰定基準。上游定基準（丙，或 Wattonomics 有證據的乙）且 Wattonomics 覆蓋已補齊（crd_cov_done＝1）→ 基準＝Wattonomics 換算值；"
                     "覆蓋未補齊 → 維持現行（原始顆數 × S33 係數）並標「對帳中」；其餘維持現行。基準係數 crd_k＝基準 ÷ 原始顆數讀數，取代基準鏈上的 S33 係數")
         CO["A2"] = ("S33 係數（um28_B、um29_B）不再是基準鏈上的水準係數：只在『維持現行』的年份經 crd_k 帶入；改用換算值的年份不讀。"
                     "供給側讀數＝原始顆數（不乘係數）；需求側讀數＝Wattonomics 換算值（C7 兩條明列數列）；另一側讀數＝未被採為基準的那一條（C4 兩讀數目標價用）")
@@ -549,19 +549,32 @@ def main():
         CO.cell(COROW["_r"], 1, "B. 證據狀態（C3；只看狀態、不看數值高低）").font = BOLD; COROW["_r"] += 1
         co("ew", "Wattonomics 證據比例（WIF_Evidence 口徑）", lambda y, col, yy: f"=crd_ew_{yy}", "0.0%")
         co("es", "Siliconomics 證據比例", lambda y, col, yy: f"=crd_es_{yy}", "0.0%")
+        # v1.3「區間跨線即待定」：兩層證據比例都用低／基準／高三值判；任一層低或高的「有證據」與基準值不同 → 待定
+        co("ew_lo", "　Wattonomics 證據比例 低", lambda y, col, yy: f"=crd_ew_{yy}_lo", "0.0%", note="模型只有點值時低＝基準＝高（In 頁說明欄註明）")
+        co("ew_hi", "　Wattonomics 證據比例 高", lambda y, col, yy: f"=crd_ew_{yy}_hi", "0.0%")
+        co("es_lo", "　Siliconomics 證據比例 低", lambda y, col, yy: f"=crd_es_{yy}_lo", "0.0%", note="docs/reports/20261114_供給側證據比例.xlsx 區間")
+        co("es_hi", "　Siliconomics 證據比例 高", lambda y, col, yy: f"=crd_es_{yy}_hi", "0.0%")
         hasev = lambda sh, pv: (lambda y, col, yy: f"=IF(ISBLANK(crd_{pv}_{yy}),IF({R_(sh, col)}>=crd_thr,1,0),IF(crd_{pv}_{yy}=1,IF({R_(sh, col)}>=crd_exit,1,0),IF({R_(sh, col)}>=crd_enter,1,0)))")
         co("hw", "Wattonomics 有證據（1／0；首次以門檻、之後套緩衝區）", hasev("ew", "prevw"), "0", note="首次判定（上次判定空白）：≥ crd_thr；原有證據：≥ crd_exit 才保留；原無證據：≥ crd_enter 才進入")
         co("hs", "Siliconomics 有證據（1／0）", hasev("es", "prevs"), "0")
-        co("st", "狀態（甲／乙／丙）", lambda y, col, yy: f'=IF(AND({R_("hw", col)}=1,{R_("hs", col)}=1),"甲",IF(OR({R_("hw", col)}=1,{R_("hs", col)}=1),"乙","丙"))', "@", fill=KEY, bold=True)
-        co("lead", "由誰定基準", lambda y, col, yy: f'=IF({R_("st", col)}="甲","兩層對帳（證據等級高者）",IF({R_("st", col)}="丙","Wattonomics（上游約束）",IF({R_("hw", col)}=1,"Wattonomics","Siliconomics")))', "@")
-        co("up", "上游定基準（丙，或 Wattonomics 有證據的乙；1／0）", lambda y, col, yy: f'=IF(OR({R_("st", col)}="丙",AND({R_("st", col)}="乙",{R_("hw", col)}=1)),1,0)', "0")
+        co("hw_lo", "　Wattonomics 有證據（低）", hasev("ew_lo", "prevw"), "0")
+        co("hw_hi", "　Wattonomics 有證據（高）", hasev("ew_hi", "prevw"), "0")
+        co("hs_lo", "　Siliconomics 有證據（低）", hasev("es_lo", "prevs"), "0")
+        co("hs_hi", "　Siliconomics 有證據（高）", hasev("es_hi", "prevs"), "0")
+        co("st0", "狀態（只看基準值；甲／乙／丙）", lambda y, col, yy: f'=IF(AND({R_("hw", col)}=1,{R_("hs", col)}=1),"甲",IF(OR({R_("hw", col)}=1,{R_("hs", col)}=1),"乙","丙"))', "@")
+        co("pend", "區間跨線即待定（1／0；規則 v1.3）", lambda y, col, yy: (f'=IF(OR({R_("hw_lo", col)}<>{R_("hw", col)},{R_("hw_hi", col)}<>{R_("hw", col)},'
+                                                                      f'{R_("hs_lo", col)}<>{R_("hs", col)},{R_("hs_hi", col)}<>{R_("hs", col)}),1,0)'), "0",
+           note="任一層的區間端點與基準值落在門檻（含緩衝區）兩側 → 狀態不同 → 待定：維持現行基準、標對帳中、個股並列兩讀數，下次重判再定")
+        co("st", "狀態（甲／乙／丙／待定）", lambda y, col, yy: f'=IF({R_("pend", col)}=1,"待定",{R_("st0", col)})', "@", fill=KEY, bold=True)
+        co("lead", "由誰定基準", lambda y, col, yy: f'=IF({R_("st", col)}="待定","待定（維持現行；下次重判）",IF({R_("st", col)}="甲","兩層對帳（證據等級高者）",IF({R_("st", col)}="丙","Wattonomics（上游約束）",IF({R_("hw", col)}=1,"Wattonomics","Siliconomics"))))', "@")
+        co("up", "上游定基準（丙，或 Wattonomics 有證據的乙；待定＝0；1／0）", lambda y, col, yy: f'=IF(OR({R_("st", col)}="丙",AND({R_("st", col)}="乙",{R_("hw", col)}=1)),1,0)', "0")
         co("res", "甲狀態殘差（現行 ÷ 換算值 − 1；容差 rc_tol）", lambda y, col, yy: f"={R_('cur', col)}/{R_('dem', col)}-1", "+0.0%;-0.0%", note="只在甲狀態用；乙、丙狀態只供參考")
         COROW["_r"] += 1
         CO.cell(COROW["_r"], 1, "C. 依規則的基準").font = BOLD; COROW["_r"] += 1
         co("use", "改用換算值（上游定基準且覆蓋已補齊；1／0）", lambda y, col, yy: f"=IF(AND({R_('up', col)}=1,crd_cov_done=1),1,0)", "0")
-        co("flag", "對帳中（1／0）", lambda y, col, yy: f'=IF(OR(AND({R_("up", col)}=1,crd_cov_done<>1),AND({R_("st", col)}="甲",ABS({R_("res", col)})>rc_tol)),1,0)', "0",
-           note="上游定基準但覆蓋未補齊（C3 乙前提）；或甲狀態殘差超出容差（待診斷）")
-        co("lab", "該年標示", lambda y, col, yy: f'=IF({R_("use", col)}=1,"改用換算值",IF({R_("flag", col)}=1,"對帳中",IF({R_("st", col)}="甲","一致","維持（本層有證據）")))', "@", fill=KEY)
+        co("flag", "對帳中（1／0）", lambda y, col, yy: f'=IF(OR({R_("st", col)}="待定",AND({R_("up", col)}=1,crd_cov_done<>1),AND({R_("st", col)}="甲",ABS({R_("res", col)})>rc_tol)),1,0)', "0",
+           note="待定（v1.3）；上游定基準但覆蓋未補齊（C3 乙前提）；或甲狀態殘差超出容差（待診斷）")
+        co("lab", "該年標示", lambda y, col, yy: f'=IF({R_("use", col)}=1,"改用換算值",IF({R_("st", col)}="待定","待定（對帳中）",IF({R_("flag", col)}=1,"對帳中",IF({R_("st", col)}="甲","一致","維持（本層有證據）"))))', "@", fill=KEY)
         co("base", "基準部署 GW（依規則）", lambda y, col, yy: f"=IF({R_('use', col)}=1,{R_('dem', col)},{R_('cur', col)})", fill=KEY, bold=True)
         co("k", "基準係數 crd_k（＝基準 ÷ 供給側讀數；維持現行的年份＝現行係數）", lambda y, col, yy: f"=IF({R_('use', col)}=1,{R_('dem', col)}/{R_('sup', col)},{R_('s33', col)})", "0.0000",
            note="基準鏈（Units、Deploy、Mkt、ABF、Rack、Equip、Cap）各年乘本列；Interface SIF_UnitsCoef_Base 隨之")
@@ -1399,7 +1412,7 @@ def main():
                                          ("cur", "SIF_DeployGW_Current", "現行取法（原始 × S33 係數；v0.18 基準）", "GW", "0.00"),
                                          ("alt", "SIF_DeployGW_Alt", "另一側讀數（未被採為基準的一條）", "GW", "0.00"),
                                          ("altr", "SIF_DeployGW_AltRatio", "另一側讀數 ÷ 基準", "x", "0.000"),
-                                         ("st", "SIF_RecoStatus", "證據狀態（甲／乙／丙）", "文字", "@"),
+                                         ("st", "SIF_RecoStatus", "證據狀態（甲／乙／丙／待定；v1.3 區間跨線即待定）", "文字", "@"),
                                          ("lead", "SIF_RecoLead", "由誰定基準", "文字", "@"),
                                          ("lab", "SIF_RecoLabel", "該年標示（一致／對帳中／改用換算值／維持）", "文字", "@"),
                                          ("flag", "SIF_RecoFlag", "對帳中（1＝是）", "旗標", "0"),

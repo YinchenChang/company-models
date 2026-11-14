@@ -63,13 +63,19 @@ lag = w_in("lag_on"); inv = w_in("inv_on")
 inp("lag_on", "付款（出貨）到上線延遲", "月", None, lag[0], lag[1], lag[2], "Assumed", f"{wt_f} In lag_on（權威層＝Wattonomics，協調規則 J3）")
 inp("inv_on", "未上線庫存 ÷ 年出貨", "比", None, inv[0], inv[1], inv[2], "Assumed", f"{wt_f} In inv_on（同上）")
 inp("thr", "「有證據」門檻（基準 50%；高＝67% 對照）", "比", None, None, 0.5, 0.67, "Assumed", "協調規則 C3、J2；首次判定用；緩衝區 55%／45% 自第二次起適用（v1.1）")
-inp("cov_done", "Wattonomics 覆蓋是否已補齊（1＝是）", "旗標", None, None, 0, None, "Derived", "v0.3 未含七家以外買方路徑（v0.3.2 W-1）；協調規則 v1.1：丙與上游有證據的乙須為 1 才改基準")
+inp("cov_done", "Wattonomics 覆蓋是否已補齊（1＝是）", "旗標", None, None, 1 if "WIF_Evidence_2026" in W.defined_names else 0, None, "Derived",
+    "v0.3.2 起（W-1 七家以外買方入主路徑）＝1；v0.3 以前＝0。協調規則 v1.1：丙與上游有證據的乙須為 1 才改基準")
 dep = cells(S, "SIF_DeployGW_Base"); coef = cells(S, "SIF_UnitsCoef_Base")[1:]
 phys = cells(S, "SIF_DeployGWPhys_Base"); capon = cells(S, "SIF_CapOnlineGW_Base")
 for i, y in enumerate(YRS):
     inp(f"wt_{y}", "Wattonomics 年新增上線 IT GW（主路徑，毛額）", "GW", y, None, cells(W, f"WIF_MktGW_Add_{y}")[0], None, "Derived", f"{wt_f} WIF_MktGW_Add_{y}")
-    inp(f"wcov_{y}", "Wattonomics 證據比例（有站點證據的年新增 ÷ 主路徑年新增）", "比", y, None, cells(W, f"WIF_Coverage_{y}")[0], None, "Derived",
-        f"{wt_f} WIF_Coverage_{y}；只計站點證據，未計七家資本支出實績（偏保守）")
+    if "WIF_Evidence_2026" in W.defined_names:
+        _e = cells(W, f"WIF_Evidence_{y}")[0]
+        inp(f"wcov_{y}", "Wattonomics 證據比例（WIF_Evidence：全市場分母，含七家實績與站點；模型只有點值，低＝基準＝高）", "比", y, _e, _e, _e, "Derived",
+            f"{wt_f} WIF_Evidence_{y}（v0.3.2 起；分母已含七家以外買方，故 Status 頁 ew 不再另除覆蓋缺口）")
+    else:
+        inp(f"wcov_{y}", "Wattonomics 證據比例（有站點證據的年新增 ÷ 主路徑年新增）", "比", y, None, cells(W, f"WIF_Coverage_{y}")[0], None, "Derived",
+            f"{wt_f} WIF_Coverage_{y}；只計站點證據，未計七家資本支出實績（偏保守）")
     inp(f"sil_{y}", "Siliconomics 現行基準 部署 GW（成本等值、出貨年）", "GW", y, None, dep[i], None, "Derived", f"{sil_f} SIF_DeployGW_Base")
     inp(f"coef_{y}", "Siliconomics 基準顆數係數（決策 S33）", "x", y, None, coef[i], None, "Assumed", f"{sil_f} SIF_UnitsCoef_Base")
     inp(f"phys_{y}", "Siliconomics 實體部署 GW（出貨年）", "GW", y, None, phys[i], None, "Derived", f"{sil_f} SIF_DeployGWPhys_Base")
@@ -79,17 +85,23 @@ inp("wt_2030", "Wattonomics 年新增上線 IT GW（主路徑，毛額）", "GW"
 inp("ship_2025", "實體出貨 GW 2025（反推的起點）", "GW", 2025, None, 16.137, None, "Derived",
     "R4 橋接 b3 2025（NVIDIA FY2026 資料中心營收 ÷ FY2027 錨點 × 世代每 GW 成本＋非 NVIDIA 約六成）；r4_bridge.py 以 v0.18／v0.3 重算")
 # C2 ① 覆蓋缺口：Wattonomics 七家以外買方未入（④；W-2 實績下限讀法為主）＋ W2
-for y, (lo, b, hi) in {2026: (0, 0, 0), 2027: (0.06, 3.03, 7.36), 2028: (0.06, 3.03, 7.36), 2029: (0.06, 3.03, 7.36)}.items():
+# v0.3.2 起（W-1：七家以外買方入主路徑、X6 新雲與主權 Assumed 年增入基準；有 WIF_Evidence 名稱）覆蓋已補齊 → 缺口＝0、cov_done＝1
+W32 = "WIF_Evidence_2026" in W.defined_names
+GAP4 = {2026: (0, 0, 0), 2027: (0.06, 3.03, 7.36), 2028: (0.06, 3.03, 7.36), 2029: (0.06, 3.03, 7.36)}
+GAP2 = {2026: (0, 0, 0), 2027: (0, 0, 0), 2028: (0, 0, 0), 2029: (0, 1.12, 1.95)}
+if W32:
+    GAP4 = {y: (0, 0, 0) for y in YRS}; GAP2 = {y: (0, 0, 0) for y in YRS}
+for y, (lo, b, hi) in GAP4.items():
     inp(f"cov4_{y}", "① Wattonomics 覆蓋缺口 ④（上線 GW）", "GW", y, lo, b, hi, "Assumed",
         "原 1.84／4.81／8.28（算力收支 11-03，全 Assumed）；W-2（11-05）(a) 七家多花由 1.84 改實績下限 0.06（0–0.92）→ 各值減 1.78（高值減 0.92）；2028–29 延續（11-05 回執）。v0.3.2 後由 W-1 實績取代")
-for y, (lo, b, hi) in {2026: (0, 0, 0), 2027: (0, 0, 0), 2028: (0, 0, 0), 2029: (0, 1.12, 1.95)}.items():
+for y, (lo, b, hi) in GAP2.items():
     inp(f"cov2_{y}", "① W2 新雲、主權站點清單結束後年增歸零（上線 GW）", "GW", y, lo, b, hi, "Assumed", "算力收支 11-05 回執第 2 節（與 ④ 不重疊部分）")
 # Siliconomics 證據比例（實績、已簽約、已確認站點支撐的比例；指引與預測不算）
 for y, (lo, b, hi, src) in {
-        2026: (0.44, 0.44, 0.65, "NVIDIA FY2027 資料中心 Q1＋Q2 實績 75.2＋89.0＝164.2 ÷ 錨點 375.46＝0.44（Verified ÷ 錨點）；高＝FY27Q3（11-19 公布）後約 0.65（以 Q3 指引估，未公布前不算）；非 NVIDIA 實績本庫未建，視同 NVIDIA 比例"),
-        2027: (0, 0, 0.1, "無實績；CoWoS／HBM 產能是供給上限，不是需求證據；NVIDIA 在手訂單說法屬利害關係方（C5）"),
-        2028: (0, 0, 0, "無實績、無已簽約訂單"),
-        2029: (0, 0, 0, "同上")}.items():
+        2026: (0.597, 0.789, 0.892, "siliconomics/docs/reports/20261114_供給側證據比例.xlsx（NVIDIA 實績＋10-Q 採購承諾、Broadcom／AMD 實績）"),
+        2027: (0.303, 0.448, 0.749, "同上（NVIDIA 採購承諾＋AMD／OpenAI 首 1 GW）"),
+        2028: (0.161, 0.236, 0.541, "同上（NVIDIA 採購承諾）"),
+        2029: (0.030, 0.079, 0.181, "同上（NVIDIA FY29、FY30 採購承諾）")}.items():
     inp(f"scov_{y}", "Siliconomics 證據比例（基準值中由實績、已簽約支撐的比例）", "比", y, lo, b, hi, "Assumed", src)
 for k, ref in N.items():
     wb.defined_names[k] = openpyxl.workbook.defined_name.DefinedName(k, attr_text=ref)
@@ -198,7 +210,7 @@ def trow(key, label, note, f, fmt="0.00", fill=None):
 
 st = lambda w, s, t: f'=IF(AND({w}>={t},{s}>={t}),"甲",IF(OR({w}>={t},{s}>={t}),"乙","丙"))'
 trow("ew0", "Wattonomics 證據比例（自身路徑分母；v1.0 量法）", "WIF_Coverage", lambda y: f"=wcov_{y}", "0%")
-trow("ew", "Wattonomics 證據比例（全市場分母；v1.1）", "WIF_Coverage × 主路徑 ÷（主路徑＋覆蓋缺口）", lambda y: f"=wcov_{y}*wt_{y}/(wt_{y}+cov4_{y}+cov2_{y})", "0%")
+trow("ew", "Wattonomics 證據比例（全市場分母；v1.1）", "v0.3 以前：WIF_Coverage × 主路徑 ÷（主路徑＋覆蓋缺口）；v0.3.2 起覆蓋缺口＝0，即 WIF_Evidence", lambda y: f"=wcov_{y}*wt_{y}/(wt_{y}+cov4_{y}+cov2_{y})", "0%")
 trow("es", "Siliconomics 證據比例（基準）", "In scov", lambda y: f"=scov_{y}", "0%")
 trow("esh", "Siliconomics 證據比例（高；NVIDIA Q3 公布後）", "", lambda y: f"=scov_{y}_hi", "0%")
 EW = lambda y: f"{CL(TC[y])}{TR['ew']}"
