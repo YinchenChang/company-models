@@ -899,7 +899,11 @@
 "val_sbc_addback_switch": "INP_278",
 "val_ntm_q4_switch": "INP_279",
 "pl_cash_yield": "INP_280",
-"pl_q4_oth_other": "INP_281"
+"pl_q4_oth_other": "INP_281",
+"val_bisect_lo_add": "INP_282",
+"val_bisect_w_hi": "INP_283",
+"val_bisect_s_lo": "INP_284",
+"val_bisect_s_hi": "INP_285"
 },
 "CHK": {
 "src_rows": "C01",

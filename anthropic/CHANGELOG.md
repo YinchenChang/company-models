@@ -146,3 +146,7 @@
 - 新增 SRC_ANT_594–621（28 列；S-1/A 損益表：營收成本、營業損益、其他收入、所得稅、淨損、每股淨損、加權股數、利息收入、9-30 現金、聯邦 NOL）；Inputs pl_cash_yield（4%，3–4.5%，Assumed）、pl_q4_oth_other（0，Decision）。Checks 列數上限改 800 列。
 - 逐格比對（v0.2.0 → v0.2.1，既有 33,473 格、其中數值 11,375 格）：數值差異只有 Checks 的 SRC_ANT／Inputs 列數（593 → 621、275 → 277）；其餘為版本字串、README、讀取日期與 OAI_Link 建置提交。Val、Funding、Cost 等計算頁 0 差異；加權目標價 82.71、評等中立不變。
 - 成品：`dist/20261114_Anthropic個股模型_v0_2_1.html`（v1.3 版面，產生器 `tools/company_html/fundmodel_v13.py`，由 `fundmodel_v2.py --profile anthropic` 呼叫；OpenAI 輸出逐位不變）、`dist/20261114_Anthropic收支模型_v0_2_1.html／.xlsx`；v0.2.0 三檔移 `dist/_待刪除/`。
+- 追加（同日，Andy 11-14 09:03／09:16）：
+  - 新頁 RevDCF（`builder/a12.py` build_revdcf）：以現價（IPO 區間中點 74）反解 (a) 隱含 WACC 5.1%（模型 11.1%；二分法）、(b) 隱含營收倍數 2.97（2030 營收總額 701 對 236；二分法，虧損扣抵逐年重算）、(c) 隱含終值期營業利益率 68.4%（模型 21.9%；封閉解）、(d) Comparable 隱含 EV／NTM 營收 11.54 倍（模型調整後 21.02、同業中位數 26.32；係數 0.44 對 0.80）；各段核對列＝0。只列示，不被任何頁引用。Inputs 新增二分法區間 4 列（INP_282–285）。
+  - Val 敏感度表新增 F–J 欄（加權目標價相對基準 %、白話標籤；白話標籤來源 `data/val_sens_plain.yaml`），具名 VAL_SensPct；既有格不變。
+  - HTML：橫幅現價附依據與日期；估值章並排四個目標價（市場共識：不適用，尚未掛牌）；敏感度主圖改為加權目標價相對基準的雙向長條（輸入取低值／取高值各一張，v1.3 H 節）；反向 DCF 章改為現價隱含表，管理層目標反推移至摺疊。

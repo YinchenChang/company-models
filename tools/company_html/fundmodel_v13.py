@@ -31,7 +31,7 @@ CSS_V13 = """
 .lg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--muted);margin:2px 0 4px}
 .lg i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 .charts2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:12px}
-table.tp td:nth-child(2),table.tp td:nth-child(5),table.tp th:nth-child(2),table.tp th:nth-child(5){text-align:left}table.pl td,table.pl th{white-space:nowrap}table.pl td:first-child,table.pl th:first-child{position:sticky;left:0;background:#fff;z-index:1}table.pl tr.sec td{position:static}table.pl tr.b td{font-weight:600}table.pl tr.r td{color:var(--muted)}
+table.rd td:nth-child(1),table.rd td:nth-child(4),table.rd th:nth-child(1),table.rd th:nth-child(4){text-align:left}table.tp td:nth-child(2),table.tp td:nth-child(5),table.tp th:nth-child(2),table.tp th:nth-child(5){text-align:left}table.pl td,table.pl th{white-space:nowrap}table.pl td:first-child,table.pl th:first-child{position:sticky;left:0;background:#fff;z-index:1}table.pl tr.sec td{position:static}table.pl tr.b td{font-weight:600}table.pl tr.r td{color:var(--muted)}
 table.pl td.fc,table.pl th.fc{background:#f4f9f9}
 table.pl tr.sec td{background:var(--soft);font-weight:600;color:var(--accent)}
 .basis{border-left:3px solid var(--teal);background:var(--soft);padding:6px 12px;margin:6px 0 10px;font-size:14px}
@@ -224,8 +224,70 @@ def valuation_v13(B, M):
     return sec.replace("<h3>結論主要項目</h3>", f"{extra}<h3>結論主要項目</h3>", 1)
 
 
+def sens_v13(B, M, s6_html: str):
+    """v1.3 H 節：加權目標價相對基準 %，輸入取低值／取高值兩張雙向長條圖；|變動|≥10% 直接顯示，其餘與全部案例表摺疊；變動為 0 的案例不畫長條。"""
+    sp = M.span
+    tbl, pct = B.grid("VAL_SensTbl"), B.grid("VAL_SensPct")
+    bref, base = B.cell("VAL_SensBase")
+    rows = []
+    for (a, b, c), (f, g, h, i, j) in zip(tbl, pct):
+        if a[1] is None or not isinstance(f[1], (int, float)):
+            continue
+        rows.append(dict(name=h, lo=i, hi=j, tlo=b, thi=c, plo=f, phi=g))
+    mx = max([abs(x[k][1]) for x in rows for k in ("plo", "phi")] + [0.1])
+
+    def line(x, k, lk):
+        ref, v = x[k]
+        w = abs(v) / mx * 50
+        bar = f'<i class="p" style="left:50%;width:{w:.2f}%"></i>' if v >= 0 else f'<i class="n" style="left:{50 - w:.2f}%;width:{w:.2f}%"></i>'
+        return (f'<div class="trw"><span>{sp(*x["name"])}（{sp(*x[lk])}）</span><div class="ttr">{bar}</div>'
+                f'<span class="tvv">{sp(ref, v, "sp1")}</span></div>')
+
+    def fig(k, lk, cap):
+        nz = sorted([x for x in rows if x[k][1] != 0], key=lambda x: -abs(x[k][1]))
+        big = [line(x, k, lk) for x in nz if abs(x[k][1]) >= 0.10]
+        small = [line(x, k, lk) for x in nz if abs(x[k][1]) < 0.10]
+        head = f'<h3>加權目標價相對基準：{cap}</h3>'
+        body = "".join(big) if big else '<p class="note">沒有案例使加權目標價變動達 10%。</p>'
+        more = (f'<details class="more"><summary>展開：{cap}，變動未達 10% 的案例（{len(small)} 項）</summary>{"".join(small)}</details>' if small else "")
+        return head + body + more
+    allt = ('<div class="tw"><table class="tp"><thead><tr><th>案例</th><th>低值設定</th><th>加權目標價</th><th>相對基準</th>'
+            '<th>高值設定</th><th>加權目標價</th><th>相對基準</th></tr></thead><tbody>'
+            + "".join(f'<tr><td>{sp(*x["name"])}</td><td>{sp(*x["lo"])}</td><td>{sp(*x["tlo"], "n2")}</td><td>{sp(*x["plo"], "sp1")}</td>'
+                      f'<td>{sp(*x["hi"])}</td><td>{sp(*x["thi"], "n2")}</td><td>{sp(*x["phi"], "sp1")}</td></tr>' for x in rows)
+            + "</tbody></table></div>")
+    intro = (f'<p class="note">一次只動一個輸入（取低值或高值），整本模型重算，看加權目標價（基準 {sp(bref, base, "n2")} 美元）相對基準變動多少。'
+             '長條依影響大小排序；只直接列出變動達 10% 的案例，其餘收在摺疊；變動為 0 的案例不畫長條，只列在全部案例表。</p>')
+    return ('<section id="sens"><h2>敏感度</h2>' + intro + fig("plo", "lo", "輸入取低值") + fig("phi", "hi", "輸入取高值")
+            + f'<details class="more"><summary>展開：全部案例表（{len(rows)} 項）</summary>{allt}</details>'
+            + f'<details class="more"><summary>展開：收支命題的敏感度（每 GW 差額、外部資金需求與「要成立必須…」）</summary>{s6_html}</details></section>')
+
+
 def revdcf_v13(B, M):
     sp = M.span
+    g = lambda n: B.cell(n)  # noqa: E731
+
+    def tr(lab, imp, base, fi, fb, note):
+        b_ = sp(*g(base), fb) if base else "1（模型）"
+        return f'<tr><td>{lab}</td><td><b>{sp(*g(imp), fi)}</b></td><td>{b_}</td><td class="note">{note}</td></tr>'
+    main = ('<div class="tw"><table class="rd"><thead><tr><th>現價隱含什麼</th><th>現價隱含</th><th>模型基準</th><th>讀法</th></tr></thead><tbody>'
+            + tr("支持現價所需的企業價值（十億美元）", "RVD_EVReq", "RVD_EVB", "n0", "n0", "DCF 情境 B 路徑；約為模型的 " + sp(*g("RVD_EVMult"), "n2") + " 倍")
+            + tr("(a) 隱含 WACC（折現率）", "RVD_WACC", "RVD_WACC0", "p1", "p1", "其餘不變，折現率要降到這個水準，DCF 才等於現價")
+            + tr("(b) 隱含營收倍數（2027 年起營收等比例放大）", "RVD_RevMult", None, "n2", "n2", "模型＝1；利益率不變，營收要放大這麼多倍")
+            + tr("　對應 2030 年營收總額（十億美元）", "RVD_Rev2030Gross", "RVD_Rev2030Gross0", "n0", "n0", "同一倍數下的 2030 年營收")
+            + tr("(c) 隱含終值期營業利益率", "RVD_TermMargin", "RVD_TermMargin0", "p1", "p1", "只改永續期的獲利率；其餘不變")
+            + tr("(d) 隱含同業倍數（企業價值 ÷ 未來 12 個月營收）", "RVD_CompMult", "RVD_AdjMult", "n2", "n2", "模型欄為調整後倍數；同業中位數 " + sp(*g("RVD_PeerMult"), "n2"))
+            + tr("　隱含相對同業係數", "RVD_CompCoef", "RVD_AdjCoef", "n2", "n2", "1＝與同業中位數同價")
+            + "</tbody></table></div>")
+    read = ('<p class="note">讀法：以 DCF 看，現價 ' + sp(*g("RVD_Px"), "n2") + ' 美元需要折現率降到 ' + sp(*g("RVD_WACC"), "p1")
+            + '，或營收放大到模型的約 ' + sp(*g("RVD_RevMult"), "n1") + ' 倍，或永續期營業利益率達 ' + sp(*g("RVD_TermMargin"), "p0")
+            + '——三者都明顯超出模型基準，DCF 單獨無法支持現價。以同業倍數看則相反：現價只隱含約 ' + sp(*g("RVD_CompMult"), "n1")
+            + ' 倍營收，低於同業中位數，所以同業倍數法給出的目標價高於現價。兩種方法對現價的判讀方向相反，是本檔的核心爭議。</p>')
+    chk = ('<details class="more"><summary>展開：反解方法與核對</summary><ul class="note">'
+           '<li>DCF 以情境 B（基準）路徑反解「評價日每股價值推到目標時點＝現價」；DCF 目標價本身是三情境加權。一次只動一個驅動，其餘維持基準。</li>'
+           '<li>(a) 折現率與 (b) 營收倍數用二分法 40 次（營收放大時，虧損扣抵與稅逐年重算）；(c)、(d) 為封閉解。</li>'
+           f'<li>核對（應為 0）：(a) {sp(*g("RVD_WACCChk"), "n6")}；(b) {sp(*g("RVD_ScaleChk"), "n6")}、模型重算 {sp(*g("RVD_ScaleChk0"), "n6")}；(c) {sp(*g("RVD_TermChk"), "n6")}；(d) {sp(*g("RVD_CompChk"), "n6")}。</li>'
+           '<li>計算在 xlsx 的 RevDCF 頁；該頁不被任何計算頁引用，不影響目標價。</li></ul></details>')
     tgt = yrs_named(B, "RVS_Target")
     fwd = yrs_row(B, "Reverse", find_row(B, "Reverse", "X05"))
     gap_ = yrs_named(B, "RVS_Gap")
@@ -242,10 +304,10 @@ def revdcf_v13(B, M):
            + tr("照目標營收時的累計外部資金需求", ext, "n1") + "</tbody></table></div>")
     yr = B.cell("RVS_CFPosYear") if B.has("RVS_CFPosYear") else None
     return ('<section id="revdcf"><h2>反向 DCF：現價隱含什麼</h2>'
-            '<p class="note">本模型尚未建「由現價反解成長率」的反向 DCF（列為待辦）。本章先以模型既有的反向頁回答相近的問題：'
-            '若營收只走到管理層對外說過的目標，而算力與營運支出照已簽承諾不變，現金與外部資金會如何——用來檢查估值所依賴的營收路徑是否已比管理層自己的說法更樂觀。</p>'
+            f'<p class="note">以現價（IPO 價格區間中點）反解：要讓模型價值等於現價，各關鍵假設需要是多少，並與模型基準並列。</p>{main}{read}{chk}'
+            '<details class="more"><summary>展開：第二段——管理層營收目標反推（若營收只走到管理層說過的目標、支出照承諾，現金與外部資金如何）</summary>'
             f'{tbl}<p class="note">讀法：倍數小於 1 表示本模型基準營收已高於管理層目標（2026–2029 年皆是）；若營收只走到管理層目標而支出照承諾，2029 年會出現外部資金需求。2025 年為實際值、2030 年無管理層目標，兩年均以本模型值代入。'
-            '管理層目標多早於初步招股說明書，只作對照，不回饋基準。</p></section>')
+            '管理層目標多早於初步招股說明書，只作對照，不回饋基準。</p></details></section>')
 
 
 def pl_v13(B, M):
@@ -377,12 +439,9 @@ def build_v13(html_in: Path, xlsx: Path, out: Path, P: dict, M):
     css = M.strip_dark(soup.style.string) + M.CSS_EXTRA + CSS_V13
 
     parts = [thesis_v13(secs["s1"], B, M, P), valuation_v13(B, M)]
-    tv, th = M.tornado_html(B)
-    sens = M.regroup(secs["s6"], soup, "sens", "敏感度與「要成立必須…」", summary="展開：收支命題的關鍵驅動表與全部案例")
-    sens_html = str(sens)
-    if tv:
-        sens_html = sens_html.replace("</h2>", f"</h2><h3>目標價敏感度（龍捲風圖）</h3>{tv}{th}<h3>收支命題的敏感度</h3>", 1)
-    parts.append(sens_html)
+    s6 = M.regroup(secs["s6"], soup, "x", "收支命題的敏感度", summary="展開：收支命題的關鍵驅動表與全部案例")
+    s6_inner = "".join(str(c) for c in [c for c in s6.children if getattr(c, "name", None)][1:])
+    parts.append(sens_v13(B, M, s6_inner))
     parts.append(revdcf_v13(B, M))
     parts.append(pl_v13(B, M))
     rev_old = M.regroup(secs["s3"], soup, "x", "營收結構")

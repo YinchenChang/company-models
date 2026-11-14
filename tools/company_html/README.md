@@ -53,4 +53,4 @@ Excel 是計算事實的來源；HTML 只負責呈現，給 Andy 與投資處同
 ## 版面規格 v1.3 檢查（`check_layout_v13.py`）
 `python3 tools/company_html/check_layout_v13.py <html>...`：依 `docs/plan/個股HTML版面規格.md` v1.3 檢查章節順序（命題→估值→敏感度→反向 DCF→損益→驅動→個別模組→對帳→資料狀態）、橫幅說明 ≤200 字且無參數代號、重點觀察 ≤5 點且 ≤750 字、標準損益表必備列與 3＋5 年、除反向 DCF／對帳／資料狀態外每章至少一張圖。v1.3 試作公司（Anthropic、CoreWeave、NVIDIA）必過；其餘公司下次改版套用後必過。
 
-收支型個股的 v1.3 產生器：`fundmodel_v13.py`（profile 設 `layout="v13"` 時由 `fundmodel_v2.py` 呼叫；目前只有 Anthropic）。新增章節：反向 DCF（暫以 Reverse 頁的管理層目標反推代替）、損益（讀 xlsx `PL` 頁具名範圍 `PL_*`）、驅動因子（分部營收推導表＋圖、成本面）；重用圖表的 SVG 提示文字去掉具名範圍代號。
+收支型個股的 v1.3 產生器：`fundmodel_v13.py`（profile 設 `layout="v13"` 時由 `fundmodel_v2.py` 呼叫；目前只有 Anthropic）。新增章節：反向 DCF（讀 xlsx `RevDCF` 頁 `RVD_*`：隱含 WACC、營收倍數、終值期營業利益率、Comparable 倍數；管理層目標反推摺疊）、敏感度（v1.3 H 節：讀 Val `VAL_SensPct` 的相對基準 % 與白話標籤）、損益（讀 xlsx `PL` 頁具名範圍 `PL_*`）、驅動因子（分部營收推導表＋圖、成本面）；重用圖表的 SVG 提示文字去掉具名範圍代號。

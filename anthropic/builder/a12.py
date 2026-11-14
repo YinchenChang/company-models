@@ -172,6 +172,155 @@ def build(ctx):
     ws.column_dimensions["L"].width = 90
     ws.freeze_panes = "C6"
     ctx.P["a12"] = dict(P=P)
+    build_revdcf(ctx)
+
+
+def build_revdcf(ctx):
+    """RevDCF 頁（v0.2.1；個股 HTML 版面規格 v1.3 A 節「反向 DCF」）：以現價（IPO 區間中點）反解現價隱含的
+    (a) WACC（二分法）、(b) 2027–2033 營收等比例倍數（二分法；累積虧損扣抵逐年重算）、(c) 終值期營業利益率（封閉解）、
+    (d) Comparable 倍數與相對同業係數（封閉解）。DCF 以情境 B 路徑反解「情境 B 每股價值推到目標時點＝現價」。
+    只讀 Val 頁與 Inputs，無任何頁引用本頁，不影響目標價；各段附核對列（應為 0）。"""
+    D, wb = ctx.D, ctx.wb
+    I = D.I
+    VP = ctx.P["a11"]["P"]
+    ws = wb.create_sheet("RevDCF", index=wb.sheetnames.index("Val") + 1)
+    title(ws, "RevDCF — 反向 DCF：現價隱含什麼（v0.2.1；個股 HTML 版面規格 v1.3）：一次只動一個驅動、其餘維持基準，反解到現價（IPO 區間中點）",
+          "DCF：以情境 B 路徑反解「情境 B 評價日每股價值 ×（1＋股權成本）^目標年數＝現價」；(a) WACC 與 (b) 營收倍數用二分法 40 次，(c) 終值期營業利益率與 (d) Comparable 倍數為封閉解。"
+          "（DCF 目標價為三情境加權，情境 B 為基準路徑。）反解值超出合理範圍時照實列出，不外推。",
+          "本頁只讀 Val 頁與 Inputs，無任何頁引用本頁。單位：$B、十億股、$／股。")
+    V = lambda key, col="C": f"Val!${col}${VP[key]}"  # noqa: E731
+    R = {}
+    r = [5]
+
+    def kv(key, label, f, fmt="#,##0.000", note="", name=None, bold=False):
+        n = r[0]
+        put(ws, f"A{n}", label, F_BOLD if bold else F_CALC)
+        put(ws, f"B{n}", f, fmt=fmt)
+        if note:
+            put(ws, f"C{n}", note, F_NOTE)
+        R[key] = n
+        if name:
+            nm(wb, name, f"RevDCF!$B${n}")
+        r[0] += 1
+        return n
+
+    def sec(t_):
+        put(ws, f"A{r[0]}", t_, F_BOLD, fill=FILL_SEC)
+        r[0] += 1
+
+    b = lambda key: f"$B${R[key]}"  # noqa: E731
+    sec("一、支持現價所需的 DCF 企業價值（情境 B 路徑）")
+    kv("px", "現價（IPO 區間中點；美元）", "=VAL_Px", "0.00", name="RVD_Px")
+    kv("ps0r", "支持現價所需的評價日每股價值＝現價 ÷（1＋股權成本）^目標年數", f"=VAL_Px/(1+VAL_Ke)^{I('val_t_tgt')}", "0.00", name="RVD_PS0Req")
+    kv("ps0b", "模型：情境 B 評價日每股價值", f"={V('ps0', 'D')}", "0.00", name="RVD_PS0B")
+    kv("evr", "支持現價所需的企業價值 EV＝每股 × 評價股數 − 淨現金", f"={b('ps0r')}*VAL_Shares-VAL_NetCash", name="RVD_EVReq", bold=True)
+    kv("evb", "模型：企業價值 EV（情境 B）", "=VAL_EV_B", name="RVD_EVB")
+    kv("evx", "EV 需為模型的倍數", f"={b('evr')}/{b('evb')}", "0.00", name="RVD_EVMult")
+
+    # (a) WACC
+    sec("二、(a) 現價隱含的 WACC（各年自由現金流不變；永續期新投資報酬＝WACC＋超額報酬差，同 Val 頁；二分法 40 次）")
+    cols = "CDEFGHI"                           # Val 明確期 2026Q4–2032
+
+    def val_w(w):
+        pv = "+".join(f"Val!${c}${VP['dB_fcff']}/(1+{w})^Val!${c}${VP['t']}" for c in cols)
+        tv = (f"Val!$D${VP['tvn']}*(1-VAL_g/({w}+{I('val_ronic_add')}))/({w}-VAL_g)/(1+{w})^(Val!$I${VP['t']}+Val!$C${VP['mid']})")
+        return f"(({pv})+{tv}+VAL_NetCash)/VAL_Shares"
+    kv("wchk", "核對：WACC＝模型值時重算的評價日每股價值 − 模型情境 B（應為 0）", f"={val_w('VAL_WACC')}-{b('ps0b')}", "0.000000")
+    header(ws, r[0], ["次", "下界", "上界", "中點", "中點的評價日每股價值"])
+    r[0] += 1
+    w0 = r[0]
+    for i in range(40):
+        n = r[0]
+        put(ws, f"A{n}", i + 1)
+        if i == 0:
+            put(ws, f"B{n}", f"=VAL_g+{I('val_bisect_lo_add')}", fmt="0.0000%")
+            put(ws, f"C{n}", f"={I('val_bisect_w_hi')}", fmt="0.0000%")
+        else:
+            put(ws, f"B{n}", f"=IF(E{n - 1}>{b('ps0r')},D{n - 1},B{n - 1})", fmt="0.0000%")
+            put(ws, f"C{n}", f"=IF(E{n - 1}>{b('ps0r')},C{n - 1},D{n - 1})", fmt="0.0000%")
+        put(ws, f"D{n}", f"=(B{n}+C{n})/{I('arith_k2')}", fmt="0.0000%")
+        put(ws, f"E{n}", "=" + val_w(f"D{n}"), fmt="0.00")
+        r[0] += 1
+    wl = r[0] - 1
+    kv("w1", "現價隱含的 WACC", f"=D{wl}", "0.00%", name="RVD_WACC", bold=True)
+    kv("w0", "模型：WACC", "=VAL_WACC", "0.00%", name="RVD_WACC0")
+    kv("w1chk", "核對：隱含 WACC 下的每股價值 − 支持現價所需（應為 0）", f"=E{wl}-{b('ps0r')}", "0.000000", name="RVD_WACCChk")
+
+    # (b) 營收倍數
+    sec("三、(b) 現價隱含的營收規模（2027–2033 營收淨額等比例放大 s 倍；各年營業利益率、資本支出比率不變；2026Q4 不動；累積虧損扣抵與稅逐年重算；二分法 40 次）")
+    ycol = "DEFGHI"                            # 2027–2032（明確期現值；2033 只進終值）
+    tax, inf, wcr = I("val_tax"), I("val_nol_inf_switch"), I("val_wc_rate")
+    hdr = ["次", "下界", "上界", "中點 s"] + [f"扣抵期初 {y}" for y in range(2027, 2033)] + [f"稅 {y}" for y in range(2027, 2033)] + ["EV", "評價日每股價值"]
+    header(ws, r[0], hdr)
+    r[0] += 1
+    NC = ["E", "F", "G", "H", "I", "J"]        # 扣抵期初欄
+    TC = ["K", "L", "M", "N", "O", "P"]        # 稅欄
+
+    def srow(n, s_ref):
+        for j, vc in enumerate(ycol):
+            eb = f"{s_ref}*Val!${vc}${VP['dB_ebit']}"
+            if j == 0:
+                put(ws, f"{NC[j]}{n}", f"=Val!$C${VP['dB_nolc']}", fmt="#,##0.000")
+            else:
+                pe = f"{s_ref}*Val!${ycol[j - 1]}${VP['dB_ebit']}"
+                put(ws, f"{NC[j]}{n}", f"={NC[j - 1]}{n}+MAX(0,-{pe})-MIN({NC[j - 1]}{n},MAX(0,{pe}))", fmt="#,##0.000")
+            put(ws, f"{TC[j]}{n}", f"={tax}*MAX(0,{eb}-{NC[j]}{n})*(1-{inf})", fmt="#,##0.000")
+        terms = []
+        for j, vc in enumerate(ycol):
+            wc = (f"(Val!$D${VP['dB_wc']}+{wcr}*({s_ref}-1)*Val!$D${VP['dB_rev']})" if j == 0 else f"{s_ref}*Val!${vc}${VP['dB_wc']}")
+            terms.append(f"({s_ref}*Val!${vc}${VP['dB_ebit']}-{TC[j]}{n}-{s_ref}*Val!${vc}${VP['dB_cx']}-{wc})*Val!${vc}${VP['df']}")
+        put(ws, f"Q{n}", f"=Val!$C${VP['dB_pv']}+" + "+".join(terms) + f"+{s_ref}*VAL_PVTV_B", fmt="#,##0.000")
+        put(ws, f"R{n}", f"=(Q{n}+VAL_NetCash)/VAL_Shares", fmt="0.00")
+    n = r[0]
+    put(ws, f"A{n}", "核對 s＝1")
+    put(ws, f"D{n}", f"={I('months_per_year')}/{I('months_per_year')}", fmt="0.0000")
+    srow(n, f"D{n}")
+    R["s_base"] = n
+    r[0] += 1
+    s0 = r[0]
+    for i in range(40):
+        n = r[0]
+        put(ws, f"A{n}", i + 1)
+        if i == 0:
+            put(ws, f"B{n}", f"={I('val_bisect_s_lo')}", fmt="0.0000")
+            put(ws, f"C{n}", f"={I('val_bisect_s_hi')}", fmt="0.0000")
+        else:
+            put(ws, f"B{n}", f"=IF(R{n - 1}>{b('ps0r')},B{n - 1},D{n - 1})", fmt="0.0000")
+            put(ws, f"C{n}", f"=IF(R{n - 1}>{b('ps0r')},D{n - 1},C{n - 1})", fmt="0.0000")
+        put(ws, f"D{n}", f"=(B{n}+C{n})/{I('arith_k2')}", fmt="0.0000")
+        srow(n, f"D{n}")
+        r[0] += 1
+    sl = r[0] - 1
+    kv("schk0", "核對：s＝1 重算的 EV − 模型 EV（情境 B；應為 0）", f"=Q{R['s_base']}-VAL_EV_B", "0.000000", name="RVD_ScaleChk0")
+    kv("s1", "現價隱含的營收倍數（模型＝1）", f"=D{sl}", "0.000", name="RVD_RevMult", bold=True)
+    kv("r30n", "現價隱含的 2030 營收淨額", f"={b('s1')}*Val!$G${VP['dB_rev']}", name="RVD_Rev2030Net")
+    kv("r30n0", "模型：2030 營收淨額（情境 B）", f"=Val!$G${VP['dB_rev']}", name="RVD_Rev2030Net0")
+    kv("r30g", "現價隱含的 2030 營收總額（同倍數）", f"={b('s1')}*Val!$G${VP['B_gross']}", name="RVD_Rev2030Gross")
+    kv("r30g0", "模型：2030 營收總額（情境 B）", f"=Val!$G${VP['B_gross']}", name="RVD_Rev2030Gross0")
+    kv("schk", "核對：隱含倍數下的每股價值 − 支持現價所需（應為 0）", f"=R{sl}-{b('ps0r')}", "0.000000", name="RVD_ScaleChk")
+
+    # (c) 終值期營業利益率
+    sec("四、(c) 現價隱含的終值期營業利益率（只改 2033 年營業利益率；終值 NOPAT 與其成正比；封閉解）")
+    kv("mJ", "模型：2033 年營業利益率（情境 B；終值基礎）", f"=Val!$J${VP['dB_m']}", "0.0%", name="RVD_TermMargin0")
+    kv("m30", "對照：模型 2030 年營業利益率（情境 B）", f"=Val!$G${VP['dB_m']}", "0.0%", name="RVD_Margin2030")
+    kv("m1", "現價隱含的終值期營業利益率＝模型值 ×（終值現值 ＋ 所需 EV − 模型 EV）÷ 終值現值", f"={b('mJ')}*(VAL_PVTV_B+{b('evr')}-{b('evb')})/VAL_PVTV_B", "0.0%",
+       name="RVD_TermMargin", bold=True)
+    kv("mchk", "核對：明確期現值 ＋ 終值現值 × 隱含利益率 ÷ 模型利益率 − 所需 EV（應為 0）", f"=VAL_PVExp_B+VAL_PVTV_B*{b('m1')}/{b('mJ')}-{b('evr')}", "0.000000", name="RVD_TermChk")
+
+    # (d) Comparable
+    sec("五、(d) Comparable：現價隱含的營收倍數與相對同業係數（情境 B 的未來 12 個月營收總額；封閉解）")
+    kv("cev", "現價隱含的企業價值＝現價 × 評價股數 − 淨現金", "=VAL_Px*VAL_Shares-VAL_NetCash", name="RVD_CompEV")
+    kv("cm", "現價隱含的 EV／未來 12 個月營收倍數", f"={b('cev')}/VAL_NTMRev", "0.00", name="RVD_CompMult", bold=True)
+    kv("pm", "模型：同業 EV／遠期營收中位數（未調整）", "=VAL_PeerMult", "0.00", name="RVD_PeerMult")
+    kv("am", "模型：調整後倍數＝同業中位數 × 調整係數（情境 B）", "=VAL_PeerMult*VAL_AdjFactor", "0.00", name="RVD_AdjMult")
+    kv("cc", "現價隱含的相對同業係數＝隱含倍數 ÷ 同業中位數", f"={b('cm')}/VAL_PeerMult", "0.000", name="RVD_CompCoef", bold=True)
+    kv("ac", "模型：調整係數（情境 B）", "=VAL_AdjFactor", "0.000", name="RVD_AdjCoef")
+    kv("cchk", "核對：（隱含倍數 × 營收 ＋ 淨現金）÷ 股數 − 現價（應為 0）", f"=({b('cm')}*VAL_NTMRev+VAL_NetCash)/VAL_Shares-VAL_Px", "0.000000", name="RVD_CompChk")
+    ws.column_dimensions["A"].width = 70
+    ws.column_dimensions["B"].width = 14
+    ws.column_dimensions["C"].width = 14
+    ws.freeze_panes = "A5"
+    ctx.P["a12"]["R"] = R
 
 
 def checks(ctx):
