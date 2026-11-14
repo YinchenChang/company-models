@@ -310,6 +310,8 @@ umx = lambda y, s: {2026: "1", 2027: "1", 2028: f"um28_{s}", 2029: f"um29_{s}"}[
 DEFP = dict(scn="A", uf="1", sht="0", sho="0", pfc="1", fh="f_hbm", mh="m_hbm", nf="1", gs27="g_sw27", gs="g_sw", opxa="0", flat29=False, wta=None)
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["wta"] is None and s != "A":   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 產業量 × wta（＝另一側讀數比值）；情境 A＝供給側讀數不縮放
+        P["wta"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     _wx = lambda y: (f"*{P['wta'][y]}" if P["wta"] and y in P["wta"] else "")   # Wattonomics 錨定（Sens 案例；預設 None＝不乘）
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -1028,6 +1030,11 @@ _r3_static(wb, "v0.5.2（2026-11-05）", "v0.5.2（2026-11-05）：換用共用�
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import px1105_post  # noqa: E402
 print(px1105_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), "v0.5.4", "v0.5.3", "v0.5.3（2026-11-06）"))
+# 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 avgo/coord_alt.json）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD
+if COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL):
+    COORD.stamp(wb, "v0.5.4", "v0.5.5", "2026-11-14")
 wb.save(sys.argv[1])
 if os.environ.get("AVGO_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

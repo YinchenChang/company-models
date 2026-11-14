@@ -206,5 +206,9 @@ for b in sec["drivers"]["blocks"]:
                 r[1:4] = [c.replace("|n1", to) if isinstance(c, str) else c for c in r[1:4]]
 # 4. 第一章補情境定義與口徑（原第一章的對照表）
 sec["thesis"]["blocks"] += [{"type": "h3", "text": "情境定義與口徑"}, old_thesis_kv]
+# 三層協調 C4（規則 v1.4；tools/coord/coord.py）：橫幅另一側讀數一格與揭露句、估值章開頭兩讀數表與長條圖
+sys.path.insert(0, os.path.join(HERE, "..", "tools", "coord"))
+import coord as COORD  # noqa: E402
+COORD.inject_html(cfg, X)
 json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok", os.path.relpath(X, HERE))
