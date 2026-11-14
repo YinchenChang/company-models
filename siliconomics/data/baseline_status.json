@@ -1,6 +1,6 @@
 {
- "_note": "v0.19-trial 試作（不合併）：由 siliconomics/tools/export_baseline_status.py 自 20261114_Siliconomics_v0.19-trial.xlsx 匯出；換算值與 Wattonomics 證據比例取自 Wattonomics v0.3.2 r1（核對中）；continuity＝規則 v1.4 連續法（基準＝前一年基準 × 換算值成長率，非換算值本身）",
- "source": "20261114_Siliconomics_v0.19-trial.xlsx",
+ "_note": "由 siliconomics/tools/export_baseline_status.py 自 20261114_Siliconomics_v0.19.xlsx 匯出；換算值與 Wattonomics 證據比例取自 Wattonomics v0.3.2（main，PR #480）；continuity＝規則 v1.4 連續法（基準＝前一年基準 × 換算值成長率，非換算值本身）",
+ "source": "20261114_Siliconomics_v0.19.xlsx",
  "threshold": 0.5,
  "wattonomics_coverage_complete": true,
  "years": {
@@ -61,8 +61,8 @@
    "use_converted": false,
    "continuity": false,
    "reconciling": true,
-   "recon_doc": null,
-   "deadline": null,
+   "recon_doc": "Drive 02-AI供應鏈/對帳/20261114_對帳單_Siliconomics基準對Wattonomics換算_2026-2029.md（r3）",
+   "deadline": "2027-02-28",
    "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
    "sil_base": 39.1637387089335
   },
@@ -92,8 +92,8 @@
    "use_converted": false,
    "continuity": false,
    "reconciling": true,
-   "recon_doc": null,
-   "deadline": null,
+   "recon_doc": "Drive 02-AI供應鏈/對帳/20261114_對帳單_Siliconomics基準對Wattonomics換算_2026-2029.md（r3）",
+   "deadline": "2027-02-28",
    "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
    "sil_base": 42.2337105529984
   },
@@ -123,8 +123,8 @@
    "use_converted": true,
    "continuity": true,
    "reconciling": true,
-   "recon_doc": null,
-   "deadline": null,
+   "recon_doc": "Drive 02-AI供應鏈/對帳/20261114_對帳單_Siliconomics基準對Wattonomics換算_2026-2029.md（r3）",
+   "deadline": "2027-02-28",
    "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
    "sil_base": 42.7042769563548
   }

@@ -1,4 +1,4 @@
-# 三層基準協調狀態檔匯出（v0.19-trial；規則 docs/plan/三層基準協調規則.md v1.1；欄位依 tools/baseline_coordination/README.md）
+# 三層基準協調狀態檔匯出（v0.19 起；規則 docs/plan/三層基準協調規則.md v1.4；欄位依 tools/baseline_coordination/README.md）
 # 用法：python3 siliconomics/tools/export_baseline_status.py [<重算後 Siliconomics xlsx>] [<輸出 json>]
 #   預設讀 model/CURRENT、寫 data/baseline_status.json。只讀 Interface 的 SIF_ 名稱（Coord 頁推導），本程式不做任何判定或計算。
 #   對帳單與期限（recon_doc、deadline）、硬體個股清單與依賴年份讀 builder/seed/coord_meta_v*.json（判斷類，未定者留空）。
@@ -61,7 +61,7 @@ def main():
             coefs.append({"name": f"um{yy}_B（S33；經 crd_k_{yy} 帶入 {y} 基準）", "year": y, "tag": "Assumed",
                           "note": "覆蓋未補齊、該年維持現行（對帳中）；改用換算值後不再在基準鏈上"})
     st = {
-        "_note": "v0.19-trial 試作（不合併）：由 siliconomics/tools/export_baseline_status.py 自 " + os.path.basename(x) + " 匯出；換算值與 Wattonomics 證據比例取自 Wattonomics v0.3.2 r1（核對中）；continuity＝規則 v1.4 連續法（基準＝前一年基準 × 換算值成長率，非換算值本身）",
+        "_note": "由 siliconomics/tools/export_baseline_status.py 自 " + os.path.basename(x) + " 匯出；換算值與 Wattonomics 證據比例取自 Wattonomics v0.3.2（main，PR #480）；continuity＝規則 v1.4 連續法（基準＝前一年基準 × 換算值成長率，非換算值本身）",
         "source": os.path.basename(x),
         "threshold": v("SIF_crd_thr"),
         "wattonomics_coverage_complete": bool(v("SIF_crd_cov_done")),

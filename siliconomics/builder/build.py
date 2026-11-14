@@ -44,7 +44,7 @@ def hdr(ws, row, labels):
 
 
 def kc(y, s_="B"):
-    """基準鏈上的顆數係數乘數（v0.19-trial：有協調區塊時各年讀 crd_k_<yy>；否則沿用 2028–29 × um*_B）。"""
+    """基準鏈上的顆數係數乘數（v0.19：有協調區塊時各年讀 crd_k_<yy>；否則沿用 2028–29 × um*_B）。"""
     if globals().get("COORD"):
         return f"*crd_k_{y % 100}"
     return f"*um{y % 100}_{s_}" if y >= 2028 else ""
@@ -146,7 +146,7 @@ def main():
         IN.cell(r, 1, "grp_" + g["key"]); IN.cell(r, 2, g["name"]); IN.cell(r, 7, g["tag"]); IN.cell(r, 8, g["src"])
         r += 1
     IN_LAST = r - 1
-    # v0.19-trial（三層基準協調規則 v1.1 C3）：基準鏈上的顆數係數改讀 Coord 頁的「依規則決定的基準係數」crd_k_<yy>
+    # v0.19（三層基準協調規則 v1.4 C3）：基準鏈上的顆數係數改讀 Coord 頁的「依規則決定的基準係數」crd_k_<yy>
     #   ＝IF(上游定基準且覆蓋已補齊, 換算值 ÷ 原始顆數讀數, 現行係數〔2026–27＝1、2028–29＝um28_B／um29_B〕)。
     #   覆蓋未補齊（crd_cov_done＝0）時各年等於現行係數，數值與 v0.18 逐格相同。
     COORD = "crd_cov_done" in INROW
@@ -158,10 +158,10 @@ def main():
     import market as MKT
     ref = MKT.write(wb, hdr, Font, scen=SCL)
     MK = ref["mk"]
-    if COORD:   # v0.19-trial：Mkt 頁顆數係數列（market.py 寫 1／1／um28_B／um29_B）改讀依規則決定的基準係數；覆蓋未補齊時值相同
+    if COORD:   # v0.19：Mkt 頁顆數係數列（market.py 寫 1／1／um28_B／um29_B）改讀依規則決定的基準係數；覆蓋未補齊時值相同
         for j, yy in enumerate((26, 27, 28, 29)):
             c = wb["Mkt"].cell(MK["cfB"], 4 + j, f"=crd_k_{yy}"); c.number_format = "0.00"
-        wb["Mkt"].cell(MK["cfB"], 1).value = str(wb["Mkt"].cell(MK["cfB"], 1).value) + "〔v0.19-trial：讀 Coord 頁 crd_k，依三層基準協調規則決定〕"
+        wb["Mkt"].cell(MK["cfB"], 1).value = str(wb["Mkt"].cell(MK["cfB"], 1).value) + "〔v0.19：讀 Coord 頁 crd_k，依三層基準協調規則決定〕"
     wb["Mkt"]["A2"] = "公式由 markets/memory/market.py write() 產生（與各記憶體公司模型的 Mkt 頁同一份）；輸入讀本活頁簿 In 頁"
 
     # ---------------- Scen：情境定義 ----------------
@@ -517,11 +517,11 @@ def main():
         DP.column_dimensions["A"].width = 36
         for col in "BCDEF": DP.column_dimensions[col].width = 10
 
-    # ---------------- Coord：三層基準協調（v0.19-trial；規則 docs/plan/三層基準協調規則.md v1.1 C3、C4、C7） ----------------
+    # ---------------- Coord：三層基準協調（v0.19；規則 docs/plan/三層基準協調規則.md v1.4 C3、C4、C7） ----------------
     CO = None; COROW = {}
     if COORD and DP is not None:
         CO = wb.create_sheet("Coord", index=wb.sheetnames.index("Path"))
-        CO["A1"] = ("Coord — 三層基準協調（試作 v0.19-trial；規則 v1.1 C3）：每年依兩層證據比例判定狀態（甲：兩層都有證據；乙：一層；丙：兩層都外推；含緩衝區），"
+        CO["A1"] = ("Coord — 三層基準協調（v0.19；規則 v1.4 C3）：每年依兩層證據比例判定狀態（甲：兩層都有證據；乙：一層；丙：兩層都外推；含緩衝區），"
                     "區間跨線即待定（規則 v1.3：兩層證據比例低／基準／高任一端點與基準值落在門檻兩側 → 待定，維持現行、標對帳中）。決定由誰定基準。上游定基準（丙，或 Wattonomics 有證據的乙）且 Wattonomics 覆蓋已補齊（crd_cov_done＝1）→ 基準＝Wattonomics 換算值；"
                     "覆蓋未補齊 → 維持現行（原始顆數 × S33 係數）並標「對帳中」；其餘維持現行。基準係數 crd_k＝基準 ÷ 原始顆數讀數，取代基準鏈上的 S33 係數")
         CO["A2"] = ("S33 係數（um28_B、um29_B）不再是基準鏈上的水準係數：只在『維持現行』的年份經 crd_k 帶入；改用換算值的年份不讀。"
@@ -1101,7 +1101,7 @@ def main():
         nm_ = "SIF_" + k
         IF.cell(r, 1, nm_); IF.cell(r, 2, lab); IF.cell(r, 3, unit)
         if has_lo: IF.cell(r, 4, f"=In!D{ir}").font = GREEN
-        c = IF.cell(r, 5, f'=IF(ISBLANK(In!E{ir}),"",In!E{ir})' if k.startswith("crd_prev") else f"=In!E{ir}"); c.font = GREEN   # v0.19-trial：上次判定空白＝首次判定，不得顯示為 0
+        c = IF.cell(r, 5, f'=IF(ISBLANK(In!E{ir}),"",In!E{ir})' if k.startswith("crd_prev") else f"=In!E{ir}"); c.font = GREEN   # v0.19：上次判定空白＝首次判定，不得顯示為 0
         if has_hi: IF.cell(r, 6, f"=In!F{ir}").font = GREEN
         IF.cell(r, 7, f"=In!G{ir}"); IF.cell(r, 8, f"In!E{ir}")
         name(wb, nm_, f"Interface!$E${r}")
@@ -1410,9 +1410,9 @@ def main():
             name(wb, nm_, f"Interface!$E${r}"); name(wb, nm_ + "_lo", f"Interface!$D${r}"); name(wb, nm_ + "_hi", f"Interface!$F${r}")
             IFNAMES.append(nm_); r += 1
     if CO is not None:
-        # v0.19-trial：三層基準協調（規則 v1.1 C3、C4、C7）。逐年純量名稱，值在欄 E
+        # v0.19：三層基準協調（規則 v1.4 C3、C4、C7）。逐年純量名稱，值在欄 E
         r += 1
-        IF.cell(r, 1, "E. 三層基準協調（v0.19-trial 試作；規則 docs/plan/三層基準協調規則.md v1.1；Coord 頁）。基準仍讀 SIF_DeployGW_Base 等 *_Base；"
+        IF.cell(r, 1, "E. 三層基準協調（v0.19；規則 docs/plan/三層基準協調規則.md v1.4；Coord 頁）。基準仍讀 SIF_DeployGW_Base 等 *_Base；"
                       "對帳中年份的個股另讀 SIF_DeployGW_Alt_<年>（另一側讀數）並列兩讀數目標價").font = BOLD; r += 1
         hdr(IF, r, ["名稱", "項目", "單位", "", "值", "", "", "", "來源位置"]); r += 1
         for key, stem, lab, unit, fm in (("sup", "SIF_DeployGW_Supply", "供給側讀數：原始顆數部署 GW（不乘係數；情境 A）", "GW", "0.00"),
@@ -1610,7 +1610,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
-        ("v0.19-trial（試作，不合併）：依三層基準協調規則 v1.1 C3 決定基準：In 頁 M30（換算值、兩層證據比例、cov_done、上次判定）＋ Coord 頁（逐年狀態甲乙丙、由誰定基準、該年標示、依規則的基準與基準係數 crd_k）；基準鏈上的 S33 係數改讀 crd_k（覆蓋未補齊時＝現行係數，數值與 v0.18 相同）。Interface E 節新增供給側／需求側讀數、另一側讀數、狀態與對帳中旗標。", False),
+        ("v0.19（2026-11-14）：依三層基準協調規則 v1.4 C3 決定基準（Andy 2026-11-14 13:06 確認 NVIDIA 試作後轉正式）：In 頁 M30（Wattonomics v0.3.2 換算值、兩層證據比例、cov_done＝1、上次判定）＋ Coord 頁（逐年狀態、由誰定基準、該年標示、依規則的基準與基準係數 crd_k）；基準鏈上的 S33 係數改讀 crd_k：2026 甲（一致）、2027–28 待定（維持現行 1／0.80，對帳中）、2029 丙＋連續法（0.85 → 0.710，對帳中）；部署 GW 2029 51.12 → 42.70。Interface E 節新增供給側／需求側讀數、另一側讀數、狀態與對帳中旗標。下游經 siliconomics/coef_rule.py 讀 um28_B／um29_B＝SIF_UnitsCoef_Base。對帳單：Drive 02-AI供應鏈/對帳/20261114_對帳單_Siliconomics基準對Wattonomics換算_2026-2029.md（r3，期限 2027-02-28）。", False),
         ("v0.18：2027 基準依 HBM 本庫自算供給截頂（三層校準原則第 2 條；Andy 11-05 同意，條件為本庫供給）：各平台 2027 顆數 × 0.9404（＝可支撐部署 GW 39.16 ÷ 原基準 41.65），不遞延到 2028；2027 部署 GW 41.65 → 39.16、HBM 需求 ÷ 供給 106% → 100%。決策 S48。", False),
         ("v0.17：HBM 供給改本庫自算（Andy 11-05「證據到哪，數字到哪」）：2026 基數＝本庫 2026 HBM 出貨 3.78 EB（三家皆稱售罄；參照 UBS 4.23）；2027 成長＝晶圓 +12% × HBM 晶圓占比 20%→30% × 每片位元 +5% ＝ +76%（0.36–1.19；參照 TrendForce +55%）。2027 供給 6.56 → 6.67 EB、需求 ÷ 供給 108% → 106%。決策 S47。", False),
         ("v0.16.3：Deploy 頁新增實體部署 GW（NVIDIA＝顆數 ÷ 該世代每 GW 顆數；非 NVIDIA＝IT 資本支出 ÷（VR200 每 GW × 持有成本比））與 Interface SIF_DeployGWPhys_Base，供電源、散熱、組裝等按實體電力計的下游讀取（Andy 11-05「先加」；讀者尚未改讀）。成本等值的 SIF_DeployGW_Base 不變。決策 S46。", False),

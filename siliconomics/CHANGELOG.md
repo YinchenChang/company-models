@@ -1,5 +1,14 @@
 # Siliconomics 變更紀錄
 
+## v0.19（2026-11-14；`model/20261114_Siliconomics_v0.19.xlsx`；Tokenomics v21.10；Wattonomics v0.3.2）
+
+- **轉正式（Andy 2026-11-14 13:06「请开始，然后 PR 的话请你直接合并我授权给你」；決策 S49）**：v0.19-trial（下節）的三層基準協調結構轉正式版號。依規則 v1.4 C3：2026 甲（一致，係數 1）；2027、2028 證據比例區間跨過門檻＝待定（維持現行 1／0.80，對帳中）；2029 丙且前一年待定＝連續法，係數 0.85 → **0.710**，標對帳中。基準部署 GW 23.40／39.16／42.23／**42.70**（v0.18：51.12）。
+- **對帳單登錄**：`builder/seed/coord_meta_v0.19.json` 的 2027–2029 對帳單＝Drive `02-AI供應鏈/對帳/20261114_對帳單_Siliconomics基準對Wattonomics換算_2026-2029.md`（r3），期限 2027-02-28（C6 第 3 點）；`tools/baseline_coordination/check.py` 第 5 項通過。
+- **下游讀到規則基準**：新增 `siliconomics/coef_rule.py`，由 `reader.py`、`markets/scen/scen.py`、`markets/memory/market.py` 三個讀取點呼叫，把 In 頁 um28_B、um29_B（原 S33 值，保留作參照）換成 `SIF_UnitsCoef_Base`；低、高依同比例縮放（2029：0.75–0.95 → 0.627–0.794；預設做法，判斷類）。約 60 個建檔程式不必逐一修改。
+- **R4 橋接 r11**（改讀 Wattonomics v0.3.2）：Wattonomics 主路徑 19.07／25.01／29.21／29.48 GW；本庫推得上線 2029 51.91 → 47.01；`SIF_GWvsWT_Base`、`SIF_WTAnchor_Base` 隨之更新（個股「Wattonomics 錨定」敏感度案例值改變）。Recon 頁 SoC 份額來源檔名更新為 Advantest v0.7.4、泰瑞達 v0.4.4。
+- **K1 自舉**：K1（本庫 HBM 市場 vs SK 海力士成品）需要 SK 海力士先讀新係數：以暫用快照重建 SK 海力士 → 重建本庫（SGOV_Errors 0）→ 匯出正式快照 → 全下游重建（同一 PR）。
+- In 頁 crd_* 來源文字「Wattonomics v0.3.2 r2 核對中」改為已合併（main PR #480）；數值不變。
+
 ## v0.19-trial（2026-11-14；**試作，不合併**；`model/20261114_Siliconomics_v0.19-trial.xlsx`；Tokenomics v21.10）
 
 - **三層基準協調結構**（規則 `docs/plan/三層基準協調規則.md` v1.1；落地步驟 5a 前置；報告 `docs/reports/20261114_協調試作_build.md`）：
