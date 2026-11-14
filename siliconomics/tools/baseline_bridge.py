@@ -98,8 +98,9 @@ for j, w in enumerate([12, 52, 6, 6, 8, 9, 8, 10, 110], 1):
 
 # ---------------- Bridge ----------------
 B = wb.create_sheet("Bridge")
-B["A1"] = ("Bridge — Wattonomics 上線 GW 反推成 Siliconomics 口徑（成本等值、出貨年），與現行基準、原始顆數並排；差距拆 C2 三類。"
-           "反推式（Wattonomics 自己的正向式的反函數）：上線ₜ＝(1−k)·出貨ₜ＋k·出貨ₜ₋₁，k＝lag_on÷12＋inv_on → 出貨ₜ＝(上線ₜ − k·出貨ₜ₋₁)÷(1−k)")
+B["A1"] = ("Bridge — Wattonomics 上線 GW 換成 Siliconomics 口徑（成本等值、出貨年），與現行基準、原始顆數並排；差距拆 C2 三類。"
+           "換算（規則 v1.1 平滑法）：實體出貨ₜ ≈ 上線ₜ＋k ×（上線ₜ₊₁ − 上線ₜ），k＝lag_on÷12＋inv_on；再 ÷（實體 ÷ 成本等值）。"
+           "供給上限只作檢查（v1.1，上限非獨立）。遞迴精確反推列保留為停用對照")
 B["A1"].font = BOLD
 for j, h in enumerate(["列", "項目", "說明", "2025"] + [str(y) for y in YRS], 1):
     c = B.cell(3, j, h); c.font = BOLD; c.fill = HDR
@@ -132,17 +133,21 @@ row("w1", "Wattonomics 年新增上線 IT GW（現值）", "WIF_MktGW_Add", lamb
 row("w2", "① 覆蓋缺口（④＋W2；Assumed）", "七家以外買方未入；v0.3.2 後由實績取代", lambda y: None if y == 2025 else f"=cov4_{y}+cov2_{y}")
 row("w3", "Wattonomics 上線（補覆蓋後）", "w1＋w2", lambda y: None if y == 2025 else f"={C(y)}{R['w1']}+{C(y)}{R['w2']}", True)
 row("cap", "供給上限（上線 GW）", "SIF_CapOnlineGW_Base（非獨立，見 In）", lambda y: None if y == 2025 else f"=cap_{y}")
-row("w4", "上線（補覆蓋、以供給為頂）", "MIN(w3, cap)", lambda y: None if y == 2025 else f"=MIN({C(y)}{R['w3']},{C(y)}{R['cap']})", True)
-row("w4a", "上線（不補覆蓋、以供給為頂）", "MIN(w1, cap)", lambda y: None if y == 2025 else f"=MIN({C(y)}{R['w1']},{C(y)}{R['cap']})")
-ship("s1", "反推實體出貨（補覆蓋）", "遞迴；2025＝ship_2025", lambda y: f"{C(y)}{R['w4']}", bold=True)
-ship("s1a", "反推實體出貨（不補覆蓋）", "同上", lambda y: f"{C(y)}{R['w4a']}")
+row("w4", "上線（補覆蓋）", "＝w3；供給上限只作檢查（v1.1）", lambda y: None if y == 2025 else f"={C(y)}{R['w3']}", True)
+row("capchk", "　檢查：超過供給上限？", "上限非獨立，只標示不封頂", lambda y: None if y == 2025 else f'=IF({C(y)}{R["w4"]}>{C(y)}{R["cap"]},"超過","未超過")', fmt="@")
+row("w4a", "上線（不補覆蓋）", "＝w1", lambda y: None if y == 2025 else f"={C(y)}{R['w1']}")
+ship("s1", "停用對照：遞迴反推實體出貨（補覆蓋）", "v1.0 量法；2025＝ship_2025", lambda y: f"{C(y)}{R['w4']}", bold=True)
+ship("s1a", "停用對照：遞迴反推（不補覆蓋）", "同上", lambda y: f"{C(y)}{R['w4a']}")
 row("rt", "本庫 實體 ÷ 成本等值（出貨年）", "SIF_DeployGWPhys ÷ SIF_DeployGW；ASIC、AMD 每 GW 較便宜", lambda y: None if y == 2025 else f"=phys_{y}/sil_{y}", fmt="0.000")
-row("x1", "換算值：成本等值出貨（補覆蓋）＝丙狀態基準候選", "s1 ÷ rt", lambda y: None if y == 2025 else f"={C(y)}{R['s1']}/{C(y)}{R['rt']}", True, fill=KEY)
-row("x1a", "換算值（不補覆蓋）", "s1a ÷ rt", lambda y: None if y == 2025 else f"={C(y)}{R['s1a']}/{C(y)}{R['rt']}")
-row("w4n", "　次年上線（補覆蓋、以供給為頂；2029 用 2030 值、覆蓋缺口沿用 2029）", "平滑法用",
-    lambda y: None if y == 2025 else (f"=MIN(wt_2030+cov4_2029+cov2_2029,cap_2029)" if y == 2029 else f"={CL(COL[y]+1)}{R['w4']}"))
-row("s2", "對照：平滑法實體出貨 ≈ 上線ₜ＋k ×（上線ₜ₊₁ − 上線ₜ）", "不遞迴、誤差不累積；r4_bridge 註記的「改讀設計」", lambda y: None if y == 2025 else f"={C(y)}{R['w4']}+{C(y)}{R['k']}*({C(y)}{R['w4n']}-{C(y)}{R['w4']})")
-row("x2", "對照：平滑法換算值（補覆蓋）", "s2 ÷ rt；方法選擇待 Andy", lambda y: None if y == 2025 else f"={C(y)}{R['s2']}/{C(y)}{R['rt']}", True)
+row("x1", "停用對照：遞迴換算值（補覆蓋）", "s1 ÷ rt", lambda y: None if y == 2025 else f"={C(y)}{R['s1']}/{C(y)}{R['rt']}")
+row("x1a", "停用對照：遞迴換算值（不補覆蓋）", "s1a ÷ rt", lambda y: None if y == 2025 else f"={C(y)}{R['s1a']}/{C(y)}{R['rt']}")
+row("w4n", "　次年上線（補覆蓋；2029 用 Wattonomics 2030 值＋2029 覆蓋缺口）", "平滑法用",
+    lambda y: None if y == 2025 else ("=wt_2030+cov4_2029+cov2_2029" if y == 2029 else f"={CL(COL[y]+1)}{R['w4']}"))
+row("w4an", "　次年上線（不補覆蓋）", "", lambda y: None if y == 2025 else ("=wt_2030" if y == 2029 else f"={CL(COL[y]+1)}{R['w4a']}"))
+row("s2", "平滑法實體出貨（補覆蓋）≈ 上線ₜ＋k ×（上線ₜ₊₁ − 上線ₜ）", "規則 v1.1", lambda y: None if y == 2025 else f"={C(y)}{R['w4']}+{C(y)}{R['k']}*({C(y)}{R['w4n']}-{C(y)}{R['w4']})", True)
+row("s2a", "平滑法實體出貨（不補覆蓋）", "", lambda y: None if y == 2025 else f"={C(y)}{R['w4a']}+{C(y)}{R['k']}*({C(y)}{R['w4an']}-{C(y)}{R['w4a']})")
+row("x2", "換算值（補覆蓋）＝上游定基準時的基準", "s2 ÷ rt", lambda y: None if y == 2025 else f"={C(y)}{R['s2']}/{C(y)}{R['rt']}", True, fill=KEY)
+row("x2a", "換算值（不補覆蓋）", "s2a ÷ rt", lambda y: None if y == 2025 else f"={C(y)}{R['s2a']}/{C(y)}{R['rt']}")
 row("x0", "對照：上線 GW 直接換成本等值（不做時差反推）", "w4a ÷ rt", lambda y: None if y == 2025 else f"={C(y)}{R['w4a']}/{C(y)}{R['rt']}")
 br += 1
 row("s0", "Siliconomics 現行基準（成本等值、出貨年）", "SIF_DeployGW_Base＝原始 × S33 係數", lambda y: None if y == 2025 else f"=sil_{y}", True, fill=KEY)
@@ -150,21 +155,24 @@ row("s0r", "Siliconomics 原始顆數讀數（供給側讀數）", "現行基準
 br += 1
 B.cell(br, 1, "C2 差距拆解（現行基準 − 上線直接換算 ＝ ① ＋ ② ＋ ③）").font = BOLD; br += 1
 row("g", "總差距", "s0 − x0", lambda y: None if y == 2025 else f"={C(y)}{R['s0']}-{C(y)}{R['x0']}", True)
-row("g2", "② 時差與庫存（單年可、累計不可）", "x1a − x0", lambda y: None if y == 2025 else f"={C(y)}{R['x1a']}-{C(y)}{R['x0']}")
+row("g2", "② 時差與庫存（單年可、累計不可）", "x2a − x0", lambda y: None if y == 2025 else f"={C(y)}{R['x2a']}-{C(y)}{R['x0']}")
 row("g2c", "　② 累計（2026 起）", "累計不得長期偏離 0", lambda y: None if y == 2025 else (f"={C(y)}{R['g2']}" if y == 2026 else f"={CL(COL[y]-1)}{br}+{C(y)}{R['g2']}"))
-row("g1", "① 口徑與覆蓋（Assumed；非分歧）", "x1 − x1a", lambda y: None if y == 2025 else f"={C(y)}{R['x1']}-{C(y)}{R['x1a']}")
-row("g3", "③ 殘差（分歧）", "s0 − x1", lambda y: None if y == 2025 else f"={C(y)}{R['s0']}-{C(y)}{R['x1']}", True, fill=KEY)
+row("g2p", "　② 累計 ÷ 當年基準（檢查第 7 項，≤ 15%）", "", lambda y: None if y == 2025 else f"={C(y)}{R['g2c']}/{C(y)}{R['s0']}", fmt="0.0%")
+row("g1", "① 口徑與覆蓋（Assumed；非分歧）", "x2 − x2a", lambda y: None if y == 2025 else f"={C(y)}{R['x2']}-{C(y)}{R['x2a']}")
+row("g3", "③ 殘差（分歧）", "s0 − x2", lambda y: None if y == 2025 else f"={C(y)}{R['s0']}-{C(y)}{R['x2']}", True, fill=KEY)
 row("g3p", "　③ ÷ 現行基準", "容差 ±15%", lambda y: None if y == 2025 else f"={C(y)}{R['g3']}/{C(y)}{R['s0']}", fmt="0.0%")
 row("g3t", "　容差內？", "", lambda y: None if y == 2025 else f'=IF(ABS({C(y)}{R["g3p"]})<=0.15,"一致","超出")', fmt="@")
 row("chk", "　檢查：① ＋ ② ＋ ③ − 總差距（應為 0）", "", lambda y: None if y == 2025 else f"={C(y)}{R['g1']}+{C(y)}{R['g2']}+{C(y)}{R['g3']}-{C(y)}{R['g']}", fmt="0.000")
 br += 1
-B.cell(br, 1, "敏感度：換算值 x1（一次動一個輸入）").font = BOLD; br += 1
-for key, lab, kexpr, covsuf in [("sl", "lag_on 低（3 月）", "(lag_on_lo/12+inv_on)", ""), ("sh", "lag_on 高（6 月）", "(lag_on_hi/12+inv_on)", ""),
-                                ("il", "inv_on 低（5%）", "(lag_on/12+inv_on_lo)", ""), ("ih", "inv_on 高（20%）", "(lag_on/12+inv_on_hi)", ""),
-                                ("cl", "覆蓋缺口 低", "(lag_on/12+inv_on)", "_lo"), ("ch", "覆蓋缺口 高", "(lag_on/12+inv_on)", "_hi")]:
-    on = (lambda s: (lambda y: f"MIN(wt_{y}+cov4_{y}{s}+cov2_{y}{s},cap_{y})"))(covsuf)
-    ship("ss_" + key, "　出貨：" + lab, "", on, kexpr)
-    row("sx_" + key, "換算值：" + lab, "÷ rt", lambda y, kk=key: None if y == 2025 else f"={C(y)}{R['ss_'+kk]}/{C(y)}{R['rt']}")
+B.cell(br, 1, "敏感度：平滑法換算值 x2（一次動一個輸入）").font = BOLD; br += 1
+for key, lab, kexpr, cs in [("sl", "lag_on 低（3 月）", "(lag_on_lo/12+inv_on)", ""), ("sh", "lag_on 高（6 月）", "(lag_on_hi/12+inv_on)", ""),
+                            ("il", "inv_on 低（5%）", "(lag_on/12+inv_on_lo)", ""), ("ih", "inv_on 高（20%）", "(lag_on/12+inv_on_hi)", ""),
+                            ("cl", "覆蓋缺口 低", "(lag_on/12+inv_on)", "_lo"), ("ch", "覆蓋缺口 高", "(lag_on/12+inv_on)", "_hi")]:
+    def onx(y, cs=cs):
+        return f"(wt_{y}+cov4_{y}{cs}+cov2_{y}{cs})"
+    def nxt(y, cs=cs):
+        return f"(wt_2030+cov4_2029{cs}+cov2_2029{cs})" if y == 2029 else onx(y + 1, cs)
+    row("sx_" + key, "換算值：" + lab, "", lambda y, kx=kexpr, o=onx, n=nxt: None if y == 2025 else f"=({o(y)}+{kx}*({n(y)}-{o(y)}))/{C(y)}{R['rt']}")
 B.column_dimensions["A"].width = 6; B.column_dimensions["B"].width = 46; B.column_dimensions["C"].width = 44
 for y in [2025] + YRS:
     B.column_dimensions[C(y)].width = 10
@@ -210,7 +218,7 @@ trow("b50", "依規則 v1.1 的基準（門檻 50%）", "上游定基準且覆�
 trow("tag", "　該年標示", "", lambda y: f'=IF({up(TR["t50"], "thr")(y)},IF(cov_done=1,"改用換算值","對帳中（待覆蓋補齊）"),IF({CL(TC[y])}{TR["t50"]}="甲",IF(ABS(Bridge!{C(y)}{R["g3p"]})<=0.15,"一致","對帳中（甲、待診斷）"),"維持"))', "@")
 trow("b50s", "假設覆蓋已補齊時的基準（門檻 50%；平滑法）", "＝覆蓋補齊後預期值；v0.3.2 後以實績覆蓋重跑", lambda y: f'=IF({up(TR["t50"], "thr")(y)},Bridge!{C(y)}{R["x2"]},sil_{y})', fill=KEY)
 trow("b67", "同上（門檻 67%）", "", lambda y: f'=IF({up(TR["t67"], "thr_hi")(y)},Bridge!{C(y)}{R["x2"]},sil_{y})')
-trow("b50r", "對照：v1.0 遞迴反推換算（已停用）", "", lambda y: f'=IF({up(TR["t50"], "thr")(y)},Bridge!{C(y)}{R["x1"]},sil_{y})')
+trow("b50r", "停用對照：v1.0 遞迴反推換算", "", lambda y: f'=IF({up(TR["t50"], "thr")(y)},Bridge!{C(y)}{R["x1"]},sil_{y})')
 trow("cur", "現行基準", "", lambda y: f"=sil_{y}")
 trow("raw", "原始顆數讀數（供給側；情境 A，J5）", "", lambda y: f"=sil_{y}/coef_{y}")
 trow("chg", "覆蓋補齊後基準 ÷ 現行 − 1", "", lambda y: f"={CL(TC[y])}{TR['b50s']}/{CL(TC[y])}{TR['cur']}-1", "0.0%")
