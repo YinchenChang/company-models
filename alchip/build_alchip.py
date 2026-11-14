@@ -332,6 +332,8 @@ DEFP = dict(scn="A", uf="1", shs="", shp="0", pfc="pfc_{s}", fh="f_al", mh="m_hb
             go27="g_o27_{s}", goL="g_oL_{s}", gma="0", phi="phi", opxa="0", nonop="nonop_f", tax="tax", fg="fade_g{s}", fm="fade_m{s}", wta=None)
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["wta"] is None and s != "A":   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 於 CY2027 起產業量（顆數）× wta（＝另一側讀數比值）；情境 A＝供給側讀數不縮放
+        P["wta"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     _wx = lambda y: (f"*{P['wta'][y]}" if P["wta"] and y in P["wta"] else "")   # Wattonomics 錨定（Sens 案例；預設 None＝不乘）
     p = lambda k: P[k].format(s=s)
     ws.cell(r0, 1, title).font = BOLD
@@ -413,6 +415,8 @@ def engine(ws, r0, title, **over):
     return R
 
 # ---------------- PL ----------------
+import json as _json
+_SENS_OV = _json.loads(os.environ.get("ALCHIP_P", "{}")) if os.environ.get("ALCHIP_SENS") == "1" else {}   # sens_alchip.py 整本重算快照：三情境同時套用案例覆寫（正式建置不設）
 PL = wb.create_sheet("PL")
 PL["A1"] = "PL — 世芯-KY 損益（十億新台幣；EPS 新台幣、基本；歸屬母公司）。FY2025A 實績、FY2026 錨點（三情境相同），FY2027–FY2029 由驅動因子推導，FY2030–FY2032 為收斂法。FY(t)＝CY(t)。三情境各一個完整推導區塊（本頁下方），頂端為摘要"
 PB = {}; r0 = 60
@@ -420,7 +424,7 @@ SCN_T = {"A": "情境 A（順利）：顆數基準（tsmc 情境 A）；世芯 T
          "B": "情境 B（平平）：CY2028 顆數 ×0.8、CY2029 ×0.85（tsmc 情境 B）；份額 50%／45%；2 奈米 ×1.2；其他營收 +5%",
          "C": "情境 C（不如預期）：CY2028–29 顆數 ×0.6（tsmc 情境 C）；份額 40%／35%；2 奈米 ×1.0；Trainium 毛利率 −2pt；其他營收 −10%／−5%"}
 for s in SC:
-    PB[s] = engine(PL, r0, SCN_T[s], scn=s)
+    PB[s] = engine(PL, r0, SCN_T[s], scn=s, **_SENS_OV)
     r0 = PB[s]["end"] + 2
 hdr(PL, 3, ["情境／項目", "單位", "FY2025A", "FY2026（錨點）", "FY2027", "FY2028", "FY2029", "FY2030（收斂）", "FY2031（收斂）", "FY2032（收斂）", "說明"])
 sr = 4; SUMR = {}
@@ -1109,6 +1113,15 @@ _r3_fix(wb, "v0.2.2", "FY2026＝日曆年 2026，錨點", extra=[('"（2026-10-2
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import px1105_post  # noqa: E402
 print(px1105_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), "v0.2.3", "v0.2.2", "v0.2.2（2026-11-06）"))
+# 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 alchip/coord_alt.json）；新版本起版面 v1.3、C0 實績（alchip/v024_post.py）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+if COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL):
+    COORD.stamp(wb, "v0.2.3", "v0.2.4", "2026-11-15")
+if os.environ.get("ALCHIP_SENS") != "1":
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import v024_post as VPOST  # noqa: E402
+    print(VPOST.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL))
 wb.save(sys.argv[1])
 if os.environ.get("ALCHIP_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
