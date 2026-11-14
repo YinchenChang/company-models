@@ -1,4 +1,15 @@
-# CoreWeave（CRWV）個股模型 v5.0.2（Oracle 收支型樣板）
+# CoreWeave（CRWV）個股模型 v5.0.3（Oracle 收支型樣板）
+
+**v5.0.3（2026-11-14）：版面 v1.3 補缺項＋三層協調（Coord 頁；新雲樣板，Nebius 複製用）。** 依據：工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md` 第 2 節；規則 `docs/plan/三層基準協調規則.md` v1.4.2 C0 第 2 點；`tools/coord/README.md`；Andy 2026-11-14 12:47（G、H 位置）、17:40（C0 用公司實績）。open PR #450（v4.14 草稿）不動。
+- **版面 v1.3 補缺項（`check_layout_v13 --xlsx` 原缺 G、H）：** 估值章第一個區塊改為四個目標價與現價圖、敏感度章前兩個區塊改為低案、高案主圖，章節說明（原 intro）移到圖下（`scripts/make_html_json.py` 末段；只改區塊順序）。
+- **Coord 頁設計（算力買賣方／新雲樣板；不做兩讀數目標價，只有兩節，Nebius 照抄結構、換成自己的玩家與實績）：**
+  - **G1 讀取層級（同源，不判定）：** 列本模型讀的 Tokenomics 名稱與版本（v22.0，commit 4a13ba4；In 頁 he_／cx_／ox_ 列直連，差距恆 0）、Wattonomics 對照值（In 頁 wat26、wat30 為手填，來源 v0.3 mw_crwv，已核對 v0.3.2 同值；層級值是公司 2026 年底、2030 年目標上緣，同源）。差距與判定標「讀取層級（同源，不判定）」，不計入對帳中；Recon 頁 wat26、wat30 兩列說明文字同步改標（數值不動）。本輪不換快照。
+  - **G2 C0（實績）：** 個股側只用已公布期間的公司實績（2026 年前三季，Q3 新聞稿與 10-Q），層級側用同口徑隱含值，每個量給兩讀數。主讀數＝前三季累計 vs 層級 CY2026 × 9 ÷ 12；第二讀數＝Q3 × 4 vs 層級 CY2026（在役電力是時點量：主讀數＝2026-09-30 實績 vs YE2025→YE2026 線性內插，第二讀數＝實績 vs YE2026）。兩者都超過 ±15% 且同號才「對帳中」，只一個超過為「時差邊界（參考）」。門檻是輸入（藍字）。層級輸入（Wattonomics 名稱與值）以藍字寫入 Coord 頁並標快照版本；Tokenomics 每 MW 持有成本連到 Thesis 頁加權錨列。核對列：營收與資本支出實績對 Thesis 9M 實績差為 0。
+  - **同源處理：** 層級側不含本模型的定價倍數 k 與計費比例（公司因素）；資本支出讀 `WIF_Gap_Player_crwv_2026_CapexAIGW`（GW 路徑 × Tokenomics 每 GW 資本支出），不讀 `CapexAIModel`（個股模型回寫值，同源）；不用 `_SiteOnly` 路徑（公司站點目標）。Coord 頁與 HTML 都寫明這些。
+  - **HTML：** 對帳章最前新增「實績對帳」（摘要、C0 表、口徑與出處摺疊表、參考列、同源與口徑說明）與摺疊的「讀取層級」表；數字與文字全取自 xlsx（`scripts/make_html_json.py` 的 `R["COORD"]` 列號）。
+- **實績與出處：** 營收 2026 年前三季 US$8.314B、Q3 US$3.661B（Q3 新聞稿 8-K 附件 99.1，2026-11-10；10-Q 0001769628-26-000465，Verified）；現金購置 PP&E 前三季 US$23.558B、Q3 US$9.441B（同新聞稿現金流量表，Verified；現金口徑，不含應付設備款與 OEM 融資）；在役電力 over 1.7 GW、簽約電力 over 4.6 GW（同新聞稿，營運指標，Interested-party）。公司口徑資本支出前三季 30.65（上半年 10-Q 16.139＋Q3 法說 14.511）只列參考。
+- **層級隱含與判定（US$B；Wattonomics v0.3.2、Tokenomics v22.0）：** 營收層級 CY2026＝（YE2025 0.85＋YE2026 1.70 GW）÷ 2 × 加權每 MW 年持有成本 10.03＝12.78；主讀數 8.31 vs 9.59＝−13.3%、第二讀數 14.64 vs 12.78＝＋14.6%，都在門檻內 → **一致**（第二讀數貼近門檻）。資本支出層級 29.97（WIF_Gap_Player_crwv_2026_CapexAIGW）：主讀數 23.56 vs 22.48＝＋4.8%、第二讀數 37.76 vs 29.97＝＋26.0%，只一個超過 → **時差邊界（參考）**；改用公司口徑 30.65 則 ＋36.3%（參考列，等級混合，不判定）。在役電力：1,700 vs 內插 1,488＝＋14.3%、vs YE2026 1,700＝0% → **一致**。簽約電力 4,600 MW：**無可比實績**（Wattonomics 沒有簽約電力序列）。**對帳中項目 0 個。** 參考：實績隱含每平均在役 MW 年收入 8.69 vs Tokenomics 加權 10.03（−13.3%，與營收主讀數同差，因 Wattonomics 平均在役 GW 與實績平均 MW 相同）；J4 公司宣稱新約每 MW 年收入 20–25（Interested-party）與 Wattonomics 2030 年底 8 GW（公司目標上緣）對情境 B、C 的差距，見 Drive 對帳單 `20261113_對帳單_CoreWeave_J4新約價格與Wattonomics上線GW.md`，只列參考。
+- **驗證：** 既有 xlsx 逐格比對只有 README A1 版號與 build_id、README 新增版本列（A67、A68 順移）、Recon I35／I36 說明改標、Sens D56 build_id、新增 Coord 頁；加權目標價 76.20、評等「收支不足」、各情境數值不變。`check_company_html`、`check_layout_v13 --xlsx`、`tools/baseline_coordination/check.py`、`make_v5.sh` 全過（Coord 名稱如 IF_HoldEcon 出現在 HTML 對帳章屬必要的層級名稱，版面檢查僅警告）。
 
 **v5.0.2（2026-11-14，試作）：HTML 套用個股 HTML 版面規格 v1.3。** Andy 2026-11-14 08:11：章節順序「命題與核心問題 → 估值 → 敏感度 → 反向 DCF → 損益 → 驅動因子 → 個別模組（CoreWeave＝資金缺口與融資，收支模組）→ 對帳 → 資料狀態」；「html 是給我念的，所以可讀性是很重要的」。本版固定規格（`scripts/make_html_json.py`，檢查 `tools/company_html/check_layout_v13.py`）：
 - 橫幅說明 ≤200 字、不含參數代號（README 頁「展示層 v1.3」hero13 列，公式組字）；原橫幅的級距邊界、評等脆弱點、方法註記移到估值章摺疊。
@@ -16,8 +27,8 @@
 
 數字以 `dist/` 的 xlsx 為準；下表由建置成品產生（`python3 tools/model_governance/version_table.py coreweave --update`），不手寫。
 
-<!-- version-table: dist/_待刪除/20261113_CoreWeave個股模型_v5.0.1.xlsx｜dist/20261114_CoreWeave個股模型_v5.0.2.xlsx -->
-| 項目 | v5.0.1 | v5.0.2 |
+<!-- version-table: dist/_待刪除/20261114_CoreWeave個股模型_v5.0.2.xlsx｜dist/20261114_CoreWeave個股模型_v5.0.3.xlsx -->
+| 項目 | v5.0.2 | v5.0.3 |
 |---|---|---|
 | 加權目標價（上檔空間） | 76.20（+25.4%） | 76.20（+25.4%） |
 | DCF 目標價（情境加權） | 0.00 | 0.00 |
@@ -43,7 +54,7 @@ SENS=1 REV=1 DEC=1 bash coreweave/make_v5.sh     # 改了公式或輸入時（�
 
 | 檔案 | 內容 |
 |---|---|
-| `build_coreweave.py` | Python → Excel 產生器（17 頁；v5.0.2 起 PL、Seg 末尾另有標準損益表與分部營收推導：README → In → Q → Thesis → Seg → PL → CF → Fund → RPO → Sites → Debt → Lease → Val → RevDCF → Recon → Sens → Sources） |
+| `build_coreweave.py` | Python → Excel 產生器（18 頁，v5.0.3 起末尾加 Coord 頁；v5.0.2 起 PL、Seg 末尾另有標準損益表與分部營收推導：README → In → Q → Thesis → Seg → PL → CF → Fund → RPO → Sites → Debt → Lease → Val → RevDCF → Recon → Sens → Sources） |
 | `scripts/runner_v50.py` | 整本重建＋LibreOffice 重算的共用工具 |
 | `scripts/sens_v50.py`、`reverse_v50.py`、`decomp_v50.py` | 敏感度、反向 DCF（反解 k_adj）、目標價變動拆解 → `data/*_v50.json` |
 | `data/coreweave_facts_20261112.json` | 事實總帳（Q3 新聞稿逐筆、Q2 10-Q 沿用項、來源 URL） |

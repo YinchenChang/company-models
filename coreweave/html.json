@@ -218,8 +218,37 @@
   {
    "id": "valuation",
    "title": "估值",
-   "intro": "@Val!A1",
    "blocks": [
+    {
+     "type": "theme",
+     "title": "四個目標價與現價（美元）",
+     "x": "@Val!E99:E102",
+     "fmt": "n0",
+     "stack": false,
+     "pad": 1.1,
+     "bars": [
+      {
+       "name": "目標價",
+       "y": "@Val!C99:C102",
+       "color": "#0b7a80"
+      }
+     ],
+     "lines": [
+      {
+       "name": "@README!A64",
+       "y": "@Val!D99:D102",
+       "color": "#b4472f",
+       "dash": true
+      }
+     ],
+     "caption": "長條＝四個目標價（DCF、Comparable 情境加權、兩者加權、市場共識）；紅虛線＝現價。DCF 長條為零時代表三情境 DCF 失效、每股取零，見上表說明。市場共識為賣方平均，只作對照、不進目標價。"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Val!A1"
+     ]
+    },
     {
      "type": "table",
      "caption": [
@@ -267,30 +296,6 @@
        "@Val!F103"
       ]
      ]
-    },
-    {
-     "type": "theme",
-     "title": "四個目標價與現價（美元）",
-     "x": "@Val!E99:E102",
-     "fmt": "n0",
-     "stack": false,
-     "pad": 1.1,
-     "bars": [
-      {
-       "name": "目標價",
-       "y": "@Val!C99:C102",
-       "color": "#0b7a80"
-      }
-     ],
-     "lines": [
-      {
-       "name": "@README!A64",
-       "y": "@Val!D99:D102",
-       "color": "#b4472f",
-       "dash": true
-      }
-     ],
-     "caption": "長條＝四個目標價（DCF、Comparable 情境加權、兩者加權、市場共識）；紅虛線＝現價。DCF 長條為零時代表三情境 DCF 失效、每股取零，見上表說明。市場共識為賣方平均，只作對照、不進目標價。"
     },
     {
      "type": "table",
@@ -740,7 +745,6 @@
   {
    "id": "sens",
    "title": "敏感度",
-   "intro": "一次只動一個輸入（取低值或高值），整本模型重算，看加權目標價相對基準變動多少；長條只列變動達兩位數百分比的案例，其餘收在摺疊。",
    "blocks": [
     {
      "type": "tornado",
@@ -761,6 +765,12 @@
      "label_col": "O",
      "value_col": "D",
      "fmt": "sp1"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "一次只動一個輸入（取低值或高值），整本模型重算，看加權目標價相對基準變動多少；長條只列變動達兩位數百分比的案例，其餘收在摺疊。"
+     ]
     },
     {
      "type": "tornado",
@@ -3858,6 +3868,433 @@
    "intro": "@Recon!A1",
    "blocks": [
     {
+     "type": "h3",
+     "text": "實績對帳：公司已公布實績對層級隱含值"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!D45"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Coord!A13",
+     "head": [
+      "讀數",
+      "期間／口徑",
+      "公司實績",
+      "層級隱含",
+      "差距",
+      "狀態／判定"
+     ],
+     "rows": [
+      [
+       "@Coord!A28",
+       "@Coord!B28",
+       "@Coord!D28|n1",
+       "@Coord!E28|n1",
+       "@Coord!F28|sp1",
+       "@Coord!G28"
+      ],
+      [
+       "@Coord!A29",
+       "@Coord!B29",
+       "@Coord!D29|n1",
+       "@Coord!E29|n1",
+       "@Coord!F29|sp1",
+       "@Coord!G29"
+      ],
+      [
+       "@Coord!A30",
+       "@Coord!B30",
+       "",
+       "",
+       "",
+       "@Coord!G30"
+      ],
+      [
+       "@Coord!A31",
+       "@Coord!B31",
+       "@Coord!D31|n1",
+       "@Coord!E31|n1",
+       "@Coord!F31|sp1",
+       "@Coord!G31"
+      ],
+      [
+       "@Coord!A32",
+       "@Coord!B32",
+       "@Coord!D32|n1",
+       "@Coord!E32|n1",
+       "@Coord!F32|sp1",
+       "@Coord!G32"
+      ],
+      [
+       "@Coord!A33",
+       "@Coord!B33",
+       "",
+       "",
+       "",
+       "@Coord!G33"
+      ],
+      [
+       "@Coord!A34",
+       "@Coord!B34",
+       "@Coord!D34|n0",
+       "@Coord!E34|n0",
+       "@Coord!F34|sp1",
+       "@Coord!G34"
+      ],
+      [
+       "@Coord!A35",
+       "@Coord!B35",
+       "@Coord!D35|n0",
+       "@Coord!E35|n0",
+       "@Coord!F35|sp1",
+       "@Coord!G35"
+      ],
+      [
+       "@Coord!A36",
+       "@Coord!B36",
+       "",
+       "",
+       "",
+       "@Coord!G36"
+      ],
+      [
+       "@Coord!A37",
+       "@Coord!B37",
+       "@Coord!D37|n0",
+       "",
+       "",
+       "@Coord!G37"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "展開：實績對帳的口徑、出處與證據等級",
+     "collapse": true,
+     "summary": "展開：實績對帳的口徑、出處與證據等級",
+     "head": [
+      "項目",
+      "期間／口徑",
+      "公司實績口徑與出處",
+      "公司實績等級",
+      "層級口徑與出處",
+      "層級等級"
+     ],
+     "rows": [
+      [
+       "@Coord!A17",
+       "@Coord!B17",
+       "@Coord!H17",
+       "@Coord!I17",
+       "@Coord!J17",
+       "@Coord!K17"
+      ],
+      [
+       "@Coord!A18",
+       "@Coord!B18",
+       "@Coord!H18",
+       "@Coord!I18",
+       "@Coord!J18",
+       "@Coord!K18"
+      ],
+      [
+       "@Coord!A19",
+       "@Coord!B19",
+       "@Coord!H19",
+       "@Coord!I19",
+       "@Coord!J19",
+       "@Coord!K19"
+      ],
+      [
+       "@Coord!A20",
+       "@Coord!B20",
+       "@Coord!H20",
+       "@Coord!I20",
+       "@Coord!J20",
+       "@Coord!K20"
+      ],
+      [
+       "@Coord!A21",
+       "@Coord!B21",
+       "@Coord!H21",
+       "@Coord!I21",
+       "@Coord!J21",
+       "@Coord!K21"
+      ],
+      [
+       "@Coord!A22",
+       "@Coord!B22",
+       "@Coord!H22",
+       "@Coord!I22",
+       "@Coord!J22",
+       "@Coord!K22"
+      ],
+      [
+       "@Coord!A23",
+       "@Coord!B23",
+       "@Coord!H23",
+       "@Coord!I23",
+       "@Coord!J23",
+       "@Coord!K23"
+      ],
+      [
+       "@Coord!A24",
+       "@Coord!B24",
+       "@Coord!H24",
+       "@Coord!I24",
+       "@Coord!J24",
+       "@Coord!K24"
+      ],
+      [
+       "@Coord!A25",
+       "@Coord!B25",
+       "@Coord!H25",
+       "@Coord!I25",
+       "@Coord!J25",
+       "@Coord!K25"
+      ],
+      [
+       "@Coord!A26",
+       "@Coord!B26",
+       "@Coord!H26",
+       "@Coord!I26",
+       "@Coord!J26",
+       "@Coord!K26"
+      ],
+      [
+       "@Coord!A27",
+       "@Coord!B27",
+       "@Coord!H27",
+       "@Coord!I27",
+       "@Coord!J27",
+       "@Coord!K27"
+      ],
+      [
+       "@Coord!A28",
+       "@Coord!B28",
+       "@Coord!H28",
+       "@Coord!I28",
+       "@Coord!J28",
+       "@Coord!K28"
+      ],
+      [
+       "@Coord!A29",
+       "@Coord!B29",
+       "@Coord!H29",
+       "@Coord!I29",
+       "@Coord!J29",
+       "@Coord!K29"
+      ],
+      [
+       "@Coord!A30",
+       "@Coord!B30",
+       "@Coord!H30",
+       "@Coord!I30",
+       "@Coord!J30",
+       "@Coord!K30"
+      ],
+      [
+       "@Coord!A31",
+       "@Coord!B31",
+       "@Coord!H31",
+       "@Coord!I31",
+       "@Coord!J31",
+       "@Coord!K31"
+      ],
+      [
+       "@Coord!A32",
+       "@Coord!B32",
+       "@Coord!H32",
+       "@Coord!I32",
+       "@Coord!J32",
+       "@Coord!K32"
+      ],
+      [
+       "@Coord!A33",
+       "@Coord!B33",
+       "@Coord!H33",
+       "@Coord!I33",
+       "@Coord!J33",
+       "@Coord!K33"
+      ],
+      [
+       "@Coord!A34",
+       "@Coord!B34",
+       "@Coord!H34",
+       "@Coord!I34",
+       "@Coord!J34",
+       "@Coord!K34"
+      ],
+      [
+       "@Coord!A35",
+       "@Coord!B35",
+       "@Coord!H35",
+       "@Coord!I35",
+       "@Coord!J35",
+       "@Coord!K35"
+      ],
+      [
+       "@Coord!A36",
+       "@Coord!B36",
+       "@Coord!H36",
+       "@Coord!I36",
+       "@Coord!J36",
+       "@Coord!K36"
+      ],
+      [
+       "@Coord!A37",
+       "@Coord!B37",
+       "@Coord!H37",
+       "@Coord!I37",
+       "@Coord!J37",
+       "@Coord!K37"
+      ],
+      [
+       "@Coord!A38",
+       "@Coord!B38",
+       "@Coord!H38",
+       "@Coord!I38",
+       "@Coord!J38",
+       "@Coord!K38"
+      ],
+      [
+       "@Coord!A39",
+       "@Coord!B39",
+       "@Coord!H39",
+       "@Coord!I39",
+       "@Coord!J39",
+       "@Coord!K39"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "參考列（不判定）：公司口徑資本支出與每 MW 年收入",
+     "head": [
+      "項目",
+      "期間／口徑",
+      "實績",
+      "層級",
+      "差距",
+      "狀態"
+     ],
+     "rows": [
+      [
+       "@Coord!A38",
+       "@Coord!B38",
+       "@Coord!D38|n2",
+       "@Coord!E38|n2",
+       "@Coord!F38|sp1",
+       "@Coord!G38"
+      ],
+      [
+       "@Coord!A39",
+       "@Coord!B39",
+       "@Coord!D39|n2",
+       "@Coord!E39|n2",
+       "@Coord!F39|sp1",
+       "@Coord!G39"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!B47"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!B46"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "三層協調：讀取層級（同源，不判定）"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!A4"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Coord!A3",
+     "collapse": true,
+     "summary": "展開：本模型讀取的層級名稱、版本與同源值（不判定）",
+     "head": [
+      "名稱",
+      "層級與版本",
+      "單位",
+      "本模型（或公司目標）",
+      "層級值",
+      "差距",
+      "狀態"
+     ],
+     "rows": [
+      [
+       "@Coord!A6",
+       "@Coord!B6",
+       "@Coord!C6",
+       "@Coord!D6|n2",
+       "@Coord!E6|n2",
+       "@Coord!F6|sp1",
+       "@Coord!G6"
+      ],
+      [
+       "@Coord!A7",
+       "@Coord!B7",
+       "@Coord!C7",
+       "@Coord!D7|n2",
+       "@Coord!E7|n2",
+       "@Coord!F7|sp1",
+       "@Coord!G7"
+      ],
+      [
+       "@Coord!A8",
+       "@Coord!B8",
+       "@Coord!C8",
+       "@Coord!D8|n2",
+       "@Coord!E8|n2",
+       "@Coord!F8|sp1",
+       "@Coord!G8"
+      ],
+      [
+       "@Coord!A9",
+       "@Coord!B9",
+       "@Coord!C9",
+       "@Coord!D9|n2",
+       "@Coord!E9|n2",
+       "@Coord!F9|sp1",
+       "@Coord!G9"
+      ],
+      [
+       "@Coord!A10",
+       "@Coord!B10",
+       "@Coord!C10",
+       "@Coord!D10|n2",
+       "@Coord!E10|n2",
+       "@Coord!F10|sp1",
+       "@Coord!G10"
+      ],
+      [
+       "@Coord!A11",
+       "@Coord!B11",
+       "@Coord!C11",
+       "@Coord!D11|n2",
+       "@Coord!E11|n2",
+       "@Coord!F11|sp1",
+       "@Coord!G11"
+      ]
+     ]
+    },
+    {
      "type": "table",
      "caption": "@Recon!A4",
      "head": [
@@ -4313,6 +4750,7 @@
      "summary": "展開：版本要點",
      "items": [
       "@README!A67",
+      "@README!A68",
       "@README!A48",
       "@README!A49",
       "@README!A50"
