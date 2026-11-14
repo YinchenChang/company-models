@@ -84,7 +84,14 @@ def check_status(st, today):
     # 3. 基準鏈上不得有 [Assumed] 水準係數
     for c in st.get("level_coefficients", []):
         if c.get("tag") == "Assumed":
-            errs.append(f"[3] 基準鏈上有 [Assumed] 水準係數：{c.get('name')}")
+            y = st.get("years", {}).get(str(c.get("year")), {})
+            dl = y.get("deadline")
+            exempt = (y.get("status") == "待定" and y.get("reconciling") and y.get("recon_doc")
+                      and dl and datetime.date.fromisoformat(dl) >= today)   # v1.4.1：待定維持現行的年份豁免
+            if exempt:
+                print(f"提醒 [3] {c.get('year')} 待定維持現行，基準鏈上暫有 [Assumed] 係數：{c.get('name')}（對帳單期限 {dl}）")
+            else:
+                errs.append(f"[3] 基準鏈上有 [Assumed] 水準係數：{c.get('name')}")
     return errs
 
 
