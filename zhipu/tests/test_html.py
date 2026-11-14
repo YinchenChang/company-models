@@ -29,6 +29,7 @@ STAMP = MODEL.name.split("_")[0]
 VER = re.search(r"_v([\d.]+)\.xlsx$", MODEL.name).group(1).replace(".", "_")
 HTML = REPO / "dist" / f"{STAMP}_智譜個股模型_v{VER}.html"
 XLSX = REPO / "dist" / f"{STAMP}_智譜個股模型_v{VER}.xlsx"
+HTML13 = REPO / "dist" / f"{STAMP}_智譜個股頁_v{VER}.html"   # v0.1.5：版面 v1.3 個股頁（tools/build_html_v13.py）
 
 
 class _Collect(HTMLParser):
@@ -159,7 +160,7 @@ def test_dist_xlsx_is_current_model():
     assert XLSX.exists()
     h = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()  # noqa: E731
     assert h(XLSX) == h(MODEL)
-    others = [p.name for p in (REPO / "dist").glob("*.html") if p != HTML]
+    others = [p.name for p in (REPO / "dist").glob("*.html") if p not in (HTML, HTML13)]
     assert not others, f"dist 有非現行版本的 HTML：{others}"
 
 
@@ -184,3 +185,12 @@ def test_narrative_claims(engine, loc):
     assert 1 < eta < 9, "『η 已由約 9.5 降到約 3.9（仍 >1）』不成立"
     ratio = engine.get_name("COST_PropRev_VR_USD")[5] / engine.get_name("OAI_COST_PropRev_VR")[5]
     assert 7 < ratio < 13, f"『智譜每 VR 等值 GW 營收約為 OpenAI 的 10 倍』不成立（{ratio:.1f}）"
+
+
+def test_v13_page_numbers_match_excel(engine, loc):
+    """v0.1.5 個股頁（版面 v1.3）：每個 data-ref 數字同樣以 engine 比對（與一頁摘要同一套規則）。"""
+    assert HTML13.exists(), f"找不到 {HTML13}（請執行 python3 tools/build_html_v13.py）"
+    p = _Collect()
+    p.feed(HTML13.read_text(encoding="utf-8"))
+    assert len(p.items) >= 100
+    test_html_numbers_match_excel(p.items, engine, loc)

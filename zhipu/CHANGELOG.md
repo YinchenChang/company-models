@@ -1,5 +1,12 @@
 # CHANGELOG（智譜個股模型；v0.1.1 以前稱收支模型）
 
+## v0.1.5（2026-11-15，建置代理）— 版面 v1.3＋三層協調（讀取層級、C0 實績）— Excel `model/20261115_Zhipu_v0.1.5.xlsx`
+- 工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`；規則 v1.4.2 C0 第 2 點。新模組 `builder/z5.py`：PL、Coord 兩頁，只列示（`test_v015_coord_pl_not_fed_back`）。
+- PL：標準損益表 FY2023–FY2030（非 IFRS 經調整，人民幣億元）；歷史取 SRC_ZP（營收、銷售成本、研發／銷售／管理、股權報酬、其他收入、財務成本、經調整淨虧損），稅前與所得稅「未揭露」、另列未拆項目；預測取 Cost／Funding（營業成本＝推論算力＋本地化交付；營業費用＝研發＋閒置算力＋非算力），稅前＝Funding 自由現金流（核對 0），所得稅「未建模」，EPS＝稅後淨利 ÷ 配售後總股本（未計稀釋）。
+- Coord：讀取層級（Tokenomics v19.0 快照；不讀 Wattonomics、亦不被讀；Siliconomics 不適用）；C0 四列（1H2026 營收 9.54、1H2026 資本開支 3.91〔主要為收購〕、算力 GW 未揭露、應付＋預付算力服務費 26.71）皆「無可比實績（層級無此玩家）」，對帳中 0。
+- 具名範圍 1,568 → 1,589（PL_ 18、COORD_ 3）；公式格 6,247 → 6,375；scenarios.yaml 預期值更新。其餘工作表與 v0.1.4 逐格相同（xlsx_diff：只差 README A1、Checks A1 版本字串與新增格）。
+- 個股頁（版面 v1.3）`tools/build_html_v13.py` → `dist/20261115_智譜個股頁_v0_1_5.html`（本模型無目標價，估值章標不適用、帶 data-unlisted）；`tests/test_html.py` 新增個股頁數字逐一比對。重建輸入：Tokenomics v19.0（1916a06）、OpenAI v0.6.2、`--base model/archive/20261106_Zhipu_v0.1.4.xlsx --date 2026-10-22`。
+
 ## Z0（2026-10-08，chat 端）
 - 建立 `zhipu/`：骨架（builder／engine／tools／tests 基礎自 OpenAI v0.6 經 Anthropic A0 複製，名稱待 Z2 改寫）、規格 r0（D1–D26）、共同規則、Z1–Z5 工作單、進度檔、交接檔。
 
