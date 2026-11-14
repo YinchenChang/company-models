@@ -40,8 +40,9 @@ def apply(rows, names, version):
             r["lo"] = float(lo) * f
         if isinstance(hi, (int, float)):
             r["hi"] = float(hi) * f
-        r["tag"] = "Derived"
         same = abs(f - 1) < 1e-12
+        if not same:
+            r["tag"] = "Derived"   # 值未變的年份保留原標記
         r["src"] = (f"Siliconomics {version} SIF_UnitsCoef_Base（三層基準協調規則 v1.4 C3 依證據狀態決定的基準係數"
                     + ("；本年維持現行，與原 S33 值相同" if same else
                        f"；原 S33 值 {old:g}（區間 {lo:g}–{hi:g}）只作參照，區間依同比例縮放")
