@@ -114,27 +114,30 @@ def apply(cfg, wb, X, H, root):
                           {"name": f"@PL!A{opm_}", "y": f"@PL!C{opm_}:K{opm_}", "axis": "r", "color": "#c29a2b"},
                           {"name": f"@PL!A{nm_}", "y": f"@PL!C{nm_}:K{nm_}", "axis": "r", "color": "#6f6bae", "dash": True}],
                 "caption": "長條＝營收；三條線＝毛利率、營業利益率、淨利率（右軸）。FY2026E 起為模型（含已公布實績與第四季假設）；FY2030E、FY2031E 為延伸期，營收與淨利率由收斂法推得，毛利率與營業費用率沿用 FY2029。FY2027E 起標「對帳中」。"}
-    x0 = row("PL", "延伸：三情境到 FY2032")
-    xa, xb, xc = (row("PL", f"延伸｜情境 {k}", x0) for k in "ABC")
-    xh = xa + 1
-    xr = lambda base, lab_: row("PL", lab_, base, True)
+    if H.get("ext"):   # (表頭列, {情境: (營收列, EPS 列)})
+        xh, XR = H["ext"](row)
+    else:
+        x0 = row("PL", "延伸：三情境到 FY2032")
+        xa, xb, xc = (row("PL", f"延伸｜情境 {k}", x0) for k in "ABC")
+        xh = xa + 1
+        XR = {k: (row("PL", "營收（延伸）", b, True), row("PL", "EPS（延伸）", b, True)) for k, b in zip("ABC", (xa, xb, xc))}
     sc_chart = {"type": "theme", "title": "三情境並列：營收（長條，十億元）與 EPS（折線，新台幣元，右軸）", "x": f"@PL!D{xh}:J{xh}",
                 "fmt": "n0", "fmt_r": "n0", "stack": False, "pad": 1.15,
-                "bars": [{"name": ["情境 A（樂觀）營收"], "y": f"@PL!D{xr(xa, '營收（延伸）')}:J{xr(xa, '營收（延伸）')}", "color": "#b7e3e4"},
-                         {"name": ["情境 B（基準）營收"], "y": f"@PL!D{xr(xb, '營收（延伸）')}:J{xr(xb, '營收（延伸）')}", "color": "#10a0a7"},
-                         {"name": ["情境 C（保守）營收"], "y": f"@PL!D{xr(xc, '營收（延伸）')}:J{xr(xc, '營收（延伸）')}", "color": "#8a8c8c"}],
-                "lines": [{"name": ["情境 A（樂觀）EPS"], "y": f"@PL!D{xr(xa, 'EPS（延伸）')}:J{xr(xa, 'EPS（延伸）')}", "axis": "r", "color": "#0b7a80", "dash": True},
-                          {"name": ["情境 B（基準）EPS"], "y": f"@PL!D{xr(xb, 'EPS（延伸）')}:J{xr(xb, 'EPS（延伸）')}", "axis": "r", "color": "#3b3838", "labels": True},
-                          {"name": ["情境 C（保守）EPS"], "y": f"@PL!D{xr(xc, 'EPS（延伸）')}:J{xr(xc, 'EPS（延伸）')}", "axis": "r", "color": "#b4472f", "dash": True}],
+                "bars": [{"name": ["情境 A（樂觀）營收"], "y": f"@PL!D{XR['A'][0]}:J{XR['A'][0]}", "color": "#b7e3e4"},
+                         {"name": ["情境 B（基準）營收"], "y": f"@PL!D{XR['B'][0]}:J{XR['B'][0]}", "color": "#10a0a7"},
+                         {"name": ["情境 C（保守）營收"], "y": f"@PL!D{XR['C'][0]}:J{XR['C'][0]}", "color": "#8a8c8c"}],
+                "lines": [{"name": ["情境 A（樂觀）EPS"], "y": f"@PL!D{XR['A'][1]}:J{XR['A'][1]}", "axis": "r", "color": "#0b7a80", "dash": True},
+                          {"name": ["情境 B（基準）EPS"], "y": f"@PL!D{XR['B'][1]}:J{XR['B'][1]}", "axis": "r", "color": "#3b3838", "labels": True},
+                          {"name": ["情境 C（保守）EPS"], "y": f"@PL!D{XR['C'][1]}:J{XR['C'][1]}", "axis": "r", "color": "#b4472f", "dash": True}],
                 "caption": H["sc_caption"]}
     old_pl = S["pl"]["blocks"]
     old_intro = S["pl"].pop("intro", None)
     pl_old = [b for b in old_pl if b["type"] == "pl"]
     assert len(pl_old) == 2, len(pl_old)
-    old_blocks = [dict(pl_old[0], collapse=True, summary="展開：三情境摘要表與折線（FY2025–FY2029）")]
+    old_blocks = [dict(pl_old[0], collapse=True, summary="展開：三情境摘要（原版面）")]
     if old_intro:
         old_blocks.append({"type": "note", "parts": [old_intro], "collapse": True, "summary": "展開：三情境摘要的會計年度說明"})
-    old_blocks.append(dict(pl_old[1], collapse=True, summary="展開：三情境延伸到 FY2032（收斂法）"))
+    old_blocks.append(dict(pl_old[1], collapse=True, summary="展開：三情境摘要（原版面，續）"))
     pl_blocks = [{"type": "note", "parts": [f"@PL!A{p0 + 1}"]}, is_chart, is_tbl, {"type": "note", "parts": [f"@PL!A{p0 + 2}"]}, chk_tbl, sc_chart] + old_blocks
     S["pl"].update(title="損益（標準損益表）", blocks=pl_blocks)
     # ---- 6. 驅動因子：分部營收推導（情境 B）----
@@ -278,6 +281,8 @@ def apply(cfg, wb, X, H, root):
         for i, b in enumerate(sc["blocks"]):
             if b.get("type") == "note" and not b.get("collapse") and len(b.get("parts", [])) == 1 and str(b["parts"][0])[1:] in FOLD:
                 sc["blocks"][i] = b = dict(b, collapse=True, summary=FOLD[str(b["parts"][0])[1:]])
+            if b.get("type") == "kv":
+                b["items"] = [_plain(it) for it in b.get("items", [])]
             if b.get("type") == "table":
                 b["rows"] = [({"sub": _plain(r["sub"])} if isinstance(r, dict) else _plain(r)) for r in b.get("rows", [])]
                 if "head" in b:
