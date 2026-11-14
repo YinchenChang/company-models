@@ -33,6 +33,11 @@ def lab(ws, prefix, start=1, col=1, exact=False, end=None):
     raise KeyError((ws.title, prefix))
 
 
+def blockB(P):
+    """PL 頁情境 B 推導區塊的標題列（A 欄以「情境 B」開頭、下一列為「項目」）。"""
+    return next(r for r in range(1, P.max_row) if str(P.cell(r, 1).value or "").startswith("情境 B") and P.cell(r + 1, 1).value == "項目")
+
+
 def dn(wb, name, ref):
     wb.defined_names[name] = DefinedName(name, attr_text=ref)
 
@@ -90,12 +95,15 @@ COLS = "CDEFGHIJK"
 
 def pl_standard(wb, CR, C):
     P = wb["PL"]
-    rb = lab(P, "情境 B：")
+    rb = blockB(P)
     g = lambda label: lab(P, label, rb, exact=True, end=rb + 70)
-    B = dict(rev=g("營收"), gp=g("毛利"), opx=g("營業費用"), oi=g("營業利益"), nop=g("業外收益"), ni=g("歸屬母公司淨利"), sh=g("股數"), eps=g("EPS"))
-    x0 = lab(P, "延伸｜情境 B")
-    gx = lambda label: lab(P, label, x0, exact=True, end=x0 + 14)
-    X = dict(rev=gx("營收（延伸）"), ni=gx("淨利（延伸）"), sh=gx("股數（延伸）"), eps=gx("EPS（延伸）"), hdr=x0 + 1)
+    B = dict(rev=g("營收"), gp=g("毛利"), opx=g("營業費用"), oi=g("營業利益"), nop=g(C.get("nop_label", "業外收益")), ni=g("歸屬母公司淨利"), sh=g("股數"), eps=g("EPS"))
+    if C.get("ext_rows"):   # 延伸期（FY2030–FY2031）在別處的模型（例：光寶科摘要表 H–J 欄）
+        X = C["ext_rows"](P)
+    else:
+        x0 = lab(P, "延伸｜情境 B")
+        gx = lambda label: lab(P, label, x0, exact=True, end=x0 + 14)
+        X = dict(rev=gx("營收（延伸）"), ni=gx("淨利（延伸）"), sh=gx("股數（延伸）"), eps=gx("EPS（延伸）"), hdr=x0 + 1)
     D = wb["DCF"]
     dbr = lab(D, "情境 B")
     d_ebit = lab(D, "營業利益 EBIT", dbr)
@@ -129,7 +137,7 @@ def pl_standard(wb, CR, C):
             P.cell(r, 12, note)
         L[key] = r; r += 1
     eng = lambda key: [f"=PL!{c}{B[key]}" for c in "DEFG"]
-    ext = lambda key: [f"=PL!H{X[key]}", f"=PL!I{X[key]}"]
+    ext = lambda key: ([f"=PL!H{X[key]}", f"=PL!I{X[key]}"] if X.get(key) else [f"=PL!H{X['ni']}/PL!H{X['eps']}", f"=PL!I{X['ni']}/PL!I{X['eps']}"])   # 無延伸股數列者＝淨利 ÷ EPS
     hs = lambda k: [f"=h_is_{k}_23", f"=h_is_{k}_24", f"=h_is_{k}_25"]
     row("rev", "營收", "NT$B", hs("rev") + eng("rev") + ext("rev"), M)
     row("yoy", "營收年增率（YoY）", "%", ["=C{rev}/h_is_rev_22-1".format(**L)] + [f"={c}{L['rev']}/{p}{L['rev']}-1" for p, c in zip(COLS, COLS[1:])], PCT, "FY2023A 的基期 FY2022 取 Hist 頁")
@@ -191,7 +199,7 @@ def revdcf(wb, C):
     vb = lambda p: f"Val!$B${lab(V, p)}"
     ncr = f"Val!$C${lab(V, '淨現金滾到評價日')}"
     feps, pmed, dcf_tp, coef = vb("12 個月後的前瞻 EPS（情境加權）"), vb("同業前瞻 P/E 中位數"), vb("DCF 目標價（情境加權）"), vb("相對倍數調整係數")
-    rb = lab(P, "情境 B："); r26 = lab(P, "營收", rb, exact=True)
+    rb = blockB(P); r26 = lab(P, "營收", rb, exact=True)
     RV["A1"] = (f"RevDCF — 反向 DCF：現價隱含什麼（{C['ver']} 起；個股 HTML 版面規格 v1.3）。一次只動一個驅動、其餘維持基準，反解到「現價」；全部為 Excel 公式（DCF 對各年營業利益與營收倍數為線性，用封閉解；WACC 用二分法）。"
                 "本頁只讀 DCF、Val、PL、In 頁，無任何頁引用本頁，不影響目標價")
     RV["A1"].font = BOLD
@@ -478,7 +486,7 @@ def judge(rg):
 def coord_c0(wb, SIL, CR, C):
     """C["layer_rows"]：讀取層級表（label, value 公式, 層級名稱, 用途, fmt）；C["same_blocks"]：同源對照（key, title, unit, PL 標籤, 層級值 list, note_m, note_l, fmt）。"""
     CW = wb["Coord"]; P = wb["PL"]
-    rb = lab(P, "情境 B：")
+    rb = blockB(P)
     pb = lambda label: lab(P, label, rb, exact=True, end=rb + 70)
     r = CW.max_row + 3
     CW.cell(r, 1, "三層協調 C0（三層基準協調規則 v1.4.2 C0；工作單 docs/workorders/20261114_第二批13家_v1.3與三層協調.md）：讀哪一層、哪一版；讀取層級（同源，不判定）；C0（實績）").font = BOLD; G = {"c0": r}; r += 1
@@ -521,7 +529,7 @@ def coord_c0(wb, SIL, CR, C):
         rl = r; r += 1
         CW.cell(r, 1, f"{title}：差距（本模型 ÷ 層級值 − 1）")
         for j, col in enumerate("BCDE"[:ncols]):
-            CW.cell(r, 2 + j, f"={col}{rm}/{col}{rl}-1").number_format = "+0.0%;-0.0%"
+            CW.cell(r, 2 + j, f'=IF({col}{rl}=0,"—",{col}{rm}/{col}{rl}-1)').number_format = "+0.0%;-0.0%"
         rg = r; r += 1
         CW.cell(r, 1, f"{title}：{tag_title}")
         for j, col in enumerate("BCDE"[:ncols]):
@@ -542,21 +550,27 @@ def coord_c0(wb, SIL, CR, C):
     # 層級之間（參考）
     CW.cell(r, 1, "層級之間（參考；Siliconomics 對帳單 r3 處理，不計入本公司 C0）：Wattonomics 側讀數").font = BOLD; r += 1
     alt = [SIL.NAMES[f"SIF_DeployGW_Alt_{y}"] for y in (2026, 2027, 2028, 2029)]
-    block("alt", "部署 GW 對 Wattonomics 側讀數", "GW", pc(C.get("gw_label", "部署 GW（IT 電力）")), alt,
+    if C.get("gw_label"):
+      block("alt", "部署 GW 對 Wattonomics 側讀數", "GW", pc(C.get("gw_label", "部署 GW（IT 電力）")), alt,
           "本模型情境 B（讀 Siliconomics 基準 × 情境顆數係數）", f"Derived：Siliconomics {SIL.VERSION} SIF_DeployGW_Alt_<年>（Wattonomics 換算值；需求側讀數）", "0.00",
           verdict='=IF(ABS({col}{rg})>0.15,"參考：層級之間（Siliconomics 與 Wattonomics 兩層之間的差距，已並列兩讀數）","一致")', tag_title="判定（±15%；僅參考）")
     r += 1
     CW.cell(r, 1, "3. 讀取層級與層級之間的結果（HTML 用；公式帶數字）").font = BOLD; G["s3"] = r; r += 1
     keys = G["same_keys"]
-    mx = lambda k: f"MAX(ABS(B{G[k][2]}),ABS(C{G[k][2]}),ABS(D{G[k][2]}),ABS(E{G[k][2]}))"
+    mx = lambda k: "MAX(" + ",".join(f"IFERROR(ABS({c}{G[k][2]}),0)" for c in "BCDE") + ")"
     parts = [T(f"本模型讀 Siliconomics {SIL.VERSION}：{C['same_names']}與層級值的最大差距分別為 ")]
     for i, k in enumerate(keys):
         parts += ([T("、")] if i else []) + [f'TEXT({mx(k)},"0.0%")']
     parts += [T("（同源：本模型直接讀入或由本公司校準後寫入 Siliconomics，差距只反映讀取一致，不判定）。")]
     CW.cell(r, 1, F(*parts)); G["sum1"] = r; r += 1
-    CW.cell(r, 1, F(T("層級之間（參考）：本模型（Siliconomics 基準）的部署 GW 在 CY2027–CY2029 比 Wattonomics 換算值高 "), f'TEXT(C{G["alt"][2]},"0%")', T("／"), f'TEXT(D{G["alt"][2]},"0%")', T("／"),
-                     f'TEXT(E{G["alt"][2]},"0%")', T("；這是 Siliconomics 與 Wattonomics 兩層之間的差距（Siliconomics 對帳單 r3 處理；已並列兩讀數目標價），"
-                                                    "不是本模型自己的差距，不計入本公司 C0，本模型不改上游值、不裁決。")))
+    if C.get("gw_label"):
+        CW.cell(r, 1, F(T("層級之間（參考）：本模型（Siliconomics 基準）的部署 GW 在 CY2027–CY2029 比 Wattonomics 換算值高 "), f'TEXT(C{G["alt"][2]},"0%")', T("／"), f'TEXT(D{G["alt"][2]},"0%")', T("／"),
+                         f'TEXT(E{G["alt"][2]},"0%")', T("；這是 Siliconomics 與 Wattonomics 兩層之間的差距（Siliconomics 對帳單 r3 處理；已並列兩讀數目標價），"
+                                                        "不是本模型自己的差距，不計入本公司 C0，本模型不改上游值、不裁決。")))
+    else:   # 本模型不讀部署 GW（以加速器顆數推導）：層級之間只列 Siliconomics 的另一側讀數比值
+        CW.cell(r, 1, F(T("層級之間（參考）：本模型不讀部署 GW（以加速器顆數推導），兩讀數只換產業量；Siliconomics 部署 GW 的 Wattonomics 換算值 ÷ 現行基準 CY2027–CY2029 為 "),
+                         f'TEXT(C{CR["ratio"]},"0.00")', T("／"), f'TEXT(D{CR["ratio"]},"0.00")', T("／"), f'TEXT(E{CR["ratio"]},"0.00")',
+                         T("；這是 Siliconomics 與 Wattonomics 兩層之間的差距（Siliconomics 對帳單 r3 處理；已並列兩讀數目標價），不計入本公司 C0，本模型不改上游值、不裁決。")))
     G["sum2"] = r; r += 1
     CW.cell(r, 1, "C4／C5：本模型不裁決兩層的對帳中年份；本版沒有可往上回饋的新證據（往上回饋只有實績、法定文件揭露的承諾、已簽約或已確認站點，個股預測與公司指引不往上流）。"); G["sum3"] = r; r += 1
     CW.column_dimensions["A"].width = 70; CW.column_dimensions["D"].width = 24; CW.column_dimensions["F"].width = 10; CW.column_dimensions["G"].width = 110; CW.column_dimensions["H"].width = 60
