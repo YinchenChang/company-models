@@ -1,4 +1,17 @@
-# avc/ — 奇鋐（3017）收支與估值模型 v0.3.4
+# avc/ — 奇鋐（3017）收支與估值模型 v0.3.5
+## v0.3.5（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（兩讀數目標價、讀取層級、C0 公司實績對帳）
+
+- **依據：** 工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`（推廣輪：電源散熱）、`docs/workorders/20261114_C0實績對帳補列_七家.md`；規則 `docs/plan/三層基準協調規則.md` v1.4.2 C0 第 2 點；`tools/coord/README.md`。樣板：台達電 v0.5.7（同次產業）、NVIDIA v0.3.10。
+- **做法：** 主引擎掛鉤（`SIL.COORD_ALT` 時情境 B、C 的 AI IT 資本支出 CY2027 起 × wta_27／28／29；情境 A 不縮放）→ `tools/coord/alt_run.py avc` → `avc/coord_alt.json`；建檔程式存檔前 `COORD.add_sheet` 後呼叫 `avc/v13_post.py`（共通步驟 `avc/c13.py`，電源散熱四家同一份）：Hist 頁（FY2022–FY2025 損益）、PL 頁末標準損益表（FY2023A–FY2031E，GAAP）、RevDCF 頁、Val 0.7（四個目標價）、Sens 末「加權目標價相對基準」、Coord 頁三層協調 C0（讀取層級、讀取層級（同源，不判定）、層級之間（參考）、C0（實績））、README 頁末 v1.3 白話列；`gen_html_json.py` 最後呼叫 `avc/html13.py`（章節：命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；估值、敏感度主圖置頂；`COORD.inject_html`）。`co_flag` 具名範圍未建。
+- **兩讀數：** 現行基準 2,442.63（−4.8%，中立）；另一側讀數 2,082.59（−18.8%，中立）——評等相同。Coord 快照狀態 CURRENT。
+- **實績與出處（Coord 第 4a 節；Verified）：** 月營收 2026-09 210.18 億元、累計前 9 月 1,572.48 億元（TechNews 2026-10-07，https://finance.technews.tw/2026/10/07/avc-3017-202609-financial-report/）；2026-10 221.03 億元、累計前 10 月 1,793.51 億元（TechNews 2026-11-08，https://finance.technews.tw/2026/11/08/avc-3017-202610-financial-report/）；3Q26 財報（2026-11-10）營收 590.89 億元、毛利率 33.86%、營業利益 168.56 億元、歸屬母公司淨利 115.64 億元、基本 EPS 29.32 元（優分析 https://uanalyze.com.tw/articles/9857458877 ；口袋學堂 https://www.pocket.tw/school/articles/article-mwbrnuav/）；法說：前三季伺服器與網通占營收 66%、3Q26 單季伺服器約 388 億元（優分析 https://uanalyze.com.tw/articles/9896958909 ）。**公司未揭露液冷營收金額或占比。** Hist 頁 FY2022–FY2025：stockanalysis 年度損益表（百萬元；https://stockanalysis.com/quote/tpe/3017/financials/income-statement/ ），FY2025 與 Q 頁年報值一致（營業利益 27.555 對 Q 頁推導值 27.551）。
+- **層級隱含：** Siliconomics v0.19 AI 液冷市場 CY2026 US$4.514B × 奇鋐有效份額 49.9%（lc_avsh_26）× 匯率 32＝NT$72.06B；主讀數層級 × 10 ÷ 12＝60.05、第二讀數 72.06。
+- **判定：** **C0（實績）結論：無可比實績（層級值同源）**——公司未揭露液冷營收；Siliconomics 的奇鋐份額由本模型以券商液冷占比 32%（Interested-party）× FY2026 營收錨點校準後寫入，市場大小在比式中被約掉。參考列（券商 32% × 實績營收）主讀數 −4.4%、第二讀數 +5.0%，代數上只等於「實績營收 ÷ 營收錨點 − 1」，標「參考（同源校準）」、不判定。上限檢查：層級隱含液冷（CY2026 × 9 ÷ 12）占公司揭露前三季伺服器與網通營收 52%，通過。C0 對帳中項目 0 項。讀取層級五項（部署 GW、液冷滲透率、每 GW 液冷內容、液冷市場、奇鋐份額）差距皆 0，標「讀取層級（同源，不判定）」；已建模份額加總殘差 34%–44%（不為空）；層級之間（參考）：部署 GW 對 Wattonomics 側讀數 CY2027–29 高 62%／50%／50%，不計入本公司 C0。
+- **README 舊節數字說明：** 下方 v0.3.4 節寫的加權目標價 2,595、上檔空間 +1.2% 是當時成品值；之後 Siliconomics 全下游重建（原地更新 dist）使現行 dist 為 2,442.63、−4.8%（評等仍中立）。本版不改寫舊節，以本節與 xlsx 為準。
+- **驗證：** `tools/xlsx_diff.py` 對 v0.3.4（_待刪除）逐格：既有格只有 README A1（標題版號更正 v0.2.1 → v0.3.5、日期、本版說明）不同，其餘 1,341 格皆為新增頁／新增列；加權目標價 2,442.63、評等中立不變；錯誤格 0。`check_company_html`、`check_layout_v13 --xlsx`（A–I 全過，含 G、H 位置）、`tools/baseline_coordination/check.py` 通過（無警告；摺疊外的參數代號已改白話、DCF 口徑說明摺疊）。
+- **未做：** `siliconomics/builder/seed/coord_meta_v0.19.json` 的 `hardware_companies` 未加入 avc（依工作單由主控統一加入）；3Q26 實績（毛利率 33.86% 等）未滾入錨點（不變性要求，留待下一版）。
+- 成品 `dist/20261115_奇鋐個股模型_v0.3.5.xlsx`／`.html`；v0.3.4 移 `dist/_待刪除/`。
+
 ## v0.3.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 
 - 版本沿革：v0.3.4：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守。
