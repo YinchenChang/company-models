@@ -39,6 +39,11 @@ _OWN = {r["id"]: r for r in OWN}
 # Siliconomics 快照（B 與其他鍵）
 _SILD = os.path.join(_ROOT, "siliconomics", "data")
 _SNAP = json.load(open(os.path.join(_SILD, open(os.path.join(_SILD, "CURRENT_SNAPSHOT"), encoding="utf-8").read().strip()), encoding="utf-8"))
+# 三層基準協調規則 v1.4：情境 B 基準顆數係數改讀 SIF_UnitsCoef_Base（siliconomics/coef_rule.py；與 reader、memory/market 同一函式）
+import sys as _sys
+_sys.path.insert(0, os.path.join(_ROOT, "siliconomics"))
+import coef_rule as _CR
+_CR.apply(_SNAP["rows"], _SNAP["names"], _SNAP["source"]["version"])
 _SILV = {}
 for _r in _SNAP["rows"]:
     if "id" in _r:

@@ -21,6 +21,11 @@ for _r in SNAP["rows"]:
             if isinstance(_x, (int, float)) and not isinstance(_x, bool):
                 _r[_f] = float(_x) if _r["unit"] in _FLOAT_UNITS else (int(_x) if float(_x).is_integer() else _x)
     ROWS.append(_r)
+# 三層基準協調規則 v1.4：情境 B 基準顆數係數（um28_B、um29_B）改讀 SIF_UnitsCoef_Base（siliconomics/coef_rule.py）
+import sys as _sys
+_sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import coef_rule as _CR
+RULE_COEF_KEYS = _CR.apply(ROWS, NAMES, VERSION)
 V = {r["id"]: r for r in ROWS if "id" in r}
 
 
@@ -52,7 +57,7 @@ def _pct(x):
 
 def scen_note(s, yy, val):
     """個股情境係數列（um28_s／um29_s）的說明文字。s＝情境字母；yy＝28 或 29；val＝本模型該列的值（÷ 原始顆數）。"""
-    bc = NAMES.get(f"SIF_um{yy}_Base")
+    bc = V[f"um{yy}_B"]["base"] if f"um{yy}_B" in RULE_COEF_KEYS else NAMES.get(f"SIF_um{yy}_Base")   # v0.19：依規則的基準係數
     gv = NAMES.get("SIF_GWvsWT_Base")
     if bc is None or gv is None:
         return "個股自訂情境（Siliconomics 快照未提供基準係數）"
