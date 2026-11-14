@@ -510,10 +510,7 @@ def coord_c0(wb, SIL):
     for j, (t) in enumerate(["FY2027E（對帳中）", "FY2028E（對帳中）", "FY2029E（對帳中）", "FY2030E（對帳中；延伸期）", "FY2031E（對帳中；延伸期）"]):
         C.cell(r, 2 + j, t)
     r += 1
-    # co_flag_<yyyy>：個股本地鏡像（版面檢查 I 項讀此；數值＝Siliconomics SIF_RecoFlag_<年>，上方 Coord 第 5 列）
-    r_flag = lab(C, "對帳中旗標")
-    for i, y in enumerate((2026, 2027, 2028, 2029)):
-        dn(wb, f"co_flag_{y}", f"Coord!${'BCDE'[i]}${r_flag}")
+    # 不設 co_flag_<yyyy> 具名範圍：版面檢查 I 項改讀 Coord 頁「年」列與「對帳中旗標」列（會計年度＝日曆年，從 FY2027 起檢查）
     return R
 
 
@@ -544,11 +541,11 @@ def readme13(wb, RVA, PLA):
         nonlocal r
         RD.cell(r, 1, F(*parts)); out[key] = r; r += 1
     put("hero", T("加權目標價 "), f'TEXT({tp},"0")', T(" 元，比現價 "), 'TEXT(px,"0")', T(" 元低 "), f'TEXT(-{up},"0.0%")', T("，評等"), rec, T("。現金流折現只有 "),
-        f'TEXT({dcf},"0")', T(" 元（資本支出高峰壓低自由現金流），同業比較法 "), f'TEXT({cadj},"0")', T(" 元。"))
+        f'TEXT({dcf},"0")', T(" 元（資本支出高峰壓低自由現金流），同業比較法（相對倍數調整後）"), f'TEXT({cadj},"0")', T(" 元。"))
     put("rec", T("投資建議「"), rec, T("」成立的前提：資本支出約占營收三到四成，折舊快速上升，營業利益增量撐不起資本支出報酬；LEAP 升到封測營收三成以上後，同業比較法的倍數不再擴張。"
-                 "若只看同業比較法（不採現金流折現），加權目標價 "), f'TEXT({cadj},"0")', T(" 元（"), f'TEXT({zero},"+0.0%;-0.0%")', T("），評等"), f'{REC5(zero)}', T("。"))
+                 "若只看同業比較法（相對倍數調整後；不採現金流折現），加權目標價 "), f'TEXT({cadj},"0")', T(" 元（"), f'TEXT({zero},"+0.0%;-0.0%")', T("），評等"), f'{REC5(zero)}', T("。"))
     put("o1", T("目標價：加權目標價 "), f'TEXT({tp},"0.00")', T(" 元，比現價 "), 'TEXT(px,"0.00")', T(" 元低 "), f'TEXT(-{up},"0.0%")', T("，評等"), rec,
-        T("。現金流折現 "), f'TEXT({dcf},"0.00")', T(" 元與同業比較法 "), f'TEXT({cadj},"0.00")', T(" 元各占一半；市場共識（BofA 單一券商）"), 'TEXT(cons_tp,"0")', T(" 元，差距主要在盈餘（模型前瞻 EPS 低 "),
+        T("。現金流折現 "), f'TEXT({dcf},"0.00")', T(" 元與同業比較法（相對倍數調整後）"), f'TEXT({cadj},"0.00")', T(" 元各占一半；市場共識（BofA 單一券商）"), 'TEXT(cons_tp,"0")', T(" 元，差距主要在盈餘（模型前瞻 EPS 低 "),
         f'TEXT(-{cgap},"0%")', T("）。"))
     put("o2", T("核心問題一：LEAP 占封測營收 FY2026 "), f'TEXT(PL!D{shr["B"]},"0.0%")', T(" → FY2027 "), f'TEXT(PL!E{shr["B"]},"0.0%")', T("（情境 B），FY2029 三情境 "),
         f'TEXT(PL!G{shr["C"]},"0%")', T("～"), f'TEXT(PL!G{shr["A"]},"0%")', T("，分歧來自 AI 加速器顆數。FY2028 EPS 三情境 "), f'TEXT(PL!F{epr["C"]},"0.0")', T("～"), f'TEXT(PL!F{epr["A"]},"0.0")', T(" 元。"))
