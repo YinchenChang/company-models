@@ -13,9 +13,19 @@ VALID = {"甲", "乙", "丙"}
 TOL = 0.005  # 第 2 項：換算值比對容許的相對誤差（四捨五入）
 
 
-def expected_status(w_share, s_share, thr):
-    """C3：兩層證據比例對門檻 → 甲／乙／丙。"""
-    w, s = w_share >= thr, s_share >= thr
+ENTER, EXIT = 0.55, 0.45  # v1.1 緩衝區
+
+
+def has_evidence(share, thr, prev):
+    """v1.1：首次判定（prev 為 None）以門檻為界；已有證據者 < EXIT 才退出；原無證據者 ≥ ENTER 才進入。"""
+    if prev is None:
+        return share >= thr
+    return share >= EXIT if prev else share >= ENTER
+
+
+def expected_status(w_share, s_share, thr, prev_w=None, prev_s=None):
+    """C3：兩層證據比例 → 甲／乙／丙（含 v1.1 緩衝區）。"""
+    w, s = has_evidence(w_share, thr, prev_w), has_evidence(s_share, thr, prev_s)
     return "甲" if (w and s) else ("乙" if (w or s) else "丙")
 
 
@@ -28,12 +38,19 @@ def check_status(st, today):
         if tag not in VALID:
             errs.append(f"[1] {yr} 缺狀態標籤或標籤無效：{tag!r}")
         else:
-            exp = expected_status(y["wattonomics"]["evidence_share"],
-                                  y["siliconomics"]["evidence_share"], thr)
+            exp = expected_status(y["wattonomics"]["evidence_share"], y["siliconomics"]["evidence_share"], thr,
+                                  y["wattonomics"].get("prev_has_evidence"), y["siliconomics"].get("prev_has_evidence"))
             if tag != exp:
                 errs.append(f"[1] {yr} 標「{tag}」，依證據比例與門檻 {thr:.0%} 應為「{exp}」")
+        # 8. 丙、或上游有證據的乙：須 Wattonomics 覆蓋已補齊，否則須標對帳中（v1.1）
+        upstream_led = tag == "丙" or (tag == "乙" and y.get("lead") == "wattonomics")
+        if upstream_led and not st.get("wattonomics_coverage_complete") and not y.get("reconciling"):
+            errs.append(f"[8] {yr} 由上游定基準但 Wattonomics 覆蓋未補齊，應標對帳中")
+        # 7. ② 累計 ÷ 當年基準 ≤ 15%（v1.1）
+        if "timing_cum" in y and abs(y["timing_cum"]) > 0.15 * abs(y["sil_base"]):
+            errs.append(f"[7] {yr} ② 時差與庫存累計 {y['timing_cum']} 超過當年基準 15%")
         # 2. 丙狀態：Siliconomics 基準＝換算值（以供給上限為頂）
-        if tag == "丙":
+        if tag == "丙" and st.get("wattonomics_coverage_complete"):
             conv = min(y["converted"], y.get("supply_cap", float("inf")))
             if abs(y["sil_base"] - conv) > TOL * abs(conv):
                 errs.append(f"[2] {yr} 丙狀態基準 {y['sil_base']} ≠ 換算值 {conv}")
