@@ -572,16 +572,18 @@ def main():
         COROW["_r"] += 1
         CO.cell(COROW["_r"], 1, "C. 依規則的基準").font = BOLD; COROW["_r"] += 1
         co("use", "改用換算值（上游定基準且覆蓋已補齊；1／0）", lambda y, col, yy: f"=IF(AND({R_('up', col)}=1,crd_cov_done=1),1,0)", "0")
-        co("flag", "對帳中（1／0）", lambda y, col, yy: f'=IF(OR({R_("st", col)}="待定",AND({R_("up", col)}=1,crd_cov_done<>1),AND({R_("st", col)}="甲",ABS({R_("res", col)})>rc_tol)),1,0)', "0",
-           note="待定（v1.3）；上游定基準但覆蓋未補齊（C3 乙前提）；或甲狀態殘差超出容差（待診斷）")
         PV = {"D": "C", "E": "D", "F": "E"}   # 前一年欄
         co("chain", "連續法（1／0；規則 v1.4）：上游定基準且前一年為待定、甲且維持現行，或前一年本身用連續法",
            lambda y, col, yy: "=0" if col == "C" else
            (f'=IF(AND({R_("use", col)}=1,OR({R_("st", PV[col])}="待定",AND({R_("st", PV[col])}="甲",{R_("use", PV[col])}=0),{PV[col]}{COROW["_r"]}=1)),1,0)'),
            "0", note="水準等前一年的待定解決，形狀由上游決定：基準＝前一年基準 ×（該年換算值 ÷ 前一年換算值）；換算值本身列為另一側讀數。前一年也直接用換算值時不適用")
+        co("flag", "對帳中（1／0）", lambda y, col, yy: (f'=IF(OR({R_("st", col)}="待定",AND({R_("up", col)}=1,crd_cov_done<>1),AND({R_("st", col)}="甲",ABS({R_("res", col)})>rc_tol)'
+                                                    + ("" if col == "C" else f',AND({R_("chain", col)}=1,OR({R_("st", PV[col])}="待定",AND({R_("chain", PV[col])}=1,{PV[col]}{COROW["_r"]}=1)))')
+                                                    + '),1,0)'), "0",
+           note="待定（v1.3）；上游定基準但覆蓋未補齊（C3 乙前提）；甲狀態殘差超出容差（待診斷）；連續法且水準取決於前一年待定（v1.4：水準等前一年的待定解決）")
         co("base", "基準部署 GW（依規則）", lambda y, col, yy: (f"=IF({R_('use', col)}=1,{R_('dem', col)},{R_('cur', col)})" if col == "C" else
            f"=IF({R_('use', col)}=1,IF({R_('chain', col)}=1,{PV[col]}{COROW['_r']}*{R_('dem', col)}/{R_('dem', PV[col])},{R_('dem', col)}),{R_('cur', col)})"), fill=KEY, bold=True)
-        co("lab", "該年標示", lambda y, col, yy: f'=IF({R_("use", col)}=1,IF({R_("chain", col)}=1,"連續法（換算值成長率）","改用換算值"),IF({R_("st", col)}="待定","待定（對帳中）",IF({R_("flag", col)}=1,"對帳中",IF({R_("st", col)}="甲","一致","維持（本層有證據）"))))', "@", fill=KEY)
+        co("lab", "該年標示", lambda y, col, yy: f'=IF({R_("use", col)}=1,IF({R_("chain", col)}=1,IF({R_("flag", col)}=1,"連續法（前一年待定，對帳中）","連續法（換算值成長率）"),"改用換算值"),IF({R_("st", col)}="待定","待定（對帳中）",IF({R_("flag", col)}=1,"對帳中",IF({R_("st", col)}="甲","一致","維持（本層有證據）"))))', "@", fill=KEY)
         co("k", "基準係數 crd_k（＝基準 ÷ 供給側讀數；維持現行的年份＝現行係數）", lambda y, col, yy: f"=IF({R_('use', col)}=1,{R_('base', col)}/{R_('sup', col)},{R_('s33', col)})", "0.0000",
            note="基準鏈（Units、Deploy、Mkt、ABF、Rack、Equip、Cap）各年乘本列；Interface SIF_UnitsCoef_Base 隨之")
         for y, col in CC_.items():
