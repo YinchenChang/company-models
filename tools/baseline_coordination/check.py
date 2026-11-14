@@ -9,7 +9,7 @@ import argparse, datetime, json, pathlib, re, sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 DEFAULT_STATUS = ROOT / "siliconomics/data/baseline_status.json"
-VALID = {"甲", "乙", "丙"}
+VALID = {"甲", "乙", "丙", "待定"}  # 待定：規則 v1.3 區間跨線
 TOL = 0.005  # 第 2 項：換算值比對容許的相對誤差（四捨五入）
 
 
@@ -23,10 +23,24 @@ def has_evidence(share, thr, prev):
     return share >= EXIT if prev else share >= ENTER
 
 
-def expected_status(w_share, s_share, thr, prev_w=None, prev_s=None):
-    """C3：兩層證據比例 → 甲／乙／丙（含 v1.1 緩衝區）。"""
-    w, s = has_evidence(w_share, thr, prev_w), has_evidence(s_share, thr, prev_s)
+def _st(w, s):
     return "甲" if (w and s) else ("乙" if (w or s) else "丙")
+
+
+def _three(x):
+    """證據比例可為點值或 {lo, base, hi}；回傳 (lo, base, hi)。"""
+    if isinstance(x, dict):
+        return x.get("lo", x["base"]), x["base"], x.get("hi", x["base"])
+    return x, x, x
+
+
+def expected_status(w_share, s_share, thr, prev_w=None, prev_s=None):
+    """C3：兩層證據比例 → 甲／乙／丙（含 v1.1 緩衝區）；v1.3：區間端點與基準值判定不同 → 待定。"""
+    wl, wb, wh = _three(w_share); sl, sb, sh = _three(s_share)
+    ev = lambda v, p: has_evidence(v, thr, p)
+    base = _st(ev(wb, prev_w), ev(sb, prev_s))
+    ends = {_st(ev(a, prev_w), ev(b, prev_s)) for a in (wl, wb, wh) for b in (sl, sb, sh)}
+    return "待定" if len(ends) > 1 else base
 
 
 def check_status(st, today):
