@@ -774,6 +774,16 @@ ol.items{margin:6px 0;padding-left:24px}ol.items li,ul.items li{margin:2px 0}
 """
 
 REQUIRED_IDS = ['thesis', 'drivers', 'pl', 'valuation', 'recon', 'sens', 'status']
+# 版面規格 v1.3（2026-11-14；可選，頂層 "layout": "v1.3"）：命題→估值→敏感度→反向 DCF→損益→驅動→個別模組（0 到多個，id 自訂）→對帳→資料狀態
+V13_HEAD = ['thesis', 'valuation', 'sens', 'revdcf', 'pl', 'drivers']
+V13_TAIL = ['recon', 'status']
+
+
+def v13_order_error(ids):
+    """v1.3 章節順序檢查；回傳錯誤訊息或 None。"""
+    if ids[:len(V13_HEAD)] != V13_HEAD or ids[-len(V13_TAIL):] != V13_TAIL or len(ids) != len(set(ids)):
+        return f'layout v1.3 的 sections 須為 {V13_HEAD} → 個別模組 → {V13_TAIL}，實際 {ids}'
+    return None
 OPTIONAL_IDS = ['conclusion', 'funding', 'revdcf']   # conclusion＝命題回覆（可選；放在 sens 與 status 之間，Andy 2026-11-05）；funding＝收支型個股的資金缺口與融資（緊接 thesis 之後）、revdcf＝反向 DCF（緊接 valuation 之後）（可選；Andy 2026-11-10，首例 Oracle v0.5.0）
 
 
@@ -810,13 +820,18 @@ def build(cdir, xlsx=None, root=None):
     cx = Ctx(Book(xlsx), {'$version': 'v' + ver, '$date': date, '$sha': sha12(xlsx), '$xlsx': os.path.basename(xlsx)})
     ids = [s['id'] for s in cfg['sections'] if s['id'] not in OPTIONAL_IDS]
     allids = [s['id'] for s in cfg['sections']]
-    if 'conclusion' in allids and allids[allids.index('conclusion') - 1:allids.index('conclusion') + 2] != ['sens', 'conclusion', 'status']:
+    if cfg.get('layout') == 'v1.3':
+        err = v13_order_error(allids)
+        if err:
+            raise SystemExit(err)
+    elif 'conclusion' in allids and allids[allids.index('conclusion') - 1:allids.index('conclusion') + 2] != ['sens', 'conclusion', 'status']:
         raise SystemExit(f'conclusion 須放在 sens 與 status 之間，實際 {allids}')
-    for opt, prev in (('funding', 'thesis'), ('revdcf', 'valuation')):
-        if opt in allids and allids[allids.index(opt) - 1] != prev:
-            raise SystemExit(f'{opt} 須緊接在 {prev} 之後，實際 {allids}')
-    if ids[:len(REQUIRED_IDS)] != REQUIRED_IDS:
-        raise SystemExit(f'sections 的 id 須依序為 {REQUIRED_IDS}，實際 {ids}')
+    if cfg.get('layout') != 'v1.3':
+        for opt, prev in (('funding', 'thesis'), ('revdcf', 'valuation')):
+            if opt in allids and allids[allids.index(opt) - 1] != prev:
+                raise SystemExit(f'{opt} 須緊接在 {prev} 之後，實際 {allids}')
+        if ids[:len(REQUIRED_IDS)] != REQUIRED_IDS:
+            raise SystemExit(f'sections 的 id 須依序為 {REQUIRED_IDS}，實際 {ids}')
     check_prose(cfg['question'], 'question')
     for s in cfg['scenarios']:
         check_prose(s['name'], 'scenarios.name')
