@@ -1,4 +1,21 @@
-# amd/ — AMD（AMD）收支與估值模型 v0.4.6
+# amd/ — AMD（AMD）收支與估值模型 v0.4.7
+
+## v0.4.7（2026-11-15）：個股 HTML 版面 v1.3、三層協調讀取層級與 C0（公司實績）、硬體股兩讀數
+
+依據：工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md` 第 2 節、`docs/workorders/20261114_C0實績對帳補列_七家.md`（核對教訓）、`docs/plan/三層基準協調規則.md` v1.4.2（C0 第 2 點、C4）、`docs/plan/個股HTML版面規格.md` v1.3、`tools/coord/README.md`。樣板：Broadcom v0.5.6／v0.5.7（同一建檔家族）、NVIDIA v0.3.10。後處理在 `v047_post.py`；`build_amd.py` 只加主引擎掛鉤與呼叫；`gen_html_json.py` 末段為 v1.3 版面。
+
+- **版面 v1.3：** 章節 命題 → 估值 → 敏感度 → 反向 DCF → 損益（標準損益表）→ 驅動因子（分部營收推導）→ 對帳 → 資料狀態。估值章第一個區塊＝四個目標價與現價；敏感度章前兩個區塊＝加權目標價相對基準（低案、高案）；損益表預測欄 FY2027E 起標「對帳中」。`check_layout_v13 --xlsx` 通過（剩餘警告為估值章 DCF 明細與驅動因子參數表的既有參數代號）。
+- **xlsx 新增（只新增，不回饋計算）：** Hist 頁末「損益表歷史」（FY2023–FY2024 non-GAAP，AMD 8-K 新聞稿；FY2025 連 Q 頁）；PL 頁末標準損益表（FY2023A–FY2025A＋FY2026E–FY2032E 情境 B，Non-GAAP，EPS 為稀釋含客戶認股權證）；RevDCF 頁；Val 0.7 四個目標價；Sens 頁末加權目標價相對基準（營運輸入引用既有「業務主因」整本重算快照表、估值框架為 Val 頁封閉式、折現參數引用既有表）；Coord 頁（A–E 兩讀數、F 讀取層級、G 讀取層級核對、H 層級之間、I 損益表年度標示、J C0（實績））；README 頁末 v1.3 白話列。
+- **兩讀數（C4）：** 主引擎掛鉤：`SIL.COORD_ALT` 時情境 B、C 於 CY2027 起 AMD 認列顆數（與認股權證歸屬 GW）× wta（另一側讀數比值 0.618／0.665／0.665）；情境 A 不縮放。`LO_PROFILE=file:///tmp/lo_amd python3 tools/coord/alt_run.py amd` → `coord_alt.json`。現行基準加權目標價 271.19 美元（放空）；另一側讀數 251.55 美元（放空），評等相同；對帳中年份 CY2027–CY2029。個股不裁決。
+- **C0（實績）與出處：** 個股側＝AMD 8-K 資料中心分部營收（Verified）：Q1 2026 5.775（8-K 2026-05-05，`000000248826000072/q12026991.htm`）、Q2 6.718（8-K 2026-08-04，`000000248826000121/q22026991.htm`）、Q3 8.546（8-K 2026-11-03，`000000248826000188/q32026991.htm`），累計 21.039 十億美元（Q 頁第 5 列）。層級側＝Siliconomics v0.19 AMD Instinct 顆數 CY2026 0.75 百萬顆 × 每顆售價 30 千美元＝22.5 十億美元（In 頁 u_amd_26 × pa_amd；顆數 Morgan Stanley 等、售價 HSBC 等外部來源，非本模型校準；Coord 有核對列＝Units 頁 AMD 金額，差 0）。
+- **判定：無可比實績。** AMD 不揭露 Instinct GPU 營收（三份 2026 新聞稿只有資料中心分部），Siliconomics 沒有資料中心 CPU 層，兩側沒有同口徑量；缺的揭露＝Instinct GPU 營收。對帳中項目 0。只列參考、不判定：(1) 上限檢驗——層級 GPU 隱含 × 9 ÷ 12＝16.875 未超過分部實績 21.039（主讀數，實績高 24.7%）；Q3 × 4＝34.18 對 22.5（第二讀數，高 51.9%）；兩者皆通過。分部實績減層級 GPU 隱含＝9 個月非 GPU 4.16（占 20%），本模型 Assumed 非 GPU 為 11.31。(2) 本模型 GPU 拆分（Assumed）9.72 對 16.875（−42.4%）、Q3 × 4＝17.64 對 22.5（−21.6%）：兩讀數同向低於層級，與認列係數 0.787 小於 1 一致；拆分是假設，列為對帳單候選，待公司揭露。第二讀數＝Q3 中點（2026-08）的年化速率，晚於年中，在成長年偏高。
+- **讀取層級：** 加速器顆數與情境顆數係數（Siliconomics v0.19，經 markets/memory 與台積電成品）、各平台每顆售價（經 NVIDIA v0.3.10 成品）、HBM 單價路徑（經 NVIDIA 成品）、對帳中旗標與另一側比值（Siliconomics v0.19）。同源核對（顆數 CY2026–2028、每顆售價）只列 G 節「讀取層級（同源，不判定）」。
+- **不變性：** 對 v0.4.6 dist 逐格比對（容差 1e-9）：既有格只有 README A1 版號與 build_id、README A66 與 Sens D791 的 build_id 文字不同；其餘為新增頁（RevDCF、Coord）與既有頁的新增格（624 格）。加權目標價 271.19、評等放空不變。
+- **舊 README 數字：** 上方 v0.4.6 節的拆解表（加權目標價 273.32、DCF 103.23）與現行 dist 不同：v0.4.6 成品在 Siliconomics 全下游重建時原地更新，現行 v0.4.6（與本版逐格相同）為加權目標價 271.19、DCF 98.96、Comparable（進加權）443.41。歷史不改寫，以本版與 xlsx 為準。
+- **反向 DCF 讀法：** 現價 404.40 需要的 WACC 低於搜尋下限（永續成長率＋0.5 個百分點＝3.5%），RevDCF 頁標「搜尋下限仍不足」；營收須放大 5.60 倍或 EBIT 率 114%（超過 100%）。
+- **驗證：** `check_company_html.py amd` 全過；`check_layout_v13.py --xlsx` 通過；`tools/baseline_coordination/check.py` 0 項不符；Coord 另一側讀數快照 CURRENT；Sens 模型狀態 CURRENT（sens.json 未變，不需重跑 sens_amd.py）。本公司無 `display_check.json`，不跑 `version_table.py`。
+- **未列入本 PR：** Siliconomics `coord_meta` 的 `hardware_companies` 需加入 `amd`（由主控合併時統一加入並重匯 `baseline_status.json`）；本模型 dist 未被其他模型讀取（`markets/invest_map` 只讀檔名，由主控重建）。
+- 成品：`dist/20261115_AMD模型_v0.4.7.xlsx`、`.html`；v0.4.6 移到 `dist/_待刪除/`。
 
 ## v0.4.6（2026-11-10）：AMD v0.4.4 驗收報告採用項——數值項
 

@@ -293,11 +293,15 @@ inp("en_hh", "鴻海集團持有樺漢股數（鴻海＋鴻揚創投）", "十�
 inp("en_px", "樺漢股價（2026-11-05 收盤）", "NT$", None, 341.5, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（6414.TW；與 px 同日）", "與 px 同日；v0.4.4 為 2026-11-04 收盤 348.5（Yahoo Finance）")
 inp("en_eq", "樺漢歸屬母公司權益（2Q26）", "NT$B", None, 28.501, None, "Verified", "stockanalysis 6414 季資產負債表 2026-06-30：Total Common Equity 28,501（百萬元；本身非控制權益 36,905 維持帳面）（同上網址）", "鴻海合併報表中樺漢少數股權帳面 ≈ 本值 × 少數持股（近似）")
 
+_OVR = dict(kv.split("=") for kv in os.environ.get("FOXCONN_OVR", "").split(";") if kv)   # 敏感度快照（foxconn/sens_foxconn.py）以環境變數 FOXCONN_OVR 覆寫 In 輸入；正式建置不設
 r = 4
 for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    if key in _OVR and key != "mf":   # lo／hi＝敏感度低／高欄；x0.8＝基準 × 0.8（mf 只改引擎 AI 部署係數，見 DEFP）
+        base = {"lo": lo, "hi": hi}.get(_OVR[key]) if _OVR[key] in ("lo", "hi") else base * float(_OVR[key].lstrip("x"))
+        assert base is not None, (key, _OVR[key])
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
         if v is not None:
@@ -365,10 +369,12 @@ FYS = (2025, 2026, 2027, 2028, 2029); FC = {2025: "C", 2026: "D", 2027: "E", 202
 BU = (2026, 2027, 2028, 2029)
 umx = lambda y, s: {2026: "1", 2027: "1", 2028: f"um28_{s}", 2029: f"um29_{s}"}[y]
 _mfy = lambda m, y: m[y] if isinstance(m, dict) else m   # Siliconomics v0.13：mf 可為年別 dict（Sens「Wattonomics 錨定」案例）；預設字串不變
-DEFP = dict(scn="A", rel="rel", cs="cs", keep="keep", vpg="vpg", mf="1", gcn="g_cn", gce="g_ce", gpc="g_pc", gco="g_co",
+DEFP = dict(scn="A", rel="rel", cs="cs", keep="keep", vpg="vpg", mf=(str(float(_OVR["mf"].lstrip("x"))) if "mf" in _OVR else "1"), gcn="g_cn", gce="g_ce", gpc="g_pc", gco="g_co",
             d="d_ai", vrd="vrd", opxa="0", nio="nio_f")
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["mf"] == "1" and s != "A":   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 的 AI IT 資本支出（與 GPU 顆數）× wta（＝另一側讀數比值）；情境 A 不縮放
+        P["mf"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
     hdr(ws, r, ["項目", "單位", "FY2025A", "FY2026（錨點）", "FY2027", "FY2028", "FY2029", "說明"]); r += 1
@@ -1099,6 +1105,17 @@ _old5 = [_c for _c in RD["A"] if isinstance(_c.value, str) and not _c.value.star
 for _k, _c in enumerate(_old5):   # 第 22 點：舊版撰寫、帶舊版數字的重點觀察 2、3（固定文字）刪除；現況見展示層重點 1–5
     _c.value = ("重點觀察 " + "、".join(x.value[5] for x in _old5) + "：舊版撰寫的文字（數字為舊版）已刪除；現況見展示層重點 1–5。") if _k == 0 else None
 
+# 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 foxconn/coord_alt.json）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD
+_HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, _HERE)
+_CR = COORD.add_sheet(wb, _HERE, SIL)
+if _CR:
+    COORD.stamp(wb, "v0.4.5", "v0.4.6", "2026-11-15")
+# v0.4.6（2026-11-15）：版面規格 v1.3（標準損益表、反向 DCF、四個目標價、敏感度主圖）＋三層協調 C0 公司實績對帳（foxconn/v046_post.py；只新增，既有數值不變）
+import v046_post as POST
+POST.apply(wb, SIL, _HERE, _CR)
 wb.save(sys.argv[1])
 if os.environ.get("R4_NOOP"): pass
 if os.environ.get("FOXCONN_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數

@@ -1,4 +1,23 @@
-# kinsus/ — 景碩（Kinsus，3189.TW）收支與估值模型 v0.4.3
+# kinsus/ — 景碩（Kinsus，3189.TW）收支與估值模型 v0.4.4
+
+## v0.4.4（2026-11-15）：個股 HTML 版面規格 v1.3、三層協調兩讀數與 C0（實績）
+
+- **依據：** 工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`、`docs/workorders/20261114_C0實績對帳補列_七家.md`、規則 `docs/plan/三層基準協調規則.md` v1.4.2（C0 第 2 點、C4）、`tools/coord/README.md`；同次產業樣板 Ibiden v0.5.6、欣興 v0.4.4（PR #540）、南電 v0.3.5（PR #547）。三項同輪完成。
+- **做法（只新增，既有數值格不變）：**
+  - 兩讀數（`tools/coord`）：主引擎在 `SIL_COORD_ALT` 時情境 B、C 的 CY2027 起產業量（NVIDIA、非 NVIDIA 加速器顆數〔NVIDIA CPU 顆數隨之〕與其他 AI 載板）× `wta_27`／`wta_28`／`wta_29`（沿用既有 `mf` 年別乘數；情境 A 不縮放）；`alt_run.py kinsus`（`LO_PROFILE` 私有設定檔）→ `coord_alt.json`；`COORD.add_sheet`＋`stamp`；`gen_html_json.py` 呼叫 `COORD.inject_html`。
+  - 版面 v1.3（`v044_post.py`、`gen_html_json.py`）：Hist 頁（FY2022–FY2025 損益表，含晶碩非控制權益）、RevDCF 頁、PL 頁末標準損益表（FY2023A–FY2025A＋FY2026E–FY2030E 情境 B，GAAP；FY2027E 起標「對帳中」；另列非控制權益，預測期＝合併淨利 − 歸屬淨利）、Val 0.7 四個目標價、Sens 頁末加權目標價相對基準（`sens_kinsus.py` 整本重算 17 個業務案例＋目標價參數表；快照 `sens.json`）、README 頁末 v1.3 白話列；章節改為命題 → 估值 → 敏感度 → 反向 DCF → 損益 → 驅動因子 → 對帳 → 資料狀態。建檔程式新增 `KS_OVERRIDE`／`KS_SNAP`（只供敏感度快照）。
+  - Coord 頁 C0：讀取層級（Siliconomics v0.19、Wattonomics v0.3.2、Ibiden／欣興／南電／網通市場模型讀入值）；讀取層級核對 22 列全部「讀取層級（同源，不判定）」；層級之間（參考）；對帳中年份；4. C0（實績）。
+- **實績與出處：**
+  - 2026 年 1–10 月合併營收累計 435.09 億元（含晶碩；TechNews 財報助手 2026-11-06：10 月 53.68 億、年增 49.0%；驗算前 9 月 381.41＋10 月 53.68），Verified。
+  - 3Q26 合併營收 145.40 億元（公司 2026-10-30 重大訊息「董事會通過 115 年第 3 季合併財務報告」與綜合損益表；In 頁 q3_rev 連格），Verified。
+  - Hist 頁 FY2022–FY2025：公司 IFRS 合併損益表（經 stockanalysis.com 年度損益表轉載；FY2025 連 Q 頁既有值；加權股數用來源基本股數，因 FY2023–FY2024 EPS 0.11 元以淨利 ÷ EPS 反推誤差大；MOPS 原文待人工複核）。
+- **層級隱含與判定：** 層級值＝Siliconomics v0.19 `abfrev_ks26` 0.70 US$B × 32.5（該列原註）÷ ABF 占營收 42%（In 頁 mx_abf）＝54.2 十億元。主讀數 1–10 月 43.5 vs 54.2 × 10 ÷ 12 ＝ 45.1，差距 −3.6%；第二讀數 3Q26 × 4 ＝ 58.2 vs 54.2，差距 +7.4%（3Q26 中點晚於年中，成長年中偏高）。**判定：參考（同源校準）；C0（實績）結論＝無可比實績（層級值同源）**——`abfrev_ks26` 由本模型 FY2026 ABF 營收推得，ABF 占比與匯率消去，本表等於「實績 vs 本模型 FY2026 營收錨點」（層級值四捨五入致差約 0.5%）；缺 ABF／加速器與 CPU 載板單獨營收揭露。對帳中 0。
+- **兩讀數：** 現行基準讀數 721.79 元（中立，−2.5%）；另一側讀數 652.95 元（中立，−11.8%），評等相同。
+- **不變：** 加權目標價 721.79、DCF 335.34、評等中立。逐格比對 v0.4.3 既有非空格：只有 README!A1（標題版號 v0.3 → v0.4.4，並附本版說明）與 PL!A118（情境 B 標題舊字「CY2029 ×0.85」改讀基準係數 0.71，文字列）不同；其餘為新增頁與新增格。
+- **README 舊節數字：** 下方 v0.4.3 節「加權目標價 793 → 732」等為當時值；之後 Siliconomics／Ibiden／欣興／南電下游重建原地更新 dist，現行為 721.79（中立不變），舊節不改寫，以本節與 xlsx 為準。
+- **驗證：** LibreOffice（`-env:UserInstallation=file:///tmp/lo_kinsus`）錯誤格 0；`check_layout_v13 --xlsx` 全過；`check_company_html kinsus` 全過；`tools/baseline_coordination/check.py` 0 項不符；Coord 另一側讀數快照 CURRENT、Sens 快照 CURRENT。
+- **coord_meta：** `hardware_companies` 未在本分支修改，由主控合併時加入 `kinsus`。
+- 成品：`dist/20261115_景碩個股模型_v0.4.4.xlsx`、`.html`；v0.4.3 移到 `dist/_待刪除/`。
 
 ## v0.4.3（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 

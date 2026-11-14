@@ -343,3 +343,20 @@ def test_w4_derived_revenue_inputs():
     assert seen == 3
     for r in range(5, wf["SRC_OAI"].max_row + 1):
         assert wf["SRC_OAI"].cell(r, 1).value not in ("SRC_OAI_141", "SRC_OAI_142", "SRC_OAI_143")
+
+
+def test_v065_coord_not_fed_back():
+    """v0.6.5 Coord（三層協調）只列示：除本頁與 Checks 外，任何公式不得引用 Coord! 或 COORD_ 名稱。"""
+    import re
+    import openpyxl
+    wb = openpyxl.load_workbook(current_model_path())
+    assert "Coord" in wb.sheetnames
+    bad = []
+    for ws in wb.worksheets:
+        if ws.title in ("Coord", "Checks"):
+            continue
+        for row in ws.iter_rows():
+            for c in row:
+                if isinstance(c.value, str) and c.value.startswith("=") and re.search(r"\bCoord!|\bCOORD_", c.value):
+                    bad.append(f"{ws.title}!{c.coordinate}")
+    assert not bad, bad[:10]
