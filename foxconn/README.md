@@ -1,4 +1,16 @@
-# foxconn/ — 鴻海（2317）收支與估值模型 v0.4.5
+# foxconn/ — 鴻海（2317）收支與估值模型 v0.4.6
+
+## v0.4.6（2026-11-15）：HTML 整個改成個股版面規格 v1.3＋三層協調（兩讀數目標價）＋C0 補公司實績（樣板＝廣達 v0.4.8）
+
+- **不變性：** 與 v0.4.5 逐格比對，既有儲存格（10,477 格）只有 README!A1 的版本沿革文字改變；加權目標價 411.81、DCF 486.28、Comparable 356.15（未做相對倍數調整）／337（調整後）、投資建議強力買進、`coord_meta` 皆不變。新增 Hist、RevDCF、Coord 三張工作表與各頁末新區塊。註：本節之前各節的數字若與現行 dist 不符（Siliconomics 全下游重建原地更新所致），以本節與現行 dist 為準，不改寫歷史。
+- **版面 v1.3：** 標準損益表 FY2023A–FY2031E（含非控制權益：歷史為公司列示的少數股權損益；預測以 FY2025 少數股權占稅前利益的比例分攤，只影響展示拆分、不回饋估值）、反向 DCF、四個目標價與現價圖、敏感度改為加權目標價相對基準的低案／高案（業務主因案例用整本重算快照 `sens.json`，由 `sens_foxconn.py` 產生）。`gen_html_json.py` 以 `html_src.json` 為底套 relayout 後重組；`v046_post.py` 於建置最後套用。
+- **Hist（FY2022–FY2025）：** 第三方彙整（S&P Global Market Intelligence），未逐項對年報原文；FY2025 與 Q 頁差異列皆為 0。
+- **兩讀數：** 主引擎掛鉤 `SIL.COORD_ALT`（對帳中 CY2027–29 的部署量改讀 Wattonomics 換算），`coord_alt.json` 由 `tools/coord/alt_run.py foxconn` 產生：現行 411.81（強力買進）／另一側 371.32（強力買進）。
+- **C0（實績，Coord 頁第 4 節）：結論＝無可比實績（層級值同源），對帳中 0。** Siliconomics 快照 `asm_fxsh_26`（鴻海有效份額）是本模型以 FY2026 錨點（營收 × 雲端網路占比 × AI 占雲端網路）反推後存入，層級隱含 CY2026 AI 伺服器營收 3,545.93 十億元恆等於 Q 頁錨點（核對列為 0）；公司未揭露 AI 伺服器營收金額，只揭露雲端網路產品占營收。表中實績側（2026-01～10 月月營收逐月含出處 × 公司法說雲端網路占比 48%／51%／54% × 本模型 AI 占雲端網路）只作參考；實際檢驗的是錨點：(a) 全年雲端網路占比錨點比前三季實際加權高 1.6 個百分點，要求 4Q 占比 56.6%（3Q 為 54%）；(b) 錨點的 4Q 營收假設低於 10 月實績年化（11–12 月月均需比 10 月低 16.7%，若維持 10 月水準全年營收比錨點高 3.9%）。
+- **限制：** 月營收來自 TechNews 等報導轉載（Histock、Yahoo 股市被擋，MOPS 與法說簡報原文未直接讀取），10 月只到億元位數；法說占比為整數百分比、來自摘要報導；模型股數約 14.017 十億股，與由 3Q26 淨利與 EPS 反推的約 14.04 十億股略有差距。3Q26 財報後的 FY2026 錨點更新由 Andy 決定，本版不改。
+- **既有不一致（未改）：** PL 頁表頭文字仍寫「CY2029 ×0.85」，In 頁情境係數為 0.71、Siliconomics 份額表為 0.85。
+- **成品：** `dist/20261115_鴻海個股模型_v0.4.6.xlsx`、`.html`（v0.4.5 移到 `dist/_待刪除/`）。建置：`python3 foxconn/build_foxconn.py raw.xlsx`（`FOXCONN_OVR`／`FOXCONN_NOSENS` 供 Sens 快照用）→ LibreOffice 重算 → `gen_html_json.py` → `tools/company_html/build_company_html.py foxconn`。
+- **驗證：** `tools/xlsx_diff.py`（錯誤格 0）、`check_company_html`、`check_layout_v13 --xlsx`、`tools/baseline_coordination/check.py` 皆通過。待總經理補：`coord_meta` 的 hardware_companies、`baseline_status.json` 尚無 foxconn。
 
 ## v0.4.5（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 
