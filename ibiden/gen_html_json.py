@@ -192,5 +192,9 @@ else:
 # 第三輪修正（2026-11-06）：情境驅動表依節標題取列並自檢、情境定義 kv 自檢、DCF 明細比例列格式、橫幅幣別（r3_html.py）
 import r3_html  # noqa: E402
 r3_html.post(cfg, wb, '日圓')
+# 三層協調 C4（規則 v1.4；tools/coord/coord.py）：橫幅另一側讀數一格與揭露句、估值章開頭兩讀數表與長條圖
+sys.path.insert(0, os.path.join(HERE, "..", "tools", "coord"))
+import coord as COORD  # noqa: E402
+COORD.inject_html(cfg, X)
 json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok", OUT)

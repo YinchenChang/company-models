@@ -306,6 +306,8 @@ def units_f(g, y):
 DEFP = dict(scn="A", w="w_ot", aie="ai_e", ga="g_asp", rel="rel", pp="pp", mne="m_ne", gne="g_ne", gcer="g_cer", goth="g_oth", nioi="ni_oi", shg="sh_g", wm=None)
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["wm"] is None and s != "A":   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 產業量 × wta（＝另一側讀數比值）；情境 A 不縮放
+        P["wm"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     wmf = lambda y: f"*{P['wm'][y]}" if P["wm"] and y >= 2027 else ""   # v0.13：Wattonomics 錨定（年別乘數 dict；預設 None＝不乘）
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -980,6 +982,11 @@ P5 = dict(ver="v0.5.3", px="4062.T", fpe="pe_fwd_sa",
           PX4={"4062.T": 8037, "3037.TW": 888, "8046.TW": 1080, "3189.TW": 822, "009150.KS": 1115000, "ATS.VI": 130.6},
           PX5={"4062.T": 6726, "3037.TW": 800, "8046.TW": 972, "3189.TW": 740, "009150.KS": 944000, "ATS.VI": 110.2})
 px1105_post.apply(wb, P5)
+# 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 ibiden/coord_alt.json）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD
+if COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL):
+    COORD.stamp(wb, "v0.5.3", "v0.5.4", "2026-11-14")
 wb.save(sys.argv[1])
 if os.environ.get("IBIDEN_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
