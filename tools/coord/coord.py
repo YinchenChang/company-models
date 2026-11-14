@@ -110,6 +110,8 @@ def add_sheet(wb, folder, SIL):
     R["note"] = r; ws.cell(r, 1, "目標價區說明")
     ws.cell(r, 2, f'="兩讀數只差產業部署 GW 一個輸入：{ys_txt} 另一側讀數為現行基準的 "&' + '&"／"&'.join(rr) +
             '&" 倍（情境 B、C 的產業量同乘；情境 A＝供給側讀數不變），其他假設不變。個股不裁決哪一側正確，對帳在 Siliconomics 對帳單處理（期限 2027-02-28）；結案前兩個目標價並列。"'); r += 1
+    if not any(re.match(r"^現價（", str(wb["Val"].cell(i, 1).value or "")) for i in range(1, wb["Val"].max_row + 1)):   # Val 頁沒有現價列（記憶體模型）：由加權目標價 ÷（1＋上檔空間）還原，供長條圖現價線
+        R["px"] = r; ws.cell(r, 1, "現價（＝加權目標價 ÷（1＋上檔空間），Val 頁）"); ws.cell(r, 2, f"=B{R['tp']}/(1+B{R['up']})").number_format = "#,##0.00"; r += 1
     R["hero"] = r; ws.cell(r, 1, "橫幅揭露")
     ws.cell(r, 2, f'="對帳中（{ys_txt}）：另一側讀數目標價 "&TEXT(C{R["tp"]},"#,##0.00")&"（"&C{R["rec"]}&"）"&IF(B{R["rec"]}<>C{R["rec"]},"，與現行基準讀數（"&B{R["rec"]}&"）評等不同","")&"。"'); r += 1
     return R
@@ -144,6 +146,9 @@ def inject_html(cfg, xlsx):
             "items": [{"label": f"@Coord!B{r_cur}", "value": f"@Coord!B{r_tp}", "series": 0}, {"label": f"@Coord!B{r_alt}", "value": f"@Coord!C{r_tp}", "series": 2}]}
     if px:
         bars["ref"] = {"label": f"@Val!A{px}", "value": f"@Val!B{px}"}
+    else:
+        r_px = f("現價（＝加權目標價")
+        bars["ref"] = {"label": f"@Coord!A{r_px}", "value": f"@Coord!B{r_px}"}
     S = {x["id"]: x for x in cfg["sections"]}
     S["valuation"]["blocks"][0:0] = [{"type": "h3", "text": "對帳中：兩讀數目標價"}, {"type": "note", "parts": [f"@Coord!B{r_note}"]}, tbl, bars]
     return True
@@ -159,3 +164,12 @@ def stamp(wb, old_ver, new_ver, date):
         a1 = head.replace(old_ver, new_ver, 1) + a1[len(head):]
     RD["A1"].value = a1 + (f"；{new_ver}（{date}）：三層協調——Coord 頁並列兩讀數目標價（三層基準協調規則 v1.4 C4；"
                                                       "Siliconomics v0.19 對帳中年份；tools/coord/），HTML 橫幅與估值章加另一側讀數；既有數值不變")
+
+
+def enabled(folder):
+    """該資料夾是否已列入 Siliconomics coord_meta 的硬體個股清單（共用建檔程式用：只對已上線的公司加 Coord 頁）。"""
+    import glob
+    root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    fs = sorted(glob.glob(os.path.join(root, "siliconomics", "builder", "seed", "coord_meta_v*.json")),
+                key=lambda f: tuple(int(x) for x in re.findall(r"\d+", os.path.basename(f).split("_v")[-1])))
+    return bool(fs) and folder in json.load(open(fs[-1], encoding="utf-8")).get("hardware_companies", [])

@@ -143,7 +143,8 @@
   "ase",
   "ibiden",
   "delta",
-  "quanta"
+  "quanta",
+  "skhynix"
  ],
  "depends_on_years": {
   "nvidia": [
@@ -177,6 +178,12 @@
    "2029"
   ],
   "quanta": [
+   "2026",
+   "2027",
+   "2028",
+   "2029"
+  ],
+  "skhynix": [
    "2026",
    "2027",
    "2028",
