@@ -22,6 +22,7 @@ from common import F_BOLD, F_CALC, F_IN, F_NOTE, FILL_SEC, header, nm, put, titl
 ROOT = Path(__file__).resolve().parent.parent
 SNAP_YAML = ROOT / "data" / "val_scenarios.yaml"
 SENS_YAML = ROOT / "data" / "val_sens.yaml"
+PLAIN_YAML = ROOT / "data" / "val_sens_plain.yaml"   # v0.2.1：敏感度案例白話標籤
 SCN = ("A", "B", "C")
 SRCK = ("rev", "gross", "ebit", "own", "cc", "fcfm")           # 情境來源列（FY2026–FY2030）
 SRC_ZH = {"rev": "營收淨額（截頂後；Funding F01）", "gross": "營收總額（截頂後；REV_GrossCapped）", "ebit": "EBIT（現金口徑）＝差額（Funding F06）",
@@ -277,10 +278,13 @@ def build(ctx):
 
     # ═══ 7. 敏感度 ═══
     sec("7. 敏感度（龍捲風；一次改一個輸入，整本活頁簿以 LibreOffice 重算後的加權目標價；建置快照，tools/val_sens.py → data/val_sens.yaml）")
-    header(ws, r[0], ["案例", "低值情況下加權目標價", "高值情況下加權目標價", "低值設定", "高值設定"])
+    header(ws, r[0], ["案例", "低值情況下加權目標價", "高值情況下加權目標價", "低值設定", "高值設定",
+                      "低值：相對基準（v0.2.1）", "高值：相對基準（v0.2.1）", "白話名稱（v0.2.1）", "低值設定白話（v0.2.1）", "高值設定白話（v0.2.1）"])
     r[0] += 1
     s0 = r[0]
     cases = (sens or {}).get("cases", [])
+    plain = yaml.safe_load(PLAIN_YAML.read_text(encoding="utf-8")) if PLAIN_YAML.exists() else {}
+    sb_row = s0 + max(len(cases), 1)          # 下方「Sens 快照的基準加權目標價」列（sbase）的列號
     for cs in cases:
         n = r[0]
         put(ws, f"A{n}", cs["name"], F_CALC)
@@ -288,11 +292,20 @@ def build(ctx):
         put(ws, f"C{n}", cs.get("tp_hi"), F_IN, fmt="#,##0.00")
         put(ws, f"D{n}", cs.get("lo_label", ""), F_NOTE)
         put(ws, f"E{n}", cs.get("hi_label", ""), F_NOTE)
+        # v0.2.1（個股 HTML 版面規格 v1.3 H 節）：加權目標價相對基準（快照基準）與白話標籤；只新增欄，不改既有格
+        put(ws, f"F{n}", f"=B{n}/$B${sb_row}-1", fmt="0.0%")
+        put(ws, f"G{n}", f"=C{n}/$B${sb_row}-1", fmt="0.0%")
+        pl = (plain or {}).get(cs.get("key"), {})
+        put(ws, f"H{n}", pl.get("plain", cs["name"]), F_CALC)
+        put(ws, f"I{n}", pl.get("lo", cs.get("lo_label", "")), F_NOTE)
+        put(ws, f"J{n}", pl.get("hi", cs.get("hi_label", "")), F_NOTE)
         r[0] += 1
     if not cases:
         put(ws, f"A{r[0]}", "（尚未產生：執行 tools/val_sens.py）", F_NOTE)
         r[0] += 1
     nm(wb, "VAL_SensTbl", f"Val!$A${s0}:$C${max(s0, r[0] - 1)}")
+    nm(wb, "VAL_SensPct", f"Val!$F${s0}:$J${max(s0, r[0] - 1)}")
+    assert r[0] == sb_row, (r[0], sb_row)
     row("sbase", "Sens 快照的基準加權目標價（建置時）", "$/股", [None], fmt="#,##0.00")
     put(ws, f"B{P['sbase']}", (sens or {}).get("base_tp"), F_IN, fmt="#,##0.00")
     put(ws, f"C{P['sbase']}", f"=VAL_TP_W", fmt="#,##0.00")

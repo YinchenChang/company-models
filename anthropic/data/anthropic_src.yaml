@@ -10083,6 +10083,482 @@ rows:
   party: "Anthropic（初步招股說明書；期中未經查核；IPO 定價前）"
   basis: "類債（現值）"
   note: "v0.2.0 獨立核對（chat 端 2026-11-11）：F-35 融資租賃負債現值 1.674；工作單 F4 的 1.95 為未折現付款額（SRC_ANT_566）。估值頁淨現金改扣本列"
+- id: SRC_ANT_594
+  key: is_s1a_cor_2023
+  group: A
+  metric: "2023 年營收成本（功能別費用表）"
+  value: 0.026
+  lo: null
+  hi: null
+  unit: "$B/年"
+  period: '2023'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；F-40 附註「Supplemental Operating Expense Information」"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 營收成本（功能別）"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_595
+  key: is_s1a_cor_2024
+  group: A
+  metric: "2024 年營收成本（功能別費用表）"
+  value: 0.752
+  lo: null
+  hi: null
+  unit: "$B/年"
+  period: '2024'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；F-40 附註「Supplemental Operating Expense Information」"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 營收成本（功能別）"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_596
+  key: is_s1a_cor_9m26
+  group: A
+  metric: "2026 前九月營收成本（功能別費用表）"
+  value: 4.812
+  lo: null
+  hi: null
+  unit: "$B/9 個月"
+  period: '2026-01–2026-09'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；F-40 附註「Supplemental Operating Expense Information」（期中未經查核）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 營收成本（功能別）"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_597
+  key: is_s1a_oi_2023
+  group: A
+  metric: "2023 年營業損益（負＝虧損）"
+  value: -0.551
+  lo: null
+  hi: null
+  unit: "$B/年"
+  period: '2023'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；Summary Consolidated Financial Data 第 24 頁"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 營業損益"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_598
+  key: is_s1a_oi_2024
+  group: A
+  metric: "2024 年營業損益（負＝虧損）"
+  value: -2.98
+  lo: null
+  hi: null
+  unit: "$B/年"
+  period: '2024'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；Summary Consolidated Financial Data 第 24 頁"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 營業損益"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_599
+  key: is_s1a_oth_2023
+  group: A
+  metric: "2023 年其他收入（費用）淨額合計（利息收入＋可轉債等公允價值變動＋其他）"
+  value: -0.978
+  lo: null
+  hi: null
+  unit: "$B/年"
+  period: '2023'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁：利息收入 69、公允價值變動 (1,045)、其他 (2)"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 營業外"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_600
+  key: is_s1a_oth_2024
+  group: A
+  metric: "2024 年其他收入（費用）淨額合計"
+  value: -5.328
+  lo: null
+  hi: null
+  unit: "$B/年"
+  period: '2024'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁：利息收入 106、公允價值變動 (5,434)、其他 —"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 營業外"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_601
+  key: is_s1a_oth_2025
+  group: A
+  metric: "2025 年其他收入（費用）淨額合計"
+  value: -33.885
+  lo: null
+  hi: null
+  unit: "$B/年"
+  period: '2025'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁：利息收入 431、公允價值變動 (34,308)、其他 (8)"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 營業外"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_602
+  key: is_s1a_oth_9m26
+  group: A
+  metric: "2026 前九月其他收入（費用）淨額合計"
+  value: -102.362
+  lo: null
+  hi: null
+  unit: "$B/9 個月"
+  period: '2026-01–2026-09'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁：利息收入 2,359、公允價值變動 (94,324)、其他 (10,397)（期中未經查核）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 營業外"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_603
+  key: is_s1a_tax_2023
+  group: A
+  metric: "2023 年所得稅費用"
+  value: 0.002
+  lo: null
+  hi: null
+  unit: "$B/年"
+  period: '2023'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 所得稅（費用為正）"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_604
+  key: is_s1a_tax_2024
+  group: A
+  metric: "2024 年所得稅費用"
+  value: 0.001
+  lo: null
+  hi: null
+  unit: "$B/年"
+  period: '2024'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 所得稅（費用為正）"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_605
+  key: is_s1a_tax_2025
+  group: A
+  metric: "2025 年所得稅費用"
+  value: 0.02
+  lo: null
+  hi: null
+  unit: "$B/年"
+  period: '2025'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁；F-55–F-56 稅率調節表"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 所得稅（費用為正）"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_606
+  key: is_s1a_tax_9m26
+  group: A
+  metric: "2026 前九月所得稅費用"
+  value: 0.417
+  lo: null
+  hi: null
+  unit: "$B/9 個月"
+  period: '2026-01–2026-09'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁（期中未經查核）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 所得稅（費用為正）"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_607
+  key: is_s1a_ni_2023
+  group: A
+  metric: "2023 年淨損（負＝虧損）"
+  value: -1.531
+  lo: null
+  hi: null
+  unit: "$B/年"
+  period: '2023'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 淨損"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_608
+  key: is_s1a_ni_2024
+  group: A
+  metric: "2024 年淨損（負＝虧損）"
+  value: -8.309
+  lo: null
+  hi: null
+  unit: "$B/年"
+  period: '2024'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 淨損"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_609
+  key: is_s1a_ni_2025
+  group: A
+  metric: "2025 年淨損（負＝虧損）"
+  value: -41.965
+  lo: null
+  hi: null
+  unit: "$B/年"
+  period: '2025'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁（含可轉債等公允價值變動 34.3）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 淨損"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_610
+  key: is_s1a_ni_9m26
+  group: A
+  metric: "2026 前九月淨損（負＝虧損）"
+  value: -104.039
+  lo: null
+  hi: null
+  unit: "$B/9 個月"
+  period: '2026-01–2026-09'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁（含公允價值變動 94.3；期中未經查核）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 淨損"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_611
+  key: is_s1a_eps_2023
+  group: A
+  metric: "2023 年每股淨損（基本＝稀釋）"
+  value: -1.42
+  lo: null
+  hi: null
+  unit: "$/股"
+  period: '2023'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 每股淨損（虧損年度基本＝稀釋）"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_612
+  key: is_s1a_eps_2024
+  group: A
+  metric: "2024 年每股淨損（基本＝稀釋）"
+  value: -5.43
+  lo: null
+  hi: null
+  unit: "$/股"
+  period: '2024'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 每股淨損（虧損年度基本＝稀釋）"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_613
+  key: is_s1a_eps_2025
+  group: A
+  metric: "2025 年每股淨損（基本＝稀釋）"
+  value: -23.04
+  lo: null
+  hi: null
+  unit: "$/股"
+  period: '2025'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 每股淨損（虧損年度基本＝稀釋）"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_614
+  key: is_s1a_eps_9m26
+  group: A
+  metric: "2026 前九月每股淨損（基本＝稀釋）"
+  value: -50.1
+  lo: null
+  hi: null
+  unit: "$/股"
+  period: '2026-01–2026-09'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁（期中未經查核）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 每股淨損（虧損年度基本＝稀釋）"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_615
+  key: is_s1a_wsh_2023
+  group: A
+  metric: "2023 年加權平均股數（基本＝稀釋；特別股轉換前）"
+  value: 1076.88051
+  lo: null
+  hi: null
+  unit: "百萬股"
+  period: '2023'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP EPS 分母"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_616
+  key: is_s1a_wsh_2024
+  group: A
+  metric: "2024 年加權平均股數（基本＝稀釋；特別股轉換前）"
+  value: 1528.99454
+  lo: null
+  hi: null
+  unit: "百萬股"
+  period: '2024'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP EPS 分母"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_617
+  key: is_s1a_wsh_2025
+  group: A
+  metric: "2025 年加權平均股數（基本＝稀釋；特別股轉換前）"
+  value: 1821.08486
+  lo: null
+  hi: null
+  unit: "百萬股"
+  period: '2025'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP EPS 分母"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_618
+  key: is_s1a_wsh_9m26
+  group: A
+  metric: "2026 前九月加權平均股數（基本＝稀釋；特別股轉換前）"
+  value: 2076.810122
+  lo: null
+  hi: null
+  unit: "百萬股"
+  period: '2026-01–2026-09'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁（期中未經查核）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP EPS 分母"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_619
+  key: is_s1a_int_9m26
+  group: A
+  metric: "2026 前九月利息收入"
+  value: 2.359
+  lo: null
+  hi: null
+  unit: "$B/9 個月"
+  period: '2026-01–2026-09'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 24 頁（期中未經查核）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "GAAP 營業外：利息收入"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_620
+  key: is_s1a_cash_0930
+  group: A
+  metric: "現金、約當現金與短期投資（2026-09-30，實際）"
+  value: 131.845
+  lo: null
+  hi: null
+  unit: "$B"
+  period: '2026-09-30'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；第 26 頁資產負債表摘要（實際欄）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "資產負債表"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_621
+  key: tax_s1a_nol_fed_2025
+  group: A
+  metric: "美國聯邦淨營業虧損遞延扣抵（NOL；不會到期）"
+  value: 8.2
+  lo: null
+  hi: null
+  unit: "$B"
+  period: '2025-12-31'
+  source: "Anthropic, PBC Form S-1/A（Amendment No. 1，2026-11-02，accession 0001628280-26-068676）；F-56 所得稅附註"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
+  doc_date: '2026-11-02'
+  retrieved: '2026-11-14'
+  tag: Verified
+  party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
+  basis: "稅務屬性"
+  note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
 not_found:
 - item: 2024 年認列營收（直接揭露值）
   tried: Reuters／Fortune／PYMNTS／Khaleej Times 招股書報導；查詢 "Anthropic 2024 revenue prospectus"

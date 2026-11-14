@@ -631,13 +631,67 @@ def test_v020_val_identities(eng):
 
 
 def test_v020_val_not_fed_back(wb):
-    """Val 只被 Checks 引用（不回饋計算頁）。"""
+    """Val 只被 Checks、PL 與 RevDCF（v0.2.1，只列示）引用（不回饋計算頁）。"""
     bad = []
     for ws in wb.worksheets:
-        if ws.title in ("Val", "Checks"):
+        if ws.title in ("Val", "Checks", "PL", "RevDCF"):
             continue
         for row in ws.iter_rows():
             for c in row:
                 if isinstance(c.value, str) and c.value.startswith("=") and re.search(r"\bVal!|\bVAL_", c.value):
                     bad.append(f"{ws.title}!{c.coordinate}")
     assert not bad, bad[:10]
+
+
+def test_v021_pl_not_fed_back(wb):
+    """v0.2.1 PL（標準損益表）與 RevDCF（反向 DCF）只列示：不被任何其他工作表引用。"""
+    bad = []
+    for ws in wb.worksheets:
+        if ws.title in ("PL", "RevDCF"):
+            continue
+        for row in ws.iter_rows():
+            for c in row:
+                if isinstance(c.value, str) and c.value.startswith("=") and re.search(r"\bPL!|\bPL_|\bRevDCF!|\bRVD_", c.value):
+                    bad.append(f"{ws.title}!{c.coordinate}")
+    assert not bad, bad[:10]
+
+
+def test_v021_revdcf_checks_zero():
+    """v0.2.1 RevDCF：各段核對列＝0（二分法容差 1e-6）。"""
+    import openpyxl
+    from engine import current_model_path
+    wb_ = openpyxl.load_workbook(current_model_path(), data_only=True)
+    for n in ("RVD_WACCChk", "RVD_ScaleChk", "RVD_ScaleChk0", "RVD_TermChk", "RVD_CompChk"):
+        s, c = wb_.defined_names[n].attr_text.split("!")
+        v = wb_[s][c.replace("$", "")].value
+        assert abs(v) < 1e-6, (n, v)
+
+
+def test_v022_coord_not_fed_back(wb):
+    """v0.2.2 Coord（三層協調）只列示：除本頁與 Checks 外，任何公式不得引用 Coord! 或 COORD_ 名稱。"""
+    assert "Coord" in wb.sheetnames
+    bad = []
+    for ws in wb.worksheets:
+        if ws.title in ("Coord", "Checks"):
+            continue
+        for row in ws.iter_rows():
+            for c in row:
+                if isinstance(c.value, str) and c.value.startswith("=") and re.search(r"\bCoord!|\bCOORD_", c.value):
+                    bad.append(f"{ws.title}!{c.coordinate}")
+    assert not bad, bad[:10]
+
+
+def test_v022_coord_c0_judgement():
+    """v0.2.2 Coord：C0 營收兩讀數為數值；判定與門檻一致（只有一個超過門檻→時差邊界；兩個同號都超過→對帳中）。"""
+    import openpyxl
+    from engine import current_model_path
+    wb_ = openpyxl.load_workbook(current_model_path(), data_only=True)
+    g = wb_["Coord"]
+    s, c = wb_.defined_names["COORD_C0"].attr_text.split("!")
+    row = list(wb_[s][c.replace("$", "").split(":")[0] + ":" + c.replace("$", "").split(":")[1]])[0]
+    e, h, j = row[4].value, row[7].value, row[8].value
+    th = g["C7"].value
+    assert isinstance(e, (int, float)) and isinstance(h, (int, float))
+    both = abs(e) > th and abs(h) > th and e * h > 0
+    one = (abs(e) > th) != (abs(h) > th) or (abs(e) > th and abs(h) > th and e * h < 0)
+    assert j == ("對帳中" if both else "時差邊界（參考）" if one else "一致"), (e, h, j)
