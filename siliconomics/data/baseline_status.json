@@ -138,10 +138,17 @@
   }
  ],
  "hardware_companies": [
-  "nvidia"
+  "nvidia",
+  "avgo"
  ],
  "depends_on_years": {
   "nvidia": [
+   "2026",
+   "2027",
+   "2028",
+   "2029"
+  ],
+  "avgo": [
    "2026",
    "2027",
    "2028",

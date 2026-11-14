@@ -76,6 +76,18 @@ def scen_note(s, yy, val):
 WTA = dict(zip((2026, 2027, 2028, 2029), NAMES.get("SIF_WTAnchor_Base") or (1, 1, 1, 1)))
 WTA_SRC = f"Siliconomics {VERSION} SIF_WTAnchor_Base（R4 比值 Wattonomics ÷ 本庫；Recon B 節）"
 
+# ---- v0.19：三層基準協調 C4 兩讀數（tools/coord/）。對帳中旗標、另一側讀數比值（另一側 ÷ 現行基準），2026–2029 ----
+RECO_YEARS = (2026, 2027, 2028, 2029)
+RECO_FLAG = {y: NAMES.get(f"SIF_RecoFlag_{y}") for y in RECO_YEARS}
+ALT_RATIO = {y: NAMES.get(f"SIF_DeployGW_AltRatio_{y}") for y in RECO_YEARS}
+# 環境變數 SIL_COORD_ALT＝1：另一側讀數整本重建（tools/coord/alt_run.py）。各模型既有「Wattonomics 錨定」的 wta 列改放另一側讀數比值
+# （只在對帳中年份；其他年份＝1），主引擎情境 B、C 於 CY2027 起產業量 × wta（情境 A＝供給側讀數，不縮放；規則 v1.4 C4、J5）。
+COORD_ALT = os.environ.get("SIL_COORD_ALT") == "1"
+if COORD_ALT:
+    assert all(v is not None for v in ALT_RATIO.values()), "快照沒有 SIF_DeployGW_AltRatio_<年>（需 Siliconomics v0.19 以後）"
+    WTA = {y: (ALT_RATIO[y] if RECO_FLAG[y] == 1 else 1) for y in RECO_YEARS}
+    WTA_SRC = f"Siliconomics {VERSION} SIF_DeployGW_AltRatio_<年>（另一側讀數建置；只在對帳中年份）"
+
 
 def wta_rows(inp, pre="wta"):
     """在 In 頁加三列 wta_27／wta_28／wta_29（Derived）。inp＝建檔程式的 9 欄 inp 函式。"""
