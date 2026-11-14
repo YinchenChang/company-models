@@ -252,10 +252,16 @@ inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新�
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 股數 sh_v)", "與 WACC 權重同一口徑")
 
 r = 4; INROW = {}
+# NP_OVERRIDE（v0.3.5 起；敏感度快照用，nanya_pcb/sens_nanya_pcb.py；「鍵=值;…」，值 @lo／@hi＝In 頁低／高欄；正式建置不設）
+OVR = dict(kv.split("=", 1) for kv in os.environ.get("NP_OVERRIDE", "").split(";") if "=" in kv)
 for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    if key in OVR:   # v0.3.5：敏感度快照用覆寫（nanya_pcb/sens_nanya_pcb.py；正式建置不設 NP_OVERRIDE）
+        ov = OVR[key]
+        base = {"@lo": lo, "@hi": hi}[ov] if ov.startswith("@") else float(ov)
+        assert base is not None, (key, ov)
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
         if v is not None:
@@ -333,6 +339,8 @@ DEFP = dict(scn="A", ga="g_asp", pp="ibpp_{y}", vot="v_ot", shnv="sh_nv_{y}", sh
             cx="cx{y}", life="life", phi="phi", nonop="nonop{y}", tax="tax", mf="1", fg="fade_g{s}", fm="fade_m{s}")
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["mf"] == "1" and s != "A":   # v0.3.5 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 產業量 × wta（＝另一側讀數比值）；情境 A 不縮放
+        P["mf"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     p = lambda k, y=None: P[k].format(y=(y % 100 if y else ""), s=s)
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -988,6 +996,67 @@ _t634 = ('v0.3.4（2026-11-10）：滾入 3Q26 財報實績（營收 163.78 億�
          'FY2026 EPS 17.82 → 17.20、加權目標價 949.86 → 926.10、上檔空間 −2.3% → −4.7%，投資建議 中立 → 中立（v0.3.3 成品對 v0.3.4 成品）')
 RD.cell(RD.max_row + 1, 1, _t634)
 RD["A1"] = RD["A1"].value + "；v0.3.4（2026-11-10）：滾入 3Q26 財報實績、稅率改最近四季實績"
+# ---------------- v0.3.5（2026-11-15）：三層協調 C4 兩讀數（tools/coord/；快照 nanya_pcb/coord_alt.json）＋個股 HTML 版面規格 v1.3＋C0（實績）（v035_post.py；只新增頁與列，既有數值格不變）----------------
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    COORD.stamp(wb, "v0.3.4", "v0.3.5", "2026-11-15")
+    if not os.environ.get("NP_OVERRIDE") and not os.environ.get("NP_SNAP"):
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import v035_post  # noqa: E402
+
+        def _drv(P_, pb_):
+            g_ = lambda p_: f"PL!F{v035_post.lab(P_, p_, pb_)}"
+            T_, TX_ = v035_post.T, v035_post.TX
+            return (T_("分部營收推導（情境 B）：ABF 載板＝MIN（需求，產能）；需求＝加速器載板（顆數 × 每顆金額 × 份額 × 溢價 × 漲價年度化）＋交換器等其他 AI 載板（隨交換晶片與交換器市場成長）＋非 AI；"
+                       "BT 載板依情境別年增、一般電路板依成長率推算；三項相加為合併營收。FY2028 ABF 載板 "), TX_(g_("ABF 載板營收 ＝"), "0.0"), T_("、BT 載板 "), TX_(g_("BT 載板"), "0.0"),
+                    T_("、一般電路板 "), TX_(g_("PCB（一般電路板）"), "0.0"), T_("，合計 "), TX_(f"PL!F{v035_post.lab(P_, '營收', pb_, exact=True)}", "0.0"), T_(" 十億元。"))
+        _H = "公司 IFRS 合併綜合損益表（經 stockanalysis.com 年度損益表轉載，網址見 Sources 頁；百萬元換算十億元；FY2025 與 Q 頁既有值相符；MOPS 原文待人工複核）"
+        CO35 = dict(
+            ver="0.3.5", name="南電", cur="元", folder="nanya_pcb", sens_py="sens_nanya_pcb.py",
+            pl_a="情境 A（樂觀）：", pl_b="情境 B（基準）：", pl_ni="歸屬母公司淨利",
+            pl_gaap_extra="南電無重大非控制權益（各年稅前利益 − 所得稅 − 淨利 ≈ 0）。",
+            pl_tax_label="所得稅", pl_tax_note="實績＝所得稅費用；預測期＝稅前利益 − 歸屬母公司淨利（＝PL 情境 B 所得稅；FY2026E 含前三季實績）",
+            hist_src=_H,
+            hist=[("rev", "營收", [64.647, 42.253, 32.283, "=a25_rev"]), ("cogs", "營業成本", [38.779, 34.075, 31.926, 36.526]),
+                  ("gp", "毛利", [25.868, 8.177, 0.358, "=a25_gp"]), ("opx", "營業費用（推銷、管理）", [2.293, 1.872, 1.624, "=a25_opx"]),
+                  ("oi", "營業利益", [23.574, 6.305, -1.267, "=a25_oi"]), ("pti", "稅前利益", [25.362, 7.107, 0.163, 2.346]),
+                  ("tax", "所得稅費用（FY2024 為利益）", [5.946, 1.290, -0.041, 0.399]), ("nci", "非控制權益損益（無）", [0, 0, 0, 0]),
+                  ("ni", "稅後淨利（歸屬母公司）", [19.416, 5.817, 0.204, "=a25_ni"]), ("eps", "EPS 基本（元）", [30.05, 9.00, 0.32, "=a25_eps"]),
+                  ("epsd", "EPS 稀釋（元）", [30.04, 9.00, 0.32, 3.01])],
+            hist_sh=[0.646, 0.646, 0.646, None],
+            sil_reads=[*[(f"sh_nv_{y}", f"南電占 NVIDIA 加速器載板 20{y}", f"abf_np_nv_{y}") for y in (26, 27, 28, 29)],
+                       *[(f"sh_ot_{y}", f"南電占非 NVIDIA 加速器載板（金額）20{y}", f"abf_np_ot_{y}") for y in (26, 27, 28, 29)],
+                       *[(f"cap_{y}", f"南電 ABF 產能指數 20{y}", f"abfcap_np_{y}") for y in (27, 28, 29)],
+                       ("v_ot", "非 NVIDIA 加速器每顆載板金額 ÷ NVIDIA", "abf_vot"), ("ib_sh26", "Ibiden 占 NVIDIA 加速器載板 2026", "abf_ibsh26"), ("fx", "匯率（新台幣 ÷ 美元）", "fx_twd")],
+            sil_use="PL 引擎 A、B 節（份額、產能、每顆金額、匯率）",
+            peer_reads=[("v26", "FY2026 每顆 NVIDIA 加速器載板金額（US$）", "ibiden/dist Units 頁（Ibiden 模型權威）"), ("g_asp", "每顆載板金額年增", "ibiden/dist In 頁 g_asp"),
+                        *[(f"ibpp_{y}", f"ABF 價格溢價指數 20{y}", f"ibiden/dist In 頁 pp_{y}") for y in (27, 28, 29)],
+                        *[(f"un_nv_{y}", f"欣興占 NVIDIA 加速器載板 20{y}（份額合計檢查用）", "unimicron/dist In 頁") for y in (26, 27, 28, 29)],
+                        *[(f"swm_{y}", f"交換晶片與交換器市場 20{y}（US$B）", "markets/network/dist Mkt 頁") for y in (26, 27, 28, 29)]],
+            c0_nocomp_note="無可比層級量的項目：南電 ABF、AI 載板營收（層級 abfrev_np26 由本模型推得，見本頁 4. C0（實績））；交換器市場 swm_* 與 AI IT 資本支出 itc_*（唯讀 markets/network，Siliconomics 無獨立對應值）。",
+            act=dict(cum=47.420, q3="=q3_rev", sil_key="abfrev_np26", sil_fx=32.5,
+                     sil_note="南電模型 Q!G19：FY2026 ABF 營收 NT$34.3B ÷ 32.5（2026-10-27 dist）",
+                     cum_src="TechNews 財報助手 2026-11-03：10 月合併營收 62.89 億元（月增 12.6%、年增 69.7%）、前 10 月累計 474.20 億元（年增 45.0%；網址見 Sources 頁）；"
+                             "驗算：前 9 月 411.31 億（TechNews 2026-10-03）＋ 10 月 62.89 億 ＝ 474.20 億",
+                     q3_src="In 頁 q3_rev（連格）：163.78 億元，公開資訊觀測站 115 年第三季財報（經富邦證券 e 點通季表，2026-11-10 讀取）；月營收加總 163.79 億（前 9 月 411.31 − 1H26 247.52）相符",
+                     sh_src="凱基 PCB 產業報告 2026-07-20：1Q26 ABF 約 55–60%（In 頁 mx_abf 來源，Interested-party）；也是 Siliconomics abfrev_np26 推導用的占比（同源）",
+                     scope_note="同口徑對象是合併營收（ABF、BT 載板與一般電路板）；ABF 或加速器載板單獨營收：無可比實績（公司未揭露產品別金額，占比多為法人估計；占比 × 營收屬 Assumed）。",
+                     concl="層級值 abfrev_np26 由本模型 FY2026 ABF 營收（FY2026 營收錨點 × ABF 占比 58%）÷ 32.5 推得，換算回合併營收時 ABF 占比與匯率往返消去，本表等於「實績 vs 本模型 FY2026 營收錨點」，"
+                           "不檢驗 Siliconomics 的獨立估計；缺 ABF／加速器載板單獨營收揭露。對帳中 0，不開對帳單",
+                     read="讀法：公司實績是月營收與季報原文、本身獨立；層級值 abfrev_np26 由本模型 FY2026 ABF 營收推得（南電份額 abf_np_* 也來自本模型），本表換算回合併營收時 ABF 占比與匯率消去，只剩「實績 vs 本模型錨點」（層級值四捨五入到 1.06 US$B，與錨點差約 0.4%）；"
+                          "錨點本身含 1–3Q26 實績，所以主讀數差距主要反映 4Q26 假設與線性時差，不是層級檢驗。判定標參考（同源校準），C0（實績）結論為無可比實績（層級值同源）。"),
+            sens_o3=("ABF 價格溢價路徑", "南電加速器載板份額"), sens_o3_txt=("ABF 價格溢價快速回落／延續 ", "加速器載板份額流失／提升 "),
+            drv_parts=_drv,
+            ver_line="v0.3.5（2026-11-15）：個股 HTML 版面規格 v1.3（樣板 NVIDIA、Ibiden、欣興）、三層協調兩讀數（tools/coord）與 C0（實績）。新增 Hist 頁（損益表歷史 FY2022–FY2025）、RevDCF 頁（反向 DCF）、PL 頁末標準損益表（FY2023A–FY2025A 實績＋FY2026E–FY2030E 情境 B，GAAP）、"
+                     "Val 頁末 0.7 四個目標價、Sens 頁末加權目標價相對基準（業務主因整本重算快照）、Coord 頁（兩讀數、讀取層級、C0（實績）：2026 年 1–10 月營收與 3Q26 營收 vs Siliconomics 南電 ABF 營收換算值；層級值同源，無可比實績）、README 頁末 v1.3 白話列。"
+                     "既有數值格不變，加權目標價與評等不變",
+            a1_old="收支與估值模型 v0.1.1（AI 半導體 Project", a1_oldver="v0.1.1",
+            pl_b_title='="情境 B（基準）：tsmc 顆數係數 B（CY2028 ×"&TEXT(um28_B,"0.00")&"、CY2029 ×"&TEXT(um29_B,"0.00")&"；讀 Siliconomics 基準係數）；BT 年增 25%／5%／3%"',
+            sources=[("公司（C0 實績）：TechNews 財報助手 2026-11-03（10 月營收 62.89 億、前 10 月累計 474.20 億）", "https://finance.technews.tw/2026/11/03/n-p-c-8046-202610-financial-report/"),
+                     ("Hist 頁：stockanalysis.com 年度損益表（FY2022–FY2025，公司財報轉載）", "https://stockanalysis.com/quote/tpe/8046/financials/income-statement/")])
+        print(v035_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR, CO35))
 wb.save(sys.argv[1])
 if os.environ.get("NANYA_PCB_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
