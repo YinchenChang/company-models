@@ -312,8 +312,13 @@ def fymkt(base, y, s, mf, wta=None):
     f = f"(w8*{nm_(a)}*{umx(a, s)}{wx(a)}+(1-w8)*{nm_(b)}*{umx(b, s)}{wx(b)})"
     return f"={f}" + ("" if y == 2027 or mf == "1" else f"*{mf}")
 DEFP = dict(scn="A", rela="rel_a", relo="rel_o", gm="gm", tx="tx", mf="1", gn="g_oth", opxa="0", phi="phi", wta=None)
+if os.environ.get("CRDO_P"):   # v0.3.6：敏感度整本重算（crdo/sens_crdo.py）：三情境主引擎一律套用案例覆寫（正式建置不設此變數）
+    import json as _json_sens
+    DEFP.update(_json_sens.loads(os.environ["CRDO_P"]))
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["wta"] is None and s != "A":   # v0.3.6 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 於 FY2028 起各日曆年成分（CY2027 起）的 AI 銅纜與光模組市場 × wta（＝另一側讀數比值）；情境 A 不縮放
+        P["wta"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
     hdr(ws, r, ["項目", "單位", "FY2025A", "FY2026A", "FY2027（錨點）", "FY2028", "FY2029", "說明"]); r += 1
@@ -1130,6 +1135,14 @@ for _k, _c in enumerate(_old5):   # 第 22 點：舊版撰寫、帶舊版數字�
 # px1105（2026-11-06）：情境名稱改回樂觀／基準／保守、舊版沿革列固定文字（本資料夾 px1105_post.py）
 import px1105_post  # noqa: E402
 print(px1105_post.apply(wb, a1_append="；v0.3.5：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"))
+# v0.3.6（2026-11-15）：三層協調 C4 兩讀數（tools/coord/；快照 crdo/coord_alt.json）＋個股 HTML 版面 v1.3 與 C0（實績）（本資料夾 v036_post.py；只新增頁與列，既有數值格不變）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = None if os.environ.get("CRDO_SENS") == "1" else COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    COORD.stamp(wb, "v0.3.5", "v0.3.6", "2026-11-15")
+    import v036_post  # noqa: E402
+    print(v036_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR))
 wb.save(sys.argv[1])
 if os.environ.get("CRDO_NOOP"): pass
 if os.environ.get("CRDO_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
