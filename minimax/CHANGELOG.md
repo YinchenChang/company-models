@@ -2,6 +2,13 @@
 
 每次同步記錄：版本、工作包、commit／PR 與變動摘要。
 
+## v0.2.2 — 版面 v1.3＋三層協調（讀取層級、C0 實績）（2026-11-15；工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`）
+- 新頁 `PL`（只列示）：標準損益表 FY2023–FY2030，非 IFRS 經調整口徑；FY2023–FY2025 取招股書與 FY2025 年度業績公告（SRC_MM 新增 S114–S141 共 28 筆一手歷史列），FY2026 起引用 PnL；所得稅歷史由 IFRS 各項推得為 0；EPS 預測＝經調整淨利 ÷（S051 ×（1＋F14）），歷史非 IFRS 每股未揭露。核對列合計 0。
+- 新頁 `Coord`（只列示）：讀取層級（Tokenomics 快照 v19.0；Wattonomics 不讀、亦不讀本模型；Siliconomics 不適用）；C0（實績）四列（1H2026 營收 116.6、資本支出 322.3、算力 MW 未揭露、阿里雲上限 300）皆「無可比實績（層級無此玩家）」——Wattonomics v0.3.2 玩家名單無 MiniMax（中國只有合計 cn）。對帳中 0。具名範圍 COORD_C0、COORD_C0Sum、COORD_C0Verdict、PL_*。
+- 新個股模型頁 `build_html_v13.py`（版面 v1.3；本模型無目標價，估值章標「不適用」並帶 `data-unlisted` 以沿用規格 J 節豁免）＋驗收 `scripts/check_html_v13.py`（每個 data-ref 數字對 xlsx）；`build_all.sh` 加入兩步（缺 bs4 時略過）。收支模型頁版本改讀 xlsx。
+- 不變性：`tools/xlsx_diff.py` 對 v0.2.1 只差 README A1 版本字串與新增格（README A34–A37、SRC_MM S114–S141、PL、Coord）；Sensitivity 31 案逐格相同。
+- 成品 `dist/20261115_MiniMax收支模型_v0_2_2.xlsx／.html`、`dist/20261115_MiniMax個股模型_v0_2_2.html`；v0.2.1 移 `dist/_待刪除/`。
+
 ## v0.2.1 — 只換現價（2026-11-06；報告 `docs/reports/20261106_minimax_v0.2.1_現價更新.md`）
 - Andy 2026-11-06 07:32「請所有個股都換成十一月五號的收盤價」：SRC_MM 新增 S113（2026-11-05 收盤 HK$170.2，Verified；Yahoo Finance、StockAnalysis 兩來源一致）；Valuation V01／V02 改讀 S113（v0.2 為 S078 10-21 推算 171.9，S078 標【已更新，見 S113】）。
 - 影響只在市值相關列：市值 7,716 → 7,640 $M；V13 折現價值 ÷ 目前市值（2030）0.882 → 0.888；V14 支持現價所需 2030 營收 2,207 → 2,192 $M；Funding 新股稀釋比例（F14，依現價發行）小幅上升；Sensitivity J 欄 31 案同步。營收、成本、MW、回本比值不變。
