@@ -21,7 +21,8 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 import relative_multiple as RM  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VER, VDATE = "v0.2.13", "2026-11-14"   # 每次升版改這裡（v0.2.13：七家版面 v1.3＋三層協調合併；加另一側讀數欄；Comparable 欄標明未調整）
+VER, VDATE = "v0.2.14", "2026-11-15"   # 每次升版改這裡（v0.2.14：第二批與其餘個股 v1.3＋兩讀數＋C0 合併後重產；Coord 現行欄核對；無對帳中年份與無 Coord 頁寫明原因）
+# v0.2.13：七家版面 v1.3＋三層協調合併；加另一側讀數欄；Comparable 欄標明未調整
 BOLD = Font(bold=True)
 HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -81,8 +82,20 @@ def read_model(folder):
                     alt[k] = r[2]
             if "yrs" not in alt and a.startswith("對帳中年份") and r[1]:
                 alt["yrs"] = str(r[1])
+            # v0.2.14：現行基準讀數欄（B）——核對與 Val 頁加權目標價一致；「是否有估值依賴的對帳中年份」
+            if "tp_cur" not in alt and a.startswith("加權目標價") and isinstance(r[1], (int, float)):
+                alt["tp_cur"] = r[1]
+            if "dep" not in alt and a.startswith("是否有估值依賴的對帳中年份") and r[1]:
+                alt["dep"] = str(r[1])
         if {"tp", "up", "rec"} <= set(alt):
+            if "yrs" not in alt:   # 例：Cerebras——Coord 頁有兩讀數但不讀 Siliconomics 產業部署 GW，兩讀數相同
+                alt["yrs"] = ("無估值依賴的對帳中年份（Coord 頁「是否有估值依賴的對帳中年份」＝否；本模型不讀 Siliconomics 產業部署 GW，"
+                              "另一側讀數無傳導、同現行）" if alt.get("dep") == "否" else "Coord 頁無「對帳中年份」列")
             out["alt"] = alt
+        else:
+            out["alt_why"] = "Coord 頁讀不到另一側讀數的加權目標價、上檔空間、投資建議三列（標籤不符）"
+    else:
+        out["alt_why"] = f"無 Coord 頁（{out['file']}：尚未升版面 v1.3／三層協調兩讀數）"
     return out
 
 
@@ -119,6 +132,9 @@ def main():
     rows = []
     for u in U:
         m = read_model(u["folder"])
+        al = m.get("alt")
+        if al and "tp_cur" in al:   # v0.2.14 核對：Coord 現行基準讀數＝Val 頁加權目標價
+            assert abs(al["tp_cur"] / m["tp"] - 1) < 1e-9, (u["公司"], al["tp_cur"], m["tp"])
         px = m["tp"] / (1 + m["up"])
         g = m.get("geps")
         tp_c = m["tp"] / (1 + g) if isinstance(g, (int, float)) else None
@@ -156,7 +172,7 @@ def main():
                 r.get("geps"), r["tp_c"], r["up_c"], rec(r["up_c"]), ("是" if rec(r["up_c"]) == rr else "否") if r["up_c"] is not None else "無資料",
                 r["obs"].get(1), r["obs"].get(2), r["obs"].get(3), r["file"]]
         al = r.get("alt")
-        vals += ([al["tp"], al["up"], al["rec"], "是" if al["rec"] == rr else "否", al.get("yrs")] if al else [None, None, None, None, "無對帳中年份"])
+        vals += ([al["tp"], al["up"], al["rec"], "是" if al["rec"] == rr else "否", al.get("yrs")] if al else [None, None, None, "無資料", r.get("alt_why", "無對帳中年份")])
         for j, v in enumerate(vals, 1):
             c = ws.cell(i, j, v)
             if j in (6, 7, 8, 9, 10, 24):
@@ -364,6 +380,8 @@ def main():
         "相對倍數調整（2026-10-29 起已進目標價）：見該頁第 2 列。資料檔 tools/data/fwd_mult_hist.csv（Bloomberg 前瞻倍數年度窗口中位數；10-27 落後代理 rel_mult_hist.csv 保留對照）、規則 tools/relative_multiple.py。",
         "Comparable 目標價欄（v0.2.13 改名）：市場主流同業法的未調整值；進加權目標價的是相對倍數調整後的值（見「相對倍數調整」頁），故加權目標價不等於本欄與 DCF 的簡單平均。",
         "另一側讀數（v0.2.13 新增，AF–AJ 欄）：三層基準協調規則 C4——估值依賴 Siliconomics「對帳中」年份的硬體股，並列只換產業部署 GW（Wattonomics 換算值）的另一側讀數目標價；取自各模型 Coord 頁，主欄（加權目標價、投資建議）仍為現行基準讀數。無 Coord 頁者在對帳中年份欄（AJ）標「無對帳中年份」。",
+        "v0.2.14：第二批與其餘個股（版面 v1.3＋兩讀數＋C0）合併後重產，凡有 Coord 頁兩讀數的公司都填 AF–AJ；讀不到者在 AJ 欄寫明原因（無 Coord 頁＝模型尚未升版面 v1.3；"
+        "Coord 頁「是否有估值依賴的對帳中年份」＝否者，兩讀數相同、AJ 欄註明）。產生時核對 Coord 頁現行基準讀數加權目標價＝Val 頁加權目標價（不符即中止）。",
         "投資建議固定規則（Andy 2026-10-25 14:17）：> +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、< −50% 強力放空。",
     ], 1):
         ex.cell(k, 1, t)
