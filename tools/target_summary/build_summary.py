@@ -156,7 +156,7 @@ def main():
                 r.get("geps"), r["tp_c"], r["up_c"], rec(r["up_c"]), ("是" if rec(r["up_c"]) == rr else "否") if r["up_c"] is not None else "無資料",
                 r["obs"].get(1), r["obs"].get(2), r["obs"].get(3), r["file"]]
         al = r.get("alt")
-        vals += ([al["tp"], al["up"], al["rec"], "是" if al["rec"] == rr else "否", al.get("yrs")] if al else [None, None, "無對帳中年份", None, None])
+        vals += ([al["tp"], al["up"], al["rec"], "是" if al["rec"] == rr else "否", al.get("yrs")] if al else [None, None, None, None, "無對帳中年份"])
         for j, v in enumerate(vals, 1):
             c = ws.cell(i, j, v)
             if j in (6, 7, 8, 9, 10, 24):
@@ -363,7 +363,7 @@ def main():
         "市場別分布（新增）：各市場評等分布與買進率；台股另依次產業拆分。",
         "相對倍數調整（2026-10-29 起已進目標價）：見該頁第 2 列。資料檔 tools/data/fwd_mult_hist.csv（Bloomberg 前瞻倍數年度窗口中位數；10-27 落後代理 rel_mult_hist.csv 保留對照）、規則 tools/relative_multiple.py。",
         "Comparable 目標價欄（v0.2.13 改名）：市場主流同業法的未調整值；進加權目標價的是相對倍數調整後的值（見「相對倍數調整」頁），故加權目標價不等於本欄與 DCF 的簡單平均。",
-        "另一側讀數（v0.2.13 新增，AF–AJ 欄）：三層基準協調規則 C4——估值依賴 Siliconomics「對帳中」年份的硬體股，並列只換產業部署 GW（Wattonomics 換算值）的另一側讀數目標價；取自各模型 Coord 頁，主欄（加權目標價、投資建議）仍為現行基準讀數。無 Coord 頁者標「無對帳中年份」。",
+        "另一側讀數（v0.2.13 新增，AF–AJ 欄）：三層基準協調規則 C4——估值依賴 Siliconomics「對帳中」年份的硬體股，並列只換產業部署 GW（Wattonomics 換算值）的另一側讀數目標價；取自各模型 Coord 頁，主欄（加權目標價、投資建議）仍為現行基準讀數。無 Coord 頁者在對帳中年份欄（AJ）標「無對帳中年份」。",
         "投資建議固定規則（Andy 2026-10-25 14:17）：> +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、< −50% 強力放空。",
     ], 1):
         ex.cell(k, 1, t)
