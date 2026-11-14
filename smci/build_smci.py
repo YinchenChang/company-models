@@ -226,10 +226,14 @@ inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新�
 TP_KEYS += ["tp_g", "tp_w_dcf", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fade_mB", "fade_mC"]
 
 r = 4; INROW = {}
+_OVR = dict(kv.split("=") for kv in os.environ.get("SMCI_OVR", "").split(";") if kv)   # v0.3.7：敏感度快照（smci/sens_smci.py）以環境變數 SMCI_OVR 把 In 輸入基準欄改為敏感度低／高值；正式建置不設
 for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    if key in _OVR:   # lo／hi＝In 頁敏感度低／高欄；x0.8＝基準 × 0.8
+        base = {"lo": lo, "hi": hi}.get(_OVR[key]) if _OVR[key] in ("lo", "hi") else base * float(_OVR[key].lstrip("x"))
+        assert base is not None, (key, _OVR[key])
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
         if v is not None:
@@ -310,6 +314,8 @@ DEFP = dict(scn="A", vpg="vpg_{y}", mf="mf", gn="g_nai{y}", gmn="gm_nai", opxa="
 def engine(ws, r0, title, **over):
     s = over.get("scn", "A")
     P = dict(DEFP); P.update(SCN_P[s]); P.update(over)
+    if SIL.COORD_ALT and P["mf"] == "mf" and s != "A":   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 的商用 GPU 顆數 CY2027 起 × wta（＝另一側讀數比值；會計年度市場各取半）；情境 A 不縮放
+        P["mf"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     p = lambda k, y=None: P[k].format(y=(y % 100 if y else ""), s=s)
     um = lambda y: {2026: "", 2027: "", 2028: f"*um28_{s}", 2029: f"*um29_{s}"}[y]
     ws.cell(r0, 1, title).font = BOLD
@@ -1052,6 +1058,17 @@ SE[f"G{_r6 + 2}"] = f"=Val!$B${T['tpw']}"; SE[f"G{_r6 + 2}"].number_format = "#,
 SE.cell(_r6 + 2, 8, "sh_v")
 SE.cell(_r6 + 3, 1, "讀法：v0.3.6 起評價日股數含未既得 RSU 16.3 百萬股與選擇權庫藏股法淨股數（Q 頁 1Q FY27 10-Q）；原口徑股數較少，DCF 每股價值較高。可轉債轉換價高於現價，兩種口徑都視為債務。")
 
+# 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 smci/coord_alt.json）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, _HERE)
+_CR = COORD.add_sheet(wb, _HERE, SIL)
+if _CR:
+    COORD.stamp(wb, "v0.3.6", "v0.3.7", "2026-11-15")
+# v0.3.7（2026-11-15）：版面規格 v1.3（標準損益表、反向 DCF、四個目標價、敏感度主圖）＋三層協調 C0（實績）對帳（smci/v037_post.py；只新增，既有數值不變）
+import v037_post as POST  # noqa: E402
+print(POST.apply(wb, SIL, _HERE, _CR))
 wb.save(sys.argv[1])
 if os.environ.get("R4_NOOP"): pass
 if os.environ.get("SMCI_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
