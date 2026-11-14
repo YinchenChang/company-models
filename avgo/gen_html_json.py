@@ -209,7 +209,7 @@ def _v13():
     RD, PLW, RV, RCW, CW = wb["README"], wb["PL"], wb["RevDCF"], wb["Recon"], wb["Coord"]
     r13 = find("README", "v1.3 展示層")
     RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "coord", "ver"], range(r13 + 1, r13 + 11)))
-    assert str(RD[f"A{RM['ver']}"].value).startswith("v0.5.6"), RD[f"A{RM['ver']}"].value
+    assert str(RD[f"A{RM['ver']}"].value).startswith("v0.5.7"), RD[f"A{RM['ver']}"].value
     cfg["layout"] = "v1.3"
     old_note = list(cfg["hero"]["note"])
     cfg["hero"]["note"] = [f"@README!A{RM['hero']}"]
@@ -361,7 +361,7 @@ def _v13():
                {"type": "h3", "text": "會計年度"}, {"type": "note", "parts": [f"@README!A{find('README', '會計年度：')}"]}]
     S["revdcf"] = rev_
     # ---- 7. 對帳章：C0 由下往上對帳（Broadcom 自己的量對它讀的層級值）與層級之間參考 ----
-    c0r = next(r for r in range(1, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith("G. C0"))
+    c0r = next(r for r in range(1, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith("G. 讀取層級"))
     c0h = c0r + 1; c0e = c0h
     while CW.cell(c0e + 1, 1).value and not str(CW.cell(c0e + 1, 1).value).startswith("層級之間"): c0e += 1
     lr = next(r for r in range(c0e, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith("層級之間"))
@@ -370,13 +370,23 @@ def _v13():
     def _fm(r, c):
         nf = CW.cell(r, c).number_format
         return "p1" if "%" in nf else "n3" if nf == "0.000" else "n2" if nf == "#,##0.00" else "n1"
-    c0_tbl = {"type": "table", "caption": "由下往上對帳（只算 Broadcom 自己的量對它讀的層級值；差距超過門檻標「對帳中」，不改上游值）",
+    c0_tbl = {"type": "table", "caption": "讀取層級（同源，不判定）與推估錨點（參考）：個股讀入的層級值與層級值必然相同，不進實績對帳判定、不計對帳中",
               "head": ["項目", "本模型值", "層級對照值", "差距／殘差", "狀態", "說明"],
               "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|{_fm(r, 2)}", f"@Coord!C{r}|{_fm(r, 3)}", f"@Coord!D{r}|sp1", f"@Coord!E{r}", f"@Coord!I{r}"] for r in range(c0h + 1, c0e + 1)]}
     lay_tbl = {"type": "table", "caption": "層級之間（參考；Siliconomics 對帳單處理，不計入本公司對帳中項目）：產業部署 GW，Siliconomics 基準對另一側讀數",
                "head": ["項目", "Siliconomics 基準", "另一側讀數", "差距", "狀態"],
                "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|n2", f"@Coord!C{r}|n2", f"@Coord!D{r}|sp1", f"@Coord!E{r}"] for r in range(lh + 1, le + 1)]}
-    S["recon"]["blocks"][1:1] = [c0_tbl, lay_tbl]
+    # C0（實績）：公司 AI 半導體營收實績 vs 層級隱含值（Coord 頁 J 節；規則 v1.4.2 C0 第 2 點）
+    jr = next(r for r in range(1, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith("J. C0（實績）"))
+    jh = next(r for r in range(jr, CW.max_row + 1) if CW.cell(r, 1).value == "項目" and CW.cell(r, 2).value == "公司實績")
+    je = jh
+    while CW.cell(je + 1, 1).value: je += 1
+    c0a_tbl = {"type": "table", "caption": "實績對帳（對帳判定）：公司實績 vs 層級隱含值（AI 半導體營收；Broadcom 八-K 已公布期間對層級隱含的 XPU 由下而上加網通歸屬；兩讀數判定）",
+               "head": ["項目", "公司實績", "層級隱含", "差距", "判定", "說明"],
+               "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|n1" if CW.cell(r, 2).value is not None else "", f"@Coord!C{r}|n1" if CW.cell(r, 3).value is not None else "",
+                         f"@Coord!D{r}|sp1" if CW.cell(r, 4).value is not None else "", f"@Coord!E{r}", f"@Coord!I{r}"] for r in range(jh + 1, je + 1)]}
+    c0a_note = {"type": "note", "parts": [f"@Coord!A{jr + 1}"]}
+    S["recon"]["blocks"][1:1] = [c0a_note, c0a_tbl, c0_tbl, lay_tbl]
     cfg["sections"] = [S[k] for k in ["thesis", "valuation", "sens", "revdcf", "pl", "drivers", "recon", "status"]]
 
 
