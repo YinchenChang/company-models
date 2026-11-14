@@ -113,7 +113,7 @@ def pl_standard(wb):
                     "稅前與稅後排除權益證券損益（一次性、波動大）；股票薪酬照列為費用，與公司自 FY2027 起的 Non-GAAP 新口徑相近（EPS 每季差 "),
                    'TEXT(ABS(MAX(Q!B' + str(q_eps_chk) + ':I' + str(q_eps_chk) + ')),"0.00")', T("～"),
                    'TEXT(ABS(MIN(Q!B' + str(q_eps_chk) + ':I' + str(q_eps_chk) + ')),"0.00")',
-                   T(" 美元，Q 頁）。GAAP 合計列在本表下方對照。FY2024、FY2025 的稅後淨利＝（營業利益＋不含權益證券損益的其他收益）×（1 − GAAP 有效稅率）；FY2026 為 Q 頁四季合計（各季有效稅率）。")))
+                   T(" 美元，Q 頁）。FY2024–FY2026 與公司當年公告的 Non-GAAP EPS 不同：當年公司口徑排除股票薪酬，本表照列為費用。GAAP 合計列在本表下方對照。FY2024、FY2025 的稅後淨利＝（營業利益＋不含權益證券損益的其他收益）×（1 − GAAP 有效稅率）；FY2026 為 Q 頁四季合計（各季有效稅率）。")))
     r_note = r; r += 1
     P.cell(r, 1, "FY2027E＝錨點（第一、二季實績＋第三季指引＋第四季假設）；FY2028E–FY2030E＝情境 B 由下而上；FY2031E＝延伸期（收斂法只推營收與淨利率，營業利益＝淨利 ÷（1 − 稅率）− 其他收益，同 DCF 頁；不拆營業成本、毛利與營業費用，該三列留白）")
     r_note2 = r; r += 1
@@ -159,11 +159,11 @@ def pl_standard(wb):
     row("r_niy", "淨利年增率（YoY）", "%", [f"=C{L['ni']}/{ni23}-1"] + [f"={c}{L['ni']}/{p}{L['ni']}-1" for p, c in zip(COLS, COLS[1:])], PCT,
         "FY2024 的基期＝FY2023 同口徑淨利（Hist 頁）")
     P.cell(r, 1, "GAAP 對照（歷史；預測不估權益證券損益，故只列實績）").font = BOLD; r_gaap = r; r += 1
-    row("g_oth", "GAAP：其他收益淨額（含權益證券損益）", "US$B", ["=h_is_nonop_24", "=h_is_nonop_25", "=a26_oth+Q!F14"], M)
-    row("g_pti", "GAAP：稅前利益", "US$B", ["=h_is_pti_24", "=h_is_pti_25", "=Q!F18"], M)
-    row("g_tax", "GAAP：所得稅", "US$B", ["=h_is_tax_24", "=h_is_tax_25", "=Q!F17"], M)
-    row("g_ni", "GAAP：稅後淨利", "US$B", ["=h_is_ni_24", "=h_is_ni_25", "=Q!F23"], M)
-    row("g_eps", "GAAP：EPS（完全稀釋，公司公告）", "US$", ["=h_is_eps_24", "=h_is_eps_25", "=Q!F24"], "0.00")
+    row("g_oth", "GAAP：其他收益淨額（含權益證券損益）", "US$B", ["=h_is_nonop_24", "=h_is_nonop_25", "=h_is_nonop_26"], M, "10-K 年度值（Hist 頁）")
+    row("g_pti", "GAAP：稅前利益", "US$B", ["=h_is_pti_24", "=h_is_pti_25", "=h_is_pti_26"], M)
+    row("g_tax", "GAAP：所得稅", "US$B", ["=h_is_tax_24", "=h_is_tax_25", "=h_is_tax_26"], M)
+    row("g_ni", "GAAP：稅後淨利", "US$B", ["=h_is_ni_24", "=h_is_ni_25", "=h_is_ni_26"], M)
+    row("g_eps", "GAAP：EPS（完全稀釋，公司公告）", "US$", ["=h_is_eps_24", "=h_is_eps_25", "=h_is_eps_26"], "0.00")
     P.cell(r, 1, "核對（應為 0）").font = BOLD; r += 1
     row("c1", "核對：營收 − 營業成本 − 毛利", "US$B", [f"={c}{L['rev']}-{c}{L['cogs']}-{c}{L['gp']}" for c in COLS[:7]] + [None], "0.000")
     row("c2", "核對：毛利 − 營業費用 − 營業利益", "US$B", [f"={c}{L['gp']}-{c}{L['opx']}-{c}{L['oi']}" for c in COLS[:7]] + [None], "0.000")
@@ -171,6 +171,22 @@ def pl_standard(wb):
         [None, None] + [f"={c}{L['ni']}-PL!{s}{R['ni']}" for c, s in zip(COLS[2:7], "CDEFG")] + [f"=J{L['ni']}-PL!H{X['ni']}"], "0.000")
     row("c4", "核對：GAAP 稅後淨利 − 本表稅後淨利 − 權益證券損益 ×（1 − GAAP 有效稅率）（FY2024、FY2025）", "US$B",
         [f"=C{L['g_ni']}-C{L['ni']}-h_is_eqg_24*(1-h_is_tax_24/h_is_pti_24)", f"=D{L['g_ni']}-D{L['ni']}-h_is_eqg_25*(1-h_is_tax_25/h_is_pti_25)"], "0.000")
+    # v0.3.7 核對後新增（獨立核對必修 1、3）
+    r += 1
+    P.cell(r, 1, "FY2028 EPS 與共識差距的靜態拆解（情境 B；一次只改一項，營業費用、其他收益、稅率、股數不變；只供展示，不回饋計算）").font = BOLD; L["gap"] = r; r += 1
+    eB = lambda rev, gm: f"((({rev})*({gm})-PL!E{R['opx']})+PL!E{R['oth']})*(1-PL!E{R['oth'] + 1})/PL!E{R['sh']}"
+    for key, labl, f in (("eps_s", "靜態式重算的 FY2028 EPS（情境 B；應等於模型）", "=" + eB(f"PL!E{R['rev']}", f"PL!E{R['gp']}/PL!E{R['rev']}")),
+                         ("eps_rv", "營收改為共識推算（Recon 頁）時的 FY2028 EPS", "=" + eB(f"Recon!B{lab(wb['Recon'], 'FY2028 營收 vs 共識推算')}", f"PL!E{R['gp']}/PL!E{R['rev']}")),
+                         ("eps_gm", "毛利率改為公司指引中點時的 FY2028 EPS", "=" + eB(f"PL!E{R['rev']}", "g28_gm"))):
+        P.cell(r, 1, labl); P[f"G{r}"] = f; P[f"G{r}"].number_format = "0.00"; L[key] = r; r += 1
+    P.cell(r, 1, "核對：靜態式 − 模型 FY2028 EPS（應為 0）"); P[f"G{r}"] = f"=G{L['eps_s']}-PL!E{R['eps']}"; P[f"G{r}"].number_format = "0.000000"; L["gap_chk"] = r; r += 1
+    P.cell(r, 1, "營收落差的 EPS 影響（營收改共識推算）"); P[f"G{r}"] = f"=G{L['eps_rv']}/PL!E{R['eps']}-1"; P[f"G{r}"].number_format = "+0.0%;-0.0%"; L["imp_rv"] = r; r += 1
+    P.cell(r, 1, "毛利率落差的 EPS 影響（毛利率改指引中點）"); P[f"G{r}"] = f"=G{L['eps_gm']}/PL!E{R['eps']}-1"; P[f"G{r}"].number_format = "+0.0%;-0.0%"; L["imp_gm"] = r; r += 1
+    r += 1
+    P.cell(r, 1, "差額：由下而上營收合計 − 報告值營收（情境 B；FY2027 為錨點校準殘差：校準係數只以情境 A 校準，FY2028 起報告值即由下而上，差額為 0）")
+    for c in "DEFG":
+        P[f"{c}{r}"] = f"=PL!{c}{lab(P, '由下而上營收合計', lab(P, '情境 B：'))}-PL!{c}{R['rev']}"; P[f"{c}{r}"].number_format = "0.000"
+    L["seg_gap"] = r; r += 1
     for col in "CDEFGHIJ": P.column_dimensions[col].width = max(P.column_dimensions[col].width or 0, 12)
     L.update(hdr=r_hdr, note=r_note, note2=r_note2, ratio=r_ratio, gaap=r_gaap, start=s0)
     return L
@@ -302,7 +318,7 @@ def revdcf(wb):
                      T(" 美元；要支持現價 "), f'TEXT(px,"0.00")', T(" 美元，企業價值須放大為 "), f'TEXT(B{A["evx"]},"0.00")',
                      T(" 倍。單靠一個因素達成時，需要：折現率降到 "), f'TEXT(B{A["w1"]},"0.0%")', T("；或 FY2028–FY2032 營收全面放大 "),
                      f'TEXT(B{A["s1"]},"0.00")', T(" 倍（FY2028 營收 "), f'TEXT(B{A["rv1"]},"#,##0")', T(" 十億美元，模型為 "), f'TEXT(B{A["rv0"]},"#,##0")', T("）；或營業利益率提高到 "),
-                     f'TEXT(B{A["m1"]},"0%")', T("（模型約 "), f'TEXT(B{A["m0"]},"0%")', T("）"),
+                     f'TEXT(B{A["m1"]},"0%")', T("（模型等效約 "), f'TEXT(B{A["m0"]},"0%")', T("，終值年權重大）"),
                      f'IF(B{A["m1"]}>1,"，超過 100%，不可能單靠利益率達成","")', T("。")))
     A["sum_dcf"] = r; r += 1
     RV.cell(r, 1, F(T("同業比較法：現價 "), f'TEXT(px,"0.00")', T(" 美元相當於 12 個月後前瞻 EPS 的 "), f'TEXT(B{A["pe1"]},"0.0")',
@@ -347,15 +363,16 @@ def readme13(wb, RVA, PLA):
     put("o1", T("目標價：加權目標價 "), f'TEXT({tp},"0.00")', T(" 美元，比現價 "), f'TEXT(px,"0.00")', T(" 高 "), f'TEXT({up},"0.0%")',
         T("，評等「"), rec, T("」。上檔全部來自同業比較法：同業前瞻本益比中位數 "), f'TEXT({pmed},"0.0")', T(" 倍，乘上 NVIDIA 過去十年相對同業的溢價 "),
         f'TEXT({coef},"0.00")', T(" 倍；不加這項溢價，加權目標價只有 "), f'TEXT({noadj},"0.00")', T(" 美元，評等為"), REC5(f"({noadj}/px-1)"), T("。"))
-    put("o2", T("現金流折現偏貴：以 "), f'TEXT(wacc,"0.0%")', T(" 折現，現金流折現法目標價 "), f'TEXT({dcf},"0.00")', T(" 美元，三個情境（"),
-        f'TEXT(Val!B{band},"0")', T("～"), f'TEXT(Val!C{band},"0")', T(" 美元）都低於現價。反向推算，要支持現價需把折現率降到 "),
+    put("o2", T("現金流折現偏貴：以 "), f'TEXT(wacc,"0.0%")', T(" 折現，現金流折現法目標價 "), f'TEXT({dcf},"0.00")', T(" 美元（三情境加權），三個情境（"),
+        f'TEXT(Val!B{band},"0")', T("～"), f'TEXT(Val!C{band},"0")', T(" 美元）都低於現價。反向推算（情境 B），要支持現價需把折現率降到 "),
         f'TEXT({rv("w1")},"0.0%")', T("，或把 FY2028 起的營收全面放大 "), f'TEXT({rv("s1")},"0.00")', T(" 倍。"))
-    put("o3", T("盈餘低於共識：情境加權的 FY2028 EPS 比市場共識低 "), f'TEXT(-{cons_gap},"0.0%")', T("。主因是毛利率：情境 B 的 FY2028 毛利率 "),
-        f'TEXT(PL!E{gm_s},"0.0%")', T("，低於公司指引 "), 'TEXT(g28_gm_lo,"0%")', T("～"), 'TEXT(g28_gm_hi,"0%")',
-        T("，因為模型假設 HBM 與 LPDDR 漲價有一半由 NVIDIA 自行吸收；全額轉嫁時 FY2028 EPS "), f'TEXT(Sens!E{lab(SE, "HBM／LPDDR 吸收比例 0")},"+0.0%;-0.0%")', T("。"))
+    put("o3", T("盈餘低於共識：情境加權的 FY2028 EPS 比市場共識低 "), f'TEXT(-{cons_gap},"0.0%")', T("。以情境 B 靜態估算，營收若達共識推算的 "),
+        f'TEXT(Recon!B{lab(RC, "FY2028 營收 vs 共識推算")},"0")', T(" 十億美元（模型 "), f'TEXT(PL!E{lab(P, "營收", rb0)},"0")', T("），EPS "),
+        f'TEXT(PL!G{PLA["imp_rv"]},"+0.0%;-0.0%")', T("；毛利率若從 "), f'TEXT(PL!E{gm_s},"0.0%")', T(" 升到公司指引中點 "), 'TEXT(g28_gm,"0.0%")',
+        T("，EPS "), f'TEXT(PL!G{PLA["imp_gm"]},"+0.0%;-0.0%")', T("。營收落差的影響較大。"))
     put("o4", T("核心問題：顆數持平後 EPS 還能成長，但幅度取決於顆數。情境 B 的顆數在 2028 年先減，FY2029 EPS "), f'TEXT(PL!F{eps_s},"0.00")',
         T(" 美元，比 FY2028 "), f'TEXT(PL!F{eps_s}/PL!E{eps_s}-1,"+0.0%;-0.0%")', T("；2029 年顆數回升後，FY2030 為 "), f'TEXT(PL!G{eps_s},"0.00")',
-        T(" 美元（"), f'TEXT(PL!G{eps_s}/PL!F{eps_s}-1,"+0.0%;-0.0%")', T("）。若 2029 年顆數與 2028 年持平，FY2030 EPS 只成長 "),
+        T(" 美元（"), f'TEXT(PL!G{eps_s}/PL!F{eps_s}-1,"+0.0%;-0.0%")', T("）。若 2029 年顆數與 2028 年持平（以情境 A 為底），FY2030 EPS 只成長 "),
         f'TEXT(Sens!N{flat},"+0.0%;-0.0%")', T("。"))
     put("o5", T("最敏感的是出貨顆數：顆數少一成時 FY2028 EPS "), f'TEXT(Sens!E{k_case},"+0.0%;-0.0%")', T("；ASIC 金額份額多 5 個百分點時 "),
         f'TEXT(Sens!E{asic},"+0.0%;-0.0%")', T("。下一個檢驗點是第三季（FY2027）財報：營收對照公司指引 "), f'TEXT({q3}*10,"#,##0")', T(" 億美元。"))

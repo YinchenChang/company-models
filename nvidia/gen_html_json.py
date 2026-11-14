@@ -387,7 +387,7 @@ def _v13():
             {"type": "note", "parts": [f"@RevDCF!A{rsum + 1}"]},
             {"type": "note", "parts": [f"@RevDCF!A{rsum + 2}"]},
             {"type": "table", "caption": "現金流折現法（情境 B 路徑）：現價隱含值與模型基準", "head": ["項目", "現價隱含", "模型基準"],
-             "rows": [["預測期營業利益率（FY2028–FY2032 統一一個值）", f"@RevDCF!B{m1}|p1", f"@RevDCF!B{m0}|p1"],
+             "rows": [["預測期營業利益率（FY2028–FY2032 統一一個值；模型欄為等效值，終值年權重大）", f"@RevDCF!B{m1}|p1", f"@RevDCF!B{m0}|p1"],
                       ["營收規模（FY2028 起各年同乘的倍數）", f"@RevDCF!B{s1}|n2", "—"],
                       ["FY2028 營收（十億美元）", f"@RevDCF!B{rv1}|n0", f"@RevDCF!B{rv0}|n0"],
                       ["FY2028 營收年增率", f"@RevDCF!B{g1}|p1", f"@RevDCF!B{g0}|p1"],
@@ -405,7 +405,7 @@ def _v13():
                       for r in range(yh + 1, rb_ - 1)]
                      + [{"sub": f"@RevDCF!A{rb_}"}] + [[f"@RevDCF!A{r}", f"@RevDCF!B{r}|" + ("p1" if "利益率" in str(RV.cell(r, 1).value) else "n1"), "", "", "", "", ""] for r in range(rb_ + 1, rb_ + 5)]
                      + [{"sub": f"@RevDCF!A{rbb}"}] + [[f"@RevDCF!A{r}", f"@RevDCF!B{r}|" + ("p1" if "年增率" in str(RV.cell(r, 1).value) else "n2" if "倍數" in str(RV.cell(r, 1).value) else "n3" if "核對" in str(RV.cell(r, 1).value) else "n1"), "", "", "", "", ""] for r in range(rbb + 1, rc - 1)]
-                     + [{"sub": f"@RevDCF!A{rc}"}] + [[f"@RevDCF!A{r}", f"@RevDCF!B{r}|" + ("p2" if "WACC" in str(RV.cell(r, 1).value)[:12] else "n3"), "", "", "", "", ""] for r in range(w1, w1 + 4)]},
+                     + [{"sub": f"@RevDCF!A{rc}"}] + [[f"@RevDCF!A{r}", f"@RevDCF!B{r}|" + ("p2" if str(RV.cell(r, 1).value).startswith(("現價隱含的 WACC", "模型 WACC")) else "n2"), "", "", "", "", ""] for r in range(w1, w1 + 4)]},
         ]}
     # ---- 5. 損益（標準損益表）----
     p0 = find("PL", "標準損益表（v0.3.7")
@@ -466,14 +466,16 @@ def _v13():
     r_ut, r_cm, r_cn, r_nt, r_ed, r_bu = pr("NVIDIA 認列顆數合計"), pr("運算營收（Σ"), pr("中國資料中心運算營收"), pr("NVIDIA 網通營收"), pr("Edge Computing 營收"), pr("由下而上營收合計")
     r_rep = next(r for r in range(r_bu, PLW.max_row + 1) if PLW.cell(r, 1).value == "營收")
     r_dc, r_eg = r_rep + 1, r_rep + 2
+    r_sg = find("PL", "差額：由下而上營收合計")
     seg_rows = lambda rs, f: [[f"@PL!A{r}", f"@PL!B{r}"] + [f"@PL!{c}{r}|{f}" for c in "DEFG"] for r in rs]
-    seg_tbl = {"type": "table", "caption": "分部營收推導（情境 B；十億美元）：資料中心運算＋網通＋中國＋Edge Computing＝合併營收",
+    seg_tbl = {"type": "table", "caption": "分部營收推導（情境 B；十億美元）：資料中心運算＋網通＋中國＋Edge Computing＝由下而上合計（與報告值的差額見末列）",
                "head": [f"@PL!A{hdrB}", f"@PL!B{hdrB}"] + [f"@PL!{c}{hdrB}" for c in "DEFG"],
                "rows": [{"sub": "一、資料中心運算＝各世代認列顆數 × 每顆售價"}] + seg_rows(gens + [r_ut], "n2") + seg_rows(prices, "n1") + seg_rows(comp + [r_cm], "n1")
                        + [{"sub": "二、網通（隨 NVIDIA 顆數同比例縮放）"}] + seg_rows([r_nt], "n1")
                        + [{"sub": "三、中國資料中心（基準為零，只進敏感度）"}] + seg_rows([r_cn], "n1")
                        + [{"sub": "四、Edge Computing（遊戲、PC、工作站、車用與機器人）"}] + seg_rows([r_ed], "n1")
-                       + [{"sub": "合計：由下而上與報告值（FY2027 報告值為錨點）"}] + seg_rows([r_bu, r_rep, r_dc, r_eg], "n1")}
+                       + [{"sub": "合計：由下而上與報告值（FY2027 報告值為錨點）"}] + seg_rows([r_bu, r_rep, r_dc, r_eg], "n1")
+                       + [[f"@PL!A{r_sg}", "@PL!B{}".format(r_rep)] + [f"@PL!{c}{r_sg}|n3" for c in "DEFG"]]}
     seg_chart = {"type": "theme", "title": "分部營收（情境 B，十億美元）與 NVIDIA 認列顆數（百萬顆，右軸）", "x": f"@PL!D{hdrB}:G{hdrB}",
                  "fmt": "n0", "fmt_r": "n1", "stack": True, "pad": 1.2, "total": f"@PL!D{r_bu}:G{r_bu}",
                  "bars": [{"name": ["資料中心運算"], "y": f"@PL!D{r_cm}:G{r_cm}", "color": "#0b7a80"},
