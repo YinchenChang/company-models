@@ -727,18 +727,20 @@ for key, nm, fmt in [('periodEnd', "期末日", "@"), ('tEnd', "折現年數：�
     r = prow(r, nm, "" if key == 'periodEnd' else "年", CAL[key], fmt, "月數 ÷ 12", font=BLACK, key='cal_' + key)
     CAL_R[key] = IN['cal_' + key]
 assert len(PERIODS) == len(COLS), 'Excel 欄位固定為 5 期（首期＋4 個完整財年）'
-# v4.2：評等門檻（company.json → methodology.rating）；評價頁的評等代碼、賣出門檻價、判斷句與「檢查」頁都引用這裡
+# v4.2：評等門檻（company.json → methodology.rating）；評價頁的評等代碼、放空門檻價、判斷句與「檢查」頁都引用這裡
 RT = CO['methodology']['rating']
 RT_PCT = lambda x: (lambda v: f"{v:.0f}%" if v == int(v) else f"{v:.1f}%")(round(abs(x) * 100, 4))
 _MT = lambda x: f'IF({x}=INT({x}),TEXT({x},"0"),TEXT({x},"0.0"))'  # 倍數文字：整數不帶小數（與 HTML multTxt 同格式）
 _PC = lambda x: _MT(f"ROUND(ABS({x})*100,4)") + '&"%"'  # 門檻百分比文字（絕對值）：與 HTML pctQ 同格式
 r = section(ws, r, "評等門檻（空間＝加權目標價 ÷ 現價 − 1）", level=2)
-RT_BUY = gi(r, "買進：空間下限", "%", RT['buyUpsideMin'], "空間 ≥ 此值、終值占比 < 上限，且股權募資未超標 → 買進 [Assumed]", PCT); r += 1
-RT_TV = gi(r, "買進：終值占 EV 上限", "%", RT['buyTvShareMax'], "終值占比達此值以上不給買進 [Assumed]", PCT); r += 1
-RT_SELL = gi(r, "賣出：空間上限", "%", RT['sellUpsideMax'], "空間 ≤ 此值 → 賣出；賣出門檻價＝現價 ×（1 ＋ 此值） [Assumed]", PCT); r += 1
-RT_EQ = gi(r, "股權募資上限（÷ 現市值）", "x", RT['equityRaiseMaxMult'], "五期股權募資超過現市值的此倍數：市場吸收能力存疑，禁止買進 [Assumed]", MULT); r += 1
-RT_SELL2 = gi(r, "股權募資超標時的賣出：空間上限", "%", RT['sellUpsideMaxIfEquityOver'], "股權募資超標且空間 ≤ 此值 → 賣出 [Assumed]", PCT); r += 1
-RT_MG = gi(r, "判斷句：距賣出門檻揭露（占現價）", "%", RT['sellMarginAlert'], "任一情境與賣出門檻的距離小於現價的此比例時，判斷句揭露該距離 [Assumed]", PCT); r += 1
+RT_SBUY = gi(r, "強力買進：空間下限（不含）", "%", RT['strongBuyUpsideMin'], "空間 > 此值 → 強力買進（全專案統一五級，v0.3）", PCT); r += 1
+RT_BUY = gi(r, "買進：空間下限（不含）", "%", RT['buyUpsideMin'], "空間 > 此值 → 買進（全專案統一五級，v0.3）", PCT); r += 1
+RT_TV = gi(r, "買進：終值占 EV 上限", "%", RT['buyTvShareMax'], "終值占比達此值以上時買進以上降為中立（買進限制開啟時）[Assumed]", PCT); r += 1
+RT_SELL = gi(r, "放空：空間下限（中立的下界，含）", "%", RT['sellUpsideMax'], "空間 < 此值 → 放空；放空門檻價＝現價 ×（1 ＋ 此值）（全專案統一五級，v0.3）", PCT); r += 1
+RT_SSELL = gi(r, "強力放空：空間下限（放空的下界，含）", "%", RT['strongSellUpsideMax'], "空間 < 此值 → 強力放空（全專案統一五級，v0.3）", PCT); r += 1
+RT_OV = gi(r, "買進限制（1＝開啟、0＝純空間分級）", "", 1 if RT['overlayCapsBuy'] else 0, "開啟時：終值占比 ≥ 上限或股權募資超標，買進以上降為中立（v0.3 判斷題預設 1）[Assumed]", NUM0); r += 1
+RT_EQ = gi(r, "股權募資上限（÷ 現市值）", "x", RT['equityRaiseMaxMult'], "五期股權募資超過現市值的此倍數：市場吸收能力存疑，買進以上降為中立（買進限制開啟時）[Assumed]", MULT); r += 1
+RT_MG = gi(r, "判斷句：距放空門檻揭露（占現價）", "%", RT['sellMarginAlert'], "任一情境與放空門檻的距離小於現價的此比例時，判斷句揭露該距離 [Assumed]", PCT); r += 1
 RT_TVW = gi(r, "終值占 EV 警示", "%", RT['tvShareWarn'], "超過此值表示結論由終值假設決定（「檢查」頁與 DCF 說明） [Assumed]", PCT); r += 1
 r += 1
 
@@ -2512,25 +2514,26 @@ DT_SC = ["low", "base", "high"]
 DT_NM = {k: CO['scenarios']['labels'][k] for k in DT_SC}
 DT_SHORT = {k: DT_NM[k].split(" ")[0] for k in DT_SC}
 _IW = "'輸入與假設'!"
-ws.cell(row=r, column=9, value=(f'="評等規則不變：空間 ≥"&{_PC(RT_BUY)}&" 且終值占比 <"&{_PC(RT_TV)}&"、股權募資 ≤"&{_MT(RT_EQ)}&" 倍現市值 → 買進；'
-                                f'空間 ≤−"&{_PC(RT_SELL)}&"，或股權募資 >"&{_MT(RT_EQ)}&" 倍且空間 ≤−"&{_PC(RT_SELL2)}&" → 賣出；其餘中立"')).font = SMALL
+ws.cell(row=r, column=9, value=(f'="評等五級（全專案統一）：空間 >"&{_PC(RT_SBUY)}&" 強力買進、>"&{_PC(RT_BUY)}&" 買進、≥−"&{_PC(RT_SELL)}&" 中立、≥−"&{_PC(RT_SSELL)}&" 放空、其餘強力放空；'
+                                f'"&IF({RT_OV}=1,"買進限制開啟：終值占比 ≥"&{_PC(RT_TV)}&" 或股權募資 >"&{_MT(RT_EQ)}&" 倍現市值時買進以上降為中立","買進限制關閉")')).font = SMALL
 R0 = r
-def _code(px):  # 評等代碼：1＝買進、0＝中立、−1＝賣出（與 HTML rateCall 同規則；門檻引用『輸入與假設』F 區評等門檻）
+def _code(px):  # 評等代碼：2＝強力買進、1＝買進、0＝中立、−1＝放空、−2＝強力放空（與 HTML rateCall 同規則；門檻引用『輸入與假設』F 區評等門檻；v0.3 統一五級）
     c = f"({px}/MAX({PX},0.01)-1)"
-    return (f"IF(AND({c}>={RT_BUY},$C${R0+1}<{RT_TV},$C${R0+2}<={RT_EQ}),1,"
-            f"IF(OR({c}<={RT_SELL},AND($C${R0+2}>{RT_EQ},{c}<={RT_SELL2})),-1,0))")
-_CALL = lambda cell: f'CHOOSE({cell}+2,"賣出","中立","買進")'
+    ok = f"OR({RT_OV}=0,AND($C${R0+1}<{RT_TV},$C${R0+2}<={RT_EQ}))"
+    return (f"IF({c}>{RT_SBUY},IF({ok},2,0),IF({c}>{RT_BUY},IF({ok},1,0),"
+            f"IF({c}>={RT_SELL},0,IF({c}>={RT_SSELL},-1,-2))))")
+_CALL = lambda cell: f'CHOOSE({cell}+3,"強力放空","放空","中立","買進","強力買進")'
 _T1 = lambda x: f'TEXT({x},"0.0")'
 _EVM = lambda m: (f"{DCF_T}*IF({DCF_BAD}=1,0,{WDCF})+MAX(0,(C{m0+8}*{m}+C{m0+7}*{LEGM}-C{m0+3})/C{m0+4})*C{m0+5}*IF({DCF_BAD}=1,1,1-{WDCF})")
 rows_rg = [
     ("目標價區間｜點位（目前輸入的加權目標價）", [f"={TGT}"], USD),
     ("目標價區間｜終值占 EV（評等用）", [f"=C{d0+3}/MAX(ABS(C{d0+4}),1)*IF(C{d0+4}=0,1,SIGN(C{d0+4}))"], PCT),
     ("目標價區間｜股權募資 ÷ 現市值（評等用）", [f"=SUM('各期收支'!C{FRR['eq']}:G{FRR['eq']})/({PX}*{SH})"], MULT),
-    ("目標價區間｜點位評等代碼（1＝買進、0＝中立、−1＝賣出）", [f"={_code(TGT)}", f"={_CALL(f'C{R0+3}')}"], NUM0),
-    (f"目標價區間｜賣出門檻價（現價 × (1 − {RT_PCT(RT['sellUpsideMax'])})）", [f"={PX}*(1+{RT_SELL})"], USD),
+    ("目標價區間｜點位評等代碼（2＝強力買進、1＝買進、0＝中立、−1＝放空、−2＝強力放空）", [f"={_code(TGT)}", f"={_CALL(f'C{R0+3}')}"], NUM0),
+    (f"目標價區間｜放空門檻價（現價 × (1 − {RT_PCT(RT['sellUpsideMax'])})）", [f"={PX}*(1+{RT_SELL})"], USD),
 ]
 for j, k in enumerate(DT_SC):
-    rows_rg.append((f"目標價區間｜{DT_NM[k]}（加權目標價／評等代碼／距賣出門檻）",
+    rows_rg.append((f"目標價區間｜{DT_NM[k]}（加權目標價／評等代碼／距放空門檻）",
                     [f"={_IW}D{DT_H+1+j}", f"={_IW}E{DT_H+1+j}", f"=C{R0+5+j}-$C${R0+4}"], USD))
 rows_rg += [
     ("目標價區間｜情境區間（下緣／上緣）", [f"=MIN(C{R0+5},C{R0+7})", f"=MAX(C{R0+5},C{R0+7})"], USD),
@@ -2552,10 +2555,10 @@ ws.cell(row=R0 + 5, column=9, value="引用『輸入與假設』底部模擬運�
 ws.cell(row=R0 + 10, column=9, value="＝DCF 採用值 × 有效權重 ＋ EV/EBITDA 腿（倍數換成兩端）× 有效權重").font = SMALL
 _A0, _A1, _B0, _B1 = f"C{R0+8}", f"D{R0+8}", f"C{R0+10}", f"D{R0+10}"
 _TH = f"$C${R0+4}"
-_mg = lambda j, k: (f'IF(ABS(E{R0+5+j})<{RT_MG}*{PX},"{DT_SHORT[k]}情境 $"&{_T1(f"C{R0+5+j}")}&"，"&IF(E{R0+5+j}<0,"距賣出門檻","高於賣出門檻")'
+_mg = lambda j, k: (f'IF(ABS(E{R0+5+j})<{RT_MG}*{PX},"{DT_SHORT[k]}情境 $"&{_T1(f"C{R0+5+j}")}&"，"&IF(E{R0+5+j}<0,"距放空門檻","高於放空門檻")'
                     f'&" $"&{_T1(_TH)}&" 僅 $"&{_T1(f"ABS(E{R0+5+j})")}&"。","")')
-_ns = '&" "&'.join(f'IF(D{R0+5+j}<>-1,"{DT_SHORT[k]}","")' for j, k in enumerate(DT_SC))
-_nsc = "+".join(f"(D{R0+5+j}<>-1)" for j in range(3))
+_ns = '&" "&'.join(f'IF(D{R0+5+j}>=0,"{DT_SHORT[k]}","")' for j, k in enumerate(DT_SC))
+_nsc = "+".join(f"(D{R0+5+j}>=0)" for j in range(3))
 text_rg = [
     ("目標價區間｜點位摘要", f'="目標價 $"&{_T1(TGT)}&"（情境區間 $"&{_T1(_A0)}&"–$"&{_T1(_A1)}&"）"'),
     ("目標價區間｜方法區間標籤", f'="方法區間（目前情境，"&{_MT(f"C{R0+9}")}&"–"&{_MT(f"D{R0+9}")}&"x）"'),
@@ -2564,8 +2567,8 @@ text_rg = [
                         f'"目前點位"&IF(AND({EVEBITDA}>C{R0+9},{EVEBITDA}<D{R0+9}),"位於方法區間內",IF({EVEBITDA}>D{R0+9},"高於方法區間上緣","低於方法區間下緣"))'
                         f'&"（目前倍數 "&{_MT(EVEBITDA)}&"x）"))')),
     ("目標價區間｜判斷句", (f'=IF({_A1}<{PX},"情境區間上緣 $"&{_T1(_A1)}&" 低於現價 $"&TEXT({PX},"0.00")'
-                       f'&IF({_nsc}>0,"，但"&SUBSTITUTE(TRIM({_ns})," ","、")&"情境未達賣出門檻 $"&{_T1(_TH)},"：賣出在三個擴張情境下都成立"),'
-                       f'"情境區間上緣 $"&{_T1(_A1)}&" 不低於現價 $"&TEXT({PX},"0.00")&"：賣出並非在三個擴張情境下都成立")&"。"'
+                       f'&IF({_nsc}>0,"，但"&SUBSTITUTE(TRIM({_ns})," ","、")&"情境未達放空門檻 $"&{_T1(_TH)},"：放空在三個擴張情境下都成立"),'
+                       f'"情境區間上緣 $"&{_T1(_A1)}&" 不低於現價 $"&TEXT({PX},"0.00")&"：放空並非在三個擴張情境下都成立")&"。"'
                        + "".join("&" + _mg(j, k) for j, k in enumerate(DT_SC)))),
 ]
 TRROW = {}  # v4.3：文字列的列號（「摘要」頁引用）
@@ -3756,20 +3759,20 @@ def srow(name, unit, vals, fmt=NUM, note=None, bold=False):
 _G = lambda x, pt=False: f'IF({x}<0,"−","+")&TEXT(ABS({x})*100,"0.0")&"{"pt" if pt else "%"}"'  # 與 HTML gapTxtQ 同格式
 r = 4
 r = section(ws, r, "1｜結論")
-srow("結論｜評等代碼（1＝買進、0＝中立、−1＝賣出）", "", [f"={VQ}{RG_PT_CODE}"], NUM0)
-srow("結論｜評等", "", [f"=CHOOSE(C{SM['結論｜評等代碼（1＝買進、0＝中立、−1＝賣出）']}+2,\"賣出\",\"中立\",\"買進\")"])
+srow("結論｜評等代碼（2＝強力買進、1＝買進、0＝中立、−1＝放空、−2＝強力放空）", "", [f"={VQ}{RG_PT_CODE}"], NUM0)
+srow("結論｜評等", "", [f"=CHOOSE(C{SM['結論｜評等代碼（2＝強力買進、1＝買進、0＝中立、−1＝放空、−2＝強力放空）']}+3,\"強力放空\",\"放空\",\"中立\",\"買進\",\"強力買進\")"])
 srow("結論｜點位（加權目標價）", "US$", [f"={VQ}{TGT}"], USD, bold=True)
 srow("結論｜現價", "US$", [f"={PX}"], USD)
 srow("結論｜空間", "%", [f"=C{r-2}/C{r-1}-1"], PCT)
 srow("結論｜情境區間（下緣／上緣）", "US$", [f"={VQ}{_A0}", f"={VQ}{_A1}"], USD)
 srow("結論｜方法區間（下緣／上緣）", "US$", [f"={VQ}{_B0}", f"={VQ}{_B1}"], USD)
-srow("結論｜賣出門檻價", "US$", [f"={VQ}{_TH}"], USD)
-srow("結論｜點位 − 賣出門檻", "US$", [f"=C{SM['結論｜點位（加權目標價）']}-C{r-1}"], USD)
+srow("結論｜放空門檻價", "US$", [f"={VQ}{_TH}"], USD)
+srow("結論｜點位 − 放空門檻", "US$", [f"=C{SM['結論｜點位（加權目標價）']}-C{r-1}"], USD)
 _s = lambda k: SM["結論｜" + k]
 srow("結論｜結論句", "", [(f'=C{_s("評等")}&"：點位 $"&TEXT(C{_s("點位（加權目標價）")},"0.0")&"，較現價 $"&TEXT(C{_s("現價")},"0.00")&" "'
                          f'&IF(C{_s("空間")}>=0,"高","低")&" "&TEXT(ABS(C{_s("空間")})*100,"0")&"%；情境區間 $"&TEXT(C{_s("情境區間（下緣／上緣）")},"0.0")&"–$"&TEXT(D{_s("情境區間（下緣／上緣）")},"0.0")'
                          f'&"，方法區間 $"&TEXT(C{_s("方法區間（下緣／上緣）")},"0.0")&"–$"&TEXT(D{_s("方法區間（下緣／上緣）")},"0.0")'
-                         f'&"；點位"&IF(C{_s("點位 − 賣出門檻")}<0,"低於","高於")&"賣出門檻 $"&TEXT(C{_s("賣出門檻價")},"0.0")&" 達 $"&TEXT(ABS(C{_s("點位 − 賣出門檻")}),"0.0")&"。"')],
+                         f'&"；點位"&IF(C{_s("點位 − 放空門檻")}<0,"低於","高於")&"放空門檻 $"&TEXT(C{_s("放空門檻價")},"0.0")&" 達 $"&TEXT(ABS(C{_s("點位 − 放空門檻")}),"0.0")&"。"')],
      bold=True)
 srow("結論｜情境判斷句", "", [f"={VQ}C{TRROW['目標價區間｜判斷句']}"])
 _JK = f"SUM('各期收支'!C{FRR['jd']}:G{FRR['jd']})"  # v0.1b（Oracle）：高息債溢出＝需失去投資級才能融資的金額

@@ -207,9 +207,12 @@ var BLEND_W = COMPANY_DATA.methodology.blendWeights,
 // 評等規則（v4.1 自 blendCall 抽出；v4.2 門檻改讀 company.json → methodology.rating）：c＝相對現價的空間、o＝終值占 EV、B＝股權募資超過現市值上限倍數
 var RATE_TH = COMPANY_DATA.methodology.rating,
   SELL_TH = RATE_TH.sellUpsideMax;
-function rateCall(c, o, B) {
-  return c >= RATE_TH.buyUpsideMin && o < RATE_TH.buyTvShareMax && !B ? `買進` : c <= SELL_TH || B && c <= RATE_TH.sellUpsideMaxIfEquityOver ? `賣出` : `中立`
+function rateCall(c, o, B) { // v0.3：全專案統一五級（> +50%、> +25%、≥ −25%、≥ −50%）；overlayCapsBuy 時終值占比過高或股權超標的買進以上降為中立
+  let ok = !RATE_TH.overlayCapsBuy || o < RATE_TH.buyTvShareMax && !B;
+  return c > RATE_TH.strongBuyUpsideMin ? (ok ? `強力買進` : `中立`) : c > RATE_TH.buyUpsideMin ? (ok ? `買進` : `中立`) : c >= SELL_TH ? `中立` : c >= RATE_TH.strongSellUpsideMax ? `放空` : `強力放空`
 }
+function isBuyQ(x) { return String(x).includes(`買進`) }
+function isShortQ(x) { return String(x).includes(`放空`) }
 function pctQ(x) { // 門檻的百分比文字（取絕對值，正負號由呈現處決定）：0.25 → 25%、-0.15 → 15%
   return `${multTxt(Math.round(Math.abs(x) * 1e6) / 1e4)}%`
 }
@@ -380,7 +383,7 @@ function tkSensQ(e, v, onlyMatrix) { // v0.3 B 段（自 Nebius v0.2a）：3 × 
 // 情境區間＝保守與積極情境的加權目標價（保留手動調整）；方法區間＝目前輸入、EV/EBITDA 倍數換成 methodology.rangeMultiples 兩端。
 // 判斷句與 DCF 權重說明在此產生（HTML 各頁共用；Excel 以文字公式產生同一字串，cmp31 逐字比對）。
 var RANGE_MULTS = COMPANY_DATA.methodology.rangeMultiples,
-  MARGIN_ALERT = RATE_TH.sellMarginAlert; // 任一情境與賣出門檻的距離小於現價的此比例（預設 5%）時，判斷句揭露該距離
+  MARGIN_ALERT = RATE_TH.sellMarginAlert; // 任一情境與放空門檻的距離小於現價的此比例（預設 5%）時，判斷句揭露該距離
 function multTxt(m) {
   return Number.isInteger(m) ? m.toFixed(0) : m.toFixed(1)
 }
@@ -399,14 +402,14 @@ function targetRange(d, st, o, base) {
     wd = base.call.weights.dcf, we = base.call.weights.pe,
     ev100 = base.peAdj, ev100Call = rateCall(ev100 / Math.max(P, .01) - 1, base.d.tvShare, base.call.blocked),
     raw = base.d.perShareRaw,
-    notSell = sc.filter(s => s.call !== `賣出`).map(s => s.name),
+    notSell = sc.filter(s => !isShortQ(s.call)).map(s => s.name),
     pos = eq(m, mHi) ? `目前點位位於方法區間上緣（${multTxt(mHi)}x 為穩態倍數上緣）`
       : eq(m, mLo) ? `目前點位位於方法區間下緣（${multTxt(mLo)}x）`
       : `目前點位${m > mLo && m < mHi ? `位於方法區間內` : m > mHi ? `高於方法區間上緣` : `低於方法區間下緣`}（目前倍數 ${multTxt(m)}x）`,
     judge = (A[1] < P
-      ? `情境區間上緣 $${Y(A[1], 1)} 低於現價 $${Y(P, 2)}` + (notSell.length ? `，但${notSell.join(`、`)}情境未達賣出門檻 $${Y(th, 1)}` : `：賣出在三個擴張情境下都成立`)
-      : `情境區間上緣 $${Y(A[1], 1)} 不低於現價 $${Y(P, 2)}：賣出並非在三個擴張情境下都成立`) + `。` +
-      sc.filter(s => Math.abs(s.gap) < MARGIN_ALERT * P).map(s => `${s.name}情境 $${Y(s.tgt, 1)}，${s.gap < 0 ? `距賣出門檻` : `高於賣出門檻`} $${Y(th, 1)} 僅 $${Y(Math.abs(s.gap), 1)}。`).join(``),
+      ? `情境區間上緣 $${Y(A[1], 1)} 低於現價 $${Y(P, 2)}` + (notSell.length ? `，但${notSell.join(`、`)}情境未達放空門檻 $${Y(th, 1)}` : `：放空在三個擴張情境下都成立`)
+      : `情境區間上緣 $${Y(A[1], 1)} 不低於現價 $${Y(P, 2)}：放空並非在三個擴張情境下都成立`) + `。` +
+      sc.filter(s => Math.abs(s.gap) < MARGIN_ALERT * P).map(s => `${s.name}情境 $${Y(s.tgt, 1)}，${s.gap < 0 ? `距放空門檻` : `高於放空門檻`} $${Y(th, 1)} 僅 $${Y(Math.abs(s.gap), 1)}。`).join(``),
     note = base.d.invalid ? `DCF 失效，已以 EV/EBITDA 100% 計。`
       : o.dcfMode !== `option` && raw < 0 ? `DCF 為 $0 仍計 ${hA(wd * 100, 0)} 權重的原因：DCF 沒有失效，而是算出的股權價值為負（每股約 ${mA(raw, 1)}），代表自由現金流折現後的企業價值不足以償還淨負債。EV/EBITDA 沒有扣除 GPU 汰換與擴張支出，保留 DCF 權重，是為了讓目標價反映「EBITDA 付不起資本成本」。若不計 DCF，目標價為 $${Y(ev100, 1)}（${ev100Call}）；${hA(wd * 100, 0)}／${hA(we * 100, 0)} 為判斷值。`
       : ``;
@@ -423,7 +426,7 @@ function EM(e, t, n) {
     a = Math.abs(r.revenue - (r.gpu + i + r.legacy)) < .05 * UFQ,
     o = e.fwd.every((e, n) => Math.abs(e.cashCapex - t.years[n].cashCapex) < 1e-6),
     s = e.fwd.every((e, n) => Math.abs(e.interest - t.years[n].interest) < 1e-6),
-    c = !e.call.blocked || e.call.call !== `買進`,
+    c = !e.call.blocked || !isBuyQ(e.call.call),
     l = n.includeAtm || e.shares < VAL_DEFAULTS.shares - .01 * UFQ,
     h = e.fwd[0].revenue * 2,
     g = h + 0;
@@ -533,7 +536,7 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
     rel = x => { let r = Math.round(x * 10) / 10; return r > mHi ? `高於` : r < mHi ? `低於` : `等於` },
     implied = !(consAvQ(`ebitda`) && consAvQ(`nd`)) ? `共識 ${YN} 調整後 EBITDA 未列：隱含倍數不適用（共識平均目標價 $${Y(PT.mean, 2)}、現價 $${Y(o.price, 2)}）。` : `共識平均目標價 $${Y(PT.mean, 2)} 隱含 ${YN} EV/EBITDA ${Y(impTgt, 1)}x（扣除傳統事業 ${Y(lgM, 1)}x × 模型 EBITDA $${Y(lgE, DUQ(1))}${UNQ} 後，OCI ${Y(impTgtOci, 1)}x），OCI 倍數${rel(impTgtOci)}模型方法區間上緣 ${multTxt(mHi)}x；現價 $${Y(o.price, 2)} 隱含 ${Y(impPx, 1)}x（OCI ${Y(impPxOci, 1)}x）。`,
     up = TR.pt / o.price - 1, gapTh = TR.pt - TR.th,
-    head = `${p.call.call}：點位 $${Y(TR.pt, 1)}，較現價 $${Y(o.price, 2)} ${up >= 0 ? `高` : `低`} ${hA(Math.abs(up) * 100, 0)}；情境區間 $${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}，方法區間 $${Y(TR.B[0], 1)}–$${Y(TR.B[1], 1)}；點位${gapTh < 0 ? `低於` : `高於`}賣出門檻 $${Y(TR.th, 1)} 達 $${Y(Math.abs(gapTh), 1)}。`;
+    head = `${p.call.call}：點位 $${Y(TR.pt, 1)}，較現價 $${Y(o.price, 2)} ${up >= 0 ? `高` : `低`} ${hA(Math.abs(up) * 100, 0)}；情境區間 $${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}，方法區間 $${Y(TR.B[0], 1)}–$${Y(TR.B[1], 1)}；點位${gapTh < 0 ? `低於` : `高於`}放空門檻 $${Y(TR.th, 1)} 達 $${Y(Math.abs(gapTh), 1)}。`;
   // v4.4：差距超過門檻的項目附差異原因（已決定事項 2）；原因與類型讀 company.json → varianceReasons，找不到即為「未歸類」
   let rsn = rows.flatMap((r, i) => ANN_RSN_KEYS.filter(([, k]) => consAvQ(k)).filter(([, k]) => k === `ebitda` && PM_TOL != null ? Math.abs(r.gap.ebM) > PM_TOL : Math.abs(r.gap[k]) > CONS_TOL).map(([n, k]) => {
       let c = findRsnQ(`annual`, r.yr, k, `consensus`),

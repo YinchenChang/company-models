@@ -1207,13 +1207,16 @@
    6
   ],
   "rating": {
+   "strongBuyUpsideMin": 0.5,
    "buyUpsideMin": 0.25,
+   "sellUpsideMax": -0.25,
+   "strongSellUpsideMax": -0.5,
+   "overlayCapsBuy": true,
    "buyTvShareMax": 0.9,
-   "sellUpsideMax": -0.15,
    "equityRaiseMaxMult": 1.5,
-   "sellUpsideMaxIfEquityOver": -0.08,
    "sellMarginAlert": 0.05,
-   "tvShareWarn": 0.85
+   "tvShareWarn": 0.85,
+   "_note": "v0.3（2026-11-11，工作單 20261111）：評等邊界改用全專案統一五級（索引第 3 節、tools/target_summary）：空間 > +50% 強力買進、> +25% 買進、≥ −25% 中立、≥ −50% 放空、其餘強力放空。overlayCapsBuy＝true：終值占 EV ≥ buyTvShareMax 或五期股權募資 > 現市值 × equityRaiseMaxMult 時，買進以上降為中立（保留 v0.1 的買進限制；判斷題預設，false＝純空間分級）。原（v0.2.1）：買進＝空間 ≥ 25% 且終值占比 < 90% 且股權未超標；賣出＝空間 ≤ −15%，或股權超標且空間 ≤ −8%；其餘中立。"
   },
   "consensusGapTol": 0.05,
   "profitMarginTolPt": 0.02,

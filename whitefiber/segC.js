@@ -17,7 +17,7 @@ function AM({
     call: m,
     shares: h
   } = r, g = (0, v.useMemo)(() => dcfGridWaccG(s, r.v), [s, r.v]), RV = (0, v.useMemo)(() => a === 4 ? reverseDcf(t, n) : null, [t, n, a]), y = n.price * h, b = y + r.v.netDebt, NDT = n.netDebt + CVN.reduce((a, c) => a + (c.mand ? 0 : c.M), 0) + ndAdjQ(n), // v0.1b：模型列用評價股數與評價淨負債（含可轉債分類）；TTM 列市值為基本股，可轉債全數計入淨負債
- x = s[1].revenue, S = s[1].ebitda, C = S > 0 ? b / S : 0, E = [`損益簡表`, `Comps`, `DCF`, `目標價`], D = m.call === `買進` ? `ok` : m.call === `賣出` ? `bad` : `watch`, O = e.totals.end, Rt = (e, t) => (0, $.jsx)(`td`, {
+ x = s[1].revenue, S = s[1].ebitda, C = S > 0 ? b / S : 0, E = [`損益簡表`, `Comps`, `DCF`, `目標價`], D = isBuyQ(m.call) ? `ok` : isShortQ(m.call) ? `bad` : `watch`, O = e.totals.end, Rt = (e, t) => (0, $.jsx)(`td`, {
     className: `py-1.5 text-right font-mono tabular-nums`,
     children: Number.isFinite(e) ? Y(e, t) : `—`
   });
@@ -1003,7 +1003,7 @@ function AM({
             children: [(0, $.jsx)(MM, {
               title: `點位（評等依此）`,
               body: `$${Y(TR.pt,1)} · ${m.call}`,
-              hint: `目前輸入的加權目標價。賣出門檻 $${Y(TR.th,1)}（現價 −${pctQ(SELL_TH)}）；上檔 ≥${pctQ(RATE_TH.buyUpsideMin)} 且終值占比 <${pctQ(RATE_TH.buyTvShareMax)}、股權需求不超過現市值 ${multTxt(RATE_TH.equityRaiseMaxMult)} 倍才給買進。`
+              hint: `目前輸入的加權目標價。放空門檻 $${Y(TR.th,1)}（現價 −${pctQ(SELL_TH)}）；評等五級：上檔 >${pctQ(RATE_TH.strongBuyUpsideMin)} 強力買進、>${pctQ(RATE_TH.buyUpsideMin)} 買進、≥−${pctQ(SELL_TH)} 中立、≥−${pctQ(RATE_TH.strongSellUpsideMax)} 放空、其餘強力放空${RATE_TH.overlayCapsBuy ? `；終值占比 ≥${pctQ(RATE_TH.buyTvShareMax)} 或股權需求超過現市值 ${multTxt(RATE_TH.equityRaiseMaxMult)} 倍時，買進以上降為中立` : ``}。`
             }), (0, $.jsx)(MM, {
               title: `情境區間（保守與積極情境）`,
               body: `$${Y(TR.A[0],1)}–$${Y(TR.A[1],1)}`,
@@ -1020,7 +1020,7 @@ function AM({
             }, e))
           }) : null, (0, $.jsx)(`p`, {
             className: `mt-4 text-xs leading-relaxed text-muted`,
-            children: `缺口處理：採期前融資瀑布——每期在需要前先融足，使期末現金不低於最低現金；依序動用未動用額度、資產層新債（總債務 ≤ 債務／backlog 上限）、股權（按現價折價發行）。新債利息進損益，新股進股數；DCF 以融資後股數計每股，並加回新股募得現金的現值；EV/EBITDA 用錨定年末（預設 FY29）淨負債與股數。舉債部分反映在錨定年末淨負債（與舊版扣缺口本金等價），股權部分反映在股數。 結論規則：股權募資 > 現市值 ${multTxt(RATE_TH.equityRaiseMaxMult)} 倍 → 禁止買進；加權目標價低於現價 ${pctQ(SELL_TH)} 以上，或股權需求過大且目標價低於現價 ${pctQ(RATE_TH.sellUpsideMaxIfEquityOver)} 以上 → 賣出；上檔 ≥${pctQ(RATE_TH.buyUpsideMin)} 且股權需求未超標才買進。這是研究框架，不是投資建議。Street $144 隱含市場相信資產層債務能以可接受成本持續擴張、股權稀釋有限，與本模型的債務上限與股權殘差假設不同。`
+            children: `缺口處理：採期前融資瀑布——每期在需要前先融足，使期末現金不低於最低現金；依序動用未動用額度、資產層新債（總債務 ≤ 債務／backlog 上限）、股權（按現價折價發行）。新債利息進損益，新股進股數；DCF 以融資後股數計每股，並加回新股募得現金的現值；EV/EBITDA 用錨定年末（預設 FY29）淨負債與股數。舉債部分反映在錨定年末淨負債（與舊版扣缺口本金等價），股權部分反映在股數。 結論規則（全專案統一五級）：上檔 >${pctQ(RATE_TH.strongBuyUpsideMin)} 強力買進、>${pctQ(RATE_TH.buyUpsideMin)} 買進、≥−${pctQ(SELL_TH)} 中立、≥−${pctQ(RATE_TH.strongSellUpsideMax)} 放空、其餘強力放空${RATE_TH.overlayCapsBuy ? `；股權募資 > 現市值 ${multTxt(RATE_TH.equityRaiseMaxMult)} 倍或終值占比過高時不給買進` : ``}。這是研究框架，不是投資建議。Street $144 隱含市場相信資產層債務能以可接受成本持續擴張、股權稀釋有限，與本模型的債務上限與股權殘差假設不同。`
           })]
         })]
       })]
