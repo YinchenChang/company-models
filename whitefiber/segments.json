@@ -1,33 +1,18 @@
 {
  "company": "WhiteFiber",
  "ticker": "WYFI",
- "model_sheet": "損益",
+ "model_sheet": "PL",
+ "fiscal_year_end": "12 月（日曆年）",
  "official_segments": [
-  {
-   "name": "Cloud services",
-   "label": "算力收入",
-   "period": "FY2025",
-   "value": 68.8,
-   "unit": "US$M",
-   "source": "FY2025 10-K、2026Q2 新聞稿",
-   "note": "雲端服務＝算力收入＋非算力服務；下一版改列名"
-  },
-  {
-   "name": "Colocation services",
-   "label": "託管",
-   "period": "FY2025",
-   "value": 8.9,
-   "unit": "US$M",
-   "source": "同上"
-  }
+  {"name": "雲端服務", "label": "分部：雲端服務", "period": "FY2025", "value": 68.754, "unit": "US$M",
+   "source": "WhiteFiber FY2025 10-K 分部附註；2026 9M 58.679（Q1–Q3 10-Q）", "note": "命題模組驅動"},
+  {"name": "託管服務與其他（含其他營收）", "label": "分部：託管與其他（NC-1、MTL、代管、其他）", "period": "FY2025", "value": 10.41, "unit": "US$M",
+   "source": "FY2025 10-K：託管 8.914＋其他 1.497（設備銷售型租賃利息）", "note": "模型期取 NC-1 合約、MTL 與代管服務路徑（In 頁 H 節）"}
  ],
  "sublines": [
-  {
-   "parent": "Cloud services",
-   "labels": [
-    "非算力服務"
-   ]
-  }
+  {"parent": "分部：雲端服務", "labels": ["雲端：命題模組（在役 MW × 每 MW 年收入）"], "kind": "命題子列（合計＝分部）"}
  ],
- "check_labels": []
+ "thesis_sublines": ["雲端：命題模組（在役 MW × 每 MW 年收入）"],
+ "check_labels": ["檢查：分部合計 − 合併營收", "檢查：命題子列 − 分部"],
+ "history_checks": {"sheet": "Q", "labels": ["檢查：Q1＋Q2＋Q3 營收 − 9M 營收（應為 0）"]}
 }
