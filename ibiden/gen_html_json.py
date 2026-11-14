@@ -382,11 +382,12 @@ def _v13():
     a4 = fnd(CW, "4. C0（實績）"); ih = next(r for r in range(a4, CW.max_row + 1) if CW.cell(r, 1).value == "項目"); mh = next(r for r in range(ih, CW.max_row + 1) if CW.cell(r, 1).value == "讀數")
     a4e = next(r for r in range(mh, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith("對帳中項目數"))
     fm = lambda r: "p1" if str(CW.cell(r, 2).value) == "%" else "n3" if str(CW.cell(r, 2).value) == "US$B" else "n1"
-    act_rows = [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}", f"@Coord!D{r}|n1", f"@Coord!E{r}|n1", (f"@Coord!F{r}|p1" if r == a4e - 1 else f"@Coord!F{r}|sp1"), f"@Coord!G{r}"]
-                for r in range(mh + 1, a4e)]
+    act_rows = [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}", f"@Coord!D{r}|n1", f"@Coord!E{r}|n1", (f"@Coord!F{r}|p1" if r == a4e - 2 else f"@Coord!F{r}|sp1"), f"@Coord!G{r}"]
+                for r in range(mh + 1, a4e - 1)]
     in_rows = [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}", f"@Coord!D{r}|" + ("n0" if CW.cell(r, 2).value == "月" else fm(r)), f"@Coord!E{r}", f"@Coord!H{r}"] for r in range(ih + 1, mh - 1) if CW.cell(r, 1).value]
     act_blocks = [{"type": "h3", "text": "公司實績對層級隱含值（實績對帳）"}, {"type": "note", "parts": [f"@Coord!A{a4 + 1}"]}, {"type": "note", "parts": [f"@Coord!A{a4 + 2}"]},
-                  {"type": "table", "caption": "電子事業營收：決算短信實績 vs Siliconomics 基準隱含值（主讀數、第二讀數；差距超過正負十五個百分點且同號標「對帳中」）", "head": [f"@Coord!{c}{mh}" for c in "ABCDEFG"], "rows": act_rows},
+                  {"type": "table", "caption": "電子事業營收：決算短信實績 vs Siliconomics 基準隱含值（主讀數、第二讀數；層級值與公司預測同源，判定標參考）", "head": [f"@Coord!{c}{mh}" for c in "ABCDEFG"], "rows": act_rows},
+                  {"type": "note", "parts": [f"@Coord!A{a4e - 1}"]},
                   {"type": "note", "parts": ["對帳中項目數：", f"@Coord!G{a4e}|n0", "。"]},
                   {"type": "table", "caption": "實績與層級隱含值的輸入、等級與出處（展開看）", "collapse": True, "summary": "展開：實績、層級值、換算參數與出處", "head": [f"@Coord!{c}{ih}" for c in "ABCDE"] + [f"@Coord!H{ih}"], "rows": in_rows}]
     c0_note = [{"type": "h3", "text": "讀取層級核對（同源，不判定）"}, {"type": "note", "parts": [f"@Coord!A{c2}"]}, {"type": "note", "parts": [f"@Coord!A{c2 + 1}"]}, c0_tbl, {"type": "note", "parts": [f"@Coord!A{cnt + 1}"]}]

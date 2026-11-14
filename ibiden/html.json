@@ -4198,7 +4198,7 @@
     },
     {
      "type": "table",
-     "caption": "電子事業營收：決算短信實績 vs Siliconomics 基準隱含值（主讀數、第二讀數；差距超過正負十五個百分點且同號標「對帳中」）",
+     "caption": "電子事業營收：決算短信實績 vs Siliconomics 基準隱含值（主讀數、第二讀數；層級值與公司預測同源，判定標參考）",
      "head": [
       "@Coord!A107",
       "@Coord!B107",
@@ -4278,16 +4278,31 @@
        "@Coord!C115",
        "@Coord!D115|n1",
        "@Coord!E115|n1",
-       "@Coord!F115|p1",
+       "@Coord!F115|sp1",
        "@Coord!G115"
+      ],
+      [
+       "@Coord!A116",
+       "@Coord!B116",
+       "@Coord!C116",
+       "@Coord!D116|n1",
+       "@Coord!E116|n1",
+       "@Coord!F116|p1",
+       "@Coord!G116"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
+      "@Coord!A117"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
       "對帳中項目數：",
-      "@Coord!G116|n0",
+      "@Coord!G118|n0",
       "。"
      ]
     },
