@@ -322,7 +322,7 @@ def _v13():
     r_ratio = plr("比率"); r_chk = next(r for r in range(r_ratio, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("核對（應為 0"))
     r_ycav = next(r for r in range(r_chk, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("年度與對帳中"))
     head = [f"@PL!A{ph}"] + [f"@PL!{c}{ph}" for c in PC]
-    is_tbl = {"type": "table", "caption": "標準損益表（十億新台幣；EPS 為新台幣）：FY2023A–FY2025A 實績、FY2026E–FY2032E 情境 B（基準）；IFRS 合併（GAAP 口徑）", "head": head,
+    is_tbl = {"type": "table", "caption": "標準損益表（十億新台幣；EPS 為新台幣）：FY2023A–FY2025A 實績、FY2026E–FY2032E 情境 B（基準）；TIFRS 合併（GAAP 口徑；實績三年與 FY2022 基期皆取公司年度合併財報〔台灣版 IFRS〕，同一準則，不混用美國申報的 IASB 版 IFRS）", "head": head,
               "rows": [rowx(plr(k)) for k in keys] + [{"sub": f"@PL!A{r_ratio}"}] + [rowx(r) for r in range(r_ratio + 1, r_chk)]}
     chk_tbl = {"type": "table", "caption": f"@PL!A{r_chk}", "head": head, "collapse": True, "summary": "展開：核對列（歷史捨入差、預測期對 PL 情境 B 與 DCF 頁、FY2030E–FY2032E 的推法差額）",
                "rows": [[f"@PL!A{r}"] + [f"@PL!{c}{r}|{'p1' if '占營收' in str(PLW.cell(r, 1).value) else 'n3'}" for c in PC] for r in range(r_chk + 1, r_ycav) if PLW.cell(r, 1).value]}
@@ -332,7 +332,7 @@ def _v13():
                 "lines": [{"name": f"@PL!A{gm_}", "y": f"@PL!C{gm_}:L{gm_}", "axis": "r", "color": "#0b7a80", "labels": True},
                           {"name": f"@PL!A{opm_}", "y": f"@PL!C{opm_}:L{opm_}", "axis": "r", "color": "#c29a2b"},
                           {"name": f"@PL!A{nm_}", "y": f"@PL!C{nm_}:L{nm_}", "axis": "r", "color": "#6f6bae", "dash": True}],
-                "caption": "長條＝營收；三條線＝毛利率、營業利益率、淨利率（右軸；IFRS 合併，淨利為歸屬母公司）。FY2026E 為前三季實績加第四季指引的錨點，含第二季一次性投資收益；FY2030E–FY2032E 為收斂法延伸期（營業利益由淨利還原）。"}
+                "caption": "長條＝營收；三條線＝毛利率、營業利益率、淨利率（右軸；TIFRS 合併，淨利為歸屬母公司）。FY2026E 為前三季實績加第四季指引的錨點，含第二季一次性投資收益；FY2030E–FY2032E 為收斂法延伸期（營業利益由淨利還原）。"}
     old_pl = S["pl"]["blocks"]
     legacy = []
     for b in old_pl:
