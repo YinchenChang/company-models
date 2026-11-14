@@ -381,7 +381,7 @@ def _v13():
     jh = next(r for r in range(jr, CW.max_row + 1) if CW.cell(r, 1).value == "項目" and CW.cell(r, 2).value == "公司實績")
     je = jh
     while CW.cell(je + 1, 1).value: je += 1
-    c0a_tbl = {"type": "table", "caption": "實績對帳（對帳判定）：公司實績 vs 層級隱含值（AI 半導體營收；Broadcom 八-K 已公布期間對層級隱含的 XPU 由下而上加網通歸屬；兩讀數判定）",
+    c0a_tbl = {"type": "table", "caption": "實績對帳（對帳判定）：公司實績 vs 層級隱含值（AI 半導體營收；Broadcom 季度新聞稿已公布期間對層級隱含的 XPU 由下而上加網通歸屬；兩讀數判定）",
                "head": ["項目", "公司實績", "層級隱含", "差距", "判定", "說明"],
                "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|n1" if CW.cell(r, 2).value is not None else "", f"@Coord!C{r}|n1" if CW.cell(r, 3).value is not None else "",
                          f"@Coord!D{r}|sp1" if CW.cell(r, 4).value is not None else "", f"@Coord!E{r}", f"@Coord!I{r}"] for r in range(jh + 1, je + 1)]}

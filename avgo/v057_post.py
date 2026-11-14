@@ -10,7 +10,7 @@ VER, BUILT = "0.5.7", "2026-11-14"
 GREEN = Font(color="008000")
 EDG = "https://www.sec.gov/Archives/edgar/data/1730168/"
 SRC_Q = ("Q1：" + EDG + "000173016826000011/avgo-02012026x8kxex99.htm；Q2：" + EDG + "000173016826000051/avgo-05032026x8kxex99.htm；"
-         "Q3：https://investors.broadcom.com/news-releases/news-release-details/broadcom-inc-announces-third-quarter-fiscal-year-2026-financial（均為 8-K 新聞稿；本模型 Q 頁第 7 列）")
+         "Q3：" + EDG + "000173016826000076/avgo-08022026x8kxex99.htm（均為 8-K 新聞稿；本模型 Q 頁第 7 列）")
 BILL = "Drive 02-AI供應鏈/對帳/20261114_對帳單_Broadcom_AI網通FY2026_個股對市場層歸屬.md"
 
 
@@ -41,7 +41,7 @@ def apply(wb, here, SIL):
         else:
             C.cell(r, 5).value = (f'=IF(ABS(D{r})>0.15,"推估錨點（參考，不判定）：差距超過 ±15%；原判對帳中，已另開對帳單，判定改由 J 節實績列決定",'
                                   f'"推估錨點（參考，不判定）：差距在 ±15% 內")')
-    C.cell(r_net, 9).value = (str(C.cell(r_net, 9).value) + "。本列保留為參考：網通拆分是 Derived（非公司揭露）；已另開對帳單（檔名見對照來源欄）；"
+    C.cell(r_net, 9).value = (str(C.cell(r_net, 9).value).replace("；對帳單由 Siliconomics 對帳單登錄（主控開立）", "") + "。本列保留為參考：網通拆分是 Derived（非公司揭露）；已另開對帳單（檔名見對照來源欄）；"
                               "判定改由 J 節以 AI 半導體營收實績（公司 8-K 揭露）對層級隱含值決定")
     C.cell(r_net, 7).value = str(C.cell(r_net, 7).value) + f"；對帳單：{BILL}"
 
@@ -87,7 +87,7 @@ def apply(wb, here, SIL):
     C.cell(r, 6, "US$B；公司實績＝三季 AI 半導體營收加總；層級＝CY2026 全年 × 9 ÷ 12")
     C.cell(r, 7, "公司：Broadcom 8-K（Q 頁第 7 列）；層級：Siliconomics " + SIL.VERSION + "（G 表 XPU 與網通列層級值）")
     C.cell(r, 8, "Verified（公司）／Assumed（層）／Derived（線性時差）")
-    C.cell(r, 9, "成長年中，線性分攤的層級值偏高（後段季度較大），主讀數偏低"); rm = r; r += 1
+    C.cell(r, 9, f'="成長年中，線性分攤的層級值偏高（後段季度較大），主讀數偏低。FY2026 Q1–Q3＝2025-11～2026-07，含兩個月 2025；以 2026 月份對齊（Q1 取三分之一）試算："&TEXT(B{b['q1']}/3+B{b['q2']}+B{b['q3']},"0.0")&" 對層級 × 7 ÷ 12＝"&TEXT(B{b['L']}*7/12,"0.0")&"，差 "&TEXT((B{b['q1']}/3+B{b['q2']}+B{b['q3']})/(B{b['L']}*7/12)-1,"+0.0%;-0.0%")&"，判定不變"'); rm = r; r += 1
     C.cell(r, 1, "第二讀數：AI 半導體營收，最近一季（FY2026 Q3）× 4 vs 層級 CY2026")
     C.cell(r, 2, f"=B{b['q3']}*4").number_format = "#,##0.0"
     C.cell(r, 3, f"=B{b['L']}").number_format = "#,##0.0"
@@ -96,11 +96,11 @@ def apply(wb, here, SIL):
     C.cell(r, 6, "US$B；Q3 單季 × 4（年化）；層級＝CY2026 全年")
     C.cell(r, 7, "公司：Broadcom 8-K（Q 頁 E7）；層級同上")
     C.cell(r, 8, "Verified（公司）／Assumed（層）／Derived（年化）")
-    C.cell(r, 9, "成長年中，最近一季年化偏高；且 Q3 為 2026-05～08，與 CY2026 全年平均相比位於後段"); rs = r; r += 1
+    C.cell(r, 9, "成長年中，最近一季年化偏高；且 Q3 為 2026-05～07，與 CY2026 全年平均相比位於後段"); rs = r; r += 1
     C.cell(r, 1, "C0（實績）判定：AI 半導體營收 FY2026").font = BOLD
     C.cell(r, 5, f'=IF(AND(ABS(D{rm})>0.15,ABS(D{rs})>0.15,SIGN(D{rm})=SIGN(D{rs})),"對帳中",IF(OR(ABS(D{rm})>0.15,ABS(D{rs})>0.15),"時差邊界（參考）","一致"))').font = BOLD
     C.cell(r, 6, "兩讀數差距都超過 ±15% 且同號＝對帳中；只有一個超過＝時差邊界（參考）；都在內＝一致")
-    C.cell(r, 9, f'=IF(E{r}="對帳中","兩讀數同向偏離：開對帳單（Drive 02-AI供應鏈/對帳/），不改上游值",IF(E{r}="時差邊界（參考）","兩讀數一個在 ±15% 內、一個超過：層級值落在兩讀數之間，沒有同向偏離；不開改值對帳單，Q4 財報（2026-12）公布後以全年實績重判","兩讀數都在 ±15% 內：層級隱含與公司實績相容"))')
+    C.cell(r, 9, f'=IF(E{r}="對帳中","兩讀數同向偏離：開對帳單（Drive 02-AI供應鏈/對帳/），不改上游值",IF(E{r}="時差邊界（參考）","兩讀數一個在 ±15% 內、一個超過：層級值落在兩讀數之間，沒有同向偏離；不開改值對帳單。走向：第二讀數 "&TEXT(D{rs},"+0%;-0%")&"、含 Q4 指引全年 "&TEXT(D{r+1},"+0%;-0%")&" 都指向層級偏低，FY2026 Q4 財報（2026-12）公布後可能改判對帳中","兩讀數都在 ±15% 內：層級隱含與公司實績相容"))')
     rv = r; r += 1
     C.cell(r, 1, "參考：FY2026 全年（Q1–Q3 實績＋Q4 公司指引）vs 層級 CY2026（含指引，不判定）")
     C.cell(r, 2, f"=Q!G{rq}").number_format = "#,##0.0"; C.cell(r, 2).font = GREEN
