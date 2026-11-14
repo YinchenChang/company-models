@@ -1,4 +1,19 @@
-# dell/ — 戴爾（Dell Technologies，DELL US）收支與估值模型 v0.2.5
+# dell/ — 戴爾（Dell Technologies，DELL US）收支與估值模型 v0.2.6
+
+## v0.2.6（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調兩讀數＋C0（實績）
+
+- **依據：** `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`、`docs/workorders/20261114_C0實績對帳補列_七家.md`、三層基準協調規則 v1.4.2（C4、C0 第 2 點）、`docs/plan/個股HTML版面規格.md` v1.3；樣板廣達、緯穎 v0.2.6（PR #531；gen_html_json 的 v1.3 區塊）。本輪不改 Siliconomics。
+- **做法：** `build_dell.py` 主引擎掛鉤（`SIL_COORD_ALT=1` 時情境 B、C 的商用 GPU 顆數 FY2028–FY2030〔≈CY2027–CY2029〕× 另一側比值；情境 A 不縮放）→ `COORD.add_sheet`＋`stamp` → `v026_post.py`（Hist〔non-GAAP，公司 8-K〕、PL 頁末標準損益表 FY2024A–FY2032E〔Non-GAAP；模型只推營業利益，預測期毛利與營業費用為展示用拆分〕、RevDCF、Val 0.7、Sens 業務主因與相對基準表、README v1.3、Coord C0）。`sens_dell.py`（`DELL_OVR`；11 案 × 低／高整本重算 → `sens.json`）、`tools/coord/alt_run.py dell`（→ `coord_alt.json`）。`gen_html_json.py` 末段套 v1.3 版面與 `COORD.inject_html`。
+- **兩讀數（C4）：** 現行基準讀數＝加權目標價 235.27（−25.8%，放空）；另一側讀數（Wattonomics 換算的產業部署 GW，CY2027–CY2029 為現行的 0.62／0.67／0.67 倍）＝213.00（−32.8%，放空）。評等相同；對帳中年份 CY2027–CY2029；快照 CURRENT。
+- **C0（實績）與出處：** 個股側＝公司揭露的 AI-optimized servers 營收（10-Q 2Q FY27 ISG 營收表，https://www.sec.gov/Archives/edgar/data/0001571996/000157199626000046/dell-20260731.htm）：2Q FY27（2026-05～07）16.401、六個月 32.533（1Q FY27 16.132＝六個月 − 三個月）十億美元，Verified。層級側＝商用 GPU 系統市場（Siliconomics SIF_GPUSysMkt_Base，CY2026 595.49）× Dell 有效份額（12.43%）＝74.0（≈ Dell FY2027）。主讀數 32.533 vs 37.0（×6/12）＝−12.1%；第二讀數 2Q × 4＝65.60 vs 74.0＝−11.4%（季中點接近年中，大致無偏）。**Dell 有效份額以公司 FY2027 AI 伺服器營收指引（740 億美元，Interested-party）校準，層級隱含值恆等於指引（核對列＝0），GPU 系統市場消去，故判定「參考（同源校準）」、結論「無可比實績（層級值同源）」，對帳中 C0 項目 0 項。** 實際檢驗錨點：上半年 AI 伺服器營收為全年指引的 44.0%；指引隱含下半年比上半年 +27.5%（10-Q 稱季末在手訂單大增）。參考（口徑不同）：Siliconomics 組裝市場 CY2026 未建模殘差 361.4（ODM 價）。缺：Dell 在商用 GPU 系統市場份額的獨立揭露；3Q FY27 財報（約 11 月下旬）未公布。
+- **讀取層級（同源，不判定）：** 商用 GPU 系統市場（情境 B，FY2027–FY2030 對 CY2026–CY2029）與 Siliconomics v0.19 差距 0。層級之間（參考）：Siliconomics 基準部署 GW 對 Wattonomics 換算值 CY2027–CY2029 +62%／+50%／+50%（Siliconomics 對帳單 r3）。
+- **對帳中年度標示：** Dell FY(t)≈CY(t−1)；PL 標準損益表 FY2028E–FY2030E 依賴 CY2027–CY2029，FY2027E 含 2027 年 1 月亦標「對帳中」（`check_layout_v13` 對 Coord 頁以會計年度＝日曆年判讀），FY2031E–FY2032E 為延伸期。
+- **Hist 出處：** 4Q FY26 新聞稿（https://www.sec.gov/Archives/edgar/data/1571996/000157199626000003/exhibit991earnings8kq4fy26.htm；FY2026、FY2025）、4Q FY25 新聞稿（FY2024 修正後數字）、4Q FY24 新聞稿（FY2023 營收與 non-GAAP 淨利）；稅前利益（non-GAAP 營業利益＋GAAP 利息及其他淨額）、所得稅與稀釋股數為推得列。
+- **不變性：** `tools/xlsx_diff.py` 對 v0.2.5 逐格（容差 1e-9）：既有儲存格只差 README A1（標題段版號由舊的 v0.1.1 更正為 v0.2.6，並加本版說明），其餘皆為新增。加權目標價 235.27、DCF 266.38、Comparable（未調整）277.16、評等放空不變。EPS 口徑：non-GAAP 稀釋。
+- **README 舊節數字加註：** 下方 v0.2.5 以前各節的目標價與上檔空間早於 Siliconomics v0.19 全下游重建，與現行 dist 不符；現行值見上（不改寫歷史）。
+- **驗證：** LibreOffice 重算錯誤格 0；`check_company_html.py dell`、`check_layout_v13.py --xlsx`（A–I 全過；剩既有參數代號警告）、`tools/baseline_coordination/check.py` 0 項不符。
+- **未解：** (1) Siliconomics `coord_meta_v0.19.json` 的 `hardware_companies` 尚未列入 dell（本輪不改，見 PR 說明）；(2) 3Q FY27 財報公布後補 C0 第三季並檢查指引。
+- 成品：`dist/20261115_戴爾個股模型_v0.2.6.xlsx`、`.html`；v0.2.5 移到 `dist/_待刪除/`。
 
 ## v0.2.5（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 
