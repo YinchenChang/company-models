@@ -216,10 +216,14 @@ inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新�
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 股數 sh_v)", "與 WACC 權重同一口徑")
 
 r = 4
+_OVR = dict(kv.split("=") for kv in os.environ.get("ACCTON_OVR", "").split(";") if kv)   # v0.4.5：敏感度快照（accton/sens_accton.py）以環境變數 ACCTON_OVR 把 In 輸入改為敏感度低／高值；mf、tf＝引擎產業量係數；正式建置不設
 for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    if key in _OVR:   # lo／hi＝In 頁敏感度低／高欄；x0.8＝基準 × 0.8
+        base = {"lo": lo, "hi": hi}.get(_OVR[key]) if _OVR[key] in ("lo", "hi") else base * float(_OVR[key].lstrip("x"))
+        assert base is not None, (key, _OVR[key])
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
         if v is not None:
@@ -281,8 +285,12 @@ FYS = (2025, 2026, 2027, 2028, 2029); FC = {2025: "C", 2026: "D", 2027: "E", 202
 BU = (2026, 2027, 2028, 2029)
 umx = lambda y, s: {2026: "1", 2027: "1", 2028: f"um28_{s}", 2029: f"um29_{s}"}[y]
 DEFP = dict(scn="A", rel="rel", eth="eth", wb="wb", nrel="nrel", mf="1", tf="1", gn="g_nai", d="d_nap", opxa="0", ns="ns26", af="af25", nio="nio_f")
+for _k in ("mf", "tf"):   # v0.4.5：敏感度快照的產業量係數（ACCTON_OVR mf=0.8 等；FY2027 起交換器市場或 Trainium 顆數 × 本值）
+    if _k in _OVR: DEFP[_k] = str(float(_OVR[_k]))
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["mf"] == "1" and P["tf"] == "1" and s != "A":   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 的交換器市場與 Trainium 顆數 × wta（＝另一側讀數比值）；情境 A 不縮放
+        P["mf"] = P["tf"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
     hdr(ws, r, ["項目", "單位", "FY2025A", "FY2026（錨點）", "FY2027", "FY2028", "FY2029", "說明"]); r += 1
@@ -888,6 +896,16 @@ print(r3_post.apply(wb, stub_note='="資產負債表日 "&bs_date&"；stub FCFF�
 # px1105（2026-11-06）：情境名稱改回樂觀／基準／保守、舊版沿革列固定文字（本資料夾 px1105_post.py）
 import px1105_post  # noqa: E402
 print(px1105_post.apply(wb))
+# 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 accton/coord_alt.json）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_CR = COORD.add_sheet(wb, _HERE, SIL)
+if _CR:
+    COORD.stamp(wb, "v0.4.4", "v0.4.5", "2026-11-15")
+# v0.4.5（2026-11-15）：版面規格 v1.3（標準損益表、反向 DCF、四個目標價、敏感度主圖）＋三層協調 C0（實績）對帳（accton/v045_post.py；只新增，既有數值不變）
+import v045_post as POST  # noqa: E402
+print(POST.apply(wb, SIL, _HERE, _CR))
 wb.save(sys.argv[1])
 if os.environ.get("ACCTON_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

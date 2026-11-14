@@ -363,6 +363,8 @@ DEFP = dict(scn="B", vr="asp_vr", amd="asp_amd", asic="asp_asic", ru="asp_ru", b
 YH = ["項目", "單位", "FY2025A", "FY2026（錨點）", "FY2027", "FY2028", "FY2029", "FY2030（收斂）", "FY2031（收斂）", "FY2032（收斂）", "說明"]
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["mf"] == "1" and s != "A":   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 的加速器顆數 × wta（＝另一側讀數比值）；情境 A 不縮放
+        P["mf"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
     hdr(ws, r, YH); r += 1
@@ -1015,6 +1017,14 @@ def _r3_text(wb, stub_lab, px_old_dates=(), px_new_date="2026-11-04", extra=()):
 RD["A1"] = RD["A1"].value + "；v0.2.3（2026-11-06）第三輪修正（合併前）：現價與同業報價統一到 2026-11-04 收盤、stub 期 FCFF 改 FY2026 錨點、展示字串統一"
 _r3_text(wb, "含 stub 期會計年度 FY2026（日曆年）FCFF × stub_frac", px_old_dates=("2026-10-22", "2026-11-04"), px_new_date="2026-11-05")
 RD["A1"] = RD["A1"].value + "；v0.2.4：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"   # px1105（2026-11-06）
+# v0.2.5（2026-11-15）：三層協調 C4（規則 v1.4.2；tools/coord/）兩讀數目標價（Coord 頁；快照 jentech/coord_alt.json）＋個股 HTML 版面規格 v1.3＋C0（實績）（jentech/v13_post.py）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import v13_post as P13
+    print(P13.apply(wb, SIL, _CR))
 wb.save(sys.argv[1])
 if os.environ.get("JT_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

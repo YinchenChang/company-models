@@ -1,4 +1,17 @@
-# accton/ — 智邦科技（2345）收支與估值模型 v0.4.4
+# accton/ — 智邦科技（2345）收支與估值模型 v0.4.5
+
+## v0.4.5（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調兩讀數＋C0（實績）
+
+- **依據：** `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`、`docs/workorders/20261114_C0實績對帳補列_七家.md`、三層基準協調規則 v1.4.2（C4、C0 第 2 點）、`docs/plan/個股HTML版面規格.md` v1.3；樣板 NVIDIA v0.3.10、Broadcom、Astera Labs（網通），同 lineage 緯穎 v0.2.6（`wiwynn/v026_post.py`）。本輪不改 Siliconomics 與網通市場層。
+- **做法：** `build_accton.py` 主引擎掛鉤（`SIL_COORD_ALT=1` 時情境 B、C 的交換器市場與 Trainium 顆數 CY2027 起 × 另一側比值；情境 A 不縮放）→ `COORD.add_sheet`＋`stamp` → `v045_post.py`（Hist、PL 頁末標準損益表、RevDCF、Val 0.7、Sens 業務主因與相對基準表、README v1.3 白話列、Coord C0）。`sens_accton.py`（環境變數 `ACCTON_OVR`；11 個業務主因 × 低／高整本重算 → `sens.json`）、`tools/coord/alt_run.py accton`（→ `coord_alt.json`）。`gen_html_json.py` 末段套 v1.3 版面與 `COORD.inject_html`。
+- **兩讀數（C4）：** 現行基準讀數＝加權目標價 2,380.41（上檔 +72.5%，強力買進）；另一側讀數（Wattonomics 換算的產業部署 GW，CY2027–CY2029 為現行的 0.62／0.67／0.67 倍）＝1,908.55（+38.3%，買進）。**評等不同**；對帳中年份 CY2027–CY2029；快照狀態 CURRENT。
+- **C0（實績）與出處：** 個股側＝公司月營收（合併營收，Verified）：2026 年 1–9 月取 Yahoo 股市營收頁（公司月營收公告彙整，https://tw.stock.yahoo.com/quote/2345.TW/revenue），10 月 446.63 億元取 TechNews 2026-11-06（https://finance.technews.tw/2026/11/06/accton-2345-202610-financial-report/；前 10 月累計 3,310.65 億元）；MOPS 原文未直接讀取。1–10 月累計 331.07、3Q26 120.74（十億元）。層級側＝白牌 AI 乙太網路交換器市場（網通市場層 × 乙太網路占比 × 白牌占比）× 智邦白牌有效份額 × 匯率＋Trainium 顆數（＝Siliconomics SIF_UnitsPlat_trn）× 每顆營收＋非 AI＝410.76（CY2026 全年）。主讀數 331.07 vs 342.30（×10/12）＝−3.3%；第二讀數 3Q26 × 4＝482.97 vs 410.76＝+17.6%（季中點在年度後半、成長年偏高）。**白牌有效份額與每顆 Trainium 營收由本模型 FY2026 錨點校準，非 AI 也來自本模型，層級隱含值恆等於錨點營收（核對列＝0），市場、顆數與匯率消去，故判定「參考（同源校準）」、結論「無可比實績（層級值同源）」，對帳中 C0 項目 0 項。** 實際檢驗的是錨點：1–10 月已實現錨點全年的 80.6%；錨點隱含 11–12 月月均營收比 10 月實績低 10.8%（錨點 4Q 營收＝3Q × 1.03，偏保守）。缺：智邦白牌份額或 AI 營收金額的獨立揭露。
+- **讀取層級（同源，不判定）：** AI IT 資本支出（情境 B）、Trainium 顆數與 Siliconomics v0.19 差距 0；交換器市場只在網通市場層 markets/network v0.2.3（Siliconomics 無同口徑名稱）。層級之間（參考）：Siliconomics 基準部署 GW 對 Wattonomics 換算值 CY2027–CY2029 +62%／+50%／+50%（Siliconomics 對帳單 r3）。
+- **不變性：** `tools/xlsx_diff.py` 對 v0.4.4 逐格（容差 1e-9）：既有儲存格只差 README A1 版號與本版說明；其餘皆為新增（Hist、RevDCF、Coord 頁與各頁末）。加權目標價 2,380.41、DCF 2,300.59、Comparable（調整後）2,460.23、評等強力買進不變。EPS 口徑：基本 EPS（歷史另列稀釋）。
+- **README 舊節數字加註：** 下方 v0.4.4 以前各節的目標價（例：v0.4.4 節 2,548.87、+84.7%）早於 Siliconomics v0.19 全下游重建，與現行 dist 不符；現行值見上（不改寫歷史）。
+- **驗證：** LibreOffice 重算錯誤格 0；`check_company_html.py accton`、`check_layout_v13.py --xlsx`（A–I 全過；剩參數代號警告為既有 Val、In 列文字）、`tools/baseline_coordination/check.py` 0 項不符。
+- **未解：** (1) 3Q26 財報（毛利率、淨利、EPS）截至建置日查無公開來源，C0 (c) 只比營收；公布後補並決定是否滾入錨點；(2) Siliconomics `coord_meta_v0.19.json` 的 `hardware_companies` 尚未列入 accton（本輪不改該檔，見 PR 說明）；(3) 本公司無 `display_check.json`，不跑 `version_table.py`。
+- 成品：`dist/20261115_智邦個股模型_v0.4.5.xlsx`、`.html`；v0.4.4 移到 `dist/_待刪除/`。
 
 ## v0.4.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 

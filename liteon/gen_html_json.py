@@ -261,3 +261,41 @@ SPEC = {
 }
 cfg = relayout(cfg, X, SPEC)
 post(cfg)
+# ───────── v0.4.5（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（兩讀數、C0（實績））；共通步驟 liteon/html13.py（樣板 delta/gen_html_json.py） ─────────
+import html13  # noqa: E402
+AIR = "AI 相關營收（＝AI 電源 ÷（1 − 非電源占比））"
+H = {
+    "ver": "v0.4.5",
+    "units_chart": lambda pB, hB: {
+        "type": "theme", "title": "AI 相關、雲端及物聯網非 AI、光電、資訊及消費性電子營收（情境 B，十億元）與光寶 AI 電源有效份額（右軸）", "x": f"@PL!D{hB}:G{hB}",
+        "fmt": "n0", "fmt_r": "p1", "stack": True, "pad": 1.25, "total": f"@PL!D{pB('營收')}:G{pB('營收')}",
+        "bars": [{"name": ["AI 相關（AI 電源與其他 AI 產品）"], "y": f"@PL!D{pB(AIR)}:G{pB(AIR)}", "color": "#0b7a80"},
+                 {"name": ["雲端及物聯網：非 AI"], "y": f"@PL!D{pB('雲端及物聯網：非 AI')}:G{pB('雲端及物聯網：非 AI')}", "color": "#6fc7cb"},
+                 {"name": ["光電"], "y": f"@PL!D{pB('光電')}:G{pB('光電')}", "color": "#c29a2b"},
+                 {"name": ["資訊及消費性電子"], "y": f"@PL!D{pB('資訊及消費性電子')}:G{pB('資訊及消費性電子')}", "color": "#b9b4a6"}],
+        "lines": [{"name": ["光寶在 AI 電源市場的有效份額"], "y": f"@PL!D{pB('光寶有效份額')}:G{pB('光寶有效份額')}", "axis": "r", "color": "#3b3838", "labels": True}],
+        "caption": "堆疊＝四塊營收，頂端數字＝合併營收；折線＝光寶 AI 電源有效份額（右軸）。回答命題：AI 部署與每 kW 電源內容帶動 AI 相關營收，基準情境份額持平，資訊及消費性電子停滯。FY2026 為校準年。"},
+    "sc_caption": "三情境 FY2027 起差在份額相對值與 AI 毛利率額外改善（A 高、B 基準、C 低），顆數係數的差異自 CY2028 起；FY2030 起為延伸期（收斂法）。",
+    "seg": [("一、AI 部署與 AI 電源", "A. AI 部署與 AI 電源市場", "B. 營收分部"), ("二、三大事業群與合併營收", "B. 營收分部", "C. 損益")],
+    "seg_caption": "分部營收推導（情境 B；十億元新台幣）：AI 電源＝部署 GW × 每 kW 電源內容 × 光寶有效份額；AI 相關＝AI 電源 ÷（一減非電源占比）；加雲端非 AI、光電、資訊及消費性電子得合併營收",
+    "gw_chart": lambda pB, hB: {
+        "type": "theme", "title": "部署 GW（IT 電力，長條）與每 kW AI 電源內容（折線，美元／kW，右軸）：情境 B", "x": f"@PL!D{hB}:G{hB}",
+        "fmt": "n0", "fmt_r": "n0", "stack": False, "pad": 1.3,
+        "bars": [{"name": ["部署 GW（IT 電力）"], "y": f"@PL!D{pB('部署 GW（IT 電力）')}:G{pB('部署 GW（IT 電力）')}", "color": "#0b7a80"}],
+        "lines": [{"name": ["每 kW AI 電源內容"], "y": f"@PL!D{pB('AI 電源內容（台達電模型）')}:G{pB('AI 電源內容（台達電模型）')}", "axis": "r", "color": "#c29a2b", "labels": True}],
+        "caption": "AI 電源營收的兩個產業輸入：部署量（讀 Siliconomics 基準，再乘情境 B 顆數係數）與每 kW 電源內容（讀 Siliconomics）；乘上光寶有效份額即為 AI 電源營收。"},
+    "recon_h3": "共識、台達電模型與校準值對照（原有）",
+    "ext": lambda row: (3, {k: (row("PL", "營收", row("PL", f"情境 {k}", exact=True), True), row("PL", "EPS", row("PL", f"情境 {k}", exact=True), True)) for k in "ABC"}),
+    "plain": {f"Val!E{row('Val', 'WACC', exact=True)}": "股權成本與稅後債務成本以市值權重加權；WACC 調整只用於敏感度（基準為零）",
+              f"Val!A{row('Val', '永續成長率 g')}": "永續成長率 g（長期成長上限與無風險利率取小者）",
+              f"Val!A{row('Val', '永續期 RONIC')}": "永續期 RONIC（＝WACC＋超額報酬差）",
+              f"Val!A{row('Val', 'DCF 情境價值推到 12 個月後')}": "DCF 情境價值推到目標時點（以股權成本複利，扣除期間股利）",
+              f"In!B{INK['g_tv']}": "永續成長率 g（最後一年之後；長期成長上限與無風險利率取小者）",
+              f"In!B{INK['scn_fade_g']}": "FY2032 營收年增收斂目標（A 為基準加兩個百分點、B 為基準、C 為基準減兩個百分點）",
+              f"In!B{INK['scn_fade_m']}" if 'scn_fade_m' in INK else "_": "FY2032 淨利率收斂目標（十年平均淨利率）",
+              f"README!A{row('README', '預估期間：')}": "預估期間：FY2027–FY2029 由驅動因子推導；FY2030 起為收斂法，非驅動因子推導（營收年增與淨利率由 FY2029 線性收斂到長期目標，FY2032 達到）"},
+    "fold": {"DCF!A2": "展開：DCF 的營業利益與自由現金流口徑"},
+}
+html13.apply(cfg, wb, X, H, os.path.join(HERE, ".."))
+json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+print("v1.3 ok", os.path.relpath(X, HERE))
