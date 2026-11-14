@@ -389,6 +389,9 @@ for _k, _v in OVR.items():
     if _k.startswith("_P:"): DEFP[_k[3:]] = _v
 if "_krdecay" in OVR:   # 原則 48：k_rec 自 FY2028 起線性衰減、FY2030 回到 1（Sens 案例）
     DEFP["krpath"] = {2027: "k_rec", 2028: "(k_rec+(1-k_rec)/3)", 2029: "(k_rec+2*(1-k_rec)/3)", 2030: "1"}
+import coord_post as CO   # 三層協調試作（2026-11-14；規則 v1.1 C4）：另一側讀數建置（nvidia/coord_alt.py）三情境 CY2027 起產業量 × co_r_<yy>
+if "_coord" in OVR:
+    DEFP["wta"] = dict(CO.WTA_CO)
 def W(fy, f):
     """原則 49：會計年度值＝11/12 × CY(t−1)＋1/12 × CY(t)；上游只到 CY2029，FY2030 的 1/12 以 CY2029 代替（持平近似，不引入新假設）"""
     c0 = fy - 1; c1 = min(c0 + 1, 2029)
@@ -1157,6 +1160,10 @@ print(v035_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), dict(STAGE
 if V36 and not OVR:
     import v037_post  # noqa: E402
     print(v037_post.apply(wb, os.path.dirname(os.path.abspath(__file__))))
+# ---------------- 三層協調試作（2026-11-14；規則 v1.1 C4、版面規格 v1.3 I 節）：In 頁 Y 節（兩讀數 GW、對帳中旗標）＋Coord 頁（兩讀數目標價；只新增） ----------------
+_CO = CO.write_inputs(wb, SIL)
+if V36 and not OVR:
+    print("coord_post：", CO.write_sheet(wb, _CO)["RC"], CO.stamp(wb))
 wb.save(sys.argv[1])
 if os.environ.get("NV_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

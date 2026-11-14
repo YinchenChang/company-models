@@ -1,0 +1,10 @@
+{
+ "_說明": "三層基準協調規則 v1.1 C4（對帳中標示與兩讀數目標價）的集中輸入。本檔是 NVIDIA 模型讀『另一側讀數』與『對帳中』旗標的唯一一處；Siliconomics 試作分支提供 SIF_DeployGW_Demand_<yyyy>、SIF_RecoFlag_<yyyy> 之後，coord_post.load() 會自動改讀快照名稱，本檔的暫值不再使用（之後只換這一處）。",
+ "status": "暫值，待 Siliconomics 試作分支",
+ "source": "Wattonomics 換算值（三層基準協調規則 v1.1 C3 平滑法；橋接表 v0.1 量測，Drive 02-AI供應鏈/對帳/20261114_三層基準協調_橋接表_v0.1.xlsx）；派工訊息 2026-11-14 給定",
+ "future_names": {"alt": "SIF_DeployGW_Demand_<yyyy>", "flag": "SIF_RecoFlag_<yyyy>", "base": "SIF_DeployGW_Base"},
+ "years": [2026, 2027, 2028, 2029],
+ "alt_gw": {"2026": 23.017, "2027": 27.921, "2028": 31.104, "2029": 30.851},
+ "base_gw_expected": {"2026": 23.400, "2027": 39.164, "2028": 42.234, "2029": 51.118},
+ "reco_flag": {"2026": 1, "2027": 1, "2028": 1, "2029": 1}
+}
