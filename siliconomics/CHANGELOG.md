@@ -1,5 +1,16 @@
 # Siliconomics 變更紀錄
 
+## v0.19-trial（2026-11-14；**試作，不合併**；`model/20261114_Siliconomics_v0.19-trial.xlsx`；Tokenomics v21.10）
+
+- **三層基準協調結構**（規則 `docs/plan/三層基準協調規則.md` v1.1；落地步驟 5a 前置；報告 `docs/reports/20261114_協調試作_build.md`）：
+  - In 頁 M30（24 列）：逐年 Wattonomics 換算值（平滑法 x2，暫值 23.017／27.921／31.104／30.851 GW，待 Wattonomics v0.3.2 後重算）、兩層證據比例（Wattonomics 暫值 0.888／0.494／0.535／0.202；Siliconomics 0.44／0／0／0）、`crd_cov_done`（暫 0）、門檻與緩衝區、上次判定（首次留空）。
+  - 新 Coord 頁：逐年狀態（甲乙丙，含緩衝區）、由誰定基準、該年標示、依規則的基準與基準係數 `crd_k_<yy>`；基準鏈（Units、Deploy、Mkt 係數列、ABF、Rack、Equip、Cap）的 S33 係數改讀 `crd_k`。S33（um28_B／um29_B）只在「維持現行」年份經 `crd_k` 帶入，保留為情境參照。
+  - Interface E 節新增 40 個逐年名稱：`SIF_DeployGW_Supply／Demand／Current／Alt／AltRatio_<年>`、`SIF_RecoStatus／Lead／Label／Flag／UseConv_<年>`；A 節自動新增 `SIF_crd_*`（38 個含 _lo／_hi）。Checks 新增 K11（基準＝規則基準，ERROR）、K12（標示，INFO 不計入 SGOV）。
+  - `tools/export_baseline_status.py` → `data/baseline_status.json`（判斷類欄位在 `builder/seed/coord_meta_v0.19.json`）。
+- cov_done＝0（現狀）：既有 1,832 個 SIF／SGOV 名稱逐值與 v0.18 相同；四年皆「對帳中」（2026 乙、2027 丙、2028 乙、2029 丙，皆由 Wattonomics 定基準但覆蓋未補齊）。NVIDIA 重建只有版本文字 9 格不同。
+- cov_done＝1（對照檔 `docs/reports/20261114_協調試作_cov_done1.xlsx`）：基準部署 GW 23.40／39.16／42.23／51.12 → 23.02／27.92／31.10／30.85（−1.6%／−28.7%／−26.4%／−39.6%），49 個名稱改值；Checks K1 四格 ERROR（SK 海力士成品仍以 um*_B 算 HBM 市場，預期）；NVIDIA 模型不跟隨（自行以 um28_B 算基準，見報告待判斷）。
+- 未跑：R4 橋接與 Recon 快照（沿用 v0.18；cov_done＝0 下輸入相同）、全下游 cascade（只跑 NVIDIA）。
+
 ## v0.18（2026-11-05；`model/20261105_Siliconomics_v0.18.xlsx`；Tokenomics v21.10）
 
 - **2027 基準依 HBM 本庫自算供給截頂**（三層校準原則第 2 條；Andy 11-05 16:33 同意、18:50「繼續做」；決策 S48；報告 `docs/reports/20261105_v0.18_2027截頂與NVIDIA顆數四線.md`）：In 頁 `u_*_27` × 0.9404（＝v0.17 `SIF_CapGW_Base` ÷ `SIF_DeployGW_Base`），原始值與來源保留在說明欄；不遞延到 2028。
