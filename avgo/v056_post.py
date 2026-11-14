@@ -465,13 +465,27 @@ def coord_c0(wb, SIL, T_):
             C.cell(r, j, v)
         r += 1
     C.cell(r, 1, "下游只註明版本、不自行重估（Instructions 第 3 條）。上列各輸入的原值與來源列見 In 頁；本節不改任何輸入。").font = Font(italic=True); r += 2
+    # ---- C0 輸入格（讀自 Siliconomics；不寫進公式）----
+    N = SIL.NAMES
+    C.cell(r, 1, "C0 輸入：Siliconomics 份額（CY2027；份額恆等式用）——Broadcom 以外的已建模同業份額與層級合計，皆為 Siliconomics 原值，本模型不改").font = BOLD; r += 1
+    for j, h in enumerate(["項目", "值", "來源"], 1):
+        c = C.cell(r, j, h); c.font = BOLD; c.fill = HDR
+    r += 1
+    IN_ = {}
+    for key, labl in (("mtk_tpu_27", "聯發科占 Google TPU 顆數份額 CY2027"), ("msh_tpu_27", "Marvell 占 Google TPU 顆數份額 CY2027"),
+                      ("mtk_oth_27", "聯發科占其他 ASIC 顆數份額 CY2027"), ("msh_oth_27", "Marvell 占其他 ASIC 顆數份額 CY2027")):
+        C.cell(r, 1, labl); C.cell(r, 2, SIL.base(key)).number_format = "0.0%"; C.cell(r, 2).font = BLUE
+        C.cell(r, 3, f"Siliconomics {SIL.VERSION}（SIF_{key}；{SIL.FILE}）"); IN_[key] = r; r += 1
+    for key, labl, i in (("SIF_ASICShareSum_tpu", "層級合計：Google TPU CY2027 各家份額合計", 1), ("SIF_ASICShareSum_oth", "層級合計：其他 ASIC CY2027 各家份額合計", 1)):
+        C.cell(r, 1, labl); C.cell(r, 2, N[key][i]).number_format = "0.0%"; C.cell(r, 2).font = BLUE
+        C.cell(r, 3, f"Siliconomics {SIL.VERSION}（{key}［CY2027］；{SIL.FILE}）"); IN_[key] = r; r += 1
+    r += 1
     # ---- C0 ----
     C.cell(r, 1, "G. C0 由下往上對帳（三層基準協調規則 v1.4.1 C0／C5）：個股的產業相關量 vs 層級對應值；差距超過 ±15% 標「對帳中」，不改上游值（主控開對帳單）").font = BOLD; r += 1
-    for j, h in enumerate(["項目", "本模型值", "層級對照值", "差距", "狀態", "單位與口徑", "對照來源（層、版本）", "證據等級", "說明"], 1):
+    for j, h in enumerate(["項目", "本模型值", "層級對照值", "差距／殘差", "狀態", "單位與口徑", "對照來源（層、版本）", "證據等級", "說明"], 1):
         c = C.cell(r, j, h); c.font = BOLD; c.fill = HDR
     r += 1
     G0 = r
-    N = SIL.NAMES
     pct = '+0.0%;-0.0%'
     P_ = wb["PL"]
     rbA = lab(P_, "情境 A：原始顆數"); rcB = lab(P_, "情境 B：")
@@ -484,9 +498,9 @@ def coord_c0(wb, SIL, T_):
         if kind == "ratio":
             C.cell(r, 4, f"=B{r}/C{r}-1").number_format = pct
             C.cell(r, 5, f'=IF(ABS(D{r})>0.15,"對帳中","一致")')
-        else:   # 恆等式：本模型值＋層內其他已建模者 ≤ 1；差距欄＝未建模殘差
-            C.cell(r, 4, f"=1-C{r}").number_format = "0.0%"
-            C.cell(r, 5, f'=IF(C{r}<=1,"一致（殘差 "&TEXT(D{r},"0%")&" 明列）","對帳中")')
+        else:   # 份額恆等式：本模型值＝Broadcom＋Siliconomics 其他已建模同業；差距／殘差欄＝層級合計 − 已建模合計（≥ 0；未建模同業吸收，不得默默歸零）
+            C.cell(r, 4, f"=C{r}-B{r}").number_format = "0.0%"
+            C.cell(r, 5, f'=IF(ABS(D{r})<0.0005,"一致（已建模合計＝層級合計）",IF(D{r}>0,"一致（未建模殘差 "&TEXT(D{r},"0%")&" 明列）","對帳中"))')
         C.cell(r, 6, unit); C.cell(r, 7, source); C.cell(r, 8, ev); C.cell(r, 9, note)
         r += 1
     S = lambda k: SIL.base(k)
@@ -501,19 +515,19 @@ def coord_c0(wb, SIL, T_):
     c0("XPU 每顆核心售價：Google TPU（2026 基準）", "=core_tpu", S("core_tpu"), "US$K；不含 HBM", f"Siliconomics {SIL.VERSION}（SIF_core_tpu）", "Assumed", "同上", fmt="0.0")
     # 份額恆等式（個股加總＋殘差＝100%）
     sumtpu, sumoth = N["SIF_ASICShareSum_tpu"], N["SIF_ASICShareSum_oth"]
-    c0("份額恆等式：Google TPU CY2027 已建模同業份額合計（Broadcom＋聯發科＝Siliconomics 份額表）", f"=sh_tpu_27+{S('mtk_tpu_27')}", sumtpu[1],
-       "%；Broadcom 份額 ＋ 聯發科（SIF_mtk_tpu_27）；層欄＝Siliconomics SIF_ASICShareSum_tpu", f"Siliconomics {SIL.VERSION}（SIF_ASICShareSum_tpu）", "Assumed",
-       "個股加總＋未建模殘差＝100%（C0 第 1 點）；殘差由未建模同業（Alchip／GUC 等）吸收，不得默默歸零", kind="identity", fmt="0.0%")
-    c0("份額恆等式：其他 ASIC CY2027 已建模同業份額合計（Broadcom＋聯發科＝Siliconomics 份額表）", f"=sh_oth_27+{S('mtk_oth_27')}", sumoth[1],
-       "%；Broadcom 份額 ＋ 聯發科（SIF_mtk_oth_27）", f"Siliconomics {SIL.VERSION}（SIF_ASICShareSum_oth）", "Assumed",
-       "殘差大（Marvell、Alchip／GUC 等未建模或由其他模型負責），明列不吸收", kind="identity", fmt="0.0%")
+    c0("份額恆等式：Google TPU CY2027（Broadcom＋聯發科＋Marvell vs 層級合計）", f"=sh_tpu_27+B{IN_['mtk_tpu_27']}+B{IN_['msh_tpu_27']}", f"=B{IN_['SIF_ASICShareSum_tpu']}",
+       "%；本模型值＝Broadcom 份額＋聯發科＋Marvell（上方輸入格）；欄位「差距／殘差」＝層級合計 − 已建模合計", f"Siliconomics {SIL.VERSION}（SIF_ASICShareSum_tpu）", "Assumed",
+       "個股加總＋殘差＝層級合計（C0 第 1 點）；殘差由未建模同業吸收，不得默默歸零", kind="identity", fmt="0.0%")
+    c0("份額恆等式：其他 ASIC CY2027（Broadcom＋聯發科＋Marvell vs 層級合計）", f"=sh_oth_27+B{IN_['mtk_oth_27']}+B{IN_['msh_oth_27']}", f"=B{IN_['SIF_ASICShareSum_oth']}",
+       "%；本模型值＝Broadcom 份額＋聯發科＋Marvell（上方輸入格）；欄位「差距／殘差」＝層級合計 − 已建模合計", f"Siliconomics {SIL.VERSION}（SIF_ASICShareSum_oth）", "Assumed",
+       "Marvell 有個股模型，份額讀自 Siliconomics；殘差＝未建模同業，不得默默歸零", kind="identity", fmt="0.0%")
     # 營收口徑：FY2026 XPU
     c0("FY2026 XPU 營收：公司實績推估（錨點）vs 層級由下而上（顆數 × 份額 × 核心售價＋代購 HBM，未校準）", f"=PL!D{r_xpu}", f"=PL!D{r_ku}", "US$B；FY2026＝CY2026；差距＝XPU 校準係數 − 1",
        f"Siliconomics {SIL.VERSION} 顆數、份額、核心售價（層）；錨點＝Q 頁（AI 營收 57.6 − 網通 17.6）", "Verified（AI 營收，公司）／Derived（XPU＝AI − 網通）",
        "±15% 內：層級由下而上與公司實績相容；校準係數只用於 FY2026 之後的縮放", fmt="#,##0.0")
     c0("FY2026 AI 網通營收：公司實績推估（錨點）vs 市場層歸屬值（markets/network）", "=a26_net", "=net_26", "US$B；FY2026；差距＝網通校準係數 − 1",
        f"{net_v}（net_26：Broadcom 歸屬）", "Derived（錨點：法說 XPU 占 AI 73%，二手）／Assumed（層：廠商歸屬比例）",
-       "超過 +15%：市場層的 Broadcom 歸屬比例偏低（Assumed），本模型以網通校準係數校準到推估；不改上游值，列對帳單候選（由網通層處理）", fmt="#,##0.0")
+       "超過 +15%：市場層的 Broadcom 歸屬比例偏低（Assumed），本模型以網通校準係數校準到推估；不改上游值；對帳單由 Siliconomics 對帳單登錄（主控開立）", fmt="#,##0.0")
     G1 = r - 1
     r += 1
     C.cell(r, 1, "層級之間（參考；Siliconomics 對帳單 r3 處理，不計入本公司 C0）：產業部署 GW，Siliconomics 現行基準 vs 另一側讀數（Wattonomics 換算）。這是兩層之間的差距，不是 Broadcom 自己的量對層級值；Siliconomics 已標對帳中，本公司不標、不計入對帳中項目數，依 C4 並列兩讀數目標價").font = BOLD; r += 1
