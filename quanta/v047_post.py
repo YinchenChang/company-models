@@ -520,7 +520,7 @@ def coord_c0(wb, SIL, R):
     flags = []
     YC = "BCDE"; PC = "DEFG"   # Coord 欄 B–E ↔ PL 欄 D–G（FY2026–FY2029）
 
-    def block(title, model_f, layer_vals, unit, src, fmt="#,##0.0", layer_label="Siliconomics 層", tol=0.15):
+    def block(title, model_f, layer_vals, unit, src, fmt="#,##0.0", layer_label="Siliconomics 層", tol=0.15, ref=False):
         nonlocal r
         C.cell(r, 1, title).font = BOLD; r += 1
         C.cell(r, 1, "　本模型"); C.cell(r, 6, unit); C.cell(r, 7, src)
@@ -535,10 +535,16 @@ def coord_c0(wb, SIL, R):
         for c in YC:
             C[f"{c}{r}"] = f"={c}{m}/{c}{l}-1"; C[f"{c}{r}"].number_format = "+0.0%;-0.0%"
         d = r; r += 1
-        C.cell(r, 1, f"　判定（|差距| > {tol:.0%}＝對帳中）")
-        for c in YC:
-            C[f"{c}{r}"] = f'=IF(ABS({c}{d})>{tol},"對帳中","一致")'
-        flags.append(r); r += 1
+        if ref:
+            C.cell(r, 1, f"　判定（參考：|差距| > {tol:.0%}＝層級差距；不標本公司對帳中）")
+            for c in YC:
+                C[f"{c}{r}"] = f'=IF(ABS({c}{d})>{tol},"層級差距","一致")'
+            r += 1
+        else:
+            C.cell(r, 1, f"　判定（|差距| > {tol:.0%}＝對帳中）")
+            for c in YC:
+                C[f"{c}{r}"] = f'=IF(ABS({c}{d})>{tol},"對帳中","一致")'
+            flags.append(r); r += 1
         return m, l, d
     dg = lambda k: [N[k][i] for i in range(4)]
     block("(1) AI IT 資本支出（情境 B）", lambda c: f"=PL!{c}{gb('AI IT 資本支出 × 情境顆數係數')}", dg("SIF_AIITCapex_Base"), "US$B；加速器顆數 × 每顆 IT capex（含 ASIC）× 顆數係數", "Siliconomics SIF_AIITCapex_Base；Derived（markets/network v0.2.3 讀入）")
@@ -546,8 +552,6 @@ def coord_c0(wb, SIL, R):
     m3, l3, d3 = block("(3) 整櫃組裝市場（ODM 價；情境 B）", lambda c: f"=PL!{c}{gb('AI 伺服器組裝市場（ODM 價，美元）')}", dg("SIF_AsmMkt_Base"), "US$B；部署 GW × 每 GW ODM 整櫃價值（含 ASIC 機架，Assumed：每 GW 價值相同）",
                        "Siliconomics SIF_AsmMkt_Base；Derived／Assumed（每 GW 價值）")
     block("(4) 部署 GW（情境 A；供給側讀數）", lambda c: f"=PL!{c}{ga('部署 GW（IT 電力）')}", [N[f"SIF_DeployGW_Supply_{y}"] for y in (2026, 2027, 2028, 2029)], "GW；情境 A＝原始顆數（供給側）", "Siliconomics SIF_DeployGW_Supply_<yyyy>；Derived", "0.00")
-    m5, l5, d5 = block("(5) 另一側讀數：部署 GW（情境 B）對 Wattonomics 換算值", lambda c: f"=PL!{c}{gb('部署 GW（IT 電力）')}", [N[f"SIF_DeployGW_Alt_{y}"] for y in (2026, 2027, 2028, 2029)],
-                       "GW；Siliconomics SIF_DeployGW_Alt_<yyyy>＝Wattonomics 資本支出與電力路徑換算的需求側讀數", "Wattonomics v0.3.2 經 Siliconomics 換算；Derived（需求側）", "0.00", layer_label="Wattonomics 換算值（需求側）")
     # 份額與未建模殘差
     C.cell(r, 1, "(6) 份額與恆等式（已建模 ODM 加總＋未建模殘差＝市場）").font = BOLD; r += 1
     qs = SIL.V["asm_qush_26"]["base"]; qrel = [1.0] + [SIL.V[f"asm_qurel_{y}"]["base"] for y in (27, 28, 29)]
@@ -583,17 +587,20 @@ def coord_c0(wb, SIL, R):
     for c in YC:
         C[f"{c}{r}"] = f"={c}{m3}*{c}{rs_m}"; C[f"{c}{r}"].number_format = "#,##0.0"
     C.cell(r, 7, "本模型：PL 情境 B 組裝市場 × 有效份額；上限為市場（恆等式：加總不得超過上層）"); r += 2
+    C.cell(r, 1, "層級之間（參考；Siliconomics 對帳單 r3 處理，不計入本公司 C0）").font = BOLD; r += 1
+    C.cell(r, 1, "　下列差距是 Wattonomics 與 Siliconomics 兩層之間的差距，不是廣達自己的量對其所讀 Siliconomics 值的差距；本公司依 C4 並列兩讀數，不裁決、不改上游。"); r += 1
+    m5, l5, d5 = block("(7) 部署 GW（情境 B）對 Wattonomics 換算值（兩層之間的差距）", lambda c: f"=PL!{c}{gb('部署 GW（IT 電力）')}", [N[f"SIF_DeployGW_Alt_{y}"] for y in (2026, 2027, 2028, 2029)],
+                       "GW；Siliconomics SIF_DeployGW_Alt_<yyyy>＝Wattonomics 資本支出與電力路徑換算的需求側讀數", "Wattonomics v0.3.2 經 Siliconomics 換算；Derived（需求側）", "0.00", layer_label="Wattonomics 換算值（需求側）", ref=True)
+    r += 1
     C.cell(r, 1, "3. 結論（C0）").font = BOLD; r += 1
     flag_cells = ",".join(f"B{x}:E{x}" for x in flags)
-    C.cell(r, 1, "對帳中項目數（|差距| > 15% 的年份格數，不含兩讀數(5)）")
-    C[f"B{r}"] = "=" + "+".join(f'COUNTIF(B{x}:E{x},"對帳中")' for x in flags[:-1]); n_other = r; r += 1
-    C.cell(r, 1, "對帳中：另一側讀數（Wattonomics 換算部署 GW）的年份格數")
-    C[f"B{r}"] = f'=COUNTIF(B{flags[-1]}:E{flags[-1]},"對帳中")'; n_alt = r; r += 1
+    C.cell(r, 1, "對帳中項目數（|差距| > 15% 的年份格數，僅本公司的量對所讀 Siliconomics 值）")
+    C[f"B{r}"] = "=" + "+".join(f'COUNTIF(B{x}:E{x},"對帳中")' for x in flags); n_other = r; r += 1
     C.cell(r, 1, "C0 結論（白話）")
     C[f"B{r}"] = F(T("本模型情境 B 的 AI IT 資本支出、部署 GW、整櫃組裝市場與廣達有效份額都直接讀自 Siliconomics "), T(SIL.VERSION), T("，與層的差距在 ±15% 內（組裝市場最大差距 "),
                    f'TEXT(MAX(ABS(B{d3}),ABS(C{d3}),ABS(D{d3}),ABS(E{d3})),"0.0%")', T("）；沒有需要往上回饋的個股證據（C5：往上流的只有證據）。"
                    "與 Wattonomics 換算的需求側讀數相比，部署 GW 在 CY2027–CY2029 差距 "), f'TEXT(C{d5},"+0%")', T("、"), f'TEXT(D{d5},"+0%")', T("、"), f'TEXT(E{d5},"+0%")',
-                   T("，超過 ±15%：這正是 Siliconomics 標示的對帳中年份，本模型依 C4 並列兩讀數目標價（上方），不改上游值，不裁決哪一側正確；對帳單由主控處理。"))
+                   T("，超過 ±15%：這是兩層之間的差距（見「層級之間」小節），已由 Siliconomics 對帳單 r3 處理，不計入本公司 C0；本模型依 C4 並列兩讀數目標價（上方），不改上游值，不裁決哪一側正確。"))
     c0_concl = r; r += 1
     return dict(c0=c0, concl=c0_concl, flags=flags, d3=d3, d5=d5, m3=m3, l3=l3)
 

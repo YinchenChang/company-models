@@ -4011,7 +4011,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!B76"
+      "@Coord!B78"
      ]
     },
     {
@@ -4154,17 +4154,17 @@
       },
       [
        "@Coord!A59",
-       "@Coord!B59|n2",
-       "@Coord!C59|n2",
-       "@Coord!D59|n2",
-       "@Coord!E59|n2"
+       "@Coord!B59|p1",
+       "@Coord!C59|p1",
+       "@Coord!D59|p1",
+       "@Coord!E59|p1"
       ],
       [
        "@Coord!A60",
-       "@Coord!B60|n2",
-       "@Coord!C60|n2",
-       "@Coord!D60|n2",
-       "@Coord!E60|n2"
+       "@Coord!B60|p1",
+       "@Coord!C60|p1",
+       "@Coord!D60|p1",
+       "@Coord!E60|p1"
       ],
       [
        "@Coord!A61",
@@ -4175,14 +4175,18 @@
       ],
       [
        "@Coord!A62",
-       "@Coord!B62|",
-       "@Coord!C62|",
-       "@Coord!D62|",
-       "@Coord!E62|"
+       "@Coord!B62|p1",
+       "@Coord!C62|p1",
+       "@Coord!D62|p1",
+       "@Coord!E62|p1"
       ],
-      {
-       "sub": "@Coord!A63"
-      },
+      [
+       "@Coord!A63",
+       "@Coord!B63|p1",
+       "@Coord!C63|p1",
+       "@Coord!D63|p1",
+       "@Coord!E63|p1"
+      ],
       [
        "@Coord!A64",
        "@Coord!B64|p1",
@@ -4199,45 +4203,51 @@
       ],
       [
        "@Coord!A66",
-       "@Coord!B66|sp1",
-       "@Coord!C66|sp1",
-       "@Coord!D66|sp1",
-       "@Coord!E66|sp1"
+       "@Coord!B66|p1",
+       "@Coord!C66|p1",
+       "@Coord!D66|p1",
+       "@Coord!E66|p1"
       ],
-      [
-       "@Coord!A67",
-       "@Coord!B67|p1",
-       "@Coord!C67|p1",
-       "@Coord!D67|p1",
-       "@Coord!E67|p1"
-      ],
-      [
-       "@Coord!A68",
-       "@Coord!B68|p1",
-       "@Coord!C68|p1",
-       "@Coord!D68|p1",
-       "@Coord!E68|p1"
-      ],
+      {
+       "sub": "@Coord!A68"
+      },
       [
        "@Coord!A69",
-       "@Coord!B69|p1",
-       "@Coord!C69|p1",
-       "@Coord!D69|p1",
-       "@Coord!E69|p1"
+       "@Coord!B69|n1",
+       "@Coord!C69|n1",
+       "@Coord!D69|n1",
+       "@Coord!E69|n1"
       ],
-      [
-       "@Coord!A70",
-       "@Coord!B70|p1",
-       "@Coord!C70|p1",
-       "@Coord!D70|p1",
-       "@Coord!E70|p1"
-      ],
+      {
+       "sub": "@Coord!A70"
+      },
       [
        "@Coord!A71",
-       "@Coord!B71|p1",
-       "@Coord!C71|p1",
-       "@Coord!D71|p1",
-       "@Coord!E71|p1"
+       "@Coord!B71|n2",
+       "@Coord!C71|n2",
+       "@Coord!D71|n2",
+       "@Coord!E71|n2"
+      ],
+      [
+       "@Coord!A72",
+       "@Coord!B72|n2",
+       "@Coord!C72|n2",
+       "@Coord!D72|n2",
+       "@Coord!E72|n2"
+      ],
+      [
+       "@Coord!A73",
+       "@Coord!B73|sp1",
+       "@Coord!C73|sp1",
+       "@Coord!D73|sp1",
+       "@Coord!E73|sp1"
+      ],
+      [
+       "@Coord!A74",
+       "@Coord!B74|",
+       "@Coord!C74|",
+       "@Coord!D74|",
+       "@Coord!E74|"
       ]
      ]
     },
