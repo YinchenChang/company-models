@@ -150,8 +150,109 @@
   {
    "id": "valuation",
    "title": "估值",
-   "intro": "@Val!A1",
    "blocks": [
+    {
+     "type": "bars",
+     "title": "四個目標價與現價（美元；豎線＝現價）",
+     "fmt": "n2",
+     "items": [
+      {
+       "label": "DCF 目標價",
+       "value": "@Val!B214",
+       "series": 1
+      },
+      {
+       "label": "Comparable（調整後，進加權）",
+       "value": "@Val!B215",
+       "series": 2
+      },
+      {
+       "label": "Comparable（未調整，不進加權）",
+       "value": "@Val!B216",
+       "series": 2
+      },
+      {
+       "label": "加權目標價（橫幅主值）",
+       "value": "@Val!B217",
+       "series": 0
+      },
+      {
+       "label": "市場共識目標價",
+       "value": "@Val!B218",
+       "series": 1
+      }
+     ],
+     "ref": {
+      "label": "@Val!A57",
+      "value": "@Val!B57"
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Val!A1"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Val!A212",
+     "head": [
+      "@Val!A213",
+      "@Val!B213",
+      "@Val!C213",
+      "@Val!D213"
+     ],
+     "rows": [
+      [
+       "@Val!A214",
+       "@Val!B214|n2",
+       "@Val!C214|sp1",
+       "@Val!D214"
+      ],
+      [
+       "@Val!A215",
+       "@Val!B215|n2",
+       "@Val!C215|sp1",
+       "@Val!D215"
+      ],
+      [
+       "@Val!A216",
+       "@Val!B216|n2",
+       "@Val!C216|sp1",
+       "@Val!D216"
+      ],
+      [
+       "@Val!A217",
+       "@Val!B217|n2",
+       "@Val!C217|sp1",
+       "@Val!D217"
+      ],
+      [
+       "@Val!A218",
+       "@Val!B218|n2",
+       "@Val!C218|sp1",
+       "@Val!D218"
+      ],
+      [
+       "@Val!A219",
+       "@Val!B219|n2",
+       "",
+       "@Val!D219"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "投資建議依加權目標價判定：",
+      "@Val!E179",
+      "；進加權的 Comparable 為相對倍數調整後 ",
+      "@Val!B199|n2",
+      "（市場主流同業法 × 相對倍數調整係數 ",
+      "@Val!B198|n2",
+      "）"
+     ]
+    },
     {
      "type": "h3",
      "text": "對帳中：兩讀數目標價"
@@ -367,102 +468,6 @@
        "@Coord!C28|n2",
        "@Coord!D28|sp1"
       ]
-     ]
-    },
-    {
-     "type": "table",
-     "caption": "@Val!A212",
-     "head": [
-      "@Val!A213",
-      "@Val!B213",
-      "@Val!C213",
-      "@Val!D213"
-     ],
-     "rows": [
-      [
-       "@Val!A214",
-       "@Val!B214|n2",
-       "@Val!C214|sp1",
-       "@Val!D214"
-      ],
-      [
-       "@Val!A215",
-       "@Val!B215|n2",
-       "@Val!C215|sp1",
-       "@Val!D215"
-      ],
-      [
-       "@Val!A216",
-       "@Val!B216|n2",
-       "@Val!C216|sp1",
-       "@Val!D216"
-      ],
-      [
-       "@Val!A217",
-       "@Val!B217|n2",
-       "@Val!C217|sp1",
-       "@Val!D217"
-      ],
-      [
-       "@Val!A218",
-       "@Val!B218|n2",
-       "@Val!C218|sp1",
-       "@Val!D218"
-      ],
-      [
-       "@Val!A219",
-       "@Val!B219|n2",
-       "",
-       "@Val!D219"
-      ]
-     ]
-    },
-    {
-     "type": "bars",
-     "title": "四個目標價與現價（美元；豎線＝現價）",
-     "fmt": "n2",
-     "items": [
-      {
-       "label": "DCF 目標價",
-       "value": "@Val!B214",
-       "series": 1
-      },
-      {
-       "label": "Comparable（調整後，進加權）",
-       "value": "@Val!B215",
-       "series": 2
-      },
-      {
-       "label": "Comparable（未調整，不進加權）",
-       "value": "@Val!B216",
-       "series": 2
-      },
-      {
-       "label": "加權目標價（橫幅主值）",
-       "value": "@Val!B217",
-       "series": 0
-      },
-      {
-       "label": "市場共識目標價",
-       "value": "@Val!B218",
-       "series": 1
-      }
-     ],
-     "ref": {
-      "label": "@Val!A57",
-      "value": "@Val!B57"
-     }
-    },
-    {
-     "type": "note",
-     "parts": [
-      "投資建議依加權目標價判定：",
-      "@Val!E179",
-      "；進加權的 Comparable 為相對倍數調整後 ",
-      "@Val!B199|n2",
-      "（市場主流同業法 × 相對倍數調整係數 ",
-      "@Val!B198|n2",
-      "）"
      ]
     },
     {
@@ -1431,8 +1436,31 @@
   {
    "id": "sens",
    "title": "敏感度",
-   "intro": "主圖為加權目標價相對基準的變動（低案、高案分開，一次動一個輸入；變動達兩位數百分比者直接顯示，其餘摺疊）；下方摺疊為全部案例、業務主因與目標價參數明細，以及 FY2028 EPS 敏感度對照。",
    "blocks": [
+    {
+     "type": "tornado",
+     "sheet": "Sens",
+     "label_col": "A",
+     "value_col": "B",
+     "fmt": "sp1",
+     "title": "加權目標價相對基準：輸入取低值，變動達兩位數百分比的案例",
+     "rows": "1025,1064"
+    },
+    {
+     "type": "tornado",
+     "sheet": "Sens",
+     "label_col": "A",
+     "value_col": "C",
+     "fmt": "sp1",
+     "title": "加權目標價相對基準：輸入取高值，變動達兩位數百分比的案例",
+     "rows": "1051,1064"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "主圖為加權目標價相對基準的變動（低案、高案分開，一次動一個輸入；變動達兩位數百分比者直接顯示，其餘摺疊）；下方摺疊為全部案例、業務主因與目標價參數明細，以及 FY2028 EPS 敏感度對照。"
+     ]
+    },
     {
      "type": "note",
      "parts": [
@@ -1578,28 +1606,10 @@
      "label_col": "A",
      "value_col": "B",
      "fmt": "sp1",
-     "title": "加權目標價相對基準：輸入取低值，變動達兩位數百分比的案例",
-     "rows": "1025,1064"
-    },
-    {
-     "type": "tornado",
-     "sheet": "Sens",
-     "label_col": "A",
-     "value_col": "B",
-     "fmt": "sp1",
      "title": "加權目標價相對基準：輸入取低值",
      "rows": "1026,1027,1028,1029,1030,1031,1032,1033,1034,1035,1037,1038,1039,1040,1041,1042,1043,1044,1045,1046,1047,1050,1053,1054,1055,1056,1057,1058,1060,1061,1062",
      "collapse": true,
      "summary": "展開：加權目標價相對基準：輸入取低值，變動未達兩位數百分比的案例（幾乎為零者見全部案例表）"
-    },
-    {
-     "type": "tornado",
-     "sheet": "Sens",
-     "label_col": "A",
-     "value_col": "C",
-     "fmt": "sp1",
-     "title": "加權目標價相對基準：輸入取高值，變動達兩位數百分比的案例",
-     "rows": "1051,1064"
     },
     {
      "type": "tornado",

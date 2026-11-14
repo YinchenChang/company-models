@@ -11,6 +11,7 @@
 - **刪除舊 Wattonomics 錨定案例：** Sens 第 895–976 列與主表第 23 列、DCF 第 99–131 列、In 頁原 Z 節與具名範圍 wta_27..29 清空（保留空白以維持列號，首列留說明），README 重點 3 的錨定句刪除；建置時掃描殘留引用（0）。
 - **另一側讀數與敏感度：** 另一側讀數只縮放情境 B、C；情境 A＝供給側讀數，兩讀數相同。`coord_alt.py` 整本重建 base／alt（`_coord`）／absorb（`_absorb`）三檔 → `coord_alt.json` → Coord 頁。`sens.json` 以新基準重跑（`sens_nvidia.py`），v0.3.6 版本沿革的 steps／attr 保留原值。
 - **HTML：** 橫幅加「另一側讀數目標價」一格與揭露句；估值章開頭兩讀數表與長條圖；敏感度章加全吸收表；標準損益表 FY2028E–FY2031E 標「對帳中」。
+- **r5 版面位置（Andy 2026-11-14 12:47；版面規格 v1.3 G、H 節「位置」）：** 估值章第一個區塊改為四個目標價與現價長條圖，章節說明、四個目標價表與評等說明移到圖下，兩讀數目標價區接在其後；敏感度章前兩個區塊改為加權目標價相對基準低案、高案兩張主圖，章節說明、全吸收表與其餘摺疊內容移到圖下（`gen_html_json.py` 的 `_top_first()`，只改區塊順序）。xlsx 只有 build_id 三格改變（含產生器雜湊）；兩章區塊內容集合與其他章節逐字相同。`check_layout_v13.py` 新增 G、H 位置檢查。
 - 建置：`python3 nvidia/coord_alt.py` →（In 頁或基準改動時）`python3 nvidia/sens_nvidia.py` → `python3 nvidia/build_nvidia.py raw.xlsx` → LibreOffice 重算 → `dist/` → `python3 nvidia/gen_html_json.py` → `python3 tools/company_html/build_company_html.py nvidia`。
 
 <!-- version-table: dist/_待刪除/20261114_NVIDIA個股模型_v0.3.7.xlsx｜dist/20261114_NVIDIA個股模型_v0.3.8.xlsx -->

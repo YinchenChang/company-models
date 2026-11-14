@@ -694,5 +694,35 @@ def _coord():
 
 _coord()
 
+
+# ================= v0.3.8 試作 r5（Andy 2026-11-14 12:47；版面規格 v1.3 G、H 節「位置」）：主圖置頂、說明放圖下 =================
+# 估值章：第一個區塊＝四個目標價與現價長條圖；章節說明（原 intro）、四個目標價表與說明放在圖下；其後才是對帳中兩讀數目標價區與其餘內容。
+# 敏感度章：前兩個區塊＝加權目標價相對基準的低案、高案主圖（變動達兩位數者）；章節說明、未達兩位數的摺疊圖、全吸收表與其他內容放在下方。
+# 只改區塊順序；不改任何區塊內容與數字。
+def _top_first():
+    S = {x["id"]: x for x in cfg["sections"]}
+    # 估值章
+    va = S["valuation"]["blocks"]
+    i_bar = next(i for i, b in enumerate(va) if b.get("type") == "bars" and str(b.get("title", "")).startswith("四個目標價"))
+    i_tbl, i_nt = i_bar - 1, i_bar + 1
+    assert va[i_tbl].get("type") == "table" and str(va[i_tbl].get("caption", "")).startswith("@Val!A"), va[i_tbl]
+    assert va[i_nt].get("type") == "note" and "投資建議依加權目標價判定" in str(va[i_nt].get("parts")), va[i_nt]
+    top = [va[i_bar]]
+    if S["valuation"].get("intro"):
+        top.append({"type": "note", "parts": [S["valuation"].pop("intro")]})
+    top += [va[i_tbl], va[i_nt]]
+    S["valuation"]["blocks"] = top + [b for i, b in enumerate(va) if i not in (i_tbl, i_bar, i_nt)]
+    # 敏感度章
+    sb = S["sens"]["blocks"]
+    main = [i for i, b in enumerate(sb) if b.get("type") == "tornado" and not b.get("collapse") and str(b.get("title", "")).startswith("加權目標價相對基準")]
+    assert len(main) == 2, main
+    top = [sb[i] for i in main]
+    if S["sens"].get("intro"):
+        top.append({"type": "note", "parts": [S["sens"].pop("intro")]})
+    S["sens"]["blocks"] = top + [b for i, b in enumerate(sb) if i not in main]
+
+
+_top_first()
+
 json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")

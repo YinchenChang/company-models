@@ -7,6 +7,8 @@
   C 重點觀察：thesis 章「重點觀察」≤ 5 點、合計 ≤ 750 字。
   D 損益：pl 章含 GAAP／Non-GAAP 標示與必備列；表頭至少 3 個歷史年＋5 個預測年（以年份欄位計）。
   F 圖表：除 revdcf、recon、status 外，每章至少一張圖（svg、長條 .ttr／.bt 或 canvas）。
+  G 位置（Andy 2026-11-14 12:47）：估值章標題後第一個區塊是圖，且含「目標價」與「現價」（四個目標價與現價圖）。
+  H 位置（同上）：敏感度章標題後前兩個區塊都是圖，且含「相對基準」（加權目標價相對基準的低案、高案主圖）。
   全頁（警告）：摺疊（details）與附錄以外的可見文字出現參數代號。
   I 對帳中（--xlsx 時；規格 I 節、三層基準協調規則 v1.1 C4 與第 10 節第 6 項）：xlsx 有任一日曆年「對帳中」（SIF_RecoFlag_<yyyy> 或 co_flag_<yyyy>＝1）
     且估值依賴（co_dep_<yyyy>，缺時視為 1）時：橫幅含「對帳中」；兩讀數評等不同時橫幅含「評等不同」；估值章含「現行基準讀數」「另一側讀數」「對帳中」
@@ -120,6 +122,36 @@ def check_reco(s, info, must):
             must.append(f'I 損益表找不到 FY{fy} 欄')
 
 
+def is_chart(el):
+    return el.name == 'figure' or bool(el.find_all('svg') or el.select('.ttr, .bt, canvas'))
+
+
+def lead_blocks(sec, n):
+    """章節標題之後的前 n 個可見區塊（直接子元素；略過 h2、script、style、hidden）。"""
+    out = []
+    for el in sec.find_all(recursive=False):
+        if el.name in ('h2', 'script', 'style') or el.has_attr('hidden'):
+            continue
+        out.append(el)
+        if len(out) == n:
+            break
+    return out
+
+
+def check_position(s, must):
+    va = s.find('section', id='valuation')
+    if va:
+        b = lead_blocks(va, 1)
+        t = re.sub(r'\s+', '', b[0].get_text()) if b else ''
+        if not (b and is_chart(b[0]) and '目標價' in t and '現價' in t):
+            must.append('G 估值章第一個區塊不是「四個目標價與現價」圖（說明請放在圖下方）')
+    se = s.find('section', id='sens')
+    if se:
+        b = lead_blocks(se, 2)
+        if not (len(b) == 2 and all(is_chart(x) and '相對基準' in x.get_text() for x in b)):
+            must.append('H 敏感度章前兩個區塊不是「加權目標價相對基準」低案、高案兩張主圖（說明與其他內容請放在圖下方）')
+
+
 def check(path, xlsx=None):
     s = BeautifulSoup(open(path, encoding='utf-8').read(), 'lxml')
     must, warn = [], []
@@ -194,6 +226,8 @@ def check(path, xlsx=None):
             continue
         if not (x.find_all('svg') or x.select('.ttr, .bt, canvas')):
             must.append(f'F 章節 {x["id"]} 沒有圖表')
+    # G、H 位置
+    check_position(s, must)
     # 全頁參數代號（警告）
     main = s.find('main') or s.body
     for x in secs:
