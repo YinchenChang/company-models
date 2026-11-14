@@ -480,7 +480,7 @@ def readme13(wb, SIL, PLA, RVA, coord_rows):
     put("drv", F(T("分部營收怎麼推導（情境 B）：AI 伺服器營收＝部署 GW（AI IT 資本支出 ÷ 每 GW IT 資本支出）× 每 GW ODM 整櫃價值 × 廣達有效份額 ×（1 − 客供比例）；"
                    "FY2027 為 "), f'TEXT(PL!E{pr("AI 伺服器營收")},"#,##0")', T(" 十億元。非 AI 營收＝一般伺服器＋筆電＋其他，由 FY2026 錨點乘各自成長率；"
                    "FY2027 為 "), f'TEXT(PL!E{pr("非 AI 營收")},"#,##0")', T(" 十億元。兩者相加＝合併營收 "), f'TEXT(PL!E{PLA["R"]["rev"]},"#,##0")', T(" 十億元；分項加總與合併營收的檢查列為 0。")))
-    put("ver", F(T("v0.4.8（2026-11-14）：三層協調 C0 補公司實績對帳（規則 v1.4.2）：Coord 頁末新增「C0〔實績〕」表，以 2026 年 1–10 月月營收與法說揭露比例換算的 AI 伺服器營收對 Siliconomics 整櫃組裝市場 × 廣達份額的同期隱含值，主讀數與第二讀數並列判定；原 C0 同源列改標「讀取層級（同源，不判定）」；其餘數值、加權目標價與評等不變。v0.4.7（2026-11-14）：版面規格 v1.3 全面改版（章節順序、橫幅 ≤200 字、重點觀察 ≤5 點、標準損益表 FY2023A–FY2031E、反向 DCF 頁、四個目標價與現價圖、敏感度改加權目標價相對基準低案／高案主圖）；"
+    put("ver", F(T("v0.4.8（2026-11-14）：三層協調 C0 補公司實績對帳（規則 v1.4.2）：Coord 頁末新增「C0〔實績〕」表，以 2026 年 1–10 月月營收與 3Q26 法說揭露比例換算的 AI 伺服器營收對層級隱含值，列出兩讀數但不判定（層級份額同源校準，無可比實績）；原 C0 同源列改標「讀取層級（同源，不判定）」；其餘數值、加權目標價與評等不變。v0.4.7（2026-11-14）：版面規格 v1.3 全面改版（章節順序、橫幅 ≤200 字、重點觀察 ≤5 點、標準損益表 FY2023A–FY2031E、反向 DCF 頁、四個目標價與現價圖、敏感度改加權目標價相對基準低案／高案主圖）；"
                  "三層協調新機制 C0：Coord 頁新增「由下往上對帳」（本模型組裝市場與 Siliconomics SIF_AsmMkt_Base 等逐年比較，差距超過 ±15% 標對帳中）；"
                  "xlsx 只新增 Hist、RevDCF 頁與各頁末新增區塊，既有數值、加權目標價 512.56 與投資建議（強力買進）不變；README A1 標題段版號由 v0.2.1 更正為 v0.4.7（現行 v0.4.8）。")))
     return M
@@ -497,7 +497,7 @@ MONTHS = [   # (月份, 營收 NT$B, 來源網址, 說明)
     ("2026-06", 385.191, TN.format("07/07", "06"), "6 月營收 3,851.91 億元，累計前 6 月約 1.85 兆元"),
     ("2026-07", 366.274, "https://uanalyze.com.tw/articles/3817752990", "7 月營收 3,662.74 億元"),
     ("2026-08", 423.971, "https://statementdog.com/news/17848", "8 月營收 4,239.71 億元（歷史新高）"),
-    ("2026-09", 325.3, "https://statementdog.com/news/17848；https://uanalyze.com.tw/articles/2106956697", "9 月營收 3,253 億元（億元位數；前 9 月累計 29,613.58 億元）"),
+    ("2026-09", 325.299, "https://statementdog.com/news/17848；https://uanalyze.com.tw/articles/2106956697；https://histock.tw/stock/2382/每月營收", "9 月營收約 3,253 億元（財報狗、優分析億元位數；Derived：HiStock 前 10 月累計 3,314,608.64 千元減其餘各月 ＝ 3,252.99 億元）"),
     ("2026-10", 353.25, TN.format("11/09", "10"), "10 月營收 3,532.50 億元，月增 8.6%，累計前 10 月約 3.31 兆元"),
 ]
 def srcname(u):
@@ -505,6 +505,7 @@ def srcname(u):
     if "technews" in u: n.append("TechNews 月營收報導")
     if "uanalyze" in u: n.append("優分析月營收報導")
     if "statementdog" in u: n.append("財報狗月營收報導")
+    if "histock" in u: n.append("HiStock 月營收表（千元）")
     return "、".join(n)
 
 
@@ -513,15 +514,15 @@ VERIF = "Verified（公司月營收公告；經媒體轉載，MOPS 原文未直�
 
 def c0_actuals(wb, C, r, l3, rs_l, d5):
     out = {"sec": r}
-    C.cell(r, 1, "4. C0（實績）：公司實績 vs 層級隱含值（規則 v1.4.2 C0 第 2 點；v0.4.8 新增；個股側只用已公布的公司實績與法說揭露，不用賣方估計或模型預測）").font = BOLD; r += 1
-    C.cell(r, 1, ("方法：個股側＝公司月營收（法定揭露）× 法說揭露的伺服器占營收比例 × AI 伺服器占伺服器比例＝公司實績側 AI 伺服器營收；廣達未揭露 AI 伺服器營收金額，只能由總營收乘揭露比例換算（口徑換算，等級 Interested-party／Derived）。"
+    C.cell(r, 1, "4. C0（實績）：公司實績 vs 層級隱含值（規則 v1.4.2 C0 第 2 點；v0.4.8 新增）。結論：無可比實績（Siliconomics 組裝市場）——缺獨立的廣達份額或 AI 伺服器營收金額揭露；下表只作參考，不判定、不計對帳中").font = BOLD; r += 1
+    C.cell(r, 1, ("方法：公司實績側＝公司月營收（法定揭露）× 3Q26 法說揭露的 AI 伺服器占營收比例（約 60–65%，取中點）＝AI 伺服器營收（廣達未揭露金額，只能換算；比例等級 Interested-party、換算 Derived）。"
                   "層級側＝Siliconomics 整櫃組裝市場（基準層，CY2026）× 廣達份額（份額表）× 匯率＝CY2026 全年隱含 AI 伺服器營收。"
-                  "主讀數＝2026 年已公布月份（1–10 月）累計實績 vs 層級 CY2026 × 已公布月數 ÷ 12（線性時差近似，Derived）；第二讀數＝最近已公布一季（3Q26，7–9 月）× 4 vs 層級 CY2026。成長年中主讀數偏低、第二讀數偏高，兩者夾住真值。"
-                  "判定：兩個讀數的差距都超過 ±15% 且同號＝對帳中；只有一個超過＝時差邊界（參考）；都在內＝一致。"))
+                  "主讀數＝2026 年已公布月份（1–10 月）累計 vs 層級 CY2026 × 已公布月數 ÷ 12（線性時差近似，Derived）；第二讀數＝最近已公布一季（3Q26，7–9 月）× 4 vs 層級 CY2026。"))
     r += 1
-    C.cell(r, 1, ("提醒：層級側廣達份額（Siliconomics 份額表）是廣達模型以 FY2026 錨點（1H26 實績＋3Q 營收實績＋4Q 假設，乘 85% × 80% 比例）校準後存入 Siliconomics 的快照，所以層級側全年值等於本模型 FY2026 AI 伺服器營收錨點（In 頁／Q 頁）。"
-                  "本表的檢驗力在於：實績側只用公司揭露的比例（伺服器 ≥ 80% 取 80%；AI 占伺服器 75–80% 取中點），不用錨點採用的 85% 與 80%，因此能看出錨點比例是否高於公司揭露。"
-                  "2H26 起部分高價料件改客供（公司：比重仍低）會使認列營收低於毛額價值，使實績側偏低（Assumed 影響，不調整）。"))
+    C.cell(r, 1, ("為什麼不判定：層級份額（Siliconomics 份額表）是廣達模型以自己的 FY2026 營收錨點 × AI 占營收（In 頁 68%）反推後存入的快照，所以層級全年隱含值恆等於錨點營收 × 68%，"
+                  "整櫃組裝市場值與匯率在比式中消去，本表不檢驗 Siliconomics 的組裝市場，也不得讀成層級獲得獨立驗證。"
+                  "本表實際檢驗的是兩件事：(a) 錨點採用的 AI 占營收（68%）與公司揭露中點（62.5%）的差；(b) 錨點的 4Q 營收假設（以 11–12 月隱含月均對 10 月實績衡量）。"
+                  "2H26 起部分高價料件改客供（公司：比重仍低）會使認列營收低於毛額價值，使實績側偏低（未調整）。"))
     r += 1
     for j, h in enumerate(["項目", "主讀數（1–10 月累計）", "第二讀數（3Q26 × 4）", "單位與口徑", "來源與證據等級", "出處網址（只在 xlsx）"], 1):
         c = C.cell(r, j, h); c.font = BOLD; c.fill = HDR
@@ -535,7 +536,7 @@ def c0_actuals(wb, C, r, l3, rs_l, d5):
     m1 = r - 1
     out["m0"], out["m1"] = m0, m1
     C.cell(r, 1, "　2026-01～2026-10 累計（主讀數用）"); C[f"B{r}"] = f"=SUM(B{m0}:B{m1})"; C[f"B{r}"].number_format = "#,##0.000"
-    C.cell(r, 4, "NT$B；公司公布前 10 月累計約 3.31 兆元（與本列相符）"); C.cell(r, 5, "Verified（加總）"); cum = r; r += 1
+    C.cell(r, 4, "NT$B；公司公布前 10 月累計約 3.31 兆元；HiStock 千元表 3,314,608.64（與本列相符）"); C.cell(r, 5, "Verified（加總）"); cum = r; r += 1
     C.cell(r, 1, "　3Q26（7–9 月）合計（第二讀數用）"); C[f"B{r}"] = f"=SUM(B{m0+6}:B{m0+8})"; C[f"B{r}"].number_format = "#,##0.000"
     C.cell(r, 4, "NT$B；公司公布 3Q26 營收約 1.1155 兆元"); C.cell(r, 5, "Verified（加總）"); q3 = r; r += 1
     C.cell(r, 1, "　核對：1–6 月合計 − 公司公布 1H26 營收（Q 頁）"); C[f"B{r}"] = f"=SUM(B{m0}:B{m0+5})-Q!C4"; C[f"B{r}"].number_format = "0.000"
@@ -545,19 +546,18 @@ def c0_actuals(wb, C, r, l3, rs_l, d5):
     C.cell(r, 1, "　核對：3Q26 合計 − 3Q26 營收輸入（In 頁 q3_rev）"); C[f"B{r}"] = f"=B{q3}-q3_rev"; C[f"B{r}"].number_format = "0.000"
     C.cell(r, 4, "NT$B；應約為 0（In 頁 q3_rev 取 1,115.5）"); C.cell(r, 5, "核對列"); ck3 = r; r += 1
     out["cum"], out["q3"] = cum, q3
-    C.cell(r, 1, "4.2 口徑換算參數（公司法說揭露比例；原簡報未直接讀取）").font = BOLD; r += 1
-    C.cell(r, 1, "　伺服器占營收比例（公司：自 1Q26 起穩定超過八成；取下限）"); C[f"B{r}"] = 0.80; C[f"B{r}"].font = BLUE; C[f"B{r}"].number_format = "0.0%"
-    C.cell(r, 4, "公司揭露為「超過八成」，只取下限 80%（保守）；In 頁伺服器占營收的 85% 來自凱基預測，不是公司揭露"); C.cell(r, 5, "Interested-party（法說摘要：富果 2Q26 法說備忘錄）"); C.cell(r, 6, "https://blog.fugle.tw/post/earnings-call-2382-2026-08-13"); srv = r; r += 1
-    C.cell(r, 1, "　AI 伺服器占伺服器營收：1H26 揭露區間下限"); C[f"B{r}"] = 0.75; C[f"B{r}"].font = BLUE; C[f"B{r}"].number_format = "0.0%"
-    C.cell(r, 4, "公司：2Q26 AI 伺服器占伺服器 75–80%"); C.cell(r, 5, "Interested-party（法說摘要：優分析 2Q26 法說報導）"); C.cell(r, 6, "https://uanalyze.com.tw/articles/5252953366"); a_lo = r; r += 1
-    C.cell(r, 1, "　AI 伺服器占伺服器營收：1H26 揭露區間上限（全年看法約 80%）"); C[f"B{r}"] = 0.80; C[f"B{r}"].font = BLUE; C[f"B{r}"].number_format = "0.0%"
-    C.cell(r, 4, "公司：下半年比重持續提升、全年維持 80% 的看法"); C.cell(r, 5, "Interested-party（法說摘要：優分析 2Q26 法說報導）"); C.cell(r, 6, "https://uanalyze.com.tw/articles/5252953366"); a_hi = r; r += 1
-    C.cell(r, 1, "　AI 伺服器占營收比例（主：下限 80% × 區間中點）"); C[f"B{r}"] = f"=B{srv}*AVERAGE(B{a_lo},B{a_hi})"; C[f"B{r}"].number_format = "0.0%"
-    C.cell(r, 4, "＝伺服器占營收下限 × AI 占伺服器區間中點；Derived（換算）"); C.cell(r, 5, "Derived／Interested-party"); ratio = r; r += 1
-    C.cell(r, 1, "　參考：AI 伺服器占營收比例（下限：80% × 75%）"); C[f"B{r}"] = f"=B{srv}*B{a_lo}"; C[f"B{r}"].number_format = "0.0%"
-    C.cell(r, 4, "公司揭露可得的最低換算；只作參考，不判定"); C.cell(r, 5, "Derived"); ratio_lo = r; r += 1
-    C.cell(r, 1, "　參考：AI 伺服器占營收比例（本模型 In 頁：伺服器占營收 × AI 占伺服器）"); C[f"B{r}"] = "=srv_26*ais_26"; C[f"B{r}"].number_format = "0.0%"
-    C.cell(r, 4, "本模型 FY2026 錨點採用的比例；只作參考，不判定"); C.cell(r, 5, "Interested-party（凱基預測 85%、公司 80%）"); ratio_md = r; r += 1
+    C.cell(r, 1, "4.2 口徑換算參數（公司 3Q26 法說揭露比例；原簡報未直接讀取）").font = BOLD; r += 1
+    SRC3 = "Interested-party（法說摘要：優分析 3Q26 法說報導，2026-11-11）"; URL3 = "https://uanalyze.com.tw/articles/2061659022；https://uanalyze.com.tw/articles/4376559072"
+    C.cell(r, 1, "　AI 伺服器占營收比例：3Q26 法說揭露區間下限"); C[f"B{r}"] = 0.60; C[f"B{r}"].font = BLUE; C[f"B{r}"].number_format = "0.0%"
+    C.cell(r, 4, "公司：AI 伺服器占伺服器 75–80%，對全公司營收約 60–65%（全年看法）"); C.cell(r, 5, SRC3); C.cell(r, 6, URL3); a_lo = r; r += 1
+    C.cell(r, 1, "　AI 伺服器占營收比例：3Q26 法說揭露區間上限"); C[f"B{r}"] = 0.65; C[f"B{r}"].font = BLUE; C[f"B{r}"].number_format = "0.0%"
+    C.cell(r, 4, "同上"); C.cell(r, 5, SRC3); C.cell(r, 6, URL3); a_hi = r; r += 1
+    C.cell(r, 1, "　AI 伺服器占營收比例（主：區間中點）"); C[f"B{r}"] = f"=AVERAGE(B{a_lo},B{a_hi})"; C[f"B{r}"].number_format = "0.0%"
+    C.cell(r, 4, "區間中點；Derived（換算）"); C.cell(r, 5, "Derived／Interested-party"); ratio = r; r += 1
+    C.cell(r, 1, "　參考：2Q26 法說換算（伺服器占營收下限 80% × AI 占伺服器 75–80% 中點）"); C[f"B{r}"] = "=0.8*AVERAGE(0.75,0.8)"; C[f"B{r}"].number_format = "0.0%"
+    C.cell(r, 4, "2Q26 法說（1H26 揭露）換算，期間與 3Q26 法說的全年看法不同；只作參考"); C.cell(r, 5, "Derived／Interested-party（法說摘要：富果、優分析 2Q26 法說）"); C.cell(r, 6, "https://blog.fugle.tw/post/earnings-call-2382-2026-08-13；https://uanalyze.com.tw/articles/5252953366"); ratio_lo = r; r += 1
+    C.cell(r, 1, "　參考：本模型 In 頁 AI 占營收（伺服器占營收 × AI 占伺服器，FY2026 錨點採用）"); C[f"B{r}"] = "=srv_26*ais_26"; C[f"B{r}"].number_format = "0.0%"
+    C.cell(r, 4, "本模型錨點採用的比例（凱基預測 85% × 公司 80%）；非公司揭露"); C.cell(r, 5, "Interested-party"); ratio_md = r; r += 1
     out["ratio"] = ratio
     C.cell(r, 1, "4.3 對帳（實績側 vs 層級隱含）").font = BOLD; r += 1
     def row2(label, fb, fc, fmt, unit, src, bold=False):
@@ -582,17 +582,23 @@ def c0_actuals(wb, C, r, l3, rs_l, d5):
     C.cell(r, 1, "　差距（實績側 ÷ 層級側 − 1）"); C[f"B{r}"] = f"=B{a_ai}/B{l_pd}-1"; C[f"C{r}"] = f"=C{a_ai}/C{l_pd}-1"
     for c in "BC": C[f"{c}{r}"].number_format = "+0.0%;-0.0%"; C[f"{c}{r}"].font = BOLD
     C.cell(r, 4, "正值＝公司實績高於層級隱含"); out["d"] = r; d = r; r += 1
-    C.cell(r, 1, "　判定（兩讀數都超過 ±15% 且同號＝對帳中；只有一個超過＝時差邊界（參考）；都在內＝一致）")
-    C[f"B{r}"] = f'=IF(AND(ABS(B{d})>0.15,ABS(C{d})>0.15,SIGN(B{d})=SIGN(C{d})),"對帳中",IF(OR(ABS(B{d})>0.15,ABS(C{d})>0.15),"時差邊界（參考）","一致"))'
-    C[f"B{r}"].font = BOLD; C.cell(r, 4, "判定只看本表主比例（AI 占營收＝下限 80% × 區間中點）"); C.cell(r, 5, "規則 v1.4.2 C0 第 2 點、工作單 20261114"); out["judge"] = r; r += 1
-    C.cell(r, 1, "　參考（不判定）：AI 占營收取下限（80% × 75%）時的差距"); C[f"B{r}"] = f"=B{a_rev}*B{ratio_lo}/B{l_pd}-1"; C[f"C{r}"] = f"=C{a_rev}*B{ratio_lo}/C{l_pd}-1"
+    C.cell(r, 1, "　判定：無可比實績（Siliconomics 組裝市場）——份額同源校準，本表不檢驗組裝市場；不判定、不計對帳中")
+    C[f"B{r}"] = "無可比實績（不判定）"; C[f"B{r}"].font = BOLD
+    C.cell(r, 4, "缺獨立的廣達份額或 AI 伺服器營收金額揭露（規則 v1.4.2：沒有可比實績時不以同源值補位）"); C.cell(r, 5, "規則 v1.4.2 C0 第 2 點、工作單 20261114"); out["judge"] = r; r += 1
+    C.cell(r, 1, "　參考：兩讀數是否都在 ±15% 內（僅描述，不構成判定）"); C[f"B{r}"] = f'=IF(AND(ABS(B{d})<=0.15,ABS(C{d})<=0.15),"都在 ±15% 內","有讀數超過 ±15%")'
+    C.cell(r, 4, "描述用；層級側恆等於錨點營收 × 68%（見上方說明）"); out["ref_in"] = r; r += 1
+    C.cell(r, 1, "　參考（不判定）：AI 占營收取 2Q26 法說換算值（80% × 77.5%）時的差距"); C[f"B{r}"] = f"=B{a_rev}*B{ratio_lo}/B{l_pd}-1"; C[f"C{r}"] = f"=C{a_rev}*B{ratio_lo}/C{l_pd}-1"
     for c in "BC": C[f"{c}{r}"].number_format = "+0.0%;-0.0%"
-    C.cell(r, 4, "公司揭露可得的最低換算"); out["ref_lo"] = r; r += 1
+    C.cell(r, 4, "2Q26 法說（1H26 揭露）換算，期間不同"); out["ref_lo"] = r; r += 1
     C.cell(r, 1, "　參考（不判定）：AI 占營收取本模型 In 頁比例（85% × 80%）時的差距"); C[f"B{r}"] = f"=B{a_rev}*B{ratio_md}/B{l_pd}-1"; C[f"C{r}"] = f"=C{a_rev}*B{ratio_md}/C{l_pd}-1"
     for c in "BC": C[f"{c}{r}"].number_format = "+0.0%;-0.0%"
-    C.cell(r, 4, "本模型錨點採用的比例（凱基預測 85%）；非公司揭露"); out["ref_md"] = r; r += 1
+    C.cell(r, 4, "本模型錨點採用的比例；非公司揭露。兩讀數因層級側＝錨點營收 × 68% 而恆接近零偏誤"); out["ref_md"] = r; r += 1
+    C.cell(r, 1, "　實際檢驗 (a)：錨點 AI 占營收（In 頁）÷ 公司揭露中點 − 1"); C[f"B{r}"] = f"=B{ratio_md}/B{ratio}-1"; C[f"B{r}"].number_format = "+0.0%;-0.0%"
+    C.cell(r, 4, "正值＝錨點採用的 AI 占營收高於公司揭露中點"); C.cell(r, 5, "Derived"); out["ref_a"] = r; r += 1
+    C.cell(r, 1, "　實際檢驗 (b)：錨點隱含 11–12 月月均營收 ÷ 10 月實績 − 1"); C[f"B{r}"] = f"=(a26_rev-B{cum})/2/B{m1}-1"; C[f"B{r}"].number_format = "+0.0%;-0.0%"
+    C.cell(r, 4, "NT$B 比；錨點＝1H26 實績＋3Q26 實績＋4Q 假設（營收年增、季增）；負值＝錨點假設 11–12 月低於 10 月"); C.cell(r, 5, "Derived"); out["ref_b"] = r; r += 1
     C.cell(r, 1, "　參考（不判定）：公司實績側營收 1–10 月累計 ÷ 本模型 FY2026 營收錨點（Q 頁）"); C[f"B{r}"] = f"=B{cum}/a26_rev"; C[f"B{r}"].number_format = "0.0%"
-    C.cell(r, 4, "NT$B 比；錨點＝1H26 實績＋3Q26 實績＋4Q 假設；11–12 月合計由錨點隱含"); C.cell(r, 5, "Derived"); out["ref_rev"] = r; r += 1
+    C.cell(r, 4, "NT$B 比"); C.cell(r, 5, "Derived"); out["ref_rev"] = r; r += 1
     out["ck"] = (ck1, ck2, ck3); out["end"] = r
     C.column_dimensions["A"].width = max(C.column_dimensions["A"].width or 0, 60)
     return out
@@ -711,9 +717,12 @@ def coord_c0(wb, SIL, R):
     c0_concl = r; r += 2
     A4 = c0_actuals(wb, C, r, l3, rs_l, d5)
     C[f"B{n_other}"] = f'=IF(B{A4["judge"]}="對帳中",1,0)'
-    C[f"B{c0_concl}"] = F(T("以公司實績對層級值（第 4 節）：2026 年 1–10 月月營收累計換算的 AI 伺服器營收，對 Siliconomics 整櫃組裝市場 × 廣達份額的同期隱含值，差距 "), f'TEXT(B{A4["d"]},"+0.0%;-0.0%")',
-                          T("（主讀數）；最近一季（3Q26）× 4 對全年隱含值，差距 "), f'TEXT(C{A4["d"]},"+0.0%;-0.0%")', T("（第二讀數）；判定「"), f'B{A4["judge"]}',
-                          T("」（門檻 ±15%）。本模型自層級讀入的同源值（第 2 節）不判定。與 Wattonomics 換算的需求側讀數相比，部署 GW 在 CY2027–CY2029 差距 "),
+    C[f"B{c0_concl}"] = F(T("C0（實績）：無可比實績（Siliconomics 組裝市場）——缺獨立的廣達份額或 AI 伺服器營收金額揭露，不判定、不計對帳中（對帳中項目數 0）。"
+                          "層級份額是本模型以自己的 FY2026 錨點反推後存入的快照，層級隱含值恆等於錨點營收 × 錨點 AI 占比，組裝市場值在比式中消去，不得讀成層級獲得獨立驗證。"
+                          "第 4 節表實際檢驗的是錨點：採用的 AI 占營收比公司 3Q26 法說揭露中點高 "), f'TEXT(B{A4["ref_a"]},"0.0%")',
+                          T("；錨點隱含 11–12 月月均營收比 10 月實績 "), f'TEXT(B{A4["ref_b"]},"+0.0%;-0.0%")',
+                          T("。（描述：以公司揭露比例換算的 1–10 月累計對層級同期隱含值 "), f'TEXT(B{A4["d"]},"+0.0%;-0.0%")', T("、最近一季年化對全年 "), f'TEXT(C{A4["d"]},"+0.0%;-0.0%")', T("。）"
+                          "本模型自層級讀入的同源值（第 2 節）不判定。與 Wattonomics 換算的需求側讀數相比，部署 GW 在 CY2027–CY2029 差距 "),
                           f'TEXT(C{d5},"+0%")', T("、"), f'TEXT(D{d5},"+0%")', T("、"), f'TEXT(E{d5},"+0%")',
                           T("，超過 ±15%：這是兩層之間的差距（見「層級之間」小節），已由 Siliconomics 對帳單 r3 處理，不計入本公司 C0；本模型依 C4 並列兩讀數目標價（上方），不改上游值，不裁決哪一側正確。"))
     return dict(c0=c0, concl=c0_concl, flags=flags, d3=d3, d5=d5, m3=m3, l3=l3, **A4)
@@ -742,9 +751,9 @@ def apply(wb, SIL, here, coord_rows):
     RMA = readme13(wb, SIL, PLA, RVA, coord_rows)
     version(wb, here, coord_rows)
     SO = wb["Sources"]; rs = SO.max_row + 1
-    SO.cell(rs, 1, "[Verified] 廣達 2026 年 1–10 月月營收（C0〔實績〕；TechNews 各月、優分析 7 月與 1 月、財報狗 8–9 月；MOPS 原文未直接讀取，網址見 Coord 頁第 4.1 節各列）")
+    SO.cell(rs, 1, "[Verified] 廣達 2026 年 1–10 月月營收（C0〔實績〕；TechNews 各月、優分析 7 月與 1 月、財報狗 8–9 月、HiStock 千元月營收表 https://histock.tw/stock/2382/每月營收；MOPS 原文未直接讀取，網址見 Coord 頁第 4.1 節各列）")
     SO.cell(rs, 2, "https://finance.technews.tw/2026/11/09/qci-2382-202610-financial-report/")
-    SO.cell(rs + 1, 1, "[Interested-party] 法說摘要：伺服器占營收自 1Q26 起超過八成（富果 2Q26 法說摘要）；AI 伺服器占伺服器 75–80%、全年約 80%（優分析 2Q26 法說）：C0〔實績〕換算比例用，原簡報未直接讀取")
-    SO.cell(rs + 1, 2, "https://blog.fugle.tw/post/earnings-call-2382-2026-08-13；https://uanalyze.com.tw/articles/5252953366")
+    SO.cell(rs + 1, 1, "[Interested-party] 法說摘要：3Q26 法說（2026-11-11）AI 伺服器占營收約 60–65%（優分析）；2Q26 法說：伺服器占營收超過八成（富果）、AI 占伺服器 75–80%（優分析）：C0〔實績〕換算比例用，原簡報未直接讀取")
+    SO.cell(rs + 1, 2, "https://uanalyze.com.tw/articles/2061659022；https://uanalyze.com.tw/articles/4376559072；https://blog.fugle.tw/post/earnings-call-2382-2026-08-13；https://uanalyze.com.tw/articles/5252953366")
     wb._v047 = dict(HR=HR, PL=PLA, RV=RVA, VG=VG, ST=ST, C0=C0, RM=RMA)
     return f"v047_post：Hist {len(HR)} 列；PL 標準損益表 {PLA['start']} 起；RevDCF；Val 0.7；Sens 主圖表 {ST}；README v1.3 {len(RMA)} 列；C0 {'有' if C0 else '無（無 Coord 頁）'}"

@@ -4006,7 +4006,7 @@
    "blocks": [
     {
      "type": "h3",
-     "text": "三層協調：公司實績對層級隱含值"
+     "text": "三層協調：公司實績對照（無可比實績，不判定）"
     },
     {
      "type": "note",
@@ -4022,7 +4022,7 @@
     },
     {
      "type": "table",
-     "caption": "公司實績對帳：2026 年已公布月營收與法說揭露比例換算的 AI 伺服器營收，對 Siliconomics 整櫃組裝市場 × 廣達份額的同期隱含值（金額十億新台幣；差距超過門檻且兩讀數同號標對帳中）",
+     "caption": "公司實績對照（參考，不判定：層級份額由本模型錨點反推，無可比實績）：2026 年已公布月營收與法說揭露比例換算的 AI 伺服器營收，對層級隱含值與錨點的差（金額十億新台幣）",
      "head": [
       "項目",
       "主讀數（已公布月份累計）",
@@ -4032,16 +4032,23 @@
      ],
      "rows": [
       [
+       "@Coord!A107",
+       "@Coord!B107|n1",
+       "@Coord!C107|n1",
+       "@Coord!D107",
+       "@Coord!E107"
+      ],
+      [
        "@Coord!A108",
-       "@Coord!B108|n1",
-       "@Coord!C108|n1",
+       "@Coord!B108|p1",
+       "@Coord!C108|p1",
        "@Coord!D108",
        "@Coord!E108"
       ],
       [
        "@Coord!A109",
-       "@Coord!B109|p1",
-       "@Coord!C109|p1",
+       "@Coord!B109|n1",
+       "@Coord!C109|n1",
        "@Coord!D109",
        "@Coord!E109"
       ],
@@ -4054,15 +4061,15 @@
       ],
       [
        "@Coord!A111",
-       "@Coord!B111|n1",
-       "@Coord!C111|n1",
+       "@Coord!B111|p1",
+       "@Coord!C111|p1",
        "@Coord!D111",
        "@Coord!E111"
       ],
       [
        "@Coord!A112",
-       "@Coord!B112|p1",
-       "@Coord!C112|p1",
+       "@Coord!B112|n1",
+       "@Coord!C112|n1",
        "@Coord!D112",
        "@Coord!E112"
       ],
@@ -4075,59 +4082,73 @@
       ],
       [
        "@Coord!A114",
-       "@Coord!B114|n1",
-       "@Coord!C114|n1",
+       "@Coord!B114|n3",
+       "@Coord!C114|n3",
        "@Coord!D114",
        "@Coord!E114"
       ],
       [
        "@Coord!A115",
-       "@Coord!B115|n3",
-       "@Coord!C115|n3",
+       "@Coord!B115|n1",
+       "@Coord!C115|n1",
        "@Coord!D115",
        "@Coord!E115"
       ],
       [
        "@Coord!A116",
-       "@Coord!B116|n1",
-       "@Coord!C116|n1",
+       "@Coord!B116|p1",
+       "@Coord!C116|p1",
        "@Coord!D116",
-       "@Coord!E116"
+       ""
       ],
       [
        "@Coord!A117",
-       "@Coord!B117|p1",
-       "@Coord!C117|p1",
+       "@Coord!B117|",
+       "",
        "@Coord!D117",
-       ""
+       "@Coord!E117"
       ],
       [
        "@Coord!A118",
        "@Coord!B118|",
        "",
        "@Coord!D118",
-       "@Coord!E118"
+       ""
       ],
       [
        "@Coord!A119",
-       "@Coord!B119|",
-       "@Coord!C119|",
+       "@Coord!B119|p1",
+       "@Coord!C119|p1",
        "@Coord!D119",
        ""
       ],
       [
        "@Coord!A120",
-       "@Coord!B120|",
-       "@Coord!C120|",
+       "@Coord!B120|p1",
+       "@Coord!C120|p1",
        "@Coord!D120",
        ""
       ],
       [
        "@Coord!A121",
-       "@Coord!B121|",
+       "@Coord!B121|p1",
        "",
        "@Coord!D121",
        "@Coord!E121"
+      ],
+      [
+       "@Coord!A122",
+       "@Coord!B122|p1",
+       "",
+       "@Coord!D122",
+       "@Coord!E122"
+      ],
+      [
+       "@Coord!A123",
+       "@Coord!B123|p1",
+       "",
+       "@Coord!D123",
+       "@Coord!E123"
       ]
      ]
     },
@@ -4269,12 +4290,6 @@
        "@Coord!B105|p1",
        "@Coord!D105",
        "@Coord!E105"
-      ],
-      [
-       "@Coord!A106",
-       "@Coord!B106|p1",
-       "@Coord!D106",
-       "@Coord!E106"
       ]
      ],
      "collapse": true,
