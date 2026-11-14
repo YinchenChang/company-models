@@ -172,7 +172,7 @@ def pl_standard(wb, CR):
     row("ni", "稅後淨利（歸屬母公司）", "NT$B", hs("ni") + eng("ni") + ext("ni"), M)
     row("nm", "淨利率", "%", [f"={c}{L['ni']}/{c}{L['rev']}" for c in COLS], PCT)
     row("sh", "股數", "十億股", hs("sh") + eng("sh") + ext("sh"), "0.000")
-    row("eps", "EPS（完全稀釋）", "NT$", hs("eps") + eng("eps") + ext("eps"), "0.00", "歷史為公司公告 EPS；預測為歸屬母公司淨利 ÷ 股數")
+    row("eps", "EPS（基本，公司公告）", "NT$", hs("eps") + eng("eps") + ext("eps"), "0.00", "歷史為公司公告基本 EPS（非稀釋）；預測為歸屬母公司淨利 ÷ 股數（無稀釋證券，同基本口徑）")
     P.cell(r, 1, "比率").font = BOLD; r_ratio = r; r += 1
     row("r_yoy", "營收年增率", "%", [f"={c}{L['yoy']}" for c in COLS], PCT)
     row("r_gm", "毛利率", "%", [f"={c}{L['gm']}" for c in COLS], PCT)
@@ -552,7 +552,7 @@ def coord_c0(wb, SIL, CR, PLA):
     C.cell(r, 1, "已建模個股份額加總：層級值（Siliconomics）"); C.cell(r, 6, "%"); C.cell(r, 7, f"Derived：Siliconomics {SIL.VERSION}")
     for j, v in enumerate(N["SIF_PwrShareSum_Base"]):
         c = C.cell(r, 2 + j, v); c.number_format = "0.0%"; c.font = BLUE
-    rl = r; r += 1
+    rl = r; G["shsum"] = (rm, rl); r += 1
     C.cell(r, 1, "已建模個股份額加總：差距（百分點）")
     for j, col in enumerate("BCDE"):
         C.cell(r, 2 + j, f"={col}{rm}-{col}{rl}").number_format = "+0.0%;-0.0%"
@@ -582,7 +582,20 @@ def coord_c0(wb, SIL, CR, PLA):
     C.cell(r, 1, "AI 電源市場對 UBS 估計：判定（±15%；僅參考）")
     for j, col in enumerate("BC"):
         C.cell(r, 2 + j, f'=IF(ABS({col}{rg})>0.15,"參考（外部估計，口徑未知，未改值）","一致")')
-    G["ubs"] = (rm, rl, rg, r); r += 2
+    G["ubs"] = (rm, rl, rg, r); r += 1
+    # 層級值快照輸入（藍字常數只在此處；份額層級值列與份額加總列連到這裡）
+    C.cell(r, 1, "層級值快照輸入：台達電有效份額（Siliconomics 快照）"); C.cell(r, 6, "%"); C.cell(r, 7, f"Interested-party／Assumed：Siliconomics {SIL.VERSION}（pwr_dsh_26 × pwr_drel_26–29 快照常數；上方份額層級值列連到此列）")
+    for j, x in enumerate(drel):
+        c = C.cell(r, 2 + j, f"={dsh}*{x}"); c.number_format = "0.0%"; c.font = BLUE
+    r_sh_in = r; r += 1
+    C.cell(r, 1, "層級值快照輸入：光寶科有效份額（Siliconomics 快照）"); C.cell(r, 6, "%"); C.cell(r, 7, f"Interested-party／Assumed：Siliconomics {SIL.VERSION}（pwr_lsh_26 × pwr_lrel 快照常數；份額加總本模型列連到此列）")
+    for j in range(4):
+        c = C.cell(r, 2 + j, f"={lsh}*{lrel[j]}"); c.number_format = "0.0%"; c.font = BLUE
+    r_lt_in = r; r += 1
+    for j, col in enumerate("BCDE"):
+        C.cell(G["sh"][1], 2 + j, f"={col}{r_sh_in}").font = Font(color="000000")
+        C.cell(G["shsum"][0], 2 + j, f"={col}{G['sh'][0]}+{col}{r_lt_in}")
+    r += 1
     # 3. 結果摘要
     C.cell(r, 1, "3. 對帳結果（HTML 用；公式帶數字）").font = BOLD; r += 1
     mx = lambda k: f"MAX(ABS(B{G[k][2]}),ABS(C{G[k][2]}),ABS(D{G[k][2]}),ABS(E{G[k][2]}))"
@@ -591,17 +604,14 @@ def coord_c0(wb, SIL, CR, PLA):
                    T("（±15% 內，一致）；已建模個股加總之外的殘差為 "), f'TEXT(MIN(B{G["resid"]}:E{G["resid"]}),"0%")', T("–"), f'TEXT(MAX(B{G["resid"]}:E{G["resid"]}),"0%")',
                    T("，不為空。")))
     G["sum1"] = r; r += 1
-    C.cell(r, 1, F(T("層級之間（參考）：與 Wattonomics 側讀數相比，本模型的部署 GW 在 CY2027–CY2029 高出 "), f'TEXT(-C{G["alt"][2]}/(1+C{G["alt"][2]}),"0%")', T("／"), f'TEXT(-D{G["alt"][2]}/(1+D{G["alt"][2]}),"0%")', T("／"),
-                   f'TEXT(-E{G["alt"][2]}/(1+E{G["alt"][2]}),"0%")', T("（以 Wattonomics 側為基準），超過 ±15%；這是 Siliconomics 與 Wattonomics 兩層之間的差距（Siliconomics 對帳單 r3 處理；已並列兩讀數目標價），"
-                                                                    "不是本模型自己的差距，不計入本公司 C0，本模型不改上游值、不裁決。")))
+    C.cell(r, 1, F(T("層級之間（參考）：本模型（Siliconomics 基準）的部署 GW 在 CY2027–CY2029 比 Wattonomics 換算值高 "), f'TEXT(C{G["alt"][2]},"0%")', T("／"), f'TEXT(D{G["alt"][2]},"0%")', T("／"),
+                   f'TEXT(E{G["alt"][2]},"0%")', T("，超過 ±15%；這是 Siliconomics 與 Wattonomics 兩層之間的差距（Siliconomics 對帳單 r3 處理；已並列兩讀數目標價），"
+                                                  "不是本模型自己的差距，不計入本公司 C0，本模型不改上游值、不裁決。")))
     G["sum2"] = r; r += 1
     C.cell(r, 1, F(T("外部估計（參考）：Siliconomics 的 AI 電源市場對 UBS 估計低 "), f'TEXT(-B{G["ubs"][2]},"0%")', T("（CY2026）、"), f'TEXT(-C{G["ubs"][2]},"0%")',
                    T("（CY2027）；UBS 為 Interested-party、口徑未知，只列參考，不計入本公司 C0，本模型不改值。")))
     G["sum3"] = r; r += 1
     C.cell(r, 1, "C4／C5：本模型不裁決兩層的對帳中年份；本版沒有可往上回饋的新證據（往上回饋只有實績、法定文件揭露的承諾、已簽約或已確認站點，個股預測與公司指引不往上流）。"); G["sum4"] = r; r += 1
-    # co_flag 鏡像（讓 check_layout_v13 的 I 項與讀者在 xlsx 內可直接看見旗標）
-    for j, y in enumerate((2026, 2027, 2028, 2029)):
-        dn(wb, f"co_flag_{y}", f"Coord!${'BCDE'[j]}${CR['flag']}")
     C.column_dimensions["A"].width = 70; C.column_dimensions["D"].width = 24; C.column_dimensions["F"].width = 10; C.column_dimensions["G"].width = 110
     G["hdr"] = C_h; G["rd0"], G["rd1"] = rd[0], rd[-1]
     return G

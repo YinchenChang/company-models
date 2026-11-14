@@ -292,7 +292,7 @@ def _v13():
     ph = next(r for r in range(p0, PLW.max_row + 1) if PLW.cell(r, 1).value == "項目")
     plr = lambda lab_, start=ph: row("PL", lab_, start, True)
     keys = ["營收", "營收年增率（YoY）", "營業成本（COGS）", "毛利", "毛利率", "營業費用（研發＋銷管）", "營業利益", "營業利益率", "其他收入（淨額，營業外收益）",
-            "稅前利益", "所得稅", "非控制權益損益", "稅後淨利（歸屬母公司）", "淨利率", "股數", "EPS（完全稀釋）"]
+            "稅前利益", "所得稅", "非控制權益損益", "稅後淨利（歸屬母公司）", "淨利率", "股數", "EPS（基本，公司公告）"]
     fmt = lambda u: {"%": "p1", "NT$": "n2", "十億股": "n3"}.get(u, "n1")
     cols = "CDEFGHIJK"
     rowx = lambda r, f=None: [f"@PL!A{r}"] + [f"@PL!{c}{r}|{f or fmt(PLW.cell(r, 2).value)}" for c in cols]
