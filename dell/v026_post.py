@@ -41,7 +41,7 @@ K = dict(
     SP=SP, SP22="；FY2023 營收 102,301、non-GAAP 淨利 5,727 百萬美元（4Q FY24 新聞稿）",
     PLB="情境 B（基準）：",
     R=dict(rev="營收", gp=None, opx=None, oi="分部營業利益（≈ non-GAAP 營業利益）", ni="non-GAAP 淨利", sh="稀釋股數", eps="non-GAAP EPS"),
-    nci_mode="none", ext_mode="inblock", DCFX="GH", OIDIV="/gaap_k", LAST_A=2026, DEP=(2027, 2028, 2029, 2030, 2031, 2032),
+    nci_mode="none", ext_mode="inblock", DCFX="GH", OIDIV="/gaap_k", LAST_A=2026, DEP=(2028, 2029, 2030, 2031, 2032), FY_LAG=1,   # FY_LAG：會計年度對應（FY 減 CY），寫入 Coord 頁具名格 co_fy_lag 供 check_layout_v13 判讀
     HIST_A1="會計年度：FY(t)＝t−1 年 2 月～t 年 1 月（≈ CY(t−1)）。來源為公司 8-K 新聞稿（SEC EDGAR）的 non-GAAP 調節表；FY2024 為公司修正後數字；稅前利益、所得稅與股數為推得值（見各列）。FY2026 營業利益為公司揭露 non-GAAP 值，模型 Q 頁用分部營業利益合計（差 0.047）",
     HIST_TAG="Verified（公司 8-K）／Derived（推得列）",
     PXL="現價（2026-11-05 收盤）", ANCH="1H FY27 實績＋公司全年指引＋2H 假設",
@@ -50,7 +50,7 @@ K = dict(
     GAAP_NOTE=("口徑：Non-GAAP（公司 8-K 新聞稿口徑，排除攤銷、股權報酬等；與本模型 PL、Q 頁及市場共識一致）。會計年度 FY(t)≈CY(t−1)（2 月～隔年 1 月）。"
                "預測期模型只推分部營業利益（≈ non-GAAP 營業利益）與「淨利 ÷ 營業利益」一個係數，本表把它拆成：營業費用＝營收 × FY2026 實績營業費用率、毛利＝營業利益＋營業費用、"
                "其他收入＝營業利益 × FY2026 實績比例、所得稅＝稅前利益 − 淨利（由模型淨利倒推）。FY2031E–FY2032E 的營業利益取 DCF 頁 EBIT ÷ GAAP 換算係數（DCF 用 GAAP 口徑）。這幾列是展示用拆分，不回饋計算、不改淨利與目標價。"
-               "標「對帳中」的年度：FY2028E–FY2030E 依賴 CY2027–CY2029；FY2027E 含 2027 年 1 月（一個月）亦標示；FY2031E–FY2032E 為延伸期。"),
+               "標「對帳中」的年度：FY2028E–FY2030E 依賴 CY2027–CY2029（FY(t) 對 CY(t−1)）；FY2031E–FY2032E 為延伸期（收斂法由 FY2030 路徑推得，另一側讀數下數值隨之變動），亦標示。FY2027E 為錨點（公司全年指引），另一側讀數下數值不變，不標。"),
     RV_NOTE=("Dell FY2027（2026-02～2027-01）為錨點（公司全年指引），評價日後只含 2027-01 一個月，不隨反解變動；DCF 的 EBIT 為 GAAP 口徑（non-GAAP × 換算係數）"),
     COMP_NOTE="同業前瞻 P/E 中位數 × Dell 十年相對同業倍數比 × 約一年後前瞻 EPS（情境加權）",
     BIZ=[  # (白話標籤, 低案設定, 高案設定, 鍵)；設定＝DELL_OVR 覆寫的 In 輸入（lo／hi 取 In 頁敏感度低／高欄；mf＝引擎 AI 部署係數）
@@ -756,6 +756,11 @@ def apply(wb, SIL, here, coord_rows):
     VG = val_g(wb)
     ST = sens_post(wb, here)
     C0 = coord_c0(wb, SIL, coord_rows) if coord_rows else None
+    if coord_rows and K.get("FY_LAG") is not None:   # 會計年度對應（版面規格 v1.3 I 節；check_layout_v13 讀 co_fy_lag）：寫在 C4 區塊與 C0 之間的空白列（C0 建好後才寫，不移動 C0 列號）
+        C = wb["Coord"]; rl = lab(C, "橫幅揭露") + 1
+        assert C.cell(rl, 1).value is None and C.cell(rl + 1, 1).value is None
+        C.cell(rl, 1, "會計年度對應（FY 減 CY）：Dell FY(t)＝t−1 年 2 月～t 年 1 月，依賴 CY(t−1)；版面規格 v1.3 I 節，check_layout_v13 據此判讀損益表應標「對帳中」的會計年度")
+        C.cell(rl, 2, K["FY_LAG"]); dn(wb, "co_fy_lag", f"Coord!$B${rl}")
     RMA = readme13(wb, SIL, PLA, RVA, coord_rows)
     if coord_rows:
         version(wb, here, coord_rows)
