@@ -1,5 +1,5 @@
-# 記憶體樣板 v13 後處理（SK 海力士 v0.7.6；2026-11-14）：個股 HTML 版面規格 v1.3 與三層協調 C0 對帳所需的 xlsx 新增內容。
-# 只在公司設定檔 CONFIG["v13"] 為真時由 tools/memory_model/build.py 呼叫（美光、三星不設，輸出不變）。
+# 記憶體樣板 v13 後處理（SK 海力士 v0.7.6；2026-11-14；三星、美光 v0.5.5 起共用）：個股 HTML 版面規格 v1.3 與三層協調 C0 對帳所需的 xlsx 新增內容。
+# 只在公司設定檔 CONFIG["v13"] 為真時由 tools/memory_model/build.py 呼叫。公司別設定放 CONFIG["v13_co"]（見下方 K 的預設值；SK 海力士不設，輸出不變）。
 # 只新增，不改既有儲存格數值：
 #   Hist 頁（新）：損益表歷史（2022 只供年增率；2023–2025 實績）
 #   PL 頁（新）：標準損益表（2023A–2025A 實績、2026E–2030E 基準情境 B）、比率區、核對列；三情境並列（圖用）；分部營收推導（情境 B）
@@ -17,6 +17,12 @@ from openpyxl.styles import Font, PatternFill
 BOLD = Font(bold=True)
 BLUE = Font(color="0000FF")
 HDR = PatternFill("solid", fgColor="DDEBF7")
+
+# 公司別設定的預設值＝SK 海力士（CONFIG["v13_co"] 覆蓋）。own／others：Siliconomics M24 HBM 營收份額鍵（hbmsh_<鍵>_<年>）；
+# cur／ccy／fxu：營收單位、每股幣別、匯率單位；fyp：年度前綴（美光 FY）；nm：有非記憶體事業（三星）；pxf：每股金額的 xlsx 數字格式。
+K = dict(name="SK 海力士", own="skh", others=("ss", "mu"), cur="兆韓元", ccy="韓元", fxu="韓元／美元", fyp="", nm=False, nm_k=None, pxf="#,##0",
+         folder="skhynix", share_scale=1000000, fxf="=fx", fxn="＝市場 × 市占 × 匯率 ÷ 1000", hist_unit="兆韓元，K-IFRS 合併；EPS 韓元", hist_ver="v0.7.6",
+         pl_note=None, hist_rows=None, hist_src=None, hist_checks=None, ccy_per_usdB="fx/1000")
 
 
 def lit(t):   # Excel 公式字串常數上限 255 字元：切段以 & 相接
@@ -67,13 +73,15 @@ HIS = [  # (鍵, 項目, 2023, 2024, 2025, 2022, 標記)；兆韓元、EPS 韓�
 
 def hist_sheet(wb):
     H = wb.create_sheet("Hist")
-    H["A1"] = ("Hist — 損益表歷史（v0.7.6 起；PL 頁「標準損益表」的歷史三年與 2023 年增率用）。兆韓元，K-IFRS 合併；EPS 韓元。2022 欄只供 2023 年增率。"
+    HIS_ = K["hist_rows"] or HIS
+    SRC_ = K["hist_src"] or SRC_H
+    H["A1"] = (f"Hist — 損益表歷史（{K['hist_ver']} 起；PL 頁「標準損益表」的歷史三年與 2023 年增率用）。{K['hist_unit']}。2022 欄只供 2023 年增率。"
                "只引用本頁常數，不回饋任何計算")
     H["A1"].font = BOLD
-    hdr_row(H, 3, ["鍵", "項目", "2023", "2024", "2025", "2022（只供年增率）", "標記", "來源"])
+    hdr_row(H, 3, ["鍵", "項目"] + [K["fyp"] + y for y in ("2023", "2024", "2025")] + [K["fyp"] + "2022（只供年增率）", "標記", "來源"])
     # 欄：A 鍵、B 項目、C 2023、D 2024、E 2025、F 2022
-    rows = {k: 4 + i for i, (k, *_x) in enumerate(HIS)}
-    for k, labl, v23, v24, v25, v22, tag in HIS:
+    rows = {k: 4 + i for i, (k, *_x) in enumerate(HIS_)}
+    for k, labl, v23, v24, v25, v22, tag in HIS_:
         r = rows[k]
         H.cell(r, 1, f"h_{k}")
         H.cell(r, 2, labl)
@@ -88,19 +96,16 @@ def hist_sheet(wb):
             if not isinstance(v, str):
                 c.font = BLUE
         H.cell(r, 7, tag)
-        H.cell(r, 8, SRC_H if tag == "Verified" else "由上列計算")
-    r = 4 + len(HIS) + 1
-    H.cell(r, 1, "核對：2025 年營收（本頁）− Q 頁四季營收合計（應接近 0；Q 頁為 3 位小數）")
-    H[f"E{r}"] = f"=E{rows['rev']}-SUM(Q!B4:E4)"
-    H[f"E{r}"].number_format = "0.0000"
-    r += 1
-    H.cell(r, 1, "核對：2025 年營業利益（本頁）− Q 頁四季營業利益合計（應接近 0）")
-    H[f"E{r}"] = f"=E{rows['oi']}-SUM(Q!B10:E10)"
-    H[f"E{r}"].number_format = "0.0000"
-    r += 1
-    H.cell(r, 1, "核對：2025 年本期淨利（本頁）− Q 頁四季淨利合計（應接近 0）")
-    H[f"E{r}"] = f"=E{rows['ni']}-SUM(Q!B12:E12)"
-    H[f"E{r}"].number_format = "0.0000"
+        H.cell(r, 8, SRC_ if tag == "Verified" else "由上列計算")
+    r = 4 + len(HIS_) + 1
+    for lbl_, f_ in (K["hist_checks"] or [
+            ("核對：2025 年營收（本頁）− Q 頁四季營收合計（應接近 0；Q 頁為 3 位小數）", "=E{rev}-SUM(Q!B4:E4)"),
+            ("核對：2025 年營業利益（本頁）− Q 頁四季營業利益合計（應接近 0）", "=E{oi}-SUM(Q!B10:E10)"),
+            ("核對：2025 年本期淨利（本頁）− Q 頁四季淨利合計（應接近 0）", "=E{ni}-SUM(Q!B12:E12)")]):
+        H.cell(r, 1, lbl_)
+        H[f"E{r}"] = f_.format(**rows)
+        H[f"E{r}"].number_format = "0.0000"
+        r += 1
     H.column_dimensions["A"].width = 14
     H.column_dimensions["B"].width = 64
     for c in "CDEF":
@@ -126,10 +131,10 @@ def pl_sheet(wb, HR):
     P["A1"] = ("PL — 標準損益表（v0.7.6 起；個股 HTML 版面規格 v1.3 D 節）：歷史三年（2023–2025 實績）＋未來五年（2026–2030，情境 B 基準）；兆韓元，EPS 韓元。"
                "只引用本頁、Hist、Y、DCF、Coord 頁，不回饋任何計算")
     P["A1"].font = BOLD
-    P["A2"] = ("口徑：GAAP（K-IFRS 合併財報；SK 海力士只公布 IFRS 損益，無另行定義的 Non-GAAP，市場共識與公司指引也用同一口徑）。"
-               "預測：2026E 為基準年（前三季實績＋第四季推估）、2027E–2029E 為情境 B 由驅動因子推導、2030E 為收斂法（只推營收與淨利）。"
+    P["A2"] = (K["pl_note"] or "口徑：GAAP（K-IFRS 合併財報；SK 海力士只公布 IFRS 損益，無另行定義的 Non-GAAP，市場共識與公司指引也用同一口徑）。") + (
+               (K.get("pl_fc") or "預測：2026E 為基準年（前三季實績＋第四季推估）、2027E–2029E 為情境 B 由驅動因子推導、2030E 為收斂法（只推營收與淨利）。") +
                "稅前利益＝淨利 ÷（1 − 有效稅率），其他收入（淨額）＝稅前利益 − 營業利益，所得稅＝稅前 − 淨利（預測不另估財務損益；2026E 的實績季度業外損益含在其他收入內）。"
-               "EPS：歷史為公告稀釋 EPS；預測為淨利 ÷ 期末流通股數（Y 頁口徑，已扣除買回註銷），兩者股數基礎不同")
+               "EPS：歷史為公告稀釋 EPS；預測為淨利 ÷ 期末流通股數（Y 頁口徑，已扣除買回註銷），兩者股數基礎不同" + K.get("pl_extra", ""))
     P["A3"] = ("2030E：毛利率與營業費用率沿用 2029E 推算營業成本、毛利與營業費用；營業利益取 DCF 頁情境 B（由淨利反推）。兩種推法的差額見表末核對列（目標價用延伸期淨利，不受影響）。"
                "對帳中：Siliconomics 標對帳中的日曆年（Coord 頁）在欄位標題標示；2030E 由 2029E 收斂而來，一併標示")
     hr = 5
@@ -157,6 +162,17 @@ def pl_sheet(wb, HR):
     M, PCT = "#,##0.000", "0.0%"
     h = lambda k, c: f"=Hist!{c}{HR[k]}"
     y = lambda k: [f"=Y!{YB[s]}{R_[k]}" for s in ("2026", "2027", "2028", "2029")]
+    if K["nm"]:   # 有非記憶體事業（三星）：Y 頁營業成本、營業費用只含記憶體；合併口徑＝記憶體＋非記憶體成本（營收 − 營業利益）按 k 分攤，合計仍等於合併營收 − 合併營業利益
+        nmr, nmo = yr("非記憶體事業營收"), yr("非記憶體事業營業利益")
+        P["A4"] = ("非記憶體事業成本分攤（Assumed）：Y 頁營業成本、營業費用只含記憶體事業；合併營業成本＝Y 頁記憶體營業成本＋（非記憶體事業營收 − 營業利益）× k，營業費用＝合併營收 − 合併營業成本 − 合併營業利益"
+                   f"（合計與 Y 頁相同）。k＝非記憶體事業成本中計入營業成本的比例，取 2025 年合併營業成本 ÷（合併營業成本＋銷管費用）＝{K['nm_k']:.3f}（Hist 頁，Derived；三星未揭露非記憶體事業的成本結構）")
+        NMK = K["nm_k"]
+        def y(k):
+            if k == "cogs":
+                return [f"=Y!{YB[s]}{R_['cogs']}+(Y!{YB[s]}{nmr}-Y!{YB[s]}{nmo})*{NMK}" for s in ("2026", "2027", "2028", "2029")]
+            if k == "opx":
+                return [f"=Y!{YB[s]}{R_['rev']}-(Y!{YB[s]}{R_['cogs']}+(Y!{YB[s]}{nmr}-Y!{YB[s]}{nmo})*{NMK})-Y!{YB[s]}{R_['oi']}" for s in ("2026", "2027", "2028", "2029")]
+            return [f"=Y!{YB[s]}{R_[k]}" for s in ("2026", "2027", "2028", "2029")]
     row("rev", "營收", "兆韓元", [h("rev", "C"), h("rev", "D"), h("rev", "E")] + y("rev") + [f"=Y!{YB['2030']}{R_['rev']}"], M, "預測取 Y 頁情境 B 合併營收（2030E 為收斂法）")
     row("yoy", "營收年增率（YoY）", "%", [f"=C{L['rev']}/Hist!F{HR['rev']}-1"] + [f"={c}{L['rev']}/{p}{L['rev']}-1" for p, c in zip(COLS, COLS[1:])], PCT, "2023 年的基期＝2022 年營收（Hist 頁）")
     r_c = r
@@ -172,7 +188,7 @@ def pl_sheet(wb, HR):
     row("tax", "所得稅", "兆韓元", [h("tax", "C"), h("tax", "D"), h("tax", "E")] + [f"={c}{r_pti}-{c}{r_pti + 2}" for c in COLS[3:]], M, "歷史為損益表稅額（2023 年為稅額利益）；預測＝稅前 − 淨利（2026E 為依有效稅率推算，非公司公告）")
     row("ni", "稅後淨利", "兆韓元", [h("ni", "C"), h("ni", "D"), h("ni", "E")] + y("ni") + [f"=Y!{YB['2030']}{R_['ni']}"], M, "歷史＝本期淨利（含非控制權益）；預測取 Y 頁情境 B 淨利")
     row("nm", "淨利率", "%", [f"={c}{L['ni']}/{c}{L['rev']}" for c in COLS], PCT)
-    row("sh", "股數（百萬股）", "百萬股", [f"=Hist!{c}{HR['nic']}/Hist!{c}{HR['eps']}*1000000" for c in "CDE"] + y("sh") + [f"=Y!{YB['2030']}{R_['sh']}"], "#,##0.0",
+    row("sh", "股數（百萬股）", "百萬股", [f"=Hist!{c}{HR['nic']}/Hist!{c}{HR['eps']}*{K['share_scale']}" for c in "CDE"] + y("sh") + [f"=Y!{YB['2030']}{R_['sh']}"], "#,##0.0",
         "歷史＝歸屬普通股淨利 ÷ 稀釋 EPS（稀釋加權平均股數的反推）；預測＝期末流通股數（Y 頁）")
     row("eps", "EPS（完全稀釋）", "韓元", [h("eps", "C"), h("eps", "D"), h("eps", "E")] + y("eps") + [f"=Y!{YB['2030']}{R_['eps']}"], "#,##0", "歷史＝公告稀釋 EPS；預測＝淨利 ÷ 期末流通股數")
     P.cell(r, 1, "比率").font = BOLD
@@ -271,8 +287,8 @@ def pl_sheet(wb, HR):
     seg("h_px", "HBM 單價（情境 B）", "US$/GB", lambda j: f"=Mkt!{mcols[j]}{m31}", "0.00")
     seg("h_mkt", "HBM 市場（情境 B）", "US$B", lambda j: f"=Mkt!{mcols[j]}{m34}", "#,##0.0")
     seg("h_sh", "本公司 HBM 營收市占", "%", lambda j: f"=sh{26 + j}", "0.0%", "Siliconomics 市占表")
-    seg("h_fx", "匯率", "韓元／美元", lambda j: "=fx", "#,##0")
-    seg("h_rev", "HBM 營收", "兆韓元", lambda j: f"=Y!{ycols[j]}{lab(Y, '  HBM', exact=False)}", M, "＝市場 × 市占 × 匯率 ÷ 1000")
+    seg("h_fx", "匯率", K["fxu"], lambda j: K["fxf"], "#,##0")
+    seg("h_rev", "HBM 營收", "兆韓元", lambda j: f"=Y!{ycols[j]}{lab(Y, '  HBM', exact=False)}", M, K["fxn"])
     P.cell(r, 1, "三、NAND＝前一年 ×（1＋位元成長）× 年均合約價指數比").font = BOLD
     r += 1
     seg("n_bit", "NAND 位元成長", "%", lambda j: None if j == 0 else f"=nb_{j}", "0.0%")
@@ -282,7 +298,7 @@ def pl_sheet(wb, HR):
     P.cell(r, 1, "四、其他與合計").font = BOLD
     r += 1
     seg("o_rev", "其他營收", "兆韓元", lambda j: f"=Y!{ycols[j]}{lab(Y, '  其他', exact=False)}", M, "固定輸入")
-    seg("nm_rev", "非記憶體事業營收", "兆韓元", lambda j: f"=Y!{ycols[j]}{yr('非記憶體事業營收')}", M, "本公司沒有，為零")
+    seg("nm_rev", "非記憶體事業營收", "兆韓元", lambda j: f"=Y!{ycols[j]}{yr('非記憶體事業營收')}", M, "輸入（In 頁 nm_rev_*；含內部抵銷）" if K["nm"] else "本公司沒有，為零")
     seg("tot", "分部加總（營收）", "兆韓元", lambda j: f"={D4[j]}{G['d_rev']}+{D4[j]}{G['h_rev']}+{D4[j]}{G['n_rev']}+{D4[j]}{G['o_rev']}+{D4[j]}{G['nm_rev']}", M, sub=True)
     seg("rep", "合併營收（Y 頁）", "兆韓元", lambda j: f"=Y!{ycols[j]}{R_['rev']}", M)
     seg("gap", "核對：分部加總 − 合併營收（應為 0）", "兆韓元", lambda j: f"={D4[j]}{G['tot']}-{D4[j]}{G['rep']}", "0.000")
@@ -575,7 +591,7 @@ def sens_rel(wb, here):
     S.cell(r, 1, "快照狀態")
     if snap:
         S.cell(r, 2, f'=IF(ABS(Val!$B${vb}-{snap["base_tp"]!r})<=1E-6*ABS({snap["base_tp"]!r}),"CURRENT","STALE")')
-        S.cell(r, 3, f"快照 {snap['snapshot']}；建置時基準加權目標價 {snap['base_tp']:,.0f} 韓元；與 Val 頁不同即 STALE（改輸入後須重跑 skhynix/sens_run.py）")
+        S.cell(r, 3, f"快照 {snap['snapshot']}；建置時基準加權目標價 {snap['base_tp']:,.{0 if K['pxf'] == '#,##0' else 2}f} 韓元；與 Val 頁不同即 STALE（改輸入後須重跑 {K['folder']}/sens_run.py）")
     else:
         S.cell(r, 2, "無快照")
     r += 1
@@ -666,20 +682,20 @@ def coord_c0(wb, SIL, here=None):
           "Mkt 頁情境 B：MIN(需求 × K1, 供給)", "SIF_HBM_ShipEB_Base", "同上")
     three("k1", "基準顆數係數 K1（情境 B；÷ 原始顆數）", "x", lambda y: f"=Mkt!{mcol[y]}{m19}", sil("SIF_UnitsCoef_Base"), "0.000",
           "Mkt 頁情境 B 顆數係數（2026–2027 無情境差異）", "SIF_UnitsCoef_Base（三層基準協調規則 v1.4：基準係數）", "同上")
-    three("sh", "SK 海力士 HBM 營收市占", "%", lambda y: f"=sh{y - 2000}", lambda y: SIL.V[f"hbmsh_skh_{y - 2000}"]["base"], "0.0%",
-          "In 頁 sh26–sh29（讀層）", "Siliconomics M24 市占表 hbmsh_skh", "層為 Interested-party（Counterpoint、IDC、UBS 位元市占）")
-    three("rev", "SK 海力士 HBM 營收", "US$B", lambda y: f"=Y!{ycol[y]}{lab(Y, '  HBM')}/(fx/1000)",
+    three("sh", f"{K['name']} HBM 營收市占", "%", lambda y: f"=sh{y - 2000}", lambda y: SIL.V[f"hbmsh_{K['own']}_{y - 2000}"]["base"], "0.0%",
+          "In 頁 sh26–sh29（讀層）", f"Siliconomics M24 市占表 hbmsh_{K['own']}", "層為 Interested-party（Counterpoint、IDC、UBS 位元市占）")
+    three("rev", f"{K['name']} HBM 營收", "US$B", lambda y: f"=Y!{ycol[y]}{lab(Y, '  HBM')}/({K['ccy_per_usdB']})",
           lambda y: f"={cols[y]}{L['mkt'][1]}*{cols[y]}{L['sh'][1]}", "#,##0.0",
           "Y 頁情境 B HBM 營收 ÷ 匯率（韓元兆 → US$B）", "層：HBM 市場 × 層的市占（Σ 個股加總的一部分）", "由上兩列相乘（Derived）")
     # 恆等式：已建模個股加總＋殘差＝市場
     Co.cell(r, 1, "C0 恆等式：HBM 市占合計（SK 海力士＋三星＋美光＋未建模殘差）＝1")
     Co.cell(r, 2, "%")
     for y in cols:
-        v = f"={cols[y]}{L['sh'][1]}+{SIL.V['hbmsh_ss_%d' % (y - 2000)]['base']}+{SIL.V['hbmsh_mu_%d' % (y - 2000)]['base']}"
+        v = f"={cols[y]}{L['sh'][1]}" + "".join(f"+{SIL.V['hbmsh_%s_%d' % (o_, y - 2000)]['base']}" for o_ in K["others"])
         Co[f"{cols[y]}{r}"] = v
         Co[f"{cols[y]}{r}"].number_format = "0.0%"
         Co[f"{cols[y]}{r}"].font = BLUE
-    Co.cell(r, 7, "SK 海力士取上方層列（連到格）加層的三星 hbmsh_ss、美光 hbmsh_mu（Siliconomics 常數）合計；殘差＝1 − 合計，層另列 SIF_HBMShareSum")
+    Co.cell(r, 7, f"{K['name']}取上方層列（連到格）加層的" + "、".join(f"{ {'skh': 'SK 海力士', 'ss': '三星', 'mu': '美光'}[o_]} hbmsh_{o_}" for o_ in K["others"]) + "（Siliconomics 常數）合計；殘差＝1 − 合計，層另列 SIF_HBMShareSum")
     L["shsum"] = r
     r += 1
     Co.cell(r, 1, "C0 恆等式：未建模殘差（1 − 三家合計）")
@@ -852,7 +868,7 @@ def readme13(wb, PLA, S_, G_, RVA, SNA, C0, ver_text):
     r += 1
     rows["o3"] = r
     g = lambda k, c="E": f"PL!{c}{G_[k]}"
-    sg = lab(SE, "2027 A")
+    sg = lab(SE, K["fyp"] + "2027 A")
     RD.cell(r, 1, F(T("2027 年基準情境營收 "), f'TEXT({g("rep")},"#,##0")', T(" 兆韓元：一般 DRAM 占 "), f'TEXT({g("dsh")},"0%")', T("、NAND 占 "), f'TEXT({g("nsh")},"0%")', T("、HBM 占 "),
                     f'TEXT({g("hsh")},"0%")', T("。營業利益對一般 DRAM 價格最敏感：2027 年樂觀情境 DRAM 收入 +20% 使營業利益 "), f'TEXT(Sens!E{sg + 2},"+0.0%;-0.0%")',
                     T("，HBM 收入 +30% 只 "), f'TEXT(Sens!E{sg + 4},"+0.0%;-0.0%")', T("；HBM 年約鎖價，收入較穩、金額較小。")))
@@ -876,10 +892,37 @@ def readme13(wb, PLA, S_, G_, RVA, SNA, C0, ver_text):
     return rows
 
 
+def _localize(wb, before, skip_fy=None):
+    """非 SK 海力士公司：把本模組新增的儲存格（新頁全部；既有頁只含 before 列以後）的幣別、年度字樣改成公司別（K）。SK 海力士（預設 K）不動。"""
+    import re
+    if K["cur"] == "兆韓元" and K["ccy"] == "韓元" and not K["fyp"] and K["pxf"] == "#,##0":
+        return
+    subs = [("兆韓元", K["cur"]), ("韓元／美元", K["fxu"]), ("韓元", K["ccy"])]
+    for ws in wb:
+        r0 = before.get(ws.title, 0)
+        for row in ws.iter_rows(min_row=r0 + 1):
+            for c in row:
+                v = c.value
+                if isinstance(v, str):
+                    for a, b in subs:
+                        v = v.replace(a, b)
+                    if K["fyp"] and not (skip_fy and ws.title == skip_fy[0] and c.row >= skip_fy[1]):
+                        v = re.sub(r"(?<![\dA-Za-z\-])(20\d\d) ?年 ?", K["fyp"] + r"\1 ", v)
+                    c.value = v
+                if K["pxf"] != "#,##0" and c.number_format == "#,##0":
+                    c.number_format = K["pxf"]
+
+
 def apply(wb, C, SIL, here):
     """build.py 呼叫：存檔前執行。回傳各區塊列號供檢查。"""
     if os.environ.get("V13_SKIP") == "1" or "Coord" not in wb.sheetnames:
         return None
+    K.update(C.get("v13_co") or {})
+    K["folder"] = os.path.basename(here.rstrip("/")) if here else K["folder"]
+    K["share_scale"] = C.get("share_scale", K["share_scale"])
+    K["ccy_per_usdB"] = C.get("ccy_per_usdB", K["ccy_per_usdB"])
+    K["fy_label"] = C.get("fy_label", "{}")
+    before = {ws.title: ws.max_row for ws in wb}
     HR = hist_sheet(wb)
     PLA, S_, G_ = pl_sheet(wb, HR)
     RVA = revdcf(wb)
@@ -887,4 +930,5 @@ def apply(wb, C, SIL, here):
     SNA = sens_rel(wb, here)
     C0 = coord_c0(wb, SIL, here)
     RM = readme13(wb, PLA, S_, G_, RVA, SNA, C0, C["v13_ver"])
+    _localize(wb, before, ("Coord", C0["act"]["top"]) if C0.get("act") else None)   # C0（實績）節的文字由公司別模組自己寫好年度字樣
     return dict(hist=HR, pl=PLA, rd=RM, rv=RVA, val07=V07, sens=SNA, c0=C0)

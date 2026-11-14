@@ -1,10 +1,14 @@
 # 記憶體樣板（SK 海力士 v0.7.6）HTML 版面 v1.3 轉換：把 html_layout.build 產生的 v1.0 版面 cfg 改成個股 HTML 版面規格 v1.3（docs/plan/個股HTML版面規格.md）。
 # 章節：thesis → valuation → sens → revdcf → pl → drivers → recon → status（記憶體無個別模組）。樣板 NVIDIA（nvidia/gen_html_json.py 的 _v13、_coord、_top_first）。
 # 數字與標籤一律取自 xlsx（Hist、PL、RevDCF、Val 0.7、Sens、Coord、README 新增列；由 tools/memory_model/v13_post.py 寫入）；列號依標籤找。
-# 只由 html_layout.build(..., v13=True) 呼叫（美光、三星不呼叫）。
+# 只由 html_layout.build(..., v13=True 或公司別設定 dict) 呼叫（SK 海力士 v0.7.6 起；三星、美光 v0.5.5 起）。
 
 
-def transform(cfg, wb, co_dir=None):
+def transform(cfg, wb, co_dir=None, opts=None, pfmt="n0"):
+    opts = opts or {}
+    PF = pfmt                       # 每股金額（目標價、現價、EPS）的 HTML 數字格式；SK 海力士、三星 n0，美光 n2
+    CCY, CUR, FXU = opts.get("ccy", "韓元"), opts.get("cur", "兆韓元"), opts.get("fxu", "韓元／美元")
+    NM = bool(opts.get("nm"))        # 有非記憶體事業（三星）
     S = {s["id"]: s for s in cfg["sections"]}
 
     def lab(sh, prefix, start=1, col=1, exact=False):
@@ -20,7 +24,7 @@ def transform(cfg, wb, co_dir=None):
     # ---- README v1.3 展示層列 ----
     r13 = lab("README", "v1.3 展示層")
     RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
-    assert str(RD[f"A{RM['ver']}"].value).startswith("v0.7."), RD[f"A{RM['ver']}"].value
+    assert str(RD[f"A{RM['ver']}"].value).startswith("v0."), RD[f"A{RM['ver']}"].value
     # ---- 橫幅：只留白話（含對帳中揭露）----
     old_note = list(cfg["hero"]["note"])
     cfg["hero"]["note"] = [f"@README!A{RM['hero']}"]
@@ -45,11 +49,11 @@ def transform(cfg, wb, co_dir=None):
     assert coord_blocks[0]["type"] == "h3" and coord_blocks[3]["type"] == "bars", [b["type"] for b in coord_blocks]
     def _int(x):
         if isinstance(x, str):
-            return x[:-3] + "|n0" if x.endswith("|n2") else x
+            return x[:-3] + "|" + PF if x.endswith("|n2") else x
         if isinstance(x, list):
             return [_int(i) for i in x]
         if isinstance(x, dict):
-            return {k: ("n0" if k == "fmt" and v == "n2" else _int(v)) for k, v in x.items()}
+            return {k: (PF if k == "fmt" and v == "n2" else _int(v)) for k, v in x.items()}
         return x
     coord_blocks = _int(coord_blocks)
     r_tpc = next(r for r in range(1, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith("加權目標價") and isinstance(CW.cell(r, 2).value, (int, float)))
@@ -60,12 +64,12 @@ def transform(cfg, wb, co_dir=None):
         t_[:] = _int(t_)
     rest = va[4:]
     rest = [b for b in rest if not (b["type"] == "bars" and str(b.get("title", "")).startswith("目標價與現價"))]
-    bar4 = {"type": "bars", "title": "四個目標價與現價（韓元；豎線＝現價）", "fmt": "n0",
+    bar4 = {"type": "bars", "title": "四個目標價與現價（韓元；豎線＝現價）", "fmt": PF,
             "items": [{"label": lb, "value": f"@Val!B{r}", "series": sr} for r, sr, lb in zip(gr, (1, 2, 2, 0, 1),
                       ("DCF 目標價", "Comparable（調整後，進加權）", "Comparable（未調整，不進加權）", "加權目標價（橫幅主值）", "市場共識目標價"))],
             "ref": {"label": f"@Val!A{r_px}", "value": f"@Val!B{r_px}"}}
     tbl4 = {"type": "table", "caption": f"@Val!A{g0}", "head": [f"@Val!{c}{g0 + 1}" for c in "ABCD"],
-            "rows": [[f"@Val!A{r}", f"@Val!B{r}|n0", f"@Val!C{r}|sp1", f"@Val!D{r}"] for r in gr]}
+            "rows": [[f"@Val!A{r}", f"@Val!B{r}|{PF}", f"@Val!C{r}|sp1", f"@Val!D{r}"] for r in gr]}
     _on = [p_ for p_ in old_note[:7] if not (str(p_).startswith("@") and "固定規則" in str(wb[str(p_)[1:].split("!")[0]][str(p_)[1:].split("!")[1].split("|")[0]].value or "")) and "投資建議依" not in str(p_)]
     if _on and isinstance(_on[0], str) and _on[0].startswith("。"):
         _on[0] = _on[0][1:]
@@ -85,16 +89,19 @@ def transform(cfg, wb, co_dir=None):
         cand = [r for r in range(r1, r2 + 1) if num(col, r) and abs(SEW[f"{col}{r}"].value) >= 0.0005]
         cand.sort(key=lambda r: -abs(SEW[f"{col}{r}"].value))
         big = [r for r in cand if abs(SEW[f"{col}{r}"].value) >= th_main] if any_big else cand[:10]
+        side_big = bool(big) and any_big
+        if not big:   # 這一側沒有達兩位數的案例（另一側有）：主圖改列這一側影響最大者
+            big = cand[:10]
         small = [r for r in cand if r not in big]
         base = {"type": "tornado", "sheet": "Sens", "label_col": "A", "value_col": col, "fmt": "sp1"}
-        ttl = (f"加權目標價相對基準：輸入取{side}值，變動達兩位數百分比的案例" if any_big
+        ttl = (f"加權目標價相對基準：輸入取{side}值，變動達兩位數百分比的案例" if side_big
                else f"加權目標價相對基準：輸入取{side}值（無案例達兩位數，列影響最大者）")
         out.append(dict(base, title=ttl, rows=",".join(map(str, big))))
         out.append(dict(base, title=f"加權目標價相對基準：輸入取{side}值（其餘案例）", rows=",".join(map(str, small)), collapse=True,
                         summary=f"展開：輸入取{side}值，其餘案例（變動較小；幾乎為零者見全部案例表）"))
     out.append({"type": "table", "caption": f"@Sens!A{s0}", "collapse": True, "summary": "展開：全部案例的加權目標價相對基準（低案、高案）",
                 "head": [f"@Sens!{c}{s0 + 1}" for c in "ABCDEF"],
-                "rows": [[f"@Sens!A{r}", f"@Sens!B{r}|sp1", f"@Sens!C{r}|sp1", f"@Sens!D{r}|n0", f"@Sens!E{r}|n0", f"@Sens!F{r}|p1"] for r in range(r1, r2 + 1)]})
+                "rows": [[f"@Sens!A{r}", f"@Sens!B{r}|sp1", f"@Sens!C{r}|sp1", f"@Sens!D{r}|{PF}", f"@Sens!E{r}|{PF}", f"@Sens!F{r}|p1"] for r in range(r1, r2 + 1)]})
     st_r = r2 + 1
     out.append({"type": "note", "parts": ["快照狀態：", f"@Sens!B{st_r}", "。", f"@Sens!C{st_r}"]})
     sb = S["sens"]["blocks"]
@@ -136,10 +143,10 @@ def transform(cfg, wb, co_dir=None):
                       ["2028E 營收年增率", f"@RevDCF!B{g1}|p1", f"@RevDCF!B{g0_}|p1"],
                       ["折現率（WACC）", f"@RevDCF!B{w1}|p2", f"@RevDCF!B{w0}|p2"]]},
             {"type": "table", "caption": f"@RevDCF!A{A['a']}", "head": ["項目", "值"],
-             "rows": [[f"@RevDCF!A{r}", f"@RevDCF!B{r}|" + ("n0" if r in (A["a"] + 2, A["a"] + 3, A["a"] + 9) else "n6" if r == A["a"] + 5 else "x1" if r == A["a"] + 8 else "n1")]
+             "rows": [[f"@RevDCF!A{r}", f"@RevDCF!B{r}|" + (PF if r in (A["a"] + 2, A["a"] + 3, A["a"] + 9) else "n6" if r == A["a"] + 5 else "x1" if r == A["a"] + 8 else "n1")]
                       for r in range(A["a"] + 2, A["a"] + 10)]},
             {"type": "table", "caption": f"@RevDCF!A{cm}", "head": [f"@RevDCF!{c}{cm + 1}" for c in "ABCD"],
-             "rows": [[f"@RevDCF!A{cm + 2}", "—", f"@RevDCF!C{cm + 2}|n0", "—"]]
+             "rows": [[f"@RevDCF!A{cm + 2}", "—", f"@RevDCF!C{cm + 2}|{PF}", "—"]]
                      + [[f"@RevDCF!A{r}", f"@RevDCF!B{r}|n2", f"@RevDCF!C{r}|n2", f"@RevDCF!D{r}|sp1"] for r in range(cm + 3, cm + 6)]
                      + [[f"@RevDCF!A{cm + 6}", "—", f"@RevDCF!C{cm + 6}|n2", "—"]]},
             {"type": "table", "caption": f"@RevDCF!A{A['yh']}", "head": [f"@RevDCF!{c}{A['yh']}" for c in "ABCDEFG"], "collapse": True,
@@ -150,7 +157,7 @@ def transform(cfg, wb, co_dir=None):
     p5 = lab("PL", "項目", 1, 1, exact=True)
     plr = lambda labl, start=p5: next(r for r in range(start, PLW.max_row + 1) if PLW.cell(r, 1).value == labl)
     keys = ["營收", "營收年增率（YoY）", "營業成本（COGS）", "毛利", "毛利率", "營業費用（銷管＋研發）", "營業利益", "營業利益率", "其他收入（淨額）", "稅前利益", "所得稅", "稅後淨利", "淨利率", "股數（百萬股）", "EPS（完全稀釋）"]
-    fmt = lambda u: {"%": "p1", "韓元": "n0", "百萬股": "n1"}.get(u, "n1")
+    fmt = lambda u: {"%": "p1", CCY: PF, "百萬股": "n1"}.get(u, "n1")
     rowx = lambda r: [f"@PL!A{r}"] + [f"@PL!{c}{r}|{fmt(PLW.cell(r, 2).value)}" for c in "CDEFGHIJ"]
     r_ratio = plr("比率")
     r_chk = plr("核對（應為 0）")
@@ -180,7 +187,7 @@ def transform(cfg, wb, co_dir=None):
     old_blocks = [dict(pls[0], collapse=True, summary="展開：三情境摘要表與折線（2026–2029；營收、營業利益、淨利、每股淨值、EPS）"),
                   {"type": "h3", "text": "延伸期（2030–2032）的收斂法"}, dict(pls[1], collapse=True, summary="展開：三情境延伸到 2032（收斂法；營收、淨利率、淨利、EPS）")]
     old_blocks.append({"type": "note", "parts": notes, "collapse": True, "summary": "展開：延伸期說明"})
-    S["pl"].update(title="損益（標準損益表）", blocks=[{"type": "note", "parts": ["@PL!A2"]}, is_chart, is_tbl, {"type": "note", "parts": ["@PL!A3"]}, sc_chart] + old_blocks)
+    S["pl"].update(title="損益（標準損益表）", blocks=[{"type": "note", "parts": ["@PL!A2"] + (["@PL!A4"] if NM else [])}, is_chart, is_tbl, {"type": "note", "parts": ["@PL!A3"]}, sc_chart] + old_blocks)
     S["pl"].pop("intro", None)
     # ---- 6. 驅動因子：分部營收推導（情境 B）----
     sh = lab("PL", "分部營收推導（情境 B")
@@ -188,9 +195,10 @@ def transform(cfg, wb, co_dir=None):
     sr = lambda labl, start=sh: next(r for r in range(start, PLW.max_row + 1) if PLW.cell(r, 1).value == labl)
     r_tot = sr("分部加總（營收）")
     dr_, hr_, nr_, or_ = sr("一般 DRAM 營收"), sr("HBM 營收"), sr("NAND 營收"), sr("其他營收")
+    nm_r = sr("非記憶體事業營收")
     hs = sr("HBM ÷ 營收")
     sg = lambda rows, f: [[f"@PL!A{r}", f"@PL!B{r}"] + [f"@PL!{c}{r}|{f(r)}" for c in "DEFG"] for r in rows]
-    ff = lambda r: {"%": "p1", "x": "n3", "指數": "n3", "EB": "n2", "US$/GB": "n2", "US$B": "n1", "韓元／美元": "n0"}.get(PLW.cell(r, 2).value, "n1")
+    ff = lambda r: {"%": "p1", "x": "n3", "指數": "n3", "EB": "n2", "US$/GB": "n2", "US$B": "n1", FXU: "n0"}.get(PLW.cell(r, 2).value, "n1")
     seg_rows = []
     sec_titles = [r for r in range(sh + 2, r_tot) if PLW.cell(r, 2).value is None and PLW.cell(r, 1).value]
     for r in range(sh + 2, sr("核對：分部加總 − 合併營收（應為 0）") + 1):
@@ -201,9 +209,11 @@ def transform(cfg, wb, co_dir=None):
     seg_tbl = {"type": "table", "caption": "分部營收推導（情境 B；兆韓元）：一般 DRAM＋HBM＋NAND＋其他＝合併營收", "head": [f"@PL!A{hdrB}", f"@PL!B{hdrB}"] + [f"@PL!{c}{hdrB}" for c in "DEFG"], "rows": seg_rows}
     seg_chart = {"type": "theme", "title": "分部營收（情境 B，兆韓元）與 HBM 占營收比（右軸）", "x": f"@PL!D{hdrB}:G{hdrB}", "fmt": "n0", "fmt_r": "p0", "stack": True, "pad": 1.2, "total": f"@PL!D{r_tot}:G{r_tot}",
                  "bars": [{"name": f"@PL!A{dr_}", "y": f"@PL!D{dr_}:G{dr_}", "color": "#6fc7cb"}, {"name": f"@PL!A{hr_}", "y": f"@PL!D{hr_}:G{hr_}", "color": "#0b7a80"},
-                          {"name": f"@PL!A{nr_}", "y": f"@PL!D{nr_}:G{nr_}", "color": "#c29a2b"}, {"name": f"@PL!A{or_}", "y": f"@PL!D{or_}:G{or_}", "color": "#8a8c8c"}],
+                          {"name": f"@PL!A{nr_}", "y": f"@PL!D{nr_}:G{nr_}", "color": "#c29a2b"}, {"name": f"@PL!A{or_}", "y": f"@PL!D{or_}:G{or_}", "color": "#8a8c8c"}]
+                         + ([{"name": f"@PL!A{nm_r}", "y": f"@PL!D{nm_r}:G{nm_r}", "color": "#6f6bae"}] if NM else []),
                  "lines": [{"name": f"@PL!A{hs}", "y": f"@PL!D{hs}:G{hs}", "axis": "r", "color": "#3b3838", "labels": True}],
-                 "caption": "堆疊＝一般 DRAM、HBM、NAND、其他四個分部（非記憶體事業為零，未畫）；頂端數字＝分部加總；折線＝HBM 占營收比。2026E 為基準年（前三季實績＋第四季推估）；2027E 起由價格路徑與位元成長推導。"}
+                 "caption": ("堆疊＝一般 DRAM、HBM、NAND、其他與非記憶體事業五個分部" if NM else "堆疊＝一般 DRAM、HBM、NAND、其他四個分部（非記憶體事業為零，未畫）") + "；頂端數字＝分部加總；折線＝HBM 占營收比。"
+                            + opts.get("seg_base", "2026E 為基準年（前三季實績＋第四季推估）") + "；2027E 起由價格路徑與位元成長推導。"}
     dr = S["drivers"]["blocks"]
     S["drivers"]["blocks"] = [{"type": "note", "parts": [f"@README!A{RM['drv']}"]}, seg_chart, seg_tbl, {"type": "h3", "text": "情境驅動與單一參數"}] + dr
     S["drivers"]["title"] = "驅動因子：分部營收推導"
@@ -254,4 +264,14 @@ def transform(cfg, wb, co_dir=None):
     order = ["thesis", "valuation", "sens", "revdcf", "pl", "drivers", "recon", "status"]
     S["revdcf"] = rvdcf
     cfg["sections"] = [S[k] for k in order]
+    if (CUR, CCY, FXU) != ("兆韓元", "韓元", "韓元／美元"):   # 非韓元公司：本模組寫入的幣別字樣改成公司別（公司自己的 html_src 字串不含這些字樣）
+        def _loc(x):
+            if isinstance(x, str):
+                return x.replace("兆韓元", CUR).replace("韓元／美元", FXU).replace("韓元", CCY)
+            if isinstance(x, list):
+                return [_loc(i) for i in x]
+            if isinstance(x, dict):
+                return {k: _loc(v) for k, v in x.items()}
+            return x
+        cfg = _loc(cfg)
     return cfg

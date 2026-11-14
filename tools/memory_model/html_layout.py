@@ -294,9 +294,9 @@ def build(co_dir, xlsx, nm_block=False, pfmt="n0", recon_main=None, v13=False):
     sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "coord"))
     import coord as COORD  # noqa: E402
     COORD.inject_html(cfg, xlsx)
-    if v13:   # SK 海力士 v0.7.6 起：個股 HTML 版面規格 v1.3（tools/memory_model/html_v13.py）；美光、三星不傳，輸出不變
+    if v13:   # SK 海力士 v0.7.6 起：個股 HTML 版面規格 v1.3（tools/memory_model/html_v13.py）；v13 可為 True（SK 海力士）或公司別設定 dict（三星、美光 v0.5.5 起：ccy／cur／fxu／nm／seg_base）
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
         import html_v13  # noqa: E402
-        cfg = html_v13.transform(cfg, wb, co_dir)
+        cfg = html_v13.transform(cfg, wb, co_dir, v13 if isinstance(v13, dict) else None, pfmt)
     json.dump(cfg, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("ok", out)

@@ -384,3 +384,38 @@ CONFIG["version"] = "v0.5.4"
 CONFIG["date"] = "2026-11-06"
 CONFIG["a1_note"] = CONFIG["a1_note"] + "；v0.5.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"
 CONFIG["readme_tail"] = CONFIG["readme_tail"] + ["v0.5.4：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"]
+
+# v0.5.5（2026-11-15）：個股 HTML 版面 v1.3、三層協調（兩讀數＋C0 公司實績）。共用建檔 tools/memory_model/ 以 CONFIG["v13"] 啟用；既有數值、目標價與評等不變。
+# C0 實績在 micron/c0_actuals.py；敏感度快照 micron/sens_run.py → sens_snapshot.json；另一側讀數 micron/coord_alt.json（tools/coord/alt_run.py）。
+_SM = ("美光 10-K FY2025（https://www.sec.gov/Archives/edgar/data/723125/000072312525000028/mu-20250828.htm；FY2025、FY2024、FY2023 合併營業報表）；"
+       "FY2022 取 FY2023 第四季財報新聞稿 8-K（https://www.sec.gov/Archives/edgar/data/723125/000072312523000051/a2023q4ex991-pressrelease.htm）；單位百萬美元÷1000。EPS 為稀釋 EPS；會計年度約 8–9 月底結束")
+CONFIG["v13"] = True
+CONFIG["version"] = "v0.5.5"
+CONFIG["date"] = "2026-11-15"
+CONFIG["v13_co"] = dict(
+    name="美光", own="mu", others=("skh", "ss"), folder="micron", cur="十億美元", ccy="美元", fxu="美元／美元", fyp="FY", pxf="#,##0.00", fxf="=1", fxn="＝市場 × 市占（美元計價，無匯率換算）",
+    hist_unit="十億美元，US GAAP 合併；EPS 美元", hist_ver="v0.5.5", hist_src=_SM,
+    hist_rows=[
+        ("rev", "營收", 15.540, 25.111, 37.378, 30.758, "Verified"),
+        ("cogs", "營業成本", 16.956, 19.498, 22.505, None, "Verified"),
+        ("gp", "毛利（＝營收 − 營業成本）", "=C{rev}-C{cogs}", "=D{rev}-D{cogs}", "=E{rev}-E{cogs}", None, "Derived"),
+        ("oi", "營業利益（毛利 − 研發 − 銷管 − 重組與減損 − 其他營業淨額）", -5.745, 1.304, 9.770, 9.702, "Verified"),
+        ("opx", "營業費用（研發、銷管、重組減損、其他營業淨額＝毛利 − 營業利益）", "=C{gp}-C{oi}", "=D{gp}-D{oi}", "=E{gp}-E{oi}", None, "Derived"),
+        ("pti", "稅前利益", -5.658, 1.240, 9.654, None, "Verified"),
+        ("oth", "其他收入（淨額）＝稅前利益 − 營業利益（含利息、其他營業外）", "=C{pti}-C{oi}", "=D{pti}-D{oi}", "=E{pti}-E{oi}", None, "Derived"),
+        ("tax", "所得稅（含權益法投資損益的調整後稅額；負值＝稅額利益）", "=C{pti}+5.833", "=D{pti}-0.778", "=E{pti}-8.539", None, "Derived"),
+        ("ni", "本期淨利（稅前 − 所得稅）", "=C{pti}-C{tax}", "=D{pti}-D{tax}", "=E{pti}-E{tax}", None, "Derived"),
+        ("nic", "歸屬普通股淨利（＝公告淨利）", -5.833, 0.778, 8.539, 8.687, "Verified"),
+        ("eps", "EPS（稀釋；美元）", -5.34, 0.70, 7.59, 7.75, "Verified"),
+    ],
+    hist_checks=[("核對：2025 年營收（本頁）− Q 頁四季營收合計（應接近 0）", "=E{rev}-SUM(Q!B4:E4)"),
+                 ("核對：2025 年營業利益（本頁）− Q 頁四季營業利益合計（應接近 0）", "=E{oi}-SUM(Q!B10:E10)"),
+                 ("核對：2025 年本期淨利（本頁）− Q 頁四季淨利合計（應接近 0）", "=E{ni}-SUM(Q!B12:E12)")],
+    pl_note="口徑：GAAP（US GAAP 合併；美光另公布 Non-GAAP，本模型與市場共識以 GAAP 淨利為準）。FY＝會計年度（約 8–9 月底結束）。歷史所得稅＝稅前利益 − 公告淨利（含權益法投資損益 FY2025 0.009、FY2024 −0.011、FY2023 0.002 十億美元的小額調整）。",
+    pl_fc="預測：FY2026E 為基準年（四季皆已公布實績；FQ4-26 為 14 週）、FY2027E–FY2029E 為情境 B 由驅動因子推導、FY2030E 為收斂法（只推營收與淨利）。",
+    seg_base="FY2026E 為基準年（四季皆為實績）",
+)
+CONFIG["v13_ver"] = ("v0.5.5（2026-11-15）：個股 HTML 版面 v1.3 與三層協調（兩讀數目標價、C0 公司實績 vs 層級隱含值）。公司未揭露 HBM 營收金額（FQ2–FQ4 FY2026 只給定性說明；HBM4 營收「已超過 10 億美元」為二手轉述、無期間），"
+                     "故 HBM 列判定為「無可比實績」；已揭露的 DRAM（含 HBM）營收只做上限檢查（參考、不判定）。既有數值、目標價與評等不變。")
+CONFIG["a1_note"] = CONFIG["a1_note"] + "；v0.5.5（2026-11-15）：版面 v1.3＋兩讀數＋C0（實績）；新增 Hist、PL、RevDCF 頁與 Val 0.7、Sens、Coord、README 新增列；既有數值不變"
+CONFIG["readme_tail"] = CONFIG["readme_tail"] + ["v0.5.5：版面 v1.3＋兩讀數＋C0（實績）；既有數值不變"]
