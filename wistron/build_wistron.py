@@ -309,11 +309,15 @@ URLNAME = {CNY2Q: "緯創 2Q26 法說（鉅亨）", UAN2Q: "緯創 2Q26 法說�
            SD_GDR: "財報狗 GDR 新聞", UDN0910: "經濟日報 2026-09-10", SA_Q: "stockanalysis 報價頁", SA_F: "stockanalysis 預估頁",
            SA_R: "stockanalysis 比率頁", SA_FIN: "stockanalysis 財報頁", SD: "財報狗個股頁", GI: "Goodinfo 經營績效", WR0810: "旺得富 2026-08-10",
            CTEE0805: "工商時報 2026-08-05", CM2024: "CMoney 2024-08-01"}
+_OVR = dict(kv.split("=") for kv in os.environ.get("WISTRON_OVR", "").split(";") if kv)
 r = 4; INROW = {}
 for srow in rows:
     if srow[0] == "sec":
         IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    if key in _OVR:   # v0.4.6：敏感度快照（wistron/sens_wistron.py）以環境變數 WISTRON_OVR 把輸入改為敏感度低／高值；正式建置不設
+        base = {"lo": lo, "hi": hi}.get(_OVR[key]) if _OVR[key] in ("lo", "hi") else base * float(_OVR[key].lstrip("x"))   # lo／hi＝敏感度低／高欄；x0.8＝基準 × 0.8
+        assert base is not None, (key, _OVR[key])
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
         if v is not None:
@@ -414,6 +418,8 @@ DEFP = dict(scn="A", rel="rel_{y}", wrel="wrel_{y}", wcs="wcs_{y}", wkeep="wkeep
             wgm="wgm", wopm="wopm", wnio="wnio", snio="snio", stake="stake", fg="fade_g{s}", fm="fade_m{s}")
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["mf"] == "1" and s != "A":   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 的 AI IT 資本支出與 GPU 顆數 × wta（＝另一側讀數比值）；情境 A 不縮放
+        P["mf"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     p = lambda k, y=None: P[k].format(y=(y % 100 if y else ""), s=s)
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -1105,6 +1111,17 @@ _old5 = [_c for _c in RD["A"] if isinstance(_c.value, str) and not _c.value.star
 for _k, _c in enumerate(_old5):   # 第 22 點：舊版撰寫、帶舊版數字的重點觀察 2、3（固定文字）刪除；現況見展示層重點 1–5
     _c.value = ("重點觀察 " + "、".join(x.value[5] for x in _old5) + "：舊版撰寫的文字（數字為舊版）已刪除；現況見展示層重點 1–5。") if _k == 0 else None
 
+# 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 wistron/coord_alt.json）
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_CR = COORD.add_sheet(wb, _HERE, SIL)
+if _CR:
+    COORD.stamp(wb, "v0.4.5", "v0.4.6", "2026-11-15")
+# v0.4.6（2026-11-15）：版面規格 v1.3（標準損益表、反向 DCF、四個目標價、敏感度主圖）＋三層協調 C0（Coord 頁讀取層級與公司實績對照）（wistron/v046_post.py；只新增，既有數值不變）
+sys.path.insert(0, _HERE)
+import v046_post as V46
+V46.apply(wb, SIL, _HERE, _CR)
 wb.save(sys.argv[1])
 if os.environ.get("R4_NOOP"): pass
 if os.environ.get("WISTRON_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
