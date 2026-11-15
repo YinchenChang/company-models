@@ -39,7 +39,7 @@ def build_pl(wb, REG, YCOL):
     Pn = lambda pid, y: f"PnL!${YCOL[y]}${REG[pid]['row']}"            # noqa: E731
     F = lambda fid, y: f"Funding!${YCOL[y]}${REG[fid]['row']}"         # noqa: E731
     ws = wb.create_sheet('PL')
-    ws['A1'] = 'PL — 標準損益表（版面 v1.3 D 節；非 IFRS 經調整口徑；FY2023–FY2025 實績、FY2026–FY2030 基準情境）'; ws['A1'].font = Font(bold=True, size=12)
+    ws['A1'] = 'PL — 標準損益表（版面 v1.3 D 節；非 IFRS 經調整口徑；FY2023–FY2025 實績、FY2026 為 1H 實績＋2H 預測、FY2027–FY2030 基準情境）'; ws['A1'].font = Font(bold=True, size=12)
     ws['A2'] = ('口徑：非 IFRS（經調整）＝IFRS 扣除股份支付、優先股公允價值變動與上市開支；公司業績公告與市場（賣方、新聞）主要使用此口徑。'
                 '歷史欄取 SRC_MM（招股書、FY2025 年度業績公告；一手）；預測欄取 PnL 頁（本頁只引用，不新增假設）。單位 $M（EPS 為美元）。')
     ws['A2'].alignment = WRAP
@@ -47,7 +47,7 @@ def build_pl(wb, REG, YCOL):
         x = ws.cell(4, c, h); x.font = BOLD; x.fill = HDR
     ws.cell(5, 1, '期間性質')
     for y in PL_YEARS:
-        ws.cell(5, 3 + PL_YEARS.index(y), '實績' if y <= 2025 else '預測（基準）')
+        ws.cell(5, 3 + PL_YEARS.index(y), '實績' if y <= 2025 else ('1H 實績＋2H 預測' if y == 2026 else '預測（基準）'))
     hist = {2023: dict(rev=S('S114'), cogs=S('S115'), sd=S('S117'), adm=S('S119'), rd=S('S121'), oth=S('S123'), fin=S('S125'), imp=S('S128'),
                        fv=S('S131'), nl=S('S134'), sbc=S('S136'), lst=S('S138'), adj=S('S140')),
             2024: dict(rev=S('S001'), cogs=S('S116'), sd=S('S118'), adm=S('S120'), rd=S('S122'), oth=S('S124'), fin=S('S126'), imp=S('S129'),

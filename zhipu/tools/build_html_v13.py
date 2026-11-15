@@ -138,7 +138,7 @@ def chart_revcheck(V):
 def valuation(V):
     rows = "".join(f'<tr><td>{lab}</td><td>{V.n(ref, None, f)}</td></tr>' for lab, ref, f in (
         ("現價：收盤價（港元，2026-11-05）", "Reverse!X38", "f0"), ("市值（人民幣億元）", "RVS_MktCap", "f0"), ("淨現金（估計，人民幣億元）", "RVS_NetCash", "f0"),
-        ("企業價值 EV（人民幣億元）", "RVS_EV", "f0"), ("同業（MiniMax）企業價值 ÷ 年化營收（倍）", "RVS_PeerMult", "f1"),
+        ("企業價值 EV（人民幣億元）", "RVS_EV", "f0"), ("同業（MiniMax）企業價值 ÷ 年化營收（倍；MiniMax 市值取 2026-10-07 盤中，與智譜股價 2026-11-05 收盤不同日）", "RVS_PeerMult", "f1"),
         ("市值隱含年營收（人民幣億元）", "RVS_MktImpliedRev", "f1"), ("模型營收首次達到的年度", "RVS_MktImpliedYear", "yrt")))
     return ('<section id="valuation" data-novaluation="1"><h2>估值：不適用（本模型未建目標價）</h2>'
             '<p class="note">本模型未建目標價與評等。智譜已在港股上市、有市場價格，但本模型是收支模型：沒有 DCF、同業倍數加權與評等，因此不給目標價。'

@@ -38,7 +38,9 @@ MiniMax（00100.HK，上海稀宇科技）收支模型，現行 **v0.2.2**（202
 **做法：**
 - `coord_pl.py`（由 `build_xlsx.py` 呼叫）新增 PL、Coord 兩頁，只列示、不被既有計算頁引用。
 - 個股模型頁 `build_html_v13.py`：章節 命題 → 估值（不適用）→ 敏感度（對至 FY2030 累計需新融資）→ 損益（標準損益表）→ 驅動因子（分部營收推導：企業端＝token × 單價、消費端成長）→ 算力與每 MW 收支 → 資金 → 回本比值 → 對帳（C0 表）→ 資料狀態；除估值、對帳、資料狀態外每章有圖。數字全取自 xlsx（`scripts/check_html_v13.py` 逐一核對 data-ref）。
-- **估值：本模型沒有目標價與評等**（Valuation 頁只有市值、EV 與反向檢驗）。MiniMax 已上市、有市價，但 G 節四個目標價、H 節加權目標價敏感度、反向 DCF 章無從呈現；估值章標「估值：不適用（本模型未建目標價）」並帶 `data-unlisted="1"`（沿用規格 J 節的檢查豁免；J 節原文只寫未上市，需主控／Andy 決定是否擴充到「上市但模型未建估值」，或另建 DCF／同業估值）。
+- **估值：本模型沒有目標價與評等**（Valuation 頁只有市值、EV 與反向檢驗）。MiniMax 已上市、有市價，但 G 節四個目標價、H 節加權目標價敏感度、反向 DCF 章無從呈現；估值章標「估值：不適用（本模型未建目標價）」並帶 `data-novaluation="1"`（規格 J 節 (b)：已上市但本模型未建目標價，2026-11-15 擴充），橫幅寫「本模型未建目標價與評等」；估值章列市值、EV 與反向檢驗，附一張反向檢驗圖。若要給目標價需另建 DCF／同業估值頁（判斷類，待 Andy 決定）。
+
+**同版修正（2026-11-15，只改標籤與旗標，數字不變）：** 估值章拿掉 `data-unlisted`、只留 `data-novaluation`；橫幅改規格字樣「本模型未建目標價與評等」；損益表 FY2026 欄標「1H 實績＋2H 預測」（個股頁表頭與 PL 頁第 5 列）；Valuation 頁 V07 標籤改「智譜 市值 ÷ 1H26 年化營收（市值為 2026-10-02，未更新）」。同版 v0.2.2 重建：`tools/xlsx_diff.py` 對修正前只差上述 3 格文字（Valuation!B14、PL!A1、PL!F5），數值全同；check_html（506）、check_html_v13（734）、ci_check、`check_layout_v13 --xlsx` 全過。
 
 **實績與出處（C0）：**
 | 項目 | 期間 | 公司實績 | 出處 | 層級隱含 | 判定 |
@@ -50,4 +52,4 @@ MiniMax（00100.HK，上海稀宇科技）收支模型，現行 **v0.2.2**（202
 
 **判定結果：** 可判定 0、對帳中 0、無可比實績 4；無同源列（Wattonomics 快照全文無 MiniMax，層級不讀本模型）。讀取層級：Tokenomics 快照 v19.0（現行 v22.0，本輪不換）。
 
-**驗證：** 建置 → LibreOffice 重算（錯誤 0、Checks 合計 0）→ 敏感度 → HTML（收支頁 506 個數字、個股頁 734 個 data-ref 全對 xlsx）；`tools/xlsx_diff.py` 對 v0.2.1：只差版本字串與新增格；`check_layout_v13 --xlsx`：main 版因 G、H、反向 DCF 必修不過（本模型無估值），PR #524 版（J 節豁免）全過；`tools/baseline_coordination/check.py` 通過。`check_company_html` 不適用（收支模型無 html.json，同 anthropic／openai）。
+**驗證：** 建置 → LibreOffice 重算（錯誤 0、Checks 合計 0）→ 敏感度 → HTML（收支頁 506 個數字、個股頁 734 個 data-ref 全對 xlsx）；`tools/xlsx_diff.py` 對 v0.2.1：只差版本字串與新增格；`check_layout_v13 --xlsx`（main 版，J 節 (b) `data-novaluation`）全過；`tools/baseline_coordination/check.py` 通過。`check_company_html` 不適用（收支模型無 html.json，同 anthropic／openai）。

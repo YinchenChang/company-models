@@ -13,7 +13,7 @@
 3. 精簡：HTML 版面規格 v1.3（`tools/company_html/check_layout_v13.py` 必過）。
 4. 每季滾動：財報後 FY 首期改為「年初至今實績＋剩餘季度模型」，升版並拆解目標價變動（`scripts/decomp_v50.py`）。
 5. HTML 單一檔案、離線開啟（`check_company_html.py`）；可見文字不含網址（網址只在 Sources 頁）。
-6. 營運成本以 Tokenomics 滿載穩態為主值；每 MW 收入＝Tokenomics `IF_HoldEcon` × 公司因素 k；不以營收、ARR、RPO、ACV、指引反推 k（公司宣稱只進 Recon、Sens、反解）。
+6. 營運成本以 Tokenomics 滿載穩態為主值；每 MW 收入＝Tokenomics `IF_HoldEcon` × 公司因素 k；不以營收、ARR、RPO、ACV、指引反推 k（公司宣稱只進 Recon、Sens、反解）。Andy 2026-11-15：每 MW 收入比照 CoreWeave 辦理——k 的構成（Tokenomics 快照、錨的世代加權、長約與現貨證據、公式）須與 `coreweave/` 現行版同法同參數，只保留 Nebius 公司事實（隨需占比、計費比例、世代占比、在役 MW）；公司宣稱的新約每 MW 年收入列參考、作 Sens（`k_claim`、`p_new_ovr`）並由 Drive 對帳單處理；橫幅與命題章須寫明支撐現價所需的每 MW 年收入（反向 DCF）。
 7. 公司未揭露季末在役 MW：2026 年在役 MW 為明列假設（In mw_q2、mw_q3、mw_ye26），公司揭露後改為實績並升版。
 8. 三層協調：Coord 頁依 `docs/plan/三層基準協調規則.md` 與 `tools/coord/README.md`；Wattonomics 層級值先用 `tools/coord/trace_wattonomics.py --player nbis` 追公式再判定同源。
 

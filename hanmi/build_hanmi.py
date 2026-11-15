@@ -220,13 +220,14 @@ HB = {"A": "hbp_{y}_hi", "B": "hbp_{y}", "C": "hbp_{y}_lo"}   # v0.2.1：混合�
 DEFP = dict(scn="A", den="", stk="", beta="beta_stk", dlt="dlt", gt="g_tail", hb=None, hsk=None, hmu=None, hss="hss",
             hsk25="hsk_25", hmu25="hmu_25", a25h="a25_hbm", go26="g_o26", go=None, rev26="rev26", oi26="oi26",
             F="opex_fix", v="opex_var", nioi="nioi", gmadj=True,
-            hsx=None, hsA28="hsA_28")   # v0.13：Wattonomics 錨定案例用（hsx＝HBM 位元替換、hsA28＝CY2027 購機的 CY2028 共同前提）；預設不變
+            hsx=None, hsA28="hsA_28", kfix=False)   # v0.13：Wattonomics 錨定案例用（hsx＝HBM 位元替換、hsA28＝CY2027 購機的 CY2028 共同前提）；預設不變
 
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
     if SIL.COORD_ALT and P["hsx"] is None and s != "A":   # 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 於 CY2027 起 HBM 需求位元 × wta（＝另一側讀數比值），出貨＝MIN(需求 × wta, 供給)（同 Sens「Wattonomics 錨定」案例）；情境 A 不縮放
         P["hsx"] = {y: (f"hs{s}_{y % 100}" if y < 2027 else f"MIN({ALT_DEM[s][y]!r}*wta_{y % 100},{ALT_SUP[y]!r})") for y in YRS}
         P["hsA28"] = f"MIN({ALT_DEM['A'][2028]!r}*wta_28,{ALT_SUP[2028]!r})"
+        P["kfix"] = True   # v0.4.5：不重算校準係數 k——CY2026 購機（FY2026 錨點期間）讀未縮放的 CY2027 產能，k 與現行建置相同（tools/coord/README.md 兩讀數規格；同 Disco、TOWA v0.3.5）
     hb = P["hb"] if P["hb"] is not None else HB[s]
     hby = lambda y: (P["hb"] if P["hb"] is not None else ("hbp_{y}" if y <= 2027 else HB[s])).format(y=y % 100)   # 情境分歧自 CY2028
     hb28p = (P["hb"] if P["hb"] is not None else "hbp_{y}").format(y=28)   # CY2027 購機的共同前提：CY2028 混合鍵合取基準
@@ -249,7 +250,9 @@ def engine(ws, r0, title, **over):
     row("lf", "層數加權（每顆晶粒鍵合時間）", "x", {y: f"=1+{P['beta']}*({COL[y]}{R['stk']}-$C{R['stk']})/4" for y in range(2025, 2031)}, fmt="0.000")
     row("hb", "混合鍵合占比", "%", {y: "=" + hby(y) for y in range(2025, 2031)}, fmt="0.0%", note={"A": "情境 A：CY2028 起 Disco 模型高值（導入快）", "B": "情境 B：Disco 模型基準值", "C": "情境 C：CY2028 起 Disco 模型低值（導入慢）"}.get(s, "") if P["hb"] is None else "")
     row("cap", "TC 鍵合產能需求（晶粒 × 層數加權 ×（1 − 混合鍵合））", "百萬顆當量", {y: f"={COL[y]}{R['dies']}*{COL[y]}{R['lf']}*(1-{COL[y]}{R['hb']})" for y in range(2025, 2031)}, fmt="#,##0")
-    nxt = lambda y: (f"{P['hsA28']}*8000/{COL[2028]}{R['den']}*{COL[2028]}{R['lf']}*(1-{hb28p})" if y == 2027 else f"{COL[y+1]}{R['cap']}")
+    if P.get("kfix"):   # v0.4.5 另一側讀數：已實現與錨點期間不受縮放影響——CY2026 購機（FY2026 錨點、校準 k 的分母）看的 CY2027 產能讀未縮放值（＝縮放後 × 現行 HBM 位元 ÷ 縮放後位元）
+        row("cap0", "TC 鍵合產能需求 CY2027（未縮放；另一側讀數 CY2026 購機＝FY2026 錨點期間用）", "百萬顆當量", {2027: f"=E{R['cap']}*hs{s}_27/E{R['ship']}"}, fmt="#,##0", note="現行建置的 CY2027 HBM 位元（hs_27）還原未縮放值；FY2026 是錨點，校準係數 k 不因另一側縮放重算")
+    nxt = lambda y: (f"{P['hsA28']}*8000/{COL[2028]}{R['den']}*{COL[2028]}{R['lf']}*(1-{hb28p})" if y == 2027 else (f"E{R['cap0']}" if (y == 2026 and P.get("kfix")) else f"{COL[y+1]}{R['cap']}"))
     row("new", "新機需求＝MAX(0, 下一年產能 − 本年)＋汰換 × 本年（CY2027 的下一年產能用三情境共同前提）", "百萬顆當量", {y: f"=MAX(0,{nxt(y)}-{COL[y]}{R['cap']})+{P['dlt']}*{COL[y]}{R['cap']}" for y in YRS}, fmt="#,##0", note="鍵合機在產能需要前一年購入；v0.2.1：CY2027 購機的 CY2028 產能＝情境 A 的 HBM 位元（hsA_28）× 混合鍵合基準，三情境相同（與 markets/equipment 2027 三情境相同、記憶體供給三情境相同一致）；CY2028 起照讀本情境")
     tot = lambda y: "+".join(f"ms_{m}_{min(y + 1, 2029) % 100}" for m in ("sk", "ss", "mu"))
     for m, nm in (("sk", "SK 海力士"), ("ss", "三星"), ("mu", "美光")):
@@ -1034,5 +1037,8 @@ if _CR:
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import v044_post as P44  # noqa: E402
     print(P44.apply(wb, SIL, _CR))
+    # v0.4.5（2026-11-15）：兩讀數的另一側讀數口徑修正（不重算校準係數 k；engine() 的 kfix）＋Coord 頁口徑揭露（hanmi/v045_post.py）
+    import v045_post as P45  # noqa: E402
+    wb._v045 = P45.apply(wb, _CR)
 wb.save(sys.argv[1])
 print("PB", {s: PB[s] for s in SC}); print("SUMR", SUMR); print("VAL", VAL, "fwd rows to", fr, "SENS_LAST", SENS_LAST, "Recon last", rr_)
