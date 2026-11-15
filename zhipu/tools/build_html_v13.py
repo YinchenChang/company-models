@@ -176,8 +176,15 @@ def valuation(V):
             f'<h3>評等規則與邊界揭露</h3><p class="note">{V.n("VAL_RatingNote", None, "text")}</p>'
             f'<p class="note">升一級所需加權目標價 {V.n("VAL_UpFlip", None, "f2")} 港元；收支關卡 FY2026–FY2030 自由現金流合計 {V.n("VAL_Gate", None, "f1")} 億元（負＝入不敷出：估值評等為買進以上時改為「收支不足」）。</p>'
             '<h3>折現率、股數與淨現金</h3><div class="tw"><table><thead><tr><th>項目</th><th>值</th></tr></thead><tbody>' + wacc + '</tbody></table></div>'
+            '<p class="note"><b>稀釋未計：</b>受限制股份有揭露（招股章程附註 29(b)：2025-06-30 尚未行使 6,620 千份〔拆股前〕，1 拆 10 後約 6,620 萬股，行使價 0.10–2.00 元），'
+            '未計入評價股數。若全部為增量，約占評價股數 13.6%，加權目標價約降至 138–140 港元，評等不變；這些股份是否已含在已發行股數內未查證。</p>'
+            '<p class="note"><b>β 的來源：</b>智譜 2026-01 上市，自身 β 期間不足，借用 Anthropic 估值頁的美國軟體同業 5 年 β 中位數'
+            '（Palantir、CrowdStrike、Cloudflare、Snowflake、Datadog；stockanalysis.com 2026-11-06），再經 Blume 調整；屬判斷類。</p>'
+            '<p class="note"><b>DCF 淨現金下限：</b>三情境皆觸及下限，下限以評價日（2026-06-30 pro forma）淨現金按股東權益成本推到目標時點，'
+            '未扣評價日之後的燒錢；若改用本模型目標時點（約 2027-11，年底期末值內插）的淨現金，加權目標價約 142 港元，評等不變。</p>'
             '<h3>DCF 與同業法（三情境）</h3><div class="tw"><table><thead><tr><th>項目</th><th>情境 A</th><th>情境 B</th><th>情境 C</th></tr></thead><tbody>' + dcf + '</tbody></table></div>'
             '<h3>同業倍數（2026-11-05 同日市值）</h3><div class="tw"><table><thead><tr><th>項目</th><th>值</th></tr></thead><tbody>' + peer + '</tbody></table></div>'
+            '<p class="note">智譜與 MiniMax 互為唯一同業（MiniMax 模型的同業也只有智譜），兩家的 Comparable 結論本質上是同一組相對價差：一家偏貴即另一家偏便宜，不是兩個獨立的檢驗。</p>'
             f'<details class="more"><summary>展開：估值方法（模型原文）</summary><p class="note">{V.n("VAL_Method", None, "text")}</p></details>'
             '<details class="more"><summary>展開：原收支模型的反向檢驗（市值隱含營收；只作對照）</summary>' + _oldval_body(V) + '</details></section>')
 
@@ -190,6 +197,9 @@ def _oldval_body(V):
     return (f'<h3>反向檢驗：模型營收（藍）vs 市值隱含年營收（紅虛線 {V.n("RVS_MktImpliedRev", None, "f1")} 億元），紫點＝分析師共識營收</h3>{chart_revcheck(V)}'
             f'<div class="tw"><table><thead><tr><th>現價、市值與反向檢驗</th><th>值</th></tr></thead><tbody>{rows}</tbody></table></div>'
             f'{year_table(V, [("正向營收 ÷ 市值隱含營收（倍）", "RVS_FwdOverImplied", "f2", ""), ("分析師共識營收（人民幣億元；FY2029–FY2030 為沿用值）", "RVS_Target", "f1", "")])}'
+            f'<p class="note">口徑差異：本摺疊的淨現金 {V.n("RVS_NetCash", None, "f0")} 億元、企業價值 {V.n("RVS_EV", None, "f0")} 億元（Reverse 頁）是 2026-06-30 現金加 7、9 月配售與可換股債券，'
+            f'另扣 7 月配售款至 8-31 已動用部分；估值章正文的淨現金 {V.n(vrow(V, "淨現金（評價日"), None, "f1")} 億元、市場企業價值 {V.n(vrow(V, "市場 EV"), None, "f0")} 億元是 2026-06-30 pro forma（未扣其後動用）。'
+            f'同業倍數 {V.n("RVS_PeerMult", None, "f1")} 倍為 MiniMax 2026-10-07 盤中市值 ÷ 年化營收；正文 {V.n(vrow(V, "同業 EV／NTM 營收中位數"), None, "f2")} 倍為 2026-11-05 收盤市值 ÷ 未來 12 個月共識營收，兩者口徑不同。</p>'
             f'<p class="note">分析師共識只到 FY2028；FY2029–FY2030 沿用 FY2028 共識平均，乘上反向模式年增率假設 {V.n("INP_134", None, "pct0")}（基準為 0，故三年同值），不是券商預測。</p>'
             '')
 

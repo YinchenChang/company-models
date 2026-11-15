@@ -47,7 +47,7 @@ def build(wb, D, Z):
         px=S("price_20261105"), px_note="SRC_ZP_1055（Yahoo Finance、StockAnalysis 兩來源一致）",
         pxfx=hk, pxfx_note="HKD/CNY 中間價 2026-09-28（Inputs fx_hkdcny）",
         shares=f"{S('shares_total_post_placing2')}/{yi}", shares_unit="億股", shares_label="評價股數＝2026-09 配售後已發行股份總數（億股）",
-        shares_note="SRC_ZP 2026-09 配售完成後總股本；選擇權、受限制股份未揭露（資料缺口，未計稀釋）；可換股債券價外，不計換股股數",
+        shares_note="SRC_ZP 2026-09 配售完成後總股本；受限制股份有揭露（SRC_ZP_876，招股章程附註 29(b)：1H25 尚未行使 6,620 千份〔拆股前〕，1 拆 10 後約 6,620 萬股，行使價 0.10–2.00 元），未計入評價股數；若全部為增量約占 13.6%，加權目標價約降至 138–140 港元，評等不變（是否已含在已發行股數內未查證）；可換股債券價外，不計換股股數",
         cash_items=[
             ("2026-06-30 現金及現金等價物（中期報告）", S("cash_end_1h26"), "SRC_ZP_211"),
             ("＋2026-07 H 股配售淨額（07-13 完成）", f("pl1", "L"), "Funding F15"),

@@ -2,9 +2,11 @@
 
 ## v0.1.6（2026-11-15，建置代理）— 估值頁 Val、反向 DCF 頁 RevDCF；成品命名對齊 MiniMax — Excel `model/20261115_Zhipu_v0.1.6.xlsx`
 - Andy 2026-11-15 決定給目標價與評等。新模組 `builder/z6.py`、`builder/valcore.py`（與 MiniMax 共用）；`tools/val_snapshots.py`；`data/val_scenarios.yaml`、`data/val_sens.yaml`；SRC_ZP_1056–1064、Inputs 26 列（INP_141–166）。
-- 加權目標價 HK$156.94（DCF 114.99、Comparable 199.74）、上檔空間 −67.0%、估值評等與投資建議「強力放空」；收支關卡（F09 五年合計）−281.2 億元不通過。
+- 加權目標價 HK$156.94（DCF 114.99、Comparable 198.88（三情境加權；199.74 為情境 B））、上檔空間 −67.0%、估值評等與投資建議「強力放空」；收支關卡（F09 五年合計）−281.2 億元不通過。
 - 成品：v1.3 頁改名 `智譜個股模型`、一頁摘要改 `智譜收支模型`（`tools/build_html.py`、`tools/build_html_v13.py`、`tests/test_html.py`）。scenarios.yaml 預期值更新（工作表、公式格 6,974、具名範圍 1,698、SRC 1,064、Inputs 166）。
 - xlsx_diff 對 v0.1.5：既有格只差版本字串與 SRC／Inputs 列數；其餘為新增格。
+
+- **獨立核對文字修正（同版重建，PR #588）：** Comparable 改寫為三情境加權 198.88（199.74 為情境 B）；Val!K40 股數說明改「受限制股份有揭露（SRC_ZP_876）、未計入評價股數；全部為增量約 13.6% → 加權目標價約 138–140，評等不變」；v1.3 頁估值章加稀釋未計、β 同業名單、DCF 淨現金下限未扣燒錢（模型目標時點淨現金 → 約 142）、與 MiniMax 互為唯一同業，摺疊反向檢驗加淨現金／EV 與同業倍數口徑說明。Coord!C15、L15 隨 main 換 Wattonomics v0.3.3 快照。數值格不變（xlsx_diff 三格文字）。
 
 ## v0.1.5（2026-11-15，建置代理）— 版面 v1.3＋三層協調（讀取層級、C0 實績）— Excel `model/20261115_Zhipu_v0.1.5.xlsx`
 - 工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`；規則 v1.4.2 C0 第 2 點。新模組 `builder/z5.py`：PL、Coord 兩頁，只列示（`test_v015_coord_pl_not_fed_back`）。
