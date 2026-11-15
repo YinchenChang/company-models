@@ -208,7 +208,7 @@ AIR_ = "高速材料營收（ELL／SLL，M7 以上；AI 相關）＝ MIN（需�
 NAIR_ = "其他等級營收（VLL／LL、非低損耗、特殊應用）"
 REVR_ = "營收（單一應報導部門：銅箔基板與膠片）"
 H = {
-    "ver": "v0.2.4",
+    "ver": "v0.2.5",
     "units_chart": lambda pB, hB: {
         "type": "theme", "title": "高速材料與其他等級營收（情境 B，十億元）與台燿在 AI 高速 CCL 市場的有效份額（右軸）", "x": f"@PL!D{hB}:G{hB}",
         "fmt": "n1", "fmt_r": "p1", "stack": True, "pad": 1.25, "total": f"@PL!D{pB(REVR_)}:G{pB(REVR_)}",

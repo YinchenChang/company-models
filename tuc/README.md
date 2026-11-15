@@ -1,4 +1,15 @@
-# tuc/ — 台燿（6274）個股模型 v0.2.4
+# tuc/ — 台燿（6274）個股模型 v0.2.5
+
+## v0.2.5（2026-11-15）：Siliconomics 讀取名稱改為只讀基準（單一基準值規則）
+
+- **依據：** Project 規則 10(4)（行業變數只在 Siliconomics 有一個基準值，情境只留在個股）；`tools/baseline_coordination/check.py` 第 [4] 項（硬體個股只讀 `*_Base`）。main 的 af9f690e6 因 `build_tuc.py` 文字寫 `SIF_DeployGW_A`、`SIF_CCLMkt_A` 而暫不把 tuc 加入 coord_meta。
+- **查核結果：** 計算自 v0.15 起就只讀基準——`GW = SIF_DeployGW_Base × 情境係數`、`MKT = SIF_CCLMkt_Base × 情境係數`（係數 2026–27 為 1，2028–29＝markets/scen 的 um28／um29 ÷ Siliconomics `um28_B`／`um29_B`；B＝基準）。違規只在來源與說明文字（In 頁 A 節標題、gw_26／27、gw28／29_A／B／C 來源欄、PL 與 Sens 引擎列說明、Units 頁、README 驅動因子列、情境名稱括號、Val 說明、Coord 讀取層級列）。
+- **做法（同台光電 emc、金像電 gce 慣例）：** 上述文字改為 `SIF_DeployGW_Base`、`SIF_CCLMkt_Base`；情境 A、C 標「× 情境係數（個股自建）」，B＝基準。`v13_post.py` 新增 `ver5`：README A1 標題版號改 v0.2.5、末尾加本版說明，HTML「本版要點」列改為本版說明＋前版 v0.2.4 原文；v1.3 各頁「v0.2.4 起」字樣保留（該頁首次加入的版本）。
+- **數值：** 2026–2027 原註「三情境相同」，改讀基準後部署 GW、市場逐格相同；2028–29 也相同（原本就以基準 × 係數計算）。`tools/xlsx_diff.py` 對 v0.2.4（容差 1e-9）：37 格不同，全為文字（README!A1、A6、本版要點列；In 來源與說明；PL、Sens 說明欄與情境名稱括號；Units 說明；Val!A2、B48；Coord!A31），數值格 0 差異、錯誤格 0。**加權目標價 1,265.92 元、評等買進（+26.0%）不變**；DCF 892.58、Comparable 1,762.59 不變。
+- **重跑：** `tools/coord/alt_run.py tuc`：另一側 1,070.07 元（中立），`coord_alt.json` 與前版逐位元組相同，檢查列「另一側建置與現行建置一致（無新增非 0）」，Coord 快照狀態 CURRENT。`tuc/sens_tuc.py`：`sens.json` 與前版逐位元組相同（匯率低／高 0.0%）。
+- **coord_meta：** `siliconomics/builder/seed/coord_meta_v0.19.json` 的 `hardware_companies` 加入 `tuc`（`depends_on_years` 2026–2029），以 `siliconomics/tools/export_baseline_status.py` 重匯 `siliconomics/data/baseline_status.json`。
+- **驗證：** `check_company_html tuc` 全部通過；`check_layout_v13 --xlsx` ok；`tools/baseline_coordination/check.py`（拉齊全部硬體個股 *.py 與 */dist/*.html）0 項不符；LibreOffice 重算錯誤格 0。
+- 成品：`dist/20261115_台燿個股模型_v0.2.5.xlsx`／`.html`；v0.2.4 移到 `dist/_待刪除/`。
 
 ## v0.2.4（2026-11-15）：個股 HTML 版面 v1.3＋三層協調（兩讀數目標價、讀取層級、C0 公司實績對帳）
 
