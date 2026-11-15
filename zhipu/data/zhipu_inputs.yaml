@@ -165,3 +165,30 @@ items:
 - {key: eta_lift_warn, name: η 上調期數 WARN 門檻（P1）, index: —, unit: 期, value: 0, lo: 0, hi: 0, tag: Decision, basis: 工作單 P1：η 被上調（殘差觸及訓練最低占比）時 WARN, range: 定義}
 # ── v0.1.2 官方分部（部署方式）對帳
 - {key: seg_recon_tol, name: 分部對帳容差（官方分部 vs 模型／子項加總；絕對差 ≤ 本值為 OK）, index: 全期, unit: RMB 億, value: 0.001, lo: 0.001, hi: 0.001, tag: Decision, basis: 工作單 v0.1.2：財報以千元四捨五入至億元四位小數，年報本地化部署 5.3396 與四捨五入後子項 5.3395 差 0.0001；容差 0.001 為定義常數（Decision，低＝高＝值）, range: 定義}
+# ── v0.1.6 估值頁 Val（Andy 2026-11-15 決定給目標價與評等；判斷類參數依 Anthropic v0.2.0 估值頁樣板慣例預設，待 Andy 確認）
+- {key: val_rf, name: 估值：無風險利率 rf（美國 10 年期公債 CMT）, index: 2026-11-06, unit: 比例, value: 0.0486, lo: 0.0386, hi: 0.0586, tag: Analogy, basis: 2026-11-06 4.86%（ycharts 轉 Treasury CMT；與 Anthropic v0.2.0 SRC_ANT_576 同一來源）；港股以港元計價、聯繫匯率，沿用美元無風險利率（判斷類）, range: ±1pt（Sens 以 WACC ±1pt 涵蓋）}
+- {key: val_beta, name: 估值：β（Blume 調整後）, index: —, unit: 倍, value: 1.248, lo: 1.0, hi: 1.6, tag: Analogy, basis: Anthropic v0.2.0 同業（PLTR、CRWD、NET、SNOW、DDOG）5 年 β 中位數 1.37 經 Blume 調整；智譜 2026-01 上市，自身 β 期間不足（判斷類）, range: 1.0～1.6（Anthropic 樣板 Sens）}
+- {key: val_erp, name: 估值：股權風險溢酬 ERP, index: —, unit: 比例, value: 0.05, lo: 0.04, hi: 0.06, tag: Assumed, basis: 個股DCF標準規格第 2 節預設 5%；未另加中國國家風險溢酬（判斷類，Sens 6% 涵蓋）, range: 4%～6%}
+- {key: val_kd_spread, name: 估值：稅前債務成本利差（kd＝rf＋利差）, index: —, unit: 比例, value: 0.02, lo: 0.01, hi: 0.04, tag: Assumed, basis: 樣板 Anthropic val_kd_spread；債務為銀行借款、零息可換股債券與租賃，利差無揭露, range: 1%～4%}
+- {key: val_tax, name: 估值：稅率, index: —, unit: 比例, value: 0.25, lo: 0.15, hi: 0.25, tag: Assumed, basis: 中國企業所得稅 25%（高新技術企業 15% 為低值）；扣評價日起自身累積虧損, range: 15%～25%}
+- {key: val_wacc_adj, name: 估值：WACC 調整（敏感度用）, index: —, unit: 比例, value: 0, lo: -0.01, hi: 0.01, tag: Decision, basis: 基準 0；Sens ±1pt, range: ±1pt}
+- {key: val_g, name: 估值：永續成長率 g, index: —, unit: 比例, value: 0.03, lo: 0.02, hi: 0.04, tag: Assumed, basis: 個股DCF標準規格第 3 節, range: 2%～4%}
+- {key: val_ronic_add, name: 估值：RONIC − WACC（0＝價值中性）, index: —, unit: 比例, value: 0, lo: 0, hi: 0.05, tag: Assumed, basis: 個股DCF標準規格第 3 節 RONIC＝WACC, range: 0～5pt}
+- {key: val_half, name: 估值：期中慣例與 2H26 半年（定義常數）, index: —, unit: 年, value: 0.5, lo: 0.5, hi: 0.5, tag: Decision, basis: 定義, range: 定義}
+- {key: val_t_tgt, name: 估值：目標時點（評價日後年數）, index: —, unit: 年, value: 1.35, lo: 1.35, hi: 1.35, tag: Derived, basis: 評價日 2026-06-30 至現價日 2026-11-05 約 0.35 年＋12 個月, range: 定義}
+- {key: val_ext_g33, name: 估值：延伸期 2033 年營收年增率（由 FY2030 年增線性收斂）, index: 2031–2033, unit: 比例, value: 0.10, lo: 0.05, hi: 0.15, tag: Assumed, basis: 樣板 Anthropic ext_g33, range: 5%～15%}
+- {key: val_ext_m_add, name: 估值：延伸期營業利益率加碼（2033 年相對 FY2030，線性）, index: 2031–2033, unit: 比例, value: 0, lo: 0, hi: 0.5, tag: Assumed, basis: 樣板 Anthropic ext_m_add 基準 0（維持 FY2030 利益率）；高值 0.5＝2033 年利益率約 +14%（成熟軟體水準），只作敏感度, range: 0～+50pt}
+- {key: val_nol_inf, name: 估值：累積虧損扣抵無限開關（1＝不課稅）, index: —, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 樣板 Anthropic val_nol_inf_switch, range: 開關}
+- {key: val_wc_rate, name: 估值：營運資金率（占營收增量）, index: —, unit: 比例, value: 0, lo: -0.05, hi: 0.05, tag: Assumed, basis: 樣板 Anthropic val_wc_rate, range: ±5%}
+- {key: val_ntm_w26, name: 估值：NTM 營收中 FY2026 的權重（2026-11-05 起：2026 剩餘 56 天 ÷ 365）, index: 2026-11-05, unit: 比例, value: 0.153425, lo: 0.153425, hi: 0.153425, tag: Derived, basis: SpaceX v0.2.7 NTM 加權法；同業倍數與本模型 NTM 同一權重, range: 定義}
+- {key: val_comp_adj_sw, name: 估值：Comparable 相對倍數調整開關（0＝不調整）, index: —, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 基準不調整：同業同為虧損中的 AI 模型公司（判斷類）；1＝倍數 × MIN(上限, 1＋FY2030 EBIT 利益率)，只作敏感度, range: 開關}
+- {key: val_comp_cap, name: 估值：Comparable 調整係數上限, index: —, unit: 倍, value: 1, lo: 1, hi: 1, tag: Decision, basis: 樣板 Anthropic val_comp_cap, range: 定義}
+- {key: val_w_dcf, name: 估值：DCF 權重（其餘為 Comparable）, index: —, unit: 比例, value: 0.5, lo: 0.25, hi: 0.75, tag: Decision, basis: 個股模型原則：DCF 與 Comparable 各半（判斷類）, range: 25%～75%}
+- {key: val_w_a, name: 估值：情境 A 權重, index: —, unit: 比例, value: 0.25, lo: 0.25, hi: 0.25, tag: Decision, basis: 個股DCF標準規格第 3 節 25／50／25, range: 定義}
+- {key: val_w_b, name: 估值：情境 B 權重, index: —, unit: 比例, value: 0.5, lo: 0.5, hi: 0.5, tag: Decision, basis: 同上, range: 定義}
+- {key: val_w_c, name: 估值：情境 C 權重, index: —, unit: 比例, value: 0.25, lo: 0.25, hi: 0.25, tag: Decision, basis: 同上, range: 定義}
+- {key: val_r_sb, name: 評等邊界：強力買進（上檔空間 >）, index: —, unit: 比例, value: 0.5, lo: 0.5, hi: 0.5, tag: Decision, basis: 原則第 24 條, range: 定義}
+- {key: val_r_b, name: 評等邊界：買進（上檔空間 >）, index: —, unit: 比例, value: 0.25, lo: 0.25, hi: 0.25, tag: Decision, basis: 原則第 24 條, range: 定義}
+- {key: val_r_n, name: 評等邊界：中立（上檔空間 ≥）, index: —, unit: 比例, value: -0.25, lo: -0.25, hi: -0.25, tag: Decision, basis: 原則第 24 條, range: 定義}
+- {key: val_r_s, name: 評等邊界：放空（上檔空間 ≥）, index: —, unit: 比例, value: -0.5, lo: -0.5, hi: -0.5, tag: Decision, basis: 原則第 24 條, range: 定義}
+- {key: val_r_near, name: 評等：距邊界揭露門檻, index: —, unit: 比例, value: 0.05, lo: 0.05, hi: 0.05, tag: Decision, basis: 原則第 36 條, range: 定義}

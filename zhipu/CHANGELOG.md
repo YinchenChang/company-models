@@ -1,5 +1,11 @@
 # CHANGELOG（智譜個股模型；v0.1.1 以前稱收支模型）
 
+## v0.1.6（2026-11-15，建置代理）— 估值頁 Val、反向 DCF 頁 RevDCF；成品命名對齊 MiniMax — Excel `model/20261115_Zhipu_v0.1.6.xlsx`
+- Andy 2026-11-15 決定給目標價與評等。新模組 `builder/z6.py`、`builder/valcore.py`（與 MiniMax 共用）；`tools/val_snapshots.py`；`data/val_scenarios.yaml`、`data/val_sens.yaml`；SRC_ZP_1056–1064、Inputs 26 列（INP_141–166）。
+- 加權目標價 HK$156.94（DCF 114.99、Comparable 199.74）、上檔空間 −67.0%、估值評等與投資建議「強力放空」；收支關卡（F09 五年合計）−281.2 億元不通過。
+- 成品：v1.3 頁改名 `智譜個股模型`、一頁摘要改 `智譜收支模型`（`tools/build_html.py`、`tools/build_html_v13.py`、`tests/test_html.py`）。scenarios.yaml 預期值更新（工作表、公式格 6,974、具名範圍 1,698、SRC 1,064、Inputs 166）。
+- xlsx_diff 對 v0.1.5：既有格只差版本字串與 SRC／Inputs 列數；其餘為新增格。
+
 ## v0.1.5（2026-11-15，建置代理）— 版面 v1.3＋三層協調（讀取層級、C0 實績）— Excel `model/20261115_Zhipu_v0.1.5.xlsx`
 - 工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`；規則 v1.4.2 C0 第 2 點。新模組 `builder/z5.py`：PL、Coord 兩頁，只列示（`test_v015_coord_pl_not_fed_back`）。
 - PL：標準損益表 FY2023–FY2030（非 IFRS 經調整，人民幣億元）；歷史取 SRC_ZP（營收、銷售成本、研發／銷售／管理、股權報酬、其他收入、財務成本、經調整淨虧損），稅前與所得稅「未揭露」、另列未拆項目；預測取 Cost／Funding（營業成本＝推論算力＋本地化交付；營業費用＝研發＋閒置算力＋非算力），稅前＝Funding 自由現金流（核對 0），所得稅「未建模」，EPS＝稅後淨利 ÷ 配售後總股本（未計稀釋）。

@@ -2,12 +2,45 @@
 
 智譜每 VR 等值 GW 的年營收能否覆蓋每 GW 年全成本；若不能，缺口由誰、以什麼條件融資（FY2025–FY2030）。架構比照 `openai/`（v0.6），算力物理取自 Tokenomics；金額單位人民幣億元，命題另列美元口徑與 OpenAI 並排。
 
-- 現行版本：**v0.1.5**（`model/20261115_Zhipu_v0.1.5.xlsx`；成品 `dist/20261115_智譜個股模型_v0_1_5.html／.xlsx`、版面 v1.3 個股頁 `dist/20261115_智譜個股頁_v0_1_5.html`；見下方 v0.1.5 節）。前版 v0.1.4（`model/archive/20261106_Zhipu_v0.1.4.xlsx`；成品 `dist/_待刪除/20261106_智譜個股模型_v0_1_4.html／.xlsx`）＝只換現價：2026-11-05 收盤 HK$476（SRC_ZP_1055），只影響 Reverse 反向對照與 Funding 可換股債券「現價 ÷ 換股價」（報告 `docs/reports/20261106_v0.1.4.md`）。再前版 v0.1.3＝文件與核對小修，依 `docs/plan/個股模型原則_命題加營收分部.md` 第 1 節改稱「個股模型」（報告 `docs/reports/20261104_v0.1.3.md`）。
+- 現行版本：**v0.1.6**（`model/20261115_Zhipu_v0.1.6.xlsx`；成品 `dist/20261115_智譜個股模型_v0_1_6.html`〔版面 v1.3〕、`dist/20261115_智譜收支模型_v0_1_6.html`〔一頁摘要〕、`dist/20261115_智譜個股模型_v0_1_6.xlsx`；見下方 v0.1.6 節：估值頁、目標價與評等）。前版 v0.1.5（`model/archive/20261115_Zhipu_v0.1.5.xlsx`；成品 `dist/_待刪除/`）＝版面 v1.3＋三層協調；v0.1.4＝只換現價 2026-11-05 收盤 HK$476（SRC_ZP_1055）。
 - 官方報告分部（部署方式）：本地化部署（②企業級智能體＋③企業級通用大模型＋④技術服務及其他）、雲端部署（①開放平台及 API）。宣告檔 `segments.json`；對帳在 Revenue 第七節（FY2025 對年報、1H2026 對中期公告子項加總，容差 Inputs `seg_recon_tol`），Checks C100–C103；`python3 tools/segment_check/check_segments.py zhipu`（repo 根目錄執行）須為「符合」。
 - 規格：`docs/plan/20261008_Zhipu_v0.1_規格.md`
 - 交接：`docs/handoff/Zhipu_handoff.md`；進度：`docs/reports/20261008_zhipu_進度.md`（v0.1.2：`docs/reports/20261030_v0.1.2_進度.md`）
 - 工作規範：`CLAUDE.md`
 
+
+## v0.1.6（2026-11-15）：估值頁（目標價、評等）與反向 DCF；成品命名對齊 MiniMax
+
+**依據：** Andy 2026-11-15 決定智譜與 MiniMax 都給目標價與評等（取代 v0.1.5「本模型未建目標價」與 DCF 標準規格「AI 收支模型不加 DCF 腿」的例外）。樣板：Anthropic v0.2.0 估值頁（`anthropic/builder/a11.py`）、反向 DCF（`a12.py`）；`docs/plan/個股DCF標準規格.md`；個股模型原則第 24、36、56、63 條；版面規格 v1.3 A–I 節。
+
+**做法：** `builder/z6.py`（參照）＋`builder/valcore.py`（Val、RevDCF 排版與公式；與 `minimax/valcore.py` 同一份程式）；新增 SRC_ZP_1056–1064（同業 MiniMax 2026-11-05 收盤、股數、淨現金組成、共識營收）、Inputs 26 列（`val_*`）。`tools/val_snapshots.py scen|sens <xlsx>` 改 Inputs、LibreOffice 重算，產生 `data/val_scenarios.yaml`（情境 A／C）與 `data/val_sens.yaml`（龍捲風），再以 builder 重建寫入 Val。兩頁不被任何既有計算頁或 Checks 引用。
+- **成品命名（主控 2026-11-15 指示，對齊 MiniMax）：** 版面 v1.3 頁 `dist/20261115_智譜個股模型_v0_1_6.html`（v0.1.5 稱「個股頁」）；一頁摘要改 `dist/20261115_智譜收支模型_v0_1_6.html`；xlsx 仍為 `dist/20261115_智譜個股模型_v0_1_6.xlsx`。AI 投資地圖 `pick_html()` 取檔名含「個股模型」者 → 嵌 v1.3 頁。
+- 個股頁估值章拿掉 `data-novaluation`，照 A–I 節：G＝四個目標價與現價圖在估值章最前；H＝加權目標價相對基準低案／高案兩張主圖在敏感度章最前；新增反向 DCF 章；原反向檢驗（市值隱含營收）與收支關卡敏感度收進摺疊。
+
+**結果（2026-11-05 收盤 HK$476）：** DCF 114.99、Comparable 199.74、**加權目標價 HK$156.94**、市場共識 1,567.3（Investing.com 24 位，2026-10-03）；上檔空間 −67.0%，**估值評等「強力放空」**；收支關卡 FY2026–FY2030 自由現金流（Funding F09，與 AI 投資地圖同口徑）合計 −281.2 億元（不通過），投資建議＝強力放空；距最近邊界 17.0pt（升一級需 HK$238）。
+- DCF：現金流沿用模型既有路徑（Funding F01 營收、F06 差額〔含股權報酬〕＝EBIT、F10 非算力資本支出、F12 併購；2H26＝Funding L 欄）。基準 2H26–FY2030 各年 FCFF 皆負、延伸期維持 FY2030 利益率（−36%），三情境 EV 皆 ≤0，DCF 觸及淨現金下限（評價日 pro forma 淨現金 417.9 億元 ÷ 4.876 億股 × (1＋ke)^1.35 ÷ HKD/CNY）。
+- Comparable：同業＝MiniMax，EV ÷ 未來 12 個月共識營收 5.65 倍（2026-11-05 同日市值）；智譜自身 9.74 倍（同業的 1.73 倍）。三情境 NTM 營收 84.9／74.2／60.9 億元 → Comparable 214／200／182 港元。
+- WACC 10.49%（ke 11.10%）；反向 DCF：支持現價需 EV 1,312 億元（模型 −1,032）；只改終值期利益率需 94.0%；延伸期利益率加碼需 +115pt（2033 年約 79%）；同業倍數法下現價隱含同業的 3.76 倍（所需 NTM 營收 279 億元 vs 模型 74）。
+- 敏感度（相對基準）：DCF 權重 25%／75% → +13.4%／−13.4%；依 FY2030 利益率調整倍數 → −11.6%；延伸期利益率 +50pt → +4.0%；任務數高／低端 → +2.3%／−2.8%；WACC、g、稅率、營運資金、算力價格、研發算力占比為 0（DCF 在淨現金下限）。
+
+**判斷類參數（依樣板慣例預設，列為待 Andy 確認）：**
+| 參數 | 預設 | 理由 | 替代 |
+|---|---|---|---|
+| rf | 4.86%（美債 10 年 CMT，2026-11-06） | 港元聯繫匯率，沿用 Anthropic 同一來源；現金流為人民幣，未另換人民幣無風險利率 | 港府或中國 10 年債 |
+| β | 1.248（Anthropic 同業 5 年 β 中位數 1.37 經 Blume） | 智譜 2026-01 上市，自身 β 期間不足 | 1.0／1.6（Sens） |
+| ERP | 5%，未加中國國家風險溢酬 | 個股DCF標準規格預設 | 6%（Sens） |
+| 稅率 | 25%（扣評價日起自身虧損） | 中國企業所得稅 | 15%（高新技術企業；Sens） |
+| g、RONIC | 3%、RONIC＝WACC | 同規格 | 2%／4% |
+| 延伸期 | 營收年增收斂到 10%、利益率維持 FY2030 | Anthropic 樣板 | 利益率加碼（Sens +50pt） |
+| 同業 | 只有 MiniMax（2026-11-05 同日市值，與 MiniMax 模型 v0.2.3 同一組數字） | 其餘中國與海外上市 AI 模型／應用公司（商湯 0020.HK、科大訊飛、第四範式、SoundHound、C3.ai、Palantir 等）本輪查不到 11-05 同日可查證市值（網路搜尋與行情頁快取皆過期），未納入、不編造 | 補資料後加入同業 |
+| 倍數口徑 | EV ÷ NTM 共識營收（FY2026 剩餘 56/365 權重）；不做相對倍數調整 | 同業同為虧損 AI 模型公司 | 依 FY2030 利益率調整（Sens） |
+| 權重 | DCF／Comparable 50／50；情境 25／50／25 | 個股模型原則、DCF 標準規格 | 25／75（Sens） |
+| 評價日與股數 | 2026-06-30 pro forma（計入 07、09 配售與可換股債券，扣銀行借款、可換股債券本金〔換股價 892.5 價外〕、租賃負債〔FY2025〕）；股數 4.876 億（2026-09 配售後） | 中期報告為最近資產負債表 | — |
+| 情境 A／C | 2H26 API 任務數成長率取高／低端（INP_038） | Anthropic 樣板以 API 任務數定情境 | 研發算力占比、算力價格 |
+
+**資料缺口：** 選擇權與受限制股份稀釋未揭露（未計）；1H26 租賃負債未揭露（沿用 FY2025）；共識營收為 2026-10-06 彙整、共識目標價為 2026-10-03，早於現價日（其間股價大跌）。
+
+**驗證：** builder 重建（restore matched 3,585、unmatched 0；e6 0；oai_refs 0）；`tools/xlsx_diff.py` 對 v0.1.5：既有格只差 README!A1／B7／B10 與 Checks!A1 版本與列數字串、Checks C5／D5、C9／D9 的 SRC／Inputs 列數（1055→1064、140→166），隱藏 `_Defaults` 因新增列位移，其餘皆為新增格；test_builder 14 通過；test_html 7 通過（含 v1.3 頁全部 data-ref 以 engine 比對）；parity：結構、具名範圍（含對 LibreOffice）、效能，與 base、n_task_growth_high、w_dc1gw_on、af_cb_convert、k2_rev_total_mismatch 五個情境通過（其餘情境以 CI 為準；Val 不被 Checks 引用，`test_scenario_expected_results` 不受影響）；`check_layout_v13 --xlsx` 全過；`check_rating_gate --strict` 符合；`tools/baseline_coordination/check.py`（全樹）0 項不符。重建輸入：Tokenomics v19.0（1916a06）、OpenAI v0.6.2、`--base model/archive/20261115_Zhipu_v0.1.5.xlsx --date 2026-10-22`。
 
 ## v0.1.5（2026-11-15）：個股 HTML 版面 v1.3＋三層協調（讀取層級、C0 公司實績）
 

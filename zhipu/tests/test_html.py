@@ -27,9 +27,9 @@ from engine import Engine, current_model_path  # noqa: E402
 MODEL = current_model_path()
 STAMP = MODEL.name.split("_")[0]
 VER = re.search(r"_v([\d.]+)\.xlsx$", MODEL.name).group(1).replace(".", "_")
-HTML = REPO / "dist" / f"{STAMP}_智譜個股模型_v{VER}.html"
+HTML = REPO / "dist" / f"{STAMP}_智譜收支模型_v{VER}.html"   # v0.1.6：一頁摘要改稱「收支模型」（命名對齊 MiniMax）
 XLSX = REPO / "dist" / f"{STAMP}_智譜個股模型_v{VER}.xlsx"
-HTML13 = REPO / "dist" / f"{STAMP}_智譜個股頁_v{VER}.html"   # v0.1.5：版面 v1.3 個股頁（tools/build_html_v13.py）
+HTML13 = REPO / "dist" / f"{STAMP}_智譜個股模型_v{VER}.html"   # 版面 v1.3 頁（tools/build_html_v13.py；v0.1.5 稱「個股頁」，v0.1.6 起「個股模型」）
 
 
 class _Collect(HTMLParser):
