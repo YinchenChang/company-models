@@ -391,7 +391,7 @@
    "docDate": "2026-11-06",
    "retrieved": "2026-11-15",
    "tag": "[Verified]",
-   "note": ""
+   "note": "2025-12-31 2,635,623"
   },
   {
    "id": "bs.inv.0930",
@@ -404,7 +404,7 @@
    "docDate": "2026-11-06",
    "retrieved": "2026-11-15",
    "tag": "[Verified]",
-   "note": ""
+   "note": "2025-12-31 6,945,450"
   },
   {
    "id": "bs.fvoci_nc.0930",
@@ -456,7 +456,7 @@
    "docDate": "2026-11-06",
    "retrieved": "2026-11-15",
    "tag": "[Verified]",
-   "note": ""
+   "note": "2025-12-31 12,020,884"
   },
   {
    "id": "bs.lease_cur.0930",
@@ -548,6 +548,123 @@
    "retrieved": "2026-11-15",
    "tag": "[Verified]",
    "note": "4,000,000 單位、每單位表彰 1 股；每單位 127.51 美元＝新台幣 4,061 元（1:31.848）；募資 5.1004 億美元；盧森堡交易所；用途外幣購料。2026 年股本增 5.066M 股中其餘約 1.07M 股來源未查明"
+  },
+  {
+   "id": "bs.ar_rel.0930",
+   "item": "應收帳款－關係人",
+   "value": 0,
+   "unit": "NT$ 千元",
+   "period": "2026-09-30",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03（companyId 3661、115 年第 3 季、合併）",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "2025-12-31 375,087"
+  },
+  {
+   "id": "bs.oth_rec.0930",
+   "item": "其他應收款",
+   "value": 303113,
+   "unit": "NT$ 千元",
+   "period": "2026-09-30",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03（companyId 3661、115 年第 3 季、合併）",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "2025-12-31 242,823"
+  },
+  {
+   "id": "bs.prepaid.0930",
+   "item": "預付款項",
+   "value": 1717021,
+   "unit": "NT$ 千元",
+   "period": "2026-09-30",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03（companyId 3661、115 年第 3 季、合併）",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "2025-12-31 3,630,886"
+  },
+  {
+   "id": "bs.oca.0930",
+   "item": "其他流動資產",
+   "value": 696644,
+   "unit": "NT$ 千元",
+   "period": "2026-09-30",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03（companyId 3661、115 年第 3 季、合併）",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "2025-12-31 345,495"
+  },
+  {
+   "id": "bs.ap.0930",
+   "item": "應付帳款",
+   "value": 7224252,
+   "unit": "NT$ 千元",
+   "period": "2026-09-30",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03（companyId 3661、115 年第 3 季、合併）",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "2025-12-31 1,986,493"
+  },
+  {
+   "id": "bs.oth_pay.0930",
+   "item": "其他應付款",
+   "value": 3057400,
+   "unit": "NT$ 千元",
+   "period": "2026-09-30",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03（companyId 3661、115 年第 3 季、合併）",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "2025-12-31 2,052,031"
+  },
+  {
+   "id": "bs.tax_pay.0930",
+   "item": "本期所得稅負債",
+   "value": 667419,
+   "unit": "NT$ 千元",
+   "period": "2026-09-30",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03（companyId 3661、115 年第 3 季、合併）",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "2025-12-31 757,613"
+  },
+  {
+   "id": "bs.ocl.0930",
+   "item": "其他流動負債",
+   "value": 15768,
+   "unit": "NT$ 千元",
+   "period": "2026-09-30",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03（companyId 3661、115 年第 3 季、合併）",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "2025-12-31 42,226"
+  },
+  {
+   "id": "wc.9m.derived",
+   "item": "1–3Q26 營運資金變動（fc_wc 口徑；9-30 − 12-31）",
+   "value": 23.969317,
+   "unit": "NT$B",
+   "period": "2026-01-01～2026-09-30",
+   "source": "Derived：上列科目",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03（companyId 3661、115 年第 3 季、合併）",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Derived]",
+   "note": "12-31 −1.926270；9-30 22.043047；不含本期所得稅負債"
   }
  ]
 }

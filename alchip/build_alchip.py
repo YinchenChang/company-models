@@ -255,6 +255,17 @@ for _row in FD.in_rows(dict(
                "2026-06-30：5,552＋24,725＋579＋648 − 7,784 − 1,425 − 15,297 − 3,886＝3,112（NT$M；Trainium 量產備料）÷ 2Q26 年化營收 30.6B＝10.2%；Sens 低／高 0%／15%（Assumed）"),
         )):
     rows.append(_row)
+inp("wc_1231", "營運資金 2025-12-31（fc_wc 口徑：應收（含關係人、其他應收）＋存貨＋預付＋其他流動資產 − 應付 − 其他應付 − 其他流動負債 − 合約負債；不含本期所得稅負債）", "NT$B", None,
+    "=(2.635623+0.375087+0.242823)+6.945450+3.630886+0.345495-1.986493-2.052031-0.042226-12.020884", None, "Verified",
+    MBS3 + "：114/12/31 欄（NT$ 千元）應收 2,635,623＋關係人 375,087＋其他應收 242,823＋存貨 6,945,450＋預付 3,630,886＋其他流動資產 345,495 − 應付 1,986,493 − 其他應付 2,052,031 − 其他流動負債 42,226 − 合約負債 12,020,884",
+    "與 stockanalysis FY2025 口徑（fc_wc 來源）比對：應收 3.254 相同、負債側 −16.101 相同；資產側存貨與預付分類不同，合計差 0.032")
+inp("wc_0930", "營運資金 2026-09-30（同 wc_1231 口徑）", "NT$B", None,
+    "=(18.123801+0+0.303113)+30.888025+1.717021+0.696644-7.224252-3.057400-0.015768-19.388137", None, "Verified",
+    MBS3 + "：115/09/30 欄（NT$ 千元）應收 18,123,801＋關係人 0＋其他應收 303,113＋存貨 30,888,025＋預付 1,717,021＋其他流動資產 696,644 − 應付 7,224,252 − 其他應付 3,057,400 − 其他流動負債 15,768 − 合約負債 19,388,137",
+    "Trainium 量產備料：存貨 +23.9、應收 +15.5、合約負債 +7.4")
+inp("wc_9m", "1–3Q26 營運資金實績變動（＝wc_0930 − wc_1231）", "NT$B", None, "=wc_0930-wc_1231", None, "Derived",
+    "stub FCFF 用：4Q26 營運資金變動＝FY2026 模型全年變動（fc_wc × FY2026 營收增加）− 本值（主 session 2026-11-15 決定；負值＝4Q 釋出營運資金，照算）",
+    "FY2026 模型全年變動遠小於 1–3Q 實績，4Q 值為大幅釋出；需 Andy 判斷（README 已知限制）")
 inp("beta_u", "產業無槓桿 β：自算 TW 半導體（同業 13 家中位數，現金修正、Blume 調整）", "x", None, 1.429, None, "Analogy",
     "自算產業 β：TW 半導體 同業 13 家中位數（Yahoo Finance 月報酬 2021-11～2026-10，對 ^TWII（加權指數） 迴歸，Hamada 去槓桿、現金修正）：中位數 1.64；Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）：0.67 × 1.64 ＋ 0.33＝1.429（同業表與方法：docs/plan/自算產業β_20261105.md）",
     "Sens 低／高改為 β_u ∓ beta_du（v0.2.1）；取代 Damodaran 表（Andy 2026-11-05 22:55）")
@@ -620,10 +631,10 @@ def dpaths(blocks, pre, tax="tax", nonop="nonop_f", lab=None, names=SC):
     for s_ in names:
         bl = blocks[s_]
         ebit = {y: (f"{pre}{FC[y]}{bl['oi']}" if y <= 2029 else f"={pre}{FC[y]}{bl['ni']}/(1-{tax})-{nonop}") for y in YRS6}
-        _r26, _r25 = f"{pre}D{bl['rev']}", f"{pre}C{bl['rev']}"   # v0.2.5：資產負債表日 9-30，stub 期只剩 4Q26 → stub FCFF＝4Q26 單季 FCFF：4Q 營業利益 ×（1 − 稅率）＋4Q 營收 ×（折舊率 − 資本支出率）− FY2026 營運資金增加 × stub_frac（1–3Q 營運資金實績科目不全，取不到）
+        _r26, _r25 = f"{pre}D{bl['rev']}", f"{pre}C{bl['rev']}"   # v0.2.5：資產負債表日 9-30，stub 期只剩 4Q26 → stub FCFF＝4Q26 單季 FCFF：4Q 營業利益 ×（1 − 稅率）＋4Q 營收 ×（折舊率 − 資本支出率）−（FY2026 營運資金增加 − 1–3Q26 實績變動 wc_9m）
         out.append(dict(name=s_, label=(lab or "情境") + f" {s_}（{SCN_NAME[s_]}）", rev={y: f"{pre}{FC[y]}{bl['rev']}" for y in YRS6}, rev0=f"{pre}D{bl['rev']}",
                         ebit=ebit, tax={y: tax for y in YRS6}, ebit_note="FY2030 起由淨利還原",
-                        stub_fcff=f"Q!$F$11*(1-{tax})+Q!$F$4*(fc_da-fc_cx-fc_cx_d)-fc_wc*({_r26}-{_r25})*stub_frac"))
+                        stub_fcff=f"Q!$F$11*(1-{tax})+Q!$F$4*(fc_da-fc_cx-fc_cx_d)-(fc_wc*({_r26}-{_r25})-wc_9m)"))
     return out
 def ddetail(paths, title):
     R_ = FD.write_detail(DCFW, DCF_NEXT[0], paths, list(YRS6), 1.0, conv_from=2029, title=title, fmt="#,##0.00", stub=True)
