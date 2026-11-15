@@ -11,7 +11,7 @@ from openpyxl.workbook.defined_name import DefinedName
 from openpyxl.utils import get_column_letter as CL
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VER = "v0.6.0"
+VER = "v0.6.1"
 BUILT = "2026-11-15"
 OVR = json.loads(os.environ.get("SENS_OVR", "{}"))
 TKV = os.environ.get("NBIS_TKV", "v22.0")
@@ -147,12 +147,13 @@ inp("fac_life", "自建機房折舊年限", "年", None, 20, None, "Assumed", "�
 inp("p_long", "長約價格證據：IREN–Microsoft GB300 五年約（Analogy）", "US$M／MW·年", 8.9073, 9.70, 12.7247, "Analogy", "IREN 新聞稿 2025-11-03：$9.7bn ÷ 5 年 ÷ 200 MW（critical IT；含 20% 預付）", "原則第 10 節第 61 條：他家合約換算一律標 Analogy；與 Nebius 差異：Nebius 自有機房比例高、長約多含預付；Nebius 自身合約未揭露 MW（legacy_v05 pricing.nebiusContract）。低／高同 CoreWeave v5.0")
 inp("p_spot", "現貨價格證據：H100 Silicon Data 指數", "US$／GPU-hr", None, 2.82, None, "Verified", "Silicon Data H100 Index（2026-10-06；同 CoreWeave v5.0）", "—")
 inp("gh_h100", "每 GPU 小時持有成本 IF_GPUhrEcon｜Hopper H100", "US$／GPU-hr", None, round(TK["IF_GPUhrEcon"]["values"]["Hopper H100"]["基準"], 5), None, "Derived", TKSRC, "—")
-inp("od_share", "隨需（現貨）占計費產能比例", "%", None, 0.0, 0.20, "Assumed", "legacy_v05 pricing.anchorMultiple：Nebius 先簽多年期合約再建產能，新增產能按長約價，隨需 0%（找不到公司拆分）", "高 20% 只作敏感度")
-inp("k_long", "長約定價倍數 k_長約（＝長約價 ÷ GB300 持有成本）", "x", None, "=p_long/he_gb300", None, "Derived", "每 MW 收入＝IF_HoldEcon × 公司因素 k；不以營收、ARR、RPO、ACV 反推 k", "—")
+inp("od_share", "隨需（現貨）占計費產能比例", "%", None, 0.0, 0.20, "Assumed", "legacy_v05 pricing.anchorMultiple：Nebius 先簽多年期合約再建產能，新增產能按長約價，隨需 0%（找不到公司拆分）", "高 20% 只作敏感度；與 CoreWeave v5.0.3 唯一不同的 k 參數（CoreWeave 基準 10%）：Andy 2026-11-15 比照 CoreWeave 時決定保留 Nebius 公司特有值")
+inp("k_long", "長約定價倍數 k_長約（＝長約價 ÷ GB300 持有成本；k_claim＝1 時長約價改用公司宣稱）", "x", None, "=IF(k_claim=1,p_claim_lo,p_long)/he_gb300", None, "Derived", "每 MW 收入＝IF_HoldEcon × 公司因素 k；不以營收、ARR、RPO、ACV 反推 k；比照 CoreWeave v5.0.3（同一 Tokenomics v22.0 快照、同一長約與現貨證據、同一公式；Andy 2026-11-15）", "基準 k_claim＝0（IREN 長約類比）")
 inp("k_spot", "現貨定價倍數 k_現貨", "x", None, "=p_spot/gh_h100", None, "Derived", "H100 現貨指數 ÷ H100 每 GPU 小時持有成本", "—")
 inp("k_mix", "定價倍數 k（隨需占比加權；單一 k）", "x", None, "=od_share*k_spot+(1-od_share)*k_long", None, "Derived", "k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約", "公司宣稱 ACV 每 MW 只進 Recon、Sens")
 inp("k_adj", "k 調整係數（敏感度與反解用；基準 1）", "x", 0.9, 1.0, 1.2, "Assumed", "敏感度 ×0.9／×1.2", "RevDCF 以本鍵反解支持現價所需的每 MW 收入")
 inp("p_new_ovr", "新增產能每 MW 年收入改用公司宣稱 ACV（0＝不用；Sens）", "US$M／MW·年", None, 0, 25, "Assumed", "公司稱 Q3 新約 ACV 每 MW 超過 US$25m（Interested-party，K 節 p_claim）", "只進 Sens、不改基準 k；作用於 2026-09-30 之後新增的在役 MW")
+inp("k_claim", "定價倍數改以公司說法（0＝IREN 長約類比；1＝長約價改用公司宣稱 Q3 新約 ACV 每 MW；Sens）", "—", None, 0, 1, "Assumed", "Andy 2026-11-15：每 MW 收入比照 CoreWeave；公司宣稱新約 ACV 每 MW 超過 US$25m（Interested-party）只列參考並作敏感度", "只進 Sens、不改基準 k；作用於全部在役 MW（p_new_ovr 只作用於新增 MW）")
 inp("lam", "成長型資本支出提前比例 λ（次年新增產能的設備在本年付款）", "%", 0.20, 0.35, 0.50, "Assumed", "沿用 legacy_v05 defaults.lambda", "可證偽指標：尚未啟用資產 ÷ 次年新增產能資本支出")
 inp("own_share", "自建機房比例（其餘租賃）", "%", 0.60, 0.75, 0.90, "Derived", "1 − 承租比例 25%（legacy_v05/company.json leases.facts.share；Wattonomics lease_nbis 同值）；公司稱逾 75% 已簽電力來自自有基礎設施（Interested-party）", "—")
 inp("rent_mw", "租賃機房每 MW 年租金", "US$M／MW·年", 0.80, 1.00, 1.30, "Analogy", "CoreWeave v5.0 站點檢查每 MW 年租金 1.00（Analogy）", "Nebius 共置租約金額未逐站揭露（找不到）")
@@ -1099,7 +1100,7 @@ rline("q9rev", "9M 2026 AI cloud 營收：實績 vs 模型估計（計費 MW × 
 rline("q3pm", "Q3 每 MW 年營收（AI cloud 扣非經常性 × 4 ÷ 平均在役假設）vs 模型（每 MW 年收入 × 計費比例）", f"=Q!D{QR['permw']}", lambda s: f"=Thesis!C{TR[s]['pm']}*u_bill", "分母在役 MW 為假設")
 rline("q3eb", "Q3 調整後 EBITDA 率：實績 vs 模型 FY2027", "=aeb_q3/rev_q3", lambda s: f"=Thesis!F{TR[s]['ebm']}", "模型 FY2027 以 Tokenomics 營運成本＋租金＋營業費用率；Q3 實績含非經常性營收；差距 >10% 時 sga_r 有 Sens", "0.0%")
 rsec("D. 公司宣稱的新約 ACV 每 MW（Interested-party；只對照、不改基準 k）")
-rline("j4m", "每 MW 年收入：公司宣稱 Q3 新約 ACV（下限值）vs 模型 FY2027（情境 B 欄＝基準）", "=(p_claim_lo+p_claim_hi)/2", lambda s: f"=Thesis!F{TR[s]['pm']}", "公司宣稱分母（IT 或設施 MW）未說明；1–5 年合約加權，含短天期高價合約")
+rline("j4m", "每 MW 年收入：公司宣稱 Q3 新約 ACV（下限值）vs 模型 FY2027（情境 B 欄＝基準）", "=(p_claim_lo+p_claim_hi)/2", lambda s: f"=Thesis!F{TR[s]['pm']}", "公司宣稱分母（IT 或設施 MW）未說明；1–5 年合約加權，含短天期高價合約；只列參考，兩邊原值寫入 Drive 對帳單（Andy 2026-11-15 決定，比照 CoreWeave J4）")
 rline("j4tk", "  Tokenomics 錨（GB300 IF_HoldEcon）vs 公司宣稱中點", "=(p_claim_lo+p_claim_hi)/2", lambda s: "=he_gb300", "")
 rline("j4s", "  短天期叢集（Q2 股東信 40–50 中點）vs 模型 FY2027", "=p_short", lambda s: f"=Thesis!F{TR[s]['pm']}", "隨需／短天期；模型隨需占比基準 0%（Sens 20%）")
 if REV:
@@ -1465,7 +1466,7 @@ lines = [
     ("o1", f'="重點觀察 1：DCF 情境加權 "&TEXT({VC("dcf")},"0.00")&"、Comparable "&TEXT({VC("comp")},"0.00")&"（同業中位數 "&TEXT(mult,"0.00")&" 倍 × FY2028 調整後 EBITDA）；"&{VC("bn_dcf")}&"。上檔空間 "&TEXT({VC("up")},"+0.0%;-0.0%")&"＝DCF 貢獻 "&TEXT({VC("dcfup")},"+0.0%;-0.0%")&"＋Comparable 貢獻 "&TEXT({VC("cmpup")},"+0.0%;-0.0%")&"＋相對倍數調整 "&TEXT({VC("adjup")},"+0.0%;-0.0%"){ALT_SENT}'),
     ("o2", f'="重點觀察 2："&{VC("bn_scn")}&"。情境 B 的 FY2029 稅後 ROIC "&TEXT(Thesis!D{SUM_ROWS[0] + 5},"0.0%")&"，對照 WACC "&TEXT(wacc,"0.0%")&"。"'),
     ("o3", f'="重點觀察 3：收支關卡（FY2026–FY2030 自由現金流合計）情境 A／B／C 為 "&TEXT(Fund!C{FS["gate"]},"0.0")&"／"&TEXT(Fund!D{FS["gate"]},"0.0")&"／"&TEXT(Fund!E{FS["gate"]},"0.0")&" 十億美元；情境 B 期間最大單年新增舉債 "&TEXT(Fund!D{FS["maxb"]},"0.0")&"、最低年末現金 "&TEXT(Fund!D{FS["minc"]},"0.0")&"、淨負債 ÷ EBITDA 最差 "&TEXT(Fund!D{FS["ndmax"]},"0.00")&" 倍、利息保障最差 "&TEXT(Fund!D{FS["icmin"]},"0.00")&" 倍（"&IF(Fund!D{FS["ndmax"]}>lev_max,"淨負債 ÷ EBITDA 觸發 WARN","淨負債 ÷ EBITDA 未觸發")&"、"&IF(Fund!D{FS["icmin"]}<icov_min,"利息保障觸發 WARN","利息保障未觸發")&"）；2030 年底累計稀釋 "&TEXT(Fund!D{FS["dil"]},"0.0%")'),
-    ("o4", '="公司宣稱：Q3 新約 ACV 每 MW 超過 US$"&TEXT(p_claim_lo,"0")&"m（Interested-party），是本模型 FY2027 情境 B 每 MW 年收入 "&TEXT(Thesis!F' + str(TR["B"]["pm"]) + ',"0.00")&" 的 "&TEXT(p_claim_lo/Thesis!F' + str(TR["B"]["pm"]) + ',"0.0")&" 倍；新增產能改用公司宣稱值的 Sens 見 Sens 頁 p_new_ovr 列；不改基準 k"'),
+    ("o4", '="公司宣稱：Q3 新約 ACV 每 MW 超過 US$"&TEXT(p_claim_lo,"0")&"m（Interested-party），是本模型 FY2027 情境 B 每 MW 年收入 "&TEXT(Thesis!F' + str(TR["B"]["pm"]) + ',"0.00")&" 的 "&TEXT(p_claim_lo/Thesis!F' + str(TR["B"]["pm"]) + ',"0.0")&" 倍；新增產能改用公司宣稱值、全部產能改用公司說法的 Sens 見 Sens 頁 p_new_ovr、k_claim 列；不改基準 k（Andy 2026-11-15：比照 CoreWeave）"'),
     ("o5", f'="橫幅："&{VC("bn_edge")}&IF({VC("bn_frag")}="","","。"&{VC("bn_frag")})'),
     ("o6", f'="指引對照（原則 50）：模型 FY2026 營收 "&TEXT(PL!D{PR_["B"]["rev"]},"0.00")&"，"&Recon!E{RCR["rev26pos"]}&"（指引 "&TEXT(g_rev_lo,"0.0")&"–"&TEXT(g_rev_hi,"0.0")&"，公司稱落在下緣）；FY2027 營收 "&TEXT(PL!E{PR_["B"]["rev"]},"0.00")&"，指引 "&TEXT(g27_rev_lo,"0")&"–"&TEXT(g27_rev_hi,"0")&"；差距主要來自每 MW 年收入（模型 FY2027 "&TEXT(Thesis!F{TR["B"]["pm"]},"0.00")&"，公司稱新約 ACV 超過 "&TEXT(p_claim_lo,"0")&"）"'),
 ]
@@ -1518,10 +1519,18 @@ if DEC:
 r += 1
 RD.cell(r, 1, "展示層 v1.3（HTML 版面規格 v1.3；以下各列供 HTML 引用；白話、不含參數代號）").font = BOLD; RL["s13"] = r; r += 1
 _V = VC
+def _srow(key):
+    i = [j for j, c in enumerate(SENS["cases"]) if c["key"] == key] if SENS else []
+    return 4 + i[0] if i else None
+_SK, _SN = _srow("k_claim"), _srow("p_new_ovr")
+_REQ = REV and "px" in RVN and REV["solves"][0]["value"] is not None
+# Andy 2026-11-15：橫幅與命題章寫明「評等對每 MW 收入高度敏感；要支撐現價需每 MW 年收入 ≥ X」（X＝RevDCF 反解）
+_HSENS = (f'&"評等對每 MW 收入高度敏感：要支撐現價，2030 年每 MW 年收入需 ≥ "&TEXT(RevDCF!G{RVN["px"]},"0.0")&" 百萬美元（模型 "&TEXT(RevDCF!H{RVN["px"]},"0.0")&"；公司稱新約超過 "&TEXT(p_claim_lo,"0")&"）。"') if _REQ else ""
 _GATE3 = f'TEXT(Fund!C{FS["gate"]},"0.0")&"、"&TEXT(Fund!E{FS["gate"]},"0.0")'
 _dcf0 = f'IF({_V("dcf")}=0,"現金流折現法（DCF）三個情境的每股價值都是 0，加權目標價全部來自同業倍數。","")'
 L13 = [
-    ("hero13", f'=IF({_V("rec")}="收支不足","投資建議「收支不足」：估值面上檔空間 "&TEXT({_V("up")},"+0.0%;-0.0%")&"，估值評等為"&{_V("val_lab")}&"；但基準情境（B）FY2026–FY2030 自由現金流合計 "&TEXT({_V("gatev")},"0.0")&" 十億美元，入不敷出，依收支關卡不得列為買進。","投資建議「"&{_V("rec")}&"」：上檔空間 "&TEXT({_V("up")},"+0.0%;-0.0%")&"；基準情境 FY2026–FY2030 自由現金流合計 "&TEXT({_V("gatev")},"0.0")&" 十億美元。")&{_dcf0}'),
+    ("hero13", f'=IF({_V("rec")}="收支不足","投資建議「收支不足」：估值面上檔空間 "&TEXT({_V("up")},"+0.0%;-0.0%")&"，估值評等為"&{_V("val_lab")}&"；但基準情境（B）FY2026–FY2030 自由現金流合計 "&TEXT({_V("gatev")},"0.0")&" 十億美元，入不敷出，依收支關卡不得列為買進。","投資建議「"&{_V("rec")}&"」：上檔空間 "&TEXT({_V("up")},"+0.0%;-0.0%")&"；基準情境 FY2026–FY2030 自由現金流合計 "&TEXT({_V("gatev")},"0.0")&" 十億美元。")&{_dcf0}{_HSENS}'),
+    ("ksens13", (f'="評等對每 MW 收入高度敏感。每 MW 年收入比照 CoreWeave：Tokenomics 每 MW 持有成本 × 定價倍數 "&TEXT(k_mix,"0.000")&"（IREN 與 Microsoft 長約類比與 H100 現貨），基準情境 2030 年為 "&TEXT(RevDCF!H{RVN["px"]},"0.00")&" 百萬美元；其他條件不變，要支撐現價 "&TEXT(px,"0.00")&" 美元，需 ≥ "&TEXT(RevDCF!G{RVN["px"]},"0.00")&" 百萬美元（模型的 "&TEXT(RevDCF!G{RVN["px"]}/RevDCF!H{RVN["px"]},"0.00")&" 倍）。公司稱 Q3 新約 ACV 每 MW 超過 "&TEXT(p_claim_lo,"0")&" 百萬美元（公司自述，只列參考）' + (f'；若全部產能改用公司說法，加權目標價 "&TEXT(Sens!E{_SK},"0.00")&"（估值評等"&Sens!N{_SK}&"，基準情境收支合計 "&TEXT(Sens!K{_SK},"0.0")&" 十億美元）' if _SK else '') + (f'，只有新增產能改用時 "&TEXT(Sens!E{_SN},"0.00")&"（估值評等"&Sens!N{_SN}&"，收支合計 "&TEXT(Sens!K{_SN},"0.0")&"）' if _SN else '') + '；收支合計為負時投資建議仍不得列為買進。"') if _REQ else '="評等對每 MW 收入高度敏感（反解快照未產生）。"'),
     ("ob1", f'="收支是結論的前提：基準情境 FY2026–FY2030 自由現金流合計 "&TEXT({_V("gatev")},"0.0")&" 十億美元，樂觀與保守情境為 "&{_GATE3}&"；客戶預付已計入營運現金流，仍"&IF({_V("gatev")}<0,"入不敷出","有餘")&"；估值面上檔空間 "&TEXT({_V("up")},"+0.0%;-0.0%")&"，距最近的評等級距 "&TEXT({_V("dist")}*100,"0.0")&" 個百分點。"'),
     ("ob2", f'="目標價的組成：DCF 情境加權每股 "&TEXT({_V("dcf")},"0.00")&" 美元，同業倍數法 "&TEXT({_V("comp")},"0.00")&" 美元（同業中位數 "&TEXT(mult,"0.00")&" 倍 × FY2028 調整後 EBITDA），各占 "&TEXT(w_dcf,"0%")&" 得 "&TEXT({_V("tp")},"0.00")&" 美元；同業倍數降到 "&TEXT({_V("mdn")},"0.00")&" 倍，估值評等就降一級。"'),
     ("ob3", f'=IF({_V("npvAB")}<0,"擴張越多、價值越低：樂觀相對基準情境每多 1 GW，DCF 企業價值減少 "&TEXT(-{_V("npvAB")},"0.0"),"擴張創造價值：樂觀相對基準情境每多 1 GW，DCF 企業價值增加 "&TEXT({_V("npvAB")},"0.0"))&" 十億美元；基準情境 FY2029 稅後投入資本報酬率 "&TEXT(Thesis!D{SUM_ROWS[0] + 5},"0.0%")&"，"&IF(Thesis!D{SUM_ROWS[0] + 5}<wacc,"低於","高於")&"資金成本 "&TEXT(wacc,"0.0%")&"。"'),
@@ -1539,6 +1548,7 @@ for k, t in L13:
     RD.cell(r, 1, t); RL[k] = r; r += 1
 r += 1
 RD.cell(r, 1, "v0.6.0（2026-11-15）：依 CoreWeave v5.0.3 新雲樣板重建（舊 JS 雙引擎 v0.5.3 移 nebius/legacy_v05/）＋滾入 2026Q3 實績（6-K 2026-11-12）＋版面 v1.3＋三層協調 Coord 頁（工作單 20261114 第二批；規則 v1.4.2 C0 第 2 點）。估值改為 DCF 50%＋Comparable 50%（新雲同業 EV/EBITDA）、評等五級並套收支關卡；Tokenomics 快照由 v19.0 改 v22.0；在役 MW 公司未揭露，2026 年改為明列假設。Coord：Wattonomics 的 Nebius 2026 年 GW 與資本支出由 v0.5.2 個股模型回寫推得（同源），營收、資本支出標參考（同源校準），在役電力無可比實績。新舊目標價與評等差異見 nebius/README.md v0.6.0 節。"); RL["v060"] = r; r += 1
+RD.cell(r, 1, "v0.6.1（2026-11-15）：Andy 2026-11-15 決定每 MW 收入比照 CoreWeave v5.0.3 辦理。核對結果：k 的構成（Tokenomics v22.0 IF_HoldEcon 在役世代加權 × 單一定價倍數；長約＝IREN–Microsoft 類比、現貨＝H100 指數）與 CoreWeave 同法、同參數，唯一不同的隨需占比依決定保留 Nebius 值（0%），基準 k 與目標價不變。新增敏感度案例「定價倍數改以公司說法」（全部產能長約價改用公司宣稱 ACV），橫幅與命題章寫明支撐現價所需的每 MW 年收入（反向 DCF）。公司宣稱只列參考，對帳單由 Andy 開於 Drive。"); RL["v061"] = r; r += 1
 RD.column_dimensions["A"].width = 180
 
 # 列號對照
