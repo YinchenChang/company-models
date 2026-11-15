@@ -193,8 +193,17 @@ def net_income_rows(b):
             hdr = {c.column: str(c.value) for c in row if c.value is not None}
             break
     vals, seen = [], set()
-    for row in ws.iter_rows():
+    in_std = False                                  # 2026-11-15：「標準損益表」區塊（版面 v1.3 D 節；歷史三年實績＋E 年度）自有表頭，
+    for row in ws.iter_rows():                      # 不得套第一個表頭（會把 FY2025A、FY2026A 實績當模型年）→ 整段略過，到下一個「情境」區塊為止
         v = row[0].value
+        if isinstance(v, str) and v.startswith("標準損益表"):
+            in_std = True
+            continue
+        if in_std:
+            if isinstance(v, str) and v.startswith("情境"):
+                in_std = False
+            else:
+                continue
         if isinstance(v, str) and v.strip() in NI_LABELS:
             for c in row[1:]:
                 h = hdr.get(c.column, "")
