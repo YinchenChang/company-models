@@ -11,7 +11,7 @@ from openpyxl.workbook.defined_name import DefinedName
 from openpyxl.utils import get_column_letter as CL
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VER = "v0.6.1"
+VER = "v0.6.2"
 BUILT = "2026-11-15"
 OVR = json.loads(os.environ.get("SENS_OVR", "{}"))
 TKV = os.environ.get("NBIS_TKV", "v22.0")
@@ -69,7 +69,7 @@ def fv(fid):
 _FACTS = json.load(open(os.path.join(HERE, "data", "nebius_facts_20261115.json"), encoding="utf-8"))
 import re as _re
 SRCF = {k_: _re.sub(r"https?://\S+", "（網址見 Sources 頁 " + k_ + "）", v_).strip() for k_, v_ in _FACTS["sources"].items()}   # 可見文字不含網址（HTML 自含檢查）；網址列在 Sources 頁
-WAT0 = json.load(open(os.path.join(HERE, "..", "wattonomics", "data", "wattonomics_snapshot_v0.3.2.json"), encoding="utf-8"))
+WAT0 = json.load(open(os.path.join(HERE, "..", "wattonomics", "data", "wattonomics_snapshot_v0.3.5.json"), encoding="utf-8"))
 INC_CO = "公司自揭 KPI／非 GAAP：管理層有呈現成長與獲利的誘因"
 INC_GUIDE = "管理層指引：有設定可達成目標、維持市場預期的誘因"
 INC_SELL = "賣方共識：投行業務、承銷關係，偏多傾向"
@@ -265,7 +265,7 @@ inp("cons_eb27", "共識 FY2027 EBITDA（MarketScreener，擷取 2026-11-13）",
 inp("cons_eb26", "共識 FY2026 EBITDA（同上）", "US$B", None, 1.348, None, "Interested-party", MSS, "只作對照，不進模型", INC_SELL)
 inp("cons_tp", "市場共識目標價（2026-10-07 擷取，19 家平均，財報前）", "US$", None, 283.58, None, "Interested-party", SRCF["CONS_NBIS"] + " priceTarget.mean（S&P 經 StockAnalysis，頁面更新 2026-09-25）", "只作對照（財報後共識未取得）", INC_SELL)
 inp("tp_v053", "v0.5.3 加權目標價（舊 JS 引擎、現價 120.37）", "US$", None, 10.30, None, "Derived", "nebius/dist/_待刪除/20261106_Nebius個股模型_v0_5_3.xlsx（評價_DCF與目標價!B49；評等放空）", "只作對照，不進模型")
-inp("wat26", "Wattonomics：Nebius 2026 年底上線 MW", "MW", None, round(WAT0["names"]["WIF_PlayerGW_YE_nbis_2026"] * 1000, 1), None, "Derived", "wattonomics/data/wattonomics_snapshot_v0.3.2.json WIF_PlayerGW_YE_nbis_2026（× 1000）", "只作對照（同源：2026 年新增 GW 由 Nebius v0.5.2 個股模型資本支出回寫推得，Coord G1）")
+inp("wat26", "Wattonomics：Nebius 2026 年底上線 MW", "MW", None, round(WAT0["names"]["WIF_PlayerGW_YE_nbis_2026"] * 1000, 1), None, "Derived", "wattonomics/data/wattonomics_snapshot_v0.3.5.json WIF_PlayerGW_YE_nbis_2026（× 1000）", "只作對照（同源：2026 年新增 GW 由 Nebius v0.6.1 個股模型資本支出回寫推得，Coord G1）")
 inp("wat30", "Wattonomics：Nebius 2030 年底上線 MW", "MW", None, round(WAT0["names"]["WIF_PlayerGW_YE_nbis_2030"] * 1000, 1), None, "Derived", "同上 WIF_PlayerGW_YE_nbis_2030", "只作對照")
 
 base_vals, IR = {}, {}
@@ -1107,7 +1107,7 @@ if REV:
     rline("j4req", "  支持現價所需每 MW 年收入（FY2030 情境 B；RevDCF 反解）vs 公司宣稱中點", "=(p_claim_lo+p_claim_hi)/2", lambda s: f"=RevDCF!G{RVN['px']}" if s == "B" else None, "反解值不是評等門檻（原則 4）")
 rsec("E. 類比與容量對照")
 rline("iren", "IREN–Microsoft 長約每 MW 年收入（Analogy，原則 61）vs 模型 FY2027", "=p_long", lambda s: f"=Thesis!F{TR[s]['pm']}", "差異：IREN 自有機房（價格含設施）、200 MW、GB300、預付 20%；Nebius 自有機房比例 75%、長約多含預付")
-rline("wat26", "Wattonomics 2026 年底上線 MW vs 模型（原則 54）", "=wat26", lambda s: f"=Thesis!E{TR[s]['conn']}", "wattonomics_snapshot_v0.3.2 WIF_PlayerGW_YE_nbis_2026", "#,##0")
+rline("wat26", "Wattonomics 2026 年底上線 MW vs 模型（原則 54）", "=wat26", lambda s: f"=Thesis!E{TR[s]['conn']}", "wattonomics_snapshot_v0.3.5 WIF_PlayerGW_YE_nbis_2026", "#,##0")
 rline("wat30", "Wattonomics 2030 年底上線 MW vs 模型", "=wat30", lambda s: f"=Thesis!I{TR[s]['conn']}", "同上 2030", "#,##0")
 rsec("F. 舊法與舊版（只作對照）")
 rline("old", "v0.5.3 加權目標價（舊 JS 引擎，現價 120.37）vs v0.6.0 情境目標價", "=tp_v053", lambda s: f"=Val!{'CDE'[SC.index(s)]}{CON['tps']}", "舊版保留為對照；差異來源見 README 版本表與 v0.6.0 節")
@@ -1313,16 +1313,16 @@ SO.cell(r, 1, HIST["source_key"]); SO.cell(r, 2, HIST["source"] + "；資料檔 
 # =====================================================================================
 # Coord 頁——三層協調（讀取層級、C0 公司實績 vs 層級隱含值）；結構同 CoreWeave v5.0.3（新雲樣板），換成 Nebius 的玩家 nbis 與實績。
 #   工作單 docs/workorders/20261114_第二批13家_v1.3與三層協調.md 第 2 節；規則 docs/plan/三層基準協調規則.md v1.4.2 C0 第 2 點；tools/coord/README.md
-#   追公式：tools/coord/trace_wattonomics.py --player nbis → nebius/data/wattonomics_trace_v0.3.2.json
+#   追公式：tools/coord/trace_wattonomics.py --player nbis → nebius/data/wattonomics_trace_v0.3.5.json
 # =====================================================================================
-WATF = os.path.join(HERE, "..", "wattonomics", "data", "wattonomics_snapshot_v0.3.2.json")
+WATF = os.path.join(HERE, "..", "wattonomics", "data", "wattonomics_snapshot_v0.3.5.json")
 WAT = json.load(open(WATF, encoding="utf-8"))
 WN = WAT["names"]
 WATV = WAT["source"]["version"]
 WATFILE = WAT["source"]["file"]
 WROW = {x.get("id"): x for x in WAT["rows"] if x.get("id")}
-TRF = "nebius/data/wattonomics_trace_v0.3.2.json"
-TRJ = json.load(open(os.path.join(HERE, "data", "wattonomics_trace_v0.3.2.json"), encoding="utf-8"))
+TRF = "nebius/data/wattonomics_trace_v0.3.5.json"
+TRJ = json.load(open(os.path.join(HERE, "data", "wattonomics_trace_v0.3.5.json"), encoding="utf-8"))
 assert TRJ["source"]["sha256"] == WAT["source"]["sha256"] if isinstance(TRJ.get("source"), dict) and "sha256" in TRJ["source"] else True
 CD = wb.create_sheet("Coord")
 CD.column_dimensions["A"].width = 52
@@ -1338,8 +1338,8 @@ CD.cell(rc, 1, ("本模型只用 Tokenomics 計價與成本（每 MW 年持有�
                 f"清單見 nebius/data/tokenomics_names.txt）；快照 Tokenomics {TKV}（{TKS['source']['file']}，commit {TKS['source']['commit'][:7]}；舊版 v0.5.3 讀 v19.0，本版隨樣板改讀 {TKV}）。"
                 f"Wattonomics 不進估值：In 頁 wat26、wat30 取自 Wattonomics {WATV} 快照（{WATFILE}），只作對照。"
                 "追公式（tools/coord/trace_wattonomics.py --player nbis，輸出 " + TRF + "）顯示：Nebius 2026 年底上線 GW＝2025 年底 0.17 GW（公司 20-F active power 170 MW）＋2026 年新增 GW，"
-                "新增 GW 由 2026 年資本支出經 Tokenomics 每 GW 成本與上線延遲換算，而 2026 年資本支出讀 In 頁 gcap_nbis＝Nebius v0.5.2 個股模型回寫值（生效分支；公司指引 cap_nbis 為條件讀取、分支未生效）。"
-                "所以層級的 Nebius GW 路徑與資本支出都與本公司模型同源，以下各列標「讀取層級（同源，不判定）」，不計入對帳中項目數。"))
+                "新增 GW 由 2026 年資本支出經 Tokenomics 每 GW 成本與上線延遲換算，而 2026 年資本支出讀 In 頁 gcap_nbis＝Nebius v0.6.1 個股模型回寫值（Thesis!E66 24.185；生效分支；公司指引 cap_nbis 為分支未生效）；Wattonomics v0.3.5 起玩家 2026 年 AI 資本支出（Gap 主讀法）改為付款年實際花費＝gcap_nbis × AI 占比 0.85，也就是本公司模型自己的值。"
+                "所以層級的 Nebius GW 路徑與資本支出都與本公司模型同源（層級 nbis 資本支出現在就是 Nebius 自己模型的值，只列參考），以下各列標「讀取層級（同源，不判定）」，不計入對帳中項目數。"))
 G1note = rc; rc += 1
 hdr(CD, rc, ["名稱", "層級與版本", "單位", "本模型採用值（或公司揭露）", "層級值", "差距 %", "狀態", "說明"]); rc += 1
 G1a = rc
@@ -1355,11 +1355,11 @@ for g_ in ("gb300", "vr200"):
 g1("每 MW IT 資本支出 IF_CapexIT｜GB300 NVL72", f"Tokenomics {TKV}", "US$M／MW", "=cx_gb300", tkv("IF_CapexIT", "gb300"), "#,##0.000", "In 頁 cx_ 列直接讀入；差距恆為 0")
 g1("每 MW 年營運費用 IF_OpexGW｜GB300 NVL72", f"Tokenomics {TKV}", "US$M／MW·年", "=ox_gb300", tkv("IF_OpexGW", "gb300"), "#,##0.000", "In 頁 ox_ 列直接讀入；差距恆為 0")
 g1("Wattonomics 2026 年底 Nebius 上線 MW（WIF_PlayerGW_YE_nbis_2026）", f"Wattonomics {WATV}", "MW", "=mw_ye26", round(WN["WIF_PlayerGW_YE_nbis_2026"] * 1000, 1), "#,##0",
-   "層級值＝2025 年底 170 MW＋由 Nebius v0.5.2 個股模型 2026 年資本支出（gcap_nbis）換算的新增 GW（同源）；本模型 2026 年底為假設（公司未揭露在役 MW），差距是兩個模型版本的差，不是實績對帳")
+   "層級值＝2025 年底 170 MW＋由 Nebius v0.6.1 個股模型 2026 年資本支出（gcap_nbis）換算的新增 GW（同源）；本模型 2026 年底為假設（公司未揭露在役 MW），差距是兩個模型版本的差，不是實績對帳")
 g1("Wattonomics 2030 年底 Nebius 上線 MW（WIF_PlayerGW_YE_nbis_2030）", f"Wattonomics {WATV}", "MW", f"=Thesis!I{TR['B']['conn']}", round(WN["WIF_PlayerGW_YE_nbis_2030"] * 1000, 1), "#,##0",
-   "2027 年起層級仍由 gcap_nbis（v0.5.2 個股模型回寫，同源）推得；對照本模型情境 B")
+   "2027 年起層級仍由 gcap_nbis（v0.6.1 個股模型回寫，同源）推得；對照本模型情境 B")
 g1("Wattonomics 2026 年 Nebius 資本支出（個股模型回寫 WIF_Gap_Player_nbis_2026_CapexAIModel）", f"Wattonomics {WATV}", "US$B", f"=Thesis!E{TR['B']['cx']}", WN["WIF_Gap_Player_nbis_2026_CapexAIModel"], "#,##0.00",
-   "層級值＝Nebius v0.5.2 個股模型 FY2026 資本支出回寫（gcap_nbis，同源、舊版）；本版合併後由主控重匯回寫值")
+   "層級值＝Nebius v0.6.1 個股模型 FY2026 資本支出合計回寫（gcap_nbis＝gcapai_nbis，Thesis!E66，同源）；本版 v0.6.2 基準輸入與 v0.6.1 相同，差距應為 0")
 g1("Wattonomics Nebius 已簽約電力（In ctr_nbis）", f"Wattonomics {WATV}", "MW", "=ctr_mw", (WROW["ctr_nbis"]["values"][1] or 0) * 1000, "#,##0",
    "層級值＝公司 Q1 股東信「超過 3.5 GW」（公司揭露，同源；時點較舊）；本模型為 Q3 股東信「超過 4 GW」。口徑未說明")
 G1b = rc - 1
@@ -1368,10 +1368,10 @@ rc += 1
 CD.cell(rc, 1, "G2. C0（實績）：公司已公布實績 vs 層級隱含值（規則 v1.4.2 C0 第 2 點；工作單 2026-11-14）").font = BOLD; G2h = rc; rc += 1
 CD.cell(rc, 1, ("方法：個股側只用已公布期間的公司實績（2026 年前三季＝2026-01～2026-09，Q3 6-K 2026-11-12；指引、RPO、ACV 與簽約電力展望不算實績）。"
                 "層級側：營收＝Wattonomics 玩家 GW 年平均 × Tokenomics 每 MW 持有成本（IF_HoldEcon 在役世代加權；層級側稱「持有成本隱含」，不乘本模型的定價倍數 k 與計費比例）；"
-                "資本支出＝Wattonomics 玩家 2026 年資本支出（WIF_Gap_Player_nbis_2026_CapexAI）。"
+                "資本支出＝Wattonomics 玩家 2026 年 AI 資本支出（WIF_Gap_Player_nbis_2026_CapexAI；v0.3.5 起 Gap 主讀法＝付款年實際花費＝gcap_nbis × AI 占比）。"
                 "時差：營收與資本支出主讀數＝2026 年已公布期間累計實績 vs 層級 CY2026 × 已公布月數 ÷ 12（線性近似，Derived）；第二讀數＝最近一季（Q3，2026-07～09）× 4 vs 層級 CY2026（Q3 中點在 8 月中，晚於年中；成長年的方向依該季相對全年平均的位置而定，不得寫成夾住真值）。"
                 "判定：兩讀數差距都超過 ±門檻且同號＝對帳中，只有一個超過＝時差邊界（參考），都在內＝一致；層級值同源者標「參考（同源校準）」、不判定。"
-                "同源檢查（追公式）：層級 2026 年新增 GW 與資本支出都由 Nebius v0.5.2 個股模型回寫值 gcap_nbis 推得（生效分支），所以營收、資本支出兩列都標參考（同源校準），結論「無可比實績（層級值同源）」；在役電力公司未揭露，無可比實績。"))
+                "同源檢查（追公式）：層級 2026 年新增 GW 與資本支出都由 Nebius v0.6.1 個股模型回寫值 gcap_nbis 推得（生效分支），所以營收、資本支出兩列都標參考（同源校準），結論「無可比實績（層級值同源）」；在役電力公司未揭露，無可比實績。"))
 G2note = rc; rc += 1
 CD.cell(rc, 1, "對帳門檻（±）"); CD.cell(rc, 4, 0.15).number_format = "0%"; CD.cell(rc, 4).font = BLUE; CD.cell(rc, 8, "三層基準協調規則 C0／工作單：差距超過 ±15% 標「對帳中」；門檻為輸入（藍字）"); TOLC = f"$D${rc}"; rc += 1
 hdr(CD, rc, ["項目", "期間／口徑", "單位", "公司實績", "層級隱含（同期間換算）", "差距 %", "狀態／判定", "公司實績口徑與出處", "公司實績等級", "層級口徑與出處", "層級等級"]); rc += 1
@@ -1399,11 +1399,11 @@ r_cx9 = c0row("資本支出 2026 年前三季（現金購置 PP&E 與無形資�
 r_cxq = c0row("資本支出 Q3（現金購置）", "2026-07～2026-09", "US$B", fv("q3.cashcapex"), "#,##0.000", f"{PRU}；Q3 7,300.4（股東信：approximately $7.3 billion）", "Verified")
 r_mw = c0row("在役電力（active power）2026-09-30（公司揭露）", "2026-09-30（時點）", "MW", None, "#,##0", "公司未揭露：Q1、Q2、Q3 6-K 與股東信都沒有季末 active／connected MW（股東信只稱 Q3 是 active capacity 季增最大的一季）", "—")
 r_l25 = c0row("層級：玩家 GW 年底 2025（WIF_PlayerGW_YE_nbis_2025）", "2025 年底", "GW", WN["WIF_PlayerGW_YE_nbis_2025"], "0.000", "", "", f"{LAYSRC} 名稱 WIF_PlayerGW_YE_nbis_2025（＝In mw_nbis 2025 年 170 MW，公司 20-F active power）", "Interested-party（公司揭露）", blue=True)
-r_l26 = c0row("層級：玩家 GW 年底 2026（WIF_PlayerGW_YE_nbis_2026）", "2026 年底", "GW", WN["WIF_PlayerGW_YE_nbis_2026"], "0.000", "", "", f"{LAYSRC} 名稱 WIF_PlayerGW_YE_nbis_2026＝CapexGW 頁 G221＝F221＋G220；G220＝G218（2026 年起甲2 路徑），由 2026 年資本支出 G203＝In 頁 gcap_nbis 26.046（Nebius v0.5.2 個股模型回寫，生效）× AI 占比 0.85 經 Tokenomics 每 GW 設備與機房成本、上線延遲 4.5 個月換算；公司指引 cap_nbis 22.5 為分支未生效（追公式 {TRF}）", "同源（個股模型回寫）", blue=True)
+r_l26 = c0row("層級：玩家 GW 年底 2026（WIF_PlayerGW_YE_nbis_2026）", "2026 年底", "GW", WN["WIF_PlayerGW_YE_nbis_2026"], "0.000", "", "", f"{LAYSRC} 名稱 WIF_PlayerGW_YE_nbis_2026＝CapexGW 頁 G227＝F227＋G226；G226＝G224（2026 年起甲2 路徑），由 2026 年資本支出 G203＝In 頁 gcap_nbis 24.185（Nebius v0.6.1 個股模型 Thesis!E66 回寫，生效）× AI 占比 0.85 經 Tokenomics 每 GW 設備與機房成本、上線延遲 4.5 個月換算；公司指引 cap_nbis 22.5 為分支未生效（追公式 {TRF}）", "同源（個股模型回寫）", blue=True)
 r_lhe = c0row("層級：在役世代加權每 MW 年持有成本 FY2026（Tokenomics IF_HoldEcon 加權）", "CY2026", "US$M／MW·年", f"=Thesis!E{TR['B']['anc']}", "#,##0.000", "", "", f"Tokenomics {TKV}（{TKS['source']['commit'][:7]}）IF_HoldEcon 依本模型在役世代占比加權（Thesis 頁錨列；未乘 k）", "Derived（世代占比 Assumed）")
 r_lrev = c0row("持有成本隱含營收 CY2026（玩家 GW 年平均 × 加權每 MW 年持有成本）", "CY2026", "US$B", f"=(D{r_l25}+D{r_l26})/2*D{r_lhe}", "#,##0.000", "", "", "＝（YE2025＋YE2026）÷ 2 × 每 MW 年持有成本；GW × US$M／MW 即 US$B；2026 年 GW 增量同源", "Derived（GW 量同源）")
-r_lcx = c0row("層級：玩家 AI 資本支出 CY2026（WIF_Gap_Player_nbis_2026_CapexAI）", "CY2026", "US$B", WN["WIF_Gap_Player_nbis_2026_CapexAI"], "#,##0.000", "", "", f"{LAYSRC} 名稱 WIF_Gap_Player_nbis_2026_CapexAI（＝新增 GW × Tokenomics 每 GW 資本支出；新增 GW 由 gcap_nbis 推得，同源）", "同源（個股模型回寫）", blue=True)
-r_lcm = c0row("層級：個股模型回寫資本支出 CY2026（WIF_Gap_Player_nbis_2026_CapexAIModel）", "CY2026", "US$B", WN["WIF_Gap_Player_nbis_2026_CapexAIModel"], "#,##0.000", "", "", f"{LAYSRC} 名稱 WIF_Gap_Player_nbis_2026_CapexAIModel＝In 頁 gcap_nbis（Nebius v0.5.2 個股模型 各期收支!C12）", "同源（個股模型回寫）", blue=True)
+r_lcx = c0row("層級：玩家 AI 資本支出 CY2026（WIF_Gap_Player_nbis_2026_CapexAI）", "CY2026", "US$B", WN["WIF_Gap_Player_nbis_2026_CapexAI"], "#,##0.000", "", "", f"{LAYSRC} 名稱 WIF_Gap_Player_nbis_2026_CapexAI（v0.3.5 主讀法＝付款年實際花費＝CapexGW 頁 G213＝gcap_nbis × AI 占比 0.85；同源）", "同源（個股模型回寫）", blue=True)
+r_lcm = c0row("層級：個股模型回寫資本支出 CY2026（WIF_Gap_Player_nbis_2026_CapexAIModel）", "CY2026", "US$B", WN["WIF_Gap_Player_nbis_2026_CapexAIModel"], "#,##0.000", "", "", f"{LAYSRC} 名稱 WIF_Gap_Player_nbis_2026_CapexAIModel＝In 頁 gcapai_nbis（Nebius v0.6.1 個股模型 Thesis!E66）", "同源（個股模型回寫）", blue=True)
 CD.cell(rc, 1, "Wattonomics 快照核對（上列藍字常數取自此檔）"); CD.cell(rc, 2, f"{WATFILE}（快照 nebius 讀 wattonomics/data/wattonomics_snapshot_{WATV}.json）"); CD.cell(rc, 8, f"xlsx sha256 {WAT['source']['sha256']}（快照 source 欄）；建置時逐名讀 WIF_PlayerGW_YE_nbis_2025／2026、WIF_Gap_Player_nbis_2026_CapexAI／CapexAIModel，不手寫"); r_sha = rc; rc += 1
 r_m1 = reading("營收｜主讀數：已公布期間累計 vs 持有成本隱含 CY2026 × 已公布月數 ÷ 12", "2026-01～2026-09 累計", "US$B", f"=D{r_rev9}", f"=D{r_lrev}*D{r_mo}/12", "#,##0.000", "前三季 AI cloud 營收", "Verified／Interested-party", "持有成本隱含營收 × 9 ÷ 12（線性時差近似）", "Derived（同源）", status=SAMEC)
 r_m2 = reading("營收｜第二讀數：最近一季（Q3）× 4 vs 持有成本隱含 CY2026", "2026-07～2026-09 年化", "US$B", f"=D{r_revq}*4", f"=D{r_lrev}", "#,##0.000", "Q3 AI cloud 營收 × 4（含非經常性約 0.325）", "Interested-party／Derived", "持有成本隱含營收（全年）", "Derived（同源）", status=SAMEC)
@@ -1424,8 +1424,8 @@ CD.cell(rc, 1, "簽約電力（contracted power）2026-11-12 vs 層級"); CD.cel
 CD.cell(rc, 5, (WROW["ctr_nbis"]["values"][1] or 0) * 1000).number_format = "#,##0"; CD.cell(rc, 6, f"=D{rc}/E{rc}-1").number_format = GAPF
 CD.cell(rc, 7, "無可比實績"); CD.cell(rc, 8, f"{SRCF['LTR_Q3']}；原文 more than 4 GW contracted；營運指標、口徑未說明"); CD.cell(rc, 9, "Interested-party")
 CD.cell(rc, 10, "Wattonomics In ctr_nbis＝公司 Q1 股東信「超過 3.5 GW」（公司揭露，同源；只作 G1 讀取層級），GW 路徑是在役量，沒有獨立的簽約電力序列；差距是公司兩次揭露的時差，不判定"); CD.cell(rc, 11, "同源"); rc += 1
-r_cxm1 = reading("參考：資本支出主讀數改對個股模型回寫值（CapexAIModel × 9 ÷ 12）", "2026-01～2026-09 累計", "US$B", f"=D{r_cx9}", f"=D{r_lcm}*D{r_mo}/12", "#,##0.000", "前三季現金資本支出", "Verified", "層級 CapexAIModel（v0.5.2 回寫）× 9 ÷ 12", "同源", status="參考（同源，不判定）")
-r_cxm2 = reading("參考：資本支出第二讀數改對個股模型回寫值", "2026-07～2026-09 年化", "US$B", f"=D{r_cxq}*4", f"=D{r_lcm}", "#,##0.000", "Q3 現金資本支出 × 4", "Verified", "層級 CapexAIModel（v0.5.2 回寫）", "同源", status="參考（同源，不判定）")
+r_cxm1 = reading("參考：資本支出主讀數改對個股模型回寫值（CapexAIModel × 9 ÷ 12）", "2026-01～2026-09 累計", "US$B", f"=D{r_cx9}", f"=D{r_lcm}*D{r_mo}/12", "#,##0.000", "前三季現金資本支出", "Verified", "層級 CapexAIModel（v0.6.1 回寫）× 9 ÷ 12", "同源", status="參考（同源，不判定）")
+r_cxm2 = reading("參考：資本支出第二讀數改對個股模型回寫值", "2026-07～2026-09 年化", "US$B", f"=D{r_cxq}*4", f"=D{r_lcm}", "#,##0.000", "Q3 現金資本支出 × 4", "Verified", "層級 CapexAIModel（v0.6.1 回寫）", "同源", status="參考（同源，不判定）")
 G2b = rc - 1
 rc += 1
 CD.cell(rc, 1, "核對：AI cloud 營收 9 個月實績 − Thesis 9M 實績（應為 0）"); CD.cell(rc, 4, f"=D{r_rev9}-Thesis!C{TR['B']['rev']}").number_format = "0.000000"; r_k1 = rc; rc += 1
@@ -1433,19 +1433,19 @@ CD.cell(rc, 1, "核對：資本支出 9 個月實績 − Thesis 9M 公司口徑�
 CD.cell(rc, 1, "對帳中項目數（營收、資本支出、在役電力；G1 與參考列不計）"); CD.cell(rc, 4, f'=COUNTIF(G{r_j1},"對帳中")+COUNTIF(G{r_j2},"對帳中")+COUNTIF(G{r_j3},"對帳中")'); r_n = rc; rc += 1
 CD.cell(rc, 1, "有判定的項目數（同源與無可比實績不計）"); CD.cell(rc, 4, f'=COUNTIF(G{r_j1},"對帳中")+COUNTIF(G{r_j1},"一致")+COUNTIF(G{r_j1},"時差邊界*")+COUNTIF(G{r_j2},"對帳中")+COUNTIF(G{r_j2},"一致")+COUNTIF(G{r_j2},"時差邊界*")'); r_nj = rc; rc += 1
 CD.cell(rc, 1, "C0 對帳摘要（HTML 對帳章讀取）")
-CD.cell(rc, 4, f'="實績對帳（公司已公布實績對 Wattonomics、Tokenomics 層級隱含值）：層級的 Nebius 2026 年上線 GW 與資本支出都由舊版個股模型回寫值推得（同源），所以營收（前三季 US$"&TEXT(D{r_m1},"0.00")&"B 對持有成本隱含同期間 US$"&TEXT(E{r_m1},"0.00")&"B，"&TEXT(F{r_m1},"+0%;-0%")&"）與資本支出（前三季 US$"&TEXT(D{r_c1},"0.0")&"B 對層級同期間 US$"&TEXT(E{r_c1},"0.0")&"B，"&TEXT(F{r_c1},"+0%;-0%")&"）只列參考："&G{r_j1}&"；在役電力："&G{r_j3}&"；簽約電力無可比實績。對帳中項目 "&D{r_n}&" 個、有判定 "&D{r_nj}&" 個（門檻 ±"&TEXT({TOLC},"0%")&"）。個股不裁決，不改上游值；證據回饋走對帳單。"'); r_sum = rc; rc += 1
+CD.cell(rc, 4, f'="實績對帳（公司已公布實績對 Wattonomics、Tokenomics 層級隱含值）：層級的 Nebius 2026 年上線 GW 與資本支出都由本公司個股模型（v0.6.1）回寫值推得（同源），所以營收（前三季 US$"&TEXT(D{r_m1},"0.00")&"B 對持有成本隱含同期間 US$"&TEXT(E{r_m1},"0.00")&"B，"&TEXT(F{r_m1},"+0%;-0%")&"）與資本支出（前三季 US$"&TEXT(D{r_c1},"0.0")&"B 對層級同期間 US$"&TEXT(E{r_c1},"0.0")&"B，"&TEXT(F{r_c1},"+0%;-0%")&"）只列參考："&G{r_j1}&"；在役電力："&G{r_j3}&"；簽約電力無可比實績。對帳中項目 "&D{r_n}&" 個、有判定 "&D{r_nj}&" 個（門檻 ±"&TEXT({TOLC},"0%")&"）。個股不裁決，不改上游值；證據回饋走對帳單。"'); r_sum = rc; rc += 1
 CD.cell(rc, 1, "同源檢查（哪些部分同源、什麼會消去、這張表實際檢驗什麼）")
 CD.cell(rc, 2, ("（一）本模型沒有把校準值寫入 Wattonomics 或 Tokenomics：定價倍數 k、計費比例、世代占比、在役 MW 假設只留在本模型。"
-                "（二）Wattonomics 玩家 nbis 的 2026 年底 GW（CapexGW 頁 G221＝F221＋G220）：2025 年底 0.17 GW 來自公司揭露；2026 年新增 G220 由 2026 年資本支出 G203 換算，G203 讀 In 頁 gcap_nbis＝Nebius v0.5.2 個股模型回寫的 FY2026 資本支出 26.046（生效分支；公司指引 cap_nbis 22.5 分支未生效）；Nebius 沒有 Q3 實績下限（沒有 w1_nbis，因公司不揭露在役 MW）。"
-                "（三）因此營收列的層級 GW 量、資本支出列的層級金額都等於「舊版本公司模型的資本支出」經 Tokenomics 單位成本換算的結果；比式裡層級值沒有獨立於本公司模型的成分，這張表實際只檢驗「實績 vs 舊版本公司模型」，依規則標「參考（同源校準）」，結論「無可比實績（層級值同源）」，不計入對帳中。"
-                "（四）參考讀數顯示：前三季現金資本支出年化速率（Q3 × 4）高於層級 CapexAI，且接近 v0.5.2 回寫值；Wattonomics 2026 年 nbis 量可能偏低，交主控在本版合併後以 v0.6.0 重匯回寫值（gcap_nbis 等）時一併評估。")); r_org = rc; rc += 1
+                "（二）Wattonomics 玩家 nbis 的 2026 年底 GW（CapexGW 頁 G227＝F227＋G226）：2025 年底 0.17 GW 來自公司揭露；2026 年新增 G226 由 2026 年資本支出 G203 換算，G203 讀 In 頁 gcap_nbis＝Nebius v0.6.1 個股模型回寫的 FY2026 資本支出 24.185（Thesis!E66；生效分支；公司指引 cap_nbis 22.5 分支未生效）；玩家 2026 年 AI 資本支出 CapexAI 自 Wattonomics v0.3.5 起改為付款年實際花費＝G203 × AI 占比 0.85＝20.557（v0.3.2 為上線年 GW 回推 13.167）；Nebius 沒有 Q3 實績下限（沒有 w1_nbis，因公司不揭露在役 MW）。"
+                "（三）因此營收列的層級 GW 量、資本支出列的層級金額都等於「本公司模型（v0.6.1）的資本支出」或其經 Tokenomics 單位成本換算的結果；比式裡層級值沒有獨立於本公司模型的成分，這張表實際只檢驗「實績 vs 本公司模型」，依規則標「參考（同源校準）」，結論「無可比實績（層級值同源）」，不計入對帳中。"
+                "（四）Wattonomics v0.3.5 已重匯 Nebius v0.6.1 回寫值（v0.3.2 讀 v0.5.2 的 26.046）：層級 CapexAI 與本模型 FY2026 資本支出 × 0.85 相同，前三季現金資本支出對層級同期間大致相同；Q3 × 4 仍高於層級全年（2026 年支出逐季上升，Q3 落在年度後半）。這只反映本模型 Q4 假設與 AI 占比，不是獨立檢驗。")); r_org = rc; rc += 1
 CD.cell(rc, 1, "口徑換算與限制")
 CD.cell(rc, 2, ("營收：層級側是持有成本（經濟口徑成本，不是價格）；公司實績 Q3 含非經常性 asset-light 營收約 0.325（股東信），且計費 MW 小於在役 MW。資本支出：公司只揭露現金購置（含無形資產），無應計口徑；層級 CapexAI 只含 AI 部分（AI 占比 0.85）。"
                 "在役電力：公司以 active power 定義（IT 口徑），但 2026 年各季未揭露。缺哪一項獨立揭露：季末 active／connected MW，或 Wattonomics 以公司實績（非個股模型）推得的 2026 年資本支出與 GW。")); r_k = rc; rc += 1
 CD.freeze_panes = "B3"
 COORD_ROWS = {"G1h": G1h, "G1a": G1a, "G1b": G1b, "G2h": G2h, "G2a": G2a, "G2b": G2b, "tol": int(TOLC.split("$")[-1]), "sha": r_sha, "m1": r_m1, "m2": r_m2, "j1": r_j1, "c1": r_c1, "c2": r_c2, "j2": r_j2, "w1": r_w1, "j3": r_j3,
               "ctr": r_ctr, "cxm1": r_cxm1, "cxm2": r_cxm2, "n": r_n, "nj": r_nj, "sum": r_sum, "org": r_org, "k": r_k, "g1note": G1note, "g2note": G2note, "mo": r_mo, "k1": r_k1, "k2": r_k2}
-RC.cell(RCR["wat26"], 9, "讀取層級（同源，不判定）：Wattonomics 2026 年 nbis 增量由 Nebius v0.5.2 個股模型資本支出回寫推得（Coord 頁 G1）")
+RC.cell(RCR["wat26"], 9, "讀取層級（同源，不判定）：Wattonomics 2026 年 nbis 增量由 Nebius v0.6.1 個股模型資本支出回寫推得（Coord 頁 G1）")
 RC.cell(RCR["wat30"], 9, "讀取層級（同源，不判定）：同上；差距是兩個模型版本與情境的差，不是實績對帳（Coord 頁 G1）")
 
 # =====================================================================================
@@ -1549,6 +1549,7 @@ for k, t in L13:
 r += 1
 RD.cell(r, 1, "v0.6.0（2026-11-15）：依 CoreWeave v5.0.3 新雲樣板重建（舊 JS 雙引擎 v0.5.3 移 nebius/legacy_v05/）＋滾入 2026Q3 實績（6-K 2026-11-12）＋版面 v1.3＋三層協調 Coord 頁（工作單 20261114 第二批；規則 v1.4.2 C0 第 2 點）。估值改為 DCF 50%＋Comparable 50%（新雲同業 EV/EBITDA）、評等五級並套收支關卡；Tokenomics 快照由 v19.0 改 v22.0；在役 MW 公司未揭露，2026 年改為明列假設。Coord：Wattonomics 的 Nebius 2026 年 GW 與資本支出由 v0.5.2 個股模型回寫推得（同源），營收、資本支出標參考（同源校準），在役電力無可比實績。新舊目標價與評等差異見 nebius/README.md v0.6.0 節。"); RL["v060"] = r; r += 1
 RD.cell(r, 1, "v0.6.1（2026-11-15）：Andy 2026-11-15 決定每 MW 收入比照 CoreWeave v5.0.3 辦理。核對結果：k 的構成（Tokenomics v22.0 IF_HoldEcon 在役世代加權 × 單一定價倍數；長約＝IREN–Microsoft 類比、現貨＝H100 指數）與 CoreWeave 同法、同參數，唯一不同的隨需占比依決定保留 Nebius 值（0%），基準 k 與目標價不變。新增敏感度案例「定價倍數改以公司說法」（全部產能長約價改用公司宣稱 ACV），橫幅與命題章寫明支撐現價所需的每 MW 年收入（反向 DCF）。公司宣稱只列參考，對帳單由 Andy 開於 Drive。"); RL["v061"] = r; r += 1
+RD.cell(r, 1, "v0.6.2（2026-11-15）：Wattonomics 快照由 v0.3.2 改讀 v0.3.5（追公式改讀 nebius/data/wattonomics_trace_v0.3.5.json）。層級 nbis 的 2026 年資本支出已重匯本公司 v0.6.1 回寫值 24.185（v0.3.2 讀 v0.5.2 的 26.046），Gap 主讀法改付款年：CapexAI 2026 13.17 → 20.56；年底上線 GW 2026 0.4365 → 0.4214、2030 2.364 → 2.482。Wattonomics 不進估值，基準輸入、目標價與評等不變；Coord 頁同源說明更新（層級 nbis 資本支出就是本公司模型的值，只列參考）。"); RL["v062"] = r; r += 1
 RD.column_dimensions["A"].width = 180
 
 # 列號對照
