@@ -12,7 +12,7 @@ import hashlib, json, os, re
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
-VER, BUILT = "0.4.8", "2026-11-14"
+VER, BUILT = "0.4.9", "2026-11-15"   # v0.4.9：3Q26 滾入（build_quanta.py In E 節、J2 資產負債表 2026-09-30）
 BOLD = Font(bold=True); BLUE = Font(color="0000FF"); HDR = PatternFill("solid", fgColor="DDEBF7")
 SP = "S&P Global Market Intelligence 經 stockanalysis.com 損益表頁（https://stockanalysis.com/quote/tpe/2382/financials/income-statement/；2026-11-14 讀取，頁面更新 2026-08-13；單位百萬元新台幣，此處換算為十億元）"
 
@@ -128,7 +128,7 @@ def pl_standard(wb, SIL):
     dep = dep_years(SIL)
     r = P.max_row + 3
     s0 = r
-    P.cell(r, 1, "標準損益表（v0.4.7 起；個股 HTML 版面規格 v1.3 D 節）：歷史三年（FY2023–FY2025 實績，Hist 頁）＋FY2026E–FY2031E（情境 B 基準；FY2026 為錨點＝1H26 實績＋3Q 營收實績＋假設）。NT$B；EPS 新台幣。"
+    P.cell(r, 1, "標準損益表（v0.4.7 起；個股 HTML 版面規格 v1.3 D 節）：歷史三年（FY2023–FY2025 實績，Hist 頁）＋FY2026E–FY2031E（情境 B 基準；FY2026 為錨點＝1–3Q26 財報實績＋4Q26 假設）。NT$B；EPS 新台幣。"
                  "只引用本頁上方、Hist、DCF 頁，不回饋任何計算").font = BOLD; r += 1
     P.cell(r, 1, ("口徑：GAAP（IFRS 合併財報，歸屬母公司）。廣達不另編 Non-GAAP，市場共識與公司法說皆用合併財報口徑，故本表用 GAAP；模型淨利為歸屬母公司淨利。"
                   "歷史 EPS 為基本 EPS（以流通股數 3.855 十億股計，與模型股數一致）；稀釋 EPS 在表末對照列。"
@@ -480,9 +480,9 @@ def readme13(wb, SIL, PLA, RVA, coord_rows):
     put("drv", F(T("分部營收怎麼推導（情境 B）：AI 伺服器營收＝部署 GW（AI IT 資本支出 ÷ 每 GW IT 資本支出）× 每 GW ODM 整櫃價值 × 廣達有效份額 ×（1 − 客供比例）；"
                    "FY2027 為 "), f'TEXT(PL!E{pr("AI 伺服器營收")},"#,##0")', T(" 十億元。非 AI 營收＝一般伺服器＋筆電＋其他，由 FY2026 錨點乘各自成長率；"
                    "FY2027 為 "), f'TEXT(PL!E{pr("非 AI 營收")},"#,##0")', T(" 十億元。兩者相加＝合併營收 "), f'TEXT(PL!E{PLA["R"]["rev"]},"#,##0")', T(" 十億元；分項加總與合併營收的檢查列為 0。")))
-    put("ver", F(T("v0.4.8（2026-11-14）：三層協調 C0 補公司實績對帳（規則 v1.4.2）：Coord 頁末新增「C0〔實績〕」表，以 2026 年 1–10 月月營收與 3Q26 法說揭露比例換算的 AI 伺服器營收對層級隱含值，列出兩讀數但不判定（層級份額同源校準，無可比實績）；原 C0 同源列改標「讀取層級（同源，不判定）」；其餘數值、加權目標價與評等不變。v0.4.7（2026-11-14）：版面規格 v1.3 全面改版（章節順序、橫幅 ≤200 字、重點觀察 ≤5 點、標準損益表 FY2023A–FY2031E、反向 DCF 頁、四個目標價與現價圖、敏感度改加權目標價相對基準低案／高案主圖）；"
-                 "三層協調新機制 C0：Coord 頁新增「由下往上對帳」（本模型組裝市場與 Siliconomics SIF_AsmMkt_Base 等逐年比較，差距超過 ±15% 標對帳中）；"
-                 "xlsx 只新增 Hist、RevDCF 頁與各頁末新增區塊，既有數值、加權目標價 512.56 與投資建議（強力買進）不變；README A1 標題段版號由 v0.2.1 更正為 v0.4.7（現行 v0.4.8）。")))
+    put("ver", F(T("v0.4.9（2026-11-15）：滾入 3Q26 財報（公開資訊觀測站 t164sb03／t164sb04，Verified）。FY2026 錨點改為 1–3Q26 財報實績＋4Q26 假設（4Q 季增 −7%、毛利率 5.0%、營業費用率 1.75%、淨利 ÷ 營業利益 0.87 不改）：3Q26 淨利 31.54（模型）→ 28.42（財報，毛利率 4.75%）；全年營收 3,998.7 → 3,998.8、歸屬母公司淨利 110.71 → 107.60 十億元。"
+                 "股數改 2026-09-30 流通股數 4.0995 十億股（含 2026-08 GDR 現金增資 245 百萬股；原 3.855），FY2026 EPS 28.72 → 26.25（全年以 9-30 股數計）。資產負債表日 2026-06-30 → 09-30：借款 416.3 → 380.6（含第四次可轉債轉列流動的估計 29.0）、租賃 14.2 → 15.1、現金及流動金融資產 328.3 → 312.0、長期投資 22.2 → 22.8、非控制權益帳面 12.19 → 12.41；"
+                 "FY2025 股利已於 08-28 發放，stub 期不再扣；淨現金與投資（扣非控制權益）−98.7 → −79.7，滾到評價日 −260.6 → −131.5。DCF 530.22 → 512.35、加權目標價 512.56 → 481.90（強力買進不變）；另一側讀數 432.35 → 408.88（買進）。")))
     return M
 
 
@@ -540,11 +540,11 @@ def c0_actuals(wb, C, r, l3, rs_l, d5):
     C.cell(r, 1, "　3Q26（7–9 月）合計（第二讀數用）"); C[f"B{r}"] = f"=SUM(B{m0+6}:B{m0+8})"; C[f"B{r}"].number_format = "#,##0.000"
     C.cell(r, 4, "NT$B；公司公布 3Q26 營收約 1.1155 兆元"); C.cell(r, 5, "Verified（加總）"); q3 = r; r += 1
     C.cell(r, 1, "　核對：1–6 月合計 − 公司公布 1H26 營收（Q 頁）"); C[f"B{r}"] = f"=SUM(B{m0}:B{m0+5})-Q!C4"; C[f"B{r}"].number_format = "0.000"
-    C.cell(r, 4, "NT$B；應約為 0（公司以億元位數公布，容許 ±0.05）"); C.cell(r, 5, "核對列"); ck1 = r; r += 1
+    C.cell(r, 4, "NT$B；應約為 0（v0.4.9 起 Q 頁 1H26＝MOPS 1–9 月累計 − 3Q26；容許 ±0.05）"); C.cell(r, 5, "核對列"); ck1 = r; r += 1
     C.cell(r, 1, "　核對：1–9 月合計 − 公司公布前 9 月累計 2,961.358（29,613.58 億元）"); C[f"B{r}"] = f"=SUM(B{m0}:B{m0+8})-2961.358"; C[f"B{r}"].number_format = "0.000"
     C.cell(r, 4, "NT$B；應約為 0（9 月以億元位數列示，容許 ±0.05）"); C.cell(r, 5, "核對列（出處：財報狗月營收報導）"); C.cell(r, 6, "https://statementdog.com/news/17848"); ck2 = r; r += 1
     C.cell(r, 1, "　核對：3Q26 合計 − 3Q26 營收輸入（In 頁 q3_rev）"); C[f"B{r}"] = f"=B{q3}-q3_rev"; C[f"B{r}"].number_format = "0.000"
-    C.cell(r, 4, "NT$B；應約為 0（In 頁 q3_rev 取 1,115.5）"); C.cell(r, 5, "核對列"); ck3 = r; r += 1
+    C.cell(r, 4, "NT$B；應約為 0（v0.4.9 起 In 頁 q3_rev 為財報單季 1,115.545，MOPS；月營收與財報差約 −0.5 百萬元）"); C.cell(r, 5, "核對列"); ck3 = r; r += 1
     out["cum"], out["q3"] = cum, q3
     C.cell(r, 1, "4.2 口徑換算參數（公司 3Q26 法說揭露比例；原簡報未直接讀取）").font = BOLD; r += 1
     SRC3 = "Interested-party（法說摘要：優分析 3Q26 法說報導，2026-11-11）"; URL3 = "https://uanalyze.com.tw/articles/2061659022；https://uanalyze.com.tw/articles/4376559072"
@@ -735,8 +735,9 @@ def version(wb, here, coord_rows):
     head = a1.split("；", 1)[0]
     assert "v0.2.1" in head, head
     a1 = head.replace("v0.2.1", f"v{VER}", 1) + a1[len(head):]
-    a1 += (f"；v{VER}（{BUILT}）：三層協調 C0 補公司實績對帳（Coord 頁末「C0〔實績〕」：1–10 月月營收與法說揭露比例換算的 AI 伺服器營收 vs Siliconomics 整櫃組裝市場 × 廣達份額；"
-           "原同源列改標「讀取層級（同源，不判定）」）；v0.4.7：版面規格 v1.3 全面改版與 C0 由下往上對帳，新增 Hist、RevDCF 頁；既有數值、加權目標價與評等不變")
+    a1 += (f"；v0.4.8（2026-11-14）：三層協調 C0 補公司實績對帳（Coord 頁末「C0〔實績〕」：1–10 月月營收與法說揭露比例換算的 AI 伺服器營收 vs Siliconomics 整櫃組裝市場 × 廣達份額；"
+           "原同源列改標「讀取層級（同源，不判定）」）；v0.4.7：版面規格 v1.3 全面改版與 C0 由下往上對帳，新增 Hist、RevDCF 頁；既有數值、加權目標價與評等不變"
+           f"；v{VER}（{BUILT}）：滾入 3Q26 財報（MOPS）——FY2026 錨點改 1–3Q26 財報實績＋4Q26 假設、資產負債表日改 2026-09-30（stub 不再扣已發放股利；股數含 2026-08 GDR 增資）")
     RD["A1"].value = a1
     return a1
 
