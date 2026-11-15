@@ -243,7 +243,7 @@ SPEC = {
     ["產品比重（公司與券商揭露）", ["srv_25", "nb_25", "srv_26", "nb_26"]],
     ["非 AI 營收成長率", ["g_sair_27", "g_sair_28", "g_sair_29", "g_nb_27", "g_nb_28", "g_nb_29", "g_oth_27", "g_oth_28", "g_oth_29"]]]],
   ["全公司：錨點、費用、股價、折現率與目標價規則", [
-    ["FY2026 錨點（第三季營收實績與第四季假設）", ["q3_rev", "q4g", "q_gm", "q_opx", "q_nop", "q_nir", "q_sh"]],
+    ["FY2026 錨點（前三季財報實績與第四季假設）", ["q3_rev", "q3_gp", "q3_oi", "q3_pbt", "q3_ni", "ytd_rev", "ytd_gp", "ytd_oi", "ytd_pbt", "ytd_ni", "ytd_eps", "q4g", "q_gm", "q_opx", "q_nop", "q_nir", "sh_9m", "q_sh"]],
     ["營業費用、業外、稅與股數（FY2027 起）", ["phi", "opx_adj", "nop_f", "nir_f", "sh_g"]],
     ["匯率", ["fx"]],
     ["股價、近四季 EPS 與共識目標價", ["px", "eps_ttm", "cons_tp", "cons_feps"]],
@@ -265,7 +265,7 @@ post(cfg)
 # ───────── v0.2.5（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（兩讀數、C0（實績））；共通步驟 auras/html13.py（樣板 delta/gen_html_json.py、avc） ─────────
 import html13  # noqa: E402
 H = {
-    "ver": "v0.2.5",
+    "ver": "v0.2.6",
     "units_chart": lambda pB, hB: {
         "type": "theme", "title": "液冷、伺服器氣冷、筆電與桌機、電競顯卡與其他營收（情境 B，十億元）與雙鴻液冷有效份額（右軸）", "x": f"@PL!D{hB}:G{hB}",
         "fmt": "n1", "fmt_r": "p1", "stack": True, "pad": 1.25, "total": f"@PL!D{pB('營收')}:G{pB('營收')}",
