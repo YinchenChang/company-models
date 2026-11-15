@@ -23,7 +23,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.6.42"
+VERSION = "v0.6.43"
 DATE = "20261115"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
@@ -270,7 +270,7 @@ def main():
         "可投資性口徑（v0.6.20，Andy 2026-11-01 11:35：如研究報告發布後股價漲跌，上檔空間隨最新價變動）：中心價＝最新一份個股模型的加權目標價（半導體：DCF 與 Comparable 加權）；"
         "中心空間＝中心價 ÷ 最新收盤（價格頁 H 欄）− 1；投資建議與級距依五級規則（>+50% 強力買進、+25～+50% 買進、−25～+25% 中立、−50～−25% 放空、<−50% 強力放空）自算；"
         "模型日的上檔空間與投資建議只列在依據欄。悲觀情境空間（v0.5.1 前稱「下檔空間」）＝C 情境 DCF 價值 ÷ 最新收盤 − 1（模型無此欄，自算）；不是一般所說目標價相對現價的下跌幅度。取不到最新收盤者暫用模型現價。"
-        "雲端與 neocloud（v0.5.1）：上檔空間＝模型加權目標價 ÷ 最近外部收盤價 − 1，依同一五級規則自算（不用模型自身評等，不再出現「賣出」）；MiniMax 用反向檢驗折現價值，依同一固定規則自算。",
+        "雲端與 neocloud（v0.5.1）：上檔空間＝模型加權目標價 ÷ 最近外部收盤價 − 1，依同一五級規則自算（不用模型自身評等，不再出現「賣出」）。MiniMax、智譜（v0.6.43 起）：讀模型 Val 頁加權目標價（DCF＋同業 EV／NTM 營收），與半導體同法以最新收盤重算上檔空間與評等。",
         "本活頁簿是研究整理，不是投資建議；各模型的方法與假設見各自 README 與 Val／摘要頁。",
     ]
     for i, t in enumerate(lines, 1):
@@ -544,18 +544,11 @@ def main():
             note = "；".join([head] + [x for x in parts[1:] if "門檻" not in x])
             if tk in ("MSFT", "AMZN", "GOOGL"):
                 note += "｜MAG 模型終值占 EV 逾 90%，評價口徑待 MAG v0.3"
-        elif tk == "00100":
-            method = "反向檢驗：折現價值 ÷ 市值"
-            we.cell(i, 24, m["disc_ratio"]["value"]).font = BLUE
-            c1 = (f"=X{i}*價格!C{prow}", f"{src(m['disc_ratio'])} × 模型現價")
-            b1 = (f"=X{i}*價格!C{prow}", "同中心（模型只有一個情境）")
         elif m.get("unlisted"):
             method = "未上市"
             note = "未上市：不評估可投資性；收支關卡結果只作參考。"
-        elif tk == "02513":
-            method = "未估值（反向模式）"
-            note = (f"模型未出隱含價；2028 年共識營收需為正向推估的 {m['need_ratio_2028']['value']:.2f} 倍"
-                    f"（最低共識 {m['need_ratio_2028_lo']['value']:.2f} 倍；{src(m['need_ratio_2028'])}）")
+        # v0.6.43：MiniMax（00100）、智譜（02513）改讀 Val 頁目標價（extract_models.py 給 v2），走上面的估值 v2 分支；
+        # 舊的「反向檢驗：折現價值 ÷ 市值」與「未估值（反向模式）」分支移除。
         we.cell(i, 5, method)
         put(i, 6, c1)
         put(i, 8, c2)
@@ -584,7 +577,7 @@ def main():
                 we.cell(i, 36, "=" + TIER6.format(i=i))
                 we.cell(i, 37, f"上檔空間＝模型加權目標價 {src(m['target'])} ÷ 外部收盤價 − 1，依本地圖五級規則自算"
                                "（模型自身評等以模型日價計、級距不同，不採用；原值見模型摘要頁）")
-            else:                                     # MiniMax：模型無評等，依同一固定規則自算
+            else:                                     # 其他無評等模型（v0.6.43 起無公司走此分支）：依同一固定規則自算
                 we.cell(i, 17, f"=O{i}/N{i}-1")
                 we.cell(i, 19, "=" + REC.format(i=i))
                 we.cell(i, 36, "=" + TIER6.format(i=i))

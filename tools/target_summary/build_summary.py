@@ -21,7 +21,8 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 import relative_multiple as RM  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VER, VDATE = "v0.2.14", "2026-11-15"   # 每次升版改這裡（v0.2.14：第二批與其餘個股 v1.3＋兩讀數＋C0 合併後重產；Coord 現行欄核對；無對帳中年份與無 Coord 頁寫明原因）
+VER, VDATE = "v0.2.15", "2026-11-15"   # 每次升版改這裡（v0.2.15：台光電、台燿、金像電、勝宏、味之素、世界先進、韓美新版合併後重產；前 6 家改讀 Coord 兩讀數，世界先進 C4 不適用寫明原因）
+# v0.2.14：第二批與其餘個股 v1.3＋兩讀數＋C0 合併後重產；Coord 現行欄核對；無對帳中年份與無 Coord 頁寫明原因）
 # v0.2.13：七家版面 v1.3＋三層協調合併；加另一側讀數欄；Comparable 欄標明未調整
 BOLD = Font(bold=True)
 HDR = PatternFill("solid", fgColor="DDEBF7")
@@ -87,11 +88,18 @@ def read_model(folder):
                 alt["tp_cur"] = r[1]
             if "dep" not in alt and a.startswith("是否有估值依賴的對帳中年份") and r[1]:
                 alt["dep"] = str(r[1])
+            # v0.2.15：Coord 頁明寫「兩讀數目標價（C4）＝不適用」者（例：世界先進——不讀產業量），記下原因
+            if "na" not in alt and a.startswith("兩讀數目標價") and str(r[1] or "").strip() == "不適用":
+                alt["na"] = str(r[4] or "") if len(r) > 4 else ""
         if {"tp", "up", "rec"} <= set(alt):
             if "yrs" not in alt:   # 例：Cerebras——Coord 頁有兩讀數但不讀 Siliconomics 產業部署 GW，兩讀數相同
                 alt["yrs"] = ("無估值依賴的對帳中年份（Coord 頁「是否有估值依賴的對帳中年份」＝否；本模型不讀 Siliconomics 產業部署 GW，"
                               "另一側讀數無傳導、同現行）" if alt.get("dep") == "否" else "Coord 頁無「對帳中年份」列")
             out["alt"] = alt
+        elif "na" in alt:
+            out["alt_na"] = True
+            out["alt_why"] = ("兩讀數不適用（Coord 頁「兩讀數目標價（C4）」＝不適用：本模型不讀 Siliconomics 產業量（部署 GW、顆數、AI 市場），"
+                              "無估值依賴的對帳中年份，不並列另一側讀數" + (f"；模型註：{alt['na']}" if alt["na"] else "") + "）")
         else:
             out["alt_why"] = "Coord 頁讀不到另一側讀數的加權目標價、上檔空間、投資建議三列（標籤不符）"
     else:
@@ -172,7 +180,7 @@ def main():
                 r.get("geps"), r["tp_c"], r["up_c"], rec(r["up_c"]), ("是" if rec(r["up_c"]) == rr else "否") if r["up_c"] is not None else "無資料",
                 r["obs"].get(1), r["obs"].get(2), r["obs"].get(3), r["file"]]
         al = r.get("alt")
-        vals += ([al["tp"], al["up"], al["rec"], "是" if al["rec"] == rr else "否", al.get("yrs")] if al else [None, None, None, "無資料", r.get("alt_why", "無對帳中年份")])
+        vals += ([al["tp"], al["up"], al["rec"], "是" if al["rec"] == rr else "否", al.get("yrs")] if al else [None, None, None, "不適用" if r.get("alt_na") else "無資料", r.get("alt_why", "無對帳中年份")])
         for j, v in enumerate(vals, 1):
             c = ws.cell(i, j, v)
             if j in (6, 7, 8, 9, 10, 24):
@@ -382,6 +390,8 @@ def main():
         "另一側讀數（v0.2.13 新增，AF–AJ 欄）：三層基準協調規則 C4——估值依賴 Siliconomics「對帳中」年份的硬體股，並列只換產業部署 GW（Wattonomics 換算值）的另一側讀數目標價；取自各模型 Coord 頁，主欄（加權目標價、投資建議）仍為現行基準讀數。無 Coord 頁者在對帳中年份欄（AJ）標「無對帳中年份」。",
         "v0.2.14：第二批與其餘個股（版面 v1.3＋兩讀數＋C0）合併後重產，凡有 Coord 頁兩讀數的公司都填 AF–AJ；讀不到者在 AJ 欄寫明原因（無 Coord 頁＝模型尚未升版面 v1.3；"
         "Coord 頁「是否有估值依賴的對帳中年份」＝否者，兩讀數相同、AJ 欄註明）。產生時核對 Coord 頁現行基準讀數加權目標價＝Val 頁加權目標價（不符即中止）。",
+        "v0.2.15：台光電 v0.5.4、台燿 v0.2.5、金像電 v0.3.4、勝宏 v0.4.4、味之素 v0.3.5、世界先進 v0.3、韓美 v0.4.5 合併後重產；前 6 家（v0.2.14 無 Coord 頁）改讀 Coord 兩讀數。"
+        "世界先進 Coord 頁「兩讀數目標價（C4）」＝不適用（不讀產業量、無估值依賴的對帳中年份），AI 欄標「不適用」、AJ 欄寫明原因（比照 Cerebras 註明無傳導；差別是 Cerebras 仍列相同的兩讀數）。",
         "投資建議固定規則（Andy 2026-10-25 14:17）：> +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、< −50% 強力放空。",
     ], 1):
         ex.cell(k, 1, t)
