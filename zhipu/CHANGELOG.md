@@ -7,6 +7,7 @@
 - 具名範圍 1,568 → 1,589（PL_ 18、COORD_ 3）；公式格 6,247 → 6,375；scenarios.yaml 預期值更新。其餘工作表與 v0.1.4 逐格相同（xlsx_diff：只差 README A1、Checks A1 版本字串與新增格）。
 - 個股頁（版面 v1.3）`tools/build_html_v13.py` → `dist/20261115_智譜個股頁_v0_1_5.html`（本模型無目標價，估值章標不適用；同版修正後帶 data-novaluation）；`tests/test_html.py` 新增個股頁數字逐一比對。重建輸入：Tokenomics v19.0（1916a06）、OpenAI v0.6.2、`--base model/archive/20261106_Zhipu_v0.1.4.xlsx --date 2026-10-22`。
 - **同版修正（2026-11-15，PR #573 審查後）：** ① PL 核對列（營業利益 − Cost 差額 − 股權報酬）`ROUND(x,9)` 改 `IF(ABS(x)<1E-9,0,x)`：pycel ROUND 在 `w_dc1gw_on`、`aq_owned_opex_amort` 情境遇 numpy 浮點數 Decimal 轉換失敗（InvalidOperation），parity 失敗 6 項；全簿已無 ROUND，其他核對列不含 ROUND。② Coord「Wattonomics」列說明補：Wattonomics Decisions D43（GL01-37）已將智譜移出 Gap。③ 個股頁估值章改帶 `data-novaluation`（規格 J 節 (b)，本 PR 擴充），補反向檢驗圖（模型營收 vs 市值隱含年營收、分析師共識）；橫幅「本模型未建目標價與評等」；共識營收 FY2029–FY2030 標明為沿用值。xlsx_diff 對修正前：值 0 差異（除 Coord!L15 說明文字）；完整 parity 全部情境通過。
+- **同業倍數日期加註（2026-11-15，PR #573 合併後；只加註，數值不變）：** 個股頁估值章「同業（MiniMax）企業價值 ÷ 年化營收」列與一頁摘要同業倍數說明，註明 MiniMax 市值取 2026-10-07 盤中、與智譜股價 2026-11-05 收盤不同日。只改 `tools/build_html_v13.py`、`tools/build_html.py` 文字，同版 v0.1.5 重建 HTML（xlsx 位元組相同）；test_html、test_builder、parity base 情境通過；`check_layout_v13 --xlsx` 全過。
 
 ## Z0（2026-10-08，chat 端）
 - 建立 `zhipu/`：骨架（builder／engine／tools／tests 基礎自 OpenAI v0.6 經 Anthropic A0 複製，名稱待 Z2 改寫）、規格 r0（D1–D26）、共同規則、Z1–Z5 工作單、進度檔、交接檔。

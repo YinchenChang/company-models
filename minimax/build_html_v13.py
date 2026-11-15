@@ -95,7 +95,7 @@ def hero(B):
              f'<div class="hero-s" style="color:var(--muted)">首次需融資 {sp(*B.y("F19", 2026), "t")} 年</div></div>')
     note = (f'本模型是收支模型，沒有建目標價與評等。基準情境下 FY2030 每 MW 營收只覆蓋全成本的 {sp(*cov, "p0")}，'
             f'現金在 {sp(*B.y("F19", 2026), "t")} 年跌破最低水位，至 FY2030 累計需新融資 {sp(*need, "n0")} 百萬美元。')
-    return (f'<div class="hero hero-na"><div class="hero-rec"><span class="hero-k">投資建議</span><span class="hero-v">不給評等（模型未建目標價）</span></div>'
+    return (f'<div class="hero hero-na"><div class="hero-rec"><span class="hero-k">投資建議</span><span class="hero-v">本模型未建目標價與評等</span></div>'
             f'<div class="hero-tiles">{tiles}</div><p class="hero-note">{note}</p></div>')
 
 
@@ -140,7 +140,7 @@ def valuation(B):
            (('V09', 'n0'), ('V10', 'n0'), ('V11', 'p1'), ('V12', 'n0'), ('V13', 'n2'), ('V14', 'n0'))]
     ch = bar_chart(sp, ['市值', '模型價值折現'], [('百萬美元', C_ACC, [B.y('V02', 2026), B.y('V12', 2030)])], '百萬美元',
                    '反向檢驗：現有股東價值折現 vs 目前市值', fmt='n0', h=230)
-    return ('<section id="valuation" data-unlisted="1" data-novaluation="1"><h2>估值：不適用（本模型未建目標價）</h2>'
+    return ('<section id="valuation" data-novaluation="1"><h2>估值：不適用（本模型未建目標價）</h2>'
             '<p class="note">MiniMax 已在港股上市、有市場價格，但本模型是收支模型：沒有 DCF、同業倍數加權與評等，因此不給目標價。'
             '版面規格 v1.3 的四個目標價圖（G 節）、加權目標價敏感度（H 節）與反向 DCF 章不適用；本章改列市值、企業價值與反向檢驗。'
             '若要給目標價，需另建 DCF 與同業倍數估值頁（判斷類，待決定）。</p>'
@@ -189,7 +189,7 @@ def pl(B):
              ('PL_Opex', 'n1', ''), ('PL_OI', 'sn1', 'b'), ('PL_OIM', 'p1', 'r'), ('PL_Oth', 'sn1', ''), ('PL_PBT', 'sn1', 'b'),
              ('PL_Tax', 'n1', ''), ('PL_NI', 'sn1', 'b'), ('PL_NIM', 'p1', 'r'), ('PL_EPS', 'sn2', 'b'), ('PL_NIYoY', 'p1', 'r')]
     yrs = list(range(2023, 2031))
-    th = ''.join(f'<th class="{"fc" if y >= 2026 else ""}">FY{y}{"<br>預測" if y >= 2026 else ""}</th>' for y in yrs)
+    th = ''.join(f'<th class="{"fc" if y >= 2026 else ""}">FY{y}{"<br>1H 實績＋2H 預測" if y == 2026 else ("<br>預測" if y > 2026 else "")}</th>' for y in yrs)
     trs = []
     for nm, f, cls in names:
         g = B.name(nm)[0]
@@ -200,7 +200,7 @@ def pl(B):
         trs.append(f'<tr class="{cls}"><td>{lab}</td>{cells}</tr>')
     table = f'<div class="tw"><table class="pl"><thead><tr><th>百萬美元（Non-GAAP：非 IFRS 經調整）</th>{th}</tr></thead><tbody>{"".join(trs)}</tbody></table></div>'
     basis = ('<p class="basis"><strong>口徑：Non-GAAP（非 IFRS 經調整）。</strong>公司業績公告以經調整淨虧損為主要指標，市場亦以此口徑比較；'
-             'IFRS 淨虧損受上市前優先股公允價值變動扭曲（FY2025 該項損失遠大於營運虧損），不適合比較。FY2023–FY2025 為招股書與年度業績公告實績，FY2026 起為本模型基準情境。</p>')
+             'IFRS 淨虧損受上市前優先股公允價值變動扭曲（FY2025 該項損失遠大於營運虧損），不適合比較。FY2023–FY2025 為招股書與年度業績公告實績；FY2026 欄為上半年實績校準＋下半年預測（本模型基準情境），FY2027 起為基準情境。</p>')
     g = lambda nm: B.name(nm)[0]  # noqa: E731
     ch = bar_chart(sp, list(range(2023, 2031)), [('營收', C_TEAL, g('PL_Rev')), ('營業利益（非 IFRS）', C_NEG, g('PL_OI'))], '百萬美元',
                    '營收與營業利益（FY2023–FY2025 實績；FY2026 起基準情境）', fmt='sn0', h=290)
