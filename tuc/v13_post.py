@@ -46,7 +46,7 @@ C = dict(
 
 def layer_rows(ver, CR):
     return [
-        ("部署 GW CY2026／27（三情境相同；SIF_DeployGW_<情境>）", '=TEXT(gw_26,"0.0")&"／"&TEXT(gw_27,"0.0")', ver, "AI 高速 CCL 市場的部署量（In 頁 A 節直接讀入）", None),
+        ("部署 GW CY2026／27（三情境相同；SIF_DeployGW_Base）", '=TEXT(gw_26,"0.0")&"／"&TEXT(gw_27,"0.0")', ver, "AI 高速 CCL 市場的部署量（In 頁 A 節直接讀入）", None),
         ("部署 GW CY2028／29：情境 A／B／C", '=TEXT(gw28_A,"0.0")&"／"&TEXT(gw28_B,"0.0")&"／"&TEXT(gw28_C,"0.0")&"；"&TEXT(gw29_A,"0.0")&"／"&TEXT(gw29_B,"0.0")&"／"&TEXT(gw29_C,"0.0")', ver, "三情境部署量（B＝Siliconomics 基準；A、C 依市場層情境係數）", None),
         ("每 GW 高速 CCL 金額 CY2026–29（US$M/GW；SIF_CCLperGW）", '=TEXT(pgw_26,"0")&"／"&TEXT(pgw_27,"0")&"／"&TEXT(pgw_28,"0")&"／"&TEXT(pgw_29,"0")', ver, "AI 高速 CCL 市場＝部署 GW × 每 GW 金額", None),
         ("匯率（NT$/US$；fx_twd）", "=fx", ver, "AI 高速 CCL 市場換算新台幣", "0.00"),
@@ -152,6 +152,30 @@ def c0_actuals(wb, G):
     return R
 
 
+# v0.2.5（2026-11-15）：Siliconomics 讀取名稱改為只讀基準（*_Base）；三情境在本模型以情境係數自建（Project 規則 10(4)；tools/baseline_coordination/check.py 第 4 項）。
+# 計算本來就讀 SIF_DeployGW_Base、SIF_CCLMkt_Base（v0.15 起），本版只改來源與說明文字，數值、目標價、評等不變。v1.3 各頁「v0.2.4 起」字樣保留（該頁首次加入的版本）。
+VER5 = "v0.2.5"
+A1_5 = (f"{VER5}（{BUILT}）：Siliconomics 讀取名稱改為只讀基準 SIF_DeployGW_Base、SIF_CCLMkt_Base（原來源文字寫部署 GW、CCL 市場的情境 A／B／C 名稱，已停用；"
+        "計算自 v0.15 起即讀基準），三情境＝基準 × 個股自建情境係數（B＝基準）；數值、目標價與評等不變")
+VL_5 = (f"{VER5}（{BUILT}）：Siliconomics 讀取名稱改為只讀基準（SIF_DeployGW_Base、SIF_CCLMkt_Base；Project 規則：行業變數只在 Siliconomics 有一個基準值，情境只留在個股），"
+        "三情境＝基準 × 個股自建情境係數（B＝基準，A、C 係數為 markets/scen 參考值 ÷ 基準係數）；只改來源與說明文字，數值、目標價與評等不變。"
+        "前版 v0.2.4：")
+
+
+def ver5(wb, RMA):
+    RD = wb["README"]
+    a1 = RD["A1"].value
+    head, sep, rest = a1.partition("；")
+    head2, n = c13.re.subn(r"v\d+(?:\.\d+)+（", f"{VER5}（", head, count=1)
+    assert n == 1, head
+    RD["A1"].value = head2 + sep + rest + "；" + A1_5
+    c = RD[f"A{RMA['ver']}"]
+    assert str(c.value).startswith(VER), c.value
+    c.value = VL_5 + c.value
+
+
 def apply(wb, SIL, CR):
     C.update(layer_rows=layer_rows, same_blocks=same_blocks)
-    return c13.apply(wb, SIL, CR, C, lines, c0_actuals)
+    msg = c13.apply(wb, SIL, CR, C, lines, c0_actuals)
+    ver5(wb, wb._v13["RM"])
+    return msg

@@ -72,13 +72,13 @@ WR = "https://wantrich.chinatimes.com/news/20260630900220-420101"
 CNY = "https://news.cnyes.com/news/id/6426189"
 SA = "https://stockanalysis.com/quote/tpex/6274/"
 
-sec("A. AI 部署與每 GW 高速 CCL 金額（讀 Siliconomics 快照；情境 A／B／C 讀同字母上游）")
-inp("gw_26", "部署 GW 2026（IT 電力；三情境相同）", "GW", None, GW["A"][0], None, "Derived", f"{SNAP}｜SIF_DeployGW_A[2026]", "AI IT 資本支出 ÷ 每 GW IT 資本支出（Siliconomics 推導；Tokenomics 量經 SIF_TK_*）")
-inp("gw_27", "部署 GW 2027（三情境相同）", "GW", None, GW["A"][1], None, "Derived", f"{SNAP}｜SIF_DeployGW_A[2027]", "同上；顆數情境係數從 CY2028 開始")
+sec("A. AI 部署與每 GW 高速 CCL 金額（讀 Siliconomics 快照：只讀基準 *_Base；情境 A／C＝基準 × 個股情境係數，B＝基準）")
+inp("gw_26", "部署 GW 2026（IT 電力；三情境相同）", "GW", None, GW["A"][0], None, "Derived", f"{SNAP}｜SIF_DeployGW_Base[2026]", "AI IT 資本支出 ÷ 每 GW IT 資本支出（Siliconomics 推導；Tokenomics 量經 SIF_TK_*）")
+inp("gw_27", "部署 GW 2027（三情境相同）", "GW", None, GW["A"][1], None, "Derived", f"{SNAP}｜SIF_DeployGW_Base[2027]", "同上；顆數情境係數從 CY2028 開始")
 for y, j in ((28, 2), (29, 3)):
     for s in SC:
-        inp(f"gw{y}_{s}", f"情境 {s}：部署 GW 20{y}", "GW", None, GW[s][j], None, "Derived", f"{SNAP}｜SIF_DeployGW_{s}[20{y}]",
-            "A＝顆數基準；B＝CY2028 ×0.8、CY2029 ×0.85；C＝CY2028–29 ×0.6（Siliconomics SIF_UnitsCoef_*；與台光電、台積電模型同一套）")
+        inp(f"gw{y}_{s}", f"情境 {s}：部署 GW 20{y}", "GW", None, GW[s][j], None, "Derived", f"{SNAP}｜SIF_DeployGW_Base[20{y}]" + ("" if s == "B" else f" × 情境 {s} 係數（個股自建）"),
+            "B＝基準（Siliconomics SIF_UnitsCoef_Base：CY2028 ×0.8、CY2029 ×0.85）；A＝原始顆數、C＝CY2028–29 ×0.6 為個股自建情境係數（markets/scen 參考值 ÷ 基準係數；與台光電、台積電模型同一套）")
 for y, j in ((26, 0), (27, 1), (28, 2), (29, 3)):
     inp(f"pgw_{y}", f"每 GW 高速 CCL 金額 20{y}（加速器／運算板＋交換器板＋UBB／中板，不含價格指數）", "US$M/GW", None, PGW[j], None, "Derived", f"{SNAP}｜SIF_CCLperGW[20{y}]",
         "2026 年三項 190／90／70（Assumed）× 世代指數（Analogy／Assumed）；元件與指數見 Siliconomics In 頁 M16（原在台光電模型）")
@@ -289,10 +289,10 @@ def engine(ws, r0, title, s, wm=None):
         ws.cell(r, 1, t).font = BOLD; r += 1
     c_ = lambda y: FC[y]
     sec_("A. AI 高速 CCL 市場（Siliconomics）與台燿份額（需求面；D 欄＝FY2026 校準年）")
-    row("gw", "部署 GW（IT 電力）", "GW", {c_(y): f"={gwk(y, s)}" for y in BU}, fmt="0.0", note=f"Siliconomics SIF_DeployGW_{s}")
+    row("gw", "部署 GW（IT 電力）", "GW", {c_(y): f"={gwk(y, s)}" for y in BU}, fmt="0.0", note="Siliconomics SIF_DeployGW_Base" + ("" if s == "B" else f" × 情境 {s} 係數（個股自建）"))
     row("pgw", "每 GW 高速 CCL 金額（不含價格指數）", "US$M/GW", {c_(y): f"=pgw_{y % 100}" for y in BU}, fmt="#,##0", note="Siliconomics SIF_CCLperGW")
     row("mku", "AI 高速 CCL 市場（美元；不含價格指數）", "US$B", {c_(y): f"={c_(y)}{R['gw']}*{c_(y)}{R['pgw']}/1000" + ("" if y == 2026 else "*mf" + (f"*{wm[y]}" if wm else "")) for y in BU},
-        note=f"＝ Siliconomics SIF_CCLMkt_{s}（Recon 核對）；FY2027 起 × mf（Sens 用，基準 1）")
+        note="＝ Siliconomics SIF_CCLMkt_Base" + ("" if s == "B" else f" × 情境 {s} 係數（個股自建）") + "（Recon 核對）；FY2027 起 × mf（Sens 用，基準 1）")
     row("mkn", "AI 高速 CCL 市場（新台幣）", "NT$B", {c_(y): f"={c_(y)}{R['mku']}*fx" for y in BU}, fmt="#,##0.0")
     row("pp", "台燿年均售價指數（FY2026＝1）", "x", {"D": "=1", **{c_(y): f"=pp_{y % 100}" for y in BU[1:]}}, fmt="0.00")
     row("sh0", "台燿有效份額（FY2026 校準）＝ 高速材料營收 ÷ 市場", "%", {"D": f"=a26_ai/D{R['mkn']}"}, fmt="0.0%",
@@ -342,7 +342,7 @@ def engine(ws, r0, title, s, wm=None):
 PL = wb.create_sheet("PL")
 PL["A1"] = "PL — 台燿損益（十億新台幣；EPS 新台幣；歸屬母公司）。FY2025A 實績、FY2026 錨點（1H26、3Q26 財報＋4Q26 假設），FY2027 起為模型。FY(t)＝CY(t)。三情境各一個完整推導區塊（本頁下方），頂端為摘要；最下方延伸到 FY2032（FY2030 起為收斂法）"
 PB = {}; r0 = 60
-SCN_T = {"A": "情境 A：順利（Siliconomics 情境 A：顆數基準）", "B": "情境 B：平平（Siliconomics 情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85）", "C": "情境 C：不如預期（Siliconomics 情境 C：CY2028–29 顆數 ×0.6）"}
+SCN_T = {"A": "情境 A：順利（原始顆數；個股自建情境係數 × Siliconomics 基準）", "B": "情境 B：平平（Siliconomics 基準：CY2028 顆數 ×0.8、CY2029 ×0.85）", "C": "情境 C：不如預期（CY2028–29 顆數 ×0.6；個股自建情境係數 × Siliconomics 基準）"}
 for s in SC:
     PB[s] = engine(PL, r0, SCN_T[s], s); r0 = PB[s]["end"] + 2
 hdr(PL, 3, ["情境／項目", "單位", "FY2025A", "FY2026（錨點）", "FY2027", "FY2028", "FY2029", "說明"])
@@ -420,9 +420,9 @@ hdr(UN, 3, ["項目", "單位", "CY2026", "CY2027", "CY2028", "CY2029", "說明"
 ur = 4; UR = {}
 EMC_SH = EMC["台光電有效份額"]; EMC_AI = EMC["台光電 AI 相關營收（實際＝MIN 需求面、產能）"]
 for key, lab, unit, f, fmt, note in (
-        ("gw", "部署 GW（情境 A）", "GW", lambda y: f"=PL!{FC[y]}{A_['gw']}", "0.0", "Siliconomics SIF_DeployGW_A"),
+        ("gw", "部署 GW（情境 A）", "GW", lambda y: f"=PL!{FC[y]}{A_['gw']}", "0.0", "Siliconomics SIF_DeployGW_Base × 情境 A 係數（個股自建）"),
         ("pgw", "每 GW 高速 CCL 金額（不含價格指數）", "US$M/GW", lambda y: f"=PL!{FC[y]}{A_['pgw']}", "#,##0", "Siliconomics SIF_CCLperGW"),
-        ("mku", "AI 高速 CCL 市場（情境 A；不含價格指數）", "US$B", lambda y: f"=PL!{FC[y]}{A_['mku']}", "#,##0.00", "＝ SIF_CCLMkt_A"),
+        ("mku", "AI 高速 CCL 市場（情境 A；不含價格指數）", "US$B", lambda y: f"=PL!{FC[y]}{A_['mku']}", "#,##0.00", "＝ SIF_CCLMkt_Base × 情境 A 係數（個股自建）"),
         ("sh", "台燿有效份額（需求面）", "%", lambda y: f"=PL!{FC[y]}{A_['sh']}", "0.0%", "FY2026 以公司 ELL／SLL 占比校準；之後 × 相對值"),
         ("aid", "台燿高速材料營收（需求面）", "US$B", lambda y: f"=PL!{FC[y]}{A_['aid']}/fx", "#,##0.00", "含台燿價格指數"),
         ("ai", "台燿高速材料營收（實際＝MIN 需求面、產能）", "US$B", lambda y: f"=PL!{FC[y]}{A_['ai']}/fx", "#,##0.00", ""),
@@ -458,7 +458,7 @@ UN.column_dimensions["G"].width = 70
 # ---------------- Val ----------------
 V = wb.create_sheet("Val")
 V["A1"] = "Val — 目標價（第 0 節：DCF 與 Comparable 加權）、現價隱含倍數與十年 P/E 分位檢查（新台幣）。本版未做先驗，無 Andy 合理 P/E 對照"
-V["A2"] = "三情境欄 B／C／D＝A 順利／B 平平／C 不如預期（讀 Siliconomics 同字母情境）。現價＝In 頁 px（2026-10-30 收盤）"
+V["A2"] = "三情境欄 B／C／D＝A 順利／B 平平／C 不如預期（B 讀 Siliconomics 基準；A、C＝基準 × 個股自建情境係數）。現價＝In 頁 px（2026-10-30 收盤）"
 YRS6 = (2027, 2028, 2029, 2030, 2031, 2032)
 T = {}
 def tset(r, key, label, fs, fmt, note=""):
@@ -529,7 +529,7 @@ V[f"B{r_}"] = ("DCF（v0.2 標準版）：無槓桿自由現金流 FCFF＝NOPAT�
                "終值＝NOPAT(FY2033) ×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, 台灣 10 年期公債殖利率)、RONIC＝WACC；EV 加淨現金 ÷ 股數，以 ke 推到 12 個月後並扣除期間股利（DCF 頁、tools/fcff_dcf.py；規格 docs/plan/個股DCF標準規格.md）。"
                "β＝自算 TW PCB／載板／CCL 產業無槓桿 β（Blume 調整 1.683）以市值 D/E 重新加槓桿，ERP 5%＋台灣 CRP。EBIT FY2027–29 取 PL 推導區塊營業利益，FY2030–32 由淨利 ÷ nir_f − nop_f 還原；稅率＝1 − nir_f；"
                "折舊、資本支出占營收取近三年實績，FY2029 起收斂到折舊 ×（1＋g）＋0.5pt；營運資金占營收約 30%。Comparable：台光電、聯茂、金像電前瞻 P/E 中位數（只有三家；金像電為下游 PCB，倍數較低），"
-               "再乘相對倍數係數（第 0.5 節）。情境對應：A＝順利、B＝平平、C＝不如預期（Siliconomics 同字母顆數情境）。")
+               "再乘相對倍數係數（第 0.5 節）。情境對應：A＝順利、B＝平平、C＝不如預期（B＝Siliconomics 基準顆數；A、C 為個股自建顆數情境係數）。")
 r_ += 1
 CLOSE = [37.25, 83.80, 89.80, 148.00, 121.00, 102.00, 51.40, 126.00, 170.00, 494.00]
 EPSY = [None, None, 7.46, 6.92, 6.67, 7.01, 4.69, 3.05, 9.56, 12.13]
@@ -694,7 +694,7 @@ lines = [(f"台燿（6274）個股模型 {VER}（AI 半導體 Project：載板�
  ("模型命題：台燿的高速材料（ELL／SLL，M7 以上）營收＝AI 高速 CCL 市場（Siliconomics：部署 GW × 每 GW CCL 金額）× 台燿有效份額 × 年均售價指數，但受月產能 × 每張營收限制（全產全銷）；其他等級（VLL／LL、非低損耗、特殊應用）另依成長率推。份額相對台光電一致（兩家合計 < 100%）。", False),
  ("核心問題：泰國、常熟、中山新產能（月產能約 235 萬 → 310 萬 → 430 萬 → 530 萬張）開出時，台燿在 AI 伺服器與交換器的 M7 以上份額與單價能撐多久；份額與價格回落時 EPS 還剩多少；現價隱含的路徑合不合理。", False),
  ("會計年度＝日曆年，FY(t)＝CY(t)。預測期 FY2027–FY2029 由驅動因子推導，FY2030–FY2032 為收斂法。金額：十億新台幣；口徑：歸屬母公司淨利。", False),
- ("驅動因子：Siliconomics SIF_DeployGW_A／B／C × SIF_CCLperGW（＝SIF_CCLMkt_*）× 匯率 × 台燿有效份額（FY2026 以公司 ELL／SLL 占比校準）× 份額相對值（Assumed，待併入 Siliconomics）× 年均售價指數（Assumed，待併入 Siliconomics）；產能上限＝月產能 × 12 × 每張營收 × 組合指數 × 價格指數。", False),
+ ("驅動因子：Siliconomics SIF_DeployGW_Base（三情境＝基準 × 個股情境係數）× SIF_CCLperGW（＝SIF_CCLMkt_Base × 情境係數）× 匯率 × 台燿有效份額（FY2026 以公司 ELL／SLL 占比校準）× 份額相對值（Assumed，待併入 Siliconomics）× 年均售價指數（Assumed，待併入 Siliconomics）；產能上限＝月產能 × 12 × 每張營收 × 組合指數 × 價格指數。", False),
  ("估值：Val 第 0 節目標價＝0.5 × DCF 目標價（v0.2 起為標準版：無槓桿自由現金流 FCFF 以 WACC 折現，FY2027–FY2032 明確期＋永續；v0.1 為股東現金流法，r 10%、g 4%；三情境權重 0.3／0.5／0.2，推到 12 個月後）＋0.5 × Comparable 目標價（台光電、聯茂、金像電前瞻 P/E 中位數 × 12 個月後前瞻 EPS × 相對倍數係數）。本版未做先驗，無 Andy 合理 P/E 對照。", False),
  ("已知限制：(1) 高速材料（M7 以上）當作 AI 相關的代理，口徑未經公司確認；(2) 份額相對值、價格指數、組合指數皆 Assumed；(3) 官方營運部門以單一部門處理（財報附註原文未取得）；(4) 十年 P/E 只有 8 年（2016–2017 年 EPS 未找到）；(5) 10 月營收與 3Q26 法說未納入。", False),
  ("", False)]
