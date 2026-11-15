@@ -1,5 +1,5 @@
 {
- "_readme": "世芯-KY 2026Q3 事實總帳（v0.2.5 滾入 3Q26 財報）。模型取值見 build_alchip.py In 頁 E 節與 Q 頁 E 欄；check＝第二來源。",
+ "_readme": "世芯-KY 2026Q3 事實總帳（v0.2.5 滾入 3Q26 財報）。模型取值見 build_alchip.py In 頁 E 節與 Q 頁 E 欄；check＝第二來源。 前 9 月出處為 MOPS t164sb04（直接核對）；重大訊息轉載降為 check。",
  "asOf": "2026-09-30",
  "items": [
   {
@@ -8,16 +8,16 @@
    "value": 37877562,
    "unit": "NT$ 千元",
    "period": "2026-01-01～2026-09-30",
-   "source": "公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
-   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "source": "公開資訊觀測站 t164sb04 綜合損益表（主 session 2026-11-15 直接讀取）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04（companyId 3661、115 年第 3 季、合併）",
    "docDate": "2026-11-06",
    "retrieved": "2026-11-15",
    "tag": "[Verified]",
    "note": "＝月營收公告前 9 月 378.78 億",
    "check": {
     "value": 37877562,
-    "source": "MoneyDJ 2026-11-06（同一公告）",
-    "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=a78d90b2-64a2-441d-9720-3222a3043929",
+    "source": "重大訊息轉載（Yahoo 股市）：公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
+    "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
     "ok": true
    }
   },
@@ -27,16 +27,16 @@
    "value": 9462133,
    "unit": "NT$ 千元",
    "period": "2026-01-01～2026-09-30",
-   "source": "公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
-   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "source": "公開資訊觀測站 t164sb04 綜合損益表（主 session 2026-11-15 直接讀取）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04（companyId 3661、115 年第 3 季、合併）",
    "docDate": "2026-11-06",
    "retrieved": "2026-11-15",
    "tag": "[Verified]",
    "note": "",
    "check": {
     "value": 9462133,
-    "source": "MoneyDJ 2026-11-06（同一公告）",
-    "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=a78d90b2-64a2-441d-9720-3222a3043929",
+    "source": "重大訊息轉載（Yahoo 股市）：公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
+    "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
     "ok": true
    }
   },
@@ -46,16 +46,16 @@
    "value": 6643602,
    "unit": "NT$ 千元",
    "period": "2026-01-01～2026-09-30",
-   "source": "公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
-   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "source": "公開資訊觀測站 t164sb04 綜合損益表（主 session 2026-11-15 直接讀取）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04（companyId 3661、115 年第 3 季、合併）",
    "docDate": "2026-11-06",
    "retrieved": "2026-11-15",
    "tag": "[Verified]",
    "note": "",
    "check": {
     "value": 6643602,
-    "source": "MoneyDJ 2026-11-06（同一公告）",
-    "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=a78d90b2-64a2-441d-9720-3222a3043929",
+    "source": "重大訊息轉載（Yahoo 股市）：公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
+    "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
     "ok": true
    }
   },
@@ -65,16 +65,16 @@
    "value": 7900866,
    "unit": "NT$ 千元",
    "period": "2026-01-01～2026-09-30",
-   "source": "公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
-   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "source": "公開資訊觀測站 t164sb04 綜合損益表（主 session 2026-11-15 直接讀取）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04（companyId 3661、115 年第 3 季、合併）",
    "docDate": "2026-11-06",
    "retrieved": "2026-11-15",
    "tag": "[Verified]",
    "note": "",
    "check": {
     "value": 7900866,
-    "source": "MoneyDJ 2026-11-06（同一公告）",
-    "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=a78d90b2-64a2-441d-9720-3222a3043929",
+    "source": "重大訊息轉載（Yahoo 股市）：公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
+    "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
     "ok": true
    }
   },
@@ -84,16 +84,16 @@
    "value": 6314827,
    "unit": "NT$ 千元",
    "period": "2026-01-01～2026-09-30",
-   "source": "公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
-   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "source": "公開資訊觀測站 t164sb04 綜合損益表（主 session 2026-11-15 直接讀取）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04（companyId 3661、115 年第 3 季、合併）",
    "docDate": "2026-11-06",
    "retrieved": "2026-11-15",
    "tag": "[Verified]",
    "note": "",
    "check": {
     "value": 6314827,
-    "source": "MoneyDJ 2026-11-06（同一公告）",
-    "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=a78d90b2-64a2-441d-9720-3222a3043929",
+    "source": "重大訊息轉載（Yahoo 股市）：公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
+    "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
     "ok": true
    }
   },
@@ -103,16 +103,16 @@
    "value": 6317516,
    "unit": "NT$ 千元",
    "period": "2026-01-01～2026-09-30",
-   "source": "公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
-   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "source": "公開資訊觀測站 t164sb04 綜合損益表（主 session 2026-11-15 直接讀取）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04（companyId 3661、115 年第 3 季、合併）",
    "docDate": "2026-11-06",
    "retrieved": "2026-11-15",
    "tag": "[Verified]",
    "note": "經濟日報：63.17 億",
    "check": {
     "value": 6317516,
-    "source": "MoneyDJ 2026-11-06（同一公告）",
-    "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=a78d90b2-64a2-441d-9720-3222a3043929",
+    "source": "重大訊息轉載（Yahoo 股市）：公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
+    "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
     "ok": true
    }
   },
@@ -122,16 +122,16 @@
    "value": 75.94,
    "unit": "NT$",
    "period": "2026-01-01～2026-09-30",
-   "source": "公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
-   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "source": "公開資訊觀測站 t164sb04 綜合損益表（主 session 2026-11-15 直接讀取）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04（companyId 3661、115 年第 3 季、合併）",
    "docDate": "2026-11-06",
    "retrieved": "2026-11-15",
    "tag": "[Verified]",
    "note": "",
    "check": {
     "value": 75.94,
-    "source": "MoneyDJ 2026-11-06（同一公告）",
-    "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=a78d90b2-64a2-441d-9720-3222a3043929",
+    "source": "重大訊息轉載（Yahoo 股市）：公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
+    "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
     "ok": true
    }
   },
@@ -665,6 +665,84 @@
    "retrieved": "2026-11-15",
    "tag": "[Derived]",
    "note": "12-31 −1.926270；9-30 22.043047；不含本期所得稅負債"
+  },
+  {
+   "id": "is.rev.3q",
+   "item": "營業收入（3Q26 單季）",
+   "value": 26050940,
+   "unit": "NT$ 千元",
+   "period": "2026Q3",
+   "source": "公開資訊觀測站 t164sb04 綜合損益表（主 session 2026-11-15 直接讀取）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04（companyId 3661、115 年第 3 季、合併）",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "Derived 值 26.050562 差 0.000378（1H 用四捨五入 11.827）"
+  },
+  {
+   "id": "is.gp.3q",
+   "item": "營業毛利（3Q26 單季）",
+   "value": 4699260,
+   "unit": "NT$ 千元",
+   "period": "2026Q3",
+   "source": "公開資訊觀測站 t164sb04 綜合損益表（主 session 2026-11-15 直接讀取）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04（companyId 3661、115 年第 3 季、合併）",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "is.oi.3q",
+   "item": "營業利益（3Q26 單季）",
+   "value": 3629312,
+   "unit": "NT$ 千元",
+   "period": "2026Q3",
+   "source": "公開資訊觀測站 t164sb04 綜合損益表（主 session 2026-11-15 直接讀取）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04（companyId 3661、115 年第 3 季、合併）",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "is.pti.3q",
+   "item": "稅前淨利（3Q26 單季）",
+   "value": 4081914,
+   "unit": "NT$ 千元",
+   "period": "2026Q3",
+   "source": "公開資訊觀測站 t164sb04 綜合損益表（主 session 2026-11-15 直接讀取）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04（companyId 3661、115 年第 3 季、合併）",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "is.ni_parent.3q.mops",
+   "item": "歸屬於母公司業主淨利（3Q26 單季）",
+   "value": 3251056,
+   "unit": "NT$ 千元",
+   "period": "2026Q3",
+   "source": "公開資訊觀測站 t164sb04 綜合損益表（主 session 2026-11-15 直接讀取）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04（companyId 3661、115 年第 3 季、合併）",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "經濟日報 32.51 億"
+  },
+  {
+   "id": "is.eps.3q.mops",
+   "item": "基本每股盈餘（3Q26 單季）",
+   "value": 37.68,
+   "unit": "NT$",
+   "period": "2026Q3",
+   "source": "公開資訊觀測站 t164sb04 綜合損益表（主 session 2026-11-15 直接讀取）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04（companyId 3661、115 年第 3 季、合併）",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": ""
   }
  ]
 }
