@@ -32,6 +32,7 @@
 # 0c) In 頁輸入更正（例如 T2 已確認延遲 M 欄、延遲證據 P／Q 欄）：python3 wattonomics/tools/apply_in_edits.py <現行.xlsx> wattonomics/edits/v<版>_In_edits.csv <base.xlsx>，再以該檔作 --base
 # 1) 產生（之後各版加 --base wattonomics/model/<現行>.xlsx，In 頁藍字讀回現行 Excel）
 python3 wattonomics/builder/build.py --base <base.xlsx> --version vX.Y --date <YYYYMMDD> --out build/raw/<YYYYMMDD>_Wattonomics_vX.Y.xlsx   # --version 一律明寫
+#    單層改值 PR（例：對帳單吸收）要固定上游 Siliconomics 版本時加 --sil-snapshot siliconomics_snapshot_v<版>.json（v0.3.3 起；預設讀 siliconomics/data/CURRENT_SNAPSHOT）
 # 2) LibreOffice headless 重算存檔（錯誤格須為 0）
 soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir wattonomics/model build/raw/<檔名>.xlsx
 # 3) 匯出快照並指向它
@@ -168,6 +169,8 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 | Decisions、DB_Evidence、Sources、Requests | 決策（GL01-01 起）、證據、來源 ID、對 TK／Siliconomics 的請求；v0.1.9：GL01-55 至 GL01-61、DB_Evidence N#1、SRC_GL_331–333、Requests R7 |
 
 ## 版本紀錄（摘要；完整見活頁簿 README 頁）
+
+- v0.3.3（2026-11-15）：對帳單 `02-AI供應鏈/對帳/20261115_對帳單_SpaceX_xAI2025年底算力實績對Wattonomics.md`（C0 實績對帳「對帳中」）——In `mw_xai` 2025 年底空白 → 800 MW（SpaceX 424B4 Nameplate Compute Draw 2025-12-31 0.8 GW；Interested-party：公司自訂 KPI、法定文件揭露的期末值；IT 口徑；`SRC_GL_346`），C113 未說明 → IT（數值不變）。xai 2025 年底 0.5698（Epoch chip_xai 308 MW × k_chip2it 1.85）→ 0.8，2026 起年底同加 0.2302；市場年底 2025 +0.230、2026 +0.223；年新增 2026–2030 −0.007～−0.017（「其他」隨市場成長率回饋）；`WIF_Evidence_2026` 0.866 → 0.854，協調狀態不變。只改 Wattonomics 一層；Siliconomics 固定 v0.18（`--sil-snapshot`，與 v0.3.2 相同）。v0.3.2 快照留在 `data/`（多個個股 build 以路徑讀取，下游改指後再移 archive）。Decisions GL01-108。報告 `docs/verify/20261115_v0.3.3_build.md`。
 
 - 2026-11-05（不改版）：`tools/import_gap_models.py` 的 Anthropic `MODEL_OVERRIDE` 改指 `anthropic/dist/20261104_Anthropic收支模型_v0_1_9.xlsx`（#327 已移除 v0_1_8）；重跑 `--only ant` 與 `builder/seed/gap_models_v0.2.1.json` 逐項相同（Funding F07／F03 2026–2030 與 v0.1.8 逐位相同，只有 file／commit 欄不同），種子與成品不重建。
 
