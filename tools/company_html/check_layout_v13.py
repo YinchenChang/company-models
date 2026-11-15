@@ -7,6 +7,8 @@
   C 重點觀察：thesis 章「重點觀察」≤ 5 點、合計 ≤ 750 字。
   D 損益：pl 章含 GAAP／Non-GAAP 標示與必備列；表頭至少 3 個歷史年＋5 個預測年（以年份欄位計）。
   F 圖表：除 revdcf、recon、status 外，每章至少一張圖（svg、長條 .ttr／.bt 或 canvas）。
+  J 無目標價的模型（規格 J 節）：估值章帶 data-unlisted（未上市、無市場價格）或 data-novaluation（已上市、本模型未建目標價）時，
+    A 節不要求 revdcf、G、H 不檢查；data-unlisted 估值章免圖，data-novaluation 估值章仍須至少一張圖（反向檢驗圖）。
   G 位置（Andy 2026-11-14 12:47）：估值章標題後第一個區塊是圖，且含「目標價」與「現價」（四個目標價與現價圖）。
   H 位置（同上）：敏感度章標題後前兩個區塊都是圖，且含「相對基準」（加權目標價相對基準的低案、高案主圖）。
   全頁（警告）：摺疊（details）與附錄以外的可見文字出現參數代號。
@@ -191,10 +193,12 @@ def check(path, xlsx=None):
     must, warn = [], []
     secs = [x for x in s.find_all('section') if x.get('id')]
     ids = [x['id'] for x in secs]
-    # 未上市、無市場價格的模型（規格「未上市、無市場價格的模型」一節）：估值章帶 data-unlisted，A 節不要求反向 DCF 章，估值章免圖，G、H 位置不適用
-    unl = s.select_one('section#valuation[data-unlisted]') is not None
+    # 無目標價的模型（規格 J 節）：(a) 未上市、無市場價格 → 估值章帶 data-unlisted；(b) 已上市但本模型未建目標價 → data-novaluation。
+    # 兩者同組豁免：A 節不要求反向 DCF 章，G、H 位置不適用；(a) 估值章免圖，(b) 估值章仍須至少一張圖（反向檢驗圖）
+    unl_a = s.select_one('section#valuation[data-unlisted]') is not None
+    unl = unl_a or s.select_one('section#valuation[data-novaluation]') is not None
     req_head = [x for x in REQUIRED_HEAD if not (unl and x == 'revdcf')]
-    no_chart = NO_CHART | ({'valuation'} if unl else set())
+    no_chart = NO_CHART | ({'valuation'} if unl_a else set())
     # A 章節順序
     head, tail = ids[:len(req_head)], ids[-len(REQUIRED_TAIL):] if len(ids) >= 2 else ids
     if head != req_head:
