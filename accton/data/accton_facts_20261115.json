@@ -1,0 +1,35 @@
+{
+ "_readme": "智邦（2345.TW）事實總帳（v0.4.6 滾入 3Q26，2026-11-15 擷取）。金額十億新台幣（NT$B），EPS 新台幣，股數十億股。標記：Verified＝公開資訊觀測站財報、資料商轉載之財報科目；Derived＝由上列數字計算。資產負債表與 3Q26 單季損益以 MOPS t164sb03／t164sb04 為主要出處（優先於資料商）。抓不到者寫「未取得」，不臆造。",
+ "sources": {
+  "MOPS_BS": "公開資訊觀測站 t164sb03 合併資產負債表 115/09/30（千元；companyId 2345、115 年第 3 季；主 session 以內建瀏覽器讀 MOPS API，2026-11-15）https://mops.twse.com.tw/mops/#/web/t164sb03",
+  "MOPS_IS": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季（千元；單季與 1–9 月累計；同上）https://mops.twse.com.tw/mops/#/web/t164sb04",
+  "SD_BS": "財報狗 智邦負債和股東權益季表（千元；2026Q3 欄；2026-11-15 讀取）https://statementdog.com/analysis/2345/liabilities-and-equity",
+  "SA_BS": "stockanalysis.com 2345 資產負債表（2026-06-30 TTM 欄與 FY2025；2026-11-15 讀取，用於確認原口徑）https://stockanalysis.com/quote/tpe/2345/financials/balance-sheet/",
+  "TN_OCT": "TechNews 2026-11-06（10 月營收 446.63 億、前 10 月 3,310.65 億；v0.4.5 已登錄）https://finance.technews.tw/2026/11/06/accton-2345-202610-financial-report/"
+ },
+ "items": [
+  {"id": "q3.rev", "v": 120.74371, "tag": "Verified", "src": "MOPS_IS", "note": "3Q26 營業收入合計 120,743,710 千元（＝7–9 月月營收合計 120.744）"},
+  {"id": "q3.cogs", "v": 99.471015, "tag": "Verified", "src": "MOPS_IS", "note": "3Q26 營業成本 99,471,015 千元"},
+  {"id": "q3.gp", "v": 21.284207, "tag": "Verified", "src": "MOPS_IS", "note": "3Q26 營業毛利淨額 21,284,207 千元（17.63%；含未實現銷貨損益調整）"},
+  {"id": "q3.opx", "v": 5.162272, "tag": "Verified", "src": "MOPS_IS", "note": "3Q26 營業費用合計 5,162,272 千元（4.28%）"},
+  {"id": "q3.oi", "v": 16.121935, "tag": "Verified", "src": "MOPS_IS", "note": "3Q26 營業利益 16,121,935 千元（13.35%）"},
+  {"id": "q3.nonop", "v": 0.093815, "tag": "Verified", "src": "MOPS_IS", "note": "3Q26 營業外收入及支出 93,815 千元"},
+  {"id": "q3.pbt", "v": 16.21575, "tag": "Verified", "src": "MOPS_IS", "note": "3Q26 稅前淨利 16,215,750 千元"},
+  {"id": "q3.tax", "v": 3.150755, "tag": "Verified", "src": "MOPS_IS", "note": "3Q26 所得稅 3,150,755 千元"},
+  {"id": "q3.ni", "v": 13.073925, "tag": "Verified", "src": "MOPS_IS", "note": "3Q26 母公司業主淨利 13,073,925 千元（本期淨利 13,064,995；非控制 −8,930）"},
+  {"id": "q3.eps", "v": 23.39, "tag": "Verified", "src": "MOPS_IS", "note": "3Q26 基本 EPS 23.39（稀釋 23.27）"},
+  {"id": "ytd3q.rev", "v": 286.402145, "tag": "Verified", "src": "MOPS_IS", "note": "1–9 月累計營業收入 286,402,145 千元"},
+  {"id": "ytd3q.ni", "v": 32.468214, "tag": "Verified", "src": "MOPS_IS", "note": "1–9 月累計母公司業主淨利 32,468,214 千元；基本 EPS 58.09（稀釋 57.72）"},
+  {"id": "bs0930.cash", "v": 35.668388, "tag": "Verified", "src": "MOPS_BS", "note": "現金及約當現金"},
+  {"id": "bs0930.fa_cur", "v": 1.168566, "tag": "Verified", "src": "MOPS_BS", "note": "FVTPL 流動 530,727＋FVOCI 流動 320,720＋攤銷後成本流動 317,119 千元"},
+  {"id": "bs0930.fa_nc", "v": 2.571419, "tag": "Verified", "src": "MOPS_BS", "note": "FVTPL 非流動 27,702＋FVOCI 非流動 899,531＋攤銷後成本非流動 590,618＋採用權益法之投資 1,053,568 千元"},
+  {"id": "bs0930.st_borrow", "v": 11.298145, "tag": "Verified", "src": "MOPS_BS", "note": "短期借款"},
+  {"id": "bs0930.lt_borrow", "v": 3.849751, "tag": "Verified", "src": "MOPS_BS", "note": "長期借款（無應付公司債、應付短期票券）"},
+  {"id": "bs0930.lt_cur", "v": 0.48, "tag": "Verified", "src": "SD_BS", "note": "一年內到期長期負債 480,000 千元（MOPS 摘要未單列；資料商轉載財報科目；與 2026-06-30 同值，待完整財報附註確認）"},
+  {"id": "bs0930.debt", "v": 15.627896, "tag": "Derived", "src": "MOPS_BS", "note": "＝短借＋一年內到期長借＋長借（原口徑）；v0.4.5 2026-06-30 為 6.19"},
+  {"id": "bs0930.lease", "v": 4.661405, "tag": "Verified", "src": "MOPS_BS", "note": "租賃負債 流動 525,681＋非流動 4,135,724 千元"},
+  {"id": "bs0930.mi", "v": 0.078576, "tag": "Verified", "src": "MOPS_BS", "note": "非控制權益"},
+  {"id": "bs0930.shares", "v": 0.558908, "tag": "Derived", "src": "MOPS_BS", "note": "普通股股本 5,611,179 千元 ÷ 10 − 庫藏股 2,209,867 股＝558.908 百萬股；無預收股本"},
+  {"id": "q4.guidance", "v": null, "tag": "未取得", "src": null, "note": "3Q26 法說內容與 4Q26 指引未取得；4Q 假設沿用 v0.4.5"}
+ ]
+}

@@ -84,6 +84,10 @@ GI = "https://goodinfo.tw/tw/StockBzPerformance.asp?STOCK_ID=2345&RPT_CAT=M_YEAR
 SINO = "https://aiinvest.sinotrade.com.tw/Stock/Content/TW/2345"
 FS = "https://news.cnyes.com/news/id/6629903"
 UDN_SEO = "https://udn.com/news/story/7252/9832440"
+# v0.4.6（2026-11-15）：3Q26 財報滾入（事實總帳 accton/data/accton_facts_20261115.json）
+MOPS_BS = "公開資訊觀測站 t164sb03 合併資產負債表 115/09/30（千元；https://mops.twse.com.tw/mops/#/web/t164sb03 ，companyId 2345、115 年第 3 季；2026-11-15 讀取）"
+MOPS_IS = "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季（千元；https://mops.twse.com.tw/mops/#/web/t164sb04 ，companyId 2345；2026-11-15 讀取）"
+SD_BS = "財報狗 智邦負債和股東權益季表（千元；2026Q3 欄；https://statementdog.com/analysis/2345/liabilities-and-equity ；2026-11-15 讀取）"
 
 sec("A. AI 交換器市場（讀 markets/network 成品；情境 A（原始顆數），B／C 依顆數係數縮放）")
 for j, y in enumerate((26, 27, 28, 29)):
@@ -133,14 +137,18 @@ inp("g_nai29", "非 AI 營收年增 2029", "%", 0.00, 0.05, 0.10, "Assumed", "�
 sec("E. 毛利率")
 inp("d_nap", "網路應用產品毛利率低於交換器與其他的幅度", "pt", 0.03, 0.06, 0.10, "Assumed", "公司：3Q25 毛利率下滑主因產品組合（AI 加速卡占比上升；富果法說摘要）", "工商時報 2026-09-29：AI 加速卡比重上升使毛利率略低於上半年（法人）；產品別毛利率未揭露：未找到")
 
-sec("F. FY2026 錨點（1Q、2Q 實績＋3Q 營收實績＋假設）")
-inp("q3_rev", "3Q26 營收（7–9 月月營收合計）", "NT$B", None, 120.74, None, "Verified", CT_Q3 + "：3Q26 營收 1,207.4 億（9 月 403.99 億）", "nstock：1–9 月 2,864.02 億 − 上半年 1,656.58 億＝1,207.44 億")
-inp("q3_gm", "3Q26 毛利率", "%", 0.175, 0.185, 0.195, "Assumed", "1Q26 19.55%、2Q26 19.7%（公司）；法人估 3Q26 18.1%（工商時報 2026-09-29，Interested-party）", "時報 2026-10-06：記憶體與 PCB 改代購（客供）使營收認列減少；零組件漲價（Interested-party）")
-inp("q4_g", "4Q26 營收季增", "%", -0.05, 0.03, 0.08, "Assumed", "時報 2026-10-06：法人稱 4Q 仍有機會較 3Q 成長（Interested-party）", "公司 4Q 指引：未找到（3Q 法說約 11 月上旬）")
-inp("q4_gm", "4Q26 毛利率", "%", 0.17, 0.185, 0.20, "Assumed", "同 3Q 假設", "—")
-inp("q_opx", "3Q、4Q26 營業費用 ÷ 營收", "%", 0.037, 0.040, 0.045, "Assumed", "2Q26 4.70%、1Q26 5.22%（公司）；法人估 3Q26 3.9%（Interested-party）", "營收跳增、費用落後")
-inp("q_nio", "3Q、4Q26 淨利 ÷ 營業利益", "x", 0.75, 0.80, 0.84, "Derived", "1Q26 8.341 ÷ 10.049＝0.830、2Q26 11.053 ÷ 14.331＝0.771（公司）", "FY2025 0.82（推導）")
-inp("q_sh", "股數（十億股；EPS 換算）", "十億股", None, "=19.394/34.7", None, "Derived", UDN_Q2 + "：上半年淨利 193.94 億 ÷ EPS 34.7", "資本額 56.11 億（面額 10 元，鉅亨）＝5.611 億股")
+sec("F. FY2026 錨點（1–3Q26 財報實績＋4Q26 假設；v0.4.6 滾入 3Q26 財報）")
+inp("q3_rev", "3Q26 營收（財報單季）", "NT$B", None, 120.74371, None, "Verified", MOPS_IS + "：營業收入合計 120,743,710 千元", CT_Q3 + "：7–9 月月營收合計 1,207.4 億（同值）；1–9 月累計 286,402,145 千元（MOPS）")
+inp("q3_gp", "3Q26 營業毛利（財報單季）", "NT$B", None, 21.284207, None, "Verified", MOPS_IS + "：營業毛利淨額 21,284,207 千元（17.63%；營業成本 99,471,015）", "v0.4.5 假設 3Q 毛利率 18.5%（法人估 18.1%）")
+inp("q3_oi", "3Q26 營業利益（財報單季）", "NT$B", None, 16.121935, None, "Verified", MOPS_IS + "：營業費用合計 5,162,272、營業利益 16,121,935 千元（13.35%）", "營業費用率 4.28%（v0.4.5 假設 4.0%）")
+inp("q3_ni", "3Q26 歸屬母公司淨利（財報單季）", "NT$B", None, 13.073925, None, "Verified", MOPS_IS + "：稅前 16,215,750、所得稅 3,150,755、本期淨利 13,064,995、母公司業主淨利 13,073,925 千元；基本 EPS 23.39、稀釋 23.27", "淨利 ÷ 營業利益 0.811（v0.4.5 假設 0.80）")
+inp("ytd_rev", "1–3Q26 營收（財報累計）", "NT$B", None, 286.402145, None, "Verified", MOPS_IS + "：1–9 月累計營業收入 286,402,145 千元", "Q 頁核對列：1Q26＋2Q26＋3Q26 − 累計")
+inp("ytd_ni", "1–3Q26 歸屬母公司淨利（財報累計）", "NT$B", None, 32.468214, None, "Verified", MOPS_IS + "：1–9 月累計母公司業主淨利 32,468,214 千元；基本 EPS 58.09", "Q 頁核對列")
+inp("q4_g", "4Q26 營收季增", "%", -0.05, 0.03, 0.08, "Assumed", "時報 2026-10-06：法人稱 4Q 仍有機會較 3Q 成長（Interested-party）", "公司 4Q 指引：未取得（3Q26 法說內容未取得）；10 月營收 446.63 億（TechNews 2026-11-06，Verified）× 3＝1,339.9 億，比本假設 4Q 營收高 7.7%（Q 頁參考列）；v0.4.6 不改 4Q 假設")
+inp("q4_gm", "4Q26 毛利率", "%", 0.17, 0.185, 0.20, "Assumed", "v0.4.5 起 18.5%（原同 3Q 假設）；3Q26 實績 17.63%（MOPS）；v0.4.6 不改 4Q 假設，列待 Andy 判斷", "—")
+inp("q_opx", "4Q26 營業費用 ÷ 營收", "%", 0.037, 0.040, 0.045, "Assumed", "2Q26 4.70%、1Q26 5.22%（公司）；3Q26 實績 4.28%（MOPS）；v0.4.6 不改 4Q 假設", "營收跳增、費用落後")
+inp("q_nio", "4Q26 淨利 ÷ 營業利益", "x", 0.75, 0.80, 0.84, "Derived", "1Q26 8.341 ÷ 10.049＝0.830、2Q26 11.053 ÷ 14.331＝0.771、3Q26 13.074 ÷ 16.122＝0.811（公司；3Q 為 MOPS）", "FY2025 0.82（推導）")
+inp("q_sh", "4Q26 與評價用股數（十億股；2026-09-30 流通股數）", "十億股", None, "=(5611.179/10-2.209867)/1000", None, "Derived", MOPS_BS + "：普通股股本 5,611,179 千元 ÷ 面額 10＝561.12 百萬股 − 庫藏股 2,209,867 股＝558.91 百萬股（無預收股本）", "v0.4.5：上半年淨利 193.94 億 ÷ EPS 34.7＝558.91 百萬股（同值）；3Q26 淨利 ÷ 基本 EPS 23.39＝558.95 百萬股；2026-10-22 董事會通過現增至多 1,000 萬股（9-30 尚未發行；FY2027 起 sh_g27）")
 
 sec("G. 營業費用、業外與稅、股數（FY2027 起）")
 inp("phi", "營業費用成長對營收成長的彈性", "x", 0.40, 0.60, 0.80, "Derived", "FY2026 錨點營業費用年增 ÷ 營收年增（Q 頁）", "低／高 Assumed")
@@ -172,7 +180,7 @@ inp("tp_gd", "延伸期 A／C 情境長期成長相對 tp_g 的差（A＋、C−
 inp("tp_w_dcf", "目標價中 DCF 的權重（其餘為 Comparable）", "%", None, 0.5, None, "Assumed", "Andy 可改（Andy 2026-10-25 11:53 定 50／50）", "Sens 頁 0.3／0.7")
 inp("nm10_k", "延伸期 C 情境淨利率目標＝FY2029 淨利率 × 本係數（十年平均未找到）", "x", None, 0.8, None, "Assumed", "工作單：找不到十年平均用最後一年 × 0.8。2016–2021 年淨利率：未找到", "參考：永豐金 AI 投資稅後淨利率 2022 10.58%、2023 10.60%、2024 10.87%、2025 10.59%（四年平均 10.66%）")
 inp("cons_tp", "市場共識目標價（FactSet）", "NT$", None, 3500, None, "Interested-party", FS + "：FactSet 10 位分析師目標價 3,500（2026-10-14，鉅亨網）", "stockanalysis（13 位）平均 3,234.92（頁面現價日期不一致，不採）；賣方有目標價誘因，只作對照")
-# v0.4：標準版 DCF（無槓桿自由現金流＋WACC；tools/fcff_dcf.py）。評價日沿用 v0.2 的 2026 年底；股價 2026-10-22、rf 2026-11-04；資產負債為 2026-06-30（合併）
+# v0.4：標準版 DCF（無槓桿自由現金流＋WACC；tools/fcff_dcf.py）。評價日沿用 v0.2 的 2026 年底；股價 2026-10-22、rf 2026-11-04；資產負債為 2026-06-30（合併；v0.4.6 起 2026-09-30，MOPS）
 SA = "stockanalysis.com 2345（TPE）財報頁（資料商整理公司 IFRS 合併財報；2026-11-05 讀取）"
 for _row in FD.in_rows(dict(
         date="2026-12-31（同 v0.2 DCF 基準日）", ccy="NT$", amt="NT$B", shu="十億股",
@@ -189,16 +197,18 @@ for _row in FD.in_rows(dict(
         tax_w=("=(2815/11735+3139/15139+6588/32930)/3", "Derived",
                SA + "：有效稅率 FY2023 2,815 ÷ 11,735＝24.0%、FY2024 3,139 ÷ 15,139＝20.7%、FY2025 6,588 ÷ 32,930＝20.0%（NT$M；稅前＝稅前利益率 × 營收，資料商頁面推算），平均",
                "NOPAT 也用本稅率（PL 引擎只有「淨利 ÷ 營業利益」，未拆稅率）；台灣營所稅法定 20%"),
-        debt=("=3.43+0.48+2.28", "Interested-party", SA + "：2026-06-30 短期借款 3,430＋一年內到期長期借款 480＋長期借款 2,280（NT$M）", "資料商「Total Debt」9,422 含租賃"),
-        lease=("=9.422-6.19", "Interested-party", SA + "：Total Debt 9,422 − 借款 6,190＝租賃負債 3,232（長期租賃 2,700＋流動約 532；NT$M）", "—"),
-        cash=("=27.677+13.14", "Interested-party", SA + "：2026-06-30 現金及約當現金 27,677＋短期投資 13,140（NT$M）", "2026-03-31：25,097＋22,555"),
-        inv=(2.693, "Interested-party", SA + "：2026-06-30 長期投資 2,693（NT$M；帳面）", "Sens 測不計"),
-        mi=(0.0848, "Interested-party", SA + "：2026-06-30 非控制權益 84.8（NT$M）", "子公司未上市，用帳面"),
-        stub=dict(bs_date="2026-06-30", val_date="2026-12-31", bs_src=SA + "；2026-06-30 為最新已公布一季（3Q26 財報截至 2026-11-05 尚未公布；智邦往年 11 月上旬公布）",
-                  div=("=15*sh_v", "Derived", "2026-07-30 除息現金股利每股 15 元（FY2025 盈餘，已宣告；wantgoo 除權息表 https://www.wantgoo.com/stock/2345/dividend-policy/ex-dividend）× 評價用股數 sh_v；落在 2026-06-30～2026-12-31", "該段無其他已宣告股利或買回")),
+        debt=("=11.298145+0.48+3.849751", "Verified", MOPS_BS + "：短期借款 11,298,145＋長期借款 3,849,751 千元（無應付公司債、應付短期票券）；一年內到期長期借款 480,000 千元 MOPS 摘要未單列（含在其他流動負債），取 " + SD_BS + "（依原口徑計入）",
+              "2026-06-30（v0.4.5，stockanalysis）：短期借款 3,430＋一年內到期 480＋長期借款 2,280＝6,190 百萬元；財報狗 2026Q3 短借、長借與 MOPS 同值"),
+        lease=("=0.525681+4.135724", "Verified", MOPS_BS + "：租賃負債 流動 525,681＋非流動 4,135,724 千元", "2026-06-30：3,232 百萬元（stockanalysis）"),
+        cash=("=35.668388+0.530727+0.320720+0.317119", "Verified", MOPS_BS + "：現金及約當現金 35,668,388＋FVTPL 流動 530,727＋FVOCI 流動 320,720＋攤銷後成本流動 317,119 千元",
+              "2026-06-30（stockanalysis）：現金 27,677＋短期投資 13,140；資料商短期投資＝FVOCI＋攤銷後成本流動（FY2025 對 MOPS 核得），v0.4.6 另計 FVTPL 流動 5.31 億（金融資產，見 README）"),
+        inv=("=0.027702+0.899531+0.590618+1.053568", "Verified", MOPS_BS + "：FVTPL 非流動 27,702＋FVOCI 非流動 899,531＋攤銷後成本非流動 590,618＋採用權益法之投資 1,053,568 千元", "資料商「長期投資」同口徑（FY2025 7,593 百萬元對 MOPS 核得）；2026-06-30：2,693；Sens 測不計"),
+        mi=(0.078576, "Verified", MOPS_BS + "：非控制權益 78,576 千元", "子公司未上市，用帳面；2026-06-30：84.8 百萬元"),
+        stub=dict(bs_date="2026-09-30", val_date="2026-12-31", bs_src=MOPS_BS + "（資產總額 228,712,646、負債總額 146,620,328、母公司權益 82,013,742 千元）",
+                  div=(0, "Verified", "2026-07-30 除息現金股利每股 15 元（wantgoo 除權息表 https://www.wantgoo.com/stock/2345/dividend-policy/ex-dividend）已於 2026-09-30 前發放、反映在 9-30 現金，stub 期不再扣（v0.4.5 資產負債表日 06-30 時扣 8.38）", "2026-09-30～12-31 無其他已宣告股利或買回")),
         dps=("=15*a26_ni/a25_ni", "Assumed", "2026-07-30 除息現金股利每股 15 元（FY2025 盈餘；wantgoo 除權息表 https://www.wantgoo.com/stock/2345/dividend-policy/ex-dividend）；年配一次",
              "評價日 2026-12-31 到目標時點 2027-12-31 之間配一次（FY2026 盈餘，約 2027-07）；假設配發率不變：15 × FY2026 淨利 ÷ FY2025 淨利"),
-        sh=("=q_sh", "Derived", "＝In 頁 q_sh（上半年淨利 193.94 億 ÷ EPS 34.7；十億股）", "2027 年現增 1.78%（sh_g27）的增資款與稀釋都不計入（兩者大致抵銷）"),
+        sh=("=q_sh", "Derived", "＝In 頁 q_sh（2026-09-30 流通股數：股本 ÷ 面額 − 庫藏股；MOPS）", "2027 年現增 1.78%（sh_g27）的增資款與稀釋都不計入（兩者大致抵銷）"),
         fc_da=(None, "=(878.15/84188+1071/110425+1636/248320)/3", None, "Derived",
                SA + "：折舊攤銷 ÷ 營收，FY2023 878 ÷ 84,188＝1.04%、FY2024 1,071 ÷ 110,425＝0.97%、FY2025 1,636 ÷ 248,320＝0.66%，平均", "營收大增使比例下降；長期穩態同近期"),
         fc_cx=(None, "=(2245/84188+2762/110425+4894/248320)/3", None, "Derived",
@@ -242,8 +252,8 @@ def defname(name, ref):
 # ---------------- Q：實績與 FY2026 錨點 ----------------
 Q = wb.create_sheet("Q")
 Q["A1"] = "Q — 實績（十億新台幣；EPS 為新台幣；股數為十億股）。口徑：合併營收、稅後淨利（公司公告）。藍字＝輸入；黑字＝公式。實績取自公司季報與月營收公告的媒體轉述（經濟日報、工商時報）"
-Q["A2"] = "FY2026 錨點＝1Q26、2Q26 實績＋3Q26 營收實績（月營收）與毛利率、費用假設＋4Q26 假設。3Q26 財報與法說約 11 月上旬（去年 11-07；確切日期未找到），公布後更新 E 欄。FY2025 毛利與營業利益由毛利率 18.09%、營益率 12.94%（永豐、Goodinfo）推導"
-hdr(Q, 3, ["項目", "FY2025A", "1Q26", "2Q26", "3Q26（營收實績＋假設）", "4Q26（假設）", "FY2026 錨點", "標記", "來源1（公司）", "來源2／說明"])
+Q["A2"] = "FY2026 錨點＝1Q26、2Q26 實績＋3Q26 財報實績（v0.4.6：公開資訊觀測站 t164sb04 單季）＋4Q26 假設（4Q 營收＝3Q × (1＋q4_g)，毛利率、費用率、淨利 ÷ 營業利益為假設，v0.4.6 不改）。3Q26 法說：未取得。FY2025 毛利與營業利益由毛利率 18.09%、營益率 12.94%（永豐、Goodinfo）推導"
+hdr(Q, 3, ["項目", "FY2025A", "1Q26", "2Q26", "3Q26（財報）", "4Q26（假設）", "FY2026 錨點", "標記", "來源1（公司）", "來源2／說明"])
 S1 = "FY2025：" + GI + "（營收 2,483 億、毛利率 18.1%、營益率 12.9%、EPS 47.13）；1Q26：" + UDN_Q1 + "；2Q26：" + UDN_Q2
 S2 = "交叉：永豐金 AI 投資（2025 毛利率 18.09%、營益率 12.94%）；理財周刊 2026-04-21（2025 淨利 263.42 億、EPS 47.13）；工商時報 2026-09-29（2Q26 營業費用 44.91 億）"
 def qrow(r, label, vals, fmt="#,##0.00", tag="Verified", s1=S1, s2=S2, ann=None):
@@ -255,24 +265,27 @@ def qrow(r, label, vals, fmt="#,##0.00", tag="Verified", s1=S1, s2=S2, ann=None)
         Q[f"G{r}"] = ann or f"=SUM(C{r}:F{r})"; Q[f"G{r}"].number_format = fmt
     Q.cell(r, 8, tag); Q.cell(r, 9, s1); Q.cell(r, 10, s2)
 qrow(4, "營收", {"B": 248.32, "C": 70.121, "D": 95.538, "E": "=q3_rev", "F": "=E4*(1+q4_g)"}, tag="Verified／Assumed（4Q）")
-qrow(5, "毛利", {"B": "=B4*0.1809", "C": 13.709, "D": 18.823, "E": "=E4*q3_gm", "F": "=F4*q4_gm"}, tag="Verified／Derived（FY2025）／Assumed（3Q、4Q）")
+qrow(5, "毛利", {"B": "=B4*0.1809", "C": 13.709, "D": 18.823, "E": "=q3_gp", "F": "=F4*q4_gm"}, tag="Verified／Derived（FY2025）／Assumed（4Q）")
 qrow(6, "毛利率", {c: f"={c}5/{c}4" for c in "BCDEFG"}, fmt="0.00%", ann="", tag="Derived", s1="—", s2="1Q26 19.55%、2Q26 19.7%（公司）")
-qrow(7, "營業費用", {c: f"={c}5-{c}8" for c in "BCD"} | {"E": "=E4*q_opx", "F": "=F4*q_opx"}, tag="Derived（毛利 − 營業利益）／Assumed")
-qrow(8, "營業利益", {"B": "=B4*0.1294", "C": 10.049, "D": 14.331, "E": "=E5-E7", "F": "=F5-F7"}, tag="Verified／Derived")
+qrow(7, "營業費用", {c: f"={c}5-{c}8" for c in "BCDE"} | {"F": "=F4*q_opx"}, tag="Derived（毛利 − 營業利益）／Assumed（4Q）")
+qrow(8, "營業利益", {"B": "=B4*0.1294", "C": 10.049, "D": 14.331, "E": "=q3_oi", "F": "=F5-F7"}, tag="Verified／Derived")
 qrow(9, "營業利益率", {c: f"={c}8/{c}4" for c in "BCDEFG"}, fmt="0.00%", ann="", tag="Derived", s1="—", s2="—")
-qrow(10, "稅後淨利", {"B": 26.342, "C": 8.341, "D": 11.053, "E": "=E8*q_nio", "F": "=F8*q_nio"}, tag="Verified／Derived（3Q、4Q）")
+qrow(10, "稅後淨利", {"B": 26.342, "C": 8.341, "D": 11.053, "E": "=q3_ni", "F": "=F8*q_nio"}, tag="Verified／Derived（4Q）")
 qrow(11, "淨利 ÷ 營業利益", {c: f"={c}10/{c}8" for c in "BCDEFG"}, fmt="0.000", ann="", tag="Derived", s1="—", s2="1Q26 稅前 103.62 億（業外 +3.1 億；公司）")
-qrow(12, "股數（十億股）", {"B": "=26.342/47.13", "C": "=8.341/14.92", "D": "=11.053/19.78", "E": "=q_sh", "F": "=q_sh"}, fmt="0.0000", ann="=q_sh", tag="Derived", s2="淨利 ÷ EPS")
+qrow(12, "股數（十億股）", {"B": "=26.342/47.13", "C": "=8.341/14.92", "D": "=11.053/19.78", "E": "=q3_ni/23.39", "F": "=q_sh"}, fmt="0.0000", ann="=q_sh", tag="Derived", s2="淨利 ÷ EPS")
 qrow(13, "EPS", {c: f"={c}10/{c}12" for c in "BCDEF"}, ann="=G10/G12", tag="Derived", s1="淨利 ÷ 股數", s2="—")
-qrow(14, "  公司揭露 EPS", {"B": 47.13, "C": 14.92, "D": 19.78}, ann="", tag="Verified", s2="永豐金 AI 投資列 2025 年 46.95、1Q26 14.87（口徑不同：疑為追溯調整）")
+qrow(14, "  公司揭露 EPS", {"B": 47.13, "C": 14.92, "D": 19.78, "E": 23.39}, ann="", tag="Verified", s2="永豐金 AI 投資列 2025 年 46.95、1Q26 14.87（口徑不同：疑為追溯調整）")
 Q.cell(16, 1, "FY2026 錨點與共識的距離（參考；校準未使用共識）").font = BOLD
 Q.cell(17, 1, "FY2026 營收 ÷ 共識 − 1"); Q["B17"] = "=G4/cons_rev26-1"
 Q.cell(18, 1, "FY2026 EPS ÷ 共識 − 1"); Q["B18"] = "=G13/cons_eps26-1"
 Q.cell(19, 1, "FY2026 營收年增"); Q["B19"] = "=G4/B4-1"
 Q.cell(20, 1, "FY2026 營業費用年增"); Q["B20"] = "=G7/B7-1"
 Q.cell(21, 1, "營業費用彈性（營業費用年增 ÷ 營收年增；In 頁 phi 的依據）"); Q["B21"] = "=B20/B19"
-Q.cell(22, 1, "3Q26 EPS（模型）vs 法人估計 23.91"); Q["B22"] = "=E13/23.91-1"
-for rr in range(17, 23): Q[f"B{rr}"].number_format = "0.0%" if rr != 21 else "0.00"
+Q.cell(22, 1, "3Q26 EPS（財報）vs 法人估計 23.91"); Q["B22"] = "=E13/23.91-1"
+Q.cell(23, 1, "核對（應為 0）：1Q26＋2Q26＋3Q26 營收 − 1–3Q26 財報累計（MOPS）"); Q["B23"] = "=SUM(C4:E4)-ytd_rev"
+Q.cell(24, 1, "核對（應為 0）：1Q26＋2Q26＋3Q26 淨利 − 1–3Q26 財報累計（MOPS）"); Q["B24"] = "=SUM(C10:E10)-ytd_ni"
+Q.cell(25, 1, "10 月營收 44.663 × 3 ÷ 4Q26 模型營收 − 1（參考；TechNews 2026-11-06）"); Q["B25"] = "=44.663*3/F4-1"
+for rr in range(17, 26): Q[f"B{rr}"].number_format = "0.0%" if rr not in (21, 23, 24) else "0.00" if rr == 21 else "0.000"
 for nm, rr in (("rev", 4), ("gp", 5), ("opx", 7), ("oi", 8), ("ni", 10), ("sh", 12), ("eps", 13)):
     defname(f"a25_{nm}", f"Q!$B${rr}"); defname(f"a26_{nm}", f"Q!$G${rr}")
 Q.column_dimensions["A"].width = 52
@@ -572,7 +585,7 @@ def rec(label, ref, getter, src, note="", fmt="#,##0.00", pt=False, gap=True):
     RC.cell(rr_, 9, src); RC.cell(rr_, 10, note); rr_ += 1
 pl = lambda key, y: (lambda s: f"=PL!{FC[y]}{PB[s][key]}")
 RC.cell(rr_, 1, "A. 共識（校準未使用）").font = BOLD; rr_ += 1
-rec("FY2026 營收 vs 共識", "=cons_rev26", pl("rev", 2026), "FactSet 中位數", "錨點＝實績＋3Q 營收實績＋4Q 假設")
+rec("FY2026 營收 vs 共識", "=cons_rev26", pl("rev", 2026), "FactSet 中位數", "錨點＝1–3Q26 財報實績＋4Q 假設")
 rec("FY2026 EPS vs 共識", "=cons_eps26", pl("eps", 2026), "FactSet 中位數", "")
 rec("FY2027 營收 vs 共識", "=cons_rev27", pl("rev", 2027), "FactSet 中位數", "")
 rec("FY2027 EPS vs 共識", "=cons_eps27", pl("eps", 2027), "FactSet 中位數", "分析師區間 86.97–139.61")
@@ -587,7 +600,7 @@ rec("FY2026 每顆 Trainium 的智邦營收（千美元）", None, lambda s: f"=
 RC.cell(rr_, 1, "C. 校準").font = BOLD; rr_ += 1
 rec("交換器與其他毛利率（Derived）", None, lambda s: f"=PL!D{PB[s]['gmo']}", "FY2026 錨點", "網路應用產品毛利率＝此值 − d_nap", fmt="0.0%")
 rec("FY2027 毛利率 vs FY2026（百分點）", "=a26_gp/a26_rev", pl("gm", 2027), "錨點", "", fmt="0.0%", pt=True)
-rec("3Q26 EPS（模型）vs 法人估計 23.91", 23.91, lambda s: "=Q!E13", "工商時報 2026-09-29", "", fmt="0.00")
+rec("3Q26 EPS（財報）vs 法人估計 23.91", 23.91, lambda s: "=Q!E13", "工商時報 2026-09-29", "", fmt="0.00")
 RC.cell(rr_, 1, "D. 預留").font = BOLD; rr_ += 1
 RC.cell(rr_, 1, "R4 產業部署路徑（markets/deploy_path/，尚未建立）：上線後以智邦 AI 營收 ÷ 部署 GW 計算每 GW 營收"); RC.cell(rr_, 10, "預留列：本版無數值"); rr_ += 1
 RC_LAST = rr_ - 1
@@ -665,7 +678,7 @@ TPL, TPN = TP.add_tp_section(wb, V,
 DCFW = wb.create_sheet("DCF")
 DCFW["A1"] = "DCF — 標準版（v0.4）：無槓桿自由現金流 FCFF＝NOPAT＋折舊攤銷 − 資本支出 − 營運資金增加；WACC 折現到評價日 2026-12-31（期中慣例）；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g）。共用模組 tools/fcff_dcf.py"
 DCFW["A2"] = ("EBIT：FY2027–FY2029 取 PL 推導區塊「營業利益」（IFRS，員工酬勞已列費用）；FY2030–FY2032（PL 延伸表只有淨利）由淨利還原：營業利益＝淨利 ÷ nio_f（與 PL 引擎「淨利 ÷ 營業利益」同一比例）。"
-              "稅率：PL 引擎未拆稅率，NOPAT 用近三年有效稅率 tax_w。折舊、資本支出、營運資金：近三年（FY2023–FY2025）占營收平均（In 頁 M2 節）。資產負債為 2026-06-30（3Q26 財報尚未公布），淨現金以 stub 期（FY2026 FCFF × stub_frac − 2026-07 已發放股利；v0.4.3 起，原用 FY2027 全年 × stub_frac）滾到評價日（v0.4.2 起）。")
+              "稅率：PL 引擎未拆稅率，NOPAT 用近三年有效稅率 tax_w。折舊、資本支出、營運資金：近三年（FY2023–FY2025）占營收平均（In 頁 M2 節）。資產負債為 2026-09-30（v0.4.6 起；公開資訊觀測站 115Q3），淨現金以 stub 期（FY2026 FCFF × stub_frac；v0.4.3 起，原用 FY2027 全年 × stub_frac；2026-07 股利已於 9-30 前發放，不再扣）滾到評價日（v0.4.2 起）。")
 FY_X = list(range(2027, 2033))
 # v0.4.3（第三輪修正 2、25）：stub 期（2026-07-01～12-31）FCFF＝含 stub 期的會計年度 FY2026 FCFF × stub_frac（模型無 2H26 季度 FCFF），不用 FY2027 全年
 STUB26 = lambda s_: (f"((PL!D{PB[s_]['oi']})*(1-tax_w)+PL!D{XR[(s_, 'rev')]}*(fc_da-fc_cx-fc_cx_d)-fc_wc*(PL!D{XR[(s_, 'rev')]}-PL!C{XR[(s_, 'rev')]}))*stub_frac")
@@ -677,7 +690,7 @@ DPATHS = [dict(name=s, label=f"情境 {s}（{ {'A': '順利', 'B': '平平', 'C'
               ebit={y: _ebit(s, y) for y in FY_X}, tax={y: "tax_w" for y in FY_X}, ebit_note="FY2030 起＝淨利 ÷ nio_f", stub_fcff=STUB26(s)) for s in SC]
 RD_ = FD.write_detail(DCFW, 4, DPATHS, FY_X, 1.0, title="三情境 FCFF 明細（NT$B；FY(t)＝CY(t)；評價日 2026-12-31，FY2027 全年在評價日後）", stub=True)
 RD_["end"] = FD.write_checks(DCFW, RD_["end"], nc_bs="27.677+13.14+2.693-(3.43+0.48+2.28)-3.232-0.0848",
-                             nc_note="2026-06-30 資產負債表（NT$B；資料商）：現金 27.677＋短期投資 13.14＋長期投資 2.693 − 借款（3.43＋0.48＋2.28）− 租賃 3.232 − 非控制權益 0.0848") + 1
+                             nc_note="2026-09-30 資產負債表（NT$B；公開資訊觀測站 t164sb03，v0.4.6）：現金與流動金融資產 36.837＋非流動金融資產與權益法投資 2.571 − 借款（短借 11.298＋一年內到期 0.48＋長借 3.850）− 租賃 4.661 − 非控制權益 0.0786") + 1
 DCFW.column_dimensions["A"].width = 58; DCFW.column_dimensions["B"].width = 40
 for _c in "CDEFGH": DCFW.column_dimensions[_c].width = 13
 _r1, _r2 = TPL["eps_h"] - 2, TPL["dcf"]            # 舊 0.1 節（標題列～DCF 目標價列）整段改寫；0.2、0.3 節位置不動
@@ -703,7 +716,7 @@ TP.dump_rowmap(TPL, TPN, XH, XR, XC, nn + 5)
 TP.yellow_inputs(IN)
 FD.yellow(IN, FD.JUDG + ("beta_u_med", "beta_du"))
 SO.cell(SO.max_row + 1, 1, "[Analogy] v0.4 標準版 DCF（v0.4.1 起 β 不再用 Damodaran 表，僅 CRP 沿用）：Damodaran Betas by Sector（Global、US，2026 年 1 月）Telecom. Equipment 現金修正無槓桿 β 1.30（Global）、0.89（US）；Country Risk Premium（2026-01）Taiwan 0.78%"); SO.cell(SO.max_row, 2, "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/BetasGlobal.html；https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/Betas.html；https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html")
-SO.cell(SO.max_row + 1, 1, "[Interested-party] v0.4 標準版 DCF：資料商整理的 IFRS 合併財報（2026-06-30 資產負債、FY2023–FY2025 折舊、資本支出、營運資金科目、稅率）"); SO.cell(SO.max_row, 2, "https://stockanalysis.com/quote/tpe/2345/financials/")
+SO.cell(SO.max_row + 1, 1, "[Interested-party] v0.4 標準版 DCF：資料商整理的 IFRS 合併財報（FY2023–FY2025 折舊、資本支出、營運資金科目、稅率）"); SO.cell(SO.max_row, 2, "https://stockanalysis.com/quote/tpe/2345/financials/")
 SO.cell(SO.max_row + 1, 1, "[Interested-party] v0.4 標準版 DCF：新台幣 10 年期公債殖利率 2026-11-04 1.98%；現金股利（2026-07-30 除息 15 元）"); SO.cell(SO.max_row, 2, "https://tradingeconomics.com/taiwan/government-bond-yield；https://www.wantgoo.com/stock/2345/dividend-policy/ex-dividend")
 RD.cell(len(lines) + 1, 1, "v0.2（2026-10-25）：(1) 目標價改為 DCF 與 Comparable 加權（Val 頁最前面「0. 目標價」：0.1 DCF 股東權益現金流、0.2 Comparable 同業前瞻 P/E、0.3 結論；Val 既有內容整體下移，公式一併改寫）；"
         "v0.1 的「0. 目標價與上檔空間」改名「舊法：規則值情境加權（參考）」保留。(2) PL 頁末新增三情境延伸到 FY2032：FY2030 起為收斂法，非驅動因子推導（上游市場層只到 CY2029＝FY2029）。"
@@ -906,6 +919,11 @@ if _CR:
 # v0.4.5（2026-11-15）：版面規格 v1.3（標準損益表、反向 DCF、四個目標價、敏感度主圖）＋三層協調 C0（實績）對帳（accton/v045_post.py；只新增，既有數值不變）
 import v045_post as POST  # noqa: E402
 print(POST.apply(wb, SIL, _HERE, _CR))
+# v0.4.6（2026-11-15）：3Q26 財報滾入、資產負債表日 2026-09-30——README A1 標題版號 v0.4.5 → v0.4.6 並加本版說明
+_a1 = RD["A1"].value; _h = _a1.split("；", 1)[0]
+assert ("v0.4.5" if _CR else "v0.4.4") in _h, _h   # 快照建置（COORD_RUN，無 Coord 頁）不蓋版號
+if _CR: RD["A1"].value = _h.replace("v0.4.5", "v" + POST.NEWVER, 1) + _a1[len(_h):] + ("；v0.4.6（2026-11-15）：滾入 3Q26 財報（公開資訊觀測站 t164sb04；Q 頁 3Q26 欄改財報單季、FY2026 錨點＝1–3Q26 實績＋4Q26 假設，4Q 假設不改）；"
+                                                                         "DCF 資產負債表日 2026-09-30（t164sb03：現金與金融資產、借款〔短借＋長借＋一年內到期長借〕、租賃、非控制權益、股數），已發放股利不再從 stub 期扣")
 wb.save(sys.argv[1])
 if os.environ.get("ACCTON_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
