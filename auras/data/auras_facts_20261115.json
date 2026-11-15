@@ -1,0 +1,325 @@
+{
+ "_readme": "雙鴻（3324）事實總帳（v0.2.6 滾入 3Q26，2026-11-15）。金額十億新台幣，EPS 新台幣。MOPS 為主要出處；一年內到期長期負債取富邦季表。抓不到者寫「未取得」。",
+ "facts": [
+  {
+   "key": "q3_rev",
+   "value": 9.786929,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季 https://mops.twse.com.tw/mops/#/web/t164sb04 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "q3_gp",
+   "value": 2.51032,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季 https://mops.twse.com.tw/mops/#/web/t164sb04 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": "25.65%"
+  },
+  {
+   "key": "q3_opx",
+   "value": 1.14835,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季 https://mops.twse.com.tw/mops/#/web/t164sb04 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "q3_oi",
+   "value": 1.36197,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季 https://mops.twse.com.tw/mops/#/web/t164sb04 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "q3_nop",
+   "value": -0.015622,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季 https://mops.twse.com.tw/mops/#/web/t164sb04 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "q3_pbt",
+   "value": 1.346348,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季 https://mops.twse.com.tw/mops/#/web/t164sb04 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "q3_tax",
+   "value": 0.257212,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季 https://mops.twse.com.tw/mops/#/web/t164sb04 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "q3_ni",
+   "value": 1.080159,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季 https://mops.twse.com.tw/mops/#/web/t164sb04 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": "非控制權益淨利 8,977 千元"
+  },
+  {
+   "key": "q3_eps",
+   "value": 11.59,
+   "unit": "NT$",
+   "source": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季 https://mops.twse.com.tw/mops/#/web/t164sb04 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": "稀釋 11.07"
+  },
+  {
+   "key": "ytd_rev",
+   "value": 27.038707,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季 https://mops.twse.com.tw/mops/#/web/t164sb04 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "ytd_gp",
+   "value": 7.519314,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季 https://mops.twse.com.tw/mops/#/web/t164sb04 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "ytd_oi",
+   "value": 4.271893,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季 https://mops.twse.com.tw/mops/#/web/t164sb04 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "ytd_pbt",
+   "value": 4.233587,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季 https://mops.twse.com.tw/mops/#/web/t164sb04 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "ytd_ni",
+   "value": 3.21312,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季 https://mops.twse.com.tw/mops/#/web/t164sb04 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "ytd_eps",
+   "value": 34.59,
+   "unit": "NT$",
+   "source": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季 https://mops.twse.com.tw/mops/#/web/t164sb04 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": "稀釋 33.03"
+  },
+  {
+   "key": "cash_0930",
+   "value": 5.225728,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表 115/09/30 https://mops.twse.com.tw/mops/#/web/t164sb03 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "ac_cur_0930",
+   "value": 0.051179,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表 115/09/30 https://mops.twse.com.tw/mops/#/web/t164sb03 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "lt_inv_0930",
+   "value": 1.147305,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表 115/09/30 https://mops.twse.com.tw/mops/#/web/t164sb03 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Derived",
+   "note": "FVTPL 非流動 156,295＋FVOCI 非流動 839,857＋攤銷後成本非流動 1,482＋權益法 149,671 千元"
+  },
+  {
+   "key": "st_borrow_0930",
+   "value": 3.232333,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表 115/09/30 https://mops.twse.com.tw/mops/#/web/t164sb03 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "lt_borrow_0930",
+   "value": 1.479839,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表 115/09/30 https://mops.twse.com.tw/mops/#/web/t164sb03 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "bonds_0930",
+   "value": 5.566809,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表 115/09/30 https://mops.twse.com.tw/mops/#/web/t164sb03 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": "應付公司債（可轉債雙鴻五、六、七之負債組成；114 年底 1,390,492 千元）"
+  },
+  {
+   "key": "cur_ltd_0930",
+   "value": 0.285,
+   "unit": "NT$B",
+   "source": "富邦 e-Broker 資產負債表季表 2026.3Q https://fubon-ebrokerdj.fbs.com.tw/z/zc/zcp/zcpa/zcpa_3324.djhtm （2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": "一年內到期長期負債；MOPS 摘要表未單列"
+  },
+  {
+   "key": "debt_v",
+   "value": 10.563981,
+   "unit": "NT$B",
+   "source": "上列合計",
+   "date": "2026-11-15",
+   "tag": "Derived",
+   "note": "v0.2.5（06-30）8.631"
+  },
+  {
+   "key": "lease_cur_0930",
+   "value": 0.139555,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表 115/09/30 https://mops.twse.com.tw/mops/#/web/t164sb03 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "lease_nc_0930",
+   "value": 0.165927,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表 115/09/30 https://mops.twse.com.tw/mops/#/web/t164sb03 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "nci_book_0930",
+   "value": 0.599166,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表 115/09/30 https://mops.twse.com.tw/mops/#/web/t164sb03 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "share_cap_0930",
+   "value": 0.930768,
+   "unit": "NT$B",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表 115/09/30 https://mops.twse.com.tw/mops/#/web/t164sb03 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": "面額 10 → 93.0768 百萬股"
+  },
+  {
+   "key": "adv_share_eq_0930",
+   "value": 0.584566,
+   "unit": "百萬股",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表 115/09/30 https://mops.twse.com.tw/mops/#/web/t164sb03 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": "預收股款約當發行股數 584,566 股"
+  },
+  {
+   "key": "treasury_0930",
+   "value": 0,
+   "unit": "股",
+   "source": "公開資訊觀測站 t164sb03 合併資產負債表 115/09/30 https://mops.twse.com.tw/mops/#/web/t164sb03 （companyId 3324；主 session 2026-11-15 讀取）",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": "114 年底 750,000 股（160,915 千元）已註銷"
+  },
+  {
+   "key": "sh_v",
+   "value": 0.093661366,
+   "unit": "十億股",
+   "source": "股本 ÷ 面額＋預收股款約當 − 庫藏股",
+   "date": "2026-11-15",
+   "tag": "Derived",
+   "note": "基本；未計可轉債稀釋"
+  },
+  {
+   "key": "cb6_cb7_issue",
+   "value": 5.0,
+   "unit": "NT$B",
+   "source": "MoneyDJ 經 Yahoo 股市 2026-01-18 https://tw.stock.yahoo.com/news/%E9%9B%99%E9%B4%BB%E7%99%BC%E8%A1%8C%E5%9C%8B%E5%85%A7%E7%AC%AC%E5%85%AD%E6%AC%A1%E7%84%A1%E6%93%94%E4%BF%9D%E8%BD%89%E6%8F%9B%E5%82%B5%E7%AD%89%E6%A1%881-16%E8%A3%9C%E6%AD%A3-%E9%A0%90%E8%A8%88%E5%B1%86%E6%BB%BF12%E5%80%8B%E7%87%9F%E6%A5%AD%E6%97%A5%E7%94%B3%E5%A0%B1%E7%94%9F%E6%95%88-002400066.html",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": "國內第六次 30,000 張 × 10 萬＝30 億元；第七次 20,000 張 × 10 萬＝20 億元（2026-01-16 補正申報）"
+  },
+  {
+   "key": "cb_dilution_est",
+   "value": "7–8%",
+   "unit": "股本",
+   "source": "凱基 2026-03-30 https://www.kgi.com.hk/zh-hk/-/media/files/kgishk/research-reports/tw-reports/auras-technology_3324-tt_20260330e.pdf",
+   "date": "2026-11-15",
+   "tag": "Interested-party",
+   "note": "CB6／CB7 股本稀釋約 7–8%"
+  },
+  {
+   "key": "cb_conversion_price",
+   "value": "未取得",
+   "unit": "NT$",
+   "source": "—",
+   "date": "2026-11-15",
+   "tag": "—",
+   "note": "雙鴻五、六、七現行轉換價格未取得（搜尋結果中無公告全文）"
+  },
+  {
+   "key": "oct_rev",
+   "value": 3.3724,
+   "unit": "NT$B",
+   "source": "TechNews 2026-11-06 https://finance.technews.tw/2026/11/06/auras-3324-202610-financial-report/",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "div_paid",
+   "value": 11.903,
+   "unit": "NT$/股",
+   "source": "玩股網除權息表",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": "2026-07-16 發放，早於 9-30；stub 不再扣"
+  }
+ ],
+ "not_obtained": [
+  "可轉債現行轉換價格與各期流通餘額",
+  "3Q26 法說",
+  "液冷營收金額或占比（公司未揭露）"
+ ]
+}
