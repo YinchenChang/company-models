@@ -163,7 +163,8 @@ inp("q4_gmo", "4Q26 非 Trainium（NRE＋其他量產）毛利率（＝3Q26 實�
 inp("q4_opx", "4Q26 營業費用（＝3Q26 實績）", "NT$B", 0.95, "=q3_opx", 1.25, "Assumed", "3Q26 財報實績（q3_opx）", UA3 + "：公司年底人力有機會達四位數；v0.2.4 為 1.05")
 inp("q_nonop", "4Q26 營業外淨額（v0.2.5 起只用於 4Q；3Q26 取財報實績）", "NT$B", 0.25, 0.40, 0.55, "Assumed", "1Q26 0.417、2Q26 0.388（工商時報推得）；3Q26 0.452（財報：前 9 月稅前 − 營業利益 − 1H）", "7 月 GDR 增資（經濟日報 2026-07-07），利息收入可能增加；匯兌損益：未找到")
 inp("q_tax", "4Q26 有效稅率（v0.2.5 起只用於 4Q）", "%", 0.17, 0.20, 0.23, "Assumed", "1Q26 20.0%、2Q26 19.5%（工商時報推得）；3Q26 20.3%（財報推得：稅前 − 歸屬淨利）", "FY2025 16.7%（stockanalysis 稅前淨利率推得）")
-inp("q_sh", "3Q、4Q26 加權股數（GDR 後）", "十億股", None, 0.08621, None, "Interested-party", SA + "：流通股數 86.21M（2026-10-23 擷取）", "2Q26 加權 81.87M（淨利 ÷ EPS）；3Q26 隱含 86.29M（3Q 歸屬淨利 32.52 億 ÷ 公司 EPS 37.68；Derived）；GDR 7 月 7 日掛牌（經濟日報）")
+inp("q_sh", "3Q、4Q26 加權股數（GDR 後；＝2026-09-30 實際股數）", "十億股", None, 0.0863496, None, "Verified", "公開資訊觀測站 2026-09-30 合併資產負債表：普通股股本 863,496 千元 ÷ 面額 10 元＝86.3496M 股（v0.2.5 起；v0.2.4 以前 86.21M，stockanalysis）",
+    "GDR 4.00M 股 2026-06-30 發行（旺得富 2026-06-26），3Q、4Q 全季計入；FY2026 加權股數＝四季平均（1Q 81.31M、2Q 81.87M 為公司淨利 ÷ EPS 推得，未含 GDR），即依 GDR 6-30 發行時點加權；3Q26 自算 EPS 37.66 vs 公司 37.68")
 
 sec("F. FY2027 起：營業費用、營業外、稅、股數、匯率")
 inp("phi", "營業費用成長對營收成長的彈性", "x", 0.2, 0.3, 0.6, "Assumed", "公司：營業費用年增「在控制內」、長期營業利益率目標十幾 %（2Q26 法說）", "FY2026 營業費用約 +23%、營收約 +120%（Q 頁）")
@@ -215,8 +216,8 @@ SABS = "stockanalysis.com 世芯-KY 季度資產負債表（https://stockanalysi
 SAY = "stockanalysis.com 世芯-KY 年度資產負債表（https://stockanalysis.com/quote/tpe/3661/financials/balance-sheet/；2026-11-05 讀取）"
 SACF = "stockanalysis.com 世芯-KY 年度現金流量表（https://stockanalysis.com/quote/tpe/3661/financials/cash-flow-statement/；2026-11-05 讀取）"
 SADV = "stockanalysis.com 世芯-KY 股利頁（https://stockanalysis.com/quote/tpe/3661/dividend/；2026-11-05 讀取）"
-MBS3 = "公開資訊觀測站 t164sb03 合併資產負債表 115 年第 3 季（2026-09-30 欄；https://mops.twse.com.tw/mops/#/web/t164sb03；2026-11-15 讀取）"
-GDR6 = "旺得富 2026-06-26（GDR 訂價：4,000,000 單位、每單位表彰 1 股、每單位 127.51 美元、折合新台幣 4,061 元、募資 5.1004 億美元、預計發行日 2026-06-30；https://wantrich.chinatimes.com/news/20260626900161-420101）"
+MBS3 = "公開資訊觀測站 t164sb03 合併資產負債表 115 年第 3 季（2026-09-30 欄；2026-11-15 讀取）"
+GDR6 = "旺得富 2026-06-26（GDR 訂價：4,000,000 單位、每單位表彰 1 股、每單位 127.51 美元、折合新台幣 4,061 元、募資 5.1004 億美元、預計發行日 2026-06-30）"
 REV3 = "營收 FY2023 30.482、FY2024 51.969、FY2025 30.926（NT$B；stockanalysis 財報頁）"
 for _row in FD.in_rows(dict(
         date="2026-12-31（同 v0.1 DCF 基準日）", ccy="NT$", amt="NT$B", shu="十億股",
@@ -241,8 +242,8 @@ for _row in FD.in_rows(dict(
                        "買回無已宣告金額，不扣；v0.2.4 以前 × 86.21M")),
         dps=(32.57285, "Assumed", "2026 年發放每股 32.57285 元（除息 2026-09-03、發放 2026-10-08；" + SADV + "）",
              "評價日到 2027-12-31 之間假設發放一次、金額與 2026 年相同（Assumed；FY2026 EPS 高於 FY2025，實際可能較高）"),
-        sh=(0.0863496, "Verified", MBS3 + "：普通股股本 863,496 千元 ÷ 面額 10 元＝86.3496M 股（2025-12-31 股本 812,836 千元＝81.28M 股）",
-            "2026 年增 5.07M 股：GDR 現金增資 4.00M 股（" + GDR6 + "）；其餘約 1.07M 股來源未查明（可能為員工認股權或限制員工權利新股，未取得公告）。資本公積 25.755 → 44.432 十億元（+18.68），GDR 約 4.0M ×（4,061 − 10）≈ 16.20 十億元，其餘約 2.5 未查明。v0.2.4 以前＝q_sh 86.21M；EPS 用股數 q_sh 不變"),
+        sh=("=q_sh", "Verified", MBS3 + "：普通股股本 863,496 千元 ÷ 面額 10 元＝86.3496M 股（2025-12-31 股本 812,836 千元＝81.28M 股）；＝In 頁 q_sh（EPS、Comparable 同一股數）",
+            "2026 年增 5.07M 股：GDR 現金增資 4.00M 股（" + GDR6 + "）；其餘約 1.07M 股來源未查明（可能為員工認股權或限制員工權利新股；2026-11-15 搜尋公開資訊觀測站轉載與新聞未找到公告）。資本公積 25.755 → 44.432 十億元（+18.68），GDR 約 4.0M ×（4,061 − 10）≈ 16.20 十億元，其餘約 2.5 未查明。v0.2.4 以前 86.21M"),
         fc_da=(None, "=AVERAGE(2.017/30.482,2.639/51.969,3.052/30.926)", None, "Derived",
                SACF + "：折舊攤銷 FY2023 2,017、FY2024 2,639、FY2025 3,052（NT$M）；" + REV3 + "；比例 6.6%、5.1%、9.9%，平均 7.2%",
                "多為 EDA／IP 授權與設備攤提，近三年營收以 NRE 與舊量產為主；轉為 Trainium turnkey 量產後占比可能下降（README 已知限制）"),
@@ -619,10 +620,10 @@ def dpaths(blocks, pre, tax="tax", nonop="nonop_f", lab=None, names=SC):
     for s_ in names:
         bl = blocks[s_]
         ebit = {y: (f"{pre}{FC[y]}{bl['oi']}" if y <= 2029 else f"={pre}{FC[y]}{bl['ni']}/(1-{tax})-{nonop}") for y in YRS6}
-        _r26, _r25 = f"{pre}D{bl['rev']}", f"{pre}C{bl['rev']}"   # 第三輪修正：stub 期用含 stub 期會計年度 FY2026（錨點）FCFF × stub_frac，不用 FY2027 全年
+        _r26, _r25 = f"{pre}D{bl['rev']}", f"{pre}C{bl['rev']}"   # v0.2.5：資產負債表日 9-30，stub 期只剩 4Q26 → stub FCFF＝4Q26 單季 FCFF：4Q 營業利益 ×（1 − 稅率）＋4Q 營收 ×（折舊率 − 資本支出率）− FY2026 營運資金增加 × stub_frac（1–3Q 營運資金實績科目不全，取不到）
         out.append(dict(name=s_, label=(lab or "情境") + f" {s_}（{SCN_NAME[s_]}）", rev={y: f"{pre}{FC[y]}{bl['rev']}" for y in YRS6}, rev0=f"{pre}D{bl['rev']}",
                         ebit=ebit, tax={y: tax for y in YRS6}, ebit_note="FY2030 起由淨利還原",
-                        stub_fcff=f"({pre}D{bl['oi']}*(1-{tax})+{_r26}*(fc_da-fc_cx-fc_cx_d)-fc_wc*({_r26}-{_r25}))*stub_frac"))
+                        stub_fcff=f"Q!$F$11*(1-{tax})+Q!$F$4*(fc_da-fc_cx-fc_cx_d)-fc_wc*({_r26}-{_r25})*stub_frac"))
     return out
 def ddetail(paths, title):
     R_ = FD.write_detail(DCFW, DCF_NEXT[0], paths, list(YRS6), 1.0, conv_from=2029, title=title, fmt="#,##0.00", stub=True)
@@ -792,7 +793,7 @@ srcs = [("公司：2Q26 財報新聞稿（美元營收、毛利、稅前、淨�
         ("媒體：經濟日報 2026-11-06（3Q26 營收 261.88 億、歸屬淨利 32.51 億、前 9 月 EPS 75.94）", UDN3), ("媒體：工商時報 2026-11-07（3Q26 法說：8.2 億美元、3／2 奈米 80%、4Q 展望）", CT3),
         ("媒體：優分析 2026-11-07（3Q26 法說：8.193 億美元、EPS 37.68、4Q 毛利率與 3Q 相當接近）", UA3), ("媒體：科技新報 2026-11-10（10 月營收 102.60 億）", OCT26),
         ("市場層：tsmc、avgo、mrvl 成品與 markets/memory UNITS、SCEN_UNITS（本 repo，唯讀）", f"{rel(TSMC_F)}；{rel(AVGO_F)}；{rel(MRVL_F)}；markets/memory/market.py"),
-        ("公司：2026-09-30 合併資產負債表（公開資訊觀測站 t164sb03）", MBS3), ("媒體：旺得富 2026-06-26（GDR 訂價與股數）", GDR6),
+        ("公司：2026-09-30 合併資產負債表（公開資訊觀測站 t164sb03；" + MBS3 + "）", "https://mops.twse.com.tw/mops/#/web/t164sb03"), ("媒體：旺得富 2026-06-26（GDR 訂價與股數；" + GDR6 + "）", "https://wantrich.chinatimes.com/news/20260626900161-420101"),
         ("待補（人工）：2026 年增股中 GDR 以外約 1.07M 股的來源；3Q26 法說 3 奈米與 2 奈米分列占比；NRE 與量產營收金額；HBM 採購方式；2 奈米每顆營收與 COT 分工；2016–2017 EPS 與 2016–2020 淨利率（十年平均）；GDR 募資金額；前瞻 P/E 十年歷史（Bloomberg）", "未找到"),
         ("SemiAnalysis", "未使用")]
 for i, (a, b) in enumerate(srcs, 2): SO.cell(i, 1, a); SO.cell(i, 2, b)
