@@ -408,7 +408,7 @@ def _v13(cfg):
                 "lines": [{"name": f"@PL!A{gm_}", "y": f"@PL!C{gm_}:L{gm_}", "axis": "r", "color": "#0b7a80", "labels": True},
                           {"name": f"@PL!A{opm_}", "y": f"@PL!C{opm_}:L{opm_}", "axis": "r", "color": "#c29a2b"},
                           {"name": f"@PL!A{nm_}", "y": f"@PL!C{nm_}:L{nm_}", "axis": "r", "color": "#6f6bae", "dash": True}],
-                "caption": "長條＝營收；三條線＝毛利率、營業利益率、淨利率（右軸，日本會計準則）。毛利率只有 FY2024A–FY2025A（預測期不推）；FY2026E 為公司指引錨點、FY2027E 起為情境推導；FY2030E–FY2032E 為收斂法延伸期（只推營收與淨利，營業利益由淨利還原）。"}
+                "caption": "長條＝營收；三條線＝毛利率、營業利益率、淨利率（右軸，日本會計準則）。毛利率只有 FY2023A–FY2025A 實績（預測期不推）；FY2026E 為公司指引錨點、FY2027E 起為情境推導；FY2030E–FY2032E 為收斂法延伸期（只推營收與淨利，營業利益由淨利還原）。"}
     old_pl = S["pl"]["blocks"]
     pls = [b for b in old_pl if b["type"] == "pl"]
     assert len(pls) == 2, [b["type"] for b in old_pl]
