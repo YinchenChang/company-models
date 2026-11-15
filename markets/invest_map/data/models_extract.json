@@ -422,79 +422,79 @@
   }
  },
  "2454": {
-  "model": "mediatek/dist/20261115_聯發科個股模型_v0.3.4.xlsx",
+  "model": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx",
   "v2": true,
   "tp": {
-   "value": 1715.10141442657,
+   "value": 1679.38890552255,
    "cell": "Val!B39",
-   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.4.xlsx"
+   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx"
   },
   "tp_dcf": {
-   "value": 1773.02982625639,
+   "value": 1701.60480844836,
    "cell": "Val!B24",
-   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.4.xlsx"
+   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx"
   },
   "tp_comp": {
    "value": 2273.89331348755,
    "cell": "Val!B40",
-   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.4.xlsx"
+   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx"
   },
   "tp_cons": {
    "value": 6067,
    "cell": "Val!B41",
-   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.4.xlsx"
+   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx"
   },
   "up": {
-   "value": -0.504305949587698,
+   "value": -0.51462748395302,
    "cell": "Val!B42",
-   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.4.xlsx"
+   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx"
   },
   "up_comp": {
    "value": -0.342805400726143,
    "cell": "Val!B43",
-   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.4.xlsx"
+   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx"
   },
   "tier6": {
    "value": "小於 −50%",
    "cell": "Val!B134",
-   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.4.xlsx"
+   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx"
   },
   "rec": {
    "value": "強力放空",
    "cell": "Val!B135",
-   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.4.xlsx"
+   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx"
   },
   "dcf_A": {
-   "value": 2475.79349164337,
+   "value": 2406.19436418185,
    "cell": "Val!B21",
-   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.4.xlsx"
+   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx"
   },
   "dcf_C": {
-   "value": 1137.17552815274,
+   "value": 1064.13014112561,
    "cell": "Val!D21",
-   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.4.xlsx"
+   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx"
   },
   "model_px": {
    "value": 3460,
    "cell": "Val!B53",
-   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.4.xlsx",
+   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx",
    "date": "2026-11-05"
   },
   "pe_fy28": [
    {
     "value": 20.2703534882634,
     "cell": "Val!B56",
-    "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.4.xlsx"
+    "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx"
    },
    {
     "value": 25.4679359522034,
     "cell": "Val!C56",
-    "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.4.xlsx"
+    "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx"
    },
    {
     "value": 36.6669755366332,
     "cell": "Val!D56",
-    "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.4.xlsx"
+    "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx"
    }
   ],
   "cash": {
@@ -597,7 +597,7 @@
      "PL!J41"
     ]
    ],
-   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.4.xlsx"
+   "file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx"
   }
  },
  "MRVL": {
@@ -740,62 +740,62 @@
   }
  },
  "CBRS": {
-  "model": "cbrs/dist/20261115_Cerebras個股模型_v0.1.2.xlsx",
+  "model": "cbrs/dist/20261115_Cerebras個股模型_v0.1.3.xlsx",
   "v2": true,
   "tp": {
-   "value": 80.5620771433814,
+   "value": 83.9432590715853,
    "cell": "Val!B41",
-   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.2.xlsx"
+   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.3.xlsx"
   },
   "tp_dcf": {
-   "value": 29.458667294132,
+   "value": 32.735673958089,
    "cell": "Val!B23",
-   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.2.xlsx"
+   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.3.xlsx"
   },
   "tp_comp": {
-   "value": 131.665486992631,
+   "value": 135.150844185082,
    "cell": "Val!B42",
-   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.2.xlsx"
+   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.3.xlsx"
   },
   "tp_cons": {
    "value": 282.55,
    "cell": "Val!B43",
-   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.2.xlsx"
+   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.3.xlsx"
   },
   "up": {
-   "value": -0.0140487438088194,
+   "value": 0.0273315270050822,
    "cell": "Val!B44",
-   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.2.xlsx"
+   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.3.xlsx"
   },
   "up_comp": {
-   "value": 0.611375437432759,
+   "value": 0.654030647228999,
    "cell": "Val!B45",
-   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.2.xlsx"
+   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.3.xlsx"
   },
   "tier6": {
-   "value": "0%～−25%",
+   "value": "0%–25%",
    "cell": "Val!B52",
-   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.2.xlsx"
+   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.3.xlsx"
   },
   "rec": {
    "value": "中立",
    "cell": "Val!B53",
-   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.2.xlsx"
+   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.3.xlsx"
   },
   "dcf_A": {
-   "value": 69.2291123962337,
+   "value": 74.7302317903267,
    "cell": "Val!B20",
-   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.2.xlsx"
+   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.3.xlsx"
   },
   "dcf_C": {
    "value": 0,
    "cell": "Val!D20",
-   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.2.xlsx"
+   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.3.xlsx"
   },
   "model_px": {
    "value": 81.71,
    "cell": "Val!B57",
-   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.2.xlsx",
+   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.3.xlsx",
    "date": "2026-11-05"
   },
   "cash": {
@@ -804,177 +804,177 @@
    "values": [
     [
      "FY2026E",
-     -0.32961,
+     -0.340037,
      "PL!D28"
     ],
     [
      "FY2027",
-     0.214059811716245,
+     0.29029531793008,
      "PL!E28"
     ],
     [
      "FY2028",
-     1.13404792331406,
+     1.25630545092174,
      "PL!F28"
     ],
     [
      "FY2029",
-     1.99708544393591,
+     2.12440265055853,
      "PL!G28"
     ],
     [
      "FY2030",
-     2.84068367945457,
+     2.98877412463418,
      "PL!H28"
     ],
     [
      "FY2031",
-     3.60440056715574,
+     3.76720907467998,
      "PL!I28"
     ],
     [
      "FY2032",
-     4.24353332071041,
+     4.41636505295541,
      "PL!J28"
     ],
     [
      "FY2027",
-     0.11475795905006,
+     0.190754442511203,
      "PL!E62"
     ],
     [
      "FY2028",
-     0.411687677057453,
+     0.529115103035008,
      "PL!F62"
     ],
     [
      "FY2029",
-     0.41766072866108,
+     0.524562002057533,
      "PL!G62"
     ],
     [
      "FY2030",
-     0.508799263887204,
+     0.622180695694635,
      "PL!H62"
     ],
     [
      "FY2031",
-     0.651180285234682,
+     0.770222529722156,
      "PL!I62"
     ],
     [
      "FY2032",
-     0.664399090976536,
+     0.78872301017989,
      "PL!J62"
     ],
     [
      "FY2027",
-     -0.165661468406885,
+     -0.0910389362145858,
      "PL!E96"
     ],
     [
      "FY2028",
-     -0.350251157854042,
+     -0.253459410089838,
      "PL!F96"
     ],
     [
      "FY2029",
-     -0.574964250114232,
+     -0.477485087014024,
      "PL!G96"
     ],
     [
      "FY2030",
-     -0.724455423620816,
+     -0.622937999578297,
      "PL!H96"
     ],
     [
      "FY2031",
-     -0.921996334607657,
+     -0.816236380792212,
      "PL!I96"
     ],
     [
      "FY2032",
-     -1.11548680509185,
+     -1.00526995230894,
      "PL!J96"
     ]
    ],
-   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.2.xlsx"
+   "file": "cbrs/dist/20261115_Cerebras個股模型_v0.1.3.xlsx"
   }
  },
  "3661": {
-  "model": "alchip/dist/20261115_世芯-KY個股模型_v0.2.4.xlsx",
+  "model": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx",
   "v2": true,
   "tp": {
-   "value": 5424.99190858543,
+   "value": 5014.73179833189,
    "cell": "Val!B39",
-   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.4.xlsx"
+   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx"
   },
   "tp_dcf": {
-   "value": 3338.40941211203,
+   "value": 2967.57840313743,
    "cell": "Val!B24",
-   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.4.xlsx"
+   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx"
   },
   "tp_comp": {
-   "value": 7189.2679770526,
+   "value": 6758.87401784223,
    "cell": "Val!B40",
-   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.4.xlsx"
+   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx"
   },
   "tp_cons": {
    "value": 5803.25,
    "cell": "Val!B41",
-   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.4.xlsx"
+   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx"
   },
   "up": {
-   "value": 0.832767536684268,
+   "value": 0.694166148085097,
    "cell": "Val!B42",
-   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.4.xlsx"
+   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx"
   },
   "up_comp": {
-   "value": 1.42880674900426,
+   "value": 1.28340338440616,
    "cell": "Val!B43",
-   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.4.xlsx"
+   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx"
   },
   "tier6": {
    "value": "大於 50%",
    "cell": "Val!B134",
-   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.4.xlsx"
+   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx"
   },
   "rec": {
    "value": "強力買進",
    "cell": "Val!B135",
-   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.4.xlsx"
+   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx"
   },
   "dcf_A": {
-   "value": 5411.13731720407,
+   "value": 4979.90238581882,
    "cell": "Val!B21",
-   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.4.xlsx"
+   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx"
   },
   "dcf_C": {
-   "value": 1687.06146603002,
+   "value": 1374.800632745,
    "cell": "Val!D21",
-   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.4.xlsx"
+   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx"
   },
   "model_px": {
    "value": 2960,
    "cell": "Val!B53",
-   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.4.xlsx",
+   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx",
    "date": "2026-11-05"
   },
   "pe_fy28": [
    {
-    "value": 8.74074917214449,
+    "value": 9.15100821052924,
     "cell": "Val!B56",
-    "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.4.xlsx"
+    "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx"
    },
    {
-    "value": 14.9771345818004,
+    "value": 16.0217179768279,
     "cell": "Val!C56",
-    "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.4.xlsx"
+    "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx"
    },
    {
-    "value": 28.3805486345991,
+    "value": 31.3840394828392,
     "cell": "Val!D56",
-    "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.4.xlsx"
+    "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx"
    }
   ],
   "cash": {
@@ -983,101 +983,101 @@
    "values": [
     [
      "FY2026（錨點）",
-     11.3101136,
+     10.3789337733834,
      "PL!D11"
     ],
     [
      "FY2027",
-     18.3710304929457,
+     17.2421447920773,
      "PL!E11"
     ],
     [
      "FY2028",
-     29.1944769234686,
+     27.9307820646374,
      "PL!F11"
     ],
     [
      "FY2029",
-     33.4006114260181,
+     31.9864462962709,
      "PL!G11"
     ],
     [
      "FY2030（收斂）",
-     37.3302990088728,
+     35.7480502941812,
      "PL!H11"
     ],
     [
      "FY2031（收斂）",
-     40.6462218575728,
+     38.922475994351,
      "PL!I11"
     ],
     [
      "FY2032（收斂）",
-     43.0849951690271,
+     41.257824554012,
      "PL!J11"
     ],
     [
      "FY2027",
-     15.9048965863146,
+     14.8722619679919,
      "PL!E23"
     ],
     [
      "FY2028",
-     17.0380788532198,
+     15.9530217901517,
      "PL!F23"
     ],
     [
      "FY2029",
-     17.3899613405487,
+     16.2497974533917,
      "PL!G23"
     ],
     [
      "FY2030（收斂）",
-     17.3256375038884,
+     16.1908428383153,
      "PL!H23"
     ],
     [
      "FY2031（收斂）",
-     17.3191781802271,
+     16.1853797467635,
      "PL!I23"
     ],
     [
      "FY2032（收斂）",
-     17.3686615464563,
+     16.2316236888971,
      "PL!J23"
     ],
     [
      "FY2027",
-     11.8183415570568,
+     10.9299600309589,
      "PL!E35"
     ],
     [
      "FY2028",
-     8.99142589826134,
+     8.14410191332315,
      "PL!F35"
     ],
     [
      "FY2029",
-     9.01127382348225,
+     8.20268557983413,
      "PL!G35"
     ],
     [
      "FY2030（收斂）",
-     9.01895022803598,
+     8.20467690276695,
      "PL!H35"
     ],
     [
      "FY2031（收斂）",
-     8.76140660419894,
+     7.96789953701174,
      "PL!I35"
     ],
     [
      "FY2032（收斂）",
-     8.24920129503039,
+     7.50208387177105,
      "PL!J35"
     ]
    ],
-   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.4.xlsx"
+   "file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx"
   }
  },
  "3443": {
@@ -4611,79 +4611,79 @@
   }
  },
  "2368": {
-  "model": "gce/dist/20261115_金像電個股模型_v0.3.4.xlsx",
+  "model": "gce/dist/20261115_金像電個股模型_v0.3.5.xlsx",
   "v2": true,
   "tp": {
-   "value": 1201.69506968222,
+   "value": 1205.24171466893,
    "cell": "Val!B40",
-   "file": "gce/dist/20261115_金像電個股模型_v0.3.4.xlsx"
+   "file": "gce/dist/20261115_金像電個股模型_v0.3.5.xlsx"
   },
   "tp_dcf": {
-   "value": 715.726332775688,
+   "value": 727.754649381095,
    "cell": "Val!B24",
-   "file": "gce/dist/20261115_金像電個股模型_v0.3.4.xlsx"
+   "file": "gce/dist/20261115_金像電個股模型_v0.3.5.xlsx"
   },
   "tp_comp": {
-   "value": 1000.86015886595,
+   "value": 997.933467234822,
    "cell": "Val!B41",
-   "file": "gce/dist/20261115_金像電個股模型_v0.3.4.xlsx"
+   "file": "gce/dist/20261115_金像電個股模型_v0.3.5.xlsx"
   },
   "tp_cons": {
    "value": 1554,
    "cell": "Val!B42",
-   "file": "gce/dist/20261115_金像電個股模型_v0.3.4.xlsx"
+   "file": "gce/dist/20261115_金像電個股模型_v0.3.5.xlsx"
   },
   "up": {
-   "value": 0.384441324518692,
+   "value": 0.38852732104716,
    "cell": "Val!B43",
-   "file": "gce/dist/20261115_金像電個股模型_v0.3.4.xlsx"
+   "file": "gce/dist/20261115_金像電個股模型_v0.3.5.xlsx"
   },
   "up_comp": {
-   "value": 0.153064699154318,
+   "value": 0.149692934602329,
    "cell": "Val!B44",
-   "file": "gce/dist/20261115_金像電個股模型_v0.3.4.xlsx"
+   "file": "gce/dist/20261115_金像電個股模型_v0.3.5.xlsx"
   },
   "tier6": {
    "value": "25%–50%",
    "cell": "Val!B118",
-   "file": "gce/dist/20261115_金像電個股模型_v0.3.4.xlsx"
+   "file": "gce/dist/20261115_金像電個股模型_v0.3.5.xlsx"
   },
   "rec": {
    "value": "買進",
    "cell": "Val!B119",
-   "file": "gce/dist/20261115_金像電個股模型_v0.3.4.xlsx"
+   "file": "gce/dist/20261115_金像電個股模型_v0.3.5.xlsx"
   },
   "dcf_A": {
-   "value": 1088.01191627462,
+   "value": 1095.63804556885,
    "cell": "Val!B21",
-   "file": "gce/dist/20261115_金像電個股模型_v0.3.4.xlsx"
+   "file": "gce/dist/20261115_金像電個股模型_v0.3.5.xlsx"
   },
   "dcf_C": {
-   "value": 348.737240136162,
+   "value": 363.70167369522,
    "cell": "Val!D21",
-   "file": "gce/dist/20261115_金像電個股模型_v0.3.4.xlsx"
+   "file": "gce/dist/20261115_金像電個股模型_v0.3.5.xlsx"
   },
   "model_px": {
    "value": 868,
    "cell": "Val!B53",
-   "file": "gce/dist/20261115_金像電個股模型_v0.3.4.xlsx",
+   "file": "gce/dist/20261115_金像電個股模型_v0.3.5.xlsx",
    "date": "2026-11-05"
   },
   "pe_fy28": [
    {
-    "value": 9.63964373870546,
+    "value": 9.6975454833947,
     "cell": "Val!B56",
-    "file": "gce/dist/20261115_金像電個股模型_v0.3.4.xlsx"
+    "file": "gce/dist/20261115_金像電個股模型_v0.3.5.xlsx"
    },
    {
-    "value": 11.3372807144017,
+    "value": 11.3607947083251,
     "cell": "Val!C56",
-    "file": "gce/dist/20261115_金像電個股模型_v0.3.4.xlsx"
+    "file": "gce/dist/20261115_金像電個股模型_v0.3.5.xlsx"
    },
    {
-    "value": 19.1576573161928,
+    "value": 19.0961194187947,
     "cell": "Val!D56",
-    "file": "gce/dist/20261115_金像電個股模型_v0.3.4.xlsx"
+    "file": "gce/dist/20261115_金像電個股模型_v0.3.5.xlsx"
    }
   ],
   "cash": {
@@ -4692,101 +4692,101 @@
    "values": [
     [
      "FY2026（錨點）",
-     19.6977289395284,
+     20.5576615587638,
      "PL!D12"
     ],
     [
      "FY2027",
-     34.3114647619272,
+     35.0186827201082,
      "PL!E12"
     ],
     [
      "FY2028",
-     47.1909147797915,
+     48.1457943296599,
      "PL!F12"
     ],
     [
      "FY2029",
-     56.6272957908376,
+     57.8124700469491,
      "PL!G12"
     ],
     [
      "FY2030（收斂）",
-     64.8114691838759,
+     66.1679331241852,
      "PL!H12"
     ],
     [
      "FY2031（收斂）",
-     71.4393169853835,
+     72.934497678419,
      "PL!I12"
     ],
     [
      "FY2032（收斂）",
-     75.7256760045065,
+     77.3105675391242,
      "PL!J12"
     ],
     [
      "FY2027",
-     31.211978678245,
+     31.9261276291801,
      "PL!E25"
     ],
     [
      "FY2028",
-     40.1245781629926,
+     41.0971276511059,
      "PL!F25"
     ],
     [
      "FY2029",
-     43.17854243256,
+     44.2431305533622,
      "PL!G25"
     ],
     [
      "FY2030（收斂）",
-     43.7369023705395,
+     44.8193076784712,
      "PL!H25"
     ],
     [
      "FY2031（收斂）",
-     43.2729355939177,
+     44.3721097394155,
      "PL!I25"
     ],
     [
      "FY2032（收斂）",
-     41.7755549231239,
+     42.8894140101042,
      "PL!J25"
     ],
     [
      "FY2027",
-     26.810614057861,
+     27.5346334616427,
      "PL!E38"
     ],
     [
      "FY2028",
-     23.7452627256412,
+     24.4497858495019,
      "PL!F38"
     ],
     [
      "FY2029",
-     24.1066457126685,
+     24.9240008594684,
      "PL!G38"
     ],
     [
      "FY2030（收斂）",
-     23.9266262221067,
+     24.7359770149528,
      "PL!H38"
     ],
     [
      "FY2031（收斂）",
-     23.1443605782874,
+     23.9263118246502,
      "PL!I38"
     ],
     [
      "FY2032（收斂）",
-     21.7913056521722,
+     22.5275428256707,
      "PL!J38"
     ]
    ],
-   "file": "gce/dist/20261115_金像電個股模型_v0.3.4.xlsx"
+   "file": "gce/dist/20261115_金像電個股模型_v0.3.5.xlsx"
   }
  },
  "3189": {
@@ -6494,84 +6494,84 @@
   }
  },
  "6315": {
-  "model": "towa/dist/20261115_TOWA個股模型_v0.3.5.xlsx",
+  "model": "towa/dist/20261115_TOWA個股模型_v0.3.6.xlsx",
   "v2": true,
   "tp": {
-   "value": 1166.0509271251,
+   "value": 1437.35899973251,
    "cell": "Val!B39",
-   "file": "towa/dist/20261115_TOWA個股模型_v0.3.5.xlsx"
+   "file": "towa/dist/20261115_TOWA個股模型_v0.3.6.xlsx"
   },
   "tp_dcf": {
-   "value": 1220.96219095893,
+   "value": 1454.61791351603,
    "cell": "Val!B24",
-   "file": "towa/dist/20261115_TOWA個股模型_v0.3.5.xlsx"
+   "file": "towa/dist/20261115_TOWA個股模型_v0.3.6.xlsx"
   },
   "tp_comp": {
-   "value": 1548.83278259364,
+   "value": 1979.49694385564,
    "cell": "Val!B40",
-   "file": "towa/dist/20261115_TOWA個股模型_v0.3.5.xlsx"
+   "file": "towa/dist/20261115_TOWA個股模型_v0.3.6.xlsx"
   },
   "tp_cons": {
    "value": 3300,
    "cell": "Val!B41",
-   "file": "towa/dist/20261115_TOWA個股模型_v0.3.5.xlsx"
+   "file": "towa/dist/20261115_TOWA個股模型_v0.3.6.xlsx"
   },
   "up": {
-   "value": -0.378768818793235,
+   "value": -0.234225359758918,
    "cell": "Val!B42",
-   "file": "towa/dist/20261115_TOWA個股模型_v0.3.5.xlsx"
+   "file": "towa/dist/20261115_TOWA個股模型_v0.3.6.xlsx"
   },
   "up_comp": {
-   "value": -0.174836024190922,
+   "value": 0.0546067894808966,
    "cell": "Val!B43",
-   "file": "towa/dist/20261115_TOWA個股模型_v0.3.5.xlsx"
+   "file": "towa/dist/20261115_TOWA個股模型_v0.3.6.xlsx"
   },
   "old_rule": {
-   "value": 1388.63671275856,
+   "value": 1776.2362346889,
    "cell": "Val!B120",
-   "file": "towa/dist/20261115_TOWA個股模型_v0.3.5.xlsx"
+   "file": "towa/dist/20261115_TOWA個股模型_v0.3.6.xlsx"
   },
   "tier6": {
-   "value": "−25%～−50%",
+   "value": "0%～−25%",
    "cell": "Val!B124",
-   "file": "towa/dist/20261115_TOWA個股模型_v0.3.5.xlsx"
+   "file": "towa/dist/20261115_TOWA個股模型_v0.3.6.xlsx"
   },
   "rec": {
-   "value": "放空",
+   "value": "中立",
    "cell": "Val!B125",
-   "file": "towa/dist/20261115_TOWA個股模型_v0.3.5.xlsx"
+   "file": "towa/dist/20261115_TOWA個股模型_v0.3.6.xlsx"
   },
   "dcf_A": {
-   "value": 1423.65950648068,
+   "value": 1724.46449170746,
    "cell": "Val!B21",
-   "file": "towa/dist/20261115_TOWA個股模型_v0.3.5.xlsx"
+   "file": "towa/dist/20261115_TOWA個股模型_v0.3.6.xlsx"
   },
   "dcf_C": {
-   "value": 1088.43368760988,
+   "value": 1252.33111316855,
    "cell": "Val!D21",
-   "file": "towa/dist/20261115_TOWA個股模型_v0.3.5.xlsx"
+   "file": "towa/dist/20261115_TOWA個股模型_v0.3.6.xlsx"
   },
   "model_px": {
    "value": 1877,
    "cell": "Val!B110",
-   "file": "towa/dist/20261115_TOWA個股模型_v0.3.5.xlsx",
+   "file": "towa/dist/20261115_TOWA個股模型_v0.3.6.xlsx",
    "date": "2026-11-05"
   },
   "pe_fy28": [
    {
-    "value": 16.6332864065329,
+    "value": 13.5589581263369,
     "cell": "Val!B116",
-    "file": "towa/dist/20261115_TOWA個股模型_v0.3.5.xlsx"
+    "file": "towa/dist/20261115_TOWA個股模型_v0.3.6.xlsx"
    },
    {
-    "value": 23.4251132747907,
+    "value": 18.0307332783237,
     "cell": "Val!C116",
-    "file": "towa/dist/20261115_TOWA個股模型_v0.3.5.xlsx"
+    "file": "towa/dist/20261115_TOWA個股模型_v0.3.6.xlsx"
    },
    {
-    "value": 27.1261628602569,
+    "value": 20.4143753358853,
     "cell": "Val!D116",
-    "file": "towa/dist/20261115_TOWA個股模型_v0.3.5.xlsx"
+    "file": "towa/dist/20261115_TOWA個股模型_v0.3.6.xlsx"
    }
   ],
   "cash": {
@@ -6580,56 +6580,56 @@
    "values": [
     [
      "FY2026",
-     7,
+     9,
      "PL!D16"
     ],
     [
      "FY2027",
-     7.58706731278771,
+     9.38676226941764,
      "PL!E16"
     ],
     [
      "FY2028",
-     8.4668239241457,
+     10.3865729189361,
      "PL!F16"
     ],
     [
      "FY2029",
-     9.06508194136731,
+     11.0672834704632,
      "PL!G16"
     ],
     [
      "FY2027",
-     5.92660124136467,
+     7.71950694534011,
      "PL!E32"
     ],
     [
      "FY2028",
-     6.01197123924081,
+     7.81061452743606,
      "PL!F32"
     ],
     [
      "FY2029",
-     6.36517329396294,
+     8.15530733144129,
      "PL!G32"
     ],
     [
      "FY2027",
-     5.73586268158517,
+     7.53267106833399,
      "PL!E48"
     ],
     [
      "FY2028",
-     5.19170765174217,
+     6.89862437458182,
      "PL!F48"
     ],
     [
      "FY2029",
-     5.29935314479372,
+     7.022796289877,
      "PL!G48"
     ]
    ],
-   "file": "towa/dist/20261115_TOWA個股模型_v0.3.5.xlsx"
+   "file": "towa/dist/20261115_TOWA個股模型_v0.3.6.xlsx"
   }
  },
  "7729": {
