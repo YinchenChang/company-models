@@ -1,4 +1,25 @@
-# tuc/ — 台燿（6274）個股模型 v0.2.3
+# tuc/ — 台燿（6274）個股模型 v0.2.4
+
+## v0.2.4（2026-11-15）：個股 HTML 版面 v1.3＋三層協調（兩讀數目標價、讀取層級、C0 公司實績對帳）
+
+### v0.2.4 獨立核對修正（合併前）：重跑 Sens 整本重算案例（不變性例外）
+
+- **原因：** 獨立核對發現 HTML 敏感度章摺疊表「整本重算對照」「全部案例的加權目標價與 FY2028 EPS」顯示 Siliconomics v0.19 全下游重建前的舊 `sens.json` 快照（以加權目標價 1,311 元的模型算出，分母卻是現行 1,266 元）：匯率低／高都 +3.5%（應約 0）；DCF 權重低案 +13.9%，與閉式主圖 +11.8% 矛盾。
+- **做法：** 以 merge main 後的同版重跑 `python3 tuc/sens_tuc.py`，更新 `tuc/sens.json`，再整本重建、LibreOffice 重算、`gen_html_json.py`、`build_company_html.py`。
+- **不變性例外：** 只動 Sens 頁整本重算案例值（Sens!D、E 欄 65 列；3 列 G、H 欄 FY2028 EPS 微動，含 Wattonomics 錨定案例），以及引用這些案例值的 README 頁 A30、A34 兩格公式文字（隨 Sens 自動更新）；`tools/xlsx_diff.py` 對前一份 dist 其餘格 0 差異。加權目標價 1,265.92 元、評等（買進）、其他頁不變；Coord 另一側讀數快照狀態 CURRENT。本節以下「加註」所說的 +3.5% 偏移已由本次重跑消除，該段保留不改寫。
+- **結果：** 基準加權目標價 1,265.92 元（與 Val 頁一致）；匯率低／高 0.0%／0.0%；DCF 權重低／高 +11.8%／−11.8%（與閉式主圖一致）；市場係數 ×0.8／×1.2 −13.5%／+8.4%；2028 年售價指數低 −11.0%。
+- **驗證：** `check_company_html tuc` 全部通過；`check_layout_v13 --xlsx` ok；`tools/baseline_coordination/check.py` 0 項不符；LibreOffice 重算錯誤格 0。
+
+- **依據：** 工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`、`docs/workorders/20261114_C0實績對帳補列_七家.md`；規則 `docs/plan/三層基準協調規則.md` v1.4.2；`tools/coord/README.md`；版面 `docs/plan/個股HTML版面規格.md` v1.3（樣板 NVIDIA v0.3.10、台達電、同次產業台光電 v0.5.4）。
+- **做法：** 共通步驟 `tuc/c13.py`、`tuc/html13.py`（高速 CCL／PCB 四家同一份；c13 新增可選 `rev_label`、`ni_label`，向下相容），台燿設定在 `tuc/v13_post.py`；`build_tuc.py` 存檔前呼叫 `tools/coord` 的 `add_sheet` 後套用（`sens_tuc.py` 的案例建置不套用）；`gen_html_json.py` 最後呼叫 `html13.apply`（含 `COORD.inject_html`）。主引擎掛鉤：`engine(..., s, wm)` 在 `SIL_COORD_ALT=1` 且情境 B、C、未指定 `wm` 時以 `WTA_MF`（`wta_27／28／29`）縮放 CY2027 起市場（情境 A 不縮放；FY2026 校準不受影響；與 `TUC_WTA` 的 Sens 案例分開）。
+- **兩讀數（`tuc/coord_alt.json`，Siliconomics v0.19；對帳中 CY2027–CY2029）：** 現行加權目標價 1,265.92 元（買進，+26.0%）；另一側 1,070.07 元（**中立**，+6.5%）；DCF 892.58 → 770.05、Comparable（未調整）1,762.59 → 1,473.18。兩讀數評等不同。alt_run 檢查列：另一側建置與現行建置一致。
+- **C0（實績）：** 實績＝月營收 2026-09 61.26 億元、2026-10 64.78 億元、前 10 月累計 487.82 億元（年增 102.7%；TechNews 2026-11-05 https://finance.technews.tw/2026/11/05/tuc-6274-202610-financial-report/ ；9 月與前 9 月 423.04 億元見 TechNews 2026-10-05）、3Q26 營收 179.49 億元（季報，Q 頁）。層級隱含＝Siliconomics AI 高速 CCL 市場 CY2026 US$8.19B × 台燿 FY2026 有效份額 9.8% × 匯率 32＝256.8 億元。**判定：無可比實績（層級值同源）**——Siliconomics 沒有台燿份額，份額＝高速材料營收錨點 ÷ 市場（＝Siliconomics 市場），市場大小消去，只檢驗營收錨點；公司未揭露高速材料營收金額（法說只給 ELL／SLL 占比 1Q26 38%、2Q26 39%）。參考列（42% × 實績營收）主讀數 −4.3%、第二讀數 +17.4%，不判定。上限檢查通過（44%）。對帳中項目 0。
+- **Hist 頁：** stockanalysis 年度損益表 FY2022–FY2025（https://stockanalysis.com/quote/tpex/6274/financials/income-statement/ ，2026-11-15 讀取）；EPS 為公司公告基本 EPS（4.69／3.05／9.56／12.13）。
+- **不變性：** `tools/xlsx_diff.py` 對 v0.2.3（容差 1e-9）：既有格只有 README!A1（版號、本版說明；A1 標題版號由舊的 v0.2.1 更正）不同，其餘皆為新增頁與新增格；目標價、評等不變。
+- **加註（舊節數字）：** v0.2.3 節的「加權目標價 1,311 元（DCF 982）、上檔空間 +30.4%」為當時成品；之後 Siliconomics v0.19 全下游重建原地更新 v0.2.3 成品，現行為加權目標價 1,265.92 元（DCF 892.58、Comparable 調整後 1,639.27）、上檔空間 +26.0%、買進。**Sens 頁整本重算案例（`sens.json`）未隨該次重建重跑**：案例目標價仍以 1,311 元時的模型算出，「相對基準」欄以現行 1,266 元為分母，故多數案例帶約 +3.5% 的偏移（例：匯率低／高皆 +3.5%，實際應約 0）。本版依不變性規則不改既有格，建議下一版重跑 `python3 tuc/sens_tuc.py`（只改 Sens 頁案例值，不影響目標價）。v1.3 新增的加權目標價敏感度主圖取自 Sens「目標價參數敏感度」閉式表（現行值），不受影響；HTML 原有整本重算龍捲風圖摺疊為對照。
+- **驗證：** `check_company_html tuc` 全部通過；`check_layout_v13 --xlsx` ok；`tools/baseline_coordination/check.py` 0 項不符；LibreOffice 重算錯誤格 0。
+- **coord_meta：** `siliconomics/builder/seed/coord_meta_v0.19.json` 的 `hardware_companies` 需加入 `tuc`（由主控合併時統一加入；本 PR 不改）。
+- 成品：`dist/20261115_台燿個股模型_v0.2.4.xlsx`／`.html`；v0.2.3 移到 `dist/_待刪除/`。
 
 ## v0.2.3（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 
