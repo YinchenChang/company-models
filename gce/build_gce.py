@@ -247,7 +247,7 @@ for _row in FD.in_rows(dict(
         crp=(0.0078, "Interested-party", "Damodaran Country Risk Premium 表（2026 年 1 月更新）：Taiwan（Moody's Aa3）CRP 0.78%（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html；2026-11-05 讀取）", "Andy 2026-11-05 20:45：非美國市場 ERP＝5%＋CRP，不設股權成本下限；Damodaran 2026-07 更新檔未取得，沿用 2026-01 表"),
         kd=("=rf+0.005", "Assumed", "台灣 10 年期公債＋信用利差 0.5%（Assumed；銀行借款與無擔保可轉債為主，利息費用未取得）", "負債占資本很小，對 WACC 影響很小"),
         tax_w=("=1-nir_f", "Derived", "＝1 − In 頁 nir_f（淨利 ÷ 稅前，與 PL 推導區塊同一口徑）", "https://stockanalysis.com/quote/tpe/2368/financials：FY2025 淨利 9,607 ÷ 營業利益 14,043；營所稅 20%。NOPAT 各年同用本值"),
-        debt=("=5.743993+0+7.203198+0", "Verified", MOPS_BS + "：短期借款 5,743,993＋應付短期票券 0＋長期借款 7,203,198＋應付公司債 0（114 年底 8,126,234 已於 2026 年轉換）", "富邦季表另列一年內到期長期負債 230 百萬元（MOPS 摘錄未列；未計入，見 README）；2026-06-30：6,575＋229.15＋6,681"),
+        debt=("=5.743993+0+7.203198+0+0.230", "Verified", MOPS_BS + "：短期借款 5,743,993＋應付短期票券 0＋長期借款 7,203,198＋應付公司債 0（114 年底 8,126,234 已於 2026 年轉換）＋一年內到期長期負債 230 百萬元（" + FB_BS + "；MOPS t164sb03 摘要未單列，含在「其他流動負債」2,779,304 千元內；轉載）", "債務就是債務：一年內到期長期負債計入借款（主 session 2026-11-15 工程口徑）；2026-06-30：6,575＋229.15＋6,681"),
         lease=("=0.054894+0.482247", "Verified", MOPS_BS + "：租賃負債 流動 54,894＋非流動 482,247", FB_BS + "：55＋482"),
         cash=("=22.998984+0.001634+0.044876", "Verified", MOPS_BS + "：現金及約當現金 22,998,984＋FVTPL 流動 1,634＋攤銷後成本流動 44,876", FB_BS + "：22,999＋2＋45"),
         inv=("=0.26004+0.0533", "Verified", MOPS_BS + "：FVTPL 非流動 260,040＋攤銷後成本非流動 53,300", "2026-06-30：281.18；Sens：不計"),
@@ -689,7 +689,7 @@ DPATHS = [dict(name=s_, label=f"情境 {s_}（{ {'A': '順利', 'B': '平平', '
               ebit={y: _ebit(s_, y) for y in FY_X}, tax={y: "1-nir_f" for y in FY_X}, ebit_note="FY2030 起＝淨利 ÷ nir_f − nop_f",
               stub_fcff=f"stub_frac*(PL!$D${PB[s_]['oi']}*nir_f+PL!$D${PB[s_]['rev']}*(fc_da-fc_cx)-fc_wc*(PL!$D${PB[s_]['rev']}-PL!$C${PB[s_]['rev']}))") for s_ in SC]   # 第二輪修正：stub 期（2026-07～12）FCFF＝FY2026 FCFF × stub_frac
 RD_ = FD.write_detail(DCFW, 4, DPATHS, FY_X, 1.0, conv_from=2029, stub=True, title="三情境 FCFF 明細（NT$B；會計年度＝日曆年，評價日 2026-12-31）")
-RD_["end"] = FD.write_checks(DCFW, RD_["end"], nc_bs="22.998984+0.001634+0.044876+0.26004+0.0533-(5.743993+7.203198)-(0.054894+0.482247)-0", nc_note="2026-09-30 資產負債表（NT$B；公開資訊觀測站）：現金 22.999＋流動金融資產 0.047＋非流動金融資產 0.313 −（短期借款 5.744＋長期借款 7.203；公司債 0）− 租賃（0.055＋0.482）") + 1
+RD_["end"] = FD.write_checks(DCFW, RD_["end"], nc_bs="22.998984+0.001634+0.044876+0.26004+0.0533-(5.743993+7.203198+0.230)-(0.054894+0.482247)-0", nc_note="2026-09-30 資產負債表（NT$B；公開資訊觀測站；一年內到期長期負債取富邦季表）：現金 22.999＋流動金融資產 0.047＋非流動金融資產 0.313 −（短期借款 5.744＋長期借款 7.203＋一年內到期 0.230；公司債 0）− 租賃（0.055＋0.482）") + 1
 DCFW.column_dimensions["A"].width = 58; DCFW.column_dimensions["B"].width = 40
 for _c in "CDEFGH": DCFW.column_dimensions[_c].width = 13
 for _rr in range(5, 26):          # 舊 0.1 節（第 5–25 列）整段改寫；0.2、0.3 節位置不動
