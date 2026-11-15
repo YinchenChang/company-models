@@ -524,7 +524,7 @@ def coord(wb, C):
     # ---- 區塊 3：無可比實績與並列 ----
     ws.cell(r, 1, "C. 沒有可比公司實績的項目與並列讀法（參考；不判定）").font = BOLD; r += 1
     ws.cell(r, 1, "名目算力 2026 年底（公司實績）"); ws.cell(r, 2, "無可比實績"); ws.cell(r, 7, "無可比實績")
-    ws.cell(r, 8, "2026 年底尚未發生；公司最近揭露 2026-09-30 為 1.7 GW（10-Q）。層級 2026 年底 2.177 GW（同源於個股模型寫回）與公司目標 >2 GW（SiteOnly）都不是實績"); ws.cell(r, 9, "—"); ws.cell(r, 10, "WIF_PlayerGW_YE_xai_2026／SiteOnly_2026（連 F1）"); ws.cell(r, 11, "Derived（同源）"); rn1 = r; r += 1
+    ws.cell(r, 8, f"2026 年底尚未發生；公司最近揭露 2026-09-30 為 1.7 GW（10-Q）。層級 2026 年底 {WN['WIF_PlayerGW_YE_xai_2026']:.3f} GW（＝2025 年底公司揭露 {WN['WIF_PlayerGW_YE_xai_2025']:.1f} GW＋2026 新增 GW〔個股模型寫回〕，兩段皆同源）與公司目標 >2 GW（SiteOnly）都不是實績"); ws.cell(r, 9, "—"); ws.cell(r, 10, "WIF_PlayerGW_YE_xai_2026／SiteOnly_2026（連 F1）"); ws.cell(r, 11, "Derived（同源）"); rn1 = r; r += 1
     ws.cell(r, 1, "2026-06-30 名目算力：公司 1.4 GW vs Wattonomics obs_xai 1.4 GW"); ws.cell(r, 2, "2026-06-30（同源）"); ws.cell(r, 3, "GW")
     ws.cell(r, 4, f"=Q!E{QR['gw']}").number_format = "0.00"; ws.cell(r, 5, f"=C{wrows['obs']}").number_format = "0.00"; ws.cell(r, 6, f"=D{r}/E{r}-1").number_format = "+0.0%;-0.0%"
     ws.cell(r, 7, "參考（同源），不判定"); ws.cell(r, 8, SRC_G); ws.cell(r, 9, GR_G); ws.cell(r, 10, "Wattonomics In obs_xai＝公司同一揭露（B#46）：不是獨立證據，差距恆為 0"); ws.cell(r, 11, "Interested-party（同源）"); rn2 = r; r += 1
