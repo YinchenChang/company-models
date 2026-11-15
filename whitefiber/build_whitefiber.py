@@ -10,7 +10,7 @@ from openpyxl.workbook.defined_name import DefinedName
 from openpyxl.utils import get_column_letter as CL
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VER = "v0.4.0"
+VER = "v0.4.1"
 BUILT = "2026-11-15"
 OVR = json.loads(os.environ.get("SENS_OVR", "{}"))
 TKV = os.environ.get("WYFI_TKV", "v22.0")
@@ -250,7 +250,15 @@ inp("peer_nd_mode", "同業淨負債口徑（0＝最新實際；1＝共識預估
 inp("po_rev", "Oracle NTM 共識營收", "US$M", None, "=90423*7/12+131711*5/12", None, "Interested-party", "oracle/data/consensus_orcl_20261022.json", "—", INC_SELL)
 inp("po_cx", "Oracle NTM 共識資本支出", "US$M", None, "=93961*7/12+100962*5/12", None, "Interested-party", "oracle/In cx2027、cx2028", "—", INC_SELL)
 inp("rel_mult", "相對倍數調整係數", "x", None, 1.0, None, "Assumed", "1.00（未調整：缺 WhiteFiber 10 年歷史倍數，上市不足 2 年）", "原則第 10 節第 18、47 條")
-inp("mult_adj", "Comparable 倍數調整（敏感度用；基準 1）", "x", 0.8, 1.0, 1.2, "Assumed", "敏感度 ±20%", "—")
+inp("mult_adj", "Comparable 倍數調整（敏感度用；基準 1；雲端與託管兩分部同時）", "x", 0.8, 1.0, 1.2, "Assumed", "敏感度 ±20%", "—")
+# 託管分部同業（Andy 2026-11-15：同業法改為分部加總；託管用資料中心／託管同業倍數，雲端用新雲同業倍數）
+inp("sotp_on", "Comparable 分部加總（1＝託管 × 資料中心同業、雲端 × 新雲同業；0＝v0.4.0 全公司 × 新雲同業）", "—", None, 1, None, "Assumed", "Andy 2026-11-15 決定改為分部加總", "0 只供拆解（scripts/decomp_v50.py）")
+inp("dlr_ev", "Digital Realty（DLR）企業價值（2026-10-07 收盤）", "US$M", None, 86198, None, "Derived", SRCF["MS_DLR"] + "：EV 86,198（股價 180.47）", "託管同業（上市資料中心營運商，REIT）")
+inp("dlr_eb", "Digital Realty NTM 共識 EBITDA（2026 × 0.25＋2027 × 0.75）", "US$M", None, "=3841*0.25+4349*0.75", None, "Interested-party", SRCF["MS_DLR"] + "：2026 3,841、2027 4,349", "原則 49 月份加權（估值日 2026-10 起 12 個月）", INC_SELL)
+inp("eqix_ev", "Equinix（EQIX）企業價值（約 2026-10-02）", "US$M", None, 121482, None, "Derived", SRCF["MS_EQIX"] + "：EV 121,482（股價 1,012.33）", "託管同業（上市資料中心營運商，REIT）")
+inp("eqix_eb", "Equinix NTM 共識 EBITDA（2026 × 0.25＋2027 × 0.75）", "US$M", None, "=5286*0.25+5930*0.75", None, "Interested-party", SRCF["MS_EQIX"] + "：2026 5,286、2027 5,930", "原則 49 月份加權", INC_SELL)
+inp("colo_disc", "託管倍數相對資料中心同業中位數的折價（小型、單一主要承租人、非 REIT）", "%", None, 0.0, 0.28, "Assumed", "基準不折價（Andy 2026-11-15 指定用資料中心／託管同業倍數）；高＝28%（約 15 倍，data/whitefiber_facts_20261008.json val.peer.coloDefault 下緣）", "只進 Sens")
+inp("tp_v040", "v0.4.0 加權目標價（全公司 × 新雲同業中位數）", "US$", None, 5.39, None, "Derived", "whitefiber/dist/_待刪除/20261115_WhiteFiber個股模型_v0.4.0.xlsx（Val 加權目標價 5.3855；投資建議放空）", "只作對照")
 
 sec("H. 託管分部（NC-1、MTL；Seg 其他事業列、Thesis 託管列）")
 inp("colo_q4", "託管＋其他營收（Q4 2026）", "US$M", None, 21.8, None, "Derived", "NC-1 Nscale 10 年約 865 ÷ 10 ÷ 40 MW＝每 MW 年 2.1625（直線）：第一期 20 MW 全季 10.81＋第二期 20 MW 自 11-09 起 6.16＋MTL-1／MTL-3 以 Q3 水準 4.52＋其他 0.3（Interested-party 合約、Derived）", "—")
@@ -851,7 +859,7 @@ LS.column_dimensions["A"].width = 62
 # Val：DCF 50%＋Comparable 50%
 # =====================================================================================
 V = wb.create_sheet("Val")
-V["A1"] = "Val — 目標價（現價日＋12 個月）＝DCF（FCFF、WACC；DCF 標準規格）50%＋Comparable（新雲同業前瞻 EV/EBITDA）50%；情境權重 A 25%／B 50%／C 25%（判斷預設，Andy 可改）"
+V["A1"] = "Val — 目標價（現價日＋12 個月）＝DCF（FCFF、WACC；DCF 標準規格）50%＋Comparable（分部加總：雲端分部 × 新雲同業前瞻 EV/EBITDA、託管分部 × 上市資料中心同業前瞻 EV/EBITDA；Andy 2026-11-15）50%；情境權重 A 25%／B 50%／C 25%（判斷預設，Andy 可改）"
 V["A2"] = "評價日 2026-09-30（Q3 資產負債表）。金額百萬美元、股數百萬股。DCF：NOPAT＝營業利益 − 長期稅率 × MAX(0, 營業利益)（股票薪酬視為現金成本）＋折舊 − 資本支出 − 營運資金增加＋預付淨額；永續 NOPAT ×(1 − g ÷ RONIC) ÷ (WACC − g)，RONIC＝WACC；股數＝評價日流通股數＋RSU／選擇權淨股數，未來瀑布新股不進 DCF 每股（X35）；可轉債列負債。Comparable 錨定 FY2027 年底（含當時的淨負債與股數）"
 hdr(V, 3, ["項目", "單位", "數值", "", "", "說明"])
 VR = {}
@@ -927,7 +935,7 @@ for j in range(3):
     cc = CL(3 + j); c_ = V.cell(r, 3 + j, f"={cc}{DC['ps']}*(1+ke)^t_tp"); c_.number_format = "#,##0.00"; c_.fill = KEY
 DC["v12"] = r; r += 2
 # Comparable
-V.cell(r, 1, "0.2 Comparable（新雲同業 NTM EV/EBITDA；同業估值日 2026-11-11，比現價日早一個交易日）").font = BOLD; r += 1
+V.cell(r, 1, "0.2 Comparable：雲端分部同業（新雲 NTM EV/EBITDA；同業估值日 2026-11-11，比現價日早一個交易日）").font = BOLD; r += 1
 PEERH = r
 hdr(V, r, ["同業", "代號", "EV（US$B）", "NTM EV/EBITDA", "估值日", "口徑與來源", "NTM EBITDA 率", "淨負債 ÷ NTM EBITDA", "資本支出 ÷ 營收", "營收成長（下一年）"]); r += 1
 P0 = r
@@ -960,7 +968,18 @@ VR["selfm"] = r; SELF_R = r
 for j, f_ in enumerate((f"=PL!E{PR_['B']['aebm']}", f"=netdebt0/PL!E{PR_['B']['aeb']}", f"=Thesis!F{TR['B']['cx']}/PL!E{PR_['B']['rev']}", f"=PL!E{PR_['B']['revg']}")):
     V.cell(r, 7 + j, f_).number_format = "0.00" if j == 1 else "0.0%"
 r += 1
-V.cell(r, 1, "同業中位數（前瞻 EV/EBITDA）"); V.cell(r, 4, f"=MEDIAN(D{P0}:D{P1})").number_format = "0.00"; VR["mult"] = r; dn("mult", f"Val!$D${r}"); r += 2
+V.cell(r, 1, "同業中位數（前瞻 EV/EBITDA；雲端分部倍數）"); V.cell(r, 4, f"=MEDIAN(D{P0}:D{P1})").number_format = "0.00"; VR["mult"] = r; dn("mult", f"Val!$D${r}"); r += 2
+V.cell(r, 1, "0.2b 託管分部同業（上市資料中心營運商 NTM EV/EBITDA；Andy 2026-11-15 分部加總）").font = BOLD; r += 1
+hdr(V, r, ["同業", "代號", "EV（US$M）", "NTM EV/EBITDA", "估值日", "口徑與來源"]); VR["hph"] = r; r += 1
+H0 = r; VR["hp0"] = r
+for nm, tk, ev, eb, dt, src in (("Digital Realty", "DLR", "dlr_ev", "dlr_eb", "2026-10-07", "MarketScreener 估值頁（EV Derived；EBITDA 為賣方共識 Interested-party）；REIT、批發型資料中心為主，最接近 NC-1 的批發長約"),
+                                ("Equinix", "EQIX", "eqix_ev", "eqix_eb", "2026-10-02", "MarketScreener 估值頁（EV Derived；EBITDA 為賣方共識 Interested-party）；REIT、零售型共置與互連為主，最接近 MTL 多客戶共置")):
+    V.cell(r, 1, nm); V.cell(r, 2, tk); V.cell(r, 3, "=" + ev).number_format = "#,##0.0"; V.cell(r, 4, f"={ev}/{eb}").number_format = "0.00"
+    V.cell(r, 5, dt); V.cell(r, 6, src); r += 1
+H1 = r - 1
+V.cell(r, 1, "託管同業中位數（前瞻 EV/EBITDA）"); V.cell(r, 4, f"=MEDIAN(D{H0}:D{H1})").number_format = "0.00"; VR["multh0"] = r; r += 1
+V.cell(r, 1, "託管分部倍數（同業中位數 ×（1 − 折價））"); V.cell(r, 4, f"=D{VR['multh0']}*(1-colo_disc)").number_format = "0.00"; VR["multh"] = r; dn("mult_colo", f"Val!$D${r}"); r += 1
+V.cell(r, 1, "  同業選取：上市資料中心營運商中有 NTM EBITDA 共識者 2 家（Digital Realty、Equinix）；Applied Digital、Core Scientific、Cipher Mining（HPC 託管）無可用 NTM EBITDA 共識或為負、Galaxy 未取得（data/whitefiber_facts_20261008.json 資料缺口），未納入；同業少於 8 家不做迴歸（原則 7）。估值日 2026-10 初，早於雲端同業 2026-11-11（本輪 MarketScreener 頁無法開啟，未更新）；WhiteFiber 規模小、NC-1 單一主要承租人、非 REIT，折價 28%（約 15 倍）列 Sens").font = GREY; r += 2
 hdr(V, r, ["項目", "單位", "情境 A", "情境 B", "情境 C", "說明"]); r += 1
 CO = {}
 def vr3(k, lab, unit, f, fmt="#,##0.00", note=None):
@@ -970,7 +989,13 @@ def vr3(k, lab, unit, f, fmt="#,##0.00", note=None):
     if note: V.cell(r, 6, note)
     r += 1
 vr3("eb", "FY2028 調整後 EBITDA（FY2027 年底的前瞻一年）", "US$M", lambda s, c: f"=PL!F{PR_[s]['aeb']}")
-vr3("ev0", "企業價值（未調整：× 同業中位數）", "US$M", lambda s, c: f"={c}{CO['eb']}*mult*mult_adj", "#,##0.0")
+vr3("rvh", "  FY2028 託管分部營收（NC-1、MTL、代管服務、其他；Seg 第二分部）", "US$M", lambda s, c: f"=PL!F{PR_[s]['oth']}")
+vr3("ebh", "  FY2028 託管分部 EBITDA（營收 ×（託管 EBITDA 率 − 營業費用率）；營業費用依營收比例分攤）", "US$M", lambda s, c: f"={c}{CO['rvh']}*(colo_m-sga_r)")
+vr3("ebc", "  FY2028 雲端分部 EBITDA（調整後 EBITDA − 託管分部）", "US$M", lambda s, c: f"={c}{CO['eb']}-{c}{CO['ebh']}")
+vr3("evc0", "  雲端分部企業價值（× 新雲同業中位數）", "US$M", lambda s, c: f"=IF(sotp_on=1,{c}{CO['ebc']},{c}{CO['eb']})*mult*mult_adj", "#,##0.0")
+vr3("evh0", "  託管分部企業價值（× 資料中心同業倍數）", "US$M", lambda s, c: f"=IF(sotp_on=1,{c}{CO['ebh']}*mult_colo*mult_adj,0)", "#,##0.0")
+vr3("ev0", "企業價值（未調整：分部加總）", "US$M", lambda s, c: f"={c}{CO['evc0']}+{c}{CO['evh0']}", "#,##0.0")
+vr3("sotpchk", "檢查：雲端＋託管分部 EBITDA − 調整後 EBITDA（應為 0）", "US$M", lambda s, c: f"={c}{CO['ebc']}+{c}{CO['ebh']}-{c}{CO['eb']}", "0.000000")
 vr3("ev", "企業價值（× 相對倍數係數 rel_mult）", "US$M", lambda s, c: f"={c}{CO['ev0']}*rel_mult", "#,##0.0", '="rel_mult "&TEXT(rel_mult,"0.00")&"（未調整：缺 WhiteFiber 10 年歷史倍數）"')
 vr3("nd27", "淨負債（FY2027 年底：借款＋融資租賃 − 現金）", "US$M", lambda s, c: f"=CF!E{CR_[s]['debt']}+finl_q3-CF!E{CR_[s]['cash1']}", "#,##0.0")
 vr3("sh27", "股數（FY2027 年底，含瀑布新股＋RSU／選擇權）", "百萬股", lambda s, c: f"=CF!E{CR_[s]['sh1']}+rsu_net", "0.000")
@@ -979,6 +1004,9 @@ vr3("ps", "Comparable 每股（FY2027 年底；含非上市權益證券投資）
 vr3("v120", "Comparable 情境價值（未調整；折回目標價時點）", "US$", lambda s, c: f"={c}{CO['ps0']}/(1+ke)^t27")
 vr3("v12", "Comparable 情境價值（折回目標價時點）", "US$", lambda s, c: f"={c}{CO['ps']}/(1+ke)^t27")
 for j in range(3): V.cell(CO["v12"], 3 + j).fill = KEY
+vr3("pcc", "  分部貢獻：雲端分部企業價值每股（折回目標價時點；未扣淨負債）", "US$", lambda s, c: f"={c}{CO['evc0']}*rel_mult/{c}{CO['sh27']}/(1+ke)^t27")
+vr3("pch", "  分部貢獻：託管分部企業價值每股（同上）", "US$", lambda s, c: f"={c}{CO['evh0']}*rel_mult/{c}{CO['sh27']}/(1+ke)^t27")
+vr3("pcn", "  分部貢獻：淨負債、非上市投資與 0 下限（＝情境價值 − 兩分部）", "US$", lambda s, c: f"={c}{CO['v12']}-{c}{CO['pcc']}-{c}{CO['pch']}")
 r += 1
 V.cell(r, 1, "0.3 結論").font = BOLD; r += 1
 hdr(V, r, ["項目", "單位", "數值", "對照", "", "說明"]); r += 1
@@ -1024,17 +1052,19 @@ crow("npvBC", "每增加 1 MW 的增量 DCF 企業價值：B 對 C", "US$B／GW"
 crow("npvps", "每增加 1 MW 的增量情境目標價：A 對 B（US$／股）", "US$", f"=(C{CON['tps']}-D{CON['tps']})/(mwA_30-mwB_30)", "#,##0.00")
 crow("cons", "市場共識目標價（2026-11-10，11 家平均，只作對照）", "US$", "=cons_tp")
 crow("v413", "v0.2.1 加權目標價（舊 JS 引擎；現價 7.80）", "US$", "=tp_v053")
-crow("chg", "目標價變動：v0.4.0 − v0.2.1", "US$", f"=C{CON['tp']}-C{CON['v413']}")
+crow("chg", "目標價變動：v0.4.1 − v0.2.1", "US$", f"=C{CON['tp']}-C{CON['v413']}")
+crow("v040", "v0.4.0 加權目標價（全公司 × 新雲同業中位數；現價 9.21）", "US$", "=tp_v040")
+crow("chg040", "目標價變動：v0.4.1 − v0.4.0（同業法改分部加總）", "US$", f"=C{CON['tp']}-C{CON['v040']}")
 crow("tvsh", "情境 B：永續價值占企業價值", "%", f"=D{DC['tvsh']}", "0.0%")
 # 橫幅與白話字串（公式組字；原則 13、31、57、60）
 crow("bn_scn", "橫幅：擴張與目標價", "—", f'=IF(AND(C{CON["tps"]}<D{CON["tps"]},D{CON["tps"]}<E{CON["tps"]}),"A 情境擴張最多但目標價最低："&TEXT(C{CON["tps"]},"0.00")&"／"&TEXT(D{CON["tps"]},"0.00")&"／"&TEXT(E{CON["tps"]},"0.00")&"（A／B／C）；每增加 1 MW（A 對 B）DCF 企業價值變動 "&TEXT(C{CON["npvAB"]},"+0.0;-0.0")&" 百萬美元",IF(AND(C{CON["tps"]}>D{CON["tps"]},D{CON["tps"]}>E{CON["tps"]}),"擴張越多目標價越高："&TEXT(C{CON["tps"]},"0.00")&"／"&TEXT(D{CON["tps"]},"0.00")&"／"&TEXT(E{CON["tps"]},"0.00")&"（A／B／C）","情境目標價 "&TEXT(C{CON["tps"]},"0.00")&"／"&TEXT(D{CON["tps"]},"0.00")&"／"&TEXT(E{CON["tps"]},"0.00")&"（A／B／C；非單調）")&IF(C{CON["npvAB"]}<0,"；但 DCF 口徑每增加 1 MW（A 對 B）企業價值 "&TEXT(C{CON["npvAB"]},"+0.0;-0.0")&" 百萬美元、（B 對 C）"&TEXT(C{CON["npvBC"]},"+0.0;-0.0")&"：擴張價值為負，情境目標價的差異來自 Comparable 的 EBITDA 倍數",""))', None)
 UB = f'IF(C{CON["up"]}>0.5,NA(),IF(C{CON["up"]}>0.25,0.5,IF(C{CON["up"]}>=-0.25,0.25,IF(C{CON["up"]}>=-0.5,-0.25,-0.5))))'
 LB = f'IF(C{CON["up"]}>0.5,0.5,IF(C{CON["up"]}>0.25,0.25,IF(C{CON["up"]}>=-0.25,-0.25,IF(C{CON["up"]}>=-0.5,-0.5,NA()))))'
-MREQ = lambda b, cond: (f'=IF({cond},"—",((px*(1+{b})-w_dcf*C{CON["dcf"]})/(1-w_dcf)*(1+ke)^t27+wA*C{CO["nd27"]}/C{CO["sh27"]}+wB*D{CO["nd27"]}/D{CO["sh27"]}+wC*E{CO["nd27"]}/E{CO["sh27"]}-hold*(wA/C{CO["sh27"]}+wB/D{CO["sh27"]}+wC/E{CO["sh27"]}))'
-                  f'/((wA*C{CO["eb"]}/C{CO["sh27"]}+wB*D{CO["eb"]}/D{CO["sh27"]}+wC*E{CO["eb"]}/E{CO["sh27"]})*mult_adj*rel_mult))')
-crow("mup", "升一級所需同業倍數（其他不變；Comparable 每股未觸及 0 下限時）", "x", MREQ("0.5" if False else UB.replace("NA()","0.5"), f'C{CON["up"]}>0.5'), "0.00", "原則 36：反解加權目標價＝升一級邊界")
-crow("mdn", "降一級所需同業倍數", "x", MREQ(LB.replace("NA()","-0.5"), f'C{CON["up"]}<-0.5'), "0.00", "反解加權目標價＝降一級邊界（現行邊界）")
-crow("bn_edge", "橫幅：距級距邊界", "—", f'=IF(C{CON["dist"]}<0.05,"接近級距邊界：","")&"距最近級距邊界 "&TEXT(C{CON["dist"]}*100,"0.0")&" 個百分點；同業倍數 "&TEXT(mult,"0.00")&" 倍，升一級需 "&IF(ISNUMBER(C{CON["mup"]}),TEXT(C{CON["mup"]},"0.00")&" 倍","—（已最高級）")&"、降一級需 "&IF(ISNUMBER(C{CON["mdn"]}),TEXT(C{CON["mdn"]},"0.00")&" 倍","—")', None)
+MREQ = lambda b, cond: (f'=IF({cond},"—",((px*(1+{b})-w_dcf*C{CON["dcf"]})/(1-w_dcf)*(1+ke)^t27+wA*C{CO["nd27"]}/C{CO["sh27"]}+wB*D{CO["nd27"]}/D{CO["sh27"]}+wC*E{CO["nd27"]}/E{CO["sh27"]}-hold*(wA/C{CO["sh27"]}+wB/D{CO["sh27"]}+wC/E{CO["sh27"]})-rel_mult*(wA*C{CO["evh0"]}/C{CO["sh27"]}+wB*D{CO["evh0"]}/D{CO["sh27"]}+wC*E{CO["evh0"]}/E{CO["sh27"]}))'
+                  f'/((wA*IF(sotp_on=1,C{CO["ebc"]},C{CO["eb"]})/C{CO["sh27"]}+wB*IF(sotp_on=1,D{CO["ebc"]},D{CO["eb"]})/D{CO["sh27"]}+wC*IF(sotp_on=1,E{CO["ebc"]},E{CO["eb"]})/E{CO["sh27"]})*mult_adj*rel_mult))')
+crow("mup", "升一級所需雲端同業倍數（託管倍數與其他不變；Comparable 每股未觸及 0 下限時）", "x", MREQ("0.5" if False else UB.replace("NA()","0.5"), f'C{CON["up"]}>0.5'), "0.00", "原則 36：反解加權目標價＝升一級邊界")
+crow("mdn", "降一級所需雲端同業倍數（託管倍數不變）", "x", MREQ(LB.replace("NA()","-0.5"), f'C{CON["up"]}<-0.5'), "0.00", "反解加權目標價＝降一級邊界（現行邊界）")
+crow("bn_edge", "橫幅：距級距邊界", "—", f'=IF(C{CON["dist"]}<0.05,"接近級距邊界：","")&"距最近級距邊界 "&TEXT(C{CON["dist"]}*100,"0.0")&" 個百分點；雲端同業倍數 "&TEXT(mult,"0.00")&" 倍（託管 "&TEXT(mult_colo,"0.00")&" 倍不變），升一級需 "&IF(ISNUMBER(C{CON["mup"]}),TEXT(C{CON["mup"]},"0.00")&" 倍","—（已最高級）")&"、降一級需 "&IF(ISNUMBER(C{CON["mdn"]}),TEXT(C{CON["mdn"]},"0.00")&" 倍","—")', None)
 crow("bn_dcf", "橫幅：DCF 有效性", "—", f'=C{CON["dvalid"]}', None)
 crow("val_lab", "估值評等標示（距邊界 <5pt 時加「邊界」）", "—", f'=C{CON["valrec"]}&IF(C{CON["dist"]}<0.05,"（邊界，±"&TEXT(C{CON["dist"]}*100,"0.0")&"pt）","")', None)
 crow("rec_lab", "評等標示（收支不足時並列估值評等與收支合計）", "—", f'=IF(C{CON["rec"]}="收支不足","收支不足〔估值評等："&C{CON["val_lab"]}&"；情境 B 的 FY2026–FY2030 自由現金流合計 "&TEXT(C{CON["gatev"]},"0.0")&" 百萬美元，入不敷出〕",C{CON["val_lab"]})', None)
@@ -1319,7 +1349,7 @@ def t4(k, lab, val, short, note, inp=False):
     V.cell(r, 7, f"=C{r}/D{r}-1").number_format = "+0.0%;-0.0%"
     r += 1
 t4("t4_dcf", "DCF 目標價（單純 DCF，情境加權）", f"=C{CON['dcf']}", "DCF", f'=IF(C{CON["dcf"]}=0,"三情境 DCF 皆失效（企業價值 ≤ 0），每股取 0（有限責任）","DCF 有效性："&C{CON["dvalid"]})')
-t4("t4_comp", "Comparable 目標價（情境加權）", f"=C{CON['comp']}", "Comparable", "新雲同業前瞻 EV/EBITDA 中位數 × FY2028 調整後 EBITDA，情境 25／50／25 加權")
+t4("t4_comp", "Comparable 目標價（情境加權）", f"=C{CON['comp']}", "Comparable", "分部加總：雲端分部 FY2028 EBITDA × 新雲同業中位數＋託管分部 × 上市資料中心同業中位數（Andy 2026-11-15），情境 25／50／25 加權")
 t4("t4_tp", "加權目標價（DCF 與 Comparable 加權；橫幅主值）", f"=C{CON['tp']}", "加權", f'="DCF "&TEXT(w_dcf,"0%")&"＋Comparable "&TEXT(1-w_dcf,"0%")&"；投資建議依此判定（再套收支關卡）"')
 t4("t4_cons", "市場共識目標價（11 家平均，2026-11-10，Q3 財報後）", "=cons_tp", "市場共識",
    "MarketScreener（S&P Capital IQ）新聞頁 2026-11-10：分析師平均目標價（出處見 Sources 頁）；賣方共識（Interested-party），只作對照，不進目標價")
@@ -1478,7 +1508,7 @@ lines = [
     ("thesis", '="命題：WhiteFiber 以多年期專用運算合約（雲端 RPO "&TEXT(rpo,"0.0")&" 百萬美元）、客戶預付（遞延收入 "&TEXT(def_open,"0.0")&"）與 NC-1 託管長約支撐的擴張，能否以高於資金成本的報酬轉成營收與現金，同時不讓資金缺口失控。命題模組（雲端在役 MW × 每 MW 年收入〔Tokenomics 持有成本 × 定價倍數 k〕、營運費用、租金、資本支出與折舊）驅動雲端服務分部；託管與其他另列"'),
     ("q", "核心問題：小型新雲靠合約與預付擴張，每增加 1 MW 雲端產能是否創造高於資金成本的價值；NC-1 託管長約能否撐住現金流；資金缺口要靠多少新債、可轉債與新股補，股東被稀釋多少。"),
     ("rec", f'="投資建議："&{VC("rec_lab")}&"（加權目標價 US$"&TEXT({VC("tp")},"0.00")&"，現價 US$"&TEXT(px,"0.00")&"〔"&TEXT(px_date,"yyyy-mm-dd")&"〕，上檔空間 "&TEXT({VC("up")},"+0.0%;-0.0%")&"）——條件式：在每 MW 年收入＝Tokenomics 持有成本 × k "&TEXT(k_mix,"0.000")&"（IREN 長約 Analogy）、計費比例 "&TEXT(u_bill,"0%")&"、AI 設備折舊 "&TEXT(life_ai,"0")&" 年、雲端在役 MW 假設（公司未揭露）、託管營收依 NC-1 合約的基準下；失效條件見本頁末"'),
-    ("o1", f'="重點觀察 1：DCF 情境加權 "&TEXT({VC("dcf")},"0.00")&"、Comparable "&TEXT({VC("comp")},"0.00")&"（同業中位數 "&TEXT(mult,"0.00")&" 倍 × FY2028 調整後 EBITDA）；"&{VC("bn_dcf")}&"。上檔空間 "&TEXT({VC("up")},"+0.0%;-0.0%")&"＝DCF 貢獻 "&TEXT({VC("dcfup")},"+0.0%;-0.0%")&"＋Comparable 貢獻 "&TEXT({VC("cmpup")},"+0.0%;-0.0%")&"＋相對倍數調整 "&TEXT({VC("adjup")},"+0.0%;-0.0%"){ALT_SENT}'),
+    ("o1", f'="重點觀察 1：DCF 情境加權 "&TEXT({VC("dcf")},"0.00")&"、Comparable "&TEXT({VC("comp")},"0.00")&"（分部加總：雲端分部 FY2028 EBITDA × 新雲同業中位數 "&TEXT(mult,"0.00")&" 倍＋託管分部 × 資料中心同業 "&TEXT(mult_colo,"0.00")&" 倍）；"&{VC("bn_dcf")}&"。上檔空間 "&TEXT({VC("up")},"+0.0%;-0.0%")&"＝DCF 貢獻 "&TEXT({VC("dcfup")},"+0.0%;-0.0%")&"＋Comparable 貢獻 "&TEXT({VC("cmpup")},"+0.0%;-0.0%")&"＋相對倍數調整 "&TEXT({VC("adjup")},"+0.0%;-0.0%"){ALT_SENT}'),
     ("o2", f'="重點觀察 2："&{VC("bn_scn")}&"。情境 B 的 FY2029 稅後 ROIC "&TEXT(Thesis!D{SUM_ROWS[0] + 5},"0.0%")&"，對照 WACC "&TEXT(wacc,"0.0%")&"。"'),
     ("o3", f'="重點觀察 3：收支關卡（FY2026–FY2030 自由現金流合計）情境 A／B／C 為 "&TEXT(Fund!C{FS["gate"]},"0.0")&"／"&TEXT(Fund!D{FS["gate"]},"0.0")&"／"&TEXT(Fund!E{FS["gate"]},"0.0")&" 百萬美元；情境 B 期間最大單年新增舉債 "&TEXT(Fund!D{FS["maxb"]},"0.0")&"、最低年末現金 "&TEXT(Fund!D{FS["minc"]},"0.0")&"、淨負債 ÷ EBITDA 最差 "&TEXT(Fund!D{FS["ndmax"]},"0.00")&" 倍、利息保障最差 "&TEXT(Fund!D{FS["icmin"]},"0.00")&" 倍（"&IF(Fund!D{FS["ndmax"]}>lev_max,"淨負債 ÷ EBITDA 觸發 WARN","淨負債 ÷ EBITDA 未觸發")&"、"&IF(Fund!D{FS["icmin"]}<icov_min,"利息保障觸發 WARN","利息保障未觸發")&"）；2030 年底累計稀釋 "&TEXT(Fund!D{FS["dil"]},"0.0%")'),
     ("o4", '="公司合約換算：已簽 B300 合約每 MW 年收入約 "&TEXT(p_claim_lo,"0.0")&"–"&TEXT(p_claim_hi,"0.0")&"（Interested-party；TCV ÷ Tokenomics 功耗換算 MW），是本模型 FY2027 情境 B 每 MW 年收入 "&TEXT(Thesis!F' + str(TR["B"]["pm"]) + ',"0.00")&" 的 "&TEXT((p_claim_lo+p_claim_hi)/2/Thesis!F' + str(TR["B"]["pm"]) + ',"0.0")&" 倍；新增產能改用合約換算值的 Sens 見 Sens 頁 p_new_ovr 列；不改基準 k"'),
@@ -1539,7 +1569,7 @@ _dcf0 = f'IF({_V("dcf")}=0,"現金流折現法（DCF）三個情境的每股價�
 L13 = [
     ("hero13", f'=IF({_V("rec")}="收支不足","投資建議「收支不足」：估值面上檔空間 "&TEXT({_V("up")},"+0.0%;-0.0%")&"，估值評等為"&{_V("val_lab")}&"；但基準情境（B）FY2026–FY2030 自由現金流合計 "&TEXT({_V("gatev")},"0.0")&" 百萬美元，入不敷出，依收支關卡不得列為買進。","投資建議「"&{_V("rec")}&"」：上檔空間 "&TEXT({_V("up")},"+0.0%;-0.0%")&"；基準情境 FY2026–FY2030 自由現金流合計 "&TEXT({_V("gatev")},"0.0")&" 百萬美元。")&{_dcf0}'),
     ("ob1", f'="收支是結論的前提：基準情境 FY2026–FY2030 自由現金流合計 "&TEXT({_V("gatev")},"0.0")&" 百萬美元，樂觀與保守情境為 "&{_GATE3}&"；客戶預付與 NC-1 租金已計入營運現金流，仍"&IF({_V("gatev")}<0,"入不敷出","有餘")&"；估值面上檔空間 "&TEXT({_V("up")},"+0.0%;-0.0%")&"，距最近的評等級距 "&TEXT({_V("dist")}*100,"0.0")&" 個百分點。"'),
-    ("ob2", f'="目標價的組成：DCF 情境加權每股 "&TEXT({_V("dcf")},"0.00")&" 美元，同業倍數法 "&TEXT({_V("comp")},"0.00")&" 美元（同業中位數 "&TEXT(mult,"0.00")&" 倍 × FY2028 調整後 EBITDA），各占 "&TEXT(w_dcf,"0%")&" 得 "&TEXT({_V("tp")},"0.00")&" 美元；同業倍數降到 "&TEXT({_V("mdn")},"0.00")&" 倍，估值評等就降一級。"'),
+    ("ob2", f'="目標價的組成：DCF 情境加權每股 "&TEXT({_V("dcf")},"0.00")&" 美元，同業倍數法 "&TEXT({_V("comp")},"0.00")&" 美元（分部加總：雲端分部 × 新雲同業 "&TEXT(mult,"0.00")&" 倍、託管分部 × 資料中心同業 "&TEXT(mult_colo,"0.00")&" 倍；基準情境每股雲端 "&TEXT(Val!D{CO["pcc"]},"0.00")&"、託管 "&TEXT(Val!D{CO["pch"]},"0.00")&"、扣淨負債 "&TEXT(Val!D{CO["pcn"]},"0.00")&"），各占 "&TEXT(w_dcf,"0%")&" 得 "&TEXT({_V("tp")},"0.00")&" 美元；雲端同業倍數"&IF(ISNUMBER({_V("mdn")}),"降到 "&TEXT({_V("mdn")},"0.00")&" 倍，估值評等就降一級。","估值評等已是最低級。")'),
     ("ob3", f'=IF({_V("npvAB")}<0,"擴張越多、價值越低：樂觀相對基準情境每多 1 MW 雲端產能，DCF 企業價值減少 "&TEXT(-{_V("npvAB")},"0.0"),"擴張創造價值：樂觀相對基準情境每多 1 MW 雲端產能，DCF 企業價值增加 "&TEXT({_V("npvAB")},"0.0"))&" 百萬美元；基準情境 FY2029 稅後投入資本報酬率 "&TEXT(Thesis!D{SUM_ROWS[0] + 5},"0.0%")&"，"&IF(Thesis!D{SUM_ROWS[0] + 5}<wacc,"低於","高於")&"資金成本 "&TEXT(wacc,"0.0%")&"。"'),
     ("ob4", f'="缺口靠舉債與增資補：基準情境 2026 年第四季至 FY2030 需外部融資 "&TEXT(Fund!D{FS["cum"]},"0.0")&" 百萬美元（投資級債 "&TEXT(Fund!D{FS["ig"]},"0.0")&"、新股 "&TEXT(Fund!D{FS["eq"]},"0.0")&"、高息債 "&TEXT(Fund!D{FS["hy"]},"0.0")&"），2030 年底股東累計稀釋 "&TEXT(Fund!D{FS["dil"]},"0.0%")&"；淨負債對 EBITDA 最差 "&TEXT(Fund!D{FS["ndmax"]},"0.00")&" 倍"&IF(Fund!D{FS["ndmax"]}>lev_max,"，超過 "&TEXT(lev_max,"0.0")&" 倍警戒","")&"。"'),
     ("ob5", '="公司合約換算的每 MW 年收入是模型的 "&TEXT((p_claim_lo+p_claim_hi)/2/Thesis!I' + str(TR["B"]["pm"]) + ',"0.0")&" 倍：已簽 B300 合約換算約 "&TEXT(p_claim_lo,"0.0")&"–"&TEXT(p_claim_hi,"0.0")&" 百萬美元／MW·年，模型 FY2030 為 "&TEXT(Thesis!I' + str(TR["B"]["pm"]) + ',"0.00")&"' + (f'；支撐現價需 "&TEXT(RevDCF!G{RVN["px"]},"0.00")&"（同為 FY2030）' if REV and REV["solves"][0]["value"] is not None else '') + f'。託管營收 FY2027 起每年約 "&TEXT(Thesis!F{TR["B"]["colo"]},"0")&" 百萬美元（NC-1 長約為主）。"'),
@@ -1555,6 +1585,7 @@ for k, t in L13:
     RD.cell(r, 1, t); RL[k] = r; r += 1
 r += 1
 RD.cell(r, 1, "v0.4.0（2026-11-15）：依 CoreWeave v5.0.3 新雲樣板（經 Nebius v0.6.0 分部版）重建（舊 JS 雙引擎 v0.2.1 移 whitefiber/legacy_v02/）＋滾入 2026Q3 實績（10-Q）＋版面 v1.3＋三層協調 Coord 頁。金額改為百萬美元；估值改為 DCF 50%＋Comparable 50%（新雲同業 EV/EBITDA，不再分部加總）、評等五級並套收支關卡；Tokenomics 快照由 v19.0 改 v22.0。Coord：Wattonomics 的 WhiteFiber 路徑讀舊版個股模型（同源），營收、資本支出標參考（同源校準），在役電力無可比實績。v0.3 版號由 open PR #451 占用。新舊目標價與評等差異見 whitefiber/README.md v0.4.0 節。"); RL["v060"] = r; r += 1
+RD.cell(r, 1, "v0.4.1（2026-11-15）：Andy 2026-11-15 決定 Comparable 改為分部加總：託管分部（NC-1 Nscale 10 年長約、MTL、代管服務、其他）FY2028 EBITDA 乘上市資料中心同業（Digital Realty、Equinix）前瞻 EV/EBITDA 中位數，雲端分部乘現行新雲同業中位數；營業費用依營收比例分攤到兩分部；DCF 不變。新增 Sens：託管倍數折價（小型、單一主要承租人、非 REIT）。新舊目標價與評等見 whitefiber/README.md v0.4.1 節。"); RL["v041"] = r; r += 1
 RD.column_dimensions["A"].width = 180
 
 # 列號對照
