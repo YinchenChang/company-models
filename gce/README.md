@@ -9,6 +9,7 @@
 - **讀取層級說明：** 每 GW PCB 三項金額經 `victory_giant/dist` 成品讀入（勝宏模型讀 Siliconomics `pcb_*`，數值與 Siliconomics 相同）；Coord 第 2 節以三項全額（中板項 ÷ 參與係數）對 `SIF_PCBperGW`、`SIF_PCBMkt_Base`，差距 0。
 - **Hist 頁：** stockanalysis 年度損益表 FY2022–FY2025（https://stockanalysis.com/quote/tpe/2368/financials/income-statement/ ，2026-11-15 讀取）；EPS 為公司公告基本 EPS（8.86／7.25／11.54／19.47；FY2025 stockanalysis 19.48 為四捨五入差，取公司 19.47 與 Q 頁一致）。
 - **不變性：** `tools/xlsx_diff.py` 對 v0.3.3（容差 1e-9）：既有格只有 README!A1（版號、本版說明；A1 標題版號由舊的 v0.1.1 更正）不同，其餘皆為新增頁與新增格；目標價、評等不變。
+- **獨立核對修正（合併前）：** dist 依現行 `v13_post.py` 重建（先前 dist 未重建）：Coord!A81 檢查列改「應接近 0」、G81 說明改為「月營收自結數與核閱後季報營收之差：1Q26 +0.29 億、2Q26 +0.39 億，合計 0.68 億（季報取自 stockanalysis／優分析）」；`tools/xlsx_diff.py` 對前一份 dist 只差這 2 格，HTML 只差該列與 build sha。
 - **加註（舊節數字）：** v0.3.3 節的「加權目標價 1,219 元（DCF 751）、上檔空間 +40.5%」為當時成品；之後 Siliconomics v0.19 全下游重建原地更新 v0.3.3 成品，現行為加權目標價 1,201.70 元（DCF 715.73、Comparable 調整後 1,687.66）、上檔空間 +38.4%、買進。本版以現行成品為基準比對，舊節不改寫。
 - **未做：** 3Q26 財報（損益）本版未滾入（不改錨點）；下一版滾入後更新 Q 頁與 C0 第二讀數的財報來源。
 - **驗證：** `check_company_html gce` 全部通過；`check_layout_v13 --xlsx` ok（HTML 可見文字的參數代號改白話：情境定義的收斂說明、Recon 的成品路徑）；`tools/baseline_coordination/check.py` 0 項不符；LibreOffice 重算錯誤格 0。
