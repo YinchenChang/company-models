@@ -68,7 +68,6 @@
   "ajinomoto",
   "emc",
   "victory_giant",
-  "tuc",
   "gce"
  ],
  "depends_on_years": {
@@ -409,12 +408,6 @@
    "2029"
   ],
   "victory_giant": [
-   "2026",
-   "2027",
-   "2028",
-   "2029"
-  ],
-  "tuc": [
    "2026",
    "2027",
    "2028",
