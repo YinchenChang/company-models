@@ -63,6 +63,8 @@ MiniMax（00100.HK，上海稀宇科技）收支模型，現行 **v0.2.3**（202
 
 **驗證：** `scripts/build_all.sh 20261115 v0_2_3 dist`：重算錯誤 0、Checks 合計 0；check_html（506）、check_html_v13（910 個 data-ref）、ci_check、`check_rating_gate --strict` 符合；`check_layout_v13 --xlsx` 全過；`tools/xlsx_diff.py` 對 v0.2.2：既有格只差 README!A1 版本字串，其餘皆為新增格（SRC、Inputs 尾端列、README 尾端三列、Val、RevDCF）。
 
+**獨立核對文字修正（同版 v0.2.3，2026-11-15；只改 `build_html_v13.py` 文字並重產個股模型頁，xlsx 與一頁摘要逐位元組不變）：**估值章加「與智譜互為唯一同業」說明（兩家 Comparable 結論本質上是同一組相對價差）；註明 DCF 淨現金下限以評價日淨現金推到目標時點、未扣其後燒錢（若改用模型 2027-11 內插淨現金約 1,298 百萬美元 → 加權目標價約 131.7 港元，仍中立但距放空邊界約 2.4pt）；β 借用來源（Anthropic 估值頁美國軟體同業 Palantir、CrowdStrike、Cloudflare、Snowflake、Datadog 5 年 β 中位數，Blume 調整）寫進 HTML；原反向檢驗摺疊註明股數基準 349.2M（S051，2026-07-14 配售後），與正文評價股數 352.5M 不同。檢查：check_html_v13（910 個 data-ref 不符 0）、check_html、ci_check、check_rating_gate --strict、check_layout_v13 --xlsx、segment_check、baseline_coordination/check.py 全過。
+
 ## v0.2.2（2026-11-15）：個股 HTML 版面 v1.3＋三層協調（讀取層級、C0 公司實績）
 
 **依據：** `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`（Andy 11-14 16:53、16:55、17:40、21:29）；`docs/plan/三層基準協調規則.md` v1.4.2 C0 第 2 點；`docs/plan/個股HTML版面規格.md` v1.3；`tools/coord/README.md`。樣板：Anthropic v0.2.2、OpenAI v0.6.5（PR #524）。
