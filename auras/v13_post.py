@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c13
 from c13 import T, F, lab, blockB, Sheet
 
-VER, BUILT = "v0.2.5", "2026-11-15"
+VER, BUILT = "v0.2.6", "2026-11-15"
 SA = "https://stockanalysis.com/quote/tpex/3324/financials/income-statement/"
 M_OCT = "https://finance.technews.tw/2026/11/06/auras-3324-202610-financial-report/"
 M_SEP = "https://finance.technews.tw/2026/10/08/auras-3324-202609-financial-report/"
@@ -26,15 +26,15 @@ C = dict(
         ("sh", "EPS 換算股數（十億股）", 0.086, 0.086, 0.089, 0.091, "Verified", "同上：Shares Outstanding (Basic)（百萬股取整）"),
         ("eps", "EPS（公司公告，基本，NT$）", 14.68, 14.28, 21.23, 28.26, "Verified", "同上：EPS (Basic)（稀釋 14.04／13.68／20.69／27.60，差異來自可轉債）；FY2025 同 Q 頁 28.26"),
     ],
-    fy26_short="FY2026E 含 1H26 實績與 3Q26 營收實績",
-    fy26_long="1H26 實績＋3Q26 營收實績（7–9 月月營收）＋3Q26 損益與 4Q26 假設（3Q26 財報截至 2026-11-15 未找到；本版不改錨點）",
+    fy26_short="FY2026E 含 1–3Q26 財報實績",
+    fy26_long="1–3Q26 財報實績（公開資訊觀測站）＋4Q26 假設",
     eps_note="歷史為公司公告基本 EPS；預測為歸屬母公司淨利 ÷ 股數（本模型不計可轉債稀釋，同基本口徑）",
     gw_label="部署 GW（IT 電力）",
     same_names="部署 GW、液冷滲透率、每 GW 液冷內容、AI 液冷市場與雙鴻有效份額五項",
     resid=("shsum", "酷碼、台達電、富世達、Boyd、CoolIT 等；不得歸零（C0 第 3 點）"),
-    a1_tail=(f"{VER}（{BUILT}）：個股 HTML 版面規格 v1.3（標準損益表、反向 DCF 頁、四個目標價、加權目標價敏感度主圖）＋三層協調（Coord 頁兩讀數目標價、讀取層級、C0（實績））；"
-             "A1 標題版號由舊的 v0.1.2 更正；既有數值不變"),
-    ver_line=(f"{VER}（{BUILT}）：改為個股 HTML 版面規格 v1.3（樣板 NVIDIA、台達電、奇鋐）並補三層協調：Coord 頁並列兩讀數目標價（tools/coord）、讀取層級（同源，不判定）、"
+    a1_tail=("v0.2.5（2026-11-15）：個股 HTML 版面規格 v1.3（標準損益表、反向 DCF 頁、四個目標價、加權目標價敏感度主圖）＋三層協調（Coord 頁兩讀數目標價、讀取層級、C0（實績））；"
+             "A1 標題版號由舊的 v0.1.2 更正；既有數值不變；v0.2.6（2026-11-15）：滾入 3Q26 財報（公開資訊觀測站）：FY2026 錨點改為 1–3Q26 財報實績＋4Q26 假設（4Q 假設不改）；DCF 資產負債表日 2026-06-30 → 09-30（借款含可轉債帳面 55.67 億與一年內到期長期負債、股利已於 7-16 發放不再扣）；評價用股數改 9-30 股本 ÷ 面額＋預收股款約當（庫藏股已註銷；可轉債稀釋未計）；C0 第二讀數改用財報 3Q26 營收。"),
+    ver_line=("v0.2.6（2026-11-15）：滾入 3Q26 財報（公開資訊觀測站）：FY2026 錨點改為 1–3Q26 財報實績＋4Q26 假設（4Q 假設不改）；DCF 資產負債表日 2026-06-30 → 09-30（借款含可轉債帳面 55.67 億與一年內到期長期負債、股利已於 7-16 發放不再扣）；評價用股數改 9-30 股本 ÷ 面額＋預收股款約當（庫藏股已註銷；可轉債稀釋未計）；C0 第二讀數改用財報 3Q26 營收。v0.2.5（2026-11-15）：改為個股 HTML 版面規格 v1.3（樣板 NVIDIA、台達電、奇鋐）並補三層協調：Coord 頁並列兩讀數目標價（tools/coord）、讀取層級（同源，不判定）、"
               "C0（實績）（月營收 2026-01～10 對 Siliconomics 液冷市場 × 雙鴻份額；結論：無可比實績，層級份額由本公司校準）；新增 RevDCF、Hist 頁、PL 標準損益表、Val 0.7、Sens 末表；"
               "既有數值、目標價與評等不變"),
 )
@@ -100,8 +100,8 @@ def c0_actuals(wb, G):
     S = Sheet(CW, G["end"] + 3)
     R = {}
     R["title"] = S.bold("4. C0（實績）：公司實績 vs Siliconomics 層級隱含值（規則 v1.4.2 C0 第 2 點；工作單 2026-11-14；差距＝實績 ÷ 層級隱含值 − 1）")
-    R["method"] = S.text("方法：個股側＝雙鴻已公布實績（月營收；3Q26 財報截至 2026-11-15 未找到）；層級側＝Siliconomics 現行版 AI 液冷市場（CY2026）× 雙鴻有效份額 × 匯率（連到本頁第 2 節層級值列）。"
-                         "層級值是日曆年，故主讀數＝2026-01～10 累計實績 vs 層級 CY2026 × 10 ÷ 12（線性時差近似，Derived）；第二讀數＝3Q26 × 4 vs 層級 CY2026（約等於 3Q26 中點 8 月中的年化速率，"
+    R["method"] = S.text("方法：個股側＝雙鴻已公布實績（月營收；3Q26 財報，公開資訊觀測站）；層級側＝Siliconomics 現行版 AI 液冷市場（CY2026）× 雙鴻有效份額 × 匯率（連到本頁第 2 節層級值列）。"
+                         "層級值是日曆年，故主讀數＝2026-01～10 累計實績 vs 層級 CY2026 × 10 ÷ 12（線性時差近似，Derived）；第二讀數＝3Q26 財報營收 × 4 vs 層級 CY2026（約等於 3Q26 中點 8 月中的年化速率，"
                          "季中點晚於年中、成長年偏高）。判定：兩讀數差距都超過 ±15% 且同號 → 對帳中；只一個超過 → 時差邊界（參考）；都在內 → 一致。公司沒有揭露液冷營收金額或占比"
                          "（液冷占比 2025 年 34%、1H26 55%、2026 年 60% 皆為凱基估計），故液冷列無可比實績；以券商液冷占比換算者只列參考。")
     R["limit"] = S.text("限制（同源校準）：Siliconomics 的雙鴻 CY2026 有效份額是本模型以「券商液冷占比 60% × FY2026 營收錨點 ÷ 本庫液冷市場」校準後寫入，層級隱含液冷營收＝60% × 營收錨點，"
@@ -115,8 +115,8 @@ def c0_actuals(wb, G):
     R["cum9"] = S.row("累計：2026-01～09", 27.040, None, "NT$B", "Verified：月營收公告 270.40 億元，年增 72.4%（TechNews 2026-10-08）", blue=True, url=M_SEP)
     R["cum10"] = S.row("累計：2026-01～10（主讀數的實績基礎）", 30.412, None, "NT$B", "Verified：月營收公告 304.12 億元，年增 68.8%（TechNews 2026-11-06）", blue=True, url=M_OCT)
     R["chk1"] = S.row("檢查：累計 9 月 + 10 月 − 累計 10 月（應為 0）", f"=B{R['cum9']}+B{R['oct']}-B{R['cum10']}", None, "NT$B", "Derived")
-    R["q3"] = S.row("3Q26 營收（最近一季；第二讀數的實績基礎；7–9 月月營收合計）", "=q3_rev", None, "NT$B", "Verified：In 頁 q3_rev（7 月 37.65、8 月 31.41、9 月 28.84 億元，HiStock 月營收）；3Q26 財報截至 2026-11-15 未找到")
-    R["chk2"] = S.row("檢查：累計 9 月 − 3Q26 − Q 頁 1H26 營收（應接近 0；1H26 為財報四捨五入值）", f"=B{R['cum9']}-B{R['q3']}-Q!C{lab(Q, '營收')}", None, "NT$B", "Derived：1H26 172.52 億元（Q 頁，公司財報）")
+    R["q3"] = S.row("3Q26 營收（最近一季；第二讀數的實績基礎；財報）", "=q3_rev", None, "NT$B", "Verified：In 頁 q3_rev＝公開資訊觀測站 t164sb04 3Q26 營業收入 9,786,929 千元（7–9 月月營收合計 97.91 億元，差 0.04 億）")
+    R["chk2"] = S.row("檢查：累計 9 月（月營收）− 1–3Q26 財報營收（應接近 0）", f"=B{R['cum9']}-ytd_rev", None, "NT$B", "Derived：月營收前 9 月 270.40 億元 − 公開資訊觀測站 1–9 月營業收入 270.39 億元（自結與核閱差、四捨五入）")
     R["lc"] = S.row("公司揭露：液冷營收或占比", "未揭露", None, "", "公司未揭露液冷營收金額或占比；In 頁 lc_26 60% 為凱基估計（Interested-party）；公司只給液冷營收年增方向（凱基轉述）", fmt="General")
     R["months"] = S.row("已公布月數（2026-01～10）", 10, None, "月", "輸入：月營收至 2026-10（2026-11-06 公告）", fmt="0", blue=True)
     S.skip()
@@ -140,7 +140,7 @@ def c0_actuals(wb, G):
     R["j_ub"] = S.row("上限檢查：結果", f'=IF(B{R["ub"]}<=1,"通過","不通過")', None, "", "", fmt="General")
     S.skip()
     S.bold("參考：本模型 FY2026 營收錨點對月營收實績（模型對實績，不是層級對帳；不計入 C0）")
-    R["anc"] = S.row("FY2026 營收錨點（Q 頁）", f"=Q!F{lab(Q, '營收')}", None, "NT$B", "Derived／Interested-party：1H26 實績＋3Q26 營收實績＋4Q 假設", fmt="#,##0.0")
+    R["anc"] = S.row("FY2026 營收錨點（Q 頁）", f"=Q!F{lab(Q, '營收')}", None, "NT$B", "Derived／Interested-party：1–3Q26 財報實績＋4Q26 假設", fmt="#,##0.0")
     R["imp"] = S.row("錨點隱含 11–12 月月均營收（錨點 − 1～10 月累計）÷ 2", f"=(B{R['anc']}-B{R['cum10']})/2", None, "NT$B", "Derived", fmt="#,##0.00")
     R["impg"] = S.row("隱含月均 ÷ 10 月實績 − 1", f"=B{R['imp']}/B{R['oct']}-1", None, "%", "Derived：正值＝錨點假設 11–12 月高於 10 月水準", fmt=pct)
     S.skip()
@@ -152,11 +152,20 @@ def c0_actuals(wb, G):
     R["sum2"] = S.text(F(T("上限檢查：層級隱含液冷（主讀數期間）占公司營收實績 "), f'TEXT(B{R["ub"]},"0%")', T("，"), f'B{R["j_ub"]}',
                          T("；10 月營收 "), f'TEXT(B{R["oct"]}*10,"#,##0.0")', T(" 億元，營收錨點隱含 11–12 月月均 "), f'TEXT(B{R["imp"]}*10,"#,##0.0")', T(" 億元（較 10 月 "),
                          f'TEXT(B{R["impg"]},"+0%;-0%")', T("）。")))
-    R["sum3"] = S.text("限制與待查：公司未揭露液冷營收，Siliconomics 的雙鴻份額由本模型校準，故液冷市場大小未獲獨立驗證；3Q26 財報與法說截至 2026-11-15 未找到，公布後於下一版補第二讀數的財報來源與損益。")
+    R["sum3"] = S.text("限制與待查：公司未揭露液冷營收，Siliconomics 的雙鴻份額由本模型校準，故液冷市場大小未獲獨立驗證；3Q26 財報已滾入（v0.2.6；第二讀數改用財報營收），3Q26 法說未取得。")
     R["end"] = S.r - 1
     return R
 
 
 def apply(wb, SIL, CR):
     C.update(layer_rows=layer_rows, same_blocks=same_blocks)
-    return c13.apply(wb, SIL, CR, C, lines, c0_actuals)
+    out = c13.apply(wb, SIL, CR, C, lines, c0_actuals)
+    # 獨立核對（2026-11-15）：v1.3 各段（標準損益表、RevDCF、Val 0.7、Sens 末表、README 展示層）的實際起始版為 v0.2.5，不隨 VER 改寫
+    import re as _re
+    _pat = _re.compile(r"(（|；)" + _re.escape(VER) + r" 起(；個股 HTML|，個股 HTML|，版面規格)")
+    for _ws in wb:
+        for _row in _ws.iter_rows():
+            for _c in _row:
+                if isinstance(_c.value, str) and VER + " 起" in _c.value:
+                    _c.value = _pat.sub(lambda m: m.group(1) + "v0.2.5 起" + m.group(2), _c.value)
+    return out

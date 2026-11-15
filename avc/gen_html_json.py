@@ -246,7 +246,7 @@ SPEC = {
   ["一般伺服器與網通、非伺服器（消費電子、系統與富世達）", [
     ["非 AI 營收成長率", ["g_gen_27", "g_gen_28", "g_gen_29", "g_nai_27", "g_nai_28", "g_nai_29"]]]],
   ["全公司：錨點、費用、股價、折現率與目標價規則", [
-    ["FY2026 錨點（第三季營收實績與第四季假設）", ["q3_rev", "q4g", "q_gm", "q_opx", "q_nop", "q_nir", "q_sh"]],
+    ["FY2026 錨點（前三季財報實績與第四季假設）", ["q3_rev", "q3_gp", "q3_oi", "q3_pbt", "q3_ni", "ytd_rev", "ytd_gp", "ytd_oi", "ytd_pbt", "ytd_ni", "ytd_eps", "q4g", "q_gm", "q_opx", "q_nop", "q_nir", "sh_9m", "q_sh"]],
     ["營業費用、業外、稅與股數（FY2027 起）", ["phi", "opx_adj", "nop_f", "nir_f", "sh_g"]],
     ["匯率", ["fx"]],
     ["股價、市場倍數與共識目標價", ["px", "pe_ttm", "cons_tp", "cons_feps"]],
@@ -269,7 +269,7 @@ post(cfg)
 import html13  # noqa: E402
 _PL = wb["PL"]
 H = {
-    "ver": "v0.3.5",
+    "ver": "v0.3.6",
     "units_chart": lambda pB, hB: {
         "type": "theme", "title": "液冷、AI 氣冷與機構、一般伺服器與網通、非伺服器營收（情境 B，十億元）與奇鋐液冷有效份額（右軸）", "x": f"@PL!D{hB}:G{hB}",
         "fmt": "n0", "fmt_r": "p1", "stack": True, "pad": 1.25, "total": f"@PL!D{pB('營收')}:G{pB('營收')}",

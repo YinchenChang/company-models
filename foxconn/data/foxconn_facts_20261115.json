@@ -1,0 +1,360 @@
+{
+ "_readme": "鴻海（2317）事實總帳（v0.4.7 滾入 3Q26，2026-11-15 擷取）。金額十億新台幣（NT$B），EPS 新台幣，股數十億股。標記：Verified＝公開資訊觀測站財報；Derived＝由上列數字計算或代理。抓不到者寫「未取得」，不臆造。",
+ "facts": [
+  {
+   "key": "q3_rev",
+   "value": 3015.633915,
+   "unit": "NT$B",
+   "source": "MOPS t164sb04 115Q3 合併綜合損益表 單季 營業收入合計 3,015,633,915 千元",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": "月營收合計 3,026.9（TechNews）差 +11.3"
+  },
+  {
+   "key": "q3_gp",
+   "value": 181.513292,
+   "unit": "NT$B",
+   "source": "同上 營業毛利淨額 181,513,292 千元",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "q3_opex",
+   "value": 66.162843,
+   "unit": "NT$B",
+   "source": "同上 營業費用合計 66,162,843 千元",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "q3_oi",
+   "value": 115.350449,
+   "unit": "NT$B",
+   "source": "同上 營業利益 115,350,449 千元",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "q3_nonop",
+   "value": 3.361573,
+   "unit": "NT$B",
+   "source": "同上 營業外收入及支出合計",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": "模型不單列，參考"
+  },
+  {
+   "key": "q3_pbt",
+   "value": 118.712022,
+   "unit": "NT$B",
+   "source": "同上 稅前淨利",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": "參考"
+  },
+  {
+   "key": "q3_ni",
+   "value": 77.523689,
+   "unit": "NT$B",
+   "source": "同上 母公司業主淨利 77,523,689 千元（非控制權益淨利 13,377,133）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "q3_eps",
+   "value": 5.51,
+   "unit": "NT$",
+   "source": "同上 基本每股盈餘（稀釋 5.46）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "ytd_rev",
+   "value": 7661.061739,
+   "unit": "NT$B",
+   "source": "MOPS t164sb04 115 年 1–9 月累計 營業收入合計",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "ytd_gp",
+   "value": 467.027173,
+   "unit": "NT$B",
+   "source": "同上 營業毛利淨額",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "ytd_oi",
+   "value": 285.80217,
+   "unit": "NT$B",
+   "source": "同上 營業利益",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "ytd_ni",
+   "value": 187.416909,
+   "unit": "NT$B",
+   "source": "同上 母公司業主淨利",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "ytd_eps",
+   "value": 13.35,
+   "unit": "NT$",
+   "source": "同上 基本每股盈餘（稀釋 13.21）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "h1_derived",
+   "value": {
+    "rev": 4645.427824,
+    "gp": 285.513881,
+    "oi": 170.451721,
+    "ni": 109.89322
+   },
+   "unit": "NT$B",
+   "source": "1–9 月累計 − 3Q26 單季",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04",
+   "date": "2026-11-15",
+   "tag": "Derived",
+   "note": "v0.4.6 1H26 營收 4,642.9（月營收推）、毛利 285.366（1Q 毛利率推）"
+  },
+  {
+   "key": "q_sh",
+   "value": 14.03872,
+   "unit": "十億股",
+   "source": "ytd_ni ÷ ytd_eps（1–3Q 加權股數）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb04",
+   "date": "2026-11-15",
+   "tag": "Derived",
+   "note": ""
+  },
+  {
+   "key": "bs_cash",
+   "value": 888.099656,
+   "unit": "NT$B",
+   "source": "MOPS t164sb03 115/09/30 現金及約當現金",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "bs_fvtpl_cur",
+   "value": 4.941698,
+   "unit": "NT$B",
+   "source": "同上 透過損益按公允價值衡量之金融資產－流動",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "bs_ac_cur",
+   "value": 556.898115,
+   "unit": "NT$B",
+   "source": "同上 按攤銷後成本衡量之金融資產－流動",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "cash_v",
+   "value": 1449.939469,
+   "unit": "NT$B",
+   "source": "現金＋FVTPL 流動＋攤銷後成本流動（對應原 stockanalysis「現金及短期投資」口徑）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03",
+   "date": "2026-11-15",
+   "tag": "Derived",
+   "note": ""
+  },
+  {
+   "key": "bs_fvtpl_nc",
+   "value": 103.110027,
+   "unit": "NT$B",
+   "source": "同上 FVTPL－非流動",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "bs_fvoci_nc",
+   "value": 151.107632,
+   "unit": "NT$B",
+   "source": "同上 FVOCI－非流動",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "bs_ac_nc",
+   "value": 16.070994,
+   "unit": "NT$B",
+   "source": "同上 攤銷後成本－非流動",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "bs_equity_method",
+   "value": 207.043045,
+   "unit": "NT$B",
+   "source": "同上 採用權益法之投資",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "inv_v",
+   "value": 477.331698,
+   "unit": "NT$B",
+   "source": "四項非流動金融資產與權益法投資合計（對應原「長期投資」口徑）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03",
+   "date": "2026-11-15",
+   "tag": "Derived",
+   "note": ""
+  },
+  {
+   "key": "bs_st_loans",
+   "value": 946.246434,
+   "unit": "NT$B",
+   "source": "同上 短期借款",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "bs_cp",
+   "value": 105.682317,
+   "unit": "NT$B",
+   "source": "同上 應付短期票券",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "bs_bonds",
+   "value": 319.921822,
+   "unit": "NT$B",
+   "source": "同上 應付公司債（非流動）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "bs_lt_loans",
+   "value": 69.755489,
+   "unit": "NT$B",
+   "source": "同上 長期借款（非流動）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "bs_cur_ltd",
+   "value": 64.303,
+   "unit": "NT$B",
+   "source": "一年內到期長期負債：MOPS 摘要表未單列；9-30 資料商季表未取得（stockanalysis、twelvedata 最新 2026-06-30），沿用 stockanalysis 2026-06-30 值",
+   "url": "https://stockanalysis.com/quote/tpe/2317/financials/balance-sheet/?p=quarterly",
+   "date": "2026-11-15",
+   "tag": "Derived",
+   "note": "代理值；待 9-30 附註或資料商更新後替換"
+  },
+  {
+   "key": "debt_v",
+   "value": 1505.909062,
+   "unit": "NT$B",
+   "source": "短借＋票券＋公司債＋長借＋一年內到期（代理）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03",
+   "date": "2026-11-15",
+   "tag": "Derived",
+   "note": "原口徑核對：FY2025 stockanalysis 短期債務 899.249＝MOPS 短借 794.456＋票券 104.793；長期債務 306.086＝公司債 279.637＋長借 26.449"
+  },
+  {
+   "key": "lease_v",
+   "value": 44.687634,
+   "unit": "NT$B",
+   "source": "同上 租賃負債 流動 11,146,499＋非流動 33,541,135 千元",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": ""
+  },
+  {
+   "key": "nci_book",
+   "value": 223.085594,
+   "unit": "NT$B",
+   "source": "同上 非控制權益",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03",
+   "date": "2026-11-15",
+   "tag": "Verified",
+   "note": "上市子公司少數股權市值調整（K2 節）其子公司帳面仍為 6-30／12-31（9-30 未取得）"
+  },
+  {
+   "key": "sh_v",
+   "value": 14.074263422,
+   "unit": "十億股",
+   "source": "普通股股本 140,757,465 千元 ÷ 10 − 庫藏股 1,483,078 股（預收股本：摘要未列）",
+   "url": "https://mops.twse.com.tw/mops/#/web/t164sb03",
+   "date": "2026-11-15",
+   "tag": "Derived",
+   "note": ""
+  },
+  {
+   "key": "stub_div",
+   "value": 0,
+   "unit": "NT$B",
+   "source": "FY2025 股利 7.17179 元/股已於 2026-07-31 發放（資產負債表日前），stub 不再扣",
+   "url": "https://stockanalysis.com/quote/tpe/2317/dividend/",
+   "date": "2026-11-15",
+   "tag": "Derived",
+   "note": ""
+  },
+  {
+   "key": "fii_eq_3q",
+   "value": "未取得",
+   "unit": "CNY B",
+   "source": "工業富聯 9-30 歸屬母公司權益：stockanalysis 601138 最新仍 2026-06-30（175,753），沿用",
+   "url": "https://stockanalysis.com/quote/sha/601138/financials/balance-sheet/",
+   "date": "2026-11-15",
+   "tag": "Derived",
+   "note": ""
+  }
+ ]
+}

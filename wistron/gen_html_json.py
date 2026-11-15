@@ -86,7 +86,7 @@ SPEC = {
   [GS, [
     ["營收結構錨點與成長率", ["nsv_26", "gen_26", "g_gen27", "g_gen28", "g_gen29", "g_pc27", "g_pc28", "g_pc29", "g_wn27", "g_wn28", "g_wn29"]]]],
   [CO, [
-    ["FY2026 錨點（上半年實績＋第三季營收實績＋假設）", ["fx", "q3_rev", "q4g", "q3_wrev", "q4gw", "q_wgm", "q_wopm", "q_wnio", "q_sgm", "q_sopx", "q_snio", "stake", "stake25", "q_sh3", "q_sh4"]],
+    ["FY2026 錨點（前三季財報實績＋第四季假設）", ["fx", "q3_rev", "q4g", "q3_wrev", "q4gw", "q_wgm", "q_wopm", "q_wnio", "q_sgm", "q_sopx", "q_snio", "stake", "stake25", "q_sh3", "q_sh4"]],
     ["營業費用、淨利係數與股數（FY2027 起）", ["phi", "opx_adj", "snio", "sh_g"]],
     ["股價、市場倍數與共識", ["px", "pe_ttm", "fpe", "cons_feps", "cons_tp", "nim_5y"]],
     ["目標價規則（情境權重、DCF 權重）", ["tp_wA", "tp_wB", "tp_wC", "tp_w_dcf"]],
@@ -262,7 +262,7 @@ S = {s_["id"]: s_ for s_ in cfg["sections"]}
 RD, PLW, RV = WBF["README"], WBF["PL"], WBF["RevDCF"]
 r13 = find("README", "v1.3 展示層")
 RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
-assert str(RD[f"A{RM['ver']}"].value).startswith("v0.4.6"), RD[f"A{RM['ver']}"].value
+assert str(RD[f"A{RM['ver']}"].value).startswith("v0.4.7"), RD[f"A{RM['ver']}"].value
 cfg["layout"] = "v1.3"
 old_note = cfg["hero"]["note"]
 cfg["hero"]["note"] = [f"@README!A{RM['hero']}"]            # 橫幅只留 ≤200 字白話；評等規則與相對倍數調整說明移到估值章

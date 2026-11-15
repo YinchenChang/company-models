@@ -12,7 +12,7 @@ import hashlib, json, os, re
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
-VER, BUILT = "0.4.6", "2026-11-15"
+VER, BUILT = "0.4.6", "2026-11-15"   # v1.3 改版的版號（各頁「v0.4.6 新增」字樣）；v0.4.7 滾入 3Q26 的說明字串另寫
 BOLD = Font(bold=True); BLUE = Font(color="0000FF"); HDR = PatternFill("solid", fgColor="DDEBF7")
 SPURL = "https://stockanalysis.com/quote/tpe/3231/financials/income-statement/"
 
@@ -168,7 +168,7 @@ def pl_standard(wb, SIL):
     dep = dep_years(SIL)
     r = P.max_row + 3
     s0 = r
-    P.cell(r, 1, f"標準損益表（v{VER} 起；個股 HTML 版面規格 v1.3 D 節）：歷史三年（FY2023–FY2025 實績，Hist 頁）＋FY2026E–FY2031E（情境 B 基準；FY2026 為錨點＝1H26 實績＋3Q 營收實績＋假設）。NT$B；EPS 新台幣。"
+    P.cell(r, 1, f"標準損益表（v{VER} 起；個股 HTML 版面規格 v1.3 D 節）：歷史三年（FY2023–FY2025 實績，Hist 頁）＋FY2026E–FY2031E（情境 B 基準；FY2026 為錨點＝1–3Q26 財報實績＋4Q26 假設）。NT$B；EPS 新台幣。"
                  "只引用本頁上方、Hist、DCF 頁，不回饋任何計算").font = BOLD; r += 1
     P.cell(r, 1, K["GAAP_NOTE"])
     r_note = r; r += 1
@@ -208,8 +208,8 @@ def pl_standard(wb, SIL):
     row("oi", "營業利益", "NT$B", h3("oi") + fc("oi") + [f"=DCF!F{d_ebit}", f"=DCF!G{d_ebit}"], M, "FY2030E、FY2031E 取 DCF 頁情境 B 的營業利益（延伸期由淨利反推；不改）")
     row("opm", "營業利益率", "%", [f"={c}{L['oi']}/{c}{L['rev']}" for c in COLS], PCT)
     ro = "(h_pti_25-h_oi_25)/h_oi_25"
-    row("oth", "其他收入（淨額：利息、匯兌、投資收益等）", "NT$B", [f"=h_pti_{y}-h_oi_{y}" for y in ("23", "24", "25")] + [f"={c}{L['oi']}*{ro}" for c in "FGHIJK"], M,
-        "歷史＝稅前利益 − 營業利益；預測＝營業利益 × FY2025 實績比例（展示用拆分）")
+    row("oth", "其他收入（淨額：利息、匯兌、投資收益等）", "NT$B", [f"=h_pti_{y}-h_oi_{y}" for y in ("23", "24", "25")] + [f"=-14.195992+Q!E7*{ro}"] + [f"={c}{L['oi']}*{ro}" for c in "GHIJK"], M,
+        "歷史＝稅前利益 − 營業利益；FY2026E＝1–9 月實績 −14.196（公開資訊觀測站）＋4Q 營業利益 × FY2025 實績比例；FY2027E 起＝營業利益 × FY2025 實績比例（展示用拆分）")
     row("pti", "稅前利益", "NT$B", [f"={c}{L['oi']}+{c}{L['oth']}" for c in COLS], M)
     r_t = r
     nm = K["nci_mode"]
@@ -221,7 +221,7 @@ def pl_standard(wb, SIL):
         # 緯創：FY2026E–FY2029E 取模型「合併淨利（含非控制權益）」與「非控制權益」列；FY2030E–FY2031E 無模型列，沿用 FY2029E 非控制權益 ÷ 稅前利益
         tax_f = [f"={c}{L['pti']}-PL!{s}{R['cons']}" for c, s in zip("FGHI", "DEFG")] + [f"={c}{L['pti']}-{c}{r_t + 1}-{c}{r_t + 2}" for c in "JK"]
         nci_f = [f"=PL!{s}{R['nci']}" for s in "DEFG"] + [f"={c}{L['pti']}*$I{r_t + 1}/$I{L['pti']}" for c in "JK"]
-        tax_note = "FY2026E–FY2029E＝稅前利益 − 模型合併淨利（含非控制權益）；FY2030E–FY2031E＝稅前利益 − 少數股權損益 − 淨利"
+        tax_note = "FY2026E–FY2029E＝稅前利益 − 模型合併淨利（含非控制權益）（FY2026E 的 1–9 月部分因非控制權益為模型近似，隱含所得稅約 21.5，實績 22.81）；FY2030E–FY2031E＝稅前利益 − 少數股權損益 − 淨利"
         nci_note = "FY2026E–FY2029E＝模型非控制權益（（1 − 持股）× 緯穎淨利）；FY2030E–FY2031E＝稅前利益 × FY2029E 比例（模型無延伸期此列）"
     else:
         tax_f = [f"={c}{L['pti']}-{c}{r_t + 1}-{c}{r_t + 2}" for c in "FGHIJK"]
@@ -508,7 +508,7 @@ def readme13(wb, SIL, PLA, RVA, coord_rows):
     e27 = lab(RC, "FY2027 EPS vs 法人下限說法")
     put("o2", F(T("2｜盈餘比法人高是上檔的主因：FY2027 EPS "), f'TEXT(Recon!C{e27},"0.00")', T(" 元，比法人下限說法（20 元以上）高 "),
                 f'TEXT(Recon!D{e27},"0%")', T("；本體淨利 ÷ 營業利益用 "), 'TEXT(snio,"0.00")', T("（業外、稅與其他少數股權），緯穎持股只有 "), 'TEXT(stake,"0.0%")',
-                T("。第三季財報已於 2026-11-11 公布、本版尚未滾入（Coord 頁第 4 節列出 3Q26 公布值對本模型 3Q 假設）；若盈餘只到共識，上檔大幅縮小。")))
+                T("。第三季財報（3Q26 EPS 5.74 元、前三季 13.54 元）已滾入 FY2026 錨點（v0.4.7）；若盈餘只到共識，上檔大幅縮小。")))
     a_s, b_s, c_s = (lab(PW, "情境 " + k, exact=True) for k in "ABC")
     eA, eC = lab(PW, "EPS", a_s, exact=True), lab(PW, "EPS", c_s, exact=True)
     put("o3", F(T("3｜三情境從 FY2028 才分開：FY2028 EPS 樂觀、基準、保守約 "), f'TEXT(PL!F{eA},"0.0")', T("、"),
@@ -529,7 +529,8 @@ def readme13(wb, SIL, PLA, RVA, coord_rows):
                  T(" 十億元；GPU 基板與運算板＝GPU 顆數 × 每顆基板金額 × 份額，FY2027 為 "), f'TEXT(PL!E{pr("GPU 基板與運算板營收", True)},"#,##0")',
                  T(" 十億元；緯穎（合併子公司，ASIC 機架為主）＝AI 伺服器（市場 × 緯穎有效份額 ×（1 − 客供））＋非 AI，FY2027 為 "), f'TEXT(PL!E{pr("緯穎營收", True)},"#,##0")',
                  T(" 十億元；再加本體一般伺服器與非伺服器，合計合併營收 "), f'TEXT(PL!E{PLA["R"]["rev"]},"#,##0")', T(" 十億元；分項加總與合併營收的檢查列為 0。")))
-    put("ver", F(T("v0.4.6（2026-11-15）：版面規格 v1.3 全面改版（章節順序、橫幅 ≤200 字、重點觀察 ≤5 點、標準損益表 FY2023A–FY2031E、反向 DCF 頁、四個目標價與現價圖、敏感度改加權目標價相對基準低案／高案主圖）；"
+    put("ver", F(T("v0.4.7（2026-11-15）：滾入 3Q26 財報（公開資訊觀測站）：FY2026 錨點改為 1–3Q26 財報實績＋4Q26 假設（4Q 假設不改）；DCF 資產負債表日 2026-06-30 → 09-30（GDR 募資已在現金內、已發放股利不再扣；一年內到期長期負債 9-30 未取得：緯穎可轉債部分改用緯穎模型推估〔Derived〕、其餘沿用 2Q26）；評價用股數改 9-30 股本 ÷ 面額 3.4298 十億股。"
+                 "v0.4.6（2026-11-15）：版面規格 v1.3 全面改版（章節順序、橫幅 ≤200 字、重點觀察 ≤5 點、標準損益表 FY2023A–FY2031E、反向 DCF 頁、四個目標價與現價圖、敏感度改加權目標價相對基準低案／高案主圖）；"
                  "三層協調：Coord 頁並列兩讀數目標價（現行基準與 Wattonomics 換算的另一側讀數）與 C0（讀取層級、公司實績對照；層級本體份額由本模型錨點反推且緯創未揭露 AI 占比，結論為無可比實績、不判定）；"
                  "xlsx 只新增 Hist、RevDCF、Coord 頁與各頁末新增區塊，既有數值、加權目標價與投資建議不變。")))
     return M
@@ -593,32 +594,32 @@ def c0_actuals(wb, C, r, l3, rs_m, rs_l, d5):
     C.cell(r, 4, "NT$B；公司公布前 10 月累計約 3.29 兆元（年增 99.5%）"); C.cell(r, 5, "Verified（加總）"); cum = r; r += 1
     C.cell(r, 1, "　3Q26（7–9 月）合計（第二讀數用）"); C[f"B{r}"] = f"=SUM(B{m0+6}:B{m0+8})"; C[f"B{r}"].number_format = "#,##0.000"
     C.cell(r, 4, "NT$B；公司 3Q26 財報合併營收 1,149.09 十億元（緯來新聞 2026-11-11：首度突破單季兆元）"); C.cell(r, 5, "Verified（加總）"); q3 = r; r += 1
-    C.cell(r, 1, "　核對：1–6 月合計 − 公司公布 1H26 營收（Q 頁）"); C[f"B{r}"] = f"=SUM(B{m0}:B{m0+5})-Q!C4"; C[f"B{r}"].number_format = "0.000"
-    C.cell(r, 4, "NT$B；應約為 0（Q 頁 1H26＝2Q26 8,954.43 億與季增 5.81% 推得；容許 ±0.05）"); C.cell(r, 5, "核對列"); ck1 = r; r += 1
+    C.cell(r, 1, "　核對：1–6 月合計 − 1H26 營收（Q 頁；MOPS 1–9 月累計 − 3Q26）"); C[f"B{r}"] = f"=SUM(B{m0}:B{m0+5})-Q!C4"; C[f"B{r}"].number_format = "0.000"
+    C.cell(r, 4, "NT$B；應約為 0（月營收自結數與財報之差；容許 ±0.05）"); C.cell(r, 5, "核對列"); ck1 = r; r += 1
     C.cell(r, 1, "　核對：1–9 月合計 − 公司公布前三季營收 2,890.84"); C[f"B{r}"] = f"=SUM(B{m0}:B{m0+8})-2890.84"; C[f"B{r}"].number_format = "0.000"
     C.cell(r, 4, "NT$B；應約為 0（緯來新聞 2026-11-11：Q1–Q3 營收 2,890.84 十億元，年增 97.25%；容許 ±0.05）"); C.cell(r, 5, "核對列（出處：緯來新聞）"); C.cell(r, 6, URL3.split("；")[-1]); ck2 = r; r += 1
     C.cell(r, 1, "　核對：3Q26 合計 − 3Q26 營收輸入（In 頁 q3_rev）"); C[f"B{r}"] = f"=B{q3}-q3_rev"; C[f"B{r}"].number_format = "0.000"
-    C.cell(r, 4, "NT$B；應為 0（In 頁 q3_rev＝7–9 月月營收合計）"); C.cell(r, 5, "核對列"); ck3 = r; r += 1
+    C.cell(r, 4, "NT$B；應約為 0（In 頁 q3_rev＝MOPS 3Q26 財報營收；與 7–9 月月營收合計之差為自結與財報差）"); C.cell(r, 5, "核對列"); ck3 = r; r += 1
     out["cum"], out["q3"] = cum, q3
-    C.cell(r, 1, "4.2 口徑換算與參考：公司 3Q26 財報公布值 vs 本模型 3Q 假設（不判定；本版未滾入 3Q26 財報）").font = BOLD; r += 1
+    C.cell(r, 1, "4.2 口徑換算與參考：公司 3Q26 財報公布值（媒體轉載）vs 本模型 3Q26（v0.4.7 已滾入 MOPS 財報；應約為 0）").font = BOLD; r += 1
     fin = {}
 
     def fin_row(key, label, act, fmt, model_f, unit, note=""):
         nonlocal r
         C.cell(r, 1, f"　{label}（公司公布）"); C[f"B{r}"] = act; C[f"B{r}"].font = BLUE; C[f"B{r}"].number_format = fmt
         C[f"C{r}"] = model_f; C[f"C{r}"].number_format = fmt
-        C.cell(r, 4, unit + "；B 欄＝公司公布值、C 欄＝本模型 3Q26 假設（Q 頁）" + (f"；{note}" if note else "")); C.cell(r, 5, SRC3); C.cell(r, 6, URL3)
+        C.cell(r, 4, unit + "；B 欄＝公司公布值（媒體轉載）、C 欄＝本模型 3Q26（Q 頁，MOPS 財報實績）" + (f"；{note}" if note else "")); C.cell(r, 5, SRC3); C.cell(r, 6, URL3)
         fin[key] = r; r += 1
     fin_row("rev", "3Q26 合併營收", 1149.09, "#,##0.0", "=Q!D4", "NT$B")
     fin_row("gm", "3Q26 合併毛利率", 0.059, "0.00%", "=Q!D6", "%", "公司 5.9%（毛利 67.8 十億元 ÷ 營收）")
     fin_row("opm", "3Q26 合併營業利益率", 0.0424, "0.00%", "=Q!D8", "%")
     fin_row("ni", "3Q26 歸屬母公司淨利", 18.402, "#,##0.000", "=Q!D20", "NT$B")
     fin_row("eps", "3Q26 EPS（基本）", 5.74, "0.00", "=Q!D24", "NT$")
-    fin_row("ni9", "前三季歸屬母公司淨利", 42.86, "#,##0.00", "=Q!C20+Q!D20", "NT$B；本模型＝1H26 實績＋3Q26 假設")
-    fin_row("eps9", "前三季 EPS（基本）", 13.54, "0.00", "=Q!C24+Q!D24", "NT$；本模型＝1H26 EPS 加 3Q26 假設 EPS（股數不同，僅供對照）")
-    C.cell(r, 1, "　差距：3Q26 公司公布 EPS ÷ 本模型 3Q 假設 EPS − 1"); C[f"B{r}"] = f"=B{fin['eps']}/C{fin['eps']}-1"; C[f"B{r}"].number_format = "+0.0%;-0.0%"
-    C.cell(r, 4, "正值＝公司公布高於本模型 3Q 假設；參考，不判定（模型 4Q 與全年錨點待下一版滾入 3Q26 實績）"); C.cell(r, 5, "Derived"); out["eps_gap"] = r; r += 1
-    C.cell(r, 1, "　差距：3Q26 公司公布歸屬母公司淨利 ÷ 本模型 3Q 假設 − 1"); C[f"B{r}"] = f"=B{fin['ni']}/C{fin['ni']}-1"; C[f"B{r}"].number_format = "+0.0%;-0.0%"
+    fin_row("ni9", "前三季歸屬母公司淨利", 42.86, "#,##0.00", "=Q!C20+Q!D20", "NT$B；本模型＝1H26＋3Q26（MOPS）")
+    fin_row("eps9", "前三季 EPS（基本）", 13.54, "0.00", "=Q!C24+Q!D24", "NT$；本模型＝1H26 EPS 加 3Q26 EPS（股數不同，僅供對照）")
+    C.cell(r, 1, "　差距：3Q26 公司公布 EPS ÷ 本模型 3Q26 EPS − 1"); C[f"B{r}"] = f"=B{fin['eps']}/C{fin['eps']}-1"; C[f"B{r}"].number_format = "+0.0%;-0.0%"
+    C.cell(r, 4, "v0.4.7 已滾入 3Q26 財報，應約為 0（v0.4.6 時為 +8.2%）"); C.cell(r, 5, "Derived"); out["eps_gap"] = r; r += 1
+    C.cell(r, 1, "　差距：3Q26 公司公布歸屬母公司淨利 ÷ 本模型 3Q26 − 1"); C[f"B{r}"] = f"=B{fin['ni']}/C{fin['ni']}-1"; C[f"B{r}"].number_format = "+0.0%;-0.0%"
     C.cell(r, 4, "同上"); C.cell(r, 5, "Derived"); out["ni_gap"] = r; r += 1
     C.cell(r, 1, "　未揭露（缺的揭露）：AI 伺服器營收金額或占營收比例").font = BOLD
     C.cell(r, 4, "緯創 2Q26 法說（2026-08-04）與 3Q26 財報報導（2026-11-11、11-12）皆未揭露；公司只揭露合併營收、毛利率、營業利益率、淨利、EPS 與筆電、桌機、顯示器出貨量、資本支出；3Q26 法說簡報原文未找到、未直接讀取")
@@ -656,7 +657,7 @@ def c0_actuals(wb, C, r, l3, rs_m, rs_l, d5):
     for c in "BC": C[f"{c}{r}"].number_format = "0.0%"
     C.cell(r, 4, "若公司日後揭露本體 AI 占營收比例，與本列比較；含緯穎營收的合併分母，故低於本體口徑占比"); C.cell(r, 5, "Derived"); out["ratio"] = r; r += 1
     C.cell(r, 1, "　實際檢驗 (a)：錨點隱含 11–12 月月均營收 ÷ 10 月實績 − 1"); C[f"B{r}"] = f"=(a26_rev-B{cum})/2/B{m1}-1"; C[f"B{r}"].number_format = "+0.0%;-0.0%"
-    C.cell(r, 4, "錨點＝1H26 實績＋3Q26 實績＋4Q 假設（季增）；負值＝錨點假設 11–12 月低於 10 月實績"); C.cell(r, 5, "Derived"); out["ref_a"] = r; r += 1
+    C.cell(r, 4, "錨點＝1–3Q26 財報實績＋4Q 假設（季增）；負值＝錨點假設 11–12 月低於 10 月實績"); C.cell(r, 5, "Derived"); out["ref_a"] = r; r += 1
     C.cell(r, 1, "　實際檢驗 (b)：公司實績 1–10 月累計 ÷ 本模型 FY2026 營收錨點"); C[f"B{r}"] = f"=B{cum}/a26_rev"; C[f"B{r}"].number_format = "0.0%"
     C.cell(r, 4, "NT$B 比"); C.cell(r, 5, "Derived"); out["ref_b"] = r; r += 1
     out["ck"] = (ck1, ck2, ck3); out["end"] = r
@@ -796,7 +797,7 @@ def coord_c0(wb, SIL, R):
                           "組裝市場值與匯率在比式中消去，不得讀成層級獲得獨立驗證。不判定、不計對帳中（對帳中項目數 0）。"
                           "第 4 節表實際檢驗的是錨點：錨點隱含 11–12 月月均營收比 10 月實績 "), f'TEXT(B{A4["ref_a"]},"+0.0%;-0.0%")',
                           T("；公司 1–10 月累計營收已達錨點的 "), f'TEXT(B{A4["ref_b"]},"0.0%")',
-                          T("；3Q26 公司公布 EPS 比本模型 3Q 假設 "), f'TEXT(B{A4["eps_gap"]},"+0.0%;-0.0%")',
+                          T("；3Q26 公司公布 EPS 對本模型 3Q26（已滾入）"), f'TEXT(B{A4["eps_gap"]},"+0.0%;-0.0%")',
                           T("。本模型自層級讀入的同源值（第 2 節）不判定。與 Wattonomics 換算的需求側讀數相比，部署 GW 在 CY2027–CY2029 差距 "),
                           f'TEXT(C{d5},"+0%")', T("、"), f'TEXT(D{d5},"+0%")', T("、"), f'TEXT(E{d5},"+0%")',
                           T("，超過 ±15%：這是兩層之間的差距（見「層級之間」小節），已由 Siliconomics 對帳單 r3 處理，不計入本公司 C0；本模型依 C4 並列兩讀數目標價（上方），不改上游值，不裁決哪一側正確。"))
@@ -808,7 +809,11 @@ def version(wb, here, coord_rows):
     RD = wb["README"]
     a1 = RD["A1"].value
     a1 += (f"；v{VER}（{BUILT}）：版面規格 v1.3（標準損益表、反向 DCF、四個目標價、敏感度主圖；新增 Hist、RevDCF 頁）與三層協調 C0（Coord 頁「C0〔實績〕」：2026 年 1–10 月月營收、3Q26 財報公布值；"
-           "緯創未揭露 AI 占比、層級份額同源，無可比實績，不判定；原同源列改標「讀取層級（同源，不判定）」）；既有數值、加權目標價與評等不變")
+           "緯創未揭露 AI 占比、層級份額同源，無可比實績，不判定；原同源列改標「讀取層級（同源，不判定）」）；既有數值、加權目標價與評等不變"
+           "；v0.4.7（2026-11-15）：滾入 3Q26 財報（公開資訊觀測站 t164sb03／t164sb04）：FY2026 錨點改 1–3Q26 財報實績＋4Q26 假設；DCF 資產負債表日 2026-09-30（一年內到期長期負債中的緯穎可轉債改用緯穎模型 9-30 推估）；評價用股數 9-30 股本 ÷ 面額")
+    head = a1.split("；", 1)[0]
+    if "v0.4.6" in head:
+        a1 = head.replace("v0.4.6", "v0.4.7", 1) + a1[len(head):]
     RD["A1"].value = a1
     return a1
 

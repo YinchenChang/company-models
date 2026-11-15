@@ -111,7 +111,7 @@ SPEC = {
     ["營收結構（FY2025 公司揭露、FY2026 拆分）", ["sw25s", "nap25s", "af25", "ns26"]],
     ["非 AI 營收成長", ["g_nai26", "g_nai27", "g_nai28", "g_nai29"]]]],
   ["全公司營運：FY2026 錨點、情境與費用", [
-    ["FY2026 錨點（第三季營收實績與假設）", ["q3_rev", "q3_gm", "q4_g", "q4_gm", "q_opx", "q_nio", "q_sh"]],
+    ["FY2026 錨點（前三季財報實績與第四季假設）", ["q3_rev", "q3_gp", "q3_oi", "q3_ni", "ytd_rev", "ytd_ni", "q4_g", "q4_gm", "q_opx", "q_nio", "q_sh"]],
     ["情境顆數係數（兩條 AI 線共用）", ["um28_A", "um29_A", "um28_B", "um29_B", "um28_C", "um29_C"]],
     ["Wattonomics 錨定係數（只進敏感度）", ["wta_27", "wta_28", "wta_29"]],
     ["AI IT 資本支出（對帳參考）", ["itc_26", "itc_27", "itc_28", "itc_29"]],
@@ -192,7 +192,7 @@ S = {s_["id"]: s_ for s_ in cfg["sections"]}
 RD, PLW, RV = WBF["README"], WBF["PL"], WBF["RevDCF"]
 r13 = find("README", "v1.3 展示層")
 RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
-assert str(RD[f"A{RM['ver']}"].value).startswith("v0.4.5"), RD[f"A{RM['ver']}"].value
+assert str(RD[f"A{RM['ver']}"].value).startswith("v0.4.6"), RD[f"A{RM['ver']}"].value
 cfg["layout"] = "v1.3"
 old_note = cfg["hero"]["note"]
 cfg["hero"]["note"] = [f"@README!A{RM['hero']}"]            # 橫幅只留 ≤200 字白話；評等規則與相對倍數調整說明移到估值章
