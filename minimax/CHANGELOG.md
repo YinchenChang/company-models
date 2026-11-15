@@ -2,6 +2,11 @@
 
 每次同步記錄：版本、工作包、commit／PR 與變動摘要。
 
+## v0.2.3 — 估值頁 Val、反向 DCF 頁 RevDCF（2026-11-15；Andy 決定給目標價與評等）
+- 新檔 `val_page.py`、`valcore.py`（與智譜共用）、`scripts/val_snapshots.py`、`data/val_scenarios.json`、`data/val_sens.json`；`build_xlsx.py` 附加 SRC S142–S155、Inputs I35–I61 並建 Val、RevDCF；`scripts/build_all.sh` 先跑快照、加 `check_rating_gate --strict`。
+- 加權目標價 HK$147.87（DCF 60.92、Comparable 234.82）、上檔空間 −13.1%、估值評等中立、收支關卡不通過（−5,983.2），投資建議中立。
+- 個股模型頁：估值章照 A–I 節（拿掉 data-novaluation）、新增反向 DCF 章、敏感度改加權目標價相對基準主圖。xlsx_diff 對 v0.2.2：既有格只差 README!A1。
+
 ## v0.2.2 同版修正（2026-11-15；只改標籤與旗標，數字不變）
 - 個股模型頁估值章拿掉 `data-unlisted`、只留 `data-novaluation`（規格 J 節 (b)）；橫幅改「本模型未建目標價與評等」。
 - 損益表 FY2026 欄標「1H 實績＋2H 預測」（`build_html_v13.py` 表頭與口徑說明；`coord_pl.py` PL!A1、PL!F5）。

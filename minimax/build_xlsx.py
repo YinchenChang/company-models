@@ -9,7 +9,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 
-VERSION = 'v0.2.2'
+VERSION = 'v0.2.3'
 DATE = '2026-11-15'
 YEARS = [2025, 2026, 2027, 2028, 2029, 2030]
 YCOL = {y: get_column_letter(4 + i) for i, y in enumerate(YEARS)}  # D..I
@@ -173,6 +173,9 @@ SRC = [
     ('S141', '經調整淨虧損（非 IFRS）', 'FY2024', 244.243, '$M', 'Verified', '一手', PROS + '（非 IFRS 調節表）'),
 ]
 
+from val_page import SRC_ADD, INP_ADD  # v0.2.3：估值頁新增列（附加在尾端，既有列號不變）
+SRC += SRC_ADD
+
 # ───────────────────────── TK_Link：Tokenomics 官方快照（scripts/tk_snapshot.py 產生；本檔不寫死任何 TK 數值） ─────────────────────────
 import json, os
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -286,6 +289,9 @@ INPUTS = [
     ('I27', '反向檢驗：2030 年 EV/營收 退出倍數', '倍', 8, 5, 12, 'Assumed', '軟體／AI 平台高成長倍數'),
     ('I28', '反向檢驗：股權折現率', '比例', 0.12, 0.10, 0.15, 'Assumed', ''),
 ]
+
+
+INPUTS += INP_ADD
 
 
 def apply_overrides(argv):
@@ -805,6 +811,10 @@ def build(out):
         ('新增 PL 頁：標準損益表 FY2023–FY2030（非 IFRS 經調整口徑；FY2023–FY2025 取招股書與業績公告，SRC_MM S114–S141 為新增歷史列；FY2026 起引用 PnL 頁），只列示。', None),
         ('新增 Coord 頁：讀取層級（Tokenomics 快照、Wattonomics 不讀、Siliconomics 不適用）與 C0（實績）表；Wattonomics 玩家名單沒有 MiniMax，C0 各列「無可比實績（層級無此玩家）」，對帳中 0。', None),
         ('既有計算頁、Inputs、Checks、Sensitivity 數值不變（tools/xlsx_diff.py 逐格比對）。本模型沒有目標價與評等（Valuation 頁只有市值、EV 與反向檢驗），版面 v1.3 的估值章以「不適用」呈現。', None),
+        ('', None),
+        ('v0.2.3（2026-11-15）：估值頁 Val 與反向 DCF 頁 RevDCF（Andy 2026-11-15 決定 MiniMax 與智譜都給目標價與評等）', BOLD),
+        ('Val：DCF（FCFF；現金流沿用本模型 R09、P16、I22）50%＋同業 EV／NTM 營收（智譜，2026-11-05 同日市值）50%；情境 A／B／C＝API token 量年增高／基準／低（25／50／25）；評價日 2026-06-30 pro forma、現價 2026-11-05 收盤；五級評等＋收支關卡（原則第 63 條）。RevDCF：支持現價所需 EV、終值期營業利益率、延伸期利益率加碼、同業倍數係數。', None),
+        ('判斷類參數（待 Andy 確認）：rf 4.86%（美債 10 年）、β 1.248（Anthropic 同業 Blume）、ERP 5%（未加國家風險）、g 3%、RONIC＝WACC、DCF／同業 50／50、同業只有智譜、不做相對倍數調整、延伸期利益率維持 FY2030。新增 SRC S142–S155、Inputs I35–I61（附加在尾端）；既有計算頁數值不變。', None),
     ]
     for i, (t, f) in enumerate(lines, 1):
         c = R.cell(i, 1, t); c.alignment = WRAP
@@ -818,6 +828,9 @@ def build(out):
 
     # 敏感度頁佔位（由 sensitivity.py 以重算結果填入）
     wb.create_sheet('Sensitivity')
+    # ── v0.2.3：估值頁 Val 與反向 DCF 頁 RevDCF（Andy 2026-11-15 決定給目標價與評等；只被 HTML 讀取，不被既有計算頁引用）
+    import val_page
+    val_page.build(wb, REG, YCOL)
     wb.save(out)
 
 
