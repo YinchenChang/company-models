@@ -34,7 +34,7 @@
        "items": [
         {
          "name": [
-          "財務長說法（逾三倍）"
+          "公司說法（三倍）"
          ],
          "v": "@Recon!E9",
          "ref": true
@@ -2130,7 +2130,7 @@
        "labels": true
       }
      ],
-     "caption": "堆疊長條＝推論雲端（平均計費 MW × 每 MW 年營收）＋系統銷售＝核心營收合計；折線＝平均計費 MW。FY2026E 為錨點（上半年實績＋指引）。"
+     "caption": "堆疊長條＝推論雲端（平均計費 MW × 每 MW 年營收）＋系統銷售＝核心營收合計；折線＝平均計費 MW。FY2026E 為錨點（前三季實績＋第四季指引）。"
     },
     {
      "type": "note",
@@ -2521,9 +2521,9 @@
       ],
       [
        "@In!B50",
-       "@In!D50|n2",
-       "@In!E50|n2",
-       "@In!F50|n2",
+       "@In!D50|n3",
+       "@In!E50|n3",
+       "@In!F50|n3",
        "@In!C50",
        "@In!G50|tag"
       ],
@@ -2584,17 +2584,17 @@
      "rows": [
       [
        "@In!B49",
-       "@In!D49|n2",
-       "@In!E49|n2",
-       "@In!F49|n2",
+       "@In!D49|n3",
+       "@In!E49|n3",
+       "@In!F49|n3",
        "@In!C49",
        "@In!G49|tag"
       ],
       [
        "@In!B51",
-       "@In!D51|n2",
-       "@In!E51|n2",
-       "@In!F51|n2",
+       "@In!D51|n3",
+       "@In!E51|n3",
+       "@In!F51|n3",
        "@In!C51",
        "@In!G51|tag"
       ],
@@ -3049,39 +3049,17 @@
      "type": "table",
      "caption": "@Coord!A25",
      "head": [
-      "@Coord!A37",
-      "@Coord!B37",
-      "@Coord!C37",
-      "@Coord!D37",
-      "@Coord!E37",
-      "@Coord!F37",
-      "@Coord!G37",
-      "@Coord!H37",
-      "@Coord!I37"
+      "@Coord!A39",
+      "@Coord!B39",
+      "@Coord!C39",
+      "@Coord!D39",
+      "@Coord!E39",
+      "@Coord!F39",
+      "@Coord!G39",
+      "@Coord!H39",
+      "@Coord!I39"
      ],
      "rows": [
-      [
-       "@Coord!A38",
-       "@Coord!B38|n3",
-       "@Coord!C38",
-       "@Coord!D38",
-       "@Coord!E38",
-       "@Coord!F38",
-       "@Coord!G38",
-       "@Coord!H38",
-       "@Coord!I38"
-      ],
-      [
-       "@Coord!A39",
-       "@Coord!B39|n3",
-       "@Coord!C39",
-       "@Coord!D39",
-       "@Coord!E39",
-       "@Coord!F39",
-       "@Coord!G39",
-       "@Coord!H39",
-       "@Coord!I39"
-      ],
       [
        "@Coord!A40",
        "@Coord!B40|n3",
@@ -3092,6 +3070,28 @@
        "@Coord!G40",
        "@Coord!H40",
        "@Coord!I40"
+      ],
+      [
+       "@Coord!A41",
+       "@Coord!B41|n3",
+       "@Coord!C41",
+       "@Coord!D41",
+       "@Coord!E41",
+       "@Coord!F41",
+       "@Coord!G41",
+       "@Coord!H41",
+       "@Coord!I41"
+      ],
+      [
+       "@Coord!A42",
+       "@Coord!B42|n3",
+       "@Coord!C42",
+       "@Coord!D42",
+       "@Coord!E42",
+       "@Coord!F42",
+       "@Coord!G42",
+       "@Coord!H42",
+       "@Coord!I42"
       ]
      ]
     },
@@ -3165,11 +3165,27 @@
       ],
       [
        "@Coord!A35",
-       "@Coord!B35|n0",
+       "@Coord!B35|n3",
        "@Coord!C35",
        "@Coord!D35",
        "@Coord!E35",
        "@Coord!F35"
+      ],
+      [
+       "@Coord!A36",
+       "@Coord!B36|n3",
+       "@Coord!C36",
+       "@Coord!D36",
+       "@Coord!E36",
+       "@Coord!F36"
+      ],
+      [
+       "@Coord!A37",
+       "@Coord!B37|n0",
+       "@Coord!C37",
+       "@Coord!D37",
+       "@Coord!E37",
+       "@Coord!F37"
       ]
      ]
     },
@@ -3177,15 +3193,15 @@
      "type": "kv",
      "items": [
       [
-       "@Coord!A42",
-       "@Coord!B42|n0"
+       "@Coord!A44",
+       "@Coord!B44|n0"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A43"
+      "@Coord!A45"
      ]
     },
     {

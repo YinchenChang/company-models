@@ -26,6 +26,8 @@ CASES = [
     ("fx", "匯率 30／34（基準 32；Trainium 美元營收換算）", dict(fx="fx_lo"), dict(fx="fx_hi")),
     ("tax", "有效稅率 17%／25%（基準 20%）", dict(tax="tax_lo"), dict(tax="tax_hi")),
     ("nonop", "營業外淨額 1.0／2.2（基準 1.6）", dict(nonop="nonop_f_lo"), dict(nonop="nonop_f_hi")),
+    ("fcwc", "營運資金強度改 9 月底實績（營運資金 ÷ 3Q26 年化營收，約 21%；基準 4.5%；只有低案）", dict(fcwc="1"), None),
+    ("stubwc", "4Q26 營運資金依 FY2026 全年假設反推（釋出 22.28 十億元；基準 4Q 變動 0；只有高案）", None, dict(stubwc="1")),
 ]
 
 

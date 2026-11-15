@@ -12,6 +12,7 @@ X = sys.argv[1] if len(sys.argv) > 1 else (lambda f: f[0] if len(f) == 1 else sy
 OUT = os.path.join(HERE, "html.json")
 SRC = json.load(open(os.path.join(HERE, "html_src.json"), encoding="utf-8"))
 cfg = copy.deepcopy(SRC)
+cfg = json.loads(json.dumps(cfg, ensure_ascii=False).replace("FY2026 錨定公司全年指引", "FY2026 錨定上半實績加下半公司指引"))   # v0.3.6：滾入第二季（html_src.json 內容不動）
 wb = openpyxl.load_workbook(X, data_only=True)
 
 
@@ -151,7 +152,7 @@ SPEC = {
     ["事業別營收實績（FY2025）", ["seg_semi", "seg_mold", "seg_osemi", "seg_new", "seg_med", "seg_las", "seg_adj"]]]],
   [B_CO, [
     ["FY2025 實績與訂單", ["a25_rev", "a25_gp", "a25_oi", "a25_ni", "a25_eps", "ord_25", "bl_25", "sh"]],
-    ["FY2026 實績、公司指引與錨點", ["q1_rev", "q1_oi", "q1_ni", "q1_eps", "h1g_rev", "h1g_oi", "g26_rev", "g26_oi", "g26_ni", "g26_eps", "g26_semi", "g26_las", "g_anc"]],
+    ["FY2026 實績、公司指引與錨點", ["q1_rev", "q1_oi", "q1_ni", "q1_eps", "h1_rev", "h1_oi", "h1_ni", "h1_eps", "ord_26q1", "ord_26h1", "h1g_rev", "h1g_oi", "g26o_rev", "g26o_oi", "g26_rev", "g26_oi", "g26_ni", "g26_eps", "h2g_rev", "h2g_oi", "h2g_ni", "g26_semi", "g26_las", "g_anc"]],
     ["利潤率與股數", ["im", "ima_A", "ima_B", "ima_C", "nioi", "shares"]],
     ["共識與市場倍數", ["cons_rev26", "cons_oi26", "cons_ni26", "cons_tp", "cons_feps", "sa_fpe", "sa_ttm", "px"]],
     ["循環位置（設備市場見頂年）", ["pk_A", "pk_B", "pk_C"]],
@@ -206,8 +207,9 @@ def _v13(cfg):
     RD, PLW, RV, SW, CW = wb["README"], wb["PL"], wb["RevDCF"], wb["Sens"], wb["Coord"]
     fnd = lambda ws, p, start=1: next(r for r in range(start, ws.max_row + 1) if str(ws.cell(r, 1).value or "").strip().startswith(p))
     r13 = fnd(RD, "v1.3 展示層")
-    RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
+    RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver", "ver36"], range(r13 + 1, r13 + 11)))
     assert str(RD[f"A{RM['ver']}"].value).startswith("v0.3.5"), RD[f"A{RM['ver']}"].value
+    assert str(RD[f"A{RM['ver36']}"].value).startswith("v0.3.6"), RD[f"A{RM['ver36']}"].value   # v0.3.6：滾入第二季
     cfg["layout"] = "v1.3"
     fmt_u = lambda u: {"%": "p1", "US$B": "n2", "¥B": "n1", "百萬股": "n1", "¥": "n1", "x": "n2"}.get(str(u).strip(), "n1")
     # ---- 橫幅：白話說明＋對帳中揭露句；評等規則與歸因移到估值章 ----
@@ -231,7 +233,7 @@ def _v13(cfg):
               "bars": [{"name": f"@PL!A{r}", "y": f"@PL!C{r}:G{r}", "color": c} for r, c in zip(segs, ("#0b7a80", "#6fc7cb", "#c29a2b", "#8a8c8c", "#b9b9b9", "#6f6bae"))],
               "lines": [{"name": [f"@PL!A{pa}", "營收"], "y": f"@PL!C{revA}:G{revA}", "color": "#0b7a80", "dash": True},
                         {"name": [f"@PL!A{pc}", "營收"], "y": f"@PL!C{revC}:G{revC}", "color": "#b4472f", "dash": True}],
-              "caption": "堆疊＝情境 B（基準）的 AI 封膠、非 AI 封膠、其他半導體、新事業、醫療器材與雷射，頂端數字＝情境 B 營收；虛線＝情境 A、情境 C 的營收。FY2026 為公司全年指引錨點；三情境的差異來自 HBM 位元、CoWoS 片數（加速器顆數）、設備市場與 AI 封膠市占。"}
+              "caption": "堆疊＝情境 B（基準）的 AI 封膠、非 AI 封膠、其他半導體、新事業、醫療器材與雷射，頂端數字＝情境 B 營收；虛線＝情境 A、情境 C 的營收。FY2026 為上半實績加下半公司指引的錨點；三情境的差異來自 HBM 位元、CoWoS 片數（加速器顆數）、設備市場與 AI 封膠市占。"}
     i_obs = next(i for i, b in enumerate(th) if b["type"] == "h3" and b.get("text") == "重點觀察")
     th[i_obs + 1] = {"type": "list", "ordered": True, "items": [f"@README!A{RM[k]}" for k in ("o1", "o2", "o3", "o4", "o5")]}
     th.insert(0, chart1)
@@ -384,7 +386,7 @@ def _v13(cfg):
     ot = fnd(CW, "其他公司實績"); oh = next(r for r in range(ot, CW.max_row + 1) if CW.cell(r, 1).value == "項目"); oe = next(r for r in range(oh, CW.max_row + 2) if not CW.cell(r + 1, 1).value)
     oth_rows = [[f"@Coord!A{r}", f"@Coord!B{r}", f"@Coord!C{r}", f"@Coord!D{r}|n1", f"@Coord!E{r}|n1", f"@Coord!G{r}"] for r in range(oh + 1, oe + 1)]
     act_blocks = [{"type": "h3", "text": "公司實績對層級隱含值（實績對帳）"}, {"type": "note", "parts": [f"@Coord!A{a4 + 1}"]}, {"type": "note", "parts": [f"@Coord!A{a4 + 2}"]}, {"type": "note", "parts": [f"@Coord!A{a4 + 3}"]},
-                  {"type": "table", "caption": "營收：公司決算短信實績 vs 層級隱含值（層級沒有 TOWA 份額；份額沿用 FY2025 實績的兩列為假設，只列參考、不判定；已公布期間只有第一季）", "head": [f"@Coord!{c}{mh}" for c in "ABCDEFG"], "rows": act_rows},
+                  {"type": "table", "caption": "營收：公司決算短信實績 vs 層級隱含值（層級沒有 TOWA 份額；份額沿用 FY2025 實績的兩列為假設，只列參考、不判定；已公布期間為上半年）", "head": [f"@Coord!{c}{mh}" for c in "ABCDEFG"], "rows": act_rows},
                   {"type": "note", "parts": [f"@Coord!A{a4e - 1}"]},
                   {"type": "note", "parts": ["對帳中項目數：", f"@Coord!G{a4e}|n0", "。"]},
                   {"type": "table", "caption": "實績與層級隱含值的輸入、等級與出處（展開看）", "collapse": True, "summary": "展開：實績、層級值、換算參數與出處", "head": [f"@Coord!{c}{ih}" for c in "ABCDE"] + [f"@Coord!H{ih}"], "rows": in_rows},
@@ -407,7 +409,7 @@ def _v13(cfg):
     S["recon"]["title"] = "對帳：三層協調、公司實績與先驗比對"
     # ---- 8. 資料狀態 ----
     st = S["status"]["blocks"]
-    st[0:0] = [{"type": "h3", "text": "本版要點"}, {"type": "note", "parts": [f"@README!A{RM['ver']}"]}]
+    st[0:0] = [{"type": "h3", "text": "本版要點"}, {"type": "note", "parts": [f"@README!A{RM['ver36']}"]}]
     order = ["thesis", "valuation", "sens", "revdcf", "pl", "drivers", "recon", "status"]
     S["revdcf"] = rev_
     cfg["sections"] = [S[k] for k in order]

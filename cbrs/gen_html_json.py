@@ -25,7 +25,7 @@ S = {x["id"]: x for x in cfg["sections"]}
 RD, PLW, RV, CW, SW, VW = wb["README"], wb["PL"], wb["RevDCF"], wb["Coord"], wb["Sens"], wb["Val"]
 r13 = find("README", "v1.3 展示層")
 RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "coord", "ver"], range(r13 + 1, r13 + 11)))
-assert str(RD[f"A{RM['ver']}"].value).startswith("v0.1.2"), RD[f"A{RM['ver']}"].value
+assert str(RD[f"A{RM['ver']}"].value).startswith("v0.1.3"), RD[f"A{RM['ver']}"].value
 cfg["layout"] = "v1.3"
 old_note = list(cfg["hero"]["note"])
 assert old_note[0] == "投資建議依加權目標價判定：", old_note
@@ -33,11 +33,11 @@ cfg["hero"]["note"] = [f"@README!A{RM['hero']}"]
 
 # ---- 1. 命題：置頂對照圖、投資建議前提、重點觀察 5 點 ----
 th = S["thesis"]["blocks"]
-rx27, rrpo, rmw = find("Recon", "FY2027 營收 ÷ FY2026"), find("Recon", "雲端營收 2026H2–2028H1"), find("Recon", "FY2028 平均計費 MW vs 公司")
+rx27, rrpo, rmw = find("Recon", "FY2027 營收 ÷ FY2026"), find("Recon", "雲端營收 4Q26–3Q28"), find("Recon", "FY2028 平均計費 MW vs 公司")
 grp = lambda nm, r, fmt, ref: {"name": [nm], "fmt": fmt, "items": [{"name": [ref], "v": f"@Recon!E{r}", "ref": True},
                                                                   {"name": ["模型 情境 A"], "v": f"@Recon!B{r}"}, {"name": ["模型 情境 B"], "v": f"@Recon!C{r}"}, {"name": ["模型 情境 C"], "v": f"@Recon!D{r}"}]}
 cmp_ = {"type": "compare", "title": "回答命題：模型的 FY2027 營收倍數、RPO 期間雲端營收與 FY2028 計費 MW，對公司說法與合約揭露",
-        "groups": [grp("FY2027 營收 ÷ FY2026（倍）", rx27, "x1", "財務長說法（逾三倍）"), grp("RPO 期間的雲端營收（十億美元）", rrpo, "n2", "RPO 二十四個月內認列額"),
+        "groups": [grp("FY2027 營收 ÷ FY2026（倍）", rx27, "x1", "公司說法（三倍）"), grp("RPO 期間的雲端營收（十億美元）", rrpo, "n2", "RPO 二十四個月內認列額"),
                    grp("FY2028 平均計費 MW", rmw, "n0", "公司：2027 年底前上線＋簽約")],
         "caption": "灰色＝公司說法或合約揭露；青綠＝本模型三情境。對照只作事後檢查，校準時未使用；公司 MW 為容量口徑（含尚未計費），與計費 MW 不同。"}
 i_obs = next(i for i, b in enumerate(th) if b["type"] == "h3" and b.get("text") == "重點觀察")
@@ -156,7 +156,7 @@ seg_chart = {"type": "theme", "title": "分部營收（情境 B，十億美元�
              "fmt": "n1", "fmt_r": "n0", "stack": True, "pad": 1.2, "total": f"@PL!D{r_rev}:J{r_rev}",
              "bars": [{"name": ["推論雲端"], "y": f"@PL!D{r_cl}:J{r_cl}", "color": "#0b7a80"}, {"name": ["系統（硬體）"], "y": f"@PL!D{r_hw}:J{r_hw}", "color": "#c29a2b"}],
              "lines": [{"name": [f"@PL!A{r_mw}"], "y": f"@PL!D{r_mw}:J{r_mw}", "axis": "r", "color": "#3b3838", "labels": True}],
-             "caption": "堆疊長條＝推論雲端（平均計費 MW × 每 MW 年營收）＋系統銷售＝核心營收合計；折線＝平均計費 MW。FY2026E 為錨點（上半年實績＋指引）。"}
+             "caption": "堆疊長條＝推論雲端（平均計費 MW × 每 MW 年營收）＋系統銷售＝核心營收合計；折線＝平均計費 MW。FY2026E 為錨點（前三季實績＋第四季指引）。"}
 fm_ = {r_mw: "n0", r_pmw: "n2"}
 seg_tbl = {"type": "table", "caption": "分部營收推導（情境 B）：推論雲端＝平均計費 MW × 每 MW 年營收；系統（硬體）＝FY2026 錨點 × 情境年增；合計＝核心營收",
            "head": [f"@PL!A{hdrB}", f"@PL!B{hdrB}"] + [f"@PL!{c}{hdrB}" for c in "DEFGHIJ"],
