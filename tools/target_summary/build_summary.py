@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 import relative_multiple as RM  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VER, VDATE = "v0.2.15", "2026-11-15"   # 每次升版改這裡（v0.2.15：台光電、台燿、金像電、勝宏、味之素、世界先進、韓美新版合併後重產；前 6 家改讀 Coord 兩讀數，世界先進 C4 不適用寫明原因）
+VER, VDATE = "v0.2.16", "2026-11-15"   # 每次升版改這裡（v0.2.16：3Q26 滾入 #599 五家、#612 台股 12 家、#613 東京精密、#614 味之素合併後重產；v0.2.15：台光電、台燿、金像電、勝宏、味之素、世界先進、韓美新版合併後重產；前 6 家改讀 Coord 兩讀數，世界先進 C4 不適用寫明原因）
 # v0.2.14：第二批與其餘個股 v1.3＋兩讀數＋C0 合併後重產；Coord 現行欄核對；無對帳中年份與無 Coord 頁寫明原因）
 # v0.2.13：七家版面 v1.3＋三層協調合併；加另一側讀數欄；Comparable 欄標明未調整
 BOLD = Font(bold=True)
