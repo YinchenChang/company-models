@@ -98,6 +98,8 @@ H_ITEM = {222: "investment_stock_nonmkt"}
 
 # Q 段（v0.1.3–v0.1.4，2026Q3／FY27Q1 財報）：F#228–246 由 Andy 下載的（F#247–254 Amazon 由公司新聞稿） 10-Q、新聞稿、法說逐字稿取數，經未參與代理核對（evidence_raw/Q_review_2026q3.md）
 Q_TRUE = rng("228–246 247–254 255–257 258–275")   # 258–275：Amazon、Meta 2026Q3 10-Q（Q_review 第五節：屬實 14、小誤 4 已改 tag）   # 247–254：Amazon 2026Q3 新聞稿（Q_review 第三節：屬實 7、小誤 1 已改 tag）；255–257：Amazon、Meta 逐字稿（第四節：屬實 1、小誤 2 已改）
+# v0.3.5（Andy 2026-11-15 19:15 照預設）：CoreWeave、Nebius、WhiteFiber 2025-12-31 期初現金（Gap 頁 cash_obs 優先採用；WhiteFiber 不在 Funding 玩家表，只作紀錄）
+R35_CASH = rng("276–278")
 # 被 Q 段取代（同期間較新或實收口徑）：Alphabet 2026H1 各列與 8 月發債（併入 9M2026 現金流量表）、F#51 股權公告 84.75（含未動用 ATM，改用實收 61.933）、
 # F#55 2026 指引（Q2 法說，Q3 重申另列）；Microsoft F#29 曆年 175（改 170）、F#30 FY27Q1 指引（已有實績）
 Q_SUPERSEDED = {44: "9M2026", 45: "9M2026", 46: "9M2026", 47: "9M2026", 48: "9M2026", 49: "9M2026（8 月發債已在 9M 現金流量表內）",
@@ -202,7 +204,9 @@ def main():
             v = "Q 段核對"
         if n in Q_SUPERSEDED:
             v = "由 Q 段取代：" + Q_SUPERSEDED[n]
-        use = 1 if v in ("屬實", "小誤（已更正）", "G§4 重算確認", "已更正（改引 6-K）", "Q 段核對") else 0
+        if n in R35_CASH:
+            v = "v0.3.5 期初現金（公司財報新聞稿原文；PR 核對代理複核）"
+        use = 1 if v in ("屬實", "小誤（已更正）", "G§4 重算確認", "已更正（改引 6-K）", "Q 段核對", "v0.3.5 期初現金（公司財報新聞稿原文；PR 核對代理複核）") else 0
         gnote = fx.get("note", "")
         if n in H_DROP:
             use = 0; v = "H 段改不採用"
