@@ -289,6 +289,18 @@
      }
     },
     {
+     "type": "note",
+     "parts": [
+      "@Coord!A98"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!A99"
+     ]
+    },
+    {
      "type": "bars",
      "title": "三情境隱含股價與現價",
      "fmt": "n0",
@@ -4480,6 +4492,18 @@
      "type": "note",
      "parts": [
       "@Coord!A54"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!A98"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Coord!A99"
      ]
     },
     {

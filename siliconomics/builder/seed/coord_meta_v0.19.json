@@ -64,7 +64,8 @@
   "kioxia",
   "sndk",
   "umc",
-  "disco"
+  "disco",
+  "ajinomoto"
  ],
  "depends_on_years": {
   "nvidia": [
@@ -386,6 +387,12 @@
    "2029"
   ],
   "disco": [
+   "2026",
+   "2027",
+   "2028",
+   "2029"
+  ],
+  "ajinomoto": [
    "2026",
    "2027",
    "2028",
