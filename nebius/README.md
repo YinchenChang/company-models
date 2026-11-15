@@ -1,4 +1,12 @@
-# Nebius（NBIS）個股模型 v0.6.1（每 MW 收入比照 CoreWeave；v0.6.0：CoreWeave v5.0.3 新雲樣板重建＋2026Q3 滾入＋三層協調）
+# Nebius（NBIS）個股模型 v0.6.2（Wattonomics 改讀 v0.3.5；v0.6.1：每 MW 收入比照 CoreWeave；v0.6.0：CoreWeave v5.0.3 新雲樣板重建＋2026Q3 滾入＋三層協調）
+
+**v0.6.2（2026-11-15）：Wattonomics 快照改讀 v0.3.5（原 v0.3.2）。**
+依據：主控指示（main 已合併 Wattonomics v0.3.5，#618）；規則 `docs/plan/三層基準協調規則.md` v1.4.2；`wattonomics/docs/verify/20261115_v0.3.5_build.md`。
+- **改了什麼：** `build_nebius.py` 讀 `wattonomics/data/wattonomics_snapshot_v0.3.5.json`（In 頁 wat26、wat30，Recon 原則 54 列，Coord 頁）；追公式重跑 `tools/coord/trace_wattonomics.py wattonomics/model/20261115_Wattonomics_v0.3.5.xlsx nebius/data/wattonomics_trace_v0.3.5.json --player nbis`（無法解析的公式 0 格；舊 v0.3.2 追公式檔保留）。
+- **層級讀數新舊值（v0.3.2 → v0.3.5）：** In 頁 gcap_nbis 2026 由 Nebius v0.5.2 回寫 26.046 重匯為 **v0.6.1 Thesis!E66 的 24.185**；`WIF_Gap_Player_nbis_2026_CapexAI` 13.17 → **20.56**（Gap 主讀法改付款年實際花費＝24.185 × AI 占比 0.85；舊值是上線年 GW 回推）；`WIF_Gap_Player_nbis_2026_CapexAIModel` 26.046 → 24.185；`WIF_PlayerGW_YE_nbis_2026` 0.4365 → **0.4214**（CapexGW 頁 G227＝F227＋G226，原 G221／G220）；`_2030` 2.364 → **2.482**。
+- **Coord 頁同源說明更新：** 層級 nbis 的 2026 年資本支出現在就是本公司模型自己的值（同源），只列參考；C0 結論不變——營收、資本支出「參考（同源校準）：無可比實績（層級值同源）」，在役電力「無可比實績」，對帳中 0 個、有判定 0 個。讀數（參考）：資本支出主讀數 前三季 15.431 vs 20.557 × 9 ÷ 12＝15.418（+0.1%），第二讀數 Q3 × 4＝29.20 vs 20.56（+42.0%）；營收主讀數 1.938 vs 2.222（−12.7%），第二讀數 3.895 vs 2.962（+31.5%）。G1 的 CapexAIModel 列差距 0（本版基準輸入與 v0.6.1 相同）。v0.6.0 節「交主控重匯回寫值」一項已由 Wattonomics v0.3.5 完成。
+- **目標價與評等：** Wattonomics 不進估值，基準輸入未變：加權目標價 **30.31 → 30.31**、投資建議 **強力放空 → 強力放空**；收支關卡、反向 DCF 19.70 不變。只有 In 頁 wat26（436.5 → 421.4 MW）、wat30（2,363.7 → 2,481.9 MW）與 Recon 對照列、Coord 頁數值與文字變動。
+- **驗證：** `SENS=1 REV=1 bash nebius/make_v1.sh` 全過（公式錯誤 0；檢查列與收支恆等式 157 項；In 版面；敏感度覆蓋 41 鍵；分部；HTML；治理；收支關卡評等；敏感度與反向 DCF 快照已重跑，拆解快照沿用）；`check_company_html nebius`、`check_layout_v13 --xlsx`、`tools/baseline_coordination/check.py` 見 PR 說明。
 
 **v0.6.1（2026-11-15）：每 MW 收入比照 CoreWeave 辦理（Andy 決定，2026-11-15）。**
 依據：Andy 2026-11-15「每 MW 收入比照 CoreWeave 辦理」；CoreWeave v5.0.3 做法（`coreweave/README.md` 方法要點）：每 MW 年收入＝Tokenomics `IF_HoldEcon` 在役世代加權 × 單一定價倍數 k；k＝IREN–Microsoft 長約〔Analogy〕與 H100 現貨加權；不以營收、ARR、RPO、ACV、指引反推 k（本資料夾 CLAUDE.md 第 6 條）；公司宣稱的新約每 MW 年收入只列參考、作敏感度，並開 Drive 對帳單（比照 CoreWeave J4 對帳單 `20261113_對帳單_CoreWeave_J4新約價格與Wattonomics上線GW.md`；Nebius 的對帳單由 Andy 開立）。
@@ -25,8 +33,8 @@
 
 數字以 `dist/` 的 xlsx 為準；下表由建置成品產生（`python3 tools/model_governance/version_table.py nebius --update`），不手寫（舊版 v0.5.3 檔名非點號版號、結構不同，未入表；其值見上）。
 
-<!-- version-table: dist/_待刪除/20261115_Nebius個股模型_v0.6.0.xlsx｜dist/20261115_Nebius個股模型_v0.6.1.xlsx -->
-| 項目 | v0.6.0 | v0.6.1 |
+<!-- version-table: dist/_待刪除/20261115_Nebius個股模型_v0.6.1.xlsx｜dist/20261115_Nebius個股模型_v0.6.2.xlsx -->
+| 項目 | v0.6.1 | v0.6.2 |
 |---|---|---|
 | 加權目標價（上檔空間） | 30.31（-76.4%） | 30.31（-76.4%） |
 | DCF 目標價（情境加權） | 0.00 | 0.00 |
@@ -51,7 +59,7 @@ SENS=1 REV=1 DEC=1 bash nebius/make_v1.sh     # 改了公式或輸入時（約 5
 | `scripts/` | runner、敏感度、反向 DCF、拆解、檢查、HTML 設定檔產生器（自 CoreWeave v5.0 樣板） |
 | `data/nebius_facts_20261115.json` | 事實總帳（Q3 6-K 附件 99.1、99.2 逐筆；來源網址） |
 | `data/nebius_is_hist_20261115.json` | 標準損益表 FY2023–FY2025（20-F）與 9M 2026（6-K） |
-| `data/wattonomics_trace_v0.3.2.json` | Wattonomics 玩家 nbis 追公式輸出（Coord 頁同源判定依據） |
+| `data/wattonomics_trace_v0.3.5.json` | Wattonomics v0.3.5 玩家 nbis 追公式輸出（Coord 頁同源判定依據；v0.3.2 版保留供 v0.6.0–v0.6.1 對照） |
 | `data/tokenomics_snapshot_v22.0.json` | Tokenomics 快照（v19.0 保留供舊引擎） |
 | `legacy_v05/` | v0.5.3 舊 JS 雙引擎（含舊 README、CLAUDE.md），保留不刪 |
 
