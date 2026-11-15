@@ -109,7 +109,7 @@ def pl_standard(wb, CR, C):
     d_ebit = lab(D, "營業利益 EBIT", dbr)
     r = P.max_row + 3
     s0 = r
-    P.cell(r, 1, f"標準損益表（{C['ver']} 起；個股 HTML 版面規格 v1.3 D 節）：歷史三年（FY2023–FY2025 實績）＋FY2026E–FY2031E（情境 B 基準；{C['fy26_short']}，FY2030E–FY2031E 為延伸期）。"
+    P.cell(r, 1, f"標準損益表（{C.get('since', C['ver'])} 起；個股 HTML 版面規格 v1.3 D 節）：歷史三年（FY2023–FY2025 實績）＋FY2026E–FY2031E（情境 B 基準；{C['fy26_short']}，FY2030E–FY2031E 為延伸期）。"
                  "NT$B；EPS 新台幣。只引用本頁上方、Hist、Q、DCF 頁，不回饋任何計算").font = BOLD; r += 1
     P.cell(r, 1, f"口徑：GAAP（台灣採用的 IFRS 合併財報，歸屬母公司淨利）。{C['name']}不另發布 Non-GAAP，法說與市場共識 EPS 皆以此口徑，故本表不做 Non-GAAP 調整。"
                  "FY2026E 以後的所得稅＝稅前 × 模型稅率（In 頁的稅率，與 DCF 同一個稅率），非控制權益＝稅前 − 所得稅 − 歸屬母公司淨利（模型以「淨利 ÷ 稅前」合併處理兩者）；歷史年度為公司財報值（Hist 頁）")
@@ -200,7 +200,7 @@ def revdcf(wb, C):
     ncr = f"Val!$C${lab(V, '淨現金滾到評價日')}"
     feps, pmed, dcf_tp, coef = vb("12 個月後的前瞻 EPS（情境加權）"), vb("同業前瞻 P/E 中位數"), vb("DCF 目標價（情境加權）"), vb("相對倍數調整係數")
     rb = blockB(P); r26 = lab(P, "營收", rb, exact=True)
-    RV["A1"] = (f"RevDCF — 反向 DCF：現價隱含什麼（{C['ver']} 起；個股 HTML 版面規格 v1.3）。一次只動一個驅動、其餘維持基準，反解到「現價」；全部為 Excel 公式（DCF 對各年營業利益與營收倍數為線性，用封閉解；WACC 用二分法）。"
+    RV["A1"] = (f"RevDCF — 反向 DCF：現價隱含什麼（{C.get('since', C['ver'])} 起；個股 HTML 版面規格 v1.3）。一次只動一個驅動、其餘維持基準，反解到「現價」；全部為 Excel 公式（DCF 對各年營業利益與營收倍數為線性，用封閉解；WACC 用二分法）。"
                 "本頁只讀 DCF、Val、PL、In 頁，無任何頁引用本頁，不影響目標價")
     RV["A1"].font = BOLD
     RV["A2"] = ("讀法：DCF 部分以情境 B（基準）路徑反解「情境 B 的 DCF 價值推到 12 個月後＝現價」（與目標價同一時點口徑：評價日每股價值 ×（1＋股權成本）^年數 − 期間股利）；"
@@ -343,7 +343,7 @@ def val_g(wb, C):
     cons_src = f"Val!$E${lab(V, '市場共識目標價')}"
     pxr = lab(V, "現價（")
     r = V.max_row + 3
-    V.cell(r, 1, f"0.7 估值並列：四個目標價（{C['ver']} 起；個股 HTML 版面規格 v1.3 G 節，Andy 2026-11-14 09:03；只引用上方各格，不回饋計算）").font = BOLD; r0 = r; r += 1
+    V.cell(r, 1, f"0.7 估值並列：四個目標價（{C.get('since', C['ver'])} 起；個股 HTML 版面規格 v1.3 G 節，Andy 2026-11-14 09:03；只引用上方各格，不回饋計算）").font = BOLD; r0 = r; r += 1
     for j, h in enumerate(["目標價", "NT$", "相對現價", "說明"], 1):
         c = V.cell(r, j, h); c.font = BOLD; c.fill = HDR
     r += 1
@@ -375,7 +375,7 @@ def sens_tor(wb, CR, C):
     while SE.cell(r, 1).value and not str(SE.cell(r, 1).value).startswith("檢查"):
         src.append(r); r += 1
     r = SE.max_row + 3
-    SE.cell(r, 1, f"加權目標價相對基準（HTML 敏感度主圖用；{C['ver']} 起，版面規格 v1.3 H 節；引用上方「目標價參數」表與 Val、Coord 頁，白話標籤，不回饋計算）").font = BOLD; t0 = r; r += 1
+    SE.cell(r, 1, f"加權目標價相對基準（HTML 敏感度主圖用；{C.get('since', C['ver'])} 起，版面規格 v1.3 H 節；引用上方「目標價參數」表與 Val、Coord 頁，白話標籤，不回饋計算）").font = BOLD; t0 = r; r += 1
     for j, h in enumerate(["案例（白話）", "低案：加權目標價相對基準", "高案：加權目標價相對基準", "來源"], 1):
         c = SE.cell(r, j, h); c.font = BOLD; c.fill = HDR
     r += 1
@@ -416,7 +416,7 @@ def readme13(wb, RVA, PLA, TOR, CR, C, lines):
     cr = lambda col: f"Coord!{col}{CR['tp']}"
     dw = lab(SE, "加權目標價中 DCF 的權重", TOR["t0"])
     r = RD.max_row + 2
-    RD.cell(r, 1, f"v1.3 展示層（HTML 用；{C['ver']} 起，個股 HTML 版面規格 v1.3：橫幅說明 ≤200 字、重點觀察 ≤5 點且 ≤750 字、不出現參數代號；上方原列保留給下游）").font = BOLD; r += 1
+    RD.cell(r, 1, f"v1.3 展示層（HTML 用；{C.get('since', C['ver'])} 起，個股 HTML 版面規格 v1.3：橫幅說明 ≤200 字、重點觀察 ≤5 點且 ≤750 字、不出現參數代號；上方原列保留給下游）").font = BOLD; r += 1
     out = {}
 
     def put(key, *parts):
