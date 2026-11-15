@@ -475,7 +475,7 @@ def build(outdir: Path) -> tuple[Path, Path, Values]:
 
     stamp = model.name.split("_")[0]
     ver = re.search(r"_v([\d.]+)\.xlsx$", model.name).group(1)
-    html_path = outdir / f"{stamp}_智譜個股模型_v{ver.replace('.', '_')}.html"
+    html_path = outdir / f"{stamp}_智譜收支模型_v{ver.replace('.', '_')}.html"   # v0.1.6：一頁摘要改稱「收支模型」（命名對齊 MiniMax；版面 v1.3 頁為「個股模型」）
     xlsx_path = outdir / f"{stamp}_智譜個股模型_v{ver.replace('.', '_')}.xlsx"
     page = render(V, model, ver, stamp, cfg)
     outdir.mkdir(parents=True, exist_ok=True)

@@ -187,9 +187,17 @@ def valuation(B):
             f'<div class="figblk">{ch}</div>'
             '<p class="note">Andy 2026-11-15 決定 MiniMax 給目標價與評等。估值頁（xlsx Val 頁）＝DCF（無槓桿自由現金流，現金流沿用本收支模型）50%＋同業倍數 50%，'
             '三情境（API token 量成長高／基準／低）25／50／25。折現率、同業選擇與權重為判斷類參數，依 Anthropic 估值頁樣板慣例預設，待確認。</p>'
-            + t4 + rate + '<h3>折現率、股數與淨現金</h3>' + wacc + '<h3>DCF 與同業法（三情境）</h3>' + dcf + '<h3>同業倍數</h3>' + peer
+            + t4 + rate + '<h3>折現率、股數與淨現金</h3>' + wacc
+            + '<p class="note"><b>β 的來源：</b>MiniMax 上市未滿一年，自身 β 期間不足，借用 Anthropic 估值頁的美國軟體同業 5 年 β 中位數'
+            '（Palantir、CrowdStrike、Cloudflare、Snowflake、Datadog；stockanalysis.com 2026-11-06），再經 Blume 調整；屬判斷類。</p>'
+            '<p class="note"><b>DCF 淨現金下限：</b>三情境皆觸及下限，下限以評價日（2026-06-30 pro forma）淨現金按股東權益成本推到目標時點，'
+            '未扣評價日之後的燒錢；若改用本模型 2027-11 的淨現金（年底期末值內插，約 1,298 百萬美元），加權目標價約 131.7 港元，評等仍為中立，但距放空邊界只剩約 2.4 個百分點。</p>'
+            + '<h3>DCF 與同業法（三情境）</h3>' + dcf + '<h3>同業倍數</h3>' + peer
+            + '<p class="note">MiniMax 與智譜互為唯一同業（智譜模型的同業也只有 MiniMax），兩家的 Comparable 結論本質上是同一組相對價差：一家偏貴即另一家偏便宜，不是兩個獨立的檢驗。</p>'
             + f'<details class="more"><summary>展開：估值方法（模型原文）</summary><p class="note">{sp(*V(B, "VAL_Method"), "t")}</p></details>'
-            + '<details class="more"><summary>展開：原收支模型的反向檢驗（2030 年退出倍數折現；只作對照）</summary>' + tbl(['項目（FY2030）', '值'], old, 'rd') + '</details></section>')
+            + '<details class="more"><summary>展開：原收支模型的反向檢驗（2030 年退出倍數折現；只作對照）</summary>' + tbl(['項目（FY2030）', '值'], old, 'rd')
+            + '<p class="note">本摺疊沿用原收支模型 Valuation 頁的股數基準 349.2 百萬股（2026-07-14 配售後已發行股數，中期業績公告）；估值章正文的評價股數為 2026-09-30 已發行股份 352.5 百萬股，兩者不同。</p>'
+            + '</details></section>')
 
 
 # ── 3 敏感度 ──

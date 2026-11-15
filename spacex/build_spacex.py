@@ -32,7 +32,7 @@ F.update({it["id"]: it for it in FD2["items"]})
 STAGE = int(os.environ.get("SPCX_STAGE", "99"))   # 歸因瀑布：1 讀法 2 加回小修、2 融資租賃重扣小修、3 G5 原文、4 G1 Q4 資本支出、5 G1 年底 GW、6 G3 pace（9M 占比）、7 pace 改用 Q4 拆法（二修）、8 v0.2.1 pace 季速改 ÷(1 − fin_sh)、9 v0.2.1 pace 分母改 FY2027 世代組合（預設全部）
 G2C = os.path.join(HERE, "data", "g2cal_v021_20261030.json")   # v0.2.1 重解（pace 改變 FY2027 營收）
 G2CAL = json.load(open(G2C, encoding="utf-8")) if (os.path.exists(G2C) and not os.environ.get("SPCX_NO_G2CAL")) else None   # G2 校準 k0（g2cal_v02.py 解出；只用於 Sens）
-VER = "v0.2.8"
+VER = "v0.2.9"
 # v0.2.6（驗收報告 2026-11-09 採用項）：build_id＝版本＋建置輸入雜湊（建置腳本與 data/ 下非敏感度 json），README、Sens、HTML 三處相同（A1）
 import hashlib
 def _build_id():
@@ -1715,7 +1715,7 @@ SRCS = [
     ("同業檔 spacex/data/peers_si_20261106.json、peers_connectivity_20261106.json（MarketScreener 估值頁與財務頁；spacex/peers_v027.py）", "2026-11-06", "https://www.marketscreener.com", "Derived", "SOTP 倍數（v0.2.7 統一 NTM 口徑）；同業可比性表（Recon 第 7 節）"),
     ("共識檔 spacex/data/consensus_spcx_20261030.json（MarketBeat、Simply Wall St 過期、Shacknews）", "2026-10-30", "repo 內", "Interested-party", "共識目標價、過期年度共識"),
     ("A 段事實總帳報告 spacex/docs/reports/20261030_spacex_v0.1_A段_事實總帳.md", "2026-10-30", "repo 內", "—", "名目算力口徑、Valor、找不到的項目"),
-    ("Wattonomics v0.3.2 快照摘錄 spacex/data/wattonomics_c0_v0.3.2.json 與追公式 wattonomics_trace_v0.3.2.json（xai 玩家；只用於 Coord 頁 C0 對帳列，不進模型計算）", "2026-11-14", "repo 內（YinchenChang/company-models wattonomics/data）", "Derived／Interested-party", "Coord 頁 F1、F1b、F2"),
+    ("Wattonomics v0.3.3 快照摘錄 spacex/data/wattonomics_c0_v0.3.3.json 與追公式 wattonomics_trace_v0.3.3.json（xai 玩家；只用於 Coord 頁 C0 對帳列，不進模型計算；v0.2.9 由 v0.3.2 換讀）", "2026-11-15", "repo 內（YinchenChang/company-models wattonomics/data）", "Derived／Interested-party", "Coord 頁 F1、F1b、F2"),
 ]
 for i, (doc, dt, url, tag, use) in enumerate(SRCS, 1):
     for j, v in enumerate((f"S{i:02d}", doc, dt, url, tag, use), 1): SO.cell(3 + i, j, v)
@@ -1723,7 +1723,7 @@ for col, w in zip("ABCDEF", [6, 80, 12, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = f"SpaceX（Nasdaq: SPCX，含 xAI）個股模型 {VER}（2026-11-15；build_id {BUILD_ID}；v0.2.8 只改展示層與新增頁〔版面 v1.3、RevDCF、Coord 三層協調；數值不變〕；v0.2.7 依驗收報告：評價股數計入 RSU 與選擇權〔庫藏股法〕、同業統一為 2026-11-06 NTM 口徑、Sens 加融資受限案〔目標價會變〕；v0.2.6 補治理與揭露〔數值不變〕；v0.2.5 只換現價為 2026-11-05 收盤 123.62，目標價不變；v0.2.4 只改展示層：README 頁新增命題分項、白話重點、命題回覆，供 HTML 新版面；v0.2.2／v0.2.3 換 Tokenomics 快照 v21.9／" + TKV + "，基準數值同 v0.2.1；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
+RD["A1"] = f"SpaceX（Nasdaq: SPCX，含 xAI）個股模型 {VER}（2026-11-15；build_id {BUILD_ID}；v0.2.9 只改 Coord 頁：改讀 Wattonomics v0.3.3〔xai 2025 年底 GW 吸收公司揭露 0.8 GW〕，名目算力 C0 改「無可比實績（層級值吸收公司揭露）」，對帳中 1→0〔估值不讀層級 GW，數值不變〕；v0.2.8 只改展示層與新增頁〔版面 v1.3、RevDCF、Coord 三層協調；數值不變〕；v0.2.7 依驗收報告：評價股數計入 RSU 與選擇權〔庫藏股法〕、同業統一為 2026-11-06 NTM 口徑、Sens 加融資受限案〔目標價會變〕；v0.2.6 補治理與揭露〔數值不變〕；v0.2.5 只換現價為 2026-11-05 收盤 123.62，目標價不變；v0.2.4 只改展示層：README 頁新增命題分項、白話重點、命題回覆，供 HTML 新版面；v0.2.2／v0.2.3 換 Tokenomics 快照 v21.9／" + TKV + "，基準數值同 v0.2.1；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
 RD["A3"] = ("命題：SI 分部的算力投入（9M26 SI 資本支出約 400 億美元、名目算力 1.7 GW）能否由 SI 營收（對外算力出租＋Grok／Cursor／X）回本；"
             "Connectivity（Starlink）現金流與 IPO 資金能支撐多久；加計 AI 折舊與 Cursor 收購獎酬後的每股價值是否高於現價。")
 RD["A4"] = "核心問題：FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金與以融資取得 PP&E；Valor 失敗售後租回本金列融資，不扣）。"
