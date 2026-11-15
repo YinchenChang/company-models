@@ -1,0 +1,42 @@
+{
+ "_readme": "緯穎（6669）事實總帳（v0.2.7 滾入 3Q26，2026-11-15 擷取）。金額十億新台幣（NT$B），EPS 新台幣（除權還原後），股數十億股（除權後）。標記：Verified＝公司財報（公開資訊觀測站、公司 IR）、公司股東會議事錄；Interested-party＝資料商、媒體；Derived＝由上列數字計算。抓不到者寫「未取得」並維持原值，不臆造。",
+ "sources": {
+  "MOPS_BS": "公開資訊觀測站 t164sb03 合併資產負債表 115/09/30（主 session 以內建瀏覽器讀 MOPS API，2026-11-15）https://mops.twse.com.tw/mops/#/web/t164sb03",
+  "MOPS_IS": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季單季與 1–9 月累計（同上）https://mops.twse.com.tw/mops/#/web/t164sb04",
+  "WY_2Q_FS": "緯穎 2026Q2 合併財報（公司 IR；可轉債附註、資產負債表 2026-06-30）https://www.wiwynn.com/hubfs/Investors/Financial_Report/Wiwynn_2026Q2_Financial.pdf",
+  "WY_AGM": "緯穎 2026 股東常會議事錄（2026-05-25；盈餘轉增資、海外可轉債、GDR 額度）https://www.wiwynn.com/hubfs/Investors/Shareholders_Services/2026_Minutes_CN.pdf",
+  "WANT_0831": "旺得富（中時）2026-08-31（配股率調整、除權交易日、停止過戶、配股總額 37.17 億）https://wantrich.chinatimes.com/news/20260831900208-420101",
+  "BNEXT": "數位時代（配股率 1,982.7946 股／千股、9-02 除權、參考價 2,615）https://www.bnext.com.tw/article/92119/wiwynn-stock-dividend-1-to-3",
+  "UA_3Q": "優分析（3Q26 財報 2026-11-06；董事會通過 GDR 上限 1,800 萬股、子公司增資 4.5 億美元）https://uanalyze.com.tw/articles/2502258599"
+ },
+ "facts": [
+  {"key": "q3_rev", "label": "3Q26 營業收入", "value": 434.61769, "unit": "NT$B", "src": "MOPS_IS", "tag": "Verified", "note": "原 v0.2.6 為月營收 434.618（同值）"},
+  {"key": "q3_gp", "label": "3Q26 營業毛利", "value": 38.553202, "unit": "NT$B", "src": "MOPS_IS", "tag": "Verified", "note": "毛利率 8.87%"},
+  {"key": "q3_oi", "label": "3Q26 營業利益", "value": 32.450484, "unit": "NT$B", "src": "MOPS_IS", "tag": "Verified", "note": "營益率 7.47%"},
+  {"key": "q3_ni", "label": "3Q26 歸屬母公司淨利", "value": 23.36429, "unit": "NT$B", "src": "MOPS_IS", "tag": "Verified", "note": "無非控制權益"},
+  {"key": "q3_eps", "label": "3Q26 基本 EPS（除權後股數基礎）", "value": 41.46, "unit": "NT$", "src": "MOPS_IS", "tag": "Verified", "note": "稀釋 38.99；加權股數＝淨利 ÷ EPS＝0.56354 十億股（Derived）"},
+  {"key": "ytd_rev", "label": "1–9 月營業收入", "value": 989.278016, "unit": "NT$B", "src": "MOPS_IS", "tag": "Verified"},
+  {"key": "ytd_gp", "label": "1–9 月營業毛利", "value": 85.197319, "unit": "NT$B", "src": "MOPS_IS", "tag": "Verified"},
+  {"key": "ytd_oi", "label": "1–9 月營業利益", "value": 70.12666, "unit": "NT$B", "src": "MOPS_IS", "tag": "Verified"},
+  {"key": "ytd_ni", "label": "1–9 月歸屬母公司淨利", "value": 52.447797, "unit": "NT$B", "src": "MOPS_IS", "tag": "Verified"},
+  {"key": "ytd_eps", "label": "1–9 月基本 EPS", "value": 94.04, "unit": "NT$", "src": "MOPS_IS", "tag": "Verified", "note": "稀釋 88.15"},
+  {"key": "cash", "label": "現金及約當現金 9-30", "value": 102.586586, "unit": "NT$B", "src": "MOPS_BS", "tag": "Verified"},
+  {"key": "fvtpl_c", "label": "FVTPL－流動 9-30", "value": 0.032774, "unit": "NT$B", "src": "MOPS_BS", "tag": "Verified"},
+  {"key": "inv_lt", "label": "長期投資 9-30（FVTPL 非流動 1.051027＋FVOCI 非流動 0.686335＋權益法 0.374997）", "value": 2.112359, "unit": "NT$B", "src": "MOPS_BS", "tag": "Derived"},
+  {"key": "st_borrow", "label": "短期借款 9-30", "value": 124.260966, "unit": "NT$B", "src": "MOPS_BS", "tag": "Verified"},
+  {"key": "bonds_nc", "label": "應付公司債（非流動）9-30", "value": 0.0, "unit": "NT$B", "src": "MOPS_BS", "tag": "Verified", "note": "6-30 為 15.785（海外第一次可轉債，US$600M）；9-30 為 0"},
+  {"key": "lt_borrow", "label": "長期借款 9-30", "value": 7.1667, "unit": "NT$B", "src": "MOPS_BS", "tag": "Verified"},
+  {"key": "cb_cur", "label": "應付公司債流動部分（海外第二次可轉債 US$2,000M 等）9-30", "value": null, "src": "未取得", "tag": "未取得", "note": "MOPS 摘要未單列；維持 2026-06-30 值 59.650255（WY_2Q_FS：一年內到期或執行賣回權公司債；其中可轉債 57.425）。3Q 有轉換（見股數），9-30 實際值應較低"},
+  {"key": "lease", "label": "租賃負債 9-30（流動 1.156566＋非流動 3.911311）", "value": 5.067877, "unit": "NT$B", "src": "MOPS_BS", "tag": "Verified"},
+  {"key": "equity", "label": "歸屬母公司業主權益 9-30", "value": 188.025502, "unit": "NT$B", "src": "MOPS_BS", "tag": "Verified"},
+  {"key": "share_cap", "label": "普通股股本 9-30", "value": 5.84337, "unit": "NT$B", "src": "MOPS_BS", "tag": "Verified", "note": "114 年底 1.858408；面額 10 元 → 584.337 百萬股；庫藏股、預收股本 MOPS 摘要未列（視為 0）"},
+  {"key": "stock_div", "label": "盈餘轉增資（FY2025 盈餘，每股配 2 股，原案）", "value": 3.71681582, "unit": "NT$B", "src": "WY_AGM", "tag": "Verified", "note": "371,681,582 股；以 185,840,791 股計；總額不變，配股率因可轉債轉換調整為每千股 1,982.7946 股（WANT_0831、BNEXT）"},
+  {"key": "exr_date", "label": "除權交易日", "value": "2026-09-02", "src": "BNEXT", "tag": "Verified", "note": "除權基準日 2026-09-08（WANT_0831）；參考價 2,615（9-01 收盤 7,800）"},
+  {"key": "sh_record", "label": "除權基準日前股數（推得）", "value": 0.1874534, "unit": "十億股", "src": "WY_AGM、WANT_0831", "tag": "Derived", "note": "371.6816 百萬股 ÷ 1.9827946；較 114 年底 185.84 多 1.61 百萬股（可轉債轉換）"},
+  {"key": "sh_post", "label": "除權後股數（推得，未含之後轉換）", "value": 0.5591350, "unit": "十億股", "src": "Derived", "tag": "Derived"},
+  {"key": "conv_post", "label": "除權基準日後至 9-30 可轉債轉換股數（推得）", "value": 0.025202, "unit": "十億股", "src": "MOPS_BS − sh_post", "tag": "Derived", "note": "584.337 − 559.135"},
+  {"key": "cb1", "label": "海外第一次可轉債", "value": "US$600M，0%，2029-07-17 到期；轉換價 2026-06-28 調為 NT$3,035.75（除權前）", "src": "WY_2Q_FS", "tag": "Verified"},
+  {"key": "cb2", "label": "海外第二次可轉債", "value": "US$2,000M，0%，2026-04-01 發行、2031-04-01 到期；轉換價 2026-06-28 調為 NT$4,165.36（除權前；÷ 2.9828 約 1,396）", "src": "WY_2Q_FS", "tag": "Verified", "note": "除權後轉換價：未取得公告值（÷ 還原係數為 Derived 估計）"},
+  {"key": "gdr_plan", "label": "董事會通過 GDR 上限 1,800 萬股（2026-11-06）", "value": 0.018, "unit": "十億股", "src": "UA_3Q", "tag": "Verified", "note": "未發行，不計入股數"}
+ ]
+}
