@@ -8,23 +8,26 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c13
 from c13 import T, F, lab, blockB, Sheet, dn, BOLD, BLUE, HDR
 
-VER, BUILT = "v0.4.5", "2026-11-15"
+VER, BUILT = "v0.4.6", "2026-11-15"
 TN1008 = "https://finance.technews.tw/2026/10/08/kyec-2449-202609-financial-report/"
 MDJ1105 = "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=2bcf599f-fe54-431a-8b6a-467b995f9ff7"
 HSM = "https://histock.tw/stock/financial.aspx?no=2449"
 SA_CF = "https://stockanalysis.com/quote/tpe/2449/financials/cash-flow-statement/"
 CNA0306 = "https://www.cna.com.tw/news/afe/202603060261.aspx"
 
+V46 = ("v0.4.6（2026-11-15）：3Q26 損益出處改公開資訊觀測站 t164sb04 單季（數值同 v0.3 已滾入值，只差捨入）；DCF 資產負債表日 2026-06-30 → 09-30（t164sb03：現金、長期投資、長期借款、租賃、非控制權益、股數），"
+       "2026-08 已發放現金股利不再扣，stub 期改 4Q26 單季（4Q 資本支出＝下半年 ÷ 2，Assumed）；4Q26 假設不改。")
+
 C = dict(
     name="京元電", ver=VER, built=BUILT,
     fy26_short="FY2026E 含 1H26、3Q26 實績",
-    fy26_long="1H26 實績＋3Q26 實績（2026-11-05 公司前三季財報 − 上半年）＋4Q26 假設",
+    fy26_long="1H26 實績＋3Q26 實績（公開資訊觀測站 t164sb04 單季）＋4Q26 假設",
     eps_note="歷史為公司公告基本 EPS；預測為歸屬母公司淨利 ÷ 股數（本模型不計稀釋）",
     gw_label=None,   # 本模型不讀部署 GW（以加速器顆數推導）
     same_names="AI 加速器顆數（八平台合計，情境 B）",
-    a1_tail=(f"{VER}（{BUILT}）：個股 HTML 版面規格 v1.3（標準損益表、反向 DCF 頁、四個目標價、加權目標價敏感度主圖）＋三層協調（Coord 頁兩讀數目標價、讀取層級、C0（實績））；"
-             "A1 標題版號由舊的 v0.4 更正；既有數值不變"),
-    ver_line=(f"{VER}（{BUILT}）：改為個股 HTML 版面規格 v1.3（樣板 NVIDIA、Advantest、泰瑞達）並補三層協調：Coord 頁並列兩讀數目標價（tools/coord）、讀取層級（同源，不判定）、"
+    a1_tail=("v0.4.5（2026-11-15）：個股 HTML 版面規格 v1.3（標準損益表、反向 DCF 頁、四個目標價、加權目標價敏感度主圖）＋三層協調（Coord 頁兩讀數目標價、讀取層級、C0（實績））；"
+             "A1 標題版號由舊的 v0.4 更正；既有數值不變；" + V46),
+    ver_line=(V46 + "v0.4.5（2026-11-15）：改為個股 HTML 版面規格 v1.3（樣板 NVIDIA、Advantest、泰瑞達）並補三層協調：Coord 頁並列兩讀數目標價（tools/coord）、讀取層級（同源，不判定）、"
               "C0（實績）（月營收 2026-01～09 與 3Q26 財報；結論：無可比實績，Siliconomics 沒有測試代工市場與京元電份額）；新增 RevDCF、Hist 頁、PL 標準損益表、Val 0.7、Sens 末表；"
               "既有數值、目標價與評等不變"),
 )
@@ -237,7 +240,7 @@ def c0_actuals(wb, G, SIL):
     R["h1"] = S.row("累計：2026-01～06（1H26）", "=Q!C4", None, "NT$B", "Verified：Q 頁 1H26 營收 213.34 億元（1Q26＋2Q26 公司簡報；HiStock 月營收合計相同）", url=HSM)
     R["cum9"] = S.row("累計：2026-01～09（主讀數的實績基礎）", 33.475818, None, "NT$B", "Verified：前三季合併營收 334.76 億元（MoneyDJ 轉載公開資訊觀測站重大訊息 2026-11-05 董事會通過前三季財報；科技新報 2026-10-08 前 9 月月營收累計同值）", blue=True, url=MDJ1105)
     R["chk1"] = S.row("檢查：累計 9 月 − 1H26 − 7～9 月月營收（應接近 0；月營收四捨五入到百萬元）", f"=B{R['cum9']}-B{R['h1']}-B{R['jul']}-B{R['aug']}-B{R['sep']}", None, "NT$B", "Derived：累計相減驗算")
-    R["q3"] = S.row("3Q26 營收（最近一季；第二讀數的實績基礎）", "=q3_rev", None, "NT$B", "Verified：In 頁 q3_rev＝前三季 334.76 − 上半年 213.34 億元（3Q26 財報，2026-11-05）")
+    R["q3"] = S.row("3Q26 營收（最近一季；第二讀數的實績基礎）", "=q3_rev", None, "NT$B", "Verified：In 頁 q3_rev＝公開資訊觀測站 t164sb04 3Q26 營業收入 12,142,259 千元（v0.4.6；＝前三季 334.76 − 上半年 213.34 億元）")
     R["chk2"] = S.row("檢查：3Q26 − 7～9 月月營收合計（應接近 0）", f"=B{R['q3']}-B{R['jul']}-B{R['aug']}-B{R['sep']}", None, "NT$B", "Derived")
     R["oct"] = S.row("月營收：2026-10", "未取得", None, "", "公司 11 月上旬公告；本版建置環境無法連網讀取，待下一版補入主讀數（改為 2026-01～10）", fmt="General")
     R["ai"] = S.row("公司揭露：AI 加速器測試營收或占比", "未揭露", None, "", "公司只揭露測試類別（晶圓測試、最終測試、燒機）與應用別占比；In 頁 ai_26 35% 為 Morgan Stanley 估計（Interested-party）", fmt="General")
