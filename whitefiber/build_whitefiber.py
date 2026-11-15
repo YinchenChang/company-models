@@ -10,7 +10,7 @@ from openpyxl.workbook.defined_name import DefinedName
 from openpyxl.utils import get_column_letter as CL
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VER = "v0.4.1"
+VER = "v0.4.2"
 BUILT = "2026-11-15"
 OVR = json.loads(os.environ.get("SENS_OVR", "{}"))
 TKV = os.environ.get("WYFI_TKV", "v22.0")
@@ -68,7 +68,7 @@ def fv(fid):
 _FACTS = json.load(open(os.path.join(HERE, "data", "whitefiber_facts_20261115.json"), encoding="utf-8"))
 import re as _re
 SRCF = {k_: _re.sub(r"https?://\S+", "（網址見 Sources 頁 " + k_ + "）", v_).strip() for k_, v_ in _FACTS["sources"].items()}   # 可見文字不含網址（HTML 自含檢查）；網址列在 Sources 頁
-WAT0 = json.load(open(os.path.join(HERE, "..", "wattonomics", "data", "wattonomics_snapshot_v0.3.2.json"), encoding="utf-8"))
+WAT0 = json.load(open(os.path.join(HERE, "..", "wattonomics", "data", "wattonomics_snapshot_v0.3.5.json"), encoding="utf-8"))
 INC_CO = "公司自揭 KPI／非 GAAP：管理層有呈現成長與獲利的誘因"
 INC_GUIDE = "管理層指引：有設定可達成目標、維持市場預期的誘因"
 INC_SELL = "賣方共識：投行業務、承銷關係，偏多傾向"
@@ -286,7 +286,7 @@ inp("cons_eb27", "共識 FY2027 EBITDA（未取得，以營收共識 × 40% 代�
 inp("cons_eb26", "共識 FY2026 營收（S&P 經 Simply Wall St）", "US$M", None, 137, None, "Interested-party", "legacy_v02 事實總帳 cons.est.sws", "只作對照", INC_SELL)
 inp("cons_tp", "市場共識目標價（11 家平均，2026-11-10）", "US$", None, fv("mkt.consensusTp.20261110"), None, "Interested-party", SRCF["MS_WYFI"], "只作對照", INC_SELL)
 inp("tp_v053", "v0.2.1 加權目標價（舊 JS 引擎、現價 7.80）", "US$", None, 15.87, None, "Derived", "whitefiber/dist/_待刪除/20261106_WhiteFiber收支模型_v0_2_1.xlsx（摘要頁；評等中立）", "只作對照")
-inp("wat26", "Wattonomics：WhiteFiber（雲端）2026 年底上線 MW", "MW", None, round(WAT0["names"]["WIF_PlayerGW_YE_wyfi_2026"] * 1000, 3), None, "Derived", "wattonomics/data/wattonomics_snapshot_v0.3.2.json WIF_PlayerGW_YE_wyfi_2026（× 1000）", "只作對照（同源：讀 legacy_v02/company.json scenarios.mwPath，Coord G1）")
+inp("wat26", "Wattonomics：WhiteFiber（雲端）2026 年底上線 MW", "MW", None, round(WAT0["names"]["WIF_PlayerGW_YE_wyfi_2026"] * 1000, 3), None, "Derived", "wattonomics/data/wattonomics_snapshot_v0.3.5.json WIF_PlayerGW_YE_wyfi_2026（× 1000）", "只作對照（同源：讀 legacy_v02/company.json scenarios.mwPath，Coord G1）")
 inp("wat30", "Wattonomics：WhiteFiber（雲端）2030 年底上線 MW", "MW", None, round(WAT0["names"]["WIF_PlayerGW_YE_wyfi_2030"] * 1000, 3), None, "Derived", "同上 2030", "只作對照")
 
 base_vals, IR = {}, {}
@@ -1052,9 +1052,9 @@ crow("npvBC", "每增加 1 MW 的增量 DCF 企業價值：B 對 C", "US$B／GW"
 crow("npvps", "每增加 1 MW 的增量情境目標價：A 對 B（US$／股）", "US$", f"=(C{CON['tps']}-D{CON['tps']})/(mwA_30-mwB_30)", "#,##0.00")
 crow("cons", "市場共識目標價（2026-11-10，11 家平均，只作對照）", "US$", "=cons_tp")
 crow("v413", "v0.2.1 加權目標價（舊 JS 引擎；現價 7.80）", "US$", "=tp_v053")
-crow("chg", "目標價變動：v0.4.1 − v0.2.1", "US$", f"=C{CON['tp']}-C{CON['v413']}")
+crow("chg", f"目標價變動：{VER} − v0.2.1", "US$", f"=C{CON['tp']}-C{CON['v413']}")
 crow("v040", "v0.4.0 加權目標價（全公司 × 新雲同業中位數；現價 9.21）", "US$", "=tp_v040")
-crow("chg040", "目標價變動：v0.4.1 − v0.4.0（同業法改分部加總）", "US$", f"=C{CON['tp']}-C{CON['v040']}")
+crow("chg040", f"目標價變動：{VER} − v0.4.0（同業法改分部加總）", "US$", f"=C{CON['tp']}-C{CON['v040']}")
 crow("tvsh", "情境 B：永續價值占企業價值", "%", f"=D{DC['tvsh']}", "0.0%")
 # 橫幅與白話字串（公式組字；原則 13、31、57、60）
 crow("bn_scn", "橫幅：擴張與目標價", "—", f'=IF(AND(C{CON["tps"]}<D{CON["tps"]},D{CON["tps"]}<E{CON["tps"]}),"A 情境擴張最多但目標價最低："&TEXT(C{CON["tps"]},"0.00")&"／"&TEXT(D{CON["tps"]},"0.00")&"／"&TEXT(E{CON["tps"]},"0.00")&"（A／B／C）；每增加 1 MW（A 對 B）DCF 企業價值變動 "&TEXT(C{CON["npvAB"]},"+0.0;-0.0")&" 百萬美元",IF(AND(C{CON["tps"]}>D{CON["tps"]},D{CON["tps"]}>E{CON["tps"]}),"擴張越多目標價越高："&TEXT(C{CON["tps"]},"0.00")&"／"&TEXT(D{CON["tps"]},"0.00")&"／"&TEXT(E{CON["tps"]},"0.00")&"（A／B／C）","情境目標價 "&TEXT(C{CON["tps"]},"0.00")&"／"&TEXT(D{CON["tps"]},"0.00")&"／"&TEXT(E{CON["tps"]},"0.00")&"（A／B／C；非單調）")&IF(C{CON["npvAB"]}<0,"；但 DCF 口徑每增加 1 MW（A 對 B）企業價值 "&TEXT(C{CON["npvAB"]},"+0.0;-0.0")&" 百萬美元、（B 對 C）"&TEXT(C{CON["npvBC"]},"+0.0;-0.0")&"：擴張價值為負，情境目標價的差異來自 Comparable 的 EBITDA 倍數",""))', None)
@@ -1154,7 +1154,7 @@ if REV:
     rline("j4req", "  支持現價所需每 MW 年收入（FY2030 情境 B；RevDCF 反解）vs 公司宣稱中點", "=(p_claim_lo+p_claim_hi)/2", lambda s: f"=RevDCF!G{RVN['px']}" if s == "B" else None, "反解值不是評等門檻（原則 4）")
 rsec("E. 類比與容量對照")
 rline("iren", "IREN–Microsoft 長約每 MW 年收入（Analogy，原則 61）vs 模型 FY2027", "=p_long", lambda s: f"=Thesis!F{TR[s]['pm']}", "差異：IREN 自有機房（價格含設施）、200 MW、GB300；WhiteFiber 雲端在第三方機房、合約 1–5 年、預付約 40%")
-rline("wat26", "Wattonomics 2026 年底上線 MW vs 模型（原則 54）", "=wat26", lambda s: f"=Thesis!E{TR[s]['conn']}", "wattonomics_snapshot_v0.3.2 WIF_PlayerGW_YE_wyfi_2026", "#,##0.0")
+rline("wat26", "Wattonomics 2026 年底上線 MW vs 模型（原則 54）", "=wat26", lambda s: f"=Thesis!E{TR[s]['conn']}", "wattonomics_snapshot_v0.3.5 WIF_PlayerGW_YE_wyfi_2026", "#,##0.0")
 rline("wat30", "Wattonomics 2030 年底上線 MW vs 模型", "=wat30", lambda s: f"=Thesis!I{TR[s]['conn']}", "同上 2030", "#,##0.0")
 rsec("F. 舊法與舊版（只作對照）")
 rline("old", "v0.2.1 加權目標價（舊 JS 引擎，現價 7.80）vs v0.4.0 情境目標價", "=tp_v053", lambda s: f"=Val!{'CDE'[SC.index(s)]}{CON['tps']}", "舊版保留為對照；差異來源見 README 版本表與 v0.6.0 節")
@@ -1361,16 +1361,16 @@ SO.cell(r, 1, HIST["source_key"]); SO.cell(r, 2, HIST["source"] + "；資料檔 
 # =====================================================================================
 # Coord 頁——三層協調（讀取層級、C0 公司實績 vs 層級隱含值）；結構同 CoreWeave v5.0.3（新雲樣板），換成 WhiteFiber 的玩家 wyfi 與實績。
 #   工作單 docs/workorders/20261114_第二批13家_v1.3與三層協調.md 第 2 節；規則 docs/plan/三層基準協調規則.md v1.4.2 C0 第 2 點；tools/coord/README.md
-#   追公式：tools/coord/trace_wattonomics.py --player wyfi → whitefiber/data/wattonomics_trace_v0.3.2.json
+#   追公式：tools/coord/trace_wattonomics.py --player wyfi → whitefiber/data/wattonomics_trace_v0.3.5.json
 # =====================================================================================
-WATF = os.path.join(HERE, "..", "wattonomics", "data", "wattonomics_snapshot_v0.3.2.json")
+WATF = os.path.join(HERE, "..", "wattonomics", "data", "wattonomics_snapshot_v0.3.5.json")
 WAT = json.load(open(WATF, encoding="utf-8"))
 WN = WAT["names"]
 WATV = WAT["source"]["version"]
 WATFILE = WAT["source"]["file"]
 WROW = {x.get("id"): x for x in WAT["rows"] if x.get("id")}
-TRF = "whitefiber/data/wattonomics_trace_v0.3.2.json"
-TRJ = json.load(open(os.path.join(HERE, "data", "wattonomics_trace_v0.3.2.json"), encoding="utf-8"))
+TRF = "whitefiber/data/wattonomics_trace_v0.3.5.json"
+TRJ = json.load(open(os.path.join(HERE, "data", "wattonomics_trace_v0.3.5.json"), encoding="utf-8"))
 assert TRJ["source"]["sha256"] == WAT["source"]["sha256"] if isinstance(TRJ.get("source"), dict) and "sha256" in TRJ["source"] else True
 CD = wb.create_sheet("Coord")
 CD.column_dimensions["A"].width = 52
@@ -1386,7 +1386,7 @@ CD.cell(rc, 1, ("本模型只用 Tokenomics 計價與成本（每 MW 年持有�
                 f"清單見 whitefiber/data/tokenomics_names.txt）；快照 Tokenomics {TKV}（{TKS['source']['file']}，commit {TKS['source']['commit'][:7]}；舊版 v0.2.1 讀 v19.0，本版隨樣板改讀 {TKV}）。"
                 f"Wattonomics 不進估值：In 頁 wat26、wat30 取自 Wattonomics {WATV} 快照（{WATFILE}），只作對照。"
                 "追公式（tools/coord/trace_wattonomics.py --player wyfi，輸出 " + TRF + "）顯示：WhiteFiber（雲端）的年底上線 GW 直接讀 Wattonomics In 頁 mw_wyfi（2025 年 5.5、2026 年 14.574、2027 年 16.548 MW），"
-                "其來源註記為 whitefiber/company.json scenarios.mwPath（舊版 v0.2 個股模型以合約 GPU 數換算），玩家資本支出 CapexAI 由這條 GW 路徑 × Tokenomics 每 GW 資本支出推得；資本支出公司實績與指引（cap_wyfi）空白。"
+                "其來源註記為 whitefiber/company.json scenarios.mwPath（舊版 v0.2 個股模型以合約 GPU 數換算），玩家資本支出 CapexAI 由這條 GW 路徑 × Tokenomics 每 GW 資本支出推得（WhiteFiber 沒有付款年資本支出列，Wattonomics v0.3.5 的付款年主讀法不適用）；資本支出公司實績與指引（cap_wyfi）空白；個股模型回寫值 gcap_wyfi 已由 Wattonomics v0.3.5 重匯為本公司 v0.4.1 的值（只進 CapexAIModel）。"
                 "所以層級的 WhiteFiber 路徑與本公司模型同源，以下各列標「讀取層級（同源，不判定）」，不計入對帳中項目數。"))
 G1note = rc; rc += 1
 hdr(CD, rc, ["名稱", "層級與版本", "單位", "本模型採用值（或公司揭露）", "層級值", "差距 %", "狀態", "說明"]); rc += 1
@@ -1407,7 +1407,7 @@ g1("Wattonomics 2026 年底 WhiteFiber（雲端）上線 MW（WIF_PlayerGW_YE_wy
 g1("Wattonomics 2030 年底 WhiteFiber（雲端）上線 MW（WIF_PlayerGW_YE_wyfi_2030）", f"Wattonomics {WATV}", "MW", f"=Thesis!I{TR['B']['conn']}", round(WN["WIF_PlayerGW_YE_wyfi_2030"] * 1000, 3), "#,##0.0",
    "層級 2028 年起持平 16.548（舊版個股模型只到 2027 年已簽約合約）；對照本模型情境 B")
 g1("Wattonomics 2026 年 WhiteFiber 資本支出（個股模型回寫 WIF_Gap_Player_wyfi_2026_CapexAIModel）", f"Wattonomics {WATV}", "US$M", f"=Thesis!E{TR['B']['cx']}", round(WN["WIF_Gap_Player_wyfi_2026_CapexAIModel"] * 1000, 3), "#,##0.0",
-   "層級值＝舊版 v0.2 個股模型 FY2026 資本支出回寫（gcap_wyfi，同源、舊版）；本版合併後由主控重匯回寫值")
+   "層級值＝WhiteFiber v0.4.1 個股模型 FY2026 資本支出合計回寫（gcapai_wyfi＝gcap_wyfi，Thesis!E70；Wattonomics v0.3.5 重匯，v0.3.2 為舊版 v0.2 的 473.2），同源；本版 v0.4.2 基準輸入與 v0.4.1 相同，差距應為 0。WhiteFiber 沒有付款年資本支出列，Wattonomics Gap 主讀法對它仍為 GW 推算，CapexAI 不讀此值")
 G1b = rc - 1
 rc += 1
 # ---------------- G2：C0（實績）----------------
@@ -1449,7 +1449,7 @@ r_l26 = c0row("層級：玩家 GW 年底 2026（WIF_PlayerGW_YE_wyfi_2026，× 1
 r_lhe = c0row("層級：在役世代加權每 MW 年持有成本 FY2026（Tokenomics IF_HoldEcon 加權）", "CY2026", "US$M／MW·年", f"=Thesis!E{TR['B']['anc']}", "#,##0.000", "", "", f"Tokenomics {TKV}（{TKS['source']['commit'][:7]}）IF_HoldEcon 依本模型在役世代占比加權（未乘 k）", "Derived（世代占比 Assumed）")
 r_lrev = c0row("持有成本隱含雲端營收 CY2026（玩家 MW 年平均 × 加權每 MW 年持有成本）", "CY2026", "US$M", f"=(D{r_l25}+D{r_l26})/2*D{r_lhe}", "#,##0.000", "", "", "＝（YE2025＋YE2026）÷ 2 × 每 MW 年持有成本；MW 路徑同源", "Derived（MW 量同源）")
 r_lcx = c0row("層級：玩家 AI 資本支出 CY2026（WIF_Gap_Player_wyfi_2026_CapexAI，× 1000）", "CY2026", "US$M", round(WN["WIF_Gap_Player_wyfi_2026_CapexAI"] * 1000, 3), "#,##0.000", "", "", f"{LAYSRC} 名稱 WIF_Gap_Player_wyfi_2026_CapexAI（新增 MW × Tokenomics 每 GW 資本支出；只含雲端，不含託管建置；新增 MW 同源）", "同源（舊版個股模型）", blue=True)
-r_lcm = c0row("層級：個股模型回寫資本支出 CY2026（WIF_Gap_Player_wyfi_2026_CapexAIModel，× 1000）", "CY2026", "US$M", round(WN["WIF_Gap_Player_wyfi_2026_CapexAIModel"] * 1000, 3), "#,##0.000", "", "", f"{LAYSRC} 名稱 WIF_Gap_Player_wyfi_2026_CapexAIModel＝In gcap_wyfi（舊版 v0.2 個股模型）", "同源（舊版個股模型）", blue=True)
+r_lcm = c0row("層級：個股模型回寫資本支出 CY2026（WIF_Gap_Player_wyfi_2026_CapexAIModel，× 1000）", "CY2026", "US$M", round(WN["WIF_Gap_Player_wyfi_2026_CapexAIModel"] * 1000, 3), "#,##0.000", "", "", f"{LAYSRC} 名稱 WIF_Gap_Player_wyfi_2026_CapexAIModel＝In gcapai_wyfi（WhiteFiber v0.4.1 個股模型 Thesis!E70；原值 US$M ÷ 1000）", "同源（個股模型回寫）", blue=True)
 CD.cell(rc, 1, "Wattonomics 快照核對（上列藍字常數取自此檔）"); CD.cell(rc, 2, f"{WATFILE}（快照 whitefiber 讀 wattonomics/data/wattonomics_snapshot_{WATV}.json）"); CD.cell(rc, 8, f"xlsx sha256 {WAT['source']['sha256']}（快照 source 欄）；建置時逐名讀 WIF_PlayerGW_YE_wyfi_2025／2026、WIF_Gap_Player_wyfi_2026_CapexAI／CapexAIModel（GW、十億美元 × 1000 換成 MW、百萬美元），不手寫"); r_sha = rc; rc += 1
 r_m1 = reading("雲端營收｜主讀數：已公布期間累計 vs 持有成本隱含 CY2026 × 已公布月數 ÷ 12", "2026-01～2026-09 累計", "US$M", f"=D{r_rev9}", f"=D{r_lrev}*D{r_mo}/12", "#,##0.000", "前三季雲端營收（含終止費）", "Verified", "持有成本隱含營收 × 9 ÷ 12", "Derived（同源）", status=SAMEC)
 r_m2 = reading("雲端營收｜第二讀數：最近一季（Q3）× 4 vs 持有成本隱含 CY2026", "2026-07～2026-09 年化", "US$M", f"=D{r_revq}*4", f"=D{r_lrev}", "#,##0.000", "Q3 雲端營收 × 4（含終止費 3.4）", "Verified／Derived", "持有成本隱含營收（全年）", "Derived（同源）", status=SAMEC)
@@ -1469,8 +1469,8 @@ r_ctr = rc
 CD.cell(rc, 1, "已簽約雲端容量（GPU 換算 MW）vs 層級"); CD.cell(rc, 2, "2026-11（法說）"); CD.cell(rc, 3, "MW"); CD.cell(rc, 4, "=ctr_mw").number_format = "#,##0.0"
 CD.cell(rc, 7, "無可比實績"); CD.cell(rc, 8, f"{CALL}：已簽專用運算 GPU 約 20,000 顆（Interested-party），以 Tokenomics 功耗換算（Derived）"); CD.cell(rc, 9, "Interested-party")
 CD.cell(rc, 10, "Wattonomics 沒有 WhiteFiber 簽約容量序列（缺：層級側簽約 GW）"); CD.cell(rc, 11, "—"); rc += 1
-r_cxm1 = reading("參考：資本支出主讀數改對個股模型回寫值（CapexAIModel × 9 ÷ 12）", "2026-01～2026-09 累計", "US$M", f"=D{r_cx9}", f"=D{r_lcm}*D{r_mo}/12", "#,##0.000", "前三季現金資本支出", "Verified", "層級 CapexAIModel（舊版回寫）× 9 ÷ 12", "同源", status="參考（同源，不判定）")
-r_cxm2 = reading("參考：資本支出第二讀數改對個股模型回寫值", "2026-07～2026-09 年化", "US$M", f"=D{r_cxq}*4", f"=D{r_lcm}", "#,##0.000", "Q3 現金資本支出 × 4", "Verified（推得）", "層級 CapexAIModel（舊版回寫）", "同源", status="參考（同源，不判定）")
+r_cxm1 = reading("參考：資本支出主讀數改對個股模型回寫值（CapexAIModel × 9 ÷ 12）", "2026-01～2026-09 累計", "US$M", f"=D{r_cx9}", f"=D{r_lcm}*D{r_mo}/12", "#,##0.000", "前三季現金資本支出", "Verified", "層級 CapexAIModel（v0.4.1 回寫）× 9 ÷ 12", "同源", status="參考（同源，不判定）")
+r_cxm2 = reading("參考：資本支出第二讀數改對個股模型回寫值", "2026-07～2026-09 年化", "US$M", f"=D{r_cxq}*4", f"=D{r_lcm}", "#,##0.000", "Q3 現金資本支出 × 4", "Verified（推得）", "層級 CapexAIModel（v0.4.1 回寫）", "同源", status="參考（同源，不判定）")
 G2b = rc - 1
 rc += 1
 CD.cell(rc, 1, "核對：雲端營收 9 個月實績 − Thesis 9M 實績（應為 0）"); CD.cell(rc, 4, f"=D{r_rev9}-Thesis!C{TR['B']['rev']}").number_format = "0.000000"; r_k1 = rc; rc += 1
@@ -1483,7 +1483,7 @@ CD.cell(rc, 1, "同源檢查（哪些部分同源、什麼會消去、這張表�
 CD.cell(rc, 2, ("（一）本模型沒有把校準值寫入 Wattonomics 或 Tokenomics：定價倍數 k、計費比例、世代占比、在役 MW 假設只留在本模型。"
                 "（二）Wattonomics 玩家 wyfi 的年底上線 GW 直接讀 In 頁 mw_wyfi（2025 年 5.5、2026 年 14.574、2027 年 16.548 MW），註記來源為 whitefiber/company.json scenarios.mwPath（舊版 v0.2 個股模型以合約 GPU 數換算）；玩家資本支出 CapexAI＝新增 GW × Tokenomics 每 GW 資本支出；公司資本支出實績與指引 cap_wyfi 空白。"
                 "（三）因此營收列的層級 MW 量、資本支出列的層級金額都等於舊版本公司模型的推估，比式裡沒有獨立於本公司模型的成分，這張表實際只檢驗「實績 vs 舊版本公司模型」，依規則標「參考（同源校準）」，結論「無可比實績（層級值同源）」。"
-                "（四）資本支出口徑另有差異：公司實績含 NC-1 託管建置與設備訂金，層級只含雲端；兩者不可直接比較。交主控：本版合併後重匯 mw_wyfi、gcap_wyfi 時一併評估，並考慮由公司揭露（已簽 GPU 數）而非個股模型推得層級 MW。")); r_org = rc; rc += 1
+                "（四）資本支出口徑另有差異：公司實績含 NC-1 託管建置與設備訂金，層級只含雲端；兩者不可直接比較。Wattonomics v0.3.5 已重匯 gcap_wyfi（本公司 v0.4.1：2026 年 844.6 百萬美元，原 v0.2 的 473.2），只進 CapexAIModel（參考列）；mw_wyfi 仍為舊版 v0.2 的 MW 路徑。交主控：重匯 mw_wyfi 時一併評估，並考慮由公司揭露（已簽 GPU 數）而非個股模型推得層級 MW。")); r_org = rc; rc += 1
 CD.cell(rc, 1, "口徑換算與限制")
 CD.cell(rc, 2, ("營收：層級側是持有成本（經濟口徑成本，不是價格）；公司雲端實績含 Initial Customer 終止費 15.7（Q2 12.3、Q3 3.4）。資本支出：公司只揭露現金購置（含設備訂金、NC-1 與 MTL 建置），無應計口徑。"
                 "在役電力：公司以合約 GPU 數揭露，未揭露季末雲端在役 MW。缺哪一項獨立揭露：季末雲端在役 MW，或 Wattonomics 以公司揭露（非個股模型）推得的 WhiteFiber 路徑。")); r_k = rc; rc += 1
@@ -1586,6 +1586,7 @@ for k, t in L13:
 r += 1
 RD.cell(r, 1, "v0.4.0（2026-11-15）：依 CoreWeave v5.0.3 新雲樣板（經 Nebius v0.6.0 分部版）重建（舊 JS 雙引擎 v0.2.1 移 whitefiber/legacy_v02/）＋滾入 2026Q3 實績（10-Q）＋版面 v1.3＋三層協調 Coord 頁。金額改為百萬美元；估值改為 DCF 50%＋Comparable 50%（新雲同業 EV/EBITDA，不再分部加總）、評等五級並套收支關卡；Tokenomics 快照由 v19.0 改 v22.0。Coord：Wattonomics 的 WhiteFiber 路徑讀舊版個股模型（同源），營收、資本支出標參考（同源校準），在役電力無可比實績。v0.3 版號由 open PR #451 占用。新舊目標價與評等差異見 whitefiber/README.md v0.4.0 節。"); RL["v060"] = r; r += 1
 RD.cell(r, 1, "v0.4.1（2026-11-15）：Andy 2026-11-15 決定 Comparable 改為分部加總：託管分部（NC-1 Nscale 10 年長約、MTL、代管服務、其他）FY2028 EBITDA 乘上市資料中心同業（Digital Realty、Equinix）前瞻 EV/EBITDA 中位數，雲端分部乘現行新雲同業中位數；營業費用依營收比例分攤到兩分部；DCF 不變。新增 Sens：託管倍數折價（小型、單一主要承租人、非 REIT）。新舊目標價與評等見 whitefiber/README.md v0.4.1 節。"); RL["v041"] = r; r += 1
+RD.cell(r, 1, "v0.4.2（2026-11-15）：Wattonomics 快照由 v0.3.2 改讀 v0.3.5（追公式改讀 whitefiber/data/wattonomics_trace_v0.3.5.json）。層級個股模型回寫資本支出 CapexAIModel 2026 由舊版 v0.2 的 0.473 重匯為本公司 v0.4.1 的 0.845（十億美元，同源，只列參考）；WhiteFiber 沒有付款年資本支出列，Gap 主讀法仍為 GW 推算，玩家 MW 路徑（mw_wyfi，舊版 v0.2）與 CapexAI 不變。Wattonomics 不進估值，基準輸入、目標價與評等不變。"); RL["v042"] = r; r += 1
 RD.column_dimensions["A"].width = 180
 
 # 列號對照

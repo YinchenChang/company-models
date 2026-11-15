@@ -6,13 +6,13 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d /tmp/wyfi_mk.XXXX)}"; mkdir -p "$WD"
-OUTNAME="20261115_WhiteFiber個股模型_v0.4.1.xlsx"
+OUTNAME="20261115_WhiteFiber個股模型_v0.4.2.xlsx"
 if [ "${SENS:-0}" = "1" ]; then python3 whitefiber/scripts/sens_v50.py --jobs "${JOBS:-2}"; fi
 if [ "${REV:-0}" = "1" ]; then python3 whitefiber/scripts/reverse_v50.py --jobs "${JOBS:-2}"; fi
 if [ "${DEC:-0}" = "1" ]; then python3 whitefiber/scripts/decomp_v50.py; fi
 WYFI_ROWMAP="$WD/rowmap.json" python3 whitefiber/build_whitefiber.py "$WD/raw.xlsx"
 mkdir -p "$WD/out"
-soffice -env:UserInstallation=file:///tmp/lo_whitefiber --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir "$WD/out" "$WD/raw.xlsx" > /dev/null 2>&1
+soffice -env:UserInstallation=file:///tmp/lo_whitefiber35 --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir "$WD/out" "$WD/raw.xlsx" > /dev/null 2>&1
 cp "$WD/out/raw.xlsx" "whitefiber/dist/$OUTNAME"
 python3 - "whitefiber/dist/$OUTNAME" <<'PY'
 import sys, openpyxl
