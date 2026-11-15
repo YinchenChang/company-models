@@ -17,7 +17,7 @@ ROOT = os.path.dirname(GL)
 EXTRACT = os.path.join(ROOT, "markets", "invest_map", "data", "models_extract.json")
 # v0.1.8：models_extract.json 尚未更新的個股（Wattonomics 不改 markets/ 檔案），在此逐家覆寫為 main 上的現行版；
 # 覆寫只換檔案路徑，列位核對規則不變（工作單 20261102 E7：Anthropic v0.1.7 已合併 #289，dist 只剩 v0_1_7）
-MODEL_OVERRIDE = {"Anthropic": "anthropic/dist/20261104_Anthropic收支模型_v0_1_9.xlsx"}   # v0.2.1 W4：Anthropic v0.1.8；2026-11-05 改指 v0.1.9（#327 移除 v0_1_8；F07／F03 逐位相同，種子與成品不重建）
+MODEL_OVERRIDE = {}   # v0.3.5：models_extract.json 已指向各家現行 dist（Anthropic v0_2_2），覆寫清空；舊值 Anthropic v0_1_9 已不在 repo   # v0.2.1 W4：Anthropic v0.1.8；2026-11-05 改指 v0.1.9（#327 移除 v0_1_8；F07／F03 逐位相同，種子與成品不重建）
 
 # 欄位 → 財年。MAG 型：C=FY2024A、D=FY2025A、E=9M26A、F=Q4 26E、G=FY2026E、H..M=FY2027E..FY2032E（Amazon、Alphabet、Meta）
 MAG7 = {"C": 2024, "D": 2025, "G": 2026, "H": 2027, "I": 2028, "J": 2029, "K": 2030, "L": 2031, "M": 2032}
@@ -69,26 +69,26 @@ CONF = {
                  cash=dict(cell="D64", label="期末現金與有價證券", asof="2025-12-31（FY2025A 期末）")),
     "meta": dict(ticker="META", family="MAG 型（CF 頁）", fye=12, unit="US$B", scale=1, sheet="CF",
                  tag="Derived（個股模型基準情境 B；FY2024A–2025A 為財報，FY2026E 含 9M 實績）",
-                 block=("A43", "情境 B"), header=(44, {"C": "FY2024A", "D": "FY2025A", "G": "FY2026E", "H": "FY2027E", "M": "FY2032E"}),
-                 rows=dict(
-                     ocf=dict(cells=[(51, "營運現金流")], cols=MAG7),
-                     capai=dict(cells=[(52, "資本支出：AI（Thesis）")], cols=MAG7_FWD, note="FY2026E 欄只有 Q4 → 2026 無模型值"),
-                     nai=dict(cells=[(53, "資本支出：非 AI（Seg）")], cols=MAG7_FWD, note="FY2026E 欄只有 Q4 → 2026 無模型值"),
-                     cap=dict(cells=[(54, "資本支出合計（含融資租賃本金）")], cols=MAG7),
-                     bb=dict(cells=[(57, "普通股股利"), (58, "特別股股利"), (66, "回購")], cols=MAG7, note="FY2024A–2025A 回購欄空白 → 該年無模型值"),
+                 block=("A53", "情境 B"), header=(54, {"C": "FY2024A", "D": "FY2025A", "G": "FY2026E", "H": "FY2027E", "M": "FY2032E"}),
+                 rows=dict(   # v0.3.5：Meta v0.2.1 CF 頁上方新增收支關卡區，情境 B 區塊移到第 53 列（舊 43）
+                     ocf=dict(cells=[(61, "營運現金流")], cols=MAG7),
+                     capai=dict(cells=[(62, "資本支出：AI（Thesis）")], cols=MAG7_FWD, note="FY2026E 欄只有 Q4 → 2026 無模型值"),
+                     nai=dict(cells=[(63, "資本支出：非 AI（Seg）")], cols=MAG7_FWD, note="FY2026E 欄只有 Q4 → 2026 無模型值"),
+                     cap=dict(cells=[(64, "資本支出合計（含融資租賃本金）")], cols=MAG7),
+                     bb=dict(cells=[(67, "普通股股利"), (68, "特別股股利"), (76, "回購")], cols=MAG7, note="FY2024A–2025A 回購、特別股股利欄空白 → 該年無模型值"),
                  ),
-                 cash=dict(cell="E63", label="期初現金（現金＋有價證券）", asof="2025-12-31（9M26 期初）")),
+                 cash=dict(cell="E73", label="期初現金（現金＋有價證券）", asof="2025-12-31（9M26 期初）")),
     "orcl": dict(ticker="ORCL", family="MAG 型（CF 頁）", fye=5, unit="US$B", scale=1, sheet="CF",
                  tag="Derived（個股模型基準情境 B；FY2026A 為財報）",
-                 block=("A49", "情境 B（基準"), header=(13, {"C": "FY2026A", "D": "FY2027", "I": "FY2032"}),
-                 rows=dict(
-                     ocf=dict(cells=[(55, "營運現金流")], cols={"C": 2026, "D": 2027, "E": 2028, "F": 2029, "G": 2030, "H": 2031, "I": 2032}),
-                     capai=dict(cells=[(56, "資本支出：AI（Thesis）")], cols={"D": 2027, "E": 2028, "F": 2029, "G": 2030, "H": 2031, "I": 2032}),
-                     nai=dict(cells=[(57, "資本支出：非 AI")], cols={"D": 2027, "E": 2028, "F": 2029, "G": 2030, "H": 2031, "I": 2032}, note="FY2026A 空白 → 無模型值"),
-                     cap=dict(cells=[(58, "資本支出合計")], cols={"C": 2026, "D": 2027, "E": 2028, "F": 2029, "G": 2030, "H": 2031, "I": 2032}),
-                     bb=dict(cells=[(60, "股利（普通股＋特別股）")], cols={"C": 2026, "D": 2027, "E": 2028, "F": 2029, "G": 2030, "H": 2031, "I": 2032}, note="只有股利；模型無回購列"),
+                 block=("A55", "情境 B（基準"), header=(17, {"C": "FY2026A", "D": "FY2027", "I": "FY2032"}),
+                 rows=dict(   # v0.3.5：Oracle v0.5.2 CF 頁上方新增收支關卡區，表頭移到第 17 列、情境 B 移到第 55 列（舊 13、49）
+                     ocf=dict(cells=[(62, "營運現金流")], cols={"C": 2026, "D": 2027, "E": 2028, "F": 2029, "G": 2030, "H": 2031, "I": 2032}),
+                     capai=dict(cells=[(63, "資本支出：AI（Thesis）")], cols={"D": 2027, "E": 2028, "F": 2029, "G": 2030, "H": 2031, "I": 2032}),
+                     nai=dict(cells=[(64, "資本支出：非 AI")], cols={"D": 2027, "E": 2028, "F": 2029, "G": 2030, "H": 2031, "I": 2032}, note="FY2026A 空白 → 無模型值"),
+                     cap=dict(cells=[(65, "資本支出合計")], cols={"C": 2026, "D": 2027, "E": 2028, "F": 2029, "G": 2030, "H": 2031, "I": 2032}),
+                     bb=dict(cells=[(67, "股利（普通股＋特別股）")], cols={"C": 2026, "D": 2027, "E": 2028, "F": 2029, "G": 2030, "H": 2031, "I": 2032}, note="只有股利；模型無回購列"),
                  ),
-                 cash=dict(cell="D63", label="期初現金（FY2027＝Q1 末）", asof="2026-08-31（FY2027 Q1 末；模型無 2025-12-31）")),
+                 cash=dict(cell="D70", label="期初現金（FY2027＝Q1 末）", asof="2026-08-31（FY2027 Q1 末；模型無 2025-12-31）")),
     "xai": dict(ticker="SPCX", family="MAG 型（CF 頁）", fye=12, unit="US$B", scale=1, sheet="CF",
                 tag="Derived（SpaceX 個股模型基準情境 B，合併 xAI；FY2026E 含 9M 實績）",
                 block=("A45", "情境 B"), header=(46, {"C": "FY2025A", "G": "FY2026E", "H": "FY2027E", "M": "FY2032E"}),
@@ -140,8 +140,8 @@ CONF = {
                 tag="Derived（OpenAI 收支模型；營收等輸入為 Interested-party、自有資本支出為模型假設）",
                 block=("A1", "Funding"), header=(5, {"D": "2025", "E": "2026", "I": "2030"}),
                 rows=dict(
-                    ocf=dict(cells=[(13, "F06"), ("Cost!26", "自有資本支出（扣合作方出資）")], cols=LAB_FWD,
-                             note="營業現金流＝自由現金流 F06（營收 − 算力現金成本 − 非算力成本）＋ Cost 頁自有資本支出（算力現金成本內含，屬投資）；2025 為校準年（模型註明只對照）→ 不取"),
+                    ocf=dict(cells=[(13, "F06")], cols=LAB_FWD,
+                             note="v0.3.5（Andy 2026-11-15 19:15 照預設）：營業現金流＝自由現金流 F06，不再加回 Cost 頁自有資本支出——Gap 對 OpenAI 的 AI 資本支出為 0（容量由 SPV 擁有，GFB_EXCL），加回會使缺口少算自有資本支出；缺口＝−F06。2025 為校準年（模型註明只對照）→ 不取"),
                     capai=dict(cells=[("Cost!26", "自有資本支出（扣合作方出資）")], cols=LAB_FWD, note="模型自有資本支出（Inputs 第 180–185 列，模型標 Assumed）"),
                     cap=dict(cells=[("Cost!26", "自有資本支出（扣合作方出資）")], cols=LAB_FWD),
                 ),
@@ -151,8 +151,8 @@ CONF = {
                 tag="Derived（Anthropic 收支模型；營收等輸入為 Interested-party）",
                 block=("A1", "Funding"), header=(5, {"D": "2025", "E": "2026", "I": "2030"}),
                 rows=dict(
-                    ocf=dict(cells=[(14, "F07"), (10, "F03")], cols=LAB_FWD,
-                             note="營業現金流＝自由現金流 F07 ＋ 自建資本支出 F03（Fluidstack；算力現金成本內含，屬投資）；2025 欄模型註明只對照 → 不取"),
+                    ocf=dict(cells=[(14, "F07")], cols=LAB_FWD,
+                             note="v0.3.5（與 OpenAI 一致）：營業現金流＝自由現金流 F07，不再加回自建資本支出 F03（Gap 對 Anthropic 的 AI 資本支出為 0，容量由出租方擁有；F03 現行 2026–2030 皆 0，數值不變）；2025 欄模型註明只對照 → 不取"),
                     capai=dict(cells=[(10, "F03")], cols=LAB_FWD, note="自建資本支出（Fluidstack $50B 均攤 2026–2028）"),
                     cap=dict(cells=[(10, "F03")], cols=LAB_FWD),
                 ),

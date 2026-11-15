@@ -1,0 +1,50 @@
+﻿key,col,old,new,source,reason
+cp_w1d_nscale_tx,N,0,1,SRC_GL_350,④ 記在出租方
+cp_w1d_nscale_tx,G,,"W1#39＋W1_verify（2026-11-05 FT：Microsoft 放棄 Barstow 第二期 700 MW 選擇權並退出 Essex；Texas 既有合約 240 MW 園區、約 104,000 顆 GB300 維持）。補充 3：去重下限只用 Texas 既有約 104k 顆，不用原 200k 顆。七家合約 → 納入＝0（X2 預設）；改 1 即還原【v0.3.5 ④（Andy 2026-11-15 19:15 照預設）】X2 去重改為記在出租方：Microsoft 10-Q（2026-09-30）未列出租方、未揭露 neocloud 合約分類，查無 Nscale 合約為 Microsoft 融資租賃的直接證據 → 納入 0→1（營運者 neo；使用者 msft 保留作矩陣紀錄；Checks E-W2 排除）。口徑：新聞稿『~240MW hyperscale AI campus』未說明 IT 或設施，依本庫規則（口徑未說明者基準取 IT 讀法）保留 240，若為設施電力則高估約 17%（÷ IF_FacilityGW 1.2＝200）；時程『自 2026Q3 分期』未揭露分期細節 → 上線月由 9 改 12（2026Q4）。同一會計處理（Microsoft 融資租賃）可能也適用於 Nscale 合約：若日後證實，本列改回納入＝0（一致性風險；查證觸發：IREN 下一份 10-K／10-Q、Microsoft FY2027 10-K〔2027-07〕）（SRC_GL_350）",—,④ 說明
+cp_w1d_nscale_narvik,N,0,1,SRC_GL_350,④ 記在出租方
+cp_w1d_nscale_narvik,G,,"W1#38（核對小誤：Nscale 2026-04-14 新聞稿：230 MW 園區、>30,000 Rubin、2027 交付；MW 口徑未明；Series C 日期更正為 2026-03-09）。使用者 Microsoft（七家）→ 納入＝0【v0.3.5 ④（Andy 2026-11-15 19:15 照預設）】X2 去重改為記在出租方，納入 0→1（理由同 cp_w1d_nscale_tx）。口徑：『230 MW 園區』未說明 IT 或設施，依規則基準取 IT 讀法，若為設施電力則高估約 17%；2027 交付未給月份，維持 2027-12。同一會計處理（Microsoft 融資租賃）可能也適用於 Nscale 合約：若日後證實，本列改回納入＝0（一致性風險；查證觸發：IREN 下一份 10-K／10-Q、Microsoft FY2027 10-K〔2027-07〕）（SRC_GL_350）",—,④ 說明
+cp_neo_sines,N,0,1,SRC_GL_350,④ 記在出租方
+cp_neo_sines,G,,"J#28（J 段複核：屬實）；Epoch 2027-09-30 233【v0.3.2 W-1（2026-11-14）】X2 去重：Start Campus Sines（Nscale；使用者 Microsoft＝七家，W1#39）→ 納入 1→0；改回 1 即還原【v0.3.5 ④（Andy 2026-11-15 19:15 照預設）】X2 去重改為記在出租方，納入 0→1。本列 MW 與時點取自 Epoch 時間線 2027-09 增量 200 MW（Analogy，J#28）；Nscale 新聞稿的 Sines 合約（約 12,600 顆 GB300、自 2026Q1）是另一來源，兩者分開記（SRC_GL_350），2026Q1 起的首期未另列。同一會計處理（Microsoft 融資租賃）可能也適用於 Nscale 合約：若日後證實，本列改回納入＝0（一致性風險；查證觸發：IREN 下一份 10-K／10-Q、Microsoft FY2027 10-K〔2027-07〕）",—,④ 說明
+cp_w1d_nscale_tx,L,9,12,SRC_GL_350,自 2026Q3 分期、未揭露分期細節 → 2026Q4
+cp_w1d_nscale_tx,F,SRC_GL_346,SRC_GL_350,Sources,Nscale 對 Microsoft 另開來源 ID
+cp_w1d_nscale_narvik,F,SRC_GL_346,SRC_GL_350,Sources,Nscale 對 Microsoft 另開來源 ID
+cp_neo_iren,G,,A#104（屬實；2026Q4 目標）；使用者＝Microsoft（與 T1 al_neo_msft 一致）。【v0.3.1 r2（2026-11-14，chat 端決定；Decisions GL01-92）】列範圍由 H3–4（原值 MW＝100）擴為 H2–4（150 MW IT）；H2 原含在 mw_neo 2026 年底輸入【v0.3.2 W-1（2026-11-14）】X2 去重：Microsoft 屬七家，IREN→Microsoft 200 MW（H1 50＋H2–4 150）為已公開對七家合約（W1#18；IREN 2025-11-03 公告：9.7B、5 年、Childress Horizons 1–4 共 200 MW 關鍵 IT）→ 納入 1→0（七家路徑已含此需求的前提見報告待判斷 1）。納入改回 1 即還原；已確認延遲 M＝1 保留作追蹤【v0.3.5 ④】查證：Microsoft 10-Q 未列出租方；財務長原話只說 some third-party capacity deliveries we expected in Q1 were delayed。The Information（2026-11-04，引未具名消息；經 cloudnews.tech 2026-11-08 轉述）指 Microsoft 當季資本支出比計畫少約 50 億、與 IREN Childress 延遲有關；『融資租賃起租時才計入資本支出』是該文作者對會計規則的解釋，不是財務長說法。據此推論（未經公司證實）IREN 合約可能是 Microsoft 融資租賃、已在 Microsoft 甲2 資本支出路徑內 → 維持納入＝0（Andy 預設）。若推論不成立則 IREN 200 MW 漏計；查證觸發：IREN 下一份 10-K／10-Q、Microsoft FY2027 10-K（2027-07）（SRC_GL_348）,—,④ 推論、維持不納入
+cp_w1_lmar26,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+cp_w1u_crusoe27,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+cp_w1u_crusoe28,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+cp_w1u_crusoe29,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+cp_w1s_reliance,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+cp_w1s_kddi,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+cp_w1d_aws_cipher,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+cp_w1d_df2,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+cp_w1_lmar_cb4,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+cp_w1_abern,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+cp_w1s_barber39,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+w1_und,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+w1_it_ratio,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+w1_crusoe_gross,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+w1_crusoe_ded,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+w1_iren_lab,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+w1_bp1,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+w1_crwv_q3,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+coord_enter,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+coord_buf_on,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+prev_ev_w_2026,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+prev_ev_w_2027,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+prev_ev_w_2028,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+prev_ev_w_2029,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+prev_ev_w_2030,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+prev_ev_s_2026,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+prev_ev_s_2027,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+prev_ev_s_2028,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+prev_ev_s_2029,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+prev_ev_s_2030,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+xc_crwv_oai,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+xc_crwv_meta,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+xc_crwv_bl,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+xc_nbis_msft,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+xc_nbis_meta,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+xc_nbis_rpo,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+oem_dell,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+oem_smci,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
+oem_hpe,F,SRC_GL_346,SRC_GL_349,Sources,W-1 證據改號（原與 SpaceX 424B4 撞號）
