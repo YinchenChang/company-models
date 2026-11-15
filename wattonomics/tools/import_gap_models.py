@@ -23,6 +23,8 @@ MODEL_OVERRIDE = {"Anthropic": "anthropic/dist/20261104_Anthropic收支模型_v0
 MAG7 = {"C": 2024, "D": 2025, "G": 2026, "H": 2027, "I": 2028, "J": 2029, "K": 2030, "L": 2031, "M": 2032}
 MAG7_FWD = {k: v for k, v in MAG7.items() if v >= 2027}
 NEO = {"C": 2026, "D": 2027, "E": 2028, "F": 2029, "G": 2030}
+NEOTH = {"E": 2026, "F": 2027, "G": 2028, "H": 2029, "I": 2030}   # v0.3.4：新雲 Thesis 頁（C＝9M 實績、D＝Q4 模型、E＝FY2026 … I＝FY2030；FY2031–32 不取，與舊設定同範圍）
+NEOCF = {"D": 2026, "E": 2027, "F": 2028, "G": 2029, "H": 2030}   # v0.3.4：新雲 CF 頁（C＝FY2025A、D＝FY2026 … H＝FY2030）
 LAB = {"D": 2025, "E": 2026, "F": 2027, "G": 2028, "H": 2029, "I": 2030}
 LAB_FWD = {k: v for k, v in LAB.items() if v >= 2026}
 
@@ -98,40 +100,42 @@ CONF = {
                 ),
                 cash=dict(cell="E67", label="期初現金（現金＋有價證券）", asof="2025-12-31（9M26 期初）"),
                 missing=dict(bb="模型無股利、回購列")),
-    "crwv": dict(ticker="CRWV", family="新雲型（各期收支頁）", fye=12, unit="US$B", scale=1, sheet="各期收支",
-                 tag="Derived（個股模型；營業現金流由模型列組合）",
-                 block=("A1", "支出與資金"), header=(4, {"C": "FY26", "G": "FY30"}),
+    # v0.3.4（2026-11-15）：CoreWeave v5.0、Nebius v0.6、WhiteFiber v0.4 起個股模型改為 Thesis／CF／Fund 頁（已無「各期收支」頁）。
+    # 資本支出讀 Thesis 情境 B「資本支出合計（公司口徑；Q4 起模型）」（FY2026＝9M 實績＋Q4 模型）；營業現金流與期初現金讀 CF 情境 B。
+    # 兩頁各自核對情境 B 區塊標題與年度表頭（extra）；舊設定（各期收支頁組合式營業現金流）見 git 歷史。
+    "crwv": dict(ticker="CRWV", family="新雲型（Thesis／CF 頁；v5.0 起）", fye=12, unit="US$B", scale=1, sheet="CF",
+                 tag="Derived（個股模型基準情境 B；FY2026＝9M 實績＋Q4 模型）",
+                 block=("A40", "情境 B（基準"), header=(4, {"D": "FY2026", "H": "FY2030"}),
+                 extra=[("Thesis", "A39", "情境 B（基準", "in"), ("Thesis", "E3", "FY2026", "eq"), ("Thesis", "I3", "FY2030", "eq")],
                  rows=dict(
-                     ocf=dict(cells=[(39, "營運缺口（不含融資、不含還本）"), (9, "① CapEx（用途用"), (18, "④ JV／策略投資出資"), (19, "電力（overlay）"), (20, "維護（overlay）")], cols=NEO,
-                              note="模型無前瞻 CFO 列；營業現金流＝營運缺口＋CapEx＋JV 出資＋電力／維護 overlay（＝營運來源 − 租金 − 利息；FY26 含 1H 實際 CFO 3.663）"),
-                     capai=dict(cells=[(9, "① CapEx（用途用")], cols=NEO, note="全公司為 AI 雲"),
-                     cap=dict(cells=[(9, "① CapEx（用途用")], cols=NEO),
+                     ocf=dict(cells=[(47, "營運現金流")], cols=NEOCF, note="CF 情境 B 營運現金流（FY2026＝9M 實績 5.638＋Q4 模型；含客戶預付流入、扣預付認列）"),
+                     capai=dict(cells=[("Thesis!66", "資本支出合計（公司口徑；Q4 起模型）")], cols=NEOTH, note="全公司為 AI 雲；公司口徑（9M＝1H 10-Q 16.139＋Q3 法說 14.511，應計；CF 頁現金資本支出 FY2026 30.64 只作對照）"),
+                     cap=dict(cells=[("Thesis!66", "資本支出合計（公司口徑；Q4 起模型）")], cols=NEOTH),
                  ),
-                 cash=dict(cell="C74", label="期初現金（2025-12-31）", asof="2025-12-31"),
-                 missing=dict(nai="模型未拆非 AI（全公司為 AI 雲）", bb="模型無股利、回購列（models_extract 標籤註明無股利與回購）")),
-    "nbis": dict(ticker="NBIS", family="新雲型（各期收支頁）", fye=12, unit="US$B", scale=1, sheet="各期收支",
-                 tag="Derived（個股模型；營業現金流由模型列組合）",
-                 block=("A1", "支出與資金"), header=(4, {"C": "FY26", "G": "FY30"}),
+                 cash=dict(carry=True, ref_cell="D51", ref_label="期初現金（FY2026＝2026-09-30）"),
+                 missing=dict(nai="模型未拆非 AI（全公司為 AI 雲）", bb="模型無股利、回購列（CF 頁說明：無股利、無回購）")),
+    "nbis": dict(ticker="NBIS", family="新雲型（Thesis／CF 頁；v0.6 起）", fye=12, unit="US$B", scale=1, sheet="CF",
+                 tag="Derived（個股模型基準情境 B；FY2026＝9M 實績＋Q4 模型）",
+                 block=("A40", "情境 B（基準"), header=(4, {"D": "FY2026", "H": "FY2030"}),
+                 extra=[("Thesis", "A39", "情境 B（基準", "in"), ("Thesis", "E3", "FY2026", "eq"), ("Thesis", "I3", "FY2030", "eq")],
                  rows=dict(
-                     ocf=dict(cells=[(45, "營運缺口（不含融資、不含還本）"), (12, "① CapEx（用途用"), (21, "④ JV／策略投資出資"), (22, "電力（overlay）"), (23, "維護（overlay）")], cols=NEO,
-                              note="模型無前瞻 CFO 列；營業現金流＝營運缺口＋CapEx＋JV 出資＋overlay（FY26 含 1H 實際 CFO 4.50）"),
-                     capai=dict(cells=[(12, "① CapEx（用途用")], cols=NEO, note="全公司為 AI 雲"),
-                     cap=dict(cells=[(12, "① CapEx（用途用")], cols=NEO),
+                     ocf=dict(cells=[(47, "營運現金流")], cols=NEOCF, note="CF 情境 B 營運現金流（FY2026＝9M 實績 4.231＋Q4 模型；含客戶預付流入、扣預付認列）"),
+                     capai=dict(cells=[("Thesis!66", "資本支出合計（公司口徑；Q4 起模型）")], cols=NEOTH, note="全公司為 AI 雲；9M＝現金購置實績 15.431（6-K；公司未另定應計口徑）；公司 2026 指引約 27 不入（模型原則 59）"),
+                     cap=dict(cells=[("Thesis!66", "資本支出合計（公司口徑；Q4 起模型）")], cols=NEOTH),
                  ),
-                 cash=dict(cell="C86", label="期初現金（2025-12-31）", asof="2025-12-31"),
-                 missing=dict(nai="模型未拆非 AI（全公司為 AI 雲）", bb="模型無股利、回購列（第 21 列說明：NBIS 不發股息）")),
-    "wyfi": dict(ticker="WYFI", family="新雲型（各期收支頁）", fye=12, unit="US$B", scale=0.001, sheet="各期收支",
-                 tag="Derived（個股模型；營業現金流由模型列組合；原值 US$m ÷ 1000）",
-                 block=("A1", "支出與資金"), header=(4, {"C": "FY26", "G": "FY30"}),
+                 cash=dict(carry=True, ref_cell="D51", ref_label="期初現金（FY2026＝2026-09-30）"),
+                 missing=dict(nai="模型未拆非 AI（全公司為 AI 雲）", bb="模型無股利、回購列（CF 頁說明：無股利、無回購）")),
+    "wyfi": dict(ticker="WYFI", family="新雲型（Thesis／CF 頁；v0.4 起）", fye=12, unit="US$B", scale=0.001, sheet="CF",
+                 tag="Derived（個股模型基準情境 B；FY2026＝9M 實績＋Q4 模型；原值 US$m ÷ 1000）",
+                 block=("A40", "情境 B（基準"), header=(4, {"D": "FY2026", "H": "FY2030"}),
+                 extra=[("Thesis", "A41", "情境 B（基準", "in"), ("Thesis", "E3", "FY2026", "eq"), ("Thesis", "I3", "FY2030", "eq")],
                  rows=dict(
-                     ocf=dict(cells=[(52, "營運缺口（不含融資、不含還本）"), (13, "① CapEx（用途用"), (23, "④ JV／策略投資出資"), (24, "⑧ 股利"), (25, "電力（overlay）"), (26, "維護（overlay）")], cols=NEO,
-                              note="模型無前瞻 CFO 列；營業現金流＝營運缺口＋CapEx＋JV 出資＋股利＋overlay（營運缺口已扣股利，加回；現金稅留在營業現金流內）；原值 US$m"),
-                     capai=dict(cells=[(13, "① CapEx（用途用")], cols=NEO, note="雲端＋託管，全為 AI 資料中心"),
-                     cap=dict(cells=[(13, "① CapEx（用途用")], cols=NEO),
-                     bb=dict(cells=[(24, "⑧ 股利")], cols=NEO, note="模型股利列（0）；無回購列"),
+                     ocf=dict(cells=[(47, "營運現金流")], cols=NEOCF, note="CF 情境 B 營運現金流（FY2026＝9M 實績 211.3＋Q4 模型；含客戶預付流入、扣預付認列）；原值 US$m"),
+                     capai=dict(cells=[("Thesis!70", "資本支出合計（公司口徑；Q4 起模型）")], cols=NEOTH, note="雲端＋託管，全為 AI 資料中心；9M＝現金購置與設備訂金實績 549.8（10-Q）"),
+                     cap=dict(cells=[("Thesis!70", "資本支出合計（公司口徑；Q4 起模型）")], cols=NEOTH),
                  ),
-                 cash=dict(cell="C100", label="期初現金（2025-12-31）", asof="2025-12-31"),
-                 missing=dict(nai="模型未拆非 AI")),
+                 cash=dict(carry=True, ref_cell="D51", ref_label="期初現金（FY2026＝2026-09-30）"),
+                 missing=dict(nai="模型未拆非 AI", bb="模型無股利、回購列（CF 頁說明：無股利、無回購）")),
     "oai": dict(ticker="OpenAI", family="AI 實驗室型（Funding 頁）", fye=12, unit="US$B", scale=1, sheet="Funding",
                 tag="Derived（OpenAI 收支模型；營收等輸入為 Interested-party、自有資本支出為模型假設）",
                 block=("A1", "Funding"), header=(5, {"D": "2025", "E": "2026", "I": "2030"}),
@@ -179,7 +183,7 @@ def main():
     bad = []
     if only:
         out = json.load(open(a.src, encoding="utf-8"))
-        out["_doc"] += f"；v0.2.1：{'、'.join(sorted(only))} 以 --only 重取（其餘沿用 {os.path.basename(a.src)}）"
+        out["_doc"] += f"；{'、'.join(sorted(only))} 以 --only 重取（其餘沿用 {os.path.basename(a.src)}）"
     for p, c in CONF.items():
         if only and p not in only: continue
         rel = MODEL_OVERRIDE.get(c["ticker"], ex[c["ticker"]]["model"])
@@ -201,6 +205,11 @@ def main():
             got = v(c["sheet"], f"{col}{hr}")
             if str(got).strip() != want:
                 bad.append(f"{p}：表頭 {c['sheet']}!{col}{hr} 應為「{want}」，實際「{got}」")
+        for sh_, cell_, want_, mode_ in c.get("extra", []):   # v0.3.4：其他頁的區塊標題／表頭核對
+            got_ = v(sh_, cell_)
+            ok_ = (want_ in str(got_ or "")) if mode_ == "in" else (str(got_).strip() == want_)
+            if not ok_:
+                bad.append(f"{p}：{sh_}!{cell_} 應{'含' if mode_ == 'in' else '為'}「{want_}」，實際「{got_}」")
         rec = {"ticker": c["ticker"], "file": rel, "commit": commit_of(rel), "family": c["family"], "fye": c["fye"], "unit": c["unit"],
                "scale": c["scale"], "tag": c["tag"], "items": {}}
         merged = {}
@@ -239,13 +248,28 @@ def main():
                                       "labels": m["labels"], "note": "；".join(m["notes"])}
             else:
                 rec["items"][item] = {"values": {}, "cells": {}, "labels": [], "note": "無模型值：" + c.get("missing", {}).get(item, "模型無此列")}
-        cv = v(c["sheet"], c["cash"]["cell"])
-        rec["cash"] = {"value": round(cv * c["scale"], 6) if isinstance(cv, (int, float)) else None, "cell": f"{c['sheet']}!{c['cash']['cell']}",
-                       "label": c["cash"]["label"], "asof": c["cash"]["asof"]}
-        # 現金標籤核對（同列 A–C 欄）
-        crow = int("".join(ch for ch in c["cash"]["cell"] if ch.isdigit()))
-        if not any(c["cash"]["label"] in str(v(c["sheet"], f"{lc}{crow}") or "") for lc in "ABC"):
-            bad.append(f"{p}：現金列 {c['sheet']} 第 {crow} 列找不到標籤「{c['cash']['label']}」")
+        if c["cash"].get("carry"):
+            # v0.3.4：新版模型無 2025-12-31 期初現金列（CF 期初現金為 2026-09-30，與其他 8 家的 2025-12-31 口徑不同，且 Gap 頁 2026 需求為全年）
+            # → 寫「模型無此列」並沿用前一種子的 2025-12-31 值（出處為舊版模型儲存格）；2026-09-30 值只寫入說明作對照，不採用
+            prev = json.load(open(a.src, encoding="utf-8"))["players"][p]
+            rcell, rlab = c["cash"]["ref_cell"], c["cash"]["ref_label"]
+            rrow = int("".join(ch for ch in rcell if ch.isdigit()))
+            if not any(rlab in str(v(c["sheet"], f"{lc}{rrow}") or "") for lc in "ABC"):
+                bad.append(f"{p}：對照現金列 {c['sheet']} 第 {rrow} 列找不到標籤「{rlab}」")
+            rv = v(c["sheet"], rcell)
+            rv = round(rv * c["scale"], 6) if isinstance(rv, (int, float)) else None
+            rec["cash"] = {"value": prev["cash"]["value"],
+                           "cell": f"模型無此列（新版無 2025-12-31 期初現金）；沿用 {prev['file']} {prev['cash']['cell']}",
+                           "label": prev["cash"]["label"],
+                           "asof": f"{prev['cash']['asof']}；對照：新版 {c['sheet']}!{rcell}「{rlab}」{rv}（不採用：asof 與他家不同）"}
+        else:
+            cv = v(c["sheet"], c["cash"]["cell"])
+            rec["cash"] = {"value": round(cv * c["scale"], 6) if isinstance(cv, (int, float)) else None, "cell": f"{c['sheet']}!{c['cash']['cell']}",
+                           "label": c["cash"]["label"], "asof": c["cash"]["asof"]}
+            # 現金標籤核對（同列 A–C 欄）
+            crow = int("".join(ch for ch in c["cash"]["cell"] if ch.isdigit()))
+            if not any(c["cash"]["label"] in str(v(c["sheet"], f"{lc}{crow}") or "") for lc in "ABC"):
+                bad.append(f"{p}：現金列 {c['sheet']} 第 {crow} 列找不到標籤「{c['cash']['label']}」")
         if "fx" in c:
             fx = c["fx"]
             if fx["label"] not in str(v(fx["sheet"], fx["label_cell"])):
