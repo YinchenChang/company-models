@@ -37,9 +37,10 @@ import z2  # noqa: E402
 import z3  # noqa: E402
 import z4  # noqa: E402
 import z5  # noqa: E402
+import z6  # noqa: E402
 
-VERSION = "v0.1.5"
-VERSION_DATE = "2026-11-15"   # v0.1.4：只換現價；v0.1.3：README A1 顯示版本日期（--date 仍為 Tokenomics／OpenAI 快照讀取日）
+VERSION = "v0.1.6"
+VERSION_DATE = "2026-11-15"   # v0.1.6：估值頁； v0.1.4：只換現價；v0.1.3：README A1 顯示版本日期（--date 仍為 Tokenomics／OpenAI 快照讀取日）
 SRC_YAML = ROOT / "data" / "zhipu_src.yaml"
 INP_YAML = ROOT / "data" / "zhipu_inputs.yaml"
 REGISTRY_PATH = HERE / "id_registry.json"
@@ -414,6 +415,7 @@ def main():
     z2.fill(wb, Z)
     z5.build_pl(wb, D, Z)                # v0.1.5：標準損益表（只列示）
     z5.build_coord(wb, D, Z, snap)       # v0.1.5：三層協調（只列示）
+    Z["VAL"] = z6.build(wb, D, Z)       # v0.1.6：估值頁 Val、反向 DCF 頁 RevDCF（Andy 2026-11-15 決定給目標價與評等；不被既有計算頁引用）
     # 結構掃描（結果寫入 Checks 作為常數；test_builder 另行逐格驗證）
     e6 = sum(len(e6_violations(wb[s])) for s in CALC_SHEETS if s in wb.sheetnames)
     oref = len(oai_refs(wb))

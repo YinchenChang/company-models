@@ -67,6 +67,6 @@ dist/             成品（HTML 一頁摘要＋xlsx）
 - **來源標記**：Verified／Interested-party／Analogy／Assumed／Derived／Decision；Analogy、Assumed 一律給區間。
 - **曆年制**：智譜會計年度＝曆年；FY2025–FY2030，2025 為實際校準年（經審計年報），2026 上半年為第二個實際點（中期報告，規格 D14）。
 - **幣別**：公司金額一律 **人民幣億元（RMB 億）**，與財報一致；港幣、美元數據以 Inputs 匯率（`INP` 定義常數，附日期）換算後才進計算頁。命題表與 OAI_Link 並排時另列 **美元口徑（$B／GW）**。token 單位兆（T），電力 GW（IT 口徑）。
-- **版本命名**：`YYYYMMDD_Zhipu_v0.1.xlsx`；各段完成時記為 `v0.1-Z2`…`v0.1-Z4`，Z4 完成即 v0.1；成品 `dist/YYYYMMDD_智譜個股模型_v0_1_x.html／.xlsx`（v0.1.2 起；v0.1.1 以前為「智譜收支模型」）。
+- **版本命名**：`YYYYMMDD_Zhipu_v0.1.xlsx`；各段完成時記為 `v0.1-Z2`…`v0.1-Z4`，Z4 完成即 v0.1；成品 `dist/YYYYMMDD_智譜個股模型_v0_1_x.html（版面 v1.3 頁）／.xlsx`、`dist/YYYYMMDD_智譜收支模型_v0_1_x.html（一頁摘要）`（v0.1.6 起命名對齊 MiniMax；v0.1.2–v0.1.5 一頁摘要稱「個股模型」、v1.3 頁稱「個股頁」）。
 - **Excel 語言**：工作表名稱與具名範圍用英文；標籤與註解用繁體中文。
 - **與 OpenAI v0.6 同名**：命題輸出與主要衍生量的具名範圍沿用 OpenAI 的前綴與名稱（`DEM_`、`REV_`、`CMP_`、`COST_`、`FND_`、`RVS_`；例如 `COST_PropGap_VR`、`COST_Coverage`、`FND_ExtNeedCum`），方便兩家並排。
