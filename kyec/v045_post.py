@@ -8,7 +8,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c13
 from c13 import T, F, lab, blockB, Sheet, dn, BOLD, BLUE, HDR
 
-VER, BUILT = "v0.4.6", "2026-11-15"
+VER, BUILT = "v0.4.5", "2026-11-15"   # 各 v1.3 區塊實際起始版（「v0.4.5 起」標籤用）
+NEWVER = "v0.4.6"   # 現行版號（README A1 標題段；apply 末段改）
 TN1008 = "https://finance.technews.tw/2026/10/08/kyec-2449-202609-financial-report/"
 MDJ1105 = "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=2bcf599f-fe54-431a-8b6a-467b995f9ff7"
 HSM = "https://histock.tw/stock/financial.aspx?no=2449"
@@ -289,6 +290,9 @@ def apply(wb, SIL, CR):
     R4 = c0_actuals(wb, G, SIL)
     RMA = c13.readme13(wb, RVA, PLA, ST, CR, C, lines(wb))
     c13.version_a1(wb, C)
+    _a1 = wb["README"]["A1"].value; _h, _s, _r = _a1.partition("；")   # v0.4.6：標題段版號改現行版（共用 c13 不改）
+    assert VER + "（" in _h, _h
+    wb["README"]["A1"].value = _h.replace(VER + "（", NEWVER + "（", 1) + _s + _r
     wb._v13 = dict(HR=HR, PL=PLA, RV=RVA, VG=VG, ST=ST, G=G, R4=R4, RM=RMA)
     return (f"v045_post：Hist {len(HR)} 列；PL 標準損益表 {PLA['start']} 起；RevDCF 頁；Val 0.7 第 {VG} 列；Sens 加權目標價相對基準第 {ST['t0']} 列；"
             f"Coord C0 第 {G['c0']} 列起、C0（實績）第 {R4['title']}–{R4['end']} 列；README v1.3 白話列 {len(RMA)} 列")
