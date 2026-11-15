@@ -252,6 +252,12 @@ else:
 # 第三輪修正（2026-11-06）：情境驅動表依節標題取列並自檢、情境定義 kv 自檢、DCF 明細比例列格式、橫幅幣別（r3_html.py）
 import r3_html  # noqa: E402
 r3_html.post(cfg, wb, '新台幣')
+# v0.3.5：In 表 stub 期長度顯示到 0.01 年（0.25；n1 會顯示 0.3）
+_ws = wb["In"]; _sr = next(r for r in range(1, _ws.max_row + 1) if _ws.cell(r, 1).value == "stub_frac")
+_cs = json.dumps(cfg, ensure_ascii=False)
+for _c in "DEF":
+    _cs = _cs.replace(f'"@In!{_c}{_sr}|n1"', f'"@In!{_c}{_sr}|n2"')
+cfg = json.loads(_cs)
 json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok", OUT)
 # ───────── v0.3.4（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（兩讀數、C0（實績））；共通步驟 gce/html13.py（高速 CCL／PCB 四家同一份；樣板 delta、auras、emc） ─────────
