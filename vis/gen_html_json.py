@@ -162,10 +162,10 @@ SEC["sens"]["blocks"] = SEC["sens"]["blocks"][:1] + vda_table() + SEC["sens"]["b
 SPEC = {
  "in_skip": [in_tok("G."), in_tok("情境驅動對照")],
  "in_groups": [
-  ["八吋晶圓（產能 × 稼動率 × 平均售價）", [
+  ["八吋晶圓（產能 × 稼動率 × 等效單位營收）", [
     ["產能（八吋）", ["cap_26", "capg27", "capg28", "capg29", "cap_adj"]],
     ["平均稼動率（三情境）", [k for k in I if re.match(r"^ut2\d_[ABC]$", k)] + ["ut_adj"]],
-    ["平均售價（美元，每片八吋）", ["asp_26"] + [k for k in I if re.match(r"^asp2\d_[ABC]$", k)] + ["asp_adj"]],
+    ["八吋等效單位營收／片（全部營收 ÷ 八吋出貨，美元；含非晶圓營收，不是晶圓報價）", ["asp_26"] + [k for k in I if re.match(r"^asp2\d_[ABC]$", k)] + ["asp_adj"]],
     ["AI 相關占營收（記憶列，不進營收加總；AI 需求反映在稼動率與售價）", ["ai_sh26", "ai_sh27_A", "ai_sh27_B", "ai_sh27_C"]]]],
   ["VSMC 新加坡十二吋廠（與 NXP 合資、合併報表）", [
     ["產能與稼動率", ["vcap27", "vcap28", "vcap29", "vcap_adj", "vut_A", "vut_B", "vut_C"]],
@@ -183,7 +183,7 @@ SPEC = {
     ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "bs_date", "stub_frac", "stub_div", "sh_v"]],
     ["自由現金流（折舊、資本支出、營運資金）", ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]],
     ["收斂法（FY2030–FY2032）", ["tp_g", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fade_mB", "fade_mC"]]]]],
- "blocks_to": {"1. 8 吋晶圓": "八吋晶圓（產能 × 稼動率 × 平均售價）", "@Units!A37": "VSMC 新加坡十二吋廠（與 NXP 合資、合併報表）"},
+ "blocks_to": {"1. 8 吋晶圓": "八吋晶圓（產能 × 稼動率 × 等效單位營收）", "@Units!A37": "VSMC 新加坡十二吋廠（與 NXP 合資、合併報表）"},
  "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "＋Stub 期 FCFF", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
           "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
           "目標價結論": ["目標價（DCF", "DCF 目標價", "Comparable 目標價（相對", "Comparable 目標價（市場", "現價", "上檔空間：加權", "上檔空間：Comparable", "投資建議", "DCF 情境價值推到", "市場共識"],

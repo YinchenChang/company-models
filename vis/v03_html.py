@@ -7,7 +7,8 @@ def apply(cfg, WB, row_of):
     S = {x["id"]: x for x in cfg["sections"]}
     RD, PLW, RVW, CW, SEW, VSW = WB["README"], WB["PL"], WB["RevDCF"], WB["Coord"], WB["Sens"], WB["VSMC"]
     r13 = row_of("README", "v1.3 展示層")
-    RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
+    RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver", "cmp"], range(r13 + 1, r13 + 11)))
+    assert str(RD[f"A{RM['cmp']}"].value).startswith("v0.3 新舊對照"), RD[f"A{RM['cmp']}"].value
     assert str(RD[f"A{RM['ver']}"].value).startswith("v0.3"), RD[f"A{RM['ver']}"].value
     cfg["layout"] = "v1.3"
     old_note = list(cfg["hero"]["note"] or [])
@@ -44,7 +45,7 @@ def apply(cfg, WB, row_of):
     sotp = {"type": "table", "caption": f"@VSMC!A{vs0}", "head": [f"@VSMC!{c}{vs0 + 1}" for c in "ACDE"],
             "rows": [[f"@VSMC!A{r}"] + [f"@VSMC!{c}{r}" + (f"|{vfm(r)}" if vfm(r) else "|") for c in "CDE"] for r in range(vs0 + 2, vse - 1)]
                     + [[f"@VSMC!A{vse - 1}", f"@VSMC!C{vse - 1}|n0", "", ""], [f"@VSMC!A{vse}", f"@VSMC!C{vse}|p0", "", ""]]}
-    vsb = next(r for r in range(1, VSW.max_row + 1) if str(VSW.cell(r, 1).value or "").startswith("三情境 FCFF 明細") and "情境 B" in str(VSW.cell(r, 1).value))
+    vsb = next(r for r in range(1, VSW.max_row + 1) if str(VSW.cell(r, 1).value or "").startswith("VSMC 100% FCFF 明細") and "情境 B" in str(VSW.cell(r, 1).value))
     vh = vsb + 1; vend = next(r for r in range(vh, VSW.max_row + 1) if str(VSW.cell(r, 1).value or "").startswith("SOTP 調整"))
     vcols = [chr(ord("C") + i) for i in range(14)]
     vtbl = {"type": "table", "caption": f"@VSMC!A{vsb}", "collapse": True, "summary": "展開：VSMC 情境 B 逐年營收、建廠折舊瀑布、自由現金流與企業價值",
@@ -177,7 +178,7 @@ def apply(cfg, WB, row_of):
     S["recon"]["blocks"] = blocks + S["recon"]["blocks"]
     S["recon"]["title"] = "對帳：三層協調、公司實績與共識對照"
     # ---- 8. 資料狀態 ----
-    S["status"]["blocks"][0:0] = [{"type": "h3", "text": "本版要點"}, {"type": "note", "parts": [f"@README!A{RM['ver']}"]}]
+    S["status"]["blocks"][0:0] = [{"type": "h3", "text": "本版要點"}, {"type": "note", "parts": [f"@README!A{RM['ver']}"]}, {"type": "note", "parts": [f"@README!A{RM['cmp']}"]}]
     # ---- 白話替換：可見文字（摺疊與資料狀態以外）不出現參數代號；xlsx 原文不改（設定檔文字不含年份與日期以外的數字）----
     import re as _re
     PLAIN = {f"VSMC!A{vse}": "有效 DCF 權重（＝設定權重 × DCF 適用）",
