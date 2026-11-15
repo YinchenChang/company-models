@@ -2354,10 +2354,26 @@ def main():
             OWN_PIT = lambda y: f"{YC[y]}{rows['pit']}"; OWN_PFA = lambda y: f"{YC[y]}{rows['pfac']}"
             MK_PIT = lambda y: f"Gap!{YC[y]}${GROW['pit']}"
             MK_PFA = (lambda y, p=p: f"Gap!{YC[y]}${GROW['pfac']}*CapexGW!{YC[y]}{XR[p]['own']}") if p in CAPP7 else (lambda y: f"Gap!{YC[y]}${GROW['pfac']}")
+            # v0.3.5 主控決定（落實①原意「需要端反映付款年實際花費」）：七家與 xAI 2026 起主讀法＝選項 B：CapexGW 曆年（付款年）AI 資本支出金額
+            # （已含當年付出的廠房提前款，故組成 1、2 當年記 0，不重複計）；選項 A（付款年 GW × 每 GW）與上線年回推皆為並列欄
             for k_, w_ in ((0, None), (1, GW1), (2, GW2)):
-                pl(f"c{k_}", f"　AI 資本支出組成：{['當年 IT＋當年廠房 w0', '次年上線 GW 的廠房 w1（提前入帳）', '後年上線 GW 的廠房 w2（提前入帳）'][k_]}", "US$B",
+                pl(f"a{k_}", f"　並列讀法 A（付款年 GW × 每 GW）組成：{['當年 IT＋當年廠房 w0', '次年 GW 的廠房 w1（提前入帳）', '後年 GW 的廠房 w2（提前入帳）'][k_]}", "US$B",
                    lambda y, k_=k_, w_=w_: comp(y, k_, OWN_PIT, OWN_PFA, w_), years=OUTG)
-            pl("ai_gw", "AI 資料中心資本支出（付款年新增 GW × 每 GW；廠房提前）＝組成合計（v0.3.5 主讀法）", "US$B", lambda y: f"={YC[y]}{rows['c0']}+{YC[y]}{rows['c1']}+{YC[y]}{rows['c2']}", years=OUTG)
+            pl("ai_a", "並列讀法 A：AI 資料中心資本支出（付款年新增 GW × 每 GW；廠房提前）", "US$B", lambda y: f"={YC[y]}{rows['a0']}+{YC[y]}{rows['a1']}+{YC[y]}{rows['a2']}", years=OUTG)
+            if PAYYR_ON and p in CAPP7:
+                BSRC = lambda y: f"CapexGW!{YC[y]}{XR[p]['ai']}"; BCOND = lambda y: (f'AND({y}>=2026,ISNUMBER({BSRC(y)}))')
+            elif PAYYR_ON and p in XRX:
+                BSRC = lambda y: f"CapexGW!{YC[y]}{XRX[p]['ai']}"; BCOND = lambda y: (f'AND({y}>=2026,ISNUMBER({BSRC(y)}))')
+            else:
+                BSRC = None
+            for k_ in (0, 1, 2):
+                lab_ = ["當年（B 年＝付款年 AI 資本支出金額；其餘＝A 組成 0）", "次年 GW 的廠房 w1（B 年記 0：已含在付款年金額）", "後年 GW 的廠房 w2（B 年記 0）"][k_]
+                if BSRC is None:
+                    pl(f"c{k_}", f"　AI 資本支出組成（主讀法）：{lab_}", "US$B", lambda y, k_=k_: f"={YC[y]}{rows['a' + str(k_)]}", years=OUTG)
+                else:
+                    pl(f"c{k_}", f"　AI 資本支出組成（主讀法）：{lab_}", "US$B",
+                       lambda y, k_=k_: (f"=IF({BCOND(y)},{BSRC(y)},{YC[y]}{rows['a0']})" if k_ == 0 else f"=IF({BCOND(y)},0,{YC[y]}{rows['a' + str(k_)]})"), years=OUTG)
+            pl("ai_gw", "AI 資料中心資本支出（主讀法：七家、xAI 2026 起＝付款年 AI 資本支出金額〔選項 B〕；其餘＝GW 推算）＝組成合計", "US$B", lambda y: f"={YC[y]}{rows['c0']}+{YC[y]}{rows['c1']}+{YC[y]}{rows['c2']}", years=OUTG)
             for k_, w_ in ((0, None), (1, GW1), (2, GW2)):
                 pl(f"o{k_}", f"　並列讀法（上線年，v0.3.4 以前主讀法）組成 {k_}", "US$B", lambda y, k_=k_, w_=w_: comp(y, k_, OWN_PIT, OWN_PFA, w_, "add"), years=OUTG)
             pl("ai_on", "並列讀法：AI 資料中心資本支出（上線年新增 GW × 每 GW；廠房提前；v0.3.4 以前主讀法）", "US$B", lambda y: f"={YC[y]}{rows['o0']}+{YC[y]}{rows['o1']}+{YC[y]}{rows['o2']}", years=OUTG)
@@ -2366,6 +2382,7 @@ def main():
         else:
             pl("ai_gw", "AI 資料中心資本支出", "US$B", lambda y: "=0", years=OUTG, note="智譜不是 Wattonomics 營運者（容量在『中國合計』）；自有算力資本支出基準 0（模型 D11r）")
             pl("ai_on", "並列讀法：上線年", "US$B", lambda y: "=0", years=OUTG)
+            pl("ai_a", "並列讀法 A", "US$B", lambda y: "=0", years=OUTG)
         # 非 AI、模型資本支出、營業現金流、買回股利（財年 → 曆年）
         pl("nai_fy", "非 AI 資本支出（財年；模型）", "US$B", lambda y: "=" + fyexpr(p, f"gnai_{p}", y, None, zs))
         pl("nai_cy", "非 AI 資本支出（曆年；空白＝無模型值）", "US$B", lambda y: cyexpr("nai_fy", y, fye), years=OUTG)
@@ -2504,7 +2521,10 @@ def main():
     gline("t_ai_gw", "　其中 GW 推算部分", "US$B", lambda y: SUM11("ai_gw", y), years=OUTG)
     gline("t_fb", "　其中模型值替代（無 GW 證據；不在市場 GW 內，市場合計同額加上）", "US$B", lambda y: f"={G('t_ai', y)}-{G('t_ai_gw', y)}", years=OUTG)
     gline("t_ai_on", "並列讀法：11 家 GW 推算 AI 資本支出（上線年；v0.3.4 以前主讀法）", "US$B", lambda y: SUM11("ai_on", y), years=OUTG)
+    gline("t_ai_a", "並列讀法 A：11 家 AI 資本支出（付款年 GW × 每 GW）", "US$B", lambda y: SUM11("ai_a", y), years=OUTG)
     gline("t_ai_payon", "　主讀法 − 上線年並列（GW 推算部分）", "US$B", lambda y: f"={G('t_ai_gw', y)}-{G('t_ai_on', y)}", years=OUTG)
+    gline("t_ai_capxon8", "　對照：七家＋xAI 付款年 AI 資本支出 − 上線年並列（主讀法 B 應與上一列逐年相同）", "US$B",
+          lambda y: "=" + "+".join([f"N(CapexGW!{YC[y]}{XR[q]['ai']})-N({YC[y]}{GPR[q]['ai_on']})" for q in GPL if q in XR] + [f"N(CapexGW!{YC[y]}{XRX['xai']['ai']})-N({YC[y]}{GPR['xai']['ai_on']})"]), years=OUTG)
     gline("t_ai_capxon", "　對照：七家＋xAI＋WhiteFiber 付款年輸入（CapexGW 曆年 AI 資本支出；WhiteFiber 個股模型）− 上線年並列（報告 20261115_v0.3.4 §2.2 差額定義）", "US$B",
           lambda y: "=" + "+".join([f"N(CapexGW!{YC[y]}{XR[q]['ai']})-N({YC[y]}{GPR[q]['ai_on']})" for q in GPL if q in XR]
                                     + [f"N(CapexGW!{YC[y]}{XRX['xai']['ai']})-N({YC[y]}{GPR['xai']['ai_on']})", f"N({YC[y]}{GPR['wyfi']['cai']})-N({YC[y]}{GPR['wyfi']['ai_on']})"]), years=OUTG)
@@ -2555,7 +2575,7 @@ def main():
 
     # ---- D. 11 家代表玩家：需求 × 延遲情景（Andy 2026-10-31 12:58：收支只算 11 家；中國與其他只留需求與下游） ----
     gsec("D. 11 家代表玩家（本專案覆蓋，不含中國）當一間公司：基準（公告時程＋已確認延遲；v0.2 起需求 B、C 與延遲 D1、D2 已刪）。情景比例 r 恆＝1（保留列以維持 *_A_D0_* 舊名）")
-    GA.cell(r, 1, "市場其餘 AI 資本支出（參考；不納入收支，只供需求與下游）：基準＝市場 GW × 每 GW − 11 家 GW 推算部分")
+    GA.cell(r, 1, "市場其餘 AI 資本支出（參考；不納入收支，只供需求與下游）：基準＝市場上線年 GW × 每 GW − 11 家上線年並列（v0.3.5：兩者同為上線年口徑）")
     MREST = r; r += 1
     GMK = {}
     for s in SCEN:
@@ -2605,7 +2625,7 @@ def main():
                lambda y: f'=IF({YC[y]}{M["mkt"]}<=0,"",({YC[y]}{M["own"]}-{RR(y)}*{G("t_fb", y)})/{YC[y]}{M["mkt"]})', fmt="0%")
             r += 1
     for y in OUTG:
-        GA.cell(MREST, YEARS.index(y) + 4, f"={YC[y]}{GMK['AD0']['mkt']}-{G('t_ai_gw', y)}").number_format = "0.0"
+        GA.cell(MREST, YEARS.index(y) + 4, f"={YC[y]}{GMK['AD0']['mkt']}-{G('t_ai_on', y)}").number_format = "0.0"   # v0.3.5：市場（上線年 GW）− 11 家上線年並列，同口徑
         SP.cell(SP_LESSOR, YEARS.index(y) + 4, f"=Gap!{YC[y]}{GROW['t_lessor']}").number_format = "0.0"
     # 敏感度 M1（每 GW 改用市場平均；A／D0、B／D1、C／D2）
     gsec("E. 敏感度 M1：11 家每 GW 成本改用市場平均（主讀法用玩家自有每 GW；基準）")
@@ -2815,9 +2835,10 @@ def main():
                                   ("Gap", "缺口（正＝需外部資金）", "US$B", "0.0"), ("SelfFund", "自籌比", "x", "0.00"), ("Buyback", "買回＋股利（備忘）", "US$B", "0.0"),
                                   ("CapexAIModel", "對照：個股模型 AI 資本支出", "US$B", "0.0"), ("CapexAIGW", "AI 資本支出 GW 推算部分", "US$B", "0.0"), ("CapexAIMC", "並列讀法 AI 資本支出", "US$B", "0.0"),
                                   ("AddGW", "年新增 IT GW（上線年；擁有者口徑；v0.1.8）", "GW", "0.000"),
-                                  ("AddGWPay", "年新增 IT GW（付款年；Gap 主讀法；v0.3.5）", "GW", "0.000"), ("CapexAIOnline", "並列讀法：AI 資本支出（上線年 GW 推算；v0.3.4 以前主讀法）", "US$B", "0.0")):
+                                  ("AddGWPay", "年新增 IT GW（付款年；Gap 主讀法；v0.3.5）", "GW", "0.000"), ("CapexAIOnline", "並列讀法：AI 資本支出（上線年 GW 推算；v0.3.4 以前主讀法）", "US$B", "0.0"),
+                                  ("CapexAIPayGW", "並列讀法 A：AI 資本支出（付款年 GW × 每 GW）", "US$B", "0.0")):
             if k in ("AddGW", "AddGWPay") and "add" not in rows: continue
-            row = rows[{"OCF": "ocf", "CapexAI": "ai", "CapexNonAI": "nai", "Gap": "gap", "SelfFund": "self", "Buyback": "bb", "CapexAIModel": "cai", "CapexAIGW": "ai_gw", "CapexAIMC": "ai_mc", "AddGW": "add", "AddGWPay": "addpay", "CapexAIOnline": "ai_on"}[k]]
+            row = rows[{"OCF": "ocf", "CapexAI": "ai", "CapexNonAI": "nai", "Gap": "gap", "SelfFund": "self", "Buyback": "bb", "CapexAIModel": "cai", "CapexAIGW": "ai_gw", "CapexAIMC": "ai_mc", "AddGW": "add", "AddGWPay": "addpay", "CapexAIOnline": "ai_on", "CapexAIPayGW": "ai_a"}[k]]
             IF.cell(r, 1, f"WIF_Gap_Player_{p}_<yyyy>_{k}"); IF.cell(r, 2, f"{GPN[p]} {lab}"); IF.cell(r, 3, unit)
             for y in OUTG:
                 j = OUTG.index(y)
@@ -3084,12 +3105,12 @@ def main():
     CK.cell(r, 1, "G-K11"); CK.cell(r, 2, "Σ逐家 AddGW＝Add11（WIF_Gap_Player_<p>_<yyyy>_AddGW 加總＝WIF_Gap_Add11_<yyyy>；2024–2030；容差 0.001 GW；工作單 E4）")
     CK.cell(r, 3, "=" + "+".join(f"ABS(WIF_Gap_Add11_{y}-(" + "+".join(f"WIF_Gap_Player_{p}_{y}_AddGW" for p in GPL if "add" in GPR[p]) + "))" for y in OUTG))
     CK.cell(r, 6, f'=IF(C{r}<=0.001,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Gap）"); r += 1
-    # v0.3.5 ①：主讀法（付款年）− 上線年並列 vs 報告 20261115_v0.3.4 §2.2 差額（付款年輸入 − 上線年回推；9 家）
-    _pay = lambda y: f"Gap!{YC[y]}{GROW['t_ai_payon']}"; _cap = lambda y: f"Gap!{YC[y]}{GROW['t_ai_capxon']}"
-    CK.cell(r, 1, "G-K12"); CK.cell(r, 2, "Gap 主讀法改付款年（v0.3.5 ①）：Σ（主讀法 − 上線年並列）與報告 §2 差額（付款年輸入 − 上線年回推）相差超過 tolband 的年數（2026–2028；差在廠房提前權重與世代成本，WARN）")
-    CK.cell(r, 3, "=" + "+".join(f"IF(ABS({_pay(y)}-{_cap(y)})>tolband*ABS({_cap(y)}),1,0)" for y in (2026, 2027, 2028)))
-    CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "驗證（Gap 付款年）")
-    CK.cell(r, 8, "=" + '&"／"&'.join(f'TEXT({_pay(y)},"0.0")&" vs "&TEXT({_cap(y)},"0.0")' for y in (2026, 2027, 2028))); r += 1
+    # v0.3.5 ①（主控決定採選項 B）：七家＋xAI 主讀法 − 上線年並列 須逐年等於 付款年 AI 資本支出 − 上線年並列（報告 20261115_v0.3.4 §2 差額的七家＋xAI 部分）
+    _pay = lambda y: f"Gap!{YC[y]}{GROW['t_ai_payon']}"; _cap = lambda y: f"Gap!{YC[y]}{GROW['t_ai_capxon8']}"; _cap9 = lambda y: f"Gap!{YC[y]}{GROW['t_ai_capxon']}"
+    CK.cell(r, 1, "G-K12"); CK.cell(r, 2, "Gap 主讀法付款年金額（v0.3.5 ①，選項 B）：Σ11（主讀法 − 上線年並列）− Σ（七家＋xAI 付款年 AI 資本支出 − 上線年並列）的絕對值合計（2026–2030，B 生效年；須 < 0.001；2024–2025 主讀法為 A，次年、後年廠房提前款按付款年 GW）；H 欄另列報告 §2 九家差額（含 WhiteFiber，WhiteFiber 主讀法仍為 GW 推算）")
+    CK.cell(r, 3, "=" + "+".join(f"ABS({_pay(y)}-{_cap(y)})" for y in range(2026, 2031)))
+    CK.cell(r, 6, f'=IF(C{r}<0.001,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Gap 付款年）")
+    CK.cell(r, 8, "=" + '&"／"&'.join(f'TEXT({_pay(y)},"0.0")&" vs 報告九家 "&TEXT({_cap9(y)},"0.0")' for y in (2026, 2027, 2028))); r += 1
     # v0.2 V3（工作單 20261104；2027 診斷建議 5、Oracle 診斷建議 4）：園區年底存量 vs 甲2 年底存量（不用年新增，避免整站完工月放大）
     ck_ = []
     for p in CAPP:
@@ -3298,7 +3319,7 @@ def main():
         {"id": "GL01-107", "cat": "判斷", "item": "r2：Compare I2 節補建、Barber Lake 39 MW 納入、W2 不計分母、主權 2026 Assumed、Siliconomics 證據比例改參照", "decision": "（1）Compare I2 節（CoreWeave、Nebius 容量交叉檢核與 X2 去重可見性）補建：r1 程式誤刪該節，8 個 xc_ 輸入名稱無公式引用，r2 補回並由 I2 節公式引用。（2）cp_w1s_barber39：Cipher 2025-11-20 新聞稿原文（additional 39 MW critical IT、56 MW gross、Fluidstack、約 830M、2027-01 交付）→ 納入 1、2027-01、X3 算 Anthropic。（3）W2（w2gap 各 1.12）自證據比例分母移除（In w2_in_den＝0；改 1 還原）：2029–2030 X6 已補新雲、主權 Assumed 年增，再加 W2 重複；W2 本就未入主路徑基準，無重複入基準。（4）主權 2026：規則 C0 第 7 點不得歸零 → 以 KDDI 堺 48 MW（已營運，僅媒體標題）＋Reliance 120 MW（年底投運指引）＝0.168 GW Assumed 點值入基準、區間 0–0.168、不入證據分子、進分母（Compare I 節 x6s 列，由 T2 cp_w1s_kddi、cp_w1s_reliance 的 MW 連結）。（5）Compare 協調狀態列的 Siliconomics 證據比例（sil_ev_*）已過時，改標『參照；Siliconomics 權威狀態見其 Coord 頁（規則 v1.3 待定）』，數值不追；上游不讀下游", "date": "2026-11-14", "quote": "chat 端 r2（獨立核對 r1：7 項符合、2 項不符）", "status": "已定（chat 端）"},
         {"id": "GL01-108", "cat": "判斷", "item": "xai 2025 年底上線 GW 改讀公司揭露 0.8（對帳單 20261115 SpaceX／xAI）", "decision": "In mw_xai 2025（J113）空白 → 800 MW（SpaceX 424B4 Nameplate Compute Draw 2025-12-31；Interested-party：公司自訂 KPI、法定文件揭露的期末值；口徑 IT〔GPU × all-in 功耗，不含設施負載〕；SRC_GL_346）；C113 未說明 → IT（數值不變：Players 只對『設施』換算）。Players 已知值優先序 Y1 輸入 > Y0 晶片換算，xai 2025 年底 0.5698（Epoch chip_xai 308 MW × k_chip2it 1.85，旗標 5）→ 0.8（旗標 1）；低／高列不再用 k 區間（0.5082／0.64064 → 0.8）。chip_xai 308 MW 保留作對照。理由：三層基準協調規則 C0 第 3 點與 C5（個股有實績、層沒有 → 層下次升版吸收）；兩側皆 IT，口徑差無法解釋（需 k＝2.60 > Epoch 設施係數 2.5）；殘差歸於範圍（Epoch 308 MW 可能未含 Colossus II 已安裝 GPU）或 Epoch 資料時點。2024 年底公司揭露 0.3 GW 本版不入（xai 2025 仍為第一個已知年、新納入存量，不計年新增；避免改動 2025 年新增口徑），列待辦", "date": "2026-11-15", "quote": "對帳單 20261115（R 線開立；Andy 11-15 08:46 授權盡早處理）", "status": "已定（chat 端；待未參與代理核對）"},
         {"id": "GL01-109", "cat": "工程", "item": "新雲三家 In Y9 改讀新版個股模型 Thesis／CF 頁（v0.3.4）", "decision": "tools/import_gap_models.py 的 crwv、nbis、wyfi 設定原讀「各期收支」頁，CoreWeave v5.0、Nebius v0.6、WhiteFiber v0.4 起已無此頁（20261115 對帳單結案後排入）。改讀：資本支出（gcapai、gcap）＝Thesis 情境 B「資本支出合計（公司口徑；Q4 起模型）」（Nebius、CoreWeave 第 66 列，WhiteFiber 第 70 列；FY2026＝9M 實績＋Q4 模型）；營業現金流（gocf）＝CF 情境 B 第 47 列「營運現金流」（舊為營運缺口＋CapEx＋JV＋overlay 組合）；期初現金（gcash）：新版模型無 2025-12-31 期初現金列（模型無此列；CF 第 51 列為 2026-09-30，與其他 8 家口徑不同、且 Gap 頁 2026 需求為全年），沿用 v0.3.3 值（舊版模型 2025-12-31），2026-09-30 值只列說明作對照（判斷題，預設不改）；非 AI、買回＋股利：模型無此列。年份範圍同舊設定 FY2026–2030。兩頁各自核對情境 B 區塊標題與表頭（extra），不符即停。build.py --refresh-y9-only crwv,nbis,wyfi；其他 8 家 Y9 不動（Meta、Oracle 現行模型列位已變、Anthropic 覆寫路徑已不存在，另案）。依三層基準協調規則 C5 屬既有設計（層讀 S1 個股資本支出路徑），不是因對帳單改值", "date": "2026-11-15", "quote": "R 線對帳單兩張結案（2026-11-15）排入 v0.3.4 (a)", "status": "執行"},
-        {"id": "GL01-110", "cat": "判斷", "item": "Gap 主讀法改付款年 GW（①）", "decision": "Gap AI 資本支出＝付款年新增 GW × 每 GW（廠房提前 w0／w1／w2 不變）：七家與 xAI 2026 起讀 CapexGW 付款年列（x），2025 以前與 WhiteFiber、OpenAI、Anthropic＝上線年；原上線年回推保留為並列欄（Gap o0–o2、ai_on；WIF_Gap_Player_<p>_<yyyy>_CapexAIOnline、t_ai_on）；缺口、尚需新融資、累計仍未安排隨主讀法；出租方廠房列隨主讀法；融資租賃本金加回仍以上線年。Checks G-K12 核對 Σ（主讀法 − 上線年）與報告 §2 差額。AddGW（上線年）名稱不變，另出 AddGWPay", "date": "2026-11-15", "quote": "Andy 2026-11-15 19:15「合并并发布。照预设」（報告 docs/verify/20261115_v0.3.4_Gap回推低估與Microsoft檢查.md §6 判斷題照預設）", "status": "執行"},
+        {"id": "GL01-110", "cat": "判斷", "item": "Gap 主讀法改付款年實際花費（①；選項 B）", "decision": "七家與 xAI 2026 起 Gap AI 資本支出＝CapexGW 曆年（付款年）AI 資本支出金額（組成 1、2 的廠房提前款在 B 年記 0，不重複）；2024–2025 與 WhiteFiber、OpenAI、Anthropic＝GW 推算（2024–2025 次年、後年廠房提前款按付款年 GW）。並列欄：選項 A 付款年 GW × 每 GW（a0–a2、ai_a；CapexAIPayGW）與上線年回推（o0–o2、ai_on；CapexAIOnline）；AddGWPay。初版採 A，Checks 顯示只補回報告差額 75%／49%／10%（CapexGW 的 GW 換算用前兩年廠房款、Gap 又前瞻加廠房），主控決定改 B（落實 Andy 同意的原意：需要端反映付款年實際花費）；G-K12 核對七家＋xAI（主讀法 − 上線年）＝（付款年資本支出 − 上線年）。市場其餘參考列改為市場上線年推算 − 11 家上線年並列。AddGW（上線年）名稱不變", "date": "2026-11-15", "quote": "Andy 2026-11-15 19:15「合并并发布。照预设」（報告 docs/verify/20261115_v0.3.4_Gap回推低估與Microsoft檢查.md §6 判斷題照預設）", "status": "執行"},
         {"id": "GL01-111", "cat": "判斷", "item": "OpenAI、Anthropic 營業現金流不加回自有資本支出（②）", "decision": "import_gap_models.py：gocf_oai＝F06、gocf_ant＝F07（舊：加回 Cost 頁自有資本支出／F03）。Gap 對兩家 AI 資本支出為 0（容量由 SPV／出租方擁有），加回會使缺口少算自有資本支出；缺口＝−自由現金流。Anthropic F03 2026–2030 皆 0", "date": "2026-11-15", "quote": "Andy 2026-11-15 19:15「合并并发布。照预设」（報告 docs/verify/20261115_v0.3.4_Gap回推低估與Microsoft檢查.md §6 判斷題照預設）", "status": "執行"},
         {"id": "GL01-112", "cat": "工程", "item": "CoreWeave、Nebius、WhiteFiber 2025-12-31 期初現金觀測（③）", "decision": "F_funding.csv 新增 F#276–278（公司 Q4／FY2025 財報新聞稿資產負債表）：CoreWeave 3.161（現金 3.127＋有價證券 0.034）、Nebius 3.6781、WhiteFiber 0.1144；Gap cash_obs 自動優先採用（CoreWeave、Nebius）；WhiteFiber 不在 Funding 玩家表，仍讀 In gcash_wyfi（同值）", "date": "2026-11-15", "quote": "Andy 2026-11-15 19:15「合并并发布。照预设」（報告 docs/verify/20261115_v0.3.4_Gap回推低估與Microsoft檢查.md §6 判斷題照預設）", "status": "執行"},
         {"id": "GL01-113", "cat": "判斷", "item": "X2 去重：Nscale→Microsoft 記在出租方、IREN 維持不納入（④）", "decision": "Microsoft 10-Q 未列出租方、未揭露 neocloud 合約分類。IREN：媒體（The Information，經 cloudnews.tech 2026-11-08）指 Microsoft 2026Q3 資本支出少 50 億與 IREN 延遲有關，且融資租賃起租才入資本支出 → 判為 Microsoft 融資租賃、已在甲2 路徑內，維持納入 0。Nscale Texas 240（2026-09）、Narvik 230（2027-12）、Sines 增量 200（2027-09）：查無融資租賃證據 → 納入 0→1，記在出租方 neo；Sens(b) 移除三列；Checks E-W2 排除三列", "date": "2026-11-15", "quote": "Andy 2026-11-15 19:15「合并并发布。照预设」（報告 docs/verify/20261115_v0.3.4_Gap回推低估與Microsoft檢查.md §6 判斷題照預設）", "status": "執行"},
@@ -3462,7 +3483,7 @@ def main():
         ("v0.3.2（2026-11-14）：W-1 七家以外買方路徑（工作單 20261114_Wattonomics_v0.3.2.md）——新雲（其他新雲，不含 CoreWeave、Nebius）與主權的主路徑改由 In T2 納入列推得，取代 mw_neo 2026 輸入與 HUMAIN 等目標列；先扣已公開對七家合約（納入＝0）、未揭露客戶 × 50%（w1_und，0–100%）；Anthropic 經 Fluidstack 租用算七家以外；Crusoe gross × 0.66 換 IT；OEM 只作交叉檢核；④ 的 (b3)(b4) 移入主路徑（r1 X6：Assumed 點值補差額，基準＝MAX（證據, Assumed））；證據比例分子扣 Assumed 部分；coord_cov_done＝1；r1：CoreWeave 2026 年底至少 1.7 GW、Mistral 移 Sens、Lake Mariner／Barber Lake／Abernathy 原文核對、協調緩衝區進公式（Decisions GL01-101 至 106）。新增 Compare I 節、Interface K 節（WIF_W1_*）、Checks E-W1／E-W2、Decisions GL01-93 至 GL01-100。報告 docs/verify/20261114_v0.3.2_build.md。", True),
         ("v0.3.3（2026-11-15）：對帳單 20261115 SpaceX／xAI——In mw_xai 2025 年底改讀 SpaceX 424B4 名目算力 0.8 GW（IT；原 Epoch 308 MW × k_chip2it 1.85＝0.5698）；C113 改 IT；Sources SRC_GL_346；Decisions GL01-108。只改 Wattonomics 一層。", False),
         ("v0.3.4（2026-11-15）：工程修正——In Y9 新雲三家（crwv、nbis、wyfi）改讀新版個股模型 Thesis 資本支出合計（公司口徑）與 CF 營運現金流，期初現金沿用舊值（模型無此列）（舊「各期收支」頁已不存在）；gcap_nbis FY2026–2030 26.046／27.597／29.149／29.149／37.692 → 24.185／31.989／32.962／33.338／31.459。Siliconomics 固定 v0.18（同 v0.3.3）、Tokenomics v21.10 不變。Decisions GL01-109。報告 docs/verify/20261115_v0.3.4_Gap回推低估與Microsoft檢查.md。", False),
-        ("v0.3.5（2026-11-15）：Andy 2026-11-15 19:15「照預設」——① Gap 主讀法改付款年 GW × 每 GW（上線年回推並列）；② OpenAI、Anthropic 營業現金流不加回自有資本支出；③ CoreWeave、Nebius、WhiteFiber 2025-12-31 期初現金觀測（FundRaw F#276–278）；④ Nscale→Microsoft 記在出租方、IREN 維持不納入（Microsoft 融資租賃）；⑤ Microsoft 列承租玩家（基準 0、Sens）；⑥ 11 家 In Y9 全部重取（Meta、Oracle 列位、Anthropic v0_2_2）；⑦ CoreWeave 現金口徑差額備忘。Siliconomics 固定 v0.18、Tokenomics v21.10。Decisions GL01-110 至 GL01-116。報告 docs/verify/20261115_v0.3.5_build.md。", False),
+        ("v0.3.5（2026-11-15）：Andy 2026-11-15 19:15「照預設」——① Gap 主讀法改付款年 AI 資本支出金額（選項 B；選項 A 與上線年回推並列；市場其餘改上線年口徑）；② OpenAI、Anthropic 營業現金流不加回自有資本支出；③ CoreWeave、Nebius、WhiteFiber 2025-12-31 期初現金觀測（FundRaw F#276–278）；④ Nscale→Microsoft 記在出租方、IREN 維持不納入（Microsoft 融資租賃）；⑤ Microsoft 列承租玩家（基準 0、Sens）；⑥ 11 家 In Y9 全部重取（Meta、Oracle 列位、Anthropic v0_2_2）；⑦ CoreWeave 現金口徑差額備忘。Siliconomics 固定 v0.18、Tokenomics v21.10。Decisions GL01-110 至 GL01-116。報告 docs/verify/20261115_v0.3.5_build.md。", False),
         ("v0.3.1（2026-11-14）：三層基準協調規則 v1.1 落地（工作單 20261114_Wattonomics_v0.3.1.md）——Z2 Compare H1 ④ 覆蓋缺口兩讀法（原值 4.81、實績下限 3.03；扣 Oracle 重疊另列；不入基準）；Z3 SIL_In 讀 Siliconomics v0.18、H3 逐年協調狀態（門檻 50%、對帳中）、H4 ④＋W2 調整後比值、F 節 NVIDIA 每 GW 營收區間與指引只作參照（W-3）、H5 五家資本支出與 Siliconomics 顆數並排（W-4）；Z4 新名稱 WIF_Evidence_2026–2030（規則 v1.1 全市場分母；舊 WIF_Coverage 保留）；Checks E-K1。Z1 財報季證據經未參與代理核對：IREN Childress H2–4 延至 2027-01 入基準（T2 擴為 150 MW、M＝1；mw_neo 2026 扣 150、總量不增），Nebius 延遲只追蹤；CoreWeave、Nebius Q1–Q3 實績入證據比例。Decisions GL01-84 至 GL01-92。報告 docs/verify/20261114_v0.3.1_build.md。", True),
         ("顏色：藍字＝輸入；黑字＝公式；綠字＝跨頁或外部鏡像；淡黃底＝關鍵輸出；亮黃底＝待證據或預設待決。", False),
         ("Excel 優先：要改輸入，直接改 In 頁藍字；builder 重建時讀回（--base）。公式頁不要手改。下游只讀 Interface 的 WIF_ 名稱（經快照）。", False),
