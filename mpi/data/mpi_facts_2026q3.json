@@ -219,8 +219,8 @@
    "note": "debt_v"
   },
   {
-   "id": "bs.ltd_cur",
-   "item": "一年內到期長期負債（推得）",
+   "id": "bs.ltd_gap",
+   "item": "資料商 Long-Term Debt 與 MOPS 公司債＋長借的差額（性質未辨識）",
    "value": 28718,
    "unit": "NT$ 千元",
    "period": "2026-09-30",
@@ -228,7 +228,7 @@
    "url": "https://stockanalysis.com/quote/tpex/6223/financials/balance-sheet/",
    "retrieved": "2026-11-15",
    "tag": "[Derived]",
-   "note": "MOPS 摘要表未單列；資料商 Total Debt 10,157＝9,662＋租賃 494.46"
+   "note": "stockanalysis Sep '26 Current Portion 欄為空白；資料商 Total Debt 10,157＝9,662＋租賃 494.46；計入 debt_v（原口徑含一年內到期長期負債，MOPS 摘要未單列）"
   },
   {
    "id": "bs.lease_c",
