@@ -1,4 +1,4 @@
-# spacex/ — SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2.8（命題＋官方營收分部 → 損益表；v0.2.2 Tokenomics 快照 v21.9、v0.2.3 換 v21.10、v0.2.4 只改展示層、v0.2.5 只換現價、v0.2.6 依驗收報告補治理與揭露、v0.2.7 計入 RSU 與選擇權稀釋並統一同業口徑、v0.2.8 版面 v1.3＋Coord 三層協調）
+# spacex/ — SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2.9（命題＋官方營收分部 → 損益表；v0.2.2 Tokenomics 快照 v21.9、v0.2.3 換 v21.10、v0.2.4 只改展示層、v0.2.5 只換現價、v0.2.6 依驗收報告補治理與揭露、v0.2.7 計入 RSU 與選擇權稀釋並統一同業口徑、v0.2.8 版面 v1.3＋Coord 三層協調、v0.2.9 Coord 改讀 Wattonomics v0.3.3）
 
 **命題（一句話）：** SI 分部的算力投入（9M26 SI 資本支出約 400 億美元、名目算力 1.7 GW；Q3 法說：Q4 資本支出 350–400 億、年底 2.5–3 GW）能否由 SI 營收（對外算力出租＋Grok／Cursor／X）回本；Connectivity（Starlink）現金流與 IPO 資金能支撐多久。
 
@@ -8,10 +8,17 @@
 
 **支持現價所需的 k（Recon 第 6 節，`spacex/kreq_v02.py` 整本重算反解；只作對照）：** 三情境 k 由 Q4 26 起長期維持約 **2.88 倍**持有成本（v0.2.6 為 2.79），加權目標價才等於現價 123.62（2026Q3 校準 1.87 倍；公司 2027Q1 營收指引隱含約 4.82 倍）。若 k 仍依基準在 FY2030 收斂到情境值，起始 k0 須約 21.9 倍——收斂路徑下現價無法由起點高價支撐。驗收報告所寫「約 4.8 倍」是指引反解的 k0，不是支持現價所需的 k。**2.88 是目標價＝現價的點，不是評等門檻**：k 只要不收斂、維持 2026Q3 約 1.87 倍，目標價已升到 64.51、離開強力放空——結論承重的是「收斂」本身。
 
+## v0.2.9 改了什麼（2026-11-15；Coord 改讀 Wattonomics v0.3.3；估值數值格 0 差異）
+- **依據：** Wattonomics v0.3.3（PR #581，已合併）吸收對帳單「20261115 SpaceX／xAI 2025 年底算力實績對 Wattonomics」（Drive `02-AI供應鏈/對帳/`，處理後移 `已處理/`）：xai 2025 年底上線 GW 改讀 SpaceX 424B4 揭露的 0.8 GW（Wattonomics In!J113 `mw_xai` 2025＝800 MW，Decisions GL01-108）；`WIF_PlayerGW_YE_xai_2025` 0.5698 → 0.8000、`_2026` 2.1768 → 2.4070，資本支出與個股模型寫回值不變。
+- **快照：** `data/wattonomics_c0_v0.3.3.json`（由 `wattonomics/data/wattonomics_snapshot_v0.3.3.json` 摘同一組名稱與 In 列）；追公式 `data/wattonomics_trace_v0.3.3.json`（main 版 `tools/coord/trace_wattonomics.py wattonomics/model/20261115_Wattonomics_v0.3.3.xlsx … --player xai --year 2026 --manual "mw_xai=公司揭露（…）"`；工具以關鍵字旗標不會自動標 J113，以 `--manual` 補標）。2025 年底路徑改為 F182←F176←F174←In!J113（生效），Epoch 晶片功耗 308 MW × 1.85（F175）變為分支未生效。v0.3.2 兩個 json 移 `data/_待刪除/`。
+- **Coord F2 名目算力（規則 v1.4.2 C0 第 2 點）：** 主讀數改「參考（同源校準）」（公司 0.8 vs 層級 0.8，差 0）；原替代讀數改為「對照（已吸收）」＝v0.3.2 舊層級 Epoch × 1.85＝0.570（+40%，即對帳單原差距）；判定列「無可比實績（層級值吸收公司揭露）」；**對帳中 1 → 0**；無可比實績列 4 → 5。xai 路徑上已無可做獨立 C0 的量，要恢復檢驗力需 Wattonomics 對 xai 改用獨立證據（對帳單第四節 (3)，Wattonomics 待辦）。README 頁 v1.3 重點觀察 5 與 HTML 對帳章同步改寫。
+- **估值不讀層級 GW：** 加權目標價 32.73、強力放空不變；`tools/xlsx_diff.py` 對 v0.2.8：差異只在 Coord（100 格：版本文字、2025／2026 年底 GW、追公式傾印值、F2 名目算力區塊與計數）、README（A1、build_id、重點觀察 5、版本列）、Sources（Wattonomics 快照列）、Recon!E77–E78（`kreq_029.json` 檔名）、Sens!D104（build_id）。Sens 與 `kreq` 檔改名 v029（內容不變；In 頁輸入指紋不變，模型狀態 CURRENT）。
+- **驗證：** `bash spacex/make_v02.sh` 全套（事實總帳、check_v02、in_layout、sens_coverage、segment_check、check_company_html、check_governance）、`tools/company_html/check_layout_v13.py --xlsx`（警告與 v0.2.8 相同）、`tools/baseline_coordination/check.py`（0 項不符）全過。v0.2.8 成品移 `dist/_待刪除/`。
+
 ## v0.2.8 改了什麼（2026-11-15；版面 v1.3＋三層協調；數值格 0 差異）
 - **依據：** 工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`（Alphabet v0.3.9 為版面樣板、Oracle 為資金觀點樣板）、`docs/plan/三層基準協調規則.md` v1.4.2 C0 第 2 點、`tools/coord/README.md`、`docs/plan/個股HTML版面規格.md` v1.3。後處理在 `v028_post.py`（只新增、不改既有格），HTML 在 `gen_html_json.py` 的 `_v13()`。
 - **版面：** 章節順序＝命題→估值→敏感度→反向 DCF→損益→驅動因子→資金（個別模組）→對帳→資料狀態；估值章第一塊為四個目標價與現價圖，敏感度章前兩塊為加權目標價相對基準龍捲風圖（低案、高案；標籤白話，`TOR_PLAIN`）。PL 頁末新增標準損益表（FY2023A–FY2025A 取 424B4、FY2026E–FY2032E 情境 B、9M26A；GAAP；營業成本與營業費用在預測期按 9M26A 成本占比分攤〔Assumed，不影響營業利益以下〕）。新增 RevDCF 頁（現價隱含：營收規模約 6 倍、企業價值約 7 倍；WACC 反解下界放寬到永續成長率＋0.01 個百分點後有解，3.48%，幾乎等於永續成長率 3%，不具經濟意義；模型 11.4%）。收支關卡與情境 B 現金流移到「資金」模組並加圖。
-- **Coord 頁（新）：** F1 讀取層級（Tokenomics v21.10；Wattonomics 不進模型）；F1b 追公式（`tools/coord/trace_wattonomics.py`，main 版，玩家碼 **xai**；傾印存 `data/wattonomics_trace_v0.3.2.json`）；F2 C0（實績）。
+- **Coord 頁（新）：** F1 讀取層級（Tokenomics v21.10；Wattonomics 不進模型）；F1b 追公式（`tools/coord/trace_wattonomics.py`，main 版，玩家碼 **xai**；傾印存 `data/wattonomics_trace_v0.3.2.json`，v0.2.9 起 v0.3.3）；F2 C0（實績）。
 - **追公式結論：** Wattonomics xai 的 2026 年資本支出與新增 GW、2025 年資本支出值都由本模型 v0.2.1 寫回值（In!K215、K216、L215、M215）換算＝同源（寫回值與 v0.2.8 的 CF 頁 FY2026E 相同，無過期差）；只有 2025 年底上線 GW 0.570（Epoch 晶片功耗 308 MW × 1.85）與公司揭露獨立。工具旗標以關鍵字判斷會漏「目標」，人工補標 mw_xai、tgt_xai_27 為公司目標。
 - **C0（實績）結果：** 名目算力 2025-12-31 公司 0.8 GW（424B4，IT 口徑，Interested-party KPI）vs 層級 0.570 GW：主讀數 +40%、替代讀數（存量無時差，改用係數區間上緣 0.641；差距最小、最保守的讀法）+25% → **對帳中 1 項**；公司值取捨入下限 0.75 時為 +32%、+17%，判定不變；兩側皆 IT 口徑，換算係數需 2.60（> Epoch 設施係數 2.5）才補足，差距主要來自範圍（含 Colossus II）或 Epoch 時點（估值不讀層級 GW，不觸發兩讀數目標價；對帳單由主控開）。SI 資本支出 9M26 39.995 vs 層級 CY2026 × 9/12 的 −35%、Q3 × 4 的 −20%：層級值同源，標「參考（同源校準）／無可比實績（層級值同源）」，不計入。2026 年底算力、客戶別出租無可比實績；SpaceXAI 每月 1.25 × 36＝45 為既定基準（Andy 11-04「依建議」），S-1 月費路徑（滿載每月約 3.1、上限 120.5、2027Q1 後可 90 天通知取消）只並列，公司 Backlog 62.959 為總額。不做兩讀數目標價（非硬體股）。
 - **驗證：** `tools/xlsx_diff.py` 與逐格比對：既有格只差版本與 build_id 文字、`kreq_028.json` 檔名；加權目標價 32.73、評等強力放空不變。`check_company_html`、`check_layout_v13 --xlsx`、`tools/baseline_coordination/check.py`、`check_governance` 全過。Sens 與 `kreq` 檔改名為 v028（內容不變）。舊成品移 `dist/_待刪除/`。
