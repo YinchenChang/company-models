@@ -1,0 +1,213 @@
+{
+ "_readme": "金像電（2368.TW）事實總帳（v0.3.5 滾入 3Q26，2026-11-15 擷取）。金額十億新台幣（NT$B），EPS 新台幣，股數十億股。標記：Verified＝公司財報、公開資訊觀測站重大訊息（經轉載）、資料商轉載之財報科目；Interested-party＝券商、媒體整理之公司說法或估計；Derived＝由上列數字計算。模型只讀本檔已登錄的數字；抓不到者寫「未取得」，不臆造。　資產負債表與 3Q26 單季損益以 MOPS t164sb03／t164sb04 為主要出處（優先於富邦、鉅亨轉載）。",
+ "sources": {
+  "MOPS_3Q": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季 1–9 月累計（主 session 2026-11-15 直接確認）https://mops.twse.com.tw/mops/#/web/t164sb04 ；交叉核對：2026-11-10 重大訊息經 Yahoo 股市轉載 https://tw.stock.yahoo.com/news/%E5%85%AC%E5%91%8A-%E9%87%91%E5%83%8F%E9%9B%BB%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E115%E5%B9%B4%E5%BA%A6%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-083946475.html",
+  "CNYES_3Q": "鉅亨網 2026-11-11〈金像電前3季EPS 28.41元居PCB廠之冠〉https://news.cnyes.com/news/id/6658248",
+  "YAHOO_3Q": "Yahoo 股市 2026-11-14〈亞馬遜入股加持！PCB大廠…Q3 EPS 達12元〉https://tw.stock.yahoo.com/news/%E4%BA%9E%E9%A6%AC%E9%81%9C%E5%85%A5%E8%82%A1%E5%8A%A0%E6%8C%81-pcb%E5%A4%A7%E5%BB%A0-%E9%80%B1%E6%8B%892%E6%A0%B9%E6%BC%B2%E5%81%9C%E5%99%B426-7-q3%E7%8D%B2%E5%88%A9%E7%88%86%E6%BC%B297%E5%80%8Deps%E9%81%9412%E5%85%83-085000652.html",
+  "FUBON_BS": "富邦 e 點通 金像電資產負債表季表（合併，百萬元；2026.3Q 欄；2026-11-15 讀取）https://fubon-ebrokerdj.fbs.com.tw/z/zc/zcp/zcpa/zcpa_2368.djhtm",
+  "UA_3Q": "優分析 2026-11-12〈金像電(2368) 漲價轉嫁原物料成本！第 3 季毛利率 38.7%，AI 伺服器占營收過半〉https://uanalyze.com.tw/articles/3656959361",
+  "STORM_3Q": "風傳媒 2026-11-13〈PCB獲利王出爐！前三季EPS 28.41元〉https://www.storm.mg/article/11181230",
+  "UA_1H": "優分析 2026-08-11（1H26 營收 435.92 億、淨利 82.67 億、EPS 16.14；模型 v0.3.4 已登錄）https://uanalyze.com.tw/articles/7465753217",
+  "TN_OCT": "TechNews 2026-11-06（10 月營收 99.13 億、前 10 月 832.92 億；模型 v0.3.4 已登錄）https://finance.technews.tw/2026/11/06/gce-2368-202610-financial-report/",
+  "MOPS_BS": "公開資訊觀測站 t164sb03 合併資產負債表 115/09/30（千元；companyId 2368、115 年第 3 季；主 session 以內建瀏覽器讀 MOPS API，2026-11-15）https://mops.twse.com.tw/mops/#/web/t164sb03",
+  "MOPS_IS": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季（千元；同上）https://mops.twse.com.tw/mops/#/web/t164sb04"
+ },
+ "items": [
+  {
+   "id": "ytd3q.rev",
+   "v": 73.159351,
+   "tag": "Verified",
+   "src": "MOPS_3Q",
+   "note": "營業收入 1–9 月累計 73,159,351 仟元"
+  },
+  {
+   "id": "ytd3q.gp",
+   "v": 26.578313,
+   "tag": "Verified",
+   "src": "MOPS_3Q",
+   "note": "營業毛利 1–9 月累計 26,578,313 仟元（毛利率 36.33%）"
+  },
+  {
+   "id": "ytd3q.oi",
+   "v": 20.355271,
+   "tag": "Verified",
+   "src": "MOPS_3Q",
+   "note": "營業利益 1–9 月累計 20,355,271 仟元"
+  },
+  {
+   "id": "ytd3q.pbt",
+   "v": 19.902223,
+   "tag": "Verified",
+   "src": "MOPS_3Q",
+   "note": "稅前淨利 1–9 月累計 19,902,223 仟元"
+  },
+  {
+   "id": "ytd3q.ni",
+   "v": 14.652778,
+   "tag": "Verified",
+   "src": "MOPS_3Q",
+   "note": "歸屬母公司業主淨利 1–9 月累計 14,652,778 仟元（本期淨利同值，無非控制權益）"
+  },
+  {
+   "id": "ytd3q.eps",
+   "v": 28.41,
+   "tag": "Verified",
+   "src": "MOPS_3Q",
+   "note": "基本每股盈餘 1–9 月累計 28.41 元"
+  },
+  {
+   "id": "bs0930.assets",
+   "v": 111.105361,
+   "tag": "Verified",
+   "src": "MOPS_3Q",
+   "note": "期末總資產 111,105,361 仟元（富邦季表 111,105 百萬同值）"
+  },
+  {
+   "id": "bs0930.liab",
+   "v": 57.694798,
+   "tag": "Verified",
+   "src": "MOPS_3Q",
+   "note": "期末總負債 57,694,798 仟元"
+  },
+  {
+   "id": "bs0930.equity",
+   "v": 53.410563,
+   "tag": "Verified",
+   "src": "MOPS_3Q",
+   "note": "期末歸屬母公司權益 53,410,563 仟元"
+  },
+  {
+   "id": "q4.gm_gs",
+   "v": 0.392,
+   "tag": "Interested-party",
+   "src": "STORM_3Q",
+   "note": "高盛估 4Q26 毛利率 39.2%；高盛稱 3Q 營業利益比其預估低 5%、比彭博共識高 3%；只列參考"
+  },
+  {
+   "id": "earnings_call_3q26",
+   "v": "未取得",
+   "tag": "Interested-party",
+   "src": "UA_3Q",
+   "note": "3Q26 法說會內容截至 2026-11-15 未見報導（2025 年同季法說為 11-28）；優分析稱既有客戶新 AI 伺服器產品 2027 年量產，無數字"
+  },
+  {
+   "id": "q3.rev",
+   "v": 29.567267,
+   "tag": "Verified",
+   "src": "MOPS_IS",
+   "note": "營業收入 29,567,267 千元（鉅亨 295.67 億同值）"
+  },
+  {
+   "id": "q3.gp",
+   "v": 11.442704,
+   "tag": "Verified",
+   "src": "MOPS_IS",
+   "note": "營業毛利 11,442,704 千元（38.70%）"
+  },
+  {
+   "id": "q3.opex",
+   "v": 2.762863,
+   "tag": "Verified",
+   "src": "MOPS_IS",
+   "note": "推銷 1,483,029＋管理 743,392＋研發 538,173＋預期信用減損 −1,731"
+  },
+  {
+   "id": "q3.oi",
+   "v": 8.75305,
+   "tag": "Verified",
+   "src": "MOPS_IS",
+   "note": "營業利益 8,753,050 千元（含其他收益及費損淨額 73,209）"
+  },
+  {
+   "id": "q3.nop",
+   "v": -0.23793,
+   "tag": "Verified",
+   "src": "MOPS_IS",
+   "note": "營業外 −237,930（利息收入 140,672、其他收入 18,737、其他利益及損失 −340,122、財務成本 57,217）"
+  },
+  {
+   "id": "q3.pbt",
+   "v": 8.51512,
+   "tag": "Verified",
+   "src": "MOPS_IS",
+   "note": "稅前 8,515,120；所得稅 2,129,381"
+  },
+  {
+   "id": "q3.ni",
+   "v": 6.385739,
+   "tag": "Verified",
+   "src": "MOPS_IS",
+   "note": "淨利（全歸母）6,385,739 千元"
+  },
+  {
+   "id": "q3.eps",
+   "v": 12.18,
+   "tag": "Verified",
+   "src": "MOPS_IS",
+   "note": "基本、稀釋 EPS 12.18（鉅亨報 12.24，以 MOPS 為準）"
+  },
+  {
+   "id": "bs0930.cash",
+   "v": 22.998984,
+   "tag": "Verified",
+   "src": "MOPS_BS",
+   "note": "現金及約當現金 22,998,984 千元"
+  },
+  {
+   "id": "bs0930.stfa",
+   "v": 0.04651,
+   "tag": "Verified",
+   "src": "MOPS_BS",
+   "note": "FVTPL 流動 1,634＋攤銷後成本流動 44,876"
+  },
+  {
+   "id": "bs0930.ltinv",
+   "v": 0.31334,
+   "tag": "Verified",
+   "src": "MOPS_BS",
+   "note": "FVTPL 非流動 260,040＋攤銷後成本非流動 53,300"
+  },
+  {
+   "id": "bs0930.stdebt",
+   "v": 5.743993,
+   "tag": "Verified",
+   "src": "MOPS_BS",
+   "note": "短期借款 5,743,993；應付短期票券 0"
+  },
+  {
+   "id": "bs0930.ltdebt",
+   "v": 7.203198,
+   "tag": "Verified",
+   "src": "MOPS_BS",
+   "note": "長期借款 7,203,198"
+  },
+  {
+   "id": "bs0930.bonds",
+   "v": 0.0,
+   "tag": "Verified",
+   "src": "MOPS_BS",
+   "note": "應付公司債 0（114/12/31 為 8,126,234，2026 年轉換；資本公積 7,638,945 → 17,271,048）"
+  },
+  {
+   "id": "bs0930.cpltd",
+   "v": 0.23,
+   "tag": "Verified",
+   "src": "FUBON_BS",
+   "note": "一年內到期長期負債 230 百萬元（富邦季表）；MOPS t164sb03 摘要未單列，含在「其他流動負債」2,779,304 千元內；計入借款（借款合計 131.77 億）；與 2026-06-30 值 2.2915 億相近，待完整財報附註確認"
+  },
+  {
+   "id": "bs0930.lease",
+   "v": 0.537141,
+   "tag": "Verified",
+   "src": "MOPS_BS",
+   "note": "租賃負債 流動 54,894＋非流動 482,247"
+  },
+  {
+   "id": "bs0930.shares",
+   "v": 0.527302,
+   "tag": "Derived",
+   "src": "MOPS_BS",
+   "note": "普通股股本 5,247,893 ÷ 10＝524.79 百萬股＋預收股本 76,620 千元約當 7,661,999 股 − 庫藏股 5,151,375 股＝527.30 百萬股"
+  }
+ ]
+}
