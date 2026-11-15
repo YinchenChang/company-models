@@ -12,7 +12,8 @@ import hashlib, json, os, re
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
-VER, BUILT = "0.4.5", "2026-11-15"
+VER, BUILT = "0.4.5", "2026-11-15"   # 「v0.4.5 新增」標籤用；現行版號見 NEWVER
+NEWVER = "0.4.6"   # v0.4.6（2026-11-15）：3Q26 財報滾入、資產負債表日 2026-09-30（README A1 版號由 build_accton.py 末段改）
 BOLD = Font(bold=True); BLUE = Font(color="0000FF"); HDR = PatternFill("solid", fgColor="DDEBF7")
 SP = ("S&P Global Market Intelligence 經 stockanalysis.com 損益表頁（https://stockanalysis.com/quote/tpe/2345/financials/income-statement/；2026-11-15 讀取，頁面更新 2026-08-10；"
       "百萬元新台幣，此處換算為十億元；智邦未除權，股數與 EPS 不需還原）")
@@ -60,6 +61,10 @@ K = dict(
         ("淨利 ÷ 營業利益（0.75 ～ 0.84）", "nio_f=lo", "nio_f=hi", "淨利係數"),
     ],
 )
+
+
+VER46 = ("v0.4.6（2026-11-15）：滾入 3Q26 財報（公開資訊觀測站 t164sb04）：FY2026 錨點改為 1–3Q26 財報實績＋4Q26 假設（4Q 假設不改）；"
+         "DCF 資產負債表日 2026-06-30 → 09-30（t164sb03；借款含一年內到期長期借款、2026-07 已發放股利不再扣）；評價用股數改 9-30 股本 ÷ 面額 − 庫藏股。")
 
 
 def lit(t):   # Excel 公式字串常數上限 255 字元：切段以 & 相接
@@ -533,7 +538,7 @@ def readme13(wb, SIL, PLA, RVA, coord_rows):
                    "FY2027 為 "), f'TEXT(PL!E{pr("AI 交換器營收")},"#,##0")', T(" 十億元。網路應用產品（Trainium 加速卡等）＝Trainium 顆數 × 每顆營收（FY2026 校準）× 相對值；FY2027 為 "),
                  f'TEXT(PL!E{pr("網路應用產品營收")},"#,##0")', T(" 十億元。非 AI 由 FY2026 錨點乘成長率；FY2027 為 "), f'TEXT(PL!E{pr("非 AI 營收")},"#,##0")',
                  T(" 十億元。三者相加＝合併營收 "), f'TEXT(PL!E{PLA["R"]["rev"]},"#,##0")', T(" 十億元。")))
-    put("ver", F(T("v0.4.5（2026-11-15）：版面規格 v1.3 全面改版（章節順序、橫幅 ≤200 字、重點觀察 ≤5 點、標準損益表 FY2023A–FY2031E、反向 DCF 頁、四個目標價與現價圖、敏感度改加權目標價相對基準低案／高案主圖）；"
+    put("ver", F(T(VER46 + "v0.4.5（2026-11-15）：版面規格 v1.3 全面改版（章節順序、橫幅 ≤200 字、重點觀察 ≤5 點、標準損益表 FY2023A–FY2031E、反向 DCF 頁、四個目標價與現價圖、敏感度改加權目標價相對基準低案／高案主圖）；"
                  "三層協調：Coord 頁並列兩讀數目標價，並新增 C0（實績）：2026 年 1–10 月月營收對層級隱含值，列兩讀數但不判定（層級份額與每顆營收由本模型錨點校準，無可比實績）；同源列標「讀取層級（同源，不判定）」。"
                  "xlsx 只新增 Hist、RevDCF、Coord 頁與各頁末新增區塊，既有數值、加權目標價與投資建議不變。"
                  "舊 README 內文（下方各節）與 v0.4.4 沿革節的數字早於 Siliconomics v0.19 全下游重建，與現行不符；現行值以 Val 頁與本展示層為準。")))
@@ -572,8 +577,8 @@ def c0_actuals(wb, C, r, lay):
     r += 1
     C.cell(r, 1, ("為什麼不判定：智邦的白牌有效份額（＝AI 交換器營收 ÷ 匯率 ÷ 白牌市場）與每顆 Trainium 營收都由本模型 FY2026 錨點反推，非 AI 營收也來自本模型，所以層級全年隱含值恆等於錨點營收（見下方核對列），"
                   "市場層的交換器市場、Trainium 顆數與匯率在比式中消去；本表不檢驗市場層，也不得讀成層級獲得獨立驗證。"
-                  "本表實際檢驗的是錨點：(a) 1–10 月累計占錨點全年的比例；(b) 錨點隱含 11–12 月月均營收對 10 月實績；(c) 3Q26 營收實績與錨點 3Q 營收輸入（同一數字，應為 0）。"
-                  "3Q26 財報（毛利率、淨利、EPS）截至建置日未取得（查無公開來源），待公布後補 (c) 的獲利比對。"))
+                  "本表實際檢驗的是錨點：(a) 1–10 月累計占錨點全年的比例；(b) 錨點隱含 11–12 月月均營收對 10 月實績；(c) 3Q26 月營收合計與財報單季營收（公開資訊觀測站 t164sb04，應為 0）。"
+                  "v0.4.6 起 3Q26 財報獲利（毛利、營業利益、淨利、EPS）已滾入錨點（Q 頁）；層級沒有獲利量，不比對。"))
     r += 1
     for j, h in enumerate(["項目", "主讀數（1–10 月累計）", "第二讀數（3Q26 × 4）", "單位與口徑", "來源與證據等級", "出處網址（只在 xlsx）"], 1):
         c = C.cell(r, j, h); c.font = BOLD; c.fill = HDR
@@ -597,7 +602,7 @@ def c0_actuals(wb, C, r, lay):
     C.cell(r, 1, "　核對：1–10 月合計 − 公司公布前 10 月累計 331.065（3,310.65 億元）"); C[f"B{r}"] = f"=B{cum}-331.065"; C[f"B{r}"].number_format = "0.000"
     C.cell(r, 4, "NT$B；應約為 0（容許 ±0.01）"); C.cell(r, 5, "核對列（出處：TechNews 10 月營收報導）"); C.cell(r, 6, TN10); ck3 = r; r += 1
     C.cell(r, 1, "　核對：3Q26 合計 − 3Q26 營收輸入（In 頁 3Q 營收）"); C[f"B{r}"] = f"=B{q3}-q3_rev"; C[f"B{r}"].number_format = "0.000"
-    C.cell(r, 4, "NT$B；應約為 0（In 頁取 120.74）"); C.cell(r, 5, "核對列"); ck4 = r; r += 1
+    C.cell(r, 4, "NT$B；應約為 0（In 頁 q3_rev＝公開資訊觀測站 t164sb04 3Q26 營業收入 120,743,710 千元）"); C.cell(r, 5, "核對列"); ck4 = r; r += 1
     out["cum"], out["q3"] = cum, q3
     C.cell(r, 1, "4.2 口徑換算參數（本表比合併營收，不需換算比例；以下為參考）").font = BOLD; r += 1
     C.cell(r, 1, "　參考：本模型 FY2026 錨點的 AI（交換器＋網路應用產品）占營收"); C[f"B{r}"] = f"=PL!D{lay['aish']}"; C[f"B{r}"].number_format = "0.0%"
@@ -639,10 +644,10 @@ def c0_actuals(wb, C, r, lay):
     C.cell(r, 1, "　實際檢驗 (a)：1–10 月累計 ÷ 本模型 FY2026 營收錨點（Q 頁）"); C[f"B{r}"] = f"=B{cum}/a26_rev"; C[f"B{r}"].number_format = "0.0%"
     C.cell(r, 4, "NT$B 比；錨點全年中已實現的比例（10 個月線性＝83.3%）"); C.cell(r, 5, "Derived"); out["ref_a"] = r; r += 1
     C.cell(r, 1, "　實際檢驗 (b)：錨點隱含 11–12 月月均營收 ÷ 10 月實績 − 1"); C[f"B{r}"] = f"=(a26_rev-B{cum})/2/B{m1}-1"; C[f"B{r}"].number_format = "+0.0%;-0.0%"
-    C.cell(r, 4, "NT$B 比；錨點＝1Q–2Q 實績＋3Q 營收實績＋4Q 假設（4Q 營收＝3Q ×（1＋季增 3%））；負值＝錨點假設 11–12 月低於 10 月實績")
+    C.cell(r, 4, "NT$B 比；錨點＝1Q–3Q 財報實績＋4Q 假設（4Q 營收＝3Q ×（1＋季增 3%））；負值＝錨點假設 11–12 月低於 10 月實績")
     C.cell(r, 5, "Derived"); out["ref_b"] = r; r += 1
-    C.cell(r, 1, "　實際檢驗 (c)：3Q26 營收實績（月營收合計）− 錨點 3Q 營收輸入（NT$B）"); C[f"B{r}"] = f"=B{q3}-Q!E4"; C[f"B{r}"].number_format = "+0.000;-0.000"
-    C.cell(r, 4, "NT$B；錨點 3Q 營收即月營收合計（同一數字）；3Q 獲利實績待財報公布"); C.cell(r, 5, "Derived"); out["ref_c"] = r; r += 1
+    C.cell(r, 1, "　實際檢驗 (c)：3Q26 月營收合計 − 錨點 3Q 營收（財報單季，Q 頁；NT$B）"); C[f"B{r}"] = f"=B{q3}-Q!E4"; C[f"B{r}"].number_format = "+0.000;-0.000"
+    C.cell(r, 4, "NT$B；月營收自結數與財報單季營收同值；3Q 獲利實績已滾入錨點（v0.4.6）"); C.cell(r, 5, "Derived"); out["ref_c"] = r; r += 1
     out["ck"] = (ck1, ck2, ck3, ck4); out["end"] = r
     C.column_dimensions["A"].width = max(C.column_dimensions["A"].width or 0, 60)
     return out
@@ -769,6 +774,10 @@ def apply(wb, SIL, here, coord_rows):
     SO.cell(rs, 2, TN10)
     SO.cell(rs + 1, 1, "[Verified／第三方彙整] 智邦損益表歷史 FY2022–FY2025（Hist 頁；S&P Global Market Intelligence 經 stockanalysis.com，2026-08-10 更新）")
     SO.cell(rs + 1, 2, "https://stockanalysis.com/quote/tpe/2345/financials/income-statement/")
-    SO.cell(rs + 2, 1, "待補（人工）：3Q26 財報（毛利率、營業利益、淨利、EPS）與法說產品別比例——截至 2026-11-15 建置日未取得公開來源；公布後補 C0〔實績〕(c) 的獲利比對與 FY2026 錨點")
+    SO.cell(rs + 2, 1, "[Verified] v0.4.6 主要出處：公開資訊觀測站 t164sb03 合併資產負債表 115/09/30、t164sb04 合併綜合損益表 115 年第 3 季（千元；companyId 2345；2026-11-15 讀取）——3Q26 單季損益、1–3Q 累計、資產負債表科目；逐筆見 accton/data/accton_facts_20261115.json")
+    SO.cell(rs + 2, 2, "https://mops.twse.com.tw/mops/#/web/t164sb03")
+    SO.cell(rs + 3, 1, "[Verified／資料商轉載財報科目] 一年內到期長期借款 2026-09-30 480,000 千元（MOPS 摘要未單列；財報狗季表）")
+    SO.cell(rs + 3, 2, "https://statementdog.com/analysis/2345/liabilities-and-equity")
+    SO.cell(rs + 4, 1, "待補（人工）：3Q26 法說產品別比例與 4Q26 指引——截至 2026-11-15 未取得")
     wb._v045 = dict(HR=HR, PL=PLA, RV=RVA, VG=VG, ST=ST, C0=C0, RM=RMA)
     return f"v045_post：Hist {len(HR)} 列；PL 標準損益表 {PLA['start']} 起；RevDCF；Val 0.7；Sens 主圖表 {ST}；README v1.3 {len(RMA)} 列；C0 {'有' if C0 else '無（無 Coord 頁）'}"
