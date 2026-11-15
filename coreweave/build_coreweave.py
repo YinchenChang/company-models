@@ -1317,6 +1317,16 @@ WATFILE = WAT["source"]["file"]
 WROWC = {x.get("id"): x for x in WAT["rows"] if x.get("id")}
 assert WROWC["mw_crwv"]["values"][3] == 1850 and WROWC["mw_crwv"]["values"][7] == 8000, "Wattonomics mw_crwv 與 In 頁 wat26／wat30 手填值不同"
 TRF = "coreweave/data/wattonomics_trace_v0.3.5.json"
+TRJ = json.load(open(os.path.join(HERE, "data", "wattonomics_trace_v0.3.5.json"), encoding="utf-8"))
+TRV = {x["cell"]: x["value"] for x in TRJ["rows"]}
+assert abs(TRV["Gap!G336"] + TRV["Gap!G337"] + TRV["Gap!G338"] - WN["WIF_Gap_Player_crwv_2026_CapexAIOnline"]) < 1e-9, "追公式組成與快照 CapexAIOnline 不符"
+def FXS(*parts):
+    """公式組字：字串常值切成 ≤100 字的片段（Excel 單一常值上限 255），tuple 為儲存格運算式。"""
+    out = []
+    for p_ in parts:
+        if isinstance(p_, tuple): out.append(p_[0])
+        else: out += ['"' + p_[i:i + 100] + '"' for i in range(0, len(p_), 100)]
+    return "=" + "&".join(out)
 CD = wb.create_sheet("Coord")
 CD.column_dimensions["A"].width = 52
 for c_, w_ in zip("BCDEFGHIJK", (30, 14, 16, 18, 12, 22, 70, 18, 70, 22)):
@@ -1397,15 +1407,19 @@ r_lhe = c0row("層級：在役世代加權每 MW 年持有成本 FY2026（Tokeno
 r_lrev = c0row("持有成本隱含營收 CY2026（玩家 GW 年平均 × 加權每 MW 年持有成本）", "CY2026", "US$B", f"=(D{r_l25}+D{r_l26})/2*D{r_lhe}", "#,##0.000", "", "", "＝（YE2025＋YE2026）÷ 2 × 每 MW 年持有成本；GW × US$M／MW 單位相乘即 US$B；GW 量部分讀公司實績（消去），層級側不含計費比例與定價倍數 k", "Derived（GW 量部分同源）")
 r_lcx = c0row("層級：玩家資本支出 CY2026，上線年回推（WIF_Gap_Player_crwv_2026_CapexAIOnline）", "CY2026", "US$B", WN["WIF_Gap_Player_crwv_2026_CapexAIOnline"], "#,##0.000", "", "", f"{LAYSRC} 名稱 WIF_Gap_Player_crwv_2026_CapexAIOnline（上線年新增 GW × Tokenomics 每 GW 資本支出；＝v0.3.4 以前的 Gap 主讀法，v0.3.2 名稱 CapexAIGW 29.970。v0.3.5 起 CapexAIGW 改為付款年實際花費＝gcap_crwv × 0.85＝" + f"{WN['WIF_Gap_Player_crwv_2026_CapexAIGW']:.3f}" + "，即本公司模型回寫值，同源，不用於判定；也不讀 CapexAIModel）", "Derived（GW 量部分同源）", blue=True)
 r_lad = c0row("層級：玩家新增 GW 2026（WIF_Gap_Player_crwv_2026_AddGW）", "CY2026", "GW", WN["WIF_Gap_Player_crwv_2026_AddGW"], "0.000", "", "", f"{LAYSRC} 名稱 WIF_Gap_Player_crwv_2026_AddGW（＝YE2026 − YE2025）", "Derived（同源）", blue=True)
-r_lpg = c0row("層級：每 GW 資本支出（CapexAIOnline ÷ AddGW）", "CY2026", "US$B／GW", f"=D{r_lcx}/D{r_lad}", "#,##0.00", "", "", "Tokenomics 每 GW 資本支出經 Wattonomics 換算；GW 量在分子分母消去，剩下單位成本", "Derived")
+r_lpg = c0row("層級：每 GW 資本支出（CapexAIOnline ÷ AddGW）", "CY2026", "US$B／GW", f"=D{r_lcx}/D{r_lad}", "#,##0.00", "", "", "Tokenomics 每 GW 資本支出經 Wattonomics 換算（說明於本列 J 欄，建置末段以公式組字）", "Derived")
+r_o0 = c0row("層級：上線年回推組成 0（2026 年新增 GW × 2026 年每 GW 設備與機房；Gap 頁 G336）", "CY2026", "US$B", TRV["Gap!G336"], "#,##0.000", "", "", f"{LAYSRC} Gap!G336＝G323 × (G324＋D6 × G325)；追公式 {TRF}（2026 年新增 GW 讀公司實績下限，GW 量消去）", "Derived（GW 量部分同源）", blue=True)
+r_o12 = c0row("層級：上線年回推組成 1＋2（2027、2028 年新增 GW 的機房提前支出；Gap 頁 G337＋G338）", "CY2026", "US$B", TRV["Gap!G337"] + TRV["Gap!G338"], "#,##0.000", "", "", f"{LAYSRC} Gap!G337＝E6 × H323 × H325、G338＝F6 × I323 × I325；2027、2028 年新增 GW 由 In 頁 gcap_crwv（本公司模型回寫）推得，同源；追公式 {TRF}", "同源（個股模型回寫）", blue=True)
+r_lpg0 = c0row("層級：純 2026 年每 GW 單位成本（組成 0 ÷ AddGW；排除同源的提前支出）", "CY2026", "US$B／GW", f"=D{r_o0}/D{r_lad}", "#,##0.00", "", "", "只含 2026 年新增 GW 的 Tokenomics 設備與機房單位成本；GW 量在分子分母消去", "Derived")
 r_apg = c0row("公司：2026 年前三季淨增在役 GW（2026-09-30 實績 − 層級 YE2025）", "2026-01～2026-09", "GW", f"=(D{r_mw}-D{r_l25}*1000)/1000", "0.000", "1,700 MW（新聞稿，Interested-party）減 2025 年底 850 MW（Verified）", "Interested-party／Verified")
-CD.cell(rc, 1, "Wattonomics 快照核對（上列藍字常數取自此檔）"); CD.cell(rc, 2, f"{WATFILE}（快照 coreweave 讀 wattonomics/data/wattonomics_snapshot_{WATV}.json）"); CD.cell(rc, 8, f"xlsx sha256 {WAT['source']['sha256']}（快照 source 欄）；建置時逐名核對 WIF_PlayerGW_YE_crwv_2025／2026、WIF_Gap_Player_crwv_2026_CapexAIGW／AddGW 取自該 JSON，不手寫"); r_sha = rc; rc += 1
+CD.cell(rc, 1, "Wattonomics 快照核對（上列藍字常數取自此檔）"); CD.cell(rc, 2, f"{WATFILE}（快照 coreweave 讀 wattonomics/data/wattonomics_snapshot_{WATV}.json）"); CD.cell(rc, 8, f"xlsx sha256 {WAT['source']['sha256']}（快照 source 欄）；建置時逐名核對 WIF_PlayerGW_YE_crwv_2025／2026、WIF_Gap_Player_crwv_2026_CapexAIOnline（主讀）／CapexAIGW（參考）／AddGW 取自該 JSON；上線年回推組成 Gap!G336–G338 取自追公式輸出 " + TRF + "，並核對三項合計＝CapexAIOnline，不手寫"); r_sha = rc; rc += 1
 # 讀數
 r_m1 = reading("營收｜主讀數：已公布期間累計 vs 持有成本隱含 CY2026 × 已公布月數 ÷ 12", "2026-01～2026-09 累計", "US$B", f"=D{r_rev9}", f"=D{r_lrev}*D{r_mo}/12", "#,##0.000", "前三季累計營收（10-Q／新聞稿）", "Verified", "持有成本隱含營收 × 9 ÷ 12（線性時差近似）", "Derived（部分同源）")
 r_m2 = reading("營收｜第二讀數：最近一季（Q3）× 4 vs 持有成本隱含 CY2026", "2026-07～2026-09 年化", "US$B", f"=D{r_revq}*4", f"=D{r_lrev}", "#,##0.000", "Q3 營收 × 4（Q3 中點 8 月中）", "Verified／Derived", "持有成本隱含營收（全年）", "Derived（部分同源）")
 r_j1 = judge("營收（部分同源：GW 量讀公司實績；實際檢驗每 MW 收入對持有成本）：C0（實績）判定", r_m1, r_m2)
 r_c1 = reading("資本支出｜主讀數：公司口徑每 GW（總 PP&E 增量 ÷ 淨增在役 GW）vs 層級每 GW 資本支出", "2026-01～2026-09", "US$B／GW", f"=D{r_ppd}/D{r_apg}", f"=D{r_lpg}", "#,##0.00", "總 PP&E 增量（10-Q 推得，Verified）÷ 淨增在役 GW（Interested-party／Verified）", "Verified（10-Q 推得）", "層級每 GW 資本支出（Tokenomics 單位成本）", "Derived")
 r_c2 = reading("資本支出｜口徑下界（不進判定）：現金口徑每 GW vs 層級每 GW 資本支出", "2026-01～2026-09（現金購置）", "US$B／GW", f"=D{r_cx9}/D{r_apg}", f"=D{r_lpg}", "#,##0.00", "前三季現金購置 PP&E（不含應付設備款與 OEM 融資）÷ 淨增在役 GW", "Verified", "同上", "Derived", status="參考（口徑下界，不判定）")
+r_c3 = reading("資本支出｜參考（不進判定）：公司口徑每 GW vs 純 2026 年每 GW 單位成本（排除 2027、2028 年 GW 的提前支出）", "2026-01～2026-09", "US$B／GW", f"=D{r_ppd}/D{r_apg}", f"=D{r_lpg0}", "#,##0.00", "同主讀數", "Verified（10-Q 推得）", "層級組成 0 ÷ AddGW（不含部分同源的組成 1、2）", "Derived", status="參考（不判定）")
 CD.cell(rc, 1, "資本支出（部分同源：GW 量消去；實際檢驗每 GW 資本支出）：C0（實績）判定").font = BOLD; CD.cell(rc, 2, "主讀數差距超過門檻＝對帳中；現金口徑列不進判定")
 CD.cell(rc, 7, f'=IF(ABS(F{r_c1})>{TOLC},"對帳中","一致")'); r_j2 = rc; rc += 1
 r_w1 = reading("在役電力｜讀數一：2026-09-30 實績 vs 層級 YE2025→YE2026 線性內插", "2026-09-30（時點）", "MW", f"=D{r_mw}", f"=(D{r_l25}+(D{r_l26}-D{r_l25})*D{r_mo}/12)*1000", "#,##0", "公司揭露在役電力（over 1.7 GW）", "Interested-party", "層級年底 GW 路徑內插到 9 月底（× 1000 換 MW）；YE2026 為公司實績下限", "同源", status=SAMEC)
@@ -1428,6 +1442,7 @@ r_xd = rc
 CD.cell(rc, 1, "參考：每 MW 年收入——實績隱含 vs Tokenomics 加權持有成本"); CD.cell(rc, 2, "2026-01～2026-09 年化 ÷ 平均在役 MW（YE2025 與 2026-09-30 的平均）"); CD.cell(rc, 3, "US$M／MW·年")
 CD.cell(rc, 4, f"=D{r_rev9}/D{r_mo}*12/((D{r_l25}*1000+D{r_mw})/2)*1000").number_format = "#,##0.00"; CD.cell(rc, 5, f"=D{r_lhe}").number_format = "#,##0.00"; CD.cell(rc, 6, f"=D{rc}/E{rc}-1").number_format = GAPF
 CD.cell(rc, 7, "參考（不判定）"); CD.cell(rc, 8, "前三季營收年化 ÷（2025 年底 850 MW 與 2026-09-30 1,700 MW 的平均）；與營收主讀數同差（GW 量消去），這才是實際被檢驗的量；分母是平均在役 MW，含未計費與爬坡中產能；公司宣稱新約每 MW 年收入 20–25（Interested-party，分母口徑未說明）屬 J4 對帳單，只列參考"); CD.cell(rc, 9, "Derived"); CD.cell(rc, 10, "Tokenomics IF_HoldEcon 在役世代加權（持有成本，不含 k）"); CD.cell(rc, 11, "Derived"); rc += 1
+CD.cell(r_lpg, 10, FXS("Tokenomics 每 GW 資本支出經 Wattonomics 換算。分子 CapexAIOnline＝組成 0（2026 年新增 GW 的設備與機房，", (f'TEXT(D{r_o0},"0.000")',), "）＋組成 1、2（2027、2028 年新增 GW 的機房提前支出，", (f'TEXT(D{r_o12},"0.000")',), "，占 ", (f'TEXT(D{r_o12}/D{r_lcx},"0.0%")',), "）。組成 0 的 GW 量在分子分母消去，剩下單位成本；組成 1、2 的 GW 由 gcap_crwv（本公司模型回寫）推得，屬部分同源。以純 2026 年單位成本 ", (f'TEXT(D{r_lpg0},"0.00")',), " 計，公司口徑每 GW 差距 ", (f'TEXT(F{r_c3},"+0.0%;-0.0%")',), "，", (f'IF(ABS(F{r_c3})>{TOLC},"超過門檻（參考，不進判定）","仍在門檻內")',), "；判定只讀主讀數，不變。"))
 r_cxb = rc
 CD.cell(rc, 1, "參考：Wattonomics 主讀法 CapexAIGW（付款年實際花費）vs 本模型 FY2026 公司口徑資本支出 × AI 占比"); CD.cell(rc, 2, "CY2026"); CD.cell(rc, 3, "US$B")
 CD.cell(rc, 4, f"=Thesis!E{TR['B']['cx']}*0.85").number_format = "#,##0.000"; CD.cell(rc, 5, WN["WIF_Gap_Player_crwv_2026_CapexAIGW"]).number_format = "#,##0.000"; CD.cell(rc, 5).font = BLUE; CD.cell(rc, 6, f"=D{rc}/E{rc}-1").number_format = GAPF
@@ -1443,16 +1458,16 @@ CD.cell(rc, 1, "有判定的項目數（營收、資本支出）"); CD.cell(rc, 
 CD.cell(rc, 1, "C0 對帳摘要（HTML 對帳章讀取）")
 CD.cell(rc, 4, f'="實績對帳（公司已公布實績對 Wattonomics、Tokenomics 層級隱含值；層級的 GW 量讀公司實績，故實際只檢驗單位經濟）：營收前三季 US$"&TEXT(D{r_m1},"0.0")&"B（持有成本隱含同期間 US$"&TEXT(E{r_m1},"0.0")&"B，主讀數 "&TEXT(F{r_m1},"+0%;-0%")&"；Q3 年化 US$"&TEXT(D{r_m2},"0.0")&"B，第二讀數 "&TEXT(F{r_m2},"+0%;-0%")&"）判定："&G{r_j1}&"；資本支出公司口徑每 GW US$"&TEXT(D{r_c1},"0.0")&"B 對層級 US$"&TEXT(E{r_c1},"0.0")&"B（"&TEXT(F{r_c1},"+0%;-0%")&"；現金口徑下界 "&TEXT(F{r_c2},"+0%;-0%")&"，不判定）判定："&G{r_j2}&"；在役電力 "&TEXT(D{r_w1},"#,##0")&" MW："&G{r_j3}&"（層級 YE2026 是公司 Q3 實績下限）。對帳中項目 "&D{r_n}&" 個（門檻 ±"&TEXT({TOLC},"0%")&"）。簽約電力無可比實績。個股不裁決，不改上游值；證據回饋走對帳單。"'); r_sum = rc; rc += 1
 CD.cell(rc, 1, "同源檢查（哪些部分同源、什麼會消去、這張表實際檢驗什麼）")
-CD.cell(rc, 2, ("（一）本模型沒有把校準值寫入 Wattonomics 或 Tokenomics：定價倍數 k、計費比例、世代占比只留在本模型；層級側不含 k 與計費比例。"
+CD.cell(rc, 2, FXS("（一）本模型沒有把校準值寫入 Wattonomics 或 Tokenomics：定價倍數 k、計費比例、世代占比只留在本模型；層級側不含 k 與計費比例。"
                 "（二）Wattonomics 玩家 GW 路徑 YE2026（CapexGW 頁 G195）的公式 G194＝MAX(個股資本支出換算 GW G192〔In 頁 gcap_crwv 37.736（CoreWeave v5.0.3 個股模型 Thesis!E66 回寫）× AI 占比 0.85 → 每 GW 成本換算 → 上線延遲調整；個股模型回寫值，同源〕, w1_crwv_q3 ÷ 1000 − F195)，w1_crwv_q3＝1,700 取自公司 Q3 新聞稿（Wattonomics In 第 470 列），延遲 GW 為 0，MAX 的兩個分支都同源（一支是個股模型回寫的資本支出，一支是公司 Q3 實績），所以層級 2026 年底 1.70 GW 不是獨立證據，等於公司 2026-09-30 實績形成的下限；在役電力列因此標「參考（同源校準）」，結論「無可比實績（層級值同源）」，不判定、不計數。"
-                "（三）營收與資本支出的 GW 量也讀公司實績，在比值中消去：營收列實際檢驗每 MW 收入對 Tokenomics 持有成本（IF_HoldEcon 加權；層級側稱「持有成本隱含」，它是成本不是價格）；資本支出列改以每 GW 資本支出比較，實際檢驗 Tokenomics 單位資本支出對公司口徑實績。兩列標「部分同源（GW 量讀公司實績）」。"
+                "（三）營收與資本支出的 GW 量也讀公司實績，在比值中消去：營收列實際檢驗每 MW 收入對 Tokenomics 持有成本（IF_HoldEcon 加權；層級側稱「持有成本隱含」，它是成本不是價格）；資本支出列改以每 GW 資本支出比較：層級分子中 2026 年新增 GW 的部分（組成 0）在分子分母消去，檢驗 Tokenomics 單位資本支出對公司口徑實績；但上線年回推另含 2027、2028 年新增 GW 的機房提前支出（組成 1、2，", (f'TEXT(D{r_o12},"0.000")',), "，占 ", (f'TEXT(D{r_o12}/D{r_lcx},"0.0%")',), "），其 GW 由本公司模型回寫的 gcap_crwv 推得，不是純單位成本、屬部分同源；排除後純 2026 年單位成本 ", (f'TEXT(D{r_lpg0},"0.00")',), "，公司口徑差距 ", (f'TEXT(F{r_c3},"+0.0%;-0.0%")',), "（參考列，不進判定）。兩列標「部分同源（GW 量讀公司實績）」。"
                 "（四）資本支出讀 CapexAIOnline（上線年 GW 路徑 × Tokenomics 每 GW 資本支出；Wattonomics v0.3.4 以前的主讀法，v0.3.2 時名稱為 CapexAIGW），不讀 CapexAIModel（個股模型回寫值，同源）；Wattonomics v0.3.5 起主讀法 CapexAIGW 改為付款年實際花費＝gcap_crwv × 0.85，也是個股模型回寫值（同源），只列參考列；不用 _SiteOnly 路徑（公司站點目標）。世代占比取自本模型 In 頁（Assumed），只影響每 MW 持有成本的加權。")); r_org = rc; rc += 1
 CD.cell(rc, 1, "口徑換算與限制")
 CD.cell(rc, 2, ("營收：層級側是持有成本（經濟口徑成本，不是價格）；公司實績含 GPU 雲端以外的軟體與服務，且計費 MW 小於在役 MW，爬坡期收入落後在役量。資本支出：公司口徑（總 PP&E 增量）含應付設備款與 OEM 融資，並含為後續上線預付的設備，所以每淨增 GW 的資本支出偏高；現金口徑不含應付設備款，是下界，兩者夾住的是口徑而非時差。層級單位資本支出由 Tokenomics 設備與機房成本組成，與公司口徑的差距只在單位成本。"
                 "在役電力：公司以 active power 揭露，Wattonomics 以 IT 口徑記錄（mwBasis 為 Assumed）。另註（交主控評估是否開對帳單）：CoreWeave 2026-09-30 的在役 1,700 MW 已等於層級 YE2026 值，公司指引年底 over 1.85 GW，層級 YE2026 可能偏低（只有下限、沒有 Q4 新增）；這是同源下限造成的，不是實績對帳結論。")); r_k = rc; rc += 1
 CD.freeze_panes = "B3"
 COORD_ROWS = {"G1h": G1h, "G1a": G1a, "G1b": G1b, "G2h": G2h, "G2a": G2a, "G2b": G2b, "tol": int(TOLC.split("$")[-1]), "wf": r_wf, "sha": r_sha, "m1": r_m1, "m2": r_m2, "j1": r_j1, "c1": r_c1, "c2": r_c2, "j2": r_j2, "w1": r_w1, "w2": r_w2, "j3": r_j3,
-              "ctr": r_ctr, "cxd": r_cxd, "xd": r_xd, "cxb": r_cxb, "n": r_n, "nj": r_nj, "sum": r_sum, "org": r_org, "k": r_k, "g1note": G1note, "g2note": G2note, "mo": r_mo}
+              "ctr": r_ctr, "cxd": r_cxd, "xd": r_xd, "cxb": r_cxb, "c3": r_c3, "o0": r_o0, "o12": r_o12, "lpg0": r_lpg0, "n": r_n, "nj": r_nj, "sum": r_sum, "org": r_org, "k": r_k, "g1note": G1note, "g2note": G2note, "mo": r_mo}
 # Recon 兩列說明改標（只改說明文字；數值不動）
 RC.cell(RCR["wat26"], 9, "讀取層級（同源，不判定）：Wattonomics 值＝公司 2026 年底目標；wattonomics_snapshot_v0.3 mw_crwv（v0.3.5 同值；Coord 頁 G1）")
 RC.cell(RCR["wat30"], 9, "讀取層級（同源，不判定）：Wattonomics 值＝公司 2030 年目標上緣；模型情境 B、C 與其差距是情境差，不是實績對帳（Coord 頁 G1；對帳單草稿 coreweave/docs/reports/20261112_對帳單草稿_CoreWeave_J4與Wattonomics.md，只列參考）")
