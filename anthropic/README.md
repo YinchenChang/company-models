@@ -6,6 +6,14 @@ Anthropic 每 VR 等值 GW 的年營收能否覆蓋每 GW 年全成本；若不�
 - 交接：`docs/handoff/Anthropic_handoff.md`；進度：`docs/reports/20261008_anthropic_進度.md`
 - 工作規範：`CLAUDE.md`
 
+## v0.2.3：Coord 改讀 Wattonomics v0.3.5（營業現金流對照差 0）
+
+**依據：** Wattonomics v0.3.5（#618，main `2debcc7`）②⑥：Anthropic 在 Wattonomics 的營業現金流不加回自建資本支出（`gocf_ant`＝本模型 Funding F07；F03 恆為 0），且 Y9 重取改讀本模型 v0.2.2 dist（SRC_GL_320，commit `90ab689`）。建置：`python3 builder/build.py --tk-dir <Tokenomics checkout@eded8e6> --oai-xlsx ../openai/model/archive/20261029_OpenAI_v0.6.4.xlsx --out model/20261115_Anthropic_v0.2.3.xlsx --base model/archive/20261114_Anthropic_v0.2.2.xlsx --date 2026-11-15`（OAI_Link 仍為 OpenAI v0.6.4，與 v0.2.2 相同；Coord 頁隨 `../wattonomics/data/CURRENT_SNAPSHOT`＝`wattonomics_snapshot_v0.3.5.json`）。
+
+- Coord B 節「營業現金流 2026–2030」：本模型 `FND_FCF`（Funding F07）10.32／−37.39／−42.21／4.64／56.26 對 Wattonomics `WIF_Gap_Player_ant_<年>_OCF` 同值，差 0（殘差 < 1e-6，來自快照取 6 位小數）。v0.2.2 時 Wattonomics 匯入停在 v0.1.8（7.03／−42.29／−49.56／−5.63／42.83），差 3.3 至 13.4（層級匯入落後），本版已消除；說明文字改由快照 `gocf_ant` 出處自動帶出。
+- 自建 IT GW 年新增對照（Inputs vs `WIF_Gap_Player_ant_<年>_CapexAIGW`）改寫為對照 v0.3.5 快照，差 0。追溯重跑 `tools/coord/trace_wattonomics.py --player ant`（v0.3.5 xlsx）：自建 GW＝0、CapexAI 取 GW 法＝0、CapexAIModel＝0，結論不變。C 節 T1 配置（AWS 1.037、Google 1.0、2025 年底 0.626）與 v0.3.2 相同，C0 判定（營收「時差邊界（參考）」、對帳中 0）不變。
+- 其餘工作表數值與 v0.2.2 逐格相同（`tools/xlsx_diff.py`：差異只在 README 列位移、TK_Link／OAI_Link 讀取日與建置提交、Coord、Checks 標題）；加權目標價 82.71、評等中立不變。
+
 ## v0.2.2 三層協調（Coord 頁）：模型商樣板（OpenAI 複製用）
 
 **依據：** 三層基準協調規則 v1.4.2 C0 第 2 點（Andy 2026-11-14 17:40：「有意義的對帳要拿公司實績去對層級值」）；工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`、`20261114_C0實績對帳補列_七家.md`。同輪完成版面 v1.3 收尾（檢查 G、H 位置規定，見 `tools/company_html/fundmodel_v13.py`）。版號：#469 的 v0.2.1 未合併，本 PR 直接收為 v0.2.2（v0.2.1 檔移 `model/archive/`、`dist/_待刪除/`）。
