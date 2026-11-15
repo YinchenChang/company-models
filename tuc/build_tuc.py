@@ -273,6 +273,8 @@ BU = (2026, 2027, 2028, 2029)
 gwk = lambda y, s: {2026: "gw_26", 2027: "gw_27", 2028: f"gw28_{s}", 2029: f"gw29_{s}"}[y]
 def engine(ws, r0, title, s, wm=None):
     wm = wm or (WTA_MF if WTA_ON else None)   # v0.13：wm＝Wattonomics 錨定年別乘數（預設 None＝不乘）
+    if wm is None and SIL.COORD_ALT and s != "A":   # v0.2.4 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 的市場 CY2027 起 × wta（＝另一側讀數比值）；情境 A 不縮放
+        wm = WTA_MF
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
     hdr(ws, r, ["項目", "單位", "FY2025A", "FY2026（錨點）", "FY2027", "FY2028", "FY2029", "說明"]); r += 1
@@ -821,6 +823,14 @@ P5 = dict(ver="v0.2.3", px="6274.TWO", fpe=None,
           PX4={"6274.TWO": 1115, "2383.TW": 4555, "6213.TW": 612, "2368.TW": 964},
           PX5={"6274.TWO": 1005, "2383.TW": 4100, "6213.TW": 551, "2368.TW": 868})
 px1105_post.apply(wb, P5)
+# v0.2.4（2026-11-15）：三層協調 C4（規則 v1.4.2；tools/coord/）兩讀數目標價（Coord 頁；快照 tuc/coord_alt.json）＋個股 HTML 版面規格 v1.3＋C0（實績）（tuc/v13_post.py）
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR and not os.environ.get("TUC_OVERRIDE") and not WTA_ON:   # sens_tuc.py 的案例建置不加 v1.3 頁（只讀 Val、Sens、PL）
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import v13_post as P13  # noqa: E402
+    print(P13.apply(wb, SIL, _CR))
 wb.save(sys.argv[1])
 if os.environ.get("TUC_ROWMAP"):
     json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK, "XT": XT, "XH": XH, "XR": XR, "T": T, "EPSR": EPSR, "CFR": CFR,

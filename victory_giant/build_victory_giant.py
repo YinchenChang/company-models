@@ -323,6 +323,8 @@ DEFP = dict(scn="A", cmpx="cmpx", swx="swx", midx="midx", rel="rel", pp="pp", cx
 YH = ["項目", "單位", "FY2025A", "FY2026（錨點）", "FY2027", "FY2028", "FY2029", "FY2030（收斂）", "FY2031（收斂）", "FY2032（收斂）", "說明"]
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["mf"] == "1" and s != "A":   # v0.4.4 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 的 AI IT 資本支出 × wta（＝另一側讀數比值）；情境 A 不縮放
+        P["mf"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
     hdr(ws, r, YH); r += 1
@@ -952,6 +954,14 @@ P5 = dict(ver="v0.4.3", px="300476.SZ", fpe='fpe',
           PX4={"300476.SZ": 135.24, "002463.SZ": 85.95, "002916.SZ": 225.6, "688183.SS": 68.59, "002938.SZ": 52.5},
           PX5={"300476.SZ": 135, "002463.SZ": 81, "002916.SZ": 216, "688183.SS": 67.25, "002938.SZ": 50.63})
 px1105_post.apply(wb, P5)
+# v0.4.4（2026-11-15）：三層協調 C4（規則 v1.4.2；tools/coord/）兩讀數目標價（Coord 頁；快照 victory_giant/coord_alt.json）＋個股 HTML 版面規格 v1.3＋C0（實績）（victory_giant/v13_post.py）
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import v13_post as P13  # noqa: E402
+    print(P13.apply(wb, SIL, _CR))
 wb.save(sys.argv[1])
 if os.environ.get("VG_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
