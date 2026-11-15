@@ -19,6 +19,7 @@ JPX25 = "https://www2.jpx.co.jp/disc/28020/140120250507532436.pdf"
 JPX26S = "https://www2.jpx.co.jp/disc/28020/081220260501516433_tse-acedifsm-28020-20260507328020-ixbrl.htm"
 SAI = "https://stockanalysis.com/quote/tyo/2802/financials/"
 RES2Q = "https://www.ajinomoto.co.jp/company/jp/ir/event/presentation/main/0111111110/teaserItems1/00/linkList/01/link/FY26-2Q_Results_J.pdf"
+TAN2Q_TD = "https://www.release.tdnet.info/inbs/140120261106566777.pdf"   # v0.3.6：TDnet 原文
 TAN2Q = "https://www.ajinomoto.co.jp/company/jp/ir/event/presentation/main/0111111110/teaserItems1/00/linkList/0/link/FY26Q2_Tanshin_J.pdf"
 REV1109 = "https://www.ajinomoto.co.jp/company/jp/ir/event/presentation/main/0111111110/teaserItems1/00/linkList/00/link/FY26Q2_Forecast_J.pdf"
 TN1110 = "https://finance.technews.tw/2026/11/10/ajinomoto-raises-earnings-forecast-for-electronic-materials-business/"
@@ -150,7 +151,7 @@ def pl_standard(wb, HR, CR):
     D = wb["DCF"]; dbr = lab(D, "情境 B（基準）"); d_ebit = lab(D, "營業利益 EBIT", dbr)
     r = P.max_row + 3
     s0 = r
-    P.cell(r, 1, f"標準損益表（{VER} 起；個股 HTML 版面規格 v1.3 D 節）：歷史三年（FY2023–FY2025 實績）＋未來六年（FY2026–FY2031，情境 B 基準；FY2026E 為公司 2026-08-06 上修後預測的錨點）。¥B；EPS 日圓。"
+    P.cell(r, 1, f"標準損益表（{VER} 起；個股 HTML 版面規格 v1.3 D 節）：歷史三年（FY2023–FY2025 實績）＋未來六年（FY2026–FY2031，情境 B 基準；FY2026E 為公司 2026-11-09 第 2 四半期決算時修正後預測的錨點）。¥B；EPS 日圓。"
                  "只引用本頁上方、Hist、DCF 頁與 In 頁，不回饋任何計算").font = BOLD; r += 1
     P.cell(r, 1, "口徑：GAAP（IFRS，公司決算短信的連結損益）。公司以「事業利益」（營收 − 營業成本 − 販管費 − 研發費＋持分法損益）為主要獲利指標，本表的營業利益列即事業利益（模型與 DCF 的 EBIT 同一口徑）；"
                  "IFRS 営業利益另含其他營業收支（FY2025 含本社大樓土地出售利益），列在其他收入。公司與市場共識都以此為主，沒有另一套 Non-GAAP。預測期的其他營業收支與金融收支不估（其他收入＝稅前利益 − 營業利益，由淨利反推）。")
@@ -577,12 +578,12 @@ def c0_actuals(wb, G, SIL):
     r += 1
     bold("a", "4a. 公司已公布實績與揭露（輸入；藍字＝來自原文的常數）")
     R["a_h"] = hdr(["項目", "值", "", "", "", "單位", "口徑、來源、證據等級", "來源網址"])
-    put("h1", "FM 營收：FY2026 上半年累計（2026-04～09）", 73.3, "¥B", f"Verified：{FR2Q}：733 億日圓（年增 63%；前年同期 449）", blue=True, url=RES2Q)
+    put("h1", "FM 營收：FY2026 上半年累計（2026-04～09）", "=h1_fm", "¥B", f"Verified：{FR2Q}：733 億日圓（年增 63%；前年同期 449）", blue=True, url=RES2Q)
     put("q2", "FM 營收：FY2026 第二季（2026-07～09；最近一季，第二讀數的實績基礎）", 40.1, "¥B", f"Verified：{FR2Q}：7–9 月 401 億日圓（前年同期 234）", blue=True, url=RES2Q)
     put("q1", "FM 營收：FY2026 第一季（2026-04～06）", "=q1_fm", "¥B", "Verified：In 頁 q1_fm（2027 年 3 月期 Q1 決算概要 33.1，2026-08-06）")
     put("chk", "檢查：上半年 − 第一季 − 第二季（應約 0；億日圓四捨五入）", f"=B{R['h1']}-B{R['q1']}-B{R['q2']}", "¥B", "Derived；差 0.1 為兩份決算概要各自四捨五入", fmt="0.0")
-    put("h1bp", "FM 事業利益：上半年累計（參考）", 42.9, "¥B", f"Verified：{FR2Q}：429 億日圓（年增 82%）；第二季 238", blue=True, url=RES2Q)
-    put("cons", "全公司營收：上半年累計（參考）", 831.1, "¥B", f"Verified：{FR2Q} p.1：8,311 億日圓（事業利益 1,086、營業利益 1,024、歸屬母公司淨利 733）；另見同日決算短信", blue=True, url=RES2Q)
+    put("h1bp", "FM 事業利益：上半年累計（參考）", "=h1_fmbp", "¥B", f"Verified：{FR2Q}：429 億日圓（年增 82%）；第二季 238", blue=True, url=RES2Q)
+    put("cons", "全公司營收：上半年累計（參考）", "=h1_rev", "¥B", f"Verified：In 頁 h1_rev（v0.3.6 起；第 2 四半期決算短信 831,161 百萬日圓；{FR2Q} p.1 為 8,311 億日圓）", url=TAN2Q_TD)
     put("abf", "公司揭露：ABF 單獨營收與 AI 占比", "未揭露", "", "公司只揭露 FM（電子材料等）子部門；AI 占比為 Palliser Capital（股東行動派）估計（Interested-party），不算實績", fmt="General")
     put("mo", "已公布月數（主讀數期間 2026-04～09）", 6, "月", "輸入：上半年實績", fmt="0", blue=True)
     r += 1
@@ -602,20 +603,20 @@ def c0_actuals(wb, G, SIL):
     put("abf_l", "ABF 增層膜營收：層級隱含", "無同口徑隱含值", "", "Siliconomics 只有載板產值與顆數，缺膜用量、膜單價與味之素份額", fmt="General", c="無同口徑隱含值")
     put("j_abf", "ABF 增層膜營收：判定", "無可比實績", "", "兩側皆缺；不計入對帳中", fmt="General", c="無可比實績")
     r += 1
-    bold("ref", "參考：本模型 FY2026 錨點對已公布實績與公司 11-09 上修（模型對實績與公司指引，不是層級對帳；不計入 C0）")
-    put("anc", "FY2026 FM 營收錨點（In 頁 f_fm；公司 2026-08-06 預測）", "=f_fm", "¥B", "Interested-party：Q1 決算概要（公司預測，非實績）")
+    bold("ref", "參考：本模型 FY2026 錨點對已公布實績與公司 11-09 上修（v0.3.6 起錨點＝11-09 修正預測；模型對實績與公司指引，不是層級對帳；不計入 C0）")
+    put("anc", "FY2026 FM 營收錨點（In 頁 f_fm；v0.3.6 起為公司 2026-11-09 修正預測）", "=f_fm", "¥B", "Interested-party：セグメント別修正業績予想（2026-11-09；公司預測，非實績）", url=REV1109)
     put("prog", "上半年實績 ÷ 錨點（進度）", f"=B{R['h1']}/B{R['anc']}", "%", "Derived；全年 12 個月中已過 6 個月", fmt="0.0%")
-    put("g1109", "公司 FY2026 FM 營收預測（2026-11-09 上修）", 133.0, "¥B", f"Interested-party（公司指引，只列參考）：公司 FY2026 セグメント別修正業績予想（2026-11-09）ファンクショナルマテリアルズ營收 1,330 億日圓（8-06 為 1,206；事業利益 765，原 655）；MoneyDJ 經 TechNews 2026-11-10 轉載相同（網址見 Sources 頁）；模型錨點本版不改", blue=True, url=REV1109)
-    put("g_vs", "11-09 上修 ÷ 模型錨點 − 1", f"=B{R['g1109']}/B{R['anc']}-1", "%", "Derived；錨點更新另案（Q2 決算後更新，In 頁 E 節標題）", fmt="+0.0%;-0.0%")
+    put("g1109", "公司 FY2026 FM 營收預測（2026-08-06；v0.3.5 以前的錨點）", 120.6, "¥B", f"Interested-party：Q1 決算概要（2026-08-06）ファンクショナルマテリアルズ營收 1,206 億日圓（事業利益 655）；11-09 修正為 1,330（事業利益 765；MoneyDJ 經 TechNews 2026-11-10 轉載相同，網址見 Sources 頁）", blue=True)
+    put("g_vs", "現行錨點（11-09 修正）÷ 8-06 預測 − 1", f"=B{R['anc']}/B{R['g1109']}-1", "%", "Derived；v0.3.6 錨點更新（In 頁 E 節）", fmt="+0.0%;-0.0%")
     r += 1
     bold("sum0", "C0（實績）結果摘要（HTML 用；公式帶數字）")
     nopen = f'COUNTIF(B{R["j_fm"]}:C{R["j_abf"]},"對帳中")'
     put("sum1", F(T("C0（實績）結論：無可比實績：味之素 FY2026 上半年 FM 營收 "), TX(f"B{R['h1']}", "#,##0.0"), T(" 十億日圓、第二季 "), TX(f"B{R['q2']}", "#,##0.0"),
                   T(" 十億日圓為公司決算概要實績，但 Siliconomics 沒有 ABF 增層膜市場與味之素份額，公司也未揭露 ABF 單獨營收，兩讀數無法計算。對帳中項目 "), nopen, T(" 項。")))
     put("sum2", F(T("參考（模型對實績）：上半年 FM 營收已達本模型 FY2026 錨點 "), TX(f"B{R['anc']}", "#,##0.0"), T(" 十億日圓的 "), TX(f"B{R['prog']}", "0%"),
-                  T("；公司 11-09 把全年電子材料營收預測上修到 "), TX(f"B{R['g1109']}", "#,##0.0"), T(" 十億日圓（較錨點 "), TX(f"B{R['g_vs']}", "+0%;-0%"),
-                  T("），屬公司指引、只列參考；本版錨點不改（既有數值不變），錨點更新另案。")))
-    put("sum3", "限制與待查：決算概要數字由本版建置時以網路讀取（2026-11-15）；全公司上半年數字另見決算短信。Siliconomics 若補 ABF 增層膜市場與味之素份額（或公司揭露 ABF 營收），即可改為可判定的 C0 列。")
+                  T("；錨點自 v0.3.6 起改為公司 11-09 修正後的全年電子材料營收預測（8-06 預測 "), TX(f"B{R['g1109']}", "#,##0.0"), T(" 十億日圓，上修 "), TX(f"B{R['g_vs']}", "+0%;-0%"),
+                  T("），屬公司指引；不是層級對帳，不計入 C0。")))
+    put("sum3", "限制與待查：FM 子部門數字取自決算概要（v0.3.5 建置時以網路讀取，2026-11-15）；全公司上半年數字取自決算短信（TDnet，v0.3.6 起進 In 頁 h1_*）。Siliconomics 若補 ABF 增層膜市場與味之素份額（或公司揭露 ABF 營收），即可改為可判定的 C0 列。")
     put("cnt", "對帳中項目數（C0 實績表；讀取層級同源列不計）", None)
     CW.cell(R["cnt"], 7, f'={nopen}')
     R["end"] = r - 1

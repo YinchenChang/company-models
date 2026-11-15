@@ -140,13 +140,13 @@ SPEC = {
     ["AI 加速器顆數（讀 tsmc 成品）與面積係數", ["unv_26", "unv_27", "unv_28", "unv_29", "uot_26", "uot_27", "uot_28", "uot_29", "v_ot", "g_asp"]],
     ["情境顆數係數與 ABF 價格乘數", ["um28_A", "um29_A", "um28_B", "um29_B", "um28_C", "um29_C", "sp_A", "sp_B", "sp_C"]],
     ["ABF 需求、份額、產能、價格與成本", ["ai_sh", "g_nai", "rel_27", "rel_28", "rel_29", "cap_27", "cap_28", "cap_29", "pp_27", "pp_28", "pp_29", "c_g"]],
-    ["FM 錨點與實績", ["f_fm", "f_fmbp", "q1_fm", "q1_fmbp", "a_fm", "a_fmbp"]],
+    ["FM 錨點與實績", ["f_fm", "f_fmbp", "q1_fm", "q1_fmbp", "h1_fm", "h1_fmbp", "a_fm", "a_fmbp"]],
     ["Wattonomics 錨定係數（只用於敏感度）", ["wta_27", "wta_28", "wta_29"]]]],
   [B_CORE, [
     ["成長率與利益率", ["g_sf", "m_sf", "g_ff", "m_ff", "g_ho", "m_ho", "g_cc"]],
     ["各事業錨點與實績", ["f_sf", "f_ff", "f_ho", "f_oth", "f_sfbp", "f_ffbp", "f_hobp", "f_othbp", "f_cc", "a_sf", "a_ff", "a_ho", "a_oth", "a_sfbp", "a_ffbp", "a_hobp", "a_othbp", "a_cc"]]]],
   [B_CO, [
-    ["全公司錨點與實績", ["f_rev", "f_bp", "f_oi", "f_ni", "f_eps", "q1_rev", "q1_bp", "q1_ni", "q1_eps", "a_rev", "a_bp", "a_oi", "a_ni", "a_eps", "a_da", "a_cx"]],
+    ["全公司錨點與實績", ["f_rev", "f_bp", "f_oi", "f_ni", "f_eps", "q1_rev", "q1_bp", "q1_ni", "q1_eps", "h1_rev", "h1_bp", "h1_ni", "h1_eps", "a_rev", "a_bp", "a_oi", "a_ni", "a_eps", "a_da", "a_cx"]],
     ["淨利與股數", ["ni_bp", "sh_g", "so"]],
     ["股價與市場倍數", ["px", "pe_cf", "fpe", "cons_feps", "cons_tp"]],
     ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "rf_us", "beta", "beta_u", "beta_u_food", "beta_u_chem", "beta_w_fm", "beta_du", "beta_de", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
@@ -238,7 +238,7 @@ def _v13():
                        {"name": f"@PL!A{r_oth2}", "y": f"@PL!D{r_oth2}:G{r_oth2}", "color": "#8a8c8c"}],
               "lines": [{"name": [f"@PL!A{pa}", "營收"], "y": f"@PL!D{revA}:G{revA}", "color": "#0b7a80", "dash": True},
                         {"name": [f"@PL!A{pc}", "營收"], "y": f"@PL!D{revC}:G{revC}", "color": "#b4472f", "dash": True}],
-              "caption": "堆疊＝情境 B（基準）的分部營收（ファンクショナルマテリアルズ分 AI 用與非 AI），頂端數字＝情境 B 合併營收；虛線＝情境 A、情境 C 的合併營收。FY2026 為公司第一季決算時上修後預測的錨點；三情境差異只來自 FM（加速器顆數與 ABF 價格乘數）。"}
+              "caption": "堆疊＝情境 B（基準）的分部營收（ファンクショナルマテリアルズ分 AI 用與非 AI），頂端數字＝情境 B 合併營收；虛線＝情境 A、情境 C 的合併營收。FY2026 為公司中間決算時修正後預測的錨點；三情境差異只來自 FM（加速器顆數與 ABF 價格乘數）。"}
     i_obs = next(i for i, b in enumerate(th) if b["type"] == "h3" and b.get("text") == "重點觀察")
     th[i_obs + 1] = {"type": "list", "ordered": True, "items": [f"@README!A{RM[k]}" for k in ("o1", "o2", "o3", "o4", "o5")]}
     th.insert(0, chart1)
