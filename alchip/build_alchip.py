@@ -219,6 +219,11 @@ SADV = "stockanalysis.com 世芯-KY 股利頁（https://stockanalysis.com/quote/
 MBS3 = "公開資訊觀測站 t164sb03 合併資產負債表 115 年第 3 季（2026-09-30 欄；2026-11-15 讀取）"
 GDR6 = "旺得富 2026-06-26（GDR 訂價：4,000,000 單位、每單位表彰 1 股、每單位 127.51 美元、折合新台幣 4,061 元、募資 5.1004 億美元、預計發行日 2026-06-30）"
 REV3 = "營收 FY2023 30.482、FY2024 51.969、FY2025 30.926（NT$B；stockanalysis 財報頁）"
+import json as _json0
+_OV0 = _json0.loads(os.environ.get("ALCHIP_P", "{}")) if os.environ.get("ALCHIP_SENS") == "1" else {}   # sens_alchip.py 案例覆寫（fcwc：fc_wc 改 9 月底營運資金強度；stubwc：stub 期 4Q 營運資金依 FY2026 全年假設反推）
+_FCWC = "=AVERAGE((2.643+12.219+0.1235+0.29359-1.925-0.84346-10.408-0.28254)/30.482,(6.138+9.95+0.11766+0.55073-1.826-1.46-6.114-0.29745)/51.969,(3.254+9.677+0.62172+0.65385-1.986-1.486-12.021-0.60836)/30.926)"
+if _OV0.get("fcwc"):
+    _FCWC = "=wc_0930/(q3_rev*4)"
 for _row in FD.in_rows(dict(
         date="2026-12-31（同 v0.1 DCF 基準日）", ccy="NT$", amt="NT$B", shu="十億股",
         rf=(0.0198, "Trading Economics「Taiwan 10Y Bond Yield」：2026-11-04 1.98%（https://tradingeconomics.com/taiwan/government-bond-yield；2026-11-05 讀取）",
@@ -250,7 +255,7 @@ for _row in FD.in_rows(dict(
         fc_cx=(None, "=AVERAGE(2.321/30.482,1.998/51.969,2.287/30.926)", None, "Derived",
                SACF + "：資本支出 FY2023 2,321、FY2024 1,998、FY2025 2,287（NT$M）；比例 7.6%、3.8%、7.4%，平均 6.3%", "Sens 用 fc_cx_d ±1pt"),
         fc_cx_ss=("=MAX(fc_da_ss*(1+g_tv),fc_cx)", "Assumed", "FY2029 起線性收斂，FY2032 達到：不低於維持水準（折舊 ×（1＋g））", "近三年資本支出低於折舊攤銷，穩態取維持水準；Andy 可改"),
-        fc_wc=(0.0, "=AVERAGE((2.643+12.219+0.1235+0.29359-1.925-0.84346-10.408-0.28254)/30.482,(6.138+9.95+0.11766+0.55073-1.826-1.46-6.114-0.29745)/51.969,(3.254+9.677+0.62172+0.65385-1.986-1.486-12.021-0.60836)/30.926)", 0.15, "Derived",
+        fc_wc=(0.0, _FCWC, 0.15, "Derived",
                "近三年年底營運資金 ÷ 營收平均：應收＋存貨＋預付＋其他流動資產 − 應付 − 應計費用 − 合約負債（客戶預收）− 其他流動負債（" + SAY + "）；比例 6.0%、13.6%、−6.1%，平均 4.5%",
                "2026-06-30：5,552＋24,725＋579＋648 − 7,784 − 1,425 − 15,297 − 3,886＝3,112（NT$M；Trainium 量產備料）÷ 2Q26 年化營收 30.6B＝10.2%；Sens 低／高 0%／15%（Assumed）"),
         )):
@@ -264,8 +269,8 @@ inp("wc_0930", "營運資金 2026-09-30（同 wc_1231 口徑）", "NT$B", None,
     MBS3 + "：115/09/30 欄（NT$ 千元）應收 18,123,801＋關係人 0＋其他應收 303,113＋存貨 30,888,025＋預付 1,717,021＋其他流動資產 696,644 − 應付 7,224,252 − 其他應付 3,057,400 − 其他流動負債 15,768 − 合約負債 19,388,137",
     "Trainium 量產備料：存貨 +23.9、應收 +15.5、合約負債 +7.4")
 inp("wc_9m", "1–3Q26 營運資金實績變動（＝wc_0930 − wc_1231）", "NT$B", None, "=wc_0930-wc_1231", None, "Derived",
-    "stub FCFF 用：4Q26 營運資金變動＝FY2026 模型全年變動（fc_wc × FY2026 營收增加）− 本值（主 session 2026-11-15 決定；負值＝4Q 釋出營運資金，照算）",
-    "FY2026 模型全年變動遠小於 1–3Q 實績，4Q 值為大幅釋出；需 Andy 判斷（README 已知限制）")
+    "事實與說明（不進基準）：基準 stub FCFF 的 4Q26 營運資金變動設為 0（維持 9-30 水準）；Sens 案例「4Q 依 FY2026 全年假設反推」＝FY2026 模型全年變動（fc_wc × 營收增加 1.69）− 本值＝−22.28（釋出）",
+    "9-30 營運資金占 3Q26 年化營收約 21%，遠高於 fc_wc 4.5%（FY2023–25 平均）；Sens 案例「fc_wc 改 9 月底強度」；README 已知限制，待 Andy 判斷")
 inp("beta_u", "產業無槓桿 β：自算 TW 半導體（同業 13 家中位數，現金修正、Blume 調整）", "x", None, 1.429, None, "Analogy",
     "自算產業 β：TW 半導體 同業 13 家中位數（Yahoo Finance 月報酬 2021-11～2026-10，對 ^TWII（加權指數） 迴歸，Hamada 去槓桿、現金修正）：中位數 1.64；Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）：0.67 × 1.64 ＋ 0.33＝1.429（同業表與方法：docs/plan/自算產業β_20261105.md）",
     "Sens 低／高改為 β_u ∓ beta_du（v0.2.1）；取代 Damodaran 表（Andy 2026-11-05 22:55）")
@@ -631,10 +636,10 @@ def dpaths(blocks, pre, tax="tax", nonop="nonop_f", lab=None, names=SC):
     for s_ in names:
         bl = blocks[s_]
         ebit = {y: (f"{pre}{FC[y]}{bl['oi']}" if y <= 2029 else f"={pre}{FC[y]}{bl['ni']}/(1-{tax})-{nonop}") for y in YRS6}
-        _r26, _r25 = f"{pre}D{bl['rev']}", f"{pre}C{bl['rev']}"   # v0.2.5：資產負債表日 9-30，stub 期只剩 4Q26 → stub FCFF＝4Q26 單季 FCFF：4Q 營業利益 ×（1 − 稅率）＋4Q 營收 ×（折舊率 − 資本支出率）−（FY2026 營運資金增加 − 1–3Q26 實績變動 wc_9m）
+        _r26, _r25 = f"{pre}D{bl['rev']}", f"{pre}C{bl['rev']}"   # v0.2.5：資產負債表日 9-30，stub 期只剩 4Q26 → stub FCFF＝4Q26 單季 FCFF：4Q 營業利益 ×（1 − 稅率）＋4Q 營收 ×（折舊率 − 資本支出率）＋0（4Q26 營運資金變動設為 0：維持 9-30 實績水準，主 session 2026-11-15 採 (b)；Sens 案例 stubwc 為依 FY2026 全年假設反推）
         out.append(dict(name=s_, label=(lab or "情境") + f" {s_}（{SCN_NAME[s_]}）", rev={y: f"{pre}{FC[y]}{bl['rev']}" for y in YRS6}, rev0=f"{pre}D{bl['rev']}",
                         ebit=ebit, tax={y: tax for y in YRS6}, ebit_note="FY2030 起由淨利還原",
-                        stub_fcff=f"Q!$F$11*(1-{tax})+Q!$F$4*(fc_da-fc_cx-fc_cx_d)-(fc_wc*({_r26}-{_r25})-wc_9m)"))
+                        stub_fcff=f"Q!$F$11*(1-{tax})+Q!$F$4*(fc_da-fc_cx-fc_cx_d)" + (f"-(fc_wc*({_r26}-{_r25})-wc_9m)" if _SENS_OV.get("stubwc") else "")))
     return out
 def ddetail(paths, title):
     R_ = FD.write_detail(DCFW, DCF_NEXT[0], paths, list(YRS6), 1.0, conv_from=2029, title=title, fmt="#,##0.00", stub=True)
