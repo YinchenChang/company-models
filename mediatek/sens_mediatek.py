@@ -1,4 +1,4 @@
-# 聯發科敏感度快照（v0.3.4）：每個營運案例以環境變數 MTK_P 覆寫三情境主引擎（PL 頁）的案例參數（覆寫鍵同 build_mediatek.py 引擎參數與 Sens 頁「一次動一個輸入」案例），
+# 聯發科敏感度快照（v0.3.4 起；v0.3.5 重跑）：每個營運案例以環境變數 MTK_P 覆寫三情境主引擎（PL 頁）的案例參數（覆寫鍵同 build_mediatek.py 引擎參數與 Sens 頁「一次動一個輸入」案例），
 # 整本重建、LibreOffice 重算，讀加權目標價、DCF 目標價與 Comparable（相對倍數調整後），寫入 mediatek/sens.json；正式建置（build_mediatek.py → v034_post.py）讀入 Sens 頁「加權目標價相對基準」表。
 # 與 Sens 頁既有案例的差別：既有案例只動情境 A 並看 FY2027／FY2028 EPS；本快照三情境同時套用，並重算 DCF、Comparable 與加權，得到加權目標價。
 # In 頁或模型改動後重跑一次，再正式建置（否則 Sens 頁快照狀態顯示 STALE）。

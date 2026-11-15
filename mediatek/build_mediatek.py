@@ -205,6 +205,12 @@ inp("fade_mA", "情境 A：FY2032 淨利率收斂目標（＝情境 A FY2029 淨
 inp("fade_mB", "情境 B：FY2032 淨利率收斂目標（FY2029 與「FY2029 × 0.8」的中點）", "%", None, 0, None, "Assumed", "十年平均未找到，依工作單以最後一年 × 0.8 代替", "—")
 inp("fade_mC", "情境 C：FY2032 淨利率收斂目標（FY2029 × 0.8）", "%", None, 0, None, "Assumed", "同上", "—")
 # v0.3（2026-11-05）：標準版 DCF（FCFF＋WACC）參數（tools/fcff_dcf.in_rows；docs/plan/個股DCF標準規格.md）。v0.3.1：資產負債改 2026-09-30（3Q26；stockanalysis 轉載公司 3Q26 季報），3Q26 未揭露的長期投資、租賃沿用 2026-06-30
+# v0.3.5（2026-11-15）：資產負債表改公司 3Q26 合併財報（出處 A；會計師核閱）全部 2026-09-30；債務加計 2026-09 發行的零息海外可轉債（應付公司債帳面）。v0.3.4 以前只含短期借款（stockanalysis 轉載資料未列應付公司債），淨現金高估約 111 十億新台幣
+MKA_U = "https://www.mediatek.com/hubfs/MediaTek-Assets/Pdfs/Financial%20Reports/2026/Q3%20Consolidated%20Report.pdf"
+MKB_U = "https://www.mediatek.com/hubfs/MediaTek-Assets/Pdfs/Quarterly%20Earnings%20Release/2026/Quarterly%20Earnings%20Release-2026Q3/Financial%20Statements.pdf"
+URLNAME[MKA_U] = "mediatek.com"; URLNAME[MKB_U] = "mediatek.com"
+MKA = "公司 3Q26 合併財務報告（出處 A：英文版，會計師核閱；" + MKA_U + "；頁碼為報告頁腳；2026-11-15 讀取）"
+MKB = "公司 3Q26 法說財務報表（出處 B：" + MKB_U + "；NT$M；2026-11-15 讀取）"
 SABS = "stockanalysis.com 聯發科季度資產負債表（https://stockanalysis.com/quote/tpe/2454/financials/balance-sheet/?p=quarterly；2026-06-30 欄；轉載公司季報；2026-11-05 讀取）"
 SABS3 = "stockanalysis.com 聯發科季度資產負債表（https://stockanalysis.com/quote/tpe/2454/financials/balance-sheet/?p=quarterly；2026-09-30 欄〔3Q26，最新已公布一季〕；轉載公司 3Q26 季報；2026-11-05 讀取）"
 SAY = "stockanalysis.com 聯發科年度資產負債表（https://stockanalysis.com/quote/tpe/2454/financials/balance-sheet/；2026-11-05 讀取）"
@@ -221,15 +227,17 @@ for _row in FD.in_rows(dict(
                     "自算產業 β：TW 半導體 同業 13 家中位數（Yahoo Finance 月報酬 2021-11～2026-10，對 ^TWII（加權指數） 迴歸，Hamada 去槓桿、現金修正），以本公司市值 D/E 與稅率重新加槓桿（Hamada）", "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）。Sens 低／高（Analogy；v0.3.1 起）：β_u ∓ beta_du（0.3），各自同式重新加槓桿（工作單第二輪修正，Andy 2026-11-05 23:16 定案；tools/fcff_dcf.py v2 write_sens）"),
         crp=(0.0078, "Interested-party", "Damodaran Country Default Spreads and Risk Premiums（2026-01-05 更新）：Taiwan Moody's Aa3、國家風險溢酬 0.78%（https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html；2026-11-05 讀取）",
              "非美國市場：ERP＝5%＋CRP（Andy 2026-11-05 20:45）；不設股權成本下限"),
-        kd=("=rf+0.01", "Assumed", "新台幣 10 年期公債＋信用利差 1%（Assumed；借款多為短期銀行借款）", "負債（借款＋租賃）約 27 十億新台幣，占資本約 0.4%，對 WACC 影響可忽略"),
+        kd=("=rf+0.01", "Assumed", "新台幣 10 年期公債＋信用利差 1%（Assumed；債務為短期銀行借款與零息海外可轉債）", "v0.3.5：可轉債帳面 111.338 → 面額 123.408（2031-09-08 到期）隱含有效利率約 2.1%（Derived），短期借款利率未揭露；負債（借款＋可轉債＋租賃）約 163 十億新台幣，占資本約 3%，kd 對 WACC 影響小"),
         tax_w=("=tax", "Derived", "＝In 頁 tax（FY2027 起有效稅率 14%）", "NOPAT 用同一稅率"),
-        debt=(41.95, "Verified", SABS3 + "：短期借款 41,950（NT$M；同頁 Total Debt 41,950，3Q26 未列長期借款）", "2026-06-30：短期借款 17,100＋長期借款 120（v0.3 用值）"),
-        lease=(9.785, "Verified", SABS + "：租賃負債流動 1,410＋非流動 8,375（NT$M）", "3Q26 轉載資料未列租賃負債，沿用最近揭露的 2026-06-30（完整 3Q26 財報公布後再更新）"),
-        cash=("=269.058+8.629", "Verified", SABS3 + "：現金及約當現金 269,058＋短期投資 8,629（NT$M）",
-              "2026-07-31 發放的股利（每股 24.50022 元）已在 3Q26 現金中反映，不再扣除（v0.3 自 2026-06-30 現金扣除）"),
-        inv=(180.62, "Verified", SABS + "：長期投資 180,620（NT$M；帳面，含透過其他綜合損益按公允價值衡量之金融資產與權益法投資）", "3Q26 轉載資料未列長期投資，沿用 2026-06-30；帳面計入；Sens 測不計"),
-        mi=("=661*0.16751*(1-0.6641)+(8.785-21.19*(1-0.6641))", "Derived", "第三輪修正（上市子公司一律市值）：達發（6526）市值 × 外部股東持股＋其餘非控制權益帳面。達發 Yahoo Finance 日線收盤 2026-11-05 661 元（v0.3.2 為 2026-11-04 717 元）× 股數 167.51M（stockanalysis 統計頁）× 外部持股 33.59%（＝1 − 聯發科直接持股 66.41%，money-link 大股東資料 2026-09）＝37.19；其餘＝合併非控制權益帳面 8,785（" + SABS3 + "）− 達發非控制權益帳面 21.19 × 33.59%＝7.12（達發股東權益 2026-06-30，stockanalysis）＝1.67（NT$B）", "v0.3.1 為帳面 8.785（全額帳面）。達發帳面為 2026-06-30、合併非控制權益為 2026-09-30（日期不同，差額小）；聯發科間接持股未計（外部持股可能略高估）"),
-        stub=dict(bs_date="2026-09-30", val_date="2026-12-31", bs_src=SABS3 + "；日期混合：現金、短期投資、借款、非控制權益為 2026-09-30，長期投資、租賃沿用 2026-06-30（3Q26 轉載資料未列；" + SABS + "）",
+        debt=("=41.95+111.338", "Verified", MKA + " p.4–5 資產負債表 2026-09-30：短期借款 41,950,000＋應付公司債（附註 6(19)）111,338,386（NT$ 千元；IFRS 負債組成帳面）；長期借款 0（2025-12-31 為 60,000）；" + MKB + "同值",
+              "應付公司債＝無擔保零息海外可轉換公司債：發行 US$3,900 million、面額 NT$123,407,700 千 − 未攤銷折價 12,069,314 千＝帳面 111,338,386 千；期間 2026-09-08～2031-09-08、轉換價 NT$4,513.75／股（可調整）、發行後三個月起可轉換、到期以本金贖回；IAS 32 拆分轉換權 11,572,827 千入權益（附註 6(19)，p.38–39）。基準以帳面計債務、不計稀釋（現價遠低於轉換價）；Sens 測面額計債與全數轉換。更正：v0.3.4 以前只含短期借款 41.950（stockanalysis 轉載資料未列應付公司債；原註「3Q26 未列長期借款」有誤），淨現金高估 111.338"),
+        lease=(9.456, "Verified", MKA + "：租賃負債合計 9,455,836（NT$ 千元；流動 1,348,816＋非流動；金融負債分類表 p.71、籌資活動調節表 p.91）", "v0.3.4 以前沿用 2026-06-30 9.785（stockanalysis）"),
+        cash=("=269.058+9.262", "Verified", MKA + " p.4 資產負債表 2026-09-30：現金及約當現金 269,057,726＋流動金融資產 9,261,842（透過損益按公允價值 633,239＋透過其他綜合損益按公允價值 3,249,040＋按攤銷後成本〔附註 6(4)〕5,379,563；NT$ 千元）",
+              "口徑核對：v0.3.4 的 277.687＝現金 269.058＋stockanalysis「短期投資」8.629（＝流動 FVOCI 3.249＋流動攤銷後成本 5.380，未含流動 FVTPL 0.633）；本版納入流動 FVTPL 0.633，與 inv_v 含非流動 FVTPL 一致。2026-07-31 發放的股利已在 3Q26 現金中反映，不再扣除"),
+        inv=(182.116, "Verified", MKA + " p.4 資產負債表 2026-09-30：非流動 透過損益按公允價值 5,635,833＋透過其他綜合損益按公允價值 81,167,399＋按攤銷後成本（附註 6(4)、8）72,842,227＋採權益法之投資 22,470,710＝182,116,169（NT$ 千元；＝" + MKB + "「Funds and investments」182,116）",
+             "與 v0.3.4 口徑相同（stockanalysis「長期投資」2026-06-30 180.620，同為四項非流動投資合計；本版改 2026-09-30 公司原文）。帳面計入；Sens 測不計"),
+        mi=("=661*0.16751*(1-0.6641)+(8.785-21.19*(1-0.6641))", "Derived", "第三輪修正（上市子公司一律市值）：達發（6526）市值 × 外部股東持股＋其餘非控制權益帳面。達發 Yahoo Finance 日線收盤 2026-11-05 661 元（v0.3.2 為 2026-11-04 717 元）× 股數 167.51M（stockanalysis 統計頁）× 外部持股 33.59%（＝1 − 聯發科直接持股 66.41%，money-link 大股東資料 2026-09）＝37.19；其餘＝合併非控制權益帳面 8,785（" + MKA + " p.5：非控制權益 8,784,791 千元）− 達發非控制權益帳面 21.19 × 33.59%＝7.12（達發股東權益 2026-06-30，stockanalysis）＝1.67（NT$B）", "v0.3.1 為帳面 8.785（全額帳面）。達發帳面為 2026-06-30、合併非控制權益為 2026-09-30（日期不同，差額小）；聯發科間接持股未計（外部持股可能略高估）"),
+        stub=dict(bs_date="2026-09-30", val_date="2026-12-31", bs_src=MKA + "：現金、流動金融資產、非流動投資、短期借款、應付公司債、租賃、非控制權益皆為 2026-09-30（v0.3.5 起；v0.3.4 以前長期投資、租賃沿用 2026-06-30 stockanalysis 轉載值）",
                   div=(0.0, "Derived", "2026-09-30～2026-12-31 無股利發放：上半年盈餘股利慣例於次年 1 月底發放（2026-01-30、2025-01-24；" + SADV + "），落在評價日之後",
                        "評價日後的股利由 dps_tgt（2027 年 1 月、7 月各一次）扣除；買回無已宣告金額，不扣")),
         dps=("=29+24.50022", "Assumed", "近一年兩次發放：2026-01-30 每股 29.0 元、2026-07-31 每股 24.50022 元（" + SADV + "）",
@@ -250,6 +258,12 @@ inp("beta_u", "產業無槓桿 β：自算 TW 半導體（同業 13 家中位數
     "Sens 低／高改為 β_u ∓ beta_du（v0.3.1）；取代 Damodaran 表（Andy 2026-11-05 22:55）")
 inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新加槓桿）", "x", None, 0.3, None, "Assumed", "工作單第二輪修正（Andy 2026-11-05 23:16 定案）：β 敏感度改為 β_u ± 0.3", "取代上一版 beta_u 低／高欄（中位數 × 0.8 再 Blume 1.209／中位數未調整 1.64）")
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 股數 sh_v)", "與 WACC 權重同一口徑")
+# v0.3.5：零息海外可轉債（附註 6(19)）——基準以帳面計入 debt_v、不計稀釋；以下各列只用於 Sens「可轉債處理」兩案（面額計債、全數轉換）
+inp("cb_bv", "可轉債帳面（IFRS 負債組成；已含在 debt_v）", "NT$B", None, 111.338, None, "Verified", MKA + " p.4–5：應付公司債 111,338,386 千元", "＝面額 123,407,700 − 未攤銷折價 12,069,314（千元）；到期 2031-09-08")
+inp("cb_face", "可轉債面額（到期贖回金額）", "NT$B", None, 123.408, None, "Verified", MKA + " 附註 6(19)（p.38–39）：發行 US$3,900 million，面額 NT$123,407,700 千元，零息，2026-09-08～2031-09-08，到期以本金贖回", "Sens「可轉債以面額計債務」用；籌資活動調節表（p.91）發行現金流 122,795,106 千元")
+inp("cb_cp", "可轉債轉換價（每股）", "NT$", None, 4513.75, None, "Verified", MKA + " 附註 6(19)：轉換價 NT$4,513.75／股（可調整）；發行後三個月起可轉換", "現價 ÷ 轉換價見下一列；> 80% 時基準應改評估稀釋")
+inp("cb_px", "現價 ÷ 轉換價（價內程度）", "x", None, "=px/cb_cp", None, "Derived", "＝px ÷ cb_cp", "基準不計稀釋的前提：現價遠低於轉換價（本列 < 80%）")
+inp("cb_sh", "全數轉換時新增股數", "十億股", None, "=cb_face/cb_cp", None, "Derived", "＝面額 cb_face ÷ 轉換價 cb_cp（123.408e9 ÷ 4,513.75 ≈ 0.02734 十億股）", "Sens「可轉債視為全數轉換」用（債務減 cb_bv、股數加本列；Comparable 以 EPS 稀釋同比例調整）")
 TP_KEYS += ["tp_g", "tp_w_dcf", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fade_mB", "fade_mC"]
 
 r = 4; INROW = {}
@@ -634,8 +648,8 @@ def ddetail(paths, title):
     DCF_NEXT[0] = R_["end"] + 1
     return R_
 RD_ = ddetail(dpaths(PB, "PL!"), "三情境 FCFF 明細（十億新台幣；會計年度＝日曆年；評價日 2026-12-31）")
-DCF_NEXT[0] = FD.write_checks(DCFW, DCF_NEXT[0], nc_bs="269.058+8.629+180.62-41.95-9.785-mi_v",
-                              nc_note="2026-09-30 資產負債表（NT$B；stockanalysis 轉載 3Q26）：現金 269.058＋短期投資 8.629＋長期投資 180.620（2026-06-30）− 借款 41.950 − 租賃 9.785（2026-06-30）− 非控制權益 mi_v（第三輪修正：達發市值 × 外部持股＋其餘帳面）") + 1
+DCF_NEXT[0] = FD.write_checks(DCFW, DCF_NEXT[0], nc_bs="269.058+9.262+182.116-41.95-111.338-9.456-mi_v",
+                              nc_note="2026-09-30 資產負債表（NT$B；公司 3Q26 合併財報，v0.3.5 起）：現金 269.058＋流動金融資產 9.262＋非流動投資 182.116 − 短期借款 41.950 − 應付公司債（可轉債帳面）111.338 − 租賃 9.456 − 非控制權益 mi_v（達發市值 × 外部持股＋其餘帳面）") + 1
 DCFW.column_dimensions["A"].width = 58; DCFW.column_dimensions["B"].width = 34
 for _c in "CDEFGH": DCFW.column_dimensions[_c].width = 12
 SDCF = FD.write_summary(wb, V, 5, RD_, list(SC), ["tp_wA", "tp_wB", "tp_wC"], fmt="#,##0.00",
@@ -797,7 +811,9 @@ srcs = [("公司：2Q26 營運報告（1Q26、2Q26 損益表、資產負債）",
         ("資料商：財報狗（現價 10-22 核對）", "https://statementdog.com/analysis/2454"),
         ("市場層：tsmc、avgo、mrvl 成品（本 repo，唯讀）", f"{rel(TSMC_F)}；{rel(AVGO_F)}；{rel(MRVL_F)}"),
         ("未能讀取（權限請求逾時）：公司 2Q26 新聞稿、4Q25 講稿 PDF、finanzen.ch 歷年 EPS", "https://www.mediatek.com/hubfs/MediaTek%20Assets/Pdfs/Quarterly%20Earnings%20Release/2026/Quarterly%20Earnings%20Release-2026Q2/Press%20Release.pdf"),
-        ("待補（人工）：3Q26 財報（約 10 月底）；客戶名稱與 TPU 世代分工；聯發科 ASIC 每顆單價與 HBM 採購方式；2016 年 EPS 與 2016–2020 淨利率（十年平均）；前瞻 P/E 十年歷史（Bloomberg）", "未找到"),
+        ("公司：3Q26 合併財務報告（出處 A；英文版，會計師核閱；2026-09-30 資產負債表、附註 6(19) 海外可轉換公司債；v0.3.5 起資產負債表全部取自本文件）", MKA_U),
+        ("公司：3Q26 法說財務報表（出處 B；NT$M；Funds and investments、9M26 現金流量）", MKB_U),
+        ("待補（人工）：客戶名稱與 TPU 世代分工；聯發科 ASIC 每顆單價與 HBM 採購方式；2016 年 EPS 與 2016–2020 淨利率（十年平均）；前瞻 P/E 十年歷史（Bloomberg）", "未找到"),
         ("SemiAnalysis", "未使用")]
 for i, (a, b) in enumerate(srcs, 2): SO.cell(i, 1, a); SO.cell(i, 2, b)
 SO.column_dimensions["A"].width = 100; SO.column_dimensions["B"].width = 130
@@ -1127,6 +1143,43 @@ _r3_fix(wb, "v0.3.2", "FY2026＝日曆年 2026，錨點", extra=[(r'"（2026-10-
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import px1105_post  # noqa: E402
 print(px1105_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), "v0.3.3", "v0.3.2", "v0.3.2（2026-11-06）"))
+# ---------------- v0.3.5（2026-11-15）：Sens「可轉債處理」兩案（閉式；與 DCF 頁明細同式，D/E、β、ke、WACC 隨債務與股數重算） ----------------
+def _cb_tp(nc, de, extra_sh=None):
+    """nc：淨現金與投資的替代式；de：替代 D/E；extra_sh：新增股數名稱（None＝不稀釋）。回傳加權目標價公式（Comparable 依稀釋比例調整）。"""
+    b_ = f"(beta_u*(1+(1-tax_w)*{de}))"; k_ = f"(rf+{b_}*(erp+crp))"; we_ = f"(1/(1+{de}))"; w_ = f"({we_}*{k_}+(1-{we_})*kd_at+wacc_adj)"
+    parts = []
+    for wgt, n in zip(["tp_wA", "tp_wB", "tp_wC"], SC):
+        e_ = FD.value_expr(RD_, n, w=w_, ke=k_, nc=nc)
+        if extra_sh:
+            assert e_.count("/sh_v)") == 1, e_[-200:]
+            e_ = e_.replace("/sh_v)", f"/(sh_v+{extra_sh}))")
+        parts.append(f"{wgt}*{e_}")
+    comp = "tp_comp_adj" + (f"*sh_v/(sh_v+{extra_sh})" if extra_sh else "")
+    return f"=tp_w_dcf*({'+'.join(parts)})+(1-tp_w_dcf)*{comp}"
+_cb0 = SE.max_row + 3
+SE.cell(_cb0, 1, "可轉債處理敏感度（v0.3.5 起）：基準＝零息海外可轉債以帳面 cb_bv 計入 debt_v、不計稀釋（現價遠低於轉換價）。閉式公式與 DCF 頁明細同式；D/E、β、股權成本與 WACC 隨債務與股數重算").font = BOLD
+for j, h in enumerate(["案例", "設定", "加權目標價", "相對基準", "D/E", "WACC", "基準加權目標價", "鍵"], 1):
+    c = SE.cell(_cb0 + 1, j, h); c.font = BOLD
+_DE_FACE = "((debt_v-cb_bv+cb_face+lease_v)/(px*sh_v))"
+_DE_CONV = "((debt_v-cb_bv+lease_v)/(px*(sh_v+cb_sh)))"
+_WACC = lambda de: f"=(1/(1+{de}))*(rf+beta_u*(1+(1-tax_w)*{de})*(erp+crp))+(1-1/(1+{de}))*kd_at+wacc_adj"
+CB_ROWS = {}
+for i_, (nm_, st_, nc_, de_, xs_, key_) in enumerate([
+        ("可轉債以面額計債務", '="債務改以面額 "&TEXT(cb_face,"0.000")&"（帳面 "&TEXT(cb_bv,"0.000")&"，多計未攤銷折價 "&TEXT(cb_face-cb_bv,"0.000")&"）；不稀釋"', "(dcf_nc-(cb_face-cb_bv))", _DE_FACE, None, "cb_face"),
+        ("可轉債視為全數轉換", '="債務減帳面 "&TEXT(cb_bv,"0.000")&"、稀釋股數加 "&TEXT(cb_sh,"0.00000")&" 十億股（面額 ÷ 轉換價 "&TEXT(cb_cp,"#,##0.00")&"）；Comparable 依 EPS 稀釋同比例調整"', "(dcf_nc+cb_bv)", _DE_CONV, "cb_sh", "cb_sh"),
+        ("檢查：閉式公式的基準（帳面計債、不稀釋）− 基準加權目標價（應為 0）", None, "dcf_nc", "beta_de", None, "")]):
+    r_ = _cb0 + 2 + i_; CB_ROWS[key_ or "chk"] = r_
+    SE.cell(r_, 1, nm_)
+    if st_: SE.cell(r_, 2, st_)
+    if key_:
+        SE.cell(r_, 3, _cb_tp(nc_, de_, xs_)).number_format = "#,##0.00"
+        SE.cell(r_, 4, f"=C{r_}/G{r_}-1").number_format = "+0.0%;-0.0%;0.0%"
+        SE.cell(r_, 5, f"={de_}").number_format = "0.0000"; SE.cell(r_, 6, _WACC(de_)).number_format = "0.00%"
+        SE.cell(r_, 7, f"=Val!$B${T['tpw']}").number_format = "#,##0.00"; SE.cell(r_, 8, key_)
+    else:
+        SE.cell(r_, 3, _cb_tp(nc_, de_) + f"-Val!$B${T['tpw']}").number_format = "0.000000"
+        SE.cell(r_, 6, f"={_WACC(de_)[1:]}-wacc").number_format = "0.000000"
+SE.cell(_cb0 + 5, 1, "讀法：現價 ÷ 轉換價 cb_px 低於 80% 時基準不計稀釋；若股價接近或超過轉換價，改以「視為全數轉換」為基準評估。零息可轉債的折價攤銷（有效利率約 2.1%）屬營業外利息費用，本模型營業外淨額 nonop_f 為假設值、未逐項拆出（Sens 營業外 10／24 涵蓋）。")
 # 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 mediatek/coord_alt.json）；v0.3.4 起版面 v1.3、C0 實績（mediatek/v034_post.py）
 sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
 import coord as COORD
