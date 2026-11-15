@@ -171,12 +171,12 @@ SPEC = {
     ["產能與稼動率", ["vcap27", "vcap28", "vcap29", "vcap_adj", "vut_A", "vut_B", "vut_C"]],
     ["售價與毛利率（含折舊）", ["vasp"] + [k for k in I if re.match(r"^vgm2\d_[ABC]$", k)]],
     ["非控制權益", ["vmi"]],
-    ["建廠計畫（DCF 資本支出：總投資、已投入、剩餘與分年比例）", ["vsmc_tot", "vda_life", "vda_eq", "vda_life_b", "vda_adj", "nxp_rem", "cxh_24", "cxh_25", "cxg_26", "cx8_r", "vsmc_rem", "vsmc_sp27", "vsmc_sp28", "vsmc_sp29"]]]],
+    ["建廠計畫與折舊拆分（總投資、設備／廠房占比與年限、剩餘支出與分年比例、VSMC 估值參數）", ["vsmc_tot", "vda_life", "vda_eq", "vda_bld", "vda_life_b", "vda_adj", "vsmc_mcx", "vsmc_nc", "nxp_rem", "cxh_24", "cxh_25", "cxg_26", "cx8_r", "vsmc_rem", "vsmc_sp27", "vsmc_sp28", "vsmc_sp29"]]]],
   ["全公司（匯率、成本、FY2026 錨點、股價與目標價規則）", [
     ["匯率", ["fx", "fx_26"]],
     ["成本：折舊、每片現金成本、營業費用", ["da_tot26", "da_sh", "dag_27", "dag_28", "dag_29", "dag_adj", "cc_g", "phi", "g_opx_min"]],
     ["營業外、稅與股數", ["nonop_f", "tax", "sh_g"]],
-    ["FY2026 錨點（第一季稼動率、第三季指引、第四季假設）", ["ut_q1", "q3_gm", "q3_opx", "q3_nonop", "q3_tax", "q4_g", "q4_ut", "q4_gm", "q4_opx", "q4_nonop", "q4_tax", "t_h1", "q_sh"]],
+    ["FY2026 錨點（第一季稼動率、第三季實績、第四季指引與假設）", ["ut_q1", "q3_gm", "q3_opm", "q3_ni", "q4_g", "q4_ut", "q4_gm", "q4_opx", "q4_nonop", "q4_tax", "t_h1", "q_sh"]],
     ["股價與市場倍數", ["px", "pe_ttm", "fpe", "cons_feps", "cons_tp", "nim_5"]],
     ["目標價規則（情境權重、DCF 權重）", ["tp_w_dcf", "tp_wA", "tp_wB", "tp_wC"]],
     ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "rf_us", "beta_u", "beta_u_med", "beta_de", "beta_du", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
@@ -211,5 +211,8 @@ for s in out["sections"]:
                 ws = WB["README"]
                 b["rows"] = [[f"@README!A{r}"] for r in range(1, ws.max_row + 1) if re.match(r"^v\d+\.\d", str(ws.cell(r, 1).value or ""))]
 
-json.dump(out, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+cfg = out
+import v03_html  # noqa: E402  v0.3：個股 HTML 版面規格 v1.3＋三層協調讀取層級與 C0（vis/v03_html.py）
+v03_html.apply(cfg, WB, row_of)
+json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")
