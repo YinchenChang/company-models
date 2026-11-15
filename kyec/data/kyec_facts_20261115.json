@@ -1,0 +1,30 @@
+{
+ "_readme": "京元電（2449.TW）事實總帳（v0.4.6，2026-11-15 擷取）。金額十億新台幣（NT$B），EPS 新台幣，股數十億股。標記：Verified＝公開資訊觀測站財報；Interested-party＝媒體轉述之公司說法；Derived＝由上列數字計算。資產負債表與 3Q26 單季損益以 MOPS t164sb03／t164sb04 為主要出處（優先於資料商）。抓不到者寫「未取得」，不臆造。",
+ "sources": {
+  "MOPS_BS": "公開資訊觀測站 t164sb03 合併資產負債表 115/09/30（千元；companyId 2449、115 年第 3 季；主 session 以內建瀏覽器讀 MOPS API，2026-11-15）https://mops.twse.com.tw/mops/#/web/t164sb03",
+  "MOPS_IS": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季（千元；單季與 1–9 月累計；同上）https://mops.twse.com.tw/mops/#/web/t164sb04",
+  "SA_BS": "stockanalysis.com 2449 資產負債表（2026-06-30 TTM 與 FY2025；無一年內到期長期借款列；2026-11-15 讀取，用於確認原口徑）https://stockanalysis.com/quote/tpe/2449/financials/balance-sheet/",
+  "TN_1106": "科技新報 2026-11-06（3Q26 營收 121.42 億、毛利率 37.6%、淨利 26.45 億、EPS 2.06；4Q26 指引營收季增高個位數約 7–10%、毛利率 36–37%）https://finance.technews.tw/2026/11/06/king-yuan-electrics-third-quarter-operations-met-market-expectations/"
+ },
+ "items": [
+  {"id": "q3.rev", "v": 12.142259, "tag": "Verified", "src": "MOPS_IS", "note": "3Q26 營業收入合計 12,142,259 千元（v0.4.5 為前三季 − 上半年 12.142258）"},
+  {"id": "q3.cogs", "v": 7.582431, "tag": "Verified", "src": "MOPS_IS", "note": "3Q26 營業成本"},
+  {"id": "q3.gp", "v": 4.559828, "tag": "Verified", "src": "MOPS_IS", "note": "3Q26 營業毛利淨額（37.55%；v0.4.5 用 4.559）"},
+  {"id": "q3.opx", "v": 1.427142, "tag": "Verified", "src": "MOPS_IS", "note": "3Q26 營業費用合計"},
+  {"id": "q3.oi", "v": 3.132686, "tag": "Verified", "src": "MOPS_IS", "note": "3Q26 營業利益（v0.4.5 用 3.132）"},
+  {"id": "q3.pbt", "v": 3.247908, "tag": "Verified", "src": "MOPS_IS", "note": "3Q26 稅前淨利（營業外 115,222；所得稅 603,167）"},
+  {"id": "q3.ni", "v": 2.644512, "tag": "Verified", "src": "MOPS_IS", "note": "3Q26 母公司業主淨利 2,644,512 千元（v0.4.5 為前三季 − 上半年 2.644516）"},
+  {"id": "q3.eps", "v": 2.06, "tag": "Verified", "src": "MOPS_IS", "note": "3Q26 基本 EPS 2.06（稀釋 2.06）"},
+  {"id": "ytd3q.rev", "v": 33.475818, "tag": "Verified", "src": "MOPS_IS", "note": "1–9 月累計營業收入"},
+  {"id": "ytd3q.ni", "v": 7.422516, "tag": "Verified", "src": "MOPS_IS", "note": "1–9 月累計母公司業主淨利；基本 EPS 5.78"},
+  {"id": "bs0930.cash", "v": 17.744357, "tag": "Verified", "src": "MOPS_BS", "note": "現金及約當現金（無流動金融資產）"},
+  {"id": "bs0930.lt_inv", "v": 19.748977, "tag": "Verified", "src": "MOPS_BS", "note": "FVOCI 非流動 19,596,272＋採用權益法之投資 152,705 千元"},
+  {"id": "bs0930.debt", "v": 43.031951, "tag": "Verified", "src": "MOPS_BS", "note": "長期借款 43,031,951 千元；無短期借款、應付短期票券、應付公司債；原口徑無一年內到期長期借款列，不另補"},
+  {"id": "bs0930.lease", "v": 10.841782, "tag": "Verified", "src": "MOPS_BS", "note": "租賃負債 流動 1,619,248＋非流動 9,222,534 千元"},
+  {"id": "bs0930.mi", "v": 0.00894, "tag": "Verified", "src": "MOPS_BS", "note": "非控制權益 8,940 千元"},
+  {"id": "bs0930.shares", "v": 1.2838823, "tag": "Derived", "src": "MOPS_BS", "note": "普通股股本 12,838,823 千元 ÷ 10；無庫藏股、預收股本（2026 年配股 5% 後）"},
+  {"id": "q4.guide_rev_qoq", "v": [0.07, 0.10], "tag": "Interested-party", "src": "TN_1106", "note": "媒體轉述公司 4Q26 營收季增高個位數（約 7–10%）；模型 q4g 15% 未改"},
+  {"id": "q4.guide_gm", "v": [0.36, 0.37], "tag": "Interested-party", "src": "TN_1106", "note": "媒體轉述公司 4Q26 毛利率 36–37%；模型 q4_gm 39.5% 未改"},
+  {"id": "q3.capex", "v": null, "tag": "未取得", "src": null, "note": "3Q26 現金資本支出（1–9 月現金流量表）未取得；stub 期 4Q 資本支出＝(capex_26 − 1H26) ÷ 2（Assumed）"}
+ ]
+}
