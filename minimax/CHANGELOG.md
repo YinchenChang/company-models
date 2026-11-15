@@ -6,6 +6,7 @@
 - 新檔 `val_page.py`、`valcore.py`（與智譜共用）、`scripts/val_snapshots.py`、`data/val_scenarios.json`、`data/val_sens.json`；`build_xlsx.py` 附加 SRC S142–S155、Inputs I35–I61 並建 Val、RevDCF；`scripts/build_all.sh` 先跑快照、加 `check_rating_gate --strict`。
 - 加權目標價 HK$147.87（DCF 60.92、Comparable 234.82）、上檔空間 −13.1%、估值評等中立、收支關卡不通過（−5,983.2），投資建議中立。
 - 個股模型頁：估值章照 A–I 節（拿掉 data-novaluation）、新增反向 DCF 章、敏感度改加權目標價相對基準主圖。xlsx_diff 對 v0.2.2：既有格只差 README!A1。
+- 獨立核對文字修正（同版 v0.2.3，2026-11-15；只改 `build_html_v13.py` 文字並重產個股模型頁，xlsx 與一頁摘要逐位元組不變）：估值章加「與智譜互為唯一同業」說明（兩家 Comparable 結論本質上是同一組相對價差）；註明 DCF 淨現金下限以評價日淨現金推到目標時點、未扣其後燒錢（若改用模型 2027-11 內插淨現金約 1,298 百萬美元 → 加權目標價約 131.7 港元，仍中立但距放空邊界約 2.4pt）；β 借用來源（Anthropic 估值頁美國軟體同業 Palantir、CrowdStrike、Cloudflare、Snowflake、Datadog 5 年 β 中位數，Blume 調整）寫進 HTML；原反向檢驗摺疊註明股數基準 349.2M（S051，2026-07-14 配售後），與正文評價股數 352.5M 不同。檢查：check_html_v13（910 個 data-ref 不符 0）、check_html、ci_check、check_rating_gate --strict、check_layout_v13 --xlsx、segment_check、baseline_coordination/check.py 全過。
 
 ## v0.2.2 同版修正（2026-11-15；只改標籤與旗標，數字不變）
 - 個股模型頁估值章拿掉 `data-unlisted`、只留 `data-novaluation`（規格 J 節 (b)）；橫幅改「本模型未建目標價與評等」。
