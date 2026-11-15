@@ -11,6 +11,8 @@ BOLD = Font(bold=True); BLUE = Font(color="0000FF"); HDR = PatternFill("solid", 
 SAME = "讀取層級（同源，不判定）"
 TSQ2 = "公司 2027年3月期 第2四半期（中間期）決算短信（2026-11-04）"
 NA = "未取得（本輪無法讀取原文；待補）"
+FS25 = "公司 2025年3月期 決算短信〔日本基準〕（連結）前期欄，2025-05-09（https://www2.jpx.co.jp/disc/77290/140120250508534580.pdf）"   # v0.3.6
+FS26 = "公司 2026年3月期 決算短信〔日本基準〕（連結），2026-05-13（https://www.accretech.com/jp/ir/news/news-202605180003/main/0/link/FS_2026_4q_J_rev.pdf）"
 
 
 def lit(t):   # Excel 公式字串常數上限 255 字元：切段以 & 相接
@@ -43,8 +45,8 @@ def hist_is(wb):
     assert [rr[y] for y in (2022, 2023, 2024, 2025)] == [13, 14, 15, 16], rr
     H = wb.create_sheet("HistIS", index=wb.sheetnames.index("Hist") + 1)
     H["A1"] = ("HistIS — 標準損益表歷史（v0.3.5 起；PL 頁「標準損益表」的歷史三年與 FY2023 年增率用）。會計年度 4–3 月：FY2023＝2023-04～2024-03。金額：十億日圓；EPS：日圓。日本會計準則。"
-               "營收、營業利益、淨利、EPS 連既有 Hist 頁（公司決算短信、松井證券）；毛利 FY2025 取 In 頁 a25_gp、FY2024 取其說明（62,453 百萬日圓）；銷管費 FY2025 取 a25_sga。"
-               "FY2023 毛利與各年稅前利益、所得稅本輪未取得原文，留空並標「未取得」（不以第三方比率推估）")
+               "營收、營業利益、淨利、EPS 連既有 Hist 頁（公司決算短信、松井證券）；毛利 FY2025 取 In 頁 a25_gp；銷管費 FY2025 取 a25_sga。"
+               "v0.3.6 起補 FY2023 毛利、FY2023–FY2024 銷管費與 FY2023–FY2025 稅前利益、所得稅（公司決算短信原文；v0.3.5 為未取得）")
     H["A1"].font = BOLD
     for j, h in enumerate(["鍵", "項目", "FY2022", "FY2023", "FY2024", "FY2025", "標記", "來源"], 1):
         c = H.cell(3, j, h); c.font = BOLD; c.fill = HDR
@@ -52,9 +54,9 @@ def hist_is(wb):
     link = lambda col: {c: f"=Hist!{col}{rr[y]}" for c, y in hc.items()}
     R = {}
     rows = [("rev", "營收（売上高）", link("B"), "Verified", "既有 Hist 頁 B 欄（公司決算短信、松井證券）"),
-            ("cogs", "營業成本（売上原価；＝營收 − 毛利）", {c: f"={c}4-{c}6" for c in "EF"}, "Derived", "營收 − 毛利；FY2023：" + NA),
-            ("gp", "毛利（売上総利益）", {"E": 62.453, "F": "=a25_gp"}, "Verified", "FY2025：In 頁 a25_gp（決算說明資料 68,860）；FY2024：同列說明 62,453 百萬日圓；FY2023：" + NA),
-            ("opx", "銷管費（販売費及び一般管理費，含研發）", {"E": "=E6-E8", "F": "=a25_sga"}, "Verified（FY2025）／Derived（FY2024）", "FY2025：In 頁 a25_sga 35,122；FY2024＝毛利 − 營業利益；FY2023：" + NA),
+            ("cogs", "營業成本（売上原価；＝營收 − 毛利）", {c: f"={c}4-{c}6" for c in "DEF"}, "Derived", "營收 − 毛利"),
+            ("gp", "毛利（売上総利益）", {"D": 54.762, "E": 62.453, "F": "=a25_gp"}, "Verified", "FY2025：In 頁 a25_gp（68,860）；FY2024：62,453（" + FS26 + "）；FY2023：54,762（" + FS25 + "）"),
+            ("opx", "銷管費（販売費及び一般管理費，含研發）", {"D": 29.454, "E": 32.750, "F": "=a25_sga"}, "Verified", "FY2025：In 頁 a25_sga 35,122；FY2024：32,750（" + FS26 + "）；FY2023：29,454（" + FS25 + "）"),
             ("oi", "營業利益（営業利益）", {c: v for c, v in link("C").items() if c != "C"}, "Verified", "既有 Hist 頁 C 欄"),
             ("ni", "稅後淨利（歸屬母公司）", link("D"), "Verified", "既有 Hist 頁 D 欄"),
             ("eps_b", "EPS 基本（公司公告值）", link("E"), "Verified", "既有 Hist 頁 E 欄（過去十年無股票分割）"),
@@ -68,10 +70,18 @@ def hist_is(wb):
         H.cell(r, 7, tag); H.cell(r, 8, src)
         R[k] = r; r += 1
     assert (R["rev"], R["gp"], R["oi"], R["ni"], R["eps_b"]) == (4, 6, 8, 9, 10), R
-    H.cell(r, 2, "稅前利益、所得稅（各年）：" + NA + "；稅率見 In 頁 tax_w 說明（第三方近似）"); r += 2
+    for k, labl, cells, src in (("pti", "稅前利益（税金等調整前当期純利益）", {"D": 27.255, "E": 34.275, "F": 33.186}, "FY2023：27,255（" + FS25 + "）；FY2024：34,275、FY2025：33,186（" + FS26 + "）"),
+                                ("tax", "所得稅（法人税等合計）", {"D": 7.791, "E": 8.531, "F": 8.354}, "FY2023：7,791（" + FS25 + "）；FY2024：8,531、FY2025：8,354（" + FS26 + "）")):
+        H.cell(r, 1, f"h_{k}"); H.cell(r, 2, labl)
+        for c, v in cells.items():
+            H[f"{c}{r}"] = v; H[f"{c}{r}"].number_format = "#,##0.000"; H[f"{c}{r}"].font = BLUE
+        H.cell(r, 7, "Verified"); H.cell(r, 8, src + "；v0.3.6 補（In 頁 tax_w 仍為 v0.3 的第三方近似，未改）"); R[k] = r; r += 1
+    H.cell(r, 2, "稅前利益 − 所得稅 ≠ 歸屬母公司淨利：差額為非支配株主に帰属する当期純利益（金額小）"); r += 2
     H.cell(r, 1, "核對（應為 0）").font = BOLD; r += 1
     R["chk0"] = r
-    H.cell(r, 2, "FY2025 毛利 − 銷管費 − 營業利益（決算說明資料，百萬日圓捨入）"); H[f"F{r}"] = "=F6-F7-F8"; H[f"F{r}"].number_format = "0.000"; r += 1
+    H.cell(r, 2, "毛利 − 銷管費 − 營業利益（FY2023–FY2025；決算短信，百萬日圓捨入）")
+    for c in "DEF": H[f"{c}{r}"] = f"={c}6-{c}7-{c}8"; H[f"{c}{r}"].number_format = "0.000"
+    r += 1
     H.column_dimensions["A"].width = 10; H.column_dimensions["B"].width = 56
     for c in "CDEF": H.column_dimensions[c].width = 12
     H.column_dimensions["G"].width = 22; H.column_dimensions["H"].width = 100
@@ -99,7 +109,7 @@ def pl_standard(wb, HR, CR, PB):
     P.cell(r, 1, "口徑：日本會計準則（J-GAAP；公司決算短信〔日本基準〕；Non-GAAP 不適用，東京精密不另公布）。EPS 為基本 EPS（與模型、公司指引同口徑）。"
                  "預測期模型以部門營業利益推導（SPE、計測各自＝FY2026 錨點＋邊際利潤率 × 營收變化），不推毛利與營業費用，故預測期營業成本、毛利、營業費用留空；淨利＝營業利益 × 淨利÷營業利益比；稅前利益＝淨利 ÷（1 − WACC 用稅率），所得稅＝稅前利益 − 淨利，其他收入淨額（營業外收支＋特別損益）＝稅前利益 − 營業利益，三者皆為由模型淨利反推的 Derived 列，不進 EPS、現金流與目標價。")
     r_note = r; r += 1
-    P.cell(r, 1, "FY2030E–FY2032E（收斂法延伸期，只推營收與淨利）：營業利益取 DCF 頁情境 B 的 EBIT（＝淨利 ÷ 淨利÷營業利益比），毛利率沿用 FY2029，營業費用＝毛利 − 營業利益（推算）。FY2026E 為錨點（公司 2026-11-04 修正指引；上半為實績；三情境相同）。歷史毛利只有 FY2024、FY2025，稅前利益與所得稅歷史本輪未取得，留空。")
+    P.cell(r, 1, "FY2030E–FY2032E（收斂法延伸期，只推營收與淨利）：營業利益取 DCF 頁情境 B 的 EBIT（＝淨利 ÷ 淨利÷營業利益比），毛利率沿用 FY2029，營業費用＝毛利 − 營業利益（推算）。FY2026E 為錨點（公司 2026-11-04 修正指引；上半為實績；三情境相同）。歷史三年毛利、銷管費、稅前利益、所得稅為公司決算短信（v0.3.6 補齊）；歷史的稅前利益 − 所得稅與歸屬母公司淨利差非支配股東損益。")
     r_note2 = r; r += 1
     for j, h in enumerate(["項目", "單位"] + YEARS + ["說明"], 1):
         c = P.cell(r, j, h); c.font = BOLD; c.fill = HDR
@@ -123,31 +133,31 @@ def pl_standard(wb, HR, CR, PB):
     row("rev", "營收", "¥B", hh("rev") + fc("rev") + [f"=PL!{EC[c]}{X['rev']}" for c in "JKL"], M, "FY2026E＝錨點；FY2027E–FY2029E 為驅動因子推導（PL 情境 B）；FY2030E–FY2032E 為收斂法")
     row("yoy", "營收年增率（YoY）", "%", ["=C{rev}/HistIS!C{h}-1".format(rev=L["rev"], h=HR["rev"])] + [f"={c}{L['rev']}/{p}{L['rev']}-1" for p, c in zip(COLS, COLS[1:])], PCT)
     rc = r
-    row("cogs", "營業成本（COGS）", "¥B", [None] + [f"=HistIS!{HC[c]}{HR['cogs']}" for c in "DE"], M, "歷史 FY2024–FY2025＝營收 − 毛利；預測期模型不推（部門營業利益法），留空")
-    row("gp", "毛利", "¥B", [None] + [f"=HistIS!{HC[c]}{HR['gp']}" for c in "DE"], M, "FY2023 未取得；預測期模型不推，留空")
-    row("gm", "毛利率", "%", [None] + [f"={c}{rc + 1}/{c}{L['rev']}" for c in "DE"], PCT, "預測期留空")
-    row("opx", "營業費用（銷管費，含研發）", "¥B", [None] + [f"=HistIS!{HC[c]}{HR['opx']}" for c in "DE"], M, "FY2025＝決算短信銷管費；FY2024＝毛利 − 營業利益（Derived）；預測期留空")
+    row("cogs", "營業成本（COGS）", "¥B", [f"=HistIS!{HC[c]}{HR['cogs']}" for c in "CDE"], M, "歷史＝營收 − 毛利；預測期模型不推（部門營業利益法），留空")
+    row("gp", "毛利", "¥B", [f"=HistIS!{HC[c]}{HR['gp']}" for c in "CDE"], M, "歷史＝決算短信；預測期模型不推，留空")
+    row("gm", "毛利率", "%", [f"={c}{rc + 1}/{c}{L['rev']}" for c in "CDE"], PCT, "預測期留空")
+    row("opx", "營業費用（銷管費，含研發）", "¥B", [f"=HistIS!{HC[c]}{HR['opx']}" for c in "CDE"], M, "歷史＝決算短信銷管費；預測期留空")
     assert L["opx"] == rc + 3
     row("oi", "營業利益", "¥B", hh("oi") + [f"=PL!{PC4[c]}{R['oi']}" for c in "FGHI"] + [f"=PL!{EC[c]}{X['ni']}/nioi" for c in "JKL"], M, "FY2030E 起＝淨利 ÷ nioi（同 DCF 頁 EBIT）")
     assert L["oi"] == rc + 4
     row("opm", "營業利益率", "%", [f"={c}{L['oi']}/{c}{L['rev']}" for c in COLS], PCT)
-    row("oth", "其他收入（淨額）", "¥B", [None] * 3 + [f"={c}{r + 1}-{c}{L['oi']}" for c in "FGHIJKL"], M, "＝稅前利益 − 營業利益（營業外收支＋特別損益）；預測期為由淨利反推的 Derived 值")
-    row("pti", "稅前利益", "¥B", [None] * 3 + [f"={c}{r + 2}/(1-tax_w)" for c in "FGHIJKL"], M, "歷史未取得；預測期＝淨利 ÷（1 − tax_w）")
-    row("tax", "所得稅", "¥B", [None] * 3 + [f"={c}{L['pti']}-{c}{r + 1}" for c in "FGHIJKL"], M, "歷史未取得；預測期＝稅前利益 − 淨利")
+    row("oth", "其他收入（淨額）", "¥B", [f"={c}{r + 1}-{c}{L['oi']}" for c in COLS], M, "＝稅前利益 − 營業利益（營業外收支＋特別損益）；預測期為由淨利反推的 Derived 值")
+    row("pti", "稅前利益", "¥B", [f"=HistIS!{HC[c]}{HR['pti']}" for c in "CDE"] + [f"={c}{r + 2}/(1-tax_w)" for c in "FGHIJKL"], M, "歷史＝決算短信；預測期＝淨利 ÷（1 − tax_w）")
+    row("tax", "所得稅", "¥B", [f"=HistIS!{HC[c]}{HR['tax']}" for c in "CDE"] + [f"={c}{L['pti']}-{c}{r + 1}" for c in "FGHIJKL"], M, "歷史＝決算短信（法人税等合計；與淨利差非支配股東損益）；預測期＝稅前利益 − 淨利")
     row("ni", "稅後淨利（歸屬母公司）", "¥B", hh("ni") + [f"=PL!{PC4[c]}{R['ni']}" for c in "FGHI"] + [f"=PL!{EC[c]}{X['ni']}" for c in "JKL"], M)
     row("nm", "淨利率", "%", [f"={c}{L['ni']}/{c}{L['rev']}" for c in COLS], PCT)
     row("sh", "基本股數（百萬股）", "百萬股", [f"=HistIS!{HC[c]}{HR['sh_b']}" for c in "CDE"] + ["=shares"] * 4 + [f"={c}{L['ni']}*1000/{c}{r + 1}" for c in "JKL"], M, "歷史＝淨利 ÷ EPS（Derived）；FY2026E–FY2029E＝In 頁 shares（中間期期中平均，扣除員工持股信託）；FY2030E 起＝淨利 ÷ EPS（延伸區塊）")
     row("eps", "EPS（J-GAAP 基本）", "¥", [f"=HistIS!{HC[c]}{HR['eps_b']}" for c in "CDE"] + [f"=PL!{PC4[c]}{R['eps']}" for c in "FGHI"] + [f"=PL!{EC[c]}{X['eps']}" for c in "JKL"], "#,##0.00", "基本 EPS；共識與公司指引為基本 EPS")
     P.cell(r, 1, "比率").font = BOLD; r_ratio = r; r += 1
     row("r_yoy", "營收年增率", "%", [f"={c}{L['yoy']}" for c in COLS], PCT)
-    row("r_gm", "毛利率", "%", [None] + [f"={c}{L['gm']}" for c in "DE"], PCT)
+    row("r_gm", "毛利率", "%", [f"={c}{L['gm']}" for c in "CDE"], PCT)
     row("r_opm", "營業利益率", "%", [f"={c}{L['opm']}" for c in COLS], PCT)
     row("r_nm", "淨利率", "%", [f"={c}{L['nm']}" for c in COLS], PCT)
-    row("r_tax", "有效稅率（所得稅 ÷ 稅前利益）", "%", [None] * 3 + [f"={c}{L['tax']}/{c}{L['pti']}" for c in "FGHIJKL"], PCT, "預測期＝In 頁 tax_w")
+    row("r_tax", "有效稅率（所得稅 ÷ 稅前利益）", "%", [f"={c}{L['tax']}/{c}{L['pti']}" for c in COLS], PCT, "歷史＝決算短信；預測期＝In 頁 tax_w")
     row("r_niy", "淨利年增率（YoY）", "%", ["=C{ni}/HistIS!C{h}-1".format(ni=L["ni"], h=HR["ni"])] + [f"={c}{L['ni']}/{p}{L['ni']}-1" for p, c in zip(COLS, COLS[1:])], PCT, "FY2023 的基期＝FY2022 淨利（Hist 頁）")
     P.cell(r, 1, "核對（應為 0）").font = BOLD; r_chk = r; r += 1
-    row("c1", "核對：營收 − 營業成本 − 毛利（FY2024A–FY2025A）", "¥B", [None] + [f"={c}{L['rev']}-{c}{L['cogs']}-{c}{L['gp']}" for c in "DE"], "0.000")
-    row("c2", "核對：毛利 − 營業費用 − 營業利益（FY2024A–FY2025A）", "¥B", [None] + [f"={c}{L['gp']}-{c}{L['opx']}-{c}{L['oi']}" for c in "DE"], "0.000")
+    row("c1", "核對：營收 − 營業成本 − 毛利（FY2023A–FY2025A）", "¥B", [f"={c}{L['rev']}-{c}{L['cogs']}-{c}{L['gp']}" for c in "CDE"], "0.000")
+    row("c2", "核對：毛利 − 營業費用 − 營業利益（FY2023A–FY2025A）", "¥B", [f"={c}{L['gp']}-{c}{L['opx']}-{c}{L['oi']}" for c in "CDE"], "0.000")
     row("c3", "核對：稅前利益 − 所得稅 − 稅後淨利（預測期）", "¥B", [None] * 3 + [f"={c}{L['pti']}-{c}{L['tax']}-{c}{L['ni']}" for c in "FGHIJKL"], "0.000")
     row("c4", "核對：營業利益 − DCF 頁情境 B 的 EBIT（FY2026E–FY2032E）", "¥B", [None] * 3 + [f"={c}{L['oi']}-DCF!{DCOL[c]}{d_ebit}" for c in "FGHIJKL"], "0.000")
     row("c5", "核對：稅後淨利 − PL 情境 B（FY2026E–FY2029E）／延伸表（FY2030E–FY2032E）", "¥B", [None] * 3 + [f"={c}{L['ni']}-PL!{PC4[c]}{R['ni']}" for c in "FGHI"] + [f"={c}{L['ni']}-PL!{EC[c]}{X['ni']}" for c in "JKL"], "0.000")
@@ -600,7 +610,7 @@ def apply(wb, here, SIL, CR, PB, EQ_F):
     SO = wb["Sources"]
     rr = SO.max_row + 1
     for i, (t, u) in enumerate((("C0 實績（v0.3.5）：FY2026 上半 SPE 營收、受注、營業利益與合併數字取自 2027年3月期 第2四半期（中間期）決算短信（2026-11-04）；Q1 部門數字取自 2026年度第1四半期 決算說明資料（本頁既有列）", ""),
-                                ("HistIS（v0.3.5）：營收、營業利益、淨利、EPS 取既有 Hist 頁；毛利、銷管費取 In 頁 a25_gp／a25_sga；FY2023 毛利與各年稅前、所得稅未取得", ""),
+                                ("HistIS（v0.3.5 起；v0.3.6 補齊）：營收、營業利益、淨利、EPS 取既有 Hist 頁；FY2025 毛利、銷管費取 In 頁 a25_gp／a25_sga；FY2023–FY2024 毛利、銷管費與 FY2023–FY2025 稅前利益、所得稅取公司 2025年3月期、2026年3月期 決算短信", FS26),
                                 ("層級：設備市場模型 Mkt 頁 5B 節（測試與其他封裝、先進封裝〔AI〕、晶圓前段設備；先進邏輯〔AI〕、DRAM〔AI〕）", ""))):
         SO.cell(rr + i, 1, t); SO.cell(rr + i, 2, u)
     wb._v035 = dict(HR=HR, PL=PLA, RV=RVA, VG=VG, SNS=SNS, RM=RMA, CO=CO)
