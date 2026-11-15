@@ -14,7 +14,7 @@ M_OCT = "https://finance.technews.tw/2026/11/06/jentech-3653-202610-financial-re
 M_SEP = "https://finance.technews.tw/2026/10/08/jentech-3653-202609-financial-report/"
 
 C = dict(
-    name="健策", ver=VER, built=BUILT,
+    name="健策", ver=VER, built=BUILT, since="v0.2.5",   # v1.3 各段標題「起始版」（v0.2.5 起；c13 選用參數）
     ext_rows=lambda P: (lambda b: dict(rev=lab(P, "營收", b, exact=True, end=b + 50), ni=lab(P, "歸屬母公司淨利", b, exact=True, end=b + 50),
                                          sh=lab(P, "股數", b, exact=True, end=b + 50), eps=lab(P, "EPS", b, exact=True, end=b + 50), hdr=b + 1))(blockB(P)),   # 延伸期在推導區塊 H–J 欄
     hist_title=("Hist — 損益表歷史（v0.2.5 起；PL 頁「標準損益表」的歷史三年與年增率用）。金額：十億新台幣；EPS：新台幣；歸屬母公司。"
