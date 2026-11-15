@@ -176,7 +176,7 @@ SPEC = {
     ["匯率", ["fx", "fx_26"]],
     ["成本：折舊、每片現金成本、營業費用", ["da_tot26", "da_sh", "dag_27", "dag_28", "dag_29", "dag_adj", "cc_g", "phi", "g_opx_min"]],
     ["營業外、稅與股數", ["nonop_f", "tax", "sh_g"]],
-    ["FY2026 錨點（第一季稼動率、第三季實績、第四季指引與假設）", ["ut_q1", "q3_gm", "q3_opm", "q3_ni", "q4_g", "q4_ut", "q4_gm", "q4_opx", "q4_nonop", "q4_tax", "t_h1", "q_sh"]],
+    ["FY2026 錨點（第一季稼動率、第三季實績、第四季指引與假設）", ["ut_q1", "q3_gm", "q3_opm", "q3_ni", "q4_g", "q4_ut", "q4_gm", "q4_opx", "q4_nonop", "q4_tax", "t_h1", "q_sh", "sh_bs"]],
     ["股價與市場倍數", ["px", "pe_ttm", "fpe", "cons_feps", "cons_tp", "nim_5"]],
     ["目標價規則（情境權重、DCF 權重）", ["tp_w_dcf", "tp_wA", "tp_wB", "tp_wC"]],
     ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "rf_us", "beta_u", "beta_u_med", "beta_de", "beta_du", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],

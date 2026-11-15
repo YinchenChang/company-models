@@ -6,7 +6,7 @@ import os, re
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
-VER, BUILT = "0.3", "2026-11-15"
+VER, BUILT = "0.3.1", "2026-11-15"
 BOLD = Font(bold=True); BLUE = Font(color="0000FF"); HDR = PatternFill("solid", fgColor="DDEBF7")
 SAME = "讀取層級（同源，不判定）"
 SAIS = "https://stockanalysis.com/quote/tpex/5347/financials/income-statement/"
@@ -464,9 +464,9 @@ def coord_c0(wb, SIL):
         c = CW.cell(r, j, h); c.font = BOLD; c.fill = HDR
     ROW["h3"] = r; r += 1
     acts = [("營收（月營收累計）", "2026-01～09", 42.479, "NT$B", "Verified：月營收公告前 9 月 424.79 億元（科技新報 2026-10-08）"),
-            ("營收（季）", "3Q26", "=Q!E4", "NT$B", "Verified：157.02 億元（季增 10.2%、年增 27.2%；壹蘋新聞網 2026-11-06 法說）"),
-            ("毛利率（季）", "3Q26", "=q3_gm", "%", "Verified：33.6%（同上）"),
-            ("歸屬母公司淨利（季）", "3Q26", "=q3_ni", "NT$B", "Verified：30.99 億元、EPS 1.62 元（同上；經濟日報同值）"),
+            ("營收（季）", "3Q26", "=Q!E4", "NT$B", "Verified：公開資訊觀測站 t164sb04 營業收入 15,702,026 千元（季增 10.2%、年增 27.2%；法說 2026-11-06 同值）"),
+            ("毛利率（季）", "3Q26", "=q3_gm", "%", "Verified：33.65%（公開資訊觀測站；法說 33.6%）"),
+            ("歸屬母公司淨利（季）", "3Q26", "=q3_ni", "NT$B", "Verified：30.99 億元、基本 EPS 1.69、稀釋 1.62 元（公開資訊觀測站；法說、經濟日報同值）"),
             ("稼動率（季）", "3Q26", "=Q!E6", "%", "Interested-party：公司法說約 90%（同上）"),
             ("資本支出（年度指引）", "2026", "=cxg_26", "NT$B", "Interested-party：公司 600–700 億元（約九成 VSMC；同上）；指引不算實績")]
     ROW["a0"] = r
@@ -518,7 +518,8 @@ def readme13(wb, PLA, RVA, SNS, CO):
     put("o5", T("三層協調：世界先進只讀 Siliconomics 匯率，不讀產業量，沒有對帳中年份，兩讀數不適用；公司實績（月營收、3Q26 損益）對層級無可比量。C0 對帳中 "), TX(f"Coord!F{CO['cnt']}", "0"), T(" 項。"))
     put("drv", T("分部營收推導（情境 B）：8 吋晶圓＝產能 × 稼動率 × 美元售價 × 匯率，加 VSMC 12 吋。FY2028 8 吋出貨 "),
         TX(f"PL!H{PLA['s_ship']}", "#,##0"), T(" 千片、8 吋營收 "), TX(f"PL!H{PLA['s_w']}", "#,##0.0"), T("、VSMC "), TX(f"PL!H{PLA['s_v']}", "#,##0.0"), T("、營收 "), TX(f"PL!H{PLA['s_rev']}", "#,##0.0"), T(" 十億新台幣。"))
-    RD.cell(r, 1, f"v{VER}（{BUILT}）：依 v0.2.4 正式驗收報告（2026-11-09，不通過）修正四項 Critical 並滾入 3Q26 實績：(C-01) 不再於負 NOPAT 套終值、每股價值不截零，VSMC 明確期延到 FY2040、未正常化者終值不適用，DCF 不適用時權重取 0；"
+    RD.cell(r, 1, f"v{VER}（{BUILT}）：3Q26 損益出處改公開資訊觀測站核對（稅前 37.62 億元、非控制權益 −0.97 億元改財報值；4Q26 營業外沿用 3Q 實績）；DCF 資產負債表日 2026-06-30 → 09-30（應付公司債 191.05、長借 88.90 億；一年內到期長期負債沿用 06-30 值 119.98 億；已發放股利不再扣）；評價用股數改 9-30 股本 ÷ 面額（基本）。"
+                  "v0.3（2026-11-15）：依 v0.2.4 正式驗收報告（2026-11-09，不通過）修正四項 Critical 並滾入 3Q26 實績：(C-01) 不再於負 NOPAT 套終值、每股價值不截零，VSMC 明確期延到 FY2040、未正常化者終值不適用，DCF 不適用時權重取 0；"
                   "(C-02) DCF 改 SOTP：既有 8 吋 100%＋VSMC 企業價值 60%，NXP 40% 以公允價值扣除；(C-03) 不再以帳面倒推 NXP 剩餘注資；(C-04) VSMC 總投資拆為設備 60%（6 年）、廠房 30%（20 年）、其他 10% 不折舊；"
                   "FY2026 錨點改用 3Q26 實績與 4Q26 指引。另：個股 HTML 版面規格 v1.3（Hist、標準損益表、RevDCF、Val 0.7、Sens 末表、Coord 讀取層級與 C0）；兩讀數不適用")
     out["ver"] = r; r += 1
@@ -542,7 +543,8 @@ def apply(wb, here, SIL, G):
     RMA = readme13(wb, PLA, RVA, SNS, CO)
     SO = wb["Sources"]
     rr = SO.max_row + 1
-    for i, (t, u) in enumerate((("媒體：壹蘋新聞網 2026-11-06（3Q26 法說：營收、毛利率、營業利益率、淨利、EPS、4Q26 指引、2026 折舊與資本支出）", VQ3),
+    for i, (t, u) in enumerate((("公司財報：公開資訊觀測站 t164sb03／t164sb04 115 年第 3 季（3Q26 損益核對、115/09/30 資產負債表；v0.3.1）", "https://mops.twse.com.tw/mops/#/web/t164sb03"),
+                                ("媒體：壹蘋新聞網 2026-11-06（3Q26 法說：營收、毛利率、營業利益率、淨利、EPS、4Q26 指引、2026 折舊與資本支出）", VQ3),
                                 ("媒體：經濟日報 2026-11-06（3Q26 法說：營收、淨利、EPS、4Q26 指引）", VQ3B),
                                 ("資料商：stockanalysis 年度損益表 FY2022–FY2025（Hist 頁）", SAIS),
                                 ("驗收報告：世界先進個股模型_v0.2.4_正式驗收與建議報告（2026-11-09；Drive 02-AI供應鏈）", "Google Drive（Andy 專案資料夾）"))):
