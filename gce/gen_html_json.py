@@ -254,3 +254,64 @@ import r3_html  # noqa: E402
 r3_html.post(cfg, wb, '新台幣')
 json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok", OUT)
+# ───────── v0.3.4（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（兩讀數、C0（實績））；共通步驟 gce/html13.py（高速 CCL／PCB 四家同一份；樣板 delta、auras、emc） ─────────
+import html13  # noqa: E402
+AIR_ = "AI 相關營收 ＝ MIN（需求面、產能上限 − 非 AI）"
+
+
+def _ext(row):   # 推導區塊直接延伸到 FY2032：表頭列＝各情境區塊的「項目」列；營收、EPS 列在區塊內
+    out = {}
+    for k in "ABC":
+        b = next(r for r in range(1, wb["PL"].max_row) if str(wb["PL"].cell(r, 1).value or "").startswith(f"情境 {k}") and wb["PL"].cell(r + 1, 1).value == "項目")
+        out[k] = (row("PL", "營收", b, True), row("PL", "EPS", b, True))
+        if k == "A":
+            xh = b + 1
+    return xh, out
+
+
+H = {
+    "ver": "v0.3.4",
+    "ext": _ext,
+    "units_chart": lambda pB, hB: {
+        "type": "theme", "title": "AI 相關與非 AI 營收（情境 B，十億元）與金像電在可參與 AI 高速 PCB 市場的有效份額（右軸）", "x": f"@PL!D{hB}:G{hB}",
+        "fmt": "n1", "fmt_r": "p1", "stack": True, "pad": 1.25, "total": f"@PL!D{pB('營收')}:G{pB('營收')}",
+        "bars": [{"name": ["AI 相關（加速器卡、運算板、交換器板等）"], "y": f"@PL!D{pB(AIR_)}:G{pB(AIR_)}", "color": "#0b7a80"},
+                 {"name": ["非 AI（一般伺服器、網通、筆電與其他）"], "y": f"@PL!D{pB('非 AI 營收')}:G{pB('非 AI 營收')}", "color": "#b9b4a6"}],
+        "lines": [{"name": ["金像電在可參與 AI 高速 PCB 市場的有效份額"], "y": f"@PL!D{pB('金像電有效份額')}:G{pB('金像電有效份額')}", "axis": "r", "color": "#3b3838", "labels": True}],
+        "caption": "堆疊＝兩塊營收，頂端數字＝合併營收；折線＝金像電有效份額（右軸）。回答命題：AI 伺服器與交換器 PCB 需求擴大時，擴產與價格能讓營收成長多少。FY2026 為校準年。"},
+    "sc_caption": "三情境 FY2027 起差在份額、價格與 AI 毛利率改善（A 高、B 基準、C 低），顆數係數的差異自 CY2028 起；FY2030 起為收斂期。",
+    "seg": [("一、AI 部署與可參與 AI 高速 PCB 需求", "A. AI 部署與每 GW AI 高速 PCB 金額", "B. 產能上限"), ("二、產能上限、非 AI 與合併營收", "B. 產能上限", "C. 損益")],
+    "seg_caption": "分部營收推導（情境 B；十億元新台幣）：AI 相關＝部署 GW × 每 GW 可參與 PCB 金額 × 金像電有效份額 × 價格指數，以產能上限減非 AI 為上限；加非 AI 得合併營收",
+    "gw_chart": lambda pB, hB: {
+        "type": "theme", "title": "部署 GW（IT 電力，長條）與可參與 AI 高速 PCB 市場（折線，十億美元，右軸）：情境 B", "x": f"@PL!D{hB}:G{hB}",
+        "fmt": "n0", "fmt_r": "n1", "stack": False, "pad": 1.3,
+        "bars": [{"name": ["部署 GW（IT 電力）"], "y": f"@PL!D{pB('部署 GW（IT 電力）')}:G{pB('部署 GW（IT 電力）')}", "color": "#0b7a80"}],
+        "lines": [{"name": ["可參與 AI 高速 PCB 市場"], "y": f"@PL!D{pB('可參與 AI 高速 PCB 市場（美元；不含價格指數）')}:G{pB('可參與 AI 高速 PCB 市場（美元；不含價格指數）')}", "axis": "r", "color": "#c29a2b", "labels": True}],
+        "caption": "AI 相關營收的產業輸入：部署量（讀 Siliconomics 基準，再乘情境 B 顆數係數）× 每 GW 可參與 PCB 金額（經勝宏模型讀 Siliconomics，中板項乘參與係數）＝可參與市場；乘上金像電有效份額與價格指數即為需求面營收。"},
+    "recon_h3": "券商、研調與同業份額對照（原有）",
+    "plain": {f"Val!E{find('Val', 'WACC')}": "股權成本與稅後債務成本以市值權重加權；WACC 調整只用於敏感度（基準為零）",
+              f"Val!A{find('Val', '永續成長率 g')}": "永續成長率 g（長期成長上限與無風險利率取小者）",
+              f"Val!A{find('Val', '永續期 RONIC')}": "永續期 RONIC（＝WACC＋超額報酬差）",
+              f"Val!A{find('Val', 'DCF 情境價值推到 12 個月後')}": "DCF 情境價值推到目標時點（以股權成本複利，扣除期間股利）",
+              f"In!B{INK['g_tv']}": "永續成長率 g（最後一年之後；長期成長上限與無風險利率取小者）",
+              f"README!A{find('README', '預估期間：')}": "預估期間：FY2027–FY2029 由驅動因子推導；FY2030 起為收斂法，非驅動因子推導（營收年增由 FY2029 線性收斂到長期營收年增、淨利率收斂到長期淨利率，FY2032 達到；PL 頁灰底）。長期淨利率依工作單以情境 C FY2029 淨利率打折（十年平均淨利率未找到）。",
+              **{f"Recon!{c.coordinate}": "勝宏模型成品" for c in wb["Recon"]["I"] if c.value == "victory_giant/dist"}},
+    "fold": {"DCF!A2": "展開：DCF 的營業利益與自由現金流口徑"},
+}
+
+
+def row(sh, label, start=1, exact=False):
+    ws = wb[sh]
+    for r in range(start, ws.max_row + 1):
+        v = str(ws.cell(r, 1).value or "").strip()
+        if (v == label.strip()) if exact else v.startswith(label.strip()):
+            return r
+    raise KeyError((sh, label))
+
+
+html13.apply(cfg, wb, X, H, os.path.join(HERE, ".."))
+for b in next(s for s in cfg["sections"] if s["id"] == "sens")["blocks"]:   # 原有龍捲風圖有 FY2027 與 FY2028 兩組：摺疊說明依標題改正
+    if b.get("type") == "tornado" and b.get("collapse") and str(b.get("title", "")).startswith("FY2027"):
+        b["summary"] = b["summary"].replace("FY2028 EPS", "FY2027 EPS")
+json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+print("v1.3 ok", os.path.relpath(X, HERE))
