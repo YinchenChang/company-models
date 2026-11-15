@@ -1,4 +1,19 @@
-# gce/ — 金像電（2368.TW）收支與估值模型 v0.3.3
+# gce/ — 金像電（2368.TW）收支與估值模型 v0.3.4
+
+## v0.3.4（2026-11-15）：個股 HTML 版面 v1.3＋三層協調（兩讀數目標價、讀取層級、C0 公司實績對帳）
+
+- **依據：** 工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`、`docs/workorders/20261114_C0實績對帳補列_七家.md`；規則 `docs/plan/三層基準協調規則.md` v1.4.2；`tools/coord/README.md`；版面 `docs/plan/個股HTML版面規格.md` v1.3（樣板 NVIDIA v0.3.10、台達電、同次產業台光電 v0.5.4）。
+- **做法：** 共通步驟 `gce/c13.py`、`gce/html13.py`（高速 CCL／PCB 四家同一份），金像電設定在 `gce/v13_post.py`。推導區塊直接延伸到 FY2032（無「延伸｜情境 B」表），故 `ext_rows`（c13）與 `H["ext"]`（html13）指向各情境區塊本身的營收、淨利、股數、EPS 列；業外列名 `營業外淨額`。`build_gce.py` 存檔前呼叫 `tools/coord` 的 `add_sheet` 後套用；`gen_html_json.py` 最後呼叫 `html13.apply`（含 `COORD.inject_html`）。主引擎掛鉤：`SIL_COORD_ALT=1` 時情境 B、C 的 AI IT 資本支出 CY2027 起 × `wta_27／28／29`（情境 A 不縮放；FY2026 校準不受影響）。
+- **兩讀數（`gce/coord_alt.json`，Siliconomics v0.19；對帳中 CY2027–CY2029）：** 現行加權目標價 1,201.70 元（買進，+38.4%）；另一側 1,033.09 元（**中立**，+19.0%）；DCF 715.73 → 609.33、Comparable（未調整）1,000.86 → 863.98。兩讀數評等不同。alt_run 檢查列：另一側建置與現行建置一致。
+- **C0（實績）：** 實績＝月營收 2026-09 93.20 億元、2026-10 99.13 億元、前 10 月累計 832.92 億元（年增 69.9%；TechNews 2026-11-06 https://finance.technews.tw/2026/11/06/gce-2368-202610-financial-report/ ；9 月與前 9 月 733.79 億元見 TechNews 2026-10-08）、3Q26 營收 297.19 億元（7–9 月月營收）。層級隱含＝Siliconomics AI 高速 PCB 市場 CY2026 US$10.53B（全額）× 金像電可參與比例 × 有效份額 17.3% × 匯率 32＝550.0 億元。**判定：無可比實績（層級值同源）**——Siliconomics 沒有金像電份額，份額＝AI 相關營收錨點 ÷ 可參與市場，市場與參與係數消去，只檢驗營收錨點；公司未揭露 AI 相關營收金額。參考列（錨點 AI 占比 × 實績營收）主讀數 −5.2%、第二讀數 +12.8%，不判定。上限檢查通過（55%）。對帳中項目 0。月營收前 9 月累計 − 3Q26 − 財報 1H26 差 6.8 億元（月營收自結數與財報之差，未查明），不影響兩讀數。
+- **讀取層級說明：** 每 GW PCB 三項金額經 `victory_giant/dist` 成品讀入（勝宏模型讀 Siliconomics `pcb_*`，數值與 Siliconomics 相同）；Coord 第 2 節以三項全額（中板項 ÷ 參與係數）對 `SIF_PCBperGW`、`SIF_PCBMkt_Base`，差距 0。
+- **Hist 頁：** stockanalysis 年度損益表 FY2022–FY2025（https://stockanalysis.com/quote/tpe/2368/financials/income-statement/ ，2026-11-15 讀取）；EPS 為公司公告基本 EPS（8.86／7.25／11.54／19.47；FY2025 stockanalysis 19.48 為四捨五入差，取公司 19.47 與 Q 頁一致）。
+- **不變性：** `tools/xlsx_diff.py` 對 v0.3.3（容差 1e-9）：既有格只有 README!A1（版號、本版說明；A1 標題版號由舊的 v0.1.1 更正）不同，其餘皆為新增頁與新增格；目標價、評等不變。
+- **加註（舊節數字）：** v0.3.3 節的「加權目標價 1,219 元（DCF 751）、上檔空間 +40.5%」為當時成品；之後 Siliconomics v0.19 全下游重建原地更新 v0.3.3 成品，現行為加權目標價 1,201.70 元（DCF 715.73、Comparable 調整後 1,687.66）、上檔空間 +38.4%、買進。本版以現行成品為基準比對，舊節不改寫。
+- **未做：** 3Q26 財報（損益）本版未滾入（不改錨點）；下一版滾入後更新 Q 頁與 C0 第二讀數的財報來源。
+- **驗證：** `check_company_html gce` 全部通過；`check_layout_v13 --xlsx` ok（HTML 可見文字的參數代號改白話：情境定義的收斂說明、Recon 的成品路徑）；`tools/baseline_coordination/check.py` 0 項不符；LibreOffice 重算錯誤格 0。
+- **coord_meta：** `siliconomics/builder/seed/coord_meta_v0.19.json` 的 `hardware_companies` 需加入 `gce`（由主控合併時統一加入；本 PR 不改）。
+- 成品：`dist/20261115_金像電個股模型_v0.3.4.xlsx`／`.html`；v0.3.3 移到 `dist/_待刪除/`。
 
 ## v0.3.3（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 
