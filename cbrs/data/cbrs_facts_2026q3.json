@@ -399,7 +399,7 @@
    "period": "2026-09-30",
    "source": "https://www.sec.gov/Archives/edgar/data/0002021728/000162828026073366/cbrsannouncesfinancialresu.htm",
    "tag": "Verified",
-   "note": "",
+   "note": "10-Q 附註：營運資金貸款依 OpenAI 主合作協議（MRA）與票據取得、可由 MRA 下帳款抵償，故出借方標 OpenAI；本金 8.291 億（已扣非現金償還 1.755 億）",
    "read": "2026-11-15"
   },
   {
@@ -619,7 +619,7 @@
    "period": "2026-11-12",
    "source": "https://www.sec.gov/Archives/edgar/data/0002021728/000162828026073366/cbrsannouncesfinancialresu.htm",
    "tag": "Interested-party",
-   "note": "",
+   "note": "「gross」為 8-K 新聞稿 Business Highlights 原文（Secured 700 gross megawatts of data center capacity for delivery by the end of 2027）；10-Q 是否同字未核",
    "read": "2026-11-15"
   },
   {

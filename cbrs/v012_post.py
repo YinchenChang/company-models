@@ -400,7 +400,7 @@ def coord(wb, TKV, WATT):
     assert Q.cell(3, 4).value == "1Q26" and Q.cell(3, 5).value == "2Q26" and Q.cell(3, 6).value == "3Q26"
     qr, qc, qh, qx = lab(Q, "營收合計（GAAP）"), lab(Q, "核心雲端營收"), lab(Q, "核心硬體營收"), lab(Q, "資本支出（季別未揭露")
     qx1 = lab(Q, "資本支出", lab(Q, "現金流量（FY"), exact=True)
-    inp("r1", "營收合計（GAAP）：1Q26", f"=Q!D{qr}", "US$B", "2026-01～2026-03", f"Q 頁 D{qr}；Cerebras 10-Q（季度結束 2026-03-31）", "Verified", GREEN, url=S8K1)
+    inp("r1", "營收合計（GAAP）：1Q26", f"=Q!D{qr}", "US$B", "2026-01～2026-03", f"Q 頁 D{qr}；Cerebras 8-K（1Q26 財報新聞稿）", "Verified", GREEN, url=S8K1)
     inp("r2", "營收合計（GAAP）：2Q26", f"=Q!E{qr}", "US$B", "2026-04～2026-06", f"Q 頁 E{qr}；Cerebras 8-K 2026-08-12（2Q26 財報新聞稿）", "Verified", GREEN, url=S8K2)
     inp("r3", "營收合計（GAAP）：3Q26", f"=Q!F{qr}", "US$B", "2026-07～2026-09", f"Q 頁 F{qr}；Cerebras 8-K 2026-11-12（3Q26 財報新聞稿）", "Verified", GREEN, url=S8K3)
     inp("c1", "核心雲端營收：1Q26", f"=Q!D{qc}", "US$B", "1Q26；公司核心口徑", f"Q 頁 D{qc}；Cerebras 8-K（1Q26 財報新聞稿）", "Verified", GREEN, url=S8K1)
