@@ -5,6 +5,9 @@ cd "$(dirname "$0")/.."
 D=${1:-20261008}; V=${2:-v0_1}   # 用法：build_all.sh [日期] [版本] [dist]
 X=out/${D}_MiniMax收支模型_${V}.xlsx; H=out/${D}_MiniMax收支模型_${V}.html; H13=out/${D}_MiniMax個股模型_${V}.html
 mkdir -p out dist
+# v0.2.3：估值頁快照（情境 A／C、敏感度）先產生，再建置主檔
+python3 scripts/val_snapshots.py scen >/dev/null
+python3 scripts/val_snapshots.py sens >/dev/null
 python3 build_xlsx.py "$X" >/dev/null
 python3 scripts/recalc.py "$X"
 python3 scripts/sensitivity.py "$X" >/dev/null
@@ -13,6 +16,7 @@ python3 build_html.py "$X" out/sensitivity.json "$H"
 # 驗收：HTML 數字逐一對照 Excel、無外部引用（M3 起）；Checks 合計與錯誤值
 python3 scripts/check_html.py "$X" "$H"
 python3 scripts/ci_check.py "$X"
+python3 ../tools/model_governance/check_rating_gate.py "$X" --strict
 # v0.2.2：個股模型頁（版面 v1.3；共用模組需 beautifulsoup4、lxml，缺時略過並警告）
 if python3 -c 'import bs4, lxml' 2>/dev/null; then
   python3 build_html_v13.py "$X" "$H13"

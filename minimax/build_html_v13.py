@@ -1,4 +1,4 @@
-# MiniMax 個股模型頁（個股 HTML 版面規格 v1.3；本模型沒有目標價，估值章依規格 J 節的豁免方式標示「不適用」）。
+# MiniMax 個股模型頁（個股 HTML 版面規格 v1.3；v0.2.3 起有目標價與評等：Val、RevDCF 頁，照 A–I 節，估值章不再帶 data-novaluation）。
 # 數字一律讀自 LibreOffice 重算後的 xlsx（openpyxl data_only），每個數字帶 data-ref（頁!格）與 data-v；本檔不做模型計算，只做圖的幾何。
 # 共用：tools/company_html/fundmodel_v2.py（span、fmt、CSS）與 fundmodel_v13.py（長條圖、v1.3 CSS）。需 beautifulsoup4、lxml（共用模組匯入用）。
 # 用法：python3 build_html_v13.py <重算後.xlsx> <輸出.html>
@@ -58,6 +58,11 @@ class X:
         return [[(f'{sh}!{rng}', ws[rng].value)]]
 
 
+def V(B, nm):
+    """具名範圍（單格）→ (頁!格, 值)。"""
+    return B.name(nm)[0][0]
+
+
 def SR(B, prefix, col):
     """Sensitivity 頁依案例名稱（前綴）找列。"""
     ws = B.wb['Sensitivity']
@@ -84,18 +89,21 @@ YH = [f'FY{y}' for y in YRS]
 
 # ── 橫幅 ──
 def hero(B):
-    px = B.y('V01', 2026)
-    cov = B.y('P23', 2030)
-    need = B.y('F11', 2030)
-    tiles = (f'<div class="hero-t"><div class="hero-l">現價（2026-11-05 收盤，港元）</div><div class="hero-n">{sp(*px, "n2")}</div>'
-             f'<div class="hero-s" style="color:var(--muted)">本模型不給目標價</div></div>'
-             f'<div class="hero-t"><div class="hero-l">FY2030 每 MW 營收 ÷ 每 MW 全成本（倍）</div><div class="hero-n">{sp(*cov, "n2")}</div>'
-             f'<div class="hero-s" style="color:var(--muted)">低於一倍＝未打平</div></div>'
-             f'<div class="hero-t"><div class="hero-l">至 FY2030 累計需新融資（百萬美元）</div><div class="hero-n">{sp(*need, "n0")}</div>'
-             f'<div class="hero-s" style="color:var(--muted)">首次需融資 {sp(*B.y("F19", 2026), "t")} 年</div></div>')
-    note = (f'本模型是收支模型，沒有建目標價與評等。基準情境下 FY2030 每 MW 營收只覆蓋全成本的 {sp(*cov, "p0")}，'
-            f'現金在 {sp(*B.y("F19", 2026), "t")} 年跌破最低水位，至 FY2030 累計需新融資 {sp(*need, "n0")} 百萬美元。')
-    return (f'<div class="hero hero-na"><div class="hero-rec"><span class="hero-k">投資建議</span><span class="hero-v">本模型未建目標價與評等</span></div>'
+    rec, vr = V(B, 'VAL_Rec'), V(B, 'VAL_Rating')
+    cls = {'強力放空': 'hero-neg', '放空': 'hero-neg', '中立': 'hero-neu', '買進': 'hero-pos', '強力買進': 'hero-pos'}.get(str(rec[1]), 'hero-neg')
+    w, uw, px = V(B, 'VAL_TP_W'), V(B, 'VAL_Up_W'), V(B, 'VAL_Px')
+    tiles = (f'<div class="hero-t"><div class="hero-l">目標價（DCF 與同業倍數各半，港元）</div><div class="hero-n">{sp(*w, "n2")}</div>'
+             f'<div class="hero-s">上檔空間 {sp(*uw, "sp1")}</div></div>'
+             f'<div class="hero-t"><div class="hero-l">現價（2026-11-05 收盤，港元）</div><div class="hero-n">{sp(*px, "n2")}</div>'
+             f'<div class="hero-s">市場共識目標價 {sp(*V(B, "VAL_TP_Cons"), "n2")}（2026-09-30）</div></div>'
+             f'<div class="hero-t"><div class="hero-l">收支關卡：FY2026–FY2030 現金收支合計（百萬美元）</div><div class="hero-n">{sp(*V(B, "VAL_Gate"), "sn0")}</div>'
+             f'<div class="hero-s">入不敷出；估值評等 {sp(*vr, "t")}</div></div>')
+    floor = V(B, 'VAL_DCFFloorAll')[1] == 1
+    note = (f'同業倍數法（以同日的智譜倍數計）給 {sp(*V(B, "VAL_TP_Comp"), "n0")} 港元；DCF '
+            + ('因基準情境到 FY2030 仍大幅虧損，只剩淨現金價值 ' if floor else '給 ') + f'{sp(*V(B, "VAL_TP_DCF"), "n0")} 港元。'
+            f'兩者各半得 {sp(*w, "n0")} 港元，上檔空間 {sp(*uw, "sp0")}，估值評等{sp(*vr, "t")}。'
+            + ('收支關卡不通過（入不敷出），依規則不給買進。' if V(B, 'VAL_GateFail')[1] == 1 else ''))
+    return (f'<div class="hero {cls}"><div class="hero-rec"><span class="hero-k">投資建議</span><span class="hero-v">{sp(*rec, "t")}</span></div>'
             f'<div class="hero-tiles">{tiles}</div><p class="hero-note">{note}</p></div>')
 
 
@@ -103,7 +111,7 @@ def hero(B):
 def thesis(B):
     items = ['每 MW 收支：MiniMax 每 MW 算力（推論＋訓練）的營收，能否覆蓋每 MW 全成本（算力、人事、其他），哪一年打平。',
              '錢夠不夠：IPO、配售與可轉債募得的現金，能否撐過虧損期；不夠時何時、要多少新融資，對現有股東稀釋多少。',
-             '現價隱含什麼：以模型營收與退出倍數折回今天，是否支持現價（只作反向檢驗，不給目標價）。']
+             '值多少：DCF（現金流沿用本收支模型）與同業倍數各半的目標價與評等；收支關卡不通過時不給買進。']
     rep = (f'<ol class="items"><li>每 MW 能否打平？答：基準情境預測期內都未打平，覆蓋率由 FY2026 的 {sp(*B.y("P23", 2026), "n2")} 倍升到 FY2030 的 {sp(*B.y("P23", 2030), "n2")} 倍。</li>'
            f'<li>錢夠不夠？答：2026 年募資後年底現金 {sp(*B.y("F09", 2026), "n0")} 百萬美元，{sp(*B.y("F19", 2026), "t")} 年起需新融資，至 FY2030 累計 {sp(*B.y("F11", 2030), "n0")}，'
            f'稀釋約 {sp(*B.y("F14", 2030), "p0")}（占目前股數）。</li>'
@@ -132,26 +140,95 @@ def thesis(B):
             f'<h3>重點觀察</h3><ol class="items">{"".join(obs)}</ol></section>')
 
 
-# ── 2 估值（不適用） ──
+# ── 2 估值 ──
+def val_rows(B, keys):
+    """Val 頁 A 欄標籤 → (標籤 span, 值 span)；keys＝[(標籤開頭, 欄, 格式)]。"""
+    ws = B.wb['Val']
+    lab = {}
+    for r in range(1, ws.max_row + 1):
+        a = ws.cell(r, 1).value
+        if isinstance(a, str):
+            lab.setdefault(a, r)
+    out = []
+    for pre, col, f in keys:
+        r = next(r for a, r in lab.items() if a.startswith(pre))
+        out.append((sp(f'Val!A{r}', ws.cell(r, 1).value, 't'), sp(f'Val!{col}{r}', ws.cell(r, ord(col) - 64).value, f)))
+    return out
+
+
 def valuation(B):
-    rows = [f'<tr><td>{T(B, "Valuation", f"B{B.rows[k][1]}")}</td><td>{sp(*B.y(k, y), f)}</td></tr>' for k, y, f in
-            (('V01', 2026, 'n2'), ('V02', 2026, 'n0'), ('V03', 2026, 'n0'), ('V04', 2026, 'n0'), ('V08', 2026, 'n1'), ('V07', 2026, 'n1'))]
-    rev = [f'<tr><td>{T(B, "Valuation", f"B{B.rows[k][1]}")}</td><td>{sp(*B.y(k, 2030), f)}</td></tr>' for k, f in
-           (('V09', 'n0'), ('V10', 'n0'), ('V11', 'p1'), ('V12', 'n0'), ('V13', 'n2'), ('V14', 'n0'))]
-    ch = bar_chart(sp, ['市值', '模型價值折現'], [('百萬美元', C_ACC, [B.y('V02', 2026), B.y('V12', 2030)])], '百萬美元',
-                   '反向檢驗：現有股東價值折現 vs 目前市值', fmt='n0', h=230)
-    return ('<section id="valuation" data-novaluation="1"><h2>估值：不適用（本模型未建目標價）</h2>'
-            '<p class="note">MiniMax 已在港股上市、有市場價格，但本模型是收支模型：沒有 DCF、同業倍數加權與評等，因此不給目標價。'
-            '版面規格 v1.3 的四個目標價圖（G 節）、加權目標價敏感度（H 節）與反向 DCF 章不適用；本章改列市值、企業價值與反向檢驗。'
-            '若要給目標價，需另建 DCF 與同業倍數估值頁（判斷類，待決定）。</p>'
-            + tbl(['市值與企業價值（FY2026 年底淨現金）', '值'], rows, 'rd')
-            + '<h3>反向檢驗（現價隱含什麼）</h3>' + ch + tbl(['項目（FY2030）', '值'], rev, 'rd')
-            + f'<p class="note">退出倍數 {sp(*B.i("I27"), "n0")} 倍、股權折現率 {sp(*B.i("I28"), "p0")}，皆為假設。'
-              f'市場參考：分析師平均目標價 {sp(*B.s("S084"), "n2")} 港元（{T(B, "SRC_MM", f"C{B.rows["S084"][1]}")}，二手，已過時），只列參考。</p></section>')
+    px = V(B, 'VAL_Px')
+    four = [('DCF 目標價（單純 DCF，三情境加權）', 'VAL_TP_DCF', 'VAL_Up_DCF', '無槓桿自由現金流折現；基準情境到 FY2030 仍虧損，三情境皆觸及淨現金下限'),
+            ('Comparable 目標價（同業 EV ÷ 未來 12 個月營收，三情境加權）', 'VAL_TP_Comp', 'VAL_Up_Comp', '同業只有智譜（同日 2026-11-05 市值）；未做相對倍數調整'),
+            ('加權目標價（DCF 與 Comparable 各半；橫幅主值）', 'VAL_TP_W', 'VAL_Up_W', '評等依此判定'),
+            ('市場共識目標價（Investing.com 23 位平均，2026-09-30）', 'VAL_TP_Cons', 'VAL_Up_Cons', '二手、早於現價日一個多月，只作對照')]
+    ch = bar_chart(sp, ['DCF', 'Comparable', '加權', '市場共識', '現價'],
+                   [('港元／股', C_ACC, [V(B, n) for _, n, _, _ in four] + [px])], '港元／股',
+                   '四個目標價與現價（港元；現價 2026-11-05 收盤）', fmt='n1', h=260)
+    t4 = tbl(['目標價', '值（港元）', '對現價上檔空間', '說明'],
+             [f'<tr><td>{a}</td><td>{sp(*V(B, n), "n2")}</td><td>{sp(*V(B, u), "sp1")}</td><td style="text-align:left">{c}</td></tr>' for a, n, u, c in four], 'rd')
+    rate = (f'<h3>評等規則與邊界揭露</h3><p class="note">{sp(*V(B, "VAL_RatingNote"), "t")}</p>'
+            f'<p class="note">升一級（{sp(*V(B, "VAL_Rating"), "t")} → 上一級）所需加權目標價 {sp(*V(B, "VAL_UpFlip"), "n2")} 港元；'
+            f'收支關卡 FY2026–FY2030 現金收支合計 {sp(*V(B, "VAL_Gate"), "sn0")} 百萬美元（負＝入不敷出：估值評等為買進以上時改為「收支不足」）。</p>')
+    wacc = tbl(['折現率與股數', '值'], [f'<tr><td>{a}</td><td>{b}</td></tr>' for a, b in val_rows(B, [
+        ('無風險利率', 'C', 'p2'), ('β（', 'C', 'n3'), ('股權風險溢酬', 'C', 'p1'), ('股東權益成本', 'C', 'p2'), ('WACC＝', 'C', 'p2'), ('永續成長率', 'C', 'p1'),
+        ('評價股數', 'C', 'n2'), ('淨現金（評價日', 'C', 'n0'), ('股權市值 E', 'C', 'n0'), ('市場 EV', 'C', 'n0')])], 'rd')
+    dcf = tbl(['DCF 彙總（百萬美元）', '情境 A', '情境 B', '情境 C'], [
+        '<tr><td>' + a + '</td>' + ''.join(f'<td>{x}</td>' for x in (b, c, d)) + '</tr>' for a, b, c, d in
+        [(x[0][0], x[0][1], x[1][1], x[2][1]) for x in zip(*[val_rows(B, [(k, col, f) for k, f in (
+            ('明確期現值合計', 'n0'), ('終值現值', 'n0'), ('企業價值 EV', 'n0'), ('股權價值＝', 'n0'), ('DCF 每股價值（目標時點；港元）', 'n2'),
+            ('Comparable 每股（港元）', 'n2'), ('情境目標價', 'n2'))]) for col in 'CDE'])]], 'rd')
+    peer = tbl(['同業（2026-11-05 市值）', '值'], [f'<tr><td>{a}</td><td>{b}</td></tr>' for a, b in val_rows(B, [
+        ('同業 EV／NTM 營收中位數', 'C', 'n2'), ('對照：本公司市場 EV ÷ 共識 NTM 營收', 'C', 'n2'), ('對照：本公司倍數 ÷ 同業中位數', 'C', 'n2'),
+        ('本模型 NTM 營收', 'D', 'n0')])], 'rd')
+    old = [f'<tr><td>{T(B, "Valuation", f"B{B.rows[k][1]}")}</td><td>{sp(*B.y(k, y), f)}</td></tr>' for k, y, f in
+           (('V09', 2030, 'n0'), ('V12', 2030, 'n0'), ('V13', 2030, 'n2'), ('V14', 2030, 'n0'))]
+    return ('<section id="valuation"><h2>估值</h2>'
+            f'<div class="figblk">{ch}</div>'
+            '<p class="note">Andy 2026-11-15 決定 MiniMax 給目標價與評等。估值頁（xlsx Val 頁）＝DCF（無槓桿自由現金流，現金流沿用本收支模型）50%＋同業倍數 50%，'
+            '三情境（API token 量成長高／基準／低）25／50／25。折現率、同業選擇與權重為判斷類參數，依 Anthropic 估值頁樣板慣例預設，待確認。</p>'
+            + t4 + rate + '<h3>折現率、股數與淨現金</h3>' + wacc + '<h3>DCF 與同業法（三情境）</h3>' + dcf + '<h3>同業倍數</h3>' + peer
+            + f'<details class="more"><summary>展開：估值方法（模型原文）</summary><p class="note">{sp(*V(B, "VAL_Method"), "t")}</p></details>'
+            + '<details class="more"><summary>展開：原收支模型的反向檢驗（2030 年退出倍數折現；只作對照）</summary>' + tbl(['項目（FY2030）', '值'], old, 'rd') + '</details></section>')
+
+
+# ── 3 敏感度 ──
+def sens_val(B):
+    ws = B.wb['Val']
+    r0 = next(r for r in range(1, ws.max_row + 1) if ws.cell(r, 1).value == '案例')
+    rows = []
+    r = r0 + 1
+    while isinstance(ws.cell(r, 2).value, (int, float)) and not str(ws.cell(r, 1).value).startswith('Sens 快照'):
+        g = lambda c: (f'Val!{c}{r}', ws[f'{c}{r}'].value)  # noqa: E731
+        rows.append(dict(name=g('H'), lo=g('I'), hi=g('J'), tlo=g('B'), thi=g('C'), plo=g('F'), phi=g('G')))
+        r += 1
+    rb = next(x for x in range(r, ws.max_row + 1) if str(ws.cell(x, 1).value or '').startswith('Sens 快照的基準加權目標價'))
+    base = (f'Val!C{rb}', ws[f'C{rb}'].value)
+    mx = max([abs(x[k][1]) for x in rows for k in ('plo', 'phi')] + [0.1])
+
+    def line(x, k, lk):
+        ref, v = x[k]
+        w = abs(v) / mx * 50
+        bar = f'<i class="p" style="left:50%;width:{w:.2f}%"></i>' if v >= 0 else f'<i class="n" style="left:{50 - w:.2f}%;width:{w:.2f}%"></i>'
+        return f'<div class="trw"><span>{sp(*x["name"], "t")}（{sp(*x[lk], "t")}）</span><div class="ttr">{bar}</div><span class="tvv">{sp(ref, v, "sp1")}</span></div>'
+
+    def fig(k, lk, cap):
+        nz = sorted([x for x in rows if abs(x[k][1]) > 1e-12], key=lambda x: -abs(x[k][1]))
+        big = [line(x, k, lk) for x in nz if abs(x[k][1]) >= 0.10]
+        small = [line(x, k, lk) for x in nz if abs(x[k][1]) < 0.10]
+        body = ''.join(big) if big else '<p class="note">沒有案例使加權目標價變動達 10%。</p>'
+        more = f'<details class="more"><summary>展開：{cap}，變動未達 10% 的案例（{len(small)} 項）</summary>{"".join(small)}</details>' if small else ''
+        return f'<div class="figblk"><h3>加權目標價相對基準：{cap}</h3>{body}{more}</div>'
+    allt = tbl(['案例', '低值設定', '加權目標價', '相對基準', '高值設定', '加權目標價', '相對基準'],
+               [f'<tr><td>{sp(*x["name"], "t")}</td><td>{sp(*x["lo"], "t")}</td><td>{sp(*x["tlo"], "n2")}</td><td>{sp(*x["plo"], "sp1")}</td>'
+                f'<td>{sp(*x["hi"], "t")}</td><td>{sp(*x["thi"], "n2")}</td><td>{sp(*x["phi"], "sp1")}</td></tr>' for x in rows], 'rd')
+    intro = (f'<p class="note">一次只動一個輸入（取低值或高值），整本模型重算，看加權目標價（基準 {sp(*base, "n2")} 港元）相對基準變動多少。'
+             '長條依影響大小排序；只直接列出變動達 10% 的案例，其餘收在摺疊；變動為 0 的案例（DCF 觸及淨現金下限時，折現率、永續成長等不影響目標價）只列在全部案例表。</p>')
+    return fig('plo', 'lo', '輸入取低值') + fig('phi', 'hi', '輸入取高值') + intro + f'<details class="more"><summary>展開：全部案例表（{len(rows)} 項）</summary>{allt}</details>'
 
 
 # ── 3 敏感度（對累計需新融資） ──
-def sens(B):
+def sens_fund(B):
     ws = B.wb['Sensitivity']
     rows = []
     for r in range(4, ws.max_row + 1):
@@ -174,13 +251,37 @@ def sens(B):
         f'<td>{sp(f"Sensitivity!{c}{r}", ws.cell(r, ci).value, f)}</td>' for c, ci, f in
         (('D', 4, 'n0'), ('F', 6, 'n2'), ('H', 8, 'n0'), ('I', 9, 't'), ('J', 10, 'n2'), ('L', 12, 'n2'))) + '</tr>'
         for r in range(4, ws.max_row + 1) if isinstance(ws.cell(r, 1).value, str) and isinstance(ws.cell(r, 8).value, (int, float))]
-    return ('<section id="sens"><h2>敏感度</h2><div class="figblk">'
+    return ('<div>'
             f'<h3>至 FY2030 累計需新融資：各案例（基準 {sp(base[1], bv, "n0")} 百萬美元；中線＝基準，右紅＝需求增加，左青＝需求減少）</h3>'
             + ''.join(big) + (f'<details class="more"><summary>展開：變動未達 10% 的案例（{len(small)} 項）</summary>{"".join(small)}</details>' if small else '')
-            + '</div><p class="note">本模型沒有目標價，因此敏感度改看「收支關卡」：一次只動一個輸入，整本模型重算，看至 FY2030 累計需新融資變動多少；'
+            + '</div><p class="note">收支關卡的敏感度：一次只動一個輸入，整本模型重算，看至 FY2030 累計需新融資變動多少；'
               '只直接列出變動達 10% 的案例。合約價改變只影響 MW 與回本比值的換算，不改變營收與現金（全部案例表可見）。</p>'
             + '<details class="more"><summary>展開：全部案例（營收、覆蓋率、累計需新融資、首次融資年、反向檢驗、回本比值）</summary>'
-            + tbl(['案例', 'FY2030 營收', 'FY2030 覆蓋率', '累計需新融資', '首次融資年', '折現價值÷市值', 'FY2030 回本比值'], full, 'rd') + '</details></section>')
+            + tbl(['案例', 'FY2030 營收', 'FY2030 覆蓋率', '累計需新融資', '首次融資年', '折現價值÷市值', 'FY2030 回本比值'], full, 'rd') + '</details></div>')
+
+
+def sens(B):
+    return ('<section id="sens"><h2>敏感度</h2>' + sens_val(B)
+            + '<details class="more"><summary>展開：收支關卡的敏感度（至 FY2030 累計需新融資）</summary>' + sens_fund(B) + '</details></section>')
+
+
+def revdcf(B):
+    R = lambda n: V(B, n)  # noqa: E731
+
+    def tr(lab, imp, base, fi, fb, note):
+        return f'<tr><td>{lab}</td><td><b>{sp(*R(imp), fi)}</b></td><td>{sp(*R(base), fb) if base else "—"}</td><td style="text-align:left">{note}</td></tr>'
+    main = tbl(['現價隱含什麼', '現價隱含', '模型基準', '讀法'], [
+        tr('支持現價所需的企業價值（百萬美元）', 'RVD_EVReq', 'RVD_EVB', 'n0', 'n0', 'DCF 情境 B 路徑；模型 EV 為負＝基準現金流不支持任何正價值'),
+        tr('(b) 隱含終值期營業利益率（只改 2033 年）', 'RVD_TermMargin', 'RVD_TermMargin0', 'p1', 'p1', '其餘不變，永續期營業利益率要到這個水準'),
+        tr('(c) 隱含 2031–2033 營業利益率加碼（相對 FY2030）', 'RVD_ExtAdd', None, 'p0', 'p0', '對應 2033 年營業利益率 ' + sp(*R('RVD_ExtMargin33'), 'p0') + '（不計稅的上限讀法）'),
+        tr('(d) 隱含 EV ÷ 未來 12 個月營收（本模型營收）', 'RVD_CompMult', 'RVD_PeerMult', 'n2', 'n2', '模型欄為同業（智譜）中位數'),
+        tr('　隱含相對同業係數', 'RVD_CompCoef', None, 'n2', 'n2', '1＝與同業同價'),
+        tr('　支持現價所需的未來 12 個月營收（同業倍數；百萬美元）', 'RVD_NTMReq', 'RVD_NTMB', 'n0', 'n0', '模型欄為本模型基準')], 'rd')
+    read = ('<p class="note">讀法：以 DCF 看，基準情境到 FY2030 仍大幅虧損，要支持現價 ' + sp(*R('RVD_Px'), 'n2') + ' 港元，永續期營業利益率須達 '
+            + sp(*R('RVD_TermMargin'), 'p0') + '；以同業倍數看，現價隱含的營收倍數是同業的 ' + sp(*R('RVD_CompCoef'), 'n2') + ' 倍。'
+            'WACC 與營收等比例放大的反解不做：基準自由現金流各年皆負，降低折現率或放大營收只會使價值更低，無解。</p>')
+    chk = (f'<p class="note">核對（應為 0）：(b) {sp(*R("RVD_TermChk"), "n6")}；(d) {sp(*R("RVD_CompChk"), "n6")}。計算在 xlsx 的 RevDCF 頁，該頁不被任何計算頁引用。</p>')
+    return f'<section id="revdcf"><h2>反向 DCF：現價隱含什麼</h2>{main}{read}{chk}</section>'
 
 
 # ── 5 損益 ──
@@ -299,18 +400,18 @@ def status(B, xlsx_name, ver):
             '<div><dt>公司資料</dt><dd>招股書（2025-12-31）、FY2025 年度業績公告（2026-03-02）、2026 中期業績公告（2026-08-26）；SRC_MM 頁逐筆列出處與一手／二手。</dd></div>'
             '<div><dt>口徑</dt><dd>美元；曆年制（公司財年＝曆年）；MW＝IT 關鍵電力。</dd></div></dl>'
             '<h3>附錄</h3><details class="hist"><summary>版本要點</summary><p class="note">'
-            'v0.2.2：版面 v1.3（新增 PL 標準損益表、Coord 三層協調：讀取層級與 C0 實績）；既有數值不變。v0.2.1：現價改 2026-11-05 收盤。'
+            'v0.2.3：估值頁 Val 與反向 DCF 頁 RevDCF（目標價、評等、收支關卡）；既有收支數值不變。v0.2.2：版面 v1.3（新增 PL 標準損益表、Coord 三層協調：讀取層級與 C0 實績）；既有數值不變。v0.2.1：現價改 2026-11-05 收盤。'
             'v0.2：P×Q 回本比值、M3.1 降價、合約價證據。v0.1：首版。</p></details>'
             '<details class="hist"><summary>已知限制</summary><p class="note">季度層未建；自建集群規模找不到；2026 消費端付費人數與 ARPPU 缺一手資料；'
-            'Tokenomics 缺中國晶片世代、租價與中國 API 有效牌價；本模型未建目標價。</p></details></section>')
+            'Tokenomics 缺中國晶片世代、租價與中國 API 有效牌價；同業只有智譜一家（其餘候選無同日可查證市值）；選擇權與受限制股份稀釋未計。</p></details></section>')
 
 
 def main(xlsx, out):
     B = X(xlsx)
     ver = re.search(r'v\d+\.\d+\.\d+', B.wb['README']['A1'].value).group(0)
-    parts = [thesis(B), valuation(B), sens(B), pl(B), drivers(B), mod_unit(B), mod_funding(B), mod_payback(B), recon(B),
+    parts = [thesis(B), valuation(B), sens(B), revdcf(B), pl(B), drivers(B), mod_unit(B), mod_funding(B), mod_payback(B), recon(B),
              status(B, os.path.basename(xlsx), ver)]
-    navs = [('thesis', '命題與核心問題'), ('valuation', '估值（不適用）'), ('sens', '敏感度'), ('pl', '損益'), ('drivers', '驅動因子'),
+    navs = [('thesis', '命題與核心問題'), ('valuation', '估值'), ('sens', '敏感度'), ('revdcf', '反向 DCF'), ('pl', '損益'), ('drivers', '驅動因子'),
             ('unit', '算力與每 MW 收支'), ('funding', '資金'), ('payback', '回本比值'), ('recon', '對帳'), ('status', '資料狀態')]
     nav = ''.join(f'<a href="#{a}">{t}</a>' for a, t in navs)
     css = M.CSS_EXTRA + CSS_V13 + ('table{border-collapse:collapse;width:100%;font-size:13.5px}th,td{border-bottom:1px solid var(--line);padding:4px 6px;text-align:right}'
@@ -318,9 +419,9 @@ def main(xlsx, out):
                                    'table.tp td:nth-child(9){text-align:left}')
     doc = (f'<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
            f'<title>MiniMax 個股模型 {ver}</title><style>{css}</style></head><body><div class="wrap">'
-           f'<header class="top"><h1>MiniMax 個股模型</h1><div class="meta">00100.HK（上海稀宇科技）｜版本 {ver}｜收支模型（未建目標價）</div>'
+           f'<header class="top"><h1>MiniMax 個股模型</h1><div class="meta">00100.HK（上海稀宇科技）｜版本 {ver}｜目標價 DCF＋同業倍數各半</div>'
            f'<nav class="toc">{nav}</nav></header>{hero(B)}<main class="v2">{"".join(parts)}</main>'
-           f'<footer class="v2">MiniMax 個股模型 {ver}｜版面 v1.3（估值不適用：本模型未建目標價）｜minimax/build_html_v13.py｜xlsx <code>{html.escape(os.path.basename(xlsx))}</code></footer>'
+           f'<footer class="v2">MiniMax 個股模型 {ver}｜版面 v1.3｜minimax/build_html_v13.py｜xlsx <code>{html.escape(os.path.basename(xlsx))}</code></footer>'
            f'</div></body></html>')
     open(out, 'w', encoding='utf-8').write(doc)
     print(out)
