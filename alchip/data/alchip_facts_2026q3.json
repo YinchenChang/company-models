@@ -1,0 +1,358 @@
+{
+ "_readme": "世芯-KY 2026Q3 事實總帳（v0.2.5 滾入 3Q26 財報）。模型取值見 build_alchip.py In 頁 E 節與 Q 頁 E 欄；check＝第二來源。",
+ "asOf": "2026-09-30",
+ "items": [
+  {
+   "id": "is.rev.9m",
+   "item": "營業收入（前 9 月累計）",
+   "value": 37877562,
+   "unit": "NT$ 千元",
+   "period": "2026-01-01～2026-09-30",
+   "source": "公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
+   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "＝月營收公告前 9 月 378.78 億",
+   "check": {
+    "value": 37877562,
+    "source": "MoneyDJ 2026-11-06（同一公告）",
+    "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=a78d90b2-64a2-441d-9720-3222a3043929",
+    "ok": true
+   }
+  },
+  {
+   "id": "is.gp.9m",
+   "item": "營業毛利（前 9 月累計）",
+   "value": 9462133,
+   "unit": "NT$ 千元",
+   "period": "2026-01-01～2026-09-30",
+   "source": "公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
+   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 9462133,
+    "source": "MoneyDJ 2026-11-06（同一公告）",
+    "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=a78d90b2-64a2-441d-9720-3222a3043929",
+    "ok": true
+   }
+  },
+  {
+   "id": "is.oi.9m",
+   "item": "營業利益（前 9 月累計）",
+   "value": 6643602,
+   "unit": "NT$ 千元",
+   "period": "2026-01-01～2026-09-30",
+   "source": "公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
+   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 6643602,
+    "source": "MoneyDJ 2026-11-06（同一公告）",
+    "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=a78d90b2-64a2-441d-9720-3222a3043929",
+    "ok": true
+   }
+  },
+  {
+   "id": "is.pti.9m",
+   "item": "稅前淨利（前 9 月累計）",
+   "value": 7900866,
+   "unit": "NT$ 千元",
+   "period": "2026-01-01～2026-09-30",
+   "source": "公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
+   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 7900866,
+    "source": "MoneyDJ 2026-11-06（同一公告）",
+    "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=a78d90b2-64a2-441d-9720-3222a3043929",
+    "ok": true
+   }
+  },
+  {
+   "id": "is.ni.9m",
+   "item": "本期淨利（前 9 月累計）",
+   "value": 6314827,
+   "unit": "NT$ 千元",
+   "period": "2026-01-01～2026-09-30",
+   "source": "公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
+   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 6314827,
+    "source": "MoneyDJ 2026-11-06（同一公告）",
+    "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=a78d90b2-64a2-441d-9720-3222a3043929",
+    "ok": true
+   }
+  },
+  {
+   "id": "is.ni_parent.9m",
+   "item": "歸屬於母公司業主淨利（前 9 月累計）",
+   "value": 6317516,
+   "unit": "NT$ 千元",
+   "period": "2026-01-01～2026-09-30",
+   "source": "公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
+   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "經濟日報：63.17 億",
+   "check": {
+    "value": 6317516,
+    "source": "MoneyDJ 2026-11-06（同一公告）",
+    "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=a78d90b2-64a2-441d-9720-3222a3043929",
+    "ok": true
+   }
+  },
+  {
+   "id": "is.eps.9m",
+   "item": "基本每股盈餘（前 9 月累計）",
+   "value": 75.94,
+   "unit": "NT$",
+   "period": "2026-01-01～2026-09-30",
+   "source": "公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
+   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 75.94,
+    "source": "MoneyDJ 2026-11-06（同一公告）",
+    "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=a78d90b2-64a2-441d-9720-3222a3043929",
+    "ok": true
+   }
+  },
+  {
+   "id": "bs.ta.0930",
+   "item": "期末總資產",
+   "value": 94471212,
+   "unit": "NT$ 千元",
+   "period": "2026-09-30",
+   "source": "公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
+   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "TradingView：94.47B",
+   "check": {
+    "value": 94470000.0,
+    "source": "TradingView 資產負債表頁",
+    "url": "https://in.tradingview.com/symbols/TWSE-3661/financials-balance-sheet",
+    "ok": true
+   }
+  },
+  {
+   "id": "bs.tl.0930",
+   "item": "期末總負債",
+   "value": 30705963,
+   "unit": "NT$ 千元",
+   "period": "2026-09-30",
+   "source": "公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
+   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "TradingView：30.71B",
+   "check": {
+    "value": 30710000.0,
+    "source": "TradingView 資產負債表頁",
+    "url": "https://in.tradingview.com/symbols/TWSE-3661/financials-balance-sheet",
+    "ok": true
+   }
+  },
+  {
+   "id": "bs.eq_parent.0930",
+   "item": "期末歸屬於母公司業主之權益",
+   "value": 63731727,
+   "unit": "NT$ 千元",
+   "period": "2026-09-30",
+   "source": "公開資訊觀測站重大訊息「董事會通過民國115年第三季合併財務報告」（Yahoo 股市轉載）",
+   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "bs.cash.0930",
+   "item": "現金及約當現金、短期投資、長期投資、租賃負債、非控制權益（2026-09-30）",
+   "value": null,
+   "unit": "NT$ 千元",
+   "period": "2026-09-30",
+   "source": "未取得",
+   "url": "—",
+   "docDate": "—",
+   "retrieved": "2026-11-15",
+   "tag": "未取得",
+   "note": "stockanalysis、Yahoo 股市、TradingView 最新明細仍為 2026-06-30；法說簡報 PDF（公開資訊觀測站）robots 封鎖未取；模型維持 2026-06-30"
+  },
+  {
+   "id": "is.rev.3q.derived",
+   "item": "3Q26 營業收入（前 9 月 − 1H26 118.27 億）",
+   "value": 26.050562,
+   "unit": "NT$B",
+   "period": "2026Q3",
+   "source": "Derived：is.rev.9m − 1H26（工商時報 2026-08-14）",
+   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Derived]",
+   "note": "單季公告 261.88 億（經濟日報）；差 0.137 為外幣換算（累計與單季換算匯率不同）"
+  },
+  {
+   "id": "is.rev.3q.single",
+   "item": "3Q26 營業收入（單季，媒體轉述）",
+   "value": 261.88,
+   "unit": "NT$ 億",
+   "period": "2026Q3",
+   "source": "經濟日報 2026-11-06",
+   "url": "https://money.udn.com/money/story/5612/9862358",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "只作參考；模型取前 9 月 − 1H"
+  },
+  {
+   "id": "is.ni_parent.3q",
+   "item": "3Q26 歸屬母公司淨利",
+   "value": 32.51,
+   "unit": "NT$ 億",
+   "period": "2026Q3",
+   "source": "經濟日報 2026-11-06",
+   "url": "https://money.udn.com/money/story/5612/9862358",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "＝is.ni_parent.9m − 1H26 30.66 億（32.52，Derived）"
+  },
+  {
+   "id": "is.rev.3q.usd",
+   "item": "3Q26 營收（美元）",
+   "value": 819.3,
+   "unit": "US$M",
+   "period": "2026Q3",
+   "source": "優分析 2026-11-07（公司法說）",
+   "url": "https://uanalyze.com.tw/articles/4032658624",
+   "docDate": "2026-11-07",
+   "retrieved": "2026-11-15",
+   "tag": "[Interested-party]",
+   "note": "工商時報：8.2 億美元；QoQ +238.9%、YoY +267%",
+   "check": {
+    "value": 820,
+    "source": "工商時報 2026-11-07",
+    "url": "https://www.ctee.com.tw/news/20261107700148-439901",
+    "ok": true
+   }
+  },
+  {
+   "id": "is.eps.3q",
+   "item": "3Q26 EPS",
+   "value": 37.68,
+   "unit": "NT$",
+   "period": "2026Q3",
+   "source": "優分析 2026-11-07（公司法說）",
+   "url": "https://uanalyze.com.tw/articles/4032658624",
+   "docDate": "2026-11-07",
+   "retrieved": "2026-11-15",
+   "tag": "[Interested-party]",
+   "note": "",
+   "check": {
+    "value": 37.68,
+    "source": "工商時報 2026-11-07",
+    "url": "https://www.ctee.com.tw/news/20261107700148-439901",
+    "ok": true
+   }
+  },
+  {
+   "id": "is.oi.3q.usd",
+   "item": "3Q26 營業利益（美元）",
+   "value": 113.9,
+   "unit": "US$M",
+   "period": "2026Q3",
+   "source": "優分析 2026-11-07",
+   "url": "https://uanalyze.com.tw/articles/4032658624",
+   "docDate": "2026-11-07",
+   "retrieved": "2026-11-15",
+   "tag": "[Interested-party]",
+   "note": "營業利益率約 13.9%"
+  },
+  {
+   "id": "is.ni.3q.usd",
+   "item": "3Q26 淨利（美元）",
+   "value": 102.0,
+   "unit": "US$M",
+   "period": "2026Q3",
+   "source": "工商時報 2026-11-07",
+   "url": "https://www.ctee.com.tw/news/20261107700148-439901",
+   "docDate": "2026-11-07",
+   "retrieved": "2026-11-15",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "mix.n3n2.3q",
+   "item": "3Q26 3／2 奈米占營收",
+   "value": 0.8,
+   "unit": "%",
+   "period": "2026Q3",
+   "source": "工商時報 2026-11-07（公司法說）",
+   "url": "https://www.ctee.com.tw/news/20261107700148-439901",
+   "docDate": "2026-11-07",
+   "retrieved": "2026-11-15",
+   "tag": "[Interested-party]",
+   "note": "3 奈米與 2 奈米分列未取得；前 3 季 67%（CMoney）；北美 84%、HPC 87%"
+  },
+  {
+   "id": "guide.4q",
+   "item": "4Q26 展望",
+   "value": null,
+   "unit": "文字",
+   "period": "2026Q4",
+   "source": "工商時報、優分析 2026-11-07（公司法說）",
+   "url": "https://www.ctee.com.tw/news/20261107700148-439901",
+   "docDate": "2026-11-07",
+   "retrieved": "2026-11-15",
+   "tag": "[Interested-party]",
+   "note": "營收再創新高；3 奈米加速器營收略高於 3Q；毛利率與 3Q 相當接近；全年綜合毛利率高於 20%（優分析 https://uanalyze.com.tw/articles/4032658624）。只列參考"
+  },
+  {
+   "id": "rev.oct",
+   "item": "10 月營收",
+   "value": 10.26,
+   "unit": "NT$B",
+   "period": "2026-10",
+   "source": "科技新報 2026-11-10",
+   "url": "https://finance.technews.tw/2026/11/10/alchip-3661-202610-financial-report/",
+   "docDate": "2026-11-10",
+   "retrieved": "2026-11-15",
+   "tag": "[Verified]",
+   "note": "前 10 月累計 480.60 億"
+  },
+  {
+   "id": "gm.3q.derived",
+   "item": "3Q26 毛利率（前 9 月 − 1H 推得）",
+   "value": 0.1804,
+   "unit": "%",
+   "period": "2026Q3",
+   "source": "Derived：(9.462133 − 4.763) ÷ 26.0506",
+   "url": "https://tw.stock.yahoo.com/news/%E4%B8%96%E8%8A%AF-ky-%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%80%9A%E9%81%8E%E6%B0%91%E5%9C%8B115%E5%B9%B4%E7%AC%AC%E4%B8%89%E5%AD%A3%E5%90%88%E4%BD%B5%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A-062900988.html",
+   "docDate": "2026-11-06",
+   "retrieved": "2026-11-15",
+   "tag": "[Derived]",
+   "note": "方格子淘金脈絡作者推得 18.0%（https://vocus.cc/article/6af2c582fd897800019cb5c8）"
+  }
+ ]
+}
