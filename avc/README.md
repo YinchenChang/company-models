@@ -24,6 +24,7 @@
 
 - **未做／待判斷：** 4Q26 毛利率 33%（3Q26 實績 33.86%）、`q_nir`／`nir_f` 0.675（3Q26 0.690、1–3Q 0.681）、`q_nop` +0.2（3Q26 −0.10）未改；3Q26 法說簡報原檔未取得。不改：現價 2,565、同業報價、富世達股價與持股比例（83.13%，06-30 附註）、共識、其他模型假設。
 - **驗證：** LibreOffice 重算錯誤格 0；重建與 dist 逐格相同；`check_company_html avc` 通過；`check_layout_v13 --xlsx` ok；`check_in_layout` 通過；`tools/baseline_coordination/check.py` 0 項不符；`alt_run` 檢查列另一側與現行一致。`check_sens_coverage --require-keycol` 47／47 鍵無案例（與 v0.3.5 相同，既有，非本版引入）。
+- **獨立核對修正（合併前，同版只改文字；數值格 0 差異）：** Val 0.7、RevDCF、Sens 末表、PL 標準損益表、README 展示層的起始版標示改回 v0.3.5；In 頁 I 欄 2026-06-30 舊值加註「前期」。
 - 成品：`dist/20261115_奇鋐個股模型_v0.3.6.xlsx`／`.html`；v0.3.5 移到 `dist/_待刪除/`。
 
 ## v0.3.5（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（兩讀數目標價、讀取層級、C0 公司實績對帳）

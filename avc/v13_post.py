@@ -169,4 +169,13 @@ def c0_actuals(wb, G):
 
 def apply(wb, SIL, CR):
     C.update(layer_rows=layer_rows, same_blocks=same_blocks)
-    return c13.apply(wb, SIL, CR, C, lines, c0_actuals)
+    out = c13.apply(wb, SIL, CR, C, lines, c0_actuals)
+    # 獨立核對（2026-11-15）：v1.3 各段（標準損益表、RevDCF、Val 0.7、Sens 末表、README 展示層）的實際起始版為 v0.3.5，不隨 VER 改寫
+    import re as _re
+    _pat = _re.compile(r"(（|；)" + _re.escape(VER) + r" 起(；個股 HTML|，個股 HTML|，版面規格)")
+    for _ws in wb:
+        for _row in _ws.iter_rows():
+            for _c in _row:
+                if isinstance(_c.value, str) and VER + " 起" in _c.value:
+                    _c.value = _pat.sub(lambda m: m.group(1) + "v0.3.5 起" + m.group(2), _c.value)
+    return out
