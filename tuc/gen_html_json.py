@@ -202,3 +202,42 @@ import r3_html  # noqa: E402
 r3_html.post(cfg, wb, '新台幣')
 json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok", OUT)
+# ───────── v0.2.4（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（兩讀數、C0（實績））；共通步驟 tuc/html13.py（高速 CCL／PCB 四家同一份；樣板 delta、auras、emc） ─────────
+import html13  # noqa: E402
+AIR_ = "高速材料營收（ELL／SLL，M7 以上；AI 相關）＝ MIN（需求面、產能上限 − 其他等級）"
+NAIR_ = "其他等級營收（VLL／LL、非低損耗、特殊應用）"
+REVR_ = "營收（單一應報導部門：銅箔基板與膠片）"
+H = {
+    "ver": "v0.2.4",
+    "units_chart": lambda pB, hB: {
+        "type": "theme", "title": "高速材料與其他等級營收（情境 B，十億元）與台燿在 AI 高速 CCL 市場的有效份額（右軸）", "x": f"@PL!D{hB}:G{hB}",
+        "fmt": "n1", "fmt_r": "p1", "stack": True, "pad": 1.25, "total": f"@PL!D{pB(REVR_)}:G{pB(REVR_)}",
+        "bars": [{"name": ["高速材料（ELL／SLL，AI 相關）"], "y": f"@PL!D{pB(AIR_)}:G{pB(AIR_)}", "color": "#0b7a80"},
+                 {"name": ["其他等級（VLL／LL、非低損耗、特殊應用）"], "y": f"@PL!D{pB(NAIR_)}:G{pB(NAIR_)}", "color": "#b9b4a6"}],
+        "lines": [{"name": ["台燿在 AI 高速 CCL 市場的有效份額"], "y": f"@PL!D{pB('台燿有效份額')}:G{pB('台燿有效份額')}", "axis": "r", "color": "#3b3838", "labels": True}],
+        "caption": "堆疊＝兩塊營收，頂端數字＝合併營收；折線＝台燿有效份額（右軸）。回答命題：AI 高速 CCL 市場擴大時，泰國、常熟、中山擴產與組合升級能讓高速材料營收成長多少。FY2026 為校準年。"},
+    "sc_caption": "三情境 FY2027 相同（部署量情境差異從 CY2028 起）；FY2030 起為延伸期（收斂法）。",
+    "seg": [("一、AI 高速 CCL 市場與台燿份額", "A. AI 高速 CCL 市場", "B. 產能上限"), ("二、產能上限、其他等級與合併營收", "B. 產能上限", "C. 損益")],
+    "seg_caption": "分部營收推導（情境 B；十億元新台幣）：高速材料＝部署 GW × 每 GW 高速 CCL 金額 × 台燿有效份額 × 售價指數，以產能上限減其他等級為上限；加其他等級得合併營收",
+    "gw_chart": lambda pB, hB: {
+        "type": "theme", "title": "部署 GW（IT 電力，長條）與 AI 高速 CCL 市場（折線，十億美元，右軸）：情境 B", "x": f"@PL!D{hB}:G{hB}",
+        "fmt": "n0", "fmt_r": "n1", "stack": False, "pad": 1.3,
+        "bars": [{"name": ["部署 GW（IT 電力）"], "y": f"@PL!D{pB('部署 GW（IT 電力）')}:G{pB('部署 GW（IT 電力）')}", "color": "#0b7a80"}],
+        "lines": [{"name": ["AI 高速 CCL 市場"], "y": f"@PL!D{pB('AI 高速 CCL 市場（美元；不含價格指數）')}:G{pB('AI 高速 CCL 市場（美元；不含價格指數）')}", "axis": "r", "color": "#c29a2b", "labels": True}],
+        "caption": "高速材料營收的產業輸入：部署量與每 GW 高速 CCL 金額（皆讀 Siliconomics）＝市場；乘上台燿有效份額與售價指數即為需求面營收。"},
+    "recon_h3": "券商、研調與同業份額對照（原有）",
+    "plain": {f"Val!E{find('Val', 'WACC')}": "股權成本與稅後債務成本以市值權重加權；WACC 調整只用於敏感度（基準為零）",
+              f"Val!A{find('Val', '永續成長率 g')}": "永續成長率 g（長期成長上限與無風險利率取小者）",
+              f"Val!A{find('Val', '永續期 RONIC')}": "永續期 RONIC（＝WACC＋超額報酬差）",
+              f"Val!A{find('Val', 'DCF 情境價值推到 12 個月後')}": "DCF 情境價值推到目標時點（以股權成本複利，扣除期間股利）",
+              f"In!B{INK['g_tv']}": "永續成長率 g（最後一年之後；長期成長上限與無風險利率取小者）",
+              f"In!B{INK['scn_fade_g']}": "FY2032 營收年增收斂目標（A 為基準加兩個百分點、B 為基準、C 為基準減兩個百分點）",
+              f"In!B{INK['tp_g']}": "PL 延伸期營收年增的收斂基準（情境 B 的 FY2032 營收年增；不用於 DCF，DCF 永續成長率見折現率一節）"},
+    "fold": {"DCF!A2": "展開：DCF 的營業利益與自由現金流口徑"},
+}
+html13.apply(cfg, wb, X, H, os.path.join(HERE, ".."))
+for b in next(s for s in cfg["sections"] if s["id"] == "sens")["blocks"]:   # 台燿原有龍捲風圖是整本重算的加權目標價（sens_tuc.py），不是 FY2028 EPS：摺疊說明改正
+    if b.get("type") == "tornado" and b.get("collapse") and str(b.get("summary", "")).startswith("展開：對照：FY2028 EPS"):
+        b["summary"] = "展開：對照：整本重算的加權目標價敏感度（In 頁輸入一次改一個；sens_tuc.py 快照）" + ("，未達兩位數百分比的案例" if "未達" in str(b.get("title")) else "")
+json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+print("v1.3 ok", os.path.relpath(X, HERE))
