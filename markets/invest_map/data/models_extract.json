@@ -4969,79 +4969,79 @@
   }
  },
  "2802": {
-  "model": "ajinomoto/dist/20261115_味之素個股模型_v0.3.5.xlsx",
+  "model": "ajinomoto/dist/20261115_味之素個股模型_v0.3.6.xlsx",
   "v2": true,
   "tp": {
-   "value": 3148.91061255869,
+   "value": 3294.73321329845,
    "cell": "Val!B40",
-   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.5.xlsx"
+   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.6.xlsx"
   },
   "tp_dcf": {
-   "value": 2649.51021795216,
+   "value": 2700.30833573263,
    "cell": "Val!B24",
-   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.5.xlsx"
+   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.6.xlsx"
   },
   "tp_comp": {
-   "value": 3089.95086722695,
+   "value": 3293.93721972907,
    "cell": "Val!B41",
-   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.5.xlsx"
+   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.6.xlsx"
   },
   "tp_cons": {
    "value": 6321.43,
    "cell": "Val!B42",
-   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.5.xlsx"
+   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.6.xlsx"
   },
   "up": {
-   "value": -0.353671877553636,
+   "value": -0.32374113027536,
    "cell": "Val!B43",
-   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.5.xlsx"
+   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.6.xlsx"
   },
   "up_comp": {
-   "value": -0.365773631521563,
+   "value": -0.323904511549864,
    "cell": "Val!B44",
-   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.5.xlsx"
+   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.6.xlsx"
   },
   "tier6": {
    "value": "−25%～−50%",
    "cell": "Val!B49",
-   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.5.xlsx"
+   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.6.xlsx"
   },
   "rec": {
    "value": "放空",
    "cell": "Val!B50",
-   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.5.xlsx"
+   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.6.xlsx"
   },
   "dcf_A": {
-   "value": 3256.94645963743,
+   "value": 3353.04937123759,
    "cell": "Val!B21",
-   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.5.xlsx"
+   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.6.xlsx"
   },
   "dcf_C": {
-   "value": 2024.39809163696,
+   "value": 2033.66818739021,
    "cell": "Val!D21",
-   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.5.xlsx"
+   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.6.xlsx"
   },
   "model_px": {
    "value": 4872,
    "cell": "Val!B62",
-   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.5.xlsx",
+   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.6.xlsx",
    "date": "2026-11-05"
   },
   "pe_fy28": [
    {
-    "value": 26.4099470304005,
+    "value": 24.6394057963881,
     "cell": "Val!B66",
-    "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.5.xlsx"
+    "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.6.xlsx"
    },
    {
-    "value": 28.9525412368069,
+    "value": 27.1677023703635,
     "cell": "Val!C66",
-    "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.5.xlsx"
+    "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.6.xlsx"
    },
    {
-    "value": 32.1438557679686,
+    "value": 30.3794664837458,
     "cell": "Val!D66",
-    "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.5.xlsx"
+    "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.6.xlsx"
    }
   ],
   "cash": {
@@ -5050,91 +5050,91 @@
    "values": [
     [
      "FY2026（錨點）",
-     123.5,
+     135,
      "PL!D14"
     ],
     [
      "FY2027",
-     152.353806343857,
+     162.510503664694,
      "PL!E14"
     ],
     [
      "FY2028",
-     170.243547810568,
+     182.670453483294,
      "PL!F14"
     ],
     [
      "FY2029",
-     180.68867025378,
+     194.6450318388,
      "PL!G14"
     ],
     [
      "FY2030（收斂）",
-     190.288095993299,
+     205.084795423504,
      "PL!H14"
     ],
     [
      "FY2031（收斂）",
-     201.051445524147,
+     216.737188829793,
      "PL!I14"
     ],
     [
      "FY2032（收斂）",
-     213.114532255596,
+     229.74142015958,
      "PL!J14"
     ],
     [
      "FY2028",
-     155.292865077719,
+     165.670669128612,
      "PL!F30"
     ],
     [
      "FY2029",
-     160.73843034957,
+     171.794060523889,
      "PL!G30"
     ],
     [
      "FY2030（收斂）",
-     161.878636553824,
+     173.038022232209,
      "PL!H30"
     ],
     [
      "FY2031（收斂）",
-     162.690780574667,
+     173.918895275104,
      "PL!I30"
     ],
     [
      "FY2032（收斂）",
-     163.155611376309,
+     174.415806404461,
      "PL!J30"
     ],
     [
      "FY2028",
-     139.875039024564,
+     148.155710133792,
      "PL!F46"
     ],
     [
      "FY2029",
-     147.114974559323,
+     156.388835853974,
      "PL!G46"
     ],
     [
      "FY2030（收斂）",
-     142.48082034368,
+     151.514878336927,
      "PL!H46"
     ],
     [
      "FY2031（收斂）",
-     136.119145090752,
+     144.775056304823,
      "PL!I46"
     ],
     [
      "FY2032（收斂）",
-     128.161410454677,
+     136.311283782387,
      "PL!J46"
     ]
    ],
-   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.5.xlsx"
+   "file": "ajinomoto/dist/20261115_味之素個股模型_v0.3.6.xlsx"
   }
  },
  "300476": {
@@ -6633,84 +6633,84 @@
   }
  },
  "7729": {
-  "model": "accretech/dist/20261115_東京精密個股模型_v0.3.5.xlsx",
+  "model": "accretech/dist/20261115_東京精密個股模型_v0.3.6.xlsx",
   "v2": true,
   "tp": {
-   "value": 10091.8873012067,
+   "value": 10077.6528953199,
    "cell": "Val!B40",
-   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.5.xlsx"
+   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.6.xlsx"
   },
   "tp_dcf": {
-   "value": 8906.00803702926,
+   "value": 8877.53922525557,
    "cell": "Val!B24",
-   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.5.xlsx"
+   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.6.xlsx"
   },
   "tp_comp": {
    "value": 20536.2123979382,
    "cell": "Val!B41",
-   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.5.xlsx"
+   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.6.xlsx"
   },
   "tp_cons": {
    "value": 20900,
    "cell": "Val!B42",
-   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.5.xlsx"
+   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.6.xlsx"
   },
   "up": {
-   "value": -0.20127524327608,
+   "value": -0.202401828625256,
    "cell": "Val!B43",
-   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.5.xlsx"
+   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.6.xlsx"
   },
   "up_comp": {
    "value": 0.625343284363925,
    "cell": "Val!B44",
-   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.5.xlsx"
+   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.6.xlsx"
   },
   "old_rule": {
    "value": 12068.547413888,
    "cell": "Val!B111",
-   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.5.xlsx"
+   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.6.xlsx"
   },
   "tier6": {
    "value": "0%～−25%",
    "cell": "Val!B115",
-   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.5.xlsx"
+   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.6.xlsx"
   },
   "rec": {
    "value": "中立",
    "cell": "Val!B116",
-   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.5.xlsx"
+   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.6.xlsx"
   },
   "dcf_A": {
-   "value": 11475.1779488274,
+   "value": 11444.4556727891,
    "cell": "Val!B21",
-   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.5.xlsx"
+   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.6.xlsx"
   },
   "dcf_C": {
-   "value": 6776.95201975059,
+   "value": 6750.31072058042,
    "cell": "Val!D21",
-   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.5.xlsx"
+   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.6.xlsx"
   },
   "model_px": {
    "value": 12635,
    "cell": "Val!B53",
-   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.5.xlsx",
+   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.6.xlsx",
    "date": "2026-11-05"
   },
   "pe_fy28": [
    {
     "value": 11.3125463685727,
     "cell": "Val!B56",
-    "file": "accretech/dist/20261115_東京精密個股模型_v0.3.5.xlsx"
+    "file": "accretech/dist/20261115_東京精密個股模型_v0.3.6.xlsx"
    },
    {
     "value": 14.6653455384685,
     "cell": "Val!C56",
-    "file": "accretech/dist/20261115_東京精密個股模型_v0.3.5.xlsx"
+    "file": "accretech/dist/20261115_東京精密個股模型_v0.3.6.xlsx"
    },
    {
     "value": 21.6615192652246,
     "cell": "Val!D56",
-    "file": "accretech/dist/20261115_東京精密個股模型_v0.3.5.xlsx"
+    "file": "accretech/dist/20261115_東京精密個股模型_v0.3.6.xlsx"
    }
   ],
   "cash": {
@@ -6768,7 +6768,7 @@
      "PL!G34"
     ]
    ],
-   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.5.xlsx"
+   "file": "accretech/dist/20261115_東京精密個股模型_v0.3.6.xlsx"
   }
  },
  "2317": {
