@@ -1,0 +1,298 @@
+{
+ "_readme": "緯創（3231）事實總帳（v0.4.7 滾入 3Q26，2026-11-15 擷取）。金額十億新台幣（NT$B），EPS 新台幣，股數十億股。標記：Verified＝公司財報（公開資訊觀測站）；Interested-party＝資料商、券商、媒體；Derived＝由上列數字計算。合併口徑（含子公司緯穎 100%）。抓不到者寫「未取得」並維持原值，不臆造。",
+ "sources": {
+  "MOPS_BS": "公開資訊觀測站 t164sb03 合併資產負債表 115/09/30（主 session 以內建瀏覽器讀 MOPS API，2026-11-15）https://mops.twse.com.tw/mops/#/web/t164sb03",
+  "MOPS_IS": "公開資訊觀測站 t164sb04 合併綜合損益表 115 年第 3 季單季與 1–9 月累計（同上）https://mops.twse.com.tw/mops/#/web/t164sb04",
+  "SA_BS_2Q": "stockanalysis（S&P Global）緯創季資產負債表 2Q26（2026-06-30；v0.4.6 已登錄）https://stockanalysis.com/quote/tpe/3231/financials/balance-sheet/?p=quarterly",
+  "WY_2Q_FS": "緯穎 2026Q2 合併財報（公司 IR）https://www.wiwynn.com/hubfs/Investors/Financial_Report/Wiwynn_2026Q2_Financial.pdf"
+ },
+ "facts": [
+  {
+   "key": "q3_rev",
+   "label": "3Q26 合併營業收入",
+   "value": 1149.090429,
+   "unit": "NT$B",
+   "date": "2026-09-30",
+   "src": "MOPS_IS",
+   "tag": "Verified",
+   "note": "原 v0.4.6 為 7–9 月月營收合計 1,149.090（同值）"
+  },
+  {
+   "key": "q3_gp",
+   "label": "3Q26 合併營業毛利",
+   "value": 67.800378,
+   "unit": "NT$B",
+   "date": "2026-09-30",
+   "src": "MOPS_IS",
+   "tag": "Verified"
+  },
+  {
+   "key": "q3_oi",
+   "label": "3Q26 合併營業利益",
+   "value": 48.671931,
+   "unit": "NT$B",
+   "date": "2026-09-30",
+   "src": "MOPS_IS",
+   "tag": "Verified"
+  },
+  {
+   "key": "q3_cni",
+   "label": "3Q26 合併本期淨利",
+   "value": 32.486321,
+   "unit": "NT$B",
+   "date": "2026-09-30",
+   "src": "MOPS_IS",
+   "tag": "Verified"
+  },
+  {
+   "key": "q3_ni",
+   "label": "3Q26 歸屬母公司業主淨利",
+   "value": 18.401661,
+   "unit": "NT$B",
+   "date": "2026-09-30",
+   "src": "MOPS_IS",
+   "tag": "Verified"
+  },
+  {
+   "key": "q3_nci",
+   "label": "3Q26 非控制權益淨利",
+   "value": 14.08466,
+   "unit": "NT$B",
+   "date": "2026-09-30",
+   "src": "MOPS_IS",
+   "tag": "Verified",
+   "note": "模型以（1 − 持股）× 緯穎淨利近似為 14.56；實績較低，只列參考"
+  },
+  {
+   "key": "q3_eps",
+   "label": "3Q26 基本 EPS",
+   "value": 5.74,
+   "unit": "NT$",
+   "date": "2026-09-30",
+   "src": "MOPS_IS",
+   "tag": "Verified",
+   "note": "稀釋 5.32"
+  },
+  {
+   "key": "q3_sh",
+   "label": "3Q26 加權股數（淨利 ÷ 基本 EPS）",
+   "value": 3.205864,
+   "unit": "十億股",
+   "src": "MOPS_IS",
+   "tag": "Derived"
+  },
+  {
+   "key": "ytd_rev",
+   "label": "1–9 月合併營業收入",
+   "value": 2890.836071,
+   "unit": "NT$B",
+   "src": "MOPS_IS",
+   "tag": "Verified"
+  },
+  {
+   "key": "ytd_gp",
+   "label": "1–9 月合併營業毛利",
+   "value": 162.557954,
+   "unit": "NT$B",
+   "src": "MOPS_IS",
+   "tag": "Verified"
+  },
+  {
+   "key": "ytd_oi",
+   "label": "1–9 月合併營業利益",
+   "value": 111.25648,
+   "unit": "NT$B",
+   "src": "MOPS_IS",
+   "tag": "Verified"
+  },
+  {
+   "key": "ytd_ni",
+   "label": "1–9 月歸屬母公司淨利",
+   "value": 42.859883,
+   "unit": "NT$B",
+   "src": "MOPS_IS",
+   "tag": "Verified"
+  },
+  {
+   "key": "ytd_nci",
+   "label": "1–9 月非控制權益淨利",
+   "value": 31.391391,
+   "unit": "NT$B",
+   "src": "MOPS_IS",
+   "tag": "Verified"
+  },
+  {
+   "key": "ytd_eps",
+   "label": "1–9 月基本 EPS",
+   "value": 13.54,
+   "unit": "NT$",
+   "src": "MOPS_IS",
+   "tag": "Verified",
+   "note": "稀釋 12.55"
+  },
+  {
+   "key": "wy_q3_rev",
+   "label": "緯穎 3Q26 營業收入",
+   "value": 434.61769,
+   "unit": "NT$B",
+   "src": "MOPS_IS（6669）",
+   "tag": "Verified"
+  },
+  {
+   "key": "wy_q3_gp",
+   "label": "緯穎 3Q26 營業毛利",
+   "value": 38.553202,
+   "unit": "NT$B",
+   "src": "MOPS_IS（6669）",
+   "tag": "Verified"
+  },
+  {
+   "key": "wy_q3_oi",
+   "label": "緯穎 3Q26 營業利益",
+   "value": 32.450484,
+   "unit": "NT$B",
+   "src": "MOPS_IS（6669）",
+   "tag": "Verified"
+  },
+  {
+   "key": "wy_q3_ni",
+   "label": "緯穎 3Q26 歸屬母公司淨利",
+   "value": 23.36429,
+   "unit": "NT$B",
+   "src": "MOPS_IS（6669）",
+   "tag": "Verified"
+  },
+  {
+   "key": "wy_ytd_rev",
+   "label": "緯穎 1–9 月營業收入",
+   "value": 989.278016,
+   "unit": "NT$B",
+   "src": "MOPS_IS（6669）",
+   "tag": "Verified"
+  },
+  {
+   "key": "wy_ytd_gp",
+   "label": "緯穎 1–9 月營業毛利",
+   "value": 85.197319,
+   "unit": "NT$B",
+   "src": "MOPS_IS（6669）",
+   "tag": "Verified"
+  },
+  {
+   "key": "wy_ytd_oi",
+   "label": "緯穎 1–9 月營業利益",
+   "value": 70.12666,
+   "unit": "NT$B",
+   "src": "MOPS_IS（6669）",
+   "tag": "Verified"
+  },
+  {
+   "key": "wy_ytd_ni",
+   "label": "緯穎 1–9 月歸屬母公司淨利",
+   "value": 52.447797,
+   "unit": "NT$B",
+   "src": "MOPS_IS（6669）",
+   "tag": "Verified"
+  },
+  {
+   "key": "cash",
+   "label": "現金及約當現金 9-30",
+   "value": 150.661376,
+   "unit": "NT$B",
+   "src": "MOPS_BS",
+   "tag": "Verified"
+  },
+  {
+   "key": "fvtpl_c",
+   "label": "FVTPL－流動 9-30",
+   "value": 6.356657,
+   "unit": "NT$B",
+   "src": "MOPS_BS",
+   "tag": "Verified",
+   "note": "與現金合計 157.018，對應原口徑「現金及短期投資」"
+  },
+  {
+   "key": "inv_lt",
+   "label": "長期投資 9-30（FVTPL 非流動 3.840666＋FVOCI 非流動 14.453829＋攤銷後成本非流動 0.010＋權益法 13.147314）",
+   "value": 31.451809,
+   "unit": "NT$B",
+   "src": "MOPS_BS",
+   "tag": "Derived"
+  },
+  {
+   "key": "st_borrow",
+   "label": "短期借款 9-30",
+   "value": 395.395904,
+   "unit": "NT$B",
+   "src": "MOPS_BS",
+   "tag": "Verified"
+  },
+  {
+   "key": "bonds",
+   "label": "應付公司債（非流動）9-30",
+   "value": 33.029921,
+   "unit": "NT$B",
+   "src": "MOPS_BS",
+   "tag": "Verified",
+   "note": "114 年底 51.010（含緯穎海外可轉債 18.553，9-30 緯穎為 0）"
+  },
+  {
+   "key": "lt_borrow",
+   "label": "長期借款 9-30",
+   "value": 31.875683,
+   "unit": "NT$B",
+   "src": "MOPS_BS",
+   "tag": "Verified"
+  },
+  {
+   "key": "cur_ltd",
+   "label": "一年內到期長期負債／應付公司債流動部分 9-30",
+   "value": 49.220028,
+   "unit": "NT$B",
+   "src": "SA_BS_2Q＋WY_2Q_FS＋緯穎模型 v0.2.7 推估",
+   "tag": "Derived",
+   "note": "9-30 實際值未取得（MOPS 摘要未單列；資料商季表停在 2Q26）。＝2Q26 63.066 − 緯穎第二次可轉債 3Q 已轉換帳面 13.845972（緯穎模型 v0.2.7 cb_cur 推導）；緯創自身部分（約 3.4）沿用 2Q26"
+  },
+  {
+   "key": "lease",
+   "label": "租賃負債 9-30（流動 2.169549＋非流動 9.395974）",
+   "value": 11.565523,
+   "unit": "NT$B",
+   "src": "MOPS_BS",
+   "tag": "Verified"
+  },
+  {
+   "key": "nci_bv",
+   "label": "非控制權益（帳面）9-30",
+   "value": 116.665051,
+   "unit": "NT$B",
+   "src": "MOPS_BS",
+   "tag": "Verified"
+  },
+  {
+   "key": "wy_eq",
+   "label": "緯穎歸屬母公司業主權益 9-30",
+   "value": 188.025502,
+   "unit": "NT$B",
+   "src": "MOPS_BS（6669）",
+   "tag": "Verified"
+  },
+  {
+   "key": "share_cap",
+   "label": "普通股股本 9-30",
+   "value": 34.298423,
+   "unit": "NT$B",
+   "src": "MOPS_BS",
+   "tag": "Verified",
+   "note": "114 年底 31.804123；增加 2.4943 約等於 9-10 GDR 2.5 億股；面額 10 元 → 3.4298 十億股；庫藏股、預收股本 MOPS 摘要未列（視為 0）"
+  },
+  {
+   "key": "ws_eq",
+   "label": "緯軟股東權益 9-30",
+   "value": null,
+   "src": "未取得",
+   "tag": "未取得",
+   "note": "維持 2Q26 4.095（stockanalysis）"
+  }
+ ]
+}
