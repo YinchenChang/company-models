@@ -12,10 +12,13 @@
 from openpyxl.styles import Font, PatternFill, Alignment
 
 VER, OLD, BUILT = "0.1.2", "0.1.1", "2026-11-15"
+CUR = "0.1.3"   # v0.1.3（2026-11-15）：滾入 3Q26 實績與 4Q26 指引；VER 保留 0.1.2（本檔新增頁與列自 v0.1.2 起）
 BOLD = Font(bold=True); BLUE = Font(color="0000FF"); GREEN = Font(color="008000"); HDR = PatternFill("solid", fgColor="DDEBF7")
 S8K1 = "https://www.sec.gov/Archives/edgar/data/0002021728/000162828026044941/cbrsannouncesfinancialresu.htm"
 S8K2 = "https://www.sec.gov/Archives/edgar/data/0002021728/000162828026056186/cbrsannouncesfinancialresu.htm"
 SQ2 = "https://www.sec.gov/Archives/edgar/data/0002021728/000162828026056357/cbrs-20260630.htm"
+S8K3 = "https://www.sec.gov/Archives/edgar/data/0002021728/000162828026073366/cbrsannouncesfinancialresu.htm"
+SQ3 = "https://www.sec.gov/Archives/edgar/data/0002021728/000162828026073494/cbrs-20260930.htm"
 
 
 def lit(t):
@@ -60,7 +63,7 @@ def pl_standard(wb, PR):
                  "營業費用含經常性股票薪酬（GAAP 費用），只排除 IPO 一次性股票薪酬與其薪資稅。公司另有 non-GAAP「核心」營業損益（不扣股票薪酬），但市場評價看 GAAP 虧損與股票薪酬負擔，故本表以 GAAP 近似呈現。")
     r_note = r; r += 1
     P.cell(r, 1, "歷史只列兩年：FY2023 GAAP 損益（424B4）本版未取得原文（待補，見 README 未解事項）；FY2024–FY2025 的其他收入與所得稅未分開取得，其他收入列＝淨利 − 營業損益（含所得稅與一次性項目，"
-                 "FY2025 含遠期合約負債消滅利益約 3.6 億美元），稅前利益、所得稅與 EPS（上市前）列「—」。FY2026E＝1Q26、2Q26 實績＋3Q26 指引中點＋全年指引推得 4Q26（Q 頁）。")
+                 "FY2025 含遠期合約負債消滅利益約 3.6 億美元），稅前利益、所得稅與 EPS（上市前）列「—」。FY2026E＝1Q26–3Q26 實績＋4Q26 指引中點（Q 頁；v0.1.3 起）。")
     r_note2 = r; r += 1
     hdr(P, r, ["項目", "單位"] + YEARS + ["說明"])
     r_hdr = r; r += 1
@@ -384,7 +387,7 @@ def coord(wb, TKV, WATT):
     C.cell(r, 1, "方法：個股側＝Cerebras 8-K／10-Q 已公布的 2026 年季度實績（公司揭露，Verified）。層級側應為同口徑的層級隱含值，但三層都沒有 Cerebras 的量：Siliconomics 無晶圓級加速器顆數或份額；"
                  "Wattonomics 無 Cerebras 玩家（唯一相關的園區列不納入加總）；Tokenomics 只有每 GW 的產出與持有成本比，要換成營收或資本支出需要 Cerebras 在役（計費）MW，公司未揭露。"
                  "因此 C0 結論為「無可比實績」；下列實績只作記錄與未來對帳的起點。時差讀法照工作單：主讀數＝2026 年已公布期間累計 vs 層級 CY2026 × 月數 ÷ 12；第二讀數＝最近一季 × 4 vs 層級 CY2026"
-                 "（最近一季 2Q26 中點約 2026-05，接近年中，成長年大致無偏或偏低）。3Q26（2026-11-12 公布）本版未取得原文，主讀數只到 1H26（6 個月）。")
+                 "（最近一季 3Q26 中點約 2026-08，晚於年中，成長年第二讀數偏高）。v0.1.3 起滾入 3Q26（2026-11-12 公布），主讀數為 9M26（9 個月）。")
     C.cell(r, 1).alignment = Alignment(wrap_text=True, vertical="top"); D_note = r; r += 2
     hdr(C, r, ["輸入", "值", "單位", "期間／口徑", "出處", "等級", "網址／名稱"]); r += 1
     IN = {}
@@ -394,23 +397,25 @@ def coord(wb, TKV, WATT):
         C.cell(r, 1, label); C.cell(r, 2, val).number_format = fmt
         if font: C.cell(r, 2).font = font
         C.cell(r, 3, unit); C.cell(r, 4, period); C.cell(r, 5, src); C.cell(r, 6, ev); C.cell(r, 7, url); IN[key] = r; r += 1
-    assert Q.cell(3, 4).value == "1Q26" and Q.cell(3, 5).value == "2Q26"
+    assert Q.cell(3, 4).value == "1Q26" and Q.cell(3, 5).value == "2Q26" and Q.cell(3, 6).value == "3Q26"
     qr, qc, qh, qx = lab(Q, "營收合計（GAAP）"), lab(Q, "核心雲端營收"), lab(Q, "核心硬體營收"), lab(Q, "資本支出（季別未揭露")
     qx1 = lab(Q, "資本支出", lab(Q, "現金流量（FY"), exact=True)
     inp("r1", "營收合計（GAAP）：1Q26", f"=Q!D{qr}", "US$B", "2026-01～2026-03", f"Q 頁 D{qr}；Cerebras 10-Q（季度結束 2026-03-31）", "Verified", GREEN, url=S8K1)
     inp("r2", "營收合計（GAAP）：2Q26", f"=Q!E{qr}", "US$B", "2026-04～2026-06", f"Q 頁 E{qr}；Cerebras 8-K 2026-08-12（2Q26 財報新聞稿）", "Verified", GREEN, url=S8K2)
+    inp("r3", "營收合計（GAAP）：3Q26", f"=Q!F{qr}", "US$B", "2026-07～2026-09", f"Q 頁 F{qr}；Cerebras 8-K 2026-11-12（3Q26 財報新聞稿）", "Verified", GREEN, url=S8K3)
     inp("c1", "核心雲端營收：1Q26", f"=Q!D{qc}", "US$B", "1Q26；公司核心口徑", f"Q 頁 D{qc}；Cerebras 8-K（1Q26 財報新聞稿）", "Verified", GREEN, url=S8K1)
     inp("c2", "核心雲端營收：2Q26", f"=Q!E{qc}", "US$B", "2Q26；公司核心口徑", f"Q 頁 E{qc}；Cerebras 8-K 2026-08-12", "Verified", GREEN, url=S8K2)
-    inp("h1", "核心硬體營收：1Q26＋2Q26", f"=Q!D{qh}+Q!E{qh}", "US$B", "1H26；公司核心口徑", f"Q 頁 D{qh}＋E{qh}", "Verified", GREEN, url=S8K2)
-    inp("x", "資本支出：1H26", f"=Q!E{qx1}", "US$B", "2026-01～2026-06（現金流量表）", f"Q 頁 E{qx1}；10-Q（季度結束 2026-06-30）", "Verified", GREEN, url=SQ2)
-    inp("mo", "已公布月數（2026 1Q–2Q）", 6, "月", "2026-01～2026-06", "會計年度＝日曆年；3Q26 原文未取得", "Derived", BLUE, fmt="0")
+    inp("c3", "核心雲端營收：3Q26", f"=Q!F{qc}", "US$B", "3Q26；公司核心口徑", f"Q 頁 F{qc}；Cerebras 8-K 2026-11-12", "Verified", GREEN, url=S8K3)
+    inp("h1", "核心硬體營收：1Q26–3Q26", f"=Q!D{qh}+Q!E{qh}+Q!F{qh}", "US$B", "9M26；公司核心口徑", f"Q 頁 D{qh}＋E{qh}＋F{qh}", "Verified", GREEN, url=S8K3)
+    inp("x", "資本支出：9M26", f"=Q!F{qx1}", "US$B", "2026-01～2026-09（現金流量表）", f"Q 頁 F{qx1}；8-K 2026-11-12（9M26 現金流量表）", "Verified", GREEN, url=S8K3)
+    inp("mo", "已公布月數（2026 1Q–3Q）", 9, "月", "2026-01～2026-09", "會計年度＝日曆年", "Derived", BLUE, fmt="0")
     r += 1
     hdr(C, r, ["項目", "公司實績", "層級隱含", "差距", "判定", "單位與口徑", "出處", "證據等級", "說明"]); r += 1
     D0 = r
     lines = [
-        ("C0（實績）判定：雲端營收 CY2026（主讀數 1H26 累計；第二讀數 2Q26 × 4）", f"=B{IN['c1']}+B{IN['c2']}", f"B{IN['c2']}*4",
+        ("C0（實績）判定：雲端營收 CY2026（主讀數 9M26 累計；第二讀數 3Q26 × 4）", f"=B{IN['c1']}+B{IN['c2']}+B{IN['c3']}", f"B{IN['c3']}*4",
          "缺：Cerebras 在役／計費 MW 揭露（Tokenomics 每 GW 收支換成營收所需）；Wattonomics 無 Cerebras 玩家、Siliconomics 無 Cerebras 量"),
-        ("C0（實績）判定：營收合計（GAAP）CY2026", f"=B{IN['r1']}+B{IN['r2']}", f"B{IN['r2']}*4",
+        ("C0（實績）判定：營收合計（GAAP）CY2026", f"=B{IN['r1']}+B{IN['r2']}+B{IN['r3']}", f"B{IN['r3']}*4",
          "缺：Siliconomics 晶圓級加速器（或「其他加速器」中 Cerebras）的顆數 × 售價；層級沒有 Cerebras 份額"),
         ("C0（實績）判定：資本支出 CY2026", f"=B{IN['x']}", None,
          "缺：Wattonomics 的 Cerebras 玩家資本支出（無此玩家；唯一相關園區列不納入）"),
@@ -420,7 +425,7 @@ def coord(wb, TKV, WATT):
         C.cell(r, 2, act).number_format = "#,##0.000"
         C.cell(r, 3, "—"); C.cell(r, 4, "—")
         C.cell(r, 5, "無可比實績").font = BOLD
-        C.cell(r, 6, "US$B；公司實績欄＝2026 已公布期間累計（" + ("第二讀數＝最近一季 × 4，見說明" if act2 else "1H26，現金流量表") + "）")
+        C.cell(r, 6, "US$B；公司實績欄＝2026 已公布期間累計（" + ("第二讀數＝最近一季 × 4，見說明" if act2 else "9M26，現金流量表") + "）")
         C.cell(r, 7, "公司：Cerebras 8-K／10-Q（Q 頁）；層級：Siliconomics v0.19、Wattonomics v0.3.2、" + TKV.split("（")[0] + "（皆無 Cerebras 同口徑量）")
         C.cell(r, 8, "Verified（公司）")
         C.cell(r, 9, F(T(miss + "。不以模型預測或合約推算值補位"), *( [T("；第二讀數（最近一季 × 4）＝"), f'TEXT({act2},"0.000")'] if act2 else []), T("。")))
@@ -461,9 +466,9 @@ def readme13(wb, PR, RVA, PLA, SEN, CO):
         T(" 美元＝同業前瞻營收倍數中位數 "), f'TEXT({pmed},"0.0")', T(" 倍 × FY2028 營收（情境加權）÷ 股數。"))
     put("o2", T("現價隱含的條件：要讓現金流折現法支持現價，"), f'IF(ABS({rv("w_res")})<0.01,"折現率須降到 "&TEXT({rv("w1")},"0.0%"),"折現率即使降到 "&TEXT({rv("w1")},"0.0%")&" 仍不足")', T("（模型 "), 'TEXT(wacc,"0.0%")', T("），或 FY2028 起營收全面放大 "),
         f'TEXT({rv("s1")},"0.00")', T(" 倍（FY2028 營收 "), f'TEXT({rv("rv1")},"0.0")', T("，模型 "), f'TEXT({rv("rv0")},"0.0")', T(" 十億美元）。"))
-    put("o3", T("成長：情境 B 的 FY2027 營收 "), f'TEXT(PL!E{B["rev"]},"0.00")', T(" 十億美元，為 FY2026 的 "), f'TEXT(Recon!C{rx27},"0.0")', T(" 倍（財務長說逾三倍）；FY2028 平均計費 "),
+    put("o3", T("成長：情境 B 的 FY2027 營收 "), f'TEXT(PL!E{B["rev"]},"0.00")', T(" 十億美元，為 FY2026 的 "), f'TEXT(Recon!C{rx27},"0.0")', T(" 倍（公司說三倍）；FY2028 平均計費 "),
         f'TEXT(PL!F{B["mw"]},"#,##0")', T(" MW、營收 "), f'TEXT(PL!F{B["rev"]},"0.00")', T("，營業利益率 "), f'TEXT(PL!F{B["om"]},"0.0%")', T("（含股票薪酬）。"))
-    put("o4", T("資本支出：情境 B FY2027–FY2028 資本支出合計 "), f'TEXT(PL!E{B["cx"]}+PL!F{B["cx"]},"0.0")', T(" 十億美元，對照 2026-06-30 現金與投資 "), 'TEXT(Q!E35+Q!E36+Q!E37,"0.0")',
+    put("o4", T("資本支出：情境 B FY2027–FY2028 資本支出合計 "), f'TEXT(PL!E{B["cx"]}+PL!F{B["cx"]},"0.0")', T(" 十億美元，對照 2026-09-30 現金與投資 "), 'TEXT(Q!F35+Q!F36+Q!F37,"0.0")',
         T("；每 MW 資本支出改用 Tokenomics 隱含值時，加權目標價 "), f'TEXT({SB("每 MW 資本支出", "C")},"+0.0%;-0.0%")', T("（只套用情境 B）。"))
     put("o5", T("敏感度：只看現金流折現時加權目標價 "), f'TEXT({SB("DCF 在加權中的權重", "B")},"+0%;-0%")', T("、只看同業比較法 "), f'TEXT({SB("DCF 在加權中的權重", "C")},"+0%;-0%")',
         T("；情境全押保守 "), f'TEXT({SB("情境權重", "B")},"+0%;-0%")', T("、全押樂觀 "), f'TEXT({SB("情境權重", "C")},"+0%;-0%")', T("。營運輸入中每 MW 年營收（合約期五年）"),
@@ -472,9 +477,11 @@ def readme13(wb, PR, RVA, PLA, SEN, CO):
         f'TEXT(PL!F{B["cl"]},"0.00")', T("（"), f'TEXT(PL!F{B["mw"]},"#,##0")', T(" MW × "), f'TEXT(PL!F{B["pmw"]},"0.00")', T(" 百萬美元）、硬體 "), f'TEXT(PL!F{B["hw"]},"0.00")',
         T("，合計 "), f'TEXT(PL!F{B["rev"]},"0.00")', T(" 十億美元。"))
     put("coord", T("三層協調：本模型只讀 Tokenomics（Cerebras 產出比與持有成本比，只作對照與敏感度高值），不讀 Siliconomics 與 Wattonomics；Siliconomics 對帳中年份沒有傳導到本模型，"
-                   "兩讀數不適用（另一側讀數與現行相同）。C0 以公司實績對層級：2026 上半年雲端營收 "), f'TEXT(Coord!B{CO["D0"]},"0.000")', T("、營收合計 "), f'TEXT(Coord!B{CO["D0"] + 1},"0.000")',
+                   "兩讀數不適用（另一側讀數與現行相同）。C0 以公司實績對層級：2026 前三季雲端營收 "), f'TEXT(Coord!B{CO["D0"]},"0.000")', T("、營收合計 "), f'TEXT(Coord!B{CO["D0"] + 1},"0.000")',
         T(" 十億美元，但三層都沒有 Cerebras 的量，結論「無可比實績」，對帳中項目 "), f'TEXT(Coord!B{CO["cnt"]},"0")', T(" 項。"))
-    RD.cell(r, 1, f"v{VER}（{BUILT}）：個股 HTML 版面規格 v1.3 與三層協調（工作單 20261114 第二批第 2 節）——章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；"
+    RD.cell(r, 1, f"v{CUR}（{BUILT}）：滾入 3Q26（2026-11-12 財報）——Q 頁 3Q26 改為實績、4Q26 改為 4Q26 指引中點（FY2026 錨點＝1Q26–3Q26 實績＋4Q26 指引）；"
+                  "資產負債表日、淨現金、股數改為 2026-09-30（股數 2026-11-05）；stub 期改為 4Q26；RPO、容量、公司 2027 說法更新；C0 主讀數改為 9M26。情境假設與公式不變。｜"
+                  f"v{VER}（{BUILT}）：個股 HTML 版面規格 v1.3 與三層協調（工作單 20261114 第二批第 2 節）——章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；"
                   "PL 頁末新增標準損益表（FY2024A–FY2025A GAAP 實績＋FY2026E–FY2032E 情境 B）、RevDCF 頁（反向 DCF）、Val 頁 0.7（四個目標價）、Sens 頁末加權目標價相對基準、"
                   "Coord 頁（讀取層級、兩讀數判定：不適用、C0 實績：無可比實績）；既有數值格不變（新增列、新增頁與版本字串以外逐格比對 0 差異），目標價與評等不變")
     out["ver"] = r; r += 1
@@ -486,8 +493,8 @@ def readme13(wb, PR, RVA, PLA, SEN, CO):
 def version(wb):
     RD = wb["README"]
     a1 = RD["A1"].value
-    assert isinstance(a1, str) and f"模型 v{VER}（" in a1, a1[:120]
-    RD["A1"].value = a1.replace("2026-11-08", BUILT, 1) + f"；v{VER}：個股 HTML 版面規格 v1.3 與三層協調（Coord 頁），既有數值不變"
+    assert isinstance(a1, str) and f"模型 v{CUR}（" in a1, a1[:120]
+    RD["A1"].value = a1.replace("2026-11-08", BUILT, 1) + f"；v{VER}：個股 HTML 版面規格 v1.3 與三層協調（Coord 頁）；v{CUR}：滾入 3Q26 實績與 4Q26 指引"
 
 
 def apply(wb, PR, TKV):

@@ -19,7 +19,7 @@ import fcff_dcf as FD
 import apply_in_layout as INL
 from addrow import add_check
 
-VER, VDATE = "v0.1.2", "2026-11-08"   # v0.1.2（2026-11-15）：版面 v1.3＋三層協調（v012_post.py）；VDATE＝v0.1 建檔日（版本沿革用）
+VER, VDATE = "v0.1.3", "2026-11-08"   # v0.1.2（2026-11-15）：版面 v1.3＋三層協調（v012_post.py）；v0.1.3（2026-11-15）：滾入 3Q26 實績與 4Q26 指引；VDATE＝v0.1 建檔日（版本沿革用）
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True)
 HDR = PatternFill("solid", fgColor="DDEBF7"); KEY = PatternFill("solid", fgColor="FFF2CC"); SUB = PatternFill("solid", fgColor="EDEDED")
 SC = ("A", "B", "C"); SCN = {"A": "樂觀", "B": "基準", "C": "保守"}
@@ -47,6 +47,8 @@ def hdr(ws, row, labels, c0=1):
 # ---------------- 來源 ----------------
 S8K2 = "Cerebras 8-K 2026-08-12（2Q26 財報新聞稿）https://www.sec.gov/Archives/edgar/data/0002021728/000162828026056186/cbrsannouncesfinancialresu.htm"
 S8K1 = "Cerebras 8-K（1Q26 財報新聞稿）https://www.sec.gov/Archives/edgar/data/0002021728/000162828026044941/cbrsannouncesfinancialresu.htm"
+S8K3 = "Cerebras 8-K 2026-11-12（3Q26 財報新聞稿）https://www.sec.gov/Archives/edgar/data/0002021728/000162828026073366/cbrsannouncesfinancialresu.htm"
+SQ3 = "Cerebras 10-Q（季度結束 2026-09-30）https://www.sec.gov/Archives/edgar/data/0002021728/000162828026073494/cbrs-20260930.htm"
 SQ2 = "Cerebras 10-Q（季度結束 2026-06-30）https://www.sec.gov/Archives/edgar/data/0002021728/000162828026056357/cbrs-20260630.htm"
 SQ1 = "Cerebras 10-Q（季度結束 2026-03-31）https://www.sec.gov/Archives/edgar/data/0002021728/000162828026044981/cbrs-20260331.htm"
 SAPI = "sec-api.io 10-Q／424B4 摘錄（https://sec-api.io/insights/cerebras-cbrs-first-public-quarters；二手彙整）"
@@ -76,11 +78,11 @@ for s in SC:
     for y, v in zip(FC, MW[s]):
         inp(f"mw{s}_{y % 100}", f"情境 {s}：FY{y} 平均計費 MW", "MW", None, v, None, "Assumed",
             MWN[s] if y == 2027 else "同上",
-            "公司：2027 年底前已上線＋已簽約交付逾 600 MW（" + S8K2 + "）；OpenAI 承諾 750 MW、選擇權再 1.25 GW" if y == 2027 else "同上")
+            "公司：700 gross MW 已簽約、2027 年底前交付（" + S8K3 + "）；OpenAI 承諾 750 MW、選擇權再 1.25 GW" if y == 2027 else "同上")
 inp("mw_k", "平均計費 MW 係數（Sens 用；FY2027 起乘在各情境 MW）", "x", 0.8, 1.0, 1.2, "Assumed", "上線時程、OpenAI 實際使用量的不確定", "±20%")
 for s, (v, note) in zip(SC, ((0.72, "規模化、利用率高"), (0.66, "約等於 FY2026 錨點（指引推得）：機房租金與電力約占營收三分之一"), (0.58, "價格競爭、利用率不足"))):
     inp(f"gmc{s}", f"情境 {s}：雲端現金毛利率（不含折舊；FY2029 起，FY2027–FY2028 由 FY2026 線性收斂）", "%", None, v, None, "Assumed", note,
-        "公司：1Q26 核心雲端毛利率 53%、2Q26 41.8%（含折舊；" + S8K1 + "；" + S8K2 + "）。雲端毛利（含折舊）＝雲端營收 × 本值 − 雲端折舊（PL 頁），故每 MW 資本支出同時影響毛利與現金流")
+        "公司：1Q26 核心雲端毛利率 53%、2Q26 41.8%、3Q26 46.9%（含折舊；" + S8K1 + "；" + S8K2 + "；" + S8K3 + "）。雲端毛利（含折舊）＝雲端營收 × 本值 − 雲端折舊（PL 頁），故每 MW 資本支出同時影響毛利與現金流")
 inp("gm_adj", "雲端現金毛利率加減（Sens 用；基準 0）", "pt", -0.05, 0.0, 0.05, "Assumed", "Sens：±5 個百分點", "—")
 inp("capex_mw", "每新增 MW 資本支出（自製 WSE 系統成本＋自建機房部分；機房多為租賃）", "US$M/MW", 7.0, 9.0,
     "=tk_capit*tk_hold_cs*(1-hw_gm)", "Derived",
@@ -93,28 +95,28 @@ inp("da_old", "FY2025 以前資產的折舊攤銷（FY2027–FY2030 每年）", 
 sec("B. 系統（硬體）銷售")
 for s, (g, note) in zip(SC, ((0.25, "MBZUAI、G42 以外的主權與企業客戶增加"), (0.05, "大致持平，雲端為主"), (-0.15, "UAE 客戶（MBZUAI、G42）採購遞減"))):
     inp(f"hg{s}", f"情境 {s}：硬體核心營收年增（FY2027 起）", "%", None, g, None, "Assumed", note,
-        "客戶集中：FY2025 MBZUAI 62%、G42 24%；2Q26 MBZUAI 34%、G42 9%（" + SAPI + "）")
-inp("hw_gm", "硬體核心毛利率", "%", 0.35, 0.40, 0.45, "Assumed", "1Q26 核心硬體毛利率 42%、2Q26 38.8%（" + S8K1 + "；" + S8K2 + "）", "—")
+        "客戶集中：FY2025 MBZUAI 62%、G42 24%；2Q26 MBZUAI 34%、G42 9%（" + SAPI + "）；3Q26 關係人客戶 A 38%、OpenAI 約 34%（" + SQ3 + "）")
+inp("hw_gm", "硬體核心毛利率", "%", 0.35, 0.40, 0.45, "Assumed", "1Q26 核心硬體毛利率 42%、2Q26 38.8%、3Q26 31.0%（" + S8K1 + "；" + S8K2 + "；" + S8K3 + "）", "—")
 
-sec("C. FY2026 錨點（1Q26、2Q26 實績＋3Q26 指引＋全年指引推得 4Q26；Q 頁）")
-inp("q3_rev", "3Q26 核心營收指引", "US$B", 0.214, 0.215, 0.216, "Interested-party", S8K2 + "：約 2.14–2.16 億美元", "共識 3Q26 營收 2.1233 億（scanx 轉述；二手）")
-inp("q3_gm", "3Q26 核心毛利率指引", "%", 0.38, 0.39, 0.40, "Interested-party", S8K2 + "：38%–40%", "—")
-inp("q3_om", "3Q26 核心營業利益率指引", "%", -0.25, -0.24, -0.23, "Interested-party", S8K2 + "：(25%)–(23%)", "—")
-inp("fy_rev", "FY2026 核心營收指引（8 月上修）", "US$B", 0.880, 0.885, 0.890, "Interested-party", S8K2 + "：8.80–8.90 億美元（原 8.55–8.65 億）", "共識 FY2026 營收 8.871 億（" + SSA + " 預測頁，10 位分析師）")
-inp("fy_gm", "FY2026 核心毛利率指引", "%", 0.41, 0.42, 0.43, "Interested-party", S8K2 + "：41%–43%", "—")
-inp("fy_om", "FY2026 核心營業利益率指引", "%", -0.19, -0.18, -0.17, "Interested-party", S8K2 + "：(19%)–(17%)", "—")
-inp("h2_hw", "3Q26、4Q26 核心硬體營收（每季）", "US$B", 0.070, 0.085, 0.100, "Assumed", "公司未給分部指引；1Q26 0.112、2Q26 0.082（" + S8K2 + "）", "雲端＝核心營收 − 硬體")
-inp("h2_da", "2026 下半年折舊攤銷", "US$B", None, 0.07, None, "Assumed", "2Q26 0.024／季、隨新上線產能增加", "—")
-inp("h2_cx", "2026 下半年資本支出", "US$B", 0.6, 1.0, 1.6, "Assumed", "1H26 0.549（" + S8K2 + "）；3Q26 新簽租約未折現最低付款約 23 億（" + SAPI + "）", "公司：2027 年底前逾 600 MW 上線或簽約交付")
-inp("h2_oth", "2026 下半年其他收益淨額（利息收入扣 OpenAI 貸款利息）", "US$B", None, 0.12, None, "Assumed", "現金與投資約 86 億美元 × 約 4% ÷ 2 − 貸款 9.2 億 × 6% ÷ 2", "2Q26 實績 0.027（IPO 6 月才入帳）")
-inp("cl_26", "FY2026 核心雲端營收（Q 頁）", "US$B", None, "=Q!H19", None, "Derived", "Q 頁：1Q26、2Q26 實績＋下半年＝核心營收 − 硬體假設", "—")
+sec("C. FY2026 錨點（1Q26–3Q26 實績＋4Q26 指引中點；Q 頁）")
+inp("q4_rev", "4Q26 核心營收指引", "US$B", 0.310, 0.320, 0.330, "Interested-party", S8K3 + "：約 3.10–3.30 億美元", "3Q26 實績 0.2309（Q 頁 F20）")
+inp("q4_gm", "4Q26 核心毛利率指引", "%", 0.47, 0.48, 0.49, "Interested-party", S8K3 + "：47%–49%", "3Q26 實績 41.0%")
+inp("q4_om", "4Q26 核心營業利益率指引", "%", -0.01, 0.0, 0.01, "Interested-party", S8K3 + "：(1%)–1%", "3Q26 實績 (14.3%)")
+inp("fy_rev", "FY2026 核心營收指引（11 月上修；只作對帳）", "US$B", 0.940, 0.950, 0.960, "Interested-party", S8K3 + "：9.40–9.60 億美元（8 月 8.80–8.90 億）", "1–3Q26 實績＋4Q26 指引中點＝0.952；共識 FY2026 營收 8.871 億（" + SSA + "，10-05；3Q26 前）")
+inp("fy_gm", "FY2026 核心毛利率指引（只作對帳）", "%", 0.42, 0.43, 0.44, "Interested-party", S8K3 + "：42%–44%（8 月 41%–43%）", "1–3Q26 實績 42.5%＋4Q26 指引中點 48% 合成約 44.4%，高於全年指引上緣；兩組指引不一致，本模型以 4Q26 指引為錨點")
+inp("fy_om", "FY2026 核心營業利益率指引（只作對帳）", "%", -0.10, -0.09, -0.08, "Interested-party", S8K3 + "：(10%)–(8%)（8 月 (19%)–(17%)）", "1–3Q26 實績 (11.1%)＋4Q26 指引中點 0% 合成約 (7.4%)，優於全年指引上緣")
+inp("q4_hw", "4Q26 核心硬體營收", "US$B", 0.070, 0.085, 0.100, "Assumed", "公司未給分部指引；1Q26 0.112、2Q26 0.082、3Q26 0.086（" + S8K3 + "）", "雲端＝核心營收 − 硬體")
+inp("q4_da", "4Q26 折舊攤銷", "US$B", None, 0.035, None, "Assumed", "3Q26 0.030（" + S8K3 + "）、隨新上線產能增加（沿用 v0.1.2 下半年 0.07 的每季值）", "—")
+inp("q4_cx", "4Q26 資本支出", "US$B", 0.1, 0.5, 1.1, "Assumed", "沿用 v0.1.2 下半年假設 0.6／1.0／1.6 扣 3Q26 實績 0.497（9M26 1.046 − 1H26 0.549；" + S8K3 + "）", "公司：700 gross MW 已簽約、2027 年底前交付；尚未起租租約未折現約 85 億（" + SQ3 + "）")
+inp("q4_oth", "4Q26 其他收益淨額（利息收入扣 OpenAI 貸款利息）", "US$B", None, 0.06, None, "Assumed", "3Q26 實績 0.064（" + S8K3 + "）；沿用 v0.1.2 下半年 0.12 的每季值", "—")
+inp("cl_26", "FY2026 核心雲端營收（Q 頁）", "US$B", None, "=Q!H19", None, "Derived", "Q 頁：1Q26–3Q26 實績＋4Q26＝核心營收指引中點 − 硬體假設", "—")
 inp("hw_26", "FY2026 核心硬體營收（Q 頁）", "US$B", None, "=Q!H18", None, "Derived", "Q 頁", "—")
-inp("gp_26", "FY2026 核心毛利（Q 頁）", "US$B", None, "=Q!H21", None, "Derived", "Q 頁：指引中點推得", "—")
+inp("gp_26", "FY2026 核心毛利（Q 頁）", "US$B", None, "=Q!H21", None, "Derived", "Q 頁：1Q26–3Q26 實績＋4Q26 指引中點", "—")
 inp("gmc_26", "FY2026 雲端現金毛利率（＝(核心毛利＋折舊攤銷 − 硬體毛利率 × 硬體營收) ÷ 雲端營收）", "%", None, "=(gp_26+da_26-hw_gm*hw_26)/cl_26", None, "Derived", "上列錨點與 hw_gm；FY2026 折舊攤銷全數視為雲端成本（Assumed）", "—")
-inp("opx_26", "FY2026 核心營業費用（Q 頁）", "US$B", None, "=Q!H23", None, "Derived", "Q 頁：指引中點推得", "—")
-inp("sbc_26", "FY2026 經常性股票薪酬（不含 IPO 一次性認列 0.274 與其雇主薪資稅）", "US$B", None, "=Q!H29", None, "Derived", "Q 頁：下半年＝2Q26 經常性部分 × 2", "—")
+inp("opx_26", "FY2026 核心營業費用（Q 頁）", "US$B", None, "=Q!H23", None, "Derived", "Q 頁：1Q26–3Q26 實績＋4Q26 指引中點", "—")
+inp("sbc_26", "FY2026 經常性股票薪酬（不含 IPO 一次性認列 0.274 與其雇主薪資稅）", "US$B", None, "=Q!H29", None, "Derived", "Q 頁：1Q26–3Q26 實績＋4Q26＝3Q26 持平（Assumed）", "—")
 inp("da_26", "FY2026 折舊攤銷（Q 頁）", "US$B", None, "=Q!H30", None, "Derived", "Q 頁", "—")
-inp("cx_26", "FY2026 資本支出（1H26 實績＋下半年假設）", "US$B", None, "=Q!E48+h2_cx", None, "Derived", "Q 頁", "—")
+inp("cx_26", "FY2026 資本支出（9M26 實績＋4Q26 假設）", "US$B", None, "=Q!F48+q4_cx", None, "Derived", "Q 頁", "—")
 inp("oth_26", "FY2026 其他收益淨額", "US$B", None, "=Q!H32", None, "Derived", "Q 頁", "—")
 
 sec("D. 費用、股票薪酬、稅、股數（FY2027 起）")
@@ -136,11 +138,11 @@ inp("oai_val", "OpenAI 主合作協議金額（逾）", "US$B", None, 20, None, 
 inp("oai_mw", "OpenAI 承諾容量", "MW", None, 750, None, "Interested-party", SAPI + "：750 MW 承諾＋1.25 GW 選擇權（合計 2 GW）", SFUT)
 inp("oai_opt", "OpenAI 選擇權容量", "MW", None, 1250, None, "Interested-party", SAPI, "—")
 inp("oai_yr", "OpenAI 合約期間（三或四年，可延至五年）", "年", 3, 3.5, 5, "Interested-party", SAPI, "基準取三、四年中點")
-inp("rpo", "剩餘履約義務 RPO（2026-06-30）", "US$B", None, 25.4, None, "Verified", S8K2 + "：254 億美元", SAPI + "：2025-12-31 246 億、2026-03-31 250 億")
-inp("rpo_24", "RPO 中 24 個月內認列比例", "%", None, 0.22, None, "Verified", SAPI + "（10-Q 附註）", "—")
-inp("rpo_48", "RPO 中第 25–48 個月認列比例", "%", None, 0.43, None, "Verified", SAPI + "（10-Q 附註）", "其餘 35% 在 48 個月後")
-inp("mw_co27", "公司：2027 年底前已上線＋已簽約交付的資料中心容量（逾）", "MW", None, 600, None, "Interested-party", S8K2, "—")
-inp("cfo_x27", "財務長：2027 年營收逾三倍（倍數）", "x", None, 3, None, "Interested-party", S8K2 + "（新聞稿引述）", SAPI)
+inp("rpo", "剩餘履約義務 RPO（2026-09-30）", "US$B", None, 26.1, None, "Verified", S8K3 + "：261 億美元", "2026-06-30 254 億（" + S8K2 + "）；2025-12-31 246 億、2026-03-31 250 億（" + SAPI + "）")
+inp("rpo_24", "RPO 中 24 個月內認列比例（2026-09-30 起算，至 2028-09-30）", "%", None, 0.33, None, "Verified", SQ3 + "：約 33%", "2026-06-30：22%（" + SAPI + "）")
+inp("rpo_48", "RPO 中第 25–48 個月認列比例", "%", None, 0.44, None, "Verified", SQ3 + "：約 44%", "其餘約 23% 在 48 個月後；2026-06-30：43%（" + SAPI + "）")
+inp("mw_co27", "公司：已簽約、2027 年底前交付的資料中心容量（gross MW）", "MW", None, 700, None, "Interested-party", S8K3 + "：700 gross MW", "2Q26：逾 600 MW 上線或簽約（" + S8K2 + "）；gross 口徑可能為設施電力")
+inp("cfo_x27", "公司：2027 年營收三倍（倍數）", "x", None, 3, None, "Interested-party", S8K3 + "：執行長「expect to triple revenue in 2027」", "2Q26：財務長逾三倍（" + S8K2 + "）")
 inp("cons_rev26", "共識 FY2026 營收", "US$B", 0.8849, 0.8871, 0.8911, "Interested-party", SSA + " 預測頁（https://stockanalysis.com/stocks/cbrs/forecast/；分析師資料 2026-10-05 更新）", "FY2027、FY2028 共識：未找到（付費）")
 inp("cons_eps26", "共識 FY2026 調整後 EPS", "US$", -0.71, -0.47, -0.16, "Interested-party", SSA + " 預測頁（同上）", "口徑為公司核心（不含股票薪酬），與本模型不同")
 inp("cons_tp", "市場共識目標價（賣方平均，11 位）", "US$", 175, 282.55, 330, "Interested-party", SSA + " 預測頁（分析師資料 2026-10-05 更新；股價當時約 165–200）", "股價其後跌至 80–110，共識目標價可能尚未更新；只作對照")
@@ -169,18 +171,18 @@ for _row in FD.in_rows(dict(
                     "本公司上市未滿一年，個股迴歸 β 不採用。Sens 低／高：β_u ∓ beta_du（0.3），各自同式重新加槓桿"),
         kd=(0.06, "Verified", SAPI + "：OpenAI 營運資金貸款年利率 6%（2026-01 撥款 10.05 億，最晚 2032-12-31 到期）", "循環信用額度 8.5 億未動用"),
         tax_w=("=tx_f", "Derived", "＝In 頁 tx_f（FY2029 起有效稅率）", "NOPAT 用 PL 頁各年稅率（FY2027–FY2028 為 0）"),
-        debt=("=Q!E42", "Verified", S8K2 + "：OpenAI 營運資金貸款 流動 7.36 億＋非流動 1.82 億（2026-06-30）", "Q 頁 E42"),
-        lease=("=Q!E43", "Verified", S8K2 + "：營業租賃負債 流動 0.88 億＋非流動 4.80 億", "3Q26 新簽租約約 23 億（未折現）尚未入帳，以資本支出與營業成本反映"),
-        cash=("=Q!E35+Q!E36", "Verified", S8K2 + "：現金及約當現金 67.42 億＋短期投資 11.79 億", "Q 頁 E35、E36"),
-        inv=("=Q!E37", "Verified", S8K2 + "：受限現金 6.85 億（列為非營業投資，Sens 測不計）", "受限用途：未找到原文說明"),
+        debt=("=Q!F42", "Verified", S8K3 + "：OpenAI 營運資金貸款 流動 7.07 億＋非流動 1.23 億（2026-09-30；本金 8.291 億，" + SQ3 + "）", "Q 頁 F42"),
+        lease=("=Q!F43", "Verified", S8K3 + "：營業租賃負債 流動 0.98 億＋非流動 5.23 億（2026-09-30）", "尚未起租租約未折現最低付款約 85 億（" + SQ3 + "）尚未入帳，以資本支出與營業成本反映"),
+        cash=("=Q!F35+Q!F36", "Verified", S8K3 + "：現金及約當現金 30.75 億＋短期投資 42.86 億（2026-09-30）", "Q 頁 F35、F36"),
+        inv=("=Q!F37", "Verified", S8K3 + "：受限現金 4.44 億（流動；列為非營業投資，Sens 測不計）", "受限用途：未找到原文說明"),
         mi=(0.0, "Verified", "無少數股權", "—"),
-        stub=dict(bs_date="2026-06-30", val_date="2026-12-31", bs_src=S8K2 + "（最新已公布一季；3Q26 財報 2026-11-12 公布）",
-                  div=(0.0, "Verified", "未配息；2026-06-30～2026-12-31 無已宣告股利或買回", "—")),
-        sh=("=Q!E54+Q!E55+Q!E56", "Derived", "已發行 2.3756 億股（2026-08-05，A＋B＋N 類）＋潛在稀釋 0.7601 億（2026-06-30）＋7 月發行 N 類認股權證 0.1003 億（" + SAPI + "）",
+        stub=dict(bs_date="2026-09-30", val_date="2026-12-31", bs_src=S8K3 + "（最新已公布一季 3Q26）",
+                  div=(0.0, "Verified", "未配息；2026-09-30～2026-12-31 無已宣告股利或買回", "—")),
+        sh=("=Q!F54+Q!F55+Q!F56", "Derived", "已發行 2.4300 億股（2026-11-05，A＋B＋N 類）＋潛在稀釋 0.7233 億（2026-09-30）（" + SQ3 + "）；v0.1.2 為 2.3756＋0.7601＋0.1003 億",
             "全部視為稀釋（選擇權履約價多低於現價；客戶認股權證對應的營收已在 FCFF 內，故其攤銷不再從 EBIT 扣除）"),
         fc_da=(None, 0.10, None, "Assumed", "本模型逐年讀 PL 頁折舊攤銷列（fcff_dcf v2 da 參數）；本列只作模組預設", "—"),
         fc_cx=(None, 0.15, None, "Assumed", "本模型逐年讀 PL 頁資本支出列（cx 參數）；本列只作模組預設", "Sens：資本支出 ÷ 營收 ±1pt（fc_cx_d）"),
-        fc_wc=(0.0, 0.05, 0.15, "Assumed", "客戶訂金與遞延收入（2026-06-30 合計 6.61 億）使營運資金需求低；應收 1.23 億、存貨 0.33 億（" + S8K2 + "）", "營運資金增加＝本值 × 營收增量"),
+        fc_wc=(0.0, 0.05, 0.15, "Assumed", "客戶訂金與遞延收入（2026-09-30 合計 7.96 億）使營運資金需求低；應收 2.32 億、存貨 1.46 億（" + S8K3 + "）", "營運資金增加＝本值 × 營收增量"),
         )):
     rows.append(_row)
 inp("beta_u", "產業無槓桿 β（採用）：自算 US 半導體 同業中位數 Blume 調整（0.67 × 中位數＋0.33）", "x", None, 1.884, None, "Analogy",
@@ -212,8 +214,8 @@ for c, w in zip("ABCDEFGHI", (14, 62, 12, 10, 12, 10, 14, 70, 60)):
 # ---------------- Q（季度實績、指引、資產負債；US$B） ----------------
 Q = wb.create_sheet("Q")
 Q["A1"] = "Q — 季度實績與指引（US$B；公司原文：8-K 財報新聞稿、10-Q）。核心（Core）＝公司 non-GAAP：排除客戶認股權證攤銷（沖減營收）、代墊資料中心收入與成本、股票薪酬、IPO 相關雇主薪資稅"
-Q["A2"] = "3Q26 為指引中點；4Q26＝FY2026 指引中點 − 前三季（Derived）。3Q26 財報 2026-11-12 公布，公布後更新本頁"
-hdr(Q, 3, ["項目", "FY2024", "FY2025", "1Q26", "2Q26", "3Q26E（指引）", "4Q26E（推得）", "FY2026E", "標記", "來源"])
+Q["A2"] = "1Q26–3Q26 為實績；4Q26＝4Q26 指引中點（3Q26 財報 2026-11-12；硬體、折舊、資本支出、其他收益為 Assumed）。v0.1.3 起資產負債表、現金流（9M26）、股數改到 3Q26 欄（2026-09-30）"
+hdr(Q, 3, ["項目", "FY2024", "FY2025", "1Q26", "2Q26", "3Q26", "4Q26E（指引）", "FY2026E", "標記", "來源"])
 def qrow(rr, label, vals, tag="Verified", src="", fmt="#,##0.000"):
     Q.cell(rr, 1, label)
     for c, v in zip("BCDEFGH", vals):
@@ -222,56 +224,56 @@ def qrow(rr, label, vals, tag="Verified", src="", fmt="#,##0.000"):
             if not (isinstance(v, str) and v.startswith("=")): x.font = BLUE
     Q.cell(rr, 9, tag); Q.cell(rr, 10, src)
 Q["A4"] = "GAAP（公司財報）"; Q["A4"].font = BOLD
-qrow(5, "硬體營收（GAAP）", [None, None, 0.110593, 0.054119, None, None, None], src=SQ1 + "；" + S8K2)
-qrow(6, "雲端與其他服務營收（GAAP）", [None, None, 0.082813, 0.125991, None, None, None], src=SQ1 + "；" + S8K2)
-qrow(7, "營收合計（GAAP）", [0.2903, 0.5100, 0.193406, 0.180110, None, None, None], src="FY2024、FY2025：424B4（" + SAPI + "）；季：10-Q")
-qrow(8, "毛利（GAAP）", [0.1227, 0.1991, 0.086176, 0.025559, None, None, None], src="1Q26＝1H26 111.735 − 2Q26 25.559（百萬美元，" + S8K2 + "）")
-qrow(9, "營業損益（GAAP）", [-0.1014, -0.1459, -0.015037, -0.477233, None, None, None], src="1Q26＝1H26 −492.270 − 2Q26 −477.233")
-qrow(10, "股票薪酬（GAAP，含 IPO 一次性）", [0.0586, 0.0498, 0.009593, 0.377008, None, None, None], src="1Q26＝1H26 386.601 − 2Q26 377.008")
+qrow(5, "硬體營收（GAAP）", [None, None, 0.110593, 0.054119, 0.068881, None, None], src=SQ1 + "；" + S8K2 + "；" + S8K3)
+qrow(6, "雲端與其他服務營收（GAAP）", [None, None, 0.082813, 0.125991, 0.141928, None, None], src=SQ1 + "；" + S8K2 + "；" + S8K3)
+qrow(7, "營收合計（GAAP）", [0.2903, 0.5100, 0.193406, 0.180110, 0.210809, None, None], src="FY2024、FY2025：424B4（" + SAPI + "）；季：10-Q；3Q26：" + S8K3)
+qrow(8, "毛利（GAAP）", [0.1227, 0.1991, 0.086176, 0.025559, 0.042094, None, None], src="1Q26＝1H26 111.735 − 2Q26 25.559（百萬美元，" + S8K2 + "）；3Q26 42.094（" + S8K3 + "）")
+qrow(9, "營業損益（GAAP）", [-0.1014, -0.1459, -0.015037, -0.477233, -0.224149, None, None], src="1Q26＝1H26 −492.270 − 2Q26 −477.233；3Q26 −224.149")
+qrow(10, "股票薪酬（GAAP，含 IPO 一次性）", [0.0586, 0.0498, 0.009593, 0.377008, 0.155105, None, None], src="1Q26＝1H26 386.601 − 2Q26 377.008；3Q26 155.105（9M26 541.706 − 1H26）")
 qrow(11, "其中：IPO 時一次認列的限制股費用", [None, None, None, 0.2736, None, None, None], src=SAPI + "：2026-05-13 IPO 認列 2.736 億")
-qrow(12, "IPO 股票薪酬的雇主薪資稅", [None, None, None, 0.022778, None, None, None], src=S8K2)
-qrow(13, "客戶認股權證攤銷（沖減營收；至 2031-10）", [None, None, 0.002053, 0.044262, None, None, None], src=S8K2 + "；1Q26＝1H26 46.315 − 2Q26 44.262")
-qrow(14, "代墊資料中心收入（pass-through）", [None, None, 0.004111, 0.014503, None, None, None], src=S8K2 + "；1Q26＝1H26 18.614 − 2Q26 14.503")
-qrow(15, "淨利（GAAP）", [-0.4816, 0.2378, -0.014006, -0.450528, None, None, None], src="FY2025 含遠期合約負債消滅利益 3.633 億（一次性）")
-qrow(16, "其他收益淨額（GAAP）", [None, None, 0.002528, 0.026979, None, None, None], src="1Q26＝1H26 29.507 − 2Q26 26.979")
+qrow(12, "IPO 股票薪酬的雇主薪資稅", [None, None, None, 0.022778, 0.0, None, None], src=S8K2 + "；3Q26 無（9M26 22.778 全在 1H26，" + S8K3 + "）")
+qrow(13, "客戶認股權證攤銷（沖減營收；至 2031-10）", [None, None, 0.002053, 0.044262, 0.036424, None, None], src=S8K2 + "；1Q26＝1H26 46.315 − 2Q26 44.262；3Q26 36.424")
+qrow(14, "代墊資料中心收入（pass-through）", [None, None, 0.004111, 0.014503, 0.016360, None, None], src=S8K2 + "；1Q26＝1H26 18.614 − 2Q26 14.503；3Q26 16.360")
+qrow(15, "淨利（GAAP）", [-0.4816, 0.2378, -0.014006, -0.450528, -0.161218, None, None], src="FY2025 含遠期合約負債消滅利益 3.633 億（一次性）；3Q26 −161.218（" + S8K3 + "）")
+qrow(16, "其他收益淨額（GAAP）", [None, None, 0.002528, 0.026979, 0.063900, None, None], src="1Q26＝1H26 29.507 − 2Q26 26.979；3Q26 63.900")
 Q["A17"] = "核心（non-GAAP；公司口徑）"; Q["A17"].font = BOLD
-qrow(18, "核心硬體營收", [None, None, 0.1116, 0.082141, "=h2_hw", "=h2_hw", "=SUM(D18:G18)"], src=S8K1 + "（111.6）；" + S8K2 + "；下半年＝h2_hw（Assumed）")
-qrow(19, "核心雲端營收", [None, None, 0.0798, 0.127728, "=F20-F18", "=G20-G18", "=SUM(D19:G19)"], src="下半年＝核心營收 − 硬體（Derived）")
-qrow(20, "核心營收合計", [None, None, 0.191348, 0.209869, "=q3_rev", "=fy_rev-SUM(D20:F20)", "=SUM(D20:G20)"], src="1Q26＝1H26 401.217 − 2Q26 209.869；3Q26 指引中點；4Q26＝全年指引中點 − 前三季")
-qrow(21, "核心毛利", [None, None, 0.089058, 0.085217, "=F20*q3_gm", "=fy_gm*fy_rev-SUM(D21:F21)", "=SUM(D21:G21)"], src="1Q26＝1H26 174.275 − 2Q26 85.217")
+qrow(18, "核心硬體營收", [None, None, 0.1116, 0.082141, 0.085959, "=q4_hw", "=SUM(D18:G18)"], src=S8K1 + "（111.6）；" + S8K2 + "；" + S8K3 + "；4Q26＝q4_hw（Assumed）")
+qrow(19, "核心雲端營收", [None, None, 0.0798, 0.127728, 0.144914, "=G20-G18", "=SUM(D19:G19)"], src="3Q26 144.914（" + S8K3 + "）；4Q26＝核心營收 − 硬體（Derived）")
+qrow(20, "核心營收合計", [None, None, 0.191348, 0.209869, 0.230873, "=q4_rev", "=SUM(D20:G20)"], src="1Q26＝1H26 401.217 − 2Q26 209.869；3Q26 230.873；4Q26 指引中點")
+qrow(21, "核心毛利", [None, None, 0.089058, 0.085217, 0.094575, "=G20*q4_gm", "=SUM(D21:G21)"], src="1Q26＝1H26 174.275 − 2Q26 85.217；3Q26 94.575；4Q26＝指引中點")
 qrow(22, "核心毛利率", [None, None, "=D21/D20", "=E21/E20", "=F21/F20", "=G21/G20", "=H21/H20"], tag="Derived", fmt="0.0%")
-qrow(23, "核心營業費用", [None, None, 0.09257, 0.11883, "=F21-F24", "=G21-G24", "=SUM(D23:G23)"], src="1Q26＝1H26 211.400 − 2Q26 118.830")
-qrow(24, "核心營業損益", [None, None, -0.003512, -0.033613, "=F20*q3_om", "=fy_om*fy_rev-SUM(D24:F24)", "=SUM(D24:G24)"], src="1Q26＝1H26 −37.125 − 2Q26 −33.613")
+qrow(23, "核心營業費用", [None, None, 0.09257, 0.11883, 0.127683, "=G21-G24", "=SUM(D23:G23)"], src="1Q26＝1H26 211.400 − 2Q26 118.830；3Q26 127.683")
+qrow(24, "核心營業損益", [None, None, -0.003512, -0.033613, -0.033108, "=G20*q4_om", "=SUM(D24:G24)"], src="1Q26＝1H26 −37.125 − 2Q26 −33.613；3Q26 −33.108；4Q26＝指引中點")
 qrow(25, "核心營業利益率", [None, None, "=D24/D20", "=E24/E20", "=F24/F20", "=G24/G20", "=H24/H20"], tag="Derived", fmt="0.0%")
-qrow(26, "核心硬體毛利", [None, None, "=0.42*D18", 0.031878, None, None, None], tag="Verified／Derived", src="1Q26＝核心硬體毛利率 42%（四捨五入）× 營收；2Q26 31.878")
-qrow(27, "核心雲端毛利", [None, None, "=D21-D26", 0.053339, None, None, None], tag="Verified／Derived", src="1Q26＝核心毛利 − 硬體；2Q26 53.339")
+qrow(26, "核心硬體毛利", [None, None, "=0.42*D18", 0.031878, 0.026672, None, None], tag="Verified／Derived", src="1Q26＝核心硬體毛利率 42%（四捨五入）× 營收；2Q26 31.878；3Q26 26.672（31.0%）")
+qrow(27, "核心雲端毛利", [None, None, "=D21-D26", 0.053339, 0.067903, None, None], tag="Verified／Derived", src="1Q26＝核心毛利 − 硬體；2Q26 53.339；3Q26 67.903（46.9%）")
 Q["A28"] = "錨點推導（進 PL 頁 FY2026）"; Q["A28"].font = BOLD
-qrow(29, "經常性股票薪酬（不含 IPO 一次性）", [None, None, "=D10", "=E10-E11", "=E29", "=E29", "=SUM(D29:G29)"], tag="Derived", src="下半年＝2Q26 經常性部分（Assumed 持平）")
-qrow(30, "折舊攤銷", [None, None, 0.018174, 0.024377, "=h2_da/2", "=h2_da/2", "=SUM(D30:G30)"], src="2Q26 24.377；1Q26＝1H26 42.551 − 24.377；下半年 h2_da")
-qrow(31, "資本支出（季別未揭露；1H26 合計見 E48）", [None, None, None, None, "=h2_cx/2", "=h2_cx/2", "=E48+F31+G31"], tag="Verified／Assumed", src="下半年 h2_cx")
-qrow(32, "其他收益淨額", [None, None, "=D16", "=E16", "=h2_oth/2", "=h2_oth/2", "=SUM(D32:G32)"], tag="Verified／Assumed", src="下半年 h2_oth")
-qrow(33, "2026 下半年 FCFF（＝stub 期 FCFF，評價日前）", [None, None, None, None, None, None,
-     "=(F24+G24-F29-G29)*(1-tx_e)+F30+G30-F31-G31-fc_wc*(F20+G20-D20-E20)"], tag="Derived",
-     src="＝(核心營業損益 − 經常性股票薪酬) ×（1 − 稅率）＋折舊 − 資本支出 − 營運資金增加（3Q26＋4Q26）")
-Q["A34"] = "資產負債表（2026-06-30；2Q26 欄）"; Q["A34"].font = BOLD
-for rr, lab, v, src in ((35, "現金及約當現金", 6.742157, S8K2), (36, "短期投資", 1.179390, S8K2), (37, "受限現金", 0.684680, S8K2),
-                        (38, "應收帳款", 0.123361, S8K2), (39, "存貨", 0.032666, S8K2), (40, "客戶訂金", 0.242672, S8K2),
-                        (41, "遞延收入（流動＋非流動）", 0.418264, S8K2 + "：173.735＋244.529"), (42, "OpenAI 營運資金貸款（流動＋非流動）", 0.918244, S8K2 + "：736.036＋182.208"),
-                        (43, "營業租賃負債（流動＋非流動）", 0.568827, S8K2 + "：88.422＋480.405"), (44, "股東權益", 9.154642, S8K2)):
-    qrow(rr, lab, [None, None, None, v, None, None, None], src=src)
-qrow(45, "剩餘履約義務 RPO", [None, 24.6, 25.0, 25.4, None, None, None], src=S8K2 + "；" + SAPI + "（FY2025 欄＝2025-12-31、1Q26＝2026-03-31）", fmt="#,##0.0")
-Q["A46"] = "現金流量（FY；1H26 填於 2Q26 欄）"; Q["A46"].font = BOLD
-qrow(47, "營業現金流", [0.452, -0.0101, None, -0.047488, None, None, None], src=SAPI + "；" + S8K2)
-qrow(48, "資本支出", [None, 0.3827, None, 0.548873, None, None, None], src=SAPI + "；" + S8K2)
+qrow(29, "經常性股票薪酬（不含 IPO 一次性）", [None, None, "=D10", "=E10-E11", "=F10", "=F29", "=SUM(D29:G29)"], tag="Derived", src="3Q26＝GAAP 股票薪酬（無 IPO 一次性項目）；4Q26＝3Q26 持平（Assumed）")
+qrow(30, "折舊攤銷", [None, None, 0.018174, 0.024377, 0.029794, "=q4_da", "=SUM(D30:G30)"], src="2Q26 24.377；1Q26＝1H26 42.551 − 24.377；3Q26 29.794（" + S8K3 + "）；4Q26 q4_da")
+qrow(31, "資本支出（季別未揭露；累計見 E48、F48）", [None, None, None, None, "=F48-E48", "=q4_cx", "=F48+G31"], tag="Verified／Assumed", src="3Q26＝9M26 − 1H26（Derived）；4Q26 q4_cx")
+qrow(32, "其他收益淨額", [None, None, "=D16", "=E16", "=F16", "=q4_oth", "=SUM(D32:G32)"], tag="Verified／Assumed", src="4Q26 q4_oth")
+qrow(33, "4Q26 FCFF（＝stub 期 FCFF，評價日前）", [None, None, None, None, None, None,
+     "=(G24-G29)*(1-tx_e)+G30-G31-fc_wc*(G20-F20)"], tag="Derived",
+     src="＝(核心營業損益 − 經常性股票薪酬) ×（1 − 稅率）＋折舊 − 資本支出 − 營運資金增加（4Q26；v0.1.2 為 3Q26＋4Q26）")
+Q["A34"] = "資產負債表（2026-09-30；3Q26 欄。2Q26 欄＝2026-06-30，v0.1.2 值）"; Q["A34"].font = BOLD
+for rr, lab, v2, v, src in ((35, "現金及約當現金", 6.742157, 3.074752, S8K3), (36, "短期投資", 1.179390, 4.286026, S8K3), (37, "受限現金", 0.684680, 0.444042, S8K3 + "（流動）"),
+                        (38, "應收帳款", 0.123361, 0.231762, S8K3), (39, "存貨", 0.032666, 0.146100, S8K3), (40, "客戶訂金", 0.242672, 0.108715, S8K3),
+                        (41, "遞延收入（流動＋非流動）", 0.418264, 0.687602, S8K3 + "：234.309＋453.293"), (42, "OpenAI 營運資金貸款（流動＋非流動）", 0.918244, 0.829082, S8K3 + "：706.518＋122.564"),
+                        (43, "營業租賃負債（流動＋非流動）", 0.568827, 0.621139, S8K3 + "：98.368＋522.771"), (44, "股東權益", 9.154642, 9.158913, S8K3)):
+    qrow(rr, lab, [None, None, None, v2, v, None, None], src=src + "；2Q26 欄：" + S8K2)
+qrow(45, "剩餘履約義務 RPO", [None, 24.6, 25.0, 25.4, 26.1, None, None], src=S8K3 + "；" + S8K2 + "；" + SAPI + "（FY2025 欄＝2025-12-31、1Q26＝2026-03-31）", fmt="#,##0.0")
+Q["A46"] = "現金流量（FY；1H26 填於 2Q26 欄、9M26 填於 3Q26 欄）"; Q["A46"].font = BOLD
+qrow(47, "營業現金流", [0.452, -0.0101, None, -0.047488, -0.388894, None, None], src=SAPI + "；" + S8K2 + "；9M26：" + S8K3)
+qrow(48, "資本支出", [None, 0.3827, None, 0.548873, 1.046059, None, None], src=SAPI + "；" + S8K2 + "；9M26：" + S8K3)
 Q["A49"] = "客戶集中（占營收）"; Q["A49"].font = BOLD
-qrow(50, "MBZUAI", [None, 0.62, 0.63, 0.34, None, None, None], tag="Verified", src=SAPI + "（10-Q 風險因子）", fmt="0%")
-qrow(51, "G42", [0.85, 0.24, 0.11, 0.09, None, None, None], tag="Verified", src=SAPI, fmt="0%")
-qrow(52, "OpenAI 營收（US$B；2Q26 欄＝當季，1H26 為 0.0744）", [None, 0, None, 0.0568, None, None, None], tag="Verified", src=SAPI + "：2Q26 第三大客戶占 32%")
-Q["A53"] = "股數（十億股）"; Q["A53"].font = BOLD
-qrow(54, "已發行普通股（A＋B＋N 類，2026-08-05）", [None, None, None, 0.237564041, None, None, None], src=SAPI + "（10-Q 封面）", fmt="0.0000")
-qrow(55, "潛在稀釋證券（2026-06-30）", [None, None, None, 0.076011, None, None, None], src=SAPI, fmt="0.0000")
-qrow(56, "N 類認股權證（2026-07 發行）", [None, None, None, 0.010033508, None, None, None], src=SAPI, fmt="0.0000")
-SEGR = add_check(Q, seg_rows=[5, 6], total_row=7, cols="DE", note="官方分部（GAAP）：硬體、雲端與其他服務（segments.json）")
+qrow(50, "MBZUAI", [None, 0.62, 0.63, 0.34, 0.38, None, None], tag="Verified／Derived", src=SAPI + "（10-Q 風險因子）；3Q26＝10-Q「客戶 A」（關係人）38%，對應前期 MBZUAI（Derived；" + SQ3 + "）", fmt="0%")
+qrow(51, "G42", [0.85, 0.24, 0.11, 0.09, None, None, None], tag="Verified", src=SAPI + "；3Q26：10-Q 關係人「客戶 C」低於 10%（未揭露確數）", fmt="0%")
+qrow(52, "OpenAI 營收（US$B；當季）", [None, 0, None, 0.0568, 0.0724, None, None], tag="Verified", src=SAPI + "：2Q26 第三大客戶占 32%；3Q26 72.4 百萬（扣認股權證攤銷 3.2 百萬後；9M26 146.8；" + SQ3 + "）")
+Q["A53"] = "股數（十億股；v0.1.3 起讀 3Q26 欄）"; Q["A53"].font = BOLD
+qrow(54, "已發行普通股（A＋B＋N 類）", [None, None, None, 0.237564041, 0.243003364, None, None], src="2Q26 欄 2026-08-05（" + SAPI + "）；3Q26 欄 2026-11-05：A 160,084,168＋B 69,203,688＋N 13,715,508（" + SQ3 + " 封面）", fmt="0.0000")
+qrow(55, "潛在稀釋證券", [None, None, None, 0.076011, 0.072326, None, None], src="2Q26 欄 2026-06-30（" + SAPI + "）；3Q26 欄 2026-09-30：或有認股權證 26.108＋選擇權 19.503＋未既得 RSU 17.139＋PRSU 9.000＋提前履約 0.481＋ESPP 0.095 百萬股（" + SQ3 + "）", fmt="0.0000")
+qrow(56, "N 類認股權證（2026-07 發行）", [None, None, None, 0.010033508, 0.0, None, None], src="2Q26 欄：" + SAPI + "；3Q26 欄 0：2026-09-30 已含在上兩列（已發行 N 類或或有認股權證），不重複計入", fmt="0.0000")
+SEGR = add_check(Q, seg_rows=[5, 6], total_row=7, cols="DEF", note="官方分部（GAAP）：硬體、雲端與其他服務（segments.json）")
 for c, w in zip("ABCDEFGHIJ", (52, 10, 10, 10, 10, 12, 12, 11, 14, 90)):
     Q.column_dimensions[c].width = w
 
@@ -357,7 +359,7 @@ def engine(ws, r0, s, title, over=None):
 
 # ---------------- PL ----------------
 PL = wb.create_sheet("PL")
-PL["A1"] = "PL — 三情境收支（US$B；FY＝日曆年）。FY2025 為 GAAP 實績（只列可得項目）；FY2026 為錨點（核心口徑，1Q26、2Q26 實績＋3Q26 指引＋全年指引推得 4Q26）；FY2027–FY2032 為模型"
+PL["A1"] = "PL — 三情境收支（US$B；FY＝日曆年）。FY2025 為 GAAP 實績（只列可得項目）；FY2026 為錨點（核心口徑，1Q26–3Q26 實績＋4Q26 指引中點）；FY2027–FY2032 為模型"
 PL["A2"] = "口徑：營收、毛利、營業費用為公司核心（non-GAAP）口徑；EBIT 再扣經常性股票薪酬（標準版 DCF 視為費用），不扣客戶認股權證攤銷（認股權證已計入評價股數）、代墊資料中心收入與 IPO 一次性費用"
 SDEF = {"A": "情境 A（樂觀）：OpenAI 750 MW 2028 全數上線、選擇權部分執行（FY2032 平均計費 2,200 MW）；每 MW 年營收持平；雲端現金毛利率 72%；硬體年增 25%",
         "B": "情境 B（基準）：OpenAI 750 MW 分批上線（接近 RPO 認列時程）、其他客戶溫和成長（FY2032 平均計費 1,300 MW）；每 MW 年營收年降 4%；雲端現金毛利率 66%；硬體年增 5%",
@@ -372,7 +374,7 @@ for c in "CDEFGHIJ": PL.column_dimensions[c].width = 11
 # ---------------- DCF（tools/fcff_dcf.py v2） ----------------
 DCFW = wb.create_sheet("DCF")
 DCFW["A1"] = "DCF — 標準版：無槓桿自由現金流 FCFF＝NOPAT＋折舊攤銷 − 資本支出 − 營運資金增加（股票薪酬視為費用），以 WACC 折現到評價日 2026-12-31（期中慣例），終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g）"
-DCFW["A2"] = "資本支出、折舊攤銷逐年讀 PL 頁（雲端擴建：新增 MW × 每 MW 資本支出；FY2031 起含汰換）；稅率讀 PL 頁各年（FY2027–FY2028 為 0）。Stub 期（2026-06-30 → 12-31）FCFF 取 Q 頁 H33（下半年 FCFF），已從淨現金扣除"
+DCFW["A2"] = "資本支出、折舊攤銷逐年讀 PL 頁（雲端擴建：新增 MW × 每 MW 資本支出；FY2031 起含汰換）；稅率讀 PL 頁各年（FY2027–FY2028 為 0）。Stub 期（2026-09-30 → 12-31）FCFF 取 Q 頁 H33（4Q26 FCFF），已從淨現金扣除"
 
 
 def paths_for(ws_name, R_, s, label, name=None):
@@ -451,7 +453,7 @@ V.cell(r, 1, "1. 價格與市場隱含倍數").font = BOLD; r += 1
 hdr(V, r, ["項目", "A", "B", "C", "說明"]); R_H1 = r; r += 1
 vrow("px", "現價（2026-11-05 收盤）", "=px")
 vrow("mcap", "市值（稀釋股數；US$B）", "=px*sh_v", fmt="#,##0.00")
-vrow("ev", "企業價值（市值 − 淨現金與投資；US$B）", "=px*sh_v-dcf_nc", fmt="#,##0.00", e="淨現金與投資為 2026-06-30（未滾到評價日）")
+vrow("ev", "企業價值（市值 − 淨現金與投資；US$B）", "=px*sh_v-dcf_nc", fmt="#,##0.00", e="淨現金與投資為 2026-09-30（未滾到評價日）")
 vrow("evs27", "現價隱含 EV ÷ FY2027 營收", f"=B{T['ev']}/PL!E{PR['A']['rev']}", f"=B{T['ev']}/PL!E{PR['B']['rev']}", f"=B{T['ev']}/PL!E{PR['C']['rev']}", fmt="0.00")
 vrow("evs28", "現價隱含 EV ÷ FY2028 營收", f"=B{T['ev']}/PL!F{PR['A']['rev']}", f"=B{T['ev']}/PL!F{PR['B']['rev']}", f"=B{T['ev']}/PL!F{PR['C']['rev']}", fmt="0.00")
 r += 1
@@ -461,7 +463,7 @@ vrow("rmk", "相對倍數調整係數", 1, e="資料不足時＝1（不調整）
 vrow("compadj", "Comparable 目標價（相對倍數調整後）", f"=Val!$B${R_COMP}*B{T['rmk']}", e="＝Comparable 目標價（市場主流同業法）× 調整係數；加權目標價使用本列")
 dn("tp_comp_adj", f"Val!$B${T['compadj']}")
 r += 1
-r = FD.write_checks(V, r, nc_bs="Q!E35+Q!E36+inv_k*Q!E37-Q!E42-Q!E43", nc_note="現金＋短期投資＋受限現金 − OpenAI 貸款 − 租賃（Q 頁 2026-06-30）")
+r = FD.write_checks(V, r, nc_bs="Q!F35+Q!F36+inv_k*Q!F37-Q!F42-Q!F43", nc_note="現金＋短期投資＋受限現金 − OpenAI 貸款 − 租賃（Q 頁 2026-09-30）")
 for c, w in zip("ABCDEF", (60, 14, 14, 14, 90, 30)): V.column_dimensions[c].width = w
 
 # ---------------- Recon ----------------
@@ -486,11 +488,11 @@ rec("rev26", "FY2026 核心營收 vs 共識", "=PL!D%d" % pa["rev"], "=PL!D%d" %
 rec("gm26", "FY2026 核心毛利率 vs 指引中點", "=PL!D%d" % pa["gm"], "=PL!D%d" % pb["gm"], "=PL!D%d" % pc["gm"], "=fy_gm", "In fy_gm", "", fmt="0.0%")
 rec("om26", "FY2026 核心營業利益率 vs 指引中點", "=Q!H25", "=Q!H25", "=Q!H25", "=fy_om", "In fy_om", "Q 頁核心口徑（未扣經常性股票薪酬）", fmt="0.0%", rel=False)
 RC.cell(rr, 1, "B. 2027 年營收、RPO 與容量").font = BOLD; rr += 1
-rec("x27", "FY2027 營收 ÷ FY2026（財務長：逾三倍）", "=PL!E%d/PL!D%d" % (pa["rev"], pa["rev"]), "=PL!E%d/PL!D%d" % (pb["rev"], pb["rev"]), "=PL!E%d/PL!D%d" % (pc["rev"], pc["rev"]), "=cfo_x27", "In cfo_x27", "公司說法無區間；情境 C 低於三倍", fmt="0.00")
-rec("rpo24", "雲端營收 2026H2–2028H1（≈ FY2026 下半年＋FY2027＋FY2028 × 0.5）vs RPO 24 個月內認列", f"=Q!F19+Q!G19+PL!E{pa['cl']}+0.5*PL!F{pa['cl']}", f"=Q!F19+Q!G19+PL!E{pb['cl']}+0.5*PL!F{pb['cl']}", f"=Q!F19+Q!G19+PL!E{pc['cl']}+0.5*PL!F{pc['cl']}", "=rpo*rpo_24", "In rpo、rpo_24（10-Q 附註）",
+rec("x27", "FY2027 營收 ÷ FY2026（公司：三倍）", "=PL!E%d/PL!D%d" % (pa["rev"], pa["rev"]), "=PL!E%d/PL!D%d" % (pb["rev"], pb["rev"]), "=PL!E%d/PL!D%d" % (pc["rev"], pc["rev"]), "=cfo_x27", "In cfo_x27", "公司說法無區間；情境 C 低於三倍", fmt="0.00")
+rec("rpo24", "雲端營收 4Q26–3Q28（≈ 4Q26＋FY2027＋FY2028 × 0.75）vs RPO 24 個月內認列", f"=Q!G19+PL!E{pa['cl']}+0.75*PL!F{pa['cl']}", f"=Q!G19+PL!E{pb['cl']}+0.75*PL!F{pb['cl']}", f"=Q!G19+PL!E{pc['cl']}+0.75*PL!F{pc['cl']}", "=rpo*rpo_24", "In rpo、rpo_24（10-Q 附註；2026-09-30 起算）",
     "RPO 含硬體與支援服務；模型雲端營收亦含 RPO 以外的新合約，故高於 RPO 認列額屬合理，低於則表示上線時程比合約慢")
-rec("rpo48", "雲端營收 2028H2–2030H1（≈ FY2028 × 0.5＋FY2029＋FY2030 × 0.5）vs RPO 第 25–48 個月", f"=0.5*PL!F{pa['cl']}+PL!G{pa['cl']}+0.5*PL!H{pa['cl']}", f"=0.5*PL!F{pb['cl']}+PL!G{pb['cl']}+0.5*PL!H{pb['cl']}", f"=0.5*PL!F{pc['cl']}+PL!G{pc['cl']}+0.5*PL!H{pc['cl']}", "=rpo*rpo_48", "In rpo、rpo_48", "同上")
-rec("mw28", "FY2028 平均計費 MW vs 公司：2027 年底前上線＋簽約逾 600 MW", f"=PL!F{pa['mw']}", f"=PL!F{pb['mw']}", f"=PL!F{pc['mw']}", "=mw_co27", "In mw_co27", "公司口徑為容量（含尚未計費），可能為設施電力，與計費 MW 不同", fmt="#,##0")
+rec("rpo48", "雲端營收 4Q28–3Q30（≈ FY2028 × 0.25＋FY2029＋FY2030 × 0.75）vs RPO 第 25–48 個月", f"=0.25*PL!F{pa['cl']}+PL!G{pa['cl']}+0.75*PL!H{pa['cl']}", f"=0.25*PL!F{pb['cl']}+PL!G{pb['cl']}+0.75*PL!H{pb['cl']}", f"=0.25*PL!F{pc['cl']}+PL!G{pc['cl']}+0.75*PL!H{pc['cl']}", "=rpo*rpo_48", "In rpo、rpo_48", "同上")
+rec("mw28", "FY2028 平均計費 MW vs 公司：700 gross MW 已簽約、2027 年底前交付", f"=PL!F{pa['mw']}", f"=PL!F{pb['mw']}", f"=PL!F{pc['mw']}", "=mw_co27", "In mw_co27", "公司口徑為容量（含尚未計費），可能為設施電力，與計費 MW 不同", fmt="#,##0")
 rec("oai", "OpenAI 承諾 750 MW 是否在 FY2028 前上線（FY2028 平均計費 MW ÷ 750）", f"=PL!F{pa['mw']}/oai_mw", f"=PL!F{pb['mw']}/oai_mw", f"=PL!F{pc['mw']}/oai_mw", None, "In oai_mw", "含 OpenAI 以外客戶，比值為上限", fmt="0.00", rel=False)
 RC.cell(rr, 1, "C. 與 Tokenomics 對照（跨層一致性；只對帳）").font = BOLD; rr += 1
 rec("tkhold", "每 MW 年營收（FY2027）vs Tokenomics 隱含 Cerebras 每 GW 年持有成本（VR200 × 持有成本比）", f"=PL!E{pa['pmw']}", f"=PL!E{pb['pmw']}", f"=PL!E{pc['pmw']}", "=tk_hold_vr*tk_hold_cs", TKV,
@@ -498,10 +500,10 @@ rec("tkhold", "每 MW 年營收（FY2027）vs Tokenomics 隱含 Cerebras 每 GW 
 rec("tkcx", "每 MW 資本支出（基準）vs Tokenomics 隱含（VR200 IT 資本支出 × 持有成本比 ×（1 − 硬體毛利率））", "=capex_mw", "=capex_mw", "=capex_mw", "=capex_mw_hi", TKV,
     "基準取公司不動產廠房設備推估；Tokenomics 隱含值作為 Sens 高值", fmt="#,##0.00")
 RC.cell(rr, 1, "D. 本模型 FY2027–FY2028 關鍵數字").font = BOLD; rr += 1
-rec("rev27", "FY2027 核心營收", f"=PL!E{pa['rev']}", f"=PL!E{pb['rev']}", f"=PL!E{pc['rev']}", "=PL!D%d*cfo_x27" % pb["rev"], "FY2026 錨點 × 3（財務長說法下限）", "", rel=True)
+rec("rev27", "FY2027 核心營收", f"=PL!E{pa['rev']}", f"=PL!E{pb['rev']}", f"=PL!E{pc['rev']}", "=PL!D%d*cfo_x27" % pb["rev"], "FY2026 錨點 × 3（公司說法）", "", rel=True)
 rec("ebit28", "FY2028 EBIT", f"=PL!F{pa['ebit']}", f"=PL!F{pb['ebit']}", f"=PL!F{pc['ebit']}", None, "—", "", rel=False)
-rec("cx27", "FY2027–FY2028 資本支出合計 vs 2026-06-30 現金與投資（含受限現金）", f"=PL!E{pa['cx']}+PL!F{pa['cx']}", f"=PL!E{pb['cx']}+PL!F{pb['cx']}", f"=PL!E{pc['cx']}+PL!F{pc['cx']}", "=Q!E35+Q!E36+Q!E37", "Q 頁",
-    "加上 2026 下半年資本支出與營業虧損後，情境 A 可能需外部融資（循環額度 8.5 億、OpenAI 貸款）", rel=True)
+rec("cx27", "FY2027–FY2028 資本支出合計 vs 2026-09-30 現金與投資（含受限現金）", f"=PL!E{pa['cx']}+PL!F{pa['cx']}", f"=PL!E{pb['cx']}+PL!F{pb['cx']}", f"=PL!E{pc['cx']}+PL!F{pc['cx']}", "=Q!F35+Q!F36+Q!F37", "Q 頁",
+    "加上 4Q26 資本支出與營業虧損後，情境 A 可能需外部融資（循環額度 8.5 億、OpenAI 貸款）", rel=True)
 for c, w in zip("ABCDEFGH", (70, 14, 14, 14, 14, 12, 50, 90)): RC.column_dimensions[c].width = w
 
 # ---------------- Sens ----------------
@@ -563,7 +565,9 @@ SO = wb.create_sheet("Sources")
 SO["A1"] = "來源（公司原文＝Cerebras 8-K 財報新聞稿與 10-Q，sec.gov；S-1／424B4 與合約條款只經二手摘要）"; SO["A1"].font = BOLD
 hdr(SO, 2, ["來源", "用途"])
 for i, (s_, u_) in enumerate((
-        (S8K2, "2Q26 GAAP 與核心損益、調節表、資產負債、現金流、3Q26 與 FY2026 指引、RPO、600 MW、AWS、OpenAI 更新"),
+        (S8K3, "3Q26 GAAP 與核心損益、分部調節表、2026-09-30 資產負債、9M26 現金流、4Q26 與 FY2026 指引、RPO 261 億、700 gross MW、2027 年營收三倍說法（v0.1.3）"),
+        (SQ3, "股數（2026-11-05 封面）、潛在稀釋證券、RPO 認列時點、客戶集中、OpenAI 營收、尚未起租租約、OpenAI 貸款（v0.1.3）"),
+        (S8K2, "2Q26 GAAP 與核心損益、調節表、2026-06-30 資產負債、1H26 現金流、3Q26 與 FY2026 指引（8 月）、600 MW、AWS、OpenAI 更新"),
         (S8K1, "1Q26 GAAP 與核心損益、分部毛利率"),
         (SQ2, "2Q26 營收分部說明、客戶認股權證攤銷、OpenAI 營收"),
         (SQ1, "1Q26 營收分部"),
@@ -592,12 +596,12 @@ RL = [
     "驅動因子 → 推導量",
     "平均計費 MW（各情境 FY2027–FY2032，In 頁 A 節）× 每 MW 年營收（OpenAI 合約：200 億 ÷ 0.75 GW ÷ 3.5 年；FY2028 起逐年調整）→ 雲端營收；硬體＝FY2026 × 情境年增",
     "毛利率：雲端現金毛利率（不含折舊）由 FY2026 錨點（指引推得）線性收斂到情境長期值（FY2029），再扣雲端折舊得含折舊毛利；硬體 40%。營業費用依營收成長彈性 0.6（年增下限 5%、上限 60%）",
-    "EBIT＝核心營業損益 − 經常性股票薪酬（FY2027 占營收 14%，收斂到 FY2032 的 6%）；不扣客戶認股權證攤銷（認股權證已計入評價股數 3.24 億股）",
+    "EBIT＝核心營業損益 − 經常性股票薪酬（FY2027 占營收 14%，收斂到 FY2032 的 6%）；不扣客戶認股權證攤銷（認股權證已計入評價股數 3.15 億股）",
     "資本支出＝新增平均計費 MW × 每 MW 資本支出 9（百萬美元，以 FY2026 折舊與不動產廠房設備推估；Tokenomics 隱含約 22.6 為高值）＋營收 × 3%；FY2031 起含 5 年汰換；折舊直線 5 年，雲端折舊列入雲端成本",
     "估值：DCF（標準版 FCFF、WACC）與 Comparable（同業前瞻 P/S 中位數 × FY2028 營收）各半；情境權重 0.3／0.5／0.2",
     "",
     "標記：Verified、Interested-party、Analogy、Assumed、Derived。S-1 與 OpenAI 合約條款只經二手摘要，待人工複核",
-    "已知限制：(1) OpenAI 合約單價與 MW 口徑未公開（Interested-party 推得）；(2) 每 MW 資本支出無公司揭露；(3) 3Q26 財報（2026-11-12）尚未納入；(4) 共識 FY2027–FY2028 未取得；(5) 上市未滿一年，β 用產業值、無十年倍數",
+    "已知限制：(1) OpenAI 合約單價與 MW 口徑未公開（Interested-party 推得）；(2) 每 MW 資本支出無公司揭露；(3) FY2026 錨點含 4Q26 指引（未實現）；(4) 共識 FY2027–FY2028 未取得；(5) 上市未滿一年，β 用產業值、無十年倍數",
     "",
     "",
     "",
@@ -612,28 +616,28 @@ up, tpv, dcf_, cmp_ = f"Val!B{T['up']}", f"Val!B{T['tp']}", f"Val!B{SV['dcf']}",
 RM_["A21"] = f'="投資建議："&Val!B{T["rec"]}&"（依上檔空間固定規則）"'
 RM_["A22"] = (f'="重點觀察 1：目標價 US$"&TEXT({tpv},"0.00")&"（DCF "&TEXT({dcf_},"0.00")&"、Comparable "&TEXT({cmp_},"0.00")&"；DCF 權重 "&TEXT(tp_w_dcf,"0%")&"），比現價 "&TEXT(px,"0.00")&" "&IF({up}>=0,"高 ","低 ")&TEXT(ABS({up}),"0.0%")&"；Comparable 單獨為 "&TEXT(Val!B{T["upc"]},"+0.0%;-0.0%")&"。'
                f'"&IF(ABS({up})>0.25,"上檔空間大的主因："&IF({up}>0,"同業前瞻 P/S 中位數 "&TEXT(Val!B{R_MED},"0.0")&" 倍套在 FY2028 營收（情境加權 "&TEXT(Val!B{R_FRW},"0.00")&" 十億美元），而現價只隱含 "&TEXT(Val!C{T["ps"]},"0.0")&" 倍（情境 B）","DCF 偏低：擴建資本支出使 FY2027–FY2029 自由現金流為負"),"兩種方法分歧：DCF 只有 "&TEXT({dcf_},"0.00")&"（擴建期自由現金流為負），Comparable 為 "&TEXT({cmp_},"0.00")&"。")')
-RM_["A23"] = (f'="重點觀察 2：FY2027 營收（情境 B）"&TEXT(PL!E{pB["rev"]},"0.00")&" 十億美元，為 FY2026 的 "&TEXT(PL!E{pB["rev"]}/PL!D{pB["rev"]},"0.0")&" 倍（財務長：逾三倍）；'
+RM_["A23"] = (f'="重點觀察 2：FY2027 營收（情境 B）"&TEXT(PL!E{pB["rev"]},"0.00")&" 十億美元，為 FY2026 的 "&TEXT(PL!E{pB["rev"]}/PL!D{pB["rev"]},"0.0")&" 倍（公司：三倍）；'
                f'FY2028 營收 A／B／C 為 "&TEXT(PL!F{PR["A"]["rev"]},"0.00")&"／"&TEXT(PL!F{pB["rev"]},"0.00")&"／"&TEXT(PL!F{PR["C"]["rev"]},"0.00")&"，差異主要來自平均計費 MW（"&TEXT(PL!F{PR["A"]["mw"]},"#,##0")&"／"&TEXT(PL!F{pB["mw"]},"#,##0")&"／"&TEXT(PL!F{PR["C"]["mw"]},"#,##0")&"）。"')
 RM_["A24"] = (f'="重點觀察 3：最敏感的是每 MW 年營收與平均計費 MW：合約期以 5 年計（每 MW 年營收 "&TEXT(p_mw_lo,"0.0")&"）時情境 B 加權價值 "&TEXT(Sens!J{[x[0] for x in case_rows if x[1]=="p_mw" and x[3]=="低"][0]},"+0.0%;-0.0%")&"，MW ×0.8 時 "&TEXT(Sens!J{[x[0] for x in case_rows if x[1]=="mw_k" and x[3]=="低"][0]},"+0.0%;-0.0%")&"，每 MW 資本支出改用 Tokenomics 隱含值時 "&TEXT(Sens!J{[x[0] for x in case_rows if x[1]=="capex_mw" and x[3]=="高"][0]},"+0.0%;-0.0%")&"。'
-               f'下一個檢驗點：3Q26 財報（2026-11-12）的核心營收對照指引 2.15 億美元、4Q26 與 2027 年說法，以及 11-09 鎖定期解禁後的賣壓。"')
+               f'下一個檢驗點：4Q26 財報的核心營收對照指引 3.10–3.30 億美元、毛利率能否到 47%–49%，以及 2027 年三倍成長的具體容量上線時程。"')
 # 展示層
 RM_["A31"] = "展示層：命題摘要、命題分項與白話重點（HTML 用）"; RM_["A31"].font = BOLD
 RM_["A32"] = "命題：Cerebras 的營收＝推論雲端（平均計費 MW × 每 MW 年營收）＋系統銷售；OpenAI 750 MW 合約撐起 2027 年的高成長，但價值取決於 OpenAI 以外的擴張、單價與毛利，以及擴建所需資本支出。"
 RM_["A33"] = "命題 1：2027 年營收能否達到公司說的「三倍以上」（FY2026 指引中點 8.85 億美元的三倍約 26.6 億）。"
 RM_["A34"] = "命題 2：OpenAI 合約隱含的每 MW 年營收，是否足以覆蓋自建成本——毛利率能否回到 45% 以上，以及與 Tokenomics 持有成本的差距。"
-RM_["A35"] = "命題 3：擴建數百 MW 的資本支出，IPO 後約 86 億美元的現金與投資是否足夠，不需再融資或稀釋。"
+RM_["A35"] = "命題 3：擴建數百 MW 的資本支出，2026-09-30 約 78 億美元的現金與投資（含受限現金）是否足夠，不需再融資或稀釋。"
 RM_["A36"] = "命題 4：現價（11-05 收盤 81.71 美元）相對同業前瞻 P/S 是低估，還是反映客戶集中（UAE、OpenAI）與解禁賣壓的合理折價。"
 RM_["A37"] = (f'="重點 1：加權目標價約 "&TEXT({tpv},"0.00")&" 美元，比現價 "&TEXT(px,"0.00")&" "&IF({up}>=0,"高 ","低 ")&TEXT(ABS({up}),"0.0%")&"，投資建議「"&Val!B{T["rec"]}&"」。'
                f'兩種方法差距大：Comparable（同業 P/S）"&TEXT({cmp_},"0.00")&"，DCF 只有 "&TEXT({dcf_},"0.00")&"，因為擴建期自由現金流為負、長期營業利益率有限。"')
 RM_["A38"] = (f'="重點 2：情境 B 的 FY2027 營收 "&TEXT(PL!E{pB["rev"]},"0.00")&" 十億美元（FY2026 的 "&TEXT(PL!E{pB["rev"]}/PL!D{pB["rev"]},"0.0")&" 倍）、FY2028 "&TEXT(PL!F{pB["rev"]},"0.00")&"；'
                f'營業利益率 FY2028 "&TEXT(PL!F{pB["om"]},"0.0%")&"、FY2032 "&TEXT(PL!J{pB["om"]},"0.0%")&"（含股票薪酬）。"')
-RM_["A39"] = (f'="重點 3：資本支出是 DCF 的關鍵。情境 B FY2027–FY2028 資本支出合計 "&TEXT(PL!E{pB["cx"]}+PL!F{pB["cx"]},"0.0")&" 十億美元，對照 2026-06-30 現金與投資 "&TEXT(Q!E35+Q!E36+Q!E37,"0.0")&"；'
+RM_["A39"] = (f'="重點 3：資本支出是 DCF 的關鍵。情境 B FY2027–FY2028 資本支出合計 "&TEXT(PL!E{pB["cx"]}+PL!F{pB["cx"]},"0.0")&" 十億美元，對照 2026-09-30 現金與投資 "&TEXT(Q!F35+Q!F36+Q!F37,"0.0")&"；'
                f'每 MW 資本支出若接近 Tokenomics 隱含值，情境 B 加權價值 "&TEXT(Sens!J{[x[0] for x in case_rows if x[1]=="capex_mw" and x[3]=="高"][0]},"+0.0%;-0.0%")&"。"')
 RM_["A40"] = (f'="重點 4：OpenAI 合約隱含的每 MW 年營收約 "&TEXT(p_mw,"0.0")&" 百萬美元，低於 Tokenomics 隱含的 Cerebras 每 GW 年持有成本 "&TEXT(tk_hold_vr*tk_hold_cs,"0.0")&"（十億美元／GW）。'
                f'若 Tokenomics 比值正確，合約毛利不足；本模型以公司毛利率實績為準，差距列在 Recon 頁並待送證據給算力收支。"')
 RM_["A42"] = "命題回覆（HTML 用；依本模型計算回答開頭四個命題）"; RM_["A42"].font = BOLD
 RM_["A43"] = (f'="2027 年營收能否三倍以上？答：情境 A／B／C 的 FY2027 營收為 FY2026 的 "&TEXT(PL!E{PR["A"]["rev"]}/PL!D{PR["A"]["rev"]},"0.0")&"／"&TEXT(PL!E{pB["rev"]}/PL!D{pB["rev"]},"0.0")&"／"&TEXT(PL!E{PR["C"]["rev"]}/PL!D{PR["C"]["rev"]},"0.0")&" 倍；'
-               f'情境 B 要 2027 年平均計費約 "&TEXT(PL!E{pB["mw"]},"#,##0")&" MW，與公司「2027 年底前逾 600 MW 上線或簽約」相符。"')
+               f'情境 B 要 2027 年平均計費約 "&TEXT(PL!E{pB["mw"]},"#,##0")&" MW，對照公司「700 gross MW 已簽約、2027 年底前交付」。"')
 RM_["A44"] = (f'="單價夠不夠覆蓋成本？答：以公司毛利率實績推算可以——雲端現金毛利率 FY2026 約 "&TEXT(gmc_26,"0.0%")&"、情境 B 長期 "&TEXT(gmcB,"0%")&"，扣折舊後 FY2030 雲端毛利率 "&TEXT(PL!H{pB["gmcg"]},"0.0%")&"；但與 Tokenomics 對照時，合約單價 "&TEXT(p_mw,"0.0")&" 只有 Tokenomics 隱含持有成本 "&TEXT(tk_hold_vr*tk_hold_cs,"0.0")&" 的 "&TEXT(p_mw/(tk_hold_vr*tk_hold_cs),"0%")&"，兩者至少一方需修正。"')
 RM_["A45"] = (f'="現金夠不夠？答：情境 B 下 FY2027–FY2029 自由現金流合計 "&TEXT(DCF!C{RD_["paths"]["B"]["fcff"]}+DCF!D{RD_["paths"]["B"]["fcff"]}+DCF!E{RD_["paths"]["B"]["fcff"]},"0.0")&" 十億美元，對照評價日淨現金 "&TEXT(Val!C{SV["ncr"]},"0.0")&"；'
                f'情境 A 擴建更快，"&IF(Val!B{SV["ncr"]}+DCF!C{RD_["paths"]["A"]["fcff"]}+DCF!D{RD_["paths"]["A"]["fcff"]}+DCF!E{RD_["paths"]["A"]["fcff"]}<0,"需要外部融資","仍可自行支應")&"。"')
@@ -687,12 +691,12 @@ if "--html" in sys.argv:
         return out
     PCT = lambda ks: {k: "p1" for k in ks}
     cloud_keys = ["p_mw", "mw_k", "gm_adj", "capex_mw", "life", "oth_cx", "da_old", "cl_26", "gmc_26"]
-    hw_keys = ["hw_gm", "hw_26", "h2_hw"]
-    co_keys = ["q3_rev", "q3_gm", "q3_om", "fy_rev", "fy_gm", "fy_om", "h2_da", "h2_cx", "h2_oth", "gp_26", "opx_26", "sbc_26", "da_26", "cx_26", "oth_26",
+    hw_keys = ["hw_gm", "hw_26", "q4_hw"]
+    co_keys = ["q4_rev", "q4_gm", "q4_om", "fy_rev", "fy_gm", "fy_om", "q4_da", "q4_cx", "q4_oth", "gp_26", "opx_26", "sbc_26", "da_26", "cx_26", "oth_26",
                "phi", "g_opx_min", "sbc_27", "sbc_ss", "oth_27", "oth_28", "oth_f", "tx_e", "tx_f", "sh_g", "px", "tp_w_dcf"]
     ref_keys = ["oai_val", "oai_mw", "oai_opt", "oai_yr", "rpo", "rpo_24", "rpo_48", "mw_co27", "cfo_x27", "cons_rev26", "cons_eps26", "cons_tp", "tk_out_cs", "tk_hold_cs", "tk_hold_vr", "tk_capit"]
-    fm = PCT(["oth_cx", "gm_adj", "gmc_26", "hw_gm", "q3_gm", "q3_om", "fy_gm", "fy_om", "g_opx_min", "sbc_27", "sbc_ss", "tx_e", "tx_f", "sh_g", "tp_w_dcf", "rpo_24", "rpo_48"])
-    fm.update({"oai_mw": "n0", "oai_opt": "n0", "mw_co27": "n0", "q3_rev": "n3", "fy_rev": "n3", "h2_hw": "n3", "hw_26": "n3", "cl_26": "n3", "cons_rev26": "n3", "da_old": "n3",
+    fm = PCT(["oth_cx", "gm_adj", "gmc_26", "hw_gm", "q4_gm", "q4_om", "fy_gm", "fy_om", "g_opx_min", "sbc_27", "sbc_ss", "tx_e", "tx_f", "sh_g", "tp_w_dcf", "rpo_24", "rpo_48"])
+    fm.update({"oai_mw": "n0", "oai_opt": "n0", "mw_co27": "n0", "q4_rev": "n3", "fy_rev": "n3", "q4_hw": "n3", "q4_da": "n3", "q4_cx": "n3", "q4_oth": "n3", "hw_26": "n3", "cl_26": "n3", "cons_rev26": "n3", "da_old": "n3",
                "gp_26": "n3", "opx_26": "n3", "sbc_26": "n3", "da_26": "n3", "oth_26": "n3", "oth_27": "n3", "oth_28": "n3", "oth_f": "n3", "life": "n0", "oai_val": "n0", "rpo": "n1", "cons_tp": "n2", "px": "n2"})
     drivers = [{"type": "table", "caption": "情境驅動（三情境並排，進加權目標價；取自 In 頁最後一節「情境驅動對照」）",
                 "head": [f"@In!B{scn0 + 1}", f"@In!D{scn0 + 1}", f"@In!E{scn0 + 1}", f"@In!F{scn0 + 1}", f"@In!C{scn0 + 1}"],
