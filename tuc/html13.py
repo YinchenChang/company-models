@@ -1,5 +1,5 @@
 # 電源散熱次產業（奇鋐、雙鴻、光寶、健策）HTML 版面 v1.3＋三層協調 C0（實績）共通步驟（2026-11-15）。
-# 樣板：台達電 delta/gen_html_json.py 的 _v13、_v13_post（NVIDIA v0.3.10 版面）。各公司資料夾放同一份本檔；公司差異（命題圖、分部推導表、部署圖、白話替換）
+# 樣板：台達電 delta/gen_html_json.py 的 _v13、_v13_post（NVIDIA v0.3.10 版面）。2026-11-15 起高速 CCL／PCB 四家共用（標準損益表 EPS 單位 RMB 也取兩位小數）。各公司資料夾放同一份本檔；公司差異（命題圖、分部推導表、部署圖、白話替換）
 # 由 <資料夾>/gen_html_json.py 傳入 H 設定。數字一律取自 xlsx（README 頁末 v1.3 白話列、PL 頁末標準損益表、RevDCF、Val 0.7、Sens 末表、Coord 頁）。
 import os, sys
 
@@ -93,7 +93,7 @@ def apply(cfg, wb, X, H, root):
     plr = lambda lab_, start=ph: row("PL", lab_, start, True)
     keys = ["營收", "營收年增率（YoY）", "營業成本（COGS）", "毛利", "毛利率", "營業費用（研發＋銷管）", "營業利益", "營業利益率", "其他收入（淨額，營業外收益）",
             "稅前利益", "所得稅", "非控制權益損益", "稅後淨利（歸屬母公司）", "淨利率", "股數", "EPS（基本，公司公告）"]
-    fmt = lambda u: {"%": "p1", "NT$": "n2", "十億股": "n3"}.get(u, "n1")
+    fmt = lambda u: {"%": "p1", "NT$": "n2", "RMB": "n2", "十億股": "n3"}.get(u, "n1")
     cols = "CDEFGHIJK"
     rowx = lambda r, f=None: [f"@PL!A{r}"] + [f"@PL!{c}{r}|{f or fmt(PLW.cell(r, 2).value)}" for c in cols]
     r_ratio, r_chk = plr("比率"), plr("核對（應為 0）")
