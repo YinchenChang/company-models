@@ -238,7 +238,7 @@ def _v13():
                        {"name": f"@PL!A{r_oth2}", "y": f"@PL!D{r_oth2}:G{r_oth2}", "color": "#8a8c8c"}],
               "lines": [{"name": [f"@PL!A{pa}", "營收"], "y": f"@PL!D{revA}:G{revA}", "color": "#0b7a80", "dash": True},
                         {"name": [f"@PL!A{pc}", "營收"], "y": f"@PL!D{revC}:G{revC}", "color": "#b4472f", "dash": True}],
-              "caption": "堆疊＝情境 B（基準）的分部營收（ファンクショナルマテリアルズ分 AI 用與非 AI），頂端數字＝情境 B 合併營收；虛線＝情境 A、情境 C 的合併營收。FY2026 為公司第一季決算時上修後預測的錨點；三情境差異只來自 FM（加速器顆數與 ABF 價格乘數）。"}
+              "caption": "堆疊＝情境 B（基準）的分部營收（ファンクショナルマテリアルズ分 AI 用與非 AI），頂端數字＝情境 B 合併營收；虛線＝情境 A、情境 C 的合併營收。FY2026 為公司中間決算時修正後預測的錨點；三情境差異只來自 FM（加速器顆數與 ABF 價格乘數）。"}
     i_obs = next(i for i, b in enumerate(th) if b["type"] == "h3" and b.get("text") == "重點觀察")
     th[i_obs + 1] = {"type": "list", "ordered": True, "items": [f"@README!A{RM[k]}" for k in ("o1", "o2", "o3", "o4", "o5")]}
     th.insert(0, chart1)
