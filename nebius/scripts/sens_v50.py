@@ -16,7 +16,7 @@ def one(k, lab, note=None):
 CASES = [
     ("he_all", "IF_HoldEcon 四世代同時（Tokenomics 低／高成本）", "Tokenomics 低成本／高成本", {f"he_{g}": RG[f"he_{g}"][0] for g in GEN}, {f"he_{g}": RG[f"he_{g}"][2] for g in GEN}),
     one("k_adj", "定價倍數 k 調整"), one("p_long", "長約價格證據（IREN–Microsoft，Analogy）"), one("od_share", "隨需占計費產能比例"), one("u_bill", "計費比例"),
-    one("p_new_ovr", "新增 MW 每 MW 年收入改用公司宣稱 ACV（Interested-party）"), one("mw_q3", "2026-09-30 在役 MW 假設"),
+    one("p_new_ovr", "新增 MW 每 MW 年收入改用公司宣稱 ACV（Interested-party）"), one("k_claim", "定價倍數改以公司說法：全部在役 MW 的長約價改用公司宣稱 ACV（Interested-party）"), one("mw_q3", "2026-09-30 在役 MW 假設"),
     one("rent_mw", "每 MW 年租金"), one("own_share", "自建機房比例"),
     one("sga_r", "營業費用率（研發＋管銷，扣 SBC）"), one("sbc_r", "股票薪酬 ÷ 營收"), one("lam", "成長型資本支出提前比例 λ"),
     one("life_ai", "AI 設備折舊年限（會計；改前 4 年／Tokenomics 6 年）"),

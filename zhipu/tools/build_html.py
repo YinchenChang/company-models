@@ -646,7 +646,7 @@ Coding Plan 額度使用率與 Coding Plan 輸出占比不列為翻轉點：它�
 <tr><td>正向營收淨額</td>{rv}</tr>
 <tr class="em"><td>正向營收 ÷ 市值隱含營收（正向營收倍數）</td>{fw}</tr>
 </tbody></table></div>
-<p class="note">同業倍數＝MiniMax EV ÷ 年化營收 {n("RVS_PeerMult", None, "f1")} 倍（區間 {n("Reverse!X51", None, "f1")}–{n("Reverse!X52", None, "f1")}，Inputs 係數）。以此倍數計，智譜市值「要求」約 {n("RVS_MktImpliedRev", None, "f0")} 億年營收；正向 {n("RVS_MktImpliedYear", None, "yrt")} 年就達到、2030 是它的 {n("RVS_FwdOverImplied", Y, "f1")} 倍；共識 2028 是它的 {n("Reverse!X62", 2028, "f1")} 倍。也就是說，<b>市值的前提不是比正向更高的營收，而是與同業同樣高的倍數</b>；用 1H26 實際營收算，智譜自己的 EV／營收是 {n("Reverse!X57", None, "f0")} 倍。股數含非上市股份（只計 H 股則市值約減半）。淨現金已扣除 2026-07 配售款截至 8 月底已動用的部分（Z5b V3；未扣 9 月以後的營運消耗）。</p>
+<p class="note">同業倍數＝MiniMax EV ÷ 年化營收 {n("RVS_PeerMult", None, "f1")} 倍（區間 {n("Reverse!X51", None, "f1")}–{n("Reverse!X52", None, "f1")}，Inputs 係數；MiniMax 市值取 2026-10-07 盤中，與智譜股價 2026-11-05 收盤不同日）。以此倍數計，智譜市值「要求」約 {n("RVS_MktImpliedRev", None, "f0")} 億年營收；正向 {n("RVS_MktImpliedYear", None, "yrt")} 年就達到、2030 是它的 {n("RVS_FwdOverImplied", Y, "f1")} 倍；共識 2028 是它的 {n("Reverse!X62", 2028, "f1")} 倍。也就是說，<b>市值的前提不是比正向更高的營收，而是與同業同樣高的倍數</b>；用 1H26 實際營收算，智譜自己的 EV／營收是 {n("Reverse!X57", None, "f0")} 倍。股數含非上市股份（只計 H 股則市值約減半）。淨現金已扣除 2026-07 配售款截至 8 月底已動用的部分（Z5b V3；未扣 9 月以後的營運消耗）。</p>
 {V.src("RVS_MktCap", "Reverse!X38", "Reverse!X39", "RVS_NetCash", "RVS_EV", "RVS_PeerMult", "Reverse!X51", "Reverse!X52", "RVS_MktImpliedRev", "RVS_MktImpliedRevLo", "RVS_MktImpliedRevHi", "Reverse!X56", "Reverse!X57", "Reverse!X58", "RVS_FwdOverImplied", "RVS_MktImpliedYear", "Reverse!X62")}
 </section>""")
 

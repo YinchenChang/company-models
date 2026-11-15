@@ -1,4 +1,11 @@
-# Nebius（NBIS）個股模型 v0.6.0（CoreWeave v5.0.3 新雲樣板重建＋2026Q3 滾入＋三層協調）
+# Nebius（NBIS）個股模型 v0.6.1（每 MW 收入比照 CoreWeave；v0.6.0：CoreWeave v5.0.3 新雲樣板重建＋2026Q3 滾入＋三層協調）
+
+**v0.6.1（2026-11-15）：每 MW 收入比照 CoreWeave 辦理（Andy 決定，2026-11-15）。**
+依據：Andy 2026-11-15「每 MW 收入比照 CoreWeave 辦理」；CoreWeave v5.0.3 做法（`coreweave/README.md` 方法要點）：每 MW 年收入＝Tokenomics `IF_HoldEcon` 在役世代加權 × 單一定價倍數 k；k＝IREN–Microsoft 長約〔Analogy〕與 H100 現貨加權；不以營收、ARR、RPO、ACV、指引反推 k（本資料夾 CLAUDE.md 第 6 條）；公司宣稱的新約每 MW 年收入只列參考、作敏感度，並開 Drive 對帳單（比照 CoreWeave J4 對帳單 `20261113_對帳單_CoreWeave_J4新約價格與Wattonomics上線GW.md`；Nebius 的對帳單由 Andy 開立）。
+- **（1）k 的構成比對（逐項對 `coreweave/build_coreweave.py` 與 v5.0.3 xlsx In 頁）：** Tokenomics 快照同檔（`data/tokenomics_snapshot_v22.0.json`，sha256 ad0decd3… 兩資料夾相同）；錨＝在役世代加權 `IF_HoldEcon`，Thesis 錨列公式（期初＋期末存量平均加權、FY2026 欄 9M／Q4 0.75／0.25）逐字相同；長約價格證據 p_long＝9.70（IREN–Microsoft，Analogy；低／高 8.9073／12.7247）、現貨 p_spot＝2.82（H100 Silicon Data）、gh_h100＝1.5426、he_gb300＝10.8864，k_長約＝9.70 ÷ 10.8864＝0.891、k_現貨＝1.828，k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約，k 調整係數基準 1（×0.9／×1.2）——**同法、同參數**。唯一不同：隨需占比 Nebius 0%（CoreWeave 10%，該值本身在 CoreWeave 也待 Andy 決定），依 Andy 指示屬 Nebius 公司特有值保留，所以 k＝0.891（CoreWeave 0.985）。世代占比、計費比例（0.92，兩家同值）、在役 MW 路徑亦屬公司事實，保留。**結論：不需改值，基準 k、每 MW 年收入（FY2027 情境 B 9.63、FY2030 10.48）與目標價不變。** 參考：若隨需占比改成 CoreWeave 的 10%，加權目標價 39.59（評等仍強力放空；整本重算一次，未入版）。
+- **（2）公司宣稱與敏感度：** 公司稱 Q3 新約 ACV 每 MW 超過 US$25m（Q3 股東信，Interested-party；分母口徑未說明）只列 Recon D 節與 Sens。新增 In 鍵 `k_claim`（0＝IREN 長約類比；1＝長約價改用公司宣稱 25，即 k_長約＝25 ÷ 10.8864＝2.296，作用於全部在役 MW）與 Sens 案例「定價倍數改以公司說法」：加權目標價 409.12（+1,250%；估值評等強力買進），但情境 B 收支合計 −22.9，仍入不敷出，投資建議依收支關卡不得列為買進。原有案例「新增 MW 改用公司宣稱 ACV」（p_new_ovr＝25，只作用於 2026-09-30 後新增 MW）251.57（+730%；收支合計 −41.4）。橫幅與命題章（新增說明列 README ksens13）寫明：**評等對每 MW 收入高度敏感；要支撐現價需 2030 年每 MW 年收入 ≥ 19.70 百萬美元**（反向 DCF 反解 k 調整 1.881 × 模型 10.48；低於公司宣稱 25）。
+- **（3）新舊目標價與評等：** v0.6.0 加權目標價 **30.31**（上檔 −76.4%）、投資建議**強力放空** → v0.6.1 **30.31**、**強力放空**，差異 0。原因：比對後 k 的構成已與 CoreWeave 同法同參數，本版只加敏感度案例與文字，基準輸入不變（`tools/xlsx_diff.py` 只有版號、build_id、新增列與說明文字差異）。
+- **驗證：** `SENS=1 bash nebius/make_v1.sh` 全過（公式錯誤 0；檢查列與收支恆等式 157 項，含新增的 k 構成對 CoreWeave 現行 xlsx 逐鍵比對 10 項；In 版面；敏感度覆蓋 41 鍵；分部；HTML；治理；收支關卡評等）；`check_company_html nebius` 全過；`check_layout_v13 --xlsx` 通過（僅警告：估值章 CONS_NBIS、對帳章層級名稱，同 v0.6.0）；`tools/baseline_coordination/check.py` 0 項不符（全樹）。`tools/xlsx_diff.py` 對 v0.6.0：數值差異只來自 In 頁插入 k_claim 一列造成的列位移與 README 新增列（橫幅、命題章說明、版本列）、Sens 新增一案；加權目標價 30.31、評等強力放空、收支關卡 A／B／C、反向 DCF 19.70 不變。反向 DCF 與拆解快照沿用（基準輸入未變）。
 
 **v0.6.0（2026-11-15）：依 CoreWeave 新雲樣板重建為 xlsx 事實基礎＋HTML 展示層，滾入 2026Q3 實績，版面 v1.3＋Coord 頁（三層協調、C0 實績）。**
 依據：工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`（第二波：Nebius ← CoreWeave）；規則 `docs/plan/三層基準協調規則.md` v1.4.2 C0 第 2 點；`tools/coord/README.md`；主控指示（預設 a）：舊 JS 引擎改依 CoreWeave 樣板（`coreweave/`，v5.0.3）重建並滾入 3Q26 實績，數字可改變，列出新舊目標價與評等差異及原因。
@@ -18,15 +25,15 @@
 
 數字以 `dist/` 的 xlsx 為準；下表由建置成品產生（`python3 tools/model_governance/version_table.py nebius --update`），不手寫（舊版 v0.5.3 檔名非點號版號、結構不同，未入表；其值見上）。
 
-<!-- version-table: dist/20261115_Nebius個股模型_v0.6.0.xlsx -->
-| 項目 | v0.6.0 |
-|---|---|
-| 加權目標價（上檔空間） | 30.31（-76.4%） |
-| DCF 目標價（情境加權） | 0.00 |
-| Comparable 目標價 | 60.62 |
-| 投資建議 | 強力放空 |
-| 現價 | 128.64 |
-| 收支關卡 A／B／C（FY2026–FY2030） | -143.1／-104.4／-71.3 |
+<!-- version-table: dist/_待刪除/20261115_Nebius個股模型_v0.6.0.xlsx｜dist/20261115_Nebius個股模型_v0.6.1.xlsx -->
+| 項目 | v0.6.0 | v0.6.1 |
+|---|---|---|
+| 加權目標價（上檔空間） | 30.31（-76.4%） | 30.31（-76.4%） |
+| DCF 目標價（情境加權） | 0.00 | 0.00 |
+| Comparable 目標價 | 60.62 | 60.62 |
+| 投資建議 | 強力放空 | 強力放空 |
+| 現價 | 128.64 | 128.64 |
+| 收支關卡 A／B／C（FY2026–FY2030） | -143.1／-104.4／-71.3 | -143.1／-104.4／-71.3 |
 <!-- /version-table -->
 
 ## 建置

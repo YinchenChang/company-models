@@ -26,6 +26,10 @@ for i in range(3):
         n += 1
         if abs(v[0] + v[1] + v[2] + v[3] + v[4] - v[5]) > 1e-6: fail.append(f"CF 現金恆等式 情境{'ABC'[i]} {c}")
         if v[5] < 25 - 1e-6: fail.append(f"CF 期末現金低於最低現金 情境{'ABC'[i]} {c}")
+# Andy 2026-11-15：Comparable 為分部加總（託管 × 資料中心同業、雲端 × 新雲同業）；In sotp_on 須為 1，託管倍數須來自 Val 託管同業表
+I_ = wb["In"]; _iv = {I_.cell(r, 1).value: I_.cell(r, 5).value for r in range(1, I_.max_row + 1) if I_.cell(r, 1).value}
+n += 1
+if _iv.get("sotp_on") != 1: fail.append(f"In sotp_on 應為 1（分部加總），現為 {_iv.get('sotp_on')}")
 print(f"檢查列與收支恆等式：{n} 項；" + ("全部通過" if not fail else f"失敗 {len(fail)}"))
 for f in fail[:20]: print("  -", f)
 sys.exit(1 if fail else 0)

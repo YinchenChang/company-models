@@ -2,6 +2,12 @@
 
 每次同步記錄：版本、工作包、commit／PR 與變動摘要。
 
+## v0.2.2 同版修正（2026-11-15；只改標籤與旗標，數字不變）
+- 個股模型頁估值章拿掉 `data-unlisted`、只留 `data-novaluation`（規格 J 節 (b)）；橫幅改「本模型未建目標價與評等」。
+- 損益表 FY2026 欄標「1H 實績＋2H 預測」（`build_html_v13.py` 表頭與口徑說明；`coord_pl.py` PL!A1、PL!F5）。
+- Valuation V07 標籤註明智譜市值日期：「智譜 市值 ÷ 1H26 年化營收（市值為 2026-10-02，未更新）」。
+- 同版重建：xlsx 對修正前只差 Valuation!B14、PL!A1、PL!F5 三格文字；收支模型頁不變；check_html、check_html_v13、ci_check、check_layout_v13 --xlsx 全過。
+
 ## v0.2.2 — 版面 v1.3＋三層協調（讀取層級、C0 實績）（2026-11-15；工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`）
 - 新頁 `PL`（只列示）：標準損益表 FY2023–FY2030，非 IFRS 經調整口徑；FY2023–FY2025 取招股書與 FY2025 年度業績公告（SRC_MM 新增 S114–S141 共 28 筆一手歷史列），FY2026 起引用 PnL；所得稅歷史由 IFRS 各項推得為 0；EPS 預測＝經調整淨利 ÷（S051 ×（1＋F14）），歷史非 IFRS 每股未揭露。核對列合計 0。
 - 新頁 `Coord`（只列示）：讀取層級（Tokenomics 快照 v19.0；Wattonomics 不讀、亦不讀本模型；Siliconomics 不適用）；C0（實績）四列（1H2026 營收 116.6、資本支出 322.3、算力 MW 未揭露、阿里雲上限 300）皆「無可比實績（層級無此玩家）」——Wattonomics v0.3.2 玩家名單無 MiniMax（中國只有合計 cn）。對帳中 0。具名範圍 COORD_C0、COORD_C0Sum、COORD_C0Verdict、PL_*。
