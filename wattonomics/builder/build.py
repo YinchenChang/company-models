@@ -14,7 +14,7 @@ from openpyxl.workbook.defined_name import DefinedName
 HERE = os.path.dirname(os.path.abspath(__file__))
 GL = os.path.dirname(HERE)
 ROOT = os.path.dirname(GL)
-VERSION = "v0.3.2"
+VERSION = "v0.3.3"
 # v0.1.9（工作單 20261102 F4）：Siliconomics R4 橋接 r1 活頁簿（Bridge 頁 b8＝推得淨新增上線 IT GW）；只作並列，首建讀入 In S8，之後以 In 為準
 SIL_R4_R1 = os.path.join(ROOT, "siliconomics", "docs", "reports", "r4_bridge",
                          "20261031_R4對帳橋接_Siliconomics側_r1.xlsx")
@@ -263,6 +263,7 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--version")
     ap.add_argument("--date")
+    ap.add_argument("--sil-snapshot", help="v0.3.3：指定 Siliconomics 快照檔名（siliconomics/data/ 下）；預設讀 CURRENT_SNAPSHOT。單層改值 PR 用來固定上游版本")
     ap.add_argument("--refresh-y9", action="store_true", help="In Y9（g* 鍵）改讀 GAPSEED（個股模型重取後；工作單 20261102 E7），其餘輸入仍讀 --base")
     ap.add_argument("--refresh-y9-only", help="v0.2.1：只重取這些玩家的 In Y9（逗號分隔，例如 ant）")
     a = ap.parse_args()
@@ -284,7 +285,7 @@ def main():
     base = load_base_inputs(a.base)
     tk = json.load(open(TK_SNAPSHOT, encoding="utf-8"))
     tkx = json.load(open(TK_EXTRA, encoding="utf-8"))
-    sil_fn = open(os.path.join(SIL_DIR, "CURRENT_SNAPSHOT"), encoding="utf-8").read().strip()
+    sil_fn = a.sil_snapshot or open(os.path.join(SIL_DIR, "CURRENT_SNAPSHOT"), encoding="utf-8").read().strip()
     sil = json.load(open(os.path.join(SIL_DIR, sil_fn), encoding="utf-8"))
     P = seed["players"]; PK = [p["key"] for p in P]; PN = {p["key"]: p["name"] for p in P}
     U = seed["users"]
@@ -3245,6 +3246,7 @@ def main():
         {"id": "GL01-105", "cat": "判斷", "item": "Lake Mariner、Barber Lake、Abernathy 原文核對（r1 第 6 項）", "decision": "（1）Lake Mariner：TeraWulf Q4／FY2025 新聞稿 CB3 42、CB4 168（原預計 2026Q3 通電）、CB5 168（2026Q4）MW；Fluidstack 租約 380 MW。cp_neo_lmar 168＝CB-5（等級 2）保留；新增 cp_w1_lmar_cb4 168 MW（2027-01 [Assumed]，Q3 新聞稿仍列建設中）。（2）Barber Lake：Cipher 新聞稿 168 MW 關鍵 IT（最多 244 MW gross）、10 年約 3B、Fluidstack、預計 2026-09 交付；原文沒有 39 MW → cp_neo_barber 207→168，39 MW 另有 Cipher 2025-11-20 新聞稿（additional 39 MW critical IT、2027-01 交付、Fluidstack）→ r2 新列 cp_w1s_barber39 納入（X3 Anthropic）。（3）Abernathy：TeraWulf 新聞稿（2025-10-28）168 MW 關鍵 IT、25 年約 9.5B、2026 下半年交付、Fluidstack 合資；X3 算 Anthropic（七家以外）→ 新列 cp_w1_abern 168 MW（2026-12）入基準", "date": "2026-11-14", "quote": "chat 端 r1 第 6 項", "status": "已定（chat 端）；時點待判斷"},
         {"id": "GL01-106", "cat": "判斷", "item": "協調緩衝區寫進公式（r1 第 7 項）", "decision": "Compare H3 新增 In 輸入：prev_ev_w_／prev_ev_s_（上次判定〔v0.3.1〕該層該年是否有證據；Wattonomics 1／0／1／0／0、Siliconomics 0／0／0／0／0）、coord_enter 55%、coord_buf_on。本次有證據＝上次有 → ≥ 45%（coord_thr 低）仍有；上次無 → ≥ 55% 才有。狀態甲乙丙由兩層旗標推得。coord_buf_on＝0 回首次判定 50%", "date": "2026-11-14", "quote": "chat 端 r1 第 7 項；規則 v1.1 C3", "status": "已定（chat 端）"},
         {"id": "GL01-107", "cat": "判斷", "item": "r2：Compare I2 節補建、Barber Lake 39 MW 納入、W2 不計分母、主權 2026 Assumed、Siliconomics 證據比例改參照", "decision": "（1）Compare I2 節（CoreWeave、Nebius 容量交叉檢核與 X2 去重可見性）補建：r1 程式誤刪該節，8 個 xc_ 輸入名稱無公式引用，r2 補回並由 I2 節公式引用。（2）cp_w1s_barber39：Cipher 2025-11-20 新聞稿原文（additional 39 MW critical IT、56 MW gross、Fluidstack、約 830M、2027-01 交付）→ 納入 1、2027-01、X3 算 Anthropic。（3）W2（w2gap 各 1.12）自證據比例分母移除（In w2_in_den＝0；改 1 還原）：2029–2030 X6 已補新雲、主權 Assumed 年增，再加 W2 重複；W2 本就未入主路徑基準，無重複入基準。（4）主權 2026：規則 C0 第 7 點不得歸零 → 以 KDDI 堺 48 MW（已營運，僅媒體標題）＋Reliance 120 MW（年底投運指引）＝0.168 GW Assumed 點值入基準、區間 0–0.168、不入證據分子、進分母（Compare I 節 x6s 列，由 T2 cp_w1s_kddi、cp_w1s_reliance 的 MW 連結）。（5）Compare 協調狀態列的 Siliconomics 證據比例（sil_ev_*）已過時，改標『參照；Siliconomics 權威狀態見其 Coord 頁（規則 v1.3 待定）』，數值不追；上游不讀下游", "date": "2026-11-14", "quote": "chat 端 r2（獨立核對 r1：7 項符合、2 項不符）", "status": "已定（chat 端）"},
+        {"id": "GL01-108", "cat": "判斷", "item": "xai 2025 年底上線 GW 改讀公司揭露 0.8（對帳單 20261115 SpaceX／xAI）", "decision": "In mw_xai 2025（J113）空白 → 800 MW（SpaceX 424B4 Nameplate Compute Draw 2025-12-31；Interested-party：公司自訂 KPI、法定文件揭露的期末值；口徑 IT〔GPU × all-in 功耗，不含設施負載〕；SRC_GL_346）；C113 未說明 → IT（數值不變：Players 只對『設施』換算）。Players 已知值優先序 Y1 輸入 > Y0 晶片換算，xai 2025 年底 0.5698（Epoch chip_xai 308 MW × k_chip2it 1.85，旗標 5）→ 0.8（旗標 1）；低／高列不再用 k 區間（0.5082／0.64064 → 0.8）。chip_xai 308 MW 保留作對照。理由：三層基準協調規則 C0 第 3 點與 C5（個股有實績、層沒有 → 層下次升版吸收）；兩側皆 IT，口徑差無法解釋（需 k＝2.60 > Epoch 設施係數 2.5）；殘差歸於範圍（Epoch 308 MW 可能未含 Colossus II 已安裝 GPU）或 Epoch 資料時點。2024 年底公司揭露 0.3 GW 本版不入（xai 2025 仍為第一個已知年、新納入存量，不計年新增；避免改動 2025 年新增口徑），列待辦", "date": "2026-11-15", "quote": "對帳單 20261115（R 線開立；Andy 11-15 08:46 授權盡早處理）", "status": "已定（chat 端；待未參與代理核對）"},
     ]
     for d in decisions:
         if d["id"] == "GL01-21":
@@ -3338,6 +3340,8 @@ def main():
             ("SRC_GL_343", "docs/plan/三層基準協調規則.md v1.1（C3 證據定義、分母、門檻、緩衝區、已知限制）；siliconomics/tools/baseline_bridge.py In（thr、cov_done、scov）", "v0.3.1 Z3、Z4：協調狀態與證據比例口徑"),
             ("SRC_GL_345", "wattonomics/evidence_raw/Z1_earnings_20261114.md（查證代理 2026-11-14；IREN Q1 FY27、CoreWeave 2026Q3、Nebius 2026Q3、Microsoft 第三方容量、七家資本支出實績；待未參與代理核對）", "v0.3.1 Z1：財報季證據（待核對）"),
             ("SRC_GL_344", "算力收支 11-05 回執第 2 節（W2；Siliconomics baseline_bridge In cov2）", "v0.3.1 Z3：W2 新雲、主權站點清單結束後年增歸零"),
+            ("SRC_GL_346", "mag/extract/docs/2026Q3/spacex_424B4.pdf（text/spacex_424B4.txt）：Summary 分部營運資料表 AI 段「Nameplate compute draw (in gigawatts)」2025-12-31＝0.8；MD&A Key Business Metrics 定義（GPU 安裝數 × 各自 all-in 功耗，不含冷卻、配電損失、照明、保全與設施負載）；spacex/data/spacex_facts_v02.json seg.si.kpi.gw.fy2025；對帳單 Drive 02-AI供應鏈/對帳/20261115_對帳單_SpaceX_xAI2025年底算力實績對Wattonomics.md",
+             "v0.3.3：SpaceX（含 xAI）424B4 名目算力 2025 年底 0.8 GW（IT 口徑；Interested-party：公司自訂 KPI、法定文件揭露的期末值）。mw_xai 2026 年底目標 >2 GW 仍為 B#46（SRC_GL_201）"),
             ("SRC_GL_334", "markets/chip_bridge/dist/20261027_晶片內容橋接表_v0.2.2.xlsx（Bridge 第 7、44 列）",
              "AI半導體 晶片內容橋接表 v0.2.2：NVIDIA 合計 ÷ IT capex × IT capex＝每 IT GW NVIDIA 內容（GB300 20.85、VR200 23.47／21.85）；只作備忘（獨立核對 R2）"),
             ("SRC_GL_333", "交流 已處理/20261102_AI半導體-to-算力收支_回執_R4歸因與2027證據送件.md 第 3 節；siliconomics/docs/reports/r4_bridge/20261102_R4對帳橋接_Siliconomics側_r2.md「2027 年新證據」",
@@ -3394,6 +3398,7 @@ def main():
         ("v0.2.2（2026-11-04）：X1 Siliconomics 改讀 v0.13 基準名稱 *_Base；X2 Deploy 不再乘 Siliconomics 顆數係數（原 A＝1）；X3 Compare F3 改讀 Siliconomics 出貨年；X4 Compare G 節供給上限與 Checks X4-K1。基準 GW 不變。Decisions GL01-75 至 GL01-78。報告 docs/verify/20261104_v0.2.2_build.md。", True),
         ("v0.3（2026-11-05）：Y1 Siliconomics v0.13.1、Tokenomics v21.10；Y2 NVIDIA 內容改讀 R7 分世代值；Y3 非 NVIDIA 占比改讀逐買方 NVIDIA 份額（金額換 GW）；Y4 供給上限主檢查改可支撐上線 GW；基準 GW 不變。Decisions GL01-79 至 GL01-83。報告 docs/verify/20261105_v0.3_build.md。", True),
         ("v0.3.2（2026-11-14）：W-1 七家以外買方路徑（工作單 20261114_Wattonomics_v0.3.2.md）——新雲（其他新雲，不含 CoreWeave、Nebius）與主權的主路徑改由 In T2 納入列推得，取代 mw_neo 2026 輸入與 HUMAIN 等目標列；先扣已公開對七家合約（納入＝0）、未揭露客戶 × 50%（w1_und，0–100%）；Anthropic 經 Fluidstack 租用算七家以外；Crusoe gross × 0.66 換 IT；OEM 只作交叉檢核；④ 的 (b3)(b4) 移入主路徑（r1 X6：Assumed 點值補差額，基準＝MAX（證據, Assumed））；證據比例分子扣 Assumed 部分；coord_cov_done＝1；r1：CoreWeave 2026 年底至少 1.7 GW、Mistral 移 Sens、Lake Mariner／Barber Lake／Abernathy 原文核對、協調緩衝區進公式（Decisions GL01-101 至 106）。新增 Compare I 節、Interface K 節（WIF_W1_*）、Checks E-W1／E-W2、Decisions GL01-93 至 GL01-100。報告 docs/verify/20261114_v0.3.2_build.md。", True),
+        ("v0.3.3（2026-11-15）：對帳單 20261115 SpaceX／xAI——In mw_xai 2025 年底改讀 SpaceX 424B4 名目算力 0.8 GW（IT；原 Epoch 308 MW × k_chip2it 1.85＝0.5698）；C113 改 IT；Sources SRC_GL_346；Decisions GL01-108。只改 Wattonomics 一層。", False),
         ("v0.3.1（2026-11-14）：三層基準協調規則 v1.1 落地（工作單 20261114_Wattonomics_v0.3.1.md）——Z2 Compare H1 ④ 覆蓋缺口兩讀法（原值 4.81、實績下限 3.03；扣 Oracle 重疊另列；不入基準）；Z3 SIL_In 讀 Siliconomics v0.18、H3 逐年協調狀態（門檻 50%、對帳中）、H4 ④＋W2 調整後比值、F 節 NVIDIA 每 GW 營收區間與指引只作參照（W-3）、H5 五家資本支出與 Siliconomics 顆數並排（W-4）；Z4 新名稱 WIF_Evidence_2026–2030（規則 v1.1 全市場分母；舊 WIF_Coverage 保留）；Checks E-K1。Z1 財報季證據經未參與代理核對：IREN Childress H2–4 延至 2027-01 入基準（T2 擴為 150 MW、M＝1；mw_neo 2026 扣 150、總量不增），Nebius 延遲只追蹤；CoreWeave、Nebius Q1–Q3 實績入證據比例。Decisions GL01-84 至 GL01-92。報告 docs/verify/20261114_v0.3.1_build.md。", True),
         ("顏色：藍字＝輸入；黑字＝公式；綠字＝跨頁或外部鏡像；淡黃底＝關鍵輸出；亮黃底＝待證據或預設待決。", False),
         ("Excel 優先：要改輸入，直接改 In 頁藍字；builder 重建時讀回（--base）。公式頁不要手改。下游只讀 Interface 的 WIF_ 名稱（經快照）。", False),

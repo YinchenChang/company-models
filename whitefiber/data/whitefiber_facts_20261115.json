@@ -1,6 +1,8 @@
 {
 "_readme": "WhiteFiber（WYFI）事實總帳 v0.4.0（2026-11-15）：金額 US$M、股數百萬股、MW 為 IT 口徑。數字轉錄自 open PR #451 分支的事實總帳（原文 10-Q 2026 Q3、10-K FY2025、法說二手逐字稿；見 sources.PR451），id 沿用原總帳；標記同原總帳（10-Q 實績 Verified；指引與 KPI Interested-party）。",
 "sources": {
+"MS_DLR": "MarketScreener 估值頁 Digital Realty（德文版；股價、EV、共識 EBITDA；2026-10-07 收盤，擷取 2026-10-08；經 data/whitefiber_facts_20261008.json val.peer.dlr 登錄）https://de.marketscreener.com/kurs/aktie/DIGITAL-REALTY-TRUST-INC-12320/bewertung/",
+"MS_EQIX": "MarketScreener 估值頁 Equinix（英文版；股價、EV、共識 EBITDA；約 2026-10-02 報價，擷取 2026-10-08；經 data/whitefiber_facts_20261008.json val.peer.eqix 登錄）https://uk.marketscreener.com/quote/stock/EQUINIX-INC-20565916/valuation/",
 "Q3_10Q": "WhiteFiber Form 10-Q 2026 Q3（季末 2026-09-30；SEC EDGAR accession 0001213900-26-117728）https://www.sec.gov/Archives/edgar/data/0002042022/000121390026117728/ea0310427-10q_whitefiber.htm",
 "CALL_Q3": "WhiteFiber 2026 Q3 法說（二手逐字稿：Investing.com、Motley Fool；全文不入庫）",
 "K10_25": "WhiteFiber Form 10-K FY2025（經查核合併財報）",

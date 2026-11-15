@@ -138,8 +138,8 @@ def plsrow(k, f):
 IS_ROWS = [plsrow(k, f) for k, f in (("rev", "n2"), ("revg", "p1"), ("cogs", "n2"), ("gp", "n2"), ("gpm", "p1"), ("opx", "n2"), ("oi", "n2"), ("oim", "p1"), ("int", "n2"), ("oth", "n2"),
                                     ("pti", "n2"), ("tax", "n2"), ("ni", "n2"), ("nim", "p1"), ("eps", "n2"))] + [{"sub": f"@PL!A{PLS['ratio']}"}] + \
           [plsrow(k, "p1") for k in ("revg", "gpm", "oim", "nim", "nig")]
-VAL_COMP = V3(["eb", "ev", "nd27", "sh27", "v12"], CO, {"sh27": "n3", "v12": "n2"})
-VAL_COMP[1][0] = "企業價值"
+VAL_COMP = V3(["eb", "ebc", "ebh", "evc0", "evh0", "ev", "nd27", "sh27", "pcc", "pch", "pcn", "v12"], CO, {"sh27": "n3", "pcc": "n2", "pch": "n2", "pcn": "n2", "v12": "n2"})
+VAL_COMP[5][0] = "企業價值（分部加總）"
 DCF_RATE = [[f"@Val!A{VR[k]}" if k != "wacc" else "WACC（加權平均資金成本）", f"@Val!C{VR[k]}|p2"] for k in ("wacc", "ke", "kdat", "ronic")] + [[f"@In!B{INR['tp_g']}", f"@In!E{INR['tp_g']}|p1"]]
 REC_J4 = rrows(["q9rev", "q3pm", "q3eb", "j4m", "j4tk", "j4s"] + (["j4req"] if "j4req" in RCR else []), {"q3eb": "p1"})
 for row in REC_J4:
@@ -180,7 +180,7 @@ cfg = {
             {"type": "list", "collapse": True, "summary": "展開：評等標示、級距邊界、評等脆弱點與方法註記（原橫幅說明）",
              "items": [f"@Val!C{CON['rec_lab']}", f"@Val!C{CON['bn_edge']}", f"@Val!C{CON['bn_frag']}", f"@Val!C{CON['bn_scn']}", f"@Val!C{CON['bn_dcf']}", f"@Val!F{CON['rec']}"]},
             {"type": "table", "collapse": True, "summary": "展開：結論的其他項目（上檔空間歸因、區間、增量價值、級距距離、舊版對照）", "head": ["項目", "數值"],
-             "rows": ctab(["cons", "mup", "mdn", "comp0", "dcfup", "cmpup", "adjup", "upchk", "lo", "hi", "inr", "npvAB", "npvBC", "npvps", "dist", "v413", "chg", "tvsh"])},
+             "rows": ctab(["cons", "mup", "mdn", "comp0", "dcfup", "cmpup", "adjup", "upchk", "lo", "hi", "inr", "npvAB", "npvBC", "npvps", "dist", "v040", "chg040", "v413", "chg", "tvsh"])},
             {"type": "table", "caption": "DCF 折現率（主要項目）", "head": ["項目", "數值"], "rows": DCF_RATE},
             {"type": "table", "collapse": True, "summary": "展開：折現率組成（股權市值、負債、無風險利率、β、股權風險溢酬、稅前債務成本、稅率）", "head": ["項目", "數值"],
              "rows": [[f"@Val!A{VR['E']}", f"@Val!C{VR['E']}|n1"], [f"@Val!A{VR['D']}", f"@Val!C{VR['D']}|n1"]] + [[f"@In!B{INR[k]}", f"@In!E{INR[k]}|{f}"] for k, f in (("rf", "p2"), ("beta_u", "n3"), ("beta", "n2"), ("erp", "p1"), ("kd", "p2"), ("tax_lt", "p1"))]},
@@ -191,7 +191,9 @@ cfg = {
             {"type": "table", "caption": "Comparable（三情境；主要項目）", "head": ["項目", "情境 A", "情境 B", "情境 C"], "rows": VAL_COMP},
             {"type": "table", "collapse": True, "summary": "展開：同業倍數", "head": [f"@Val!{c}{R['PEERH']}" for c in "ABCDEGHIJ"],
              "rowgen": {"sheet": "Val", "rows": f"{R['PEERS'][0]}-{VR['mult']}", "cols": list("ABCDEGHIJ"), "fmts": ["", "", "n1", "n2", "", "p1", "n2", "p1", "p1"],
-                        "row_fmt": {str(VR["altm"]): {"C": "n2", "D": "n2", "E": "n2", "F": "n2"}}}}]},
+                        "row_fmt": {str(VR["altm"]): {"C": "n2", "D": "n2", "E": "n2", "F": "n2"}}}},
+            {"type": "table", "collapse": True, "summary": "展開：託管分部同業倍數（上市資料中心營運商）", "head": [f"@Val!{c}{VR['hph']}" for c in "ABCDEF"],
+             "rowgen": {"sheet": "Val", "rows": f"{VR['hp0']}-{VR['multh'] + 1}", "cols": list("ABCDEF"), "fmts": ["", "", "n1", "n2", "", ""]}}]},
         {"id": "sens", "title": "敏感度", "intro": "一次只動一個輸入（取低值或高值），整本模型重算，看加權目標價相對基準變動多少；長條只列變動達兩位數百分比的案例，其餘收在摺疊。",
          "blocks": [dict(b, label_col="O") for b in tor("D", "加權目標價相對基準：輸入取低值") + tor("F", "加權目標價相對基準：輸入取高值")] + [
             {"type": "table", "collapse": True, "summary": "展開：全部案例（含 DCF 單法與收支關卡）", "head": [f"@Sens!{c}3" for c in "ABCDEFHIJKMN"],
@@ -274,7 +276,7 @@ cfg = {
             {"type": "h3", "text": "附錄：驅動 → 推導對照表（查核用）"},
             {"type": "list", "collapse": True, "summary": "展開：每頁的輸入、推導量與因果方向", "items": [f"@README!A{RL['drv'] + k}" for k in range(1, 6)]},
             {"type": "h3", "text": "附錄：版本要點與目標價變動拆解"},
-            {"type": "list", "collapse": True, "summary": "展開：版本要點", "items": [f"@README!A{RL['v060']}"] + ([f"@README!A{RL['dec']}"] if "dec" in RL else [])},
+            {"type": "list", "collapse": True, "summary": "展開：版本要點", "items": [f"@README!A{RL['v041']}", f"@README!A{RL['v060']}"] + ([f"@README!A{RL['dec']}"] if "dec" in RL else [])},
             {"type": "h3", "text": "風險登錄（未進主模型的尾部風險）"},
             {"type": "list", "collapse": True, "summary": "展開：風險、是否建模、理由、觀察指標", "items": [f"@README!A{RL['risk'] + k}" for k in range(1, 7)]},
             {"type": "h3", "text": "「未取得」與「找不到」清單"},

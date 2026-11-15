@@ -11145,16 +11145,16 @@
   }
  },
  "02513": {
-  "model": "zhipu/dist/20261106_智譜個股模型_v0_1_4.xlsx",
+  "model": "zhipu/dist/20261115_智譜個股模型_v0_1_5.xlsx",
   "need_ratio_2028": {
    "value": 2.46959527523438,
    "cell": "Reverse!G30",
-   "file": "zhipu/dist/20261106_智譜個股模型_v0_1_4.xlsx"
+   "file": "zhipu/dist/20261115_智譜個股模型_v0_1_5.xlsx"
   },
   "need_ratio_2028_lo": {
    "value": 1.90924562859496,
    "cell": "Reverse!G31",
-   "file": "zhipu/dist/20261106_智譜個股模型_v0_1_4.xlsx"
+   "file": "zhipu/dist/20261115_智譜個股模型_v0_1_5.xlsx"
   },
   "cash": {
    "basis": "現金流",
@@ -11186,7 +11186,7 @@
      "Funding!I16"
     ]
    ],
-   "file": "zhipu/dist/20261106_智譜個股模型_v0_1_4.xlsx"
+   "file": "zhipu/dist/20261115_智譜個股模型_v0_1_5.xlsx"
   }
  },
  "OpenAI": {

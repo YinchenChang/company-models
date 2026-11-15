@@ -159,6 +159,7 @@ cfg = {
         {"id": "thesis", "title": "命題與核心問題", "blocks": [
             {"type": "h3", "text": "命題"},
             {"type": "list", "items": [f"@README!A{RL['show'] + k}" for k in (1, 2, 3)]},
+            {"type": "note", "parts": [f"@README!A{RL['ksens13']}"]},
             {"type": "list", "collapse": True, "summary": "展開：命題回覆（依本模型計算的答案）", "items": [f"@README!A{RL['ans'] + k}" for k in (1, 2, 3)]},
             {"type": "list", "collapse": True, "summary": "展開：主要失效條件（出現任一可觀察證據，結論須重估）", "items": [f"@README!A{RL['fail'] + k}" for k in (1, 2, 3)]},
             theme_gate,
@@ -274,7 +275,7 @@ cfg = {
             {"type": "h3", "text": "附錄：驅動 → 推導對照表（查核用）"},
             {"type": "list", "collapse": True, "summary": "展開：每頁的輸入、推導量與因果方向", "items": [f"@README!A{RL['drv'] + k}" for k in range(1, 6)]},
             {"type": "h3", "text": "附錄：版本要點與目標價變動拆解"},
-            {"type": "list", "collapse": True, "summary": "展開：版本要點", "items": [f"@README!A{RL['v060']}"] + ([f"@README!A{RL['dec']}"] if "dec" in RL else [])},
+            {"type": "list", "collapse": True, "summary": "展開：版本要點", "items": [f"@README!A{RL['v061']}", f"@README!A{RL['v060']}"] + ([f"@README!A{RL['dec']}"] if "dec" in RL else [])},
             {"type": "h3", "text": "風險登錄（未進主模型的尾部風險）"},
             {"type": "list", "collapse": True, "summary": "展開：風險、是否建模、理由、觀察指標", "items": [f"@README!A{RL['risk'] + k}" for k in range(1, 7)]},
             {"type": "h3", "text": "「未取得」與「找不到」清單"},

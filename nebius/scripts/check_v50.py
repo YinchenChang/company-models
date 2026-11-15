@@ -26,6 +26,18 @@ for i in range(3):
         n += 1
         if abs(v[0] + v[1] + v[2] + v[3] + v[4] - v[5]) > 1e-6: fail.append(f"CF 現金恆等式 情境{'ABC'[i]} {c}")
         if v[5] < 2 - 1e-6: fail.append(f"CF 期末現金低於最低現金 情境{'ABC'[i]} {c}")
+# Andy 2026-11-15：每 MW 收入比照 CoreWeave——k 的構成參數須與 coreweave/dist 現行 xlsx 相同（隨需占比、計費比例等公司事實除外）
+import glob, os
+_cw = sorted(glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "coreweave", "dist", "*CoreWeave個股模型_v*.xlsx")))
+if _cw:
+    def _inv(wb_):
+        I_ = wb_["In"]; return {I_.cell(r, 1).value: I_.cell(r, 5).value for r in range(1, I_.max_row + 1) if I_.cell(r, 1).value}
+    a_, b_ = _inv(wb), _inv(openpyxl.load_workbook(_cw[-1], data_only=True))
+    for k_ in ("p_long", "p_spot", "gh_h100", "he_h100", "he_gb200", "he_gb300", "he_vr200", "k_long", "k_spot", "k_adj"):
+        n += 1
+        if a_.get(k_) is None or b_.get(k_) is None or abs(a_[k_] - b_[k_]) > 1e-9: fail.append(f"k 構成與 CoreWeave 不同：{k_} {a_.get(k_)} vs {b_.get(k_)}（{os.path.basename(_cw[-1])}）")
+else:
+    print("（找不到 coreweave/dist，略過 k 構成比對）")
 print(f"檢查列與收支恆等式：{n} 項；" + ("全部通過" if not fail else f"失敗 {len(fail)}"))
 for f in fail[:20]: print("  -", f)
 sys.exit(1 if fail else 0)

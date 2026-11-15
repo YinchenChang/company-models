@@ -1,0 +1,5 @@
+﻿key,col,old,new,source,reason
+mw_xai,J,,800,mag/extract/docs/2026Q3/spacex_424B4.pdf（SRC_GL_346）,對帳單 20261115 SpaceX／xAI：2025 年底改讀公司揭露（原空白，由 Epoch 晶片換算 569.8 MW）
+mw_xai,C,未說明,IT,spacex_424B4 MD&A Key Business Metrics 定義,公司定義不含設施負載＝IT；數值不變（Players 只對「設施」換算）
+mw_xai,F,SRC_GL_201,SRC_GL_346,builder Sources,2025 值改讀 424B4；2026 目標來源 SRC_GL_201 寫在說明欄
+mw_xai,G,2025 年底由 Epoch 晶片 × k（Y0）；2026 年底目標 >2 GW（B#46 屬實；nameplate compute）；2027「接近 10 GW」未納入（S4 tgt_xai_27）,2025 年底＝800 MW：SpaceX 424B4 Summary 分部營運資料表 AI 段 Nameplate compute draw 2025-12-31 0.8 GW（Interested-party：公司自訂 KPI、法定文件揭露的期末值；SRC_GL_346）；口徑 IT（MD&A Key Business Metrics：GPU 安裝數 × 各自 all-in 功耗，不含冷卻、配電損失與設施負載）。2026 年底目標 >2 GW（B#46 屬實；nameplate compute，SRC_GL_201）；2027「接近 10 GW」未納入（S4 tgt_xai_27）。【v0.3.3（2026-11-15）對帳單 20261115 SpaceX／xAI；Decisions GL01-108】2025 原為空白（由 Y0 Epoch chip_xai 308 MW × k_chip2it 1.85＝569.8 MW 推得）；C 欄原值「未說明」。2024 年底公司揭露 0.3 GW 未入（待辦）,對帳單 20261115,說明更新（原文保留）

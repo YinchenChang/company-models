@@ -17,6 +17,7 @@
 7. 公司未揭露季末雲端在役 MW：2026 年雲端在役 MW 為明列假設（In mw_q2、mw_q3、mw_ye26），公司揭露後改為實績並升版。
 8. 三層協調：Coord 頁依 `docs/plan/三層基準協調規則.md` 與 `tools/coord/README.md`；Wattonomics 層級值先用 `tools/coord/trace_wattonomics.py --player wyfi` 追公式再判定同源。
 9. 金額單位百萬美元（US$M）、股數百萬股；託管（NC-1、MTL、代管服務）以 In 頁 H 節路徑進 Thesis 託管列（三情境相同），只計已簽合約與公司目標的打折值。
+10. Comparable 為分部加總（Andy 2026-11-15）：託管分部（NC-1、MTL、代管服務、其他）FY2028 EBITDA × 上市資料中心同業（Val 0.2b 表）前瞻 EV/EBITDA 中位數，雲端分部 × 新雲同業中位數；營業費用依營收比例分攤；DCF 不變。`scripts/check_v50.py` 檢查 In `sotp_on`＝1，Val 檢查列核對兩分部 EBITDA 合計＝調整後 EBITDA。倍數須取自可查證來源並標等級，查不到就留空並回報，不得編造。
 
 ## 個股模型共通規格
 `docs/plan/個股模型原則_命題加營收分部.md`、`docs/plan/個股DCF標準規格.md`、`docs/plan/個股HTML版面規格.md`、`docs/plan/自算產業β_20261105.md`。
