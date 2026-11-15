@@ -1,5 +1,6 @@
 # 電源散熱次產業（奇鋐、雙鴻、光寶、健策）版面 v1.3＋三層協調 C0（實績）共通後處理（2026-11-15）。
 # 樣板：台達電 delta/v056_post.py、delta/v057_post.py（NVIDIA v0.3.10 版面）；各公司資料夾放同一份本檔，公司差異在 <資料夾>/v13_post.py 的設定。
+# 2026-11-15 起高速 CCL／PCB 四家（台光電、台燿、金像電、勝宏）共用：C 可選 rev_label、ni_label（PL 情境 B 區塊的營收、淨利列名），其餘向下相容。
 # 只新增，不改既有數值格（以 tools/xlsx_diff.py 對前一版逐格比對驗證）：
 #   Hist 頁（新）：損益表歷史 FY2022–FY2025；PL 頁末：標準損益表（FY2023A–FY2031E）；RevDCF 頁（新）：反向 DCF；
 #   Val 頁末 0.7：四個目標價；Sens 頁末：加權目標價相對基準；README 頁末：v1.3 白話列；
@@ -97,7 +98,7 @@ def pl_standard(wb, CR, C):
     P = wb["PL"]
     rb = blockB(P)
     g = lambda label: lab(P, label, rb, exact=True, end=rb + 70)
-    B = dict(rev=g("營收"), gp=g("毛利"), opx=g("營業費用"), oi=g("營業利益"), nop=g(C.get("nop_label", "業外收益")), ni=g("歸屬母公司淨利"), sh=g("股數"), eps=g("EPS"))
+    B = dict(rev=g(C.get("rev_label", "營收")), gp=g("毛利"), opx=g("營業費用"), oi=g("營業利益"), nop=g(C.get("nop_label", "業外收益")), ni=g(C.get("ni_label", "歸屬母公司淨利")), sh=g("股數"), eps=g("EPS"))
     if C.get("ext_rows"):   # 延伸期（FY2030–FY2031）在別處的模型（例：光寶科摘要表 H–J 欄）
         X = C["ext_rows"](P)
     else:
@@ -199,7 +200,7 @@ def revdcf(wb, C):
     vb = lambda p: f"Val!$B${lab(V, p)}"
     ncr = f"Val!$C${lab(V, '淨現金滾到評價日')}"
     feps, pmed, dcf_tp, coef = vb("12 個月後的前瞻 EPS（情境加權）"), vb("同業前瞻 P/E 中位數"), vb("DCF 目標價（情境加權）"), vb("相對倍數調整係數")
-    rb = blockB(P); r26 = lab(P, "營收", rb, exact=True)
+    rb = blockB(P); r26 = lab(P, C.get("rev_label", "營收"), rb, exact=True)
     RV["A1"] = (f"RevDCF — 反向 DCF：現價隱含什麼（{C['ver']} 起；個股 HTML 版面規格 v1.3）。一次只動一個驅動、其餘維持基準，反解到「現價」；全部為 Excel 公式（DCF 對各年營業利益與營收倍數為線性，用封閉解；WACC 用二分法）。"
                 "本頁只讀 DCF、Val、PL、In 頁，無任何頁引用本頁，不影響目標價")
     RV["A1"].font = BOLD
