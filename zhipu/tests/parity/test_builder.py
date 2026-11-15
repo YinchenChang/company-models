@@ -181,3 +181,20 @@ def test_reverse_not_fed_back(wb):
             for c in row:
                 if isinstance(c.value, str) and c.value.startswith("="):
                     assert "Reverse!" not in c.value and "RVS_" not in c.value, f"{ws.title}!{c.coordinate}"
+
+
+def test_v015_coord_pl_not_fed_back():
+    """v0.1.5 Coord（三層協調）、PL（標準損益表）只列示：其他頁的公式不得引用 Coord!、PL! 或 COORD_／PL_ 名稱。"""
+    import re
+    import openpyxl
+    wb = openpyxl.load_workbook(current_model_path())
+    assert "Coord" in wb.sheetnames and "PL" in wb.sheetnames
+    bad = []
+    for ws in wb.worksheets:
+        if ws.title in ("Coord", "PL"):
+            continue
+        for row in ws.iter_rows():
+            for c in row:
+                if isinstance(c.value, str) and c.value.startswith("=") and re.search(r"\bCoord!|\bPL!|\bCOORD_|\bPL_", c.value):
+                    bad.append(f"{ws.title}!{c.coordinate}")
+    assert not bad, bad[:10]

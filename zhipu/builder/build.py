@@ -36,9 +36,10 @@ from tk_link import PENDING_NOTE, TABLE_NOTE, read_snapshot  # noqa: E402
 import z2  # noqa: E402
 import z3  # noqa: E402
 import z4  # noqa: E402
+import z5  # noqa: E402
 
-VERSION = "v0.1.4"
-VERSION_DATE = "2026-11-06"   # v0.1.4：只換現價；v0.1.3：README A1 顯示版本日期（--date 仍為 Tokenomics／OpenAI 快照讀取日）
+VERSION = "v0.1.5"
+VERSION_DATE = "2026-11-15"   # v0.1.4：只換現價；v0.1.3：README A1 顯示版本日期（--date 仍為 Tokenomics／OpenAI 快照讀取日）
 SRC_YAML = ROOT / "data" / "zhipu_src.yaml"
 INP_YAML = ROOT / "data" / "zhipu_inputs.yaml"
 REGISTRY_PATH = HERE / "id_registry.json"
@@ -143,6 +144,8 @@ def sheet_readme(wb, D, snap, oai, date, summary):
         ("Checks", "C01 起；CHK_Errors 必須為 0。WARN（ARR、η 合理範圍、國產晶片 GW 對照）與 INFO 不計入。"),
         ("標記", "Verified／Interested-party／Analogy／Assumed／Derived／Decision（Analogy、Assumed 一律附區間）。"),
         ("分層", "公司財務原始數據→SRC_ZP；AI 技術與算力→TK_Link（取自 Tokenomics）；假設→Inputs；OpenAI 對照→OAI_Link（不進計算）。"),
+        ("v0.1.5 變動", "個股 HTML 版面 v1.3 與三層協調（工作單 docs/workorders/20261114_第二批13家_v1.3與三層協調.md；規則 v1.4.2）：新頁 PL（標準損益表 FY2023–FY2030，非 IFRS 經調整；歷史取 SRC_ZP，預測取 Cost／Funding）、"
+                         "新頁 Coord（讀取層級；C0 公司實績 vs 層級隱含值：Wattonomics 無智譜玩家，四列皆無可比實績，對帳中 0）。兩頁只列示、不被計算頁引用；其餘工作表數值與 v0.1.4 逐格相同。本模型沒有目標價與評等（Reverse 只作反向對照）。"),
     ]
     for i, (a, b) in enumerate(lines):
         put(ws, f"A{4 + i}", a, F_BOLD)
@@ -409,6 +412,8 @@ def main():
     Z.update(z3.build(wb, D, Z, snap))
     Z.update(z4.build(wb, D, Z))
     z2.fill(wb, Z)
+    z5.build_pl(wb, D, Z)                # v0.1.5：標準損益表（只列示）
+    z5.build_coord(wb, D, Z, snap)       # v0.1.5：三層協調（只列示）
     # 結構掃描（結果寫入 Checks 作為常數；test_builder 另行逐格驗證）
     e6 = sum(len(e6_violations(wb[s])) for s in CALC_SHEETS if s in wb.sheetnames)
     oref = len(oai_refs(wb))
