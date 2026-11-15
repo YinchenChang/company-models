@@ -77,6 +77,10 @@ TAN25 = "https://www.ajinomoto.com/cms_wp_ajnmt_global/wp-content/uploads/pdf/20
 TANQ1 = "https://news.ajinomoto.co.jp/2026/08/2026_08_06_03.pdf"
 SUMQ1 = "https://www.ajinomoto.co.jp/company/jp/ir/event/presentation/main/011111114/teaserItems1/00/linkList/01/link/FY25Q4_Results_J.pdf"
 PRQ1 = "https://www.ajinomoto.co.jp/company/jp/ir/event/presentation/main/011111114/teaserItems1/00/linkList/03/link/FY25Q3_Presentation_J.pdf"
+# v0.3.6（2026-11-15）：2027 年 3 月期 第 2 四半期（中間期）決算短信（TDnet，2026-11-09）、同日決算概要（FM 子部門）與セグメント別修正業績予想
+TAN2Q = "https://www.release.tdnet.info/inbs/140120261106566777.pdf"
+SUM2Q = "https://www.ajinomoto.co.jp/company/jp/ir/event/presentation/main/0111111110/teaserItems1/00/linkList/01/link/FY26-2Q_Results_J.pdf"
+REV2Q = "https://www.ajinomoto.co.jp/company/jp/ir/event/presentation/main/0111111110/teaserItems1/00/linkList/00/link/FY26Q2_Forecast_J.pdf"
 ASV = "https://www.ajinomoto.com/sustainability/pdf/2026/ASV_Report_2026_A4_en_014-015.pdf"
 TF26 = "https://www.trendforce.com/news/2026/05/08/news-ajinomoto-ramps-chip-packaging-push-with-%C2%A51-2b-land-buy-for-new-plant-in-2032-abf-margins-top-50-on-ai-boom/"
 TF25 = "https://www.trendforce.com/news/2025/04/01/news-japanese-firm-ajinomoto-to-invest-jpy-25-billion-by-2030-to-expand-abf-production/"
@@ -97,7 +101,8 @@ SWS = "https://www.simplywall.st/stocks/jp/food-beverage-tobacco/tse-2802/ajinom
 STO = "https://www.stockopedia.com/share-prices/ajinomoto-co-TYO:2802/"
 KY = "https://kabuyoho.jp/report?bcode=2802"
 SAP = "https://stockanalysis.com/quote/{}/statistics/"
-URLNAME = {TAN25: "公司：2026 年 3 月期決算短信（2026-05-07）", TANQ1: "公司：2027 年 3 月期 Q1 決算短信（2026-08-06）", SUMQ1: "公司：Q1 決算概要（分部門、子部門；2026-08-06）",
+URLNAME = {TAN2Q: "公司：2027 年 3 月期 第 2 四半期（中間期）決算短信（2026-11-09，TDnet）", SUM2Q: "公司：第 2 四半期 決算概要（FM 子部門；2026-11-09）",
+           REV2Q: "公司：セグメント別修正業績予想（2026-11-09）", TAN25: "公司：2026 年 3 月期決算短信（2026-05-07）", TANQ1: "公司：2027 年 3 月期 Q1 決算短信（2026-08-06）", SUMQ1: "公司：Q1 決算概要（分部門、子部門；2026-08-06）",
            PRQ1: "公司：2026-08-06 IR 簡報（業績預想、AFT 實績、中東影響）", ASV: "公司：ASV Report 2026 分部門回顧", TF26: "TrendForce 2026-05-08（引日經、朝日電視）",
            TF25: "TrendForce 2025-04-01（引日經）", EDGX: "EdgeX 2026-08-08", PAL: "Palliser Capital 價值提升計畫 2026-03（股東行動派）", DBS: "DBS 2026-08-12",
            TN: "TechNews 2026-06-23（引 MoneyDJ／日經）", BGF: "BigGo Finance 2026-02-06", SA: "stockanalysis.com（統計）", SAF: "stockanalysis.com（預估）", SAR: "stockanalysis.com（比率）",
@@ -138,31 +143,44 @@ inp("c_g", "ABF 每單位成本年增（新產能折舊、原料）", "%", 0.0, 
 
 sec("C. 其他事業（不隨 AI 情境）")
 inp("g_sf", "調味料・食品營收年增", "%", 0.02, 0.04, 0.06, "Assumed", TAN25 + "：FY2025 +4.6%；FY2026 預測 +6.6%（含匯率）", "—")
-inp("m_sf", "調味料・食品事業利益率（FY2027 起）", "%", 0.135, "=f_sfbp/f_sf", 0.155, "Derived", "FY2026 預測 145.9 ÷ 998.6（" + SUMQ1 + "）", "FY2025 15.3%（143.0 ÷ 936.9）")
+inp("m_sf", "調味料・食品事業利益率（FY2027 起）", "%", 0.135, "=f_sfbp/f_sf", 0.155, "Derived", "FY2026 預測（2026-11-09 修正）145.9 ÷ 1,015.9（" + REV2Q + "；v0.3.5 為 8-06 預測 145.9 ÷ 998.6）", "FY2025 15.3%（143.0 ÷ 936.9）")
 inp("g_ff", "冷凍食品營收年增", "%", 0.0, 0.03, 0.05, "Assumed", "FY2025 +0.3%；FY2026 預測 +7.0%（含匯率）", "—")
 inp("m_ff", "冷凍食品事業利益率（FY2027 起）", "%", 0.03, 0.045, 0.06, "Assumed", "FY2024 4.5%、FY2025 2.9%、FY2026 預測 3.9%（公司）", PAL + "：要求冷凍食品重整，ROIC 由約 3% 提高到 8%")
 inp("g_ho", "ヘルスケア等（扣除 FM）營收年增：生技醫藥 CDMO、胺基酸、其他", "%", 0.02, 0.05, 0.08, "Assumed", "1Q FY26：生技醫藥＆原料 +11%（胺基酸 +21%、CDMO +2%）、其他 +12%（" + SUMQ1 + "）", "—")
-inp("m_ho", "ヘルスケア等（扣除 FM）事業利益率（FY2027 起）", "%", 0.05, "=(f_hobp-f_fmbp)/(f_ho-f_fm)", 0.09, "Derived", "FY2026 預測 (85.0 − 65.5) ÷ (406.8 − 120.6)", "FY2025 (66.2 − 54.6) ÷ (341.5 − 102.5)＝4.9%")
+inp("m_ho", "ヘルスケア等（扣除 FM）事業利益率（FY2027 起）", "%", 0.05, "=(f_hobp-f_fmbp)/(f_ho-f_fm)", 0.09, "Derived", "FY2026 預測（2026-11-09 修正）(96.0 − 76.5) ÷ (419.2 − 133.0)（v0.3.5 以 8-06 預測 (85.0 − 65.5) ÷ (406.8 − 120.6)）", "FY2025 (66.2 − 54.6) ÷ (341.5 − 102.5)＝4.9%")
 inp("g_cc", "全社共通費年增（負值，費用）", "%", 0.02, 0.03, 0.05, "Assumed", "FY2025 +6.9%（39.9 → 42.6）；FY2026 預測 +8.5%（46.2）", "—")
 
 sec("D. 淨利與股數（FY2027 起）")
-inp("ni_bp", "淨利（歸屬母公司）÷ 事業利益", "x", 0.58, 0.62, 0.66, "Derived", "FY2026 預測 123.5 ÷ 202.0＝0.611（" + TANQ1 + "）", "FY2025 0.743（含本社土地出售利益）、FY2024 0.441（減損）；2027-04 吸收合併味之素ファインテクノ可能有稅務正面影響（金額未定，" + PRQ1 + "）")
-inp("sh_g", "股數年變動（自社株買回）", "%", -0.03, -0.015, 0.0, "Assumed", "期中平均股數 FY2024 10.07 億 → FY2025 9.73 億 → 1Q FY26 9.56 億（" + TANQ1 + "）", "買回計畫金額：未找到")
+inp("ni_bp", "淨利（歸屬母公司）÷ 事業利益", "x", 0.58, 0.62, 0.66, "Derived", "FY2026 預測 123.5 ÷ 202.0＝0.611（" + TANQ1 + "）；2026-11-09 修正後 135.0 ÷ 210.0＝0.643、上半年實績 73.311 ÷ 108.603＝0.675（" + TAN2Q + "）；本版基準值 0.62 不改（待判斷）", "FY2025 0.743（含本社土地出售利益）、FY2024 0.441（減損）；2027-04 吸收合併味之素ファインテクノ可能有稅務正面影響（金額未定，" + PRQ1 + "）")
+inp("sh_g", "股數年變動（自社株買回）", "%", -0.03, -0.015, 0.0, "Assumed", "期中平均股數 FY2024 10.07 億 → FY2025 9.73 億 → 1Q FY26 9.56 億（" + TANQ1 + "）→ 上半年 9.547 億（" + TAN2Q + "）", "上半年自己株式取得 38.569 十億日圓（中間 CF）；買回計畫金額：未找到")
 
-sec("E. FY2026 錨點（公司 2026-08-06 上修後預測；Q2 決算後更新）")
-for k, lab, v in (("f_rev", "營收", 1732.0), ("f_sf", "調味料・食品營收", 998.6), ("f_ff", "冷凍食品營收", 310.6), ("f_ho", "ヘルスケア等營收", 406.8), ("f_oth", "その他營收", 15.8),
-                  ("f_fm", "  其中 ファンクショナルマテリアルズ（電子材料等）營收", 120.6), ("f_bp", "事業利益", 202.0), ("f_sfbp", "調味料・食品事業利益", 145.9),
-                  ("f_ffbp", "冷凍食品事業利益", 12.1), ("f_hobp", "ヘルスケア等事業利益", 85.0), ("f_othbp", "その他事業利益", 5.1), ("f_cc", "全社共通費", -46.2),
-                  ("f_fmbp", "  其中 ファンクショナルマテリアルズ事業利益", 65.5), ("f_oi", "營業利益", 184.2), ("f_ni", "淨利（歸屬母公司）", 123.5)):
-    inp(k, f"FY2026 {lab}預測", "¥B", None, v, None, "Interested-party", SUMQ1,
-        "期初 1,723.0（" + TAN25 + "）" if k == "f_rev" else ("期初 197.0；中東情勢（原油 110 美元、158 日圓）可能 −25 十億（" + PRQ1 + "）" if k == "f_bp" else
-        ("期初 111.6（＋9.0 全數來自電子材料，" + EDGX + "）" if k == "f_fm" else ("期初 60.5（＋5.0）" if k == "f_fmbp" else ("期初 120.0" if k == "f_ni" else "—")))))
-inp("f_eps", "FY2026 EPS 預測（基本）", "¥", None, 129.84, None, "Interested-party", TANQ1, "期初 126.16")
+sec("E. FY2026 錨點（v0.3.6 起：公司 2026-11-09 第 2 四半期決算時修正後預測；v0.3.5 為 2026-08-06 預測）")
+F8 = {"f_rev": 1732.0, "f_sf": 998.6, "f_ff": 310.6, "f_ho": 406.8, "f_oth": 15.8, "f_fm": 120.6, "f_bp": 202.0, "f_sfbp": 145.9, "f_ffbp": 12.1, "f_hobp": 85.0,
+      "f_othbp": 5.1, "f_cc": -46.2, "f_fmbp": 65.5, "f_oi": 184.2, "f_ni": 123.5}   # 2026-08-06 預測（v0.3.5 錨點；只寫在說明欄）
+for k, lab, v in (("f_rev", "營收", 1767.0), ("f_sf", "調味料・食品營收", 1015.9), ("f_ff", "冷凍食品營收", 316.0), ("f_ho", "ヘルスケア等營收", 419.2), ("f_oth", "その他營收", 15.7),
+                  ("f_fm", "  其中 ファンクショナルマテリアルズ（電子材料等）營收", 133.0), ("f_bp", "事業利益", 210.0), ("f_sfbp", "調味料・食品事業利益", 145.9),
+                  ("f_ffbp", "冷凍食品事業利益", 9.1), ("f_hobp", "ヘルスケア等事業利益", 96.0), ("f_othbp", "その他事業利益", 5.1), ("f_cc", "全社共通費", -46.2),
+                  ("f_fmbp", "  其中 ファンクショナルマテリアルズ事業利益", 76.5), ("f_oi", "營業利益", 184.2), ("f_ni", "淨利（歸屬母公司）", 135.0)):
+    if k == "f_oi":
+        src, nt = TANQ1, "2026-11-09 修正後的營業利益（IFRS 営業利益）預測：未取得（決算短信摘要只列売上高、事業利益、親会社帰属利益、EPS），沿用 2026-08-06 預測 184.2；只用於展示，不進 EPS 與目標價"
+    elif k in ("f_rev", "f_bp", "f_ni"):
+        src, nt = TAN2Q, f"2026-08-06 預測 {F8[k]:,.1f}；" + {"f_rev": "期初 1,723.0（" + TAN25 + "）", "f_bp": "期初 197.0；8-06 中東情勢（原油 110 美元、158 日圓）可能 −25 十億（" + PRQ1 + "）", "f_ni": "期初 120.0"}[k]
+    elif k in ("f_fm", "f_fmbp"):
+        src, nt = REV2Q + "：ファンクショナルマテリアルズ " + ("營收 1,330 億日圓" if k == "f_fm" else "事業利益 765 億日圓"), f"2026-08-06 預測 {F8[k]:,.1f}；" + ("期初 111.6（＋9.0 全數來自電子材料，" + EDGX + "）" if k == "f_fm" else "期初 60.5（＋5.0）")
+    else:
+        src, nt = TAN2Q + "（セグメント別通期予想，億日圓 ÷ 100）", f"2026-08-06 預測 {F8[k]:,.1f}" + ("；公司合計與各事業加總的四捨五入差併入 PL 調整列" if k == "f_oth" else "")
+    inp(k, f"FY2026 {lab}預測", "¥B", None, v, None, "Interested-party", src, nt)
+inp("f_eps", "FY2026 EPS 預測（基本）", "¥", None, 141.78, None, "Interested-party", TAN2Q, "2026-08-06 預測 129.84；期初 126.16")
 for k, lab, v, f in (("q1_rev", "營收", 412.105, "#,##0.0"), ("q1_bp", "事業利益", 60.116, "#,##0.0"), ("q1_fm", "FM 營收", 33.1, "#,##0.0"), ("q1_fmbp", "FM 事業利益", 19.1, "#,##0.0"),
                      ("q1_ni", "淨利（歸屬母公司）", 36.452, "#,##0.0"), ("q1_eps", "基本 EPS", 38.11, "0.00")):
     inp(k, f"1Q FY26（2026-04～06）{lab}實績", "¥" if k == "q1_eps" else "¥B", None, v, None, "Verified", TANQ1 if k in ("q1_rev", "q1_bp", "q1_ni", "q1_eps") else SUMQ1,
         "年增：營收 +13%、事業利益 +27%、淨利 +13%" if k == "q1_rev" else ("年增：FM 營收 +54%、事業利益 +77%（" + SUMQ1 + "）" if k == "q1_fm" else "—"))
 
+for k, lab, v in (("h1_rev", "營收", 831.161), ("h1_bp", "事業利益", 108.603), ("h1_fm", "FM 營收", 73.3), ("h1_fmbp", "FM 事業利益", 42.9),
+                  ("h1_ni", "淨利（歸屬母公司）", 73.311), ("h1_eps", "基本 EPS", 76.79)):
+    inp(k, f"上半年 FY26（2026-04～09）{lab}實績", "¥" if k == "h1_eps" else "¥B", None, v, None, "Verified", SUM2Q + "（FM 子部門，億日圓 ÷ 100）" if k in ("h1_fm", "h1_fmbp") else TAN2Q + "（百萬日圓 ÷ 1000）",
+        {"h1_rev": "前年同期 738.881（+12.5%）；第二季單季＝上半年 − 1Q（Q 頁，Derived）", "h1_bp": "前年同期 86.754（+25.2%）", "h1_fm": "前年同期 44.9（+63%）；第二季 40.1", "h1_fmbp": "+82%；第二季 23.8",
+         "h1_ni": "前年同期 51.245", "h1_eps": "前年同期 52.18；期中平均股數 954,721,797 股"}[k])
 sec("F. FY2025 實績（2026 年 3 月期）")
 for k, lab, v in (("a_rev", "營收", 1583.719), ("a_sf", "調味料・食品營收", 936.926), ("a_ff", "冷凍食品營收", 290.308), ("a_ho", "ヘルスケア等營收", 341.504), ("a_oth", "その他營收", 14.979),
                   ("a_bp", "事業利益", 181.163), ("a_sfbp", "調味料・食品事業利益", 143.036), ("a_ffbp", "冷凍食品事業利益", 8.457), ("a_hobp", "ヘルスケア等事業利益", 66.202),
@@ -191,7 +209,7 @@ inp("fpe", "前瞻 P/E（2026-11-05 收盤 ÷ stockanalysis 前瞻 EPS）", "x",
 inp("cons_feps", "共識前瞻 12 月 EPS（＝取得時價格 ÷ 前瞻 P/E）", "¥", None, "=5051/32.76", None, "Derived", "stockanalysis 2026-09-25 價格 5,051 ÷ 前瞻 P/E 32.76", "DBS：FY26F 正常化 EPS 155")
 inp("cons_tp", "市場共識目標價（賣方平均）", "¥", 5800, 6321.43, 7300, "Interested-party", SWS + "：14 位平均 6,321（最高 7,300、最低 5,800；2026-10-26）",
     SAF + "：14 位平均 6,104、中位數 6,200（2026-08-07）；" + KY + "：5,906（2026-08）；高盛 6,500（" + TN + "）、DBS 6,200")
-inp("so", "期末發行股數（含庫藏）", "十億股", None, 0.977736, None, "Verified", TANQ1 + "：977,735,616 股；庫藏 23,173,875 股", "—")
+inp("so", "期末發行股數（含庫藏）", "十億股", None, 0.977735616, None, "Verified", TAN2Q + "：2026-09-30 977,735,616 股（與 03-31、06-30 同）；自己株式 26,419,939 股（06-30 為 23,173,875）", "—")
 
 sec("I. 目標價與收斂法參數（黃底；Assumed，Andy 可改）")
 TP_KEYS = []
@@ -225,11 +243,11 @@ YF_S = "Yahoo Finance 月報酬 2021-11～2026-10，對 日經 225 ^N225 迴歸�
 _US10 = ("美國財政部每日殖利率曲線 10 Yr：2026-10-23 5.00%（https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202610；2026-11-05 讀取）",
          "FRED DGS10 同序列；v0.3.2 現價日（2026-10-23）值，第三輪修正未改；只用於 Sens「美元口徑折現」（工作單第二輪修正，Andy 2026-11-05 23:16）")
 for _row in FD.in_rows(dict(
-        date="2026-12-31（統一評價日；FY2026 只計評價日後一季；v0.3.2 起資產負債表日 2026-06-30 的淨現金與投資以 stub 期滾到評價日）", amt="¥B", shu="十億股", ccy="¥",
+        date="2026-12-31（統一評價日；FY2026 只計評價日後一季；資產負債表日的淨現金與投資以 stub 期滾到評價日；v0.3.6 起資產負債表日 2026-09-30，v0.3.2–v0.3.5 為 2026-06-30）", amt="¥B", shu="十億股", ccy="¥",
         rf_us=(0.05, _US10[0], _US10[1]),
-        stub=dict(bs_date="2026-06-30", val_date="2026-12-31", bs_src=SA_BS + "（最新已公布一季：2027 年 3 月期第 1 季；第 2 季決算短信尚未公布）",
-                  div=(0, "Assumed", "2026-06-30 → 2026-12-31 無已宣告股利／買回：2026-09 基準日中間股利 ¥25（12 月支付）為公司預想，董事會決議隨中間決算（公司 IR 行事曆：2026-11-09 15:30 發表），2026-11-05 前未決議，不扣",
-                       "只扣已宣告者；若計入約 ¥25 × 股數 sh_v＝¥24B（每股 ¥25）")),
+        stub=dict(bs_date="2026-09-30", val_date="2026-12-31", bs_src=TAN2Q + "（最新已公布期間：2027 年 3 月期 第 2 四半期〔中間期〕決算短信 2026-11-09，要約中間連結財政状態計算書；v0.3.5 為 2026-06-30 stockanalysis）",
+                  div=("=26*sh_v", "Derived", "2026-09-30 → 2026-12-31 已宣告股利：中間股利每股 ¥26（2026-11-09 董事會決議，2026-12-02 支付；" + TAN2Q + "）× 期末流通股數 sh_v（951,315,677 股）",
+                       "已執行的自己株式取得（上半年 38.569 十億日圓）已反映在 9-30 現金與股數；10-01 起的買回：未取得，不扣（只扣已宣告者）")),
         rf=(0.02817, "財務省 國債金利情報（https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/jgbcme.csv）：2026-11-02 10 年期 2.817%（本月檔最早一日；2026-11-04 為 2.855%）",
             "Trading Economics 2026-11-05 為 2.76%（https://tradingeconomics.com/japan/government-bond-yield）；10 月逐日值未取得，取 v0.3.2 現價日（10-23）之後最近可得值；第三輪修正現價改 2026-11-04（同日 2.855%），rf 未改（不在該輪範圍）；同 Kioxia v0.5、Ibiden v0.5", "無風險利率（日本 10 年期公債殖利率，2026-11-02）"),
         beta_fixed=("=(beta_u-beta_du)*(1+(1-tax_w)*beta_de)", "=beta_u*(1+(1-tax_w)*beta_de)",
@@ -240,13 +258,13 @@ for _row in FD.in_rows(dict(
              "Andy 2026-11-05 20:45：非美國市場 ERP＝5%＋CRP，不設股權成本下限"),
         kd=("=rf+0.005", "Assumed", "日本 10 年期公債＋信用利差 0.5pt（A 級附近；借款利率未逐筆查）", "負債占資本約 10%"),
         tax_w=(0.306, "Assumed", "日本法定實效稅率約 30.6%（公司實際有效稅率：資料商未列，未找到）", "NOPAT 各年同用本值；淨利（PL）用 ni_bp 比例，不受本值影響"),
-        debt=("=561.919-52.498", "Derived", SA_BS + "：2026-06-30 Total Debt 561,919（含租賃）− 2026-03-31 長期租賃 52,498", "2026-06-30 租賃負債未單獨列示，以 03-31 值拆分（Assumed）"),
-        lease=(52.498, "Verified", SA_BS + "：2026-03-31 Long-Term Leases 52,498", "—"),
-        cash=(196.979, "Verified", SA_BS + "：2026-06-30 Cash & Short-Term Investments 196,979", "2026-03-31：106,693"),
-        inv=(189.162, "Verified", SA_BS + "：2026-06-30 Long-Term Investments 189,162（投資有價證券與權益法投資，政策持股為主）", "以帳面計入；Sens：不計"),
-        mi=("=73.845-0.496*0.89086*157.279/4.044+0.496*60.80*19.72/1000*157.279/4.044", "Verified／Derived", SA_BS + "：2026-06-30 Minority Interest 73,845；其中上市子公司 Ajinomoto (Malaysia) 部分改市值：− 帳面 49.6% × MYR 0.891B ＋ 市值 49.6% × 60.80 百萬股 × MYR 19.72（換日圓）", "Ajinomoto (Malaysia) Berhad（KLSE:AJI 2658）：味之素持股約 50.4%（合併子公司）；股數 60.80 百萬股、2026-06-30 權益 MYR 890.86M（stockanalysis.com）；股價 Yahoo Finance 日線收盤 2026-11-05 MYR 19.72（2658.KL）；匯率 Yahoo Finance 2026-11-05 USD/MYR 4.044、USD/JPY 157.279 交叉（v0.3.3：股價沿用 11-03 收盤 19.72、MYR 匯率沿用 FRED 10-30 4.0555、USD/JPY 158.469）；其餘子公司未上市，維持帳面（第三輪修正第 1、13 項）"),
-        sh=("=so-0.023173875", "Derived", "期末發行股數 so 0.977736 − 庫藏股 0.023174 十億股（" + TANQ1 + "）", "未來買回由 FCFF 支應，不另推股數"),
-        dps=(50, "Derived", "stockanalysis 股利頁（https://stockanalysis.com/quote/tyo/2802/dividend/）：2026-09 基準日中間股利 ¥25（2026-12 支付）；2027-03 期末、2027-09 中間股利假設同 ¥25（2027-06、2027-12 支付）", "評價日 2026-12-31 到目標時點 2027-12-31 之間兩次，共 ¥50（Assumed 股利不變）"),
+        debt=("=7.474+80.0+39.984+33.695+164.560+175.783", "Verified", TAN2Q + "（要約中間連結財政状態計算書 2026-09-30，百萬日圓 ÷ 1000）" + "：短期借入金 7,474＋コマーシャル・ペーパー 80,000＋1 年内償還予定の社債 39,984＋1 年内返済予定の長期借入金 33,695＋社債 164,560＋長期借入金 175,783＝501,496", "v0.3.5（2026-06-30，stockanalysis Total Debt 561,919 − 03-31 租賃 52,498）509.421；CP 為上半年新發行"),
+        lease=("=562.4-(7.474+80.0+39.984+33.695+164.560+175.783)", "Derived", TAN2Q + "：本文 有利子負債残高 5,624 億日圓 − 上列借款、社債、CP 合計 501.496＝租賃負債約 60.9（決算短信未單列租賃負債，含於その他の金融負債）", "v0.3.5 為 2026-03-31 長期租賃 52.498（stockanalysis）；有利子負債為億日圓四捨五入，租賃為差額（±0.05）"),
+        cash=("=159.401+21.444", "Verified", TAN2Q + "（要約中間連結財政状態計算書 2026-09-30，百萬日圓 ÷ 1000）" + "：現金及び現金同等物 159,401＋その他の金融資産（流動）21,444＝180,845", "與 v0.3.5 口徑（stockanalysis Cash & Short-Term Investments：現金＋流動金融資產）一致；2026-06-30 196.979、2026-03-31 106.693＋46.670"),
+        inv=("=139.510+46.256", "Verified", TAN2Q + "（要約中間連結財政状態計算書 2026-09-30，百萬日圓 ÷ 1000）" + "：持分法で会計処理される投資 139,510＋長期金融資産 46,256＝185,766", "v0.3.5 為 2026-06-30 stockanalysis Long-Term Investments 189.162（同口徑）；以帳面計入；Sens：不計"),
+        mi=("=71.635-0.496*0.89086*157.279/4.044+0.496*60.80*19.72/1000*157.279/4.044", "Verified／Derived", TAN2Q + "（要約中間連結財政状態計算書 2026-09-30，百萬日圓 ÷ 1000）" + "：非支配持分 71,635；其中上市子公司 Ajinomoto (Malaysia) 部分改市值：− 帳面 49.6% × MYR 0.891B ＋ 市值 49.6% × 60.80 百萬股 × MYR 19.72（換日圓）", "Ajinomoto (Malaysia) Berhad（KLSE:AJI 2658）：味之素持股約 50.4%（合併子公司）；股數 60.80 百萬股、權益 MYR 890.86M 為 2026-06-30 值（stockanalysis.com；2026-09-30 值未取得，沿用）；股價 Yahoo Finance 日線收盤 2026-11-05 MYR 19.72（2658.KL）；匯率 Yahoo Finance 2026-11-05 USD/MYR 4.044、USD/JPY 157.279 交叉；其餘子公司未上市，維持帳面。v0.3.5 帳面為 2026-06-30 stockanalysis 73.845"),
+        sh=("=so-0.026419939", "Derived", "期末發行股數 so 0.977735616 − 期末自己株式 0.026419939 十億股（含役員報酬 BIP 信託 1,151,800 股；2026-09-30；" + TAN2Q + "）＝951,315,677 股", "v0.3.5 為 2026-06-30 庫藏 0.023174（" + TANQ1 + "）；未來買回由 FCFF 支應，不另推股數"),
+        dps=(52, "Derived", TAN2Q + "：2027 年 3 月期 年間配當予想 ¥52（中間 26 已決議、期末予想 26；前回 50）；評價日後支付：2027-03 期末 ¥26（2027-06 支付）＋2027-09 中間 ¥26（假設同額，2027-12 支付）", "評價日 2026-12-31 到目標時點 2027-12-31 之間兩次，共 ¥52（Assumed 股利不變）；2026-12-02 支付的中間 ¥26 在評價日前，已在 stub 期扣除"),
         t_tgt=(1.0, "目標價為評價日後 12 個月（2027-12-31）"),
         fc_da=(None, "=da_rev", None, "Derived", "＝In 頁 da_rev（FY2025 實績：折舊攤銷 88.914 ÷ 營收 1,583.719＝5.6%）", "FY2027 起線性收斂到長期穩態（FY2032）"),
         fc_da_ss=("=(78.298/1439.231+86.461/1530.556+88.914/1583.719)/3", "Derived",
@@ -263,7 +281,7 @@ inp("beta_u_food", "產業無槓桿 β 中位數：自算 JP 食品（Blume 調�
     BETA_F + "：2802 2801 2809 2897 2269", "調味料・食品、冷凍食品、生技醫藥等本業")
 inp("beta_u_chem", "產業無槓桿 β 中位數：自算 JP 電子材料／載板（Blume 調整前；Blume 後 1.389）", "x", None, 1.58, None, "Derived",
     BETA_C + "：4062 4004 4063 4186 3110", "ファンクショナルマテリアルズ（ABF 增層膜等電子材料）")
-inp("beta_w_fm", "β 加權用：FM 事業利益 ÷ 全公司事業利益（FY2026 錨點）", "%", None, "=f_fmbp/f_bp", None, "Derived", "公司 FY2026 預測：FM 65.5 ÷ 事業利益 202.0（Q 頁）", "本業與 ABF 風險不同，以事業利益占比加權產業 β（Assumed 方法）")
+inp("beta_w_fm", "β 加權用：FM 事業利益 ÷ 全公司事業利益（FY2026 錨點）", "%", None, "=f_fmbp/f_bp", None, "Derived", "公司 FY2026 預測（2026-11-09 修正）：FM 76.5 ÷ 事業利益 210.0（v0.3.5 為 8-06 預測 65.5 ÷ 202.0；Q 頁）", "本業與 ABF 風險不同，以事業利益占比加權產業 β（Assumed 方法）")
 inp("beta_u", "產業無槓桿 β（採用值）＝Blume 調整（0.67 ×〔（1 − FM 占比）× 食品 ＋ FM 占比 × 電子材料〕＋ 0.33）", "x", None, "=0.67*((1-beta_w_fm)*beta_u_food+beta_w_fm*beta_u_chem)+0.33", None, "Derived",
     "自算產業 β（Andy 2026-11-05 22:55 對照表：JP 食品 0.437 × 68% ＋ JP 電子材料 1.389 × 32%＝0.742；本模型 FM 占比取 Q 頁 FY2026 錨點 32.4%）；用現金修正值：淨現金與投資另計，β 只對營業資產", "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）；β 低／高見 Sens")
 inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新加槓桿）", "x", None, 0.3, None, "Assumed", "工作單第二輪修正（Andy 2026-11-05 23:16 定案）：β 敏感度改為 β_u ± 0.3", "取代 v0.3.1 的加權中位數 × 0.8 再 Blume／中位數未調整")
@@ -296,7 +314,7 @@ def defname(name, ref):
 
 # ---------------- Q：實績與 FY2026 錨點 ----------------
 Q = wb.create_sheet("Q")
-Q["A1"] = "Q — FY2025 實績、1Q FY26 實績與 FY2026 錨點（¥B；EPS 日圓）。FY2026 錨點＝公司 2026-08-06 上修後的全年預測（Q1 公布時）；上半年決算（約 2026-11 上旬）後更新"
+Q["A1"] = "Q — FY2025 實績、1Q FY26 實績、FY2026 錨點與上半年／第二季實績（¥B；EPS 日圓）。FY2026 錨點＝公司 2026-11-09 第 2 四半期決算時修正後的全年預測（v0.3.6 起；v0.3.5 為 2026-08-06 預測）；I–K 欄為上半年實績（2026-11-09 決算短信）、第二季單季（＝上半年 − 1Q，Derived）與上半年 ÷ 錨點"
 Q["A2"] = ("公司不單獨揭露 ABF 營收；ファンクショナルマテリアルズ（FM，電子材料等）為ヘルスケア等的子部門，季度決算概要揭露其營收與事業利益。FY2025 FM 營收以 ASV Report 的 30% 占比推估（Derived），"
            "電子材料營收 100.7（媒體引公司）與子公司味之素ファインテクノ營收 98.4 為對照。FM 內 AI 用比例公司未揭露，以 In 頁 ai_sh（Assumed）切分")
 hdr(Q, 3, ["項目", "FY2025A", "1Q FY26（實績）", "FY2026 錨點", "年增（錨點 ÷ FY2025）", "1Q ÷ 錨點（進度）", "標記", "說明"])
@@ -317,9 +335,18 @@ for i, (k, lab, a, q1, f) in enumerate(QROWS, 4):
     Q[f"E{i}"].number_format = "0.0%"; Q[f"F{i}"].number_format = "0.0%"
     Q.cell(i, 7, "Derived" if k in ("fm", "hox", "hoxbp") else ("Verified／Interested-party" if k != "fmbp" else "Interested-party／Verified"))
     QR[k] = i
+# v0.3.6：上半年實績（I 欄；決算短信 2026-11-09，セグメント外部顧客への売上高與セグメント利益，百萬日圓 ÷ 1000；FM 為決算概要）、第二季單季（J＝I − C，Derived）、上半年 ÷ 錨點（K）
+H1Q = {"rev": "=h1_rev", "sf": 481.540, "ff": 148.910, "ho": 192.784, "fm": "=h1_fm", "hox": f"=I{QR['ho']}-I{QR['fm']}", "oth": 7.927, "bp": "=h1_bp", "sfbp": 77.506, "ffbp": 1.904,
+       "hobp": 47.471, "fmbp": "=h1_fmbp", "hoxbp": f"=I{QR['hobp']}-I{QR['fmbp']}", "othbp": 2.762, "cc": -21.041, "oi": 102.498, "ni": "=h1_ni", "eps": "=h1_eps"}
+hdr(Q, 3, ["項目", "FY2025A", "1Q FY26（實績）", "FY2026 錨點", "年增（錨點 ÷ FY2025）", "1Q ÷ 錨點（進度）", "標記", "說明", "上半年 FY26（實績）", "2Q FY26（＝上半年 − 1Q）", "上半年 ÷ 錨點（進度）"])
+for k, i in list(QR.items()):
+    fmt = "0.00" if k == "eps" else "#,##0.0"
+    Q[f"I{i}"] = H1Q[k]; Q[f"J{i}"] = f"=I{i}-C{i}"; Q[f"K{i}"] = f"=I{i}/D{i}"
+    if not isinstance(H1Q[k], str): Q[f"I{i}"].font = BLUE
+    Q[f"I{i}"].number_format = fmt; Q[f"J{i}"].number_format = fmt; Q[f"K{i}"].number_format = "0.0%"
 Q.cell(QR["fm"], 8, "FY2025＝0.30 × ヘルスケア等（ASV Report 占比）；1Q 與錨點為公司決算概要揭露值")
 Q.cell(QR["ni"], 8, "FY2025 含本社大樓土地出售利益（營業利益 199.4 > 事業利益 181.2），FY2026 預測淨利因此年減")
-Q.cell(QR["sf"], 8, "1Q 子部門值取自決算概要（億日圓 ÷ 100）")
+Q.cell(QR["sf"], 8, "1Q 子部門值取自決算概要（億日圓 ÷ 100）；上半年取決算短信セグメント外部顧客への売上高、セグメント利益（百萬日圓 ÷ 1000；Verified）")
 Q.cell(QR["cc"], 8, "費用（負值）")
 r = QR["eps"] + 2
 Q.cell(r, 1, "比率").font = BOLD; r += 1
@@ -330,17 +357,18 @@ for k, lab, fb, fc, fd in (("fmm", "FM 事業利益率", f"=B{QR['fmbp']}/B{QR['
                            ("nibp", "淨利 ÷ 事業利益", f"=B{QR['ni']}/B{QR['bp']}", f"=C{QR['ni']}/C{QR['bp']}", f"=D{QR['ni']}/D{QR['bp']}"),
                            ("sh", "股數（十億股＝淨利 ÷ EPS）", f"=B{QR['ni']}/B{QR['eps']}", f"=C{QR['ni']}/C{QR['eps']}", f"=D{QR['ni']}/D{QR['eps']}")):
     Q.cell(r, 1, lab); Q[f"B{r}"] = fb; Q[f"C{r}"] = fc; Q[f"D{r}"] = fd
+    Q[f"I{r}"] = fc.replace("C", "I"); Q[f"J{r}"] = fc.replace("C", "J"); Q[f"I{r}"].number_format = Q[f"J{r}"].number_format = "0.0%" if k != "sh" else "0.0000"
     for c in "BCD": Q[f"{c}{r}"].number_format = "0.0%" if k != "sh" else "0.0000"
     Q.cell(r, 7, "Derived"); QR[k] = r; r += 1
 Q.cell(QR["fmbpsh"], 8, "DBS：FY25 30%、FY26 修正預測 32%（Interested-party）")
-Q.cell(QR["fmm"], 8, "1Q 達 58%；公司全年預測隱含下半年 FM 事業利益率約 53%（保守）")
-Q.cell(r + 1, 1, "讀法：FM 只占營收約 7%，卻占事業利益約三分之一；1Q 的 FM 營收、事業利益分別達全年預測的 27%、29%，公司全年預測隱含下半年放緩，屬保守。").font = BOLD
+Q.cell(QR["fmm"], 8, "1Q 58%、上半年 59%（第二季 59%）；公司 11-09 修正後全年預測 76.5 ÷ 133.0＝57.5%，隱含下半年約 56%")
+Q.cell(r + 1, 1, "讀法：FM 只占營收約 7%，卻占事業利益約三分之一；上半年 FM 營收、事業利益分別達公司 11-09 修正後全年預測的 55%、56%（全公司營收 47%、事業利益 52%），修正後預測隱含下半年 FM 營收 59.7（上半年 73.3）。").font = BOLD
 Q_NOTE = r + 1
 for nm, k in (("rev", "rev"), ("sf", "sf"), ("ff", "ff"), ("ho", "ho"), ("fm", "fm"), ("hox", "hox"), ("oth", "oth"), ("bp", "bp"), ("sfbp", "sfbp"), ("ffbp", "ffbp"),
               ("fmbp", "fmbp"), ("hoxbp", "hoxbp"), ("othbp", "othbp"), ("cc", "cc"), ("ni", "ni"), ("eps", "eps"), ("sh", "sh")):
     defname(f"q25_{nm}", f"Q!$B${QR[k]}"); defname(f"q26_{nm}", f"Q!$D${QR[k]}")
 Q.column_dimensions["A"].width = 48
-for c in "BCDEF": Q.column_dimensions[c].width = 14
+for c in "BCDEFIJK": Q.column_dimensions[c].width = 14
 Q.column_dimensions["G"].width = 24; Q.column_dimensions["H"].width = 80
 Q.freeze_panes = "B4"
 
@@ -565,8 +593,8 @@ _eb = lambda s_, y: f"PL!{FC[y]}{PB[s_]['bp']}" if y <= 2029 else f"=PL!{FC[y]}{
 DPATHS = [dict(name=s_, label=f"情境 {s_}（{ {'A': '順利', 'B': '平平', 'C': '不如預期'}[s_] }）", rev={y: f"PL!{FC[y]}{PB[s_]['rev']}" for y in FY_X}, rev0=f"PL!C{PB[s_]['rev']}",
               ebit={y: _eb(s_, y) for y in FY_X}, tax={y: "tax_w" for y in FY_X}, ebit_note="FY2030 起＝淨利 ÷ FY2029（淨利 ÷ 事業利益）") for s_ in SC]
 RDCF = FD.write_detail(DCFW, 4, DPATHS, FY_X, 0.25, title="三情境 FCFF 明細（¥B；FY2026＝2026-04～2027-03，評價日 2026-12-31 後只計一季）", stub=True)   # v0.3.2：stub 期淨現金滾到評價日（模型無逐年資本支出／折舊列，維持占營收比例）
-RDCF["end"] = FD.write_checks(DCFW, RDCF["end"], nc_bs="196.979+189.162-(561.919-52.498)-52.498-mi_v",
-                              nc_note="2026-06-30 資產負債表（¥B；stockanalysis；最近一季，v0.3.2 起以 stub 期滾到評價日 2026-12-31）：現金 196.979＋長期投資 189.162 − 債務 509.421 − 租賃 52.498 − 少數股權 mi_v（73.845 帳面，其中 Ajinomoto (Malaysia) 改市值；v0.3.3）") + 1
+RDCF["end"] = FD.write_checks(DCFW, RDCF["end"], nc_bs="(159.401+21.444)+(139.510+46.256)-562.4-mi_v",
+                              nc_note="2026-09-30 資產負債表（¥B；第 2 四半期決算短信；v0.3.6 起，以 stub 期滾到評價日 2026-12-31）：現金 159.401＋流動金融資產 21.444＋持分法投資 139.510＋長期金融資產 46.256 − 有利子負債 562.4（借款、社債、CP 501.496＋租賃差額）− 少數股權 mi_v（71.635 帳面，其中 Ajinomoto (Malaysia) 改市值）") + 1
 DCFW.column_dimensions["A"].width = 58; DCFW.column_dimensions["B"].width = 40
 for _c in "CDEFGHI": DCFW.column_dimensions[_c].width = 13
 assert FD.summary_rows(stub=True) <= 20   # 摘要寫在第 5–24 列，0.2 節第 26 列不動
@@ -610,7 +638,7 @@ tset(49, "grade", "上檔空間級距", ['=IF(B43>0.5,"大於 50%",IF(B43>0.25,"
 tset(50, "rec", "投資建議", ['=IF(B43>0.5,"強力買進",IF(B43>0.25,"買進",IF(B43>=-0.25,"中立",IF(B43>=-0.5,"放空","強力放空"))))', None, None], "@",
      "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
 V.cell(51, 1, "目標價方法")
-V["B51"] = ("DCF（v0.3 標準版）：無槓桿自由現金流 FCFF＝NOPAT（事業利益 ×（1 − 30.6%））＋折舊 − 資本支出 − 營運資金增加，以 WACC 折到 2026-12-31（期中慣例；FY2026 只計評價日後一季；淨現金沿用 2026-06-30 資產負債表），"
+V["B51"] = ("DCF（v0.3 標準版）：無槓桿自由現金流 FCFF＝NOPAT（事業利益 ×（1 − 30.6%））＋折舊 − 資本支出 − 營運資金增加，以 WACC 折到 2026-12-31（期中慣例；FY2026 只計評價日後一季；淨現金為 2026-09-30 資產負債表以 stub 期滾到評價日），"
             "終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, 日本 10 年期公債殖利率)、RONIC＝WACC；β＝自算 JP 食品與 JP 電子材料產業無槓桿 β 依 FY2026 事業利益占比加權、Blume 調整後重新加槓桿，ERP 5%＋日本 CRP；EV 加淨現金與投資、減少數股權 ÷ 股數，以 ke 推到 12 個月後並扣期間股利（DCF 頁、tools/fcff_dcf.py）。"
             "Comparable：龜甲萬、日清食品、明治、Kewpie、McCormick、Nestlé 前瞻 P/E 中位數（食品同業，不含 A 股）× 2027-11～2028-10 的 EPS（5/12 × FY2027＋7/12 × FY2028）。"
             "偏誤：食品同業倍數未反映 ABF 的獨占與成長（Comparable 偏低）；食品 β 低使 WACC 約 7%、終值占 DCF 企業價值約七成，DCF 對 WACC 與永續成長率敏感（Sens 頁）。"
@@ -795,14 +823,14 @@ def rec(label, ref, getter, src, note="", fmt="#,##0.0", gap=True):
     RC.cell(rr_, 9, src); RC.cell(rr_, 10, note); rr_ += 1
 pl = lambda key, y: (lambda s: f"=PL!{FC[y]}{PB[s][key]}")
 RC.cell(rr_, 1, "A. 共識（校準未使用）").font = BOLD; rr_ += 1
-rec("FY2026 營收 vs 共識", "=c_rev26", pl("rev", 2026), "stockanalysis（14 位）", "錨點＝公司預測 1,732")
-rec("FY2026 EPS vs 共識", "=c_eps26", pl("eps", 2026), "stockanalysis 共識淨利 ÷ 股數", "錨點＝公司預測 129.84；共識高於公司預測（公司 FM 預測保守）", fmt="#,##0.00")
+rec("FY2026 營收 vs 共識", "=c_rev26", pl("rev", 2026), "stockanalysis（14 位）", "錨點＝公司 11-09 修正預測 1,767（8-06 為 1,732）；共識為 11-09 前取得")
+rec("FY2026 EPS vs 共識", "=c_eps26", pl("eps", 2026), "stockanalysis 共識淨利 ÷ 股數", "錨點＝公司 11-09 修正預測 141.78（8-06 為 129.84）；共識為 11-09 前取得", fmt="#,##0.00")
 rec("FY2027 營收 vs 共識", "=c_rev27", pl("rev", 2027), "stockanalysis（Revenue Next Year）", "")
 rec("FY2027 EPS vs 共識", "=c_eps27", pl("eps", 2027), "Stockopedia 年增率推導", "單一來源；基期口徑未明示", fmt="#,##0.00")
 rec("FY2028 EPS vs 共識", None, pl("eps", 2028), "未找到", "共識 FY2028 EPS：未找到", fmt="#,##0.00")
 RC.cell(rr_, 1, "B. 公司預測與 ABF 說法").font = BOLD; rr_ += 1
-rec("FY2026 FM 營收 vs 1Q 年化（× 4）", "=q1_fm*4", pl("fm", 2026), "公司 1Q 決算概要", "公司全年預測低於 1Q 年化：下半年放緩或保守")
-rec("FY2026 FM 事業利益 vs 1Q 年化", "=q1_fmbp*4", pl("fmbp", 2026), "同上", "")
+rec("FY2026 FM 營收 vs 上半年年化（× 2）", "=h1_fm*2", pl("fm", 2026), "公司第 2 四半期決算概要（2026-11-09）", "公司 11-09 修正後全年預測低於上半年年化：隱含下半年放緩或保守（v0.3.5 為 1Q × 4）")
+rec("FY2026 FM 事業利益 vs 上半年年化（× 2）", "=h1_fmbp*2", pl("fmbp", 2026), "同上", "")
 rec("FY2027 FM 事業利益率 vs Palliser 預估 66%", 0.66, pl("fmm", 2027), "Palliser 2026-03（Interested-party）", "Palliser：FY2025E 55%、FY2026E 63%、FY2027E 66%；共識（Palliser 引用）62%", fmt="0.0%")
 rec("FY2027 FM 營收 ÷ FY2025（兩年成長）", None, lambda s: f"=PL!E{PB[s]['fm']}/PL!C{PB[s]['fm']}-1", "Palliser：未來兩年 ABF 營收年複合 30% 以上（約 +69%）", "", fmt="0.0%", gap=False)
 rec("FY2029 FM 營收 vs FY2024 實績 77（Palliser）", 77, pl("fm", 2029), "Palliser FY2024 77；TrendForce 2025-04-01（引日經：2030 年前年增 10% 以上）", "公司說法：年增 10% 以上 × 5 年 ≈ 124 以上")
@@ -810,7 +838,7 @@ RC.cell(rr_, 1, "C. 上游載板模型（Ibiden；唯讀）").font = BOLD; rr_ +
 rec("FY2027 每顆 AI 加速器 ABF 金額 ÷ NVIDIA 載板金額", 0.10, lambda s: f"=Units!D{UR['ratio']}", "Palliser：ABF 約占載板物料成本 10%", "Units 頁（情境 A）", fmt="0.0%")
 rec("FY2027 AI 用 ABF 營收年增 − Ibiden AI 載板營收年增", None, lambda s: f"=Units!D{UR['ibg']}", "ibiden/dist Units", "負值＝味之素出貨受產能上限", fmt="0.0%")
 RC.cell(rr_, 1, "D. 校準").font = BOLD; rr_ += 1
-rec("FY2026 FM 事業利益率（錨點）", None, pl("fmm", 2026), "公司預測 65.5 ÷ 120.6", "", fmt="0.0%")
+rec("FY2026 FM 事業利益率（錨點）", None, pl("fmm", 2026), "公司 11-09 修正預測 76.5 ÷ 133.0", "8-06 預測 65.5 ÷ 120.6＝54.3%", fmt="0.0%")
 rec("FY2026 AI 用 ABF 營收（Assumed 切分）", None, pl("fmai", 2026), "ai_sh 40%", "公司未揭露")
 rec("FY2026 每顆有效加速器 AI 用 ABF 營收（US$）", None, pl("aiusd", 2026), "—", "")
 RECON_LAST = rr_ - 1
@@ -820,7 +848,8 @@ RC.column_dimensions["I"].width = 40; RC.column_dimensions["J"].width = 60
 
 # ---------------- Sources ----------------
 SO = wb.create_sheet("Sources"); SO["A1"] = "來源（公司原文為決算短信、決算概要、IR 簡報；公司預測為 Interested-party；股東行動派、券商、媒體與資料商皆為 Interested-party）"; SO["A1"].font = BOLD
-srcs = [("公司：2026 年 3 月期決算短信（FY2025 實績、分部門、FY2026 期初預測、折舊、資本支出、股數；2026-05-07）", TAN25),
+srcs = [("公司：2027 年 3 月期 第 2 四半期（中間期）決算短信〔IFRS〕（2026-11-09，TDnet；上半年損益、セグメント、2026-09-30 財政状態、股數、中間股利 ¥26、通期修正予想；v0.3.6 資產負債表日與錨點）", TAN2Q),
+        ("公司：2026 年 3 月期決算短信（FY2025 實績、分部門、FY2026 期初預測、折舊、資本支出、股數；2026-05-07）", TAN25),
         ("公司：2027 年 3 月期 Q1 決算短信（1Q 實績、上修後全年預測、EPS 129.84、股數；2026-08-06）", TANQ1),
         ("公司：2027 年 3 月期 Q1 決算概要（分部門與子部門：ファンクショナルマテリアルズ 1Q 33.1／19.1、全年 120.6／65.5；匯率前提 ¥150）", SUMQ1),
         ("公司：2026-08-06 IR 簡報（味之素ファインテクノ FY2025 營收 98.383、營業利益 53.012；2027-04 吸收合併；中東影響 −25 十億）", PRQ1),
@@ -843,7 +872,7 @@ srcs = [("公司：2026 年 3 月期決算短信（FY2025 實績、分部門、F
         ("市場層與公司模型：tsmc、ibiden、unimicron 成品（本 repo，唯讀）", f"{rel(TSMC_F)}；{rel(IB_F)}；{rel(UM_F)}"),
         ("[Verified] 自由現金流列：FY2025 折舊攤銷 88.914、資本支出 104.550（有形 96.446＋無形 8.104）、營收 1,583.719（¥B；決算短信）", TAN25),
         ("[Assumed] 折舊 ÷ 營收、資本支出 ÷ 營收 FY2026 起各年維持 FY2025 實績比率", "本模型假設"),
-        ("待補（人工）：上半年決算（約 2026-11 上旬，日期未找到）；ABF 單獨營收與 AI 占比（公司未揭露）；ABF 產能數字；共識 FY2028 EPS；十年淨利率；積水化學與中國廠認證進度", "未找到"),
+        ("待補（人工）：11-09 修正後的營業利益預測（決算短信摘要未列）；Ajinomoto (Malaysia) 2026-09-30 權益；ABF 單獨營收與 AI 占比（公司未揭露）；ABF 產能數字；共識 FY2028 EPS；十年淨利率；積水化學與中國廠認證進度", "未找到"),
         ("SemiAnalysis", "未使用")]
 for i, (a, b) in enumerate(srcs, 2): SO.cell(i, 1, a); SO.cell(i, 2, b)
 SO.column_dimensions["A"].width = 100; SO.column_dimensions["B"].width = 130
@@ -867,12 +896,12 @@ lines = [("味之素（Ajinomoto，2802.T）收支與估值模型 v0.1（AI 半�
  ("驅動因子 → 推導量（全部唯讀上游，不修改）", True),
  ("AI 用 ABF：tsmc 成品的 NVIDIA 與非 NVIDIA 加速器顆數（非 NVIDIA × 欣興模型的面積係數 0.8）× 同字母情境係數 × Ibiden 模型的每顆載板面積層數年增 18% × 份額相對值 → 需求量；與非 AI 需求（年增 3%）加權後，受可出貨量上限（Assumed）限制。", False),
  ("價格：2026-05 宣布的約 30% 漲價在 FY2026 只反映部分，FY2027 價格指數 1.12、FY2028 1.15、FY2029 1.12（Assumed），FY2028 起再乘情境乘數 1.0／0.95／0.88；FM 事業利益率＝1 −（1 − 校準值）× 單位成本指數 ÷ 價格指數。", False),
- ("校準：FY2026 ＝ 公司 2026-08-06 上修後預測（營收 1,732、事業利益 202.0、淨利 123.5、EPS 129.84；FM 120.6／65.5）。AI 占比 40%（Assumed）。不用券商數字（只在 Recon 對帳）。", False),
+ ("校準：FY2026 ＝ 公司 2026-11-09 修正後預測（營收 1,767、事業利益 210.0、淨利 135.0、EPS 141.78；FM 133.0／76.5；v0.3.6 起，v0.3.5 為 2026-08-06 預測 1,732／202.0／123.5／129.84；FM 120.6／65.5）。AI 占比 40%（Assumed）。不用券商數字（只在 Recon 對帳）。", False),
  ("估值：Val 第 0 節目標價＝0.5 × DCF 目標價（v0.3 起為標準版：無槓桿自由現金流 FCFF 以 WACC 折現，FY2026 評價日後一季至 FY2032＋永續，明細在 DCF 頁；三情境權重 0.3／0.5／0.2）＋0.5 × Comparable 目標價（食品同業：龜甲萬、日清食品、明治、Kewpie、McCormick、Nestlé 前瞻 P/E 中位數 × 12 個月後前瞻 EPS；不含 A 股）；另列 Comparable 單獨目標價、市場共識目標價、差距拆解與上檔空間級距。第 7 節 SOTP（FM 用電子材料同業倍數）與現價隱含 ABF 價值只作參考。本版未做先驗，無 Andy 合理 P/E 對照。", False),
  ("預估期間：FY2027–FY2029 由驅動因子推導；FY2030 起為收斂法，非驅動因子推導（上游顆數到 CY2029＝FY2029；營收年增由 FY2029 線性收斂到 fade_g、淨利率收斂到 fade_m，FY2032 達到；PL 頁灰底）。", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。", False),
  ("", False),
- ("已知限制：(1) 公司不單獨揭露 ABF 與 AI 占比，FM 以子部門揭露值、AI 占比 40% 為 Assumed；(2) 可出貨量上限與價格指數是 Assumed，FY2027 起產能受限，EPS 對兩者最敏感；(3) FY2026 錨點用公司預測，1Q FM 已達全年 27–29%，預測偏保守；(4) 本業以成長率推，中東情勢（公司估最多 −25 十億）未納入；(5) 共識 FY2027 EPS 單一來源推導、FY2028 未找到；(6) 十年 P/E 2020、2024 年受減損影響；(7) 上半年決算（約 2026-11 上旬）後更新錨點。", False)]
+ ("已知限制：(1) 公司不單獨揭露 ABF 與 AI 占比，FM 以子部門揭露值、AI 占比 40% 為 Assumed；(2) 可出貨量上限與價格指數是 Assumed，FY2027 起產能受限，EPS 對兩者最敏感；(3) FY2026 錨點用公司 11-09 修正預測，上半年 FM 營收、事業利益已達全年 55%、56%，隱含下半年放緩；(4) 本業以成長率推，中東情勢（公司估最多 −25 十億）未納入；(5) 共識 FY2027 EPS 單一來源推導、FY2028 未找到；(6) 十年 P/E 2020、2024 年受減損影響；(7) 錨點已於 v0.3.6 改為上半年決算（2026-11-09）時的修正預測；修正後營業利益預測未取得（f_oi 沿用 8-06）。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
 
@@ -988,7 +1017,7 @@ PRES = [
  "重點 2：ABF 是成長來源，但仍只占集團一部分。情境 A 的 FM 營收由 FY2026 公司預測 ¥{fm26|#,##0.0}B 升到 FY2027 ¥{fm27|#,##0.0}B（其中 AI 用 ¥{fmai26|#,##0.0}B → ¥{fmai27|#,##0.0}B），FM 事業利益 ¥{fmbp27|#,##0.0}B 占全公司 {fmbpsh27|0%}、每股貢獻 ¥{fmeps27|#,##0.0}（EPS ¥{eps27|#,##0.0}）。漲價、產能與 AI 占比為假設（Assumed）。",
  "重點 3：EPS 對 ABF 價格與產能上限最敏感（情境 A 的 FY2028 EPS；敏感度測試，不是門檻）：「{l_plo}」「{l_phi}」為 {e_plo|SP}／{e_phi|SP}，「{l_clo}」「{l_chi}」為 {e_clo|SP}／{e_chi|SP}；本業「{l_msf}」為 {e_msf|SP}。",
  "重點 4：v0.3 起 DCF 改為標準版（無槓桿自由現金流折現）：DCF 目標價 ¥{dcftp|#,##0}，三種情境推到 12 個月後為 A ¥{dcfA|#,##0}、B ¥{dcfB|#,##0}、C ¥{dcfC|#,##0}（{dcfwho}）。折現率 WACC {wacc|0.0%}：股權成本 {ke|0.0%}＝rf {rfv|0.00%}（日本 10 年期公債）＋ β {beta|0.00} ×（ERP {erp|0%} ＋ 日本國家風險溢酬 {crp|0.00%}）；β 為自算 JP 食品與 JP 電子材料產業無槓桿 β 依 FM 事業利益占比 {wfm|0%} 加權、Blume 調整（{betau|0.000}）後重新加槓桿，ERP 5%、RONIC＝WACC 與加權方法為假設；永續成長率 g＝{gtv|0.00%}。食品 β 低使 WACC 低於舊法的 10%，DCF 目標價因此上升；情境 B 的終值現值占企業價值 {tvshB|0%}、隱含終值 EV／EBITDA 約 {multB|0.0} 倍。以三情境加權目標價為基準，WACC −1pt／＋1pt 使加權目標價變動 {s_wlo|SP}／{s_whi|SP}，g −1pt／＋1pt 為 {s_glo|SP}／{s_ghi|SP}，β 低／高案例（β_u ∓ 0.3 各自重新加槓桿）為 {s_blo|SP}／{s_bhi|SP}（敏感度測試，不是門檻）。"
- "淨現金與投資以 2026-06-30 資產負債表 ¥{dcfnc|#,##0}B 加 stub 期 FCFF（FY2026 FCFF × stub_frac；情境 B ¥{stubB|#,##0}B）滾到評價日為 ¥{ncrB|#,##0}B。"
+ "淨現金與投資以 2026-09-30 資產負債表 ¥{dcfnc|#,##0}B 加 stub 期 FCFF（FY2026 FCFF × stub_frac；情境 B ¥{stubB|#,##0}B）滾到評價日為 ¥{ncrB|#,##0}B。"
  "美元口徑折現（Sens 案例：rf 改用美國 10 年期 {rfus|0.00%}、CRP 照基準、g＝MIN(3%, {rfus|0.00%})，現金流與匯率不變）下加權目標價 ¥{usd|#,##0}，相對基準 {usdp|SP}；基準仍採日本利率＋固定匯率。{tvflag}"]
 ANS = [
  "ABF 能長多大？答：依本模型情境 A，FM 營收 FY2027 為 ¥{fm27|#,##0.0}B（FY2026 公司預測 ¥{fm26|#,##0.0}B），AI 用 ¥{fmai27|#,##0.0}B；FM 事業利益占全公司由 FY2026 的 {fmbpsh26|0%} 升到 {fmbpsh27|0%}，每股貢獻 ¥{fmeps27|#,##0.0}。FY2028 EPS 情境 A／B／C 為 ¥{eps28A|#,##0.0}／¥{eps28B|#,##0.0}／¥{eps28C|#,##0.0}（顆數與 ABF 價格乘數依情境；漲價、產能、AI 占比為假設）。",
@@ -1033,6 +1062,9 @@ _CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
 if _CR:
     import v035_post  # noqa: E402
     print(v035_post.apply(wb, SIL, _CR))
+    # ---------------- v0.3.6（2026-11-15）：第 2 四半期決算短信滾入（輸入改動在上方 In／Q／DCF；本檔只寫版號與版本說明）----------------
+    import v036_post  # noqa: E402
+    print(v036_post.apply(wb))
 wb.save(sys.argv[1])
 if os.environ.get("AJI_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     _json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK, "VAL": VAL, "INROW": INROW, "QR": QR, "Q_NOTE": Q_NOTE,
