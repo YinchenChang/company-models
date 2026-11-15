@@ -31,7 +31,7 @@ import p6  # noqa: E402
 import p7  # noqa: E402
 import p8  # noqa: E402
 
-VERSION = "v0.6.5"
+VERSION = "v0.6.6"
 KIND_LABEL = {"SRC": "SRC_OAI", "INP": "Inputs", "FORMULA": "公式（後續工作包）", "DUP": "重複併入", "SKIP": "不遷入", "TK": "不遷入；改取 TK_Link"}
 SRC_COLS = ["SRC_ID", "指標", "數值", "低", "高", "單位", "口徑", "適用對象", "日期", "出處（v0.5 原文）", "來源等級", "立場", "立場說明",
             "一手／二手", "狀態", "取代者", "v0.5 標記", "查核狀態（v0.5 chk）", "v0.5 路徑", "模型使用位置", "備註",
@@ -617,6 +617,7 @@ def sheet_readme(wb, snap, date, summary, tkdate=None):
         ("SRC_OAI", f"{summary['src']} 列；v0.5『已取得的原始訊息』逐筆遷入（Interested-party／Verified）。"),
         ("TK_Link", f"單一快照（v0.6.2 起；TK_PxQ 併入，TKQ_ 前綴退役）：Tokenomics {snap['version']}（{snap['file']}），master 提交 {snap['sha'][:7]}，讀取日 {tkdate or date}；{summary['tk_ok']} 個名稱有值、{summary['tk_pending']} 個待 Tokenomics 提供。"),
         ("PxQ", "v0.6.4（v0.6.3 起）P×Q 與回本比值：實際 m×L ÷ 所需 m×L（＝營收 ÷ 算力成本）；11 欄＝2025 指數／線性 + 2026 三口徑（Q2 年化營收÷Q2 季平均 GW；FY2026 營收÷全年平均 GW；9 月底 run-rate÷年底 GW）× 低／基準／高；頂部主輸出（比值、倍數、持平門檻）、中間量、敏感度 4.1–4.7、外部支出對照、證據對帳（6B）、Fairwater 六情境（J7）、GW 路線 token 帳（具名範圍 PXQ_*）；v0.6.4 新增第 8.4 節 D2 推導式（Codex 份額 × ChatGPT token 量；候選因子，不進基準 token 帳）與第九節 Microsoft 10-Q 對照。"),
+        ("v0.6.6 變動", "Wattonomics 改讀 v0.3.5（Coord 頁隨 wattonomics/data/CURRENT_SNAPSHOT）：Coord B 節營業現金流對照改為本模型 Funding F06 vs Wattonomics gocf_oai（v0.3.5 起不再加回自有資本支出），差 0；追溯列 Gap 列位更新。其餘工作表數值與 v0.6.5 逐格相同。"),
         ("v0.6.5 變動", "三層協調：新頁 Coord（讀取層級〔同源，不判定〕；C0 公司揭露 vs 層級隱含值；層級之間〔參考〕），新頁 PL（標準損益表：FY2024–2025 外流財報、FY2026–2030 基準情境；未揭露／未建模者留空標示）；兩頁只列示、不被計算頁引用；Checks 新增 4 列。其餘工作表數值與 v0.6.4 逐格相同。"),
         ("v0.6.4 變動", "W1 口徑一 Q2 季平均 GW 2.34→2.26（2.17–2.35；Tokenomics B 段 Fairwater 占比 f＝0.4／0.65／0.9）；W2 PxQ 第 8.4 節 D2 推導式；W3 INP_303 註記；W4 SRC_OAI_141–143 移入 Inputs（公式）；W5 TK_Link 快照 v21.4→v21.7；W6 Microsoft FY27 Q1 10-Q 對照。"),
         ("Inputs", f"{summary['inp']} 列；v0.5 Assumed／Analogy／Decision 項目（長表）。"),
