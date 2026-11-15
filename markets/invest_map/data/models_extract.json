@@ -9870,63 +9870,63 @@
   }
  },
  "CRWV": {
-  "model": "coreweave/dist/20261114_CoreWeave個股模型_v5.0.3.xlsx",
+  "model": "coreweave/dist/20261115_CoreWeave個股模型_v5.0.4.xlsx",
   "v2": true,
   "seg_model": true,
   "tp": {
    "value": 76.2042366517448,
    "cell": "Val!C64",
-   "file": "coreweave/dist/20261114_CoreWeave個股模型_v5.0.3.xlsx"
+   "file": "coreweave/dist/20261115_CoreWeave個股模型_v5.0.4.xlsx"
   },
   "tp_dcf": {
    "value": 0,
    "cell": "Val!C61",
-   "file": "coreweave/dist/20261114_CoreWeave個股模型_v5.0.3.xlsx"
+   "file": "coreweave/dist/20261115_CoreWeave個股模型_v5.0.4.xlsx"
   },
   "tp_comp": {
    "value": 152.40847330349,
    "cell": "Val!C63",
-   "file": "coreweave/dist/20261114_CoreWeave個股模型_v5.0.3.xlsx"
+   "file": "coreweave/dist/20261115_CoreWeave個股模型_v5.0.4.xlsx"
   },
   "tp_cons": {
    "value": 132,
    "cell": "Val!C102",
-   "file": "coreweave/dist/20261114_CoreWeave個股模型_v5.0.3.xlsx"
+   "file": "coreweave/dist/20261115_CoreWeave個股模型_v5.0.4.xlsx"
   },
   "up": {
    "value": 0.253977894549034,
    "cell": "Val!C66",
-   "file": "coreweave/dist/20261114_CoreWeave個股模型_v5.0.3.xlsx"
+   "file": "coreweave/dist/20261115_CoreWeave個股模型_v5.0.4.xlsx"
   },
   "up_comp": {
    "value": 1.50795578909807,
    "cell": "Val!C67",
-   "file": "coreweave/dist/20261114_CoreWeave個股模型_v5.0.3.xlsx"
+   "file": "coreweave/dist/20261115_CoreWeave個股模型_v5.0.4.xlsx"
   },
   "rec": {
    "value": "收支不足",
    "cell": "Val!C71",
-   "file": "coreweave/dist/20261114_CoreWeave個股模型_v5.0.3.xlsx"
+   "file": "coreweave/dist/20261115_CoreWeave個股模型_v5.0.4.xlsx"
   },
   "dcf_A": {
    "value": 0,
    "cell": "Val!C34",
-   "file": "coreweave/dist/20261114_CoreWeave個股模型_v5.0.3.xlsx"
+   "file": "coreweave/dist/20261115_CoreWeave個股模型_v5.0.4.xlsx"
   },
   "dcf_C": {
    "value": 0,
    "cell": "Val!E34",
-   "file": "coreweave/dist/20261114_CoreWeave個股模型_v5.0.3.xlsx"
+   "file": "coreweave/dist/20261115_CoreWeave個股模型_v5.0.4.xlsx"
   },
   "model_px": {
    "value": 60.77,
    "cell": "Val!C4",
-   "file": "coreweave/dist/20261114_CoreWeave個股模型_v5.0.3.xlsx",
+   "file": "coreweave/dist/20261115_CoreWeave個股模型_v5.0.4.xlsx",
    "date": "2026-11-11"
   },
   "cash": {
    "basis": "現金流",
-   "file": "coreweave/dist/20261114_CoreWeave個股模型_v5.0.3.xlsx",
+   "file": "coreweave/dist/20261115_CoreWeave個股模型_v5.0.4.xlsx",
    "label": "自由現金流五年合計（收支關卡口徑）（基準情境 B；A -175.2、C -56.9）",
    "values": [
     [
@@ -9938,63 +9938,63 @@
   }
  },
  "NBIS": {
-  "model": "nebius/dist/20261115_Nebius個股模型_v0.6.1.xlsx",
+  "model": "nebius/dist/20261115_Nebius個股模型_v0.6.2.xlsx",
   "v2": true,
   "seg_model": true,
   "tp": {
    "value": 30.3079364086949,
    "cell": "Val!C64",
-   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.1.xlsx"
+   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.2.xlsx"
   },
   "tp_dcf": {
    "value": 0,
    "cell": "Val!C61",
-   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.1.xlsx"
+   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.2.xlsx"
   },
   "tp_comp": {
    "value": 60.6158728173898,
    "cell": "Val!C63",
-   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.1.xlsx"
+   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.2.xlsx"
   },
   "tp_cons": {
    "value": 283.58,
    "cell": "Val!C102",
-   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.1.xlsx"
+   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.2.xlsx"
   },
   "up": {
    "value": -0.764397260504548,
    "cell": "Val!C66",
-   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.1.xlsx"
+   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.2.xlsx"
   },
   "up_comp": {
    "value": -0.528794521009096,
    "cell": "Val!C67",
-   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.1.xlsx"
+   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.2.xlsx"
   },
   "rec": {
    "value": "強力放空",
    "cell": "Val!C71",
-   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.1.xlsx"
+   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.2.xlsx"
   },
   "dcf_A": {
    "value": 0,
    "cell": "Val!C34",
-   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.1.xlsx"
+   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.2.xlsx"
   },
   "dcf_C": {
    "value": 0,
    "cell": "Val!E34",
-   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.1.xlsx"
+   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.2.xlsx"
   },
   "model_px": {
    "value": 128.64,
    "cell": "Val!C4",
-   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.1.xlsx",
+   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.2.xlsx",
    "date": "2026-11-12"
   },
   "cash": {
    "basis": "現金流",
-   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.1.xlsx",
+   "file": "nebius/dist/20261115_Nebius個股模型_v0.6.2.xlsx",
    "label": "自由現金流五年合計（收支關卡口徑）（基準情境 B；A -143.1、C -71.3）",
    "values": [
     [
@@ -10006,63 +10006,63 @@
   }
  },
  "WYFI": {
-  "model": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx",
+  "model": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx",
   "v2": true,
   "seg_model": true,
   "tp": {
    "value": 13.7949385223488,
    "cell": "Val!C82",
-   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx"
+   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx"
   },
   "tp_dcf": {
    "value": 0,
    "cell": "Val!C79",
-   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx"
+   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx"
   },
   "tp_comp": {
    "value": 27.5898770446976,
    "cell": "Val!C81",
-   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx"
+   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx"
   },
   "tp_cons": {
    "value": 40.45,
    "cell": "Val!C102",
-   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx"
+   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx"
   },
   "up": {
    "value": 0.497821772242,
    "cell": "Val!C84",
-   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx"
+   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx"
   },
   "up_comp": {
    "value": 1.995643544484,
    "cell": "Val!C85",
-   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx"
+   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx"
   },
   "rec": {
    "value": "收支不足",
    "cell": "Val!C89",
-   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx"
+   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx"
   },
   "dcf_A": {
    "value": 0,
    "cell": "Val!C34",
-   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx"
+   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx"
   },
   "dcf_C": {
    "value": 0,
    "cell": "Val!E34",
-   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx"
+   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx"
   },
   "model_px": {
    "value": 9.21,
    "cell": "Val!C4",
-   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx",
+   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx",
    "date": "2026-11-10"
   },
   "cash": {
    "basis": "現金流",
-   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx",
+   "file": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx",
    "label": "自由現金流五年合計（收支關卡口徑）（基準情境 B；A -2,113.5、C -762.1）",
    "values": [
     [
@@ -10248,7 +10248,7 @@
   }
  },
  "OpenAI": {
-  "model": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx",
+  "model": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx",
   "unlisted": true,
   "cash": {
    "basis": "現金流",
@@ -10280,80 +10280,80 @@
      "Funding!I13"
     ]
    ],
-   "file": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx"
+   "file": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx"
   },
   "pxq": {
    "gw": [
     {
      "value": 2.17,
      "cell": "PxQ!F46",
-     "file": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx"
+     "file": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx"
     },
     {
      "value": 2.26,
      "cell": "PxQ!G46",
-     "file": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx"
+     "file": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx"
     },
     {
      "value": 2.35,
      "cell": "PxQ!H46",
-     "file": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx"
+     "file": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx"
     }
    ],
    "rev": {
     "value": 26.3,
     "cell": "PxQ!G61",
-    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx"
+    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx"
    },
    "cap_fleet": {
     "value": 91042401450.4909,
     "cell": "PxQ!G56",
-    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx"
+    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx"
    },
    "cap_vr200": {
     "value": 257035462226.142,
     "cell": "PxQ!E42",
-    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx"
+    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx"
    },
    "derate_vr200": {
     "value": 0.805795445539647,
     "cell": "PxQ!H42",
-    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx"
+    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx"
    },
    "year": {
     "value": 2026,
     "cell": "PxQ!G32",
-    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx"
+    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx"
    },
    "rev_c3": {
     "value": 50,
     "cell": "PxQ!M61",
-    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx"
+    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx"
    },
    "gw_c3": {
     "value": 4.6,
     "cell": "PxQ!M46",
-    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx"
+    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx"
    },
    "cap_fleet_handoff": {
     "value": 98571305410.4417,
     "cell": "PxQ!G83",
-    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx"
+    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx"
    },
    "cap_gb300": {
     "value": 156016123358.035,
     "cell": "PxQ!E41",
-    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx"
+    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx"
    },
    "derate_gb300": {
     "value": 0.85,
     "cell": "PxQ!H41",
-    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx"
+    "file": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx"
    }
   }
  },
  "Anthropic": {
-  "model": "anthropic/dist/20261114_Anthropic收支模型_v0_2_2.xlsx",
+  "model": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx",
   "unlisted": false,
   "cash": {
    "basis": "現金流",
@@ -10385,59 +10385,59 @@
      "Funding!I14"
     ]
    ],
-   "file": "anthropic/dist/20261114_Anthropic收支模型_v0_2_2.xlsx"
+   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
   },
   "v2": true,
   "ipo": true,
   "tp": {
    "value": 82.7133264927967,
    "cell": "Val!C10",
-   "file": "anthropic/dist/20261114_Anthropic收支模型_v0_2_2.xlsx"
+   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
   },
   "tp_dcf": {
    "value": 54.3666176018468,
    "cell": "Val!C7",
-   "file": "anthropic/dist/20261114_Anthropic收支模型_v0_2_2.xlsx"
+   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
   },
   "tp_comp": {
    "value": 111.060035383747,
    "cell": "Val!C9",
-   "file": "anthropic/dist/20261114_Anthropic收支模型_v0_2_2.xlsx"
+   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
   },
   "tp_comp_main": {
    "value": 153.444275986771,
    "cell": "Val!C8",
-   "file": "anthropic/dist/20261114_Anthropic收支模型_v0_2_2.xlsx"
+   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
   },
   "dcf_A": {
    "value": 133.986843868857,
    "cell": "Val!C154",
-   "file": "anthropic/dist/20261114_Anthropic收支模型_v0_2_2.xlsx"
+   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
   },
   "dcf_C": {
    "value": 14.2785714130823,
    "cell": "Val!E154",
-   "file": "anthropic/dist/20261114_Anthropic收支模型_v0_2_2.xlsx"
+   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
   },
   "up": {
    "value": 0.117747655308064,
    "cell": "Val!C12",
-   "file": "anthropic/dist/20261114_Anthropic收支模型_v0_2_2.xlsx"
+   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
   },
   "up_comp": {
    "value": 1.07357129711853,
    "cell": "Val!C13",
-   "file": "anthropic/dist/20261114_Anthropic收支模型_v0_2_2.xlsx"
+   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
   },
   "rec": {
    "value": "中立",
    "cell": "Val!C15",
-   "file": "anthropic/dist/20261114_Anthropic收支模型_v0_2_2.xlsx"
+   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
   },
   "model_px": {
    "value": 74,
    "cell": "Val!C46",
-   "file": "anthropic/dist/20261114_Anthropic收支模型_v0_2_2.xlsx",
+   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx",
    "date": "2026-11-10"
   }
  }

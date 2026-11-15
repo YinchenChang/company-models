@@ -1,18 +1,18 @@
 {
  "meta": {
-  "version": "v0.6.45",
-  "book": "20261115_AI投資地圖_資料_v0.6.45.xlsx",
+  "version": "v0.6.46",
+  "book": "20261115_AI投資地圖_資料_v0.6.46.xlsx",
   "tk_file": "20261102_Tokenomics_v21.8.xlsx",
   "tk_version": "v21.8",
   "tk_commit": "91db9ac",
-  "cm_commit": "075a530",
+  "cm_commit": "3ae1094",
   "built": "2026-11-15",
   "price_date": "上市公司一律用 2026-11-13 收盤（Yahoo Finance 日線；v0.6.45 起全面更新）；Anthropic 用 IPO 價格區間中點（上檔空間＝模型目標價 ÷ 最新收盤 − 1；模型現價多為 2026-11-05 等較早日期，差距超過 20% 者標示「模型尚未反映期間變化」）",
   "last_close_date": "2026-11-13",
   "pages": "https://yinchenchang.github.io/company-models/",
   "private_models": {
-   "openai": "20261115_OpenAI個股模型_v0_6_5.html",
-   "anthropic": "20261114_Anthropic個股模型_v0_2_2.html"
+   "openai": "20261115_OpenAI個股模型_v0_6_6.html",
+   "anthropic": "20261115_Anthropic個股模型_v0_2_3.html"
   }
  },
  "pergw": {
@@ -94,7 +94,7 @@
    "hi": null,
    "unit": "$B",
    "name": "OpenAI 模型",
-   "cell": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx PxQ!G61"
+   "cell": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx PxQ!G61"
   },
   "OpenAI 2026 Q2 平均上線 GW（低／基準／高）｜機隊": {
    "lo": 2.17,
@@ -102,7 +102,7 @@
    "hi": 2.35,
    "unit": "GW",
    "name": "OpenAI 模型",
-   "cell": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx PxQ!F46／PxQ!G46／PxQ!H46（Fairwater 分配 0.4／0.65／0.9）"
+   "cell": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx PxQ!F46／PxQ!G46／PxQ!H46（Fairwater 分配 0.4／0.65／0.9）"
   },
   "實收每上線 GW 年營收｜機隊": {
    "lo": 12.1198156682028,
@@ -118,7 +118,7 @@
    "hi": null,
    "unit": "M tok/GW/年",
    "name": "OpenAI 模型",
-   "cell": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx PxQ!G56（世代組合 V1：Hopper 35%、GB200 27.5%、GB300 27.5%、VR200 5%、其他 5%）"
+   "cell": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx PxQ!G56（世代組合 V1：Hopper 35%、GB200 27.5%、GB300 27.5%、VR200 5%、其他 5%）"
   },
   "VR200 每 GW 付費產能｜VR200": {
    "lo": null,
@@ -126,7 +126,7 @@
    "hi": null,
    "unit": "M tok/GW/年",
    "name": "OpenAI 模型（TK 快照）",
-   "cell": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx PxQ!E42"
+   "cell": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx PxQ!E42"
   },
   "VR200 生產折減（採用）｜VR200": {
    "lo": null,
@@ -134,7 +134,7 @@
    "hi": null,
    "unit": "倍",
    "name": "OpenAI 模型",
-   "cell": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx PxQ!H42"
+   "cell": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx PxQ!H42"
   },
   "VR200 ÷ 機隊 每 GW 有效產能倍數｜VR200": {
    "lo": null,
@@ -238,7 +238,7 @@
    "hi": null,
    "unit": "倍",
    "name": "OpenAI 模型（TK 快照）",
-   "cell": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx PxQ!E41、PxQ!H41：GB300 產能 × 折減；VR200 產能來自 TK 規格（NVIDIA 公布值推得，出貨前未經實測）"
+   "cell": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx PxQ!E41、PxQ!H41：GB300 產能 × 折減；VR200 產能來自 TK 規格（NVIDIA 公布值推得，出貨前未經實測）"
   },
   "校準營收改用 9 月底 run-rate（口徑三：50 ÷ 4.6 GW）｜敏感度": {
    "lo": 1.81904016349569,
@@ -246,7 +246,7 @@
    "hi": null,
    "unit": "倍",
    "name": "OpenAI 模型",
-   "cell": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx PxQ!M61、PxQ!M46（Assumed 年底 GW）"
+   "cell": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx PxQ!M61、PxQ!M46（Assumed 年底 GW）"
   },
   "機隊世代組合改用交接檔（Hopper 25%、GB200 45%、GB300 25%、VR200 5%）｜敏感度": {
    "lo": 1.79874923184609,
@@ -254,7 +254,7 @@
    "hi": null,
    "unit": "倍",
    "name": "OpenAI 模型 4.1 節",
-   "cell": "openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx PxQ!G83"
+   "cell": "openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx PxQ!G83"
   },
   "敏感度區間（上列各情境的最小／最大）｜敏感度": {
    "lo": 1.24694695557427,
@@ -2447,24 +2447,24 @@
    "tier": "收支不足",
    "vtier": "買進",
    "mfolder": "coreweave",
-   "mfile": "20261114_CoreWeave個股模型_v5.0.3.html",
+   "mfile": "20261115_CoreWeave個股模型_v5.0.4.html",
    "gate": "不通過",
    "gbasis": "現金流",
    "glabel": "自由現金流五年合計（收支關卡口徑）（基準情境 B；A -175.2、C -56.9）",
    "gseries": "情境 B 五年合計 -95.7",
    "gsum": -95.7057197433564,
    "gmin": -95.7057197433564,
-   "gsrc": "[Derived] coreweave/dist/20261114_CoreWeave個股模型_v5.0.3.xlsx Fund!D5…Fund!D5",
+   "gsrc": "[Derived] coreweave/dist/20261115_CoreWeave個股模型_v5.0.4.xlsx Fund!D5…Fund!D5",
    "alt": null,
    "altlbl": "",
    "pe28": "",
    "note": "DCF 目標價 0.0（Val!C61）；Comparable 目標價 152.4（Val!C63）；市場共識目標價 132.0（Val!C102，外部、僅供對照）；價格帶 C～A 情境 DCF 0.0～0.0",
-   "c1src": "coreweave/dist/20261114_CoreWeave個股模型_v5.0.3.xlsx Val!C64",
+   "c1src": "coreweave/dist/20261115_CoreWeave個股模型_v5.0.4.xlsx Val!C64",
    "c2src": "",
-   "b1src": "coreweave/dist/20261114_CoreWeave個股模型_v5.0.3.xlsx Val!E34",
+   "b1src": "coreweave/dist/20261115_CoreWeave個股模型_v5.0.4.xlsx Val!E34",
    "b2src": "",
    "tier6": "25%–50%",
-   "recsrc": "上檔空間＝模型加權目標價 coreweave/dist/20261114_CoreWeave個股模型_v5.0.3.xlsx Val!C64 ÷ 最新收盤 − 1，依五級規則自算；對照：模型日上檔空間 +25.4%（coreweave/dist/20261114_CoreWeave個股模型_v5.0.3.xlsx Val!C66）、模型日投資建議 收支不足（coreweave/dist/20261114_CoreWeave個股模型_v5.0.3.xlsx Val!C71）"
+   "recsrc": "上檔空間＝模型加權目標價 coreweave/dist/20261115_CoreWeave個股模型_v5.0.4.xlsx Val!C64 ÷ 最新收盤 − 1，依五級規則自算；對照：模型日上檔空間 +25.4%（coreweave/dist/20261115_CoreWeave個股模型_v5.0.4.xlsx Val!C66）、模型日投資建議 收支不足（coreweave/dist/20261115_CoreWeave個股模型_v5.0.4.xlsx Val!C71）"
   },
   {
    "tk": "NBIS",
@@ -2493,24 +2493,24 @@
    "tier": "強力放空",
    "vtier": "強力放空",
    "mfolder": "nebius",
-   "mfile": "20261115_Nebius個股模型_v0.6.1.html",
+   "mfile": "20261115_Nebius個股模型_v0.6.2.html",
    "gate": "不通過",
    "gbasis": "現金流",
    "glabel": "自由現金流五年合計（收支關卡口徑）（基準情境 B；A -143.1、C -71.3）",
    "gseries": "情境 B 五年合計 -104.4",
    "gsum": -104.393162053453,
    "gmin": -104.393162053453,
-   "gsrc": "[Derived] nebius/dist/20261115_Nebius個股模型_v0.6.1.xlsx Fund!D5…Fund!D5",
+   "gsrc": "[Derived] nebius/dist/20261115_Nebius個股模型_v0.6.2.xlsx Fund!D5…Fund!D5",
    "alt": null,
    "altlbl": "",
    "pe28": "",
    "note": "DCF 目標價 0.0（Val!C61）；Comparable 目標價 60.6（Val!C63）；市場共識目標價 283.6（Val!C102，外部、僅供對照）；價格帶 C～A 情境 DCF 0.0～0.0",
-   "c1src": "nebius/dist/20261115_Nebius個股模型_v0.6.1.xlsx Val!C64",
+   "c1src": "nebius/dist/20261115_Nebius個股模型_v0.6.2.xlsx Val!C64",
    "c2src": "",
-   "b1src": "nebius/dist/20261115_Nebius個股模型_v0.6.1.xlsx Val!E34",
+   "b1src": "nebius/dist/20261115_Nebius個股模型_v0.6.2.xlsx Val!E34",
    "b2src": "",
    "tier6": "小於 −50%",
-   "recsrc": "上檔空間＝模型加權目標價 nebius/dist/20261115_Nebius個股模型_v0.6.1.xlsx Val!C64 ÷ 最新收盤 − 1，依五級規則自算；對照：模型日上檔空間 -76.4%（nebius/dist/20261115_Nebius個股模型_v0.6.1.xlsx Val!C66）、模型日投資建議 強力放空（nebius/dist/20261115_Nebius個股模型_v0.6.1.xlsx Val!C71）"
+   "recsrc": "上檔空間＝模型加權目標價 nebius/dist/20261115_Nebius個股模型_v0.6.2.xlsx Val!C64 ÷ 最新收盤 − 1，依五級規則自算；對照：模型日上檔空間 -76.4%（nebius/dist/20261115_Nebius個股模型_v0.6.2.xlsx Val!C66）、模型日投資建議 強力放空（nebius/dist/20261115_Nebius個股模型_v0.6.2.xlsx Val!C71）"
   },
   {
    "tk": "WYFI",
@@ -2539,24 +2539,24 @@
    "tier": "收支不足",
    "vtier": "買進",
    "mfolder": "whitefiber",
-   "mfile": "20261115_WhiteFiber個股模型_v0.4.1.html",
+   "mfile": "20261115_WhiteFiber個股模型_v0.4.2.html",
    "gate": "不通過",
    "gbasis": "現金流",
    "glabel": "自由現金流五年合計（收支關卡口徑）（基準情境 B；A -2,113.5、C -762.1）",
    "gseries": "情境 B 五年合計 -1,513.3",
    "gsum": -1513.31553569772,
    "gmin": -1513.31553569772,
-   "gsrc": "[Derived] whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx Fund!D5…Fund!D5",
+   "gsrc": "[Derived] whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx Fund!D5…Fund!D5",
    "alt": null,
    "altlbl": "",
    "pe28": "",
    "note": "DCF 目標價 0.0（Val!C79）；Comparable 目標價 27.6（Val!C81）；市場共識目標價 40.5（Val!C102，外部、僅供對照）；價格帶 C～A 情境 DCF 0.0～0.0",
-   "c1src": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx Val!C82",
+   "c1src": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx Val!C82",
    "c2src": "",
-   "b1src": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx Val!E34",
+   "b1src": "whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx Val!E34",
    "b2src": "",
    "tier6": "25%–50%",
-   "recsrc": "上檔空間＝模型加權目標價 whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx Val!C82 ÷ 最新收盤 − 1，依五級規則自算；對照：模型日上檔空間 +49.8%（whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx Val!C84）、模型日投資建議 收支不足（whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx Val!C89）"
+   "recsrc": "上檔空間＝模型加權目標價 whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx Val!C82 ÷ 最新收盤 − 1，依五級規則自算；對照：模型日上檔空間 +49.8%（whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx Val!C84）、模型日投資建議 收支不足（whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx Val!C89）"
   },
   {
    "tk": "00100",
@@ -2677,14 +2677,14 @@
    "tier": "未上市",
    "vtier": "未上市",
    "mfolder": "openai",
-   "mfile": "20261115_OpenAI個股模型_v0_6_5.html",
+   "mfile": "20261115_OpenAI個股模型_v0_6_6.html",
    "gate": "不通過",
    "gbasis": "現金流",
    "glabel": "F06 自由現金流",
    "gseries": "2026 -39.4、2027 -116.0、2028 -134.9、2029 -137.6、2030 -131.9",
    "gsum": -559.844811653528,
    "gmin": -137.624622192723,
-   "gsrc": "[Derived] openai/dist/20261115_OpenAI收支模型_v0_6_5.xlsx Funding!E13…Funding!I13",
+   "gsrc": "[Derived] openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx Funding!E13…Funding!I13",
    "alt": null,
    "altlbl": "",
    "pe28": "",
@@ -2723,24 +2723,24 @@
    "tier": "中立",
    "vtier": "中立",
    "mfolder": "anthropic",
-   "mfile": "20261114_Anthropic個股模型_v0_2_2.html",
+   "mfile": "20261115_Anthropic個股模型_v0_2_3.html",
    "gate": "不通過",
    "gbasis": "現金流",
    "glabel": "F07 自由現金流",
    "gseries": "2026 10.3、2027 -37.4、2028 -42.2、2029 4.6、2030 56.3",
    "gsum": -8.37721282071933,
    "gmin": -42.209640664714,
-   "gsrc": "[Derived] anthropic/dist/20261114_Anthropic收支模型_v0_2_2.xlsx Funding!E14…Funding!I14",
+   "gsrc": "[Derived] anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx Funding!E14…Funding!I14",
    "alt": null,
    "altlbl": "",
    "pe28": "",
    "note": "IPO 價格區間中點計（尚未掛牌）；DCF 目標價 54.4（Val!C7）；Comparable 目標價（調整後，進加權）111.1（Val!C9）；市場主流 Comparable（未調整）153.4（Val!C8）；價格帶 C～A 情境 DCF 14.3～134.0",
-   "c1src": "anthropic/dist/20261114_Anthropic收支模型_v0_2_2.xlsx Val!C10",
+   "c1src": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx Val!C10",
    "c2src": "",
-   "b1src": "anthropic/dist/20261114_Anthropic收支模型_v0_2_2.xlsx Val!E154",
+   "b1src": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx Val!E154",
    "b2src": "",
    "tier6": "0%–25%",
-   "recsrc": "上檔空間＝模型加權目標價 anthropic/dist/20261114_Anthropic收支模型_v0_2_2.xlsx Val!C10 ÷ 最新收盤 − 1，依五級規則自算；對照：模型日上檔空間 +11.8%（anthropic/dist/20261114_Anthropic收支模型_v0_2_2.xlsx Val!C12）、模型日投資建議 中立（anthropic/dist/20261114_Anthropic收支模型_v0_2_2.xlsx Val!C15）"
+   "recsrc": "上檔空間＝模型加權目標價 anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx Val!C10 ÷ 最新收盤 − 1，依五級規則自算；對照：模型日上檔空間 +11.8%（anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx Val!C12）、模型日投資建議 中立（anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx Val!C15）"
   },
   {
    "tk": "AMD",
@@ -12648,27 +12648,27 @@
   },
   "CRWV": {
    "folder": "coreweave",
-   "file": "20261114_CoreWeave個股模型_v5.0.3.html",
+   "file": "20261115_CoreWeave個股模型_v5.0.4.html",
    "title": "CoreWeave個股模型",
-   "date": "2026-11-14",
-   "ver": "v5.0.3",
-   "xlsx": "20261114_CoreWeave個股模型_v5.0.3.xlsx"
+   "date": "2026-11-15",
+   "ver": "v5.0.4",
+   "xlsx": "20261115_CoreWeave個股模型_v5.0.4.xlsx"
   },
   "NBIS": {
    "folder": "nebius",
-   "file": "20261115_Nebius個股模型_v0.6.1.html",
+   "file": "20261115_Nebius個股模型_v0.6.2.html",
    "title": "Nebius個股模型",
    "date": "2026-11-15",
-   "ver": "v0.6.1",
-   "xlsx": "20261115_Nebius個股模型_v0.6.1.xlsx"
+   "ver": "v0.6.2",
+   "xlsx": "20261115_Nebius個股模型_v0.6.2.xlsx"
   },
   "WYFI": {
    "folder": "whitefiber",
-   "file": "20261115_WhiteFiber個股模型_v0.4.1.html",
+   "file": "20261115_WhiteFiber個股模型_v0.4.2.html",
    "title": "WhiteFiber個股模型",
    "date": "2026-11-15",
-   "ver": "v0.4.1",
-   "xlsx": "20261115_WhiteFiber個股模型_v0.4.1.xlsx"
+   "ver": "v0.4.2",
+   "xlsx": "20261115_WhiteFiber個股模型_v0.4.2.xlsx"
   },
   "00100": {
    "folder": "minimax",
@@ -12688,19 +12688,19 @@
   },
   "OpenAI": {
    "folder": "openai",
-   "file": "20261115_OpenAI個股模型_v0_6_5.html",
+   "file": "20261115_OpenAI個股模型_v0_6_6.html",
    "title": "OpenAI個股模型",
    "date": "2026-11-15",
-   "ver": "v0.6.5",
-   "xlsx": "20261115_OpenAI收支模型_v0_6_5.xlsx"
+   "ver": "v0.6.6",
+   "xlsx": "20261115_OpenAI收支模型_v0_6_6.xlsx"
   },
   "Anthropic": {
    "folder": "anthropic",
-   "file": "20261114_Anthropic個股模型_v0_2_2.html",
+   "file": "20261115_Anthropic個股模型_v0_2_3.html",
    "title": "Anthropic個股模型",
-   "date": "2026-11-14",
-   "ver": "v0.2.2",
-   "xlsx": "20261114_Anthropic收支模型_v0_2_2.xlsx"
+   "date": "2026-11-15",
+   "ver": "v0.2.3",
+   "xlsx": "20261115_Anthropic收支模型_v0_2_3.xlsx"
   },
   "AMD": {
    "folder": "amd",
