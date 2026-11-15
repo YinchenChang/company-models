@@ -352,6 +352,8 @@ DEFP = dict(scn="A", aish="ai_sh", ga="g_asp", vot="v_ot", rel="rel_{y}", cap="c
             gsf="g_sf", msf="m_sf", gff="g_ff", mff="m_ff", gho="g_ho", mho="m_ho", gcc="g_cc", nibp="ni_bp", shg="sh_g", wm=None)
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    if SIL.COORD_ALT and P["wm"] is None and s != "A":   # v0.3.5 三層協調 C4 另一側讀數建置（tools/coord/alt_run.py）：情境 B、C 於 CY2027 起加速器顆數 × wta（＝另一側讀數比值）；情境 A 不縮放。
+        P["wm"] = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}   # FY2026 校準年（指數分母 $D 欄）與 FY2025 實績不縮放：已實現與錨點期間不受影響（tools/coord/README.md 兩讀數規格）
     p = lambda k, y=None: P[k].format(y=(y % 100 if y else ""))
     um = lambda y: {2026: "", 2027: "", 2028: f"*um28_{s}", 2029: f"*um29_{s}"}[y] + (f"*{P['wm'][y]}" if P["wm"] and y >= 2027 else "")   # v0.13：wm＝Wattonomics 錨定年別乘數（預設 None＝不乘）
     spx = lambda y: "" if y < 2028 else f"*sp_{s}"
@@ -1024,6 +1026,13 @@ RD.cell(_r, 1, "上檔空間：Comparable 目標價（相對倍數調整後）")
 # ---------------- v0.3.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤（上方 In 頁 px、0.2 節與第 7 節同業、mi_v 直接改）；情境名稱改回樂觀／基準／保守（px1105_post.py）----------------
 import px1105_post  # noqa: E402
 px1105_post.apply(wb, dict(ver="v0.3.4", px=None, peers=False))
+# ---------------- v0.3.5（2026-11-15）：三層協調 C4 兩讀數（Coord 頁；快照 ajinomoto/coord_alt.json）＋個股 HTML 版面規格 v1.3＋三層協調讀取層級與 C0（實績）（ajinomoto/v035_post.py；只新增，既有數值不變）----------------
+sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+import coord as COORD  # noqa: E402
+_CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
+if _CR:
+    import v035_post  # noqa: E402
+    print(v035_post.apply(wb, SIL, _CR))
 wb.save(sys.argv[1])
 if os.environ.get("AJI_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     _json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK, "VAL": VAL, "INROW": INROW, "QR": QR, "Q_NOTE": Q_NOTE,
