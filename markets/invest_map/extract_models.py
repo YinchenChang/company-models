@@ -305,14 +305,25 @@ def main():
             out[tk] = {"model": b.rel, **cloud(b)}
 
     # --- 模型商（上市） ---
-    b = Book(dist_xlsx("minimax"))
-    out["00100"] = {"model": b.rel,
-                    "price": b.num("Valuation", [(0, "^V01$")], 0), "price_date": "2026-10-21",
-                    "disc_ratio": b.num("Valuation", [(0, "^V13$")], 0)}
-    b = Book(dist_xlsx("zhipu"))
-    out["02513"] = {"model": b.rel,
-                    "need_ratio_2028": b.num("Reverse", [(0, "^X21$")], 3),
-                    "need_ratio_2028_lo": b.num("Reverse", [(0, "^X22$")], 3)}
+    # v0.6.43（2026-11-15）：MiniMax v0.2.3、智譜 v0.1.6 起有 Val 頁目標價與評等（Andy 2026-11-15 決定給目標價與評等；
+    # DCF（FCFF）＋同業 EV／NTM 營收，三情境加權）。讀 Val 頁具名範圍（與 Anthropic 同法），走估值 v2 讀法：
+    # 中心價＝VAL_TP_W、悲觀情境＝VAL_TP_DCF_C；上檔空間與評等依最新收盤重算（模型日值只作對照）。
+    # 取代舊的 MiniMax 反向檢驗折現價值（Valuation V13，v0.2.3 已無值）與智譜「未估值（反向模式）」。
+    def val_names(bk, px_date):
+        def nm(name):
+            sh, c = bk.wb.defined_names[name].attr_text.split("!")
+            sh, c = sh.strip("'"), c.replace("$", "")
+            v = bk.wb[sh][c].value
+            if v is None:
+                raise KeyError(f"{bk.rel} 具名範圍 {name} 無值")
+            return cell(bk, sh, c, v)
+        return {"v2": True, "tp": nm("VAL_TP_W"), "tp_dcf": nm("VAL_TP_DCF"), "tp_comp": nm("VAL_TP_Comp"),
+                "tp_cons": nm("VAL_TP_Cons"), "dcf_A": nm("VAL_TP_DCF_A"), "dcf_C": nm("VAL_TP_DCF_C"),
+                "up": nm("VAL_Up_W"), "up_comp": nm("VAL_Up_Comp"), "rec": nm("VAL_Rec"),
+                "model_px": dict(nm("VAL_Px"), date=px_date)}
+    for tk, folder in (("00100", "minimax"), ("02513", "zhipu")):
+        b = Book(dist_xlsx(folder))
+        out[tk] = {"model": b.rel, **val_names(b, "2026-11-05")}   # Val 頁「現價（2026-11-05 收盤）」
 
     # --- 收支關卡：只有損益的半導體模型 ---
     for tk, folder in SEMIS_V2:
