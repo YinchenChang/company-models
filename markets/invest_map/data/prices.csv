@@ -1,73 +1,73 @@
 ticker,close,currency,date,source,sources_count
-CRWV,60.77,USD,2026-11-11,個股模型現價（20261114_CoreWeave個股模型_v5.0.3.xlsx，Val!C4；In 頁 px 2026-11-11 收盤）,1
-NBIS,128.64,USD,2026-11-12,個股模型現價（20261115_Nebius個股模型_v0.6.1.xlsx，Val!C4；In 頁 px 2026-11-12 收盤）,1
-WYFI,9.21,USD,2026-11-10,個股模型現價（20261115_WhiteFiber個股模型_v0.4.1.xlsx，Val!C4；In 頁 px 2026-11-10 收盤）,1
-ORCL,115.16,USD,2026-11-05,個股模型現價（20261115_Oracle個股模型_v0.5.2.xlsx，In!E5；模型出處 Yahoo Finance 日線 115.16、StockAnalysis 115.19）,2
-MSFT,555.80,USD,2026-11-04,massive；marketbeat,2
-AMZN,266.03,USD,2026-11-04,massive（marketbeat 266.31，03:59 PM）,1
-GOOGL,288.93,USD,2026-11-04,massive；marketbeat,2
-META,605.08,USD,2026-11-05,個股模型現價（20261115_Meta個股模型_v0.2.1.xlsx，Val!B9）,1
-SPCX,135.92,USD,2026-11-04,massive；marketbeat,2
-00100,170.2,HKD,2026-11-05,個股模型現價（20261115_MiniMax收支模型_v0_2_3.xlsx，Val!C11／VAL_Px Val!C37；2026-11-05 收盤；原 11-04 etnet 167.30）,1
-02513,476,HKD,2026-11-05,個股模型現價（20261115_智譜個股模型_v0_1_6.xlsx，Val!C11／VAL_Px Val!C37；2026-11-05 收盤；原 11-04 etnet 484.20）,1
-NVDA,181.6,USD,2026-11-05,個股模型現價（20261114_NVIDIA個股模型_v0.3.10.xlsx，Val!B57）,1
-AVGO,291.53,USD,2026-11-05,個股模型現價（20261114_Broadcom個股模型_v0.5.7.xlsx，Val!B57）,1
-MU,656.39,USD,2026-11-05,個股模型現價（20261115_美光個股模型_v0.5.5.xlsx，In!E5）,1
-AMD,404.4,USD,2026-11-05,個股模型現價（20261115_AMD模型_v0.4.7.xlsx，Val!B67）,1
-MRVL,133.55,USD,2026-11-05,個股模型現價（20261115_邁威爾個股模型_v0.3.5.xlsx，Val!B68）,1
-ANET,159.16,USD,2026-11-05,個股模型現價（20261115_Arista個股模型_v0.5.5.xlsx，Val!B57）,1
-SNDK,806.43,USD,2026-11-05,個股模型現價（20261115_SanDisk個股模型_v0.5.5.xlsx，Val!B82）,1
-COHR,169.76,USD,2026-11-05,個股模型現價（20261114_Coherent個股模型_v0.4.5.xlsx，Val!B64）,1
-LITE,509.7,USD,2026-11-05,個股模型現價（20261115_Lumentum個股模型_v0.5.6.xlsx，Val!B63）,1
-2330,2240,TWD,2026-11-05,個股模型現價（20261115_台積電個股模型_v0.5.5.xlsx，In!E166）,1
-2454,3460,TWD,2026-11-05,個股模型現價（20261115_聯發科個股模型_v0.3.5.xlsx，Val!B53）,1
-2308,1130,TWD,2026-11-05,個股模型現價（20261114_台達電個股模型_v0.5.7.xlsx，Val!B6）,1
-2382,300.00,TWD,2026-11-05,個股模型現價（20261115_廣達個股模型_v0.4.9.xlsx，Val!B6）,1
-3661,2960,TWD,2026-11-05,個股模型現價（20261115_世芯-KY個股模型_v0.2.5.xlsx，Val!B53）,1
-3443,6405,TWD,2026-11-05,個股模型現價（20261115_創意個股模型_v0.3.5.xlsx，Val!B53）,1
-4062,6726,JPY,2026-11-05,個股模型現價（20261114_Ibiden個股模型_v0.5.6.xlsx，Val!B6）,1
-6857,29485,JPY,2026-11-05,個股模型現價（20261115_Advantest個股模型_v0.7.5.xlsx，Val!B92）,1
-6146,41450,JPY,2026-11-05,個股模型現價（20261115_Disco模型_v0.3.5.xlsx，Val!B53）,1
-285A,9324,JPY,2026-11-05,個股模型現價（20261115_Kioxia個股模型_v0.5.5.xlsx，Val!B82）,1
-2345,1380,TWD,2026-11-05,個股模型現價（20261115_智邦個股模型_v0.4.6.xlsx，Val!B66）,1
-FN,292.97,USD,2026-11-05,個股模型現價（20261115_Fabrinet個股模型_v0.3.5.xlsx，Val!B64）,1
-CRDO,112.33,USD,2026-11-05,個股模型現價（20261115_Credo個股模型_v0.3.6.xlsx，Val!B63）,1
-ALAB,179.47,USD,2026-11-05,個股模型現價（20261114_Astera Labs個股模型_v0.3.8.xlsx，Val!B63）,1
-2449,228.5,TWD,2026-11-05,個股模型現價（20261115_京元電個股模型_v0.4.6.xlsx，Val!B53）,1
-AMKR,30.49,USD,2026-11-05,個股模型現價（20261114_艾克爾個股模型_v0.4.4.xlsx，Val!B53）,1
-2383,4100,TWD,2026-11-05,個股模型現價（20261115_台光電個股模型_v0.5.4.xlsx，Val!B6）,1
-3037,800,TWD,2026-11-05,個股模型現價（20261115_欣興個股模型_v0.4.4.xlsx，Val!B53）,1
-8046,972,TWD,2026-11-05,個股模型現價（20261115_南電個股模型_v0.3.5.xlsx，Val!B53）,1
-2368,868,TWD,2026-11-05,個股模型現價（20261115_金像電個股模型_v0.3.5.xlsx，Val!B53）,1
-ASML,1250,EUR,2026-11-05,個股模型現價（20261115_ASML個股模型_v0.3.5.xlsx，Val!B16）,1
-AMAT,319.25,USD,2026-11-05,個股模型現價（20261115_應用材料個股模型_v0.4.5.xlsx，Val!B92）,1
-LRCX,185.2,USD,2026-11-05,個股模型現價（20261115_科林研發模型_v0.3.5.xlsx，Val!B85）,1
-KLAC,129.8,USD,2026-11-05,個股模型現價（20261115_科磊個股模型_v0.4.5.xlsx，Val!B86）,1
-TER,212.74,USD,2026-11-05,個股模型現價（20261114_泰瑞達個股模型_v0.4.5.xlsx，Val!B73）,1
-BESI,140.9,EUR,2026-11-05,個股模型現價（20261115_BESI模型_v0.2.4.xlsx，Val!B68）,1
-2317,235,TWD,2026-11-05,個股模型現價（20261115_鴻海個股模型_v0.4.7.xlsx，Val!B6）,1
-3231,168.5,TWD,2026-11-05,個股模型現價（20261115_緯創個股模型_v0.4.7.xlsx，Val!B53）,1
-6669,1650,TWD,2026-11-05,個股模型現價（20261115_緯穎個股模型_v0.2.7.xlsx，Val!B53）,1
-DELL,316.91,USD,2026-11-05,個股模型現價（20261115_戴爾個股模型_v0.2.6.xlsx，Val!B55）,1
-SMCI,27.08,USD,2026-11-05,個股模型現價（20261115_美超微個股模型_v0.3.7.xlsx，Val!B53）,1
-3017,2565,TWD,2026-11-05,個股模型現價（20261115_奇鋐個股模型_v0.3.6.xlsx，Val!B6）,1
-2301,211.5,TWD,2026-11-05,個股模型現價（20261115_光寶個股模型_v0.4.5.xlsx，Val!B53）,1
-3324,1170,TWD,2026-11-05,個股模型現價（20261115_雙鴻個股模型_v0.2.6.xlsx，Val!B62）,1
-3653,5805,TWD,2026-11-05,個股模型現價（20261115_健策個股模型_v0.2.6.xlsx，Val!B56）,1
-ARM,166.72,USD,2026-11-05,個股模型現價（20261115_Arm個股模型_v0.3.5.xlsx，Val!B64）,1
-3711,572,TWD,2026-11-05,個股模型現價（20261114_日月光投控個股模型_v0.2.7.xlsx，Val!B53）,1
-2303,98.4,TWD,2026-11-05,個股模型現價（20261115_聯電個股模型_v0.2.4.xlsx，Val!B53）,1
-5347,126,TWD,2026-11-05,個股模型現價（20261115_世界先進個股模型_v0.3.1.xlsx，Val!B53）,1
-6274,1005,TWD,2026-11-05,個股模型現價（20261115_台燿個股模型_v0.2.5.xlsx，Val!B57）,1
-6223,3725,TWD,2026-11-05,個股模型現價（20261115_旺矽個股模型_v0.2.6.xlsx，Val!B53）,1
-000660,1264000,KRW,2026-11-05,個股模型現價（20261114_SK海力士個股模型_v0.7.7.xlsx，In!E6）,1
-005930,201500,KRW,2026-11-05,個股模型現價（20261115_三星電子個股模型_v0.5.5.xlsx，In!E6）,1
-300308,493.33,CNY,2026-11-05,個股模型現價（20261115_中際旭創個股模型_v0.4.5.xlsx，Val!B53）,1
-300502,185.61,CNY,2026-11-05,個股模型現價（20261115_新易盛個股模型_v0.4.5.xlsx，Val!B63）,1
-300476,135.00,CNY,2026-11-05,個股模型現價（20261115_勝宏科技個股模型_v0.4.4.xlsx，Val!B53）,1
-6315,1877,JPY,2026-11-05,個股模型現價（20261115_TOWA個股模型_v0.3.6.xlsx，Val!B110）,1
-7729,12635,JPY,2026-11-05,個股模型現價（20261115_東京精密個股模型_v0.3.6.xlsx，Val!B53）,1
-042700,169100,KRW,2026-11-05,個股模型現價（20261115_韓美半導體個股模型_v0.4.5.xlsx，Val!B68）,1
-3189,740,TWD,2026-11-05,個股模型現價（20261115_景碩個股模型_v0.4.4.xlsx，Val!B55）,1
-2802,4872,JPY,2026-11-05,個股模型現價（20261115_味之素個股模型_v0.3.6.xlsx，Val!B62）,1
-CBRS,81.71,USD,2026-11-05,個股模型現價（20261115_Cerebras個股模型_v0.1.3.xlsx，Val!B57；equibles 11-06 收盤 89.68 − 漲跌 7.97）,1
+CRWV,53.13,USD,2026-11-13,Yahoo Finance 日線收盤（CRWV；2026-11-15 擷取，query1 chart API）,1
+NBIS,115.88,USD,2026-11-13,Yahoo Finance 日線收盤（NBIS；2026-11-15 擷取，query1 chart API）,1
+WYFI,9.43,USD,2026-11-13,Yahoo Finance 日線收盤（WYFI；2026-11-15 擷取，query1 chart API）,1
+ORCL,125.35,USD,2026-11-13,Yahoo Finance 日線收盤（ORCL；2026-11-15 擷取，query1 chart API）,1
+MSFT,523.88,USD,2026-11-13,Yahoo Finance 日線收盤（MSFT；2026-11-15 擷取，query1 chart API）,1
+AMZN,266.66,USD,2026-11-13,Yahoo Finance 日線收盤（AMZN；2026-11-15 擷取，query1 chart API）,1
+GOOGL,295.77,USD,2026-11-13,Yahoo Finance 日線收盤（GOOGL；2026-11-15 擷取，query1 chart API）,1
+META,641.69,USD,2026-11-13,Yahoo Finance 日線收盤（META；2026-11-15 擷取，query1 chart API）,1
+SPCX,139.11,USD,2026-11-13,Yahoo Finance 日線收盤（SPCX；2026-11-15 擷取，query1 chart API）,1
+00100,152.4,HKD,2026-11-13,Yahoo Finance 日線收盤（0100.HK；2026-11-15 擷取，query1 chart API）,1
+02513,408.4,HKD,2026-11-13,Yahoo Finance 日線收盤（2513.HK；2026-11-15 擷取，query1 chart API）,1
+NVDA,162.85,USD,2026-11-13,Yahoo Finance 日線收盤（NVDA；2026-11-15 擷取，query1 chart API）,1
+AVGO,347.01,USD,2026-11-13,Yahoo Finance 日線收盤（AVGO；2026-11-15 擷取，query1 chart API）,1
+MU,778.31,USD,2026-11-13,Yahoo Finance 日線收盤（MU；2026-11-15 擷取，query1 chart API）,1
+AMD,534.06,USD,2026-11-13,Yahoo Finance 日線收盤（AMD；2026-11-15 擷取，query1 chart API）,1
+MRVL,156.76,USD,2026-11-13,Yahoo Finance 日線收盤（MRVL；2026-11-15 擷取，query1 chart API）,1
+ANET,197.29,USD,2026-11-13,Yahoo Finance 日線收盤（ANET；2026-11-15 擷取，query1 chart API）,1
+SNDK,885.01,USD,2026-11-13,Yahoo Finance 日線收盤（SNDK；2026-11-15 擷取，query1 chart API）,1
+COHR,218.15,USD,2026-11-13,Yahoo Finance 日線收盤（COHR；2026-11-15 擷取，query1 chart API）,1
+LITE,596.62,USD,2026-11-13,Yahoo Finance 日線收盤（LITE；2026-11-15 擷取，query1 chart API）,1
+2330,2350,TWD,2026-11-13,Yahoo Finance 日線收盤（2330.TW；2026-11-15 擷取，query1 chart API）,1
+2454,4120,TWD,2026-11-13,Yahoo Finance 日線收盤（2454.TW；2026-11-15 擷取，query1 chart API）,1
+2308,1240,TWD,2026-11-13,Yahoo Finance 日線收盤（2308.TW；2026-11-15 擷取，query1 chart API）,1
+2382,276.5,TWD,2026-11-13,Yahoo Finance 日線收盤（2382.TW；2026-11-15 擷取，query1 chart API）,1
+3661,4020,TWD,2026-11-13,Yahoo Finance 日線收盤（3661.TW；2026-11-15 擷取，query1 chart API）,1
+3443,8610,TWD,2026-11-13,Yahoo Finance 日線收盤（3443.TW；2026-11-15 擷取，query1 chart API）,1
+4062,6087,JPY,2026-11-13,Yahoo Finance 日線收盤（4062.T；2026-11-15 擷取，query1 chart API）,1
+6857,30610,JPY,2026-11-13,Yahoo Finance 日線收盤（6857.T；2026-11-15 擷取，query1 chart API）,1
+6146,47470,JPY,2026-11-13,Yahoo Finance 日線收盤（6146.T；2026-11-15 擷取，query1 chart API）,1
+285A,9091,JPY,2026-11-13,Yahoo Finance 日線收盤（285A.T；2026-11-15 擷取，query1 chart API）,1
+2345,1520,TWD,2026-11-13,Yahoo Finance 日線收盤（2345.TW；2026-11-15 擷取，query1 chart API）,1
+FN,327.98,USD,2026-11-13,Yahoo Finance 日線收盤（FN；2026-11-15 擷取，query1 chart API）,1
+CRDO,131.51,USD,2026-11-13,Yahoo Finance 日線收盤（CRDO；2026-11-15 擷取，query1 chart API）,1
+ALAB,221.83,USD,2026-11-13,Yahoo Finance 日線收盤（ALAB；2026-11-15 擷取，query1 chart API）,1
+2449,213.5,TWD,2026-11-13,Yahoo Finance 日線收盤（2449.TW；2026-11-15 擷取，query1 chart API）,1
+AMKR,36.11,USD,2026-11-13,Yahoo Finance 日線收盤（AMKR；2026-11-15 擷取，query1 chart API）,1
+2383,4215,TWD,2026-11-13,Yahoo Finance 日線收盤（2383.TW；2026-11-15 擷取，query1 chart API）,1
+3037,785,TWD,2026-11-13,Yahoo Finance 日線收盤（3037.TW；2026-11-15 擷取，query1 chart API）,1
+8046,977,TWD,2026-11-13,Yahoo Finance 日線收盤（8046.TW；2026-11-15 擷取，query1 chart API）,1
+2368,1030,TWD,2026-11-13,Yahoo Finance 日線收盤（2368.TW；2026-11-15 擷取，query1 chart API）,1
+ASML,1338.8,EUR,2026-11-13,Yahoo Finance 日線收盤（ASML.AS；2026-11-15 擷取，query1 chart API）,1
+AMAT,370.5,USD,2026-11-13,Yahoo Finance 日線收盤（AMAT；2026-11-15 擷取，query1 chart API）,1
+LRCX,225.92,USD,2026-11-13,Yahoo Finance 日線收盤（LRCX；2026-11-15 擷取，query1 chart API）,1
+KLAC,152.32,USD,2026-11-13,Yahoo Finance 日線收盤（KLAC；2026-11-15 擷取，query1 chart API）,1
+TER,249.55,USD,2026-11-13,Yahoo Finance 日線收盤（TER；2026-11-15 擷取，query1 chart API）,1
+BESI,154.1,EUR,2026-11-13,Yahoo Finance 日線收盤（BESI.AS；2026-11-15 擷取，query1 chart API）,1
+2317,241,TWD,2026-11-13,Yahoo Finance 日線收盤（2317.TW；2026-11-15 擷取，query1 chart API）,1
+3231,171,TWD,2026-11-13,Yahoo Finance 日線收盤（3231.TW；2026-11-15 擷取，query1 chart API）,1
+6669,1635,TWD,2026-11-13,Yahoo Finance 日線收盤（6669.TW；2026-11-15 擷取，query1 chart API）,1
+DELL,344.53,USD,2026-11-13,Yahoo Finance 日線收盤（DELL；2026-11-15 擷取，query1 chart API）,1
+SMCI,26.87,USD,2026-11-13,Yahoo Finance 日線收盤（SMCI；2026-11-15 擷取，query1 chart API）,1
+3017,3040,TWD,2026-11-13,Yahoo Finance 日線收盤（3017.TW；2026-11-15 擷取，query1 chart API）,1
+2301,231.5,TWD,2026-11-13,Yahoo Finance 日線收盤（2301.TW；2026-11-15 擷取，query1 chart API）,1
+3324,1140,TWD,2026-11-13,Yahoo Finance 日線收盤（3324.TWO；2026-11-15 擷取，query1 chart API）,1
+3653,5345,TWD,2026-11-13,Yahoo Finance 日線收盤（3653.TW；2026-11-15 擷取，query1 chart API）,1
+ARM,190.53,USD,2026-11-13,Yahoo Finance 日線收盤（ARM；2026-11-15 擷取，query1 chart API）,1
+3711,598,TWD,2026-11-13,Yahoo Finance 日線收盤（3711.TW；2026-11-15 擷取，query1 chart API）,1
+2303,101.5,TWD,2026-11-13,Yahoo Finance 日線收盤（2303.TW；2026-11-15 擷取，query1 chart API）,1
+5347,135,TWD,2026-11-13,Yahoo Finance 日線收盤（5347.TWO；2026-11-15 擷取，query1 chart API）,1
+6274,974,TWD,2026-11-13,Yahoo Finance 日線收盤（6274.TWO；2026-11-15 擷取，query1 chart API）,1
+6223,4670,TWD,2026-11-13,Yahoo Finance 日線收盤（6223.TWO；2026-11-15 擷取，query1 chart API）,1
+000660,1216000,KRW,2026-11-13,Yahoo Finance 日線收盤（000660.KS；2026-11-15 擷取，query1 chart API）,1
+005930,206000,KRW,2026-11-13,Yahoo Finance 日線收盤（005930.KS；2026-11-15 擷取，query1 chart API）,1
+300308,466.2,CNY,2026-11-13,Yahoo Finance 日線收盤（300308.SZ；2026-11-15 擷取，query1 chart API）,1
+300502,187.58,CNY,2026-11-13,Yahoo Finance 日線收盤（300502.SZ；2026-11-15 擷取，query1 chart API）,1
+300476,123.24,CNY,2026-11-13,Yahoo Finance 日線收盤（300476.SZ；2026-11-15 擷取，query1 chart API）,1
+6315,2207,JPY,2026-11-13,Yahoo Finance 日線收盤（6315.T；2026-11-15 擷取，query1 chart API）,1
+7729,13150,JPY,2026-11-13,Yahoo Finance 日線收盤（7729.T；2026-11-15 擷取，query1 chart API）,1
+042700,181700,KRW,2026-11-13,Yahoo Finance 日線收盤（042700.KS；2026-11-15 擷取，query1 chart API）,1
+3189,668,TWD,2026-11-13,Yahoo Finance 日線收盤（3189.TW；2026-11-15 擷取，query1 chart API）,1
+2802,4227,JPY,2026-11-13,Yahoo Finance 日線收盤（2802.T；2026-11-15 擷取，query1 chart API）,1
+CBRS,108.72,USD,2026-11-13,Yahoo Finance 日線收盤（CBRS；2026-11-15 擷取，query1 chart API）,1
