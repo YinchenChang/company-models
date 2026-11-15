@@ -34,3 +34,4 @@
 - Coord「Wattonomics」列說明補：Wattonomics Decisions D43（GL01-37，Andy 2026-10-31 已定）已將智譜移出 Gap（資金缺口收支只算 11 家代表玩家，不含中國）。
 - 驗證：完整 parity（tests/parity，47 情境）全過——情境一致性 47／47、快取等價 47／47、結構與效能測試通過；`test_scenarios_actually_change_outputs`、`test_scenario_expected_results` 在本機單一行程記憶體不足（7 GB 上限，pycel 引擎未即時回收），改以同一斷言分段執行（每情境後回收記憶體）全過。test_builder、test_html 通過；`tools/baseline_coordination/check.py` 0 項不符。
 - 檢查：main 版 `check_layout_v13` 對本頁不過（main 版只認 `data-unlisted`；本分支合併後即為新版）；新版全過。repo 內其他既有 HTML（77 份）main 版與新版輸出逐字相同。
+- **同業倍數日期加註（2026-11-15，PR #573 合併後；只加註，數值不變）：** 個股頁估值章「同業（MiniMax）企業價值 ÷ 年化營收」列與一頁摘要同業倍數說明，註明 MiniMax 市值取 2026-10-07 盤中、與智譜股價 2026-11-05 收盤不同日。只改 `tools/build_html_v13.py`、`tools/build_html.py` 文字，同版 v0.1.5 重建 HTML（xlsx 位元組相同）；test_html、test_builder、parity base 情境通過；`check_layout_v13 --xlsx` 全過。

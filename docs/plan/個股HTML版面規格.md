@@ -98,7 +98,7 @@
 - **估值章 (b)：** 標題寫成「估值：不適用（本模型未建目標價）」；橫幅寫「本模型未建目標價與評等」。必列現價、市值、EV 與反向檢驗（市值隱含營收，或支持現價所需營收），且**至少一張反向檢驗圖**；數字一律取自 xlsx。註明「若要給目標價需另建估值頁（判斷類，待 Andy 決定）」。
 - **不適用（兩類皆同）：** 反向 DCF 章（`revdcf` 可省略）、G 節（四個目標價圖與位置）、H 節（加權目標價相對基準的主圖與位置）；(a) 另免估值章的圖表要求。
 - **照做：** 命題（至少 1 張圖）、敏感度（改為對收支關卡或資金缺口；至少 1 張圖）、損益（標準損益表，見 D 節；歷史未揭露的年度與列留空並標「未揭露」，模型未建的預測列標「未建模」，不得補編數字）、驅動因子（含分部營收推導；至少 1 張圖）、個別模組（每個至少 1 張圖）、對帳、資料狀態。
-- **檢查：** `check_layout_v13.py` 在估值章帶 `data-unlisted` 或 `data-novaluation` 時（`section#valuation[data-unlisted], section#valuation[data-novaluation]`）套用同組豁免：A 節章節順序改為 `thesis、valuation、sens、pl、drivers`（不要求 `revdcf`）＋個別模組＋`recon、status`；G、H 不檢查；F 節：(a) 估值章免圖，(b) 估值章至少一張圖；其餘照查。對未帶旗標的既有各家輸出不變（以全部既有個股 HTML 前後輸出逐字相同驗證）。
+- **檢查：** `check_layout_v13.py` 在估值章帶 `data-unlisted` 或 `data-novaluation` 時（`section#valuation[data-unlisted], section#valuation[data-novaluation]`）套用同組豁免：A 節章節順序改為 `thesis、valuation、sens、pl、drivers`（不要求 `revdcf`）＋個別模組＋`recon、status`；G、H 不檢查；F 節：(a) 估值章免圖，(b) 估值章至少一張圖；兩旗標並存時以 `data-novaluation`（(b)）為準（2026-11-15）；其餘照查。對未帶旗標的既有各家輸出不變（以全部既有個股 HTML 前後輸出逐字相同驗證）。
 
 ## 原則
 
