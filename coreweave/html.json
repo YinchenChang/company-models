@@ -3874,7 +3874,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!D53"
+      "@Coord!D54"
      ]
     },
     {
@@ -4232,6 +4232,14 @@
        "@Coord!I47",
        "@Coord!J47",
        "@Coord!K47"
+      ],
+      [
+       "@Coord!A48",
+       "@Coord!B48",
+       "@Coord!H48",
+       "@Coord!I48",
+       "@Coord!J48",
+       "@Coord!K48"
       ]
      ]
     },
@@ -4276,13 +4284,13 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!B55"
+      "@Coord!B56"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!B54"
+      "@Coord!B55"
      ]
     },
     {
@@ -4821,8 +4829,8 @@
      "collapse": true,
      "summary": "展開：版本要點",
      "items": [
-      "@README!A67",
       "@README!A68",
+      "@README!A69",
       "@README!A48",
       "@README!A49",
       "@README!A50"

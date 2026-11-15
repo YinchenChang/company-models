@@ -1,4 +1,12 @@
-# CoreWeave（CRWV）個股模型 v5.0.3（Oracle 收支型樣板）
+# CoreWeave（CRWV）個股模型 v5.0.4（Oracle 收支型樣板；Coord 改讀 Wattonomics v0.3.5）
+
+**v5.0.4（2026-11-15）：Coord 頁 C0 層級側改讀 Wattonomics v0.3.5（原 v0.3.2）。**
+依據：主控指示（main 已合併 Wattonomics v0.3.5，#618）；規則 `docs/plan/三層基準協調規則.md` v1.4.2；`wattonomics/docs/verify/20261115_v0.3.5_build.md`。
+- **改了什麼：** `build_coreweave.py` 讀 `wattonomics/data/wattonomics_snapshot_v0.3.5.json`；mw_crwv 改以列 id 讀取並斷言等於 In 頁 wat26／wat30 手填值（1,850／8,000 MW，v0.3.5 同值）；新增追公式輸出 `data/wattonomics_trace_v0.3.5.json`（`--player crwv`，無法解析 0 格），Coord 文字的儲存格位置改為 v0.3.5（CapexGW 頁 G195＝F195＋G194、G194＝MAX(G192, w1_crwv_q3 ÷ 1000 − F195)、w1_crwv_q3 在 In 第 470 列；回寫值 gcap_crwv 37.736＝v5.0.3 Thesis!E66）。成品日改 2026-11-15。
+- **層級讀數新舊值（v0.3.2 → v0.3.5）：** `WIF_Gap_Player_crwv_2026_CapexAIGW` 29.97 → **32.08**：Gap 主讀法改付款年實際花費＝gcap_crwv 37.736 × 0.85，即本公司模型回寫值（同源）。所以**資本支出每 GW 判定改讀 `_CapexAIOnline`（上線年 GW × Tokenomics 每 GW；＝v0.3.2 時 CapexAIGW 的算法）30.12**，層級每 GW 35.26 → 35.43；CapexAIGW 32.08 改列參考列（同源，差距 0）。`WIF_PlayerGW_YE_crwv_2025／2026`（0.85／1.70）、`_AddGW` 2026（0.85）不變；`_2030` 4.560 → **4.766**（簽約電力列參考文字）。
+- **C0 判定（不變）：** 營收 主讀數 8.314 vs 9.587（−13.3%）、第二讀數 14.644 vs 12.783（+14.6%）→ 一致；資本支出 公司口徑每 GW 36.02 vs 35.43（+1.7%，原 +2.1%）→ 一致；現金口徑下界 27.72（−21.8%）不判定；在役電力 參考（同源校準）。對帳中 0 個、有判定 2 個。
+- **目標價與評等：** Wattonomics 不進估值：加權目標價 **76.20 → 76.20**、投資建議 **收支不足 → 收支不足**；收支關卡不變。
+- **驗證：** `SENS=1 REV=1 bash coreweave/make_v5.sh` 全過（公式錯誤 0；檢查列與收支恆等式 147 項；In 版面；敏感度覆蓋 36 鍵；分部；HTML；治理；收支關卡評等；敏感度、反向 DCF 快照已重跑，拆解沿用）；其餘檢查見 PR 說明。
 
 **v5.0.3（2026-11-14）：版面 v1.3 補缺項＋三層協調（Coord 頁；新雲樣板，Nebius 複製用）。** 依據：工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md` 第 2 節；規則 `docs/plan/三層基準協調規則.md` v1.4.2 C0 第 2 點；`tools/coord/README.md`；Andy 2026-11-14 12:47（G、H 位置）、17:40（C0 用公司實績）。open PR #450（v4.14 草稿）不動。
 - **版面 v1.3 補缺項（`check_layout_v13 --xlsx` 原缺 G、H）：** 估值章第一個區塊改為四個目標價與現價圖、敏感度章前兩個區塊改為低案、高案主圖，章節說明（原 intro）移到圖下（`scripts/make_html_json.py` 末段；只改區塊順序）。
@@ -28,8 +36,8 @@
 
 數字以 `dist/` 的 xlsx 為準；下表由建置成品產生（`python3 tools/model_governance/version_table.py coreweave --update`），不手寫。
 
-<!-- version-table: dist/_待刪除/20261114_CoreWeave個股模型_v5.0.2.xlsx｜dist/20261114_CoreWeave個股模型_v5.0.3.xlsx -->
-| 項目 | v5.0.2 | v5.0.3 |
+<!-- version-table: dist/_待刪除/20261114_CoreWeave個股模型_v5.0.3.xlsx｜dist/20261115_CoreWeave個股模型_v5.0.4.xlsx -->
+| 項目 | v5.0.3 | v5.0.4 |
 |---|---|---|
 | 加權目標價（上檔空間） | 76.20（+25.4%） | 76.20（+25.4%） |
 | DCF 目標價（情境加權） | 0.00 | 0.00 |
@@ -61,6 +69,7 @@ SENS=1 REV=1 DEC=1 bash coreweave/make_v5.sh     # 改了公式或輸入時（�
 | `data/coreweave_facts_20261112.json` | 事實總帳（Q3 新聞稿逐筆、Q2 10-Q 沿用項、來源 URL） |
 | `data/coreweave_is_hist_20261114.json` | 標準損益表的 FY2023–FY2025 與 9M 2026 實績（SEC XBRL，10-K／10-Q） |
 | `data/tokenomics_snapshot_v22.0.json` | Tokenomics 快照（v18.0 保留供拆解） |
+| `data/wattonomics_trace_v0.3.5.json` | Wattonomics v0.3.5 玩家 crwv 追公式輸出（Coord 頁同源判定依據） |
 | `segments.json`、`display_check.json`、`html.json` | 分部宣告、展示層一致性設定、HTML 設定（由腳本產生） |
 | `legacy_v4/` | v4.13 舊引擎（JS＋company.json＋驗證腳本），保留不刪 |
 
