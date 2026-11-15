@@ -13,7 +13,7 @@
    "inc": 1,
    "sec": 0,
    "tag": "Verified",
-   "src": "SRC_GL_346",
+   "src": "SRC_GL_349",
    "note": "W1#24（核對屬實，Q3'26 新聞稿原文：102 MW revenue-generating critical IT capacity；等級 1 實績）。承租方 Fluidstack／Core42，非七家。【r1（2026-11-14）X6 第 3 項】重複查核：TeraWulf Q4／FY2025 新聞稿（2026-02-26）「39 critical IT MW HPC capacity online」（CB1 16 MW、CB2A 已運轉）＝2025 年底已運轉量，已含在 mw_neo 2025 年底存量 500（其他新雲合計，含 TeraWulf）→ 2026 增量＝102 − 39＝63 MW（原值 102 保留於此）；與 2026 年清空 mw_neo 2026 的理由一致（2026 年底＝2025 存量＋2026 增量）"
   },
   {
@@ -29,7 +29,7 @@
    "inc": 1,
    "sec": 0,
    "tag": "Assumed",
-   "src": "SRC_GL_346",
+   "src": "SRC_GL_349",
    "note": "W1#32（Crusoe 原文：6 GW+ gross contracted、1 GW gross operating，口徑 gross）。X5：× Galaxy 0.66（526 MW IT ÷ 800 MW）換 IT＝3,960 MW；X2：扣七家已公開 Abilene OpenAI 824（全額扣除，補充 1）、Microsoft Abilene 鄰近 672（cp_msft_abl、cp_msft_abl2）、Google Goodnight 618（cp_googl_gn1–3）＝2,114 MW，其餘 1,846 MW 未揭露客戶 × 50%（w1_und；0–100%）＝923 MW；分期 2027–2029 各 1/3 為 [Assumed]（來源未分年）。In 純量 w1_crusoe_gross、w1_crusoe_ded、w1_it_ratio 可重算；Checks E-W1 核對"
   },
   {
@@ -45,7 +45,7 @@
    "inc": 1,
    "sec": 0,
    "tag": "Assumed",
-   "src": "SRC_GL_346",
+   "src": "SRC_GL_349",
    "note": "W1#32（Crusoe 原文：6 GW+ gross contracted、1 GW gross operating，口徑 gross）。X5：× Galaxy 0.66（526 MW IT ÷ 800 MW）換 IT＝3,960 MW；X2：扣七家已公開 Abilene OpenAI 824（全額扣除，補充 1）、Microsoft Abilene 鄰近 672（cp_msft_abl、cp_msft_abl2）、Google Goodnight 618（cp_googl_gn1–3）＝2,114 MW，其餘 1,846 MW 未揭露客戶 × 50%（w1_und；0–100%）＝923 MW；分期 2027–2029 各 1/3 為 [Assumed]（來源未分年）。In 純量 w1_crusoe_gross、w1_crusoe_ded、w1_it_ratio 可重算；Checks E-W1 核對"
   },
   {
@@ -61,7 +61,7 @@
    "inc": 1,
    "sec": 0,
    "tag": "Assumed",
-   "src": "SRC_GL_346",
+   "src": "SRC_GL_349",
    "note": "W1#32（Crusoe 原文：6 GW+ gross contracted、1 GW gross operating，口徑 gross）。X5：× Galaxy 0.66（526 MW IT ÷ 800 MW）換 IT＝3,960 MW；X2：扣七家已公開 Abilene OpenAI 824（全額扣除，補充 1）、Microsoft Abilene 鄰近 672（cp_msft_abl、cp_msft_abl2）、Google Goodnight 618（cp_googl_gn1–3）＝2,114 MW，其餘 1,846 MW 未揭露客戶 × 50%（w1_und；0–100%）＝923 MW；分期 2027–2029 各 1/3 為 [Assumed]（來源未分年）。In 純量 w1_crusoe_gross、w1_crusoe_ded、w1_it_ratio 可重算；Checks E-W1 核對"
   },
   {
@@ -77,7 +77,7 @@
    "inc": 0,
    "sec": 0,
    "tag": "Interested-party",
-   "src": "SRC_GL_346",
+   "src": "SRC_GL_349",
    "note": "W1#47（核對小誤：AGM 2026-06-19 稱 will commission the first 120 MW by end 2026，是指引、尚未投運；屬自建、無簽約相對方）；補充 4：只入 Sens"
   },
   {
@@ -93,7 +93,7 @@
    "inc": 0,
    "sec": 0,
    "tag": "Interested-party",
-   "src": "SRC_GL_346",
+   "src": "SRC_GL_349",
    "note": "W1#53（核對小誤：Jiji 2026-01-23 稱已開始營運，48 MW 只見 mingtiandi 標題；商用電信業者，歸主權需判斷）；補充 4：只入 Sens"
   },
   {
@@ -109,7 +109,7 @@
    "inc": 0,
    "sec": 0,
    "tag": "Interested-party",
-   "src": "SRC_GL_346",
+   "src": "SRC_GL_349",
    "note": "W1#39＋W1_verify（2026-11-05 FT：Microsoft 放棄 Barstow 第二期 700 MW 選擇權並退出 Essex；Texas 既有合約 240 MW 園區、約 104,000 顆 GB300 維持）。補充 3：去重下限只用 Texas 既有約 104k 顆，不用原 200k 顆。七家合約 → 納入＝0（X2 預設）；改 1 即還原"
   },
   {
@@ -125,7 +125,7 @@
    "inc": 0,
    "sec": 0,
    "tag": "Interested-party",
-   "src": "SRC_GL_346",
+   "src": "SRC_GL_349",
    "note": "W1#38（核對小誤：Nscale 2026-04-14 新聞稿：230 MW 園區、>30,000 Rubin、2027 交付；MW 口徑未明；Series C 日期更正為 2026-03-09）。使用者 Microsoft（七家）→ 納入＝0"
   },
   {
@@ -141,7 +141,7 @@
    "inc": 0,
    "sec": 0,
    "tag": "Interested-party",
-   "src": "SRC_GL_346",
+   "src": "SRC_GL_349",
    "note": "W1#28（核對屬實：2025-11-03 AWS 15 年約 5.5B、300 MW，分兩期 2026-07 至 Q4 交付；MW 口徑未明）。Amazon 屬七家 → 納入＝0；其中 81 MW 已在 cp_amzn_cip4（amzn 營運者路徑），不重複"
   },
   {
@@ -157,7 +157,7 @@
    "inc": 0,
    "sec": 0,
    "tag": "Interested-party",
-   "src": "SRC_GL_346",
+   "src": "SRC_GL_349",
    "note": "W1#23（核對小誤：簽約日 2026-06-08；210 MW、15 年、約 5.2B；承租方 tier-one investment grade hyperscaler，與七家重疊極高；補充 5：視為七家）。上線年 [Assumed] 2028（原文未分年）→ 納入＝0"
   },
   {
@@ -168,7 +168,7 @@
    "inc": 1,
    "sec": 0,
    "tag": "Interested-party",
-   "src": "SRC_GL_346",
+   "src": "SRC_GL_349",
    "key": "cp_w1_lmar_cb4",
    "name": "TeraWulf Lake Mariner CB-4（Fluidstack 租約；Anthropic 鏈）",
    "mw": 168,
@@ -184,7 +184,7 @@
    "inc": 1,
    "sec": 0,
    "tag": "Interested-party",
-   "src": "SRC_GL_346",
+   "src": "SRC_GL_349",
    "key": "cp_w1_abern",
    "name": "TeraWulf×Fluidstack Abernathy TX 合資（168 MW IT；X3：Anthropic 鏈）",
    "mw": 168,
@@ -200,7 +200,7 @@
    "inc": 1,
    "sec": 0,
    "tag": "Interested-party",
-   "src": "SRC_GL_346",
+   "src": "SRC_GL_349",
    "key": "cp_w1s_barber39",
    "name": "Cipher Barber Lake 增量 39 MW（Fluidstack；Anthropic 鏈）",
    "mw": 39,
@@ -211,7 +211,7 @@
  ],
  "sources": [
   {
-   "id": "SRC_GL_346",
+   "id": "SRC_GL_349",
    "path": "wattonomics/evidence_raw/20261114_W1/W1_evidence.md／W1_evidence.csv（查證代理 2026-11-14，68 列）；W1_verify.md（未參與代理獨立核對：屬實 40、小誤 12、錯誤 0、無法核對 16）",
    "desc": "v0.3.2 W-1：七家以外買方（新雲、主權、OEM 交叉檢核）證據"
   }
