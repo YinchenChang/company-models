@@ -3874,7 +3874,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!D53"
+      "@Coord!D58"
      ]
     },
     {
@@ -3889,30 +3889,6 @@
       "狀態／判定"
      ],
      "rows": [
-      [
-       "@Coord!A35",
-       "@Coord!B35",
-       "@Coord!D35|n1",
-       "@Coord!E35|n1",
-       "@Coord!F35|sp1",
-       "@Coord!G35"
-      ],
-      [
-       "@Coord!A36",
-       "@Coord!B36",
-       "@Coord!D36|n1",
-       "@Coord!E36|n1",
-       "@Coord!F36|sp1",
-       "@Coord!G36"
-      ],
-      [
-       "@Coord!A37",
-       "@Coord!B37",
-       "",
-       "",
-       "",
-       "@Coord!G37"
-      ],
       [
        "@Coord!A38",
        "@Coord!B38",
@@ -3940,34 +3916,58 @@
       [
        "@Coord!A41",
        "@Coord!B41",
-       "@Coord!D41|n0",
-       "@Coord!E41|n0",
+       "@Coord!D41|n1",
+       "@Coord!E41|n1",
        "@Coord!F41|sp1",
        "@Coord!G41"
       ],
       [
        "@Coord!A42",
        "@Coord!B42",
-       "@Coord!D42|n0",
-       "@Coord!E42|n0",
+       "@Coord!D42|n1",
+       "@Coord!E42|n1",
        "@Coord!F42|sp1",
        "@Coord!G42"
       ],
       [
-       "@Coord!A43",
-       "@Coord!B43",
+       "@Coord!A44",
+       "@Coord!B44",
        "",
        "",
        "",
-       "@Coord!G43"
+       "@Coord!G44"
       ],
       [
        "@Coord!A45",
        "@Coord!B45",
        "@Coord!D45|n0",
-       "",
-       "",
+       "@Coord!E45|n0",
+       "@Coord!F45|sp1",
        "@Coord!G45"
+      ],
+      [
+       "@Coord!A46",
+       "@Coord!B46",
+       "@Coord!D46|n0",
+       "@Coord!E46|n0",
+       "@Coord!F46|sp1",
+       "@Coord!G46"
+      ],
+      [
+       "@Coord!A47",
+       "@Coord!B47",
+       "",
+       "",
+       "",
+       "@Coord!G47"
+      ],
+      [
+       "@Coord!A49",
+       "@Coord!B49",
+       "@Coord!D49|n0",
+       "",
+       "",
+       "@Coord!G49"
       ]
      ]
     },
@@ -4232,6 +4232,46 @@
        "@Coord!I47",
        "@Coord!J47",
        "@Coord!K47"
+      ],
+      [
+       "@Coord!A48",
+       "@Coord!B48",
+       "@Coord!H48",
+       "@Coord!I48",
+       "@Coord!J48",
+       "@Coord!K48"
+      ],
+      [
+       "@Coord!A49",
+       "@Coord!B49",
+       "@Coord!H49",
+       "@Coord!I49",
+       "@Coord!J49",
+       "@Coord!K49"
+      ],
+      [
+       "@Coord!A50",
+       "@Coord!B50",
+       "@Coord!H50",
+       "@Coord!I50",
+       "@Coord!J50",
+       "@Coord!K50"
+      ],
+      [
+       "@Coord!A51",
+       "@Coord!B51",
+       "@Coord!H51",
+       "@Coord!I51",
+       "@Coord!J51",
+       "@Coord!K51"
+      ],
+      [
+       "@Coord!A52",
+       "@Coord!B52",
+       "@Coord!H52",
+       "@Coord!I52",
+       "@Coord!J52",
+       "@Coord!K52"
       ]
      ]
     },
@@ -4248,41 +4288,41 @@
      ],
      "rows": [
       [
-       "@Coord!A46",
-       "@Coord!B46",
-       "@Coord!D46|n2",
-       "@Coord!E46|n2",
-       "@Coord!F46|sp1",
-       "@Coord!G46"
+       "@Coord!A50",
+       "@Coord!B50",
+       "@Coord!D50|n2",
+       "@Coord!E50|n2",
+       "@Coord!F50|sp1",
+       "@Coord!G50"
       ],
       [
-       "@Coord!A47",
-       "@Coord!B47",
-       "@Coord!D47|n2",
-       "@Coord!E47|n2",
-       "@Coord!F47|sp1",
-       "@Coord!G47"
+       "@Coord!A51",
+       "@Coord!B51",
+       "@Coord!D51|n2",
+       "@Coord!E51|n2",
+       "@Coord!F51|sp1",
+       "@Coord!G51"
       ],
       [
-       "@Coord!A44",
-       "@Coord!B44",
-       "@Coord!D44|n2",
-       "@Coord!E44|n2",
-       "@Coord!F44|sp1",
-       "@Coord!G44"
+       "@Coord!A48",
+       "@Coord!B48",
+       "@Coord!D48|n2",
+       "@Coord!E48|n2",
+       "@Coord!F48|sp1",
+       "@Coord!G48"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!B55"
+      "@Coord!B60"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!B54"
+      "@Coord!B59"
      ]
     },
     {
@@ -4821,8 +4861,8 @@
      "collapse": true,
      "summary": "展開：版本要點",
      "items": [
-      "@README!A67",
       "@README!A68",
+      "@README!A69",
       "@README!A48",
       "@README!A49",
       "@README!A50"
