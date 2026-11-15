@@ -162,28 +162,28 @@ SEC["sens"]["blocks"] = SEC["sens"]["blocks"][:1] + vda_table() + SEC["sens"]["b
 SPEC = {
  "in_skip": [in_tok("G."), in_tok("情境驅動對照")],
  "in_groups": [
-  ["八吋晶圓（產能 × 稼動率 × 平均售價）", [
+  ["八吋晶圓（產能 × 稼動率 × 等效單位營收）", [
     ["產能（八吋）", ["cap_26", "capg27", "capg28", "capg29", "cap_adj"]],
     ["平均稼動率（三情境）", [k for k in I if re.match(r"^ut2\d_[ABC]$", k)] + ["ut_adj"]],
-    ["平均售價（美元，每片八吋）", ["asp_26"] + [k for k in I if re.match(r"^asp2\d_[ABC]$", k)] + ["asp_adj"]],
+    ["八吋等效單位營收／片（全部營收 ÷ 八吋出貨，美元；含非晶圓營收，不是晶圓報價）", ["asp_26"] + [k for k in I if re.match(r"^asp2\d_[ABC]$", k)] + ["asp_adj"]],
     ["AI 相關占營收（記憶列，不進營收加總；AI 需求反映在稼動率與售價）", ["ai_sh26", "ai_sh27_A", "ai_sh27_B", "ai_sh27_C"]]]],
   ["VSMC 新加坡十二吋廠（與 NXP 合資、合併報表）", [
     ["產能與稼動率", ["vcap27", "vcap28", "vcap29", "vcap_adj", "vut_A", "vut_B", "vut_C"]],
     ["售價與毛利率（含折舊）", ["vasp"] + [k for k in I if re.match(r"^vgm2\d_[ABC]$", k)]],
     ["非控制權益", ["vmi"]],
-    ["建廠計畫（DCF 資本支出：總投資、已投入、剩餘與分年比例）", ["vsmc_tot", "vda_life", "vda_eq", "vda_life_b", "vda_adj", "nxp_rem", "cxh_24", "cxh_25", "cxg_26", "cx8_r", "vsmc_rem", "vsmc_sp27", "vsmc_sp28", "vsmc_sp29"]]]],
+    ["建廠計畫與折舊拆分（總投資、設備／廠房占比與年限、剩餘支出與分年比例、VSMC 估值參數）", ["vsmc_tot", "vda_life", "vda_eq", "vda_bld", "vda_life_b", "vda_adj", "vsmc_mcx", "vsmc_nc", "nxp_rem", "cxh_24", "cxh_25", "cxg_26", "cx8_r", "vsmc_rem", "vsmc_sp27", "vsmc_sp28", "vsmc_sp29"]]]],
   ["全公司（匯率、成本、FY2026 錨點、股價與目標價規則）", [
     ["匯率", ["fx", "fx_26"]],
     ["成本：折舊、每片現金成本、營業費用", ["da_tot26", "da_sh", "dag_27", "dag_28", "dag_29", "dag_adj", "cc_g", "phi", "g_opx_min"]],
     ["營業外、稅與股數", ["nonop_f", "tax", "sh_g"]],
-    ["FY2026 錨點（第一季稼動率、第三季指引、第四季假設）", ["ut_q1", "q3_gm", "q3_opx", "q3_nonop", "q3_tax", "q4_g", "q4_ut", "q4_gm", "q4_opx", "q4_nonop", "q4_tax", "t_h1", "q_sh"]],
+    ["FY2026 錨點（第一季稼動率、第三季實績、第四季指引與假設）", ["ut_q1", "q3_gm", "q3_opm", "q3_ni", "q4_g", "q4_ut", "q4_gm", "q4_opx", "q4_nonop", "q4_tax", "t_h1", "q_sh"]],
     ["股價與市場倍數", ["px", "pe_ttm", "fpe", "cons_feps", "cons_tp", "nim_5"]],
     ["目標價規則（情境權重、DCF 權重）", ["tp_w_dcf", "tp_wA", "tp_wB", "tp_wC"]],
     ["折現率（標準版 DCF：股權成本、WACC、永續成長率、RONIC）", ["rf", "rf_us", "beta_u", "beta_u_med", "beta_de", "beta_du", "beta", "erp", "crp", "kd", "tax_w", "wacc_adj", "g_cap", "g_tv", "ronic_sp", "t_tgt", "dps_tgt"]],
     ["資本結構、淨現金與股數（評價用）", ["debt_v", "lease_v", "cash_v", "inv_v", "inv_k", "mi_v", "bs_date", "stub_frac", "stub_div", "sh_v"]],
     ["自由現金流（折舊、資本支出、營運資金）", ["fc_da", "fc_da_ss", "fc_cx", "fc_cx_ss", "fc_cx_d", "fc_wc"]],
     ["收斂法（FY2030–FY2032）", ["tp_g", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fade_mB", "fade_mC"]]]]],
- "blocks_to": {"1. 8 吋晶圓": "八吋晶圓（產能 × 稼動率 × 平均售價）", "@Units!A37": "VSMC 新加坡十二吋廠（與 NXP 合資、合併報表）"},
+ "blocks_to": {"1. 8 吋晶圓": "八吋晶圓（產能 × 稼動率 × 等效單位營收）", "@Units!A37": "VSMC 新加坡十二吋廠（與 NXP 合資、合併報表）"},
  "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "＋Stub 期 FCFF", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
           "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
           "目標價結論": ["目標價（DCF", "DCF 目標價", "Comparable 目標價（相對", "Comparable 目標價（市場", "現價", "上檔空間：加權", "上檔空間：Comparable", "投資建議", "DCF 情境價值推到", "市場共識"],
@@ -211,5 +211,8 @@ for s in out["sections"]:
                 ws = WB["README"]
                 b["rows"] = [[f"@README!A{r}"] for r in range(1, ws.max_row + 1) if re.match(r"^v\d+\.\d", str(ws.cell(r, 1).value or ""))]
 
-json.dump(out, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+cfg = out
+import v03_html  # noqa: E402  v0.3：個股 HTML 版面規格 v1.3＋三層協調讀取層級與 C0（vis/v03_html.py）
+v03_html.apply(cfg, WB, row_of)
+json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")

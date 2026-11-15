@@ -244,7 +244,7 @@ def _ext(row_):
 
 
 H = {
-    "ver": "v0.4.4",
+    "ver": "v0.4.5",
     "units_chart": lambda pB, hB: {
         "type": "theme", "title": "HBM TC 鍵合機與其他業務營收（情境 B，億韓元）與 HBM TC 鍵合機占營收（右軸）", "x": f"@PL!D{hB}:G{hB}",
         "fmt": "n0", "fmt_r": "p0", "stack": True, "pad": 1.25, "total": f"@PL!D{pB('營收')}:G{pB('營收')}",
@@ -273,6 +273,21 @@ H = {
     "ext": _ext,
 }
 html13.apply(_out, WB, X, H, os.path.join(HERE, ".."))
+# ───────── v0.4.5（2026-11-15）：兩讀數口徑（Coord 頁第 5 節）：估值章兩讀數長條圖之後、對帳章「層級之間」說明之後各加口徑說明與口徑揭露 ─────────
+_CW = WB["Coord"]
+_c5 = row_of("Coord", "5. 兩讀數口徑")
+assert str(_CW.cell(_c5 + 2, 1).value or "").startswith("口徑揭露"), _CW.cell(_c5 + 2, 1).value
+_n5 = [{"type": "note", "parts": [f"@Coord!A{_c5 + 1}"]}, {"type": "note", "parts": [f"@Coord!A{_c5 + 2}"]}]
+_S5 = {x["id"]: x for x in _out["sections"]}
+_vb = _S5["valuation"]["blocks"]
+_i = next(i for i, b in enumerate(_vb) if b.get("type") == "bars" and str(b.get("title", "")).startswith("兩讀數的加權目標價"))
+_vb[_i + 1:_i + 1] = copy.deepcopy(_n5)
+# html13 把 C0 結果摘要之後到頁末的 A 欄都當摘要說明列入（第 5 節在頁末）：先移除，再放到「層級之間」說明之後
+_S5["recon"]["blocks"] = [b for b in _S5["recon"]["blocks"] if not (b.get("type") == "note" and len(b.get("parts", [])) == 1 and re.fullmatch(r"@Coord!A\d+", str(b["parts"][0])) and int(b["parts"][0][8:]) >= _c5)]
+_rb = _S5["recon"]["blocks"]
+_s3 = row_of("Coord", "3. 讀取層級與層級之間的結果")
+_j = max(i for i, b in enumerate(_rb) if b.get("type") == "note" and any(str(p).startswith("@Coord!A") and _s3 < int(str(p)[8:]) <= _s3 + 3 for p in b.get("parts", [])))
+_rb[_j + 1:_j + 1] = copy.deepcopy(_n5)
 _m = f"@Val!B{row_of('Val', 'DCF（標準版）', col=2)}"   # 目標價方法說明（多段 note，含參數代號）：摺疊
 for _s in _out["sections"]:
     for _b in _s["blocks"]:
