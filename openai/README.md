@@ -7,6 +7,15 @@ OpenAI 收支模型（v0.6，建置中）。2026-10-07 由 `YinchenChang/openai-
 - 本地建置：`pip install -r requirements-dev.txt`；`python3 builder/build.py --tk-dir <Tokenomics> --out model/<檔名>.xlsx --base model/<現行>.xlsx`；測試 `python3 -m pytest tests/parity`。
 - 需要 LibreOffice Calc（Ubuntu：`apt-get install -y --no-install-recommends libreoffice-calc-nogui`）。
 
+## v0.6.6：Coord 改讀 Wattonomics v0.3.5（營業現金流對照改 F06）
+
+**依據：** Wattonomics v0.3.5（#618，main `2debcc7`）②：OpenAI 在 Wattonomics 的營業現金流不再加回自有資本支出（`gocf_oai`＝本模型 Funding F06；SRC_GL_319 匯入 v0.6.5 dist）。建置：`python3 builder/build.py --tk-dir <Tokenomics checkout@8309fdb> --out model/20261115_OpenAI_v0.6.6.xlsx --base model/archive/20261115_OpenAI_v0.6.5.xlsx --date 2026-11-15 --tk-date 2026-10-29`（Coord 頁隨 `../wattonomics/data/CURRENT_SNAPSHOT`＝`wattonomics_snapshot_v0.3.5.json`）。
+
+- Coord B 節「營業現金流 2026–2030」：本模型側由「F06＋Cost 自有資本支出」改為 F06（`FND_FCF`），與 Wattonomics v0.3.5 同口徑；兩側 −39.42／−116.02／−134.88／−137.62／−131.91，差 0（殘差 < 1e-6，來自快照取 6 位小數）。v0.6.5 時兩側皆含自有資本支出（−19.42…−61.91），差亦為 0。
+- 「Wattonomics 讀本模型的版本」改由快照 `gocf_oai` 出處自動帶出（v0.6.5 dist，commit `6f922c8`）；自有資本支出（20／30／45／60／70）、2025 年底現金 40 對照差 0。
+- 追溯列重跑 `tools/coord/trace_wattonomics.py --player oai`（v0.3.5 xlsx）：Gap 列位移動，Interface 的 CapexAI 取 `Gap!G572＝IF(G571<>"",G567,G552)`，G571 是空字串常數，故取 G552（GW 法）＝0；其餘結論不變。C 節 T1 配置（Oracle→OpenAI 2026 年底 0.824）與 v0.3.2 相同，C0 判定（對帳中 0）不變。
+- 其餘工作表數值與 v0.6.5 逐格相同（`tools/xlsx_diff.py`：差異只在 README 列位移與 Coord 頁）。未上市，無目標價與評等（不適用）。
+
 ## v0.6.5 三層協調（Coord 頁）：模型商（複製自 Anthropic v0.2.2）
 
 **依據：** 三層基準協調規則 v1.4.2 C0 第 2 點（Andy 2026-11-14 17:40）；工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`。數值計算頁逐格不變（與 v0.6.4 比對：既有計算頁 0 差異；只新增 Coord 頁、PL 頁、Checks 4 列、README 列位移）。TK_Link 仍為 Tokenomics v21.7（master 現為 v22.0，本輪不換快照）。建置：`python3 builder/build.py --tk-dir <Tokenomics checkout@8309fdb> --out model/20261115_OpenAI_v0.6.5.xlsx --base model/archive/20261029_OpenAI_v0.6.4.xlsx --date 2026-11-15 --tk-date 2026-10-29`。

@@ -1,4 +1,12 @@
-# WhiteFiber（WYFI）個股模型 v0.4.1（Comparable 分部加總；v0.4.0：CoreWeave v5.0.3 新雲樣板重建＋2026Q3 滾入＋三層協調）
+# WhiteFiber（WYFI）個股模型 v0.4.2（Wattonomics 改讀 v0.3.5；v0.4.1：Comparable 分部加總；v0.4.0：CoreWeave v5.0.3 新雲樣板重建＋2026Q3 滾入＋三層協調）
+
+**v0.4.2（2026-11-15）：Wattonomics 快照改讀 v0.3.5（原 v0.3.2）。**
+依據：主控指示（main 已合併 Wattonomics v0.3.5，#618）；規則 `docs/plan/三層基準協調規則.md` v1.4.2；`wattonomics/docs/verify/20261115_v0.3.5_build.md`。
+- **改了什麼：** `build_whitefiber.py` 讀 `wattonomics/data/wattonomics_snapshot_v0.3.5.json`（In 頁 wat26、wat30，Recon 原則 54 列，Coord 頁）；追公式重跑（`--player wyfi`，輸出 `data/wattonomics_trace_v0.3.5.json`，無法解析 0 格；舊 v0.3.2 檔保留）。Val 頁「目標價變動」兩列標籤改用現行版號。
+- **層級讀數新舊值（v0.3.2 → v0.3.5）：** `WIF_Gap_Player_wyfi_2026_CapexAIModel` 0.473 → **0.845**（十億美元；gcap_wyfi＝gcapai_wyfi 由舊版 v0.2 重匯為本公司 v0.4.1 Thesis!E70）；WhiteFiber 沒有付款年資本支出列，Gap 主讀法仍為 GW 推算，`_CapexAI` 2026 0.316 不變；玩家 MW 路徑（In mw_wyfi，舊版 v0.2：2025 5.5、2026 14.574、2027 起 16.548 MW）不變。
+- **Coord 頁：** G1 的 CapexAIModel 列改為本公司 v0.4.1 回寫值（差距 0，同源）；參考列（對回寫值）主讀數 549.8 vs 633.4（−13.2%，原 +54.9%）、第二讀數 820.4 vs 844.6（−2.9%）；C0 結論不變（營收、資本支出 參考（同源校準）：無可比實績；在役電力 無可比實績；對帳中 0、有判定 0）。同源說明（四）改寫：gcap_wyfi 已重匯，mw_wyfi 仍待主控重匯。
+- **目標價與評等：** Wattonomics 不進估值：加權目標價 **13.79 → 13.79**、投資建議 **收支不足 → 收支不足**；收支關卡不變。
+- **驗證：** `SENS=1 REV=1 bash whitefiber/make_v1.sh` 全過（公式錯誤 0；檢查列與收支恆等式 148 項；In 版面；敏感度覆蓋 45 鍵；分部；HTML；治理；收支關卡評等；敏感度、反向 DCF 快照已重跑，拆解沿用）；其餘檢查見 PR 說明。
 
 **v0.4.1（2026-11-15）：同業法改為分部加總（Andy 決定，2026-11-15）。**
 依據：Andy 2026-11-15「同業法改為分部加總：託管分部（NC-1 Nscale 10 年長約、MTL、代管服務）用資料中心／託管同業倍數，雲端分部用現行新雲同業倍數 6.74；DCF 部分不變」（即 v0.4.0「需 Andy 決定」第 1 點改採分部加總）。
@@ -29,13 +37,13 @@
 
 數字以 `dist/` 的 xlsx 為準；下表由建置成品產生（`python3 tools/model_governance/version_table.py whitefiber --update`），不手寫（舊版 v0.2.1 檔名非點號版號、結構不同，未入表；其值見上）。
 
-<!-- version-table: dist/_待刪除/20261115_WhiteFiber個股模型_v0.4.0.xlsx｜dist/20261115_WhiteFiber個股模型_v0.4.1.xlsx -->
-| 項目 | v0.4.0 | v0.4.1 |
+<!-- version-table: dist/_待刪除/20261115_WhiteFiber個股模型_v0.4.1.xlsx｜dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx -->
+| 項目 | v0.4.1 | v0.4.2 |
 |---|---|---|
-| 加權目標價（上檔空間） | 5.39（-41.5%） | 13.79（+49.8%） |
+| 加權目標價（上檔空間） | 13.79（+49.8%） | 13.79（+49.8%） |
 | DCF 目標價（情境加權） | 0.00 | 0.00 |
-| Comparable 目標價 | 10.77 | 27.59 |
-| 投資建議 | 放空 | 收支不足 |
+| Comparable 目標價 | 27.59 | 27.59 |
+| 投資建議 | 收支不足 | 收支不足 |
 | 現價 | 9.21 | 9.21 |
 | 收支關卡 A／B／C（FY2026–FY2030） | -2,113.5／-1,513.3／-762.1 | -2,113.5／-1,513.3／-762.1 |
 <!-- /version-table -->
@@ -55,7 +63,7 @@ SENS=1 REV=1 DEC=1 bash whitefiber/make_v1.sh     # 改了公式或輸入時（�
 | `scripts/` | runner、敏感度、反向 DCF、拆解、檢查、HTML 設定檔產生器 |
 | `data/whitefiber_facts_20261115.json` | 事實總帳（轉錄自 #451 分支；10-Q、10-K、法說） |
 | `data/whitefiber_is_hist_20261115.json` | 標準損益表 FY2024–FY2025（10-K）與 9M 2026（10-Q） |
-| `data/wattonomics_trace_v0.3.2.json` | Wattonomics 玩家 wyfi 追公式輸出 |
+| `data/wattonomics_trace_v0.3.5.json` | Wattonomics v0.3.5 玩家 wyfi 追公式輸出（v0.3.2 版保留供 v0.4.0–v0.4.1 對照） |
 | `legacy_v02/` | v0.2.1 舊 JS 雙引擎（保留不刪） |
 
 ## 已知限制

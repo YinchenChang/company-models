@@ -1,4 +1,4 @@
-"""Anthropic v0.2.2 三層協調頁 Coord（三層基準協調規則 v1.4.2；工作單 20261114 第二批 13 家 第 2 節；模型商樣板，OpenAI 複製）。
+"""Anthropic v0.2.2 三層協調頁 Coord（v0.2.3：Wattonomics 改讀 v0.3.5，營業現金流對照差 0；三層基準協調規則 v1.4.2；工作單 20261114 第二批 13 家 第 2 節；模型商樣板，OpenAI 複製）。
 
 本頁只列示，不被任何計算頁引用（Checks 除外）；新增本頁不改變任何既有工作表的數值。結構：
   A. 參數（判定門檻、季化倍數；月數取 Inputs 定義常數）
@@ -33,7 +33,7 @@ def build(ctx):
     W = read_watt()
     R, N = W["rows"], W["names"]
     ws = wb.create_sheet("Coord")
-    title(ws, "Coord — 三層協調（v0.2.2；規則 v1.4.2）：讀取層級、C0（實績）公司實績 vs 層級隱含值",
+    title(ws, "Coord — 三層協調（v0.2.3；規則 v1.4.2）：讀取層級、C0（實績）公司實績 vs 層級隱含值",
           "C0 比較基準＝公司實績或法定揭露（S-1/A 季度損益、現金流量表）；層級側＝Tokenomics 每 GW 營收 × Wattonomics 配置給 Anthropic 的 GW（兩者都不讀本模型的輸出）。"
           "差距超過 ±15% 且兩讀數同號標「對帳中」（開對帳單、不改上游）；只有一個讀數超過標「時差邊界（參考）」。自層級讀入的同源值只列在 B 節，不判定。",
           "本頁只列示，不被任何計算頁引用（Checks 除外）。單位：$B、GW。藍字＝快照值或參數，黑字＝公式。")
@@ -87,7 +87,7 @@ def build(ctx):
         "CapexAIModel 回寫值＝0；(4) 唯一讀本模型的 GW 相關值是 Y4 usr_ant 2025（1.4，取自本模型 Compute），只作 Matrix 對照列，本頁不用；"
         "(5) 未發現 w1_*、obs_*、Players 覆寫讀本模型。結論：營收列不是同源；Google 1 GW 為公司公告的規劃容量，屬公司揭露而非本模型輸出，已在 C 節說明。", cols="C")
     row("wtm", "本模型讀 Wattonomics 的版本", ["v0.1.7（Inputs 藍字，非即時連結）"], "",
-        "own_gw_add_2025–2030（自建 IT GW 年新增）與 own_lag_bldg 在 v0.1.7 取 Wattonomics 快照值寫入 Inputs；之後未重讀。下列逐年與 v0.3.2 快照對照（同源，不判定）", cols="C")
+        f"own_gw_add_2025–2030（自建 IT GW 年新增）與 own_lag_bldg 在 v0.1.7 取 Wattonomics 快照值寫入 Inputs；之後未重讀。下列逐年與 {W['version']} 快照對照（同源，不判定）", cols="C")
     for y in range(2025, 2031):
         row(f"own{y}", f"自建 IT GW 年新增 {y}：Inputs 值 vs Wattonomics WIF_Gap_Player_ant_{y}_CapexAIGW",
             [f"={I(f'own_gw_add_{y}')}", N.get(f"WIF_Gap_Player_ant_{y}_CapexAIGW"), f"=C{r[0]}-D{r[0]}"], "GW", "同源（本模型取自 Wattonomics）；差為 0＝未落後" if y == 2025 else "")
@@ -98,8 +98,8 @@ def build(ctx):
         n = r[0]
         row(f"ocf{y}", f"營業現金流 {y}：本模型 FND_FCF 現值 vs Wattonomics Gap 匯入值（WIF_Gap_Player_ant_{y}_OCF）",
             [f"=INDEX(FND_FCF,1,{i_ + 1})", N.get(f"WIF_Gap_Player_ant_{y}_OCF"), f"=C{n}-D{n}"], "$B",
-            ("Wattonomics 的 Anthropic 營業現金流由本模型匯入（交接檔：Funding F07＋F03；自建資本支出 F03＝0）；匯入值停在 v0.1.8，與本模型現值不同＝層級匯入落後，"
-             "不是證據分歧；待 Wattonomics 下次重匯更新。同源，不判定、不計入對帳中" if y == 2026 else ""), cols="CDE")
+            (f"Wattonomics 的 Anthropic 營業現金流由本模型匯入（{R['gocf_ant']['src']}：{R['gocf_ant']['note'].split('；')[0]} 的 Funding F07；"
+             "Wattonomics v0.3.5 起不再加回自建資本支出 F03〔本模型 F03 恆為 0〕）；差為 0＝層級匯入未落後。同源，不判定、不計入對帳中" if y == 2026 else ""), cols="CDE")
 
     # ── C. 層級隱含值推導 ──
     r[0] += 1
