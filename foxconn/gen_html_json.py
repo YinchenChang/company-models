@@ -95,7 +95,7 @@ SPEC = {
     ["電腦終端成長率", ["g_pc27", "g_pc28", "g_pc29"]],
     ["元件及其他成長率", ["g_co27", "g_co28", "g_co29"]]]],
   ["全公司（FY2026 錨點、費用與淨利、股價、目標價規則）", [
-    ["FY2026 錨點（上半年實績＋第三季營收實績＋假設）", ["q3_rev", "q4g", "q_gm", "q_opx", "q_nio", "q_sh"]],
+    ["FY2026 錨點（前三季財報實績＋第四季假設）", ["q3_rev", "q3_gp", "q3_oi", "q3_ni", "ytd_rev", "ytd_gp", "ytd_oi", "ytd_ni", "ytd_eps", "q4g", "q_gm", "q_opx", "q_nio", "q_sh"]],
     ["營業費用、淨利係數與股數（FY2027 起）", ["phi", "opx_adj", "nio_f", "sh_g"]],
     ["匯率", ["fx"]],
     ["股價", ["px", "pe_ttm"]],
@@ -303,7 +303,7 @@ S = {s_["id"]: s_ for s_ in cfg["sections"]}
 RD, PLW, RV = WBF["README"], WBF["PL"], WBF["RevDCF"]
 r13 = find("README", "v1.3 展示層")
 RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
-assert str(RD[f"A{RM['ver']}"].value).startswith("v0.4.6"), RD[f"A{RM['ver']}"].value
+assert str(RD[f"A{RM['ver']}"].value).startswith("v0.4.7"), RD[f"A{RM['ver']}"].value
 cfg["layout"] = "v1.3"
 old_note = cfg["hero"]["note"]
 cfg["hero"]["note"] = [f"@README!A{RM['hero']}"]            # 橫幅只留 ≤200 字白話；評等規則與相對倍數調整說明移到估值章
