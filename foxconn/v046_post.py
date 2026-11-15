@@ -173,7 +173,7 @@ def pl_standard(wb, SIL):
     dep = dep_years(SIL)
     r = P.max_row + 3
     s0 = r
-    P.cell(r, 1, f"標準損益表（v{VER} 起；個股 HTML 版面規格 v1.3 D 節）：歷史三年（FY2023–FY2025 實績，Hist 頁）＋FY2026E–FY2031E（情境 B 基準；FY2026 為錨點＝1H26 實績＋3Q 營收實績＋假設）。NT$B；EPS 新台幣。"
+    P.cell(r, 1, f"標準損益表（v{VER} 起；個股 HTML 版面規格 v1.3 D 節）：歷史三年（FY2023–FY2025 實績，Hist 頁）＋FY2026E–FY2031E（情境 B 基準；FY2026 為錨點＝1–3Q26 財報實績＋4Q26 假設）。NT$B；EPS 新台幣。"
                  "只引用本頁上方、Hist、DCF 頁，不回饋任何計算").font = BOLD; r += 1
     P.cell(r, 1, K["GAAP_NOTE"])
     r_note = r; r += 1
@@ -529,9 +529,10 @@ def readme13(wb, SIL, PLA, RVA, coord_rows):
     put("drv", F(T("分部營收怎麼推導（情境 B）：AI 伺服器營收＝部署 GW（AI IT 資本支出 ÷ 每 GW IT 資本支出）× 每 GW ODM 整櫃價值 × 鴻海有效份額 ×（1 − 客供比例）；"
                    "FY2027 為 "), f'TEXT(PL!E{pr("AI 伺服器營收")},"#,##0")', T(" 十億元。非 AI 營收＝雲端網路非 AI＋消費智能＋電腦終端＋元件及其他，由 FY2026 錨點乘各自成長率；"
                    "FY2027 為 "), f'TEXT(PL!E{pr("非 AI 營收合計")},"#,##0")', T(" 十億元。兩者相加＝合併營收 "), f'TEXT(PL!E{PLA["R"]["rev"]},"#,##0")', T(" 十億元；四大產品類別加總與合併營收的檢查列為 0。")))
-    put("ver", F(T("v0.4.6（2026-11-15）：版面規格 v1.3 全面改版（章節順序、橫幅 ≤200 字、重點觀察 ≤5 點、標準損益表 FY2023A–FY2031E 含少數股權、反向 DCF 頁、四個目標價與現價圖、敏感度改加權目標價相對基準低案／高案主圖）；"
-                 "三層協調：Coord 頁新增 C0 由下往上對帳（讀取層級的同源列不判定）與第 4 節 C0〔實績〕：2026 年 1–10 月月營收與公司揭露的雲端網路占比，結論無可比實績（層級的鴻海份額由本模型錨點校準，公司未揭露 AI 伺服器金額）；"
-                 "實際檢驗錨點的雲端網路占比與 4Q 營收假設；既有數值、加權目標價與投資建議不變。")))
+    put("ver", F(T("v0.4.7（2026-11-15）：滾入 3Q26 財報（公開資訊觀測站 t164sb03／t164sb04，Verified）。FY2026 錨點改為 1–3Q26 財報實績＋4Q26 假設（4Q 季增、毛利率、營業費用率、淨利 ÷ 營業利益不改）：營收 11,150.7 → 11,129.0 十億元、歸屬母公司淨利 275.26 → 275.54、EPS 19.64 → 19.63（股數改 1–3Q 加權 14.039 十億股）。"
+                 "資產負債表日 2026-06-30 → 09-30：借款 1,315.9 → 1,505.9（一年內到期長期負債 64.3 為 6-30 代理，9-30 未取得）、租賃 41.8 → 44.7、現金及流動金融資產 1,524.7 → 1,449.9、長期投資 491.2 → 477.3、非控制權益帳面 211.7 → 223.1、評價用股數 14.017 → 14.074；"
+                 "FY2025 股利已於 07-31 發放，stub 期不再扣；淨現金與投資（扣非控制權益）−165.5 → −458.4，滾到評價日 −329.3 → −489.7。DCF 486.28 → 472.48、加權目標價 411.81 → 404.09（強力買進不變）；另一側讀數 371.32 → 363.69（強力買進）。"
+                 "C0：Siliconomics 鴻海份額快照仍以 v0.4.6 錨點反推，同源核對列差 6.9 十億元（−0.19% 營收錨點變動），待 Siliconomics 下次升版重存。")))
     return M
 
 
@@ -591,11 +592,11 @@ def c0_actuals(wb, C, r, l3, rs_l, d5):
     C.cell(r, 1, "　1Q–3Q26（1–9 月）合計（主讀數用）"); C[f"B{r}"] = f"=B{q1}+B{q2}+B{q3}"; C[f"B{r}"].number_format = "#,##0.000"
     C.cell(r, 4, "NT$B；公司公布前 9 月累計 7 兆 6,698 億元"); C.cell(r, 5, "Verified（加總）"); cum9 = r; r += 1
     C.cell(r, 1, "　核對：1–6 月合計 − 公司公布 1H26 營收（Q 頁）"); C[f"B{r}"] = f"=SUM(B{m0}:B{m0+5})-Q!C4"; C[f"B{r}"].number_format = "0.000"
-    C.cell(r, 4, "NT$B；應約為 0（公司以億元位數公布，容許 ±0.05）"); C.cell(r, 5, "核對列"); ck1 = r; r += 1
+    C.cell(r, 4, "NT$B；v0.4.7 起 Q 頁 1H26 為財報（MOPS 1–9 月累計 − 3Q26），本列＝月營收自結數與財報營收之差（合併沖銷口徑），不再應為 0"); C.cell(r, 5, "核對列（參考）"); ck1 = r; r += 1
     C.cell(r, 1, "　核對：1–9 月合計 − 公司公布前 9 月累計 7,669.8（7 兆 6,698 億元）"); C[f"B{r}"] = f"=B{cum9}-7669.8"; C[f"B{r}"].number_format = "0.000"
     C.cell(r, 4, "NT$B；應約為 0（累計以億元位數列示，容許 ±0.05）"); C.cell(r, 5, "核對列（出處：TechNews 2026-10-05 月營收報導）"); C.cell(r, 6, "https://finance.technews.tw/2026/10/05/2026-sep-foxconn/"); ck2 = r; r += 1
     C.cell(r, 1, "　核對：3Q26 合計 − 3Q26 營收輸入（In 頁 q3_rev）"); C[f"B{r}"] = f"=B{q3}-q3_rev"; C[f"B{r}"].number_format = "0.000"
-    C.cell(r, 4, "NT$B；應約為 0（In 頁 q3_rev 取 3,026.9）"); C.cell(r, 5, "核對列"); ck3 = r; r += 1
+    C.cell(r, 4, "NT$B；v0.4.7 起 In 頁 q3_rev 為財報單季 3,015.634（MOPS），本列＝月營收自結數與財報營收之差（約 +0.4%），不再應為 0"); C.cell(r, 5, "核對列（參考）"); ck3 = r; r += 1
     C.cell(r, 1, "　核對：1–10 月合計 − 公司公布前 10 月累計 8,975.1（8 兆 9,751 億元）"); C[f"B{r}"] = f"=B{cum10}-8975.1"; C[f"B{r}"].number_format = "0.000"
     C.cell(r, 4, "NT$B；應約為 0（10 月只到億元位數，容許 ±0.5）"); C.cell(r, 5, "核對列（出處：TechNews 2026-11-05 月營收報導）"); C.cell(r, 6, "https://finance.technews.tw/2026/11/05/oct-2026-foxconn/"); ck4 = r; r += 1
     out["cum10"], out["cum9"], out["q3"] = cum10, cum9, q3
@@ -620,11 +621,11 @@ def c0_actuals(wb, C, r, l3, rs_l, d5):
     C.cell(r, 6, "https://blog.fugle.tw/post/earnings-call-2317-2026-05-14"); ais_lo = r; r += 1
     C.cell(r, 1, "　參考：本模型 In 頁 FY2026 雲端網路產品占營收（錨點採用）"); C[f"B{r}"] = "=cl_26"; C[f"B{r}"].number_format = "0.0%"
     C.cell(r, 4, "本模型錨點採用的全年占比（1Q26 48%、2Q26 51% 的外推；Interested-party）"); C.cell(r, 5, "Interested-party"); cl26 = r; r += 1
-    C.cell(r, 1, "　參考：3Q26 財報營收（法說揭露）"); C[f"B{r}"] = 3015.6; C[f"B{r}"].font = BLUE; C[f"B{r}"].number_format = "#,##0.0"
-    C.cell(r, 4, "NT$B；法說：營收 3.0156 兆元（數位時代）；與月營收合計的差距見下列"); C.cell(r, 5, "Interested-party（法說摘要）"); C.cell(r, 6, "https://www.bnext.com.tw/article/93040/2026-foxconn--earnings-call-"); rev3 = r; r += 1
+    C.cell(r, 1, "　參考：3Q26 財報營收（MOPS；In 頁 q3_rev）"); C[f"B{r}"] = "=q3_rev"; C[f"B{r}"].number_format = "#,##0.0"
+    C.cell(r, 4, "NT$B；MOPS t164sb04 115Q3 營業收入 3,015,633,915 千元（法說 3.0156 兆元一致）；與月營收合計的差距見下列"); C.cell(r, 5, "Verified（MOPS）"); C.cell(r, 6, "https://mops.twse.com.tw/mops/#/web/t164sb04"); rev3 = r; r += 1
     C.cell(r, 1, "　參考：3Q26 財報營收 ÷ 月營收合計 − 1"); C[f"B{r}"] = f"=B{rev3}/B{q3}-1"; C[f"B{r}"].number_format = "+0.0%;-0.0%"
-    C.cell(r, 4, "月營收（合併未沖銷）與財報營收的口徑差；用月營收是為了與錨點（Q 頁 3Q26 營收＝月營收合計）一致"); C.cell(r, 5, "Derived"); r += 1
-    C.cell(r, 1, "　參考：3Q26 營業利益（公司揭露）"); C[f"B{r}"] = 115.35; C[f"B{r}"].font = BLUE; C[f"B{r}"].number_format = "#,##0.00"
+    C.cell(r, 4, "月營收（自結）與財報營收的口徑差；C0 兩讀數的實績側仍用月營收（與 1Q、2Q 一致、可延伸到 10 月），錨點 v0.4.7 起用財報"); C.cell(r, 5, "Derived"); r += 1
+    C.cell(r, 1, "　參考：3Q26 營業利益（公司揭露）"); C[f"B{r}"] = 115.350449; C[f"B{r}"].font = BLUE; C[f"B{r}"].number_format = "#,##0.00"
     C.cell(r, 4, "NT$B；法說：3Q26 營業利益 1,153.5 億元（毛利率 6.02%、營業利益率 3.83%；首度超過千億元）"); C.cell(r, 5, "Interested-party（法說摘要）"); C.cell(r, 6, URL_MIX["3Q26"]); oi3 = r; r += 1
     C.cell(r, 1, "　參考：3Q26 EPS（公司揭露）"); C[f"B{r}"] = 5.51; C[f"B{r}"].font = BLUE; C[f"B{r}"].number_format = "0.00"
     C.cell(r, 4, "新台幣（基本）；法說：3Q26 歸屬母公司淨利 775.24 億元、EPS 5.51 元（單季新高）；前三季 EPS 13.35 元"); C.cell(r, 5, "Interested-party（法說摘要）"); C.cell(r, 6, URL_MIX["3Q26"]); eps3 = r; r += 1
@@ -673,11 +674,11 @@ def c0_actuals(wb, C, r, l3, rs_l, d5):
     C.cell(r, 1, "　實際檢驗 (b2)：若 11、12 月維持 10 月水準，全年營收 ÷ 錨點 − 1"); C[f"B{r}"] = f"=(B{cum10}+2*B{m1})/a26_rev-1"; C[f"B{r}"].number_format = "+0.0%;-0.0%"
     C.cell(r, 4, "描述用，不是預測；正值＝錨點的 4Q 營收低於 10 月年化水準"); C.cell(r, 5, "Derived"); out["ref_b2"] = r; r += 1
     C.cell(r, 1, "　參考（不判定）：3Q26 營業利益（公司揭露）÷ Q 頁 3Q26 營業利益（模型）− 1"); C[f"B{r}"] = f"=B{oi3}/Q!D8-1"; C[f"B{r}"].number_format = "+0.0%;-0.0%"
-    C.cell(r, 4, "NT$B；Q 頁 3Q26＝營收實績＋毛利率、營業費用率假設（公司 3Q26 揭露見 4.2）"); C.cell(r, 5, "Interested-party（法說摘要）；Derived"); out["ref_oi"] = r; r += 1
+    C.cell(r, 4, "NT$B；v0.4.7 起 Q 頁 3Q26 為財報實績（MOPS），本列應為 0"); C.cell(r, 5, "Verified（MOPS）；Derived"); out["ref_oi"] = r; r += 1
     C.cell(r, 1, "　參考（不判定）：3Q26 EPS（公司揭露）÷ Q 頁 3Q26 EPS（模型）− 1"); C[f"B{r}"] = f"=B{eps3}/Q!D13-1"; C[f"B{r}"].number_format = "+0.0%;-0.0%"
-    C.cell(r, 4, "新台幣；Q 頁 3Q26 EPS 為模型（營收實績＋假設）；公司揭露見 4.2"); C.cell(r, 5, "Interested-party（法說摘要）；Derived"); out["ref_eps"] = r; r += 1
+    C.cell(r, 4, "新台幣；v0.4.7 起 Q 頁 3Q26 EPS＝財報淨利 ÷ 1–3Q 加權股數（q_sh），與公司揭露 5.51 的差只來自股數口徑"); C.cell(r, 5, "Verified（MOPS）；Derived"); out["ref_eps"] = r; r += 1
     C.cell(r, 1, "　參考（不判定）：錨點 4Q26 EPS（模型）÷ 3Q26 實際 EPS − 1"); C[f"B{r}"] = f"=Q!E13/B{eps3}-1"; C[f"B{r}"].number_format = "+0.0%;-0.0%"
-    C.cell(r, 4, "＝錨點要求 4Q 盈餘比 3Q 實績再成長多少；錨點全年 EPS 不改，3Q 財報後的更新由 Andy 決定"); C.cell(r, 5, "Derived"); out["ref_q4"] = r; r += 1
+    C.cell(r, 4, "＝錨點要求 4Q 盈餘比 3Q 實績再成長多少（v0.4.7 起錨點＝1–3Q26 財報＋4Q 假設）"); C.cell(r, 5, "Derived"); out["ref_q4"] = r; r += 1
     out["ck"] = (ck1, ck2, ck3, ck4); out["end"] = r
     C.column_dimensions["A"].width = max(C.column_dimensions["A"].width or 0, 60)
     return out
@@ -819,7 +820,8 @@ def version(wb, here, coord_rows):
     RD = wb["README"]
     a1 = RD["A1"].value
     a1 += (f"；v{VER}（{BUILT}）：版面規格 v1.3 全面改版（新增 Hist、RevDCF 頁與各頁末新增區塊）；三層協調 C0：Coord 頁新增由下往上對帳，讀取層級的同源列改標不判定，第 4 節 C0〔實績〕以 2026 年 1–10 月月營收與公司揭露的雲端網路占比對層級隱含值，"
-           "結論無可比實績（層級值同源）並實際檢驗錨點的雲端網路占比與 4Q 營收假設；既有數值、加權目標價與評等不變")
+           "結論無可比實績（層級值同源）並實際檢驗錨點的雲端網路占比與 4Q 營收假設；既有數值、加權目標價與評等不變"
+           + "；v0.4.7（2026-11-15）：滾入 3Q26 財報（MOPS）——FY2026 錨點改 1–3Q26 財報實績＋4Q26 假設、資產負債表日改 2026-09-30（stub 不再扣已發放股利）")
     RD["A1"].value = a1
     return a1
 
