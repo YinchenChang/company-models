@@ -2,6 +2,14 @@
 
 ## v0.2.4（2026-11-15）：個股 HTML 版面 v1.3＋三層協調（兩讀數目標價、讀取層級、C0 公司實績對帳）
 
+### v0.2.4 獨立核對修正（合併前）：重跑 Sens 整本重算案例（不變性例外）
+
+- **原因：** 獨立核對發現 HTML 敏感度章摺疊表「整本重算對照」「全部案例的加權目標價與 FY2028 EPS」顯示 Siliconomics v0.19 全下游重建前的舊 `sens.json` 快照（以加權目標價 1,311 元的模型算出，分母卻是現行 1,266 元）：匯率低／高都 +3.5%（應約 0）；DCF 權重低案 +13.9%，與閉式主圖 +11.8% 矛盾。
+- **做法：** 以 merge main 後的同版重跑 `python3 tuc/sens_tuc.py`，更新 `tuc/sens.json`，再整本重建、LibreOffice 重算、`gen_html_json.py`、`build_company_html.py`。
+- **不變性例外：** 只動 Sens 頁整本重算案例值（Sens!D、E 欄 65 列；3 列 G、H 欄 FY2028 EPS 微動，含 Wattonomics 錨定案例），以及引用這些案例值的 README 頁 A30、A34 兩格公式文字（隨 Sens 自動更新）；`tools/xlsx_diff.py` 對前一份 dist 其餘格 0 差異。加權目標價 1,265.92 元、評等（買進）、其他頁不變；Coord 另一側讀數快照狀態 CURRENT。本節以下「加註」所說的 +3.5% 偏移已由本次重跑消除，該段保留不改寫。
+- **結果：** 基準加權目標價 1,265.92 元（與 Val 頁一致）；匯率低／高 0.0%／0.0%；DCF 權重低／高 +11.8%／−11.8%（與閉式主圖一致）；市場係數 ×0.8／×1.2 −13.5%／+8.4%；2028 年售價指數低 −11.0%。
+- **驗證：** `check_company_html tuc` 全部通過；`check_layout_v13 --xlsx` ok；`tools/baseline_coordination/check.py` 0 項不符；LibreOffice 重算錯誤格 0。
+
 - **依據：** 工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`、`docs/workorders/20261114_C0實績對帳補列_七家.md`；規則 `docs/plan/三層基準協調規則.md` v1.4.2；`tools/coord/README.md`；版面 `docs/plan/個股HTML版面規格.md` v1.3（樣板 NVIDIA v0.3.10、台達電、同次產業台光電 v0.5.4）。
 - **做法：** 共通步驟 `tuc/c13.py`、`tuc/html13.py`（高速 CCL／PCB 四家同一份；c13 新增可選 `rev_label`、`ni_label`，向下相容），台燿設定在 `tuc/v13_post.py`；`build_tuc.py` 存檔前呼叫 `tools/coord` 的 `add_sheet` 後套用（`sens_tuc.py` 的案例建置不套用）；`gen_html_json.py` 最後呼叫 `html13.apply`（含 `COORD.inject_html`）。主引擎掛鉤：`engine(..., s, wm)` 在 `SIL_COORD_ALT=1` 且情境 B、C、未指定 `wm` 時以 `WTA_MF`（`wta_27／28／29`）縮放 CY2027 起市場（情境 A 不縮放；FY2026 校準不受影響；與 `TUC_WTA` 的 Sens 案例分開）。
 - **兩讀數（`tuc/coord_alt.json`，Siliconomics v0.19；對帳中 CY2027–CY2029）：** 現行加權目標價 1,265.92 元（買進，+26.0%）；另一側 1,070.07 元（**中立**，+6.5%）；DCF 892.58 → 770.05、Comparable（未調整）1,762.59 → 1,473.18。兩讀數評等不同。alt_run 檢查列：另一側建置與現行建置一致。
