@@ -155,3 +155,7 @@
 - 接續 PR #469（v0.2.1 版面 v1.3 試作，未合併）：補檢查 G（估值章第一區塊為四個目標價與現價圖）、H（敏感度章前兩區塊為相對基準低案、高案主圖）；其餘必修／建議項以 `check_layout_v13` 為準。
 - 新頁 Coord（builder/a13.py）：讀取層級、C0（實績）、層級之間（參考）；Checks 新增 2 列（C234、C235）；HTML 對帳章新增「三層協調」表。詳見 README「v0.2.2 三層協調」。
 - 既有工作表逐格不變（目標價 82.71、評等中立）。
+
+## v0.2.3 Coord 改讀 Wattonomics v0.3.5（2026-11-15；Excel `model/20261115_Anthropic_v0.2.3.xlsx`；v0.2.2 移至 `model/archive/`）
+- Coord（builder/a13.py）隨 `wattonomics/data/CURRENT_SNAPSHOT` 改讀 v0.3.5：營業現金流對照（`FND_FCF`＝Funding F07 vs `gocf_ant`）2026–2030 差 0（v0.2.2：3.29／4.90／7.35／10.27／13.43，層級匯入落後）；B 節說明改自快照帶出版本與出處。
+- 既有計算頁逐格不變（加權目標價 82.71、評等中立）；對帳中 0。`dist/` 重產，v0.2.2 成品移 `dist/_待刪除/`。
