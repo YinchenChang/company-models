@@ -1,4 +1,4 @@
-"""OpenAI v0.6.5 三層協調頁 Coord（三層基準協調規則 v1.4.2；工作單 20261114 第二批 13 家 第 2 節；模型商，樣板 Anthropic v0.2.2）。
+"""OpenAI v0.6.5 三層協調頁 Coord（v0.6.6：Wattonomics 改讀 v0.3.5，營業現金流對照改 F06）（三層基準協調規則 v1.4.2；工作單 20261114 第二批 13 家 第 2 節；模型商，樣板 Anthropic v0.2.2）。
 
 本頁只列示，不被任何計算頁引用（Checks 除外）；新增本頁不改變任何既有工作表的數值。結構：
   A. 參數（判定門檻、季化倍數、已公布月數；藍字）
@@ -52,7 +52,7 @@ def build_p7(wb, R, S, I, nm, snap, tk_dir):
     TKX = read_tk_l1(tk_dir)
     RW, N = W["rows"], W["names"]
     ws = wb.create_sheet("Coord")
-    title(ws, "Coord — 三層協調（v0.6.5；規則 v1.4.2）：讀取層級、C0（實績）公司揭露 vs 層級隱含值",
+    title(ws, "Coord — 三層協調（v0.6.6；規則 v1.4.2）：讀取層級、C0（實績）公司揭露 vs 層級隱含值",
           "C0 比較基準＝公司揭露（OpenAI 未上市，無財報；只有公司告知投資人、公司 CFO 部落格與合作方公告）；層級側＝Tokenomics 每 GW 營收 × Wattonomics T1 配置給 OpenAI 的 GW。"
           "營收列屬同源：Tokenomics 的 m 由 OpenAI 營收 ÷（付費 token × 牌價）校準，標「參考（同源校準）」；其餘列有公司揭露且層級有獨立路徑才判定，否則寫「無可比實績」。",
           "本頁只列示，不被任何計算頁引用（Checks 除外）。單位：$B、GW。藍字＝快照值或參數，黑字＝公式。")
@@ -105,12 +105,12 @@ def build_p7(wb, R, S, I, nm, snap, tk_dir):
     row("trace", "Wattonomics oai、usr_oai 路徑追溯（C0 前置檢查；tools/coord/trace_wattonomics.py＋人工確認）", ["已逐一追溯：層級 GW 不讀本模型的 GW，只讀本模型的現金流與資本支出回寫"], "",
         "追溯：(1) T1 配置 al_orcl_oai（2026 年底 0.824、2027 年底 0.991；來源＝Oracle 公告 Abilene，公司揭露）與 al_oai_self（OpenAI／Stargate 自建，比例 1）為 Wattonomics In 頁輸入列，只進 Matrix（營運者×使用者）；"
         "(2) 玩家路徑（Players、CapexGW）：OpenAI 自建年底 GW＝0（2025、2026；2027 起由 Ports Pike、Milam 等園區輸入列延伸，皆為公司公告的園區），自建 AI 資本支出 2026＝0；"
-        "(3) CapexAIModel（In 頁 gcapai_oai，Wattonomics 稱「個股模型寫回」）讀本模型 Cost 自有資本支出，只進 Gap 頁對照欄；Interface 的 CapexAI 取 Gap!G476＝IF(G475<>\"\",G471,G460)，G475 是空字串常數，故取 G460（GW 法）＝0，不讀本模型"
+        "(3) CapexAIModel（In 頁 gcapai_oai，Wattonomics 稱「個股模型寫回」）讀本模型 Cost 自有資本支出，只進 Gap 頁對照欄；Interface 的 CapexAI 取 Gap!G572＝IF(G571<>\"\",G567,G552)，G571 是空字串常數，故取 G552（GW 法）＝0，不讀本模型（v0.3.5 重新追溯，列位較 v0.3.2 移動）"
         "（巢狀 IF 為工具已知限制，已人工確認）；(4) 營業現金流 gocf_oai、期初現金 gcash_oai 讀本模型（Gap 頁；影響資金缺口，不影響 GW）；"
         "(5) usr_oai（Y4 使用者報導 GW：2025 年底 1.9、2026 年底 5、2027 年底 11）只在 Matrix 對照列（Matrix!D21、D42、D63）被讀取，不進任何計算；它的 2025 值取自公司 CFO 部落格（SRC_OAI_090 同一來源），2026、2027 為第三方報導與 Assumed 中點；"
         "(6) 未發現任何 w1_*、obs_*、act26_* 或 Players 覆寫讀本模型的 GW。結論：T1 配置 GW 與自建 GW 不同源；營收的同源來自 Tokenomics 的 m，不來自 Wattonomics。", cols="C")
-    row("wtm", "Wattonomics 讀本模型的版本", ["OpenAI 收支模型 v0.6.4（commit 4c027d8；In 頁 gcapai_oai、gocf_oai、gcash_oai，非即時連結）"], "",
-        "下列自有資本支出、營業現金流、2025 年底現金：本模型現值 vs Wattonomics 匯入值（同源，不判定）；差為 0＝層級匯入未落後。本輪（v0.6.5）不改本模型數值，故差維持 0", cols="C")
+    row("wtm", "Wattonomics 讀本模型的版本", [f"{RW['gocf_oai']['note'].split('；')[0]}（{RW['gocf_oai']['src']}；In 頁 gcapai_oai、gocf_oai、gcash_oai，非即時連結）"], "",
+        "下列自有資本支出、營業現金流、2025 年底現金：本模型現值 vs Wattonomics 匯入值（同源，不判定）；差為 0＝層級匯入未落後。本輪（v0.6.6）只改本頁對照口徑，不改本模型數值", cols="C")
     for k, y in enumerate(range(2026, 2031), start=2):
         n = r[0]
         row(f"cap{y}", f"自有資本支出 {y}：Cost 現值 vs Wattonomics WIF_Gap_Player_oai_{y}_CapexAIModel",
@@ -118,9 +118,9 @@ def build_p7(wb, R, S, I, nm, snap, tk_dir):
             "同源（本模型寫入 Wattonomics 對照欄；Wattonomics 的 CapexAI 不讀它）；差為 0＝未落後" if y == 2026 else "", fmt="#,##0.00", cols="CDE")
     for k, y in enumerate(range(2026, 2031), start=2):
         n = r[0]
-        row(f"ocf{y}", f"營業現金流 {y}：本模型（Funding 自由現金流 F06＋Cost 自有資本支出）vs Wattonomics WIF_Gap_Player_oai_{y}_OCF",
-            [f"=INDEX(FND_FCF,1,{k})+INDEX(COST_OwnedCapex,1,{k})", N.get(f"WIF_Gap_Player_oai_{y}_OCF"), f"=C{n}-D{n}"], "$B",
-            "Wattonomics 的營業現金流由本模型匯入（SRC_GL_319：Funding!13＋Cost!26）；同源，不判定、不計入對帳中" if y == 2026 else "", fmt="#,##0.00", cols="CDE")
+        row(f"ocf{y}", f"營業現金流 {y}：本模型 Funding 自由現金流 F06 vs Wattonomics WIF_Gap_Player_oai_{y}_OCF",
+            [f"=INDEX(FND_FCF,1,{k})", N.get(f"WIF_Gap_Player_oai_{y}_OCF"), f"=C{n}-D{n}"], "$B",
+            "Wattonomics 的營業現金流由本模型匯入（SRC_GL_319：Funding!13＝F06；Wattonomics v0.3.5 起不再加回 Cost!26 自有資本支出，與本列同口徑）；同源，不判定、不計入對帳中" if y == 2026 else "", fmt="#,##0.00", cols="CDE")
     n = r[0]
     row("cash25", "2025 年底現金：Funding 現值 vs Wattonomics gcash_oai", ["=INDEX(FND_CashEnd,1,1)", RW["gcash_oai"]["values"][1], f"=C{n}-D{n}"], "$B",
         "同源；Wattonomics 期初現金 40 取自本模型 Funding!D30", fmt="#,##0.00", cols="CDE")

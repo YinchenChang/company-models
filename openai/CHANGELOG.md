@@ -2,6 +2,11 @@
 
 每次同步記錄：Excel 版本、工作包、commit 與變動摘要。
 
+## 20261115_OpenAI_v0.6.6.xlsx — v0.6.6（Coord 改讀 Wattonomics v0.3.5；TK 快照仍 v21.7）
+
+- Coord（builder/p7.py）隨 `wattonomics/data/CURRENT_SNAPSHOT` 改讀 v0.3.5；營業現金流對照本模型側改 F06（`FND_FCF`，不再加 `COST_OwnedCapex`），與 Wattonomics `gocf_oai` 同口徑，2026–2030 差 0（殘差 < 1e-6）。讀本模型版本列改自快照出處帶出；追溯列 Gap 列位更新（G572／G571／G552）。
+- 既有計算頁逐格不變（`tools/xlsx_diff.py` 對 v0.6.5：差異只在 README、Coord）。對帳中 0。`dist/` 重產，v0.6.5 成品移 `dist/_待刪除/`，xlsx 移 `model/archive/`。
+
 ## 20261115_OpenAI_v0.6.5.xlsx — v0.6.5（三層協調 Coord 頁、PL 頁、未上市版面 v1.3；TK 快照仍 v21.7）
 
 - 新頁 `Coord`（builder/p7.py）：讀取層級（同源，不判定）、C0（公司揭露 vs 層級隱含值；營收「參考（同源校準）」）、層級之間（參考）；只列示，不被計算頁引用。具名範圍 COORD_C0、COORD_C0Sum、COORD_C0Verdict；Checks 新增 2 列（C181、C182）。新頁 `PL`（builder/p8.py；標準損益表；Checks C183、C184）。
