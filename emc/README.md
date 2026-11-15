@@ -1,4 +1,17 @@
-# emc/ — 台光電（2383）收支與估值模型 v0.5.3
+# emc/ — 台光電（2383）收支與估值模型 v0.5.4
+
+## v0.5.4（2026-11-15）：個股 HTML 版面 v1.3＋三層協調（兩讀數目標價、讀取層級、C0 公司實績對帳）
+
+- **依據：** 工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`、`docs/workorders/20261114_C0實績對帳補列_七家.md`；規則 `docs/plan/三層基準協調規則.md` v1.4.2；`tools/coord/README.md`；版面 `docs/plan/個股HTML版面規格.md` v1.3（樣板 NVIDIA v0.3.10、台達電、雙鴻）。
+- **做法：** 共通步驟 `emc/c13.py`、`emc/html13.py`（與電源散熱四家同一份），台光電設定在 `emc/v13_post.py`；`build_emc.py` 存檔前呼叫 `tools/coord` 的 `add_sheet` 後套用；`gen_html_json.py` 最後呼叫 `html13.apply`（含 `COORD.inject_html`）。主引擎掛鉤：`SIL_COORD_ALT=1` 時情境 B、C 的 AI IT 資本支出 CY2027 起 × `wta_27／28／29`（情境 A 不縮放；FY2026 校準不受影響）。新增 Hist、RevDCF、Coord 頁，PL 頁末標準損益表、Val 0.7 四個目標價、Sens 末表加權目標價相對基準、README 頁 v1.3 白話列。
+- **兩讀數（`emc/coord_alt.json`，Siliconomics v0.19；對帳中 CY2027–CY2029，另一側 ÷ 現行 0.618／0.665／0.665）：** 現行加權目標價 3,698.65 元（中立，上檔空間 −9.8%）；另一側 3,070.46 元（**放空**，−25.1%）；DCF 2,524.58 → 2,140.38、Comparable（未調整）5,248.99 → 4,309.46。兩讀數評等不同。alt_run 檢查列：另一側建置與現行建置一致。
+- **C0（實績）：** 實績＝月營收 2026-09 215.32 億元、2026-10 244.73 億元、前 10 月累計 1,657.00 億元（年增 114.1%；TechNews 2026-11-05 https://finance.technews.tw/2026/11/05/emc-2383-202610-financial-report/ ；9 月與前 9 月 1,412.27 億元見 TechNews 2026-10-05）、3Q26 營收 608.85 億元（季報，已在 v0.4 滾入）。層級隱含＝Siliconomics AI 高速 CCL 市場 CY2026 US$8.19B × 台光電 FY2026 有效份額 47.5% × 匯率 32＝1,244.7 億元。**判定：無可比實績（層級值同源）**——Siliconomics 沒有台光電份額（M16：份額留在公司模型），本模型份額＝AI 相關營收錨點 ÷ 本模型市場（＝Siliconomics 市場），市場大小在比式中消去，只檢驗營收錨點；公司未揭露 AI 相關營收金額（只有法說口述占比，Interested-party）。參考列（58.5% × 實績營收）差距主讀數 −6.5%、第二讀數 +14.5%，不判定。上限檢查通過（層級隱含 AI 相關占實績營收 63%）。對帳中項目 0。
+- **Hist 頁：** stockanalysis 年度損益表 FY2022–FY2025（https://stockanalysis.com/quote/tpe/2383/financials/income-statement/ ，2026-11-15 讀取）；EPS 為公司公告基本 EPS（15.24／16.35／27.81／41.67）。
+- **不變性：** `tools/xlsx_diff.py` 對 v0.5.3（容差 1e-9）：既有格只有 README!A1（版號、本版說明；A1 標題版號由舊的 v0.2.1 更正）不同，其餘皆為新增頁與新增格；目標價、評等不變。
+- **加註（舊節數字）：** v0.5.3 節的「加權目標價 4,108 → 3,843 元（DCF 2,811 → 2,814）、上檔空間 −6.3%」為當時成品；之後 Siliconomics v0.19 全下游重建原地更新 v0.5.3 成品，現行 v0.5.3 成品為加權目標價 3,698.65 元（DCF 2,524.58、Comparable 調整後 4,872.71）、上檔空間 −9.8%、中立。本版以現行成品為基準比對，舊節不改寫。
+- **驗證：** `check_company_html emc` 全部通過；`check_layout_v13 --xlsx` ok；`tools/baseline_coordination/check.py` 0 項不符；LibreOffice 重算錯誤格 0。
+- **coord_meta：** `siliconomics/builder/seed/coord_meta_v0.19.json` 的 `hardware_companies` 需加入 `emc`（由主控合併時統一加入並重匯 `baseline_status.json`；本 PR 不改）。
+- 成品：`dist/20261115_台光電個股模型_v0.5.4.xlsx`／`.html`；v0.5.3 移到 `dist/_待刪除/`。
 
 ## v0.5.3（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守
 
