@@ -76,6 +76,7 @@ def apply(wb, here, cfg):
         if d != old_date or (k, NEWD) not in closes():
             unchanged.append((k, d)); continue
         p0, p1 = px(k, d), px(k)
+        fx_note = ""
         if isinstance(f, str) and f.startswith("="):
             m = re.match(r"^=([\d.]+)\*([\d.]+)/([\d.]+)$", f)            # =PE*N/O
             m2 = re.match(r"^=([\d.]+)/\(([\d.]+)/([\d.]+)\)$", f)        # =N/(O/PE)
@@ -88,14 +89,17 @@ def apply(wb, here, cfg):
                 new_f = f"={fmt(p1)}/({m2.group(2)}/{m2.group(3)})"
             elif m3:
                 assert abs(float(m3.group(1)) - p0) < 1e-4 * p0, (k, f, p0)
-                new_f = f"=(2*{fmt(p1)}/{m3.group(2)})/{m3.group(3)}"
+                fx_new = cfg.get("fx_ads")      # K 批：ADS 換算的 USD/TWD 改 11-13 收盤（TWD=X）
+                new_f = f"=(2*{fmt(p1)}/{fmt(fx_new) if fx_new else m3.group(2)})/{m3.group(3)}"
+                if fx_new:
+                    fx_note = f"；K 批：ADS 換算的 USD/TWD {m3.group(2)} → {fmt(fx_new)}（Yahoo Finance TWD=X 日線收盤 2026-11-13；僅換股價換算，預測用匯率不變）"
             else:
                 raise AssertionError(("未知同業公式", k, f))
         else:
             new_f = f"={fmt(float(f))}*{fmt(p1)}/{fmt(p0)}"
         Vw.cell(rr, 3).value = new_f
         Vw.cell(rr, 4).value = NEWD
-        Vw.cell(rr, 5).value = str(Vw.cell(rr, 5).value or "") + f"；工作單 px1113：換算到 {NEWD}＝現行倍數 × {NEWD} 收盤 {n(p1)} ÷ {old_date} 收盤 {n(p0)}（Yahoo Finance 日線收盤；markets/invest_map/data/closes_20261020_20261113.csv；共識前瞻 EPS 不變）"
+        Vw.cell(rr, 5).value = str(Vw.cell(rr, 5).value or "") + f"；工作單 px1113：換算到 {NEWD}＝現行倍數 × {NEWD} 收盤 {n(p1)} ÷ {old_date} 收盤 {n(p0)}（Yahoo Finance 日線收盤；markets/invest_map/data/closes_20261020_20261113.csv；共識前瞻 EPS 不變）" + fx_note
         npeer += 1
         log.append(f"peer {k} {f} → {new_f}")
     # 3 其他寫死股價
