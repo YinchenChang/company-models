@@ -23,13 +23,16 @@ def vv(k, col="B", f=""):
 # ---- 敏感度案例（依相對基準絕對值排序由產生器處理；這裡只列有數值的列） ----
 SE = wb["Sens"]
 case_rows = [r for r in rm["SE_ROWS"] if isinstance(SE.cell(r, 5).value, (int, float))]
-big = [r for r in case_rows if abs(SE.cell(r, 5).value) >= 0.1]
-small = [r for r in case_rows if abs(SE.cell(r, 5).value) < 0.1 and abs(SE.cell(r, 5).value) >= 0.0005]
 sens_blocks = []
-sens_blocks.append({"type": "tornado", "title": "加權目標價相對基準的變動：變動達兩位數百分比的案例（一次改一個輸入，整本重算）", "sheet": "Sens", "rows": ",".join(map(str, big)) if big else ",".join(map(str, case_rows[:1])), "label_col": "A", "value_col": "E", "fmt": "sp1"})
-if small:
-    sens_blocks.append({"type": "tornado", "title": "加權目標價相對基準的變動：未達兩位數百分比的案例", "sheet": "Sens", "rows": ",".join(map(str, small)), "label_col": "A", "value_col": "E", "fmt": "sp1",
-                        "collapse": True, "summary": "展開：變動未達兩位數百分比的案例"})
+for side in ("低", "高"):
+    rs = [r for r in case_rows if SE.cell(r, 3).value == side]
+    big = [r for r in rs if abs(SE.cell(r, 5).value) >= 0.1]
+    small = [r for r in rs if 0.0005 <= abs(SE.cell(r, 5).value) < 0.1]
+    base = {"type": "tornado", "sheet": "Sens", "label_col": "A", "value_col": "E", "fmt": "sp1"}
+    sens_blocks.append(dict(base, title=f"加權目標價相對基準：輸入取{side}值，變動達兩位數百分比的案例", rows=",".join(map(str, big or rs[:1]))))
+    if small:
+        sens_blocks.append(dict(base, title=f"加權目標價相對基準：輸入取{side}值，其餘案例", rows=",".join(map(str, small)), collapse=True,
+                                summary=f"展開：輸入取{side}值，變動未達兩位數百分比的案例"))
 sens_blocks.append({"type": "table", "collapse": True, "summary": "展開：全部案例（含收支關卡 B、DCF 目標價與投資建議）",
                     "head": ["驅動", "設定", "方向", "加權目標價", "相對基準", "收支關卡 B", "DCF 目標價", "投資建議"],
                     "rowgen": {"sheet": "Sens", "rows": f"4-{rm['SE_END']}", "cols": ["A", "B", "C", "D", "E", "H", "I", "J"], "fmts": ["", "", "", "n2", "sp1", "n1", "n2", ""]}})
@@ -109,7 +112,8 @@ valuation = {"id": "valuation", "title": "估值", "blocks": [
     {"type": "table", "caption": "情境目標價與收支關卡", "head": ["項目", "數值"],
      "rows": [[f"@Val!A{VR[k]}", vv(k, "B", f)] for k, f in (("t_A", "n2"), ("t_B", "n2"), ("t_C", "n2"), ("wsum", "p0"), ("per", "n1"), ("gate_A", "n0"), ("fcf_gate", "n0"), ("gate_C", "n0"))]}]}
 # ---------- 3. 敏感度 ----------
-sens = {"id": "sens", "title": "敏感度", "blocks": sens_blocks[:1] + [{"type": "note", "parts": ["@Sens!A2"]}] + sens_blocks[1:]}
+_main = [b for b in sens_blocks if not b.get("collapse") and b["type"] == "tornado"]
+sens = {"id": "sens", "title": "敏感度", "blocks": _main + [{"type": "note", "parts": ["@Sens!A2"]}] + [b for b in sens_blocks if b not in _main]}
 # ---------- 4. 反向 DCF ----------
 revdcf = {"id": "revdcf", "title": "反向 DCF：現價隱含什麼", "blocks": [
     {"type": "note", "parts": ["@RevDCF!A2"]}, {"type": "note", "parts": [f"@RevDCF!A{RVR['sum']}"]},
@@ -120,7 +124,7 @@ revdcf = {"id": "revdcf", "title": "反向 DCF：現價隱含什麼", "blocks": 
      "rows": [[f"@RevDCF!A{RVR[k]}", f"@RevDCF!B{RVR[k]}|{f}"] for k, f in (("smul", "n1"), ("smod", "n1"), ("sps", "n2"))]}]}
 # ---------- 5. 損益 ----------
 pl = {"id": "pl", "title": "損益（標準損益表）", "blocks": [
-    {"type": "note", "parts": [f"@PL!A{rm['STD_NOTE']}"]},
+    {"type": "note", "parts": ["損益表採 IFRS 口徑（GAAP 口徑，非 Non-GAAP 調整後數字）。", f"@PL!A{rm['STD_NOTE']}"]},
     {"type": "theme", "title": "營收（十億日圓）與毛利率、營業利益率、淨利率：FY2023A–FY2032E（情境 B）", "x": f"@PL!C{STDH}:L{STDH}", "fmt": "n0", "fmt_r": "p0", "stack": True, "pad": 1.6,
      "bars": [{"name": [f"@PL!A{IX['rev']}"], "y": f"@PL!C{IX['rev']}:L{IX['rev']}", "color": "#6fc7cb"}],
      "lines": [{"name": [f"@PL!A{IX['gm']}"], "y": f"@PL!C{IX['gm']}:L{IX['gm']}", "axis": "r", "color": "#0b7a80", "labels": True},
@@ -139,7 +143,7 @@ drivers = {"id": "drivers", "title": "驅動因子：分部營收推導", "block
     {"type": "note", "parts": ["@PL!A2"]},
     {"type": "theme", "title": "搜尋廣告營收（長條）× 情境 A／B／C（十億日圓）", "x": f"@PL!F{HR}:L{HR}", "fmt": "n0", "stack": False, "pad": 1.2,
      "bars": [{"name": ["情境 ", s, "：搜尋廣告"], "y": f"@PL!F{PR[s]['srch']}:L{PR[s]['srch']}", "color": c} for s, c in (("A", "#7fb8bb"), ("B", "#3b3838"), ("C", "#d9a08f"))],
-     "caption": "搜尋廣告＝基礎營收 ×（1 − 查詢分流占比）×（1 + 價格提升）；三情境只改分流與價格提升，基礎成長相同。"},
+     "caption": "搜尋廣告＝基礎營收 ×（扣除查詢分流占比）×（加上價格提升）；三情境只改分流與價格提升，基礎成長相同。"},
     {"type": "table", "caption": "分部營收推導（情境 B；十億日圓）：子線加總＝分部，分部加總＝合併營收", "head": ["項目"] + [f"@PL!{c}{HR}" for c in C],
      "rowgen": {"sheet": "PL", "rows": f"{PB['s_base']}-{PB['chk_seg']}", "cols": ["A"] + C, "fmts": [""] + ["n1"] * 10}},
     scn_table(["ai_inc", "ai_ero", "inf", "ai_net", "ai_oi"]),

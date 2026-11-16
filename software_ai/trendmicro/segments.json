@@ -1,0 +1,93 @@
+{
+ "company": "趨勢科技 Trend Micro",
+ "ticker": "4704.T",
+ "fiscal_year_end": "12 月（FY2025＝2025-01～2025-12）",
+ "model_sheet": "PL",
+ "note": "官方報告分部＝所在地別四分部（Japan、Americas、Europe、Asia Pacific），來源 Annual Report FY2025 p.38 附註（事業報告，二手轉載另見 EDINET 鏡像）；公司另揭露企業（TrendAI）與個人（TrendLife）分業務營收年增與 ARR，但不是報告分部。命題子列＝各分部之下的 Vision One（命題子列）與其他（Other），子列合計＝分部。單位 ¥B。FY2025 分部合計與合併差 0.002（四捨五入）。",
+ "official_segments": [
+  {
+   "name": "Japan",
+   "label": "Japan",
+   "period": "FY2025",
+   "value": 87.84,
+   "unit": "¥B",
+   "source": "Annual Report FY2025 p.38；software_ai/trendmicro/data/facts_trendmicro.csv",
+   "date": "2026-02",
+   "operatingIncome": 20.651
+  },
+  {
+   "name": "Americas",
+   "label": "Americas",
+   "period": "FY2025",
+   "value": 55.187,
+   "unit": "¥B",
+   "source": "Annual Report FY2025 p.38；software_ai/trendmicro/data/facts_trendmicro.csv",
+   "date": "2026-02",
+   "operatingIncome": 11.027
+  },
+  {
+   "name": "Europe",
+   "label": "Europe",
+   "period": "FY2025",
+   "value": 61.439,
+   "unit": "¥B",
+   "source": "Annual Report FY2025 p.38；software_ai/trendmicro/data/facts_trendmicro.csv",
+   "date": "2026-02",
+   "operatingIncome": 12.334
+  },
+  {
+   "name": "Asia Pacific",
+   "label": "Asia Pacific",
+   "period": "FY2025",
+   "value": 71.516,
+   "unit": "¥B",
+   "source": "Annual Report FY2025 p.38；software_ai/trendmicro/data/facts_trendmicro.csv",
+   "date": "2026-02",
+   "operatingIncome": 12.982
+  }
+ ],
+ "consolidated": {
+  "period": "FY2025",
+  "value": 275.984,
+  "unit": "¥B",
+  "source": "Annual Report FY2025 p.4、p.20"
+ },
+ "sublines": [
+  {
+   "parent": "Japan",
+   "labels": [
+    "Vision One（命題子列）｜Japan",
+    "其他｜Japan"
+   ],
+   "kind": "命題子列（P 原型：受保護範圍×模組×單價；其他＝殘差）"
+  },
+  {
+   "parent": "Americas",
+   "labels": [
+    "Vision One（命題子列）｜Americas",
+    "其他｜Americas"
+   ],
+   "kind": "命題子列（P 原型：受保護範圍×模組×單價；其他＝殘差）"
+  },
+  {
+   "parent": "Europe",
+   "labels": [
+    "Vision One（命題子列）｜Europe",
+    "其他｜Europe"
+   ],
+   "kind": "命題子列（P 原型：受保護範圍×模組×單價；其他＝殘差）"
+  },
+  {
+   "parent": "Asia Pacific",
+   "labels": [
+    "Vision One（命題子列）｜Asia Pacific",
+    "其他｜Asia Pacific"
+   ],
+   "kind": "命題子列（P 原型：受保護範圍×模組×單價；其他＝殘差）"
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收",
+  "檢查：命題子列合計 − 分部"
+ ]
+}

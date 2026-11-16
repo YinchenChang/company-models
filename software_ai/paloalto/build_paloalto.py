@@ -130,7 +130,8 @@ inp("pe_f", "同業前瞻本益比 Fortinet（FTNT）", "x", None, 33.85, None, 
 inp("pe_z", "同業前瞻本益比 Zscaler（ZS）", "x", None, 39.22, None, "Interested-party", "StockAnalysis.com ZS 統計頁（同上）", "US GAAP", INC_DATA, "0.00")
 inp("pe_c", "同業前瞻本益比 Check Point（CHKP）", "x", None, 13.70, None, "Interested-party", "StockAnalysis.com CHKP 統計頁（同上）", "US GAAP（以色列公司，申報 US GAAP）", INC_DATA, "0.00")
 inp("pe_n", "同業前瞻本益比 Cloudflare（NET）", "x", None, 174.39, None, "Interested-party", "StockAnalysis.com NET 統計頁（同上）", "US GAAP", INC_DATA, "0.00")
-inp("rel_adj", "相對倍數調整係數（未調整＝1.00）", "x", 0.8, 1.0, "=H_PEREL", "Assumed", "1.00（未調整：缺同業 NTM 成長率、利益率與同日 EPS；4 家同業不做迴歸）", "高案＝PANW 前瞻本益比 ÷ 同業中位數（77.10÷36.54，資料商）；列入承重輸入（第 18 條）", "", "0.00")
+inp("pe_p", "PANW 資料商前瞻本益比（展示；同源同日）", "x", None, 77.10, None, "Interested-party", SRC["SAS"], "只用於相對倍數高案與 Recon 展示", INC_DATA, "0.00")
+inp("rel_adj", "相對倍數調整係數（未調整＝1.00）", "x", 0.8, 1.0, "=H_PEREL", "Assumed", "1.00（未調整：缺同業 NTM 成長率、利益率與同日 EPS；4 家同業不做迴歸）", "高案＝PANW 資料商前瞻本益比 ÷ 同業中位數（Val 頁）；列入承重輸入（第 18 條）", "", "0.00")
 
 sec("G. 只作對照的公司指引、目標與共識（不進模型）")
 for k, it, u, v, f, inc in [
@@ -381,8 +382,8 @@ def scenario(wb, ws, sc):
     R("eros", "定價侵蝕（相對 FY2026）", "US$M", [None, None, "=0"], "=[U]*[eros_u]", "#,##0.0")
     R("dinf", "推論成本增量（市場價；相對 FY2026）", "US$M", [None, None, "=0"], "=[U]*[dinf_u]", "#,##0.0")
     R("ainet", "AI 淨效果（增量 − 侵蝕 − 推論成本）", "US$M", [None, None, "=0"], "=[incr]-[eros]-[dinf]", "#,##0.0", bold=True)
-    R("infsh", "推論成本增量 ÷ 營業成本", "%", None, "=[dinf]/[cogs]", "0.000%")
-    R("infsh2", "推論成本增量（全成本對照，模型商自做的下限）÷ 營業成本", "%", None, "=[dinf]*TK!$C$12/TK!$C$11/[cogs]", "0.000%", "以任務成本比例縮放，不另估 token 價格")
+    R("infsh", "推論成本增量 ÷ 營業成本", "%", None, None, "0.000%")
+    R("infsh2", "推論成本增量（全成本對照，模型商自做的下限）÷ 營業成本", "%", None, None, "0.000%", "以任務成本比例縮放，不另估 token 價格")
     R("be", "損益兩平所需代理身分單價 ÷ AI 前單價（反解）", "x", None, '=IF([nn]-$E[nn]<=0,"",(([eros_u]+[dinf_u])/[R0]-([mm]-$E[mm]))/([nn]-$E[nn]))', "0.000", "淨效果＝0 時的 P_rho；負值＝不需代理身分收入即為正")
     HD("三、損益鏈（Non-GAAP → GAAP）")
     R("nmeff", "核心 Non-GAAP 營業利益率（基準全期持平）", "%", None, "=nm0+nm_up*[tt]", "0.0%")
@@ -451,11 +452,12 @@ def scenario(wb, ws, sc):
         sc_rows[k] = r; r += 1
     allrows = dict(rows); allrows.update({k: v for k, v in sc_rows.items()})
     pat = re.compile(r"\[([a-z0-9_A-Z]+?)(-1)?\]")
+    LK = rows
     def conv(t, col, prevcol):
         def sub(m):
             k, prev = m.group(1), m.group(2)
-            return f"{prevcol if prev else col}{rows[k]}"
-        t = re.sub(r"\$E\[([A-Za-z0-9_]+)\]", lambda m: f"$E${rows[m.group(1)]}", t)
+            return f"{prevcol if prev else col}{LK[k]}"
+        t = re.sub(r"\$E\[([A-Za-z0-9_]+)\]", lambda m: f"$E${LK[m.group(1)]}", t)
         return pat.sub(sub, t)
     ws["A3"] = "項目"; ws["B3"] = "單位"
     for y in YEARS: ws[f"{COLS[y]}3"] = f"FY{y}{'A' if y <= 2026 else 'E'}"
@@ -488,6 +490,7 @@ def scenario(wb, ws, sc):
     r = max(sc_rows.values()) + 2
     ws.cell(r, 1, "標準損益表（GAAP；US$M，EPS 為 US$）——由上方各列引用").font = BOLD; r += 1
     std = {}
+    LK = dict(rows)
     ws.cell(r, 1, "標準損益表年度"); std["hdr"] = r
     for y in YEARS: ws[f"{COLS[y]}{r}"] = f"FY{y}{'A' if y <= 2026 else 'E'}"
     r += 1
@@ -501,15 +504,16 @@ def scenario(wb, ws, sc):
                 if t is None: continue
                 ws[f"{col}{r}"] = conv(t, col, prevcol) if "[" in t else t
                 ws[f"{col}{r}"].number_format = fmt
+        LK[key] = r
         r += 1
     srow("rev", "營收", "=[rev]")
     srow("yoy", "營收年增率", "=[rev]/[rev-1]-1", fmt="0.0%", unit="%")
     ws[f"C{std['yoy']}"] = "=C%d/h_rev_23-1" % std["rev"]
     ws[f"C{std['yoy']}"].number_format = "0.0%"
-    srow("cogs", "營業成本", "=h_cogs_24", None)   # 先放歷史，下方覆寫
-    srow("gp", "毛利", "=[rev]-[cogsS]")
+    srow("cogs", "營業成本", None)
+    srow("gp", "毛利", None)
     srow("gm", "毛利率", "=[gp]/[rev]", fmt="0.0%", unit="%")
-    srow("opex", "營業費用", "=h_opex_24")
+    srow("opex", "營業費用", None)
     srow("oi", "營業利益", "=[ebitg]")
     srow("om", "營業利益率", "=[oi]/[rev]", fmt="0.0%", unit="%")
     srow("oth", "其他收入（淨額）", "=[othx]")
@@ -626,7 +630,7 @@ def valuation(wb, S, RW):
     put("adj", "相對倍數調整係數", "=rel_adj", fmt="0.00", note="1.00（未調整：缺同業 NTM 成長率、利益率與同日 EPS）")
     put("eps28", "FY2028 Non-GAAP EPS（A／B／C）", "=PL_A!G%d" % R["ngeps"], "=PL!G%d" % R["ngeps"], "=PL_C!G%d" % R["ngeps"])
     put("cmp", "Comparable 目標價（A／B／C）", "=PL_A!C%d" % R["tpcmp"], "=PL!C%d" % R["tpcmp"], "=PL_C!C%d" % R["tpcmp"])
-    put("pxpe", "PANW 前瞻本益比 ÷ 同業中位數（資料商 77.10 對同業中位；展示）", "=77.1/B{pemed}", fmt="0.00", note="分子 77.10 為 StockAnalysis 2026-11-13 前瞻本益比（Interested-party，資料商口徑）；只作展示，不進模型")
+    put("pxpe", "PANW 資料商前瞻本益比 ÷ 同業中位數（展示；同一資料商同日口徑）", "=pe_p/B{pemed}", fmt="0.00", note="分子為 StockAnalysis 2026-11-13 前瞻本益比（Interested-party，資料商口徑）；高案相對倍數係數取此值")
     put("pemod", "PANW 現價 ÷ 模型 FY2027 Non-GAAP EPS（情境 B；NTM 近似）", "=px/PL!F%d" % R["ngeps"], fmt="0.00")
     put("sec5", "期間與評等邊界", bold=True)
     put("per_d", "折現期間（評價日 → 目標時點，年）", "=(tp_date-val_date)/365", fmt="0.00")

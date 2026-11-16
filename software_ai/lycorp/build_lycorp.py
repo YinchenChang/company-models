@@ -93,7 +93,7 @@ inp("px_date", "股價基準日（現價日）", "日期", None, PXDATE, None, "
 inp("val_date", "評價日", "日期", None, VALDATE, None, "Derived", "同股價基準日（資產負債表為 2026-09-30，見下）")
 inp("tp_date", "目標時點＝EDATE(股價基準日, 12)", "日期", None, "=EDATE(E6,12)", None, "Derived", "原則第 10 節第 26 條")
 inp("fye", "FY2026 會計年度結束日", "日期", None, FYE, None, "Verified", "公司 4 月制")
-inp("px", "現價（2026-11-16 收盤）", "日圓", None, 543.3, None, "Verified", "https://www.traders.co.jp/stocks/61_4689/news/2213540（15 分鐘延遲）", "收盤價取自單一網站，未三源核對（見研究包未找到）")
+inp("px", "現價（2026-11-16 收盤）", "日圓", None, 543.3, None, "Verified", "traders.co.jp 個股頁（stocks/61_4689）（15 分鐘延遲）", "收盤價取自單一網站，未三源核對（見研究包未找到）")
 inp("sh_out", "流通股數（含庫藏，2026-10-26）", "百萬股", None, 6888.742311, None, "Verified", "https://finance.yahoo.co.jp/quote/4689.T", "未扣庫藏股（2026-03 末庫藏 25.6 百萬股）；稀釋以 dil 另計")
 inp("dil", "稀釋係數（稀釋 EPS ÷ 基本 EPS 的差，FY2025 實績 0.43%）", "%", None, 0.0043, None, "Derived", "決算短信 FY2025 p.17：稀釋 27.85／基本 27.97", "", "0.00%")
 inp("debt0", "有息負債（不含金融事業，2026-09-30）", "十億日圓", None, 1384.7, None, "Verified", A2Q + " p.10", "含租賃負債；PayPay 銀行業務之存款與放款不在內")

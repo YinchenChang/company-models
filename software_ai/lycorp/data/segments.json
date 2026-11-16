@@ -1,0 +1,23 @@
+{
+ "company": "LY Corporation",
+ "ticker": "4689",
+ "model_sheet": "PL",
+ "note": "官方報告分部（IFRS 8）：Media、Commerce、Strategic，另有 Other 與 Adjustments（分部間消除）。來源＝FY2025（2025-04～2026-03）決算短信 附註 p.32（2026-05-07 發布）。FY2025 與 FY2024 取重編後口徑；FY2026 Q1 起又有服務移轉與費用分攤變更，最近 4 季口徑不完全一致（見 data/research_lycorp.md 第 3 節）。Media 之下子列＝搜尋廣告、帳號廣告、展示廣告、其他（含用戶付費）（簡報固定揭露，FY2025 絕對值取自 FY2025 Q4 簡報 slide 9-10，十億日圓一位小數）；模型另在 Media 內加 AI 增量子列（Agent i 訂閱與廣告）為命題模組，不屬官方揭露。金額十億日圓。",
+ "official_segments": [
+  {"name": "Media", "label": "Media", "period": "FY2025", "value": 735.197, "unit": "十億日圓", "source": "LY FY2025 決算短信 附註 p.32（2026-05-07）；data/facts_lycorp.csv", "url": "https://data.swcms.net/file/lycorp-ir/dam/jcr:977c1536-eca8-4f95-b8ed-5b6df7c8e884/140120260507518939.pdf"},
+  {"name": "Commerce", "label": "Commerce", "period": "FY2025", "value": 857.622, "unit": "十億日圓", "source": "同上", "url": "https://data.swcms.net/file/lycorp-ir/dam/jcr:977c1536-eca8-4f95-b8ed-5b6df7c8e884/140120260507518939.pdf"},
+  {"name": "Strategic", "label": "Strategic", "period": "FY2025", "value": 445.772, "unit": "十億日圓", "source": "同上", "url": "https://data.swcms.net/file/lycorp-ir/dam/jcr:977c1536-eca8-4f95-b8ed-5b6df7c8e884/140120260507518939.pdf"},
+  {"name": "Other", "label": "Other", "period": "FY2025", "value": 9.861, "unit": "十億日圓", "source": "同上", "url": "https://data.swcms.net/file/lycorp-ir/dam/jcr:977c1536-eca8-4f95-b8ed-5b6df7c8e884/140120260507518939.pdf"},
+  {"name": "Adjustments", "label": "Adjustments", "period": "FY2025", "value": -12.086, "unit": "十億日圓", "source": "同上", "url": "https://data.swcms.net/file/lycorp-ir/dam/jcr:977c1536-eca8-4f95-b8ed-5b6df7c8e884/140120260507518939.pdf"}
+ ],
+ "consolidated": {
+  "period": "FY2025", "revenue": 2036.366, "operatingIncome": 341.322,
+  "check": "Media＋Commerce＋Strategic＋Other＋Adjustments－合併營收：FY2024、FY2025 差 0；FY2021–FY2023 差 ≤ 0.002（來源四捨五入）；近 4 季 Q4 FY2025、Q1 FY2026 差 0／-0.002，Q3 FY2025、Q2 FY2026 的 Other 與 Adjustments 未分列，以合併減三分部反推（恆等）。十億日圓"
+ },
+ "sublines": [
+  {"parent": "Media", "labels": ["搜尋廣告", "帳號廣告（LINE 官方帳號等）", "展示廣告", "其他（含用戶付費）"],
+   "values": {"FY2025": {"搜尋廣告": 179.0, "帳號廣告（LINE 官方帳號等）": 145.7, "展示廣告": 254.2, "其他（含用戶付費）": 156.2}},
+   "drivers": {"搜尋廣告": "命題模組（原型 A）：基礎營收 ×（1 − 查詢分流）×（1 + AI 轉換率帶動的每次點擊價格提升）", "帳號廣告（LINE 官方帳號等）": "基礎成長＋AI Mode 增量", "展示廣告": "成長率收斂", "其他（含用戶付費）": "成長率收斂；LYP Premium 直接訂閱 10.90 百萬（Q2 FY2026）"}}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收"]
+}
