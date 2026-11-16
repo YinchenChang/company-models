@@ -30,7 +30,7 @@ AI 伺服器品牌商：以買賣模式銷售含 NVIDIA、AMD GPU 的整機、�
 - 4Q FY26 毛利率 17.5% 含一次性因素；不含 4Q 的 FY2026 毛利率只有 8.2% [本專案：20261116_美超微個股模型_v0.3.8.xlsx Q!E6、B24]。
 
 ## 市場定位與產業位置
-- 本專案有效份額（分母為 NVIDIA、AMD 商用 GPU 系統市場）2H FY26 約 5.0%；FY2027 以公司營收指引校準，情境 A 約 8.1% [本專案：20261104_美超微個股模型_v0.2.xlsx Units!C10、D10]。
+- 本專案有效份額（分母為 NVIDIA、AMD 商用 GPU 系統市場）2H FY26 約 5.0%；FY2027 以公司營收指引校準，情境 A 約 8.4% [本專案：20261116_美超微個股模型_v0.3.8.xlsx Units!C10、D10]。
 - 客戶與供應商集中：最大客戶占 FY2026 營收 28%；單一供應商占採購 63.1% [本專案：smci/README.md 治理風險]。
 - 4Q FY26 新訂單逾 US$600 億 [本專案：20261116_美超微個股模型_v0.3.8.xlsx In!H34]。
 - 營運資金壓力：FY2026 營業現金流 −US$68 億，靠約 US$56 億增資與特別股補足 [本專案：smci/README.md 估值]。
@@ -96,8 +96,8 @@ AI 伺服器品牌商：以買賣模式銷售含 NVIDIA、AMD GPU 的整機、�
 - 市場口徑一致性｜美超微模型與 Dell 模型的 2026 年商用 GPU 系統市場現在同為 US$595B（先前因 AMD 2026 年計價世代不同而有差異，已對齊），兩邊更新時需同步 [本專案：20261116_美超微個股模型_v0.3.8.xlsx Units!C8；20261116_戴爾個股模型_v0.2.7.xlsx Units!C8]｜模型更新
 
 ## 來源
-1. 本專案：`smci/README.md`（v0.2，2026-11-04）；`smci/dist/20261104_美超微個股模型_v0.2.xlsx`（In、Q、Units 頁）
-2. 本專案：`dell/dist/20261030_戴爾個股模型_v0.1.2.xlsx`（對照）
+1. 本專案：`smci/README.md`（v0.2，2026-11-04）；`smci/dist/20261116_美超微個股模型_v0.3.8.xlsx`（In、Q、Units 頁）
+2. 本專案：`dell/dist/20261116_戴爾個股模型_v0.2.7.xlsx`（對照）
 3. [Supermicro：1Q FY27 初步營運更新](https://ir.supermicro.com/news/news-details/2026/Supermicro-Provides-First-Quarter-of-Fiscal-Year-2027-Preliminary-Business-Update/default.aspx)（2026-10-20）
 4. [Supermicro：任命 Mark Long 為財務長](https://ir.supermicro.com/news/news-details/2026/Supermicro-Appoints-Mark-Long-as-Chief-Financial-Officer/default.aspx)（2026-10-15）
 5. [Supermicro：FY2026 第四季與全年財報](https://ir.supermicro.com/news/news-details/2026/Supermicro-Announces-Fourth-Quarter-and-Full-Fiscal-Year-2026-Financial-Results/default.aspx)（2026-08-11）
