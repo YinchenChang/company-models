@@ -1,0 +1,10 @@
+# Naver 個股模型 v0.1 取用的 Tokenomics 契約名稱（只取 IF_；推論成本只讀 Tokenomics，不自行重估 token 價格）
+IF_PriceRef_Terra
+IF_FullCost_Terra
+IF_FullCostDefault_Terra
+IF_TaskTokFresh
+IF_TaskTokCached
+IF_TaskTokDec
+IF_TaskTokMult
+IF_TaskLen
+IF_Disc

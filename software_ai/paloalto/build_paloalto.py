@@ -142,6 +142,7 @@ for k, it, u, v, f, inc in [
     ("g_sh_lo", "FY2027 稀釋股數指引（低）", "百萬股", 844, N0, INC_CO), ("g_sh_hi", "FY2027 稀釋股數指引（高）", "百萬股", 847, N0, INC_CO),
     ("t_arr30", "FY2030 NGS ARR 管理層目標", "US$B", 20, N2, INC_CO), ("t_fcf28", "FY2028 調整後自由現金流率管理層目標", "%", 0.40, PCT, INC_CO)]:
     inp(k, it, u, None, v, None, "Interested-party", SRC["R26Q4"] + "；Financial Outlook／CEO、CFO 引言", "只作對照，不進模型", inc + "；只作對照，不進模型", f)
+inp("acq_rev", "Chronosphere＋CyberArk 併入後貢獻營收（FY2026）", "US$M", None, 930, None, "Verified", SRC["K26"] + "；Note 8", "只作對照，不進模型", "", N0)
 inp("cons_rev27", "共識 FY2027 營收", "US$M", None, 14170, None, "Interested-party", SRC["SA"], "52 家；只作對照，不進模型", INC_SELL + "；只作對照，不進模型", N0)
 inp("cons_eps27", "共識 FY2027 Non-GAAP EPS", "US$", None, 4.18, None, "Interested-party", SRC["SA"], "52 家；只作對照，不進模型", INC_SELL + "；只作對照，不進模型", N2)
 inp("cons_tp", "賣方平均目標價（55 家）", "US$", 190, 398.63, 525, "Interested-party", SRC["SAS"] + "（2026-11-14，S&P Global）；低高值 MarketScreener 2026-10-23", "共識目標價的最低、最高只作對照", INC_SELL + "；只作對照，不進模型", N2)
@@ -245,7 +246,8 @@ def build(ov=None, sens=None, fp=None, rec_tp=None, build_id="BUILD"):
         for j, kk in enumerate(trip): ws.cell(r, 4 + j, f"=E{INROW[kk]}")
         ws.cell(r, 8, why); r += 1
     for col, w in zip("ABCDEFGHIJ", (14, 52, 10, 11, 12, 11, 16, 60, 70, 40)): ws.column_dimensions[col].width = w
-    IN_LAST = r
+    global INLAST
+    INLAST = r
     # ---------------- Hist
     wh = S["Hist"]
     wh["A1"] = "Hist — 歷史財務（US$M，會計年度 8 月 1 日至翌年 7 月 31 日）；公式只引用本頁儲存格（定義名稱 h_<鍵>_<年>）"
@@ -329,8 +331,9 @@ def build(ov=None, sens=None, fp=None, rec_tp=None, build_id="BUILD"):
         RW[sh] = scenario(wb, S[sh], sc)
     # ---------------- Val / RevDCF / Recon / Sens / README / Sources
     VR = valuation(wb, S, RW)
-    revdcf(wb, S["RevDCF"], RW["PL"], VR)
-    recon(wb, S["Recon"], RW["PL"], VR)
+    global RW_REV, RW_RC
+    RW_REV = revdcf(wb, S["RevDCF"], RW["PL"], VR)
+    RW_RC = recon(wb, S["Recon"], RW["PL"], VR)
     sensitivity(wb, S["Sens"], VR, sens, fp, rec_tp, build_id)
     readme(wb, S["README"], RW, VR, build_id, sens)
     sources(S["Sources"])
@@ -395,8 +398,8 @@ def scenario(wb, ws, sc):
     R("amortx", "收購無形資產攤銷", "US$M", [None, "=h_amort_25", "=h_amort_26"], "=MIN(amort_run,[bal-1])", "#,##0.0")
     R("acqx", "併購相關費用", "US$M", [None, "=h_acq_25", "=h_acq_26"], "=IF([yr]=2027,acq27,IF([yr]=2028,acq28,0))", "#,##0.0")
     R("litx", "訴訟相關費用", "US$M", [None, "=h_lit_25", "=h_lit_26"], "=0", "#,##0.0")
-    R("ebitg", "GAAP EBIT（Non-GAAP 營業利益 − 股票薪酬 − 攤銷 − 併購費用 − 訴訟）", "US$M", [None, "=[ngebit]-[sbcx]-[amortx]-[acqx]-[litx]", "=[ngebit]-[sbcx]-[amortx]-[acqx]-[litx]"], "=[ngebit]-[sbcx]-[amortx]-[acqx]-[litx]", "#,##0.0")
-    R("chk5", "檢查：GAAP EBIT 調節－公司揭露 GAAP 營業利益", "US$M", [None, "=[ebitg]-h_ebit_25", "=[ebitg]-h_ebit_26"], None, "0.0", "FY2025 差 0.1 內為四捨五入")
+    R("ebitg", "GAAP EBIT（Non-GAAP 營業利益 − 股票薪酬 − 攤銷 − 併購費用 − 訴訟）", "US$M", ["=h_ebit_24", "=[ngebit]-[sbcx]-[amortx]-[acqx]-[litx]", "=[ngebit]-[sbcx]-[amortx]-[acqx]-[litx]"], "=[ngebit]-[sbcx]-[amortx]-[acqx]-[litx]", "#,##0.0")
+    R("chk5", "檢查：GAAP EBIT 調節－公司揭露 GAAP 營業利益", "US$M", [None, "=[ebitg]-h_ebit_25", "=[ebitg]-h_ebit_26"], None, "0.0", "FY2025 差 0.3：調節表整數四捨五入")
     R("othx", "其他收入（淨額）", "US$M", ["=h_oth_24", "=h_oth_25", "=h_oth_26"], "=ysd*[cash-1]", "#,##0.0", "預測＝收益率 × 期初現金與投資；公允價值變動不預測")
     R("ptix", "稅前利益", "US$M", ["=h_pti_24", "=h_pti_25", "=h_pti_26"], "=[ebitg]+[othx]", "#,##0.0")
     R("taxx", "所得稅", "US$M", ["=h_tax_24", "=h_tax_25", "=h_tax_26"], "=tax*[ptix]", "#,##0.0")
@@ -685,3 +688,282 @@ def revdcf(wb, ws, R, V):
         if isinstance(c.value, str) and "{" in c.value: c.value = re.sub(r"\{(\w+)\}", lambda m: str(rows[m.group(1)]), c.value)
     ws.column_dimensions["A"].width = 70; ws.column_dimensions["B"].width = 16
     return rows
+
+
+# ====================================================================== Recon
+def recon(wb, ws, R, V):
+    ws["A1"] = "Recon — 對帳：模型（情境 B）與公司指引、市場共識、實績的口徑對照；方向字樣由公式依數值組字（第 31、57 條）"
+    r = 3; RC = {}
+    def head(t, cols):
+        nonlocal r
+        ws.cell(r, 1, t).font = BOLD; r += 1
+        for j, h in enumerate(cols): ws.cell(r, 1 + j, h).font = BOLD
+        r += 1
+    def row(key, vals, fmts=None):
+        nonlocal r
+        RC[key] = r
+        for j, v in enumerate(vals):
+            if v is None: continue
+            c = ws.cell(r, 1 + j, v)
+            if fmts and j < len(fmts) and fmts[j]: c.number_format = fmts[j]
+        r += 1
+    def rng(m, lo, hi, unit_div=1, dec="0.0"):
+        return (f'=IF({m}>{hi},"高於指引上緣 "&TEXT(({m}/{hi}-1)*100,"{dec}")&" 個百分點",IF({m}<{lo},"低於指引下緣 "&TEXT((1-{m}/{lo})*100,"{dec}")&" 個百分點","落在指引區間內"))')
+    P = lambda k, col="F": f"PL!{col}{R[k]}"
+    head("1. 合併層：FY2027 模型（情境 B）對公司指引與共識（指引只作對照，不進基準；X3）", ["項目", "模型（情境 B）", "指引低", "指引高", "共識", "判定（模型對指引）", "說明"])
+    row("rev", ["FY2027 營收（US$M）", "=" + P("rev"), "=g_rev_lo", "=g_rev_hi", "=cons_rev27", rng("B{r}", "C{r}", "D{r}"), "指引 2026-09-01；共識 52 家 2026-10-15（財報後）"], [None, N0, N0, N0, N0])
+    row("arr", ["FY2027 年底 NGS ARR（US$B）", "=" + P("ARR"), "=g_arr_lo", "=g_arr_hi", None, rng("B{r}", "C{r}", "D{r}"), "指引含 CyberArk 全年度；模型單位成長不以指引校準"], [None, "0.000", "0.000", "0.000"])
+    row("nm", ["FY2027 Non-GAAP 營業利益率", "=" + P("ngm"), "=g_nm", "=g_nm", None, '=IF(B{r}>D{r},"高於指引 "&TEXT((B{r}-D{r})*100,"0.0")&" 個百分點",IF(B{r}<C{r},"低於指引 "&TEXT((C{r}-B{r})*100,"0.0")&" 個百分點","與指引相同"))', "指引為單點 29.5%；模型基準為 FY2026 實績持平，扣 AI 增量成本"], [None, "0.0%", "0.0%", "0.0%"])
+    row("eps", ["FY2027 Non-GAAP EPS（US$）", "=" + P("ngeps"), "=g_eps_lo", "=g_eps_hi", "=cons_eps27", rng("B{r}", "C{r}", "D{r}", dec="0.0"), "共識貼近指引；模型股數另依淨發行與買回推算"], [None, "0.00", "0.00", "0.00", "0.00"])
+    row("sh", ["FY2027 稀釋加權股數（百萬）", "=" + P("shavg"), "=g_sh_lo", "=g_sh_hi", None, rng("B{r}", "C{r}", "D{r}"), "指引 844–847"], [None, "#,##0.0", "#,##0", "#,##0"])
+    row("fcf", ["FY2027 自由現金流率（模型：營業現金流 − 資本支出；指引為調整後口徑）", "=" + P("fcfm"), "=g_fcfm", "=g_fcfm", None, '=IF(B{r}>D{r},"高於",IF(B{r}<C{r},"低於","等於"))&"指引 "&TEXT(ABS(B{r}-D{r})*100,"0.0")&" 個百分點（口徑不同：指引加回總部購地與併購付款）"', "第 29、33 條：口徑不同，只作參照"], [None, "0.0%", "0.0%", "0.0%"])
+    row("arr30", ["FY2030 年底 NGS ARR（US$B）對管理層目標", "=" + P("ARR", "I"), "=t_arr30", "=t_arr30", None, '=IF(B{r}<C{r},"低於目標 "&TEXT((1-B{r}/C{r})*100,"0.0")&"%","高於目標 "&TEXT((B{r}/C{r}-1)*100,"0.0")&"%")', "管理層目標 Interested-party；不校準"], [None, "0.00", "0.00", "0.00"])
+    row("req", ["達到管理層目標所需的額外年增（FY2027–FY2030 四年；其餘不動，反解）", '=(C{ra}/B{ra})^(1/4)-1', None, None, None, '="需要 NGS ARR 每年比模型快 "&TEXT(B{r}*100,"0.0")&" 個百分點，才在 FY2030 達 "&TEXT(C{ra},"0")&" 十億美元"', "Derived"], [None, "0.0%"])
+    ws.cell(RC["req"], 2).value = ws.cell(RC["req"], 2).value.replace("{ra}", str(RC["arr30"]))
+    ws.cell(RC["req"], 6).value = ws.cell(RC["req"], 6).value.replace("{ra}", str(RC["arr30"]))
+    row("fcf28", ["FY2028 自由現金流率對管理層目標（調整後口徑）", "=" + P("fcfm", "G"), "=t_fcf28", "=t_fcf28", None, '=IF(B{r}<C{r},"低於目標 "&TEXT((C{r}-B{r})*100,"0.0")&" 個百分點","高於目標 "&TEXT((B{r}-C{r})*100,"0.0")&" 個百分點")', "口徑不同，只作參照"], [None, "0.0%", "0.0%", "0.0%"])
+    r += 1
+    head("2. 逐分部（單一應報導分部；官方營收線 Product、Subscription and support）", ["項目", "FY2026 模型欄", "公司揭露", "差額", None, "指引／共識", "說明"])
+    row("p", ["Product", "=PL!E%d" % R["prod"], "=h_prod_26", "=B{r}-C{r}", None, "未找到（公司不給分部指引）", "歷史＝公司揭露"], [None, N0, N0, "0.0"])
+    row("s", ["Subscription and support", "=PL!E%d" % R["ss"], "=h_ss_26", "=B{r}-C{r}", None, "未找到", ""], [None, N0, N0, "0.0"])
+    row("t", ["合併營收", "=PL!E%d" % R["rev"], "=h_rev_26", "=B{r}-C{r}", None, "指引見第 1 節", ""], [None, N0, N0, "0.0"])
+    row("q", ["最近四季合計 − FY2026 全年（Product／Subscription and support／合併營收）", "=Q!I4", "=Q!I5", "=Q!I6", None, "Q 頁", "四個值皆應為 0"], [None, "0.0", "0.0", "0.0"])
+    r += 1
+    head("3. 一次性項目與有機成長（FY2026；Derived）", ["項目", "值", None, None, None, "說明", "出處"])
+    row("org", ["有機營收（扣除 Chronosphere＋CyberArk 併入後貢獻）US$M", "=h_rev_26-acq_rev", None, None, None, "", "10-K Note 8、8-K"], [None, N0])
+    row("orgg", ["有機營收年增率", "=B{o}/h_rev_25-1".replace("{o}", str(RC["org"])), None, None, None, '="合併年增 "&TEXT(h_rev_26/h_rev_25-1,"0.0%")&"，有機年增 "&TEXT(B{r},"0.0%")&"，差 "&TEXT((h_rev_26/h_rev_25-1-B{r})*100,"0.0")&" 個百分點來自併購"', "Derived"], [None, "0.0%"])
+    row("bridge", ["GAAP 營業利益調節（Non-GAAP 營業利益 − 股票薪酬 − 攤銷 − 併購費用 − 訴訟）－公司揭露", "=PL!E%d" % R["chk5"], None, None, None, "應為 0", "Non-GAAP 調節表"], [None, "0.0"])
+    row("sbcm", ["FY2026 GAAP 營業利益率 vs Non-GAAP 營業利益率", "=h_ebit_26/h_rev_26", "=h_ngebit_26/h_rev_26", None, None, '="差 "&TEXT((C{r}-B{r})*100,"0.0")&" 個百分點，主要為股票薪酬 "&TEXT(h_sbc_26/h_rev_26,"0.0%")&" 與攤銷 "&TEXT(h_amort_26/h_rev_26,"0.0%")&"（占營收）"', ""], [None, "0.0%", "0.0%"])
+    r += 1
+    head("4. 同業可比性（同一估值日 2026-11-13；皆 US GAAP；每組不足 8 家不做迴歸，X8）", ["同業", "前瞻本益比（x）", "EV／營收 TTM（x）", "成長率", "利益率", "會計口徑", "說明"])
+    for tk, pe, evs in (("Fortinet（FTNT）", "pe_f", 11.32), ("Zscaler（ZS）", "pe_z", 8.88), ("Check Point（CHKP）", "pe_c", 4.67), ("Cloudflare（NET）", "pe_n", 39.95)):
+        row("peer_" + tk[:3], [tk, "=" + pe, evs, "未取得", "未取得", "US GAAP；租賃為營業租賃", "StockAnalysis.com 統計頁 2026-11-13；成長率、利益率未取得同口徑，故不調整"], [None, "0.00", "0.00"])
+    row("pemed", ["同業中位數", "=pe_med", "=MEDIAN(C%d:C%d)" % (r - 4, r - 1), None, None, "", "調整係數 1.00（未調整：缺成長與利益率）"], [None, "0.00", "0.00"])
+    row("panw", ["PANW（資料商同日）", "=pe_p", 22.88, None, None, "US GAAP", '="PANW 前瞻本益比為同業中位數的 "&TEXT(B{r}/B{m},"0.00")&" 倍；同業中位落在口徑相近的 FTNT 與 ZS 之間"'.replace("{m}", str(RC["pemed"]))], [None, "0.00", "0.00"])
+    row("pemod", ["PANW 現價 ÷ 模型 FY2027 Non-GAAP EPS（情境 B）", "=Val!B%d" % V["pemod"], None, None, None, "分母：模型情境 B、FY2027（8 月至 7 月）", "倍數分母標示（第 43 條）"], [None, "0.00"])
+    r += 1
+    head("5. Tokenomics 讀值（只讀快照，不自行估價）", ["項目", "值", None, None, None, "說明", "出處"])
+    row("tkv", ["快照版本", TK["source"]["version"], None, None, None, "commit " + TK["source"]["commit"][:10], "software_ai/unit_economics/data/tk_snapshot.json"])
+    row("tk1", ["取用層級每成功任務推論成本（市場價，US$/次）", "=TK!C11", None, None, None, "", "TK 頁"], [None, "0.0000"])
+    row("tk2", ["對照：全成本（模型商自做成本下限，US$/次）", "=TK!C12", None, None, None, "", "TK 頁；只作對照"], [None, "0.0000"])
+    row("tk3", ["FY2032 推論成本增量 ÷ 營業成本（情境 B）", "=" + P("infsh", "K"), None, None, None, "", "PL 頁"], [None, "0.000%"])
+    r += 1
+    head("6. 風險登錄（未建模的尾端風險；第 10、19 條）", ["風險", "是否建模", "理由", None, None, "觀察指標", None])
+    for a, b, c_, d in [
+        ("CyberArk 商譽稅務抵減（商譽 14.8 十億美元，大部分可抵稅）使現金稅率長期低於模型稅率", "Sens（tax_dcf 低案）", "金額與攤提年限未取得", "10-K 所得稅附註的遞延稅項與已付所得稅"),
+        ("兩家經銷商合計占 FY2026 營收 30%", "Sens（tail_dist）", "單一經銷商占比未揭露", "10-K Item 1 經銷商集中度揭露"),
+        ("記憶體與儲存成本上升壓縮硬體利潤（硬體約占營收一成）", "只在 nm0 低案", "管理層口述，無量化", "Product 毛利率（FY2026 75.1%）與 Q1 FY2027 毛利率"),
+        ("併購整合（CyberArk、Chronosphere、Koi、Portkey、Embrace、Console）失敗或續做大型併購", "否", "無可觀察量化", "有機 NGS ARR 成長、併購費用與員工數"),
+        ("可轉債（CyberArk 2030，換股價約 211.24）在價內，稀釋 5.4 百萬股", "以公允價值視為債務，不計股數", "避免重複", "轉換或贖回公告"),
+        ("AI 原生競爭或雲端／模型商內建基礎安全功能，價格侵蝕高於基準", "情境 C", "無直接量測", "NGS ARR 淨新增、模組加購、同業價格公告"),
+    ]:
+        row("risk", [a, b, c_, None, None, d, None])
+    ws.column_dimensions["A"].width = 78
+    for c in "BCDE": ws.column_dimensions[c].width = 18
+    ws.column_dimensions["F"].width = 60; ws.column_dimensions["G"].width = 60
+    # {r} 取代
+    for rr in range(3, r):
+        for cc in range(1, 8):
+            cell = ws.cell(rr, cc)
+            if isinstance(cell.value, str) and "{r}" in cell.value: cell.value = cell.value.replace("{r}", str(rr))
+    return RC
+
+
+# ====================================================================== 案例
+def val(x, key=None):
+    if x is None: return None
+    if isinstance(x, (int, float)): return float(x)
+    if isinstance(x, str) and x == "=H_PEREL":
+        import statistics
+        return 77.10 / statistics.median([33.85, 39.22, 13.70, 174.39])
+    if isinstance(x, str) and x.startswith("="):
+        return float(eval(x[1:], {"MEDIAN": lambda *a: sorted(a)[len(a) // 2] if len(a) % 2 else sum(sorted(a)[len(a)//2-1:len(a)//2+1]) / 2}))
+    return None
+
+def make_cases():
+    """回傳 [(label, key, setting, lo_ov or None, hi_ov or None)]。每個有低／高區間的鍵一案；加兩個群組案。"""
+    out = []
+    SKIP = {"cons_tp"}
+    for it in IN:
+        if it[0] == "sec": continue
+        k, item, unit, lo, base, hi, *_ = it
+        if k in SKIP: continue
+        lov, hiv = val(lo, k), val(hi, k)
+        bv = None
+        try: bv = val(base, k)
+        except Exception: bv = None
+        if k in ("nm0", "sbc_pct", "amort_run", "ysd", "dep_pct", "cx_pct", "beta"):
+            bv = {"nm0": 3356 / 11480, "sbc_pct": 1712 / 11480, "amort_run": 4 * 281, "ysd": None, "dep_pct": (855 - 638) / 11480, "cx_pct": (440 - 91) / 11480, "beta": (0.67 * 0.97 + 0.33 + 0.67 * 0.93 + 0.33) / 2}[k]
+        has_lo = lo is not None and lov != bv
+        has_hi = hi is not None and hiv != bv
+        if not (has_lo or has_hi): continue
+        setting = f"{k} 取 {'低' if has_lo else ''}{'、' if has_lo and has_hi else ''}{'高' if has_hi else ''}值"
+        if k in ("g_px", "P_tier", "ovh", "g_tok"): setting += "（高案為上界：只動成本一邊，未連動價格與路由）"
+        out.append((item, k, setting, {k: lov} if has_lo else None, {k: hiv} if has_hi else None))
+    b = {k: [it for it in IN if it[0] == k][0][4] for k in ("n32_B", "m32_B", "e32_B", "k32_B")}
+    cs = {}
+    for k in ("n32", "m32", "e32", "k32"):
+        for L in "AC": cs[f"{k}_{L}"] = b[f"{k}_B"]
+    out.append(("三情境 AI 參數同時取情境 B（情境分化歸零）", "scn_collapse", "n32、m32、e32、k32 的情境 A、C 都設成情境 B 的值", cs, None))
+    out.append(("價格與成本聯動（路由到便宜模型）", "cost_link", "P_tier 取 1（最低層級）且 g_px 取低值；低案＝聯動降本，高案＝層級 3 且單價不降", {"P_tier": 1.0, "g_px": -0.5}, {"P_tier": 3.0, "g_px": 0.0}))
+    return out
+
+
+# ====================================================================== Sens
+def sensitivity(wb, ws, V, sens, fp, rec_tp, build_id):
+    ws["A1"] = "Sens — 敏感度：一次動一個輸入，整本重算（LibreOffice）後記錄目標價；本頁為建置快照（X6），不是活公式"
+    ws["A2"] = "讀法：低案、高案＝In 頁敏感度低、敏感度高欄；加權目標價＝DCF 與同業本益比依 w 加權。群組案「三情境 AI 參數同時取情境 B」說明情境分化的貢獻。IF_HoldEcon 群組（he_*）不適用：本模型不讀 Tokenomics 每 MW 持有成本。"
+    ws["A3"] = "build_id"; ws["D3"] = build_id
+    ws["A4"] = "模型狀態"
+    ws["A5"] = "輸入指紋（敏感度重算時記錄；In 頁 D 至 F 欄數值合計）"; ws["D5"] = fp
+    ws["A6"] = "輸入指紋（即時）"; ws["D6"] = f"=SUM(In!D4:F{INLAST})"
+    ws["A7"] = "基準加權目標價（敏感度重算時記錄）"; ws["D7"] = rec_tp
+    ws["A8"] = "基準加權目標價（即時）"; ws["D8"] = f"=Val!B{V['tp']}"
+    ws["D4"] = '=IF(AND(ISNUMBER(D5),ISNUMBER(D7),ABS(D6-D5)<=0.000001*MAX(1,ABS(D5)),ABS(D8-D7)<0.005),"CURRENT","STALE")'
+    ws["A9"] = "WACC 加減、g、β、ERP、資本支出、終值替代法（tv_alt）、股票薪酬下降路徑（sbc_dn）、營運資金比（nwc_r）都在下表各有一列；DCF 單法與 Comparable 單法並列。"
+    hdr = 11
+    for j, h in enumerate(["案例", "設定", "鍵", "低案加權目標價", "高案加權目標價", "低案 DCF 目標價", "高案 DCF 目標價", "低案 Comparable 目標價", "高案 Comparable 目標價"]): ws.cell(hdr, 1 + j, h).font = BOLD
+    r = hdr + 1
+    cases = make_cases()
+    first = r
+    for i, (label, key, setting, lo, hi) in enumerate(cases):
+        ws.cell(r, 1, label); ws.cell(r, 2, setting); ws.cell(r, 3, key)
+        if sens:
+            res = sens["cases"][i]
+            for j, side in enumerate(("low", "high")):
+                v = res.get(side)
+                if v:
+                    for col, kk in ((4 + j, "tp"), (6 + j, "dcf"), (8 + j, "cmp")):
+                        ws.cell(r, col, v[kk]).number_format = "#,##0.00"
+        r += 1
+    last = r - 1
+    r += 1
+    ws.cell(r, 1, "加權目標價相對基準（HTML 讀取）：案例目標價 ÷ 基準加權目標價 − 1").font = BOLD
+    t0 = r; r += 1
+    for j, h in enumerate(["案例", "低案相對基準", "高案相對基準"]): ws.cell(r, 1 + j, h).font = BOLD
+    r += 1
+    for i in range(len(cases)):
+        src = first + i
+        ws.cell(r, 1, f"=A{src}")
+        ws.cell(r, 2, f'=IF(ISNUMBER(D{src}),D{src}/$D$7-1,"")').number_format = "+0.0%;-0.0%"
+        ws.cell(r, 3, f'=IF(ISNUMBER(E{src}),E{src}/$D$7-1,"")').number_format = "+0.0%;-0.0%"
+        r += 1
+    ws.cell(r + 1, 1, "未涵蓋說明：he_all（IF_HoldEcon 四世代）不適用本模型；cons_tp 低高值只作對照，不進模型。")
+    ws.column_dimensions["A"].width = 60; ws.column_dimensions["B"].width = 46
+    for c in "DEFGHI": ws.column_dimensions[c].width = 16
+    ws._t0 = t0
+
+
+# ====================================================================== README
+def readme(wb, ws, RW, V, build_id, sens):
+    R = RW["PL"]; RA = RW["PL_A"]
+    ws["A1"] = f"{build_id}｜Palo Alto Networks（PANW）個股模型 v{VER}｜命題（原型 P 按防護範圍計價）＋營收線 → 損益表｜FCFF DCF 與同業本益比各半"
+    ws["A2"] = '="資料截止日 "&TEXT(data_date,"yyyy-mm-dd")&"；成品日 2026-11-16；股價基準日 "&TEXT(px_date,"yyyy-mm-dd")&"（與現價日相差超過 2 個交易日者標逾期：無风險利率 2026-10-27、同業與共識見各列日期）"'
+    rows = {}
+    def put(key, f):
+        r = put.r; rows[key] = r; put.r += 1
+        ws.cell(r, 1, f)
+    put.r = 4
+    v = lambda k, c="B": f"Val!{c}{V[k]}"
+    tx = lambda ref, f: f'TEXT({ref},"{f}")'
+    put("hero", '="估值評等"&' + v("vrate") + '&"；投資建議"&' + v("rec") + '&"。加權目標價 "&' + tx(v("tp"), "0") + '&" 美元對現價 "&' + tx(v("px"), "0.00") + '&" 美元（"&TEXT(px_date,"yyyy-mm-dd")&" 收盤）"&' + tx(v("up"), "+0%;-0%") + '&"；DCF "&' + tx(v("tpdcf"), "0") + '&"、同業本益比 "&' + tx(v("tpcmp"), "0") + '&"、賣方共識 "&' + tx(v("cons"), "0") + '&"。條件：核心營業利益率與股票薪酬占營收持平；現價隱含核心營業利益率 "&' + tx(f"RevDCF!B{{m1}}", "0%") + '&"，模型 "&' + tx("nm0", "0%") + '&"。"')
+    put("rec", '="在核心 non-GAAP 營業利益率與股票薪酬占營收持平、永續成長 "&TEXT(g,"0%")&"、同業中位前瞻本益比 "&' + tx(v("pemed"), "0.0") + '&" 倍的基準假設下，加權目標價 "&' + tx(v("tp"), "0.00") + '&" 美元、上檔空間 "&' + tx(v("up"), "+0.0%;-0.0%") + '&"，估值評等"&' + v("vrate") + '&"（收支關卡"&' + v("gtxt") + '&"，FY2027–FY2031 自由現金流合計 "&' + tx(v("gate"), "#,##0") + '&" 百萬美元）。失效條件：核心營業利益率擴張或 SBC 占營收下降（Sens 有列），或同業估值上移。"')
+    put("t1", '="命題：AI 讓資安的受保護範圍從人與端點擴大到代理（非人類身分），NGS ARR ＝ 受保護單位 × 每單位營收，使用者問的是 AI 帶來的營收增量，能否大於定價侵蝕與推論成本。"')
+    put("t2", '="營收線：Product 與 Subscription and support（單一應報導分部下 10-K 固定揭露的兩條線）；命題模組只驅動 Subscription and support 之下的 NGS ARR 相關營收。"')
+    put("t3", '="未做先驗（工作單 G 節：先驗跳過）；單位數、每單位年價、模組數公司不揭露，只作比例尺（Assumed）。"')
+    put("a1", '="問題一：AI 增量是否大於侵蝕與推論成本？答：情境 B 下 FY2032 AI 淨效果（增量 − 侵蝕 − 推論成本）為 "&TEXT(PL!K' + str(R["ainet"]) + ',"#,##0")&" 百萬美元（情境 A "&TEXT(PL_A!K' + str(R["ainet"]) + ',"#,##0")&"、情境 C "&TEXT(PL_C!K' + str(R["ainet"]) + ',"#,##0")&"）；推論成本增量只占營業成本的 "&TEXT(PL!K' + str(R["infsh"]) + ',"0.00%")&"，量級遠小於增量與侵蝕，因此結果由代理身分數、加購與侵蝕三個 Assumed 決定，不由推論成本決定。"')
+    put("a2", '="問題二：現價要求什麼？答：DCF 單法下，現價隱含核心 non-GAAP 營業利益率 "&TEXT(RevDCF!B{m1},"0.0%")&"，"&IF(RevDCF!B{m1}>nm0,"高於","低於")&"模型的 "&TEXT(nm0,"0.0%")&"；現價隱含 EV 為 FY2027E 營收的 "&TEXT(RevDCF!B{evs},"0.0")&" 倍。這是模型輸出，不是獨立證據。"')
+    put("a3", '="問題三：與管理層目標的差距？答：模型情境 B 的 FY2030 NGS ARR 為 "&TEXT(PL!I' + str(R["ARR"]) + ',"0.0")&" 十億美元，管理層目標 "&TEXT(t_arr30,"0")&" 十億美元；差距需要每年額外 "&TEXT(Recon!B{req}*100,"0.0")&" 個百分點的成長才能彌補（管理層目標為 Interested-party，不校準）。"')
+    put("o1", '="1. 評等主要由估值決定：DCF 目標價 "&' + tx(v("tpdcf"), "0") + '&" 美元、同業本益比目標價 "&' + tx(v("tpcmp"), "0") + '&" 美元，兩者"&IF(MAX(' + v("tpdcf") + ',' + v("tpcmp") + ')<' + v("px") + ',"都低於","並非都低於")&"現價 "&' + tx(v("px"), "0.00") + '&" 美元。"')
+    put("o2", '="2. DCF 偏低的主因是股票薪酬：FY2032 股票薪酬占營收 "&TEXT(RevDCF!B{sbc},"0.0%")&"，標準 FCFF 以 NOPAT 扣股票薪酬、不加回；Sens 有股票薪酬占營收低案與每年下降案。"')
+    put("o3", '="3. 營收成長含併購：FY2026 有機年增 "&TEXT(Recon!B{orgg},"0.0%")&"，合併年增 "&TEXT(h_rev_26/h_rev_25-1,"0.0%")&"；模型 FY2027 營收 "&TEXT(PL!F' + str(R["rev"]) + '/1000,"0.0")&" 十億美元，"&Recon!F{rev}&"。"')
+    put("o4", '="4. 同業中位前瞻本益比 "&' + tx(v("pemed"), "0.0") + '&" 倍（4 家，不做迴歸），PANW 資料商前瞻本益比為其 "&' + tx(v("pxpe"), "0.0") + '&" 倍；調整係數 1.00（缺成長與利益率資料）；高案取 PANW 目前溢價。"')
+    put("o5", '="5. AI 推論成本不是重點：FY2032 推論成本增量只占營業成本 "&TEXT(PL!K' + str(R["infsh"]) + ',"0.00%")&"；全成本對照（模型商自做）占 "&TEXT(PL!K' + str(R["infsh2"]) + ',"0.000%")&"。可證偽指標：Subscription and support 毛利率走勢（FY2026 "&TEXT(0.692,"0.0%")&"）。"')
+    put("drv", '="驅動因子：Product＝上年 ×（1＋成長）；Subscription and support＝NGS ARR 相關營收（年平均 NGS ARR × 列入比例）＋其他；NGS ARR＝受保護單位 × 每單位營收（R0 ×（1 − 侵蝕 ＋ 加購 ＋ 代理身分數 × 代理單價比））；三項相加為合併營收。"')
+    put("ver", '="v' + VER + '（2026-11-16）：首版。命題原型 P；DCF 標準 FCFF 至 FY2032；同業本益比 4 家；Sens 整本重算 "&COUNTA(Sens!C12:C60)&" 個鍵；未做先驗。"')
+    r = put.r + 1
+    ws.cell(r, 1, "不適用與未做項目（工作單 G 節）").font = BOLD; r += 1
+    for t in ["不適用：Wattonomics 對照與自用算力（Meta 的自用 AI 讀法 2、在役 MW、Wattonomics 上線時程）——理由：PANW 不自建算力，推論成本以向模型商購買的市場價計（Tokenomics 快照，只讀）。",
+              "不適用：Tokenomics 每 MW 持有成本（IF_HoldEcon）群組與 he_all 案——理由：本模型不讀每 MW 成本。",
+              "不適用：三層協調（Coord 頁、C0、兩讀數）——理由：非 Siliconomics 覆蓋。",
+              "不適用：分部加總（SOTP）——理由：單一應報導分部；Comparable 以合併 non-GAAP EPS × 同業中位本益比。",
+              "不適用：收支模組、反向 DCF 之外的融資瀑布——理由：淨現金為正（FY2026 年底現金與投資 7.9 十億美元），不以新債補缺口。",
+              "未做：先驗（工作單 G 節 2026-11-16 23:27：先驗跳過）。",
+              "v0.2 計畫：該版改讀 software_ai/unit_economics 的 P 原型輸出（本版 In 頁自建，變數名稱一致）。",
+              "與 unit_economics 的差異：本模型的成本不隨價格侵蝕下降（侵蝕不減成本），unit_economics 的 cogsx 隨淨營收；推論成本與 AI 增量取相對 FY2026 的差。",
+              "承重 Assumed 與可證偽指標：(1) 受保護代理身分數與加購（n32、m32）——可證偽：公司揭露非人類身分產品營收或客戶採用；(2) 價格侵蝕（e32）——Subscription and support 毛利率與 NGS ARR 淨新增；(3) 核心 non-GAAP 營業利益率持平與 SBC 占營收持平——FY2027 Q1 起的營業利益率與 SBC 占營收實績。",
+              "公司指標與模型參數的差異：NGS ARR 為公司自訂 KPI（含併購、排除硬體與 legacy），模型以其為 FY2026 錨點並標 Interested-party；調整後自由現金流含加回項目，模型 FCF 為營業現金流減資本支出。"]:
+        ws.cell(r, 1, t); r += 1
+    # 解析 {m1} 等
+    res = {"m1": RW_REV["m1"], "evs": RW_REV["evs"], "sbc": RW_REV["sbc"], "req": RW_RC["req"], "orgg": RW_RC["orgg"], "rev": RW_RC["rev"]}
+    for rr in range(1, r + 1):
+        c = ws.cell(rr, 1)
+        if isinstance(c.value, str) and "{" in c.value: c.value = re.sub(r"\{(\w+)\}", lambda m: str(res[m.group(1)]), c.value)
+    ws.column_dimensions["A"].width = 160
+    ws._rows = rows
+
+
+def sources(ws):
+    ws["A1"] = "Sources — 出處清單（逐列紀錄見 data/facts_paloalto.csv）"
+    r = 3
+    for k, v in SRC.items():
+        ws.cell(r, 1, k); ws.cell(r, 2, v); r += 1
+    for t in ["WebSearch／WebFetch 擷取日 2026-11-16", "software_ai/unit_economics/data/tk_snapshot.json（Tokenomics v22.0）"]:
+        ws.cell(r, 2, t); r += 1
+    ws.column_dimensions["B"].width = 160
+
+
+# ====================================================================== 重算與主流程
+def recalc(paths, outdir):
+    os.makedirs(outdir, exist_ok=True)
+    prof = os.path.join(SCR, "lo_profile")
+    for i in range(0, len(paths), 25):
+        batch = paths[i:i + 25]
+        subprocess.run(["soffice", f"-env:UserInstallation=file://{prof}", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", outdir] + batch,
+                       check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=dict(os.environ, LC_ALL="C.UTF-8"), timeout=900)
+
+def read_out(path):
+    wb = openpyxl.load_workbook(path, data_only=True)
+    v = wb["Val"]; lab = {str(v.cell(r, 1).value): r for r in range(1, v.max_row + 1) if v.cell(r, 1).value}
+    g = lambda s: v.cell(lab[s], 2).value
+    out = {"tp": g("加權目標價（DCF 與同業本益比加權）"), "dcf": g("DCF 目標價（三情境加權）"), "cmp": g("Comparable 目標價（同業前瞻本益比中位數法，三情境加權）")}
+    return out, wb
+
+def input_hash():
+    h = hashlib.sha256()
+    for it in IN:
+        h.update(repr(it).encode("utf-8"))
+    h.update(TK["source"]["commit"].encode())
+    return h.hexdigest()[:10]
+
+def main():
+    os.makedirs(SCR, exist_ok=True)
+    bid = f"v{VER}-{input_hash()}"
+    wd = os.path.join(SCR, "run"); shutil.rmtree(wd, ignore_errors=True); os.makedirs(wd)
+    base = build(build_id=bid); bp = os.path.join(wd, "base.xlsx"); base.save(bp)
+    cases = make_cases()
+    paths = [bp]; idx = []
+    if "--no-sens" not in sys.argv:
+        for i, (label, key, setting, lo, hi) in enumerate(cases):
+            for side, ov in (("low", lo), ("high", hi)):
+                if ov:
+                    p = os.path.join(wd, f"c{i:03d}_{side}.xlsx"); build(ov=ov, build_id=bid).save(p); paths.append(p); idx.append((i, side, p))
+    recalc(paths, os.path.join(wd, "out"))
+    bout, bwb = read_out(os.path.join(wd, "out", "base.xlsx"))
+    ws = bwb["In"]
+    fp = bwb["Sens"]["D6"].value
+    print("基準：", bout, "fp", fp)
+    sens = {"base": bout, "cases": [dict() for _ in cases]}
+    for i, side, p in idx:
+        o, _ = read_out(os.path.join(wd, "out", os.path.basename(p))); sens["cases"][i][side] = o
+    final = build(sens=sens, fp=fp, rec_tp=bout["tp"], build_id=bid)
+    fr = os.path.join(wd, OUTNAME); final.save(fr)
+    recalc([fr], os.path.join(wd, "fin"))
+    os.makedirs(os.path.join(HERE, "dist"), exist_ok=True)
+    for old in glob.glob(os.path.join(HERE, "dist", "*.xlsx")): os.remove(old)
+    shutil.copy(os.path.join(wd, "fin", OUTNAME), os.path.join(HERE, "dist", OUTNAME))
+    json.dump(sens, open(os.path.join(HERE, "data", f"sens_v{VER.replace('.', '')}_{VDATE}.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    print("完成", OUTNAME)
+
+if __name__ == "__main__":
+    main()

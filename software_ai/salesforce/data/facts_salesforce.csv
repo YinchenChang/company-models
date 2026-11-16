@@ -256,4 +256,11 @@ FY2024 淨利、稀釋 EPS、稅前利益,未找到,—,FY2024,本次未讀到 F
 Beta（5 年）,1.23,—,2026-11-15,第二來源（StockAnalysis）；只有單一來源,https://stockanalysis.com/stocks/crm/statistics/｜StockAnalysis CRM statistics,2026-11-16,Verified,
 總債務（含租賃，第二來源）,42380,US$M,2026-07-31 前後,"StockAnalysis；資產負債表非流動債務 39,288，差額約 3,092 視為租賃負債（Derived）",https://stockanalysis.com/stocks/crm/statistics/｜StockAnalysis CRM statistics,2026-11-16,Verified,
 Q1 FY27 Agentforce 處理 token,28.6,兆,Q1 FY27,公司自揭；Futurum 轉述,https://futurumgroup.com/insights/salesforce-q1-fy-2027-agentforce-and-data-360-drive-ai-monetization-push/｜Futurum Q1 FY27,2026-11-16,Interested-party,公司自揭 KPI
-注意：AWU 數字矛盾,Futurum 稱 Q1 FY27 當季 AWU 3.8B；Q2 新聞稿稱 Q2 當季 3.2B（季增 97%）、累計 7.0B，兩者不一致，本研究包不採用 AWU 作模型輸入,—,Q1–Q2 FY27,—,—,2026-11-16,Interested-party,公司自揭 KPI；來源互相矛盾
+AWU 口徑說明（累計值，三數一致）,"AWU 累計：Q4 FY26 2.4B、Q1 FY27 3.8B、Q2 FY27 7.0B；Q2 單季 3.2B＝7.0−3.8，與新聞稿一致；token 28.6 兆亦為累計值。每任務 token＝累計 token÷累計 AWU：Q4 FY26 約 20 兆÷2.4B≈8,300；Q1 FY27 28.6 兆÷3.8B≈7,500（Derived，公司自揭兩數相除）",—,Q1–Q2 FY27,—,—,2026-11-16,Interested-party,公司自揭 KPI；誘因＝向市場證明 AI 變現；相除值為推算（Derived）
+每任務 token（推得，Q1 FY27）,7526,token／任務,Q1 FY27,累計 token ÷ 累計 AWU（28.6 兆÷3.8B）,公司 Q1 FY27 揭露,2026-11-16,Derived,來源誘因同 AWU：公司自揭 KPI
+RSU 未歸屬股數,39,M,Q2 FY27,預計歸屬 33M,協調者獨立核對轉述；未讀 Q2 10-Q 原檔（Q1 10-Q：40M／34M）,2026-11-16,Interested-party,待回 SEC 原檔核對
+選擇權股數,7,M,Q2 FY27,履約價 205.71；Q1 10-Q 為 7M、203.99,協調者獨立核對轉述；Q1 10-Q,2026-11-16,Interested-party,待回 SEC 原檔核對
+融資租賃負債,633,US$M,2026-07-31,淨債務只計此項,協調者獨立核對轉述；Q1 10-Q 為 664,2026-11-16,Interested-party,待回 SEC 原檔核對
+營業租賃負債,2455,US$M,2026-07-31,不計入淨債務（口徑已寫明）,Q2 10-Q（第三方鏡像）,2026-11-16,Verified,
+10-Q 封面流通股數,819,M,2026-05-21（Q1 FY27）,Q2 10-Q 封面股數未找到；StockAnalysis 823M 作對照,Q1 FY27 10-Q 封面,2026-11-16,Verified,
+同業 P／FCF,市值÷(EV÷(EV／FCF)),倍,TTM,逐家由 StockAnalysis 市值、EV、EV／FCF 推導；本公司÷中位數 0.69（EV／FCF 口徑 0.845）,StockAnalysis,2026-11-16,Derived,

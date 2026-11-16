@@ -1,0 +1,282 @@
+{
+ "source": {
+  "file": "20261105_Tokenomics_v22.0.xlsx",
+  "current": "20261105_Tokenomics_v22.0.xlsx",
+  "version": "v22.0",
+  "commit": "79f6b300735444bc0892be8fa2f3c89a478e6e9c",
+  "extractedAt": "2026-11-16",
+  "repo": "YinchenChang/Tokenomics",
+  "recalculated": false,
+  "optional": [],
+  "generations": [
+   {
+    "name": "Hopper H100",
+    "code": "H100"
+   },
+   {
+    "name": "GB200 NVL72",
+    "code": "GB200"
+   },
+   {
+    "name": "GB300 NVL72",
+    "code": "GB300"
+   },
+   {
+    "name": "VR200 NVL72",
+    "code": "VR200"
+   },
+   {
+    "name": "Rubin Ultra（MGX NVL 單架，72 GPU）",
+    "code": "RU"
+   }
+  ],
+  "note": "主值取「基準」成本情境；低成本／高成本只作敏感度。每 GW＝IT 關鍵電力（Tokenomics Interface 第 1 列）。"
+ },
+ "items": {
+  "IF_PriceRef_Terra": {
+   "sheet": "Interface",
+   "ref": "Interface!C409",
+   "label": "Terra（中低層）｜參考請求混合 $/M — OpenAI 有效（對應 D 節）",
+   "unit": "$/M",
+   "kind": "single",
+   "values": 0.784,
+   "cell": "Interface!C409"
+  },
+  "IF_FullCost_Terra": {
+   "sheet": "Interface",
+   "ref": "Interface!C416:Q416",
+   "label": "Terra（中低層）｜全成本 $/M（服務＋快取儲存＋自下而上攤提；基準利用率）（對應 D 節）",
+   "unit": "$/M",
+   "kind": "gen_cost",
+   "values": {
+    "Hopper H100": {
+     "低成本": 0.501779086520696,
+     "基準": 0.716936220475106,
+     "高成本": 1.11279525482741
+    },
+    "GB200 NVL72": {
+     "低成本": 0.0606253576626821,
+     "基準": 0.0809431298164694,
+     "高成本": 0.119366705396305
+    },
+    "GB300 NVL72": {
+     "低成本": 0.0641093686303316,
+     "基準": 0.0827970668900676,
+     "高成本": 0.126922973753429
+    },
+    "VR200 NVL72": {
+     "低成本": 0.0397569647918884,
+     "基準": 0.052717617176252,
+     "高成本": 0.0765232933049157
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": 0.0293777646726864,
+     "基準": 0.044643233148163,
+     "高成本": 0.0725453343666336
+    }
+   },
+   "cells": {
+    "Hopper H100": {
+     "低成本": "Interface!C416",
+     "基準": "Interface!D416",
+     "高成本": "Interface!E416"
+    },
+    "GB200 NVL72": {
+     "低成本": "Interface!F416",
+     "基準": "Interface!G416",
+     "高成本": "Interface!H416"
+    },
+    "GB300 NVL72": {
+     "低成本": "Interface!I416",
+     "基準": "Interface!J416",
+     "高成本": "Interface!K416"
+    },
+    "VR200 NVL72": {
+     "低成本": "Interface!L416",
+     "基準": "Interface!M416",
+     "高成本": "Interface!N416"
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": "Interface!O416",
+     "基準": "Interface!P416",
+     "高成本": "Interface!Q416"
+    }
+   }
+  },
+  "IF_FullCostDefault_Terra": {
+   "sheet": "Interface",
+   "ref": "Interface!C419:Q419",
+   "label": "Terra（中低層）｜全成本 $/M（服務＋快取儲存＋K6 預設攤提；基準利用率；下游預設）（對應 D 節）",
+   "unit": "$/M",
+   "kind": "gen_cost",
+   "values": {
+    "Hopper H100": {
+     "低成本": 0.84909747620719,
+     "基準": 1.21315634649029,
+     "高成本": 1.88297375011958
+    },
+    "GB200 NVL72": {
+     "低成本": 0.156944300486118,
+     "基準": 0.209528772784709,
+     "高成本": 0.308972916089273
+    },
+    "GB300 NVL72": {
+     "低成本": 0.164437089871361,
+     "基準": 0.212357464257912,
+     "高成本": 0.32550836961014
+    },
+    "VR200 NVL72": {
+     "低成本": 0.114512141178217,
+     "基準": 0.151830528989995,
+     "高成本": 0.220375647518355
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": 0.0897606207709003,
+     "基準": 0.13638532606641,
+     "高成本": 0.221605589599533
+    }
+   },
+   "cells": {
+    "Hopper H100": {
+     "低成本": "Interface!C419",
+     "基準": "Interface!D419",
+     "高成本": "Interface!E419"
+    },
+    "GB200 NVL72": {
+     "低成本": "Interface!F419",
+     "基準": "Interface!G419",
+     "高成本": "Interface!H419"
+    },
+    "GB300 NVL72": {
+     "低成本": "Interface!I419",
+     "基準": "Interface!J419",
+     "高成本": "Interface!K419"
+    },
+    "VR200 NVL72": {
+     "低成本": "Interface!L419",
+     "基準": "Interface!M419",
+     "高成本": "Interface!N419"
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": "Interface!O419",
+     "基準": "Interface!P419",
+     "高成本": "Interface!Q419"
+    }
+   }
+  },
+  "IF_TaskTokFresh": {
+   "sheet": "Interface",
+   "ref": "Interface!C156:G156",
+   "label": "每次嘗試 新鮮輸入 token（現行）",
+   "unit": "tok",
+   "kind": "vector",
+   "values": [
+    1500,
+    1500,
+    6840,
+    27360,
+    200400
+   ],
+   "cells": [
+    "Interface!C156",
+    "Interface!D156",
+    "Interface!E156",
+    "Interface!F156",
+    "Interface!G156"
+   ]
+  },
+  "IF_TaskTokCached": {
+   "sheet": "Interface",
+   "ref": "Interface!C157:G157",
+   "label": "每次嘗試 快取輸入 token（現行）",
+   "unit": "tok",
+   "kind": "vector",
+   "values": [
+    1000,
+    1000,
+    18360,
+    73440,
+    1263600
+   ],
+   "cells": [
+    "Interface!C157",
+    "Interface!D157",
+    "Interface!E157",
+    "Interface!F157",
+    "Interface!G157"
+   ]
+  },
+  "IF_TaskTokDec": {
+   "sheet": "Interface",
+   "ref": "Interface!C158:G158",
+   "label": "每次嘗試 decode token（思考＋可見；現行）",
+   "unit": "tok",
+   "kind": "vector",
+   "values": [
+    500,
+    3700,
+    2400,
+    9600,
+    30000
+   ],
+   "cells": [
+    "Interface!C158",
+    "Interface!D158",
+    "Interface!E158",
+    "Interface!F158",
+    "Interface!G158"
+   ]
+  },
+  "IF_TaskTokMult": {
+   "sheet": "Interface",
+   "ref": "Interface!C331:G331",
+   "label": "任務總 token ÷ 一般聊天總 token（欄 C–G＝Workload 任務，同 E 節 IF_HdrTask；任務別，非模型層級；token 類型＝總 token：新鮮輸入＋快取輸入＋decode，混合）",
+   "unit": "x",
+   "kind": "vector",
+   "values": [
+    1,
+    2.06666666666667,
+    9.2,
+    36.8,
+    498
+   ],
+   "cells": [
+    "Interface!C331",
+    "Interface!D331",
+    "Interface!E331",
+    "Interface!F331",
+    "Interface!G331"
+   ]
+  },
+  "IF_TaskLen": {
+   "sheet": "Interface",
+   "ref": "Interface!C155:G155",
+   "label": "任務長度（人類完成時間）",
+   "unit": "hr",
+   "kind": "vector",
+   "values": [
+    0.02,
+    0.1,
+    0.5,
+    2,
+    8
+   ],
+   "cells": [
+    "Interface!C155",
+    "Interface!D155",
+    "Interface!E155",
+    "Interface!F155",
+    "Interface!G155"
+   ]
+  },
+  "IF_Disc": {
+   "sheet": "Interface",
+   "ref": "Interface!C347",
+   "label": "折扣 d（有效牌價＝表列牌價 ×（1 − IF_Disc）；基準／低／高）",
+   "unit": "%",
+   "kind": "single",
+   "values": 0.2,
+   "cell": "Interface!C347"
+  }
+ }
+}

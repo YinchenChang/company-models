@@ -90,7 +90,7 @@ Salesforce（NYSE: CRM）是以訂閱制銷售 CRM 與企業雲端軟體（銷�
 |---|---|---|---|---|
 | Q3 FY26（2025-10） | >0.5B（+330%） | ~1.4B（+114%） | paid deals 逾 9,500（季增 50%；累計成交逾 18,500） | — |
 | Q4 FY26（2026-01） | 0.8B（+169%） | >2.9B（+200%以上；含 Informatica Cloud 1.1B） | Agentforce deals 逾 29,000（累計；季增 50%；來源未註明是否付費） | AWU 累計 2.4B；token 近 20 兆 |
-| Q1 FY27（2026-04） | 1.2B（+205%） | ~3.4B（含 Informatica Cloud 1.1B） | — | token 28.6 兆（季增 152%）；AWU 當季 3.8B（Futurum 轉述） |
+| Q1 FY27（2026-04） | 1.2B（+205%） | ~3.4B（含 Informatica Cloud 1.1B） | — | token 28.6 兆（季增 152%）；AWU 累計 3.8B（Futurum 轉述；累計值，非當季） |
 | Q2 FY27（2026-07） | >1.5B（+240%以上；**自本季起納入 Slackbot 與 Headless 360，口徑擴大**） | ~3.9B（+210%以上） | 新增 2,000 家付費客戶投入生產（季增 70%，口述） | AWU 累計 7.0B、當季 3.2B（季增 97%）；Data 360 當季攝入 104 兆筆（+355%） |
 - Data 360 ARR 無單獨揭露（僅與 Agentforce 合計）。AI 營收占比：Agentforce ARR 1.5B ÷ 年化營收 45.4B（Q2 FY27 營收×4）≈ 3.3%（Derived）。
 - 以上 ARR、交易數、AWU 皆為公司自揭 KPI，標 Interested-party，誘因＝公司向市場證明 AI 變現。

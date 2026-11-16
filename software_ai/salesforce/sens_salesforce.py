@@ -16,7 +16,14 @@ for k, r in IR.items():
     e, d, f = ws.cell(r, 5).value, ws.cell(r, 4).value, ws.cell(r, 6).value
     for side, v in (("低", d), ("高", f)):
         if isinstance(v, (int, float)) and isinstance(e, (int, float)) and v != e:
-            cases.append((k, side, v, e, ws.cell(r, 2).value))
+            lab = ws.cell(r, 2).value
+            if k == "ptok" and side == "高": lab += "（上界：只動成本一邊，售價不同步）"
+            if k == "ptok" and side == "低": lab += "（模型組合路由到便宜模型）"
+            if k == "asr_sh": lab += "（ASR 最終交割列入敏感度）"
+            cases.append((k, side, v, e, lab))
+COMBO = [("ptok,p0", "高", {"ptok": "F", "p0": "F"}, "價格與成本聯動：token 價格與每任務單價同取高端（同步變動）"),
+         ("ptok,p0", "低", {"ptok": "D", "p0": "D"}, "價格與成本聯動：token 價格與每任務單價同取低端（同步變動）"),
+         ("cm_adj", "基準", {}, "相對倍數係數＝1（基準，原則第 47 條）")]
 WD = tempfile.mkdtemp(prefix="sfsens_", dir="/home/claude/scratch/salesforce")
 
 
@@ -31,6 +38,15 @@ def recalc(path, prof):
 
 
 def run(i):
+    if i >= len(cases):
+        k, side, cmap, lab = COMBO[i - len(cases)]
+        d = os.path.join(WD, f"c{i}"); os.makedirs(d)
+        wb = openpyxl.load_workbook(RAW)
+        for kk, col in cmap.items():
+            wb["In"].cell(IR[kk], 5).value = wb["In"].cell(IR[kk], 4 if col == "D" else 6).value
+        p = os.path.join(d, "case.xlsx"); wb.save(p)
+        tp, dcf, rec = recalc(p, os.path.join(WD, f"lo{i % JOBS}"))
+        return {"key": k, "side": side, "label": lab, "setting": lab, "tp": tp, "dcf": dcf, "rec": rec}
     k, side, v, e, lab = cases[i]
     d = os.path.join(WD, f"c{i}"); os.makedirs(d)
     wb = openpyxl.load_workbook(RAW)
@@ -46,12 +62,12 @@ base_tp, base_dcf, base_rec = recalc(os.path.join(b, "case.xlsx"), os.path.join(
 # 以 JOBS 個 profile 平行（同一 profile 不可同時跑）
 from collections import defaultdict
 groups = defaultdict(list)
-for i in range(len(cases)): groups[i % JOBS].append(i)
+for i in range(len(cases) + len(COMBO)): groups[i % JOBS].append(i)
 res = {}
 def worker(g):
     for i in groups[g]: res[i] = run(i)
 with ThreadPoolExecutor(JOBS) as ex: list(ex.map(worker, range(JOBS)))
-out = {"fingerprint": rm["FP"], "build_id": rm["BUILD_ID"], "base_tp": base_tp, "base_dcf": base_dcf, "base_rec": base_rec, "cases": [res[i] for i in range(len(cases))]}
+out = {"fingerprint": rm["FP"], "build_id": rm["BUILD_ID"], "base_tp": base_tp, "base_dcf": base_dcf, "base_rec": base_rec, "cases": [res[i] for i in range(len(cases) + len(COMBO))]}
 json.dump(out, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 shutil.rmtree(WD, ignore_errors=True)
 print("cases", len(cases), "base", base_tp)
