@@ -1108,6 +1108,12 @@ for _r6 in range(1, 40):
         _RD6.cell(_r6, 1).value = _fx(_v6.replace("撐住約 22 倍的指引本益比", "撐住約 {peg|0.0} 倍的指引本益比"))
 if not os.environ.get("TOWA_OVERRIDE") and not os.environ.get("TOWA_SNAP") and _CR:
     _RD6.cell(_RD6.max_row + 1, 1, V036_NOTE)
+# v0.3.7（2026-11-16）：工作單 px1113——現價與同業報價改 2026-11-13 收盤（towa/px1113_post.py；只改價格輸入與說明文字）
+import px1113_post as P1113  # noqa: E402
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_N1113 = open(os.path.join(_HERE, "px1113_note.txt"), encoding="utf-8").read().strip() if os.path.exists(os.path.join(_HERE, "px1113_note.txt")) else "v0.3.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。"
+print(P1113.apply(wb, _HERE, dict(ver="v0.3.7", old_ver="v0.3.6", tk="6315.T", note=_N1113 + " ",
+                                  sweep=(("2026-11-05 收盤", "2026-11-13 收盤"), ("日線收盤 2026-11-05", "日線收盤 2026-11-13")))))
 wb.save(sys.argv[1])
 if os.environ.get("TOWA_ROWS"):
     json.dump(dict(IN=IN_ROW, SUMR={f"{a}|{b}": v for (a, b), v in SUMR.items()}, PB=PB, EXT=EXT, T=T, EPSR=EPSR, PL_CHK=PL_CHK,
