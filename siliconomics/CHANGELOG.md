@@ -14,7 +14,7 @@
 - **TK_In 改 Tokenomics v22.0**（commit 79f6b30；`data/tokenomics_snapshot_v22.0.json`）：本庫讀的 22 個名稱、162 格與 v21.10 逐值相同（同儲存格、同列名）。chip_bridge v21.7 不在本版範圍。
 - **改名**：「AI 投資地圖」改稱「AI 算力地圖」（Andy 11-16；README、規劃書）。
 - 工具：`tools/cascade.sh` 支援 `LO_PROFILE`；`tools/export_baseline_status.py`、`tools/baseline_bridge.py`（讀 Wattonomics 證據區間）、`tools/r4_bridge.py`（純實績列）。v0.19 xlsx 移 `model/archive/`。
-- 下游：CASCADE_SUMMARY
+- 下游：相對 main 54444b9（含 #628 的 2026-11-13 收盤）重跑：cascade 合併後第 1 輪 60 個 CHANGED（jentech 首輪順序失敗）、第 2 輪只 jentech；sens 45 支與 alt_run 59 家（含 NVIDIA coord_alt.py）重跑後再兩輪，末輪 65 個全部 SAME。61 家加權目標價變動 -0.026%（wistron）到 +0.000%（accretech），投資建議變動 0 家；另一側讀數評等變動 0 家。HTML 70 家重建（check_company_html 全部通過）、In 版面 70／70 符合、markets/overview 重跑。目標價總表與地圖不在本 PR。
 
 ## v0.19（2026-11-14；`model/20261114_Siliconomics_v0.19.xlsx`；Tokenomics v21.10；Wattonomics v0.3.2）
 
