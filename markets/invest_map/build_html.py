@@ -1,4 +1,4 @@
-"""AI 投資地圖 — 由資料活頁簿（LibreOffice 重算後的值）產生網站 dist/index.html。
+"""AI 算力地圖（2026-11-16 前稱 AI 投資地圖）— 由資料活頁簿（LibreOffice 重算後的值）產生網站 dist/index.html。
 
 網站只呈現活頁簿的值，不做任何計算（排序、篩選、繪圖除外）。
 用法：python3 markets/invest_map/build_html.py
@@ -41,6 +41,14 @@ def pick_html(folder):
     return os.path.basename((new or fs)[0])
 
 
+def _book_key(path):
+    """資料活頁簿排序：先日期、再版號（v0.6.50 起改名 AI算力地圖；同日新舊檔名並存時不能只靠字串排序）。"""
+    import re as _re
+    b = os.path.basename(path)
+    m = _re.match(r"(\d{8})_.*_v([\d.]+)\.xlsx$", b)
+    return (m.group(1), tuple(int(x) for x in m.group(2).split("."))) if m else (b, ())
+
+
 def rec5(u):
     """五級規則（與活頁簿 REC 公式相同）。"""
     return "強力買進" if u > 0.5 else "買進" if u > 0.25 else "中立" if u >= -0.25 else "放空" if u >= -0.5 else "強力放空"
@@ -66,7 +74,8 @@ def num(x):
 
 
 def main():
-    books = sorted(glob.glob(os.path.join(HERE, "dist", "*_AI投資地圖_資料_*.xlsx")))
+    books = sorted((f for g in ("*_AI算力地圖_資料_*.xlsx", "*_AI投資地圖_資料_*.xlsx")  # v0.6.50 起新檔名；舊檔名仍認
+                    for f in glob.glob(os.path.join(HERE, "dist", g))), key=_book_key)
     src = books[-1]
     calc, tmp = recalc(src)
     wb = openpyxl.load_workbook(calc, data_only=True)

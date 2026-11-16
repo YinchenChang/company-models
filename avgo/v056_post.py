@@ -457,8 +457,8 @@ def coord_c0(wb, SIL, T_):
         ("AI 網通營收（net_26–net_29；Broadcom 歸屬）", "市場層 markets/network", net_v, "AI 網通營收（再以 k_n 校準到 FY2026 推估）", "In 頁 D 節"),
         ("HBM 混合單價路徑 2026–2029（hbm_<情境>_<年>）", "市場層（SK 海力士成品）", hbm_v, "代購 HBM 金額與毛利", "In 頁 C 節"),
         ("加速器模組每顆價格（pm_*、pa_*；金額份額計算用）", "市場層（NVIDIA 成品）", src_in("pm_bw").split("｜")[0], "Recon 頁 ASIC 金額份額檢查", "In 頁 I 節"),
-        ("Wattonomics 錨定係數 wta_27–wta_29（舊敏感度案例；SIF_WTAnchor_Base，v0.13 起）", "Wattonomics（經 Siliconomics 轉入）", "Wattonomics 現行 v0.3.2；係數取自 Siliconomics v0.13 起快照", "Sens 頁「Wattonomics 錨定」案例（情境 B × 係數）", "舊口徑，保留供對照；對帳中兩讀數（另一側讀數）取代其角色"),
-        ("對帳中年份兩讀數 C4", "Wattonomics 現行 v0.3.2 換算（經 Siliconomics v0.19 另一側讀數）", vtxt, "本模型不直接讀 Wattonomics；C4 並列兩讀數（Coord 頁 A–E 節）", "CY2027／2028／2029 另一側讀數＝現行基準 ×0.62／0.67／0.67"),
+        ("Wattonomics 錨定係數 wta_27–wta_29（舊敏感度案例；SIF_WTAnchor_Base，v0.13 起）", "Wattonomics（經 Siliconomics 轉入）", "Wattonomics 現行 v0.3.6；係數取自 Siliconomics v0.13 起快照", "Sens 頁「Wattonomics 錨定」案例（情境 B × 係數）", "舊口徑，保留供對照；對帳中兩讀數（另一側讀數）取代其角色"),
+        ("對帳中年份兩讀數 C4", "Wattonomics 現行 v0.3.6 換算（經 Siliconomics v0.20 另一側讀數）", vtxt, "本模型不直接讀 Wattonomics；C4 並列兩讀數（Coord 頁 A–E 節）", "CY2027／2028／2029 另一側讀數＝現行基準 ×0.62／0.67／0.67"),
     ]
     for it in rows:
         for j, v in enumerate(it, 1):
