@@ -1,0 +1,83 @@
+{
+ "company": "Naver",
+ "ticker": "035420",
+ "model_sheet": "PL",
+ "note": "官方報告分部（2026 年第 1 季起新口徑，K-IFRS）：Naver Platform（廣告 Ads、服務 Services）、Financial Platform、Global Opportunities（C2C、Contents、Enterprise；英文新聞稿稱 Global Initiatives，簡報稱 Global Opportunities）。2026 年前為舊五分部（Search Platform、Commerce、Fintech、Content、Cloud／Enterprise），僅作參考，見模型 Hist 頁。新口徑的 FY2025 只有 1Q25–4Q25 比較欄，FY2025 為季度加總（Derived）。命題模組：Naver Platform 廣告中 AI 暴露部分（搜尋等）＝查詢量 x 廣告負載 x 點擊率 x 每次點擊價格，含 AI 增量、外部 AI 侵蝕與自建 HyperCLOVA X 推論成本；AI Factory（算力出租）併入 Enterprise，為模型模組，非官方揭露子線。金額十億韓元。",
+ "official_segments": [
+  {
+   "name": "Naver Platform",
+   "label": "Naver Platform",
+   "period": "FY2025",
+   "value": 6964.7,
+   "unit": "十億韓元",
+   "source": "Naver 財報簡報 1Q26／2Q26／3Q26／4Q25 重編比較欄（FY2025＝1Q25–4Q25 季度加總，Derived）；data/facts_naver.csv",
+   "url": "https://www.navercorp.com/api/article/download/0cdefb0e-a7c5-4a8b-b785-9e026da9c305"
+  },
+  {
+   "name": "Financial Platform",
+   "label": "Financial Platform",
+   "period": "FY2025",
+   "value": 1668.2,
+   "unit": "十億韓元",
+   "source": "Naver 財報簡報 1Q26／2Q26／3Q26／4Q25 重編比較欄（FY2025＝1Q25–4Q25 季度加總，Derived）；data/facts_naver.csv",
+   "url": "https://www.navercorp.com/api/article/download/0cdefb0e-a7c5-4a8b-b785-9e026da9c305"
+  },
+  {
+   "name": "Global Opportunities",
+   "label": "Global Opportunities",
+   "period": "FY2025",
+   "value": 3402.1,
+   "unit": "十億韓元",
+   "source": "Naver 財報簡報 1Q26／2Q26／3Q26／4Q25 重編比較欄（FY2025＝1Q25–4Q25 季度加總，Derived）；data/facts_naver.csv",
+   "url": "https://www.navercorp.com/api/article/download/0cdefb0e-a7c5-4a8b-b785-9e026da9c305"
+  }
+ ],
+ "consolidated": {
+  "period": "FY2025",
+  "revenue": 12035.0,
+  "operatingIncome": 2208.1,
+  "check": "Naver Platform＋Financial Platform＋Global Opportunities－合併營收：FY2025 差 0.0（季度加總 6,964.7＋1,668.2＋3,402.1＝12,035.0，公司揭露 12,035.0）；各季單季因來源四捨五入差 ≤ 0.1（3Q26 分部加總 3,472.5 對合併 3,472.4）。十億韓元"
+ },
+ "sublines": [
+  {
+   "parent": "Naver Platform",
+   "labels": [
+    "廣告（Ads）",
+    "服務（Services）"
+   ],
+   "values": {
+    "FY2025": {
+     "廣告（Ads）": 5436.2,
+     "服務（Services）": 1528.6
+    }
+   },
+   "drivers": {
+    "廣告（Ads）": "命題模組（原型 A）：AI 暴露廣告＝查詢量 x（1−外部分流）x 每查詢營收 x（1＋AI 回答占比 x（R−1））；其餘為其他廣告",
+    "服務（Services）": "成長率由 3Q26 年增 13.1% 線性收斂"
+   }
+  },
+  {
+   "parent": "Global Opportunities",
+   "labels": [
+    "C2C",
+    "Contents",
+    "Enterprise"
+   ],
+   "values": {
+    "FY2025": {
+     "C2C": 986.5,
+     "Contents": 1851.4,
+     "Enterprise": 564.2
+    }
+   },
+   "drivers": {
+    "C2C": "成長率收斂",
+    "Contents": "成長率持平",
+    "Enterprise": "核心成長率收斂；加 AI Factory 模組（容量 x 每 MW 營收 x 利益率）"
+   }
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ]
+}

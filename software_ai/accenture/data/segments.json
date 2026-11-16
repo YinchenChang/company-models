@@ -1,0 +1,124 @@
+{
+ "company": "Accenture",
+ "ticker": "ACN",
+ "fiscal_year_end": "8 月（FY2026＝2025-09-01～2026-08-31）",
+ "model_sheet": "PL",
+ "note": "官方報告分部為三個地理市場（10-K FY2026 Note 16；2025-09 起 Americas／EMEA／Asia Pacific 新口徑，舊口徑 North America／EMEA／Growth Markets 列對照，重編期間 FY2024 起）。產業群（五個）與型態（Consulting／Managed Services）為公司固定揭露的細分，非報告分部，各自加總等於合併營收，作 PL 頁子列或對照列。命題子列（AI 新專案營收、AI 通縮）只能是官方分部之下的子列，合計須等於母分部。",
+ "official_segments": [
+  {
+   "name": "Americas",
+   "label": "Americas",
+   "period": "FY2026",
+   "value": 36546.614,
+   "unit": "US$M",
+   "source": "10-K FY2026（2026-10-16）Note 16 Segment Reporting，p.F-46",
+   "date": "2026-10-16"
+  },
+  {
+   "name": "EMEA",
+   "label": "EMEA",
+   "period": "FY2026",
+   "value": 26958.994,
+   "unit": "US$M",
+   "source": "10-K FY2026（2026-10-16）Note 16 Segment Reporting，p.F-46",
+   "date": "2026-10-16"
+  },
+  {
+   "name": "Asia Pacific",
+   "label": "Asia Pacific",
+   "period": "FY2026",
+   "value": 10677.837,
+   "unit": "US$M",
+   "source": "10-K FY2026（2026-10-16）Note 16 Segment Reporting，p.F-46",
+   "date": "2026-10-16"
+  }
+ ],
+ "consolidated": {
+  "period": "FY2026",
+  "value": 74183.445,
+  "unit": "US$M",
+  "source": "10-K FY2026（2026-10-16）Consolidated Income Statements",
+  "date": "2026-10-16"
+ },
+ "product_lines": [
+  {
+   "name": "Communications, Media & Technology",
+   "period": "FY2026",
+   "value": 12673.55,
+   "unit": "US$M",
+   "kind": "industry_group",
+   "source": "10-K FY2026 Note 16，p.F-47"
+  },
+  {
+   "name": "Financial Services",
+   "period": "FY2026",
+   "value": 13959.208,
+   "unit": "US$M",
+   "kind": "industry_group",
+   "source": "10-K FY2026 Note 16，p.F-47"
+  },
+  {
+   "name": "Health & Public Service",
+   "period": "FY2026",
+   "value": 15170.696,
+   "unit": "US$M",
+   "kind": "industry_group",
+   "source": "10-K FY2026 Note 16，p.F-47"
+  },
+  {
+   "name": "Products",
+   "period": "FY2026",
+   "value": 22450.767,
+   "unit": "US$M",
+   "kind": "industry_group",
+   "source": "10-K FY2026 Note 16，p.F-47"
+  },
+  {
+   "name": "Resources",
+   "period": "FY2026",
+   "value": 9929.224,
+   "unit": "US$M",
+   "kind": "industry_group",
+   "source": "10-K FY2026 Note 16，p.F-47"
+  },
+  {
+   "name": "Consulting",
+   "period": "FY2026",
+   "value": 36883.316,
+   "unit": "US$M",
+   "kind": "type_of_work",
+   "source": "10-K FY2026 Note 16，p.F-47"
+  },
+  {
+   "name": "Managed Services",
+   "period": "FY2026",
+   "value": 37300.129,
+   "unit": "US$M",
+   "kind": "type_of_work",
+   "source": "10-K FY2026 Note 16，p.F-47"
+  }
+ ],
+ "prior_basis": [
+  {
+   "name": "North America",
+   "period": "FY2024",
+   "value": 30740.611,
+   "unit": "US$M",
+   "source": "10-K FY2024 Note 16，p.F-43；2025-09 重編為 Americas／Asia Pacific"
+  },
+  {
+   "name": "EMEA",
+   "period": "FY2024",
+   "value": 22817.879,
+   "unit": "US$M",
+   "source": "10-K FY2024 Note 16，p.F-43；2025-09 重編為 Americas／Asia Pacific"
+  },
+  {
+   "name": "Growth Markets",
+   "period": "FY2024",
+   "value": 11337.974,
+   "unit": "US$M",
+   "source": "10-K FY2024 Note 16，p.F-43；2025-09 重編為 Americas／Asia Pacific"
+  }
+ ]
+}

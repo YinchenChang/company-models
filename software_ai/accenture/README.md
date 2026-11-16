@@ -1,0 +1,39 @@
+# software_ai/accenture/ — Accenture（ACN）個股模型 v0.1（原型 L：按人力計價）
+
+**本版未做先驗**（Andy 2026-11-16 23:27 指示）。工作單：`software_ai/docs/workorders/20261116_第一批_研究包與單位經濟.md` C 節與 G、G2 節。
+
+**建置：** `bash software_ai/accenture/make_v01.sh`（`SENS=1` 重跑敏感度與反解）。成品 `dist/20261116_Accenture個股模型_v0.1.xlsx`／`.html`。投資建議、目標價與各數字見成品 README 頁與 HTML（由公式組字，本檔不手寫）。
+
+**版本表（由建置成品產生，不手寫）：**
+
+<!-- version-table: dist/20261116_Accenture個股模型_v0.1.xlsx -->
+| 項目 | v0.1 |
+|---|---|
+| 現價 | 250.49 |
+| DCF 目標價 | 171.86 |
+| Comparable（分部加總）目標價 | 211.24 |
+| 加權目標價（上檔空間） | 191.55（-23.5%） |
+| 投資建議 | 中立 |
+| 收支關卡 A／B／C（FY2027–FY2031，US$M） | 21,454.5／17,012.0／7,718.5 |
+<!-- /version-table -->
+
+**命題：** AI 進入按人力計價的 IT 服務後，每單位營收＝AI 新專案增量 − 定價侵蝕 − 推論成本。AI 前營收 R0＝交付人力 × 利用率 × 可用工時 × 時薪；AI 後營收＝R0 −（被自動化工時 × 時薪 ×（1−價格保留率））＋ R0 × 新專案占比；推論成本＝被自動化工時 ÷ 任務長度 × 每成功任務成本，只讀 Tokenomics v22.0 快照（`data/tokenomics_snapshot_v22.0.json`，任務 5）。變數名稱沿用 `software_ai/unit_economics`（L_util、L_hrs、L_rate、a、r、n），該模型 v0.1 完成前在本模型 In 頁自建（v0.2 改讀 unit_economics）。
+
+**結構：** README、In、Q（10-K 歷史）、Seg（命題與三分部營收）、PL（標準損益表、分部營收與營業利益、三情境）、DCF（含收支關卡）、Val、RevDCF、Recon（含整本重算反解）、Sens、Sources。官方報告分部三個（Americas、EMEA、Asia Pacific；10-K FY2026 Note 16）；分部營收與營業利益合計與合併值差 0。
+
+**情境：** A 樂觀／B 基準／C 保守，在 AI 淨效果上分化（自動化比例 `a32`、價格保留率 `r`、新專案占比 `n32`），依據與標記見 In 頁。
+
+**檔案：** `build_accenture.py`、`sens_accenture.py`（敏感度與反解，整本重算）、`gen_html_json.py`、`segments.json`、`html.json`、`display_check.json`、`make_v01.sh`、`data/`（研究包、事實總帳、Tokenomics 快照、敏感度與反解結果）、`dist/`。
+
+## 不適用與未做
+- Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照：不適用：Accenture 不自建算力，推論成本為向模型商購買。
+- 三層協調（Coord 頁、C0、兩讀數）：不適用：非 Siliconomics 覆蓋。
+- 先驗：未做。
+- 公司不揭露計費工時、時薪、價量拆分、token 量與代理任務量：未找到；時薪由營收反推（Derived），每任務 token 取 Tokenomics 任務 5（類比）。
+- Blume β 第二來源、公司債有效利率、融資租賃餘額、同業 NTM 倍數、平均賣方目標價與家數：未找到。
+- 同業倍數三家、日期 2026-10-21 至 10-27，已標逾期，使用前須更新。
+
+## 已知限制
+- 同業 EV／EBIT 取自 StockAnalysis，準則與租賃處理未逐家核對。
+- 人力成長含併購併入，對應 FCFF 內併購現金；匯率未建模（美元口徑對公司當地幣指引）。
+- 展示層與治理檢查見 make 腳本末段。

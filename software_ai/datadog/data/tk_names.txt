@@ -1,0 +1,17 @@
+# Datadog 個股模型 v0.1 取用的 Tokenomics 契約名稱（下游契約第 2 條：只取 IF_／IFC_）
+IF_PriceRef_Luna
+IF_PriceRef_Terra
+IF_PriceRef_Sol
+IF_PriceRef_Astra
+IF_FullCost_Terra
+IF_FullCost_Sol
+IF_FullCost_Astra
+IF_TaskLen
+IF_TaskTokFresh
+IF_TaskTokCached
+IF_TaskTokDec
+IF_TaskTokMult
+IF_Disc
+IF_PxEffMix
+IFC_Use
+IFC_Conf

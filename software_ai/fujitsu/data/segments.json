@@ -1,0 +1,95 @@
+{
+ "company": "富士通 Fujitsu",
+ "ticker": "6702.T",
+ "fiscal_year_end": "3 月（FY2025＝2025-04-01～2026-03-31；公司稱「2025年度」）",
+ "model_sheet": "PL",
+ "note": "官方報告分部（決算短信 FY2025 p.8）：Service Solutions、Hardware Solutions、Ubiquitous Solutions，另列 Elimination／Corporate。Device Solutions 已出售（終止營業）。Service Solutions 子分部自 FY2026 為 Enterprise／Public（舊：Global Solutions／Regions）；Uvance、Modernization 為跨分部固定揭露的服務組合（非報告分部）。分部營收含分部間，合計＝合併營收（Elimination／Corporate 為負）。分部利益只有調整後（non-GAAP）口徑。",
+ "official_segments": [
+  {
+   "name": "Service Solutions",
+   "label": "Service Solutions",
+   "period": "FY2025",
+   "value": 2346.932,
+   "unit": "¥B",
+   "source": "決算短信 FY2025（2026-04-28）p.8 セグメント情報",
+   "date": "2026-04-28"
+  },
+  {
+   "name": "Hardware Solutions",
+   "label": "Hardware Solutions",
+   "period": "FY2025",
+   "value": 1009.857,
+   "unit": "¥B",
+   "source": "決算短信 FY2025（2026-04-28）p.8 セグメント情報",
+   "date": "2026-04-28"
+  },
+  {
+   "name": "Ubiquitous Solutions",
+   "label": "Ubiquitous Solutions",
+   "period": "FY2025",
+   "value": 229.805,
+   "unit": "¥B",
+   "source": "決算短信 FY2025（2026-04-28）p.8 セグメント情報",
+   "date": "2026-04-28"
+  },
+  {
+   "name": "Elimination/Corporate",
+   "label": "Elimination/Corporate",
+   "period": "FY2025",
+   "value": -83.623,
+   "unit": "¥B",
+   "source": "決算短信 FY2025（2026-04-28）p.8 セグメント情報",
+   "date": "2026-04-28"
+  }
+ ],
+ "consolidated": {
+  "period": "FY2025",
+  "value": 3502.971,
+  "unit": "¥B",
+  "source": "決算短信 FY2025（2026-04-28）p.4；有價證券報告書 p.2",
+  "date": "2026-04-28"
+ },
+ "sub_lines": [
+  {
+   "parent": "Service Solutions",
+   "name": "Enterprise",
+   "period": "FY2025",
+   "value": 866.3,
+   "unit": "¥B",
+   "source": "決算說明資料 FY2025 p.47（0.1B 精度）"
+  },
+  {
+   "parent": "Service Solutions",
+   "name": "Public",
+   "period": "FY2025",
+   "value": 1480.6,
+   "unit": "¥B",
+   "source": "決算說明資料 FY2025 p.47（0.1B 精度）"
+  },
+  {
+   "parent": "Hardware Solutions",
+   "name": "System Products",
+   "period": "FY2025",
+   "value": 816.2,
+   "unit": "¥B",
+   "source": "決算說明資料 FY2025 p.64"
+  },
+  {
+   "parent": "Hardware Solutions",
+   "name": "Network Products",
+   "period": "FY2025",
+   "value": 193.6,
+   "unit": "¥B",
+   "source": "決算說明資料 FY2025 p.64"
+  }
+ ],
+ "cross_segment_lines": [
+  {
+   "name": "Fujitsu Uvance",
+   "period": "FY2025",
+   "value": 709.3,
+   "unit": "¥B",
+   "source": "決算說明資料 FY2025 p.14,66（Interested-party）"
+  }
+ ]
+}

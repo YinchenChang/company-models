@@ -1,0 +1,19 @@
+{
+ "company": "CrowdStrike",
+ "ticker": "CRWD",
+ "model_sheet": "PL",
+ "note": "官方報告分部（Form 10-K FY2026 附註 14；10-Q 2026-07-31 同）：CODM（CEO）以單一營運及應報導分部（合併層級）管理，分部損益衡量為合併淨利（損）。因此沒有分部營業利益；本表以營收型態（訂閱、專業服務；10-K 損益表與附註營收拆分）作為官方營收線，兩線合計等於合併營收。命題子列（非官方、Assumed）：訂閱營收 ＝ 受保護端點／身分基數 × 模組數 × 每模組單價（原型 P：按防護範圍計價），另列非人類身分（代理）與 Falcon Flex 帳戶之 ARR 為揭露的 KPI，不是分部。會計年度 2 月制（FY2026＝2025-02-01～2026-01-31）。金額 US$B。",
+ "official_segments": [
+  {"name": "Subscription", "label": "訂閱", "period": "FY2026", "value": 4.564683, "unit": "US$B",
+   "source": "CrowdStrike Form 10-K FY2026（2026-03）合併損益表；data/facts_crowdstrike.csv「訂閱營收」FY2026"},
+  {"name": "Professional services", "label": "專業服務", "period": "FY2026", "value": 0.247322, "unit": "US$B",
+   "source": "同上；「專業服務營收」FY2026（合併營收 4.812005＝兩線合計；單一應報導分部見附註 14）"}
+ ],
+ "sublines": [
+  {"parent": "Subscription", "labels": ["端點與身分基數（命題子列）", "模組密度（命題子列）", "每模組年費（命題子列）"], "thesis": true}
+ ],
+ "check_labels": [
+  "檢查：訂閱＋專業服務 − 合併營收",
+  "檢查：命題子列（基數×模組×單價）− 訂閱營收"
+ ]
+}

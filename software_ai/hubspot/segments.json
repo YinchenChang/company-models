@@ -1,0 +1,54 @@
+{
+ "company": "HubSpot",
+ "ticker": "HUBS",
+ "model_sheet": "PL",
+ "note": "官方報告分部：單一應報導分部（10-K FY2025 附註：公司只有一個營運分部，主要營運決策者為執行長）。官方營收線＝Subscription（訂閱）與 Professional services and other（專業服務與其他）；地理（Americas／Europe／Asia Pacific）為揭露備註，不是分部，本模型不建模。命題模組（原型 S）：訂閱營收＝平均客戶數 × 每客戶訂閱營收（含席位被 AI 取代的侵蝕）＋AI 代理按任務計價營收（Customer Agent 每次解決 0.50 美元）。金額 US$M。",
+ "official_segments": [
+  {
+   "name": "HubSpot 單一分部（合併營收）",
+   "label": "營收",
+   "period": "FY2025",
+   "value": 3131.266,
+   "unit": "US$M",
+   "source": "HubSpot 10-K FY2025（2026-02-11）附註（單一應報導分部）與 Q3 2026 新聞稿；data/facts_hubspot.csv",
+   "url": "https://www.sec.gov/Archives/edgar/data/1404655/000119312526046646/hubs-20251231.htm",
+   "operatingIncome": 7.379,
+   "ttm2026q3": 3587.047,
+   "ttmOperatingIncome": 191.393
+  }
+ ],
+ "consolidated": {
+  "period": "FY2025",
+  "revenue": 3131.266,
+  "operatingIncome": 7.379,
+  "ttm2026q3Revenue": 3587.047,
+  "ttm2026q3OperatingIncome": 191.393,
+  "check": "單一分部＝合併；訂閱＋專業服務與其他－營收合計：FY2025 差 0；近四季（Q4 2025＋9M 2026）差 0（US$M）"
+ },
+ "sublines": [
+  {
+   "parent": "營收",
+   "labels": [
+    "訂閱",
+    "專業服務與其他"
+   ],
+   "values": {
+    "FY2025": {
+     "訂閱": 3063.917,
+     "專業服務與其他": 67.349
+    },
+    "TTM2026Q3": {
+     "訂閱": 3515.511,
+     "專業服務與其他": 71.536
+    }
+   },
+   "drivers": {
+    "訂閱": "平均客戶數 × 每客戶訂閱營收（年增 g_up 減席位取代侵蝕 repl×seat_sh）＋按任務計價營收（採用率 × 每採用客戶任務數 × 每任務單價）",
+    "專業服務與其他": "訂閱營收 × 近四季持平比率（約 2.0%）"
+   }
+  }
+ ],
+ "check_labels": [
+  "檢查：訂閱＋專業服務 − 營收合計"
+ ]
+}

@@ -1,0 +1,19 @@
+# HubSpot 個股模型 v0.1 取用的 Tokenomics 契約名稱（下游契約第 2 條：只取 IF_）
+IF_PriceFresh_Luna
+IF_PriceCached_Luna
+IF_PriceOut_Luna
+IF_PriceFresh_Terra
+IF_PriceCached_Terra
+IF_PriceOut_Terra
+IF_PriceFresh_Sol
+IF_PriceCached_Sol
+IF_PriceOut_Sol
+IF_TaskSucc_Terra
+IF_TaskTokFresh
+IF_TaskTokCached
+IF_TaskTokDec
+IF_TaskTokMult
+IF_FullCostDefault_Terra
+IF_FullCostDefault_Sol
+IF_FullCostDefault_Luna
+IF_Disc

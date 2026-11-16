@@ -1,0 +1,54 @@
+{
+ "company": "Accenture",
+ "ticker": "ACN",
+ "fiscal_year_end": "8 月 31 日（FY2026＝2025-09-01～2026-08-31；FY2027＝2026-09-01～2027-08-31）",
+ "model_sheet": "PL",
+ "note": "官方報告分部三個：Americas、EMEA、Asia Pacific（10-K FY2026 Note 16 Segment Reporting，p.F-46）。FY2026 起 Latin America 併入 Americas、Growth Markets 更名 Asia Pacific；FY2024、FY2025 為新口徑重編值，舊口徑（North America／EMEA／Growth Markets）FY2023–FY2024 見 data/research_accenture.md。分部營收與分部營業利益合計皆等於合併營收與合併營業利益（FY2024–FY2026 差 0）。營收型態（Consulting／Managed Services）與產業群為公司另行揭露的切法，不是報告分部，本模型不預測。金額 US$M。",
+ "official_segments": [
+  {
+   "name": "Americas",
+   "label": "Americas",
+   "period": "FY2026",
+   "value": 36546.614,
+   "unit": "US$M",
+   "operatingIncome": 6244.303,
+   "source": "10-K FY2026（SEC 0001467373-26-000049，申報 2026-10-16）Note 16，p.F-46",
+   "date": "2026-10-16"
+  },
+  {
+   "name": "EMEA",
+   "label": "EMEA",
+   "period": "FY2026",
+   "value": 26958.994,
+   "unit": "US$M",
+   "operatingIncome": 3436.425,
+   "source": "同上",
+   "date": "2026-10-16"
+  },
+  {
+   "name": "Asia Pacific",
+   "label": "Asia Pacific",
+   "period": "FY2026",
+   "value": 10677.837,
+   "unit": "US$M",
+   "operatingIncome": 1725.232,
+   "source": "同上",
+   "date": "2026-10-16"
+  }
+ ],
+ "consolidated": {
+  "period": "FY2026",
+  "value": 74183.445,
+  "unit": "US$M",
+  "operatingIncome": 11405.96,
+  "source": "10-K FY2026 損益表",
+  "check": "三分部營收合計 74,183.445＝合併營收、營業利益合計 11,405.960＝合併營業利益（差 0）"
+ },
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部營收合計 − 合併營收",
+  "檢查：分部營業利益合計 − 合併營業利益",
+  "檢查：分部營收合計 − 公司揭露合併營收（歷史年度）",
+  "檢查：三情境分部營收合計 − 合併營收"
+ ]
+}

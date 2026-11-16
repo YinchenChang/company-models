@@ -1,0 +1,23 @@
+{
+ "company": "Salesforce",
+ "ticker": "CRM",
+ "fiscal_year_end": "1 月 31 日（FY2026＝2025-02-01～2026-01-31；FY2027＝2026-02-01～2027-01-31）",
+ "model_sheet": "PL",
+ "note": "官方報告分部只有一個：10-K FY2026 附註「The Company operates as one operating segment」，因此沒有分部營業利益。營收列取公司法定附註的營收型態（訂閱與支援、專業服務與其他）與固定揭露的產品線：FY2027 Q1 起新二分類 Agentforce Apps、Data 360, Headless Platform, and Other（Q1 FY26 起回溯；FY2026 全年與 Q3、Q4 FY26 未回溯，未找到）；舊五分類（Sales、Service、Platform and Other、Marketing and Commerce、Integration and Analytics）僅有 FY2022–FY2026 與 Q3、Q4 FY26 歷史，見 data/research_salesforce.md 與 facts_salesforce.csv。命題子列：席位型營收＋Agentforce 代理營收＝Agentforce Apps（本模型拆分，Assumed，不是公司揭露）。金額 US$M。",
+ "official_segments": [
+  {"name": "Salesforce（單一營運分部）", "label": "營收合計（單一營運分部）", "period": "FY2026", "value": 41525, "unit": "US$M",
+   "source": "10-K FY2026（SEC 0001108524-26-000060，2026-03-02）附註 operating segment；Q4 FY26 財報新聞稿（8-K 附件 99.1，2026-02-25）", "date": "2026-03-02"}
+ ],
+ "consolidated": {"period": "FY2026", "value": 41525, "unit": "US$M", "source": "10-K FY2026；Q4 FY26 新聞稿"},
+ "sublines": [
+  {"parent": "營收合計（單一營運分部）", "labels": ["訂閱與支援", "專業服務與其他"], "kind": "營收型態（公司法定附註）"},
+  {"parent": "訂閱與支援", "labels": ["Agentforce Apps", "Data 360, Headless Platform, and Other", "Hedging gains"], "kind": "產品線（公司固定揭露，FY2027 Q1 起新口徑）"},
+  {"parent": "Agentforce Apps", "labels": ["Agentforce 代理營收（命題子列）", "席位型營收（命題子列）"], "kind": "命題子列（席位 × 每席位年費；任務數 × 每任務單價）"}
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收",
+  "檢查：Apps＋Data＋Hedging − 訂閱與支援（三情境）",
+  "檢查：席位型＋代理 − Agentforce Apps（三情境）",
+  "檢查：分部合計 − 公司揭露合併營收（歷史年度；實績期）"
+ ]
+}

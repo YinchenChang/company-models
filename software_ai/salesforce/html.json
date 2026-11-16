@@ -1,0 +1,1135 @@
+{
+ "company": "Salesforce",
+ "ticker": "CRM",
+ "thesis": "@README!A3",
+ "question": "AI 進入席位型軟體後，Agentforce 代理營收的增量能否抵過席位被替代的侵蝕與推論成本",
+ "scenarios": [
+  {
+   "key": "A",
+   "name": "情境 A（席位替代低、任務量與單價佳）"
+  },
+  {
+   "key": "B",
+   "name": "情境 B（基準）"
+  },
+  {
+   "key": "C",
+   "name": "情境 C（席位替代高、任務量與單價差）"
+  }
+ ],
+ "wide_text": true,
+ "layout": "v1.3",
+ "hero": {
+  "rec": "@Val!B15",
+  "tiles": [
+   [
+    "@Val!A10",
+    "@Val!B10|n2",
+    [
+     "上檔空間 ",
+     "@Val!B11|sp1"
+    ]
+   ],
+   [
+    "@Val!A16",
+    "@Val!B16|n2",
+    [
+     "上檔空間 ",
+     "@Val!C16|sp1"
+    ]
+   ],
+   [
+    "@Val!A5",
+    "@Val!B5|n2",
+    ""
+   ]
+  ],
+  "note": [
+   "@README!A13"
+  ]
+ },
+ "sections": [
+  {
+   "id": "thesis",
+   "title": "命題與核心問題",
+   "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "@README!A5"
+     ]
+    },
+    {
+     "type": "theme",
+     "title": "營收（十億美元，依產品線堆疊）：FY2027E–FY2032E（情境 B）",
+     "x": "@Seg!F27:K27",
+     "fmt": "n0",
+     "stack": true,
+     "pad": 1.15,
+     "total": "@Seg!F38:K38",
+     "bars": [
+      {
+       "name": [
+        "@Seg!A31"
+       ],
+       "y": "@Seg!F31:K31",
+       "color": "#6fa8dc"
+      },
+      {
+       "name": [
+        "@Seg!A30"
+       ],
+       "y": "@Seg!F30:K30",
+       "color": "#c29a2b"
+      },
+      {
+       "name": [
+        "@Seg!A34"
+       ],
+       "y": "@Seg!F34:K34",
+       "color": "#0b7a80"
+      },
+      {
+       "name": [
+        "@Seg!A37"
+       ],
+       "y": "@Seg!F37:K37",
+       "color": "#999999"
+      }
+     ],
+     "caption": "堆疊＝席位型營收與代理營收（合為 Agentforce Apps）、資料與其他產品線、專業服務；單位為百萬美元，圖軸以十億計；官方分部只有一個，產品線依公司新口徑。"
+    },
+    {
+     "type": "h3",
+     "text": "重點觀察"
+    },
+    {
+     "type": "list",
+     "ordered": true,
+     "items": [
+      "@README!A6",
+      "@README!A7",
+      "@README!A8",
+      "@README!A9",
+      "@README!A10"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "本版要點"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A15",
+      "@README!A16",
+      "@README!A17",
+      "@README!A18"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "valuation",
+   "title": "估值",
+   "blocks": [
+    {
+     "type": "bars",
+     "title": "目標價與現價（美元；豎線＝現價）",
+     "fmt": "n2",
+     "items": [
+      {
+       "label": "@Val!A8",
+       "value": "@Val!B8",
+       "series": 1
+      },
+      {
+       "label": "@Val!A9",
+       "value": "@Val!B9",
+       "series": 2
+      },
+      {
+       "label": "@Val!A10",
+       "value": "@Val!B10",
+       "series": 0
+      }
+     ],
+     "ref": {
+      "label": "@Val!A5",
+      "value": "@Val!B5"
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Val!A1"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Val!A2"
+     ]
+    },
+    {
+     "type": "kv",
+     "items": [
+      [
+       "@Val!A19",
+       "@Val!B19|p2"
+      ],
+      [
+       "@Val!A21",
+       "@Val!B21|p2"
+      ],
+      [
+       "@Val!A22",
+       "@Val!B22|p2"
+      ],
+      [
+       "@Val!A23",
+       "@Val!B23|p2"
+      ],
+      [
+       "@Val!A24",
+       "@Val!B24|p2"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "結論（情境加權）",
+     "head": [
+      "項目",
+      "數值",
+      "對照"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "8-15",
+      "cols": [
+       "A",
+       "B"
+      ],
+      "fmts": [
+       "",
+       "n2"
+      ],
+      "row_fmt": {
+       "11": {
+        "B": "sp1"
+       },
+       "15": {
+        "B": ""
+       }
+      }
+     }
+    },
+    {
+     "type": "table",
+     "caption": "DCF 彙總（三情境）",
+     "head": [
+      "項目",
+      "情境 A",
+      "情境 B",
+      "情境 C"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "37-43",
+      "cols": [
+       "A",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "n1"
+      ],
+      "row_fmt": {
+       "43": {
+        "C": "p1",
+        "D": "p1",
+        "E": "p1"
+       },
+       "41": {
+        "C": "n2",
+        "D": "n2",
+        "E": "n2"
+       },
+       "42": {
+        "C": "n2",
+        "D": "n2",
+        "E": "n2"
+       }
+      }
+     }
+    },
+    {
+     "type": "table",
+     "caption": "Comparable（同業 EV／自由現金流）",
+     "head": [
+      "項目",
+      "情境 A",
+      "情境 B",
+      "情境 C"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "46-49,53-54",
+      "cols": [
+       "A",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "n1"
+      ],
+      "row_fmt": {
+       "47": {
+        "C": "x1",
+        "D": "x1",
+        "E": "x1"
+       },
+       "49": {
+        "C": "n2",
+        "D": "n2",
+        "E": "n2"
+       },
+       "53": {
+        "C": "n2",
+        "D": "n2",
+        "E": "n2"
+       },
+       "54": {
+        "C": "sp1",
+        "D": "sp1",
+        "E": "sp1"
+       }
+      }
+     }
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：同業倍數與淨現金",
+     "head": [
+      "項目",
+      "數值"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "30-33,58-66",
+      "cols": [
+       "A",
+       "B"
+      ],
+      "fmts": [
+       "",
+       "n2"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sens",
+   "title": "敏感度",
+   "blocks": [
+    {
+     "type": "tornado",
+     "title": "加權目標價相對基準：輸入取低值（一次改一個，整本重算）",
+     "sheet": "Sens",
+     "rows": "10,13,14,15,17,19,21,23,25,27,29,31,33,35,37,40,42,44,46,48,50,52,54,55,57,59,61,63,65,67,69,71,73,75,82",
+     "label_col": "A",
+     "value_col": "E",
+     "fmt": "sp1"
+    },
+    {
+     "type": "tornado",
+     "title": "加權目標價相對基準：輸入取高值（一次改一個，整本重算）",
+     "sheet": "Sens",
+     "rows": "11,12,16,18,20,22,24,26,28,30,32,34,36,41,43,45,47,49,51,53,56,58,60,62,64,66,68,70,72,74,76,81",
+     "label_col": "A",
+     "value_col": "E",
+     "fmt": "sp1"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Sens!A1"
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：全部案例（含 DCF 單法與投資建議）",
+     "head": [
+      "驅動",
+      "設定",
+      "方向",
+      "加權目標價",
+      "相對基準",
+      "鍵",
+      "DCF 目標價",
+      "DCF 變動（美元）",
+      "投資建議"
+     ],
+     "rowgen": {
+      "sheet": "Sens",
+      "rows": "10-83",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G",
+       "H",
+       "I"
+      ],
+      "fmts": [
+       "",
+       "",
+       "",
+       "n2",
+       "sp1",
+       "",
+       "n2",
+       "n2",
+       ""
+      ]
+     }
+    },
+    {
+     "type": "kv",
+     "items": [
+      [
+       "build_id",
+       "@Sens!D3"
+      ],
+      [
+       "模型狀態",
+       "@Sens!D4"
+      ],
+      [
+       "@Sens!A5",
+       "@Sens!D5|n2"
+      ],
+      [
+       "@Sens!A6",
+       "@Sens!D6|n2"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "revdcf",
+   "title": "反向 DCF：現價隱含什麼",
+   "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "@RevDCF!A1"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@RevDCF!A2"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "現價隱含值與模型基準（情境 B）",
+     "head": [
+      "項目",
+      "數值"
+     ],
+     "rowgen": {
+      "sheet": "RevDCF",
+      "rows": "5-16",
+      "cols": [
+       "A",
+       "B"
+      ],
+      "fmts": [
+       "",
+       "n2"
+      ],
+      "row_fmt": {
+       "10": {
+        "B": "p1"
+       },
+       "11": {
+        "B": "p1"
+       },
+       "14": {
+        "B": "n2"
+       },
+       "15": {
+        "B": "x1"
+       },
+       "16": {
+        "B": "x1"
+       },
+       "7": {
+        "B": "n0"
+       },
+       "8": {
+        "B": "n0"
+       },
+       "12": {
+        "B": "n0"
+       },
+       "13": {
+        "B": "n0"
+       },
+       "9": {
+        "B": "n2"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "pl",
+   "title": "損益（標準損益表）",
+   "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "@PL!A1"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@PL!A2"
+     ]
+    },
+    {
+     "type": "theme",
+     "title": "營收（十億美元）與營業利益率：FY2024A–FY2032E（情境 B）",
+     "x": "@PL!C5:K5",
+     "fmt": "n0",
+     "fmt_r": "p0",
+     "stack": false,
+     "pad": 1.3,
+     "bars": [
+      {
+       "name": [
+        "@PL!A6"
+       ],
+       "y": "@PL!C6:K6",
+       "color": "#6fa8dc"
+      }
+     ],
+     "lines": [
+      {
+       "name": [
+        "@PL!A13"
+       ],
+       "y": "@PL!C13:K13",
+       "axis": "r",
+       "color": "#3b3838",
+       "labels": true
+      }
+     ],
+     "caption": "長條＝營收（百萬美元，軸以十億計）；折線＝GAAP 營業利益率（右軸）。FY2027E 起為情境 B。"
+    },
+    {
+     "type": "table",
+     "caption": "標準損益表（GAAP；百萬美元，EPS 為美元）：FY2024A–FY2026A 實績、FY2027E–FY2032E 情境 B",
+     "head": [
+      "項目",
+      "@PL!C5",
+      "@PL!D5",
+      "@PL!E5",
+      "@PL!F5",
+      "@PL!G5",
+      "@PL!H5",
+      "@PL!I5",
+      "@PL!J5",
+      "@PL!K5"
+     ],
+     "rowgen": {
+      "sheet": "PL",
+      "rows": "6-20",
+      "cols": [
+       "A",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G",
+       "H",
+       "I",
+       "J",
+       "K"
+      ],
+      "fmts": [
+       "",
+       "n0",
+       "n0",
+       "n0",
+       "n0",
+       "n0",
+       "n0",
+       "n0",
+       "n0",
+       "n0"
+      ],
+      "row_fmt": {
+       "7": {
+        "C": "p1",
+        "D": "p1",
+        "E": "p1",
+        "F": "p1",
+        "G": "p1",
+        "H": "p1",
+        "I": "p1",
+        "J": "p1",
+        "K": "p1"
+       },
+       "10": {
+        "C": "p1",
+        "D": "p1",
+        "E": "p1",
+        "F": "p1",
+        "G": "p1",
+        "H": "p1",
+        "I": "p1",
+        "J": "p1",
+        "K": "p1"
+       },
+       "13": {
+        "C": "p1",
+        "D": "p1",
+        "E": "p1",
+        "F": "p1",
+        "G": "p1",
+        "H": "p1",
+        "I": "p1",
+        "J": "p1",
+        "K": "p1"
+       },
+       "18": {
+        "C": "p1",
+        "D": "p1",
+        "E": "p1",
+        "F": "p1",
+        "G": "p1",
+        "H": "p1",
+        "I": "p1",
+        "J": "p1",
+        "K": "p1"
+       },
+       "20": {
+        "C": "p1",
+        "D": "p1",
+        "E": "p1",
+        "F": "p1",
+        "G": "p1",
+        "H": "p1",
+        "I": "p1",
+        "J": "p1",
+        "K": "p1"
+       },
+       "19": {
+        "C": "n2",
+        "D": "n2",
+        "E": "n2",
+        "F": "n2",
+        "G": "n2",
+        "H": "n2",
+        "I": "n2",
+        "J": "n2",
+        "K": "n2"
+       }
+      }
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@PL!A21"
+     ]
+    },
+    {
+     "type": "theme",
+     "title": "FCFF：情境 A／B／C（十億美元）",
+     "x": "@PL!F5:K5",
+     "fmt": "n0",
+     "stack": false,
+     "pad": 1.2,
+     "bars": [
+      {
+       "name": [
+        "情境 ",
+        "A",
+        "：FCFF"
+       ],
+       "y": "@PL!F83:K83",
+       "color": "#7fb8bb"
+      },
+      {
+       "name": [
+        "情境 ",
+        "B",
+        "：FCFF"
+       ],
+       "y": "@PL!F109:K109",
+       "color": "#3b3838"
+      },
+      {
+       "name": [
+        "情境 ",
+        "C",
+        "：FCFF"
+       ],
+       "y": "@PL!F135:K135",
+       "color": "#d9a08f"
+      }
+     ],
+     "caption": "三情境的無槓桿自由現金流（百萬美元，軸以十億計）；情境差異來自席位替代、任務量、每任務單價與推論成本。"
+    },
+    {
+     "type": "table",
+     "caption": "分部營收（情境 B；單一營運分部下的營收型態與產品線）",
+     "head": [
+      "項目",
+      "@PL!C5",
+      "@PL!D5",
+      "@PL!E5",
+      "@PL!F5",
+      "@PL!G5",
+      "@PL!H5",
+      "@PL!I5",
+      "@PL!J5",
+      "@PL!K5"
+     ],
+     "rowgen": {
+      "sheet": "PL",
+      "rows": "24-31",
+      "cols": [
+       "A",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G",
+       "H",
+       "I",
+       "J",
+       "K"
+      ],
+      "fmts": [
+       "",
+       "n0",
+       "n0",
+       "n0",
+       "n0",
+       "n0",
+       "n0",
+       "n0",
+       "n0",
+       "n0"
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "caption": "核對（應為零）",
+     "head": [
+      "項目",
+      "@PL!C5",
+      "@PL!D5",
+      "@PL!E5",
+      "@PL!F5",
+      "@PL!G5",
+      "@PL!H5",
+      "@PL!I5",
+      "@PL!J5",
+      "@PL!K5"
+     ],
+     "rowgen": {
+      "sheet": "PL",
+      "rows": "33-37",
+      "cols": [
+       "A",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G",
+       "H",
+       "I",
+       "J",
+       "K"
+      ],
+      "fmts": [
+       "",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "drivers",
+   "title": "驅動因子：席位、代理任務與推論成本",
+   "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "@Seg!A1"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Seg!A2"
+     ]
+    },
+    {
+     "type": "theme",
+     "title": "AI 淨效果的三個分項（情境 B；十億美元）",
+     "x": "@Seg!F27:K27",
+     "fmt": "n1",
+     "stack": false,
+     "pad": 1.2,
+     "bars": [
+      {
+       "name": [
+        "@Seg!A40"
+       ],
+       "y": "@Seg!F40:K40",
+       "color": "#0b7a80"
+      },
+      {
+       "name": [
+        "@Seg!A39"
+       ],
+       "y": "@Seg!F39:K39",
+       "color": "#c29a2b"
+      },
+      {
+       "name": [
+        "@Seg!A41"
+       ],
+       "y": "@Seg!F41:K41",
+       "color": "#b4472f"
+      }
+     ],
+     "lines": [
+      {
+       "name": [
+        "@Seg!A42"
+       ],
+       "y": "@Seg!F42:K42",
+       "color": "#3b3838",
+       "labels": true
+      }
+     ],
+     "caption": "長條＝代理營收增量、席位侵蝕、推論成本（皆為正數）；折線＝AI 淨效果。百萬美元，軸以十億計。推論成本取 Tokenomics 市場價。"
+    },
+    {
+     "type": "table",
+     "caption": "營收推導（情境 B；百萬美元除另註）",
+     "head": [
+      "項目",
+      "@Seg!F27",
+      "@Seg!G27",
+      "@Seg!H27",
+      "@Seg!I27",
+      "@Seg!J27",
+      "@Seg!K27"
+     ],
+     "rowgen": {
+      "sheet": "Seg",
+      "rows": "28-45",
+      "cols": [
+       "A",
+       "F",
+       "G",
+       "H",
+       "I",
+       "J",
+       "K"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1"
+      ],
+      "row_fmt": {
+       "29": {
+        "F": "n3",
+        "G": "n3",
+        "H": "n3",
+        "I": "n3",
+        "J": "n3",
+        "K": "n3"
+       }
+      }
+     }
+    },
+    {
+     "type": "table",
+     "caption": "情境驅動（三情境並排，進加權目標價；In 頁情境驅動對照）",
+     "head": [
+      "@In!B80",
+      "@In!D80",
+      "@In!E80",
+      "@In!F80"
+     ],
+     "rowgen": {
+      "sheet": "In",
+      "rows": "81-84",
+      "cols": [
+       "B",
+       "D",
+       "E",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "p1",
+       "p1",
+       "p1"
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "caption": "單一參數區間（In 頁；基準進主模型，敏感度低／高只用於敏感度頁、不進目標價）",
+     "head": [
+      "@In!B3",
+      "@In!D3",
+      "@In!E3",
+      "@In!F3",
+      "@In!G3"
+     ],
+     "rowgen": {
+      "sheet": "In",
+      "rows": "4-65",
+      "cols": [
+       "B",
+       "D",
+       "E",
+       "F",
+       "G"
+      ],
+      "fmts": [
+       "",
+       "n3",
+       "n3",
+       "n3",
+       ""
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "recon",
+   "title": "對帳：公司指引與共識",
+   "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "@Recon!A1"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "指引與共識對照",
+     "head": [
+      "項目",
+      "本模型",
+      "指引低",
+      "指引高",
+      "共識",
+      "說明"
+     ],
+     "rowgen": {
+      "sheet": "Recon",
+      "rows": "4-11",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       ""
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "caption": "口徑與未找到",
+     "head": [
+      "項目"
+     ],
+     "rowgen": {
+      "sheet": "Recon",
+      "rows": "13-29",
+      "cols": [
+       "A"
+      ],
+      "fmts": [
+       ""
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "status",
+   "title": "資料狀態",
+   "blocks": [
+    {
+     "type": "kv",
+     "items": [
+      [
+       "模型版本",
+       [
+        "$version",
+        "（",
+        "$date",
+        "）"
+       ]
+      ],
+      [
+       "版本與日期",
+       "@README!A1"
+      ],
+      [
+       "build_id",
+       "@Sens!D3"
+      ],
+      [
+       "來源 xlsx",
+       "$xlsx"
+      ],
+      [
+       "來源 xlsx 的雜湊指紋",
+       "$sha"
+      ],
+      [
+       "Tokenomics 快照",
+       "@Sources!B3"
+      ]
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "市場資料日期與失效條件"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A21",
+      "@README!A22"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "風險登錄",
+     "head": [
+      "風險",
+      "是否建模",
+      "理由",
+      "觀察指標"
+     ],
+     "rowgen": {
+      "sheet": "README",
+      "rows": "25-29",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D"
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：每頁的輸入、推導量與因果方向",
+     "head": [
+      "頁",
+      "輸入",
+      "推導量",
+      "因果方向"
+     ],
+     "rowgen": {
+      "sheet": "README",
+      "rows": "34-37",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D"
+      ]
+     }
+    },
+    {
+     "type": "h3",
+     "text": "「未找到」清單"
+    },
+    {
+     "type": "scan",
+     "needle": "未找到",
+     "collapse": true,
+     "summary": "展開：標為「未找到」的項目",
+     "sheets": {
+      "Recon": [
+       "A",
+       "F"
+      ],
+      "In": [
+       "B",
+       "H"
+      ],
+      "Q": [
+       "A"
+      ]
+     },
+     "empty": "沒有標為未找到的項目。"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,91 @@
+{
+ "company": "野村總合研究所 NRI",
+ "ticker": "4307",
+ "fiscal_year_end": "3 月 31 日（FY2027＝2026-04-01～2027-03-31）",
+ "model_sheet": "PL",
+ "note": "官方報告分部（IFRS 8）：2026-04 起改為 Consulting、Financial IT Solutions、Industrial IT Solutions、IT Platform Services、Others（澳洲子公司由 Industrial IT 移至 Financial IT）；FY2026 以新口徑重編（外部客戶營收，合計等於合併營收 814,708）。FY2024A、FY2025A 為舊口徑。分部營業利益用含內部交易的口徑（FY2026 舊口徑含 Industrial IT 減損 97,060）。產品線取公司固定揭露的產業別外部營收（Financial IT：Securities、Insurance、Banking、Other financial；Industrial IT：Distribution、Manufacturing, service & other）；占比自 1H27 揭露持平。金額百萬日圓（模型為十億日圓）。",
+ "official_segments": [
+  {
+   "name": "Consulting",
+   "label": "Consulting",
+   "period": "FY2026",
+   "value": 63556,
+   "unit": "¥M",
+   "source": "NRI 2026-10-29 決算短信 p.9（FY2026 外部客戶營收，2026-04 新口徑重編）；FY3/26 決算短信（2026-04-24）",
+   "date": "2026-10-29"
+  },
+  {
+   "name": "Financial IT Solutions",
+   "label": "Financial IT Solutions",
+   "period": "FY2026",
+   "value": 455522,
+   "unit": "¥M",
+   "source": "NRI 2026-10-29 決算短信 p.9（FY2026 外部客戶營收，2026-04 新口徑重編）；FY3/26 決算短信（2026-04-24）",
+   "date": "2026-10-29"
+  },
+  {
+   "name": "Industrial IT Solutions",
+   "label": "Industrial IT Solutions",
+   "period": "FY2026",
+   "value": 215511,
+   "unit": "¥M",
+   "source": "NRI 2026-10-29 決算短信 p.9（FY2026 外部客戶營收，2026-04 新口徑重編）；FY3/26 決算短信（2026-04-24）",
+   "date": "2026-10-29"
+  },
+  {
+   "name": "IT Platform Services",
+   "label": "IT Platform Services",
+   "period": "FY2026",
+   "value": 77039,
+   "unit": "¥M",
+   "source": "NRI 2026-10-29 決算短信 p.9（FY2026 外部客戶營收，2026-04 新口徑重編）；FY3/26 決算短信（2026-04-24）",
+   "date": "2026-10-29"
+  },
+  {
+   "name": "Others／Adjustments",
+   "label": "Others／Adjustments",
+   "period": "FY2026",
+   "value": 3077,
+   "unit": "¥M",
+   "source": "NRI 2026-10-29 決算短信 p.9（FY2026 外部客戶營收，2026-04 新口徑重編）；FY3/26 決算短信（2026-04-24）",
+   "date": "2026-10-29"
+  }
+ ],
+ "consolidated": {
+  "period": "FY2026",
+  "value": 814708,
+  "unit": "¥M",
+  "source": "FY3/26 決算短信（2026-04-24）"
+ },
+ "sublines": [
+  {
+   "parent": "Financial IT Solutions",
+   "labels": [
+    "Securities",
+    "Insurance",
+    "Banking",
+    "Other financial"
+   ],
+   "kind": "產品線（公司固定揭露的產業別外部營收）"
+  },
+  {
+   "parent": "Industrial IT Solutions",
+   "labels": [
+    "Distribution",
+    "Manufacturing, service & other"
+   ],
+   "kind": "產品線（公司固定揭露的產業別外部營收）"
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收（情境 A）",
+  "檢查：分部合計 − 合併營收（情境 B）",
+  "檢查：分部合計 − 合併營收（情境 C）",
+  "檢查：產品線合計 − 分部（情境 A）",
+  "檢查：產品線合計 − 分部（情境 B）",
+  "檢查：產品線合計 − 分部（情境 C）",
+  "檢查：分部營業利益合計 − 合併營業利益（情境 A；歷史對 Hist 公司值）",
+  "檢查：分部營業利益合計 − 合併營業利益（情境 B；歷史對 Hist 公司值）",
+  "檢查：分部營業利益合計 − 合併營業利益（情境 C；歷史對 Hist 公司值）"
+ ]
+}

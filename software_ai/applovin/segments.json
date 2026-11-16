@@ -1,0 +1,26 @@
+{
+ "company": "AppLovin",
+ "ticker": "APP",
+ "model_sheet": "PL",
+ "note": "官方報告分部：自 FY2025 10-K 起為單一營運及應報導分部 Advertising（FY2024 以前稱 Software Platform，另有 Apps 分部）；Apps 於 2025-06-30 出售，列停業單位，不入持續營運合併營收。分部之下無固定揭露的產品線（未找到）。命題模組（原型 A）：Advertising＝安裝量 × 單次安裝淨收入（公司只揭露年增率）。金額 US$M。",
+ "official_segments": [
+  {
+   "name": "Advertising",
+   "label": "Advertising",
+   "period": "FY2025",
+   "value": 5480.717,
+   "unit": "US$M",
+   "source": "AppLovin 10-K FY2025 Item 8 Statements of Operations（單一應報導分部；2026-02-19）；software_ai/applovin/data/facts_applovin.csv",
+   "url": "https://www.sec.gov/Archives/edgar/data/1751008/000175100826000010/app-20251231.htm"
+  }
+ ],
+ "consolidated": {
+  "period": "FY2025",
+  "revenue": 5480.717,
+  "check": "Advertising－合併營收（持續營運單位）：FY2023、FY2024、FY2025 與 2026 年前三季差 0（US$M）"
+ },
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ]
+}

@@ -1,0 +1,54 @@
+{
+ "company": "Palo Alto Networks",
+ "ticker": "PANW",
+ "model_sheet": "PL",
+ "note": "Palo Alto Networks 只有一個應報導分部（10-K FY2026 Note 19：一個 operating and reportable segment，CODM 為董事長暨執行長，以合併淨利衡量）。因此「官方分部」列採公司在損益表與 10-K Item 7 固定揭露的兩條營收線：Product 與 Subscription and support，其下 Subscription、Support 為 10-K 固定揭露的子列。命題模組（原型 P，按防護範圍計價）只驅動 Subscription and support 之下的「NGS ARR 相關營收」子列；另列「其他 Subscription and support（硬體支援、legacy、專業服務）」子列，兩個子列合計＝Subscription and support。Product 以成長路徑驅動。金額 US$M，會計年度 8 月 1 日至翌年 7 月 31 日。",
+ "single_reportable_segment": true,
+ "official_segments": [
+  {
+   "name": "Product",
+   "label": "Product",
+   "period": "FY2026",
+   "value": 2280,
+   "unit": "US$M",
+   "source": "PANW 8-K 附件 99.1 FY2026 Q4 財報新聞稿（2026-09-01）損益表；10-K FY2026 Item 7",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001327567/000132756726000019/ex991q426earningsrelease.htm",
+   "ttm2026q4": 2280
+  },
+  {
+   "name": "Subscription and support",
+   "label": "Subscription and support",
+   "period": "FY2026",
+   "value": 9200,
+   "unit": "US$M",
+   "source": "同上；10-K FY2026 Item 7（Subscription 6,239、Support 2,961）",
+   "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+   "ttm2026q4": 9200
+  }
+ ],
+ "consolidated": {
+  "period": "FY2026",
+  "revenue": 11480,
+  "check": "Product＋Subscription and support－合併營收：FY2022–FY2026 各年與 FY2026 Q1–Q4 各季差額皆為 0（四捨五入至 0.1 百萬）"
+ },
+ "sublines": [
+  {
+   "parent": "Subscription and support",
+   "labels": ["Subscription", "Support", "NGS ARR 相關營收", "其他 Subscription and support"],
+   "values": {
+    "FY2026": {"Subscription": 6239, "Support": 2961}
+   },
+   "drivers": {
+    "NGS ARR 相關營收": "（期初 NGS ARR＋期末 NGS ARR）÷ 2 × 認列於 S&S 的比例（命題模組 P：受保護單位 × 每單位年價；單位經濟變數名稱與 software_ai/unit_economics 一致）",
+    "其他 Subscription and support": "硬體附掛支援、legacy 附加訂閱、專業服務；FY2026 以 S&S 減 NGS ARR 相關營收推得，之後依成長路徑",
+    "Subscription": "只作 10-K 固定揭露的子列，預測期依 FY2026 占比拆分（展示用，不驅動）",
+    "Support": "同上"
+   }
+  }
+ ],
+ "check_labels": [
+  "檢查：Product＋Subscription and support－合併營收",
+  "檢查：NGS ARR 相關營收＋其他 Subscription and support－Subscription and support",
+  "檢查：Subscription＋Support－Subscription and support"
+ ]
+}
