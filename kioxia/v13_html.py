@@ -9,7 +9,7 @@ def apply(cfg, wb, ver="v0.5.5", ccy="日圓", unit_b="十億日圓", co="Kioxia
     fnd = lambda ws, p, start=1: next(r for r in range(start, ws.max_row + 1) if str(ws.cell(r, 1).value or "").strip().startswith(p))
     r13 = fnd(RD, "v1.3 展示層")
     RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
-    assert str(RD[f"A{RM['ver']}"].value).startswith(ver), RD[f"A{RM['ver']}"].value
+    assert ver + "（" in str(RD[f"A{RM['ver']}"].value), RD[f"A{RM['ver']}"].value   # v0.5.6：本版要點列前置 px1113 說明，v0.5.5 說明接在其後
     cfg["layout"] = "v1.3"
     fmt_u = lambda u: {"%": "p1", "US$B": "n2", "$B": "n2", "¥B": "n0", "百萬股": "n1", "¥": "n0", "USD": "n2", "$": "n2", "JPY": "n0", "x": "n2"}.get(str(u).strip(), "n1")
     # ---- 橫幅：白話說明＋對帳中揭露句；原說明移到估值章 ----

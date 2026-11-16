@@ -142,7 +142,7 @@ inp("da_y", "折舊攤銷（年）", U, 280, 320, 380, "Assumed", ER + "：第�
 for y, v, lo, hi in ((2026, 450, 400, 500), (2027, 470, 400, 550), (2028, 470, 400, 550), (2029, 470, 350, 550)):
     inp(f"cap_{y}", f"資本支出 FY{y}", U, lo, v, hi, "Interested-party", "TrendForce 2026-06-03：FY2026 ¥450B、FY2026–28 年均 ¥470B（較 FY2025 ¥283.7B +66%）" if y == 2026 else ("同上" if y < 2029 else "Assumed：延續 FY2026–28 年均"), "含合資廠 Kioxia 分攤；SanDisk 分攤另計於 sndk/")
 inp("payout", "股東回饋（股利＋買回）÷ 自由現金流", "%", 0.0, 0.2, 0.5, "Assumed", "FY2025 無股利；MarketScreener 共識 FY2026 每股股利 ¥266（Interested-party）", "以買回計（股數減少）")
-inp("px", "股價（2026-11-05 收盤）", PXU, None, 9324, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（第 35 點統一價格日；分割後）", "v0.5.3 為 2026-11-04 收盤 ¥10,735；v0.5.2 為 2026-10-23 收盤 ¥12,755（stockanalysis）；10-01 為 ¥19,100")
+inp("px", "股價（2026-11-13 收盤）", PXU, None, 9091, None, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）（分割後）", "v0.5.5 為 2026-11-05 收盤 ¥9,324；v0.5.3 為 2026-11-04 收盤 ¥10,735；v0.5.2 為 2026-10-23 收盤 ¥12,755（stockanalysis）；10-01 為 ¥19,100")
 inp("bb_px", "未來買回均價", PXU, None, "=px", None, "Assumed", "＝現價", "")
 # v0.5.3（第三輪修正）：2026-08 已執行的 ¥800B 買回（7-31 決議、8-3 起、8-10 公告取得完畢）扣現金並減股數；放在 C 節最後（其後各列下移，名稱引用不受影響）
 inp("bb800", "已執行買回（2026-08；FY2026 第二季）", U, None, 800, None, "Verified", "公司 2026-07-31 決議（上限 3,000 萬股（分割前）／¥800B）、2026-08-10 公告取得完畢；SBクリエイティブ ビジネス+IT「キオクシア 2026年7〜9月期決算」2026-10-30（https://www.sbbit.jp/article/st/187973，2026-11-06 讀取）：「8,000億円の自社株買い後もネット・キャッシュは8,127億円」", "PL 頁 FY2026 權益、淨現金扣除；DCF 淨現金改用 9-30 公司淨現金（已含本筆）")
@@ -525,10 +525,10 @@ rr = t0 + 10      # 0.2 節位置同 v0.4（q＝rr＋12＝第 26 列）
 q = rr + 12
 V.cell(q, 1, "0.2 Comparable（市場主流同業前瞻 P/B；記憶體慣例）").font = BOLD; T["h02"] = q
 hdr(V, q + 1, ["同業與前瞻 P/B", "代號", "前瞻 P/B", "日期", "來源", "標記"]); T["phd"] = q + 1
-PEERS = [("美光", "MU", "=656.39/(877.55/3.35)", "2026-11-05", "11-05 收盤 656.39（Yahoo Finance 日線收盤 2026-11-05）÷ FY2027E（2027-09）每股淨值（＝10-23 收盤 877.55 ÷ 頁面 P/B 3.35；MarketScreener 共識每股淨值（2026-10-25 擷取，未更新）；micron/ 模型同值）"),
-         ("SK 海力士", "000660.KS", "=1264000/(1277000/1.35)", "2026-11-05", "11-05 收盤 1,264,000（Yahoo Finance 日線收盤 2026-11-05）÷ 2027E 每股淨值（＝10-23 收盤 1,277,000 ÷ 頁面 P/B 1.35；MarketScreener 共識每股淨值（2026-10-25 擷取，未更新）；skhynix/ 模型同值）"),
-         ("三星電子", "005930.KS", "=201500/(215500/1.26)", "2026-11-05", "11-05 收盤 201,500（Yahoo Finance 日線收盤 2026-11-05）÷ 2027E 每股淨值（＝10-23 收盤 215,500 ÷ 頁面 P/B 1.26；MarketScreener 共識每股淨值（2026-10-25 擷取，未更新）；samsung/ 模型同值）"),
-         ("SanDisk", "SNDK", "=806.43/((313.8+553.1)/2)", "2026-11-05", "11-05 收盤 806.43（Yahoo Finance 日線收盤 2026-11-05；分割前）÷ MarketScreener 約 2027 年底每股淨值（FY2027、FY2028 年底平均；sndk/ 模型同口徑）")]   # v0.5.3：報價統一 2026-11-04 收盤
+PEERS = [("美光", "MU", "=778.31/(877.55/3.35)", "2026-11-13", "11-13 收盤 778.31（工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）；v0.5.5 為 11-05 收盤 656.39）÷ FY2027E（2027-09）每股淨值（＝10-23 收盤 877.55 ÷ 頁面 P/B 3.35；MarketScreener 共識每股淨值（2026-10-25 擷取，未更新）；micron/ 模型同值）"),
+         ("SK 海力士", "000660.KS", "=1216000/(1277000/1.35)", "2026-11-13", "11-13 收盤 1,216,000（工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）；v0.5.5 為 11-05 收盤 1,264,000）÷ 2027E 每股淨值（＝10-23 收盤 1,277,000 ÷ 頁面 P/B 1.35；MarketScreener 共識每股淨值（2026-10-25 擷取，未更新）；skhynix/ 模型同值）"),
+         ("三星電子", "005930.KS", "=206000/(215500/1.26)", "2026-11-13", "11-13 收盤 206,000（工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）；v0.5.5 為 11-05 收盤 201,500）÷ 2027E 每股淨值（＝10-23 收盤 215,500 ÷ 頁面 P/B 1.26；MarketScreener 共識每股淨值（2026-10-25 擷取，未更新）；samsung/ 模型同值）"),
+         ("SanDisk", "SNDK", "=885.01/((313.8+553.1)/2)", "2026-11-13", "11-13 收盤 885.01（工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）；分割前；v0.5.5 為 11-05 收盤 806.43）÷ MarketScreener 約 2027 年底每股淨值（FY2027、FY2028 年底平均；sndk/ 模型同口徑）")]   # v0.5.3：報價統一 2026-11-04 收盤
 for i, (nm, tk, pb, dt, src) in enumerate(PEERS, q + 2):
     V.cell(i, 1, nm); V.cell(i, 2, tk); c = V.cell(i, 3, pb); c.number_format = "0.00"
     if not isinstance(pb, str): c.font = BLUE
@@ -536,7 +536,7 @@ for i, (nm, tk, pb, dt, src) in enumerate(PEERS, q + 2):
 T["p1"] = q + 2; T["pl"] = q + 1 + len(PEERS)
 q = T["pl"] + 1
 tset(q, "pmed", "同業前瞻 P/B 中位數", [f"=MEDIAN(C{T['p1']}:C{T['pl']})", None, None], "0.00",
-     "記憶體同業（美光、SK 海力士、三星、SanDisk；無 A 股）。WDC（硬碟）不列入 P/B（僅有落後 P/B），P/E 並列參考見下方。Kioxia 自身 11-05 收盤 ÷ FY2027 年底（2028-03）共識每股淨值 1.19x（記憶體三家、sndk/ 同業表同值）")
+     "記憶體同業（美光、SK 海力士、三星、SanDisk；無 A 股）。WDC（硬碟）不列入 P/B（僅有落後 P/B），P/E 並列參考見下方。Kioxia 自身 11-13 收盤 ÷ FY2027 年底（2028-03）共識每股淨值 1.16x（記憶體三家、sndk/ 同業表同值）")
 tset(q + 1, "fbv", "12 個月後的前瞻每股淨值（情境加權）", ["=" + "+".join(f"tp_w{s}*(0.25*PL!{FYC[2027]}{PB[s]['bv']}+0.75*PL!{FYC[2028]}{PB[s]['bv']})" for s in SC), None, None], EF,
      "同業倍數＝現價 ÷ 約 14 個月後（約 2027 年底）每股淨值；對應 12 個月後（約 2027-10）用約 2028 年底每股淨值＝¼ × FY2027 年底（2028-03）＋¾ × FY2028 年底（2029-03）（會計年度 3 月，依月份調整）")
 tset(q + 2, "comptp", "Comparable 目標價", [f"=B{q}*B{q + 1}", None, None], MF, "同業中位數 × 前瞻每股淨值")
@@ -547,11 +547,11 @@ tset(q + 3, "feps", "12 個月後的前瞻 EPS（情境加權）", ["=tp_wA*" + 
 q += 5
 V.cell(q, 1, "並列參考：同業前瞻 P/E（不進目標價）").font = BOLD; T["h02b"] = q
 hdr(V, q + 1, ["同業與前瞻 P/E", "代號", "前瞻 P/E", "日期", "來源", "標記"]); T["ehd"] = q + 1
-PEERS_E = [("美光", "MU", "=656.39/173", "2026-11-05", "11-05 收盤 656.39（Yahoo Finance 日線收盤 2026-11-05）÷ MarketScreener FY2027 共識 EPS 173（micron/ 模型 In 頁）"),
-           ("SK 海力士", "000660.KS", "=1264000/475721", "2026-11-05", "11-05 收盤 1,264,000（Yahoo Finance 日線收盤 2026-11-05）÷ MarketScreener 2027 共識 EPS 475,721（skhynix/ 模型 In 頁）"),
-           ("三星電子", "005930.KS", "=201500/72279", "2026-11-05", "11-05 收盤 201,500（Yahoo Finance 日線收盤 2026-11-05）÷ MarketScreener 2027 共識 EPS 72,279（samsung/ 模型 In 頁）"),
-           ("SanDisk", "SNDK", "=806.43/217.4", "2026-11-05", "11-05 收盤 806.43（Yahoo Finance 日線收盤 2026-11-05；分割前）÷ MarketScreener FY2027（2027-06）共識 EPS 217.4"),
-           ("Western Digital", "WDC", "=267.63/(356.13/12.33)", "2026-11-05", "11-05 收盤 267.63（Yahoo Finance 日線收盤 2026-11-05）÷ 前瞻 EPS（＝stockanalysis 統計頁 10-26 收盤 356.13 ÷ Forward P/E 12.33；硬碟為主，參考）；v0.5.2 為 10-23 的 11.91")]   # v0.5.3：報價統一 2026-11-04 收盤
+PEERS_E = [("美光", "MU", "=778.31/173", "2026-11-13", "11-13 收盤 778.31（工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）；v0.5.5 為 11-05 收盤 656.39）÷ MarketScreener FY2027 共識 EPS 173（micron/ 模型 In 頁）"),
+           ("SK 海力士", "000660.KS", "=1216000/475721", "2026-11-13", "11-13 收盤 1,216,000（工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）；v0.5.5 為 11-05 收盤 1,264,000）÷ MarketScreener 2027 共識 EPS 475,721（skhynix/ 模型 In 頁）"),
+           ("三星電子", "005930.KS", "=206000/72279", "2026-11-13", "11-13 收盤 206,000（工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）；v0.5.5 為 11-05 收盤 201,500）÷ MarketScreener 2027 共識 EPS 72,279（samsung/ 模型 In 頁）"),
+           ("SanDisk", "SNDK", "=885.01/217.4", "2026-11-13", "11-13 收盤 885.01（工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）；分割前；v0.5.5 為 11-05 收盤 806.43）÷ MarketScreener FY2027（2027-06）共識 EPS 217.4"),
+           ("Western Digital", "WDC", "=295.65/(356.13/12.33)", "2026-11-13", "11-13 收盤 295.65（工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）；v0.5.5 為 11-05 收盤 267.63）÷ 前瞻 EPS（＝stockanalysis 統計頁 10-26 收盤 356.13 ÷ Forward P/E 12.33；硬碟為主，參考）；v0.5.2 為 10-23 的 11.91")]   # v0.5.3：報價統一 2026-11-04 收盤
 for i, (nm, tk, pe, dt, src) in enumerate(PEERS_E, q + 2):
     V.cell(i, 1, nm); V.cell(i, 2, tk); c = V.cell(i, 3, pe); c.number_format = "0.00"
     if not isinstance(pe, str): c.font = BLUE
@@ -567,7 +567,7 @@ q += 2
 tset(q, "tpw", "目標價（DCF 與 Comparable 加權）", [f"=tp_w_dcf*B{T['dcftp']}+(1-tp_w_dcf)*B{T['comptp']}", None, None], MF, "tp_w_dcf × DCF 目標價＋（1 − tp_w_dcf）× Comparable 目標價；tp_w_dcf 見 In 頁")
 tset(q + 1, "comp2", "Comparable 目標價（市場主流同業法）", [f"=B{T['comptp']}", None, None], MF, "引用 0.2（前瞻 P/B）")
 tset(q + 2, "cons", "市場共識目標價", ["=cons_tp", None, None], MF, "MarketScreener（16 位，2026-10-16 收盤時）：平均 ¥36,929（最低 16,333、最高 66,667；分割後）；stockanalysis（16 位，09-09）分割調整後 ¥37,085")
-tset(q + 3, "upw", "上檔空間：加權目標價", [f"=B{q}/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-05 收盤）")
+tset(q + 3, "upw", "上檔空間：加權目標價", [f"=B{q}/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-13 收盤）")
 tset(q + 4, "upc", "上檔空間：Comparable 目標價", [f"=B{q + 1}/px-1", None, None], "0.0%")
 x = f"B{q + 3}"
 tset(q + 5, "tier", "上檔空間級距", [f'=IF({x}>0.5,"大於 50%",IF({x}>0.25,"25%–50%",IF({x}>=0,"0%–25%",IF({x}>=-0.25,"0%～−25%",IF({x}>=-0.5,"−25%～−50%","小於 −50%")))))', None, None], "@", "以「上檔空間：加權目標價」分六級（Andy 2026-10-25 14:00）")
@@ -586,7 +586,7 @@ V.cell(q + 13, 1, "目標價方法")
 b5 = 80
 V.cell(b5, 1, "5. 目前倍數（僅供參考）").font = BOLD; hdr(V, b5 + 1, ["項目", "A／數值", "B", "C", "備註"]); CMH = b5 + 1
 fr = b5 + 2; CUR = {}
-for key, nm, fs, fm, note in (("px", "現價（2026-11-05 收盤）", ["=px"], EF, "Yahoo Finance 日線收盤 2026-11-05（分割後）"),
+for key, nm, fs, fm, note in (("px", "現價（2026-11-13 收盤）", ["=px"], EF, "Yahoo Finance 日線收盤 2026-11-13（分割後；工作單 px1113）"),
                               ("pe26", "P/E：現價 ÷ FY2025 EPS 341.4", ["=px/a25_eps"], "0.0", "落後（分割後）"),
                               ("pb26", "P/B：現價 ÷ 2026-06-30 每股淨值", ["=px/(eq_j/sh0*1000)"], "0.00", "權益 2,404.3 ÷ 1,644.0 百萬股"),
                               ("pe27", "現價 ÷ FY2027 EPS（模型）", [f"=px/PL!E{SUMR[(s, 'eps')]}" for s in SC], "0.0", "A／B／C"),
@@ -767,7 +767,7 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 130
 RD = wb.create_sheet("README", 0)
 VA = lambda k, c="B": f"Val!{c}{T[k]}"
 OBS = [
- f'="1. 加權目標價 ¥"&TEXT({VA("tpw")},"#,##0")&"，相對現價 ¥"&TEXT(px,"#,##0")&"（2026-11-05 收盤）"&TEXT({VA("upw")},"+0.0%;−0.0%")&"。主因是現價的倍數低於同業：Kioxia 現價 ÷ 2028-03 共識每股淨值 1.63x，同業中位數 "&TEXT({VA("pmed")},"0.00")&"x（SanDisk 2.86x、美光 3.35x），Comparable ¥"&TEXT({VA("comptp")},"#,##0")&"（"&TEXT({VA("upc")},"+0%;−0%")&"）；DCF（v0.5 標準版 FCFF＋WACC）¥"&TEXT({VA("dcftp")},"#,##0")&IF({VA("dcftp")}>px," 也高於現價"," 低於現價")&"（現價為 FY2027 EPS（A）的 "&TEXT(Val!B{CUR["pe27"]},"0.0")&" 倍）。股價 10-09 至 10-23 已跌 27%（17,505 → 12,755）。"',
+ f'="1. 加權目標價 ¥"&TEXT({VA("tpw")},"#,##0")&"，相對現價 ¥"&TEXT(px,"#,##0")&"（2026-11-13 收盤）"&TEXT({VA("upw")},"+0.0%;−0.0%")&"。主因是現價的倍數低於同業：Kioxia 現價 ÷ 2028-03 共識每股淨值 1.63x，同業中位數 "&TEXT({VA("pmed")},"0.00")&"x（SanDisk 2.86x、美光 3.35x），Comparable ¥"&TEXT({VA("comptp")},"#,##0")&"（"&TEXT({VA("upc")},"+0%;−0%")&"）；DCF（v0.5 標準版 FCFF＋WACC）¥"&TEXT({VA("dcftp")},"#,##0")&IF({VA("dcftp")}>px," 也高於現價"," 低於現價")&"（現價為 FY2027 EPS（A）的 "&TEXT(Val!B{CUR["pe27"]},"0.0")&" 倍）。股價 10-09 至 10-23 已跌 27%（17,505 → 12,755）。"',
  f'="2. 本模型 FY2026 EPS（A）¥"&TEXT(PL!D{SUMR[("A", "eps")]},"#,##0")&"，比共識 ¥3,486 "&TEXT(PL!D{SUMR[("A", "eps")]}/cons_eps26-1,"+0%;−0%")&"；上半年已由兩季實績鎖定（淨利 ¥2,202B）。v0.3 滾入第二季（營收 ¥2,480.0B、營業利益 ¥1,994.7B，皆高於指引）。v0.4 對帳：模型第三季營收 ¥"&TEXT(Recon!C7,"#,##0")&"B，比指引 ¥2,500B "&TEXT(Recon!D7,"+0.0%;−0.0%")&"（v0.3 為 +21.5%）。原因是市場層把合約價當實現價（2026Q3 實現 +25%、2026Q4 改 +8.1%，兩季累計不變），且份額只用出貨提前的單一季（改取兩季平均）；餘差為匯率假設與公司出貨季別移動（同一會計年度內）。"',
  f'="3. 營收以美元計、成本以日圓計：匯率 145／170 日圓使 FY2028 EPS（A）變動 "&TEXT(Sens!H9,"+0%;−0%")&"／"&TEXT(Sens!H10,"+0%;−0%")&"；2027 起季價 ±20% 為 "&TEXT(Sens!H5,"+0%;−0%")&"／"&TEXT(Sens!H6,"+0%;−0%")&"。情境 C 的 FY2029 毛利率降到 "&TEXT(PL!G{SUMR[("C", "ygm")]},"0%")&"。追蹤：TrendForce 每季初的 NAND 合約價、日圓匯率、SanDisk 2026-10-29 財報（合資群位元）。"']
 PROP = ("Kioxia 是全球第三、四大 NAND 廠（2Q26 營收市占 13.6%），與 SanDisk 共用四日市、北上合資產能；盈餘由 NAND 合約價循環、AI 推論帶動的企業級 SSD 位元與日圓匯率決定。"
@@ -918,10 +918,11 @@ RD.cell(_r, 1, 'v0.5.3（2026-11-06）：第三輪（合併前）修正（共用
 RD.cell(_r, 1, 'v0.5.4：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守。新舊對照（v0.5.3 → v0.5.4，當版成品）：現價 ¥10,735 → ¥9,324；同業前瞻 P/B 中位數 1.93 → 1.60（美光 3.04 → 2.51、SK 海力士 1.48 → 1.34、三星 1.27 → 1.18、SanDisk 2.39 → 1.86）；DCF 目標價 ¥14,833 → ¥14,853，Comparable 目標價 ¥17,409 → ¥14,808，加權目標價 ¥16,121 → ¥14,830，上檔空間 +50.2% → +59.1%，投資建議 強力買進 → 強力買進。'); _r += 1
 # v0.5.3：README!A4（重點觀察 1）主因改為公式判定（上檔來源占比、每股淨值成長 vs 倍數差；同一時間窗）
 assert str(RD["A4"].value).startswith('="1. 加權目標價')
-RD["A4"] = _fx("1. 加權目標價 ¥{tpw|#,##0}，相對現價 ¥{px|#,##0}（2026-11-05 收盤）{upw|SP}。{src}：加權目標價與現價的差距中 DCF 占 {dcfsh|0%}、Comparable 占 {compsh|0%}（各自權重 ×（目標價 − 現價））。"
+RD["A4"] = _fx("1. 加權目標價 ¥{tpw|#,##0}，相對現價 ¥{px|#,##0}（2026-11-13 收盤）{upw|SP}。{src}：加權目標價與現價的差距中 DCF 占 {dcfsh|0%}、Comparable 占 {compsh|0%}（各自權重 ×（目標價 − 現價））。"
                "Comparable ¥{comp|#,##0}（{upc|+0%;−0%}）拆成兩個因素相乘（同一時間窗）：每股淨值由約 2027 年底成長到約 2028 年底（本模型，情境加權）{bvg|+0%;−0%}，同業前瞻 P/B 中位數 {pmed|0.00} 倍比現價隱含的約 2027 年底 P/B（{pxbv27|0.00} 倍）{pmg|+0%;−0%}，{cdrv}。"
                "DCF（標準版 FCFF＋WACC）¥{dcftp|#,##0}（{dcfup|+0%;−0%}）。")
 
+PX1113_ROW = "v0.5.6（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）：現價 ¥9,324 → ¥9,091；同業前瞻 P/B 中位數 1.60 → 1.66（美光 2.51 → 2.97、SK 海力士 1.34 → 1.29、三星 1.18 → 1.20、SanDisk 1.86 → 2.04；SanDisk 用分割前 11-13 收盤 885.01）；DCF 目標價 ¥14,483 → ¥14,487，Comparable 目標價 ¥14,795 → ¥15,489，加權目標價 ¥14,639 → ¥14,988，上檔空間 +57.0% → +64.9%，投資建議 強力買進 → 強力買進；共識、rf、預測匯率與模型假設不變。"
 # ---------------- v0.5.5（2026-11-15）：三層協調 C4 兩讀數（tools/coord；快照 kioxia/coord_alt.json）＋個股 HTML 版面規格 v1.3＋C0（公司實績）；kioxia/v055_post.py 只新增頁與列 ----------------
 sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
 import coord as COORD  # noqa: E402
@@ -931,8 +932,17 @@ if _CR:
     if not os.environ.get("KIOXIA_OVERRIDE") and not os.environ.get("KIOXIA_SNAP"):
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
         import v055_post  # noqa: E402
-        print(v055_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR,
-                              dict(PB=PB, EXT=EXT, SUMR=SUMR, FYC=FYC, EXTC=EXTC, QC=QC, T=T, TS=_TS, UR=UR, UCOL=UCOL, NAND_F=rel(NAND_F))))
+        _RES = v055_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR,
+                               dict(PB=PB, EXT=EXT, SUMR=SUMR, FYC=FYC, EXTC=EXTC, QC=QC, T=T, TS=_TS, UR=UR, UCOL=UCOL, NAND_F=rel(NAND_F)))
+        print(_RES)
+        # v0.5.6（2026-11-16，工作單 px1113）：現價與同業報價改 2026-11-13 收盤；README A1 版號與「本版要點」列（HTML 讀此列）前置本版說明
+        _RD6 = wb["README"]
+        _h6 = _RD6["A1"].value.split("；", 1)
+        assert "v0.5.5" in _h6[0]
+        _RD6["A1"] = _h6[0].replace("v0.5.5", "v0.5.6", 1) + "；" + _h6[1] + "；v0.5.6（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）"
+        _vr = _RES["readme"]["ver"]
+        assert str(_RD6.cell(_vr, 1).value).startswith("v0.5.5（")
+        _RD6.cell(_vr, 1).value = PX1113_ROW + "上一版：" + _RD6.cell(_vr, 1).value
 wb.save(sys.argv[1])
 RULER = [i for i in range(nr, tr) if isinstance(V.cell(i, 1).value, str) and V.cell(i, 1).value.startswith("規則值：")]
 RC_FMT = {}
