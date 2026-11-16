@@ -113,8 +113,8 @@ MB = "https://www.marketbeat.com/stocks/nasdaq/msft/chart"
 SA = "https://stockanalysis.com/stocks/msft/"
 
 sec("A. 股價、股數與資本結構（評價日 2026-09-30＝FY27Q1 季底〔v0.3：2026-06-30〕；目標價時點＝今日 2026-10-29 後 12 個月）")
-inp("px", "現價（2026-11-05 收盤）", "US$", None, 535.93, None, "Verified", "Yahoo Finance MSFT 日線 https://query1.finance.yahoo.com/v8/finance/chart/MSFT?range=5d&interval=1d（2026-11-05 收盤 535.93、前日 555.80；擷取 2026-11-06）",
-    "Motley Fool〈Stock Market Today, Nov. 5〉535.93、MarketAlleys 收盤表 535.93（−3.58%）三來源一致（docs/reports/20261105_收盤價_個股換價來源.md）；v0.3.6 為 2026-10-28 收盤 531.01（MarketBeat、247wallst）")
+inp("px", "現價（2026-11-13 收盤）", "US$", None, 523.88, None, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（markets/invest_map/data/closes_20261020_20261113.csv）MSFT 523.88；v0.3.7～v0.3.8 為 2026-11-05 收盤 535.93",
+    "v0.3.7 的 535.93（11-05）曾由 Yahoo Finance、Motley Fool、MarketAlleys 三來源一致（docs/reports/20261105_收盤價_個股換價來源.md）；v0.3.6 為 2026-10-28 收盤 531.01")
 inp("sh_dil26", "FY2026 稀釋加權股數", "十億股", None, fb("is.sharesDilW.fy2026"), None, "Verified", FX + "｜is.sharesDilW.fy2026（10-K FY2026）", "v0.3 DCF 每股的分母（評價日 2026-06-30）")
 inp("sh_basic26", "FY2026 基本加權股數", "十億股", None, fb("is.sharesBasicW.fy2026"), None, "Verified", FX + "｜is.sharesBasicW.fy2026", "—")
 inp("dil_gap", "稀釋與基本股數差", "十億股", None, "=sh_dil26-sh_basic26", None, "Derived", "FY2026 稀釋 − 基本", "預測期稀釋股數＝期間平均流通股數＋此差額")
@@ -1076,7 +1076,7 @@ vhead("h03", ["項目", "數值", "對照", "對照", "說明"])
 vset("tp", "目標價（DCF 與 Comparable 加權）", [f"=w_dcf*{B3('dcftp')}+(1-w_dcf)*{B3('comp')}"], "#,##0.00", "w_dcf × DCF ＋（1 − w_dcf）× 分部加總；[判斷] 預設 50／50；主值＝讀法 2")
 vset("dcf2", "DCF 目標價（情境加權）", [f"={B3('dcftp')}"], "#,##0.00")
 vset("cons", "市場共識目標價", ["=cons_tp", "=cons_tp_lo", "=cons_tp_hi"], "#,##0.00", "S&P（經 StockAnalysis）57 位平均；C、D＝最低、最高（2026-10-27；財報後調整未反映）；MarketBeat 49 位 596.07")
-vset("px", "現價（2026-11-05 收盤）", ["=px"], "#,##0.00", "Yahoo Finance、Motley Fool、MarketAlleys（2026-11-05 收盤 535.93；v0.3.6 為 10-28 收盤 531.01）")
+vset("px", "現價（2026-11-13 收盤）", ["=px"], "#,##0.00", "工作單 px1113；Yahoo Finance 日線 2026-11-13 收盤 523.88；v0.3.7～v0.3.8 為 11-05 收盤 535.93、v0.3.6 為 10-28 收盤 531.01")
 vset("up", "上檔空間：加權目標價", [f"={B3('tp')}/px-1"], "0.0%", "目標價 ÷ 現價 − 1")
 vset("upc", "上檔空間：Comparable 目標價", [f"={B3('comp')}/px-1"], "0.0%")
 UP = B3("up")
@@ -1184,7 +1184,7 @@ CASE_KEY = {"讀法 1（自用 AI 只計成本）": "internal_ai_reading", "k �
             "ERP 4.5%": "erp", "ERP 6%": "erp", "永續期新投資報酬 WACC＋5pt": "ronic_prem", "SOTP 倍數 −20%": "m_sw m_cloud m_ads m_game m_pc", "SOTP 倍數 +20%": "m_sw m_cloud m_ads m_game m_pc"}
 ALT_KEY = ["pace_epoch cap_epoch", "k_long_lo p_long_lo", "tv_alt", "m_own", "internal_ai_reading pace_epoch", "shadow_base", "floor", "floor", "g_q2_win",
            "nonnv pace_nv0", "nonnv", "tgt_alt", "oai_stake26", "oai_stake", "oai_stake liq_disc", "w_dcf", "w_dcf", "w_A w_B w_C", "w_B"]
-# v0.3.3：整本重算案例（In 頁低／高；microsoft/sens_v033.py 產生 microsoft/data/sens_v037_20261106.json；v0.3.5 起，v0.3.6 改名沿用）
+# v0.3.3：整本重算案例（In 頁低／高；microsoft/sens_v033.py 產生 microsoft/data/sens_v039_20261116.json；v0.3.5 起，v0.3.6 改名沿用）
 def _f(k, v):
     u = INR[k][2]
     return f"{v * 100:.4g}%" if u in ("%", "pt") else f"{v:,.4g}"
@@ -1212,7 +1212,7 @@ for k, lab, grp, ex in (("mw_ext_26", "FY2026 年底在役對外 AI MW", "命題
                         ("al_ind", "SOTP 利益率分配：Industry", "評價：SOTP 分配", ""), ("al_fro", "SOTP 利益率分配：Frontier", "評價：SOTP 分配", ""),
                         ("al_srch", "SOTP 利益率分配：Search and advertising", "評價：SOTP 分配", "")):
     RCASES += _rc(k, lab, grp, ex)
-_SP = ARGS.sens or os.path.join(HERE, "data", "sens_v037_20261106.json")
+_SP = ARGS.sens or os.path.join(HERE, "data", "sens_v039_20261116.json")
 SENSJ = json.load(open(_SP, encoding="utf-8")) if (os.path.exists(_SP) and not ARGS.set) else {}
 CUR["Sens"] = SENS_BLK0
 srow = 4
@@ -1386,7 +1386,7 @@ if ATTR:
     rrow("v0.3 加權目標價（以本程式 --legacy-q1 等設定重現；v0.3 成品 385.56）", st[0]["tp"], None, f"重現差 {st[0]['tp'] - 385.56225022499:+.6f}", fmt="0.00")
     for i in range(1, len(st)):
         rrow(STEPN[st[i]["key"]], st[i]["tp"] - st[i - 1]["tp"], None, f"累計 {st[i]['tp']:.2f}；讀法 1 {st[i]['tp_r1']:.2f}", fmt="0.00")
-    rrow("(g) v0.3.7 現價 531.01 → 535.93（2026-11-05 收盤；只經 WACC 權重與回購價）", f"=Val!$B${VR_['tp']}-{st[-1]['tp']!r}", None, f"v0.3.1～v0.3.6 加權目標價 {st[-1]['tp']:.2f}（v0.3.2～v0.3.6 基準數值不變）", fmt="0.00")
+    rrow("(g) v0.3.7 現價 531.01 → 535.93（2026-11-05 收盤）→ v0.3.9 換 523.88（2026-11-13 收盤）；只經 WACC 權重與回購價", f"=Val!$B${VR_['tp']}-{st[-1]['tp']!r}", None, f"v0.3.1～v0.3.6 加權目標價 {st[-1]['tp']:.2f}（v0.3.2～v0.3.6 基準數值不變）", fmt="0.00")
     rrow("v0.3.7 加權目標價（本檔 Val 頁）", f"=Val!$B${VR_['tp']}", None, "—", fmt="0.00")
     n_ = len(st) + 1
     rrow("檢查：v0.3 ＋ (a)～(g) − v0.3.7（應為 0）", f"=SUM(B{r0}:B{r0 + n_ - 1})-B{r0 + n_}", None, "拆解 JSON 與本檔不同步時不為 0（重跑 attrib_v031.py）", fmt="0.000")
@@ -1437,7 +1437,7 @@ SRC = [
     ("k 證據（IREN 長約、Silicon Data H100 指數、Azure 牌價）", "2026-10-08", "microsoft/data/kevidence_microsoft_20261008.json", "Analogy／Verified"),
     ("市場共識（MarketScreener、S&P 經 StockAnalysis）", "2026-10-08", "microsoft/data/consensus_msft_20261008.json", "Interested-party"),
     ("MarketBeat 報價頁（2026-10-28 收盤 531.01；v0.3.6 現價）", "2026-10-29", MB, "Verified"),
-    ("Yahoo Finance MSFT 日線（2026-11-05 收盤 535.93；v0.3.7 現價）", "2026-11-06", "https://query1.finance.yahoo.com/v8/finance/chart/MSFT?range=5d&interval=1d", "Verified"),
+    ("Yahoo Finance MSFT 日線（2026-11-13 收盤 523.88；v0.3.9 現價，closes_20261020_20261113.csv；v0.3.7 為 11-05 收盤 535.93）", "2026-11-16", "https://query1.finance.yahoo.com/v8/finance/chart/MSFT?range=5d&interval=1d", "Verified"),
     ("Motley Fool〈Stock Market Today, Nov. 5〉（MSFT 535.93）", "2026-11-05", "https://www.fool.com/coverage/stock-market-today/2026/11/05/stock-market-today-nov-5-nasdaq-suffers-worst-day-in-18-months-as-ai-trade-comes-under-fire/", "Verified"),
     ("247wallst 財報直播頁（報價 531.01、−0.06%；FY27Q1 共識 EPS 4.72、營收 90.75）", "2026-10-28", "https://247wallst.com/investing/2026/10/28/live-will-microsoft-crush-q1-earnings-tonight-after-the-bell/", "Interested-party"),
     ("StockAnalysis 預測頁（S&P 共識目標價 605.12、FY2027 營收 391.58、EPS 19.76）", "2026-10-27", SA + "forecast/", "Interested-party"),
@@ -1464,7 +1464,7 @@ SO.column_dimensions["B"].width = 90; SO.column_dimensions["C"].width = 22; SO.c
 # =====================================================================================
 RD = WS["README"]
 RB = BL["B"]
-RD["A1"] = "Microsoft（MSFT）個股模型 v0.3.8 — 命題＋官方營收分部 → 損益表（2026-11-15；v0.3.8 只改展示層並新增 RevDCF、Coord 頁與標準損益表〔個股 HTML 版面規格 v1.3；三層協調 C0 實績對帳〕，數值不變；v0.3.7 只換現價為 2026-11-05 收盤 535.93；v0.3.6 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；數值同 v0.3.1〔2026-10-29 季度滾動〕；資料截至 FY27Q1〔2026-09-30〕；評價日 2026-09-30、目標價時點 2027-10-29）"
+RD["A1"] = "Microsoft（MSFT）個股模型 v0.3.9 — 命題＋官方營收分部 → 損益表（2026-11-16；v0.3.9 只換現價為 2026-11-13 收盤 523.88〔工作單 px1113〕，其餘輸入不變；v0.3.8 只改展示層並新增 RevDCF、Coord 頁與標準損益表〔個股 HTML 版面規格 v1.3；三層協調 C0 實績對帳〕，數值不變；v0.3.7 只換現價為 2026-11-05 收盤 535.93；v0.3.6 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；數值同 v0.3.1〔2026-10-29 季度滾動〕；資料截至 FY27Q1〔2026-09-30〕；評價日 2026-09-30、目標價時點 2027-10-29）"
 RD["A2"] = "工作表：README → In → Q → Thesis → Seg → PL → CF → Val → Recon → Sens → Sources。金額十億美元；財年 6 月結束（FY2027＝2026-07～2027-06）"
 RD["A3"] = "命題：AI 能否同時在 Azure（算力）與 Microsoft 365（Copilot 應用）變現，撐住翻倍的資本支出。"
 RD["A4"] = "核心問題：FY2029 的 AI 增量營業利益能否覆蓋 AI 資本支出的資金成本（AI 增量 ROIC 對 WACC），且自由現金流不需停止回購。"
