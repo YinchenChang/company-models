@@ -110,12 +110,13 @@ def own_fpe(wb, P, log, done):
 def dates(wb, P, log, done):
     """非歷史說明格內的現價日期字樣 2026-11-05 收盤 → 2026-11-13 收盤（rf 等不在範圍的日期不動）"""
     d0 = P["d0"]; s0, s1 = d0[5:], NEW[5:]
-    pats = ((f"{d0} 收盤", f"{NEW} 收盤"), (f"{s0} 收盤", f"{s1} 收盤"), (f"（{d0}）", f"（{NEW}）")) + tuple(P.get("dates_extra", ()))
+    pats = ((f"{d0} 收盤", f"{NEW} 收盤"), (f"{s0} 收盤", f"{s1} 收盤"), (f"（{d0}）", f"（{NEW}）"),
+            (f"統一為 {NEW} 收盤（2026-11-06 更新）", f"統一為 {NEW} 收盤（2026-11-16 更新）")) + tuple(P.get("dates_extra", ()))
     n = 0
     for ws, c in _each_str(wb):
         if (ws.title, c.coordinate) in done:
             continue
-        if _is_hist(ws, c) or re.search(rf"(為|原|改|前一版[:：]?|前一版來源[:：]?) ?{d0}", c.value) or "公債" in c.value or str(ws.cell(c.row, 1).value) == "rf":
+        if _is_hist(ws, c) or re.search(rf"(原|改|前一版[:：]?|前一版來源[:：]?) ?{d0}", c.value) or "公債" in c.value or str(ws.cell(c.row, 1).value) == "rf":
             continue
         v = c.value
         for a, b in pats:
