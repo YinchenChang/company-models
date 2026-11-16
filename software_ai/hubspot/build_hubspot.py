@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """HubSpot（HUBS）個股模型 v0.1 建置腳本（AI 軟體應用 Project；原型 S：按席位計價，AI 代理按任務計價）。
 
-用法（由 make_v01.sh 呼叫；敏感度與反解由 sens_hubspot.py 呼叫本檔）：
+用法（由 make_v01.sh 呼叫；敏感度與反解由 敏感度程式 呼叫本檔）：
   python3 build_hubspot.py <輸出 raw.xlsx> [--sens data/sens_v01.json] [--kreq data/kreq_v01.json] [--set 鍵=值 ...]
 公開 repo：只含公司與市場事實，不含任何個人情境。本版未做先驗。
 """
@@ -106,7 +106,7 @@ SIDE_NOTE = {"tk_pscale": "（上界：只動成本一邊，售價不連動；�
 
 
 def case_jobs():
-    """敏感度案例清單：[(key, side, label, setting, [(k, v)])]，供 sens_hubspot.py 使用"""
+    """敏感度案例清單：[(key, side, label, setting, [(k, v)])]，供 敏感度程式 使用"""
     out = []
     for it in INP:
         if it[0] == SEC:
@@ -913,13 +913,13 @@ def recon(wb, RC, VR, kreq, keyrow):
     r += 1
     sec("2. 指引差距歸因（Q4 2026 營收）", ["項目", "數值", "說明"])
     row("q4gap", "Q4 營收：模型 − 指引中點（US$M）", [f"=Q4E!B{q['rev']}-g_rev_q4"], ["+#,##0.0;-#,##0.0"], "落差全數來自 Q4 ASRPC 季增假設")
-    row("q4_implied", "指引中點隱含的 Q4 ASRPC 季增（假設專業服務與淨增同基準）", [f"=((g_rev_q4/(1+ps_pct))*4/Q4E!B{q['avg']}*1000000)/h_asrpc_q326-1"], ["0.0%"], "模型基準取持平（0%）與此值之間（In 頁 q4_asrpc）")
+    row("q4_implied", "指引中點隱含的 Q4 ASRPC 季增（假設專業服務與淨增同基準）", [f"=((g_rev_q4/(1+ps_pct))*4/Q4E!B{q['avg']}*1000000)/h_asrpc_q326-1"], ["0.0%"], "模型基準取持平（0%）與此值之間（In 頁第四季每客戶營收季增）")
     row("q4_pct", "落差占 Q4 營收", [f"=B{A['q4gap']}/g_rev_q4"], ["+0.0%;-0.0%"], "")
-    row("m27", "管理層 2027 非 GAAP 營業利益率目標（中點）vs 模型 FY2027 非 GAAP 營業利益率", [f"=PL!G{PBB['ngopm']}", "=g_m27"], ["0.0%", "0.0%"], "模型以歷史增量利益率（inc_m，工作單 G3.1）延伸，不採用管理層目標；管理層 23–24%（2027）、30%（2030）為 Interested-party，只在此對照")
+    row("m27", "管理層 2027 非 GAAP 營業利益率目標（中點）vs 模型 FY2027 非 GAAP 營業利益率", [f"=PL!G{PBB['ngopm']}", "=g_m27"], ["0.0%", "0.0%"], "模型以歷史增量利益率（增量利益率，工作單 G3.1）延伸，不採用管理層目標；管理層 23–24%（2027）、30%（2030）為 Interested-party，只在此對照")
     r += 1
     sec("3. 反解：支持現價所需的主導變數（整本重算；快照）", ["項目", "數值", "說明"])
     kr = kreq or {}
-    row("k_key", "主導變數：增量非 GAAP 營業利益率（inc_m；基準＝FY2023–FY2025 斜率）", [kr.get("base", None)], ["0.0%"], "營收每增 1 美元的營業利益增量；建置時整本重算快照")
+    row("k_key", "主導變數：增量非 GAAP 營業利益率（增量利益率；基準＝FY2023–FY2025 斜率）", [kr.get("base", None)], ["0.0%"], "營收每增 1 美元的營業利益增量；建置時整本重算快照")
     row("k_req", "反解值：使加權目標價＝現價所需的增量利益率", [kr.get("required", None)], ["0.0%"], "割線法，LibreOffice 整本重算；超過 100% 表示單靠此變數無解")
     row("k_m", "反解值對應的 FY2027 非 GAAP 營業利益率", [kr.get("margin27", None)], ["0.0%"], "對照：管理層 2027 目標 23–24%")
     row("k_tp", "核對：反解值代入後的加權目標價（US$）", [kr.get("tp", None)], ["0.00"], "應≈現價")
@@ -979,7 +979,7 @@ def recon(wb, RC, VR, kreq, keyrow):
 def readme(wb, RD, build_id, VR, RVA, RCA, vw, SENS):
     TBB, PBB = TB["B"], PB["B"]
     f_(RD, "A1", tf(f"HubSpot（HUBS）個股模型 {VERSION}｜build_id {build_id}｜資料截止日 ", ("data_date", "yyyy-mm-dd"), f"｜成品日 {BUILD_DATE}｜股價基準日 ", ("px_date", "yyyy-mm-dd"), "｜評價日 ", ("val_date", "yyyy-mm-dd"), "｜本版未做先驗"))
-    f_(RD, "A2", f"{VERSION} 要點：首版。依 software_ai 工作單 G 與 G2 建立：命題模組＝原型 S（按席位計價）單位經濟：每客戶訂閱營收受席位被 AI 取代侵蝕，AI 代理按任務計價為增量，三情境；官方分部為單一分部，營收線＝訂閱、專業服務與其他；FCFF DCF 到 FY2032＋同業前瞻 P/E 法各半；推論成本讀 Tokenomics v22.0 快照。未做先驗。")
+    f_(RD, "A2", f"{VERSION} 要點：首版。依 工作單 G 與 G2 建立：命題模組＝原型 S（按席位計價）單位經濟：每客戶訂閱營收受席位被 AI 取代侵蝕，AI 代理按任務計價為增量，三情境；官方分部為單一分部，營收線＝訂閱、專業服務與其他；FCFF DCF 到 FY2032＋同業前瞻 P/E 法各半；推論成本讀 Tokenomics v22.0 快照。未做先驗。")
     f_(RD, "A3", tf("命題：AI 進入 CRM 後，HubSpot 的價值被重新分配：按任務計價的 AI 代理（Customer Agent 每次解決 0.50 美元）是增量，但席位被取代是侵蝕。情境 B 下 FY2032 AI 淨效果 US$M ", (f"Thesis!L{TB['B']['net']}", "#,##0"),
                     "（按任務營收 ", (f"Thesis!L{TB['B']['aiRev']}", "#,##0"), " − 席位取代損失 ", (f"Thesis!L{TB['B']['loss']}", "#,##0"), " − 增量推論成本 ", (f"Thesis!L{TB['B']['inc']}", "#,##0"), "）。"))
     f_(RD, "A4", tf("核心問題：FY2032 的 AI 淨效果在情境 A／B／C 各為 US$M ", (f"Thesis!L{TB['A']['net']}", "#,##0"), "／", (f"Thesis!L{TB['B']['net']}", "#,##0"), "／", (f"Thesis!L{TB['C']['net']}", "#,##0"),
@@ -1048,8 +1048,8 @@ def readme(wb, RD, build_id, VR, RVA, RCA, vw, SENS):
 
 
 def sens_sheet(wb, S, sens, build_id, inhash):
-    f_(S, "A1", "Sens — 一次改一個輸入（In 頁敏感度低／高值），整本活頁簿以 LibreOffice 重算後的加權目標價（Val 頁）與 DCF、Comparable 單法目標價；由 sens_hubspot.py 產生。")
-    f_(S, "A2", "相對基準＝案例目標價 ÷ 基準加權目標價 − 1。token 價格高案只動成本一邊（上界）；另列價格與成本聯動案與路由案（工作單 G2.2）。情境專屬列（repl_*、adopt_*、dp_*）以 A／B／C 三情境並列為其區間，不另列案。")
+    f_(S, "A1", "Sens — 一次改一個輸入（In 頁敏感度低／高值），整本活頁簿以 LibreOffice 重算後的加權目標價（Val 頁）與 DCF、Comparable 單法目標價；由 敏感度程式 產生。")
+    f_(S, "A2", "相對基準＝案例目標價 ÷ 基準加權目標價 − 1。token 價格高案只動成本一邊（上界）；另列價格與成本聯動案與路由案（工作單 G2.2）。情境專屬列（席位取代率、採用率、單價變動）以 A／B／C 三情境並列為其區間，不另列案。")
     for j, h in enumerate(["驅動", "設定", "方向", "加權目標價", "相對基準", "鍵", "說明", "DCF 單法目標價", "Comparable 單法目標價"], 1):
         f_(S, f"{L_(j)}3", h, bold=True, fill=HDR)
     cases = (sens or {}).get("cases", [])

@@ -112,11 +112,11 @@ rf_f[str(VR["uattr"])] = {"B": "sp1", "C": "sp1", "D": "sp1"}
 rf_f[str(VR["tvsh2"])] = {c: "p1" for c in "BCD"}
 rf_f[str(VR["gate_all"])] = {c: "n0" for c in "BCD"}
 vw = rm["vw"]
-S.append({"id": "valuation", "title": "估值", "intro": "@Val!A1", "blocks": [
+S.append({"id": "valuation", "title": "估值", "blocks": [
     {"type": "bars", "title": "四個目標價與現價（美元；豎線＝現價）", "fmt": "n2",
      "items": [{"label": f"@Val!A{VR[k]}", "value": f"@Val!B{VR[k]}", "series": sr} for k, sr in (("tpdcf", 1), ("tpcomp", 2), ("tp", 0), ("cons", 1))],
      "ref": {"label": f"@Val!A{VR['px']}", "value": f"@Val!B{VR['px']}"}},
-    {"type": "note", "parts": ["@Val!A2"]}, {"type": "note", "parts": ["@Val!A3"]},
+    {"type": "note", "parts": ["@Val!A1"]}, {"type": "note", "parts": ["@Val!A2"]}, {"type": "note", "parts": ["@Val!A3"]},
     {"type": "table", "caption": "@Val!A4", "head": ["項目", "數值", "對照", "對照", "說明"],
      "rowgen": {"sheet": "Val", "rows": f"{VR['tpdcf']}-{VR['san_diag']}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n2", "n2", "n2", ""], "row_fmt": rf_f}},
     {"type": "table", "caption": "折現率與股數", "head": ["項目", "數值"],
@@ -133,11 +133,12 @@ S.append({"id": "valuation", "title": "估值", "intro": "@Val!A1", "blocks": [
     {"type": "table", "collapse": True, "summary": "展開：同業前瞻 P/E（逐家）", "head": ["同業", "前瞻 P/E（倍）"],
      "rowgen": {"sheet": "Val", "rows": f"{VR['peer0']}-{VR['peer_hubs']}", "cols": ["A", "B"], "fmts": ["", "x1"]}}]})
 # ───────── 3. 敏感度 ─────────
-S.append({"id": "sens", "title": "敏感度", "intro": "@Sens!A1", "blocks": tors + [
+S.append({"id": "sens", "title": "敏感度", "blocks": tors + [
+    {"type": "note", "parts": ["@Sens!A1"]},
     {"type": "note", "parts": ["@Sens!A2"]},
     {"type": "table", "collapse": True, "summary": "展開：全部案例（含 DCF 單法與 Comparable 單法）", "head": ["驅動", "設定", "方向", "加權目標價", "相對基準", "DCF 單法", "Comparable 單法"],
      "rowgen": {"sheet": "Sens", "rows": f"{SENS['first']}-{SENS['last']}", "cols": ["A", "B", "C", "D", "E", "H", "I"], "fmts": ["", "", "", "n2", "sp1", "n2", "n2"]}},
-    {"type": "kv", "items": [["模型狀態", f"@Sens!D{SENS['status']}"], ["build_id", f"@Sens!D{SENS['bid']}"]]}]})
+    {"type": "kv", "items": [["模型狀態", f"@Sens!D{SENS['status']}"], ["建置識別碼", f"@Sens!D{SENS['bid']}"]]}]})
 # ───────── 4. 反向 DCF ─────────
 RV = RVA
 S.append({"id": "revdcf", "title": "反向 DCF：現價隱含什麼", "intro": "@RevDCF!A2", "blocks": [
@@ -194,7 +195,7 @@ S.append({"id": "drivers", "title": "驅動因子 → 推導量", "intro": "@The
      "rows": [[f"@In!B{SCN[k]}", f"@In!D{SCN[k]}|p1", f"@In!E{SCN[k]}|p1", f"@In!F{SCN[k]}|p1", f"@In!C{SCN[k]}", f"@In!G{SCN[k]}|tag"] for k in ("scn_repl", "scn_adopt", "scn_dp", "scn_w")]},
     {"type": "table", "caption": "單一參數區間（基準進主模型；低／高只用於敏感度頁、不進目標價；三情境共用）", "head": ["@In!B3", "@In!D3", "@In!E3", "@In!F3", "@In!C3", "@In!G3"],
      "rows": [[f"@In!B{inkey(k)}", f"@In!D{inkey(k)}|{pfmt(k)}", f"@In!E{inkey(k)}|{pfmt(k)}", f"@In!F{inkey(k)}|{pfmt(k)}", f"@In!C{inkey(k)}", f"@In!G{inkey(k)}|tag"] for k in param_keys]},
-    {"type": "table", "collapse": True, "summary": "展開：Q4 2026 預測（第一期現金流）", "head": ["項目", "Q4 2026E"],
+    {"type": "table", "collapse": True, "summary": "展開：第四季 2026 預測（第一期現金流）", "head": ["項目", "第四季 2026E"],
      "rows": [[f"@Q4E!A{Q4[k]}", f"@Q4E!B{Q4[k]}|{f}"] for k, f in (("cust", "n0"), ("asrpc", "n0"), ("rev", "n1"), ("ngop", "n1"), ("sbc", "n1"), ("restr", "n1"), ("ebit", "n1"), ("fcff", "n1"), ("fcf", "n1"), ("ngeps", "n2"))]}]})
 # ───────── 7. 對帳 ─────────
 R = RCA
@@ -214,7 +215,7 @@ S.append({"id": "recon", "title": "對帳：指引、共識與反解", "intro": 
                 "row_fmt": {str(R["ai_brk"]): {c: "n2" for c in "BCD"}, str(R["ai_price"]): {c: "n2" for c in "BCD"}, str(R["ai_share"]): {c: "p1" for c in "BCD"}}}}]})
 # ───────── 8. 資料狀態 ─────────
 S.append({"id": "status", "title": "資料狀態", "blocks": [
-    {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期（資料截止日、成品日、股價基準日）", "@README!A1"], ["build_id", f"@Sens!D{SENS['bid']}"], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"]]},
+    {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期（資料截止日、成品日、股價基準日）", "@README!A1"], ["建置識別碼", f"@Sens!D{SENS['bid']}"], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"]]},
     {"type": "h3", "text": "資料與口徑"},
     {"type": "list", "items": ["@In!A2", "@Hist!A1", "@Q4E!A1", "@Sens!A2"]},
     {"type": "h3", "text": "市場資料日期、失效條件與風險登錄"},
