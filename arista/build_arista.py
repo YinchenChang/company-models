@@ -855,7 +855,7 @@ SO.cell(SO.max_row + 1, 1, "[Derived] 自算產業 β（Andy 2026-11-05 22:55）
 import r3_post  # noqa: E402
 print(r3_post.apply(wb, stub_note='="資產負債表日 "&bs_date&"；stub 期＝4Q26（Q 頁公司 4Q26 指引 FCFF；stub_frac "&TEXT(stub_frac,"0.000")&" 年只用於營運資金增量）"',
                     stub_src="stub FCFF＝4Q26 FCFF（Q 頁 4Q26 公司指引；v0.5.3 起），不用 FY2027 全年 × 本值；本值只用於 FY2026 營運資金增量的期間比例",
-                    stub_lab="stub FCFF＝4Q26（Q 頁公司 4Q26 指引）", readme_repl=[("（2026-10-23，沿用）", "（2026-11-05）")]))
+                    stub_lab="stub FCFF＝4Q26（Q 頁公司 4Q26 指引）", readme_repl=[("（2026-10-23，沿用）", "（2026-11-13）")]))
 # px1105（2026-11-06）：情境名稱改回樂觀／基準／保守、舊版沿革列固定文字（本資料夾 px1105_post.py）
 import px1105_post  # noqa: E402
 print(px1105_post.apply(wb))
