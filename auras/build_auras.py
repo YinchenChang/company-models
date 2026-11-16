@@ -195,7 +195,7 @@ for j, y in enumerate((26, 27, 28, 29)):
         "奇鋐模型三情境的份額相對值相同；只作兩家份額合計檢查，不進本模型計算" if y == 26 else "同上")
 
 sec("H. 價格與估值")
-inp("px", "股價（2026-11-05 收盤）", "NT$", None, 1170, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（px1105：全部個股統一價格日）", "v0.2.3 為 2026-11-04 收盤 1,300（Yahoo Finance 日線收盤）；v0.2.2 為 2026-10-22 收盤 1,360（Yahoo 股市）")
+inp("px", "股價（2026-11-13 收盤）", "NT$", None, 1140, None, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（markets/invest_map/data/closes_20261020_20261113.csv）", "v0.2.6 為 2026-11-05 收盤 1,170；v0.2.3 為 2026-11-04 收盤 1,300（Yahoo Finance 日線收盤）；v0.2.2 為 2026-10-22 收盤 1,360（Yahoo 股市）")
 inp("eps_ttm", "近 12 月 EPS（3Q25–2Q26）", "NT$", None, "=10.66+10.19+12.61+10.41", None, "Verified", HISEPS + "：3Q25 10.66、4Q25 10.19、1Q26 12.61、2Q26 10.41", "—")
 
 sec("I. 目標價（DCF 與 Comparable 加權）與收斂法參數（黃底＝Assumed，Andy 可改）")
@@ -531,7 +531,7 @@ V["A2"] = "循環位置：雙鴻不是設備股，不套設備市場見頂年；
 V1 = 60   # 第 1–4 節與規則區塊的起始列（第 0 節放在本頁最前面）
 V.cell(V1, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, V1 + 1, ["項目", "A", "B", "C", "說明"])
-V.cell(V1 + 2, 1, "現價（2026-11-05 收盤）"); V[f"B{V1 + 2}"] = "=px"; V[f"B{V1 + 2}"].number_format = "#,##0"
+V.cell(V1 + 2, 1, "現價（2026-11-13 收盤）"); V[f"B{V1 + 2}"] = "=px"; V[f"B{V1 + 2}"].number_format = "#,##0"
 for k_, (lab, y) in enumerate((("現價 ÷ FY2026 EPS（錨點）", 2026), ("現價 ÷ FY2027 EPS（模型）", 2027), ("現價 ÷ FY2028 EPS（模型）", 2028), ("現價 ÷ FY2029 EPS（模型）", 2029))):
     rr = V1 + 3 + k_; V.cell(rr, 1, lab)
     for j, s in enumerate(SC):
@@ -539,7 +539,7 @@ for k_, (lab, y) in enumerate((("現價 ÷ FY2026 EPS（錨點）", 2026), ("現
 PXR = V1 + 2
 V.cell(V1 + 7, 1, "未來 12 月 EPS（模型 B）≈ 2／12 × FY2026＋10／12 × FY2027"); V[f"B{V1 + 7}"] = f"=2/12*PL!D{SUMR[('B', 'eps')]}+10/12*PL!E{SUMR[('B', 'eps')]}"; V[f"B{V1 + 7}"].number_format = "0.00"
 V.cell(V1 + 8, 1, "  現價 ÷ 未來 12 月 EPS（模型 B）"); V[f"B{V1 + 8}"] = f"=px/B{V1 + 7}"; V[f"B{V1 + 8}"].number_format = "0.0"
-V.cell(V1 + 9, 1, "近 12 月 P/E（3Q25–2Q26 EPS，現價 11-05）"); V[f"B{V1 + 9}"] = "=px/eps_ttm"; V[f"B{V1 + 9}"].number_format = "0.0"
+V.cell(V1 + 9, 1, "近 12 月 P/E（3Q25–2Q26 EPS，現價 11-13）"); V[f"B{V1 + 9}"] = "=px/eps_ttm"; V[f"B{V1 + 9}"].number_format = "0.0"
 V.cell(V1 + 10, 1, "前瞻 P/E（stockanalysis，2026-08-28；價格 1,140）"); V[f"B{V1 + 10}"] = 17.27; V[f"B{V1 + 10}"].font = BLUE; V[f"B{V1 + 10}"].number_format = "0.0"
 V[f"E{V1 + 10}"] = "Interested-party（賣方共識）；10 月價格下的前瞻 P/E：未找到"
 C2 = V1 + 12
@@ -638,13 +638,13 @@ EPSR = {}; CFR = {}
 _D12 = SDCF["v12"]
 V.cell(26, 1, "0.2 Comparable（市場主流同業前瞻 P/E；非 A 股公司，同業不放 A 股）").font = BOLD
 hdr(V, 27, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"])
-PEERS = [("奇鋐（AVC）", "3017.TW", "=2565/(3585/27.04)", "2026-11-05"), ("健策（Jentech）", "3653.TW", "=5805/(6920/69.92)", "2026-11-05"),
-         ("Vertiv", "VRT", "=176.73/(207.93/26.21)", "2026-11-05"), ("台達電（Delta）", "2308.TW", "=1130/(1560/30.51)", "2026-11-05")]
+PEERS = [("奇鋐（AVC）", "3017.TW", "=3040/(3585/27.04)", "2026-11-13"), ("健策（Jentech）", "3653.TW", "=5345/(6920/69.92)", "2026-11-13"),
+         ("Vertiv", "VRT", "=202.07/(207.93/26.21)", "2026-11-13"), ("台達電（Delta）", "2308.TW", "=1240/(1560/30.51)", "2026-11-13")]
 PEER_SRC = {"3017.TW": "stockanalysis 個股頁 2026-10-05：價格 3,585 ÷ Forward PE 27.04（奇鋐模型 cons_feps 同一筆）", "3653.TW": "stockanalysis 統計頁 2026-09-24：價格 6,920 ÷ Forward PE 69.92（可取得的最新頁面，較舊）",
             "VRT": "stockanalysis 統計頁 2026-10-27：價格 207.93 ÷ Forward PE 26.21", "2308.TW": "stockanalysis 個股頁 2026-10-22：價格 1,560 ÷ Forward PE 30.51（台達電模型 cons_feps 同一筆）"}
 for i, (nm, tk, pe, dt) in enumerate(PEERS, 28):
     V.cell(i, 1, nm); V.cell(i, 2, tk); c = V.cell(i, 3, pe); c.font = BLUE; c.number_format = "0.0"
-    V.cell(i, 4, dt); V.cell(i, 5, f"第三輪修正：P/E＝Yahoo Finance 日線收盤 2026-11-05 ÷ 資料商前瞻 EPS（{PEER_SRC[tk]}）"); V.cell(i, 6, "Interested-party（賣方共識）")
+    V.cell(i, 4, dt); V.cell(i, 5, f"第三輪修正；px1113：P/E＝Yahoo Finance 日線收盤 2026-11-13（v0.2.6 為 11-05 收盤）÷ 資料商前瞻 EPS（{PEER_SRC[tk]}）"); V.cell(i, 6, "Interested-party（賣方共識）")
 PEER_LAST = 27 + len(PEERS)
 V.cell(PEER_LAST + 1, 1, "並列參考（不進目標價）：無。英維克（002837.SZ）為 A 股，依規則不列；酷碼（Cooler Master）、Boyd、CoolIT 未上市")
 tset(PEER_LAST + 2, "pmed", "同業前瞻 P/E 中位數", [f"=MEDIAN(C28:C{PEER_LAST})", None, None], "0.0",
@@ -660,7 +660,7 @@ r_ = C03 + 2
 tset(r_, "tpw", "目標價（DCF 與 Comparable 加權）", [f"=tp_w_dcf*B{T['dcftp']}+(1-tp_w_dcf)*B{T['comptp']}", None, None], "#,##0", "tp_w_dcf × DCF＋（1 − tp_w_dcf）× Comparable；tp_w_dcf 見 In 頁"); r_ += 1
 tset(r_, "comp2", "Comparable 目標價（市場主流同業法）", [f"=B{T['comptp']}", None, None], "#,##0", "引用 0.2"); r_ += 1
 tset(r_, "cons", "市場共識目標價", ["=cons_tp", None, None], "#,##0", "stockanalysis（S&P Global）：17 位分析師平均 1,523、中位數 1,550（頁面時間 2026-10-19）"); r_ += 1
-tset(r_, "upw", "上檔空間：加權目標價", [f"=B{T['tpw']}/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-05 收盤 1,170；Yahoo Finance 日線收盤）"); r_ += 1
+tset(r_, "upw", "上檔空間：加權目標價", [f"=B{T['tpw']}/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-13 收盤 1,140；Yahoo Finance 日線收盤）"); r_ += 1
 tset(r_, "upc", "上檔空間：Comparable 目標價", [f"=B{T['comp2']}/px-1", None, None], "0.0%"); r_ += 1
 tset(r_, "geps", "與市場共識目標價的差距：EPS 因素", [f"=B{T['feps']}/cons_feps-1", None, None], "0.0%",
      "本模型前瞻 EPS ÷ 共識前瞻 EPS − 1；共識前瞻 EPS＝2／12 × FY2026＋10／12 × FY2027 共識（In 頁 cons_feps；期間為現在起算 12 個月，與本模型不同）"); r_ += 1
@@ -1045,7 +1045,7 @@ def _r3_text(wb, stub_lab, px_old_dates=(), px_new_date="2026-11-04", extra=()):
                     c.value = w; n += 1
     return n
 RD["A1"] = RD["A1"].value + "；v0.2.3（2026-11-06）第三輪修正（合併前）：現價與同業報價統一到 2026-11-04 收盤、stub 期 FCFF 改 FY2026 錨點、展示字串統一"
-_r3_text(wb, "含 stub 期會計年度 FY2026（日曆年）FCFF × stub_frac", px_old_dates=("2026-10-22", "2026-11-04"), px_new_date="2026-11-05")
+_r3_text(wb, "含 stub 期會計年度 FY2026（日曆年）FCFF × stub_frac", px_old_dates=("2026-10-22", "2026-11-04", "2026-11-05"), px_new_date="2026-11-13")
 RD["A1"] = RD["A1"].value + "；v0.2.4：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"   # px1105（2026-11-06）
 # v0.2.5（2026-11-15）：三層協調 C4（規則 v1.4.2；tools/coord/）兩讀數目標價（Coord 頁；快照 auras/coord_alt.json）＋個股 HTML 版面規格 v1.3＋C0（實績）（auras/v13_post.py）
 sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
@@ -1065,6 +1065,9 @@ if _CR:
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import v13_post as P13
     print(P13.apply(wb, SIL, _CR))
+    # v0.2.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）；只改版本文字
+    import px1113_post as PX
+    print(PX.apply(wb, P13))
 wb.save(sys.argv[1])
 if os.environ.get("AURAS_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
