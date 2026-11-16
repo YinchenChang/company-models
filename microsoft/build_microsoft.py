@@ -41,6 +41,12 @@ FACTS = json.load(open(os.path.join(ROOT, FACTS_F), encoding="utf-8"))
 F = {i["id"]: i for g in FACTS["groups"].values() for i in g}
 FQ1 = json.load(open(os.path.join(ROOT, FACTS_Q1), encoding="utf-8"))
 F.update({i["id"]: i for g in FQ1["groups"].values() for i in g})
+# v0.3.9 原地換價（工作單 px1113）：同業倍數由報價日（2026-10-07／10-08）換到 2026-11-13 收盤；microsoft/px1113_peers.py 產生下列兩個 JSON
+PXP = json.load(open(os.path.join(ROOT, "microsoft/data/peers_px1113_20261113.json"), encoding="utf-8"))
+PXC = json.load(open(os.path.join(ROOT, "microsoft/data/peers_cloud_20261113.json"), encoding="utf-8"))
+PXA = json.load(open(os.path.join(ROOT, "microsoft/data/peers_ads_20261113.json"), encoding="utf-8"))
+def PXN(i): return PXP["items"][i]["new"]
+def PXO(i): return PXP["items"][i]["old"]
 SNAP = json.load(open(os.path.join(ROOT, SNAP_F), encoding="utf-8"))
 TKV = SNAP["source"]["version"]
 TKN = f"Tokenomics {TKV}（{SNAP['source']['file']}，master {SNAP['source']['commit'][:7]}）"
@@ -194,12 +200,12 @@ inp("oai_val", "OpenAI 最近一輪投後估值", "US$B", None, F["oai.valuation
 inp("liq_disc", "未上市持股流動性折價", "%", 0.0, 0.2, 0.4, "Assumed", "工作單 20261027：20%", V22)
 inp("oai_v", "OpenAI 持股價值（扣折價）", "US$B", None, "=oai_stake*oai_val*(1-liq_disc)", None, "Derived", "比例 × 估值 ×（1 − 折價）", "Anthropic 持股比例未揭露 → 不估值（資料缺口）")
 inp("m_ai", "Azure AI 倍數（EV／NTM EBITDA）", "x", 4, 6, 10, "Assumed", V22 + "（valuation.evEbitda 6×）", "AI 基礎設施租賃同業（CRWV TTM 25×、NBIS 不具意義、ORCL NTM 9.5×）口徑不一，沿用 v0.2.2")
-inp("m_cloud", "非 AI 雲端倍數（Azure 其他）", "x", None, 13.82, None, "Derived", "microsoft/data/peers_cloud_20261008.json：ORCL、IBM、SAP、CRM、NOW、AKAM、EQIX、DOCN 中位數（C12）", "2026-10-07 收盤")
-inp("m_sw", "企業軟體倍數（M365 cloud、授權、產業、Frontier）", "x", None, F["val.peer.sw.median"]["value"], None, "Derived", FX + "｜val.peer.sw.*：ORCL 9.54、SAP 15.02、CRM 10.80、ADBE 6.60、NOW 20.65 中位數（不含 MSFT）", "2026-10-07")
-inp("m_ads", "數位廣告倍數（Search and advertising）", "x", None, 9.11, None, "Derived", "microsoft/data/peers_ads_20261009.json：META、PINS、TTD、APP、RDDT、SNAP 中位數（C18）", "2026-10-07")
-inp("m_game", "遊戲倍數（XBOX）", "x", None, F["val.peer.game.median"]["value"], None, "Derived", FX + "｜val.peer.game.*：TTWO 50.9、NTDOY 12.63、NTES 8.23 中位數（TTM；NTM 找不到）", "2026-10-08")
-inp("m_pc", "PC／裝置倍數（Windows OEM and devices）", "x", None, F["val.peer.pc.median"]["value"], None, "Derived", FX + "｜val.peer.pc.*：HPQ 7.6、DELL 22.1、Lenovo 14.47 中位數（TTM）", "2026-10-08")
-inp("m_own", "Microsoft 自身 NTM EV／EBITDA（對照）", "x", None, F["val.msft.ownNtm"]["value"], None, "Derived", FX + "｜val.msft.ownNtm（2026-10-07）", "只用於判斷預設替代（非 AI 各線改用自身倍數）")
+inp("m_cloud", "非 AI 雲端倍數（Azure 其他）", "x", None, PXC["median"]["value"], None, "Derived", "microsoft/data/peers_cloud_20261113.json：ORCL、IBM、SAP、CRM、NOW、AKAM、EQIX、DOCN 中位數（C12）；工作單 px1113：各家倍數 × 2026-11-13 收盤 ÷ 報價日（10-07）收盤，近似，無市值（closes_20261020_20261113.csv）", "2026-11-13 換價（[Derived] 近似）；v0.3.8 以前為 2026-10-07 值 " + f"{PXC['median1007']['value']}（{', '.join(str(p['ntmEvEbitda1007']) for p in PXC['peers'])}）")
+inp("m_sw", "企業軟體倍數（M365 cloud、授權、產業、Frontier）", "x", None, PXP["medians"]["sw"], None, "Derived", FX + "｜val.peer.sw.*（工作單 px1113 換價至 2026-11-13：" + "、".join(f"{t.upper()} {PXN('val.peer.sw.' + t)}" for t in ("orcl", "sap", "crm", "adbe", "now")) + " 中位數，不含 MSFT；倍數 × 收盤比，近似，無市值）", "2026-11-13 換價（[Derived] 近似）；v0.3.8 以前為 2026-10-07 值 " + "、".join(f"{t.upper()} {PXO('val.peer.sw.' + t)}" for t in ("orcl", "sap", "crm", "adbe", "now")) + f"，中位數 {PXP['mediansOld']['sw']}")
+inp("m_ads", "數位廣告倍數（Search and advertising）", "x", None, PXA["median"]["value"], None, "Derived", "microsoft/data/peers_ads_20261113.json：META、PINS、TTD、APP、RDDT、SNAP 中位數（C18）；工作單 px1113：各家倍數 × 2026-11-13 收盤 ÷ 報價日（10-07／10-08）收盤，近似，無市值", "2026-11-13 換價（[Derived] 近似）；v0.3.8 以前為 2026-10-07 值 " + f"{PXA['median1007']['value']}（{', '.join(str(p['ntmEvEbitda1007']) for p in PXA['peers'])}）")
+inp("m_game", "遊戲倍數（XBOX）", "x", None, PXP["medians"]["game"], None, "Derived", FX + "｜val.peer.game.*（工作單 px1113 換價至 2026-11-13：" + "、".join(f"{t.upper()} {PXN('val.peer.game.' + t)}" for t in ("ttwo", "ntdoy", "ntes")) + " 中位數；TTM，NTM 找不到；倍數 × 收盤比，近似）", "2026-11-13 換價（[Derived] 近似）；v0.3.8 以前為 2026-10-08 值 " + "、".join(f"{t.upper()} {PXO('val.peer.game.' + t)}" for t in ("ttwo", "ntdoy", "ntes")) + f"，中位數 {PXP['mediansOld']['game']}")
+inp("m_pc", "PC／裝置倍數（Windows OEM and devices）", "x", None, PXP["medians"]["pc"], None, "Derived", FX + "｜val.peer.pc.*（工作單 px1113 換價至 2026-11-13：HPQ " + str(PXN('val.peer.pc.hpq')) + "、DELL " + str(PXN('val.peer.pc.dell')) + "、Lenovo " + str(PXN('val.peer.pc.0992.hk')) + " 中位數；TTM；倍數 × 收盤比，近似）", "2026-11-13 換價（[Derived] 近似）；v0.3.8 以前為 2026-10-08 值 HPQ " + str(PXO('val.peer.pc.hpq')) + "、DELL " + str(PXO('val.peer.pc.dell')) + "、Lenovo " + str(PXO('val.peer.pc.0992.hk')) + f"，中位數 {PXP['mediansOld']['pc']}")
+inp("m_own", "Microsoft 自身 NTM EV／EBITDA（對照）", "x", None, PXN("val.msft.ownNtm"), None, "Derived", FX + "｜val.msft.ownNtm（工作單 px1113 換價至 2026-11-13：EV 新＝EV 舊 3,990,000＋市值舊 3,930,000 ×（523.88 ÷ 529.76 − 1）；EBITDA 不變）", "只用於判斷預設替代（非 AI 各線改用自身倍數）；v0.3.8 以前為 2026-10-07 值 " + str(PXO("val.msft.ownNtm")))
 for k, lab, v, note in (("al_m365", "Microsoft 365 cloud", 0.60, "舊 PBP 分部 FY2026 59.9% 類比"), ("al_lic", "Productivity and server licensing", 0.75, "地端授權毛利高、銷售費用低"),
                         ("al_ind", "Industry solutions", 0.30, "含 Dynamics、LinkedIn 等"), ("al_fro", "Frontier and support services", 0.30, "含支援服務"),
                         ("al_srch", "Search and advertising", 0.30, "—")):
@@ -1098,8 +1104,8 @@ vset("tpe28", "加權目標價 ÷ FY2028 EPS（基準）", [f"={B3('tp')}/{BL['B
 vset("meth", "目標價方法", None, "@")
 VW[f"B{VR_['meth']}"] = ("DCF：評價用自由現金流（營業現金流 − 股票薪酬 − 公司口徑資本支出＋自用 AI 影子效益稅後），WACC（CAPM：rf 5.00%（2026-10-26，沿用 v0.3）、Blume β、ERP 5%；kd＝rf＋10 年期 AAA 利差；負債含融資租賃），"
                          "FY2027–FY2032 明確期（FY2029 後 MW 新增速度收斂），永續期 NOPAT ×（1 − g ÷ WACC）÷（WACC − g），g 3%；評價日 2026-09-30（FY2027 只計第二至第四季），以 WACC 推到 2027-10-29 並扣期間股利。"
-                         "SOTP：AI 基礎設施模組 DCF；Azure 其他 13.82×（非 AI 雲端 8 家）、M365 cloud／授權／產業／Frontier 10.8×（企業軟體 5 家，不含 MSFT）、搜尋與廣告 9.11×（6 家）、"
-                         "XBOX 12.63×（遊戲 3 家 TTM）、Windows 14.47×（PC 3 家 TTM），乘目標價時點 NTM EBITDA（股票薪酬加回）；加 FY2027 年底淨現金、FY2027 年底到目標價時點的非 AI 自由現金流與 OpenAI 持股（24% × 852 ×（1 − 20%）；10-Q FY27Q1）、減在帳融資租賃負債。")
+                         f"SOTP：AI 基礎設施模組 DCF；Azure 其他 {PXC['median']['value']}×（非 AI 雲端 8 家）、M365 cloud／授權／產業／Frontier {PXP['medians']['sw']}×（企業軟體 5 家，不含 MSFT）、搜尋與廣告 {PXA['median']['value']}×（6 家）、"
+                         f"XBOX {PXP['medians']['game']}×（遊戲 3 家 TTM）、Windows {PXP['medians']['pc']}×（PC 3 家 TTM；同業倍數為 2026-11-13 換價近似），乘目標價時點 NTM EBITDA（股票薪酬加回）；加 FY2027 年底淨現金、FY2027 年底到目標價時點的非 AI 自由現金流與 OpenAI 持股（24% × 852 ×（1 − 20%）；10-Q FY27Q1）、減在帳融資租賃負債。")
 for k in ("dcftp", "comp", "tp"):
     VW[f"B{VR_[k]}"].fill = KEY
 for cc in range(1, 6): VW.cell(VR_["rec"], cc).fill = KEY
@@ -1160,7 +1166,7 @@ ALT = [
     ("C 情境改用 Epoch 可辨識站點 MW 速度（650／年，上限 4,386）", {"C": (dict(pace="pace_epoch", cap="cap_epoch"), {})}, None),
     ("C 情境 k 改用長約低端（k_long_lo，v0.2.2 價格軸低）", {"C": (dict(kmult="(k_long_lo/k_C)"), {})}, None),
     ("永續期改用 FY2032 評價用自由現金流 ×（1＋g）", {s: ({}, dict(ronic="0", g="g_tv")) for s in SC}, "tvalt"),
-    ("非 AI 各線改用 Microsoft 自身倍數 15.67×", {s: ({}, dict(m_sw="m_own", m_cloud="m_own", m_ads="m_own", m_game="m_own", m_pc="m_own")) for s in SC}, None),
+    (f"非 AI 各線改用 Microsoft 自身倍數 {PXN('val.msft.ownNtm')}×", {s: ({}, dict(m_sw="m_own", m_cloud="m_own", m_ads="m_own", m_game="m_own", m_pc="m_own")) for s in SC}, None),
     ("讀法 1 且 MW 速度改 Epoch 可辨識站點（與 Sens「讀法 1」比較＝讀法 1 下的容量效果）", {s: (dict(reading="1", pace="pace_epoch", cap="cap_epoch"), {}) for s in SC}, None),
     ("影子效益基準改 FY2026 年底自用 MW（修正二口徑）", {s: (dict(sbase="0"), {}) for s in SC}, None),
     ("FY2027 補足差額不計（資本支出低於公司指引）", {s: (dict(floor="none"), {}) for s in SC}, None),
@@ -1386,7 +1392,7 @@ if ATTR:
     rrow("v0.3 加權目標價（以本程式 --legacy-q1 等設定重現；v0.3 成品 385.56）", st[0]["tp"], None, f"重現差 {st[0]['tp'] - 385.56225022499:+.6f}", fmt="0.00")
     for i in range(1, len(st)):
         rrow(STEPN[st[i]["key"]], st[i]["tp"] - st[i - 1]["tp"], None, f"累計 {st[i]['tp']:.2f}；讀法 1 {st[i]['tp_r1']:.2f}", fmt="0.00")
-    rrow("(g) v0.3.7 現價 531.01 → 535.93（2026-11-05 收盤）→ v0.3.9 換 523.88（2026-11-13 收盤）；只經 WACC 權重與回購價", f"=Val!$B${VR_['tp']}-{st[-1]['tp']!r}", None, f"v0.3.1～v0.3.6 加權目標價 {st[-1]['tp']:.2f}（v0.3.2～v0.3.6 基準數值不變）", fmt="0.00")
+    rrow("(g) v0.3.7 現價 531.01 → 535.93（2026-11-05 收盤）→ v0.3.9 換 523.88（2026-11-13 收盤；經 WACC 權重與回購價）並把同業倍數換到 11-13（經分部加總 SOTP）", f"=Val!$B${VR_['tp']}-{st[-1]['tp']!r}", None, f"v0.3.1～v0.3.6 加權目標價 {st[-1]['tp']:.2f}（v0.3.2～v0.3.6 基準數值不變）", fmt="0.00")
     rrow("v0.3.7 加權目標價（本檔 Val 頁）", f"=Val!$B${VR_['tp']}", None, "—", fmt="0.00")
     n_ = len(st) + 1
     rrow("檢查：v0.3 ＋ (a)～(g) − v0.3.7（應為 0）", f"=SUM(B{r0}:B{r0 + n_ - 1})-B{r0 + n_}", None, "拆解 JSON 與本檔不同步時不為 0（重跑 attrib_v031.py）", fmt="0.000")
@@ -1442,8 +1448,9 @@ SRC = [
     ("247wallst 財報直播頁（報價 531.01、−0.06%；FY27Q1 共識 EPS 4.72、營收 90.75）", "2026-10-28", "https://247wallst.com/investing/2026/10/28/live-will-microsoft-crush-q1-earnings-tonight-after-the-bell/", "Interested-party"),
     ("StockAnalysis 預測頁（S&P 共識目標價 605.12、FY2027 營收 391.58、EPS 19.76）", "2026-10-27", SA + "forecast/", "Interested-party"),
     ("MarketBeat 預測頁（共識目標價 596.07，49 位）", "2026-10-27", "https://www.marketbeat.com/stocks/NASDAQ/MSFT/forecast/", "Interested-party"),
-    ("非 AI 雲端同業 NTM EV/EBITDA（8 家）", "2026-10-07", "microsoft/data/peers_cloud_20261008.json", "Derived"),
-    ("數位廣告同業 NTM EV/EBITDA（6 家）", "2026-10-07", "microsoft/data/peers_ads_20261009.json", "Derived"),
+    ("非 AI 雲端同業 NTM EV/EBITDA（8 家；2026-11-13 換價，倍數 × 收盤比近似；原值 2026-10-07 見 peers_cloud_20261008.json）", "2026-11-16", "microsoft/data/peers_cloud_20261113.json", "Derived"),
+    ("數位廣告同業 NTM EV/EBITDA（6 家；2026-11-13 換價，倍數 × 收盤比近似；原值 2026-10-07 見 peers_ads_20261009.json）", "2026-11-16", "microsoft/data/peers_ads_20261113.json", "Derived"),
+    ("企業軟體、遊戲、PC 同業與 Microsoft 自身 EV/EBITDA（2026-11-13 換價；MSFT 自身用市值法）", "2026-11-16", "microsoft/data/peers_px1113_20261113.json", "Derived"),
     ("MAG 命題與驅動對照表 r1（C1–C23）", "2026-10-09", "mag/docs/plan/20261008_MAG_命題與驅動對照表_r1.md", "—"),
     ("v0.2.2 成品（對照）", "2026-10-25", "microsoft/dist/_待刪除/20261025_Microsoft收支模型_v0_2_2.xlsx", "Derived"),
     ("個股模型原則（命題＋營收分部）", "2026-10-27", "docs/plan/個股模型原則_命題加營收分部.md", "—"),
