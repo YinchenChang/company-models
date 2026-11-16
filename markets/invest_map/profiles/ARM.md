@@ -32,8 +32,8 @@ CPU 架構的「設計圖」供應商：把指令集與處理器核心授權給�
 
 ## 市場定位與產業位置
 - 手機應用處理器幾乎都用 Arm 架構；資料中心是成長最快的權利金來源，1Q27 資料中心權利金年增逾一倍、2Q27 年增一倍 [本專案：20261116_Arm個股模型_v0.3.6.xlsx In!H25，Interested-party]。
-- 本專案推估資料中心占權利金由 FY2026 14% 升到 FY2029 情境 B 25.4% [本專案：20261105_Arm個股模型_v0.2.xlsx Units!C15、F15，Derived]；NVIDIA Grace／Vera 的顆數讀 Siliconomics 加速器顆數 [本專案：20261116_Arm個股模型_v0.3.6.xlsx Units!A4]。
-- 上下游依賴：Arm China 與 SoftBank 為關係人客戶；自研晶片委外製造，產能是限制 [本專案：20261105_Arm個股模型_v0.2.xlsx Sources!A8、In!I61，Interested-party]。
+- 本專案推估資料中心占權利金由 FY2026 14% 升到 FY2029 情境 B 24.7% [本專案：20261116_Arm個股模型_v0.3.6.xlsx Units!C15、F15，Derived]；NVIDIA Grace／Vera 的顆數讀 Siliconomics 加速器顆數 [本專案：20261116_Arm個股模型_v0.3.6.xlsx Units!A4]。
+- 上下游依賴：Arm China 與 SoftBank 為關係人客戶；自研晶片委外製造，產能是限制 [本專案：20261116_Arm個股模型_v0.3.6.xlsx Sources!A8、In!I66，Interested-party]。
 
 ## 管理層與經營風格
 | 職位 | 姓名 | 任職起 | 背景 |
@@ -43,17 +43,17 @@ CPU 架構的「設計圖」供應商：把指令集與處理器核心授權給�
 | 董事長 | 孫正義（Masayoshi Son） | 本專案未建立 | SoftBank 集團創辦人 [外部・未經本專案檢核] |
 
 - 經營風格：本專案尚未研究。
-- 本專案模型可見的事實：SoftBank 持股約九成，流通股約一成 [本專案：20261105_Arm個股模型_v0.2.xlsx In!E79、H79，Interested-party]；稀釋股數 FY2026 10.68 億股、1Q27 10.78 億股 [本專案：20261116_Arm個股模型_v0.3.6.xlsx Q!C14、D14]。
+- 本專案模型可見的事實：SoftBank 持股約九成，流通股約一成 [本專案：20261116_Arm個股模型_v0.3.6.xlsx In!E85、H85，Interested-party]；稀釋股數 FY2026 10.68 億股、1Q27 10.78 億股 [本專案：20261116_Arm個股模型_v0.3.6.xlsx Q!C14、D14]。
 
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| 高通 | 手機與 PC 晶片客戶；自研 Oryon 核心（架構授權） | 前瞻 P/E 19.5x | [本專案：20261105_Arm個股模型_v0.2.xlsx Val!C28，Interested-party] |
-| 博通、邁威爾 | 客製 ASIC 與資料中心晶片 | 前瞻 P/E 18.5x、43.0x | [本專案：20261105_Arm個股模型_v0.2.xlsx Val!C29、C30] |
-| Rambus、新思、益華 | 半導體 IP 與 EDA | 前瞻 P/E 24.2x、25.7x、36.0x | [本專案：20261105_Arm個股模型_v0.2.xlsx Val!C31:C33] |
+| 高通 | 手機與 PC 晶片客戶；自研 Oryon 核心（架構授權） | 前瞻 P/E 18.6x | [本專案：20261116_Arm個股模型_v0.3.6.xlsx Val!C28，Interested-party] |
+| 博通、邁威爾 | 客製 ASIC 與資料中心晶片 | 前瞻 P/E 20.0x、27.8x | [本專案：20261116_Arm個股模型_v0.3.6.xlsx Val!C29、C30] |
+| Rambus、新思、益華 | 半導體 IP 與 EDA | 前瞻 P/E 22.1x、25.8x、34.3x | [本專案：20261116_Arm個股模型_v0.3.6.xlsx Val!C31:C33] |
 | RISC-V 陣營 | 開放指令集 | 本專案未建立 | [外部・未經本專案檢核] |
 
-- 同業前瞻 P/E 中位數 25.0x，Arm 現價約 94.7 倍共識前瞻 EPS [本專案：20261105_Arm個股模型_v0.2.xlsx Val!B34、B67]。
+- 同業前瞻 P/E 中位數 23.9x，Arm 現價約 74.0 倍共識前瞻 EPS [本專案：20261116_Arm個股模型_v0.3.6.xlsx Val!B34、B71]。
 - 自研 AGI CPU 使 Arm 與部分授權客戶在資料中心 CPU 上直接競爭 [外部・未經本專案檢核]。
 
 ## 主要客戶
@@ -75,7 +75,7 @@ CPU 架構的「設計圖」供應商：把指令集與處理器核心授權給�
 
 ## 近期重大事件
 - 2026-11-04｜2Q27 財報：營收 14.43 億美元（授權及其他 7.73 億、年增 50%；權利金 6.70 億、年增 8%）、non-GAAP EPS 0.52；3Q27 指引營收 15.4 億 ± 0.5 億、non-GAAP EPS 0.56 ± 0.04｜權利金成長低於原指引 low-teens，授權高於原指引 mid-30% [本專案：20261116_Arm個股模型_v0.3.6.xlsx Q!E4、E5、E6、E16、In!H5、I5、H6、I6、H7]
-- 2026-10-30｜收盤 228.88 美元；10 月初約 300 美元 [本專案：20261105_Arm個股模型_v0.2.xlsx In!E78]；[外部新聞：InvestSmart、marketscreener]
+- 2026-11-13｜收盤 190.53 美元；10 月初約 300 美元 [本專案：20261116_Arm個股模型_v0.3.6.xlsx In!E84]；[外部新聞：InvestSmart、marketscreener]
 - 2026-10-13｜Qualcomm 訴訟：陪審團判 Arm 違反架構授權並干擾 Qualcomm 與 Meta 的關係；法官審理部分待判 [本專案：20261116_Arm個股模型_v0.3.6.xlsx In!H33]；[外部新聞：Paul Weiss]
 - 2026-07-29｜1Q27 財報：營收 12.89 億美元（+22%）、權利金 7.15 億、授權 5.74 億；AGI CPU 客戶需求逾 20 億美元 [本專案：20261116_Arm個股模型_v0.3.6.xlsx Q!D4、D5、D6、In!H18]
 - 2026-05-06｜4Q26 財報：FY2026 營收 49.20 億美元、non-GAAP EPS 1.77 [本專案：20261116_Arm個股模型_v0.3.6.xlsx Q!C6、C16]
@@ -84,12 +84,12 @@ CPU 架構的「設計圖」供應商：把指令集與處理器核心授權給�
 ## 需要觀察的事項
 - 3Q27 財報｜FY2027 錨點已用 1Q27、2Q27 實績與 3Q27 指引中點 15.4 億美元；4Q27 授權年增 20%、權利金年增 15% 為假設 [本專案：20261116_Arm個股模型_v0.3.6.xlsx Q!A2、In!E7、E9、E10]｜2027 年 2 月（日期本專案未確認）
 - 授權成長與營業費用｜授權成長 2% 使加權目標價 −10.3%、營業費用年增 18% −7.7% [本專案：arm/README.md 重點觀察 2]｜每季 ACV 與營業費用指引
-- AGI CPU 晶片營收｜情境 A／B／C FY2028 14／10／5 億美元 [本專案：20261105_Arm個股模型_v0.2.xlsx In!E61:E63]｜產能取得與客戶公告
-- 資料中心權利金｜FY2029 情境 B 占權利金 25.4% [本專案：20261105_Arm個股模型_v0.2.xlsx Units!F15]｜雲端自研 CPU 與 NVIDIA Vera 出貨
+- AGI CPU 晶片營收｜情境 A／B／C FY2028 14／10／5 億美元 [本專案：20261116_Arm個股模型_v0.3.6.xlsx In!E66:E68]｜產能取得與客戶公告
+- 資料中心權利金｜FY2029 情境 B 占權利金 24.7% [本專案：20261116_Arm個股模型_v0.3.6.xlsx Units!F15]｜雲端自研 CPU 與 NVIDIA Vera 出貨
 - Qualcomm 判決｜情境 C 手機費率年增 7%、qc_adj 下緣 −6% [本專案：20261116_Arm個股模型_v0.3.6.xlsx In!E32、D33]｜法官判決與上訴
 
 ## 來源
-1. 本專案：`arm/README.md`（v0.2，2026-11-05）；`arm/dist/20261105_Arm個股模型_v0.2.xlsx`（In、Q、Units、Val 頁）
+1. 本專案：`arm/README.md`（v0.2，2026-11-05）；`arm/dist/20261116_Arm個股模型_v0.3.6.xlsx`（In、Q、Units、Val 頁）
 2. [Arm 1Q27 股東信（SEC 6-K）](https://www.sec.gov/Archives/edgar/data/0001973239/000197323926000113/exhibit992fye27q130-junx26.htm)（2026-07-29）
 3. [Arm 20-F（FY2026）](https://www.sec.gov/Archives/edgar/data/0001973239/000197323926000097/arm-20260331.htm)
 4. [Paul Weiss：Qualcomm 對 Arm 陪審團判決](https://www.paulweiss.com/insights/client-news/qualcomm-wins-jury-verdict-in-breach-of-contract-and-interference-trial-against-arm)（2026-10-13）
