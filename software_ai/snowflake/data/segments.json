@@ -1,0 +1,49 @@
+{
+ "company": "Snowflake Inc.",
+ "ticker": "SNOW",
+ "model_sheet": "PL",
+ "note": "官方報告分部：單一營運與應報導分部（10-Q Q2 FY2027 Segment Information：CODM 為 CEO，以合併基礎檢視）。因此官方分部列＝合併營收；產品線子列＝公司法定申報固定揭露的 Product revenue 與 Professional services and other revenue（Note 3 Disaggregation of Revenue）。命題模組（原型 U 按用量）驅動 Product 子列：運算額度消耗＝客戶數×每客戶消耗×單價；AI 子拆分（若需要）只能是 Product 子列之下的子列，合計須等於 Product。會計年度 2 月起（FY2026＝2025-02-01～2026-01-31）。金額 US$M。",
+ "official_segments": [
+  {
+   "name": "Snowflake（單一應報導分部）",
+   "label": "Snowflake",
+   "period": "FY2026",
+   "value": 4683.946,
+   "unit": "US$M",
+   "source": "10-K FY2026 Note 3 與 Segment Information（2026-03-20）；10-Q Q2 FY2027（2026-09-04）Segment Information",
+   "url": "https://www.sec.gov/Archives/edgar/data/1640147/000164014726000008/snow-20260131.htm",
+   "ttm2026q2": 5434.647
+  }
+ ],
+ "consolidated": {
+  "period": "FY2026",
+  "revenue": 4683.946,
+  "operatingIncome": -1435.165,
+  "ttm2026Q2Revenue": 5434.647,
+  "check": "單一分部＝合併；Product＋Professional services 與合併營收差 0：FY2022–FY2026 逐年差 0；近四季（Q3 FY26–Q2 FY27）逐季差 0（見 facts_snowflake.csv、research_snowflake.md 第 3 節）"
+ },
+ "sublines": [
+  {
+   "parent": "Snowflake",
+   "labels": [
+    "Product revenue",
+    "Professional services and other revenue"
+   ],
+   "values": {
+    "FY2026": {
+     "Product revenue": 4472.317,
+     "Professional services and other revenue": 211.629
+    },
+    "TTM2026Q2": {
+     "Product revenue": 5211.198,
+     "Professional services and other revenue": 223.449
+    }
+   },
+   "drivers": {
+    "Product revenue": "消耗型計價：運算、儲存、資料傳輸；命題＝客戶數×每客戶消耗×（核心平台＋AI 工作負載）；公司揭露 NRR、$1M+ 客戶、RPO",
+    "Professional services and other revenue": "專業服務；毛利為負，占營收約 4%"
+   }
+  }
+ ],
+ "source_package": "software_ai/snowflake/data/research_snowflake.md"
+}

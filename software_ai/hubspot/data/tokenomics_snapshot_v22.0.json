@@ -1,0 +1,415 @@
+{
+ "source": {
+  "file": "20261105_Tokenomics_v22.0.xlsx",
+  "current": "20261105_Tokenomics_v22.0.xlsx",
+  "version": "v22.0",
+  "commit": "79f6b300735444bc0892be8fa2f3c89a478e6e9c",
+  "extractedAt": "2026-11-16",
+  "repo": "YinchenChang/Tokenomics",
+  "recalculated": false,
+  "optional": [],
+  "generations": [
+   {
+    "name": "Hopper H100",
+    "code": "H100"
+   },
+   {
+    "name": "GB200 NVL72",
+    "code": "GB200"
+   },
+   {
+    "name": "GB300 NVL72",
+    "code": "GB300"
+   },
+   {
+    "name": "VR200 NVL72",
+    "code": "VR200"
+   },
+   {
+    "name": "Rubin Ultra（MGX NVL 單架，72 GPU）",
+    "code": "RU"
+   }
+  ],
+  "note": "主值取「基準」成本情境；低成本／高成本只作敏感度。每 GW＝IT 關鍵電力（Tokenomics Interface 第 1 列）。"
+ },
+ "items": {
+  "IF_PriceFresh_Luna": {
+   "sheet": "Interface",
+   "ref": "Interface!C86",
+   "label": "新鮮輸入 $/M — OpenAI 有效",
+   "unit": "$/M",
+   "kind": "single",
+   "values": 0.08,
+   "cell": "Interface!C86"
+  },
+  "IF_PriceCached_Luna": {
+   "sheet": "Interface",
+   "ref": "Interface!C87",
+   "label": "快取輸入 $/M — OpenAI 有效",
+   "unit": "$/M",
+   "kind": "single",
+   "values": 0.008,
+   "cell": "Interface!C87"
+  },
+  "IF_PriceOut_Luna": {
+   "sheet": "Interface",
+   "ref": "Interface!C89",
+   "label": "可見輸出 $/M — OpenAI 有效",
+   "unit": "$/M",
+   "kind": "single",
+   "values": 0.4,
+   "cell": "Interface!C89"
+  },
+  "IF_PriceFresh_Terra": {
+   "sheet": "Interface",
+   "ref": "Interface!C405",
+   "label": "Terra（中低層）｜新鮮輸入 $/M — OpenAI 有效（對應 D 節）",
+   "unit": "$/M",
+   "kind": "single",
+   "values": 0.8,
+   "cell": "Interface!C405"
+  },
+  "IF_PriceCached_Terra": {
+   "sheet": "Interface",
+   "ref": "Interface!C406",
+   "label": "Terra（中低層）｜快取輸入 $/M — OpenAI 有效（對應 D 節）",
+   "unit": "$/M",
+   "kind": "single",
+   "values": 0.04,
+   "cell": "Interface!C406"
+  },
+  "IF_PriceOut_Terra": {
+   "sheet": "Interface",
+   "ref": "Interface!C408",
+   "label": "Terra（中低層）｜可見輸出 $/M — OpenAI 有效（對應 D 節）",
+   "unit": "$/M",
+   "kind": "single",
+   "values": 4,
+   "cell": "Interface!C408"
+  },
+  "IF_PriceFresh_Sol": {
+   "sheet": "Interface",
+   "ref": "Interface!C104",
+   "label": "新鮮輸入 $/M — OpenAI 有效",
+   "unit": "$/M",
+   "kind": "single",
+   "values": 1.6,
+   "cell": "Interface!C104"
+  },
+  "IF_PriceCached_Sol": {
+   "sheet": "Interface",
+   "ref": "Interface!C105",
+   "label": "快取輸入 $/M — OpenAI 有效",
+   "unit": "$/M",
+   "kind": "single",
+   "values": 0.08,
+   "cell": "Interface!C105"
+  },
+  "IF_PriceOut_Sol": {
+   "sheet": "Interface",
+   "ref": "Interface!C107",
+   "label": "可見輸出 $/M — OpenAI 有效",
+   "unit": "$/M",
+   "kind": "single",
+   "values": 8,
+   "cell": "Interface!C107"
+  },
+  "IF_TaskSucc_Terra": {
+   "sheet": "Interface",
+   "ref": "Interface!C425:G425",
+   "label": "Terra（中低層）｜成功率 p（現行）（對應 E 節）",
+   "unit": "%",
+   "kind": "vector",
+   "values": [
+    0.98631717866191,
+    0.955670313721164,
+    0.865725304209211,
+    0.695076124968439,
+    0.446267899285204
+   ],
+   "cells": [
+    "Interface!C425",
+    "Interface!D425",
+    "Interface!E425",
+    "Interface!F425",
+    "Interface!G425"
+   ]
+  },
+  "IF_TaskTokFresh": {
+   "sheet": "Interface",
+   "ref": "Interface!C156:G156",
+   "label": "每次嘗試 新鮮輸入 token（現行）",
+   "unit": "tok",
+   "kind": "vector",
+   "values": [
+    1500,
+    1500,
+    6840,
+    27360,
+    200400
+   ],
+   "cells": [
+    "Interface!C156",
+    "Interface!D156",
+    "Interface!E156",
+    "Interface!F156",
+    "Interface!G156"
+   ]
+  },
+  "IF_TaskTokCached": {
+   "sheet": "Interface",
+   "ref": "Interface!C157:G157",
+   "label": "每次嘗試 快取輸入 token（現行）",
+   "unit": "tok",
+   "kind": "vector",
+   "values": [
+    1000,
+    1000,
+    18360,
+    73440,
+    1263600
+   ],
+   "cells": [
+    "Interface!C157",
+    "Interface!D157",
+    "Interface!E157",
+    "Interface!F157",
+    "Interface!G157"
+   ]
+  },
+  "IF_TaskTokDec": {
+   "sheet": "Interface",
+   "ref": "Interface!C158:G158",
+   "label": "每次嘗試 decode token（思考＋可見；現行）",
+   "unit": "tok",
+   "kind": "vector",
+   "values": [
+    500,
+    3700,
+    2400,
+    9600,
+    30000
+   ],
+   "cells": [
+    "Interface!C158",
+    "Interface!D158",
+    "Interface!E158",
+    "Interface!F158",
+    "Interface!G158"
+   ]
+  },
+  "IF_TaskTokMult": {
+   "sheet": "Interface",
+   "ref": "Interface!C331:G331",
+   "label": "任務總 token ÷ 一般聊天總 token（欄 C–G＝Workload 任務，同 E 節 IF_HdrTask；任務別，非模型層級；token 類型＝總 token：新鮮輸入＋快取輸入＋decode，混合）",
+   "unit": "x",
+   "kind": "vector",
+   "values": [
+    1,
+    2.06666666666667,
+    9.2,
+    36.8,
+    498
+   ],
+   "cells": [
+    "Interface!C331",
+    "Interface!D331",
+    "Interface!E331",
+    "Interface!F331",
+    "Interface!G331"
+   ]
+  },
+  "IF_FullCostDefault_Terra": {
+   "sheet": "Interface",
+   "ref": "Interface!C419:Q419",
+   "label": "Terra（中低層）｜全成本 $/M（服務＋快取儲存＋K6 預設攤提；基準利用率；下游預設）（對應 D 節）",
+   "unit": "$/M",
+   "kind": "gen_cost",
+   "values": {
+    "Hopper H100": {
+     "低成本": 0.84909747620719,
+     "基準": 1.21315634649029,
+     "高成本": 1.88297375011958
+    },
+    "GB200 NVL72": {
+     "低成本": 0.156944300486118,
+     "基準": 0.209528772784709,
+     "高成本": 0.308972916089273
+    },
+    "GB300 NVL72": {
+     "低成本": 0.164437089871361,
+     "基準": 0.212357464257912,
+     "高成本": 0.32550836961014
+    },
+    "VR200 NVL72": {
+     "低成本": 0.114512141178217,
+     "基準": 0.151830528989995,
+     "高成本": 0.220375647518355
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": 0.0897606207709003,
+     "基準": 0.13638532606641,
+     "高成本": 0.221605589599533
+    }
+   },
+   "cells": {
+    "Hopper H100": {
+     "低成本": "Interface!C419",
+     "基準": "Interface!D419",
+     "高成本": "Interface!E419"
+    },
+    "GB200 NVL72": {
+     "低成本": "Interface!F419",
+     "基準": "Interface!G419",
+     "高成本": "Interface!H419"
+    },
+    "GB300 NVL72": {
+     "低成本": "Interface!I419",
+     "基準": "Interface!J419",
+     "高成本": "Interface!K419"
+    },
+    "VR200 NVL72": {
+     "低成本": "Interface!L419",
+     "基準": "Interface!M419",
+     "高成本": "Interface!N419"
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": "Interface!O419",
+     "基準": "Interface!P419",
+     "高成本": "Interface!Q419"
+    }
+   }
+  },
+  "IF_FullCostDefault_Sol": {
+   "sheet": "Interface",
+   "ref": "Interface!C118:Q118",
+   "label": "全成本 $/M（服務＋快取儲存＋K6 預設攤提；基準利用率；下游預設）　[IF_FullCostDefault_Sol]｜v15.0 O12 口徑：機隊占比取 2025 OpenAI 推論 ÷（推論＋訓練）支出比（B4_Serve×(1−B4_Free)，全部世代同值，Assumed）；訓練成本以 100% 利用率計、服務以 ÷IF_Util 計；縮放倍數與隱含家族計畫數為 Assumed，接受為決策（Decisions SL46-16）",
+   "unit": "$/M",
+   "kind": "gen_cost",
+   "values": {
+    "Hopper H100": {
+     "低成本": 0.694129520779168,
+     "基準": 0.991749640634667,
+     "高成本": 1.53932903567708
+    },
+    "GB200 NVL72": {
+     "低成本": 0.134805834937012,
+     "基準": 0.179977031128122,
+     "高成本": 0.265401695689939
+    },
+    "GB300 NVL72": {
+     "低成本": 0.137726321056283,
+     "基準": 0.177866200315954,
+     "高成本": 0.272645586685596
+    },
+    "VR200 NVL72": {
+     "低成本": 0.0965259292413494,
+     "基準": 0.127986967883279,
+     "高成本": 0.185773510903655
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": 0.0766038021370404,
+     "基準": 0.116401064298725,
+     "高成本": 0.189142181863326
+    }
+   },
+   "cells": {
+    "Hopper H100": {
+     "低成本": "Interface!C118",
+     "基準": "Interface!D118",
+     "高成本": "Interface!E118"
+    },
+    "GB200 NVL72": {
+     "低成本": "Interface!F118",
+     "基準": "Interface!G118",
+     "高成本": "Interface!H118"
+    },
+    "GB300 NVL72": {
+     "低成本": "Interface!I118",
+     "基準": "Interface!J118",
+     "高成本": "Interface!K118"
+    },
+    "VR200 NVL72": {
+     "低成本": "Interface!L118",
+     "基準": "Interface!M118",
+     "高成本": "Interface!N118"
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": "Interface!O118",
+     "基準": "Interface!P118",
+     "高成本": "Interface!Q118"
+    }
+   }
+  },
+  "IF_FullCostDefault_Luna": {
+   "sheet": "Interface",
+   "ref": "Interface!C100:Q100",
+   "label": "全成本 $/M（服務＋快取儲存＋K6 預設攤提；基準利用率；下游預設）　[IF_FullCostDefault_Luna]｜v15.0 O12 口徑：機隊占比取 2025 OpenAI 推論 ÷（推論＋訓練）支出比（B4_Serve×(1−B4_Free)，全部世代同值，Assumed）；訓練成本以 100% 利用率計、服務以 ÷IF_Util 計；縮放倍數與隱含家族計畫數為 Assumed，接受為決策（Decisions SL46-16）",
+   "unit": "$/M",
+   "kind": "gen_cost",
+   "values": {
+    "Hopper H100": {
+     "低成本": 0.179777401500454,
+     "基準": 0.256857088481771,
+     "高成本": 0.398672932073868
+    },
+    "GB200 NVL72": {
+     "低成本": 0.0321021303988127,
+     "基準": 0.0428567499832247,
+     "高成本": 0.063195148076591
+    },
+    "GB300 NVL72": {
+     "低成本": 0.0334955164813938,
+     "基準": 0.0432556671159345,
+     "高成本": 0.0663016031047471
+    },
+    "VR200 NVL72": {
+     "低成本": 0.024630401927332,
+     "基準": 0.0326560779859989,
+     "高成本": 0.0473973610094285
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": 0.0193627494706178,
+     "基準": 0.0294186832097818,
+     "高成本": 0.0477988384920865
+    }
+   },
+   "cells": {
+    "Hopper H100": {
+     "低成本": "Interface!C100",
+     "基準": "Interface!D100",
+     "高成本": "Interface!E100"
+    },
+    "GB200 NVL72": {
+     "低成本": "Interface!F100",
+     "基準": "Interface!G100",
+     "高成本": "Interface!H100"
+    },
+    "GB300 NVL72": {
+     "低成本": "Interface!I100",
+     "基準": "Interface!J100",
+     "高成本": "Interface!K100"
+    },
+    "VR200 NVL72": {
+     "低成本": "Interface!L100",
+     "基準": "Interface!M100",
+     "高成本": "Interface!N100"
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": "Interface!O100",
+     "基準": "Interface!P100",
+     "高成本": "Interface!Q100"
+    }
+   }
+  },
+  "IF_Disc": {
+   "sheet": "Interface",
+   "ref": "Interface!C347",
+   "label": "折扣 d（有效牌價＝表列牌價 ×（1 − IF_Disc）；基準／低／高）",
+   "unit": "%",
+   "kind": "single",
+   "values": 0.2,
+   "cell": "Interface!C347"
+  }
+ }
+}

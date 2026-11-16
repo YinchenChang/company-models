@@ -1,0 +1,178 @@
+﻿指標,數值,單位,期間,口徑,出處,擷取日,標記,來源誘因
+合併營收（net sales）,190359,百萬日圓,FY2021（2021-01-01～2021-12-31）,日本會計準則（J-GAAP）合併,https://stockanalysis.com/quote/tyo/4704/financials/income-statement/（與 https://envalith.com/en/companies/4704 二源一致；法定申報原文未讀）,2026-11-16,Verified,
+合併營收（net sales）,223795,百萬日圓,FY2022（2022-01-01～2022-12-31）,日本會計準則（J-GAAP）合併,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.4 事業成績表,2026-11-16,Verified,
+合併營收（net sales）,248691,百萬日圓,FY2023（2023-01-01～2023-12-31）,日本會計準則（J-GAAP）合併,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.4,2026-11-16,Verified,
+合併營收（net sales）,272638,百萬日圓,FY2024（2024-01-01～2024-12-31）,日本會計準則（J-GAAP）合併,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.4；AR24 p.26,2026-11-16,Verified,
+合併營收（net sales）,275984,百萬日圓,FY2025（2025-01-01～2025-12-31）,日本會計準則（J-GAAP）合併,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.4、p.20,2026-11-16,Verified,
+營業利益（財報口徑）,43642,百萬日圓,FY2021,J-GAAP 合併；財報口徑,"https://stockanalysis.com/quote/tyo/4704/financials/income-statement/（envalith 43,641；差 1 為四捨五入）",2026-11-16,Verified,
+營業利益（財報口徑）,31341,百萬日圓,FY2022,J-GAAP 合併；財報口徑,"https://stockanalysis.com/quote/tyo/4704/financials/income-statement/（envalith 31,340）",2026-11-16,Verified,
+營業利益（財報口徑）,32603,百萬日圓,FY2023,J-GAAP 合併；財報口徑,"https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2023.pdf p.2 為 32,602；https://stockanalysis.com/quote/tyo/4704/financials/income-statement/ 為 32,603",2026-11-16,Verified,
+營業利益（財報口徑）,48105,百萬日圓,FY2024,J-GAAP 合併；財報口徑,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2024.pdf p.26,2026-11-16,Verified,
+營業利益（財報口徑）,57777,百萬日圓,FY2025,J-GAAP 合併；財報口徑,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.1、p.20,2026-11-16,Verified,
+營業成本（cost of sales）,42017,百萬日圓,FY2021,J-GAAP 合併,https://stockanalysis.com/quote/tyo/4704/financials/income-statement/,2026-11-16,Verified,
+營業成本（cost of sales）,54300,百萬日圓,FY2022,J-GAAP 合併,https://stockanalysis.com/quote/tyo/4704/financials/income-statement/,2026-11-16,Verified,
+營業成本（cost of sales）,63662,百萬日圓,FY2023,J-GAAP 合併,https://stockanalysis.com/quote/tyo/4704/financials/income-statement/,2026-11-16,Verified,
+營業成本（cost of sales）,64980,百萬日圓,FY2024,J-GAAP 合併,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2024.pdf p.26,2026-11-16,Verified,
+營業成本（cost of sales）,63717,百萬日圓,FY2025,J-GAAP 合併,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.20,2026-11-16,Verified,
+銷管費（含研發；SG&A）,159551,百萬日圓,FY2024,J-GAAP 合併,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2024.pdf p.26,2026-11-16,Verified,
+銷管費（含研發；SG&A）,154490,百萬日圓,FY2025,J-GAAP 合併,"AR25 p.20 之 毛利 212,267 − 營業利益 57,777（https://stockanalysis.com/quote/tyo/4704/financials/income-statement/ 列 SG&A 154,490）",2026-11-16,Derived,
+毛利,148342,百萬日圓,FY2021,營收 − 營業成本,由 rev 與 cogs 相減；與 https://stockanalysis.com/quote/tyo/4704/financials/income-statement/ 一致,2026-11-16,Derived,
+毛利,169495,百萬日圓,FY2022,營收 − 營業成本,由 rev 與 cogs 相減；與 https://stockanalysis.com/quote/tyo/4704/financials/income-statement/ 一致,2026-11-16,Derived,
+毛利,185029,百萬日圓,FY2023,營收 − 營業成本,由 rev 與 cogs 相減；與 https://stockanalysis.com/quote/tyo/4704/financials/income-statement/ 一致,2026-11-16,Derived,
+毛利,207658,百萬日圓,FY2024,營收 − 營業成本,由 rev 與 cogs 相減；與 https://stockanalysis.com/quote/tyo/4704/financials/income-statement/ 一致,2026-11-16,Derived,
+毛利,212267,百萬日圓,FY2025,營收 − 營業成本,由 rev 與 cogs 相減；與 https://stockanalysis.com/quote/tyo/4704/financials/income-statement/ 一致,2026-11-16,Derived,
+稅前利益,52371,百萬日圓,FY2021,J-GAAP 合併,https://stockanalysis.com/quote/tyo/4704/financials/income-statement/（資料商；法定申報原文未讀）,2026-11-16,Verified,
+稅前利益,41897,百萬日圓,FY2022,J-GAAP 合併,https://stockanalysis.com/quote/tyo/4704/financials/income-statement/（資料商；法定申報原文未讀）,2026-11-16,Verified,
+稅前利益,31976,百萬日圓,FY2023,J-GAAP 合併,https://stockanalysis.com/quote/tyo/4704/financials/income-statement/（資料商；法定申報原文未讀）,2026-11-16,Verified,
+稅前利益,55579,百萬日圓,FY2024,J-GAAP 合併,https://stockanalysis.com/quote/tyo/4704/financials/income-statement/（資料商；法定申報原文未讀）,2026-11-16,Verified,
+稅前利益,52329,百萬日圓,FY2025,J-GAAP 合併,https://stockanalysis.com/quote/tyo/4704/financials/income-statement/（資料商；法定申報原文未讀）,2026-11-16,Verified,
+歸屬母公司淨利,38367,百萬日圓,FY2021,J-GAAP 合併,https://stockanalysis.com/quote/tyo/4704/financials/income-statement/,2026-11-16,Verified,
+歸屬母公司淨利,29843,百萬日圓,FY2022,J-GAAP 合併,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.4,2026-11-16,Verified,
+歸屬母公司淨利,10731,百萬日圓,FY2023,J-GAAP 合併,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.4,2026-11-16,Verified,
+歸屬母公司淨利,34358,百萬日圓,FY2024,J-GAAP 合併,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.4,2026-11-16,Verified,
+歸屬母公司淨利,34523,百萬日圓,FY2025,J-GAAP 合併,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.4,2026-11-16,Verified,
+每股盈餘（基本）,213.59,日圓,FY2022,J-GAAP,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.4,2026-11-16,Verified,
+每股盈餘（基本）,78.45,日圓,FY2023,J-GAAP,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.4,2026-11-16,Verified,
+每股盈餘（基本）,259.05,日圓,FY2024,J-GAAP,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.4,2026-11-16,Verified,
+每股盈餘（基本）,262.42,日圓,FY2025,J-GAAP,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.4、p.39,2026-11-16,Verified,
+Pre-GAAP 營業利益（公司自訂；加回遞延收入調整）,53073,百萬日圓,FY2023,公司 non-GAAP 類指標,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2023.pdf p.2,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+Pre-GAAP 營業利益（公司自訂；加回遞延收入調整）,77636,百萬日圓,FY2024,公司 non-GAAP 類指標,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2024.pdf p.1,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+Pre-GAAP 營業利益（公司自訂；加回遞延收入調整）,80799,百萬日圓,FY2025,公司 non-GAAP 類指標,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.2,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+分部營收：Japan（日本）,83002,百萬日圓,FY2023,所在地別報告分部；外部客戶營收,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2023.pdf p.1（營運概況）,2026-11-16,Verified,
+分部營收：Japan（日本）,85756,百萬日圓,FY2024,所在地別報告分部；外部客戶營收,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2024.pdf p.40 附註,2026-11-16,Verified,
+分部營收：Japan（日本）,87840,百萬日圓,FY2025,所在地別報告分部；外部客戶營收,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.38 附註,2026-11-16,Verified,
+分部營收：Americas（美洲）,52930,百萬日圓,FY2022,所在地別報告分部；外部客戶營收,由 AR23 p.1 之 FY2023 值與年增率回推（≈）,2026-11-16,Derived,
+分部營收：Americas（美洲）,57643,百萬日圓,FY2023,所在地別報告分部；外部客戶營收,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2023.pdf p.1（營運概況）,2026-11-16,Verified,
+分部營收：Americas（美洲）,58827,百萬日圓,FY2024,所在地別報告分部；外部客戶營收,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2024.pdf p.40 附註,2026-11-16,Verified,
+分部營收：Americas（美洲）,55187,百萬日圓,FY2025,所在地別報告分部；外部客戶營收,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.38 附註,2026-11-16,Verified,
+分部營收：Europe（歐洲）,41479,百萬日圓,FY2022,所在地別報告分部；外部客戶營收,由 AR23 p.1 之 FY2023 值與年增率回推（≈）,2026-11-16,Derived,
+分部營收：Europe（歐洲）,50643,百萬日圓,FY2023,所在地別報告分部；外部客戶營收,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2023.pdf p.1（營運概況）,2026-11-16,Verified,
+分部營收：Europe（歐洲）,58546,百萬日圓,FY2024,所在地別報告分部；外部客戶營收,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2024.pdf p.40 附註,2026-11-16,Verified,
+分部營收：Europe（歐洲）,61439,百萬日圓,FY2025,所在地別報告分部；外部客戶營收,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.38 附註,2026-11-16,Verified,
+分部營收：Asia Pacific（亞太）,47284,百萬日圓,FY2022,所在地別報告分部；外部客戶營收,由 AR23 p.1 之 FY2023 值與年增率回推（≈）,2026-11-16,Derived,
+分部營收：Asia Pacific（亞太）,57401,百萬日圓,FY2023,所在地別報告分部；外部客戶營收,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2023.pdf p.1（營運概況）,2026-11-16,Verified,
+分部營收：Asia Pacific（亞太）,69507,百萬日圓,FY2024,所在地別報告分部；外部客戶營收,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2024.pdf p.40 附註,2026-11-16,Verified,
+分部營收：Asia Pacific（亞太）,71516,百萬日圓,FY2025,所在地別報告分部；外部客戶營收,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.38 附註,2026-11-16,Verified,
+分部利益：Japan,20651,百萬日圓,FY2025,"報告分部利益（調整前；合計 56,994 與合併營業利益 57,777 差 783 為調整）",https://envalith.com/en/companies/4704/segments（資料商；法定申報原文未讀）,2026-11-16,Verified,
+分部利益：Americas,11027,百萬日圓,FY2025,"報告分部利益（調整前；合計 56,994 與合併營業利益 57,777 差 783 為調整）",https://envalith.com/en/companies/4704/segments（資料商；法定申報原文未讀）,2026-11-16,Verified,
+分部利益：Europe,12334,百萬日圓,FY2025,"報告分部利益（調整前；合計 56,994 與合併營業利益 57,777 差 783 為調整）",https://envalith.com/en/companies/4704/segments（資料商；法定申報原文未讀）,2026-11-16,Verified,
+分部利益：Asia Pacific,12982,百萬日圓,FY2025,"報告分部利益（調整前；合計 56,994 與合併營業利益 57,777 差 783 為調整）",https://envalith.com/en/companies/4704/segments（資料商；法定申報原文未讀）,2026-11-16,Verified,
+分部營收：Japan,22072,百萬日圓,2025Q1,所在地別報告分部,https://envalith.com/en/companies/4704/segments（資料商；法定申報原文未讀）,2026-11-16,Verified,
+分部營收：Japan,22136,百萬日圓,2026Q1,所在地別報告分部,https://envalith.com/en/companies/4704/segments（資料商；法定申報原文未讀）,2026-11-16,Verified,
+分部營收：Americas,14174,百萬日圓,2025Q1,所在地別報告分部,https://envalith.com/en/companies/4704/segments（資料商；法定申報原文未讀）,2026-11-16,Verified,
+分部營收：Americas,14498,百萬日圓,2026Q1,所在地別報告分部,https://envalith.com/en/companies/4704/segments（資料商；法定申報原文未讀）,2026-11-16,Verified,
+分部營收：Europe,14261,百萬日圓,2025Q1,所在地別報告分部,https://envalith.com/en/companies/4704/segments（資料商；法定申報原文未讀）,2026-11-16,Verified,
+分部營收：Europe,16990,百萬日圓,2026Q1,所在地別報告分部,https://envalith.com/en/companies/4704/segments（資料商；法定申報原文未讀）,2026-11-16,Verified,
+分部營收：Asia Pacific,16993,百萬日圓,2025Q1,所在地別報告分部,https://envalith.com/en/companies/4704/segments（資料商；法定申報原文未讀）,2026-11-16,Verified,
+分部營收：Asia Pacific,20231,百萬日圓,2026Q1,所在地別報告分部,https://envalith.com/en/companies/4704/segments（資料商；法定申報原文未讀）,2026-11-16,Verified,
+分部營收：Japan,44184,百萬日圓,2026H1（1–6 月累計）,所在地別報告分部；年增 0.7%,https://www.gyokaidigest.com/en/companies/trend-micro/report/2026-Q2（資料商轉載短信；法定申報原文未讀）,2026-11-16,Verified,
+分部營收：Americas,29059,百萬日圓,2026H1（1–6 月累計）,所在地別報告分部；年增 7.5%,https://www.gyokaidigest.com/en/companies/trend-micro/report/2026-Q2（資料商轉載短信；法定申報原文未讀）,2026-11-16,Verified,
+分部營收：Europe,33865,百萬日圓,2026H1（1–6 月累計）,所在地別報告分部；年增 16.6%,https://www.gyokaidigest.com/en/companies/trend-micro/report/2026-Q2（資料商轉載短信；法定申報原文未讀）,2026-11-16,Verified,
+分部營收：Asia Pacific,41486,百萬日圓,2026H1（1–6 月累計）,所在地別報告分部；年增 22.2%,https://www.gyokaidigest.com/en/companies/trend-micro/report/2026-Q2（資料商轉載短信；法定申報原文未讀）,2026-11-16,Verified,
+合併營收,73230,百萬日圓,2025Q4,J-GAAP 合併；季度,https://newsroom.trendmicro.com/2026-02-18-Trend-Micro-Reports-Earnings-Results-for-Q4-2025-and-FY-2025,2026-11-16,Verified,
+營業利益,13303,百萬日圓,2025Q4,J-GAAP 合併；季度,https://newsroom.trendmicro.com/2026-02-18-Trend-Micro-Reports-Earnings-Results-for-Q4-2025-and-FY-2025,2026-11-16,Verified,
+歸屬母公司淨利,7580,百萬日圓,2025Q4,J-GAAP 合併；季度,https://newsroom.trendmicro.com/2026-02-18-Trend-Micro-Reports-Earnings-Results-for-Q4-2025-and-FY-2025,2026-11-16,Verified,
+合併營收,73856,百萬日圓,2026Q1,J-GAAP 合併；季度,https://newsroom.trendmicro.com/2026-05-14-Trend-Micro-Reports-Earnings-Results-for-Q1-2026,2026-11-16,Verified,
+營業利益,15558,百萬日圓,2026Q1,J-GAAP 合併；季度,https://newsroom.trendmicro.com/2026-05-14-Trend-Micro-Reports-Earnings-Results-for-Q1-2026,2026-11-16,Verified,
+歸屬母公司淨利,11775,百萬日圓,2026Q1,J-GAAP 合併；季度,https://newsroom.trendmicro.com/2026-05-14-Trend-Micro-Reports-Earnings-Results-for-Q1-2026,2026-11-16,Verified,
+合併營收,74739,百萬日圓,2026Q2,J-GAAP 合併；季度,https://newsroom.trendmicro.com/2026-08-13-Trend-Micro-Reports-Earnings-Results-for-Q2-2026,2026-11-16,Verified,
+營業利益,6233,百萬日圓,2026Q2,J-GAAP 合併；季度,https://newsroom.trendmicro.com/2026-08-13-Trend-Micro-Reports-Earnings-Results-for-Q2-2026,2026-11-16,Verified,
+歸屬母公司淨利,3455,百萬日圓,2026Q2,J-GAAP 合併；季度,https://newsroom.trendmicro.com/2026-08-13-Trend-Micro-Reports-Earnings-Results-for-Q2-2026,2026-11-16,Verified,
+合併營收,75300,百萬日圓,2026Q3,J-GAAP 合併；季度,https://www.prnewswire.com/news-releases/trend-micro-reports-q3-2026-results-with-9-net-sales-growth-and-an-18-operating-margin-302938200.html（新聞稿以十億日圓一位小數表達：75.3／13.2／8.6）,2026-11-16,Verified,
+營業利益,13200,百萬日圓,2026Q3,J-GAAP 合併；季度,https://www.prnewswire.com/news-releases/trend-micro-reports-q3-2026-results-with-9-net-sales-growth-and-an-18-operating-margin-302938200.html（新聞稿以十億日圓一位小數表達：75.3／13.2／8.6）,2026-11-16,Verified,
+歸屬母公司淨利,8600,百萬日圓,2026Q3,J-GAAP 合併；季度,https://www.prnewswire.com/news-releases/trend-micro-reports-q3-2026-results-with-9-net-sales-growth-and-an-18-operating-margin-302938200.html（新聞稿以十億日圓一位小數表達：75.3／13.2／8.6）,2026-11-16,Verified,
+合併營收（上半年累計）,148596,百萬日圓,2026H1,J-GAAP；年增 11.0%,https://www.gyokaidigest.com/en/companies/trend-micro/report/2026-Q2,2026-11-16,Verified,
+營業利益（上半年累計）,21792,百萬日圓,2026H1,J-GAAP；年增 −23.5%,https://www.gyokaidigest.com/en/companies/trend-micro/report/2026-Q2,2026-11-16,Verified,
+經常利益（上半年累計）,24824,百萬日圓,2026H1,J-GAAP,https://www.gyokaidigest.com/en/companies/trend-micro/report/2026-Q2,2026-11-16,Verified,
+企業業務（TrendAI）營收（上半年累計）,119444,百萬日圓,2026H1,公司分業務營收；年增 11.9%,https://www.gyokaidigest.com/en/companies/trend-micro/report/2026-Q2,2026-11-16,Verified,
+個人業務（TrendLife）營收（上半年累計）,29151,百萬日圓,2026H1,公司分業務營收；年增 7.2%,https://www.gyokaidigest.com/en/companies/trend-micro/report/2026-Q2,2026-11-16,Verified,
+營業現金流（上半年累計）,35541,百萬日圓,2026H1,J-GAAP 合併現金流,https://www.gyokaidigest.com/en/companies/trend-micro/report/2026-Q2,2026-11-16,Verified,
+庫藏股買回（上半年累計）,4999,百萬日圓,2026H1,現金支出,https://www.gyokaidigest.com/en/companies/trend-micro/report/2026-Q2,2026-11-16,Verified,
+FY2026 營收指引,301500,百萬日圓,FY2026,J-GAAP；匯率假設 156 日圓／美元；2026-02-18 發布、2026-05-14、08-13、11-12 維持,https://newsroom.trendmicro.com/2026-02-18-Trend-Micro-Reports-Earnings-Results-for-Q4-2025-and-FY-2025；https://www.prnewswire.com/news-releases/trend-micro-reports-q3-2026-results-with-9-net-sales-growth-and-an-18-operating-margin-302938200.html,2026-11-16,Interested-party,公司指引：管理層設定可達成的目標
+FY2026 營業利益指引（初始）,56400,百萬日圓,FY2026,2026-02-18 發布；2026-05-14 未修正,https://newsroom.trendmicro.com/2026-02-18-Trend-Micro-Reports-Earnings-Results-for-Q4-2025-and-FY-2025；https://newsroom.trendmicro.com/2026-05-14-Trend-Micro-Reports-Earnings-Results-for-Q1-2026,2026-11-16,Interested-party,公司指引
+FY2026 營業利益指引（現行）,44400,百萬日圓,FY2026,"2026-08-13 下修（−12,000）；2026-11-12 維持",https://newsroom.trendmicro.com/2026-08-13-Trend-Micro-Reports-Earnings-Results-for-Q2-2026；https://www.prnewswire.com/news-releases/trend-micro-reports-q3-2026-results-with-9-net-sales-growth-and-an-18-operating-margin-302938200.html,2026-11-16,Interested-party,公司指引；下修理由寫「雲端相關費用（含 AI token 成本）顯著超出原預估」
+FY2026 歸屬母公司淨利指引（現行）,30700,百萬日圓,FY2026,"2026-08-13 由 36,600 下修",https://newsroom.trendmicro.com/2026-08-13-Trend-Micro-Reports-Earnings-Results-for-Q2-2026；https://www.prnewswire.com/news-releases/trend-micro-reports-q3-2026-results-with-9-net-sales-growth-and-an-18-operating-margin-302938200.html,2026-11-16,Interested-party,公司指引
+FY2026 經常利益指引（現行）,46000,百萬日圓,FY2026,"2026-08-13 由 55,100 下修（資料商轉載）",https://www.gyokaidigest.com/en/companies/trend-micro/report/2026-Q2,2026-11-16,Interested-party,公司指引
+FY2028 營業利益率目標,28–31,%,FY2028,管理層法說口頭；2026-11-12 維持；FY2029–2030 路線圖不再延伸、年度 IR Day 取消,https://www.investing.com/news/transcripts/earnings-call-transcript-trend-micro-posts-record-q3-sales-stock-slips-085-on-outlook-93CH-5022947,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+全公司 ARR,1760,US$M,2026Q3,固定匯率 155.95；年增 6%（Q1 3%、Q2 5%）,https://www.prnewswire.com/news-releases/trend-micro-reports-q3-2026-results-with-9-net-sales-growth-and-an-18-operating-margin-302938200.html,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+企業（TrendAI）ARR,1292,US$M,2026Q3,固定匯率；年增 8%,https://www.prnewswire.com/news-releases/trend-micro-reports-q3-2026-results-with-9-net-sales-growth-and-an-18-operating-margin-302938200.html,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+個人（TrendLife）ARR,463,US$M,2026Q3,固定匯率；年增 1%；Worry-Free 轉入 TrendLife 後重編,https://www.prnewswire.com/news-releases/trend-micro-reports-q3-2026-results-with-9-net-sales-growth-and-an-18-operating-margin-302938200.html,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+Vision One SaaS ARR,564,US$M,2026Q3,固定匯率；年增 46%；與法說譯稿「近 800M、占企業 ARR 61%」口徑不一致，未解,https://www.prnewswire.com/news-releases/trend-micro-reports-q3-2026-results-with-9-net-sales-growth-and-an-18-operating-margin-302938200.html,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+Vision One ARR（法說譯稿口徑）,800,US$M,2026Q3,約數（nearly）；年增 37%；占 TrendAI ARR 約 61%；口徑與新聞稿不同,https://www.investing.com/news/transcripts/earnings-call-transcript-trend-micro-posts-record-q3-sales-stock-slips-085-on-outlook-93CH-5022947,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+服務 ARR,88,US$M,2026Q3,年增 25%,https://www.prnewswire.com/news-releases/trend-micro-reports-q3-2026-results-with-9-net-sales-growth-and-an-18-operating-margin-302938200.html,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+Digital Life Protection ARR,141,US$M,2026Q3,年增 37%；占 TrendLife ARR 30%,https://www.prnewswire.com/news-releases/trend-micro-reports-q3-2026-results-with-9-net-sales-growth-and-an-18-operating-margin-302938200.html,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+淨營收留存率（NRR）,1.19,比率,2026Q3,企業；Q2 122%,https://www.prnewswire.com/news-releases/trend-micro-reports-q3-2026-results-with-9-net-sales-growth-and-an-18-operating-margin-302938200.html,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+毛留存率（GRR）,0.87,比率,2026Q3,企業；法說,https://www.investing.com/news/transcripts/earnings-call-transcript-trend-micro-posts-record-q3-sales-stock-slips-085-on-outlook-93CH-5022947,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+Vision One ARR 年增率,0.46,比率,2026Q3,新聞稿口徑（Q1 50%、Q2 49%）,https://www.prnewswire.com/news-releases/trend-micro-reports-q3-2026-results-with-9-net-sales-growth-and-an-18-operating-margin-302938200.html,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+大型企業平台 ARR（Vision One Platform＋Platform Cyber Services）,467,US$M,2025Q4,固定匯率；年增 58%,https://newsroom.trendmicro.com/2026-02-18-Trend-Micro-Reports-Earnings-Results-for-Q4-2025-and-FY-2025,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+個人（TrendLife）ARR,374,US$M,2026Q2,年增 4%（與 Q3 463 口徑不同：重編前後）,https://newsroom.trendmicro.com/2026-08-13-Trend-Micro-Reports-Earnings-Results-for-Q2-2026,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+企業淨新增 ARR,31,US$M,2026Q3,Q2 為 21,https://www.prnewswire.com/news-releases/trend-micro-reports-q3-2026-results-with-9-net-sales-growth-and-an-18-operating-margin-302938200.html,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+Q4 以後管線,1200,US$M,2026Q3,約數；法說,https://www.investing.com/news/transcripts/earnings-call-transcript-trend-micro-posts-record-q3-sales-stock-slips-085-on-outlook-93CH-5022947,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+個人客戶 ARPU,33.3,US$,2026Q1,年增 2%（Q3 年增 9%）,https://newsroom.trendmicro.com/2026-05-14-Trend-Micro-Reports-Earnings-Results-for-Q1-2026,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+企業 ARR（FY2025 年底）,>1300,US$M,2025Q4,固定匯率；2025 全年成長 2%,https://newsroom.trendmicro.com/2026-02-18-Trend-Micro-Reports-Earnings-Results-for-Q4-2025-and-FY-2025,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+個人業務營收年增,-0.09,比率,FY2025,公司說法,https://newsroom.trendmicro.com/2026-02-18-Trend-Micro-Reports-Earnings-Results-for-Q4-2025-and-FY-2025,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+員工數（期末）,6717,人,FY2025 年底,"合併；R&D 2,228、銷售 1,811、產品支援 1,406、行銷 489、管理 783",https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.5,2026-11-16,Verified,
+員工數（期末）,6869,人,FY2024 年底,合併,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2024.pdf p.5,2026-11-16,Verified,
+員工數（約）,6300,人,2026Q3 末,"法說；Q4 預計低於 6,200；全年減 300–400 人（譯稿 300 與 400 並見）",https://www.investing.com/news/transcripts/earnings-call-transcript-trend-micro-posts-record-q3-sales-stock-slips-085-on-outlook-93CH-5022947,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+離職相關費用（約）,1000,百萬日圓,2026Q3,法說約數,https://www.investing.com/news/transcripts/earnings-call-transcript-trend-micro-posts-record-q3-sales-stock-slips-085-on-outlook-93CH-5022947,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+離職相關費用（預計）,4000,百萬日圓,2026Q4,法說約 40 億日圓、約 300 人,https://www.investing.com/news/transcripts/earnings-call-transcript-trend-micro-posts-record-q3-sales-stock-slips-085-on-outlook-93CH-5022947,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+AWS 抵減（Q3 雲端費用）,11,US$M,2026Q3,法說（譯稿換算日圓 1.1／1.7／1.8 十億並見，口徑未解）,https://www.investing.com/news/transcripts/earnings-call-transcript-trend-micro-posts-record-q3-sales-stock-slips-085-on-outlook-93CH-5022947,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+現金及存款,220092,百萬日圓,2025-12-31,合併資產負債表,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.19,2026-11-16,Verified,
+現金及存款＋有價證券,231030,百萬日圓,2025-12-31,資料商,https://stockanalysis.com/quote/tyo/4704/financials/balance-sheet/,2026-11-16,Verified,
+現金及存款,219902,百萬日圓,2026-06-30,短信；資料商轉載,https://www.gyokaidigest.com/en/companies/trend-micro/report/2026-Q2；https://stockanalysis.com/quote/tyo/4704/financials/balance-sheet/,2026-11-16,Verified,
+現金及存款＋短期投資,231363,百萬日圓,2026-06-30,"資料商（現金 219,902＋短期投資 11,461）",https://stockanalysis.com/quote/tyo/4704/financials/balance-sheet/,2026-11-16,Verified,
+合約負債（遞延收入，流動）,236085,百萬日圓,2025-12-31,資料商,https://stockanalysis.com/quote/tyo/4704/financials/balance-sheet/,2026-11-16,Verified,
+合約負債（遞延收入，流動）,232485,百萬日圓,2026-06-30,資料商,https://stockanalysis.com/quote/tyo/4704/financials/balance-sheet/,2026-11-16,Verified,
+應收帳款,76126,百萬日圓,2025-12-31,資料商,https://stockanalysis.com/quote/tyo/4704/financials/balance-sheet/,2026-11-16,Verified,
+有利息負債,未找到,百萬日圓,2026-06-30,資產負債表資料商頁無借款列,https://stockanalysis.com/quote/tyo/4704/financials/balance-sheet/,2026-11-16,Assumed,
+租賃負債,未找到,百萬日圓,2026-06-30,資料商頁未列,https://stockanalysis.com/quote/tyo/4704/financials/balance-sheet/,2026-11-16,Assumed,
+已發行股數,140901604,股,2025-12-31,,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.35,2026-11-16,Verified,
+庫藏股,10221368,股,2025-12-31,,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.35,2026-11-16,Verified,
+流通股數,130680236,股,2025-12-31,,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.6,2026-11-16,Verified,
+流通股數,129.93,百萬股,2026-11-13,資料商,https://stockanalysis.com/quote/tyo/4704/,2026-11-16,Verified,
+每股股利（FY2025 年度）,185,日圓,FY2025,"股利總額 24,175 百萬；除息日 2025-12-29",https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.35；https://stockanalysis.com/quote/tyo/4704/,2026-11-16,Verified,
+每股股利（FY2024 年度）,184,日圓,FY2024,"股利總額 24,158 百萬",https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.35,2026-11-16,Verified,
+營業現金流,55267,百萬日圓,FY2021,合併現金流,https://stockanalysis.com/quote/tyo/4704/financials/cash-flow-statement/,2026-11-16,Verified,
+資本支出,2156,百萬日圓,FY2021,"（FY2023 2,178、FY2024 1,220 與 AR 營運概況一致）",https://stockanalysis.com/quote/tyo/4704/financials/cash-flow-statement/,2026-11-16,Verified,
+折舊攤銷（含合約成本等攤銷，口徑待釐清）,20894,百萬日圓,FY2021,資料商,https://stockanalysis.com/quote/tyo/4704/financials/cash-flow-statement/,2026-11-16,Verified,
+庫藏股買回,0,百萬日圓,FY2021,現金支出,https://stockanalysis.com/quote/tyo/4704/financials/cash-flow-statement/,2026-11-16,Verified,
+營業現金流,56903,百萬日圓,FY2022,合併現金流,https://stockanalysis.com/quote/tyo/4704/financials/cash-flow-statement/,2026-11-16,Verified,
+資本支出,1402,百萬日圓,FY2022,"（FY2023 2,178、FY2024 1,220 與 AR 營運概況一致）",https://stockanalysis.com/quote/tyo/4704/financials/cash-flow-statement/,2026-11-16,Verified,
+折舊攤銷（含合約成本等攤銷，口徑待釐清）,25185,百萬日圓,FY2022,資料商,https://stockanalysis.com/quote/tyo/4704/financials/cash-flow-statement/,2026-11-16,Verified,
+庫藏股買回,7035,百萬日圓,FY2022,現金支出,https://stockanalysis.com/quote/tyo/4704/financials/cash-flow-statement/,2026-11-16,Verified,
+營業現金流,57227,百萬日圓,FY2023,合併現金流,https://stockanalysis.com/quote/tyo/4704/financials/cash-flow-statement/,2026-11-16,Verified,
+資本支出,2178,百萬日圓,FY2023,"（FY2023 2,178、FY2024 1,220 與 AR 營運概況一致）",https://stockanalysis.com/quote/tyo/4704/financials/cash-flow-statement/,2026-11-16,Verified,
+折舊攤銷（含合約成本等攤銷，口徑待釐清）,28315,百萬日圓,FY2023,資料商,https://stockanalysis.com/quote/tyo/4704/financials/cash-flow-statement/,2026-11-16,Verified,
+庫藏股買回,24999,百萬日圓,FY2023,現金支出,https://stockanalysis.com/quote/tyo/4704/financials/cash-flow-statement/,2026-11-16,Verified,
+營業現金流,46781,百萬日圓,FY2024,合併現金流,https://stockanalysis.com/quote/tyo/4704/financials/cash-flow-statement/,2026-11-16,Verified,
+資本支出,1220,百萬日圓,FY2024,"（FY2023 2,178、FY2024 1,220 與 AR 營運概況一致）",https://stockanalysis.com/quote/tyo/4704/financials/cash-flow-statement/,2026-11-16,Verified,
+折舊攤銷（含合約成本等攤銷，口徑待釐清）,28927,百萬日圓,FY2024,資料商,https://stockanalysis.com/quote/tyo/4704/financials/cash-flow-statement/,2026-11-16,Verified,
+庫藏股買回,40000,百萬日圓,FY2024,現金支出,https://stockanalysis.com/quote/tyo/4704/financials/cash-flow-statement/,2026-11-16,Verified,
+研究開發費用,6651,百萬日圓,FY2025,"有價證券報告書「研究開發活動」（二手轉載；與員工 R&D 2,228 人不相稱，疑僅計特定資本化／外部項目，口徑待釐清）",https://edinetdb.jp/company/E04999/text?fy=2025,2026-11-16,Verified,
+股票薪酬費用,未找到,—,FY2025,法定申報僅見董事股票選擇權費用約 7 百萬日圓（FY2024）；合併股票薪酬未單獨揭露,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2024.pdf p.13,2026-11-16,Assumed,
+收盤價,7214,日圓,2026-11-13,"東證；Q3 財報（11-12 盤後）後 +8.32%（前日收盤 6,660）",https://stockanalysis.com/quote/tyo/4704/,2026-11-16,Verified,
+收盤價,6660,日圓,2026-11-12,財報當日,https://www.investing.com/news/transcripts/earnings-call-transcript-trend-micro-posts-record-q3-sales-stock-slips-085-on-outlook-93CH-5022947（譯稿標題誤標為美元）；與 11-13 +554 日圓相符,2026-11-16,Verified,
+市值,937340,百萬日圓,2026-11-13,資料商,https://stockanalysis.com/quote/tyo/4704/,2026-11-16,Verified,
+Beta（5 年）,0.43,—,2026-11-13,資料商 stockanalysis,https://stockanalysis.com/quote/tyo/4704/,2026-11-16,Verified,
+日本 10 年期公債殖利率,0.0277,比率,2026-11-11,Trading Economics,https://tradingeconomics.com/japan/government-bond-yield/news/600233,2026-11-16,Verified,
+賣方平均目標價,6433,日圓,2026-09-30 價格日（資料更新 2026-09-11）,"S&P Global 彙整 9 家；中位數 6,400、低 5,000、高 9,000；評等 2 強買、0 買、5 持有、1 賣、1 強賣；財報前，只作歷史對照",https://stockanalysis.com/quote/tyo/4704/forecast/,2026-11-16,Interested-party,賣方預估：賣方有維持客戶關係與評等立場的誘因；資料商轉載
+賣方共識營收,298960,百萬日圓,FY2026,S&P Global 彙整（家數未載；範圍 282.0–303.6 十億日圓）；財報前,https://stockanalysis.com/quote/tyo/4704/forecast/,2026-11-16,Interested-party,賣方預估：賣方有維持客戶關係與評等立場的誘因；資料商轉載
+賣方共識營收,316690,百萬日圓,FY2027,S&P Global 彙整；財報前,https://stockanalysis.com/quote/tyo/4704/forecast/,2026-11-16,Interested-party,賣方預估：賣方有維持客戶關係與評等立場的誘因；資料商轉載
+賣方共識 EPS（FY2026、FY2027）,未找到,日圓,FY2026／FY2027,資料商頁 EPS 為 n/a 或需付費,https://stockanalysis.com/quote/tyo/4704/forecast/,2026-11-16,Interested-party,賣方預估：賣方有維持客戶關係與評等立場的誘因；資料商轉載
+Check Point（CHKP）,"{""g3"": 4.12, ""opm"": 28.31, ""fpe"": 13.7, ""evebit"": 16.51, ""evebitda"": 15.78, ""evs"": 4.67, ""beta"": 0.42}",混合,2026-11-13,3 年營收成長預估（%）、營業利益率（%）、前瞻 P/E、EV/EBIT、EV/EBITDA、EV/Sales（TTM）、Beta；P/E 口徑（GAAP 或 non-GAAP）因資料商而異，未逐家核對,https://stockanalysis.com/stocks/chkp/statistics/（美國 GAAP；租賃處理未逐家核對）,2026-11-16,Verified,
+Gen Digital（GEN）,"{""g3"": 6.74, ""opm"": 42.8, ""fpe"": 8.25, ""evebit"": 10.2, ""evebitda"": 9.2, ""evs"": 4.36, ""beta"": 1.26}",混合,2026-10-26,3 年營收成長預估（%）、營業利益率（%）、前瞻 P/E、EV/EBIT、EV/EBITDA、EV/Sales（TTM）、Beta；P/E 口徑（GAAP 或 non-GAAP）因資料商而異，未逐家核對,https://stockanalysis.com/stocks/gen/statistics/（美國 GAAP；租賃處理未逐家核對）,2026-11-16,Verified,
+Qualys（QLYS）,"{""g3"": 8.61, ""opm"": 34.45, ""fpe"": 28.03, ""evebit"": 29.48, ""evebitda"": 28.04, ""evs"": 10.16, ""beta"": 0.6}",混合,2026-10-26,3 年營收成長預估（%）、營業利益率（%）、前瞻 P/E、EV/EBIT、EV/EBITDA、EV/Sales（TTM）、Beta；P/E 口徑（GAAP 或 non-GAAP）因資料商而異，未逐家核對,https://stockanalysis.com/stocks/qlys/statistics/（美國 GAAP；租賃處理未逐家核對）,2026-11-16,Verified,
+Fortinet（FTNT）,"{""g3"": 14.25, ""opm"": 32.91, ""fpe"": 33.85, ""evebit"": 34.4, ""evebitda"": 32.4, ""evs"": 11.32, ""beta"": 1.04}",混合,2026-11-13,3 年營收成長預估（%）、營業利益率（%）、前瞻 P/E、EV/EBIT、EV/EBITDA、EV/Sales（TTM）、Beta；P/E 口徑（GAAP 或 non-GAAP）因資料商而異，未逐家核對,https://stockanalysis.com/stocks/ftnt/statistics/（美國 GAAP；租賃處理未逐家核對）,2026-11-16,Verified,
+Zscaler（ZS）,"{""g3"": 16.68, ""opm"": -3.52, ""fpe"": 39.22, ""evebit"": null, ""evebitda"": null, ""evs"": 8.88, ""beta"": 0.84}",混合,2026-11-13,3 年營收成長預估（%）、營業利益率（%）、前瞻 P/E、EV/EBIT、EV/EBITDA、EV/Sales（TTM）、Beta；P/E 口徑（GAAP 或 non-GAAP）因資料商而異，未逐家核對,https://stockanalysis.com/stocks/zs/statistics/（美國 GAAP；租賃處理未逐家核對）,2026-11-16,Verified,
+Okta（OKTA）,"{""g3"": 10.31, ""opm"": 7.68, ""fpe"": 44.83, ""evebit"": 125.95, ""evebitda"": 92.6, ""evs"": 9.67, ""beta"": 0.72}",混合,2026-11-13,3 年營收成長預估（%）、營業利益率（%）、前瞻 P/E、EV/EBIT、EV/EBITDA、EV/Sales（TTM）、Beta；P/E 口徑（GAAP 或 non-GAAP）因資料商而異，未逐家核對,https://stockanalysis.com/stocks/okta/statistics/（美國 GAAP；租賃處理未逐家核對）,2026-11-16,Verified,
+Palo Alto Networks（PANW）,"{""g3"": 17.28, ""opm"": 7.05, ""fpe"": 77.1, ""evebit"": 324.69, ""evebitda"": 168.38, ""evs"": 22.88, ""beta"": 0.97}",混合,2026-11-13,3 年營收成長預估（%）、營業利益率（%）、前瞻 P/E、EV/EBIT、EV/EBITDA、EV/Sales（TTM）、Beta；P/E 口徑（GAAP 或 non-GAAP）因資料商而異，未逐家核對,https://stockanalysis.com/stocks/panw/statistics/（美國 GAAP；租賃處理未逐家核對）,2026-11-16,Verified,
+2026-08-13 下修指引的理由：雲端相關費用（含 AI token 成本）顯著超出原預估,"營業利益指引 56,400 → 44,400 百萬日圓（−12,000，其中含產品功能投資與競爭環境，未拆 token 部分）",文字,2025Q4–2026Q3,公司揭露／管理層說法,https://newsroom.trendmicro.com/2026-08-13-Trend-Micro-Reports-Earnings-Results-for-Q2-2026,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+與 Anthropic 策略協議（2026 年初簽署）；內部大量使用 Claude；加入 Project Glasswing，以 Claude Opus 5 做漏洞優先排序與虛擬修補；Claude Compliance API 整合至 Vision One（Q3 延伸至 Claude Code、Cowork）,金額未揭露,文字,2025Q4–2026Q3,公司揭露／管理層說法,https://newsroom.trendmicro.com/2026-08-13-Trend-Micro-Reports-Earnings-Results-for-Q2-2026；https://www.investing.com/news/transcripts/earnings-call-transcript-trend-micro-posts-record-q3-sales-stock-slips-085-on-outlook-93CH-5022947,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+NVIDIA：2025-10-28 起代理式 AI 防護；Q3 支援 NVIDIA Agent Safety Platform；以 Nemotron 開源模型作為 Vision One 平台以降低 token 成本,金額未揭露,文字,2025Q4–2026Q3,公司揭露／管理層說法,https://newsroom.trendmicro.com/2026-02-18-Trend-Micro-Reports-Earnings-Results-for-Q4-2025-and-FY-2025；https://www.prnewswire.com/news-releases/trend-micro-reports-q3-2026-results-with-9-net-sales-growth-and-an-18-operating-margin-302938200.html；https://www.investing.com/news/transcripts/earnings-call-transcript-trend-micro-posts-record-q3-sales-stock-slips-085-on-outlook-93CH-5022947,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+Magna AI：與 Wistron、NVIDIA 的主權 AI 合資（2025-10 宣布；2026-01 前後設立）；VicOne 與 Magna 合計營收年增 8 倍、ARR 年增 36 倍（Q2）,金額未揭露；FY2026 營業利益指引含 Magna 啟動前期成本（資料商說法）,文字,2025Q4–2026Q3,公司揭露／管理層說法,https://newsroom.trendmicro.com/2026-08-13-Trend-Micro-Reports-Earnings-Results-for-Q2-2026；https://the-shashi.com/tse/4704/decisions/2025-magna-ai-trendai-pivot/,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+ÆSIR AI 安全研究平台（Q1）；Autonomous Vulnerability Remediation 私測（Q3）,金額未揭露,文字,2025Q4–2026Q3,公司揭露／管理層說法,https://newsroom.trendmicro.com/2026-05-14-Trend-Micro-Reports-Earnings-Results-for-Q1-2026；https://www.prnewswire.com/news-releases/trend-micro-reports-q3-2026-results-with-9-net-sales-growth-and-an-18-operating-margin-302938200.html,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+TrendAI Vision One AI Security Package（企業 AI 風險管理）,未單獨揭露營收或客戶數,文字,2025Q4–2026Q3,公司揭露／管理層說法,https://newsroom.trendmicro.com/2026-02-18-Trend-Micro-Reports-Earnings-Results-for-Q4-2025-and-FY-2025,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+定價：過去曾漲價、可能延續到 2027 年；彈性定價；免費授權方案協助舊產品客戶遷移（無預算者）,管理層預期對 Q4 與全年指引無重大影響；漲價日期與幅度未找到,文字,2025Q4–2026Q3,公司揭露／管理層說法,https://www.investing.com/news/transcripts/earnings-call-transcript-trend-micro-posts-record-q3-sales-stock-slips-085-on-outlook-93CH-5022947,2026-11-16,Interested-party,公司自揭 KPI／管理層說法：有為自身辯護、呈現成長的誘因
+AI 產品付費客戶數、AI 營收、AI 訂單,未找到（公司未揭露）,文字,2025Q4–2026Q3,公司揭露／管理層說法,—,2026-11-16,Assumed,
+私募收購傳聞：2025-02-13 Reuters 報導 Bain Capital、Advent、EQT 競逐，KKR 亦表興趣；公司未置評；報導稱不保證成交,"股價當日漲停 +1,500 日圓至 10,860",文字,2025-02-13,匿名消息人士；2024 年已報導公司探索出售,https://www.thestar.com.my/tech/tech-news/2025/02/13/exclusive-buyout-firms-vie-for-cybersecurity-firm-trend-micro-sources-say,2026-11-16,Interested-party,匿名消息來源與媒體：無法驗證，來源可能有試探市場的誘因
+"上市狀態：2026-11-12 仍發布 Q3 財報；2026-11-13 東證收盤 7,214 日圓；EDINET 大量持有申報（2026-10-28 野村 10.40%、2026-07-21 三菱 UFJ 5.01%、ValueAct 3.68% 於 2025-09-19）未見公開收購或私有化申報",仍上市；不下市；未找到任何已宣告的收購或私有化,文字,2026-11-16,查證,https://edinetdb.jp/company/E04999/ma；https://www.prnewswire.com/news-releases/trend-micro-reports-q3-2026-results-with-9-net-sales-growth-and-an-18-operating-margin-302938200.html；https://stockanalysis.com/quote/tyo/4704/,2026-11-16,Verified,
