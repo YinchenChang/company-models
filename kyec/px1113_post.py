@@ -124,6 +124,8 @@ def apply(wb, here, cfg):
                     continue
                 if ws.title == "In" and c.row == r:
                     continue
+                if (ws.title, c.coordinate) in cfg.get("sweep_skip", ()):
+                    continue
                 if ws.title == "README" and not v.startswith("="):
                     continue
                 if ws.title == "Val" and c.row in peer_rows:
@@ -148,10 +150,21 @@ def apply(wb, here, cfg):
                 RD.cell(rr, 1).value = t; m += 1
     assert m == len(frozen), ("hist_frozen_px1113 未全部套用", m, len(frozen))
     log.append(f"凍結版本沿革 {m} 列")
-    # 6 版本說明
+    # 6 版本說明：A1 標題段版號、A2 版本列、「本版要點」列（以 old_ver（開頭的靜態列；cfg["note_in_post"] 時由該公司後處理自行放）
     a1 = RD["A1"].value
-    RD["A1"].value = f"{a1}；{cfg['ver']}（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）"
+    head, sep, rest = str(a1).partition("；")
+    if cfg["old_ver"] in head:
+        head = head.replace(cfg["old_ver"], cfg["ver"], 1)
+    RD["A1"].value = f"{head}{sep}{rest}；{cfg['ver']}（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）"
+    a2 = RD["A2"].value
+    if isinstance(a2, str) and a2.startswith(f"版本：{cfg['old_ver']}（"):
+        RD["A2"].value = a2.replace(f"版本：{cfg['old_ver']}（", f"版本：{cfg['ver']}（2026-11-16：現價與同業報價改 2026-11-13 收盤；前版 {cfg['old_ver']}）；{cfg['old_ver']}（", 1)
+        log.append("A2 版本列")
     if cfg.get("note") and not cfg.get("note_in_post"):
-        RD.cell(RD.max_row + 2, 1, cfg["note"])
+        rows = [rr for rr in range(1, RD.max_row + 1) if isinstance(RD.cell(rr, 1).value, str) and RD.cell(rr, 1).value.startswith(f"{cfg['old_ver']}（")]
+        assert len(rows) <= 1, ("本版要點列", cfg["old_ver"], rows)   # 0 列：另一側讀數／敏感度快照建置（後處理未加 v1.3 列）
+        if rows:
+            RD.cell(rows[0], 1).value = cfg["note"] + RD.cell(rows[0], 1).value
+        log.append(f"本版要點 README!A{rows[0] if rows else '（無）'}")
     log.append(f"未換價同業：{unchanged}")
     return "；".join(log)
