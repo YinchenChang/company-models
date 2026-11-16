@@ -1004,17 +1004,7 @@ if _CR:
         print(v056_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, wb._v055["CO"]))
 # v0.5.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（px1113_post.py；工作單 px1113；只換價格，公式與架構不改）
 import px1113_post  # noqa: E402
-def _px1113_ver_row(wb, log, done):
-    RD = wb["README"]
-    for row in range(RD.max_row, 0, -1):
-        v = RD.cell(row, 1).value
-        if isinstance(v, str) and v.startswith("v0.5.6（2026-11-14）：C0 補公司實績對帳"):
-            RD.cell(RD.max_row + 1, 1, v)   # 舊本版要點列保留原文（沿革）
-            RD.cell(row, 1).value = ("v0.5.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。只換價格，rf、共識 EPS、預測用匯率、模型假設、公式與架構不變；"
-                                     "現價、Comparable 同業前瞻 P/E（現行倍數 × 11-13 收盤 ÷ 原報價日收盤）、本公司前瞻 P/E 隨之換算，加權目標價、上檔空間與評等隨公式重算（前後數字見 README 本版要點與成品）。承 v0.5.6 的 C0 補公司實績對帳。")
-            log.append("本版要點列改 v0.5.7"); return
-    # 無本版要點列者＝敏感度快照（IB_OVERRIDE／IB_SNAP）或 Coord 另一側讀數建置（COORD_RUN），不含 v055／v056 後處理；正式建置由 gen_html_json 的版號斷言把關
-px1113_post.apply(wb, dict(ver="v0.5.7", prev="v0.5.6", px="4062.T", fpe="pe_fwd_sa", d0="2026-11-05", extra=[_px1113_ver_row]))
+px1113_post.apply(wb, dict(ver="v0.5.7", prev="v0.5.6", px="4062.T", fpe="pe_fwd_sa", d0="2026-11-05"))
 wb.save(sys.argv[1])
 if os.environ.get("IBIDEN_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

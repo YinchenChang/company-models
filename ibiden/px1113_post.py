@@ -125,6 +125,21 @@ def dates(wb, P, log, done):
     log.append(f"日期字樣 {n} 格")
 
 
+def ver_row(wb, P, log, done):
+    """README「v1.3 展示層」節的本版要點列（r13＋9，HTML 取用）：舊文複製到 README 末（沿革保留原文），本列改本版說明"""
+    RD = wb["README"]
+    r13 = [r for r in range(1, RD.max_row + 1) if str(RD.cell(r, 1).value or "").strip().startswith("v1.3 展示層")]
+    if not r13:
+        return   # 敏感度快照或 Coord 另一側建置不含 v1.3 後處理
+    row = r13[-1] + 9
+    v = RD.cell(row, 1).value
+    assert isinstance(v, str) and v.startswith(P["prev"]), (row, str(v)[:60])
+    RD.cell(RD.max_row + 1, 1, v)
+    RD.cell(row, 1).value = (f"{P['ver']}（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。只換價格：現價、Comparable 同業前瞻 P/E（現行倍數 × 11-13 收盤 ÷ 原報價日收盤）、"
+                             f"本公司前瞻 P/E 隨之換算；rf、共識 EPS、預測用匯率、模型假設、公式與架構不變，加權目標價、上檔空間與評等隨公式重算（前後數字見 README 本版要點與成品）。承 {P['prev']}。")
+    log.append(f"本版要點列改 {P['ver']}")
+
+
 def version(wb, P, log):
     RD = wb["README"]
     t = f"{P['ver']}（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）"
@@ -149,6 +164,8 @@ def apply(wb, P):
         peers(wb, P, log, done)
     if P.get("fpe"):
         own_fpe(wb, P, log, done)
+    if P.get("vrow", True):
+        ver_row(wb, P, log, done)
     for f in P.get("extra", ()):
         f(wb, log, done)
     dates(wb, P, log, done)
