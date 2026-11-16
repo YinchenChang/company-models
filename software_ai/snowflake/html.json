@@ -374,7 +374,7 @@
     {
      "type": "table",
      "collapse": true,
-     "summary": "展開：rel_mult（SNOW 相對同業 trailing P/S 的 5 期自算）",
+     "summary": "展開：rel_mult（SNOW 相對同業 trailing P/S 的近五期自算）",
      "head": [
       "期間",
       "SNOW",

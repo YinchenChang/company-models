@@ -331,6 +331,71 @@
     {
      "type": "table",
      "collapse": true,
+     "summary": "展開：歷史相對倍數（PANW 市銷率 ÷ 同業中位數，近 5 年逐季）",
+     "head": [
+      "PANW 財季末",
+      "PANW",
+      "Zscaler",
+      "Fortinet",
+      "Check Point",
+      "同業中位",
+      "相對倍數"
+     ],
+     "rowgen": {
+      "sheet": "RelHist",
+      "rows": "6-26",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G"
+      ],
+      "fmts": [
+       "",
+       "n2",
+       "n2",
+       "n2",
+       "n2",
+       "n2",
+       "n2"
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：歷史相對倍數統計與現行比值",
+     "head": [
+      "項目",
+      "數值"
+     ],
+     "rowgen": {
+      "sheet": "RelHist",
+      "rows": "28-37",
+      "cols": [
+       "A",
+       "B"
+      ],
+      "fmts": [
+       "",
+       "n2"
+      ],
+      "row_fmt": {
+       "32": {
+        "B": "n0"
+       },
+       "33": {
+        "B": "n2"
+       }
+      }
+     }
+    },
+    {
+     "type": "table",
+     "collapse": true,
      "summary": "展開：折現率組成與期間、評等邊界",
      "head": [
       "項目",
@@ -338,7 +403,7 @@
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "4-6,9-10,55-60",
+      "rows": "4-6,9-10,55-61",
       "cols": [
        "A",
        "B"
@@ -348,11 +413,14 @@
        "n4"
       ],
       "row_fmt": {
-       "59": {
-        "B": "p1"
-       },
        "60": {
         "B": "p1"
+       },
+       "61": {
+        "B": "p1"
+       },
+       "59": {
+        "B": ""
        },
        "58": {
         "B": ""
@@ -486,7 +554,7 @@
      ],
      "rowgen": {
       "sheet": "RevDCF",
-      "rows": "4-17",
+      "rows": "4-22",
       "cols": [
        "A",
        "B"
@@ -538,7 +606,7 @@
     {
      "type": "note",
      "parts": [
-      "@RevDCF!B18"
+      "@RevDCF!B23"
      ]
     }
    ]

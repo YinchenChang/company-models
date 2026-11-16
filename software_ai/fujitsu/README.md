@@ -7,6 +7,14 @@
 **版本表（由建置成品產生，不手寫）：**
 
 <!-- version-table: dist/20261116_Fujitsu個股模型_v0.1.xlsx -->
+| 項目 | v0.1 |
+|---|---|
+| 現價 | 3,455.00 |
+| DCF 目標價 | 3,171.63 |
+| Comparable（分部加總）目標價 | 3,292.36 |
+| 加權目標價（上檔空間） | 3,231.99（-6.5%） |
+| 投資建議 | 中立 |
+| 收支關卡 A／B／C（FY2026–FY2030，¥百萬） | 1,294,356.2／1,152,885.3／858,042.1 |
 <!-- /version-table -->
 
 **命題：** AI 進入按人力計價的 IT 服務後，每單位營收＝AI 新專案增量 − 定價侵蝕 − 推論成本。Service 的 AI 前營收 R0＝交付人力 × 利用率 × 可用工時 × 時薪；AI 後營收＝R0 −（被自動化工時 × 時薪 ×（1−價格保留率））＋ R0 × 新專案占比；推論成本＝被自動化工時 ÷ 任務長度 × 每成功任務成本，只讀 Tokenomics v22.0 快照（`data/tokenomics_snapshot_v22.0.json`，任務 5）。變數名稱沿用 `software_ai/unit_economics`（L_util、L_hrs、L_rate、a、r、n、tier），v0.2 改讀 unit_economics／待 AI供應鏈 登錄。Hardware 與 Ubiquitous 為不按人力計價的獨立分部，以年增率預測。

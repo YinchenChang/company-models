@@ -1037,12 +1037,13 @@ def readme(wb, RD, build_id, VR, RVA, RCA, vw, SENS):
                     "（按任務營收減席位取代損失與增量推論成本）；按任務計價營收在情境 A 亦僅占 FY2032 營收 ", (f"Thesis!L{TB['A']['aiRev']}/Thesis!L{TB['A']['rev']}", "0.0%"), "。"))
     f_(RD, "A46", tf("2. 推論成本是否吃掉毛利：情境 B 的 FY2032 推論成本占非 GAAP 營業成本 ", (f"Thesis!L{TB['B']['share']}", "0.0%"), "；每解決任務推論成本占單價 ", ("Thesis!D9", "0.0%"), "；損益兩平每任務單價 US$", (f"Thesis!L{TB['B']['brk']}", "0.00"), "。"))
     f_(RD, "A47", tf("3. 現價隱含什麼：FY2028 起現金流須為情境 B 基準的 ", (f"RevDCF!B{RVA['evx']}", "0.0"), " 倍；或目標時點 NTM 非 GAAP EPS 的 P/E 為 ", (f"RevDCF!B{RVA['spe']}", "0.0"), " 倍（同業中位數 ", ("pe_med", "0.0"), "）。"))
-    f_(RD, "A49", "未做先驗：本版未套用任何先驗（Andy 2026-11-16 指示先跳過）；公開 repo，內容只含公司與市場事實。")
+    f_(RD, "A49", "未做先驗：本版未套用任何先驗（依工作單先跳過）；公開 repo，內容只含公司與市場事實。")
     f_(RD, "A50", "不適用：算力 MW、Tokenomics 自用 AI 讀法 2、Wattonomics（HubSpot 不自建算力，推論成本向模型商購買）。")
     f_(RD, "A51", "不適用：三層協調（Coord 頁、C0、兩讀數）：非 Siliconomics 覆蓋。")
     f_(RD, "A52", "未做：現金稅率橋（原則第 10 節第 40 條）；事件型尾端 Sens；選擇權庫藏股法（履約價未找到）與期末未歸屬 RSU（用 Q3 反稀釋加權代理）；每任務 token 公司揭露（未找到，以 Tokenomics 類比）。")
     f_(RD, "A53", "v0.2 待辦：改讀 software_ai/unit_economics 的 S 原型；補 seats-and-credits 揭露；以 10-K 核對 FY2021–FY2022 欄位。")
     f_(RD, "A54", "工作單 G2 十條落實：見 data/research_hubspot.md 末節與 README.md。")
+    f_(RD, "A56", tf("席位被 AI 取代的侵蝕大於按任務計價的增量；加權目標價 US$", (f"Val!B{VR['tp']}", "0.00"), "，現價 US$", ("px", "0.00"), "，評等", (f"Val!B{VR['rec']}", "@"), "；DCF 受股票薪酬費用化拖累。"))
     RD.column_dimensions["A"].width = 120
 
 

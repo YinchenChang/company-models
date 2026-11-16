@@ -125,7 +125,7 @@ _I = lambda k: f"In!$E${IR[k]}"
 PFD = dict(
     date="2026-11-13", ccy="US$", amt="US$M", shu="M股",
     rf=(0.0499, "沿用 repo meta/README.md 所載 2026-10-27 10 年美債 4.99%；距股價日 2026-11-13 逾兩個交易日，標逾期", "本次未重讀財政部頁面", "無風險利率（10 年美債；2026-10-27，逾期）"),
-    betas=[("StockAnalysis（5 年）", 1.32, SA + "（beta 1.32）；第二來源未找到；docs/plan/自算產業β_20261105.md 的軟體產業 β 本版未套用")],
+    betas=[("StockAnalysis（5 年）", 1.32, SA + "（beta 1.32）；第二來源未取得；docs/plan/自算產業β_20261105.md 的軟體產業 β 本版未套用")],
     beta_lohi=(1.0, 1.5, "單一來源，區間為 Assumed"),
     erp=(0.04, 0.05, 0.06, "DCF 標準規格預設 5%（4–6%）"),
     kd=("=rf+" + _I("kd_sp"), "Derived", "rf＋信用利差（kd_sp）", "可轉債 0 票息；若轉換則債務為 0"),
@@ -258,36 +258,37 @@ for j, col in zip((2, 3, 4), "BCD"): Q.cell(rr, j, f"={col}{QR['rev']}-{col}{QR[
 
 # ---- 規模經濟迴歸與營運資金比率（原則 G3 第 1、2 條）
 rr += 2
-Q.cell(rr, 1, "規模經濟迴歸（FY2022–FY2027 實績；營業費用與股票薪酬＝固定＋變動×營收；US$M）").font = BOLD; rr += 1
+Q.cell(rr, 1, "規模經濟迴歸（FY2022–FY2027 實績；營業費用與股票薪酬＝固定＋變動×營收；US$M；一期一列）").font = BOLD; rr += 1
 RG = rr
-for j, h in enumerate(["指標", "FY2022", "FY2023", "FY2024", "FY2025", "FY2026", "LTM（Q3 FY26–Q2 FY27）", "來源", "標記"], 1): Q.cell(rr, j, h).font = BOLD
+for j_, h in enumerate(["期間", "營收", "非 GAAP 產品毛利（專業服務非 GAAP 毛利約 0，以產品毛利代理合計）", "非 GAAP 營業利益", "非 GAAP 營業費用（＝毛利−營業利益）", "股票薪酬", "標記", "來源"], 1): Q.cell(rr, j_, h).font = BOLD
 rr += 1
+REG = [("FY2022", 1219.327, 844.623, -31.175, 605.095, "FY2022 10-K 損益、Q4 FY23 新聞稿 FY2022 非 GAAP 調節表與 MD&A SBC 表"),
+       ("FY2023", 2065.659, 1457.382, 95.283, 861.533, "FY2023 10-K、Q4 FY23 新聞稿非 GAAP 調節表與 MD&A SBC 表"),
+       ("FY2024", None, None, None, None, "取自上方 Q 表（FY2024）"), ("FY2025", None, None, None, None, "取自上方 Q 表（FY2025）"), ("FY2026", None, None, None, None, "取自上方 Q 表（FY2026）"),
+       ("LTM（Q3 FY26–Q2 FY27）", 5434.653, 3917.406, 673.241, 1641.922, "四季合計（Q3 FY26 至 Q2 FY27 新聞稿，facts_snowflake.csv）：營收 1,212.909＋1,283.994＋1,390.951＋1,546.793（與 Q3 FY26 期末起算）；非 GAAP 產品毛利、營業利益與 SBC 同法加總")]
 QG = {}
-reg = [("rev", "營收", [1219.327, 2065.659, "=B%d" % 0, None, None, 5434.653], "10-K FY2022／FY2024／FY2026 損益；LTM＝四季營收 1,212.909＋1,283.994＋1,390.951＋1,546.793（8-K 附件 99.1）"),
-       ("pgp", "非 GAAP 產品毛利（FY2022、FY2023、LTM；專業服務非 GAAP 毛利約 0，以產品毛利代理合計）", [844.623, 1457.382, None, None, None, 3917.406], "FY2022、FY2023 非 GAAP 調節表（facts_snowflake.csv）；LTM＝879.165＋921.462＋1,002.695＋1,114.084"),
-       ("oi", "非 GAAP 營業利益", [-31.175, 95.283, None, None, None, 673.241], "同上；LTM＝131.313＋139.175＋165.753＋237.0"),
-       ("opx", "非 GAAP 營業費用（＝毛利−營業利益）", [None] * 6, "FY2022、FY2023、LTM＝產品毛利−營業利益（Derived）；FY2024–FY2026 取上方 Q 表"),
-       ("sbc", "股票薪酬", [605.095, 861.533, None, None, None, 1641.922], "FY2022、FY2023 MD&A SBC 表；LTM＝412.278＋403.592＋402.47＋423.582（Derived）")]
-for key, lab, vals, src in reg:
-    QG[key] = rr
+for n_, (lab, rv_, pg_, oi_, sb_, src_) in enumerate(REG):
+    QG[n_] = rr
     Q.cell(rr, 1, lab)
-    for j, v in enumerate(vals):
-        if v is not None and not (isinstance(v, str)): Q.cell(rr, 2 + j, v).font = BLUE
-    Q.cell(rr, 8, src); Q.cell(rr, 9, "Derived" if key in ("opx",) else "Interested-party" if key in ("pgp", "oi") else "Verified")
+    if rv_ is not None:
+        for j_, v_ in zip((2, 3, 4, 6), (rv_, pg_, oi_, sb_)): Q.cell(rr, j_, v_).font = BLUE
+        Q.cell(rr, 5, f"=C{rr}-D{rr}")
+    else:
+        col_ = "BCD"[n_ - 2]
+        Q.cell(rr, 2, f"={col_}{QR['rev']}"); Q.cell(rr, 5, f"={col_}{QR['opx_n']}"); Q.cell(rr, 6, f"={col_}{QR['sbc']}")
+        Q.cell(rr, 3, f"={col_}{QR['gp_n']}"); Q.cell(rr, 4, f"={col_}{QR['oi_n']}")
+    Q.cell(rr, 7, IP); Q.cell(rr, 8, src_)
     rr += 1
-for j, col in zip((4, 5, 6), "BCD"):   # FY2024–FY2026 取上方 Q 表
-    Q.cell(QG["rev"], j, f"={col}{QR['rev']}"); Q.cell(QG["opx"], j, f"={col}{QR['opx_n']}"); Q.cell(QG["sbc"], j, f"={col}{QR['sbc']}")
-for j, col in zip((2, 3, 7), "BCG"):
-    Q.cell(QG["opx"], j, f"={col}{QG['pgp']}-{col}{QG['oi']}")
+r_a, r_b, r_c, r_l = QG[0], QG[2], QG[3], QG[5]
 rr += 1
-X3 = f"E{QG['rev']}:G{QG['rev']}"; X6 = f"B{QG['rev']}:G{QG['rev']}"
 RS = {}
-for key, lab, f in (("opxv", "營業費用變動部分（最近三點斜率）", f"=SLOPE(E{QG['opx']}:G{QG['opx']},{X3})"), ("opxa", "營業費用固定部分（最近三點截距；US$M）", f"=INTERCEPT(E{QG['opx']}:G{QG['opx']},{X3})"),
-                    ("opxv6", "營業費用變動部分（六點全樣本斜率）", f"=SLOPE(B{QG['opx']}:G{QG['opx']},{X6})"), ("opxa6", "營業費用固定部分（六點全樣本截距）", f"=INTERCEPT(B{QG['opx']}:G{QG['opx']},{X6})"),
-                    ("opxltm", "營業費用率（LTM；全期持平案用）", f"=G{QG['opx']}/G{QG['rev']}"),
-                    ("sbcv", "股票薪酬變動部分（最近三點斜率）", f"=SLOPE(E{QG['sbc']}:G{QG['sbc']},{X3})"), ("sbca", "股票薪酬固定部分（最近三點截距；US$M）", f"=INTERCEPT(E{QG['sbc']}:G{QG['sbc']},{X3})"),
-                    ("sbcv6", "股票薪酬變動部分（六點全樣本斜率）", f"=SLOPE(B{QG['sbc']}:G{QG['sbc']},{X6})"), ("sbca6", "股票薪酬固定部分（六點全樣本截距；US$M）", f"=INTERCEPT(B{QG['sbc']}:G{QG['sbc']},{X6})"), ("sbcltm", "股票薪酬占營收（LTM；全期持平案用）", f"=G{QG['sbc']}/G{QG['rev']}")):
-    RS[key] = rr; Q.cell(rr, 1, lab); Q.cell(rr, 2, f); Q.cell(rr, 7, DE); rr += 1
+for key, lab, f in (("opxv", "營業費用變動部分（最近三點＝FY2025、FY2026、LTM 的斜率）", f"=SLOPE(E{r_c}:E{r_l},B{r_c}:B{r_l})"), ("opxa", "營業費用固定部分（最近三點截距；US$M）", f"=INTERCEPT(E{r_c}:E{r_l},B{r_c}:B{r_l})"),
+                    ("opxv6", "營業費用變動部分（六點全樣本斜率）", f"=SLOPE(E{r_a}:E{r_l},B{r_a}:B{r_l})"), ("opxa6", "營業費用固定部分（六點全樣本截距）", f"=INTERCEPT(E{r_a}:E{r_l},B{r_a}:B{r_l})"),
+                    ("opxltm", "營業費用率（LTM；全期持平案用）", f"=E{r_l}/B{r_l}"),
+                    ("sbcv", "股票薪酬變動部分（最近三點斜率）", f"=SLOPE(F{r_c}:F{r_l},B{r_c}:B{r_l})"), ("sbca", "股票薪酬固定部分（最近三點截距；US$M）", f"=INTERCEPT(F{r_c}:F{r_l},B{r_c}:B{r_l})"),
+                    ("sbcv6", "股票薪酬變動部分（六點全樣本斜率）", f"=SLOPE(F{r_a}:F{r_l},B{r_a}:B{r_l})"), ("sbca6", "股票薪酬固定部分（六點全樣本截距；US$M）", f"=INTERCEPT(F{r_a}:F{r_l},B{r_a}:B{r_l})"),
+                    ("sbcltm", "股票薪酬占營收（LTM；全期持平案用）", f"=F{r_l}/B{r_l}")):
+    RS[key] = rr; Q.cell(rr, 1, lab); Q.cell(rr, 2, f); Q.cell(rr, 7, DE); Q.cell(rr, 8, "迴歸（SLOPE／INTERCEPT）自上表；固定部分為成本結構的不隨營收項（規模經濟）"); rr += 1
 rr += 1
 Q.cell(rr, 1, "營運資金（10-K FY2026 MD&A 營運資產負債變動；負值＝流入，原則第 23 條）").font = BOLD; rr += 1
 WCR = rr

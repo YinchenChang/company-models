@@ -459,7 +459,7 @@
     },
     {
      "type": "table",
-     "caption": "同業 EV／EBITDA（TTM；Analogy；逾期＝資料日與現價基準日相差超過 2 個交易日）",
+     "caption": "同業 EV／EBITDA（TTM；Analogy；逾期＝資料日與現價基準日相差超過兩個交易日）",
      "head": [
       "公司",
       "對應分部",
@@ -497,11 +497,11 @@
      "caption": "歷史相對倍數 rel_mult（本公司 ÷ 同業中位數；自算，財報年度值）",
      "head": [
       "項目",
-      "t0",
-      "t1",
-      "t2",
-      "t3",
-      "t4",
+      "@Peers!B24",
+      "@Peers!C24",
+      "@Peers!D24",
+      "@Peers!E24",
+      "@Peers!F24",
       "中位數",
       "採用（夾值後）"
      ],
@@ -532,7 +532,7 @@
     },
     {
      "type": "table",
-     "caption": "合理性關卡（G3 第 3 條）",
+     "caption": "合理性關卡（發布前必查）",
      "head": [
       "項目",
       "數值",
@@ -573,7 +573,7 @@
     },
     {
      "type": "table",
-     "caption": "逾期核對（第 15 條）",
+     "caption": "逾期核對",
      "head": [
       "項目",
       "資料日",

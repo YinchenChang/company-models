@@ -269,7 +269,7 @@ S.cell(SEG_END, 1, "註：推論成本取 Tokenomics 市場價（有效牌價）
 
 # ---------------- PL 頁
 P = SH["PL"]
-P["A1"] = "損益表：官方報告分部四列（Service Solutions、Hardware Solutions、Ubiquitous Solutions、Elimination/Corporate；決算短信 p.8），分部利益為公司自訂的調整後營業利益；合併營業利益為 IFRS（調整後減非常態項目）。¥百萬。"
+P["A1"] = "損益表：官方報告分部四列（Service Solutions、Hardware Solutions、Ubiquitous Solutions、Elimination/Corporate；決算短信 p.8），分部利益為公司自訂的調整後營業利益；合併營業利益為 IFRS（GAAP；調整後減非常態項目），調整後營業利益為 Non-GAAP 指標。¥百萬。"
 P["A2"] = "FY2024A–FY2025A 取自 Q 頁；FY2026E–FY2032E 為情境預測（FY2026 為首個預測年，含 2026 上半年實績）。毛利率持平於 LTM，營業費用為殘差（含其他損益）。分部利益率持平於 LTM，Elimination/Corporate 持平於 LTM 加調整。"
 PLB = ["rev", "oi_sv", "oi_hw", "oi_ub", "oi_co", "adj", "oneoff", "ebit", "inf_c", "gp", "cogs", "opex", "da", "capex", "nopat", "dwc", "fcff", "oth", "ebt", "taxx", "ni", "nci", "ni_own", "shs", "eps", "gate", "chk_oi"]
 PLL = {"rev": "營收", "oi_sv": "Service Solutions 調整後營業利益", "oi_hw": "Hardware Solutions 調整後營業利益", "oi_ub": "Ubiquitous Solutions 調整後營業利益", "oi_co": "Elimination/Corporate 調整後營業利益",
@@ -645,14 +645,14 @@ Rm["A2"] = "命題、結論與重點觀察的數字由公式自本檔其他頁�
 sb = SR["B"]
 Rm["A3"] = (f'="命題：AI 進入按人力計價的 IT 服務後，每單位營收＝AI 新專案增量 − 定價侵蝕 − 推論成本。本模型把原型 L 套用於 Service Solutions（人力 × 利用率 × 可用工時 × 時薪），Hardware 與 Ubiquitous 為獨立分部。情境 B 在 FY2032 的 Service AI 淨效果為 "&TEXT(Seg!K{sb["net"]}/1000,"#,##0")&" 十億日圓（新專案 "&TEXT(Seg!K{sb["incr"]}/1000,"#,##0")&" − 定價侵蝕 "&TEXT(Seg!K{sb["eros"]}/1000,"#,##0")&" − 推論成本 "&TEXT(Seg!K{sb["inf"]}/1000,"0.00")&"），AI 後所需 Service 交付人力 "&TEXT(Seg!K{sb["hc_ai"]},"0.0")&" 千人（AI 前 "&TEXT(Seg!K{sb["hc0"]},"0.0")&" 千人）。"')
 Rm["A4"] = "命題的可證偽指標：Service 營收年增與員工數的差距、價值導向定價占比是否按目標上升、Service 毛利率是否回到 43% 目標；任何一項偏離基準區間即須重估。"
-Rm["A5"] = (f'="投資建議（在自動化、價格保留與新專案三項落在情境 A 到 C 區間的基準假設下）："&{VB("rec")}&"；加權目標價 "&TEXT({VB("tp")},"#,##0")&" 日圓，上檔空間 "&TEXT({VB("up")},"+0.0%;-0.0%")&"（現價 "&TEXT({VB("px")},"#,##0")&" 日圓，"&TEXT({VB("px_date")},"yyyy-mm-dd")&"）"')
-Rm["A6"] = (f'="一、DCF 目標價 "&TEXT({VB("dcf_tp")},"#,##0")&"、Comparable 目標價 "&TEXT({VB("comp_tp")},"#,##0")&" 日圓；情境 B 落差 "&TEXT({VB("gap")},"+#,##0;-#,##0")&" 日圓，其中時點 "&TEXT({VB("gap_t")},"+#,##0;-#,##0")&"、倍數 "&TEXT({VB("gap_m")},"+#,##0;-#,##0")&"、股票薪酬 0、槓桿 0。"')
+Rm["A5"] = (f'="投資建議（在自動化、價格保留與新專案三項落在情境 A 到 C 區間的基準假設下）："&{VB("rec")}&"；加權目標價 "&TEXT({VB("tp")},"0.00")&" 日圓，上檔空間 "&TEXT({VB("up")},"+0.0%;-0.0%")&"（現價 "&TEXT({VB("px")},"#,##0")&" 日圓，"&TEXT({VB("px_date")},"yyyy-mm-dd")&"）"')
+Rm["A6"] = (f'="一、DCF 目標價 "&TEXT({VB("dcf_tp")},"0.00")&"、Comparable 目標價 "&TEXT({VB("comp_tp")},"0.00")&" 日圓；情境 B 落差 "&TEXT({VB("gap")},"+#,##0;-#,##0")&" 日圓，其中時點 "&TEXT({VB("gap_t")},"+#,##0;-#,##0")&"、倍數 "&TEXT({VB("gap_m")},"+#,##0;-#,##0")&"、股票薪酬 0、槓桿 0。"')
 Rm["A7"] = (f'="二、情境 B FY2026 營收 "&TEXT(PL!E{STR["營收"]}/1000000,"0.000")&" 兆日圓（年增 "&TEXT(PL!E{STR["營收年增率"]},"0.0%")&"），對照公司指引 "&TEXT(Recon!C{RCR["rev26"]}/1000000,"0.00")&" 兆；調整後營業利益 "&TEXT(PL!E{b["adj"]}/1000,"#,##0")&" 十億，指引 "&TEXT(Recon!C{RCR["adj26"]}/1000,"#,##0")&" 十億（Recon）。"')
 Rm["A8"] = (f'="三、每任務推論成本（Tokenomics Sol 層級）"&TEXT({I("cps")},"0.00")&" 美元，FY2032 推論成本僅占 Service 營收 "&TEXT(Seg!K{sb["inf"]}/Seg!K{sb["sv"]},"0.00%")&"；AI 對富士通的影響主要在定價侵蝕與新專案，不在推論成本。"')
 Rm["A9"] = (f'="四、現價隱含 FY2032 IFRS 營業利益率 "&TEXT(RevDCF!B{RV["m_imp"]},"0.0%")&"（情境 B 為 "&TEXT(RevDCF!B{RV["m_fy32"]},"0.0%")&"）；現行 EV／LTM 營業利益 "&TEXT({VB("own_mult")},"0.0")&" 倍，為同業中位數 "&TEXT({VB("pe_med")},"0.0")&" 倍的 "&TEXT({VB("own_ratio")},"0.00")&" 倍；永續價值占 EV 約 "&TEXT(Val!D{VR["tvsh"]},"0%")&"。"')
 Rm["A10"] = (f'="五、情境 A／B／C 加權目標價 "&TEXT(Val!C{VR["wb"]},"#,##0")&"／"&TEXT(Val!D{VR["wb"]},"#,##0")&"／"&TEXT(Val!E{VR["wb"]},"#,##0")&" 日圓；分化來自自動化比例、價格保留率（價值導向定價）與新專案占比（FY2032 Service AI 淨效果 A／B／C 為 "&TEXT(Seg!K{SR["A"]["net"]}/1000,"#,##0")&"／"&TEXT(Seg!K{SR["B"]["net"]}/1000,"#,##0")&"／"&TEXT(Seg!K{SR["C"]["net"]}/1000,"#,##0")&" 十億日圓）。"')
 Rm["A12"] = "v1.3 展示層"
-Rm["A13"] = (f'="富士通："&{VB("rec")}&"，加權目標價 "&TEXT({VB("tp")},"#,##0")&" 日圓（上檔 "&TEXT({VB("up")},"+0.0%;-0.0%")&"）；本版未做先驗。"')
+Rm["A13"] = (f'="富士通："&{VB("rec")}&"，加權目標價 "&TEXT({VB("tp")},"0.00")&" 日圓（上檔 "&TEXT({VB("up")},"+0.0%;-0.0%")&"）；本版未做先驗。"')
 Rm["A14"] = "本版要點"
 Rm["A15"] = "官方報告分部四列（Service Solutions、Hardware Solutions、Ubiquitous Solutions、Elimination/Corporate）；分部營收與分部利益（調整後營業利益）合計與合併值在 FY2024、FY2025 與 2025、2026 上半年差 0（決算短信 ¥百萬）。"
 Rm["A16"] = "命題模組為原型 L，只套用於 Service Solutions；公司不揭露分部員工、利用率、計費工時、時薪，時薪由 FY2025 Service 營收反推（Derived），自動化比例、價格保留率、新專案占比為 Assumed，分化依據見 In 頁。"
