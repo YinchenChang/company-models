@@ -91,14 +91,14 @@ asof: 2026-10-25
 - 2026-06-11｜宣布財務長交接（Dan Durn 6-15 上任）[外部新聞：Storage Newsletter]
 
 ## 需要觀察的事項
-- FY2028 營收 US$20B 的可達性｜模型 18.3B，差 8.3%；要補上需資料中心 ×1.10 或客製 ×1.35 [本專案：20261030_邁威爾個股模型_v0.2.4.xlsx Recon!C6、Recon!D6、Recon!C12、Recon!C14]｜FY2027 Q3 財報（約 2026-11-30～12 月初）[本專案：mrvl/README.md 最大限制]
+- FY2028 營收 US$20B 的可達性｜模型 17.7B，差 11.7%；要補上需資料中心 ×1.15 或客製 ×1.52 [本專案：20261116_邁威爾個股模型_v0.3.6.xlsx Recon!C6、Recon!D6、Recon!C12、Recon!C14]｜FY2027 Q3 財報（約 2026-11-30～12 月初）[本專案：mrvl/README.md 最大限制]
 - 光互連規模｜光互連 ×1.2 使 FY2028 EPS +12.0%；每模組晶片組 ×0.8 為 −12.0% [本專案：mrvl/README.md 敏感度]｜同上
 - 客製代購 HBM 比例與毛利率｜模型 FY2030 毛利率 48.1% vs 公司 FY2031 目標中點 57.5% [本專案：20261116_邁威爾個股模型_v0.3.6.xlsx Recon!C32、Recon!B32]｜同上
 - Google TPU 份額（認股權證案）｜TPU 份額 +5pt 使 FY2028 EPS +8.4% [本專案：mrvl/README.md 敏感度]｜Google 下一代 TPU 供應商消息
 - 校準係數｜k_x 0.80、k_o 1.44 為顆數、份額、單價的合併係數，無法分開識別 [本專案：20261116_邁威爾個股模型_v0.3.6.xlsx Units!C30、Units!C31]｜下一版模型
 
 ## 來源
-1. 本專案：`mrvl/README.md`；`mrvl/dist/20261030_邁威爾個股模型_v0.2.4.xlsx`（In、Q、Units、PL、Recon）；`avgo/dist/20261030_Broadcom個股模型_v0.3.1.xlsx`（Units）；`alchip/dist/20261030_世芯-KY個股模型_v0.1.3.xlsx`（Units）；`mediatek/dist/20261102_聯發科個股模型_v0.2.xlsx`（Units）；AI半導體 `先驗比對_AVGO_20261023.md`
+1. 本專案：`mrvl/README.md`；`mrvl/dist/20261116_邁威爾個股模型_v0.3.6.xlsx`（In、Q、Units、PL、Recon）；`avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx`（Units）；`alchip/dist/20261116_世芯-KY個股模型_v0.2.6.xlsx`（Units）；`mediatek/dist/20261116_聯發科個股模型_v0.3.6.xlsx`（Units）；AI半導體 `先驗比對_AVGO_20261023.md`
 2. [Marvell raises 2028 revenue forecast on strong AI data center demand](https://www.ksl.com/article/51632987/marvell-raises-2028-revenue-forecast-on-strong-ai-data-center-demand)（2026-10）
 3. [Marvell gives Google right to buy shares](https://www.verdict.co.uk/marvell-google-to-buy-shares/)（2026-08-20）
 4. [Marvell FY2027 Q2 8-K](https://www.sec.gov/Archives/edgar/data/0001835632/000183563226000022/q227_8kx812026ex-991.htm)（2026-08-27）
