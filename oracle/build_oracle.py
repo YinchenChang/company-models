@@ -65,8 +65,8 @@ FACTS = "oracle/data/oracle_facts_20261007.json"
 CO = "oracle/legacy_v0.3/company.json"
 
 sec("A. 股價、股數")
-inp("px", "現價（2026-11-05 收盤）", "US$", None, 115.16, None, "Verified", "Yahoo Finance ORCL 日線（https://query1.finance.yahoo.com/v8/finance/chart/ORCL?range=5d&interval=1d，2026-11-06 擷取）：2026-11-05 收盤 115.16（11-04 收 123.73，−6.93%）；CNBC 11-05 盤勢「Oracle 跌近 7%」；StockAnalysis 115.19", "v0.4.6 由 2026-11-03 收盤 126.19（FinancialContent）更新（docs/reports/20261105_收盤價_個股換價來源.md）；現價經新股發行價（瀑布 eq／neweq）影響目標價")
-inp("px_date", "現價日（px 的收盤日）", "日期", None, "=DATE(2026,11,5)", None, "Verified", "同 px（Yahoo Finance 日線）", "README、Val 與 tp_date 以本列組字（原則第 10 節第 13、26 條）")
+inp("px", "現價（2026-11-13 收盤）", "US$", None, 125.35, None, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（markets/invest_map/data/closes_20261020_20261113.csv）ORCL 125.35", "v0.5.2 以前為 2026-11-05 收盤 115.16（Yahoo Finance；CNBC 11-05 盤勢「Oracle 跌近 7%」；StockAnalysis 115.19）；v0.4.6 由 2026-11-03 收盤 126.19（FinancialContent）更新（docs/reports/20261105_收盤價_個股換價來源.md）；現價經新股發行價（瀑布 eq／neweq）影響目標價")
+inp("px_date", "現價日（px 的收盤日）", "日期", None, "=DATE(2026,11,13)", None, "Verified", "同 px（Yahoo Finance 日線；v0.5.2 以前為 2026-11-05）", "README、Val 與 tp_date 以本列組字（原則第 10 節第 13、26 條）")
 inp("sh_out", "普通股流通在外（2026-09-07）", "十億股", None, 3.023736, None, "Interested-party", Q10 + " 封面（" + FACTS + " sh.out.20260907）", "Q1 FY27 已含 ATM 發行 1.41 億股；2026-11-04 交割的新股另列 ex_sh（I2 節）")
 inp("opt_dil", "稀釋股數加項（選擇權等）", "十億股", None, 0.034, None, "Derived", "Q1 FY27 稀釋加權 3.000 − 基本加權 2.966（" + FACTS + " sh.dilW／sh.basicW.fy27q1）", "各年沿用")
 inp("mcps_sh", "強制轉換特別股轉換股數（2029-01-15，FY2029 計入）", "十億股", None, 0.031238, None, "Derived", "Series D 50,000 股 × 轉換比率上限 624.7657（" + FACTS + " mcps.convShares）", "沿用 v0.3.1：一律轉股、取稀釋最大")
@@ -223,11 +223,11 @@ inp("tp_g", "永續成長率", "%", 0.02, 0.03, 0.04, "Assumed", "沿用 v0.3.1 
 inp("w_dcf", "目標價中 DCF 的權重（其餘為分部加總）", "%", 0.3, 0.5, 0.7, "Assumed", "工作單預設 50%（與 AI半導體 v2「DCF＋Comparable 各半」一致；Comparable 在分部層做）", "Andy 可改")
 for s, w in (("A", 0.25), ("B", 0.5), ("C", 0.25)):
     inp(f"w{s}", f"目標價情境權重 {s}", "%", None, w, None, "Assumed", "工作單預設 A 25%／B 50%／C 25%", "Andy 可改")
-inp("ev_crwv", "CoreWeave 企業價值（2026-10-21）", "US$B", None, 80.12, None, "Interested-party", "oracle/data/oracle_facts_20261022.json val.peer.crwv", "—")
+inp("ev_crwv", "CoreWeave 企業價值（2026-11-13 近似）", "US$B", None, 75.33, None, "Derived", "工作單 px1113：EV 新＝EV 舊 80.12（2026-10-21，oracle/data/oracle_facts_20261022.json val.peer.crwv）＋市值舊 34.09 ×（11-13 收盤 53.13 ÷ 10-21 收盤 61.82 − 1）；收盤取自 closes_20261020_20261113.csv；淨負債不變（近似）", "v0.5.2 以前為 80.12（2026-10-21）")
 inp("eb_crwv", "CoreWeave 2027 年共識 EBITDA", "US$B", None, 16.656, None, "Interested-party", "coreweave/data/consensus_crwv_20260925.json FY27（MarketScreener）", "—")
-inp("ev_nbis", "Nebius 企業價值（2026-10-21）", "US$B", None, 48.79, None, "Interested-party", "oracle/data/oracle_facts_20261022.json val.peer.nbis", "—")
+inp("ev_nbis", "Nebius 企業價值（2026-11-13 近似）", "US$B", None, 33.65, None, "Derived", "工作單 px1113：EV 新＝EV 舊 48.79（2026-10-21，oracle/data/oracle_facts_20261022.json val.peer.nbis）＋市值舊 46.64 ×（11-13 收盤 115.88 ÷ 10-21 收盤 171.57 − 1）；收盤取自 closes_20261020_20261113.csv；淨負債不變（近似）", "v0.5.2 以前為 48.79（2026-10-21）")
 inp("eb_nbis", "Nebius 2027 年共識 EBITDA", "US$B", None, 6.194, None, "Interested-party", "nebius/data/consensus_nbis_20261007.json FY27（MarketScreener）", "—")
-inp("mult_oci", "OCI AI 前瞻 EV/EBITDA（neocloud 同業中位數；修正一起只作對照列）", "x", 4.81, "=MEDIAN(Val!D61:D62)", 7.88, "Derived", "CoreWeave、Nebius：EV（2026-10-21）÷ 2027 年共識 EBITDA（Val 頁同業表）", "第三家同業（IREN、WhiteFiber）EBITDA 共識：未找到；v0.3.1 為 6x [Assumed]")
+inp("mult_oci", "OCI AI 前瞻 EV/EBITDA（neocloud 同業中位數；修正一起只作對照列）", "x", 4.81, "=MEDIAN(Val!D61:D62)", 7.88, "Derived", "CoreWeave、Nebius：EV（2026-11-13 近似；v0.5.2 以前 2026-10-21）÷ 2027 年共識 EBITDA（Val 頁同業表）", "第三家同業（IREN、WhiteFiber）EBITDA 共識：未找到；v0.3.1 為 6x [Assumed]")
 inp("pm_msft", "Microsoft NTM EV/EBITDA", "x", None, 15.59, None, "Derived", FACTS + " val.peer.msft（2026-10-07；EV ÷ 共識 EBITDA 時間加權）", "2026-10-22 找不到新值")
 inp("pm_sap", "SAP NTM EV/EBITDA", "x", None, 15.02, None, "Derived", FACTS + " val.peer.sap（2026-10-07）", "同上")
 inp("pm_crm", "Salesforce NTM EV/EBITDA", "x", None, 10.8, None, "Derived", FACTS + " val.peer.crm（2026-10-07）", "同上")
@@ -947,8 +947,8 @@ DC["v12"] = r; r += 2
 V.cell(r, 1, "0.2 分部加總（FY2029 EBITDA × 前瞻倍數；OCI AI 以 AI 模組 DCF）").font = BOLD; r += 1
 hdr(V, r, ["同業", "代號", "EV（US$B）", "前瞻 EV/EBITDA", "日期", "來源與標記"]); r += 1
 V.cell(r, 1, "OCI AI 同業（neocloud）：EV ÷ 2027 年共識 EBITDA（修正一起只作對照列）").font = GREY; r += 1
-for nm, tk, ev, eb, dt, src in (("CoreWeave", "CRWV", "ev_crwv", "eb_crwv", "2026-10-21", "In 頁 ev_crwv、eb_crwv（MarketScreener，Interested-party）"),
-                                ("Nebius", "NBIS", "ev_nbis", "eb_nbis", "2026-10-21", "In 頁 ev_nbis、eb_nbis（MarketScreener，Interested-party）")):
+for nm, tk, ev, eb, dt, src in (("CoreWeave", "CRWV", "ev_crwv", "eb_crwv", "2026-11-13", "In 頁 ev_crwv、eb_crwv（MarketScreener，Interested-party）"),
+                                ("Nebius", "NBIS", "ev_nbis", "eb_nbis", "2026-11-13", "In 頁 ev_nbis、eb_nbis（MarketScreener，Interested-party）")):
     V.cell(r, 1, nm); V.cell(r, 2, tk); V.cell(r, 3, f"={ev}").number_format = "#,##0.0"
     V.cell(r, 4, f"={ev}/{eb}").number_format = "0.00"; V.cell(r, 5, dt); V.cell(r, 6, src); r += 1
 OCI_PEERS = (r - 2, r - 1)
@@ -1020,7 +1020,7 @@ wsum = lambda row: f"=wA*C{row}+wB*D{row}+wC*E{row}"
 cr("dcf", "DCF 目標價（情境加權）", "US$", wsum(DC["v12"]))
 cr("comp", "Comparable 目標價（市場主流同業法）：分部加總混合版——OCI AI 以 AI 模組 DCF", "US$", wsum(SO_["v12"]), note="不是純同業法（v0.4.7 改名，驗收報告 H3）：OCI AI 以 AI 模組 DCF（neocloud 同業只有 2 家，不符「至少 3 家」）；SaaS 與 OCI 非 AI × 軟體倍數；傳統業務 × 成熟軟體倍數；情境加權。純倍數版見下方「對照」列")
 cr("tp", "目標價（DCF 與 Comparable 加權）", "US$", f"=w_dcf*C{r-2}+(1-w_dcf)*C{r-1}", fill=True, note='="DCF 權重 "&TEXT(w_dcf,"0%")&"、分部加總權重 "&TEXT(1-w_dcf,"0%")&"；情境權重 A／B／C "&TEXT(wA,"0%")&"／"&TEXT(wB,"0%")&"／"&TEXT(wC,"0%")')
-cr("px", "現價（2026-11-05）", "US$", "=px", note="v0.4.5：2026-11-03 收盤 126.19；v0.4.3：2026-10-26 收盤 126.06")
+cr("px", "現價（2026-11-13）", "US$", "=px", note="v0.5.2 以前：2026-11-05 收盤 115.16；v0.4.5：2026-11-03 收盤 126.19；v0.4.3：2026-10-26 收盤 126.06")
 cr("cons", "市場共識目標價", "US$", "=cons_tp", note="S&P（43 家平均，2026-10-20）；Interested-party")
 cr("up", "上檔空間：加權目標價", "%", f"=C{CON['tp']}/px-1", "0.0%", fill=True)
 cr("upc", "上檔空間：Comparable 目標價", "%", f"=C{CON['comp']}/px-1", "0.0%")
@@ -1170,7 +1170,7 @@ srcs = [("Oracle FY2026 10-K（附註 13 分部、經查核財報）", "2026-06-
         ("Oracle 事實總帳 v0.3.1 增補（現價、共識、美債、同業 EV）", "2026-10-22", "oracle/data/oracle_facts_20261022.json", "Verified／Interested-party"),
         ("市場共識（MarketScreener／S&P、LSEG）", "2026-10-22", "oracle/data/consensus_orcl_20261022.json", "Interested-party"),
         ("現價：FinancialContent 歷史股價（2026-11-03 收盤 126.19；11-02 收盤 119.22）", "2026-11-04", "https://www.financialcontent.com/quote/NY%3AORCL/historical", "Verified"),
-        ("現價：Yahoo Finance ORCL 日線（2026-11-05 收盤 115.16；11-04 收盤 123.73）", "2026-11-06", "https://query1.finance.yahoo.com/v8/finance/chart/ORCL?range=5d&interval=1d", "Verified"),
+        ("現價：Yahoo Finance ORCL 日線（2026-11-13 收盤 125.35；closes_20261020_20261113.csv；v0.5.2 以前 2026-11-05 收盤 115.16）", "2026-11-16", "https://query1.finance.yahoo.com/v8/finance/chart/ORCL?range=5d&interval=1d", "Verified"),
         ("現價第二來源：CNBC 2026-11-05 盤勢（Oracle 跌近 7%）", "2026-11-05", "https://www.cnbc.com/2026/11/04/stock-market-today-live-updates.html", "Verified"),
         ("v0.4.3 現價：stockanalysis.com 歷史股價（2026-10-26 收盤 126.06；10-30 收盤 130.67 兩站相同）", "2026-10-27", "https://stockanalysis.com/stocks/orcl/history/", "Verified"),
         ("Oracle 新聞稿：Oracle Announces Pricing of $20 Billion of Common Stock and Senior Notes（股 86,206,897 × $116；票據五檔 10.0；11-04 交割）", "2026-11-02", "https://www.prnewswire.com/news-releases/oracle-announces-pricing-of-20-billion-of-common-stock-and-senior-notes-302927244.html", "Verified"),
@@ -1242,7 +1242,7 @@ lines += [
 # v0.5.2：README 第 1 列版本文字（只改版號與日期；其餘文字不動）
 _t0 = lines[0][0]
 assert "個股模型 v0.5.1（命題＋營收分部架構＋收支模組；" in _t0 and _t0.endswith("　2026-11-10"), _t0[-40:]
-lines[0] = (_t0.replace("個股模型 v0.5.1（命題＋營收分部架構＋收支模組；", "個股模型 v0.5.2（命題＋營收分部架構＋收支模組；v0.5.2 套用 HTML 版面 v1.3 並新增 IS、Coord 兩頁〔既有各頁數值同 v0.5.1〕；", 1)[:-len("2026-11-10")] + "2026-11-15", lines[0][1])
+lines[0] = (_t0.replace("個股模型 v0.5.1（命題＋營收分部架構＋收支模組；", "個股模型 v0.5.3（命題＋營收分部架構＋收支模組；v0.5.3 只換現價與同業報價為 2026-11-13 收盤〔工作單 px1113〕；v0.5.2 套用 HTML 版面 v1.3 並新增 IS、Coord 兩頁〔既有各頁數值同 v0.5.1〕；", 1)[:-len("2026-11-10")] + "2026-11-16", lines[0][1])
 for i, (t, b) in enumerate(lines, 1):
     RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
@@ -1288,7 +1288,7 @@ for i, (t, b) in enumerate(show):
     RD.cell(r0_ + i, 1, t).font = Font(bold=b)
 # v0.5.2：HTML 版面 v1.3 補缺項（IS 頁、Sens 白話標籤、README 展示層列）與 Coord 頁「三層協調」（oracle/v052_post.py；只新增，不改既有格）
 import v052_post
-assert _rev_neu and _rev_eq and _rev_hi, "RevDCF p_long 列不存在"
+assert OVR or (_rev_neu and _rev_eq and _rev_hi), "RevDCF p_long 列不存在"   # px1113：敏感度建置（SENS_OVR）不載反向 DCF 快照，列不存在屬正常
 V052 = v052_post.apply(wb, {"HERE": HERE, "TKS": TKS, "TKV": TKV, "GEN": GEN, "GNAME": GNAME, "QR": {"capex": 29, "oci": 4}, "PR": PR_, "TR": TR, "CR": CR_, "CON": CON, "GATE": GATE,
                             "SENS_ROWS": SENS_ROWS, "REV_NEU": _rev_neu, "REV_EQ": _rev_eq, "REV_HI": _rev_hi, "FB_LEV": _FB["lev"], "OCI_SH": f"Val!D{SO_['oci_sh']}",
                             "TPS_A": f"Val!C{SO_['tps']}", "TPS_B": f"Val!D{SO_['tps']}", "TPS_C": f"Val!E{SO_['tps']}"})
