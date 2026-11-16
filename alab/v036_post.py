@@ -12,7 +12,7 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
 BOLD = Font(bold=True); BLUE = Font(color="0000FF"); HDR = PatternFill("solid", fgColor="DDEBF7")
-AS_OF, VAL_D = "2026-11-05", "2026-12-31"
+AS_OF, VAL_D = "2026-11-13", "2026-12-31"
 PR3 = "https://www.sec.gov/Archives/edgar/data/1736297/000173629726000044/q326exhibit991.htm"
 PR4 = "https://www.sec.gov/Archives/edgar/data/1736297/000173629726000005/q425exhibit991.htm"
 Q10 = "https://www.sec.gov/Archives/edgar/data/0001736297/000173629726000045/alab-20260930.htm"
@@ -107,7 +107,7 @@ def hist_sheet(wb):
         if tag == "Interested-party": H.cell(r, 8, INCENT[tag])
         r += 1
     r += 1
-    for k, labl, f in (("asof", "資料基準日（現價日）", "=DATE(2026,11,5)"), ("valdate", "DCF 評價日", "=DATE(2026,12,31)"), ("bsdate", "資產負債表日", "=DATE(2026,9,30)")):
+    for k, labl, f in (("asof", "資料基準日（現價日）", "=DATE(2026,11,13)"), ("valdate", "DCF 評價日", "=DATE(2026,12,31)"), ("bsdate", "資產負債表日", "=DATE(2026,9,30)")):
         H.cell(r, 1, f"h_{k}"); H.cell(r, 2, labl); H.cell(r, 3, f).number_format = "yyyy-mm-dd"; dn(wb, f"h_{k}", f"Hist!$C${r}"); H.cell(r, 6, "—"); r += 1
     H.column_dimensions["A"].width = 14; H.column_dimensions["B"].width = 46
     for c in "CDE": H.column_dimensions[c].width = 13
@@ -230,10 +230,10 @@ def norm_tags(wb):
 # ---------- 原則 1：build_id、輸入指紋、模型狀態 ----------
 def build_id(here, stage):
     h = hashlib.sha256(stage.encode())
-    for fn in sorted(["build_alab.py", "v036_post.py", "v038_post.py", "px1105_post.py", "sens.json", "segments.json", "coord_alt.json"]):   # v0.3.8：加 v038_post.py、coord_alt.json
+    for fn in sorted(["build_alab.py", "v036_post.py", "v038_post.py", "px1105_post.py", "px1113_post.py", "sens.json", "segments.json", "coord_alt.json"]):   # v0.3.8：加 v038_post.py、coord_alt.json
         p = os.path.join(here, fn)
         if os.path.exists(p): h.update(fn.encode()); h.update(open(p, "rb").read())
-    return f"alab-v0.3.8-{h.hexdigest()[:10]}"   # v0.3.8 起標籤改版號（數值邏輯仍由 ALAB_STAGE＝0.3.7 控制，見 build_alab.py）
+    return f"alab-v0.3.9-{h.hexdigest()[:10]}"   # v0.3.9（px1113）；v0.3.8 起標籤改版號（數值邏輯仍由 ALAB_STAGE＝0.3.7 控制，見 build_alab.py）
 
 
 def governance(wb, SJ, bid, OVR):
@@ -432,7 +432,7 @@ def readme(wb, ctx, bid, G):
     # as_of
     G["asof_h"] = put(f"資料基準日（as_of）：{AS_OF}（現價日）。市場資料與基準日相差超過 2 個交易日標「逾期」；最近一次財報（3Q26，2026-11-03）前的共識標「財報前，只作歷史對照」（原則 15）。", True)
     RD.cell(r, 1, "項目").font = BOLD; RD.cell(r, 2, "資料日期").font = BOLD; RD.cell(r, 3, "狀態").font = BOLD; G["asof_t"] = r; r += 1
-    items = [("股價 px", "2026-11-05", 0), ("同業股價（五家）", "2026-11-05", 0), ("同業前瞻 P/E 原值（stockanalysis 頁面）", "2026-10-23", 0),
+    items = [("股價 px", "2026-11-13", 0), ("同業股價（五家）", "2026-11-13", 0), ("同業前瞻 P/E 原值（stockanalysis 頁面）", "2026-10-23", 0),
              ("無風險利率 rf（美國 10 年期公債）", "2026-10-23", 0), ("市場共識目標價 tp_street", "2026-10-16", 1), ("共識 FY2026／FY2027 EPS（Yahoo）", "2026-10-23", 1),
              ("共識 3Q26、4Q26 營收（Recon 對照）", "2026-10-23", 1), ("資產負債（3Q26；v0.3.7 起以 10-Q 為主來源）" if ctx["V37"] else "資產負債（3Q26；stockanalysis，v0.3.7 改 10-Q）", "2026-09-30", 2)]
     G["asof_rows"] = []
@@ -441,7 +441,7 @@ def readme(wb, ctx, bid, G):
         RD.cell(r, 3, '="財報前，只作歷史對照"' if kind == 1 else ('="最近一季資產負債表（以 stub 期滾到評價日）"' if kind == 2 else
                        f'=IF(ABS(NETWORKDAYS(MIN(DATEVALUE(B{r}),DATEVALUE("{AS_OF}")),MAX(DATEVALUE(B{r}),DATEVALUE("{AS_OF}")))-1)>2,"逾期 "&TEXT(ABS(NETWORKDAYS(MIN(DATEVALUE(B{r}),DATEVALUE("{AS_OF}")),MAX(DATEVALUE(B{r}),DATEVALUE("{AS_OF}")))-1),"0")&" 個交易日","同期")'))
         G["asof_rows"].append(r); r += 1
-    G["asof_n"] = put("說明：rf 與同業前瞻 P/E 原值逾期，但與其他 AI 半導體個股模型同一取值日，為維持跨模型一致暫不單獨更新（原則 15；不需驗收清單 X24）；同業 P/E 已以 2026-11-05 收盤換算。共識只作對帳，不進目標價。")
+    G["asof_n"] = put("說明：rf 與同業前瞻 P/E 原值逾期，但與其他 AI 半導體個股模型同一取值日，為維持跨模型一致暫不單獨更新（原則 15；不需驗收清單 X24）；同業 P/E 已以 2026-11-13 收盤換算。共識只作對帳，不進目標價。")
     inv = G["recon"]["inv"]
     G["fail_h"] = put("主要失效條件（可觀察；原則 3）", True)
     E_up, E_dn = f"Recon!B{G['recon']['e_up']}", f"Recon!B{G['recon']['e_dn']}"
@@ -487,7 +487,7 @@ def apply(wb, here, ctx):
              else "FY2026–FY2027 三情境相同（顆數係數 CY2028 起），差異在 FY2028 起")
     PLs["A1"].value = ('="PL — Astera Labs 損益（US$B；non-GAAP）。FY2025A 實績、FY2026 錨點（"&Q!D3&"、"&Q!E3&"、"&Q!F3&"＋"&Q!G3&"），FY2027 起為模型。'
                        '會計年度＝日曆年。三情境各一個完整推導區塊（本頁下方），頂端為摘要。' + _tail + '"')
-    in_set(wb, "rf", 9, "FRED DGS10：10-28～10-30 5.05%／4.98%／4.94%。股價日 2026-11-05；殖利率沿用 2026-10-23（逾期，與其他個股模型同一取值日；見 README 資料基準日表）")
+    in_set(wb, "rf", 9, "FRED DGS10：10-28～10-30 5.05%／4.98%／4.94%。股價日 2026-11-13；殖利率沿用 2026-10-23（逾期，與其他個股模型同一取值日；見 README 資料基準日表）")
     for k in ("beta", "beta_u"):
         r = inrow(wb, k); c = wb["In"].cell(r, 9)
         c.value = str(c.value or "") + "。依據：docs/plan/自算產業β_20261105.md（US 半導體 13 家；Astera Labs 本身在同業組內，上市不足 60 個月）"

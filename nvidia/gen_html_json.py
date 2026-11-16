@@ -349,6 +349,7 @@ def _v13():
     r13 = find("README", "v1.3 展示層")
     RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
     assert str(RD[f"A{RM['ver']}"].value).startswith("v0.3.7"), RD[f"A{RM['ver']}"].value
+    assert str(RD[f"A{RD.max_row}"].value).startswith("v0.3.11"), RD[f"A{RD.max_row}"].value
     cfg["layout"] = "v1.3"
     # ---- 橫幅：只留 ≤200 字白話（規則與歸因移到估值章）----
     old_note = cfg["hero"]["note"]
@@ -504,7 +505,7 @@ def _v13():
     S["drivers"]["title"] = "驅動因子：分部營收推導"
     # ---- 9. 資料狀態：會計年度、原投資建議條件式、本版要點 ----
     st = S["status"]["blocks"]
-    st[0:0] = [{"type": "h3", "text": "本版要點"}, {"type": "note", "parts": [f"@README!A{RM['ver']}"]},
+    st[0:0] = [{"type": "h3", "text": "本版要點"}, {"type": "note", "parts": [f"@README!A{RD.max_row}"]},
                {"type": "h3", "text": "會計年度與原投資建議條件式（模型原文）"}, {"type": "note", "parts": [f"@README!A{find('README', '會計年度：')}"]},
                {"type": "note", "parts": [f"@README!A{find('README', '投資建議：')}"]}]
     order = ["thesis", "valuation", "sens", "revdcf", "pl", "drivers", "recon", "status"]

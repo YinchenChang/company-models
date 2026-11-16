@@ -630,7 +630,7 @@ def apply(wb, here, SIL):
         return "v038_post：略過（alt_run 建置）"
     RD = wb["README"]
     import re as _re
-    RD["A1"].value = _re.sub(r"；build_id alab-v0\.3\.8-[0-9a-f]+(?=；v0\.3\.8（)", "（build_id 見 README 狀態列）", str(RD["A1"].value))
+    RD["A1"].value = _re.sub(r"；build_id alab-v0\.3\.[89]-[0-9a-f]+(?=；v0\.3\.8（)", "（build_id 見 README 狀態列）", str(RD["A1"].value))
     hist_block(wb)
     PLA = pl_standard(wb)
     RVA = revdcf(wb)

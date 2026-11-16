@@ -164,7 +164,7 @@ inp("tp_wB", "目標價情境權重 B", "%", None, 0.5, None, "Assumed", "Andy �
 inp("tp_wC", "目標價情境權重 C", "%", None, 0.2, None, "Assumed", "Andy 可改", "—")
 
 sec("I. 價格與估值")
-inp("px", "股價（2026-11-05 收盤）", "US$", None, 112.33, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（CRDO；本公司、同業統一同日）", "原 v0.3.4：136.5（2026-11-04 收盤）；v0.3.3 為 2026-10-23 收盤 147.29（stockanalysis、CoinMarketCap）")
+inp("px", "股價（2026-11-13 收盤）", "US$", None, 131.51, None, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（CRDO；本公司、同業統一同日；markets/invest_map/data/closes_20261020_20261113.csv）", "v0.3.6 為 2026-11-05 收盤 112.33；原 v0.3.4：136.5（2026-11-04 收盤）；v0.3.3 為 2026-10-23 收盤 147.29（stockanalysis、CoinMarketCap）")
 inp("px_hi", "52 週高點", "US$", None, 308.67, None, "Interested-party", SA + "：52 週區間 86.49–308.67", TK + "：2026-06-22 收盤 302.52")
 inp("sh_out", "流通股數（2026-10）", "十億股", None, 0.18795, None, "Interested-party", SA + "：187.95 百萬股", K10 + "：186,477,898 股（2026-06-08，公司）")
 
@@ -438,7 +438,7 @@ VAL = {}
 # 1. 價格與市場隱含倍數（第 14 列起；第 0 節在最後寫入第 4–12 列）
 V.cell(14, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, 15, ["項目", "A", "B", "C", "說明"])
-V.cell(16, 1, "現價（2026-11-05 收盤）"); V["B16"] = "=px"; V["B16"].number_format = "0.00"
+V.cell(16, 1, "現價（2026-11-13 收盤）"); V["B16"] = "=px"; V["B16"].number_format = "0.00"
 V.cell(17, 1, "現價 ÷ FY2026 EPS（實績）"); V.cell(18, 1, "現價 ÷ FY2027 EPS（模型）"); V.cell(19, 1, "現價 ÷ FY2028 EPS（模型）"); V.cell(20, 1, "現價 ÷ FY2029 EPS（模型）")
 for j, s in enumerate(SC):
     c = "BCD"[j]
@@ -508,7 +508,7 @@ V.cell(4, 1, "舊法：規則值情境加權（參考）").font = BOLD
 hdr(V, 5, ["項目", "數值", "", "", "說明"])
 V.cell(6, 1, "規則值情境加權價（參考，非目標價）"); V["B6"] = f"=tp_wA*F{VAL['A']}+tp_wB*F{VAL['B']}+tp_wC*F{VAL['C']}"; V["B6"].number_format = "#,##0"
 V["E6"] = "權重 × 各情境隱含價（第 3 節規則值）"
-V.cell(7, 1, "規則值情境加權價 ÷ 現價 − 1（參考）"); V["B7"] = "=B6/px-1"; V["B7"].number_format = "0.0%"; V["E7"] = "現價＝In 頁 px（2026-11-05 收盤）"
+V.cell(7, 1, "規則值情境加權價 ÷ 現價 − 1（參考）"); V["B7"] = "=B6/px-1"; V["B7"].number_format = "0.0%"; V["E7"] = "現價＝In 頁 px（2026-11-13 收盤）"
 for rr, s, lab in ((8, "A", "情境 A 隱含價（樂觀）"), (9, "B", "情境 B 隱含價（基準）"), (10, "C", "情境 C 隱含價（下檔）")):
     V.cell(rr, 1, lab); V[f"B{rr}"] = f"=F{VAL[s]}"; V[f"B{rr}"].number_format = "#,##0"
     V[f"E{rr}"] = f'="近 12 月 GAAP 換算 EPS "&TEXT(D{VAL[s]},"0.00")&" × "&TEXT(E{VAL[s]},"0.0")&" 倍（第 3 節）"'
@@ -616,7 +616,7 @@ srcs = [("公司：4Q26 與 FY2026 實績、1Q27 指引（8-K 附件 99.1）", P
         ("券商：Needham 等（客戶名稱 Amazon、Microsoft、xAI；Benzinga 2025-03）", BZ),
         ("共識：Yahoo Finance 分析師預估（2026-10-01）", YH),
         ("共識：StockAnalysis 預估與目標價（2026-10-05）", SAF),
-        ("價格：Yahoo Finance 日線收盤 2026-11-05（現價、同業報價；本公司、同業統一同日）", "https://finance.yahoo.com/quote/CRDO/history/"), ("價格：StockAnalysis（2026-10-23 收盤〔同業 P/E 換算基準〕、52 週區間、股數）", SA),
+        ("價格：Yahoo Finance 日線收盤 2026-11-13（現價、同業報價；本公司、同業統一同日）", "https://finance.yahoo.com/quote/CRDO/history/"), ("價格：StockAnalysis（2026-10-23 收盤〔同業 P/E 換算基準〕、52 週區間、股數）", SA),
         ("價格與評論：TIKR（10 月跌幅、OCP 發表 ALC、FY2027 共識 GAAP／調整後 EPS）", TK),
         ("資料商：companiesmarketcap 年底 P/E", CMC),
         ("資料商：StockAnalysis 會計年度末 P/E", "https://stockanalysis.com/stocks/crdo/financials/ratios/"),
@@ -822,7 +822,7 @@ _fade_all(lambda c, R: f"{c}{R['ni']}/{c}{R['sh_']}", None)
 _shift_rows(wb, "Val", 4, 47)
 TPT = _tp_section(V, lambda s_, y: f"PL!{FCX[y]}{SUMR[(s_, 'eps')]}", [(2028, '6/12'), (2029, '6/12')],
     '約 2027-10 時的未來 12 月（2027-11～2028-10）≈ 6／12 × FY2028＋6／12 × FY2029（會計年度 4 月底／5 月初結束）',
-    [('Astera Labs', 'ALAB', '=45.77*179.47/257.16', '2026-11-05', 'stockanalysis.com forward PE 45.77（2026-10-23，收盤 257.16）× 2026-11-05 收盤 179.47 ÷ 257.16（Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變）'), ('Marvell', 'MRVL', '=40.44*133.55/228.51', '2026-11-05', 'stockanalysis.com forward PE 40.44（2026-10-23，收盤 228.51）× 2026-11-05 收盤 133.55 ÷ 228.51（Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變）'), ('Broadcom', 'AVGO', '=18.52*291.53/321.68', '2026-11-05', 'stockanalysis.com forward PE 18.52（2026-10-23，收盤 321.68）× 2026-11-05 收盤 291.53 ÷ 321.68（Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變）'), ('MACOM', 'MTSI', '=28.59*190.35/236.24', '2026-11-05', 'stockanalysis.com forward PE 28.59（2026-10-23，收盤 236.24）× 2026-11-05 收盤 190.35 ÷ 236.24（Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變）')],
+    [('Astera Labs', 'ALAB', '=45.77*221.83/257.16', '2026-11-13', 'stockanalysis.com forward PE 45.77（2026-10-23，收盤 257.16）× 2026-11-13 收盤 221.83 ÷ 257.16（Yahoo Finance 日線收盤 2026-11-13；共識 EPS 不變；工作單 px1113；closes_20261020_20261113.csv；v0.3.6 為 2026-11-05 收盤 179.47 換算 31.94）'), ('Marvell', 'MRVL', '=40.44*156.76/228.51', '2026-11-13', 'stockanalysis.com forward PE 40.44（2026-10-23，收盤 228.51）× 2026-11-13 收盤 156.76 ÷ 228.51（Yahoo Finance 日線收盤 2026-11-13；共識 EPS 不變；工作單 px1113；closes_20261020_20261113.csv；v0.3.6 為 2026-11-05 收盤 133.55 換算 23.63）'), ('Broadcom', 'AVGO', '=18.52*347.01/321.68', '2026-11-13', 'stockanalysis.com forward PE 18.52（2026-10-23，收盤 321.68）× 2026-11-13 收盤 347.01 ÷ 321.68（Yahoo Finance 日線收盤 2026-11-13；共識 EPS 不變；工作單 px1113；closes_20261020_20261113.csv；v0.3.6 為 2026-11-05 收盤 291.53 換算 16.78）'), ('MACOM', 'MTSI', '=28.59*232.06/236.24', '2026-11-13', 'stockanalysis.com forward PE 28.59（2026-10-23，收盤 236.24）× 2026-11-13 收盤 232.06 ÷ 236.24（Yahoo Finance 日線收盤 2026-11-13；共識 EPS 不變；工作單 px1113；closes_20261020_20261113.csv；v0.3.6 為 2026-11-05 收盤 190.35 換算 23.04）')],
     '美股高速連接晶片同業（Astera Labs、Marvell、Broadcom、MACOM；不放 A 股）',
     'In 頁 tp_street：20 家平均 279.09（2026-10-05）；10-23 為 284.05',
     'DCF：股東現金流＝EPS（non-GAAP）×（1 − g／ROE），r＝10%、g＝4%、ROE 需與 non-GAAP EPS 同口徑，本模型無股東權益、算不出，取 0.20（Assumed；再投資率 20%），FY2027–32 明確期＋永續，FY2030 起為收斂法。Comparable：美股高速連接晶片同業（Astera Labs、Marvell、Broadcom、MACOM）前瞻 P/E 中位數 × 12 個月後前瞻 EPS（non-GAAP）；Broadcom 規模與業務組合不同，拉低中位數。會計年度 4 月底結束：FY2027 為錨點年（2026-05～2027-04），DCF 的 t＝1 對 FY2027，偏高估。十年 P/E 只有 2025 年一個觀測值（GAAP），分位檢查參考性低。情境對應：顆數情境 A＝順利、B＝平平、C＝不如預期。',
@@ -1111,7 +1111,7 @@ for _ws in wb:   # 公式中的現價日期標籤同步（含 tools/relative_mul
         for _c in _row:
             if isinstance(_c.value, str) and _c.value.startswith("="):
                 for _o in ['"（2026-10-23）"']:
-                    if _o in _c.value: _c.value = _c.value.replace(_o, '"（2026-11-05 收盤）"')
+                    if _o in _c.value: _c.value = _c.value.replace(_o, '"（2026-11-13 收盤）"')
 RD["A1"] = RD["A1"].value + "；v0.3.4（2026-11-06）第三輪修正：現價與同業報價統一 2026-11-04 收盤（Yahoo Finance）"
 # v0.3.4（2026-11-06）第三輪修正（續）：情境名稱統一（Andy 2026-11-06 改定：樂觀／基準／保守）、重點觀察 1 刪除 2026-10-29 調整前舊文（第 22 點）
 import re as _re5
@@ -1143,6 +1143,9 @@ if _CR:
     COORD.stamp(wb, "v0.3.5", "v0.3.6", "2026-11-15")
     import v036_post  # noqa: E402
     print(v036_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR))
+    import px1113_post  # noqa: E402   v0.3.7：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
+    if os.environ.get("COORD_RUN") != "1" and os.environ.get("CRDO_SENS") != "1":
+        print(px1113_post.apply(wb))
 wb.save(sys.argv[1])
 if os.environ.get("CRDO_NOOP"): pass
 if os.environ.get("CRDO_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數

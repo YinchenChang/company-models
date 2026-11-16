@@ -9,7 +9,7 @@ from openpyxl.styles import Font, PatternFill, Alignment
 from openpyxl.workbook.defined_name import DefinedName
 
 BOLD = Font(bold=True); BLUE = Font(color="0000FF"); HDR = PatternFill("solid", fgColor="DDEBF7")
-AS_OF, CUTOFF, BUILT, VAL_D = "2026-11-05", "2026-11-05", "2026-11-11", "2026-12-31"
+AS_OF, CUTOFF, BUILT, VAL_D = "2026-11-13", "2026-11-13", "2026-11-11", "2026-12-31"
 SEC = "https://www.sec.gov/Archives/edgar/data/1045810/"
 Q10 = SEC + "000104581026000075/nvda-20260726.htm"
 Q10N = "NVIDIA 10-Q（期間結束 2026-07-26；申報 2026-08-26；accession 0001045810-26-000075）"
@@ -116,7 +116,7 @@ def hist_sheet(wb):
         H.cell(r, 7, "Verified"); H.cell(r, 8, Q10N + " Note 9 Debt（2026-06 發行七批，有效利率 4.39%–5.66%）"); r += 1
     dn(wb, "h_note_amt", f"Hist!$C${n0}:$C${r - 1}"); dn(wb, "h_note_rate", f"Hist!$D${n0}:$D${r - 1}")
     r += 1
-    for k, labl, f in (("asof", "資料基準日（現價日）", "=DATE(2026,11,5)"), ("cutoff", "資料截止日（最晚一筆資料：股價與同業報價）", "=DATE(2026,11,5)"),
+    for k, labl, f in (("asof", "資料基準日（現價日）", "=DATE(2026,11,13)"), ("cutoff", "資料截止日（最晚一筆資料：股價與同業報價）", "=DATE(2026,11,13)"),
                        ("built", "成品日（本版建置）", "=DATE(2026,11,11)"), ("valdate", "DCF 評價日", "=DATE(2026,12,31)"), ("bsdate", "資產負債表日（10-Q）", "=DATE(2026,7,26)")):
         H.cell(r, 1, f"h_{k}"); H.cell(r, 2, labl); H.cell(r, 3, f).number_format = "yyyy-mm-dd"; dn(wb, f"h_{k}", f"Hist!$C${r}"); H.cell(r, 7, "—"); r += 1
     H.column_dimensions["A"].width = 16; H.column_dimensions["B"].width = 60
@@ -379,9 +379,9 @@ def recon(wb, SJ, ctx):
     dcf = f"Val!$B${lab(V, 'DCF 目標價（情境加權）')}"
     feps = f"Val!$B${lab(V, '12 個月後的前瞻 EPS（情境加權）')}"; pmed = f"Val!$B${lab(V, '同業前瞻 P/E 中位數')}"
     up = f"Val!$B${lab(V, '上檔空間：加權目標價')}"
-    RC.cell(r, 1, "評等級距邊界：升一級（上檔空間）"); RC.cell(r, 2, f"=IF({up}<-0.5,-0.5,IF({up}<-0.25,-0.25,IF({up}<=0.25,0.25,IF({up}<=0.5,0.5,NA()))))").number_format = "+0%;-0%"
+    RC.cell(r, 1, "評等級距邊界：升一級（上檔空間）"); RC.cell(r, 2, f'=IF({up}<-0.5,-0.5,IF({up}<-0.25,-0.25,IF({up}<=0.25,0.25,IF({up}<=0.5,0.5,"不適用（已是最高級）"))))').number_format = "+0%;-0%"
     RC.cell(r, 10, "級距：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空（Andy 2026-10-25；Val 投資建議公式與 tools/target_summary/build_summary.py 同一套邊界，原則 24）"); G["e_up"] = r; r += 1
-    RC.cell(r, 1, "評等級距邊界：降一級（上檔空間）"); RC.cell(r, 2, f"=IF({up}>0.5,0.5,IF({up}>0.25,0.25,IF({up}>=-0.25,-0.25,IF({up}>=-0.5,-0.5,NA()))))").number_format = "+0%;-0%"; G["e_dn"] = r; r += 1
+    RC.cell(r, 1, "評等級距邊界：降一級（上檔空間）"); RC.cell(r, 2, f'=IF({up}>0.5,0.5,IF({up}>0.25,0.25,IF({up}>=-0.25,-0.25,IF({up}>=-0.5,-0.5,"不適用（已是最低級）"))))').number_format = "+0%;-0%"; G["e_dn"] = r; r += 1
     for j, h in enumerate(["項目", "需要的值", "模型現值", "需要的變動"], 1): RC.cell(r, j, h).font = BOLD
     r += 1
     w = "tp_w_dcf"; G["inv"] = {}
@@ -394,8 +394,10 @@ def recon(wb, SJ, ctx):
             labl = {"pe": f"{nm[t]}所需的 Comparable 採用倍數（同業中位數 × 相對倍數係數；DCF 不變）",
                     "rm": f"{nm[t]}所需的相對倍數調整係數（同業中位數與前瞻 EPS 不變；DCF 不變）",
                     "dcf": f"{nm[t]}所需的 DCF 目標價（Comparable 不變）"}[kind]
+            if t != "px":   # px1113：上檔空間已超過最高級距邊界（>+50%）時無「升一級」邊界，改顯示「不適用」，不留 #N/A
+                f = f"=IF(ISNUMBER(B{G['e_' + t]}),{f[1:]},\"不適用\")"
             RC.cell(r, 1, labl); RC.cell(r, 2, f).number_format = fmt; RC.cell(r, 3, cur).number_format = fmt
-            RC.cell(r, 4, f"=B{r}/C{r}-1").number_format = "+0.0%;-0.0%"
+            RC.cell(r, 4, (f'=IF(ISNUMBER(B{r}),B{r}/C{r}-1,"不適用")' if t != "px" else f"=B{r}/C{r}-1")).number_format = "+0.0%;-0.0%"
             RC.cell(r, 10, "閉式：加權目標價＝w × DCF＋（1 − w）× 倍數 × EPS × 係數；另一法固定。反解值是目標價等於該點的值，不是評等門檻（評等門檻見升一級／降一級列）")
             G["inv"][f"{kind}_{t}"] = r; r += 1
     if ctx["V36"]:
@@ -443,17 +445,17 @@ def val(wb, ctx):
             V.cell(rr, 1).value = a + "【舊法，不進結論】"
         e = V.cell(rr, 5).value
         if isinstance(e, str) and e.startswith("FY2028 EPS 三情境幾乎相同"):
-            V.cell(rr, 5).value = ("分母：本模型各情境 FY2028 EPS（FY 口徑，2027-02～2028-01；B／C／D 欄＝情境 A／B／C）；現價日 2026-11-05。"
+            V.cell(rr, 5).value = ("分母：本模型各情境 FY2028 EPS（FY 口徑，2027-02～2028-01；B／C／D 欄＝情境 A／B／C）；現價日 2026-11-13。"
                                    + ("v0.3.6 起 FY2028 含 1/12 的 CY2028（月數加權），情境係數自 FY2028 起部分作用" if MW else "FY2028 三情境幾乎相同（情境係數從 FY2029 才開始）"))
         if isinstance(a, str) and a.startswith("讀法：1.00＝價格不變"):
             V.cell(rr, 1).value = "讀法（舊法，不進結論）：1.00＝價格不變、1.21＝兩年約 10% 年報酬；所需倍數與歷史年底倍數分位比較，見上表（數字由公式計算）。"
-    for lbl, note in (("現價 ÷ FY2029 EPS（模型）", "分母：本模型各情境 FY2029 EPS（FY 口徑，2028-02～2029-01）；現價日 2026-11-05"),
+    for lbl, note in (("現價 ÷ FY2029 EPS（模型）", "分母：本模型各情境 FY2029 EPS（FY 口徑，2028-02～2029-01）；現價日 2026-11-13"),
                       ("現價 ÷ 共識 FY2028 EPS", "分母：共識 FY2028 EPS 15.91（247wallst 2026-10-19，新 non-GAAP 口徑含 SBC；FY 口徑，非 NTM）；資料商區間 15.70–16.13，口徑與日期未釐清前不據以判斷市場錯估（原則 43）"),
                       ("命題：現價約為", "擁有者命題原值（Interested-party，工作單）；現行值見上方模型與共識兩列"),
-                      ("檢查用：現價 ÷ 各情境 FY2028 EPS", "分母：本模型各情境 FY2028 EPS（FY 口徑）；現價日 2026-11-05")):
+                      ("檢查用：現價 ÷ 各情境 FY2028 EPS", "分母：本模型各情境 FY2028 EPS（FY 口徑）；現價日 2026-11-13")):
         V.cell(lab(V, lbl), 5).value = note
     rr = lab(V, "同業前瞻 P/E 中位數")
-    V.cell(rr, 5).value = "分母：各同業資料商未來 12 個月共識 EPS（stockanalysis 統計頁 2026-10-27～10-30）；價格 2026-11-05 收盤（原則 43）"
+    V.cell(rr, 5).value = "分母：各同業資料商未來 12 個月共識 EPS（stockanalysis 統計頁 2026-10-27～10-30）；價格 2026-11-13 收盤（原則 43）"
     rr = lab(V, "相對倍數調整係數")
     V.cell(rr, 3).value = f'=IF(B{lab(V, "原始比值")}>B{lab(V, "夾值上限")},"已達夾值上限：原始比值 "&TEXT(B{lab(V, "原始比值")},"0.00"),"未觸及夾值（原始比值 "&TEXT(B{lab(V, "原始比值")},"0.00")&"，夾值 0.5–2.0）")'
     G = {}
@@ -473,7 +475,7 @@ def val(wb, ctx):
     pe = [lab(V, n) for n in ("AMD", "Broadcom", "Marvell", "台積電 ADR", "Qualcomm")]
     V.cell(r, 1, "子群中位數（純展示）：GPU／客製 ASIC 設計（AMD、Broadcom、Marvell）"); V.cell(r, 2, f"=MEDIAN(C{pe[0]},C{pe[1]},C{pe[2]})").number_format = "0.00"; G["sub1"] = r; r += 1
     V.cell(r, 1, "子群中位數（純展示）：代工與手機 SoC（台積電 ADR、Qualcomm）"); V.cell(r, 2, f"=MEDIAN(C{pe[3]},C{pe[4]})").number_format = "0.00"; G["sub2"] = r; r += 1
-    V.cell(r, 1, "同業口徑（原則 7、30）"); V.cell(r, 2, "前瞻 P/E：價格日 2026-11-05、EPS 為資料商 NTM 共識（2026-10-27～10-30 頁面）。AMD、Broadcom、Marvell、Qualcomm 為 US GAAP（各家 non-GAAP 口徑不一），台積電 ADR 為 TIFRS；P/E 不涉 EV 與租賃處理。各同業成長率、EBITDA 率、淨負債 ÷ EBITDA、資本強度：未取得（同業少於 8 家不做迴歸，X8）")
+    V.cell(r, 1, "同業口徑（原則 7、30）"); V.cell(r, 2, "前瞻 P/E：價格日 2026-11-13、EPS 為資料商 NTM 共識（2026-10-27～10-30 頁面）。AMD、Broadcom、Marvell、Qualcomm 為 US GAAP（各家 non-GAAP 口徑不一），台積電 ADR 為 TIFRS；P/E 不涉 EV 與租賃處理。各同業成長率、EBITDA 率、淨負債 ÷ EBITDA、資本強度：未取得（同業少於 8 家不做迴歸，X8）")
     G["peer"] = r
     return G
 
@@ -607,12 +609,12 @@ def readme(wb, ctx, bid, G, SJ):
     # 版本沿革列（插在 v0.3.4 列前）
     h = lab(RD, "v0.3.4：")
     RD.insert_rows(h)
-    RD.cell(h, 1, f"v0.3.5（{BUILT}）：NVIDIA v0.3.4 驗收採用規劃書——展示與治理（數值不變；加權目標價、DCF、Comparable 不變）：build_id、輸入指紋與模型狀態；In、Q 頁單一主要標記與來源誘因；歷史財務移到 Hist 頁；"
+    RD.cell(h, 1, f"v0.3.5（2026-11-11）：NVIDIA v0.3.4 驗收採用規劃書——展示與治理（數值不變；加權目標價、DCF、Comparable 不變）：build_id、輸入指紋與模型狀態；In、Q 頁單一主要標記與來源誘因；歷史財務移到 Hist 頁；"
                   "三個日期分列；10 年落後 P/E 標舊法；倍數標分母；README 手寫數字改公式；條件式投資建議與失效條件；上檔空間三段歸因與現行相對倍數（原則 47）；評等邊界距離；Recon 反解；"
                   "命題 2 依模型結果寫明被否定、命題 1 寫明模型輸出；資產負債與股數以 10-Q 為主來源；Sens 目標價表加 DCF 單法美元欄、相對倍數係數＝1 列與業務主因整本重算表；資料基準日與逾期；風險登錄與可證偽指標；展示層數字一致性檢查。")
     if V36:
         RD.insert_rows(h)
-        RD.cell(h, 1, f"v0.3.6（{BUILT}）：驗收採用規劃書——數值項：評價股數改流通股＋RSU（原則 11）；目標時點改現價日＋12 個月（原則 26）；折舊與資本支出比率改最近四季（原則 35）；FY↔CY 改月數加權 11/12＋1/12、k_rec 與 c_nh 依新口徑重算（原則 49）；"
+        RD.cell(h, 1, f"v0.3.6（2026-11-11）：驗收採用規劃書——數值項：評價股數改流通股＋RSU（原則 11）；目標時點改現價日＋12 個月（原則 26）；折舊與資本支出比率改最近四季（原則 35）；FY↔CY 改月數加權 11/12＋1/12、k_rec 與 c_nh 依新口徑重算（原則 49）；"
                       "Sens 新增 k_rec 線性衰減案例（原則 48）；Recon 新增 FY2028 毛利率與指引差距分解與 abs_mem 反解（原則 50）；供應預付與承諾另列（原則 23）。目標價變動拆解見下一列。")
         if SJ and SJ.get("attr"):
             RD.insert_rows(h + 1); RD.cell(h + 1, 1, SJ["attr"])
@@ -640,7 +642,7 @@ def readme(wb, ctx, bid, G, SJ):
                        f'&"；FY2028 營收年增（情境 B）"&TEXT({g27},"0.0%")&IF({g27}<g28_gr,"，低於","，高於")&"公司說法約 "&TEXT(g28_gr,"0%")&" "&TEXT(ABS({g27}-g28_gr)*100,"0.0")&" 個百分點。指引只作對照、不校準（X3）"&IF({"TRUE" if V36 else "FALSE"},"；毛利率差距分解與 abs_mem 反解見 Recon G 節。","。")')
     G["asof_h"] = put(f"資料基準日（as_of）：{AS_OF}（現價日）。市場資料與基準日相差超過 2 個交易日標「逾期」；最近一次財報（Q2 FY27，2026-08-26）之後的共識不標財報前（原則 15）。", True)
     RD.cell(r, 1, "項目").font = BOLD; RD.cell(r, 2, "資料日期").font = BOLD; RD.cell(r, 3, "狀態").font = BOLD; G["asof_t"] = r; r += 1
-    items = [("股價 px（Yahoo Finance 日線收盤）", "2026-11-05", 0), ("同業股價（五家；Comparable 前瞻 P/E 換算）", "2026-11-05", 0),
+    items = [("股價 px（Yahoo Finance 日線收盤）", "2026-11-13", 0), ("同業股價（五家；Comparable 前瞻 P/E 換算）", "2026-11-13", 0),
              ("同業前瞻 EPS（stockanalysis 統計頁，最早一頁）", "2026-10-27", 0), ("無風險利率 rf（美國 10 年期公債殖利率）", "2026-10-23", 0),
              ("相對倍數歷史資料（Bloomberg 前瞻倍數，10 年）", "2026-10-29", 0), ("市場共識目標價 cons_tp（stockanalysis）", "2026-10-25", 0),
              ("共識 FY2028 EPS（247wallst）", "2026-10-19", 0), ("資產負債與股數（10-Q）", "2026-07-26", 2)]
@@ -650,13 +652,13 @@ def readme(wb, ctx, bid, G, SJ):
         RD.cell(r, 3, '="最近一季資產負債表（以 stub 期滾到評價日）"' if kind == 2 else
                 f'=IF(ABS(NETWORKDAYS(MIN(DATEVALUE(B{r}),DATEVALUE("{AS_OF}")),MAX(DATEVALUE(B{r}),DATEVALUE("{AS_OF}")))-1)>2,"逾期 "&TEXT(ABS(NETWORKDAYS(MIN(DATEVALUE(B{r}),DATEVALUE("{AS_OF}")),MAX(DATEVALUE(B{r}),DATEVALUE("{AS_OF}")))-1),"0")&" 個交易日","同期")')
         G["asof_rows"].append(r); r += 1
-    G["asof_n"] = put("說明：rf、同業前瞻 EPS、相對倍數資料與共識逾期，但與其他 AI半導體 個股模型同一取值日，為維持跨模型一致暫不單獨更新（原則 15；不需驗收清單 X24）；同業 P/E 已以 2026-11-05 收盤換算。共識只作對帳，不進目標價。")
+    G["asof_n"] = put("說明：rf、同業前瞻 EPS、相對倍數資料與共識逾期，但與其他 AI半導體 個股模型同一取值日，為維持跨模型一致暫不單獨更新（原則 15；不需驗收清單 X24）；同業 P/E 已以 2026-11-13 收盤換算。共識只作對帳，不進目標價。")
     inv = G["recon"]["inv"]
     G["fail_h"] = put("主要失效條件（可觀察；原則 3、20）", True)
     E_up, E_dn = f"Recon!B{G['recon']['e_up']}", f"Recon!B{G['recon']['e_dn']}"
     fails = [f'="(1) 相對倍數：NVIDIA 對同業的前瞻倍數比（現價 ÷ 12 個月前瞻 EPS ÷ 同業中位數；目前 "&TEXT({rmrel},"0.00")&"）是否回到 1.5 倍以上；調整後 Comparable 假設回到 10 年比值 "&TEXT(rm_factor,"0.00")&"。評等降一級（上檔 "&TEXT({E_dn},"+0%;-0%")&"）所需的相對倍數係數約 "&TEXT(Recon!B{inv["rm_dn"]},"0.00")&"，支持現價需約 "&TEXT(Recon!B{inv["rm_px"]},"0.00")&"。"',
              f'="(2) 毛利率：FY2028 實際毛利率是否 ≥ "&TEXT(g28_gm_lo,"0%")&"（公司指引下緣）；模型情境 B 為 "&TEXT({gB},"0.0%")&"。高於指引下緣表示吸收比例 abs_mem 或非記憶體成本假設偏保守。"',
-             f'="(3) DCF：DCF 目標價（目前 "&TEXT(Recon!C{inv["dcf_up"]},"0.00")&"）升到約 "&TEXT(Recon!B{inv["dcf_up"]},"0.00")&" 評等升一級（上檔 "&TEXT({E_up},"+0%;-0%")&"；Comparable 不變）"&IF(Recon!B{inv["dcf_dn"]}>0,"，降到約 "&TEXT(Recon!B{inv["dcf_dn"]},"0.00")&" 降一級","；即使 DCF 為 0 也不會降一級（Comparable 不變時）")&"。可觀察：WACC 組成（rf、自算產業 β）與 FY2028–FY2030 營收、營業利益率。"',
+             f'="(3) DCF：DCF 目標價（目前 "&TEXT(Recon!C{inv["dcf_up"]},"0.00")&"）"&IF(ISNUMBER({E_up}),"升到約 "&TEXT(Recon!B{inv["dcf_up"]},"0.00")&" 評等升一級（上檔 "&TEXT({E_up},"+0%;-0%")&"；Comparable 不變）","；已是最高評等級（強力買進），沒有升一級邊界")&IF(Recon!B{inv["dcf_dn"]}>0,"，降到約 "&TEXT(Recon!B{inv["dcf_dn"]},"0.00")&" 降一級","；即使 DCF 為 0 也不會降一級（Comparable 不變時）")&"。可觀察：WACC 組成（rf、自算產業 β）與 FY2028–FY2030 營收、營業利益率。"',
              f'="(4) 倍數：Comparable 採用倍數（同業中位數 × 相對倍數係數；目前 "&TEXT({pmed}*rm_factor,"0.0")&" 倍）降到約 "&TEXT(Recon!B{inv["pe_dn"]},"0.0")&" 倍評等降一級；支持現價需約 "&TEXT(Recon!B{inv["pe_px"]},"0.0")&" 倍。可觀察：同業前瞻本益比中位數。"',
              f'="(5) 顆數與 k_rec：Q3 FY27 財報（約 2026-11 下旬）營收對照 Q3 指引 "&TEXT(q3_rev*10,"#,##0")&" 億美元（區間 "&TEXT(q3_rev_lo*10,"#,##0")&"～"&TEXT(q3_rev_hi*10,"#,##0")&"）；Rubin 出貨與認列節奏若使 k_rec 缺口收斂，目標價上升（Sens 業務主因表「k_rec 衰減」）。"']
     G["fail"] = [put(t) for t in fails]
@@ -696,9 +698,9 @@ def apply(wb, here, ctx):
                       "公司原文＝NVIDIA 8-K 新聞稿與 SEC 10-Q／10-K（資產負債與股數以 10-Q 為主來源，原則 34；歷史財務在 Hist 頁）；CFO 書面說明與法說逐字稿未取得")
     r = inrow(wb, "th_mult"); IN.cell(r, 9, "命題原文分母為「2027 年 EPS」（未標情境）。現行值統一以 12 個月前瞻情境加權 EPS 為分母（Val 0.6 節「現價 ÷ 12 個月前瞻 EPS」）；各情境 FY2028 口徑見 Val 第 1 節（原則 6、43：舊說明「約 13.4–13.5x」已過時，刪除）")
     RC = wb["Recon"]; rr = lab(RC, "現價 ÷ FY2028 EPS vs 命題")
-    RC.cell(rr, 10).value = "分母：C／E／G 欄＝各情境 FY2028 EPS（FY 口徑，2026-11-05 現價）；統一口徑（12 個月前瞻情境加權 EPS）的倍數見 Val 0.6 節。EPS 越高，現價越便宜"
-    r = inrow(wb, "rf"); IN.cell(r, 9, str(IN.cell(r, 9).value or "") + "。期限：10 年期；取值日 2026-10-23（股價日 2026-11-05，逾期；與其他個股模型同一取值日，見 README 資料基準日表，X24）")
-    r = inrow(wb, "px"); IN.cell(r, 9, str(IN.cell(r, 9).value or "") + "。定位：Yahoo Finance NVDA 日線 2026-11-05 Close 181.60（未調整；原則 45）")
+    RC.cell(rr, 10).value = "分母：C／E／G 欄＝各情境 FY2028 EPS（FY 口徑，2026-11-13 現價）；統一口徑（12 個月前瞻情境加權 EPS）的倍數見 Val 0.6 節。EPS 越高，現價越便宜"
+    r = inrow(wb, "rf"); IN.cell(r, 9, str(IN.cell(r, 9).value or "") + "。期限：10 年期；取值日 2026-10-23（股價日 2026-11-13，逾期；與其他個股模型同一取值日，見 README 資料基準日表，X24）")
+    r = inrow(wb, "px"); IN.cell(r, 9, str(IN.cell(r, 9).value or "") + "。定位：Yahoo Finance NVDA 日線 2026-11-13 Close 162.85（未調整；原則 45）")
     for k, add in (("q3_rev", "定位：Q2 FY27 新聞稿 Outlook 段：Revenue is expected to be $108.0 billion, plus or minus 2%（原則 45）"),
                    ("q3_gm", "定位：Q2 FY27 新聞稿 Outlook 段：GAAP and non-GAAP gross margins 74.0%, plus or minus 50 basis points"),
                    ("beta_u", "依據：docs/plan/自算產業β_20261105.md（US 半導體 13 家；NVIDIA 本身在同業組內）")):
