@@ -188,9 +188,9 @@ inp("kgi_pe", "凱基：LITE 歷史平均 P/E", "x", None, 45.0, None, "Interest
 sec("I. 價格與估值")
 MRV8K = "https://www.sec.gov/Archives/edgar/data/0001835632/000119312526442717/d352474d8k.htm"   # 第三輪修正：Marvell 8-K（2026-11-02 申報；合併協議條款）
 MRVPR = "https://www.sec.gov/Archives/edgar/data/0001835632/000119312526442714/d81187dex991.htm"   # 同上附件 99.1 新聞稿
-inp("px", "股價（2026-11-05 收盤）", "US$", None, 509.7, None, "Interested-party", "Yahoo Finance 日線收盤 2026-11-05", "v0.5.3 為 2026-11-04 收盤 626.75；原 v0.5.2：756.17（2026-10-23）")
+inp("px", "股價（2026-11-13 收盤）", "US$", None, 596.62, None, "Interested-party", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（LITE；`closes_20261020_20261113.csv`）", "v0.5.6 為 2026-11-05 收盤 509.70；v0.5.3 為 2026-11-04 收盤 626.75；原 v0.5.2：756.17（2026-10-23）")
 inp("mrg_x", "併購換股比例（每股 LITE 換 MRVL 普通股）", "股", None, 4.5, None, "Verified", "Marvell 8-K（2026-11-02 申報；" + MRV8K + "）：每股 Lumentum 普通股轉換為 4.500 股 Marvell 普通股（全股票；零股付現）", "Lumentum 8-K（" + MRG + "）；公司公告隱含約 1,132 美元／股（2026-10-28 收盤）；外部日 2027-11-01（可延至 2028-08-01），預計 2028 上半年完成")
-inp("mrvl_px", "MRVL 股價（2026-11-05 收盤；換股價值用）", "US$", None, 133.55, None, "Interested-party", "Yahoo Finance 日線收盤 2026-11-05", "v0.5.3 為 2026-11-04 收盤 159.80")
+inp("mrvl_px", "MRVL 股價（2026-11-13 收盤；換股價值用）", "US$", None, 156.76, None, "Interested-party", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（MRVL；`closes_20261020_20261113.csv`）", "v0.5.6 為 2026-11-05 收盤 133.55；v0.5.3 為 2026-11-04 收盤 159.80")
 inp("mrvl_tp", "MRVL 模型加權目標價（mrvl/ v0.3.5）", "US$", None, 64.73, None, "Derived", "mrvl/dist/20261115_邁威爾個股模型_v0.3.5.xlsx Val 頁「目標價（DCF 與 Comparable 加權）」64.73（現價 133.55，2026-11-05；v0.3.4 建置時為 67.36，Siliconomics v0.19 下游重建後 64.73）；v0.5.3 為 v0.3.3 的 72.35（現價 159.80，2026-11-04）", "MRVL 模型本版未做合併後 pro forma（列為下一版）；本列只作對照，不進 LITE 加權目標價")
 inp("px_hi", "2026 年內高點", "US$", None, 1143, None, "Interested-party", IVS + "：2026 年內低點 317.61、高點 1,143", "52 週高點：未找到（以年內高點代用）")
 inp("sh_basic", "普通股股數（2026-08-14）", "百萬股", None, 89.7, None, "Verified", K10 + "：8,970 萬股", "—")
@@ -473,7 +473,7 @@ V["A1"] = "Val — P/E 估值（美元；non-GAAP EPS）。目標價＝DCF 與 C
 V["A2"] = "循環位置：Lumentum 不是設備股，不套設備市場見頂年；以本模型營收最高的會計年度為見頂年（比照中際旭創）。營收到 FY2029 仍在增加時，見頂年未知，判為中段"
 V.cell(14, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, 15, ["項目", "A", "B", "C", "說明"])
-V.cell(16, 1, "現價（2026-11-05 收盤）"); V["B16"] = "=px"; V["B16"].number_format = "0.00"
+V.cell(16, 1, "現價（2026-11-13 收盤）"); V["B16"] = "=px"; V["B16"].number_format = "0.00"
 V.cell(17, 1, "現價 ÷ FY2026 EPS（錨點）"); V.cell(18, 1, "現價 ÷ FY2027 EPS（模型）"); V.cell(19, 1, "現價 ÷ FY2028 EPS（模型）"); V.cell(20, 1, "現價 ÷ FY2029 EPS（模型）")
 for j, s in enumerate(SC):
     c = "BCD"[j]
@@ -545,7 +545,7 @@ V.cell(4, 1, "舊法：規則值情境加權（參考）").font = BOLD
 hdr(V, 5, ["項目", "數值", "", "", "說明"])
 V.cell(6, 1, "規則值情境加權價（參考，非目標價）"); V["B6"] = f"=tp_wA*D{VAL['A']}+tp_wB*D{VAL['B']}+tp_wC*D{VAL['C']}"; V["B6"].number_format = "#,##0"
 V["E6"] = "權重 × 各情境隱含價（第 3 節規則值）"
-V.cell(7, 1, "規則值情境加權價 ÷ 現價 − 1（參考）"); V["B7"] = "=B6/px-1"; V["B7"].number_format = "0.0%"; V["E7"] = "現價＝In 頁 px（2026-11-05 收盤）"
+V.cell(7, 1, "規則值情境加權價 ÷ 現價 − 1（參考）"); V["B7"] = "=B6/px-1"; V["B7"].number_format = "0.0%"; V["E7"] = "現價＝In 頁 px（2026-11-13 收盤）"
 for rr, s, lab in ((8, "A", "情境 A 隱含價（樂觀）"), (9, "B", "情境 B 隱含價（基準）"), (10, "C", "情境 C 隱含價（下檔）")):
     V.cell(rr, 1, lab); V[f"B{rr}"] = f"=D{VAL[s]}"; V[f"B{rr}"].number_format = "#,##0"
     V[f"E{rr}"] = f'="FY2027 EPS "&TEXT(B{VAL[s]},"0.00")&" × "&TEXT(C{VAL[s]},"0.0")&"x（第 3 節；"&C{27 + SC.index(s)}&"）"'
@@ -838,7 +838,7 @@ _fade_all(lambda c, R: f"{c}{R['ni']}*1000/{c}{R['sh_']}", None)
 _shift_rows(wb, "Val", 4, 47)
 TPT = _tp_section(V, lambda s_, y: f"PL!{FCX[y]}{SUMR[(s_, 'eps')]}", [(2028, '8/12'), (2029, '4/12')],
     '約 2027-10 時的未來 12 月（2027-11～2028-10）≈ 8／12 × FY2028＋4／12 × FY2029（會計年度 6 月底結束）',
-    [('Coherent', 'COHR', '=22.3*169.76/209.17', '2026-11-05', '前瞻 P/E＝資料商頁面前瞻 P/E 22.3（頁面價格 209.17，2026-10-23）× 2026-11-05 收盤 169.76 ÷ 頁面價格（收盤：Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變；v0.5.3 用 2026-11-04 收盤 195.09）；原：stockanalysis forward PE（分析師共識；價格日期如左）'), ('Fabrinet', 'FN', '=17.27*292.97/314.94', '2026-11-05', '前瞻 P/E＝資料商頁面前瞻 P/E 17.27（頁面價格 314.94，2026-10-23）× 2026-11-05 收盤 292.97 ÷ 頁面價格（收盤：Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變；v0.5.3 用 2026-11-04 收盤 341.64）；原：stockanalysis forward PE（分析師共識；價格日期如左）'), ('Applied Optoelectronics', 'AAOI', '=29.34*46.89/67.51', '2026-11-05', '前瞻 P/E＝資料商頁面前瞻 P/E 29.34（頁面價格 67.51，2026-10-23）× 2026-11-05 收盤 46.89 ÷ 頁面價格（收盤：Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變；v0.5.3 用 2026-11-04 收盤 59.27）；原：stockanalysis forward PE（分析師共識；價格日期如左）'), ('Ciena', 'CIEN', '=30.77*230.81/320.26', '2026-11-05', '前瞻 P/E＝資料商頁面前瞻 P/E 30.77（頁面價格 320.26，2026-10-23）× 2026-11-05 收盤 230.81 ÷ 頁面價格（收盤：Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變；v0.5.3 用 2026-11-04 收盤 272.24）；原：stockanalysis forward PE（分析師共識；價格日期如左）'), ('Corning', 'GLW', '=32.89*103.43/123.69', '2026-11-05', '前瞻 P/E＝資料商頁面前瞻 P/E 32.89（頁面價格 123.69，2026-10-23）× 2026-11-05 收盤 103.43 ÷ 頁面價格（收盤：Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變；v0.5.3 用 2026-11-04 收盤 118.77）；原：stockanalysis forward PE（分析師共識；價格日期如左）')],
+    [('Coherent', 'COHR', '=22.3*218.15/209.17', '2026-11-13', '前瞻 P/E＝資料商頁面前瞻 P/E 22.3（頁面價格 209.17，2026-10-23）× 2026-11-13 收盤 218.15 ÷ 頁面價格（收盤：工作單 px1113；Yahoo Finance 日線收盤 2026-11-13；前版 2026-11-05 收盤 169.76；共識 EPS 不變；v0.5.3 用 2026-11-04 收盤 195.09）；原：stockanalysis forward PE（分析師共識；價格日期如左）'), ('Fabrinet', 'FN', '=17.27*327.98/314.94', '2026-11-13', '前瞻 P/E＝資料商頁面前瞻 P/E 17.27（頁面價格 314.94，2026-10-23）× 2026-11-13 收盤 327.98 ÷ 頁面價格（收盤：工作單 px1113；Yahoo Finance 日線收盤 2026-11-13；前版 2026-11-05 收盤 292.97；共識 EPS 不變；v0.5.3 用 2026-11-04 收盤 341.64）；原：stockanalysis forward PE（分析師共識；價格日期如左）'), ('Applied Optoelectronics', 'AAOI', '=29.34*49.89/67.51', '2026-11-13', '前瞻 P/E＝資料商頁面前瞻 P/E 29.34（頁面價格 67.51，2026-10-23）× 2026-11-13 收盤 49.89 ÷ 頁面價格（收盤：工作單 px1113；Yahoo Finance 日線收盤 2026-11-13；前版 2026-11-05 收盤 46.89；共識 EPS 不變；v0.5.3 用 2026-11-04 收盤 59.27）；原：stockanalysis forward PE（分析師共識；價格日期如左）'), ('Ciena', 'CIEN', '=30.77*280.54/320.26', '2026-11-13', '前瞻 P/E＝資料商頁面前瞻 P/E 30.77（頁面價格 320.26，2026-10-23）× 2026-11-13 收盤 280.54 ÷ 頁面價格（收盤：工作單 px1113；Yahoo Finance 日線收盤 2026-11-13；前版 2026-11-05 收盤 230.81；共識 EPS 不變；v0.5.3 用 2026-11-04 收盤 272.24）；原：stockanalysis forward PE（分析師共識；價格日期如左）'), ('Corning', 'GLW', '=32.89*114.08/123.69', '2026-11-13', '前瞻 P/E＝資料商頁面前瞻 P/E 32.89（頁面價格 123.69，2026-10-23）× 2026-11-13 收盤 114.08 ÷ 頁面價格（收盤：工作單 px1113；Yahoo Finance 日線收盤 2026-11-13；前版 2026-11-05 收盤 103.43；共識 EPS 不變；v0.5.3 用 2026-11-04 收盤 118.77）；原：stockanalysis forward PE（分析師共識；價格日期如左）')],
     '美股光通訊同業（不放 A 股）',
     'stockanalysis：27 位分析師平均 1,165.03（2026-10-23）',
     'DCF（v0.5 標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加（EBIT＝non-GAAP 營業利益 − 股票薪酬），以 WACC 折現到 2026 年底（期中慣例；會計年度 6 月底結束，FY2027 只計 2027-01～06 半年），終值＝NOPAT(FY2033) ×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, rf)、RONIC＝WACC；EV 加淨現金 ÷ 稀釋股數（可轉債以轉換股數計入），以 ke 推到 12 個月後（DCF 頁、tools/fcff_dcf.py）。Comparable：美股光通訊同業（Coherent、Fabrinet、AAOI、Ciena、Corning）前瞻 P/E 中位數 × 12 個月後前瞻 EPS（non-GAAP）。情境對應：顆數情境 A＝順利、B＝平平、C＝不如預期。',
@@ -989,7 +989,7 @@ hdr(V, _m0 + 1, ["項目", "數值", "相對 LITE 現價", "", "說明"])
 MRG_R = {"xv": _m0 + 2, "xt": _m0 + 3, "tp": _m0 + 4, "note": _m0 + 5}
 V.cell(MRG_R["xv"], 1, "換股價值＝換股比例 × MRVL 現價"); V.cell(MRG_R["xv"], 2, "=mrg_x*mrvl_px").number_format = "#,##0.00"
 V.cell(MRG_R["xv"], 3, f"=B{MRG_R['xv']}/px-1").number_format = "+0.0%;-0.0%"
-V.cell(MRG_R["xv"], 5, "Marvell 8-K（2026-11-02）：每股換 4.500 股 MRVL；MRVL 2026-11-05 收盤（In 頁 mrvl_px）")
+V.cell(MRG_R["xv"], 5, "Marvell 8-K（2026-11-02）：每股換 4.500 股 MRVL；MRVL 2026-11-13 收盤（In 頁 mrvl_px）")
 V.cell(MRG_R["xt"], 1, "換股比例 × MRVL 模型加權目標價"); V.cell(MRG_R["xt"], 2, "=mrg_x*mrvl_tp").number_format = "#,##0.00"
 V.cell(MRG_R["xt"], 3, f"=B{MRG_R['xt']}/px-1").number_format = "+0.0%;-0.0%"
 V.cell(MRG_R["xt"], 5, "MRVL 模型 v0.3.5 加權目標價（In 頁 mrvl_tp；未做合併後 pro forma）")
@@ -1133,7 +1133,7 @@ SO.cell(SO.max_row + 1, 1, "[Derived] 自算產業 β（Andy 2026-11-05 22:55）
 import r3_post  # noqa: E402
 print(r3_post.apply(wb, stub_note='="資產負債表日 "&bs_date&"；stub FCFF＝含 stub 期的會計年度 FY2027（2026-07～2027-06）FCFF × stub_frac "&TEXT(stub_frac,"0.000")&" 年"',
                     stub_src="stub FCFF＝含 stub 期的會計年度 FY2027（2026-07～2027-06）FCFF × 本值（年度比例）",
-                    readme_repl=[("（2026-10-23）", "（2026-11-05）")]))
+                    readme_repl=[("（2026-10-23）", "（2026-11-13）")]))
 # ---------------- v0.5.4（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守（本資料夾 px1105_post.py；只改文字） ----------------
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import px1105_post  # noqa: E402
@@ -1157,6 +1157,10 @@ if _CR and not OVR:
     _vr = [r for r in range(1, _RD.max_row + 1) if str(_RD.cell(r, 1).value or "").startswith("v0.5.5（2026-11-15）：個股 HTML 版面規格 v1.3")]
     assert len(_vr) == 1, _vr
     _RD.cell(_vr[0], 1).value = _V56 + "。" + _RD.cell(_vr[0], 1).value
+    # v0.5.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）——README A1 版號與本版說明
+    _a1 = _RD["A1"].value; _h, _t = _a1.split("；", 1)
+    assert "v0.5.6" in _h, _h
+    _RD["A1"].value = _h.replace("v0.5.6", "v0.5.7", 1) + "；v0.5.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113；LITE、MRVL 與同業皆換價；共識 EPS 與模型假設不變）；" + _t
 wb.save(sys.argv[1])
 if os.environ.get("LITE_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
