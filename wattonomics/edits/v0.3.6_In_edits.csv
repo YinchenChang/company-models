@@ -1,0 +1,4 @@
+key,col,old,new,reason
+mw_wyfi,G,whitefiber/company.json scenarios.mwPath（合約 GPU 數換算）,whitefiber/legacy_v02/company.json scenarios.mwPath（合約 GPU 數換算；v0.3.6 前路徑寫 whitefiber/company.json，該檔已移 legacy_v02/）。對照：現行 whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx In mw_ye25／mw_ye26／mwB_27＝5.5／14.5／35 MW（情境 B），v0.3.6 未改值（列下版待辦）,v0.3.6 小項：SRC_GL_070 舊路徑更正（檢核清單 A 節）
+nnv_wyfi,G,fleet.generations 僅 NVIDIA 世代,whitefiber/legacy_v02/company.json fleet.generations 僅 NVIDIA 世代（v0.3.6 路徑更正）,v0.3.6 小項：SRC_GL_070 舊路徑更正（檢核清單 A 節）
+fye_wyfi,G,company.json calendar.fiscalYearEndMonth,whitefiber/legacy_v02/company.json calendar.fiscalYearEndMonth（v0.3.6 路徑更正；現行 v0.4.2 財年仍為曆年）,v0.3.6 小項：SRC_GL_070 舊路徑更正（檢核清單 A 節）

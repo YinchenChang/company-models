@@ -3,7 +3,7 @@
 #   匯出：python3 wattonomics/tools/export_snapshot.py <重算後的 Wattonomics xlsx> <輸出 snapshot.json>
 #   檢查：python3 wattonomics/tools/export_snapshot.py --check <snapshot.json> [<xlsx>]
 #         重新讀取快照記錄的 xlsx（預設 wattonomics/model/<快照記錄的檔名>），任何值差異即以代碼 1 結束。
-# 下游（Siliconomics Deploy、公司模型、AI 投資地圖）只讀快照，不直接讀 xlsx；快照記錄檔名、版本、sha256。
+# 下游（Siliconomics Deploy、公司模型、AI 算力地圖）只讀快照，不直接讀 xlsx；快照記錄檔名、版本、sha256。
 import hashlib, json, os, sys
 import openpyxl
 

@@ -14,7 +14,7 @@ from openpyxl.workbook.defined_name import DefinedName
 HERE = os.path.dirname(os.path.abspath(__file__))
 GL = os.path.dirname(HERE)
 ROOT = os.path.dirname(GL)
-VERSION = "v0.3.5"
+VERSION = "v0.3.6"
 # v0.1.9（工作單 20261102 F4）：Siliconomics R4 橋接 r1 活頁簿（Bridge 頁 b8＝推得淨新增上線 IT GW）；只作並列，首建讀入 In S8，之後以 In 為準
 SIL_R4_R1 = os.path.join(ROOT, "siliconomics", "docs", "reports", "r4_bridge",
                          "20261031_R4對帳橋接_Siliconomics側_r1.xlsx")
@@ -115,7 +115,7 @@ W1_IN = [
      "v0.3.1 WIF_Evidence_2029＝0.202（門檻 50%）→ 無證據；r1 第 7 項"),
     ("prev_ev_w_2030", "上次判定（v0.3.1）Wattonomics 該年是否有證據（1＝是）", "旗標", None, 0, None, "Derived",
      "v0.3.1 WIF_Evidence_2030＝0.218（門檻 50%）→ 無證據；r1 第 7 項"),
-    ("prev_ev_s_2026", "上次判定（v0.3.1）Siliconomics 該年是否有證據（1＝是）", "旗標", None, 0, None, "Derived",
+    ("prev_ev_s_2026", "上次判定（v0.3.1）Siliconomics 該年是否有證據（1＝是；v0.3.6 起只供 Wattonomics 側自評參考）", "旗標", None, 0, None, "Derived",
      "v0.3.1 csil（In sil_ev）2026＝0.44（< 50%）→ 無證據；r1 第 7 項"),
     ("prev_ev_s_2027", "上次判定（v0.3.1）Siliconomics 該年是否有證據（1＝是）", "旗標", None, 0, None, "Derived",
      "v0.3.1 csil（In sil_ev）2027＝0（< 50%）→ 無證據；r1 第 7 項"),
@@ -152,7 +152,7 @@ COORD_IN = [
      "協調規則 C3、J2：首次判定以 50% 為界；緩衝區進入 55%／退出 45% 自第二次起適用；67% 只作對照"),
     ("coord_cov_done", "Wattonomics 覆蓋是否已補齊（1＝是）", "旗標", None, 0, None, "Derived", "SRC_GL_343",
      "v0.3.1 未含七家以外買方路徑（v0.3.2 W-1）；協調規則 v1.1：丙與上游有證據的乙須覆蓋已補齊才改基準，未補齊前標「對帳中」"),
-] + [(f"sil_ev_{y}", f"Siliconomics 證據比例 {y}（實績、已簽約支撐的比例）", "%", lo_, b_, hi_, "Assumed", "SRC_GL_343", n_)
+] + [(f"sil_ev_{y}", f"（停用 v0.3.6；Compare H3 改讀 sil_bs_ev_{y}）舊 Siliconomics 證據比例 {y}（AI半導體 橋接表 scov）", "%", lo_, b_, hi_, "Assumed", "SRC_GL_343", n_)
      for y, lo_, b_, hi_, n_ in ((2026, 0.44, 0.44, 0.65, "AI半導體 橋接表 In scov_2026：NVIDIA FY2027 Q1＋Q2 資料中心實績 164.2 ÷ 錨點 375.46；高＝FY27Q3（11-19）公布後約 0.65（未公布前不算）；Siliconomics 下一版自量後改讀其快照"),
                                  (2027, 0, 0, 0.10, "AI半導體 橋接表 In scov_2027：無實績；產能是上限不是需求證據"),
                                  (2028, 0, 0, 0, "同上（無實績、無已簽約訂單）"), (2029, 0, 0, 0, "同上"),
@@ -174,8 +174,13 @@ ACT26Z1 = {
 }
 
 DATE = "20261102"
-TK_SNAPSHOT = os.path.join(GL, "data", "tokenomics_snapshot_v21.10.json")   # v0.3 Y1：Tokenomics v21.10（master 9e91447）   # v0.2 V8：Tokenomics master 最新 v21.9（tools/tokenomics/import_tokenomics.py 抽取；含 IF_FacilityGW）；Siliconomics 仍用 v21.7
+TK_SNAPSHOT = os.path.join(GL, "data", "tokenomics_snapshot_v22.0.json")   # v0.3.6：Tokenomics v22.0（main 79f6b30；本庫讀的 23 個名稱與 v21.10 逐值相同）   # v0.3 Y1：Tokenomics v21.10（master 9e91447）   # v0.2 V8：Tokenomics master 最新 v21.9（tools/tokenomics/import_tokenomics.py 抽取；含 IF_FacilityGW）；Siliconomics 仍用 v21.7
 SIL_DIR = os.path.join(ROOT, "siliconomics", "data")
+BSTAT = os.path.join(SIL_DIR, "baseline_status.json")
+try:
+    BS_COMMIT = __import__("subprocess").run(["git", "-C", ROOT, "log", "-1", "--format=%h %cs", "--", BSTAT], capture_output=True, text=True).stdout.strip() or "未取得"
+except Exception:
+    BS_COMMIT = "未取得"   # v0.3.6：逐年協調狀態唯一權威（規則 v1.4.3；Siliconomics export_baseline_status.py 產生）
 SEED = os.path.join(HERE, "seed", "seed_v0.1.json")
 TK_EXTRA = os.path.join(HERE, "seed", "tk_extra_v21.7.json")   # 快照未含、直接讀 Tokenomics 活頁簿的名稱（R1 裁定）
 EVID = os.path.join(HERE, "seed", "evidence_v0.1.json")         # tools/import_evidence.py 由 evidence_raw 產生
@@ -183,7 +188,7 @@ FUND = os.path.join(HERE, "seed", "funding_v0.1.4.json")        # tools/import_f
 CAMPUS_ADD = sorted(__import__("glob").glob(os.path.join(HERE, "seed", "campus_v*_add.json")))   # v0.1.2 起新增的 T2 園區列（各版一檔；園區候選回查＋獨立抽查後合併；值之後由 Excel 讀回）
 SEG = os.path.join(ROOT, "markets", "invest_map", "data", "segments_ai_semis_v0.2.3.csv")   # AI半導體 次產業比例（最新版）
 SEG_COMMIT = "5dea5c8"
-GAPSEED = os.path.join(HERE, "seed", "gap_models_v0.3.5.json")   # v0.3.5 ⑥：11 家全部重取（Meta、Oracle 列位修正、Anthropic v0_2_2、OpenAI／Anthropic 營業現金流不加回自有資本支出）；v0.3.4：   # v0.3.4：CoreWeave v5.0.3、Nebius v0.6.1、WhiteFiber v0.4.1 改讀 Thesis／CF 頁（--only crwv,nbis,wyfi；其餘同 v0.2.1 種子）   # v0.2.1 W4：Anthropic 改 v0.1.8（其餘同 v0.1.8 種子）   # tools/import_gap_models.py：Gap 頁個股模型基準值（In Y9 首建；--refresh-y9 時改以本檔覆寫 Y9）
+GAPSEED = os.path.join(HERE, "seed", "gap_models_v0.3.6.json")   # v0.3.6：OpenAI v0_6_6、Anthropic v0_2_3、WhiteFiber v0.4.2 重取（--only oai,ant,wyfi；Y9 值與 v0.3.5 種子逐值相同，只換檔名與 commit）； v0.3.5 ⑥：11 家全部重取（Meta、Oracle 列位修正、Anthropic v0_2_2、OpenAI／Anthropic 營業現金流不加回自有資本支出）；v0.3.4：   # v0.3.4：CoreWeave v5.0.3、Nebius v0.6.1、WhiteFiber v0.4.1 改讀 Thesis／CF 頁（--only crwv,nbis,wyfi；其餘同 v0.2.1 種子）   # v0.2.1 W4：Anthropic 改 v0.1.8（其餘同 v0.1.8 種子）   # tools/import_gap_models.py：Gap 頁個股模型基準值（In Y9 首建；--refresh-y9 時改以本檔覆寫 Y9）
 GP = ["msft", "googl", "amzn", "meta", "orcl", "crwv", "nbis", "wyfi", "xai", "oai", "ant"]   # Gap 頁：11 家代表玩家（本專案覆蓋，不含中國；Andy 2026-10-31 12:58）
 GPN = {"msft": "Microsoft", "googl": "Alphabet", "amzn": "Amazon", "meta": "Meta", "orcl": "Oracle", "crwv": "CoreWeave", "nbis": "Nebius",
        "wyfi": "WhiteFiber", "xai": "SpaceX／xAI", "oai": "OpenAI", "ant": "Anthropic"}
@@ -292,6 +297,8 @@ def main():
     tkx = json.load(open(TK_EXTRA, encoding="utf-8"))
     sil_fn = a.sil_snapshot or open(os.path.join(SIL_DIR, "CURRENT_SNAPSHOT"), encoding="utf-8").read().strip()
     sil = json.load(open(os.path.join(SIL_DIR, sil_fn), encoding="utf-8"))
+    BS = json.load(open(BSTAT, encoding="utf-8"))
+    BS_DESC = f"siliconomics/data/baseline_status.json，來源 {BS.get('source')}（repo main {BS_COMMIT}）"
     P = seed["players"]; PK = [p["key"] for p in P]; PN = {p["key"]: p["name"] for p in P}
     U = seed["users"]
 
@@ -558,6 +565,25 @@ def main():
     hdr(IN, r, ["鍵", "項目", "口徑", "單位", "標記", "來源 ID", "說明", "低", "基準", "高"]); r += 1
     for k_, lab_, unit_, lo_, b_, hi_, tag_, note_ in W1_IN:
         scalar(dict(key=k_, label=lab_, unit=unit_, lo=lo_, base=b_, hi=hi_, tag=tag_, src="SRC_GL_349", note=note_))   # v0.3.5：W-1 證據原為 SRC_GL_346，與 v0.3.3 SpaceX 424B4 撞號，改 349
+    # ---- S14（v0.3.6；檢核清單 A 節第 4 項；規則 v1.4.3）：Siliconomics 權威協調狀態（siliconomics/data/baseline_status.json）。每次建置由 json 重寫（不讀 --base），放在頁尾，既有列位不動 ----
+    r += 1
+    sec(f"S14. v0.3.6 Siliconomics 權威協調狀態（{BS_DESC}）：建置時由 json 重寫、不讀 --base；Wattonomics 不自行判定逐年狀態")
+    hdr(IN, r, ["鍵", "項目", "口徑", "單位", "標記", "來源 ID", "說明", "低", "基準", "高"]); r += 1
+    for y in (2026, 2027, 2028, 2029, 2030):
+        yy = BS["years"].get(str(y))
+        for k_ in (f"sil_bs_lab_{y}", f"sil_bs_ev_{y}"): base.pop(k_, None)
+        if yy:
+            st_ = yy.get("status"); lab_ = yy.get("label")
+            note_ = (f"baseline_status.json years.{y}：status＝{st_}、label＝{lab_}；reconciling＝{yy.get('reconciling')}" +
+                     (f"；對帳單 {yy.get('recon_doc')}（期限 {yy.get('deadline')}）" if yy.get("recon_doc") else ""))
+            txt_ = f"{st_}｜{lab_}"
+            ev_ = yy["siliconomics"]["evidence_share"]
+        else:
+            note_ = f"baseline_status.json 無 {y} 年（Siliconomics 只到 2029）"; txt_ = "（Siliconomics 無此年狀態）"; ev_ = {}
+        scalar(dict(key=f"sil_bs_lab_{y}", label=f"Siliconomics 權威狀態 {y}（status｜label）", unit="文字", base=txt_, tag="Derived", src="SRC_GL_351", note=note_))
+        scalar(dict(key=f"sil_bs_ev_{y}", label=f"Siliconomics 證據比例 {y}（baseline_status siliconomics.evidence_share；低／基準／高）", unit="%",
+                    lo=ev_.get("lo"), base=ev_.get("base"), hi=ev_.get("hi"), tag="Derived", src="SRC_GL_351",
+                    note=(f"baseline_status.json years.{y}.siliconomics.evidence_share（Siliconomics 自量，規則 v1.1 定義）" if ev_ else note_ + "；值留空")))
     IN_LAST = r - 1
     for col, w in zip("ABCDEFGHIJKLMNOPQRS", (16, 50, 8, 7, 18, 12, 70) + (9,) * 11 + (5,)):
         IN.column_dimensions[col].width = w
@@ -565,7 +591,7 @@ def main():
     # ================= TK_In：Tokenomics 鏡像（只讀） =================
     src = tk["source"]
     TKS["A1"] = (f"TK_In — Tokenomics 取數（只讀鏡像；權威在 Tokenomics）：{src['file']}（{src['version']}，commit {src['commit'][:7]}，擷取 {src['extractedAt']}）。"
-                 "v0.2 起 Wattonomics 自抽快照 wattonomics/data/tokenomics_snapshot_v21.9.json（tools/tokenomics/import_tokenomics.py；名稱清單＝Siliconomics 清單＋IF_FacilityGW；Siliconomics 仍為 v21.7）；綠字不得修改")
+                 f"Wattonomics 自抽快照 wattonomics/data/{os.path.basename(TK_SNAPSHOT)}（tools/tokenomics/import_tokenomics.py；名稱清單＝v21.10 快照同 23 名，含 IF_FacilityGW）；綠字不得修改")
     TKS["A2"] = "快照註記：" + src.get("note", "")
     hdr(TKS, 4, ["名稱（TK）", "世代／項目", "本庫名稱", "低", "基準", "高", "單位", "TK 位置"])
     gens = {g["name"]: g["code"] for g in src["generations"]}
@@ -1663,9 +1689,9 @@ def main():
              "2025 Verified；2026 Q1–Q2 Verified＋Q3 指引（Interested-party）＋Q4 Assumed（2026 實績校準保留）；2027＝FY2027 共識 ×（1＋FY2028 指引年增 70%）× 資料中心占比 92.5%（Derived／Interested-party）——v0.3.1 W-3：2027 欄只作參照列，不作校準目標", "0.0")
         nrow(px + "7lo", "　(7) 低", "US$B", {y: actlo[y] for y in ys}, "", "0.0")
         nrow(px + "7hi", "　(7) 高", "US$B", {y: acthi[y] for y in ys}, "", "0.0")
-        nrow(px + "8", "(8) 比值＝(6)÷(7)" + ("（未校準，不作判讀）" if px == "w" and NV_V4 else ""), "x", {y: f"={YC[y]}{NVR[px + '6']}/{YC[y]}{NVR[px + '7']}" for y in ys},
-             (("未校準比值不作判讀（水準受非 NVIDIA 占比口徑影響）。v0.3 Y3：非 NVIDIA 占比改讀 Siliconomics 逐買方份額（金額）換 GW 份額；Y2：內容改讀 R7 分世代值；判讀看 (13) 成長比較" if NVSH else "未校準比值不作判讀") if px == "w" and NV_V4 else ""), "0.000")
-        nrow(px + "8s", "　判定（tolband；2027 對指引只作參照）", "—", {y: (f'="參照（指引，不判定）："&IF(ABS({YC[y]}{NVR[px + "8"]}-1)<=tolband,"帶內","帶外")' if y >= 2027 else f'=IF(ABS({YC[y]}{NVR[px + "8"]}-1)<=tolband,"一致（帶內）","帶外：待診斷")') for y in ys},
+        nrow(px + "8", "(8) 比值＝(6)÷(7)" + ("（2025 實績年依 C0 判讀；2026–2027 未校準）" if px == "w" and NV_V4 else ""), "x", {y: f"={YC[y]}{NVR[px + '6']}/{YC[y]}{NVR[px + '7']}" for y in ys},
+             (("2025 為實績年，依 C0 判讀；水準受非 NVIDIA 占比口徑影響，已開對帳單（Drive 02-AI供應鏈/對帳/）（Checks N-K0，v0.3.6；協調規則 v1.4.3 C0）。2026 含指引與假設、2027 為指引參照：未校準，判讀看 (13) 成長比較。v0.3 Y3：非 NVIDIA 占比改讀 Siliconomics 逐買方份額（金額）換 GW 份額；Y2：內容改讀 R7 分世代值" if NVSH else "未校準比值不作判讀") if px == "w" and NV_V4 else ""), "0.000")
+        nrow(px + "8s", "　判定（tolband；2027 對指引只作參照）", "—", {y: (f'="參照（指引，不判定）："&IF(ABS({YC[y]}{NVR[px + "8"]}-1)<=tolband,"帶內","帶外")' if y >= 2027 else (f'=IF(ABS({YC[y]}{NVR[px + "8"]}-1)<=tolband,"一致（帶內）","帶外：實績年，依 C0 開對帳單（Checks N-K0）")' if (y == 2025 and px == "w") else f'=IF(ABS({YC[y]}{NVR[px + "8"]}-1)<=tolband,"一致（帶內）","帶外：待診斷")')) for y in ys},
              "三層對帳規則：帶內＝一致；帶外＝待診斷（各層先用自己的數字，上游先更新再對帳；不自動調參數）", "General")
         nrow(px + "8lo", "　比值（以 (7) 高）", "x", {y: f"={YC[y]}{NVR[px + '6']}/{YC[y]}{NVR[px + '7hi']}" for y in ys}, "", "0.000")
         nrow(px + "8hi", "　比值（以 (7) 低）", "x", {y: f"={YC[y]}{NVR[px + '6']}/{YC[y]}{NVR[px + '7lo']}" for y in ys}, "", "0.000")
@@ -1799,31 +1825,39 @@ def main():
     nrow("ev", "WIF_Evidence＝MIN(1, 分子 ÷ 分母)（規則 v1.1 口徑）", "比", {y: f"=IF({YC[y]}{NVR['evden']}<=0,1,MIN(1,{YC[y]}{NVR['evnum']}/{YC[y]}{NVR['evden']}))" for y in EY},
          "下游與協調狀態讀本列；舊 WIF_Coverage 保留不改義（只量自身路徑、只計站點）", "0.0%")
     for c_ in range(4, 14): CP.cell(NVR["ev"], c_).fill = KEY
-    nrow("evlit", "　對照：工作單字面讀法（分子 1＋七家實績支撐全額，不去重）", "比", {y: f"=IF({YC[y]}{NVR['evden']}<=0,1,MIN(1,({YC[y]}{NVR['evso']}-{YC[y]}{NVR['evw1u']}+{YC[y]}{NVR['evact']})/{YC[y]}{NVR['evden']}))" for y in EY},
-         "七家站點與七家資本支出實績是同一批 GW 的兩種證據，相加會重複；只作對照（待判斷）", "0.0%")
+    nrow("evlit", "　高：工作單字面讀法（分子 1＋七家實績支撐全額，不去重；上限 1）＝WIF_Evidence_Hi", "比", {y: f"=IF({YC[y]}{NVR['evden']}<=0,1,MIN(1,({YC[y]}{NVR['evso']}-{YC[y]}{NVR['evw1u']}+{YC[y]}{NVR['evact']})/{YC[y]}{NVR['evden']}))" for y in EY},
+         "v0.3.6 區間高端（檢核清單 A 節第 3 項）：七家站點與七家資本支出實績是同一批 GW 的兩種證據，相加會重複計入，故為上限讀法", "0.0%")
+    nrow("evlo", "　低：只計站點證據（SiteOnly 分子 1 − W-1 假設部分；不計七家已公布資本支出實績支撐）＝WIF_Evidence_Lo", "比", {y: f"=IF({YC[y]}{NVR['evden']}<=0,1,MIN(1,MAX(0,{YC[y]}{NVR['evso']}-{YC[y]}{NVR['evw1u']})/{YC[y]}{NVR['evden']}))" for y in EY},
+         "v0.3.6 區間低端：同分母；分子只留等級 3 已確認站點（＝本列與基準的差即七家實績超出站點的部分 evex）", "0.0%")
     nrow("evo", "　對照：分母用 ④ 原值讀法", "比", {y: f"=IF(({YC[y]}{NVR['evmain']}+{YC[y]}{NVR['evg4o']}+{YC[y]}{NVR['evw2']})<=0,1,MIN(1,{YC[y]}{NVR['evnum']}/({YC[y]}{NVR['evmain']}+{YC[y]}{NVR['evg4o']}+{YC[y]}{NVR['evw2']})))" for y in EY}, "", "0.0%")
     nrow("evcov", "　對照：v1.0 量法 WIF_Coverage（自身路徑分母、只計站點）", "比", {y: f"=Deploy!{YC[y]}{DR['cov']}" for y in EY}, "", "0.0%")
     # H3：逐年協調狀態
-    CP.cell(r, 1, "H3. 逐年協調狀態（規則 C3：只看狀態、不看數值高低；首次判定門檻 50%；覆蓋未補齊時標「對帳中」；v0.3.2 起覆蓋視為補齊）").font = BOLD; r += 1
+    CP.cell(r, 1, "H3. 逐年協調狀態（v0.3.6 起改為參考：依規則 v1.4.3，逐年協調狀態的唯一權威是 Siliconomics siliconomics/data/baseline_status.json；下列 Wattonomics 側自評只作參考，不作判定）").font = BOLD; r += 1
     hdr(CP, r, ["項目", "鍵", "單位"] + [str(y) for y in YEARS] + ["說明"]); r += 1
-    nrow("csil", "參照：Siliconomics 證據比例（In sil_ev；Siliconomics 權威狀態見其 Coord 頁，規則 v1.3 待定）", "比", {y: f"=sil_ev_{y}" for y in EY}, "r2：此列只是參照（Siliconomics 側證據比例已過時，數值不追；上游不讀下游）；AI半導體 橋接表 In scov 舊值", "0.0%")
+    nrow("csilst", "Siliconomics 權威狀態（baseline_status.json；status｜label）", "—", {y: f"=sil_bs_lab_{y}" for y in EY},
+         f"In S14 sil_bs_lab_*（Derived，SRC_GL_351）：{BS_DESC}；建置時由 json 重寫。下游與協調判定只讀本列（權威在 Siliconomics）", "General")
+    for c_ in range(4, 14): CP.cell(NVR["csilst"], c_).fill = KEY
+    nrow("csil", "Siliconomics 證據比例（baseline_status siliconomics.evidence_share.base）", "比", {y: f"=sil_bs_ev_{y}" for y in EY},
+         "v0.3.6：改讀 In S14 sil_bs_ev_*（Siliconomics 自量；低／高見 In）；取代 v0.3.1 In sil_ev_* 舊值（0.44／0／0／0／0，已停用）。2030 Siliconomics 無值（空白＝0）", "0.0%")
+    nrow("csillo", "　Siliconomics 證據比例 低", "比", {y: f"=sil_bs_ev_{y}_lo" for y in EY if BS["years"].get(str(y))}, "", "0.0%")
+    nrow("csilhi", "　Siliconomics 證據比例 高", "比", {y: f"=sil_bs_ev_{y}_hi" for y in EY if BS["years"].get(str(y))}, "", "0.0%")
+    CP.cell(r, 1, "　以下為 Wattonomics 側自評（參考，不作判定）：以本庫證據比例與上列 Siliconomics 證據比例套規則 C3 緩衝區；未含規則 v1.3「區間跨線即待定」與 v1.4 連續法，與權威狀態不同時以權威為準").font = BOLD; r += 1
     EVc = lambda y: f"{YC[y]}{NVR['ev']}"; SVc = lambda y: f"{YC[y]}{NVR['csil']}"
     # r1 第 7 項：緩衝區（規則 v1.1 C3 第二次判定起）：上次無證據 → 須 ≥ coord_enter（55%）才進入；上次有證據 → 須 < coord_thr 低（45%）才退出
     bf = lambda ev_, pv_: f'IF(coord_buf_on=1,IF({pv_}=1,{ev_}>=coord_thr_lo,{ev_}>=coord_enter),{ev_}>=coord_thr)'
-    nrow("cpw", "上次判定（v0.3.1）Wattonomics 是否有證據（In prev_ev_w_*；1＝是）", "旗標", {y: f"=prev_ev_w_{y}" for y in EY}, "以 v0.3.1 結果填（WIF_Evidence 0.887／0.494／0.535／0.202／0.218；門檻 50%）", "0")
-    nrow("cps", "上次判定（v0.3.1）Siliconomics 是否有證據（In prev_ev_s_*；1＝是）", "旗標", {y: f"=prev_ev_s_{y}" for y in EY}, "v0.3.1 csil 0.44／0／0／0／0（< 50%）", "0")
-    nrow("cfw", "本次 Wattonomics 有證據（緩衝：進入 ≥ coord_enter 55%、退出 < 45%）", "旗標", {y: f"=IF({bf(EVc(y), YC[y] + str(NVR['cpw']))},1,0)" for y in EY}, "規則 v1.1 C3：第二次判定起套 55%／45% 緩衝；coord_buf_on＝0 回首次判定 50%", "0")
-    nrow("cfs", "本次 Siliconomics 有證據（同緩衝）", "旗標", {y: f"=IF({bf(SVc(y), YC[y] + str(NVR['cps']))},1,0)" for y in EY}, "", "0")
+    nrow("cpw", "〔自評參考〕上次判定（v0.3.1）Wattonomics 是否有證據（In prev_ev_w_*；1＝是）", "旗標", {y: f"=prev_ev_w_{y}" for y in EY}, "以 v0.3.1 結果填（WIF_Evidence 0.887／0.494／0.535／0.202／0.218；門檻 50%）", "0")
+    nrow("cps", "〔自評參考〕上次判定（v0.3.1）Siliconomics 是否有證據（In prev_ev_s_*；1＝是）", "旗標", {y: f"=prev_ev_s_{y}" for y in EY}, "v0.3.1 csil 0.44／0／0／0／0（< 50%）", "0")
+    nrow("cfw", "〔自評參考〕本次 Wattonomics 有證據（緩衝：進入 ≥ coord_enter 55%、退出 < 45%）", "旗標", {y: f"=IF({bf(EVc(y), YC[y] + str(NVR['cpw']))},1,0)" for y in EY}, "規則 v1.1 C3：第二次判定起套 55%／45% 緩衝；coord_buf_on＝0 回首次判定 50%", "0")
+    nrow("cfs", "〔自評參考〕本次 Siliconomics 有證據（同緩衝；讀上列 baseline_status 基準值）", "旗標", {y: f"=IF({bf(SVc(y), YC[y] + str(NVR['cps']))},1,0)" for y in EY}, "", "0")
     stf = lambda y, t: f'=IF(AND({EVc(y)}>={t},{SVc(y)}>={t}),"甲",IF(OR({EVc(y)}>={t},{SVc(y)}>={t}),"乙","丙"))'
-    nrow("cst", "狀態（有證據旗標：緩衝區 55%／45%；甲乙丙）", "—", {y: f'=IF(AND({YC[y]}{NVR["cfw"]}=1,{YC[y]}{NVR["cfs"]}=1),"甲",IF(OR({YC[y]}{NVR["cfw"]}=1,{YC[y]}{NVR["cfs"]}=1),"乙","丙"))' for y in EY}, "甲＝兩層都有證據；乙＝只有一層；丙＝兩層都是外推", "General")
-    for c_ in range(4, 14): CP.cell(NVR["cst"], c_).fill = KEY
-    nrow("cst67", "　狀態（門檻 67%；對照）", "—", {y: stf(y, "coord_thr_hi") for y in EY}, "", "General")
-    nrow("clead", "　乙狀態時有證據的一層", "—", {y: f'=IF({YC[y]}{NVR["cst"]}="乙",IF({YC[y]}{NVR["cfw"]}=1,"Wattonomics","Siliconomics"),"—")' for y in EY}, "", "General")
+    nrow("cst", "Wattonomics 側自評（參考，不作判定）：狀態（有證據旗標：緩衝區 55%／45%；甲乙丙）", "—", {y: f'=IF(AND({YC[y]}{NVR["cfw"]}=1,{YC[y]}{NVR["cfs"]}=1),"甲",IF(OR({YC[y]}{NVR["cfw"]}=1,{YC[y]}{NVR["cfs"]}=1),"乙","丙"))' for y in EY}, "甲＝兩層都有證據；乙＝只有一層；丙＝兩層都是外推", "General")
+    nrow("cst67", "　Wattonomics 側自評（參考，不作判定）：狀態（門檻 67%；對照）", "—", {y: stf(y, "coord_thr_hi") for y in EY}, "", "General")
+    nrow("clead", "　Wattonomics 側自評（參考，不作判定）：乙狀態時有證據的一層", "—", {y: f'=IF({YC[y]}{NVR["cst"]}="乙",IF({YC[y]}{NVR["cfw"]}=1,"Wattonomics","Siliconomics"),"—")' for y in EY}, "", "General")
     tagf = lambda y: (f'=IF({YC[y]}{NVR["cst"]}="甲","甲：兩層都有證據，±15% 容差對帳（橋接表 ③；不在容差內則對帳中、待診斷）",'
                       f'IF(AND({YC[y]}{NVR["cst"]}="乙",{YC[y]}{NVR["clead"]}="Siliconomics"),"乙（Siliconomics 有證據）：Siliconomics 為準；Wattonomics 只經對帳單吸收下游實績（C5）",'
                       f'IF(coord_cov_done=1,IF({YC[y]}{NVR["cst"]}="乙","乙（Wattonomics 有證據）：Wattonomics 為準","丙：上游約束（Wattonomics 換算值）"),'
                       f'IF({YC[y]}{NVR["cst"]}="乙","對帳中（乙、Wattonomics 有證據；待覆蓋補齊 v0.3.2）","對帳中（丙；待覆蓋補齊 v0.3.2）"))))')
-    nrow("ctag", "協調標示（對帳中＝基準維持現值、下一次該層升版時才改）", "—", {y: tagf(y) for y in EY}, "規則 C3、C6：狀態改變的年份在下一次該層升版時改；改前標「對帳中」；coord_cov_done＝1（v0.3.2 W-1 完成後覆蓋視為補齊）", "General")
+    nrow("ctag", "Wattonomics 側自評（參考，不作判定）：協調標示", "—", {y: tagf(y) for y in EY}, "v0.3.6：只作參考；權威狀態見本節第一列（baseline_status.json）。規則 C3、C6；coord_cov_done＝1（v0.3.2 W-1 完成後覆蓋視為補齊）", "General")
     # H4：④＋W2 調整後比值（兩讀法）
     CP.cell(r, 1, "H4. 調整後比值（Wattonomics 年新增＋④＋W2）÷ Siliconomics 部署 GW（SIF_DeployGW_Base）——④ 兩讀法並列").font = BOLD; r += 1
     nrow("ar0", "比值（未調整；同上方「比值（瓦帳 主路徑 ÷ Siliconomics）」）", "x", {y: f"={YC[y]}{CPR['rA']}" for y in CY}, "", "0.000")
@@ -2904,6 +2938,15 @@ def main():
         c = IF.cell(r, 4 + j, f"=Compare!{YC[y]}{NVR['ev']}"); c.font = GREEN; c.number_format = "0.000"
         nm_ = f"WIF_Evidence_{y}"; name(wb, nm_, f"Interface!${get_column_letter(4 + j)}${r}"); GIF.append(nm_); EVN.append(nm_)
     IF.cell(r, 13, f"Compare!{YC[2026]}{NVR['ev']}:{YC[2030]}{NVR['ev']}"); r += 1
+    EVLH = {}
+    for k_, key_, lab_ in (("Lo", "evlo", "證據比例 低（v0.3.6：只計站點證據 SiteOnly，不計七家已公布資本支出實績支撐）"),
+                           ("Hi", "evlit", "證據比例 高（v0.3.6：工作單字面讀法，站點＋七家實績支撐全額相加、不去重；上限 1）")):
+        IF.cell(r, 1, f"WIF_Evidence_{k_}"); IF.cell(r, 2, lab_); IF.cell(r, 3, "比")
+        for y in (2026, 2027, 2028, 2029, 2030):
+            j = OUTY.index(y)
+            c = IF.cell(r, 4 + j, f"=Compare!{YC[y]}{NVR[key_]}"); c.font = GREEN; c.number_format = "0.000"
+            nm_ = f"WIF_Evidence_{k_}_{y}"; name(wb, nm_, f"Interface!${get_column_letter(4 + j)}${r}"); GIF.append(nm_); EVLH.setdefault(k_, []).append(nm_)
+        IF.cell(r, 13, f"Compare!{YC[2026]}{NVR[key_]}:{YC[2030]}{NVR[key_]}"); r += 1
     # ---- K. 七家以外買方路徑（v0.3.2 W-1；Compare I 節）：新名稱，不改既有名稱 ----
     IF.cell(r, 1, "K. 七家以外買方路徑（v0.3.2 W-1；Compare I 節）：新雲（其他新雲，不含 CoreWeave、Nebius）、主權年新增 IT GW（基準），及低／高（未揭露客戶比例 0／100% 與 Sens 列）；2026–2029").font = BOLD; r += 1
     for k_, lab_, key_ in (("W1_NeoAdd", "新雲年新增 IT GW（基準）", "w1n_add"), ("W1_SovAdd", "主權年新增 IT GW（基準）", "w1s_add"),
@@ -3186,6 +3229,10 @@ def main():
     CK.cell(r, 1, "E-K1"); CK.cell(r, 2, "WIF_Evidence_2026–2030（規則 v1.1 證據比例）非數值或不在 0–1 的年數（v0.3.1 Z4）")
     CK.cell(r, 3, "=" + "+".join(f"IF(ISNUMBER({n_}),IF(AND({n_}>=0,{n_}<=1),0,1),1)" for n_ in EVN)); CK.cell(r, 6, f'=IF(C{r}=0,"OK","ERROR")'); CK.cell(r, 7, "恆等式（協調）")
     CK.cell(r, 8, "=" + '&"／"&'.join(f'TEXT({n_},"0.00")' for n_ in EVN)); r += 1
+    CK.cell(r, 1, "E-K2"); CK.cell(r, 2, "WIF_Evidence 區間：低 ≤ 基準 ≤ 高 不成立的年數（2026–2030；v0.3.6 檢核清單 A 節第 3 項）")
+    CK.cell(r, 3, "=" + "+".join(f"IF(AND({lo_}<={b_}+1E-9,{b_}<={hi_}+1E-9),0,1)" for lo_, b_, hi_ in zip(EVLH["Lo"], EVN, EVLH["Hi"])))
+    CK.cell(r, 6, f'=IF(C{r}=0,"OK","ERROR")'); CK.cell(r, 7, "恆等式（協調）")
+    CK.cell(r, 8, "=" + '&"／"&'.join(f'TEXT({lo_},"0.00")&"–"&TEXT({hi_},"0.00")' for lo_, hi_ in zip(EVLH["Lo"], EVLH["Hi"]))); r += 1
     # v0.3.2 W-1：未揭露客戶 × w1_und 的 T2 列 MW 須與 S13 參數一致；X2 去重（基準內 neo、sov 營運者列不得有七家使用者）
     W1UK = ["cp_neo_iren27", "cp_neo_bp1", "cp_w1u_crusoe27", "cp_w1u_crusoe28", "cp_w1u_crusoe29"]
     CK.cell(r, 1, "E-W1"); CK.cell(r, 2, "W-1 未揭露客戶 × w1_und 的 T2 列 MW 合計 − w1_und ×（IREN Lab＋Beacon Point＋Crusoe 6 GW × 0.66 − 已公開七家 2,114）（MW；須 |差| < 1）")
@@ -3197,6 +3244,11 @@ def main():
     CK.cell(r, 3, "=" + "+".join(f'COUNTIFS(Pipeline!$C${CR0}:$C${CR1},"{o_}",Pipeline!$D${CR0}:$D${CR1},"{u_}",Pipeline!$O${CR0}:$O${CR1},1)' for o_ in ("neo", "sov") for u_ in ("msft", "googl", "amzn", "meta", "orcl", "xai", "oai"))
                  + "-(" + "+".join(f'COUNTIFS(Pipeline!$A${CR0}:$A${CR1},"{k_}",Pipeline!$O${CR0}:$O${CR1},1)' for k_ in X2_LESSOR) + ")")
     CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "治理（W-1）"); r += 1
+    # v0.3.6（檢核清單 A 節第 2 項；協調規則 v1.4.3 C0）：已公布實績年份的 NVIDIA 對帳點帶外＝WARN（2026 含 Q3 指引與 Q4 假設，不是純實績，留 N-K1）
+    CK.cell(r, 1, "N-K0"); CK.cell(r, 2, "NVIDIA 資料中心營收對帳點：已公布實績年份（2025；2026 Q3 指引、Q4 假設未公布，不屬純實績、不在本項）隱含 ÷ 實績 超出 ±tolband 的年數（WARN）")
+    CK.cell(r, 3, "=IF(ABS(WIF_Recon_NV_Ratio_2025-1)>tolband,1,0)"); CK.cell(r, 4, 0); CK.cell(r, 5, f"=C{r}-D{r}")
+    CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "驗證（C0 實績對帳）")
+    CK.cell(r, 8, '="依協調規則 v1.4.3 C0：實績年份帶外須開對帳單。2025 比值 "&TEXT(WIF_Recon_NV_Ratio_2025,"0.000")&"（隱含 "&TEXT(WIF_Recon_NV_ImpliedRev_2025,"0.0")&" vs 實績 "&TEXT(WIF_Recon_NV_ActualRev_2025,"0.0")&"）；2026 Q1–Q2 實績無法與 Q3–Q4 分開（對帳點以曆年計），未列"'); r += 1
     # v0.1.9（工作單 20261102 F6）：INFO 類，不計入 WGOV_Errors／WGOV_Warn
     CK.cell(r, 1, "N-K1"); CK.cell(r, 2, "NVIDIA 資料中心營收對帳點 2026：隱含 ÷ 實績／指引 是否在 ±tolband 內（INFO；只並列、不校準，不影響 ERROR／WARN）")
     CK.cell(r, 3, "=WIF_Recon_NV_Ratio_2026"); CK.cell(r, 4, 1); CK.cell(r, 5, f"=C{r}-D{r}"); CK.cell(r, 6, "INFO"); CK.cell(r, 7, "資訊（對帳點）")
@@ -3341,6 +3393,16 @@ def main():
         {"id": "GL01-115", "cat": "工程", "item": "11 家 In Y9 全部重取（⑥）", "decision": "import_gap_models.py：Meta v0.2.1 CF 情境 B 移到第 53 列（OCF 61、AI 62、非 AI 63、合計 64、股利 67–68、回購 76、現金 E73）；Oracle v0.5.2 表頭第 17 列、情境 B 第 55 列（OCF 62、AI 63、非 AI 64、合計 65、股利 67、現金 D70）；MODEL_OVERRIDE 清空（Anthropic 讀 models_extract 的 v0_2_2）；build.py --refresh-y9", "date": "2026-11-15", "quote": "Andy 2026-11-15 19:15「合并并发布。照预设」（報告 docs/verify/20261115_v0.3.4_Gap回推低估與Microsoft檢查.md §6 判斷題照預設）", "status": "執行"},
         {"id": "GL01-116", "cat": "判斷", "item": "CoreWeave 2026 資本支出維持應計（⑦）", "decision": "GW 路徑與 Gap 維持公司口徑（應計）37.736；Gap 頁加備忘列「現金口徑差額」＝37.736 − 30.644（In capcash26_crwv，CF!D48）＝7.09，不進缺口", "date": "2026-11-15", "quote": "Andy 2026-11-15 19:15「合并并发布。照预设」（報告 docs/verify/20261115_v0.3.4_Gap回推低估與Microsoft檢查.md §6 判斷題照預設）", "status": "執行"},
     ]
+    # ---- v0.3.6（檢核清單 A 節修補；Andy 2026-11-16 22:22「我同意你的建议，然后去把它解决」）----
+    QA36 = "Andy 2026-11-16 22:22「我同意你的建议，然后去把它解决」（檢核清單 A 節）"
+    decisions += [
+        {"id": "GL01-117", "cat": "工程", "item": "上游換讀：Siliconomics v0.19、Tokenomics v22.0", "decision": "SIL_In 改讀 siliconomics/data/CURRENT_SNAPSHOT（v0.19；不再以 --sil-snapshot 固定 v0.18）；TK_In 改讀 wattonomics/data/tokenomics_snapshot_v22.0.json（Tokenomics main 79f6b30，tools/tokenomics/import_tokenomics.py；本庫讀的 23 個名稱與 v21.10 逐值相同）。Siliconomics v0.19 只改 2029 年 *_Base（DeployGW 51.12→42.70 等），本庫只用於 Compare／Checks 並列，既有 WIF_ 名稱 0 變動、基準 GW 不變", "date": "2026-11-16", "quote": QA36, "status": "執行"},
+        {"id": "GL01-118", "cat": "判斷", "item": "NVIDIA 對帳點 2025 實績年依 C0 判讀（Checks N-K0）", "decision": "新增 Checks N-K0：已公布實績年份（2025）隱含 ÷ 實績超出 ±tolband 為 WARN（不是 INFO），說明欄寫「依協調規則 v1.4.3 C0：實績年份帶外須開對帳單」；2026 對帳點以曆年計、含 Q3 指引與 Q4 假設，Q1–Q2 純實績無法分開，不列入。Compare F (8) 說明改為「2025 為實績年，依 C0 判讀；水準受非 NVIDIA 占比口徑影響，已開對帳單（Drive 02-AI供應鏈/對帳/）」。基準不因此改值（只並列、不校準）", "date": "2026-11-16", "quote": QA36, "status": "執行"},
+        {"id": "GL01-119", "cat": "判斷", "item": "證據比例給區間 WIF_Evidence_Lo／Hi", "decision": "Compare H2 新增兩列、Interface J 節新增 WIF_Evidence_Lo_<yyyy>、WIF_Evidence_Hi_<yyyy>（2026–2030）：低＝只計站點證據（SiteOnly 分子 1 − W-1 假設部分；不計七家已公布資本支出實績支撐），基準＝現行 WIF_Evidence（逐家取站點與實績較大者），高＝工作單字面讀法（站點＋七家實績支撐全額相加、不去重），上限 1；三者同分母。Checks E-K2：低 ≤ 基準 ≤ 高（ERROR）", "date": "2026-11-16", "quote": QA36, "status": "預設、可撤回"},
+        {"id": "GL01-120", "cat": "判斷", "item": "Compare H3 改為參考；Siliconomics 權威狀態改讀 baseline_status.json", "decision": "依協調規則 v1.4.3，逐年協調狀態的唯一權威是 Siliconomics siliconomics/data/baseline_status.json。H3 新增第一列「Siliconomics 權威狀態」＝In S14 sil_bs_lab_<y>（建置時由 json years.<年>.status／label 寫入，Derived，SRC_GL_351）；csil 改讀 In S14 sil_bs_ev_<y>（json siliconomics.evidence_share 低／基準／高），取代過時的 In sil_ev_*（0.44／0／0／0／0，標停用）；cpw、cps、cfw、cfs、cst、cst67、clead、ctag 改標「Wattonomics 側自評（參考，不作判定）」，cst 取消關鍵輸出底色。Wattonomics 不以自身公式判定逐年狀態", "date": "2026-11-16", "quote": QA36 + "；docs/plan/三層基準協調規則.md v1.4.3", "status": "執行"},
+        {"id": "GL01-121", "cat": "工程", "item": "Sources 小項", "decision": "（1）SRC_GL_349 重複：Sources 頁第 46 列（campus_v0.3.2_add.json 種子來源）與第 74 列（v0.3.5 改號說明列）同 ID 同路徑，刪第 46 列；（2）SRC_GL_317／319／320 改指現行 WhiteFiber v0.4.2、OpenAI v0_6_6、Anthropic v0_2_3：import_gap_models.py --only oai,ant,wyfi 重取，In Y9 值與 v0.3.5 種子逐值相同（只換檔名與 commit），以 --refresh-y9-only oai,ant,wyfi 寫入；（3）SRC_GL_070（mw_wyfi、nnv_wyfi、fye_wyfi）原寫 whitefiber/company.json（已移 legacy_v02/），改指 whitefiber/legacy_v02/company.json（數值的實際出處）；現行 v0.4.2 In mw_ye26／mwB_27 為 14.5／35 MW（mw_wyfi 14.574／16.548），本版不改值，列下版待辦", "date": "2026-11-16", "quote": QA36, "status": "執行"},
+        {"id": "GL01-122", "cat": "工程", "item": "「AI 投資地圖」改稱「AI 算力地圖」", "decision": "wattonomics/ 內中文顯示文字改「AI 算力地圖」（英文 AI Compute Investment Map、repo 路徑 markets/invest_map 與網址不變）；歷史敘述（explorer/README.md 規劃列）保留原名加註一次", "date": "2026-11-16", "quote": "Andy 2026-11-16 22:06（AI 投資地圖改稱 AI 算力地圖）", "status": "執行"},
+    ]
     for d in decisions:
         if d["id"] == "GL01-21":
             d.update(cat="判斷", decision="承租玩家只算 IT＋自付廠房：Oracle、CoreWeave、Nebius 的甲2 與 Gap 每 GW 成本＝IT＋（1 − 承租比例 ×（1 − 融資租賃占比））× 廠房（GL01-62、GL01-63）；房東出資的廠房（營業租賃部分）改列『出租方』（市場其餘），每 GW 仍只在擁有者計一次。營業現金流不另扣租金（個股模型已扣，Oracle CF!55）；融資租賃本金償還屬籌資活動，不在營業現金流。【2026-11-04 Andy 決定；原為待決『一律 ÷ IF_CapexTotal』】",
@@ -3407,8 +3469,14 @@ def main():
     SR["A1"] = "Sources — 來源 ID（In 頁 F 欄）"
     hdr(SR, 3, ["來源 ID", "路徑", "說明"])
     r = 4
+    SRC_FIX = {   # v0.3.6 小項：舊路徑改指 repo 內實際檔案
+        "SRC_GL_070": ("whitefiber/legacy_v02/company.json（scenarios.mwPath、calendar、fleet；v0.3.6 前記為 whitefiber/company.json，該檔已移 legacy_v02/）",
+                       "WhiteFiber 舊版（v0.2）個股模型 company.json：In mw_wyfi 2025–2027（5.5／14.574／16.548 MW）、nnv_wyfi、fye_wyfi 取自此檔。現行個股模型 whitefiber/dist/20261115_WhiteFiber個股模型_v0.4.2.xlsx In 頁 mw_ye25／mw_ye26／mwB_27 為 5.5／14.5／35 MW（2026 −0.074、2027 +18.45 MW），本版未改值（基準 GW 不動；列下版待辦）"),
+    }
     for s in seed["sources"]:
-        SR.cell(r, 1, s["id"]); SR.cell(r, 2, s["path"]); SR.cell(r, 3, s["desc"]); r += 1
+        if s["id"] == "SRC_GL_349": continue   # v0.3.6 小項：campus_v0.3.2_add.json 的 SRC_GL_349 與下方 v0.3.5 改號說明列重複，只留下方一列
+        pth_, dsc_ = SRC_FIX.get(s["id"], (s["path"], s["desc"]))
+        SR.cell(r, 1, s["id"]); SR.cell(r, 2, pth_); SR.cell(r, 3, dsc_); r += 1
     for p in GP:   # v0.1.7 Gap 頁個股模型（In Y9）
         g = GSEED["players"].get(p, {})
         SR.cell(r, 1, GSRC[p]); SR.cell(r, 2, g.get("file", ""))
@@ -3443,6 +3511,8 @@ def main():
              "v0.3.2 W-1 證據（v0.3.5 由 SRC_GL_346 改號：原與 v0.3.3 SpaceX 424B4 撞號）"),
             ("SRC_GL_350", "Nscale 對 Microsoft：Nscale 新聞稿 2025-10-15（約 20 萬顆 GB300；Texas 約 104,000 顆、約 240 MW 園區、自 2026Q3 分期；Sines〔Start Campus〕約 12,600 顆、自 2026Q1；Loughton 自 2027Q1）；Nscale 新聞稿 2026-04-14（Narvik 230 MW 園區、2027 交付；W1#38）；AI Weekly 2026-11-05（Microsoft 退出 Loughton、放棄一項可使 Texas 容量合約加倍以上的選擇權）",
              "v0.3.5 ④：Nscale→Microsoft 記在出租方。Sines 合約（2026Q1 起、約 12,600 顆）與模型所取 Epoch 2027-09 增量 200 MW（Analogy，J#28）是不同來源，分開記"),
+            ("SRC_GL_351", f"{BS_DESC}；years.<年>.label／status、years.<年>.siliconomics.evidence_share",
+             "v0.3.6：逐年協調狀態的唯一權威（docs/plan/三層基準協調規則.md v1.4.3）；In S14 sil_bs_lab_*、sil_bs_ev_* 由建置程式自 json 寫入（Derived），Compare H3 第一列讀之"),
             ("SRC_GL_334", "markets/chip_bridge/dist/20261027_晶片內容橋接表_v0.2.2.xlsx（Bridge 第 7、44 列）",
              "AI半導體 晶片內容橋接表 v0.2.2：NVIDIA 合計 ÷ IT capex × IT capex＝每 IT GW NVIDIA 內容（GB300 20.85、VR200 23.47／21.85）；只作備忘（獨立核對 R2）"),
             ("SRC_GL_333", "交流 已處理/20261102_AI半導體-to-算力收支_回執_R4歸因與2027證據送件.md 第 3 節；siliconomics/docs/reports/r4_bridge/20261102_R4對帳橋接_Siliconomics側_r2.md「2027 年新證據」",
@@ -3469,7 +3539,7 @@ def main():
     # ================= README =================
     lines = [
         (f"瓦帳 {a.version} — 全市場 AI 資料中心 GW 唯一基準事實（{a.date}）", True),
-        ("命題：市場總 GW 要與主要玩家 GW 對得上，再與資本支出、GPU／ASIC 顆數、記憶體、電廠與發電機組、電源散熱、AI 投資地圖個股逐環對得上。v0.2 起只給基準（公告時程＋已確認延遲），情境留給下游個股。", False),
+        ("命題：市場總 GW 要與主要玩家 GW 對得上，再與資本支出、GPU／ASIC 顆數、記憶體、電廠與發電機組、電源散熱、AI 算力地圖個股逐環對得上。v0.2 起只給基準（公告時程＋已確認延遲），情境留給下游個股。", False),
         ("驅動 → 推導：In（Epoch 晶片功耗、玩家年底 MW、觀測、園區管線與已確認延遲、世代組合、使用者分配、承租比例）＋ TK_In（每 GW 係數、IF_FacilityGW）＋ SIL_In（顆數、顆數係數）→ Players（玩家 × 年 IT GW）→ Matrix（營運者 × 使用者）→ Pipeline（上線事件；基準時點）→ CapexGW（甲2）→ Deploy（市場 GW、汰換）→ C0／C1／Compare（對帳）→ Interface（WIF_）→ Checks（WGOV_Errors＝0）。", False),
         ("單位（規劃書 r1）：主口徑 IT GW＝TK GW（IT 關鍵電力）；設施電力＝IT × TK IF_FacilityGW（1.2）。公司標設施者 ÷ IF_FacilityGW；口徑未說明者基準取 IT 讀法，Players 另列設施讀法；Epoch 晶片功耗 × k_chip2it。", False),
         ("頁面：README｜In 輸入｜TK_In、SIL_In 鏡像（綠字）｜Players 玩家 × 年｜Matrix 營運者 × 使用者｜Pipeline 園區管線 × 延遲｜Delay 延遲逐站追蹤（v0.1.8）｜Deploy 市場總 GW 需求 × 延遲｜C0 由下而上 vs 第三方｜C1 資本支出對帳｜Compare 與 Siliconomics 成本等值 GW｜Funding、FundRaw 資金來源｜Gap 資金缺口（v0.1.7）｜Facility、SegIn、Spend｜Interface WIF_｜Checks｜Decisions｜DB_Evidence｜Sources｜Requests。", False),
@@ -3502,6 +3572,7 @@ def main():
         ("v0.3.3（2026-11-15）：對帳單 20261115 SpaceX／xAI——In mw_xai 2025 年底改讀 SpaceX 424B4 名目算力 0.8 GW（IT；原 Epoch 308 MW × k_chip2it 1.85＝0.5698）；C113 改 IT；Sources SRC_GL_346；Decisions GL01-108。只改 Wattonomics 一層。", False),
         ("v0.3.4（2026-11-15）：工程修正——In Y9 新雲三家（crwv、nbis、wyfi）改讀新版個股模型 Thesis 資本支出合計（公司口徑）與 CF 營運現金流，期初現金沿用舊值（模型無此列）（舊「各期收支」頁已不存在）；gcap_nbis FY2026–2030 26.046／27.597／29.149／29.149／37.692 → 24.185／31.989／32.962／33.338／31.459。Siliconomics 固定 v0.18（同 v0.3.3）、Tokenomics v21.10 不變。Decisions GL01-109。報告 docs/verify/20261115_v0.3.4_Gap回推低估與Microsoft檢查.md。", False),
         ("v0.3.5（2026-11-15）：Andy 2026-11-15 19:15「照預設」——① Gap 主讀法改付款年 AI 資本支出金額（選項 B；選項 A 與上線年回推並列；市場其餘改上線年口徑）；② OpenAI、Anthropic 營業現金流不加回自有資本支出；③ CoreWeave、Nebius、WhiteFiber 2025-12-31 期初現金觀測（FundRaw F#276–278）；④ Nscale→Microsoft 記在出租方、IREN 維持不納入（Microsoft 融資租賃）；⑤ Microsoft 列承租玩家（基準 0、Sens）；⑥ 11 家 In Y9 全部重取（Meta、Oracle 列位、Anthropic v0_2_2）；⑦ CoreWeave 現金口徑差額備忘。Siliconomics 固定 v0.18、Tokenomics v21.10。Decisions GL01-110 至 GL01-116。報告 docs/verify/20261115_v0.3.5_build.md。", False),
+        ("v0.3.6（2026-11-16）：檢核清單 A 節修補（Andy 2026-11-16 22:22「我同意你的建议，然后去把它解决」）——Siliconomics 改讀 v0.19、Tokenomics v22.0（本庫讀的名稱逐值相同）；Checks N-K0（NVIDIA 對帳點 2025 實績年帶外 WARN，依規則 v1.4.3 C0 開對帳單）；WIF_Evidence_Lo／Hi（低＝只計站點、高＝字面相加，上限 1）與 Checks E-K2；Compare H3 改為參考、權威狀態改讀 Siliconomics baseline_status.json（In S14）；Sources SRC_GL_349 重複列刪除、SRC_GL_317／319／320／070 改指現行檔；「AI 投資地圖」改稱「AI 算力地圖」。既有 WIF_ 0 變動、基準 GW 不變。Decisions GL01-117 至 GL01-122。報告 docs/verify/20261116_v0.3.6_build.md。", False),
         ("v0.3.1（2026-11-14）：三層基準協調規則 v1.1 落地（工作單 20261114_Wattonomics_v0.3.1.md）——Z2 Compare H1 ④ 覆蓋缺口兩讀法（原值 4.81、實績下限 3.03；扣 Oracle 重疊另列；不入基準）；Z3 SIL_In 讀 Siliconomics v0.18、H3 逐年協調狀態（門檻 50%、對帳中）、H4 ④＋W2 調整後比值、F 節 NVIDIA 每 GW 營收區間與指引只作參照（W-3）、H5 五家資本支出與 Siliconomics 顆數並排（W-4）；Z4 新名稱 WIF_Evidence_2026–2030（規則 v1.1 全市場分母；舊 WIF_Coverage 保留）；Checks E-K1。Z1 財報季證據經未參與代理核對：IREN Childress H2–4 延至 2027-01 入基準（T2 擴為 150 MW、M＝1；mw_neo 2026 扣 150、總量不增），Nebius 延遲只追蹤；CoreWeave、Nebius Q1–Q3 實績入證據比例。Decisions GL01-84 至 GL01-92。報告 docs/verify/20261114_v0.3.1_build.md。", True),
         ("顏色：藍字＝輸入；黑字＝公式；綠字＝跨頁或外部鏡像；淡黃底＝關鍵輸出；亮黃底＝待證據或預設待決。", False),
         ("Excel 優先：要改輸入，直接改 In 頁藍字；builder 重建時讀回（--base）。公式頁不要手改。下游只讀 Interface 的 WIF_ 名稱（經快照）。", False),
