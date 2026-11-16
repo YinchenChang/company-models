@@ -256,7 +256,7 @@ def _v13():
     RD, PLW, RV, CW, SW = wb["README"], wb["PL"], wb["RevDCF"], wb["Coord"], wb["Sens"]
     r13 = find("README", "v1.3 展示層")
     RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "coord", "ver"], range(r13 + 1, r13 + 11)))
-    assert str(RD[f"A{RM['ver']}"].value).startswith("v0.3.6"), RD[f"A{RM['ver']}"].value
+    assert str(RD[f"A{RM['ver']}"].value).startswith("v0.3.7"), RD[f"A{RM['ver']}"].value
     cfg["layout"] = "v1.3"
     old_note = list(cfg["hero"]["note"])
     assert old_note[0] == "投資建議依加權目標價判定：", old_note

@@ -1,4 +1,12 @@
-# Oracle（ORCL）個股模型 v0.5.2（命題＋營收分部架構＋收支模組）
+# Oracle（ORCL）個股模型 v0.5.3（命題＋營收分部架構＋收支模組；v0.5.3 只換現價與同業報價為 2026-11-13 收盤〔工作單 px1113〕）
+
+**v0.5.3（2026-11-16，現價與同業報價改 2026-11-13 收盤；工作單 px1113）：**
+- 現價與同業報價改 2026-11-13 收盤（工作單 px1113）：現價 115.16（11-05）→ 125.35（Yahoo Finance 日線，`markets/invest_map/data/closes_20261020_20261113.csv`）；`px_date` 2026-11-05 → 2026-11-13，目標時點隨公式（現價日 ＋ 12 個月）後移。現價經融資瀑布的新股上限與發行股數影響目標價：加權目標價 70.38 → **70.89**（只換現價與 neocloud EV 時為 70.11；再換軟體同業倍數後 Comparable 目標價 103.26 → 104.81，DCF 36.97 不變）；上檔空間 −38.9% → −43.4%（只換現價為 −44.1%）；投資建議放空不變（Comparable 上檔空間 −10.5% → −16.4%）。
+- OCI AI 同業（neocloud，只作 Val 對照列、不進目標價）：CoreWeave、Nebius 的 EV 以 2026-10-21 市值依 11-13 收盤換算（`EV 新＝EV 舊＋市值舊 ×（收盤 11-13 ÷ 收盤 10-21 − 1）`，市值取自 `oracle_facts_20261022.json`，淨負債不變，近似 [Derived]）：CRWV 80.12 → 75.33、NBIS 48.79 → 33.65（US$B）；EV／2027 EBITDA 4.81x → 4.52x、7.88x → 5.43x，中位數 6.34x → 4.98x。
+- **軟體同業換 2026-11-13**（MSFT、SAP、CRM、ADBE、NOW；報價日 2026-10-07 的同日收盤取自價格檔補入的 09-28～10-19；方法：倍數 × 11-13 收盤 ÷ 10-07 收盤，無市值，淨負債不變的近似，標 [Derived] 近似；MSFT 有市值〔`microsoft/data/microsoft_facts_20261008.json` val.mktcap 3,930,000、val.ev 3,990,000，單位百萬美元〕，EV 新＝EV 舊＋市值舊 ×（價格比−1），EBITDA 不變）。程式 `px1113_peers.py` → `data/peers_sw_20261113.json`。NTM EV/EBITDA：MSFT 15.59 → 15.42、SAP 15.02 → 16.79、CRM 10.80 → 10.48、ADBE 6.60 → 6.89、NOW 20.65 → 15.31；`mult_sw` 中位數 15.02（SAP）→ 15.31（NOW）；Sens 低／高（原 10.8／15.59，取第二低 CRM／第二高 MSFT）→ 10.48／15.42；`mult_leg` 基準＝CRM、ADBE 中位數 8.70 → 8.69（低／高 7.5／10.5 不動）。**所有同業代號價格檔皆有，沒有未換價同業。** NOW 自 10-07 −26% 為近似失真風險較高者。共識、rf、β 與其他假設不變。
+- 重跑 `SENS=1`、`REV=1 STRESS=1`（`data/sens_v04.json`、`reverse_v05.json`、`stress_v05.json`；皆 `JOBS=1`）。**既有問題（順手修）：** v0.5.2 加入的 `assert _rev_neu and _rev_eq and _rev_hi` 在敏感度建置（`SENS_OVR` 不載反向 DCF 快照）必然失敗，導致 `SENS=1` 無法執行；本版改為 `assert OVR or (...)`，成品建置的檢查不變。
+- 版號：`v052_post.py`、`make_v05.sh` 同步改 v0.5.3；README 頁本版要點第一列改為換價說明，v0.5.2 原文保留為下一列。v0.5.2 成品移 `dist/_待刪除/`。
+- 檢查：`make_v05.sh` 內各檢查（公式錯誤、Sens 快照、收支模組 51 項、`tools/in_layout`、敏感度覆蓋、segment_check、`check_company_html.py`）全過；`check_layout_v13.py`、`tools/baseline_coordination/check.py` 0 項不符。
 
 **v0.5.2（2026-11-15，HTML 版面 v1.3 補缺項＋Coord 三層協調；既有數值不變）：** 工作單 `docs/workorders/20261114_第二批13家_v1.3與三層協調.md`、`20261114_C0實績對帳補列_七家.md`；規則 `docs/plan/三層基準協調規則.md` v1.4.2 C0 第 2 點；樣板 Alphabet v0.3.9（`alphabet/v039_post.py`）。`oracle/v052_post.py` 在存檔前新增（只新增，不改既有格；與 v0.5.1 逐格比對只有 README 第 1 列版號與日期不同，加權目標價 70.38、放空不變）：
 - **IS 頁（新）**：標準損益表（GAAP；FY2024A–FY2026A 為 10-K FY2026 實績，輸入列在頁尾、標 Verified；FY2027E–FY2032E 為情境 B）、淨利年增率、核對列（毛利 − 費用 − 營業利益、稅前、稅後、營收、EPS 皆 0）、營收分部（圖表用）。預測期營業成本＝（營收 − OCI AI 營收）× 非 AI 營業成本率（FY2024 營業成本扣非 AI 折舊占營收，約 22.7%，假設列）＋AI 營運費用＋AI 機房租金＋折舊（D&A 扣攤銷）；營業費用＝毛利 − 營業利益（殘差）。營業利益、稅前、稅後與 EPS 取自 PL 頁，不因此改變。
@@ -51,8 +59,8 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_oracle.py` | 獨立 Python → Excel 產生器（openpyxl，全部活公式；藍字輸入、黑字公式） |
-| `dist/20261115_Oracle個股模型_v0.5.2.xlsx` | LibreOffice headless 重算後的成品（公式錯誤 0） |
-| `dist/20261115_Oracle個股模型_v0.5.2.html`、`html.json` | `tools/company_html/build_company_html.py oracle` 產生；`check_company_html.py` 通過 |
+| `dist/20261116_Oracle個股模型_v0.5.3.xlsx` | LibreOffice headless 重算後的成品（公式錯誤 0） |
+| `dist/20261116_Oracle個股模型_v0.5.3.html`、`html.json` | `tools/company_html/build_company_html.py oracle` 產生；`check_company_html.py` 通過 |
 | `segments.json` | 官方分部宣告；`tools/segment_check/check_segments.py oracle` 通過 |
 | `scripts/sens_v04.py` | 敏感度：一次動一個輸入，完整重算（寫 `data/sens_v04.json`，再建置時寫入 Sens 頁；v0.4.2 起涵蓋 In 頁全部有區間的鍵） |
 | `scripts/decomp_v044.py` | v0.4.4 增資拆解：逐步完整重算（瀑布可凍結，環境變數 `ORCL_WF_FREEZE`，成品不設）→ `data/decomp_v044.json` |

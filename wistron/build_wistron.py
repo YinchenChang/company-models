@@ -225,7 +225,7 @@ inp("kw_rev27", "凱基緯穎 FY2027 營收（07-28）", "NT$B", None, 2368.079,
 inp("kw_ni27", "凱基緯穎 FY2027 淨利（07-28）", "NT$B", None, 105.263, None, "Interested-party", KGIW, "—")
 
 sec("I. 價格與市場倍數")
-inp("px", "股價（2026-11-05 收盤）", "NT$", None, 168.5, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（3231.TW）", "v0.4.4 為 2026-11-04 收盤 176（Yahoo Finance）")
+inp("px", "股價（2026-11-13 收盤）", "NT$", None, 171, None, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（3231.TW；markets/invest_map/data/closes_20261020_20261113.csv）", "v0.4.7 為 2026-11-05 收盤 168.5；v0.4.4 為 2026-11-04 收盤 176（Yahoo Finance）")
 inp("pe_ttm", "近 12 月 P/E（財報狗，10-22）", "x", None, 15.09, None, "Interested-party", SD + "：近四季 EPS 12.59", "Goodinfo 目前 P/E 14.93")
 inp("fpe", "前瞻 P/E（stockanalysis，09-29）", "x", None, 9.93, None, "Interested-party", SA_Q + "：價格 185.5（2026-09-29 擷取）", "—")
 inp("cons_feps", "共識前瞻 12 月 EPS（09-29 價格 ÷ 前瞻 P/E）", "NT$", None, "=185.5/fpe", None, "Derived", "stockanalysis 前瞻 P/E 9.93、價格 185.5（2026-09-29）", "共識前瞻 EPS 的直接數字：未找到")
@@ -291,12 +291,12 @@ _FD = FD.in_rows(dict(
            "2Q26 應收 716,679＋存貨 532,898 − 應付 434,695 − 預收 13,000（季資產負債表）；Sens 低／高 10%／22%（Assumed）"),
 ))
 _FD[0] = ("sec", "J2. 折現率與無槓桿自由現金流（標準版 DCF；tools/fcff_dcf.py；評價日 2026-12-31；黃底＝Andy 可改）")
-inp("wy_px", "緯穎股價（2026-11-05 收盤；非控制權益市值用）", "NT$", None, 1650, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（6669.TW；與 px 同日）", "與 px 同日；v0.4.4 為 2026-11-04 收盤 1,785（Yahoo Finance）")
+inp("wy_px", "緯穎股價（2026-11-13 收盤；非控制權益市值用）", "NT$", None, 1635, None, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（6669.TW；與 px 同日）", "與 px 同日；v0.4.7 為 2026-11-05 收盤 1,650；v0.4.4 為 2026-11-04 收盤 1,785（Yahoo Finance）")
 inp("wy_sh", "緯穎股數（讀緯穎模型 In 頁 q_sh）", "十億股", None, WY["q_sh"][1], None, "Interested-party", WY["q_sh"][3], "唯讀")
 inp("wy_eq", "緯穎股東權益（3Q26；少數股權帳面推算用）", "NT$B", None, 188.025502, None, "Verified", MOPS_BS + "（6669 緯穎）：歸屬於母公司業主之權益合計 188,025,502 千元", "v0.4.6 為 2Q26 137.263（stockanalysis）；緯穎無非控制權益")
 inp("ws_hold", "緯創持有緯軟（4953）比例", "%", 0.236, 0.236, 0.40, "Interested-party", "Simply Wall St 4953 股東表：Wistron Corporation 16,756,254 股（23.6%）（2026-11-06 讀取；網址見 Sources 頁）", "間接持股：未找到（高值 40% 為 Assumed）；緯軟為緯創子公司（公司簡介）")
 inp("ws_sh", "緯軟流通股數", "十億股", None, 0.07115, None, "Verified", "stockanalysis 4953 季資產負債表 2Q26：流通股數 71.15 百萬股 https://stockanalysis.com/quote/tpex/4953/financials/balance-sheet/?p=quarterly（2026-11-06 讀取）", "—")
-inp("ws_px", "緯軟股價（2026-11-05 收盤）", "NT$", None, 111.5, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（4953.TWO；與 px 同日）", "與 px 同日；v0.4.4 為 2026-11-04 收盤 119（Yahoo Finance）")
+inp("ws_px", "緯軟股價（2026-11-13 收盤）", "NT$", None, 119, None, "Verified", "工作單 px1113 K 批；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）（4953.TWO）", "v0.4.7 為 2026-11-05 收盤 111.5；v0.4.4 為 2026-11-04 收盤 119（Yahoo Finance）")
 inp("ws_eq", "緯軟股東權益（2Q26；9-30 未取得）", "NT$B", None, 4.095, None, "Verified", "stockanalysis 4953 季資產負債表 2Q26：Shareholders' Equity 4,095（TWD 百萬）（同上網址）", "少數股權帳面 ≈ 本值 ×（1 − ws_hold）；3Q26 值未取得，維持（只進下限 0 的差額項，不影響結果）")
 rows += _FD
 inp("beta_u", "產業無槓桿 β（採用）：自算 TW 伺服器／ODM 同業中位數 Blume 調整（0.67 × 中位數＋0.33）", "x", None, 0.792, None, "Analogy",
@@ -613,7 +613,7 @@ V["A2"] = "循環位置：緯創不是設備股，不套設備市場見頂年；
 O = 51
 V.cell(O, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, O + 1, ["項目", "A", "B", "C", "說明"])
-V.cell(O + 2, 1, "現價（2026-11-05 收盤）"); V[f"B{O + 2}"] = "=px"; V[f"B{O + 2}"].number_format = "#,##0.0"
+V.cell(O + 2, 1, "現價（2026-11-13 收盤）"); V[f"B{O + 2}"] = "=px"; V[f"B{O + 2}"].number_format = "#,##0.0"
 for k, y, lab in ((3, 2026, "現價 ÷ FY2026 EPS（錨點）"), (4, 2027, "現價 ÷ FY2027 EPS（模型）"), (5, 2028, "現價 ÷ FY2028 EPS（模型）"), (6, 2029, "現價 ÷ FY2029 EPS（模型）")):
     V.cell(O + k, 1, lab)
     for j, s in enumerate(SC):
@@ -729,11 +729,11 @@ _E = lambda s_, y: f"PL!{FC[y]}{SUMR[(s_, 'eps')]}"
 V.cell(26, 1, "0.2 Comparable（市場主流同業前瞻 P/E）").font = BOLD
 hdr(V, 27, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"])
 # v0.4.4（第三輪修正）：同業前瞻 P/E 換算到 2026-11-04 收盤（共識 EPS 不變；台股同業＝stockanalysis 統計頁同頁價格 ÷ Forward PE 得前瞻 EPS）
-PEERS = [('廣達（Quanta）', '2382.TW', '=11.52*302.5/328.5*300/302.5', '2026-11-05', 'stockanalysis.com 統計頁 Forward PE 11.52（2026-10-21 頁面，價格 328.5；共識前瞻 EPS＝328.5 ÷ 11.52）× 2026-11-04 收盤 302.5 ÷ 328.5 × 2026-11-05 收盤 300 ÷ 2026-11-04 收盤 302.5（Yahoo Finance 日線收盤 2026-11-05）；上一版 11.31（2026-10-14）'),
-         ('鴻海（Hon Hai）', '2317.TW', '=11.94*240/250*235/240', '2026-11-05', 'stockanalysis.com 統計頁 Forward PE 11.94（2026-10-21 頁面，價格 250；共識前瞻 EPS＝250 ÷ 11.94）× 2026-11-04 收盤 240 ÷ 250 × 2026-11-05 收盤 235 ÷ 2026-11-04 收盤 240（Yahoo Finance 日線收盤 2026-11-05）；上一版 11.37（2026-10-19）'),
-         ('英業達（Inventec）', '2356.TW', '=18.0*56.4/69.9*55/56.4', '2026-11-05', 'stockanalysis.com forward PE 18.0（2026-08-14，收盤 69.9）× 2026-11-04 收盤 56.4 ÷ 69.9 × 2026-11-05 收盤 55 ÷ 2026-11-04 收盤 56.4（Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變）'),
-         ('緯穎（Wiwynn；緯創子公司）', '6669.TW', '=11.73*1785/1880*1650/1785', '2026-11-05', 'stockanalysis.com 統計頁 Forward PE 11.73（2026-10-21 頁面，價格 1,880；共識前瞻 EPS＝1,880 ÷ 11.73）× 2026-11-04 收盤 1,785 ÷ 1,880 × 2026-11-05 收盤 1,650 ÷ 2026-11-04 收盤 1,785（Yahoo Finance 日線收盤 2026-11-05）；上一版 13.87（2026-10-02）'),
-         ('美超微（Supermicro）', 'SMCI', '=7.06*29.6/32.94*27.08/29.6', '2026-11-05', 'stockanalysis.com forward PE 7.06（2026-10-23，收盤 32.94）× 2026-11-04 收盤 29.6 ÷ 32.94 × 2026-11-05 收盤 27.08 ÷ 2026-11-04 收盤 29.6（Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變）')]
+PEERS = [('廣達（Quanta）', '2382.TW', '=11.52*302.5/328.5*300/302.5*276.5/300.0', '2026-11-13', 'stockanalysis.com 統計頁 Forward PE 11.52（2026-10-21 頁面，價格 328.5；共識前瞻 EPS＝328.5 ÷ 11.52）× 2026-11-04 收盤 302.5 ÷ 328.5 × 2026-11-05 收盤 300 ÷ 2026-11-04 收盤 302.5（Yahoo Finance 日線收盤 2026-11-05）；上一版 11.31（2026-10-14）；工作單 px1113：× 2026-11-13 收盤 276.5 ÷ 2026-11-05 收盤 300.0（Yahoo Finance 日線；共識 EPS 不變）'),
+         ('鴻海（Hon Hai）', '2317.TW', '=11.94*240/250*235/240*241.0/235.0', '2026-11-13', 'stockanalysis.com 統計頁 Forward PE 11.94（2026-10-21 頁面，價格 250；共識前瞻 EPS＝250 ÷ 11.94）× 2026-11-04 收盤 240 ÷ 250 × 2026-11-05 收盤 235 ÷ 2026-11-04 收盤 240（Yahoo Finance 日線收盤 2026-11-05）；上一版 11.37（2026-10-19）；工作單 px1113：× 2026-11-13 收盤 241.0 ÷ 2026-11-05 收盤 235.0（Yahoo Finance 日線；共識 EPS 不變）'),
+         ('英業達（Inventec）', '2356.TW', '=18.0*56.4/69.9*55/56.4*46.05/55.0', '2026-11-13', 'stockanalysis.com forward PE 18.0（2026-08-14，收盤 69.9）× 2026-11-04 收盤 56.4 ÷ 69.9 × 2026-11-05 收盤 55 ÷ 2026-11-04 收盤 56.4（Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變）；工作單 px1113：× 2026-11-13 收盤 46.05 ÷ 2026-11-05 收盤 55.0（Yahoo Finance 日線；共識 EPS 不變）'),
+         ('緯穎（Wiwynn；緯創子公司）', '6669.TW', '=11.73*1785/1880*1650/1785*1635.0/1650.0', '2026-11-13', 'stockanalysis.com 統計頁 Forward PE 11.73（2026-10-21 頁面，價格 1,880；共識前瞻 EPS＝1,880 ÷ 11.73）× 2026-11-04 收盤 1,785 ÷ 1,880 × 2026-11-05 收盤 1,650 ÷ 2026-11-04 收盤 1,785（Yahoo Finance 日線收盤 2026-11-05）；上一版 13.87（2026-10-02）；工作單 px1113：× 2026-11-13 收盤 1635.0 ÷ 2026-11-05 收盤 1650.0（Yahoo Finance 日線；共識 EPS 不變）'),
+         ('美超微（Supermicro）', 'SMCI', '=7.06*29.6/32.94*27.08/29.6*26.87/27.08', '2026-11-13', 'stockanalysis.com forward PE 7.06（2026-10-23，收盤 32.94）× 2026-11-04 收盤 29.6 ÷ 32.94 × 2026-11-05 收盤 27.08 ÷ 2026-11-04 收盤 29.6（Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變）；工作單 px1113：× 2026-11-13 收盤 26.87 ÷ 2026-11-05 收盤 27.08（Yahoo Finance 日線；共識 EPS 不變）')]
 for i, (nm, tk, pe, dt, src) in enumerate(PEERS, 28):
     V.cell(i, 1, nm); V.cell(i, 2, tk); c = V.cell(i, 3, pe); c.font = BLUE; c.number_format = "0.0"
     V.cell(i, 4, dt); V.cell(i, 5, src); V.cell(i, 6, "Interested-party")
@@ -748,7 +748,7 @@ hdr(V, 38, ["項目", "數值", "", "", "說明"])
 tset(39, "tpw", "目標價（DCF 與 Comparable 加權）", [f"=tp_w_dcf*B{T['dcftp']}+(1-tp_w_dcf)*B35", None, None], "0.00", "tp_w_dcf × DCF＋（1 − tp_w_dcf）× Comparable；tp_w_dcf 見 In 頁（0.5）")
 tset(40, "comp2", "Comparable 目標價（市場主流同業法）", ["=B35", None, None], "0.00")
 tset(41, "cons", "市場共識目標價", ["=cons_tp", None, None], "0.00", "stockanalysis：17 位分析師平均 268.71（中位數 275、區間 165–400），2026-09-16 擷取")
-tset(42, "upw", "上檔空間：加權目標價", ["=B39/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-05 收盤）")
+tset(42, "upw", "上檔空間：加權目標價", ["=B39/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-13 收盤）")
 tset(43, "upc", "上檔空間：Comparable 目標價", ["=B40/px-1", None, None], "0.0%")
 tset(44, "geps", "與市場共識目標價的差距：EPS 因素", ["=B34/cons_feps-1", None, None], "0.0%", "本模型前瞻 EPS ÷ 共識前瞻 EPS − 1；共識前瞻 EPS＝09-29 價格 ÷ 前瞻 P/E（In 頁 cons_feps）")
 tset(45, "gmul", "與市場共識目標價的差距：倍數因素", ["=(cons_tp/cons_feps)/B33-1", None, None], "0.0%")
@@ -872,7 +872,7 @@ srcs = [("公司（摘要）：鉅亨 2Q26 法說（2Q26 營收、毛利率、�
         ("媒體：財報狗 GDR 新聞（2.5 億股、NT$186.24、稀釋 7.29%）", SD_GDR),
         ("券商：經濟日報 2026-09-10（美系券商 NVL72 櫃數調查）", UDN0910),
         ("券商：旺得富 2026-08-10（法人 2026–27 EPS、目標價）", WR0810), ("券商：工商時報 2026-08-05（本國投顧目標價 300）", CTEE0805),
-        ("價格：Yahoo Finance 日線收盤 2026-11-05（現價、同業報價、緯穎與緯軟股價）", "https://finance.yahoo.com/quote/3231.TW/history/"), ("資料商：財報狗（10-22 收盤 190〔v0.4.3 現價〕、近 12 月 P/E）", SD), ("資料商：stockanalysis 報價頁（前瞻 P/E、股數）", SA_Q),
+        ("價格：Yahoo Finance 日線收盤 2026-11-13（現價、同業報價、緯穎股價；工作單 px1113）；緯軟（4953）股價亦改 2026-11-13 收盤（K 批）", "https://finance.yahoo.com/quote/3231.TW/history/"), ("資料商：財報狗（10-22 收盤 190〔v0.4.3 現價〕、近 12 月 P/E）", SD), ("資料商：stockanalysis 報價頁（前瞻 P/E、股數）", SA_Q),
         ("資料商：stockanalysis 預估頁（共識營收、EPS、目標價）", SA_F), ("資料商：stockanalysis 財報與比率頁（FY2021–25 損益、ROE、P/E）", SA_FIN),
         ("資料商：stockanalysis 比率頁", SA_R), ("資料商：Goodinfo 歷年經營績效（年底收盤、EPS、ROE）", GI),
         ("同業前瞻 P/E：stockanalysis（廣達、鴻海、英業達、緯穎、美超微各報價頁）", "https://stockanalysis.com/quote/tpe/2382/；https://stockanalysis.com/quote/tpe/2317/；https://stockanalysis.com/quote/tpe/2356/；https://stockanalysis.com/quote/tpe/6669/；https://stockanalysis.com/stocks/smci/"),
@@ -1092,7 +1092,7 @@ for _ws in wb:   # 公式中的現價日期標籤同步（含 tools/relative_mul
         for _c in _row:
             if isinstance(_c.value, str) and _c.value.startswith("="):
                 for _o in ['"（2026-10-22）"']:
-                    if _o in _c.value: _c.value = _c.value.replace(_o, '"（2026-11-05 收盤）"')
+                    if _o in _c.value: _c.value = _c.value.replace(_o, '"（2026-11-13 收盤）"')
 RD["A1"] = RD["A1"].value + "；v0.4.4（2026-11-06）第三輪修正：現價與同業報價統一 2026-11-04 收盤（Yahoo Finance）"
 RD["A1"] = RD["A1"].value + "；v0.4.5（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"   # 工作單 px1105
 # v0.4.4（2026-11-06）第三輪修正（續）：情境名稱統一（Andy 2026-11-06 改定：樂觀／基準／保守）、重點觀察 1 刪除 2026-10-29 調整前舊文（第 22 點）

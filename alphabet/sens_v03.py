@@ -15,8 +15,9 @@ Q3CF = os.path.join(HERE, "data", "q3cf_v03_2026q3.json")
 
 def build(name, sets):
     raw = os.path.join(WD, f"{name}.xlsx")
-    cmd = [sys.executable, BUILD, raw] + sum((["--q3cf", Q3CF] if k == "__q3cf" else ["--set", f"{k}={v}"] for k, v in sets), [])
+    cmd = [sys.executable, BUILD, raw] + sum((["--q3cf", Q3CF] if k == "__q3cf" else ["--set", f"{k}={v}"] for k, v in sets if k != "__oldpeers"), [])
     env = dict(os.environ); env["ROWMAP"] = os.path.join(WD, f"{name}.rowmap.json")
+    if any(k == "__oldpeers" for k, v in sets): env["ALPHA_OLDPEERS"] = "1"   # v0.3.10 原地換同業倍數：變動拆解鏈（chain|S1–S4、q10|*）仍用 2026-10-07／10-08 原值
     subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, env=env)
     return raw
 
@@ -90,13 +91,14 @@ CF3 = json.load(open(Q3CF, encoding="utf-8"))
 Q10 = json.load(open(os.path.join(HERE, "data", "q10_v035_old.json"), encoding="utf-8"))["steps"]
 OLD10 = [(x["key"], x["old"]) for x in Q10]
 for k in range(len(Q10)):
-    jobs[f"q10|Q{k}"] = OLD10[k:]
+    jobs[f"q10|Q{k}"] = OLD10[k:] + [("__oldpeers", 1)]
+jobs["q10|P"] = [("__oldpeers", 1)]                    # 本版輸入、同業倍數原值：第 4 節 (10) ＝ P − Q9；(11) 同業換價 ＝ 本版 − P
 S4 = OLD10 + [("rf", 0.05), ("px_val", 316.80)]
 S3 = S4 + [("tpu_f", 1), ("tpu_cf", 1), ("pace", PACE["pace_tpu1"])]
 S2 = S4 + [("tpu_f", 1), ("tpu_cf", 1), ("pace", 4159.67), ("cip_it", 0.6)]
 S1 = S2 + [("__q3cf", 1)] + [tuple(x) for x in CF3["sets"]]
 for k, v in (("S1", S1), ("S2", S2), ("S3", S3), ("S4", S4)):
-    jobs[f"chain|{k}"] = v
+    jobs[f"chain|{k}"] = v + [("__oldpeers", 1)]
 res = {}
 with ThreadPoolExecutor(max_workers=int(os.environ.get("JOBS", "4"))) as ex:
     futs = {k: ex.submit(run, f"c{i:02d}", sets) for i, (k, sets) in enumerate(jobs.items())}

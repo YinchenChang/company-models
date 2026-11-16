@@ -1,4 +1,14 @@
-# alab/ — Astera Labs（ALAB）收支與估值模型 v0.3.8
+# alab/ — Astera Labs（ALAB）收支與估值模型 v0.3.9
+
+## v0.3.9（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
+
+依據：`docs/workorders/20261116_px1113_現價與同業報價換11-13收盤.md`；價格只取 `markets/invest_map/data/closes_20261020_20261113.csv`。base＝v0.3.8。
+
+- **現價與同業報價改 2026-11-13 收盤（工作單 px1113）：** 現價 179.47 → 221.83（In 頁 px）；Comparable 同業前瞻 P/E（＝stockanalysis 10-23 前瞻 P/E × 11-13 收盤 ÷ 10-23 收盤，與「v0.3.8 倍數 × 11-13 ÷ 11-05 收盤」等價，共識 EPS 不變）：Credo 15.40→18.03、Marvell 23.63→27.74、Broadcom 16.78→19.98、Rambus 20.53→24.22、MACOM 23.04→28.08；**同業中位數 20.53 → 24.22**。**加權目標價 101.32 → 115.24；上檔空間 −43.5% → −48.1%；評等 放空 → 放空。**未換價同業：無。
+- **日期輸入：** 資料基準日（as_of，Hist 頁）改 2026-11-13，資料基準日表中股價、同業股價列改 11-13；rf、同業前瞻 P/E 原值與共識維持原取值日（表內顯示逾期）。rf、β、ERP、共識 EPS、情境權重與營運假設不變；以市值計的 WACC 權重隨現價自動重算。
+- **快照：** `sens.json`、`coord_alt.json` 以新價重跑（`sens_alab.py`、`tools/coord/alt_run.py alab`）；`sens.json` 的 `attr`（v0.3.7 目標價變動拆解，歷史說明）沿用 v0.3.8 原文不重算，以免沿革列顯示新價數字。Sens 頁快照狀態 CURRENT。
+- **文字與沿革：** 「2026-11-05 收盤」標籤與來源欄改 11-13（保留「v0.3.8 為 2026-11-05 收盤 179.47」）；README 頁本版要點列改寫為 v0.3.9，前一版（v0.3.8）本版要點移到 README 頁末；build_id 標籤 alab-v0.3.9；既有沿革列保留原文。新增 `px1113_post.py`（只改 README 說明文字）。
+- 建置：同 v0.3.8（`python3 alab/build_alab.py raw.xlsx` → LibreOffice 重算 → `dist/` → `python3 alab/gen_html_json.py <xlsx> alab/html_src.json alab/html.json` → `build_company_html.py alab`）。
 
 ## v0.3.8（2026-11-14）：個股 HTML 版面規格 v1.3＋三層協調兩讀數＋C0（實績）
 

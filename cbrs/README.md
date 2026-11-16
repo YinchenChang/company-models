@@ -1,6 +1,15 @@
-# cbrs/ — Cerebras Systems（CBRS）收支與估值模型 v0.1.3
+# cbrs/ — Cerebras Systems（CBRS）收支與估值模型 v0.1.4
 
 AI 半導體 Project 運算層的新個股（Andy 2026-11-08 要求新增，格式比照 `nvidia/` v0.3.4）。獨立的 Python→Excel 產生器（openpyxl，LibreOffice 重算），HTML 展示層用共用產生器 `tools/company_html/`。
+
+## v0.1.4（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
+
+依據：`docs/workorders/20261116_px1113_現價與同業報價換11-13收盤.md`；價格只取 `markets/invest_map/data/closes_20261020_20261113.csv`。base＝v0.1.3。
+
+- **現價與同業報價改 2026-11-13 收盤（工作單 px1113）：** 現價 81.71 → 108.72（In 頁 px；來源改 Yahoo Finance 日線收盤，標記由 Derived 改 Verified，保留 v0.1.3 的 equibles 推算 81.71，兩者 11-05 收盤相同）；Comparable 同業前瞻 P/S（＝共識前瞻 P/S × 11-13 收盤 ÷ 頁面價格，共識與頁面價格不變）：NVIDIA 8.14→7.30、AMD 7.89→10.42、Broadcom 8.84→10.53、Marvell 7.47→8.77；**同業中位數 8.02 → 9.59**。**加權目標價 83.94 → 97.21；上檔空間 +2.7% → −10.6%；評等 中立 → 中立。**未換價同業：無。
+- **不變：** 共識（stockanalysis 10-05）、rf、β、ERP、股數（2026-11-05 封面）、情境權重與營運假設；以市值計的 WACC 權重與 D/E 隨現價自動重算。本模型沒有「資料基準日」型輸入，也沒有 Sens／Coord 另一側讀數快照。
+- **文字與沿革：** 「2026-11-05 收盤」標籤與來源欄改 11-13；命題 4 文字改「11-13 收盤 108.72 美元」；README 頁本版要點列改寫為 v0.1.4，前一版（v0.1.3）本版要點移到 README 頁末；既有沿革列保留原文。新增 `px1113_post.py`（只改版號與說明文字）。
+- 建置：同 v0.1.3（`python3 cbrs/build_cbrs.py raw.xlsx --html` → LibreOffice 重算 → `dist/` → `gen_html_json.py <xlsx>` → `build_company_html.py cbrs`）。
 
 ## v0.1.3（2026-11-15）：滾入 3Q26（2026-11-12 財報）
 

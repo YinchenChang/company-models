@@ -11,7 +11,7 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
 BOLD = Font(bold=True); BLUE = Font(color="0000FF"); HDR = PatternFill("solid", fgColor="DDEBF7")
-AS_OF, CUTOFF, BUILT, VAL_D = "2026-11-05", "2026-11-05", "2026-11-10", "2026-12-31"
+AS_OF, CUTOFF, BUILT, VAL_D = "2026-11-13", "2026-11-13", "2026-11-16", "2026-12-31"
 E8K = "https://www.sec.gov/Archives/edgar/data/2488/"
 PR3 = E8K + "000000248826000188/q32026991.htm"; PR4 = E8K + "000000248826000014/q42025991.htm"
 Q10 = E8K + "000000248826000191/amd-20260926.htm"
@@ -97,8 +97,8 @@ def hist_sheet(wb):
         if not (isinstance(v, str) and v.startswith("=")): c.font = BLUE
         dn(wb, f"h_{k}", f"Hist!$C${r}"); H.cell(r, 7, tag); H.cell(r, 8, src); r += 1
     r += 1
-    for k, labl, f in (("asof", "資料基準日（現價日）", "=DATE(2026,11,5)"), ("cutoff", "資料截止日（最晚一筆資料：股價與同業報價）", "=DATE(2026,11,5)"),
-                       ("built", "成品日（本版建置）", "=DATE(2026,11,10)"), ("valdate", "DCF 評價日", "=DATE(2026,12,31)"), ("bsdate", "資產負債表日", "=DATE(2026,9,26)")):
+    for k, labl, f in (("asof", "資料基準日（現價日）", "=DATE(2026,11,13)"), ("cutoff", "資料截止日（最晚一筆資料：股價與同業報價）", "=DATE(2026,11,13)"),
+                       ("built", "成品日（本版建置）", "=DATE(2026,11,16)"), ("valdate", "DCF 評價日", "=DATE(2026,12,31)"), ("bsdate", "資產負債表日", "=DATE(2026,9,26)")):
         H.cell(r, 1, f"h_{k}"); H.cell(r, 2, labl); H.cell(r, 3, f).number_format = "yyyy-mm-dd"; dn(wb, f"h_{k}", f"Hist!$C${r}"); H.cell(r, 7, "—"); r += 1
     H.column_dimensions["A"].width = 16; H.column_dimensions["B"].width = 56
     for c in "CDEF": H.column_dimensions[c].width = 13
@@ -340,7 +340,7 @@ def val(wb, ctx):
     rr = lab(V, "現價 ÷ 共識 FY2028 EPS"); V.cell(rr, 5).value = "分母：Motley Fool 經 ts2.tech 轉述約 20 美元（2026-07-30，二手；FY 口徑）"
     for lbl in ("現價 ÷ FY2026 EPS", "現價 ÷ FY2027 EPS", "現價 ÷ FY2028 EPS", "現價 ÷ FY2029 EPS"):
         rr = lab(V, lbl)
-        if not V.cell(rr, 5).value or j2: V.cell(rr, 5).value = "分母：本模型各情境 non-GAAP EPS（FY 口徑；B／C／D 欄＝情境 A／B／C）；現價日 2026-11-05"
+        if not V.cell(rr, 5).value or j2: V.cell(rr, 5).value = "分母：本模型各情境 non-GAAP EPS（FY 口徑；B／C／D 欄＝情境 A／B／C）；現價日 2026-11-13"
     # 原則 18 延伸（原則 38）：夾值揭露
     rr = lab(V, "相對倍數調整係數")
     V.cell(rr, 3).value = f'=IF(B{lab(V, "原始比值")}>B{lab(V, "夾值上限")},"已達夾值上限：原始比值 "&TEXT(B{lab(V, "原始比值")},"0.00")&"（承重輸入；Sens 業務主因表有不夾值案例）","")'
@@ -450,7 +450,7 @@ def readme(wb, ctx, bid, G):
     # 版本沿革列
     h = lab(RD, "v0.4.4：")
     RD.insert_rows(h)
-    RD.cell(h, 1, f"{VER}（{BUILT}）：AMD v0.4.4 驗收報告採用項（Andy 2026-11-10 07:52 確認採用規劃書，J1–J4 照建議預設）。" +
+    RD.cell(h, 1, f"{VER}（2026-11-10）：AMD v0.4.4 驗收報告採用項（Andy 2026-11-10 07:52 確認採用規劃書，J1–J4 照建議預設）。" +
             ("數值：認股權證改閘門式（出貨 GW 隨 AMD 顆數、到期日失效、wf 股價與條件；PL 與 DCF 評價股數同一邏輯，J1a）；情境 A／C 自 FY2027 起帶 AMD 顆數與資料中心 CPU 路徑（J2b），EPS 敏感度改以情境 B 為基準；"
              "目標時點改現價日＋12 個月；評價股數改流通股＋庫藏股法；股票薪酬比率改最近四季；目標價 Sens 新增業務主因整本重算表（GPU 占比 40／60％、Q4 其他分部 ±0.5／±1.0、認股權證 0／50％、不夾值、現金稅率）。目標價變動拆解見下一列。"
              if ctx["V46"] else
@@ -471,7 +471,7 @@ def readme(wb, ctx, bid, G):
                     f'"評等邊界（原則 36）：上檔空間距最近級距邊界 "&TEXT({d}*100,"0.0")&" 個百分點（5 個百分點以上，評等不貼近邊界）；加權目標價 "&TEXT(px*(1+{e}),"0.00")&" 美元時翻轉。")')
     G["asof_h"] = put(f"資料基準日（as_of）：{AS_OF}（現價日）。市場資料與基準日相差超過 2 個交易日標「逾期」；最近一次財報（3Q26，2026-11-03）前的共識標「財報前，只作歷史對照」（原則 15）。", True)
     RD.cell(r, 1, "項目").font = BOLD; RD.cell(r, 2, "資料日期").font = BOLD; RD.cell(r, 3, "狀態").font = BOLD; G["asof_t"] = r; r += 1
-    items = [("股價 px（Yahoo Finance 日線收盤）", "2026-11-05", 0), ("同業股價（五家；Comparable 前瞻 P/E 換算）", "2026-11-05", 0),
+    items = [("股價 px（Yahoo Finance 日線收盤）", "2026-11-13", 0), ("同業股價（五家；Comparable 前瞻 P/E 換算）", "2026-11-13", 0),
              ("同業前瞻 EPS（stockanalysis 統計頁）", "2026-10-30", 0), ("無風險利率 rf（美國 10 年期公債殖利率）", "2026-10-23", 0),
              ("相對倍數歷史資料（Bloomberg 前瞻倍數，10 年）", "2026-10-29", 0),
              ("市場共識目標價 cons_tp", "2026-10-25", 1), ("共識 FY2026／FY2027 EPS（stockanalysis、tickflow）", "2026-10-23", 1), ("共識 FY2028 EPS（約 20，二手）", "2026-07-30", 1),
@@ -482,7 +482,7 @@ def readme(wb, ctx, bid, G):
         RD.cell(r, 3, '="財報前，只作歷史對照"' if kind == 1 else ('="最近一季資產負債表（以 stub 期滾到評價日）"' if kind == 2 else
                        f'=IF(ABS(NETWORKDAYS(MIN(DATEVALUE(B{r}),DATEVALUE("{AS_OF}")),MAX(DATEVALUE(B{r}),DATEVALUE("{AS_OF}")))-1)>2,"逾期 "&TEXT(ABS(NETWORKDAYS(MIN(DATEVALUE(B{r}),DATEVALUE("{AS_OF}")),MAX(DATEVALUE(B{r}),DATEVALUE("{AS_OF}")))-1),"0")&" 個交易日","同期")'))
         G["asof_rows"].append(r); r += 1
-    G["asof_n"] = put("說明：rf、同業前瞻 EPS 與相對倍數資料逾期，但與其他 AI 半導體個股模型同一取值日，為維持跨模型一致暫不單獨更新（原則 15；不需驗收清單 X24）；同業 P/E 已以 2026-11-05 收盤換算。共識只作對帳，不進目標價。")
+    G["asof_n"] = put("說明：rf、同業前瞻 EPS 與相對倍數資料逾期，但與其他 AI 半導體個股模型同一取值日，為維持跨模型一致暫不單獨更新（原則 15；不需驗收清單 X24）；同業 P/E 已以 2026-11-13 收盤換算。共識只作對帳，不進目標價。")
     inv = G["recon"]["inv"]
     G["fail_h"] = put("主要失效條件（可觀察；原則 3）", True)
     E_up, E_dn = f"Recon!B{G['recon']['e_up']}", f"Recon!B{G['recon']['e_dn']}"
@@ -530,13 +530,13 @@ def apply(wb, here, ctx):
     PLs["A1"].value = ("PL — AMD 損益（US$B；non-GAAP；FY2025A 實績、FY2026 錨點，FY2027 起為模型）。會計年度＝日曆年。三情境各一個完整推導區塊（本頁下方），頂端為摘要。"
                        + ("情境 A／C 自 FY2027 起帶 AMD 顆數係數與資料中心 CPU 成長路徑（驗收 J2），產業顆數係數差異自 CY2028 起" if j2 else "FY2026、FY2027 三情境相同（情境係數從 CY2028 才開始）"))
     # A3：rf 期限與日期；B6：β 依據；B7：承重外部輸入定位
-    in_set(wb, "rf", 9, str(wb["In"].cell(inrow(wb, "rf"), 9).value or "") + "。期限：10 年期；取值日 2026-10-23（股價日 2026-11-05，逾期 9 個交易日，與其他個股模型同一取值日；見 README 資料基準日表）")
+    in_set(wb, "rf", 9, str(wb["In"].cell(inrow(wb, "rf"), 9).value or "") + "。期限：10 年期；取值日 2026-10-23（股價日 2026-11-13，逾期 15 個交易日，與其他個股模型同一取值日；見 README 資料基準日表）")
     for k in ("beta", "beta_u"):
         c = wb["In"].cell(inrow(wb, k), 9)
         c.value = str(c.value or "") + "。依據：docs/plan/自算產業β_20261105.md（US 半導體 13 家；AMD 本身在同業組內）"
     for k, add in (("w_tot", "定位：OpenAI 8-K Item 1.01 與 Exhibit 4.1（up to 160 million shares、$0.01、首批隨首 1 GW、最後一批 $600）；Meta 8-K 2026-02-23 Item 1.01（同結構）。轉換：0.16＋0.16＝0.32 十億股"),
                    ("q4_rev", "定位：3Q26 新聞稿「Current Outlook」段：approximately $17.0 billion, plus or minus $500 million（區間以 ±3% 表示）"),
-                   ("px", "定位：Yahoo Finance AMD 日線 2026-11-05 Close 404.40（未調整）")):
+                   ("px", "定位：Yahoo Finance AMD 日線 2026-11-13 Close 534.06（未調整）")):
         c = wb["In"].cell(inrow(wb, k), 9); c.value = str(c.value or "") + "。" + add
     bid = build_id(here, ctx["STAGE"])
     G = {}

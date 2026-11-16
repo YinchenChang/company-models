@@ -1,4 +1,23 @@
-# besi/ — BESI（BE Semiconductor Industries，BESI.AS）收支與估值模型 v0.2.4
+# besi/ — BESI（BE Semiconductor Industries，BESI.AS）收支與估值模型 v0.2.5
+
+## v0.2.5（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
+
+- 現價與同業報價改 2026-11-13 收盤（工作單 px1113；價格只取自 `markets/invest_map/data/closes_20261020_20261113.csv`）。後處理 `px1113_post.py`（build 存檔前呼叫）只改價格輸入與說明文字，不改公式結構；共識 EPS、rf、預測用匯率與模型假設不變。
+- 同業前瞻倍數＝現行倍數 × 11-13 收盤 ÷ 現行倍數所用報價日收盤。**未換價同業：無**（五家皆有 11-13 收盤；ASMPT 報價日 2026-09-23 的倍數以現行倍數 × 11-13 收盤 ÷ 09-23 收盤換算）。
+
+| 項目 | v0.2.4 | v0.2.5 |
+|---|---|---|
+| 現價 | 140.9（11-05） | 154.1（11-13） |
+| 同業前瞻倍數中位數 | 21.87 | 25.05 |
+| DCF 目標價 | 69.01 | 68.98 |
+| Comparable（相對倍數調整後；進加權） | 178.78 | 204.74 |
+| Comparable（市場主流同業法） | 136.56 | 156.39 |
+| 加權目標價 | 123.89（−12.1%） | 136.86（−11.2%） |
+| 投資建議 | 中立 | 中立 |
+| 另一側讀數（Coord） | 116.47（中立） | 128.66（中立） |
+
+- 驗證：LibreOffice 重算錯誤格 0；`check_company_html besi` 全部通過；`check_layout_v13 --xlsx` ok；`check_sens_coverage --require-keycol` 56／56 未過（與 v0.2.4 相同，既有）；`baseline_coordination/check.py` 0 項不符；重跑 `sens_besi.py`、`alt_run.py besi`（`sens.json`、`coord_alt.json` 更新）。
+- 成品：`dist/20261116_BESI模型_v0.2.5.xlsx`、`.html`；v0.2.4 移到 `dist/_待刪除/`。
 
 ## v0.2.4（2026-11-15）：個股 HTML 版面 v1.3、三層協調讀取層級與 C0（公司實績）、硬體股兩讀數
 

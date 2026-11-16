@@ -1,0 +1,139 @@
+{
+ "asOf": "2026-11-13",
+ "priceSource": "markets/invest_map/data/closes_20261020_20261113.csv",
+ "tag": "[Derived]（近似）",
+ "items": {
+  "val.peer.sw.orcl": {
+   "ticker": "ORCL",
+   "old": 9.54,
+   "new": 8.33,
+   "refDate": "2026-10-07",
+   "closeOld": 143.56,
+   "closeNew": 125.35,
+   "priceRatio": 0.873154,
+   "method": "倍數 × 收盤比（近似，無市值）"
+  },
+  "val.peer.sw.sap": {
+   "ticker": "SAP",
+   "old": 15.02,
+   "new": 16.79,
+   "refDate": "2026-10-07",
+   "closeOld": 210.13,
+   "closeNew": 234.9,
+   "priceRatio": 1.117879,
+   "method": "倍數 × 收盤比（近似，無市值）"
+  },
+  "val.peer.sw.crm": {
+   "ticker": "CRM",
+   "old": 10.8,
+   "new": 10.48,
+   "refDate": "2026-10-07",
+   "closeOld": 224.56,
+   "closeNew": 217.84,
+   "priceRatio": 0.970075,
+   "method": "倍數 × 收盤比（近似，無市值）"
+  },
+  "val.peer.sw.adbe": {
+   "ticker": "ADBE",
+   "old": 6.6,
+   "new": 6.89,
+   "refDate": "2026-10-07",
+   "closeOld": 232.77,
+   "closeNew": 243.08,
+   "priceRatio": 1.044293,
+   "method": "倍數 × 收盤比（近似，無市值）"
+  },
+  "val.peer.sw.now": {
+   "ticker": "NOW",
+   "old": 20.65,
+   "new": 15.31,
+   "refDate": "2026-10-07",
+   "closeOld": 137.87,
+   "closeNew": 102.25,
+   "priceRatio": 0.741641,
+   "method": "倍數 × 收盤比（近似，無市值）"
+  },
+  "val.peer.game.ttwo": {
+   "ticker": "TTWO",
+   "old": 50.9,
+   "new": 55.39,
+   "refDate": "2026-10-08",
+   "closeOld": 209.37,
+   "closeNew": 227.82,
+   "priceRatio": 1.088122,
+   "method": "倍數 × 收盤比（近似，無市值）"
+  },
+  "val.peer.game.ntdoy": {
+   "ticker": "NTDOY",
+   "old": 12.63,
+   "new": 13.86,
+   "refDate": "2026-10-08",
+   "closeOld": 12.48,
+   "closeNew": 13.7,
+   "priceRatio": 1.097756,
+   "method": "倍數 × 收盤比（近似，無市值）"
+  },
+  "val.peer.game.ntes": {
+   "ticker": "NTES",
+   "old": 8.23,
+   "new": 8.41,
+   "refDate": "2026-10-08",
+   "closeOld": 119.6,
+   "closeNew": 122.18,
+   "priceRatio": 1.021572,
+   "method": "倍數 × 收盤比（近似，無市值）"
+  },
+  "val.peer.pc.hpq": {
+   "ticker": "HPQ",
+   "old": 7.6,
+   "new": 6.88,
+   "refDate": "2026-10-08",
+   "closeOld": 32.44,
+   "closeNew": 29.36,
+   "priceRatio": 0.905055,
+   "method": "倍數 × 收盤比（近似，無市值）"
+  },
+  "val.peer.pc.dell": {
+   "ticker": "DELL",
+   "old": 22.1,
+   "new": 13.25,
+   "refDate": "2026-10-08",
+   "closeOld": 574.55,
+   "closeNew": 344.53,
+   "priceRatio": 0.599652,
+   "method": "倍數 × 收盤比（近似，無市值）"
+  },
+  "val.peer.pc.0992.hk": {
+   "ticker": "0992.HK",
+   "old": 14.47,
+   "new": 7.89,
+   "refDate": "2026-10-08",
+   "closeOld": 32.32,
+   "closeNew": 17.62,
+   "priceRatio": 0.545173,
+   "method": "倍數 × 收盤比（近似，無市值）"
+  },
+  "val.msft.ownNtm": {
+   "ticker": "MSFT",
+   "old": 15.67,
+   "new": 15.5,
+   "refDate": "2026-10-07",
+   "closeOld": 529.76,
+   "closeNew": 523.88,
+   "priceRatio": 0.988901,
+   "method": "EV 新＝EV 舊 3,990,000＋市值舊 3,930,000 ×（價格比−1）；EBITDA 不變（事實總帳 val.ev、val.mktcap）"
+  }
+ },
+ "medians": {
+  "sw": 10.48,
+  "game": 13.86,
+  "pc": 7.89
+ },
+ "mediansOld": {
+  "sw": 10.8,
+  "game": 12.63,
+  "pc": 14.47
+ },
+ "cloudMedian": 14.66,
+ "adsMedian": 8.54
+}

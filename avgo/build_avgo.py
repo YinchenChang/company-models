@@ -163,7 +163,7 @@ for k, lab in (("pm_bw", "Blackwell 模組"), ("pm_rb", "Rubin 模組"), ("pm_ru
     inp(k, f"{lab} 每顆", "US$K", None, NVP[k][0], None, "Derived", NVP[k][1], "NVIDIA 模型 In 頁（同一套價格；唯讀）")
 
 sec("J. 價格、估值與客戶融資")
-inp("px", "股價（2026-11-05 收盤）", "US$", None, 291.53, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05", "v0.5.3 為 2026-11-04 收盤 325.48；v0.5.2 為 2026-10-23 收盤 321.68（markets/invest_map/data/prices.csv）；v0.1.1 為 10-22 收盤 323.24（StockAnalysis、YCharts）")
+inp("px", "股價（2026-11-13 收盤）", "US$", None, 347.01, None, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（markets/invest_map/data/closes_20261020_20261113.csv）", "v0.5.7 為 2026-11-05 收盤 291.53；v0.5.3 為 2026-11-04 收盤 325.48；v0.5.2 為 2026-10-23 收盤 321.68（markets/invest_map/data/prices.csv）；v0.1.1 為 10-22 收盤 323.24（StockAnalysis、YCharts）")
 inp("pe_ttm_gaap", "近 12 月 GAAP P/E", "x", None, 41.26, None, "Interested-party", "StockAnalysis", "top1markets：近 12 月約 45x（10 月報導）")
 inp("pe_fwd_sa", "前瞻 P/E（StockAnalysis）", "x", None, 18.61, None, "Interested-party", "StockAnalysis（口徑未說明）", "GuruFocus 17.39；valueinvesting.io 49.62（2026-10-22；口徑不明，可能為 GAAP 或舊預估，不採）")
 inp("eps_q4_25", "Q4 FY25 non-GAAP EPS（近 12 月計算用）", "US$", None, 1.95, None, "Verified", EDG + "000173016825000116/avgo-11022025x8kxex99.htm", "—")
@@ -493,7 +493,7 @@ V["A1"] = "Val — P/E 估值（美元；non-GAAP EPS）。結論用「現價 ÷
 V["A2"] = "循環位置：共用規則（tools/cycle_position.py classify；AVGO 的 FY(t) 對照日曆年 t，不平移），見頂年度讀設備市場模型；本版只記錄判定，倍數待前瞻 P/E 歷史"
 V.cell(4, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, 5, ["項目", "A", "B", "C", "說明"])
-V.cell(6, 1, "現價（2026-11-05 收盤）"); V["B6"] = "=px"; V["B6"].number_format = "0.00"
+V.cell(6, 1, "現價（2026-11-13 收盤）"); V["B6"] = "=px"; V["B6"].number_format = "0.00"
 V.cell(7, 1, "現價 ÷ FY2026 EPS（錨點）")
 V.cell(8, 1, "現價 ÷ FY2027 EPS（模型）")
 V.cell(9, 1, "現價 ÷ FY2028 EPS（模型）")
@@ -713,11 +713,11 @@ TPL, TPN = TP.add_tp_section(wb, V,
     eps={s: [f"PL!{XC[y]}{XR[(s, 'eps')]}" for y in range(2027, 2033)] for s in SC}, e_mon=10,
     fwd={s: [(f"PL!{XC[2028]}{XR[(s, 'eps')]}", 1)] for s in SC},
     fwd_note="會計年度 FY(t) 約為 t−1 年 11 月～t 年 10 月：約 12 個月後（2027-10 底）的未來 12 個月＝2027-11～2028-10＝FY2028 全年（1 × FY2028）",
-    peers=[("NVIDIA", "NVDA", 15.02, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 16.92（2026-10-30 頁面，價格 204.64）→ 前瞻 EPS 12.09；P/E＝2026-11-04 基準 16.55 × Yahoo Finance 日線收盤 2026-11-05 181.6 ÷ 2026-11-04 收盤 200.13（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）"),
-           ("AMD", "AMD", 36.12, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 45.09（2026-10-30 頁面，價格 504.8）→ 前瞻 EPS 11.2；P/E＝2026-11-04 基準 43.66 × Yahoo Finance 日線收盤 2026-11-05 404.4 ÷ 2026-11-04 收盤 488.78（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）"),
-           ("Marvell", "MRVL", 23.66, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 42.09（2026-10-27 頁面，價格 237.6）→ 前瞻 EPS 5.645；P/E＝2026-11-04 基準 28.31 × Yahoo Finance 日線收盤 2026-11-05 133.55 ÷ 2026-11-04 收盤 159.8（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）"),
-           ("Qualcomm", "QCOM", 16.93, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 20.03（2026-10-29 頁面，價格 185.41）→ 前瞻 EPS 9.257；P/E＝2026-11-04 基準 18.71 × Yahoo Finance 日線收盤 2026-11-05 156.75 ÷ 2026-11-04 收盤 173.19（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）"),
-           ("台積電 ADR", "TSM", 16.58, "2026-11-05", "stockanalysis.com 統計頁 Forward PE 19.07（2026-10-30 頁面，價格 406.13）→ 前瞻 EPS 21.3；P/E＝2026-11-04 基準 18.58 × Yahoo Finance 日線收盤 2026-11-05 353.1 ÷ 2026-11-04 收盤 395.75（共識 EPS 不變）", "Interested-party（資料商彙整賣方預估）")],
+    peers=[("NVIDIA", "NVDA", 13.47, "2026-11-13", "stockanalysis.com 統計頁 Forward PE 16.92（2026-10-30 頁面，價格 204.64）→ 前瞻 EPS 12.09；P/E＝2026-11-05 基準 15.02（v0.5.7；原由 2026-11-04 基準換算）× Yahoo Finance 日線收盤 2026-11-13 162.85 ÷ 2026-11-05 收盤 181.6（共識 EPS 不變；工作單 px1113；closes_20261020_20261113.csv）", "Interested-party（資料商彙整賣方預估）"),
+           ("AMD", "AMD", 47.70, "2026-11-13", "stockanalysis.com 統計頁 Forward PE 45.09（2026-10-30 頁面，價格 504.8）→ 前瞻 EPS 11.2；P/E＝2026-11-05 基準 36.12（v0.5.7；原由 2026-11-04 基準換算）× Yahoo Finance 日線收盤 2026-11-13 534.06 ÷ 2026-11-05 收盤 404.4（共識 EPS 不變；工作單 px1113；closes_20261020_20261113.csv）", "Interested-party（資料商彙整賣方預估）"),
+           ("Marvell", "MRVL", 27.77, "2026-11-13", "stockanalysis.com 統計頁 Forward PE 42.09（2026-10-27 頁面，價格 237.6）→ 前瞻 EPS 5.645；P/E＝2026-11-05 基準 23.66（v0.5.7；原由 2026-11-04 基準換算）× Yahoo Finance 日線收盤 2026-11-13 156.76 ÷ 2026-11-05 收盤 133.55（共識 EPS 不變；工作單 px1113；closes_20261020_20261113.csv）", "Interested-party（資料商彙整賣方預估）"),
+           ("Qualcomm", "QCOM", 18.63, "2026-11-13", "stockanalysis.com 統計頁 Forward PE 20.03（2026-10-29 頁面，價格 185.41）→ 前瞻 EPS 9.257；P/E＝2026-11-05 基準 16.93（v0.5.7；原由 2026-11-04 基準換算）× Yahoo Finance 日線收盤 2026-11-13 172.47 ÷ 2026-11-05 收盤 156.75（共識 EPS 不變；工作單 px1113；closes_20261020_20261113.csv）", "Interested-party（資料商彙整賣方預估）"),
+           ("台積電 ADR", "TSM", 18.72, "2026-11-13", "stockanalysis.com 統計頁 Forward PE 19.07（2026-10-30 頁面，價格 406.13）→ 前瞻 EPS 21.3；P/E＝2026-11-05 基準 16.58（v0.5.7；原由 2026-11-04 基準換算）× Yahoo Finance 日線收盤 2026-11-13 398.73 ÷ 2026-11-05 收盤 353.1（共識 EPS 不變；工作單 px1113；closes_20261020_20261113.csv）", "Interested-party（資料商彙整賣方預估）")],
     peer_note="券商常用的 AI 半導體大型股同業（GPU、客製 ASIC、手機 SoC、代工）；不含 A 股（Andy 11:53）。前瞻 P/E 口徑為資料商的未來 12 個月共識 EPS，各家 GAAP／non-GAAP 口徑不一",
     cons_tp="cons_tp", cons_note="stockanalysis.com：51 位分析師平均目標價（2026-10-25 頁面）；Interested-party",
     cons_fwd="cons_eps27", cons_fwd_note="共識 FY2027 non-GAAP EPS（In 頁 cons_eps27；FY2028 共識未找到，故 EPS 因素以 FY2027 同年度比較：B＝情境加權 FY2027 EPS ÷ 共識 − 1）",
@@ -992,7 +992,7 @@ def _r3_fix(wb, ver, stub_fy, extra=()):
         (r"(情境 ?C[^（）\n\"]{0,8})（(?:保守|下檔|悲觀)）", r"\1（不如預期）"),
         (r"／B（基準）", "／B（平平）"), (r"／C（(?:保守|下檔|悲觀)）", "／C（不如預期）"),
         (r"在?(?:本|建置)環境(?:中)?(?:無法開啟|找不到|取不到)(?:（未找到）)?", "未取得"),
-        (r"無法開啟：未找到", "未取得"), (r"px（2026-10-23 收盤）", "px（2026-11-05 收盤）"), (r"無法開啟", "未取得"), (r"取不到", "未取得"), (r"，已抓取", ""), (r"已逐頁抓取", "已逐頁讀取"), (r"已抓取", "已讀取"), (r"抓取", "取得"),
+        (r"無法開啟：未找到", "未取得"), (r"px（2026-10-23 收盤）", "px（2026-11-13 收盤）"), (r"無法開啟", "未取得"), (r"取不到", "未取得"), (r"，已抓取", ""), (r"已逐頁抓取", "已逐頁讀取"), (r"已抓取", "已讀取"), (r"抓取", "取得"),
         (r"第一年 FCFF × stub_frac", f"含 stub 期會計年度（{stub_fy}）FCFF × stub_frac"),
         (r"重點觀察 1 的第一句已改為公式；重點觀察 2、3 與其他說明中的目標價與上檔空間數字為調整前撰寫，以 Val 頁為準。",
          f"重點觀察 1 的目標價等數字為公式；調整前撰寫的舊說明已於 {ver} 刪除（第三輪修正）。"),
@@ -1042,6 +1042,9 @@ if COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL):
     print(v056_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL))
     import v057_post   # v0.5.7：C0（實績）對帳補列
     print(v057_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL))
+    import px1113_post   # v0.5.8：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
+    if not (os.environ.get("COORD_RUN") == "1" or os.environ.get("AVGO_SENS") == "1"):
+        print(px1113_post.apply(wb, wb._v056["RM"]["ver"]))
 wb.save(sys.argv[1])
 if os.environ.get("AVGO_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

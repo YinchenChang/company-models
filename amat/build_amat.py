@@ -1300,5 +1300,9 @@ if _CR:
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
         import v045_post  # noqa: E402
         print(v045_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR, PB, EQ_F))
+# ---------------- v0.4.6（2026-11-16）：工作單 px1113——現價與同業報價改 2026-11-13 收盤（amat/px1113_post.py；公式與模型假設不變）----------------
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import px1113_post  # noqa: E402
+print(px1113_post.apply(wb))
 wb.save(sys.argv[1])
 print("PB", {s: (PB[s]["ss"], PB[s]["rev"], PB[s]["eps"], PB[s]["idx"]) for s in SC}, "SUMR", SUMR[("A", "rev")], SUMR[("C", "eps")], "VAL", VAL, "FR", FR, "SENS_LAST", SENS_LAST, "RECON_LAST", RECON_LAST)

@@ -1,4 +1,23 @@
-# lite/ — Lumentum（LITE，美股）收支與估值模型 v0.5.6
+# lite/ — Lumentum（LITE，美股）收支與估值模型 v0.5.7
+
+## v0.5.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
+
+- 現價（LITE）、MRVL 股價（Val 0.6 換股價值用）與 Comparable 同業報價改 2026-11-13 收盤（工作單 px1113；Yahoo Finance 日線收盤，`markets/invest_map/data/closes_20261020_20261113.csv`）。只換價格；共識 EPS、rf、β、預測用匯率、營運假設、情境權重與三層基準讀數不變。同業前瞻 P/E＝現行倍數 × 11-13 收盤 ÷ 11-05 收盤。**未換價同業：無**（本公司、MRVL 與 COHR、FN、AAOI、CIEN、GLW 皆取自收盤檔）。
+- **In 頁 `mrvl_tp`（MRVL 模型加權目標價 64.73，取自 mrvl/ v0.3.5）不變**：它是另一個模型的目標價，不是報價；MRVL 模型換價後由主串 cascade 統一更新。換股價值（4.5 × MRVL 現價）600.98 → 705.42，只作對照，不進加權目標價。
+- 版本沿革：v0.5.5／v0.5.6 的 README「本版要點」列保留於 v0.5.7 列之後；`px1105_post.py` 與 `hist_frozen.json` 不變。
+
+| 項目 | v0.5.6 | v0.5.7 |
+|---|---|---|
+| 現價（LITE，US$） | 509.70（11-05） | 596.62（11-13） |
+| 同業前瞻 P/E 中位數 | 20.38 | 23.26 |
+| DCF 目標價 | 251.46 | 251.45（只經市值 D/E 影響 WACC） |
+| Comparable（相對倍數調整後） | 503.97 | 575.17 |
+| 加權目標價 | 377.71 | 413.31 |
+| 上檔空間／投資建議 | -25.9%／放空 | -30.7%／放空 |
+
+- 另一側讀數（C4）：上檔 -43.8%，評等放空；Sens、Coord 快照已重跑。
+- 驗證：LibreOffice 重算錯誤格 0；`check_company_html.py` 全過；`check_layout_v13.py` 通過；`check_sens_coverage.py` 42／50 鍵無案例（v0.5.6 即同）；`baseline_coordination/check.py` 0 項不符。
+- 成品：`dist/20261116_Lumentum個股模型_v0.5.7.xlsx`、`.html`；v0.5.6 移到 `dist/_待刪除/`。
 
 ## v0.5.6（2026-11-15）：MRVL 模型目標價對照值更新（main 合併後整理）
 

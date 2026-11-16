@@ -1,0 +1,60 @@
+{
+ "group": "retail",
+ "peers": [
+  {
+   "ticker": "WMT",
+   "name": "Walmart",
+   "ntmEvEbitda1007": 17.72,
+   "ntmEvEbitda": 20.99,
+   "ev1007": 921.68,
+   "ev": {
+    "value": 1091.51,
+    "asOf": "2026-11-13"
+   },
+   "refDate": "2026-10-07",
+   "closeOld": 108.16,
+   "closeNew": 128.09,
+   "priceRatio": 1.184264
+  },
+  {
+   "ticker": "COST",
+   "name": "Costco",
+   "ntmEvEbitda1007": 25.33,
+   "ntmEvEbitda": 29.74,
+   "ev1007": 406.42,
+   "ev": {
+    "value": 477.14,
+    "asOf": "2026-11-13"
+   },
+   "refDate": "2026-10-07",
+   "closeOld": 942.25,
+   "closeNew": 1106.21,
+   "priceRatio": 1.174009
+  },
+  {
+   "ticker": "TGT",
+   "name": "Target",
+   "ntmEvEbitda1007": 8.77,
+   "ntmEvEbitda": 9.38,
+   "ev1007": 82.35,
+   "ev": {
+    "value": 88.1,
+    "asOf": "2026-11-13"
+   },
+   "refDate": "2026-10-07",
+   "closeOld": 150.92,
+   "closeNew": 161.45,
+   "priceRatio": 1.069772
+  }
+ ],
+ "median1007": {
+  "value": 17.72
+ },
+ "median": {
+  "value": 20.99,
+  "n": 3,
+  "tag": "[Derived]（近似）"
+ },
+ "asOf": "2026-11-13（倍數＝2026-10-07 倍數 × Yahoo Finance 收盤比，近似）",
+ "priceSource": "markets/invest_map/data/closes_20261020_20261113.csv"
+}

@@ -587,10 +587,13 @@ def readme13(wb, RVA, PLA, SEN, CO):
     put("coord", T("三層協調：本模型讀市場層 markets/network 的光學市場、Siliconomics 的 CPO 份額與情境顆數係數、中際旭創份額（加總檢查）（Coord 頁 F 節）。C0 改以公司實績對層級隱含值（Coord 頁 G 節）：2026 年前三季營收累計 "), f'TEXT(Coord!B{CO["rm"]},"0.00")',
         T(" 十億美元對層級隱含依月數折算 "), f'TEXT(Coord!C{CO["rm"]},"0.00")', T("，差 "), f'TEXT(Coord!D{CO["rm"]},"+0.0%;-0.0%")', T("；最近一季年化差 "), f'TEXT(Coord!D{CO["rs"]},"+0.0%;-0.0%")', T("；層級份額由本模型校準，判定「"), f'Coord!E{CO["rv"]}',
         T("」，對帳中項目 "), f'TEXT(Coord!B{CO["cnt"]},"0")', T(" 項。產業部署 GW 兩層差距另列參考、不計入；對帳中年份 CY2027–CY2029 依 C4 並列兩讀數目標價。"))
+    put("ver", T("v0.3.6（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113；Yahoo Finance 日線收盤，closes_20261020_20261113.csv）。現價 292.97 → "), 'TEXT(px,"0.00")',
+        T("；同業前瞻 P/E 中位數 13.27 → "), f'TEXT({vb("同業前瞻 P/E 中位數")},"0.00")', T("；加權目標價 366.12 → "), f'TEXT({tp},"0.00")',
+        T("；上檔空間 +25.0%（中立）→ "), f'TEXT({up},"+0.0%;-0.0%")', T("（"), rec, T("）。共識 EPS、rf、β、預測用匯率、營運假設、情境權重與三層基準讀數不變；DCF 只經市值 D/E 對 WACC 微幅變動。未換價同業：無（四家同業與本公司皆取自收盤檔）。"))
     RD.cell(r, 1, f"v{VER}（{BUILT}）：個股 HTML 版面規格 v1.3、三層協調（讀取層級、C0 實績）與兩讀數目標價（三層基準協調規則 v1.4.2 C4）——章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；新增 Hist 頁（損益表歷史）、PL 頁末標準損益表"
                   "（FY2024A–FY2026A 實績＋FY2027E–FY2032E 情境 B，Non-GAAP）、RevDCF 頁（反向 DCF）、Val 頁 0.7（四個目標價）、Sens 頁末加權目標價相對基準（整本重算快照 fabrinet/sens.json）、"
                   "Coord 頁 A–E 節兩讀數目標價與 F–H 節（讀取層級、C0（實績）、損益表年度標示）；既有數值格不變（新增列、新增頁與版本字串以外逐格比對 0 差異），目標價與評等不變")
-    out["ver"] = r; r += 1
+    out["ver_prev"] = r; r += 1
     for k, rr in out.items():
         RD.cell(rr, 1).alignment = Alignment(wrap_text=True, vertical="top")
     return out

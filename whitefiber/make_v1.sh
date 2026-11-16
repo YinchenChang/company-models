@@ -6,7 +6,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d /tmp/wyfi_mk.XXXX)}"; mkdir -p "$WD"
-OUTNAME="20261115_WhiteFiber個股模型_v0.4.2.xlsx"
+OUTNAME="20261116_WhiteFiber個股模型_v0.4.3.xlsx"
 if [ "${SENS:-0}" = "1" ]; then python3 whitefiber/scripts/sens_v50.py --jobs "${JOBS:-2}"; fi
 if [ "${REV:-0}" = "1" ]; then python3 whitefiber/scripts/reverse_v50.py --jobs "${JOBS:-2}"; fi
 if [ "${DEC:-0}" = "1" ]; then python3 whitefiber/scripts/decomp_v50.py; fi

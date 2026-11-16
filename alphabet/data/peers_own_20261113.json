@@ -1,0 +1,13 @@
+{
+ "old": 14.68,
+ "new": 12.31,
+ "refDate": "2026-10-07",
+ "closeOld": 350.5,
+ "closeNew": 295.77,
+ "priceRatio": 0.843852,
+ "evOld": 4169.1,
+ "mcapOld": 4309.0,
+ "evNew": 3496.2,
+ "method": "EV 新＝EV 舊 4,169.1＋市值舊 4,309.2 ×（295.77 ÷ 350.50 − 1）；EBITDA 不變（meta/data/peers_ads_20261030.json GOOGL 列的 EV 與股數）",
+ "tag": "[Derived]"
+}

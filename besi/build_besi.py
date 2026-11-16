@@ -1022,6 +1022,11 @@ if _CR:
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
         import v024_post  # noqa: E402
         print(v024_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR, PB, SUMR, EQ_F))
+# v0.2.5（2026-11-16）：工作單 px1113——現價與同業報價改 2026-11-13 收盤（besi/px1113_post.py；只改價格輸入與說明文字）
+import px1113_post as P1113  # noqa: E402
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_N1113 = open(os.path.join(_HERE, "px1113_note.txt"), encoding="utf-8").read().strip() if os.path.exists(os.path.join(_HERE, "px1113_note.txt")) else "v0.2.5（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。"
+print(P1113.apply(wb, _HERE, dict(ver="v0.2.5", old_ver="v0.2.4", tk="BESI.AS", note=_N1113 + " ")))
 wb.save(sys.argv[1])
 print("PB", {s: PB[s] for s in SC}); print("SUMR", SUMR); print("VAL", VAL, "PXROW", PXROW, "fwd rows to", fr, "SENS_LAST", SENS_LAST, "Recon last", rr_)
 print("UR", UR)

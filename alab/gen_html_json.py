@@ -327,7 +327,7 @@ def _v13():
     RD, PLW, RV, CW = wb["README"], wb["PL"], wb["RevDCF"], wb["Coord"]
     r13 = lab("README", "v1.3 展示層")
     RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "coord", "ver"], range(r13 + 1, r13 + 11)))
-    assert str(RD[f"A{RM['ver']}"].value).startswith("v0.3.8"), RD[f"A{RM['ver']}"].value
+    assert str(RD[f"A{RM['ver']}"].value).startswith("v0.3.9"), RD[f"A{RM['ver']}"].value
     cfg["layout"] = "v1.3"
     old_note = list(cfg["hero"]["note"])
     cfg["hero"]["note"] = [f"@README!A{RM['hero']}"]
