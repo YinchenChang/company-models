@@ -107,9 +107,9 @@ def fs(i): i = _fid(i); it = F[i]; return f"{it['source']}（{it['docDate']}；�
 
 V22 = "沿用 v0.2.2（legacy_v0.2/company.json）"
 sec("A. 現價、股數與資產負債（評價日 2026-09-30；2026Q3 財報新聞稿＋10-Q〔v0.3.5〕）")
-inp("px", "現價（2026-11-05 收盤）", "US$", None, 282.57, None, "Verified",
-    "Yahoo Finance GOOGL 日線 https://query1.finance.yahoo.com/v8/finance/chart/GOOGL?range=5d&interval=1d（11-05 收盤 282.57、前日 288.93）；MarketAlleys〈Closing Tape — 2026-11-05〉https://www.marketalleys.com/post/marketalleys-closing-tape-2026-11-05（282.57，−2.20%）（2026-11-06 讀取）",
-    "兩來源一致（docs/reports/20261105_收盤價_個股換價來源.md）。只影響上檔空間與評等（v0.3.1 起與 WACC、回購價脫鉤，見 px_val）。v0.3.7 現價 324.89（2026-10-28）、v0.3 316.80（2026-10-26）")
+inp("px", "現價（2026-11-13 收盤）", "US$", None, 295.77, None, "Verified",
+    "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（markets/invest_map/data/closes_20261020_20261113.csv）GOOGL 295.77",
+    "v0.3.8～v0.3.9 為 11-05 收盤 282.57（Yahoo Finance、MarketAlleys 兩來源一致，docs/reports/20261105_收盤價_個股換價來源.md）。只影響上檔空間與評等（v0.3.1 起與 WACC、回購價脫鉤，見 px_val）。v0.3.7 現價 324.89（2026-10-28）、v0.3 316.80（2026-10-26）")
 inp("px_val", "評價日股價（2026-09-30 收盤；WACC 權益權重與回購價用）", "US$", None, 344.08, None, "Verified",
     "FinancialContent GOOGL 歷史股價 https://www.financialcontent.com/quote/NQ%3AGOOGL/historical（2026-10-29 讀取：9/30 收盤 344.08；同頁 10/07 350.50、10/23 320.21 與 StockAnalysis 相同）",
     "v0.3.1 新增：評價日市值權重（與評價日一致）；v0.3 以現價代用")
@@ -174,7 +174,7 @@ inp("cons_tp", "市場共識目標價（平均）", "US$", None, 429.12, None, "
     "財報後（10-28 盤後）的修正尚未反映；賣方有承銷關係，只作對照")
 
 inp("dps_tgt", "評價日到目標時點的每股股利（推到目標價時扣除）", "US$", None, "=dps/4+dps*(1+dps_g)*(1-w_ntm27)", None, "Derived", "Q4 26 一季＋2027 年至 10-29（修正一 F6）")
-inp("t_px0", "現價日（2026-11-05）的年份小數", "年", None, 2026.85, None, "Derived", "只供對照（v0.3.1 起回購均價改用評價日股價 px_val × (1＋ke)^(期中 − t_val)）")
+inp("t_px0", "現價日（2026-11-13）的年份小數", "年", None, 2026.87, None, "Derived", "只供對照（v0.3.1 起回購均價改用評價日股價 px_val × (1＋ke)^(期中 − t_val)）")
 inp("mb_ttm", "分部利益率起點改用近四季（1＝是；0＝9M26）", "x", None, 0, 1, "Assumed", "判斷：預設 9M26（最新已申報的年初至今，利潤率擴張中、與評價日機隊同時點）；1＝v0.2.2 的近四季口徑", "", judg=True)
 inp("internal_ai_reading", "自用 AI 讀法（2＝主值：自用 AI 價值中性，計影子效益；1＝敏感度：只計成本）", "x", 1, 2, None, "Assumed",
     "修正一 F1；Andy 2026-10-27 15:03 決定讀法 2 為主值：自用增量 MW × Tokenomics IF_HoldEcon（k＝1）＝自用 AI 影子效益（非財報營收），進評價口徑 NOPAT、FCF、EPS；對照表 r1 C16",
@@ -1208,7 +1208,7 @@ vput("tpdcf", "DCF 目標價（情境加權）", [f"={W3(VR_['dcf12'])}"], "#,##
 vput("tpcomp", "Comparable 目標價（市場主流同業法）", [f"={W3(VR_['sotp'])}"], "#,##0.00", note="＝分部加總（SOTP）情境加權；各分部用各自同業倍數，Cloud AI 用自身 DCF")
 vput("tp", "目標價（DCF 與 Comparable 加權）", ["=w_dcf*B{0}+(1-w_dcf)*B{1}".format(r - 2, r - 1)], "#,##0.00", bold=True, fill=KEY,
      note='="DCF 權重 "&TEXT(w_dcf,"0%")&"、分部加總 "&TEXT(1-w_dcf,"0%")&"；自用 AI 讀法 "&internal_ai_reading')
-vput("px", "現價（2026-11-05 收盤）", ["=px"], "#,##0.00", note="Yahoo Finance、MarketAlleys（In 頁 px）；v0.3.7 為 10-28 收盤 324.89")
+vput("px", "現價（2026-11-13 收盤）", ["=px"], "#,##0.00", note="工作單 px1113；Yahoo Finance 日線（In 頁 px）；v0.3.9 為 11-05 收盤 282.57、v0.3.7 為 10-28 收盤 324.89")
 vput("cons", "市場共識目標價", ["=cons_tp"], "#,##0.00", note="StockAnalysis 61 位分析師平均（2026-10-26 更新，財報前）；只作對照")
 vput("up", "上檔空間：加權目標價", [f"=B{VR_['tp']}/px-1"], "0.0%", bold=True, fill=KEY)
 vput("upc", "上檔空間：Comparable 目標價", [f"=B{VR_['tpcomp']}/px-1"], "0.0%")
@@ -1444,7 +1444,7 @@ for i, (k, lab, prv) in enumerate(CHAIN):
         c = RC.cell(rr, 2, f"=IF(ABS(Sens!E{SE_STALE})<0.000001,{res['tp']}-{pv},\"快照過期\")"); c.number_format = "#,##0.00"
     RC.cell(rr, 3, (f"重算快照：{k} 目標價 {res['tp']:.4f}" if res else "") + "（" + "；".join(f"{a}={b}" for a, b in (res or {}).get("set", [])[:12]) + "）")
 rr = RC_ATT + 1 + len(CHAIN)
-RC.cell(rr, 1, "(e) 現價與共識：現價 316.80 → 324.89（v0.3.1）→ 282.57（v0.3.8，2026-11-05 收盤）、共識 429.12 不變（只影響上檔空間與評等，不影響目標價）")
+RC.cell(rr, 1, "(e) 現價與共識：現價 316.80 → 324.89（v0.3.1）→ 282.57（v0.3.8，2026-11-05 收盤）→ 295.77（v0.3.10，2026-11-13 收盤）、共識 429.12 不變（只影響上檔空間與評等，不影響目標價）")
 RC.cell(rr, 2, 0).number_format = "#,##0.00"
 RC.cell(rr, 3, f'="上檔空間 v0.3 −18.3% → v0.3.1 −20.7%（現價 324.89）→ 本版 v0.3.8 "&TEXT(Val!B{VR_["up"]},"+0.0%;-0.0%")&"；評等 中立 → "&Val!B{VR_["rec"]}'); rr += 1
 RC.cell(rr, 1, "(f) 其他：無風險利率 5.00% → 4.99%、WACC 權益權重改用評價日股價 344.08（v0.3 用現價 316.80）")
@@ -1516,12 +1516,12 @@ for col, w in zip("ABCDEF", [6, 80, 12, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = "Alphabet（GOOGL）個股模型 v0.3.9（2026-11-14；v0.3.9 版面 v1.3＋RevDCF 頁＋Coord 頁〔三層協調〕，數值不變；v0.3.8 只換現價為 2026-11-05 收盤 282.57，目標價不變；v0.3.7 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；v0.3.6：2026Q3 季度滾動＋10-Q 補入＋Tokenomics " + TKV + "）— 命題模組＋官方營收分部 → 損益表"
+RD["A1"] = "Alphabet（GOOGL）個股模型 v0.3.10（2026-11-16；v0.3.10 只換現價為 2026-11-13 收盤 295.77〔工作單 px1113〕，其餘輸入不變；v0.3.9 版面 v1.3＋RevDCF 頁＋Coord 頁〔三層協調〕，數值不變；v0.3.8 只換現價為 2026-11-05 收盤 282.57，目標價不變；v0.3.7 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；v0.3.6：2026Q3 季度滾動＋10-Q 補入＋Tokenomics " + TKV + "）— 命題模組＋官方營收分部 → 損益表"
 RD["A3"] = "命題：AI 改變搜尋之後，Google Search 的變現能否守住，同時 Google Cloud（含 TPU）能否把翻倍的資本支出變成營收；資本支出與 2026 年股權發行後的每股價值是否高於現價。"
 RD["A4"] = "核心問題：Search & other 在 C 情境（AI 助理分流、每次查詢變現下降）下 FY2028 營收與利益率會掉多少，Cloud 的 AI 營收能否抵銷；加計 AI 折舊與股權發行後的每股價值。"
 VB = lambda k, c="B": f"Val!{c}{VR_[k]}"
 PB_, PC_ = PR_["B"], PR_["C"]
-RD["A5"] = f'="投資建議："&{VB("rec")}&"（加權目標價 US$"&TEXT({VB("tp")},"0.00")&"，上檔空間 "&TEXT({VB("up")},"+0.0%;-0.0%")&"；現價 "&TEXT(px,"0.00")&"，2026-11-05 收盤）"'
+RD["A5"] = f'="投資建議："&{VB("rec")}&"（加權目標價 US$"&TEXT({VB("tp")},"0.00")&"，上檔空間 "&TEXT({VB("up")},"+0.0%;-0.0%")&"；現價 "&TEXT(px,"0.00")&"，2026-11-13 收盤）"'
 RD["A6"] = (f'="重點觀察 1：目標價 "&TEXT({VB("tp")},"0")&"＝DCF "&TEXT({VB("tpdcf")},"0")&"、分部加總 "&TEXT({VB("tpcomp")},"0")&" 各半；情境 A／B／C 為 "'
             f'&TEXT({VB("scen")},"0")&"／"&TEXT({VB("scen", "C")},"0")&"／"&TEXT({VB("scen", "D")},"0")&"，DCF 終值占 EV "&TEXT({VB("tvsh2", "C")},"0%")&"（B）。市場共識目標價 "&TEXT(cons_tp,"0")&"。"')
 RD["A7"] = (f'="重點觀察 2：C 情境 FY2028 Search & other "&TEXT(PL!I{PC_["search"]},"0.0")&"（比 B 少 "&TEXT(1-PL!I{PC_["search"]}/PL!I{PB_["search"]},"0.0%")'

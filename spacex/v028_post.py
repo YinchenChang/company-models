@@ -14,7 +14,7 @@ import re
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
-VER, BUILT = "0.2.9", "2026-11-15"   # v0.2.9：只換 Coord 讀的 Wattonomics 快照（v0.3.2 → v0.3.3）
+VER, BUILT = "0.2.10", "2026-11-16"   # v0.2.9：只換 Coord 讀的 Wattonomics 快照（v0.3.2 → v0.3.3）
 BOLD = Font(bold=True)
 BLUE = Font(color="0000FF")
 HDR = PatternFill("solid", fgColor="DDEBF7")
@@ -612,11 +612,18 @@ def readme13(wb, C, RVA, PLA, CRD):
         T("）；對帳單已由 Wattonomics v0.3.3 吸收，層級改讀公司揭露，判定："), f'Coord!G{CRD["rg"][2]}', T("，對帳中 "), f'TEXT(Coord!D{CRD["rncount"]},"0")', T(" 項；資本支出與 2026 年底 GW 也同源，無可比實績。"))
     put("drv", T("營收推導（情境 B）：Space＝客戶發射 × 每次收入＋發射與開發；Connectivity＝平均訂戶 × ARPU ×（含 Kits 的調整）＋企業與政府；SI＝對外雲端服務（在役 GW × 對外比例 × 每 GW 年營收）＋Grok／Cursor／X 訂閱、資料授權與 API＋廣告，加總為合併營收。FY2028 Space "),
         f'TEXT(PL!I{PRB["space"]},"0.0")', T("、Connectivity "), f'TEXT(PL!I{PRB["conn"]},"0")', T("、SI "), f'TEXT(PL!I{PRB["si"]},"0")', T("，合計 "), f'TEXT(PL!I{PRB["rev"]},"0")', T(" 十億美元。"))
-    RD.cell(r, 1, f"v{VER}（{BUILT}）：Coord 頁改讀 Wattonomics v0.3.3（PR #581，xai 2025 年底 GW 吸收公司揭露 0.8 GW），名目算力 C0 改「參考（同源校準）／無可比實績（層級值吸收公司揭露）」，對帳中 1→0；估值不讀層級 GW，目標價與評等不變。"
+    RD.cell(r, 1, F(T("v0.2.10（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。現價 123.62（11-05）→ "), 'TEXT(px,"0.00")',
+                    T("；Connectivity 同業 EV／NTM EBITDA 中位數 6.32x → "), 'TEXT(MEDIAN(pm_conn_irdm,pm_conn_tmus,pm_conn_t,pm_conn_cmcsa,pm_conn_sats),"0.00")',
+                    T("x；SI 同業（CRWV、NBIS、ORCL）中位數 7.73x → "), 'TEXT(MEDIAN(pm_si_crwv,pm_si_nbis,pm_si_orcl),"0.00")',
+                    T("x（同業倍數＝2026-11-06 MarketScreener 原值 × 收盤比，無市值，近似 [Derived]）；加權目標價 32.73 → "), f'TEXT({vb("tp")},"0.00")',
+                    T("；上檔空間 −73.5% → "), f'TEXT({vb("up")},"+0.0%;-0.0%")', T("；投資建議 強力放空 → "), f'{vb("rec")}',
+                    T("。評價股數的庫藏股法與其他隨現價的公式自動重算；評價日股價（WACC 權益權重用 px_val）、共識與其他假設不變。")))
+    out["ver"] = r; r += 1
+    RD.cell(r, 1, "v0.2.9（2026-11-15）：Coord 頁改讀 Wattonomics v0.3.3（PR #581，xai 2025 年底 GW 吸收公司揭露 0.8 GW），名目算力 C0 改「參考（同源校準）／無可比實績（層級值吸收公司揭露）」，對帳中 1→0；估值不讀層級 GW，目標價與評等不變。"
                   "v0.2.8（2026-11-15）：只改展示層與新增頁——個股 HTML 版面規格 v1.3：章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；新增 RevDCF 頁（反向 DCF）、PL 頁末標準損益表"
                   "（FY2023A–FY2025A 實績＋FY2026E–FY2032E 情境 B，GAAP）、Sens 頁末加權目標價相對基準（龍捲風圖用）、README 頁末 v1.3 白話列；新增 Coord 頁「三層協調」（F1 讀取層級；F1b 追公式〔main 版 tools/coord/trace_wattonomics.py〕；F2 C0（實績））。"
                   "既有數值格不變（新增列與新增頁以外逐格比對 0 差異），目標價與評等不變")
-    out["ver"] = r; r += 1
+    r += 1
     return out
 
 

@@ -23,7 +23,7 @@ BLUE = Font(color="0000FF"); BOLD = Font(bold=True)
 HDR = PatternFill("solid", fgColor="DDEBF7"); KEY = PatternFill("solid", fgColor="FFF2CC"); SUB = PatternFill("solid", fgColor="E2EFDA")
 wb = openpyxl.Workbook()
 
-VER = "v0.2.1"; VDATE = "2026-11-15"   # 成品日（README 首列「成品日」）
+VER = "v0.2.2"; VDATE = "2026-11-16"   # 成品日（README 首列「成品日」）
 # v0.2.0（原則第 10 節第 1 條）：build_id＝版本＋建置輸入雜湊（建置腳本與 data/ 下非敏感度、非 k 反解 json），README!A1、Sens、HTML 三處相同
 def _build_id():
     h = hashlib.sha256()
@@ -107,12 +107,12 @@ CR_ = CONS["priceReference"]; PT_ = CONS["priceTarget"]; AE = CONS["annualEstima
 sec("A. 日期、現價、股數與資產負債（評價日 2026-09-30）")
 inp("data_date", "資料截止日（本版最晚一筆輸入：Tokenomics v22.0 快照擷取日；財報原文截至 2026-10-29 10-Q）", "日期", None, datetime.date(2026, 11, 8), None, "Derived",
     "meta/data/tokenomics_snapshot_v22.0.json source.extractedAt；事實總帳最晚 docDate 2026-10-29", "原則第 10 節第 41 條：README 首列與 HTML 表頭分列資料截止日、成品日、股價基準日")
-inp("px_date", "股價基準日（現價日）", "日期", None, datetime.date(2026, 11, 5), None, "Verified", "同 px 列來源（2026-11-05 收盤）", "原則第 10 節第 26 條：目標時點＝本值＋12 個月（tp_date）")
+inp("px_date", "股價基準日（現價日）", "日期", None, datetime.date(2026, 11, 13), None, "Verified", "同 px 列來源（2026-11-13 收盤；v0.2.1 為 2026-11-05）", "原則第 10 節第 26 條：目標時點＝本值＋12 個月（tp_date）")
 inp("val_date", "評價日（最近一季資產負債表日）", "日期", None, datetime.date(2026, 9, 30), None, "Verified", "Meta 2026Q3 10-Q 資產負債表日", "不需驗收清單 X20：評價日早於現價日本身不改")
 inp("tp_date", "目標時點＝EDATE(股價基準日, 12)", "日期", None, "=EDATE(px_date,12)", None, "Derived", "原則第 10 節第 26 條（v0.1.6 寫死 2027-10-30）", "持有期間＝現價日起 12 個月；折現期間＝評價日起（Val 頁並列，第 5 條）")
-inp("px", "現價（2026-11-05 收盤）", "US$", None, 605.08, None, "Verified",
-    "Yahoo Finance META 日線 https://query1.finance.yahoo.com/v8/finance/chart/META?range=5d&interval=1d（11-05 收盤 605.08、前日 630.00）；Motley Fool〈Stock Market Today, Nov. 5〉605.08；MarketAlleys 收盤表 605.08（2026-11-06 讀取）",
-    "三來源一致（docs/reports/20261105_收盤價_個股換價來源.md）；v0.1.5 為 10-28 收盤 612.49（consensus_meta_20261030.json priceReference）。只影響上檔空間與評等")
+inp("px", "現價（2026-11-13 收盤）", "US$", None, 641.69, None, "Verified",
+    "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（markets/invest_map/data/closes_20261020_20261113.csv）META 641.69",
+    "v0.1.6～v0.2.1 為 11-05 收盤 605.08（Yahoo Finance、Motley Fool、MarketAlleys 三來源一致，docs/reports/20261105_收盤價_個股換價來源.md）；v0.1.5 為 10-28 收盤 612.49（consensus_meta_20261030.json priceReference）。只影響上檔空間與評等")
 inp("px_val", "評價日股價（2026-09-30 收盤；WACC 權益權重用）", "US$", None, 725.18, None, "Verified",
     "TipRanks 歷史股價 https://www.tipranks.com/stocks/meta/historical-prices（2026-10-30 讀取：9/29 738.79、9/30 725.18）；StockScan 9/30 −1.84%（738.79 × 0.9816＝725.20，相符）", "")
 inp("sh_out", "流通股數（2026-10-16，10-Q 封面 Class A＋B）", "十億股", None, round(fv("sh.out.20261016") / 1000, 6), None, "Verified", fs("sh.out.20261016"))
@@ -151,7 +151,7 @@ for p, v in (("2H", 0.0), (27, 0.8125), (28, 0.8125), (29, 0.609)):
     inp(f"pref_{p}", f"強制轉換特別股股利 {YH[p]}", "US$B", None, v, None, "Assumed",
         "6.50% × 12.5B＝0.8125／年；首次付息推定 2027-02，2029-08 轉換前最後一期（FY2029 約三季）" if p == "2H" else "")
 inp("fwd_on", "Class A 遠期出售於 FY2027 交割（1＝計入；0＝不計）", "x", 0, 1, None, "Assumed",
-    fs("eq.fwd.shares") + "：40M 股、初始遠期價 622.91875、2027-11-19 前由公司選擇交割", "交割前公司不收款；目標時點（tp_date，2027-11-05）早於 2027-11-19 交割期限，推定已交割（判斷）", judg=True)
+    fs("eq.fwd.shares") + "：40M 股、初始遠期價 622.91875、2027-11-19 前由公司選擇交割", "交割前公司不收款；目標時點（tp_date，2027-11-13；v0.2.1 為 2027-11-05）早於 2027-11-19 交割期限，推定已交割（判斷）", judg=True)
 inp("fwd_sh", "遠期出售股數", "十億股", None, fv("eq.fwd.shares") / 1000, None, "Verified", fs("eq.fwd.shares"))
 inp("fwd_cash", "遠期出售淨額（初始遠期價 622.91875 × 40M 股）", "US$B", None, round(622.91875 * 0.04, 4), None, "Derived", fs("eq.fwd.shares"), "超額配售 6M 股不計")
 
@@ -1104,7 +1104,7 @@ vput("tpcomp", "Comparable 目標價（市場主流同業法）＝分部加總�
      note="原則第 25 條：方法名稱如實——分部加總（SOTP）情境加權，含讀法 2 的自用 AI 增量營運成本加回與 AI 新增資產帳面（依賴占比見下方「讀法 2 依賴」列）")
 vput("tp", "目標價（DCF 與 Comparable 加權）", ["=w_dcf*B{0}+(1-w_dcf)*B{1}".format(r - 2, r - 1)], "#,##0.00", bold=True, fill=KEY,
      note='="DCF 權重 "&TEXT(w_dcf,"0%")&"、分部加總 "&TEXT(1-w_dcf,"0%")&"；自用 AI 讀法 "&internal_ai_reading')
-vput("px", "現價（2026-11-05 收盤）", ["=px"], "#,##0.00", note='="股價基準日 "&TEXT(px_date,"yyyy-mm-dd")&"（Yahoo Finance、Motley Fool、MarketAlleys；In 頁 px）"')
+vput("px", "現價（2026-11-13 收盤）", ["=px"], "#,##0.00", note='="股價基準日 "&TEXT(px_date,"yyyy-mm-dd")&"（工作單 px1113；Yahoo Finance 日線；v0.2.1 為 11-05 收盤 605.08；In 頁 px）"')
 vput("cons", "市場共識目標價", ["=cons_tp"], "#,##0.00", note="MarketBeat 58 位平均（2026-10-22）；只作對照")
 vput("up", "上檔空間：加權目標價", [f"=B{VR_['tp']}/px-1"], "0.0%", bold=True, fill=KEY)
 vput("upc", "上檔空間：Comparable 目標價", [f"=B{VR_['tpcomp']}/px-1"], "0.0%")
@@ -1515,7 +1515,7 @@ SRCS = [
     ("同業檔 meta/data/peers_ads_20261030.json", "2026-10-07 基準", "repo 內", "Derived", "SOTP 倍數（五家 10-07＋GOOGL）"),
     ("TipRanks META 歷史股價", "2026-10-30", "https://www.tipranks.com/stocks/meta/historical-prices", "Verified", "評價日股價 725.18（9/30）"),
     ("StockScan META 歷史股價", "2026-10-30", "https://stockscan.io/stocks/META/price-history", "Verified", "9/30 −1.84%（評價日股價佐證）；v0.1.5 現價 10-28 收盤 612.49"),
-    ("Yahoo Finance META 日線", "2026-11-05", "https://query1.finance.yahoo.com/v8/finance/chart/META?range=5d&interval=1d", "Verified", "11-05 收盤 605.08（v0.1.6 現價）"),
+    ("Yahoo Finance META 日線", "2026-11-16", "https://query1.finance.yahoo.com/v8/finance/chart/META?range=5d&interval=1d", "Verified", "2026-11-13 收盤 641.69（v0.2.2 現價，closes_20261020_20261113.csv）；11-05 收盤 605.08 為 v0.1.6～v0.2.1 現價"),
     ("Motley Fool〈Stock Market Today, Nov. 5〉", "2026-11-05", "https://www.fool.com/coverage/stock-market-today/2026/11/05/stock-market-today-nov-5-nasdaq-suffers-worst-day-in-18-months-as-ai-trade-comes-under-fire/", "Verified", "META 605.08（第二來源）"),
     ("ChartRow META", "2026-10-30", "https://chartrow.com/quote/meta", "Interested-party", "β 1.24；10-29 收盤 624.55（單一來源，未採用）"),
     ("CoinDataFlow META", "2026-10-30", "https://coindataflow.com/en/stock/META", "Interested-party", "β（5Y Monthly）1.185"),
@@ -1542,8 +1542,8 @@ _allup = f'IF(MIN({VB("scen")},{VB("scen", "C")},{VB("scen", "D")})>px,"三種�
 _near = f'IF({VB("bdist")}<5,"；距最近評等邊界 "&TEXT({VB("bdist")},"0.0")&" 個百分點（目標價升至 "&TEXT({VB("bdist", "C")},"0.00")&" 升級、降至 "&TEXT({VB("bdist", "D")},"0.00")&" 降級）","")'
 V.cell(VR_["banner"], 2, f'="讀法 1（只計成本）目標價 "&TEXT({VB("tp_r1")},"0.00")&"（"&TEXT({VB("tp_r1", "C")},"+0.0%;-0.0%")&"，"&{VB("tp_r1", "D")}&"）；支持現價所需 k＝"&{_KT("kreq")}&"；評等翻轉 k＝"&{_KT("kflip")}&"（買進／中立邊界；主值 k＝"&TEXT(k_ai,"0.00")&"）"&{_near}')
 RD["A1"] = (f'="Meta（META）個股模型 {VER}｜build_id {BUILD_ID}｜資料截止日 "&TEXT(data_date,"yyyy-mm-dd")&"｜成品日 {VDATE}｜股價基準日 "&TEXT(px_date,"yyyy-mm-dd")'
-            f'&"｜評價日 "&TEXT(val_date,"yyyy-mm-dd")&"｜目標時點 "&TEXT(tp_date,"yyyy-mm-dd")&"（v0.2.1：v0.2.0 ＋ 版面規格 v1.3 ＋ Coord 三層協調；命題模組＋官方營收分部 → 損益表）"')
-RD["A2"] = "v0.2.1 要點：只改展示層與新增頁——個股 HTML 版面規格 v1.3（章節重排、RevDCF 反向 DCF、標準損益表）與 Coord 三層協調（讀取層級、追公式、C0 實績對帳）；數值與目標價不變。v0.2.0 要點：Tokenomics 快照 v22.0；目標時點公式化（股價基準日＋12 個月）；評價股數計入未歸屬 RSU；在建工程對應 MW 與折舊分 4 季轉入在役（J2）；自用在役容量讀 Wattonomics 上線時程（Andy 11-12 選項 a）；k 梯度、支持現價所需 k、隱含 AI 歸因比例；融資可行性檢查與期間流動性；Wattonomics 對照；build_id 與 STALE 旗標。逐項目標價歸因見 meta/docs/reports/20261111_meta_v0.2.0_驗收採用.md"
+            f'&"｜評價日 "&TEXT(val_date,"yyyy-mm-dd")&"｜目標時點 "&TEXT(tp_date,"yyyy-mm-dd")&"（v0.2.2：只換現價與股價基準日為 2026-11-13；v0.2.1：v0.2.0 ＋ 版面規格 v1.3 ＋ Coord 三層協調；命題模組＋官方營收分部 → 損益表）"')
+RD["A2"] = "v0.2.2 要點：現價與同業報價改 2026-11-13 收盤（工作單 px1113）；現價 605.08（11-05）→ 641.69；股價基準日 11-05 → 11-13，目標時點隨公式 2027-11-05 → 2027-11-13；同業（報價日 2026-10-07）無同日收盤可換算，維持原值；共識、rf、β、模型假設不變。v0.2.1 要點：只改展示層與新增頁——個股 HTML 版面規格 v1.3（章節重排、RevDCF 反向 DCF、標準損益表）與 Coord 三層協調（讀取層級、追公式、C0 實績對帳）；數值與目標價不變。v0.2.0 要點：Tokenomics 快照 v22.0；目標時點公式化（股價基準日＋12 個月）；評價股數計入未歸屬 RSU；在建工程對應 MW 與折舊分 4 季轉入在役（J2）；自用在役容量讀 Wattonomics 上線時程（Andy 11-12 選項 a）；k 梯度、支持現價所需 k、隱含 AI 歸因比例；融資可行性檢查與期間流動性；Wattonomics 對照；build_id 與 STALE 旗標。逐項目標價歸因見 meta/docs/reports/20261111_meta_v0.2.0_驗收採用.md"
 RD["A3"] = f'="命題：Meta 的 AI 資本支出（2026 指引 "&TEXT(Recon!C{RC2["2026 資本支出（含融資租賃本金）"]}*10,"#,##0")&"–"&TEXT(Recon!D{RC2["2026 資本支出（含融資租賃本金）"]}*10,"#,##0")&" 億美元，含融資租賃本金）能否由廣告現金流支撐，且自用算力（GPU＋自研 MTIA）是否帶來足以回本的廣告變現提升。"'
 RD["A4"] = "核心問題：FY2028 AI 增量營業利益（讀法 2：自用 AI 影子效益＝自用增量在役 MW × Tokenomics 每 MW 持有成本 × k）能否覆蓋 AI 資本支出的資金成本；收支關卡＝FY2026–FY2030 自由現金流扣股利合計，旁列期間流動性。"
 RD["A5"] = (f'="投資建議："&{VB("rec")}&"——在自用 AI 採讀法 2（k＝"&TEXT(k_ai,"0.00")&"：自用 AI 報酬剛好等於資金成本，這是假設，不是可觀察現金流）的基準假設下；加權目標價 US$"&TEXT({VB("tp")},"0.00")&"，上檔空間 "&TEXT({VB("up")},"+0.0%;-0.0%")'
