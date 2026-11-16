@@ -1112,6 +1112,9 @@ if _CR:
             sources=[("公司（C0 實績）：TechNews 財報助手 2026-11-06（10 月營收 53.68 億、前 10 月累計 435.09 億）", "https://finance.technews.tw/2026/11/06/kinsus-3189-202610-financial-report/"),
                      ("Hist 頁：stockanalysis.com 年度損益表（FY2022–FY2025，公司財報轉載）", "https://stockanalysis.com/quote/tpe/3189/financials/income-statement/")])
         print(v044_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR, CO44))
+# v0.4.5（2026-11-16）：現價與同業報價改 2026-11-13 收盤（px1113_post.py；工作單 px1113；只換價格，公式與架構不改）
+import px1113_post  # noqa: E402
+px1113_post.apply(wb, dict(ver="v0.4.5", prev="v0.4.4", px="3189.TW", fpe="fpe", d0="2026-11-05"))
 wb.save(sys.argv[1])
 if os.environ.get("KINSUS_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

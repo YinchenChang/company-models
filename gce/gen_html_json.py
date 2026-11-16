@@ -276,7 +276,7 @@ def _ext(row):   # 推導區塊直接延伸到 FY2032：表頭列＝各情境區
 
 
 H = {
-    "ver": "v0.3.5",
+    "ver": "v0.3.6",
     "ext": _ext,
     "units_chart": lambda pB, hB: {
         "type": "theme", "title": "AI 相關與非 AI 營收（情境 B，十億元）與金像電在可參與 AI 高速 PCB 市場的有效份額（右軸）", "x": f"@PL!D{hB}:G{hB}",

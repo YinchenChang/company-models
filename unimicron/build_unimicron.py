@@ -1067,6 +1067,9 @@ if _CR:
                      ("公司（3Q26 財報，鉅亨經優分析 2026-10-27：3Q26 營收 526.5 億、毛利率 28.85%、EPS 6.15）", "https://uanalyze.com.tw/articles/2603257795"),
                      ("Hist 頁：stockanalysis.com 年度損益表（FY2021–FY2025，公司財報轉載）", "https://stockanalysis.com/quote/tpe/3037/financials/income-statement/")])
         print(v044_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR, CO44))
+# v0.4.5（2026-11-16）：現價與同業報價改 2026-11-13 收盤（px1113_post.py；工作單 px1113；只換價格，公式與架構不改）
+import px1113_post  # noqa: E402
+px1113_post.apply(wb, dict(ver="v0.4.5", prev="v0.4.4", px="3037.TW", fpe="fpe", d0="2026-11-05"))
 wb.save(sys.argv[1])
 if os.environ.get("UNIMICRON_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
