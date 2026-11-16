@@ -1,4 +1,4 @@
-# markets/invest_map — AI 投資地圖
+# markets/invest_map — AI 算力地圖（2026-11-16 前稱 AI 投資地圖）
 
 把算力收支（Tokenomics、雲端／neocloud／模型商模型）與 AI半導體（各公司模型、候選母體）的研究，放回 AI 供應鏈，呈現三個視角：
 
@@ -14,7 +14,7 @@
 | `data/tokenomics_snapshot_v*.json` | Tokenomics 官方取數快照（`tools/tokenomics/import_tokenomics.py`；名稱清單 `data/tokenomics_names.txt`） |
 | `data/universe_ai_semis_v*.csv`、`data/segments_ai_semis_v*.csv` | AI半導體 候選母體與次產業排序的抄錄（權威在 AI半導體 Project Drive） |
 | `data/prices.csv`、`data/prices_*_sources.md` | 同日收盤價與來源 |
-| `build_xlsx.py` | 產生資料活頁簿 `dist/<日期>_AI投資地圖_資料_v*.xlsx`（**事實與判斷的權威位置**；黃底＝判斷輸入，重建時讀回） |
+| `build_xlsx.py` | 產生資料活頁簿 `dist/<日期>_AI算力地圖_資料_v*.xlsx`（v0.6.48 以前為 `AI投資地圖_資料`，`build_xlsx.py`／`build_html.py` 兩種檔名都認）（**事實與判斷的權威位置**；黃底＝判斷輸入，重建時讀回） |
 | `counter/Code.gs`、`counter/endpoint.txt` | 造訪計數器（Apps Script 原始碼；部署後網址） |
 | `build_html.py`、`template.html` | LibreOffice 重算活頁簿 → 產生 `dist/index.html`（網站只呈現值，不計算）與 `dist/data.json` |
 
@@ -25,6 +25,28 @@ python3 markets/invest_map/extract_models.py [--avgo <AVGO 成品 xlsx>]
 python3 markets/invest_map/build_xlsx.py
 python3 markets/invest_map/build_html.py
 ```
+
+## 舊名對照
+
+**AI 投資地圖＝AI 算力地圖（2026-11-16 起）**。Andy 2026-11-16 22:06（經 AI實體應用 專案轉來）：「我們本來的 AI 投資地圖，我想要改成 AI 算力地圖。那這個 AI 實體的這個，我們就把它做成實體 AI 地圖……不然那個 AI 投資地圖感覺上就會包含著這個實體 AI 嘛。」英文名稱維持 AI Compute Investment Map。
+
+- v0.6.49 起改：網頁標題與頁首、資料活頁簿檔名與 README 頁標題、本目錄程式的說明字串、`profiles/00_格式規格.md`、發布腳本的說明與 commit 訊息。
+- 不改：repo 路徑 `markets/invest_map/`、GitHub Pages 網址（https://yinchenchang.github.io/company-models/ ，既有連結不失效）；歷史報告、`dist/_待刪除/` 舊檔；各公司建檔程式（coreweave、nebius、delta 等）與模型成品裡的「AI 投資地圖」出處文字（改了會觸發整本重建，各公司下次改版時自然更新）；`wattonomics/`、`siliconomics/` 由各自工作線處理。看到舊名一律指本地圖。
+
+## 導覽入口：實體 AI 地圖（預留，尚未加連結）
+
+實體 AI 地圖放在 `physical_ai/`（由 AI實體應用 專案提供頁面），網址預定 https://yinchenchang.github.io/company-models/physical_ai/ ；兩站之間以「算力｜實體 AI」導覽切換。**本地圖 v0.6.49 尚未加連結**（頁面還不存在），待對方頁面發布後再加。
+
+- **導覽在哪裡**：本網站沒有獨立的站際導覽列；頁面骨架都在 `template.html`，`build_html.py` 只把資料塞進 `/*__DATA__*/null`（`build_html.py` 第 172–178 行讀範本並替換），不產生任何導覽 HTML。
+  - 頁首：`template.html` 第 258–267 行 `<header class="mast">`（第 261 行 `.eyebrow`「算力收支 · AI 半導體 研究整合」、第 262 行 `<h1>`）。
+  - 視角分頁：第 269–277 行 `<nav class="tabs" aria-label="視角">`（01–04、附），這是頁內視角切換，不是站際導覽。
+  - 分頁點擊處理：第 597–613 行（`views` 陣列與 `document.addEventListener("click", …)`；凡 `.tab` 元素都會被攔截改呼叫 `show()`）。
+- **預定加法**：在 `<header class="mast">` 的 `.wrap` 內（`<h1>` 上方，取代或併入 `.eyebrow`）加一個站際切換，例如 `<nav class="site-switch" aria-label="地圖"><a aria-current="page">算力</a>｜<a href="physical_ai/">實體 AI</a></nav>`，樣式加在第 39–46 行 `.mast` 一帶。**不可**用 `.tab` class，也不可放進 `<nav class="tabs">`，否則會被分頁點擊處理攔截。相對路徑 `physical_ai/` 在 Pages 上指向站根下的實體 AI 地圖；本機開檔（file://）時不保證可用。
+- **對方要放的檔案與介面**：
+  - `physical_ai/index.html`：單一自足 HTML（樣式與資料內嵌，`<html lang="zh-Hant">`、`<meta charset="utf-8">`、viewport），同樣在頁首放「算力｜實體 AI」切換，「算力」連回 `../`（本地圖）。
+  - 若要附模型成品，放 `physical_ai/models/…`，不要用站根的 `models/`（本地圖 `publish_map_only.sh` 每次 `rm -rf models/` 後重建）。
+  - 發布：比照 `wattonomics/`、`siliconomics/`，在 gh-pages 上追加 commit、只動 `physical_ai/`。**注意**：本目錄 `publish_pages.sh` 以全新歷史 force 覆寫整個 gh-pages，目前只帶 `index.html`、`models/`、`siliconomics/`、`wattonomics/`；實體 AI 頁上線前，`publish_pages.sh` 須先加一段產生或複製 `physical_ai/`（缺檔即停），否則全站重發會把它刪掉。`publish_map_only.sh` 不受影響。
+  - 造訪計數器（`counter/`）只計本地圖；實體 AI 頁要計數須另行約定（`Code.gs` 的 `TABS` 只認本地圖分頁）。
 
 ## 固定規格（2026-10-25，Andy 要求）
 
@@ -37,7 +59,7 @@ python3 markets/invest_map/build_html.py
 - **不用「賣出」評等**（Andy 2026-10-26）：原話「我看到你那个频道里面有卖出，这跟放空会搞混，请取消或删除卖出这个平等」→ 全站只用五級：強力買進、買進、中立、放空、強力放空（另有收支不足、未估值、未上市）。雲端／neocloud／MAG 模型自身評等（含「賣出」與門檻句）不在網站顯示。
 - **模型未更新時照樣評等**（Andy 2026-10-26）：原話「在模型还没更新之前，它既然都已经有了目标价，你就用他给的目标价与现在的价格……去计算出它的上档空间……然后依据我们的平等，去给他放他的一个评级」→ 雲端／neocloud／MAG：上檔空間（網站「中心空間」）＝模型加權目標價 ÷ 最近外部收盤價 − 1，依五級規則評等；價格偏離模型日逾 20% 仍標示「模型尚未反映期間變化」。收支關卡依下條（10-26 修訂）。
 - **「下檔空間」改名「悲觀情境空間」**（Andy 2026-10-26：一般說的下檔空間是目標價相對現價會跌多少，原名易混）：＝C 情境（悲觀情境）DCF 價值 ÷ 最新收盤 − 1（v0.6.20 起；此前半導體為 ÷ 模型現價；雲端取情境區間下緣與目標價較低者）。下檔價 → 悲觀情境價。
-- **造訪計數器，不公開**（Andy 2026-10-26 10:46「加个拜访计数器。这个计数器不用公开出来，我自己看就好」；10:50 選自寫）：GitHub Pages 與 repo Traffic 不統計 Pages 網站造訪。網頁在開啟（view）、切換分頁（tab）、開公司檔案（profile）時送一筆到 Andy 自己的 Google Apps Script（`counter/Code.gs`，綁定 Drive `AI投資地圖/AI投資地圖_造訪紀錄` 試算表），寫入「紀錄」頁，「彙總」頁以公式統計每日開啟次數、不重複訪客、分頁與公司熱門度。網站上不顯示任何計數。不收 IP、不用 cookie；訪客代號為讀者瀏覽器內隨機值。網址存 `counter/endpoint.txt`（空白＝不計數；`build_html.py` 檢查格式）。網址加 `?nocount` 後該瀏覽器不再計數（Andy 自己的造訪可排除），`?count=on` 恢復。本機開檔（file://）不計數。
+- **造訪計數器，不公開**（Andy 2026-10-26 10:46「加个拜访计数器。这个计数器不用公开出来，我自己看就好」；10:50 選自寫）：GitHub Pages 與 repo Traffic 不統計 Pages 網站造訪。網頁在開啟（view）、切換分頁（tab）、開公司檔案（profile）時送一筆到 Andy 自己的 Google Apps Script（`counter/Code.gs`，綁定 Drive `AI投資地圖/AI投資地圖_造訪紀錄` 試算表；Drive 資料夾與檔名尚未隨網站改名），寫入「紀錄」頁，「彙總」頁以公式統計每日開啟次數、不重複訪客、分頁與公司熱門度。網站上不顯示任何計數。不收 IP、不用 cookie；訪客代號為讀者瀏覽器內隨機值。網址存 `counter/endpoint.txt`（空白＝不計數；`build_html.py` 檢查格式）。網址加 `?nocount` 後該瀏覽器不再計數（Andy 自己的造訪可排除），`?count=on` 恢復。本機開檔（file://）不計數。
 - 網站不做計算；判斷（分級門檻、權重、地位分項）只在活頁簿黃底欄修改。
 - **數字只用本專案檢核過的資料**（Andy 2026-10-25 10:25）：網站上的數字只能出自算力收支或 AI半導體 的模型與比對檔；網路只用於新聞（近期重大事件）、管理層身分與即時股價。本專案沒有的數字寫「本專案未建立」。公司檔案規格見 `profiles/00_格式規格.md`。
 - **公司檔案**（Andy 2026-10-25 10:22）：每家含管理層、市場定位與產業位置、在做什麼、主要產品與營收占比、同業與競爭、近期重大事件、需要觀察的事項；以右側面板分頁呈現，不整片攤開。
@@ -66,6 +88,7 @@ python3 markets/invest_map/build_html.py
 
 ## 版本
 
+- v0.6.49（2026-11-16）：**AI 投資地圖改名 AI 算力地圖（只改文字）**（Andy 2026-11-16 22:06，見「舊名對照」）。改：網頁 `<title>` 與頁首 `<h1>`；資料活頁簿檔名 `20261116_AI算力地圖_資料_v0.6.49.xlsx`（`build_xlsx.py`／`build_html.py` 讀前版時兩種檔名都認）與 README 頁 A1、A2；本目錄程式、`profiles/00_格式規格.md`、發布腳本、`counter/Code.gs` 註解、`invest-map-check.yml` 註解的名稱字串；新增「舊名對照」「導覽入口：實體 AI 地圖」兩節。不重抽（`extract_models.py` 對 main a0e82b5 重跑，`models_extract.json` 0 差異）；黃底判斷讀回 v0.6.48。**數值 0 改變**：(1) `data.json` 10,284 個葉值逐一比對，差異只有 meta 的 version、book、built、cm_commit 4 項；(2) 新舊活頁簿各以 LibreOffice 重算後 8 頁逐格比對（非空 4,967 格、數值 1,720 格），值差只有 README!A1、A2 兩格名稱，公式差 0；(3) `index.html` 去掉內嵌資料後只差 `<title>`、`<h1>` 兩行，內嵌資料與 `data.json` 相同。估值、上檔空間、評等、收支關卡、地位分數皆不變。目標價總表（`tools/target_summary/`）不含地圖名稱，不重出。
 - v0.6.48（2026-11-15）：**偏離清單與模型狀態說明更新**（Andy 2026-11-15 23:34 請確認「最新收盤已偏離模型日股價超過 20%：9 家」是否已更新）。確認：9 家以 2026-11-13 收盤對模型現價（多為 11-05）計算，已是最新；9 家為 Cerebras、Arista、AMD、世芯-KY、創意、Coherent、Astera Labs、Lam Research、旺矽，皆為 11-05 後上漲超過 20%。修正：`data/model_status.csv` 19 列說明過時（AMD、Arista 仍寫「收盤 11-03 為財報前」；Coherent 仍寫「FQ1 未滾入」，實已於 v0.3 滾入；CoreWeave、Nebius、WhiteFiber、Arm 仍寫財報後改版待做），全部改為現況；方法說明「各模型內的現價為建模日（09-24 至 10-23）」改為「多為 2026-11-05，個別較新」；股價來源說明「WebSearch 取得」改為 Yahoo Finance 日線收盤。估值、評等、偏離家數 0 改變。
 - v0.6.47（2026-11-15）：**公司檔案出處改指現行模型（逐格核對後只換檔名）**。新增 `audit_profile_cites.py`：找出 `profiles/*.md` 中引用非現行模型 xlsx 的出處標記，逐格比對舊檔與現行檔（同位址值相同、舊值非空、該列 A／B 欄標籤相同才算 SAME）。已從 repo 刪除的三份舊檔（Anthropic v0_1_9、緯創 v0.2.1、Broadcom v0.3.1）由 git 歷史取回後以 `--old-dir` 提供。結果：舊檔出處標記 1,765 個，SAME 1,258 個以 `--apply` 改指現行檔名（69 個公司檔案，文字與數字不動）；**剩 507 個待人工改寫**（DIFF 479：值或標籤已變，需對新版數值改寫文字；NOCUR 24：NAND 市場模型 v0.3 無現行對應；NOCELL 4），清單在 `data/profile_cites_audit.csv`。`data.json` 差異只在 profiles 出處字串與 meta；估值、評等 0 改變。
 - v0.6.46（2026-11-15）：**重抽改指 11-15 Wattonomics v0.3.5 連動新版模型**（`extract_models.py` → `build_xlsx.py` → `build_html.py`；黃底判斷讀回 v0.6.45）。Nebius v0.6.1→v0.6.2（#619）、CoreWeave v5.0.3→v5.0.4（#620）、WhiteFiber v0.4.1→v0.4.2（#621）、OpenAI v0_6_5→v0_6_6（#622）、Anthropic v0_2_2→v0_2_3（#623）；五家新版只改 Coord／Wattonomics 讀數，`models_extract.json` 63 處差異全是檔名，`data.json` 52 處差異全是檔名、版號、日期與來源字串，**估值、上檔空間、評等、收支關卡 0 處改變**；統計同 v0.6.45。目的：v0.6.45 指向的舊 dist 已移 `_待刪除`，`publish_map_only.sh` 缺檔會停止；本版缺檔 0。未做：SanDisk 8:1 分割（董事會核准，2026-11-20 起分割後交易；`prices_20261113_sources.md` 為分割前價格）——待首個分割後收盤與 SanDisk 模型分割調整版後重抽；公司檔案改引新版（約 1,800 處引用舊檔名，另案）；味之素、景碩公司檔案。

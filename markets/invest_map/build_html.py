@@ -1,4 +1,4 @@
-"""AI 投資地圖 — 由資料活頁簿（LibreOffice 重算後的值）產生網站 dist/index.html。
+"""AI 算力地圖（2026-11-16 前稱 AI 投資地圖）— 由資料活頁簿（LibreOffice 重算後的值）產生網站 dist/index.html。
 
 網站只呈現活頁簿的值，不做任何計算（排序、篩選、繪圖除外）。
 用法：python3 markets/invest_map/build_html.py
@@ -23,7 +23,7 @@ ROOT = os.path.dirname(os.path.dirname(HERE))
 
 
 # v0.6.19：頁首日期改在此集中維護（原本寫死在 data 組裝處，換版時漏改）
-BUILT = "2026-11-15"
+BUILT = "2026-11-16"
 PRICE_NOTE = ("上市公司一律用 2026-11-13 收盤（Yahoo Finance 日線；v0.6.45 起全面更新）；Anthropic 用 IPO 價格區間中點（上檔空間＝模型目標價 ÷ 最新收盤 − 1；模型現價多為 2026-11-05 等較早日期，差距超過 20% 者標示「模型尚未反映期間變化」）")
 LAST_CLOSE = "2026-11-13"
 # 模型狀態註記（data/model_status.csv：代號, 狀態）——偏離旗標旁顯示：最近／下次財報與模型更新計畫
@@ -66,7 +66,8 @@ def num(x):
 
 
 def main():
-    books = sorted(glob.glob(os.path.join(HERE, "dist", "*_AI投資地圖_資料_*.xlsx")))
+    books = sorted((f for g in ("*_AI算力地圖_資料_*.xlsx", "*_AI投資地圖_資料_*.xlsx")  # v0.6.49 起新檔名；舊檔名仍認
+                    for f in glob.glob(os.path.join(HERE, "dist", g))), key=os.path.basename)
     src = books[-1]
     calc, tmp = recalc(src)
     wb = openpyxl.load_workbook(calc, data_only=True)

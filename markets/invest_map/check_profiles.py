@@ -1,4 +1,4 @@
-"""AI 投資地圖檢查：(1) 公司檔案網站主文不得殘留出處標記（Andy 2026-10-25 11:36 規格）；
+"""AI 算力地圖檢查：(1) 公司檔案網站主文不得殘留出處標記（Andy 2026-10-25 11:36 規格）；
 (2) markets/invest_map 下的文字檔不得殘留 Git 合併衝突標記（2026-10-25 README 曾殘留）。
 用法：python3 markets/invest_map/check_profiles.py"""
 import os, re, sys

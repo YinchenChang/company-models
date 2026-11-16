@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 只發布 AI 投資地圖（index.html 與 models/）到 gh-pages：在現有 gh-pages 上「追加一個 commit」，不 force、不動 wattonomics/、siliconomics/。
+# 只發布 AI 算力地圖（index.html 與 models/）到 gh-pages：在現有 gh-pages 上「追加一個 commit」，不 force、不動 wattonomics/、siliconomics/。
 # 先檢查 data.json 列出的每一份模型 HTML／xlsx 都存在，缺任何一份就停止（2026-11-04：v0.6.22 發布時 Anthropic 檔已被新版取代，複製中斷仍推送，已回復）。
 # 用法（在 main 的工作目錄）：bash markets/invest_map/publish_map_only.sh
 # 需要 Andy 在對話中明確說「發布」（Project Instructions 第 6 條）。
@@ -44,6 +44,6 @@ print("已複製模型：", len(d["models"]), "家")
 PY
 cd "$WT"
 git add -A
-git -c user.name="Claude" -c user.email="noreply@anthropic.com" commit -q -m "發布 AI 投資地圖 $VER（來源 main $SHA；只更新 index.html 與 models/）"
+git -c user.name="Claude" -c user.email="noreply@anthropic.com" commit -q -m "發布 AI 算力地圖 $VER（來源 main $SHA；只更新 index.html 與 models/）"
 git push -q origin HEAD:gh-pages
-echo "已發布 AI 投資地圖 $VER 到 gh-pages（來源 $SHA）：$(git rev-parse --short HEAD)"
+echo "已發布 AI 算力地圖 $VER 到 gh-pages（來源 $SHA）：$(git rev-parse --short HEAD)"

@@ -1,4 +1,4 @@
-"""AI 投資地圖 — 產生資料活頁簿 dist/AI投資地圖_資料_v<版本>.xlsx（事實與判斷的權威位置）。
+"""AI 算力地圖（2026-11-16 前稱 AI 投資地圖）— 產生資料活頁簿 dist/<日期>_AI算力地圖_資料_v<版本>.xlsx（事實與判斷的權威位置）。
 
 讀：
   data/tokenomics_snapshot_v*.json   Tokenomics 官方取數快照（每 GW 金額）
@@ -23,9 +23,11 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.6.48"
-DATE = "20261115"
-OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
+VERSION = "v0.6.49"
+DATE = "20261116"
+OUT = os.path.join(HERE, "dist", f"{DATE}_AI算力地圖_資料_{VERSION}.xlsx")
+# v0.6.49 起改名「AI算力地圖」；讀回前版時兩種檔名都認（檔名以日期開頭，排序即版次）
+BOOK_GLOBS = ("*_AI算力地圖_資料_*.xlsx", "*_AI投資地圖_資料_*.xlsx")
 
 YELLOW = PatternFill("solid", fgColor="FFF2CC")
 HDR = PatternFill("solid", fgColor="1F3A5F")
@@ -215,7 +217,7 @@ def restore():
     """讀回黃底判斷輸入：優先讀本版活頁簿；本版尚未產生（升版）時讀 dist/ 最新一版，避免升版時判斷被預設值覆蓋。"""
     src = OUT
     if not os.path.exists(src):
-        prev = sorted(glob.glob(os.path.join(HERE, "dist", "*_AI投資地圖_資料_*.xlsx")))
+        prev = sorted((f for g in BOOK_GLOBS for f in glob.glob(os.path.join(HERE, "dist", g))), key=os.path.basename)
         if not prev:
             return {}, {}, {}
         src = prev[-1]
@@ -257,8 +259,8 @@ def main():
     ws = wb.active
     ws.title = "README"
     lines = [
-        f"AI 投資地圖 資料活頁簿 {VERSION}（{DATE}）",
-        "用途：AI 投資地圖網站（markets/invest_map/dist/index.html）的唯一數字來源。網站只呈現本活頁簿重算後的值。",
+        f"AI 算力地圖 資料活頁簿 {VERSION}（{DATE}）",
+        "用途：AI 算力地圖網站（markets/invest_map/dist/index.html）的唯一數字來源。網站只呈現本活頁簿重算後的值。",
         "三個視角：(1) 供應鏈地圖＝「價值鏈」頁＋Tokenomics 每 GW 金額；(2) 產業地位＝「地位」頁；(3) 可投資性＝「估值」頁。",
         "黃底＝判斷輸入（Andy 可直接改；重建時讀回，不被程式覆寫）。藍字＝自各模型或 Tokenomics 抄錄的值，旁欄註明來源儲存格。其餘為公式。",
         f"Tokenomics：{TK['source']['file']}（commit {TK['source']['commit'][:7]}；擷取 {TK['source']['extractedAt']}）",

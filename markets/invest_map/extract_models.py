@@ -1,7 +1,7 @@
-"""AI 投資地圖：從各公司模型成品（<公司>/dist/*.xlsx 的重算值）抽出估值欄位。
+"""AI 算力地圖：從各公司模型成品（<公司>/dist/*.xlsx 的重算值）抽出估值欄位。
 
 輸出 data/models_extract.json：每家公司一筆，每個數字附「檔案、工作表!儲存格」。
-本程式只讀、不計算；換算（空間、分級、地位分數）在 AI投資地圖_資料.xlsx 以公式完成。
+本程式只讀、不計算；換算（空間、分級、地位分數）在 AI算力地圖_資料.xlsx 以公式完成。
 
 用法：python3 markets/invest_map/extract_models.py [--avgo <avgo dist xlsx 路徑>]
 AVGO 模型已合併（PR #107，avgo/dist/）；預設讀 avgo/dist，--avgo 只在要改讀其他成品時使用。
