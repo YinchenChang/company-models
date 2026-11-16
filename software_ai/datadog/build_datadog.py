@@ -302,7 +302,7 @@ for row in ROWS:
             c = IN.cell(r, j, v)
             if not (isinstance(v, str) and v.startswith("=")): c.font = BLUE
             c.number_format = "yyyy-mm-dd" if unit == "日期" else ("0.0%" if unit == "%" else "#,##0.0000")
-    IN.cell(r, 7, tag); IN.cell(r, 8, src); IN.cell(r, 9, note)
+    IN.cell(r, 7, tag); IN.cell(r, 8, __import__('re').sub(r'https?://([^/\s（）]+)\S*', r'\1', src) if '未找到' in src else src); IN.cell(r, 9, note)
     if tag == "Interested-party": IN.cell(r, 10, inc or INC_CO)
     if judg:
         for cc in range(1, 10): IN.cell(r, cc).fill = KEY
