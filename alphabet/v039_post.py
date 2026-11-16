@@ -14,7 +14,7 @@ import re
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
-VER, BUILT = "0.3.9", "2026-11-14"
+VER, BUILT = "0.3.10", "2026-11-16"
 U_10Q = "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q3/GOOG-10-Q-Q3-2026.pdf"   # 出處網址只放 Coord 頁 L 欄（HTML 不顯示外部網址）
 BOLD = Font(bold=True)
 BLUE = Font(color="0000FF")
@@ -617,7 +617,7 @@ def readme13(wb, C, RVA, PLA, CRD):
     put("hero", T("加權目標價 "), f'TEXT({tp},"0")', T(" 美元，比現價 "), 'TEXT(px,"0.00")', f'IF({up}<0," 低 "," 高 ")', f'TEXT(ABS({up}),"0%")', T("，評等"), rec, T("：現金流折現 "), f'TEXT({dcf},"0")',
         T(" 與分部加總 "), f'TEXT({cmpv},"0")', T(" 各占一半。Cloud 成長足以抵銷搜尋被 AI 分流的損失，但 AI 折舊與資本支出把營業利益率從 "), f'TEXT(PL!D{PRB["om"]},"0%")', T(" 壓到 "), f'TEXT(PL!I{PRB["om"]},"0%")', T("（FY2028）。"))
     put("rec", T("投資建議「"), rec, T("」成立的前提：自用 AI 採價值中性（讀法 2）；改為只計成本（讀法 1）時加權目標價 "), f'TEXT(Val!B{VR["tp_r1"]},"0")', T(" 美元（"), f'TEXT(Val!C{VR["tp_r1"]},"+0%;-0%")', T("），評等"),
-        f'Val!D{VR["tp_r1"]}', T("；Cloud 的資本支出轉成營收的速度符合 2026 年指引（195–205）的假設；現價 "), 'TEXT(px,"0.00")', T(" 美元為 2026-11-05 收盤。"))
+        f'Val!D{VR["tp_r1"]}', T("；Cloud 的資本支出轉成營收的速度符合 2026 年指引（195–205）的假設；現價 "), 'TEXT(px,"0.00")', T(" 美元為 2026-11-13 收盤。"))
     put("o1", T("目標價 "), f'TEXT({tp},"0")', T("＝現金流折現 "), f'TEXT({dcf},"0")', T("、分部加總 "), f'TEXT({cmpv},"0")', T(" 各半，比現價 "), f'IF({up}<0,"低 ","高 ")', f'TEXT(ABS({up}),"0%")',
         T("；市場共識 "), f'TEXT({cons},"0")', T("。三個情境（"), f'TEXT({vb("scen")},"0")', T("／"), f'TEXT({vb("scen", "C")},"0")', T("／"), f'TEXT({vb("scen", "D")},"0")', T("）都低於共識。"))
     put("o2", T("現金流折現偏貴：反向推算（情境 B），要支持現價需把折現率降到 "), f'TEXT({rv("w1")},"0.0%")', T("（模型 "), f'TEXT({rv("w0")},"0.0%")', T("），或 FY2028 起營收與營業利益全面放大 "),
@@ -631,10 +631,14 @@ def readme13(wb, C, RVA, PLA, CRD):
     put("drv", T("分部營收推導（情境 B）：Google Services＝Search & other（B 路徑年增，情境 A／C 再乘分流與變現變動）＋YouTube ads＋Google Network＋訂閱與裝置（各自近四季年增向長期值收斂）；"
                  "Google Cloud＝Cloud AI（AI 在役 MW × 對外比例 × 每 MW 年收入）＋TPU 系統銷售＋Cloud 其他（近四季年增收斂）；另加 Other Bets 與避險損益，加總為合併營收。FY2028 Services "),
         f'TEXT(PL!I{PRB["gs"]},"0")', T("、Cloud "), f'TEXT(PL!I{PRB["cloud"]},"0")', T("（其中 Cloud AI "), f'TEXT(PL!I{PRB["ai"]},"0")', T("）、Other Bets "), f'TEXT(PL!I{PRB["ob"]},"0.0")', T("，合計 "), f'TEXT(PL!I{PRB["rev"]},"0")', T(" 十億美元。"))
-    RD.cell(r, 1, f"v{VER}（{BUILT}）：只改展示層與新增頁——個股 HTML 版面規格 v1.3：章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；新增 RevDCF 頁（反向 DCF）、PL 頁末標準損益表"
+    RD.cell(r, 1, F(T("v0.3.10（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。現價 282.57（11-05）→ "), 'TEXT(px,"0.00")',
+                    T("；加權目標價 257.76 → "), f'TEXT({vb("tp")},"0.00")', T("；上檔空間 −8.8% → "), f'TEXT({vb("up")},"+0.0%;-0.0%")',
+                    T("；投資建議 中立 → "), f'{vb("rec")}', T("。本模型現價只影響上檔空間與評等（WACC 權益權重與回購價用 In 頁 px_val〔評價日 2026-09-30 收盤 344.08〕，依設計不隨現價換）。同業倍數（非 AI 雲端、數位廣告等）報價日 2026-10-07 早於收盤價資料起日 2026-10-20，無同日收盤可換算，維持原值（未換價同業：ORCL、IBM、SAP、CRM、NOW、AKAM、EQIX、DOCN、META、PINS、TTD、APP、RDDT、SNAP 等）；共識與其他假設不變。")))
+    out["ver"] = r; r += 1
+    RD.cell(r, 1, "v0.3.9（2026-11-14）：只改展示層與新增頁——個股 HTML 版面規格 v1.3：章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；新增 RevDCF 頁（反向 DCF）、PL 頁末標準損益表"
                   "（FY2023A–FY2025A 實績＋FY2026E–FY2032E 情境 B，GAAP）、Sens 頁末加權目標價相對基準（龍捲風圖用）、README 頁末 v1.3 白話列；新增 Coord 頁「三層協調」（F1 讀取層級；F2 C0（實績）：公司資本支出與 Cloud 營收 vs 層級隱含值）。"
                   "既有數值格不變（新增列與新增頁以外逐格比對 0 差異），目標價與評等不變")
-    out["ver"] = r; r += 1
+    r += 1
     return out
 
 
