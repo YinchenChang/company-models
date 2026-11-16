@@ -1,4 +1,32 @@
-# nvidia/ — NVIDIA（NVDA）個股模型 v0.3.10
+# nvidia/ — NVIDIA（NVDA）個股模型 v0.3.11
+
+## v0.3.11（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
+
+依據：`docs/workorders/20261116_px1113_現價與同業報價換11-13收盤.md`；價格只取 `markets/invest_map/data/closes_20261020_20261113.csv`。base＝v0.3.10。
+
+- **現價與同業報價改 2026-11-13 收盤（工作單 px1113）：** 現價 181.60 → 162.85（In 頁 px）；Comparable 同業前瞻 P/E（新＝v0.3.10 倍數 × 11-13 收盤 ÷ 11-05 收盤，共識 EPS 不變）：AMD 36.12→47.70、Broadcom 16.76→19.95、Marvell 23.66→27.77、台積電 ADR 16.58→18.72、Qualcomm 16.93→18.63；**同業中位數 16.93 → 19.95**。**加權目標價 248.46 → 283.32；上檔空間 +36.8% → +74.0%；評等 買進 → 強力買進。**未換價同業：無（五家同業 11-05、11-13 收盤都在 CSV）。
+- **日期輸入：** 股價基準日（h_asof）與資料截止日改 2026-11-13，目標時點（現價日＋12 個月）隨之後移八天；成品日 2026-11-16。rf、β、ERP、共識 EPS、預測用匯率、情境權重與營運假設不變；以市值計的 WACC 權重隨現價自動重算。
+- **公式修補（只動邊界情況）：** 上檔空間超過 +50%（已是最高級距「強力買進」）時，Recon F 節「評等級距邊界：升一級」原公式回 `NA()`，造成 Recon!B44、B47–B49、D47–D49 與 README 失效條件 (3) 出現 `#N/A`。改為該邊界顯示「不適用（已是最高級）」，以該邊界為輸入的反解列加 `ISNUMBER` 判斷顯示「不適用」，README (3) 改為「已是最高評等級，沒有升一級邊界」。降一級邊界對稱處理。其他公式不變。
+- **快照：** `sens.json` 與 `coord_alt.json` 以新價重跑（`sens_nvidia.py`、`coord_alt.py`）；`sens.json` 的 `steps`、`attr`（v0.3.6 目標價變動拆解，歷史說明）沿用 v0.3.10 原文不重算，以免沿革列顯示新價數字。Sens 頁模型狀態 CURRENT。
+- **文字與沿革：** 「2026-11-05 收盤」標籤與來源欄改 11-13（保留「v0.3.10 為 2026-11-05 收盤 181.6」）；README 頁最後追加 v0.3.11 沿革列（固定文字）；既有沿革列保留原文。下游 avgo、amd 讀本檔名者由各自資料夾（同批）更新。
+- 建置：同 v0.3.10（`nvidia/build_nvidia.py` → LibreOffice 重算 → `dist/` → `gen_html_json.py` → `build_company_html.py` → `version_table.py --update`）；新增 `px1113_post.py`（只追加 README 沿革列）。
+
+<!-- version-table: dist/_待刪除/20261114_NVIDIA個股模型_v0.3.10.xlsx｜dist/20261116_NVIDIA個股模型_v0.3.11.xlsx -->
+| 項目 | v0.3.10 | v0.3.11 |
+|---|---|---|
+| 現價 | 181.60 | 162.85 |
+| DCF 目標價 | 107.96 | 108.30 |
+| Comparable 目標價（未調整） | 220.35 | 259.66 |
+| Comparable 目標價（相對倍數調整後） | 388.95 | 458.33 |
+| 加權目標價（上檔空間） | 248.46（+36.8%） | 283.32（+74.0%） |
+| 投資建議 | 買進 | 強力買進 |
+| EPS 情境 A（FY2028／FY2029／FY2030） | 13.40／15.35／17.60 | 13.40／15.35／17.60 |
+| EPS 情境 B（FY2028／FY2029／FY2030） | 13.24／12.78／12.95 | 13.24／12.78／12.95 |
+| EPS 情境 C（FY2028／FY2029／FY2030） | 13.01／9.73／11.07 | 13.01／9.73／11.07 |
+| FY2028 毛利率（情境 A） | 68.84% | 68.84% |
+| FY2028 毛利率（情境 B） | 69.47% | 69.47% |
+| FY2028 毛利率（情境 C） | 69.71% | 69.71% |
+<!-- /version-table -->
 
 ## v0.3.10（2026-11-14）：Coord 頁新增 F3「C0（實績）」——公司已公布實績 vs 層級隱含值；F2 既有列改標、不判定（目標價、評等、兩讀數不變）
 
@@ -15,7 +43,7 @@
 - **未解事項：** 對帳中項目的對帳單（Drive 02-AI供應鏈/對帳/）由主控開；Siliconomics 側差距的拆分（顆數、每 GW 內容、GW 換算、認列時差）需 Siliconomics 與 Tokenomics 側證據，本模型無法單獨拆。
 - 建置：`python3 nvidia/build_nvidia.py raw.xlsx` → LibreOffice（私有設定檔）重算 → `dist/` → `python3 nvidia/gen_html_json.py` → `python3 tools/company_html/build_company_html.py nvidia` → `python3 tools/model_governance/version_table.py nvidia --update`。
 
-<!-- version-table: dist/_待刪除/20261114_NVIDIA個股模型_v0.3.9.xlsx｜dist/20261114_NVIDIA個股模型_v0.3.10.xlsx -->
+<!-- version-table: dist/_待刪除/20261114_NVIDIA個股模型_v0.3.9.xlsx｜dist/_待刪除/20261114_NVIDIA個股模型_v0.3.10.xlsx -->
 | 項目 | v0.3.9 | v0.3.10 |
 |---|---|---|
 | 現價 | 181.60 | 181.60 |
