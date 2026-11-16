@@ -1,5 +1,21 @@
 # Siliconomics 變更紀錄
 
+## v0.20（2026-11-16；`model/20261116_Siliconomics_v0.20.xlsx`；Tokenomics v22.0；Wattonomics v0.3.6；規則 v1.4.3）
+
+- **依據**：Andy 2026-11-16 22:22「我同意你的建议，然后去把它解决」（三層補強清單 B、C 節）；決策 S50；報告 `docs/reports/20261116_v0.20_build.md`。本版是 Siliconomics 單層 PR，**不因對帳單改基準值**；基準值只因讀到新版 Wattonomics 換算值依既有規則機械性變動。
+- **改讀 Wattonomics v0.3.6**：`tools/baseline_bridge.py` 重算換算值 crd_x2 20.64／24.213／28.092／28.405 → **20.972／24.488／28.184／28.482** GW（結果檔 `docs/reports/20261116_協調橋接_v0.3.6.xlsx`）；Wattonomics 證據比例改讀 v0.3.6 並讀入區間 `WIF_Evidence_Lo_／Hi_`（2026 0.599／0.857／1.000、2027 **0.435／0.472／0.630**、2028 0.518、2029 0.208）。狀態不變：2026 甲、2027 待定（Wattonomics 區間跨 55% 進入門檻；Siliconomics 0.303–0.749 亦跨線）、2028 待定、2029 丙（連續法）。
+  - 基準部署 GW 2026–2029：23.40／39.16／42.23／**42.70 → 42.68**（只有 2029 連續法＝2028 基準 × 換算值 2029 ÷ 2028 改變；`SIF_UnitsCoef_Base` 2029 0.7101 → 0.7097）。
+  - R4 橋接 r12（`docs/reports/r4_bridge/20261116_R4對帳橋接_Siliconomics側_r12.xlsx`）：Wattonomics 主路徑 19.29／25.50／29.31／29.57；比值 0.927／0.734／0.649／0.629（`SIF_WTAnchor_Base` 2027 0.720 → 0.734，個股「Wattonomics 錨定」敏感度案例改值）。新增 n10–n14 純實績列。
+- **規則 v1.4.3 C0 第 8 點（有條件一致）**：Coord 頁新增 c0f 列、Interface `SIF_RecoC0Fail_<年>`。2026 甲年的 NVIDIA 資料中心營收純實績（FY27 Q1＋Q2 164.2 vs 層級同期間 224.18，**−26.8%**；第二讀數 Q2 × 4 對層級全年 **−20.6%**）同號超出 ±15% → 2026 標示「一致」改「**有條件一致**」（Checks K12-2026 同）；不並列兩讀數。對帳單 Drive `02-AI供應鏈/對帳/20261116_對帳單_NVIDIA資料中心營收實績對兩層_合併.md`，期限 2026-11-30。
+- **狀態檔**（`data/baseline_status.json`）：新增頂層 `wattonomics_version`＝"v0.3.6"、逐年 `c0_fail`／`c0_recon_doc`／`c0_deadline`、頂層 `c0_actuals.2025`（Wattonomics 2025 NVIDIA 對帳點 0.826＝160.0 ÷ 193.7，對帳單 `20261116_對帳單_Wattonomics_NVIDIA實績對帳2025.md`，期限 2027-02-28，layer＝wattonomics）。判斷類欄位在 `builder/seed/coord_meta_v0.20.json`。`tools/baseline_coordination/check.py`：0 項不符。
+- **Recon 頁**：B 節（R4）狀態改讀 Coord（C3 唯一權威），刪「兩邊都不錨定」判定；F 節主讀數改純實績（已公布季累計 ÷ 層級同期間；第二讀數＝最近一季年化），含指引的 1.194（2026 錨點）、1.174（2027 指引）移「參考（含指引）」列；E 節彙總改 A、D 節，Checks K9 只計待診斷。
+- **Recon D 節第 1 市場 GPU／ASIC 晶片金額**（規格 `recon_d_gpu_asic_spec.md`；種子 `builder/seed/recon_d_gpu_asic_v0.20.json`）：市場值＝Σ 平台基準顆數 × 每顆金額（2026–2029：534.2／912.3／974.3／982.2 $B）＝已建模個股（NVIDIA、AMD、Broadcom、Marvell、聯發科、世芯；創意無層級份額）＋殘差（26.0／20.2／19.6／20.0）。2026 市場層主讀數 0.786、第二讀數 0.864 → **時差邊界**；逐家：NVIDIA 對帳中、Broadcom 時差邊界（參考）、AMD／Marvell 上限檢驗通過、世芯上限檢驗不通過（0.409）→ 對帳單 `20261116_對帳單_世芯_Trainium營收上限對Siliconomics.md`（本版不改值）。Checks 新增 K11-gpu（恆等式）、K11-gpu-res、K11-gpu-spec（WARN 6 格：pa_trn／pa_oth 各年固定 8K 低於夥伴規格，殘差② 2027–29 為負，下版判斷題）、K11-gpu-ub（WARN 1）。In 頁新增 M6b `core_trn`（Derived）。Interface `SIF_GpuAsicMkt_Base`、`SIF_GpuAsicResid_Base`。
+- **recon 快照結構**（`tools/recon.py`；`data/recon_snapshot_v0.20.json`）：每市場 `kind`（market／structural／layer／actual）、`status`、`status_by_year`；market 類有市場值、已建模加總與「其他（未建模）」殘差列；D 節未建市場（CoWoS、晶圓前段設備、AI 高速 PCB／CCL、光學模組）以 status＝未建列入。`tools/baseline_coordination/check.py` 第 [9] 項改為逐年檢查 Σ 個股＋殘差＝市場值（README 同步）。
+- **TK_In 改 Tokenomics v22.0**（commit 79f6b30；`data/tokenomics_snapshot_v22.0.json`）：本庫讀的 22 個名稱、162 格與 v21.10 逐值相同（同儲存格、同列名）。chip_bridge v21.7 不在本版範圍。
+- **改名**：「AI 投資地圖」改稱「AI 算力地圖」（Andy 11-16；README、規劃書）。
+- 工具：`tools/cascade.sh` 支援 `LO_PROFILE`；`tools/export_baseline_status.py`、`tools/baseline_bridge.py`（讀 Wattonomics 證據區間）、`tools/r4_bridge.py`（純實績列）。v0.19 xlsx 移 `model/archive/`。
+- 下游：CASCADE_SUMMARY
+
 ## v0.19（2026-11-14；`model/20261114_Siliconomics_v0.19.xlsx`；Tokenomics v21.10；Wattonomics v0.3.2）
 
 - **轉正式（Andy 2026-11-14 13:06「请开始，然后 PR 的话请你直接合并我授权给你」；決策 S49）**：v0.19-trial（下節）的三層基準協調結構轉正式版號。依規則 v1.4 C3：2026 甲（一致，係數 1）；2027、2028 證據比例區間跨過門檻＝待定（維持現行 1／0.80，對帳中）；2029 丙且前一年待定＝連續法，係數 0.85 → **0.710**，標對帳中。基準部署 GW 23.40／39.16／42.23／**42.70**（v0.18：51.12）。
