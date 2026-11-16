@@ -630,7 +630,7 @@ def readme13(wb, RVA, PLA, TO):
     RD.cell(r, 1, F(T(f"v{VER}（{BUILT}）：現價與同業報價改 2026-11-13 收盤（工作單 px1113；只換價，共識 EPS、rf、β、ERP、模型假設與情境權重不變）。現價 3,460 → "), 'TEXT(px,"#,##0")',
                     T("；同業前瞻 P/E 中位數 16.93 → "), f'TEXT({pmed},"0.00")', T("；DCF 目標價 1,701.60 → "), f'TEXT({dcf},"#,##0.00")', T("，加權目標價 1,679.39 → "), f'TEXT({tp},"#,##0.00")',
                     T("（上檔 −51.5% → "), f'TEXT({up},"+0.0%;-0.0%")', T("），評等 強力放空 → "), rec,
-                    T("。達發（6526）市值（In 頁 mi）改 2026-11-13 收盤 756 元（原 661 元），mi_v 38.86 → 44.21。未換價：近 12 月 P/E（pe_ttm 66.23，資料商值）。")))
+                    T("。達發（6526）市值（In 頁 mi）改 2026-11-13 收盤 756 元（原 661 元），mi_v 38.86 → 44.20。未換價：近 12 月 P/E（pe_ttm 66.23，資料商值）。")))
     _fz = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "hist_frozen_px1113.json"), encoding="utf-8"))
     r += 1
     RD.cell(r, 1, _fz["v0.3.5（2026-11-15）"])
