@@ -287,7 +287,7 @@ import html13  # noqa: E402
 cfg = json.load(open(os.path.join(HERE, "html.json"), encoding="utf-8"))   # 取補充規則 A 處理後的設定
 _AI = "AI／HPC 探針卡（VPC、MEMS；命題子列）"
 H = {
-    "ver": "v0.2.6",
+    "ver": "v0.2.7",
     "units_chart": lambda pB, hB: {
         "type": "theme", "title": "AI／HPC 探針卡、其他探針卡、設備與其他營收（情境 B，十億元）與 AI／HPC 探針卡占營收（右軸）", "x": f"@PL!D{hB}:G{hB}",
         "fmt": "n1", "fmt_r": "p0", "stack": True, "pad": 1.25, "total": f"@PL!D{pB('營收')}:G{pB('營收')}",

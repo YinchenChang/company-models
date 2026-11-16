@@ -209,7 +209,7 @@ def _v13(cfg):
     r13 = fnd(RD, "v1.3 展示層")
     RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver", "ver36"], range(r13 + 1, r13 + 11)))
     assert str(RD[f"A{RM['ver']}"].value).startswith("v0.3.5"), RD[f"A{RM['ver']}"].value
-    assert str(RD[f"A{RM['ver36']}"].value).startswith("v0.3.6"), RD[f"A{RM['ver36']}"].value   # v0.3.6：滾入第二季
+    assert str(RD[f"A{RM['ver36']}"].value).startswith("v0.3.7"), RD[f"A{RM['ver36']}"].value   # v0.3.6：滾入第二季
     cfg["layout"] = "v1.3"
     fmt_u = lambda u: {"%": "p1", "US$B": "n2", "¥B": "n1", "百萬股": "n1", "¥": "n1", "x": "n2"}.get(str(u).strip(), "n1")
     # ---- 橫幅：白話說明＋對帳中揭露句；評等規則與歸因移到估值章 ----
