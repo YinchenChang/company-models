@@ -1040,5 +1040,10 @@ if _CR:
     # v0.4.5（2026-11-15）：兩讀數的另一側讀數口徑修正（不重算校準係數 k；engine() 的 kfix）＋Coord 頁口徑揭露（hanmi/v045_post.py）
     import v045_post as P45  # noqa: E402
     wb._v045 = P45.apply(wb, _CR)
+# v0.4.6（2026-11-16）：工作單 px1113——現價與同業報價改 2026-11-13 收盤（hanmi/px1113_post.py；只改價格輸入與說明文字）
+import px1113_post as P1113  # noqa: E402
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_N1113 = open(os.path.join(_HERE, "px1113_note.txt"), encoding="utf-8").read().strip() if os.path.exists(os.path.join(_HERE, "px1113_note.txt")) else "v0.4.6（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。"
+print(P1113.apply(wb, _HERE, dict(ver="v0.4.6", old_ver="v0.4.5", tk="042700.KS", note=_N1113 + " ")))
 wb.save(sys.argv[1])
 print("PB", {s: PB[s] for s in SC}); print("SUMR", SUMR); print("VAL", VAL, "fwd rows to", fr, "SENS_LAST", SENS_LAST, "Recon last", rr_)
