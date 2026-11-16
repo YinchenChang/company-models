@@ -498,7 +498,7 @@ def coord_c0(wb, SIL, CR, PLA):
        f"=In!H{inrow('itc_26')}", "部署 GW 的分子（原始顆數口徑）；本層成品為市場層，Tokenomics 經橋接表進入")
     kv("每 GW IT 資本支出（US$B；GB300／VR200；markets/chip_bridge）", '=TEXT(itpg_gb,"0.0")&"／"&TEXT(itpg_vr,"0.0")', f"=In!H{inrow('itpg_vr')}", "部署 GW 的分母（Tokenomics IF_CapexIT，經橋接表唯讀）")
     kv("Wattonomics 錨定係數 CY2027／28／29（SIF_WTAnchor_Base；R4 比值）", '=TEXT(wta_27,"0.000")&"／"&TEXT(wta_28,"0.000")&"／"&TEXT(wta_29,"0.000")',
-       f"{ver}；Wattonomics 現行 v0.3.2（只經 Siliconomics 進入）", "只進敏感度（Sens「Wattonomics 錨定」案例）；不改基準")
+       f"{ver}；Wattonomics 現行 v0.3.6（只經 Siliconomics 進入）", "只進敏感度（Sens「Wattonomics 錨定」案例）；不改基準")
     kv("另一側讀數 ÷ 現行基準 CY2026／27／28／29（SIF_DeployGW_AltRatio_<年>）", f'=TEXT(B{CR["ratio"]},"0.000")&"／"&TEXT(C{CR["ratio"]},"0.000")&"／"&TEXT(D{CR["ratio"]},"0.000")&"／"&TEXT(E{CR["ratio"]},"0.000")',
        f"{ver}（比值列見本頁上方 B 節）", "兩讀數目標價（上方 B 節）只換產業部署 GW 一個輸入")
     r += 1

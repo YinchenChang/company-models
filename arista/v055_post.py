@@ -662,7 +662,7 @@ def coord_c0(wb, SIL, R):
         ("硬體股讀哪一層", "Siliconomics（零組件層；基準）＋ markets/network（網通市場層）", ver + "；" + NET, "情境顆數係數、Wattonomics 錨定、對帳中旗標讀 Siliconomics；交換器市場、AI IT 資本支出讀網通市場層", "下游只註明版本、不自行重估（專案規則第 3 條）"),
         ("AI 後端 scale-out 交換器市場（情境 A 原始顆數）", "US$B；In 頁 mkt_26–mkt_29", NET + "（Mkt!C7:F7）", "PL 交換器市場 × 情境顆數係數", "Siliconomics 無同口徑名稱（交換器市場只在網通市場層）"),
         ("AI IT 資本支出（情境 B＝原始 × 顆數係數）", "／".join(f"{v:,.0f}" for v in N["SIF_AIITCapex_Base"]) + " US$B", NET + "（Mkt!C27:F27）；" + ver + " SIF_AIITCapex_Base", "In 頁 itc_26–itc_29（只用於 Units、Recon 對照）", "同源（見第 2 節）"),
-        ("情境顆數係數（2028、2029）", "A 1.0／1.0；B 0.8／0.71；C 0.6／0.6", "tsmc v0.5.4（In!E37:E42；Siliconomics v0.19 基準係數）", "In 頁 um28_A–um29_C", "情境 B＝Siliconomics 基準"),
+        ("情境顆數係數（2028、2029）", "A 1.0／1.0；B 0.8／0.71；C 0.6／0.6", "tsmc v0.5.4（In!E37:E42；Siliconomics v0.20 基準係數）", "In 頁 um28_A–um29_C", "情境 B＝Siliconomics 基準"),
         ("Wattonomics 錨定 SIF_WTAnchor_Base（wta_27–29）", wt, ver, "只用於 Sens「Wattonomics 錨定」案例，不進目標價", "Wattonomics 現行版本 v0.3.2（本模型不直接讀）"),
         ("對帳中旗標 SIF_RecoFlag_<yyyy>、SIF_DeployGW_AltRatio_<yyyy>", f"旗標 {flg}；比值 {alt}", ver, "C4 兩讀數（本頁上方）", "另一側讀數＝Wattonomics 換算的產業 GW；本模型交換器市場同乘比值")):
         for j, v in enumerate((a, b, c, d, e), 1):
@@ -708,7 +708,7 @@ def coord_c0(wb, SIL, R):
     C.cell(r, 1, "層級之間（參考；Siliconomics 對帳單 r3 處理，不計入本公司 C0）").font = BOLD; r += 1
     C.cell(r, 1, "　下列差距是 Wattonomics 與 Siliconomics 兩層之間的差距，不是 Arista 自己的量對其所讀層級值的差距；本公司依 C4 並列兩讀數，不裁決、不改上游。"); r += 1
     m5, l5, d5 = block("(2) 產業部署 GW：Siliconomics 基準對 Wattonomics 換算值（兩層之間的差距）", list(N["SIF_DeployGW_Base"]), [N[f"SIF_DeployGW_Alt_{y}"] for y in (2026, 2027, 2028, 2029)],
-                       "GW；Siliconomics 基準部署 GW 對 Wattonomics 資本支出與電力路徑換算的需求側讀數", "Wattonomics v0.3.2 經 Siliconomics 換算；Derived（需求側）", "0.00",
+                       "GW；Siliconomics 基準部署 GW 對 Wattonomics 資本支出與電力路徑換算的需求側讀數", "Wattonomics v0.3.6 經 Siliconomics 換算；Derived（需求側）", "0.00",
                        model_label="Siliconomics 基準", layer_label="Wattonomics 換算值（需求側）", ref=True)
     r += 1
     C.cell(r, 1, "3. 結論（C0；判定見第 4 節 C0〔實績〕表）").font = BOLD; r += 1

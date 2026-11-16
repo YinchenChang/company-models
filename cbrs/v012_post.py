@@ -426,7 +426,7 @@ def coord(wb, TKV, WATT):
         C.cell(r, 3, "—"); C.cell(r, 4, "—")
         C.cell(r, 5, "無可比實績").font = BOLD
         C.cell(r, 6, "US$B；公司實績欄＝2026 已公布期間累計（" + ("第二讀數＝最近一季 × 4，見說明" if act2 else "9M26，現金流量表") + "）")
-        C.cell(r, 7, "公司：Cerebras 8-K／10-Q（Q 頁）；層級：Siliconomics v0.19、Wattonomics v0.3.2、" + TKV.split("（")[0] + "（皆無 Cerebras 同口徑量）")
+        C.cell(r, 7, "公司：Cerebras 8-K／10-Q（Q 頁）；層級：Siliconomics v0.20、Wattonomics v0.3.6、" + TKV.split("（")[0] + "（皆無 Cerebras 同口徑量）")
         C.cell(r, 8, "Verified（公司）")
         C.cell(r, 9, F(T(miss + "。不以模型預測或合約推算值補位"), *( [T("；第二讀數（最近一季 × 4）＝"), f'TEXT({act2},"0.000")'] if act2 else []), T("。")))
         r += 1

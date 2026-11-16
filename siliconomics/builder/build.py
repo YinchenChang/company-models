@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 
 VERSION = "v0.1"   # 由 --version 覆寫
 DATE = "20261027"  # 由 --date 覆寫
-TK_SNAPSHOT = os.path.join(SIL, "data", "tokenomics_snapshot_v21.10.json")   # v0.16：Tokenomics v21.10（相對 v21.7 只有 NonNV 產出比 TPU、Trainium 改值；本庫不讀產出比）
+TK_SNAPSHOT = os.path.join(SIL, "data", "tokenomics_snapshot_v22.0.json")   # v0.20：Tokenomics v22.0（本庫讀的 22 個名稱、162 格與 v21.10 逐值相同）；v0.16：v21.10
 TK_OLD = os.path.join(SIL, "data", "tokenomics_snapshot_v21.7.json")   # 下游（chip_bridge）實際讀的 TK 快照（仍 v21.7；差異 6 格皆為產出比，chip_bridge 不讀，見 Checks K3）
 SEED = os.path.join(HERE, "seed", "seed_v0.1.json")
 CONFLICTS = os.path.join(HERE, "seed", "conflicts_v0.1.json")
@@ -521,7 +521,7 @@ def main():
     CO = None; COROW = {}
     if COORD and DP is not None:
         CO = wb.create_sheet("Coord", index=wb.sheetnames.index("Path"))
-        CO["A1"] = ("Coord — 三層基準協調（v0.19；規則 v1.4 C3）：每年依兩層證據比例判定狀態（甲：兩層都有證據；乙：一層；丙：兩層都外推；含緩衝區），"
+        CO["A1"] = ("Coord — 三層基準協調（v0.19 起；v0.20 讀 Wattonomics v0.3.6、規則 v1.4.3：甲年 C0 公司實績對帳超出容差改標「有條件一致」；本頁與 data/baseline_status.json 為狀態唯一權威）：每年依兩層證據比例判定狀態（甲：兩層都有證據；乙：一層；丙：兩層都外推；含緩衝區），"
                     "區間跨線即待定（規則 v1.3：兩層證據比例低／基準／高任一端點與基準值落在門檻兩側 → 待定，維持現行、標對帳中）。決定由誰定基準。上游定基準（丙，或 Wattonomics 有證據的乙）且 Wattonomics 覆蓋已補齊（crd_cov_done＝1）→ 基準＝Wattonomics 換算值；"
                     "覆蓋未補齊 → 維持現行（原始顆數 × S33 係數）並標「對帳中」；其餘維持現行。基準係數 crd_k＝基準 ÷ 原始顆數讀數，取代基準鏈上的 S33 係數")
         CO["A2"] = ("S33 係數（um28_B、um29_B）不再是基準鏈上的水準係數：只在『維持現行』的年份經 crd_k 帶入；改用換算值的年份不讀。"
@@ -544,13 +544,13 @@ def main():
            note="Deploy 頁 AI IT 資本支出（未乘係數）÷ 每 GW IT 資本支出；2027 已含 v0.18 HBM 截頂（u_*_27 × 0.9404）；個股情境 A（J5）")
         co("s33", "現行係數（S33：2026–27＝1，2028–29＝um28_B／um29_B）", lambda y, col, yy: "=1" if y <= 2027 else f"=um{yy}_B", note="決策 S33；只作『維持現行』年份的係數與情境參照")
         co("cur", "現行基準（原始 × 現行係數＝v0.18 取法）", lambda y, col, yy: f"={R_('sup', col)}*{R_('s33', col)}")
-        co("dem", "需求側讀數：Wattonomics 換算值（平滑法 x2；暫值）", lambda y, col, yy: f"=crd_x2_{yy}", bold=True, note="In 頁 M30 crd_x2；待 Wattonomics v0.3.2 後以 baseline_bridge.py 重算")
+        co("dem", "需求側讀數：Wattonomics 換算值（平滑法 x2）", lambda y, col, yy: f"=crd_x2_{yy}", bold=True, note="In 頁 M30 crd_x2（Wattonomics v0.3.6；siliconomics/tools/baseline_bridge.py → docs/reports/20261116_協調橋接_v0.3.6.xlsx）")
         COROW["_r"] += 1
         CO.cell(COROW["_r"], 1, "B. 證據狀態（C3；只看狀態、不看數值高低）").font = BOLD; COROW["_r"] += 1
         co("ew", "Wattonomics 證據比例（WIF_Evidence 口徑）", lambda y, col, yy: f"=crd_ew_{yy}", "0.0%")
         co("es", "Siliconomics 證據比例", lambda y, col, yy: f"=crd_es_{yy}", "0.0%")
         # v1.3「區間跨線即待定」：兩層證據比例都用低／基準／高三值判；任一層低或高的「有證據」與基準值不同 → 待定
-        co("ew_lo", "　Wattonomics 證據比例 低", lambda y, col, yy: f"=crd_ew_{yy}_lo", "0.0%", note="模型只有點值時低＝基準＝高（In 頁說明欄註明）")
+        co("ew_lo", "　Wattonomics 證據比例 低", lambda y, col, yy: f"=crd_ew_{yy}_lo", "0.0%", note="Wattonomics v0.3.6 起讀 WIF_Evidence_Lo_／Hi_（規則 v1.3 區間跨線即待定）；模型只有點值的年份低＝基準＝高")
         co("ew_hi", "　Wattonomics 證據比例 高", lambda y, col, yy: f"=crd_ew_{yy}_hi", "0.0%")
         co("es_lo", "　Siliconomics 證據比例 低", lambda y, col, yy: f"=crd_es_{yy}_lo", "0.0%", note="docs/reports/20261114_供給側證據比例.xlsx 區間")
         co("es_hi", "　Siliconomics 證據比例 高", lambda y, col, yy: f"=crd_es_{yy}_hi", "0.0%")
@@ -583,7 +583,9 @@ def main():
            note="待定（v1.3）；上游定基準但覆蓋未補齊（C3 乙前提）；甲狀態殘差超出容差（待診斷）；連續法且水準取決於前一年待定（v1.4：水準等前一年的待定解決）")
         co("base", "基準部署 GW（依規則）", lambda y, col, yy: (f"=IF({R_('use', col)}=1,{R_('dem', col)},{R_('cur', col)})" if col == "C" else
            f"=IF({R_('use', col)}=1,IF({R_('chain', col)}=1,{PV[col]}{COROW['_r']}*{R_('dem', col)}/{R_('dem', PV[col])},{R_('dem', col)}),{R_('cur', col)})"), fill=KEY, bold=True)
-        co("lab", "該年標示", lambda y, col, yy: f'=IF({R_("use", col)}=1,IF({R_("chain", col)}=1,IF({R_("flag", col)}=1,"連續法（前一年待定，對帳中）","連續法（換算值成長率）"),"改用換算值"),IF({R_("st", col)}="待定","待定（對帳中）",IF({R_("flag", col)}=1,"對帳中",IF({R_("st", col)}="甲","一致","維持（本層有證據）"))))', "@", fill=KEY)
+        co("c0f", "C0 公司實績對帳超出容差（1／0；規則 v1.4.3 C0 第 8 點；讀 Recon 頁 F 節 NVIDIA 資料中心營收純實績、D 節市場層對帳點）", lambda y, col, yy: "=0", "0",
+           note="任一層對公司實績的對帳點（純實績，只到最近已公布期間）兩讀數同號超出 ±15% → 1。甲年標示改「有條件一致」（不並列兩讀數）；非甲年標示不變但同樣登錄對帳單（baseline_status.json c0_fail／c0_recon_doc／c0_deadline）")
+        co("lab", "該年標示", lambda y, col, yy: f'=IF({R_("use", col)}=1,IF({R_("chain", col)}=1,IF({R_("flag", col)}=1,"連續法（前一年待定，對帳中）","連續法（換算值成長率）"),"改用換算值"),IF({R_("st", col)}="待定","待定（對帳中）",IF({R_("flag", col)}=1,"對帳中",IF({R_("st", col)}="甲",IF({R_("c0f", col)}=1,"有條件一致","一致"),"維持（本層有證據）"))))', "@", fill=KEY)
         co("k", "基準係數 crd_k（＝基準 ÷ 供給側讀數；維持現行的年份＝現行係數）", lambda y, col, yy: f"=IF({R_('use', col)}=1,{R_('base', col)}/{R_('sup', col)},{R_('s33', col)})", "0.0000",
            note="基準鏈（Units、Deploy、Mkt、ABF、Rack、Equip、Cap）各年乘本列；Interface SIF_UnitsCoef_Base 隨之")
         for y, col in CC_.items():
@@ -878,6 +880,11 @@ def main():
         rsnap = json.load(open(os.path.join(SIL, "data", rc_file), encoding="utf-8"))
         evf = sorted(glob.glob(os.path.join(HERE, "seed", "recon_evidence_v*.json")), key=_vkey)
         rev = json.load(open(evf[-1], encoding="utf-8")) if evf else {"r4": {}, "soc": {}}
+        cmeta = {}
+        for f_ in sorted(glob.glob(os.path.join(HERE, "seed", "coord_meta_v*.json")), key=_vkey):
+            cmeta.update(json.load(open(f_, encoding="utf-8")))
+        d1f = sorted(glob.glob(os.path.join(HERE, "seed", "recon_d_gpu_asic_v*.json")), key=_vkey)
+        d1seed = json.load(open(d1f[-1], encoding="utf-8")) if d1f else None
         RC = wb.create_sheet("Recon")
         RC["A1"] = ("Recon — 由下往上對帳（工作方式 v1.7 第 8 節；決策 S32）：覆蓋個股的基準情境（情境 " + rsnap.get("base_scen", "B") + "）加總 → 本庫市場；"
                     "本庫推得上線 GW → Wattonomics 主路徑。個股值與 R4 值為版本固定快照（tools/recon.py → data/" + rc_file + "），綠字＝外部快照；"
@@ -889,6 +896,8 @@ def main():
         RC.cell(r, 1, "A. SoC 測試機（份額口徑；分母＝本庫 Equip 頁 SoC 測試機市場，兩家模型同讀）").font = BOLD; r += 1
         r_first = r
         for row in soc["rows"]:
+            if row.get("residual"):   # v0.20 快照的殘差列；本頁下方「其他廠（1 − 合計）」以公式列示
+                continue
             RC.cell(r, 1, row["who"] + " SoC 份額"); RC.cell(r, 2, row["note"])
             for j, v in enumerate(row["vals"]):
                 c = RC.cell(r, 3 + j, v); c.font = GREEN; c.number_format = "0.0%"
@@ -943,46 +952,210 @@ def main():
             v = rev.get("r4", {}).get(str(y), "")
             if v: RC.cell(r, 4 + j, v)
         RCROW["r4_ev"] = r; r += 1
-        RC.cell(r, 1, "狀態").font = BOLD
+        RC.cell(r, 1, "狀態（C3；讀 Coord 頁，本頁不自判）").font = BOLD
+        RC.cell(r, 2, "規則 v1.4.3 C3「狀態的唯一權威」：逐年協調狀態只以 Coord 頁與 data/baseline_status.json 為準；v0.16.3 起的「兩邊都不錨定」判定已由 C3 丙與 C6 第 3 點取代（v0.20 刪除）")
         for j in range(4):
-            col = "DEFG"[j]
-            c = RC.cell(r, 4 + j, f'=IF(ABS({col}{RCROW["r4_ratio"]}-1)<=rc_tol,"一致",IF(LEFT({col}{RCROW["r4_ev"]},6)="兩邊都不錨定","兩邊都不錨定",IF(LEN({col}{RCROW["r4_ev"]})>0,"時差","待診斷")))'); c.fill = KEY
+            c = RC.cell(r, 4 + j, f'=Coord!{"CDEF"[j]}{COROW["st"]}&"："&Coord!{"CDEF"[j]}{COROW["lab"]}' if CO is not None else "—"); c.fill = KEY
+        RC.cell(r, 8, "Coord 頁 st、lab 列（Interface SIF_RecoStatus_<年>、SIF_RecoLabel_<年>）")
         RCROW["r4_st"] = r; r += 2
         RC.cell(r, 1, "C. 結構一致的市場（覆蓋個股直接讀本庫份額 × 本庫市場，比值恆等於份額合計；由 Checks K6 約束 ≤ 100%）").font = BOLD; r += 1
         for mk, k6 in (("ASIC 設計服務（TPU、Trainium、其他 ASIC）", "K6-tpu／oth／trn"), ("CPO 光學", "K6-cpo"), ("加速器 ABF 載板", "K6-abfnv／abfot"),
                        ("AI 電源", "K6-pwr"), ("AI 液冷", "K6-lc"), ("AI 伺服器組裝", "K6-asm"), ("HBM", "K6-hbm")):
             RC.cell(r, 1, mk); RC.cell(r, 2, "結構一致（份額由本庫擁有）"); RC.cell(r, 8, "Checks " + k6); r += 1
         r += 1
-        RC.cell(r, 1, "D. 尚未建立對帳的市場（v0.12 起依序補：份額或營收 ÷ 市場）").font = BOLD; r += 1
-        for mk in ("GPU／ASIC 晶片金額（NVIDIA、AMD、Broadcom、Marvell、聯發科、創意、世芯）", "CoWoS（台積電；Amkor、日月光委外）",
+        RC.cell(r, 1, "D. 由下往上對帳的市場（v0.20 起逐一建立；規則 v1.4.3 C0 第 1、2 點：已建模個股實績加總＋殘差＝市場值，比較基準＝公司實績）").font = BOLD; r += 1
+        D1C = {2026: "D", 2027: "E", 2028: "F", 2029: "G"}       # Recon 欄
+        UC = {2026: "C", 2027: "D", 2028: "E", 2029: "F"}        # Units 欄
+        MC = {2026: "D", 2027: "E", 2028: "F", 2029: "G"}        # Mkt 欄（HBM 單價列）
+        if d1seed is not None and UN is not None and "pa_trn" in INROW:
+            A_ = {a["key"]: a for a in d1seed["actuals"]}
+            P_ = {p_["key"]: p_ for p_ in d1seed["params"]}
+            yy8 = lambda y: min(y, 2028) % 100                  # 2029 份額、HBM 容量沿用 2028（同 Units 頁與個股做法）
+            units = lambda k, y: f"Units!{UC[y]}{UROW[k]}*crd_k_{y % 100}"
+            hbmp = lambda y: f"Mkt!{MC[y]}{MK['pB']}"
+            spec = lambda k, y: f"(core_{k}+f_hbm*g_{k}_{yy8(y)}*{hbmp(y)}/1000)"
+            perunit = {"bw": lambda y: "it_GB*nvr_GB300", "rb": lambda y: "it_VR*nvr_VR26" if y == 2026 else "it_VR*nvr_VR27",
+                       "ru": lambda y: "it_RU*nvr_RU", "hp": lambda y: "it_HP*nvr_H100", "amd": lambda y: "pa_amd",
+                       "tpu": lambda y: "pa_tpu", "trn": lambda y: "pa_trn", "oth": lambda y: "pa_oth"}
+            pname = {"bw": "NVIDIA Blackwell", "rb": "NVIDIA Rubin", "ru": "NVIDIA Rubin Ultra", "hp": "NVIDIA Hopper", "amd": "AMD Instinct",
+                     "tpu": "Google TPU", "trn": "AWS Trainium", "oth": "其他 ASIC"}
+            alsh = lambda y: {2026: "al_trn_26", 2027: "al27_B"}.get(y, "al28_B")
+            SH = {"avgo": [("tpu", "sh_tpu"), ("oth", "sh_oth")], "mrvl": [("tpu", "msh_tpu"), ("trn", "msh_trn"), ("oth", "msh_oth")],
+                  "mtk": [("tpu", "mtk_tpu"), ("oth", "mtk_oth")], "al": [("trn", None)]}
+            shn = lambda stem, k, y: alsh(y) if stem is None else f"{stem}_{yy8(y)}"
+            def d1row(key, lab, f, fmt="0.0", note="", src="", fill=None, bold=False, y25=None):
+                RC.cell(r_[0], 1, lab)
+                if bold: RC.cell(r_[0], 1).font = BOLD
+                if note: RC.cell(r_[0], 2, note)
+                if y25 is not None: RC.cell(r_[0], 3, y25)
+                for y, col in D1C.items():
+                    v = f(y, col)
+                    if v is not None:
+                        c = RC.cell(r_[0], 4 + list(D1C).index(y), v); c.number_format = fmt
+                        if fill: c.fill = fill
+                if src: RC.cell(r_[0], 8, src)
+                RCROW["d1_" + key] = r_[0]; r_[0] += 1
+            r_ = [r]
+            RC.cell(r_[0], 1, "D1. GPU／ASIC 晶片金額（市場值＝Σ 平台基準顆數 × 每顆金額；NVIDIA 為營收口徑 M9 × M28 基準，ASIC 與 AMD 為 M6 每顆金額；日曆年、出貨年；US$B）").font = BOLD
+            RC.cell(r_[0], 8, "規格：Drive／交付 recon_d_gpu_asic_spec.md；種子 builder/seed/" + os.path.basename(d1f[-1]) + "（公司實績＝版本固定快照，綠字）"); r_[0] += 1
+            for k in ("bw", "rb", "ru", "hp", "amd", "tpu", "trn", "oth"):
+                d1row("v_" + k, "　平台金額：" + pname[k], lambda y, col, k=k: f"={units(k, y)}*{perunit[k](y)}", y25="層級未建")
+            d1row("mkt", "市場值（層級）", lambda y, col: f"=SUM({col}{RCROW['d1_v_bw']}:{col}{RCROW['d1_v_oth']})", fill=KEY, bold=True, y25="層級未建",
+                  note="2025：Units 頁只建 2026–2029，不以公司數字補位（C0 第 2 點）")
+            d1row("nv", "已建模：NVIDIA", lambda y, col: f"=SUM({col}{RCROW['d1_v_bw']}:{col}{RCROW['d1_v_hp']})", y25="層級未建")
+            d1row("amd", "已建模：AMD", lambda y, col: f"={col}{RCROW['d1_v_amd']}", y25="層級未建")
+            for pk, plab in (("avgo", "Broadcom（ASIC）"), ("mrvl", "Marvell（ASIC）"), ("mtk", "聯發科（ASIC）"), ("al", "世芯（ASIC）")):
+                d1row(pk, "已建模：" + plab, lambda y, col, pk=pk: "=" + "+".join(f"{shn(st, k, y)}*{units(k, y)}*{spec(k, y)}" for k, st in SH[pk]), "0.000",
+                      note="份額（M7，顆數口徑）× 基準顆數 × 夥伴每顆營收規格（core＋f_hbm × HBM 容量 × HBM 單價；Broadcom 口徑）", y25="層級未建")
+            d1row("guc", "已建模：創意（M7 份額表無創意列；歸入殘差）", lambda y, col: "=0", "0.000", y25="層級未建")
+            d1row("sum", "已建模個股加總", lambda y, col: f"=SUM({col}{RCROW['d1_nv']}:{col}{RCROW['d1_guc']})", bold=True, y25="層級未建")
+            d1row("res", "殘差（其他（未建模））", lambda y, col: f"={col}{RCROW['d1_mkt']}-{col}{RCROW['d1_sum']}", fill=KEY, bold=True, y25="層級未建",
+                  note="C0 第 1 點：殘差明列、不為空；＝殘差①＋殘差②")
+            d1row("res1", "　殘差①：非建模夥伴份額的 ASIC 金額（客戶自研、華為昇騰、創意、其他夥伴）",
+                  lambda y, col: (f"=(1-({shn('sh_tpu','tpu',y)}+{shn('msh_tpu','tpu',y)}+{shn('mtk_tpu','tpu',y)}))*{col}{RCROW['d1_v_tpu']}"
+                                  f"+(1-({shn('msh_trn','trn',y)}+{alsh(y)}))*{col}{RCROW['d1_v_trn']}"
+                                  f"+(1-({shn('sh_oth','oth',y)}+{shn('msh_oth','oth',y)}+{shn('mtk_oth','oth',y)}))*{col}{RCROW['d1_v_oth']}"), y25="層級未建")
+            d1row("res2", "　殘差②：建模夥伴份額內夥伴未收的金額（負值＝夥伴規格高於每顆金額，見 Checks K11-gpu-spec）",
+                  lambda y, col: (f"=({shn('sh_tpu','tpu',y)}+{shn('msh_tpu','tpu',y)}+{shn('mtk_tpu','tpu',y)})*{units('tpu', y)}*(pa_tpu-{spec('tpu', y)})"
+                                  f"+({shn('msh_trn','trn',y)}+{alsh(y)})*{units('trn', y)}*(pa_trn-{spec('trn', y)})"
+                                  f"+({shn('sh_oth','oth',y)}+{shn('msh_oth','oth',y)}+{shn('mtk_oth','oth',y)})*{units('oth', y)}*(pa_oth-{spec('oth', y)})"), y25="層級未建")
+            d1row("idchk", "檢查：已建模加總＋殘差 − 市場值（應為 0）", lambda y, col: f"={col}{RCROW['d1_sum']}+{col}{RCROW['d1_res']}-{col}{RCROW['d1_mkt']}", "0.000")
+            d1row("idchk2", "檢查：殘差①＋殘差② − 殘差（應為 0）", lambda y, col: f"={col}{RCROW['d1_res1']}+{col}{RCROW['d1_res2']}-{col}{RCROW['d1_res']}", "0.000")
+            d1row("nv_f", "對照：F 節隱含 NVIDIA 資料中心營收（R4 橋接 GW 混合法）", lambda y, col: None, note="方法差（逐平台相乘 vs GW 混合）約 ±1.5%")
+            # 公司實績（2026；版本固定快照）
+            G_ = lambda key: A_[key]["value"]
+            def act(key, lab, val, src, fmt="0.0", note=""):
+                RC.cell(r_[0], 1, lab); RC.cell(r_[0], 2, note)
+                c = RC.cell(r_[0], 4, val); c.font = GREEN; c.number_format = fmt
+                RC.cell(r_[0], 3, "—"); RC.cell(r_[0], 8, src)
+                for j in range(1, 4): RC.cell(r_[0], 4 + j, "無實績（遠年不做 C0）")
+                RCROW["d1_" + key] = r_[0]; r_[0] += 1
+            srcs = lambda *ks: "；".join(f"{A_[k]['period']} {A_[k]['value']}（{A_[k]['source_file']} {A_[k]['source_cell']}；{A_[k]['grade']}）" for k in ks)
+            act("act_nv_m", "NVIDIA 實績：Data Center FY2027 Q1＋Q2（主讀數；2026-02～07）", G_("nv_dc_fy27q1") + G_("nv_dc_fy27q2"), srcs("nv_dc_fy27q1", "nv_dc_fy27q2"),
+                note="含 scale-out 網通與軟體（層級 nvr 不含；nvr 高值比值更低，差距非網通口徑造成）")
+            act("act_nv_q", "NVIDIA 實績：最近一季 FY2027 Q2", G_("nv_dc_fy27q2"), srcs("nv_dc_fy27q2"))
+            xpu = P_["avgo_xpu_ratio"]
+            act("xpu", "換算參數：Broadcom XPU ÷ AI 半導體營收", xpu["value"], f"{xpu['source']}（{xpu['grade']}；低 {xpu['lo']}）", "0.000")
+            act("act_av_m", "Broadcom 實績：AI 半導體 FY2026 Q1–Q3（2025-11～2026-07；主讀數，× XPU 比例前）", G_("avgo_ai_fy26q1") + G_("avgo_ai_fy26q2") + G_("avgo_ai_fy26q3"),
+                srcs("avgo_ai_fy26q1", "avgo_ai_fy26q2", "avgo_ai_fy26q3"), "0.00", note="會計年度 11 月初止；含 2025 年 11–12 月（沿用 avgo 模型 9 個月近似）")
+            act("act_av_q", "Broadcom 實績：最近一季 FY2026 Q3（× XPU 比例前）", G_("avgo_ai_fy26q3"), srcs("avgo_ai_fy26q3"), "0.00")
+            act("act_amd", "AMD 實績：Data Center 分部 Q1–Q3 2026（含 EPYC；無可比實績，只作上限檢驗）", G_("amd_dc_q126") + G_("amd_dc_q226") + G_("amd_dc_q326"),
+                srcs("amd_dc_q126", "amd_dc_q226", "amd_dc_q326"), "0.000")
+            act("act_mrvl", "Marvell 實績：資料中心 FY2027 Q1＋Q2（無可比實績，只作上限檢驗）", G_("mrvl_dc_fy27q1") + G_("mrvl_dc_fy27q2"), srcs("mrvl_dc_fy27q1", "mrvl_dc_fy27q2"), "0.000")
+            act("act_al", "世芯實績：合併營收 2026-01～10（NT$B；無可比實績，只作上限檢驗）",
+                G_("alchip_rev_1q26") + G_("alchip_rev_2q26") + G_("alchip_rev_3q26") + G_("alchip_rev_oct26"),
+                srcs("alchip_rev_1q26", "alchip_rev_2q26", "alchip_rev_3q26", "alchip_rev_oct26"), "0.000")
+            D = "D"
+            def ratio(key, lab, f, note=""):
+                RC.cell(r_[0], 1, lab); RC.cell(r_[0], 2, note)
+                RC.cell(r_[0], 4, f).number_format = "0.000"
+                RCROW["d1_" + key] = r_[0]; r_[0] += 1
+            ratio("r_nv_m", "　NVIDIA 主讀數：實績 ÷（層級 NVIDIA × 6 ÷ 12）", f"={D}{RCROW['d1_act_nv_m']}/({D}{RCROW['d1_nv']}*6/12)")
+            ratio("r_nv_s", "　NVIDIA 第二讀數：Q2 × 4 ÷ 層級 NVIDIA", f"={D}{RCROW['d1_act_nv_q']}*4/{D}{RCROW['d1_nv']}")
+            ratio("r_av_m", "　Broadcom 主讀數：AI × XPU 比例 ÷（層級 Broadcom × 9 ÷ 12）", f"={D}{RCROW['d1_act_av_m']}*{D}{RCROW['d1_xpu']}/({D}{RCROW['d1_avgo']}*9/12)")
+            ratio("r_av_s", "　Broadcom 第二讀數：Q3 × XPU 比例 × 4 ÷ 層級 Broadcom", f"={D}{RCROW['d1_act_av_q']}*{D}{RCROW['d1_xpu']}*4/{D}{RCROW['d1_avgo']}")
+            ratio("ub_amd", "　上限檢驗 AMD：分部實績 ÷（層級 AMD × 9 ÷ 12）（≥ 1 通過）", f"={D}{RCROW['d1_act_amd']}/({D}{RCROW['d1_amd']}*9/12)")
+            ratio("ub_mrvl", "　上限檢驗 Marvell：資料中心實績 ÷（層級 Marvell × 6 ÷ 12）（≥ 1 通過）", f"={D}{RCROW['d1_act_mrvl']}/({D}{RCROW['d1_mrvl']}*6/12)")
+            ratio("ub_al", "　上限檢驗 世芯：合併營收 ÷ fx_twd ÷（層級世芯 × 10 ÷ 12）（≥ 1 通過）", f"={D}{RCROW['d1_act_al']}/fx_twd/({D}{RCROW['d1_al']}*10/12)")
+            # 逐家診斷判定（不計入彙總）
+            two = lambda m, s_: (f'=IF(AND(ABS({m}-1)<=rc_tol,ABS({s_}-1)<=rc_tol),"一致",IF(AND(ABS({m}-1)>rc_tol,ABS({s_}-1)>rc_tol,SIGN({m}-1)=SIGN({s_}-1)),"對帳中","時差邊界（參考）"))')
+            al_doc = cmeta.get("recon_d", {}).get("gpu_asic", {}).get("alchip_ub", "")
+            for key, lab, f in (("dg_nv", "　判定（逐家診斷，不計入彙總）：NVIDIA", two(f"D{RCROW['d1_r_nv_m']}", f"D{RCROW['d1_r_nv_s']}")),
+                                ("dg_av", "　判定（逐家診斷）：Broadcom", two(f"D{RCROW['d1_r_av_m']}", f"D{RCROW['d1_r_av_s']}")),
+                                ("dg_amd", "　判定（上限檢驗）：AMD", f'=IF(D{RCROW["d1_ub_amd"]}>=1,"上限檢驗通過","上限檢驗不通過")'),
+                                ("dg_mrvl", "　判定（上限檢驗）：Marvell", f'=IF(D{RCROW["d1_ub_mrvl"]}>=1,"上限檢驗通過","上限檢驗不通過")'),
+                                ("dg_al", "　判定（上限檢驗）：世芯", f'=IF(D{RCROW["d1_ub_al"]}>=1,"上限檢驗通過",' + (f'"對帳中（對帳單 {al_doc}）"' if al_doc else '"上限檢驗不通過"') + ")")):
+                RC.cell(r_[0], 1, lab); c = RC.cell(r_[0], 4, f)
+                if key == "dg_al" and al_doc: RC.cell(r_[0], 8, "層級隱含世芯 Trainium 營收高於世芯全公司營收；本版不改值（pa_trn、al 份額待對帳單診斷）")
+                RCROW["d1_" + key] = r_[0]; r_[0] += 1
+            # 市場層兩讀數
+            def mrow(key, lab, f, fmt="0.0", note="", fill=None):
+                RC.cell(r_[0], 1, lab); RC.cell(r_[0], 2, note)
+                c = RC.cell(r_[0], 4, f); c.number_format = fmt
+                if fill: c.fill = fill
+                RC.cell(r_[0], 3, "—")
+                for j in range(1, 4): RC.cell(r_[0], 4 + j, "—")
+                RCROW["d1_" + key] = r_[0]; r_[0] += 1
+            other = f"({D}{RCROW['d1_sum']}-{D}{RCROW['d1_nv']}-{D}{RCROW['d1_avgo']})"
+            mrow("bu_m", "由下往上（主讀數）＝NVIDIA 實績 × 12 ÷ 6＋Broadcom XPU 實績 × 12 ÷ 9＋其他已建模（層級，無可比實績）＋殘差",
+                 f"={D}{RCROW['d1_act_nv_m']}*12/6+{D}{RCROW['d1_act_av_m']}*{D}{RCROW['d1_xpu']}*12/9+{other}+{D}{RCROW['d1_res']}")
+            mrow("ratio_m", "比值（主讀數；由下往上 ÷ 市場值）", f"={D}{RCROW['d1_bu_m']}/{D}{RCROW['d1_mkt']}", "0.000")
+            mrow("bu_s", "由下往上（第二讀數）＝NVIDIA Q2 × 4＋Broadcom Q3 × XPU × 4＋其他已建模＋殘差",
+                 f"={D}{RCROW['d1_act_nv_q']}*4+{D}{RCROW['d1_act_av_q']}*{D}{RCROW['d1_xpu']}*4+{other}+{D}{RCROW['d1_res']}")
+            mrow("ratio_s", "比值（第二讀數）", f"={D}{RCROW['d1_bu_s']}/{D}{RCROW['d1_mkt']}", "0.000")
+            RC.cell(r_[0], 1, "證據送件")
+            for j, y in enumerate((2025, 2026, 2027, 2028, 2029)):
+                v = rev.get("gpu_asic", {}).get(str(y), "")
+                if v: RC.cell(r_[0], 3 + j, v)
+            RCROW["d1_ev"] = r_[0]; r_[0] += 1
+            RC.cell(r_[0], 1, "狀態（市場層；兩讀數都在容差內＝一致；都超出且同號＝時差（有送件）／待診斷；一內一外＝時差邊界）").font = BOLD
+            c = RC.cell(r_[0], 3, "層級未建"); c.fill = KEY
+            m, s_ = f"D{RCROW['d1_ratio_m']}", f"D{RCROW['d1_ratio_s']}"
+            c = RC.cell(r_[0], 4, f'=IF(AND(ABS({m}-1)<=rc_tol,ABS({s_}-1)<=rc_tol),"一致",IF(AND(ABS({m}-1)>rc_tol,ABS({s_}-1)>rc_tol,SIGN({m}-1)=SIGN({s_}-1)),IF(LEN(D{RCROW["d1_ev"]})>0,"時差","待診斷"),"時差邊界"))'); c.fill = KEY
+            for j in range(1, 4):
+                c = RC.cell(r_[0], 4 + j, "無實績（遠年不做 C0）"); c.fill = KEY
+            RC.cell(r_[0], 8, "逐家診斷列不計入彙總（同 F 節做法）；世芯上限檢驗另有對帳單（見上方判定列）")
+            RCROW["d1_st"] = r_[0]; r_[0] += 1
+            r = r_[0]
+        else:
+            RC.cell(r, 1, "GPU／ASIC 晶片金額（NVIDIA、AMD、Broadcom、Marvell、聯發科、創意、世芯）"); RC.cell(r, 2, "未建"); r += 1
+        for mk in ("CoWoS（台積電；Amkor、日月光委外）",
                    "晶圓前段設備（應用材料、Lam、KLA、ASML；TEL 未建模）", "AI 高速 PCB／CCL（勝宏、金像電、台光電）", "光學模組總量（中際旭創、新易盛、Lumentum、Coherent）"):
             RC.cell(r, 1, mk); RC.cell(r, 2, "未建"); r += 1
         r += 1
         nvq = rsnap["markets"].get("nv_dc")
         if nvq:
-            RC.cell(r, 1, "F. 季度實績驗證（v0.13；三層校準原則：實績雙向校正）：NVIDIA 資料中心營收（出貨年 NVIDIA GW × 每 GW 內容 vs 公司實績／指引；只作診斷，不計入狀態彙總）").font = BOLD; r += 1
-            for lab, key, fm in (("隱含 NVIDIA 資料中心營收（$B）", "implied", "0.0"), ("公司（2026 錨點；2027 指引推得）（$B）", "company", "0.0")):
-                RC.cell(r, 1, lab)
-                for j, v in enumerate(nvq[key]):
-                    if v is not None:
-                        c = RC.cell(r, 4 + j, v); c.font = GREEN; c.number_format = fm
-                RC.cell(r, 8, nvq["ref"]); RCROW["nv_" + key] = r; r += 1
-            RC.cell(r, 1, "比值（隱含 ÷ 公司）")
+            c0doc = cmeta.get("c0", {}).get("2026", {}).get("recon_doc", "")
+            RC.cell(r, 1, "F. 季度實績驗證：NVIDIA 資料中心營收（規則 v1.4.3 C0：主讀數＝純實績，只到最近已公布期間；含指引的讀數只列參考）").font = BOLD; r += 1
+            RC.cell(r, 1, "隱含 NVIDIA 資料中心營收（層級；$B）")
+            for j, v in enumerate(nvq["implied"]):
+                if v is not None:
+                    c = RC.cell(r, 4 + j, v); c.font = GREEN; c.number_format = "0.0"
+            RC.cell(r, 8, nvq["ref"] + "（n3＝出貨年 NVIDIA 成本等值 GW × 每 GW 內容）"); RCROW["nv_implied"] = r; r += 1
+            act_ = nvq.get("actual_cum")
+            if act_:
+                RC.cell(r, 1, f"公司純實績：已公布季累計（{nvq.get('actual_label', 'FY27 Q1＋Q2')}；$B）")
+                c = RC.cell(r, 4, act_[0]); c.font = GREEN; c.number_format = "0.0"
+                RC.cell(r, 8, nvq["ref_actual"]); RCROW["nv_act"] = r; r += 1
+                RC.cell(r, 1, "已公布月數（CY2026）"); c = RC.cell(r, 4, nvq["months"][0]); c.font = GREEN; RCROW["nv_mo"] = r; r += 1
+                RC.cell(r, 1, "最近一季年化（$B）"); c = RC.cell(r, 4, nvq["actual_q_annual"][0]); c.font = GREEN; c.number_format = "0.0"
+                RC.cell(r, 8, nvq["ref_actual"]); RCROW["nv_qa"] = r; r += 1
+                RC.cell(r, 1, "主讀數：實績 ÷ 層級同期間 − 1").font = BOLD; RC.cell(r, 2, "層級同期間＝隱含 × 月數 ÷ 12（線性分攤）")
+                c = RC.cell(r, 4, f"=D{RCROW['nv_act']}/(D{RCROW['nv_implied']}*D{RCROW['nv_mo']}/12)-1"); c.number_format = "+0.0%;-0.0%"; RCROW["nv_m"] = r; r += 1
+                RC.cell(r, 1, "第二讀數：最近一季年化 ÷ 層級全年 − 1").font = BOLD
+                c = RC.cell(r, 4, f"=D{RCROW['nv_qa']}/D{RCROW['nv_implied']}-1"); c.number_format = "+0.0%;-0.0%"; RCROW["nv_s"] = r; r += 1
+                RC.cell(r, 1, "C0 對帳單"); RC.cell(r, 4, c0doc); RC.cell(r, 8, "builder/seed/coord_meta_v*.json c0（判斷類）"); RCROW["nv_doc"] = r; r += 1
+                RC.cell(r, 1, "狀態（±15%：兩讀數同號超出＝對帳中〔有對帳單〕／待診斷；一內一外＝時差邊界（參考））").font = BOLD
+                m, s_ = f"D{RCROW['nv_m']}", f"D{RCROW['nv_s']}"
+                c = RC.cell(r, 4, f'=IF(AND(ABS({m})<=rc_tol,ABS({s_})<=rc_tol),"一致",IF(AND(ABS({m})>rc_tol,ABS({s_})>rc_tol,SIGN({m})=SIGN({s_})),IF(LEN(D{RCROW["nv_doc"]})>0,"對帳中","待診斷"),"時差邊界（參考）"))'); c.fill = KEY
+                for j in range(1, 4):
+                    c = RC.cell(r, 4 + j, "無實績（遠年不做 C0）"); c.fill = KEY
+                RCROW["nv_st"] = r; r += 1
+            RC.cell(r, 1, "參考（含指引）：公司 2026 錨點（Q3 指引＋Q4 假設）／2027 指引推得（$B）")
+            for j, v in enumerate(nvq["company"]):
+                if v is not None:
+                    c = RC.cell(r, 4 + j, v); c.font = GREEN; c.number_format = "0.0"
+            RC.cell(r, 8, nvq["ref"] + "（n4；含公司指引，C5 只列參考，不判定）"); RCROW["nv_company"] = r; r += 1
+            RC.cell(r, 1, "參考（含指引）：比值（隱含 ÷ 公司錨點／指引）")
             for j in range(len(nvq["implied"])):
-                if nvq["implied"][j] is not None:
+                if nvq["implied"][j] is not None and nvq["company"][j] is not None:
                     RC.cell(r, 4 + j, f"={'DEFG'[j]}{RCROW['nv_implied']}/{'DEFG'[j]}{RCROW['nv_company']}").number_format = "0.000"
-            RCROW["nv_ratio"] = r; r += 1
-            RC.cell(r, 1, "狀態")
-            for j in range(len(nvq["implied"])):
-                if nvq["implied"][j] is not None:
-                    col = "DEFG"[j]
-                    RC.cell(r, 4 + j, f'=IF(ABS({col}{RCROW["nv_ratio"]}-1)<=rc_tol,"一致","待診斷")')
-            r += 2
-        RC.cell(r, 1, "E. 狀態彙總（A、B 節）").font = BOLD; r += 1
-        st_cells = f"C{RCROW['soc_st']}:G{RCROW['soc_st']},D{RCROW['r4_st']}:G{RCROW['r4_st']}"
-        for lab in ("一致", "時差", "兩邊都不錨定", "待診斷"):
+            RCROW["nv_ratio"] = r; r += 2
+        if "d1_nv_f" in RCROW and "nv_implied" in RCROW:
+            for j in range(2):
+                RC.cell(RCROW["d1_nv_f"], 4 + j, f"={'DE'[j]}{RCROW['nv_implied']}").number_format = "0.0"
+        # Coord C0 列（規則 v1.4.3 C0 第 8 點）：F 節 NVIDIA 純實績、D 節市場層任一對帳點兩讀數同號超出容差
+        if CO is not None:
+            for j in range(4):
+                parts = []
+                if "nv_st" in RCROW: parts += [f'Recon!{"DEFG"[j]}{RCROW["nv_st"]}="對帳中"', f'Recon!{"DEFG"[j]}{RCROW["nv_st"]}="待診斷"']
+                if "d1_st" in RCROW: parts += [f'Recon!{"DEFG"[j]}{RCROW["d1_st"]}="時差"', f'Recon!{"DEFG"[j]}{RCROW["d1_st"]}="待診斷"']
+                CO.cell(COROW["c0f"], 3 + j, ("=IF(OR(" + ",".join(parts) + "),1,0)") if parts else "=0")
+        RC.cell(r, 1, "E. 狀態彙總（A、D 節；B 節為 C3 狀態，讀 Coord 頁，不入彙總；F 節與 D 節逐家列只作診斷）").font = BOLD; r += 1
+        st_rng = [f"C{RCROW['soc_st']}:G{RCROW['soc_st']}"] + ([f"C{RCROW['d1_st']}:G{RCROW['d1_st']}"] if "d1_st" in RCROW else [])
+        for lab in ("一致", "時差", "時差邊界", "待診斷"):
             RC.cell(r, 1, lab)
-            RC.cell(r, 3, f'=COUNTIF(C{RCROW["soc_st"]}:G{RCROW["soc_st"]},"{lab}")+COUNTIF(D{RCROW["r4_st"]}:G{RCROW["r4_st"]},"{lab}")')
+            RC.cell(r, 3, "=" + "+".join(f'COUNTIF({rg},"{lab}")' for rg in st_rng))
             RCROW["n_" + lab] = r; r += 1
         RC.column_dimensions["A"].width = 46; RC.column_dimensions["B"].width = 44; RC.column_dimensions["H"].width = 80
         for col in "CDEFG": RC.column_dimensions[col].width = 11
@@ -1425,13 +1598,25 @@ def main():
                                          ("lab", "SIF_RecoLabel", "該年標示（一致／對帳中／改用換算值／維持）", "文字", "@"),
                                          ("flag", "SIF_RecoFlag", "對帳中（1＝是）", "旗標", "0"),
                                          ("use", "SIF_RecoUseConv", "基準已改用換算值（1＝是）", "旗標", "0"),
-                                         ("chain", "SIF_RecoChain", "連續法（1＝是；規則 v1.4：前一年待定或甲且維持現行，基準＝前一年基準 × 換算值成長率）", "旗標", "0")):
+                                         ("chain", "SIF_RecoChain", "連續法（1＝是；規則 v1.4：前一年待定或甲且維持現行，基準＝前一年基準 × 換算值成長率）", "旗標", "0"),
+                                         ("c0f", "SIF_RecoC0Fail", "C0 公司實績對帳超出容差（1＝是；規則 v1.4.3 C0 第 8 點；甲年標「有條件一致」）", "旗標", "0")):
             for j, y in enumerate((2026, 2027, 2028, 2029)):
                 nm_ = f"{stem}_{y}"; col = "CDEF"[j]
                 IF.cell(r, 1, nm_); IF.cell(r, 2, f"{y} {lab}"); IF.cell(r, 3, unit)
                 c = IF.cell(r, 5, f"=Coord!{col}{COROW[key]}"); c.font = GREEN; c.number_format = fm
                 IF.cell(r, 9, f"Coord!{col}{COROW[key]}")
                 name(wb, nm_, f"Interface!$E${r}"); IFNAMES.append(nm_); r += 1
+    if RC is not None and "d1_mkt" in RCROW:
+        # v0.20：由下往上對帳市場（Recon D1；規則 v1.4.3 C0）。向量名稱，欄 E–H＝2026–2029
+        r += 1
+        IF.cell(r, 1, "F. 由下往上對帳市場（v0.20；Recon 頁 D1 GPU／ASIC 晶片金額，US$B；欄 E–H＝2026–2029）。個股日後讀市場值只讀這兩個名稱").font = BOLD; r += 1
+        hdr(IF, r, ["名稱", "項目", "單位", "", "2026", "2027", "2028", "2029", "來源位置"]); r += 1
+        for key, nm_, lab in (("d1_mkt", "SIF_GpuAsicMkt_Base", "GPU／ASIC 晶片金額市場值（層級）"), ("d1_res", "SIF_GpuAsicResid_Base", "GPU／ASIC 殘差（其他（未建模））")):
+            IF.cell(r, 1, nm_); IF.cell(r, 2, lab); IF.cell(r, 3, "$B")
+            for j in range(4):
+                c = IF.cell(r, 5 + j, f"=Recon!{'DEFG'[j]}{RCROW[key]}"); c.font = GREEN; c.number_format = "0.0"
+            IF.cell(r, 9, f"Recon!D{RCROW[key]}:G{RCROW[key]}")
+            name(wb, nm_, f"Interface!$E${r}:$H${r}"); IFNAMES.append(nm_); r += 1
     for col, w in zip("ABCDEFGHI", (30, 50, 9, 10, 10, 10, 10, 14, 16)):
         IF.column_dimensions[col].width = w
 
@@ -1526,7 +1711,7 @@ def main():
             CK.cell(r, 3, f"=Recon!{'CDEFG'[j]}{RCROW['soc_sum']}"); CK.cell(r, 4, 1)
             CK.cell(r, 6, f'=IF(C{r}<=1+1E-9,"OK","ERROR")'); CK.cell(r, 7, "驗證（加總受限）"); r += 1
         CK.cell(r, 1, "K9"); CK.cell(r, 2, "Recon 頁狀態為『待診斷』的格數（沒有證據送件的落差；規則：兩邊都更新後仍有落差須診斷錯在哪一方）")
-        CK.cell(r, 3, f"=Recon!C{RCROW['n_待診斷']}+Recon!C{RCROW['n_兩邊都不錨定']}"); CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "治理（對帳）")
+        CK.cell(r, 3, f"=Recon!C{RCROW['n_待診斷']}"); CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "治理（對帳）")
         CK.cell(r, 8, "WARN＝仍有待診斷的落差；明細見 Recon 頁"); r += 1
     if CP is not None:
         for j, y in enumerate((2026, 2027, 2028, 2029)):
@@ -1554,8 +1739,25 @@ def main():
             CK.cell(r, 6, f'=IF(ABS(E{r})<=1E-9*ABS(D{r}),"OK","ERROR")'); CK.cell(r, 7, "驗證（基準取法）"); r += 1
         for j, y in enumerate((2026, 2027, 2028, 2029)):
             col = "CDEF"[j]
-            CK.cell(r, 1, f"K12-{y}"); CK.cell(r, 2, f"三層基準協調 {y}：該年標示（對帳中須有對帳單與期限，見 tools/baseline_coordination/check.py 第 5 項）")
-            CK.cell(r, 3, f"=Coord!{col}{COROW['lab']}"); CK.cell(r, 6, "INFO"); CK.cell(r, 7, "資訊（不計入 SGOV）"); r += 1
+            CK.cell(r, 1, f"K12-{y}"); CK.cell(r, 2, f"三層基準協調 {y}：該年標示（對帳中須有對帳單與期限，見 tools/baseline_coordination/check.py 第 5 項；"
+                                                 "「有條件一致」＝甲年 C0 公司實績對帳超出 ±15%，規則 v1.4.3 C0 第 8 點：須登錄對帳單與期限〔check.py 第 12 項〕，有條件一致不並列兩讀數）")
+            CK.cell(r, 3, f"=Coord!{col}{COROW['lab']}"); CK.cell(r, 4, f"=Coord!{col}{COROW['c0f']}"); CK.cell(r, 6, "INFO"); CK.cell(r, 7, "資訊（不計入 SGOV）")
+            CK.cell(r, 8, "D 欄＝C0 實績對帳超出容差旗標（Coord c0f）"); r += 1
+    if "d1_st" in RCROW:
+        D1 = RCROW
+        CK.cell(r, 1, "K11-gpu"); CK.cell(r, 2, "Recon D1 GPU／ASIC 恆等式：Σ|已建模加總＋殘差 − 市場值|＋Σ|殘差①＋② − 殘差|（2026–2029；規則第 10 節第 9 項）")
+        CK.cell(r, 3, f"=SUMPRODUCT(ABS(Recon!D{D1['d1_idchk']}:G{D1['d1_idchk']}))+SUMPRODUCT(ABS(Recon!D{D1['d1_idchk2']}:G{D1['d1_idchk2']}))")
+        CK.cell(r, 6, f'=IF(C{r}<=1E-6,"OK","ERROR")'); CK.cell(r, 7, "驗證（C0 恆等式）"); r += 1
+        CK.cell(r, 1, "K11-gpu-res"); CK.cell(r, 2, "Recon D1 殘差列 2026–2029 皆有數值（殘差明列、不為空）")
+        CK.cell(r, 3, f"=COUNT(Recon!D{D1['d1_res']}:G{D1['d1_res']})"); CK.cell(r, 4, 4)
+        CK.cell(r, 6, f'=IF(C{r}=D{r},"OK","ERROR")'); CK.cell(r, 7, "驗證（C0 恆等式）"); r += 1
+        spec_ = lambda k, col, yy: f"(core_{k}+f_hbm*g_{k}_{yy}*Mkt!{col}{MK['pB']}/1000)"
+        cnt = "+".join(f"IF({spec_(k, col, yy)}>pa_{k},1,0)" for k in ("trn", "oth") for col, yy in (("D", 26), ("E", 27), ("F", 28), ("G", 28)))
+        CK.cell(r, 1, "K11-gpu-spec"); CK.cell(r, 2, "D1 夥伴每顆營收規格 > 每顆金額 pa_ 的格數（Trainium、其他 ASIC；2026–2029）——殘差②為負的來源；pa_trn／pa_oth 各年固定 8K（下版判斷題）")
+        CK.cell(r, 3, "=" + cnt); CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "治理（口徑）"); r += 1
+        CK.cell(r, 1, "K11-gpu-ub"); CK.cell(r, 2, "D1 上限檢驗不通過的列數（AMD、Marvell、世芯：公司營收 < 層級隱含）")
+        CK.cell(r, 3, "=" + "+".join(f"IF(Recon!D{D1[k]}<1,1,0)" for k in ("d1_ub_amd", "d1_ub_mrvl", "d1_ub_al")))
+        CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "治理（對帳）"); CK.cell(r, 8, "世芯：對帳單見 Recon D1 判定列"); r += 1
     # G 治理：輸入列標記、來源、區間
     g0 = r
     CK.cell(r, 1, "G1"); CK.cell(r, 2, "In 頁輸入列缺標記")
@@ -1610,6 +1812,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.20（2026-11-16）：改讀 Wattonomics v0.3.6（換算值 crd_x2 依 baseline_bridge.py 重算；Wattonomics 證據比例區間 WIF_Evidence_Lo_／Hi_ 讀入狀態判定）；規則 v1.4.3：Coord 頁新增 C0 實績對帳列（c0f），甲年實績不過標「有條件一致」（2026：NVIDIA 資料中心營收純實績 FY27 Q1＋Q2 對層級同期間 −26.8%），Interface SIF_RecoC0Fail_<年>；Recon B 節狀態改讀 Coord（刪「兩邊都不錨定」）、F 節改純實績主讀數（含指引的比值移參考列）、D 節第 1 市場 GPU／ASIC 晶片金額建立（已建模個股加總＋殘差＝市場值；Checks K11-gpu*；Interface SIF_GpuAsicMkt_Base、SIF_GpuAsicResid_Base）；In 頁 M6 新增 core_trn；TK_In 改 Tokenomics v22.0（本庫讀的值逐值不變）。基準值只因換算值機械性變動：2029 連續法 42.70 → 42.68 GW。決策 S50。", False),
         ("v0.19（2026-11-14）：依三層基準協調規則 v1.4 C3 決定基準（Andy 2026-11-14 13:06 確認 NVIDIA 試作後轉正式）：In 頁 M30（Wattonomics v0.3.2 換算值、兩層證據比例、cov_done＝1、上次判定）＋ Coord 頁（逐年狀態、由誰定基準、該年標示、依規則的基準與基準係數 crd_k）；基準鏈上的 S33 係數改讀 crd_k：2026 甲（一致）、2027–28 待定（維持現行 1／0.80，對帳中）、2029 丙＋連續法（0.85 → 0.710，對帳中）；部署 GW 2029 51.12 → 42.70。Interface E 節新增供給側／需求側讀數、另一側讀數、狀態與對帳中旗標。下游經 siliconomics/coef_rule.py 讀 um28_B／um29_B＝SIF_UnitsCoef_Base。對帳單：Drive 02-AI供應鏈/對帳/20261114_對帳單_Siliconomics基準對Wattonomics換算_2026-2029.md（r3，期限 2027-02-28）。", False),
         ("v0.18：2027 基準依 HBM 本庫自算供給截頂（三層校準原則第 2 條；Andy 11-05 同意，條件為本庫供給）：各平台 2027 顆數 × 0.9404（＝可支撐部署 GW 39.16 ÷ 原基準 41.65），不遞延到 2028；2027 部署 GW 41.65 → 39.16、HBM 需求 ÷ 供給 106% → 100%。決策 S48。", False),
         ("v0.17：HBM 供給改本庫自算（Andy 11-05「證據到哪，數字到哪」）：2026 基數＝本庫 2026 HBM 出貨 3.78 EB（三家皆稱售罄；參照 UBS 4.23）；2027 成長＝晶圓 +12% × HBM 晶圓占比 20%→30% × 每片位元 +5% ＝ +76%（0.36–1.19；參照 TrendForce +55%）。2027 供給 6.56 → 6.67 EB、需求 ÷ 供給 108% → 106%。決策 S47。", False),

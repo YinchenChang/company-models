@@ -1,0 +1,1390 @@
+{
+ "schema": "recon_d_seed/1",
+ "market_key": "gpu_asic",
+ "market_name": "GPU／ASIC 晶片金額（AI 加速器；NVIDIA、AMD、Broadcom、Marvell、聯發科、創意、世芯）",
+ "target_version": "Siliconomics v0.20",
+ "prepared": "2026-11-16",
+ "repo_commit": "a0e82b5",
+ "layer_source": "siliconomics/model/20261114_Siliconomics_v0.19.xlsx",
+ "rules": "docs/plan/三層基準協調規則.md v1.4.2 C0 第 1、2 點；第 10 節第 9 項",
+ "cutoff_note": "實績只到最近已公布期間（2026-11-16）：NVIDIA FY2027 Q2（Q3 於 2026-11-19 公布）、Broadcom FY2026 Q3、AMD Q3 2026、Marvell FY2027 Q2、台股三家 3Q26 與 10 月月營收",
+ "fy_map": {
+  "NVIDIA": {
+   "fy_end": "1 月底（FY(t)＝t−1 年 2 月～t 年 1 月）",
+   "cy_from_fy": "CY(t) ≈ FY(t+1)：11/12 × CY(t)＋1/12 × CY(t+1) 落在 FY(t+1)",
+   "q_to_cal": {
+    "Q1": "2–4 月",
+    "Q2": "5–7 月",
+    "Q3": "8–10 月",
+    "Q4": "11–1 月"
+   }
+  },
+  "Marvell": {
+   "fy_end": "1 月底（同 NVIDIA）",
+   "cy_from_fy": "同 NVIDIA"
+  },
+  "Broadcom": {
+   "fy_end": "11 月初（FY(t)＝t−1 年 11 月～t 年 10 月）",
+   "cy_from_fy": "FY(t) ≈ 2/12 × CY(t−1)＋10/12 × CY(t)",
+   "q_to_cal": {
+    "Q1": "11–1 月",
+    "Q2": "2–4 月",
+    "Q3": "5–7 月",
+    "Q4": "8–10 月"
+   }
+  },
+  "AMD": {
+   "fy_end": "12 月（日曆年）"
+  },
+  "聯發科": {
+   "fy_end": "12 月"
+  },
+  "創意": {
+   "fy_end": "12 月"
+  },
+  "世芯": {
+   "fy_end": "12 月"
+  }
+ },
+ "actuals": [
+  {
+   "key": "nv_dc_fy26q1",
+   "company": "NVIDIA",
+   "item": "Data Center 營收",
+   "period": "FY2026 Q1",
+   "fiscal_period": "FY2026 Q1",
+   "cal_start": "2025-02",
+   "cal_end": "2025-04",
+   "months_in_cy2026": 0,
+   "months_in_cy2025": 3,
+   "value": 39.1,
+   "unit": "US$B",
+   "scope": "Data Center 營收（運算＋網通；含 NVLink、InfiniBand、Spectrum-X、軟體與服務）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "nvidia/dist/20261114_NVIDIA個股模型_v0.3.10.xlsx",
+   "source_cell": "Q!B5",
+   "source_doc": "NVIDIA 8-K 新聞稿（nvidianews.nvidia.com，各季財報稿；模型 Q 頁第 5 列來源欄）"
+  },
+  {
+   "key": "nv_dc_fy26q2",
+   "company": "NVIDIA",
+   "item": "Data Center 營收",
+   "period": "FY2026 Q2",
+   "fiscal_period": "FY2026 Q2",
+   "cal_start": "2025-05",
+   "cal_end": "2025-07",
+   "months_in_cy2026": 0,
+   "months_in_cy2025": 3,
+   "value": 41.1,
+   "unit": "US$B",
+   "scope": "Data Center 營收（運算＋網通；含 NVLink、InfiniBand、Spectrum-X、軟體與服務）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "nvidia/dist/20261114_NVIDIA個股模型_v0.3.10.xlsx",
+   "source_cell": "Q!C5",
+   "source_doc": "NVIDIA 8-K 新聞稿（nvidianews.nvidia.com，各季財報稿；模型 Q 頁第 5 列來源欄）"
+  },
+  {
+   "key": "nv_dc_fy26q3",
+   "company": "NVIDIA",
+   "item": "Data Center 營收",
+   "period": "FY2026 Q3",
+   "fiscal_period": "FY2026 Q3",
+   "cal_start": "2025-08",
+   "cal_end": "2025-10",
+   "months_in_cy2026": 0,
+   "months_in_cy2025": 3,
+   "value": 51.2,
+   "unit": "US$B",
+   "scope": "Data Center 營收（運算＋網通；含 NVLink、InfiniBand、Spectrum-X、軟體與服務）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "nvidia/dist/20261114_NVIDIA個股模型_v0.3.10.xlsx",
+   "source_cell": "Q!D5",
+   "source_doc": "NVIDIA 8-K 新聞稿（nvidianews.nvidia.com，各季財報稿；模型 Q 頁第 5 列來源欄）"
+  },
+  {
+   "key": "nv_dc_fy26q4",
+   "company": "NVIDIA",
+   "item": "Data Center 營收",
+   "period": "FY2026 Q4",
+   "fiscal_period": "FY2026 Q4",
+   "cal_start": "2025-11",
+   "cal_end": "2026-01",
+   "months_in_cy2026": 1,
+   "months_in_cy2025": 2,
+   "value": 62.3,
+   "unit": "US$B",
+   "scope": "Data Center 營收（運算＋網通；含 NVLink、InfiniBand、Spectrum-X、軟體與服務）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "nvidia/dist/20261114_NVIDIA個股模型_v0.3.10.xlsx",
+   "source_cell": "Q!E5",
+   "source_doc": "NVIDIA 8-K 新聞稿（nvidianews.nvidia.com，各季財報稿；模型 Q 頁第 5 列來源欄）"
+  },
+  {
+   "key": "nv_dc_fy27q1",
+   "company": "NVIDIA",
+   "item": "Data Center 營收",
+   "period": "FY2027 Q1",
+   "fiscal_period": "FY2027 Q1",
+   "cal_start": "2026-02",
+   "cal_end": "2026-04",
+   "months_in_cy2026": 3,
+   "months_in_cy2025": 0,
+   "value": 75.2,
+   "unit": "US$B",
+   "scope": "Data Center 營收（運算＋網通；含 NVLink、InfiniBand、Spectrum-X、軟體與服務）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "nvidia/dist/20261114_NVIDIA個股模型_v0.3.10.xlsx",
+   "source_cell": "Q!G5",
+   "source_doc": "NVIDIA 8-K 新聞稿（nvidianews.nvidia.com，各季財報稿；模型 Q 頁第 5 列來源欄）"
+  },
+  {
+   "key": "nv_dc_fy27q2",
+   "company": "NVIDIA",
+   "item": "Data Center 營收",
+   "period": "FY2027 Q2",
+   "fiscal_period": "FY2027 Q2",
+   "cal_start": "2026-05",
+   "cal_end": "2026-07",
+   "months_in_cy2026": 3,
+   "months_in_cy2025": 0,
+   "value": 89,
+   "unit": "US$B",
+   "scope": "Data Center 營收（運算＋網通；含 NVLink、InfiniBand、Spectrum-X、軟體與服務）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "nvidia/dist/20261114_NVIDIA個股模型_v0.3.10.xlsx",
+   "source_cell": "Q!H5",
+   "source_doc": "NVIDIA 8-K 新聞稿（nvidianews.nvidia.com，各季財報稿；模型 Q 頁第 5 列來源欄）"
+  },
+  {
+   "key": "avgo_ai_fy26q1",
+   "company": "Broadcom",
+   "item": "AI 半導體營收",
+   "period": "FY2026 Q1",
+   "fiscal_period": "FY2026 Q1",
+   "cal_start": "2025-11",
+   "cal_end": "2026-01",
+   "months_in_cy2026": 1,
+   "months_in_cy2025": 2,
+   "value": 8.4,
+   "unit": "US$B",
+   "scope": "AI 半導體營收（客製 XPU＋AI 網通：Tomahawk、Jericho 等）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "avgo/dist/20261114_Broadcom個股模型_v0.5.7.xlsx",
+   "source_cell": "Q!C7",
+   "source_doc": "Broadcom 8-K 新聞稿（Q1 FY26 accession 0001730168-26-000011；Q2 FY26 0001730168-26-000051；Q3 FY26 investors.broadcom.com；模型 Q 頁第 7 列來源欄）"
+  },
+  {
+   "key": "avgo_ai_fy26q2",
+   "company": "Broadcom",
+   "item": "AI 半導體營收",
+   "period": "FY2026 Q2",
+   "fiscal_period": "FY2026 Q2",
+   "cal_start": "2026-02",
+   "cal_end": "2026-04",
+   "months_in_cy2026": 3,
+   "months_in_cy2025": 0,
+   "value": 10.8,
+   "unit": "US$B",
+   "scope": "AI 半導體營收（客製 XPU＋AI 網通：Tomahawk、Jericho 等）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "avgo/dist/20261114_Broadcom個股模型_v0.5.7.xlsx",
+   "source_cell": "Q!D7",
+   "source_doc": "Broadcom 8-K 新聞稿（Q1 FY26 accession 0001730168-26-000011；Q2 FY26 0001730168-26-000051；Q3 FY26 investors.broadcom.com；模型 Q 頁第 7 列來源欄）"
+  },
+  {
+   "key": "avgo_ai_fy26q3",
+   "company": "Broadcom",
+   "item": "AI 半導體營收",
+   "period": "FY2026 Q3",
+   "fiscal_period": "FY2026 Q3",
+   "cal_start": "2026-05",
+   "cal_end": "2026-07",
+   "months_in_cy2026": 3,
+   "months_in_cy2025": 0,
+   "value": 16.7,
+   "unit": "US$B",
+   "scope": "AI 半導體營收（客製 XPU＋AI 網通：Tomahawk、Jericho 等）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "avgo/dist/20261114_Broadcom個股模型_v0.5.7.xlsx",
+   "source_cell": "Q!E7",
+   "source_doc": "Broadcom 8-K 新聞稿（Q1 FY26 accession 0001730168-26-000011；Q2 FY26 0001730168-26-000051；Q3 FY26 investors.broadcom.com；模型 Q 頁第 7 列來源欄）"
+  },
+  {
+   "key": "amd_dc_q125",
+   "company": "AMD",
+   "item": "Data Center 分部營收",
+   "period": "Q1 2025",
+   "fiscal_period": "Q1 2025",
+   "cal_start": "2025-01",
+   "cal_end": "2025-03",
+   "months_in_cy2026": 0,
+   "months_in_cy2025": 3,
+   "value": 3.674,
+   "unit": "US$B",
+   "scope": "Data Center 分部營收（Instinct GPU＋EPYC CPU＋DPU、FPGA 等；公司不揭露 GPU 拆分）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "amd/dist/20261115_AMD模型_v0.4.7.xlsx",
+   "source_cell": "Q!B5",
+   "source_doc": "AMD 8-K 新聞稿（Q3 2026 accession 0000002488-26-000188 等；模型 Q 頁第 5 列來源欄）"
+  },
+  {
+   "key": "amd_dc_q225",
+   "company": "AMD",
+   "item": "Data Center 分部營收",
+   "period": "Q2 2025",
+   "fiscal_period": "Q2 2025",
+   "cal_start": "2025-04",
+   "cal_end": "2025-06",
+   "months_in_cy2026": 0,
+   "months_in_cy2025": 3,
+   "value": 3.24,
+   "unit": "US$B",
+   "scope": "Data Center 分部營收（Instinct GPU＋EPYC CPU＋DPU、FPGA 等；公司不揭露 GPU 拆分）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "amd/dist/20261115_AMD模型_v0.4.7.xlsx",
+   "source_cell": "Q!C5",
+   "source_doc": "AMD 8-K 新聞稿（Q3 2026 accession 0000002488-26-000188 等；模型 Q 頁第 5 列來源欄）"
+  },
+  {
+   "key": "amd_dc_q325",
+   "company": "AMD",
+   "item": "Data Center 分部營收",
+   "period": "Q3 2025",
+   "fiscal_period": "Q3 2025",
+   "cal_start": "2025-07",
+   "cal_end": "2025-09",
+   "months_in_cy2026": 0,
+   "months_in_cy2025": 3,
+   "value": 4.341,
+   "unit": "US$B",
+   "scope": "Data Center 分部營收（Instinct GPU＋EPYC CPU＋DPU、FPGA 等；公司不揭露 GPU 拆分）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "amd/dist/20261115_AMD模型_v0.4.7.xlsx",
+   "source_cell": "Q!D5",
+   "source_doc": "AMD 8-K 新聞稿（Q3 2026 accession 0000002488-26-000188 等；模型 Q 頁第 5 列來源欄）"
+  },
+  {
+   "key": "amd_dc_q425",
+   "company": "AMD",
+   "item": "Data Center 分部營收",
+   "period": "Q4 2025",
+   "fiscal_period": "Q4 2025",
+   "cal_start": "2025-10",
+   "cal_end": "2025-12",
+   "months_in_cy2026": 0,
+   "months_in_cy2025": 3,
+   "value": 5.38,
+   "unit": "US$B",
+   "scope": "Data Center 分部營收（Instinct GPU＋EPYC CPU＋DPU、FPGA 等；公司不揭露 GPU 拆分）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "amd/dist/20261115_AMD模型_v0.4.7.xlsx",
+   "source_cell": "Q!E5",
+   "source_doc": "AMD 8-K 新聞稿（Q3 2026 accession 0000002488-26-000188 等；模型 Q 頁第 5 列來源欄）"
+  },
+  {
+   "key": "amd_dc_q126",
+   "company": "AMD",
+   "item": "Data Center 分部營收",
+   "period": "Q1 2026",
+   "fiscal_period": "Q1 2026",
+   "cal_start": "2026-01",
+   "cal_end": "2026-03",
+   "months_in_cy2026": 3,
+   "months_in_cy2025": 0,
+   "value": 5.775,
+   "unit": "US$B",
+   "scope": "Data Center 分部營收（Instinct GPU＋EPYC CPU＋DPU、FPGA 等；公司不揭露 GPU 拆分）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "amd/dist/20261115_AMD模型_v0.4.7.xlsx",
+   "source_cell": "Q!G5",
+   "source_doc": "AMD 8-K 新聞稿（Q3 2026 accession 0000002488-26-000188 等；模型 Q 頁第 5 列來源欄）"
+  },
+  {
+   "key": "amd_dc_q226",
+   "company": "AMD",
+   "item": "Data Center 分部營收",
+   "period": "Q2 2026",
+   "fiscal_period": "Q2 2026",
+   "cal_start": "2026-04",
+   "cal_end": "2026-06",
+   "months_in_cy2026": 3,
+   "months_in_cy2025": 0,
+   "value": 6.718,
+   "unit": "US$B",
+   "scope": "Data Center 分部營收（Instinct GPU＋EPYC CPU＋DPU、FPGA 等；公司不揭露 GPU 拆分）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "amd/dist/20261115_AMD模型_v0.4.7.xlsx",
+   "source_cell": "Q!H5",
+   "source_doc": "AMD 8-K 新聞稿（Q3 2026 accession 0000002488-26-000188 等；模型 Q 頁第 5 列來源欄）"
+  },
+  {
+   "key": "amd_dc_q326",
+   "company": "AMD",
+   "item": "Data Center 分部營收",
+   "period": "Q3 2026",
+   "fiscal_period": "Q3 2026",
+   "cal_start": "2026-07",
+   "cal_end": "2026-09",
+   "months_in_cy2026": 3,
+   "months_in_cy2025": 0,
+   "value": 8.546,
+   "unit": "US$B",
+   "scope": "Data Center 分部營收（Instinct GPU＋EPYC CPU＋DPU、FPGA 等；公司不揭露 GPU 拆分）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "amd/dist/20261115_AMD模型_v0.4.7.xlsx",
+   "source_cell": "Q!I5",
+   "source_doc": "AMD 8-K 新聞稿（Q3 2026 accession 0000002488-26-000188 等；模型 Q 頁第 5 列來源欄）"
+  },
+  {
+   "key": "mrvl_dc_fy26",
+   "company": "Marvell",
+   "item": "資料中心營收",
+   "period": "FY2026 全年",
+   "fiscal_period": "FY2026",
+   "cal_start": "2025-02",
+   "cal_end": "2026-01",
+   "months_in_cy2026": 1,
+   "months_in_cy2025": 11,
+   "value": 6.1003,
+   "unit": "US$B",
+   "scope": "資料中心終端市場營收（客製 XPU＋光互連 DSP＋交換器＋AEC＋儲存；公司不揭露客製金額）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "mrvl/dist/20261115_邁威爾個股模型_v0.3.5.xlsx",
+   "source_cell": "Q!B5",
+   "source_doc": "Marvell 8-K 新聞稿（Q1 FY27 2026-05-27、Q2 FY27 2026-08-27；FY2026 accession 0001835632-26-000006；模型 Q 頁第 5 列來源欄）"
+  },
+  {
+   "key": "mrvl_dc_fy27q1",
+   "company": "Marvell",
+   "item": "資料中心營收",
+   "period": "FY2027 Q1",
+   "fiscal_period": "FY2027 Q1",
+   "cal_start": "2026-02",
+   "cal_end": "2026-04",
+   "months_in_cy2026": 3,
+   "months_in_cy2025": 0,
+   "value": 1.8327,
+   "unit": "US$B",
+   "scope": "資料中心終端市場營收（客製 XPU＋光互連 DSP＋交換器＋AEC＋儲存；公司不揭露客製金額）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "mrvl/dist/20261115_邁威爾個股模型_v0.3.5.xlsx",
+   "source_cell": "Q!C5",
+   "source_doc": "Marvell 8-K 新聞稿（Q1 FY27 2026-05-27、Q2 FY27 2026-08-27；FY2026 accession 0001835632-26-000006；模型 Q 頁第 5 列來源欄）"
+  },
+  {
+   "key": "mrvl_dc_fy27q2",
+   "company": "Marvell",
+   "item": "資料中心營收",
+   "period": "FY2027 Q2",
+   "fiscal_period": "FY2027 Q2",
+   "cal_start": "2026-05",
+   "cal_end": "2026-07",
+   "months_in_cy2026": 3,
+   "months_in_cy2025": 0,
+   "value": 2.1715,
+   "unit": "US$B",
+   "scope": "資料中心終端市場營收（客製 XPU＋光互連 DSP＋交換器＋AEC＋儲存；公司不揭露客製金額）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "mrvl/dist/20261115_邁威爾個股模型_v0.3.5.xlsx",
+   "source_cell": "Q!D5",
+   "source_doc": "Marvell 8-K 新聞稿（Q1 FY27 2026-05-27、Q2 FY27 2026-08-27；FY2026 accession 0001835632-26-000006；模型 Q 頁第 5 列來源欄）"
+  },
+  {
+   "key": "mtk_rev_fy25",
+   "company": "聯發科",
+   "item": "合併營收",
+   "period": "FY2025",
+   "fiscal_period": "FY2025",
+   "cal_start": "2025-01",
+   "cal_end": "2025-12",
+   "months_in_cy2026": 0,
+   "months_in_cy2025": 12,
+   "value": 595.966,
+   "unit": "NT$B",
+   "scope": "合併營收（手機＋智慧邊緣〔含 AI ASIC〕＋電源 IC；AI ASIC 金額未揭露）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx",
+   "source_cell": "Q!B4",
+   "source_doc": "聯發科 4Q25 營運報告（模型 Q 頁第 4 列來源欄）"
+  },
+  {
+   "key": "mtk_rev_1q26",
+   "company": "聯發科",
+   "item": "合併營收",
+   "period": "1Q26",
+   "fiscal_period": "1Q26",
+   "cal_start": "2026-01",
+   "cal_end": "2026-03",
+   "months_in_cy2026": 3,
+   "months_in_cy2025": 0,
+   "value": 149.151,
+   "unit": "NT$B",
+   "scope": "合併營收（手機＋智慧邊緣〔含 AI ASIC〕＋電源 IC；AI ASIC 金額未揭露）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx",
+   "source_cell": "Q!C4",
+   "source_doc": "聯發科 2Q26 營運報告；3Q26 為月營收合計（模型 Q 頁第 4 列來源欄）"
+  },
+  {
+   "key": "mtk_rev_2q26",
+   "company": "聯發科",
+   "item": "合併營收",
+   "period": "2Q26",
+   "fiscal_period": "2Q26",
+   "cal_start": "2026-04",
+   "cal_end": "2026-06",
+   "months_in_cy2026": 3,
+   "months_in_cy2025": 0,
+   "value": 152.183,
+   "unit": "NT$B",
+   "scope": "合併營收（手機＋智慧邊緣〔含 AI ASIC〕＋電源 IC；AI ASIC 金額未揭露）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx",
+   "source_cell": "Q!D4",
+   "source_doc": "聯發科 2Q26 營運報告；3Q26 為月營收合計（模型 Q 頁第 4 列來源欄）"
+  },
+  {
+   "key": "mtk_rev_3q26",
+   "company": "聯發科",
+   "item": "合併營收",
+   "period": "3Q26",
+   "fiscal_period": "3Q26",
+   "cal_start": "2026-07",
+   "cal_end": "2026-09",
+   "months_in_cy2026": 3,
+   "months_in_cy2025": 0,
+   "value": 168.057,
+   "unit": "NT$B",
+   "scope": "合併營收（手機＋智慧邊緣〔含 AI ASIC〕＋電源 IC；AI ASIC 金額未揭露）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx",
+   "source_cell": "Q!E4",
+   "source_doc": "聯發科 2Q26 營運報告；3Q26 為月營收合計（模型 Q 頁第 4 列來源欄）"
+  },
+  {
+   "key": "guc_rev_fy25",
+   "company": "創意",
+   "item": "合併營收",
+   "period": "FY2025",
+   "fiscal_period": "FY2025",
+   "cal_start": "2025-01",
+   "cal_end": "2025-12",
+   "months_in_cy2026": 0,
+   "months_in_cy2025": 12,
+   "value": 34.141,
+   "unit": "NT$B",
+   "scope": "合併營收（NRE＋量產；Google CPU、AI ASIC、車用等金額未揭露）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "guc/dist/20261115_創意個股模型_v0.3.5.xlsx",
+   "source_cell": "Q!B4",
+   "source_doc": "stockanalysis 財報頁、經濟日報 2026-01-31（模型 Q 頁第 4 列來源欄；媒體轉述財報）"
+  },
+  {
+   "key": "guc_rev_1q26",
+   "company": "創意",
+   "item": "合併營收",
+   "period": "1Q26",
+   "fiscal_period": "1Q26",
+   "cal_start": "2026-01",
+   "cal_end": "2026-03",
+   "months_in_cy2026": 3,
+   "months_in_cy2025": 0,
+   "value": 11.448,
+   "unit": "NT$B",
+   "scope": "合併營收（NRE＋量產；Google CPU、AI ASIC、車用等金額未揭露）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "guc/dist/20261115_創意個股模型_v0.3.5.xlsx",
+   "source_cell": "Q!C4",
+   "source_doc": "月營收公告與季報（模型 Q 頁第 4 列來源欄）"
+  },
+  {
+   "key": "guc_rev_2q26",
+   "company": "創意",
+   "item": "合併營收",
+   "period": "2Q26",
+   "fiscal_period": "2Q26",
+   "cal_start": "2026-04",
+   "cal_end": "2026-06",
+   "months_in_cy2026": 3,
+   "months_in_cy2025": 0,
+   "value": 13.897,
+   "unit": "NT$B",
+   "scope": "合併營收（NRE＋量產；Google CPU、AI ASIC、車用等金額未揭露）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "guc/dist/20261115_創意個股模型_v0.3.5.xlsx",
+   "source_cell": "Q!D4",
+   "source_doc": "月營收公告與季報（模型 Q 頁第 4 列來源欄）"
+  },
+  {
+   "key": "guc_rev_3q26",
+   "company": "創意",
+   "item": "合併營收",
+   "period": "3Q26",
+   "fiscal_period": "3Q26",
+   "cal_start": "2026-07",
+   "cal_end": "2026-09",
+   "months_in_cy2026": 3,
+   "months_in_cy2025": 0,
+   "value": 18.754,
+   "unit": "NT$B",
+   "scope": "合併營收（NRE＋量產；Google CPU、AI ASIC、車用等金額未揭露）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "guc/dist/20261115_創意個股模型_v0.3.5.xlsx",
+   "source_cell": "Q!E4",
+   "source_doc": "月營收公告與季報（模型 Q 頁第 4 列來源欄）"
+  },
+  {
+   "key": "alchip_rev_fy25",
+   "company": "世芯",
+   "item": "合併營收",
+   "period": "FY2025",
+   "fiscal_period": "FY2025",
+   "cal_start": "2025-01",
+   "cal_end": "2025-12",
+   "months_in_cy2026": 0,
+   "months_in_cy2025": 12,
+   "value": 30.926,
+   "unit": "NT$B",
+   "scope": "合併營收（NRE＋量產；Trainium 金額未揭露）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx",
+   "source_cell": "Q!B4",
+   "source_doc": "經濟日報 2026-03-06、stockanalysis（模型 Q 頁第 4 列來源欄）"
+  },
+  {
+   "key": "alchip_rev_1q26",
+   "company": "世芯",
+   "item": "合併營收",
+   "period": "1Q26",
+   "fiscal_period": "1Q26",
+   "cal_start": "2026-01",
+   "cal_end": "2026-03",
+   "months_in_cy2026": 3,
+   "months_in_cy2025": 0,
+   "value": 4.187,
+   "unit": "NT$B",
+   "scope": "合併營收（NRE＋量產；Trainium 金額未揭露）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx",
+   "source_cell": "Q!C4",
+   "source_doc": "工商時報 2026-08-14（公司財報）、公開資訊觀測站前 9 月財報（模型 Q 頁第 4 列來源欄）"
+  },
+  {
+   "key": "alchip_rev_2q26",
+   "company": "世芯",
+   "item": "合併營收",
+   "period": "2Q26",
+   "fiscal_period": "2Q26",
+   "cal_start": "2026-04",
+   "cal_end": "2026-06",
+   "months_in_cy2026": 3,
+   "months_in_cy2025": 0,
+   "value": 7.64,
+   "unit": "NT$B",
+   "scope": "合併營收（NRE＋量產；Trainium 金額未揭露）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx",
+   "source_cell": "Q!D4",
+   "source_doc": "工商時報 2026-08-14（公司財報）、公開資訊觀測站前 9 月財報（模型 Q 頁第 4 列來源欄）"
+  },
+  {
+   "key": "alchip_rev_3q26",
+   "company": "世芯",
+   "item": "合併營收",
+   "period": "3Q26",
+   "fiscal_period": "3Q26",
+   "cal_start": "2026-07",
+   "cal_end": "2026-09",
+   "months_in_cy2026": 3,
+   "months_in_cy2025": 0,
+   "value": 26.050562,
+   "unit": "NT$B",
+   "scope": "合併營收（NRE＋量產；Trainium 金額未揭露）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx",
+   "source_cell": "Q!E4",
+   "source_doc": "工商時報 2026-08-14（公司財報）、公開資訊觀測站前 9 月財報（模型 Q 頁第 4 列來源欄）"
+  },
+  {
+   "key": "alchip_rev_oct26",
+   "company": "世芯",
+   "item": "合併營收（10 月單月）",
+   "period": "2026-10",
+   "fiscal_period": "2026-10",
+   "cal_start": "2026-10",
+   "cal_end": "2026-10",
+   "months_in_cy2026": 1,
+   "months_in_cy2025": 0,
+   "value": 10.26,
+   "unit": "NT$B",
+   "scope": "合併營收（NRE＋量產；Trainium 金額未揭露）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx",
+   "source_cell": "Coord!F78",
+   "source_doc": "科技新報 2026-11-10 月營收公告轉載"
+  },
+  {
+   "key": "guc_rev_oct26",
+   "company": "創意",
+   "item": "合併營收（10 月單月）",
+   "period": "2026-10",
+   "fiscal_period": "2026-10",
+   "cal_start": "2026-10",
+   "cal_end": "2026-10",
+   "months_in_cy2026": 1,
+   "months_in_cy2025": 0,
+   "value": 8.433,
+   "unit": "NT$B",
+   "scope": "合併營收（NRE＋量產；Google CPU、AI ASIC、車用等金額未揭露）",
+   "grade": "Verified",
+   "kind": "實績",
+   "source_file": "guc/dist/20261115_創意個股模型_v0.3.5.xlsx",
+   "source_cell": "Coord!F79",
+   "source_doc": "科技新報 2026-11-05 月營收公告轉載"
+  }
+ ],
+ "params": [
+  {
+   "key": "avgo_xpu_ratio",
+   "label": "Broadcom XPU ÷ AI 半導體營收（實績換成 XPU 口徑用）",
+   "value": 0.73,
+   "lo": 0.6944,
+   "hi": 0.73,
+   "grade": "Interested-party",
+   "source": "Q3 FY26 法說口述 73%（二手）；低值＝avgo 模型 FY2026 錨點 XPU ÷ AI 0.694（Derived）"
+  },
+  {
+   "key": "fx_twd",
+   "label": "新台幣 ÷ 美元",
+   "value": 32,
+   "grade": "Assumed",
+   "source": "siliconomics/model/20261114_Siliconomics_v0.19.xlsx In!E596（SIF_fx_twd）"
+  }
+ ],
+ "reference": [
+  {
+   "key": "nv_dc_fy27q3_guide",
+   "company": "NVIDIA",
+   "item": "Data Center 營收 FY2027 Q3（指引中點推得，2026-11-19 公布實績）",
+   "period": "FY2027 Q3",
+   "value": 100.41795,
+   "unit": "US$B",
+   "grade": "Interested-party／Derived",
+   "note": "指引不算實績；只列參考",
+   "source_file": "nvidia/dist/20261114_NVIDIA個股模型_v0.3.10.xlsx",
+   "source_cell": "Q!I5"
+  },
+  {
+   "key": "avgo_ai_fy26q4_guide",
+   "company": "Broadcom",
+   "item": "AI 半導體營收 FY2026 Q4 指引",
+   "period": "FY2026 Q4",
+   "value": 21.7,
+   "unit": "US$B",
+   "grade": "Interested-party",
+   "note": "指引不算實績；2026-12 公布",
+   "source_file": "avgo/dist/20261114_Broadcom個股模型_v0.5.7.xlsx",
+   "source_cell": "Q!F7"
+  },
+  {
+   "key": "avgo_ai_fy25",
+   "company": "Broadcom",
+   "item": "AI 半導體營收 FY2025（推得：FY2026 展望 58 ÷ (1＋186%)）",
+   "period": "FY2025",
+   "value": 20.2797202797203,
+   "unit": "US$B",
+   "grade": "Derived",
+   "note": "非 8-K 金額：Q4 FY25 8-K 新聞稿只寫『AI semiconductor revenue increasing 74% year-over-year』、未列金額（本代理 2026-11-16 讀 SEC accession 0001730168-25-000116 ex99 核對）；季度金額只在法說口述",
+   "source_file": "avgo/dist/20261114_Broadcom個股模型_v0.5.7.xlsx",
+   "source_cell": "Q!B7"
+  },
+  {
+   "key": "mrvl_cus_fy26",
+   "company": "Marvell",
+   "item": "客製（XPU＋attach）營收 FY2026（法說口述）",
+   "period": "FY2026",
+   "value": 1.5,
+   "unit": "US$B",
+   "grade": "Interested-party",
+   "note": "法說轉述（二手）；不是財報揭露",
+   "source_file": "mrvl/dist/20261115_邁威爾個股模型_v0.3.5.xlsx",
+   "source_cell": "Q!B7"
+  },
+  {
+   "key": "mtk_asic_3q26",
+   "company": "聯發科",
+   "item": "AI ASIC（資料中心）營收 3Q26（模型放置的 1–3Q 假設）",
+   "period": "3Q26",
+   "value": 9.51,
+   "unit": "NT$B",
+   "grade": "Assumed",
+   "note": "公司未揭露金額；模型 asic13 假設",
+   "source_file": "mediatek/dist/20261115_聯發科個股模型_v0.3.5.xlsx",
+   "source_cell": "Q!E8"
+  },
+  {
+   "key": "alchip_trn_3q26",
+   "company": "世芯",
+   "item": "Trainium 量產營收 3Q26（模型拆分）",
+   "period": "3Q26",
+   "value": 20.8404496,
+   "unit": "NT$B",
+   "grade": "Interested-party／Assumed",
+   "note": "公司未揭露金額；模型以『FY2026 3 奈米營收超過 15 億美元』（媒體轉述外資）推得",
+   "source_file": "alchip/dist/20261115_世芯-KY個股模型_v0.2.5.xlsx",
+   "source_cell": "Q!E5"
+  },
+  {
+   "key": "avgo_xpu_share_q3fy26",
+   "company": "Broadcom",
+   "item": "XPU 占 AI 半導體營收（Q3 FY26 法說）",
+   "period": "FY2026 Q3",
+   "value": 0.73,
+   "unit": "x",
+   "grade": "Interested-party",
+   "note": "法說口述（二手、單一來源）；avgo 模型 Q 頁第 10 列說明欄",
+   "source_file": "avgo/dist/20261114_Broadcom個股模型_v0.5.7.xlsx",
+   "source_cell": "Q!J10"
+  },
+  {
+   "key": "avgo_xpu_share_fy26_model",
+   "company": "Broadcom",
+   "item": "XPU ÷ AI（FY2026 錨點；網通取 markets/network rep_avgo26 17.6）",
+   "period": "FY2026",
+   "value": 0.694444444444444,
+   "unit": "x",
+   "grade": "Derived",
+   "note": "含 Q4 指引；只作敏感度",
+   "source_file": "avgo/dist/20261114_Broadcom個股模型_v0.5.7.xlsx",
+   "source_cell": "Q!G10"
+  }
+ ],
+ "no_comparable": [
+  {
+   "company": "AMD",
+   "reason": "公司只揭露 Data Center 分部（含 EPYC CPU）；Instinct GPU 營收未揭露；Siliconomics 無資料中心 CPU 層，組不出同口徑層級值",
+   "test": "上限檢驗：分部實績 ≥ 層級 GPU 隱含"
+  },
+  {
+   "company": "Marvell",
+   "reason": "公司只揭露資料中心終端市場合計；客製 XPU 金額只在法說口述（Interested-party）",
+   "test": "上限檢驗：資料中心實績 ≥ 層級客製 XPU 隱含"
+  },
+  {
+   "company": "聯發科",
+   "reason": "AI ASIC 營收金額未揭露（首顆 ASIC 2026-09 起出貨初期訂單；4Q26 雲端 ASIC 25 億美元為指引）",
+   "test": "無（合併營收遠大於層級值，上限檢驗無鑑別力）"
+  },
+  {
+   "company": "創意",
+   "reason": "Siliconomics v0.19 M7 份額表沒有創意列（創意的其他 ASIC 份額 3% 只在 guc 模型，Assumed）；公司未揭露 AI ASIC 金額",
+   "test": "無；創意歸入殘差"
+  },
+  {
+   "company": "世芯",
+   "reason": "Trainium 營收金額未揭露（只揭露合併營收）",
+   "test": "上限檢驗：合併營收 ≥ 層級 Trainium 隱含"
+  }
+ ],
+ "layer_inputs_v019": {
+  "u_bw_26": {
+   "value": 5.4,
+   "ref": "In!E45",
+   "tag": "Interested-party",
+   "unit": "百萬顆"
+  },
+  "u_bw_27": {
+   "value": 2.256909,
+   "ref": "In!E46",
+   "tag": "Interested-party；截頂後 Derived",
+   "unit": "百萬顆"
+  },
+  "u_bw_28": {
+   "value": 0.5,
+   "ref": "In!E47",
+   "tag": "Assumed",
+   "unit": "百萬顆"
+  },
+  "g29_bw": {
+   "value": -0.5,
+   "ref": "In!E118",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "u_rb_26": {
+   "value": 1.7,
+   "ref": "In!E51",
+   "tag": "Interested-party",
+   "unit": "百萬顆"
+  },
+  "u_rb_27": {
+   "value": 6.582652,
+   "ref": "In!E52",
+   "tag": "Interested-party；截頂後 Derived",
+   "unit": "百萬顆"
+  },
+  "u_rb_28": {
+   "value": 7,
+   "ref": "In!E53",
+   "tag": "Assumed",
+   "unit": "百萬顆"
+  },
+  "g29_rb": {
+   "value": 0.15,
+   "ref": "In!E119",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "u_ru_26": {
+   "value": 0,
+   "ref": "In!E57",
+   "tag": "Assumed",
+   "unit": "百萬顆"
+  },
+  "u_ru_27": {
+   "value": 0.282114,
+   "ref": "In!E58",
+   "tag": "Assumed；截頂後 Derived",
+   "unit": "百萬顆"
+  },
+  "u_ru_28": {
+   "value": 2,
+   "ref": "In!E59",
+   "tag": "Assumed",
+   "unit": "百萬顆"
+  },
+  "g29_ru": {
+   "value": 0.15,
+   "ref": "In!E120",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "u_hp_26": {
+   "value": 0.5,
+   "ref": "In!E63",
+   "tag": "Interested-party",
+   "unit": "百萬顆"
+  },
+  "u_hp_27": {
+   "value": 0,
+   "ref": "In!E64",
+   "tag": "Interested-party；截頂後 Derived",
+   "unit": "百萬顆"
+  },
+  "u_hp_28": {
+   "value": 0,
+   "ref": "In!E65",
+   "tag": "Interested-party",
+   "unit": "百萬顆"
+  },
+  "g29_hp": {
+   "value": 0,
+   "ref": "In!E121",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "u_amd_26": {
+   "value": 0.75,
+   "ref": "In!E69",
+   "tag": "Interested-party／Assumed",
+   "unit": "百萬顆"
+  },
+  "u_amd_27": {
+   "value": 1.410568,
+   "ref": "In!E70",
+   "tag": "Interested-party／Assumed；截頂後 Derived",
+   "unit": "百萬顆"
+  },
+  "u_amd_28": {
+   "value": 2,
+   "ref": "In!E71",
+   "tag": "Interested-party／Assumed",
+   "unit": "百萬顆"
+  },
+  "g29_amd": {
+   "value": 0.15,
+   "ref": "In!E122",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "u_tpu_26": {
+   "value": 3.85,
+   "ref": "In!E75",
+   "tag": "Interested-party",
+   "unit": "百萬顆"
+  },
+  "u_tpu_27": {
+   "value": 5.172083,
+   "ref": "In!E76",
+   "tag": "Interested-party；截頂後 Derived",
+   "unit": "百萬顆"
+  },
+  "u_tpu_28": {
+   "value": 7,
+   "ref": "In!E77",
+   "tag": "Interested-party",
+   "unit": "百萬顆"
+  },
+  "g29_tpu": {
+   "value": 0.15,
+   "ref": "In!E123",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "u_trn_26": {
+   "value": 2,
+   "ref": "In!E81",
+   "tag": "Assumed",
+   "unit": "百萬顆"
+  },
+  "u_trn_27": {
+   "value": 2.350947,
+   "ref": "In!E82",
+   "tag": "Assumed；截頂後 Derived",
+   "unit": "百萬顆"
+  },
+  "u_trn_28": {
+   "value": 3,
+   "ref": "In!E83",
+   "tag": "Assumed",
+   "unit": "百萬顆"
+  },
+  "g29_trn": {
+   "value": 0.15,
+   "ref": "In!E124",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "u_oth_26": {
+   "value": 1,
+   "ref": "In!E87",
+   "tag": "Derived／Assumed",
+   "unit": "百萬顆"
+  },
+  "u_oth_27": {
+   "value": 4.231705,
+   "ref": "In!E88",
+   "tag": "Derived／Assumed；截頂後 Derived",
+   "unit": "百萬顆"
+  },
+  "u_oth_28": {
+   "value": 5,
+   "ref": "In!E89",
+   "tag": "Derived／Assumed",
+   "unit": "百萬顆"
+  },
+  "g29_oth": {
+   "value": 0.15,
+   "ref": "In!E125",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "g_tpu_26": {
+   "value": 192,
+   "ref": "In!E78",
+   "tag": "Interested-party",
+   "unit": "GB"
+  },
+  "g_tpu_27": {
+   "value": 250,
+   "ref": "In!E79",
+   "tag": "Interested-party",
+   "unit": "GB"
+  },
+  "g_tpu_28": {
+   "value": 288,
+   "ref": "In!E80",
+   "tag": "Interested-party",
+   "unit": "GB"
+  },
+  "g_trn_26": {
+   "value": 110,
+   "ref": "In!E84",
+   "tag": "Assumed",
+   "unit": "GB"
+  },
+  "g_trn_27": {
+   "value": 144,
+   "ref": "In!E85",
+   "tag": "Assumed",
+   "unit": "GB"
+  },
+  "g_trn_28": {
+   "value": 200,
+   "ref": "In!E86",
+   "tag": "Assumed",
+   "unit": "GB"
+  },
+  "g_oth_26": {
+   "value": 150,
+   "ref": "In!E90",
+   "tag": "Derived／Assumed",
+   "unit": "GB"
+  },
+  "g_oth_27": {
+   "value": 200,
+   "ref": "In!E91",
+   "tag": "Derived／Assumed",
+   "unit": "GB"
+  },
+  "g_oth_28": {
+   "value": 250,
+   "ref": "In!E92",
+   "tag": "Derived／Assumed",
+   "unit": "GB"
+  },
+  "crd_k_26": {
+   "value": 1,
+   "ref": "Coord!C36",
+   "tag": null,
+   "unit": "x"
+  },
+  "crd_k_27": {
+   "value": 1,
+   "ref": "Coord!D36",
+   "tag": null,
+   "unit": "x"
+  },
+  "crd_k_28": {
+   "value": 0.8,
+   "ref": "Coord!E36",
+   "tag": null,
+   "unit": "x"
+  },
+  "crd_k_29": {
+   "value": 0.710097721339093,
+   "ref": "Coord!F36",
+   "tag": null,
+   "unit": "x"
+  },
+  "it_GB": {
+   "value": 66.1944444444444,
+   "ref": "In!E215",
+   "tag": "Derived",
+   "unit": "$K/顆"
+  },
+  "it_VR": {
+   "value": 128.833333333333,
+   "ref": "In!E216",
+   "tag": "Derived",
+   "unit": "$K/顆"
+  },
+  "it_RU": {
+   "value": 257.166666666667,
+   "ref": "In!E217",
+   "tag": "Derived",
+   "unit": "$K/顆"
+  },
+  "it_HP": {
+   "value": 38.3125,
+   "ref": "In!E218",
+   "tag": "Derived",
+   "unit": "$K/顆"
+  },
+  "nvr_GB300": {
+   "value": 0.7717,
+   "ref": "In!E603",
+   "tag": "Derived",
+   "unit": "%"
+  },
+  "nvr_VR26": {
+   "value": 0.6951,
+   "ref": "In!E604",
+   "tag": "Derived",
+   "unit": "%"
+  },
+  "nvr_VR27": {
+   "value": 0.6951,
+   "ref": "In!E605",
+   "tag": "Derived",
+   "unit": "%"
+  },
+  "nvr_RU": {
+   "value": 0.6951,
+   "ref": "In!E608",
+   "tag": "Analogy",
+   "unit": "%"
+  },
+  "nvr_H100": {
+   "value": 0.7027,
+   "ref": "In!E606",
+   "tag": "Analogy",
+   "unit": "%"
+  },
+  "pa_amd": {
+   "value": 30,
+   "ref": "In!E127",
+   "tag": "Interested-party",
+   "unit": "US$K"
+  },
+  "pa_tpu": {
+   "value": 12,
+   "ref": "In!E128",
+   "tag": "Assumed",
+   "unit": "US$K"
+  },
+  "pa_trn": {
+   "value": 8,
+   "ref": "In!E129",
+   "tag": "Assumed",
+   "unit": "US$K"
+  },
+  "pa_oth": {
+   "value": 8,
+   "ref": "In!E130",
+   "tag": "Assumed",
+   "unit": "US$K"
+  },
+  "core_tpu": {
+   "value": 8,
+   "ref": "In!E131",
+   "tag": "Assumed",
+   "unit": "US$K"
+  },
+  "core_oth": {
+   "value": 6,
+   "ref": "In!E132",
+   "tag": "Assumed",
+   "unit": "US$K"
+  },
+  "f_hbm": {
+   "value": 0.6,
+   "ref": "In!E133",
+   "tag": "Assumed",
+   "unit": "x"
+  },
+  "hbm_p26": {
+   "value": 14.6,
+   "ref": "In!E102",
+   "tag": "Interested-party",
+   "unit": "$/GB"
+  },
+  "hbm_p27": {
+   "value": 0.8,
+   "ref": "In!E103",
+   "tag": "Interested-party",
+   "unit": "%"
+  },
+  "hbm_p28_B": {
+   "value": -0.25,
+   "ref": "In!E104",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "hbm_p29_B": {
+   "value": 0,
+   "ref": "In!E107",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "sh_tpu_26": {
+   "value": 0.9,
+   "ref": "In!E135",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "sh_tpu_27": {
+   "value": 0.8,
+   "ref": "In!E136",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "sh_tpu_28": {
+   "value": 0.75,
+   "ref": "In!E137",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "sh_oth_26": {
+   "value": 0.35,
+   "ref": "In!E138",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "sh_oth_27": {
+   "value": 0.55,
+   "ref": "In!E139",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "sh_oth_28": {
+   "value": 0.55,
+   "ref": "In!E140",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "msh_trn_26": {
+   "value": 0.1,
+   "ref": "In!E141",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "msh_trn_27": {
+   "value": 0.1,
+   "ref": "In!E142",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "msh_trn_28": {
+   "value": 0.08,
+   "ref": "In!E143",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "msh_oth_26": {
+   "value": 0.05,
+   "ref": "In!E144",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "msh_oth_27": {
+   "value": 0.06,
+   "ref": "In!E145",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "msh_oth_28": {
+   "value": 0.15,
+   "ref": "In!E146",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "msh_tpu_26": {
+   "value": 0,
+   "ref": "In!E147",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "msh_tpu_27": {
+   "value": 0,
+   "ref": "In!E148",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "msh_tpu_28": {
+   "value": 0.05,
+   "ref": "In!E149",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "mtk_tpu_26": {
+   "value": 0.05,
+   "ref": "In!E150",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "mtk_tpu_27": {
+   "value": 0.15,
+   "ref": "In!E151",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "mtk_tpu_28": {
+   "value": 0.18,
+   "ref": "In!E152",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "mtk_oth_26": {
+   "value": 0,
+   "ref": "In!E153",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "mtk_oth_27": {
+   "value": 0,
+   "ref": "In!E154",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "mtk_oth_28": {
+   "value": 0,
+   "ref": "In!E155",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "al_trn_26": {
+   "value": 0.3,
+   "ref": "In!E156",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "al27_B": {
+   "value": 0.5,
+   "ref": "In!E157",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "al28_B": {
+   "value": 0.45,
+   "ref": "In!E158",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "rc_tol": {
+   "value": 0.15,
+   "ref": "In!E600",
+   "tag": "Assumed",
+   "unit": "%"
+  },
+  "fx_twd": {
+   "value": 32,
+   "ref": "In!E596",
+   "tag": "Assumed",
+   "unit": "NT$/US$"
+  }
+ },
+ "recon_f_snapshot_v019": {
+  "years": [
+   2026,
+   2027,
+   2028,
+   2029
+  ],
+  "implied": [
+   448.361697688478,
+   743.784746309678,
+   null,
+   null
+  ],
+  "company": [
+   375.46,
+   633.7,
+   null,
+   null
+  ],
+  "ref": "20261114_R4對帳橋接_Siliconomics側_r11.xlsx Bridge 第 n3、n4 列"
+ }
+}

@@ -35,7 +35,7 @@ def apply(wb, CR):
                     f'TEXT(D{r},"#,##0")', T(" 韓元（"), REC5(up), T("），本模型採用的不重算口徑為 "), f'TEXT(Coord!C{tp},"#,##0")', T(" 韓元（"), f"Coord!C{rec}",
                     T("），兩口徑差 "), f'TEXT(D{r}/Coord!C{tp}-1,"+0.0%;-0.0%")', T("、評等"), f'IF({REC5(up)}=Coord!C{rec},"相同","不同")',
                     T("。重算值只列揭露、不進兩讀數表；Sens 案例維持一次動一個輸入、案例內重算 k 的做法，不改。")))
-    CW.cell(r, 8, f"D 欄：{PREV} 的另一側讀數（hanmi/coord_alt.json {PREV} 版，tools/coord/alt_run.py；另一側建置以縮放後的 CY2026 購機重算 k；Siliconomics v0.19 對帳中比值；Derived）加權目標價 26,255.41 韓元；本模型正式另一側讀數不採此口徑")
+    CW.cell(r, 8, f"D 欄：{PREV} 的另一側讀數（hanmi/coord_alt.json {PREV} 版，tools/coord/alt_run.py；另一側建置以縮放後的 CY2026 購機重算 k；Siliconomics v0.20 對帳中比值；Derived）加權目標價 26,255.41 韓元；本模型正式另一側讀數不採此口徑")
     out["recal"] = r; r += 1
     # README：A1 標題版號、末尾說明；v1.3 展示層版本列前加本版說明（HTML 版本列）
     a1 = RD["A1"].value

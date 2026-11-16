@@ -119,6 +119,12 @@ inp("nv_dc_25", "NVIDIA 資料中心營收 FY2026（約 CY2025）", "$B", None, 
     "NVIDIA 8-K：FY26 Q1–Q4 39.1／41.1／51.2／62.3（nvidia/build_nvidia.py Q 頁）")
 inp("nv_dc_26", "NVIDIA 資料中心營收 FY2027 錨點（約 CY2026）", "$B", None, 375.46, None, "Verified／Assumed",
     "Q1、Q2 實績 75.2／89.0（8-K）＋Q3 指引中點＋Q4 假設（NVIDIA 個股模型 v0.2.3）")
+inp("nv_q1_27", "NVIDIA 資料中心營收 FY2027 Q1（2026-02～04；純實績）", "$B", None, 75.2, None, "Verified",
+    "NVIDIA 8-K（FY27 Q1）；nvidia/dist NVIDIA 個股模型 v0.3.10 Q!G5。v0.20（規則 v1.4.3 C0）：主讀數只用已公布實績")
+inp("nv_q2_27", "NVIDIA 資料中心營收 FY2027 Q2（2026-05～07；純實績）", "$B", None, 89.0, None, "Verified",
+    "NVIDIA 8-K（FY27 Q2）；nvidia/dist NVIDIA 個股模型 v0.3.10 Q!H5")
+inp("nv_mo_26", "已公布實績涵蓋 CY2026 的月數（FY27 Q1＋Q2）", "月", None, 6, None, "Derived",
+    "FY27 Q1、Q2 全在 CY2026（2026-02～07）；Q3（2026-11-19 公布）後改 9")
 inp("pgw_25", "每 GW IT capex 2025（NVIDIA 世代加權）", "$B/GW", None, 26.01, None, "Derived",
     f"{wt_f} CapexGW「NVIDIA 每 IT GW IT capex（世代加權）」2025 欄")
 inp("nonnv_25", "非 NVIDIA 2025 實體 GW ÷ 2026", "x", 0.5, 0.6, 0.75, "Assumed",
@@ -296,6 +302,11 @@ brow("n2", "每 IT GW NVIDIA 營收（營收口徑基準）", "2026＝GB300 與 
 brow("n3", "隱含 NVIDIA 資料中心營收（$B）", "n1 × n2", lambda y: None if y not in (2026, 2027) else f"={C(y)}{R['n1']}*{C(y)}{R['n2']}")
 brow("n4", "NVIDIA 資料中心營收（公司；$B）", "2026 錨點 nv_dc_26；2027 指引推得 nv_dc_27", lambda y: {2026: "=nv_dc_26", 2027: "=nv_dc_27"}.get(y))
 brow("n5", "比值（隱含 ÷ 公司）", "1 附近＝顆數與每 GW 內容一致；> 1 本庫 NVIDIA 出貨 GW 偏多或內容偏高", lambda y: None if y not in (2026, 2027) else f"={C(y)}{R['n3']}/{C(y)}{R['n4']}", True)
+brow("n10", "純實績：已公布季累計（FY27 Q1＋Q2；$B）", "v0.20 主讀數的公司側（規則 v1.4.3 C0：實績只到最近已公布期間）", lambda y: {2026: "=nv_q1_27+nv_q2_27"}.get(y))
+brow("n11", "層級同期間（n3 × 月數 ÷ 12；$B）", "線性分攤（成長年中偏高估層級同期間 → 主讀數偏低）", lambda y: {2026: f"={C(y)}{R['n3']}*nv_mo_26/12"}.get(y))
+brow("n12", "主讀數：實績 ÷ 層級同期間", "±15% 判定（rc_tol）", lambda y: {2026: f"={C(y)}{R['n10']}/{C(y)}{R['n11']}"}.get(y), True)
+brow("n13", "最近一季年化（Q2 × 4；$B）", "第二讀數的公司側", lambda y: {2026: "=nv_q2_27*4"}.get(y))
+brow("n14", "第二讀數：最近一季年化 ÷ 層級全年", "約等於該季中點年化速率；加速成長時偏低", lambda y: {2026: f"={C(y)}{R['n13']}/{C(y)}{R['n3']}"}.get(y), True)
 brow("n6", "所需每 GW 內容（公司營收 ÷ n1）", "與 n2 比較", lambda y: None if y not in (2026, 2027) else f"={C(y)}{R['n4']}/{C(y)}{R['n1']}")
 brow("n7", "　比值：營收口徑低值內容", "n1 × 低值 ÷ n4", lambda y: {2026: f"={C(y)}{R['n1']}*(nvc_gb_lo*(1-vr26_mix)+nvc_vr26_lo*vr26_mix)/{C(y)}{R['n4']}", 2027: f"={C(y)}{R['n1']}*nvc_vr27_lo/{C(y)}{R['n4']}"}.get(y))
 brow("n8", "　比值：營收口徑高值內容", "n1 × 高值 ÷ n4", lambda y: {2026: f"={C(y)}{R['n1']}*(nvc_gb_hi*(1-vr26_mix)+nvc_vr26_hi*vr26_mix)/{C(y)}{R['n4']}", 2027: f"={C(y)}{R['n1']}*nvc_vr27_hi/{C(y)}{R['n4']}"}.get(y))

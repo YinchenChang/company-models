@@ -1,0 +1,19 @@
+[
+ {
+  "after_section_end": "M6.",
+  "section": "M6b. ASIC 核心價補充（v0.20；Recon D1 GPU／ASIC 晶片金額的夥伴每顆營收規格用）",
+  "rows": [
+   {
+    "id": "core_trn",
+    "label": "AWS Trainium 核心價（不含 HBM；每顆）",
+    "unit": "US$K",
+    "lo": 4.5,
+    "base": "=pa_trn-g_trn_26*hbm_p26/1000",
+    "hi": 8.0,
+    "tag": "Derived",
+    "src": "＝pa_trn − g_trn_26 × hbm_p26 ÷ 1000（2026 每顆金額扣 HBM；8 − 110 × 14.6 ÷ 1000＝6.394）；同 mrvl 模型 In 頁 core_trn、世芯模型每顆規格。區間沿用 mrvl 模型 4.5–8.0",
+    "src2": "Recon D1 規格（recon_d_gpu_asic_spec.md 第 4.5 節）；只供 D1 夥伴規格，不進基準鏈"
+   }
+  ]
+ }
+]
