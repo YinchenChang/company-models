@@ -124,6 +124,8 @@ def apply(wb, here, cfg):
                     continue
                 if ws.title == "In" and c.row == r:
                     continue
+                if (ws.title, c.coordinate) in cfg.get("sweep_skip", ()):
+                    continue
                 if ws.title == "README" and not v.startswith("="):
                     continue
                 if ws.title == "Val" and c.row in peer_rows:
