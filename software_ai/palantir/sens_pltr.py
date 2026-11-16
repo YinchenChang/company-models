@@ -22,8 +22,11 @@ def recalc(raw):
     out = os.path.join(WD, "out"); os.makedirs(out, exist_ok=True)
     prof = tempfile.mkdtemp(prefix="lo_pltr_")
     env = dict(os.environ); env["LC_ALL"] = "C.UTF-8"
-    subprocess.run(["soffice", f"-env:UserInstallation=file://{prof}", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", out, raw],
-                   check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=env, timeout=900)
+    for _try in range(4):   # LibreOffice 首次啟動偶發 255，重試
+        p_ = subprocess.run(["soffice", f"-env:UserInstallation=file://{prof}", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", out, raw],
+                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=env, timeout=900)
+        if p_.returncode == 0 and os.path.exists(os.path.join(out, os.path.basename(raw))): break
+    else: raise SystemExit("soffice 重算失敗")
     shutil.rmtree(prof, ignore_errors=True)
     return os.path.join(out, os.path.basename(raw))
 

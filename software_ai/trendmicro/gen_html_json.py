@@ -103,9 +103,9 @@ cfg = {
     {"type": "table", "caption": "合併層：模型 vs 公司指引與共識（財報前）", "head": ["項目", "模型情境 B", "對照值", "差", "說明"],
      "rowgen": {"sheet": "Recon", "rows": f"{RCR['r26']}-{RCR['c27']}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n2", "n2", "n2", ""],
                 "row_fmt": {str(RCR["m28"]): {"B": "p1", "C": "p1", "D": "n1"}, str(RCR["gm"]): {"B": "p1", "C": "p1", "D": "n1"}, str(RCR["c26"]): {"D": "sp1"}, str(RCR["c27"]): {"D": "sp1"}}}},
-    {"type": "table", "caption": "分部：2026H1 實績 vs 模型", "head": ["分部", "H1 實績", "H1 年增", "模型 FY2026E", "隱含 H2", "隱含 H2 年增", "FY2025 實績"],
+    {"type": "table", "caption": "分部：2026上半年實績 vs 模型", "head": ["分部", "上半年實績", "上半年年增", "模型 FY2026E", "隱含下半年", "隱含下半年年增", "FY2025 實績"],
      "rowgen": {"sheet": "Recon", "rows": f"{RCR['h1jp']}-{RCR['h1t']}", "cols": list("ABCDEFG"), "fmts": ["", "n1", "p1", "n1", "n1", "p1", "n1"]}},
-    {"type": "table", "caption": "原型 P 單位經濟：每 US$1M 平均 ARR（US$K）", "head": ["項目", "情境 A", "情境 B", "情境 C", "說明"],
+    {"type": "table", "caption": "原型 P 單位經濟：每百萬美元平均 ARR（千美元）", "head": ["項目", "情境 A", "情境 B", "情境 C", "說明"],
      "rowgen": {"sheet": "Recon", "rows": f"{RCR['uinc2027']}-{RCR['uain']}", "cols": list("ABCDE"), "fmts": ["", "n0", "n0", "n0", ""],
                 "row_fmt": {str(RCR["uinfr"]): {c: "p1" for c in "BCD"}, str(RCR["uain"]): {c: "n1" for c in "BCD"}}}}]},
   {"id": "status", "title": "資料狀態", "blocks": [
@@ -113,7 +113,7 @@ cfg = {
     {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期（資料截止日、成品日、股價基準日）", f"@README!A{RDR['a1']}"], ["build_id", f"@Sens!D{SEM['BID']}"], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"], ["Tokenomics 快照", "@Sources!B2"]]},
     {"type": "h3", "text": "資料與口徑"}, {"type": "list", "items": ["@In!A2", "@Sources!B3", "@Sources!B4"]},
     {"type": "h3", "text": "市場資料日期、失效條件與承重假設"},
-    {"type": "list", "items": [f"@README!A{RDR[k]}" for k in ("md1", "f1", "f2", "f3", "l1", "l2", "l3", "na1", "na2", "na3", "na4")]},
+    {"type": "list", "items": [f"@README!A{RDR[k]}" for k in ("md1", "diag", "f1", "f2", "f3", "l1", "l2", "l3", "na1", "na2", "na3", "na4")]},
     {"type": "table", "caption": "風險登錄", "head": ["風險", "是否建模", "理由", "觀察指標"], "rowgen": {"sheet": "README", "rows": f"{rm['RISK_HDR'] + 1}-{rm['RISK_HDR'] + 5}", "cols": list("ABCD")}},
     {"type": "h3", "text": "「未找到」清單"},
     {"type": "scan", "needle": "未找到", "collapse": True, "summary": "展開：標為「未找到」的項目", "sheets": {"In": ["B", "H", "I"]}, "empty": "沒有標為未找到的項目。"}]}]}

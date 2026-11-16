@@ -140,10 +140,10 @@ def facts_rows():
             add(QLAB[k], v * 100 if k == "np_m" else v, QUNIT.get(k, "十億韓元"), q, QBASIS.get(k, "K-IFRS 合併；2025 各季為新口徑重編比較欄"), "Naver 財報簡報 " + q + "（" + SRC_Q[q] + "）；頁：業績表（頁碼未逐頁記錄）", tag)
     for k, (lab, vals) in YDATA.items():
         for y, v, s in zip(YYR, vals, YSRC):
-            add(lab + "（舊五分部口徑）" if k.startswith("seg_") else lab, v, "十億韓元", y, "舊口徑；FY2025 為 2026 年重編後之季度加總" if y == "FY2025" else ("含 LINE-Z 合併利益" if k == "y_ni" and y == "FY2021" else "K-IFRS 合併"), "Naver 財報簡報 " + s + "（見 DECK 表）；頁：年度業績表（頁碼未逐頁記錄）", "Derived" if y == "FY2025" and k != "y_oi" else "Verified")
+            add(lab + "（舊五分部口徑）" if k.startswith("seg_") else lab, v, "十億韓元", y, "舊口徑；FY2025 為 2026 年重編後之季度加總" if y == "FY2025" else ("含 LINE-Z 合併利益" if k == "y_ni" and y == "FY2021" else "K-IFRS 合併"), "Naver 財報簡報 " + s + "（" + DECK[s[:4]] + "）；頁：年度業績表（頁碼未逐頁記錄）", "Derived" if y == "FY2025" and k != "y_oi" else "Verified")
     for k, (lab, d) in YOPX.items():
         for y, v in d.items():
-            add(lab, v, "十億韓元", y, "舊口徑", "Naver 財報簡報 " + ("4Q23" if y == "FY2023" else "4Q25") + "；頁：年度費用表（頁碼未逐頁記錄）", "Verified")
+            add(lab, v, "十億韓元", y, "舊口徑", "Naver 財報簡報 " + ("4Q23" if y == "FY2023" else "4Q25") + "（" + DECK["4Q23" if y == "FY2023" else "4Q25"] + "）；頁：年度費用表（頁碼未逐頁記錄）", "Verified")
     for y, v in ADJ_EBITDA.items():
         add("調整後 EBITDA（公司定義，不含 SBC）", v, "十億韓元", y, "非 K-IFRS；公司自訂", "Naver 財報簡報 4Q22／4Q23／4Q24", "Interested-party", "管理層自訂口徑")
     for q, v in zip(["1Q25", "2Q25", "3Q25", "4Q25"], COMM_ADS_Q):

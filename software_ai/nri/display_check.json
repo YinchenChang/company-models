@@ -1,0 +1,19 @@
+{
+ "_說明": "展示層數字一致性檢查設定（tools/model_governance/check_display.py、version_table.py；原則第 10 節第 51、53 條）",
+ "history_re": "^(v\\d|本版要點)",
+ "items": [
+  {"name": "加權目標價", "sheet": "Val", "find": "目標價（DCF 與 Comparable 加權）", "col": "B", "fmt": "n0", "patterns": ["加權目標價 ([0-9]+) 日圓"]},
+  {"name": "DCF 目標價", "sheet": "Val", "find": "DCF 目標價（情境加權）", "col": "B", "fmt": "n0", "patterns": ["DCF 目標價 ([0-9]+)、"]},
+  {"name": "Comparable 目標價", "sheet": "Val", "find": "Comparable 目標價（相對倍數調整後）", "col": "B", "fmt": "n0", "patterns": ["Comparable 目標價 ([0-9]+) 日圓"]},
+  {"name": "上檔空間", "sheet": "Val", "find": "上檔空間：加權目標價", "col": "B", "fmt": "sp1", "patterns": ["上檔空間 ([+-][0-9]+\\.[0-9]%)，"]},
+  {"name": "投資建議", "sheet": "Val", "find": "投資建議", "col": "B", "fmt": "text"}
+ ],
+ "table_rows": [
+  {"title": "現價", "sheet": "Val", "find": "現價（日圓）", "col": "B", "fmt": "n0"},
+  {"title": "DCF 目標價", "sheet": "Val", "find": "DCF 目標價（情境加權）", "col": "B", "fmt": "n0"},
+  {"title": "Comparable 目標價", "sheet": "Val", "find": "Comparable 目標價（相對倍數調整後）", "col": "B", "fmt": "n0"},
+  {"title": "加權目標價（上檔空間）", "sheet": "Val", "find": "目標價（DCF 與 Comparable 加權）", "col": "B", "fmt": "n0", "with": {"sheet": "Val", "find": "上檔空間：加權目標價", "col": "B", "fmt": "sp1"}},
+  {"title": "投資建議", "sheet": "Val", "find": "投資建議", "col": "B", "fmt": "text"},
+  {"title": "收支關卡 A／B／C", "sheet": "CF", "find": "收支關卡：", "col": "B,C,D", "fmt": "n1"}
+ ]
+}

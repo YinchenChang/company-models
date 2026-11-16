@@ -2,7 +2,7 @@
 HN = set(wb.defined_names.keys())
 FCOLS = ["I", "J", "K", "L", "M", "N"]
 HISTC = {"C": "23", "D": "24", "E": "25"}
-YR_OF = {c: y for c, y in zip("HIJKLMN", [2026] + ANN)}
+YR_OF = {c: y for c, y in zip("HIJKLMN", [2026] + [2000 + a for a in ANN])}
 
 
 def blk_header(ws, r, title, fill=SUB):
@@ -58,7 +58,7 @@ for s in "ABC":
     put(TH, R["pA"], "AI 原生客戶單價年變動（讓利自 FY2027 起三年線性消退）", "%", cols(lambda c: f"=pa_{s}*MAX(0,1-({c}{R['yr']}-2027)/3)"), "0.0%")
     put(TH, R["priA"], "AI 原生客戶單價指數（價格保留率；FY2026E＝1）", "x", {"H": 1, **cols(lambda c: f"={P(c)}{R['priA']}*(1+{c}{R['pA']})")}, "0.000")
     put(TH, R["gai"], "AI credits 營收年增（FY2028 起）", "%", {c: f"=MAX(gai_floor,gai28-gai_step*({c}{R['yr']}-2028))" for c in FCOLS[1:]}, "0.0%")
-    put(TH, R["units"], "用量（以 FY2026 價格計的營收）", "US$M", {"H": f"=H{R['revN']}+H{R['revA']}+H{R['aic']}", **cols(lambda c: f"=$H{R['revN']}*{c}{R['volN']}+$H{R['revA']}*{c}{R['volA']}+{c}{R['aic']}")})
+    put(TH, R["units"], "平台用量（以 FY2026 價格計的營收；不含 AI credits，其成本由推論成本列計）", "US$M", {"H": f"=H{R['revN']}+H{R['revA']}", **cols(lambda c: f"=$H{R['revN']}*{c}{R['volN']}+$H{R['revA']}*{c}{R['volA']}")})
     put(TH, R["core"], "銷貨成本（non-GAAP，不含推論）＝用量 ×（1 − 毛利率）×（1＋單位成本年變動）^年數", "US$M", {c: f"={c}{R['units']}*(1-gm_core)*(1+uc_g)^({c}{R['yr']}-2026)" for c in "HIJKLMN"})
     put(TH, R["pxt"], "採用的 token 價格（路由組合 × 價格年變動；Tokenomics IF_PriceRef）", "US$/M", {c: f"=((1-route_sh)*tk_px+route_sh*tk_cheap)*(1+tp_dec)^({c}{R['yr']}-2026)" for c in "HIJKLMN"}, "0.000", note="價格只讀 Tokenomics 快照；年變動為 Assumed（待 AI供應鏈 登錄）")
     put(TH, R["crp"], "每 credit 價格（隨 token 價格變動轉嫁 pt_k）", "US$", {c: f"=cr_px*(1+pt_k*({c}{R['pxt']}/tk_px0-1))" for c in "HIJKLMN"}, "0.000")
@@ -74,7 +74,7 @@ for s in "ABC":
     put(TH, R["pbe"], "反解：AI 淨效果＝0 所需的 AI 原生客戶價格保留率", "x", {c: f"=($H{R['revA']}-{c}{R['aic']}+{c}{R['inf2']})/($H{R['revA']}*{c}{R['volA']})" for c in "HIJKLMN"}, "0.000", note="公式反解：(基期 − AI credits 營收 ＋ 推論成本) ÷ (基期 × 用量指數)；低於實際單價指數＝淨效果為正")
     put(TH, R["pact"], "對照：模型的 AI 原生客戶單價指數", "x", {c: f"={c}{R['priA']}" for c in "HIJKLMN"}, "0.000")
     put(TH, R["pbe_task"], "反解：AI credits 轉售毛利率＝0 的每任務 credit 收入（美元）＝每任務推論成本", "US$", {c: f"={c}{R['ctask']}" for c in "HIJKLMN"}, "0.000", note="對照每任務 credit 收入＝耗用 credits × 每 credit 價格")
-    put(TH, R["pidx"], "加權單價指數＝營收 ÷ 用量", "x", {c: f"={c}{R['rev']}/{c}{R['units']}" for c in "HIJKLMN"}, "0.000")
+    put(TH, R["pidx"], "平台加權單價指數＝平台營收 ÷ 平台用量", "x", {c: f"=({c}{R['revN']}+{c}{R['revA']})/{c}{R['units']}" for c in "HIJKLMN"}, "0.000")
     r = base + len(keys) + 1
     T[s] = R
 widths(TH)
@@ -113,11 +113,11 @@ for s in "ABC":
     for k, nm, lab_ in (("rdn", "rd_ng", "研發費用（non-GAAP）"), ("smn", "sm_ng", "銷售與行銷費用（non-GAAP）"), ("gan", "ga_ng", "一般及行政費用（non-GAAP）")):
         hk = {"rdn": "ngrd", "smn": "ngsm", "gan": "ngga"}[k]
         pl(k, lab_, "US$M", {**{c: f"=h_{hk}_{p}" for c, p in H3.items() if ex(f"h_{hk}_{p}")}, "G": f"=G{R['rev']}*{nm}", "H": f"=F{R[k]}+G{R[k]}",
-                              **{c: f"={c}{R['rev']}*({nm}+opx_st*({c}{R['yr']}-2026)*{nm}/{share})" for c in FCOLS}})
+                              **{c: f"={c}{R['rev']}*{nm}/{share}*MAX(opx_floor,{share}+opx_st*({c}{R['yr']}-2026))" for c in FCOLS}})
     pl("oin", "營業利益（non-GAAP）", "US$M", {**{c: f"=h_ngoi_{p}" for c, p in H3.items() if ex(f"h_ngoi_{p}")}, "G": f"=G{R['gpn']}-G{R['rdn']}-G{R['smn']}-G{R['gan']}", "H": f"=F{R['oin']}+G{R['oin']}",
                                   **{c: f"={c}{R['gpn']}-{c}{R['rdn']}-{c}{R['smn']}-{c}{R['gan']}" for c in FCOLS}}, bold=True)
     pl("omn", "營業利益率（non-GAAP）", "%", {c: f"={c}{R['oin']}/{c}{R['rev']}" for c in "CDEFGHIJKLMN"}, "0.0%")
-    pl("sbc", "股票薪酬（總額）", "US$M", {**hist("sbc", H3), "G": f"=G{R['rev']}*sbc_0", "H": f"=F{R['sbc']}+G{R['sbc']}", **{c: f"={c}{R['rev']}*(sbc_0+sbc_st*({c}{R['yr']}-2026))" for c in FCOLS}})
+    pl("sbc", "股票薪酬（總額）", "US$M", {**hist("sbc", H3), "G": f"=G{R['rev']}*sbc_0", "H": f"=F{R['sbc']}+G{R['sbc']}", **{c: f"={c}{R['rev']}*MAX(sbc_floor,sbc_0+sbc_st*({c}{R['yr']}-2026))" for c in FCOLS}})
     pl("ptx", "員工股票交易薪資稅", "US$M", {"D": "=h_ptx_24", "E": "=h_ptx_25", "F": "=h_ptx_9m26", "G": f"=G{R['sbc']}*ptx_sh", "H": f"=F{R['ptx']}+G{R['ptx']}", **{c: f"={c}{R['sbc']}*ptx_sh" for c in FCOLS}})
     pl("oth", "取得無形資產攤銷＋併購費用", "US$M", {"D": "=h_amort_24+h_mna_24", "E": "=h_amort_25+h_mna_25", "F": "=h_amort_9m26+h_mna_9m26", "G": f"=G{R['rev']}*oth_adj", "H": f"=F{R['oth']}+G{R['oth']}", **{c: f"={c}{R['rev']}*oth_adj" for c in FCOLS}})
     pl("oi", "營業利益（GAAP）", "US$M", {**hist("oi", H3), **{c: f"={c}{R['oin']}-{c}{R['sbc']}-{c}{R['ptx']}-{c}{R['oth']}" for c in ["G"] + FCOLS}, "H": f"=F{R['oi']}+G{R['oi']}"}, bold=True, fill=KEY)

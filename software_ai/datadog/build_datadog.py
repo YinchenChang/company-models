@@ -95,7 +95,7 @@ HROWS = [("rev", "營收"), ("cogs", "營業成本（GAAP）"), ("gp", "毛利�
          ("ptx", "員工股票交易薪資稅"), ("amort", "取得無形資產攤銷"), ("mna", "併購交易費用"), ("ngp", "毛利（non-GAAP）"), ("ngrd", "研發費用（non-GAAP）"), ("ngsm", "銷售與行銷費用（non-GAAP）"),
          ("ngga", "一般及行政費用（non-GAAP）"), ("ngoi", "營業利益（non-GAAP）"), ("ngeps", "稀釋 EPS（non-GAAP，US$）"), ("da", "折舊與攤銷"), ("ocf", "營運現金流"), ("capex", "購置不動產與設備"),
          ("capsw", "資本化軟體開發成本"), ("fcf", "自由現金流（公司定義）"), ("wcx", "營運資金與其他變動（營運現金流 − 淨利 − 折舊攤銷 − 股票薪酬）")]
-H_ROW = {}
+H_ROW = {k_: 4 + i_ for i_, (k_, _) in enumerate(HROWS)}
 r = 4
 for k, lab in HROWS:
     HS.cell(r, 1, lab); HS.cell(r, 2, "百萬股" if k == "dsh" else ("US$" if "eps" in k else "US$M")); H_ROW[k] = r
@@ -195,7 +195,7 @@ inp("opt_n", "流通選擇權（2026-09-30）", "百萬股", None, fv("opt.n.202
 inp("opt_k", "選擇權加權平均履約價", "US$", None, fv("opt.k.20260930"), None, "Verified", fs("opt.k.20260930"), "庫藏股法：價格用現價")
 inp("dil_inc", "評價股數計入 RSU 與選擇權（1＝是；0＝只用流通股）", "x", 0, 1, None, "Assumed", "DCF 規格第 3 節（基準 1）", "Sens 低＝0（原口徑）", judg=True)
 inp("conv_if", "2029 票據視為股份（1＝以 if-converted 計入股數並移除債務；0＝視為債務）", "x", None, 0, 1, "Assumed", "票據本金 1,000、轉換價約 217.60（" + fs("conv.px") + "）；現價與基準每股價值皆低於轉換價 → 視為債務", "Sens 高＝1", judg=True)
-inp("conv_sh", "票據轉換股數（百萬股）＝1,000 ÷ 217.60", "百萬股", None, "=h_debt_9m26/217.6", None, "Derived", "4.5955 股／千美元（" + fs("conv.px") + "）")
+inp("conv_sh", "票據轉換股數（百萬股）＝1,000 ÷ 217.60", "百萬股", None, "=h_debt/217.6", None, "Derived", "4.5955 股／千美元（" + fs("conv.px") + "）")
 inp("cash_0", "現金＋有價證券（2026-09-30）", "US$M", None, "=h_cash+h_mkt", None, "Derived", fs("bs.cash.20260930") + "；" + fs("bs.mkt.20260930"), "881.230＋4,352.357")
 inp("debt_0", "債務本金（2029 年到期 0.00% 可轉換票據）", "US$M", None, "=h_debt", None, "Verified", fs("debt.face.20260930"), "淨債務只計債務本金＋融資租賃，營業租賃不計（G2 第 5 條）")
 inp("fin_lease", "融資租賃負債（10-Q 未見融資租賃；未找到）", "US$M", None, 0.0, None, "Assumed", "未找到：資產負債表只列營業租賃負債（流動 46.177、非流動 274.462；不計入，因營業租賃費用已在營業利益）", "G2 第 5 條")
@@ -203,9 +203,9 @@ sec("B. 營收：命題模組（原型 U 按用量計價：營收＝用量單位
 inp("q4_g", "Q4 26E 營收季增率（相對 3Q26）", "%", -0.01, 0.01, 0.03, "Assumed", "指引中點隱含 −0.2%（" + fs("guid.g_q4lo") + "）；近三季實績皆超出指引上緣 3.8%–4.7%（Recon）", "指引不入基準（X3）；基準＝略高於指引上緣的 +1.0%", judg=True)
 inp("ai_26", "AI 產品 credits 營收 FY2026E（Bits AI 等；公司未揭露）", "US$M", 20, 45, 90, "Assumed", "未找到：公司不揭露 AI 產品營收；約三分之一客戶使用 AI 產品（" + fs("ai.pen.3q26") + "）", "基準＝FY2026E 營收約 1%", judg=True)
 inp("sa_26", "AI 原生客戶占 FY2026E 平台營收比（扣除 AI credits）", "%", 0.12, 0.15, 0.18, "Assumed", "公司最後揭露 2025Q3 12%（" + fs("ai.sh.3q25") + "）；2026Q3 由非 AI 成長 28% 反推約 16.7%（Recon 第 3 節，Derived）", "全年平均介於兩者", judg=True)
-inp("vn_27_A", "非 AI 客戶用量成長 FY2027（情境 A）", "%", None, 0.23, None, "Assumed", "2026Q3 非 AI 客戶營收成長 high 20s、連續五季加速（" + fs("ai.nonai.3q26") + "）", "樂觀：維持高 20s 動能")
-inp("vn_27_B", "非 AI 客戶用量成長 FY2027（情境 B）", "%", None, 0.20, None, "Assumed", "同上；共識 FY2027 總成長 23%（" + fs("cons.rev27g") + "）", "基準：低於近季，反映 Q4 指引隱含的減速")
-inp("vn_27_C", "非 AI 客戶用量成長 FY2027（情境 C）", "%", None, 0.16, None, "Assumed", "同上", "保守：雲端最佳化、預算趨緊（The Stack 2026-11-04）")
+inp("vn_27_A", "非 AI 客戶用量成長 FY2027（情境 A）", "%", None, 0.27, None, "Assumed", "2026Q3 非 AI 客戶營收成長 high 20s、連續五季加速（" + fs("ai.nonai.3q26") + "）", "樂觀：維持高 20s 動能")
+inp("vn_27_B", "非 AI 客戶用量成長 FY2027（情境 B）", "%", None, 0.24, None, "Assumed", "同上；共識 FY2027 總成長 23%（" + fs("cons.rev27g") + "）", "基準：介於近季 28% 與保守情境之間，反映 Q4 指引隱含的減速")
+inp("vn_27_C", "非 AI 客戶用量成長 FY2027（情境 C）", "%", None, 0.18, None, "Assumed", "同上", "保守：雲端最佳化、預算趨緊（The Stack 2026-11-04）")
 inp("vn_32", "非 AI 客戶用量成長 FY2032（線性收斂目標）", "%", 0.06, 0.09, 0.12, "Assumed", "判斷：大型 SaaS 十年期收斂", "FY2027 至 FY2032 線性", judg=True)
 inp("pn_g", "非 AI 客戶單價年變動（量大折扣、承諾用量折價）", "%", -0.04, -0.02, 0.0, "Assumed", "公司稱預期類似折扣結構（" + fs("ai.exlargest.fy26") + "）；金額未揭露", "價格保留率＝1＋本值", judg=True)
 inp("va_27_A", "AI 原生客戶用量成長 FY2027（情境 A）", "%", None, 0.45, None, "Assumed", "代理工作負載：MCP 工具呼叫年增 50 倍、代理可觀測 span 年增 9 倍（" + fs("ai.cust.20260930") + "）", "樂觀：代理工作負載持續放大")
@@ -240,9 +240,11 @@ inp("uc_g", "單位成本年變動（工程效率；基準持平）", "%", 0.0, 
 inp("rd_ng", "non-GAAP 研發費用率（近四季）", "%", None, round(ttm("ngrd") / rv_t, 6), None, "Derived", "近四季 non-GAAP 研發 ÷ 營收", "全期持平")
 inp("sm_ng", "non-GAAP 銷售與行銷費用率（近四季）", "%", None, round(ttm("ngsm") / rv_t, 6), None, "Derived", "近四季", "全期持平")
 inp("ga_ng", "non-GAAP 一般及行政費用率（近四季）", "%", None, round(ttm("ngga") / rv_t, 6), None, "Derived", "近四季", "全期持平")
-inp("opx_st", "non-GAAP 營業費用率每年變動（三項合計；收斂只放 Sens）", "%", None, 0.0, -0.01, "Assumed", "基準無證據→持平；高＝每年 −1.0 百分點（FY2027 起）", "公司長期目標 non-GAAP 營業利益率 25% 以上（未取得原文，不作依據）", judg=True)
+inp("opx_st", "non-GAAP 營業費用率每年變動（三項合計）", "%", None, 0.0, -0.01, "Assumed", "歷史檢視（G3 第 1 條）：三項合計占營收 FY2024 56.9%、FY2025 58.6%、近四季 56.2%，無一致下降趨勢（研發上升、銷售與行銷下降）→基準持平；高＝每年 −1.0 百分點", "歷史規模經濟主要在股票薪酬（見 sbc_st），非 non-GAAP 費用率", judg=True)
+inp("opx_floor", "non-GAAP 營業費用率（三項合計）下限", "%", 0.40, 0.45, 0.50, "Assumed", "判斷：僅在 opx_st 為負的 Sens 案例生效；基準持平不觸發", "", judg=True)
 inp("sbc_0", "股票薪酬占營收（近四季）", "%", None, round(ttm("sbc") / rv_t, 6), None, "Derived", "近四季 SBC ÷ 營收", "全期持平；DCF 不加回（預設）")
-inp("sbc_st", "股票薪酬占營收每年變動（收斂只放 Sens）", "%", 0.0, 0.0, -0.01, "Assumed", "基準無證據→持平", "", judg=True)
+inp("sbc_st", "股票薪酬占營收每年變動（歷史規模經濟：FY2023 22.7% → 近四季 20.1%，斜率 ÷ 2.5 年；G3 第 1 條）", "%", 0.0, round((ttm("sbc") / rv_t - fv("is.sbc.fy2023") / fv("is.rev.fy2023")) / 2.5, 6), -0.02, "Derived", "近四季與 FY2023 的 SBC 占營收差 ÷ 2.5 年（事實 is.sbc.*、is.rev.*）", "基準＝歷史斜率延伸（固定＋變動成本）；下限 sbc_floor；Sens 低＝全期持平（下緣）", judg=True)
+inp("sbc_floor", "股票薪酬占營收下限（成熟大型軟體公司區間下緣）", "%", 0.08, 0.12, 0.16, "Assumed", "判斷：延伸斜率的下限，避免無限下降", "G3 第 1 條", judg=True)
 inp("ptx_sh", "員工股票交易薪資稅 ÷ 股票薪酬（近四季）", "%", None, round(ttm("ptx") / ttm("sbc"), 6), None, "Derived", "近四季")
 inp("oth_adj", "取得無形資產攤銷＋併購費用占營收（近四季）", "%", None, round((ttm("amort") + ttm("mna")) / rv_t, 6), None, "Derived", "近四季")
 inp("gp_adj", "GAAP 與 non-GAAP 毛利差占營收（近四季）", "%", None, round((ttm("ngp") - (fv("q.rev.4q25") - fv("q.cogs.4q25")) - fv("is.gp.9m26")) / rv_t, 6), None, "Derived", "近四季 non-GAAP 毛利 − GAAP 毛利 ÷ 營收", "只影響營業成本與營業費用的分類，不影響營業利益")
@@ -255,7 +257,7 @@ inp("tax_ng", "non-GAAP 稅率", "%", None, 0.21, None, "Interested-party", fs("
 inp("dil", "稀釋股數年增（股票薪酬；無回購）", "%", 0.015, 0.025, 0.035, "Assumed", "基本加權股數 9M26 較 9M25 +2.9%、2025 年較 2024 年 +3.3%（事實 is.bsh.*）", "", judg=True)
 inp("da_r", "折舊攤銷占營收", "%", 0.015, 0.017, 0.020, "Derived", "9M26 58.202 ÷ 3,324.970＝1.75%（" + fs("is.da.9m26") + "）", "", judg=True)
 inp("cx_r", "資本支出＋資本化軟體占營收", "%", 0.03, 0.035, 0.04, "Interested-party", fs("guid.cx"), "9M26 實績 3.67%（（32.119＋89.897）÷ 3,324.970）", inc=INC_CO, judg=True)
-inp("wc_k", "營運資金增加 ÷ 營收增量（負＝流入；歷史：FY2024 −11%、FY2025 −18%、9M26 −1.5%，見 Hist）", "%", -0.15, -0.08, 0.0, "Assumed", "Hist 頁「營運資金與其他變動」÷ 營收增量；遞延收入、應付款與遞延合約成本", "原則第 23 條", judg=True)
+inp("wc_k", "營運資金增加 ÷ 營收增量（負＝流入；歷史：FY2024 −11.1%、FY2025 −18.3%、9M26 −1.5%，三期平均）", "%", -0.15, -0.103, 0.0, "Derived", "Hist 頁「營運資金與其他變動」÷ 營收增量，三期平均；遞延收入增加為現金流入（G3 第 2 條）", "原則第 23 條", judg=True)
 sec("E. 折現率與目標價規則")
 inp("rf", "無風險利率（10 年期美國公債，2026-11-13）", "%", 0.0465, fv("mkt.rf.20261113") / 100, 0.0565, "Verified", fs("mkt.rf.20261113"), "與現價同日", judg=True)
 inp("rf_date", "無風險利率基準日", "日期", None, datetime.date(2026, 11, 13), None, "Verified", fs("mkt.rf.20261113"), "與現價同日")

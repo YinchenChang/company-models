@@ -4,8 +4,8 @@
   {
    "key": "rel_mult",
    "label": "相對倍數係數 rel_mult（主導變數：Sens 最大）",
-   "base": 1.0,
-   "solve": 6.9865485121285635,
+   "base": "=AVERAGE(rm_22,rm_23,rm_24,rm_25,rm_26)",
+   "solve": 6.921884353875179,
    "within": "否",
    "note": "其餘輸入不變；搜尋範圍 0.8–12"
   },

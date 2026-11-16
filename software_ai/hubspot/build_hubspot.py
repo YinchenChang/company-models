@@ -454,9 +454,9 @@ def build(out, ov=None, sens=None, kreq=None):
                 f_(P, f"{c}{R['chk2']}", f"=Thesis!{c}{B_['avg']}*Thesis!{c}{B_['arpc']}/1000000+Thesis!{c}{B_['aiRev']}-{c}{R['sub']}", "0.000")
                 f_(P, f"{c}{R['inf']}", f"=Thesis!{c}{B_['inc']}", "#,##0.0")
                 f_(P, f"{c}{R['ngcogs']}", f"=ng_cogs*{c}{R['rev']}+{c}{R['inf']}", "#,##0.0")
-                f_(P, f"{c}{R['ngopx']}", f"=ng_opex*{c}{R['rev']}", "#,##0.0")
-                f_(P, f"{c}{R['ngop']}", f"={c}{R['rev']}-{c}{R['ngcogs']}-{c}{R['ngopx']}", "#,##0.0")
-                f_(P, f"{c}{R['sbc']}", f"=sbc_pct*{c}{R['rev']}", "#,##0.0")
+                f_(P, f"{c}{R['ngop']}", f"=h_ngoi_ltm+inc_m*({c}{R['rev']}-h_rev_ltm)-{c}{R['inf']}", "#,##0.0")
+                f_(P, f"{c}{R['ngopx']}", f"={c}{R['rev']}-{c}{R['ngcogs']}-{c}{R['ngop']}", "#,##0.0")
+                f_(P, f"{c}{R['sbc']}", f"=h_sbc_ltm+sbc_inc*({c}{R['rev']}-h_rev_ltm)", "#,##0.0")
                 f_(P, f"{c}{R['adj']}", f"=adj_pct*{c}{R['rev']}", "#,##0.0")
                 f_(P, f"{c}{R['restr']}", 0, "#,##0.0")
                 f_(P, f"{c}{R['ebit']}", f"={c}{R['ngop']}-{c}{R['sbc']}-{c}{R['adj']}", "#,##0.0")
@@ -569,9 +569,9 @@ def build(out, ov=None, sens=None, kreq=None):
     # ───────── Val ─────────
     V = W["Val"]
     VKEYS = ["tpdcf", "tpcomp", "tp", "px", "cons", "up", "upc", "updcf", "tier", "rec_val", "gatev", "rec", "per", "gate_all", "tvsh2", "bdist", "uattr", "dep", "perel",
-             "gap", "gap_sbc", "gap_time", "gap_lev", "gap_mult", "pe_hubs_now"]
+             "gap", "gap_sbc", "gap_time", "gap_lev", "gap_mult", "pe_hubs_now", "san_dcf", "san_ev", "san_rec", "san_g", "san_m27", "san_diag"]
     VR = {k: 6 + i for i, k in enumerate(VKEYS)}
-    vw0 = VR["pe_hubs_now"] + 3
+    vw0 = VR["san_diag"] + 3
     vw = {k: vw0 + 1 + i for i, k in enumerate(["rf", "beta", "erp", "ke", "kd", "tax", "mc", "wd", "wacc", "g", "ronic", "sh_basic", "rsu", "opt", "sh_val"])}
     VR["wacc_hdr"] = vw0
     d0 = vw["sh_val"] + 3
@@ -636,6 +636,12 @@ def build(out, ov=None, sens=None, kreq=None):
     vr("gap_mult", "落差分解 4：倍數與成長（剩餘）＝落差 − 股票薪酬 − 時點 − 槓桿", f"=B{VR['gap']}-B{VR['gap_sbc']}-B{VR['gap_time']}-B{VR['gap_lev']}", "+0.00;-0.00",
        fe="剩餘項：同業 P/E 中位數對應的盈餘成長與風險，高於本模型以 WACC 折現的 FCFF 所隱含者")
     vr("pe_hubs_now", "現價隱含 P/E：現價 ÷ 本模型 NTM 非 GAAP EPS（目標時點，情境 B）", f"=px/C{cmpr['ntm']}", "0.0", fe="對照同業中位數；本模型 EPS 以 48.9M 庫藏股法股數，DCF 以含全數 RSU 的評價股數")
+    vr("san_dcf", "合理性關卡 1（G3.3）：DCF 目標價 ÷ 現價（<25% 或 >4 倍須診斷）", f"=B{VR['tpdcf']}/px", "0.00", f'=IF(OR(B{VR["san_dcf"]}<0.25,B{VR["san_dcf"]}>4),"觸發","通過")')
+    vr("san_ev", "合理性關卡 2：企業價值（情境 B，US$M；為負須診斷）", f"=CF!C{CB['B']['ev']}", "#,##0", f'=IF(B{VR["san_ev"]}<=0,"觸發","通過")')
+    vr("san_rec", "合理性關卡 3：估值評等（強力買進或強力放空須診斷）", f"=B{VR['rec_val']}", "@", f'=IF(OR(B{VR["san_rec"]}="強力放空",B{VR["san_rec"]}="強力買進"),"觸發","通過")')
+    vr("san_g", "合理性關卡 4：FY2026 營收與非 GAAP 營業利益率對公司指引的最大差距（>10% 須診斷）", f"=MAX(ABS(PL!F{PB['B']['rev']}/g_rev26-1),ABS(PL!F{PB['B']['ngopm']}/(g_ngoi26/g_rev26)-1))", "0.0%", f'=IF(B{VR["san_g"]}>0.1,"觸發","通過")')
+    vr("san_m27", "對照：FY2027 非 GAAP 營業利益率（模型）對管理層目標中點的差距（目標非指引，不入關卡）", f"=PL!G{PB['B']['ngopm']}/g_m27-1", "+0.0%;-0.0%")
+    vr("san_diag", "診斷結論", f'=IF(COUNTIF(C{VR["san_dcf"]}:C{VR["san_rec"]},"觸發")+IF(C{VR["san_g"]}="觸發",1,0)=0,"四項關卡皆通過：DCF 目標價為現價的 "&TEXT(B{VR["san_dcf"]},"0%")&"，EV 為正，評等 "&B{VR["rec_val"]}&"，FY2026 對指引最大差距 "&TEXT(B{VR["san_g"]},"0.0%")&"；DCF 低於現價主因為股票薪酬費用化（SBC 稅後現值每股 US$"&TEXT(B{VR["gap_sbc"]},"0")&"）與 WACC 對高成長終值的折現，屬經濟判斷而非建模錯誤","有關卡觸發：須先診斷輸入或口徑再發布（見 README）")')
     # WACC 區
     f_(V, f"A{vw0}", "折現率與資本結構（個股 DCF 標準規格第 2 節）", bold=True)
     rows_w = [("rf", "無風險利率 rf", "=rf", "0.00%"), ("beta", "β（Blume 調整後兩來源平均）", "=beta", "0.000"), ("erp", "股權風險溢酬 ERP", "=erp", "0.00%"),
@@ -819,7 +825,8 @@ def revdcf(wb, RV, VR, vw):
     kv("w1", "現價隱含的 WACC", f"=D{r - 1}", "0.00%", "搜尋區間：永續成長率＋0.5 個百分點～40%")
     kv("w0", "模型 WACC", "=wacc", "0.00%")
     kv("w_chk", "核對：以模型 WACC 代入同一公式的 EV − 情境 B EV（應為 0）", f"={ev_at('wacc')}-B{A['ev']}", "0.000000")
-    kv("w_res", "核對：隱含 WACC 下的評價日每股價值 − 支持現價所需值（美元，應接近 0）", f"=E{b0 + 39}-B{A['v0']}", "0.000000")
+    kv("w_res", "核對：隱含 WACC 下的評價日每股價值 − 支持現價所需值（美元；在區間內有解時應接近 0）", f"=E{b0 + 39}-B{A['v0']}", "0.000000")
+    kv("w_flag", "判讀", f'=IF(ABS(B{r - 1})<0.5,"區間內有解","無解：即使折現率降到搜尋下界，每股價值仍低於支持現價所需值")', "@")
     r += 1
     f_(RV, f"A{r}", "B. Comparable（同業前瞻 P/E）：支持現價所需的倍數", bold=True)
     r += 1
@@ -844,7 +851,7 @@ def revdcf(wb, RV, VR, vw):
     f_(RV, f"A{r}", "C. 摘要（HTML 用；公式帶數字）", bold=True)
     r += 1
     f_(RV, f"A{r}", tf("現金流折現法：情境 B 的企業價值 ", (f"B{A['ev']}", "#,##0"), " 百萬美元，每股價值 ", (f"B{A['v_b']}", "0.00"), " 美元（評價日）；現價 ", ("px", "0.00"),
-                      " 美元相當於企業價值為模型的 ", (f"B{A['evx']}", "0.00"), " 倍。單靠一個因素達成時，需要：折現率 ", (f"B{A['w1']}", "0.0%"), "（模型 ", (f"B{A['w0']}", "0.0%"),
+                      " 美元相當於企業價值為模型的 ", (f"B{A['evx']}", "0.00"), " 倍。單靠一個因素達成時，需要：折現率 ", (f"IF(ABS(B{A['w_res']})<0.5,TEXT(B{A['w1']},\"0.0%\"),\"無解（下界 \"&TEXT(B{A['w1']},\"0.0%\")&\" 仍不足）\")", "@"), "（模型 ", (f"B{A['w0']}", "0.0%"),
                       "）；或 FY2028–FY2032 營收與營業利益為模型的 ", (f"B{A['s1']}", "0.00"), " 倍（FY2028 營收 ", (f"B{A['rv1']}", "#,##0"), " 百萬美元，模型 ", (f"B{A['rv0']}", "#,##0"),
                       "）；或預測期營業利益率 ", (f"B{A['m1']}", "0%"), "（模型等效約 ", (f"B{A['m0']}", "0%"), "，終值年權重大）。"))
     A["sum_dcf"] = r
@@ -889,7 +896,7 @@ def recon(wb, RC, VR, kreq, keyrow):
     sec("1. 公司指引對帳（2026-11-04 指引；只作對照）", ["項目", "模型（情境 B）", "指引或共識", "差距（模型相對對照）", "說明"])
     for key, lab, fm, ref, nf, note in [
         ("q4rev", "Q4 2026 營收（US$M）：模型 vs 指引中點", f"=Q4E!B{q['rev']}", "=g_rev_q4", "#,##0.0", "指引 945–947；模型為 Q4E（ASRPC 季增 Assumed）"),
-        ("q4ngoi", "Q4 2026 非 GAAP 營業利益（US$M）", f"=Q4E!B{q['ngop']}", "=g_ngoi_q4", "#,##0.0", "指引 216–217；模型成本率持平於近四季，不含重組節省"),
+        ("q4ngoi", "Q4 2026 非 GAAP 營業利益（US$M）", f"=Q4E!B{q['ngop']}", "=g_ngoi_q4", "#,##0.0", "指引 216–217；Q4 單季成本率持平於近四季，不含重組節省"),
         ("fy26rev", "FY2026 營收（US$M）", f"=PL!F{PBB['rev']}", "=g_rev26", "#,##0.0", "指引 3,685–3,687"),
         ("fy26ngoi", "FY2026 非 GAAP 營業利益（US$M）", f"=PL!F{PBB['ngop']}", "=g_ngoi26", "#,##0.0", "指引 772–773"),
         ("fy26eps", "FY2026 非 GAAP EPS（US$）", f"=PL!F{PBB['ngeps']}", "=g_eps26", "0.00", "指引 13.59–13.61"),
@@ -908,16 +915,16 @@ def recon(wb, RC, VR, kreq, keyrow):
     row("q4gap", "Q4 營收：模型 − 指引中點（US$M）", [f"=Q4E!B{q['rev']}-g_rev_q4"], ["+#,##0.0;-#,##0.0"], "落差全數來自 Q4 ASRPC 季增假設")
     row("q4_implied", "指引中點隱含的 Q4 ASRPC 季增（假設專業服務與淨增同基準）", [f"=((g_rev_q4/(1+ps_pct))*4/Q4E!B{q['avg']}*1000000)/h_asrpc_q326-1"], ["0.0%"], "模型基準取持平（0%）與此值之間（In 頁 q4_asrpc）")
     row("q4_pct", "落差占 Q4 營收", [f"=B{A['q4gap']}/g_rev_q4"], ["+0.0%;-0.0%"], "")
-    row("m27", "管理層 2027 非 GAAP 營業利益率目標（中點）vs 模型 FY2027 非 GAAP 營業利益率", [f"=PL!G{PBB['ngopm']}", "=g_m27"], ["0.0%", "0.0%"], "模型成本率持平於近四季（無證據不收斂，工作單 G2.3）；管理層目標只放 Sens（ng_opex 低案）")
+    row("m27", "管理層 2027 非 GAAP 營業利益率目標（中點）vs 模型 FY2027 非 GAAP 營業利益率", [f"=PL!G{PBB['ngopm']}", "=g_m27"], ["0.0%", "0.0%"], "模型以歷史增量利益率（inc_m，工作單 G3.1）延伸，不採用管理層目標；管理層 23–24%（2027）、30%（2030）為 Interested-party，只在此對照")
     r += 1
     sec("3. 反解：支持現價所需的主導變數（整本重算；快照）", ["項目", "數值", "說明"])
     kr = kreq or {}
-    row("k_key", "主導變數：非 GAAP 營業費用率（ng_opex；基準＝近四季持平）", [kr.get("base", None)], ["0.00%"], "全期持平的非 GAAP 營業費用率；建置時整本重算快照")
-    row("k_req", "反解值：使加權目標價＝現價所需的費用率", [kr.get("required", None)], ["0.00%"], "割線法，LibreOffice 整本重算")
-    row("k_m", "反解值對應的 FY2027 非 GAAP 營業利益率", [kr.get("margin27", None)], ["0.0%"], "對照：管理層目標 23–24%")
+    row("k_key", "主導變數：增量非 GAAP 營業利益率（inc_m；基準＝FY2023–FY2025 斜率）", [kr.get("base", None)], ["0.0%"], "營收每增 1 美元的營業利益增量；建置時整本重算快照")
+    row("k_req", "反解值：使加權目標價＝現價所需的增量利益率", [kr.get("required", None)], ["0.0%"], "割線法，LibreOffice 整本重算；超過 100% 表示單靠此變數無解")
+    row("k_m", "反解值對應的 FY2027 非 GAAP 營業利益率", [kr.get("margin27", None)], ["0.0%"], "對照：管理層 2027 目標 23–24%")
     row("k_tp", "核對：反解值代入後的加權目標價（US$）", [kr.get("tp", None)], ["0.00"], "應≈現價")
-    row("k_up", "反解值所需費用率相對基準的變動（百分點）", [f"=(B{A['k_req']}-B{A['k_key']})*100" if kr else None], ["+0.0;-0.0"], "負值＝費用率須比近四季低多少")
-    row("k_rev", "翻轉評等所需：加權目標價上檔空間觸及 −25% 所需的費用率", [kr.get("flip_m25", None)], ["0.00%"], "中立／放空界線（−25%）；整本重算快照")
+    row("k_dn", "評等翻轉（中立→放空）：加權目標價上檔空間觸及 −25% 所需的增量利益率", [kr.get("flip_m25", None)], ["0.0%"], "整本重算快照")
+    row("k_up", "評等翻轉（中立→買進）：上檔空間觸及 +25% 所需的增量利益率", [kr.get("flip_p25", None)], ["0.0%"], "整本重算快照")
     r += 1
     sec("4. 資料日期核對（相對股價基準日；超過 2 個交易日標逾期；工作單 G2.10）", ["項目", "資料日", "與股價基準日相差（交易日）", "狀態"])
     for key, lab, dn in [("d_rf", "無風險利率", "rf_date"), ("d_pe", "同業前瞻 P/E", "pe_date"), ("d_cons", "賣方共識", "c_date"), ("d_px", "現價", "px_date")]:
@@ -1010,7 +1017,7 @@ def readme(wb, RD, build_id, VR, RVA, RCA, vw, SENS):
     f_(RD, "A28", "市場資料日期、失效條件與可證偽指標", bold=True)
     f_(RD, "A29", tf("市場資料日期：現價 ", ("px_date", "yyyy-mm-dd"), "（兩處同值）；rf ", ("rf_date", "yyyy-mm-dd"), "（單一來源）；同業倍數 ", ("pe_date", "yyyy-mm-dd"), "；賣方共識 ", ("c_date", "yyyy-mm-dd"), "；公司指引 2026-11-04（Q3 2026）；逾期核對見 Recon 第 4 節。"))
     f_(RD, "A30", "下一個事件：Q4 2026 財報預計 2027-02 公布（含 FY2027 指引與 seats-and-credits EMEA 試點結果）；共識與指引屆時更新。")
-    f_(RD, "A31", tf("承重 Assumed 1（成本率持平：ng_opex，反解值見 Recon 第 3 節）。可證偽指標：Q4 2026 與 FY2027 各季非 GAAP 營業利益率（近四季 ", ("1-ng_cogs-ng_opex", "0.0%"), "）對管理層 2027 目標 23–24%；模型 FY2027 ", (f"PL!G{PBB['ngopm']}", "0.0%"), "。"))
+    f_(RD, "A31", tf("承重 Assumed 1（增量非 GAAP 營業利益率 inc_m，歷史斜率延伸；全期持平為 Sens 下緣，反解值見 Recon 第 3 節）。可證偽指標：FY2027 各季非 GAAP 營業利益率對管理層 2027 目標 23–24%；模型 FY2027 ", (f"PL!G{PBB['ngopm']}", "0.0%"), "，FY2032 ", (f"PL!L{PBB['ngopm']}", "0.0%"), "。"))
     f_(RD, "A32", tf("承重 Assumed 2（席位取代：repl_*、seat_sh）。可證偽指標：淨營收留存率（FY2026 預期較 FY2025 降約 2 個百分點；Q3 為 101%）、ASRPC 軌跡（Q3 12,038）；模型 FY2027 每客戶訂閱營收年增 ", (f"Thesis!G{TBB['arpc']}/Thesis!F{TBB['arpc']}-1", "0.0%"), "。"))
     f_(RD, "A33", tf("承重 Assumed 3（客戶淨增率與每客戶年增：na_27／na_32、g_up）。可證偽指標：Q4 2026 淨增（管理層稱低於 5,000）與 FY2027 各季客戶淨增；模型 FY2027 客戶年增 ", (f"Thesis!G{TBB['na']}", "0.0%"), "。"))
     f_(RD, "A34", "失效條件（可觀察）：seats-and-credits 方案在 EMEA 試點後擴及現有客戶而 ASP 明顯下降；NRR 低於 100%；agent 付費任務數公司揭露且高於情境 A；非 GAAP 營業利益率超過 23%（費用率證據出現）。")

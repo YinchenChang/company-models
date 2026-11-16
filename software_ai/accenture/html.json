@@ -90,7 +90,7 @@
        "color": "#0b7a80"
       }
      ],
-     "caption": "堆疊＝三個官方報告分部（Americas、EMEA、Asia Pacific；10-K Note 16）；單位為百萬美元，圖軸以十億計。"
+     "caption": "堆疊＝三個官方報告分部（Americas、EMEA、Asia Pacific；10-K 分部附註）；單位為百萬美元，圖軸以十億計。"
     },
     {
      "type": "h3",
@@ -897,7 +897,7 @@
        "labels": true
       }
      ],
-     "caption": "長條＝新專案增量、定價侵蝕、推論成本（皆為正數）；折線＝AI 淨效果。百萬美元，軸以十億計。推論成本取 Tokenomics 市場價，占營收不到 0.1%。"
+     "caption": "長條＝新專案增量、定價侵蝕、推論成本（皆為正數）；折線＝AI 淨效果。百萬美元，軸以十億計。推論成本取 Tokenomics 市場價，占營收比例極小。"
     },
     {
      "type": "table",

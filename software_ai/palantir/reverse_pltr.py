@@ -17,7 +17,10 @@ def tp(sets):
     subprocess.run([sys.executable, BUILD, raw] + sum((["--set", f"{k}={v}"] for k, v in sets), []), check=True, stdout=subprocess.DEVNULL, env=env)
     out = os.path.join(WD, "out"); os.makedirs(out, exist_ok=True)
     prof = tempfile.mkdtemp(prefix="lo_rev_"); e2 = dict(os.environ); e2["LC_ALL"] = "C.UTF-8"
-    subprocess.run(["soffice", f"-env:UserInstallation=file://{prof}", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", out, raw], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=e2, timeout=900)
+    for _try in range(4):   # LibreOffice 首次啟動偶發 255，重試
+        p_ = subprocess.run(["soffice", f"-env:UserInstallation=file://{prof}", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", out, raw], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=e2, timeout=900)
+        if p_.returncode == 0 and os.path.exists(os.path.join(out, name + ".xlsx")): break
+    else: raise SystemExit("soffice 重算失敗")
     shutil.rmtree(prof, ignore_errors=True)
     rm = json.load(open(env["ROWMAP"], encoding="utf-8"))
     wb = openpyxl.load_workbook(os.path.join(out, name + ".xlsx"), data_only=True)

@@ -20,8 +20,12 @@ VR = rm["VR"]
 def recalc(raw, tag):
     od = os.path.join(WD, "o_" + tag)
     os.makedirs(od, exist_ok=True)
-    subprocess.run(["soffice", f"-env:UserInstallation=file://{WD}/lo_{tag}", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", od, raw],
-                   check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=dict(os.environ, LC_ALL="C.UTF-8"))
+    for _try in range(3):
+        rc = subprocess.run(["soffice", f"-env:UserInstallation=file://{WD}/lo_{tag}{_try}", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", od, raw],
+                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=dict(os.environ, LC_ALL="C.UTF-8")).returncode
+        if rc == 0 and os.path.exists(os.path.join(od, os.path.basename(raw))): break
+    else:
+        raise RuntimeError("soffice 重算失敗：" + raw)
     return os.path.join(od, os.path.basename(raw))
 
 

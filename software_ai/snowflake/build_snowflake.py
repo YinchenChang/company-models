@@ -5,6 +5,8 @@
 """
 import datetime, hashlib, json, os, sys
 import openpyxl
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'tools'))
+import fcff_dcf as FD
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
@@ -39,19 +41,20 @@ TKS = "Tokenomics v22.0（commit 79f6b30；data/tokenomics_snapshot_v22.0.json�
 add("px_date", "股價基準日（收盤）", "日期", None, datetime.date(2026, 11, 13), None, D0, SA)
 add("px", "現價（2026-11-13 收盤）", "US$/股", None, 291.00, None, D0, SA + "；收盤 291.00，盤後 290.00")
 add("sh_out", "流通股數（10-Q 封面，2026-08-21）", "M股", None, 352.8, None, D0, Q2Q + " 封面：352.8 百萬股（2026-08-21）；法定申報為主來源，StockAnalysis 352.46M 為第二來源")
-add("sh_dil", "在外 RSU（扣預期沒收）與選擇權庫藏股法的稀釋加項（可轉債另列為債務）", "M股", 10, 18, 35, AS, "規格要求 RSU 與選擇權庫藏股法（DCF 規格第 3 節）：10-Q Note 12 的在外 RSU／PSU 與選擇權數量、履約價、沒收率本次未取得（未找到：已兩次讀取 10-Q，附註未在讀到的段落內）；代理值＝公司 FY2027 非 GAAP 稀釋加權股數指引 380M 減流通股 352.8M 與可轉債 if-converted 約 10M＝約 17M，取 18M（Interested-party 推算，標 Assumed）；已授予未認列補償約 3.8B（10-Q MD&A）", "")
-add("cash", "現金、約當現金與投資（2026-07-31）", "US$M", None, 4329.177, None, D0, Q2Q + " 資產負債表：現金及約當現金 1,707.187＋短期投資 637.508＋長期投資 1,984.482")
-add("conv", "可轉換優先票據本金（2027 年與 2029 年票據各 1,150；轉換價未找到；2026-07-31）", "US$M", None, 2300, None, D0, Q2Q + " MD&A：兩檔各 1.15B 本金；資產負債表帳面淨額 2,283.985；capped call 上限價 225.00；轉換價本次未取得（未找到）。依規格以債務本金計，不另計 if-converted 稀釋（現價高於上限價，轉換稀釋已部分由 capped call 對沖，未建模）")
-add("lease", "融資租賃負債（未找到；以 0 為基準）；營業租賃負債 479.8（流動 59.787＋非流動 420.043）依規格不計入淨債務", "US$M", 0, 0, 300, AS, "10-Q 資產負債表營業租賃 59.787＋420.043（Verified，不計入）；融資租賃金額未找到；以 0 計並以區間作敏感度")
-add("rf", "無風險利率（10 年美債；2026-10-27，距股價日 2026-11-13 逾兩個交易日，標逾期）", "比例", 0.045, 0.0499, 0.055, D0, "沿用 repo meta/README.md 所載 2026-10-27 10 年美債 4.99%；本次未重讀財政部頁面")
-add("beta_raw", "Beta（5 年，單一來源；第二來源未找到）", "—", 1.0, 1.32, 1.5, D0, SA + "（beta 1.32）；規格要兩來源取 Blume 中位數，只取得一個（未找到第二來源）；docs/plan/自算產業β_20261105.md 的軟體產業 β 本版未套用")
-add("erp", "股權風險溢酬", "比例", 0.04, 0.05, 0.06, AS, "DCF 標準規格預設 5%（4–6%）")
-add("kd_sp", "稅前負債信用利差（相對 rf）", "比例", 0.008, 0.012, 0.02, AS, "可轉債票面利率與公司債有效利率未取得（未找到）；以利差假設")
-add("g_tv", "永續成長率", "比例", 0.02, 0.03, 0.04, AS, "DCF 標準規格預設 3%（2–4%）")
-add("ronic_sp", "RONIC 減 WACC 的利差", "比例", -0.02, 0.0, 0.02, AS, "DCF 標準規格預設 RONIC＝WACC")
 add("tax", "稅率（非 GAAP 稅與 NOPAT 稅）", "比例", 0.2, 0.25, 0.28, DE, "FY2024–FY2026 非 GAAP 淨利相對（非 GAAP 營業利益＋利息與其他收支）的隱含稅率約 26.0%、25.5%、24.0%（Derived；公司未揭露非 GAAP 稅前與稅額）")
+add("kd_sp", "稅前負債信用利差（相對 rf）", "比例", 0.008, 0.012, 0.02, AS, "可轉債為 0 票息；公司債有效利率未取得（未找到）；以利差假設")
+add("rsu", "在外 RSU／PSU（權益分類 23.529＋負債分類 1.435；沒收率未揭露，全額計入）", "M股", 23.529, 24.964, 25.089, D0, Q2Q + " Note 12：權益分類未歸屬 RSU（含領導層 PRSU）23,529 千股；負債分類 PRSU 1,435 千股；每股盈餘附註列 RSU 25,089 千股（高案）；沒收率未揭露（未找到）")
+add("opt_n", "在外選擇權（2026-07-31）", "M股", None, 9.277, None, D0, Q2Q + " Note 12：9,277 千股")
+add("opt_k", "選擇權加權平均履約價", "US$/股", None, 30.74, None, D0, Q2Q + " Note 12：US$30.74（庫藏股法，價格用現價）")
+add("conv_prin", "可轉換優先票據本金（2027 與 2029 年票據各 1,150）", "US$M", None, 2300, None, D0, Q2Q + " Note 10：各 1.15B 本金")
+add("conv_px", "可轉債轉換價", "US$/股", None, 157.50, None, D0, Q2Q + " Note 10：2027 與 2029 年票據轉換價皆為 US$157.50")
+add("conv_sh", "可轉債轉換股數（兩檔合計）", "M股", None, 14.603, None, D0, Q2Q + " 每股盈餘附註：轉換選擇權基礎股數 14,603 千股")
+add("cap_px", "Capped call 上限價", "US$/股", None, 225.00, None, D0, Q2Q + " MD&A：capped call 上限價 US$225.00（履約價 157.50）；現價高於轉換價時以 if-converted 計入股數、債務為 0，並扣 capped call 在 157.50–225 區間的回收股數")
+add("rel_mult", "相對倍數調整係數（本公司 P/S ÷ 同業中位數的近五期中位數；夾在 0.5–2.0）", "倍", 1.0, "=Val!$B$@@RELM@@", 2.0, DE, "自算（Val 頁表）：StockAnalysis 各公司財務比率頁近五個會計年度末的 P/S，SNOW 除以八家同業中位數，取五期中位數，夾在 tools/relative_multiple.py 的 0.5–2.0（原則 G3 第 4 條）；低案 1.00＝未調整；高案＝夾值上限 2.0；期間為歷史落後 P/S，與前瞻倍數口徑不同，為承重輸入")
+add("opx_a", "非 GAAP 營業費用：固定部分（US$M；營業費用＝固定＋變動×營收）", "US$M", 500, "=Q!$B$@@OPXA@@", 1000, DE, "Q 頁迴歸（FY2022–FY2027 實績）：最近三點（FY2025、FY2026、LTM 至 Q2 FY27）的截距，原則 G3 第 1 條；「全期持平」（固定 0、變動＝最近四季營業費用率）為 Sens 下緣案例")
+add("opx_v", "非 GAAP 營業費用：變動部分（每增加 1 美元營收增加的營業費用）", "比例", 0.40, "=Q!$B$@@OPXV@@", 0.5705, DE, "Q 頁迴歸：最近三點斜率；低案 0.40 較強規模經濟（假設）；高案 0.5705＝六點全樣本斜率（較弱的規模經濟）")
+add("sbc_a", "股票薪酬：固定部分（US$M；股票薪酬＝固定＋變動×營收）", "US$M", 800, "=Q!$B$@@SBCA@@", 1500, DE, "Q 頁迴歸：最近三點截距；「全期持平」（占營收比固定為最近四季）為 Sens 下緣案例")
 add("w_dcf", "DCF 權重（其餘為 Comparable）", "比例", 0.3, 0.5, 0.7, AS, "原則第 4 節預設 50／50")
-add("cm_adj", "Comparable 倍數調整係數（對同業中位數；1＝未調整）", "倍", 0.8, 1.0, 1.2, AS, "同業日期不一致、無相對倍數歷史資料（tools/data/fwd_mult_hist.csv 無 SNOW 與同業），故相對倍數調整係數為 1.00（未調整：缺歷史前瞻倍數）；區間作敏感度")
 # ---- FY2027 錨點（H1 實績＋下半年假設）
 add("q1p", "產品營收 Q1 FY27（實績）", "US$M", None, 1334.329, None, D0, "Q1 FY27 財報新聞稿 " + U + "000164014726000027/fy2027q1earnings.htm")
 add("q2p", "產品營收 Q2 FY27（實績）", "US$M", None, 1491.861, None, D0, Q2PR)
@@ -77,12 +80,6 @@ add("g_b32", "AI 前基準消耗年增 FY2032", "比例", 0.06, 0.10, 0.14, AS, 
 add("ps_g", "專業服務及其他逐年成長（FY2028 起）", "比例/年", -0.05, 0.03, 0.08, AS, "FY2022–FY2026 年增 61%／10%／17%／29%（Derived）；占營收約 4.5%，影響小")
 add("gm_ps", "專業服務及其他非 GAAP 毛利率", "比例", -0.05, 0.0, 0.05, DE, "FY2026 非 GAAP 合計毛利 3,388.431 減產品毛利 3,388.382＝0.049（約 0%）；FY2025 3.3%、FY2024 5.0%（Derived，" + U + "000162828026011631/fy2026q4earnings.htm）")
 # ---- 費用與現金流
-add("opx27", "非 GAAP 營業費用占營收（最近四季實績；全期持平）", "比例", 0.56, 0.597, 0.61, DE, "最近四季（Q3 FY26 至 Q2 FY27）非 GAAP 產品毛利 3,917.4 減營業利益 673.2，除以營收 5,434.7＝約 59.7%（Derived，facts_snowflake.csv；專業服務非 GAAP 毛利約 0）；低案 56% 約為 Q2 FY27 單季水準；公司指引 14.5% 營業利益率只在 Recon 對照")
-add("opx_dr", "非 GAAP 營業費用率逐年下降（FY2028 起；基準持平，收斂只放 Sens）", "百分點/年", 0.0, 0.0, 0.025, AS, "基準持平（原則第 35 條；無公司長期目標：未找到）；FY2026 61.9% 降到最近四季 59.7%（Derived）顯示槓桿存在，高案每年 2.5 點僅為敏感度")
-add("sbc27", "股票薪酬占營收 FY2027", "比例", 0.26, 0.274, 0.29, DE, "Q1、Q2 FY27 SBC 402.47＋423.58＝826.05 對上半年營收 2,937.7＝28.1%；FY2026 34.1%（Derived）")
-add("da_pct", "折舊與攤銷占營收（非 GAAP 營業利益內含者）", "比例", 0.035, 0.045, 0.055, AS, "FY2026 220.443÷4,683.9＝4.7%、FY2025 5.0%（Derived）；含被併購無形資產攤銷，高估非 GAAP 內含折舊的部分")
-add("capex_pct", "資本支出（含資本化軟體）占營收", "比例", 0.015, 0.022, 0.03, DE, "FY2026 101.628÷4,683.9＝2.2%、FY2025 2.1%（營業現金流減公司自由現金流；Derived）")
-add("wc_k", "營運資金流入占營收增量比例", "比例", 0.15, 0.25, 0.35, AS, "遞延收入與 RPO 增加（RPO 9,004.3，年增 30%；Verified）；FY2026 營業現金流 1,221.9 高於非 GAAP 營業利益加折舊；比例為假設")
 add("yld", "現金與投資的利息收益率（用於非 GAAP 其他收入）", "比例", 0.03, 0.04, 0.05, AS, "FY2026 利息收入 190.6 對現金與投資（Derived）；現金餘額不隨年度滾動，為簡化")
 add("sh_ng", "FY2027 非 GAAP 稀釋加權股數（僅用於 EPS 顯示）", "M股", 376, 380, 384, IP, "公司 FY2027 非 GAAP 稀釋加權股數指引 380M（含可轉債 if-converted 約 10M 股；Q2 FY27 新聞稿）", "公司指引")
 add("sh_g", "FY2028 起每年稀釋股數增加（僅 EPS 顯示）", "比例/年", 0.0, 0.01, 0.03, AS, "FY2024–FY2026 非 GAAP 稀釋股數 362.1／363.4／372.3（Verified）；年增約 0.4–2.5%")
@@ -103,7 +100,7 @@ SC = {
  "U_w32": ("代理工作負載乘數 — FY2032", "比例", 0.40, 0.25, 0.10, AS, "unit_economics 同名參數 2032 為 10%／40%／90%（低／基準／高）；Snowflake 以基準 25%、樂觀 40%、保守 10% 分化：AI 營收占比與採用速度為最大不確定性，無公司揭露的 AI 占比（未找到）", ""),
  "U_e32": ("工作負載被替代 — FY2032", "比例", 0.04, 0.08, 0.15, AS, "unit_economics 2032 為 0%／8%／20%；Snowflake 自身開放表格式（Iceberg）與模型直讀資料的外移速度為假設；無量測", ""),
  "U_mk": ("AI 功能轉售加成（售價÷推論成本−1）", "比例", 0.5, 0.3, 0.1, AS, "Cortex 價目：claude-sonnet-4-5 輸入 1.8／輸出 9.0 AI Credit 每百萬 token，AI Credit 全域 US$2＝US$3.6／18 每百萬 token（公司公開價目，Verified）；模型商牌價本版未取，故加成為假設；unit_economics 區間 0%／30%／100%", ""),
- "sbc32": ("股票薪酬占營收 — FY2032", "比例", 0.10, 0.12, 0.16, AS, "FY2024 41.6%→FY2026 34.1%→FY2027 上半年 28.1%（Derived）；管理層稱目標 Q4 FY2028 達 GAAP 營業獲利（Interested-party；本版未取得原文時點，待核）；成熟軟體約 8–12%（類比 Salesforce 8%，Derived）", ""),
+ "sbc_v": ("股票薪酬：變動部分（每增加 1 美元營收增加的股票薪酬）", "比例", 0.05, "=Q!$B$@@SBCV@@", 0.15, DE, "基準＝Q 頁最近三點迴歸斜率（FY2025、FY2026、LTM；Derived）；樂觀 5%、保守 15% 為假設（管理層稱目標 Q4 FY2028 達 GAAP 營業獲利，Interested-party，原文時點待核）；全樣本斜率 25.7% 為更弱的規模經濟，另列 Sens；GAAP 調整路徑的分化", ""),
  "tp_w": ("情境權重", "比例", 0.25, 0.5, 0.25, AS, "原則第 4 節預設 25／50／25", ""),
 }
 
@@ -123,6 +120,41 @@ for key, label, unit, lo, base, hi, tag, src, inc in INP:
             if isinstance(v, datetime.date): c.number_format = "yyyy-mm-dd"
     ws.cell(r, 7, tag); ws.cell(r, 8, src); ws.cell(r, 9, inc)
     r += 1
+# ---- 標準版 DCF 參數（tools/fcff_dcf.py in_rows；定義名稱 key／key_lo／key_hi）
+_I = lambda k: f"In!$E${IR[k]}"
+PFD = dict(
+    date="2026-11-13", ccy="US$", amt="US$M", shu="M股",
+    rf=(0.0499, "沿用 repo meta/README.md 所載 2026-10-27 10 年美債 4.99%；距股價日 2026-11-13 逾兩個交易日，標逾期", "本次未重讀財政部頁面", "無風險利率（10 年美債；2026-10-27，逾期）"),
+    betas=[("StockAnalysis（5 年）", 1.32, SA + "（beta 1.32）；第二來源未找到；docs/plan/自算產業β_20261105.md 的軟體產業 β 本版未套用")],
+    beta_lohi=(1.0, 1.5, "單一來源，區間為 Assumed"),
+    erp=(0.04, 0.05, 0.06, "DCF 標準規格預設 5%（4–6%）"),
+    kd=("=rf+" + _I("kd_sp"), "Derived", "rf＋信用利差（kd_sp）", "可轉債 0 票息；若轉換則債務為 0"),
+    tax_w=("=" + _I("tax"), "Derived", "同 In 頁 tax（非 GAAP 隱含稅率）", "—"),
+    debt=("=IF(" + _I("px") + ">" + _I("conv_px") + ",0," + _I("conv_prin") + ")", "Derived", "可轉債本金；現價高於轉換價 157.50 時依 if-converted 視為股權（債務 0，股數加項見 sh_v）", Q2Q),
+    lease=(0, "Assumed", "融資租賃負債未找到，以 0 計；營業租賃 479.8（流動 59.787＋非流動 420.043，10-Q 資產負債表）依規格不計入淨債務", "—"),
+    cash=(4329.177, "Verified", Q2Q + " 資產負債表：現金及約當現金 1,707.187＋短期投資 637.508＋長期投資 1,984.482", "—"),
+    inv=(0, "Assumed", "非營業權益投資未另列（已含於現金與投資）", "—"),
+    mi=(0, "Assumed", "無少數股權（10-Q 損益表淨損失歸屬他方金額極小，未計）", "—"),
+    sh=("=" + _I("sh_out") + "+" + _I("rsu") + "+" + _I("opt_n") + "*MAX(0,1-" + _I("opt_k") + "/" + _I("px") + ")+IF(" + _I("px") + ">" + _I("conv_px") + "," + _I("conv_sh") + "-" + _I("conv_sh") + "*(MIN(" + _I("px") + "," + _I("cap_px") + ")-" + _I("conv_px") + ")/" + _I("px") + ",0)",
+        "Derived", "評價日股數＝流通股 352.8＋RSU（全額）＋選擇權庫藏股法＋可轉債 if-converted 股數減 capped call 回收（DCF 規格第 3 節）", "RSU 沒收率未揭露（未找到），全額計入；ASR 未建模"),
+    fc_da=(0.035, 0.045, 0.055, "Assumed", "FY2026 220.443÷4,683.9＝4.7%、FY2025 5.0%（Derived）；含被併購無形資產攤銷，高估非 GAAP 內含折舊的部分", "—"),
+    fc_cx=(0.015, 0.022, 0.03, "Derived", "FY2026 101.628÷4,683.9＝2.2%、FY2025 2.1%、FY2024 2.5%（營業現金流減公司自由現金流；10-K MD&A）", "—"),
+    fc_wc=(-0.452, -0.363, -0.25, "Derived", "營運資金增加÷營收增量，負值＝流入（原則第 23 條）：10-K FY2026 MD&A 營運資產負債變動合計流入 383.8（FY2026；其中遞延收入 +755.2、遞延佣金 −305.1、應收 −380.0、應計 +393.3）÷營收增量 1,057.6＝36.3%；FY2025 443.6÷819.9＝54.1%；基準取最新年，低案取兩年平均，高案 25% 為假設", "FY2024 未找到"),
+)
+FDROWS = FD.in_rows(PFD)
+for tup in FDROWS:
+    if tup[0] == "sec":
+        ws.cell(r, 1, tup[1]).font = BOLD; r += 1; continue
+    key, label, unit, lo, base, hi, tag, s1, s2 = tup
+    IR[key] = r
+    ws.cell(r, 1, key); ws.cell(r, 2, label); ws.cell(r, 3, unit)
+    for col, v in ((4, lo), (5, base), (6, hi)):
+        if v is not None:
+            c = ws.cell(r, col, v); c.font = BLUE
+    ws.cell(r, 7, tag); ws.cell(r, 8, s1 + ("" if s2 in ("—", "") else "；" + s2)); ws.cell(r, 9, s2 if tag in ("Interested-party",) else "")
+    for nm, colx in ((key, "E"), (key + "_lo", "D"), (key + "_hi", "F")):
+        wb.defined_names[nm] = DefinedName(nm, attr_text=f"In!${colx}${r}")
+    r += 1
 SCK = {}
 for pre, (label, unit, a, b, c_, tag, src, inc) in SC.items():
     for s, v in zip("ABC", (a, b, c_)):
@@ -133,7 +165,7 @@ for pre, (label, unit, a, b, c_, tag, src, inc) in SC.items():
         ws.cell(r, 5, v).font = BLUE
         ws.cell(r, 7, tag); ws.cell(r, 8, src); ws.cell(r, 9, inc)
         r += 1
-LAST_PARAM_ROW = max(v for k, v in IR.items() if not k.startswith(("U_w32_", "U_e32_", "U_mk_", "sbc32_", "tp_w")))
+LAST_PARAM_ROW = max(v for k, v in IR.items() if not k.startswith(("U_w32_", "U_e32_", "U_mk_", "sbc_v_", "tp_w")))
 r += 1
 ws.cell(r, 1, "J. 情境驅動對照（純展示；A 樂觀／B 基準／C 保守）").font = BOLD
 r += 1
@@ -142,7 +174,7 @@ for j, h in enumerate(["鍵", "項目", "單位", "情境 A", "情境 B", "情�
 SCN_H = r
 r += 1
 SCN_ROWS = {}
-for pre, key in (("U_w32", "scn_w32"), ("U_e32", "scn_e32"), ("U_mk", "scn_mk"), ("sbc32", "scn_sbc32"), ("tp_w", "scn_w")):
+for pre, key in (("U_w32", "scn_w32"), ("U_e32", "scn_e32"), ("U_mk", "scn_mk"), ("sbc_v", "scn_sbc_v"), ("tp_w", "scn_w")):
     ks = SCK[pre]
     ws.cell(r, 1, key); ws.cell(r, 2, SC[pre][0]); ws.cell(r, 3, SC[pre][1])
     for j, k in zip((4, 5, 6), ks):
@@ -188,7 +220,7 @@ qdata = [
  ("sh_n", "非 GAAP 稀釋加權股數（M）", 362.064, 363.374, 372.323, "M股", PR4 + " Reconciliations", IP, "公司定義之非 GAAP 數字"),
  ("sbc", "股票薪酬（現金流量表）", 1168.015, 1479.314, 1599.547, "US$M", K26 + " 現金流量表", D0, ""),
  ("da", "折舊與攤銷", NF, 182.508, 220.443, "US$M", K26 + " 現金流量表", D0, ""),
- ("capex", "資本支出（含資本化軟體；營業現金流減公司自由現金流）", NF, 75.712, 101.628, "US$M", K26 + " 現金流量表；FY2025 959.764−884.052、FY2026 1,221.942−1,120.314（Derived）", DE, ""),
+ ("capex", "資本支出（含資本化軟體；營業現金流減公司自由現金流）", 69.219, 75.712, 101.628, "US$M", K26 + " 現金流量表；FY2025 959.764−884.052、FY2026 1,221.942−1,120.314（Derived）", DE, ""),
  ("fcf", "公司口徑自由現金流", 778.903, 884.052, 1120.314, "US$M", PR4, IP, "公司定義之非 GAAP 數字"),
  ("inti", "利息收入", 200.663, 209.009, 190.556, "US$M", K26 + " 損益表", D0, ""),
  ("inte", "利息費用", 0, -2.759, -8.298, "US$M", K26 + " 損益表（FY2024 未單列，以 0 計）", D0, ""),
@@ -220,6 +252,50 @@ for j, col in zip((2, 3, 4), "BCD"): Q.cell(rr, j, f"={col}{QR['gp_n']}-{col}{QR
 rr += 1
 Q.cell(rr, 1, "核對：GAAP 營收−營業成本−毛利（應為 0）"); QR["chk3"] = rr
 for j, col in zip((2, 3, 4), "BCD"): Q.cell(rr, j, f"={col}{QR['rev']}-{col}{QR['cogs_g']}-{col}{QR['gp_g']}")
+
+# ---- 規模經濟迴歸與營運資金比率（原則 G3 第 1、2 條）
+rr += 2
+Q.cell(rr, 1, "規模經濟迴歸（FY2022–FY2027 實績；營業費用與股票薪酬＝固定＋變動×營收；US$M）").font = BOLD; rr += 1
+RG = rr
+for j, h in enumerate(["指標", "FY2022", "FY2023", "FY2024", "FY2025", "FY2026", "LTM（Q3 FY26–Q2 FY27）", "來源", "標記"], 1): Q.cell(rr, j, h).font = BOLD
+rr += 1
+QG = {}
+reg = [("rev", "營收", [1219.327, 2065.659, "=B%d" % 0, None, None, 5434.653], "10-K FY2022／FY2024／FY2026 損益；LTM＝四季營收 1,212.909＋1,283.994＋1,390.951＋1,546.793（8-K 附件 99.1）"),
+       ("pgp", "非 GAAP 產品毛利（FY2022、FY2023、LTM；專業服務非 GAAP 毛利約 0，以產品毛利代理合計）", [844.623, 1457.382, None, None, None, 3917.406], "FY2022、FY2023 非 GAAP 調節表（facts_snowflake.csv）；LTM＝879.165＋921.462＋1,002.695＋1,114.084"),
+       ("oi", "非 GAAP 營業利益", [-31.175, 95.283, None, None, None, 673.241], "同上；LTM＝131.313＋139.175＋165.753＋237.0"),
+       ("opx", "非 GAAP 營業費用（＝毛利−營業利益）", [None] * 6, "FY2022、FY2023、LTM＝產品毛利−營業利益（Derived）；FY2024–FY2026 取上方 Q 表"),
+       ("sbc", "股票薪酬", [605.095, 861.533, None, None, None, 1641.922], "FY2022、FY2023 MD&A SBC 表；LTM＝412.278＋403.592＋402.47＋423.582（Derived）")]
+for key, lab, vals, src in reg:
+    QG[key] = rr
+    Q.cell(rr, 1, lab)
+    for j, v in enumerate(vals):
+        if v is not None and not (isinstance(v, str)): Q.cell(rr, 2 + j, v).font = BLUE
+    Q.cell(rr, 8, src); Q.cell(rr, 9, "Derived" if key in ("opx",) else "Interested-party" if key in ("pgp", "oi") else "Verified")
+    rr += 1
+for j, col in zip((4, 5, 6), "BCD"):   # FY2024–FY2026 取上方 Q 表
+    Q.cell(QG["rev"], j, f"={col}{QR['rev']}"); Q.cell(QG["opx"], j, f"={col}{QR['opx_n']}"); Q.cell(QG["sbc"], j, f"={col}{QR['sbc']}")
+for j, col in zip((2, 3, 7), "BCG"):
+    Q.cell(QG["opx"], j, f"={col}{QG['pgp']}-{col}{QG['oi']}")
+rr += 1
+X3 = f"E{QG['rev']}:G{QG['rev']}"; X6 = f"B{QG['rev']}:G{QG['rev']}"
+RS = {}
+for key, lab, f in (("opxv", "營業費用變動部分（最近三點斜率）", f"=SLOPE(E{QG['opx']}:G{QG['opx']},{X3})"), ("opxa", "營業費用固定部分（最近三點截距；US$M）", f"=INTERCEPT(E{QG['opx']}:G{QG['opx']},{X3})"),
+                    ("opxv6", "營業費用變動部分（六點全樣本斜率）", f"=SLOPE(B{QG['opx']}:G{QG['opx']},{X6})"), ("opxa6", "營業費用固定部分（六點全樣本截距）", f"=INTERCEPT(B{QG['opx']}:G{QG['opx']},{X6})"),
+                    ("opxltm", "營業費用率（LTM；全期持平案用）", f"=G{QG['opx']}/G{QG['rev']}"),
+                    ("sbcv", "股票薪酬變動部分（最近三點斜率）", f"=SLOPE(E{QG['sbc']}:G{QG['sbc']},{X3})"), ("sbca", "股票薪酬固定部分（最近三點截距；US$M）", f"=INTERCEPT(E{QG['sbc']}:G{QG['sbc']},{X3})"),
+                    ("sbcv6", "股票薪酬變動部分（六點全樣本斜率）", f"=SLOPE(B{QG['sbc']}:G{QG['sbc']},{X6})"), ("sbcltm", "股票薪酬占營收（LTM；全期持平案用）", f"=G{QG['sbc']}/G{QG['rev']}")):
+    RS[key] = rr; Q.cell(rr, 1, lab); Q.cell(rr, 2, f); Q.cell(rr, 7, DE); rr += 1
+rr += 1
+Q.cell(rr, 1, "營運資金（10-K FY2026 MD&A 營運資產負債變動；負值＝流入，原則第 23 條）").font = BOLD; rr += 1
+WCR = rr
+for j, h in enumerate(["指標", "FY2025", "FY2026", "來源", "標記"], 1): Q.cell(rr, j, h).font = BOLD
+rr += 1
+Q.cell(rr, 1, "營運資產負債變動合計（現金流入；US$M）"); Q.cell(rr, 2, 443.6).font = BLUE; Q.cell(rr, 3, 383.8).font = BLUE
+Q.cell(rr, 4, K26 + " MD&A Liquidity：FY2026 合計 383.8（遞延收入 +755.2、遞延佣金 −305.1、應收 −380.0、應計 +393.3、營運租賃 −26.9、預付 −44.5）；FY2025 443.6"); Q.cell(rr, 5, D0); WC1 = rr; rr += 1
+Q.cell(rr, 1, "營收增量（US$M）"); Q.cell(rr, 2, f"=C{QR['rev']}-B{QR['rev']}"); Q.cell(rr, 3, f"=D{QR['rev']}-C{QR['rev']}"); Q.cell(rr, 5, DE); rr += 1
+Q.cell(rr, 1, "營運資金增加÷營收增量（負值＝流入）"); Q.cell(rr, 2, f"=-B{WC1}/B{WC1+1}"); Q.cell(rr, 3, f"=-C{WC1}/C{WC1+1}"); Q.cell(rr, 5, DE); WCRAT = rr; rr += 1
+Q.cell(rr, 1, "其中遞延收入增加（FY2026；US$M）"); Q.cell(rr, 3, 755.2).font = BLUE; Q.cell(rr, 4, K26 + " MD&A"); Q.cell(rr, 5, D0); rr += 1
+Q.cell(rr, 1, "核對：In 頁 fc_wc 基準 − FY2026 比率（應為 0；容許四捨五入 0.001）"); Q.cell(rr, 3, f"=ROUND(In!$E${IR['fc_wc']}-C{WCRAT},3)"); WCCK = rr; rr += 1
 
 
 def QH(key, y):
@@ -310,8 +386,8 @@ P["A1"] = "損益表（非 GAAP 口徑，公司與賣方共識的口徑；單一
 P["A2"] = "非 GAAP 排除股票薪酬與相關薪資稅、無形資產攤銷等。DCF 的 EBIT＝非 GAAP 營業利益−股票薪酬（SBC 不加回；非 GAAP→FCFF 橋接見各情境區塊）。GAAP 營業利益與 EPS 為參考列（本版 GAAP 預測為近似，不進估值）。FY2024A–FY2026A 取自 Q 頁。"
 PLB = ["rev", "cogs", "gp", "opex", "oi", "sbc", "ebit", "da", "capex", "nopat", "dwc", "fcff", "oth", "ebt", "taxx", "ni", "shs", "eps", "gaap_oi", "fcf_co"]
 PLL = {"rev": "營收", "cogs": "營業成本（非 GAAP）", "gp": "毛利（非 GAAP）", "opex": "營業費用（非 GAAP）", "oi": "營業利益（非 GAAP）", "sbc": "股票薪酬",
-       "ebit": "DCF 的 EBIT（非 GAAP 營業利益−股票薪酬）", "da": "折舊與攤銷", "capex": "資本支出", "nopat": "NOPAT（EBIT−max(EBIT,0)×稅率；不計 NOL 與稅盾）",
-       "dwc": "營運資金增加（負值＝流入）", "fcff": "無槓桿自由現金流 FCFF", "oth": "其他收入（利息等；非 GAAP）", "ebt": "稅前（非 GAAP）", "taxx": "所得稅（非 GAAP）",
+       "ebit": "DCF 的 EBIT（非 GAAP 營業利益−股票薪酬）", "da": "折舊與攤銷", "capex": "資本支出", "nopat": "NOPAT（EBIT×(1−稅率)；取自 DCF 頁）",
+       "dwc": "營運資金增加（負值＝流入；取自 DCF 頁）", "fcff": "無槓桿自由現金流 FCFF（取自 DCF 頁）", "oth": "其他收入（利息等；非 GAAP）", "ebt": "稅前（非 GAAP）", "taxx": "所得稅（非 GAAP）",
        "ni": "淨利（非 GAAP）", "shs": "稀釋股數（M；非 GAAP）", "eps": "EPS（非 GAAP 稀釋，美元）", "gaap_oi": "參考：GAAP 營業利益（近似＝非 GAAP 營業利益−SBC−其他調整）", "fcf_co": "參考：公司口徑自由現金流（FCFF＋SBC＋稅後其他收入）"}
 PR = {}
 BASE0 = 70
@@ -340,16 +416,13 @@ for si, s in enumerate("ABC"):
         P[R("rev")] = f"=Seg!{c}{sr['rev']}"
         P[R("cogs")] = f"=Seg!{c}{sr['cogsx']}+Seg!{c}{sr['infc']}+Seg!{c}{sr['ps']}*(1-{I('gm_ps')})"
         P[R("gp")] = f"={R('rev')}-{R('cogs')}"
-        P[R("opex")] = f"={R('rev')}*{I('opx27')}" if y == "FY2027" else f"={R('rev')}*({Pv('opex')}/{Pv('rev')}-{I('opx_dr')})"
+        P[R("opex")] = f"={I('opx_a')}+{I('opx_v')}*{R('rev')}"
         P[R("oi")] = f"={R('gp')}-{R('opex')}"
-        P[R("sbc")] = f"={R('rev')}*({I('sbc27')}+({I('sbc32_'+s)}-{I('sbc27')})*{n}/5)"
+        P[R("sbc")] = f"=({I('sbc_a')}+{I('sbc_v_B')}*$F{rows['rev']})+{I('sbc_v_'+s)}*({R('rev')}-$F{rows['rev']})"
         P[R("ebit")] = f"={R('oi')}-{R('sbc')}"
-        P[R("da")] = f"={R('rev')}*{I('da_pct')}"
-        P[R("capex")] = f"={R('rev')}*{I('capex_pct')}"
-        P[R("nopat")] = f"={R('ebit')}-MAX({R('ebit')},0)*{I('tax')}"
-        P[R("dwc")] = f"=-{I('wc_k')}*({R('rev')}-{Pv('rev')})"
-        P[R("fcff")] = f"={R('nopat')}+{R('da')}-{R('capex')}-{R('dwc')}"
-        P[R("oth")] = f"={I('yld')}*{I('cash')}"
+        P[R("da")] = f"={R('rev')}*{I('fc_da')}"
+        P[R("capex")] = f"={R('rev')}*{I('fc_cx')}"
+        P[R("oth")] = f"={I('yld')}*{I('cash_v')}"
         P[R("ebt")] = f"={R('oi')}+{R('oth')}"
         P[R("taxx")] = f"={R('ebt')}*{I('tax')}"
         P[R("ni")] = f"={R('ebt')}-{R('taxx')}"

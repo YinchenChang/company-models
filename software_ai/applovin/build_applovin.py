@@ -10,7 +10,7 @@ from openpyxl.utils import get_column_letter as L
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 VER = "0.1"
-BUILD_DATE = dt.date(2026, 11, 16)
+BUILD_DATE = dt.date(2026, 11, 17)
 DATA_DATE = dt.date(2026, 11, 16)
 PX_DATE = dt.date(2026, 11, 13)
 VAL_DATE = dt.date(2026, 9, 30)
@@ -152,7 +152,7 @@ S("E. 估值（同業前瞻本益比、權重）",
   E("pe_meta", "同業預估本益比：META（2026-11-13）", "x", None, 19.48, None, "Interested-party", "https://stockanalysis.com/stocks/meta/statistics/", "同上", IP_SELL),
   E("pe_googl", "同業預估本益比：GOOGL（2026-11-13）", "x", None, 21.45, None, "Interested-party", "https://stockanalysis.com/stocks/googl/statistics/", "同上", IP_SELL),
   E("pe_app", "APP 自身預估本益比（2026-11-06，391.22 價位）", "x", None, 19.87, None, "Interested-party", "https://stockanalysis.com/stocks/app/statistics/", "逾期：2026-11-06 與現價日相差超過 2 個交易日。只作對照，不進模型；不計入同業中位數", IP_SELL),
-  E("pe_rel", "相對倍數調整係數（1.00＝未調整）", "x", 0.7, 1.0, 1.3, "Assumed", "未調整：缺同業 NTM EPS 同一日期、同一 GAAP／non-GAAP 口徑資料（原則第 10 節第 18 條；承重輸入）", "寫「1.00（未調整：缺…）」；Sens 低／高＝倍數 ±30%"),
+  E("pe_rel", "相對倍數調整係數（1.00＝未調整）", "x", 0.7, 1.0, 1.3, "Assumed", "未調整：缺同業 NTM EPS 同一日期、同一 GAAP／non-GAAP 口徑資料；G3-4：未取得本公司與同業近 5 年股價與 EPS 歷史，未計算歷史相對倍數，故取 1.00（原則第 10 節第 18、47 條；承重輸入）", "寫「1.00（未調整：缺…）」；Sens 低／高＝倍數 ±30%"),
   E("w_dcf", "目標價中 DCF 的權重（其餘＝同業前瞻本益比）", "%", 0.3, 0.5, 0.7, "Assumed", "原則第 4 節預設 DCF 50%＋Comparable 50%"),
   E("tp_wA", "情境權重 A", "%", None, 0.25, None, "Assumed", "DCF 標準規格第 3 節預設 25／50／25"),
   E("tp_wB", "情境權重 B", "%", None, 0.5, None, "Assumed", "同上"),
@@ -193,8 +193,8 @@ def make_cases():
             cases.append(dict(id=f"{e['key']}|{side}", keys=[e["key"]], side=side, label=e["label"].split("（")[0][:30], sets=[[e["key"], v]]))
     tk = IND
     def tv(k, s): return tk[k]["lo" if s == "低" else "hi"]
-    cases.append(dict(id="tkjoint|高", keys=["tk_px", "tk_mult", "llm_tasks27"], side="高", label="成本聯動上界：價格、倍數與任務數同取高值",
-                      sets=[["tk_px", tv("tk_px", "高")], ["tk_mult", tv("tk_mult", "高")], ["llm_tasks27", tv("llm_tasks27", "高")]]))
+    cases.append(dict(id="tkjoint|高", keys=["tk_px", "tk_mult"], side="高", label="成本聯動上界：價格與任務 token 倍數同取高值",
+                      sets=[["tk_px", tv("tk_px", "高")], ["tk_mult", tv("tk_mult", "高")]]))
     cases.append(dict(id="tkroute|高", keys=["tk_px", "tk_mult"], side="高", label="路由到便宜模型：價格取低層、任務 token 取高倍數",
                       sets=[["tk_px", tv("tk_px", "低")], ["tk_mult", tv("tk_mult", "高")]]))
     return cases
@@ -627,6 +627,11 @@ vrow("app_pe", "APP 自身預估本益比（2026-11-06；只作對照）", ["=pe
 vrow("app_ratio", "本公司現行預估本益比 ÷ 同業中位數", ["=B{0}/B{1}".format(VR["app_pe"], VR["mult_med"])], "0.00")
 vrow("rerate", "隱含重估：若 APP 倍數回到同業中位數的價格變動", ["=B{0}/B{1}-1".format(VR["mult_med"], VR["app_pe"])], "+0.0%;-0.0%;0.0%", "只作展示；不進目標價")
 _vr[0] += 1
+vsec("合理性關卡（工作單 G3-3；發布前必查）")
+for k, l in (("rs_dcf", "DCF 目標價 ÷ 現價（關卡：小於 0.25 或大於 4）"), ("rs_ev", "最小情境 EV（US$M；關卡：為負）"), ("rs_rate", "評等為強力買進或強力放空？（1＝是）"),
+             ("rs_q4", "Q4 營收相對指引中點（關卡：差距大於 10%）"), ("rs_flag", "任一關卡成立？（1＝是；須先診斷）")):
+    vrow(k, l)
+_vr[0] += 1
 vsec("備註")
 V.cell(_vr[0], 1, "分母口徑：本公司 EPS 為 GAAP 稀釋（扣股票薪酬）；同業分母多為 non-GAAP。兩者不同，故 Comparable 腿偏保守；相對調整係數基準 1（未調整，缺同業 NTM EPS 同日期同口徑資料）。")
 
@@ -1007,6 +1012,17 @@ rd("nf", "未找到清單：見 Recon 第 7 節與 data/research_applovin.md 第
 RD.column_dimensions["A"].width = 120
 for c in "BCD": RD.column_dimensions[c].width = 40
 
+Vset("rs_dcf", "B", f"=B{VR['tpdcf']}/px", "0.00"); Vset("rs_ev", "B", f"=MIN(B{VR['ev']}:D{VR['ev']})", "#,##0")
+Vset("rs_rate", "B", f'=IF(OR(B{VR["vrate"]}="強力買進",B{VR["vrate"]}="強力放空"),1,0)', "0")
+Vset("rs_q4", "B", f"=Recon!B{RCR['g_gap']}", "+0.0%;-0.0%")
+Vset("rs_flag", "B", f"=IF(OR(B{VR['rs_dcf']}<0.25,B{VR['rs_dcf']}>4,B{VR['rs_ev']}<0,B{VR['rs_rate']}=1,ABS(B{VR['rs_q4']})>0.1),1,0)", "0")
+rd("gate3", "合理性關卡診斷（G3-3）", bold=True)
+rd("gate3_r", fx("四項關卡：DCF 目標價 ÷ 現價 ", T(f"Val!B{VR['rs_dcf']}", "0.00"), "（界線 0.25 與 4）；最小情境 EV ", T(f"Val!B{VR['rs_ev']}", "#,##0"), " 百萬美元；評等 ", ("f", f"Val!B{VR['vrate']}"),
+                 "；Q4 營收相對指引中點 ", T(f"Val!B{VR['rs_q4']}", "+0.0%;-0.0%"), "。任一關卡成立＝", ("f", f'IF(Val!B{VR["rs_flag"]}=1,"是（須診斷）","否")'), "。"))
+rd("gate3_d", "診斷結論：四項關卡皆未成立。DCF 低於現價與 Comparable 的主因是折現率（β 約 2，WACC 約 15%）與終值價值中性（RONIC＝WACC），不是模型錯誤：基準營業利益率 77%–78% 持平於最近四季，營收成長與公司 Q4 指引、賣方共識同量級（Recon 第 1、2 節），反解見 Recon 第 4 節。DCF 與 Comparable 的落差屬口徑與折現率的經濟判斷，保留。")
+rd("gate3_1", "G3-1 費用率延伸：營業費用率歷史上已大幅下降（FY2023 約 39%、FY2025 約 12%、最近四季約 11%），規模經濟已大部分實現；基準取最近四季持平，不是虧損水準凍結（營業利益率 77% 以上），故不另做固定＋變動拆分；Sens 低案（費用率下限）涵蓋進一步下降。")
+rd("gate3_2", "G3-2 營運資金：APP 非訂閱制，無遞延收入；營運資金增加 ÷ 營收增量以 2026Q3 淨營運資金占營收推得（約 10%–12%），正號表示現金流出。")
+rd("gate3_4", "G3-4 相對倍數：未取得本公司與同業近 5 年股價與 EPS 歷史，未計算本公司倍數 ÷ 同業中位數的歷史基準，故相對倍數調整係數取 1.00（未調整），列為承重輸入（Sens 倍數 ±30%）。")
 # ═════════════════════════════ 輸出 ═════════════════════════════
 for ws in wb.worksheets: ws.sheet_view.zoomScale = 90
 wb.save(A.out)

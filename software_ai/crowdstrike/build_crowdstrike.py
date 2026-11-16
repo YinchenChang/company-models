@@ -49,6 +49,9 @@ SA = "https://stockanalysis.com/stocks/{}/statistics/"
 VEND = "資料商（StockAnalysis）整理值，非法定文件"
 SEC = "#"
 # (key, 項目, 單位, 低, 基準, 高, 標記, 來源, 說明, 來源誘因)
+RMH = [1.412, 1.149, 2.163, 2.356, 3.411]
+RMH_MAX = max(RMH)
+RMSRC = "https://stockanalysis.com/stocks/crwd/financials/ratios/ 與 panw、ftnt、zs、okta、s、chkp 同路徑（2026-11-17 擷取；StockAnalysis 年度 EV／Sales）；data/relmult_history.csv"
 INP = [
     (SEC, "A. 日期、現價、股數與資產負債（評價日 2026-07-31；US$M；股數百萬股，4 比 1 拆股後）"),
     ("data_date", "資料截止日（本版最晚一筆輸入）", "日期", None, D(2026, 11, 16), None, "Derived", "本腳本建置日；最晚輸入為 Tokenomics 快照擷取日 2026-11-16", "README 首列與 HTML 表頭分列資料截止日、成品日、股價基準日", None),
@@ -94,7 +97,14 @@ INP = [
     ("pm_s", "同業 EV／營收（TTM）：SentinelOne", "x", None, 7.48, None, "Interested-party", SA.format("s") + "（2026-10-27 更新，收盤 2026-10-26）", "逾期（與基準日相差超過 2 個交易日）；直接競爭者；租賃處理未核對", VEND),
     ("pm_chkp", "同業 EV／營收（TTM）：Check Point", "x", None, 4.67, None, "Interested-party", SA.format("chkp") + "（2026-11-15 更新）", "會計準則（IFRS 或 US GAAP）與租賃處理未核對；低成長", VEND),
     ("pm_med", "同業 EV／營收（TTM）中位數", "x", None, "=MEDIAN(pm_panw,pm_ftnt,pm_zs,pm_okta,pm_s,pm_chkp)", None, "Derived", "六家同業中位數；少於約 8 家，不做迴歸（原則第 10 節第 7 條）", "G2-6：分子 EV（無槓桿）、分母 TTM 營收，與本公司同口徑；Comparable 乘目標日 TTM 營收；分母為各家 TTM 營收；成長率、利益率、資本強度並列未做（未取得）", None),
-    ("rel_mult", "相對倍數係數（CRWD 倍數 ÷ 同業中位數；1.00＝未調整）", "x", 0.8, 1.0, 2.5, "Assumed", "1.00（未調整：缺 CRWD 歷史相對倍數與成長調整資料）", "承重輸入：CRWD 現價隱含倍數遠高於同業中位數，見 Recon", None),
+    ("rm_22", "CRWD EV／營收 ÷ 同業中位數：FY2022 年末（2022-01-31）", "x", None, RMH[0], None, "Derived", RMSRC, "CRWD 25.80；同業六家 18.27（中位數）；各家取最接近的會計年度末（PANW、ZS 為 7 月底、其餘 12 月或 1 月底）", VEND),
+    ("rm_23", "同上：FY2023 年末（2023-01-31）", "x", None, RMH[1], None, "Derived", RMSRC, "CRWD 9.76；同業中位數 8.50", VEND),
+    ("rm_24", "同上：FY2024 年末（2024-01-31）", "x", None, RMH[2], None, "Derived", RMSRC, "CRWD 21.32；同業中位數 9.86", VEND),
+    ("rm_25", "同上：FY2025 年末（2025-01-31）", "x", None, RMH[3], None, "Derived", RMSRC, "CRWD 23.93；同業中位數 10.16", VEND),
+    ("rm_26", "同上：FY2026 年末（2026-01-31）", "x", None, RMH[4], None, "Derived", RMSRC, "CRWD 22.31；同業中位數 6.54", VEND),
+    ("rel_mult", "相對倍數係數（CRWD 倍數 ÷ 同業中位數）：最近 5 個會計年度末平均", "x", 1.0, "=AVERAGE(rm_22,rm_23,rm_24,rm_25,rm_26)", RMH_MAX, "Derived", "G3-4：用公開股價與財報自算的 5 年相對倍數平均（data/relmult_history.csv）；低值 1.0＝與同業中位數平價；高值＝5 年最高", "承重輸入；五個年末觀察值跨度大（最低與最高見 In 頁各列），且 CRWD 現價隱含倍數遠高於 5 年平均，見 Recon", None),
+    ("ev_hc", "事件尾端：營收認列與 ARR 報告方式資訊請求（DOJ／SEC）→ 重編下修訂閱營收比例", "%", None, 0.0, 0.10, "Assumed", "G3 與原則第 19 條：10-Q Note 11 揭露 DOJ 與 SEC 資訊請求，無金額或結論；高值 10% 為尾端壓力（無證據支持幅度，非預測）", "只列 Sens，基準 0；尾端案不進加權目標價", None),
+    ("ev_delta", "事件尾端：Delta 案一次性現金負擔（US$M）", "US$M", None, 0.0, 500, "Verified", "Delta 公開求償額逾 US$500M（itpro.com 與 TechTarget 2024-10 報導；證據開示中）；高值以求償額上限計，非預期損失，僅作尾端壓力", "只列 Sens，基準 0；求償金額為原告主張，法院結果未定（Interested-party：原告陳述）", None),
     (SEC, "C. 命題驅動：按防護範圍計價（受保護單位 × 模組數 × 每模組年費）與 AI 代理（非人類身分）；v0.2 改讀 unit_economics"),
     ("u_0", "受保護單位數（端點＋身分；FY2026 年底）", "百萬", 25, 40, 60, "Assumed", "公司不揭露；10-K 稱客戶逾 88,000（含 MSSP 終端）。校準：ARR ÷ 單位數＝每單位年費", "承重 Assumed 之一；只影響每單位數字，不影響 ARR 路徑（p_0 由 ARR 反推）", None),
     ("m_0", "每單位平均模組數（FY2026 年底）", "個", 5, 6, 7, "Assumed", "依模組採用分布推估：6 個以上 50%、7 個以上 34%、8 個以上 24%（Q4 FY2026 新聞稿）", "ARR 加權平均高於客戶加權；公司只揭露門檻占比", None),
@@ -129,15 +139,15 @@ INP = [
     ("gmsub_ng", "Non-GAAP 訂閱毛利率（不含增量 AI 推論成本）", "%", 0.79, 0.81, 0.83, "Interested-party", Q2PR + "：近四季各季均 81%", "公司自訂 non-GAAP 口徑（排除 SBC、攤銷等）", "公司自訂 non-GAAP 口徑；管理層稱 FY2029 目標模型（數值未取得）"),
     ("gmps_ng", "Non-GAAP 專業服務毛利率", "%", 0.25, 0.32, 0.35, "Interested-party", Q2PR + "：近四季 30%–35%", "公司自訂 non-GAAP 口徑", "公司自訂 non-GAAP 口徑"),
     ("opx_27", "Non-GAAP 營業費用率（S&M＋R&D＋G&A）：FY2027", "%", 0.53, "=Q!M11-Q!M17", 0.57, "Derived", "最近四季：non-GAAP 毛利率 − non-GAAP 營業利益率（Q 頁）", "原則第 10 節第 35 條：以最近四季實績為起點；FY2027 指引 non-GAAP 營業利益約 25% 只進 Recon", None),
-    ("opx_32", "Non-GAAP 營業費用率：FY2032（基準全期持平於 FY2027 起點）", "%", 0.47, "=opx_27", 0.57, "Derived", "原則第 10 節第 35 條與 G2-3：無證據的比率改善不入基準，基準＝最近四季實績全期持平；低值 0.47 為規模槓桿收斂案（費用率由 FY2026 56.4% 降至 Q2 FY2027 53.4%，新聞稿 Derived），只放 Sens", "高值 0.57＝費用率回升", None),
+    ("fix_ng", "Non-GAAP 固定成本（US$M；規模經濟：營運成本＝固定＋變動 × 營收）", "US$M", 0, "=INTERCEPT(Hist!C45:F45,Hist!C5:F5)", 400, "Derived", "G3-1：FY2023–FY2026 四年 non-GAAP 總成本（營收 − non-GAAP 營業利益）對營收的最小平方回歸截距（Hist 頁）；非 GAAP 營業利益率由 FY2023 15.9% 升至 FY2026 21.7%，FY2024 起大致持平，故固定部分不大；FY2027 以近四季費用率為起點，之後只吸收固定成本的稀釋（營業費用率 ＝ 起點費用率 − 固定成本 ×（1／FY2027 營收 − 1／當年營收））；低值 0＝全期持平（下緣，G2-3）", "高值 400 為規模經濟加大案（Assumed）", None),
     ("sbc_27", "SBC（含雇主薪資稅）占營收：FY2027", "%", 0.22, "=Q!M12/Q!M7", 0.27, "Derived", "最近四季 SBC 與相關薪資稅 ÷ 營收（Q 頁）", "現金流量表 SBC 占營收 FY2026 22.8%（Hist 頁）", None),
-    ("sbc_32", "SBC（含雇主薪資稅）占營收：FY2032（基準全期持平於 FY2027 起點）", "%", 0.18, "=sbc_27", 0.26, "Derived", "G2-3：基準全期持平於最近四季；歷史 FY2022 21%、FY2023 23.5%、FY2024 21%、FY2025 22.8%、FY2026 23.5%（Hist 頁）並未下降；低值 0.18 為收斂案，只放 Sens", "DCF 以 NOPAT 扣 SBC，不加回（個股 DCF 標準規格預設）", None),
+    ("fix_sbc", "SBC（含雇主薪資稅）固定部分（US$M）", "US$M", 0, "=MAX(0,INTERCEPT(Hist!C22:F22,Hist!C5:F5))", 400, "Derived", "G3-1：FY2023–FY2026 SBC（現金流量表）對營收的回歸截距為負（約 −3）：歷史 SBC 占營收 23.5%、21.2%、21.8%、22.8% 無下降趨勢，固定部分取 0（即基準＝近四季占營收比持平）；低值 0；高值 400 為 SBC 規模經濟案（Assumed，無歷史證據）", "DCF 以 NOPAT 扣 SBC，不加回（個股 DCF 標準規格預設）", None),
     ("oth_pct", "Non-GAAP 與 GAAP 營業利益的其他調整（攤銷、併購費用、7 月 19 日事件等）占營收", "%", 0.003, 0.007, 0.012, "Assumed", "Q2 FY2027 調節表：攤銷 13.3、併購費用 6.7、事件回收 −14.5（US$M）；近年約 0.7% 營收", None, None),
     ("gm_gap", "GAAP 與 non-GAAP 毛利率差（成本中的 SBC 與攤銷）", "%", 0.03, 0.035, 0.045, "Derived", "FY2026：non-GAAP 毛利率 78.2% 減 GAAP 74.7%（Hist 頁）", "僅分配 GAAP 毛利與營業費用，不影響營業利益", None),
     ("ext_d", "延伸期終點（FY2037）GAAP 營業利益率相對 FY2032 的變動", "%", -0.03, 0.0, 0.08, "Assumed", "G2-3：基準持平（0）；FY2033–FY2037 營收年增線性收斂到永續成長率 g，利益率不變。高值 +8pt＝規模槓桿收斂案，低值 −3pt＝競爭壓縮，只放 Sens", "延伸期必要性：明確期到 FY2032 時營收年增仍高於 10%，直接接永續價值會低估，故加 5 年延伸期（個股 DCF 標準規格第 1 節）", None),
-    ("da_pct", "折舊與攤銷占營收", "%", 0.05, "=h_da26/h_rev26+h_am26/h_rev26", 0.07, "Derived", "FY2026 現金流量表：折舊攤銷 250.2＋無形資產攤銷 31.2 ÷ 營收", None, None),
+    ("da_k", "折舊與攤銷 ÷ 前一年資本支出（資本支出以固定比例轉為折舊攤銷）", "x", 0.75, "=AVERAGE((h_da25+h_am25)/h_cxt24,(h_da26+h_am26)/h_cxt25)", 1.0, "Derived", "FY2025、FY2026 折舊攤銷（含無形資產攤銷）÷ 前一年資本支出合計（Hist 頁）的平均；使折舊與攤銷隨資本支出累積，不再固定占營收比（資本支出 9% 對折舊 6% 長期並存為內部不一致）", "營業利益由費用率決定，折舊攤銷只影響 FCFF 的非現金加回", None),
     ("cx_27", "資本支出占營收（含資本化軟體）：FY2027", "%", 0.075, 0.09, 0.105, "Assumed", "FY2026 7.7%、FY2027 上半年 9.5%（現金流量表）；以後者附近為起點", "資料中心設備與自建資料中心上升", None),
-    ("cx_32", "資本支出占營收：FY2032（基準全期持平於 FY2027）", "%", 0.07, "=cx_27", 0.105, "Derived", "G2-3：基準持平；低值 0.07 為收斂案，只放 Sens", None, None),
+    ("fix_cx", "資本支出固定部分（US$M；含資本化軟體）", "US$M", 0, "=MAX(0,INTERCEPT(Hist!C46:F46,Hist!C5:F5))", 300, "Derived", "G3-1：FY2023–FY2026 資本支出合計對營收的回歸截距（Hist 頁）；FY2027 以 In 頁 cx_27 占營收比為起點，之後只吸收固定部分的稀釋；低值 0＝全期持平（下緣）；高值 300 為加大案（Assumed）", "FY2027 上半年占營收 9.5% 高於 FY2024–FY2026（7.4%–7.9%），回歸截距主要由 FY2023 的高占比（11.8%）帶出", None),
     ("wc_in", "營運資金流入 ÷ 營收增量（遞延收入為主，含遞延取得成本攤銷加回）", "x", 0.25, 0.40, 0.50, "Assumed", "FY2025 0.348、FY2026 0.454（Hist 頁，10-K 現金流量表營運資產負債變動，與營運現金流勾稽）", "個股模型原則第 10 節第 23 條；遞延收入占 FY2026 營運現金流來源大宗", None),
     ("int_y", "現金利率（利息收入 ÷ 期初現金）", "%", 0.03, 0.04, 0.05, "Assumed", "FY2026 利息收入 195.0 ÷ 平均現金約 4.78B＝4.1%", None, None),
     ("int_x", "利息費用（US$M／年，優先票據）", "US$M", None, 28.0, None, "Derived", "FY2026 利息費用 28.0（Q4 FY2026 新聞稿）", None, None),
@@ -348,6 +358,16 @@ def build(ov=None, sens=None, out=None):
     for c in "CDEF":
         f_(H, f"{c}{rr}", f"={c}{hr['sub']}+{c}{hr['ps']}-{c}{hr['rev']}", "0.000")
     Reg.rows["Hist_check"] = rr
+    r_ngc, r_cxt = rr + 2, rr + 3
+    assert (r_ngc, r_cxt, hr["rev"], hr["sbc"]) == (45, 46, 5, 22), (r_ngc, r_cxt, hr["rev"], hr["sbc"])
+    f_(H, f"A{r_ngc}", "Non-GAAP 總成本（營收 − non-GAAP 營業利益；規模經濟回歸用，Derived）")
+    f_(H, f"A{r_cxt}", "資本支出合計（購置不動產設備＋資本化內部使用軟體；Derived）")
+    for y, c in zip((2023, 2024, 2025, 2026), "CDEF"):
+        f_(H, f"{c}{r_ngc}", f"={c}{hr['rev']}-{c}{hr['ngebit']}", "#,##0.000")
+        f_(H, f"{c}{r_cxt}", f"={c}{hr['cx']}+{c}{hr['cs']}", "#,##0.000")
+        addname(wb, f"h_ngc{str(y)[2:]}", f"Hist!${c}${r_ngc}")
+        addname(wb, f"h_cxt{str(y)[2:]}", f"Hist!${c}${r_cxt}")
+    f_(H, f"G{r_ngc}", "Derived"); f_(H, f"G{r_cxt}", "Derived")
     H.column_dimensions["A"].width = 46
     # ───────── Q ─────────
     Q = ws_["Q"]
@@ -482,10 +502,10 @@ def build(ov=None, sens=None, out=None):
                 f_(T, T_("r", c), f"=r32_{s}*{c}{R['n']}/6", "0.00")
                 f_(T, T_("tpu", c), f"=tasks_0+(tasks_{s}-tasks_0)*{c}{R['n']}/6", "0")
                 f_(T, T_("dev", c), f"=({c}{R['P']}-$E{R['P']})*{c}{R['U']}*{c}{R['M']}", "#,##0.0")
-                f_(T, T_("sub", c), f"=conv*AVERAGE({pc}{R['ARR']},{c}{R['ARR']})", "#,##0.0")
+                f_(T, T_("sub", c), f"=conv*(1-ev_hc)*AVERAGE({pc}{R['ARR']},{c}{R['ARR']})", "#,##0.0")
                 f_(T, T_("ps", c), f"=ps_pct*{c}{R['sub']}", "#,##0.0")
-                f_(T, T_("aiRev", c), f"=conv*AVERAGE({pc}{R['aARR']},{c}{R['aARR']})", "#,##0.0")
-                f_(T, T_("ero", c), f"=conv*AVERAGE({pc}{R['dev']},{c}{R['dev']})", "#,##0.0")
+                f_(T, T_("aiRev", c), f"=conv*(1-ev_hc)*AVERAGE({pc}{R['aARR']},{c}{R['aARR']})", "#,##0.0")
+                f_(T, T_("ero", c), f"=conv*(1-ev_hc)*AVERAGE({pc}{R['dev']},{c}{R['dev']})", "#,##0.0")
                 f_(T, T_("inc", c), f"={c}{R['cost']}-$E{R['cost']}", "#,##0.0")
                 f_(T, T_("nn", c), f"={c}{R['ARR']}-{pc}{R['ARR']}", "#,##0.0")
                 f_(T, T_("arrg", c), f"={c}{R['ARR']}/{pc}{R['ARR']}-1", "0.0%")
@@ -578,13 +598,13 @@ def build(ov=None, sens=None, out=None):
                 f_(P, f"{c}{R['u']}", f"=Thesis!{tc}{B_['U']}", "0.0")
                 f_(P, f"{c}{R['m']}", f"=Thesis!{tc}{B_['M']}", "0.00")
                 f_(P, f"{c}{R['p']}", f"=Thesis!{tc}{B_['P']}", "0.0")
-                f_(P, f"{c}{R['chk2']}", f"=conv*AVERAGE({pc}{R['u']}*{pc}{R['m']}*{pc}{R['p']}+Thesis!{pc}{B_['aARR']},{c}{R['u']}*{c}{R['m']}*{c}{R['p']}+Thesis!{c}{B_['aARR']})-{c}{R['sub']}", "0.000")
+                f_(P, f"{c}{R['chk2']}", f"=conv*(1-ev_hc)*AVERAGE({pc}{R['u']}*{pc}{R['m']}*{pc}{R['p']}+Thesis!{pc}{B_['aARR']},{c}{R['u']}*{c}{R['m']}*{c}{R['p']}+Thesis!{c}{B_['aARR']})-{c}{R['sub']}", "0.000")
                 f_(P, f"{c}{R['inf']}", f"=Thesis!{tc}{B_['inc']}", "#,##0.0")
                 n_ = f"Thesis!{tc}{B_['n']}"
                 f_(P, f"{c}{R['nggp']}", f"={c}{R['sub']}*gmsub_ng+{c}{R['ps']}*gmps_ng-{c}{R['inf']}", "#,##0.0")
                 f_(P, f"{c}{R['nggm']}", f"={c}{R['nggp']}/{c}{R['rev']}", "0.0%")
-                f_(P, f"{c}{R['ngop']}", f"={c}{R['nggp']}-(opx_27+(opx_32-opx_27)*({n_}-1)/5)*{c}{R['rev']}", "#,##0.0")
-                f_(P, f"{c}{R['sbc']}", f"=(sbc_27+(sbc_32-sbc_27)*({n_}-1)/5)*{c}{R['rev']}", "#,##0.0")
+                f_(P, f"{c}{R['ngop']}", f"={c}{R['nggp']}-opx_27*{c}{R['rev']}+fix_ng*({c}{R['rev']}/$F{R['rev']}-1)", "#,##0.0")
+                f_(P, f"{c}{R['sbc']}", f"=sbc_27*{c}{R['rev']}-fix_sbc*({c}{R['rev']}/$F{R['rev']}-1)", "#,##0.0")
                 f_(P, f"{c}{R['ebit']}", f"={c}{R['ngop']}-{c}{R['sbc']}-oth_pct*{c}{R['rev']}", "#,##0.0")
                 f_(P, f"{c}{R['gp']}", f"={c}{R['nggp']}-gm_gap*{c}{R['rev']}", "#,##0.0")
                 f_(P, f"{c}{R['cogs']}", f"={c}{R['rev']}-{c}{R['gp']}", "#,##0.0")
@@ -634,19 +654,19 @@ def build(ov=None, sens=None, out=None):
                 n_ = f"Thesis!{c}{B_['n']}"
                 f_(cf, f"{c}{C_['rev']}", f"=PL!{c}{R['rev']}", "#,##0.0")
                 f_(cf, f"{c}{C_['ebit']}", f"=PL!{c}{R['ebit']}", "#,##0.0")
-                f_(cf, f"{c}{C_['cx']}", f"=(cx_27+(cx_32-cx_27)*({n_}-1)/5)*{c}{C_['rev']}", "#,##0.0")
+                f_(cf, f"{c}{C_['cx']}", f"=cx_27*{c}{C_['rev']}-fix_cx*({c}{C_['rev']}/$F{C_['rev']}-1)", "#,##0.0")
                 f_(cf, f"{c}{C_['sbcab']}", f"=sbc_ab*sbc_nc*PL!{c}{R['sbc']}", "#,##0.0")
             else:
                 f_(cf, f"{c}{C_['gr']}", f"=$K{C_['gr']}+(g_tv-$K{C_['gr']})*{k_}/5", "0.0%")
                 f_(cf, f"{c}{C_['rev']}", f"={pc}{C_['rev']}*(1+{c}{C_['gr']})", "#,##0.0")
                 f_(cf, f"{c}{C_['ebit']}", f"=(PL!$K{R['ebitm']}+ext_d*{k_}/5)*{c}{C_['rev']}", "#,##0.0")
-                f_(cf, f"{c}{C_['cx']}", f"=cx_32*{c}{C_['rev']}", "#,##0.0")
-                f_(cf, f"{c}{C_['sbcab']}", f"=sbc_ab*sbc_nc*sbc_32*{c}{C_['rev']}", "#,##0.0")
+                f_(cf, f"{c}{C_['cx']}", f"=$K{C_['cx']}/$K{C_['rev']}*{c}{C_['rev']}", "#,##0.0")
+                f_(cf, f"{c}{C_['sbcab']}", f"=sbc_ab*sbc_nc*PL!$K{R['sbc']}/PL!$K{R['rev']}*{c}{C_['rev']}", "#,##0.0")
             if y <= 2032:
                 f_(cf, f"{c}{C_['gr']}", f"={c}{C_['rev']}/{pc}{C_['rev']}-1", "0.0%")
             f_(cf, f"{c}{C_['tax']}", "=tax", "0.0%")
             f_(cf, f"{c}{C_['nopat']}", f"=IF({c}{C_['ebit']}>0,{c}{C_['ebit']}*(1-{c}{C_['tax']}),{c}{C_['ebit']})", "#,##0.0")
-            f_(cf, f"{c}{C_['da']}", f"=da_pct*{c}{C_['rev']}", "#,##0.0")
+            f_(cf, f"{c}{C_['da']}", ("=da_k*(h_cxt26)" if y == 2027 else f"=da_k*{pc}{C_['cx']}"), "#,##0.0")
             f_(cf, f"{c}{C_['wc']}", f"=wc_in*({c}{C_['rev']}-{pc}{C_['rev']})", "#,##0.0")
             f_(cf, f"{c}{C_['fcff']}", f"={c}{C_['nopat']}+{c}{C_['da']}-{c}{C_['cx']}+{c}{C_['wc']}+{c}{C_['sbcab']}", "#,##0.0")
             if y <= 2032:
@@ -668,7 +688,7 @@ def build(ov=None, sens=None, out=None):
         f_(cf, E_("tvdf"), f"=1/(1+wacc)^((DATE(2027,1,31)-val_date)/365+10)", "0.0000")
         f_(cf, E_("tvpv"), f"={E_('tv')}*{E_('tvdf')}", "#,##0.0")
         f_(cf, E_("ev"), f"={E_('spv')}+{E_('tvpv')}", "#,##0.0")
-        f_(cf, E_("nc"), "=cash_0-debt_0", "#,##0.0")
+        f_(cf, E_("nc"), "=cash_0-debt_0-ev_delta", "#,##0.0")
         f_(cf, E_("eq"), f"={E_('ev')}+{E_('nc')}", "#,##0.0")
         f_(cf, E_("ps0"), f"={E_('eq')}/sh_dil", "0.00")
         f_(cf, E_("ps1"), f"={E_('ps0')}*(1+ke)^t_tgt", "0.00")
@@ -738,15 +758,15 @@ def build(ov=None, sens=None, out=None):
     f_(V, "B18", f"=CF!E{CB['B']['tvsh']}", "0.0%")
     f_(V, "E18", '=IF(B18>0.8,"超過 80%：估值對永續成長與 WACC 高度敏感","未超過 80%")')
     f_(V, "A19", "現價隱含 EV／TTM 營收 ÷ 同業中位數（現行相對倍數）")
-    f_(V, "B19", "=((px*sh_dil-(cash_0-debt_0))/Q!M7)/pm_med", "0.00")
-    f_(V, "E19", tf("現價隱含 EV／TTM 營收 ", ("(px*sh_dil-(cash_0-debt_0))/Q!M7", "0.0"), "；同業中位數 ", ("pm_med", "0.0"), "；相對倍數係數基準 ", ("rel_mult", "0.00"), "（未調整：缺歷史相對倍數）"))
+    f_(V, "B19", "=((px*sh_dil-(cash_0-debt_0-ev_delta))/Q!M7)/pm_med", "0.00")
+    f_(V, "E19", tf("現價隱含 EV／TTM 營收 ", ("(px*sh_dil-(cash_0-debt_0-ev_delta))/Q!M7", "0.0"), "；同業中位數 ", ("pm_med", "0.0"), "；相對倍數係數基準 ", ("rel_mult", "0.00"), "（最近 5 個會計年度末 CRWD 倍數 ÷ 同業中位數的平均）"))
     f_(V, "A20", "上檔空間三段歸因：DCF 貢獻（權重 × DCF 上檔）")
     f_(V, "B20", "=w_dcf*(B6/px-1)", "+0.0%;-0.0%")
     f_(V, "A21", "上檔空間三段歸因：未調整 Comparable 貢獻（係數＝1）")
     f_(V, "B21", f"=(1-w_dcf)*((B7/rel_mult)/px-1)", "+0.0%;-0.0%")
     f_(V, "A22", "上檔空間三段歸因：相對倍數調整貢獻")
     f_(V, "B22", "=B11-B20-B21", "+0.0%;-0.0%")
-    f_(V, "E22", "未調整 Comparable 的相對倍數係數＝1；基準係數即 1，故此項為 0（Sens 有係數低／高案）")
+    f_(V, "E22", "未調整 Comparable 的相對倍數係數＝1；基準係數為最近 5 年相對倍數平均（In 頁 rel_mult），此項即其調整貢獻（Sens 有係數低／高案）")
     f_(V, "A23", "重點：Comparable 價格＝EV 倍數 × 營收，隨 TTM 營收與同業倍數連動；DCF 價格依 WACC、終值與 SBC 費用化")
     f_(V, "A24", "加權中 DCF 與 Comparable 各占的目標價美元（DCF／Comparable）")
     f_(V, "B24", "=w_dcf*B6", "0.00")
@@ -783,7 +803,7 @@ def build(ov=None, sens=None, out=None):
         f_(V, f"{c}61", f"=PL!G{PB[s]['rev']}", "#,##0")
         f_(V, f"{c}62", f"=0.25*{c}60+0.75*{c}61", "#,##0")
         f_(V, f"{c}63", f"=pm_med*rel_mult*{c}62", "#,##0")
-        f_(V, f"{c}64", f"=({c}63+cash_0-debt_0)/sh_dil", "0.00")
+        f_(V, f"{c}64", f"=({c}63+cash_0-debt_0-ev_delta)/sh_dil", "0.00")
     f_(V, "B7", "=tp_wA*B64+tp_wB*C64+tp_wC*D64", "0.00")
     V.column_dimensions["A"].width = 70
     V.column_dimensions["E"].width = 80
@@ -796,24 +816,24 @@ def build(ov=None, sens=None, out=None):
         (6, "現價（拆股後，US$）", "=px", "0.00"),
         (7, "現價折回評價日（以 ke 折現，US$）", "=px/(1+ke)^((px_date-val_date)/365)", "0.00"),
         (8, "隱含股權價值（US$M）", "=B7*sh_dil", "#,##0"),
-        (9, "淨現金（US$M）", "=cash_0-debt_0", "#,##0"),
+        (9, "淨現金（US$M）", "=cash_0-debt_0-ev_delta", "#,##0"),
         (10, "隱含企業價值 EV（US$M）", "=B8-B9", "#,##0"),
         (11, "情境 B 首期（FY2027 下半年）現值（US$M）", f"=CF!F{rb['pv']}", "#,##0"),
         (12, "情境 B FY2028–FY2037 現金流現值＋終值現值（US$M）", f"=SUM(CF!G{rb['pv']}:P{rb['pv']})+CF!E{rb['tvpv']}", "#,##0"),
         (13, "反解係數 k：FY2028 起 FCFF 與終值須為模型的幾倍才支持現價", "=(B10-B11)/B12", "0.00"),
         (14, "模型基準（k＝1）", 1, "0.00"),
-        (16, "現價隱含 EV／TTM 營收（Q 頁 TTM）", "=(px*sh_dil-(cash_0-debt_0))/Q!M7", "0.0"),
+        (16, "現價隱含 EV／TTM 營收（Q 頁 TTM）", "=(px*sh_dil-(cash_0-debt_0-ev_delta))/Q!M7", "0.0"),
         (17, "同業 EV／營收中位數", "=pm_med", "0.0"),
         (18, "現價隱含相對倍數（÷ 同業中位數）", "=B16/B17", "0.00"),
         (19, "模型相對倍數係數（基準）", "=rel_mult", "0.00"),
         (20, "情境 B 目標時點 TTM 營收（US$M）", "=Val!C62", "#,##0"),
-        (21, "支持現價所需的 EV／TTM 營收（以目標時點 TTM 營收、不含折現）", "=(px*sh_dil-(cash_0-debt_0))/B20", "0.0"),
+        (21, "支持現價所需的 EV／TTM 營收（以目標時點 TTM 營收、不含折現）", "=(px*sh_dil-(cash_0-debt_0-ev_delta))/B20", "0.0"),
     ]
     for r_, lab, fm, nf in rows_rv:
         f_(RV, f"A{r_}", lab)
         f_(RV, f"B{r_}", fm, nf)
     f_(RV, "A24", tf("現金流折現法：現價要成立，FY2028 起 FCFF 與終值須為情境 B 基準的 ", ("raw", 'IF(B13<0,"（情境 B 基準的 FY2028 起 FCFF 與終值現值合計為負，倍數無經濟意義；改看下方整本重算反解）",TEXT(B13,"0.0")&" 倍")'), "（反解值是目標價＝現價的點，不是評等門檻）。"))
-    f_(RV, "A25", tf("同業倍數法：現價隱含 EV／TTM 營收 ", ("B16", "0.0"), "，為同業中位數 ", ("B17", "0.0"), " 的 ", ("B18", "0.0"), " 倍；模型相對倍數係數基準為 ", ("B19", "0.00"), "（未調整：缺歷史相對倍數）。"))
+    f_(RV, "A25", tf("同業倍數法：現價隱含 EV／TTM 營收 ", ("B16", "0.0"), "，為同業中位數 ", ("B17", "0.0"), " 的 ", ("B18", "0.0"), " 倍；模型相對倍數係數基準為 ", ("B19", "0.00"), "（最近 5 個會計年度末 CRWD 倍數 ÷ 同業中位數的平均）。"))
     rev = {}
     rf_ = os.path.join(DATA, "reverse_v01.json")
     if os.path.exists(rf_):
@@ -841,12 +861,12 @@ def build(ov=None, sens=None, out=None):
     if ("sbc_ab", "高") in sensrow:
         f_(RV, f"B{g0+1}", f"=Sens!H{sensrow[('sbc_ab', '高')]}-Val!B6", "0.00")
     f_(RV, f"A{g0+2}", "(2) 槓桿：兩法同用淨現金／稀釋股數（cash_0−debt_0；sh_dil），差額")
-    f_(RV, f"B{g0+2}", "=(cash_0-debt_0)/sh_dil-(cash_0-debt_0)/sh_dil", "0.00")
+    f_(RV, f"B{g0+2}", "=(cash_0-debt_0-ev_delta)/sh_dil-(cash_0-debt_0-ev_delta)/sh_dil", "0.00")
     f_(RV, f"A{g0+3}", "(3) 時點：兩法皆為目標時點每股價值（DCF 由評價日值複利，Comparable 用目標日 TTM），差額")
     f_(RV, f"B{g0+3}", "=0", "0.00")
     f_(RV, f"A{g0+4}", "(4) 倍數與成長（殘差）：落差 − (1) − (2) − (3)")
     f_(RV, f"B{g0+4}", f"=B{g0}-B{g0+1}-B{g0+2}-B{g0+3}", "0.00")
-    f_(RV, f"A{g0+5}", tf("DCF 隱含 EV／目標日 TTM 營收 ", ("(Val!B6*sh_dil-(cash_0-debt_0))/B20", "0.0"), "；同業中位數 × 係數 ", ("pm_med*rel_mult", "0.0"), "；殘差主要反映同業六家的成長與利益率低於本模型情境之處，或本模型 FCFF 低於同業倍數隱含之現金流。"))
+    f_(RV, f"A{g0+5}", tf("DCF 隱含 EV／目標日 TTM 營收 ", ("(Val!B6*sh_dil-(cash_0-debt_0-ev_delta))/B20", "0.0"), "；同業中位數 × 係數 ", ("pm_med*rel_mult", "0.0"), "；殘差主要反映同業六家的成長與利益率低於本模型情境之處，或本模型 FCFF 低於同業倍數隱含之現金流。"))
     RV.column_dimensions["A"].width = 80
     # ───────── Recon ─────────
     RC = ws_["Recon"]
@@ -914,7 +934,7 @@ def build(ov=None, sens=None, out=None):
     f_(RD, "A3", tf("命題：AI 進入資安後，CrowdStrike 的 ARR 由『受保護單位 × 每單位模組數 × 每模組年費』驅動；AI 代理（非人類身分）創造新的受保護單位與模組（增量），AI 平台業者與打包競爭可能侵蝕每模組年費（定價侵蝕），推論成本進入毛利。現價要成立，FY2028 起現金流須為本模型基準的 ", ("RevDCF!B13", "0.0"), " 倍。"))
     f_(RD, "A4", tf("核心問題：FY2032 的 AI 淨效果（AI 代理防護增量營收 + 定價侵蝕 − 增量推論成本）在情境 A／B／C 各為 US$M ", (f"Thesis!K{TB['A']['net']}", "#,##0"), "／", (f"Thesis!K{TB['B']['net']}", "#,##0"), "／", (f"Thesis!K{TB['C']['net']}", "#,##0"), "；FY2032 營收情境 B 為 US$M ", (f"PL!K{PB['B']['rev']}", "#,##0"), "。"))
     f_(RD, "A5", tf("投資建議：", ("Val!B14", "@"), "——在『AI 代理防護以情境權重放量、每模組價格依情境小幅下降、股票薪酬依規格費用化（不加回）』的基準假設下；加權目標價 US$", ("Val!B8", "0.00"), "，上檔空間 ", ("Val!B11", "+0.0%;-0.0%"), "（現價 US$", ("px", "0.00"), "，", ("px_date", "yyyy-mm-dd"), "）。主要失效條件見下方。"))
-    f_(RD, "A6", tf("重點觀察 1：目標價 ", ("Val!B8", "0.00"), "＝DCF ", ("Val!B6", "0.00"), " × ", ("w_dcf", "0%"), "＋Comparable ", ("Val!B7", "0.00"), " × ", ("1-w_dcf", "0%"), "；現價隱含 EV／TTM 營收為同業中位數的 ", ("Val!B19", "0.0"), " 倍（相對倍數係數基準 ", ("rel_mult", "0.00"), "，未調整：缺歷史相對倍數）。"))
+    f_(RD, "A6", tf("重點觀察 1：目標價 ", ("Val!B8", "0.00"), "＝DCF ", ("Val!B6", "0.00"), " × ", ("w_dcf", "0%"), "＋Comparable ", ("Val!B7", "0.00"), " × ", ("1-w_dcf", "0%"), "；現價隱含 EV／TTM 營收為同業中位數的 ", ("Val!B19", "0.0"), " 倍（相對倍數係數基準 ", ("rel_mult", "0.00"), "，最近 5 年平均）。"))
     f_(RD, "A7", tf("重點觀察 2：FY2032 情境 B 的 ARR 為 US$M ", (f"Thesis!K{TB['B']['ARR']}", "#,##0"), "，其中 AI 代理防護 ", (f"Thesis!K{TB['B']['aARR']}", "#,##0"), "；增量推論成本 US$M ", (f"Thesis!K{TB['B']['inc']}", "#,##0"), "，占 non-GAAP 營業成本 ", (f"Thesis!K{TB['B']['share']}", "0.0%"), "，不是主要風險；價格保留率與代理單位數才是。"))
     f_(RD, "A8", tf("重點觀察 3：收支關卡（FY2026–FY2030 自由現金流合計，情境 C）US$M ", ("Val!B16", "#,##0"), "，", ("IF(Val!B16<0,\"未通過\",\"通過\")", "@"), "；DCF 終值占 EV ", ("Val!B18", "0%"), "；情境 B 的 FY2032 GAAP 營業利益率 ", (f"PL!K{PB['B']['ebitm']}", "0.0%"), "，SBC 費用化是 DCF 與 non-GAAP 口徑差距的主因。"))
     f_(RD, "A9", "投資建議依加權目標價判定；現價隱含的現金流遠高於本模型基準，主要差異在 AI 代理防護放量、股票薪酬費用化與終值。本版未做先驗。")
@@ -924,8 +944,8 @@ def build(ov=None, sens=None, out=None):
     mp = [("Thesis", "u_0、m_0、gu_27／gu_32、gm_27／gm_32、ero_A／B／C", "核心 ARR、價格侵蝕", "單位與模組數上升 → ARR 上升；每模組年費下降 → ARR 下降"),
           ("Thesis", "r32_A／B／C、ma_n、pf_A／B／C", "AI 代理防護 ARR 與增量營收", "代理單位與價格保留率上升 → 增量營收上升"),
           ("Thesis", "tasks_0、tasks_A／B／C、tok_task、px_tok（Tokenomics 快照）", "AI 推論成本與兩平價格保留率", "任務數、token、單價上升 → 推論成本上升 → AI 淨效果下降"),
-          ("PL", "conv、ps_pct、gmsub_ng、opx_27／32、sbc_27／32、oth_pct、gm_gap", "營收、毛利、營業利益、EPS（GAAP 與 non-GAAP）", "費用率與 SBC 率下降 → 營業利益率上升"),
-          ("CF", "da_pct、cx_27／32、wc_in、tax", "FCFF、收支關卡、現金", "資本支出上升 → FCFF 下降；營運資金流入上升 → FCFF 上升"),
+          ("PL", "conv、ps_pct、gmsub_ng、opx_27、fix_ng、sbc_27、fix_sbc、oth_pct、gm_gap", "營收、毛利、營業利益、EPS（GAAP 與 non-GAAP）", "費用率與 SBC 率下降 → 營業利益率上升"),
+          ("CF", "da_k、cx_27、fix_cx、wc_in、tax", "FCFF、收支關卡、現金", "資本支出上升 → FCFF 下降；營運資金流入上升 → FCFF 上升"),
           ("Val", "rf、beta、erp、kd_sp、g_tv、ronic_sp、pm_*、rel_mult、w_dcf", "DCF、Comparable、加權目標價、投資建議", "WACC 上升 → DCF 下降；同業倍數與係數上升 → Comparable 上升")]
     for i, row in enumerate(mp):
         for j, v in enumerate(row):
@@ -940,7 +960,7 @@ def build(ov=None, sens=None, out=None):
     f_(RD, "A27", "下一個事件：Q3 FY2027 財報預計 2026 年 12 月初公布；共識與指引屆時更新，現有共識為 Q2 財報後，不屬『財報前』共識。")
     f_(RD, "A28", tf("承重 Assumed 1（人類端單位與模組路徑 gu、gm）。可證偽指標：Q3 FY2027 期末 ARR 對公司指引 ", ("g_arr27", "#,##0"), "（FY2027 期末）的軌跡；模型 FY2027 ARR 為 ", (f"Thesis!F{TB['B']['ARR']}", "#,##0"), "。"))
     f_(RD, "A29", "承重 Assumed 2（價格保留：ero、pf）。可證偽指標：公司揭露的美元淨留存率（FY2026 為 115%）、Falcon Flex 轉換 ARR 增幅（Q2 FY2027 逾 40%）、AIDR 絕對 ARR 與客戶數（目前未揭露）。")
-    f_(RD, "A30", tf("承重 Assumed 3（相對倍數係數 rel_mult，基準 1.00 未調整）。費用率、SBC 率、資本支出率基準全期持平於近四季（non-GAAP 營業利益率 ", ("Q!M17", "0.0%"), "、SBC 占營收 ", ("Q!M18", "0.0%"), "），收斂只放 Sens；可證偽指標為這兩個比率的逐季路徑。"))
+    f_(RD, "A30", tf("承重 Assumed 3（相對倍數係數 rel_mult，基準為最近 5 年平均相對倍數，Derived）。費用率、SBC 率、資本支出率以近四季為起點，只依歷史回歸的固定成本吸收規模經濟（non-GAAP 營業利益率 ", ("Q!M17", "0.0%"), "、SBC 占營收 ", ("Q!M18", "0.0%"), "），無證據的改善只放 Sens；可證偽指標為這兩個比率的逐季路徑。"))
     f_(RD, "A31", "結論條件式：評等隨加權目標價相對現價的級距而定；DCF 與 Comparable 各半時，評等翻轉需要 (a) 現金流反解係數大幅下降，或 (b) 同業倍數與相對倍數係數上升（見 Recon 與 Sens）。")
     f_(RD, "A32", "失效條件（可觀察）：FY2027 以後淨新增 ARR 年增持續高於本模型基準；AIDR／代理防護揭露絕對 ARR 且高於情境 A；SBC 占營收快速下降；DOJ／SEC 資訊請求有結論。")
     f_(RD, "A33", "本版未做先驗；公開 repo，內容只含公司與市場事實。")
@@ -965,6 +985,12 @@ def build(ov=None, sens=None, out=None):
     f_(RD, "A51", "未做：展示層數字一致性檢查設定（display_check.json，原則第 10 節第 51 條）；本版 README、HTML 的數字由儲存格組字，未另建對照檔。")
     f_(RD, "A52", "未做：RSU 與選擇權庫藏股法明細（以稀釋加權平均近似）；現金稅率橋（原則第 10 節第 40 條）；事件型尾端 Sens（DOJ／SEC、Delta 案；原則第 19 條）；同業成長與利益率並列（未取得）。")
     f_(RD, "A53", "v0.2 待辦：改讀 software_ai/unit_economics 的 P 原型；補 AIDR／Charlotte AI 揭露；以 10-K 核對 FY2022–FY2023 員工數。")
+    sens_r = {(c["key"], c["side"]): 4 + i for i, c in enumerate((sens or {}).get("cases", []))}
+    f_(RD, "A55", "合理性關卡診斷（工作單 G3-3；發布前必查）", bold=True)
+    f_(RD, "A56", tf("(a) DCF 目標價 ", ("Val!B6", "0.00"), "＝現價的 ", ("Val!B6/px", "0.0%"), "：", ("raw", 'IF(OR(Val!B6<0.25*px,Val!B6>4*px),"觸發（低於 25% 或高於 4 倍）","未觸發")'), "；(b) 情境 B 的 DCF 企業價值 US$M ", (f"CF!E{CB['B']['ev']}", "#,##0"), "：", ("raw", f'IF(CF!E{CB["B"]["ev"]}<0,"為負，觸發","為正，未觸發")'), "；(c) 評等 ", ("Val!B14", "@"), "：", ("raw", 'IF(OR(Val!B14="強力放空",Val!B14="強力買進"),"觸發","未觸發")'), "；(d) FY2027 營收差距 ", ("Recon!D5", "+0.0%;-0.0%"), "、non-GAAP 營業利益差距 ", ("Recon!D7", "+0.0%;-0.0%"), "（門檻 10%）：", ("raw", 'IF(OR(ABS(Recon!D5)>0.1,ABS(Recon!D7)>0.1),"觸發","未觸發")'), "。"))
+    f_(RD, "A57", tf("診斷量：FY2032 情境 B 的 GAAP 營業利益率 ", (f"PL!K{PB['B']['ebitm']}", "0.0%"), "、non-GAAP 營業利益率 ", (f"PL!K{PB['B']['ngopm']}", "0.0%"), "、SBC（含薪資稅）占營收 ", (f"PL!K{PB['B']['sbc']}/PL!K{PB['B']['rev']}", "0.0%"), "；DCF 加回 SBC 時的 DCF 目標價 ", ((f"Sens!H{sens_r[('sbc_ab', '高')]}" if ('sbc_ab', '高') in sens_r else "0"), "0.00"), "；SBC 規模經濟加大案（固定部分高值）的相對基準 ", ((f"Sens!E{sens_r[('fix_sbc', '高')]}" if ('fix_sbc', '高') in sens_r else "0"), "+0.0%;-0.0%"), "。"))
+    f_(RD, "A58", tf("核對：(1) 營運資金為現金流入、符號正確（情境 B 的 FY2027 營運資金流入 US$M ", (f"CF!F{CB['B']['wc']}", "#,##0"), "）；(2) 模型 FY2027 公司口徑近似自由現金流 US$M ", (f"CF!F{CB['B']['fcf']}", "#,##0"), "，對照 FY2026 實績 ", ("h_fcf26", "#,##0"), "、FY2027 上半年實績 ", ("h1_fcf_co", "#,##0"), "；(3) 淨現金與股數取自 10-Q 與新聞稿（In 頁）；(4) 折舊攤銷由資本支出推得（In 頁 da_k），EV 為正。"))
+    f_(RD, "A59", "診斷結論：DCF 偏低與強力放空不是公式或符號錯誤，而是輸入口徑的結果：GAAP 營業利益（SBC 費用化）在 FY2023–FY2026 實績中接近零或為負，歷史 SBC 占營收沒有下降趨勢，規模經濟只由固定成本回歸取得（幅度小），所以預測期 GAAP 營業利益率仍接近零（略為負），終值為負或近零。保留此結果的限制：它由『SBC 視為費用、無證據不假設其占比下降』這個口徑決定，不是對公司價值的經濟定論；DCF 加回 SBC、SBC 與費用的規模經濟加大案、延伸期利益率上移案在 Sens 各有列。Comparable 單法（同業倍數 × 最近 5 年相對倍數平均）才是本版加權目標價的主要來源。")
     RD.column_dimensions["A"].width = 120
     # ───────── Sens ─────────
     S = ws_["Sens"]

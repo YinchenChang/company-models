@@ -21,8 +21,11 @@ def build(name, sets):
 def recalc(raw):
     out = os.path.join(WD, "out"); os.makedirs(out, exist_ok=True)
     prof = tempfile.mkdtemp(prefix="lo_app_")
-    subprocess.run(["soffice", f"-env:UserInstallation=file://{prof}", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", out, raw],
-                   check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env={**os.environ, "LC_ALL": "C.UTF-8"}, timeout=900)
+    for _try in range(4):   # soffice 偶發失敗（平行啟動）：重試
+        rc = subprocess.run(["soffice", f"-env:UserInstallation=file://{prof}", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", out, raw],
+                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env={**os.environ, "LC_ALL": "C.UTF-8"}, timeout=900).returncode
+        if rc == 0 and os.path.exists(os.path.join(out, os.path.basename(raw))): break
+    else: raise SystemExit("soffice 重算失敗：" + raw)
     shutil.rmtree(prof, ignore_errors=True)
     return os.path.join(out, os.path.basename(raw))
 

@@ -83,12 +83,12 @@ add("cps", "每成功任務推論成本（Sol 層級市場價；Terra 為低、A
 add("px_dec", "每件推論成本逐年變動（FY2028 起）", "比例/年", -0.25, 0.0, 0.0, AS, "價格路徑待 AI供應鏈 登錄；基準持平（保守）；低端每年降 25%")
 add("cs", "自動化工時省下的交付成本比例（相對交付成本全額）", "比例", 0.3, 0.6, 1.0, AS, "無揭露；FY2026 員工數與營收同步成長、payroll 占營收由 65.6% 降至 64.5%（Derived）；0.6＝省下的人力一部分被再培訓、閒置與工具成本吃掉")
 add("c0_dr", "營業成本率（不含推論）逐年變動（FY2027 起）", "百分點/年", -0.003, 0.0, 0.003, AS, "規則：比率無證據時持平於 FY2026 實績（67.95%）；改善或惡化只放敏感度")
-add("opx_dr", "營業費用率逐年變動（FY2027 起）", "百分點/年", -0.003, 0.0, 0.003, AS, "持平於 FY2026 實績（銷售與行銷＋一般與管理 16.26%，不含 business optimization）")
+add("opx_dr", "營業費用率逐年變動（FY2027 起）", "百分點/年", -0.003, -0.0011, 0.0, DE, "G3 第 1 條：歷史有規模經濟證據——銷售與行銷＋一般與管理占營收 FY2024 17.15%→FY2025 16.37%→FY2026 16.26%（不含 business optimization；Derived）；基準取最近兩年斜率 −0.11 點／年延伸；高端 0＝全期持平（下緣）；低端＝更快改善")
 add("d_em", "EMEA 營收占比逐年變動", "百分點/年", -0.005, 0.0, 0.005, AS, "持平於 FY2026（36.34%）；FY2024→FY2026 +0.9 點（Derived，新口徑）")
 add("d_ap", "Asia Pacific 營收占比逐年變動", "百分點/年", -0.003, 0.0, 0.003, AS, "持平於 FY2026（14.39%）")
 add("da_pct", "折舊與攤銷占營收", "比例", 0.019, 0.02105, 0.023, DE, "FY2026 1,561.81÷74,183.445＝2.11%（10-K Note 16 分部附註 D&A；持平）")
 add("capex_pct", "資本支出占營收", "比例", 0.009, 0.0115, 0.014, AS, "FY2026 1.0%（742.7÷74,183）；公司 FY2027 指引約 0.9B（Q4 FY26 法說）≈ 1.2%")
-add("wc_k", "營運資金增加占營收增量比例", "比例", 0.0, 0.05, 0.12, AS, "FY2026 營業現金流 12.36B 對淨利加折舊與股票薪酬約 12.2B，營運資金大致中性；比率為假設")
+add("wc_k", "營運資金增加占營收增量比例（負值＝流入）", "比例", -0.05, -0.02, 0.05, DE, "歷史：營業現金流減（淨利＋折舊＋股票薪酬）FY2025 約 +23M、FY2026 約 +178M（流入），除以營收增量 4,776／4,510＝約 −0.5%／−3.9%，平均約 −2%（Derived；第 23 條，注意正負號）")
 add("acq27", "FY2027 併購現金支出（FCFF 內）", "US$M", 3000, 5000, 5000, IP, "法說口述：FY2027 預計約 $5B（Q4 FY26 法說；FY2026 實際 4.94B）；另有約 3B（Dragos 相關）由 FY2026Q4 移到 FY2027Q1", "公司口述計畫，未簽約部分可變")
 add("acq_run", "FY2028 起每年併購現金支出（FCFF 內）", "US$M", 1500, 3500, 5000, AS, "FY2023–FY2026 併購與投資現金 2.53B／6.58B／1.47B／4.94B（Derived，平均 3.9B）；與 hg 的人力併入配套")
 add("oth_net", "業外淨額（利息收入－利息費用＋其他）", "US$M", -150, -30, 100, AS, "FY2026：363.2－303.4－93.6＝−33.7（10-K 損益表，Derived）；債務增加使利息費用上升")
@@ -402,12 +402,13 @@ for col, s in zip("BCD", "ABC"):
     Dp[f"{col}{GATE}"] = f"=SUM(PL!F{PR[s]['gate']}:J{PR[s]['gate']})"
 Dp.cell(GATE + 1, 1, "檢查：收支關卡 B − 逐年加總（應為 0）"); Dp[f"B{GATE+1}"] = f"=C{GATE}-(PL!F{PR['B']['gate']}+PL!G{PR['B']['gate']}+PL!H{PR['B']['gate']}+PL!I{PR['B']['gate']}+PL!J{PR['B']['gate']})"
 
+RCR_REV27, RCR_OM27 = 5, 6   # Recon 列號（h1=3、g27=4、rev27=5、om27=6；建置後斷言）
 # ---------------- Val 頁
 V = SH["Val"]
 VR = {}
 vrows = ["intro", "hint", "blank0", "cap", "px", "px_date", "tp_date", "dcf_tp", "comp_tp", "tp", "up", "valr", "gate", "rec", "tp_ref", "sp1", "wh", "ke", "kd", "kdat", "wacc", "ronic", "g", "emkt", "dmkt", "ewt",
          "sp2", "ndh", "cashx", "ndebt", "nciv", "netcash", "sh", "dps", "sp3", "sumh", "pvx", "tvpv", "ev", "eq", "vps0", "dcf12", "tvsh", "sp4", "ch", "ttm_am", "ttm_em", "ttm_ap", "ttm_tot", "mult", "ev_c", "comp12",
-         "sp7", "gaph", "gap", "gap_t", "gap_m", "gap_sbc", "gap_lev", "ownh", "own_ev", "own_mult", "own_ratio", "rerate", "sp5", "scenh", "wa", "wb", "wc", "chk_w",
+         "sp8", "g3h", "g3_dcf", "g3_ev", "g3_rate", "g3_rev", "g3_om", "g3_flag", "sp7", "gaph", "gap", "gap_t", "gap_m", "gap_sbc", "gap_lev", "ownh", "own_ev", "own_mult", "own_ratio", "rerate", "sp5", "scenh", "wa", "wb", "wc", "chk_w",
          "sp6", "peerh", "pe1", "pe2", "pe3", "pe_med", "pe_n", "pe_own", "stale_rf", "pe_note"]
 for i, k in enumerate(vrows): VR[k] = 1 + i
 V.cell(VR["intro"], 1, "估值：DCF（FCFF）與 Comparable（分部加總：各分部目標時點 TTM 營業利益 × 同業 EV／EBIT）加權；目標價為 12 個月後（股價基準日＋12 個月）。三情境 25／50／25。上檔空間不是年化報酬。")
@@ -488,6 +489,13 @@ V.cell(VR["ownh"], 1, "本公司現行倍數 ÷ 同業中位數與隱含重估�
 vrow("own_mult", "Accenture 現行 EV／TTM 營業利益（FY2026 GAAP 營業利益 11,405.96）", f"=B{VR['own_ev']}/PL!E{PR['B']['ebit']}")
 vrow("own_ratio", "現行倍數 ÷ 同業中位數", f"=B{VR['own_mult']}/B{VR['pe_med']}")
 vrow("rerate", "若回到同業中位數（調整前）的隱含股價變動", f"=(B{VR['pe_med']}*PL!E{PR['B']['ebit']}+B{VR['netcash']})/B{VR['sh']}/B{VR['px']}-1")
+V.cell(VR["g3h"], 1, "合理性關卡（工作單 G3 第 3 條；發布前必查）").font = BOLD
+vrow("g3_dcf", "DCF 目標價 ÷ 現價（小於 0.25 或大於 4 觸發）", f"=B{VR['dcf_tp']}/B{VR['px']}")
+vrow("g3_ev", "三情境企業價值最小值（US$M；負值觸發）", f"=MIN(C{VR['ev']}:E{VR['ev']})")
+vrow("g3_rate", "估值評等為強力買進或強力放空（1＝觸發）", f'=IF(OR(B{VR["valr"]}="強力買進",B{VR["valr"]}="強力放空"),1,0)')
+vrow("g3_rev", "FY2027 營收（情境 B）對指引中點差距（超過 10% 觸發）", f"=ABS(Recon!B{RCR_REV27}/AVERAGE(Recon!C{RCR_REV27}:D{RCR_REV27})-1)")
+vrow("g3_om", "FY2027 營業利益率對指引中點差距（相對值，超過 10% 觸發）", f"=ABS(Recon!B{RCR_OM27}/AVERAGE(Recon!C{RCR_OM27}:D{RCR_OM27})-1)")
+vrow("g3_flag", "合理性關卡是否觸發（1＝觸發）", f"=IF(OR(B{VR['g3_dcf']}<0.25,B{VR['g3_dcf']}>4,B{VR['g3_ev']}<0,B{VR['g3_rate']}=1,B{VR['g3_rev']}>0.1,B{VR['g3_om']}>0.1),1,0)")
 V.cell(VR["scenh"], 1, "情境權重與加權").font = BOLD
 vrow("wa", "情境權重 A／B／C", None, f"={wr('A')}", f"={wr('B')}", f"={wr('C')}")
 vrow("wb", "情境加權目標價（各情境 DCF 與 Comparable 加權；US$）"); vrow("wc", "各情境上檔空間")
@@ -570,6 +578,7 @@ Rc[f"C{RCR['rev27']}"] = f"=PL!E{STR['營收']}*(1+C{RCR['g27']})"; Rc[f"D{RCR['
 Rc[f"F{RCR['g27']}"] = (f'="本模型 FY2027 營收 "&TEXT(B{RCR["rev27"]}/1000,"0.0")&" 十億美元（年增 "&TEXT(B{RCR["g27"]},"0.0%")&"）；指引當地幣 +3% 至 +6%，其中併購貢獻約 2.5 點（CFO 口述）。本模型以人力成長 "&TEXT({I("hg")},"0.0%")&"＋價格 "&TEXT({I("rg")},"0.0%")&"為 AI 前成長，減 AI 淨效果 "&TEXT(Seg!F{SR["B"]["net"]}/1000,"0.0")&" 十億美元。"')
 Rc[f"F{RCR['om27']}"] = (f'="本模型 "&TEXT(B{RCR["om27"]},"0.0%")&"，指引 15.9% 至 16.1%；FY2026 調整後 15.8%（排除 business optimization 307.5M）。落差＝"&TEXT((B{RCR["om27"]}-AVERAGE(C{RCR["om27"]}:D{RCR["om27"]}))*100,"+0.00;-0.00")&" 點，來自營業成本率與費用率持平於 FY2026 實績（規則：無證據不假設改善），公司指引隱含 AI 與定價帶來的改善。"')
 Rc[f"F{RCR['eps27']}"] = (f'="本模型 EPS "&TEXT(B{RCR["eps27"]},"0.00")&"，指引 14.39–14.81；落差由營業利益率、稅率 "&TEXT({I("tax")},"0.0%")&"（FY2026 實績，公司未給 FY2027 稅率）與稀釋股數 "&TEXT({I("sh27")},"0")&"M（Assumed）共同造成。共識 14.66 取自 TIKR。"')
+assert RCR["rev27"] == RCR_REV27 and RCR["om27"] == RCR_OM27
 r += 1
 Rc.cell(r, 1, "4. 反解（整本重算）：支持現價所需的主導變數值（原則第 4 條）").font = BOLD
 RC_REV = r + 1
@@ -641,6 +650,7 @@ Rm["A15"] = "官方報告分部三個（Americas、EMEA、Asia Pacific；FY2024 
 Rm["A16"] = "命題模組為原型 L；公司不揭露計費工時、時薪、價量拆分，時薪由 FY2026 營收與員工數、利用率反推（Derived），自動化比例、價格保留率、新專案占比為 Assumed，情境分化依據見 In 頁。"
 Rm["A17"] = "推論成本只讀 Tokenomics v22.0 快照任務 5（類比）；公司未揭露 token 量與代理任務量，不以聊天基數乘倍數；token 價格路徑待 AI供應鏈 登錄。"
 Rm["A18"] = "未做事項：先驗（Andy 指示本版跳過）；三層基準協調（Coord、C0、兩讀數）不適用：非 Siliconomics 覆蓋；Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照不適用：Accenture 不自建算力；v0.2 改讀 unit_economics。"
+Rm["A19"] = (f'="合理性關卡（工作單 G3 第 3 條）："&IF({VB("g3_flag")}=1,"觸發，須診斷：","未觸發；")&"DCF 目標價÷現價 "&TEXT({VB("g3_dcf")},"0.00")&"、EV 最小值 "&TEXT({VB("g3_ev")}/1000,"0.0")&" 十億美元、FY2027 營收對指引中點差 "&TEXT({VB("g3_rev")},"0.0%")&"、營業利益率相對差 "&TEXT({VB("g3_om")},"0.0%")&"、評等 "&{VB("valr")}&"。診斷結論：本模型評等由 AI 淨效果之成本節省比例 cs（Assumed，Sens 最敏感）與同業倍數（三家、已逾期）決定；DCF 與 Comparable 彼此接近、與現價落差來自市場對 Accenture 的倍數溢價（現行倍數÷同業中位數見 Val），屬經濟判斷而非建模錯誤；恆等式核對皆為 0。"')
 Rm["A20"] = "市場資料日期"
 Rm["A21"] = (f'="現價 "&TEXT({I("px_date")},"yyyy-mm-dd")&" 收盤；無風險利率 "&TEXT({I("rf_date")},"yyyy-mm-dd")&"（與現價日相差 "&TEXT({VB("stale_rf")},"0")&" 個交易日，"&{VB("stale_rf","C")}&"）；同業倍數 2026-10-21 至 2026-10-27，已標逾期（Val 頁）。"')
 Rm["A22"] = "主要失效條件（可觀察）：FY2027 Q1（2026-12 公布）起每員工營收年增明顯高於 2%、員工數下降而營收持平、新訂單 book-to-bill 跌破 1.0、定價持續「lower pricing in many areas」。"

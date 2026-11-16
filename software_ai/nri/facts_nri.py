@@ -153,6 +153,11 @@ def rows():
     a("賣方 FY2027 營收共識平均", 867500, "百萬日圓", "更新 2026-09-11（財報前）", "高 884,600、低 855,800", "SAF", "Interested-party", "賣方分析師：財報前只作歷史對照")
     a("賣方 FY2027 共識（營收 858,121／營業利益 178,992／淨利 122,488）", 178992, "百萬日圓", "2026-07-24（財報前）", "營業利益；營收 858,121、淨利 122,488", "KB", "Interested-party", "賣方分析師：財報前只作歷史對照")
     a("賣方目標價平均（13 家；評等 強買 11／中立 1／弱 1）", 5954, "日圓", "2026-09-10（財報前）", "", "KT", "Interested-party", "賣方分析師：評等與交易業務誘因")
+    inc_co = "公司管理層：展示 AI 推進與成長的誘因，口徑由公司定義，未經查核"
+    a("AI 開發工具適用比例（2026 年）", 0.25, "比例", "2026（公司敘述）", "公司稱 AI 驅動開發適用約 25%，目標 FY2028 全面導入（75% 為公司圖表讀值，摘要擷取非逐字）", "H1P", "Interested-party", inc_co, "p.11")
+    a("AX 顧問營收年增（1H27）", 2.0, "倍", "1H FY2027", "公司稱約倍增（roughly doubled；數量未揭露）", "H1P", "Interested-party", inc_co, "p.13")
+    a("離職率", 0.036, "比例", "FY2026", "公司人才資料", "H1P", "Interested-party", inc_co, "p.44")
+    a("token 量、代理任務量、每任務 token", "未找到", "—", "—", "公司未揭露", "H1P", "Derived", "", "")
     for t, n, pe, ev, d, g in PEERS:
         out.append(["同業前瞻 P/E：" + n + "（" + t + "）", pe, "倍", d, f"資料商前瞻 P/E（{g}）；與 NRI 估值日不同（逾期標示）", "https://stockanalysis.com/（各公司 statistics 頁）｜StockAnalysis 統計頁", EXT, "Interested-party", "資料商前瞻倍數含賣方預估：估值日與口徑未與 NRI 對齊"])
         out.append(["同業 EV/EBITDA：" + n + "（" + t + "）", ev, "倍", d, f"資料商（{g}）；TTM 口徑，不用於估值", "https://stockanalysis.com/（各公司 statistics 頁）｜StockAnalysis 統計頁", EXT, "Interested-party", "資料商計算，口徑未核對"])

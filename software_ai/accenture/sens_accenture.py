@@ -36,8 +36,13 @@ WD = tempfile.mkdtemp(prefix=f"{SLUG}sens_", dir=f"/home/claude/scratch/{SLUG}")
 
 def recalc(path, prof):
     out = os.path.join(os.path.dirname(path), "out"); os.makedirs(out, exist_ok=True)
-    subprocess.run(["soffice", f"-env:UserInstallation=file://{prof}", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", out, path],
-                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=dict(os.environ, LC_ALL="C.UTF-8"), check=True)
+    for attempt in range(4):
+        rc = subprocess.run(["soffice", f"-env:UserInstallation=file://{prof}", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", out, path],
+                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=dict(os.environ, LC_ALL="C.UTF-8")).returncode
+        if rc == 0 and os.path.exists(os.path.join(out, os.path.basename(path))): break
+        import time; time.sleep(3)
+    else:
+        raise RuntimeError("soffice 重算失敗：" + path)
     wb = openpyxl.load_workbook(os.path.join(out, os.path.basename(path)), data_only=True)
     V = wb["Val"]
     return V.cell(VR["tp"], 2).value, V.cell(VR["dcf_tp"], 2).value, V.cell(VR["rec"], 2).value
@@ -93,8 +98,10 @@ for it in range(6):
     x = e + (px - base_tp) / s2
 label = openpyxl.load_workbook(RAW)["In"].cell(IR[dom], 2).value
 ok = abs(hist[-1][1] - px) < 0.5
+rng = [v for v in (openpyxl.load_workbook(RAW)["In"].cell(IR[dom], 4).value, openpyxl.load_workbook(RAW)["In"].cell(IR[dom], 6).value) if v is not None]
+outside = "" if (not rng or min(rng) <= hist[-1][0] <= max(rng)) else f"；解落在敏感度區間 {min(rng):g}～{max(rng):g} 之外（區間內無解）"
 json.dump({"key": dom, "label": f"{dom}：{label}", "base": e, "solved": hist[-1][0], "tp_at_solved": hist[-1][1], "px": px, "converged": ok,
-           "note": f"整本重算割線法：將 {dom} 由基準 {e:g} 改為 {hist[-1][0]:.4g}，加權目標價 {hist[-1][1]:.2f} 對現價 {px:.2f}（{'收斂' if ok else '未收斂，值僅供參考'}）；其他輸入維持基準；{dom} 為 Sens 頁 AI 命題與營運參數中影響最大者。",
+           "note": f"整本重算割線法：將 {dom} 由基準 {e:g} 改為 {hist[-1][0]:.4g}，加權目標價 {hist[-1][1]:.2f} 對現價 {px:.2f}（{'收斂' if ok else '未收斂，值僅供參考'}）{outside}；其他輸入維持基準；{dom} 為 Sens 頁 AI 命題與營運參數中影響最大者。",
            "history": hist}, open(REVOUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 shutil.rmtree(WD, ignore_errors=True)
 print("cases", len(cases), "base", base_tp, "dominant", dom, hist[-1])

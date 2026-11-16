@@ -26,6 +26,8 @@ IS_END = find("PL", "EPS（完全稀釋", start=IS0)
 NYOY = find("PL", "淨利年增率", start=IS_END)
 SCN_H = find("In", "鍵", start=100)
 YC = "CDEFGHIJK"
+DX = find("README", "合理性關卡診斷")
+RD = find("README", "不適用與未做項目")
 def yrs(sh, r, c1="C", c2="K"): return f"@{sh}!{c1}{r}:{c2}{r}"
 rec = V["rec"]
 tornAll = ",".join(map(str, rel_rows))
@@ -48,7 +50,7 @@ cfg = {
     {"type": "h3", "text": "命題回覆（依模型計算）"},
     {"type": "list", "items": [f"@README!A{r}" for r in (9, 10, 11)]},
     {"type": "h3", "text": "本版要點"},
-    {"type": "list", "items": ["@README!A8", "@README!A18"]}]},
+    {"type": "list", "items": ["@README!A8", "@README!A18", f"@README!A{DX}"]}]},
   {"id": "valuation", "title": "估值", "blocks": [
     {"type": "bars", "title": "目標價與現價（美元；豎線＝現價）", "fmt": "n2",
      "items": [{"label": f"@Val!A{V[k]}", "value": f"@Val!B{V[k]}", "series": sr} for k, sr in (("dcf", 1), ("cmp", 2), ("tp", 0))],
@@ -109,11 +111,11 @@ cfg = {
     {"type": "table", "collapse": True, "summary": "展開：逐分部、有機成長、同業可比性與 Tokenomics 讀值", "head": ["項目", "欄一", "欄二", "欄三", "欄四", "欄五", "欄六"], "rowgen": {"sheet": "Recon", "rows": f"{RC['s2']+2}-{RC['s6']-2}", "cols": list("ABCDEFG"), "fmts": ["", "n3", "n3", "n3", "n3", "", ""]}},
     {"type": "table", "caption": "風險登錄", "head": ["風險", "是否建模", "理由", "觀察指標"], "rowgen": {"sheet": "Recon", "rows": f"{RC['s6']+2}-{wb['Recon'].max_row}", "cols": list("ABCD"), "fmts": [""] * 4}}]},
   {"id": "status", "title": "資料狀態", "blocks": [
-    {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期", "@README!A1"], ["build_id", "@Sens!D3"], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"], ["Tokenomics 快照", "@Sources!B3"]]},
+    {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期", "@README!A1"], ["build_id", "@Sens!D3"], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"], ["Tokenomics 快照", [f"@Recon!B{RC['s5']+2}", "；", f"@Recon!C{RC['s5']+2}"]]]},
     {"type": "h3", "text": "市場資料日期與失效條件"},
-    {"type": "list", "items": ["@README!A2", "@README!A29", "@README!A30"]},
+    {"type": "list", "items": ["@README!A2", f"@README!A{RD+9}", f"@README!A{RD+10}"]},
     {"type": "h3", "text": "不適用與未做項目"},
-    {"type": "list", "items": [f"@README!A{r}" for r in range(21, 29)]},
+    {"type": "list", "items": [f"@README!A{r}" for r in range(RD + 1, RD + 9)]},
     {"type": "h3", "text": "「未找到」清單"},
     {"type": "scan", "needle": "未找到", "collapse": True, "summary": "展開：標為「未找到」的項目", "sheets": {"Recon": ["A", "F"], "In": ["B"], "Q": ["A"]}, "empty": "沒有標為未找到的項目。"}]}
  ]}
