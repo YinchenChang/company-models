@@ -178,7 +178,7 @@ RD["A8"] = (f'="重點觀察 3：FY2032E AI 淨效果 A／B／C＝"&TEXT({VB("ai
 RD["A9"] = (f'="重點觀察 4：FY2026E 營收模型 "&TEXT(Recon!C{RCR["fyrev"]},"#,##0")&" 對指引中點 "&TEXT(Recon!F{RCR["fyrev"]},"+0.0%;-0.0%")&"（公司近三季皆超出指引上緣）；FY2027E 成長情境 B "&TEXT(Recon!D{RCR["g27"]},"0.0%")&"，共識 "&TEXT(Recon!F{RCR["g27"]},"0.0%")&"。"')
 RD["A10"] = (f'="重點觀察 5：收支關卡（FY2026–FY2030 自由現金流）A／B／C＝"&TEXT({VB("gate_A")},"#,##0")&"／"&TEXT({VB("fcf_gate")},"#,##0")&"／"&TEXT({VB("gate_C")},"#,##0")&" 百萬美元；WACC "&TEXT({VB("wacc")},"0.00%")&"，終值占 EV "&TEXT({VB("tvsh","C")},"0%")&"。"')
 RD["A11"] = (f'="橫幅："&{VB("rec")}&"；加權目標價 "&TEXT({VB("tp")},"#,##0")&" 美元，上檔空間 "&TEXT({VB("up")},"+0.0%;-0.0%")&"。DCF 因股票薪酬視為成本而遠低於現價，Comparable 因同業倍數而偏高，兩法差距大，結論取決於如何看待股票薪酬與倍數。"')
-RD["A13"] = (f'="情境分化依據：A／B／C 只在四個 AI 驅動分化——非 AI 客戶 FY2027 用量成長（"&TEXT(In!D{SCN["scn_vn"]},"0%")&"／"&TEXT(In!E{SCN["scn_vn"]},"0%")&"／"&TEXT(In!F{SCN["scn_vn"]},"0%")&"，依近五季非 AI 成長 high 20s 的延續或減速）、AI 原生客戶用量成長（"&TEXT(In!D{SCN["scn_va"]},"0%")&"／"&TEXT(In!E{SCN["scn_va"]},"0%")&"／"&TEXT(In!F{SCN["scn_va"]},"0%")&"，依代理工作負載放大 vs 最大客戶停留最低承諾）、AI 原生客戶單價變動（"&TEXT(In!D{SCN["scn_pa"]},"0%")&"／"&TEXT(In!E{SCN["scn_pa"]},"0%")&"／"&TEXT(In!F{SCN["scn_pa"]},"0%")&"，依提前續約讓利）、AI credits FY2027 營收（"&TEXT(In!D{SCN["scn_ai"]},"#,##0")&"／"&TEXT(In!E{SCN["scn_ai"]},"#,##0")&"／"&TEXT(In!F{SCN["scn_ai"]},"#,##0")&" 百萬美元，公司未揭露，Assumed）。"')
+RD["A13"] = (f'="情境分化依據：A／B／C 只在四個 AI 驅動分化——非 AI 客戶 FY2027 用量成長（"&TEXT(vn_27_A,"0%")&"／"&TEXT(vn_27_B,"0%")&"／"&TEXT(vn_27_C,"0%")&"，依近五季非 AI 成長 high 20s 的延續或減速）、AI 原生客戶用量成長（"&TEXT(va_27_A,"0%")&"／"&TEXT(va_27_B,"0%")&"／"&TEXT(va_27_C,"0%")&"，依代理工作負載放大 vs 最大客戶停留最低承諾）、AI 原生客戶單價變動（"&TEXT(pa_A,"0%")&"／"&TEXT(pa_B,"0%")&"／"&TEXT(pa_C,"0%")&"，依提前續約讓利）、AI credits FY2027 營收（"&TEXT(ai_27_A,"#,##0")&"／"&TEXT(ai_27_B,"#,##0")&"／"&TEXT(ai_27_C,"#,##0")&" 百萬美元，公司未揭露，Assumed）。"')
 RD["A14"] = ("與標準規格的偏離：(1) 2029 可轉換票據預設視為債務（現價與基準每股價值皆低於轉換價約 217.60），conv_if＝1 為 Sens；(2) 費用率基準：股票薪酬占營收依歷史斜率延伸（FY2023 至近四季），non-GAAP 費用率三項合計歷史無一致下降→持平；"
              "(3) Comparable 為同業 Forward 倍數（P/S 與 P/E 各半），分母期間未載明，只作 Analogy；(4) RSU 預期沒收率未找到，基準 0。")
 RD["A15"] = ("不適用：Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照——Datadog 不自建 GPU 算力，只向模型商購買推論，推論成本讀 Tokenomics 快照的市場價名稱。"
@@ -203,7 +203,7 @@ for i_, rowv in enumerate(MAP):
 RD["A29"] = "市場資料日期、失效條件與風險登錄"
 RD["A30"] = (f'="市場資料日期：現價 "&TEXT(px_date,"yyyy-mm-dd")&" 收盤（兩來源前收價相符）；10 年期美國公債 "&TEXT(rf,"0.00%")&"（"&TEXT(rf_date,"yyyy-mm-dd")&"，"&Val!C{VR["o_rf"]}&"）；共識目標價 "&TEXT(cons_date,"yyyy-mm-dd")&"（"&Val!C{VR["o_cons"]}&"）；同業倍數資料日 "&TEXT(MIN(pm_dt_snow,pm_dt_net,pm_dt_mdb,pm_dt_dt,pm_dt_estc),"yyyy-mm-dd")&" 至 "&TEXT(MAX(pm_dt_snow,pm_dt_net,pm_dt_mdb,pm_dt_dt,pm_dt_estc),"yyyy-mm-dd")&"（MDB、DT、ESTC 逾期）。"')
 RD["A31"] = "主要失效條件"
-RD["A32"] = (f'="(1) 最大客戶續約後用量低於 Q4 指引假設的最低承諾，或同群體第二、第三大客戶跟進：情境 C 的 AI 原生客戶用量成長（"&TEXT(In!F{SCN["scn_va"]},"0%")&"）需再下修。(2) 公司揭露 AI 產品營收或 token 用量後，與 Assumed 區間差距大。(3) 股票薪酬占營收下降速度低於歷史斜率：加權目標價走向 Sens 低案。(4) 同業倍數逾期列更新後，Comparable 重算。"')
+RD["A32"] = (f'="(1) 最大客戶續約後用量低於 Q4 指引假設的最低承諾，或同群體第二、第三大客戶跟進：情境 C 的 AI 原生客戶用量成長（"&TEXT(va_27_C,"0%")&"）需再下修。(2) 公司揭露 AI 產品營收或 token 用量後，與 Assumed 區間差距大。(3) 股票薪酬占營收下降速度低於歷史斜率：加權目標價走向 Sens 低案。(4) 同業倍數逾期列更新後，Comparable 重算。"')
 RD["A33"] = "風險登錄"
 hdr(RD, 34, ["風險", "是否建模", "理由", "觀察指標"])
 RISKS = [("最大 AI 原生客戶降低用量或自建", "是（情境 C、事件型 lc_cut）", "10-Q 稱最大客戶 2026Q3 降低用量，Q4 指引以最低承諾計", "季報客戶集中度、AI 原生占營收比"),

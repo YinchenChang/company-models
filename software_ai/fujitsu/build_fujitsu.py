@@ -123,14 +123,14 @@ for key, label, unit, lo, base, hi, tag, src, inc in INP:
         if v is not None:
             c = ws.cell(r, col, v); c.font = BLUE
             if isinstance(v, datetime.date): c.number_format = "yyyy-mm-dd"
-    ws.cell(r, 7, tag); ws.cell(r, 8, src); ws.cell(r, 9, inc)
+    ws.cell(r, 7, tag); ws.cell(r, 8, __import__("re").sub(r"https?://\S+", "（網址見 facts 總帳）", src) if "未找到" in src else src); ws.cell(r, 9, inc)
     r += 1
 for pre, (label, unit, a, b, c_, tag, src, inc) in SC.items():
     for s, v in zip("ABC", (a, b, c_)):
         k = f"{pre}{s}" if pre == "tp_w" else f"{pre}_{s}"
         IR[k] = r
         ws.cell(r, 1, k); ws.cell(r, 2, f"情境 {s}：{label}"); ws.cell(r, 3, unit)
-        ws.cell(r, 5, v).font = BLUE; ws.cell(r, 7, tag); ws.cell(r, 8, src); ws.cell(r, 9, inc)
+        ws.cell(r, 5, v).font = BLUE; ws.cell(r, 7, tag); ws.cell(r, 8, __import__("re").sub(r"https?://\S+", "（網址見 facts 總帳）", src) if "未找到" in src else src); ws.cell(r, 9, inc)
         r += 1
 r += 1
 ws.cell(r, 1, "J. 情境驅動對照（純展示；A 樂觀／B 基準／C 保守）").font = BOLD

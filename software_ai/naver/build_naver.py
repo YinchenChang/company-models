@@ -1105,7 +1105,7 @@ for i_, (a, b_) in enumerate([("事實總帳", "facts_naver.py → data/facts_na
 
 ROWMAP = {"IN": INR, "PR": PR, "IX": IX, "RID": RID, "VR": VR, "RVR": RVR, "RCR": RCR, "DR": DR, "CFR": CFR, "SE_ROWS": SE_ROWS, "SE_BASE": SE_BASE, "SE_STALE": SE_STALE, "SE_STATUS": SE_STATUS, "SE_BID": SE_BID,
           "SE_END": SE_END, "SE_TORN": SE_TORN, "STDH": STDH, "STD_NOTE": STD_NOTE, "PLSUM": PLSUM, "HR": HRW, "SCN_ROWS": SCN_ROWS, "SE_FP": SE_FP, "BUILD_ID": BUILD_ID, "QROW": QROW,
-          "SENS_DEF": [[k, s_, ov, lab] for k, s_, ov, lab, st in SENS_DEF], "IN_LAST": IN_LAST, "IN_ROWS": [[x[0], x[1], x[3], x[4], x[5]] for x in IN_ROWS if x[0] != "#" and not isinstance(x[4], str)]}
+          "SENS_DEF": [[k, s_, ov, lab] for k, s_, ov, lab, st in SENS_DEF], "IN_LAST": IN_LAST, "IN_ROWS": [[x[0], x[1], x[3], (None if isinstance(x[4], str) else x[4]), x[5]] for x in IN_ROWS if x[0] != "#"]}
 if os.environ.get("ROWMAP"):
     json.dump(ROWMAP, open(os.environ["ROWMAP"], "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=str)
 wb.save(OUT)

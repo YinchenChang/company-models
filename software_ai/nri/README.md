@@ -18,5 +18,5 @@
 - 財報數字經 WebFetch 摘要模型轉錄，非逐字人工核對；現價單一來源且逾期（2026-11-09）；同業前瞻 P/E 日期不一致且逾期；rf 單一來源。
 - 每任務 token 與價格層級為 Analogy，額外推論倍數與利用率、單價、價格保留率、自動化比例為 Assumed。
 
-<!-- version-table: -->
+<!-- version-table: dist/20261116_野村總研個股模型_v0.1.xlsx -->
 <!-- /version-table -->

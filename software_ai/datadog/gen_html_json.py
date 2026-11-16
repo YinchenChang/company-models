@@ -140,7 +140,7 @@ drivers = {"id": "drivers", "title": "驅動因子：命題推導（用量 × �
                            ("wc_k", "p1"), ("beta", "n2"), ("erp", "p1"), ("g_tv", "p1"), ("w_dcf", "p0"), ("w_pe", "p0"), ("rel_m", "n2"))]}]}
 recon = {"id": "recon", "title": "對帳：公司指引、共識、校準與合理性關卡", "blocks": [
     {"type": "note", "parts": ["@Recon!A2"]},
-    {"type": "table", "caption": "公司指引 vs 模型情境 B（公司指引＝Interested-party）", "head": ["項目", "期間", "模型", "指引下緣", "指引上緣", "模型 ÷ 指引中點 − 1"],
+    {"type": "table", "caption": "公司指引 vs 模型情境 B（公司指引＝Interested-party）", "head": ["項目", "期間", "模型", "指引下緣", "指引上緣", "模型相對指引中點"],
      "rowgen": {"sheet": "Recon", "rows": f"{RCR['q4rev']}-{RCR['fyeps']}", "cols": ["A", "B", "C", "D", "E", "F"], "fmts": ["", "", "n1", "n1", "n1", "sp1"], "row_fmt": {str(RCR["fyeps"]): {c: "n2" for c in "CDE"}}}},
     {"type": "table", "caption": "市場共識對模型（只作對照）", "head": ["項目", "期間", "情境 A", "情境 B", "情境 C", "共識"],
      "rowgen": {"sheet": "Recon", "rows": f"{RCR['g27']}-{RCR['tpc']}", "cols": ["A", "B", "C", "D", "E", "F"], "fmts": ["", "", "n1", "n1", "n1", "n1"],
@@ -163,7 +163,7 @@ status = {"id": "status", "title": "資料狀態", "blocks": [
     {"type": "table", "caption": "風險登錄", "head": ["風險", "是否建模", "理由", "觀察指標"], "rowgen": {"sheet": "README", "rows": "35-39", "cols": ["A", "B", "C", "D"]}},
     {"type": "table", "collapse": True, "summary": "展開：驅動 → 推導對照表", "head": ["頁", "輸入", "推導量", "因果方向"], "rowgen": {"sheet": "README", "rows": "21-27", "cols": ["A", "B", "C", "D"]}},
     {"type": "h3", "text": "「未找到」清單"},
-    {"type": "scan", "needle": "未找到", "collapse": True, "summary": "展開：標為「未找到」的項目", "sheets": {"Recon": ["A"], "In": ["B", "H", "I"]}, "empty": "沒有標為未找到的項目。"}]}
+    {"type": "scan", "needle": "未找到", "collapse": True, "summary": "展開：標為「未找到」的項目", "sheets": {"Recon": ["A"], "In": ["B", "I"]}, "empty": "沒有標為未找到的項目。"}]}
 cfg["sections"] = [thesis, valuation, sens, revdcf, pl, drivers, recon, status]
 json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")

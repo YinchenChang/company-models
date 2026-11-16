@@ -104,7 +104,7 @@
        "color": "#999999"
       }
      ],
-     "caption": "堆疊＝官方報告分部外部客戶營收（2026-04 新口徑）；單位十億日圓。"
+     "caption": "堆疊＝官方報告分部外部客戶營收（新口徑）；單位十億日圓。"
     },
     {
      "type": "h3",
@@ -118,8 +118,7 @@
       "@README!A7",
       "@README!A8",
       "@README!A9",
-      "@README!A10",
-      "@README!A11"
+      "@README!A10"
      ]
     },
     {
@@ -607,7 +606,7 @@
        "labels": true
       }
      ],
-     "caption": "長條＝營收（十億日圓）；折線＝營業利益率（右軸）。FY2026A 營業利益含減損 97.586；FY2027E 起為情境 B。"
+     "caption": "長條＝營收（十億日圓）；折線＝營業利益率（右軸）。FY2026A 營業利益含減損；FY2027E 起為情境 B。"
     },
     {
      "type": "table",
@@ -896,7 +895,7 @@
     },
     {
      "type": "table",
-     "caption": "分部營業利益（情境 B；十億日圓；歷史為舊口徑，FY2026A Industrial IT 含減損 97.060）",
+     "caption": "分部營業利益（情境 B；十億日圓；歷史為舊口徑，FY2026A Industrial IT 含減損）",
      "head": [
       "項目",
       "@PL!C40",
@@ -1155,7 +1154,7 @@
     },
     {
      "type": "table",
-     "caption": "Tokenomics v22.0 讀值（只讀；價格層級為 Analogy）",
+     "caption": "Tokenomics 快照讀值（只讀；價格層級為 Analogy）",
      "head": [
       "項目",
       "數值"
@@ -1365,6 +1364,7 @@
     {
      "type": "list",
      "items": [
+      "@README!A11",
       "@README!A21",
       "@README!A22"
      ]

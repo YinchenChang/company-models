@@ -294,6 +294,7 @@ for row in ROWS:
     if row[0] == "sec":
         IN.cell(r, 1, row[1]).font = BOLD; r += 1; continue
     key, item, unit, lo, base, hi, tag, src, note, judg, inc = row
+    if "未找到" in src and "未找到" not in note: note = "未找到（見來源欄）；" + note
     if key in OVR: base = OVR[key]
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
@@ -326,6 +327,5 @@ for k, w_ in (("A", 8), ("B", 14), ("C", 16)): pass
 IN.column_dimensions["A"].width = 12; IN.column_dimensions["B"].width = 62
 for c_ in "CDEFG": IN.column_dimensions[c_].width = 12
 IN.column_dimensions["H"].width = 70; IN.column_dimensions["I"].width = 50; IN.column_dimensions["J"].width = 40
-dn("scn_w_row", f"In!$D${SCN['scn_w']}")
 
 exec(open(os.path.join(HERE, "build_datadog_p2.py"), encoding="utf-8").read())

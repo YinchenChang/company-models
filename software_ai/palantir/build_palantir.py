@@ -67,10 +67,10 @@ QLAST = 4 + len(FACTS) - 1
 r = QLAST + 2
 put(Q, r, 1, "檢查：Government＋Commercial－合併營收（FY2021–FY2025；應為 0）", bold=True); QCHK = r
 for k, y in enumerate(range(2021, 2026)):
-    put(Q, r, 3 + k, f"={q(f'seg.gov.{y}')}+{q(f'seg.com.{y}')}-{q(f'rev.{y}')}", "0.000")
+    put(Q, r, 11 + k, f"={q(f'seg.gov.{y}')}+{q(f'seg.com.{y}')}-{q(f'rev.{y}')}", "0.000")
 r += 1; put(Q, r, 1, "檢查：Government＋Commercial－合併營收（最近四季；應為 0）", bold=True); QCHK2 = r
 for k, qq in enumerate(["2025Q4", "2026Q1", "2026Q2", "2026Q3"]):
-    put(Q, r, 3 + k, f"={q(f'seg.gov.{qq}')}+{q(f'seg.com.{qq}')}-{q(f'rev.{qq}')}", "0.000")
+    put(Q, r, 11 + k, f"={q(f'seg.gov.{qq}')}+{q(f'seg.com.{qq}')}-{q(f'rev.{qq}')}", "0.000")
 for col, w in zip("ABCDEFGHIJ", [46, 18, 14, 8, 36, 60, 16, 36, 12, 18]): Q.column_dimensions[col].width = w
 
 # =====================================================================================================
@@ -551,7 +551,7 @@ for col in "BCDEFGHIJKL": D_.column_dimensions[col].width = 12
 # =====================================================================================================
 # Val
 Vs = SH["Val"]
-Vs["A1"] = "Val — 目標價：DCF 與 Comparable（同業 EV／營收，成長調整）以 In 頁 w_dcf 加權；情境 A／B／C 以 In 頁權重加權。目標時點＝股價基準日＋12 個月；上檔空間是持有期間報酬，不是年化"
+Vs["A1"] = "Val — 目標價：DCF 與 Comparable（同業 EV／營收，成長調整）以 In 頁 DCF 權重加權；情境 A／B／C 以 In 頁權重加權。目標時點＝股價基準日＋12 個月；上檔空間是持有期間報酬，不是年化"
 Vs["A2"] = "評等五級固定規則（原則第 24 條）：上檔空間 > +50% 強力買進、> +25% 買進、≥ −25% 中立、≥ −50% 放空、其餘強力放空；收支關卡不通過且評等為買進以上時，投資建議為「收支不足」（第 63 條）。B、C、D 欄＝情境 A、B、C"
 def vp(k, label, vals, fmt=None, bold=False, note=None):
     r = VR[k]; put(Vs, r, 1, label, bold=bold)
@@ -752,7 +752,7 @@ for j in range(3): cc = "BCD"[j]; put(RCs, r, 2 + j, f"={cc}{RCK['d_dcf']}+{cc}{
 REV = {}
 _rp = os.path.join(HERE, "data", "reverse_solve.json")
 if os.path.exists(_rp): REV = json.load(open(_rp, encoding="utf-8"))
-rc_hdr(RCK["s4"], "4. 主導變數整本重算反解：使加權目標價等於現價所需的值（逐步整本重算；scripts：reverse_pltr.py；數值為建置快照）", ["項目", "基準值", "反解值", "反解後目標價", "說明"])
+rc_hdr(RCK["s4"], "4. 主導變數整本重算反解：使加權目標價等於現價所需的值（逐步整本重算；反解腳本；數值為建置快照）", ["項目", "基準值", "反解值", "反解後目標價", "說明"])
 for k, lab, key, fm, note in (("k_wacc", "WACC 調整（加在 WACC；負值＝降低折現率）", "wacc_adj", "0.00%", "使加權目標價＝現價所需的 WACC 調整"), ("k_wl", "FY2027 每客戶工作負載成長（A／B／C 同加 Δ 後的情境 B 值）", "wl27", "0.0%", "三情境同加 Δ；FY2032 收斂終點不動")):
     r = RCK[k]; put(RCs, r, 1, lab)
     put(RCs, r, 2, f"={I('wacc_adj')}" if key == "wacc_adj" else f"={I('wl27_B')}", fm)
@@ -771,9 +771,9 @@ for i, (lab, d, note) in enumerate(dts):
     put(RCs, r, 3, f"=NETWORKDAYS(B{r},{I('px_date')})-1", "0"); put(RCs, r, 4, f'=IF(ABS(C{r})>2,"逾期","")'); put(RCs, r, 5, note)
 assert RCK["dt0"] + len(dts) <= RCK["s6"], len(dts)
 rc_hdr(RCK["s6"], "6. Tokenomics 成本下限對照與聯動（只讀快照 v22.0；不自行估推論成本）", ["項目", "值", "單位", "說明"])
-put(RCs, RCK["fc"], 1, "模型商全成本下限 IF_FullCost_Terra（GB200 基準）"); put(RCs, RCK["fc"], 2, TKI["IF_FullCost_Terra"]["values"]["GB200 NVL72"]["基準"], "0.0000", blue=True); put(RCs, RCK["fc"], 3, "US$/M token")
+put(RCs, RCK["fc"], 1, "模型商全成本下限（Tokenomics 全成本，Terra 層，GB200 基準）"); put(RCs, RCK["fc"], 2, TKI["IF_FullCost_Terra"]["values"]["GB200 NVL72"]["基準"], "0.0000", blue=True); put(RCs, RCK["fc"], 3, "US$/M token")
 put(RCs, RCK["fc"], 4, "模型商的成本下限；軟體公司付的是市場價（Analogy：選 Terra 層），兩者價差是模型商毛利，不是 Palantir 成本")
-put(RCs, RCK["mkt"], 1, "本模型採用市場價 IF_PriceRef_Terra（基準）"); put(RCs, RCK["mkt"], 2, f"={I('tk_p')}", "0.0000"); put(RCs, RCK["mkt"], 3, "US$/M token"); put(RCs, RCK["mkt"], 4, "選哪一層價格屬 Analogy，不標 Verified")
+put(RCs, RCK["mkt"], 1, "本模型採用市場價（Tokenomics 市場價，Terra 層，基準）"); put(RCs, RCK["mkt"], 2, f"={I('tk_p')}", "0.0000"); put(RCs, RCK["mkt"], 3, "US$/M token"); put(RCs, RCK["mkt"], 4, "選哪一層價格屬 Analogy，不標 Verified")
 put(RCs, RCK["ratio"], 1, "市場價 ÷ 全成本下限"); put(RCs, RCK["ratio"], 2, f"=B{RCK['mkt']}/B{RCK['fc']}", "0.0"); put(RCs, RCK["ratio"], 3, "倍"); put(RCs, RCK["ratio"], 4, "Sens 中「只動價格」的高案為成本上界（價格升而營收不變）；另列價格與成本聯動案")
 put(RCs, RCK["joint"], 1, "推論成本占 Commercial 營收（FY2028，情境 B）"); put(RCs, RCK["joint"], 2, f"=Seg!H{SEGR['B']['share']}", "0.00%"); put(RCs, RCK["joint"], 3, "%"); put(RCs, RCK["joint"], 4, "公司未揭露任何推論成本或 token 用量（未找到）；此為 In 頁判斷值（每客戶任務數）推得")
 RCs.column_dimensions["A"].width = 80
@@ -783,7 +783,7 @@ RCs.column_dimensions["H"].width = 60
 # =====================================================================================================
 # Sens
 SE = SH["Sens"]
-SE["A1"] = "Sens — 一次改一個輸入（In 頁敏感度低／高值），整本活頁簿以 LibreOffice 重算後的加權目標價（Val 頁）與 DCF 單法目標價；由 make_v01.sh（SENS=1）產生，建置時寫入（數值，屬建置快照）；模型狀態與 build_id 見本頁底部"
+SE["A1"] = "Sens — 一次改一個輸入（In 頁敏感度低／高值），整本活頁簿以 LibreOffice 重算後的加權目標價（Val 頁）與 DCF 單法目標價；由建置腳本（敏感度模式）產生，建置時寫入（數值，屬建置快照）；模型狀態與 build_id 見本頁底部"
 SE["A2"] = ("相對基準＝案例目標價 ÷ 基準加權目標價 − 1。只動成本一邊的案例（token 價格高、每任務 token 倍數高、每客戶任務數高）標「上界」：價格升而營收不變，非一致的情境；"
             "另列價格與成本聯動案（token 價格下降同時客戶要求分享節省、單價侵蝕加深）與模型組合案（路由到便宜模型）。")
 def hdrrow(ws, r, labs):
@@ -832,7 +832,7 @@ put(SE, r, 1, "輸入指紋（本檔即時重算）"); put(SE, r, 4, f"=SUMPRODU
 put(SE, r, 1, "輸入指紋（敏感度重算時的基準檔）")
 if "base|base" in SENS and SENS["base|base"].get("fp") is not None: put(SE, r, 4, SENS["base|base"]["fp"], "0.000000", blue=True)
 r += 1
-put(SE, r, 1, "模型狀態（CURRENT＝Sens、HTML、README 與本檔輸入一致；STALE＝In 頁已改、須重跑 SENS=1 bash make_v01.sh）", bold=True)
+put(SE, r, 1, "模型狀態（CURRENT＝Sens、HTML、README 與本檔輸入一致；STALE＝In 頁已改、須重跑敏感度）", bold=True)
 put(SE, r, 4, f'=IF(AND(ISNUMBER(D{r - 1}),ISNUMBER(D{SE_STALE}),ABS(D{SE_STALE}-D{SE_BASE})<0.005,ABS(D{r - 2}-D{r - 1})<=0.000000001*MAX(1,ABS(D{r - 1}))),"CURRENT","STALE")')
 SE_STATUS = r; r += 1
 put(SE, r, 1, "build_id（README、Sens、HTML 三處相同）"); put(SE, r, 4, BUILD_ID); SE_BID = r; r += 1

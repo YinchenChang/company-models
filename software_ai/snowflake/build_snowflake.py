@@ -14,7 +14,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = sys.argv[1]
 SENS = sys.argv[sys.argv.index("--sens") + 1] if "--sens" in sys.argv else None
 ROWMAP = sys.argv[sys.argv.index("--rowmap") + 1] if "--rowmap" in sys.argv else None
-VER, VDATE = "0.1", "20261116"
+VER, VDATE = "0.1.1", "20261117"
 TK = json.load(open(os.path.join(HERE, "data/tokenomics_snapshot_v22.0.json"), encoding="utf-8"))
 TKI = TK["items"]
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
@@ -137,10 +137,9 @@ PFD = dict(
     mi=(0, "Assumed", "無少數股權（10-Q 損益表淨損失歸屬他方金額極小，未計）", "—"),
     sh=("=" + _I("sh_out") + "+" + _I("rsu") + "+" + _I("opt_n") + "*MAX(0,1-" + _I("opt_k") + "/" + _I("px") + ")+IF(" + _I("px") + ">" + _I("conv_px") + "," + _I("conv_sh") + "-" + _I("conv_sh") + "*(MIN(" + _I("px") + "," + _I("cap_px") + ")-" + _I("conv_px") + ")/" + _I("px") + ",0)",
         "Derived", "評價日股數＝流通股 352.8＋RSU（全額）＋選擇權庫藏股法＋可轉債 if-converted 股數減 capped call 回收（DCF 規格第 3 節）", "RSU 沒收率未揭露（未找到），全額計入；ASR 未建模"),
-    fc_da=(0.035, 0.045, 0.055, "Assumed", "FY2026 220.443÷4,683.9＝4.7%、FY2025 5.0%（Derived）；含被併購無形資產攤銷，高估非 GAAP 內含折舊的部分", "—"),
+    fc_da=(0.0186, 0.0236, 0.0286, "Derived", "非 GAAP 營業利益已排除被併購無形資產攤銷，故只加回其餘折舊攤銷：FY2026（220.443−110.113）÷4,683.9＝2.36%、FY2025（182.508−96.882）÷3,626.4＝2.36%（Q4 FY26 新聞稿 GAAP 到非 GAAP 調節表；v0.1 誤用含無形資產攤銷的 4.5%，雙重加回）", "—"),
     fc_cx=(0.015, 0.022, 0.03, "Derived", "FY2026 101.628÷4,683.9＝2.2%、FY2025 2.1%、FY2024 2.5%（營業現金流減公司自由現金流；10-K MD&A）", "—"),
-    fc_da_ss=(0.03, "Assumed", "長期穩態：被併購無形資產攤銷退出後，折舊攤銷收斂到資本支出附近（FY2030–FY2032 線性收斂）", "—"),
-    fc_cx_ss=(0.031, "Assumed", "長期穩態：資本支出占營收略高於折舊（終值要求資本支出 ≥ 折舊×(1+g)）", "—"),
+    fc_cx_ss=(0.0245, "Assumed", "長期穩態：資本支出占營收略高於折舊（終值要求資本支出 ≥ 折舊×(1+g)；FY2030–FY2032 線性收斂）", "—"),
     fc_wc=(-0.452, -0.363, -0.25, "Derived", "營運資金增加÷營收增量，負值＝流入（原則第 23 條）：10-K FY2026 MD&A 營運資產負債變動合計流入 383.8（FY2026；其中遞延收入 +755.2、遞延佣金 −305.1、應收 −380.0、應計 +393.3）÷營收增量 1,057.6＝36.3%；FY2025 443.6÷819.9＝54.1%；基準取最新年，低案取兩年平均，高案 25% 為假設", "FY2024 未找到"),
 )
 FDROWS = FD.in_rows(PFD)
@@ -287,7 +286,7 @@ for key, lab, f in (("opxv", "營業費用變動部分（最近三點斜率）",
                     ("opxv6", "營業費用變動部分（六點全樣本斜率）", f"=SLOPE(B{QG['opx']}:G{QG['opx']},{X6})"), ("opxa6", "營業費用固定部分（六點全樣本截距）", f"=INTERCEPT(B{QG['opx']}:G{QG['opx']},{X6})"),
                     ("opxltm", "營業費用率（LTM；全期持平案用）", f"=G{QG['opx']}/G{QG['rev']}"),
                     ("sbcv", "股票薪酬變動部分（最近三點斜率）", f"=SLOPE(E{QG['sbc']}:G{QG['sbc']},{X3})"), ("sbca", "股票薪酬固定部分（最近三點截距；US$M）", f"=INTERCEPT(E{QG['sbc']}:G{QG['sbc']},{X3})"),
-                    ("sbcv6", "股票薪酬變動部分（六點全樣本斜率）", f"=SLOPE(B{QG['sbc']}:G{QG['sbc']},{X6})"), ("sbcltm", "股票薪酬占營收（LTM；全期持平案用）", f"=G{QG['sbc']}/G{QG['rev']}")):
+                    ("sbcv6", "股票薪酬變動部分（六點全樣本斜率）", f"=SLOPE(B{QG['sbc']}:G{QG['sbc']},{X6})"), ("sbca6", "股票薪酬固定部分（六點全樣本截距；US$M）", f"=INTERCEPT(B{QG['sbc']}:G{QG['sbc']},{X6})"), ("sbcltm", "股票薪酬占營收（LTM；全期持平案用）", f"=G{QG['sbc']}/G{QG['rev']}")):
     RS[key] = rr; Q.cell(rr, 1, lab); Q.cell(rr, 2, f); Q.cell(rr, 7, DE); rr += 1
 rr += 1
 Q.cell(rr, 1, "營運資金（10-K FY2026 MD&A 營運資產負債變動；負值＝流入，原則第 23 條）").font = BOLD; rr += 1
@@ -392,7 +391,7 @@ PLB = ["rev", "cogs", "gp", "opex", "oi", "sbc", "ebit", "da", "capex", "nopat",
 PLL = {"rev": "營收", "cogs": "營業成本（非 GAAP）", "gp": "毛利（非 GAAP）", "opex": "營業費用（非 GAAP）", "oi": "營業利益（非 GAAP）", "sbc": "股票薪酬",
        "ebit": "DCF 的 EBIT（非 GAAP 營業利益−股票薪酬）", "da": "折舊與攤銷", "capex": "資本支出", "nopat": "NOPAT（EBIT×(1−稅率)；取自 DCF 頁）",
        "dwc": "營運資金增加（負值＝流入；取自 DCF 頁）", "fcff": "無槓桿自由現金流 FCFF（取自 DCF 頁）", "oth": "其他收入（利息等；非 GAAP）", "ebt": "稅前（非 GAAP）", "taxx": "所得稅（非 GAAP）",
-       "ni": "淨利（非 GAAP）", "shs": "稀釋股數（M；非 GAAP）", "eps": "EPS（非 GAAP 稀釋，美元）", "gaap_oi": "參考：GAAP 營業利益（近似＝非 GAAP 營業利益−SBC−其他調整）", "fcf_co": "參考：公司口徑自由現金流（FCFF＋SBC＋稅後其他收入）"}
+       "ni": "淨利（非 GAAP）", "shs": "稀釋股數（M；非 GAAP）", "eps": "EPS（非 GAAP 稀釋，美元）", "gaap_oi": "參考：GAAP 營業利益（近似＝非 GAAP 營業利益−SBC−其他調整）", "fcf_co": "參考：公司口徑自由現金流（FCFF＋SBC＋稅後其他收入－虧損期稅盾）"}
 PR = {}
 BASE0 = 70
 for si, s in enumerate("ABC"):
@@ -433,7 +432,7 @@ for si, s in enumerate("ABC"):
         P[R("shs")] = f"={I('sh_ng')}" if y == "FY2027" else f"={Pv('shs')}*(1+{I('sh_g')})"
         P[R("eps")] = f"={R('ni')}/{R('shs')}"
         P[R("gaap_oi")] = f"={R('oi')}-{R('sbc')}-{I('gaap_adj')}*{R('rev')}"
-        P[R("fcf_co")] = f"={R('fcff')}+{R('sbc')}+{R('oth')}*(1-{I('tax')})"
+        P[R("fcf_co")] = f"={R('fcff')}+{R('sbc')}+{R('oth')}*(1-{I('tax')})+MIN({R('ebit')},0)*tax_w"
 PL_END = BASE0 + 3 * (len(PLB) + 4)
 b = PR["B"]
 STD = ["營收", "營收年增率", "營業成本", "毛利", "毛利率", "營業費用", "營業利益", "營業利益率", "其他收入", "稅前利益", "所得稅", "稅後淨利", "淨利率", "EPS（非 GAAP 稀釋，美元）", "淨利年增率"]
@@ -674,7 +673,9 @@ rec_rows = [
  ("h1", "1. 合併層：FY2027（情境 B）", None),
  ("prod27", "產品營收（US$M）", (f"=PL!F{SPR['Product revenue']}", 6070, 6070, "未找到", G27 + "：產品營收 6,070（含 Observe 約 1 個百分點）；本模型 Q3、Q4 為假設（Assumed），高於指引屬預期（公司指引通常保守，Interested-party）；共識的產品營收未找到")),
  ("rev27", "合併營收（US$M）", (f"=PL!F{STR['營收']}", None, None, 6320, "賣方共識 6,320（StockAnalysis／S&P，2026-11-12，47 家；Interested-party）")),
- ("om27", "非 GAAP 營業利益率", (f"=PL!F{STR['營業利益率']}", 0.145, 0.145, "未找到", G27 + "：14.5%；本模型由營業費用率假設校準，非獨立預測")),
+ ("om27", "非 GAAP 營業利益率", (f"=PL!F{STR['營業利益率']}", 0.145, 0.145, "未找到", G27 + "：14.5%；本模型由規模經濟（營業費用固定＋變動拆分，FY2022–FY2027 實績迴歸，Derived）推得，未對指引校準")),
+ ("omgap", "FY2027 非 GAAP 營業利益率：本模型相對指引的差距（百分比；合理性關卡門檻 10%）", ("", None, None, "未找到", "＝本模型÷指引−1；絕對值超過 10% 觸發合理性關卡診斷（見 README）")),
+ ("prodgap", "FY2027 產品營收：本模型相對指引的差距（百分比；門檻 10%）", ("", None, None, "未找到", "＝本模型÷指引−1；本模型 Q3、Q4 為假設，高於指引屬預期（公司指引通常保守）")),
  ("gm27", "非 GAAP 產品毛利率", (f"=Seg!F{SR['B']['pgm']}", 0.74, 0.74, "未找到", G27 + "：74.0%；本模型為 U_gm0 與 AI 推論成本的結果（含 AI 稀釋）")),
  ("fcf27", "公司口徑自由現金流率（調整後）", (f"=PL!F{GR0+4}", 0.23, 0.23, "未找到", G27 + "：調整後自由現金流率 23%；模型口徑為 FCFF＋SBC＋稅後其他收入，不含薪資稅調整，非同一口徑")),
  ("sh27", "非 GAAP 稀釋加權股數（M）", (f"={I('sh_ng')}", 380, 380, "未找到", G27 + "：380M（含可轉債 if-converted 約 10M）；本模型直接採用指引（Interested-party）")),
@@ -696,7 +697,8 @@ for k, lab, spec in rec_rows:
         for j, v in enumerate(spec, 2):
             if v is not None: Rc.cell(r, j, v)
     r += 1
-KREQ = os.path.join(HERE, "data/kreq_v01.json")
+Rc[f"B{RCR['omgap']}"] = f"=B{RCR['om27']}/C{RCR['om27']}-1"; Rc[f"B{RCR['prodgap']}"] = f"=B{RCR['prod27']}/C{RCR['prod27']}-1"
+KREQ = os.path.join(HERE, "data/kreq_v011.json")
 if os.path.exists(KREQ):
     for n_, kq in enumerate(json.load(open(KREQ, encoding="utf-8"))):
         RCR["kreq" if n_ == 0 else "kreq2"] = r
@@ -706,7 +708,14 @@ if os.path.exists(KREQ):
 Rc.cell(r + 1, 1, "3. 同業日期與口徑").font = BOLD
 Rc.cell(r + 2, 1, "同業前瞻 P/S 取自 StockAnalysis；MongoDB、ServiceNow、Elastic 為 2026-11-06（距股價日逾兩個交易日，標逾期），CrowdStrike 頁面未載日期；八家家數達規格門檻但前瞻期間不一，不做迴歸；以調整係數作敏感度。")
 Rc.cell(r + 3, 1, "4. Q3 FY27 實績（截至 2026-10-31）尚未公布，發布日未找到；本版以 Q2 FY27 為最新已公布季，Q3 指引（產品營收 1,588–1,593、非 GAAP 營業利益率 15.5%）只作對照。")
-Rc.cell(r + 4, 1, "5. 未找到：AI 營收占比（公司只稱 meaningful step-up）、AI 專屬毛利率、Q2 FY27 租賃負債與流通股封面數、第二來源 Beta、FY2029 以後公司長期目標、共識的產品營收。")
+Rc.cell(r + 6, 1, "6. 合理性關卡（工作單 G3 第 4 條）：觸發條件 DCF 目標價低於現價 25% 或高於 4 倍；任一情境企業價值為負；評等為強力放空或強力買進；FY2027 營收或營業利益率與指引差距超過 10%").font = BOLD
+RCR["g_dcf"] = r + 7; RCR["g_ev"] = r + 8; RCR["g_rec"] = r + 9; RCR["g_gap"] = r + 10; RCR["g_n"] = r + 11
+Rc.cell(r + 7, 1, "DCF 目標價÷現價（觸發：低於 25% 或高於 400%）"); Rc[f"B{r+7}"] = f"=Val!B{VR['dcf_tp']}/Val!B{VR['px']}"; Rc[f"C{r+7}"] = f"=IF(OR(B{r+7}<0.25,B{r+7}>4),1,0)"
+Rc.cell(r + 8, 1, "三情境企業價值最小值（US$M；觸發：為負）"); Rc[f"B{r+8}"] = f"=MIN(Val!C{VR['ev']}:E{VR['ev']})"; Rc[f"C{r+8}"] = f"=IF(B{r+8}<0,1,0)"
+Rc.cell(r + 9, 1, "估值評等（觸發：強力放空或強力買進）"); Rc[f"B{r+9}"] = f"=Val!B{VR['val_rec']}"; Rc[f"C{r+9}"] = f'=IF(OR(B{r+9}="強力放空",B{r+9}="強力買進"),1,0)'
+Rc.cell(r + 10, 1, "FY2027 營收與營業利益率相對指引差距之絕對值較大者（觸發：超過 10%）"); Rc[f"B{r+10}"] = f"=MAX(ABS(B{RCR['prodgap']}),ABS(B{RCR['omgap']}))"; Rc[f"C{r+10}"] = f"=IF(B{r+10}>0.1,1,0)"
+Rc.cell(r + 11, 1, "觸發數（0–4；C 欄為各項是否觸發）"); Rc[f"B{r+11}"] = f"=SUM(C{r+7}:C{r+10})"
+Rc.cell(r + 5, 1, "5. 未找到：AI 營收占比（公司只稱 meaningful step-up）、AI 專屬毛利率、Q2 FY27 租賃負債與流通股封面數、第二來源 Beta、FY2029 以後公司長期目標、共識的產品營收。")
 
 # ---------------------------------------------------------------- Sens 頁
 Se = SH["Sens"]
@@ -755,7 +764,7 @@ Rm["A3"] = ('="命題：AI 進入按用量計價的資料平台後，產品營�
 Rm["A4"] = "命題的可證偽指標：扣除價格因素後的用量成長（工作負載乘數）、AI 功能消耗的 credit 占比、產品毛利率是否因 AI 轉售而下降；任何一項偏離基準區間即須重估。"
 Rm["A5"] = (f'="投資建議（在 AI 工作負載與被替代落在情境 A 到 C 區間、推論成本取 Tokenomics 市場價的基準假設下）："&{VB("rec")}&"；加權目標價 "&TEXT({VB("tp")},"0.00")&" 美元，上檔空間 "&TEXT({VB("up")},"0.0%")&"（現價 "&TEXT({VB("px")},"0.00")&" 美元，"&TEXT({VB("px_date")},"yyyy-mm-dd")&"）；估值評等 "&{VB("val_rec")}&"；收支關卡（FY2026–FY2030 公司口徑自由現金流合計 "&TEXT({VB("gate_use")},"#,##0")&" 百萬美元）"&{VB("gate_res")}')
 Rm["A6"] = (f'="一、DCF 目標價 "&TEXT({VB("dcf_tp")},"0.00")&"、Comparable 目標價 "&TEXT({VB("comp_tp")},"0.00")&" 美元；情境 B 兩者相差 "&TEXT({VB("dec_gap")},"0.00")&" 美元，其中股票薪酬約 "&TEXT({VB("dec_sbc")},"0.00")&"、其餘（槓桿、時點與倍數）約 "&TEXT({VB("dec_res")},"0.00")&" 美元；同業中位數前瞻 P/S "&TEXT({VB("pe_med")},"0.0")&" 倍，SNOW 自身 "&TEXT({VB("pe_own")},"0.0")&" 倍（"&IF({VB("pe_pe")}>0,"高於","低於")&"中位數 "&TEXT(ABS({VB("pe_pe")}),"0%")&"），調整到中位數隱含價格 "&TEXT({VB("rerate")},"0.00")&" 美元。"')
-Rm["A7"] = (f'="二、情境 B FY2027 產品營收 "&TEXT(PL!F{SPR["Product revenue"]}/1000,"0.00")&" 十億美元，"&IF(PL!F{SPR["Product revenue"]}>Recon!C{RCR["prod27"]},"高於","低於")&"公司指引 "&TEXT(Recon!C{RCR["prod27"]}/1000,"0.00")&" 十億美元；非 GAAP 營業利益率 "&TEXT(PL!F{STR["營業利益率"]},"0.0%")&"，"&IF(PL!F{STR["營業利益率"]}>Recon!C{RCR["om27"]},"高於","低於")&"公司指引 "&TEXT(Recon!C{RCR["om27"]},"0.0%")&"（模型費用率與毛利率依規格持平於最近四季實績，不含公司預期的槓桿；落差即此處假設的影響）。"')
+Rm["A7"] = (f'="二、情境 B FY2027 產品營收 "&TEXT(PL!F{SPR["Product revenue"]}/1000,"0.00")&" 十億美元，"&IF(PL!F{SPR["Product revenue"]}>Recon!C{RCR["prod27"]},"高於","低於")&"公司指引 "&TEXT(Recon!C{RCR["prod27"]}/1000,"0.00")&" 十億美元；非 GAAP 營業利益率 "&TEXT(PL!F{STR["營業利益率"]},"0.0%")&"，"&IF(PL!F{STR["營業利益率"]}>Recon!C{RCR["om27"]},"高於","低於")&"公司指引 "&TEXT(Recon!C{RCR["om27"]},"0.0%")&"（營業費用與股票薪酬依 FY2022–FY2027 實績迴歸的固定＋變動拆分推得，未對指引校準；差距見 Recon）。"')
 Rm["A8"] = (f'="三、情境 B FY2032 推論成本（市場價）占產品營業成本 "&TEXT(Seg!K{SB["infc"]}/(Seg!K{SB["infc"]}+Seg!K{SB["cogsx"]}),"0%")&"，產品毛利率由 FY2027 的 "&TEXT(Seg!F{SB["pgm"]},"0.0%")&" 變為 "&TEXT(Seg!K{SB["pgm"]},"0.0%")&"；以全成本計的推論成本僅 "&TEXT(Seg!K{SB["inf_full"]}/1000,"0.0")&" 十億美元（對照用）。"')
 Rm["A9"] = (f'="四、現價隱含 FY2032 EBIT 率（扣股票薪酬）"&TEXT(RevDCF!B{RV["m_imp"]},"0.0%")&"（情境 B 為 "&TEXT(RevDCF!B{RV["m_fy32"]},"0.0%")&"）；永續價值占 EV 約 "&TEXT(Val!D{VR["tvsh"]},"0%")&"。"')
 Rm["A10"] = (f'="五、情境 A／B／C 加權目標價 "&TEXT(Val!C{VR["wb"]},"0.00")&"／"&TEXT(Val!D{VR["wb"]},"0.00")&"／"&TEXT(Val!E{VR["wb"]},"0.00")&" 美元；分化來自 AI 工作負載、被替代、轉售加成與股票薪酬占比。"')
@@ -772,18 +781,21 @@ Rm["A22"] = "主要失效條件（可觀察）：Q3 FY27 產品營收低於指�
 Rm["A23"] = "風險登錄"
 Rm["A24"] = "風險"; Rm["B24"] = "是否建模"; Rm["C24"] = "理由"; Rm["D24"] = "觀察指標"
 risks = [("核心消耗被模型直讀資料或開放格式替代", "是", "U_e32 三情境", "淨營收留存率、儲存與運算 credit 成長"), ("AI 推論成本侵蝕產品毛利", "是", "Tokenomics 市場價×呼叫數", "產品毛利率、第三方雲端費用占產品營業成本"),
-         ("股票薪酬與稀釋", "是", "DCF 扣 SBC；sbc32 三情境", "SBC 占營收、稀釋股數"), ("同業倍數與大盤評價", "部分", "Comparable 係數 cm_adj", "同業前瞻 P/S"), ("併購（Observe、Natoma）與整合", "否", "營收錨點已含 Observe", "產品營收指引含併購貢獻")]
+         ("股票薪酬與稀釋", "是", "DCF 扣 SBC；sbc_v 三情境（變動部分）、sbc_a（固定部分）", "SBC 占營收、稀釋股數"), ("同業倍數與大盤評價", "部分", "Comparable 倍數 rel_mult（5 期自算）", "同業前瞻 P/S"), ("併購（Observe、Natoma）與整合", "否", "營收錨點已含 Observe", "產品營收指引含併購貢獻")]
 for i, rk in enumerate(risks, 25):
     for j, v in enumerate(rk, 1): Rm.cell(i, j, v)
 Rm.cell(31, 1, "工作表：README、In、Q、Seg、PL、DCF、Val、RevDCF、Recon、Sens、Sources")
 Rm["A33"] = "頁"; Rm["B33"] = "輸入"; Rm["C33"] = "推導量"; Rm["D33"] = "因果方向"
 mp = [("Seg", "q3g、q4g、U_w26、U_w32_A／B／C、U_e26、U_e32_A／B／C、U_j26、U_j32、U_mk_A／B／C、g_px、g_tok、ovh、U_tier、g_b28、g_b32", "基準消耗、AI 營收、核心侵蝕、推論成本、AI 淨效果", "基準消耗×(1＋w−e)＋轉售營收 → 產品營收；呼叫數×每次成本 → 推論成本"),
-      ("PL", "U_gm0、gm_dr、opx27、opx_dr、sbc27、sbc32_A／B／C、da_pct、capex_pct、wc_k、tax、yld", "毛利、非 GAAP 營業利益、EBIT、FCFF、EPS", "營收 − 成本 − 費用 → 非 GAAP 營業利益 → 扣 SBC → NOPAT → FCFF"),
-      ("Val", "rf、beta_raw、erp、kd_sp、g_tv、ronic_sp、w_dcf、cm_adj、sh_dil", "WACC、DCF、Comparable、加權目標價、評等", "FCFF 折現＋同業前瞻 P/S × NTM 營收 → 加權"),
+      ("PL", "U_gm0、gm_dr、opx_a、opx_v、sbc_a、sbc_v_A／B／C、fc_da、fc_cx、fc_wc、tax、yld", "毛利、非 GAAP 營業利益、EBIT、FCFF、EPS", "營收 − 成本 − 費用 → 非 GAAP 營業利益 → 扣 SBC → NOPAT → FCFF"),
+      ("Val", "rf、beta_1、erp、kd_sp、g_tv、ronic_sp、w_dcf、rel_mult、rsu、opt_n、conv_px", "WACC、DCF、Comparable、加權目標價、評等", "FCFF 折現＋同業前瞻 P/S × NTM 營收 → 加權"),
       ("Sens", "In 頁敏感度低／高", "加權目標價、DCF 目標價、投資建議", "一次改一個輸入、整本重算")]
 for i, rk in enumerate(mp, 34):
     for j, v in enumerate(rk, 1): Rm.cell(i, j, v)
-Rm["A39"] = "版本沿革：v0.1（2026-11-16）首版；未做先驗；本版與其他版本無對照。"
+Rm["A39"] = "版本沿革：v0.1（2026-11-16）首版；v0.1.1（2026-11-17）依工作單 G3 修正：規模經濟延伸、DCF 改接 tools/fcff_dcf.py、rel_mult 自算、補讀 RSU／選擇權／可轉債、合理性關卡診斷；未做先驗。"
+Rm["A40"] = "合理性關卡診斷（工作單 G3 第 4 條；觸發條件與當期判定見 Recon 第 6 節；診斷全文見 README.md）"
+Rm["A41"] = (f'="觸發數 "&TEXT(Recon!B{RCR["g_n"]},"0")&"／4：DCF 目標價 "&TEXT({VB("dcf_tp")},"0.00")&" 美元為現價 "&TEXT(Recon!B{RCR["g_dcf"]},"0%")&"；情境 C 企業價值 "&TEXT(Val!E{VR["ev"]},"#,##0")&" 百萬美元；評等 "&{VB("val_rec")}&"；FY2027 營收與營業利益率相對指引差距 "&TEXT(Recon!B{RCR["prodgap"]},"0.0%")&"／"&TEXT(Recon!B{RCR["omgap"]},"0.0%")&"。"')
+Rm["A42"] = "診斷：這不是計算錯誤。FCFF 營運資金符號（遞延收入增加為流入）、股數（RSU、選擇權、可轉債）、折舊攤銷（排除已被非 GAAP 排除的無形資產攤銷）、WACC 與終值公式已逐項核對；低 DCF 來自輸入：營業費用與股票薪酬的規模經濟只取自實績迴歸（不預設槓桿）、AI 推論使毛利率下降，使 FY2032 的 EBIT（扣股票薪酬）率僅個位數；現價隱含的 EBIT 率見 RevDCF。判斷屬經濟判斷：DCF 對股票薪酬與規模經濟的路徑高度敏感，Comparable 則由同業倍數與 rel_mult 決定，兩者落差分解見 Val。"
 
 for ws_ in wb.worksheets:
     ws_.column_dimensions["A"].width = 52
@@ -791,7 +803,7 @@ for ws_ in wb.worksheets:
 wb["In"].column_dimensions["B"].width = 60; wb["In"].column_dimensions["H"].width = 70
 wb.defined_names["PL_hdr"] = DefinedName("PL_hdr", attr_text="PL!$C$5:$K$5")
 wb.save(OUT)
-rowmap = {"IR": IR, "SR": SR, "PR": PR, "STR": STR, "SPR": SPR, "VR": VR, "DR": FDR, "FS": FS, "RM": {"rel_mult": RELM_ROW, "first": RM0 + 2}, "RV": RV, "RCR": RCR, "CK": CK, "QR": QR, "SE_ROWS": SE_ROWS, "SE_END": SE_END, "SCN_H": SCN_H, "SCN_ROWS": SCN_ROWS,
+rowmap = {"IR": IR, "SR": SR, "PR": PR, "STR": STR, "SPR": SPR, "VR": VR, "DR": FDR, "FS": FS, "RM": {"rel_mult": RELM_ROW, "first": RM0 + 2}, "RV": RV, "RCR": RCR, "CK": CK, "QR": QR, "RS": RS, "SE_ROWS": SE_ROWS, "SE_END": SE_END, "SCN_H": SCN_H, "SCN_ROWS": SCN_ROWS,
           "BUILD_ID": BUILD_ID, "FP": fp, "HDR_R": hdr_r, "GR0": GR0, "LAST_PARAM_ROW": LAST_PARAM_ROW}
 if ROWMAP: json.dump(rowmap, open(ROWMAP, "w"), ensure_ascii=False, indent=1)
 print("built", OUT, BUILD_ID)

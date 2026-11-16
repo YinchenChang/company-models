@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Palo Alto Networks（PANW）個股模型 v0.1：命題（原型 P 按防護範圍計價）＋營收線 → 損益表 → FCFF DCF／同業本益比。
+"""Palo Alto Networks（PANW）個股模型 v0.1.1：命題（原型 P 按防護範圍計價）＋營收線 → 損益表 → FCFF DCF／同業本益比。
 用法：python3 software_ai/paloalto/build_paloalto.py [--sens-only] [--no-sens]
-  1. 建基準檔並以 LibreOffice 重算；2. 逐案整本重算（Sens）；3. 寫成品 dist/<日期>_Palo Alto Networks個股模型_v0.1.xlsx 並重算。
+  1. 建基準檔並以 LibreOffice 重算；2. 逐案整本重算（Sens）；3. 寫成品 dist/<日期>_Palo Alto Networks個股模型_v0.1.1.xlsx 並重算。
 需要：python3＋openpyxl、LibreOffice（soffice）。暫存檔在 /home/claude/scratch/paloalto。"""
 import copy, datetime, glob, hashlib, json, os, re, shutil, subprocess, sys
 import openpyxl
@@ -12,7 +12,7 @@ from openpyxl.workbook.defined_name import DefinedName
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
 SCR = "/home/claude/scratch/paloalto"
-VER, VDATE = "0.1", "20261116"
+VER, VDATE = "0.1.1", "20261117"
 OUTNAME = f"{VDATE}_Palo Alto Networks個股模型_v{VER}.xlsx"
 TKJ = os.path.join(ROOT, "software_ai", "unit_economics", "data", "tk_snapshot.json")
 TK = json.load(open(TKJ, encoding="utf-8"))
@@ -45,7 +45,7 @@ def inp(key, item, unit, lo, base, hi, tag, src, note="", inc="", fmt="0.00"):
 PCT, PCT1, N0, N2 = "0.0%", "0.00%", "#,##0", "#,##0.00"
 
 sec("A. 日期、現價、股數與資產負債（評價日＝FY2026 年底 2026-07-31，最近一期法定資產負債表）")
-inp("data_date", "資料截止日（本版最晚一筆輸入）", "日期", None, D(2026, 11, 16), None, "Derived", "研究包 data/facts_paloalto.csv 擷取日", "README 首列分列資料截止日、成品日、股價基準日（原則第 10 節第 41 條）", "", "yyyy-mm-dd")
+inp("data_date", "資料截止日（本版最晚一筆輸入）", "日期", None, D(2026, 11, 17), None, "Derived", "研究包 data/facts_paloalto.csv 擷取日", "README 首列分列資料截止日、成品日、股價基準日（原則第 10 節第 41 條）", "", "yyyy-mm-dd")
 inp("px_date", "股價基準日（現價日）", "日期", None, D(2026, 11, 13), None, "Verified", SRC["SAS"], "目標時點＝本值加 12 個月（第 26 條）", "", "yyyy-mm-dd")
 inp("val_date", "評價日（FY2026 年底資產負債表日）", "日期", None, D(2026, 7, 31), None, "Verified", SRC["K26"] + "；資產負債表", "FY2027 Q1（2026-10-31）資產負債表尚未公布，沿用 FY2026 年底", "", "yyyy-mm-dd")
 inp("tp_date", "目標時點＝EDATE(股價基準日, 12)", "日期", None, "=EDATE(px_date,12)", None, "Derived", "公式", "折現期間自評價日起、持有期間自現價日起，Val 頁並列", "", "yyyy-mm-dd")
@@ -131,7 +131,7 @@ inp("pe_z", "同業前瞻本益比 Zscaler（ZS）", "x", None, 39.22, None, "In
 inp("pe_c", "同業前瞻本益比 Check Point（CHKP）", "x", None, 13.70, None, "Interested-party", "StockAnalysis.com CHKP 統計頁（同上）", "US GAAP（以色列公司，申報 US GAAP）", INC_DATA, "0.00")
 inp("pe_n", "同業前瞻本益比 Cloudflare（NET）", "x", None, 174.39, None, "Interested-party", "StockAnalysis.com NET 統計頁（同上）", "US GAAP", INC_DATA, "0.00")
 inp("pe_p", "PANW 資料商前瞻本益比（展示；同源同日）", "x", None, 77.10, None, "Interested-party", SRC["SAS"], "只用於相對倍數高案與 Recon 展示", INC_DATA, "0.00")
-inp("rel_adj", "相對倍數調整係數（未調整＝1.00）", "x", 0.8, 1.0, "=H_PEREL", "Assumed", "1.00（未調整：缺同業 NTM 成長率、利益率與同日 EPS；4 家同業不做迴歸）", "高案＝PANW 資料商前瞻本益比 ÷ 同業中位數（Val 頁）；列入承重輸入（第 18 條）", "", "0.00")
+inp("rel_adj", "相對倍數調整係數（本公司前瞻本益比 ÷ 同業中位數的歷史相對倍數）", "x", "=rel_lo", "=rel_med", "=rel_hi", "Derived", "RelHist 頁：PANW 近 5 年 21 個財季末 TTM 市銷率 ÷ 同業（Zscaler、Fortinet、Check Point）中位數；取不到歷史前瞻本益比，以市銷率代理（macrotrends.net，擷取日 2026-11-17）", "基準＝歷史中位數，低／高＝歷史最低／最高（G3 第 4 條）；現行資料商前瞻本益比比值另見 Val 頁，不進基準；列入承重輸入（第 18 條）", "", "0.00")
 
 sec("G. 只作對照的公司指引、目標與共識（不進模型）")
 for k, it, u, v, f, inc in [
@@ -207,7 +207,7 @@ def build(ov=None, sens=None, fp=None, rec_tp=None, build_id="BUILD"):
     """建一本活頁簿。ov＝覆寫 In 基準值（Sens 整本重算用）；sens＝敏感度結果（成品用）；fp／rec_tp＝記錄的指紋與基準加權目標價。"""
     ov = ov or {}
     wb = openpyxl.Workbook(); wb.remove(wb.active)
-    names = ["README", "In", "Q", "Hist", "TK", "PL", "PL_A", "PL_C", "Val", "RevDCF", "Recon", "Sens", "Sources"]
+    names = ["README", "In", "Q", "Hist", "TK", "PL", "PL_A", "PL_C", "Val", "RevDCF", "Recon", "Sens", "RelHist", "Sources"]
     S = {n: wb.create_sheet(n) for n in names}
     # ---------------- In
     ws = S["In"]
@@ -225,7 +225,6 @@ def build(ov=None, sens=None, fp=None, rec_tp=None, build_id="BUILD"):
         b = ov.get(k, base)
         for col, v in ((4, lo), (5, b), (6, hi)):
             if v is None: continue
-            if isinstance(v, str) and v == "=H_PEREL": v = "=pe_rel_live"
             c = ws.cell(r, col, v); c.font = BLUE; fmt_cell(c, f)
         ws.cell(r, 7, tag); ws.cell(r, 8, src); ws.cell(r, 9, note); ws.cell(r, 10, inc)
         if tag == "Assumed" and k in ("w_dcf", "tp_wA", "tp_wB", "tp_wC"): ws.cell(r, 5).fill = YELLOW
@@ -336,6 +335,7 @@ def build(ov=None, sens=None, fp=None, rec_tp=None, build_id="BUILD"):
     RW_RC = recon(wb, S["Recon"], RW["PL"], VR)
     sensitivity(wb, S["Sens"], VR, sens, fp, rec_tp, build_id)
     readme(wb, S["README"], RW, VR, build_id, sens)
+    relhist(wb, S["RelHist"])
     sources(S["Sources"])
     wb._rw = RW; wb._vr = VR; wb._inrow = INROW
     return wb
@@ -615,7 +615,7 @@ def valuation(wb, S, RW):
     put("gate", "入不敷出判定用（收支關卡：FY2027–FY2031 自由現金流扣股利合計，情境 B）", "=PL!C%d" % R["gate"], fmt="#,##0")
     put("gatev", "收支關卡 A／B／C（FY2027–FY2031 自由現金流扣股利合計，US$M）", "=PL_A!C%d" % R["gate"], "=PL!C%d" % R["gate"], "=PL_C!C%d" % R["gate"], fmt="#,##0")
     put("gtxt", "入不敷出判定", '=IF(B{gate}<0,"不通過","通過")')
-    put("rec", "投資建議", '=IF(AND(B{gate}<0,OR(B{vrate}="買進",B{vrate}="強力買進")),"收支不足",B{vrate})', bold=True)
+    put("rec", "投資建議", '=IF(AND(B{gate}<0,OR(B{vrate}="強力買進",B{vrate}="買進")),"收支不足",B{vrate})', bold=True)
     put("scn", "情境目標價 A／B／C", "=PL_A!C%d" % R["tps"], "=PL!C%d" % R["tps"], "=PL_C!C%d" % R["tps"])
     put("scndcf", "情境 DCF 目標價 A／B／C", "=PL_A!C%d" % R["tpdcf"], "=PL!C%d" % R["tpdcf"], "=PL_C!C%d" % R["tpdcf"])
     put("scncmp", "情境 Comparable 目標價 A／B／C", "=PL_A!C%d" % R["tpcmp"], "=PL!C%d" % R["tpcmp"], "=PL_C!C%d" % R["tpcmp"])
@@ -630,7 +630,7 @@ def valuation(wb, S, RW):
     put("pec", "同業前瞻本益比：Check Point", "=pe_c", fmt="0.00")
     put("pen", "同業前瞻本益比：Cloudflare", "=pe_n", fmt="0.00")
     put("pemed", "同業中位數（4 家；不做迴歸）", "=MEDIAN(B{pef}:B{pen})", fmt="0.00", bold=True)
-    put("adj", "相對倍數調整係數", "=rel_adj", fmt="0.00", note="1.00（未調整：缺同業 NTM 成長率、利益率與同日 EPS）")
+    put("adj", "相對倍數調整係數", "=rel_adj", fmt="0.00", note="歷史相對倍數中位數（RelHist 頁，PANW ÷ 同業中位市銷率，近 5 年 21 點；Derived）")
     put("eps28", "FY2028 Non-GAAP EPS（A／B／C）", "=PL_A!G%d" % R["ngeps"], "=PL!G%d" % R["ngeps"], "=PL_C!G%d" % R["ngeps"])
     put("cmp", "Comparable 目標價（A／B／C）", "=PL_A!C%d" % R["tpcmp"], "=PL!C%d" % R["tpcmp"], "=PL_C!C%d" % R["tpcmp"])
     put("pxpe", "PANW 資料商前瞻本益比 ÷ 同業中位數（展示；同一資料商同日口徑）", "=pe_p/B{pemed}", fmt="0.00", note="分子為 StockAnalysis 2026-11-13 前瞻本益比（Interested-party，資料商口徑）；高案相對倍數係數取此值")
@@ -641,7 +641,8 @@ def valuation(wb, S, RW):
     put("bdist", "加權上檔空間距最近評等邊界（百分點）", "=MIN(ABS(B{up}-0.5),ABS(B{up}-0.25),ABS(B{up}+0.25),ABS(B{up}+0.5))*100", fmt="0.0")
     put("bflag", "距邊界揭露（不到 5 個百分點才顯示）", '=IF(B{bdist}<5,"加權上檔空間距最近評等邊界只差 "&TEXT(B{bdist},"0.0")&" 個百分點","距最近評等邊界 "&TEXT(B{bdist},"0.0")&" 個百分點（未貼近）")')
     put("attr_d", "上檔空間歸因：DCF 貢獻（w × (DCF − 現價) ÷ 現價）", "=w_dcf*(B{tpdcf}-B{px})/B{px}", fmt="+0.0%;-0.0%")
-    put("attr_c", "上檔空間歸因：Comparable 貢獻（(1 − w) × (Comparable − 現價) ÷ 現價）", "=(1-w_dcf)*(B{tpcmp}-B{px})/B{px}", fmt="+0.0%;-0.0%")
+    put("attr_c1", "上檔空間歸因：Comparable 同業中位倍數貢獻（(1 − w) × (Comparable ÷ 調整係數 − 現價) ÷ 現價）", "=(1-w_dcf)*(B{tpcmp}/rel_adj-B{px})/B{px}", fmt="+0.0%;-0.0%")
+    put("attr_c2", "上檔空間歸因：歷史相對倍數調整貢獻（(1 − w) × (Comparable − Comparable ÷ 調整係數) ÷ 現價）", "=(1-w_dcf)*(B{tpcmp}-B{tpcmp}/rel_adj)/B{px}", fmt="+0.0%;-0.0%", note="三段相加＝加權上檔空間")
     # 解析 {key}
     for r in range(3, put.r):
         for col in (2, 3, 4):
@@ -656,6 +657,33 @@ def valuation(wb, S, RW):
     for c in "BCD": ws.column_dimensions[c].width = 14
     return rows
 
+
+
+# ====================================================================== RelHist
+def relhist(wb, ws):
+    ws["A1"] = "RelHist — 歷史相對倍數：PANW 市銷率 ÷ 同業中位市銷率（G3 第 4 條；Derived）"
+    ws["A2"] = "取不到歷史前瞻本益比（共識 EPS 歷史不公開），以 TTM 市銷率代理；同一組同業（Zscaler、Fortinet、Check Point；Cloudflare 的歷史頁禁止擷取，歷史段不含，現行段另列含與不含）、同一口徑。PANW 與 Zscaler 為 1／4／7／10 月底財季末，Fortinet 與 Check Point 取前一個日曆季末。"
+    ws["A3"] = "來源：macrotrends.net 各公司 price-sales 頁（PANW、ZS、FTNT、CHKP），擷取日 2026-11-17；來源誘因：資料商，無；頁面資料止於 2025 年，之後的現行比值用 StockAnalysis 2026-11-13 EV／營收。市銷率與本益比的相對倍數不同（PANW 利益率與同業不同），套用於本益比屬近似。"
+    for j, h in enumerate(["PANW 財季末", "PANW 市銷率", "Zscaler 市銷率", "Fortinet 市銷率", "Check Point 市銷率", "同業中位數", "相對倍數（PANW ÷ 同業中位）"]):
+        ws.cell(5, 1 + j, h).font = BOLD
+    r0 = 6
+    for i, d in enumerate(REL_D):
+        r = r0 + i
+        ws.cell(r, 1, d)
+        for j, k in enumerate(("panw", "zs", "ft", "ck")): ws.cell(r, 2 + j, REL[k][d]).font = BLUE
+        ws.cell(r, 6, f"=MEDIAN(C{r}:E{r})"); c = ws.cell(r, 7, f"=B{r}/F{r}"); c.number_format = "0.00"
+    r1 = r0 + len(REL_D) - 1; r = r1 + 2
+    for lab, f, nm in (("歷史相對倍數：中位數（基準）", f"=MEDIAN(G{r0}:G{r1})", "rel_med"), ("歷史相對倍數：最低", f"=MIN(G{r0}:G{r1})", "rel_lo"), ("歷史相對倍數：最高", f"=MAX(G{r0}:G{r1})", "rel_hi"), ("歷史相對倍數：最近一點（2025-04-30）", f"=G{r1}", None), ("點數", f"=COUNT(G{r0}:G{r1})", None)):
+        ws.cell(r, 1, lab); c = ws.cell(r, 2, f); c.number_format = "0.00"
+        if nm: bname(wb, nm, f"RelHist!$B${r}")
+        r += 1
+    ws.cell(r, 1, "現行（2026-11-13，StockAnalysis EV／營收 TTM）：PANW"); ws.cell(r, 2, 22.88).font = BLUE; r += 1
+    ws.cell(r, 1, "現行：同業中位數（Zscaler 8.88、Fortinet 11.32、Check Point 4.67；3 家）"); ws.cell(r, 2, 8.88).font = BLUE; r += 1
+    ws.cell(r, 1, "現行相對倍數（3 家同業，與歷史段同組）"); c = ws.cell(r, 2, f"=B{r-2}/B{r-1}"); c.number_format = "0.00"; r += 1
+    ws.cell(r, 1, "現行相對倍數（含 Cloudflare 10.10，4 家）"); c = ws.cell(r, 2, f"=B{r-3}/10.1"); c.number_format = "0.00"; r += 1
+    ws.cell(r, 1, "現行相對倍數：前瞻本益比（資料商，Val 頁）"); c = ws.cell(r, 2, "=pe_rel_live"); c.number_format = "0.00"
+    ws.column_dimensions["A"].width = 70
+    for c in "BCDEFG": ws.column_dimensions[c].width = 18
 
 # ====================================================================== RevDCF
 def revdcf(wb, ws, R, V):
@@ -677,12 +705,17 @@ def revdcf(wb, ws, R, V):
     put("d2", "每 1 個百分點核心率對 EV 的影響（終值）", "=IF(tv_alt=1,0,0.01*(PL!K%d+PL!K%d)*(1+g)*(1-tax_dcf)*(1-g/%s)/(wacc-g)/(1+wacc)^5.5)" % (R["rev"], R["eros"], P("ronic")), "#,##0")
     put("m0", "模型核心 Non-GAAP 營業利益率", "=nm0", "0.0%")
     put("m1", "現價隱含核心 Non-GAAP 營業利益率起點（改善路徑不動）", "=B{m0}+(B{evt}-B{evb})/(B{d1}+B{d2})*0.01", "0.0%")
+    put("pvx", "明確期 FCFF 現值（情境 B；US$M）", "=" + P("pvx"), "#,##0")
+    put("tvn", "現價所需終值現值之外的終值（FY2032 年底，US$M）", "=(B{evt}-B{pvx})*(1+wacc)^5.5", "#,##0")
+    put("tvm", "模型終值（FY2032 年底，US$M）", "=" + P("tv"), "#,##0")
+    put("qq", "所需終值 × (WACC − g) ÷ 終端年 NOPAT（＜1 才有 RONIC 解）", "=B{tvn}*(wacc-g)/" + P("nopat33"), "0.00")
+    put("rq", "現價所需 RONIC（其餘不動；模型取 WACC）", '=IF(B{qq}<1,g/(1-B{qq}),"無解")', "0.0%")
     put("m1x", "隱含 Non-GAAP 營業利益率 − 模型", "=B{m1}-B{m0}", "+0.0%;-0.0%")
     put("evs", "現價隱含 EV ÷ FY2027E 營收（情境 B）", "=B{evt}/PL!F%d" % R["rev"], "0.0")
     put("evs2", "模型 EV ÷ FY2027E 營收", "=B{evb}/PL!F%d" % R["rev"], "0.0")
     put("tvsh", "模型永續價值占 EV", "=" + P("tvsh"), "0.0%")
     put("sbc", "對照：FY2032 SBC 占營收（模型）", "=PL!K%d/PL!K%d" % (R["sbcx"], R["rev"]), "0.0%")
-    put("note", "解讀", '="現價隱含核心 Non-GAAP 營業利益率 "&TEXT(B{m1},"0.0%")&"，"&IF(B{m1}>B{m0},"高於","低於")&"模型的 "&TEXT(B{m0},"0.0%")&"（差 "&TEXT(ABS(B{m1x})*100,"0.0")&" 個百分點）；全期持平且 SBC 占營收不變下，現價要求的利益率已接近或超過營收減去全部成本的上限。"', "@")
+    put("note", "解讀", '=IF(B{m1}>1,"無解：核心 Non-GAAP 營業利益率須達 "&TEXT(B{m1},"0%")&"，超過 100%（營收全部變成利益也不夠）。RONIC＝WACC 時永續成長不增加價值（終值＝NOPAT×(1＋g)÷WACC），"&IF(ISNUMBER(B{rq}),"須 RONIC 達 "&TEXT(B{rq},"0.0%")&"（模型 "&TEXT(wacc,"0.0%")&"）或明確期營收與利益遠高於模型。","任何 RONIC 都不夠，須明確期營收與利益遠高於模型。"),"現價隱含核心 Non-GAAP 營業利益率 "&TEXT(B{m1},"0.0%")&"，"&IF(B{m1}>B{m0},"高於","低於")&"模型的 "&TEXT(B{m0},"0.0%")&"（差 "&TEXT(ABS(B{m1x})*100,"0.0")&" 個百分點）。")')
     for r in range(4, put.r):
         c = ws.cell(r, 2)
         if isinstance(c.value, str) and "{" in c.value: c.value = re.sub(r"\{(\w+)\}", lambda m: str(rows[m.group(1)]), c.value)
@@ -769,13 +802,20 @@ def recon(wb, ws, R, V):
     return RC
 
 
+REL = {"panw": {"2020-04-30": 5.81, "2020-07-31": 7.29, "2020-10-31": 5.98, "2021-01-31": 8.92, "2021-04-30": 8.54, "2021-07-31": 9.02, "2021-10-31": 10.81, "2022-01-31": 10.36, "2022-04-30": 10.62, "2022-07-31": 8.92, "2022-10-31": 9.03, "2023-01-31": 8.12, "2023-04-30": 9.19, "2023-07-31": 12.31, "2023-10-31": 11.54, "2024-01-31": 15.68, "2024-04-30": 13.11, "2024-07-31": 14.32, "2024-10-31": 15.44, "2025-01-31": 15.25, "2025-04-30": 14.92}, "zs": {"2020-04-30": 21.84, "2020-07-31": 38.78, "2020-10-31": 36.86, "2021-01-31": 49.22, "2021-04-30": 41.71, "2021-07-31": 47.39, "2021-10-31": 57.31, "2022-01-31": 41.34, "2022-04-30": 29.15, "2022-07-31": 19.98, "2022-10-31": 17.96, "2023-01-31": 13.14, "2023-04-30": 8.75, "2023-07-31": 14.34, "2023-10-31": 13.15, "2024-01-31": 18.26, "2024-04-30": 12.7, "2024-07-31": 12.42, "2024-10-31": 11.9, "2025-01-31": 12.75, "2025-04-30": 13.57}, "ft": {"2020-04-30": 7.8, "2020-07-31": 10.0, "2020-10-31": 8.11, "2021-01-31": 9.62, "2021-04-30": 11.25, "2021-07-31": 13.64, "2021-10-31": 15.62, "2022-01-31": 17.97, "2022-04-30": 15.86, "2022-07-31": 12.24, "2022-10-31": 9.77, "2023-01-31": 8.94, "2023-04-30": 11.27, "2023-07-31": 12.1, "2023-10-31": 9.03, "2024-01-31": 8.74, "2024-04-30": 9.95, "2024-07-31": 8.49, "2024-10-31": 10.52, "2025-01-31": 12.23, "2025-04-30": 12.11}, "ck": {"2020-04-30": 7.53, "2020-07-31": 7.83, "2020-10-31": 8.55, "2021-01-31": 9.19, "2021-04-30": 7.56, "2021-07-31": 7.65, "2021-10-31": 7.26, "2022-01-31": 7.25, "2022-04-30": 8.35, "2022-07-31": 7.11, "2022-10-31": 6.31, "2023-01-31": 6.88, "2023-04-30": 6.91, "2023-07-31": 6.51, "2023-10-31": 6.75, "2024-01-31": 7.53, "2024-04-30": 7.88, "2024-07-31": 7.71, "2024-10-31": 8.79, "2025-01-31": 8.29, "2025-04-30": 9.89}}
+REL_D = sorted(REL["panw"])
+def _med(xs):
+    xs = sorted(xs); n = len(xs)
+    return xs[n // 2] if n % 2 else (xs[n // 2 - 1] + xs[n // 2]) / 2
+REL_R = [REL["panw"][d] / _med([REL["zs"][d], REL["ft"][d], REL["ck"][d]]) for d in REL_D]
+
+
 # ====================================================================== 案例
 def val(x, key=None):
     if x is None: return None
     if isinstance(x, (int, float)): return float(x)
-    if isinstance(x, str) and x == "=H_PEREL":
-        import statistics
-        return 77.10 / statistics.median([33.85, 39.22, 13.70, 174.39])
+    if isinstance(x, str) and x in ("=rel_med", "=rel_lo", "=rel_hi"):
+        return {"=rel_med": _med(REL_R), "=rel_lo": min(REL_R), "=rel_hi": max(REL_R)}[x]
     if isinstance(x, str) and x.startswith("="):
         return float(eval(x[1:], {"MEDIAN": lambda *a: sorted(a)[len(a) // 2] if len(a) % 2 else sum(sorted(a)[len(a)//2-1:len(a)//2+1]) / 2}))
     return None
@@ -859,7 +899,7 @@ def sensitivity(wb, ws, V, sens, fp, rec_tp, build_id):
 def readme(wb, ws, RW, V, build_id, sens):
     R = RW["PL"]; RA = RW["PL_A"]
     ws["A1"] = f"{build_id}｜Palo Alto Networks（PANW）個股模型 v{VER}｜命題（原型 P 按防護範圍計價）＋營收線 → 損益表｜FCFF DCF 與同業本益比各半"
-    ws["A2"] = '="資料截止日 "&TEXT(data_date,"yyyy-mm-dd")&"；成品日 2026-11-16；股價基準日 "&TEXT(px_date,"yyyy-mm-dd")&"（與現價日相差超過 2 個交易日者標逾期：無风險利率 2026-10-27、同業與共識見各列日期）"'
+    ws["A2"] = '="資料截止日 "&TEXT(data_date,"yyyy-mm-dd")&"；成品日 2026-11-17；股價基準日 "&TEXT(px_date,"yyyy-mm-dd")&"（與現價日相差超過 2 個交易日者標逾期：無风險利率 2026-10-27、同業與共識見各列日期）"'
     rows = {}
     def put(key, f):
         r = put.r; rows[key] = r; put.r += 1
@@ -867,22 +907,22 @@ def readme(wb, ws, RW, V, build_id, sens):
     put.r = 4
     v = lambda k, c="B": f"Val!{c}{V[k]}"
     tx = lambda ref, f: f'TEXT({ref},"{f}")'
-    put("hero", '="估值評等"&' + v("vrate") + '&"；投資建議"&' + v("rec") + '&"。加權目標價 "&' + tx(v("tp"), "0") + '&" 美元對現價 "&' + tx(v("px"), "0.00") + '&" 美元（"&TEXT(px_date,"yyyy-mm-dd")&" 收盤）"&' + tx(v("up"), "+0%;-0%") + '&"；DCF "&' + tx(v("tpdcf"), "0") + '&"、同業本益比 "&' + tx(v("tpcmp"), "0") + '&"、賣方共識 "&' + tx("cons_tp", "0") + '&"。條件：核心營業利益率每年小幅改善、股票薪酬占營收逐年下降（歷史規模經濟，Sens 有全期持平案）；現價隱含核心營業利益率 "&' + tx(f"RevDCF!B{{m1}}", "0%") + '&"，模型 "&' + tx("nm0", "0%") + '&"。"')
-    put("rec", '="在核心 non-GAAP 營業利益率與股票薪酬占營收依歷史規模經濟延伸、永續成長 "&TEXT(g,"0%")&"、同業中位前瞻本益比 "&' + tx(v("pemed"), "0.0") + '&" 倍的基準假設下，加權目標價 "&' + tx(v("tp"), "0.00") + '&" 美元、上檔空間 "&' + tx(v("up"), "+0.0%;-0.0%") + '&"，估值評等"&' + v("vrate") + '&"（收支關卡"&' + v("gtxt") + '&"，FY2027–FY2031 自由現金流合計 "&' + tx(v("gate"), "#,##0") + '&" 百萬美元）。失效條件：核心營業利益率擴張或 SBC 占營收下降（Sens 有列），或同業估值上移。"')
+    put("hero", '="估值評等"&' + v("vrate") + '&"；投資建議"&' + v("rec") + '&"。加權目標價 "&' + tx(v("tp"), "0") + '&" 美元對現價 "&' + tx(v("px"), "0.00") + '&" 美元（"&TEXT(px_date,"yyyy-mm-dd")&" 收盤）"&' + tx(v("up"), "+0%;-0%") + '&"；DCF "&' + tx(v("tpdcf"), "0") + '&"、同業本益比 "&' + tx(v("tpcmp"), "0") + '&"、賣方共識 "&' + tx("cons_tp", "0") + '&"。條件：核心營業利益率每年小幅改善、股票薪酬占營收逐年下降（歷史規模經濟，Sens 有全期持平案）；"&IF(RevDCF!B{m1}>1,"反向 DCF 無解（所需營業利益率 "&TEXT(RevDCF!B{m1},"0%")&"，超過 100%）","現價隱含核心營業利益率 "&TEXT(RevDCF!B{m1},"0%")&"，模型 "&TEXT(nm0,"0%"))&"。"')
+    put("rec", '="上檔空間 "&' + tx(v("up"), "+0%;-0%") + '&"：DCF 貢獻 "&' + tx(v("attr_d"), "+0%;-0%") + '&"、同業中位倍數 "&' + tx(v("attr_c1"), "+0%;-0%") + '&"、歷史相對倍數調整 "&' + tx(v("attr_c2"), "+0%;-0%") + '&"（三段相加）。DCF（RONIC＝WACC）假設無持續競爭優勢，Comparable 以同業倍數隱含優勢延續，兩法假設相反。失效條件：費用率與同業估值。"')
     put("t1", '="命題：AI 讓資安的受保護範圍從人與端點擴大到代理（非人類身分），NGS ARR ＝ 受保護單位 × 每單位營收，使用者問的是 AI 帶來的營收增量，能否大於定價侵蝕與推論成本。"')
     put("t2", '="營收線：Product 與 Subscription and support（單一應報導分部下 10-K 固定揭露的兩條線）；命題模組只驅動 Subscription and support 之下的 NGS ARR 相關營收。"')
     put("t3", '="未做先驗（工作單 G 節：先驗跳過）；單位數、每單位年價、模組數公司不揭露，只作比例尺（Assumed）。"')
     put("a1", '="問題一：AI 增量是否大於侵蝕與推論成本？答：情境 B 下 FY2032 AI 淨效果（增量 − 侵蝕 − 推論成本）為 "&TEXT(PL!K' + str(R["ainet"]) + ',"#,##0")&" 百萬美元（情境 A "&TEXT(PL_A!K' + str(R["ainet"]) + ',"#,##0")&"、情境 C "&TEXT(PL_C!K' + str(R["ainet"]) + ',"#,##0")&"）；推論成本增量只占營業成本的 "&TEXT(PL!K' + str(R["infsh"]) + ',"0.00%")&"，量級遠小於增量與侵蝕，因此結果由代理身分數、加購與侵蝕三個 Assumed 決定，不由推論成本決定。"')
-    put("a2", '="問題二：現價要求什麼？答：DCF 單法下，現價隱含核心 non-GAAP 營業利益率 "&TEXT(RevDCF!B{m1},"0.0%")&"，"&IF(RevDCF!B{m1}>nm0,"高於","低於")&"模型的 "&TEXT(nm0,"0.0%")&"；現價隱含 EV 為 FY2027E 營收的 "&TEXT(RevDCF!B{evs},"0.0")&" 倍。這是模型輸出，不是獨立證據。"')
+    put("a2", '="問題二：現價要求什麼？答：DCF 單法下，"&RevDCF!B{note}&"現價隱含 EV 為 FY2027E 營收的 "&TEXT(RevDCF!B{evs},"0.0")&" 倍。這是模型輸出，不是獨立證據。"')
     put("a3", '="問題三：與管理層目標的差距？答：模型情境 B 的 FY2030 NGS ARR 為 "&TEXT(PL!I' + str(R["ARR"]) + ',"0.0")&" 十億美元，管理層目標 "&TEXT(t_arr30,"0")&" 十億美元；差距需要每年額外 "&TEXT(Recon!B{req}*100,"0.0")&" 個百分點的成長才能彌補（管理層目標為 Interested-party，不校準）。"')
-    put("o1", '="1. 評等主要由估值決定：DCF 目標價 "&' + tx(v("tpdcf"), "0") + '&" 美元、同業本益比目標價 "&' + tx(v("tpcmp"), "0") + '&" 美元，兩者"&IF(MAX(' + v("tpdcf") + ',' + v("tpcmp") + ')<' + v("px") + ',"都低於","並非都低於")&"現價 "&' + tx(v("px"), "0.00") + '&" 美元。"')
+    put("o1", '="1. 評等主要由估值決定：加權目標價 "&' + tx(v("tp"), "0.00") + '&" 美元、上檔空間 "&' + tx(v("up"), "+0.0%;-0.0%") + '&"（收支關卡"&' + v("gtxt") + '&"，FY2027–FY2031 自由現金流合計 "&' + tx(v("gate"), "#,##0") + '&" 百萬美元）；DCF "&' + tx(v("tpdcf"), "0") + '&"、同業本益比 "&' + tx(v("tpcmp"), "0") + '&" 美元，兩者"&IF(MAX(' + v("tpdcf") + ',' + v("tpcmp") + ')<' + v("px") + ',"都低於","並非都低於")&"現價 "&' + tx(v("px"), "0.00") + '&" 美元。"')
     put("o2", '="2. DCF 偏低的主因是股票薪酬：FY2032 股票薪酬占營收 "&TEXT(RevDCF!B{sbc},"0.0%")&"，標準 FCFF 以 NOPAT 扣股票薪酬、不加回；Sens 有股票薪酬占營收低案與每年下降案。"')
     put("o3", '="3. 營收成長含併購：FY2026 有機年增 "&TEXT(Recon!B{orgg},"0.0%")&"，合併年增 "&TEXT(h_rev_26/h_rev_25-1,"0.0%")&"；模型 FY2027 營收 "&TEXT(PL!F' + str(R["rev"]) + '/1000,"0.0")&" 十億美元，"&Recon!F{rev}&"。"')
-    put("o4", '="4. 同業中位前瞻本益比 "&' + tx(v("pemed"), "0.0") + '&" 倍（4 家，不做迴歸），PANW 資料商前瞻本益比為其 "&' + tx(v("pxpe"), "0.0") + '&" 倍；調整係數 1.00（缺成長與利益率資料）；高案取 PANW 目前溢價。"')
+    put("o4", '="4. 同業中位前瞻本益比 "&' + tx(v("pemed"), "0.0") + '&" 倍（4 家，不做迴歸）；歷史相對倍數（PANW ÷ 同業中位市銷率，近 5 年 "&TEXT(COUNT(RelHist!G6:G26),"0")&" 點）中位數 "&TEXT(rel_med,"0.00")&"（"&TEXT(rel_lo,"0.00")&"–"&TEXT(rel_hi,"0.00")&"），現行資料商前瞻本益比比值 "&' + tx(v("pxpe"), "0.00") + '&"；Comparable 取中位數。DCF（RONIC＝WACC）假設無持續競爭優勢，Comparable 沿用同業級倍數，隱含優勢延續，兩法對競爭優勢的假設相反，加權值是折衷。"')
     put("o5", '="5. AI 推論成本不是重點：FY2032 推論成本增量只占營業成本 "&TEXT(PL!K' + str(R["infsh"]) + ',"0.00%")&"；全成本對照（模型商自做）占 "&TEXT(PL!K' + str(R["infsh2"]) + ',"0.000%")&"。可證偽指標：Subscription and support 毛利率走勢（FY2026 "&TEXT(0.692,"0.0%")&"）。"')
     put("drv", '="驅動因子：Product＝上年 ×（1＋成長）；Subscription and support＝NGS ARR 相關營收（年平均 NGS ARR × 列入比例）＋其他；NGS ARR＝受保護單位 × 每單位營收（R0 ×（1 − 侵蝕 ＋ 加購 ＋ 代理身分數 × 代理單價比））；三項相加為合併營收。"')
-    put("ver", '="v' + VER + '（2026-11-16）：首版。命題原型 P；DCF 標準 FCFF 至 FY2032；同業本益比 4 家；Sens 整本重算 "&COUNTA(Sens!C12:C60)&" 個鍵；未做先驗。"')
-    put("dx", '="合理性關卡診斷（G3 第 3 條）：DCF 目標價 "&' + tx(v("tpdcf"), "0") + '&" 美元為現價的 "&TEXT(' + v("tpdcf") + '/' + v("px") + ',"0%")&"，評等"&' + v("vrate") + '&"，觸發診斷。結論：經濟判斷，不是建模錯誤。依據：(1) 企業價值為正（情境 B "&TEXT(' + v("d_ev", "C") + ',"#,##0")&" 百萬美元），FY2027 營收與利益率和指引差距都在 10% 內；(2) 費用率已依歷史規模經濟延伸，全期持平只列 Sens 下緣；(3) 費用率改善、折現率下調、終值替代法同時取最樂觀，DCF 目標價仍只有 "&TEXT(IFERROR(INDEX(Sens!G:G,MATCH("best_stack",Sens!C:C,0)),0),"0")&" 美元；(4) 現價隱含核心 non-GAAP 營業利益率 "&TEXT(RevDCF!B{m1},"0%")&"，超過營收上限，現價依賴 FY2032 之後長期高成長與高報酬，終值只給 RONIC＝WACC、永續成長 "&TEXT(g,"0%")&"；(5) 同業本益比法也只到 "&' + tx(v("tpcmp"), "0") + '&" 美元。"')
+    put("ver", '="v' + VER + '（2026-11-17）：v0.1 為 2026-11-16 首版；本版改歷史相對倍數（RelHist）、反向 DCF 無解表述、上檔空間三段歸因。命題原型 P；DCF 標準 FCFF 至 FY2032；同業本益比 4 家；Sens 整本重算 "&COUNTA(Sens!C12:C60)&" 個鍵；未做先驗。"')
+    put("dx", '="合理性關卡診斷（G3 第 3 條）：DCF 目標價 "&' + tx(v("tpdcf"), "0") + '&" 美元為現價的 "&TEXT(' + v("tpdcf") + '/' + v("px") + ',"0%")&"，評等"&' + v("vrate") + '&"，觸發診斷。結論：經濟判斷，不是建模錯誤。依據：(1) 企業價值為正（情境 B "&TEXT(' + v("d_ev", "C") + ',"#,##0")&" 百萬美元），FY2027 營收與利益率和指引差距都在 10% 內；(2) 費用率已依歷史規模經濟延伸，全期持平只列 Sens 下緣；(3) 費用率改善、折現率下調、終值替代法同時取最樂觀，DCF 目標價仍只有 "&TEXT(IFERROR(INDEX(Sens!G:G,MATCH("best_stack",Sens!C:C,0)),0),"0")&" 美元；(4) 反向 DCF："&RevDCF!B{note}&"現價依賴 FY2032 之後長期高成長與高報酬，終值只給 RONIC＝WACC、永續成長 "&TEXT(g,"0%")&"；(5) 同業本益比法也只到 "&' + tx(v("tpcmp"), "0") + '&" 美元。"')
     r = put.r + 1
     ws.cell(r, 1, "不適用與未做項目（工作單 G 節）").font = BOLD; r += 1
     for t in ["不適用：Wattonomics 對照與自用算力（Meta 的自用 AI 讀法 2、在役 MW、Wattonomics 上線時程）——理由：PANW 不自建算力，推論成本以向模型商購買的市場價計（Tokenomics 快照，只讀）。",
@@ -897,7 +937,7 @@ def readme(wb, ws, RW, V, build_id, sens):
               "公司指標與模型參數的差異：NGS ARR 為公司自訂 KPI（含併購、排除硬體與 legacy），模型以其為 FY2026 錨點並標 Interested-party；調整後自由現金流含加回項目，模型 FCF 為營業現金流減資本支出。"]:
         ws.cell(r, 1, t); r += 1
     # 解析 {m1} 等
-    res = {"m1": RW_REV["m1"], "evs": RW_REV["evs"], "sbc": RW_REV["sbc"], "req": RW_RC["req"], "orgg": RW_RC["orgg"], "rev": RW_RC["rev"]}
+    res = {"note": RW_REV["note"], "m1": RW_REV["m1"], "evs": RW_REV["evs"], "sbc": RW_REV["sbc"], "req": RW_RC["req"], "orgg": RW_RC["orgg"], "rev": RW_RC["rev"]}
     for rr in range(1, r + 1):
         c = ws.cell(rr, 1)
         if isinstance(c.value, str) and "{" in c.value: c.value = re.sub(r"\{(\w+)\}", lambda m: str(res[m.group(1)]), c.value)
@@ -910,7 +950,7 @@ def sources(ws):
     r = 3
     for k, v in SRC.items():
         ws.cell(r, 1, k); ws.cell(r, 2, v); r += 1
-    for t in ["WebSearch／WebFetch 擷取日 2026-11-16", "software_ai/unit_economics/data/tk_snapshot.json（Tokenomics v22.0）"]:
+    for t in ["WebSearch／WebFetch 擷取日 2026-11-16 與 2026-11-17（RelHist）", "software_ai/unit_economics/data/tk_snapshot.json（Tokenomics v22.0）"]:
         ws.cell(r, 2, t); r += 1
     ws.column_dimensions["B"].width = 160
 

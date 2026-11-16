@@ -14,7 +14,7 @@ base_raw = os.path.join(WD, "base_raw.xlsx")
 subprocess.run([sys.executable, os.path.join(HERE, "build_naver.py"), base_raw], check=True, env=dict(os.environ, ROWMAP=rm_path), stdout=subprocess.DEVNULL)
 rm = json.load(open(rm_path, encoding="utf-8"))
 VR = rm["VR"]
-NONOP = {"beta", "erp", "kd_sp", "g_tv", "rel_adj", "w_dcf", "pe_inv", "dil", "fx", "ptok_idx", "tok_mult", "route", "nci_v"}
+NONOP = {"beta", "erp", "kd_sp", "g_tv", "rel_adj", "w_dcf", "pe_inv", "dil", "fx", "ptok_idx", "tok_mult", "route", "nci_v", "eqm_inc", "af_m28", "af_m27", "dps_g"}
 
 
 def recalc(raw, tag):
@@ -49,10 +49,13 @@ bx = recalc(base_raw, "base")
 base = read(bx)
 fp = openpyxl.load_workbook(bx, data_only=True)["Sens"].cell(rm["SE_FP"], 4).value
 res = {}
-with cf.ThreadPoolExecutor(JOBS) as ex:
-    for key, r in ex.map(run, [tuple(c) for c in rm["SENS_DEF"]]):
-        res[key] = r
-        print(key, round(r["tp"], 1), flush=True)
+if os.environ.get("SOLVE_ONLY") and os.path.exists(OUT):   # 只重做反解，沿用既有案例
+    res = json.load(open(OUT, encoding="utf-8"))["cases"]
+else:
+    with cf.ThreadPoolExecutor(JOBS) as ex:
+        for key, r in ex.map(run, [tuple(c) for c in rm["SENS_DEF"]]):
+            res[key] = r
+            print(key, round(r["tp"], 1), flush=True)
 # 反解：營運輸入中相對基準絕對值最大者
 best = None
 inrows = {x[0]: x for x in rm["IN_ROWS"]}

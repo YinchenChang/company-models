@@ -139,7 +139,7 @@ drivers = {"id": "drivers", "title": "驅動因子：廣告單位經濟與分部
     {"type": "note", "parts": ["@PL!A2"]},
     {"type": "theme", "title": "AI 暴露廣告營收（長條）× 情境 A／B／C（十億韓元）", "x": f"@PL!F{HR}:L{HR}", "fmt": "n0", "stack": False, "pad": 1.2,
      "bars": [{"name": ["情境 ", s, "：AI 暴露廣告"], "y": f"@PL!F{PR[s]['ads_exp']}:L{PR[s]['ads_exp']}", "color": c} for s, c in (("A", "#7fb8bb"), ("B", "#3b3838"), ("C", "#d9a08f"))],
-     "caption": "AI 暴露廣告＝查詢量 x（1 − 外部分流）x 每查詢營收 x（1 + AI 回答占比 x（R − 1））；FY2026E 為校準年，三情境相同，其後只在 AI 回答占比、R 與外部分流分化。"},
+     "caption": "AI 暴露廣告＝查詢量 x（扣除外部分流）x 每查詢營收 x（AI 回答占比帶來的相對值調整）；FY2026E 為校準年，三情境相同，其後只在 AI 回答占比、R 與外部分流分化。"},
     {"type": "table", "caption": "廣告單位經濟與分部營收推導（情境 B）：子線加總＝分部，分部加總＝合併營收", "head": ["項目"] + [f"@PL!{c}{HR}" for c in C],
      "rowgen": {"sheet": "PL", "rows": f"{PB['q']}-{PB['chk_seg']}", "cols": ["A"] + C, "fmts": [""] + ["n1"] * 10, "row_fmt": rf_}},
     scn_table(["inc", "ero", "inf", "ai_net", "rstar", "ai_oi"]),
