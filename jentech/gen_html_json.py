@@ -254,7 +254,7 @@ def _blk(k):
 
 
 H = {
-    "ver": "v0.2.6",
+    "ver": "v0.2.7",
     "units_chart": lambda pB, hB: {
         "type": "theme", "title": "AI 加速器均熱片、液冷冷板元件、其他散熱、導線架與其他營收（情境 B，十億元）與健策 NVIDIA 均熱片份額（右軸）", "x": f"@PL!D{hB}:G{hB}",
         "fmt": "n1", "fmt_r": "p1", "stack": True, "pad": 1.25, "total": f"@PL!D{pB('營收')}:G{pB('營收')}",

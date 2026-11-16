@@ -157,7 +157,7 @@ inp("c_eps27", "共識 FY2027 EPS（non-GAAP）", "US$", 3.50, 4.67, 6.40, "Inte
 inp("c_eps28", "共識 FY2028 EPS（non-GAAP）", "US$", None, 5.59, None, "Interested-party", YF + "：5.59（17 位）", "第二來源：未找到（tickflow 季度數字前後不一致，不採用）")
 
 sec("G. 價格與市場倍數")
-inp("px", "股價（2026-11-05 收盤）", "US$", None, 27.08, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（SMCI）", "v0.3.4 為 2026-11-04 收盤 29.6（Yahoo Finance）")
+inp("px", "股價（2026-11-13 收盤）", "US$", None, 26.87, None, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（SMCI；markets/invest_map/data/closes_20261020_20261113.csv）", "v0.3.7 為 2026-11-05 收盤 27.08；v0.3.4 為 2026-11-04 收盤 29.6（Yahoo Finance）")
 inp("pe_ttm", "近 12 月 P/E（stockanalysis，10-23）", "x", None, 10.12, None, "Interested-party", SA, "fullratio 9.02（以 non-GAAP EPS）")
 inp("fpe", "前瞻 P/E（stockanalysis，10-23）", "x", None, 7.06, None, "Interested-party", SA, "以 non-GAAP 共識 EPS")
 inp("cons_feps", "共識前瞻 12 月 EPS（10-23 價格 32.94 ÷ 前瞻 P/E；non-GAAP）", "US$", None, "=32.94/fpe", None, "Derived", "stockanalysis 前瞻 P/E 7.06（2026-10-23）", "≈ 共識 FY2027 EPS 4.67")
@@ -485,7 +485,7 @@ V["A2"] = "循環位置：美超微不是設備股，不套設備市場見頂年
 O = 51
 V.cell(O, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, O + 1, ["項目", "A", "B", "C", "說明"])
-V.cell(O + 2, 1, "現價（2026-11-05 收盤）"); V[f"B{O + 2}"] = "=px"; V[f"B{O + 2}"].number_format = "0.00"
+V.cell(O + 2, 1, "現價（2026-11-13 收盤）"); V[f"B{O + 2}"] = "=px"; V[f"B{O + 2}"].number_format = "0.00"
 for k, y, lab in ((3, 2026, "現價 ÷ FY2026 EPS（實績）"), (4, 2027, "現價 ÷ FY2027 EPS（模型）"), (5, 2028, "現價 ÷ FY2028 EPS（模型）"), (6, 2029, "現價 ÷ FY2029 EPS（模型）")):
     V.cell(O + k, 1, lab)
     for j, s in enumerate(SC):
@@ -598,11 +598,11 @@ _E = lambda s_, y: f"PL!{FC[y]}{SUMR[(s_, 'eps')]}"
 V.cell(26, 1, "0.2 Comparable（市場主流同業前瞻 P/E）").font = BOLD
 hdr(V, 27, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"])
 # v0.3.4（第三輪修正）：同業前瞻 P/E 換算到 2026-11-04 收盤（共識 EPS 不變；台股同業＝stockanalysis 統計頁同頁價格 ÷ Forward PE 得前瞻 EPS）
-PEERS = [('Dell Technologies', 'DELL', '=16.22*372.36/456.44*316.91/372.36', '2026-11-05', 'stockanalysis.com forward PE 16.22（2026-10-23，收盤 456.44）× 2026-11-04 收盤 372.36 ÷ 456.44 × 2026-11-05 收盤 316.91 ÷ 2026-11-04 收盤 372.36（Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變）'),
-         ('Hewlett Packard Enterprise', 'HPE', '=12.19*50.09/56.69*44.16/50.09', '2026-11-05', 'stockanalysis.com forward PE 12.19（2026-10-23，收盤 56.69）× 2026-11-04 收盤 50.09 ÷ 56.69 × 2026-11-05 收盤 44.16 ÷ 2026-11-04 收盤 50.09（Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變）'),
-         ('緯穎（Wiwynn）', '6669.TW', '=11.73*1785/1880*1650/1785', '2026-11-05', 'stockanalysis.com 統計頁 Forward PE 11.73（2026-10-21 頁面，價格 1,880；共識前瞻 EPS＝1,880 ÷ 11.73）× 2026-11-04 收盤 1,785 ÷ 1,880 × 2026-11-05 收盤 1,650 ÷ 2026-11-04 收盤 1,785（Yahoo Finance 日線收盤 2026-11-05）'),
-         ('廣達（Quanta）', '2382.TW', '=11.52*302.5/328.5*300/302.5', '2026-11-05', 'stockanalysis.com 統計頁 Forward PE 11.52（2026-10-21 頁面，價格 328.5；共識前瞻 EPS＝328.5 ÷ 11.52）× 2026-11-04 收盤 302.5 ÷ 328.5 × 2026-11-05 收盤 300 ÷ 2026-11-04 收盤 302.5（Yahoo Finance 日線收盤 2026-11-05）'),
-         ('緯創（Wistron）', '3231.TW', '=9.21*176/178*168.5/176', '2026-11-05', 'stockanalysis.com 統計頁 Forward PE 9.21（2026-10-19 頁面，價格 178；共識前瞻 EPS＝178 ÷ 9.21）× 2026-11-04 收盤 176 ÷ 178 × 2026-11-05 收盤 168.5 ÷ 2026-11-04 收盤 176（Yahoo Finance 日線收盤 2026-11-05）')]
+PEERS = [('Dell Technologies', 'DELL', '=16.22*372.36/456.44*344.53/372.36', '2026-11-13', 'stockanalysis.com forward PE 16.22（2026-10-23，收盤 456.44）× 2026-11-04 收盤 372.36 ÷ 456.44 × 2026-11-13 收盤 344.53（v0.3.7 為 2026-11-05 收盤 316.91）÷ 2026-11-04 收盤 372.36（Yahoo Finance 日線收盤 2026-11-13；共識 EPS 不變）'),
+         ('Hewlett Packard Enterprise', 'HPE', '=12.19*50.09/56.69*48.29/50.09', '2026-11-13', 'stockanalysis.com forward PE 12.19（2026-10-23，收盤 56.69）× 2026-11-04 收盤 50.09 ÷ 56.69 × 2026-11-13 收盤 48.29（v0.3.7 為 2026-11-05 收盤 44.16）÷ 2026-11-04 收盤 50.09（Yahoo Finance 日線收盤 2026-11-13；共識 EPS 不變）'),
+         ('緯穎（Wiwynn）', '6669.TW', '=11.73*1785/1880*1635/1785', '2026-11-13', 'stockanalysis.com 統計頁 Forward PE 11.73（2026-10-21 頁面，價格 1,880；共識前瞻 EPS＝1,880 ÷ 11.73）× 2026-11-04 收盤 1,785 ÷ 1,880 × 2026-11-13 收盤 1,635（v0.3.7 為 2026-11-05 收盤 1,650）÷ 2026-11-04 收盤 1,785（Yahoo Finance 日線收盤 2026-11-13）'),
+         ('廣達（Quanta）', '2382.TW', '=11.52*302.5/328.5*276.5/302.5', '2026-11-13', 'stockanalysis.com 統計頁 Forward PE 11.52（2026-10-21 頁面，價格 328.5；共識前瞻 EPS＝328.5 ÷ 11.52）× 2026-11-04 收盤 302.5 ÷ 328.5 × 2026-11-13 收盤 276.5（v0.3.7 為 2026-11-05 收盤 300）÷ 2026-11-04 收盤 302.5（Yahoo Finance 日線收盤 2026-11-13）'),
+         ('緯創（Wistron）', '3231.TW', '=9.21*176/178*171/176', '2026-11-13', 'stockanalysis.com 統計頁 Forward PE 9.21（2026-10-19 頁面，價格 178；共識前瞻 EPS＝178 ÷ 9.21）× 2026-11-04 收盤 176 ÷ 178 × 2026-11-13 收盤 171（v0.3.7 為 2026-11-05 收盤 168.5）÷ 2026-11-04 收盤 176（Yahoo Finance 日線收盤 2026-11-13）')]
 for i, (nm, tk, pe, dt, src) in enumerate(PEERS, 28):
     V.cell(i, 1, nm); V.cell(i, 2, tk); c = V.cell(i, 3, pe); c.font = BLUE; c.number_format = "0.0"
     V.cell(i, 4, dt); V.cell(i, 5, src); V.cell(i, 6, "Interested-party")
@@ -616,7 +616,7 @@ hdr(V, 38, ["項目", "數值", "", "", "說明"])
 tset(39, "tpw", "目標價（DCF 與 Comparable 加權）", [f"=tp_w_dcf*B{T['dcftp']}+(1-tp_w_dcf)*B35", None, None], "0.00", "tp_w_dcf × DCF＋（1 − tp_w_dcf）× Comparable；tp_w_dcf 見 In 頁（0.5）")
 tset(40, "comp2", "Comparable 目標價（市場主流同業法）", ["=B35", None, None], "0.00")
 tset(41, "cons", "市場共識目標價", ["=cons_tp", None, None], "0.00", "stockanalysis（S&P Global）：18 位分析師平均 43.27（中位數 45、最低 15、最高 60），2026-10-22；tickflow 25 位 41.44")
-tset(42, "upw", "上檔空間：加權目標價", ["=B39/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-05 收盤）")
+tset(42, "upw", "上檔空間：加權目標價", ["=B39/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-13 收盤）")
 tset(43, "upc", "上檔空間：Comparable 目標價", ["=B40/px-1", None, None], "0.0%")
 tset(44, "geps", "與市場共識目標價的差距：EPS 因素", ["=B34/cons_feps-1", None, None], "0.0%", "本模型前瞻 EPS（GAAP）÷ 共識前瞻 EPS（non-GAAP，＝10-23 價格 32.94 ÷ 前瞻 P/E）− 1；期間約晚一年、口徑不同（GAAP 較低）")
 tset(45, "gmul", "與市場共識目標價的差距：倍數因素", ["=(cons_tp/cons_feps)/B33-1", None, None], "0.0%")
@@ -730,7 +730,7 @@ srcs = [("公司：FY2026 第四季與全年新聞稿（2026-08-11；營收、�
         ("公司（摘要）：MarketBeat 2026-08-11 法說重點", MB0811),
         ("公司：2Q FY26 新聞稿（8-K；1Q、2Q FY26 數字）", PRQ2),
         ("公司：1Q FY27 初步營運更新（2026-10-20；營收 185～195 億、毛利率 12.0–12.5%、11-03 財報）", PRQ1U),
-        ("價格：Yahoo Finance 日線收盤 2026-11-05（現價、同業報價）", "https://finance.yahoo.com/quote/SMCI/history/"),
+        ("價格：Yahoo Finance 日線收盤 2026-11-13（現價、同業報價；工作單 px1113）", "https://finance.yahoo.com/quote/SMCI/history/"),
         ("公司：2026-06-11 普通股與強制可轉換特別股定價（股利率 7%、轉換率、2029-06-01 轉換）", FIN0611),
         ("公司：2026-08 獨立調查完成公告（出口管制）", INVEST),
         ("媒體：Stocktwits 2026-08-20（調查結論、2026-03 起訴、共同創辦人辭任董事）", ST0820),
@@ -1023,7 +1023,7 @@ for _ws in wb:   # 公式中的現價日期標籤同步（含 tools/relative_mul
         for _c in _row:
             if isinstance(_c.value, str) and _c.value.startswith("="):
                 for _o in ['"（2026-10-23）"']:
-                    if _o in _c.value: _c.value = _c.value.replace(_o, '"（2026-11-05 收盤）"')
+                    if _o in _c.value: _c.value = _c.value.replace(_o, '"（2026-11-13 收盤）"')
 RD["A1"] = RD["A1"].value + "；v0.3.4（2026-11-06）第三輪修正：現價與同業報價統一 2026-11-04 收盤（Yahoo Finance）"
 RD["A1"] = RD["A1"].value + "；v0.3.5（2026-11-06）：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"   # 工作單 px1105
 RD["A1"] = RD["A1"].value + "；v0.3.6（2026-11-10）：稀釋股數口徑修正——EPS 改兩類法（加特別股參與股數、可轉債利息加回）、評價日股數加 RSU 與選擇權庫藏股法（1Q FY27 10-Q）"
@@ -1069,6 +1069,9 @@ if _CR:
 # v0.3.7（2026-11-15）：版面規格 v1.3（標準損益表、反向 DCF、四個目標價、敏感度主圖）＋三層協調 C0（實績）對帳（smci/v037_post.py；只新增，既有數值不變）
 import v037_post as POST  # noqa: E402
 print(POST.apply(wb, SIL, _HERE, _CR))
+if _CR:   # v0.3.8（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）；只改版本文字
+    import px1113_post as PX  # noqa: E402
+    print(PX.apply(wb, POST))
 wb.save(sys.argv[1])
 if os.environ.get("R4_NOOP"): pass
 if os.environ.get("SMCI_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數

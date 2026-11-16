@@ -140,7 +140,7 @@ inp("kgi_sh", *SIL.row9("pwr_kgi_0701")[1:])   # Siliconomics M17（CF11 待 And
 inp("pe_fair_andy", "Andy 先驗：合理 P/E", "x", None, 25, None, "Assumed", "先驗_Andy_台達電_20261024 D10b（Drive；不在本 repo）", "只作對照")
 
 sec("H. 價格與估值")
-inp("px", "股價（2026-11-05 收盤）", "NT$", None, 1130, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（px1105：全部個股統一價格日）", "v0.5.3 為 2026-11-04 收盤 1,220（Yahoo Finance 日線收盤）；v0.5.2 為 2026-10-30 收盤 1,335（Taiwan News、cnyes）")
+inp("px", "股價（2026-11-13 收盤）", "NT$", None, 1240, None, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（markets/invest_map/data/closes_20261020_20261113.csv）", "v0.5.7 為 2026-11-05 收盤 1,130；v0.5.4 起同；v0.5.3 為 2026-11-04 收盤 1,220（Yahoo Finance 日線收盤）；v0.5.2 為 2026-10-30 收盤 1,335（Taiwan News、cnyes）")
 inp("pe_ttm", "近 12 月 P/E（10-22）", "x", None, 49.65, None, "Interested-party", "Goodinfo（10-22）", "HiStock 49.65")
 
 sec("I. 目標價情境權重（Val 第 0 節用；Andy 可改）")
@@ -160,14 +160,14 @@ V2 = {'name': '台達電',
  'roe': ('=AVERAGE(0.1661,0.1547,0.2246)', 'stockanalysis 比率頁（Return on Equity）：FY2023 16.61%、FY2024 15.47%、FY2025 22.46%', '單一來源；近 12 月 29.97%（同站）'),
  'cons_tp': (2502.36, 'stockanalysis 個股與 forecast 頁（S&P Global）22 位分析師平均 2,502（中位數 2,500），頁面時間 2026-10-22', '第二來源：未找到'),
  'cons_feps': ('=1560/30.51', 'stockanalysis 個股頁 2026-10-22：價格 1,560 ÷ Forward PE 30.51'),
- 'peers': [('Vertiv', 'VRT', '=176.73/(207.93/26.21)', '2026-11-05'), ('Eaton', 'ETN', '=327.02/(376.52/24.81)', '2026-11-05'), ('Schneider Electric', 'SU.PA', '=227.85/(241/19.46)', '2026-11-05'), ('光寶科（Lite-On）', '2301.TW', '=211.5/(255.5/19.7)', '2026-11-05')],
+ 'peers': [('Vertiv', 'VRT', '=202.07/(207.93/26.21)', '2026-11-13'), ('Eaton', 'ETN', '=352.97/(376.52/24.81)', '2026-11-13'), ('Schneider Electric', 'SU.PA', '=243.45/(241/19.46)', '2026-11-13'), ('光寶科（Lite-On）', '2301.TW', '=231.5/(255.5/19.7)', '2026-11-13')],
  'peer_src': {'VRT': 'stockanalysis 統計頁 2026-10-27：價格 207.93 ÷ Forward PE 26.21', 'ETN': 'stockanalysis 統計頁 2026-10-27：價格 376.52 ÷ Forward PE 24.81',
               'SU.PA': 'stockanalysis 統計頁 2026-10-27：價格 241.00 歐元 ÷ Forward PE 19.46', '2301.TW': 'stockanalysis 個股頁 2026-10-22：價格 255.5 ÷ Forward PE 19.70（光寶科模型 cons_feps 同一筆）'},
  'peer_note': 'AI 資料中心電源與電氣同業：Vertiv、Eaton、Schneider Electric、光寶科（券商常用比較組）。麥格米特（002851.SZ）為 A 股，依規則不列。非 A 股公司的同業名單不放中國 A 股（A 股有結構性溢價；Andy 2026-10-25 11:53）',
  'fwd_w': (0.16666666666666666, 0.8333333333333334),
  'fwd_note': '約 2027-10 時的未來 12 月 EPS ≈ 2／12 × FY2027＋10／12 × FY2028（會計年度＝日曆年）',
  'pe10': None,
- 'px_note': '現價＝In 頁 px（2026-11-05 收盤 1,130；Yahoo Finance 日線收盤）',
+ 'px_note': '現價＝In 頁 px（2026-11-13 收盤 1,240；Yahoo Finance 日線收盤）',
  'method': 'DCF（v0.5 標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加（股權報酬視為費用），以 WACC 折現到 2026 年底（期中慣例），終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, 台灣 10 年期公債殖利率)、RONIC＝WACC；ke＝rf＋β ×（ERP 5%＋台灣國家風險溢酬），β 為自算產業 β（TW 散熱／電源同業中位數，Blume 調整）依台達電 D／E 重新加槓桿；EV 加淨現金與長期投資、扣非控制權益 ÷ 股數，以 ke 推到 12 個月後並扣除期間股利（DCF 頁；tools/fcff_dcf.py）。FY2027–29 驅動因子、FY2030–32 收斂法。Comparable：Vertiv、Eaton、Schneider、光寶科前瞻 P/E '
            '中位數；歐美電氣大廠業務組合較成熟、成長較低，台達電歷來倍數較高，偏低估。情境對應：A＝樂觀、B＝基準、C＝保守（原顆數情境）。',
  'readme_val': '估值：Val 第 0 節目標價＝0.5 × DCF 目標價（v0.5 起為標準版：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，FY2027–FY2032 明確期＋終值，以 WACC 折現；ke＝rf＋β ×（ERP＋國家風險溢酬）、g＝MIN(3%, rf)、RONIC＝WACC，三情境權重 0.3／0.5／0.2，以 ke 推到 12 個月後並扣期間股利；明細見 DCF 頁）＋0.5 × Comparable 目標價（Vertiv、Eaton、Schneider Electric、光寶科 前瞻 '
@@ -442,7 +442,7 @@ V["A1"] = "Val — P/E 估值（新台幣）。結論用「現價 ÷ FY2027、FY
 V["A2"] = "循環位置：台達電不是設備股，不套設備市場見頂年；以本模型營收最高的會計年度為見頂年（比照 NVIDIA、Arista；FY(t)＝CY(t)）。營收到 FY2029 仍在增加時，見頂年未知，判為中段"
 V.cell(4, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, 5, ["項目", "A", "B", "C", "說明"])
-V.cell(6, 1, "現價（2026-11-05 收盤）"); V["B6"] = "=px"; V["B6"].number_format = "#,##0"
+V.cell(6, 1, "現價（2026-11-13 收盤）"); V["B6"] = "=px"; V["B6"].number_format = "#,##0"
 V.cell(7, 1, "現價 ÷ FY2026 EPS（錨點）"); V.cell(8, 1, "現價 ÷ FY2027 EPS（模型）"); V.cell(9, 1, "現價 ÷ FY2028 EPS（模型）"); V.cell(10, 1, "現價 ÷ FY2029 EPS（模型）")
 for j, s in enumerate(SC):
     c = "BCD"[j]
@@ -761,7 +761,7 @@ hdr(V, r_, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來
 P1 = r_
 for nm, tk, pe, dt in V2["peers"]:
     V.cell(r_, 1, nm); V.cell(r_, 2, tk); cc = V.cell(r_, 3, pe); cc.font = BLUE; cc.number_format = "0.0"
-    V.cell(r_, 4, dt); V.cell(r_, 5, f"第三輪修正：P/E＝Yahoo Finance 日線收盤 2026-11-05 ÷ 資料商前瞻 EPS（{V2['peer_src'][tk]}）"); V.cell(r_, 6, "Interested-party（賣方共識）"); r_ += 1
+    V.cell(r_, 4, dt); V.cell(r_, 5, f"第三輪修正；px1113：P/E＝Yahoo Finance 日線收盤 2026-11-13（v0.5.7 為 11-05 收盤）÷ 資料商前瞻 EPS（{V2['peer_src'][tk]}）"); V.cell(r_, 6, "Interested-party（賣方共識）"); r_ += 1
 P2 = r_ - 1; T["p1"], T["p2"] = P1, P2
 tset(r_, "pmed", "同業前瞻 P/E 中位數", [f"=MEDIAN(C{P1}:C{P2})", None, None], "0.0", V2["peer_note"]); r_ += 1
 w1, w2 = V2["fwd_w"]
@@ -1044,7 +1044,7 @@ for _row_ in DCFW.iter_rows():   # 第三輪修正（第 12 項）：WACC 重算
         if isinstance(_c_.value, str) and _c_.value.startswith("=(px*sh_v*(rf+beta*(erp+crp))"):
             _c_.value = _c_.value.replace("px*sh_v", "(px*sh_v+mi_v)")
             DCFW.cell(_c_.row, 1).value = "檢查：WACC 由 In 頁輸入重算（E＝母公司市值＋非控制權益）− Val 的 WACC（應為 0）"
-_r3_text(wb, "4Q26 季度 FCFF：Q 頁 E 欄 4Q26 營業利益 ×（1 − tax_w）＋營收 ×（fc_da − fc_cx）− fc_wc × FY2026 營收增量 × stub_frac", px_old_dates=("2026-10-30", "2026-11-04"), px_new_date="2026-11-05")
+_r3_text(wb, "4Q26 季度 FCFF：Q 頁 E 欄 4Q26 營業利益 ×（1 − tax_w）＋營收 ×（fc_da − fc_cx）− fc_wc × FY2026 營收增量 × stub_frac", px_old_dates=("2026-10-30", "2026-11-04", "2026-11-05"), px_new_date="2026-11-13")
 RD["A1"] = RD["A1"].value + "；v0.5.4：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"   # px1105（2026-11-06）
 # 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 delta/coord_alt.json）
 sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
@@ -1059,6 +1059,9 @@ if _CR:
     # v0.5.7（2026-11-14）：C0 實績對帳（規則 v1.4.2）：Coord 頁第 4 節；同源四項改標讀取層級；只動 Coord 頁與版本文字
     import v057_post as P57
     print(P57.apply(wb, P56))
+    # v0.5.8（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）；只改版本文字
+    import px1113_post as PX
+    print(PX.apply(wb, P56))
 wb.save(sys.argv[1])
 if os.environ.get("DELTA_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
