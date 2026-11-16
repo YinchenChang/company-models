@@ -107,6 +107,27 @@ def own_fpe(wb, P, log, done):
     log.append(f"本公司前瞻 P/E {v} → {IN.cell(r, 5).value}")
 
 
+def refs(wb, P, log, done):
+    """Val 「並列參考」列（不進目標價的他國同業倍數，文字內 N.Nx）：P["refs"]＝[(代號, 報價日 d0 的倍數)]，依文字內出現順序；× 11-13 收盤 ÷ d0 收盤"""
+    V = wb["Val"]
+    r = next(x for x in range(1, V.max_row + 1) if str(V.cell(x, 1).value or "").startswith("並列參考"))
+    old = V.cell(r, 1).value
+    head = old.split(f"（{P['d0']}", 1)[0]
+    nums = list(re.finditer(r"\d+\.\d+x", head))
+    assert len(nums) == len(P["refs"]), (head, P["refs"])
+    new_head, last, vs = "", 0, []
+    for m, (t, v0) in zip(nums, P["refs"]):
+        p0, p1 = close(t, P["d0"]), close(t, NEW)
+        v1 = v0 * p1 / p0
+        vs.append((t, v0, v1))
+        new_head += head[last:m.start()] + f"{v1:.1f}x"; last = m.end()
+    new_head += head[last:]
+    V.cell(r, 1).value = (new_head + f"（{NEW}；" + "、".join(f"{t} {v0:g}x → {v1:.1f}x" for t, v0, v1 in vs)
+                          + f"（{P['d0']} 口徑 × {NEW} 收盤 ÷ {P['d0']} 收盤；Yahoo Finance 日線收盤；{SRCTAG}）；前一版：{old}")
+    done.add(("Val", V.cell(r, 1).coordinate))
+    log.append("並列參考：" + "；".join(f"{t} {v0:g}x → {v1:.1f}x" for t, v0, v1 in vs))
+
+
 def dates(wb, P, log, done):
     """非歷史說明格內的現價日期字樣 2026-11-05 收盤 → 2026-11-13 收盤（rf 等不在範圍的日期不動）"""
     d0 = P["d0"]; s0, s1 = d0[5:], NEW[5:]
@@ -134,7 +155,7 @@ def ver_row(wb, P, log, done):
         return   # 敏感度快照或 Coord 另一側建置不含 v1.3 後處理
     row = r13[-1] + 9
     v = RD.cell(row, 1).value
-    assert isinstance(v, str) and v.startswith(P["prev"]), (row, str(v)[:60])
+    assert isinstance(v, str) and v.startswith(P.get("vprev", P["prev"])), (row, str(v)[:60])
     RD.cell(RD.max_row + 1, 1, v)
     RD.cell(row, 1).value = (f"{P['ver']}（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。只換價格：現價、Comparable 同業前瞻 P/E（現行倍數 × 11-13 收盤 ÷ 原報價日收盤）、"
                              f"本公司前瞻 P/E 隨之換算；rf、共識 EPS、預測用匯率、模型假設、公式與架構不變，加權目標價、上檔空間與評等隨公式重算（前後數字見 README 本版要點與成品）。承 {P['prev']}。")
@@ -165,6 +186,8 @@ def apply(wb, P):
         peers(wb, P, log, done)
     if P.get("fpe"):
         own_fpe(wb, P, log, done)
+    if P.get("refs"):
+        refs(wb, P, log, done)
     if P.get("vrow", True):
         ver_row(wb, P, log, done)
     for f in P.get("extra", ()):

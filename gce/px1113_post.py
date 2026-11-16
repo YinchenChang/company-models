@@ -155,7 +155,7 @@ def ver_row(wb, P, log, done):
         return   # 敏感度快照或 Coord 另一側建置不含 v1.3 後處理
     row = r13[-1] + 9
     v = RD.cell(row, 1).value
-    assert isinstance(v, str) and v.startswith(P["prev"]), (row, str(v)[:60])
+    assert isinstance(v, str) and v.startswith(P.get("vprev", P["prev"])), (row, str(v)[:60])
     RD.cell(RD.max_row + 1, 1, v)
     RD.cell(row, 1).value = (f"{P['ver']}（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。只換價格：現價、Comparable 同業前瞻 P/E（現行倍數 × 11-13 收盤 ÷ 原報價日收盤）、"
                              f"本公司前瞻 P/E 隨之換算；rf、共識 EPS、預測用匯率、模型假設、公式與架構不變，加權目標價、上檔空間與評等隨公式重算（前後數字見 README 本版要點與成品）。承 {P['prev']}。")
