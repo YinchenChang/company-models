@@ -171,7 +171,7 @@ inp("tf_pen26", *SIL.row9("lc_tf_26")[1:])   # Siliconomics M19
 inp("tf_pen27", *SIL.row9("lc_tf_27")[1:])   # Siliconomics M19
 
 sec("H. 價格與估值")
-inp("px", "股價（2026-11-05 收盤）", "NT$", None, 2565, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（px1105：全部個股統一價格日）", "v0.3.3 為 2026-11-04 收盤 2,820（Yahoo Finance 日線收盤）；v0.3.2 為 2026-10-22 收盤 3,145（HiStock、鉅亨）")
+inp("px", "股價（2026-11-13 收盤）", "NT$", None, 3040, None, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（markets/invest_map/data/closes_20261020_20261113.csv）", "v0.3.6 為 2026-11-05 收盤 2,565；v0.3.3 為 2026-11-04 收盤 2,820（Yahoo Finance 日線收盤）；v0.3.2 為 2026-10-22 收盤 3,145（HiStock、鉅亨）")
 inp("pe_ttm", "近 12 月 P/E（10-22）", "x", None, 41.92, None, "Interested-party", "HiStock（10-22）", "財報狗 41.98")
 
 sec("I. 目標價情境權重（Val 第 0 節用；Andy 可改）")
@@ -191,14 +191,14 @@ V2 = {'name': '奇鋐',
  'roe': ('=AVERAGE(0.2688,0.3099,0.4986)', 'stockanalysis 比率頁（Return on Equity）：FY2023 26.88%、FY2024 30.99%、FY2025 49.86%', '單一來源；近 12 月 66.78%（同站，2026-10-12）'),
  'cons_tp': (4130, 'stockanalysis forecast 頁（S&P Global）17 位分析師平均 4,130（中位數 4,250），頁面時間 2026-10-01', '個股頁（2026-10-05）4,200.35；第二來源：未找到'),
  'cons_feps': ('=3585/27.04', 'stockanalysis 個股頁 2026-10-05：價格 3,585 ÷ Forward PE 27.04'),
- 'peers': [('雙鴻（Auras）', '3324.TWO', '=1170/(1710/24.96)', '2026-11-05'), ('健策（Jentech）', '3653.TW', '=5805/(6920/69.92)', '2026-11-05'), ('Vertiv', 'VRT', '=176.73/(207.93/26.21)', '2026-11-05'), ('台達電（Delta）', '2308.TW', '=1130/(1560/30.51)', '2026-11-05')],
+ 'peers': [('雙鴻（Auras）', '3324.TWO', '=1140/(1710/24.96)', '2026-11-13'), ('健策（Jentech）', '3653.TW', '=5345/(6920/69.92)', '2026-11-13'), ('Vertiv', 'VRT', '=202.07/(207.93/26.21)', '2026-11-13'), ('台達電（Delta）', '2308.TW', '=1240/(1560/30.51)', '2026-11-13')],
  'peer_src': {'3324.TWO': 'stockanalysis 統計頁 2026-09-24：價格 1,710 ÷ Forward PE 24.96（可取得的最新頁面，較舊）', '3653.TW': 'stockanalysis 統計頁 2026-09-24：價格 6,920 ÷ Forward PE 69.92（可取得的最新頁面，較舊）',
               'VRT': 'stockanalysis 統計頁 2026-10-27：價格 207.93 ÷ Forward PE 26.21', '2308.TW': 'stockanalysis 個股頁 2026-10-22：價格 1,560 ÷ Forward PE 30.51（台達電模型 cons_feps 同一筆）'},
  'peer_note': '散熱與液冷同業：雙鴻、健策、Vertiv、台達電（券商常用比較組）。英維克（002837.SZ）為 A 股，依規則不列。非 A 股公司的同業名單不放中國 A 股（A 股有結構性溢價；Andy 2026-10-25 11:53）',
  'fwd_w': (0.16666666666666666, 0.8333333333333334),
  'fwd_note': '約 2027-10 時的未來 12 月 EPS ≈ 2／12 × FY2027＋10／12 × FY2028（會計年度＝日曆年）',
  'pe10': None,
- 'px_note': '現價＝In 頁 px（2026-11-05 收盤 2,565；Yahoo Finance 日線收盤）',
+ 'px_note': '現價＝In 頁 px（2026-11-13 收盤 3,040；Yahoo Finance 日線收盤）',
  'method': 'DCF（v0.3 標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加（股權報酬視為費用），以 WACC 折現到 2026 年底（期中慣例），終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g），'
            'g＝MIN(3%, 台灣 10 年期公債殖利率)、RONIC＝WACC；ke＝rf＋β ×（ERP 5%＋台灣國家風險溢酬），β 為自算產業 β（TW 散熱／電源同業中位數，Blume 調整）依公司 D／E 重新加槓桿；'
            'EV 加淨現金與長期投資、扣非控制權益（富世達市值 × 83.13%）÷ 股數，以 ke 推到 12 個月後並扣除期間股利（DCF 頁；tools/fcff_dcf.py）。FY2027–29 驅動因子、FY2030–32 收斂法。Comparable：雙鴻、健策、Vertiv、台達電前瞻 P/E 中位數；同業倍數分散（約 19–65x）；各同業 P/E＝2026-11-05 收盤 ÷ 資料商前瞻 EPS（雙鴻、健策的前瞻 EPS 取自 '
@@ -499,7 +499,7 @@ V["A1"] = "Val — P/E 估值（新台幣）。結論用「現價 ÷ FY2027、FY
 V["A2"] = "循環位置：奇鋐不是設備股，不套設備市場見頂年；以本模型營收最高的會計年度為見頂年（比照台達電、NVIDIA、Arista；FY(t)＝CY(t)）。營收到 FY2029 仍在增加時，見頂年未知，判為中段"
 V.cell(4, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, 5, ["項目", "A", "B", "C", "說明"])
-V.cell(6, 1, "現價（2026-11-05 收盤）"); V["B6"] = "=px"; V["B6"].number_format = "#,##0"
+V.cell(6, 1, "現價（2026-11-13 收盤）"); V["B6"] = "=px"; V["B6"].number_format = "#,##0"
 V.cell(7, 1, "現價 ÷ FY2026 EPS（錨點）"); V.cell(8, 1, "現價 ÷ FY2027 EPS（模型）"); V.cell(9, 1, "現價 ÷ FY2028 EPS（模型）"); V.cell(10, 1, "現價 ÷ FY2029 EPS（模型）")
 for j, s in enumerate(SC):
     c = "BCD"[j]
@@ -829,7 +829,7 @@ hdr(V, r_, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來
 P1 = r_
 for nm, tk, pe, dt in V2["peers"]:
     V.cell(r_, 1, nm); V.cell(r_, 2, tk); cc = V.cell(r_, 3, pe); cc.font = BLUE; cc.number_format = "0.0"
-    V.cell(r_, 4, dt); V.cell(r_, 5, f"第三輪修正：P/E＝Yahoo Finance 日線收盤 2026-11-05 ÷ 資料商前瞻 EPS（{V2['peer_src'][tk]}）"); V.cell(r_, 6, "Interested-party（賣方共識）"); r_ += 1
+    V.cell(r_, 4, dt); V.cell(r_, 5, f"第三輪修正；px1113：P/E＝Yahoo Finance 日線收盤 2026-11-13（v0.3.6 為 11-05 收盤）÷ 資料商前瞻 EPS（{V2['peer_src'][tk]}）"); V.cell(r_, 6, "Interested-party（賣方共識）"); r_ += 1
 P2 = r_ - 1; T["p1"], T["p2"] = P1, P2
 tset(r_, "pmed", "同業前瞻 P/E 中位數", [f"=MEDIAN(C{P1}:C{P2})", None, None], "0.0", V2["peer_note"]); r_ += 1
 w1, w2 = V2["fwd_w"]
@@ -1092,7 +1092,7 @@ for _row_ in DCFW.iter_rows():   # 第三輪修正（第 12 項）：WACC 重算
         if isinstance(_c_.value, str) and _c_.value.startswith("=(px*sh_v*(rf+beta*(erp+crp))"):
             _c_.value = _c_.value.replace("px*sh_v", "(px*sh_v+mi_v)")
             DCFW.cell(_c_.row, 1).value = "檢查：WACC 由 In 頁輸入重算（E＝母公司市值＋非控制權益）− Val 的 WACC（應為 0）"
-_r3_text(wb, "4Q26 季度 FCFF（v0.3.6 起資產負債表日 2026-09-30）：Q 頁 E 欄營業利益 ×（1 − tax_w）＋營收 ×（fc_da − fc_cx）− fc_wc × FY2026 營收增量 × stub_frac", px_old_dates=("2026-10-22", "2026-11-04"), px_new_date="2026-11-05")
+_r3_text(wb, "4Q26 季度 FCFF（v0.3.6 起資產負債表日 2026-09-30）：Q 頁 E 欄營業利益 ×（1 − tax_w）＋營收 ×（fc_da − fc_cx）− fc_wc × FY2026 營收增量 × stub_frac", px_old_dates=("2026-10-22", "2026-11-04", "2026-11-05"), px_new_date="2026-11-13")
 RD["A1"] = RD["A1"].value + "；v0.3.4：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"   # px1105（2026-11-06）
 # v0.3.5（2026-11-15）：三層協調 C4（規則 v1.4.2；tools/coord/）兩讀數目標價（Coord 頁；快照 avc/coord_alt.json）＋個股 HTML 版面規格 v1.3＋C0（實績）（avc/v13_post.py）
 sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
@@ -1102,6 +1102,9 @@ if _CR:
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import v13_post as P13
     print(P13.apply(wb, SIL, _CR))
+    # v0.3.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）；只改版本文字
+    import px1113_post as PX
+    print(PX.apply(wb, P13))
 wb.save(sys.argv[1])
 if os.environ.get("AVC_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
