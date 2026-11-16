@@ -55,7 +55,7 @@ asof: 2026-10-25
 | Kioxia | NAND（合資夥伴） | 14.0% | [本專案：20261031_NAND市場模型_v0.3.xlsx Ann!E24] |
 | 長江存儲等 | NAND | 12.7%（其他合計） | [本專案：20261031_NAND市場模型_v0.3.xlsx Ann!E26] |
 
-- SanDisk 與 Kioxia 共用晶圓廠，成本年降假設相同（14%／12%／10%）[本專案：20261031_SanDisk個股模型_v0.4.xlsx README!A16]。
+- SanDisk 與 Kioxia 共用晶圓廠，成本年降假設相同（14%／12%／10%）[本專案：20261116_SanDisk個股模型_v0.5.6.xlsx README!A16]。
 - SK 海力士＋Solidigm 晶圓投片約 −10%，但 QLC 企業級 SSD 出貨季增約 40% [本專案：20261031_NAND市場模型_v0.3.xlsx Sup!D5]。
 
 ## 主要客戶
@@ -88,14 +88,14 @@ asof: 2026-10-25
 - 2026-07-02｜與 Kioxia 在北上 Fab2 開始量產第 10 代 3D 快閃記憶體 [外部新聞：SanDisk 新聞稿]
 
 ## 需要觀察的事項
-- FQ2 FY27 實績 vs 指引｜FQ1 FY27 已滾入實績，模型 FQ1 營收 11.03B 等於實績（恆等式）；模型 FQ2 FY27 營收 12.45B，在公司指引 12.2–12.6B 內 [本專案：20261031_SanDisk個股模型_v0.4.xlsx Recon!C6、Recon!J6、README!A5]｜FQ2 FY27 財報
-- 2027 起 NAND 合約價｜季價 ±20% 使 FY2028 EPS（A）−28%／+30%；成本年降 ±4pt 只有約 ±1% [本專案：20261031_SanDisk個股模型_v0.4.xlsx README!A6]｜TrendForce 每季初合約價
-- 情境分歧時點｜B、C 到 FY2028 才分歧；情境 C 的 FY2029 毛利率降到 49% [本專案：20261031_SanDisk個股模型_v0.4.xlsx README!A5、README!A6]｜同上
+- FQ2 FY27 實績 vs 指引｜FQ1 FY27 已滾入實績，模型 FQ1 營收 11.03B 等於實績（恆等式）；模型 FQ2 FY27 營收 12.45B，在公司指引 12.2–12.6B 內 [本專案：20261116_SanDisk個股模型_v0.5.6.xlsx Recon!C6、Recon!J6、README!A5]｜FQ2 FY27 財報
+- 2027 起 NAND 合約價｜季價 ±20% 使 FY2028 EPS（A）−29%／+34%；成本年降 ±4pt 只有約 ±1% [本專案：20261116_SanDisk個股模型_v0.5.6.xlsx README!A6]｜TrendForce 每季初合約價
+- 情境分歧時點｜B、C 到 FY2028 才分歧；情境 C 的 FY2029 毛利率降到 49% [本專案：20261116_SanDisk個股模型_v0.5.6.xlsx README!A5、README!A6]｜同上
 - 份額｜±10% 使 FY2028 EPS ±13% [本專案：sndk/README.md 最敏感的變數]｜Kioxia 2026-10-30 財報（合資群位元與價格）
-- 模型與共識｜FY2027 EPS 模型 263.7 vs 共識 217.4（MarketScreener）+21% [本專案：20261031_SanDisk個股模型_v0.4.xlsx Recon!C12、Recon!B12、Recon!D12]｜同上
+- 模型與共識｜FY2027 EPS 模型 274.4 vs 共識 217.4（MarketScreener）+26% [本專案：20261116_SanDisk個股模型_v0.5.6.xlsx Recon!C12、Recon!B12、Recon!D12]｜同上
 
 ## 來源
-1. 本專案：`sndk/README.md`；`sndk/dist/20261031_SanDisk個股模型_v0.4.xlsx`（README、In、Q、PL、Recon、Sources）；`markets/nand/README.md`；`markets/nand/dist/20261031_NAND市場模型_v0.3.xlsx`（Ann、Sup、Recon）
+1. 本專案：`sndk/README.md`；`sndk/dist/20261116_SanDisk個股模型_v0.5.6.xlsx`（README、In、Q、PL、Recon、Sources）；`markets/nand/README.md`；`markets/nand/dist/20261031_NAND市場模型_v0.3.xlsx`（Ann、Sup、Recon）
 2. [Sandisk Reports Fiscal Fourth Quarter 2026 Financial Results](https://www.sandisk.com/company/newsroom/press-releases/2026/2026-08-05-sandisk-reports-fiscal-fourth-quarter-2026-financial-results)（2026-08-05）
 3. [Sandisk to Report First Quarter Fiscal Year 2027 Results on October 29, 2026](https://www.sandisk.com/company/newsroom/press-releases/2026/2026-09-29-sandisk-to-report-first-quarter-fiscal-year-2027-results-on-october-29-2026)（2026-09-29）
 4. [Kioxia and Sandisk Begin Production of 10th-Generation 3D Flash Memory at Kitakami Fab2](https://www.sandisk.com/en-ca/company/newsroom/press-releases/2026/2026-07-02-kioxia-sandisk-begin-production-10th-gen-3d-flash-memory-kitakami)（2026-07-02）

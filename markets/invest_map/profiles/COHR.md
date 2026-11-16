@@ -56,7 +56,7 @@ asof: 2026-10-25
 | 新易盛 | 光模組 | 2025 光模組營收 US$3.5B，排名高於 Coherent（LightCounting） | [本專案：20261116_Coherent個股模型_v0.4.6.xlsx In!E107] |
 | Lumentum | 雷射元件、OCS | 本專案未建立對比份額 | — |
 
-- 本專案網通模型：AI 可插拔光模組市場 CY2026 US$29.8B → CY2027 53.6B → CY2028 58.0B [本專案：20261104_Coherent個股模型_v0.3.xlsx Units!C4:E4]。
+- 本專案網通模型：AI 可插拔光模組市場 CY2026 US$29.8B → CY2027 50.4B → CY2028 58.0B [本專案：20261116_Coherent個股模型_v0.4.6.xlsx Units!C4:E4]。
 - CPO 光學市場 CY2026 US$0.3B → CY2029 11.7B，模型假設 Coherent 拿 10%／15%／20% [本專案：20261116_Coherent個股模型_v0.4.6.xlsx Units!C5、Units!F5；In!E31:E33]。
 - 份額相對值假設 1.10／1.15／1.15（磷化銦產能倍增、1.6T 提前）；新易盛、中際旭創搶 1.6T 是下行路徑 [本專案：cohr/README.md 驅動因子；20261116_Coherent個股模型_v0.4.6.xlsx Sens!B5]。
 
@@ -99,7 +99,7 @@ asof: 2026-10-25
 - CPO｜CPO 份額歸零只使 FY2028 EPS −3%，短期不是承重變數 [本專案：cohr/README.md 結果]｜PhotonLink 營收自 12 月季開始（公司說法）[本專案：20261116_Coherent個股模型_v0.4.6.xlsx In!I38]
 
 ## 來源
-1. 本專案：`cohr/README.md`；`cohr/dist/20261104_Coherent個股模型_v0.3.xlsx`（Q、Units、In、Sens、Sources）；AI半導體 `先驗比對_中際旭創_20261024.md`、`先驗比對_網通_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
+1. 本專案：`cohr/README.md`；`cohr/dist/20261116_Coherent個股模型_v0.4.6.xlsx`（Q、Units、In、Sens、Sources）；AI半導體 `先驗比對_中際旭創_20261024.md`、`先驗比對_網通_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 2. [Optics Stocks Tumble as Tech Selloff Deepens Ahead of Earnings（24/7 Wall St.）](https://247wallst.com/investing/2026/10/22/optics-stocks-tumble-as-tech-selloff-deepens-ahead-of-earnings-coherent-tumbles-12-applied-optoelectronics-drops-10-lumentum-falls-9/)（2026-10-22）
 3. [Coherent news（Earnings Whispers）](https://www.earningswhispers.com/news/COHR)（2026-10）
 4. [Coherent news（Autobound）](https://www.autobound.ai/companies/coherent/news)（2026-07～09）

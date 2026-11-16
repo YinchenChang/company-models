@@ -83,21 +83,21 @@ asof: 2026-10-25
 - 口徑：歐洲公司；AFM 大股東申報（>3%）僅 Applied Materials 為本次直接查到的申報（9.00%，交易日 2025-04-14）。其餘為 Simply Wall St 彙整（持股日期未逐一標示，價格日 2026-10-23），非 AFM 申報，僅供參考。 [外部・未經本專案檢核]
 
 ## 近期重大事件
-- 2026-10-23｜收盤 €145.10，單日 −7.73% [本專案：20261031_BESI模型_v0.1.3.xlsx In!E117、H117]
+- 2026-11-13｜收盤 €154.10 [本專案：20261116_BESI模型_v0.2.5.xlsx In!E117、H117]
 - 2026-10-22｜第三季營收 €283.4M（年增 113.6%＝÷ 2025 年第三季 €132.7M，Derived）、淨利 €107.2M、EPS €1.33、訂單 €342.6M；第四季營收指引持平 ±5%、毛利率 63–65% [本專案：20261116_BESI模型_v0.2.5.xlsx Q!J4、E4、J10:J12、In!H80:H81]
 - 2026-10-22｜法說：記憶體嚴重短缺使 HBM 混合鍵合導入放慢，現階段以較低堆疊層數生產較久；與三家記憶體廠持續開發 [外部新聞：GuruFocus]
 - 2026-10-22｜宣布 16 週策略檢討（含與應用材料的合作機會），第四季營業費用因顧問費增加 5–10% [本專案：20261116_BESI模型_v0.2.5.xlsx In!B82、H82]
 - 2026-07-23｜第二季營收 €249.9M、毛利率 65.7% [本專案：20261116_BESI模型_v0.2.5.xlsx Q!I4、I6]
 
 ## 需要觀察的事項
-- 邏輯混合鍵合導入比例的斜率（2028 年起）｜×0.7／×1.3 使 FY2027 EPS −21.9%／+21.9%，是最敏感的公司變數 [本專案：20261031_BESI模型_v0.1.3.xlsx Sens!E7:E8]｜台積電 SoIC 擴產消息
-- 上游情境（CoWoS 片數、HBM 位元、設備市場）｜情境 B／C 的 FY2027 EPS 比 A 低 31.9%／47.2% [本專案：20261031_BESI模型_v0.1.3.xlsx Sens!E32:E33]｜台積電、記憶體廠財報
-- 主流業務對設備市場的彈性｜0.5／1.5 使 FY2027 EPS −6.1%／+6.1% [本專案：20261031_BESI模型_v0.1.3.xlsx Sens!E23:E24]｜每季訂單
-- HBM 混合鍵合導入時點｜改用 Disco 基準／低值時 FY2027 EPS −6.1%／−9.2%；HBM 段在 FY2027–28 權重仍小 [本專案：20261031_BESI模型_v0.1.3.xlsx Sens!E5:E6]｜HBM4E／HBM5 製程決定
+- 邏輯混合鍵合導入比例的斜率（2028 年起）｜×0.7／×1.3 使 FY2027 EPS −22.4%／+22.4%，是最敏感的公司變數 [本專案：20261116_BESI模型_v0.2.5.xlsx Sens!E7:E8]｜台積電 SoIC 擴產消息
+- 上游情境（CoWoS 片數、HBM 位元、設備市場）｜情境 B／C 的 FY2027 EPS 比 A 低 33.2%／50.5% [本專案：20261116_BESI模型_v0.2.5.xlsx Sens!E32:E33]｜台積電、記憶體廠財報
+- 主流業務對設備市場的彈性｜0.5／1.5 使 FY2027 EPS −5.7%／+5.7% [本專案：20261116_BESI模型_v0.2.5.xlsx Sens!E23:E24]｜每季訂單
+- HBM 混合鍵合導入時點｜改用 Disco 基準／低值時 FY2027 EPS −6.5%／−9.7%；HBM 段在 FY2027–28 權重仍小 [本專案：20261116_BESI模型_v0.2.5.xlsx Sens!E5:E6]｜HBM4E／HBM5 製程決定
 - 策略檢討結論｜可能改變與應用材料的合作方式，模型未建模 [本專案：besi/README.md 最大限制]｜2027-01 初；第四季與全年實績 2027-02-25
 
 ## 來源
-1. 本專案：`besi/README.md`（v0.1.3，2026-10-31）；`besi/dist/20261031_BESI模型_v0.1.3.xlsx`（In、Q、PL、Sens 頁）
+1. 本專案：`besi/README.md`（v0.1.3，2026-10-31）；`besi/dist/20261116_BESI模型_v0.2.5.xlsx`（In、Q、PL、Sens 頁）
 2. 本專案：`先驗與比對/先驗比對_HBM_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 3. [GuruFocus：BESI Q3 2026 法說重點](https://www.gurufocus.com/news/9137691/be-semiconductor-industries-nv-besiy-q3-2026-earnings-call-highlights-revenue-more-than-doubles-a)（2026-10-22）
 4. [Simply Wall St：BESI management](https://simplywall.st/stocks/nl/semiconductors/ams-besi/be-semiconductor-industries-shares/management)（查閱 2026-10-25）
