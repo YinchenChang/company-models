@@ -22,10 +22,10 @@ tors = []
 for col, side in (("B", "低"), ("C", "高")):
     rows = [r for r in range(t1, t2 + 1) if num(col, r)]
     big = [r for r in rows if abs(sens_ws[f"{col}{r}"].value) >= 0.1] or rows
-    small = [r for r in rows if r not in big]
+    small = [r for r in rows if r not in big and abs(sens_ws[f"{col}{r}"].value) >= 0.0005]
     tors.append({"type": "tornado", "sheet": "Sens", "label_col": "A", "value_col": col, "fmt": "sp1", "rows": ",".join(map(str, big)),
                  "title": f"加權目標價相對基準：輸入取{side}值，變動達兩位數百分比的案例（未達者摺疊於下）"})
-    if small and big != rows:
+    if small:
         tors.append({"type": "tornado", "sheet": "Sens", "label_col": "A", "value_col": col, "fmt": "sp1", "rows": ",".join(map(str, small)), "collapse": True,
                      "summary": f"展開：加權目標價相對基準：輸入取{side}值，未達兩位數的案例", "title": f"加權目標價相對基準：輸入取{side}值（其餘案例）"})
 case_tbl = {"type": "table", "collapse": True, "summary": "展開：全部案例（含 DCF 單法、評等與收支關卡）", "head": ["驅動", "設定", "方向", "加權目標價", "相對基準", "DCF 目標價", "DCF 變動（日圓）", "投資建議", "收支關卡 B"],
@@ -116,6 +116,6 @@ cfg = {
     {"type": "list", "items": [f"@README!A{RDR[k]}" for k in ("md1", "diag", "f1", "f2", "f3", "l1", "l2", "l3", "na1", "na2", "na3", "na4")]},
     {"type": "table", "caption": "風險登錄", "head": ["風險", "是否建模", "理由", "觀察指標"], "rowgen": {"sheet": "README", "rows": f"{rm['RISK_HDR'] + 1}-{rm['RISK_HDR'] + 5}", "cols": list("ABCD")}},
     {"type": "h3", "text": "「未找到」清單"},
-    {"type": "scan", "needle": "未找到", "collapse": True, "summary": "展開：標為「未找到」的項目", "sheets": {"In": ["B", "H", "I"]}, "empty": "沒有標為未找到的項目。"}]}]}
+    {"type": "list", "items": [f"@README!A{RDR['nf']}"]}]}]}
 json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("ok")

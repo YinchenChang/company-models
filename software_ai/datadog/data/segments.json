@@ -1,0 +1,42 @@
+{
+ "company": "Datadog",
+ "ticker": "DDOG",
+ "model_sheet": "PL",
+ "note": "官方報告分部：Datadog 為單一應報導部門（10-K 附註：Datadog 平台）；營收即部門營收。命題模組（原型 U 按用量計價）把平台營收拆成三條模型子列：非 AI 原生客戶平台用量、AI 原生客戶平台用量、AI 產品 credits 營收（命題拆分，非官方分部；公司只揭露 AI 原生客戶占營收比至 2025Q3 為 12%、不揭露 AI 產品營收）。金額 US$M。",
+ "official_segments": [
+  {
+   "name": "Datadog 平台",
+   "label": "Datadog 平台（單一應報導部門）",
+   "period": "FY2025",
+   "value": 3427.158,
+   "unit": "US$M",
+   "source": "Datadog FY2025 10-K 與 Q4/FY2025 財報新聞稿；software_ai/datadog/data/facts_datadog.csv id is.rev.fy2025",
+   "operatingIncome": -44.373
+  }
+ ],
+ "consolidated": {
+  "period": "FY2025",
+  "revenue": 3427.158,
+  "operatingIncome": -44.373,
+  "check": "單一部門：部門營收＝合併營收，差 0（PL 頁「核對」列涵蓋 FY2023A–FY2032E 三情境）"
+ },
+ "sublines": [
+  {
+   "parent": "Datadog 平台（單一應報導部門）",
+   "labels": [
+    "非 AI 原生客戶平台用量",
+    "AI 原生客戶平台用量",
+    "AI 產品 credits 營收"
+   ],
+   "drivers": {
+    "非 AI 原生客戶平台用量": "基期營收 × 用量指數（非 AI 客戶用量成長 FY2027 值線性收斂）× 單價指數（量大折扣年變動）",
+    "AI 原生客戶平台用量": "基期營收 × 用量指數（含最大客戶事件型尾端）× 單價指數（提前續約讓利三年線性消退）",
+    "AI 產品 credits 營收": "FY2027 情境值，其後成長逐年下降；任務數 × 每任務 credit 收入；推論成本＝任務數 × 每任務 token × token 價格（Tokenomics）"
+   }
+  }
+ ],
+ "check_labels": [
+  "核對：三情境 × 全部年度 分部合計 − 合併營收 絕對值最大者（應為 0）",
+  "核對：三情境 × 全部年度 子列合計 − 合併營收 絕對值最大者（應為 0）"
+ ]
+}

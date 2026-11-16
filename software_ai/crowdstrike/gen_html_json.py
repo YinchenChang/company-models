@@ -94,6 +94,8 @@ cfg = {
     {"type": "table", "caption": "口徑與未找到", "head": ["項目", "說明"], "rowgen": {"sheet": "Recon", "rows": f"29-{wb['Recon'].max_row}", "cols": ["A", "C"], "fmts": ["", ""]}}]},
   {"id": "status", "title": "資料狀態", "blocks": [
     {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期", "@README!A1"], ["build_id", f"@Sens!D{bid}"], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"], ["Tokenomics 快照", f"@Sources!B{L['reg']['Sources_tk']}"]]},
+    {"type": "h3", "text": "合理性關卡診斷"},
+    {"type": "list", "items": [f"@README!A{r}" for r in (56, 57, 58, 59)]},
     {"type": "h3", "text": "市場資料日期與失效條件"},
     {"type": "list", "items": [f"@README!A{r}" for r in (26, 27, 32)]},
     {"type": "table", "caption": "風險登錄", "head": ["風險", "是否建模", "理由", "觀察指標"], "rowgen": {"sheet": "README", "rows": "37-41", "cols": list("ABCD")}},

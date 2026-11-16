@@ -369,7 +369,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準：輸入取低值（一次改一個，整本重算）",
      "sheet": "Sens",
-     "rows": "13,19,49,53",
+     "rows": "13,19",
      "label_col": "A",
      "value_col": "E",
      "fmt": "sp1"
@@ -378,7 +378,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準：輸入取高值與聯動案例（一次改一個，整本重算）",
      "sheet": "Sens",
-     "rows": "14,18,20,40",
+     "rows": "14,18,20",
      "label_col": "A",
      "value_col": "E",
      "fmt": "sp1"
@@ -406,7 +406,7 @@
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "4-75",
+      "rows": "4-77",
       "cols": [
        "A",
        "B",
@@ -436,11 +436,11 @@
      "items": [
       [
        "build_id",
-       "@Sens!D77"
+       "@Sens!D79"
       ],
       [
        "模型狀態",
-       "@Sens!D78"
+       "@Sens!D80"
       ]
      ]
     }
@@ -1196,7 +1196,7 @@
       ],
       [
        "build_id",
-       "@Sens!D77"
+       "@Sens!D79"
       ],
       [
        "來源 xlsx",
@@ -1210,6 +1210,19 @@
        "Tokenomics 快照",
        "@Sources!B14"
       ]
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "合理性關卡診斷"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A56",
+      "@README!A57",
+      "@README!A58",
+      "@README!A59"
      ]
     },
     {

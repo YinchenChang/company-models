@@ -496,19 +496,25 @@ for y, c in YC.items():
 
 # ---------------------------------------------------------------- DCF 頁
 Dp = SH["DCF"]
-Dp["A1"] = "DCF（FCFF 標準規格）：明確期 FY2027E 剩餘期間～FY2032E；永續價值 ＝ NOPAT(FY2033)×(1−g÷RONIC)÷(WACC−g)；期中折現。評價日＝股價基準日。三情境各算一次。EBIT 已扣除股票薪酬（SBC 不加回）。"
-Dp["A2"] = "WACC 由 Val 頁推出（讀 In 頁基準欄，不讀敏感度欄）。non-GAAP→FCFF 橋接：非 GAAP 營業利益−SBC＝EBIT；EBIT 稅後＋折舊攤銷−資本支出−營運資金增加＝FCFF；公司口徑自由現金流＝FCFF＋SBC＋稅後其他收入（只在 PL 參考列與 Recon 用）。"
-DR = {}
-for si, s in enumerate("ABC"):
-    r0 = 4 + si * 9
-    DR[s] = {k: r0 + 1 + i for i, k in enumerate(["fcff", "frac", "t", "df", "pv"])}
-    Dp.cell(r0, 1, f"情境 {s}").font = BOLD
-    for y in YEARS[3:]:
-        Dp[f"{YC[y]}{r0}"] = y + "E"
-    for k, lab in zip(["fcff", "frac", "t", "df", "pv"], ["FCFF", "計入比例（FY2027 只計評價日之後）", "折現時點（年）", "折現因子", "現值"]):
-        Dp.cell(DR[s][k], 1, f"情境 {s}｜{lab}")
-    for y in YEARS[3:]:
-        Dp[f"{YC[y]}{DR[s]['fcff']}"] = f"=PL!{YC[y]}{PR[s]['fcff']}"
+Dp["A1"] = "DCF（FCFF 標準規格；tools/fcff_dcf.py）：明確期 FY2027E 剩餘期間～FY2032E；永續價值＝NOPAT×(1+g)×(1−g÷RONIC)÷(WACC−g)；期中折現；評價日＝股價基準日。三情境各算一次。EBIT 已扣股票薪酬（SBC 不加回）。"
+Dp["A2"] = "non-GAAP→FCFF 橋接：非 GAAP 營業利益−SBC＝EBIT；EBIT 稅後＋折舊攤銷−資本支出−營運資金增加＝FCFF（遞延收入增加為現金流入，fc_wc 為負值）；公司口徑自由現金流（PL 頁）＝FCFF＋SBC＋稅後其他收入。折舊與資本支出 FY2027–FY2029 取 PL 頁，之後線性收斂到穩態。"
+DYR = [2027, 2028, 2029, 2030, 2031, 2032]
+DPATHS = []
+for s in "ABC":
+    pr = PR[s]
+    DPATHS.append(dict(name=s, label=f"情境 {s}", rev={y: f"PL!{YC['FY'+str(y)]}{pr['rev']}" for y in DYR}, rev0=f"PL!E{pr['rev']}",
+                       ebit={y: f"PL!{YC['FY'+str(y)]}{pr['ebit']}" for y in DYR}, tax={y: "tax_w" for y in DYR},
+                       da={y: f"PL!{YC['FY'+str(y)]}{pr['da']}" for y in (2027, 2028, 2029)}, cx={y: f"PL!{YC['FY'+str(y)]}{pr['capex']}" for y in (2027, 2028, 2029)}))
+FRAC0 = 79 / 365   # 2026-11-13 → 2027-01-31（FY2027 年底）
+FDR = FD.write_detail(Dp, 4, DPATHS, DYR, FRAC0)
+DCOL = FDR["col"]
+for s in "ABC":
+    pr = PR[s]; D = FDR["paths"][s]
+    for y in ("FY2027", "FY2028", "FY2029", "FY2030", "FY2031", "FY2032"):
+        c = YC[y]; dc = DCOL[int(y[2:])]
+        P[f"{c}{pr['nopat']}"] = f"=DCF!{dc}{D['nopat']}"; P[f"{c}{pr['dwc']}"] = f"=DCF!{dc}{D['dwc']}"; P[f"{c}{pr['fcff']}"] = f"=DCF!{dc}{D['fcff']}"
+        if y in ("FY2030", "FY2031", "FY2032"):
+            P[f"{c}{pr['da']}"] = f"=DCF!{dc}{D['da']}"; P[f"{c}{pr['capex']}"] = f"=DCF!{dc}{D['cx']}"
 
 # ---------------------------------------------------------------- Val 頁
 V = SH["Val"]
@@ -540,21 +546,21 @@ vrow("gate_res", "入不敷出判定", f'=IF(B{VR["gate_use"]}<0,"不通過（�
 vrow("rec", "投資建議", f'=IF(AND(B{VR["gate_use"]}<0,OR(B{VR["val_rec"]}="買進",B{VR["val_rec"]}="強力買進")),"收支不足",B{VR["val_rec"]})')
 vrow("tp_ref", "只看 Comparable 的目標價（上檔空間見右）", f"=B{VR['comp_tp']}", f"=B{VR['comp_tp']}/B{VR['px']}-1")
 V.cell(VR["wh"], 1, "折現率（DCF）").font = BOLD
-vrow("ke", "股權成本 ke（rf＋β×ERP；β＝Blume 調整＝0.67×原始＋0.33）", f"={I('rf')}+(0.67*{I('beta_raw')}+0.33)*{I('erp')}")
-vrow("kd", "稅前債務成本（rf＋利差）", f"={I('rf')}+{I('kd_sp')}")
-vrow("kdat", "稅後債務成本", f"=B{VR['kd']}*(1-{I('tax')})")
-vrow("emkt", "股權市值（US$M；流通股加稀釋加項）", f"={I('px')}*({I('sh_out')}+{I('sh_dil')})")
-vrow("dmkt", "債務本金＋租賃（US$M）", f"={I('conv')}+{I('lease')}")
-vrow("ewt", "股權權重", f"=B{VR['emkt']}/(B{VR['emkt']}+B{VR['dmkt']})")
-vrow("wacc", "WACC", f"=B{VR['ewt']}*B{VR['ke']}+(1-B{VR['ewt']})*B{VR['kdat']}")
-vrow("ronic", "RONIC（＝WACC＋利差）", f"=B{VR['wacc']}+{I('ronic_sp')}")
-vrow("g", "永續成長率", f"={I('g_tv')}")
+vrow("ke", "股權成本 ke（rf＋β×(ERP＋CRP)；β＝Blume 調整；DCF 摘要區，見下）", "=ke")
+vrow("kd", "稅前債務成本（rf＋利差）", "=kd")
+vrow("kdat", "稅後債務成本", "=kd_at")
+vrow("emkt", "股權市值（US$M；現價×評價股數）", f"={I('px')}*sh_v")
+vrow("dmkt", "債務本金＋租賃（US$M）", "=debt_v+lease_v")
+vrow("ewt", "股權權重", "=w_e")
+vrow("wacc", "WACC", "=wacc")
+vrow("ronic", "RONIC（＝WACC＋利差）", "=ronic")
+vrow("g", "永續成長率", "=g_tv")
 V.cell(VR["ndh"], 1, "淨現金（2026-07-31；US$M）").font = BOLD
-vrow("cashx", "現金、約當現金與投資", f"={I('cash')}")
-vrow("ndebt", "可轉債＋租賃負債", f"={I('conv')}+{I('lease')}")
-vrow("netcash", "淨現金（負值＝淨債務）", f"=B{VR['cashx']}-B{VR['ndebt']}")
-vrow("sh", "評價股數（M；流通股＋稀釋加項）", f"={I('sh_out')}+{I('sh_dil')}")
-vrow("dps", "期間股利（US$/股）", 0)
+vrow("cashx", "現金、約當現金與投資", "=cash_v")
+vrow("ndebt", "債務（可轉債未轉換時）＋租賃負債", "=debt_v+lease_v")
+vrow("netcash", "淨現金（負值＝淨債務）", "=dcf_nc")
+vrow("sh", "評價股數（M；流通股＋RSU＋選擇權庫藏股法＋可轉債 if-converted 淨增）", "=sh_v")
+vrow("dps", "期間股利（US$/股）", "=dps_tgt")
 V.cell(VR["sumh"], 1, "DCF 彙總（三情境）").font = BOLD
 for col, lab in zip("CDE", ("情境 A", "情境 B", "情境 C")): V[f"{col}{VR['sumh']}"] = lab
 vrow("pvx", "明確期 FCFF 現值（US$M）"); vrow("tvpv", "永續價值現值（US$M）"); vrow("ev", "企業價值 EV（US$M）"); vrow("eq", "股權價值（EV＋淨現金；US$M）")
@@ -568,8 +574,9 @@ vrow("wc", "各情境上檔空間", None, *(f"={c}{VR['wb']}/$B${VR['px']}-1" fo
 vrow("chk_w", "檢查：情境加權目標價與加權目標價之差（應為 0）", f"=ABS({I('tp_wA')}*C{VR['wb']}+{I('tp_wB')}*D{VR['wb']}+{I('tp_wC')}*E{VR['wb']}-B{VR['tp']})")
 V.cell(VR["dec_h"], 1, "DCF 與 Comparable 落差分解（情境 B；每股 US$；目標時點）").font = BOLD
 sb = PR["B"]
-_pv_sbc = "+".join(f"PL!{YC[y]}{sb['sbc']}*DCF!{YC[y]}{DR['B']['frac']}*DCF!{YC[y]}{DR['B']['df']}" for y in YEARS[3:])
-_tv_sbc = f"PL!K{sb['sbc']}*(1+B{VR['g']})*(1-B{VR['g']}/B{VR['ronic']})/(B{VR['wacc']}-B{VR['g']})/(1+B{VR['wacc']})^DCF!K{DR['B']['pv']+1}"
+_DB = FDR["paths"]["B"]
+_pv_sbc = "+".join(f"PL!{YC['FY'+str(y)]}{sb['sbc']}*DCF!{DCOL[y]}${FDR['frac']}*DCF!{DCOL[y]}{_DB['df']}" for y in DYR)
+_tv_sbc = f"PL!K{sb['sbc']}*(1+B{VR['g']})*(1-B{VR['g']}/B{VR['ronic']})/(B{VR['wacc']}-B{VR['g']})/(1+B{VR['wacc']})^{FDR['tvt']}"
 vrow("dec_gap", "Comparable 減 DCF（情境 B）", f"=D{VR['comp12']}-D{VR['dcf12']}")
 vrow("dec_sbc", "其中：股票薪酬（DCF 扣除、P/S 未扣；稅後現值加永續價值，推到目標時點）", f"=(1-{I('tax')})*(({_pv_sbc})+{_tv_sbc})/B{VR['sh']}*(1+B{VR['ke']})")
 vrow("dec_res", "其餘：槓桿（淨債務）、時點、前瞻期間與倍數水準差（殘差）", f"=B{VR['dec_gap']}-B{VR['dec_sbc']}")
@@ -590,38 +597,45 @@ vrow("pe_own", "Snowflake 自身前瞻 P/S（2026-11-13；僅對照）", 14.31, 
 V.cell(VR["pe_own"], 5, "C＝前瞻 P/E；D＝市值 US$B；隱含前瞻營收（US$M）見 Recon")
 for col in "BCD": V[f"{col}{VR['pe_own']}"].font = BLUE
 vrow("pe_pe", "Snowflake 前瞻 P/S 相對同業中位數", f"=B{VR['pe_own']}/B{VR['pe_med']}-1")
-V.cell(VR["rmx"], 1, "相對倍數調整係數：1.00（未調整：缺歷史前瞻倍數；tools/data/fwd_mult_hist.csv 無 SNOW 與同業）；敏感度見 cm_adj")
-for s in "ABC":
-    d = DR[s]
-    for y in YEARS[3:]:
-        c = YC[y]; i = YEARS.index(y) - 3
-        if y == "FY2027":
-            Dp[f"{c}{d['frac']}"] = f"=(DATE(2027,1,31)-{I('px_date')})/365"
-            Dp[f"{c}{d['t']}"] = f"={c}{d['frac']}/2"
-        else:
-            Dp[f"{c}{d['frac']}"] = 1
-            Dp[f"{c}{d['t']}"] = f"=$F{d['frac']}+{i-1}+0.5"
-        Dp[f"{c}{d['df']}"] = f"=1/(1+Val!$B${VR['wacc']})^{c}{d['t']}"
-        Dp[f"{c}{d['pv']}"] = f"={c}{d['fcff']}*{c}{d['frac']}*{c}{d['df']}"
-    Dp.cell(d["pv"] + 1, 1, f"情境 {s}｜永續價值折現時點（年）"); Dp[f"K{d['pv']+1}"] = f"=$F{d['frac']}+5"
-    Dp.cell(d["pv"] + 2, 1, f"情境 {s}｜檢查：FCFF 各列加總（NOPAT＋折舊−資本支出−營運資金增加）−FCFF（應為 0）")
-    for y in YEARS[3:]:
-        c = YC[y]
-        Dp[f"{c}{d['pv']+2}"] = f"={c}{d['fcff']}-(PL!{c}{PR[s]['nopat']}+PL!{c}{PR[s]['da']}-PL!{c}{PR[s]['capex']}-PL!{c}{PR[s]['dwc']})"
-for si, s in enumerate("ABC"):
-    col = "CDE"[si]
-    pvr = DR[s]["pv"]
-    V[f"{col}{VR['pvx']}"] = f"=SUM(DCF!F{pvr}:K{pvr})"
-    V[f"{col}{VR['tvpv']}"] = f"=PL!K{PR[s]['nopat']}*(1+$B${VR['g']})*(1-$B${VR['g']}/$B${VR['ronic']})/($B${VR['wacc']}-$B${VR['g']})/(1+$B${VR['wacc']})^DCF!K{DR[s]['pv']+1}"
-    V[f"{col}{VR['ev']}"] = f"={col}{VR['pvx']}+{col}{VR['tvpv']}"
-    V[f"{col}{VR['eq']}"] = f"={col}{VR['ev']}+$B${VR['netcash']}"
-    V[f"{col}{VR['vps0']}"] = f"={col}{VR['eq']}/$B${VR['sh']}"
-    V[f"{col}{VR['dcf12']}"] = f"=MAX(0,{col}{VR['vps0']}*(1+$B${VR['ke']})-$B${VR['dps']})"
-    V[f"{col}{VR['tvsh']}"] = f"={col}{VR['tvpv']}/{col}{VR['ev']}"
-    V[f"{col}{VR['ntm']}"] = f"=((DATE(2028,1,31)-$B${VR['tp_date']})/365)*PL!G{PR[s]['rev']}+(1-(DATE(2028,1,31)-$B${VR['tp_date']})/365)*PL!H{PR[s]['rev']}"
-    V[f"{col}{VR['mult']}"] = f"=$B${VR['pe_med']}*{I('cm_adj')}"
+# rel_mult 表與 FD 摘要區在 DCF 檢查之後（見下）
+# ---- rel_mult：最近 5 個期間 SNOW 倍數 ÷ 同業中位數（原則 G3 第 3 條；Derived）
+RM0 = VR["rmx"] + 1
+V.cell(RM0, 1, "相對倍數 rel_mult：SNOW 最近 5 個期間的 trailing P/S ÷ 同業（八家）trailing P/S 中位數；取 5 期比值中位數，夾在 0.5–2.0（Derived）").font = BOLD
+RMH = ["期間（StockAnalysis 財務比率表，市值÷近四季營收）", "SNOW", "DDOG", "MDB", "NET", "CRWD", "NOW", "PLTR", "ESTC", "ZS", "同業中位數", "比值"]
+for j, h in enumerate(RMH, 1): V.cell(RM0 + 1, j, h).font = BOLD
+RMD = [("FY2026（2026-01-31）", 14.08, 13.92, 12.27, 31.85, 23.13, 11.97, 94.66, 2.76, 7.29),
+       ("FY2025（2025-01-31）", 16.52, 18.08, 10.14, 22.13, 24.80, 19.91, 60.12, 6.07, 16.63),
+       ("FY2024（2024-01-31）", 22.96, 18.74, 17.18, 21.56, 22.09, 16.11, 16.79, 8.13, 12.51),
+       ("FY2023（2023-01-31）", 24.36, 13.93, 11.56, 15.23, 10.50, 10.81, 7.01, 5.17, 14.47),
+       ("FY2022（2022-01-31）", 69.31, 54.02, 30.95, 64.45, 26.57, 21.91, 23.68, 8.25, 20.16)]
+for i, row in enumerate(RMD):
+    rw = RM0 + 2 + i
+    V.cell(rw, 1, row[0])
+    for j, v in enumerate(row[1:], 2): V.cell(rw, j, v).font = BLUE
+    V.cell(rw, 11, f"=MEDIAN(C{rw}:J{rw})"); V.cell(rw, 12, f"=B{rw}/K{rw}")
+RMR = RM0 + 2 + len(RMD)
+V.cell(RMR, 1, "rel_mult（5 期比值中位數，夾在 0.5–2.0）"); V.cell(RMR, 2, f"=MIN(2,MAX(0.5,MEDIAN(L{RM0+2}:L{RMR-1})))"); V.cell(RMR, 3, "Derived；來源與缺漏見 Recon；trailing P/S 與前瞻 P/S 口徑不同，為主要載重輸入")
+RELM_ROW = RMR
+# ---- FD 摘要區（折現率、DCF 彙總）
+FS0 = RMR + 3
+FS = FD.write_summary(wb, V, FS0, FDR, ["A", "B", "C"], ["tp_wA", "tp_wB", "tp_wC"], px="px", beta_note="Blume 調整；單一來源")
+fd_ = lambda k, col: f"=DCF!$C${FDR['paths'][col][k]}"
+for si, s_ in enumerate("ABC"):
+    col = "CDE"[si]; D_ = FDR["paths"][s_]
+    V[f"{col}{VR['pvx']}"] = f"=DCF!$C${D_['pvx']}"; V[f"{col}{VR['tvpv']}"] = f"=DCF!$C${D_['pvtv']}"; V[f"{col}{VR['ev']}"] = f"=DCF!$C${D_['ev']}"
+    V[f"{col}{VR['eq']}"] = f"={col}{VR['ev']}+$B${VR['netcash']}"; V[f"{col}{VR['vps0']}"] = f"=DCF!$C${D_['val']}"
+    V[f"{col}{VR['dcf12']}"] = f"=DCF!$C${D_['v12']}"; V[f"{col}{VR['tvsh']}"] = f"=DCF!$C${D_['tvsh']}"
+    V[f"{col}{VR['ntm']}"] = f"=((DATE(2028,1,31)-$B${VR['tp_date']})/365)*PL!G{PR[s_]['rev']}+(1-(DATE(2028,1,31)-$B${VR['tp_date']})/365)*PL!H{PR[s_]['rev']}"
+    V[f"{col}{VR['mult']}"] = f"=$B${VR['pe_med']}*{I('rel_mult')}"
     V[f"{col}{VR['eqc']}"] = f"={col}{VR['ntm']}*{col}{VR['mult']}"
     V[f"{col}{VR['comp12']}"] = f"={col}{VR['eqc']}/$B${VR['sh']}"
+wb.defined_names["px"] = DefinedName("px", attr_text=f"In!$E${IR['px']}")
+
+for _row in SH['In'].iter_rows():
+    for _c in _row:
+        if isinstance(_c.value, str) and "@@" in _c.value:
+            _c.value = (_c.value.replace("@@RELM@@", str(RELM_ROW)).replace("@@OPXA@@", str(RS["opxa"])).replace("@@OPXV@@", str(RS["opxv"]))
+                        .replace("@@SBCA@@", str(RS["sbca"])).replace("@@SBCV@@", str(RS["sbcv"])))
 
 # ---------------------------------------------------------------- RevDCF 頁
 RD = SH["RevDCF"]
@@ -637,8 +651,8 @@ for i, (k, lab) in enumerate(rv_rows):
 b_ = PR["B"]
 RD[f"B{RV['v0']}"] = f"=Val!D{VR['vps0']}"; RD[f"B{RV['px']}"] = f"=Val!B{VR['px']}"
 RD[f"B{RV['gap']}"] = f"=(B{RV['px']}-B{RV['v0']})*Val!B{VR['sh']}"
-terms = "+".join(f"PL!{YC[y]}{b_['rev']}*DCF!{YC[y]}{DR['B']['frac']}*DCF!{YC[y]}{DR['B']['df']}" for y in YEARS[3:])
-RD[f"B{RV['k_m']}"] = f"=0.01*(1-{I('tax')})*(({terms})+PL!K{b_['rev']}*(1+Val!B{VR['g']})*(1-Val!B{VR['g']}/Val!B{VR['ronic']})/(Val!B{VR['wacc']}-Val!B{VR['g']})/(1+Val!B{VR['wacc']})^DCF!K{DR['B']['pv']+1})"
+terms = "+".join(f"PL!{YC['FY'+str(y)]}{b_['rev']}*DCF!{DCOL[y]}${FDR['frac']}*DCF!{DCOL[y]}{FDR['paths']['B']['df']}" for y in DYR)
+RD[f"B{RV['k_m']}"] = f"=0.01*(1-tax_w)*(({terms})+PL!K{b_['rev']}*(1+Val!B{VR['g']})*(1-Val!B{VR['g']}/Val!B{VR['ronic']})/(Val!B{VR['wacc']}-Val!B{VR['g']})/(1+Val!B{VR['wacc']})^{FDR['tvt']})"
 RD[f"B{RV['d_m']}"] = f"=B{RV['gap']}/B{RV['k_m']}"
 RD[f"B{RV['m_fy32']}"] = f"=PL!K{b_['ebit']}/PL!K{b_['rev']}"
 RD[f"B{RV['m_imp']}"] = f"=B{RV['m_fy32']}+B{RV['d_m']}/100"
@@ -775,7 +789,7 @@ for ws_ in wb.worksheets:
 wb["In"].column_dimensions["B"].width = 60; wb["In"].column_dimensions["H"].width = 70
 wb.defined_names["PL_hdr"] = DefinedName("PL_hdr", attr_text="PL!$C$5:$K$5")
 wb.save(OUT)
-rowmap = {"IR": IR, "SR": SR, "PR": PR, "STR": STR, "SPR": SPR, "VR": VR, "DR": DR, "RV": RV, "RCR": RCR, "CK": CK, "QR": QR, "SE_ROWS": SE_ROWS, "SE_END": SE_END, "SCN_H": SCN_H, "SCN_ROWS": SCN_ROWS,
+rowmap = {"IR": IR, "SR": SR, "PR": PR, "STR": STR, "SPR": SPR, "VR": VR, "DR": FDR, "FS": FS, "RM": {"rel_mult": RELM_ROW, "first": RM0 + 2}, "RV": RV, "RCR": RCR, "CK": CK, "QR": QR, "SE_ROWS": SE_ROWS, "SE_END": SE_END, "SCN_H": SCN_H, "SCN_ROWS": SCN_ROWS,
           "BUILD_ID": BUILD_ID, "FP": fp, "HDR_R": hdr_r, "GR0": GR0, "LAST_PARAM_ROW": LAST_PARAM_ROW}
 if ROWMAP: json.dump(rowmap, open(ROWMAP, "w"), ensure_ascii=False, indent=1)
 print("built", OUT, BUILD_ID)

@@ -562,6 +562,7 @@ rd("na1", '"不適用：Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattono
 rd("na2", '"不適用：三層協調（Coord 頁、對帳中旗標、兩讀數）：非 Siliconomics 覆蓋。"')
 rd("na3", '"股數：RSU 與選擇權庫藏股法：合併股票薪酬與 RSU 未揭露（未找到），以流通股數為準；ASR、可轉債：無。淨債務：只計有利息負債與融資租賃（資料未見，基準 0），營業租賃不計。"')
 rd("na4", '"本版未做先驗。"')
+rd("nf", '"未找到：FY2021–2022 分部營收與單季分部（Q2–Q4）；受保護單位數、模組數、單價；AI 營收、訂單與付費客戶；漲價日期與幅度；股票薪酬；有利息負債與租賃負債；EPS 共識；第二個 beta 來源；2026Q3 資產負債表；EDINET 法定申報原文；同業 NTM 倍數與本公司 5 年歷史相對倍數；私募談判 2025-02 後進展。"')
 rd("sp5", '""')
 rd("h_ws", '"工作表：README、In、Hist、PL、CF、Val、Recon、RevDCF、Sens、Sources"', formula=True)
 RD.column_dimensions["A"].width = 160; RD.column_dimensions["B"].width = 16; RD.column_dimensions["C"].width = 50; RD.column_dimensions["D"].width = 40

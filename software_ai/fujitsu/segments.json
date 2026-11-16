@@ -1,0 +1,69 @@
+{
+ "company": "富士通",
+ "ticker": "6702",
+ "fiscal_year_end": "3 月 31 日（FY2025＝2025-04-01～2026-03-31；FY2026＝2026-04-01～2027-03-31）",
+ "model_sheet": "PL",
+ "note": "官方報告分部四列：Service Solutions、Hardware Solutions、Ubiquitous Solutions、Elimination/Corporate（決算短信分部表）；分部利益為公司自訂的調整後營業利益，合併營業利益取 IFRS。FY2024、FY2025 為 Device Solutions 出售後的重編值。分部營收與分部調整後營業利益合計等於合併營收與調整後營業利益（FY2024、FY2025、2025 與 2026 上半年差 0；FY2026 上半年尚有 ¥0.1B 精度的四捨五入差異見 research_fujitsu.md）。金額 ¥百萬。",
+ "official_segments": [
+  {
+   "name": "Service Solutions",
+   "label": "Service Solutions",
+   "period": "FY2025",
+   "value": 2346932,
+   "unit": "¥百萬",
+   "operatingIncome": 361464,
+   "source": "決算短信 FY2025（2026-04-28）p.8",
+   "url": "https://global.fujitsu/-/media/Project/Fujitsu/Fujitsu-HQ/ir/documents/Financial_Results/FY2025/FY/2025FY-Financial-Results-en.pdf",
+   "date": "2026-04-28"
+  },
+  {
+   "name": "Hardware Solutions",
+   "label": "Hardware Solutions",
+   "period": "FY2025",
+   "value": 1009857,
+   "unit": "¥百萬",
+   "operatingIncome": 67012,
+   "source": "決算短信 FY2025（2026-04-28）p.8",
+   "url": "https://global.fujitsu/-/media/Project/Fujitsu/Fujitsu-HQ/ir/documents/Financial_Results/FY2025/FY/2025FY-Financial-Results-en.pdf",
+   "date": "2026-04-28"
+  },
+  {
+   "name": "Ubiquitous Solutions",
+   "label": "Ubiquitous Solutions",
+   "period": "FY2025",
+   "value": 229805,
+   "unit": "¥百萬",
+   "operatingIncome": 38825,
+   "source": "決算短信 FY2025（2026-04-28）p.8",
+   "url": "https://global.fujitsu/-/media/Project/Fujitsu/Fujitsu-HQ/ir/documents/Financial_Results/FY2025/FY/2025FY-Financial-Results-en.pdf",
+   "date": "2026-04-28"
+  },
+  {
+   "name": "Elimination/Corporate",
+   "label": "Elimination/Corporate",
+   "period": "FY2025",
+   "value": -83623,
+   "unit": "¥百萬",
+   "operatingIncome": -76712,
+   "source": "決算短信 FY2025（2026-04-28）p.8",
+   "url": "https://global.fujitsu/-/media/Project/Fujitsu/Fujitsu-HQ/ir/documents/Financial_Results/FY2025/FY/2025FY-Financial-Results-en.pdf",
+   "date": "2026-04-28"
+  }
+ ],
+ "consolidated": {
+  "period": "FY2025",
+  "value": 3502971,
+  "unit": "¥百萬",
+  "operatingIncome": 390589,
+  "source": "決算短信 FY2025 合併損益表與分部表（調整後營業利益）",
+  "check": "四列分部營收合計 3,502,971＝合併營收；分部調整後營業利益合計 390,589＝合併調整後營業利益（差 0）"
+ },
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部營收合計 − 合併營收",
+  "檢查：分部調整後營業利益合計 − 調整後營業利益",
+  "檢查：分部營收合計 − 公司揭露合併營收（歷史年度）",
+  "檢查：分部調整後營業利益合計 − 公司揭露調整後營業利益（歷史年度）",
+  "檢查：三情境分部營收合計 − 合併營收"
+ ]
+}
