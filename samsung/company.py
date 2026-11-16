@@ -497,3 +497,24 @@ CONFIG["v13_ver"] = ("v0.5.5（2026-11-15）：個股 HTML 版面 v1.3 與三層
                      "故 HBM 列判定為「無可比實績」；已揭露的記憶體事業營收只做上限檢查（參考、不判定）。既有數值、目標價與評等不變。")
 CONFIG["a1_note"] = CONFIG["a1_note"] + "；v0.5.5（2026-11-15）：版面 v1.3＋兩讀數＋C0（實績）；新增 Hist、PL、RevDCF 頁與 Val 0.7、Sens、Coord、README 新增列；既有數值不變"
 CONFIG["readme_tail"] = CONFIG["readme_tail"] + ["v0.5.5：版面 v1.3＋兩讀數＋C0（實績）；既有數值不變"]
+
+# v0.5.6（2026-11-16，工作單 px1113）：現價與同業報價改 2026-11-13 收盤（Yahoo Finance 日線；markets/invest_map/data/closes_20261020_20261113.csv）
+# 同業前瞻 P/B＝現行倍數（11-05 基準）× 11-13 收盤 ÷ 11-05 收盤（共識每股淨值不變）；rf、共識、預測匯率、模型假設不變。
+# Rainbow Robotics（277810.KQ）不在 closes 檔，維持 11-05 收盤 334,500 韓元（未換價）。
+_PX13 = "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）"
+_set_in("px", label="普通股股價（2026-11-13 收盤）", base=206000, tag="Verified", src=_PX13 + "；v0.5.5 為 2026-11-05 收盤 201,500")
+def _roll(i, new, old, nd, od="11-05"):
+    nm, tk, f, _d, src = CONFIG["tp"]["peers"][i]
+    return (nm, tk, f"=({f[1:]})*{new}/{old}", "2026-11-13", "現行 P/B（v0.5.5：" + src + "）" + f"× 11-13 收盤 {nd[1]} ÷ 11-05 收盤 {nd[0]}（{_PX13}）")
+CONFIG["tp"]["peers"] = [_roll(0, 1216000, 1264000, ("1,264,000", "1,216,000")),
+                         _roll(1, 778.31, 656.39, ("656.39", "778.31")),
+                         _roll(2, 9091, 9324, ("¥9,324", "¥9,091")),
+                         _roll(3, 377, 360, ("360", "377"))]
+CONFIG["tp"]["peer_note"] = CONFIG["tp"]["peer_note"] + "；v0.5.6 起報價改 2026-11-13 收盤（工作單 px1113；現行倍數 × 11-13 ÷ 11-05 收盤），共識每股淨值不變"
+CONFIG["obs_tpl"][1] = CONFIG["obs_tpl"][1].replace("相對現價 {px|P}（2026-11-05）", "相對現價 {px|P}（2026-11-13）")
+assert "（2026-11-13）" in CONFIG["obs_tpl"][1]
+CONFIG["version"] = "v0.5.6"
+CONFIG["date"] = "2026-11-16"
+CONFIG["v13_ver"] = ("v0.5.6（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113；Yahoo Finance 日線收盤）；共識、rf、預測匯率與模型假設不變；Rainbow Robotics 股價不在收盤檔，維持 2026-11-05 收盤。上一版（v0.5.5，2026-11-15）：" + CONFIG["v13_ver"])
+CONFIG["a1_note"] = CONFIG["a1_note"] + "；v0.5.6（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）"
+CONFIG["readme_tail"] = CONFIG["readme_tail"] + ["v0.5.6：現價與同業報價改 2026-11-13 收盤（工作單 px1113）；現價 201,500 → 206,000"]
