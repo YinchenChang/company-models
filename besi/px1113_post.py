@@ -131,7 +131,7 @@ def apply(wb, here, cfg):
                 if ws.title == "Val" and c.row in peer_rows:
                     continue
                 w = v
-                for a, b in cfg.get("sweep", (("%s 收盤" % old_date, "%s 收盤" % NEWD),)):
+                for a, b in cfg.get("sweep", (("%s 收盤" % old_date, "%s 收盤" % NEWD), ("股價日 %s" % old_date, "股價日 %s" % NEWD))):
                     w = w.replace(a, b)
                 if v.startswith("=") and re.search(r"\bpx\b", v):
                     w = w.replace(f"（{old_date}）", f"（{NEWD}）")

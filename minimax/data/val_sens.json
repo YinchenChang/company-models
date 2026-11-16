@@ -1,6 +1,6 @@
 {
  "note": "scripts/val_snapshots.py sens 產生；值＝改寫 Inputs 後整本 LibreOffice 重算的加權目標價（港元）；勿手改",
- "model": "build_xlsx.py（2026-11-16）",
+ "model": "build_xlsx.py（2026-11-17）",
  "base_tp": 131.524833379371,
  "cases": [
   {
