@@ -47,15 +47,15 @@ asof: 2026-10-25
 | 財務長 | David Kennedy | 2025-09 起代理；FY2026 年報列為財務長 | 接替 Yvonne McGill [外部・未經本專案檢核] |
 
 - 持續買回：2Q FY27 買回 950 萬股；稀釋股數由 FY2026 6.84 億降到 1H FY27 6.54 億（約 −4%）[本專案：20261116_戴爾個股模型_v0.2.7.xlsx In!H38、H59]。
-- 財務槓桿高：股東權益為負（2Q FY27 −US$14.27 億）、淨負債約 US$237 億 [本專案：20261030_戴爾個股模型_v0.1.2.xlsx In!H78、I76]。
+- 財務槓桿高：股東權益為負，ROE 用預設 20% [本專案：20261116_戴爾個股模型_v0.2.7.xlsx README!A18；In!E99:E100]。
 - 併購與治理：本專案尚未研究。
 
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| Supermicro（SMCI） | AI 伺服器品牌 | FY2027 有效份額約 8.1%（不同分母） | [本專案：20261104_美超微個股模型_v0.2.xlsx Units!D10] |
+| Supermicro（SMCI） | AI 伺服器品牌 | FY2027 有效份額約 8.4%（不同分母） | [本專案：20261116_美超微個股模型_v0.3.8.xlsx Units!D10] |
 | HPE | 企業 AI 伺服器 | 本專案未建立 | [本專案：20261116_戴爾個股模型_v0.2.7.xlsx In!I23] |
-| 鴻海、廣達、緯創 | ODM 直供雲端 | 三家（含緯穎）有效份額合計 43.0% | [本專案：20261030_戴爾個股模型_v0.1.2.xlsx Units!C14] |
+| 鴻海、廣達、緯創 | ODM 直供雲端 | 三家（含緯穎）有效份額合計 43.0% | [本專案：20261116_戴爾個股模型_v0.2.7.xlsx Units!C14] |
 
 - 雲端與 neocloud 直接向 ODM 採購、Supermicro 與 HPE 競價，是份額下滑的主因；本專案假設份額相對值逐年降到 0.80 [本專案：dell/README.md 份額合理性；20261116_戴爾個股模型_v0.2.7.xlsx In!E23:E25，Assumed]。
 
@@ -95,8 +95,8 @@ asof: 2026-10-25
 - 市場口徑一致性｜Dell 模型與美超微模型的 2026 年商用 GPU 系統市場現在同為 US$595B（先前兩模型因 AMD 2026 年每顆價值處理不同而有差異，已對齊），兩邊更新時需同步 [本專案：20261116_戴爾個股模型_v0.2.7.xlsx Units!C8；20261116_美超微個股模型_v0.3.8.xlsx Units!C8]｜模型更新
 
 ## 來源
-1. 本專案：`dell/README.md`（v0.1.2，2026-10-30）；`dell/dist/20261030_戴爾個股模型_v0.1.2.xlsx`（In、Q、Units 頁）
-2. 本專案：`smci/dist/20261104_美超微個股模型_v0.2.xlsx`（對照）
+1. 本專案：`dell/README.md`（v0.1.2，2026-10-30）；`dell/dist/20261116_戴爾個股模型_v0.2.7.xlsx`（In、Q、Units 頁）
+2. 本專案：`smci/dist/20261116_美超微個股模型_v0.3.8.xlsx`（對照）
 3. [Dell 8-K 2Q FY27 財報新聞稿](https://www.sec.gov/Archives/edgar/data/0001571996/000157199626000039/exhibit991earnings8kq2fy27.htm)（2026-09-01）
 4. [Dell FY2026 10-K（主管名單）](https://www.sec.gov/Archives/edgar/data/1571996/000157199626000008/dell-20260130.htm)（查閱 2026-10-25）
 5. [Business Wire：Dell CFO Transition](https://www.businesswire.com/news/home/20250908467929/en/Dell-Technologies-Announces-CFO-Transition)（2025-09-08）

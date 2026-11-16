@@ -11,7 +11,7 @@ asof: 2026-11-04
 ---
 
 ## 一句話定位
-AI 模型公司（位於 AI 金流的最上游）：自研 Claude 系列大模型，收入以企業與開發者按 token 付費的 API 為主（FY2025 82.9%，模型推估 FY2026 91.0%）[本專案：20261104_Anthropic收支模型_v0_1_9.xlsx SRC_ANT!E30、E416；Revenue!E58、E67；Derived]，算力向 Google、Amazon、Microsoft 等租用；本專案模型（已納入公開 S-1 與 S-1/A 的算力承諾）推估自由現金流 2026 年為正、2027–2029 年為負、2030 年起持續轉正，只靠已到位融資不需再募資 [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx Funding!E14–I14、D254、I43]，但若 SpaceXAI 合約照 S-1/A 月費付滿上限，需要外部資金 22.0bn [本專案：anthropic/docs/reports/20261103_v0.1.8.md ⑤]。
+AI 模型公司（位於 AI 金流的最上游）：自研 Claude 系列大模型，收入以企業與開發者按 token 付費的 API 為主（FY2025 82.9%，模型推估 FY2026 91.5%）[本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E30、E416；Revenue!E58、E67；Derived]，算力向 Google、Amazon、Microsoft 等租用；本專案模型（已納入公開 S-1 與 S-1/A 的算力承諾與初步招股說明書的 IPO 募資）推估自由現金流 2026 年為正、2027–2028 年為負、2029 年起持續轉正；計入已到位融資與 IPO 加同步私募淨額後不需再募資 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Funding!E14–I14、D254、I43]。
 
 ## 公司在做什麼
 - 模型與 API：Claude 分 Opus（頂層）、Sonnet（中層）、Haiku（低層）三個價位，按「每百萬 token」計價（token 是模型處理文字的最小單位）；2026-09 Opus 5.5 牌價輸入 4、輸出 20 美元，2026-10 Haiku 5.5 降至 0.1／0.5 美元 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E115–E116、E119–E120]。
@@ -25,21 +25,21 @@ AI 模型公司（位於 AI 金流的最上游）：自研 Claude 系列大模�
 |---|---|---|---|---|
 | API（用量計價） | 開發者、企業與雲端市集按 token 付費 | 82.9%（3.8 ÷ 4.585bn） | FY2025 | [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E30、E416]（[Derived]） |
 | 訂閱 | Pro／Max 個人方案＋Team／Enterprise 席位 | 17.2%（0.789 ÷ 4.585bn） | FY2025 | [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E29、E416]（[Derived]） |
-| API（用量計價） | 同上 | 91.0%（45.67 ÷ 50.2bn） | FY2026（模型推估） | [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx Revenue!E58、E67]（[Derived]） |
-| 訂閱 | 同上 | 9.0%（4.53 ÷ 50.2bn） | FY2026（模型推估） | [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx Revenue!E55、E67]（[Derived]） |
+| API（用量計價） | 同上 | 91.5%（48.96 ÷ 53.49bn） | FY2026（模型推估） | [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Revenue!E58、E67]（[Derived]） |
+| 訂閱 | 同上 | 8.5%（4.53 ÷ 53.49bn） | FY2026（模型推估） | [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Revenue!E55、E67]（[Derived]） |
 
-- 2025 年 API 與訂閱拆分來自外流招股書草稿，公開 S-1 未拆；2026 年 API 是由總額倒推的唯一項，不是公司揭露 [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx SRC_ANT!E30；Revenue!E57]；第三方估 2026 API 72.5%、訂閱 12.5% [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E65–E66]（[Analogy]）。
-- 雲端通路：2025 年 47% 營收經 Amazon／Google 雲端市集銷售（草稿轉述），公開 S-1 寫 2026 上半年約 48% [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E31、E466]；模型以總額認列後再扣平台抽成 16%（2026 抽成 4.14bn、淨額 46.05bn）[本專案：20261104_Anthropic收支模型_v0_1_9.xlsx Revenue!E70–E72]。
+- 2025 年 API 與訂閱拆分來自外流招股書草稿，公開 S-1 未拆；2026 年 API 是由總額倒推的唯一項，不是公司揭露 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E30；Revenue!E57]；第三方估 2026 API 72.5%、訂閱 12.5% [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E65–E66]（[Analogy]）。
+- 雲端通路：2025 年 47% 營收經 Amazon／Google 雲端市集銷售（草稿轉述），公開 S-1 寫 2026 上半年約 48% [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E31、E466]；模型以總額認列後再扣平台抽成 16%（2026 抽成 4.44bn、淨額 49.05bn）[本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Revenue!E70–E72]。
 - 客戶集中：公開 S-1 寫 2026 前九個月前五大客戶約占 25%、沒有單一客戶超過 10%；上半年最大揭露客戶（Customer C）占 11% [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E463、G464、E465]（[Verified]）。
 - 獲利：2026 Q2 首度 GAAP 營業獲利 0.974bn；Q3 營業損失 0.567bn，主因股權報酬 1.07bn 與一次性非現金捐贈配對 1.96bn，排除後調整後營業利益率 15% [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E445、E494–E496、E498]（S-1／S-1/A，[Verified]）；草稿轉述 2025 淨損 42bn（其中 34bn 為非現金重估）、2026 上半年淨損 80.7bn（約 72bn 非現金）[本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E284–E285、E395–E396]（[Interested-party]）。
 
 ## 市場定位與產業位置
-- 在 AI 金流最上游：模型 2026 營收淨額 46.05bn、算力成本（現金）28.18bn [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx Funding!E8–E9]；公司稱 Q3 每 1 美元算力支出帶來 1.7 美元營收 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E391]（[Interested-party]），以 S-1/A Q3 營收 16.956bn ÷ 算力與基礎設施費用 9.863bn 計約 1.72 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E492–E493]（[Derived]）。
-- 每 VR 等值 GW（把各種晶片換算成 NVIDIA VR200 的算力單位）：2026 營收淨額 41.38bn、全成本 42.58bn，覆蓋率 0.97；2030 升至 1.20 [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx Cost!E109、E113、E117、I117]。本模型沒有 OpenAI 那樣的 P×Q 回本比值頁：本專案未建立。
-- 晶片最分散的模型商：模型 2030 供給 12.94 GW 中，Google TPU v7／次世代 5.43 GW、Trainium3 1.58、AMD 1.6、NVIDIA 合計約 4.33（其中 2.79 GW 是 S-1 承諾中尚未對應到具名合約的餘額，以 VR200 族換算）[本專案：20261104_Anthropic收支模型_v0_1_9.xlsx Compute!I91–I100、I255]（[Derived] 加總）。
+- 在 AI 金流最上游：模型 2026 營收淨額 49.05bn、算力成本（現金）28.19bn [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Funding!E8–E9]；公司稱 Q3 每 1 美元算力支出帶來 1.7 美元營收 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E391]（[Interested-party]），以 S-1/A Q3 營收 16.956bn ÷ 算力與基礎設施費用 9.863bn 計約 1.72 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E492–E493]（[Derived]）。
+- 每 VR 等值 GW（把各種晶片換算成 NVIDIA VR200 的算力單位）：2026 營收淨額 44.05bn、全成本 55.05bn（含股權報酬），覆蓋率 0.80；2030 升至 1.28 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Cost!E109、E113、E117、I117]。本模型沒有 OpenAI 那樣的 P×Q 回本比值頁：本專案未建立。
+- 晶片最分散的模型商：模型 2030 供給 13.00 GW 中，Google TPU v7／次世代 5.43 GW、Trainium3 1.58、AMD 1.6、NVIDIA 合計約 4.39（其中 2.82 GW 是 S-1 承諾中尚未對應到具名合約的餘額，以 VR200 族換算）[本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Compute!I91–I100、I255]（[Derived] 加總）。
 - 算力承諾（公開 S-1/A，截至 2026-09-30）：總額約 895.4bn，含表內義務 320.0bn、已簽未起租租賃 451.2bn（加權租期約 10 年）、9-30 後新簽 100.2bn、短期承諾 17.4＋6.6bn；其中 213.8bn 附終止權或開工前條件 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E499–E500、E507–E508、E510–E511]（[Verified]）。表內義務付款：2026 Q4 5.2、2027 29.2、2028 44.4、2029 47.8、2030 45.1bn、之後 148.4bn；未來 12 個月預計支付 69.8bn [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E501–E506、E513]。
-- 逐家合約（S-1／S-1/A）：Google Cloud 121.3bn、Broadcom TPU 設備租賃 161.2bn（約 3.5 GW）、Amazon 110bn、Microsoft Azure 44.9bn、Nscale 最高 44.6bn、Lambda 41.3bn、SpaceXAI 最高 120.5bn（滿載每月約 3.1bn）[本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E517、E458、E192、E455、E518、E459–E460、E457、E519]；模型基準對 SpaceX 仍用每月 1.25bn、合計 45bn [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E231；Cost!D143]。模型把 S-1/A 三段承諾 871.4bn 扣掉逐家合約 580.1bn，餘額 291.3bn 依 S-1/A 付款結構計入成本 [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx Cost!D442、D368、D370]。
-- 投資人兼供應商：Google、Amazon、Microsoft、NVIDIA、AMD 同時是股東與算力賣方 [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx Funding!B20–B34]；本專案推估 Anthropic 約占 Google Cloud backlog 22%（下限）[本專案：alphabet_facts_20261008.json rp.anthropic.rpoShare]。
+- 逐家合約（S-1／S-1/A）：Google Cloud 121.3bn、Broadcom TPU 設備租賃 161.2bn（約 3.5 GW）、Amazon 110bn、Microsoft Azure 44.9bn、Nscale 最高 44.6bn、Lambda 41.3bn、SpaceXAI 最高 120.5bn（滿載每月約 3.1bn）[本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E517、E458、E192、E455、E518、E459–E460、E457、E519]；模型基準對 SpaceX 仍用每月 1.25bn、合計 45bn [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E231；Cost!D143]。模型把 S-1/A 三段承諾 876.9bn 扣掉逐家合約 582.4bn，餘額 294.5bn 依 S-1/A 付款結構計入成本 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Cost!D442、D368、D370]。
+- 投資人兼供應商：Google、Amazon、Microsoft、NVIDIA、AMD 同時是股東與算力賣方 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Funding!B101–B106]；本專案推估 Anthropic 約占 Google Cloud backlog 22%（下限）[本專案：alphabet_facts_20261008.json rp.anthropic.rpoShare]。
 
 ## 管理層與經營風格
 | 職位 | 姓名 | 任職起 | 背景 |
@@ -54,7 +54,7 @@ AI 模型公司（位於 AI 金流的最上游）：自研 Claude 系列大模�
 - 股權與治理（本專案可見部分）：共同創辦人經 Founder LLC 掌握 50.1% 投票權 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E315]。
 - 資本募集：公開 S-1 列 2026 年 Series G-1／G-2 30.2bn、Series H-1／H-2 65.2bn，另 Google 與 Amazon 於 Q2 認購 Series G-2 共 15.0bn；上半年特別股發行收入 110.4bn，Q3 無新股權 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E477–E478、E482、E476、E525]；模型 2026 已到位融資 110.4bn [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Funding!E26]。新聞稿口徑投後估值 Series G 380bn、Series H 965bn，成立以來私募累計 >125bn [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E307、E303、E308]（[Interested-party]）。
 - 現金：2025 年底 20.28bn、2026-06-30 131.65bn、2026-09-30 131.9bn（另受限現金 2.6bn）[本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E309、E448、E520–E521]；循環信用額度 2026-09 擴為 15.0bn [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E489]。
-- IPO（初步招股說明書 2026-11-10）：價格區間每股 70–78 美元 [本專案：20261111_Anthropic收支模型_v0_2_0.xlsx Val（VAL_PxLo、VAL_PxHi）]、中點 74 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E526]；公司新股加同步私募淨募資約 84.6bn [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E538]，其中私募 26.0bn 由 Google、NVIDIA、AMD 等以 IPO 價認購 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E529–E534]；發行後股數 13,086.7 百萬股 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E543]；2026-10-31 年化營收（Run-Rate Revenue）約 81bn [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E561]。本專案以區間中點計：加權目標價 82.71、上檔 +11.8%、中立 [本專案：20261111_Anthropic收支模型_v0_2_0.xlsx Val（VAL_TP_W、VAL_Up_W、VAL_Rating）]。
+- IPO（初步招股說明書 2026-11-10）：價格區間每股 70–78 美元 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Val!C47、C48]、中點 74 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E526]；公司新股加同步私募淨募資約 84.6bn [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E538]，其中私募 26.0bn 由 Google、NVIDIA、AMD 等以 IPO 價認購 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E529–E534]；發行後股數 13,086.7 百萬股 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E543]；2026-10-31 年化營收（Run-Rate Revenue）約 81bn [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E561]。本專案以區間中點計：加權目標價 82.71、上檔 +11.8%、中立 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Val!C10、C12、C15]。
 
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
@@ -89,8 +89,8 @@ AI 模型公司（位於 AI 金流的最上游）：自研 Claude 系列大模�
 - 註：Amazon 累計金額各來源不一（80 億 vs 約 130 億），未能調和。 [外部・未經本專案檢核]
 
 ## 近期重大事件
-- 2026-11-02｜公開 S-1/A（第 1 號修訂）：Q3 營收 16.956bn、營業損失 0.567bn、調整後營業利益率 15%；首次揭露算力承諾總額約 895.4bn 與付款表；發行價區間仍留白，路演最早 11-10 之後 [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx SRC_ANT!E492、E494、E498、E499；anthropic/docs/reports/20261103_S1A原文摘錄.md]
-- 2026-10-26｜向 SEC 公開提交 S-1：2026 上半年營收 16.286bn、Q2 首度 GAAP 營業獲利 0.974bn、6-30 現金與短期投資 131.65bn；承諾總額留白 [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx SRC_ANT!E418、E445、E448、D453；anthropic/docs/reports/20261102_S1原文核對.md]
+- 2026-11-02｜公開 S-1/A（第 1 號修訂）：Q3 營收 16.956bn、營業損失 0.567bn、調整後營業利益率 15%；首次揭露算力承諾總額約 895.4bn 與付款表；發行價區間仍留白，路演最早 11-10 之後 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E492、E494、E498、E499]；[本專案：anthropic/docs/reports/20261103_S1A原文摘錄.md]
+- 2026-10-26｜向 SEC 公開提交 S-1：2026 上半年營收 16.286bn、Q2 首度 GAAP 營業獲利 0.974bn、6-30 現金與短期投資 131.65bn；承諾總額留白 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E418、E445、E448、D453]；[本專案：anthropic/docs/reports/20261102_S1原文核對.md]
 - 2026-10-20｜WSJ 轉述草擬 S-1：上半年營收 16.3bn、淨損 80.7bn（約 72bn 非現金）、已鎖定算力承諾 >600bn、談判中再約 150bn；兩家客戶占上半年營收約兩成 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E384、E395–E396、E406–E407、E409]；[外部新聞：investingLive 引 WSJ]
 - 2026-10-14｜告訴投資人 Q3 營收 16.8bn（較 Q2 11.6bn 季增約 45%，[Derived]），連續第二季獲利（S-1/A 實際 Q3 營收 16.956bn）[本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E386、E388–E389、E492]；[外部新聞：The Star 引 Reuters／FT]
 - 2026-10-07｜推出 Haiku 5.5（0.1／0.5 美元），Sonnet 5.5 快取讀取價減半 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E119–E120、E132]
@@ -99,15 +99,15 @@ AI 模型公司（位於 AI 金流的最上游）：自研 Claude 系列大模�
 - 2026-09-22｜Opus 5.5 上市，牌價降 20% [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E162]
 
 ## 需要觀察的事項
-- 收支結果｜本專案模型自由現金流 2026–2030：+7.0、−42.3、−49.6、−5.6、+42.8bn，2030 年起持續轉正 [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx Funding!E14–I14、D254]；計入已到位 110.4bn 股權後累計外部資金需求為 0，現金谷底 40.2bn（2029 年，當年最低現金 12.0bn）；若完全不融資則需 102.5bn [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx Funding!E26、I43、D54、H38、I127]；每 VR 等值 GW 差額 2026–2030 為 −1.20、−7.54、−6.14、−1.44、+3.65bn，2030 年才持續轉正 [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx Cost!E115–I115、D412]｜S-1/A 第 2 號修訂（價格區間）、IPO 後首份季報
-- SpaceXAI 讀法｜模型基準仍用每月 1.25bn × 36 個月＝45bn；S-1/A 寫滿載每月約 3.1bn、上限 120.5bn、2027 Q1 後可 90 天通知取消 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Cost!D143；SRC_ANT!E519、E457]。若照 S-1 路徑付滿上限，累計外部資金需求由 0 變 22.0bn（首次 2029 年），是 v0.1.8 唯一單獨就讓結論翻轉的讀法 [本專案：anthropic/docs/reports/20261103_v0.1.8.md ⑤、⑪]｜2027 Q1 取消權生效前
-- 承諾與附條件｜模型算力成本（現金）2028 年 146.7bn、2029 年 141.9bn，其中包含 S-1/A 三段承諾 871.4bn 裡未對應到具名合約的餘額，依付款表攤付（2029 年 34.4bn）[本專案：20261104_Anthropic收支模型_v0_1_9.xlsx Funding!G9–H9；Cost!D442、H372]；附條件 213.8bn 若全數自承諾扣除（上緣讀法），每 VR 等值 GW 差額提早到 2029 年持續轉正、現金谷底升至 92.25bn [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E512；anthropic/docs/reports/20261103_v0.1.8.md ②]；草稿轉述的談判中 150bn 若全數成交，2030 每 VR 等值 GW 差額由 3.65 降到 0.98bn，並需外部資金 6.4bn（2029 年）[本專案：20261104_Anthropic收支模型_v0_1_9.xlsx Cost!I115、I262；Funding!H116、I118]｜新合約公告、S-1/A 承諾表更新
-- 2026 Q4 與一次性捐贈｜模型假設 Q4＝Q3，全年營收 50.2bn [本專案：20261104_Anthropic收支模型_v0_1_9.xlsx Revenue!E67]；2026 全成本把 Q3 非現金捐贈 1.96bn 照 Q4＝Q3 再計一次（合計 3.92bn），若只計一次，2026 每 VR 等值 GW 差額由 −0.94 轉為 +0.44bn（非現金，不影響現金與外部資金）[本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Cost!E431；anthropic/docs/reports/20261103_v0.1.8.md ⑤]｜2027 年初 Q4 實績
+- 收支結果｜本專案模型自由現金流 2026–2030：+10.3、−37.4、−42.2、+4.6、+56.3bn，2029 年起持續轉正 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Funding!E14–I14、D254]；計入已到位 110.4bn 股權與 IPO 加同步私募淨額 80.8bn（基準；累計股權流入 191.2bn）後累計外部資金需求為 0，現金谷底 142.2bn（2028 年底，當年最低現金 10.3bn）；若不計任何融資、只靠營運現金流則需 79.6bn [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Funding!E26、E30、E36、I43、D54、G38、I127]；每 VR 等值 GW 差額 2026–2030 為 −11.00、−7.71、−5.54、−0.35、+5.07bn，2030 年才持續轉正 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Cost!E115–I115、D412]｜S-1/A 第 2 號修訂（價格區間）、IPO 後首份季報
+- SpaceXAI 讀法｜模型基準仍用每月 1.25bn × 36 個月＝45bn；S-1/A 寫滿載每月約 3.1bn、上限 120.5bn、2027 Q1 後可 90 天通知取消 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Cost!D143；SRC_ANT!E519、E457]；模型另設 S-1 路徑開關（基準 0＝不啟用）[本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Inputs!E221]，本專案未在本頁列示啟用後的結果｜2027 Q1 取消權生效前
+- 承諾與附條件｜模型算力成本（現金）2028 年 147.4bn、2029 年 142.6bn，其中包含 S-1/A 三段承諾 876.9bn 裡未對應到具名合約的餘額，依付款表攤付（2029 年 34.7bn）[本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Funding!G9–H9；Cost!D442、H372]；附條件或可終止承諾，S-1/A 為 213.8bn、初步招股說明書為 186.2bn [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E512、E573]；草稿轉述的談判中 150bn 若全數成交，2030 每 VR 等值 GW 差額由 5.07 降到 2.16bn，外部資金需求仍為 0 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Cost!I115、I262；Funding!H116、I118]｜新合約公告、S-1/A 承諾表更新
+- 2026 Q4 與一次性捐贈｜模型 Q4 營收讀 2026-10-31 年化 81bn ÷ 4＝20.25bn，全年營收總額 53.49bn [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E561；Inputs!E240；Revenue!E67]；2026 全成本把 Q3 非現金捐贈 1.96bn 照 Q4＝Q3 再計一次（合計 3.92bn；非現金，不影響現金與外部資金）[本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Inputs!E232；Cost!E431]｜2027 年初 Q4 實績
 - 雲端平台抽成率｜基準 16%，區間至 30%，直接決定營收淨額 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Revenue!E70、K70]；S-1 寫上半年約 48% 營收經雲端市集，但未揭露抽成率 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E466]｜IPO 後首份季報
 
 ## 來源
-1. 本專案：`anthropic/dist/20261104_Anthropic收支模型_v0_1_9.xlsx`（SRC_ANT、Revenue、Compute、Cost、Funding）與 `anthropic/dist/20261104_Anthropic收支模型_v0_1_9.html`（2026-11-05 全部改引 v0.1.9；每 VR 等值 GW 營收、成本與差額 3 處數字改為 v0.1.9 值，因 Tokenomics v21.10 產出比使 VR 等值 GW 變少，總金額不變；v0.1.8 存 `anthropic/model/archive/20261103_Anthropic_v0.1.8.xlsx`）；`anthropic/docs/handoff/Anthropic_handoff.md`；`anthropic/docs/reports/20261103_v0.1.8.md`、`20261103_S1A原文摘錄.md`、`20261102_S1原文核對.md`、`20261102_v0.1.7.1.md`、`20261031_v0.1.7.md`、`20261031_v0.1.6.md`
-2. 本專案：`openai/dist/20261029_OpenAI收支模型_v0_6_4.xlsx`（SRC_OAI）；`minimax/dist/20261022_MiniMax收支模型_v0_2.xlsx`（SRC_MM）；`alphabet/data/alphabet_facts_20261008.json`
+1. 本專案：`anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx`（SRC_ANT、Revenue、Compute、Cost、Funding、Val、Inputs）與 `anthropic/dist/20261115_Anthropic收支模型_v0_2_3.html`；`anthropic/docs/handoff/Anthropic_handoff.md`；`anthropic/docs/reports/20261115_v0.2.3.md`、`20261111_v0.2.0.md`、`20261103_S1A原文摘錄.md`、`20261102_S1原文核對.md`
+2. 本專案：`openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx`（SRC_OAI）；`minimax/dist/20261116_MiniMax收支模型_v0_2_4.xlsx`（SRC_MM）；`alphabet/data/alphabet_facts_20261008.json`
 3. [Anthropic, PBC Form S-1/A（Amendment No. 1）](https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm)（SEC EDGAR，2026-11-02）
 4. [Anthropic, PBC Form S-1](https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm)（SEC EDGAR，2026-10-26）
 5. [Anthropic IPO draft shows nearly 15-fold revenue jump and $600 billion in compute deals](https://investinglive.com/stocks/anthropic-ipo-draft-shows-nearly-15-fold-revenue-jump-and-600-billion-in-compute-deals/)（investingLive，2026-10-20）

@@ -90,12 +90,12 @@ asof: 2026-10-25
 - FQ1 FY27 財報｜檢驗指引 61.5B 與模型 FY27 平均每季約 66.4B（A 情境；B、C 約 67.0B）的差距 [本專案：20261116_美光個股模型_v0.5.6.xlsx Y!D4、G4 ÷ 4，Derived]｜2026 年 12 月中下旬（日期本次未確認）
 - 股東回饋擴大幅度｜模型取超額現金 80% 回饋；回饋越快，P/B 法下的淨值越低、買回加回 P/B 越重要 [本專案：20261116_美光個股模型_v0.5.6.xlsx In!E61]｜2026-12-09 起
 - HBM 2028 年價格重議｜模型 2028 單價 A／B／C ＝ +10%／−25%／−40%，FY2028 營業利益 243.5／144.1／111.0B [本專案：20261116_美光個股模型_v0.5.6.xlsx In!E221:E223、Y!E14、H14、K14]｜各季法說
-- ROE 與估值｜模型 ROE FY26 61%、FY27A 91%，遠高於十年歷史；估值 v2 加權目標價 $743.42（DCF $921.76、同業 P/B 法 $433.49，經相對倍數調整後 $565.09 才進加權），舊法十年 P/B 規則值情境加權價 $347.71，兩法相差 2.1 倍（[Derived]：743.42 ÷ 347.71；空間以 2026-10-23 收盤計，見網站「可投資性」頁）[本專案：20261030_美光個股模型_v0.4.3.xlsx Y!C30:D30、Val!B208、B193、B209、B251、B223]｜每季更新淨值
+- ROE 與估值｜模型 ROE FY26 61%、FY27A 92%，遠高於十年歷史；估值 v2 加權目標價 $511.70（DCF $510.32、同業 P/B 法 $393.60，經相對倍數調整後 $513.08 才進加權），舊法十年 P/B 規則值情境加權價 $365.02，兩法相差 1.4 倍（[Derived]：511.70 ÷ 365.02；空間以 2026-11-13 收盤計，見網站「可投資性」頁）[本專案：20261116_美光個股模型_v0.5.6.xlsx Y!C30:D30、Val!B208、B193、B209、B251、B223]｜每季更新淨值
 - 一般 DRAM 與 NAND 合約價見頂｜美光 FY 含半年 CY2028，對 2028 谷底較不敏感 [本專案：micron/README.md v0.3 變更]｜TrendForce 每季合約價
 
 ## 來源
-1. 本專案：`micron/README.md`、`micron/dist/20261030_美光個股模型_v0.4.3.xlsx`（In、Q、Y、Val 頁）
-2. 本專案：`先驗與比對/先驗比對_HBM_20261008.md`；`skhynix/dist/20261030_SK海力士個股模型_v0.6.1.xlsx` In 頁
+1. 本專案：`micron/README.md`、`micron/dist/20261116_美光個股模型_v0.5.6.xlsx`（In、Q、Y、Val 頁）
+2. 本專案：`先驗與比對/先驗比對_HBM_20261008.md`；`skhynix/dist/20261116_SK海力士個股模型_v0.7.8.xlsx` In 頁
 3. [Micron Reports Record Fiscal Fourth-Quarter and Full-Year 2026 Results（Micron）](https://investors.micron.com/news/press-release/2026/Micron-Technology-Inc--Reports-Record-Fiscal-Fourth-Quarter-and-Full-Year-2026-Results/)（2026-09-30）
 4. [Micron FQ4 2026 Prepared Remarks（Micron）](https://investors.micron.com/files/doc_financials/2026/q4/Q4-FY26-Prepared-Remarks.pdf)（2026-09-30）
 5. [Earnings call transcript: Micron tops Q4 2026 estimates（Investing.com）](https://www.investing.com/news/transcripts/earnings-call-transcript-micron-tops-q4-2026-estimates-as-demand-stays-hot-93CH-4925992)（2026-09-30）

@@ -1075,7 +1075,7 @@ if SENS:
     _flip = [4 + i for i, c in enumerate(SENS["cases"]) if any(c.get(sd) and c[sd]["rec"] in _LOW for sd in ("lo", "hi"))]
 _SR = [4, 3 + len(SENS['cases'])] if SENS else [4, 4]
 _med = '"四家中間兩家的平均"'
-crow("bn_frag", "橫幅：評等脆弱點（原則 36）", "—", '=IF(C{d}<0.05,"評等脆弱點：(a) 同業中位數剛好是 "&{m}&"（"&TEXT(mult,"0.00")&" 倍）；(b) 同業估值日 11-13 與現價日同日（IREN 無報價維持 11-11；DLR、EQIX 維持 10 月初）、CoreWeave 共識為其財報前；(c) Sens 單一案例中有 "&TEXT({n},"0")&" 案的估值評等會由買進降為中立或更低"{lst},"")'.format(
+crow("bn_frag", "橫幅：評等脆弱點（原則 36）", "—", '=IF(C{d}<0.05,"評等脆弱點：(a) 同業中位數剛好是 "&{m}&"（"&TEXT(mult,"0.00")&" 倍）；(b) 同業估值日 11-13 與現價日同日（IREN 亦為 11-13 收盤；DLR、EQIX 維持 10 月初）、CoreWeave 共識為其財報前；(c) Sens 單一案例中有 "&TEXT({n},"0")&" 案的估值評等會由買進降為中立或更低"{lst},"")'.format(
     d=CON["dist"], m=_med, n=f'SUMPRODUCT(--((ISNUMBER(MATCH(Sens!M{_SR[0]}:M{_SR[1]},{{"中立","放空","強力放空"}},0))+ISNUMBER(MATCH(Sens!N{_SR[0]}:N{_SR[1]},{{"中立","放空","強力放空"}},0)))>0))' if SENS else "0", lst=('&"（如 "&' + '&"、"&'.join(f"Sens!L{x}" for x in _flip[:6]) + ('&" 等）"' if len(_flip) > 6 else '&"）"')) if _flip else ''), None)
 V.column_dimensions["A"].width = 64; V.column_dimensions["B"].width = 11
 for c in "CDE": V.column_dimensions[c].width = 12
