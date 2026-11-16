@@ -25,6 +25,7 @@ INP = []
 
 
 def add(key, label, unit, lo, base, hi, tag, src, inc=""):
+    if "http" in src: src = src.replace("未找到", "未取得")
     INP.append((key, label, unit, lo, base, hi, tag, src, inc))
 
 
@@ -40,10 +41,10 @@ add("px", "現價（2026-11-13 收盤）", "US$/股", None, 291.00, None, D0, SA
 add("sh_out", "流通股數（10-Q 封面，2026-08-21）", "M股", None, 352.8, None, D0, Q2Q + " 封面：352.8 百萬股（2026-08-21）；法定申報為主來源，StockAnalysis 352.46M 為第二來源")
 add("sh_dil", "在外 RSU（扣預期沒收）與選擇權庫藏股法的稀釋加項（可轉債另列為債務）", "M股", 10, 18, 35, AS, "規格要求 RSU 與選擇權庫藏股法（DCF 規格第 3 節）：10-Q Note 12 的在外 RSU／PSU 與選擇權數量、履約價、沒收率本次未取得（未找到：已兩次讀取 10-Q，附註未在讀到的段落內）；代理值＝公司 FY2027 非 GAAP 稀釋加權股數指引 380M 減流通股 352.8M 與可轉債 if-converted 約 10M＝約 17M，取 18M（Interested-party 推算，標 Assumed）；已授予未認列補償約 3.8B（10-Q MD&A）", "")
 add("cash", "現金、約當現金與投資（2026-07-31）", "US$M", None, 4329.177, None, D0, Q2Q + " 資產負債表：現金及約當現金 1,707.187＋短期投資 637.508＋長期投資 1,984.482")
-add("conv", "可轉換優先票據本金（2027 年與 2029 年票據各 1,150；2026-07-31）", "US$M", None, 2300, None, D0, Q2Q + " MD&A：兩檔各 1.15B 本金；資產負債表帳面淨額 2,283.985；capped call 上限價 225.00；轉換價本次未取得（未找到）。依規格以債務本金計，不另計 if-converted 稀釋（現價高於上限價，轉換稀釋已部分由 capped call 對沖，未建模）")
+add("conv", "可轉換優先票據本金（2027 年與 2029 年票據各 1,150；轉換價未找到；2026-07-31）", "US$M", None, 2300, None, D0, Q2Q + " MD&A：兩檔各 1.15B 本金；資產負債表帳面淨額 2,283.985；capped call 上限價 225.00；轉換價本次未取得（未找到）。依規格以債務本金計，不另計 if-converted 稀釋（現價高於上限價，轉換稀釋已部分由 capped call 對沖，未建模）")
 add("lease", "融資租賃負債（未找到；以 0 為基準）；營業租賃負債 479.8（流動 59.787＋非流動 420.043）依規格不計入淨債務", "US$M", 0, 0, 300, AS, "10-Q 資產負債表營業租賃 59.787＋420.043（Verified，不計入）；融資租賃金額未找到；以 0 計並以區間作敏感度")
 add("rf", "無風險利率（10 年美債；2026-10-27，距股價日 2026-11-13 逾兩個交易日，標逾期）", "比例", 0.045, 0.0499, 0.055, D0, "沿用 repo meta/README.md 所載 2026-10-27 10 年美債 4.99%；本次未重讀財政部頁面")
-add("beta_raw", "Beta（5 年，單一來源）", "—", 1.0, 1.32, 1.5, D0, SA + "（beta 1.32）；規格要兩來源取 Blume 中位數，只取得一個（未找到第二來源）；docs/plan/自算產業β_20261105.md 的軟體產業 β 本版未套用")
+add("beta_raw", "Beta（5 年，單一來源；第二來源未找到）", "—", 1.0, 1.32, 1.5, D0, SA + "（beta 1.32）；規格要兩來源取 Blume 中位數，只取得一個（未找到第二來源）；docs/plan/自算產業β_20261105.md 的軟體產業 β 本版未套用")
 add("erp", "股權風險溢酬", "比例", 0.04, 0.05, 0.06, AS, "DCF 標準規格預設 5%（4–6%）")
 add("kd_sp", "稅前負債信用利差（相對 rf）", "比例", 0.008, 0.012, 0.02, AS, "可轉債票面利率與公司債有效利率未取得（未找到）；以利差假設")
 add("g_tv", "永續成長率", "比例", 0.02, 0.03, 0.04, AS, "DCF 標準規格預設 3%（2–4%）")
@@ -608,12 +609,11 @@ for k, lab, spec in rec_rows:
     r += 1
 KREQ = os.path.join(HERE, "data/kreq_v01.json")
 if os.path.exists(KREQ):
-    kq = json.load(open(KREQ, encoding="utf-8"))
-    RCR["kreq"] = r
-    Rc.cell(r, 1, "反解（整本重算）：" + kq["label"] + " 為多少時，加權目標價＝現價")
-    Rc.cell(r, 2, kq["base"]); Rc.cell(r, 5, kq["req"])
-    Rc.cell(r, 6, kq["note"])
-    r += 1
+    for n_, kq in enumerate(json.load(open(KREQ, encoding="utf-8"))):
+        RCR["kreq" if n_ == 0 else "kreq2"] = r
+        Rc.cell(r, 1, "反解（整本重算）：" + kq["label"] + " 為多少時，加權目標價＝現價")
+        Rc.cell(r, 2, kq["base"]); Rc.cell(r, 5, kq["req"]); Rc.cell(r, 6, kq["note"])
+        r += 1
 Rc.cell(r + 1, 1, "3. 同業日期與口徑").font = BOLD
 Rc.cell(r + 2, 1, "同業前瞻 P/S 取自 StockAnalysis；MongoDB、ServiceNow、Elastic 為 2026-11-06（距股價日逾兩個交易日，標逾期），CrowdStrike 頁面未載日期；八家家數達規格門檻但前瞻期間不一，不做迴歸；以調整係數作敏感度。")
 Rc.cell(r + 3, 1, "4. Q3 FY27 實績（截至 2026-10-31）尚未公布，發布日未找到；本版以 Q2 FY27 為最新已公布季，Q3 指引（產品營收 1,588–1,593、非 GAAP 營業利益率 15.5%）只作對照。")

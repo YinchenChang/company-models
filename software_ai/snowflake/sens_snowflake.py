@@ -40,23 +40,23 @@ def val(k): return ws.cell(IR[k], 5).value
 
 
 if KREQ:
-    key = "opx_dr"
-    lo, hi = 0.0, 0.2
-    f = lambda x: run_case(0, {key: x}, os.path.join(WD, "lo0"))[0]
-    base_tp = f(val(key)); px = ws.cell(IR["px"], 5).value
-    top = f(hi)
-    if top < px:
-        res = {"req": None, "note": f"上限 {hi:g} 仍不足以使加權目標價達現價（上限時 {top:.1f}）"}
-    else:
-        for _ in range(14):
-            mid = (lo + hi) / 2
-            if f(mid) < px: lo = mid
-            else: hi = mid
-        res = {"req": round((lo + hi) / 2, 4), "note": "二分法，14 次整本重算；其餘輸入取基準；反解值是「加權目標價＝現價」的點，不是評等門檻"}
-    out = {"key": key, "label": "非 GAAP 營業費用率逐年下降幅度（opx_dr，百分點/年）", "base": val(key), "px": px, "base_tp": base_tp, **res}
-    if out["req"] is None: out["req"] = "無解"
-    json.dump(out, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-    print(out); shutil.rmtree(WD, ignore_errors=True); sys.exit(0)
+    px = ws.cell(IR["px"], 5).value
+    outs = []
+    for key, label, hi0 in (("opx_dr", "非 GAAP 營業費用率逐年下降幅度（opx_dr，百分點/年；FY2028 起）", 0.2), ("cm_adj", "Comparable 倍數調整係數（cm_adj；對同業前瞻 P/S 中位數的倍數）", 5.0)):
+        lo, hi = (0.0 if key == "opx_dr" else 0.5), hi0
+        f = lambda x: run_case(0, {key: x}, os.path.join(WD, "lo0"))[0]
+        base_tp = f(val(key)); top = f(hi)
+        if top < px:
+            req, note = "無解", f"上限 {hi:g} 仍不足以使加權目標價達現價（上限時 {top:.1f}）；其餘輸入取基準"
+        else:
+            for _ in range(14):
+                mid = (lo + hi) / 2
+                if f(mid) < px: lo = mid
+                else: hi = mid
+            req, note = round((lo + hi) / 2, 3), "二分法，14 次整本重算；其餘輸入取基準；反解值是「加權目標價＝現價」的點，不是評等門檻"
+        outs.append({"key": key, "label": label, "base": val(key), "px": px, "base_tp": base_tp, "req": req, "note": note})
+    json.dump(outs, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    print(outs); shutil.rmtree(WD, ignore_errors=True); sys.exit(0)
 
 cases = []  # (key, side, sets, setting, label)
 NOTE = {("g_px", "高"): "｜上界：只動成本端價格，售價不聯動", ("g_px", "低"): "｜只動成本端價格，售價不聯動", ("U_tier", "低"): "｜路由到較便宜模型",

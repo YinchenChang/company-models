@@ -33,6 +33,10 @@ for side in ("低", "高"):
     if small:
         sens_blocks.append(dict(base, title=f"加權目標價相對基準：輸入取{side}值，其餘案例", rows=",".join(map(str, small)), collapse=True,
                                 summary=f"展開：輸入取{side}值，變動未達兩位數百分比的案例"))
+_link = [r for r in case_rows if SE.cell(r, 3).value == "聯動"]
+if _link:
+    sens_blocks.append({"type": "tornado", "title": "加權目標價相對基準：價格與成本聯動、模型路由組合案例", "sheet": "Sens", "rows": ",".join(map(str, _link)), "label_col": "A", "value_col": "E", "fmt": "sp1", "collapse": True,
+                        "summary": "展開：價格與成本聯動、模型路由組合案例"})
 sens_blocks.append({"type": "table", "collapse": True, "summary": "展開：全部案例（含收支關卡 B、DCF 目標價與投資建議）",
                     "head": ["驅動", "設定", "方向", "加權目標價", "相對基準", "收支關卡 B", "DCF 目標價", "投資建議"],
                     "rowgen": {"sheet": "Sens", "rows": f"4-{rm['SE_END']}", "cols": ["A", "B", "C", "D", "E", "H", "I", "J"], "fmts": ["", "", "", "n2", "sp1", "n1", "n2", ""]}})
@@ -101,7 +105,8 @@ valuation = {"id": "valuation", "title": "估值", "blocks": [
      "rows": [[f"@Val!A{VR['tpdcf']}", vv("tpdcf", "B", "n2"), f"@Val!E{VR['tpdcf']}"], [f"@Val!A{VR['tpcomp']}", vv("tpcomp", "B", "n2"), f"@Val!E{VR['tpcomp']}"],
               [f"@Val!A{VR['tp']}", vv("tp", "B", "n2"), f"@Val!E{VR['tp']}"], [f"@Val!A{VR['px']}", vv("px", "B", "n2"), f"@Val!E{VR['px']}"],
               [f"@Val!A{VR['cons']}", vv("cons", "B", "n0"), f"@Val!E{VR['cons']}"], [f"@Val!A{VR['up']}", vv("up", "B", "sp1"), ""], [f"@Val!A{VR['upc']}", vv("upc", "B", "sp1"), ""],
-              [f"@Val!A{VR['tier']}", vv("tier"), f"@Val!E{VR['tier']}"], [f"@Val!A{VR['gate_chk']}", vv("gate_chk"), f"@Val!E{VR['gate_chk']}"], [f"@Val!A{VR['rec']}", vv("rec"), f"@Val!E{VR['rec']}"]]},
+              [f"@Val!A{VR['tier']}", vv("tier"), f"@Val!E{VR['tier']}"], [f"@Val!A{VR['valrate']}", vv("valrate"), f"@Val!E{VR['valrate']}"], [f"@Val!A{VR['gate_chk']}", vv("gate_chk"), f"@Val!E{VR['gate_chk']}"],
+              [f"@Val!A{VR['gate_in']}", vv("gate_in", "B", "n1"), f"@Val!E{VR['gate_in']}"], [f"@Val!A{VR['rec']}", vv("rec"), f"@Val!E{VR['rec']}"]]},
     {"type": "kv", "items": [[f"@Val!A{VR[k]}", vv(k, "B", f)] for k, f in (("rf", "p2"), ("beta", "n2"), ("erp", "p1"), ("ke", "p2"), ("kdat", "p2"), ("wacc", "p2"), ("ronic", "p2"), ("g", "p1"))]},
     {"type": "table", "caption": "DCF 彙總（三情境；十億日圓，每股為日圓）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
      "rowgen": {"sheet": "Val", "rows": f"{VR['pvx']}-{VR['dcf12']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"],
@@ -109,6 +114,14 @@ valuation = {"id": "valuation", "title": "估值", "blocks": [
     {"type": "table", "caption": "分部加總（FY2027E 分部 EBITDA × 倍數；目標時點）", "head": ["分部", "情境 A", "情境 B", "情境 C", "倍數", "EBITDA 率"],
      "rowgen": {"sheet": "Val", "rows": f"{VR['s_media']}-{VR['s_ps']}", "cols": ["A", "B", "C", "D", "E", "F"], "fmts": ["", "n1", "n1", "n1", "x1", "p1"],
                 "row_fmt": {str(VR["s_ps"]): {c: "n2" for c in "BCD"}}}},
+    {"type": "table", "caption": "DCF 與 Comparable 落差分解（情境 B，每股日圓）", "head": ["項目", "數值"],
+     "rows": [[f"@Val!A{VR[k]}", vv(k, "B", f)] for k, f in (("g_tot", "n2"), ("g_mult", "n2"), ("g_lev", "n2"), ("g_time", "n2"), ("g_sbc", ""), ("g_chk", "n2"), ("g_evd", "n0"), ("g_imp", "n1"), ("g_sum", "n1"))]},
+    {"type": "table", "caption": "本公司現行倍數與同業中位數（隱含重估）", "head": ["項目", "數值"],
+     "rows": [[f"@Val!A{VR[k]}", vv(k, "B", f)] for k, f in (("c_ev", "n0"), ("c_eb", "n1"), ("c_mult", "n1"), ("c_peer", "n1"), ("c_ratio", "n2"), ("c_rr", "sp1"))]},
+    {"type": "table", "caption": "同業 EV／EBITDA（TTM；Analogy；逾期＝資料日與現價基準日相差超過 2 個交易日）", "head": ["公司", "對應分部", "會計準則", "租賃處理", "倍數", "資料日", "逾期"],
+     "rowgen": {"sheet": "Peers", "rows": "4-14", "cols": ["A", "C", "D", "E", "H", "I", "J"], "fmts": ["", "", "", "", "x1", "", ""]}},
+    {"type": "table", "caption": "逾期核對（第 15 條）", "head": ["項目", "資料日", "狀態"],
+     "rows": [[f"@Val!A{VR[k]}", f"@Val!B{VR[k]}", f"@Val!C{VR[k]}"] for k in ("o_rf", "o_peer", "o_cons", "o_ly")]},
     {"type": "table", "caption": "情境目標價與收支關卡", "head": ["項目", "數值"],
      "rows": [[f"@Val!A{VR[k]}", vv(k, "B", f)] for k, f in (("t_A", "n2"), ("t_B", "n2"), ("t_C", "n2"), ("wsum", "p0"), ("per", "n1"), ("gate_A", "n0"), ("fcf_gate", "n0"), ("gate_C", "n0"))]}]}
 # ---------- 3. 敏感度 ----------
@@ -158,6 +171,11 @@ recon = {"id": "recon", "title": "對帳：公司指引與市場共識", "blocks
     {"type": "note", "parts": ["@Recon!A2"]},
     {"type": "table", "caption": "公司指引 vs 模型情境 B（公司指引＝Interested-party）", "head": ["項目", "年度", "模型情境 B", "公司指引", "差距", "說明"],
      "rowgen": {"sheet": "Recon", "rows": f"{RCR['rev']}-{RCR['eps']}", "cols": ["A", "B", "C", "D", "E", "F"], "fmts": ["", "", "n1", "n1", "sp1", ""]}},
+    {"type": "table", "caption": "反解：整本重算，使加權目標價等於現價所需的主導變數", "head": ["項目", "數值", "對照", "差距", "說明"],
+     "rows": [[f"@Recon!A{RCR['sv_base']}", f"@Recon!C{RCR['sv_base']}|p2", "", "", f"@Recon!F{RCR['sv_base']}"],
+              [f"@Recon!A{RCR['sv_x']}", f"@Recon!C{RCR['sv_x']}|p2", "", "", f"@Recon!F{RCR['sv_x']}"],
+              [f"@Recon!A{RCR['sv_d']}", f"@Recon!C{RCR['sv_d']}|n2", "", "", ""],
+              [f"@Recon!A{RCR['sv_tp']}", f"@Recon!C{RCR['sv_tp']}|n2", f"@Recon!D{RCR['sv_tp']}|n2", f"@Recon!E{RCR['sv_tp']}|sp2", f"@Recon!F{RCR['sv_tp']}"]]},
     {"type": "table", "caption": "上半年實績與共識", "head": ["項目", "數值", "對照", "差距", "說明"],
      "rows": [[f"@Recon!A{RCR['h1v']}", f"@Recon!C{RCR['h1v']}|n1", "", "", f"@Recon!F{RCR['h1v']}"], [f"@Recon!A{RCR['h1v'] + 1}", f"@Recon!C{RCR['h1v'] + 1}|p1", "", "", f"@Recon!F{RCR['h1v'] + 1}"],
               [f"@Recon!A{RCR['tpc']}", f"@Recon!C{RCR['tpc']}|n2", f"@Recon!D{RCR['tpc']}|n0", f"@Recon!E{RCR['tpc']}|sp1", f"@Recon!F{RCR['tpc']}"]]}]}
@@ -165,7 +183,7 @@ recon = {"id": "recon", "title": "對帳：公司指引與市場共識", "blocks
 status = {"id": "status", "title": "資料狀態", "blocks": [
     {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期", "@README!A1"], ["build_id", f"@Sens!D{rm['SE_BID']}"], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"]]},
     {"type": "h3", "text": "本版要點與限制"},
-    {"type": "list", "items": ["@README!A2", "@README!A14", "@README!A15", "@README!A16"]},
+    {"type": "list", "items": ["@README!A2", "@README!A14", "@README!A15", "@README!A16", "@README!A17", "@README!A41"]},
     {"type": "h3", "text": "市場資料日期與失效條件"},
     {"type": "list", "items": ["@README!A29", "@README!A31"]},
     {"type": "table", "caption": "風險登錄", "head": ["風險", "是否建模", "理由", "觀察指標"], "rowgen": {"sheet": "README", "rows": "34-38", "cols": ["A", "B", "C", "D"]}},

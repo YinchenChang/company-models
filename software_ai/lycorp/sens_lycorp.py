@@ -33,9 +33,12 @@ def read(x):
 
 def run(case):
     k, side, v = case
-    tag = f"{k}_{side}".replace("|", "_")
+    tag = f"{k}_{side}".replace("|", "_").replace("@", "c_")
     raw = os.path.join(WD, f"c_{tag}.xlsx")
-    subprocess.run([sys.executable, os.path.join(HERE, "build_lycorp.py"), raw, "--set", f"{k}={v}"], check=True, stdout=subprocess.DEVNULL)
+    sets = []
+    for kv in (v.split(";") if k.startswith("@") else [f"{k}={v}"]):
+        sets += ["--set", kv]
+    subprocess.run([sys.executable, os.path.join(HERE, "build_lycorp.py"), raw] + sets, check=True, stdout=subprocess.DEVNULL)
     return f"{k}|{side}", read(recalc(raw, tag))
 
 
@@ -49,5 +52,29 @@ with cf.ThreadPoolExecutor(JOBS) as ex:
     for key, r in ex.map(run, cases):
         res[key] = r
         print(key, round(r["tp"], 2), flush=True)
-json.dump({"base_tp": base["tp"], "fp": fp, "cases": res}, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+# 反解：主導變數＝無 AI 基礎營業利益率（opm26＝opm32，全期持平），割線法求加權目標價＝現價
+wbi = wbk["In"]
+px = wbi.cell(rm["IN"]["px"], 5).value
+x0 = wbi.cell(rm["IN"]["opm26"], 5).value
+
+
+def tp_at(x, tag):
+    raw = os.path.join(WD, f"rv_{tag}.xlsx")
+    subprocess.run([sys.executable, os.path.join(HERE, "build_lycorp.py"), raw, "--set", f"opm26={x}", "--set", f"opm32={x}"], check=True, stdout=subprocess.DEVNULL)
+    return read(recalc(raw, "rv" + tag))["tp"]
+
+
+xa, fa = x0, base["tp"] - px
+xb = x0 - 0.02
+fb = tp_at(xb, "b") - px
+xs, tps = xb, fb + px
+for i in range(3):
+    xn = xb - fb * (xb - xa) / (fb - fa)
+    tn = tp_at(xn, f"n{i}")
+    xa, fa, xb, fb = xb, fb, xn, tn - px
+    xs, tps = xn, tn
+    print("reverse", i, round(xn, 6), round(tn, 4), flush=True)
+    if abs(tn - px) < 0.01:
+        break
+json.dump({"base_tp": base["tp"], "fp": fp, "cases": res, "reverse": {"x": xs, "tp": tps, "px": px, "var": "opm26,opm32"}}, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("base", base["tp"], "fp", fp)

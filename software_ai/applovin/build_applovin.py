@@ -857,3 +857,162 @@ for t in NF: RC.cell(r, 1, t); r += 1
 RC.column_dimensions["A"].width = 70
 for c in "BCDEFG": RC.column_dimensions[c].width = 16
 RC.column_dimensions["H"].width = 60
+
+
+# ═════════════════════════════ Sens ═════════════════════════════
+SE["A1"] = "Sens — 一次改一個輸入（In 頁敏感度低／高值；聯動案同時改多個），整本活頁簿以 LibreOffice 重算後的加權目標價與 DCF 單法目標價；由 make_v01.sh（SENS=1）產生，建置時寫入（數值，屬建置快照）。模型狀態與 build_id 見本頁底部。"
+SE["A2"] = ("相對基準＝案例目標價 ÷ 基準加權目標價 − 1。G2-2：token 價格高案只動成本一邊，標「上界」（不含營收端相應變化）；另列「成本聯動上界」與「路由到便宜模型」兩個聯動案例。"
+            "未列入案例：日期、價格、股數、資產負債等單值輸入（無低／高區間）。")
+hdr(SE, 3, ["驅動", "設定", "方向", "加權目標價", "相對基準", "鍵", "說明", "收支關卡 B（五年）", "FY2027 營收（B）", "DCF 目標價", "DCF 相對基準（美元）", "投資建議"])
+CASES = make_cases()
+r = 4
+SE_ROWS = []
+for cs in CASES:
+    side = cs["side"]
+    lab = cs["label"]
+    if cs["id"].startswith("tk_px|高"): lab += "（上界：只動成本一邊）"
+    SE.cell(r, 1, f"{lab}：{side}")
+    SE.cell(r, 2, "；".join(f"{k}＝{v:.4g}" for k, v in cs["sets"])); SE.cell(r, 3, side); SE.cell(r, 6, ",".join(cs["keys"]))
+    res = SENS.get(cs["id"])
+    if res is not None:
+        c = SE.cell(r, 4, res["tp"]); c.number_format = "#,##0.00"; c.font = BLUE
+        SE.cell(r, 5, f"=D{r}/Val!$B${VR['tp']}-1").number_format = "+0.0%;-0.0%;0.0%"
+        for cc, kk in ((8, "gateB"), (9, "rev27B")):
+            c = SE.cell(r, cc, res[kk]); c.number_format = "#,##0.0"; c.font = BLUE
+        c = SE.cell(r, 10, res["tpdcf"]); c.number_format = "#,##0.00"; c.font = BLUE
+        SE.cell(r, 11, f"=J{r}-Val!$B${VR['tpdcf']}").number_format = "+#,##0.00;-#,##0.00"
+        SE.cell(r, 12, "=" + recf(f"D{r}/px-1"))
+    SE.cell(r, 7, "重算值（make_v01.sh）")
+    SE_ROWS.append((cs["id"], side, r)); r += 1
+SE_END = r - 1
+r += 1
+SE.cell(r, 1, "基準加權目標價（Val 頁）"); SE.cell(r, 4, f"=Val!B{VR['tp']}").number_format = "#,##0.00"; SE_BASE = r
+SE.cell(r, 8, f"=CF!C{GATE_ROW}").number_format = "#,##0.0"; SE.cell(r, 9, f"=PL!G{PLR['B']['rev']}").number_format = "#,##0.0"; r += 1
+SE.cell(r, 1, "敏感度重算時的基準值（應與上一列相同；不同表示敏感度已過期）")
+if "base|base" in SENS:
+    c = SE.cell(r, 4, SENS["base|base"]["tp"]); c.number_format = "#,##0.00"; c.font = BLUE
+    SE.cell(r, 5, f"=D{r}-D{r - 1}").number_format = "0.000"
+SE_STALE = r; r += 1
+FP_RNG = f"In!$D$4:$F${SCN_SEC - 1}"
+SE.cell(r, 1, "輸入指紋（本檔即時重算）"); SE.cell(r, 4, f"=SUMPRODUCT({FP_RNG},ROW({FP_RNG})*3+COLUMN({FP_RNG}))").number_format = "0.000000"; SE_FP = r; r += 1
+SE.cell(r, 1, "輸入指紋（敏感度重算時的基準檔）")
+if "base|base" in SENS and SENS["base|base"].get("fp") is not None:
+    c = SE.cell(r, 4, SENS["base|base"]["fp"]); c.number_format = "0.000000"; c.font = BLUE
+r += 1
+SE.cell(r, 1, "模型狀態（CURRENT＝Sens、HTML、README 與本檔輸入一致；STALE＝In 頁已改、須重跑 SENS=1 bash software_ai/applovin/make_v01.sh）").font = BOLD
+SE.cell(r, 4, f'=IF(AND(ISNUMBER(D{r - 1}),ISNUMBER(D{SE_STALE}),ABS(D{SE_STALE}-D{SE_BASE})<0.005,ABS(D{r - 2}-D{r - 1})<=0.000000001*MAX(1,ABS(D{r - 1}))),"CURRENT","STALE")')
+SE_STATUS = r; r += 1
+SE.cell(r, 1, "build_id（README、Sens、HTML 三處相同）"); SE.cell(r, 4, BUILD_ID); SE_BID = r; r += 2
+SE.cell(r, 1, "加權目標價相對基準（HTML 用；一個驅動一列）").font = BOLD; SE_T0 = r; r += 1
+hdr(SE, r, ["驅動", "輸入取低值", "輸入取高值"]); r += 1
+SE_T1 = r
+groups = {}
+for cid, side, rr_ in SE_ROWS:
+    base_id = cid.split("|")[0]
+    lab = SE.cell(rr_, 1).value.rsplit("：", 1)[0]
+    groups.setdefault(base_id, {"lab": lab}); groups[base_id][side] = rr_
+for g in groups.values():
+    SE.cell(r, 1, g["lab"])
+    if "低" in g: SE.cell(r, 2, f"=E{g['低']}").number_format = "+0.0%;-0.0%;0.0%"
+    if "高" in g: SE.cell(r, 3, f"=E{g['高']}").number_format = "+0.0%;-0.0%;0.0%"
+    r += 1
+SE_T2 = r - 1
+SE.column_dimensions["A"].width = 56; SE.column_dimensions["B"].width = 36; SE.column_dimensions["F"].width = 22
+
+# ═════════════════════════════ Sources ═════════════════════════════
+SO["A1"] = "Sources — 來源與版本。逐筆數字的來源見 In 頁（來源欄）、Hist 頁與 data/facts_applovin.csv。"
+hdr(SO, 3, ["類別", "內容", "網址或路徑"])
+SRCL = [("財報", "AppLovin 2026Q3 財報新聞稿（8-K 附件 99.1，2026-11-04）、10-Q（2026-09-30 止季度）、10-K FY2025", "https://www.sec.gov/ （EDGAR；逐件網址見事實總帳）"),
+        ("事實總帳", "228 筆事實（指標、數值、單位、期間、口徑、出處、擷取日、標記、來源誘因）", "software_ai/applovin/data/facts_applovin.csv"),
+        ("Tokenomics 快照", "Tokenomics v22.0（commit 79f6b30），45 個名稱，只讀；推論價格取 IF_PriceRef", "software_ai/applovin/data/tokenomics_snapshot.json"),
+        ("市場資料", "現價、β、共識目標價、同業預估本益比：StockAnalysis、Yahoo Finance（皆 Interested-party 或第三方，日期見 In 頁）", "https://stockanalysis.com/stocks/app/"),
+        ("研究包", "公司概述、分部、AI 揭露、正反論點與未找到清單", "software_ai/applovin/data/research_applovin.md")]
+for i, row_ in enumerate(SRCL):
+    for j, v in enumerate(row_): SO.cell(4 + i, 1 + j, v)
+SO.column_dimensions["A"].width = 18; SO.column_dimensions["B"].width = 90; SO.column_dimensions["C"].width = 60
+
+
+# ═════════════════════════════ README ═════════════════════════════
+RM = {}
+rdr = [1]
+def rd(key, val, extra=None, bold=False, fmt=None):
+    r = rdr[0]; rdr[0] += 1; RM[key] = r
+    c = RD.cell(r, 1, val); c.alignment = WRAP
+    if bold: c.font = BOLD
+    for j, v in enumerate(extra or []): RD.cell(r, 2 + j, v).alignment = WRAP
+    return r
+Vb = lambda k: f"Val!B{VR[k]}"
+PBr = PLR["B"]
+rd("ver_line", fx(f"v{VER}｜資料截止日 ", T("data_date", "yyyy-mm-dd"), "｜成品日 ", T(f"DATE({BUILD_DATE.year},{BUILD_DATE.month},{BUILD_DATE.day})", "yyyy-mm-dd"), "｜股價基準日 ", T("px_date", "yyyy-mm-dd"), f"｜build_id {BUILD_ID}"))
+rd("scope", "AppLovin（APP）個股模型 v0.1：數位廣告科技（行動應用的程式化廣告與變現），原型 A（按廣告計價）。命題模組＝安裝量 × 單次安裝淨收入的單位經濟，驅動單一官方分部 Advertising，再到損益表、現金流、DCF 與同業本益比。金額 US$M；每股 US$；股數百萬股。")
+rd("thesis", fx("AI 對 AppLovin 的價值重分配：AI 推薦模型提高單次安裝淨收入並打開電商、連網電視新垂直，是營收增量；AI 聊天介面分走安裝量是侵蝕；運算與推論是成本。情境 B 的 FY2027 營收年增 ", T(f"PL!G{PBr['yoy']}", "0.0%"),
+                "，FY2032 AI 淨效果（營業利益口徑）", T(f"Thesis!D{THR['c_net']}", "#,##0"), " 百萬美元。"))
+rd("prior", "本版未做先驗（工作單 G：2026-11-16 指示先建模、先驗略過）；先驗到位後改版。", bold=True)
+rd("na", "不適用：(1) Meta 式自建算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照——AppLovin 運算以雲端租用為主、無自建資本支出，本模型只讀 Tokenomics 推論價格；(2) 三層協調（Coord 頁、C0、兩讀數）：不適用：非 Siliconomics 覆蓋；(3) 單位經濟模型 software_ai/unit_economics 尚未完成，變數先在 In 頁自建，標「v0.2 改讀 unit_economics」。")
+rd("pr_note", "公開 repo：本檔不含任何個人部位、基金或投資可行性資訊；評等為模型自身的估值評等，不構成投資建議。")
+rdr[0] += 1
+rd("h13", "v1.3 展示層（HTML 由本頁文字與各頁儲存格組成，不手寫數字）", bold=True)
+rd("hero", fx("目標價 ", T(Vb("tp"), "0.00"), " 美元，相對現價 ", T(Vb("px"), "0.00"), " 的上檔空間 ", T(Vb("up"), "+0.0%;-0.0%"), "；DCF ", T(Vb("tpdcf"), "0.00"), "、Comparable ", T(Vb("tpcomp"), "0.00"),
+              "。折現率偏高使 DCF 低於同業本益比法。收支關卡", ("f", f'IF({Vb("gate")}>=0,"通過","不通過")'), "。"))
+rd("rec", fx("投資建議：", ("f", Vb("rec")), "（估值評等 ", ("f", Vb("vrate")), "；加權目標價 ", T(Vb("tp"), "0.00"), " 美元；現價 ", T(Vb("px"), "0.00"), " 美元，", T("px_date", "yyyy-mm-dd"), "）。DCF 與 Comparable 各自為 ",
+              T(Vb("tpdcf"), "0.00"), " 與 ", T(Vb("tpcomp"), "0.00"), " 美元。"))
+rd("o1", fx("營收：AI 提升與新垂直為增量，分流為侵蝕；情境 B 的 FY2027 營收年增 ", T(f"PL!G{PBr['yoy']}", "0.0%"), "，FY2032 年增 ", T(f"PL!L{PBr['yoy']}", "0.0%"), "。公司只揭露安裝量與單次安裝淨收入的年增率。"))
+rd("o2", fx("DCF：β ", T("beta", "0.00"), " 使 ke ", T(Vb("ke"), "0.0%"), "、WACC ", T(Vb("wacc"), "0.0%"), "；DCF 每股 ", T(Vb("tpdcf"), "0.00"), " 美元，永續價值占 EV ", T(f"Val!C{VR['tvsh']}", "0%"), "。反解見對帳章。"))
+rd("o3", fx("Comparable：同業前瞻本益比中位數 ", T(Vb("mult_med"), "0.0"), " 倍 × 目標時點 NTM GAAP EPS；APP 現行倍數為同業中位數的 ", T(Vb("app_ratio"), "0.00"), " 倍。同業分母多為 non-GAAP。"))
+rd("o4", fx("AI 淨效果：FY2032 情境 A／B／C 為 ", T(f"Thesis!C{THR['c_net']}", "#,##0"), "／", T(f"Thesis!D{THR['c_net']}", "#,##0"), "／", T(f"Thesis!E{THR['c_net']}", "#,##0"), " 百萬美元；LLM 推論成本只讀 Tokenomics，占營收比 ", T(f"Recon!B{TKR['share27']}", "0.00%"), "。"))
+rd("o5", fx("利潤率：資料中心成本率 FY2023 ", T(f"PL!C{PBr['dcr']}", "0.0%"), "、FY2025 ", T(f"PL!E{PBr['dcr']}", "0.0%"), "、基準 ", T("dc_26", "0.0%"), "；回到歷史高點將壓低營業利益率。收支關卡合計（五年）", T(Vb("gate"), "#,##0"), " 百萬美元。"))
+rd("drv", "驅動 → 推導：安裝量（年增）與單次安裝淨收入（AI 提升、新垂直、分流）決定 Advertising 營收；營收乘各成本率得損益表；自由現金流決定買回與股數；FCFF 與 WACC 決定 DCF；同業倍數乘 NTM EPS 得 Comparable。")
+rd("ver", fx(f"v{VER}：首版。研究包與事實總帳 228 筆；三情境 A／B／C 權重 25／50／25；DCF 到 FY2032；Sens 逐鍵案例 ", T(f"COUNTA(Sens!A4:A{SE_END})", "0"), " 列。本版未做先驗。"))
+rdr[0] += 1
+rd("mkt", "市場資料日期", bold=True)
+rd("mkt1", fx("現價 ", T("px", "0.00"), " 美元（", T("px_date", "yyyy-mm-dd"), " 收盤，單一來源 StockAnalysis）；β 來自 StockAnalysis 與 Yahoo Finance；共識目標價（32 位，2026-11-10）與同業倍數為 Interested-party，日期見 In 與 Val 頁，逾期者已標示。"))
+rd("mkt2", "rf 為 2026-10-27 的 10 年美債（跨模型沿用，逾期，下次全面改版更新）；Unity 預估本益比為 2026-10-26（逾期）。")
+rdr[0] += 1
+rd("fail", "主要失效條件", bold=True)
+rd("fail1", "新模型（AXON）AI 提升低於情境 C，或單次安裝淨收入年增快速收斂，使營收增量不足。")
+rd("fail2", "AI 聊天介面（如 ChatGPT 廣告與 AppsFlyer 歸因）顯著分走行動應用安裝預算，累計分流超過情境 C。")
+rd("fail3", "訴訟與監管（證券集體訴訟、做空報告相關調查）導致罰款、和解或業務限制；損失目前未估，基準類債列 0。")
+rd("fail4", "β 與股權風險溢酬：β 約 2 使 DCF 對折現率極敏感；若市場以較低折現率定價，DCF 與現價差距縮小（見反解）。")
+rdr[0] += 1
+rd("risk", "風險登錄", bold=True)
+rd("risk_h", "風險", ["是否建模", "理由", "觀察指標"], bold=True)
+for row_ in (("AI 提升不如預期", "是（情境 C）", "In 頁 u0、e0 三情境", "單次安裝淨收入年增、Q4 指引"), ("AI 聊天介面分流", "是（cdiv）", "分流比例三情境與 Sens", "ChatGPT 廣告營收、安裝歸因"),
+             ("資料中心成本率回升", "是（dcr）", "三情境與 Sens", "資料中心成本占營收比"), ("訴訟與監管", "部分（類債 Sens 高案）", "損失未估", "10-Q 或有事項、和解公告"),
+             ("折現率（β）", "是（Sens、反解）", "β 約 2", "股價波動、資金成本"), ("客戶集中與平台政策（行動平台）", "否", "無量化揭露（未找到）", "平台政策、廣告主集中度"),
+             ("股票薪酬與稀釋", "是（sbc_r、股數）", "最近四季比率持平", "稀釋股數、RSU")):
+    rd("risk_r", row_[0], list(row_[1:]))
+rdr[0] += 1
+rd("sheets", "工作表：", bold=True)
+rd("sheets_h", "頁", ["輸入", "推導量", "因果方向"], bold=True)
+for row_ in (("In", "全部輸入（低／基準／高）、情境驅動對照", "各頁公式引用", "輸入 → 全模型"), ("Hist", "facts_applovin.csv 事實", "最近四季比率、前期值", "實績 → 基準比率"),
+             ("Thesis", "AI 提升、新垂直、分流、成本率", "單位經濟（每千元營收）與 AI 淨效果", "命題 → 營收與成本"), ("PL", "Thesis 與 In", "三情境損益、分部對帳", "營收 → 利潤 → EPS"),
+             ("CF", "PL、In", "FCFF、買回、股數、現金與債務、收支關卡", "利潤 → 現金 → 股數"), ("Val", "CF、PL、In", "DCF、Comparable、加權目標價、評等", "現金流與倍數 → 目標價"),
+             ("RevDCF", "Val、CF", "現價隱含的 FY2032 利潤與倍數", "現價 → 隱含假設"), ("Recon", "共識、指引、Tokenomics 快照", "對照、落差分解、反解", "外部資料 → 對照"), ("Sens", "In 低／高", "加權目標價敏感度", "輸入 → 目標價"), ("Sources", "—", "來源清單", "—")):
+    rd("sheets_r", row_[0], list(row_[1:]))
+rdr[0] += 1
+rd("g2", "工作單 G2 共通必修對照（逐條）", bold=True)
+for t in ("G2-1 每任務 token 以揭露校準：公司未揭露 token 量與代理任務量（未找到），無法校準；採快照倍數並標 Assumed，token 價格層級標 Analogy。",
+          "G2-2 聯動 Sens：token 價格高案標上界；另列成本聯動上界與路由到便宜模型兩案。",
+          "G2-3 比率持平：營業費用率取最近四季實績並全期持平，收斂只放 Sens；資料中心與其他營業成本率取 2026 年前三季（2025Q4 單季資料中心成本未找到）。",
+          "G2-4 股數：評價日股數含 RSU 全額（沒收率未揭露）與選擇權庫藏股法；法定封面最新股數未找到，改用 2026-09-30 資產負債表；PSU 不計。",
+          "G2-5 淨債務：只計票據本金與融資租賃（列 0，未找到）；營業租賃不計。",
+          "G2-6 Comparable：倍數為同業前瞻本益比（分母多為 non-GAAP、期間未載），乘目標時點 NTM GAAP EPS；同業逐家標準則；揭露 APP 現行倍數 ÷ 同業中位數與隱含重估。",
+          "G2-7 收支關卡：Val 頁有估值評等、入不敷出判定用、投資建議三列；make_v01.sh 跑 check_rating_gate.py。",
+          "G2-8 文字組字：README 日期、數字由公式組字；DCF 與 Comparable 落差以公式分解（Recon 第 3 節）。",
+          "G2-9 反解：β、情境 B 的 AI 提升與新垂直增量，整本重算反解，結果在 Recon 第 4 節。",
+          "G2-10 逾期標示：rf、Unity、PINS、TTD、APP 倍數與現價日相差超過 2 個交易日，已標逾期（In、Val、Recon）。"):
+    rd("g2_r", t)
+rdr[0] += 1
+rd("nf", "未找到清單：見 Recon 第 7 節與 data/research_applovin.md 第 9 節。")
+RD.column_dimensions["A"].width = 120
+for c in "BCD": RD.column_dimensions[c].width = 40
+
+# ═════════════════════════════ 輸出 ═════════════════════════════
+for ws in wb.worksheets: ws.sheet_view.zoomScale = 90
+wb.save(A.out)
+if os.environ.get("ROWMAP"):
+    json.dump(dict(VR=VR, PLR=PLR, CFR=CFR, GATE=GATE_ROW, RM=RM, THR=THR, THS={f"{a}|{b}": v for (a, b), v in THS.items()}, RVR=RVR, RCR={k: v for k, v in RCR.items() if isinstance(k, str) and not isinstance(v, dict)},
+                   TKR=TKR, SE_ROWS=SE_ROWS, SE_END=SE_END, SE_BASE=SE_BASE, SE_STALE=SE_STALE, SE_STATUS=SE_STATUS, SE_BID=SE_BID, SE_T0=SE_T0, SE_T1=SE_T1, SE_T2=SE_T2, INR=INR, SCN_SEC=SCN_SEC, SE_FP=SE_FP,
+                   SE_KREQ=RCR["kreq"], KREQ_CHK=RCR["kreq_chk"], SENS_N=len(CASES)),
+              open(os.environ["ROWMAP"], "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+print("built", A.out, BUILD_ID)

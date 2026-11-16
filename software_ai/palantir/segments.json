@@ -1,0 +1,44 @@
+{
+ "company": "Palantir Technologies",
+ "ticker": "PLTR",
+ "model_sheet": "PL",
+ "note": "官方報告分部（10-K／10-Q 分部資訊）：Government 與 Commercial 兩個分部；分部利益（operatingIncome 欄）為公司自訂的分部 contribution（非 GAAP 營業利益；差額為未分攤成本，含股票薪酬），合併 GAAP 營業利益見 consolidated。Commercial 之下子列＝美國商業與國際商業（新聞稿固定揭露美國商業，國際商業＝Commercial 減美國商業，Derived），因這兩列在 Seg 頁而非 PL 頁，本檔不列 sublines，由 Seg 頁核對列（美國商業營收＝客戶數×每客戶年營收）負責。命題模組（原型 U）：美國商業營收＝期末客戶數×每客戶年營收，每客戶年營收成長＝代理工作負載成長＋單價侵蝕；推論成本只讀 Tokenomics 快照。金額 US$M。",
+ "official_segments": [
+  {
+   "name": "Government",
+   "label": "Government",
+   "period": "FY2025",
+   "value": 2402.287,
+   "unit": "US$M",
+   "source": "Palantir FY2025 10-K 分部資訊（Note）；data/facts_palantir.csv seg.gov.2025／ctb.gov.2025",
+   "url": "https://investors.palantir.com/files/2025%20FY%20PLTR%2010-K.pdf",
+   "operatingIncome": 1576.07,
+   "ttm2026q3": 3723.647,
+   "ttmOperatingIncome": 2634.764
+  },
+  {
+   "name": "Commercial",
+   "label": "Commercial",
+   "period": "FY2025",
+   "value": 2073.159,
+   "unit": "US$M",
+   "source": "Palantir FY2025 10-K 分部資訊（Note）；data/facts_palantir.csv seg.com.2025／ctb.com.2025",
+   "url": "https://investors.palantir.com/files/2025%20FY%20PLTR%2010-K.pdf",
+   "operatingIncome": 1366.627,
+   "ttm2026q3": 3564.613,
+   "ttmOperatingIncome": 2672.954
+  }
+ ],
+ "consolidated": {
+  "period": "FY2025",
+  "revenue": 4475.446,
+  "operatingIncome": 1414.015,
+  "ttm2026q3Revenue": 7288.26,
+  "ttm2026q3OperatingIncome": 3326.241,
+  "check": "Government＋Commercial－合併：FY2021–FY2025 營收差 0、最近四季營收差 0（Q 頁核對列）；總 contribution－未分攤成本＝GAAP 營業利益（PL 頁）"
+ },
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計－合併營收"
+ ]
+}

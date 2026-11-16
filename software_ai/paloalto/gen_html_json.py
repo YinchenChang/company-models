@@ -115,7 +115,7 @@ cfg = {
     {"type": "h3", "text": "不適用與未做項目"},
     {"type": "list", "items": [f"@README!A{r}" for r in range(21, 29)]},
     {"type": "h3", "text": "「未找到」清單"},
-    {"type": "scan", "needle": "未找到", "collapse": True, "summary": "展開：標為「未找到」的項目", "sheets": {"Recon": ["A", "F"], "In": ["B", "H"], "Q": ["A"]}, "empty": "沒有標為未找到的項目。"}]}
+    {"type": "scan", "needle": "未找到", "collapse": True, "summary": "展開：標為「未找到」的項目", "sheets": {"Recon": ["A", "F"], "In": ["B"], "Q": ["A"]}, "empty": "沒有標為未找到的項目。"}]}
  ]}
 json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("html.json 寫出")

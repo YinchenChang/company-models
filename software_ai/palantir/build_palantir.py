@@ -689,7 +689,7 @@ rvp("cur_mult", "本公司現行 EV／營收（現價隱含 EV ÷ 最近四季�
 rvp("peer_mult", "同業採用倍數（B 情境，按目標日 TTM 營收加權；未做成長調整的中位數倍數加權）", f"=({val('m_c')}*{val('ttm_c','C')}+{val('m_g')}*{val('ttm_g','C')})/({val('ttm_c','C')}+{val('ttm_g','C')})", "0.0")
 rvp("cur_rel", "本公司現行倍數 ÷ 同業中位數倍數（倍）", f"=B{RVR['cur_mult']}/B{RVR['peer_mult']}", "0.0")
 rvp("imp_up", "Comparable 隱含重估：目標價 ÷ 現價−1（情境 B）", f"={val('ps_c','C')}/{val('px')}-1", "+0.0%;-0.0%")
-put(RV, RVR["sum_dcf"], 1, f'="現金流折現法：現價隱含的企業價值約為模型情境 B 的 "&TEXT(B{RVR["scale"]},"0.0")&" 倍；若只靠調高折現率，需要 WACC 約 "&IF(ISNUMBER(B{RVR["w1"]}),TEXT(B{RVR["w1"]},"0.0%"),"低於格點範圍")&"（模型 "&TEXT(B{RVR["w0"]},"0.0%")&"）。"')
+put(RV, RVR["sum_dcf"], 1, f'="現金流折現法：現價隱含的企業價值約為模型情境 B 的 "&TEXT(B{RVR["scale"]},"0.0")&" 倍；若只靠調整折現率，需要 WACC "&IF(ISNUMBER(B{RVR["w1"]}),"約 "&TEXT(B{RVR["w1"]},"0.0%"),"低於格點下限（逼近永續成長率，不可行）")&"（模型 "&TEXT(B{RVR["w0"]},"0.0%")&"）。"')
 put(RV, RVR["sum_cmp"], 1, f'="Comparable：本公司現行 EV／營收約為同業中位數倍數的 "&TEXT(B{RVR["cur_rel"]},"0.0")&" 倍（"&TEXT(B{RVR["cur_mult"]},"0.0")&" 對 "&TEXT(B{RVR["peer_mult"]},"0.0")&"）；成長調整後情境 B 隱含重估 "&TEXT(B{RVR["imp_up"]},"+0%;-0%")&"。"')
 RV.column_dimensions["A"].width = 80
 for col in "BCD": RV.column_dimensions[col].width = 16
@@ -892,14 +892,14 @@ def rput(key, formula, bold=False):
 rput("hdr", (f'="Palantir（PLTR）個股模型 {VER}｜build_id {BUILD_ID}｜資料截止日 "&TEXT({I("data_date")},"yyyy-mm-dd")&"｜成品日 {VDATE}｜股價基準日 "&TEXT({I("px_date")},"yyyy-mm-dd")'
              f'&"｜評價日 "&TEXT({I("val_date")},"yyyy-mm-dd")&"｜目標時點 "&TEXT({I("tp_date")},"yyyy-mm-dd")&"（命題＝原型 U 按用量計價的單位經濟＋官方分部 → 損益表；本版未做先驗）"'))
 rput("sheets", "工作表：README → In → Q → Seg → PL → CF → DCF → Val → RevDCF → Recon → Sens → Sources。藍字＝輸入、黑字＝公式；黃底＝判斷題。命題模組變數（客戶數、工作負載、單價、推論成本）暫建於 In 頁，標「v0.2 改讀 unit_economics」。")
-rput("thesis", (f'="命題：AI 對 Palantir 的價值重分配＝美國商業營收（客戶數 × 每客戶年營收）中 AI 增量減單價侵蝕再減推論成本的淨效果；情境 B FY2028 AI 增量 US$"&{bn("Seg","H",SB_["inc"])}&"B、單價侵蝕 US$"&{bn("Seg","H",SB_["ero"])}&"B、增量推論成本 US$"&{bn("Seg","H",SB_["incinf"])}&"B，淨效果 US$"&{bn("Seg","H",SB_["net"])}&"B。三情境的差別全在這三個分量與政府成長。"'))
+rput("thesis", (f'="命題：AI 對 Palantir 的價值重分配＝美國商業營收（客戶數 × 每客戶年營收）中 AI 增量減單價侵蝕再減推論成本的淨效果；情境 B FY2028 AI 增量 US$"&{bn("Seg","H",SB_["inc"])}&"B、單價侵蝕 US$"&{bn("Seg","H",SB_["ero"])}&"B、增量推論成本 US$"&TEXT(Seg!H{SB_["incinf"]}/1000,"0.00")&"B，淨效果 US$"&{bn("Seg","H",SB_["net"])}&"B。三情境的差別全在這三個分量與政府成長。"'))
 rr += 1
 rput("rec", (f'="投資建議："&{VB("rec")}&"（估值評等 "&{VB("est")}&"；收支關卡 "&CF!C{GR["gate_ok"]}&"）；加權目標價 US$"&TEXT({VB("tp")},"0.00")&"（DCF "&TEXT({VB("tpdcf")},"0.00")&"、Comparable "&TEXT({VB("tpcomp")},"0.00")&"），現價 US$"&TEXT({VB("px")},"0.00")&"（"&TEXT({I("px_date")},"yyyy-mm-dd")&"），上檔空間 "&TEXT({VB("up")},"+0.0%;-0.0%")&"。"'), True)
 O = {}
 O["o1"] = (f'="重點觀察 1：目標價 "&TEXT({VB("tp")},"0.00")&"（DCF "&TEXT({VB("tpdcf")},"0.00")&"、Comparable "&TEXT({VB("tpcomp")},"0.00")&"），現價 "&TEXT({VB("px")},"0.00")&"；兩法都遠低於現價，落差由規則算出，不是調參結果。"')
 O["o2"] = (f'="重點觀察 2：情境 B FY2028 AI 淨效果 US$"&{bn("Seg","H",SB_["net"])}&"B；情境 A "&{bn("Seg","H",SA_["net"])}&"B、情境 C "&{bn("Seg","H",SC_["net"])}&"B。"')
 O["o3"] = (f'="重點觀察 3：推論成本只占 Commercial 營收 "&TEXT(Seg!H{SB_["share"]},"0.0%")&"（情境 B FY2028；token 用量公司未揭露，為判斷值）；損益兩平的工作負載成長僅 "&TEXT(Seg!H{SB_["be"]},"0.0%")&"。"')
-O["o4"] = (f'="重點觀察 4：現價隱含的企業價值約為模型情境 B 的 "&TEXT(RevDCF!B{RVR["scale"]},"0.0")&" 倍；只調折現率則需 WACC 約 "&IF(ISNUMBER(RevDCF!B{RVR["w1"]}),TEXT(RevDCF!B{RVR["w1"]},"0.0%"),"低於格點範圍")&"。"')
+O["o4"] = (f'="重點觀察 4：現價隱含的企業價值約為模型情境 B 的 "&TEXT(RevDCF!B{RVR["scale"]},"0.0")&" 倍；只調折現率則需 WACC "&IF(ISNUMBER(RevDCF!B{RVR["w1"]}),"約 "&TEXT(RevDCF!B{RVR["w1"]},"0.0%"),"低於格點下限（逼近永續成長率，不可行）")&"。"')
 O["o5"] = (f'="重點觀察 5：本公司現行 EV／營收約為同業中位數的 "&TEXT(RevDCF!B{RVR["cur_rel"]},"0.0")&" 倍；政府營收約占 FY2026 營收 "&TEXT(Seg!F{SB_["gov"]}/Seg!F{SB_["rev"]},"0%")&"。"')
 rput("o1_legacy", "=" + O["o1"][1:]); rput("o2_legacy", "=" + O["o2"][1:]); rput("o3_legacy", "=" + O["o3"][1:])
 rr += 1
@@ -911,7 +911,7 @@ rput("drv", (f'="分部營收推導：美國商業營收＝客戶數 × 每客�
 rput("ver", f'="{VER}：首版（2026-11-16）：研究包（data/research_palantir.md）與個股模型 v0.1；Government／Commercial 分部、原型 U 單位經濟（v0.2 改讀 unit_economics）、DCF 至 FY2032、Comparable＝同業 EV／營收成長調整、五級評等與收支關卡。"')
 rr += 1
 rput("qa", "命題回覆（依模型計算逐一回答）", True)
-rput("qa1", (f'="問：AI 讓 Palantir 的單位經濟變好還是變差？答：情境 B FY2028 AI 增量 US$"&{bn("Seg","H",SB_["inc"])}&"B 大於單價侵蝕 US$"&{bn("Seg","H",SB_["ero"])}&"B 與增量推論成本 US$"&{bn("Seg","H",SB_["incinf"])}&"B 之和，淨效果 US$"&{bn("Seg","H",SB_["net"])}&"B；情境 C（工作負載成長 "&TEXT(In!E{IR["wl27_C"]},"0%")&"、單價 "&TEXT(In!E{IR["pe27_C"]},"0%")&"）淨效果降到 US$"&{bn("Seg","H",SC_["net"])}&"B。"'))
+rput("qa1", (f'="問：AI 讓 Palantir 的單位經濟變好還是變差？答：情境 B FY2028 AI 增量 US$"&{bn("Seg","H",SB_["inc"])}&"B 大於單價侵蝕 US$"&{bn("Seg","H",SB_["ero"])}&"B 與增量推論成本 US$"&TEXT(Seg!H{SB_["incinf"]}/1000,"0.00")&"B 之和，淨效果 US$"&{bn("Seg","H",SB_["net"])}&"B；情境 C（工作負載成長 "&TEXT(In!E{IR["wl27_C"]},"0%")&"、單價 "&TEXT(In!E{IR["pe27_C"]},"0%")&"）淨效果降到 US$"&{bn("Seg","H",SC_["net"])}&"B。"'))
 rput("qa2", (f'="問：推論成本會不會吃掉增量？答：不會，在本模型假設下：推論成本占 Commercial 營收約 "&TEXT(Seg!H{SB_["share"]},"0.0%")&"，且每客戶任務數為判斷值（公司未揭露）；token 價格上界案（Tokenomics 高層價格）見 Sens。真正的風險在單價侵蝕，不在推論成本。"'))
 rput("qa3", (f'="問：現價隱含什麼？答：以情境 B 現金流，現價隱含企業價值約為模型的 "&TEXT(RevDCF!B{RVR["scale"]},"0.0")&" 倍；DCF 目標價 US$"&TEXT({VB("tpdcf")},"0.00")&" 與 Comparable US$"&TEXT({VB("tpcomp")},"0.00")&" 的落差，股票薪酬解釋 US$"&TEXT(Recon!C{RCK["d_sbc"]},"0.00")&"，其餘為倍數與成長假設。"'))
 rr += 1

@@ -5,7 +5,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-VDATE="${VDATE:-20261116}"; VER="${VER:-0.1.0}"
+VDATE="${VDATE:-20261116}"; VER="${VER:-0.1.1}"
 OUTNAME="${VDATE}_LY個股模型_v${VER}.xlsx"
 SJ="software_ai/lycorp/data/sens_v${VER//./}_${VDATE}.json"
 python3 tools/tokenomics/import_tokenomics.py --check software_ai/lycorp/data/tokenomics_snapshot_v22.0.json
@@ -15,6 +15,7 @@ mkdir -p "$WD/out" software_ai/lycorp/dist
 LC_ALL=C.UTF-8 soffice -env:UserInstallation=file://$WD/lo --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir "$WD/out" "$WD/raw.xlsx" > /dev/null 2>&1
 cp "$WD/out/raw.xlsx" "software_ai/lycorp/dist/$OUTNAME"
 python3 software_ai/lycorp/check_lycorp.py "software_ai/lycorp/dist/$OUTNAME"
+python3 tools/model_governance/check_rating_gate.py "software_ai/lycorp/dist/$OUTNAME" --strict
 python3 tools/in_layout/check_in_layout.py "software_ai/lycorp/dist/$OUTNAME"
 python3 tools/sens_coverage/check_sens_coverage.py "software_ai/lycorp/dist/$OUTNAME" --require-keycol
 python3 tools/segment_check/check_segments.py software_ai/lycorp

@@ -1,0 +1,21 @@
+{
+ "company": "Snowflake",
+ "ticker": "SNOW",
+ "fiscal_year_end": "1 月 31 日（FY2026＝2025-02-01～2026-01-31；FY2027＝2026-02-01～2027-01-31）",
+ "model_sheet": "PL",
+ "note": "官方報告分部只有一個：10-K FY2026 與 10-Q Q2 FY27 附註 Segment Information：單一營運與應報導分部，CODM 為 CEO 以合併基礎檢視，因此沒有分部營業利益。營收列取公司固定揭露的營收線（Note 3：Product revenue、Professional services and other revenue）；AI 營收不另列（未找到，公司只稱 AI 為產品組合的一部分）。命題子列：核心平台消耗與 AI 工作負載營收（含 Cortex 等 AI 功能轉售）＝本模型拆分（Assumed），不是公司揭露；歷史年度標未找到。金額 US$M。",
+ "official_segments": [
+  {"name": "Snowflake（單一營運分部）", "label": "營收合計（單一營運分部）", "period": "FY2026", "value": 4683.946, "unit": "US$M",
+   "source": "10-K FY2026（SEC 0001640147-26-000008）Note 3 與 Segment 附註；Q4 FY26 財報新聞稿（8-K 附件 99.1）", "date": "2026-03"}
+ ],
+ "consolidated": {"period": "FY2026", "value": 4683.946, "unit": "US$M", "source": "10-K FY2026 損益表"},
+ "sublines": [
+  {"parent": "營收合計（單一營運分部）", "labels": ["Product revenue", "Professional services and other revenue"], "kind": "固定揭露營收線（10-K Note 3 Disaggregation of Revenue）"},
+  {"parent": "Product revenue", "labels": ["核心平台消耗（命題子列）", "AI 工作負載營收（命題子列）"], "kind": "命題子列（基準消耗 B×(1−被替代)；B×工作負載乘數＋AI 功能轉售）"}
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收",
+  "檢查：核心平台消耗＋AI 營收增量 − Product revenue（三情境）",
+  "檢查：分部合計 − 公司揭露合併營收（歷史年度；實績期）"
+ ]
+}

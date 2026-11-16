@@ -25,7 +25,7 @@ VER = "v0.1"; VDATE = "2026-11-16"
 
 def _build_id():
     h = hashlib.sha256()
-    for fn in sorted(["build_datadog.py"] + [os.path.join("data", f) for f in os.listdir(os.path.join(HERE, "data")) if f.endswith(".json") and not f.startswith(("sens_", "kreq_"))]):
+    for fn in sorted(["build_datadog.py", "build_datadog_p2.py", "build_datadog_p3.py", "build_datadog_p4.py"] + [os.path.join("data", f) for f in os.listdir(os.path.join(HERE, "data")) if f.endswith(".json") and not f.startswith(("sens_", "kreq_"))]):
         h.update(fn.encode()); h.update(open(os.path.join(HERE, fn), "rb").read())
     return f"datadog-{VER}-{h.hexdigest()[:10]}"
 
@@ -258,6 +258,7 @@ inp("cx_r", "資本支出＋資本化軟體占營收", "%", 0.03, 0.035, 0.04, "
 inp("wc_k", "營運資金增加 ÷ 營收增量（負＝流入；歷史：FY2024 −11%、FY2025 −18%、9M26 −1.5%，見 Hist）", "%", -0.15, -0.08, 0.0, "Assumed", "Hist 頁「營運資金與其他變動」÷ 營收增量；遞延收入、應付款與遞延合約成本", "原則第 23 條", judg=True)
 sec("E. 折現率與目標價規則")
 inp("rf", "無風險利率（10 年期美國公債，2026-11-13）", "%", 0.0465, fv("mkt.rf.20261113") / 100, 0.0565, "Verified", fs("mkt.rf.20261113"), "與現價同日", judg=True)
+inp("rf_date", "無風險利率基準日", "日期", None, datetime.date(2026, 11, 13), None, "Verified", fs("mkt.rf.20261113"), "與現價同日")
 inp("beta_si", "β 來源一：stockanalysis（5Y 月）", "x", None, fv("mkt.beta.si"), None, "Interested-party", fs("mkt.beta.si"), "", inc=INC_DATA)
 inp("beta_yh", "β 來源二：Yahoo Finance（5Y 月）", "x", None, fv("mkt.beta.yh"), None, "Interested-party", fs("mkt.beta.yh"), "兩來源相同、可能同源", inc=INC_DATA)
 inp("blume_a", "Blume 調整權重", "x", None, 0.67, None, "Assumed", "DCF 規格第 2 節（0.67×原始＋0.33×1）")
@@ -279,7 +280,8 @@ for k, nm, dt in PEER:
 inp("pm_ps_ddog", "Datadog 現行 Forward P/S（資料商，2026-11-13）", "x", None, fv("peer.fps.ddog"), None, "Interested-party", fs("peer.fps.ddog"), "只作對照", inc=INC_DATA)
 inp("pm_pe_ddog", "Datadog 現行 Forward P/E（資料商，2026-11-13）", "x", None, fv("peer.fpe.ddog"), None, "Interested-party", fs("peer.fpe.ddog"), "只作對照", inc=INC_DATA)
 sec("G. 市場共識與情境權重")
-inp("cons_tp", "賣方平均目標價（TipRanks，2026-11-12；家數頁面未載；低 171、高 335）", "US$", 171.0, fv("cons.tp.tipranks"), 335.0, "Interested-party", fs("cons.tp.tipranks"), "只作對照，不進模型", inc=INC_SELL)
+inp("cons_tp", "賣方平均目標價（TipRanks，2026-11-12；家數頁面未載；低 171、高 335）", "US$", 171.0, fv("cons.tp.tipranks"), 335.0, "Interested-party", fs("cons.tp.tipranks"), "只作對照，不進模型", inc=INC_SELL + "；只作對照，不進模型")
+inp("cons_date", "共識目標價基準日", "日期", None, datetime.date(2026, 11, 12), None, "Verified", fs("cons.tp.tipranks"), "只作對照，不進模型")
 inp("tp_wA", "情境權重 A", "%", None, 0.25, None, "Assumed", "原則第 4 節預設 25／50／25")
 inp("tp_wB", "情境權重 B", "%", None, 0.50, None, "Assumed", "同上")
 inp("tp_wC", "情境權重 C", "%", None, 0.25, None, "Assumed", "同上")
