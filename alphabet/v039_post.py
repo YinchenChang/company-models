@@ -633,7 +633,7 @@ def readme13(wb, C, RVA, PLA, CRD):
         f'TEXT(PL!I{PRB["gs"]},"0")', T("、Cloud "), f'TEXT(PL!I{PRB["cloud"]},"0")', T("（其中 Cloud AI "), f'TEXT(PL!I{PRB["ai"]},"0")', T("）、Other Bets "), f'TEXT(PL!I{PRB["ob"]},"0.0")', T("，合計 "), f'TEXT(PL!I{PRB["rev"]},"0")', T(" 十億美元。"))
     RD.cell(r, 1, F(T("v0.3.10（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。現價 282.57（11-05）→ "), 'TEXT(px,"0.00")',
                     T("；加權目標價 257.76 → "), f'TEXT({vb("tp")},"0.00")', T("；上檔空間 −8.8% → "), f'TEXT({vb("up")},"+0.0%;-0.0%")',
-                    T("；投資建議 中立 → "), f'{vb("rec")}', T("（只換現價時為 257.76、−12.9%、中立）。本模型現價只影響上檔空間與評等（WACC 權益權重與回購價用 In 頁 px_val〔評價日 2026-09-30 收盤 344.08〕，依設計不隨現價換）；加權目標價的變動來自同業倍數換價。同業倍數（報價日 2026-10-07／10-08）依價格檔同日收盤換到 2026-11-13（倍數 × 收盤比，近似，無市值；Alphabet 自身用市值法）：" + _PXTXT + "；訂閱組 NFLX、SPOT、DIS 收盤價資料沒有，維持原值；共識與其他假設不變。")))
+                    T("；投資建議 中立 → "), f'{vb("rec")}', T("（只換現價時為 257.76、−12.9%、中立）。本模型現價只影響上檔空間與評等（WACC 權益權重與回購價用 In 頁 px_val〔評價日 2026-09-30 收盤 344.08〕，依設計不隨現價換）；加權目標價的變動來自同業倍數換價。同業倍數（報價日 2026-10-07／10-08）依價格檔同日收盤換到 2026-11-13（倍數 × 收盤比，近似，無市值；Alphabet 自身用市值法）：" + _PXTXT + "；訂閱組 NFLX、SPOT、DIS 同法換價（N 批補做，報價日 2026-10-07）；共識與其他假設不變。")))
     out["ver"] = r; r += 1
     RD.cell(r, 1, "v0.3.9（2026-11-14）：只改展示層與新增頁——個股 HTML 版面規格 v1.3：章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；新增 RevDCF 頁（反向 DCF）、PL 頁末標準損益表"
                   "（FY2023A–FY2025A 實績＋FY2026E–FY2032E 情境 B，GAAP）、Sens 頁末加權目標價相對基準（龍捲風圖用）、README 頁末 v1.3 白話列；新增 Coord 頁「三層協調」（F1 讀取層級；F2 C0（實績）：公司資本支出與 Cloud 營收 vs 層級隱含值）。"
@@ -646,8 +646,9 @@ _HD = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 _PXC = json.load(open(os.path.join(_HD, "peers_cloud_20261113.json"), encoding="utf-8"))
 _PXA = json.load(open(os.path.join(_HD, "peers_ads_20261113.json"), encoding="utf-8"))
 _PXO = json.load(open(os.path.join(_HD, "peers_own_20261113.json"), encoding="utf-8"))
+_PXS = json.load(open(os.path.join(_HD, "peers_subs_20261113.json"), encoding="utf-8"))
 _PXM = [p for p in _PXA["peers"] if p["ticker"] == "META"][0]
-_PXTXT = (f"非 AI 雲端中位數 {_PXC['median1007']['value']} → {_PXC['median']['value']}、數位廣告中位數 {_PXA['median1007']['value']} → {_PXA['median']['value']}、META {_PXM['ntmEvEbitda1007']} → {_PXM['ntmEvEbitda']}、"
+_PXTXT = (f"非 AI 雲端中位數 {_PXC['median1007']['value']} → {_PXC['median']['value']}、數位廣告中位數 {_PXA['median1007']['value']} → {_PXA['median']['value']}、訂閱中位數 {_PXS['median1007']['value']} → {_PXS['median']['value']}、META {_PXM['ntmEvEbitda1007']} → {_PXM['ntmEvEbitda']}、"
           f"Alphabet 自身 {_PXO['old']} → {_PXO['new']}")
 
 

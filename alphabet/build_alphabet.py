@@ -182,16 +182,17 @@ inp("internal_ai_reading", "自用 AI 讀法（2＝主值：自用 AI 價值中�
 inp("sbc_add", "DCF 加回股權報酬（1＝是；Sens 用）", "x", None, 0, 1, "Assumed", "判斷：股權報酬視為真實成本、不加回（稀釋已在股數 dil）；1＝加回（稅後）", "", judg=True)
 inp("tv_alt", "終值改用 FY2032 無槓桿自由現金流 ×(1＋g)（1＝是；Sens 用）", "x", None, 0, 1, "Assumed", "判斷：基準用價值驅動公式（ronic）；1＝替代口徑", "", judg=True)
 
-sec("C2. 分部加總（SOTP）倍數：同業 NTM EV/EBITDA（共用同業檔，報價日 2026-10-07／10-08，雲端與廣告組已依工作單 px1113 換到 2026-11-13 收盤；訂閱組 NFLX、SPOT、DIS 收盤價資料沒有，維持原值；中位數在 Val 頁計算）")
+sec("C2. 分部加總（SOTP）倍數：同業 NTM EV/EBITDA（共用同業檔，報價日 2026-10-07／10-08，雲端、廣告與訂閱組已依工作單 px1113 換到 2026-11-13 收盤；中位數在 Val 頁計算）")
 PEERS = {"ads": ("數位廣告（Search、YouTube、Network、Alphabet 層級費用）", "data/peers_ads_20261113.json（C18；MAG 三家共用；工作單 px1113：倍數 × 2026-11-13 收盤 ÷ 報價日收盤，近似，無市值；原值見 peers_ads_20261009.json）"),
-         "subs": ("訂閱影音（Subscriptions, platforms, and devices）", "legacy_v0.2/company.json valuation.segmentMultiples.subs（NFLX 為 NTM；SPOT、DIS 為 TTM，amazon/data 事實總帳）"),
+         "subs": ("訂閱影音（Subscriptions, platforms, and devices）", "data/peers_subs_20261113.json（NFLX 為 NTM；SPOT、DIS 為 TTM；工作單 px1113：倍數 × 2026-11-13 收盤 ÷ 2026-10-07 收盤，近似；原值見 legacy_v0.2/company.json valuation.segmentMultiples.subs、amazon/data 事實總帳）"),
          "cloud": ("非 AI 雲端／軟體（Cloud 其他）", "data/peers_cloud_20261113.json（C12；MAG 三家共用；工作單 px1113：倍數 × 2026-11-13 收盤 ÷ 報價日收盤，近似，無市值；原值見 peers_cloud_20261008.json）")}
 # ALPHA_OLDPEERS=1：改讀 2026-10-07／10-08 原值（只供變動拆解鏈 sens_v03.py 的 chain|S1–S4、q10|* 使用，使拆解維持同業倍數不變的同口徑）
 _OLDP = bool(os.environ.get("ALPHA_OLDPEERS"))
 _pa = json.load(open(os.path.join(HERE, "data", "peers_ads_20261009.json" if _OLDP else "peers_ads_20261113.json"), encoding="utf-8"))["peers"]
 _pc = json.load(open(os.path.join(HERE, "data", "peers_cloud_20261008.json" if _OLDP else "peers_cloud_20261113.json"), encoding="utf-8"))["peers"]
+_ps = json.load(open(os.path.join(HERE, "data", "peers_subs_20261113.json"), encoding="utf-8"))["peers"]   # N 批補換（px1113_peers.py）：訂閱組 倍數 × 收盤比
 PEERL = {"ads": [(p["ticker"], p["name"], p["ntmEvEbitda"]) for p in _pa],
-         "subs": [("NFLX", "Netflix", 15.41), ("SPOT", "Spotify", 31.97), ("DIS", "Disney", 10.58)],
+         "subs": [(p["ticker"], p["name"], p["ntmEvEbitda1007"] if _OLDP else p["ntmEvEbitda"]) for p in _ps],
          "cloud": [(p["ticker"], p["name"], p["ntmEvEbitda"]) for p in _pc]}
 for grp, lst in PEERL.items():
     for tkr, nm, x in lst:
@@ -1483,7 +1484,7 @@ for i, st in enumerate(Q10):
         RC.cell(rr, 3, f"重算快照 q10|P − q10|Q{i}（{st['key']}：{st['old']} → 本版 In 頁值）")
     rr += 1
 RC.cell(rr, 1, "檢查：10-Q 補入各項合計 − 差額（應為 0）"); RC.cell(rr, 2, f"=SUM(B{_q10a}:B{rr - 1})-B{Q10_D}").number_format = "0.000"; rr += 1
-RC.cell(rr, 1, "(11) 同業倍數（非 AI 雲端、數位廣告、Alphabet 自身）由 2026-10-07／10-08 換到 2026-11-13 收盤（v0.3.10 原地修改，工作單 px1113；倍數 × 收盤比，近似）")
+RC.cell(rr, 1, "(11) 同業倍數（非 AI 雲端、數位廣告、訂閱、Alphabet 自身）由 2026-10-07／10-08 換到 2026-11-13 收盤（v0.3.10 原地修改，工作單 px1113；倍數 × 收盤比，近似）")
 RC.cell(rr, 2, f"=Val!B{VR_['tp']}-B{Q10_V1}").number_format = "#,##0.00"; RC.cell(rr, 3, "活公式：本版目標價 − 重算快照 q10|P（(1)–(10) 與第 3 節拆解鏈皆用同業倍數原值重算）"); rr += 1
 RC.cell(rr, 1, "本版加權目標價（＝v0.3.5 同業原值 ＋ (11)）"); RC.cell(rr, 2, f"=Val!B{VR_['tp']}").number_format = "#,##0.00"; rr += 1
 assert rr <= RC_Q10 + len(Q10) + 8
@@ -1512,7 +1513,7 @@ SRCS = [
     ("FinancialContent GOOGL 歷史股價", "2026-10-29", "https://www.financialcontent.com/quote/NQ%3AGOOGL/historical", "Verified", "評價日股價 344.08（2026-09-30 收盤）"),
     ("StockAnalysis GOOGL 預測頁（S&P Global）", "2026-10-26", "https://stockanalysis.com/stocks/googl/forecast/", "Interested-party", "共識目標價 429.12、FY2026 non-GAAP EPS 11.89"),
     ("MarketScreener Alphabet 財務預估（S&P Capital IQ 系）", "2026-10-26", "https://www.marketscreener.com/quote/stock/ALPHABET-INC-24203373/finances/", "Interested-party", "FY2026–2028 合併共識"),
-    ("共用同業檔 alphabet/data/peers_ads_20261113.json、peers_cloud_20261113.json、peers_own_20261113.json（原值：peers_ads_20261009.json、peers_cloud_20261008.json，2026-10-07）", "2026-11-16", "repo 內（StockAnalysis EV ÷ MarketScreener NTM EBITDA；工作單 px1113 換價至 2026-11-13：倍數 × 收盤比近似，Alphabet 自身用市值法）", "Derived", "SOTP 倍數"),
+    ("共用同業檔 alphabet/data/peers_ads_20261113.json、peers_cloud_20261113.json、peers_subs_20261113.json、peers_own_20261113.json（原值：peers_ads_20261009.json、peers_cloud_20261008.json，2026-10-07）", "2026-11-16", "repo 內（StockAnalysis EV ÷ MarketScreener NTM EBITDA；工作單 px1113 換價至 2026-11-13：倍數 × 收盤比近似，Alphabet 自身用市值法）", "Derived", "SOTP 倍數"),
     ("共識檔 alphabet/data/consensus_googl_20261008.json", "2026-10-08", "repo 內", "Interested-party", "v0.2.2 時的共識（對照）"),
     ("MAG v0.2.2 成品與交接檔（legacy_v0.2/、dist/_待刪除/、docs/handoff/）", "2026-10-25", "repo 內", "Derived", "沿用參數與 v0.2.2 目標價"),
     ("MAG 命題與驅動對照表 r1（C1–C23）", "2026-10-08", "mag/docs/plan/20261008_MAG_命題與驅動對照表_r1.md", "—", "已決定的口徑"),

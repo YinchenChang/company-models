@@ -26,3 +26,17 @@ for src, dst in (("peers_cloud_20261008.json", "peers_cloud_20261113.json"), ("p
     j["_readme"] = j.get("_readme", "") + "；v0.3.8 原地換價至 2026-11-13（px1113_peers.py；工作單 px1113）"
     json.dump(j, open(os.path.join(D, dst), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(dst, old_med, "->", j["median"]["value"], [(p["ticker"], p["ntmEvEbitda1007"], p["ntmEvEbitda"]) for p in j["peers"]])
+
+# 補做（N 批）：零售組 WMT、COST、TGT（價格檔 09-28～11-13 已補）。原值見事實總帳 val.peer.retail.*（報價日 2026-10-07，EV 與 NTM EBITDA 來自不同供應商）。
+# 事實總帳只有 EV 與倍數，無市值 → 倍數新 ＝ 倍數舊 × 11-13 收盤 ÷ 10-07 收盤（近似，標 [Derived]）。
+RET = [("WMT", "Walmart", 17.72, 921.68), ("COST", "Costco", 25.33, 406.42), ("TGT", "Target", 8.77, 82.35)]
+peers = []
+for t, nm, m0, ev0 in RET:
+    a, b = C[(t, "2026-10-07")], C[(t, NEW)]; k = b / a
+    peers.append(dict(ticker=t, name=nm, ntmEvEbitda1007=m0, ntmEvEbitda=round(m0 * k, 2), ev1007=ev0, ev=dict(value=round(ev0 * k, 2), asOf=NEW),
+                      refDate="2026-10-07", closeOld=a, closeNew=b, priceRatio=round(k, 6)))
+jr = dict(group="retail", peers=peers, median1007=dict(value=med(p["ntmEvEbitda1007"] for p in peers)),
+          median=dict(value=med(p["ntmEvEbitda"] for p in peers), n=3, tag="[Derived]（近似）"), asOf="2026-11-13（倍數＝2026-10-07 倍數 × Yahoo Finance 收盤比，近似）",
+          priceSource="markets/invest_map/data/closes_20261020_20261113.csv")
+json.dump(jr, open(os.path.join(D, "peers_retail_20261113.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+print("retail", jr["median1007"]["value"], "->", jr["median"]["value"], [(p["ticker"], p["ntmEvEbitda1007"], p["ntmEvEbitda"]) for p in peers])

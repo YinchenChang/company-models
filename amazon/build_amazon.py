@@ -135,7 +135,7 @@ S_V01A = src("v0.1a 資料報告（AI 在役 MW、對外比例、世代占比的
 S_V022 = src("v0.2.2 交接檔（MW 速度、k 規格、WACC、持股、同業倍數；本版沿用）", "2026-10-25", "amazon/docs/handoff/20261025_Amazon收支模型_交接檔_v0_2_2.md；引擎 amazon/legacy_v0.2/", "Derived")
 S_PEERC = src("共用非 AI 雲端同業檔（ORCL、IBM、SAP、CRM、NOW、AKAM、EQIX、DOCN；StockAnalysis EV ÷ MarketScreener NTM EBITDA，2026-10-07；工作單 px1113 換價至 2026-11-13：倍數 × 收盤比，近似；原值見 peers_cloud_20261008.json）", "2026-11-16", "amazon/data/peers_cloud_20261113.json", "Derived")
 S_PEERA = src("共用數位廣告同業檔（META、PINS、TTD、APP、RDDT、SNAP；2026-10-07／10-08；工作單 px1113 換價至 2026-11-13：倍數 × 收盤比，近似；原值見 peers_ads_20261009.json）", "2026-11-16", "amazon/data/peers_ads_20261113.json", "Derived")
-S_PEERR = src("零售同業（WMT、COST、TGT；事實總帳 val.peer.retail.*）", "2026-10-07", "amazon/data/amazon_facts_20261008.json", "Derived")
+S_PEERR = src("零售同業（WMT、COST、TGT；事實總帳 val.peer.retail.*，報價日 2026-10-07；工作單 px1113 換價至 2026-11-13：倍數 × 收盤比，近似；原值見 amazon_facts_20261008.json）", "2026-11-16", "amazon/data/peers_retail_20261113.json", "Derived")
 S_ANT = src("Anthropic Series H 投後估值 965B（W.Media）", "2026-06-01", "https://w.media/anthropic-valuation-touches-us-965-billion-surpassing-openai/", "Interested-party")
 S_FORT = src("Fortune：Amazon 持有 Anthropic 約 mid-to-high teens", "2026-06-04", "https://www.fortune.com/2026/06/04/amazon-google-billions-anthropic-ipo/", "Analogy")
 S_OAI = src("GeekWire：Amazon 投資 OpenAI 50B、投前 730B", "2026-02-27", "https://www.geekwire.com/2026/amazon-invests-50b-in-openai-deepens-aws-partnership-with-expanded-100b-cloud-deal/", "Interested-party")
@@ -1099,13 +1099,14 @@ for k in ("tpw", "upw", "rec"):
 # 同業倍數表
 RD1 = {}
 P0 = 40
-V.cell(P0, 1, "同業 NTM EV/EBITDA（StockAnalysis EV ÷ MarketScreener NTM EBITDA 共識，報價日 2026-10-07；雲端與廣告組已依工作單 px1113 換到 2026-11-13 收盤〔倍數 × 收盤比，近似，無市值〕；零售組 WMT、COST、TGT 收盤價資料沒有，維持 2026-10-07 原值）").font = BOLD
+V.cell(P0, 1, "同業 NTM EV/EBITDA（StockAnalysis EV ÷ MarketScreener NTM EBITDA 共識，報價日 2026-10-07；雲端、廣告與零售組已依工作單 px1113 換到 2026-11-13 收盤〔倍數 × 收盤比，近似，無市值〕；零售組 WMT、COST、TGT 亦已換到 2026-11-13，同法）").font = BOLD
 hdr(V, P0 + 1, ["同業", "代號", "NTM EV/EBITDA", "組別", "來源", "標記"])
 # AMZN_OLDPEERS=1：改讀 2026-10-07／10-08 原值（只供變動拆解鏈 sens_v031.py 的 chain|S0–S3、chain|P 使用，讓 v0.3.2 → v0.3.3 拆解維持同業倍數不變的同口徑）
 _OLDP = bool(os.environ.get("AMZN_OLDPEERS"))
 _PXC = json.load(open(os.path.join(HERE, "data", "peers_cloud_20261008.json" if _OLDP else "peers_cloud_20261113.json"), encoding="utf-8"))["peers"]   # v0.3.8 原地換價（px1113_peers.py）
 _PXA = json.load(open(os.path.join(HERE, "data", "peers_ads_20261009.json" if _OLDP else "peers_ads_20261113.json"), encoding="utf-8"))["peers"]
-PEERS = [("retail", "Walmart", "WMT", 17.72), ("retail", "Costco", "COST", 25.33), ("retail", "Target", "TGT", 8.77)] \
+_PXR = json.load(open(os.path.join(HERE, "data", "peers_retail_20261113.json"), encoding="utf-8"))["peers"]   # N 批補換（px1113_peers.py）：零售組 倍數 × 收盤比
+PEERS = [("retail", p["name"], p["ticker"], p["ntmEvEbitda1007"] if _OLDP else p["ntmEvEbitda"]) for p in _PXR] \
     + [("ads", p["name"], p["ticker"], p["ntmEvEbitda"]) for p in _PXA] + [("cloud", p["name"], p["ticker"], p["ntmEvEbitda"]) for p in _PXC]
 GRP = {}
 for i, (g, nm_, tkr, m) in enumerate(PEERS, P0 + 2):
@@ -1326,7 +1327,7 @@ for k, lab, prv in CHAIN:
 s3 = SENS.get("chain|S3", {}).get("tp")
 sP = SENS.get("chain|P", {}).get("tp")
 CH_ROWS.append(rec("(d) 2026Q3 分部折舊：推導（Q2 × 現金流量表 D&A 季增比）→ 10-Q（北美 4.57、國際 1.35、AWS 9.23；只進 9M26 實績欄）", f"=IF({_ok},{sP}-{s3},\"快照過期\")" if (s3 and sP) else None, None, "重算快照 chain|P（本版輸入、同業倍數仍為 2026-10-07／10-08 原值）− chain|S3", fmt="0.00", gap=False))
-CH_ROWS.append(rec("(e) 同業倍數（非 AI 雲端、數位廣告）由 2026-10-07／10-08 換到 2026-11-13 收盤（v0.3.8 原地修改，工作單 px1113；倍數 × 收盤比，近似）", f"=Val!B19-{sP}" if sP else None, None, "活公式＝本版 − chain|P；(a)–(d) 以原同業倍數重算（AMZN_OLDPEERS=1）", fmt="0.00", gap=False))
+CH_ROWS.append(rec("(e) 同業倍數（非 AI 雲端、數位廣告、零售）由 2026-10-07／10-08 換到 2026-11-13 收盤（v0.3.8 原地修改，工作單 px1113；倍數 × 收盤比，近似）", f"=Val!B19-{sP}" if sP else None, None, "活公式＝本版 − chain|P；(a)–(d) 以原同業倍數重算（AMZN_OLDPEERS=1）", fmt="0.00", gap=False))
 RC_SUM = rec("拆解合計（(a)–(d)）", "=" + "+".join(f"B{x}" for x in CH_ROWS) if SENS else None, None, "", fmt="0.00", gap=False)
 RC_TOT = rec("總變動＝v0.3.3 − v0.3.2", f"=Val!B19-B{RC_B0}", None, "", fmt="0.00", gap=False)
 rec("檢查：拆解合計 − 總變動（應為 0）", f"=B{RC_SUM}-B{RC_TOT}" if SENS else 0, None, "", fmt="0.000000", gap=False, check=True)
@@ -1382,7 +1383,7 @@ lines = [
     ("", False),
     ("工作表：README → In（輸入；J 節情境驅動對照）→ Q（實績與核對）→ Thesis（命題模組）→ Seg（營收分部）→ PL → CF → Val → Recon（共識、指引、v0.3 拆解）→ Sens（敏感度）→ Sources。", False),
     ("標記：Verified、Interested-party、Analogy、Assumed、Derived。沿用 v0.2.2：k 規格（kspec.py）、對外比例、WACC 輸入、持股與同業倍數。SemiAnalysis 未使用。In 頁 D／F＝敏感度低／高，只用於 Sens 頁；共識區間只作對照。", False),
-    ("已知限制：(1) 公司未揭露 AI 在役 MW、對外比例與 AI 營收，AWS AI／AWS 其他的歷史分拆為估計；(2) 分部共識未找到，合併共識為財報前；(3) 雲端與廣告同業倍數已依工作單 px1113 由 2026-10-07 換到 2026-11-13（倍數 × 收盤比，近似，無市值）、零售同業（WMT、COST、TGT）收盤價資料沒有而維持 2026-10-07；(4) 到期債務假設全數再融資；(5) 10-Q 不揭露在建工程與 RPO 的認列時程；供應商擔保貸款額度（最高約 80.0，2027Q1 起可動用）與 Globalstar 收購（約 10.9，預計 2027 年完成）未入模型。", False),
+    ("已知限制：(1) 公司未揭露 AI 在役 MW、對外比例與 AI 營收，AWS AI／AWS 其他的歷史分拆為估計；(2) 分部共識未找到，合併共識為財報前；(3) 雲端、廣告與零售同業倍數已依工作單 px1113 由 2026-10-07／10-08 換到 2026-11-13（倍數 × 收盤比，近似，無市值）；(4) 到期債務假設全數再融資；(5) 10-Q 不揭露在建工程與 RPO 的認列時程；供應商擔保貸款額度（最高約 80.0，2027Q1 起可動用）與 Globalstar 收購（約 10.9，預計 2027 年完成）未入模型。", False),
 ]
 # v0.3.5（Andy 2026-11-05，個股 HTML 版面規格 v1.0）：展示層與命題回覆（HTML 讀；原列保留）
 _BC = lambda k, c: B_("C", k, c)
