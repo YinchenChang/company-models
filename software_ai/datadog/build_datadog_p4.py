@@ -228,8 +228,20 @@ hdr(SG, 4, ["項目", "FY2025A", "說明"])
 SG["A5"] = SEGL; SG["B5"] = "=h_rev_25"; SG["B5"].number_format = "#,##0.0"; SG["C5"] = "10-K：單一應報導部門；營收 3,427.158"
 SG.column_dimensions["A"].width = 60; SG.column_dimensions["C"].width = 70
 
+# PL 頁圖表資料（連續欄：FY2023A–FY2025A、FY2026E–FY2032E；供 HTML 折線與長條圖）
+r = PL.max_row + 3
+PL.cell(r, 1, "圖表資料（情境 B；連續欄供 HTML 圖表使用，值同上方標準損益表）").font = BOLD; r += 1
+CHR = {"hdr": r}
+PL.cell(r, 1, "項目"); PL.cell(r, 2, "單位")
+SRCC = ["C", "D", "E", "H", "I", "J", "K", "L", "M", "N"]; DSTC = "CDEFGHIJKL"
+for d_, s_ in zip(DSTC, SRCC): PL[f"{d_}{r}"] = f"={s_}{PL_HDR}"
+r += 1
+for k, lab, unit, src, fm in (("rev", "營收", "US$M", "rev", "#,##0.0"), ("gm", "毛利率", "%", "gm", "0.0%"), ("om", "營業利益率", "%", "om", "0.0%"), ("nm", "淨利率", "%", "nm", "0.0%")):
+    CHR[k] = r; PL.cell(r, 1, lab); PL.cell(r, 2, unit)
+    for d_, s_ in zip(DSTC, SRCC): PL[f"{d_}{r}"] = f"={s_}{PB_[src]}"; PL[f"{d_}{r}"].number_format = fm
+    r += 1
 ROWMAP = {"IN": IN_ROW, "PR": P_, "TR": T, "CR": C_, "DR": DR_, "IX": IS, "VR": VR, "RVR": RVR, "RCR": RCR, "SE_ROWS": SE_ROWS, "SE_BASE": SE_BASE, "SE_STALE": SE_STALE, "SE_STATUS": SE_STATUS,
-          "SE_BID": SE_BID, "SE_END": SE_END, "SE_TORN": SE_TORN, "SE_FP": SE_FP, "PL_HDR": PL_HDR, "PL_NOTE": PL_NOTE, "PL_SUM": PL_SUM, "GATE": GATE, "SCN": SCN, "SCN_H": SCN_H, "BUILD_ID": BUILD_ID,
+          "SE_BID": SE_BID, "SE_END": SE_END, "SE_TORN": SE_TORN, "SE_FP": SE_FP, "PL_HDR": PL_HDR, "PL_NOTE": PL_NOTE, "PL_SUM": PL_SUM, "PL_SUM2": PL_SUM2, "PL_SUM3": PL_SUM3, "CHR": CHR, "RD_ROWS": {"hero": 11}, "GATE": GATE, "SCN": SCN, "SCN_H": SCN_H, "BUILD_ID": BUILD_ID,
           "SENS_DEF": [(k, s_, str(v)) for k, s_, v, _ in SENS_DEF], "IN_LAST": IN_LAST, "Q_CHK": [Q_CHK1, Q_CHK2, Q_CHK3]}
 if os.environ.get("ROWMAP"):
     json.dump(ROWMAP, open(os.environ["ROWMAP"], "w", encoding="utf-8"), ensure_ascii=False, indent=1)

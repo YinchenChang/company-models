@@ -26,10 +26,10 @@ def recalc(raw):
     prof = tempfile.mkdtemp(prefix="lo_hs_")
     env = dict(os.environ)
     env["LC_ALL"] = "C.UTF-8"
-    for attempt in range(4):
+    for attempt in range(6):
         rc = subprocess.run(["soffice", f"-env:UserInstallation=file://{prof}", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", out, raw],
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=env, timeout=900).returncode
-        if rc == 0:
+        if rc == 0 and os.path.exists(os.path.join(out, os.path.basename(raw))):
             break
     else:
         raise RuntimeError(f"soffice 失敗：{raw}")

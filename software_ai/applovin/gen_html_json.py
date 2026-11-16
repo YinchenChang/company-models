@@ -37,7 +37,7 @@ hdrs = f"@PL!C{hp}:L{hp}"
 # ---- thesis ----
 thesis = {"id": "thesis", "title": "命題與核心問題", "blocks": [
     {"type": "note", "parts": [f"@README!A{RM['rec']}"]},
-    {"type": "theme", "title": "營收（十億美元以外：百萬美元）與營業利益率：FY2023A–FY2032E（情境 B）", "x": hdrs, "fmt": "n0", "fmt_r": "p0", "stack": True, "pad": 1.3,
+    {"type": "theme", "title": "營收（百萬美元）與營業利益率：FY2023A–FY2032E（情境 B）", "x": hdrs, "fmt": "n0", "fmt_r": "p0", "stack": True, "pad": 1.3,
      "bars": [{"name": [f"@PL!A{PB['s_ads']}"], "y": f"@PL!C{PB['s_ads']}:L{PB['s_ads']}", "color": "#0b7a80"}],
      "lines": [{"name": [f"@PL!A{PB['opm']}"], "y": f"@PL!C{PB['opm']}:L{PB['opm']}", "axis": "r", "color": "#3b3838", "labels": True}],
      "caption": "長條＝單一官方分部 Advertising 營收（百萬美元）；折線＝合併營業利益率（右軸，GAAP）。FY2026E 起為情境 B（基準）。"},
@@ -115,7 +115,7 @@ drivers = {"id": "drivers", "title": "驅動因子：單位經濟與 AI 淨效�
     {"type": "note", "parts": [f"@README!A{RM['drv']}"]},
     {"type": "theme", "title": "AI 淨效果（營業利益口徑，百萬美元）× 情境 A／B／C", "x": f"@Thesis!G{THS['B|hdr']}:L{THS['B|hdr']}", "fmt": "n0", "stack": False, "pad": 1.2,
      "bars": [{"name": ["情境 ", s, "：AI 淨效果"], "y": f"@Thesis!G{THS[s + '|net']}:L{THS[s + '|net']}", "color": c} for s, c in (("A", "#7fb8bb"), ("B", "#3b3838"), ("C", "#d9a08f"))],
-     "caption": "AI 淨效果＝(AI 增量營收＋分流侵蝕)×(1−資料中心成本率−其他營業成本率)−LLM 推論成本；三情境差距來自 AI 提升、新垂直、分流與資料中心成本率。"},
+     "caption": "AI 淨效果＝(AI 增量營收＋分流侵蝕)×貢獻利潤率（一減資料中心成本率減其他營業成本率）減 LLM 推論成本；三情境差距來自 AI 提升、新垂直、分流與資料中心成本率。"},
     {"type": "note", "parts": ["@Thesis!A1"]}, {"type": "note", "parts": ["@Thesis!A2"]},
     {"type": "table", "caption": "單位經濟：每一千美元營收（情境 B）", "head": ["項目"] + [f"@Thesis!{c}{THR['hdr_ue']}" for c in YC],
      "rows": [[f"@Thesis!A{r}"] + [f"@Thesis!{c}{r}|n0" for c in YC] for r in ue_rows]},

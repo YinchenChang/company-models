@@ -103,7 +103,7 @@ cfg = {
     {"type": "table", "caption": "合併層：模型 vs 公司指引與共識（財報前）", "head": ["項目", "模型情境 B", "對照值", "差", "說明"],
      "rowgen": {"sheet": "Recon", "rows": f"{RCR['r26']}-{RCR['c27']}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n2", "n2", "n2", ""],
                 "row_fmt": {str(RCR["m28"]): {"B": "p1", "C": "p1", "D": "n1"}, str(RCR["gm"]): {"B": "p1", "C": "p1", "D": "n1"}, str(RCR["c26"]): {"D": "sp1"}, str(RCR["c27"]): {"D": "sp1"}}}},
-    {"type": "table", "caption": "分部：2026上半年實績 vs 模型", "head": ["分部", "上半年實績", "上半年年增", "模型 FY2026E", "隱含下半年", "隱含下半年年增", "FY2025 實績"],
+    {"type": "table", "caption": "分部：上半年實績 vs 模型", "head": ["分部", "上半年實績", "上半年年增", "模型 FY2026E", "隱含下半年", "隱含下半年年增", "FY2025 實績"],
      "rowgen": {"sheet": "Recon", "rows": f"{RCR['h1jp']}-{RCR['h1t']}", "cols": list("ABCDEFG"), "fmts": ["", "n1", "p1", "n1", "n1", "p1", "n1"]}},
     {"type": "table", "caption": "原型 P 單位經濟：每百萬美元平均 ARR（千美元）", "head": ["項目", "情境 A", "情境 B", "情境 C", "說明"],
      "rowgen": {"sheet": "Recon", "rows": f"{RCR['uinc2027']}-{RCR['uain']}", "cols": list("ABCDE"), "fmts": ["", "n0", "n0", "n0", ""],
