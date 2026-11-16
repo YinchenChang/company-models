@@ -152,11 +152,27 @@ def main():
     nanc = sum(1 for row in wf["Compare"].iter_rows() for c in row if isinstance(c.value, str) and "兩邊都不錨定" in c.value)
     if nanc: bad.append(f"Compare 仍出現「兩邊都不錨定」{nanc} 格（協調規則 v1.1 改寫）")
     else: print("  Compare：無「兩邊都不錨定」")
-    SIL_REQ = "v0.18"
+    SIL_REQ = "v0.19"   # v0.3.6：改讀 main 現行 v0.19（v0.3.1–v0.3.5 為 v0.18）
     a1 = str(wf["SIL_In"]["A1"].value or "")
     if f"（{SIL_REQ}，" not in a1: bad.append(f"SIL 快照版本不是 {SIL_REQ}：{a1[:80]}")
     else: print(f"  SIL_In：Siliconomics 快照 {SIL_REQ}")
     if "E-K1" not in [x_[0] for x_ in rows]: bad.append("Checks 缺 E-K1（v0.3.1）")
+    # v0.3.6（檢核清單 A 節）：證據比例區間、N-K0、H3 權威狀態
+    for cid in ("E-K2", "N-K0"):
+        if cid not in [x_[0] for x_ in rows]: bad.append(f"Checks 缺 {cid}（v0.3.6）")
+    elh = []
+    for y in range(2026, 2031):
+        lo_, b_, hi_ = (val(f"WIF_Evidence_{k_}{y}") if f"WIF_Evidence_{k_}{y}" in names else None for k_ in ("Lo_", "", "Hi_"))
+        if not all(isinstance(v_, (int, float)) for v_ in (lo_, b_, hi_)) or not (0 <= lo_ <= b_ + 1e-9 <= hi_ + 2e-9 <= 1 + 2e-9): elh.append(f"{y}：{lo_!r}／{b_!r}／{hi_!r}")
+    if elh: bad.append(f"WIF_Evidence_Lo ≤ 基準 ≤ Hi 不成立：{elh}")
+    else: print("  WIF_Evidence_Lo／Hi 2026–2030：低 ≤ 基準 ≤ 高（" + "／".join(f"{val(f'WIF_Evidence_Lo_{y}'):.3f}–{val(f'WIF_Evidence_Hi_{y}'):.3f}" for y in range(2026, 2031)) + "）")
+    nk0 = [x_ for x_ in rows if x_[0] == "N-K0"]
+    if nk0 and nk0[0][2] not in ("OK", "WARN"): bad.append(f"N-K0 判讀須為 OK／WARN：{nk0[0][2]}")
+    ninfo_auth = sum(1 for row in wf["Compare"].iter_rows(min_col=2, max_col=2) for c in row if c.value == "csilst")
+    if ninfo_auth != 1: bad.append("Compare H3 缺「Siliconomics 權威狀態」列（csilst）")
+    lab_cst = [wb["Compare"].cell(c.row, 1).value for row in wf["Compare"].iter_rows(min_col=2, max_col=2) for c in row if c.value in ("cst", "cst67", "clead", "ctag")]
+    if not lab_cst or any("Wattonomics 側自評（參考，不作判定）" not in str(t) for t in lab_cst): bad.append("Compare H3 自評列未標「Wattonomics 側自評（參考，不作判定）」")
+    else: print("  Compare H3：權威狀態列（baseline_status.json）＋自評 4 列已標參考")
     for cid in ("E-W1", "E-W2"):
         if cid not in [x_[0] for x_ in rows]: bad.append(f"Checks 缺 {cid}（v0.3.2）")
     w1b = [f"WIF_W1_{k_}_{y}" for k_ in ("NeoAdd", "SovAdd", "Lo", "Hi") for y in range(2026, 2030) if not isinstance(val(f"WIF_W1_{k_}_{y}"), (int, float)) or val(f"WIF_W1_{k_}_{y}") < -1e-9]
@@ -197,7 +213,9 @@ def main():
                # v0.3.1（工作單 20261114 Z7）
                "### 三層基準協調（v0.3.1）", "WIF_Evidence_<yyyy>", "實績下限讀法", "對帳中",
                # v0.3.2（工作單 20261114 W-1）
-               "### 七家以外買方路徑（v0.3.2）", "WIF_W1_NeoAdd_<yyyy>", "Anthropic 經 Fluidstack 租用"):
+               "### 七家以外買方路徑（v0.3.2）", "WIF_W1_NeoAdd_<yyyy>", "Anthropic 經 Fluidstack 租用",
+               # v0.3.6（檢核清單 A 節）
+               "WIF_Evidence_Lo_<yyyy>", "WIF_Evidence_Hi_<yyyy>", "baseline_status.json", "N-K0"):
         if kw not in txt: bad.append(f"wattonomics/README.md 缺固定規格：{kw}")
     print(f"{os.path.basename(x)}：頁面 {len(wb.sheetnames)}、具名範圍 {len(names)}（WIF_ {len(gif)}）、Checks {len(rows)} 項（OK {nok}／WARN {len(cw)}／ERROR {len(ce)}／INFO {ninfo}）、"
           f"In 輸入列 {nrow}（待證據 {pend}）、錯誤格 {nerr}")
