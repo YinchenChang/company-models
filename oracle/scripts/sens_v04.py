@@ -11,6 +11,7 @@ import openpyxl
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BUILD = os.path.join(HERE, "build_oracle.py")
+_PXS = json.load(open(os.path.join(HERE, "data", "peers_sw_20261113.json"), encoding="utf-8"))   # v0.5.3 原地換價：軟體同業 Sens 低／高
 TK = json.load(open(os.path.join(HERE, "data", "tokenomics_snapshot_v19.0.json"), encoding="utf-8"))["items"]
 GN = {"h100": "Hopper H100", "gb200": "GB200 NVL72", "gb300": "GB300 NVL72", "vr200": "VR200 NVL72"}
 OX = {g: round(TK["IF_OpexGW"]["values"][n]["基準"], 4) for g, n in GN.items()}
@@ -73,7 +74,7 @@ CASES += [
     ("營運資金增加 ÷ 營收增量 nwc_r", "FY2024–FY2026 各年最小／最大（4.6%／33.8%；v0.4.7）", {"nwc_r": 0.457 / (67.357 - 57.399)}, {"nwc_r": 1.500 / (57.399 - 52.961)}),
     ("AI 設備經濟汰換壓力（低於 Tokenomics 區間；Assumed，待 Tokenomics 登錄）", "4 年／—（v0.4.7）", {"life_ai": 4}, {}, "life_ai"),
     ("投資級槓桿上限", "4.0x／5.0x", {"lev_max": 4.0}, {"lev_max": 5.0}),
-    ("其餘業務（軟體等）前瞻 EV/EBITDA", "10.8x／15.59x", {"mult_sw": 10.8}, {"mult_sw": 15.59}),
+    ("其餘業務（軟體等）前瞻 EV/EBITDA", f"{_PXS['lo']}x／{_PXS['hi']}x", {"mult_sw": _PXS["lo"]}, {"mult_sw": _PXS["hi"]}),
 ]
 # mult_oci（OCI AI 同業倍數）不列：2026-10-30 重算 4.81x／7.88x 皆 73.2244；v0.4.4（2026-11-04）重算皆 74.6671（變動 0；只進 Val 對照列），豁免理由寫在 Sens 頁說明列。
 

@@ -1,0 +1,64 @@
+{
+ "asOf": "2026-11-13",
+ "priceSource": "markets/invest_map/data/closes_20261020_20261113.csv",
+ "peers": {
+  "MSFT": {
+   "old": 15.59,
+   "new": 15.42,
+   "refDate": "2026-10-07",
+   "closeOld": 529.76,
+   "closeNew": 523.88,
+   "priceRatio": 0.988901,
+   "method": "EV 新＝EV 舊 3,990,000＋市值舊 3,930,000 ×（價格比−1）；EBITDA 不變（MSFT 事實總帳 val.ev、val.mktcap）",
+   "tag": "[Derived]"
+  },
+  "SAP": {
+   "old": 15.02,
+   "new": 16.79,
+   "refDate": "2026-10-07",
+   "closeOld": 210.13,
+   "closeNew": 234.9,
+   "priceRatio": 1.117879,
+   "method": "倍數 × 收盤比（近似，無市值；淨負債不變）",
+   "tag": "[Derived]（近似）"
+  },
+  "CRM": {
+   "old": 10.8,
+   "new": 10.48,
+   "refDate": "2026-10-07",
+   "closeOld": 224.56,
+   "closeNew": 217.84,
+   "priceRatio": 0.970075,
+   "method": "倍數 × 收盤比（近似，無市值；淨負債不變）",
+   "tag": "[Derived]（近似）"
+  },
+  "ADBE": {
+   "old": 6.6,
+   "new": 6.89,
+   "refDate": "2026-10-07",
+   "closeOld": 232.77,
+   "closeNew": 243.08,
+   "priceRatio": 1.044293,
+   "method": "倍數 × 收盤比（近似，無市值；淨負債不變）",
+   "tag": "[Derived]（近似）"
+  },
+  "NOW": {
+   "old": 20.65,
+   "new": 15.31,
+   "refDate": "2026-10-07",
+   "closeOld": 137.87,
+   "closeNew": 102.25,
+   "priceRatio": 0.741641,
+   "method": "倍數 × 收盤比（近似，無市值；淨負債不變）",
+   "tag": "[Derived]（近似）"
+  }
+ },
+ "median": 15.31,
+ "medianOld": 15.02,
+ "lo": 10.48,
+ "hi": 15.42,
+ "loOld": 10.8,
+ "hiOld": 15.59,
+ "legacyMedian": 8.69,
+ "legacyMedianOld": 8.7
+}
