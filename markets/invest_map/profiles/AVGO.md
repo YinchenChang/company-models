@@ -31,11 +31,11 @@ asof: 2026-10-25
 
 - 兩期各自合計約 100%（營收 FY2025 US$63.9B、FY2026 錨點 105.9B）[本專案：20261116_Broadcom個股模型_v0.5.8.xlsx Q!B4、Q!G4]。
 - AI 內 XPU 約 69%、網通約 31%（FY2026 推估）；Q3 FY26 法說稱 XPU 73%（二手）[本專案：20261116_Broadcom個股模型_v0.5.8.xlsx Q!G10、Q!J10]。
-- non-GAAP 毛利率 FY2025 78.6% → FY2026 75.1% → 模型 FY2027 67.8%（代購 HBM 稀釋）[本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Q!B13、Q!G13、PL!E11]。
+- non-GAAP 毛利率 FY2025 78.6% → FY2026 75.1% → 模型 FY2027 68.1%（代購 HBM 稀釋）[本專案：20261116_Broadcom個股模型_v0.5.8.xlsx Q!B13、Q!G13、PL!E11]。
 
 ## 市場定位與產業位置
-- 本專案推算 CY2027 Broadcom 占 ASIC 金額 61.5%、顆數 55% [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Units!D61、Units!D62]；外部：Counterpoint 約 60%（口徑未說明）、JPMorgan 高階 ASIC 80–85% [本專案：先驗比對_AVGO_20261023.md 資料表]。
-- ASIC 整體在 CY2027 加速器金額中占 22.4%（Broadcom 模型）[本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Units!D59]；NVIDIA 模型對應約 18%，先驗比對推導 14–19%，三者並列 [本專案：20261030_NVIDIA個股模型_v0.2.3.xlsx Units!D34:D36；先驗比對_AVGO_20261023.md B6a]。
+- 本專案推算 CY2027 Broadcom 占 ASIC 金額 59.5%、顆數 55% [本專案：20261116_Broadcom個股模型_v0.5.8.xlsx Units!D61、Units!D62]；外部：Counterpoint 約 60%（口徑未說明）、JPMorgan 高階 ASIC 80–85% [本專案：先驗比對_AVGO_20261023.md 資料表]。
+- ASIC 整體在 CY2027 加速器金額中占 18.2%（Broadcom 模型）[本專案：20261116_Broadcom個股模型_v0.5.8.xlsx Units!D59]；NVIDIA 模型對應約 18%，先驗比對推導 14–19%，三者並列 [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Units!D34:D36；先驗比對_AVGO_20261023.md B6a]。
 - 客戶集中：6 家 XPU 客戶合計占 AI 營收 73%；Anthropic 預計 2027 年成為最大 XPU 客戶 [本專案：先驗比對_AVGO_20261023.md 資料表]。
 
 ## 管理層與經營風格
@@ -45,15 +45,15 @@ asof: 2026-10-25
 | 財務長 | Amie Thuener | 2026-06-12 | 前 Alphabet 主計長暨會計長；接替退休的 Kirsten Spears [外部・未經本專案檢核] |
 
 - 經營風格：本專案尚未研究。
-- 本專案記錄的特色：替客戶融資。對 Anthropic 放款上限 US$42B、為 OpenAI 安排超過 50B，媒體合計約 92B，約為模型 FY2027 AI 營收的 76% [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Recon!B34、Recon!C35]。
+- 本專案記錄的特色：替客戶融資。對 Anthropic 放款上限 US$42B、為 OpenAI 安排超過 50B，媒體合計約 92B，約為模型 FY2027 AI 營收的 81% [本專案：20261116_Broadcom個股模型_v0.5.8.xlsx Recon!B34、Recon!C35]。
 
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| NVIDIA | AI 加速器、網通 | CY2027 加速器金額份額 71.3%（Broadcom 模型）／75.1%（NVIDIA 模型） | [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Recon!C24；20261030_NVIDIA個股模型_v0.2.3.xlsx Units!D32] |
+| NVIDIA | AI 加速器、網通 | CY2027 加速器金額份額 75.1%（Broadcom 模型與 NVIDIA 模型一致） | [本專案：20261116_Broadcom個股模型_v0.5.8.xlsx Recon!C24；20261116_NVIDIA個股模型_v0.3.11.xlsx Units!D32] |
 | Marvell | 客製 ASIC | 2027 約 8%（Counterpoint）／10–12%（JPMorgan） | [本專案：先驗比對_AVGO_20261023.md 資料表] |
 | 聯發科（MediaTek） | Google TPU 部分版本 | 本專案未建立 | — |
-| AWS Trainium（非 Broadcom） | 自研 AI 晶片 | CY2027 加速器金額份額 3.0% | [本專案：20261030_NVIDIA個股模型_v0.2.3.xlsx Units!D35] |
+| AWS Trainium（非 Broadcom） | 自研 AI 晶片 | CY2027 加速器金額份額 3.0% | [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Units!D35] |
 
 - 模型假設 Broadcom 在 Google TPU 的份額由 90%（2026）降到 75%（2028）[本專案：20261116_Broadcom個股模型_v0.5.8.xlsx Units!C5:E5]。
 
@@ -87,13 +87,13 @@ asof: 2026-10-25
 
 ## 需要觀察的事項
 - FY2028 AI 營收 230B 的可達性｜要對上，Broadcom XPU 顆數需為市場層推得的 1.73 倍 [本專案：20261116_Broadcom個股模型_v0.5.8.xlsx Recon!C11]｜FY2026 Q4 財報（約 2026-12-10，未確認）
-- 毛利率下滑幅度｜模型 FY2027 67.8% vs 共識隱含約 72.4%，差在代購 HBM 比例 [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Recon!C32、Recon!B32]｜同上
-- 客戶融資曝險｜約 92B，若全損約等於模型 FY2027 淨利 1.03 倍 [本專案：20261030_Broadcom個股模型_v0.3.1.xlsx Recon!C36]｜Anthropic 上市進度、OpenAI 融資條款
+- 毛利率下滑幅度｜模型 FY2027 68.1% vs 共識隱含約 72.3%，差在代購 HBM 比例 [本專案：20261116_Broadcom個股模型_v0.5.8.xlsx Recon!C32、Recon!B32]｜同上
+- 客戶融資曝險｜約 92B，若全損約等於模型 FY2027 淨利 1.08 倍 [本專案：20261116_Broadcom個股模型_v0.5.8.xlsx Recon!C36]｜Anthropic 上市進度、OpenAI 融資條款
 - Google TPU 份額（聯發科分食）｜份額假設 90%→75% 是 Assumed [本專案：20261116_Broadcom個股模型_v0.5.8.xlsx Units!C5:E5]｜Google 下一代 TPU 供應商消息
-- 模型狀態｜Broadcom 個股模型現行 v0.3.1（`avgo/dist/`）[本專案：20261030_Broadcom個股模型_v0.3.1.xlsx]｜下一版更新
+- 模型狀態｜Broadcom 個股模型現行 v0.3.1（`avgo/dist/`）[本專案：20261116_Broadcom個股模型_v0.5.8.xlsx]｜下一版更新
 
 ## 來源
-1. 本專案：`avgo/dist/20261030_Broadcom個股模型_v0.3.1.xlsx`（README、Q、Units、PL、Recon）；`nvidia/dist/20261030_NVIDIA個股模型_v0.2.3.xlsx`（Units）；AI半導體 `先驗比對_AVGO_20261023.md`、`先驗比對_Arista_20261024.md`；`markets/invest_map/data/models_extract.json`
+1. 本專案：`avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx`（README、Q、Units、PL、Recon）；`nvidia/dist/20261116_NVIDIA個股模型_v0.3.11.xlsx`（Units）；AI半導體 `先驗比對_AVGO_20261023.md`、`先驗比對_Arista_20261024.md`；`markets/invest_map/data/models_extract.json`
 2. [Broadcom in Early Financing Talks for OpenAI Chips](https://www.bloomberg.com/news/videos/2026-10-08/broadcom-in-early-financing-talks-for-openai-chips-video)（2026-10-08）
 3. [Broadcom Starts Amassing Funds for Anthropic Chips](https://www.bloomberg.com/news/articles/2026-10-02/broadcom-starts-amassing-60-billion-to-fund-chips-for-anthropic)（2026-10-02，僅標題）
 4. [Broadcom to lend Anthropic up to $42 billion to lease chips](https://finance.yahoo.com/technology/article/broadcom-to-lend-anthropic-up-to-42-billion-to-lease-chips-in-latest-circular-investing-deal-121617505.html)（2026-10-01）
