@@ -14,7 +14,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = sys.argv[1]
 SENS = sys.argv[sys.argv.index("--sens") + 1] if "--sens" in sys.argv else None
 ROWMAP = sys.argv[sys.argv.index("--rowmap") + 1] if "--rowmap" in sys.argv else None
-VER, VDATE = "0.1.1", "20261117"
+VER, VDATE = "0.1.2", "20261117"
 TK = json.load(open(os.path.join(HERE, "data/tokenomics_snapshot_v22.0.json"), encoding="utf-8"))
 TKI = TK["items"]
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
@@ -622,6 +622,10 @@ RELM_ROW = RMR
 FS0 = RMR + 3
 FS = FD.write_summary(wb, V, FS0, FDR, ["A", "B", "C"], ["tp_wA", "tp_wB", "tp_wC"], px="px", beta_note="Blume 調整；單一來源")
 fd_ = lambda k, col: f"=DCF!$C${FDR['paths'][col][k]}"
+for s_ in "ABC":   # 原則第 56 條：EV ≤ 0 時終值占比顯示 N/M
+    D_ = FDR["paths"][s_]
+    Dp[f"C{D_['tvsh']}"] = f'=IF(C{D_["ev"]}<=0,"N/M",C{D_["pvtv"]}/C{D_["ev"]})'
+    Dp[f"C{D_['ck_tv']}"] = f'=IF(ISNUMBER(C{D_["tvsh"]}),IF(C{D_["tvsh"]}>0.8,"超過 80%，需在報告標示","未超過"),"N/M（EV 非正）")'
 for si, s_ in enumerate("ABC"):
     col = "CDE"[si]; D_ = FDR["paths"][s_]
     V[f"{col}{VR['pvx']}"] = f"=DCF!$C${D_['pvx']}"; V[f"{col}{VR['tvpv']}"] = f"=DCF!$C${D_['pvtv']}"; V[f"{col}{VR['ev']}"] = f"=DCF!$C${D_['ev']}"
@@ -699,7 +703,7 @@ for k, lab, spec in rec_rows:
             if v is not None: Rc.cell(r, j, v)
     r += 1
 Rc[f"B{RCR['omgap']}"] = f"=B{RCR['om27']}/C{RCR['om27']}-1"; Rc[f"B{RCR['prodgap']}"] = f"=B{RCR['prod27']}/C{RCR['prod27']}-1"
-KREQ = os.path.join(HERE, "data/kreq_v011.json")
+KREQ = os.path.join(HERE, "data/kreq_v012.json")
 if os.path.exists(KREQ):
     for n_, kq in enumerate(json.load(open(KREQ, encoding="utf-8"))):
         RCR["kreq" if n_ == 0 else "kreq2"] = r

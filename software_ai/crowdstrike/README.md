@@ -1,11 +1,11 @@
-# software_ai/crowdstrike/ — CrowdStrike（CRWD）個股模型 v0.1.1（原型 P：按防護範圍計價）
+# software_ai/crowdstrike/ — CrowdStrike（CRWD）個股模型 v0.1.2（原型 P：按防護範圍計價）
 
 **本版未做先驗**（Andy 2026-11-16 23:27 指示）。工作單：`software_ai/docs/workorders/20261116_第一批_研究包與單位經濟.md` F、G、G2、G3 節。公開 repo：只含公司與市場事實，無任何個人情境。
 
 **建置：**
-1. `python3 software_ai/crowdstrike/build_crowdstrike.py`（全部活公式；含整本重算敏感度，約 2 分鐘；`--quick` 沿用 `data/sens_v01.json`；`--reverse` 重算 `data/reverse_v01.json` 整本重算反解）。成品 `dist/20261117_CrowdStrike個股模型_v0.1.1.xlsx`（LibreOffice 重算後存檔）。
+1. `python3 software_ai/crowdstrike/build_crowdstrike.py`（全部活公式；含整本重算敏感度，約 2 分鐘；`--quick` 沿用 `data/sens_v01.json`；`--reverse` 重算 `data/reverse_v01.json` 整本重算反解）。成品 `dist/20261117_CrowdStrike個股模型_v0.1.2.xlsx`（LibreOffice 重算後存檔）。
 2. `python3 software_ai/crowdstrike/gen_html_json.py <xlsx> <layout.json> software_ai/crowdstrike/html.json`（layout.json 由步驟 1 寫到暫存目錄）。
-3. `python3 tools/company_html/build_company_html.py software_ai/crowdstrike` → `dist/…_v0.1.1.html`。
+3. `python3 tools/company_html/build_company_html.py software_ai/crowdstrike` → `dist/…_v0.1.2.html`。
 
 投資建議、目標價與各數字見成品 README 頁與 HTML（由公式組字，本檔不手寫）。
 
@@ -16,6 +16,13 @@
 |---|---|---|
 | v0.1 | 2026-11-16 | 首版；G2-3 把費用率、SBC 率、資本支出率全期持平，DCF 約 1、加權目標價約 35，強力放空（舊檔在 `dist/_待刪除/`） |
 | v0.1.1 | 2026-11-17 | G3：(1) 規模經濟改以 FY2023–FY2026 回歸的固定＋變動成本延伸（non-GAAP 成本固定部分、SBC 固定部分取 0、資本支出固定部分），全期持平改為 Sens 下緣；(2) 營運資金符號核對，折舊攤銷改由前一年資本支出推得（`da_k`）；(3) `rel_mult` 改用最近 5 個會計年度末自算平均（`data/relmult_history.csv`）；(4) 合理性關卡診斷寫入成品 README 頁；新增事件尾端 Sens（`ev_hc`、`ev_delta`） |
+| v0.1.2 | 2026-11-17 | 批次獨立核對修正：(1) 合理性關卡補第三項診斷：情境 A 的 DCF 企業價值為負；(2) 揭露三情境 DCF 排序倒掛（終值現值皆為負、營收越大負終值越大，比照原則第 60 條）；(3) EV 小於或等於零時終值占 EV 顯示 N/M，Val 頁新增 DCF 有效性檢查（情境 A 不通過），DCF 失效條件加「EV 小於或等於零」；(4) 收支關卡 B16／B26 統一為三情境最小值（CF 頁 B3） |
+
+## 合理性關卡診斷（G3-3，v0.1.2 更新）
+觸發三項：(a) DCF 目標價低於現價的 25%；(b) 情境 A 的 DCF 企業價值為負（情境 B、C 為正）；(c) 評等為強力放空。FY2027 營收與 non-GAAP 營業利益和指引的差距未超過 10%。
+診斷：以上都不是公式或符號錯誤，而是口徑結果：SBC 費用化，歷史 SBC 占營收（含薪資稅約四分之一）沒有下降趨勢，GAAP 營業利益率在預測期與終值期都在零附近（略為負），NOPAT 與終值因而為負或近零。數字見成品 README 頁（公式組字）。
+**情境排序倒掛（比照原則第 60 條）：** 三情境的 DCF 終值現值皆為負，DCF 每股價值依情境 A、B、C 遞增，方向與 AI 淨效果（A 大於 B 大於 C）相反。成因是 GAAP 營業利益率長期在零附近，營收越大，負的 NOPAT 與負終值越大，營收較高的情境 DCF 反而較低。因此三情境的 DCF 排序不代表經營好壞排序，EV 為負的情境不作為估值依據，加權目標價主要由 Comparable 決定。
+**DCF 失效條件：** 任一情境 DCF 企業價值小於或等於零（原則第 56 條）；此時終值占 EV 等比率顯示 N/M，Val 頁「DCF 有效性檢查」判不通過。
 
 **結構：** README、In、Hist、Q、Thesis、PL（標準損益表、分部營收與對帳、三情境）、CF（FCFF DCF，含 FY2033–FY2037 延伸期）、Val、RevDCF、Recon、Sens、Sources。官方分部只有一個，營收線為訂閱與專業服務。
 

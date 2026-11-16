@@ -1,14 +1,14 @@
 #!/bin/bash
-# Snowflake 個股模型 v0.1.1：建置 → LibreOffice 重算 → 核對。需要 python3＋openpyxl、LibreOffice。
-#   bash software_ai/snowflake/make_v01.sh            # 沿用已存的敏感度與反解 data/sens_v011_20261117.json、data/kreq_v011.json
+# Snowflake 個股模型 v0.1.2：建置 → LibreOffice 重算 → 核對。需要 python3＋openpyxl、LibreOffice。
+#   bash software_ai/snowflake/make_v01.sh            # 沿用已存的敏感度與反解 data/sens_v012_20261117.json、data/kreq_v012.json
 #   SENS=1 bash software_ai/snowflake/make_v01.sh     # 改了輸入或公式後重跑敏感度與反解（約 90 案＋14 次反解，約 4 分鐘）
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$ROOT"
 D=software_ai/snowflake
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD/out" $D/dist /home/claude/scratch/snowflake
-S=$D/data/sens_v011_20261117.json
-K=$D/data/kreq_v011.json
-OUT=$D/dist/20261117_Snowflake個股模型_v0.1.1.xlsx
+S=$D/data/sens_v012_20261117.json
+K=$D/data/kreq_v012.json
+OUT=$D/dist/20261117_Snowflake個股模型_v0.1.2.xlsx
 python3 $D/build_snowflake.py "$WD/raw0.xlsx" --rowmap "$WD/rowmap.json"
 if [ "${SENS:-0}" = "1" ]; then
   python3 $D/sens_snowflake.py "$WD/raw0.xlsx" "$WD/rowmap.json" "$S" 4
