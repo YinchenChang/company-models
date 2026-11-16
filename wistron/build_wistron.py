@@ -296,7 +296,7 @@ inp("wy_sh", "緯穎股數（讀緯穎模型 In 頁 q_sh）", "十億股", None,
 inp("wy_eq", "緯穎股東權益（3Q26；少數股權帳面推算用）", "NT$B", None, 188.025502, None, "Verified", MOPS_BS + "（6669 緯穎）：歸屬於母公司業主之權益合計 188,025,502 千元", "v0.4.6 為 2Q26 137.263（stockanalysis）；緯穎無非控制權益")
 inp("ws_hold", "緯創持有緯軟（4953）比例", "%", 0.236, 0.236, 0.40, "Interested-party", "Simply Wall St 4953 股東表：Wistron Corporation 16,756,254 股（23.6%）（2026-11-06 讀取；網址見 Sources 頁）", "間接持股：未找到（高值 40% 為 Assumed）；緯軟為緯創子公司（公司簡介）")
 inp("ws_sh", "緯軟流通股數", "十億股", None, 0.07115, None, "Verified", "stockanalysis 4953 季資產負債表 2Q26：流通股數 71.15 百萬股 https://stockanalysis.com/quote/tpex/4953/financials/balance-sheet/?p=quarterly（2026-11-06 讀取）", "—")
-inp("ws_px", "緯軟股價（2026-11-05 收盤）", "NT$", None, 111.5, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（4953.TWO；收盤檔無此代號，維持 11-05，與 px 不同日；工作單 px1113）", "px 已改 11-13，本列維持 11-05；v0.4.4 為 2026-11-04 收盤 119（Yahoo Finance）")
+inp("ws_px", "緯軟股價（2026-11-13 收盤）", "NT$", None, 119, None, "Verified", "工作單 px1113 K 批；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）（4953.TWO）", "v0.4.7 為 2026-11-05 收盤 111.5；v0.4.4 為 2026-11-04 收盤 119（Yahoo Finance）")
 inp("ws_eq", "緯軟股東權益（2Q26；9-30 未取得）", "NT$B", None, 4.095, None, "Verified", "stockanalysis 4953 季資產負債表 2Q26：Shareholders' Equity 4,095（TWD 百萬）（同上網址）", "少數股權帳面 ≈ 本值 ×（1 − ws_hold）；3Q26 值未取得，維持（只進下限 0 的差額項，不影響結果）")
 rows += _FD
 inp("beta_u", "產業無槓桿 β（採用）：自算 TW 伺服器／ODM 同業中位數 Blume 調整（0.67 × 中位數＋0.33）", "x", None, 0.792, None, "Analogy",
@@ -872,7 +872,7 @@ srcs = [("公司（摘要）：鉅亨 2Q26 法說（2Q26 營收、毛利率、�
         ("媒體：財報狗 GDR 新聞（2.5 億股、NT$186.24、稀釋 7.29%）", SD_GDR),
         ("券商：經濟日報 2026-09-10（美系券商 NVL72 櫃數調查）", UDN0910),
         ("券商：旺得富 2026-08-10（法人 2026–27 EPS、目標價）", WR0810), ("券商：工商時報 2026-08-05（本國投顧目標價 300）", CTEE0805),
-        ("價格：Yahoo Finance 日線收盤 2026-11-13（現價、同業報價、緯穎股價；工作單 px1113）；緯軟（4953）股價維持 2026-11-05 收盤（收盤檔無此代號）", "https://finance.yahoo.com/quote/3231.TW/history/"), ("資料商：財報狗（10-22 收盤 190〔v0.4.3 現價〕、近 12 月 P/E）", SD), ("資料商：stockanalysis 報價頁（前瞻 P/E、股數）", SA_Q),
+        ("價格：Yahoo Finance 日線收盤 2026-11-13（現價、同業報價、緯穎股價；工作單 px1113）；緯軟（4953）股價亦改 2026-11-13 收盤（K 批）", "https://finance.yahoo.com/quote/3231.TW/history/"), ("資料商：財報狗（10-22 收盤 190〔v0.4.3 現價〕、近 12 月 P/E）", SD), ("資料商：stockanalysis 報價頁（前瞻 P/E、股數）", SA_Q),
         ("資料商：stockanalysis 預估頁（共識營收、EPS、目標價）", SA_F), ("資料商：stockanalysis 財報與比率頁（FY2021–25 損益、ROE、P/E）", SA_FIN),
         ("資料商：stockanalysis 比率頁", SA_R), ("資料商：Goodinfo 歷年經營績效（年底收盤、EPS、ROE）", GI),
         ("同業前瞻 P/E：stockanalysis（廣達、鴻海、英業達、緯穎、美超微各報價頁）", "https://stockanalysis.com/quote/tpe/2382/；https://stockanalysis.com/quote/tpe/2317/；https://stockanalysis.com/quote/tpe/2356/；https://stockanalysis.com/quote/tpe/6669/；https://stockanalysis.com/stocks/smci/"),

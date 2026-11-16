@@ -73,7 +73,7 @@ def apply(wb, here, cfg):
         if not (isinstance(t, str) and isinstance(d, str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", d) and f is not None and not (isinstance(f, str) and f.startswith("=MEDIAN"))):
             continue
         k = pm.get(t) or re.split(r"[／/]", t)[-1].strip()
-        if d != old_date or (k, NEWD) not in closes():
+        if (d != old_date and cfg.get("also", {}).get(k) != d) or (k, NEWD) not in closes() or (k, d) not in closes():   # also＝{代號: 報價日}：原報價日不是 old_date 但收盤檔已有該日收盤者
             unchanged.append((k, d)); continue
         p0, p1 = px(k, d), px(k)
         if isinstance(f, str) and f.startswith("="):

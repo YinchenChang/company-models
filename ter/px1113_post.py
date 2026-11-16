@@ -9,7 +9,7 @@ PX_OLD, PX_NEW = 212.74, 249.55
 PXF = "#,##0.00"      # 現價與目標價的 TEXT 格式
 PEERS = {'6857.T': (29485, 30610), 'KLAC': (129.8, 152.32), 'COHU': (34.9, 43.59), 'FORM': (71.76, 87.53), 'AMAT': (319.25, 370.5)}   # 代號 -> (2026-11-05 收盤, 2026-11-13 收盤)
 OLD = {'med': 23.76, 'tp': 300.241716870176, 'up': 0.411308248896194, 'rec': '買進', 'nd': 2}      # v0.4.5 成品值：同業中位數、加權目標價、上檔空間、評等
-UNCH = "未換價：Technoprobe（TPRO.MI）股價與歐元兌美元匯率（DCF 淨現金內上市子公司市值的輸入；收盤資料檔無此代號，維持 2026-11-05 值）"
+UNCH = "DCF 淨現金內 Technoprobe（TPRO.MI）市值的輸入改 11-13 收盤：股價 €20.52 → €21.98、歐元兌美元 0.8904 €/US$ → 1.105 US$/€（EURUSD=X；預測用匯率不變）；未換價：無"
 SRC = "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（markets/invest_map/data/closes_20261020_20261113.csv）"
 
 
@@ -34,6 +34,26 @@ def apply(wb):
     In.cell(r, 8).value = f"Yahoo Finance 日線收盤 2026-11-13：{PX_NEW:,}（{TK}）"
     In.cell(r, 9).value = f"工作單 px1113（2026-11-16）：現價改 2026-11-13 收盤（原 {PX_OLD:,}，2026-11-05 收盤，v{OLDVER}）；" + old_i
     skip |= {("In", r, 8), ("In", r, 9)}
+    # (1b) K 批：Technoprobe（TPRO.MI）股價 €20.52 → €21.98、歐元兌美元 0.8904 €/US$ → 1.105 US$/€（EURUSD=X）；僅換市值換算（inv、DCF 淨現金），預測用匯率不變
+    hits = 0
+    for ws in wb:
+        for row in ws.iter_rows():
+            for c in row:
+                v = c.value
+                if not isinstance(v, str):
+                    continue
+                w = v.replace("65.326087*20.52/0.8904", "65.326087*21.98*1.105")
+                w = w.replace("€20.52 ÷ 0.8904 €/US$（Yahoo Finance 日線收盤 2026-11-05；工作單 px1105：原 €22.62 ÷ 0.8923，2026-11-04",
+                              "€21.98 × 1.105 US$/€（Yahoo Finance 日線收盤 2026-11-13：TPRO.MI、EURUSD=X；工作單 px1113 K 批：v0.4.5 為 €20.52 ÷ 0.8904 €/US$，2026-11-05；px1105 前為 €22.62 ÷ 0.8923，2026-11-04")
+                w = w.replace("65.33M 股 × €20.52 ÷ 0.8904，2026-11-05）", "65.33M 股 × €21.98 × 1.105，2026-11-13）")
+                if w != v:
+                    c.value = w; hits += 1
+    assert hits >= 3, hits
+    for ws in wb:
+        for row in ws.iter_rows():
+            for c in row:
+                if isinstance(c.value, str) and "0.8904" in c.value and not c.value.startswith("v0."):
+                    print("警告：殘留 0.8904", ws.title, c.coordinate, c.value[:80])
     # (2) Comparable 同業前瞻 P/E
     h = next(r for r in range(1, V.max_row + 1) if str(V.cell(r, 1).value or "").startswith("0.2 Comparable"))
     done = []
