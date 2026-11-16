@@ -1,7 +1,7 @@
 # 三層基準協調檢查（規則 docs/plan/三層基準協調規則.md 第 10 節；v1.4.3 起接 CI）
 # 步驟一：tools/baseline_coordination/check.py（狀態檔、版本漂移、C0、證據比例區間；「提醒」不擋，「不符」以 1 結束）
 # 步驟二：wattonomics/tools/check.py 讀 CURRENT 活頁簿與快照（只讀已存的快取值，不需要 LibreOffice）
-# 本機不呼叫 API；consistency-check.yml（API 版）在 API credit 到期後停用，本檔是其替代檢查。
+# 本機不呼叫 API；consistency-check.yml（API 版）在 API credit 到期後停用，本檔是不呼叫 API 的部分替代（不做 tools/consistency 原本的跨模型數字比對）。
 name: coord-check
 on:
   pull_request:
@@ -12,6 +12,7 @@ on:
       - "tools/coord/**"
       - "docs/plan/三層基準協調規則.md"
       - ".github/workflows/coord-check.yml"
+      - "*/dist/*.html"
   push:
     branches: [main]
     paths:
@@ -21,6 +22,7 @@ on:
       - "tools/coord/**"
       - "docs/plan/三層基準協調規則.md"
       - ".github/workflows/coord-check.yml"
+      - "*/dist/*.html"
 jobs:
   check:
     runs-on: ubuntu-latest

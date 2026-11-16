@@ -48,6 +48,32 @@ def expected_status(w_share, s_share, thr, prev_w=None, prev_s=None):
     return "待定" if len(ends) > 1 else base
 
 
+def _check_c0(yr, y, today, require_label):
+    """12. C0 實績對帳不過（c0_fail is True）的登錄檢查；c0_fail 只認布林 True。"""
+    errs = []
+    flag = y.get("c0_fail")
+    if flag is not None and not isinstance(flag, bool):
+        return [f"[12] {yr} c0_fail 須為布林值，現為 {flag!r}"]
+    if flag is not True:
+        return errs
+    if require_label and "有條件" not in str(y.get("label") or ""):
+        errs.append(f"[12] {yr} C0 實績對帳不過（c0_fail），甲年標示「{y.get('label')}」未含「有條件」")
+    if not y.get("c0_recon_doc"):
+        errs.append(f"[12] {yr} C0 實績對帳不過但未登錄對帳單（c0_recon_doc）")
+    dl = y.get("c0_deadline")
+    if not dl:
+        errs.append(f"[12] {yr} C0 實績對帳不過但未寫期限（c0_deadline）")
+    else:
+        try:
+            d = datetime.date.fromisoformat(dl)
+        except (TypeError, ValueError):
+            errs.append(f"[12] {yr} c0_deadline 格式錯誤：{dl!r}（應為 YYYY-MM-DD）")
+        else:
+            if d < today:
+                errs.append(f"[12] {yr} C0 對帳單已逾期（{dl}）：依 C6 第 3 點強制裁定")
+    return errs
+
+
 def check_status(st, today):
     errs = []
     thr = st["threshold"]
@@ -70,17 +96,8 @@ def check_status(st, today):
             note(f"提醒 [7] {yr} 未量測（狀態檔缺 timing_cum，C2 ② 累計上限未檢查）")
         elif abs(y["timing_cum"]) > 0.15 * abs(y["sil_base"]):
             errs.append(f"[7] {yr} ② 時差與庫存累計 {y['timing_cum']} 超過當年基準 15%")
-        # 12. C0 實績對帳不過時（c0_fail）：標示須含「有條件」，且須登錄對帳單與期限（v1.4.3）
-        if y.get("c0_fail"):
-            if "有條件" not in str(y.get("label") or ""):
-                errs.append(f"[12] {yr} C0 實績對帳不過（c0_fail），標示「{y.get('label')}」未含「有條件」")
-            if not y.get("c0_recon_doc"):
-                errs.append(f"[12] {yr} C0 實績對帳不過但未登錄對帳單（c0_recon_doc）")
-            dl = y.get("c0_deadline")
-            if not dl:
-                errs.append(f"[12] {yr} C0 實績對帳不過但未寫期限（c0_deadline）")
-            elif datetime.date.fromisoformat(dl) < today:
-                errs.append(f"[12] {yr} C0 對帳單已逾期（{dl}）：依 C6 第 3 點強制裁定")
+        # 12. C0 實績對帳不過時（c0_fail）：甲年標示須含「有條件」；所有年份須登錄對帳單與期限（v1.4.3）
+        errs += _check_c0(yr, y, today, require_label=(tag == "甲"))
         # 2. 丙狀態：Siliconomics 基準＝換算值（以供給上限為頂）
         if tag == "丙" and st.get("wattonomics_coverage_complete"):
             conv = min(y["converted"], y.get("supply_cap", float("inf")))
@@ -195,6 +212,14 @@ def check_recon_residual():
     return errs
 
 
+def check_c0_actuals(st, today):
+    """12（續）. 協調年份以外的已公布年份：頂層 c0_actuals.<年>（C0 第 9 點；v1.4.3）。"""
+    errs = []
+    for yr, y in sorted((st.get("c0_actuals") or {}).items()):
+        errs += _check_c0(yr, y, today, require_label=False)
+    return errs
+
+
 def check_evidence_range():
     """10. Wattonomics 證據比例區間：WIF_Evidence_Lo_<yyyy> ≤ WIF_Evidence_<yyyy> ≤ WIF_Evidence_Hi_<yyyy>（v1.4.3）。"""
     errs = []
@@ -212,13 +237,16 @@ def check_evidence_range():
     missing = []
     for yr in years:
         b, lo, hi = names[f"WIF_Evidence_{yr}"], names.get(f"WIF_Evidence_Lo_{yr}"), names.get(f"WIF_Evidence_Hi_{yr}")
-        if lo is None or hi is None:
+        if lo is None and hi is None:
             missing.append(yr)
+            continue
+        if lo is None or hi is None:
+            errs.append(f"[10] {fn} {yr} 只有 {'Hi' if lo is None else 'Lo'}，證據比例區間不完整")
             continue
         if not (lo <= b <= hi):
             errs.append(f"[10] {fn} {yr} 證據比例 低 {lo} ≤ 基準 {b} ≤ 高 {hi} 不成立")
     if missing:
-        note(f"提醒 [10] {fn} 無 WIF_Evidence_Lo_／Hi_ 名稱（{missing[0]}–{missing[-1]}），證據比例區間未檢查")
+        note(f"提醒 [10] {fn} 無 WIF_Evidence_Lo_／Hi_ 名稱（{'、'.join(missing)}），證據比例區間未檢查")
     return errs
 
 
@@ -232,7 +260,8 @@ def main():
         print(f"未啟用：找不到狀態檔 {p}（步驟 3 量測後建立）")
         return 0
     st = json.loads(p.read_text(encoding="utf-8"))
-    errs = (check_status(st, datetime.date.fromisoformat(a.today)) + check_company_reads(st)
+    today = datetime.date.fromisoformat(a.today)
+    errs = (check_status(st, today) + check_c0_actuals(st, today) + check_company_reads(st)
             + check_version_drift(st) + check_recon_residual() + check_evidence_range())
     for n in NOTES:
         print(n)
