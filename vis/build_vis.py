@@ -1220,6 +1220,11 @@ RD["A1"] = _a1 + "；v0.3（2026-11-15）：依 v0.2.4 驗收報告修正四項 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import v03_post  # noqa: E402
 print(v03_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, dict(PB=PB, C=C, SENS_ROWS=SENS_ROWS, TP_ROWS=TP_ROWS)))
+# v0.3.2（2026-11-16）：工作單 px1113——現價與同業報價改 2026-11-13 收盤（vis/px1113_post.py；只改價格輸入與說明文字）
+import px1113_post as P1113  # noqa: E402
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_N1113 = open(os.path.join(_HERE, "px1113_note.txt"), encoding="utf-8").read().strip() if os.path.exists(os.path.join(_HERE, "px1113_note.txt")) else "v0.3.2（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。"
+print(P1113.apply(wb, _HERE, dict(ver="v0.3.2", old_ver="v0.3.1", tk="5347.TWO", note=_N1113 + " ")))   # NXP 出資換算匯率 33.034 沿用（收盤檔無匯率序列）
 wb.save(sys.argv[1])
 if os.environ.get("ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK, "VAL": VAL, "INROW": INROW,
