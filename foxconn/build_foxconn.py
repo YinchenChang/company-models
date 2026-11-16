@@ -258,7 +258,7 @@ _FD = FD.in_rows(dict(
     inv=("=103.110027+151.107632+16.070994+207.043045", "Verified", MOPSBS + "：FVTPL－非流動 103,110,027＋FVOCI－非流動 151,107,632＋攤銷後成本－非流動 16,070,994＋採用權益法之投資 207,043,045（對應 stockanalysis「長期投資」；FY2025 此口徑 437.3 vs 436.3）", NO2 + "長期投資 491,182；Sens 測不計"),
     mi=("=223.085594-fii_eq*(1-fii_hh/fii_sh)*cnytwd_bs+(fii_sh-fii_hh)*fii_px*cnytwd-ht_eq*(1-ht_hh/ht_sh)*usdtwd_bs+(ht_sh-ht_hh)*ht_px*hkdtwd-fm_eq*(1-fm_hh/fm_sh)*usdtwd_bs25+(fm_sh-fm_hh)*fm_px*hkdtwd-en_eq*(1-en_hh/en_sh)+(en_sh-en_hh)*en_px", "Derived",
         "上市子公司少數股權用市值、其餘用帳面（Andy 2026-11-05 23:16 定案）：" + MOPSBS + " 非控制權益帳面 223,085,594 千元（v0.4.6 為 2026-06-30 211,651 百萬元） − 工業富聯（601138.SS）少數股權帳面（工業富聯 2Q26 歸屬母公司權益 × 少數持股 × 人民幣匯率）＋ 工業富聯少數股權市值（流通股數 − 鴻海持股）× 股價 × 匯率；In 頁 K2 節 fii_*",
-        "v0.4.4（第三輪修正第 13、35 點）：鴻騰（6088.HK）、富智康（2038.HK）、樺漢（6414）少數股權同樣改市值（帳面以各公司歸屬母公司權益 × 少數持股 × 匯率近似扣除；In 頁 K2 節 ht_*、fm_*、en_*）；股價與匯率皆為 2026-11-05 收盤（與 px 同日）；樺漢本身的非控制權益（36,905 百萬元）維持帳面"),
+        "v0.4.4（第三輪修正第 13、35 點）：鴻騰（6088.HK）、富智康（2038.HK）、樺漢（6414）少數股權同樣改市值（帳面以各公司歸屬母公司權益 × 少數持股 × 匯率近似扣除；In 頁 K2 節 ht_*、fm_*、en_*）；股價與匯率 v0.4.7 皆為 2026-11-05 收盤，v0.4.8 K 批改 2026-11-13 收盤（與 px 同日）；樺漢本身的非控制權益（36,905 百萬元）維持帳面"),
     stub=dict(bs_date="2026-09-30", val_date="2026-12-31", bs_src=MOPSBS + "（v0.4.7 起；v0.4.6 為 2026-06-30 stockanalysis）",
               div=("=0", "Derived", "FY2025 盈餘現金股利每股 7.17179 元已於 2026-07-31 發放（除息日 07-02，stockanalysis https://stockanalysis.com/quote/tpe/2317/dividend/），在資產負債表日 2026-09-30 之前，已反映在 9-30 現金；stub 期（09-30～12-31）不再扣",
                    "鴻海一年配息一次，評價日前無其他已宣告股利；買回無（v0.4.6 以 2026-06-30 為資產負債表日時扣 7.17179 × 股數＝100.5）")),
@@ -281,27 +281,27 @@ inp("beta_u", "產業無槓桿 β（採用）：自算 TW 伺服器／ODM 同業
     "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）；本組維持 0.792（工作單第二輪修正：只改 Sens 規則）")
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v+mi_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 稀釋股數 sh_v ＋ 非控制權益 mi_v)", "與 WACC 權重同一口徑；第三輪修正：合併 EV 含子公司 100%，E＝母公司市值＋非控制權益市值（主控決定）")
 inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新加槓桿）", "x", None, 0.3, None, "Assumed", "工作單第二輪修正（Andy 2026-11-05 23:16 定案）：β 敏感度改為 β_u ± 0.3", "取代 v0.4.1 的低＝中位數 × 0.8 再 Blume、高＝未調整中位數")
-sec("K2. 上市子公司少數股權市值（非控制權益 mi_v 用；v0.4.2 新增，Andy 2026-11-05 23:16 定案：上市子公司用市值、非上市用帳面；v0.4.4 加鴻騰、富智康、樺漢，股價與匯率統一 2026-11-05 收盤；v0.4.8 工作單 px1113：收盤檔沒有工業富聯、鴻騰、富智康、樺漢與匯率，本節維持 2026-11-05 收盤，只有 px 與同業改 2026-11-13）")
+sec("K2. 上市子公司少數股權市值（非控制權益 mi_v 用；v0.4.2 新增，Andy 2026-11-05 23:16 定案：上市子公司用市值、非上市用帳面；v0.4.4 加鴻騰、富智康、樺漢，股價與匯率統一 2026-11-05 收盤；v0.4.8 工作單 px1113：K 批補價後，本節股價與換算匯率（USD/TWD、USD/CNY、USD/HKD）亦改 2026-11-13 收盤）")
 inp("fii_sh", "工業富聯（601138.SS）流通股數", "十億股", None, 19.84, None, "Verified", "stockanalysis 601138 統計頁：流通股數 19.84B（https://stockanalysis.com/quote/sha/601138/statistics/；2026-11-05 讀取）", "MarketScreener 601138 股東表：庫藏股 117,579,159 股另列")
 inp("fii_hh", "鴻海持有工業富聯股數", "十億股", None, 16.52385, None, "Verified", "MarketScreener 601138 股東表：Hon Hai Precision Industry 16,523,850,047 股（83.32%）（https://www.marketscreener.com/quote/stock/FOXCONN-INDUSTRIAL-INTERN-44388510/company/；2026-11-05 讀取）", "少數持股＝1 − fii_hh ÷ fii_sh（約 16.7%）")
-inp("fii_px", "工業富聯股價（2026-11-05 收盤）", "CNY", None, 44.29, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（601138.SS；收盤檔無此代號，維持 11-05，與 px 不同日）", "px 已改 11-13（工作單 px1113），本列維持 11-05；v0.4.4 為 2026-11-04 收盤 45.25（Yahoo Finance）")
-inp("cnytwd", "人民幣兌新台幣（2026-11-05 收盤；美元交叉）", "NT$/CNY", None, "=33.034/6.6583", None, "Verified", "Yahoo Finance 日線收盤 2026-11-05：USD/TWD 33.034 ÷ USD/CNY 6.6583（Yahoo FX，1 美元兌當地幣）", "v0.4.4 為 2026-11-04 收盤交叉 32.733 ÷ 6.6701")
+inp("fii_px", "工業富聯股價（2026-11-13 收盤）", "CNY", None, 40.1, None, "Verified", "工作單 px1113 K 批；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）（601138.SS）", "v0.4.7 為 2026-11-05 收盤 44.29；v0.4.4 為 2026-11-04 收盤 45.25（Yahoo Finance）")
+inp("cnytwd", "人民幣兌新台幣（2026-11-13 收盤；美元交叉）", "NT$/CNY", None, "=32.939/6.6704", None, "Verified", "Yahoo Finance 日線收盤 2026-11-13：USD/TWD 32.939 ÷ USD/CNY 6.6704（TWD=X、CNY=X；1 美元兌當地幣；工作單 px1113 K 批；只用於股價市值換算，預測用匯率不變）", "v0.4.7 為 2026-11-05 交叉 33.034 ÷ 6.6583；v0.4.4 為 2026-11-04 收盤交叉 32.733 ÷ 6.6701")
 inp("fii_eq", "工業富聯歸屬母公司權益（2Q26）", "CNY B", None, 175.753, None, "Verified", "stockanalysis 601138 季資產負債表：2026-06-30 股東權益 175,753（百萬人民幣）（https://stockanalysis.com/quote/sha/601138/financials/balance-sheet/?p=quarterly；2026-11-05 讀取）", "鴻海合併報表中工業富聯少數股權帳面 ≈ 本值 × 少數持股（近似；未取得鴻海附註的子公司別非控制權益）")
 inp("cnytwd_bs", "人民幣兌新台幣（2026-06 月平均；資產負債表日換算）", "NT$/CNY", None, 4.671294, None, "Verified", "x-rates 2026 年 CNY→TWD 月平均：6 月 4.671294（同上）", "—")
-inp("hkdtwd", "港幣兌新台幣（2026-11-05 收盤；美元交叉）", "NT$/HKD", None, "=33.034/7.8416", None, "Verified", "Yahoo Finance 日線收盤 2026-11-05：USD/TWD 33.034 ÷ USD/HKD 7.8416（Yahoo FX）", "鴻騰、富智康少數股權市值換算；v0.4.4 為 2026-11-04 收盤交叉 32.733 ÷ 7.8462")
+inp("hkdtwd", "港幣兌新台幣（2026-11-13 收盤；美元交叉）", "NT$/HKD", None, "=32.939/7.8443", None, "Verified", "Yahoo Finance 日線收盤 2026-11-13：USD/TWD 32.939 ÷ USD/HKD 7.8443（TWD=X、HKD=X；工作單 px1113 K 批）", "鴻騰、富智康少數股權市值換算；v0.4.7 為 2026-11-05 交叉 33.034 ÷ 7.8416；v0.4.4 為 2026-11-04 收盤交叉 32.733 ÷ 7.8462")
 inp("usdtwd_bs", "美元兌新台幣（2026-06 月平均；資產負債表日換算）", "NT$/US$", None, 31.65026, None, "Verified", "x-rates 2026 年 USD→TWD 月平均：6 月 31.650260（https://www.x-rates.com/average/?from=USD&to=TWD&amount=1&year=2026；2026-11-06 讀取）", "鴻騰帳面（美元報表）換算")
 inp("usdtwd_bs25", "美元兌新台幣（2025-12 月平均；富智康資產負債表日換算）", "NT$/US$", None, 31.387819, None, "Verified", "x-rates 2025 年 USD→TWD 月平均：12 月 31.387819（https://www.x-rates.com/average/?from=USD&to=TWD&amount=1&year=2025；2026-11-06 讀取）", "富智康帳面（美元報表）換算")
 inp("ht_sh", "鴻騰（6088.HK）流通股數", "十億股", None, 7.116, None, "Verified", "stockanalysis 6088 半年資產負債表 1H26（2026-06-30）：流通股數 7,116 百萬股（https://stockanalysis.com/quote/hkg/6088/financials/balance-sheet/?p=quarterly；2026-11-06 讀取）", "同站統計頁 7.11B")
 inp("ht_hh", "鴻海持有鴻騰股數", "十億股", None, 5.179557888, None, "Interested-party", "Simply Wall St 6088 股東表：Hon Hai Precision Industry 5,179,557,888 股（72.8%）（https://simplywall.st/stocks/hk/tech/hkg-6088/fit-hon-teng-shares/ownership；2026-11-06 讀取，頁面 2026-10-09）", "少數持股＝1 − ht_hh ÷ ht_sh（約 27.2%）")
-inp("ht_px", "鴻騰股價（2026-11-05 收盤）", "HKD", None, 3.39, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（6088.HK；收盤檔無此代號，維持 11-05，與 px 不同日）", "px 已改 11-13（工作單 px1113），本列維持 11-05；v0.4.4 為 2026-11-04 收盤 3.41（Yahoo Finance）")
+inp("ht_px", "鴻騰股價（2026-11-13 收盤）", "HKD", None, 2.645, None, "Verified", "工作單 px1113 K 批；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）（6088.HK）", "v0.4.7 為 2026-11-05 收盤 3.39；v0.4.4 為 2026-11-04 收盤 3.41（Yahoo Finance）")
 inp("ht_eq", "鴻騰歸屬母公司權益（1H26）", "US$B", None, 2.743, None, "Verified", "stockanalysis 6088 半年資產負債表 2026-06-30：Total Common Equity 2,743（百萬美元；本身非控制權益 15.53）（同上網址）", "鴻海合併報表中鴻騰少數股權帳面 ≈ 本值 × 少數持股 × usdtwd_bs（近似）")
 inp("fm_sh", "富智康（2038.HK）流通股數", "十億股", None, 0.78099, None, "Verified", "stockanalysis 2038 統計頁：流通股數 780.99 百萬股（https://stockanalysis.com/quote/hkg/2038/statistics/；2026-11-06 讀取，頁面 2026-10-01）", "同站資產負債表 2025-12-31：780.78 百萬股")
 inp("fm_hh", "鴻海持有富智康股數", "十億股", None, 0.515777266, None, "Interested-party", "Simply Wall St 2038 股東表：Hon Hai Precision Industry 515,777,266 股（66%）（https://simplywall.st/stocks/hk/tech/hkg-2038/fih-mobile-shares/ownership；2026-11-06 讀取，頁面 2026-10-09）", "少數持股約 34.0%")
-inp("fm_px", "富智康股價（2026-11-05 收盤）", "HKD", None, 13.58, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（2038.HK；收盤檔無此代號，維持 11-05，與 px 不同日）", "px 已改 11-13（工作單 px1113），本列維持 11-05；v0.4.4 為 2026-11-04 收盤 13.57（Yahoo Finance）")
+inp("fm_px", "富智康股價（2026-11-13 收盤）", "HKD", None, 13.89, None, "Verified", "工作單 px1113 K 批；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）（2038.HK）", "v0.4.7 為 2026-11-05 收盤 13.58；v0.4.4 為 2026-11-04 收盤 13.57（Yahoo Finance）")
 inp("fm_eq", "富智康歸屬母公司權益（2025-12-31）", "US$B", None, 1.518, None, "Verified", "stockanalysis 2038 半年資產負債表 2025-12-31：Total Common Equity 1,518（百萬美元；本身非控制權益 4.39）（https://stockanalysis.com/quote/hkg/2038/financials/balance-sheet/?p=quarterly；2026-11-06 讀取）", "1H26（2026-06-30）資產負債表：未取得（資料商頁面最新為 2025-12-31），沿用 2025-12-31")
 inp("en_sh", "樺漢（6414）流通股數", "十億股", None, 0.15048, None, "Verified", "stockanalysis 6414 季資產負債表 2Q26：流通股數 150.48 百萬股（https://stockanalysis.com/quote/tpe/6414/financials/balance-sheet/?p=quarterly；2026-11-06 讀取）", "同站統計頁同值")
 inp("en_hh", "鴻海集團持有樺漢股數（鴻海＋鴻揚創投）", "十億股", None, "=0.033178779+0.002063433", None, "Interested-party", "Simply Wall St 6414 股東表：Hon Hai Precision Industry 33,178,779 股（22.1%）、Hyield Venture Capital（鴻揚創投，鴻海子公司）2,063,433 股（1.37%）（網址見 Sources 頁；2026-11-06 讀取，頁面 2026-10-15）", "合計約 23.4%；鴻海對樺漢具控制力而合併（持股未過半）；其他鴻海子公司持股：未找到（若有，少數股權市值會略低）")
-inp("en_px", "樺漢股價（2026-11-05 收盤）", "NT$", None, 341.5, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（6414.TW；收盤檔無此代號，維持 11-05，與 px 不同日）", "px 已改 11-13（工作單 px1113），本列維持 11-05；v0.4.4 為 2026-11-04 收盤 348.5（Yahoo Finance）")
+inp("en_px", "樺漢股價（2026-11-13 收盤）", "NT$", None, 336.5, None, "Verified", "工作單 px1113 K 批；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）（6414.TW）", "v0.4.7 為 2026-11-05 收盤 341.5；v0.4.4 為 2026-11-04 收盤 348.5（Yahoo Finance）")
 inp("en_eq", "樺漢歸屬母公司權益（2Q26）", "NT$B", None, 28.501, None, "Verified", "stockanalysis 6414 季資產負債表 2026-06-30：Total Common Equity 28,501（百萬元；本身非控制權益 36,905 維持帳面）（同上網址）", "鴻海合併報表中樺漢少數股權帳面 ≈ 本值 × 少數持股（近似）")
 
 _OVR = dict(kv.split("=") for kv in os.environ.get("FOXCONN_OVR", "").split(";") if kv)   # 敏感度快照（foxconn/sens_foxconn.py）以環境變數 FOXCONN_OVR 覆寫 In 輸入；正式建置不設
@@ -725,7 +725,7 @@ srcs = [("公司（摘要）：富果 2Q26 法說摘要 2026-08-12（2Q26 與 1H
         ("券商：經濟日報 2026-09-10（美系券商 NVL72 櫃數調查）", UDN0910),
         ("券商：經濟日報 2026-08-27（VR200 市占 40% 以上）", UDN0827),
         ("資料商：聚財網 2317 日成交（10 月收盤）", "https://stock.wearn.com/cdata.asp?kind=2317"),
-        ("價格：Yahoo Finance 日線收盤 2026-11-13（現價、同業報價；工作單 px1113）；工業富聯／鴻騰／富智康／樺漢股價、匯率 USD/TWD、USD/CNY、USD/HKD 維持 2026-11-05 收盤（收盤檔無此代號）", "https://finance.yahoo.com/quote/2317.TW/history/"),
+        ("價格：Yahoo Finance 日線收盤 2026-11-13（現價、同業報價；工作單 px1113）；工業富聯／鴻騰／富智康／樺漢股價與市值換算用匯率 USD/TWD、USD/CNY、USD/HKD 亦改 2026-11-13 收盤（K 批，closes_20261020_20261113.csv）", "https://finance.yahoo.com/quote/2317.TW/history/"),
         ("資料商：Yahoo 股市（10-16 收盤、近 12 月 P/E）", "https://tw.stock.yahoo.com/quote/2317.TW"),
         ("Simply Wall St 6088 股東表（鴻海持有鴻騰；In 頁 ht_hh）", "https://simplywall.st/stocks/hk/tech/hkg-6088/fit-hon-teng-shares/ownership"),
         ("Simply Wall St 2038 股東表（鴻海持有富智康；In 頁 fm_hh）", "https://simplywall.st/stocks/hk/tech/hkg-2038/fih-mobile-shares/ownership"),
