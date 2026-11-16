@@ -1,0 +1,21 @@
+﻿季末日（對齊日曆季末）,財季實際期末日,市值（百萬）,TTM 營收（百萬；市值÷PS 反推）,TTM 營收年增,PS,PSG,幣別,來源,擷取日,標記
+2021-09-30,2021-09-30,32844.0,2436.5,,13.48,,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,年增：視窗起點前 4 季，無基期
+2021-12-31,2021-12-31,23707.0,2576.8,,9.2,,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,年增：視窗起點前 4 季，無基期
+2022-03-31,2022-03-31,16197.0,2668.4,,6.07,,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,年增：視窗起點前 4 季，無基期
+2022-06-30,2022-06-30,12049.0,2719.9,,4.43,,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,年增：視窗起點前 4 季，無基期
+2022-09-30,2022-09-30,15692.0,2772.4,0.1379,5.66,0.4105,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2022-12-31,2022-12-31,16467.0,2800.5,0.0868,5.88,0.6774,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2023-03-31,2023-03-31,18649.0,2829.9,0.0605,6.59,1.0887,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2023-06-30,2023-06-30,18694.0,2871.6,0.0558,6.51,1.1671,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2023-09-30,2023-09-30,18110.0,2949.5,0.0639,6.14,0.9613,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2023-12-31,2023-12-31,24978.0,3053.5,0.0904,8.18,0.9053,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2024-03-31,2024-03-31,23540.0,3194.0,0.1287,7.37,0.5728,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2024-06-30,2024-06-30,30107.0,3337.8,0.1624,9.02,0.5556,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2024-09-30,2024-09-30,22212.0,3470.6,0.1767,6.4,0.3622,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2024-12-31,2024-12-31,19599.0,3642.9,0.193,5.38,0.2787,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2025-03-31,2025-03-31,21025.0,3761.2,0.1776,5.59,0.3148,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2025-06-30,2025-06-30,24264.0,3907.2,0.1706,6.21,0.364,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2025-09-30,2025-09-30,21873.0,4058.1,0.1693,5.39,0.3184,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2025-12-31,2025-12-31,17490.0,4224.6,0.1597,4.14,0.2593,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2026-03-31,2026-03-31,11753.0,4369.1,0.1616,2.69,0.1664,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2026-06-30,2026-06-30,11780.0,4548.3,0.1641,2.59,0.1579,USD,https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,

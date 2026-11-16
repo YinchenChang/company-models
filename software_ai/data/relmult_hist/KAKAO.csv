@@ -1,0 +1,21 @@
+﻿季末日（對齊日曆季末）,財季實際期末日,市值（百萬）,TTM 營收（百萬；市值÷PS 反推）,TTM 營收年增,PS,PSG,幣別,來源,擷取日,標記
+2021-09-30,2021-09-30,51055468.0,5501666.8,,9.28,,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,年增：視窗起點前 4 季，無基期
+2021-12-31,2021-12-31,48776953.0,5912357.9,,8.25,,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,年增：視窗起點前 4 季，無基期
+2022-03-31,2022-03-31,46219275.0,6305494.5,,7.33,,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,年增：視窗起點前 4 季，無基期
+2022-06-30,2022-06-30,30244734.0,6766159.7,,4.47,,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,年增：視窗起點前 4 季，無基期
+2022-09-30,2022-09-30,24924985.0,6885355.0,0.2515,3.62,0.1439,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2022-12-31,2022-12-31,23185190.0,6799176.0,0.15,3.41,0.2273,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2023-03-31,2023-03-31,26692378.0,6774715.2,0.0744,3.94,0.5295,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2023-06-30,2023-06-30,21377296.0,6873728.6,0.0159,3.11,,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,PSG N/M（TTM 年增 <2% 或為負）
+2023-09-30,2023-09-30,19236942.0,7020781.8,0.0197,2.74,,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,PSG N/M（TTM 年增 <2% 或為負）
+2023-12-31,2023-12-31,23785714.0,7551020.3,0.1106,3.15,0.2849,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2024-03-31,2024-03-31,23547964.0,7928607.4,0.1703,2.97,0.1744,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2024-06-30,2024-06-30,17834347.0,7997465.0,0.1635,2.23,0.1364,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2024-09-30,2024-09-30,15864841.0,7892955.7,0.1242,2.01,0.1618,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2024-12-31,2024-12-31,16766365.0,,,,,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,PS 缺（資料商未提供）；年增：缺營收
+2025-03-31,2025-03-31,17167558.0,5665860.7,-0.2854,3.03,,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,PSG N/M（TTM 年增 <2% 或為負）
+2025-06-30,2025-06-30,26226848.0,5592078.5,-0.3008,4.69,,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,PSG N/M（TTM 年增 <2% 或為負）
+2025-09-30,2025-09-30,26213617.0,5748600.2,-0.2717,4.56,,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,PSG N/M（TTM 年增 <2% 或為負）
+2025-12-31,2025-12-31,26442983.0,7893427.8,,3.35,,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,年增：缺營收；隱含 TTM 營收單季變動 +37%（重編／併購／資料錯誤，使用前核對）
+2026-03-31,2026-03-31,20166917.0,8066766.8,0.4237,2.5,0.059,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
+2026-06-30,2026-06-30,15220603.0,8272066.8,0.4792,1.84,0.0384,KRW,(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）,2026-11-17,
