@@ -1065,6 +1065,33 @@ if _CR:
     # ---------------- v0.3.6（2026-11-15）：第 2 四半期決算短信滾入（輸入改動在上方 In／Q／DCF；本檔只寫版號與版本說明）----------------
     import v036_post  # noqa: E402
     print(v036_post.apply(wb))
+# v0.3.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（px1113_post.py；工作單 px1113；只換價格，公式與架構不改）
+import re, px1113_post  # noqa: E402
+
+
+def _aji_peers(wb, log, done):
+    """同業前瞻 P/E 為公式 ＝報價日收盤 ÷（取得日價格 ÷ Forward PE）：分子改 11-13 收盤、分母（前瞻 EPS）不變；Val 0.2 節與第 7 節各列（D 欄日期 2026-11-05）"""
+    V = wb["Val"]; out = []
+    for r in range(1, V.max_row + 1):
+        t, f, d = V.cell(r, 2).value, V.cell(r, 3).value, V.cell(r, 4).value
+        if isinstance(t, str) and isinstance(f, str) and re.fullmatch(r"=[\d.]+/\(.+\)", f) and d == "2026-11-05":
+            c0, c1 = px1113_post.close(t, "2026-11-05"), px1113_post.close(t, "2026-11-13")
+            num = float(f[1:f.index("/")])
+            if c0 is None or c1 is None:
+                px1113_post.UNCHANGED.append(t); continue
+            assert abs(num - c0) < 1e-6, (t, num, c0)
+            old_pe = eval(f[1:]); den = f[f.index("/"):]
+            V.cell(r, 3).value = "=" + repr(c1).rstrip("0").rstrip(".") + den
+            V.cell(r, 4).value = "2026-11-13"
+            V.cell(r, 5).value = (f"2026-11-13 收盤（Yahoo Finance 日線收盤 2026-11-13；{px1113_post.SRCTAG}）÷ stockanalysis.com 前瞻 EPS（分母不變）；＝現行倍數 {old_pe:.2f} × 11-13 收盤 {c1:,g} ÷ 11-05 收盤 {c0:,g}；前一版：{V.cell(r, 5).value}")
+            for j in (3, 4, 5):
+                done.add(("Val", V.cell(r, j).coordinate))
+            out.append(f"{t} {old_pe:.2f} → {eval(V.cell(r, 3).value[1:]):.2f}")
+    assert out
+    log.append("同業：" + "；".join(out))
+
+
+px1113_post.apply(wb, dict(ver="v0.3.7", prev="v0.3.6", vprev="v0.3.5", px="2802.T", fpe=None, peers=False, d0="2026-11-05", extra=[_aji_peers]))
 wb.save(sys.argv[1])
 if os.environ.get("AJI_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     _json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK, "VAL": VAL, "INROW": INROW, "QR": QR, "Q_NOTE": Q_NOTE,
