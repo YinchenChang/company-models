@@ -214,8 +214,7 @@ S.append({"id": "recon", "title": "對帳：指引、共識與反解", "intro": 
                 "row_fmt": {str(R["ai_brk"]): {c: "n2" for c in "BCD"}, str(R["ai_price"]): {c: "n2" for c in "BCD"}, str(R["ai_share"]): {c: "p1" for c in "BCD"}}}}]})
 # ───────── 8. 資料狀態 ─────────
 S.append({"id": "status", "title": "資料狀態", "blocks": [
-    {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期（資料截止日、成品日、股價基準日）", "@README!A1"], ["build_id", f"@Sens!D{SENS['bid']}"], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"],
-                             ["Tokenomics 快照", "@Sources!B" + str(find("Sources", "Tokenomics 快照", 2))]]},
+    {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期（資料截止日、成品日、股價基準日）", "@README!A1"], ["build_id", f"@Sens!D{SENS['bid']}"], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"]]},
     {"type": "h3", "text": "資料與口徑"},
     {"type": "list", "items": ["@In!A2", "@Hist!A1", "@Q4E!A1", "@Sens!A2"]},
     {"type": "h3", "text": "市場資料日期、失效條件與風險登錄"},
