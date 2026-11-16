@@ -229,7 +229,7 @@ inp("pc_ndf", "CoreWeave 淨負債：共識 FY2026 預估（財報前）", "US$B
 inp("pc_eb", "CoreWeave NTM 共識 EBITDA（2026 × 1.6/12＋2027 × 10.4/12）", "US$B", None, "=7.574*1.6/12+16.656*10.4/12", None, "Interested-party", SRCF["CONS_CRWV"] + "：FY26 7.574、FY27 16.656、FY28 28.857（2026-09-25，財報前；財報後共識未取得）", "原則 49 月份加權", INC_SELL)
 inp("pc_rev", "CoreWeave NTM 共識營收", "US$B", None, "=12.882*1.6/12+26.376*10.4/12", None, "Interested-party", SRCF["CONS_CRWV"], "同業表成長與利潤率欄", INC_SELL)
 inp("pc_cx", "CoreWeave NTM 共識資本支出", "US$B", None, "=35.953*1.6/12+46.476*10.4/12", None, "Interested-party", SRCF["CONS_CRWV"], "同業表資本支出率欄", INC_SELL)
-inp("ir_px", "IREN 股價（2026-11-11 收盤；v0.6.3 未換價：closes_20261020_20261113.csv 無 IREN）", "US$", None, 20.84, None, "Verified", MSS + "：Nasdaq 5 日表 11-11 20.84", "工作單 px1113：CSV 沒有 IREN，維持 2026-11-11 收盤 20.84，不臆造；與現價日差 2 日")
+inp("ir_px", "IREN 股價（2026-11-13 收盤）", "US$", None, 18.17, None, "Verified", "Yahoo Finance 日線收盤 2026-11-13（`markets/invest_map/data/closes_20261020_20261113.csv`，IREN 2026-11-13＝18.17）；v0.6.3 初稿為 2026-11-11 收盤 20.84（MarketScreener Nasdaq 5 日表 11-11）；股數與淨負債來源："+MSS, "工作單 px1113：IREN 價格檔補齊後換 11-13 收盤 18.17；EV＝股價 × 股數＋淨負債，依公式重算（等同 EV 新＝EV 舊＋市值舊 ×（18.17 ÷ 20.84 − 1））；股數、淨負債、共識 EBITDA 不變")
 inp("ir_sh", "IREN 股數（Nbr of stocks）", "十億股", None, 0.424357, None, "Derived", MSS + "：424,357 千股", "—")
 inp("ir_nd", "IREN 淨負債：最新申報（2026-09-30；借款＋融資租賃 − 現金；受限現金不扣）", "US$B", None, "=10.208-3.522", None, "Derived", SRCF["IREN_Q1"] + "：借款含融資租賃 10.208；現金 3.522", "同 CoreWeave v5.0 In ir_nd")
 inp("ir_ndf", "IREN 淨負債：MarketScreener FY2027 預估", "US$B", None, 18.889, None, "Interested-party", MSS, "替代口徑", INC_SELL)
@@ -908,7 +908,7 @@ for j in range(3):
     cc = CL(3 + j); c_ = V.cell(r, 3 + j, f"={cc}{DC['ps']}*(1+ke)^t_tp"); c_.number_format = "#,##0.00"; c_.fill = KEY
 DC["v12"] = r; r += 2
 # Comparable
-V.cell(r, 1, "0.2 Comparable（新雲同業 NTM EV/EBITDA；同業估值日 2026-11-13＝現價日；IREN 無 11-13 報價，維持 11-11）").font = BOLD; r += 1
+V.cell(r, 1, "0.2 Comparable（新雲同業 NTM EV/EBITDA；同業估值日 2026-11-13＝現價日；IREN 11-11 收盤 20.84 → 11-13 收盤 18.17）").font = BOLD; r += 1
 PEERH = r
 hdr(V, r, ["同業", "代號", "EV（US$B）", "NTM EV/EBITDA", "估值日", "口徑與來源", "NTM EBITDA 率", "淨負債 ÷ NTM EBITDA", "資本支出 ÷ 營收", "營收成長（下一年）"]); r += 1
 P0 = r
@@ -921,14 +921,14 @@ for nm, tk, ev, eb, src, mg, nd, cx_, gr in (
         V.cell(r, 3, "=" + ev).number_format = "#,##0.0"; V.cell(r, 4, f'=IF(ir_use=0,"不納入",({ev})/{eb})' if tk == "IREN" else f"=({ev})/{eb}").number_format = "0.00"
     else:
         V.cell(r, 3, "未取得"); V.cell(r, 4, "未取得")
-    V.cell(r, 5, "2026-11-11（未換價）" if tk == "IREN" else PEER_D); V.cell(r, 6, src)
+    V.cell(r, 5, PEER_D); V.cell(r, 6, src)
     for j, v in enumerate((mg, nd, cx_, gr)):
         if v is not None:
             c_ = V.cell(r, 7 + j, v)
             if isinstance(v, str) and v.startswith("="): c_.number_format = "0.0%" if j != 1 else "0.00"
     r += 1
 P1 = r - 1
-V.cell(r, 1, "  估值日 2026-11-13（＝本模型現價日；IREN 因 CSV 無報價維持 2026-11-11 收盤）；NTM 自 11-11 起依月份加權（原則 49）；淨負債主口徑＝最新申報（CoreWeave、IREN 為 2026-09-30，受限現金不扣，與 Nebius 自身一致；Oracle 含 2026-11 增資 pro forma），替代口徑見下兩列。WhiteFiber：共識無 EBITDA（未納入）。同業 3 家，少於 8 家不做迴歸（原則 7）").font = GREY; r += 1
+V.cell(r, 1, "  估值日 2026-11-13（＝本模型現價日；IREN 亦為 11-13 收盤 18.17，原 11-11 收盤 20.84）；NTM 自 11-11 起依月份加權（原則 49）；淨負債主口徑＝最新申報（CoreWeave、IREN 為 2026-09-30，受限現金不扣，與 Nebius 自身一致；Oracle 含 2026-11 增資 pro forma），替代口徑見下兩列。WhiteFiber：共識無 EBITDA（未納入）。同業 3 家，少於 8 家不做迴歸（原則 7）").font = GREY; r += 1
 V.cell(r, 1, "  替代口徑：淨負債改用共識年底預估時的 NTM EV/EBITDA（CRWV／ORCL／IREN；時點不一致：11-13 市值配年底預估淨負債，只作對照）")
 for j, (pxs, nds, ebs) in enumerate((("pc_px*pc_sh", "pc_ndf", "pc_eb"), ("po_px*po_sh", "po_ndf", "po_eb"), ("ir_px*ir_sh", "ir_ndf", "ir_eb"))):
     V.cell(r, 3 + j, f"=({pxs}+{nds})/{ebs}").number_format = "0.00"
@@ -1550,7 +1550,7 @@ r += 1
 RD.cell(r, 1, "v0.6.0（2026-11-15）：依 CoreWeave v5.0.3 新雲樣板重建（舊 JS 雙引擎 v0.5.3 移 nebius/legacy_v05/）＋滾入 2026Q3 實績（6-K 2026-11-12）＋版面 v1.3＋三層協調 Coord 頁（工作單 20261114 第二批；規則 v1.4.2 C0 第 2 點）。估值改為 DCF 50%＋Comparable 50%（新雲同業 EV/EBITDA）、評等五級並套收支關卡；Tokenomics 快照由 v19.0 改 v22.0；在役 MW 公司未揭露，2026 年改為明列假設。Coord：Wattonomics 的 Nebius 2026 年 GW 與資本支出由 v0.5.2 個股模型回寫推得（同源），營收、資本支出標參考（同源校準），在役電力無可比實績。新舊目標價與評等差異見 nebius/README.md v0.6.0 節。"); RL["v060"] = r; r += 1
 RD.cell(r, 1, "v0.6.1（2026-11-15）：Andy 2026-11-15 決定每 MW 收入比照 CoreWeave v5.0.3 辦理。核對結果：k 的構成（Tokenomics v22.0 IF_HoldEcon 在役世代加權 × 單一定價倍數；長約＝IREN–Microsoft 類比、現貨＝H100 指數）與 CoreWeave 同法、同參數，唯一不同的隨需占比依決定保留 Nebius 值（0%），基準 k 與目標價不變。新增敏感度案例「定價倍數改以公司說法」（全部產能長約價改用公司宣稱 ACV），橫幅與命題章寫明支撐現價所需的每 MW 年收入（反向 DCF）。公司宣稱只列參考，對帳單由 Andy 開於 Drive。"); RL["v061"] = r; r += 1
 RD.cell(r, 1, "v0.6.2（2026-11-15）：Wattonomics 快照由 v0.3.2 改讀 v0.3.5（追公式改讀 nebius/data/wattonomics_trace_v0.3.5.json）。層級 nbis 的 2026 年資本支出已重匯本公司 v0.6.1 回寫值 24.185（v0.3.2 讀 v0.5.2 的 26.046），Gap 主讀法改付款年：CapexAI 2026 13.17 → 20.56；年底上線 GW 2026 0.4365 → 0.4214、2030 2.364 → 2.482。Wattonomics 不進估值，基準輸入、目標價與評等不變；Coord 頁同源說明更新（層級 nbis 資本支出就是本公司模型的值，只列參考）。"); RL["v062"] = r; r += 1
-RD.cell(r, 1, "v0.6.3（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113；Yahoo Finance 日線，markets/invest_map/data/closes_20261020_20261113.csv）。現價 128.64（2026-11-12）→ 115.88；同業報價：CoreWeave 60.77（11-11）→ 53.13、Oracle 128.38（11-11）→ 125.35（EV＝市值＋淨負債，依公式重算）；IREN 的 CSV 沒有報價，維持 2026-11-11 收盤 20.84（未換價同業：IREN）。同業前瞻 EV/EBITDA 中位數 5.62 → 5.62（中位數仍為 IREN，未變；CoreWeave 5.01 → 4.73、Oracle 7.86 → 7.71）；Comparable 目標價 60.62 → 58.14；加權目標價 30.31 → 29.07；上檔空間 −76.4% → −74.9%；評等 強力放空 → 強力放空。rf、共識、淨負債、股數、營運假設與情境權重不變。Sens、RevDCF 快照已重跑；拆解沿用。")
+RD.cell(r, 1, "v0.6.3（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113；Yahoo Finance 日線，markets/invest_map/data/closes_20261020_20261113.csv）。現價 128.64（2026-11-12）→ 115.88；同業報價：CoreWeave 60.77（11-11）→ 53.13、Oracle 128.38（11-11）→ 125.35（EV＝市值＋淨負債，依公式重算）；IREN 20.84（2026-11-11）→ 18.17（2026-11-13 收盤；價格檔補 IREN 後原地修改，不升版號；EV 15.530 → 14.397＝股價 × 股數＋淨負債，公式重算，無未換價同業）。同業前瞻 EV/EBITDA 中位數 5.62 → 5.21（中位數仍為 IREN；IREN 5.62 → 5.21、CoreWeave 5.01 → 4.73、Oracle 7.86 → 7.71）；Comparable 目標價 60.62 → 49.87；加權目標價 30.31 → 24.94；上檔空間 −76.4% → −78.5%；評等 強力放空 → 強力放空。rf、共識、淨負債、股數、營運假設與情境權重不變。Sens、RevDCF 快照已重跑；拆解沿用。")
 RD.column_dimensions["A"].width = 180
 
 # 列號對照
