@@ -147,7 +147,7 @@ drivers = {"id": "drivers", "title": "驅動因子：廣告單位經濟與分部
      "rows": [[f"@In!B{rm['SCN_ROWS'][k]}", f"@In!D{rm['SCN_ROWS'][k]}|{f}", f"@In!E{rm['SCN_ROWS'][k]}|{f}", f"@In!F{rm['SCN_ROWS'][k]}|{f}"] for k, f in (("scn_sai", "p0"), ("scn_rai", "n2"), ("scn_lam", "p0"), ("scn_w", "p0"))]},
     {"type": "table", "caption": "單一參數區間（基準進主模型；敏感度低／高只用於敏感度頁）", "head": ["@In!B3", "@In!D3", "@In!E3", "@In!F3", "@In!G3"],
      "rows": [[f"@In!B{INR[k]}", f"@In!D{INR[k]}|{f}", f"@In!E{INR[k]}|{f}", f"@In!F{INR[k]}|{f}", f"@In!G{INR[k]}|tag"]
-              for k, f in (("q0", "n0"), ("gq", "p1"), ("s26", "p0"), ("al_R", "n2"), ("ctr_R", "n2"), ("cpc_R", "n2"), ("tok_mult", "n2"), ("ptok_idx", "n0"), ("fx", "n0"), ("m_np", "p1"), ("m_fin", "p1"), ("m_glob", "p1"),
+              for k, f in (("q0", "n0"), ("gq", "p1"), ("s26", "p0"), ("al_R", "n2"), ("ctr_R", "n2"), ("cpc_R", "n2"), ("ptok_idx", "n0"), ("fx", "n0"), ("m_np", "p1"), ("m_fin", "p1"), ("m_glob", "p1"),
                            ("capex26", "n0"), ("capex_pct", "p1"), ("beta", "n2"), ("erp", "p1"), ("g_tv", "p1"), ("rel_adj", "n2"), ("w_dcf", "p0"))]}]}
 aif = {"id": "aifactory", "title": "AI Factory：算力出租模組", "blocks": [
     {"type": "note", "parts": ["AI Factory 併入 Global Opportunities 的 Enterprise；營收＝年度平均上線容量 x 每容量年營收，營業利益率為 Assumed；資產由 Asset Co 持有，其資本支出與負債未入模型。"]},

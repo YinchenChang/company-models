@@ -964,7 +964,7 @@ RCR["solve_val"] = r
 put(RC, f"A{r}", "反解值（整本以 LibreOffice 重算，割線法）"); put(RC, f"C{r}", SOL["x"] if SOL else None, None, None, SOL.get("fmt", "0.0000") if SOL else None); put(RC, f"D{r}", SOL["base"] if SOL else None, None, None, SOL.get("fmt", "0.0000") if SOL else None); put(RC, f"E{r}", "=IF(D{0}=\"\",\"\",C{0}/D{0}-1)".format(r), None, None, "0.0%"); put(RC, f"F{r}", "C＝反解值、D＝基準、E＝相對基準")
 r += 1
 RCR["solve_chk"] = r
-put(RC, f"A{r}", "反解後加權目標價（核對：應等於現價）"); put(RC, f"C{r}", SOL["tp"] if SOL else None, None, None, "#,##0"); put(RC, f"D{r}", f"=Val!B{VR['px']}", None, None, "#,##0"); put(RC, f"F{r}", "本列為重算靜態值，In 頁改動後須重跑 sens_naver.py")
+put(RC, f"A{r}", "反解後加權目標價（核對：應等於現價）"); put(RC, f"C{r}", SOL["tp"] if SOL else None, None, None, "#,##0"); put(RC, f"D{r}", f"=Val!B{VR['px']}", None, None, "#,##0"); put(RC, f"F{r}", "本列為重算靜態值，In 頁改動後須重跑敏感度與反解腳本")
 r += 2
 put(RC, f"A{r}", "未找到：公司年度指引、第二個共識來源、法定申報封面股數、RSU 與選擇權、非控制權益、租賃負債、折舊攤銷與股票薪酬、年度資本支出、查詢量與 AI token 量（見研究包第 9 節）。")
 RC.column_dimensions["A"].width = 70; RC.column_dimensions["F"].width = 70
