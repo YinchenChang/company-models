@@ -1,7 +1,7 @@
-"""三層基準協調檢查（草稿；規則見 docs/plan/三層基準協調規則.md 第 10 節）。
+"""三層基準協調檢查（規則見 docs/plan/三層基準協調規則.md 第 10 節；v1.4.3 起接 CI：.github/workflows/coord-check.yml）。
 
-步驟 2 起草、步驟 5 啟用。狀態檔 siliconomics/data/baseline_status.json
-尚未建立時（步驟 3 量測後才建），只印「未啟用」並以 0 結束，不擋任何 PR。
+狀態檔 siliconomics/data/baseline_status.json 不存在時只印「未啟用」並以 0 結束。
+輸出兩類：「不符」（以 1 結束）與「提醒 [n]」（不影響結束碼）。
 
 用法：python3 tools/baseline_coordination/check.py [--status 路徑] [--today YYYY-MM-DD]
 """
@@ -11,6 +11,11 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 DEFAULT_STATUS = ROOT / "siliconomics/data/baseline_status.json"
 VALID = {"甲", "乙", "丙", "待定"}  # 待定：規則 v1.3 區間跨線
 TOL = 0.005  # 第 2 項：換算值比對容許的相對誤差（四捨五入）
+NOTES = []   # 提醒（不算不符）
+
+
+def note(msg):
+    NOTES.append(msg)
 
 
 ENTER, EXIT = 0.55, 0.45  # v1.1 緩衝區
@@ -43,6 +48,32 @@ def expected_status(w_share, s_share, thr, prev_w=None, prev_s=None):
     return "待定" if len(ends) > 1 else base
 
 
+def _check_c0(yr, y, today, require_label):
+    """12. C0 實績對帳不過（c0_fail is True）的登錄檢查；c0_fail 只認布林 True。"""
+    errs = []
+    flag = y.get("c0_fail")
+    if flag is not None and not isinstance(flag, bool):
+        return [f"[12] {yr} c0_fail 須為布林值，現為 {flag!r}"]
+    if flag is not True:
+        return errs
+    if require_label and "有條件" not in str(y.get("label") or ""):
+        errs.append(f"[12] {yr} C0 實績對帳不過（c0_fail），甲年標示「{y.get('label')}」未含「有條件」")
+    if not y.get("c0_recon_doc"):
+        errs.append(f"[12] {yr} C0 實績對帳不過但未登錄對帳單（c0_recon_doc）")
+    dl = y.get("c0_deadline")
+    if not dl:
+        errs.append(f"[12] {yr} C0 實績對帳不過但未寫期限（c0_deadline）")
+    else:
+        try:
+            d = datetime.date.fromisoformat(dl)
+        except (TypeError, ValueError):
+            errs.append(f"[12] {yr} c0_deadline 格式錯誤：{dl!r}（應為 YYYY-MM-DD）")
+        else:
+            if d < today:
+                errs.append(f"[12] {yr} C0 對帳單已逾期（{dl}）：依 C6 第 3 點強制裁定")
+    return errs
+
+
 def check_status(st, today):
     errs = []
     thr = st["threshold"]
@@ -60,9 +91,13 @@ def check_status(st, today):
         upstream_led = tag == "丙" or (tag == "乙" and y.get("lead") == "wattonomics")
         if upstream_led and not st.get("wattonomics_coverage_complete") and not y.get("reconciling"):
             errs.append(f"[8] {yr} 由上游定基準但 Wattonomics 覆蓋未補齊，應標對帳中")
-        # 7. ② 累計 ÷ 當年基準 ≤ 15%（v1.1）
-        if "timing_cum" in y and abs(y["timing_cum"]) > 0.15 * abs(y["sil_base"]):
+        # 7. ② 累計 ÷ 當年基準 ≤ 15%（v1.1）；缺欄位＝未量測，列提醒（v1.4.3）
+        if "timing_cum" not in y:
+            note(f"提醒 [7] {yr} 未量測（狀態檔缺 timing_cum，C2 ② 累計上限未檢查）")
+        elif abs(y["timing_cum"]) > 0.15 * abs(y["sil_base"]):
             errs.append(f"[7] {yr} ② 時差與庫存累計 {y['timing_cum']} 超過當年基準 15%")
+        # 12. C0 實績對帳不過時（c0_fail）：甲年標示須含「有條件」；所有年份須登錄對帳單與期限（v1.4.3）
+        errs += _check_c0(yr, y, today, require_label=(tag == "甲"))
         # 2. 丙狀態：Siliconomics 基準＝換算值（以供給上限為頂）
         if tag == "丙" and st.get("wattonomics_coverage_complete"):
             conv = min(y["converted"], y.get("supply_cap", float("inf")))
@@ -89,7 +124,7 @@ def check_status(st, today):
             exempt = (y.get("status") == "待定" and y.get("reconciling") and y.get("recon_doc")
                       and dl and datetime.date.fromisoformat(dl) >= today)   # v1.4.1：待定維持現行的年份豁免
             if exempt:
-                print(f"提醒 [3] {c.get('year')} 待定維持現行，基準鏈上暫有 [Assumed] 係數：{c.get('name')}（對帳單期限 {dl}）")
+                note(f"提醒 [3] {c.get('year')} 待定維持現行，基準鏈上暫有 [Assumed] 係數：{c.get('name')}（對帳單期限 {dl}）")
             else:
                 errs.append(f"[3] 基準鏈上有 [Assumed] 水準係數：{c.get('name')}")
     return errs
@@ -118,6 +153,103 @@ def check_company_reads(st):
     return errs
 
 
+def _ver(s):
+    m = re.search(r"v\d+(?:\.\d+)+", s or "")
+    return m.group(0) if m else None
+
+
+def check_version_drift(st):
+    """11. 狀態檔記錄的 Wattonomics 版本＝wattonomics/model/CURRENT 的版本（v1.4.3）。"""
+    errs = []
+    cur_file = ROOT / "wattonomics/model/CURRENT"
+    cur = _ver(cur_file.read_text(encoding="utf-8").strip()) if cur_file.exists() else None
+    if cur is None:
+        note("提醒 [11] 找不到 wattonomics/model/CURRENT 或其中無版本字串，版本漂移未檢查")
+        return errs
+    rec = st.get("wattonomics_version")
+    if rec is None:
+        m = re.search(r"Wattonomics\s*(v\d+(?:\.\d+)+)", st.get("_note", ""))
+        nv = m.group(1) if m else "（_note 亦無版本字串）"
+        note(f"提醒 [11] 狀態檔未記錄 Wattonomics 版本（_note 寫 {nv}；wattonomics/model/CURRENT＝{cur}）"
+             + ("：兩者不同，下次匯出狀態檔時補 wattonomics_version 並重算" if m and nv != cur else ""))
+    elif _ver(str(rec)) != cur:
+        errs.append(f"[11] 狀態檔 wattonomics_version＝{rec}，wattonomics/model/CURRENT＝{cur}：版本漂移")
+    return errs
+
+
+def check_recon_residual():
+    """9. C0 恆等式：讀 CURRENT_RECON 指向的 recon 快照（v1.4.3）。
+    市場有 status 欄時才判定：「未建」列提醒；其他狀態（已建）須有殘差／其他列，否則不符。
+    市場無 status 欄＝結構無法判定殘差，只列提醒（現行 recon.py 快照皆屬此類）。"""
+    errs = []
+    ptr = ROOT / "siliconomics/data/CURRENT_RECON"
+    if not ptr.exists():
+        note("提醒 [9] 找不到 siliconomics/data/CURRENT_RECON，C0 恆等式未檢查")
+        return errs
+    fn = ptr.read_text(encoding="utf-8").strip()
+    p = ROOT / "siliconomics/data" / fn
+    if not p.exists():
+        errs.append(f"[9] CURRENT_RECON 指向不存在的檔案 {fn}")
+        return errs
+    mk = json.loads(p.read_text(encoding="utf-8")).get("markets", {})
+    unbuilt = [k for k, m in mk.items() if isinstance(m, dict) and m.get("status") == "未建"]
+    if unbuilt:
+        note(f"提醒 [9] {fn}：狀態「未建」的市場 {len(unbuilt)} 個：{'、'.join(unbuilt)}")
+    undecidable = []
+    for k, m in mk.items():
+        if not isinstance(m, dict) or m.get("status") == "未建":
+            continue
+        rows = m.get("rows")
+        if "status" not in m:
+            if rows is not None:
+                undecidable.append(k)
+            continue
+        whos = [str(r.get("who", "")) for r in (rows or [])]
+        if not any(("殘差" in w) or ("其他" in w) or ("未建模" in w) for w in whos):
+            errs.append(f"[9] {fn} 市場 {k} 已建但缺殘差／其他列")
+    if undecidable:
+        note(f"提醒 [9] {fn}：市場 {'、'.join(undecidable)} 只有個股列、無 status 與殘差欄位，結構無法判定 C0 恆等式（未建市場清單亦未記錄於快照）")
+    return errs
+
+
+def check_c0_actuals(st, today):
+    """12（續）. 協調年份以外的已公布年份：頂層 c0_actuals.<年>（C0 第 9 點；v1.4.3）。"""
+    errs = []
+    for yr, y in sorted((st.get("c0_actuals") or {}).items()):
+        errs += _check_c0(yr, y, today, require_label=False)
+    return errs
+
+
+def check_evidence_range():
+    """10. Wattonomics 證據比例區間：WIF_Evidence_Lo_<yyyy> ≤ WIF_Evidence_<yyyy> ≤ WIF_Evidence_Hi_<yyyy>（v1.4.3）。"""
+    errs = []
+    ptr = ROOT / "wattonomics/data/CURRENT_SNAPSHOT"
+    if not ptr.exists():
+        note("提醒 [10] 找不到 wattonomics/data/CURRENT_SNAPSHOT，證據比例區間未檢查")
+        return errs
+    fn = ptr.read_text(encoding="utf-8").strip()
+    p = ROOT / "wattonomics/data" / fn
+    if not p.exists():
+        errs.append(f"[10] CURRENT_SNAPSHOT 指向不存在的檔案 {fn}")
+        return errs
+    names = json.loads(p.read_text(encoding="utf-8")).get("names", {})
+    years = sorted(k.rsplit("_", 1)[1] for k in names if re.fullmatch(r"WIF_Evidence_\d{4}", k))
+    missing = []
+    for yr in years:
+        b, lo, hi = names[f"WIF_Evidence_{yr}"], names.get(f"WIF_Evidence_Lo_{yr}"), names.get(f"WIF_Evidence_Hi_{yr}")
+        if lo is None and hi is None:
+            missing.append(yr)
+            continue
+        if lo is None or hi is None:
+            errs.append(f"[10] {fn} {yr} 只有 {'Hi' if lo is None else 'Lo'}，證據比例區間不完整")
+            continue
+        if not (lo <= b <= hi):
+            errs.append(f"[10] {fn} {yr} 證據比例 低 {lo} ≤ 基準 {b} ≤ 高 {hi} 不成立")
+    if missing:
+        note(f"提醒 [10] {fn} 無 WIF_Evidence_Lo_／Hi_ 名稱（{'、'.join(missing)}），證據比例區間未檢查")
+    return errs
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--status", default=str(DEFAULT_STATUS))
@@ -128,10 +260,14 @@ def main():
         print(f"未啟用：找不到狀態檔 {p}（步驟 3 量測後建立）")
         return 0
     st = json.loads(p.read_text(encoding="utf-8"))
-    errs = check_status(st, datetime.date.fromisoformat(a.today)) + check_company_reads(st)
+    today = datetime.date.fromisoformat(a.today)
+    errs = (check_status(st, today) + check_c0_actuals(st, today) + check_company_reads(st)
+            + check_version_drift(st) + check_recon_residual() + check_evidence_range())
+    for n in NOTES:
+        print(n)
     for e in errs:
         print(e)
-    print(f"三層基準協調檢查：{len(errs)} 項不符")
+    print(f"三層基準協調檢查：{len(errs)} 項不符、{len(NOTES)} 項提醒")
     return 1 if errs else 0
 
 

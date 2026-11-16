@@ -1,5 +1,7 @@
 # 跨模型數字一致性檢查（API 版，2026-10-27 起；說明見 tools/consistency/README.md）
 # 每月 3 日 09:23（台北）在預設分支執行，結果 commit 到固定分支 consistency-results（不寫 main）；push 到 claude/consistency 可測試。
+# 2026-11-10（台北）之後停用：依賴 ANTHROPIC_API_KEY，API credit 已到期；「Stop after credit expiry」步驟判斷日期後略過其餘步驟
+#   （比照 wattonomics-weekly-monitor.yml）。本機無 API 的部分替代檢查（不含跨模型數字比對）是 .github/workflows/coord-check.yml（三層基準協調＋Wattonomics 核對）。
 name: consistency-check
 on:
   schedule:
@@ -17,16 +19,26 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
+      - name: Stop after credit expiry
+        id: gate
+        run: |
+          today=$(TZ=Asia/Taipei date +%F)
+          if [[ "$today" > "2026-11-10" ]]; then echo "已過 2026-11-10，停止"; echo "run=false" >> "$GITHUB_OUTPUT"; else echo "run=true" >> "$GITHUB_OUTPUT"; fi
       - uses: actions/checkout@v5
+        if: steps.gate.outputs.run == 'true'
         with: {fetch-depth: 0}
       - uses: actions/setup-python@v6
+        if: steps.gate.outputs.run == 'true'
         with: {python-version: "3.12"}
       - run: pip install openpyxl
+        if: steps.gate.outputs.run == 'true'
       - name: Check
+        if: steps.gate.outputs.run == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python3 tools/consistency/check.py
       - name: Commit results
+        if: steps.gate.outputs.run == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
