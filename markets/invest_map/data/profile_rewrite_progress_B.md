@@ -5,3 +5,4 @@
 - 285A.md｜處理標記 14（DIFF 2／NOCUR 12／NOCELL 0）；DIFF 2 處（Kioxia v0.4→v0.5.6：README!A17、A6 座標與文字不變，僅換檔名）；NOCUR 12 處經核對 markets/nand/dist/20261031_NAND市場模型_v0.3.xlsx 即現行檔（與 a0e82b51 舊檔逐位元組相同），各格值皆支持原文（Ann!E12 47.9%、Ann!D24:F24 14.4／14.0／13.9%、Ann!E14 4.3%、Ann!E21–E26 份額、Sup!B6/C6/D4/D5/D9、In!H125），不需改寫；audit 腳本因檔案在 markets/ 下找不到現行檔而持續列為 NOCUR（工具限制）
 - SNDK.md｜處理標記 17（DIFF 5／NOCUR 12／NOCELL 0）；DIFF 5 處已改（SanDisk v0.4→v0.5.6：FY2028 季價 ±20% 敏感度改 −29%／+34%、FY2027 EPS 模型 274.4（+26%）；其餘座標不變）；NOCUR 12 處經核對 markets/nand/dist/20261031_NAND市場模型_v0.3.xlsx 即現行檔（與舊檔相同），Ann／Sup／Recon!B4 各格值皆支持原文，不需改寫；audit 腳本因檔案在 markets/ 下仍列為 NOCUR（工具限制）
 - 3017.md｜處理標記 14（DIFF 14）；9 處僅換檔名／座標；5 處改寫：1H26 毛利率括號改 3Q26 33.86%、股數 3.94 億股（In!E74）、高盛／3Q 營收／2Q 法說事件句座標改指現行 Coord!G87、In!H68／E85／H85、Q!I5；2Q26 毛利率 32.57% 僅見於 Q!I5 備註
+- 3653.md｜處理標記 13（DIFF 13）；7 處僅換檔名／座標；6 處改寫：AI 均熱片市場 2027 年 US$1.62B、3Q26 毛利率 49.97%（取代模型已無的 8 月自結淨利率 33.4%）、10-22 股價句刪去模型已無的單日 −7.12%（改為收盤 6,070，In!I150）、事件句座標改指 Coord／Sources／In!H119
