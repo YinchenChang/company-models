@@ -1,13 +1,13 @@
 note: tools/val_snapshots.py sens 產生；值＝改寫 Inputs 後整本 LibreOffice 重算的加權目標價（港元）；勿手改
-model: 20261115_Zhipu_v0.1.6.xlsx
-date: '2026-11-15'
-base_tp: 156.935363782588
+model: 20261116_Zhipu_v0.1.7.xlsx
+date: '2026-11-16'
+base_tp: 149.417574966051
 cases:
 - key: wacc
   name: WACC ±1pt（val_wacc_adj）
   plain: 折現率（WACC）
-  tp_lo: 156.935363782588
-  tp_hi: 156.935363782588
+  tp_lo: 149.417574966051
+  tp_hi: 149.417574966051
   lo_label: WACC −1pt
   hi_label: WACC +1pt
   lo_plain: 折現率低 1 個百分點
@@ -19,8 +19,8 @@ cases:
 - key: g
   name: 永續成長率 2%／4%（val_g）
   plain: 永續成長率
-  tp_lo: 156.935363782588
-  tp_hi: 156.935363782588
+  tp_lo: 149.417574966051
+  tp_hi: 149.417574966051
   lo_label: g＝2%
   hi_label: g＝4%
   lo_plain: 永續成長 2%
@@ -32,8 +32,8 @@ cases:
 - key: beta
   name: β 1.0／1.6（val_beta）
   plain: 股價波動係數（β）
-  tp_lo: 156.0707540782
-  tp_hi: 158.168356379977
+  tp_lo: 148.552965261663
+  tp_hi: 150.65056756344
   lo_label: β＝1.0
   hi_label: β＝1.6
   lo_plain: 波動係數 1.0
@@ -45,8 +45,8 @@ cases:
 - key: erp
   name: ERP 4%／6%（val_erp）
   plain: 股權風險溢酬
-  tp_lo: 156.065186991732
-  tp_hi: 157.808968548326
+  tp_lo: 148.547398175195
+  tp_hi: 150.291179731789
   lo_label: ERP＝4%
   hi_label: ERP＝6%
   lo_plain: 風險溢酬 4%
@@ -58,8 +58,8 @@ cases:
 - key: extg
   name: 延伸期終點營收年增 5%／15%（val_ext_g33）
   plain: 2031–2033 營收成長終點
-  tp_lo: 156.935363782588
-  tp_hi: 156.935363782588
+  tp_lo: 149.417574966051
+  tp_hi: 149.417574966051
   lo_label: 5%
   hi_label: 15%
   lo_plain: 2033 年營收年增 5%
@@ -71,8 +71,8 @@ cases:
 - key: extm
   name: 延伸期營業利益率加碼 0／+50pt（val_ext_m_add）
   plain: 2031–2033 營業利益率改善
-  tp_lo: 156.935363782588
-  tp_hi: 163.272641287291
+  tp_lo: 149.417574966051
+  tp_hi: 155.931750735843
   lo_label: 維持 FY2030
   hi_label: +50pt（2033 年約 +14%）
   lo_plain: 利益率維持 2030 年水準
@@ -84,8 +84,8 @@ cases:
 - key: wdcf
   name: DCF 權重 25%／75%（val_w_dcf）
   plain: DCF 與同業法的權重
-  tp_lo: 177.908073606833
-  tp_hi: 135.962653958344
+  tp_lo: 166.631390382027
+  tp_hi: 132.203759550075
   lo_label: DCF 25%
   hi_label: DCF 75%
   lo_plain: DCF 占 25%
@@ -97,8 +97,8 @@ cases:
 - key: tax
   name: 稅率 15%／25%（val_tax）
   plain: 所得稅率
-  tp_lo: 156.935363782588
-  tp_hi: 156.935363782588
+  tp_lo: 149.417574966051
+  tp_hi: 149.417574966051
   lo_label: 15%
   hi_label: 25%
   lo_plain: 稅率 15%
@@ -110,8 +110,8 @@ cases:
 - key: wc
   name: 營運資金率 −5%／+5%（val_wc_rate）
   plain: 營運資金占營收增量
-  tp_lo: 156.935363782588
-  tp_hi: 156.935363782588
+  tp_lo: 149.417574966051
+  tp_hi: 149.417574966051
   lo_label: −5%
   hi_label: +5%
   lo_plain: 預收款增加（−5%）
@@ -123,8 +123,8 @@ cases:
 - key: adj
   name: 相對倍數調整：不調整／依 FY2030 利益率調整（val_comp_adj_sw）
   plain: 同業倍數是否依獲利差異打折
-  tp_lo: 156.935363782588
-  tp_hi: 138.741417827221
+  tp_lo: 149.417574966051
+  tp_hi: 133.983391242177
   lo_label: 不調整
   hi_label: 調整
   lo_plain: 不打折
@@ -136,8 +136,8 @@ cases:
 - key: task
   name: 2H26 API 任務數成長率低端／高端（INP_038；情境 A／C 的驅動）
   plain: API 任務數成長
-  tp_lo: 152.467045201012
-  tp_hi: 160.548046891096
+  tp_lo: 145.627036613677
+  tp_hi: 152.482265548822
   lo_label: 低端
   hi_label: 高端
   lo_plain: 任務數成長慢
@@ -149,8 +149,8 @@ cases:
 - key: pxgw
   name: 每 GW 算力價格每年 −25%／不變（px_gw_chg）
   plain: 算力採購價格年變動
-  tp_lo: 156.935363782588
-  tp_hi: 156.935363782588
+  tp_lo: 149.417574966051
+  tp_hi: 149.417574966051
   lo_label: −25%／年
   hi_label: 不變
   lo_plain: 算力每年降價 25%
@@ -162,8 +162,8 @@ cases:
 - key: rdfee
   name: 研發項下算力費占研發開支 60%／80%（rd_fee_share）
   plain: 研發中的算力費占比
-  tp_lo: 156.935363782588
-  tp_hi: 156.935363782588
+  tp_lo: 149.417574966051
+  tp_hi: 149.417574966051
   lo_label: 60%
   hi_label: 80%
   lo_plain: 研發算力占比低

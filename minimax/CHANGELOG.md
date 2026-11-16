@@ -2,6 +2,13 @@
 
 每次同步記錄：版本、工作包、commit／PR 與變動摘要。
 
+## v0.2.4 — 現價與同業報價改 2026-11-13 收盤（2026-11-16；工作單 `docs/workorders/20261116_px1113_現價與同業報價換11-13收盤.md`）
+- SRC_MM S113（MiniMax 收盤價）HK$170.2（2026-11-05）→ 152.4（2026-11-13）；S143（智譜收盤價）476.0 → 408.4；來源欄保留舊值。價格取自 `markets/invest_map/data/closes_20261020_20261113.csv`。
+- 同業 EV／NTM 營收中位數 9.74 → 7.99；Comparable 目標價 234.82 → 202.13；DCF 目標價 60.92 不變；加權目標價 147.87 → 131.52（上檔空間 −13.1% → −13.7%）；估值評等中立、投資建議中立不變；收支關卡不變（不通過）。
+- 標籤：Valuation V01、Val 標題與同業表、個股模型頁橫幅、README 頁改 2026-11-13；Val I44、I49 日期衍生參數未重算。Sensitivity、Val 敏感度（val_sens.json）、情境快照（val_scenarios.json）已重跑。
+- 成品 `dist/20261116_MiniMax收支模型_v0_2_4.xlsx／.html`、`dist/20261116_MiniMax個股模型_v0_2_4.html`；v0.2.3 移 `dist/_待刪除/`。
+- 檢查：重算錯誤 0、Checks 合計 0、check_html 506 個數字不符 0、check_html_v13 910 個 data-ref 不符 0、收支關卡評等檢查符合。
+
 ## v0.2.3 — 估值頁 Val、反向 DCF 頁 RevDCF（2026-11-15；Andy 決定給目標價與評等）
 - 新檔 `val_page.py`、`valcore.py`（與智譜共用）、`scripts/val_snapshots.py`、`data/val_scenarios.json`、`data/val_sens.json`；`build_xlsx.py` 附加 SRC S142–S155、Inputs I35–I61 並建 Val、RevDCF；`scripts/build_all.sh` 先跑快照、加 `check_rating_gate --strict`。
 - 加權目標價 HK$147.87（DCF 60.92、Comparable 234.82）、上檔空間 −13.1%、估值評等中立、收支關卡不通過（−5,983.2），投資建議中立。

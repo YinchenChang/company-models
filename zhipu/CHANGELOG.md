@@ -1,5 +1,11 @@
 # CHANGELOG（智譜個股模型；v0.1.1 以前稱收支模型）
 
+## v0.1.7（2026-11-16，建置代理）— 現價與同業報價改 2026-11-13 收盤 — Excel `model/20261116_Zhipu_v0.1.7.xlsx`
+- 工作單 `docs/workorders/20261116_px1113_現價與同業報價換11-13收盤.md`。SRC_ZP_1055（智譜收盤價）476.0 → 408.4、SRC_ZP_1056（MiniMax 收盤價）170.2 → 152.4，period、來源、取得日同步，來源欄保留舊值；SRC_ZP_1065 註記改 11-13；builder 標籤（z4 收盤價列、z6 Val 標題與同業說明）、README 頁 v0.1.7 列、HTML 文字改 11-13。
+- 同業 EV／NTM 營收 5.65 → 4.79；Comparable 目標價 198.88 → 183.85；DCF 114.99 不變；加權目標價 156.94 → 149.42（上檔空間 −67.0% → −63.4%）；評等、投資建議強力放空不變；收支關卡 −281.2 不變。
+- xlsx 逐格比對 v0.1.6：差異只在 SRC_ZP 價格列、Funding D59（現價 ÷ 換股價）、Reverse（市值、隱含營收）、Val、RevDCF、Checks（C91、C92 市場隱含年）、README A1，以及 Coord C15、L15 的 Wattonomics 快照版本文字（v0.3.3 → v0.3.5，repo 現行檔）。
+- 重建輸入：Tokenomics v19.0（1916a06）、OpenAI v0.6.2、`--base model/archive/20261115_Zhipu_v0.1.6.xlsx --date 2026-10-22`；`tools/val_snapshots.py scen|sens` 重跑後再建。v0.1.6 移 `model/archive/`。
+
 ## v0.1.6（2026-11-15，建置代理）— 估值頁 Val、反向 DCF 頁 RevDCF；成品命名對齊 MiniMax — Excel `model/20261115_Zhipu_v0.1.6.xlsx`
 - Andy 2026-11-15 決定給目標價與評等。新模組 `builder/z6.py`、`builder/valcore.py`（與 MiniMax 共用）；`tools/val_snapshots.py`；`data/val_scenarios.yaml`、`data/val_sens.yaml`；SRC_ZP_1056–1064、Inputs 26 列（INP_141–166）。
 - 加權目標價 HK$156.94（DCF 114.99、Comparable 198.88（三情境加權；199.74 為情境 B））、上檔空間 −67.0%、估值評等與投資建議「強力放空」；收支關卡（F09 五年合計）−281.2 億元不通過。
