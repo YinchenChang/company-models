@@ -139,6 +139,8 @@ PFD = dict(
         "Derived", "評價日股數＝流通股 352.8＋RSU（全額）＋選擇權庫藏股法＋可轉債 if-converted 股數減 capped call 回收（DCF 規格第 3 節）", "RSU 沒收率未揭露（未找到），全額計入；ASR 未建模"),
     fc_da=(0.035, 0.045, 0.055, "Assumed", "FY2026 220.443÷4,683.9＝4.7%、FY2025 5.0%（Derived）；含被併購無形資產攤銷，高估非 GAAP 內含折舊的部分", "—"),
     fc_cx=(0.015, 0.022, 0.03, "Derived", "FY2026 101.628÷4,683.9＝2.2%、FY2025 2.1%、FY2024 2.5%（營業現金流減公司自由現金流；10-K MD&A）", "—"),
+    fc_da_ss=(0.03, "Assumed", "長期穩態：被併購無形資產攤銷退出後，折舊攤銷收斂到資本支出附近（FY2030–FY2032 線性收斂）", "—"),
+    fc_cx_ss=(0.031, "Assumed", "長期穩態：資本支出占營收略高於折舊（終值要求資本支出 ≥ 折舊×(1+g)）", "—"),
     fc_wc=(-0.452, -0.363, -0.25, "Derived", "營運資金增加÷營收增量，負值＝流入（原則第 23 條）：10-K FY2026 MD&A 營運資產負債變動合計流入 383.8（FY2026；其中遞延收入 +755.2、遞延佣金 −305.1、應收 −380.0、應計 +393.3）÷營收增量 1,057.6＝36.3%；FY2025 443.6÷819.9＝54.1%；基準取最新年，低案取兩年平均，高案 25% 為假設", "FY2024 未找到"),
 )
 FDROWS = FD.in_rows(PFD)
@@ -422,8 +424,8 @@ for si, s in enumerate("ABC"):
         P[R("oi")] = f"={R('gp')}-{R('opex')}"
         P[R("sbc")] = f"=({I('sbc_a')}+{I('sbc_v_B')}*$F{rows['rev']})+{I('sbc_v_'+s)}*({R('rev')}-$F{rows['rev']})"
         P[R("ebit")] = f"={R('oi')}-{R('sbc')}"
-        P[R("da")] = f"={R('rev')}*{I('fc_da')}"
-        P[R("capex")] = f"={R('rev')}*{I('fc_cx')}"
+        P[R("da")] = f"={R('rev')}*({I('fc_da')}+({I('fc_da_ss')}-{I('fc_da')})*MAX(0,{n}-2)/3)"
+        P[R("capex")] = f"={R('rev')}*({I('fc_cx')}+({I('fc_cx_ss')}-{I('fc_cx')})*MAX(0,{n}-2)/3)"
         P[R("oth")] = f"={I('yld')}*{I('cash_v')}"
         P[R("ebt")] = f"={R('oi')}+{R('oth')}"
         P[R("taxx")] = f"={R('ebt')}*{I('tax')}"
@@ -499,14 +501,14 @@ for y, c in YC.items():
 # ---------------------------------------------------------------- DCF 頁
 Dp = SH["DCF"]
 Dp["A1"] = "DCF（FCFF 標準規格；tools/fcff_dcf.py）：明確期 FY2027E 剩餘期間～FY2032E；永續價值＝NOPAT×(1+g)×(1−g÷RONIC)÷(WACC−g)；期中折現；評價日＝股價基準日。三情境各算一次。EBIT 已扣股票薪酬（SBC 不加回）。"
-Dp["A2"] = "non-GAAP→FCFF 橋接：非 GAAP 營業利益−SBC＝EBIT；EBIT 稅後＋折舊攤銷−資本支出−營運資金增加＝FCFF（遞延收入增加為現金流入，fc_wc 為負值）；公司口徑自由現金流（PL 頁）＝FCFF＋SBC＋稅後其他收入。折舊與資本支出 FY2027–FY2029 取 PL 頁，之後線性收斂到穩態。"
+Dp["A2"] = "non-GAAP→FCFF 橋接：非 GAAP 營業利益−SBC＝EBIT；EBIT 稅後＋折舊攤銷−資本支出−營運資金增加＝FCFF（遞延收入增加為現金流入，fc_wc 為負值）；公司口徑自由現金流（PL 頁）＝FCFF＋SBC＋稅後其他收入。折舊與資本支出取 PL 頁（FY2027–FY2029 為近期比例，FY2030–FY2032 線性收斂到穩態比例 fc_da_ss／fc_cx_ss）。"
 DYR = [2027, 2028, 2029, 2030, 2031, 2032]
 DPATHS = []
 for s in "ABC":
     pr = PR[s]
     DPATHS.append(dict(name=s, label=f"情境 {s}", rev={y: f"PL!{YC['FY'+str(y)]}{pr['rev']}" for y in DYR}, rev0=f"PL!E{pr['rev']}",
                        ebit={y: f"PL!{YC['FY'+str(y)]}{pr['ebit']}" for y in DYR}, tax={y: "tax_w" for y in DYR},
-                       da={y: f"PL!{YC['FY'+str(y)]}{pr['da']}" for y in (2027, 2028, 2029)}, cx={y: f"PL!{YC['FY'+str(y)]}{pr['capex']}" for y in (2027, 2028, 2029)}))
+                       da={y: f"PL!{YC['FY'+str(y)]}{pr['da']}" for y in DYR}, cx={y: f"PL!{YC['FY'+str(y)]}{pr['capex']}" for y in DYR}))
 FRAC0 = 79 / 365   # 2026-11-13 → 2027-01-31（FY2027 年底）
 FDR = FD.write_detail(Dp, 4, DPATHS, DYR, FRAC0)
 DCOL = FDR["col"]
@@ -515,8 +517,6 @@ for s in "ABC":
     for y in ("FY2027", "FY2028", "FY2029", "FY2030", "FY2031", "FY2032"):
         c = YC[y]; dc = DCOL[int(y[2:])]
         P[f"{c}{pr['nopat']}"] = f"=DCF!{dc}{D['nopat']}"; P[f"{c}{pr['dwc']}"] = f"=DCF!{dc}{D['dwc']}"; P[f"{c}{pr['fcff']}"] = f"=DCF!{dc}{D['fcff']}"
-        if y in ("FY2030", "FY2031", "FY2032"):
-            P[f"{c}{pr['da']}"] = f"=DCF!{dc}{D['da']}"; P[f"{c}{pr['capex']}"] = f"=DCF!{dc}{D['cx']}"
 
 # ---------------------------------------------------------------- Val 頁
 V = SH["Val"]
