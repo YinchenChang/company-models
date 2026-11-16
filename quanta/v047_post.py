@@ -572,8 +572,8 @@ def c0_actuals(wb, C, r, l3, rs_l, d5):
     a_rev = row2("　公司實績：營收（主：1–10 月累計；第二：3Q26 × 4）", f"=B{cum}", f"=B{q3}*4", "#,##0.0", "NT$B；合併營收", VERIF)
     a_rat = row2("　× AI 伺服器占營收比例", f"=B{ratio}", f"=B{ratio}", "0.0%", "見 4.2", "Derived／Interested-party")
     a_ai = row2("　＝ 公司實績側 AI 伺服器營收", f"=B{a_rev}*B{a_rat}", f"=C{a_rev}*C{a_rat}", "#,##0.0", "NT$B；主讀數為 10 個月累計；第二讀數為年化", "Derived（口徑換算）", True)
-    l_mk = row2("　層級：整櫃組裝市場 CY2026（Siliconomics 基準層）", f"=B{l3}", f"=B{l3}", "#,##0.0", "US$B；連到下方「讀取層級」第 (3) 項的 Siliconomics 層列", "Siliconomics v0.19；Derived")
-    l_sh = row2("　× 廣達份額（Siliconomics 份額表）", f"=B{rs_l}", f"=B{rs_l}", "0.0%", "連到下方 (5) 的 Siliconomics 份額列", "Siliconomics v0.19；Derived（由本模型 FY2026 錨點校準，見提醒）")
+    l_mk = row2("　層級：整櫃組裝市場 CY2026（Siliconomics 基準層）", f"=B{l3}", f"=B{l3}", "#,##0.0", "US$B；連到下方「讀取層級」第 (3) 項的 Siliconomics 層列", "Siliconomics v0.20；Derived")
+    l_sh = row2("　× 廣達份額（Siliconomics 份額表）", f"=B{rs_l}", f"=B{rs_l}", "0.0%", "連到下方 (5) 的 Siliconomics 份額列", "Siliconomics v0.20；Derived（由本模型 FY2026 錨點校準，見提醒）")
     l_fx = row2("　× 匯率（新台幣 ÷ 美元；In 頁 fx）", "=fx", "=fx", "0.0", "NT$/US$", "Derived（與台達電模型相同；公司換算隱含約 32.7）")
     l_fy = row2("　＝ 層級隱含 CY2026 全年 AI 伺服器營收", f"=B{l_mk}*B{l_sh}*B{l_fx}", f"=C{l_mk}*C{l_sh}*C{l_fx}", "#,##0.0", "NT$B；全年", "Derived", True)
     l_tf = row2("　× 期間係數（主：已公布月數 ÷ 12；第二：1）", f"=COUNT(B{m0}:B{m1})/12", "=1", "0.000", "線性時差近似（層級值為日曆年）", "Derived")
@@ -623,7 +623,7 @@ def coord_c0(wb, SIL, R):
         ("硬體股讀哪一層", "Siliconomics（零組件層；基準）", ver, "產業部署量、AI IT 資本支出、整櫃組裝市場、顆數係數、份額表、對帳中旗標（reader.py）", "下游只註明版本、不自行重估（專案規則第 3 條）"),
         ("AI IT 資本支出 SIF_AIITCapex_Base（情境 A 供給側；情境 B 以顆數係數縮放）", "US$B；見下表", "markets/network v0.2.3（Mkt!C27:F27）", "In 頁 itc_26–itc_29", "數值與 Siliconomics 基準相同（核對見下表）"),
         ("每 GW IT 資本支出 SIF_ITCapexPerGW、每 GW 機架數、整櫃買方價", "33.4／37.6／37.6／37.6 US$B", "markets/chip_bridge v0.2.3（Tokenomics v21.x 經橋接表）", "In 頁 itpg_gb、itpg_vr、racks_gb、racks_vr、rack_gb、rack_vr", "唯讀"),
-        ("情境顆數係數（2028、2029）", "A 1.0／1.0；B 0.8／0.71；C 0.6／0.6", "tsmc v0.5.4（In!E37:E42；Siliconomics v0.19 基準係數）", "In 頁 um28_A–um29_C", "情境 B＝Siliconomics 基準"),
+        ("情境顆數係數（2028、2029）", "A 1.0／1.0；B 0.8／0.71；C 0.6／0.6", "tsmc v0.5.4（In!E37:E42；Siliconomics v0.20 基準係數）", "In 頁 um28_A–um29_C", "情境 B＝Siliconomics 基準"),
         ("份額快照 asm_qush_26、asm_qurel_27–29", "0.1339／1.0／0.95／0.90", ver, "In 頁 rel_27–rel_29；FY2026 有效份額由公司揭露比例校準", "公司模型以自身營收校準，Siliconomics 只存快照"),
         ("Wattonomics 錨定 SIF_WTAnchor_Base（wta_27–29）", "0.72／0.65／0.63", ver, "只用於 Sens「Wattonomics 錨定」案例，不進目標價", "Wattonomics 現行版本 v0.3.2（本模型不直接讀）"),
         ("對帳中旗標 SIF_RecoFlag_<yyyy>、SIF_DeployGW_AltRatio_<yyyy>", "旗標 0／1／1／1；比值 0.88／0.62／0.67／0.67", ver, "C4 兩讀數（本頁上方）", "另一側讀數＝Wattonomics 換算的產業 GW")):
@@ -708,7 +708,7 @@ def coord_c0(wb, SIL, R):
     C.cell(r, 1, "層級之間（參考；Siliconomics 對帳單 r3 處理，不計入本公司 C0）").font = BOLD; r += 1
     C.cell(r, 1, "　下列差距是 Wattonomics 與 Siliconomics 兩層之間的差距，不是廣達自己的量對其所讀 Siliconomics 值的差距；本公司依 C4 並列兩讀數，不裁決、不改上游。"); r += 1
     m5, l5, d5 = block("(6) 部署 GW（情境 B）對 Wattonomics 換算值（兩層之間的差距）", lambda c: f"=PL!{c}{gb('部署 GW（IT 電力）')}", [N[f"SIF_DeployGW_Alt_{y}"] for y in (2026, 2027, 2028, 2029)],
-                       "GW；Siliconomics 的需求側部署 GW 逐年值＝Wattonomics 資本支出與電力路徑換算的需求側讀數", "Wattonomics v0.3.2 經 Siliconomics 換算；Derived（需求側）", "0.00", layer_label="Wattonomics 換算值（需求側）", ref=True)
+                       "GW；Siliconomics 的需求側部署 GW 逐年值＝Wattonomics 資本支出與電力路徑換算的需求側讀數", "Wattonomics v0.3.6 經 Siliconomics 換算；Derived（需求側）", "0.00", layer_label="Wattonomics 換算值（需求側）", ref=True)
     r += 1
     C.cell(r, 1, "3. 結論（C0；判定見第 4 節 C0〔實績〕表）").font = BOLD; r += 1
     C.cell(r, 1, "對帳中項目數（C0〔實績〕判定為「對帳中」者；讀取層級的同源列不判定、不計入）")

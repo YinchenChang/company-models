@@ -71,8 +71,10 @@ for i, y in enumerate(YRS):
     inp(f"wt_{y}", "Wattonomics 年新增上線 IT GW（主路徑，毛額）", "GW", y, None, cells(W, f"WIF_MktGW_Add_{y}")[0], None, "Derived", f"{wt_f} WIF_MktGW_Add_{y}")
     if "WIF_Evidence_2026" in W.defined_names:
         _e = cells(W, f"WIF_Evidence_{y}")[0]
-        inp(f"wcov_{y}", "Wattonomics 證據比例（WIF_Evidence：全市場分母，含七家實績與站點；模型只有點值，低＝基準＝高）", "比", y, _e, _e, _e, "Derived",
-            f"{wt_f} WIF_Evidence_{y}（v0.3.2 起；分母已含七家以外買方，故 Status 頁 ew 不再另除覆蓋缺口）")
+        _lo = cells(W, f"WIF_Evidence_Lo_{y}")[0] if f"WIF_Evidence_Lo_{y}" in W.defined_names else _e   # v0.3.6 起有區間（規則 v1.3）
+        _hi = cells(W, f"WIF_Evidence_Hi_{y}")[0] if f"WIF_Evidence_Hi_{y}" in W.defined_names else _e
+        inp(f"wcov_{y}", "Wattonomics 證據比例（WIF_Evidence：全市場分母，含七家實績與站點；v0.3.6 起低／高＝WIF_Evidence_Lo_／Hi_，之前只有點值）", "比", y, _lo, _e, _hi, "Derived",
+            f"{wt_f} WIF_Evidence_{y}、WIF_Evidence_Lo_{y}、WIF_Evidence_Hi_{y}（v0.3.2 起；分母已含七家以外買方，故 Status 頁 ew 不再另除覆蓋缺口）")
     else:
         inp(f"wcov_{y}", "Wattonomics 證據比例（有站點證據的年新增 ÷ 主路徑年新增）", "比", y, None, cells(W, f"WIF_Coverage_{y}")[0], None, "Derived",
             f"{wt_f} WIF_Coverage_{y}；只計站點證據，未計七家資本支出實績（偏保守）")

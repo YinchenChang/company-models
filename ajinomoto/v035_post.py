@@ -464,7 +464,7 @@ def coord_c0(wb, SIL, CR):
             ("每顆載板面積 × 層數年增", "=g_asp", f"Ibiden 模型成品 In 頁（＝{ver} abf_gasp）", "AI 用 ABF 需求量指數", "0.0%"),
             ("非 NVIDIA 加速器每顆面積係數", "=v_ot", f"欣興模型成品 In 頁（{ver} abf_vot 同名量 0.80）", "有效顆數", "0.00"),
             ("Wattonomics 錨定係數 CY2027／28／29（SIF_WTAnchor_Base；R4 比值）", '=TEXT(wta_27,"0.000")&"／"&TEXT(wta_28,"0.000")&"／"&TEXT(wta_29,"0.000")',
-             f"{ver}；Wattonomics 現行 v0.3.2（只經 Siliconomics 進入）", "只進敏感度（Sens「Wattonomics 錨定」案例）；不改基準", None),
+             f"{ver}；Wattonomics 現行 v0.3.6（只經 Siliconomics 進入）", "只進敏感度（Sens「Wattonomics 錨定」案例）；不改基準", None),
             ("另一側讀數 ÷ 現行基準 CY2026／27／28／29（SIF_DeployGW_AltRatio_<年>）", f'=TEXT(B{CR["ratio"]},"0.000")&"／"&TEXT(C{CR["ratio"]},"0.000")&"／"&TEXT(D{CR["ratio"]},"0.000")&"／"&TEXT(E{CR["ratio"]},"0.000")',
              f"{ver}（比值列見本頁上方）", "兩讀數目標價（本頁上方）只換產業部署 GW 一個輸入（情境 B、C 的加速器顆數 × 比值）", None)]
     for label, val, who, use, fmt in rows:

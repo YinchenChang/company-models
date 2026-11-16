@@ -499,7 +499,7 @@ def coord_c0(wb, SIL, CR, C):
     ver = f"Siliconomics {SIL.VERSION}（{SIL.FILE}）"
     rows = [("Siliconomics 快照版本", SIL.VERSION, ver, "行業變數單一來源（siliconomics/reader.py）；下游不讀 In、Path、Mkt 等內部頁", None)] + C["layer_rows"](ver, CR) + [
         ("Wattonomics 錨定係數 CY2027／28／29（SIF_WTAnchor_Base；R4 比值）", '=TEXT(wta_27,"0.000")&"／"&TEXT(wta_28,"0.000")&"／"&TEXT(wta_29,"0.000")',
-         f"{ver}；Wattonomics 現行 v0.3.2（只經 Siliconomics 進入）", "只進敏感度（Sens「Wattonomics 錨定」案例）；不改基準", None),
+         f"{ver}；Wattonomics 現行 v0.3.6（只經 Siliconomics 進入）", "只進敏感度（Sens「Wattonomics 錨定」案例）；不改基準", None),
         ("另一側讀數 ÷ 現行基準 CY2026／27／28／29（SIF_DeployGW_AltRatio_<年>）", f'=TEXT(B{CR["ratio"]},"0.000")&"／"&TEXT(C{CR["ratio"]},"0.000")&"／"&TEXT(D{CR["ratio"]},"0.000")&"／"&TEXT(E{CR["ratio"]},"0.000")',
          f"{ver}（比值列見本頁上方）", "兩讀數目標價（本頁上方）只換產業部署 GW 一個輸入", None)]
     for label, val, who, use, fmt in rows:

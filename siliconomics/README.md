@@ -4,9 +4,11 @@ AI 半導體 Project 的「唯一事實」Excel：加速器顆數、記憶體與
 
 | 項目 | 內容 |
 |---|---|
-| 現行版本 | 見 `model/CURRENT` |
+| 現行版本 | 見 `model/CURRENT`（v0.20，2026-11-16；Wattonomics v0.3.6、Tokenomics v22.0、規則 v1.4.3） |
 | 下游快照 | `data/CURRENT_SNAPSHOT` 指向的 `data/siliconomics_snapshot_v*.json`（由 `tools/export_snapshot.py` 產生） |
-| Tokenomics 快照 | `data/tokenomics_snapshot_v21.7.json`（名稱清單 `data/tokenomics_names.txt`） |
+| Tokenomics 快照 | `data/tokenomics_snapshot_v22.0.json`（v0.20 起；名稱清單 `data/tokenomics_names.txt`；下游 chip_bridge 仍讀 `v21.7`，見 Checks K3） |
+| 協調狀態檔 | `data/baseline_status.json`（`tools/export_baseline_status.py`；逐年狀態的唯一權威，規則 v1.4.3 C3） |
+| Recon 快照 | `data/CURRENT_RECON` 指向的 `data/recon_snapshot_v*.json`（`tools/recon.py`；每市場 kind／status／殘差列，見檔頭） |
 | 規劃書 | `docs/plan/Siliconomics_規劃書.md` |
 | 下游契約 | `docs/Siliconomics_downstream_contract.md` |
 | 變更紀錄 | `CHANGELOG.md` |
@@ -24,12 +26,15 @@ echo siliconomics_snapshot_vX.Y.json > siliconomics/data/CURRENT_SNAPSHOT
 # 4) 對帳（v0.11 起每次升版都跑）：R4 橋接 → Recon 快照 → 以快照重建本版（Recon 頁）
 python3 siliconomics/tools/r4_bridge.py build/r4_raw.xlsx && soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir build build/r4_raw.xlsx
 cp build/r4_raw.xlsx siliconomics/docs/reports/r4_bridge/<YYYYMMDD>_R4對帳橋接_Siliconomics側_r<N>.xlsx
-python3 siliconomics/tools/recon.py siliconomics/docs/reports/r4_bridge/<該檔> siliconomics/data/recon_snapshot_vX.Y.json
+python3 siliconomics/tools/recon.py siliconomics/docs/reports/r4_bridge/<該檔> siliconomics/data/recon_snapshot_vX.Y.json   # 第三參數預設 model/CURRENT（讀 Recon D1、Coord 狀態）
 echo recon_snapshot_vX.Y.json > siliconomics/data/CURRENT_RECON   # 之後回到步驟 1 以 --base 重建一次
-# 5) 下游全部重建（CI ai-semis-build）：數值變動須全部落在本版預期範圍內
+# 5) 狀態檔與協調檢查（v0.19 起）：python3 siliconomics/tools/export_baseline_status.py && python3 tools/baseline_coordination/check.py（須 0 項不符）
+# 6) 下游全部重建（CI ai-semis-build；本機 tools/cascade.sh，並行時設 LO_PROFILE）：數值變動須全部落在本版預期範圍內。
+#    K1（本庫 HBM 市場 vs SK 海力士成品）須先以暫用快照重建 SK 海力士再重建本庫（K1 自舉）
 ```
 
 對帳狀態（Recon 頁）：|比值 − 1| ≤ 容差＝一致；超出且有已寄出的 `交流/` 證據送件（登錄在 `builder/seed/recon_evidence_v*.json`）＝時差；其餘＝待診斷（Checks K9）。只加總覆蓋個股的**基準情境**（工作方式 v1.7）。
+v0.20 起（規則 v1.4.3）：B 節（R4）狀態讀 Coord 頁、不自判；D 節由下往上市場（D1 GPU／ASIC 晶片金額）＝已建模個股加總＋殘差＝市場值，公司實績以主讀數（已公布期間累計 ÷ 層級同期間）與第二讀數（最近一季年化）判定，兩者同號超出 ±15% 才不一致、一內一外為時差邊界；F 節 NVIDIA 資料中心營收主讀數＝純實績，含指引的比值只列參考。甲年任一實績對帳點不過 → Coord 標「有條件一致」（`SIF_RecoC0Fail_<年>`）。
 
 ## 原則（比照 Tokenomics CLAUDE.md）
 
@@ -41,7 +46,7 @@ echo recon_snapshot_vX.Y.json > siliconomics/data/CURRENT_RECON   # 之後回到
 
 ## 網頁版（展示層）
 
-- 線上版：https://yinchenchang.github.io/company-models/siliconomics/ （GitHub Pages，公司內可直接開啟；Andy 2026-10-30 要求，比照 AI 投資地圖）。
+- 線上版：https://yinchenchang.github.io/company-models/siliconomics/ （GitHub Pages，公司內可直接開啟；Andy 2026-10-30 要求，比照 AI 算力地圖〔原名 AI 投資地圖，Andy 2026-11-16 改稱〕）。
 - 產生：`python3 siliconomics/tools/build_html.py <輸出.html>`（讀 `model/CURRENT`）；`markets/invest_map/publish_pages.sh` 發布時自動產生，不在 repo 另存 HTML。數字全部取自重算後的 xlsx，程式不做計算；每格 title 標註來源儲存格。
 - Siliconomics 升版合併後，重跑 `publish_pages.sh` 即更新線上版。
 

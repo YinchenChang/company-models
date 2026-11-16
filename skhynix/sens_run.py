@@ -106,7 +106,7 @@ def main():
         lo, hi = res.get((ci, "lo")), res.get((ci, "hi"))
         cases.append({"label": label, "keys": "、".join(keys), "lo": lo, "hi": hi})
     cases.sort(key=lambda c: -max(abs((c[s] or base_tp) / base_tp - 1) for s in ("lo", "hi")))
-    snap = {"snapshot": "Siliconomics v0.19（現行基準）", "base_tp": base_tp, "cases": cases}
+    snap = {"snapshot": "Siliconomics v0.20（現行基準）", "base_tp": base_tp, "cases": cases}
     json.dump(snap, open(os.path.join(HERE, "sens_snapshot.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     for c in cases:
         print(f"{c['label']:<40} lo {((c['lo'] or base_tp) / base_tp - 1):+.1%}  hi {((c['hi'] or base_tp) / base_tp - 1):+.1%}")

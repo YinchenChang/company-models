@@ -1,0 +1,362 @@
+{
+ "note": "Recon 快照（tools/recon.py 產生）。個股值取各公司 dist 成品的情境 B（基準）；R4 取 r4_bridge 重算結果；D1、C3 狀態取 20261116_Siliconomics_v0.20.xlsx。結構見 tools/recon.py 檔頭與 tools/baseline_coordination/README.md。",
+ "base_scen": "B",
+ "siliconomics": "20261116_Siliconomics_v0.20.xlsx",
+ "tolerance": 0.15,
+ "markets": {
+  "soc": {
+   "kind": "market",
+   "name": "SoC 測試機（份額口徑）",
+   "unit": "份額",
+   "status": "一致",
+   "status_by_year": [
+    "一致",
+    "一致",
+    "一致",
+    "一致",
+    "一致"
+   ],
+   "years": [
+    2025,
+    2026,
+    2027,
+    2028,
+    2029
+   ],
+   "market": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "modeled_sum": [
+    0.9093975155279499,
+    0.980736231884058,
+    0.980736231884058,
+    0.980736231884058,
+    0.980736231884058
+   ],
+   "expected_residual": 0.04,
+   "rows": [
+    {
+     "who": "Advantest",
+     "vals": [
+      0.635527950310559,
+      0.713710144927536,
+      0.713710144927536,
+      0.713710144927536,
+      0.713710144927536
+     ],
+     "ref": "advantest/dist/20261115_Advantest個股模型_v0.7.5.xlsx PL!C83:G83",
+     "note": "會計年度（4–3 月）份額，近似日曆年；FY2025＝實績隱含，FY2026 起＝CY2026 三季實績＋第四季指引推得"
+    },
+    {
+     "who": "泰瑞達",
+     "vals": [
+      0.273869565217391,
+      0.267026086956522,
+      0.267026086956522,
+      0.267026086956522,
+      0.267026086956522
+     ],
+     "ref": "ter/dist/20261114_泰瑞達個股模型_v0.4.5.xlsx PL!C78:G78",
+     "note": "日曆年；FY2025、FY2026＝實績／錨點隱含，之後維持"
+    },
+    {
+     "who": "其他（未建模）",
+     "vals": [
+      0.0906024844720501,
+      0.019263768115941993,
+      0.019263768115941993,
+      0.019263768115941993,
+      0.019263768115941993
+     ],
+     "residual": true,
+     "note": "殘差＝1 − 已建模份額合計；預期約 rc_soc_oth＝0.04（In 頁 M27）"
+    }
+   ]
+  },
+  "r4": {
+   "kind": "layer",
+   "name": "R4 部署 GW（層間對帳點，非個股加總）",
+   "years": [
+    2026,
+    2027,
+    2028,
+    2029
+   ],
+   "sil_online": [
+    20.805525896637,
+    34.725557687619,
+    45.1889437753727,
+    47.0009273630538
+   ],
+   "wt_main": [
+    19.2940977929285,
+    25.5005334169982,
+    29.3111548208607,
+    29.568985736203
+   ],
+   "status": "C3",
+   "status_by_year": [
+    "甲：有條件一致",
+    "待定：待定（對帳中）",
+    "待定：待定（對帳中）",
+    "丙：連續法（前一年待定，對帳中）"
+   ],
+   "ref": "20261116_R4對帳橋接_Siliconomics側_r12.xlsx Bridge 第 b8、b9 列"
+  },
+  "nv_dc": {
+   "kind": "actual",
+   "name": "NVIDIA 資料中心營收（公司實績對帳點）",
+   "years": [
+    2026,
+    2027,
+    2028,
+    2029
+   ],
+   "implied": [
+    448.361697688478,
+    743.784746309678,
+    null,
+    null
+   ],
+   "company": [
+    375.46,
+    633.7,
+    null,
+    null
+   ],
+   "ref": "20261116_R4對帳橋接_Siliconomics側_r12.xlsx Bridge 第 n3、n4 列（company＝含指引，只列參考）",
+   "actual_cum": [
+    164.2,
+    null,
+    null,
+    null
+   ],
+   "actual_label": "FY27 Q1＋Q2",
+   "months": [
+    6,
+    null,
+    null,
+    null
+   ],
+   "actual_q_annual": [
+    356,
+    null,
+    null,
+    null
+   ],
+   "ratio_main": [
+    0.732444367333475,
+    null,
+    null,
+    null
+   ],
+   "ratio_second": [
+    0.794001811116678,
+    null,
+    null,
+    null
+   ],
+   "ref_actual": "20261116_R4對帳橋接_Siliconomics側_r12.xlsx Bridge 第 n10–n14 列（NVIDIA 8-K FY27 Q1 75.2、Q2 89.0）",
+   "status_by_year": [
+    "對帳中",
+    "無實績",
+    "無實績",
+    "無實績"
+   ],
+   "status": "對帳中"
+  },
+  "gpu_asic": {
+   "kind": "market",
+   "name": "GPU／ASIC 晶片金額（US$B；層級值，2026 以公司實績對帳）",
+   "unit": "US$B",
+   "years": [
+    2026,
+    2027,
+    2028,
+    2029
+   ],
+   "market": [
+    534.243746875,
+    912.250954417742,
+    974.334861111111,
+    982.225896792348
+   ],
+   "modeled_sum": [
+    508.267049275,
+    892.052059067296,
+    954.750276855111,
+    962.245870878185
+   ],
+   "rows": [
+    {
+     "who": "NVIDIA",
+     "vals": [
+      441.543746875,
+      755.207702417742,
+      807.934861111111,
+      812.466035226827
+     ],
+     "ref": "20261116_Siliconomics_v0.20.xlsx Recon!D42:G42"
+    },
+    {
+     "who": "AMD",
+     "vals": [
+      22.5,
+      42.31704,
+      48,
+      48.9691908362081
+     ],
+     "ref": "20261116_Siliconomics_v0.20.xlsx Recon!D43:G43"
+    },
+    {
+     "who": "Broadcom（ASIC）",
+     "vals": [
+      36.1077528,
+      70.7164463372,
+      67.6090296,
+      68.9741556819426
+     ],
+     "ref": "20261116_Siliconomics_v0.20.xlsx Recon!D44:G44"
+    },
+    {
+     "who": "Marvell（ASIC）",
+     "vals": [
+      1.83722,
+      4.3611197501424,
+      10.24931504,
+      10.4562638361287
+     ],
+     "ref": "20261116_Siliconomics_v0.20.xlsx Recon!D45:G45"
+    },
+    {
+     "who": "聯發科（ASIC）",
+     "vals": [
+      1.8637696,
+      9.2647522779,
+      11.497135104,
+      11.7292792286967
+     ],
+     "ref": "20261116_Siliconomics_v0.20.xlsx Recon!D46:G46"
+    },
+    {
+     "who": "世芯（ASIC）",
+     "vals": [
+      4.41456,
+      10.184998284312,
+      9.459936,
+      9.65094606838158
+     ],
+     "ref": "20261116_Siliconomics_v0.20.xlsx Recon!D47:G47"
+    },
+    {
+     "who": "創意（無層級份額）",
+     "vals": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "ref": "20261116_Siliconomics_v0.20.xlsx Recon!D48:G48"
+    },
+    {
+     "who": "其他（未建模）",
+     "vals": [
+      25.9766976,
+      20.1988953504456,
+      19.584584256,
+      19.9800259141639
+     ],
+     "residual": true,
+     "ref": "20261116_Siliconomics_v0.20.xlsx Recon!D50:G50",
+     "note": "＝殘差①（非建模夥伴份額）＋殘差②（夥伴未收；可為負）"
+    }
+   ],
+   "ratio_main": [
+    0.78603617978316,
+    "—",
+    "—",
+    "—"
+   ],
+   "ratio_second": [
+    0.863568829581352,
+    "—",
+    "—",
+    "—"
+   ],
+   "status_by_year": [
+    "時差邊界",
+    "無實績（遠年不做 C0）",
+    "無實績（遠年不做 C0）",
+    "無實績（遠年不做 C0）"
+   ],
+   "status": "時差邊界",
+   "note": "已建模個股列為層級值（份額 × 市場）；比較基準（公司實績）見 Siliconomics Recon 頁 D1 實績列與 builder/seed/recon_d_gpu_asic_v*.json"
+  },
+  "cowos": {
+   "kind": "market",
+   "name": "CoWoS（台積電；Amkor、日月光委外）",
+   "status": "未建"
+  },
+  "wfe": {
+   "kind": "market",
+   "name": "晶圓前段設備（應用材料、Lam、KLA、ASML；TEL 未建模）",
+   "status": "未建"
+  },
+  "pcb_ccl": {
+   "kind": "market",
+   "name": "AI 高速 PCB／CCL（勝宏、金像電、台光電）",
+   "status": "未建"
+  },
+  "optics": {
+   "kind": "market",
+   "name": "光學模組總量（中際旭創、新易盛、Lumentum、Coherent）",
+   "status": "未建"
+  },
+  "asic_ds": {
+   "kind": "structural",
+   "name": "ASIC 設計服務（TPU、Trainium、其他 ASIC）",
+   "status": "結構一致",
+   "check": "Checks K6-tpu／oth／trn"
+  },
+  "cpo": {
+   "kind": "structural",
+   "name": "CPO 光學",
+   "status": "結構一致",
+   "check": "Checks K6-cpo"
+  },
+  "abf": {
+   "kind": "structural",
+   "name": "加速器 ABF 載板",
+   "status": "結構一致",
+   "check": "Checks K6-abfnv／abfot"
+  },
+  "power": {
+   "kind": "structural",
+   "name": "AI 電源",
+   "status": "結構一致",
+   "check": "Checks K6-pwr"
+  },
+  "liquid": {
+   "kind": "structural",
+   "name": "AI 液冷",
+   "status": "結構一致",
+   "check": "Checks K6-lc"
+  },
+  "asm": {
+   "kind": "structural",
+   "name": "AI 伺服器組裝",
+   "status": "結構一致",
+   "check": "Checks K6-asm"
+  },
+  "hbm": {
+   "kind": "structural",
+   "name": "HBM",
+   "status": "結構一致",
+   "check": "Checks K6-hbm"
+  }
+ }
+}

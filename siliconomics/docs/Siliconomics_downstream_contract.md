@@ -51,3 +51,13 @@
 - 新建檔程式一律經上述讀取點取值，不得直接讀 In 頁或快照 rows 的 um28_B／um29_B 原值。
 - 對帳中年份（`SIF_RecoFlag_<年>`＝1）的硬體個股，依規則 C4 並列兩讀數目標價（`SIF_DeployGW_AltRatio_<年>`；樣板 NVIDIA v0.3.8）。
 
+
+## v0.20：C0 實績對帳、有條件一致、Recon D1（三層基準協調規則 v1.4.3）
+
+| 版本 | 日期 | 名稱變動 | 下游影響 |
+|---|---|---|---|
+| v0.20 | 2026-11-16 | 新增 `SIF_RecoC0Fail_<年>`（C0 公司實績對帳超出 ±15%；1＝是）、`SIF_GpuAsicMkt_Base`、`SIF_GpuAsicResid_Base`（Recon D1 GPU／ASIC 晶片金額市場值與殘差，欄 E–H＝2026–2029）、`SIF_core_trn`（Trainium 核心價，Derived）；`SIF_RecoLabel_2026` 由「一致」改「有條件一致」；換算值 `SIF_crd_x2_*`／`SIF_DeployGW_Demand_*`／`SIF_DeployGW_Alt*` 改讀 Wattonomics v0.3.6；`SIF_crd_ew_*` 低／高改讀 `WIF_Evidence_Lo_／Hi_`；`SIF_TK_*` 鏡像改 Tokenomics v22.0（值不變） | 基準值只有 2029 連續法機械性變動（`SIF_DeployGW_Base` 2029 42.70 → 42.68、`SIF_UnitsCoef_Base` 2029 0.7101 → 0.7097）；`SIF_WTAnchor_Base`、`SIF_GWvsWT_Base` 隨 Wattonomics v0.3.6 改值（個股「Wattonomics 錨定」敏感度案例） |
+
+- **有條件一致（規則 v1.4.3 C0 第 8 點）：** 甲年的 C0 公司實績對帳點（Recon F 節 NVIDIA 資料中心營收純實績、D 節市場層兩讀數）同號超出 ±15% 時，`SIF_RecoLabel_<年>`＝「有條件一致」、`SIF_RecoC0Fail_<年>`＝1。個股**不**因此並列兩讀數目標價（C0 第 8 點例外於 C4；`SIF_RecoFlag_<年>` 仍為 0），只在 Coord 頁與橫幅標「有條件一致」並連結對帳單（`data/baseline_status.json` 的 `c0_recon_doc`）。
+- **狀態的唯一權威（C3）：** 逐年狀態只讀 `data/baseline_status.json` 或 `SIF_RecoStatus／Label／Flag／C0Fail_<年>`；Recon B 節不再自判（v0.20 刪除「兩邊都不錨定」）。
+- **Recon 快照（`data/recon_snapshot_v*.json`）結構：** 每個市場有 `kind`（market／structural／layer／actual）、`status`、`status_by_year`；market 類有 `market`、`modeled_sum` 與「其他（未建模）」殘差列（`residual: true`），`tools/baseline_coordination/check.py` 第 [9] 項據此檢查 C0 恆等式。

@@ -471,7 +471,7 @@ def coord_c0(wb, SIL, CR, HR, PB, EQ_F):
                     T("）取決於「另一側讀數不重算校準係數」這個口徑。若照 Sens 錨定案例的做法重算校準（kH、kL 以縮放後的 FY2025 新機需求重新校準），另一側讀數加權目標價為 "),
                     TX(f"D{r}", "#,##0"), T(" 日圓（"), REC5(f"(D{r}/px-1)"), T("），與現行基準讀數評等"), f'IF({REC5(f"(D{r}/px-1)")}=B{CR["rec"]},"相同","不同")',
                     T("。本模型採不重算口徑（校準分母含 CY2026→CY2027 增量，縮放會使係數虛增、方向反轉），重算值只列揭露、不進兩讀數表。")))
-    CW.cell(r, 8, "D 欄：tools/coord/alt_run.py 另一側建置（Siliconomics v0.19 對帳中比值）改為重算校準的一次性試算（2026-11-15；Derived），加權目標價 31,830.47 日圓；本模型正式另一側讀數不採此口徑")
+    CW.cell(r, 8, "D 欄：tools/coord/alt_run.py 另一側建置（Siliconomics v0.20 對帳中比值）改為重算校準的一次性試算（2026-11-15；Derived），加權目標價 31,830.47 日圓；本模型正式另一側讀數不採此口徑")
     ROW["s3c"] = r; r += 1
     CW.column_dimensions["F"].width = 18; CW.column_dimensions["G"].width = 26; CW.column_dimensions["H"].width = 110; CW.column_dimensions["I"].width = 40
     # ---- 4. C0 ----
@@ -622,7 +622,7 @@ def apply(wb, here, SIL, CR, PB, EQ_F):
     rr = SO.max_row + 1
     for i, (t, u) in enumerate((("C0 實績（v0.3.5）：FY2026 Q1–Q2 營收、營業利益、淨利取自 2027年3月期 第2四半期決算短信（2026-10-22）與第1四半期決算短信（2026-07-23）；本頁第 2、4 列", "https://www.disco.co.jp/eg/ir/library/doc/fr/fr20261022.pdf"),
                                 ("HistIS（v0.3.5）：FY2023–FY2025 稅前淨利、所得稅取自 2025年3月期、2026年3月期決算短信（In 頁 etr_25 說明）", "https://www.disco.co.jp/eg/ir/library/doc/fr/fr20250417.pdf"),
-                                ("層級：Siliconomics v0.19 SIF_SEMI_Pkg（SEMI 組裝與封裝設備）、SIF_HBMHybrid_Base、SIF_HBM_ShipEB_Base", "siliconomics/data/siliconomics_snapshot_v0.19.json"))):
+                                ("層級：Siliconomics v0.20 SIF_SEMI_Pkg（SEMI 組裝與封裝設備）、SIF_HBMHybrid_Base、SIF_HBM_ShipEB_Base", "siliconomics/data/siliconomics_snapshot_v0.19.json"))):
         SO.cell(rr + i, 1, t); SO.cell(rr + i, 2, u)
     wb._v035 = dict(HR=HR, PL=PLA, RV=RVA, VG=VG, SNS=SNS, RM=RMA, CO=CO)
     return f"v035_post：HistIS 頁；PL 標準損益表 {PLA['start']} 起；RevDCF 頁；Val 0.7 {VG} 起；Sens 加權目標價相對基準 {SNS['t0']} 起；Coord 讀取層級與 C0 {CO['rd0']}–{CO['last']}；README v1.3 白話列 {len(RMA)} 列"

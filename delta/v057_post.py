@@ -1,7 +1,7 @@
 # 台達電 v0.5.7（2026-11-14）後處理：C0 實績對帳（規則 v1.4.2 C0 第 2 點；工作單 docs/workorders/20261114_C0實績對帳補列_七家.md）
 # 只動 Coord 頁與 README 版本文字，不動任何計算格：
 #   1. 既有「本模型 vs 層級值」四項（部署 GW、AI 電源市場、有效份額、每 kW 內容）同源，差距恆為 0：判定欄改標「讀取層級（同源，不判定）」，不計入對帳中；
-#   2. Coord 頁最下方新增第 4 節「C0（實績）：公司實績 vs 層級隱含值」：月營收（2026-01～10）、3Q26 法說揭露的占比與分部營收，對 Siliconomics v0.19 AI 電源市場 × 台達電份額的隱含營收；
+#   2. Coord 頁最下方新增第 4 節「C0（實績）：公司實績 vs 層級隱含值」：月營收（2026-01～10）、3Q26 法說揭露的占比與分部營收，對 Siliconomics v0.20 AI 電源市場 × 台達電份額的隱含營收；
 #   3. README A1 與 v1.3 白話列的版本文字升 v0.5.7。
 # build_delta.py 在 v056_post.apply 之後、存檔前呼叫 apply(wb, P56)。alt_run.py 建置（無 Coord 頁）不呼叫。
 from openpyxl.styles import Font, PatternFill
@@ -194,7 +194,7 @@ def version_text(wb, RM):
     old = "個股模型 v0.5.6（"
     assert old in a1, a1[:120]
     a1 = a1.replace(old, f"個股模型 v{VER}（", 1)
-    RD["A1"].value = a1 + (f"；v{VER}（{BUILT}）：C0 改以公司實績對帳（規則 v1.4.2；Coord 頁第 4 節 C0（實績））：月營收 2026-01～10 與 3Q26 法說占比、部門營收對 Siliconomics v0.19 AI 電源市場 × 台達電份額；"
+    RD["A1"].value = a1 + (f"；v{VER}（{BUILT}）：C0 改以公司實績對帳（規則 v1.4.2；Coord 頁第 4 節 C0（實績））：月營收 2026-01～10 與 3Q26 法說占比、部門營收對 Siliconomics v0.20 AI 電源市場 × 台達電份額；"
                            "既有同源四項改標「讀取層級（同源，不判定）」；只動 Coord 頁與版本文字，數值與目標價不變")
     rv = RD.cell(RM["ver"], 1)
     t = rv.value

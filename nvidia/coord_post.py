@@ -1,5 +1,5 @@
 # NVIDIA 三層基準協調試作（2026-11-14）：對帳中標示與兩讀數目標價（三層基準協調規則 v1.1 C4；個股 HTML 版面規格 v1.3 I 節）。
-# 2026-11-14 13:06 Andy 確認試作後轉正式（Siliconomics v0.19 PR #487 合併後讀正式快照）。
+# 2026-11-14 13:06 Andy 確認試作後轉正式（Siliconomics v0.20 PR #487 合併後讀正式快照）。
 #   write_inputs(wb, SIL)：In 頁末新增「Y. 三層協調」一節——現行基準 GW（Siliconomics SIF_DeployGW_Base）、另一側讀數 GW、對帳中旗標、
 #                          兩者比值 co_r_<yy>（具名範圍）。正式建置與另一側讀數建置都呼叫（另一側讀數建置的顆數乘數讀 co_r_27..29）。
 #   write_sheet(wb, here)：新增 Coord 頁——兩讀數 GW、兩讀數目標價與評等、橫幅揭露文字、損益表年度標示（HTML 用）、快照一致性核對。
@@ -225,7 +225,7 @@ def relabel(wb):
     IN = wb["In"]
     r = next(r for r in range(4, IN.max_row + 1) if IN.cell(r, 1).value == "um29_C")
     old = IN.cell(r, 9).value
-    assert ("×0.706（基準係數 0.85）" in str(old)) or ("基準係數 0.71" in str(old)), old   # v0.18 口徑或 v0.19 reader 口徑
+    assert ("×0.706（基準係數 0.85）" in str(old)) or ("基準係數 0.7" in str(old)), old   # v0.18 口徑或 v0.19 起 reader 口徑（Siliconomics v0.20：0.7097）
     IN.cell(r, 9).value = ('="個股自訂情境 C：＝Siliconomics 基準 ×"&TEXT(um29_C/co_ucoef_29,"0.000")&"（基準係數 "&TEXT(co_ucoef_29,"0.000")&"，SIF_UnitsCoef_Base，2029 連續法；v0.3.8）；2029 產業 GW 相對另一側讀數（Wattonomics 換算值）"'
                            '&TEXT(co_gws_29*um29_C/co_gwa_29-1,"+0%;-0%")&"（現行基準 "&TEXT(co_gwb_29/co_gwa_29-1,"+0%;-0%")&"）。原說明（Siliconomics reader 產生）：' + str(old).replace('"', '""') + '"')
     n += 1
@@ -353,7 +353,7 @@ def write_c0(ws, wb, r, L):
     F1 逐項列出本模型讀的 Siliconomics 名稱、值、版本與 Tokenomics 鏡像值；F2 本模型自己的量 vs Siliconomics 對應值（差距超過 ±15% 標「對帳中」）。"""
     import reader as SIL   # Siliconomics 快照（與 build_nvidia 同一份）
     N, V = SIL.NAMES, SIL.VERSION
-    TKV = "Tokenomics v21.10"   # Siliconomics v0.19 鏡像的 Tokenomics 版本（siliconomics/CHANGELOG v0.19 標題）
+    TKV = "Tokenomics v22.0"   # Siliconomics v0.20 鏡像的 Tokenomics 版本（siliconomics/CHANGELOG v0.20 標題；本庫讀的值與 v21.10 逐值相同）
     rp = os.path.join(os.path.dirname(os.path.abspath(SIL.__file__)), "data", f"recon_snapshot_{V}.json")
     NVD = json.load(open(rp, encoding="utf-8"))["markets"]["nv_dc"]
     NVD_I = dict(zip(NVD["years"], NVD["implied"])); NVD_C = dict(zip(NVD["years"], NVD["company"]))
@@ -385,7 +385,7 @@ def write_c0(ws, wb, r, L):
     for y in YEARS:
         f1("SIF_DeployGW_Supply_<yyyy>", y, N[f"SIF_DeployGW_Supply_{y}"], f"=co_gws_{yy(y)}", "GW", SL, "In 頁 Z 節 co_gws_<yy>；供給側讀數（情境 A）")
     for y in YEARS:
-        f1("SIF_DeployGW_Alt_<yyyy>", y, N[f"SIF_DeployGW_Alt_{y}"], f"=co_gwa_{yy(y)}", "GW", SL + "（Wattonomics v0.3.2 換算值）", "In 頁 Z 節 co_gwa_<yy>；另一側讀數，只進兩讀數目標價")
+        f1("SIF_DeployGW_Alt_<yyyy>", y, N[f"SIF_DeployGW_Alt_{y}"], f"=co_gwa_{yy(y)}", "GW", SL + "（Wattonomics v0.3.6 換算值）", "In 頁 Z 節 co_gwa_<yy>；另一側讀數，只進兩讀數目標價")
     for y in YEARS:
         f1("SIF_DeployGW_AltRatio_<yyyy>", y, N[f"SIF_DeployGW_AltRatio_{y}"], f"=co_r_{yy(y)}", "x", SL, "In 頁 Z 節 co_r_<yy>；另一側 ÷ 現行基準")
     for y in YEARS:
@@ -531,7 +531,7 @@ def write_c0(ws, wb, r, L):
     ws.cell(r, 1, "口徑換算（層級隱含 vs 公司資料中心營收）"); RF3K = r
     ws.cell(r, 2, "層級 n2（每 IT GW NVIDIA 營收）基準只含機架內 NVIDIA 硬體與殘差，不含 scale-out 網通、LPDDR、軟體與服務（晶片內容橋接表 v0.2.3 第 46–49 列）；層級含中國 H200 約 US$14.4B（約 3.2%），公司實績與指引不含中國運算；n1 為出貨年，與認列可能差約一季（Assumed）。"
                  "補上網通與軟體會使層級更高、差距更大，所以口徑差不能解釋缺口；判定真正敏感的是 n2 取低值或高值（下表）。"); r += 1
-    ws.cell(r, 1, "n2 敏感度（只換每 IT GW 內容；數值由 Siliconomics v0.19 快照 SIF_NVContentGW_GB300、SIF_NVContentGW_VR200_26 的低／基準／高值，依 SIF_vr26 2026 Rubin 占比混合；n1 與實績不變）").font = BOLD; RF3S1 = r; r += 1
+    ws.cell(r, 1, "n2 敏感度（只換每 IT GW 內容；數值由 Siliconomics v0.20 快照 SIF_NVContentGW_GB300、SIF_NVContentGW_VR200_26 的低／基準／高值，依 SIF_vr26 2026 Rubin 占比混合；n1 與實績不變）").font = BOLD; RF3S1 = r; r += 1
     for j, h in enumerate(["n2 取值", "每 IT GW 內容（混合，US$B／GW）", "層級隱含 CY2026（US$B）", "主讀數差距", "第二讀數差距", "判定"], 1): ws.cell(r, j, h).font = BOLD
     r += 1
     mx = N["SIF_vr26"]; mx = mx[1] if isinstance(mx, list) else mx

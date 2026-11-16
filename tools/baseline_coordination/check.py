@@ -178,9 +178,11 @@ def check_version_drift(st):
 
 
 def check_recon_residual():
-    """9. C0 恆等式：讀 CURRENT_RECON 指向的 recon 快照（v1.4.3）。
-    市場有 status 欄時才判定：「未建」列提醒；其他狀態（已建）須有殘差／其他列，否則不符。
-    市場無 status 欄＝結構無法判定殘差，只列提醒（現行 recon.py 快照皆屬此類）。"""
+    """9. C0 恆等式：讀 CURRENT_RECON 指向的 recon 快照（v1.4.3；Siliconomics v0.20 起快照有 kind／status／market／殘差列）。
+    kind＝market：status「未建」列提醒；其他狀態（已建）須有殘差列（who 含「殘差」「其他」「未建模」或 residual: true），
+    且有 market 值時逐年檢查 Σ rows（含殘差）＝market（相對誤差 1e-6），否則不符。
+    kind＝structural（結構一致，由 Siliconomics Checks K6 約束）、layer（層間對帳點，R4）、actual（公司實績對帳點）不是個股加總，不檢查恆等式，只計數提醒。
+    無 kind 欄的舊快照：市場有 status 欄時同上判定；無 status 而有 rows＝結構無法判定，只列提醒。"""
     errs = []
     ptr = ROOT / "siliconomics/data/CURRENT_RECON"
     if not ptr.exists():
@@ -195,18 +197,39 @@ def check_recon_residual():
     unbuilt = [k for k, m in mk.items() if isinstance(m, dict) and m.get("status") == "未建"]
     if unbuilt:
         note(f"提醒 [9] {fn}：狀態「未建」的市場 {len(unbuilt)} 個：{'、'.join(unbuilt)}")
-    undecidable = []
+    other = [k for k, m in mk.items() if isinstance(m, dict) and m.get("kind") in ("structural", "layer", "actual")]
+    if other:
+        note(f"提醒 [9] {fn}：非個股加總的對帳點 {len(other)} 個不檢查恆等式（結構一致／層間／公司實績）：{'、'.join(other)}")
+    undecidable, built = [], []
     for k, m in mk.items():
-        if not isinstance(m, dict) or m.get("status") == "未建":
+        if not isinstance(m, dict) or m.get("status") == "未建" or k in other:
             continue
         rows = m.get("rows")
         if "status" not in m:
             if rows is not None:
                 undecidable.append(k)
             continue
-        whos = [str(r.get("who", "")) for r in (rows or [])]
-        if not any(("殘差" in w) or ("其他" in w) or ("未建模" in w) for w in whos):
+        built.append(k)
+        rws = rows or []
+        res = [r for r in rws if r.get("residual") or any(t in str(r.get("who", "")) for t in ("殘差", "其他", "未建模"))]
+        if not res:
             errs.append(f"[9] {fn} 市場 {k} 已建但缺殘差／其他列")
+            continue
+        if any(v is None for r in res for v in (r.get("vals") or [None])):
+            errs.append(f"[9] {fn} 市場 {k} 殘差列有空值（殘差不得為空）")
+        mv = m.get("market")
+        if mv is None:
+            note(f"提醒 [9] {fn} 市場 {k} 無 market 值，恆等式只檢查殘差列存在")
+            continue
+        for i, yv in enumerate(mv):
+            if not isinstance(yv, (int, float)):
+                continue
+            tot = sum(r["vals"][i] for r in rws if isinstance(r.get("vals", [None] * (i + 1))[i], (int, float)))
+            if abs(tot - yv) > 1e-6 * max(1.0, abs(yv)):
+                yr = (m.get("years") or list(range(len(mv))))[i]
+                errs.append(f"[9] {fn} 市場 {k} {yr}：已建模加總＋殘差 {tot:.6g} ≠ 市場值 {yv:.6g}")
+    if built:
+        note(f"提醒 [9] {fn}：已判定恆等式的市場 {len(built)} 個：{'、'.join(built)}（狀態：{'、'.join(str(mk[k].get('status')) for k in built)}）")
     if undecidable:
         note(f"提醒 [9] {fn}：市場 {'、'.join(undecidable)} 只有個股列、無 status 與殘差欄位，結構無法判定 C0 恆等式（未建市場清單亦未記錄於快照）")
     return errs

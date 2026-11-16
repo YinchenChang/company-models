@@ -2,7 +2,9 @@
 # 用法：python3 siliconomics/tools/export_baseline_status.py [<重算後 Siliconomics xlsx>] [<輸出 json>]
 #   預設讀 model/CURRENT、寫 data/baseline_status.json。只讀 Interface 的 SIF_ 名稱（Coord 頁推導），本程式不做任何判定或計算。
 #   對帳單與期限（recon_doc、deadline）、硬體個股清單與依賴年份讀 builder/seed/coord_meta_v*.json（判斷類，未定者留空）。
-import glob, json, os, sys
+#   v0.20（規則 v1.4.3）：頂層 wattonomics_version（取自 wattonomics/model/CURRENT 檔名）；逐年 c0_fail（讀 SIF_RecoC0Fail_<年>）與
+#   c0_recon_doc、c0_deadline（meta c0）；頂層 c0_actuals.<年>（協調年份以外的已公布年份；值讀 Wattonomics 快照 WIF_Recon_NV_*，對帳單與期限讀 meta）。
+import glob, json, os, re, sys
 import openpyxl
 
 SIL = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -50,22 +52,43 @@ def main():
             "reconciling": bool(v(f"SIF_RecoFlag_{y}")),
             "recon_doc": meta.get("recon_doc", {}).get(str(y)),
             "deadline": meta.get("deadline", {}).get(str(y)),
+            "c0_fail": bool(v(f"SIF_RecoC0Fail_{y}")) if f"SIF_RecoC0Fail_{y}" in wb.defined_names else False,
             "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
         }
         # 基準部署 GW（Interface 向量 SIF_DeployGW_Base 欄 E–H＝2026–2029）
         sh, ref = list(wb.defined_names["SIF_DeployGW_Base"].destinations)[0]
         row = [c.value for c in wb[sh][ref.replace("$", "")][0]]
         rec["sil_base"] = row[YRS.index(y)]
+        c0 = meta.get("c0", {}).get(str(y))
+        if rec["c0_fail"]:   # 規則 v1.4.3 C0 第 8 點：實績不過須登錄對帳單與期限（甲年標示由 Coord 頁改「有條件一致」）
+            rec["c0_recon_doc"] = (c0 or {}).get("recon_doc")
+            rec["c0_deadline"] = (c0 or {}).get("deadline")
+            rec["c0_point"] = (c0 or {}).get("point")
         years[str(y)] = rec
         if not rec["use_converted"] and y >= 2028:
             coefs.append({"name": f"um{yy}_B（S33；經 crd_k_{yy} 帶入 {y} 基準）", "year": y, "tag": "Assumed",
                           "note": "覆蓋未補齊、該年維持現行（對帳中）；改用換算值後不再在基準鏈上"})
+    root = os.path.dirname(SIL)
+    wt_file = open(os.path.join(root, "wattonomics", "model", "CURRENT")).read().strip()
+    wt_ver = re.search(r"v\d+(?:\.\d+)+", wt_file).group(0)
+    wsnap = json.load(open(os.path.join(root, "wattonomics", "data", open(os.path.join(root, "wattonomics", "data", "CURRENT_SNAPSHOT")).read().strip()), encoding="utf-8"))["names"]
+    c0a = {}
+    for yr, m in (meta.get("c0_actuals") or {}).items():
+        ratio = wsnap.get(f"WIF_Recon_NV_Ratio_{yr}")
+        rec = {"layer": m.get("layer"), "point": m.get("point"),
+               "implied": wsnap.get(f"WIF_Recon_NV_ImpliedRev_{yr}"), "actual": wsnap.get(f"WIF_Recon_NV_ActualRev_{yr}"), "ratio": ratio,
+               "c0_fail": ratio is not None and abs(ratio - 1) > v("SIF_rc_tol")}
+        if rec["c0_fail"]:
+            rec["c0_recon_doc"] = m.get("recon_doc"); rec["c0_deadline"] = m.get("deadline")
+        c0a[yr] = rec
     st = {
-        "_note": "由 siliconomics/tools/export_baseline_status.py 自 " + os.path.basename(x) + " 匯出；換算值與 Wattonomics 證據比例取自 Wattonomics v0.3.2（main，PR #480）；continuity＝規則 v1.4 連續法（基準＝前一年基準 × 換算值成長率，非換算值本身）",
+        "_note": "由 siliconomics/tools/export_baseline_status.py 自 " + os.path.basename(x) + " 匯出；換算值與 Wattonomics 證據比例（含 v0.3.6 起的低／高區間）取自 Wattonomics " + wt_ver + "（" + wt_file + "）；continuity＝規則 v1.4 連續法（基準＝前一年基準 × 換算值成長率，非換算值本身）",
         "source": os.path.basename(x),
+        "wattonomics_version": wt_ver,
         "threshold": v("SIF_crd_thr"),
         "wattonomics_coverage_complete": bool(v("SIF_crd_cov_done")),
         "years": years,
+        "c0_actuals": c0a,
         "level_coefficients": coefs,
         "hardware_companies": meta.get("hardware_companies", []),
         "depends_on_years": meta.get("depends_on_years", {}),
