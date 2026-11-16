@@ -34,6 +34,18 @@ if os.path.exists(_sf):
     with open(_sf, encoding="utf-8") as _f:
         STATUS = {r["ticker"]: r["status"] for r in _csv.DictReader(_f)}
 
+# v0.6.52：跨圖標註（data/cross_map.csv）——重複個股主圖＝持有個股模型的專案所屬地圖；
+# 本地圖為主圖、實體 AI 地圖照列者加註「另見實體 AI 地圖（跨圖）」。只作標籤，不影響估值與評等。
+CROSS = {}
+_cf = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "cross_map.csv")
+if os.path.exists(_cf):
+    with open(_cf, encoding="utf-8") as _f:
+        CROSS = {r["ticker"]: {"map": r["另見地圖"], "row": r["實體AI列代號"], "seg": r["實體AI次產業"],
+                               "rule": r["地圖歸屬原文"], "note": r["說明"], "src": r["來源"],
+                               "url": "", "status": "建置中"}  # 實體 AI 地圖頁（physical_ai/）尚未上線：不做連結
+                 for r in csv.DictReader(_f)}
+
+
 def pick_html(folder):
     """模型成品 HTML：有新版面（檔名含「個股模型」，2026-11-11 起收支型個股）就用新版面，否則用唯一的那份。"""
     fs = sorted(glob.glob(os.path.join(ROOT, folder, "dist", "*.html")))
@@ -168,6 +180,7 @@ def main():
                                     for k in ("openai", "anthropic") if glob.glob(os.path.join(ROOT, k, "dist", "*.html"))}},
         "pergw": pergw, "segments": segments, "position": position, "valuation": valuation,
         "nodes": nodes, "params": params,
+        "cross_map": CROSS,
         "profiles": load_all(os.path.join(HERE, "profiles")),
         "models": model_files(valuation),
     }
@@ -177,6 +190,9 @@ def main():
     nop = [v["tk"] for v in valuation if v["tk"] not in data["profiles"]]
     if nop:
         print("警告：尚無公司檔案", nop)
+    badx = sorted(set(CROSS) - {v["tk"] for v in valuation})
+    if badx:
+        raise SystemExit(f"data/cross_map.csv 有地圖上不存在的代號：{badx}")
     tpl = open(os.path.join(HERE, "template.html"), encoding="utf-8").read()
     # 造訪計數器網址（Google Apps Script 網頁應用程式；counter/endpoint.txt，空白＝不計數）
     ep = os.path.join(HERE, "counter", "endpoint.txt")
