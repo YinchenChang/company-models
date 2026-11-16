@@ -9,7 +9,7 @@ import c13
 from c13 import T, F, lab, blockB, Sheet, dn, BOLD, BLUE, HDR
 
 VER, BUILT = "v0.4.5", "2026-11-15"   # 各 v1.3 區塊實際起始版（「v0.4.5 起」標籤用）
-NEWVER = "v0.4.6"   # 現行版號（README A1 標題段；apply 末段改）
+NEWVER = "v0.4.7"   # 現行版號（README A1 標題段；apply 末段改）
 TN1008 = "https://finance.technews.tw/2026/10/08/kyec-2449-202609-financial-report/"
 MDJ1105 = "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=2bcf599f-fe54-431a-8b6a-467b995f9ff7"
 HSM = "https://histock.tw/stock/financial.aspx?no=2449"
@@ -18,6 +18,10 @@ CNA0306 = "https://www.cna.com.tw/news/afe/202603060261.aspx"
 
 V46 = ("v0.4.6（2026-11-15）：3Q26 損益出處改公開資訊觀測站 t164sb04 單季（數值同 v0.3 已滾入值，只差捨入）；DCF 資產負債表日 2026-06-30 → 09-30（t164sb03：現金、長期投資、長期借款、租賃、非控制權益、股數），"
        "2026-08 已發放現金股利不再扣，stub 期改 4Q26 單季（4Q 資本支出＝下半年 ÷ 2，Assumed）；4Q26 假設不改。")
+
+V47 = ("v0.4.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）：現價 228.5（11-05）→ 213.5（11-13）；同業前瞻 P/E 中位數 14.71 → 16.42；"
+       "加權目標價 103.72 → 111.82（上檔空間 −54.6% → −47.6%，評等強力放空 → 放空）；DCF 目標價 69.50 → 69.68（只因現價改變 D/E、β 與 WACC 權重）、Comparable（相對倍數調整後）137.94 → 153.96；"
+       "另一側讀數（Coord）99.40 → 106.73（強力放空）。共識 EPS、rf、預測用匯率與模型假設不變；日月光 ADS 換算的 USD/TWD 33.034 沿用（收盤檔無匯率序列）；同業全數有 11-13 收盤，無未換價同業。")
 
 C = dict(
     name="京元電", ver=VER, built=BUILT,
@@ -28,7 +32,7 @@ C = dict(
     same_names="AI 加速器顆數（八平台合計，情境 B）",
     a1_tail=("v0.4.5（2026-11-15）：個股 HTML 版面規格 v1.3（標準損益表、反向 DCF 頁、四個目標價、加權目標價敏感度主圖）＋三層協調（Coord 頁兩讀數目標價、讀取層級、C0（實績））；"
              "A1 標題版號由舊的 v0.4 更正；既有數值不變；" + V46),
-    ver_line=(V46 + "v0.4.5（2026-11-15）：改為個股 HTML 版面規格 v1.3（樣板 NVIDIA、Advantest、泰瑞達）並補三層協調：Coord 頁並列兩讀數目標價（tools/coord）、讀取層級（同源，不判定）、"
+    ver_line=(V47 + V46 + "v0.4.5（2026-11-15）：改為個股 HTML 版面規格 v1.3（樣板 NVIDIA、Advantest、泰瑞達）並補三層協調：Coord 頁並列兩讀數目標價（tools/coord）、讀取層級（同源，不判定）、"
               "C0（實績）（月營收 2026-01～09 與 3Q26 財報；結論：無可比實績，Siliconomics 沒有測試代工市場與京元電份額）；新增 RevDCF、Hist 頁、PL 標準損益表、Val 0.7、Sens 末表；"
               "既有數值、目標價與評等不變"),
 )
