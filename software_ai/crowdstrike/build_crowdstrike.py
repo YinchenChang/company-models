@@ -24,9 +24,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
 DIST = os.path.join(HERE, "dist")
 SCR = "/home/claude/scratch/crowdstrike"
-VERSION = "v0.1"
+VERSION = "v0.1.1"
 BUILD_DATE = "2026-11-16"
-FILE_DATE = "20261116"
+FILE_DATE = "20261117"
 YEARS = list(range(2024, 2033))                 # FY2024A..FY2032E
 YC = {y: openpyxl.utils.get_column_letter(3 + i) for i, y in enumerate(YEARS)}   # C..K
 FC = [2027, 2028, 2029, 2030, 2031, 2032]
@@ -930,7 +930,7 @@ def build(ov=None, sens=None, out=None):
     inhash = hashlib.sha256(json.dumps([[str(x) for x in it] for it in INP] + [sorted((k, str(v)) for k, v in ov.items())] + [VERSION], ensure_ascii=False).encode()).hexdigest()[:10]
     build_id = f"crowdstrike-{VERSION}-{inhash}"
     f_(RD, "A1", tf(f"CrowdStrike（CRWD）個股模型 {VERSION}｜build_id {build_id}｜資料截止日 ", ("data_date", "yyyy-mm-dd"), f"｜成品日 {BUILD_DATE}｜股價基準日 ", ("px_date", "yyyy-mm-dd"), "｜評價日 ", ("val_date", "yyyy-mm-dd"), "｜本版未做先驗"))
-    f_(RD, "A2", f"{VERSION} 要點：首版。依 software_ai 工作單 G 節建立：命題模組＝原型 P（按防護範圍計價）單位經濟，三情境（AI 代理防護放量／基準／價格侵蝕）；官方分部為單一分部，營收線＝訂閱、專業服務；FCFF DCF 到 FY2032＋同業 EV／營收法各半；推論成本只讀 Tokenomics v22.0 快照。本版未做先驗（Andy 2026-11-16 指示先跳過）。")
+    f_(RD, "A2", f"{VERSION} 要點：依工作單 G3 修正 v0.1：基準不再全期持平（改為依 FY2023–FY2026 回歸的固定＋變動成本規模經濟，全期持平移到 Sens 下緣）、折舊攤銷由前一年資本支出推得、相對倍數係數改用最近 5 個會計年度末自算平均、新增合理性關卡診斷與事件尾端 Sens（DOJ／SEC、Delta 案）。其餘依 software_ai 工作單 G 節建立：命題模組＝原型 P（按防護範圍計價）單位經濟，三情境（AI 代理防護放量／基準／價格侵蝕）；官方分部為單一分部，營收線＝訂閱、專業服務；FCFF DCF 到 FY2032＋同業 EV／營收法各半；推論成本只讀 Tokenomics v22.0 快照。本版未做先驗（Andy 2026-11-16 指示先跳過）。")
     f_(RD, "A3", tf("命題：AI 進入資安後，CrowdStrike 的 ARR 由『受保護單位 × 每單位模組數 × 每模組年費』驅動；AI 代理（非人類身分）創造新的受保護單位與模組（增量），AI 平台業者與打包競爭可能侵蝕每模組年費（定價侵蝕），推論成本進入毛利。現價要成立，FY2028 起現金流須為本模型基準的 ", ("RevDCF!B13", "0.0"), " 倍。"))
     f_(RD, "A4", tf("核心問題：FY2032 的 AI 淨效果（AI 代理防護增量營收 + 定價侵蝕 − 增量推論成本）在情境 A／B／C 各為 US$M ", (f"Thesis!K{TB['A']['net']}", "#,##0"), "／", (f"Thesis!K{TB['B']['net']}", "#,##0"), "／", (f"Thesis!K{TB['C']['net']}", "#,##0"), "；FY2032 營收情境 B 為 US$M ", (f"PL!K{PB['B']['rev']}", "#,##0"), "。"))
     f_(RD, "A5", tf("投資建議：", ("Val!B14", "@"), "——在『AI 代理防護以情境權重放量、每模組價格依情境小幅下降、股票薪酬依規格費用化（不加回）』的基準假設下；加權目標價 US$", ("Val!B8", "0.00"), "，上檔空間 ", ("Val!B11", "+0.0%;-0.0%"), "（現價 US$", ("px", "0.00"), "，", ("px_date", "yyyy-mm-dd"), "）。主要失效條件見下方。"))
@@ -951,7 +951,7 @@ def build(ov=None, sens=None, out=None):
         for j, v in enumerate(row):
             f_(RD, f"{openpyxl.utils.get_column_letter(j + 1)}{12 + i}", v)
     f_(RD, "A19", "版本要點", bold=True)
-    f_(RD, "A20", "首版，無前版可比；數值皆為本版輸入的函數。")
+    f_(RD, "A20", "相對 v0.1：DCF 與 Comparable 目標價都上移（營業利益率不再凍結在虧損水準、相對倍數係數由 1.00 改為 5 年平均）；評等仍為強力放空，診斷見 README 頁合理性關卡一節；數值皆為本版輸入的函數。")
     f_(RD, "A21", "官方分部：單一應報導分部；營收線訂閱、專業服務；對帳核對列為 0（PL 頁各情境區塊、Hist 頁、Q 頁）。")
     f_(RD, "A22", "推論成本只讀 Tokenomics v22.0 快照（data/tk_snapshot_v22.0.json）；不自行估 token 價格。v0.2 改讀 software_ai/unit_economics。")
     f_(RD, "A23", "研究包：data/research_crowdstrike.md、facts_crowdstrike.csv、segments.json。")
@@ -1193,7 +1193,8 @@ def main():
     os.makedirs(DIST, exist_ok=True)
     for old in os.listdir(DIST):
         if old.endswith((".xlsx", ".html")):
-            os.remove(os.path.join(DIST, old))
+            os.makedirs(os.path.join(DIST, "_待刪除"), exist_ok=True)
+            shutil.move(os.path.join(DIST, old), os.path.join(DIST, "_待刪除", old))
     dst = os.path.join(DIST, os.path.basename(rf))
     shutil.copy(rf, dst)
     json.dump({"TB": TB, "PB": PB, "CB": CB, "reg": {k: (v if not isinstance(v, tuple) else [v[0], v[1]]) for k, v in Reg.rows.items()}}, open(os.path.join(SCR, "layout.json"), "w"))

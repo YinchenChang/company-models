@@ -156,11 +156,13 @@ for tup in FDROWS:
         wb.defined_names[nm] = DefinedName(nm, attr_text=f"In!${colx}${r}")
     r += 1
 SCK = {}
+for _s in "ABC": pass
 for pre, (label, unit, a, b, c_, tag, src, inc) in SC.items():
     for s, v in zip("ABC", (a, b, c_)):
         k = f"{pre}{s}" if pre == "tp_w" else f"{pre}_{s}"
         SCK.setdefault(pre, []).append(k)
         IR[k] = r
+        if pre == "tp_w": wb.defined_names[k] = DefinedName(k, attr_text=f"In!$E${r}")
         ws.cell(r, 1, k); ws.cell(r, 2, f"情境 {s}：{label}"); ws.cell(r, 3, unit)
         ws.cell(r, 5, v).font = BLUE
         ws.cell(r, 7, tag); ws.cell(r, 8, src); ws.cell(r, 9, inc)

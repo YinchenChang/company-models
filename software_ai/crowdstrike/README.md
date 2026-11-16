@@ -1,15 +1,21 @@
-# software_ai/crowdstrike/ — CrowdStrike（CRWD）個股模型 v0.1（原型 P：按防護範圍計價）
+# software_ai/crowdstrike/ — CrowdStrike（CRWD）個股模型 v0.1.1（原型 P：按防護範圍計價）
 
-**本版未做先驗**（Andy 2026-11-16 23:27 指示）。工作單：`software_ai/docs/workorders/20261116_第一批_研究包與單位經濟.md` F、G、G2 節。公開 repo：只含公司與市場事實，無任何個人情境。
+**本版未做先驗**（Andy 2026-11-16 23:27 指示）。工作單：`software_ai/docs/workorders/20261116_第一批_研究包與單位經濟.md` F、G、G2、G3 節。公開 repo：只含公司與市場事實，無任何個人情境。
 
 **建置：**
-1. `python3 software_ai/crowdstrike/build_crowdstrike.py`（全部活公式；含整本重算敏感度，約 2 分鐘；`--quick` 沿用 `data/sens_v01.json`；`--reverse` 重算 `data/reverse_v01.json` 整本重算反解）。成品 `dist/20261116_CrowdStrike個股模型_v0.1.xlsx`（LibreOffice 重算後存檔）。
+1. `python3 software_ai/crowdstrike/build_crowdstrike.py`（全部活公式；含整本重算敏感度，約 2 分鐘；`--quick` 沿用 `data/sens_v01.json`；`--reverse` 重算 `data/reverse_v01.json` 整本重算反解）。成品 `dist/20261117_CrowdStrike個股模型_v0.1.1.xlsx`（LibreOffice 重算後存檔）。
 2. `python3 software_ai/crowdstrike/gen_html_json.py <xlsx> <layout.json> software_ai/crowdstrike/html.json`（layout.json 由步驟 1 寫到暫存目錄）。
-3. `python3 tools/company_html/build_company_html.py software_ai/crowdstrike` → `dist/…_v0.1.html`。
+3. `python3 tools/company_html/build_company_html.py software_ai/crowdstrike` → `dist/…_v0.1.1.html`。
 
 投資建議、目標價與各數字見成品 README 頁與 HTML（由公式組字，本檔不手寫）。
 
 **命題：** ARR＝受保護單位 × 每單位模組數 × 每模組年費；AI 代理（非人類身分）另計單位與價格保留率；AI 淨效果＝增量營收 − 定價侵蝕 − 增量推論成本。推論成本＝任務數 × 每任務 token × 市場價，只讀 Tokenomics v22.0 快照（`data/tk_snapshot_v22.0.json`），基期推論成本已含在實績毛利，只扣增量。三情境 A／B／C 在 AI 淨效果上分化：AI 代理單位數與價格保留率、每模組年費變動、任務數。
+
+## 版本
+| 版本 | 日期 | 變更 |
+|---|---|---|
+| v0.1 | 2026-11-16 | 首版；G2-3 把費用率、SBC 率、資本支出率全期持平，DCF 約 1、加權目標價約 35，強力放空（舊檔在 `dist/_待刪除/`） |
+| v0.1.1 | 2026-11-17 | G3：(1) 規模經濟改以 FY2023–FY2026 回歸的固定＋變動成本延伸（non-GAAP 成本固定部分、SBC 固定部分取 0、資本支出固定部分），全期持平改為 Sens 下緣；(2) 營運資金符號核對，折舊攤銷改由前一年資本支出推得（`da_k`）；(3) `rel_mult` 改用最近 5 個會計年度末自算平均（`data/relmult_history.csv`）；(4) 合理性關卡診斷寫入成品 README 頁；新增事件尾端 Sens（`ev_hc`、`ev_delta`） |
 
 **結構：** README、In、Hist、Q、Thesis、PL（標準損益表、分部營收與對帳、三情境）、CF（FCFF DCF，含 FY2033–FY2037 延伸期）、Val、RevDCF、Recon、Sens、Sources。官方分部只有一個，營收線為訂閱與專業服務。
 
@@ -18,7 +24,7 @@
 ## G2 共通必修（逐條）
 1. 每任務 token：**未做到（公司未揭露 token 量或代理任務量，無從校準）**；沿用 Tokenomics 任務 3 的 token 數（Assumed，任務類別選擇為 Assumed），價格層級選擇標 Analogy。
 2. 聯動 Sens：做到。token 價格高案標上界（只動成本一邊）；另列價格與成本聯動、模型組合路由、低價聯動三案。
-3. 比率基準持平：做到。non-GAAP 營業費用率、SBC 率、資本支出率、延伸期利益率基準全期持平於近四季，收斂只放 Sens。
+3. 比率基準持平：v0.1 做到；v0.1.1 依 G3-1 改為歷史回歸的固定＋變動成本延伸，全期持平案放 Sens 下緣（`fix_ng`、`fix_sbc`、`fix_cx` 低值 0）；延伸期利益率仍持平（`ext_d` 基準 0）。
 4. 股數：部分做到。以公司稀釋加權平均近似（含 RSU 與選擇權庫藏股法影響），RSU 預期沒收與庫藏股法明細未找到；ASR、可轉債未見；法定封面流通股數作對照。
 5. 淨債務：做到。只計優先票據帳面，營業租賃不計；融資租賃未另列（未找到）。
 6. Comparable 口徑：部分做到。EV（無槓桿）對營收（TTM），乘目標日 TTM 營收；同業各家會計準則與租賃處理未核對，逐家標明；揭露現行倍數 ÷ 同業中位數與反解係數。
@@ -34,5 +40,5 @@
 
 ## 已知限制
 - 現價與同業倍數只有單一資料商（StockAnalysis）；賣方「次一年」營收共識的會計年度待確認；FY2022–FY2023 員工數為第二來源。
-- 基準全期持平下，GAAP 營業利益在整個預測期偏低，DCF 單法接近零；費用率收斂案只在 Sens（opx_32、sbc_32、ext_d 低／高值）。
-- 命題子列的人類端單位與模組路徑（gu、gm）、價格保留率（ero、pf）、相對倍數係數（rel_mult）為承重 Assumed。
+- 合理性關卡（G3-3）：DCF 目標價低於現價 25% 與評等為強力放空兩項觸發，診斷結論寫在成品 README 頁；成因是 SBC（含薪資稅）占營收約四分之一且歷史無下降趨勢，GAAP 營業利益率在預測期仍接近零，結果由『SBC 視為費用、無證據不假設下降』口徑決定，不是對公司價值的經濟定論；加回 SBC、SBC 規模經濟加大案、延伸期利益率上移案在 Sens。
+- 命題子列的人類端單位與模組路徑（gu、gm）、價格保留率（ero、pf）、相對倍數係數（rel_mult）為承重輸入。
