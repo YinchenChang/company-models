@@ -90,7 +90,7 @@ asof: 2026-10-25
 - 毛利率下滑幅度｜模型 FY2027 68.1% vs 共識隱含約 72.3%，差在代購 HBM 比例 [本專案：20261116_Broadcom個股模型_v0.5.8.xlsx Recon!C32、Recon!B32]｜同上
 - 客戶融資曝險｜約 92B，若全損約等於模型 FY2027 淨利 1.08 倍 [本專案：20261116_Broadcom個股模型_v0.5.8.xlsx Recon!C36]｜Anthropic 上市進度、OpenAI 融資條款
 - Google TPU 份額（聯發科分食）｜份額假設 90%→75% 是 Assumed [本專案：20261116_Broadcom個股模型_v0.5.8.xlsx Units!C5:E5]｜Google 下一代 TPU 供應商消息
-- 模型狀態｜Broadcom 個股模型現行 v0.3.1（`avgo/dist/`）[本專案：20261116_Broadcom個股模型_v0.5.8.xlsx]｜下一版更新
+- 模型狀態｜Broadcom 個股模型現行 v0.5.8（`avgo/dist/`）[本專案：20261116_Broadcom個股模型_v0.5.8.xlsx]｜下一版更新
 
 ## 來源
 1. 本專案：`avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx`（README、Q、Units、PL、Recon）；`nvidia/dist/20261116_NVIDIA個股模型_v0.3.11.xlsx`（Units）；AI半導體 `先驗比對_AVGO_20261023.md`、`先驗比對_Arista_20261024.md`；`markets/invest_map/data/models_extract.json`
