@@ -94,7 +94,7 @@ def hero(B):
     w, uw, px = V(B, 'VAL_TP_W'), V(B, 'VAL_Up_W'), V(B, 'VAL_Px')
     tiles = (f'<div class="hero-t"><div class="hero-l">目標價（DCF 與同業倍數各半，港元）</div><div class="hero-n">{sp(*w, "n2")}</div>'
              f'<div class="hero-s">上檔空間 {sp(*uw, "sp1")}</div></div>'
-             f'<div class="hero-t"><div class="hero-l">現價（2026-11-05 收盤，港元）</div><div class="hero-n">{sp(*px, "n2")}</div>'
+             f'<div class="hero-t"><div class="hero-l">現價（2026-11-13 收盤，港元）</div><div class="hero-n">{sp(*px, "n2")}</div>'
              f'<div class="hero-s">市場共識目標價 {sp(*V(B, "VAL_TP_Cons"), "n2")}（2026-09-30）</div></div>'
              f'<div class="hero-t"><div class="hero-l">收支關卡：FY2026–FY2030 現金收支合計（百萬美元）</div><div class="hero-n">{sp(*V(B, "VAL_Gate"), "sn0")}</div>'
              f'<div class="hero-s">入不敷出；估值評等 {sp(*vr, "t")}</div></div>')
@@ -159,12 +159,12 @@ def val_rows(B, keys):
 def valuation(B):
     px = V(B, 'VAL_Px')
     four = [('DCF 目標價（單純 DCF，三情境加權）', 'VAL_TP_DCF', 'VAL_Up_DCF', '無槓桿自由現金流折現；基準情境到 FY2030 仍虧損，三情境皆觸及淨現金下限'),
-            ('Comparable 目標價（同業 EV ÷ 未來 12 個月營收，三情境加權）', 'VAL_TP_Comp', 'VAL_Up_Comp', '同業只有智譜（同日 2026-11-05 市值）；未做相對倍數調整'),
+            ('Comparable 目標價（同業 EV ÷ 未來 12 個月營收，三情境加權）', 'VAL_TP_Comp', 'VAL_Up_Comp', '同業只有智譜（同日 2026-11-13 市值）；未做相對倍數調整'),
             ('加權目標價（DCF 與 Comparable 各半；橫幅主值）', 'VAL_TP_W', 'VAL_Up_W', '評等依此判定'),
             ('市場共識目標價（Investing.com 23 位平均，2026-09-30）', 'VAL_TP_Cons', 'VAL_Up_Cons', '二手、早於現價日一個多月，只作對照')]
     ch = bar_chart(sp, ['DCF', 'Comparable', '加權', '市場共識', '現價'],
                    [('港元／股', C_ACC, [V(B, n) for _, n, _, _ in four] + [px])], '港元／股',
-                   '四個目標價與現價（港元；現價 2026-11-05 收盤）', fmt='n1', h=260)
+                   '四個目標價與現價（港元；現價 2026-11-13 收盤）', fmt='n1', h=260)
     t4 = tbl(['目標價', '值（港元）', '對現價上檔空間', '說明'],
              [f'<tr><td>{a}</td><td>{sp(*V(B, n), "n2")}</td><td>{sp(*V(B, u), "sp1")}</td><td style="text-align:left">{c}</td></tr>' for a, n, u, c in four], 'rd')
     rate = (f'<h3>評等規則與邊界揭露</h3><p class="note">{sp(*V(B, "VAL_RatingNote"), "t")}</p>'
@@ -178,7 +178,7 @@ def valuation(B):
         [(x[0][0], x[0][1], x[1][1], x[2][1]) for x in zip(*[val_rows(B, [(k, col, f) for k, f in (
             ('明確期現值合計', 'n0'), ('終值現值', 'n0'), ('企業價值 EV', 'n0'), ('股權價值＝', 'n0'), ('DCF 每股價值（目標時點；港元）', 'n2'),
             ('Comparable 每股（港元）', 'n2'), ('情境目標價', 'n2'))]) for col in 'CDE'])]], 'rd')
-    peer = tbl(['同業（2026-11-05 市值）', '值'], [f'<tr><td>{a}</td><td>{b}</td></tr>' for a, b in val_rows(B, [
+    peer = tbl(['同業（2026-11-13 市值）', '值'], [f'<tr><td>{a}</td><td>{b}</td></tr>' for a, b in val_rows(B, [
         ('同業 EV／NTM 營收中位數', 'C', 'n2'), ('對照：本公司市場 EV ÷ 共識 NTM 營收', 'C', 'n2'), ('對照：本公司倍數 ÷ 同業中位數', 'C', 'n2'),
         ('本模型 NTM 營收', 'D', 'n0')])], 'rd')
     old = [f'<tr><td>{T(B, "Valuation", f"B{B.rows[k][1]}")}</td><td>{sp(*B.y(k, y), f)}</td></tr>' for k, y, f in
@@ -408,7 +408,7 @@ def status(B, xlsx_name, ver):
             '<div><dt>公司資料</dt><dd>招股書（2025-12-31）、FY2025 年度業績公告（2026-03-02）、2026 中期業績公告（2026-08-26）；SRC_MM 頁逐筆列出處與一手／二手。</dd></div>'
             '<div><dt>口徑</dt><dd>美元；曆年制（公司財年＝曆年）；MW＝IT 關鍵電力。</dd></div></dl>'
             '<h3>附錄</h3><details class="hist"><summary>版本要點</summary><p class="note">'
-            'v0.2.3：估值頁 Val 與反向 DCF 頁 RevDCF（目標價、評等、收支關卡）；既有收支數值不變。v0.2.2：版面 v1.3（新增 PL 標準損益表、Coord 三層協調：讀取層級與 C0 實績）；既有數值不變。v0.2.1：現價改 2026-11-05 收盤。'
+            'v0.2.4：現價與同業報價改 2026-11-13 收盤（工作單 px1113）；其餘數值不變。v0.2.3：估值頁 Val 與反向 DCF 頁 RevDCF（目標價、評等、收支關卡）；既有收支數值不變。v0.2.2：版面 v1.3（新增 PL 標準損益表、Coord 三層協調：讀取層級與 C0 實績）；既有數值不變。v0.2.1：現價改 2026-11-05 收盤。'
             'v0.2：P×Q 回本比值、M3.1 降價、合約價證據。v0.1：首版。</p></details>'
             '<details class="hist"><summary>已知限制</summary><p class="note">季度層未建；自建集群規模找不到；2026 消費端付費人數與 ARPPU 缺一手資料；'
             'Tokenomics 缺中國晶片世代、租價與中國 API 有效牌價；同業只有智譜一家（其餘候選無同日可查證市值）；選擇權與受限制股份稀釋未計。</p></details></section>')

@@ -995,6 +995,12 @@ if _CR:
     import v026_post as P26  # noqa: E402  v0.2.6：滾入 3Q26 財報、資產負債表日 9-30（版號與本版要點）
     print(P26.apply(wb))
 
+# v0.2.7（2026-11-16）：工作單 px1113——現價與同業報價改 2026-11-13 收盤（mpi/px1113_post.py；只改價格輸入與說明文字）
+import px1113_post as P1113  # noqa: E402
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_N1113 = open(os.path.join(_HERE, "px1113_note.txt"), encoding="utf-8").read().strip() if os.path.exists(os.path.join(_HERE, "px1113_note.txt")) else "v0.2.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。"
+print(P1113.apply(wb, _HERE, dict(ver="v0.2.7", old_ver="v0.2.6", tk="6223.TWO", note=_N1113 + " ",
+                                  extra_subs=(("v0.2.4 起為 2026-11-05（3,725）", "v0.2.4 起為 2026-11-05（3,725）；v0.2.7 起為 2026-11-13（%s）" % format(P1113.px("6223.TWO"), ",.10g")),))))
 wb.save(sys.argv[1])
 if os.environ.get("MPI_ROWMAP"):
     import json

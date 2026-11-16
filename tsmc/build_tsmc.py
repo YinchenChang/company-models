@@ -126,7 +126,7 @@ for s, vals in zip(SC, ((0.64, 0.63, 0.62), (0.64, 0.58, 0.56), (0.64, 0.54, 0.5
 inp("opex", "營業費用 ÷ 營收", "%", None, 0.075, None, "Derived", "2Q26 毛利率 67.7% − 營業利益率 60.3%")
 inp("ni_op", "淨利 ÷ 營業利益（2027 起；低／高＝區間）", "x", "=ni_op_underlying", "=(1+nonop_hist)*(1-etr_new)", "=ni_op_2023", "Derived", "基準＝(1＋歷史營業外比率)×(1－新稅率)，推導見 NI_OI 頁；低 0.864＝2026 年扣除一次性利益後的內含水準；高 0.909＝2023 年年度值（稅率上升前、2022–2025 年度最高）。v0.1.1 為 0.92（含一次性利益的 2Q26 單季值，不再當上限）")
 inp("shares", "股數", "十億股", None, 25.93, None, "Derived", "市值 ÷ 股價；3Q26 淨利 NT$763.06B ÷ EPS 29.43 ＝ 25.93，一致")
-inp("px", "股價（2026-11-05 收盤）", "NT$", None, 2240, None, "Verified", "Yahoo Finance 日線收盤 2026-11-05（2330.TW；v0.5.4 統一價格日）；v0.5.3 為 2026-11-04 的 2,260，v0.5.1 為 2026-10-22 的 2,385，v0.2.2 為 10-07 的 2,585（Wantgoo）")
+inp("px", "股價（2026-11-13 收盤）", "NT$", None, 2350, None, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）（2330.TW）；v0.5.5 為 2026-11-05 收盤 2,240；v0.5.3 為 2026-11-04 的 2,260，v0.5.1 為 2026-10-22 的 2,385，v0.2.2 為 10-07 的 2,585（Wantgoo）")
 for y, v, tag, src in ((26, 62, "Interested-party", "公司指引 US$60–64B 中點（7 月上修；10 月維持不變）｜媒體：民視財經、vestedfinance"), (27, 77, "Interested-party", "Citi；券商 73–81"), (28, 90, "Interested-party", "JPMorgan"), (29, 95, "Assumed", "")):
     inp(f"capex{y}", f"資本支出 20{y}", "$B", None, v, None, tag, src)
 for i, (v, src) in enumerate(((15, "近谷底（2022 年約 11.9x）"), (20.5, "ADR 10 年中位數（GuruFocus）"), (32.7, "10 年最高（GuruFocus）")), 1):
@@ -178,7 +178,7 @@ for _row in FD.in_rows(dict(
         lease=(36.882, "Verified", SA_BS + "：租賃負債流動 3,606＋非流動 33,276（NT$M；2026-06-30）", "3Q26 財報摘要未揭露租賃負債，沿用 2026-06-30（占淨現金不到 1%）"),
         cash=(4016.98, "Verified", MR3 + "：Cash & marketable securities 4,016.98（NT$B；2026-09-30。2026-06-30 為 3,518.01，與 v0.5 現金＋短期投資 3,517.787 同口徑）", FS3 + "：現金及約當現金 3,621,894（NT$M）"),
         inv=(224.633, "Verified", FS3 + "：長期投資 224,633（NT$M；含權益法投資與金融資產）", "帳面計入；Sens 測不計"),
-        mi=("=nci_bk-nci_bk_l+nci_mv_guc+nci_mv_vis", "Derived", "＝非控制權益帳面 nci_bk − 上市子公司（創意 3443、采鈺 6789）的非控制權益帳面 nci_bk_l ＋ 兩家非控制權益市值（2026-11-05 收盤）",
+        mi=("=nci_bk-nci_bk_l+nci_mv_guc+nci_mv_vis", "Derived", "＝非控制權益帳面 nci_bk − 上市子公司（創意 3443、采鈺 6789）的非控制權益帳面 nci_bk_l ＋ 兩家非控制權益市值（2026-11-13 收盤）",
             "v0.5.2（第三輪修正：上市子公司一律市值）；其餘子公司（JASM、ESMC 等未上市）用帳面；明細見 In 頁最後 nci_* 各列"),
         dps=("=7*4", "Derived", "台積電董事會 2026-08 核准 2Q26 季度現金股利每股 7 元（pr.tsmc.com/chinese/news/3332；經濟日報 money.udn.com/money/story/5607/9684950）",
              "評價日 2026-12-31 到目標時點 2027-12-31 之間假設四次、金額不變（Assumed）"),
@@ -652,17 +652,31 @@ V.cell(r_, 1, "0.2 Comparable（市場主流同業前瞻 P/E）").font = BOLD; r
 hdr(V, r_, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"]); T["ph"] = r_; r_ += 1
 # v0.5.2（第三輪修正）：同業前瞻 P/E 統一換算到 2026-11-04 收盤＝原 P/E × 11-04 收盤 ÷ 原報價日收盤（共識 EPS 不變）；原報價日收盤未取得者沿用原值並註明
 # v0.5.4（2026-11-06，工作單 px1105）：同業前瞻 P/E 再換算到 2026-11-05 收盤＝現行 P/E（11-04 基準）× 11-05 收盤 ÷ 11-04 收盤（共識 EPS 不變）；
-# 現行 P/E 不是 11-04 基準者（英特爾、中芯：原報價日收盤未取得）沿用原值並註明「未取得」
-PEERS = [("聯電（UMC）", "UMC／2303.TW", 20.22, "2026-10-22", 125.5, 105.5, 98.4), ("格芯（GlobalFoundries）", "GFS", 20.04, "2026-10-22", 43.37, 40.34, 36.36),
-         ("英特爾（Intel）", "INTC", 50.64, "2026-10-23", None, 58.27, 52.25), ("中芯國際（SMIC，港股）", "0981.HK", 37.14, "2026-10-16", None, 46.44, 47.5),
-         ("三星電子", "005930.KS", 3.35, "2026-10-21", 223500, 218000, 201500)]
+# v0.5.6（2026-11-16，工作單 px1113）：再 × 11-13 收盤 ÷ 11-05 收盤（closes_20261020_20261113.csv）。英特爾原報價日 10-23 在收盤檔內：P/E＝原 P/E × 11-13 收盤 ÷ 10-23 收盤；
+# 中芯（港股）原報價日 10-16 收盤 52.4 已補入收盤檔：P/E＝37.14 × 11-13 收盤 48.52 ÷ 10-16 收盤 52.4（px1113 K 批原地修正；原 K 批前沿用原值）
+PEERS = [("聯電（UMC）", "UMC／2303.TW", 20.22, "2026-10-22", 125.5, 105.5, 98.4, 101.5), ("格芯（GlobalFoundries）", "GFS", 20.04, "2026-10-22", 43.37, 40.34, 36.36, 41.47),
+         ("英特爾（Intel）", "INTC", 50.64, "2026-10-23", 86.96, None, None, 59.66), ("中芯國際（SMIC，港股）", "0981.HK", 37.14, "2026-10-16", 52.4, None, None, 48.52),
+         ("三星電子", "005930.KS", 3.35, "2026-10-21", 223500, 218000, 201500, 206000)]
 _YF5 = "Yahoo Finance 日線收盤 2026-11-05"
+_YF13 = "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）"
 p0 = r_
-for nm_, tk_, pe_, dt_, po_, pn_, p5_ in PEERS:
-    V.cell(r_, 1, nm_); V.cell(r_, 2, tk_); c = V.cell(r_, 3, f"={pe_}*{pn_}/{po_}*{p5_}/{pn_}" if po_ else pe_); c.font = BLUE; c.number_format = "0.0"
-    V.cell(r_, 4, "2026-11-05" if po_ else dt_)
-    V.cell(r_, 5, (f"現行 P/E（11-04 基準）＝stockanalysis.com forward PE {pe_}（{dt_}，收盤 {po_:,}；stockanalysis 股價歷史）× 2026-11-04 收盤 {pn_:,} ÷ {po_:,}；再 × 2026-11-05 收盤 {p5_:,} ÷ 11-04 收盤 {pn_:,}（{_YF5}；共識 EPS 不變）" if po_ else
-                   f"stockanalysis.com forward PE（分析師共識；{dt_}）；{dt_} 收盤未取得，未換算到 2026-11-05（2026-11-05 收盤 {p5_:,}，{_YF5}），沿用原值（未取得）")); V.cell(r_, 6, "Interested-party"); r_ += 1
+for nm_, tk_, pe_, dt_, po_, pn_, p5_, p13_ in PEERS:
+    if pn_ is not None and po_ is not None:
+        _f = f"={pe_}*{pn_}/{po_}*{p5_}/{pn_}*{p13_}/{p5_}"
+        _s = (f"現行 P/E（v0.5.5，11-05 基準）＝stockanalysis.com forward PE {pe_}（{dt_}，收盤 {po_:,}；stockanalysis 股價歷史）× 2026-11-04 收盤 {pn_:,} ÷ {po_:,} × 2026-11-05 收盤 {p5_:,} ÷ 11-04 收盤 {pn_:,}（{_YF5}）；"
+              f"再 × 2026-11-13 收盤 {p13_:,} ÷ 11-05 收盤 {p5_:,}（{_YF13}；共識 EPS 不變）")
+        _d = "2026-11-13"
+    elif po_ is not None:   # 英特爾（pn_ 為 None）：原報價日收盤在 closes 檔內
+        _f = f"={pe_}*{p13_}/{po_}"
+        _s = (f"stockanalysis.com forward PE {pe_}（分析師共識；{dt_}，該日收盤 {po_:,} 取自 closes_20261020_20261113.csv）× 2026-11-13 收盤 {p13_:,} ÷ {po_:,}（{_YF13}；共識 EPS 不變）；"
+              f"v0.5.5 沿用原值 {pe_}（原報價日收盤當時未取得）")
+        _d = "2026-11-13"
+    else:                   # 中芯：原報價日 10-16 不在收盤檔 → 維持原值
+        _f = pe_
+        _s = (f"stockanalysis.com forward PE（分析師共識；{dt_}）；{dt_} 收盤不在 closes_20261020_20261113.csv（檔案自 10-20 起），未換算到 2026-11-13（2026-11-13 收盤 {p13_:,}，{_YF13}），沿用原值（未換價）")
+        _d = dt_
+    V.cell(r_, 1, nm_); V.cell(r_, 2, tk_); c = V.cell(r_, 3, _f); c.font = BLUE; c.number_format = "0.0"
+    V.cell(r_, 4, _d); V.cell(r_, 5, _s); V.cell(r_, 6, "Interested-party"); r_ += 1
 p9 = r_ - 1; T["p0"], T["p9"] = p0, p9
 tset(r_, "pmed", "同業前瞻 P/E 中位數", [f"=MEDIAN(C{p0}:C{p9})", None, None], "0.0",
      "晶圓代工與整合元件同業（聯電、格芯、英特爾、中芯港股、三星）；無 A 股。中芯以港股計（A 股 688981 不列）；三星 P/E 由記憶體盈餘主導、英特爾盈餘低谷，中位數受兩端影響小"); r_ += 1
@@ -674,7 +688,7 @@ hdr(V, r_, ["項目", "數值", "", "", "說明"]); T["h03"] = r_; r_ += 1
 tset(r_, "tpw", "目標價（DCF 與 Comparable 加權）", [f"=tp_w_dcf*B{T['dcftp']}+(1-tp_w_dcf)*B{T['comptp']}", None, None], "#,##0", "tp_w_dcf × DCF＋（1 − tp_w_dcf）× Comparable；tp_w_dcf 見 In 頁"); r_ += 1
 tset(r_, "comp2", "Comparable 目標價（市場主流同業法）", [f"=B{T['comptp']}", None, None], "#,##0"); r_ += 1
 tset(r_, "cons", "市場共識目標價", ["=cons_tp", None, None], "#,##0", "MarketScreener：35 位分析師平均 3,390.43（最低 2,650、最高 5,000），10-22 收盤頁面，2026-10-25 擷取"); r_ += 1
-tset(r_, "upw", "上檔空間：加權目標價", [f"=B{T['tpw']}/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-05 收盤）"); r_ += 1
+tset(r_, "upw", "上檔空間：加權目標價", [f"=B{T['tpw']}/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-13 收盤）"); r_ += 1
 tset(r_, "upc", "上檔空間：Comparable 目標價", [f"=B{T['comp2']}/px-1", None, None], "0.0%"); r_ += 1
 tset(r_, "geps", "與市場共識目標價的差距：EPS 因素", [f"=B{T['feps']}/(2/12*cons_feps27+10/12*cons_feps28)-1", None, None], "0.0%",
      "本模型前瞻 EPS ÷ 共識前瞻 EPS（2／12 × 共識 2027＋10／12 × 共識 2028，In 頁 cons_feps27／28）− 1；Recon 頁另列"); r_ += 1
@@ -689,7 +703,7 @@ V.cell(r_, 1, "目標價方法"); T["meth"] = r_
 V[f"B{r_}"] = ("DCF（v0.5 標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現到 2026 年底（期中慣例），終值＝NOPAT(2033) ×（1 − g ÷ RONIC）÷（WACC − g），"
                "g＝MIN(3%, 新台幣 10 年期公債殖利率)、RONIC＝WACC；ke＝rf＋β ×（ERP 5%＋台灣國家風險溢酬），β 為 自算 TW 半導體產業無槓桿 β 依市值 D/E 重新加槓桿；EV 加淨現金與長期投資、減非控制權益 ÷ 股數，以 ke 推到 12 個月後並扣除期間股利（DCF 頁、tools/fcff_dcf.py）。"
                "折舊取 2023–2025 占營收平均；資本支出 FY2027–2029 用 PL 頁資本支出列（capex27–29），FY2030 起收斂；淨現金由 2026-09-30 以 stub 期滾到評價日；2030 起收斂法，情境 A 維持 2029 淨利率，偏高估。"
-               "Comparable：聯電、格芯、英特爾、中芯（港股）、三星前瞻 P/E 中位數（2026-11-05 收盤換算）× 12 個月後前瞻 EPS；同業成長與技術地位低於台積電，偏低估。"
+               "Comparable：聯電、格芯、英特爾、中芯（港股）、三星前瞻 P/E 中位數（2026-11-13 收盤換算）× 12 個月後前瞻 EPS；同業成長與技術地位低於台積電，偏低估。"
                "情境對應：A＝樂觀（原始顆數）、B＝基準（2028 顆數 ×0.8、毛利率 58%）、C＝保守（顆數 ×0.6、毛利率 54%）；2027 三情境 EPS 相同，DCF 情境差來自 2028 起。")
 r_ += 2
 for k_ in ("dcftp", "comptp", "tpw"): V[f"B{T[k_]}"].fill = KEYF
@@ -748,11 +762,11 @@ for _k, _nm, _u, _v, _tag, _src in (
         ("own_guc", "台積電持有創意（3443）股權比例", "%", 0.35, "Interested-party", "優分析（uanalyze.com.tw/articles/1626552582）：「創意為台積電持股約 35% 的子公司」；台積電具控制力而合併"),
         ("sh_guc", "創意流通股數", "十億股", 0.13401, "Verified", "stockanalysis.com/quote/tpe/3443/financials/balance-sheet/?p=quarterly：134.01M 股（2026-06-30）"),
         ("eq_guc", "創意股東權益（帳面）", "NT$B", 13.465, "Verified", SAQ.replace("季度", "創意季度") + "：13,465（NT$M）"),
-        ("px_guc", "創意股價（2026-11-05 收盤）", "NT$", 6405, "Verified", "Yahoo Finance 日線收盤 2026-11-05（3443.TW）；v0.5.3 為 2026-11-04 的 7,115"),
+        ("px_guc", "創意股價（2026-11-13 收盤）", "NT$", 8610, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）（3443.TW）；v0.5.5 為 2026-11-05 收盤 6,405；v0.5.3 為 2026-11-04 的 7,115"),
         ("own_vis", "台積電持有采鈺（6789）股權比例", "%", 0.6725, "Verified", "台積電 2025 年報第八章關係企業（investor.tsmc.com/static/annualReports/2025/chinese/pdf/2025_tsmc_ar_c_ch8.pdf）：持有 213,619,000 股、67.25%"),
         ("sh_vis", "采鈺流通股數", "十億股", 0.3183, "Verified", "stockanalysis.com/quote/tpe/6789/financials/balance-sheet/?p=quarterly：318.3M 股（2026-06-30）；年報實收資本 3,182,991 千元 ÷ 10"),
         ("eq_vis", "采鈺股東權益（帳面）", "NT$B", 18.453, "Verified", SAQ.replace("季度", "采鈺季度") + "：18,453（NT$M）"),
-        ("px_vis", "采鈺股價（2026-11-05 收盤）", "NT$", 360, "Verified", "Yahoo Finance 日線收盤 2026-11-05（6789.TW）；v0.5.3 為 2026-11-04 的 390"),
+        ("px_vis", "采鈺股價（2026-11-13 收盤）", "NT$", 400.5, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）（6789.TW）；v0.5.5 為 2026-11-05 收盤 360；v0.5.3 為 2026-11-04 的 390"),
         ("nci_bk_l", "上市子公司非控制權益帳面（創意＋采鈺；自帳面總額扣除）", "NT$B", "=eq_guc*(1-own_guc)+eq_vis*(1-own_vis)", "Derived", "＝子公司股東權益 ×（1 − 台積電持股），2026-06-30 帳面（3Q26 子公司明細未取得）"),
         ("nci_mv_guc", "創意非控制權益市值", "NT$B", "=px_guc*sh_guc*(1-own_guc)", "Derived", "＝股價 × 股數 ×（1 − 台積電持股）"),
         ("nci_mv_vis", "采鈺非控制權益市值", "NT$B", "=px_vis*sh_vis*(1-own_vis)", "Derived", "＝股價 × 股數 ×（1 − 台積電持股）")):
@@ -951,7 +965,7 @@ RD.cell(r, 1, "命題 1：AI 只占營收一部分。AI 加速器相關營收占
 RD.cell(r, 1, "命題 2：2027 年誰先卡住。加速器出貨先受 HBM 供給限制，還是先受台積電 CoWoS 先進封裝產能限制。"); r += 1
 RD.cell(r, 1, "命題 3：每股值多少。AI 顆數 × 每顆台積電內容 × 漲價，加上非 AI 成長，推到 EPS 與目標價之後，是否高於現價。"); r += 1
 _gap = f"({_V('tpw')}-cons_tp)"; _gd = f"(tp_w_dcf*({_V('dcftp')}-cons_tp))"; _gc = f"((1-tp_w_dcf)*(tp_comp_adj-cons_tp))"
-RD.cell(r, 1, XF("重點 1：合理價值", (f'IF({_V("upw")}>=0,"高於","低於")',), "現價，投資建議", (_rec,), "。加權目標價約 ", (f'TEXT({_V("tpw")},"#,##0")',), " 元，比現價 ", ('TEXT(px,"#,##0")',), " 元（2026-11-05）",
+RD.cell(r, 1, XF("重點 1：合理價值", (f'IF({_V("upw")}>=0,"高於","低於")',), "現價，投資建議", (_rec,), "。加權目標價約 ", (f'TEXT({_V("tpw")},"#,##0")',), " 元，比現價 ", ('TEXT(px,"#,##0")',), " 元（2026-11-13）",
                  (f'IF({_V("upw")}>=0,"高 ","低 ")&TEXT(ABS({_V("upw")}),"0.0%")',), "。兩種算法差距大：未來現金流折現（DCF）約 ", (f'TEXT({_V("dcftp")},"#,##0")',), " 元、同業倍數法（Comparable，已乘本公司相對同業的長期倍數比 ", ('TEXT(rm_factor,"0.00")',),
                  "）約 ", ('TEXT(tp_comp_adj,"#,##0")',), " 元，各占一半。市場分析師平均目標價約 ", ('TEXT(cons_tp,"#,##0")',), " 元；加權目標價與共識的差距 ", (f'TEXT({_gap},"+#,##0;-#,##0")',),
                  " 元，拆成兩部分：DCF 部分（權重 × (DCF − 共識)）", (f'TEXT({_gd},"+#,##0;-#,##0")',), " 元、占 ", (f'TEXT({_gd}/{_gap},"0%")',), "；Comparable 部分 ", (f'TEXT({_gc},"+#,##0;-#,##0")',), " 元、占 ", (f'TEXT({_gc}/{_gap},"0%")',),
@@ -990,6 +1004,7 @@ RD.cell(_R + 2, 1, XF("重點觀察 1：目標價 NT$", (f'TEXT({_V("tpw")},"#,#
                       "；Comparable 內本模型前瞻 EPS ", (f'TEXT({_V("feps")},"0.0")',), " 比共識前瞻 EPS 低 ", (f'TEXT(-{_V("geps")},"0.0%")',), "、倍數因素 ", (f'TEXT({_V("gmul")},"+0.0%;-0.0%")',), "（共識目標價隱含 ", ('TEXT(cons_tp/(2/12*cons_feps27+10/12*cons_feps28),"0.0")',), " 倍，同業中位數 ", (f'TEXT({_V("pmed")},"0.0")',), " 倍）。"))
 # 三層協調 C4（規則 v1.4；tools/coord/）：對帳中年份並列兩讀數目標價（Coord 頁；快照 tsmc/coord_alt.json）
 sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
+PX1113_ROW = "v0.5.6（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）：現價 2,240 → 2,350；創意 6,405 → 8,610、采鈺 360 → 400.5（非控制權益市值）；同業前瞻 P/E 中位數 16.8 → 19.2（聯電 15.9 → 16.4、格芯 16.8 → 19.2、英特爾 50.6 → 34.7、中芯 37.1 → 34.4、三星 3.02 → 3.09；英特爾原報價日 10-23 在收盤檔內，改依 11-13 ÷ 10-23 收盤換價，v0.5.5 沿用原值；中芯原報價日 10-16 收盤 52.4 已補入收盤檔，P/E＝37.14 × 48.52 ÷ 52.4）；DCF 目標價 1,464 → 1,456，Comparable（相對倍數調整後）2,826 → 3,223，加權目標價 2,145 → 2,339，上檔空間 −4.2% → −0.5%，投資建議 中立 → 中立；共識 EPS、rf、預測匯率與模型假設不變。"
 import coord as COORD  # noqa: E402
 _CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
 if _CR:
@@ -997,5 +1012,16 @@ if _CR:
     # v0.5.5（2026-11-15）：個股 HTML 版面規格 v1.3、三層協調讀取層級與 C0（含公司實績，規則 v1.4.2）、硬體股兩讀數（tsmc/v055_post.py；只新增頁與列，既有數值格不變）
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import v055_post  # noqa: E402
-    print(v055_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR, [k for k, *_ in MEM.UNITS], PR, COLOF, SC))
+    _RES = v055_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR, [k for k, *_ in MEM.UNITS], PR, COLOF, SC)
+    print(_RES)
+    # v0.5.6（2026-11-16，工作單 px1113）：現價與同業報價改 2026-11-13 收盤；README A1 版號與「本版要點」列（HTML 讀此列）前置本版說明
+    _RD6 = wb["README"]
+    _h6 = _RD6["A1"].value.split("；", 1)
+    assert "v0.5.5" in _h6[0], _h6[0]
+    _RD6["A1"] = _h6[0].replace("v0.5.5", "v0.5.6", 1) + "；" + _h6[1] + "；v0.5.6（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）"
+    _vr6 = [r for r in range(1, _RD6.max_row + 1) if str(_RD6.cell(r, 1).value or "").startswith("v0.5.5（個股 HTML 版面規格 v1.3") or str(_RD6.cell(r, 1).value or "").startswith("v0.5.5（2026-11-15）：個股 HTML")]
+    assert len(_vr6) == 1, _vr6
+    _vr6 = _vr6[0]
+    assert str(_RD6.cell(_vr6, 1).value).startswith("v0.5.5（"), _RD6.cell(_vr6, 1).value
+    _RD6.cell(_vr6, 1).value = PX1113_ROW + "上一版：" + _RD6.cell(_vr6, 1).value
 wb.save(sys.argv[1]); print("saved")

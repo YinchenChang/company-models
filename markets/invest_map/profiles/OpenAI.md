@@ -57,8 +57,8 @@ AI 模型公司（位於 AI 金流的最上游）：自研 GPT 系列大模型�
 |---|---|---|---|
 | Anthropic | 企業 API、程式代理、訂閱 | 2026 Q3 營收 16.8bn；Q2 11.6bn | [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E388、E386] |
 | Google（Gemini） | 消費端助理、API、雲端 | Gemini 營收：本專案未建立；Q2 法說揭露 API 每分鐘 22B token | [本專案：alphabet_facts_20261008.json split.aiRunRate] |
-| MiniMax（00100.HK） | API、消費型 App | 1H26 營收 116.6m 美元 | [本專案：20261115_MiniMax收支模型_v0_2_3.xlsx SRC_MM!E8] |
-| 智譜（02513.HK） | API、Coding 方案 | 1H26 營收 RMB 954m | [本專案：20261115_MiniMax收支模型_v0_2_3.xlsx SRC_MM!E75] |
+| MiniMax（00100.HK） | API、消費型 App | 1H26 營收 116.6m 美元 | [本專案：20261116_MiniMax收支模型_v0_2_4.xlsx SRC_MM!E8] |
+| 智譜（02513.HK） | API、Coding 方案 | 1H26 營收 RMB 954m | [本專案：20261116_MiniMax收支模型_v0_2_4.xlsx SRC_MM!E75] |
 
 - 市占：本專案未建立。
 - 營收口徑不同：Anthropic 經雲端市集的銷售以總額認列 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Revenue!B67]；OpenAI 9 月底 50bn 為淨額口徑 [本專案：20261115_OpenAI收支模型_v0_6_6.xlsx SRC_OAI!C139]，兩家季營收不能直接比大小。

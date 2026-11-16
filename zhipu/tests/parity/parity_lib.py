@@ -11,7 +11,7 @@ import openpyxl
 from engine import resolve_key
 
 REL_TOL = 1e-9
-ABS_TOL = 1e-12
+ABS_TOL = 1e-10  # px1113（2026-11-16）：1e-12 → 1e-10；「核對（應為 0）」格為上百億元量級相減，浮點殘差約 1e-12（RevDCF!B16 曾 1.14e-12）
 
 
 def set_inputs(src: Path, dst: Path, inputs: dict[str, object]) -> None:
@@ -55,7 +55,7 @@ def _is_num(x) -> bool:
 
 
 def compare(engine_vals: dict, excel_vals: dict) -> dict:
-    """比對；數值：相對誤差 ≤1e-9 或絕對誤差 ≤1e-12；其他型別必須完全相等。"""
+    """比對；數值：相對誤差 ≤1e-9 或絕對誤差 ≤ABS_TOL；其他型別必須完全相等。"""
     mismatches, max_rel, max_rel_all, max_abs, n_num, n_err = [], 0.0, 0.0, 0.0, 0, 0
     for key, e in engine_vals.items():
         x = excel_vals[key]

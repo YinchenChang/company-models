@@ -44,7 +44,7 @@ K = dict(
     nci_mode="none", ext_mode="inblock", DCFX="GH", OIDIV="/gaap_k", LAST_A=2026, DEP=(2028, 2029, 2030, 2031, 2032), FY_LAG=1,   # FY_LAG：會計年度對應（FY 減 CY），寫入 Coord 頁具名格 co_fy_lag 供 check_layout_v13 判讀
     HIST_A1="會計年度：FY(t)＝t−1 年 2 月～t 年 1 月（≈ CY(t−1)）。來源為公司 8-K 新聞稿（SEC EDGAR）的 non-GAAP 調節表；FY2024 為公司修正後數字；稅前利益、所得稅與股數為推得值（見各列）。FY2026 營業利益為公司揭露 non-GAAP 值，模型 Q 頁用分部營業利益合計（差 0.047）",
     HIST_TAG="Verified（公司 8-K）／Derived（推得列）",
-    PXL="現價（2026-11-05 收盤）", ANCH="1H FY27 實績＋公司全年指引＋2H 假設",
+    PXL="現價（2026-11-13 收盤）", ANCH="1H FY27 實績＋公司全年指引＋2H 假設",
     EPSL="EPS（non-GAAP 稀釋；美元）", EPSN="歷史＝公司列示 non-GAAP 稀釋 EPS；預測＝non-GAAP 淨利 ÷ 模型稀釋股數",
     EPSDL="EPS（GAAP 稀釋；公司列示值，對照）", DILH="GAAP 稀釋 EPS 對照（歷史；預測不估 GAAP）", SHN="歷史與預測皆為稀釋股數",
     GAAP_NOTE=("口徑：Non-GAAP（公司 8-K 新聞稿口徑，排除攤銷、股權報酬等；與本模型 PL、Q 頁及市場共識一致）。會計年度 FY(t)≈CY(t−1)（2 月～隔年 1 月）。"

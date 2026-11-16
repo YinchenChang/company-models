@@ -116,9 +116,9 @@ inp("idc_anet", "2Q26 資料中心乙太網路交換器：Arista 份額（全部
 inp("pe_fair_andy", "Andy 先驗：合理 P/E", "x", None, 25, None, "Assumed", "先驗_Andy_Arista_20261024 A9b（Drive；不在本 repo）", "只作對照")
 
 sec("H. 價格與估值")
-inp("px", "股價（2026-11-05 收盤）", "US$", None, 159.16, None, "Interested-party", "Yahoo Finance 日線收盤 2026-11-05（ANET；本公司、同業統一同日）", "原 v0.5.3：178.48（2026-11-04 收盤）；v0.5.2：172.37（2026-10-23）")
+inp("px", "股價（2026-11-13 收盤）", "US$", None, 197.29, None, "Interested-party", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（ANET；`closes_20261020_20261113.csv`；本公司、同業統一同日）", "v0.5.5 為 2026-11-05 收盤 159.16；v0.5.3：178.48（2026-11-04 收盤）；v0.5.2：172.37（2026-10-23）")
 inp("pe_ttm_gaap", "近 12 月 GAAP P/E", "x", None, 54.55, None, "Interested-party", "StockAnalysis", "MarketBeat 53.81")
-inp("pe_fwd_sa", "前瞻 P/E（StockAnalysis；換算到 2026-11-05 收盤）", "x", None, "=37.06*159.16/172.37", None, "Interested-party", "StockAnalysis 前瞻 P/E 37.06（頁面價格 172.37，2026-10-23）× 2026-11-05 收盤 159.16 ÷ 172.37（共識 EPS 不變）", "第二來源：未找到")
+inp("pe_fwd_sa", "前瞻 P/E（StockAnalysis；換算到 2026-11-13 收盤）", "x", None, "=37.06*197.29/172.37", None, "Interested-party", "StockAnalysis 前瞻 P/E 37.06（頁面價格 172.37，2026-10-23）× 2026-11-13 收盤 197.29 ÷ 172.37（共識 EPS 不變；工作單 px1113，v0.5.5 為 11-05 收盤 159.16）", "第二來源：未找到")
 inp("g2n", "GAAP EPS ÷ non-GAAP EPS（規則值換算用）", "x", None, "=1.75/1.89", None, "Derived", PR_Q226 + "：1H26 GAAP 稀釋 EPS 1.75、non-GAAP 1.89", "FY2025：2.75 ÷ 2.98＝0.923（公司）")
 sec("I. 目標價情境權重（v0.1.1 新增；Val 頁第 0 節用）")
 for s, w in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
@@ -365,7 +365,7 @@ V["A1"] = "Val — P/E 估值（美元）。結論用「現價 ÷ FY2027、FY202
 V["A2"] = "循環位置：Arista 不是設備股，不套設備市場見頂年；以本模型營收最高的會計年度為見頂年（比照 NVIDIA；FY(t)＝CY(t)，不平移）。營收到 FY2029 仍在增加時，見頂年未知，判為中段"
 V.cell(4, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, 5, ["項目", "A", "B", "C", "說明"])
-V.cell(6, 1, "現價（2026-11-05 收盤）"); V["B6"] = "=px"; V["B6"].number_format = "0.00"
+V.cell(6, 1, "現價（2026-11-13 收盤）"); V["B6"] = "=px"; V["B6"].number_format = "0.00"
 V.cell(7, 1, "現價 ÷ FY2026 EPS（錨點）"); V.cell(8, 1, "現價 ÷ FY2027 EPS（模型）"); V.cell(9, 1, "現價 ÷ FY2028 EPS（模型）"); V.cell(10, 1, "現價 ÷ FY2029 EPS（模型）")
 for j, s in enumerate(SC):
     c = "BCD"[j]
@@ -577,7 +577,7 @@ TP0 = add_target_price(V, {s: f"=E{VAL[s]}" for s in SC},
     {s: f'="第 3 節規則值：FY2027 GAAP 換算 EPS × "&TEXT(D{VAL[s]},"0.0")&"x（"&C{17 + SC.index(s)}&"）"' for s in SC}, "#,##0.00",
     "P/E：各情境 FY2027 GAAP 換算 EPS（non-GAAP EPS × g2n）× 十年（2016–2025 年底）GAAP P/E 依循環位置取分位（以本模型營收最高年判定：A、B 中段＝中位數，C 見頂＝25 分位；companiesmarketcap 與 Macrotrends 兩來源平均）。"
     "十年倍數含 2021 年與 2024–2025 年高成長期的高倍數，偏誤方向為高估；FY2027 三情境 EPS 相同，A、B 隱含價相同、C 只差在倍數；隱含價約為 FY2027 年底的價格、未折現，當作 12 個月目標價時偏高。",
-    "現價＝In 頁 px（2026-11-05 收盤）")
+    "現價＝In 頁 px（2026-11-13 收盤）")
 
 # ---------------- v0.2：三情境延伸到 FY2032、Val 第 0 節（DCF 與 Comparable 加權）、Sens 目標價參數 ----------------
 XH, XR, XC = TP.extend_pl(PL, PB, FC, FYS, 2029, {"rev": "rev", "ni": "ni", "sh": "sh_", "eps": "eps"}, "US$",
@@ -589,11 +589,11 @@ TPL, TPN = TP.add_tp_section(wb, V,
     eps={s: [f"PL!{XC[y]}{XR[(s, 'eps')]}" for y in range(2027, 2033)] for s in SC}, e_mon=12,
     fwd={s: [(f"PL!{XC[2027]}{XR[(s, 'eps')]}", "2/12"), (f"PL!{XC[2028]}{XR[(s, 'eps')]}", "10/12")] for s in SC},
     fwd_note="會計年度＝日曆年：約 12 個月後（2027-10 底）的未來 12 個月＝2027-11～2028-10（2/12 × FY2027＋10/12 × FY2028）",
-    peers=[("Cisco", "CSCO", "=20.7*95.72/106.5", "2026-11-05", "前瞻 P/E＝資料商頁面前瞻 P/E 20.7（頁面價格 106.5，2026-10-23）× 2026-11-05 收盤 95.72 ÷ 頁面價格（收盤：Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變）；原：stockanalysis.com 統計頁（Forward PE）", "Interested-party（資料商彙整賣方預估）"),
-           ("Ciena", "CIEN", "=30.77*230.81/320.26", "2026-11-05", "前瞻 P/E＝資料商頁面前瞻 P/E 30.77（頁面價格 320.26，2026-10-23）× 2026-11-05 收盤 230.81 ÷ 頁面價格（收盤：Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變）；原：同上", "Interested-party（同上）"),
-           ("Celestica", "CLS", "=16.65*205.64/260.01", "2026-11-05", "前瞻 P/E＝資料商頁面前瞻 P/E 16.65（頁面價格 260.01，2026-10-23）× 2026-11-05 收盤 205.64 ÷ 頁面價格（收盤：Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變）；原：同上", "Interested-party（同上）"),
-           ("Hewlett Packard Enterprise（含 Juniper）", "HPE", "=12.19*44.16/56.69", "2026-11-05", "前瞻 P/E＝資料商頁面前瞻 P/E 12.19（頁面價格 56.69，2026-10-23）× 2026-11-05 收盤 44.16 ÷ 頁面價格（收盤：Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變）；原：同上", "Interested-party（同上）"),
-           ("Credo", "CRDO", "=20.19*112.33/147.29", "2026-11-05", "前瞻 P/E＝資料商頁面前瞻 P/E 20.19（頁面價格 147.29，2026-10-23）× 2026-11-05 收盤 112.33 ÷ 頁面價格（收盤：Yahoo Finance 日線收盤 2026-11-05；共識 EPS 不變）；原：同上", "Interested-party（同上）")],
+    peers=[("Cisco", "CSCO", "=20.7*95.64/106.5", "2026-11-13", "前瞻 P/E＝資料商頁面前瞻 P/E 20.7（頁面價格 106.5，2026-10-23）× 2026-11-13 收盤 95.64 ÷ 頁面價格（收盤：工作單 px1113；Yahoo Finance 日線收盤 2026-11-13；v0.5.5 為 11-05 收盤 95.72；共識 EPS 不變）；原：stockanalysis.com 統計頁（Forward PE）", "Interested-party（資料商彙整賣方預估）"),
+           ("Ciena", "CIEN", "=30.77*280.54/320.26", "2026-11-13", "前瞻 P/E＝資料商頁面前瞻 P/E 30.77（頁面價格 320.26，2026-10-23）× 2026-11-13 收盤 280.54 ÷ 頁面價格（收盤：工作單 px1113；Yahoo Finance 日線收盤 2026-11-13；v0.5.5 為 11-05 收盤 230.81；共識 EPS 不變）；原：同上", "Interested-party（同上）"),
+           ("Celestica", "CLS", "=16.65*240.34/260.01", "2026-11-13", "前瞻 P/E＝資料商頁面前瞻 P/E 16.65（頁面價格 260.01，2026-10-23）× 2026-11-13 收盤 240.34 ÷ 頁面價格（收盤：工作單 px1113；Yahoo Finance 日線收盤 2026-11-13；v0.5.5 為 11-05 收盤 205.64；共識 EPS 不變）；原：同上", "Interested-party（同上）"),
+           ("Hewlett Packard Enterprise（含 Juniper）", "HPE", "=12.19*48.29/56.69", "2026-11-13", "前瞻 P/E＝資料商頁面前瞻 P/E 12.19（頁面價格 56.69，2026-10-23）× 2026-11-13 收盤 48.29 ÷ 頁面價格（收盤：工作單 px1113；Yahoo Finance 日線收盤 2026-11-13；v0.5.5 為 11-05 收盤 44.16；共識 EPS 不變）；原：同上", "Interested-party（同上）"),
+           ("Credo", "CRDO", "=20.19*131.51/147.29", "2026-11-13", "前瞻 P/E＝資料商頁面前瞻 P/E 20.19（頁面價格 147.29，2026-10-23）× 2026-11-13 收盤 131.51 ÷ 頁面價格（收盤：工作單 px1113；Yahoo Finance 日線收盤 2026-11-13；v0.5.5 為 11-05 收盤 112.33；共識 EPS 不變）；原：同上", "Interested-party（同上）")],
     peer_note="券商常用的資料中心網通同業（交換器：Cisco、HPE＋Juniper；光傳輸：Ciena；白牌交換器 ODM：Celestica；AI 互連：Credo）；不含 A 股（Andy 11:53）。前瞻 P/E 口徑為資料商的未來 12 個月共識 EPS，各家 GAAP／non-GAAP 口徑不一",
     cons_tp="cons_tp", cons_note="stockanalysis.com：32 位分析師平均目標價（2026-10-23）；Interested-party",
     cons_fwd="px/pe_fwd_sa", cons_fwd_note="共識未來 12 個月 EPS＝現價 ÷ StockAnalysis 前瞻 P/E（FY2027 以後共識未找到）；比較窗為 2026-11～2027-10，故 B 用同窗的情境加權 2/12 × FY2026＋10/12 × FY2027",
@@ -855,7 +855,7 @@ SO.cell(SO.max_row + 1, 1, "[Derived] 自算產業 β（Andy 2026-11-05 22:55）
 import r3_post  # noqa: E402
 print(r3_post.apply(wb, stub_note='="資產負債表日 "&bs_date&"；stub 期＝4Q26（Q 頁公司 4Q26 指引 FCFF；stub_frac "&TEXT(stub_frac,"0.000")&" 年只用於營運資金增量）"',
                     stub_src="stub FCFF＝4Q26 FCFF（Q 頁 4Q26 公司指引；v0.5.3 起），不用 FY2027 全年 × 本值；本值只用於 FY2026 營運資金增量的期間比例",
-                    stub_lab="stub FCFF＝4Q26（Q 頁公司 4Q26 指引）", readme_repl=[("（2026-10-23，沿用）", "（2026-11-05）")]))
+                    stub_lab="stub FCFF＝4Q26（Q 頁公司 4Q26 指引）", readme_repl=[("（2026-10-23，沿用）", "（2026-11-13）")]))
 # px1105（2026-11-06）：情境名稱改回樂觀／基準／保守、舊版沿革列固定文字（本資料夾 px1105_post.py）
 import px1105_post  # noqa: E402
 print(px1105_post.apply(wb))
@@ -869,6 +869,11 @@ if _CR:
 # v0.5.5（2026-11-15）：版面規格 v1.3（標準損益表、反向 DCF、四個目標價、敏感度主圖）＋三層協調 C0（實績）對帳（arista/v055_post.py；只新增，既有數值不變）
 import v055_post as POST  # noqa: E402
 print(POST.apply(wb, SIL, _HERE, _CR))
+# v0.5.6（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）——README A1 版號與本版說明
+_a1 = wb["README"]["A1"].value; _h, _t = _a1.split("；", 1)
+import re as _re
+assert _re.search(r"v0\.5\.[45]", _h)
+wb["README"]["A1"] = _re.sub(r"v0\.5\.[45]", "v0.5.6", _h, count=1) + "；v0.5.6（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113；只換價格，共識 EPS 與模型假設不變）；" + _t
 wb.save(sys.argv[1])
 if os.environ.get("ARISTA_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

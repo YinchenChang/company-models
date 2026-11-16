@@ -13,7 +13,7 @@ import re
 
 from openpyxl.styles import Font, PatternFill
 
-VER, BUILT = "0.3.7", "2026-11-15"
+VER, BUILT = "0.3.8", "2026-11-16"
 U_PR = "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf"   # 出處網址只放 Coord 頁 L 欄（HTML 不顯示外部網址）
 BOLD = Font(bold=True)
 BLUE = Font(color="0000FF")
@@ -563,7 +563,7 @@ def readme13(wb, C, RVA, PLA, CRD):
     put("hero", T("加權目標價 "), f'TEXT({tp},"0")', T(" 美元，比現價 "), 'TEXT(px,"0.00")', f'IF({up}<0," 低 "," 高 ")', f'TEXT(ABS({up}),"0%")', T("，評等"), rec, T("：現金流折現 "), f'TEXT({dcf},"0")',
         T(" 與分部加總 "), f'TEXT({cmpv},"0")', T(" 各半。AI 資本支出大、基準情境 AWS AI 報酬低於資金成本，是現金流折現偏低的主因。"))
     put("rec", T("投資建議「"), rec, T("」成立的前提：自用 AI 採價值中性（讀法 2）；改為只計成本（讀法 1）時加權目標價 "), f'TEXT(Val!B{C["R1"]["tp"]},"0")', T(" 美元（"), f'TEXT(Val!B{C["R1"]["up"]},"+0%;-0%")', T("），評等"),
-        f'Val!B{C["R1"]["rec"]}', T("。2026 資本支出依公司指引約 220 十億美元校準 AI 容量速度；現價 "), 'TEXT(px,"0.00")', T(" 美元為 2026-11-05 收盤。"))
+        f'Val!B{C["R1"]["rec"]}', T("。2026 資本支出依公司指引約 220 十億美元校準 AI 容量速度；現價 "), 'TEXT(px,"0.00")', T(" 美元為 2026-11-13 收盤。"))
     put("o1", T("目標價 "), f'TEXT({tp},"0")', T("＝現金流折現 "), f'TEXT({dcf},"0")', T("、分部加總 "), f'TEXT({cmpv},"0")', T(" 各半，比現價"), f'IF({up}<0,"低 ","高 ")', f'TEXT(ABS({up}),"0%")',
         T("；市場共識 "), 'TEXT(cons_tp,"0")', T("。三個情境 "), f'TEXT({vb("tps")},"0")', T("／"), f'TEXT({vb("tps", "C")},"0")', T("／"), f'TEXT({vb("tps", "D")},"0")', T("。"))
     put("o2", T("現金流折現偏低：反向推算（情境 B），要支持現價需把折現率降到 "), f'TEXT({rv("w1")},"0.0%")', T("（模型 "), f'TEXT({rv("w0")},"0.0%")', T("），或 FY2028 起營收與營業利益全面放大 "),
@@ -575,11 +575,22 @@ def readme13(wb, C, RVA, PLA, CRD):
     put("drv", T("分部營收推導（情境 B）：North America、International＝零售六條營收線（線上商店、實體店、第三方賣家、廣告、訂閱、其他）依年增率推算再按北美比例分配；AWS＝AWS AI（對外 AI 在役 MW × 每 MW 年持有成本 × 價格比）＋AWS 其他（非 AI 雲端，近四季年增向長期值收斂）；四者加總為合併營收。FY2028：North America "),
         f'TEXT({PLB("na", "I")},"0")', T("、International "), f'TEXT({PLB("intl", "I")},"0")', T("、AWS 其他 "), f'TEXT({PLB("aws_o", "I")},"0")', T("、AWS AI "), f'TEXT({PLB("aws_ai", "I")},"0")',
         T("，合計 "), f'TEXT({PLB("tot", "I")},"0")', T(" 十億美元。"))
-    RD.cell(r, 1, f"v{VER}（{BUILT}）：只改展示層與新增頁——個股 HTML 版面規格 v1.3：章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；新增 RevDCF 頁（反向 DCF）、PL 頁末標準損益表"
+    RD.cell(r, 1, F_(T("v0.3.8（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。現價 260.21（11-05）→ "), 'TEXT(px,"0.00")',
+                     T("；加權目標價 217.69 → "), f'TEXT({tp},"0.00")', T("；上檔空間 −16.3% → "), f'TEXT({up},"+0.0%;-0.0%")',
+                     T("；投資建議 中立 → "), rec, T("（只換現價時為 217.69、−18.4%、中立）。本模型現價只影響上檔空間與評等（WACC 權益權重用 In 頁 px_val〔2026-10-30 收盤 240.35，依設計不隨現價換〕）；加權目標價的變動來自同業倍數換價。同業倍數（報價日 2026-10-07／10-08）依價格檔同日收盤換到 2026-11-13（倍數 × 收盤比，近似，無市值）：" + _PXTXT + "；零售同業 WMT、COST、TGT 同法換價（N 批補做，報價日 2026-10-07）；共識與其他假設不變。")))
+    out["ver"] = r; r += 1
+    RD.cell(r, 1, "v0.3.7（2026-11-15）：只改展示層與新增頁——個股 HTML 版面規格 v1.3：章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；新增 RevDCF 頁（反向 DCF）、PL 頁末標準損益表"
                   "（FY2023A–FY2025A 實績＋FY2026E–FY2032E 情境 B，GAAP；另列 9M26A）、Sens 頁末加權目標價相對基準（龍捲風圖用）、README 頁末 v1.3 白話列；新增 Coord 頁「三層協調」（F1 讀取層級；F1b 追公式；F2 C0（實績）：現金資本支出 vs 層級隱含值，層級值同源）。"
                   "既有數值格不變（新增列與新增頁以外逐格比對 0 差異），目標價與評等不變")
-    out["ver"] = r; r += 1
+    r += 1
     return out
+
+
+_HD = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
+_PXC = json.load(open(os.path.join(_HD, "peers_cloud_20261113.json"), encoding="utf-8"))
+_PXA = json.load(open(os.path.join(_HD, "peers_ads_20261113.json"), encoding="utf-8"))
+_PXR = json.load(open(os.path.join(_HD, "peers_retail_20261113.json"), encoding="utf-8"))
+_PXTXT = f"非 AI 雲端中位數 {_PXC['median1007']['value']} → {_PXC['median']['value']}、數位廣告 {_PXA['median1007']['value']} → {_PXA['median']['value']}、零售 {_PXR['median1007']['value']} → {_PXR['median']['value']}"
 
 
 def apply(wb, C):

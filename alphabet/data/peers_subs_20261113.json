@@ -1,0 +1,48 @@
+{
+ "group": "subs",
+ "peers": [
+  {
+   "ticker": "NFLX",
+   "name": "Netflix",
+   "basis": "NTM",
+   "ntmEvEbitda1007": 15.41,
+   "ntmEvEbitda": 13.74,
+   "refDate": "2026-10-07",
+   "closeOld": 69.7,
+   "closeNew": 62.15,
+   "priceRatio": 0.891679
+  },
+  {
+   "ticker": "SPOT",
+   "name": "Spotify",
+   "basis": "TTM",
+   "ntmEvEbitda1007": 31.97,
+   "ntmEvEbitda": 38.18,
+   "refDate": "2026-10-07",
+   "closeOld": 512.92,
+   "closeNew": 612.63,
+   "priceRatio": 1.194397
+  },
+  {
+   "ticker": "DIS",
+   "name": "Disney",
+   "basis": "TTM",
+   "ntmEvEbitda1007": 10.58,
+   "ntmEvEbitda": 12.02,
+   "refDate": "2026-10-07",
+   "closeOld": 104.75,
+   "closeNew": 118.97,
+   "priceRatio": 1.135752
+  }
+ ],
+ "median1007": {
+  "value": 15.41
+ },
+ "median": {
+  "value": 13.74,
+  "n": 3,
+  "tag": "[Derived]（近似）"
+ },
+ "asOf": "2026-11-13（倍數＝2026-10-07 倍數 × Yahoo Finance 收盤比，近似）",
+ "priceSource": "markets/invest_map/data/closes_20261020_20261113.csv"
+}

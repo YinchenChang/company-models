@@ -569,7 +569,7 @@
      "value_col": "B",
      "fmt": "sp1",
      "title": "加權目標價相對基準：輸入取低值",
-     "rows": "853,854,855,859,860,861,862,863,865,867,868,869,870,871,872,875,876,878,880,881,884,885,886,887,892,893,894,896,897,901,902,903,904",
+     "rows": "853,854,855,859,860,861,862,863,865,867,869,870,871,872,875,876,878,880,881,884,885,886,887,892,893,894,896,897,901,902,903,904",
      "collapse": true,
      "summary": "展開：加權目標價相對基準：輸入取低值，變動未達兩位數百分比的案例"
     },
@@ -3662,39 +3662,48 @@
       ],
       [
        "@Recon!A66|",
-       "@Recon!B66|n3",
-       "@Recon!C66|n3",
-       "@Recon!D66|n3",
-       "@Recon!E66|n3",
+       "@Recon!B66|n2",
+       "@Recon!C66|n2",
+       "@Recon!D66|n2",
+       "@Recon!E66|n2",
        "@Recon!F66|sp1",
        "@Recon!H66|"
       ],
       [
        "@Recon!A67|",
-       "@Recon!B67|n2",
-       "@Recon!C67|n2",
-       "@Recon!D67|n2",
-       "@Recon!E67|n2",
+       "@Recon!B67|n3",
+       "@Recon!C67|n3",
+       "@Recon!D67|n3",
+       "@Recon!E67|n3",
        "@Recon!F67|sp1",
        "@Recon!H67|"
       ],
       [
        "@Recon!A68|",
-       "@Recon!B68|sp1",
-       "@Recon!C68|n1",
-       "@Recon!D68|n1",
-       "@Recon!E68|n1",
+       "@Recon!B68|n2",
+       "@Recon!C68|n2",
+       "@Recon!D68|n2",
+       "@Recon!E68|n2",
        "@Recon!F68|sp1",
        "@Recon!H68|"
       ],
       [
        "@Recon!A69|",
-       "@Recon!B69|n2",
-       "@Recon!C69|n2",
-       "@Recon!D69|n2",
-       "@Recon!E69|n2",
+       "@Recon!B69|sp1",
+       "@Recon!C69|n1",
+       "@Recon!D69|n1",
+       "@Recon!E69|n1",
        "@Recon!F69|sp1",
        "@Recon!H69|"
+      ],
+      [
+       "@Recon!A70|",
+       "@Recon!B70|n2",
+       "@Recon!C70|n2",
+       "@Recon!D70|n2",
+       "@Recon!E70|n2",
+       "@Recon!F70|sp1",
+       "@Recon!H70|"
       ]
      ]
     },

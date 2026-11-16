@@ -214,7 +214,7 @@ def _v13():
     RD, PLW, RV = wb["README"], wb["PL"], wb["RevDCF"]
     r13 = row("README", "v1.3 展示層")
     RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
-    assert str(RD[f"A{RM['ver']}"].value).startswith("v0.5.7"), RD[f"A{RM['ver']}"].value
+    assert str(RD[f"A{RM['ver']}"].value).startswith("v0.5.8"), RD[f"A{RM['ver']}"].value
     cfg["layout"] = "v1.3"
     old_note = list(cfg["hero"]["note"])
     cfg["hero"]["note"] = [f"@README!A{RM['hero']}"]   # 橫幅只留白話說明（≤200 字）；評等邊界與相對倍數調整移到估值章

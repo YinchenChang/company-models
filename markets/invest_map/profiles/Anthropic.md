@@ -61,8 +61,8 @@ AI 模型公司（位於 AI 金流的最上游）：自研 Claude 系列大模�
 |---|---|---|---|
 | OpenAI | API、訂閱、程式代理 | 2026 Q2 營收 6.7bn；9 月底 run-rate 約 50bn（淨額口徑） | [本專案：20261115_OpenAI收支模型_v0_6_6.xlsx SRC_OAI!C9、C139] |
 | Google（Gemini） | API、企業助理；也是 Anthropic 股東與 TPU 供應商 | Gemini 營收：本專案未建立 | — |
-| MiniMax（00100.HK） | API、消費型 App | 1H26 營收 116.6m 美元 | [本專案：20261115_MiniMax收支模型_v0_2_3.xlsx SRC_MM!E8] |
-| 智譜（02513.HK） | API、Coding 方案 | 1H26 營收 RMB 954m | [本專案：20261115_MiniMax收支模型_v0_2_3.xlsx SRC_MM!E75] |
+| MiniMax（00100.HK） | API、消費型 App | 1H26 營收 116.6m 美元 | [本專案：20261116_MiniMax收支模型_v0_2_4.xlsx SRC_MM!E8] |
+| 智譜（02513.HK） | API、Coding 方案 | 1H26 營收 RMB 954m | [本專案：20261116_MiniMax收支模型_v0_2_4.xlsx SRC_MM!E75] |
 
 - 份額（第三方）：企業 LLM API 使用份額 32%（Menlo，2025-07）；OpenRouter 文字請求份額 2.5%（2026-09 底）[本專案：20261115_Anthropic收支模型_v0_2_3.xlsx SRC_ANT!E186、E185]（[Analogy]）。兩者差距大，反映 Anthropic 偏企業、OpenRouter 偏開發者長尾 [判斷]。
 - 營收口徑：Anthropic 雲端市集營收以總額認列 [本專案：20261115_Anthropic收支模型_v0_2_3.xlsx Revenue!B67]，與 OpenAI 淨額口徑不能直接比大小。

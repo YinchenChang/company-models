@@ -14,7 +14,7 @@ import re
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
-VER, BUILT = "0.2.1", "2026-11-15"
+VER, BUILT = "0.2.2", "2026-11-16"
 U_10Q = "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm"   # 出處網址只放 Coord 頁 L 欄（HTML 不顯示外部網址）
 U_PR = "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066700/meta-09302026xexhibit991.htm"
 U_Q4_23 = "https://investor.atmeta.com/investor-news/press-release-details/2024/Meta-Reports-Fourth-Quarter-and-Full-Year-2023-Results-Initiates-Quarterly-Dividend/"
@@ -619,11 +619,19 @@ def readme13(wb, C, RVA, PLA, CRD):
         T("（最近一季年化 "), f'TEXT(Coord!F{CRD["rd2"]},"+0%;-0%")', T("），但該層級值由 Meta 資本支出換算（同源），結論："), f'Coord!G{CRD["rj"]}', T("；AI 營收、在役電力公司不揭露，無可比實績。"))
     put("drv", T("分部營收推導（情境 B）：Advertising＝廣告曝光數 × 每則廣告平均價格（各自近四季年增向長期值收斂；情境 A／C 只調價格），Other revenue 與 Reality Labs 各依近四季年增收斂；"
                  "三者加總為合併營收。FY2028 Advertising "), f'TEXT(PL!I{PRB["ads"]},"0")', T("、Other revenue "), f'TEXT(PL!I{PRB["other"]},"0.0")', T("、Reality Labs "), f'TEXT(PL!I{PRB["rl"]},"0.0")', T("，合計 "), f'TEXT(PL!I{PRB["rev"]},"0")', T(" 十億美元。"))
-    RD.cell(r, 1, f"v{VER}（{BUILT}）：只改展示層與新增頁——個股 HTML 版面規格 v1.3：章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；新增 RevDCF 頁（反向 DCF）、PL 頁末標準損益表"
-                  "（FY2023A–FY2025A 實績＋FY2026E–FY2032E 情境 B，GAAP）、Sens 頁末加權目標價相對基準（龍捲風圖用）、README 頁末 v1.3 白話列；新增 Coord 頁「三層協調」（F1 讀取層級；F1b 追公式；F2 C0（實績）：公司資本支出 vs 層級隱含值）；Recon 第 7 節判定欄改標「參考（讀取層級，不判定）」。"
-                  "既有數值格不變（新增列與新增頁以外逐格比對 0 差異），目標價與評等不變；Wattonomics 固定讀 v0.3 快照（main 的 CURRENT 已升 v0.3.2，v0.3 檔在 archive/），本輪不換快照")
+    RD.cell(r, 1, F(T("v0.2.2（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。現價 605.08（11-05）→ "), 'TEXT(px,"0.00")',
+                    T("；股價基準日 2026-11-05 → 2026-11-13，目標時點隨公式 2027-11-05 → "), 'TEXT(tp_date,"yyyy-mm-dd")',
+                    T("；加權目標價 778.44 → "), f'TEXT({vb("tp")},"0.00")', T("；上檔空間 +28.7% → "), f'TEXT({vb("up")},"+0.0%;-0.0%")',
+                    T("；投資建議 買進 → "), f'{vb("rec")}', T("（只換現價時為 780.65、+21.7%、中立）；加權目標價的變動來自同業倍數換價。評價日股價與 WACC 權益權重（px_val）不隨現價換。同業倍數（報價日 2026-10-07／10-08；Meta 自身 10-28）依價格檔同日收盤換到 2026-11-13（GOOGL 與 Meta 自身用市值法，PINS、TTD、APP、RDDT、SNAP 倍數 × 收盤比，近似）：" + _PXTXT + "；共識與其他假設不變。")))
     out["ver"] = r; r += 1
+    RD.cell(r, 1, "v0.2.1（2026-11-15）：只改展示層與新增頁——個股 HTML 版面規格 v1.3：章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；新增 RevDCF 頁、PL 頁末標準損益表、Sens 頁末加權目標價相對基準、README 頁末 v1.3 白話列；新增 Coord 頁「三層協調」。既有數值格不變，目標價與評等不變；Wattonomics 固定讀 v0.3 快照，本輪不換快照")
+    r += 1
     return out
+
+
+_PXJ = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "peers_ads_20261113.json"), encoding="utf-8"))
+_PXG = [p for p in _PXJ["peers"] if p["ticker"] == "GOOGL"][0]
+_PXTXT = f"六家中位數 {_PXJ['median1030']['value']} → {_PXJ['median']['value']}、GOOGL {_PXG['ntmEvEbitda1007']} → {_PXG['ntmEvEbitda']}、Meta 自身 {_PXJ['selfReference']['ntmEvEbitda1007']} → {_PXJ['selfReference']['ntmEvEbitda']}"
 
 
 def apply(wb, C):

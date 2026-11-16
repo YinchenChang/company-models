@@ -157,8 +157,8 @@ inp("tk_capit", "Tokenomics：VR200 每 GW IT 資本支出", "US$B/GW", cv["低�
     TKV + "：IF_CapexIT｜VR200（" + TKI["IF_CapexIT"]["cells"][VR]["基準"] + "）", "—")
 
 sec("F. 價格與估值")
-inp("px", "股價（2026-11-05 收盤）", "US$", None, 81.71, None, "Derived", SPX + "：11-05 收盤＝89.68 − 7.97＝81.71",
-    "equibles 2026-11-04 收盤 91.85；stockanalysis.com 歷史股價 10-30 收盤 109.18。11-09 為 IPO 鎖定期最後解禁日、11-12 公布 3Q26 財報")
+inp("px", "股價（2026-11-13 收盤）", "US$", None, 108.72, None, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（markets/invest_map/data/closes_20261020_20261113.csv）",
+    "v0.1.3 為 2026-11-05 收盤 81.71（" + SPX + "：11-05 收盤＝89.68 − 7.97＝81.71；Yahoo Finance 日線 11-05 收盤同為 81.71）。equibles 2026-11-04 收盤 91.85；stockanalysis.com 歷史股價 10-30 收盤 109.18。11-09 為 IPO 鎖定期最後解禁日、11-12 公布 3Q26 財報")
 for s, w in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
     inp(f"tp_w{s}", f"目標價情境權重 {s}", "%", None, w, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 0.3／0.5／0.2；同 NVIDIA、AMD）", "三權重合計應為 1")
 inp("tp_w_dcf", "目標價中 DCF 的權重（其餘為 Comparable）", "%", None, 0.5, None, "Assumed", "Andy 可改（Andy 2026-10-25 11:53 定 50／50）", "Sens 頁 0.3／0.7")
@@ -399,17 +399,17 @@ V["A3"] = "0. 目標價（DCF 與 Comparable 加權）"; V["A3"].font = BOLD
 SV = FD.write_summary(wb, V, 4, RD_, ["A", "B", "C"], ["tp_wA", "tp_wB", "tp_wC"], beta_note="自算產業 β 重新加槓桿")
 r = 4 + FD.summary_rows(True) + 2
 V.cell(r, 1, "0.2 Comparable（市場主流同業前瞻 P/S）").font = BOLD; R_C0 = r; r += 1
-hdr(V, r, ["同業與前瞻 P/S", "代號", "前瞻 P/S（11-05）", "日期", "來源", "標記"]); R_PH = r; r += 1
-PEERS = [("NVIDIA", "NVDA", 8.37, 186.64, "11-06", 181.60), ("AMD", "AMD", 8.76, 449.04, "11-06", 404.40), ("Broadcom", "AVGO", 8.91, 293.69, "11-06", 291.53),
-         ("Marvell", "MRVL", 7.90, 141.20, "11-06", 133.55)]
+hdr(V, r, ["同業與前瞻 P/S", "代號", "前瞻 P/S（11-13）", "日期", "來源", "標記"]); R_PH = r; r += 1
+PEERS = [("NVIDIA", "NVDA", 8.37, 186.64, "11-06", 162.85), ("AMD", "AMD", 8.76, 449.04, "11-06", 534.06), ("Broadcom", "AVGO", 8.91, 293.69, "11-06", 347.01),
+         ("Marvell", "MRVL", 7.90, 141.20, "11-06", 156.76)]   # px1113：最後一欄由 11-05 收盤（181.60、404.40、291.53、133.55）改 11-13 收盤（共識 P/S 與頁面價格不變）
 R_P1 = r
 for nm, tk_, fps, ppx, pdt, px5 in PEERS:
     V.cell(r, 1, nm); V.cell(r, 2, tk_)
     c = V.cell(r, 3, f"={fps}*{px5}/{ppx}"); c.number_format = "0.00"
-    V.cell(r, 4, "2026-11-05")
+    V.cell(r, 4, "2026-11-13")
     src5 = {"NVDA": "本專案 NVIDIA 模型 In 頁 px", "AMD": "本專案 AMD 模型 In 頁 px", "AVGO": "本專案 Broadcom 模型 In 頁 px", "MRVL": "本專案 Marvell 模型 In 頁 px",
             "CRWV": "本專案 CoreWeave README（v4.13 現價）；equibles 11-06 收盤 46.40 − 2.74", "NBIS": "equibles 11-06 收盤 129.49 − 9.12"}[tk_]
-    V.cell(r, 5, f"stockanalysis.com 統計頁 Forward PS {fps}（2026-{pdt} 頁面，價格 {ppx}）× 11-05 收盤 {px5}（{src5}）÷ 頁面價格")
+    V.cell(r, 5, f"stockanalysis.com 統計頁 Forward PS {fps}（2026-{pdt} 頁面，價格 {ppx}）× 11-13 收盤 {px5}（{src5}；工作單 px1113，closes_20261020_20261113.csv）÷ 頁面價格；v0.1.3 為 11-05 收盤換算")
     V.cell(r, 6, "Interested-party（資料商彙整賣方營收預估）"); r += 1
 R_P2 = r - 1
 V.cell(r, 1, "  同業選擇"); V.cell(r, 5, "只用 AI 運算晶片同業（NVIDIA、AMD、Broadcom、Marvell；Andy 2026-11-08 21:21 定：Comparable 只用晶片同業）。推論雲端同業（CoreWeave 前瞻 P/S 1.2、Nebius 4.6）不納入；Cerebras 2Q26 營收七成為雲端服務，此選擇使倍數偏高。前瞻 P/S＝股價 ÷ 資料商次一會計年度營收預估"); R_PNOTE = r; r += 1
@@ -452,7 +452,7 @@ vrow("rec", "投資建議", f'=IF(B{T["up"]}>0.5,"強力買進",IF(B{T["up"]}>0.
 r += 1
 V.cell(r, 1, "1. 價格與市場隱含倍數").font = BOLD; r += 1
 hdr(V, r, ["項目", "A", "B", "C", "說明"]); R_H1 = r; r += 1
-vrow("px", "現價（2026-11-05 收盤）", "=px")
+vrow("px", "現價（2026-11-13 收盤）", "=px")
 vrow("mcap", "市值（稀釋股數；US$B）", "=px*sh_v", fmt="#,##0.00")
 vrow("ev", "企業價值（市值 − 淨現金與投資；US$B）", "=px*sh_v-dcf_nc", fmt="#,##0.00", e="淨現金與投資為 2026-09-30（未滾到評價日）")
 vrow("evs27", "現價隱含 EV ÷ FY2027 營收", f"=B{T['ev']}/PL!E{PR['A']['rev']}", f"=B{T['ev']}/PL!E{PR['B']['rev']}", f"=B{T['ev']}/PL!E{PR['C']['rev']}", fmt="0.00")
@@ -574,7 +574,7 @@ for i, (s_, u_) in enumerate((
         (SQ1, "1Q26 營收分部"),
         (SAPI, "FY2024–FY2025（424B4）、客戶集中、OpenAI 貸款與循環額度、股數、RPO 認列時點、租約、潛在稀釋"),
         (SFUT, "S-1：OpenAI 主合作協議 750 MW、逾 200 億美元、AWS 條款書、2025 客戶集中"),
-        (SPX, "現價（2026-11-05 收盤，Derived）"),
+        ("Yahoo Finance 日線收盤 2026-11-13（工作單 px1113；closes_20261020_20261113.csv）；v0.1.3 的 2026-11-05 收盤 81.71 見 " + SPX, "現價（2026-11-13 收盤）"),
         ("stockanalysis.com 預測頁 https://stockanalysis.com/stocks/cbrs/forecast/ ；統計頁 https://stockanalysis.com/stocks/cbrs/statistics/", "共識營收、EPS、目標價；股數與現金（對照）"),
         ("stockanalysis.com 各同業統計頁（NVDA、AMD、AVGO、MRVL；2026-11-08 讀取）", "同業前瞻 P/S"),
         (TKV, "Cerebras 產出比、持有成本比、VR200 持有成本與 IT 資本支出（Recon 與 capex_mw 高值）"),
@@ -627,7 +627,7 @@ RM_["A32"] = "命題：Cerebras 的營收＝推論雲端（平均計費 MW × �
 RM_["A33"] = "命題 1：2027 年營收能否達到公司說的「三倍」（FY2026 錨點約 9.52 億美元的三倍約 28.6 億）。"
 RM_["A34"] = "命題 2：OpenAI 合約隱含的每 MW 年營收，是否足以覆蓋自建成本——毛利率能否回到 45% 以上，以及與 Tokenomics 持有成本的差距。"
 RM_["A35"] = "命題 3：擴建數百 MW 的資本支出，2026-09-30 約 78 億美元的現金與投資（含受限現金）是否足夠，不需再融資或稀釋。"
-RM_["A36"] = "命題 4：現價（11-05 收盤 81.71 美元）相對同業前瞻 P/S 是低估，還是反映客戶集中（UAE、OpenAI）與解禁賣壓的合理折價。"
+RM_["A36"] = "命題 4：現價（11-13 收盤 108.72 美元）相對同業前瞻 P/S 是低估，還是反映客戶集中（UAE、OpenAI）與解禁賣壓的合理折價。"
 RM_["A37"] = (f'="重點 1：加權目標價約 "&TEXT({tpv},"0.00")&" 美元，比現價 "&TEXT(px,"0.00")&" "&IF({up}>=0,"高 ","低 ")&TEXT(ABS({up}),"0.0%")&"，投資建議「"&Val!B{T["rec"]}&"」。'
                f'兩種方法差距大：Comparable（同業 P/S）"&TEXT({cmp_},"0.00")&"，DCF 只有 "&TEXT({dcf_},"0.00")&"，因為擴建期自由現金流為負、長期營業利益率有限。"')
 RM_["A38"] = (f'="重點 2：情境 B 的 FY2027 營收 "&TEXT(PL!E{pB["rev"]},"0.00")&" 十億美元（FY2026 的 "&TEXT(PL!E{pB["rev"]}/PL!D{pB["rev"]},"0.0")&" 倍）、FY2028 "&TEXT(PL!F{pB["rev"]},"0.00")&"；'
@@ -656,6 +656,8 @@ for ws in (PL, V, DCFW, SE):
 sys.path.insert(0, HERE)
 import v012_post  # noqa: E402
 print(v012_post.apply(wb, PR, TKV))
+import px1113_post  # noqa: E402   v0.1.4：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
+print(px1113_post.apply(wb))
 out = sys.argv[1]
 wb.save(out)
 

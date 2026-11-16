@@ -973,6 +973,11 @@ if os.environ.get("AMKR_SENS") != "1":
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import v044_post as V44
     print(V44.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL))
+# v0.4.5（2026-11-16）：工作單 px1113——現價與同業報價改 2026-11-13 收盤（amkr/px1113_post.py；只改價格輸入與說明文字）
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import px1113_post as P1113  # noqa: E402
+_N1113 = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "px1113_note.txt"), encoding="utf-8").read().strip() if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), "px1113_note.txt")) else "v0.4.5（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。"
+print(P1113.apply(wb, os.path.dirname(os.path.abspath(__file__)), dict(ver="v0.4.5", old_ver="v0.4.4", tk="AMKR", note=_N1113 + " ")))
 wb.save(sys.argv[1])
 if os.environ.get("AMKR_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

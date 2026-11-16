@@ -13,7 +13,7 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
 VER, BUILT = "0.4.5", "2026-11-15"   # 「v0.4.5 新增」標籤用；現行版號見 NEWVER
-NEWVER = "0.4.6"   # v0.4.6（2026-11-15）：3Q26 財報滾入、資產負債表日 2026-09-30（README A1 版號由 build_accton.py 末段改）
+NEWVER = "0.4.7"   # v0.4.6（2026-11-15）：3Q26 財報滾入、資產負債表日 2026-09-30（README A1 版號由 build_accton.py 末段改）
 BOLD = Font(bold=True); BLUE = Font(color="0000FF"); HDR = PatternFill("solid", fgColor="DDEBF7")
 SP = ("S&P Global Market Intelligence 經 stockanalysis.com 損益表頁（https://stockanalysis.com/quote/tpe/2345/financials/income-statement/；2026-11-15 讀取，頁面更新 2026-08-10；"
       "百萬元新台幣，此處換算為十億元；智邦未除權，股數與 EPS 不需還原）")
@@ -40,7 +40,7 @@ K = dict(
     R=dict(rev="營收", gp="毛利", opx="營業費用", oi="營業利益", ni="稅後淨利", sh="股數", eps="EPS"),
     nci_mode="hist", ext_mode="named",
     EXT=dict(title="三情境延伸到 FY2032", rev="營收", ni="淨利（延伸表）", sh="稀釋股數", eps="EPS（延伸表）"),
-    PXL="現價（2026-11-05 收盤）",
+    PXL="現價（2026-11-13 收盤）",
     GAAP_NOTE=("口徑：GAAP（IFRS 合併財報；淨利為歸屬母公司，與公司公告及本模型 Q 頁一致）。智邦不另編 Non-GAAP，市場共識與公司法說皆用合併財報口徑，故本表用 GAAP。"
                "歷史 EPS 為基本 EPS；稀釋 EPS 在表末對照列。"
                "預測期模型只推營業利益與「淨利 ÷ 營業利益」一個係數（涵蓋業外、稅、少數股權），本表把它拆成：其他收入＝營業利益 × FY2025 實績比例、少數股權損益＝稅前利益 × FY2025 實績比例、"
@@ -538,7 +538,10 @@ def readme13(wb, SIL, PLA, RVA, coord_rows):
                    "FY2027 為 "), f'TEXT(PL!E{pr("AI 交換器營收")},"#,##0")', T(" 十億元。網路應用產品（Trainium 加速卡等）＝Trainium 顆數 × 每顆營收（FY2026 校準）× 相對值；FY2027 為 "),
                  f'TEXT(PL!E{pr("網路應用產品營收")},"#,##0")', T(" 十億元。非 AI 由 FY2026 錨點乘成長率；FY2027 為 "), f'TEXT(PL!E{pr("非 AI 營收")},"#,##0")',
                  T(" 十億元。三者相加＝合併營收 "), f'TEXT(PL!E{PLA["R"]["rev"]},"#,##0")', T(" 十億元。")))
-    put("ver", F(T(VER46 + "v0.4.5（2026-11-15）：版面規格 v1.3 全面改版（章節順序、橫幅 ≤200 字、重點觀察 ≤5 點、標準損益表 FY2023A–FY2031E、反向 DCF 頁、四個目標價與現價圖、敏感度改加權目標價相對基準低案／高案主圖）；"
+    put("ver", F(T("v0.4.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113；Yahoo Finance 日線收盤，closes_20261020_20261113.csv）。現價 1,380 → "), f'TEXT({PX},"#,##0")',
+                 T("；同業前瞻 P/E 中位數 11.84 → "), f'TEXT({vb("同業前瞻 P/E 中位數")},"0.00")', T("；加權目標價 2,316.99 → "), f'TEXT({TPW},"#,##0.00")',
+                 T("；上檔空間 +67.9%（強力買進）→ "), f'TEXT({UP},"+0.0%;-0.0%")', T("（"), f'{REC}', T("）。共識 EPS、rf、β、預測用匯率、營運假設、情境權重與三層基準讀數不變；DCF 只經市值 D/E 對 WACC 微幅變動。未換價同業：無（四家同業與本公司皆取自收盤檔）。")))
+    put("ver_prev", F(T(VER46 + "v0.4.5（2026-11-15）：版面規格 v1.3 全面改版（章節順序、橫幅 ≤200 字、重點觀察 ≤5 點、標準損益表 FY2023A–FY2031E、反向 DCF 頁、四個目標價與現價圖、敏感度改加權目標價相對基準低案／高案主圖）；"
                  "三層協調：Coord 頁並列兩讀數目標價，並新增 C0（實績）：2026 年 1–10 月月營收對層級隱含值，列兩讀數但不判定（層級份額與每顆營收由本模型錨點校準，無可比實績）；同源列標「讀取層級（同源，不判定）」。"
                  "xlsx 只新增 Hist、RevDCF、Coord 頁與各頁末新增區塊，既有數值、加權目標價與投資建議不變。"
                  "舊 README 內文（下方各節）與 v0.4.4 沿革節的數字早於 Siliconomics v0.19 全下游重建，與現行不符；現行值以 Val 頁與本展示層為準。")))

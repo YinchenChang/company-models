@@ -1057,6 +1057,9 @@ if _CR:
             sources=[("公司（C0 實績）：TechNews 財報助手 2026-11-03（10 月營收 62.89 億、前 10 月累計 474.20 億）", "https://finance.technews.tw/2026/11/03/n-p-c-8046-202610-financial-report/"),
                      ("Hist 頁：stockanalysis.com 年度損益表（FY2022–FY2025，公司財報轉載）", "https://stockanalysis.com/quote/tpe/8046/financials/income-statement/")])
         print(v035_post.apply(wb, os.path.dirname(os.path.abspath(__file__)), SIL, _CR, CO35))
+# v0.3.6（2026-11-16）：現價與同業報價改 2026-11-13 收盤（px1113_post.py；工作單 px1113；只換價格，公式與架構不改）
+import px1113_post  # noqa: E402
+px1113_post.apply(wb, dict(ver="v0.3.6", prev="v0.3.5", px="8046.TW", fpe="fpe", d0="2026-11-05"))
 wb.save(sys.argv[1])
 if os.environ.get("NANYA_PCB_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

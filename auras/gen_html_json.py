@@ -265,7 +265,7 @@ post(cfg)
 # ───────── v0.2.5（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（兩讀數、C0（實績））；共通步驟 auras/html13.py（樣板 delta/gen_html_json.py、avc） ─────────
 import html13  # noqa: E402
 H = {
-    "ver": "v0.2.6",
+    "ver": "v0.2.7",
     "units_chart": lambda pB, hB: {
         "type": "theme", "title": "液冷、伺服器氣冷、筆電與桌機、電競顯卡與其他營收（情境 B，十億元）與雙鴻液冷有效份額（右軸）", "x": f"@PL!D{hB}:G{hB}",
         "fmt": "n1", "fmt_r": "p1", "stack": True, "pad": 1.25, "total": f"@PL!D{pB('營收')}:G{pB('營收')}",

@@ -1242,6 +1242,13 @@ if _CR:
     import v045_post as P45  # noqa: E402
     print(P45.apply(wb, SIL, _CR))
 
+# v0.4.7（2026-11-16）：工作單 px1113——現價與同業報價改 2026-11-13 收盤（kyec/px1113_post.py；只改價格輸入與說明文字）
+import px1113_post as P1113  # noqa: E402
+print(P1113.apply(wb, os.path.dirname(os.path.abspath(__file__)), dict(
+    ver="v0.4.7", old_ver="v0.4.6", tk="2449.TW", note_in_post=True,
+    extra_subs=(), fx_ads=32.939,   # 日月光 ADS 換算的 USD/TWD 33.034 → 32.939（K 批：TWD=X 2026-11-13 收盤）
+)))
+
 wb.save(sys.argv[1])
 if os.environ.get("KYEC_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

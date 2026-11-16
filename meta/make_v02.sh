@@ -9,7 +9,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-VER="${VER:-0.2.1}"; VDATE="${VDATE:-20261115}"
+VER="${VER:-0.2.2}"; VDATE="${VDATE:-20261116}"
 OUTNAME="${VDATE}_Meta個股模型_v${VER}.xlsx"
 SJ="meta/data/sens_v${VER//./}_${VDATE}.json"; KJ="meta/data/kreq_v${VER//./}.json"
 python3 meta/facts_2026q3.py                           # 事實總帳（兩讀核對；不一致即失敗）
@@ -18,7 +18,7 @@ if [ "${KREQ:-0}" = "1" ]; then python3 meta/kreq_v020.py "$WD/kreq" "$KJ"; fi
 if [ "${SENS:-0}" = "1" ]; then python3 meta/sens_v02.py "$WD/sens" "$SJ"; fi
 ROWMAP="$WD/rowmap.json" python3 meta/build_meta.py "$WD/raw.xlsx" --sens "$SJ" --kreq "$KJ"
 mkdir -p "$WD/out" meta/dist
-LC_ALL=C.UTF-8 soffice -env:UserInstallation=file://$WD/lo --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir "$WD/out" "$WD/raw.xlsx" > /dev/null 2>&1
+LC_ALL=C.UTF-8 soffice -env:UserInstallation=file:///tmp/lo_meta --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir "$WD/out" "$WD/raw.xlsx" > /dev/null 2>&1
 cp "$WD/out/raw.xlsx" "meta/dist/$OUTNAME"
 python3 meta/check_v02.py "meta/dist/$OUTNAME"
 python3 tools/in_layout/check_in_layout.py "meta/dist/$OUTNAME"

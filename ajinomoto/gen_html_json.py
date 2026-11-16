@@ -209,7 +209,7 @@ def _v13():
     fnd = lambda ws, p, start=1: next(r for r in range(start, ws.max_row + 1) if str(ws.cell(r, 1).value or "").strip().startswith(p))
     r13 = find("README", "v1.3 展示層")
     RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
-    assert str(RD[f"A{RM['ver']}"].value).startswith("v0.3.5"), RD[f"A{RM['ver']}"].value
+    assert str(RD[f"A{RM['ver']}"].value).startswith("v0.3.7"), RD[f"A{RM['ver']}"].value
     cfg["layout"] = "v1.3"
     fmt_u = lambda u: {"%": "p1", "¥": "n2", "十億股": "n3", "x": "n3", "百萬顆": "n2"}.get(str(u).strip(), "n1")
     # ---- 橫幅：≤200 字白話＋對帳中揭露句；評等規則與 Comparable 說明移到估值章 ----
