@@ -1,4 +1,14 @@
-# crdo/ — Credo（CRDO）收支與估值模型 v0.3.6
+# crdo/ — Credo（CRDO）收支與估值模型 v0.3.7
+
+## v0.3.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
+
+依據：`docs/workorders/20261116_px1113_現價與同業報價換11-13收盤.md`；價格只取 `markets/invest_map/data/closes_20261020_20261113.csv`。base＝v0.3.6。
+
+- **現價與同業報價改 2026-11-13 收盤（工作單 px1113）：** 現價 112.33 → 131.51（In 頁 px）；Comparable 同業前瞻 P/E（＝stockanalysis 10-23 前瞻 P/E × 11-13 收盤 ÷ 10-23 收盤，與「v0.3.6 倍數 × 11-13 ÷ 11-05 收盤」等價，共識 EPS 不變）：Astera Labs 31.94→39.48、Marvell 23.63→27.74、Broadcom 16.78→19.98、MACOM 23.04→28.08；**同業中位數 23.34 → 27.91**。**加權目標價 121.57 → 140.60；上檔空間 +8.2% → +6.9%；評等 中立 → 中立。**未換價同業：無。
+- **不變：** 共識 EPS、rf、β、ERP、情境權重與營運假設；以市值計的 WACC 權重隨現價自動重算。本模型沒有「資料基準日」型輸入。
+- **快照：** `sens.json`、`coord_alt.json` 以新價重跑（`sens_crdo.py`、`tools/coord/alt_run.py crdo`）；Sens 頁快照狀態 CURRENT。
+- **文字與沿革：** 「2026-11-05 收盤」標籤與來源欄改 11-13（保留「v0.3.6 為 2026-11-05 收盤 112.33」）；README 頁本版要點列改寫為 v0.3.7，前一版（v0.3.6）本版要點移到 README 頁末；既有沿革列保留原文。新增 `px1113_post.py`（只改版號與說明文字）。
+- 建置：同 v0.3.6（`python3 crdo/build_crdo.py raw.xlsx` → LibreOffice 重算 → `dist/` → `python3 crdo/gen_html_json.py <xlsx> crdo/html_src.json crdo/html.json` → `build_company_html.py crdo`）。
 
 ## v0.3.6（2026-11-15）：個股 HTML 版面 v1.3、三層協調讀取層級與 C0（公司實績）、硬體股兩讀數
 
