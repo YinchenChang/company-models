@@ -36,12 +36,13 @@ def index_files():
             continue
         parts = rel.split(os.sep)
         old[os.path.basename(p)].append(p)
-        if len(parts) >= 3 and parts[-2] == "dist" and parts[0] != "markets":
-            cur.setdefault(parts[0], []).append(p)
+        if len(parts) >= 3 and parts[-2] == "dist":   # 2026-11-17：市場層 markets/<x>/dist 也算現行檔（NAND 市場模型等）
+            cur.setdefault(parts[0] if parts[0] != "markets" else "/".join(parts[:2]), []).append(p)
     return cur, old
 
 def current_for(oldpath, cur):
-    folder = os.path.relpath(oldpath, ROOT).split(os.sep)[0]
+    rp = os.path.relpath(oldpath, ROOT).split(os.sep)
+    folder = rp[0] if rp[0] != "markets" else "/".join(rp[:2])
     cands = cur.get(folder, [])
     st = stem(os.path.basename(oldpath))
     same = [c for c in cands if stem(os.path.basename(c)) == st]
