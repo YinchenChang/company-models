@@ -1,11 +1,11 @@
 {
  "meta": {
-  "version": "v0.6.49",
-  "book": "20261116_AI投資地圖_資料_v0.6.49.xlsx",
+  "version": "v0.6.50",
+  "book": "20261116_AI算力地圖_資料_v0.6.50.xlsx",
   "tk_file": "20261102_Tokenomics_v21.8.xlsx",
   "tk_version": "v21.8",
   "tk_commit": "91db9ac",
-  "cm_commit": "bdbb4090",
+  "cm_commit": "54444b9",
   "built": "2026-11-16",
   "price_date": "上市公司一律用 2026-11-13 收盤（Yahoo Finance 日線）；v0.6.49 起各個股模型的現價、同業報價與目標價也已改以 2026-11-13 收盤重算（工作單 px1113），模型價與收盤同日；Anthropic 未掛牌，用 IPO 價格區間中點（上檔空間＝模型目標價 ÷ 最新收盤 − 1）",
   "last_close_date": "2026-11-13",

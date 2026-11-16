@@ -44,11 +44,11 @@ if not body.lstrip().lower().startswith("<!doctype"):
     open(p, "w", encoding="utf-8").write(body)
 PY
 echo "Wattonomics 互動頁：v$WV"
-printf '# AI 投資地圖（GitHub Pages 發布分支）\n\n本分支只放網站成品，由 main 的 `markets/invest_map/publish_pages.sh` 產生（來源 %s）。研究整理，非投資建議。\n' "$SHA" > "$TMP/README.md"
+printf '# AI 算力地圖（GitHub Pages 發布分支）\n\n本分支只放網站成品，由 main 的 `markets/invest_map/publish_pages.sh` 產生（來源 %s）。研究整理，非投資建議。\n' "$SHA" > "$TMP/README.md"
 cd "$TMP"
 git init -q -b gh-pages
 git add -A
-git -c user.name="Claude" -c user.email="noreply@anthropic.com" commit -q -m "發布 AI 投資地圖（來源 $SHA）"
+git -c user.name="Claude" -c user.email="noreply@anthropic.com" commit -q -m "發布 AI 算力地圖（來源 $SHA）"
 git push -q -f "$URL" gh-pages:gh-pages
 cd / && rm -rf "$TMP"
 echo "已發布到 gh-pages（來源 $SHA）"
