@@ -622,11 +622,16 @@ def readme13(wb, C, RVA, PLA, CRD):
     RD.cell(r, 1, F(T("v0.2.2（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。現價 605.08（11-05）→ "), 'TEXT(px,"0.00")',
                     T("；股價基準日 2026-11-05 → 2026-11-13，目標時點隨公式 2027-11-05 → "), 'TEXT(tp_date,"yyyy-mm-dd")',
                     T("；加權目標價 778.44 → "), f'TEXT({vb("tp")},"0.00")', T("；上檔空間 +28.7% → "), f'TEXT({vb("up")},"+0.0%;-0.0%")',
-                    T("；投資建議 買進 → "), f'{vb("rec")}', T("。評價日股價與 WACC 權益權重（px_val）不隨現價換。同業倍數報價日 2026-10-07 早於收盤價資料起日 2026-10-20，無同日收盤可換算，維持原值（未換價同業：PINS、TTD、APP、RDDT、SNAP、GOOGL 等廣告同業）；共識與其他假設不變。")))
+                    T("；投資建議 買進 → "), f'{vb("rec")}', T("（只換現價時為 780.65、+21.7%、中立）；加權目標價的變動來自同業倍數換價。評價日股價與 WACC 權益權重（px_val）不隨現價換。同業倍數（報價日 2026-10-07／10-08；Meta 自身 10-28）依價格檔同日收盤換到 2026-11-13（GOOGL 與 Meta 自身用市值法，PINS、TTD、APP、RDDT、SNAP 倍數 × 收盤比，近似）：" + _PXTXT + "；共識與其他假設不變。")))
     out["ver"] = r; r += 1
     RD.cell(r, 1, "v0.2.1（2026-11-15）：只改展示層與新增頁——個股 HTML 版面規格 v1.3：章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；新增 RevDCF 頁、PL 頁末標準損益表、Sens 頁末加權目標價相對基準、README 頁末 v1.3 白話列；新增 Coord 頁「三層協調」。既有數值格不變，目標價與評等不變；Wattonomics 固定讀 v0.3 快照，本輪不換快照")
     r += 1
     return out
+
+
+_PXJ = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "peers_ads_20261113.json"), encoding="utf-8"))
+_PXG = [p for p in _PXJ["peers"] if p["ticker"] == "GOOGL"][0]
+_PXTXT = f"六家中位數 {_PXJ['median1030']['value']} → {_PXJ['median']['value']}、GOOGL {_PXG['ntmEvEbitda1007']} → {_PXG['ntmEvEbitda']}、Meta 自身 {_PXJ['selfReference']['ntmEvEbitda1007']} → {_PXJ['selfReference']['ntmEvEbitda']}"
 
 
 def apply(wb, C):

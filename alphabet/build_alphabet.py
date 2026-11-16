@@ -182,12 +182,14 @@ inp("internal_ai_reading", "自用 AI 讀法（2＝主值：自用 AI 價值中�
 inp("sbc_add", "DCF 加回股權報酬（1＝是；Sens 用）", "x", None, 0, 1, "Assumed", "判斷：股權報酬視為真實成本、不加回（稀釋已在股數 dil）；1＝加回（稅後）", "", judg=True)
 inp("tv_alt", "終值改用 FY2032 無槓桿自由現金流 ×(1＋g)（1＝是；Sens 用）", "x", None, 0, 1, "Assumed", "判斷：基準用價值驅動公式（ronic）；1＝替代口徑", "", judg=True)
 
-sec("C2. 分部加總（SOTP）倍數：同業 NTM EV/EBITDA（沿用 v0.2.2 共用同業檔，基準日 2026-10-07；中位數在 Val 頁計算）")
-PEERS = {"ads": ("數位廣告（Search、YouTube、Network、Alphabet 層級費用）", "data/peers_ads_20261009.json（C18；MAG 三家共用）"),
+sec("C2. 分部加總（SOTP）倍數：同業 NTM EV/EBITDA（共用同業檔，報價日 2026-10-07／10-08，雲端與廣告組已依工作單 px1113 換到 2026-11-13 收盤；訂閱組 NFLX、SPOT、DIS 收盤價資料沒有，維持原值；中位數在 Val 頁計算）")
+PEERS = {"ads": ("數位廣告（Search、YouTube、Network、Alphabet 層級費用）", "data/peers_ads_20261113.json（C18；MAG 三家共用；工作單 px1113：倍數 × 2026-11-13 收盤 ÷ 報價日收盤，近似，無市值；原值見 peers_ads_20261009.json）"),
          "subs": ("訂閱影音（Subscriptions, platforms, and devices）", "legacy_v0.2/company.json valuation.segmentMultiples.subs（NFLX 為 NTM；SPOT、DIS 為 TTM，amazon/data 事實總帳）"),
-         "cloud": ("非 AI 雲端／軟體（Cloud 其他）", "data/peers_cloud_20261008.json（C12；MAG 三家共用）")}
-_pa = json.load(open(os.path.join(HERE, "data", "peers_ads_20261009.json"), encoding="utf-8"))["peers"]
-_pc = json.load(open(os.path.join(HERE, "data", "peers_cloud_20261008.json"), encoding="utf-8"))["peers"]
+         "cloud": ("非 AI 雲端／軟體（Cloud 其他）", "data/peers_cloud_20261113.json（C12；MAG 三家共用；工作單 px1113：倍數 × 2026-11-13 收盤 ÷ 報價日收盤，近似，無市值；原值見 peers_cloud_20261008.json）")}
+# ALPHA_OLDPEERS=1：改讀 2026-10-07／10-08 原值（只供變動拆解鏈 sens_v03.py 的 chain|S1–S4、q10|* 使用，使拆解維持同業倍數不變的同口徑）
+_OLDP = bool(os.environ.get("ALPHA_OLDPEERS"))
+_pa = json.load(open(os.path.join(HERE, "data", "peers_ads_20261009.json" if _OLDP else "peers_ads_20261113.json"), encoding="utf-8"))["peers"]
+_pc = json.load(open(os.path.join(HERE, "data", "peers_cloud_20261008.json" if _OLDP else "peers_cloud_20261113.json"), encoding="utf-8"))["peers"]
 PEERL = {"ads": [(p["ticker"], p["name"], p["ntmEvEbitda"]) for p in _pa],
          "subs": [("NFLX", "Netflix", 15.41), ("SPOT", "Spotify", 31.97), ("DIS", "Disney", 10.58)],
          "cloud": [(p["ticker"], p["name"], p["ntmEvEbitda"]) for p in _pc]}
@@ -196,9 +198,13 @@ for grp, lst in PEERL.items():
         inp(f"pm_{grp}_{tkr.lower()}", f"{PEERS[grp][0]}：{nm}（{tkr}）NTM EV/EBITDA", "x", None, x, None, "Derived", PEERS[grp][1], "EV（StockAnalysis）÷ NTM EBITDA（MarketScreener 共識 FY1／FY2 時間加權）")
 inp("mult_ai", "TPU 系統銷售的 EV/EBITDA；Cloud AI 同業倍數對照", "x", 4.0, 6.0, 10.0, "Assumed", V22 + " valuation.evEbitda（AI 基礎設施 6×；CRWV TTM 25×、ORCL NTM 9.5× 為對照，事實總帳 val.peer.aiInfra）",
     "修正一 F3：Cloud AI 主值改用 AI 模組自身 DCF；本倍數版只作對照列", judg=True)
-inp("mult_ads_own", "Alphabet 自身 NTM EV/EBITDA（Sens 用）", "x", None, 14.68, None, "Derived", "事實總帳 val.googl.ownNtm（2026-10-07）")
+PXO = json.load(open(os.path.join(HERE, "data", "peers_own_20261113.json"), encoding="utf-8"))
+PXA_ = json.load(open(os.path.join(HERE, "data", "peers_ads_20261113.json"), encoding="utf-8"))
+META_NEW = [p["ntmEvEbitda"] for p in PXA_["peers"] if p["ticker"] == "META"][0]; META_OLD = [p["ntmEvEbitda1007"] for p in PXA_["peers"] if p["ticker"] == "META"][0]
+MED_NEW = PXA_["median"]["value"]; MED_OLD = PXA_["median1007"]["value"]
+inp("mult_ads_own", "Alphabet 自身 NTM EV/EBITDA（Sens 用）", "x", None, PXO["old"] if _OLDP else PXO["new"], None, "Derived", "事實總帳 val.googl.ownNtm（2026-10-07）換價至 2026-11-13（工作單 px1113）：" + PXO["method"], "2026-11-13 換價（[Derived]）；v0.3.9 以前為 2026-10-07 值 " + str(PXO["old"]))
 inp("ads_mode", "Search、YouTube、Alphabet 層級的倍數（0＝META；1＝六家廣告同業中位數；2＝Alphabet 自身）", "x", 1, 0, 2, "Assumed",
-    "修正一：小型廣告科技（PINS、TTD、APP、RDDT、SNAP）規模與護城河不可比 → 預設 META NTM 10.79×；Network 仍用六家中位數", "Sens：中位數 9.11×／自身 14.68×", judg=True)
+    "修正一：小型廣告科技（PINS、TTD、APP、RDDT、SNAP）規模與護城河不可比 → 預設 META NTM " + f"{META_NEW}×（2026-11-13 換價；2026-10-07 為 {META_OLD}×）；Network 仍用六家中位數", f"Sens：中位數 {MED_NEW}×／自身 {PXO['new']}×", judg=True)
 inp("waymo_val", "Waymo Series D 投後估值（2026-02-02）", "US$B", None, 126.0, None, "Interested-party",
     "Fintool https://fintool.com/news/waymo-16-billion-126-billion-valuation；Bloomberg Law https://news.bloomberglaw.com/private-equity/waymo-raises-16-billion-from-alphabet-others-to-expand-service（2026-10-27 讀取）：募資 16.0、投後 126（含新資金）",
     "Bloomberg：Alphabet 出資約 13.0；修正二")
@@ -1310,7 +1316,7 @@ r += 10
 RC.cell(r, 1, "4. v0.3.4 → v0.3.5：2026Q3 10-Q 補入的目標價變動拆解（依序把推導／沿用值換成 10-Q 值，每步整本重算；各項加總＝總變動）").font = BOLD; r += 1
 hdr(RC, r, ["項目", "數值", "說明"]); r += 1
 RC_Q10 = r
-r += len(Q10) + 5
+r += len(Q10) + 8
 RC.column_dimensions["A"].width = 70
 for c in "BCDEFG": RC.column_dimensions[c].width = 13
 RC.column_dimensions["H"].width = 70
@@ -1343,8 +1349,8 @@ SENS_CASES = [
     ("ronic_sp", "RONIC＝WACC＋5pt", None, "hi", "RONIC＝WACC → WACC＋5pt"),
     ("tv_alt", "終值改用 FY2032 自由現金流", None, "hi", "價值驅動 → UFCF ×(1＋g)"),
     ("mult_ai", "TPU 系統銷售倍數", "lo", "hi", "4×／10×"),
-    ("ads_mode", "搜尋／YouTube 倍數：六家中位數 9.11×", "lo", None, "META 10.79× → 9.11×"),
-    ("ads_mode", "搜尋／YouTube 倍數：Alphabet 自身 14.68×", None, "hi", "META 10.79× → 14.68×"),
+    ("ads_mode", f"搜尋／YouTube 倍數：六家中位數 {MED_NEW}×", "lo", None, f"META {META_NEW}× → {MED_NEW}×"),
+    ("ads_mode", f"搜尋／YouTube 倍數：Alphabet 自身 {PXO['new']}×", None, "hi", f"META {META_NEW}× → {PXO['new']}×"),
     ("illiq", "非上市持股折價", "lo", "hi", "0%／40%"),
     ("w_dcf", "DCF 權重", "lo", "hi", "30%／70%"),
     ("bb_t", "回購目標", "lo", "hi", "0／45.7（2025 全年）"),
@@ -1460,7 +1466,8 @@ if _q0 is not None:
 # 第 4 節：v0.3.4 → v0.3.5（sens_v03.py 的 q10|Q0…Q{n-1}；Q0＝全部 10-Q 前的值；第 k 步＝Q(k) − Q(k−1)；最後一步＝本版目標價 − Q(n−1)，活公式）
 rr = RC_Q10
 RC.cell(rr, 1, "v0.3.4 加權目標價（2026-11-04，Tokenomics v21.9 快照版；重算快照 q10|Q0）"); RC.cell(rr, 2, f"=B{RCV['v03']}").number_format = "#,##0.00"; Q10_V0 = rr; rr += 1
-RC.cell(rr, 1, "v0.3.5 加權目標價（10-Q 補入後；＝本版 v0.3.6）"); RC.cell(rr, 2, f"=Val!B{VR_['tp']}").number_format = "#,##0.00"; Q10_V1 = rr; rr += 1
+_qP = SENS.get("q10|P", {}).get("tp")
+RC.cell(rr, 1, "v0.3.5 加權目標價（10-Q 補入後，同業倍數用 2026-10-07／10-08 原值；重算快照 q10|P）"); RC.cell(rr, 2, f"=IF(ABS(Sens!E{SE_STALE})<0.000001,{_qP},\"快照過期\")" if _qP is not None else f"=Val!B{VR_['tp']}").number_format = "#,##0.00"; Q10_V1 = rr; rr += 1
 RC.cell(rr, 1, "差額"); RC.cell(rr, 2, f"=B{Q10_V1}-B{Q10_V0}").number_format = "#,##0.00"; Q10_D = rr; rr += 1
 _q10a = rr
 for i, st in enumerate(Q10):
@@ -1472,11 +1479,14 @@ for i, st in enumerate(Q10):
             RC.cell(rr, 2, f"=IF(ABS(Sens!E{SE_STALE})<0.000001,{cur}-{prv},\"快照過期\")").number_format = "#,##0.00"
         RC.cell(rr, 3, f"重算快照 q10|Q{i + 1} − q10|Q{i}（{st['key']}：{st['old']} → 本版 In 頁值）")
     else:
-        if prv is not None: RC.cell(rr, 2, f"=Val!B{VR_['tp']}-{prv}").number_format = "#,##0.00"
-        RC.cell(rr, 3, f"活公式：本版目標價 − 重算快照 q10|Q{i}（{st['key']}：{st['old']} → 本版 In 頁值）")
+        if prv is not None and _qP is not None: RC.cell(rr, 2, f"=IF(ABS(Sens!E{SE_STALE})<0.000001,{_qP}-{prv},\"快照過期\")").number_format = "#,##0.00"
+        RC.cell(rr, 3, f"重算快照 q10|P − q10|Q{i}（{st['key']}：{st['old']} → 本版 In 頁值）")
     rr += 1
 RC.cell(rr, 1, "檢查：10-Q 補入各項合計 − 差額（應為 0）"); RC.cell(rr, 2, f"=SUM(B{_q10a}:B{rr - 1})-B{Q10_D}").number_format = "0.000"; rr += 1
-assert rr <= RC_Q10 + len(Q10) + 5
+RC.cell(rr, 1, "(11) 同業倍數（非 AI 雲端、數位廣告、Alphabet 自身）由 2026-10-07／10-08 換到 2026-11-13 收盤（v0.3.10 原地修改，工作單 px1113；倍數 × 收盤比，近似）")
+RC.cell(rr, 2, f"=Val!B{VR_['tp']}-B{Q10_V1}").number_format = "#,##0.00"; RC.cell(rr, 3, "活公式：本版目標價 − 重算快照 q10|P（(1)–(10) 與第 3 節拆解鏈皆用同業倍數原值重算）"); rr += 1
+RC.cell(rr, 1, "本版加權目標價（＝v0.3.5 同業原值 ＋ (11)）"); RC.cell(rr, 2, f"=Val!B{VR_['tp']}").number_format = "#,##0.00"; rr += 1
+assert rr <= RC_Q10 + len(Q10) + 8
 
 # =====================================================================================================
 # Sources
@@ -1502,7 +1512,7 @@ SRCS = [
     ("FinancialContent GOOGL 歷史股價", "2026-10-29", "https://www.financialcontent.com/quote/NQ%3AGOOGL/historical", "Verified", "評價日股價 344.08（2026-09-30 收盤）"),
     ("StockAnalysis GOOGL 預測頁（S&P Global）", "2026-10-26", "https://stockanalysis.com/stocks/googl/forecast/", "Interested-party", "共識目標價 429.12、FY2026 non-GAAP EPS 11.89"),
     ("MarketScreener Alphabet 財務預估（S&P Capital IQ 系）", "2026-10-26", "https://www.marketscreener.com/quote/stock/ALPHABET-INC-24203373/finances/", "Interested-party", "FY2026–2028 合併共識"),
-    ("共用同業檔 alphabet/data/peers_ads_20261009.json、peers_cloud_20261008.json", "2026-10-07", "repo 內（StockAnalysis EV ÷ MarketScreener NTM EBITDA）", "Derived", "SOTP 倍數"),
+    ("共用同業檔 alphabet/data/peers_ads_20261113.json、peers_cloud_20261113.json、peers_own_20261113.json（原值：peers_ads_20261009.json、peers_cloud_20261008.json，2026-10-07）", "2026-11-16", "repo 內（StockAnalysis EV ÷ MarketScreener NTM EBITDA；工作單 px1113 換價至 2026-11-13：倍數 × 收盤比近似，Alphabet 自身用市值法）", "Derived", "SOTP 倍數"),
     ("共識檔 alphabet/data/consensus_googl_20261008.json", "2026-10-08", "repo 內", "Interested-party", "v0.2.2 時的共識（對照）"),
     ("MAG v0.2.2 成品與交接檔（legacy_v0.2/、dist/_待刪除/、docs/handoff/）", "2026-10-25", "repo 內", "Derived", "沿用參數與 v0.2.2 目標價"),
     ("MAG 命題與驅動對照表 r1（C1–C23）", "2026-10-08", "mag/docs/plan/20261008_MAG_命題與驅動對照表_r1.md", "—", "已決定的口徑"),
