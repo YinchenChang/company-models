@@ -12,7 +12,10 @@ def apply(wb, P56):
     a1 = RD["A1"].value
     old = "個股模型 v0.5.7（"
     assert old in a1, a1[:120]
-    RD["A1"].value = a1.replace(old, f"個股模型 v{VER}（", 1) + f"；v{VER}（{BUILT}）：" + NOTE
+    import re
+    a1 = a1.replace(old, f"個股模型 v{VER}（", 1)
+    a1 = re.sub("\u300020\\d\\d-\\d\\d-\\d\\d", "\u3000" + BUILT, a1, count=1)
+    RD["A1"].value = a1 + f"；v{VER}（{BUILT}）：" + NOTE
     RM = wb._v056["RM"]
     rv = RD.cell(RM["ver"], 1)
     t = rv.value
