@@ -6,7 +6,7 @@ import json, os
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
-VER, BUILT = "0.3.5", "2026-11-15"   # v0.3.5：資產負債表改公司 3Q26 合併財報、債務加計零息海外可轉債（版本列與 Sens 可轉債案例；其餘同 v0.3.4）
+VER, BUILT = "0.3.6", "2026-11-16"   # v0.3.6：現價與同業報價改 2026-11-13 收盤（工作單 px1113；只換價）。v0.3.5： v0.3.5：資產負債表改公司 3Q26 合併財報、債務加計零息海外可轉債（版本列與 Sens 可轉債案例；其餘同 v0.3.4）
 BOLD = Font(bold=True); BLUE = Font(color="0000FF"); HDR = PatternFill("solid", fgColor="DDEBF7")
 MK = "https://www.mediatek.com/hubfs/MediaTek%20Assets/Pdfs/"
 S25 = MK + "Financial%20Reports/2025/Q4%20Consolidated%20Report.pdf"
@@ -342,7 +342,7 @@ def val_g(wb):
             ("④ 市場共識目標價（賣方平均）", cons, "=" + cons_src)]
     for labl, ref, note in rows:
         V.cell(r, 1, labl); V.cell(r, 2, "=" + ref).number_format = "0.00"; V.cell(r, 3, f"=B{r}/px-1").number_format = "+0.0%;-0.0%"; V.cell(r, 4, note); r += 1
-    V.cell(r, 1, "現價（2026-11-05 收盤）"); V.cell(r, 2, "=px").number_format = "0.00"; V.cell(r, 4, "Yahoo Finance 日線收盤（In 頁 px）"); r += 1
+    V.cell(r, 1, "現價（2026-11-13 收盤）"); V.cell(r, 2, "=px").number_format = "0.00"; V.cell(r, 4, "Yahoo Finance 日線收盤（In 頁 px）"); r += 1
     return r0
 
 
@@ -627,11 +627,13 @@ def readme13(wb, RVA, PLA, TO):
     put("drv", T("分部營收推導（情境 B）：合併營收＝AI ASIC＋手機＋智慧邊緣平台（不含 ASIC）＋電源 IC。AI ASIC＝TPU 市場顆數 × 聯發科份額 × 每顆營收（核心售價＋代購 HBM）× 校準係數（FY2026 對齊公司資料中心說法）× 匯率；其餘三塊由 FY2026 錨點依成長率推。"
                  "FY2028 合計營收 "), f'TEXT(PL!F{lab(P, "營收", b0["B"], exact=True)},"#,##0")', T(" 十億元，其中 AI ASIC "), f'TEXT(PL!F{lab(P, "AI ASIC 營收", b0["B"], exact=True)},"#,##0")', T(" 十億元。"))
     out["ver"] = r
-    RD.cell(r, 1, F(T(f"v{VER}（{BUILT}）：資產負債表改公司 3Q26 合併財報（2026-09-30，會計師核閱），債務加計零息海外可轉債。更正：v0.3.4 以前債務只含短期借款 41.950，漏計 2026-09 發行的可轉債（帳面 111.338、面額 123.408，轉換價 4,513.75 元，2031-09 到期），淨現金高估約 111（十億新台幣）。"
-                      "淨現金與投資 367.71 → "), 'TEXT(dcf_nc,"0.00")', T("（債務 41.95 → "), 'TEXT(debt_v,"0.000")', T("、租賃 9.785 → "), 'TEXT(lease_v,"0.000")', T("、現金與流動金融資產 277.687 → "), 'TEXT(cash_v,"0.000")',
-                    T("、非流動投資 180.620 → "), 'TEXT(inv_v,"0.000")', T("）；D/E 0.0094 → "), 'TEXT(beta_de,"0.0000")', T("、β 1.44 → "), 'TEXT(beta,"0.00")', T("、WACC 10.23% → "), 'TEXT(wacc,"0.00%")',
-                    T("。DCF 目標價 1,773.03 → "), f'TEXT({dcf},"#,##0.00")', T("，加權目標價 1,715.10 → "), f'TEXT({tp},"#,##0.00")', T("（上檔 −50.4% → "), f'TEXT({up},"+0.0%;-0.0%")', T("），評等 強力放空 → "), rec,
-                    T("。可轉債基準以帳面計債、不計稀釋（現價為轉換價的 "), 'TEXT(cb_px,"0%")', T("）；Sens 新增以面額計債務、視為全數轉換兩案。")))
+    RD.cell(r, 1, F(T(f"v{VER}（{BUILT}）：現價與同業報價改 2026-11-13 收盤（工作單 px1113；只換價，共識 EPS、rf、β、ERP、模型假設與情境權重不變）。現價 3,460 → "), 'TEXT(px,"#,##0")',
+                    T("；同業前瞻 P/E 中位數 16.93 → "), f'TEXT({pmed},"0.00")', T("；DCF 目標價 1,701.60 → "), f'TEXT({dcf},"#,##0.00")', T("，加權目標價 1,679.39 → "), f'TEXT({tp},"#,##0.00")',
+                    T("（上檔 −51.5% → "), f'TEXT({up},"+0.0%;-0.0%")', T("），評等 強力放空 → "), rec,
+                    T("。未換價：達發（6526）市值（In 頁 mi，661 元為 2026-11-05 收盤；收盤檔沒有該代號）、近 12 月 P/E（pe_ttm 66.23，資料商值）。")))
+    _fz = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "hist_frozen_px1113.json"), encoding="utf-8"))
+    r += 1
+    RD.cell(r, 1, _fz["v0.3.5（2026-11-15）"])
     out["ver34"] = r + 1; r += 1
     RD.cell(r, 1, f"v0.3.4（{BUILT}）：只改展示層與新增列——個股 HTML 版面規格 v1.3（章節：命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態）；三層協調（規則 v1.4.2）：Coord 頁新增 A 讀哪一層哪一版、B 讀取層級（同源，不判定）、C 口徑註記、D 摘要、E C0（實績）：公司實績 vs 層級隱含值，"
                   "並列兩讀數目標價（C4；主引擎情境 B、C 於 CY2027 起 ASIC 顆數 × 另一側讀數比值；情境 A 不縮放）。新增 Hist 頁（損益表歷史 FY2022–FY2025）、RevDCF 頁（反向 DCF）、PL 頁末標準損益表（FY2023A–FY2025A 實績＋FY2026E–FY2031E 情境 B，GAAP）、Val 0.7（四個目標價）、"
@@ -651,11 +653,11 @@ def apply(wb, here, SIL):
     CR = coord_c0(wb, SIL)
     RMA = readme13(wb, RVA, PLA, ST)
     RD = wb["README"]
-    RD["A2"].value = (f"版本：v{VER}（{BUILT}：資產負債表改公司 3Q26 合併財報、債務加計零息海外可轉債；前版 v0.3.4，同日）；"
+    RD["A2"].value = (f"版本：v{VER}（{BUILT}：現價與同業報價改 2026-11-13 收盤；前版 v0.3.5，2026-11-15）；v0.3.5（2026-11-15：資產負債表改公司 3Q26 合併財報、債務加計零息海外可轉債；前版 v0.3.4，同日）；"
                       f"v0.3.4（{BUILT}：版面規格 v1.3、三層協調 C0 與兩讀數；前版 v0.3.3，2026-11-06）；" + str(RD["A2"].value))
     a1 = str(RD["A1"].value); head = a1.split("；", 1)[0]
     assert "v0.3.4" in head, head
-    RD["A1"].value = head.replace("v0.3.4", f"v{VER}", 1) + a1[len(head):] + f"；v{VER}（{BUILT}）：資產負債表改公司 3Q26 合併財報，債務加計零息海外可轉債（更正 v0.3.4 以前淨現金漏計），Sens 新增可轉債處理兩案"
+    RD["A1"].value = head.replace("v0.3.4", f"v{VER}", 1) + a1[len(head):] + f"；v{VER}（{BUILT}）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）；v0.3.5（2026-11-15）：資產負債表改公司 3Q26 合併財報，債務加計零息海外可轉債（更正 v0.3.4 以前淨現金漏計），Sens 新增可轉債處理兩案"
     order = ["README", "In", "Q", "Hist", "Units", "PL", "Val", "DCF", "RevDCF", "Recon", "Sens", "Sources", "Coord"]
     wb._sheets = [wb[n] for n in order]
     return f"v034_post：Hist {len(HR)} 列；PL 標準損益表 {PLA['start']} 起；RevDCF；Val 0.7；Sens 相對基準 {ST['first']}–{ST['last']}；Coord E 節 {CR['E_first']}–{CR['E_last']}；README v1.3 {len(RMA)} 列"

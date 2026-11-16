@@ -197,7 +197,7 @@ def _v13(cfg):
     RD, PLW, RVW, CW, SEW = WB["README"], WB["PL"], WB["RevDCF"], WB["Coord"], WB["Sens"]
     r13 = row_of("README", "展示層 v1.3")
     RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
-    assert str(RD[f"A{RM['ver']}"].value).startswith(("v0.3.5", "=\"v0.3.5")), RD[f"A{RM['ver']}"].value
+    assert str(RD[f"A{RM['ver']}"].value).startswith(("v0.3.6", "=\"v0.3.6")), RD[f"A{RM['ver']}"].value
     cfg["layout"] = "v1.3"
     cr = lambda p, start=1: next(r for r in range(start, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith(p))
     # ---- 橫幅：只留 ≤200 字白話與對帳中揭露；規則與歸因移到估值章 ----
