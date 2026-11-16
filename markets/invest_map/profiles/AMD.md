@@ -11,12 +11,12 @@ asof: 2026-10-25
 ---
 
 ## 一句話定位
-AI 加速器（GPU）市場中 NVIDIA 以外的第二大 GPU 供應商，同時賣伺服器 CPU；資料中心 GPU 營收＝加速器市場金額 × AMD 金額份額 [本專案：20261104_AMD模型_v0.3.xlsx README!A3]。
+AI 加速器（GPU）市場中 NVIDIA 以外的第二大 GPU 供應商，同時賣伺服器 CPU；資料中心 GPU 營收＝加速器市場金額 × AMD 金額份額 [本專案：20261116_AMD模型_v0.4.8.xlsx README!A3]。
 
 ## 公司在做什麼
 - 賣資料中心晶片：Instinct GPU（MI355X、MI450／MI455X，用來訓練與執行 AI 模型）、EPYC 伺服器 CPU、DPU、FPGA；另有個人電腦（Client）、遊戲主機與顯示卡（Gaming）、嵌入式（Embedded）[本專案：20261116_AMD模型_v0.4.8.xlsx Q!A5:A10]。
 - Helios 是 AMD 的整櫃 AI 系統（MI455X GPU＋EPYC CPU＋網通），把 GPU 賣成整櫃，對標 NVIDIA 的 NVL72 [外部・未經本專案檢核]。
-- 大客戶以「GW（十億瓦）」為單位簽約：OpenAI 6 GW、Meta 6 GW（兩案合計 12 GW）、Anthropic 最多 2 GW、Oracle 首批 5 萬顆 MI450 [本專案：20261104_AMD模型_v0.3.xlsx In!E122、In!E112、In!E124、In!E125]。
+- 大客戶以「GW（十億瓦）」為單位簽約：OpenAI 6 GW、Meta 6 GW（兩案合計 12 GW）、Anthropic 最多 2 GW、Oracle 首批 5 萬顆 MI450 [本專案：20261116_AMD模型_v0.4.8.xlsx In!E126、In!E112、In!E128、In!E129]。
 - 公司不揭露資料中心內 GPU 與 CPU 的拆分；本專案的 GPU 金額是假設拆分（Assumed）[本專案：20261116_AMD模型_v0.4.8.xlsx Q!M6]。
 
 ## 主要產品與營收占比
@@ -29,11 +29,11 @@ AI 加速器（GPU）市場中 NVIDIA 以外的第二大 GPU 供應商，同時�
 | 合計 | — | 100% | FY2025 | — |
 
 - FY2026 錨點（Q1–Q3 實績＋Q4 指引中點，Q4 分部為假設）營收 US$52.2B，其中 Data Center 33.4B（64.0%）[本專案：20261116_AMD模型_v0.4.8.xlsx Q!A2、Q!K4、Q!K5，占比為換算]。
-- 資料中心 GPU：FY2025 約 US$6.5B、FY2026 錨點約 17.7B，皆為假設拆分 [本專案：20261116_AMD模型_v0.4.8.xlsx Q!F6、Q!K6]；模型 FY2027 為 37.9B [本專案：20261104_AMD模型_v0.3.xlsx PL!E8]。
-- non-GAAP 毛利率：FY2025 52.4%、FY2026 錨點 55.6%、模型 FY2027 49.8%（HBM 2027 漲價、吸收比例 0.5 壓 GPU 毛利率）[本專案：20261104_AMD模型_v0.3.xlsx Q!F13、Q!K13、PL!E12、Recon!J15]。
+- 資料中心 GPU：FY2025 約 US$6.5B、FY2026 錨點約 17.7B，皆為假設拆分 [本專案：20261116_AMD模型_v0.4.8.xlsx Q!F6、Q!K6]；模型 FY2027 為 42.8B [本專案：20261116_AMD模型_v0.4.8.xlsx PL!E8]。
+- non-GAAP 毛利率：FY2025 52.4%、FY2026 錨點 55.6%、模型 FY2027 49.6%（HBM 2027 漲價、吸收比例 0.5 壓 GPU 毛利率）[本專案：20261116_AMD模型_v0.4.8.xlsx Q!F13、Q!K13、PL!E12、Recon!J15]。
 
 ## 市場定位與產業位置
-- 本專案推算 CY2027 AI 加速器**金額份額** AMD 6.7%、**顆數份額** 6.3%；NVIDIA 金額份額 75.1% [本專案：20261104_AMD模型_v0.3.xlsx Recon!C27、Recon!C28、Recon!C29]。
+- 本專案推算 CY2027 AI 加速器**金額份額** AMD 6.7%、**顆數份額** 6.3%；NVIDIA 金額份額 75.1% [本專案：20261116_AMD模型_v0.4.8.xlsx Recon!C27、Recon!C28、Recon!C29]。
 - 同一題 AI半導體 先驗比對的推導值為 3–6%（候選母體表同此寫法），比模型的 6.7% 低，兩者並列 [本專案：先驗比對_NVDA_20261023.md N5c；universe_ai_semis_v0.2.2.csv AMD 列]。
 - 每顆售價水準：FY2026 隱含每顆認列售價約 US$23.6K，HSBC 估 MI355X 約 23K [本專案：20261116_AMD模型_v0.4.8.xlsx Recon!C18、Recon!B18]。
 - 大單附帶認股權證：OpenAI、Meta 合計上限 3.2 億股，約為 FY2026 股數的 19%，依出貨 GW 分批歸屬 [本專案：20261116_AMD模型_v0.4.8.xlsx In!E111、Recon!J25]。
@@ -51,10 +51,10 @@ AI 加速器（GPU）市場中 NVIDIA 以外的第二大 GPU 供應商，同時�
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| NVIDIA | AI GPU、整櫃系統 | CY2027 加速器金額份額 75.1% | [本專案：20261030_NVIDIA個股模型_v0.2.3.xlsx Units!D32] |
-| Google TPU（Broadcom、聯發科設計） | 自研 AI 晶片 | CY2027 金額份額 9.8% | [本專案：20261030_NVIDIA個股模型_v0.2.3.xlsx Units!D34] |
-| AWS Trainium（世芯、Marvell 設計） | 自研 AI 晶片 | CY2027 金額份額 3.0% | [本專案：20261030_NVIDIA個股模型_v0.2.3.xlsx Units!D35] |
-| 其他 ASIC（MTIA、Maia、昇騰等） | 自研 AI 晶片 | CY2027 金額份額 5.4% | [本專案：20261030_NVIDIA個股模型_v0.2.3.xlsx Units!D36] |
+| NVIDIA | AI GPU、整櫃系統 | CY2027 加速器金額份額 75.1% | [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Units!D32] |
+| Google TPU（Broadcom、聯發科設計） | 自研 AI 晶片 | CY2027 金額份額 9.8% | [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Units!D34] |
+| AWS Trainium（世芯、Marvell 設計） | 自研 AI 晶片 | CY2027 金額份額 3.0% | [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Units!D35] |
+| 其他 ASIC（MTIA、Maia、昇騰等） | 自研 AI 晶片 | CY2027 金額份額 5.4% | [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Units!D36] |
 
 - AMD 與 NVIDIA 模型用同一份顆數與每顆價，所以份額可互相加總 [本專案：20261116_AMD模型_v0.4.8.xlsx Recon!J29]。
 - 伺服器 CPU（與 Intel、Arm 架構自研 CPU 競爭）的份額：本專案未建立。
@@ -94,14 +94,14 @@ AI 加速器（GPU）市場中 NVIDIA 以外的第二大 GPU 供應商，同時�
 - 2026-08-04｜Q2 2026 財報：營收 US$11.5B、Data Center 6.7B；Q3 營收指引 13.0B [本專案：20261116_AMD模型_v0.4.8.xlsx Q!H4、Q!H5、In!E88]；法說稱 2027 資料中心「逾一倍」（二手）[本專案：20261116_AMD模型_v0.4.8.xlsx Recon!I7]
 
 ## 需要觀察的事項
-- 每顆售價（k_rec 0.787 是否延續）｜改用市場層每顆價時 FY2027 EPS +10.8% [本專案：20261104_AMD模型_v0.3.xlsx Recon!C17、Sens!E8]｜Q4 2026 財報（2027-02 初）[本專案：amd/README.md v0.3 重點觀察]
+- 每顆售價（k_rec 0.787 是否延續）｜改用市場層每顆價時 FY2027 EPS +10.4% [本專案：20261116_AMD模型_v0.4.8.xlsx Recon!C17、Sens!E8]｜Q4 2026 財報（2027-02 初）[本專案：amd/README.md v0.3 重點觀察]
 - HBM 漲價吸收比例｜0 或 1 使 FY2027 EPS ±10.9%；FY2028 起情境 A／B／C 取 0.2／0.5／0.7 [本專案：amd/README.md 敏感度、v0.2.1 節]｜HBM4 合約價消息
-- 2027 資料中心「逾一倍」可達性｜模型 FY2027 資料中心 US$61.5B，比公司說法 66.8B 低 8.0% [本專案：20261104_AMD模型_v0.3.xlsx Recon!C7、Recon!B7、Recon!D7]｜同上
-- 模型 EPS 與共識的落差｜FY2027 模型 11.02 vs 共識 15.76（stockanalysis，二手）差 −30% [本專案：20261104_AMD模型_v0.3.xlsx Recon!C10、Recon!B10、Recon!D10]｜同上
-- 認股權證歸屬與 World Labs 增發｜權證占 FY2029 股數 7.2%（A）[本專案：20261104_AMD模型_v0.3.xlsx Recon!C25]；World Labs 本專案未建立｜收購完成（預計 2026 年底）
+- 2027 資料中心「逾一倍」可達性｜模型 FY2027 資料中心 US$69.5B，比公司說法 66.8B 高 4.0% [本專案：20261116_AMD模型_v0.4.8.xlsx Recon!C7、Recon!B7、Recon!D7]｜同上
+- 模型 EPS 與共識的落差｜FY2027 模型 12.20 vs 共識 15.76（stockanalysis，二手）差 −23% [本專案：20261116_AMD模型_v0.4.8.xlsx Recon!C10、Recon!B10、Recon!D10]｜同上
+- 認股權證歸屬與 World Labs 增發｜權證占 FY2029 股數 8.6%（A）[本專案：20261116_AMD模型_v0.4.8.xlsx Recon!C25]；World Labs 本專案未建立｜收購完成（預計 2026 年底）
 
 ## 來源
-1. 本專案：`amd/README.md`；`amd/dist/20261104_AMD模型_v0.3.xlsx`（README、In、Q、PL、Recon、Sens）；`nvidia/dist/20261030_NVIDIA個股模型_v0.2.3.xlsx`（Units）；AI半導體 `先驗比對_NVDA_20261023.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
+1. 本專案：`amd/README.md`；`amd/dist/20261116_AMD模型_v0.4.8.xlsx`（README、In、Q、PL、Recon、Sens）；`nvidia/dist/20261116_NVIDIA個股模型_v0.3.11.xlsx`（Units）；AI半導體 `先驗比對_NVDA_20261023.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 2. [AMD to Buy AI Research Lab World Labs in $8.2 Billion Stock Deal](https://northeasttimes.com/2026/09/28/amd-to-buy-ai-research-lab-world-labs-in-8-2-billion-stock-deal)（2026-09-28）
 3. AMD MI455／Helios 開始出貨（Cryptopolitan，2026-10-07；經 [autobound 新聞彙整](https://www.autobound.ai/companies/amd/news) 取得，僅標題）
 4. [AMD Helios in production（igor'sLAB 轉述 Reuters）](https://www.igorslab.de/en/amd-helios-in-production-mi455x-epyc-venice-openai-challenge-nvidia-ai-racks/)（日期未標示）
