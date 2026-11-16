@@ -1279,10 +1279,10 @@ V.cell(r, 1, "0.2 分部加總（SOTP；目標時點 NTM 分部調整後 EBITDA 
 hdr(V, r, ["同業組／倍數", "倍數", "家數", "", "說明"]); r += 1
 ck = [f"pm_conn_{p_['ticker'].lower()}" for p_ in PCN["peers"]]
 sk = [f"pm_si_{p_['ticker'].lower()}" for p_ in PSI["peers"]]
-vput("mult_conn", "Connectivity：衛星與電信同業 EV／NTM EBITDA 中位數（2026-11-13 近似） × mult_cn_adj × mult_cn_pm", ["=MEDIAN(" + ",".join(ck) + ")*mult_cn_adj*mult_cn_pm", len(ck)], ["0.00", "0"], note="data/peers_connectivity_20261106.json（2026-11-06 收盤，NTM）：" + "、".join(k.split("_")[-1].upper() for k in ck))
+vput("mult_conn", "Connectivity：衛星與電信同業 EV／NTM EBITDA 中位數（2026-11-13 近似） × mult_cn_adj × mult_cn_pm", ["=MEDIAN(" + ",".join(ck) + ")*mult_cn_adj*mult_cn_pm", len(ck)], ["0.00", "0"], note="data/peers_connectivity_20261113.json（2026-11-13 收盤，NTM；v0.2.9 為 20261106.json、11-06 收盤）：" + "、".join(k.split("_")[-1].upper() for k in ck))
 dn("mult_conn", f"Val!$B${VR_['mult_conn']}")
 vput("mult_si", "讀法 1 自用 AI 營運成本扣除倍數：AI 基礎設施／雲同業中位數 × mult_si_adj", ["=MEDIAN(" + ",".join(sk) + ")*mult_si_adj", len(sk)], ["0.00", "0"],
-     note="data/peers_si_20261106.json：CRWV、NBIS、ORCL 皆 EV／NTM EBITDA（2026-11-13 近似；v0.2.7 統一口徑）")
+     note="data/peers_si_20261113.json：CRWV、NBIS、ORCL 皆 EV／NTM EBITDA（2026-11-13 近似；v0.2.7 統一口徑）")
 dn("mult_si", f"Val!$B${VR_['mult_si']}")
 r += 1
 hdr(V, r, ["分部（NTM 分部調整後 EBITDA；Space 為營收）", "情境 A", "情境 B", "情境 C", "倍數與說明", "EV：A", "EV：B", "EV：C"]); r += 1
