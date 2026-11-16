@@ -1,12 +1,12 @@
-# software_ai/fujitsu/ — 富士通（6702）個股模型 v0.1（原型 L：按人力計價，套用於 Service Solutions）
+# software_ai/fujitsu/ — 富士通（6702）個股模型 v0.2（原型 L：按人力計價，套用於 Service Solutions）
 
 **本版未做先驗**（Andy 2026-11-16 23:27 指示）。工作單：`software_ai/docs/workorders/20261116_第一批_研究包與單位經濟.md` C 節與 G、G2、G3 節。
 
-**建置：** `bash software_ai/fujitsu/make_v01.sh`（`SENS=1` 重跑敏感度與反解）。成品 `dist/20261116_Fujitsu個股模型_v0.1.xlsx`／`.html`。投資建議、目標價與各數字見成品 README 頁與 HTML（由公式組字，本檔不手寫）。
+**建置：** `bash software_ai/fujitsu/make_v02.sh`（`SENS=1` 重跑敏感度與反解）。成品 `dist/20261117_Fujitsu個股模型_v0.2.xlsx`／`.html`。投資建議、目標價與各數字見成品 README 頁與 HTML（由公式組字，本檔不手寫）。
 
 **版本表（由建置成品產生，不手寫）：**
 
-<!-- version-table: dist/20261116_Fujitsu個股模型_v0.1.xlsx -->
+<!-- version-table: dist/20261117_Fujitsu個股模型_v0.2.xlsx -->
 | 項目 | v0.1 |
 |---|---|
 | 現價 | 3,455.00 |
@@ -23,7 +23,13 @@
 
 **情境：** A 樂觀／B 基準／C 保守，在 AI 淨效果上分化（自動化比例 `a32`、價格保留率 `r`、新專案占比 `n32`），依據與標記見 In 頁。
 
-**檔案：** `build_fujitsu.py`、`sens_fujitsu.py`、`gen_html_json.py`、`segments.json`、`html.json`、`display_check.json`、`make_v01.sh`、`data/`、`dist/`。
+**檔案：** `build_fujitsu.py`、`sens_fujitsu.py`、`gen_html_json.py`、`segments.json`、`html.json`、`display_check.json`、`make_v02.sh`、`data/`、`dist/`。
+
+## v0.2 改版（G5，2026-11-17）
+- Comparable 相對倍數（rel_mult／cm_adj）改讀 `software_ai/data/relmult_hist/out/fujitsu.json` 的 `geo_base`（Derived；副本 `data/relmult_hist_fujitsu.json`）；Sens 加 `ps_only`／`psg_only`（缺者寫明）與 `sens.low`／`sens.high`（即 cm_adj 低高端）。倍數為 EV／EBIT，以 PS／PSG 相對值近似套用。
+- 無風險利率統一：日本 10 年期 2.77%（Trading Economics，2026-11-11）。
+- 股票薪酬加回 DCF 讀數：Val 與 Recon 並列，只作對照，不進加權目標價。
+- 舊成品移 `dist/_待刪除/`；`data/_待刪除/` 放 v0.1 敏感度與反解結果。
 
 ## 不適用與未做
 - Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照：不適用：富士通不以自建算力為命題。
@@ -31,7 +37,8 @@
 - 先驗：未做。
 - 分部員工、利用率、計費工時、時薪、token 量與代理任務量：公司不揭露，未找到；時薪由 Service 營收反推（Derived），每任務 token 取 Tokenomics 任務 5（類比）。
 - Blume β 第二來源、債券有效利率、退休金淨負債、稀釋證券明細、匯率來源、歷史營運資金比率、決算後賣方目標價與共識：未找到。
-- 本公司 5 年相對倍數歷史（G3 第 4 條）：未做，1.00 為承重輸入（cm_adj）；已列為 Assumed 並進 Sens。
+- 本公司歷史相對倍數（G3 第 4 條、G5 第 1 條）：已由共用資料庫取得，只用 PS（PSG 有效點 6 少於 12，參考讀數不進基準）；psg_only 案缺。
+- 股票報酬費用金額：未找到，加回 DCF 讀數無法計算。
 - G3 第 1 條：費用率（毛利率、折舊、資本支出）持平於 LTM，因公司以分部利益率持平加 AI 路徑建模，未發現可用的歷史規模經濟證據；Sens 涵蓋毛利率區間。
 
 ## 合理性關卡診斷（工作單 G3 第 3 條）

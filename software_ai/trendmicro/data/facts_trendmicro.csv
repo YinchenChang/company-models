@@ -150,6 +150,7 @@ AWS 抵減（Q3 雲端費用）,11,US$M,2026Q3,法說（譯稿換算日圓 1.1�
 庫藏股買回,40000,百萬日圓,FY2024,現金支出,https://stockanalysis.com/quote/tyo/4704/financials/cash-flow-statement/,2026-11-16,Verified,
 研究開發費用,6651,百萬日圓,FY2025,"有價證券報告書「研究開發活動」（二手轉載；與員工 R&D 2,228 人不相稱，疑僅計特定資本化／外部項目，口徑待釐清）",https://edinetdb.jp/company/E04999/text?fy=2025,2026-11-16,Verified,
 股票薪酬費用,未找到,—,FY2025,法定申報僅見董事股票選擇權費用約 7 百萬日圓（FY2024）；合併股票薪酬未單獨揭露,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2024.pdf p.13,2026-11-16,Assumed,
+董事股票選擇權報酬（認列費用；4 名內部董事；僅董事，非合併股票薪酬）,132,百萬日圓,FY2025,事業報告董事報酬表（Stock Options 欄），註記為認列於當期費用的公允價值；合併股票薪酬仍未找到，故只作 SBC 加回的下限,https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.11,2026-11-16,Verified,
 收盤價,7214,日圓,2026-11-13,"東證；Q3 財報（11-12 盤後）後 +8.32%（前日收盤 6,660）",https://stockanalysis.com/quote/tyo/4704/,2026-11-16,Verified,
 收盤價,6660,日圓,2026-11-12,財報當日,https://www.investing.com/news/transcripts/earnings-call-transcript-trend-micro-posts-record-q3-sales-stock-slips-085-on-outlook-93CH-5022947（譯稿標題誤標為美元）；與 11-13 +554 日圓相符,2026-11-16,Verified,
 市值,937340,百萬日圓,2026-11-13,資料商,https://stockanalysis.com/quote/tyo/4704/,2026-11-16,Verified,

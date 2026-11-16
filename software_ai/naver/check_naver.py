@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Naver 個股模型 v0.1 專屬核對：無 #錯誤、分部對帳為零、AI 恆等式為零、三情境 AI 淨效果分化、權重合計 1、落差分解合計為零、Tokenomics 快照版本一致、合理性關卡診斷存在。"""
+"""Naver 個股模型 v0.2 專屬核對：無 #錯誤、分部對帳為零、AI 恆等式為零、三情境 AI 淨效果分化、權重合計 1、落差分解合計為零、Tokenomics 快照版本一致、合理性關卡診斷存在。"""
 import json, sys, os
 import openpyxl
 x = sys.argv[1]

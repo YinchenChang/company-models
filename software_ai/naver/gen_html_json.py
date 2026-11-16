@@ -93,6 +93,10 @@ valuation = {"id": "valuation", "title": "估值", "blocks": [
      "ref": {"label": f"@Val!A{VR['px']}", "value": f"@Val!B{VR['px']}"}},
     {"type": "note", "parts": ["@Val!A2"]},
     {"type": "note", "parts": ["@README!A12"]},
+    {"type": "note", "parts": ["@README!A41"]},
+    {"type": "note", "parts": ["@README!A42"]},
+    {"type": "table", "caption": "DCF（股票薪酬加回）讀數，只作對照、不進加權目標價", "head": ["項目", "情境 A", "情境 B", "情境 C"],
+     "rows": [[f"@Recon!A{RCR['sbc'] + 2 + i}"] + [f"@Recon!{c}{RCR['sbc'] + 2 + i}|{'n1' if i < 3 else 'n0'}" for c in "BCD"] for i in range(5)] + [[f"@Recon!A{RCR['sbc_tp']}", f"@Recon!B{RCR['sbc_tp']}|n0", "", ""]]},
     {"type": "table", "caption": "結論", "head": ["項目", "數值", "說明"],
      "rows": [[f"@Val!A{VR[k]}", vv(k, "B", f), f"@Val!E{VR[k]}"] for k, f in (("tpdcf", "n0"), ("tpcomp", "n0"), ("tp", "n0"), ("px", "n0"), ("cons", "n0"), ("up", "sp1"), ("upc", "sp1"), ("tier", ""), ("val_rating", ""), ("gate_val", "n0"), ("rec", ""))]},
     {"type": "kv", "items": [[f"@Val!A{VR[k]}", vv(k, "B", f)] for k, f in (("rf", "p2"), ("rf_flag", ""), ("beta", "n2"), ("erp", "p1"), ("ke", "p2"), ("kdat", "p2"), ("wacc", "p2"), ("ronic", "p2"), ("g", "p1"))]},
@@ -105,7 +109,7 @@ valuation = {"id": "valuation", "title": "估值", "blocks": [
     {"type": "table", "caption": "同業前瞻本益比逐家（會計準則、基準日與逾期旗標）", "head": ["同業", "前瞻本益比", "基準日", "會計準則與租賃處理", "逾期", "群組"],
      "rowgen": {"sheet": "Val", "rows": f"{VR['peh'] + 1}-{VR['peer_end']}", "cols": list("ABCDEF"), "fmts": ["", "n2", "date", "", "", ""]}},
     {"type": "table", "caption": "本公司現行倍數與 DCF／Comparable 落差分解（情境 B）", "head": ["項目", "數值"],
-     "rows": [[f"@Val!A{VR[k]}", vv(k, "B", f)] for k, f in (("own_pe", "n1"), ("own_ratio", "n2"), ("own_rerate", "sp1"), ("comp_alt", "n0"), ("tp_alt", "n0"), ("gp_gap", "n0"), ("gp_sbc", "n0"), ("gp_lev", "n0"), ("gp_time", "n0"), ("gp_mult", "n0"), ("gp_chk", "n0"), ("gp_dcfmult", "n1"))]},
+     "rows": [[f"@Val!A{VR[k]}", vv(k, "B", f)] for k, f in (("own_pe", "n1"), ("own_ratio", "n2"), ("own_rerate", "sp1"), ("rm_geo", "n2"), ("rm_ps", "n2"), ("rm_psg", "n2"), ("rm_g", "n2"), ("rm_cg", "p1"), ("rm_pg", "p1"), ("rm_div", "p0"), ("comp_alt", "n0"), ("tp_alt", "n0"), ("gp_gap", "n0"), ("gp_sbc", "n0"), ("gp_lev", "n0"), ("gp_time", "n0"), ("gp_mult", "n0"), ("gp_chk", "n0"), ("gp_dcfmult", "n1"))]},
     {"type": "table", "caption": "情境目標價與收支關卡", "head": ["項目", "數值"],
      "rows": [[f"@Val!A{VR[k]}", vv(k, "B", f)] for k, f in (("t_A", "n0"), ("t_B", "n0"), ("t_C", "n0"), ("wsum", "p0"), ("per", "n1"), ("gate_A", "n0"), ("gate_B", "n0"), ("gate_C", "n0"))]}]}
 _main = [b for b in sens_blocks if not b.get("collapse") and b["type"] == "tornado"]
@@ -171,7 +175,7 @@ recon = {"id": "recon", "title": "對帳：公司指引、市場共識與反解"
 status = {"id": "status", "title": "資料狀態", "blocks": [
     {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期", "@README!A1"], ["build_id", f"@Sens!D{rm['SE_BID']}"], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"]]},
     {"type": "h3", "text": "本版要點、診斷與限制"},
-    {"type": "list", "items": ["@README!A2", "@README!A30", "@README!A14", "@README!A15", "@README!A16", "@README!A17"]},
+    {"type": "list", "items": ["@README!A2", "@README!A30", "@README!A41", "@README!A14", "@README!A15", "@README!A16", "@README!A17"]},
     {"type": "h3", "text": "市場資料日期與失效條件"},
     {"type": "list", "items": ["@README!A29", "@README!A31"]},
     {"type": "table", "caption": "風險登錄", "head": ["風險", "是否建模", "理由", "觀察指標"], "rowgen": {"sheet": "README", "rows": "34-38", "cols": ["A", "B", "C", "D"]}},

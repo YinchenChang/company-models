@@ -1,0 +1,770 @@
+{
+ "company": "fujitsu",
+ "ticker": "FUJITSU",
+ "currency": "JPY",
+ "generated": "2026-11-17",
+ "method": "PS＝市值÷TTM 營收；PSG＝PS÷TTM 營收年增(pt)；相對值＝本公司÷同業中位；讀數與基準見規格第 2 節",
+ "align": "財季末對齊到最近的日曆季末（例：1/31→前一年 12/31、7/31→6/30、4/30→3/31、2/28→3/31、11/30→12/31）；各公司取最近 20 個財季",
+ "gaps": [
+  "FUJITSU 2025-03-31：PS 缺（資料商未提供）",
+  "FUJITSU 2026-03-31：隱含 TTM 營收單季變動 +43%（重編／併購／資料錯誤，使用前核對）",
+  "PSG 有效點 6 < 12"
+ ],
+ "ttm_growth_method": "TTM 營收由 市值÷PS 反推，年增＝本季 TTM ÷ 4 季前 TTM − 1；最早 4 季無基期，故 PSG 最多 16 點",
+ "groups": {
+  "all": {
+   "peers": [
+    "HITACHI",
+    "NEC",
+    "NRI",
+    "BIPROGY"
+   ],
+   "peers_missing": [],
+   "ps_series": [
+    {
+     "q": "2021-12-31",
+     "actual": "2021-12-31",
+     "company": 1.08,
+     "peer_median": 0.815,
+     "n_peers": 4,
+     "rel": 1.325153374233129
+    },
+    {
+     "q": "2022-03-31",
+     "actual": "2022-03-31",
+     "company": 1.01,
+     "peer_median": 0.7849999999999999,
+     "n_peers": 4,
+     "rel": 1.2866242038216562
+    },
+    {
+     "q": "2022-06-30",
+     "actual": "2022-06-30",
+     "company": 0.93,
+     "peer_median": 0.72,
+     "n_peers": 4,
+     "rel": 1.2916666666666667
+    },
+    {
+     "q": "2022-09-30",
+     "actual": "2022-09-30",
+     "company": 0.86,
+     "peer_median": 0.755,
+     "n_peers": 4,
+     "rel": 1.1390728476821192
+    },
+    {
+     "q": "2022-12-31",
+     "actual": "2022-12-31",
+     "company": 0.93,
+     "peer_median": 0.7949999999999999,
+     "n_peers": 4,
+     "rel": 1.1698113207547172
+    },
+    {
+     "q": "2023-03-31",
+     "actual": "2023-03-31",
+     "company": 0.9,
+     "peer_median": 0.7949999999999999,
+     "n_peers": 4,
+     "rel": 1.1320754716981134
+    },
+    {
+     "q": "2023-06-30",
+     "actual": "2023-06-30",
+     "company": 0.95,
+     "peer_median": 0.9,
+     "n_peers": 4,
+     "rel": 1.0555555555555556
+    },
+    {
+     "q": "2023-09-30",
+     "actual": "2023-09-30",
+     "company": 0.89,
+     "peer_median": 0.94,
+     "n_peers": 4,
+     "rel": 0.946808510638298
+    },
+    {
+     "q": "2023-12-31",
+     "actual": "2023-12-31",
+     "company": 1.08,
+     "peer_median": 1.0699999999999998,
+     "n_peers": 4,
+     "rel": 1.0093457943925235
+    },
+    {
+     "q": "2024-03-31",
+     "actual": "2024-03-31",
+     "company": 1.22,
+     "peer_median": 1.275,
+     "n_peers": 4,
+     "rel": 0.9568627450980393
+    },
+    {
+     "q": "2024-06-30",
+     "actual": "2024-06-30",
+     "company": 1.22,
+     "peer_median": 1.45,
+     "n_peers": 4,
+     "rel": 0.8413793103448276
+    },
+    {
+     "q": "2024-09-30",
+     "actual": "2024-09-30",
+     "company": 1.44,
+     "peer_median": 1.55,
+     "n_peers": 4,
+     "rel": 0.9290322580645161
+    },
+    {
+     "q": "2024-12-31",
+     "actual": "2024-12-31",
+     "company": 1.36,
+     "peer_median": 1.535,
+     "n_peers": 4,
+     "rel": 0.8859934853420196
+    },
+    {
+     "q": "2025-03-31",
+     "actual": "2025-03-31",
+     "company": null,
+     "peer_median": null,
+     "n_peers": 4,
+     "rel": null
+    },
+    {
+     "q": "2025-06-30",
+     "actual": "2025-06-30",
+     "company": 2.46,
+     "peer_median": 1.795,
+     "n_peers": 4,
+     "rel": 1.3704735376044568
+    },
+    {
+     "q": "2025-09-30",
+     "actual": "2025-09-30",
+     "company": 2.49,
+     "peer_median": 1.79,
+     "n_peers": 4,
+     "rel": 1.3910614525139666
+    },
+    {
+     "q": "2025-12-31",
+     "actual": "2025-12-31",
+     "company": 3.11,
+     "peer_median": 2.08,
+     "n_peers": 4,
+     "rel": 1.4951923076923075
+    },
+    {
+     "q": "2026-03-31",
+     "actual": "2026-03-31",
+     "company": 1.57,
+     "peer_median": 1.665,
+     "n_peers": 4,
+     "rel": 0.942942942942943
+    },
+    {
+     "q": "2026-06-30",
+     "actual": "2026-06-30",
+     "company": 1.6,
+     "peer_median": 1.615,
+     "n_peers": 4,
+     "rel": 0.9907120743034057
+    },
+    {
+     "q": "2026-09-30",
+     "actual": "2026-09-30",
+     "company": 1.93,
+     "peer_median": null,
+     "n_peers": 1,
+     "rel": null
+    }
+   ],
+   "ps_stats": {
+    "n": 18,
+    "median": 1.0938155136268346,
+    "min": 0.8413793103448276,
+    "max": 1.4951923076923075
+   },
+   "psg_series": [
+    {
+     "q": "2021-12-31",
+     "actual": "2021-12-31",
+     "company": null,
+     "peer_median": null,
+     "n_peers": 0,
+     "rel": null
+    },
+    {
+     "q": "2022-03-31",
+     "actual": "2022-03-31",
+     "company": null,
+     "peer_median": null,
+     "n_peers": 0,
+     "rel": null
+    },
+    {
+     "q": "2022-06-30",
+     "actual": "2022-06-30",
+     "company": null,
+     "peer_median": null,
+     "n_peers": 0,
+     "rel": null
+    },
+    {
+     "q": "2022-09-30",
+     "actual": "2022-09-30",
+     "company": null,
+     "peer_median": null,
+     "n_peers": 2,
+     "rel": null
+    },
+    {
+     "q": "2022-12-31",
+     "actual": "2022-12-31",
+     "company": 0.3999522100425145,
+     "peer_median": 0.12365941018243724,
+     "n_peers": 4,
+     "rel": 3.2343046877909
+    },
+    {
+     "q": "2023-03-31",
+     "actual": "2023-03-31",
+     "company": 0.21596097502681988,
+     "peer_median": 0.12598031415142805,
+     "n_peers": 4,
+     "rel": 1.7142438204054269
+    },
+    {
+     "q": "2023-06-30",
+     "actual": "2023-06-30",
+     "company": 0.3347134103443963,
+     "peer_median": 0.11203482756991394,
+     "n_peers": 3,
+     "rel": 2.987583572041672
+    },
+    {
+     "q": "2023-09-30",
+     "actual": "2023-09-30",
+     "company": 0.2681667536748189,
+     "peer_median": 0.10605272607015578,
+     "n_peers": 3,
+     "rel": 2.5286172606013144
+    },
+    {
+     "q": "2023-12-31",
+     "actual": "2023-12-31",
+     "company": null,
+     "peer_median": null,
+     "n_peers": 3,
+     "rel": null
+    },
+    {
+     "q": "2024-03-31",
+     "actual": "2024-03-31",
+     "company": null,
+     "peer_median": null,
+     "n_peers": 3,
+     "rel": null
+    },
+    {
+     "q": "2024-06-30",
+     "actual": "2024-06-30",
+     "company": 0.415831108488859,
+     "peer_median": 0.3951938386162677,
+     "n_peers": 3,
+     "rel": 1.0522206265787206
+    },
+    {
+     "q": "2024-09-30",
+     "actual": "2024-09-30",
+     "company": null,
+     "peer_median": null,
+     "n_peers": 2,
+     "rel": null
+    },
+    {
+     "q": "2024-12-31",
+     "actual": "2024-12-31",
+     "company": null,
+     "peer_median": null,
+     "n_peers": 2,
+     "rel": null
+    },
+    {
+     "q": "2025-03-31",
+     "actual": "2025-03-31",
+     "company": null,
+     "peer_median": null,
+     "n_peers": 2,
+     "rel": null
+    },
+    {
+     "q": "2025-06-30",
+     "actual": "2025-06-30",
+     "company": null,
+     "peer_median": null,
+     "n_peers": 2,
+     "rel": null
+    },
+    {
+     "q": "2025-09-30",
+     "actual": "2025-09-30",
+     "company": null,
+     "peer_median": null,
+     "n_peers": 4,
+     "rel": null
+    },
+    {
+     "q": "2025-12-31",
+     "actual": "2025-12-31",
+     "company": null,
+     "peer_median": null,
+     "n_peers": 4,
+     "rel": null
+    },
+    {
+     "q": "2026-03-31",
+     "actual": "2026-03-31",
+     "company": null,
+     "peer_median": null,
+     "n_peers": 4,
+     "rel": null
+    },
+    {
+     "q": "2026-06-30",
+     "actual": "2026-06-30",
+     "company": 0.041422660091601865,
+     "peer_median": 0.2584379540192761,
+     "n_peers": 4,
+     "rel": 0.16028086992405255
+    },
+    {
+     "q": "2026-09-30",
+     "actual": "2026-09-30",
+     "company": 0.04486066791901945,
+     "peer_median": null,
+     "n_peers": 1,
+     "rel": null
+    }
+   ],
+   "psg_stats": {
+    "n": 6,
+    "median": 2.1214305405033707,
+    "min": 0.16028086992405255,
+    "max": 3.2343046877909
+   },
+   "growth_ratio": {
+    "value": 5.463385147420578,
+    "basis": "TTM（NTM 未取得）",
+    "quarter": "2026-06-30",
+    "company_g": 0.38626201129086546,
+    "peer_median_g": 0.07070012471539389,
+    "n_peers": 4
+   },
+   "ps_reading": 1.0938155136268346,
+   "psg_reading": 11.590192106270523,
+   "psg_reading_ref_only": 11.590192106270523,
+   "geo_base": 1.0938155136268346,
+   "base_source": "只有 PS（PSG 讀數無法計：PSG 有效點不足 12）",
+   "sens": {
+    "low": 0.8413793103448276,
+    "high": 1.4951923076923075,
+    "ps_only": 1.0938155136268346,
+    "psg_only": null
+   },
+   "divergence": null,
+   "divergence_gt_30pct": null,
+   "valid_points": {
+    "ps": 18,
+    "psg": 6,
+    "window_quarters": 20,
+    "min_required": 12,
+    "meets_12": false
+   },
+   "gaps": [
+    "PSG 有效點 6 < 12"
+   ],
+   "notes": [
+    "PSG 有效點 6 < 12，只作參考，不進基準",
+    "只用 PS（規格第 2 節第 6 條）"
+   ]
+  }
+ },
+ "peers": [
+  "HITACHI",
+  "NEC",
+  "NRI",
+  "BIPROGY"
+ ],
+ "peers_missing": [],
+ "ps_series": [
+  {
+   "q": "2021-12-31",
+   "actual": "2021-12-31",
+   "company": 1.08,
+   "peer_median": 0.815,
+   "n_peers": 4,
+   "rel": 1.325153374233129
+  },
+  {
+   "q": "2022-03-31",
+   "actual": "2022-03-31",
+   "company": 1.01,
+   "peer_median": 0.7849999999999999,
+   "n_peers": 4,
+   "rel": 1.2866242038216562
+  },
+  {
+   "q": "2022-06-30",
+   "actual": "2022-06-30",
+   "company": 0.93,
+   "peer_median": 0.72,
+   "n_peers": 4,
+   "rel": 1.2916666666666667
+  },
+  {
+   "q": "2022-09-30",
+   "actual": "2022-09-30",
+   "company": 0.86,
+   "peer_median": 0.755,
+   "n_peers": 4,
+   "rel": 1.1390728476821192
+  },
+  {
+   "q": "2022-12-31",
+   "actual": "2022-12-31",
+   "company": 0.93,
+   "peer_median": 0.7949999999999999,
+   "n_peers": 4,
+   "rel": 1.1698113207547172
+  },
+  {
+   "q": "2023-03-31",
+   "actual": "2023-03-31",
+   "company": 0.9,
+   "peer_median": 0.7949999999999999,
+   "n_peers": 4,
+   "rel": 1.1320754716981134
+  },
+  {
+   "q": "2023-06-30",
+   "actual": "2023-06-30",
+   "company": 0.95,
+   "peer_median": 0.9,
+   "n_peers": 4,
+   "rel": 1.0555555555555556
+  },
+  {
+   "q": "2023-09-30",
+   "actual": "2023-09-30",
+   "company": 0.89,
+   "peer_median": 0.94,
+   "n_peers": 4,
+   "rel": 0.946808510638298
+  },
+  {
+   "q": "2023-12-31",
+   "actual": "2023-12-31",
+   "company": 1.08,
+   "peer_median": 1.0699999999999998,
+   "n_peers": 4,
+   "rel": 1.0093457943925235
+  },
+  {
+   "q": "2024-03-31",
+   "actual": "2024-03-31",
+   "company": 1.22,
+   "peer_median": 1.275,
+   "n_peers": 4,
+   "rel": 0.9568627450980393
+  },
+  {
+   "q": "2024-06-30",
+   "actual": "2024-06-30",
+   "company": 1.22,
+   "peer_median": 1.45,
+   "n_peers": 4,
+   "rel": 0.8413793103448276
+  },
+  {
+   "q": "2024-09-30",
+   "actual": "2024-09-30",
+   "company": 1.44,
+   "peer_median": 1.55,
+   "n_peers": 4,
+   "rel": 0.9290322580645161
+  },
+  {
+   "q": "2024-12-31",
+   "actual": "2024-12-31",
+   "company": 1.36,
+   "peer_median": 1.535,
+   "n_peers": 4,
+   "rel": 0.8859934853420196
+  },
+  {
+   "q": "2025-03-31",
+   "actual": "2025-03-31",
+   "company": null,
+   "peer_median": null,
+   "n_peers": 4,
+   "rel": null
+  },
+  {
+   "q": "2025-06-30",
+   "actual": "2025-06-30",
+   "company": 2.46,
+   "peer_median": 1.795,
+   "n_peers": 4,
+   "rel": 1.3704735376044568
+  },
+  {
+   "q": "2025-09-30",
+   "actual": "2025-09-30",
+   "company": 2.49,
+   "peer_median": 1.79,
+   "n_peers": 4,
+   "rel": 1.3910614525139666
+  },
+  {
+   "q": "2025-12-31",
+   "actual": "2025-12-31",
+   "company": 3.11,
+   "peer_median": 2.08,
+   "n_peers": 4,
+   "rel": 1.4951923076923075
+  },
+  {
+   "q": "2026-03-31",
+   "actual": "2026-03-31",
+   "company": 1.57,
+   "peer_median": 1.665,
+   "n_peers": 4,
+   "rel": 0.942942942942943
+  },
+  {
+   "q": "2026-06-30",
+   "actual": "2026-06-30",
+   "company": 1.6,
+   "peer_median": 1.615,
+   "n_peers": 4,
+   "rel": 0.9907120743034057
+  },
+  {
+   "q": "2026-09-30",
+   "actual": "2026-09-30",
+   "company": 1.93,
+   "peer_median": null,
+   "n_peers": 1,
+   "rel": null
+  }
+ ],
+ "ps_stats": {
+  "n": 18,
+  "median": 1.0938155136268346,
+  "min": 0.8413793103448276,
+  "max": 1.4951923076923075
+ },
+ "psg_series": [
+  {
+   "q": "2021-12-31",
+   "actual": "2021-12-31",
+   "company": null,
+   "peer_median": null,
+   "n_peers": 0,
+   "rel": null
+  },
+  {
+   "q": "2022-03-31",
+   "actual": "2022-03-31",
+   "company": null,
+   "peer_median": null,
+   "n_peers": 0,
+   "rel": null
+  },
+  {
+   "q": "2022-06-30",
+   "actual": "2022-06-30",
+   "company": null,
+   "peer_median": null,
+   "n_peers": 0,
+   "rel": null
+  },
+  {
+   "q": "2022-09-30",
+   "actual": "2022-09-30",
+   "company": null,
+   "peer_median": null,
+   "n_peers": 2,
+   "rel": null
+  },
+  {
+   "q": "2022-12-31",
+   "actual": "2022-12-31",
+   "company": 0.3999522100425145,
+   "peer_median": 0.12365941018243724,
+   "n_peers": 4,
+   "rel": 3.2343046877909
+  },
+  {
+   "q": "2023-03-31",
+   "actual": "2023-03-31",
+   "company": 0.21596097502681988,
+   "peer_median": 0.12598031415142805,
+   "n_peers": 4,
+   "rel": 1.7142438204054269
+  },
+  {
+   "q": "2023-06-30",
+   "actual": "2023-06-30",
+   "company": 0.3347134103443963,
+   "peer_median": 0.11203482756991394,
+   "n_peers": 3,
+   "rel": 2.987583572041672
+  },
+  {
+   "q": "2023-09-30",
+   "actual": "2023-09-30",
+   "company": 0.2681667536748189,
+   "peer_median": 0.10605272607015578,
+   "n_peers": 3,
+   "rel": 2.5286172606013144
+  },
+  {
+   "q": "2023-12-31",
+   "actual": "2023-12-31",
+   "company": null,
+   "peer_median": null,
+   "n_peers": 3,
+   "rel": null
+  },
+  {
+   "q": "2024-03-31",
+   "actual": "2024-03-31",
+   "company": null,
+   "peer_median": null,
+   "n_peers": 3,
+   "rel": null
+  },
+  {
+   "q": "2024-06-30",
+   "actual": "2024-06-30",
+   "company": 0.415831108488859,
+   "peer_median": 0.3951938386162677,
+   "n_peers": 3,
+   "rel": 1.0522206265787206
+  },
+  {
+   "q": "2024-09-30",
+   "actual": "2024-09-30",
+   "company": null,
+   "peer_median": null,
+   "n_peers": 2,
+   "rel": null
+  },
+  {
+   "q": "2024-12-31",
+   "actual": "2024-12-31",
+   "company": null,
+   "peer_median": null,
+   "n_peers": 2,
+   "rel": null
+  },
+  {
+   "q": "2025-03-31",
+   "actual": "2025-03-31",
+   "company": null,
+   "peer_median": null,
+   "n_peers": 2,
+   "rel": null
+  },
+  {
+   "q": "2025-06-30",
+   "actual": "2025-06-30",
+   "company": null,
+   "peer_median": null,
+   "n_peers": 2,
+   "rel": null
+  },
+  {
+   "q": "2025-09-30",
+   "actual": "2025-09-30",
+   "company": null,
+   "peer_median": null,
+   "n_peers": 4,
+   "rel": null
+  },
+  {
+   "q": "2025-12-31",
+   "actual": "2025-12-31",
+   "company": null,
+   "peer_median": null,
+   "n_peers": 4,
+   "rel": null
+  },
+  {
+   "q": "2026-03-31",
+   "actual": "2026-03-31",
+   "company": null,
+   "peer_median": null,
+   "n_peers": 4,
+   "rel": null
+  },
+  {
+   "q": "2026-06-30",
+   "actual": "2026-06-30",
+   "company": 0.041422660091601865,
+   "peer_median": 0.2584379540192761,
+   "n_peers": 4,
+   "rel": 0.16028086992405255
+  },
+  {
+   "q": "2026-09-30",
+   "actual": "2026-09-30",
+   "company": 0.04486066791901945,
+   "peer_median": null,
+   "n_peers": 1,
+   "rel": null
+  }
+ ],
+ "psg_stats": {
+  "n": 6,
+  "median": 2.1214305405033707,
+  "min": 0.16028086992405255,
+  "max": 3.2343046877909
+ },
+ "growth_ratio": {
+  "value": 5.463385147420578,
+  "basis": "TTM（NTM 未取得）",
+  "quarter": "2026-06-30",
+  "company_g": 0.38626201129086546,
+  "peer_median_g": 0.07070012471539389,
+  "n_peers": 4
+ },
+ "ps_reading": 1.0938155136268346,
+ "psg_reading": 11.590192106270523,
+ "geo_base": 1.0938155136268346,
+ "base_source": "只有 PS（PSG 讀數無法計：PSG 有效點不足 12）",
+ "sens": {
+  "low": 0.8413793103448276,
+  "high": 1.4951923076923075,
+  "ps_only": 1.0938155136268346,
+  "psg_only": null
+ },
+ "valid_points": {
+  "ps": 18,
+  "psg": 6,
+  "window_quarters": 20,
+  "min_required": 12,
+  "meets_12": false
+ },
+ "divergence": null,
+ "divergence_gt_30pct": null,
+ "window": {
+  "first": "2021-12-31",
+  "last": "2026-09-30"
+ }
+}

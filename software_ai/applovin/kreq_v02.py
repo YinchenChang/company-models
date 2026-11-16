@@ -1,6 +1,6 @@
 # AppLovin 反解（G2-9）：整本 LibreOffice 重算，解出使加權目標價＝現價（req）與上檔空間＝+25%（flip；買進邊界）的主導變數值。
 # 變數：beta（折現率）、u0_B（情境 B AI 提升）、e0_B（情境 B 新垂直增量）。割線法；只作展示、不進目標價。
-# 用法：python3 software_ai/applovin/kreq_v01.py <工作資料夾> <輸出 json>
+# 用法：python3 software_ai/applovin/kreq_v02.py <工作資料夾> <輸出 json>
 import json, os, subprocess, sys, shutil, tempfile
 import openpyxl
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -37,7 +37,7 @@ def solve(key, target_up, a, b):
 
 
 res = {"base_tp": run("beta", 2.0251)[0]}
-for key, a, b in (("beta", 1.5, 1.2), ("u0_B", 0.08, 0.15), ("e0_B", 0.10, 0.16)):
+for key, a, b in (("pe_rel", 1.0, 0.8), ("beta", 2.5, 3.0), ("u0_B", 0.08, 0.03), ("e0_B", 0.10, 0.05)):
     res[key] = {"req": solve(key, 0.0, a, b), "flip": solve(key, 0.25, a, b)}
 json.dump(res, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print(json.dumps({k: v for k, v in res.items()}, ensure_ascii=False))

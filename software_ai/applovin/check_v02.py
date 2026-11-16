@@ -1,5 +1,5 @@
 # AppLovin 成品核對（v0.1）：公式錯誤 0、各頁「檢查：」列為 0、敏感度未過期、固定列標籤存在、反解快照未過期。
-# 用法：python3 software_ai/applovin/check_v01.py <重算後的 xlsx>；失敗時非零結束。
+# 用法：python3 software_ai/applovin/check_v02.py <重算後的 xlsx>；失敗時非零結束。
 import sys
 import openpyxl
 wb = openpyxl.load_workbook(sys.argv[1], data_only=True)
@@ -48,7 +48,10 @@ ri = labs.get("任一關卡成立？（1＝是；須先診斷）")
 flag = V.cell(ri, 2).value if ri else None
 tp, up, rec = V.cell(labs["目標價（DCF 與 Comparable 加權）"], 2).value, V.cell(labs["上檔空間：加權目標價"], 2).value, V.cell(labs["投資建議"], 2).value
 print(f"加權目標價 {tp:.2f}；上檔空間 {up:+.1%}；投資建議 {rec}；合理性關卡旗標 {flag}")
-if flag not in (0, None): fail.append("合理性關卡成立：須先診斷並在 README 寫出結論（gate3_d）")
+if flag not in (0, None):
+    rd_ = wb["README"]
+    if not any(str(rd_.cell(r, 1).value or "").startswith("診斷結論") for r in range(1, rd_.max_row + 1)): fail.append("合理性關卡成立：README 缺「診斷結論」")
+    else: print("合理性關卡成立；README 已有診斷結論")
 if fail:
     print("失敗：")
     for f in fail: print("  -", f)

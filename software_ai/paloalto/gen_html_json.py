@@ -13,20 +13,20 @@ def find(sh, text, col=1, start=1, exact=False):
 
 V = {k: find("Val", t) for k, t in dict(
     wacc_h="折現率", rf="無風險利率", ke="股權成本", kd="稅後債務成本", wacc="WACC", g="永續成長率", ronic="RONIC", px="現價", tp="加權目標價", dcf="DCF 目標價（三情境", cmp="Comparable 目標價（同業", cons="市場共識", up="加權目標價上檔",
-    rec="投資建議", scn_tp="情境目標價 A", gate_scn="收支關卡 A", dcf_h="DCF 彙總", pvx="明確期 FCFF", dcfv="DCF 目標價", tvsh="永續價值占 EV", peh="同業本益比（Comparable）", pe1="同業前瞻本益比：Fortinet", pe_rel="PANW 資料商前瞻", pxpe="PANW 現價 ÷", per_h="期間與評等邊界", att2="上檔空間歸因：歷史相對倍數", pemed="同業中位數", rel="相對倍數調整係數", eps="FY2028 Non-GAAP EPS", cmpabc="Comparable 目標價（A／B／C）", lvl="級距", valr="估值評等", gate="入不敷出判定用", gtxt="入不敷出判定", wts="情境權重", sdcf="情境 DCF 目標價", scmp="情境 Comparable 目標價").items()}
+    rec="投資建議", scn_tp="情境目標價 A", gate_scn="收支關卡 A", dcf_h="DCF 彙總", pvx="明確期 FCFF", dcfv="DCF 目標價", tvsh="永續價值占 EV", peh="同業本益比（Comparable）", pe1="同業前瞻本益比：Fortinet", pe_rel="PANW 資料商前瞻", pxpe="PANW 現價 ÷", per_h="期間與評等邊界", att2="上檔空間歸因：歷史相對倍數", pemed="同業中位數", rel="相對倍數調整係數", eps="FY2028 Non-GAAP EPS", cmpabc="Comparable 目標價（A／B／C）", lvl="級距", scncmp="情境 Comparable 目標價 A", tpsb="DCF（股票薪酬加回）目標價（三", valr="估值評等", gate="入不敷出判定用", gtxt="入不敷出判定", wts="情境權重", sdcf="情境 DCF 目標價", scmp="情境 Comparable 目標價").items()}
 SC = {k: find("Sens", t) for k, t in dict(hdr="案例", rel="加權目標價相對基準", note="未涵蓋說明").items()}
 rel_hdr = SC["rel"] + 1
 rel_rows = [r for r in range(rel_hdr + 1, SC["note"]) if wb["Sens"].cell(r, 1).value]
 case_first, case_last = SC["hdr"] + 1, SC["rel"] - 2
 R = {k: find("RevDCF", t) for k, t in dict(px="現價", mrow="模型核心", imp="現價隱含核心", interp="解讀", ev0="現價隱含企業價值").items()}
-RC = {"h1": find("Recon", "項目", start=3), "s2": find("Recon", "2. 逐分部"), "s3": find("Recon", "3. 一次性"), "s4": find("Recon", "4. 同業"), "s5": find("Recon", "5. Tokenomics"), "s6": find("Recon", "6. 風險")}
+RC = {"h1": find("Recon", "項目", start=3), "s2": find("Recon", "2. 逐分部"), "s3": find("Recon", "3. 一次性"), "s4": find("Recon", "4. 同業"), "s5": find("Recon", "5. Tokenomics"), "s6": find("Recon", "7. 風險")}
 P = {k: find("PL", t) for k, t in dict(prod="Product", ss="Subscription and support", rev="合併營收", chk1="檢查：Product＋", n="受保護代理身分數", rho="每單位營收", arr="NGS ARR（期末）", incr="AI 營收增量（代理", eros="定價侵蝕（相對", inf="推論成本增量（市場價", net="AI 淨效果", cpt="每次成功分析", fcff="FCFF（無槓桿", is0="標準損益表年度", io="營收", yoy_n="淨利年增率", isnote="標準損益表說明", ck1="檢查：標準損益表", ck2="檢查：營收 ＝", opm="營業利益率").items()}
 IS0 = find("PL", "營收", start=P["is0"] + 1, exact=True)
 IS_END = find("PL", "EPS（完全稀釋", start=IS0)
 NYOY = find("PL", "淨利年增率", start=IS_END)
 SCN_H = find("In", "鍵", start=100)
 YC = "CDEFGHIJK"
-RH_END = find("RelHist", "歷史相對倍數：中位數") - 2
+RH_END = find("RelHist", "PS 讀數（歷史中位）") - 2
 DX = find("README", "合理性關卡診斷")
 RD = find("README", "不適用與未做項目")
 def yrs(sh, r, c1="C", c2="K"): return f"@{sh}!{c1}{r}:{c2}{r}"
@@ -58,14 +58,15 @@ cfg = {
      "ref": {"label": f"@Val!A{V['px']}", "value": f"@Val!B{V['px']}"}},
     {"type": "kv", "items": [[f"@Val!A{V[k]}", f"@Val!B{V[k]}|p2"] for k in ("ke", "kd", "wacc", "ronic", "g")]},
     {"type": "table", "caption": "結論（三情境加權）", "head": ["項目", "值／情境 A", "情境 B", "情境 C"],
-     "rowgen": {"sheet": "Val", "rows": f"{V['px']}-{V['wts']}", "cols": list("ABCD"), "fmts": ["", "n2", "n2", "n2"],
+     "rowgen": {"sheet": "Val", "rows": f"{V['px']}-{V['scncmp']},{V['wts']}", "cols": list("ABCD"), "fmts": ["", "n2", "n2", "n2"],
                 "row_fmt": {**{str(V[k]): {"B": "sp1"} for k in ("up",)}, str(V["up"] + 1): {"B": "sp1"}, str(V["up"] + 2): {"B": "sp1"}, str(V["lvl"]): {"B": ""}, str(V["valr"]): {"B": ""}, str(V["gate"]): {"B": "n0"}, str(V["gate"] + 1): {c: "n0" for c in "BCD"}, str(V["gtxt"]): {"B": ""}, str(V["rec"]): {"B": ""}, str(V["cons"]): {"C": ""}, str(V["wts"]): {c: "p0" for c in "BCD"}}}},
+    {"type": "table", "caption": "DCF（股票薪酬加回）對照：只作對照，不進加權目標價", "head": ["項目", "值／情境 A", "情境 B", "情境 C"], "rowgen": {"sheet": "Val", "rows": f"{V['tpsb']}-{V['tpsb']+2}", "cols": list("ABCD"), "fmts": ["", "n2", "n2", "n2"]}},
     {"type": "table", "caption": "DCF 彙總（三情境；百萬美元，股數為百萬股，每股為美元）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
      "rowgen": {"sheet": "Val", "rows": f"{V['pvx']}-{V['tvsh']}", "cols": list("ABCD")[:1] + list("BCD"), "fmts": ["", "n1", "n1", "n1"], "row_fmt": {str(V["tvsh"]): {c: "p1" for c in "BCD"}, str(V["dcfv"]): {c: "n2" for c in "BCD"}, str(V["dcfv"] - 1): {c: "n2" for c in "BCD"}, str(V["dcfv"] - 2): {c: "n0" for c in "BCD"}}}},
     {"type": "table", "caption": "Comparable（同業前瞻本益比中位數；倍數分母為 FY2028 Non-GAAP EPS）", "head": ["項目", "值／情境 A", "情境 B", "情境 C"],
      "rowgen": {"sheet": "Val", "rows": f"{V['peh']+1}-{V['pxpe']}", "cols": list("ABCD"), "fmts": ["", "n2", "n2", "n2"], "row_fmt": {str(V["rel"]): {"C": ""}, str(V["pe_rel"]): {"C": ""}, str(V["pemed"]): {"B": "n2"}}}},
-    {"type": "table", "collapse": True, "summary": "展開：歷史相對倍數（PANW 市銷率 ÷ 同業中位數，近五年逐季）", "head": ["PANW 財季末", "PANW", "Zscaler", "Fortinet", "Check Point", "同業中位", "相對倍數"], "rowgen": {"sheet": "RelHist", "rows": f"6-{RH_END}", "cols": list("ABCDEFG"), "fmts": ["", "n2", "n2", "n2", "n2", "n2", "n2"]}},
-    {"type": "table", "collapse": True, "summary": "展開：歷史相對倍數統計與現行比值", "head": ["項目", "數值"], "rowgen": {"sheet": "RelHist", "rows": f"{RH_END+2}-{wb['RelHist'].max_row}", "cols": ["A", "B"], "fmts": ["", "n2"], "row_fmt": {str(RH_END+6): {"B": "n0"}, str(RH_END+7): {"B": "n2"}}}},
+    {"type": "table", "collapse": True, "summary": "展開：歷史相對倍數逐季（共用庫讀值；PS 與 PSG）", "head": ["財季末", "實際財季末", "PANW 市銷率", "同業中位市銷率", "同業家數", "PS 相對值", "PSG 相對值"], "rowgen": {"sheet": "RelHist", "rows": f"7-{RH_END}", "cols": list("ABCDEFG"), "fmts": ["", "", "n2", "n2", "n0", "n2", "n2"]}},
+    {"type": "table", "collapse": True, "summary": "展開：歷史相對倍數讀數、Sens 區間與現行比值", "head": ["項目", "數值"], "rowgen": {"sheet": "RelHist", "rows": f"{RH_END+2}-{wb['RelHist'].max_row}", "cols": ["A", "B"], "fmts": ["", "n2"]}},
     {"type": "table", "collapse": True, "summary": "展開：折現率組成與期間、評等邊界", "head": ["項目", "數值"],
      "rowgen": {"sheet": "Val", "rows": f"{V['rf']}-{V['ke']-1},{V['kd']+1}-{V['wacc']-1},{V['per_h']+1}-{V['att2']}", "cols": ["A", "B"], "fmts": ["", "n4"], "row_fmt": {str(V["att2"] - 1): {"B": "p1"}, str(V["att2"]): {"B": "p1"}, str(V["att2"] - 2): {"B": ""}, str(V["per_h"] + 4): {"B": ""}}}}]},
   {"id": "sens", "title": "敏感度", "blocks": [

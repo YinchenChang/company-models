@@ -87,7 +87,10 @@ RCR["rc_int"] = r; RC.cell(r, 1, "− 利息收入淨額 ×(1 − 稅率)（FCFF
 RCR["rc_fcffs"] = r; RC.cell(r, 1, "＝FCFF（加回全額股票薪酬；DCF 頁）"); RC.cell(r, 2, "FY2027E"); RC.cell(r, 3, f"=DCF!I{DB_['fcffs']}").number_format = "#,##0.0"; r += 1
 RCR["rc_chk"] = r; RC.cell(r, 1, "檢查：公司定義自由現金流 − 利息稅後 − FCFF（應為 0）"); RC.cell(r, 3, f"=C{RCR['rc_fcf']}-C{RCR['rc_int']}-C{RCR['rc_fcffs']}").number_format = "0.000"; r += 1
 RCR["rc_sbc"] = r; RC.cell(r, 1, "FCFF（股票薪酬視為費用；主值）與加回股票薪酬之差＝股票薪酬"); RC.cell(r, 2, "FY2027E"); RC.cell(r, 3, f"=DCF!I{DB_['fcffs']}-DCF!I{DB_['fcff']}").number_format = "#,##0.0"; RC.cell(r, 7, "DCF 偏低的第一個原因：股票薪酬占公司定義自由現金流的大部分"); r += 1
-RCR["rc_wacc"] = r; RC.cell(r, 1, "WACC／終值折現年數／終值占 EV（情境 B）"); RC.cell(r, 3, f"=Val!B{VR['wacc']}").number_format = "0.00%"; RC.cell(r, 4, "=t_tv").number_format = "0.00"; RC.cell(r, 5, f"=Val!C{VR['tvsh']}").number_format = "0%"; RC.cell(r, 7, "第二個原因：折現率約 11.8%；第三個：FY2032 營收年增仍約 8% 即降到永續成長率"); r += 2
+RCR["rc_wacc"] = r; RC.cell(r, 1, "WACC／終值折現年數／終值占 EV（情境 B）"); RC.cell(r, 3, f"=Val!B{VR['wacc']}").number_format = "0.00%"; RC.cell(r, 4, "=t_tv").number_format = "0.00"; RC.cell(r, 5, f"=Val!C{VR['tvsh']}").number_format = "0%"; RC.cell(r, 7, "第二個原因：折現率約 11.8%；第三個：FY2032 營收年增仍約 8% 即降到永續成長率"); r += 1
+RCR["rc_psv_s"] = r; RC.cell(r, 1, "DCF（股票薪酬加回）每股價值（US$，情境加權，評價日；只作對照）"); RC.cell(r, 3, f"=Val!B{VR['psv_s']}").number_format = "#,##0.00"; RC.cell(r, 7, "對照用，不進加權目標價（G5 第 3 條）"); r += 1
+RCR["rc_tp_s"] = r; RC.cell(r, 1, "DCF（股票薪酬加回）目標價（US$，情境加權；只作對照）"); RC.cell(r, 3, f"=Val!B{VR['tpdcf_s']}").number_format = "#,##0.00"; RC.cell(r, 4, f"=Val!B{VR['tpdcf']}").number_format = "#,##0.00"; RC.cell(r, 5, f"=Val!B{VR['px']}").number_format = "#,##0.00"; RC.cell(r, 7, "欄位：加回目標價／主值 DCF 目標價／現價"); r += 1
+RCR["rc_txt"] = r; RC.cell(r, 1, f'="DCF（股票薪酬加回）每股價值 "&TEXT(C{RCR["rc_psv_s"]},"#,##0.00")&" 美元、目標價 "&TEXT(C{RCR["rc_tp_s"]},"#,##0.00")&" 美元，為現價 "&TEXT(E{RCR["rc_tp_s"]},"#,##0.00")&" 美元的 "&TEXT(C{RCR["rc_tp_s"]}/E{RCR["rc_tp_s"]},"0%")&"；主值 DCF 目標價 "&TEXT(D{RCR["rc_tp_s"]},"#,##0.00")&" 美元把股票薪酬視為費用。此列只作對照，不進加權目標價與評等。"'); r += 2
 RC.cell(r, 1, "8. 現金稅與模型稅率（原則第 40 條）").font = BOLD; r += 1
 RCR["cash_tax"] = r; RC.cell(r, 1, "FY2026 現金稅（公司預期）vs 模型所得稅費用（情境 B，US$M）"); c = RC.cell(r, 3, fv("tax.cash.fy26g")); c.font = BLUE; RC.cell(r, 4, f"=PL!H{PB_['tax']}").number_format = "#,##0.0"; RC.cell(r, 7, "現金稅遠低於帳面稅（美國遞延所得稅資產全額備抵、股票薪酬扣除）；模型以帳面稅率，DCF 偏保守"); r += 2
 RC.cell(r, 1, "9. 未找到").font = BOLD; r += 1
@@ -117,6 +120,8 @@ for row_ in ROWS:
         SENS_DEF.append((key, side, v, item))
 COMBO = {"@link": ("tk_px、pt_k", "tk_px=%r;pt_k=1.0" % tkv("IF_PriceRef_Astra"), "價格與成本聯動：token 價格取 Astra 層，同時 credit 價格完全轉嫁（pt_k＝1）"),
          "@route": ("tk_px、route_sh", "tk_px=%r;route_sh=0.7" % tkv("IF_PriceRef_Astra"), "模型組合：高價 Astra 層，但 70% 任務路由到 Terra 層便宜模型")}
+COMBO["@ps_only"] = ("rel_m", "rel_m=%r" % _R0["ps_reading"], "相對倍數只用 PS 讀數（近 20 財季中位）")
+COMBO["@psg_only"] = ("rel_m", "rel_m=%r" % _R0["psg_reading"], "相對倍數只用 PSG 讀數（成長調整後）")
 for ck, (kt, vv_, lab_) in COMBO.items(): SENS_DEF.append((ck, "聯動", vv_, lab_))
 r = 4
 SE_ROWS = []
@@ -167,7 +172,7 @@ VB = lambda k, c="B": f"Val!{c}{VR[k]}"
 TB = T["B"]
 RD["A1"] = (f'="Datadog（DDOG）個股模型 {VER}｜build_id "&Sens!D{SE_BID}&"｜資料截止日 "&TEXT(data_date,"yyyy-mm-dd")&"｜成品日 {VDATE}｜股價基準日 "&TEXT(px_date,"yyyy-mm-dd")'
             f'&"｜評價日 "&TEXT(val_date,"yyyy-mm-dd")&"｜目標時點 "&TEXT(tp_date,"yyyy-mm-dd")&"（本版未做先驗；Tokenomics 快照 v22.0；命題＝原型 U 按用量計價，單位經濟在 In 頁自建，v0.2 改讀 unit_economics）"')
-RD["A2"] = ("v0.1 要點：命題＋官方單一分部 → 損益表；套用共通必修 G2 十條與 G3 四條；DCF 為 FCFF（股票薪酬視為費用）到 FY2032，Comparable 為同業 Forward P/S 與 P/E；"
+RD["A2"] = ("v0.2 要點（相對倍數改讀歷史相對倍數 geo_base、無風險利率統一為 5.10%、並列股票薪酬加回 DCF 對照）：命題＋官方單一分部 → 損益表；套用共通必修 G2 十條與 G3 四條；DCF 為 FCFF（股票薪酬視為費用）到 FY2032，Comparable 為同業 Forward P/S 與 P/E；"
             "股票薪酬占營收依歷史規模經濟斜率延伸（下限 sbc_floor），其餘比率持平；三情境只在 AI 驅動分化（非 AI 與 AI 原生客戶用量、AI 原生客戶價格讓利、AI credits）。")
 RD["A3"] = "命題：Datadog 的營收按用量計價（營收＝客戶用量 × 單價）。AI 原生客戶帶來用量爆發，但也以大額承諾換取較低單價；AI 產品 credits 帶來新營收卻需向模型商買推論。本模型檢驗 AI 淨效果（增量 − 價格讓利 − 推論成本）的正負，以及它是否足以支持現價。"
 RD["A4"] = (f'="核心問題：FY2032E 的 AI 淨效果（營業利益前毛利）在情境 A／B／C 分別為 "&TEXT({VB("ai_net")},"#,##0")&"／"&TEXT({VB("ai_net","C")},"#,##0")&"／"&TEXT({VB("ai_net","D")},"#,##0")&" 百萬美元；基準下 AI 增量是否大於價格讓利與推論成本。"')
@@ -213,7 +218,7 @@ RISKS = [("最大 AI 原生客戶降低用量或自建", "是（情境 C、事�
          ("內建可觀察性與雲端原生替代（雲端大廠自有監控）", "否", "無可量化輸入；反映於非 AI 用量成長的區間", "新客戶數、淨營收留存率")]
 for i_, rowv in enumerate(RISKS):
     for j, v in enumerate(rowv): RD.cell(35 + i_, j + 1, v)
-RD["A41"] = "工作表：README／In／Hist／Q／Thesis／Seg／PL／CF／DCF／Val／RevDCF／Recon／Sens／Sources。成品 dist/<日期>_Datadog個股模型_v0.1.xlsx 與 .html。"
+RD["A41"] = "工作表：README／In／Hist／Q／Thesis／Seg／PL／CF／DCF／Val／RevDCF／Recon／Sens／Sources。成品 dist/<日期>_Datadog個股模型_v0.2.xlsx 與 .html。"
 RD["A42"] = (f'="DCF 與 Comparable 落差歸因（情境 B）：Comparable "&TEXT({VB("comp","C")},"#,##0.00")&" − DCF "&TEXT({VB("dcf12","C")},"#,##0.00")&" ＝ "&TEXT({VB("g_tot")},"+#,##0.00;-#,##0.00")&" 美元／股：股票薪酬 "&TEXT({VB("g_sbc")},"+#,##0.00;-#,##0.00")&"、倍數與成長殘差 "&TEXT({VB("g_mult")},"+#,##0.00;-#,##0.00")&"；槓桿 兩法皆為股權每股價值（每股淨現金 "&TEXT({VB("g_lev")},"0.00")&" 已含）；時點 兩法皆在目標時點（DCF 評價日起以 ke 滾動 "&TEXT({VB("g_time")},"+0.00")&" 已含在 DCF 內）。"')
 RD["A43"] = "未做先驗：本版沒有先驗（未預先設定任何投資觀點，結論全由 Assumed 輸入與公開資料推出）。"
 for rr_ in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 30, 32, 42, 43):

@@ -4,7 +4,7 @@
 
 **版本表（由建置成品產生，不手寫；原則第 10 節第 51 條）：**
 
-<!-- version-table: dist/20261117_AppLovin個股模型_v0.1.xlsx -->
+<!-- version-table: dist/_待刪除/20261117_AppLovin個股模型_v0.1.xlsx｜dist/20261117_AppLovin個股模型_v0.2.xlsx -->
 | 項目 | v0.1 |
 |---|---|
 | 現價 | 409.10 |
@@ -16,12 +16,12 @@
 | 收支關卡 A／B／C（FY2027–FY2031，US$M） | 59,184.2／48,677.8／36,342.7 |
 <!-- /version-table -->
 
-**v0.1（2026-11-17）：** 工作單 `docs/workorders/20261116_第一批_研究包與單位經濟.md`（G、G2、G3）。建置 `bash software_ai/applovin/make_v01.sh`（`KREQ=1 SENS=1` 重跑反解與敏感度）。
+**v0.2（2026-11-17）：** 工作單 G5：相對倍數改讀 `software_ai/data/relmult_hist/out/applovin.json` 的 geo_base（副本 `data/relmult_applovin.json`；PS 與 PSG 讀數差異大，成長比 2.60，原因見 README 頁與 HTML）、rf 統一 5.10%（FRED DGS10，2026-11-12）、DCF 並列股票薪酬加回讀數（只作對照）。v0.1 為工作單 G、G2、G3 首版（移 `dist/_待刪除/`）。建置 `bash software_ai/applovin/make_v02.sh`（`KREQ=1 SENS=1` 重跑反解與敏感度）。
 
 - **本版未做先驗**（工作單 G：2026-11-16 指示先建模、先驗略過）；先驗到位後改版。
 - **不適用：** Meta 式自建算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照（APP 運算以雲端租用為主，推論價格只讀 Tokenomics 快照）；三層協調（Coord 頁、C0、兩讀數）：不適用：非 Siliconomics 覆蓋。
 - **單位經濟模型：** `software_ai/unit_economics/` 尚未完成，變數先在 In 頁自建，標「v0.2 改讀 unit_economics」。
 - **研究包：** `data/research_applovin.md`、`data/facts_applovin.csv`（228 筆逐列紀錄）、`segments.json`。
 - **Tokenomics：** `data/tokenomics_snapshot.json`（v22.0，commit 79f6b30，只讀）；公司未揭露 token 量與任務量（未找到），每任務 token 以快照倍數推得並標 Assumed；token 價格層級標 Analogy。
-- **檔案：** `build_applovin.py`（建置）、`sens_v01.py`、`kreq_v01.py`（整本重算的敏感度與反解）、`check_v01.py`（成品核對）、`gen_html_json.py`（產生 `html.json`）、`display_check.json`（展示層一致性設定）、`dist/`（成品 xlsx 與 html）。
+- **檔案：** `build_applovin.py`（建置）、`sens_v02.py`、`kreq_v02.py`（整本重算的敏感度與反解）、`check_v02.py`（成品核對）、`gen_html_json.py`（產生 `html.json`）、`display_check.json`（展示層一致性設定）、`dist/`（成品 xlsx 與 html）。
 - **公開 repo：** 不含任何個人部位、基金或投資可行性資訊；評等為模型自身的估值評等。

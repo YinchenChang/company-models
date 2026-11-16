@@ -3,7 +3,7 @@
 用法：python3 build_snowflake.py <raw.xlsx> [--sens data/sens_v01.json] [--rowmap rowmap.json]
 所有計算為活公式；輸入在 In 頁（藍字）。LibreOffice 重算後才有快取值。
 """
-import datetime, hashlib, json, os, sys
+import datetime, hashlib, json, os, shutil, sys
 import openpyxl
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'tools'))
 import fcff_dcf as FD
@@ -14,7 +14,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = sys.argv[1]
 SENS = sys.argv[sys.argv.index("--sens") + 1] if "--sens" in sys.argv else None
 ROWMAP = sys.argv[sys.argv.index("--rowmap") + 1] if "--rowmap" in sys.argv else None
-VER, VDATE = "0.1.2", "20261117"
+VER, VDATE = "0.2", "20261117"
+RMJ = json.load(open(os.path.join(HERE, "../data/relmult_hist/out/snowflake.json"), encoding="utf-8"))
+shutil.copy(os.path.join(HERE, "../data/relmult_hist/out/snowflake.json"), os.path.join(HERE, "data/relmult_snowflake.json"))
+RMG = RMJ["groups"]["all"]
 TK = json.load(open(os.path.join(HERE, "data/tokenomics_snapshot_v22.0.json"), encoding="utf-8"))
 TKI = TK["items"]
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
@@ -50,7 +53,7 @@ add("conv_prin", "可轉換優先票據本金（2027 與 2029 年票據各 1,150
 add("conv_px", "可轉債轉換價", "US$/股", None, 157.50, None, D0, Q2Q + " Note 10：2027 與 2029 年票據轉換價皆為 US$157.50")
 add("conv_sh", "可轉債轉換股數（兩檔合計）", "M股", None, 14.603, None, D0, Q2Q + " 每股盈餘附註：轉換選擇權基礎股數 14,603 千股")
 add("cap_px", "Capped call 上限價", "US$/股", None, 225.00, None, D0, Q2Q + " MD&A：capped call 上限價 US$225.00（履約價 157.50）；現價高於轉換價時以 if-converted 計入股數、債務為 0，並扣 capped call 在 157.50–225 區間的回收股數")
-add("rel_mult", "相對倍數調整係數（本公司 P/S ÷ 同業中位數的近五期中位數；夾在 0.5–2.0）", "倍", 1.0, "=Val!$B$@@RELM@@", 2.0, DE, "自算（Val 頁表）：StockAnalysis 各公司財務比率頁近五個會計年度末的 P/S，SNOW 除以八家同業中位數，取五期中位數，夾在 tools/relative_multiple.py 的 0.5–2.0（原則 G3 第 4 條）；低案 1.00＝未調整；高案＝夾值上限 2.0；期間為歷史落後 P/S，與前瞻倍數口徑不同，為承重輸入")
+add("rel_mult", "相對倍數 rel_mult（本公司 P/S 相對同業中位數；共用庫 geo_base：PS 與 PSG 兩讀數幾何平均）", "倍", "=Val!$B$@@RELLO@@", "=Val!$B$@@RELM@@", "=Val!$B$@@RELHI@@", DE, "讀 software_ai/data/relmult_hist/out/snowflake.json（2026-11-17 產生；副本 data/relmult_snowflake.json）：base_source＝" + RMJ["base_source"] + "；低／高＝sens.low／sens.high（近 20 個財季 PS 與 PSG 相對值的區間）；Comparable 倍數為前瞻 P/S，與庫內 TTM P/S 相對值同為 P/S 口徑，直接套用")
 add("opx_a", "非 GAAP 營業費用：固定部分（US$M；營業費用＝固定＋變動×營收）", "US$M", 500, "=Q!$B$@@OPXA@@", 1000, DE, "Q 頁迴歸（FY2022–FY2027 實績）：最近三點（FY2025、FY2026、LTM 至 Q2 FY27）的截距，原則 G3 第 1 條；「全期持平」（固定 0、變動＝最近四季營業費用率）為 Sens 下緣案例")
 add("opx_v", "非 GAAP 營業費用：變動部分（每增加 1 美元營收增加的營業費用）", "比例", 0.40, "=Q!$B$@@OPXV@@", 0.5705, DE, "Q 頁迴歸：最近三點斜率；低案 0.40 較強規模經濟（假設）；高案 0.5705＝六點全樣本斜率（較弱的規模經濟）")
 add("sbc_a", "股票薪酬：固定部分（US$M；股票薪酬＝固定＋變動×營收）", "US$M", 800, "=Q!$B$@@SBCA@@", 1500, DE, "Q 頁迴歸：最近三點截距；「全期持平」（占營收比固定為最近四季）為 Sens 下緣案例")
@@ -124,7 +127,7 @@ for key, label, unit, lo, base, hi, tag, src, inc in INP:
 _I = lambda k: f"In!$E${IR[k]}"
 PFD = dict(
     date="2026-11-13", ccy="US$", amt="US$M", shu="M股",
-    rf=(0.0499, "沿用 repo meta/README.md 所載 2026-10-27 10 年美債 4.99%；距股價日 2026-11-13 逾兩個交易日，標逾期", "本次未重讀財政部頁面", "無風險利率（10 年美債；2026-10-27，逾期）"),
+    rf=(0.051, "FRED DGS10（美國 10 年期公債）2026-11-12：5.10%；股價日 2026-11-13 前 1 個交易日（工作單 G5 第 2 條統一取值）", "https://fred.stlouisfed.org/series/DGS10", "無風險利率（10 年美債；FRED DGS10，2026-11-12）"),
     betas=[("StockAnalysis（5 年）", 1.32, SA + "（beta 1.32）；第二來源未取得；docs/plan/自算產業β_20261105.md 的軟體產業 β 本版未套用")],
     beta_lohi=(1.0, 1.5, "單一來源，區間為 Assumed"),
     erp=(0.04, 0.05, 0.06, "DCF 標準規格預設 5%（4–6%）"),
@@ -600,24 +603,22 @@ V.cell(VR["pe_own"], 5, "C＝前瞻 P/E；D＝市值 US$B；隱含前瞻營收�
 for col in "BCD": V[f"{col}{VR['pe_own']}"].font = BLUE
 vrow("pe_pe", "Snowflake 前瞻 P/S 相對同業中位數", f"=B{VR['pe_own']}/B{VR['pe_med']}-1")
 # rel_mult 表與 FD 摘要區在 DCF 檢查之後（見下）
-# ---- rel_mult：最近 5 個期間 SNOW 倍數 ÷ 同業中位數（原則 G3 第 3 條；Derived）
+# ---- rel_mult：讀共用庫 JSON（工作單 G5 第 1 條；Derived）
 RM0 = VR["rmx"] + 1
-V.cell(RM0, 1, "相對倍數 rel_mult：SNOW 最近 5 個期間的 trailing P/S ÷ 同業（八家）trailing P/S 中位數；取 5 期比值中位數，夾在 0.5–2.0（Derived）").font = BOLD
-RMH = ["期間（StockAnalysis 財務比率表，市值÷近四季營收）", "SNOW", "DDOG", "MDB", "NET", "CRWD", "NOW", "PLTR", "ESTC", "ZS", "同業中位數", "比值"]
-for j, h in enumerate(RMH, 1): V.cell(RM0 + 1, j, h).font = BOLD
-RMD = [("FY2026（2026-01-31）", 14.08, 13.92, 12.27, 31.85, 23.13, 11.97, 94.66, 2.76, 7.29),
-       ("FY2025（2025-01-31）", 16.52, 18.08, 10.14, 22.13, 24.80, 19.91, 60.12, 6.07, 16.63),
-       ("FY2024（2024-01-31）", 22.96, 18.74, 17.18, 21.56, 22.09, 16.11, 16.79, 8.13, 12.51),
-       ("FY2023（2023-01-31）", 24.36, 13.93, 11.56, 15.23, 10.50, 10.81, 7.01, 5.17, 14.47),
-       ("FY2022（2022-01-31）", 69.31, 54.02, 30.95, 64.45, 26.57, 21.91, 23.68, 8.25, 20.16)]
-for i, row in enumerate(RMD):
-    rw = RM0 + 2 + i
-    V.cell(rw, 1, row[0])
-    for j, v in enumerate(row[1:], 2): V.cell(rw, j, v).font = BLUE
-    V.cell(rw, 11, f"=MEDIAN(C{rw}:J{rw})"); V.cell(rw, 12, f"=B{rw}/K{rw}")
-RMR = RM0 + 2 + len(RMD)
-V.cell(RMR, 1, "rel_mult（5 期比值中位數，夾在 0.5–2.0）"); V.cell(RMR, 2, f"=MIN(2,MAX(0.5,MEDIAN(L{RM0+2}:L{RMR-1})))"); V.cell(RMR, 3, "Derived；來源與缺漏見 Recon；trailing P/S 與前瞻 P/S 口徑不同，為主要載重輸入")
-RELM_ROW = RMR
+V.cell(RM0, 1, "相對倍數 rel_mult：讀 software_ai/data/relmult_hist/out/snowflake.json（八家同業；近 20 個財季 PS 相對值與 PSG 相對值；Derived）").font = BOLD
+RMROWS = [("ps", "PS 讀數（相對值 20 季中位）", RMG["ps_reading"]), ("psg", "PSG 讀數（PS÷成長；相對值 16 季中位）", RMG["psg_reading"]),
+          ("geo", "geo_base＝兩讀數幾何平均（＝rel_mult 基準）", None), ("low", "sens.low", RMG["sens"]["low"]), ("high", "sens.high", RMG["sens"]["high"]),
+          ("div", "兩讀數差距 divergence（> 30% 時須說明成長比）", RMG["divergence"]), ("gr", "成長比（SNOW TTM 營收年增 ÷ 同業中位；" + RMG["growth_ratio"]["basis"] + "）", RMG["growth_ratio"]["value"])]
+RMX = {}
+for i_, (k_, lab_, v_) in enumerate(RMROWS):
+    rw = RM0 + 1 + i_; RMX[k_] = rw
+    V.cell(rw, 1, lab_)
+    if v_ is not None: V.cell(rw, 2, v_).font = BLUE
+V[f"B{RMX['geo']}"] = f"=SQRT(B{RMX['ps']}*B{RMX['psg']})"
+V.cell(RMX["geo"], 3, "Derived；與 JSON geo_base 核對差（應為 0）："); V[f"D{RMX['geo']}"] = f"=ROUND(B{RMX['geo']}-{RMG['geo_base']!r},6)"
+V.cell(RMX["div"], 3, "未超過 30%" if not RMG["divergence_gt_30pct"] else "超過 30%：兩讀數差距來自成長比（見 README）")
+RMR = RM0 + 1 + len(RMROWS)
+RELM_ROW = RMX["geo"]
 # ---- FD 摘要區（折現率、DCF 彙總）
 FS0 = RMR + 3
 FS = FD.write_summary(wb, V, FS0, FDR, ["A", "B", "C"], ["tp_wA", "tp_wB", "tp_wC"], px="px", beta_note="Blume 調整；單一來源")
@@ -640,7 +641,7 @@ wb.defined_names["px"] = DefinedName("px", attr_text=f"In!$E${IR['px']}")
 for _row in SH['In'].iter_rows():
     for _c in _row:
         if isinstance(_c.value, str) and "@@" in _c.value:
-            _c.value = (_c.value.replace("@@RELM@@", str(RELM_ROW)).replace("@@OPXA@@", str(RS["opxa"])).replace("@@OPXV@@", str(RS["opxv"]))
+            _c.value = (_c.value.replace("@@RELM@@", str(RELM_ROW)).replace("@@RELLO@@", str(RMX["low"])).replace("@@RELHI@@", str(RMX["high"])).replace("@@OPXA@@", str(RS["opxa"])).replace("@@OPXV@@", str(RS["opxv"]))
                         .replace("@@SBCA@@", str(RS["sbca"])).replace("@@SBCV@@", str(RS["sbcv"])))
 
 # ---------------------------------------------------------------- RevDCF 頁
@@ -703,7 +704,7 @@ for k, lab, spec in rec_rows:
             if v is not None: Rc.cell(r, j, v)
     r += 1
 Rc[f"B{RCR['omgap']}"] = f"=B{RCR['om27']}/C{RCR['om27']}-1"; Rc[f"B{RCR['prodgap']}"] = f"=B{RCR['prod27']}/C{RCR['prod27']}-1"
-KREQ = os.path.join(HERE, "data/kreq_v012.json")
+KREQ = os.path.join(HERE, "data/kreq_v02.json")
 if os.path.exists(KREQ):
     for n_, kq in enumerate(json.load(open(KREQ, encoding="utf-8"))):
         RCR["kreq" if n_ == 0 else "kreq2"] = r
@@ -721,6 +722,24 @@ Rc.cell(r + 9, 1, "估值評等（觸發：強力放空或強力買進）"); Rc[
 Rc.cell(r + 10, 1, "FY2027 營收與營業利益率相對指引差距之絕對值較大者（觸發：超過 10%）"); Rc[f"B{r+10}"] = f"=MAX(ABS(B{RCR['prodgap']}),ABS(B{RCR['omgap']}))"; Rc[f"C{r+10}"] = f"=IF(B{r+10}>0.1,1,0)"
 Rc.cell(r + 11, 1, "觸發數（0–4；C 欄為各項是否觸發）"); Rc[f"B{r+11}"] = f"=SUM(C{r+7}:C{r+10})"
 Rc.cell(r + 5, 1, "5. 未找到：AI 營收占比（公司只稱 meaningful step-up）、AI 專屬毛利率、Q2 FY27 租賃負債與流通股封面數、第二來源 Beta、FY2029 以後公司長期目標、共識的產品營收。")
+
+# ---- 7. DCF（股票薪酬加回）對照讀數（工作單 G5 第 3 條；只作對照，不進加權目標價）
+rb = RCR["g_n"] + 2
+RCR["sb_h"] = rb
+Rc.cell(rb, 1, "7. DCF（股票薪酬加回）對照讀數：EBIT 改為非 GAAP 營業利益（SBC 不扣），其餘同標準 DCF；只作對照，不進加權目標價").font = BOLD
+RCR["sb_v0"], RCR["sb_v12"], RCR["sb_w"], RCR["sb_d"] = rb + 1, rb + 2, rb + 3, rb + 4
+Rc.cell(rb + 1, 1, "每股價值（評價日；SBC 加回；US$）"); Rc.cell(rb + 2, 1, "DCF 情境目標價（12 個月後；SBC 加回；US$）")
+Rc.cell(rb + 3, 1, "DCF 目標價（情境加權；SBC 加回；US$）"); Rc.cell(rb + 4, 1, "相對標準 DCF 目標價的差（US$）")
+for si_, s_ in enumerate("ABC"):
+    col_ = "BCD"[si_]; pr_ = PR[s_]; Dd = FDR["paths"][s_]
+    pv_ = "+".join(f"PL!{YC['FY'+str(y)]}{pr_['sbc']}*DCF!{DCOL[y]}${FDR['frac']}*DCF!{DCOL[y]}{Dd['df']}" for y in DYR)
+    tv_ = f"PL!K{pr_['sbc']}*(1+g_tv)*(1-g_tv/ronic)/(wacc-g_tv)/(1+wacc)^{FDR['tvt']}"
+    Rc[f"{col_}{rb+1}"] = f"=MAX(0,DCF!$C${Dd['val']}+(1-tax_w)*(({pv_})+{tv_})/sh_v)"
+    Rc[f"{col_}{rb+2}"] = f"={col_}{rb+1}*(1+ke)^t_tgt-dps_tgt"
+Rc[f"B{rb+3}"] = f"={I('tp_wA')}*B{rb+2}+{I('tp_wB')}*C{rb+2}+{I('tp_wC')}*D{rb+2}"
+Rc[f"B{rb+4}"] = f"=B{rb+3}-Val!B{VR['dcf_tp']}"
+Rc.cell(rb + 1, 6, "每股價值＝標準 DCF 每股價值＋(1−稅率)×(SBC 現值＋SBC 永續價值現值)÷股數；SBC 費用化是標準規格，加回讀數等於假設 SBC 無經濟成本（上界）")
+for j_, h_ in enumerate(["情境 A", "情境 B", "情境 C"], 2): Rc.cell(rb, j_, h_).font = BOLD
 
 # ---------------------------------------------------------------- Sens 頁
 Se = SH["Sens"]
@@ -808,7 +827,7 @@ for ws_ in wb.worksheets:
 wb["In"].column_dimensions["B"].width = 60; wb["In"].column_dimensions["H"].width = 70
 wb.defined_names["PL_hdr"] = DefinedName("PL_hdr", attr_text="PL!$C$5:$K$5")
 wb.save(OUT)
-rowmap = {"IR": IR, "SR": SR, "PR": PR, "STR": STR, "SPR": SPR, "VR": VR, "DR": FDR, "FS": FS, "RM": {"rel_mult": RELM_ROW, "first": RM0 + 2}, "RV": RV, "RCR": RCR, "CK": CK, "QR": QR, "RS": RS, "SE_ROWS": SE_ROWS, "SE_END": SE_END, "SCN_H": SCN_H, "SCN_ROWS": SCN_ROWS,
+rowmap = {"IR": IR, "SR": SR, "PR": PR, "STR": STR, "SPR": SPR, "VR": VR, "DR": FDR, "FS": FS, "RM": {"rel_mult": RELM_ROW, "first": RM0 + 1, "last": RMR - 1, **RMX}, "RV": RV, "RCR": RCR, "CK": CK, "QR": QR, "RS": RS, "SE_ROWS": SE_ROWS, "SE_END": SE_END, "SCN_H": SCN_H, "SCN_ROWS": SCN_ROWS,
           "BUILD_ID": BUILD_ID, "FP": fp, "HDR_R": hdr_r, "GR0": GR0, "LAST_PARAM_ROW": LAST_PARAM_ROW}
 if ROWMAP: json.dump(rowmap, open(ROWMAP, "w"), ensure_ascii=False, indent=1)
 print("built", OUT, BUILD_ID)

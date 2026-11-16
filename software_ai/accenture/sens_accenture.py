@@ -22,6 +22,11 @@ for k, r in IR.items():
         if isinstance(v, (int, float)) and isinstance(e, (int, float)) and v != e:
             lab = ws.cell(r, 2).value + ("（上界：只動成本一邊）" if k == "cps" and side == "高" else "")
             cases.append(dict(key=k, side=side, label=lab, setting=f"{k}＝{v:g}（基準 {e:g}）", sets=[(k, v)]))
+# G5 第 1 條：歷史相對倍數的 ps_only／psg_only 兩案（sens.low／sens.high 已是 cm_adj 的低高端）
+_rm = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "relmult_hist_accenture.json"), encoding="utf-8"))
+for _k, _lab in (("ps_only", "只用 PS 讀數"), ("psg_only", "只用 PSG 讀數")):
+    if _rm["sens"].get(_k) is not None:
+        cases.append(dict(key=f"cm_adj:{_k}", side="相對倍數", label=f"歷史相對倍數：{_lab}（Comparable 倍數調整係數 cm_adj）", setting=f"cm_adj＝{_rm['sens'][_k]:g}（基準 {base['cm_adj']:g}）", sets=[("cm_adj", _rm["sens"][_k])]))
 # 聯動與模型路由（原則第 44 條）
 a_keys = [k for k in IR if k.startswith("a32_")]
 if "cps" in IR:

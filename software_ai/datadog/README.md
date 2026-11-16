@@ -1,4 +1,4 @@
-# Datadog（DDOG）個股模型 v0.1
+# Datadog（DDOG）個股模型 v0.2
 
 資料截止日 2026-11-16（Q3 2026 財報後；會計年度＝日曆年）。**本版沒有做先驗**（未預先設定任何投資觀點，結論全由 Assumed 輸入與公開資料推出）。
 
@@ -17,7 +17,7 @@ DCF 為標準 FCFF 到 FY2032（股票薪酬視為費用、期中折現、RONIC�
 3. 比率基準持平於近四季；歷史有證據者（股票薪酬占營收：FY2023 22.7% → 近四季 20.1%）依斜率延伸並設下限，Sens 低案為全期持平。non-GAAP 費用率三項合計歷史無一致下降（56.9%／58.6%／56.2%），故持平。
 4. 股數取 10-Q 封面；含 RSU 與選擇權庫藏股法；2029 可轉換票據預設視為債務（現價低於轉換價），if-converted 為 Sens。
 5. 淨債務只計票據本金與融資租賃；營業租賃不計。
-6. Comparable 倍數標分母期間（資料商未載明）與會計準則（US GAAP；租賃處理未找到）；揭露本公司現行倍數 ÷ 同業中位數與隱含重估。同業歷史相對倍數取不到，rel_m＝1.00 並列為承重輸入。
+6. Comparable 倍數標分母期間（資料商未載明）與會計準則（US GAAP；租賃處理未找到）；揭露本公司現行倍數 ÷ 同業中位數與隱含重估。相對倍數 rel_m 改讀 software_ai/data/relmult_hist/out/datadog.json 的 geo_base（近 20 財季 PS 與 PSG 相對值幾何平均，Derived；base_source 見 In 頁）；本模型 Comparable 為 P/S 與 P/E 兩腿，以 PS／PSG 相對值近似套用於 P/E 腿；divergence_gt_30pct 為否（PS 與 PSG 兩讀數相近），無需另述成長比原因。Sens 另有 ps_only、psg_only、sens.low、sens.high 四案。
 7. Val 頁有「估值評等」「入不敷出判定用」「投資建議」三列；`check_rating_gate.py --strict` 已跑。
 8. README 頁文字數字由公式組字；DCF 與 Comparable 落差以公式分解。
 9. 主導變數整本重算反解寫在 Recon 第 6 節（rel_m：Comparable 需要的相對倍數；DCF 一腿無單一營運變數可支持現價）。
@@ -29,7 +29,7 @@ G3：營運資金比率取歷史三期平均（遞延收入為現金流入）；
 - 不適用：三層協調（Coord 頁、C0、兩讀數、Siliconomics）——非 Siliconomics 覆蓋；對帳中兩讀數目標價亦不適用。
 
 ## 版本註記
-v0.2 起改讀 AI 軟體專案的 unit_economics 模型輸出，取代本版在 In 頁自建的單位經濟。
+v0.2（2026-11-17，G5）：相對倍數讀歷史相對倍數 geo_base；無風險利率統一為美國 10 年期 5.10%（FRED DGS10，2026-11-12）；Val 與 Recon 並列 DCF（股票薪酬加回）每股價值與目標價，只作對照；合理性關卡重跑並更新診斷。單位經濟改讀 unit_economics 模型輸出仍待後續版次。
 
 ## 目錄與建置
 - `build_datadog.py`（＋`build_datadog_p2/p3/p4.py` 為同一建置的分段）建模型；`facts_datadog.py` 事實總帳；`sens_datadog.py` 逐案重算敏感度與反解；`gen_html_json.py` 產 html.json；`check_datadog.py` 專屬核對；`segments.json`、`display_check.json` 設定。

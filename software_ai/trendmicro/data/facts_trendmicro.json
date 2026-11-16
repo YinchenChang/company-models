@@ -1812,6 +1812,18 @@
   "incentive": ""
  },
  {
+  "id": "sbc.dir.fy25",
+  "metric": "董事股票選擇權報酬（認列費用；4 名內部董事；僅董事，非合併股票薪酬）",
+  "value": 132,
+  "unit": "百萬日圓",
+  "period": "FY2025",
+  "basis": "事業報告董事報酬表（Stock Options 欄），註記為認列於當期費用的公允價值；合併股票薪酬仍未找到，故只作 SBC 加回的下限",
+  "source": "https://www.trendmicro.com/content/dam/trendmicro/global/en/about/investor-relations/shareholder-meetings/annual-report-fiscal-year-2025.pdf p.11",
+  "date": "2026-11-16",
+  "tag": "Verified",
+  "incentive": ""
+ },
+ {
   "id": "px",
   "metric": "收盤價",
   "value": 7214,

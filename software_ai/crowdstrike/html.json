@@ -349,6 +349,32 @@
     },
     {
      "type": "table",
+     "caption": "DCF 讀數並列：股票薪酬加回（只作對照，不進加權目標價）",
+     "head": [
+      "項目",
+      "US$"
+     ],
+     "rowgen": {
+      "sheet": "Recon",
+      "rows": "38-40",
+      "cols": [
+       "A",
+       "B"
+      ],
+      "fmts": [
+       "",
+       "n2"
+      ]
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Recon!A41"
+     ]
+    },
+    {
+     "type": "table",
      "collapse": true,
      "summary": "展開：折現率組成與資本結構",
      "head": [
@@ -387,7 +413,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準：輸入取高值與聯動案例（一次改一個，整本重算）",
      "sheet": "Sens",
-     "rows": "14,18,20",
+     "rows": "14,18,20,78,79",
      "label_col": "A",
      "value_col": "E",
      "fmt": "sp1"
@@ -415,7 +441,7 @@
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "4-77",
+      "rows": "4-79",
       "cols": [
        "A",
        "B",
@@ -445,11 +471,11 @@
      "items": [
       [
        "build_id",
-       "@Sens!D79"
+       "@Sens!D81"
       ],
       [
        "模型狀態",
-       "@Sens!D80"
+       "@Sens!D82"
       ]
      ]
     }
@@ -1205,7 +1231,7 @@
       ],
       [
        "build_id",
-       "@Sens!D79"
+       "@Sens!D81"
       ],
       [
        "來源 xlsx",

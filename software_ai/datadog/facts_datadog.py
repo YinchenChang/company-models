@@ -161,7 +161,7 @@ f("mkt.px.20261113", "收盤價", 184.16, "US$", "2026-11-13", "Nasdaq 收盤", 
 f("mkt.px.20261112", "收盤價", 184.46, "US$", "2026-11-12", "Nasdaq 收盤", "https://www.tipranks.com/stocks/ddog/stock-forecast（2026-11-16 讀取）；stockanalysis 前收價 184.46 相符")
 f("mkt.beta.si", "β（5Y 月）", 1.51, "x", "2026-11-13", "stockanalysis", "https://stockanalysis.com/stocks/ddog/statistics/")
 f("mkt.beta.yh", "β（5Y 月）", 1.51, "x", "2026-10-23 頁面", "Yahoo Finance", "https://finance.yahoo.com/quote/DDOG/key-statistics/（2026-11-16 讀取，頁面價格日 2026-10-23）")
-f("mkt.rf.20261113", "10 年期美國公債殖利率", 5.15, "%", "2026-11-13", "財政部日殖利率曲線", "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202611")
+f("mkt.rf.20261112", "10 年期美國公債殖利率（FRED DGS10）", 5.10, "%", "2026-11-12", "FRED DGS10（工作單 G5 第 2 條統一值；現價日前 1 個交易日）", "https://fred.stlouisfed.org/series/DGS10")
 f("cons.tp.tipranks", "賣方平均目標價（高 335、低 171；家數頁面未載）", 276.92, "US$", "2026-11-12", "12 個月目標價", "https://www.tipranks.com/stocks/ddog/stock-forecast（2026-11-16 讀取）", "Interested-party", "賣方分析師：評等與投行／交易業務誘因，目標價傾向跟隨股價")
 f("cons.tp.tikr", "賣方平均目標價（家數與日期頁面未載）", 272.0, "US$", "約 2026-11-09", "12 個月目標價", "https://www.tikr.com/blog/datadog-sinks-17-in-a-week-despite-strong-adoption-across-our-platform", "Interested-party", "賣方分析師；二手整理")
 f("cons.tp.fn2", "賣方平均目標價（52 週區間；高 335、低 75.76）", 237.0, "US$", "2026-11-15", "頁面標示；口徑未載明（含舊目標）", "https://fn2.ai/earnings/ddog/analysts", "Interested-party", "賣方分析師；二手整理")

@@ -83,7 +83,7 @@ valuation = {"id": "valuation", "title": "估值", "blocks": [
      "ref": {"label": f"@Val!A{VR['px']}", "value": f"@Val!B{VR['px']}"}},
     {"type": "note", "parts": ["@Val!A2"]},
     {"type": "table", "caption": "結論", "head": ["項目", "數值", "說明"],
-     "rows": [[f"@Val!A{VR[k]}", vv(k, "B", f), f"@Val!E{VR[k]}"] for k, f in (("tpdcf", "n2"), ("tpcomp", "n2"), ("tp", "n2"), ("px", "n2"), ("cons", "n2"), ("up", "sp1"), ("upc", "sp1"), ("tier", ""), ("gate_chk", ""), ("rec", ""))]},
+     "rows": [[f"@Val!A{VR[k]}", vv(k, "B", f), f"@Val!E{VR[k]}"] for k, f in (("tpdcf", "n2"), ("psv_s", "n2"), ("tpdcf_s", "n2"), ("tpcomp", "n2"), ("tp", "n2"), ("px", "n2"), ("cons", "n2"), ("up", "sp1"), ("upc", "sp1"), ("tier", ""), ("gate_chk", ""), ("rec", ""))]},
     {"type": "kv", "items": [[f"@Val!A{VR[k]}", vv(k, "B", f)] for k, f in (("rf", "p2"), ("beta", "n2"), ("erp", "p1"), ("ke", "p2"), ("kdat", "p2"), ("wacc", "p2"), ("ronic", "p2"), ("g", "p1"))]},
     {"type": "table", "caption": "DCF 彙總（三情境；百萬美元，每股為美元）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
      "rowgen": {"sheet": "Val", "rows": f"{VR['pvx']}-{VR['dcf12_s']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"],
@@ -153,7 +153,7 @@ recon = {"id": "recon", "title": "對帳：公司指引、共識、校準與合�
      "rowgen": {"sheet": "Recon", "rows": f"{RCR['gt1']}-{RCR['gt_n']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n2", "", ""],
                 "row_fmt": {str(RCR["gt2"]): {"B": "n0"}, str(RCR["gt4"]): {"B": "sp1"}, str(RCR["gt5"]): {"B": "sp1"}, str(RCR["gt6"]): {"B": "n1"}, str(RCR["gt_n"]): {"B": "n0"}, str(RCR["gt3"]): {"B": ""}}}},
     {"type": "table", "caption": "DCF 與公司自由現金流對帳", "head": ["項目", "期間", "百萬美元", "終值折現年數", "終值占 EV"],
-     "rowgen": {"sheet": "Recon", "rows": f"{RCR['rc_fcf']}-{RCR['rc_wacc']}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "", "n1", "n2", "p0"], "row_fmt": {str(RCR["rc_chk"]): {"C": "n3"}, str(RCR["rc_wacc"]): {"C": "p2"}}}}]}
+     "rowgen": {"sheet": "Recon", "rows": f"{RCR['rc_fcf']}-{RCR['rc_txt']}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "", "n1", "n2", "p0"], "row_fmt": {str(RCR["rc_chk"]): {"C": "n3"}, str(RCR["rc_wacc"]): {"C": "p2"}, str(RCR["rc_psv_s"]): {"C": "n2"}, str(RCR["rc_tp_s"]): {"C": "n2", "D": "n2", "E": "n2"}}}}]}
 status = {"id": "status", "title": "資料狀態", "blocks": [
     {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期", "@README!A1"], ["build_id", f"@Sens!D{rm['SE_BID']}"], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"]]},
     {"type": "h3", "text": "本版要點與限制"},

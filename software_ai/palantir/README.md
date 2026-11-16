@@ -4,7 +4,7 @@
 
 ## 版本
 
-<!-- version-table: dist/20261116_Palantir個股模型_v0.1.xlsx -->
+<!-- version-table: dist/_待刪除/20261116_Palantir個股模型_v0.1.xlsx｜dist/20261117_Palantir個股模型_v0.2.xlsx -->
 | 項目 | v0.1 |
 |---|---|
 | 現價 | 167.99 |
@@ -22,13 +22,13 @@
 | `data/research_palantir.md`、`data/facts_palantir.csv`、`data/facts_palantir.py` | 研究包與事實總帳（逐筆：指標、值、單位、期間、口徑、來源、擷取日、標記、來源誘因） |
 | `data/tokenomics_snapshot_v22.0.json`、`data/tk_names.txt` | Tokenomics 快照與讀取名稱清單 |
 | `build_palantir.py` | 建置腳本（openpyxl 活公式）；`segments.json`、`html.json`、`display_check.json` 為檢查與展示設定 |
-| `sens_pltr.py`、`reverse_pltr.py`、`data/sens_v01_*.json`、`data/reverse_solve.json` | 敏感度（一次改一個輸入整本重算）與主導變數反解 |
-| `make_v01.sh`、`check_pltr.py` | 一次跑完建置與全部核對 |
+| `sens_pltr.py`、`reverse_pltr.py`、`data/sens_v02_*.json`、`data/reverse_solve.json` | 敏感度（一次改一個輸入整本重算）與主導變數反解 |
+| `make_v02.sh`、`check_pltr.py` | 一次跑完建置與全部核對 |
 | `dist/` | 成品 xlsx 與 html |
 
 ## 方法
 
-三層：事實（Q）→ 命題模組與官方分部（Seg）→ 損益（PL）→ 現金流（CF）→ DCF 與 Comparable（Val）。DCF 至 FY2032，FCFF 期中折現，終值 RONIC＝WACC；Comparable＝同業 EV／營收（TTM）成長調整；目標價＝二者加權（預設各半），情境 A／B／C 權重 25%／50%／25%。五級評等與收支關卡照原則第 24、63 條。情境 A／B／C 的差別在 AI 淨效果（增量、侵蝕、推論成本）與政府成長，依據見 README 頁「情境分化依據」。
+三層：事實（Q）→ 命題模組與官方分部（Seg）→ 損益（PL）→ 現金流（CF）→ DCF 與 Comparable（Val）。DCF 至 FY2032，FCFF 期中折現，終值 RONIC＝WACC；Comparable＝同業 EV／營收（TTM）× 共用庫相對倍數（software_ai/data/relmult_hist/out/palantir.json 的 geo_base，Derived；θ 成長調整只留作 Sens）；另並列 DCF（股票薪酬加回）對照讀數，不進加權目標價；目標價＝二者加權（預設各半），情境 A／B／C 權重 25%／50%／25%。五級評等與收支關卡照原則第 24、63 條。情境 A／B／C 的差別在 AI 淨效果（增量、侵蝕、推論成本）與政府成長，依據見 README 頁「情境分化依據」。
 
 命題模組變數（客戶數、工作負載、單價、推論成本）暫建在 In 頁，標「v0.2 改讀 unit_economics」。
 
@@ -42,4 +42,4 @@
 
 ## 重跑
 
-`bash software_ai/palantir/make_v01.sh`；`SENS=1 REV=1` 重跑敏感度與反解；需 python3、openpyxl、bs4、LibreOffice。
+`bash software_ai/palantir/make_v02.sh`；`SENS=1 REV=1` 重跑敏感度與反解；需 python3、openpyxl、bs4、LibreOffice。

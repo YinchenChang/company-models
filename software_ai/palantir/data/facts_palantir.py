@@ -203,7 +203,7 @@ f("mkt.px.1113", "PLTR 收盤價", 167.99, "US$", "2026-11-13", "普通股收盤
 f("mkt.px.1109", "PLTR 收盤價", 169.20, "US$", "2026-11-09", "普通股收盤（與 heygotrade 11-09 報導相符）", U_SA, "Verified")
 f("mkt.beta.y", "原始 β：Yahoo Finance「Beta (5Y Monthly)」", 1.60, "x", "頁面當日（日期未載）", "資料商計算", "https://finance.yahoo.com/quote/PLTR/key-statistics｜Yahoo Finance 關鍵統計頁", "Interested-party", "資料商計算值，無交易誘因；基準指數與日期未載")
 f("mkt.beta.s", "原始 β：StockAnalysis「Beta (5Y)」", 1.61, "x", "2026-11-13 收盤", "資料商計算", "https://stockanalysis.com/stocks/pltr/statistics/｜StockAnalysis 統計頁（更新 2026-11-14）", "Interested-party", "資料商計算值，無交易誘因")
-f("mkt.rf", "無風險利率（10 年美債）", 0.0499, "比率", "2026-10-27", "美國財政部每日殖利率曲線", "meta/dist/20261115_Meta個股模型_v0.2.1.xlsx In!E37（沿用跨模型取值；2026-10-27）", "Verified")
+f("mkt.rf", "無風險利率（10 年美債）", 0.0510, "比率", "2026-11-12", "FRED DGS10 收盤（現價日 2026-11-13 前 1 個交易日）", "https://fred.stlouisfed.org/series/DGS10（工作單 G5 第 2 條指定美國 10 年期 5.10%）", "Verified")
 f("mkt.mcap", "市值", 404770, "US$M", "2026-11-13", "資料商", "https://stockanalysis.com/stocks/pltr/statistics/", "Verified")
 f("mkt.evs", "EV／營收（TTM）", 54.12, "x", "2026-11-13", "資料商", "https://stockanalysis.com/stocks/pltr/statistics/", "Verified")
 f("cons.rev26", "賣方共識營收 FY2026（平均；29 家）", 8220, "US$M", "FY2026", "共識；2026-10-23 收盤，財報前", "https://finance.yahoo.com/quote/PLTR/analysis/｜Yahoo Finance 分析頁", "Interested-party", "賣方預估；投行業務關係；財報前，只作歷史對照")

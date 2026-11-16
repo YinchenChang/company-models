@@ -104,6 +104,10 @@ cases.append(("opx_v", "低", {"opx_a": 0.0, "opx_v": ol}, f"opx_a＝0、opx_v�
 cases.append(("sbc_v", "低", {"sbc_a": 0.0, "sbc_v_A": sl, "sbc_v_B": sl, "sbc_v_C": sl}, f"sbc_a＝0、sbc_v 三情境＝LTM 股票薪酬率 {sl:.3f}（全期持平）", "股票薪酬占營收全期持平於 LTM（Sens 下緣；無規模經濟）"))
 cases.append(("opx_a", "低", {"opx_a": 0.0, "opx_v": ol, "sbc_a": 0.0, "sbc_v_A": sl, "sbc_v_B": sl, "sbc_v_C": sl}, "營業費用率與股票薪酬率同時全期持平於 LTM", "兩者同時全期持平（工作單原 G2 第 3 條口徑；Sens 下緣）"))
 cases.append(("opx_v", "高", {"opx_a": qv("opxa6"), "opx_v": qv("opxv6"), "sbc_a": qv("sbca6"), "sbc_v_B": qv("sbcv6")}, "六點全樣本斜率（FY2022–LTM）取代最近三點", "全樣本規模經濟（營業費用與股票薪酬皆用六點迴歸；情境 A、C 變動部分不變）"))
+Vv = wbv["Val"]; RMr = rm["RM"]
+for k_, nm_ in (("ps", "ps_only：只用 PS 讀數"), ("psg", "psg_only：只用 PSG 讀數")):
+    v_ = Vv.cell(RMr[k_], 2).value
+    cases.append(("rel_mult", "高" if v_ > val("rel_mult") else "低", {"rel_mult": v_}, f"rel_mult＝{v_:.3f}（共用庫 {nm_}；基準 {val('rel_mult'):.3f}）", f"相對倍數 {nm_}（共用庫 relmult_hist）"))
 groups = defaultdict(list)
 for i in range(len(cases)): groups[i % JOBS].append(i)
 res = {}

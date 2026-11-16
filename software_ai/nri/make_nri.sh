@@ -1,12 +1,12 @@
 #!/bin/bash
-# NRI 個股模型 v0.1：建置 → 敏感度與反解 → 重算 → 全部核對。需要 python3＋openpyxl、LibreOffice。
+# NRI 個股模型 v0.2：建置 → 敏感度與反解 → 重算 → 全部核對。需要 python3＋openpyxl、LibreOffice。
 #   bash software_ai/nri/make_nri.sh            # 沿用已存的敏感度與反解
 #   SENS=1 bash software_ai/nri/make_nri.sh     # 改了輸入、公式或 facts 後重跑敏感度與反解
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$ROOT"
 WD="${WD:-/home/claude/scratch/nri/make}"; mkdir -p "$WD/out" software_ai/nri/dist; export ROWMAP="$WD/rowmap.json"
-N=software_ai/nri; S=$N/data/sens_v01_20261116.json; K=$N/data/kreq_v01.json
-OUT=$N/dist/20261116_野村總研個股模型_v0.1.xlsx
+N=software_ai/nri; S=$N/data/sens_v02_20261117.json; K=$N/data/kreq_v02.json
+OUT=$N/dist/20261117_野村總研個股模型_v0.2.xlsx
 python3 $N/facts_nri.py
 python3 $N/build_nri.py "$WD/raw0.xlsx"
 if [ "${SENS:-0}" = "1" ]; then

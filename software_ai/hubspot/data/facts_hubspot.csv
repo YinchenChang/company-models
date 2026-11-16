@@ -283,7 +283,7 @@ HUBS 收盤價（對照）,217.25,US$,2026-11-13,收盤；第二來源,https://c
 HUBS 收盤價,215.84,US$,2026-11-12,收盤,https://www.quiverquant.com/stock/HUBS/historical-prices/｜QuiverQuant HUBS 歷史收盤價｜歷史收盤價表,2026-11-16,Verified,
 HUBS 收盤價,216.64,US$,2026-11-04,法說當日收盤,https://www.quiverquant.com/stock/HUBS/historical-prices/｜QuiverQuant HUBS 歷史收盤價｜歷史收盤價表,2026-11-16,Verified,
 HUBS 收盤價,204.96,US$,2026-11-05,財報後首日收盤,https://www.quiverquant.com/stock/HUBS/historical-prices/｜QuiverQuant HUBS 歷史收盤價｜歷史收盤價表,2026-11-16,Verified,
-美國 10 年期公債殖利率,0.0515,比率,2026-11-13,新聞頁載「約 5.15–5.16%」；只取得一個來源,https://tradingeconomics.com/united-states/government-bond-yield/news/598729｜Trading Economics 美國 10 年期公債殖利率新聞頁（含 2026-11-13 更新）｜新聞串 2026-11-13 條目,2026-11-16,Verified,
+美國 10 年期公債殖利率,0.051,比率,2026-11-12,工作單 G5.2 統一值（FRED DGS10；現價日前 1 個交易日）；v0.1 曾用 Trading Economics 2026-11-13 約 5.15%,https://fred.stlouisfed.org/series/DGS10｜FRED DGS10（美國 10 年期公債固定到期殖利率；工作單 G5.2 統一值，2026-11-12 收盤 5.10%）｜DGS10 2026-11-12,2026-11-16,Verified,
 HUBS β（5 年）,1.24,無單位,2026-10-26,StockAnalysis；未載報酬頻率,https://stockanalysis.com/stocks/hubs/statistics/｜StockAnalysis HUBS statistics（2026-10-26）｜Beta (5Y),2026-11-16,Analogy,
 HUBS β,1.19,無單位,Q2 後（無日期）,MarketBeat,https://www.marketbeat.com/instant-alerts/hubspot-nysehubs-releases-quarterly-earnings-results-beats-estimates-by-024-eps-2026-08-05/｜MarketBeat HUBS 頁（Q2 後，無明確日期）｜Beta,2026-11-16,Analogy,
 同業前瞻 P/E：Salesforce（CRM）,13.6,倍,2026-11-13,ChartRow Forward P/E（口徑未核）,https://chartrow.com/quote/hubs｜ChartRow HUBS 報價頁｜https://chartrow.com/quote/crm Forward P/E,2026-11-16,Analogy,

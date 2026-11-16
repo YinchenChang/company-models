@@ -1,6 +1,6 @@
 # AppLovin 敏感度（v0.1）：一次改一個（或聯動改數個）In 頁輸入，整本以 LibreOffice 重算，讀 Val 頁加權目標價、DCF 目標價、投資建議、CF 收支關卡 B、FY2027 營收 B 與輸入指紋，
 # 寫成 JSON 供 build_applovin.py --sens 使用（鍵＝案例 id）。案例清單來自 build_applovin.py --cases（同一份定義，不手寫）。
-# 用法：python3 software_ai/applovin/sens_v01.py <工作資料夾> <輸出 sens.json>（環境變數 JOBS＝平行數，預設 2）
+# 用法：python3 software_ai/applovin/sens_v02.py <工作資料夾> <輸出 sens.json>（環境變數 JOBS＝平行數，預設 2）
 import json, os, subprocess, sys, shutil, tempfile
 from concurrent.futures import ThreadPoolExecutor
 import openpyxl

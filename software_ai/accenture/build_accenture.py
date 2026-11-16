@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Accenture 個股模型 v0.1（原型 L：按人力計價；命題＋官方分部營收 → 損益表 → FCFF DCF＋分部加總 Comparable）。
-用法：python3 build_accenture.py <raw.xlsx> [--sens data/sens_v01_20261116.json] [--rowmap rowmap.json] [--rev data/rev_solve_v01.json] [--set key=value ...]
+"""Accenture 個股模型 v0.2（原型 L：按人力計價；命題＋官方分部營收 → 損益表 → FCFF DCF＋分部加總 Comparable）。
+用法：python3 build_accenture.py <raw.xlsx> [--sens data/sens_v02_20261117.json] [--rowmap rowmap.json] [--rev data/rev_solve_v02.json] [--set key=value ...]
 所有計算為活公式；輸入在 In 頁（藍字）。LibreOffice 重算後才有快取值。本版未做先驗。
 """
 import datetime, hashlib, json, os, sys
@@ -16,7 +16,8 @@ SETS = {}
 for i, a in enumerate(sys.argv):
     if a == "--set":
         k, v = sys.argv[i + 1].split("=", 1); SETS[k] = float(v)
-VER, VDATE = "0.1", "20261116"
+VER, VDATE = "0.2", "20261117"
+RM = json.load(open(os.path.join(HERE, "data", "relmult_hist_accenture.json"), encoding="utf-8"))   # G5：歷史相對倍數（PS 與 PSG；software_ai/data/relmult_hist/out/accenture.json 副本）
 TK = json.load(open(os.path.join(HERE, "data", "tokenomics_snapshot_v22.0.json"), encoding="utf-8"))
 TKI = TK["items"]
 
@@ -58,8 +59,8 @@ add("cash", "現金及約當現金（2026-08-31）", "US$M", None, 12831.471, No
 add("debt", "債務本金（長期債務 9,998.689＋一年內到期 113.069；不含營業租賃）", "US$M", None, 10111.758, None, D0, K26 + " 資產負債表；營業租賃負債不計入淨債務（原則：只計債務本金與融資租賃）；融資租賃未另列（未找到）")
 add("nci", "非控制權益（1,157.098）＋可贖回非控制權益（532.762）", "US$M", None, 1689.860, None, D0, K26 + " 資產負債表；自企業價值扣除")
 add("dps", "每股股利（年）", "US$/股", None, 6.48, None, DE, "FY2026 股利 4.0B（公司揭露：回購 7.5B＋股利 4.0B；8-K 2026-10-01）÷ 稀釋加權股數 617.5M")
-add("rf_date", "無風險利率基準日", "日期", None, datetime.date(2026, 11, 16), None, D0, "https://tradingeconomics.com/united-states/government-bond-yield（2026-11-16 讀取）")
-add("rf", "無風險利率（10 年美債）", "比例", 0.045, 0.0512, 0.055, D0, "tradingeconomics 美國 10 年殖利率 5.12%（2026-11-16；單一來源）")
+add("rf_date", "無風險利率基準日", "日期", None, datetime.date(2026, 11, 12), None, D0, "FRED DGS10（美國 10 年期公債，2026-11-12；現價日前 1 個交易日；同一批模型統一日與來源，G5 第 2 條）")
+add("rf", "無風險利率（10 年美債）", "比例", 0.045, 0.051, 0.055, D0, "FRED DGS10 5.10%（2026-11-12；官方統計來源，Verified；G5 第 2 條統一值）")
 add("beta_raw", "Beta（5 年，單一來源；Blume 調整後用）", "—", 0.9, 1.10, 1.3, D0, "StockAnalysis ACN statistics 頁 Beta (5Y) 1.10（2026-10-31 版；本次只取得一個來源，規格要兩來源，未找到第二來源）")
 add("erp", "股權風險溢酬", "比例", 0.04, 0.05, 0.06, AS, "DCF 標準規格預設 5%（4–6%）")
 add("kd_sp", "稅前債務信用利差（相對 rf）", "比例", 0.006, 0.010, 0.02, AS, "未找到公司債票面與有效利率；以利差假設")
@@ -67,7 +68,9 @@ add("g_tv", "永續成長率", "比例", 0.02, 0.03, 0.04, AS, "DCF 標準規格
 add("ronic_sp", "RONIC 減 WACC 的利差", "比例", -0.02, 0.0, 0.02, AS, "DCF 標準規格預設 RONIC＝WACC（新投資價值中性）")
 add("tax", "稅率（NOPAT 與損益）", "比例", 0.22, 0.251, 0.27, AS, "FY2026 GAAP 有效稅率 25.1%（10-K MD&A；FY2025 23.7%）；預測期持平於實績，區間為敏感度")
 add("w_dcf", "DCF 權重（其餘為 Comparable）", "比例", 0.3, 0.5, 0.7, AS, "原則第 4 節預設 50／50")
-add("cm_adj", "Comparable 倍數調整係數（對同業中位數）", "倍", 0.8, 1.0, 1.2, AS, "同業僅 3 家、日期不一致，不做迴歸；以係數作敏感度")
+add("cm_adj", "Comparable 倍數調整係數（本公司對同業中位數的歷史相對倍數；rel_mult 基準）", "倍", RM["sens"]["low"], RM["geo_base"], RM["sens"]["high"], DE,
+    "software_ai/data/relmult_hist/out/accenture.json（2026-11-17）geo_base＝PS 與 PSG 兩讀數幾何平均（PS 讀數 %.4f、PSG 讀數 %.4f；base_source：%s）；低／高＝sens.low／sens.high；同業 CTSH、INFY、GIB；以 PS／PSG 相對值近似套用於 EV／EBIT" % (RM["ps_reading"], RM["psg_reading"], RM["base_source"]))
+add("sbc_pct", "股票薪酬占營收（只用於「股票薪酬加回」DCF 對照讀數）", "比例", None, 0.0283, None, DE, "FY2026 股票薪酬 2,100.433÷營收 74,183.445＝2.83%（10-K FY2026 現金流量表；Derived）；預測期持平；對照讀數不進加權目標價")
 # ---------------- 命題（原型 L）
 add("hc_y25", "期末員工數 FY2025", "千人", None, 779, None, IP, "10-K FY2026 MD&A People Metrics（約數）", "公司自揭 KPI，約數")
 add("hc_y26", "期末員工數 FY2026", "千人", None, 814, None, IP, "10-K FY2026 MD&A People Metrics；8-K 2026-10-01", "公司自揭 KPI，約數")
@@ -409,7 +412,8 @@ VR = {}
 vrows = ["intro", "hint", "blank0", "cap", "px", "px_date", "tp_date", "dcf_tp", "comp_tp", "tp", "up", "valr", "gate", "rec", "tp_ref", "sp1", "wh", "ke", "kd", "kdat", "wacc", "ronic", "g", "emkt", "dmkt", "ewt",
          "sp2", "ndh", "cashx", "ndebt", "nciv", "netcash", "sh", "dps", "sp3", "sumh", "pvx", "tvpv", "ev", "eq", "vps0", "dcf12", "tvsh", "sp4", "ch", "ttm_am", "ttm_em", "ttm_ap", "ttm_tot", "mult", "ev_c", "comp12",
          "sp8", "g3h", "g3_dcf", "g3_ev", "g3_rate", "g3_rev", "g3_om", "g3_flag", "sp7", "gaph", "gap", "gap_t", "gap_m", "gap_sbc", "gap_lev", "ownh", "own_ev", "own_mult", "own_ratio", "rerate", "sp5", "scenh", "wa", "wb", "wc", "chk_w",
-         "sp6", "peerh", "pe1", "pe2", "pe3", "pe_med", "pe_n", "pe_own", "stale_rf", "pe_note"]
+         "sp6", "peerh", "pe1", "pe2", "pe3", "pe_med", "pe_n", "pe_own", "stale_rf", "pe_note",
+         "sp9", "sbch", "sbc_pv", "sbc_tv", "sbc_ev", "sbc_vps", "sbc_dcf12", "sbc_cmp", "sbc_w", "sbc_note"]
 for i, k in enumerate(vrows): VR[k] = 1 + i
 V.cell(VR["intro"], 1, "估值：DCF（FCFF）與 Comparable（分部加總：各分部目標時點 TTM 營業利益 × 同業 EV／EBIT）加權；目標價為 12 個月後（股價基準日＋12 個月）。三情境 25／50／25。上檔空間不是年化報酬。")
 V.cell(VR["hint"], 1, "Comparable 同業只有 3 家（少於 8 家，不做迴歸）、日期不一致；倍數分母為 TTM 營業利益（EV／EBIT，無槓桿對無槓桿），故乘目標日的 TTM 營業利益；不用 FCF 倍數，避免股票薪酬與槓桿口徑落差。")
@@ -516,6 +520,24 @@ V.cell(VR["stale_rf"], 1, "rf 基準日與現價日相差（交易日；超過 2
 V[f"B{VR['stale_rf']}"] = f"=NETWORKDAYS(MIN({I('rf_date')},{I('px_date')}),MAX({I('rf_date')},{I('px_date')}))-1"
 V[f"C{VR['stale_rf']}"] = f'=IF(B{VR["stale_rf"]}>2,"逾期","未逾期")'
 V.cell(VR["pe_note"], 1, "同業倍數基準日全部早於現價日 2 個交易日以上者標「逾期」，使用前須更新；本版未更新（同業日期 2026-10-21 至 10-27，現價日 2026-11-13）。EPAM 頁無日期且資料為 2025 年，已排除。")
+
+V.cell(VR["sbch"], 1, "股票薪酬加回 DCF 對照讀數（G5 第 3 條；只作對照，不進加權目標價；FCFF 與永續價值的營業利潤基礎各加回股票薪酬＝營收 × 股票薪酬占營收）").font = BOLD
+for col, lab in zip("CDE", ("情境 A", "情境 B", "情境 C")): V[f"{col}{VR['sbch']}"] = lab
+for si, s_ in enumerate("ABC"):
+    col = "CDE"[si]; pvr = DR[s_]["pv"]
+    terms_ = "+".join(f"PL!{YC[y]}{PR[s_]['rev']}*DCF!{YC[y]}{DR[s_]['frac']}*DCF!{YC[y]}{DR[s_]['df']}" for y in YEARS[3:])
+    V[f"{col}{VR['sbc_pv']}"] = f"={I('sbc_pct')}*({terms_})"
+    V[f"{col}{VR['sbc_tv']}"] = f"={I('sbc_pct')}*PL!K{PR[s_]['rev']}*(1+$B${VR['g']})*(1-$B${VR['g']}/$B${VR['ronic']})/($B${VR['wacc']}-$B${VR['g']})/(1+$B${VR['wacc']})^DCF!K{pvr+1}"
+    V[f"{col}{VR['sbc_ev']}"] = f"={col}{VR['ev']}+{col}{VR['sbc_pv']}+{col}{VR['sbc_tv']}"
+    V[f"{col}{VR['sbc_vps']}"] = f"=({col}{VR['sbc_ev']}+$B${VR['netcash']})/$B${VR['sh']}"
+    V[f"{col}{VR['sbc_dcf12']}"] = f"={col}{VR['sbc_vps']}*(1+$B${VR['ke']})-$B${VR['dps']}"
+vrow("sbc_pv", "加回股票薪酬：明確期現值（US$M）"); vrow("sbc_tv", "加回股票薪酬：永續價值現值（US$M）"); vrow("sbc_ev", "企業價值（股票薪酬加回；US$M）")
+vrow("sbc_vps", "每股價值（股票薪酬加回；評價日；US$）")
+vrow("sbc_dcf12", "DCF（股票薪酬加回）情境目標價（US$；12 個月後）", f"={wr('A')}*C{VR['sbc_dcf12']}+{wr('B')}*D{VR['sbc_dcf12']}+{wr('C')}*E{VR['sbc_dcf12']}")
+vrow("sbc_cmp", "對照：DCF（股票薪酬加回；情境加權）相對標準 DCF 目標價的差距", f"=B{VR['sbc_dcf12']}/B{VR['dcf_tp']}-1")
+vrow("sbc_w", "對照：若 DCF 改用加回讀數，加權目標價（US$）與上檔空間", f"={I('w_dcf')}*B{VR['sbc_dcf12']}+(1-{I('w_dcf')})*B{VR['comp_tp']}", f"=B{VR['sbc_w']}/B{VR['px']}-1")
+V.cell(VR["sbc_note"], 1, "標準 DCF 把股票薪酬當費用（營業利益已扣）、評價股數已含 RSU 淨沒收；加回讀數同時未計入加回後的稀釋，因此高估，只作與標準讀數對照；不進加權目標價、不改評等。")
+
 for s in "ABC":
     for y in YEARS[3:]:
         c = YC[y]
@@ -596,6 +618,16 @@ Rc.cell(r + 2, 1, "FY2027 Q1（2026-09 至 11）實績預計 2026-12 下旬公�
 Rc.cell(r + 3, 1, "未找到：Blume β 第二來源、公司債有效利率、融資租賃餘額、FY2024 GenAI 數字官方 8-K 原文、利用率定義、計費工時與時薪（公司不揭露）、平均賣方目標價與家數；詳見 research_accenture.md 第 9 節。")
 RC_END = r + 3
 
+r = RC_END + 2
+Rc.cell(r, 1, "6. 股票薪酬加回 DCF 讀數（G5 第 3 條；只作對照，不進加權目標價）").font = BOLD
+RC_SBC = r + 1
+Rc.cell(RC_SBC, 1, "DCF 目標價（標準：股票薪酬費用化；情境加權；US$）"); Rc.cell(RC_SBC, 2, f"=Val!B{VR['dcf_tp']}")
+Rc.cell(RC_SBC + 1, 1, "DCF 目標價（股票薪酬加回；情境加權；US$）"); Rc.cell(RC_SBC + 1, 2, f"=Val!B{VR['sbc_dcf12']}")
+Rc.cell(RC_SBC + 2, 1, "每股價值（評價日；情境 B；標準／股票薪酬加回；US$）"); Rc.cell(RC_SBC + 2, 2, f"=Val!D{VR['vps0']}"); Rc.cell(RC_SBC + 2, 3, f"=Val!D{VR['sbc_vps']}")
+Rc.cell(RC_SBC + 3, 1, "說明")
+Rc.cell(RC_SBC + 3, 2, f'="股票薪酬加回使 DCF 目標價由 "&TEXT(B{RC_SBC},"0.00")&" 升至 "&TEXT(B{RC_SBC+1},"0.00")&" 美元（"&TEXT(Val!B{VR["sbc_cmp"]},"+0.0%")&"）；若改用加回讀數，加權目標價為 "&TEXT(Val!B{VR["sbc_w"]},"0.00")&" 美元（上檔 "&TEXT(Val!C{VR["sbc_w"]},"+0.0%;-0.0%")&"）。只作對照，不進加權目標價。"')
+RC_END2 = RC_SBC + 3
+
 # ---------------- Sens 頁
 Se = SH["Sens"]
 Se["A1"] = "敏感度：In 頁每個有「敏感度低／高」區間的輸入，一次動一個、整本 LibreOffice 重算；表中為加權目標價相對基準。情境專屬列與情境權重不列（三情境本身就是情境分析）。"
@@ -625,7 +657,7 @@ So = SH["Sources"]
 So["A1"] = "來源與版本"; So.cell(2, 1, "項目"); So.cell(2, 2, "內容")
 src_rows = [("Tokenomics 快照", f"{TK['source']['version']}（{TK['source']['file']}；commit {TK['source']['commit'][:7]}）；名稱：IF_TaskLen、IF_TaskTokFresh／Cached／Dec、IF_PriceFresh／Cached／Out_Terra／Sol／Astra、IF_TaskSucc_Terra／Sol／Astra（data/tokenomics_snapshot_v22.0.json）"),
             ("研究包", RES), ("公司申報", "10-K FY2026（SEC 0001467373-26-000049，2026-10-16）；10-K FY2025；10-Q FY2026 Q1–Q3；8-K 2026-10-01 Q4 FY26 新聞稿"),
-            ("同業倍數", "StockAnalysis statistics 頁（CTSH 2026-10-27、INFY 2026-10-21、CGI（GIB）2026-10-26、ACN 2026-10-31）"), ("市場資料", "tradingeconomics 10 年美債 2026-11-16；StockAnalysis ACN 股價與 Beta"),
+            ("同業倍數", "StockAnalysis statistics 頁（CTSH 2026-10-27、INFY 2026-10-21、CGI（GIB）2026-10-26、ACN 2026-10-31）"), ("歷史相對倍數", "software_ai/data/relmult_hist/out/accenture.json（2026-11-17；PS 20 點、PSG 13 點；副本 data/relmult_hist_accenture.json）"), ("市場資料", "FRED DGS10 10 年美債 2026-11-12；StockAnalysis ACN 股價與 Beta"),
             ("本版先驗", "未做（Andy 2026-11-16 23:27）")]
 for i, (a, b2) in enumerate(src_rows, 3): So.cell(i, 1, a); So.cell(i, 2, b2)
 
@@ -648,11 +680,11 @@ Rm["A13"] = (f'="Accenture："&{VB("rec")}&"，加權目標價 "&TEXT({VB("tp")}
 Rm["A14"] = "本版要點"
 Rm["A15"] = "官方報告分部三個（Americas、EMEA、Asia Pacific；FY2024 為 10-K FY2026 新口徑重編值）；分部營收與營業利益皆取公司法定附註，三分部合計與合併值差 0。"
 Rm["A16"] = "命題模組為原型 L；公司不揭露計費工時、時薪、價量拆分，時薪由 FY2026 營收與員工數、利用率反推（Derived），自動化比例、價格保留率、新專案占比為 Assumed，情境分化依據見 In 頁。"
-Rm["A17"] = "推論成本只讀 Tokenomics v22.0 快照任務 5（類比）；公司未揭露 token 量與代理任務量，不以聊天基數乘倍數；token 價格路徑待 AI供應鏈 登錄。"
-Rm["A18"] = "未做事項：先驗（Andy 指示本版跳過）；三層基準協調（Coord、C0、兩讀數）不適用：非 Siliconomics 覆蓋；Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照不適用：Accenture 不自建算力；v0.2 改讀 unit_economics。"
-Rm["A19"] = (f'="合理性關卡（工作單 G3 第 3 條）："&IF({VB("g3_flag")}=1,"觸發，須診斷：","未觸發；")&"DCF 目標價÷現價 "&TEXT({VB("g3_dcf")},"0.00")&"、EV 最小值 "&TEXT({VB("g3_ev")}/1000,"0.0")&" 十億美元、FY2027 營收對指引中點差 "&TEXT({VB("g3_rev")},"0.0%")&"、營業利益率相對差 "&TEXT({VB("g3_om")},"0.0%")&"、評等 "&{VB("valr")}&"。診斷結論：本模型評等由 AI 淨效果之成本節省比例 cs（Assumed，Sens 最敏感）與同業倍數（三家、已逾期）決定；DCF 與 Comparable 彼此接近、與現價落差來自市場對 Accenture 的倍數溢價（現行倍數÷同業中位數見 Val），屬經濟判斷而非建模錯誤；恆等式核對皆為 0。"')
+Rm["A17"] = "推論成本只讀 Tokenomics v22.0 快照任務 5（類比）；公司未揭露 token 量與代理任務量，不以聊天基數乘倍數；token 價格路徑待 AI供應鏈 登錄。Comparable 倍數＝同業 EV／EBIT 中位數 × 歷史相對倍數（rel_mult／cm_adj；PS 與 PSG 兩讀數幾何平均，Derived）；本公司以 EV／EBIT 估值，故以 PS／PSG 相對值近似套用於 EV／EBIT；兩讀數差異未超過 30%，不需另述原因。"
+Rm["A18"] = "未做事項：股票薪酬加回 DCF 只作對照（Val 與 Recon 並列，不進加權目標價）；先驗（Andy 指示本版跳過）；三層基準協調（Coord、C0、兩讀數）不適用：非 Siliconomics 覆蓋；Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照不適用：Accenture 不自建算力；v0.2 改讀 unit_economics。"
+Rm["A19"] = (f'="合理性關卡（工作單 G3 第 3 條）："&IF({VB("g3_flag")}=1,"觸發，須診斷：","未觸發；")&"DCF 目標價÷現價 "&TEXT({VB("g3_dcf")},"0.00")&"、EV 最小值 "&TEXT({VB("g3_ev")}/1000,"0.0")&" 十億美元、FY2027 營收對指引中點差 "&TEXT({VB("g3_rev")},"0.0%")&"、營業利益率相對差 "&TEXT({VB("g3_om")},"0.0%")&"、評等 "&{VB("valr")}&"。診斷結論：本模型評等由 AI 淨效果之成本節省比例 cs（Assumed，Sens 最敏感）與同業倍數與歷史相對倍數（geo_base，Derived；PS／PSG 讀數見 In 頁）決定；兩法與現價的落差見 Val 的落差分解與現行倍數÷同業中位數，屬經濟判斷而非建模錯誤；恆等式核對皆為 0。"')
 Rm["A20"] = "市場資料日期"
-Rm["A21"] = (f'="現價 "&TEXT({I("px_date")},"yyyy-mm-dd")&" 收盤；無風險利率 "&TEXT({I("rf_date")},"yyyy-mm-dd")&"（與現價日相差 "&TEXT({VB("stale_rf")},"0")&" 個交易日，"&{VB("stale_rf","C")}&"）；同業倍數 2026-10-21 至 2026-10-27，已標逾期（Val 頁）。"')
+Rm["A21"] = (f'="現價 "&TEXT({I("px_date")},"yyyy-mm-dd")&" 收盤；無風險利率 "&TEXT({I("rf_date")},"yyyy-mm-dd")&"（與現價日相差 "&TEXT({VB("stale_rf")},"0")&" 個交易日，"&{VB("stale_rf","C")}&"）；同業倍數 2026-10-21 至 2026-10-27，已標逾期（Val 頁）；無風險利率取 FRED DGS10（與同批模型統一，G5 第 2 條）。"')
 Rm["A22"] = "主要失效條件（可觀察）：FY2027 Q1（2026-12 公布）起每員工營收年增明顯高於 2%、員工數下降而營收持平、新訂單 book-to-bill 跌破 1.0、定價持續「lower pricing in many areas」。"
 Rm["A23"] = "風險登錄"
 Rm["A24"] = "風險"; Rm["B24"] = "是否建模"; Rm["C24"] = "理由"; Rm["D24"] = "觀察指標"
@@ -668,7 +700,7 @@ mp = [("Seg", "hc_y26、util、hrs、hg、rg、a27、a32_A/B/C、r_A/B/C、n27�
       ("Sens", "In 頁敏感度低／高", "加權目標價、DCF 目標價、投資建議", "一次改一個輸入、整本重算")]
 for i, rk in enumerate(mp, 34):
     for j, v in enumerate(rk, 1): Rm.cell(i, j, v)
-Rm["A39"] = "版本沿革：v0.1（2026-11-16）首版；未做先驗；本版與其他版本無對照。"
+Rm["A39"] = "版本沿革：v0.2（2026-11-17）G5：Comparable 倍數改用歷史相對倍數 geo_base（PS／PSG；Derived）、無風險利率統一為 FRED DGS10 5.10%（2026-11-12）、新增股票薪酬加回 DCF 對照讀數；v0.1（2026-11-16）首版。皆未做先驗。"
 for ws_ in wb.worksheets:
     ws_.column_dimensions["A"].width = 52
     for col in "BCDEFGHIJK": ws_.column_dimensions[col].width = 14
@@ -676,6 +708,6 @@ wb["In"].column_dimensions["B"].width = 60; wb["In"].column_dimensions["H"].widt
 wb.defined_names["PL_hdr"] = DefinedName("PL_hdr", attr_text="PL!$C$5:$K$5")
 wb.save(OUT)
 rowmap = {"IR": IR, "SR": SR, "PR": PR, "STR": STR, "SPR": SPR, "VR": VR, "DR": DR, "RV": RV, "RCR": RCR, "CK": CK, "QR": QR, "SE_ROWS": SE_ROWS, "SE_END": SE_END, "SCN_H": SCN_H, "SCN_ROWS": SCN_ROWS,
-          "BUILD_ID": BUILD_ID, "FP": fp, "HDR_R": hdr_r, "GATE": GATE, "RC_REV": RC_REV, "RC_END": RC_END, "CPS": CPS}
+          "BUILD_ID": BUILD_ID, "FP": fp, "HDR_R": hdr_r, "GATE": GATE, "RC_REV": RC_REV, "RC_END": RC_END, "RC_SBC": RC_SBC, "RC_END2": RC_END2, "CPS": CPS}
 if ROWMAP: json.dump(rowmap, open(ROWMAP, "w"), ensure_ascii=False, indent=1)
 print("built", OUT, BUILD_ID)

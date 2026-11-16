@@ -1,5 +1,5 @@
-# 趨勢科技（4704）個股模型 v0.1（原型 P 按防護範圍計價；官方報告分部＝所在地別四分部；命題子列＝Vision One）
-# 用法：python3 build_trendmicro.py raw.xlsx [--sens sens.json] [--set 鍵=值 ...]；再以 LibreOffice 重算（make_v01.sh）。
+# 趨勢科技（4704）個股模型 v0.2（原型 P 按防護範圍計價；官方報告分部＝所在地別四分部；命題子列＝Vision One）
+# 用法：python3 build_trendmicro.py raw.xlsx [--sens sens.json] [--set 鍵=值 ...]；再以 LibreOffice 重算（make_v02.sh）。
 # 金額：十億日圓（¥B）；ARR：百萬美元；股數：百萬股；每股：日圓。FY＝日曆年（12 月制）。評價日 2026-06-30（最近可得資產負債表）。
 # 本版未做先驗（工作單 G 節）。Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics、三層協調：不適用（見 README）。
 import sys, os, json, argparse, hashlib, datetime
@@ -11,15 +11,16 @@ ap = argparse.ArgumentParser(); ap.add_argument("out"); ap.add_argument("--sens"
 A = ap.parse_args()
 OVR = {k: float(v) for k, v in (s.split("=", 1) for s in A.set)}
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
-VER = "v0.1"; VDATE = "2026-11-16"
+VER = "v0.2"; VDATE = "2026-11-17"
 def _bid():
     h = hashlib.sha256()
-    for fn in ["build_trendmicro.py", "data/facts_trendmicro.json", "data/tk_snapshot.json"]:
+    for fn in ["build_trendmicro.py", "data/facts_trendmicro.json", "data/tk_snapshot.json", "../data/relmult_hist/out/trendmicro.json"]:
         h.update(fn.encode()); h.update(open(os.path.join(HERE, fn), "rb").read())
     return f"trendmicro-{VER}-{h.hexdigest()[:10]}"
 BUILD_ID = _bid()
 FJ = {x["id"]: x for x in json.load(open(os.path.join(HERE, "data/facts_trendmicro.json"), encoding="utf-8"))}
 TK = json.load(open(os.path.join(HERE, "data/tk_snapshot.json"), encoding="utf-8"))
+RM = json.load(open(os.path.join(HERE, "../data/relmult_hist/out/trendmicro.json"), encoding="utf-8"))["groups"]["all"]; RMS = RM["sens"]
 TKV = TK["source"]["version"]; TKI = TK["items"]
 def fv(i): return FJ[i]["value"]
 def fsrc(i): return FJ[i]["source"].split("；")[0][:160] + f"（事實總帳 {i}）"
@@ -117,7 +118,18 @@ inp("w_dcf", "DCF 權重（Comparable 為 1 減本值）", "比率", 0.3, 0.5, 0
 inp("pm_chkp", "同業 EV/EBIT（TTM）：Check Point（2026-11-13；US GAAP）", "倍", None, 16.51, None, "Verified", "stockanalysis.com/stocks/chkp/statistics/", "低成長子群（3 年營收成長預估 ≤10%）")
 inp("pm_gen", "同業 EV/EBIT（TTM）：Gen Digital（2026-10-26；US GAAP；逾期）", "倍", None, 10.20, None, "Verified", "stockanalysis.com/stocks/gen/statistics/", "價格日 2026-10-26 與現價日相差逾 2 個交易日：逾期；Gen 有槓桿（淨負債），EV 口徑對 EV")
 inp("pm_qlys", "同業 EV/EBIT（TTM）：Qualys（2026-10-26；US GAAP；逾期）", "倍", None, 29.48, None, "Verified", "stockanalysis.com/stocks/qlys/statistics/", "逾期，同上")
-inp("cm_adj", "相對倍數調整係數（1.00＝未調整：缺同業 NTM 倍數與成長／利益率迴歸，家數少於 8 不做迴歸）", "倍", 0.85, 1.0, 1.15, "Assumed", "原則第 10 節第 7、18 條")
+RMSRC = "software_ai/data/relmult_hist/out/trendmicro.json（groups.all；2026-11-17 產出；窗口 2021-09-30～2026-06-30，20 季）"
+inp("cm_adj", "相對倍數 rel_mult（本公司 ÷ 同業中位；PS 與 PSG 兩讀數幾何平均＝geo_base；基準＝geo_base，低／高＝sens.low／sens.high）", "倍", RMS["low"], RM["geo_base"], RMS["high"], "Derived", RMSRC,
+    "base_source：" + RM["base_source"] + "。同業 CHKP、GEN、QLYS、FTNT；本公司 Comparable 倍數是 EV/EBIT，以 PS／PSG 相對值近似套用於 EV/EBIT（子群中位數 × rel_mult）。1.00＝未調整（v0.1）")
+inp("rm_ps", "PS 相對值讀數（20 季中位數；Sens 案 ps_only）", "倍", None, RM["ps_reading"], None, "Derived", RMSRC, "PS＝市值÷TTM 營收；範圍 %.2f–%.2f" % (RM["ps_stats"]["min"], RM["ps_stats"]["max"]))
+inp("rm_psg", "PSG 相對值讀數（14 季中位數；Sens 案 psg_only）", "倍", None, RM["psg_reading"], None, "Derived", RMSRC, "PSG＝PS÷TTM 營收年增(pt)；最早 4 季無基期")
+inp("rm_psgm", "PSG 相對值中位數（14 季；未乘成長比）", "倍", None, RM["psg_stats"]["median"], None, "Derived", RMSRC, "PSG 讀數＝本值 × 成長比")
+inp("rm_gco", "本公司 TTM 營收年增（2026-06-30）", "比率", None, RM["growth_ratio"]["company_g"], None, "Derived", RMSRC, "TTM（NTM 未取得）")
+inp("rm_gpe", "同業中位 TTM 營收年增（2026-06-30）", "比率", None, RM["growth_ratio"]["peer_median_g"], None, "Derived", RMSRC, "同業 %d 家" % RM["growth_ratio"]["n_peers"])
+inp("rm_gr", "成長比（本公司年增 ÷ 同業中位年增）", "倍", None, RM["growth_ratio"]["value"], None, "Derived", RMSRC, "解釋 PS 與 PSG 兩讀數分歧")
+inp("rm_div", "兩讀數分歧度（|PS 讀數 − PSG 讀數| ÷ PS 讀數；divergence_gt_30pct＝" + str(RM["divergence_gt_30pct"]) + "）", "比率", None, RM["divergence"], None, "Derived", RMSRC, "超過 30% 要在 README 與 HTML 寫原因")
+inp("sbc_dir", "董事股票選擇權報酬（FY2025；僅董事，合併股票薪酬未找到）", "¥B", None, fv("sbc.dir.fy25") / 1000, None, "Verified", fsrc("sbc.dir.fy25"), "只作 SBC 加回對照的下限；不進加權目標價")
+inp("sbc_ab", "SBC 加回對照：股票薪酬占營收（FY2025 董事選擇權 ÷ 合併營收）", "比率", None, fv("sbc.dir.fy25") / fv("rev.fy2025"), None, "Derived", fsrc("sbc.dir.fy25") + "；" + fsrc("rev.fy2025"), "合併 SBC 未找到，此為下限（不含員工）；只用於 Val 的對照列")
 inp("tp_wA", "情境權重 A", "比率", None, 0.25, None, "Assumed", "DCF 規格第 3 節預設 25／50／25")
 inp("tp_wB", "情境權重 B", "比率", None, 0.50, None, "Assumed", "同上")
 inp("tp_wC", "情境權重 C", "比率", None, 0.25, None, "Assumed", "同上")
@@ -347,7 +359,7 @@ vr("tvsh", "終值占 EV", *v3(lambda s: f'=IF({"BCD"["ABC".index(s)]}{VR["ev"]}
 vr("eq", "股權價值＝EV＋現金（2026-06-30）− 有利息負債與租賃", *v3(lambda s: f"={'BCD'['ABC'.index(s)]}{VR['ev']}+cash_0-fin_lease"), fmt="#,##0.0")
 vr("ps0", "DCF 每股價值（評價日；÷現流通股）", *v3(lambda s: f"={'BCD'['ABC'.index(s)]}{VR['eq']}*1000/sh_now"), fmt="#,##0")
 vr("dcf", "DCF 目標價（推到目標時點、扣 FY2026 股利）", *v3(lambda s: f"={'BCD'['ABC'.index(s)]}{VR['ps0']}*(1+{KE})^{YT}-PL!{ref(s, 'dps', 2026)}"), fmt="#,##0")
-vr("pm", "Comparable 倍數：低成長子群 EV/EBIT（TTM；CHKP、GEN、QLYS 中位數）×調整係數", "=MEDIAN(pm_chkp,pm_gen,pm_qlys)*cm_adj", fmt="0.00", note="分母期間：TTM（FY2027E 近似目標日 TTM）；同業 US GAAP；租賃處理未逐家核對")
+vr("pm", "Comparable 倍數：低成長子群 EV/EBIT（TTM；CHKP、GEN、QLYS 中位數）×相對倍數 rel_mult（cm_adj）", "=MEDIAN(pm_chkp,pm_gen,pm_qlys)*cm_adj", fmt="0.00", note="分母期間：TTM（FY2027E 近似目標日 TTM）；同業 US GAAP；租賃處理未逐家核對；rel_mult 為 PS／PSG 相對值近似套用於 EV/EBIT（v0.2）")
 vr("evc", "Comparable EV＝倍數×FY2027E 營業利益", *v3(lambda s: f"=$B${VR['pm']}*PL!{ref(s, 'oi', 2027)}"), fmt="#,##0.0")
 vr("comp", "Comparable 目標價（EV＋現金−負債，÷現流通股）", *v3(lambda s: f"=({'BCD'['ABC'.index(s)]}{VR['evc']}+cash_0-fin_lease)*1000/sh_now"), fmt="#,##0")
 vr("tps", "各情境加權目標價（w_dcf×DCF＋(1−w_dcf)×Comparable）", *v3(lambda s: f"=w_dcf*{'BCD'['ABC'.index(s)]}{VR['dcf']}+(1-w_dcf)*{'BCD'['ABC'.index(s)]}{VR['comp']}"), fmt="#,##0")
@@ -366,6 +378,17 @@ vr("gate", "入不敷出判定用（基準情境 B；FY2026–FY2030 自由現�
 vr("gatej", "入不敷出判定", '=IF(B%d<0,"不通過","通過")' % VR["gate"], fmt="@")
 vr("rec", "投資建議（收支不足＝入不敷出且估值評等為買進以上）", '=IF(AND(B%d<0,OR(B%d="買進",B%d="強力買進")),"收支不足",B%d)' % (VR["gate"], VR["vrate"], VR["vrate"], VR["vrate"]), fmt="@")
 vr("dist", "距最近評等邊界（百分點；<5 要揭露）", "=MIN(ABS(B%d-0.5),ABS(B%d-0.25),ABS(B%d+0.25),ABS(B%d+0.5))*100" % ((VR["up"],) * 4), fmt="0.0")
+# SBC 加回對照（只作對照，不進加權目標價）
+def pvab(sc):
+    t = [f"sbc_ab*PL!{ref(sc, 'rev', 2026)}*{ST}/(1+{W_})^({ST}/2)"]
+    for y in range(2027, 2033): t.append(f"sbc_ab*PL!{ref(sc, 'rev', y)}/(1+{W_})^({ST}+{y - 2027}+0.5)")
+    t.append(f"sbc_ab*PL!{ref(sc, 'rev', 2032)}*(1+{G})/({W_}-{G})/(1+{W_})^({ST}+6)")
+    return "=" + "+".join(t)
+vr("pvab", "SBC 加回對照：股票薪酬加回的現值（FY2026 下半年到終值；sbc_ab×營收；終值為永續年金，不乘稅盾）", *v3(pvab), fmt="#,##0.00", note="只作對照，不進加權目標價；合併 SBC 未找到，sbc_ab 僅董事選擇權（下限）")
+vr("dcfs", "DCF 每股目標價（股票薪酬加回；對照）", *v3(lambda s: f"=(({'BCD'['ABC'.index(s)]}{VR['eq']}+{'BCD'['ABC'.index(s)]}{VR['pvab']})*1000/sh_now)*(1+{KE})^{YT}-PL!{ref(s, 'dps', 2026)}"), fmt="#,##0", note="同 DCF 目標價的推算方式，EV 加上加回現值")
+vr("ps0s", "DCF 每股價值（股票薪酬加回；評價日；對照）", *v3(lambda s: f"=({'BCD'['ABC'.index(s)]}{VR['eq']}+{'BCD'['ABC'.index(s)]}{VR['pvab']})*1000/sh_now"), fmt="#,##0")
+vr("tpdcfs", "DCF 目標價（股票薪酬加回；情境加權；對照，不進加權目標價）", "=SUMPRODUCT(B%d:D%d,B%d:D%d)" % (VR["dcfs"], VR["dcfs"], VR["wts"], VR["wts"]), fmt="#,##0")
+vr("sbcd", "  加回後比 DCF 目標價多（日圓）", "=B%d-B%d" % (VR["tpdcfs"], VR["tpdcf"]), fmt="#,##0.0", note="差距極小，因合併 SBC 未找到、僅董事選擇權為下限")
 # DCF 與 Comparable 落差分解（情境 B）
 vr("gap", "落差分解（情境 B）：DCF 目標價 − Comparable 目標價", "=C%d-C%d" % (VR["dcf"], VR["comp"]), fmt="#,##0")
 vr("gap_t", "  時點與股利：DCF 由評價日推到目標時點並扣股利的增減", "=C%d-C%d" % (VR["dcf"], VR["ps0"]), fmt="#,##0")
@@ -439,6 +462,13 @@ rc("uinfr", "FY2030E 推論成本占 Vision One 營收", *[f"=PL!{ref(s, 'inf', 
 rc("uain", "AI 淨效果（¥B）FY2030E", *[f"=PL!{ref(s, 'ain', 2030)}" for s in "ABC"], "三情境分化：A＝增量大、侵蝕小；C 相反", fmts=[None, "#,##0.0", "#,##0.0", "#,##0.0"])
 rcur[0] += 1
 RC.cell(rcur[0], 1, "4. 反解（整本重算）：見 Sens 頁下方「反解」區（建置時由敏感度重算寫入）"); RCR["kreq_hint"] = rcur[0]
+rcur[0] += 2
+rch("5. DCF（股票薪酬加回）對照：只作對照，不進加權目標價", ["項目", "情境 A", "情境 B", "情境 C", "情境加權", "說明"])
+rc("sb0", "DCF 每股價值（評價日；現行）", *[f"=Val!{c}{VR['ps0']}" for c in "BCD"], None, "現行 DCF，sbc_r＝0", fmts=[None, "#,##0", "#,##0", "#,##0"])
+rc("sb1", "DCF 每股價值（評價日；股票薪酬加回）", *[f"=Val!{c}{VR['ps0s']}" for c in "BCD"], None, "加回現值見 Val 頁；sbc_ab 為董事選擇權下限", fmts=[None, "#,##0", "#,##0", "#,##0"])
+rc("sb2", "DCF 目標價（現行）", *[f"=Val!{c}{VR['dcf']}" for c in "BCD"], f"=Val!B{VR['tpdcf']}", "", fmts=[None, "#,##0", "#,##0", "#,##0", "#,##0"])
+rc("sb3", "DCF 目標價（股票薪酬加回）", *[f"=Val!{c}{VR['dcfs']}" for c in "BCD"], f"=Val!B{VR['tpdcfs']}", "對照；不進加權目標價", fmts=[None, "#,##0", "#,##0", "#,##0", "#,##0"])
+rc("sbs", "摘要（公式組字）", f'="DCF 目標價（股票薪酬加回）"&TEXT(Val!B{VR["tpdcfs"]},"#,##0")&" 日圓，較現行 DCF "&TEXT(Val!B{VR["tpdcf"]},"#,##0")&" 日圓多 "&TEXT(Val!B{VR["sbcd"]},"#,##0.0")&" 日圓；合併股票薪酬未找到，加回只含董事選擇權（占營收 "&TEXT(sbc_ab,"0.000%")&"，下限），故差距極小；只作對照，不進加權目標價。"')
 RC.column_dimensions["A"].width = 70
 for c in "BCDEFG": RC.column_dimensions[c].width = 16
 # ================= Sens =================
@@ -453,6 +483,8 @@ for row_ in ROWS:
             cases.append((key, side, [(key, v)], item))
 EXTRA = [("combo_route", "低", [("ptok", TKI["IF_PriceRef_Luna"]["values"]), ("tok_mult", tm[3])], "聯動：改走便宜模型（token 市價取低、每任務 token 取高）"),
          ("combo_pxcost", "高", [("ptok", TKI["IF_PriceRef_Sol"]["values"]), ("defl", 0.05)], "聯動：token 市價高且降幅小（價格與降幅同向）"),
+         ("rel_ps_only", "高", [("cm_adj", RM["ps_reading"])], "相對倍數只用 PS 讀數（ps_only）"),
+         ("rel_psg_only", "低", [("cm_adj", RM["psg_reading"])], "相對倍數只用 PSG 讀數（psg_only）"),
          ("combo_ai_off", "低", [("ag26", 0.0), ("am26", 0.0), ("tpm", 0.0)], "AI 全關：無 AI 增量也無推論成本（對照）")]
 cases += EXTRA
 SE["A1"] = "Sens — 敏感度：一次改一個 In 頁輸入（敏感度低／高，整本以 LibreOffice 重算），讀加權目標價。token 市價高案只動成本一邊，標「上界」；聯動案另列。"
@@ -530,10 +562,12 @@ rd("o3", f'"3. 估值：DCF "&{T(VB("tpdcf"))}&"、Comparable "&{T(VB("tpcomp"))
 rd("o4", f'"4. 收支：FY2026–FY2030 自由現金流扣股利合計 "&{T(VB("gate"), "#,##0.0")}&" 十億日圓，關卡"&{VB("gatej")}&"；無有利息負債，現金 "&{T("cash_0", "#,##0")}&" 十億日圓。"')
 rd("o5", f'"5. 傳聞：2025 年私募興趣報導未見後續成交，公司仍上市（2026-11-12 發布 Q3 財報）；模型不含任何收購溢價。"')
 rd("hero", f'"加權目標價 "&{T(VB("tp"))}&" 日圓，上檔空間 "&{T(VB("up"), "+0.0%;-0.0%")}&"（現價 "&{T(VB("px"))}&"，"&TEXT(px_date,"yyyy-mm-dd")&" 收盤）；DCF "&{T(VB("tpdcf"))}&"、Comparable "&{T(VB("tpcomp"))}&"。Vision One 高成長，但推論成本已使 FY2026 營業利益指引下修；結論依賴 AI 增量不被單價侵蝕蓋過。"')
-rd("diag", f'"發布前合理性診斷（G3）：DCF 目標價 ÷ 現價 "&{T(VB("tpdcf")+"/"+VB("px"), "0.00")}&" 倍（"&IF(AND({VB("tpdcf")}/{VB("px")}>=0.25,{VB("tpdcf")}/{VB("px")}<=4),"在 0.25–4 倍內","超出 0.25–4 倍，須診斷")&"）；EV "&IF(Val!C{VR["ev"]}>0,"為正","為負")&"；評等 "&{VB("vrate")}&IF(OR({VB("vrate")}="強力買進",{VB("vrate")}="強力放空"),"，須診斷","，非強力評等")&"；FY2027E 營收較賣方共識（財報前）"&TEXT({PBR("rev", 2027)}/316.69-1,"+0.0%;-0.0%")&"，FY2026E 營收較公司指引"&TEXT({PBR("rev", 2026)}/301.5-1,"+0.0%;-0.0%")&"。診斷結論：DCF 高於現價主因是 WACC 約 6.5% 配 Vision One 成長與費用年增低於營收年增（利益率擴張），屬經濟判斷而非建模錯誤；FY2027 公司無指引（管理層拒絕提供）；relative multiple 因缺 5 年歷史倍數取 1.00 並列承重。"')
+rd("diag", f'"發布前合理性診斷（G3）：DCF 目標價 ÷ 現價 "&{T(VB("tpdcf")+"/"+VB("px"), "0.00")}&" 倍（"&IF(AND({VB("tpdcf")}/{VB("px")}>=0.25,{VB("tpdcf")}/{VB("px")}<=4),"在 0.25–4 倍內","超出 0.25–4 倍，須診斷")&"）；EV "&IF(Val!C{VR["ev"]}>0,"為正","為負")&"；評等 "&{VB("vrate")}&IF(OR({VB("vrate")}="強力買進",{VB("vrate")}="強力放空"),"，須診斷","，非強力評等")&"；FY2027E 營收較賣方共識（財報前）"&TEXT({PBR("rev", 2027)}/316.69-1,"+0.0%;-0.0%")&"，FY2026E 營收較公司指引"&TEXT({PBR("rev", 2026)}/301.5-1,"+0.0%;-0.0%")&"。診斷結論：Comparable 目標價 "&{T(VB("tpcomp"))}&" 日圓低於 DCF "&{T(VB("tpdcf"))}&" 日圓，落差 "&{T(VB("gap"))}&" 日圓，由倍數主導（Comparable 倍數 "&{T(VB("pm"), "0.00")}&" 倍，DCF 隱含 "&{T(VB("mdcf"), "0.00")}&" 倍）；倍數低是因 rel_mult "&TEXT(cm_adj,"0.00")&"（PS 與 PSG 讀數分歧，成長比 "&TEXT(rm_gr,"0.00")&"），而 DCF 的 WACC 約 "&TEXT({VB("wacc")},"0.0%")&" 配 Vision One 成長與費用年增低於營收年增（利益率擴張）。屬估值方法間的經濟判斷與讀數分歧，非建模錯誤；FY2027 公司無指引。"')
 rd("dist", f'IF({VB("dist")}<5,"評等距最近邊界僅 "&{T(VB("dist"), "0.0")}&" 個百分點，目標價小幅變動即翻轉評等。","評等距最近邊界 "&{T(VB("dist"), "0.0")}&" 個百分點。")')
 rd("drv", f'"驅動：Vision One 營收＝平均 ARR × 匯率；ARR 年增＝(1＋範圍成長)×(1＋模組成長)×(1＋單價成長)，AI 增量加在範圍與模組、侵蝕扣在單價；各分部營收＝Vision One 占比分配＋其他營收，合計＝合併營收（核對列為 0）。"')
-rd("ver", f'"{VER}（{VDATE}）：首版；本版未做先驗；未做 Meta 的算力、自用 AI 讀法 2、Wattonomics、三層協調（不適用：非算力公司、非 Siliconomics 覆蓋）。"')
+rd("ver", f'"{VER}（{VDATE}）：相對倍數改讀 relmult_hist 的 geo_base（"&TEXT(cm_adj,"0.00")&"，v0.1 為 1.00，Derived）；新增 Sens 四案 ps_only、psg_only、sens.low、sens.high；DCF（股票薪酬加回）對照列（不進加權目標價）；rf 沿用日本 10 年期 "&TEXT(rf,"0.00%")&"（2026-11-11）；其餘同 v0.1。本版未做先驗；未做 Meta 的算力、自用 AI 讀法 2、Wattonomics、三層協調（不適用：非算力公司、非 Siliconomics 覆蓋）。"')
+rd("rm1", f'"相對倍數：rel_mult＝"&TEXT(cm_adj,"0.00")&"（"&"PS 與 PSG 兩讀數幾何平均，來源 relmult_hist/out/trendmicro.json，Derived；本公司 Comparable 倍數是 EV/EBIT，以 PS／PSG 相對值近似套用於 EV/EBIT：低成長子群中位數 "&TEXT(MEDIAN(pm_chkp,pm_gen,pm_qlys),"0.00")&" × "&TEXT(cm_adj,"0.00")&" ＝ "&TEXT({VB("pm")},"0.00")&" 倍，v0.1 為 1.00）；Sens 另列 ps_only "&TEXT(rm_ps,"0.00")&"、psg_only "&TEXT(rm_psg,"0.00")&"、sens.low "&TEXT(INDEX(In!D:D,MATCH("cm_adj",In!A:A,0)),"0.00")&"、sens.high "&TEXT(INDEX(In!F:F,MATCH("cm_adj",In!A:A,0)),"0.00")&"。"')
+rd("rm2", f'IF(rm_div>0.3,"PS 與 PSG 兩讀數差異大（分歧度 "&TEXT(rm_div,"0%")&"，超過 30%）：PS 讀數 "&TEXT(rm_ps,"0.00")&"、PSG 讀數 "&TEXT(rm_psg,"0.00")&"。原因是成長比：本公司 TTM 營收年增 "&TEXT(rm_gco,"0.0%")&"，同業中位 "&TEXT(rm_gpe,"0.0%")&"，成長比 "&TEXT(rm_gr,"0.00")&"；PSG 讀數＝PSG 相對值中位數 "&TEXT(rm_psgm,"0.00")&" × 成長比 "&TEXT(rm_gr,"0.00")&" ≈ "&TEXT(rm_psgm*rm_gr,"0.00")&"。PS 只看營收倍數，不扣成長差；PSG 把成長差全數計入，所以讀數約減半。geo_base 取兩者折衷，Comparable 因此大幅低於 v0.1。","PS 與 PSG 兩讀數分歧度 "&TEXT(rm_div,"0%")&"，未超過 30%。")')
 rd("sp2", '""')
 rd("h_md", '"市場資料日期"', formula=True)
 rd("md1", f'"現價 "&TEXT(px_date,"yyyy-mm-dd")&"；rf 2026-11-11（"&IF(px_date-DATE(2026,11,11)>2,"逾期","未逾期")&"）；同業倍數 CHKP 2026-11-13、GEN 與 QLYS 2026-10-26（逾期）；共識目標價價格日 2026-09-30、資料更新 2026-09-11（財報前，只作歷史對照）。"')
@@ -556,6 +590,7 @@ rd("h_load", '"承重最大的 Assumed 與可證偽指標"', formula=True)
 rd("l1", '"每 US$1M ARR 的 AI 任務數（tpm）：公司未揭露；可證偽：Trend 披露雲端／AI token 成本占營收比或指引再下修。"')
 rd("l2", '"Vision One 範圍、模組、單價成長拆解（s_b26／m_b26／p_b26）：公司未揭露；可證偽：公司揭露客戶數、每客戶 ARR、方案數。"')
 rd("l3", '"單價侵蝕（aier_A／B／C）：公司只說競爭與免費授權；可證偽：Vision One ARR 增速與每客戶 ARR 的背離。"')
+rd("l4", '"相對倍數 rel_mult（cm_adj）：PS／PSG 讀數近似套用於 EV/EBIT，兩讀數分歧大；可證偽：同業 EV/EBIT 與本公司 EV/EBIT 的歷史相對值（5 年歷史倍數未找到）；Sens 有 ps_only、psg_only、low、high 四案。"')
 rd("sp4", '""')
 rd("h_na", '"不適用說明"', formula=True)
 rd("na1", '"不適用：Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照：Trend Micro 不自建 AI 算力，AI 成本以向模型商購買的 token 計。"')

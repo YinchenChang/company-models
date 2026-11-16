@@ -49,6 +49,8 @@ cfg = {
      "items": [{"label": f"@Val!A{VR[k]}", "value": f"@Val!B{VR[k]}", "series": sr} for k, sr in (("tpdcf", 1), ("tpcomp", 2), ("tp", 0), ("cons", 3))],
      "ref": {"label": f"@Val!A{VR['px']}", "value": f"@Val!B{VR['px']}"}},
     {"type": "table", "caption": "結論（情境加權）", "head": ["項目", "數值"], "rowgen": {"sheet": "Val", "rows": f"{VR['px']}-{VR['rec']}", "cols": ["A", "B"], "fmts": ["", "n2"], "row_fmt": {str(VR["om"]): {"B": "n3"}, **{str(VR[k]): {"B": "n2"} for k in ("ntmA", "ntmB", "ntmC")}, **{str(VR[k]): {"B": "sp1"} for k in ("up", "upd", "upc")}, str(VR["tier"]): {"B": ""}, str(VR["gate"]): {"B": "n1"}, str(VR["gate_t"]): {"B": ""}, str(VR["rec"]): {"B": ""}}}},
+    {"type": "note", "parts": ["@README!A19"]},
+    {"type": "table", "caption": "DCF（股票薪酬加回）對照（只作對照，不進加權目標價；十億日圓除另註）", "head": ["項目", "情境 A", "情境 B", "情境 C", "情境加權"], "rowgen": {"sheet": "Recon", "rows": f"{RCR['sbc_a']}-{RCR['sbc_a']+RCR['sbc_n']-1}", "cols": list("ABCDE"), "fmts": ["", "n2", "n2", "n2", "n2"], "row_fmt": {str(RCR["sbc_a"]): {c: "p1" for c in "BCD"}, str(RCR["sbc_a"] + 1): {c: "n1" for c in "BCD"}}}},
     {"type": "kv", "items": [[f"@Val!A{VR[k]}", f"@Val!B{VR[k]}|{f}"] for k, f in (("ke", "p2"), ("kdat", "p2"), ("wacc", "p2"), ("ronic", "p2"), ("g", "p2"))]},
     {"type": "table", "caption": "DCF 彙總（三情境，十億日圓除另註）", "head": ["項目", "情境 A", "情境 B", "情境 C"], "rows": [[f"@Val!A{FC['B'][k]}", f"@Val!B{FC['A'][k]}|{f}", f"@Val!B{FC['B'][k]}|{f}", f"@Val!B{FC['C'][k]}|{f}"] for k, f in (("ev", "n1"), ("tvs", "p1"), ("eq", "n1"), ("v0", "n0"), ("vt", "n0"))]},
     {"type": "table", "caption": "落差分解與同業倍數", "head": ["項目", "數值", "對照"], "rowgen": {"sheet": "Val", "rows": f"{VR['pe_now']}-{VR['wdcf_sh']}", "cols": ["A", "B", "C"], "fmts": ["", "n1", "n1"], "row_fmt": {str(VR["pe_now"]): {"B": "n2"}, str(VR["impl_pe"]): {"B": "n1"}, str(VR["gap_dcf_cmp"]): {"B": "n0"}, str(VR["gap_pe"]): {"B": "n0"}, str(VR["wdcf_sh"]): {"B": "n0", "C": "n0"}}}},
@@ -99,7 +101,7 @@ cfg = {
   {"id": "recon", "title": "對帳：公司指引與共識", "blocks": [
     {"type": "note", "parts": ["@Recon!A1"]},
     {"type": "table", "caption": "指引與共識對照（十億日圓；EPS、股利為日圓）", "head": ["項目", "本模型", "指引", "共識", "共識口徑", "說明"], "rowgen": {"sheet": "Recon", "rows": f"{RCR['h1']+1}-{RCR['p1']}", "cols": list("ABCDEF"), "fmts": ["", "n2", "n2", "n2", "", ""]}},
-    {"type": "table", "caption": "口徑與未找到", "head": ["項目"], "rowgen": {"sheet": "Recon", "rows": f"{RCR['p1']+1}-{RCR['dom_h']-1}", "cols": ["A"], "fmts": [""]}},
+    {"type": "table", "caption": "口徑與未找到", "head": ["項目"], "rowgen": {"sheet": "Recon", "rows": f"{RCR['p1']+1}-{RCR['sbc_h']-1}", "cols": ["A"], "fmts": [""]}},
     {"type": "table", "caption": "主導變數反解（使加權目標價＝現價所需的值）", "head": ["變數", "基準值", "反解值", "單位", "說明"], "rowgen": {"sheet": "Recon", "rows": f"{RCR['kreq_a']}-{RCR['kreq_a']+RCR['kreq_n']-1}", "cols": list("ABCDE"), "fmts": ["", "n3", "n3", "", ""]}}]},
   {"id": "status", "title": "資料狀態", "blocks": [
     {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期", "@README!A1"], ["build_id", "@Sens!D3"], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"], ["Tokenomics 快照", "@Sources!B3"]]},

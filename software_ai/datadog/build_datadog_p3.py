@@ -42,13 +42,13 @@ widths(DC)
 # ====================================================================================================== Val
 V["A1"] = '="Val — 目標價（股價基準日＋12 個月＝"&TEXT(tp_date,"yyyy-mm-dd")&"）＝DCF "&TEXT(w_dcf,"0%")&"＋Comparable "&TEXT(1-w_dcf,"0%")&"；情境權重 A "&TEXT(tp_wA,"0%")&"／B "&TEXT(tp_wB,"0%")&"／C "&TEXT(tp_wC,"0%")&"。金額 US$M，每股美元"'
 V["A2"] = ("DCF：FCFF（股票薪酬視為費用、不加回）以 WACC 折現到評價日（期中），每股價值以 ke 推到目標時點；評價股數含未歸屬 RSU（扣預期沒收）與選擇權庫藏股法，2029 票據預設視為債務。"
-           "Comparable：同業 Forward 倍數（Analogy，分母期間資料商未載明）× 本模型目標時點 NTM 營收與 non-GAAP EPS，兩個倍數腿以 w_pe 加權；相對倍數調整 rel_m 預設 1.00（缺同業成長與利潤率同口徑資料，不調整）。"
+           "Comparable：同業 Forward 倍數（Analogy，分母期間資料商未載明）× 本模型目標時點 NTM 營收與 non-GAAP EPS，兩個倍數腿以 w_pe 加權；相對倍數 rel_m 取近 20 財季本公司 ÷ 同業中位的 PS 與 PSG 相對值幾何平均（Derived）。"
            "五級評等：> +50% 強力買進、> +25% 買進、≥ −25% 中立、≥ −50% 放空、其餘強力放空；先看收支關卡。")
 VR = {}
 r = 4
 V.cell(r, 1, "0.3 結論").font = BOLD; r += 1
 hdr(V, r, ["項目", "數值", "對照", "對照", "說明"]); r += 1
-for k in ("tpdcf", "tpcomp", "tp", "px", "cons", "up", "upc", "tier", "valrate", "gate_chk", "gate_in", "rec", "scen_t", "scen_up", "gap_hint"):
+for k in ("tpdcf", "psv_s", "tpdcf_s", "tpcomp", "tp", "px", "cons", "up", "upc", "tier", "valrate", "gate_chk", "gate_in", "rec", "scen_t", "scen_up", "gap_hint"):
     VR[k] = r; r += 1
 r += 1
 V.cell(r, 1, "0.2 折現率（CAPM；Blume β；稅後債務成本）").font = BOLD; r += 1
@@ -139,7 +139,8 @@ for s in "ABC":
     vset(f"B{VR['gate_' + s] if s != 'B' else VR['fcf_gate']}".replace("BB", "B") if False else (f"B{VR['gate_' + s]}" if s != "B" else f"B{VR['fcf_gate']}"), f"=SUM(CF!H{C_[s]['fcf']}:L{C_[s]['fcf']})", "#,##0.0")
     vset(f"{c}{VR['ai_net']}", f"=Thesis!N{T[s]['net']}", "#,##0.0")
 W3 = lambda row: f"tp_wA*B{row}+tp_wB*C{row}+tp_wC*D{row}"
-vset(f"B{VR['tpdcf']}", "=" + W3(VR["dcf12"])); vset(f"B{VR['tpcomp']}", "=" + W3(VR["comp"]))
+vset(f"B{VR['tpdcf']}", "=" + W3(VR["dcf12"])); vset(f"B{VR['tpdcf_s']}", "=" + W3(VR["dcf12_s"]))
+vset(f"B{VR['psv_s']}", "=" + "+".join(f"tp_w{s}*MAX(0,({c}{VR['ev_s']}+{c}{VR['nc']})/{c}{VR['shv']})" for s, c in (("A", "B"), ("B", "C"), ("C", "D")))); vset(f"B{VR['tpcomp']}", "=" + W3(VR["comp"]))
 vset(f"B{VR['tp']}", f"=w_dcf*B{VR['tpdcf']}+(1-w_dcf)*B{VR['tpcomp']}"); vset(f"B{VR['px']}", "=px")
 vset(f"B{VR['cons']}", "=cons_tp", "#,##0.00")
 vset(f"B{VR['up']}", f"=B{VR['tp']}/B{VR['px']}-1", "0.0%"); vset(f"B{VR['upc']}", f"=B{VR['tpcomp']}/B{VR['px']}-1", "0.0%")
@@ -172,7 +173,9 @@ rr = VR["p_ddog"]; vset(f"B{rr}", "=pm_ps_ddog", "0.00"); vset(f"C{rr}", "=pm_pe
 vset(f"B{VR['o_rf']}", "=rf_date", "yyyy-mm-dd"); V[f"C{VR['o_rf']}"] = f'=IF(NETWORKDAYS(B{VR["o_rf"]},px_date)-1>2,"逾期","正常")'
 vset(f"B{VR['o_cons']}", "=cons_date", "yyyy-mm-dd"); V[f"C{VR['o_cons']}"] = f'=IF(NETWORKDAYS(B{VR["o_cons"]},px_date)-1>2,"逾期","正常")'
 # 標籤與說明
-NOTES = {"tpdcf": ("DCF 目標價（情境加權）", "三情境 DCF 每股價值推到目標時點，依情境權重加權；股票薪酬視為費用"),
+NOTES = {"psv_s": ("DCF（股票薪酬加回）每股價值（情境加權，評價日；只作對照）", "FCFF 與終值 NOPAT 加回全額股票薪酬；不進加權目標價（工作單 G5 第 3 條）"),
+         "tpdcf_s": ("DCF（股票薪酬加回）目標價（情境加權；只作對照）", "每股價值以 ke 推到目標時點；不進加權目標價、不影響評等"),
+         "tpdcf": ("DCF 目標價（情境加權）", "三情境 DCF 每股價值推到目標時點，依情境權重加權；股票薪酬視為費用"),
          "tpcomp": ("Comparable 目標價（同業 Forward 倍數，情境加權）", "同業 Forward P/S 與 P/E 中位數（Analogy）× 本模型目標時點 NTM 營收與 non-GAAP EPS"),
          "tp": ("加權目標價（DCF 與 Comparable 加權）", "DCF 與 Comparable 依 w_dcf 加權；投資建議依此判定"),
          "px": ("現價（2026-11-13 收盤）", "兩來源前收價相符；財報後（2026-11-04）單日大跌"),

@@ -19,11 +19,13 @@ for k, r in IR.items():
             lab = ws.cell(r, 2).value
             if k == "ptok" and side == "高": lab += "（上界：只動成本一邊，售價不同步）"
             if k == "ptok" and side == "低": lab += "（模型組合路由到便宜模型）"
+            if k == "cm_adj": lab += "（sens.%s）" % ("low" if side == "低" else "high")
             if k == "asr_sh": lab += "（ASR 最終交割列入敏感度）"
             cases.append((k, side, v, e, lab))
 COMBO = [("ptok,p0", "高", {"ptok": "F", "p0": "F"}, "價格與成本聯動：token 價格與每任務單價同取高端（同步變動）"),
          ("ptok,p0", "低", {"ptok": "D", "p0": "D"}, "價格與成本聯動：token 價格與每任務單價同取低端（同步變動）"),
-         ("cm_adj", "基準", {}, "相對倍數係數＝1（基準，原則第 47 條）")]
+         ("cm_adj", "PS", {"cm_adj": ("in", "rel_ps")}, "相對倍數僅 PS 讀數（ps_only）"),
+         ("cm_adj", "PSG", {"cm_adj": ("in", "rel_psg")}, "相對倍數僅 PSG 讀數（psg_only）")]
 WD = tempfile.mkdtemp(prefix="sfsens_", dir="/home/claude/scratch/salesforce")
 
 
@@ -43,7 +45,7 @@ def run(i):
         d = os.path.join(WD, f"c{i}"); os.makedirs(d)
         wb = openpyxl.load_workbook(RAW)
         for kk, col in cmap.items():
-            wb["In"].cell(IR[kk], 5).value = wb["In"].cell(IR[kk], 4 if col == "D" else 6).value
+            wb["In"].cell(IR[kk], 5).value = wb["In"].cell(IR[col[1]], 5).value if isinstance(col, tuple) else wb["In"].cell(IR[kk], 4 if col == "D" else 6).value
         p = os.path.join(d, "case.xlsx"); wb.save(p)
         tp, dcf, rec = recalc(p, os.path.join(WD, f"lo{i % JOBS}"))
         return {"key": k, "side": side, "label": lab, "setting": lab, "tp": tp, "dcf": dcf, "rec": rec}

@@ -23,6 +23,7 @@ SRC = {
     "SAAS": ("https://www.saastr.com/hubspot-switching-ai-pricing-from-per-use-to-per-resolution/", "SaaStr：HubSpot 改以每次解決計價（第二來源）"),
     "CR": ("https://chartrow.com/quote/hubs", "ChartRow HUBS 報價頁"),
     "QQ": ("https://www.quiverquant.com/stock/HUBS/historical-prices/", "QuiverQuant HUBS 歷史收盤價"),
+    "FRED": ("https://fred.stlouisfed.org/series/DGS10", "FRED DGS10（美國 10 年期公債固定到期殖利率；工作單 G5.2 統一值，2026-11-12 收盤 5.10%）"),
     "TE": ("https://tradingeconomics.com/united-states/government-bond-yield/news/598729", "Trading Economics 美國 10 年期公債殖利率新聞頁（含 2026-11-13 更新）"),
     "SA": ("https://stockanalysis.com/stocks/hubs/statistics/", "StockAnalysis HUBS statistics（2026-10-26）"),
     "MB": ("https://www.marketbeat.com/instant-alerts/hubspot-nysehubs-releases-quarterly-earnings-results-beats-estimates-by-024-eps-2026-08-05/", "MarketBeat HUBS 頁（Q2 後，無明確日期）"),
@@ -200,7 +201,7 @@ f("HUBS 收盤價（對照）", 217.25, "US$", "2026-11-13", "收盤；第二來
 f("HUBS 收盤價", 215.84, "US$", "2026-11-12", "收盤", "QQ", "歷史收盤價表", V)
 f("HUBS 收盤價", 216.64, "US$", "2026-11-04", "法說當日收盤", "QQ", "歷史收盤價表", V)
 f("HUBS 收盤價", 204.96, "US$", "2026-11-05", "財報後首日收盤", "QQ", "歷史收盤價表", V)
-f("美國 10 年期公債殖利率", 0.0515, "比率", "2026-11-13", "新聞頁載「約 5.15–5.16%」；只取得一個來源", "TE", "新聞串 2026-11-13 條目", V)
+f("美國 10 年期公債殖利率", 0.0510, "比率", "2026-11-12", "工作單 G5.2 統一值（FRED DGS10；現價日前 1 個交易日）；v0.1 曾用 Trading Economics 2026-11-13 約 5.15%", "FRED", "DGS10 2026-11-12", V)
 f("HUBS β（5 年）", 1.24, "無單位", "2026-10-26", "StockAnalysis；未載報酬頻率", "SA", "Beta (5Y)", A, INC_MKT)
 f("HUBS β", 1.19, "無單位", "Q2 後（無日期）", "MarketBeat", "MB", "Beta", A, INC_MKT)
 f("同業前瞻 P/E：Salesforce", 13.6, "倍", "2026-11-13", "ChartRow Forward P/E（口徑與日期以頁面為準，疑為非 GAAP 一年期前瞻；未核）", "CR", "https://chartrow.com/quote/crm", A, INC_MKT)

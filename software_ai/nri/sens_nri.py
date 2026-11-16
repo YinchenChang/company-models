@@ -26,13 +26,16 @@ for k, r in IR.items():
     for side, v in (("低", d), ("高", f)):
         if isinstance(v, (int, float)) and not isinstance(v, bool) and isinstance(e, (int, float)) and abs(v - e) > 1e-12:
             lab = Ib.cell(r, 2).value
+            if k == "rm_adj": lab = "相對倍數 sens." + ("low" if side == "低" else "high") + "（relmult_hist）"
             if k in ("tk_tier", "inf_mult") and side == "高": lab += "（上界：只動成本一邊，價格保留率不同步）"
             if k == "tk_tier" and side == "低": lab += "（模型組合路由到便宜模型：只動成本一邊）"
             cases.append(([(k, v)], side, k, lab, f"{k}＝{v:g}（基準 {e:g}）"))
 rets = {x: Ib.cell(IR["ret_" + x], 5).value for x in "ABC"}
 cases.append(([("tk_tier", 3), ("inf_mult", 50)] + [("ret_" + x, min(1.0, rets[x] + 0.05)) for x in "ABC"], "高", "tk_tier,inf_mult,ret_A,ret_B,ret_C", "價格與成本聯動：推論成本取高端（最高層級、額外倍數 50）且成本轉嫁客戶（價格保留率各情境 +5 個百分點；同步變動）", "聯動高"))
 cases.append(([("tk_tier", 1), ("inf_mult", 1)] + [("ret_" + x, rets[x] - 0.05) for x in "ABC"], "低", "tk_tier,inf_mult,ret_A,ret_B,ret_C", "模型組合路由到便宜模型：推論成本取低端（最低層級、額外倍數 1），客戶同步要求分享（價格保留率各情境 −5 個百分點）", "聯動低"))
-cases.append(([("rm_adj", Ib.cell(IR["rm_adj"], 5).value)], "基準", "rm_adj", "相對倍數係數＝1（基準，原則第 47 條）", "rm_adj＝1"))
+_g = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "relmult_hist", "out", "nri.json"), encoding="utf-8"))["groups"]["all"]["sens"]
+cases.append(([("rm_adj", _g["ps_only"])], "基準", "rm_adj", "相對倍數 ps_only（只用 PS 讀數；relmult_hist）", f"rm_adj＝{_g['ps_only']:.4g}（ps_only）"))
+cases.append(([("rm_adj", _g["psg_only"])], "基準", "rm_adj", "相對倍數 psg_only（只用 PSG 讀數；relmult_hist）", f"rm_adj＝{_g['psg_only']:.4g}（psg_only）"))
 def run(i):
     edits, side, key, lab, setting = cases[i]
     d = os.path.join(WD, f"c{i}"); os.makedirs(d)

@@ -245,7 +245,10 @@ EBITDA（第二來源）,2953,十億韓元,FY2025,MarketScreener；與公司口�
 資本支出（第二來源）,1235,十億韓元,FY2025,MarketScreener；公司未於簡報揭露年度資本支出（未找到）,https://www.marketscreener.com/quote/stock/NAVER-CORPORATION-6491497/finances/,2026-11-16,Derived,
 β（StockAnalysis）,1.19,倍,2026-11,5 年月,https://stockanalysis.com/quote/krx/035420/statistics/,2026-11-16,Verified,
 β（Yahoo Finance）,1.2,倍,2026-11,5 年月,https://finance.yahoo.com/quote/035420.KS/,2026-11-16,Verified,
-無風險利率（韓國 10 年期國債）,0.04,比例,2026-11-16,殖利率,https://tradingeconomics.com/south-korea/government-bond-yield,2026-11-16,Verified,
+無風險利率（韓國 10 年期國債）,0.0399,比例,2026-11-13,殖利率收盤；Trading Economics 頁載 2026-11-16 為 3.986%、單日變動 −0.001，11-13 約 3.987%（頁面無 11-12、11-13 逐日值）,https://tradingeconomics.com/south-korea/government-bond-yield,2026-11-16,Verified,
+歷史相對倍數基準（PS 與 PSG 兩讀數幾何平均）,0.5617479268406912,倍,2021-09 至 2026-06,本公司 ÷ 同業中位（GOOGL、META、PINS、Kakao、LY）；規格 docs/plan/歷史相對倍數_PS與PSG.md,software_ai/data/relmult_hist/out/naver.json（geo_base；base_source＝PS 與 PSG 兩讀數幾何平均）,2026-11-16,Derived,
+歷史相對倍數：PS 讀數（歷史相對中位）,0.6807807444453408,倍,2021-09 至 2026-06,20 季；最低 0.36、最高 1.17,同上（ps_reading）,2026-11-16,Derived,
+歷史相對倍數：PSG 讀數（歷史相對中位 x 成長比）,0.4635277009294886,倍,2021-09 至 2026-06,16 季；成長比 0.722（TTM，本公司 14.6%、同業中位 20.2%）,同上（psg_reading）,2026-11-16,Derived,
 AI 對 1Q26 廣告成長的貢獻（公司稱）,0.5,占比（超過）,1Q26,公司稱 AI 貢獻廣告成長逾 50%,https://www.navercorp.com/api/article/download/896dc2b0-33ea-4dbf-a354-c9608c6d989b,2026-11-16,Interested-party,管理層向市場說明 AI 成效
 AI 對 2Q26 廣告成長的貢獻（公司稱）,0.6,占比（超過）,2Q26,公司稱 AI 貢獻廣告成長逾 60%,https://www.navercorp.com/api/article/download/07b3b329-bbbe-481c-ac47-b3d0d7fea855,2026-11-16,Interested-party,管理層向市場說明 AI 成效
 AI Briefing 廣告點擊率提升（公司稱）,0.3,比例,2026-07-21 起,AI Briefing 廣告上線後公司稱 CTR +30%、轉換 3 倍（非隨機對照）,https://www.navercorp.com/api/article/download/07b3b329-bbbe-481c-ac47-b3d0d7fea855,2026-11-16,Interested-party,管理層向市場說明 AI 成效

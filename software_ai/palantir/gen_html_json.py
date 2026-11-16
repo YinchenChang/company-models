@@ -51,16 +51,18 @@ val_blocks = [
     {"type": "bars", "title": "目標價與現價（美元；豎線＝現價）", "fmt": "n2",
      "items": [{"label": f"@Val!A{V_[k]}", "value": f"@Val!B{V_[k]}", "series": sr} for k, sr in (("tpdcf", 1), ("tpcomp", 2), ("tp", 0), ("cons", 1))],
      "ref": {"label": f"@Val!A{V_['px']}", "value": f"@Val!B{V_['px']}"}},
-    {"type": "note", "parts": [f"@Val!A1"]}, {"type": "note", "parts": [f"@README!A{RDR['dt1']}"]}, {"type": "note", "parts": [f"@README!A{RDR['dt2']}"]},
+    {"type": "note", "parts": [f"@Val!A1"]}, {"type": "note", "parts": [f"@README!A{RDR['dt1']}"]}, {"type": "note", "parts": [f"@README!A{RDR['rel1']}"]}, {"type": "note", "parts": [f"@README!A{RDR['rel2']}"]}, {"type": "note", "parts": [f"@README!A{RDR['dt2']}"]},
     {"type": "table", "caption": "結論主要項目", "head": ["項目", "數值", "對照", "對照"],
      "rows": [[f"@Val!A{V_[k]}", f"@Val!B{V_[k]}|{f}", "", ""] for k, f in (("px", "n2"), ("tpdcf", "n2"), ("tpcomp", "n2"), ("tp", "n2"), ("up", "sp1"), ("est", ""), ("gate", "n1"), ("rec", ""))]
               + [[f"@Val!A{V_['bdist']}", f"@Val!B{V_['bdist']}|n1", f"@Val!C{V_['bdist']}|n2", f"@Val!D{V_['bdist']}|n2"]]},
     {"type": "table", "caption": "上檔空間歸因", "head": ["項目", "貢獻"], "rows": [[f"@Val!A{V_[k]}", f"@Val!B{V_[k]}|sp1"] for k in ("att_dcf", "att_cmp", "att_adj")]},
     {"type": "kv", "items": [[f"@Val!A{V_[k]}", f"@Val!B{V_[k]}|{f}"] for k, f in (("ke", "p2"), ("kdat", "p2"), ("wacc", "p2"), ("ronic", "p2"), ("g", "p2"))]},
     {"type": "table", "caption": "DCF 彙總（三情境）", "head": ["項目", "情境 A", "情境 B", "情境 C"], "rows": val_rows(["d_pv", "d_pvtv", "d_ev", "d_nc", "d_eq", "d_ps", "d_pstp", "d_tvsh"], fmts={"d_tvsh": "p1"})},
+    {"type": "table", "caption": "DCF（股票薪酬加回）對照讀數（只作對照，不進加權目標價）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
+     "rows": val_rows(["d_pstp", "d_pstp_sbc"]) + [[f"@Val!A{V_['tpdcf_sbc']}", f"@Val!B{V_['tpdcf_sbc']}|n2", "", ""], [f"@Val!A{V_['updcf_sbc']}", f"@Val!B{V_['updcf_sbc']}|sp1", "", ""]]},
     {"type": "table", "caption": "Comparable：同業 EV／營收（TTM）與成長調整（三情境）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
      "rows": [[f"@Val!A{V_['m_c']}", f"@Val!B{V_['m_c']}|n2", "", ""], [f"@Val!A{V_['m_g']}", f"@Val!B{V_['m_g']}|n2", "", ""], [f"@Val!A{V_['pg_c']}", f"@Val!B{V_['pg_c']}|p1", "", ""], [f"@Val!A{V_['pg_g']}", f"@Val!B{V_['pg_g']}|p1", "", ""]]
-             + val_rows(["sg_c", "sg_g"], fmts={"sg_c": "p1", "sg_g": "p1"}) + val_rows(["rr_c", "rc_c", "rr_g", "rc_g", "ma_c", "ma_g", "ttm_c", "ttm_g", "ev_t", "nc_t", "ps_c", "ps_u", "imp_m"], fmts={"ttm_c": "n0", "ttm_g": "n0", "ev_t": "n0", "nc_t": "n0"})
+             + val_rows(["sg_c", "sg_g"], fmts={"sg_c": "p1", "sg_g": "p1"}) + val_rows(["rl_c", "rl_g"]) + val_rows(["rr_c", "rc_c", "rr_g", "rc_g", "ma_c", "ma_g", "ttm_c", "ttm_g", "ev_t", "nc_t", "ps_c", "ps_u", "imp_m"], fmts={"ttm_c": "n0", "ttm_g": "n0", "ev_t": "n0", "nc_t": "n0"})
              + val_rows(["clamp"], fmts={"clamp": ""})},
     {"type": "table", "collapse": True, "summary": "展開：評價日稀釋股數與折現率組成", "head": ["項目", "數值"],
      "rows": [[f"@Val!A{V_[k]}", f"@Val!B{V_[k]}|{f}"] for k, f in (("sh_basic", "n1"), ("sh_rsu", "n1"), ("sh_opt", "n1"), ("sh_sar", "n1"), ("sh_dil", "n1"), ("nc0", "n1"), ("rf", "p2"), ("beta", "n3"), ("erp", "p2"), ("mcap", "n0"), ("we", "p1"))]}]
@@ -135,7 +137,7 @@ S.append({"id": "recon", "title": "對帳：共識、公司指引、落差分解
     {"type": "table", "caption": f"@Recon!A{RC['s2']}", "head": [f"@Recon!{c}{RC['h2']}" for c in "ABCDEF"],
      "rowgen": {"sheet": "Recon", "rows": f"{RC['q4']}-{RC['usc']}", "cols": list("ABCDEF"), "fmts": ["", "n1", "n1", "n1", "", ""]}},
     {"type": "table", "caption": f"@Recon!A{RC['s3']}", "head": [f"@Recon!{c}{RC['h3']}" for c in "ABCDE"],
-     "rowgen": {"sheet": "Recon", "rows": f"{RC['d_ps']}-{RC['d_chk']}", "cols": list("ABCDE"), "fmts": ["", "n2", "n2", "n2", ""]}},
+     "rowgen": {"sheet": "Recon", "rows": f"{RC['d_ps']}-{RC['d_sbcw']}", "cols": list("ABCDE"), "fmts": ["", "n2", "n2", "n2", ""]}},
     {"type": "table", "caption": f"@Recon!A{RC['s4']}", "head": [f"@Recon!{c}{RC['h4']}" for c in "ABCDE"],
      "rowgen": {"sheet": "Recon", "rows": f"{RC['k_wacc']}-{RC['k_chk']}", "cols": list("ABCDE"), "fmts": ["", "n3", "n3", "n2", ""], "row_fmt": {str(RC["k_wl"]): {"B": "p1", "C": "p1"}, str(RC["k_wacc"]): {"B": "p2", "C": "p2"}}}},
     {"type": "table", "caption": f"@Recon!A{RC['s5']}", "collapse": True, "summary": "展開：市場資料日期與逾期標示（逐筆）", "head": [f"@Recon!{c}{RC['h5']}" for c in "ABCDE"],

@@ -1,8 +1,8 @@
 #!/bin/bash
-# Palantir 個股模型 v0.1：一次跑完
+# Palantir 個股模型 v0.2：一次跑完
 #   事實總帳 → Tokenomics 快照 --check → （反解）→ （敏感度）→ 建置 → LibreOffice 重算 → 核對 → In 頁版面 → 敏感度覆蓋 → 分部檢查 → HTML → 治理、展示層、評等關卡。
-#   bash software_ai/palantir/make_v01.sh                  # 沿用已提交的敏感度 data/sens_v01_<VDATE>.json 與反解 data/reverse_solve.json
-#   SENS=1 REV=1 bash software_ai/palantir/make_v01.sh     # 重跑敏感度（約 70 次整本重算；JOBS＝平行數，預設 3）與反解（約 36 次）
+#   bash software_ai/palantir/make_v02.sh                  # 沿用已提交的敏感度 data/sens_v02_<VDATE>.json 與反解 data/reverse_solve.json
+#   SENS=1 REV=1 bash software_ai/palantir/make_v02.sh     # 重跑敏感度（約 75 次整本重算；JOBS＝平行數，預設 3）與反解（約 36 次）
 #   TOKENOMICS_DIR=<Tokenomics clone>                      # 有設定時 --check 快照與 Tokenomics 原檔一致
 # 需要：python3＋openpyxl、LibreOffice（soffice）、bs4。
 set -euo pipefail
@@ -10,7 +10,7 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$ROOT"
 P=software_ai/palantir
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-VER="${VER:-0.1}"; VDATE="${VDATE:-20261116}"
+VER="${VER:-0.2}"; VDATE="${VDATE:-20261117}"
 OUTNAME="${VDATE}_Palantir個股模型_v${VER}.xlsx"
 SJ="$P/data/sens_v${VER//./}_${VDATE}.json"
 python3 $P/data/facts_palantir.py
