@@ -193,7 +193,7 @@ inp("beta", "β（兩來源 1.19、1.20 平均後 Blume 調整）", "倍", 0.9, 
 inp("erp", "股權風險溢酬", "%", 0.04, 0.05, 0.06, "Assumed", "DCF 標準規格預設 5%", "", "0.0%")
 inp("kd_sp", "負債成本相對無風險利率的利差", "%", 0.003, 0.006, 0.015, "Assumed", "未逐檔查證公司債利率", "", "0.0%")
 inp("g_tv", "永續成長率", "%", 0.02, 0.03, 0.04, "Assumed", "DCF 標準規格預設 3%", "", "0.0%")
-inp("rel_adj", "同業倍數相對調整 rel_mult（本公司 ÷ 同業；歷史 PS 與 PSG 兩讀數幾何平均）", "倍", RMG["sens"]["low"], RMG["geo_base"], RMG["sens"]["high"], "Derived", "software_ai/data/relmult_hist/out/naver.json（data/relmult_naver.json）：geo_base；" + RMG["base_source"] + "；規格 docs/plan/歷史相對倍數_PS與PSG.md", "G5 第 1 條：低／高＝sens.low／sens.high；Sens 另列只用 PS、只用 PSG 兩案。Comparable 用前瞻本益比，以 PS／PSG 相對值近似套用", "0.000")
+inp("rel_adj", "同業倍數相對調整 相對倍數（本公司 ÷ 同業；歷史 PS 與 PSG 兩讀數幾何平均）", "倍", RMG["sens"]["low"], RMG["geo_base"], RMG["sens"]["high"], "Derived", "software_ai/data/relmult_hist/out/naver.json（data/relmult_naver.json）：geo_base；" + RMG["base_source"] + "；規格 docs/plan/歷史相對倍數_PS與PSG.md", "G5 第 1 條：低／高＝sens.low／sens.high；Sens 另列只用 PS、只用 PSG 兩案。Comparable 用前瞻本益比，以 PS／PSG 相對值近似套用", "0.000")
 inp("sbc_pct", "股票薪酬占營收（只作對照，不進模型）", "%", 0.0, 0.0, 0.03, "Assumed", "未找到：股票薪酬金額未取得；0＝DCF（股票薪酬加回）讀數與標準 DCF 相同", "只作對照，不進模型；Recon 並列加回讀數（G4 第 2 條）", "0.0%")
 inp("w_dcf", "加權目標價：DCF 權重", "%", 0.3, 0.5, 0.7, "Assumed", "預設 DCF 50%＋Comparable 50%（個股模型原則第 4 節）", "", "0%")
 inp("tpw_A", "情境權重 A（樂觀）", "%", None, 0.25, None, "Assumed", "DCF 標準規格第 3 節預設 25／50／25", "", "0%")
@@ -764,7 +764,7 @@ VR["peer_end"] = r - 1
 r += 1
 put(V, f"A{r}", "本公司現行倍數 vs 同業（G2 第 6 條，第 47 條）", BOLD); r += 1
 for k, lab in (("own_pe", "本公司現行前瞻本益比（現價 ÷ 情境 B 的 NTM EPS，分母期間＝NTM）"), ("own_ratio", "本公司現行倍數 ÷ 同業中位數"), ("own_rerate", "隱含重估（Comparable 目標價 ÷ 現價 − 1）"),
-               ("rm_geo", "歷史相對倍數基準 rel_mult（PS 與 PSG 兩讀數幾何平均；Derived，relmult_hist）"), ("rm_ps", "　PS 讀數（歷史相對中位）"), ("rm_psg", "　PSG 讀數（歷史相對中位 x 成長比）"),
+               ("rm_geo", "歷史相對倍數基準 相對倍數（PS 與 PSG 兩讀數幾何平均；Derived，歷史相對倍數資料庫）"), ("rm_ps", "　PS 讀數（歷史相對中位）"), ("rm_psg", "　PSG 讀數（歷史相對中位 x 成長比）"),
                ("rm_g", "　成長比（本公司 ÷ 同業中位的 TTM 營收年增）"), ("rm_cg", "　本公司 TTM 營收年增（2026-06-30）"), ("rm_pg", "　同業中位 TTM 營收年增"), ("rm_div", "　兩讀數差異（相對）"),
                ("comp_alt", "診斷對照：Comparable 目標價（相對倍數取現行 ÷ 同業中位數；不進目標價）"), ("tp_alt", "診斷對照：加權目標價（同上；不進目標價）")):
     VR[k] = r; put(V, f"A{r}", lab); r += 1
@@ -1107,7 +1107,7 @@ for i_, rowv in enumerate(MAP):
         put(RD, f"{L(j+1)}{20+i_}", v)
 put(RD, "A28", "市場資料日期、失效條件與風險登錄", BOLD)
 put(RD, "A29", "市場資料日期：現價 2026-11-13 收盤（KRX，最近交易日）；韓國 10 年期國債 3.99%（2026-11-13，Trading Economics 回推）；同業本益比 GOOGL、META 2026-11-13、PINS 2026-11-06、LY 2026-10-13、Kakao 2026-09-09；共識 2026-11-11（財報前）。")
-put(RD, "A30", f'="合理性關卡診斷（G3 第 3 條）：DCF 目標價 "&TEXT({Vv("tpdcf")},"#,##0")&" 為現價的 "&TEXT({Vv("tpdcf")}/{Vv("px")},"0.00")&" 倍（界線 0.25 至 4 倍："&IF(OR({Vv("tpdcf")}/{Vv("px")}<0.25,{Vv("tpdcf")}/{Vv("px")}>4),"觸發","未觸發")&"）；EV 為負："&IF({Vv("ev","C")}<0,"是","否")&"；評等 "&{Vv("val_rating")}&"（強力評等："&IF(OR({Vv("val_rating")}="強力買進",{Vv("val_rating")}="強力放空"),"是","否")&"）；FY2027 營收、營業利益對財報前共識 "&TEXT(Recon!E{RCR["rev27"]},"+0.0%;-0.0%")&"、"&TEXT(Recon!E{RCR["oi27"]},"+0.0%;-0.0%")&"（公司無年度指引，改對共識，界線 10%）。診斷：評等偏多的來源是 Comparable（"&TEXT({Vv("tpcomp")},"#,##0")&"），因同業中位數前瞻本益比 "&TEXT({Vv("pe_all")},"0.0")&" 倍而本公司現行只有 "&TEXT({Vv("own_pe")},"0.0")&" 倍（"&TEXT({Vv("own_ratio")},"0.00")&" 倍），相對倍數 rel_mult 取歷史 PS 與 PSG 兩讀數幾何平均 "&TEXT({Vv("rm_geo")},"0.00")&"（G4）；若改取現行比值，Comparable 為 "&TEXT({Vv("comp_alt")},"#,##0")&"、加權目標價 "&TEXT({Vv("tp_alt")},"#,##0")&"。DCF 單獨為現價的 "&TEXT({Vv("tpdcf")}/{Vv("px")}-1,"+0%;-0%")&"。結論：不是建模錯誤（恆等式與分部對帳為零），是韓國折價是否維持歷史水準的經濟判斷，評等依賴它。"')
+put(RD, "A30", f'="合理性關卡診斷（G3 第 3 條）：DCF 目標價 "&TEXT({Vv("tpdcf")},"#,##0")&" 為現價的 "&TEXT({Vv("tpdcf")}/{Vv("px")},"0.00")&" 倍（界線 0.25 至 4 倍："&IF(OR({Vv("tpdcf")}/{Vv("px")}<0.25,{Vv("tpdcf")}/{Vv("px")}>4),"觸發","未觸發")&"）；EV 為負："&IF({Vv("ev","C")}<0,"是","否")&"；評等 "&{Vv("val_rating")}&"（強力評等："&IF(OR({Vv("val_rating")}="強力買進",{Vv("val_rating")}="強力放空"),"是","否")&"）；FY2027 營收、營業利益對財報前共識 "&TEXT(Recon!E{RCR["rev27"]},"+0.0%;-0.0%")&"、"&TEXT(Recon!E{RCR["oi27"]},"+0.0%;-0.0%")&"（公司無年度指引，改對共識，界線 10%）。診斷：Comparable（"&TEXT({Vv("tpcomp")},"#,##0")&"）與 DCF 的落差來源是倍數：同業中位數前瞻本益比 "&TEXT({Vv("pe_all")},"0.0")&" 倍而本公司現行只有 "&TEXT({Vv("own_pe")},"0.0")&" 倍（"&TEXT({Vv("own_ratio")},"0.00")&" 倍），相對倍數 相對倍數 取歷史 PS 與 PSG 兩讀數幾何平均 "&TEXT({Vv("rm_geo")},"0.00")&"（G4）；若改取現行比值，Comparable 為 "&TEXT({Vv("comp_alt")},"#,##0")&"、加權目標價 "&TEXT({Vv("tp_alt")},"#,##0")&"。DCF 單獨為現價的 "&TEXT({Vv("tpdcf")}/{Vv("px")}-1,"+0%;-0%")&"。結論：不是建模錯誤（恆等式與分部對帳為零），是韓國折價是否維持歷史水準的經濟判斷，Comparable 與評等依賴它。"')
 put(RD, "A31", "(1) Naver Platform 利益率續降至單季 24% 以下而廣告成長放緩：基準的持平假設失效。(2) AI Factory 實際上線容量、每 MW 營收與 Naver 保證使用費的會計處理公布後與 Assumed 顯著不同。(3) NAVER Financial 與 Dunamu 合併條件（換股比例、會計）公布：Financial Platform 價值與權益法投資需重估。")
 put(RD, "A32", "風險登錄", BOLD)
 for j, h in enumerate(["風險", "是否建模", "理由", "觀察指標"]):
@@ -1120,7 +1120,7 @@ RISKS = [("外部 AI 取代搜尋入口", "是（情境外部分流）", "Naver 
 for i_, rowv in enumerate(RISKS):
     for j, v in enumerate(rowv):
         put(RD, f"{L(j+1)}{34+i_}", v)
-put(RD, "A41", f'="歷史相對倍數（G4，PS 與 PSG）：rel_mult 基準＝兩讀數幾何平均 "&TEXT({Vv("rm_geo")},"0.00")&"（PS 讀數 "&TEXT({Vv("rm_ps")},"0.00")&"、PSG 讀數 "&TEXT({Vv("rm_psg")},"0.00")&"），Comparable 用前瞻本益比，以 PS／PSG 相對值近似套用。兩讀數差 "&TEXT({Vv("rm_div")},"0%")&IF({Vv("rm_div")}>0.3,"，大於 30%：原因是本公司 TTM 營收年增 "&TEXT({Vv("rm_cg")},"0.0%")&" 低於同業中位 "&TEXT({Vv("rm_pg")},"0.0%")&"（成長比 "&TEXT({Vv("rm_g")},"0.00")&"），PSG 把歷史每單位成長的溢價按較低成長比折算，故低於 PS 讀數","，未超過 30%")&"。"')
+put(RD, "A41", f'="歷史相對倍數（G4，PS 與 PSG）：相對倍數 基準＝兩讀數幾何平均 "&TEXT({Vv("rm_geo")},"0.00")&"（PS 讀數 "&TEXT({Vv("rm_ps")},"0.00")&"、PSG 讀數 "&TEXT({Vv("rm_psg")},"0.00")&"），Comparable 用前瞻本益比，以 PS／PSG 相對值近似套用。兩讀數差 "&TEXT({Vv("rm_div")},"0%")&IF({Vv("rm_div")}>0.3,"，大於 30%：原因是本公司 TTM 營收年增 "&TEXT({Vv("rm_cg")},"0.0%")&" 低於同業中位 "&TEXT({Vv("rm_pg")},"0.0%")&"（成長比 "&TEXT({Vv("rm_g")},"0.00")&"），PSG 把歷史每單位成長的溢價按較低成長比折算，故低於 PS 讀數","，未超過 30%")&"。"')
 put(RD, "A42", f'="DCF（股票薪酬加回）對照：每股價值 "&TEXT(Recon!C{SB["shv"]},"#,##0")&" 韓元（情境 B），目標價 "&TEXT(Recon!B{RCR["sbc_tp"]},"#,##0")&" 韓元（情境加權），標準 DCF "&TEXT({Vv("tpdcf")},"#,##0")&"；股票薪酬金額未找到，占營收比 Assumed "&TEXT({I("sbc_pct")},"0.0%")&"，故兩者相同。只作對照，不進加權目標價。"')
 put(RD, "A40", "工作表：README／In／Q／Hist／PL／DCF／CF／Val／RevDCF／Recon／Sens／Sources。成品 dist/<日期>_Naver個股模型_v0.2.xlsx 與 .html。")
 for rr_ in list(range(1, 18)) + [30, 41, 42]:
