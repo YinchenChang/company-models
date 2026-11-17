@@ -37,6 +37,12 @@ a{color:inherit}
 
 /* masthead */
 .mast{background:var(--navy);color:var(--navy-ink)}
+/* v0.6.54 站際切換（與 AI 軟體地圖 software_ai/ 同一標記與樣式）；不可用 .tab class，否則會被視角分頁點擊處理攔截 */
+.site-switch{display:flex;gap:0;margin:0 0 14px;border:1px solid #ffffff40;width:max-content;max-width:100%}
+.site-switch a,.site-switch span{padding:5px 16px;font-size:12.5px;letter-spacing:.06em;color:var(--navy-muted);text-decoration:none;border-right:1px solid #ffffff2e;white-space:nowrap}
+.site-switch>*:last-child{border-right:0}
+.site-switch a:hover{color:var(--navy-ink)}
+.site-switch [aria-current="page"]{background:var(--navy-ink);color:var(--navy);font-weight:600}
 /* 標題說明在上、版本資訊在下（2026-11-01：原右欄過寬把標題與說明擠窄） */
 .mast .wrap{padding-block:28px 22px}
 .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--navy-muted);display:flex;gap:10px;align-items:center}
@@ -262,6 +268,11 @@ footer{border-top:1px solid var(--rule);padding-block:18px 28px;color:var(--fain
 
 <header class="mast">
   <div class="wrap">
+    <nav class="site-switch" aria-label="地圖">
+      <span aria-current="page">算力</span>
+      <a href="physical/">實體 AI</a>
+      <a href="software_ai/">軟體 AI</a>
+    </nav>
     <div>
       <div class="eyebrow">算力收支 · AI 半導體 研究整合</div>
       <h1>AI 算力地圖</h1>

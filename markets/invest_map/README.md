@@ -34,20 +34,23 @@ python3 markets/invest_map/build_html.py
 - v0.6.50 起改：網頁標題與頁首、資料活頁簿檔名與 README 頁標題、本目錄程式的說明字串、`profiles/00_格式規格.md`、發布腳本的說明與 commit 訊息。
 - 不改：repo 路徑 `markets/invest_map/`、GitHub Pages 網址（https://yinchenchang.github.io/company-models/ ，既有連結不失效）；歷史報告、`dist/_待刪除/` 舊檔；各公司建檔程式（coreweave、nebius、delta 等）與模型成品裡的「AI 投資地圖」出處文字（改了會觸發整本重建，各公司下次改版時自然更新）；`wattonomics/`、`siliconomics/` 由各自工作線處理。看到舊名一律指本地圖。
 
-## 導覽入口：實體 AI 地圖（預留，尚未加連結）
+## 導覽入口：算力｜實體 AI｜軟體 AI（v0.6.54 起）
 
-實體 AI 地圖放在 `physical_ai/`（由 AI實體應用 專案提供頁面），網址預定 https://yinchenchang.github.io/company-models/physical_ai/ ；兩站之間以「算力｜實體 AI」導覽切換。**本地圖 v0.6.50 尚未加連結**（頁面還不存在），待對方頁面發布後再加。
+**固定規格**（Andy 2026-11-17 14:00：「AI算力地圖最上方缺像『AI軟體地圖』連到其他地圖的傳送門」）：頁首最上方（`<header class="mast">` 的 `.wrap` 內、`.eyebrow` 上方）放站際切換，標記與樣式和 AI 軟體地圖（`software_ai/map/template.html` 的 `.site-switch`）相同：
 
-- **導覽在哪裡**：本網站沒有獨立的站際導覽列；頁面骨架都在 `template.html`，`build_html.py` 只把資料塞進 `/*__DATA__*/null`（`build_html.py` 第 180–186 行讀範本並替換），不產生任何導覽 HTML。
-  - 頁首：`template.html` 第 258–267 行 `<header class="mast">`（第 261 行 `.eyebrow`「算力收支 · AI 半導體 研究整合」、第 262 行 `<h1>`）。
-  - 視角分頁：第 269–277 行 `<nav class="tabs" aria-label="視角">`（01–04、附），這是頁內視角切換，不是站際導覽。
-  - 分頁點擊處理：第 597–613 行（`views` 陣列與 `document.addEventListener("click", …)`；凡 `.tab` 元素都會被攔截改呼叫 `show()`）。
-- **預定加法**：在 `<header class="mast">` 的 `.wrap` 內（`<h1>` 上方，取代或併入 `.eyebrow`）加一個站際切換，例如 `<nav class="site-switch" aria-label="地圖"><a aria-current="page">算力</a>｜<a href="physical_ai/">實體 AI</a>｜<a href="software_ai/">軟體 AI</a></nav>`（「軟體 AI」連 AI軟體應用 的站內頁 `software_ai/`，與「實體 AI」用同一種標記；2026-11-17 repo 治理 PR 補記，範本尚未加導覽），樣式加在第 39–46 行 `.mast` 一帶。**不可**用 `.tab` class，也不可放進 `<nav class="tabs">`，否則會被分頁點擊處理攔截。相對路徑 `physical_ai/` 在 Pages 上指向站根下的實體 AI 地圖；本機開檔（file://）時不保證可用。
-- **對方要放的檔案與介面**：
-  - `physical_ai/index.html`：單一自足 HTML（樣式與資料內嵌，`<html lang="zh-Hant">`、`<meta charset="utf-8">`、viewport），同樣在頁首放「算力｜實體 AI」切換，「算力」連回 `../`（本地圖）。
-  - 若要附模型成品，放 `physical_ai/models/…`，不要用站根的 `models/`（本地圖 `publish_map_only.sh` 每次 `rm -rf models/` 後重建）。
-  - 發布：比照 `wattonomics/`、`siliconomics/`，在 gh-pages 上追加 commit、只動 `physical_ai/`。**注意**：本目錄 `publish_pages.sh` 以全新歷史 force 覆寫整個 gh-pages；2026-11-17 起（repo 治理 PR）發布前先從現有 gh-pages 原樣複製 `physical_ai/`、`software_ai/`、`physical/`（實體 AI 地圖 v0.1 現行位置）、`tokenomics/`，複製失敗或檔數不符即停止，全站重發不再刪掉其他專案的頁面。`publish_map_only.sh` 不受影響。
-  - 造訪計數器（`counter/`）只計本地圖；實體 AI 頁要計數須另行約定（`Code.gs` 的 `TABS` 只認本地圖分頁）。
+```
+<nav class="site-switch" aria-label="地圖">
+  <span aria-current="page">算力</span>
+  <a href="physical/">實體 AI</a>
+  <a href="software_ai/">軟體 AI</a>
+</nav>
+```
+
+- **連結目標**：「實體 AI」連 `physical/`——實體 AI 地圖 v0.1 在 gh-pages 的現行位置（2026-11-17 查 gh-pages 只有 `physical/`，沒有 `physical_ai/`）。AI實體應用 專案若把頁面搬到 `physical_ai/`，本連結與跨圖標籤一起改。「軟體 AI」連 `software_ai/`（AI軟體應用 專案自行發布）。
+- **不可**用 `.tab` class，也不可放進 `<nav class="tabs">`，否則會被視角分頁點擊處理攔截。相對路徑在 Pages 上指向站根下的子目錄；本機開檔（file://）時不保證可用。
+- 頁面骨架都在 `template.html`，`build_html.py` 只把資料塞進 `/*__DATA__*/null`，不產生導覽 HTML。
+- **對方頁面的介面**：子目錄頁同樣在頁首放三格切換，「算力」連回 `../`。若附模型成品，放自己子目錄下的 `models/`，不要用站根的 `models/`（本地圖 `publish_map_only.sh` 每次 `rm -rf models/` 後重建）。發布比照 `wattonomics/`、`siliconomics/`，在 gh-pages 上追加 commit、只動自己的子目錄。`publish_pages.sh` 發布前先從現有 gh-pages 原樣複製 `physical_ai/`、`software_ai/`、`physical/`、`tokenomics/`，複製失敗或檔數不符即停止。`publish_map_only.sh` 不受影響。
+- 造訪計數器（`counter/`）只計本地圖；其他頁要計數須另行約定（`Code.gs` 的 `TABS` 只認本地圖分頁）。
 
 ## 跨圖標註：另見實體 AI 地圖（v0.6.52 起）
 
@@ -56,7 +59,7 @@ python3 markets/invest_map/build_html.py
 - **資料來源**：`data/cross_map.csv`（ticker、公司、另見地圖、實體AI列代號、實體AI次產業、地圖歸屬原文、說明、來源）。權威在 Drive `02-Projects/03-AI實體應用/20261116_實體AI產業地位_v0.5.xlsx`「個股地位」頁「地圖歸屬」欄；本檔只抄錄**本圖為主圖**的列（「跨圖（主圖：AI 算力地圖…）」與 Waymo 的「跨圖分部（母公司 Alphabet 主圖：AI 算力地圖）」）。實體 AI 地圖為主圖的公司（例如 Tesla）不在本圖，不列。
 - **目前 7 家**：NVIDIA（實體 AI 列 NVDA-C 運算晶片）、台積電（運算晶片代工）、Alphabet（Waymo 分部，Robotaxi 營運）、Amazon（Zoox／Amazon Robotics）、Teradyne（Universal Robots 協作機器人）、台達電（伺服與驅動）、鴻海（整機代工與組裝）。
 - **顯示位置**（`template.html`，`xmapTag()`）：公司檔案卡片（視角 04，次產業與地位下方）、公司檔案面板頁首（名稱下方一行說明）、可投資性表格「公司」欄；方法與來源頁「跨圖（v0.6.52）」列寫規則。標籤文字「另見實體 AI 地圖（跨圖）· 建置中」。
-- **不做連結**：實體 AI 地圖頁（`physical_ai/`）尚未上線；上線後把 `build_html.py` 的 `CROSS[...]["url"]` 填 `physical_ai/`（或該頁錨點）、`status` 清空，再在 `xmapTag()` 改成 `<a>`。
+- **不做連結**（v0.6.52 時實體 AI 地圖未上線；2026-11-17 v0.1 已在 gh-pages `physical/`，頁首切換 v0.6.54 已連；標籤是否改連結待下次跨圖改版一併處理）：要連時把 `build_html.py` 的 `CROSS[...]["url"]` 填 `physical_ai/`（或該頁錨點）、`status` 清空，再在 `xmapTag()` 改成 `<a>`。
 - **只作標籤**：`cross_map` 不進資料活頁簿、不影響估值、地位分數與評等。`build_html.py` 檢查 csv 每個代號都在估值清單內，不在即停。實體 AI 產業地位改版（地圖歸屬變動）時，對照新版「地圖歸屬」欄更新本 csv 並升版。
 
 ## 固定規格（2026-10-25，Andy 要求）
@@ -99,6 +102,7 @@ python3 markets/invest_map/build_html.py
 
 ## 版本
 
+- v0.6.54（2026-11-17）：**頁首加站際切換「算力｜實體 AI｜軟體 AI」**（Andy 2026-11-17 14:00）。`template.html` 在頁首最上方加 `.site-switch`（與 AI 軟體地圖同標記與樣式），「實體 AI」連 `physical/`、「軟體 AI」連 `software_ai/`；「導覽入口」一節改寫為固定規格。黃底判斷讀回 v0.6.53，舊活頁簿移 `dist/_待刪除/`。**數值 0 改變**：`data.json` 只有 meta 的 version、book、cm_commit 3 項不同；`index.html` 只多導覽標記與樣式。
 - v0.6.53（2026-11-17）：**新增五家個股模型與 L3 機房設施**（Andy 2026-11-17 07:48「Intel、GlobalFoundries、Vertiv、ABB、TEL 補上內容與個股模型」；08:01「電力與機房範圍定案也一起做掉」）。新模型 v0.1.0（皆 11-13 收盤）：Intel `intc/`、GlobalFoundries `gfs/`、Tokyo Electron `tel/`、Vertiv `vrt/`、ABB `abb/`（股價 CHF）；`extract_models.py` SEMIS_V2 加五家、NI_LABELS 加兩個列名；候選母體升 v0.2.6（VRT、ABBN 移入新次產業「機房電力與冷卻」，五家狀態改建置中；v0.2.5 移 `data/_待刪除/`）；`build_xlsx.py` 新增層級「L3 機房設施」（占比讀 Wattonomics 現行快照 S7 廠房拆分：配電＋UPS＋冷卻＋發電機 ÷ 廠房，2027＝53.7%，不與 IT 設備相加）、掛牌「瑞士」→ CHF；`template.html` L3 廠房說明改為範圍定案文字並顯示新次產業卡片。規則見 `docs/plan/電力與機房範圍定案_20261117.md`。其餘 74 檔估值與評等 0 改變（評等統計只多出五家：放空 +4、強力放空 +1）。
 - v0.6.52（2026-11-17）：**跨圖標註：7 家另見實體 AI 地圖**（AI實體應用 專案來訊；Andy 2026-11-16 22:09 同意「主圖＝持有個股模型的專案所屬地圖，另一張圖照列並標跨圖；公司檔案、目標價、評等只讀主圖模型」）。新增 `data/cross_map.csv`（抄錄 Drive `20261116_實體AI產業地位_v0.5.xlsx`「個股地位」頁「地圖歸屬」欄中主圖為本圖的 7 家：NVIDIA、台積電、Alphabet〔Waymo 分部〕、Amazon、Teradyne、台達電、鴻海）；`build_html.py` 讀入 `data.json` 的 `cross_map`；`template.html` 在公司檔案卡片、公司檔案面板頁首、可投資性表格加「另見實體 AI 地圖（跨圖）· 建置中」小標籤（實體 AI 地圖未上線，不做連結），方法與來源頁新增「跨圖」列（主圖規則；地位分數兩圖可不同）。新增「跨圖標註」一節。不重抽（`models_extract.json` 不動）；黃底判斷讀回 v0.6.51，舊活頁簿移 `dist/_待刪除/`。**數值 0 改變**（對 main 2f95d42 的 v0.6.51）：(1) `data.json` 葉值舊 10,315／新 10,371，差異 59 項＝meta 的 version、book、cm_commit 3 項＋新增 `cross_map` 56 項，其餘 0；(2) 新舊活頁簿各以 LibreOffice 重算後逐格比對（非空 4,958 格、數值 1,720 格；公式 5,033 格），差異只有 README!A1 版本字串；(3) `index.html` 內嵌資料與 `data.json` 相同，去掉內嵌資料後只差標籤樣式、`xmapTag()`、三處顯示與方法說明一列。估值、上檔空間、評等、收支關卡、地位分數皆不變。
 - v0.6.51（2026-11-17）：**公司檔案出處全面改寫到現行模型＋模型舊日期標籤修正**（Andy 2026-11-16 23:45「請繼續完成」）。公司檔案 64 檔、515 個引用舊模型檔的出處標記（DIFF 435、NOCUR 76〔CoreWeave、WhiteFiber 樣板重建整份重寫；NAND v0.3 即現行檔〕、NOCELL 4）依現行模型儲存格改寫數字與檔名；模型已不支撐的數字句刪除（紀錄 `data/profile_rewrite_progress_A.md`、`_B.md`）。`audit_profile_cites.py` 納入 markets/*/dist 現行檔，稽核 0 列；未參與代理抽查 80 處 0 不支持。模型標籤（同版原地重建）：智譜、MiniMax、韓美、BESI、SpaceX、WhiteFiber、奇鋐、台積電、Broadcom、Marvell 殘留「11-05」等文字改為現況；Lumentum 換股對照改讀 MRVL v0.3.6（72.87）。另帶入 #633 Siliconomics v0.20 重建後的硬體股新版：加權目標價變動均在約 ±0.02% 內，最終分級 0 改變。
