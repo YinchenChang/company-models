@@ -42,7 +42,7 @@
 7. 收支關卡列：做到（`check_rating_gate --strict` 通過）。
 8. 公式組字 README 與 DCF 對 Comparable 分解：做到。
 9. 反解寫入 Recon：做到（`opx_v`：無解；`rel_mult`：2.21）。
-10. 逾期標記：做到（rf 2026-10-27、同業 2026-11-06 標逾期）。
+10. 逾期標記：做到（rf 改為 FRED 2026-11-12 未逾期；同業前瞻 P/S 2026-11-06 標逾期）。
 
 ## 檔案
 `build_snowflake.py`（Excel 產生器，全部活公式）、`sens_snowflake.py`（敏感度與反解，整本重算）、`gen_html_json.py`、`segments.json`、`html.json`、`make_v02.sh`、`data/`（研究包 `research_snowflake.md`、`facts_snowflake.csv`、Tokenomics 快照、`sens_v02_20261117.json`、`kreq_v02.json`）、`dist/`、`dist/_待刪除/`（舊版成品，待 Andy 決定）。
