@@ -1,0 +1,15 @@
+{
+ "company": "ABB",
+ "ticker": "ABBN",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "Electrification", "label": "電氣化營收（Electrification）", "period": "FY2025", "value": 17.357, "unit": "US$B", "source": "ABB Q4 2025 financial information（library.e.abb.com，2026-02）：Electrification 營收 17,357 百萬美元（分部間未沖銷）"},
+  {"name": "Motion", "label": "馬達驅動營收（Motion）", "period": "FY2025", "value": 8.247, "unit": "US$B", "source": "同上：Motion 營收 8,247 百萬美元"},
+  {"name": "Automation（原 Process Automation）", "label": "自動化營收（Automation）", "period": "FY2025", "value": 8.084, "unit": "US$B", "source": "同上：Automation 營收 8,084 百萬美元；Q3 2026 新聞稿起稱 Automation（原 Process Automation）"},
+  {"name": "Corporate and Other（含分部間沖銷）", "label": "公司與其他及沖銷（淨）", "period": "FY2025", "value": -0.468, "unit": "US$B", "source": "同上：Corporate and Other 462＋沖銷 (930)＝(468) 百萬美元"}
+ ],
+ "sublines": [
+  {"parent": "Electrification", "labels": ["電氣化：非資料中心營收", "電氣化：資料中心營收（拆分為本模型假設）"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收（應為 0）"]
+}

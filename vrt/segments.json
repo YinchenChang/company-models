@@ -1,0 +1,14 @@
+{
+ "company": "Vertiv",
+ "ticker": "VRT",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "Americas（美洲）", "label": "Americas（美洲）", "period": "FY2025", "value": 6.3863, "unit": "US$B", "source": "Vertiv 4Q25／FY2025 新聞稿 Segment net sales（Verified）"},
+  {"name": "Asia Pacific（亞太）", "label": "Asia Pacific（亞太）", "period": "FY2025", "value": 2.0192, "unit": "US$B", "source": "同上"},
+  {"name": "EMEA（歐洲、中東與非洲）", "label": "EMEA（歐洲、中東與非洲）", "period": "FY2025", "value": 1.8244, "unit": "US$B", "source": "同上"}
+ ],
+ "sublines": [
+  {"parent": "合併營收（產品線拆分；Vertiv 未揭露產品線營收，本模型命題的推導子列，非官方分部）", "labels": ["資料中心設施產品營收（情境 B，推導）", "其餘營收（服務、備品、非資料中心；情境 B，推導）"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收（FY2025 實績）"]
+}
