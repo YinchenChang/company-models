@@ -15,7 +15,7 @@ asof: 2026-11-17
 
 ## 公司在做什麼
 - 本業是電動車與儲能。車賣給個人與車隊，另向車主收 FSD（Full Self-Driving，監督式輔助駕駛軟體）月費或買斷費 [外部・未經本專案檢核]。
-- FSD 活躍數 3Q26 為 174 萬戶（含早期買斷），北美新車搭配率 >75% [本專案：20261117_Tesla個股模型_v0.3.xlsx 對帳!C4、對帳!C8；Interested-party]。
+- FSD 活躍數 3Q26 為 174 萬戶（含早期買斷），北美新車搭配率 >75% [本專案：20261117_Tesla個股模型_v0.3.xlsx 對帳!C4（Verified）、對帳!C8（Interested-party）]。
 - Robotaxi：純視覺路線（只用相機，不用光達）的無人叫車服務；公司說 3Q26 已在 6 城無人營運 [本專案：產業地位 v0.5「地位依據」；Interested-party：公司揭露]。德州登記 1,302 台（Model Y 729、Cybercab 573），登記不等於營運 [本專案：20261116_Robotaxi單位經濟_v0.2.xlsx 追蹤指標!B12；Verified]。
 - Optimus：全尺寸人形機器人；公司稱 2027 年底起對外交付，Fremont 設計產能 100 萬台／年 [本專案：20261117_Tesla個股模型_v0.3.xlsx 對帳!C17；Interested-party]。
 - 3Q26 營業利益率 2.6%，市值主要押在 FSD、Robotaxi、Optimus 這三個尚無分部揭露的業務 [本專案：tesla/README.md 命題]。
