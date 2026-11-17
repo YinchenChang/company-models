@@ -5,7 +5,7 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_summary.py` | 讀各模型 `dist/*.xlsx` 的 Val 頁（標籤同 `markets/invest_map/extract_models.py`）與 README 頁重點觀察 |
-| `universe.csv` | 61 家（v0.2.7 加 Cerebras）：資料夾、公司、代號、次產業、市場、本公司代號（`own_ticker`）、v0.2.3 對照值 |
+| `universe.csv` | 66 家（v0.2.7 加 Cerebras；v0.2.18 加 Intel、GlobalFoundries、TEL、Vertiv、ABB）：資料夾、公司、代號、次產業、市場、本公司代號（`own_ticker`）、v0.2.3 對照值 |
 | `peers.csv` | 各模型 Comparable 同業（抄自 Val 頁同業表，2026-10-27） |
 
 工作表：目標價總表（v0.2.4 新增「與前版相比」與「穩健度：共識 EPS」欄；v0.2.13 新增 AF–AJ 另一側讀數欄，讀各模型 Coord 頁；v0.2.14 起凡有 Coord 頁兩讀數者都填，讀不到者在 AJ 欄寫明原因，並核對 Coord 現行基準讀數加權目標價＝Val 頁加權目標價，不符即中止；v0.2.15 起 Coord 頁「兩讀數目標價（C4）」＝不適用者（世界先進）AI 欄標「不適用」、AJ 欄寫明原因）、投資建議統計、市場別分布、相對倍數試算（未套用）、說明。

@@ -82,3 +82,8 @@ siliconomics/model/*.xlsx,02-AI供應鏈/Siliconomics/,Siliconomics,AI供應鏈
 wattonomics/model/*.xlsx,02-AI供應鏈/GW帳/,GW帳,AI供應鏈
 software_ai/*/dist/*,04-AI軟體應用/個股模型/,software_ai,AI軟體應用
 physical_ai/*/dist/*,03-AI實體應用/個股模型/,physical_ai,AI實體應用
+intc/dist/*,02-AI供應鏈/個股模型/硬體供應鏈/,硬體供應鏈,AI供應鏈
+gfs/dist/*,02-AI供應鏈/個股模型/硬體供應鏈/,硬體供應鏈,AI供應鏈
+tel/dist/*,02-AI供應鏈/個股模型/硬體供應鏈/,硬體供應鏈,AI供應鏈
+vrt/dist/*,02-AI供應鏈/個股模型/硬體供應鏈/,硬體供應鏈,AI供應鏈
+abb/dist/*,02-AI供應鏈/個股模型/硬體供應鏈/,硬體供應鏈,AI供應鏈
