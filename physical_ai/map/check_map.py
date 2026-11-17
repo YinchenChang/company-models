@@ -87,6 +87,21 @@ for p in D["positions"]:
         fail.append(f"跨圖列 {p['tk']} 沒有主圖模型")
     if p["cross"] and p["val_key"] and "算力" not in D["valuation"][p["val_key"]]["map"]:
         fail.append(f"跨圖列 {p['tk']} 主圖不是 AI 算力地圖")
+# 5 v0.2：線號、分組、站際切換、公司檔案
+codes = [g["code"] for g in D["groups"]]
+if codes != ["1", "2", "3", "4", "5", "6A", "6B", "6C", "6D"]:
+    fail.append(f"分組代碼 {codes} 不是 1–5、6A–6D")
+if sorted(x for g in D["groups"] for x in g["subs"]) != sorted(s["code"] for s in D["segments"]):
+    fail.append("分組未恰好涵蓋全部次產業")
+if [l["code"] for l in D["lines"]] != ["1", "2", "3", "4", "5", "6"]:
+    fail.append("線號不是 1–6")
+html_txt = open(os.path.join(HERE, "dist", "index.html"), encoding="utf-8").read()
+sw = re.search(r'<nav class="site-switch".*?</nav>', html_txt, re.S)
+if not (sw and 'href="../"' in sw.group(0) and 'href="../software_ai/"' in sw.group(0) and '<span aria-current="page">實體 AI</span>' in sw.group(0) and 'class="tab' not in sw.group(0)):
+    fail.append("頁首站際切換（算力｜實體 AI｜軟體 AI）不正確")
+for k, v in D["profiles"].items():
+    if v["missing"]:
+        fail.append(f"公司檔案 {k} 缺章節 {v['missing']}")
 # 4 無個人字樣
 # 通用字樣寫在這裡；人名、雇主等私人字樣不寫進公開程式碼，改由環境變數 PRIVATE_TERMS（逗號分隔）提供
 _terms = ["部位", "下注"] + [t for t in os.environ.get("PRIVATE_TERMS", "").split(",") if t]

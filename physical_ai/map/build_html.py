@@ -4,6 +4,9 @@
 """
 import glob, json, os, re, shutil, subprocess, tempfile
 import openpyxl
+import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from profiles_md import load_all
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
@@ -11,6 +14,7 @@ CSS = os.path.join(ROOT, "markets", "invest_map", "template.html")   # 版面樣
 BUILT = "2026-11-17"
 CLOSE_DATE = "2026-11-16"
 ALIAS = {"TSLA-EV": "TSLA"}   # 同一公司多列：讀同一份模型
+PKEY = {"TSLA-EV": "TSLA", "TSLA-RT": "TSLA", "1810-EV": "1810", "300124-M": "300124"}   # 同一公司多列：讀同一份公司檔案
 
 
 def recalc(path):
@@ -61,6 +65,18 @@ def main():
                         line=r["所屬線"], sub=r["子分類"], imp=r["公司重要性"], posn=r["市場位置"], irr_s=r["不可替代性分"], pos_s=r["市場位置分"],
                         vc_s=r["價值鏈分量分"], score=r["地位分數"], rank=r["排名"], mapnote=r["地圖歸屬"], cross=cross,
                         basis=r["地位依據"], tag=r["標記"], exp=r["實體 AI 營收曝險"], tier=tier, val_key=k if v else None, seg_key=tk if s else None))
+    groups = [dict(code=r["組別"], name=r["組名"], q=r["組關鍵問題"], line=str(r["線"]), subs=str(r["次產業代碼"]).split()) for r in table(wb["地圖分組"])]
+    g_of = {sc: g["code"] for g in groups for sc in g["subs"]}
+    for p in pos:
+        p["grp"] = g_of[p["seg"]]
+    profiles = load_all(os.path.join(HERE, "profiles"))
+    need = {PKEY.get(p["tk"], p["tk"]) for p in pos if not p["cross"]}
+    extra = sorted(set(profiles) - need)
+    if extra:
+        raise SystemExit(f"公司檔案多出不在地圖的代號：{extra}")
+    miss_sec = {k: v["missing"] for k, v in profiles.items() if v["missing"]}
+    if miss_sec:
+        raise SystemExit(f"公司檔案缺章節：{miss_sec}")
     watch = table(wb["觀察名單"])
     tiers = {}
     seen = set()
@@ -71,15 +87,16 @@ def main():
         seen.add(key); tiers[p["tier"]] = tiers.get(p["tier"], 0) + 1
     data = dict(meta=dict(version=ver, book=os.path.basename(book), built=BUILT, close_date=CLOSE_DATE,
                           price_note=f"上市公司一律用 {CLOSE_DATE} 收盤（Yahoo Finance 日線，data/prices.csv）；上檔空間＝最新一份模型目標價 ÷ 最新收盤 − 1。台股只顯示上檔空間與評等，不顯示目標價。",
-                          tiers=tiers, n_pos=len(pos), n_cross=sum(p["cross"] for p in pos)),
-                lines=list(lines.values()), segments=segs, positions=pos, valuation=vals, segvals=segv, watch=watch)
+                          tiers=tiers, n_pos=len(pos), n_cross=sum(p["cross"] for p in pos), n_prof=len(profiles), n_prof_need=len(need)),
+                lines=list(lines.values()), groups=groups, pkey=PKEY, profiles=profiles, segments=segs, positions=pos, valuation=vals, segvals=segv, watch=watch)
     js = json.dumps(data, ensure_ascii=False, default=str)
     json.dump(data, open(os.path.join(HERE, "dist", "data.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=str)
-    css = re.sub(r"/\*.*?\*/", "", "\n".join(open(CSS, encoding="utf-8").read().split("\n")[6:255]), flags=re.S)  # 去註解（原檔註解含規格來源）
+    raw = open(CSS, encoding="utf-8").read()
+    css = re.sub(r"/\*.*?\*/", "", raw[raw.index("<style>"):raw.index("</style>")], flags=re.S)  # 只取樣式（去註解：原檔註解含規格來源）
     tpl = open(os.path.join(HERE, "template.html"), encoding="utf-8").read()
     html = tpl.replace("/*CSS*/", css).replace("/*DATA*/", js.replace("</", "<\\/"))
     open(os.path.join(HERE, "dist", "index.html"), "w", encoding="utf-8").write(html)
-    print("index.html", len(html), "tiers", tiers, "跨圖", data["meta"]["n_cross"])
+    print("index.html", len(html), "tiers", tiers, "跨圖", data["meta"]["n_cross"], "公司檔案", len(profiles), "/", len(need))
 
 
 if __name__ == "__main__":
