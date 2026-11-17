@@ -13,7 +13,7 @@ from openpyxl.styles import Font, PatternFill, Alignment
 from openpyxl.utils import get_column_letter as L
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VER = "0.2.1"
+VER = "0.2.2"
 PXDATE = datetime.date(2026, 11, 16)
 VALDATE = datetime.date(2026, 11, 16)
 DATADATE = datetime.date(2026, 11, 16)
@@ -665,7 +665,7 @@ r += 1
 for j, h in enumerate(["項目", "數值", "對照", "對照", "說明"]):
     put(V, f"{L(j+1)}{r}", h, BOLD, HDR)
 r += 1
-for k in ("tpdcf", "tpcomp", "tp", "px", "cons", "up", "upc", "tpeb1", "tpeb2", "tpps_alt", "tier", "valrate", "gate_chk", "gate_in", "rec"):
+for k in ("tpdcf", "tpcomp", "tp", "px", "cons", "up", "upc", "tpeb1", "tpeb2", "tier", "valrate", "gate_chk", "gate_in", "rec"):
     VR[k] = r
     r += 1
 r += 1
@@ -688,13 +688,13 @@ for k, lab in (("pvx", "明確期 FCFF 現值（含 stub）"), ("nop33", "FY2033
     put(V, f"A{r}", lab)
     r += 1
 r += 1
-put(V, f"A{r}", "0.0 Comparable 主腿（G6）：分部 P/S 加總＝Σ（同業中位 P/S × rel_mult × 目標時點 TTM 分部營收）− 淨債務 − 非控制權益，÷ 稀釋股數", BOLD); r += 1
+put(V, f"A{r}", "0.0 Comparable 主腿（G6）：分部 P/S 加總＝Σ（同業中位 P/S × rel_mult × 目標時點 TTM 分部營收）− 非控制權益（P/S 為股權口徑，不再扣淨債務），÷ 稀釋股數", BOLD); r += 1
 VR["pm_h"] = r
 for j_, h_ in enumerate(["分部", "情境 A", "情境 B", "情境 C", "同業中位 P/S × rel_mult", "rel_mult"]):
     put(V, f"{L(j_+1)}{r}", h_, BOLD, HDR)
 r += 1
 for k_, lab_ in (("pm_media", "Media（目標時點 TTM 營收，十億日圓）"), ("pm_com", "Commerce（TTM 營收）"), ("pm_str", "Strategic（TTM 營收）"), ("pm_ev", "分部 P/S 加總（股權口徑市值）"),
-                 ("pm_nd", "− 淨有息負債"), ("pm_nci", "− 非控制權益"), ("pm_eq", "股權價值"), ("pm_ps", "每股價值（日圓，目標時點；Comparable 主腿）")):
+                 ("pm_nd", "淨有息負債（P/S 為市值口徑，已含負債，不再扣）"), ("pm_nci", "− 非控制權益"), ("pm_eq", "股權價值"), ("pm_ps", "每股價值（日圓，目標時點；Comparable 主腿）")):
     VR[k_] = r
     put(V, f"A{r}", lab_)
     r += 1
@@ -724,7 +724,7 @@ put(V, f"A{r}", "AI 淨效果對 DCF 價值的影響：情境價值 − 無 AI �
 r += 2
 put(V, f"A{r}", "0.4 DCF 與 Comparable 落差分解（情境 B，每股日圓；兩法皆在目標時點）", BOLD); r += 1
 for k, lab in (("g_tot", "落差＝Comparable 每股 − DCF 每股"), ("g_mult", "其中：倍數（P/S 主腿加總 − DCF 隱含目標時點 EV，÷ 稀釋股數）"),
-               ("g_lev", "其中：槓桿（兩法的淨債務與非控制權益扣除差）"), ("g_time", "其中：時點（兩法同在目標時點）"),
+               ("g_lev", "其中：槓桿（P/S 主腿為股權口徑不扣淨債務，DCF 由 EV 扣；兩法扣除差）"), ("g_time", "其中：時點（兩法同在目標時點）"),
                ("g_sbc", "其中：股票薪酬（LY 不揭露；DCF 不加回，公司調整後 EBITDA 口徑未拆）"), ("g_chk", "檢查：分解合計 − 落差（應為零）"),
                ("g_evd", "DCF 隱含目標時點 EV（十億日圓）"), ("g_imp", "DCF 隱含股權價值／目標時點 TTM 分部營收合計（P/S，倍）"), ("g_sum", "P/S 主腿使用的加權 P/S（倍，含 rel_mult）")):
     VR[k] = r
@@ -816,7 +816,7 @@ for s_ in "ABC":
     for k_, seg_ in (("pm_media", "media"), ("pm_com", "com"), ("pm_str", "str")):
         put(V, f"{c}{VR[k_]}", f"=(PL!{CL[4]}{R[seg_]}+PL!{CL[5]}{R[seg_]})/2", None, None, "#,##0.0")
     put(V, f"{c}{VR['pm_ev']}", f"={c}{VR['pm_media']}*$E${VR['pm_media']}+{c}{VR['pm_com']}*$E${VR['pm_com']}+{c}{VR['pm_str']}*$E${VR['pm_str']}", None, None, "#,##0.0")
-    put(V, f"{c}{VR['pm_nd']}", f"=-{I('nd0')}", None, None, "#,##0.0")
+    put(V, f"{c}{VR['pm_nd']}", 0, None, None, "#,##0.0")
     put(V, f"{c}{VR['pm_nci']}", f"=-{I('nci0')}*{I('nci_mult')}", None, None, "#,##0.0")
     put(V, f"{c}{VR['pm_eq']}", f"={c}{VR['pm_ev']}+{c}{VR['pm_nd']}+{c}{VR['pm_nci']}", None, None, "#,##0.0")
     put(V, f"{c}{VR['pm_ps']}", f"={c}{VR['pm_eq']}*1000/{I('sh_dil')}", None, None, "#,##0.00")
@@ -824,7 +824,6 @@ for k_, ik_, rk_ in (("pm_media", "psm_media", "rel_media"), ("pm_com", "psm_com
     put(V, f"E{VR[k_]}", f"={I(ik_)}*{I(rk_)}", None, None, "0.00")
     put(V, f"F{VR[k_]}", f"={I(rk_)}", None, None, "0.000")
 put(V, f"B{VR['tpcomp']}", f"={I('tpw_A')}*B{VR['pm_ps']}+{I('tpw_B')}*C{VR['pm_ps']}+{I('tpw_C')}*D{VR['pm_ps']}", None, None, "#,##0.00")
-put(V, f"B{VR['tpps_alt']}", f"=(({I('tpw_A')}*B{VR['pm_ev']}+{I('tpw_B')}*C{VR['pm_ev']}+{I('tpw_C')}*D{VR['pm_ev']})+C{VR['pm_nci']})*1000/{I('sh_dil')}", None, None, "#,##0.00")
 put(V, f"B{VR['tpeb1']}", f"={I('tpw_A')}*B{VR['s_ps']}+{I('tpw_B')}*C{VR['s_ps']}+{I('tpw_C')}*D{VR['s_ps']}", None, None, "#,##0.00")
 put(V, f"B{VR['tpeb2']}", f"=((B{VR['s_ev']}*{I('tpw_A')}+C{VR['s_ev']}*{I('tpw_B')}+D{VR['s_ev']}*{I('tpw_C')})*B{VR['c_ratio_eb']}+C{VR['s_nd']}+C{VR['s_nci']})*1000/{I('sh_dil')}", None, None, "#,##0.00")
 put(V, f"B{VR['tp']}", f"={I('w_dcf')}*B{VR['tpdcf']}+(1-{I('w_dcf')})*B{VR['tpcomp']}", None, None, "#,##0.00")
@@ -864,9 +863,8 @@ for k, dref in (("o_rf", I('rf_date')), ("o_cons", I('cons_date')), ("o_ly", I('
 put(V, f"B{VR['o_peer']}", "=MIN(Peers!$I$4:$I$14)", None, None, "yyyy-mm-dd")
 put(V, f"C{VR['o_peer']}", '=COUNTIF(Peers!$J$4:$J$14,"逾期")&" 列逾期（共 11 列）；最舊資料日見 B"')
 for k, lab, note in (("tpdcf", "DCF 目標價（情境加權）", "三情境 DCF 推到 12 個月後（扣期間股利）依權重 25／50／25 加權"),
-                     ("tpcomp", "Comparable 目標價（P/S 主腿，情境加權）", "同業最近一季中位 P/S（Analogy）× rel_mult（PS／PSG 幾何平均，Derived）× 目標時點 TTM 分部營收，扣淨債務與非控制權益"),
+                     ("tpcomp", "Comparable 目標價（P/S 主腿，情境加權）", "同業最近一季中位 P/S（Analogy）× rel_mult（PS／PSG 幾何平均，Derived）× 目標時點 TTM 分部營收，只扣非控制權益（P/S 為股權口徑）"),
                      ("tpeb1", "對照：分部 EV／EBITDA 加總目標價（rel_mult＝1.00；不進加權）", "G6 第 2 條：盈餘型倍數只作對照"), ("tpeb2", "對照：分部 EV／EBITDA 加總目標價（乘本公司現行相對值；不進加權）", "現行 EV／EBITDA ÷ 同業原始加權中位數"),
-                     ("tpps_alt", "對照：P/S 主腿若視為股權口徑（只扣非控制權益，不再扣淨債務；不進加權）", "P/S 以市值為分子，已隱含淨債務；工作單 G6 指定扣淨債務，此列供判讀雙重扣除的影響"),
                      ("tp", "目標價（DCF 與 Comparable 加權）", "DCF 與分部加總依 In 頁權重加權"),
                      ("px", "現價（2026-11-16 收盤）", "traders.co.jp 與 Yahoo!ファイナンス兩源一致"),
                      ("cons", "市場共識目標價", "kabuyoho.jp 10 家，2026-09-08，已早於 Q2 財報（2026-11-05）上修；只作對照"),
@@ -1164,7 +1162,7 @@ SE.column_dimensions["A"].width = 60
 RD = S["README"]
 Vb = lambda k, col="B": f"Val!{col}{VR[k]}"
 put(RD, "A1", f'="LY Corporation（4689）個股模型 v{VER}｜build_id "&Sens!D{SE_BID}&"｜資料截止日 "&TEXT({I("data_date")},"yyyy-mm-dd")&"｜成品日 {BUILDDATE.isoformat()}｜股價基準日 "&TEXT({I("px_date")},"yyyy-mm-dd")&"｜評價日 "&TEXT({I("val_date")},"yyyy-mm-dd")&"｜目標時點 "&TEXT({I("tp_date")},"yyyy-mm-dd")&"（本版未做先驗；v0.1.1：Tokenomics 快照 {TKV}；單位經濟模組在 In 頁自建，v0.2 改讀 unit_economics）"')
-put(RD, "A2", "v0.2.1 要點（G6）：Comparable 主腿改為 P/S（同業最近一季中位 P/S × rel_mult × 目標時點 TTM 分部營收，扣淨債務與非控制權益），EV／EBITDA 加總改對照列；v0.2（G5）：相對倍數改讀 software_ai/data/relmult_hist/out/lycorp.json 的 PS 與 PSG 分組讀數（取代 v0.1.1 自算年度相對倍數）；無風險利率改統一值（日本 10 年期，2026-11-11）；新增股票薪酬加回 DCF 對照讀數（不進目標價）；Sens 加 ps_only、psg_only、sens.low、sens.high 四案；沿用 v0.1.1 的 G2／G3 十四條。命題＝原型 A（按廣告計價）的單位經濟；官方分部 Media、Commerce、Strategic；DCF（標準 FCFF，股票薪酬費用化）與分部加總各 50%，三情境只在四個 AI 驅動分化。未做項目：先驗、Tokenomics 自用 AI 讀法與 Wattonomics 對照（不適用）、三層協調（不適用：非 Siliconomics 覆蓋）。")
+put(RD, "A2", "v0.2.1 要點（G6）：Comparable 主腿改為 P/S（同業最近一季中位 P/S × rel_mult × 目標時點 TTM 分部營收，只扣非控制權益（P/S 為股權口徑）），EV／EBITDA 加總改對照列；v0.2（G5）：相對倍數改讀 software_ai/data/relmult_hist/out/lycorp.json 的 PS 與 PSG 分組讀數（取代 v0.1.1 自算年度相對倍數）；無風險利率改統一值（日本 10 年期，2026-11-11）；新增股票薪酬加回 DCF 對照讀數（不進目標價）；Sens 加 ps_only、psg_only、sens.low、sens.high 四案；沿用 v0.1.1 的 G2／G3 十四條。命題＝原型 A（按廣告計價）的單位經濟；官方分部 Media、Commerce、Strategic；DCF（標準 FCFF，股票薪酬費用化）與分部加總各 50%，三情境只在四個 AI 驅動分化。未做項目：先驗、Tokenomics 自用 AI 讀法與 Wattonomics 對照（不適用）、三層協調（不適用：非 Siliconomics 覆蓋）。")
 put(RD, "A3", "命題：AI 進入日本最大的 LINE／Yahoo! 廣告平台後，每單位廣告營收的變化＝AI 帶來的營收增量（轉換率與每次點擊價格提升、官方帳號 AI Mode、Agent i 訂閱與廣告）減去營收侵蝕（搜尋查詢分流到聊天介面）減去向模型商購買的推論成本；本模型以三情境檢驗淨效果的正負與大小。")
 put(RD, "A4", f'="核心問題：FY2032E 的 AI 淨效果（營業利益）在情境 A／B／C 分別為 "&TEXT(Val!B{VR["ai_B"]},"#,##0.0")&"／"&TEXT(Val!C{VR["ai_B"]},"#,##0.0")&"／"&TEXT(Val!D{VR["ai_B"]},"#,##0.0")&" 十億日圓；基準下 AI 是否足以抵銷傳統搜尋與展示廣告的衰退。"')
 put(RD, "A5", f'="投資建議："&Val!B{VR["rec"]}&"——在三情境權重 "&TEXT({I("tpw_A")},"0%")&"／"&TEXT({I("tpw_B")},"0%")&"／"&TEXT({I("tpw_C")},"0%")&"、同業中位 P/S × rel_mult（Comparable 主腿）的基準假設下；加權目標價 "&TEXT(Val!B{VR["tp"]},"#,##0.0")&" 日圓，上檔空間 "&TEXT(Val!B{VR["up"]},"+0.0%;-0.0%")&"（現價 "&TEXT({I("px")},"#,##0.0")&"，"&TEXT({I("px_date")},"yyyy-mm-dd")&" 收盤，兩個來源一致）；收支關卡："&Val!B{VR["gate_chk"]}&"。"')
@@ -1209,7 +1207,7 @@ for i_, rowv in enumerate(RISKS):
         put(RD, f"{L(j+1)}{34+i_}", v)
 put(RD, "A42", f'="合理性關卡診斷（G3 第 3 條）：DCF 目標價 ÷ 現價 "&TEXT(Val!B{VR["z_dcf"]},"0.00")&"、三情境最小 EV "&TEXT(Val!B{VR["z_ev"]},"#,##0")&" 十億日圓、投資建議 "&Val!B{VR["rec"]}&"、FY2026E 營收對指引差距 "&TEXT(Val!B{VR["z_rev"]},"+0.0%;-0.0%")&"，均未觸發。觸發項：FY2026E EBITDA 對公司調整後 EBITDA 指引差距 "&TEXT(Val!B{VR["z_ebt"]},"+0.0%;-0.0%")&"（模型 "&TEXT(Recon!C{RCR["ebitda"]},"#,##0")&"、指引 "&TEXT(Recon!D{RCR["ebitda"]},"#,##0")&" 十億日圓）。診斷：(a) 基準營業利益率依規則持平於最近四季 "&TEXT({I("opm26")},"0.0%")&"，H1 FY2026 實績為 "&TEXT({I("h1_oi")}/{I("h1_rev")},"0.0%")&"，單此一項使 FY2026E 營業利益少 "&TEXT(({I("h1_oi")}/{I("h1_rev")}-{I("opm26")})*PL!{CL[3]}{PR["B"]["rev"]},"#,##0")&" 十億日圓；(b) 公司調整後 EBITDA 加回一次性項目與股票薪酬等，與營業利益加折舊攤銷口徑不同；(c) 營收差距小，不是主因。結論：差距來自基準規則（G2 第 3 條、G3 第 1 條）與口徑差異，是經濟判斷而非建模錯誤（公式、單位與分部合計已核對）；營業利益率的影響見 Sens 與 Recon 反解，EPS 差距同源並含 IFRS 與調整後口徑。"')
 put(RD, "A43", f'="相對倍數（G5 第 1 條）：Media "&TEXT({I("rel_media")},"0.00")&"、Commerce "&TEXT({I("rel_com")},"0.00")&"、Strategic "&TEXT({I("rel_str")},"0.00")&"（PS 與 PSG 讀數幾何平均；Media 兩讀數 "&TEXT(Peers!B25,"0.00")&"／"&TEXT(Peers!C25,"0.00")&"，Commerce "&TEXT(Peers!B26,"0.00")&"／"&TEXT(Peers!C26,"0.00")&"，Strategic "&TEXT(Peers!B27,"0.00")&"／"&TEXT(Peers!C27,"0.00")&"）。本公司 Comparable 主腿為 P/S，與 PS／PSG 相對值同口徑（G6）。"&IF(Peers!F27="是","Strategic 兩讀數差異 "&TEXT(Peers!E27,"0%")&" 大於 30%：原因是本公司 TTM 營收成長 "&TEXT(Peers!H27,"0.0%")&" 對 Strategic 同業中位 "&TEXT(Peers!I27,"0.0%")&"，成長比 "&TEXT(Peers!G27,"0.00")&" 使 PSG 讀數（"&TEXT(Peers!C27,"0.00")&"）遠高於 PS 讀數（"&TEXT(Peers!B27,"0.00")&"）；Strategic 同業只有 3 家（Rakuten、PayPal、Block），結論偏不穩，已在 Sens 列 ps_only 與 psg_only。","")&IF(Peers!F25="是","Media 兩讀數差異大於 30%。","")&IF(Peers!F26="是","Commerce 兩讀數差異大於 30%。","")')
-put(RD, "A40", "工作表：README／In／Q／PL／DCF／Val／Peers／RevDCF／Recon／Sens／Sources。成品 dist/<日期>_LY個股模型_v0.2.1.xlsx 與 .html。")
+put(RD, "A40", "工作表：README／In／Q／PL／DCF／Val／Peers／RevDCF／Recon／Sens／Sources。成品 dist/<日期>_LY個股模型_v0.2.2.xlsx 與 .html。")
 put(RD, "A41", f'="DCF 與 Comparable 落差歸因（情境 B）：Comparable（P/S 主腿）"&TEXT(Val!C{VR["pm_ps"]},"#,##0.0")&" − DCF "&TEXT(Val!C{VR["dcf12"]},"#,##0.0")&" ＝ "&TEXT(Val!B{VR["g_tot"]},"+#,##0.0;-#,##0.0")&" 日圓／股：倍數 "&TEXT(Val!B{VR["g_mult"]},"+#,##0.0;-#,##0.0")&"、槓桿 "&TEXT(Val!B{VR["g_lev"]},"+#,##0.0;-#,##0.0")&"、時點 "&TEXT(Val!B{VR["g_time"]},"+#,##0.0;-#,##0.0")&"、股票薪酬 未取得（LY 不揭露 SBC）。P/S 主腿使用加權 P/S "&TEXT(Val!B{VR["g_sum"]},"0.00")&" 倍（含 rel_mult），DCF 隱含 "&TEXT(Val!B{VR["g_imp"]},"0.00")&" 倍；本公司現行 P/S "&TEXT(Val!B{VR["c_ps"]},"0.00")&" 倍 ÷ 同業原始加權中位 "&TEXT(Val!B{VR["c_psp"]},"0.00")&" 倍＝"&TEXT(Val!B{VR["c_ratio"]},"0.00")&"，主腿採用 P/S 對現行的隱含重估 "&TEXT(Val!B{VR["c_rr"]},"+0%;-0%")&"。"')
 put(RD, "A44", f'="Comparable 口徑（G6）：主腿改為 P/S，是為了與 PS／PSG 相對值（已含利潤率差）同口徑；EV／EBITDA 加總降為對照列，不進加權：rel_mult＝1.00 讀數 "&TEXT(Val!B{VR["tpeb1"]},"#,##0.0")&"、乘本公司現行相對值（"&TEXT(Val!B{VR["c_ratio_eb"]},"0.00")&"）讀數 "&TEXT(Val!B{VR["tpeb2"]},"#,##0.0")&" 日圓，對照主腿 "&TEXT(Val!B{VR["tpcomp"]},"#,##0.0")&" 日圓。P/S 以市值為分子，已隱含淨債務，主腿依工作單再扣淨債務與非控制權益；若只扣非控制權益則為 "&TEXT(Val!B{VR["tpps_alt"]},"#,##0.0")&" 日圓（對照，不進加權）。同業 P/S 取各家最近一季（季末日見 Peers 頁，皆已逾期，最舊 "&TEXT(MIN(Peers!$D$33:$D$43),"yyyy-mm-dd")&"）。分部營收只含 Media、Commerce、Strategic，Other 與 Adjustments 淨額小，未計。"')
 for rr_ in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 29, 31, 41, 42, 43, 44):
