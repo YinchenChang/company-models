@@ -1138,10 +1138,11 @@ Vset("rs_flag", "B", f"=IF(OR(B{VR['rs_dcf']}<0.25,B{VR['rs_dcf']}>4,B{VR['rs_ev
 rd("gate3", "合理性關卡診斷（G3-3）", bold=True)
 rd("gate3_r", fx("四項關卡：DCF 目標價 ÷ 現價 ", T(f"Val!B{VR['rs_dcf']}", "0.00"), "（界線 0.25 與 4）；最小情境 EV ", T(f"Val!B{VR['rs_ev']}", "#,##0"), " 百萬美元；評等 ", ("f", f"Val!B{VR['vrate']}"),
                  "；Q4 營收相對指引中點 ", T(f"Val!B{VR['rs_q4']}", "+0.0%;-0.0%"), "。任一關卡成立＝", ("f", f'IF(Val!B{VR["rs_flag"]}=1,"是（須診斷）","否")'), "。"))
-rd("gate3_d", fx("診斷結論：四項關卡皆未成立（評等 ", ("f", f"Val!B{VR['vrate']}"), "，上檔空間 ", T(f"Val!B{VR['up']}", "+0.0%;-0.0%"), "，距強力買進界線不遠）。但加權目標價 ", T(f"Val!B{VR['tp']}", "0.00"), " 主要由相對倍數推動：Comparable ",
-                 T(f"Val!B{VR['tpcomp']}", "0.00"), " 為 DCF ", T(f"Val!B{VR['tpdcf']}", "0.00"), " 的 ", T(f"Val!B{VR['tpcomp']}/Val!B{VR['tpdcf']}", "0.0"), " 倍；採用倍數 ", T(f"Val!C{VR['mult']}", "0.0"), " 倍＝同業中位數乘相對倍數 ", T("pe_rel", "0.00"),
-                 "，而 APP 現行預估本益比約為同業中位數的 ", T(f"Val!B{VR['app_ratio']}", "0.00"), " 倍。原因是相對倍數取自 PS 與 PSG 讀數（成長比 ", T(f"Recon!B{RL['gr']}", "0.00"), "，PS 與 PSG 差距見 Recon 第 8 節）並近似套用於本益比，未調整 APP 利潤率遠高於同業。"
-                 "這是 Andy 2026-11-17 定案的方法所致的經濟判斷，不是公式錯誤；DCF（折現率約 15%）不支持這個倍數，兩腿差距在 Recon 第 3 節分解，Sens 相對倍數低案與 ps_only 案顯示下緣。保留，但使用者應以 DCF 與 Comparable 並看。"))
+rd("gate3_d", fx("診斷結論：四項關卡", ("f", f'IF(Val!B{VR["rs_flag"]}=1,"有成立者（須逐項說明）","皆未成立")'), "（評等 ", ("f", f"Val!B{VR['vrate']}"), "，上檔空間 ", T(f"Val!B{VR['up']}", "+0.0%;-0.0%"), "，加權目標價 ", T(f"Val!B{VR['tp']}", "0.00"), " 美元）。G6 改版後 Comparable ",
+                 T(f"Val!B{VR['tpcomp']}", "0.00"), " 為 DCF ", T(f"Val!B{VR['tpdcf']}", "0.00"), " 的 ", T(f"Val!B{VR['tpcomp']}/Val!B{VR['tpdcf']}", "0.0"), " 倍；採用 P/S ", T(f"Val!C{VR['mult']}", "0.0"), " 倍＝同業中位 ", T(f"Val!B{VR['ps_med']}", "0.00"), " 乘相對倍數 ", T("pe_rel", "0.00"),
+                 "，APP 現行 P/S 為同業中位的 ", T(f"Val!B{VR['ps_ratio']}", "0.00"), " 倍，採用值高於現行，表示假設 APP 相對同業的 P/S 溢價擴大（成長比 ", T(f"Recon!B{RL['gr']}", "0.00"), "，PS 與 PSG 讀數差距見 Recon 第 8 節）。"
+                 "相對倍數 1.00 的本益比對照腿每股 ", T(f"Val!C{VR['pe_v1']}", "0.00"), " 美元、現行相對值 ", T(f"Val!C{VR['pe_v2']}", "0.00"), " 美元（情境 B，只作對照），顯示 P/S 主腿高於盈餘類倍數對照；差異來自相對倍數（承重輸入），不是公式錯誤。DCF 折現率約 ", T(f"Val!B{VR['ke']}", "0%"),
+                 "，兩腿差距在 Recon 第 3 節分解；Sens 的相對倍數低案與 ps_only 案顯示下緣，反解見 Recon 第 4 節。保留，使用者應以 DCF 與 Comparable 並看。"))
 rd("gate3_1", "G3-1 費用率延伸：營業費用率歷史上已大幅下降（FY2023 約 39%、FY2025 約 12%、最近四季約 11%），規模經濟已大部分實現；基準取最近四季持平，不是虧損水準凍結（營業利益率 77% 以上），故不另做固定＋變動拆分；Sens 低案（費用率下限）涵蓋進一步下降。")
 rd("gate3_2", "G3-2 營運資金：APP 非訂閱制，無遞延收入；營運資金增加 ÷ 營收增量以 2026Q3 淨營運資金占營收推得（約 10%–12%），正號表示現金流出。")
 rd("gate3_4", "G3-4 相對倍數：改讀 relmult_hist 的 geo_base（PS 與 PSG 讀數幾何平均，Derived），取代 v0.1 的 1.00；G6 起套用於同業 P/S；仍為承重輸入，Sens 含 sens.low、sens.high、ps_only、psg_only。")

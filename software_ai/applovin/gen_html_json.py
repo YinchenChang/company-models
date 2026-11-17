@@ -162,6 +162,7 @@ recon = {"id": "recon", "title": "對帳：共識、指引、DCF 與 Comparable 
      "rows": [[f"@Recon!A{rm['RL'][k]}", f"@Recon!B{rm['RL'][k]}|{f}", f"@Recon!C{rm['RL'][k]}"] for k, f in (("ps", "n3"), ("psg", "n3"), ("geo", "n3"), ("gr", "n2"), ("cg", "p1"), ("pg", "p1"), ("div", "n2"), ("lo", "n3"), ("hi", "n3"), ("pso", "n3"), ("pgo", "n3"))]},
     {"type": "note", "parts": [f"@Recon!A{cr['rel_txt']}"]},
     {"type": "note", "parts": [f"@README!A{RM['gate3_d']}"]},
+    {"type": "note", "parts": [f"@Recon!A{cr['ver_txt']}"]},
     {"type": "table", "caption": f"@Recon!A{cr['s5']}", "head": ["項目", "數值", "說明"],
      "rowgen": {"sheet": "Recon", "rows": f"{TKR['t_terra']}-{TKR['share27']}", "cols": list("ABC"), "fmts": ["", "n3", ""], "row_fmt": {str(TKR["cost27"]): {"B": "n1"}, str(TKR["share27"]): {"B": "p1"}}}}]}
 # ---- status ----

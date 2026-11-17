@@ -786,7 +786,7 @@ for j, k in enumerate(("k_wacc", "k_wl")): put(RCs, r, 3 + j, f'=IF(ISNUMBER(D{R
 # 5. 市場資料日期與逾期
 rc_hdr(RCK["s5"], "5. 市場資料日期與逾期標示（與現價日相差超過 2 個交易日標逾期；原則第 15 條）", ["項目", "資料日期", "與現價日相差（交易日）", "標示", "說明"])
 dts = [("無風險利率 rf（10 年美債）", datetime.datetime(2026, 11, 12), "FRED DGS10"), ("賣方平均目標價", datetime.datetime(2026, 8, 31), "MarketScreener；Q3 財報前"),
-       ("賣方共識營收與 EPS", datetime.datetime(2026, 10, 23), "Yahoo Finance analysis；Q3 財報前")] + [(f"同業 P/S：{p[1]}（{p[0]}）", datetime.datetime.strptime(PSL[p[0]][0], "%Y-%m-%d"), "共用庫最近一季季末日") for p in PEERS] + [(f"同業賣方成長預測：{p[1]}（{p[0]}）", datetime.datetime.strptime(p[5], "%Y-%m-%d"), "StockAnalysis 頁面更新日") for p in PEERS]
+       ("賣方共識營收與 EPS", datetime.datetime(2026, 10, 23), "Yahoo Finance analysis；Q3 財報前")] + [(f"同業 P/S：{p[1]}（{p[0]}）", datetime.datetime.strptime(PSL[p[0]][0], "%Y-%m-%d"), "共用庫最近一季季末日") for p in PEERS]
 for i, (lab, d, note) in enumerate(dts):
     r = RCK["dt0"] + i; put(RCs, r, 1, lab); put(RCs, r, 2, d, "yyyy-mm-dd", blue=True)
     put(RCs, r, 3, f"=NETWORKDAYS(B{r},{I('px_date')})-1", "0"); put(RCs, r, 4, f'=IF(ABS(C{r})>2,"逾期","")'); put(RCs, r, 5, note)

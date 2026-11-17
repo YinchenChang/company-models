@@ -118,9 +118,15 @@ inp("w_dcf", "DCF 權重（Comparable 為 1 減本值）", "比率", 0.3, 0.5, 0
 inp("pm_chkp", "同業 EV/EBIT（TTM）：Check Point（2026-11-13；US GAAP）", "倍", None, 16.51, None, "Verified", "stockanalysis.com/stocks/chkp/statistics/", "低成長子群（3 年營收成長預估 ≤10%）")
 inp("pm_gen", "同業 EV/EBIT（TTM）：Gen Digital（2026-10-26；US GAAP；逾期）", "倍", None, 10.20, None, "Verified", "stockanalysis.com/stocks/gen/statistics/", "價格日 2026-10-26 與現價日相差逾 2 個交易日：逾期；Gen 有槓桿（淨負債），EV 口徑對 EV")
 inp("pm_qlys", "同業 EV/EBIT（TTM）：Qualys（2026-10-26；US GAAP；逾期）", "倍", None, 29.48, None, "Verified", "stockanalysis.com/stocks/qlys/statistics/", "逾期，同上")
+PSCSV = "software_ai/data/relmult_hist/%s.csv（2026-06-30 季末列；StockAnalysis 季度比率，擷取日 2026-11-17）"
+inp("ps_chkp", "同業 P/S（TTM）：Check Point（季末 2026-06-30；US GAAP）", "倍", None, 4.95, None, "Verified", PSCSV % "CHKP", "逾期：季末日 2026-06-30 與現價日 2026-11-13 相差逾 2 個交易日（資料庫只有季末列）；PS＝市值÷TTM 營收，與會計準則差異無關")
+inp("ps_gen", "同業 P/S（TTM）：Gen Digital（季末 2026-06-30；US GAAP；逾期）", "倍", None, 3.16, None, "Verified", PSCSV % "GEN", "逾期，同上")
+inp("ps_qlys", "同業 P/S（TTM）：Qualys（季末 2026-06-30；US GAAP；逾期）", "倍", None, 6.89, None, "Verified", PSCSV % "QLYS", "逾期，同上")
+inp("ps_ftnt", "同業 P/S（TTM）：Fortinet（季末 2026-06-30；US GAAP；逾期）", "倍", None, 14.95, None, "Verified", PSCSV % "FTNT", "逾期，同上；資料庫另有 2026-09-30 列 16.64，為與 relmult 窗口及其他同業同季，取 2026-06-30")
+inp("ps_tm", "本公司 P/S（TTM；季末 2026-06-30）", "倍", None, 2.67, None, "Verified", PSCSV % "TRENDMICRO", "與同業同季末日，用於現行相對值")
 RMSRC = "software_ai/data/relmult_hist/out/trendmicro.json（groups.all；2026-11-17 產出；窗口 2021-09-30～2026-06-30，20 季）"
 inp("cm_adj", "相對倍數 rel_mult（本公司 ÷ 同業中位；PS 與 PSG 兩讀數幾何平均＝geo_base；基準＝geo_base，低／高＝sens.low／sens.high）", "倍", RMS["low"], RM["geo_base"], RMS["high"], "Derived", RMSRC,
-    "base_source：" + RM["base_source"] + "。同業 CHKP、GEN、QLYS、FTNT；本公司 Comparable 倍數是 EV/EBIT，以 PS／PSG 相對值近似套用於 EV/EBIT（子群中位數 × rel_mult）。1.00＝未調整（v0.1）")
+    "base_source：" + RM["base_source"] + "。同業 CHKP、GEN、QLYS、FTNT；Comparable 主腿為 P/S 口徑（G6），與 PS／PSG 相對值同口徑（同業 P/S 中位 × rel_mult）。v0.1 為 1.00（EV/EBIT）")
 inp("rm_ps", "PS 相對值讀數（20 季中位數；Sens 案 ps_only）", "倍", None, RM["ps_reading"], None, "Derived", RMSRC, "PS＝市值÷TTM 營收；範圍 %.2f–%.2f" % (RM["ps_stats"]["min"], RM["ps_stats"]["max"]))
 inp("rm_psg", "PSG 相對值讀數（14 季中位數；Sens 案 psg_only）", "倍", None, RM["psg_reading"], None, "Derived", RMSRC, "PSG＝PS÷TTM 營收年增(pt)；最早 4 季無基期")
 inp("rm_psgm", "PSG 相對值中位數（14 季；未乘成長比）", "倍", None, RM["psg_stats"]["median"], None, "Derived", RMSRC, "PSG 讀數＝本值 × 成長比")
@@ -328,7 +334,7 @@ CF.cell(GATE + 6, 1, "最低年末現金：不適用（無有利息負債；基�
 CF.column_dimensions["A"].width = 70
 # ================= Val =================
 VR = {}; vcur = [4]
-VA["A1"] = "Val — 估值：DCF（FCFF，明確期到 FY2032，評價日 2026-06-30，期中折現）與 Comparable（同業 EV/EBIT×目標日 TTM EBIT）各半；三情境依 In 頁權重加權。金額 ¥B，每股日圓。"
+VA["A1"] = "Val — 估值：DCF（FCFF，明確期到 FY2032，評價日 2026-06-30，期中折現）與 Comparable（同業 P/S 中位 × rel_mult × 目標日 TTM 營收，G6 主腿）各半；EV/EBIT Comparable 只作對照列，不進加權目標價；三情境依 In 頁權重加權。金額 ¥B，每股日圓。"
 VA["A2"] = "目標時點＝股價基準日＋12 個月；DCF 值由評價日以股權成本推到目標時點並扣期間股利；上檔空間為持有期間（現價日起 12 個月）價差，不是年化報酬。"
 VA["A3"] = "三情境差異只在 Vision One 的 AI 增量／侵蝕／推論成本、其他營收年增與營業費用年增；DCF 與 Comparable 落差分解見下方。"
 hdr(VA, 4, ["項目", "情境 A／數值", "情境 B", "情境 C", "說明"]); vcur[0] = 5
@@ -359,9 +365,9 @@ vr("tvsh", "終值占 EV", *v3(lambda s: f'=IF({"BCD"["ABC".index(s)]}{VR["ev"]}
 vr("eq", "股權價值＝EV＋現金（2026-06-30）− 有利息負債與租賃", *v3(lambda s: f"={'BCD'['ABC'.index(s)]}{VR['ev']}+cash_0-fin_lease"), fmt="#,##0.0")
 vr("ps0", "DCF 每股價值（評價日；÷現流通股）", *v3(lambda s: f"={'BCD'['ABC'.index(s)]}{VR['eq']}*1000/sh_now"), fmt="#,##0")
 vr("dcf", "DCF 目標價（推到目標時點、扣 FY2026 股利）", *v3(lambda s: f"={'BCD'['ABC'.index(s)]}{VR['ps0']}*(1+{KE})^{YT}-PL!{ref(s, 'dps', 2026)}"), fmt="#,##0")
-vr("pm", "Comparable 倍數：低成長子群 EV/EBIT（TTM；CHKP、GEN、QLYS 中位數）×相對倍數 rel_mult（cm_adj）", "=MEDIAN(pm_chkp,pm_gen,pm_qlys)*cm_adj", fmt="0.00", note="分母期間：TTM（FY2027E 近似目標日 TTM）；同業 US GAAP；租賃處理未逐家核對；rel_mult 為 PS／PSG 相對值近似套用於 EV/EBIT（v0.2）")
-vr("evc", "Comparable EV＝倍數×FY2027E 營業利益", *v3(lambda s: f"=$B${VR['pm']}*PL!{ref(s, 'oi', 2027)}"), fmt="#,##0.0")
-vr("comp", "Comparable 目標價（EV＋現金−負債，÷現流通股）", *v3(lambda s: f"=({'BCD'['ABC'.index(s)]}{VR['evc']}+cash_0-fin_lease)*1000/sh_now"), fmt="#,##0")
+vr("pm", "Comparable 倍數：同業 P/S 中位數（CHKP、GEN、QLYS、FTNT；TTM；季末 2026-06-30，逾期）×相對倍數 rel_mult（cm_adj）", "=MEDIAN(ps_chkp,ps_gen,ps_qlys,ps_ftnt)*cm_adj", fmt="0.00", note="P/S 口徑與 PS／PSG 相對值同口徑（G6）；分母期間：TTM（FY2027E 營收近似目標日 TTM）；同業 US GAAP，P/S 不受費用認列差異影響；同業倍數逾期（季末列）")
+vr("evc", "Comparable 股權價值＝P/S 倍數×FY2027E 營收（P/S 為股權口徑，不再加減現金與負債）", *v3(lambda s: f"=$B${VR['pm']}*PL!{ref(s, 'rev', 2027)}"), fmt="#,##0.0")
+vr("comp", "Comparable 目標價（股權價值 ÷ 現流通股）", *v3(lambda s: f"={'BCD'['ABC'.index(s)]}{VR['evc']}*1000/sh_now"), fmt="#,##0")
 vr("tps", "各情境加權目標價（w_dcf×DCF＋(1−w_dcf)×Comparable）", *v3(lambda s: f"=w_dcf*{'BCD'['ABC'.index(s)]}{VR['dcf']}+(1-w_dcf)*{'BCD'['ABC'.index(s)]}{VR['comp']}"), fmt="#,##0")
 vr("wts", "情境權重 A／B／C", "=tp_wA", "=tp_wB", "=tp_wC", fmt="0%")
 vr("tpdcf", "DCF 目標價（情境加權）", "=SUMPRODUCT(B%d:D%d,B%d:D%d)" % (VR["dcf"], VR["dcf"], VR["wts"], VR["wts"]), fmt="#,##0")
@@ -392,13 +398,20 @@ vr("sbcd", "  加回後比 DCF 目標價多（日圓）", "=B%d-B%d" % (VR["tpdc
 # DCF 與 Comparable 落差分解（情境 B）
 vr("gap", "落差分解（情境 B）：DCF 目標價 − Comparable 目標價", "=C%d-C%d" % (VR["dcf"], VR["comp"]), fmt="#,##0")
 vr("gap_t", "  時點與股利：DCF 由評價日推到目標時點並扣股利的增減", "=C%d-C%d" % (VR["dcf"], VR["ps0"]), fmt="#,##0")
-vr("mdcf", "  DCF 隱含 EV/EBIT（EV ÷ FY2027E 營業利益）", "=C%d/PL!%s" % (VR["ev"], ref("B", "oi", 2027)), fmt="0.00")
-vr("gap_m", "  倍數：(DCF 隱含倍數 − Comparable 倍數)×FY2027E 營業利益 ÷ 股數", "=(B%d-B%d)*PL!%s*1000/sh_now" % (VR["mdcf"], VR["pm"], ref("B", "oi", 2027)), fmt="#,##0")
+vr("mdcf", "  DCF 隱含 P/S（DCF 股權價值 ÷ FY2027E 營收）", "=C%d/PL!%s" % (VR["eq"], ref("B", "rev", 2027)), fmt="0.00")
+vr("gap_m", "  倍數：(DCF 隱含 P/S − Comparable P/S)×FY2027E 營收 ÷ 股數", "=(B%d-B%d)*PL!%s*1000/sh_now" % (VR["mdcf"], VR["pm"], ref("B", "rev", 2027)), fmt="#,##0")
 vr("gap_s", "  股票薪酬與槓桿：基準 0（sbc_r＝0、無負債）", 0, fmt="#,##0")
 vr("gap_c", "  分解核對（時點＋倍數＋其他−落差，應為 0）", "=B%d+B%d+B%d-B%d" % (VR["gap_t"], VR["gap_m"], VR["gap_s"], VR["gap"]), fmt="0.000")
-vr("cur", "本公司現行 EV/EBIT（現價 EV ÷ FY2026E 營業利益，情境 B）", "=(px*sh_now/1000-cash_0+fin_lease)/PL!%s" % ref("B", "oi", 2026), fmt="0.00", note="分子分母同為 FY2026E，與同業 TTM 倍數並列")
-vr("rel", "現行倍數 ÷ 同業子群中位數（調整前）", "=B%d/(B%d/cm_adj)" % (VR["cur"], VR["pm"]), fmt="0.00", note="隱含重估：現行倍數需達同業中位數才支持 Comparable")
-vr("stale", "同業倍數價格日（逾期標示）", '="CHKP 2026-11-13（未逾期）；GEN、QLYS 2026-10-26（逾期，相差超過 2 個交易日）"', fmt="@")
+vr("cur", "本公司現行 P/S（季末 2026-06-30；與同業同季）", "=ps_tm", fmt="0.00", note="資料庫 TTM P/S；與同業 P/S 同日對照")
+vr("rel", "現行倍數 ÷ 同業 P/S 中位數（本公司現行相對值；對照 rel_mult）", "=ps_tm/MEDIAN(ps_chkp,ps_gen,ps_qlys,ps_ftnt)", fmt="0.00", note="與 rel_mult（歷史 20 季 PS／PSG 讀數）並列；現行值高於 rel_mult 表示市場已不把成長差全數計入")
+vr("pmx", "對照列：同業 EV/EBIT 中位數（TTM；CHKP、GEN、QLYS；GEN、QLYS 價格日 2026-10-26 逾期）", "=MEDIAN(pm_chkp,pm_gen,pm_qlys)", fmt="0.00", note="盈餘型倍數已內含利潤率差，與 PS／PSG 相對值不同口徑，只作對照，不進加權目標價（G6）")
+vr("curx", "對照列：本公司現行 EV/EBIT（現價 EV ÷ FY2026E 營業利益，情境 B）", "=(px*sh_now/1000-cash_0+fin_lease)/PL!%s" % ref("B", "oi", 2026), fmt="0.00", note="分子分母同為 FY2026E，與同業 TTM 倍數並列")
+vr("relx", "對照列：現行 EV/EBIT ÷ 同業中位數（本公司現行相對值）", "=B%d/B%d" % (VR["curx"], VR["pmx"]), fmt="0.00")
+vr("cx1", "對照列：EV/EBIT Comparable 目標價，rel_mult＝1.00（同業中位 × FY2027E 營業利益＋現金−負債）", *v3(lambda s: f"=($B${VR['pmx']}*PL!{ref(s, 'oi', 2027)}+cash_0-fin_lease)*1000/sh_now"), fmt="#,##0")
+vr("cx2", "對照列：EV/EBIT Comparable 目標價，rel＝本公司現行相對值", *v3(lambda s: f"=($B${VR['pmx']}*$B${VR['relx']}*PL!{ref(s, 'oi', 2027)}+cash_0-fin_lease)*1000/sh_now"), fmt="#,##0")
+vr("cx1w", "對照列：EV/EBIT Comparable（rel＝1.00）情境加權；不進加權目標價", "=SUMPRODUCT(B%d:D%d,B%d:D%d)" % (VR["cx1"], VR["cx1"], VR["wts"], VR["wts"]), fmt="#,##0")
+vr("cx2w", "對照列：EV/EBIT Comparable（rel＝現行）情境加權；不進加權目標價", "=SUMPRODUCT(B%d:D%d,B%d:D%d)" % (VR["cx2"], VR["cx2"], VR["wts"], VR["wts"]), fmt="#,##0")
+vr("stale", "同業倍數日期（逾期標示）", '="P/S：CHKP、GEN、QLYS、FTNT 與本公司皆為季末 2026-06-30（相對現價日 2026-11-13 逾期，資料庫只有季末列）；對照列 EV/EBIT：CHKP 2026-11-13（未逾期）、GEN 與 QLYS 2026-10-26（逾期）"', fmt="@")
 VA.column_dimensions["A"].width = 80; VA.column_dimensions["E"].width = 80
 for c in "BCD": VA.column_dimensions[c].width = 14
 # ================= RevDCF =================
@@ -417,7 +430,7 @@ rv("rest", "其餘現值（FY2026–2027 與折舊、資本支出、營運資金
 rv("m1", "現價隱含 FY2028–FY2032 統一營業利益率", f"=(B{4}-B{4 + 3})/B{4 + 1}+sbc_r", "0.0%")
 rv("m0", "模型情境 B FY2028–FY2032 營收加權營業利益率", "=(" + "+".join(f"PL!{ref('B', 'oi', y)}" for y in range(2028, 2033)) + ")/(" + "+".join(f"PL!{ref('B', 'rev', y)}" for y in range(2028, 2033)) + ")", "0.0%")
 rv("gapm", "現價隱含 − 模型（百分點）", f"=(B{4 + 4}-B{4 + 5})*100", "0.0")
-rv("mdc", "現價隱含 EV/EBIT（現價 EV ÷ FY2027E 營業利益，情境 B）", f"=(px*sh_now/1000-cash_0+fin_lease)/PL!{ref('B', 'oi', 2027)}", "0.00", "對照：Comparable 倍數見 Val 頁")
+rv("mdc", "現價隱含 EV/EBIT（現價 EV ÷ FY2027E 營業利益，情境 B）", f"=(px*sh_now/1000-cash_0+fin_lease)/PL!{ref('B', 'oi', 2027)}", "0.00", "對照：EV/EBIT 對照列見 Val 頁")
 rv("sum", "摘要（公式組字）", f'="現價 "&TEXT(px,"#,##0")&" 日圓隱含 FY2028–FY2032 營業利益率約 "&TEXT(B{4 + 4},"0.0%")&"，模型情境 B 為 "&TEXT(B{4 + 5},"0.0%")&"（"&IF(B{4 + 4}>B{4 + 5},"現價要求高於模型","現價要求低於模型")&" "&TEXT(ABS(B{4 + 6}),"0.0")&" 個百分點）；管理層 FY2028 目標 28–31%（Interested-party，不進模型）。"', "@")
 # ================= Recon =================
 RC["A1"] = "Recon — 對帳：公司指引、前三季實績、共識（財報前）、分部與單位經濟。比較字樣由公式依數值組字。"
@@ -562,15 +575,15 @@ rd("o3", f'"3. 估值：DCF "&{T(VB("tpdcf"))}&"、Comparable "&{T(VB("tpcomp"))
 rd("o4", f'"4. 收支：FY2026–FY2030 自由現金流扣股利合計 "&{T(VB("gate"), "#,##0.0")}&" 十億日圓，關卡"&{VB("gatej")}&"；無有利息負債，現金 "&{T("cash_0", "#,##0")}&" 十億日圓。"')
 rd("o5", f'"5. 傳聞：2025 年私募興趣報導未見後續成交，公司仍上市（2026-11-12 發布 Q3 財報）；模型不含任何收購溢價。"')
 rd("hero", f'"加權目標價 "&{T(VB("tp"))}&" 日圓，上檔空間 "&{T(VB("up"), "+0.0%;-0.0%")}&"（現價 "&{T(VB("px"))}&"，"&TEXT(px_date,"yyyy-mm-dd")&" 收盤）；DCF "&{T(VB("tpdcf"))}&"、Comparable "&{T(VB("tpcomp"))}&"。Vision One 高成長，但推論成本已使 FY2026 營業利益指引下修；結論依賴 AI 增量不被單價侵蝕蓋過。"')
-rd("diag", f'"發布前合理性診斷（G3）：DCF 目標價 ÷ 現價 "&{T(VB("tpdcf")+"/"+VB("px"), "0.00")}&" 倍（"&IF(AND({VB("tpdcf")}/{VB("px")}>=0.25,{VB("tpdcf")}/{VB("px")}<=4),"在 0.25–4 倍內","超出 0.25–4 倍，須診斷")&"）；EV "&IF(Val!C{VR["ev"]}>0,"為正","為負")&"；評等 "&{VB("vrate")}&IF(OR({VB("vrate")}="強力買進",{VB("vrate")}="強力放空"),"，須診斷","，非強力評等")&"；FY2027E 營收較賣方共識（財報前）"&TEXT({PBR("rev", 2027)}/316.69-1,"+0.0%;-0.0%")&"，FY2026E 營收較公司指引"&TEXT({PBR("rev", 2026)}/301.5-1,"+0.0%;-0.0%")&"。診斷結論：Comparable 目標價 "&{T(VB("tpcomp"))}&" 日圓低於 DCF "&{T(VB("tpdcf"))}&" 日圓，落差 "&{T(VB("gap"))}&" 日圓，由倍數主導（Comparable 倍數 "&{T(VB("pm"), "0.00")}&" 倍，DCF 隱含 "&{T(VB("mdcf"), "0.00")}&" 倍）；倍數低是因 rel_mult "&TEXT(cm_adj,"0.00")&"（PS 與 PSG 讀數分歧，成長比 "&TEXT(rm_gr,"0.00")&"），而 DCF 的 WACC 約 "&TEXT({VB("wacc")},"0.0%")&" 配 Vision One 成長與費用年增低於營收年增（利益率擴張）。屬估值方法間的經濟判斷與讀數分歧，非建模錯誤；FY2027 公司無指引。"')
+rd("diag", f'"發布前合理性診斷（G3）：DCF 目標價 ÷ 現價 "&{T(VB("tpdcf")+"/"+VB("px"), "0.00")}&" 倍（"&IF(AND({VB("tpdcf")}/{VB("px")}>=0.25,{VB("tpdcf")}/{VB("px")}<=4),"在 0.25–4 倍內","超出 0.25–4 倍，須診斷")&"）；EV "&IF(Val!C{VR["ev"]}>0,"為正","為負")&"；評等 "&{VB("vrate")}&IF(OR({VB("vrate")}="強力買進",{VB("vrate")}="強力放空"),"，須診斷","，非強力評等")&"；FY2027E 營收較賣方共識（財報前）"&TEXT({PBR("rev", 2027)}/316.69-1,"+0.0%;-0.0%")&"，FY2026E 營收較公司指引"&TEXT({PBR("rev", 2026)}/301.5-1,"+0.0%;-0.0%")&"。診斷結論：Comparable（P/S 主腿）目標價 "&{T(VB("tpcomp"))}&" 日圓，DCF "&{T(VB("tpdcf"))}&" 日圓，落差 "&{T(VB("gap"))}&" 日圓，由倍數主導（Comparable P/S "&{T(VB("pm"), "0.00")}&" 倍，DCF 隱含 P/S "&{T(VB("mdcf"), "0.00")}&" 倍）；倍數低是因 rel_mult "&TEXT(cm_adj,"0.00")&"（PS 與 PSG 讀數分歧，成長比 "&TEXT(rm_gr,"0.00")&"），而 DCF 的 WACC 約 "&TEXT({VB("wacc")},"0.0%")&" 配 Vision One 成長與費用年增低於營收年增（利益率擴張）。屬估值方法間的經濟判斷與讀數分歧，非建模錯誤；FY2027 公司無指引。"')
 rd("dist", f'IF({VB("dist")}<5,"評等距最近邊界僅 "&{T(VB("dist"), "0.0")}&" 個百分點，目標價小幅變動即翻轉評等。","評等距最近邊界 "&{T(VB("dist"), "0.0")}&" 個百分點。")')
 rd("drv", f'"驅動：Vision One 營收＝平均 ARR × 匯率；ARR 年增＝(1＋範圍成長)×(1＋模組成長)×(1＋單價成長)，AI 增量加在範圍與模組、侵蝕扣在單價；各分部營收＝Vision One 占比分配＋其他營收，合計＝合併營收（核對列為 0）。"')
-rd("ver", f'"{VER}（{VDATE}）：相對倍數改讀 relmult_hist 的 geo_base（"&TEXT(cm_adj,"0.00")&"，v0.1 為 1.00，Derived）；新增 Sens 四案 ps_only、psg_only、sens.low、sens.high；DCF（股票薪酬加回）對照列（不進加權目標價）；rf 沿用日本 10 年期 "&TEXT(rf,"0.00%")&"（2026-11-11）；其餘同 v0.1。本版未做先驗；未做 Meta 的算力、自用 AI 讀法 2、Wattonomics、三層協調（不適用：非算力公司、非 Siliconomics 覆蓋）。"')
-rd("rm1", f'"相對倍數：rel_mult＝"&TEXT(cm_adj,"0.00")&"（"&"PS 與 PSG 兩讀數幾何平均，來源 relmult_hist/out/trendmicro.json，Derived；本公司 Comparable 倍數是 EV/EBIT，以 PS／PSG 相對值近似套用於 EV/EBIT：低成長子群中位數 "&TEXT(MEDIAN(pm_chkp,pm_gen,pm_qlys),"0.00")&" × "&TEXT(cm_adj,"0.00")&" ＝ "&TEXT({VB("pm")},"0.00")&" 倍，v0.1 為 1.00）；Sens 另列 ps_only "&TEXT(rm_ps,"0.00")&"、psg_only "&TEXT(rm_psg,"0.00")&"、sens.low "&TEXT(INDEX(In!D:D,MATCH("cm_adj",In!A:A,0)),"0.00")&"、sens.high "&TEXT(INDEX(In!F:F,MATCH("cm_adj",In!A:A,0)),"0.00")&"。"')
-rd("rm2", f'IF(rm_div>0.3,"PS 與 PSG 兩讀數差異大（分歧度 "&TEXT(rm_div,"0%")&"，超過 30%）：PS 讀數 "&TEXT(rm_ps,"0.00")&"、PSG 讀數 "&TEXT(rm_psg,"0.00")&"。原因是成長比：本公司 TTM 營收年增 "&TEXT(rm_gco,"0.0%")&"，同業中位 "&TEXT(rm_gpe,"0.0%")&"，成長比 "&TEXT(rm_gr,"0.00")&"；PSG 讀數＝PSG 相對值中位數 "&TEXT(rm_psgm,"0.00")&" × 成長比 "&TEXT(rm_gr,"0.00")&" ≈ "&TEXT(rm_psgm*rm_gr,"0.00")&"。PS 只看營收倍數，不扣成長差；PSG 把成長差全數計入，所以讀數約減半。geo_base 取兩者折衷，Comparable 因此大幅低於 v0.1。","PS 與 PSG 兩讀數分歧度 "&TEXT(rm_div,"0%")&"，未超過 30%。")')
+rd("ver", f'"{VER}（{VDATE}）：相對倍數改讀 relmult_hist 的 geo_base（"&TEXT(cm_adj,"0.00")&"，v0.1 為 1.00，Derived）；依 G6 Comparable 主腿改 P/S 口徑、EV/EBIT 改對照列；新增 Sens 四案 ps_only、psg_only、sens.low、sens.high；DCF（股票薪酬加回）對照列（不進加權目標價）；rf 沿用日本 10 年期 "&TEXT(rf,"0.00%")&"（2026-11-11）；其餘同 v0.1。本版未做先驗；未做 Meta 的算力、自用 AI 讀法 2、Wattonomics、三層協調（不適用：非算力公司、非 Siliconomics 覆蓋）。"')
+rd("rm1", f'"相對倍數與 Comparable 口徑（G6）：rel_mult＝"&TEXT(cm_adj,"0.00")&"（PS 與 PSG 兩讀數幾何平均，來源 relmult_hist/out/trendmicro.json，Derived）。Comparable 主腿改 P/S 口徑，與 PS／PSG 相對值同口徑：同業 P/S 中位 "&TEXT(MEDIAN(ps_chkp,ps_gen,ps_qlys,ps_ftnt),"0.00")&" × rel_mult "&TEXT(cm_adj,"0.00")&" ＝ "&TEXT({VB("pm")},"0.00")&" 倍，乘 FY2027E 營收；EV/EBIT Comparable 只作對照列（rel＝1.00 為 "&TEXT({VB("cx1w")},"#,##0")&"、rel＝現行 "&TEXT({VB("relx")},"0.00")&" 為 "&TEXT({VB("cx2w")},"#,##0")&" 日圓），不進加權目標價。Sens 另列 ps_only "&TEXT(rm_ps,"0.00")&"、psg_only "&TEXT(rm_psg,"0.00")&"、sens.low、sens.high（In 頁 cm_adj 低／高欄）。"')
+rd("rm2", f'IF(rm_div>0.3,"PS 與 PSG 兩讀數差異大（分歧度 "&TEXT(rm_div,"0%")&"，超過 30%）：PS 讀數 "&TEXT(rm_ps,"0.00")&"、PSG 讀數 "&TEXT(rm_psg,"0.00")&"。原因是成長比：本公司 TTM 營收年增 "&TEXT(rm_gco,"0.0%")&"，同業中位 "&TEXT(rm_gpe,"0.0%")&"，成長比 "&TEXT(rm_gr,"0.00")&"；PSG 讀數＝PSG 相對值中位數 "&TEXT(rm_psgm,"0.00")&" × 成長比 "&TEXT(rm_gr,"0.00")&" ≈ "&TEXT(rm_psgm*rm_gr,"0.00")&"。PS 讀數不扣成長差；PSG 把成長差全數計入，所以讀數約減半。geo_base 取兩者折衷。","PS 與 PSG 兩讀數分歧度 "&TEXT(rm_div,"0%")&"，未超過 30%。")')
 rd("sp2", '""')
 rd("h_md", '"市場資料日期"', formula=True)
-rd("md1", f'"現價 "&TEXT(px_date,"yyyy-mm-dd")&"；rf 2026-11-11（"&IF(px_date-DATE(2026,11,11)>2,"逾期","未逾期")&"）；同業倍數 CHKP 2026-11-13、GEN 與 QLYS 2026-10-26（逾期）；共識目標價價格日 2026-09-30、資料更新 2026-09-11（財報前，只作歷史對照）。"')
+rd("md1", f'"現價 "&TEXT(px_date,"yyyy-mm-dd")&"；rf 2026-11-11（"&IF(px_date-DATE(2026,11,11)>2,"逾期","未逾期")&"）；同業 P/S 為季末 2026-06-30（逾期）；對照列 EV/EBIT：CHKP 2026-11-13、GEN 與 QLYS 2026-10-26（逾期）；共識目標價價格日 2026-09-30、資料更新 2026-09-11（財報前，只作歷史對照）。"')
 rd("h_fail", '"主要失效條件"', formula=True)
 rd("f1", '"Vision One ARR 年增掉到非 AI 基準以下，或單價侵蝕大於 AI 增量（觀察：公司每季 Vision One ARR 與淨新增 ARR）。"')
 rd("f2", '"AI 推論成本占 Vision One 營收超過假設區間（觀察：營業利益指引是否再因雲端與 token 成本下修）。"')
@@ -590,7 +603,7 @@ rd("h_load", '"承重最大的 Assumed 與可證偽指標"', formula=True)
 rd("l1", '"每 US$1M ARR 的 AI 任務數（tpm）：公司未揭露；可證偽：Trend 披露雲端／AI token 成本占營收比或指引再下修。"')
 rd("l2", '"Vision One 範圍、模組、單價成長拆解（s_b26／m_b26／p_b26）：公司未揭露；可證偽：公司揭露客戶數、每客戶 ARR、方案數。"')
 rd("l3", '"單價侵蝕（aier_A／B／C）：公司只說競爭與免費授權；可證偽：Vision One ARR 增速與每客戶 ARR 的背離。"')
-rd("l4", '"相對倍數 rel_mult（cm_adj）：PS／PSG 讀數近似套用於 EV/EBIT，兩讀數分歧大；可證偽：同業 EV/EBIT 與本公司 EV/EBIT 的歷史相對值（5 年歷史倍數未找到）；Sens 有 ps_only、psg_only、low、high 四案。"')
+rd("l4", '"相對倍數 rel_mult（cm_adj）：兩讀數分歧大；主腿為 P/S 口徑；可證偽：本公司現行 P/S 相對值（Val 頁 rel）持續高於或低於 rel_mult；Sens 有 ps_only、psg_only、low、high 四案。"')
 rd("sp4", '""')
 rd("h_na", '"不適用說明"', formula=True)
 rd("na1", '"不適用：Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照：Trend Micro 不自建 AI 算力，AI 成本以向模型商購買的 token 計。"')
