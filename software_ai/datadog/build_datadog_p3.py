@@ -89,7 +89,7 @@ for k, lab in (("c_ps", "本公司現行 Forward P/S（資料商同日同口徑�
     VR[k] = r; V.cell(r, 1, lab); r += 1
 r += 1
 V.cell(r, 1, "0.6 同業倍數逐家與逾期核對（原則第 15 條；與現價基準日相差超過 2 個交易日標逾期；皆為美國會計準則 US GAAP，租賃處理資料商未載明＝未找到）").font = BOLD; r += 1
-VR["ph"] = r; hdr(V, r, ["項目", "P/S（主腿；2026-11-13 現價）", "Forward P/E（對照）", "P/S 價格日", "狀態／說明"]); r += 1
+VR["ph"] = r; hdr(V, r, ["項目", "P/S（主腿；現價日）", "Forward P/E（對照）", "P/S 價格日", "狀態／說明"]); r += 1
 for k, nm, dt in PEER:
     VR["p_" + k] = r; V.cell(r, 1, nm + "（US GAAP；租賃處理未找到）"); r += 1
 VR["p_ddog"] = r; V.cell(r, 1, "Datadog 現行（資料商，只作對照；US GAAP）"); r += 1

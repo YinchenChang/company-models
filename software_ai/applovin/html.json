@@ -279,6 +279,12 @@
      ]
     },
     {
+     "type": "note",
+     "parts": [
+      "@README!A64"
+     ]
+    },
+    {
      "type": "table",
      "caption": "Comparable 主腿：同業中位 P/S × 相對倍數 × 目標時點 TTM 營收 ÷ 稀釋股數（三情境）",
      "head": [
@@ -526,17 +532,17 @@
     },
     {
      "type": "table",
-     "caption": "同業 P/S（Comparable 主腿；季末日與逾期標示）",
+     "caption": "同業 P/S（Comparable 主腿；資料日與逾期標示）",
      "head": [
       "同業",
       "P/S",
-      "季末日",
+      "資料日",
       "逾期？",
       "是否納入中位數"
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "83-93",
+      "rows": "83-94",
       "cols": [
        "A",
        "B",
@@ -552,14 +558,17 @@
        ""
       ],
       "row_fmt": {
-       "93": {
+       "94": {
         "B": "sp1"
        },
-       "92": {
+       "93": {
         "B": "n2"
        },
        "90": {
         "B": ""
+       },
+       "91": {
+        "B": "n2"
        }
       }
      }
@@ -576,7 +585,7 @@
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "96-102,103-105",
+      "rows": "97-103,104-106",
       "cols": [
        "A",
        "B",
@@ -592,10 +601,10 @@
        ""
       ],
       "row_fmt": {
-       "105": {
+       "106": {
         "B": "sp1"
        },
-       "104": {
+       "105": {
         "B": "n2"
        }
       }
@@ -611,7 +620,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準：輸入取低值",
      "sheet": "Sens",
-     "rows": "80-117",
+     "rows": "81-119",
      "label_col": "A",
      "value_col": "B",
      "fmt": "sp1"
@@ -620,7 +629,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準：輸入取高值",
      "sheet": "Sens",
-     "rows": "80-117",
+     "rows": "81-119",
      "label_col": "A",
      "value_col": "C",
      "fmt": "sp1"
@@ -653,7 +662,7 @@
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "4-69",
+      "rows": "4-70",
       "cols": [
        "A",
        "B",
@@ -680,20 +689,20 @@
      "type": "kv",
      "items": [
       [
-       "@Sens!A71",
-       "@Sens!D71|n2"
-      ],
-      [
        "@Sens!A72",
        "@Sens!D72|n2"
       ],
       [
+       "@Sens!A73",
+       "@Sens!D73|n2"
+      ],
+      [
        "模型狀態",
-       "@Sens!D75"
+       "@Sens!D76"
       ],
       [
        "build_id",
-       "@Sens!D76"
+       "@Sens!D77"
       ]
      ]
     }
@@ -1604,24 +1613,12 @@
      "type": "table",
      "caption": "情境驅動（三情境並排，進加權目標價；In 頁最後一節）",
      "head": [
-      "@In!B103",
-      "@In!D103",
-      "@In!E103",
-      "@In!F103"
+      "@In!B105",
+      "@In!D105",
+      "@In!E105",
+      "@In!F105"
      ],
      "rows": [
-      [
-       "@In!B104",
-       "@In!D104|p1",
-       "@In!E104|p1",
-       "@In!F104|p1"
-      ],
-      [
-       "@In!B105",
-       "@In!D105|p1",
-       "@In!E105|p1",
-       "@In!F105|p1"
-      ],
       [
        "@In!B106",
        "@In!D106|p1",
@@ -1639,6 +1636,18 @@
        "@In!D108|p1",
        "@In!E108|p1",
        "@In!F108|p1"
+      ],
+      [
+       "@In!B109",
+       "@In!D109|p1",
+       "@In!E109|p1",
+       "@In!F109|p1"
+      ],
+      [
+       "@In!B110",
+       "@In!D110|p1",
+       "@In!E110|p1",
+       "@In!F110|p1"
       ]
      ]
     },
@@ -1799,20 +1808,20 @@
        "@In!G39|tag"
       ],
       [
-       "@In!B97",
-       "@In!D97|p0",
-       "@In!E97|p0",
-       "@In!F97|p0",
-       "@In!C97",
-       "@In!G97|tag"
+       "@In!B99",
+       "@In!D99|p0",
+       "@In!E99|p0",
+       "@In!F99|p0",
+       "@In!C99",
+       "@In!G99|tag"
       ],
       [
-       "@In!B96",
-       "@In!D96|n2",
-       "@In!E96|n2",
-       "@In!F96|n2",
-       "@In!C96",
-       "@In!G96|tag"
+       "@In!B98",
+       "@In!D98|n2",
+       "@In!E98|n2",
+       "@In!F98|n2",
+       "@In!C98",
+       "@In!G98|tag"
       ]
      ]
     }
@@ -2058,7 +2067,7 @@
     {
      "type": "note",
      "parts": [
-      "@README!A80"
+      "@README!A84"
      ]
     },
     {
@@ -2122,7 +2131,7 @@
       ],
       [
        "build_id",
-       "@Sens!D76"
+       "@Sens!D77"
       ],
       [
        "來源 xlsx",
@@ -2190,16 +2199,16 @@
     {
      "type": "list",
      "items": [
-      "@README!A66",
-      "@README!A67",
-      "@README!A68",
-      "@README!A69",
       "@README!A70",
       "@README!A71",
       "@README!A72",
       "@README!A73",
       "@README!A74",
-      "@README!A75"
+      "@README!A75",
+      "@README!A76",
+      "@README!A77",
+      "@README!A78",
+      "@README!A79"
      ]
     },
     {
