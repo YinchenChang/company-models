@@ -1,0 +1,6 @@
+{
+  "company": "Tesla Robotaxi（Tesla 分部，視同未上市）",
+  "official_segments": [],
+  "note": "Tesla 官方報告分部為 Automotive 與 Energy；Robotaxi 營收未單獨揭露。本模型是分部模型，營收由命題模組（里程 × 每英里價格）推得，供 physical_ai/tesla/ SOTP 讀取（RT_VAL_LO／RT_VAL_BASE／RT_VAL_HI）。",
+  "model_rows": {"市場天花板與情境": "Tesla Robotaxi 營收（自有全額＋車主抽成）"}
+}
