@@ -1,0 +1,32 @@
+name: ownership-check
+
+# 路徑歸屬檢查（docs/OWNERSHIP.md）：PR 同時改到兩個以上歸屬群組（AI供應鏈、AI軟體應用、AI實體應用、共用）時，
+# 標題須以「[跨專案]」開頭。另檢查 Drive 同步清單（tools/drive_sync/manifest.csv）涵蓋每個有 dist/ 的資料夾。
+# 只用 Python 標準函式庫，不安裝任何套件。
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  ownership:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 路徑歸屬（跨群組須標「[跨專案]」）
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          python3 tools/ownership/check_ownership.py --base "$BASE_SHA" --head "$HEAD_SHA" --title "$PR_TITLE"
+
+      - name: Drive 同步清單涵蓋所有 dist/
+        run: |
+          python3 tools/drive_sync/manifest.py --check

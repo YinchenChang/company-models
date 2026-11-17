@@ -1,6 +1,21 @@
 # company-models
 
-個股收支與評價模型（算力收支 Project）。每家公司一個資料夾，各自完整可建置（CRWV 模板的副本＋該公司的 company.json 與資料）。
+個股收支與評價模型。三個研究專案共用本 repo；路徑歸屬與跨專案修改規則見 [`docs/OWNERSHIP.md`](docs/OWNERSHIP.md)。
+
+## 本 repo 的三個專案
+
+| 專案 | 頂層資料夾 | 說明 | 索引位置 |
+|---|---|---|---|
+| AI供應鏈 | 除 `software_ai/`、`physical_ai/` 以外的全部資料夾（各公司資料夾、`siliconomics/`、`wattonomics/`、`markets/`、`mag/`、`docs/` 等）；共用區 `tools/`、`markets/invest_map/`、`docs/plan/`、`.github/` 亦由本專案維護 | AI 算力投入與收入的可持續性、AI 硬體供應鏈各環節的個股模型與產業基準（Siliconomics、Wattonomics）、AI 算力地圖 | Drive `02-Projects/02-AI供應鏈/`；下方總表 |
+| AI實體應用 | `physical_ai/`（目前只在分支 `physical-ai-v0.1`，尚未併入 main） | 實體 AI（機器人、自駕等）個股模型與實體 AI 地圖 | `physical_ai/README.md` |
+| AI軟體應用 | `software_ai/` | AI 軟體應用個股模型與 AI 對軟體單位經濟 | `software_ai/`（各公司資料夾內的 `README.md`） |
+
+- 一個 PR 只改自己專案的路徑；需要動到其他專案或共用區時，PR 標題以「[跨專案]」開頭並在說明寫明交流訊息或理由（`ownership-check` CI 會檢查）。
+- 成品（`dist/` 內的 xlsx、html）與 Drive 閱讀資料夾的對照：`tools/drive_sync/manifest.csv`（說明見 `tools/drive_sync/README.md`）。
+
+## AI供應鏈：個股模型總表
+
+每家公司一個資料夾，各自完整可建置（CRWV 模板的副本＋該公司的 company.json 與資料）。
 
 | 資料夾 | 公司 | 來源模板 | 狀態 |
 |---|---|---|---|
@@ -41,7 +56,7 @@
 - 各公司資料夾內的 `CLAUDE.md` 沿用各自來源模板的工作守則；與本 README 衝突時，以本 README 的流程與範圍為準。
 - **代理模型分工（Andy 2026-11-14；工作方式卡 v1.11 第 6 節，適用所有 repo）：** 網路查證、工作單已寫清楚的建置，派代理時指定 Sonnet；獨立核對與需要判斷的工作（證據等級、判斷題、規則解讀）用 Opus；執行中的代理不中途更換。
 - CI：各公司一個 workflow，只在該資料夾有變動時執行（`.github/workflows/<公司>-*.yml`）。
-- 成品的 Drive 位置：`02-算力收支/<公司>/`（資料夾 2026-10-07 由錯字「02-算利收支」改名）。
+- 成品的 Drive 位置：`02-AI供應鏈/個股模型/<類別>/`（雲端大廠、模型商、算力平台、硬體供應鏈；扁平排列、不開公司資料夾；Andy 2026-11-17），對照表 `tools/drive_sync/manifest.csv`。
 
 ## 共用工具：公司模型 HTML 展示層（`tools/company_html/`）
 - Excel 仍是計算事實的來源；`<公司>/html.json` ＋ 共用產生器 → `<公司>/dist/<日期>_<公司>模型_v<版本>.html`（單頁自含、每個數字標註來源儲存格）。檢核（重現性、抽數、無手寫數字）在 `ai-semis-build` CI。說明見 `tools/company_html/README.md`。目前：Advantest、Disco、SK 海力士、美光、三星、台積電、NVIDIA、Arista、台達電、廣達、中際旭創、Cerebras 等。風格比照 AI 半導體價值鏈儀表板：白底、青綠主色，不做深色模式。
