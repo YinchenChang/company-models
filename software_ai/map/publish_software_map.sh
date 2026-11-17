@@ -44,6 +44,7 @@ print("已複製模型 HTML：", n, "家")
 PY
 cd "$WT"
 git add -A
-git -c user.name="Claude" -c user.email="noreply@anthropic.com" commit -q -m "發布 AI 軟體地圖 $VER（來源 main $SHA；只更新 software_ai/）"
+git -c user.name="Claude" -c user.email="noreply@anthropic.com" commit -q -m "發布 AI 軟體地圖 $VER（來源 main $SHA；只更新 software_ai/）" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01V11BcxnDR1soAd3TmNvgEp"
 git push -q origin HEAD:gh-pages
 echo "已發布 AI 軟體地圖 $VER 到 gh-pages software_ai/（來源 $SHA）：$(git rev-parse --short HEAD)"
