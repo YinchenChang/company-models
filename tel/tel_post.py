@@ -321,7 +321,7 @@ def val_g(wb):
     for j, h in enumerate(["目標價", "日圓", "相對現價", "說明"], 1):
         c = V.cell(r, j, h); c.font = BOLD; c.fill = HDR
     r += 1
-    rows = [("① DCF 目標價（單純 DCF，情境加權）", dcf, F(T("三情境 DCF 價值（推到 12 個月後）以情境權重 A "), TX("tp_wA", "0.0"), T("／B "), TX("tp_wB", "0.0"), T("／C "), TX("tp_wC", "0.0"), T(" 加權；標準版 DCF（無槓桿自由現金流 FCFF＋WACC）"))),
+    rows = [("① DCF 目標價（單純 DCF，情境加權）", dcf, F(T("三情境 DCF 價值（推到 12 個月後）以情境權重 A "), TX("tp_wA", "0%"), T("／B "), TX("tp_wB", "0%"), T("／C "), TX("tp_wC", "0%"), T(" 加權；標準版 DCF（無槓桿自由現金流 FCFF＋WACC）"))),
             ("② Comparable 目標價（情境加權；相對倍數調整後，進加權）", cadj, F(T("同業前瞻本益比中位數 "), TX(pmed, "0.0"), T(" 倍 × 相對倍數調整係數 "), TX(coef, "0.00"), T(" × 12 個月後前瞻 EPS（情境加權）"), TX(feps, "0.0"), T(" 日圓；進加權目標價"))),
             ("②' Comparable 目標價（情境加權；未調整，市場主流同業法，不進加權）", cu, F(T("同業前瞻本益比中位數 "), TX(pmed, "0.0"), T(" 倍 × 12 個月後前瞻 EPS（情境加權）；只供對照，不進加權目標價"))),
             ("③ 加權目標價（DCF 與 Comparable 加權；橫幅主值，評等依此判定）", tp, F(T("DCF "), TX("tp_w_dcf", "0%"), T("＋Comparable（相對倍數調整後）"), TX("1-tp_w_dcf", "0%"))),
@@ -561,6 +561,8 @@ def readme13(wb, HR, PLA, RVA, SNS, CR, CO):
     sd = SNS["dcfw"]
     rv = lambda k: f"RevDCF!B{RVA[k]}"
     rb = PLA["rows_B"]
+    D_ = wb["DCF"]; sb_ = lab(D_, "情境 B（基準）")
+    d_rev, d_nop, d_tv = lab(D_, "營收", start=sb_, exact=True), lab(D_, "NOPAT＝", start=sb_), lab(D_, "終值（最後一年年底）", start=sb_)
     noadj = f"(tp_w_dcf*{dcf}+(1-tp_w_dcf)*{cu})"
     pc = lambda c: TX(c, "+0.0%;-0.0%")
     r = RD.max_row + 2
@@ -580,7 +582,9 @@ def readme13(wb, HR, PLA, RVA, SNS, CR, CO):
         T("；中國新設備營收變化 低／高 "), pc(f"Sens!B{s_chh}"), T("／"), pc(f"Sens!C{s_chh}"), T("；Field Solutions 與其他年增 低／高 "), pc(f"Sens!B{s_gm}"), T("／"), pc(f"Sens!C{s_gm}"),
         T("；情境權重全給保守 "), pc(f"Sens!B{s_wts}"), T("。這些是測試案例，不是門檻。"))
     put("o3", T("DCF 與現價的關係：WACC "), TX("wacc", "0.0%"), T("（股權成本 "), TX("ke", "0.0%"), T("；公司無有息負債）。反向 DCF：要支持現價，折現率須為 "), TX(rv("w1"), "0.0%"),
-        T("，或 FY2028 起現金流為基準情境的 "), TX(rv("s1"), "0.00"), T(" 倍（現價隱含 FY2028 營收約 "), TX(rv("rv1"), "#,##0"), T(" 十億日圓，模型 "), TX(rv("rv0"), "#,##0"), T("）。"))
+        T("，或 FY2028 起現金流為基準情境的 "), TX(rv("s1"), "0.00"), T(" 倍（現價隱含 FY2028 營收約 "), TX(rv("rv1"), "#,##0"), T(" 十億日圓，模型 "), TX(rv("rv0"), "#,##0"), T("）。"),
+        T("情境 B 營收在 FY3/28–FY3/32 持平約 "), TX(f"AVERAGE(DCF!D{d_rev}:H{d_rev})/1000", "0.0"), T(" 兆日圓（"), TX(f"MIN(DCF!D{d_rev}:H{d_rev})", "#,##0"), T("～"), TX(f"MAX(DCF!D{d_rev}:H{d_rev})", "#,##0"),
+        T(" 十億日圓）；在 WACC "), TX("wacc", "0.0%"), T("、g "), TX("g_tv", "0.0%"), T(" 下，終值約為最後一年 NOPAT 的 "), TX(f"DCF!C{d_tv}/DCF!I{d_nop}", "0.0"), T(" 倍。"))
     put("o4", T("對帳中：CY2027–CY2029 的 AI 設備（先進邏輯、DRAM 含 HBM），Wattonomics 換算值只有 Siliconomics 基準的 "), TX(f"Coord!C{CR['ratio']}", "0.00"), T("～"), TX(f"Coord!D{CR['ratio']}", "0.00"),
         T(" 倍；另一側讀數加權目標價 "), TX(f"Coord!C{CR['tp']}", "#,##0"), T(" 日圓（"), f"Coord!C{CR['rec']}", T("），現行基準讀數 "), TX(f"Coord!B{CR['tp']}", "#,##0"), T("（"), f"Coord!B{CR['rec']}", T("）"),
         f'IF(Coord!B{CR["rec"]}=Coord!C{CR["rec"]},"，評等相同","，評等不同")', T("。個股不裁決。公司實績（新設備銷售 FY2026 Q1–Q2）對層級：無可比實績（層級無東京威力科創份額；標參考）。"))
