@@ -55,6 +55,9 @@ def main():
             continue
         ok(latest is not None and E.rel(latest[0]) == x["xlsx"], f"{tk} 引用的是 dist/ 最新成品 {x['xlsx'].split('/')[-1]}")
         path = os.path.join(ROOT, x["xlsx"])
+        if not os.path.exists(path):
+            ok(False, f"{tk} 抽數時的成品已不在（模型剛改版？重跑 extract_models.py 與 build_html.py）")
+            continue
         for key, lab in (("tp", "目標價"), ("rec", "投資建議"), ("rating", "評等")):
             o = mm.get(key)
             if o is None:
@@ -114,6 +117,7 @@ def main():
     ok(not re.search(r"https?:|//[a-z0-9.-]+\.[a-z]{2,}", re.sub(r"<!--.*?-->", "", html), re.I), "網頁無外部網址（http／https／協定相對網址）")
     ok(not re.search(r"<(script|link|img|iframe)[^>]+(src|href)=[\"']?(https?:|//)", html, re.I), "無外部載入資源")
     hrefs = re.findall(r'href="([^"]+)"', html) + re.findall(r"href=\\\"([^\\\"]+)\\\"", html)
+    hrefs = [h for h in hrefs if not h.startswith("${")]          # 模板運算式（值由 data.json 的 link 帶入，另於下一項檢查）
     ok(all(h.startswith(("models/", "../")) for h in hrefs), f"連結皆為站內相對路徑（{len(hrefs)} 個 href 於模板，含站際切換）")
     ok(all(not (mm.get("link") and not mm["link"].startswith("models/")) for mm in data["models"].values()), "模型連結皆為 models/<公司>.html")
     ok(not re.search(r"#(DIV/0!|N/A|REF!|VALUE!|NAME\?|NUM!|NULL!)|Err:\d{3}|\bNaN\b|undefined", html), "網頁無 # 錯誤值、NaN、undefined 字樣")

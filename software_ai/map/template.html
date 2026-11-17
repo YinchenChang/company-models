@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI 軟體地圖</title>
 <style>
-/* Layout: research-portal masthead → sticky section tabs → one view at a time; data dense, hairline tables, figures in mono. */
+
 :root{
   --paper:#F5F6F8; --surface:#FFFFFF; --sunken:#EEF1F5; --ink:#0F1B2D; --muted:#5A6577; --faint:#8A94A3;
   --rule:#D8DDE4; --rule-strong:#AEB7C3; --navy:#12284A; --navy-ink:#E9EEF6; --navy-muted:#9FB0C9;
@@ -35,20 +35,20 @@ h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;font-weight:700
 a{color:inherit}
 :focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 
-/* masthead */
+
 .mast{background:var(--navy);color:var(--navy-ink)}
-/* 標題說明在上、版本資訊在下（2026-11-01：原右欄過寬把標題與說明擠窄） */
+
 .mast .wrap{padding-block:28px 22px}
 .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--navy-muted);display:flex;gap:10px;align-items:center}
 .eyebrow::before{content:"";width:18px;height:2px;background:var(--brass)}
 .mast h1{font-size:34px;letter-spacing:.02em;margin-top:8px}
-/* v0.6.21（Andy 11-03）：說明文字延伸到頁面內容寬度，減少行數 */
+
 .mast p{margin:8px 0 0;color:var(--navy-muted)}
 .meta{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 14px;font-size:12px;color:var(--navy-muted);border-top:1px solid #ffffff2e;margin-top:16px;padding-top:12px}
 .meta b{overflow-wrap:anywhere}
 .meta b{color:var(--navy-ink);font-weight:500;font-family:var(--f-mono)}
 
-/* kpis */
+
 .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid var(--rule);background:var(--surface)}
 .kpi{padding:16px 18px;border-right:1px solid var(--rule);min-width:0}
 .kpi:last-child{border-right:0}
@@ -56,7 +56,7 @@ a{color:inherit}
 .kpi .v{font-family:var(--f-mono);font-size:26px;font-weight:500;margin-top:2px}
 .kpi .s{font-size:12px;color:var(--muted);margin-top:2px}
 
-/* tabs */
+
 .tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--rule-strong)}
 .tabs .wrap{display:flex;gap:2px;overflow-x:auto}
 .tab{appearance:none;border:0;background:none;color:var(--muted);font:inherit;font-weight:500;padding:13px 16px 11px;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
@@ -78,7 +78,7 @@ main{padding-block:26px 56px}
 .note{font-size:12px;color:var(--muted)}
 .tagx{font-family:var(--f-mono);font-size:10.5px;color:var(--faint);white-space:nowrap}
 
-/* flow ribbon */
+
 .flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;background:var(--surface);border:1px solid var(--rule)}
 .flow .st{padding:14px 16px;position:relative;border-right:1px solid var(--rule);min-width:0}
 .flow .st:last-child{border-right:0}
@@ -88,7 +88,7 @@ main{padding-block:26px 56px}
 .flow .v small{font-size:12px;color:var(--muted);font-weight:400}
 .flow .r{font-size:11.5px;color:var(--faint);font-family:var(--f-mono)}
 
-/* map */
+
 .layer{display:grid;grid-template-columns:220px minmax(0,1fr);border:1px solid var(--rule);background:var(--surface)}
 .layer+.layer{border-top:0}
 .rail{padding:16px;border-right:1px solid var(--rule);background:var(--sunken);display:grid;gap:6px;align-content:start}
@@ -116,7 +116,7 @@ main{padding-block:26px 56px}
 .facility{padding:14px 16px;color:var(--muted);font-size:13px}
 .axisB{font-size:12px;color:var(--muted);padding:10px 16px;border-top:1px dashed var(--rule-strong)}
 
-/* tables */
+
 .tbl{overflow-x:auto}
 table{border-collapse:collapse;width:100%;font-size:13px}
 th{font-size:11px;letter-spacing:.06em;color:var(--muted);font-weight:500;text-align:left;padding:9px 10px;border-bottom:1px solid var(--rule-strong);white-space:nowrap;background:var(--surface);position:sticky;top:0}
@@ -142,7 +142,7 @@ tr:hover td{background:var(--sunken)}
 .fbtn{appearance:none;font:inherit;font-size:12px;padding:4px 10px;border:1px solid var(--rule-strong);background:var(--surface);color:var(--muted);border-radius:2px;cursor:pointer}
 .fbtn[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
 
-/* range bars */
+
 .rng{position:relative;height:18px;min-width:180px}
 .rng .ax{position:absolute;top:50%;left:0;right:0;height:1px;background:var(--rule)}
 .rng .z{position:absolute;top:0;bottom:0;width:1px;background:var(--ink);opacity:.55}
@@ -157,7 +157,7 @@ details[open] summary::before{content:"－ "}
 .det{display:grid;gap:4px;font-size:12px;color:var(--muted);margin-top:6px;max-width:72ch}
 .det b{color:var(--ink);font-weight:500}
 
-/* scatter */
+
 .chart svg{width:100%;height:auto;display:block}
 .chart text{font-family:var(--f-body);fill:var(--muted);font-size:11px}
 .chart .lab{fill:var(--ink);font-size:11px}
@@ -173,7 +173,7 @@ details[open] summary::before{content:"－ "}
 .def dt{font-weight:600;background:var(--sunken)}
 .def dd{color:var(--muted);min-width:0}
 .def dd code{font-family:var(--f-mono);font-size:12px;color:var(--ink)}
-/* profile index */
+
 .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
 .pcard{appearance:none;text-align:left;font:inherit;color:inherit;background:none;border:0;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:14px 16px;display:grid;gap:6px;cursor:pointer;min-width:0}
 .pcard:hover{background:var(--sunken)}

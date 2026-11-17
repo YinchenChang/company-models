@@ -21,6 +21,7 @@
 
 ## v0.2 變更（2026-11-17；G5）
 - rel_adj 基準改讀共用庫 `software_ai/data/relmult_hist/out/paloalto.json` 的 geo_base（PS 與 PSG 兩讀數幾何平均，Derived），取代 v0.1.1 自算的 macrotrends 序列；`RelHist` 頁為庫內讀值。Sens 加 ps_only、psg_only、sens.low、sens.high 四案。以 PS／PSG 相對值近似套用於前瞻本益比。兩讀數差異未超過 30%。
+- Comparable 主腿改為同業 P/S（G6）：同業中位 P/S（Fortinet 16.64、Zscaler 7.29、Check Point 4.95，共用庫最近一季，逾期標示）× 歷史相對倍數 × 目標時點 TTM 營收 ÷ 稀釋股數；這樣與 PS／PSG 相對值同口徑。前瞻本益比 Comparable 改為對照列（相對值 1.00 與本公司現行相對值兩讀數），不進加權目標價。
 - 無風險利率統一為美國 10 年期 5.10%（FRED DGS10，2026-11-12，現價日前 1 個交易日，未逾期，Verified）。
 - Recon 第 6 節與 HTML 估值章並列「DCF（股票薪酬加回）」每股價值與目標價，只作對照，不進加權目標價。
 - 合理性關卡重跑並更新診斷（README 頁「合理性關卡診斷」列）。
