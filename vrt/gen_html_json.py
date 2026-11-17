@@ -23,7 +23,7 @@ sec_thesis = {"id": "thesis", "title": "命題與核心問題", "blocks": [
     {"type": "h3", "text": "命題"},
     {"type": "list", "ordered": True, "items": [R_("p1"), R_("p2"), R_("p3")]},
     {"type": "note", "parts": [R_("mkt")]},
-    {"type": "list", "ordered": True, "collapse": True, "summary": "展開：命題回覆（依本模型計算的答案；想先看結論可展開，或讀完全文再看）", "items": [R_("r1"), R_("r2"), R_("r3")]},
+    {"type": "list", "ordered": True, "collapse": True, "summary": "展開：命題回覆（依本模型計算的答案；想先看結論可展開，或讀完全文再看）", "items": [R_("r1"), R_("r2"), R_("r3"), R_("r4")]},
     {"type": "h3", "text": "重點觀察"},
     {"type": "list", "ordered": True, "items": [R_(f"o{i}") for i in range(1, 6)]},
     {"type": "h3", "text": "情境定義"},

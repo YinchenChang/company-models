@@ -20,6 +20,9 @@ shutil.rmtree(TMP, ignore_errors=True); os.makedirs(os.path.join(TMP, "raw")); o
 jobs = {"base": ""}
 for k in KEYS:
     jobs[f"{k}__lo"] = f"{k}=@lo"; jobs[f"{k}__hi"] = f"{k}=@hi"
+CASES = {"share_back": "rel_27=1.20;rel_28=1.45;rel_29=1.45"}  # 與 build_part2.py 的 CASES 同步
+for ck, cov in CASES.items():
+    jobs[f"case_{ck}"] = cov
 for nm, ov in jobs.items():
     subprocess.run([sys.executable, BUILD, os.path.join(TMP, "raw", f"{nm}.xlsx")], check=True, env={**env0, "VRT_OVERRIDE": ov}, stdout=subprocess.DEVNULL)
 subprocess.run(["soffice"] + ([f"-env:UserInstallation=file://{os.environ['LO_PROFILE']}"] if os.environ.get("LO_PROFILE") else []) + ["--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", os.path.join(TMP, "rc")]
@@ -37,4 +40,8 @@ for k in KEYS:
         r = read(nm); d[side] = {"tp": r["tp"], "dcf": r["dcf"]}
     out["biz"][k] = d
     print(f"{k:10s} 低 {d['低']['tp'] / b['tp'] - 1:+.2%} 高 {d['高']['tp'] / b['tp'] - 1:+.2%}")
+out["cases"] = {}
+for ck in CASES:
+    r = read(f"case_{ck}"); out["cases"][ck] = {"tp": r["tp"], "dcf": r["dcf"]}
+    print(f"案例 {ck}: 加權 {r['tp']:.2f}（{r['tp'] / b['tp'] - 1:+.2%}）DCF {r['dcf']:.2f}")
 json.dump(out, open(os.path.join(HERE, "sens.json"), "w"), ensure_ascii=False, indent=1)

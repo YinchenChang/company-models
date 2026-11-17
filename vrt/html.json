@@ -86,7 +86,8 @@
      "items": [
       "@README!A13",
       "@README!A14",
-      "@README!A15"
+      "@README!A15",
+      "@README!A16"
      ]
     },
     {
@@ -97,11 +98,11 @@
      "type": "list",
      "ordered": true,
      "items": [
-      "@README!A18",
       "@README!A19",
       "@README!A20",
       "@README!A21",
-      "@README!A22"
+      "@README!A22",
+      "@README!A23"
      ]
     },
     {
@@ -174,7 +175,7 @@
     {
      "type": "note",
      "parts": [
-      "@README!A25"
+      "@README!A26"
      ]
     },
     {
@@ -2750,7 +2751,7 @@
     {
      "type": "note",
      "parts": [
-      "@README!A29"
+      "@README!A30"
      ]
     },
     {
@@ -2775,7 +2776,7 @@
       ],
       [
        "敏感度建置識別",
-       "@Sens!D47"
+       "@Sens!D51"
       ],
       [
        "機房設施市場來源（Wattonomics 快照）",
@@ -2795,7 +2796,6 @@
      "type": "list",
      "ordered": true,
      "items": [
-      "@README!A32",
       "@README!A33",
       "@README!A34",
       "@README!A35",
@@ -2805,7 +2805,8 @@
       "@README!A39",
       "@README!A40",
       "@README!A41",
-      "@README!A42"
+      "@README!A42",
+      "@README!A43"
      ]
     },
     {
@@ -2816,10 +2817,10 @@
      "type": "list",
      "ordered": true,
      "items": [
-      "@README!A45",
       "@README!A46",
       "@README!A47",
-      "@README!A48"
+      "@README!A48",
+      "@README!A49"
      ]
     },
     {
@@ -2829,7 +2830,7 @@
     {
      "type": "note",
      "parts": [
-      "@README!A28"
+      "@README!A29"
      ]
     },
     {
@@ -2895,7 +2896,7 @@
    ]
   ],
   "note": [
-   "@README!A24"
+   "@README!A25"
   ]
  },
  "layout": "v1.3"

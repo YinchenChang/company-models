@@ -138,7 +138,26 @@ for key, lab, unit in BIZ:
     SE.cell(rr, 7, f"=Val!$B${T['tpw']}").number_format = "#,##0.00"
     BIZR[key] = rr; rr += 1
 BIZ_LAST = rr - 1
-SE.cell(rr, 1, "註：業務主因案例為快照值（整本重算），非即時公式；基準欄為即時值，快照基準見下方；兩者不同＝模型狀態 STALE")
+# 情境案例（多個輸入同時改；整本重建快照）：份額路徑「隨認列落後回升到 FY2025 水準」
+CASES = [("share_back", "份額隨認列落後回升到 FY2025 水準（FY2028–29 約 15%；基準不改）", "rel_27=1.20;rel_28=1.45;rel_29=1.45", "rel_27 1.20／rel_28 1.45／rel_29 1.45（份額約 12.6%／15.2%／15.2%；基準 1.03／1.02／1.00）")]
+rr += 1
+SE.cell(rr, 1, "組合案例（整本重建；多個輸入同時改；快照 vrt/sens.json「cases」）").font = BOLD; rr += 1
+for j, h in enumerate(["案例", "設定", "案例：加權目標價", "案例：相對基準", "", "", "基準加權目標價", "鍵", "案例：DCF 目標價"], 1):
+    if h:
+        c = SE.cell(rr, j, h); c.font = BOLD; c.fill = HDR
+rr += 1
+CASE_ROWS = {}
+for ck, clab, cov, cset in CASES:
+    SE.cell(rr, 1, clab); SE.cell(rr, 2, cset); SE.cell(rr, 8, "rel_27、rel_28、rel_29（組合）")
+    v = SNAP["cases"].get(ck) if SNAP and "cases" in SNAP else None
+    if v:
+        SE.cell(rr, 3, v["tp"]).number_format = "#,##0.00"; SE.cell(rr, 4, f"=C{rr}/G{rr}-1").number_format = "+0.0%;-0.0%;0.0%"
+        SE.cell(rr, 9, v["dcf"]).number_format = "#,##0.00"
+    else:
+        SE.cell(rr, 3, "—"); SE.cell(rr, 4, "—")
+    SE.cell(rr, 7, f"=Val!$B${T['tpw']}").number_format = "#,##0.00"
+    CASE_ROWS[ck] = rr; rr += 1
+SE.cell(rr, 1, "註：業務主因與組合案例為快照值（整本重算），非即時公式；基準欄為即時值，快照基準見下方；兩者不同＝模型狀態 STALE")
 rr += 2
 SE.cell(rr, 1, "豁免（不列案例的鍵）").font = BOLD; rr += 1
 EXEMPT = ["dcp_25：不列：只影響 FY2025 歷史份額的顯示（Units 頁），不進任何預測與目標價",
@@ -198,8 +217,11 @@ RV["A12"] = "FY2027 營收 ÷ 共識營收"; RV["B12"] = "=B8/cons_rev27"; RV["C
 for rr_ in (6, 8, 9, 10): RV[f"B{rr_}"].number_format = "#,##0.00"; RV[f"C{rr_}"].number_format = "#,##0.00"
 RV["B7"].number_format = "0.00"; RV["C7"].number_format = "0.00"
 for rr_ in (11, 12): RV[f"B{rr_}"].number_format = "0.0%"; RV[f"C{rr_}"].number_format = "0.0%"
-RV["A14"] = ('="現價隱含營收規模約為模型情境 B 的 "&TEXT(B7,"0.00")&" 倍（FY2027 營收 "&TEXT(B8,"0.0")&" 十億美元，年增 "&TEXT(B11,"0%")&"；共識 FY2027 營收 "&TEXT(cons_rev27,"0.0")&" 十億美元）；'
-             'Wattonomics 基準在 FY2028 後市場持平，隱含倍數大於 1 表示現價已預期市場或份額高於 Wattonomics 基準。"')
+RV["A13"] = "現價隱含終值 EV／EBITDA（顯性期 FCFF 不變，只調終值現值至現價隱含企業價值）"
+RV["B13"] = f"=Val!C{SDCF['mult']}*(B6-Val!C{SDCF['pvx']})/Val!C{SDCF['pvtv']}"; RV["C13"] = f"=Val!C{SDCF['mult']}"
+RV["B13"].number_format = "0.0"; RV["C13"].number_format = "0.0"
+RV["A14"] = ('="現價隱含企業價值約為模型情境 B 的 "&TEXT(B7,"0.00")&" 倍；這是現價隱含的營收規模（FY2027 "&TEXT(B8,"0.0")&" 十億美元），不是模型值：模型 FY2027 營收 "&TEXT(C8,"0.0")&" 十億美元，已接近共識 "&TEXT(cons_rev27,"0.0")&"（"&TEXT(C12,"0.000")&" 倍）。'
+             '差距來自折現率與終值：WACC "&TEXT(wacc,"0.0%")&"、情境 B 終值隱含 EV／EBITDA 約 "&TEXT(C13,"0.0")&" 倍，以及 FY2028 後成長能否延續（Wattonomics 基準下市場 FY2029 年增 "&TEXT(Units!G10,"0.0%")&"）；顯性期 FCFF 不變時，現價需要終值 EV／EBITDA 約 "&TEXT(B13,"0.0")&" 倍。"')
 RV.column_dimensions["A"].width = 60; RV.column_dimensions["B"].width = 18; RV.column_dimensions["C"].width = 18
 
 # ---------------- Recon ----------------
