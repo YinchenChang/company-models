@@ -63,7 +63,7 @@ valuation = {"id": "valuation", "title": "估值", "blocks": [
     {"type": "note", "parts": [f"@README!A{RM['g6_2']}"]},
     {"type": "table", "caption": "Comparable 主腿：同業中位 P/S × 相對倍數 × 目標時點 TTM 營收 ÷ 稀釋股數（三情境）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
      "rowgen": {"sheet": "Val", "rows": f"{VR['fw']}-{VR['tpc_s']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n2", "n2", "n2"], "row_fmt": cmp_fmt}},
-    {"type": "table", "caption": "前瞻本益比對照（不進加權目標價；相對倍數 1.00 與現行相對值兩讀）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
+    {"type": "table", "caption": "前瞻本益比對照（不進加權目標價；固定相對倍數與現行相對值兩讀）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
      "rowgen": {"sheet": "Val", "rows": f"{VR['eps27']}-{VR['pe_tp2']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n2", "n2", "n2"], "row_fmt": pe_fmt}},
     {"type": "note", "parts": [f"@README!A{RM['g6_3']}"]},
     {"type": "table", "caption": "情境加權", "head": ["項目", "情境 A", "情境 B", "情境 C"],

@@ -30,7 +30,7 @@ print("核對列：" + "、".join(f"{k} {v} 列" for k, v in n_chk.items()))
 if n_chk["PL"] < 12 or n_chk["CF"] < 3: fail.append(f"核對列過少 {n_chk}")
 V = wb["Val"]
 labs = {V.cell(r, 1).value: r for r in range(1, V.max_row + 1)}
-for n in ("目標價（DCF 與 Comparable 加權）", "上檔空間：加權目標價", "投資建議", "估值評等（五級）", "入不敷出判定用：收支關卡合計（情境 B）", "DCF 目標價（情境加權；12 個月後）", "Comparable 目標價（情境加權；同業前瞻本益比）"):
+for n in ("目標價（DCF 與 Comparable 加權）", "上檔空間：加權目標價", "投資建議", "估值評等（五級）", "入不敷出判定用：收支關卡合計（情境 B）", "DCF 目標價（情境加權；12 個月後）", "Comparable 目標價（情境加權；同業 P/S 法）"):
     if n not in labs: fail.append(f"Val 缺列「{n}」")
 se = wb["Sens"]
 for r in range(1, se.max_row + 1):

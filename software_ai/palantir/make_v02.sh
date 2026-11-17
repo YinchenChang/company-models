@@ -10,7 +10,7 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$ROOT"
 P=software_ai/palantir
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-VER="${VER:-0.2}"; VDATE="${VDATE:-20261117}"
+VER="${VER:-0.2.1}"; VDATE="${VDATE:-20261117}"
 OUTNAME="${VDATE}_Palantir個股模型_v${VER}.xlsx"
 SJ="$P/data/sens_v${VER//./}_${VDATE}.json"
 python3 $P/data/facts_palantir.py

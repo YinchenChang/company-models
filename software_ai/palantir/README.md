@@ -4,7 +4,7 @@
 
 ## 版本
 
-<!-- version-table: dist/_待刪除/20261116_Palantir個股模型_v0.1.xlsx｜dist/20261117_Palantir個股模型_v0.2.xlsx -->
+<!-- version-table: dist/_待刪除/20261117_Palantir個股模型_v0.2.xlsx｜dist/20261117_Palantir個股模型_v0.2.1.xlsx -->
 | 項目 | v0.1 | v0.2 |
 |---|---|---|
 | 現價 | 167.99 | 167.99 |
@@ -28,7 +28,7 @@
 
 ## 方法
 
-三層：事實（Q）→ 命題模組與官方分部（Seg）→ 損益（PL）→ 現金流（CF）→ DCF 與 Comparable（Val）。DCF 至 FY2032，FCFF 期中折現，終值 RONIC＝WACC；Comparable＝同業 P/S（共用庫最近一季）× 共用庫相對倍數（G6：與 PS／PSG 同口徑；EV／營收與盈餘型倍數只作對照）（software_ai/data/relmult_hist/out/palantir.json 的 geo_base，Derived；θ 成長調整只留作 Sens）；另並列 DCF（股票薪酬加回）對照讀數，不進加權目標價；目標價＝二者加權（預設各半），情境 A／B／C 權重 25%／50%／25%。五級評等與收支關卡照原則第 24、63 條。情境 A／B／C 的差別在 AI 淨效果（增量、侵蝕、推論成本）與政府成長，依據見 README 頁「情境分化依據」。
+三層：事實（Q）→ 命題模組與官方分部（Seg）→ 損益（PL）→ 現金流（CF）→ DCF 與 Comparable（Val）。DCF 至 FY2032，FCFF 期中折現，終值 RONIC＝WACC；Comparable＝8 家同業合併中位 P/S（共用庫最近一季）× 整體 geo_base × 合併目標時點 TTM 營收（v0.2.1：整體單一口徑，因分組讀數把政府分部按 Palantir 自己的 P/S 計價、政府同業與其業務不同類，比值失真，故分組讀數只列對照、不進加權；G6：與 PS／PSG 同口徑，EV／營收與盈餘型倍數只作對照）（software_ai/data/relmult_hist/out/palantir.json 的 geo_base，Derived；θ 成長調整只留作 Sens）；另並列 DCF（股票薪酬加回）對照讀數，不進加權目標價；目標價＝二者加權（預設各半），情境 A／B／C 權重 25%／50%／25%。五級評等與收支關卡照原則第 24、63 條。情境 A／B／C 的差別在 AI 淨效果（增量、侵蝕、推論成本）與政府成長，依據見 README 頁「情境分化依據」。
 
 命題模組變數（客戶數、工作負載、單價、推論成本）暫建在 In 頁，標「v0.2 改讀 unit_economics」。
 

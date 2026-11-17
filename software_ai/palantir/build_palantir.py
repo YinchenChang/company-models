@@ -19,7 +19,7 @@ A = ap.parse_args()
 OVR = {k: float(v) for k, v in (s.split("=", 1) for s in A.set)}
 SENS = json.load(open(A.sens, encoding="utf-8")) if A.sens and os.path.exists(A.sens) else {}
 
-VER = "v0.2"; VDATE = "2026-11-17"
+VER = "v0.2.1"; VDATE = "2026-11-17"
 def _build_id():
     h = hashlib.sha256()
     for fn in ["build_palantir.py", "data/facts_palantir.py", "data/tokenomics_snapshot_v22.0.json", "../data/relmult_hist/out/palantir.json"] + [f"../data/relmult_hist/{_t}.csv" for _t in PSL]:
@@ -158,16 +158,18 @@ inp("w_dcf", "目標價中 DCF 的權重（其餘＝Comparable）", "%", 0.3, 0.
 for s, w in (("A", 0.25), ("B", 0.5), ("C", 0.25)):
     inp(f"tp_w{s}", f"情境權重 {s}", "%", None, w, None, "Assumed", "預設 A 25%／B 50%／C 25%（DCF 標準規格第 3 節）", fmt=pct)
 inp("gth", "成長調整指數 θ（倍數 × (分部成長 ÷ 同業成長)^θ；v0.2 基準 0＝改由共用庫相對倍數取代，θ 只留作 Sens）", "x", None, 0, 0.5, "Assumed", "判斷：θ＝0 為未調整同業倍數（缺資料時不調整的邊界，原則第 18、47 條）；θ＝1 為倍數與成長等比例", "v0.2：基準 0（相對倍數改讀共用庫）；Sens 高值 0.5＝v0.1 基準的成長調整", fmt="0.00")
-_rg = RELM["商業"]; _rv = RELM["政府"]
-for _k, _g, _nm in (("rel_c", _rg, "商業"), ("rel_g", _rv, "政府")):
-    inp(_k, f"{_nm}分部相對倍數（本公司 ÷ {_nm}同業中位；共用庫 geo_base）", "x", round(_g["sens"]["low"], 4), round(_g["geo_base"], 4), round(_g["sens"]["high"], 4), "Derived",
-        f"software_ai/data/relmult_hist/out/palantir.json groups.{_nm}.geo_base；base_source＝{_g['base_source']}；低／高＝sens.low／sens.high；Comparable 主腿為 P/S（G6），與 PS／PSG 相對值同口徑",
-        "Comparable 倍數＝同業 P/S 中位數 × 本係數；PS 與 PSG 兩讀數差異大（見 README）；Sens 另列 ps_only、psg_only、sens.low、sens.high 四案", fmt="0.00")
-for _k, _g, _nm in (("c", _rg, "商業"), ("g", _rv, "政府")):
+_rg = RELM["商業"]; _rv = RELM["政府"]; _ra = RELM["all"]
+for _k, _nm in (("rel_c", "Commercial"), ("rel_g", "Government")):
+    inp(_k, f"{_nm}：整體相對倍數（本公司合併 P/S ÷ 8 家同業合併中位 P/S；共用庫 all.geo_base，兩分部同值）", "x", round(_ra["sens"]["low"], 4), round(_ra["geo_base"], 4), round(_ra["sens"]["high"], 4), "Derived",
+        f"software_ai/data/relmult_hist/out/palantir.json groups.all.geo_base；base_source＝{_ra['base_source']}；低／高＝sens.low／sens.high；v0.2.1：整體單一口徑，分組讀數（商業、政府）只列對照",
+        "Comparable 倍數＝8 家同業合併中位 P/S × 本係數；兩分部同值，Sens 同步改動；PS 與 PSG 兩讀數差異大（見 README）", fmt="0.00")
+for _k, _g, _nm in (("c", _rg, "商業"), ("g", _rv, "政府"), ("a", _ra, "整體")):
     for _kk, _lab, _v, _f in ((f"ps_{_k}", "PS 讀數（20 季歷史相對值中位）", _g["ps_reading"], "0.00"), (f"psg_{_k}", "PSG 讀數（相對值）", _g["psg_reading"], "0.00"),
                               (f"gr_{_k}", "成長比（本公司 TTM 營收年增 ÷ 同業中位）", _g["growth_ratio"]["value"], "0.00"), (f"cgr_{_k}", "本公司 TTM 營收年增", _g["growth_ratio"]["company_g"], "0.0%"),
                               (f"pgr_{_k}", "同業 TTM 營收年增中位", _g["growth_ratio"]["peer_median_g"], "0.0%"), (f"dv_{_k}", "PS 與 PSG 讀數差異倍數（divergence）", _g["divergence"], "0.00")):
-        inp(_kk, f"{_nm}：{_lab}", "x", None, round(_v, 4), None, "Derived", f"relmult_hist/out/palantir.json groups.{_nm}", "只作對照，不進模型", fmt=_f)
+        inp(_kk, f"{_nm}：{_lab}", "x", None, round(_v, 4), None, "Derived", f"relmult_hist/out/palantir.json groups.{_nm}", "只作對照，不進模型（v0.2.1 起分組讀數不進加權）", fmt=_f)
+inp("rel_c_ref", "對照：商業分組 geo_base（不進模型）", "x", None, round(_rg["geo_base"], 4), None, "Derived", "relmult_hist/out/palantir.json groups.商業", "只作對照，不進加權", fmt="0.00")
+inp("rel_g_ref", "對照：政府分組 geo_base（不進模型）", "x", None, round(_rv["geo_base"], 4), None, "Derived", "relmult_hist/out/palantir.json groups.政府", "只作對照，不進加權", fmt="0.00")
 inp("gcap", "成長比值上限（分部成長 ÷ 同業成長 超過者夾到此值）", "x", 2, 3, 99, "Assumed", "判斷：避免與低成長同業比時倍數失控；原則第 38 條：觸及夾值時 Val 揭露原始值與夾值，Sens 高值 99＝不夾值", fmt="0.0")
 cm_peers = [p for p in PEERS if p[2] == "商業"]; gv_peers = [p for p in PEERS if p[2] == "政府"]
 for p in cm_peers + gv_peers:
@@ -638,8 +640,8 @@ for k, lab, rk, fm in (("d_pv", "明確期現值合計", "sumpv", "#,##0.0"), ("
 vp("d_pstp_sbc", "DCF（股票薪酬加回）每股價值（目標時點；只作對照）", S3(lambda s: f"=DCF!C{DR[s]['pstpsb']}"), "#,##0.00")
 cap("cap5", "5. Comparable 主腿：同業 P/S（共用庫最近一季）×共用庫相對倍數×本公司目標時點 TTM 營收 ÷ 稀釋股數（P/S 為市值口徑，不另加淨現金；G6）")
 cmk = [p[0].lower() for p in PEERS if p[2] == "商業"]; gvk = [p[0].lower() for p in PEERS if p[2] == "政府"]
-vp("m_c", "商業同業 P/S 中位數（共用庫最近一季）", ["=MEDIAN(" + ",".join(I(f"pm_{k}") for k in cmk) + ")"], "0.00")
-vp("m_g", "政府服務同業 P/S 中位數（共用庫最近一季）", ["=MEDIAN(" + ",".join(I(f"pm_{k}") for k in gvk) + ")"], "0.00")
+vp("m_c", "8 家同業合併中位 P/S（共用庫最近一季；整體單一口徑）", ["=MEDIAN(" + ",".join(I(f"pm_{k}") for k in cmk + gvk) + ")"], "0.00")
+vp("m_g", "同上（Government 分部沿用合併中位；不再單獨取政府同業）", [f"=$B${VR['m_c']}"], "0.00")
 vp("pg_c", "商業同業賣方 3 年營收成長中位數", ["=MEDIAN(" + ",".join(I(f"pg_{k}") for k in cmk) + ")"], "0.0%")
 vp("pg_g", "政府服務同業賣方 3 年營收成長中位數", ["=MEDIAN(" + ",".join(I(f"pg_{k}") for k in gvk) + ")"], "0.0%")
 vp("sg_c", "Commercial 分部 FY2026–FY2029 營收年複合成長", S3(lambda s: f"=(Seg!J{SEGR[s]['com']}/Seg!F{SEGR[s]['com']})^(1/3)-1"), "0.0%")
@@ -648,15 +650,15 @@ vp("rr_c", "Commercial 成長比值（原始）", S3(lambda s: f"={SCOL[s]}{VR['
 vp("rc_c", "Commercial 成長比值（夾 gcap 後）", S3(lambda s: f"=MIN({I('gcap')},{SCOL[s]}{VR['rr_c']})"), "0.00")
 vp("rr_g", "Government 成長比值（原始）", S3(lambda s: f"={SCOL[s]}{VR['sg_g']}/$B${VR['pg_g']}"), "0.00")
 vp("rc_g", "Government 成長比值（夾 gcap 後）", S3(lambda s: f"=MIN({I('gcap')},{SCOL[s]}{VR['rr_g']})"), "0.00")
-vp("rl_c", "Commercial 相對倍數（共用庫 geo_base；In 頁）", [f"={I('rel_c')}"], "0.00")
-vp("rl_g", "Government 相對倍數（共用庫 geo_base；In 頁）", [f"={I('rel_g')}"], "0.00")
+vp("rl_c", "Commercial 相對倍數（整體 geo_base；In 頁）", [f"={I('rel_c')}"], "0.00")
+vp("rl_g", "Government 相對倍數（整體 geo_base；In 頁，與 Commercial 同值）", [f"={I('rel_g')}"], "0.00")
 vp("ma_c", "Commercial 採用倍數＝同業中位數×相對倍數×(成長比值)^θ（θ 基準 0）", S3(lambda s: f"=$B${VR['m_c']}*$B${VR['rl_c']}*{SCOL[s]}{VR['rc_c']}^{I('gth')}"), "0.00")
 vp("ma_g", "Government 採用倍數", S3(lambda s: f"=$B${VR['m_g']}*$B${VR['rl_g']}*{SCOL[s]}{VR['rc_g']}^{I('gth')}"), "0.00")
 vp("ftp", "目標日 TTM 中 FY2027 占比（TTM 至 2027Q3＝Q4'26＋前三季'27，近似 25%／75%）", ["=0.75"], "0.00")
 vp("ttm_c", "Commercial 目標日 TTM 營收", S3(lambda s: f"=$B${VR['ftp']}*Seg!G{SEGR[s]['com']}+(1-$B${VR['ftp']})*Seg!F{SEGR[s]['com']}"), "#,##0.0")
 vp("ttm_g", "Government 目標日 TTM 營收", S3(lambda s: f"=$B${VR['ftp']}*Seg!G{SEGR[s]['gov']}+(1-$B${VR['ftp']})*Seg!F{SEGR[s]['gov']}"), "#,##0.0")
-vp("ev_c", "Commercial 隱含市值（P/S 口徑）", S3(lambda s: f"={SCOL[s]}{VR['ma_c']}*{SCOL[s]}{VR['ttm_c']}"), "#,##0.0")
-vp("ev_g", "Government 隱含市值（P/S 口徑）", S3(lambda s: f"={SCOL[s]}{VR['ma_g']}*{SCOL[s]}{VR['ttm_g']}"), "#,##0.0")
+vp("ev_c", "Commercial 隱含市值（合併倍數 × 分部營收，拆分僅供檢視）", S3(lambda s: f"={SCOL[s]}{VR['ma_c']}*{SCOL[s]}{VR['ttm_c']}"), "#,##0.0")
+vp("ev_g", "Government 隱含市值（合併倍數 × 分部營收，拆分僅供檢視）", S3(lambda s: f"={SCOL[s]}{VR['ma_g']}*{SCOL[s]}{VR['ttm_g']}"), "#,##0.0")
 vp("ev_t", "合計隱含市值（P/S 口徑）", S3(lambda s: f"={SCOL[s]}{VR['ev_c']}+{SCOL[s]}{VR['ev_g']}"), "#,##0.0")
 vp("nc_t", "淨現金（目標日；僅供對照，P/S 口徑不加入；CF 現金 FY2026／FY2027 以 25%／75% 內插，減借款）", S3(lambda s: f"=(1-$B${VR['ftp']})*CF!F{CFR[s]['cash']}+$B${VR['ftp']}*CF!G{CFR[s]['cash']}-{I('debt_0')}"), "#,##0.0")
 vp("eq_t", "股權價值（＝P/S 口徑市值，不另加淨現金）", S3(lambda s: f"={SCOL[s]}{VR['ev_t']}"), "#,##0.0")
@@ -812,10 +814,10 @@ def hdrrow(ws, r, labs):
         c = ws.cell(r, j, h); c.font = HDR; c.fill = HFILL
 hdrrow(SE, 3, ["驅動", "設定", "方向", "加權目標價", "相對基準", "鍵", "說明", "收支關卡 B（五年）", "FY2027 美國商業營收（B）", "DCF 目標價", "DCF 相對基準（美元）", "投資建議"])
 COST_ONLY = {"tk_p": "上界：只動成本邊（營收不變）", "tk_mult": "上界：只動成本邊（營收不變）", "tk_n": "上界：只動成本邊（營收不變）"}
-_rc, _rg2 = RELM["商業"]["sens"], RELM["政府"]["sens"]
+_rc = _rg2 = RELM["all"]["sens"]
 JOINT = {
-    "rel_c+rel_g:ps_only": ("相對倍數只用 PS 讀數（共用庫 ps_only；商業與政府）", "低", {"rel_c": round(_rc["ps_only"], 4), "rel_g": round(_rg2["ps_only"], 4)}, "PS 讀數不計成長"),
-    "rel_c+rel_g:psg_only": ("相對倍數只用 PSG 讀數（共用庫 psg_only；商業與政府）", "高", {"rel_c": round(_rc["psg_only"], 4), "rel_g": round(_rg2["psg_only"], 4)}, "PSG 讀數把成長放進分母，高成長公司被放大"),
+    "rel_c+rel_g:ps_only": ("相對倍數只用 PS 讀數（整體 json ps_only）", "低", {"rel_c": round(_rc["ps_only"], 4), "rel_g": round(_rg2["ps_only"], 4)}, "PS 讀數不計成長"),
+    "rel_c+rel_g:psg_only": ("相對倍數只用 PSG 讀數（整體 json psg_only）", "高", {"rel_c": round(_rc["psg_only"], 4), "rel_g": round(_rg2["psg_only"], 4)}, "PSG 讀數把成長放進分母，高成長公司被放大"),
     "rel_c+rel_g:sens.low": ("相對倍數取共用庫敏感度低值（sens.low）", "低", {"rel_c": round(_rc["low"], 4), "rel_g": round(_rg2["low"], 4)}, "共用庫 sens.low"),
     "rel_c+rel_g:sens.high": ("相對倍數取共用庫敏感度高值（sens.high）", "高", {"rel_c": round(_rc["high"], 4), "rel_g": round(_rg2["high"], 4)}, "共用庫 sens.high"),
     "tk_pg+pe27": ("價格與成本聯動：token 價格每年降 30% 且客戶要求分享節省（FY2027 單價變動三情境各再 −5pt）", "高", {"tk_pg": -0.30, "pe27_A": -0.10, "pe27_B": -0.13, "pe27_C": -0.18}, "價格降使推論成本降，但單價侵蝕加深（聯動）"),
@@ -940,8 +942,8 @@ rput("ver", f'="{VER}（2026-11-17）：Comparable 主腿改 P/S（G6，同業 P
 rput("ver1", "v0.1（2026-11-16）：首版：研究包與個股模型；Government／Commercial 分部、原型 U 單位經濟（v0.2 改讀 unit_economics）、DCF 至 FY2032、Comparable＝同業 EV／營收成長調整、五級評等與收支關卡。")
 rr += 1
 rput("rel0", "相對倍數（共用庫）與 PS／PSG 差異原因", True)
-rput("rel1", (f'="Comparable 倍數＝同業 P/S 中位數（共用庫最近一季）× 共用庫相對倍數（software_ai/data/relmult_hist/out/palantir.json 的 geo_base，Derived；PS 與 PSG 兩讀數的幾何平均）：商業 "&TEXT({I("rel_c")},"0.00")&"、政府 "&TEXT({I("rel_g")},"0.00")&"。主腿改為 P/S（G6）：與 PS／PSG 相對值同口徑、同資料庫；EV／營收（v0.1 口徑）與盈餘型倍數只作對照（相對倍數＝1.00 與本公司現行相對值），不進加權目標價。"'))
-rput("rel2", (f'="PS 與 PSG 兩讀數差異大（商業：PS "&TEXT({I("ps_c")},"0.00")&"、PSG "&TEXT({I("psg_c")},"0.00")&"，差 "&TEXT({I("dv_c")},"0.00")&" 倍；政府：PS "&TEXT({I("ps_g")},"0.00")&"、PSG "&TEXT({I("psg_g")},"0.00")&"，差 "&TEXT({I("dv_g")},"0.00")&" 倍；均超過 30%）。原因是成長比：本公司 TTM 營收年增 "&TEXT({I("cgr_c")},"0%")&"、商業同業中位 "&TEXT({I("pgr_c")},"0%")&"，成長比 "&TEXT({I("gr_c")},"0.00")&"（政府同業成長比 "&TEXT({I("gr_g")},"0.0")&"）。PS 不計成長，PSG 把成長放進分母，高成長公司的 PSG 相對值因此被放大；兩者取幾何平均為基準，單獨取 PS 或 PSG 的結果列在 Sens。"'))
+rput("rel1", (f'="Comparable 主腿（v0.2.1）：8 家同業合併中位 P/S（共用庫最近一季）"&TEXT({val("m_c")},"0.00")&" × 整體相對倍數 "&TEXT({I("rel_c")},"0.00")&"（palantir.json groups.all.geo_base，Derived；PS "&TEXT({I("ps_a")},"0.00")&"、PSG "&TEXT({I("psg_a")},"0.00")&" 的幾何平均）× 合併目標時點 TTM 營收 ÷ 稀釋股數。改整體單一口徑的理由：分組讀數是以本公司合併 P/S 除以分組同業（政府 IT 服務：BAH、LDOS、CACI），政府分部等於按 Palantir 自己的歷史 P/S 計價，且政府同業與 Palantir 業務不同類，比值被放大成雜訊（政府 geo_base "&TEXT({I("rel_g_ref")},"0.00")&"、商業 "&TEXT({I("rel_c_ref")},"0.00")&"），故商業、政府分組讀數只列對照、不進加權目標價。主腿為 P/S（G6），與 PS／PSG 同口徑；EV／營收與盈餘型倍數只作對照，不進加權。"'))
+rput("rel2", (f'="PS 與 PSG 兩讀數差異大（整體：PS "&TEXT({I("ps_a")},"0.00")&"、PSG "&TEXT({I("psg_a")},"0.00")&"，差 "&TEXT({I("dv_a")},"0.00")&" 倍，超過 30%）。原因是成長比：本公司 TTM 營收年增 "&TEXT({I("cgr_a")},"0%")&"、同業中位 "&TEXT({I("pgr_a")},"0%")&"，成長比 "&TEXT({I("gr_a")},"0.00")&"。PS 不計成長，PSG 把成長放進分母，高成長公司的 PSG 相對值因此被放大；兩者取幾何平均為基準，單獨取 PS 或 PSG 的結果列在 Sens。"'))
 rr += 1
 rput("qa", "命題回覆（依模型計算逐一回答）", True)
 rput("qa1", (f'="問：AI 讓 Palantir 的單位經濟變好還是變差？答：情境 B FY2028 AI 增量 US$"&{bn("Seg","H",SB_["inc"])}&"B 大於單價侵蝕 US$"&{bn("Seg","H",SB_["ero"])}&"B 與增量推論成本 US$"&TEXT(Seg!H{SB_["incinf"]}/1000,"0.00")&"B 之和，淨效果 US$"&{bn("Seg","H",SB_["net"])}&"B；情境 C（工作負載成長 "&TEXT(In!E{IR["wl27_C"]},"0%")&"、單價 "&TEXT(In!E{IR["pe27_C"]},"0%")&"）淨效果降到 US$"&{bn("Seg","H",SC_["net"])}&"B。"'))
