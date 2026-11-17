@@ -800,7 +800,7 @@ for s in "ABC":
     put(V, f"{c}{VR['s_nci']}", f"=-{I('nci0')}*{I('nci_mult')}", None, None, "#,##0.0")
     put(V, f"{c}{VR['s_eq']}", f"={c}{VR['s_ev']}+{c}{VR['s_nd']}+{c}{VR['s_nci']}", None, None, "#,##0.0")
     put(V, f"{c}{VR['s_ps']}", f"={c}{VR['s_eq']}*1000/({I('sh_dil')})", None, None, "#,##0.00")
-    put(V, f"B{VR['t_' + s]}", f"={I('w_dcf')}*{c}{VR['dcf12']}+(1-{I('w_dcf')})*{c}{VR['s_ps']}", None, None, "#,##0.00")
+    put(V, f"B{VR['t_' + s]}", f"={I('w_dcf')}*{c}{VR['dcf12']}+(1-{I('w_dcf')})*{c}{VR['pm_ps']}", None, None, "#,##0.00")
     put(V, f"B{VR['gate_' + s] if s != 'B' else VR['fcf_gate']}", f"=SUM(DCF!{CL[3]}{D_['gate']}:{CL[7]}{D_['gate']})", None, None, "#,##0.0")
     put(V, f"{c}{VR['ai_B']}", f"=PL!{CL[9]}{R['ai_oi']}", None, None, "#,##0.0")
 for k, col, ik in (("s_media", "E", "m_media"), ("s_com", "E", "m_com"), ("s_str", "E", "m_str")):
