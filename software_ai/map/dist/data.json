@@ -6,7 +6,7 @@
   "ue_file": "20261116_AI對軟體單位經濟_v0.1.xlsx",
   "ue_version": "v0.1",
   "ue_date": "2026-11-16",
-  "models_note": "11／14 家有現行成品（版本 v0.2、v0.2.1）",
+  "models_note": "13／14 家有現行成品（版本 v0.2、v0.2.1）",
   "price_dates": "2026-11-13",
   "relmult_date": "2026-11-17",
   "extract_date": "2026-11-17"
@@ -24,7 +24,7 @@
   },
   {
    "k": "已建模",
-   "v": "11／14",
+   "v": "13／14",
    "s": "個股模型現行成品"
   },
   {
@@ -6258,8 +6258,94 @@
    "sub": "ADS",
    "sub_name": "數位廣告：搜尋、社群與廣告科技",
    "layer": "S4 網路平台層",
-   "status": "dist 無現行成品（改版中；_待刪除/ 不計）",
+   "status": "ok",
    "ccy": "USD",
+   "price": {
+    "value": 409.1,
+    "cell": "Val!B12",
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.1.xlsx",
+    "label": "現價（股價基準日收盤）",
+    "date": "2026-11-13"
+   },
+   "dcf": {
+    "value": 261.314974614017,
+    "cell": "Val!B9",
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.1.xlsx",
+    "label": "DCF 目標價（情境加權；12 個月後）"
+   },
+   "comp": {
+    "value": 542.520491385494,
+    "cell": "Val!B10",
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.1.xlsx",
+    "label": "Comparable 目標價（情境加權；同業 P/S 法）"
+   },
+   "tp": {
+    "value": 401.917732999755,
+    "cell": "Val!B3",
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.1.xlsx",
+    "label": "目標價（DCF 與 Comparable 加權）"
+   },
+   "upside": {
+    "value": -0.0175562625280974,
+    "cell": "Val!B4",
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.1.xlsx",
+    "label": "上檔空間：加權目標價"
+   },
+   "rating": {
+    "value": "中立",
+    "cell": "Val!B6",
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.1.xlsx",
+    "label": "估值評等（五級）"
+   },
+   "rec": {
+    "value": "中立",
+    "cell": "Val!B8",
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.1.xlsx",
+    "label": "投資建議"
+   },
+   "scen": {
+    "values": [
+     461.939625957382,
+     404.448524930266,
+     336.834256181108
+    ],
+    "cells": [
+     "Val!B77",
+     "Val!C77",
+     "Val!D77"
+    ],
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.1.xlsx",
+    "label": "情境目標價＝DCF 權重×DCF＋(1−DCF 權重)×Comparable"
+   },
+   "sbc_dcf": {
+    "value": 268.733116349329,
+    "cell": "Val!B70",
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.1.xlsx",
+    "label": "DCF 目標價（加回；情境加權）"
+   },
+   "sbc_abc": null,
+   "ai_net": null,
+   "version": "v0.2.1",
+   "date": "2026-11-17",
+   "xlsx": "20261117_AppLovin個股模型_v0.2.1.xlsx",
+   "sbc_note": null,
+   "missing": [
+    "ai_net"
+   ],
+   "gate": {
+    "basis": {
+     "value": 48677.819408233,
+     "cell": "Val!B7",
+     "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.1.xlsx",
+     "label": "入不敷出判定用：收支關卡合計（情境 B）"
+    },
+    "abc": null,
+    "verdict": null,
+    "status": "通過",
+    "derived": true
+   },
+   "link": null,
+   "html_note": "尚無 HTML 成品",
    "relmult": {
     "file": "software_ai/data/relmult_hist/out/applovin.json",
     "generated": "2026-11-17",
@@ -6292,8 +6378,104 @@
    "sub": "ADS",
    "sub_name": "數位廣告：搜尋、社群與廣告科技",
    "layer": "S4 網路平台層",
-   "status": "dist 無現行成品（改版中；_待刪除/ 不計）",
+   "status": "ok",
    "ccy": "KRW",
+   "price": {
+    "value": 172500,
+    "cell": "Val!B9",
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.1.xlsx",
+    "label": "現價（2026-11-13 收盤）",
+    "date": "2026-11-13"
+   },
+   "dcf": {
+    "value": 208800.84856134,
+    "cell": "Val!B6",
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.1.xlsx",
+    "label": "DCF 目標價（情境加權）"
+   },
+   "comp": {
+    "value": 140494.4225827,
+    "cell": "Val!B7",
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.1.xlsx",
+    "label": "Comparable 目標價（P/S 主腿，情境加權）"
+   },
+   "tp": {
+    "value": 174647.63557202,
+    "cell": "Val!B8",
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.1.xlsx",
+    "label": "目標價（DCF 與 Comparable 加權）"
+   },
+   "upside": {
+    "value": 0.0124500612870737,
+    "cell": "Val!B11",
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.1.xlsx",
+    "label": "上檔空間：加權目標價"
+   },
+   "rating": {
+    "value": "中立",
+    "cell": "Val!B14",
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.1.xlsx",
+    "label": "估值評等（依加權目標價上檔空間）"
+   },
+   "rec": {
+    "value": "中立",
+    "cell": "Val!B16",
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.1.xlsx",
+    "label": "投資建議"
+   },
+   "scen": {
+    "values": [
+     184079.707447742,
+     175608.148690343,
+     163294.537459653
+    ],
+    "cells": [
+     "Val!B109",
+     "Val!B110",
+     "Val!B111"
+    ],
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.1.xlsx",
+    "label": "情境 A／B／C 目標價"
+   },
+   "sbc_dcf": {
+    "value": 208800.84856134,
+    "cell": "Recon!B39",
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.1.xlsx",
+    "label": "DCF 目標價（股票薪酬加回，情境加權）"
+   },
+   "sbc_abc": null,
+   "ai_net": {
+    "values": [
+     242.936823809413,
+     -130.87729544876,
+     -675.643434119166
+    ],
+    "cells": [
+     "Val!B117",
+     "Val!C117",
+     "Val!D117"
+    ],
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.1.xlsx",
+    "label": "AI 淨效果（營業利益，相對 FY2026）FY2032E：A／B／C（十億韓元）"
+   },
+   "version": "v0.2.1",
+   "date": "2026-11-17",
+   "xlsx": "20261117_Naver個股模型_v0.2.1.xlsx",
+   "sbc_note": null,
+   "missing": [],
+   "gate": {
+    "basis": {
+     "value": 3286.77934059906,
+     "cell": "Val!B15",
+     "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.1.xlsx",
+     "label": "入不敷出判定用收支合計（十億韓元，FY2026–FY2030）"
+    },
+    "abc": null,
+    "verdict": null,
+    "status": "通過",
+    "derived": true
+   },
+   "link": "models/naver.html",
    "relmult": {
     "file": "software_ai/data/relmult_hist/out/naver.json",
     "generated": "2026-11-17",
@@ -7231,8 +7413,9 @@
   "Fujitsu 富士通（6702）相對倍數庫註記：FUJITSU 2025-03-31：PS 缺（資料商未提供）；FUJITSU 2026-03-31：隱含 TTM 營收單季變動 +43%（重編／併購／資料錯誤，使用前核對）；PSG 有效點 6 < 12",
   "野村總研 NRI（4307，v0.2.1）未找到：AI 淨效果（命題模組）",
   "野村總研 NRI（4307）相對倍數庫註記：同業 FUJITSU 2025-03-31：PS 缺（資料商未提供）；同業 FUJITSU 2026-03-31：隱含 TTM 營收單季變動 +43%（重編／併購／資料錯誤，使用前核對）",
-  "AppLovin（APP）：dist 無現行成品（改版中；_待刪除/ 不計）；估值與評等欄顯示「—」，待新版成品放入 dist/ 後重跑抽數。",
-  "Naver（035420）：dist 無現行成品（改版中；_待刪除/ 不計）；估值與評等欄顯示「—」，待新版成品放入 dist/ 後重跑抽數。",
+  "AppLovin（APP，v0.2.1）未找到：AI 淨效果（命題模組）",
+  "AppLovin（APP）：尚無 HTML 成品",
+  "Naver（035420）相對倍數庫註記：同業 KAKAO 2024-12-31：PS 缺（資料商未提供）；同業 KAKAO 2025-12-31：隱含 TTM 營收單季變動 +37%（重編／併購／資料錯誤，使用前核對）",
   "LY Corp（4689）：dist 無現行成品（改版中；_待刪除/ 不計）；估值與評等欄顯示「—」，待新版成品放入 dist/ 後重跑抽數。"
  ],
  "sources": [
@@ -7250,7 +7433,7 @@
   },
   {
    "k": "個股模型",
-   "v": "Snowflake 20261117_Snowflake個股模型_v0.2.xlsx；Datadog 20261117_Datadog個股模型_v0.2.xlsx；Palantir 20261117_Palantir個股模型_v0.2.xlsx；CrowdStrike 20261117_CrowdStrike個股模型_v0.2.xlsx；Palo Alto Networks 20261117_Palo Alto Networks個股模型_v0.2.xlsx；Trend Micro 趨勢科技 20261117_趨勢科技個股模型_v0.2.xlsx；Salesforce 20261117_Salesforce個股模型_v0.2.1.xlsx；HubSpot 20261117_HubSpot個股模型_v0.2.xlsx；Accenture 20261117_Accenture個股模型_v0.2.1.xlsx；Fujitsu 富士通 20261117_Fujitsu個股模型_v0.2.1.xlsx；野村總研 NRI 20261117_野村總研個股模型_v0.2.1.xlsx"
+   "v": "Snowflake 20261117_Snowflake個股模型_v0.2.xlsx；Datadog 20261117_Datadog個股模型_v0.2.xlsx；Palantir 20261117_Palantir個股模型_v0.2.xlsx；CrowdStrike 20261117_CrowdStrike個股模型_v0.2.xlsx；Palo Alto Networks 20261117_Palo Alto Networks個股模型_v0.2.xlsx；Trend Micro 趨勢科技 20261117_趨勢科技個股模型_v0.2.xlsx；Salesforce 20261117_Salesforce個股模型_v0.2.1.xlsx；HubSpot 20261117_HubSpot個股模型_v0.2.xlsx；Accenture 20261117_Accenture個股模型_v0.2.1.xlsx；Fujitsu 富士通 20261117_Fujitsu個股模型_v0.2.1.xlsx；野村總研 NRI 20261117_野村總研個股模型_v0.2.1.xlsx；AppLovin 20261117_AppLovin個股模型_v0.2.1.xlsx；Naver 20261117_Naver個股模型_v0.2.1.xlsx"
   },
   {
    "k": "相對倍數庫",
