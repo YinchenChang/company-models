@@ -62,7 +62,7 @@ hdr(V, r_, ["項目", "數值", "上檔空間", "", "說明"]); T["h3"] = r_; r_
 T["c0"] = r_
 tset(r_, "dcftp", "DCF 目標價", [f"=B{SDCF['dcf']}", f"=B{r_}/px-1", None], "#,##0.00", "引用 0.1：三情境價值推到 12 個月後的加權"); V[f"C{r_}"].number_format = "+0.0%;-0.0%;0.0%"; r_ += 1
 tset(r_, "compadj", "Comparable（調整後，進加權）", ["=tp_comp_adj", f"=B{r_}/px-1", None], "#,##0.00", "同業中位數 × EPS × 相對倍數調整係數（0.5 節）"); V[f"C{r_}"].number_format = "+0.0%;-0.0%;0.0%"; r_ += 1
-tset(r_, "comp2", "Comparable（未調整，不進加權）", [f"=B{T['comptp']}", f"=B{r_}/px-1", None], "#,##0.00", "市場主流同業法"); V[f"C{r_}"].number_format = "+0.0%;-0.0%;0.0%"; r_ += 1
+tset(r_, "comp2", "Comparable 目標價（市場主流同業法）", [f"=B{T['comptp']}", f"=B{r_}/px-1", None], "#,##0.00", "市場主流同業法"); V[f"C{r_}"].number_format = "+0.0%;-0.0%;0.0%"; r_ += 1
 tset(r_, "tpw", "目標價（DCF 與 Comparable 加權）", [f"=tp_w_dcf*B{T['dcftp']}+(1-tp_w_dcf)*tp_comp_adj", f"=B{r_}/px-1", None], "#,##0.00", "DCF 權重 × DCF 目標價＋（1 − DCF 權重）× Comparable（調整後）；權重見 In 頁")
 V[f"C{r_}"].number_format = "+0.0%;-0.0%;0.0%"; r_ += 1
 tset(r_, "cons", "市場共識目標價", ["=cons_tp", f"=B{r_}/px-1", None], "#,##0.00", "Yahoo 2026-11-17（30 位分析師）；只作對帳，不作校準"); V[f"C{r_}"].number_format = "+0.0%;-0.0%;0.0%"; r_ += 1
