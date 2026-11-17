@@ -20,7 +20,7 @@
   }
  ],
  "hero": {
-  "rec": "@Val!B18",
+  "rec": "@Val!B20",
   "tiles": [
    [
     "@Val!A10",
@@ -122,9 +122,9 @@
     {
      "type": "list",
      "items": [
-      "@README!A22",
-      "@README!A23",
-      "@README!A24"
+      "@README!A27",
+      "@README!A28",
+      "@README!A29"
      ]
     }
    ]
@@ -173,13 +173,25 @@
     {
      "type": "note",
      "parts": [
-      "@README!A33"
+      "@README!A38"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@README!A34"
+      "@README!A23"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A24"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A39"
      ]
     },
     {
@@ -223,18 +235,6 @@
        ""
       ],
       [
-       "@Val!A16",
-       "@Val!B16|",
-       "",
-       ""
-      ],
-      [
-       "@Val!A17",
-       "@Val!B17|n1",
-       "",
-       ""
-      ],
-      [
        "@Val!A18",
        "@Val!B18|",
        "",
@@ -243,8 +243,20 @@
       [
        "@Val!A19",
        "@Val!B19|n1",
-       "@Val!C19|n2",
-       "@Val!D19|n2"
+       "",
+       ""
+      ],
+      [
+       "@Val!A20",
+       "@Val!B20|",
+       "",
+       ""
+      ],
+      [
+       "@Val!A21",
+       "@Val!B21|n1",
+       "@Val!C21|n2",
+       "@Val!D21|n2"
       ]
      ]
     },
@@ -257,16 +269,16 @@
      ],
      "rows": [
       [
-       "@Val!A20",
-       "@Val!B20|sp1"
-      ],
-      [
-       "@Val!A21",
-       "@Val!B21|sp1"
-      ],
-      [
        "@Val!A22",
        "@Val!B22|sp1"
+      ],
+      [
+       "@Val!A23",
+       "@Val!B23|sp1"
+      ],
+      [
+       "@Val!A24",
+       "@Val!B24|sp1"
       ]
      ]
     },
@@ -274,24 +286,24 @@
      "type": "kv",
      "items": [
       [
-       "@Val!A34",
-       "@Val!B34|p2"
+       "@Val!A37",
+       "@Val!B37|p2"
       ],
       [
-       "@Val!A36",
-       "@Val!B36|p2"
+       "@Val!A39",
+       "@Val!B39|p2"
       ],
       [
-       "@Val!A40",
-       "@Val!B40|p2"
+       "@Val!A43",
+       "@Val!B43|p2"
       ],
       [
-       "@Val!A41",
-       "@Val!B41|p2"
+       "@Val!A44",
+       "@Val!B44|p2"
       ],
       [
-       "@Val!A42",
-       "@Val!B42|p2"
+       "@Val!A45",
+       "@Val!B45|p2"
       ]
      ]
     },
@@ -305,24 +317,6 @@
       "情境 C"
      ],
      "rows": [
-      [
-       "@Val!A46",
-       "@Val!B46|n2",
-       "@Val!C46|n2",
-       "@Val!D46|n2"
-      ],
-      [
-       "@Val!A47",
-       "@Val!B47|n2",
-       "@Val!C47|n2",
-       "@Val!D47|n2"
-      ],
-      [
-       "@Val!A48",
-       "@Val!B48|n2",
-       "@Val!C48|n2",
-       "@Val!D48|n2"
-      ],
       [
        "@Val!A49",
        "@Val!B49|n2",
@@ -348,16 +342,34 @@
        "@Val!D52|n2"
       ],
       [
-       "@Val!A53",
-       "@Val!B53|p1",
-       "@Val!C53|p1",
-       "@Val!D53|p1"
+       "@Val!A54",
+       "@Val!B54|n2",
+       "@Val!C54|n2",
+       "@Val!D54|n2"
+      ],
+      [
+       "@Val!A55",
+       "@Val!B55|n2",
+       "@Val!C55|n2",
+       "@Val!D55|n2"
+      ],
+      [
+       "@Val!A56",
+       "@Val!B56|n2",
+       "@Val!C56|n2",
+       "@Val!D56|n2"
+      ],
+      [
+       "@Val!A57",
+       "@Val!B57|p1",
+       "@Val!C57|p1",
+       "@Val!D57|p1"
       ]
      ]
     },
     {
      "type": "table",
-     "caption": "Comparable：同業 EV／營收（TTM）與成長調整（三情境）",
+     "caption": "DCF（股票薪酬加回）對照讀數（只作對照，不進加權目標價）",
      "head": [
       "項目",
       "情境 A",
@@ -366,46 +378,76 @@
      ],
      "rows": [
       [
-       "@Val!A55",
-       "@Val!B55|n2",
-       "",
-       ""
-      ],
-      [
        "@Val!A56",
        "@Val!B56|n2",
-       "",
-       ""
-      ],
-      [
-       "@Val!A57",
-       "@Val!B57|p1",
-       "",
-       ""
+       "@Val!C56|n2",
+       "@Val!D56|n2"
       ],
       [
        "@Val!A58",
-       "@Val!B58|p1",
+       "@Val!B58|n2",
+       "@Val!C58|n2",
+       "@Val!D58|n2"
+      ],
+      [
+       "@Val!A15",
+       "@Val!B15|n2",
        "",
        ""
       ],
       [
-       "@Val!A59",
-       "@Val!B59|p1",
-       "@Val!C59|p1",
-       "@Val!D59|p1"
-      ],
+       "@Val!A16",
+       "@Val!B16|sp1",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "Comparable 主腿：同業 P/S × 相對倍數（三情境）",
+     "head": [
+      "項目",
+      "情境 A",
+      "情境 B",
+      "情境 C"
+     ],
+     "rows": [
       [
        "@Val!A60",
-       "@Val!B60|p1",
-       "@Val!C60|p1",
-       "@Val!D60|p1"
+       "@Val!B60|n2",
+       "",
+       ""
       ],
       [
        "@Val!A61",
        "@Val!B61|n2",
-       "@Val!C61|n2",
-       "@Val!D61|n2"
+       "",
+       ""
+      ],
+      [
+       "@Val!A64",
+       "@Val!B64|p1",
+       "",
+       ""
+      ],
+      [
+       "@Val!A65",
+       "@Val!B65|p1",
+       "",
+       ""
+      ],
+      [
+       "@Val!A66",
+       "@Val!B66|p1",
+       "@Val!C66|p1",
+       "@Val!D66|p1"
+      ],
+      [
+       "@Val!A67",
+       "@Val!B67|p1",
+       "@Val!C67|p1",
+       "@Val!D67|p1"
       ],
       [
        "@Val!A62",
@@ -420,70 +462,88 @@
        "@Val!D63|n2"
       ],
       [
-       "@Val!A64",
-       "@Val!B64|n2",
-       "@Val!C64|n2",
-       "@Val!D64|n2"
-      ],
-      [
-       "@Val!A65",
-       "@Val!B65|n2",
-       "@Val!C65|n2",
-       "@Val!D65|n2"
-      ],
-      [
-       "@Val!A66",
-       "@Val!B66|n2",
-       "@Val!C66|n2",
-       "@Val!D66|n2"
-      ],
-      [
        "@Val!A68",
-       "@Val!B68|n0",
-       "@Val!C68|n0",
-       "@Val!D68|n0"
+       "@Val!B68|n2",
+       "@Val!C68|n2",
+       "@Val!D68|n2"
       ],
       [
        "@Val!A69",
-       "@Val!B69|n0",
-       "@Val!C69|n0",
-       "@Val!D69|n0"
+       "@Val!B69|n2",
+       "@Val!C69|n2",
+       "@Val!D69|n2"
+      ],
+      [
+       "@Val!A70",
+       "@Val!B70|n2",
+       "@Val!C70|n2",
+       "@Val!D70|n2"
+      ],
+      [
+       "@Val!A71",
+       "@Val!B71|n2",
+       "@Val!C71|n2",
+       "@Val!D71|n2"
       ],
       [
        "@Val!A72",
-       "@Val!B72|n0",
-       "@Val!C72|n0",
-       "@Val!D72|n0"
+       "@Val!B72|n2",
+       "@Val!C72|n2",
+       "@Val!D72|n2"
       ],
       [
        "@Val!A73",
-       "@Val!B73|n0",
-       "@Val!C73|n0",
-       "@Val!D73|n0"
+       "@Val!B73|n2",
+       "@Val!C73|n2",
+       "@Val!D73|n2"
       ],
       [
        "@Val!A75",
-       "@Val!B75|n2",
-       "@Val!C75|n2",
-       "@Val!D75|n2"
+       "@Val!B75|n0",
+       "@Val!C75|n0",
+       "@Val!D75|n0"
       ],
       [
        "@Val!A76",
-       "@Val!B76|n2",
-       "@Val!C76|n2",
-       "@Val!D76|n2"
+       "@Val!B76|n0",
+       "@Val!C76|n0",
+       "@Val!D76|n0"
       ],
       [
-       "@Val!A77",
-       "@Val!B77|n2",
-       "@Val!C77|n2",
-       "@Val!D77|n2"
+       "@Val!A79",
+       "@Val!B79|n0",
+       "@Val!C79|n0",
+       "@Val!D79|n0"
       ],
       [
-       "@Val!A78",
-       "@Val!B78|",
-       "@Val!C78|",
-       "@Val!D78|"
+       "@Val!A80",
+       "@Val!B80|n0",
+       "@Val!C80|n0",
+       "@Val!D80|n0"
+      ],
+      [
+       "@Val!A82",
+       "@Val!B82|n2",
+       "@Val!C82|n2",
+       "@Val!D82|n2"
+      ],
+      [
+       "@Val!A83",
+       "@Val!B83|n2",
+       "@Val!C83|n2",
+       "@Val!D83|n2"
+      ],
+      [
+       "@Val!A84",
+       "@Val!B84|n2",
+       "@Val!C84|n2",
+       "@Val!D84|n2"
+      ],
+      [
+       "@Val!A85",
+       "@Val!B85|",
+       "@Val!C85|",
+       "@Val!D85|"
       ]
      ]
     },
@@ -496,14 +556,6 @@
       "數值"
      ],
      "rows": [
-      [
-       "@Val!A24",
-       "@Val!B24|n1"
-      ],
-      [
-       "@Val!A25",
-       "@Val!B25|n1"
-      ],
       [
        "@Val!A26",
        "@Val!B26|n1"
@@ -521,24 +573,32 @@
        "@Val!B29|n1"
       ],
       [
+       "@Val!A30",
+       "@Val!B30|n1"
+      ],
+      [
        "@Val!A31",
-       "@Val!B31|p2"
+       "@Val!B31|n1"
       ],
       [
-       "@Val!A32",
-       "@Val!B32|n3"
+       "@Val!A34",
+       "@Val!B34|p2"
       ],
       [
-       "@Val!A33",
-       "@Val!B33|p2"
+       "@Val!A35",
+       "@Val!B35|n3"
       ],
       [
-       "@Val!A37",
-       "@Val!B37|n0"
+       "@Val!A36",
+       "@Val!B36|p2"
       ],
       [
-       "@Val!A39",
-       "@Val!B39|p1"
+       "@Val!A40",
+       "@Val!B40|n0"
+      ],
+      [
+       "@Val!A42",
+       "@Val!B42|p1"
       ]
      ]
     }
@@ -552,7 +612,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準：輸入取低值的案例（一次改一個輸入，整本重算）",
      "sheet": "Sens",
-     "rows": "82,83,85,86,89,91,92,93,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,111,112,113,114,115,116,118",
+     "rows": "87,89,90,93,95,96,97,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,116,118,121,123,127",
      "label_col": "A",
      "value_col": "B",
      "fmt": "sp1"
@@ -561,7 +621,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準：輸入取高值的案例（一次改一個輸入，整本重算）",
      "sheet": "Sens",
-     "rows": "82,83,85,86,87,88,89,91,92,93,95,96,97,98,99,100,102,103,104,105,106,107,108,110,111,112,113,114,115,116,117",
+     "rows": "87,89,90,91,92,93,95,96,97,99,100,101,102,103,104,106,107,108,109,110,111,112,114,115,116,118,119,122,124,125,126",
      "label_col": "A",
      "value_col": "C",
      "fmt": "sp1"
@@ -595,7 +655,7 @@
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "4-71",
+      "rows": "4-75",
       "cols": [
        "A",
        "B",
@@ -624,20 +684,20 @@
      "type": "kv",
      "items": [
       [
-       "@Sens!A73",
-       "@Sens!D73|n2"
+       "@Sens!A77",
+       "@Sens!D77|n2"
       ],
       [
-       "@Sens!A74",
-       "@Sens!D74|n2"
+       "@Sens!A78",
+       "@Sens!D78|n2"
       ],
       [
        "模型狀態",
-       "@Sens!D77"
+       "@Sens!D81"
       ],
       [
        "build_id",
-       "@Sens!D78"
+       "@Sens!D82"
       ]
      ]
     }
@@ -1418,41 +1478,41 @@
      "type": "table",
      "caption": "情境驅動（三情境並排；進加權目標價）",
      "head": [
-      "@In!B113",
-      "@In!D113",
-      "@In!E113",
-      "@In!F113"
+      "@In!B136",
+      "@In!D136",
+      "@In!E136",
+      "@In!F136"
      ],
      "rows": [
       [
-       "@In!B114",
-       "@In!D114|p0",
-       "@In!E114|p0",
-       "@In!F114|p0"
+       "@In!B137",
+       "@In!D137|p0",
+       "@In!E137|p0",
+       "@In!F137|p0"
       ],
       [
-       "@In!B115",
-       "@In!D115|p0",
-       "@In!E115|p0",
-       "@In!F115|p0"
+       "@In!B138",
+       "@In!D138|p0",
+       "@In!E138|p0",
+       "@In!F138|p0"
       ],
       [
-       "@In!B116",
-       "@In!D116|p0",
-       "@In!E116|p0",
-       "@In!F116|p0"
+       "@In!B139",
+       "@In!D139|p0",
+       "@In!E139|p0",
+       "@In!F139|p0"
       ],
       [
-       "@In!B117",
-       "@In!D117|p0",
-       "@In!E117|p0",
-       "@In!F117|p0"
+       "@In!B140",
+       "@In!D140|p0",
+       "@In!E140|p0",
+       "@In!F140|p0"
       ],
       [
-       "@In!B118",
-       "@In!D118|p0",
-       "@In!E118|p0",
-       "@In!F118|p0"
+       "@In!B141",
+       "@In!D141|p0",
+       "@In!E141|p0",
+       "@In!F141|p0"
       ]
      ]
     },
@@ -1468,18 +1528,11 @@
      ],
      "rows": [
       [
-       "@In!B62",
-       "@In!D62|n3",
-       "@In!E62|n3",
-       "@In!F62|n3",
-       "@In!G62|tag"
-      ],
-      [
-       "@In!B64",
-       "@In!D64|n1",
-       "@In!E64|n1",
-       "@In!F64|n1",
-       "@In!G64|tag"
+       "@In!B63",
+       "@In!D63|n3",
+       "@In!E63|n3",
+       "@In!F63|n3",
+       "@In!G63|tag"
       ],
       [
        "@In!B65",
@@ -1490,17 +1543,17 @@
       ],
       [
        "@In!B66",
-       "@In!D66|p0",
-       "@In!E66|p0",
-       "@In!F66|p0",
+       "@In!D66|n1",
+       "@In!E66|n1",
+       "@In!F66|n1",
        "@In!G66|tag"
       ],
       [
-       "@In!B68",
-       "@In!D68|p1",
-       "@In!E68|p1",
-       "@In!F68|p1",
-       "@In!G68|tag"
+       "@In!B67",
+       "@In!D67|p0",
+       "@In!E67|p0",
+       "@In!F67|p0",
+       "@In!G67|tag"
       ],
       [
        "@In!B69",
@@ -1517,53 +1570,53 @@
        "@In!G70|tag"
       ],
       [
-       "@In!B54",
-       "@In!D54|p0",
-       "@In!E54|p0",
-       "@In!F54|p0",
-       "@In!G54|tag"
+       "@In!B71",
+       "@In!D71|p1",
+       "@In!E71|p1",
+       "@In!F71|p1",
+       "@In!G71|tag"
       ],
       [
-       "@In!B60",
-       "@In!D60|p0",
-       "@In!E60|p0",
-       "@In!F60|p0",
-       "@In!G60|tag"
+       "@In!B55",
+       "@In!D55|p0",
+       "@In!E55|p0",
+       "@In!F55|p0",
+       "@In!G55|tag"
       ],
       [
-       "@In!B75",
-       "@In!D75|p0",
-       "@In!E75|p0",
-       "@In!F75|p0",
-       "@In!G75|tag"
+       "@In!B61",
+       "@In!D61|p0",
+       "@In!E61|p0",
+       "@In!F61|p0",
+       "@In!G61|tag"
       ],
       [
-       "@In!B26",
-       "@In!D26|n3",
-       "@In!E26|n3",
-       "@In!F26|n3",
-       "@In!G26|tag"
+       "@In!B76",
+       "@In!D76|p0",
+       "@In!E76|p0",
+       "@In!F76|p0",
+       "@In!G76|tag"
       ],
       [
-       "@In!B30",
-       "@In!D30|p1",
-       "@In!E30|p1",
-       "@In!F30|p1",
-       "@In!G30|tag"
+       "@In!B27",
+       "@In!D27|n3",
+       "@In!E27|n3",
+       "@In!F27|n3",
+       "@In!G27|tag"
       ],
       [
-       "@In!B78",
-       "@In!D78|p0",
-       "@In!E78|p0",
-       "@In!F78|p0",
-       "@In!G78|tag"
+       "@In!B31",
+       "@In!D31|p1",
+       "@In!E31|p1",
+       "@In!F31|p1",
+       "@In!G31|tag"
       ],
       [
-       "@In!B82",
-       "@In!D82|n1",
-       "@In!E82|n1",
-       "@In!F82|n1",
-       "@In!G82|tag"
+       "@In!B79",
+       "@In!D79|p0",
+       "@In!E79|p0",
+       "@In!F79|p0",
+       "@In!G79|tag"
       ],
       [
        "@In!B83",
@@ -1571,6 +1624,13 @@
        "@In!E83|n1",
        "@In!F83|n1",
        "@In!G83|tag"
+      ],
+      [
+       "@In!B106",
+       "@In!D106|n1",
+       "@In!E106|n1",
+       "@In!F106|n1",
+       "@In!G106|tag"
       ]
      ]
     }
@@ -1663,7 +1723,7 @@
      ],
      "rowgen": {
       "sheet": "Recon",
-      "rows": "19-26",
+      "rows": "19-27",
       "cols": [
        "A",
        "B",
@@ -1682,17 +1742,17 @@
     },
     {
      "type": "table",
-     "caption": "@Recon!A28",
+     "caption": "@Recon!A29",
      "head": [
-      "@Recon!A29",
-      "@Recon!B29",
-      "@Recon!C29",
-      "@Recon!D29",
-      "@Recon!E29"
+      "@Recon!A30",
+      "@Recon!B30",
+      "@Recon!C30",
+      "@Recon!D30",
+      "@Recon!E30"
      ],
      "rowgen": {
       "sheet": "Recon",
-      "rows": "30-32",
+      "rows": "31-33",
       "cols": [
        "A",
        "B",
@@ -1708,11 +1768,11 @@
        ""
       ],
       "row_fmt": {
-       "31": {
+       "32": {
         "B": "p1",
         "C": "p1"
        },
-       "30": {
+       "31": {
         "B": "p2",
         "C": "p2"
        }
@@ -1721,19 +1781,19 @@
     },
     {
      "type": "table",
-     "caption": "@Recon!A34",
+     "caption": "@Recon!A35",
      "collapse": true,
      "summary": "展開：市場資料日期與逾期標示（逐筆）",
      "head": [
-      "@Recon!A35",
-      "@Recon!B35",
-      "@Recon!C35",
-      "@Recon!D35",
-      "@Recon!E35"
+      "@Recon!A36",
+      "@Recon!B36",
+      "@Recon!C36",
+      "@Recon!D36",
+      "@Recon!E36"
      ],
      "rowgen": {
       "sheet": "Recon",
-      "rows": "36-46",
+      "rows": "37-47",
       "cols": [
        "A",
        "B",
@@ -1752,16 +1812,16 @@
     },
     {
      "type": "table",
-     "caption": "@Recon!A47",
+     "caption": "@Recon!A48",
      "head": [
-      "@Recon!A48",
-      "@Recon!B48",
-      "@Recon!C48",
-      "@Recon!D48"
+      "@Recon!A49",
+      "@Recon!B49",
+      "@Recon!C49",
+      "@Recon!D49"
      ],
      "rowgen": {
       "sheet": "Recon",
-      "rows": "49-52",
+      "rows": "50-53",
       "cols": [
        "A",
        "B",
@@ -1775,10 +1835,10 @@
        ""
       ],
       "row_fmt": {
-       "51": {
+       "52": {
         "B": "n1"
        },
-       "52": {
+       "53": {
         "B": "p2"
        }
       }
@@ -1818,7 +1878,7 @@
       ],
       [
        "build_id",
-       "@Sens!D78"
+       "@Sens!D82"
       ],
       [
        "來源 xlsx",
@@ -1839,7 +1899,7 @@
      "items": [
       "@In!A2",
       "@Sens!A2",
-      "@README!A50"
+      "@README!A55"
      ]
     },
     {
@@ -1849,13 +1909,13 @@
     {
      "type": "list",
      "items": [
-      "@README!A37",
-      "@README!A38",
-      "@README!A39",
-      "@README!A53",
-      "@README!A54",
-      "@README!A55",
-      "@README!A58"
+      "@README!A42",
+      "@README!A43",
+      "@README!A44",
+      "@README!A58",
+      "@README!A59",
+      "@README!A60",
+      "@README!A63"
      ]
     },
     {
@@ -1869,7 +1929,7 @@
      ],
      "rowgen": {
       "sheet": "README",
-      "rows": "43-47",
+      "rows": "48-52",
       "cols": [
        "A",
        "B",

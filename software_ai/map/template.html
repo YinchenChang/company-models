@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 軟體地圖</title>
+<style>
+
+:root{
+  --paper:#F5F6F8; --surface:#FFFFFF; --sunken:#EEF1F5; --ink:#0F1B2D; --muted:#5A6577; --faint:#8A94A3;
+  --rule:#D8DDE4; --rule-strong:#AEB7C3; --navy:#12284A; --navy-ink:#E9EEF6; --navy-muted:#9FB0C9;
+  --brass:#8C6A2E; --pos:#1D7A52; --pos-bg:#E3F2EA; --watch:#9A6410; --watch-bg:#F7EDDB; --neg:#B0281F; --neg-bg:#F8E4E2;
+  --none:#6B7480; --none-bg:#ECEEF1; --gap:#5B3C88; --gap-bg:#ECE6F5; --bar:#2F4C78; --bar-soft:#C9D4E4;
+  --f-display:"Songti TC","Noto Serif TC",Georgia,serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-mono:"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0C1118; --surface:#121923; --sunken:#0F151E; --ink:#E4E9F0; --muted:#9BA6B6; --faint:#6F7A8A;
+  --rule:#243041; --rule-strong:#3A4A60; --navy:#0A1626; --navy-ink:#E4EAF3; --navy-muted:#8296B3;
+  --brass:#C9A35C; --pos:#55C08E; --pos-bg:#11291F; --watch:#E2A64A; --watch-bg:#2B2213; --neg:#F07A70; --neg-bg:#301717;
+  --none:#9AA3AF; --none-bg:#1C2430; --gap:#B79AE6; --gap-bg:#251C36; --bar:#7FA2D6; --bar-soft:#2A3A52; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0C1118; --surface:#121923; --sunken:#0F151E; --ink:#E4E9F0; --muted:#9BA6B6; --faint:#6F7A8A;
+  --rule:#243041; --rule-strong:#3A4A60; --navy:#0A1626; --navy-ink:#E4EAF3; --navy-muted:#8296B3;
+  --brass:#C9A35C; --pos:#55C08E; --pos-bg:#11291F; --watch:#E2A64A; --watch-bg:#2B2213; --neg:#F07A70; --neg-bg:#301717;
+  --none:#9AA3AF; --none-bg:#1C2430; --gap:#B79AE6; --gap-bg:#251C36; --bar:#7FA2D6; --bar-soft:#2A3A52; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.55;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--navy)}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.num,td.n,.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;font-weight:700}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+
+
+.mast{background:var(--navy);color:var(--navy-ink)}
+
+.mast .wrap{padding-block:28px 22px}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--navy-muted);display:flex;gap:10px;align-items:center}
+.eyebrow::before{content:"";width:18px;height:2px;background:var(--brass)}
+.mast h1{font-size:34px;letter-spacing:.02em;margin-top:8px}
+
+.mast p{margin:8px 0 0;color:var(--navy-muted)}
+.meta{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 14px;font-size:12px;color:var(--navy-muted);border-top:1px solid #ffffff2e;margin-top:16px;padding-top:12px}
+.meta b{overflow-wrap:anywhere}
+.meta b{color:var(--navy-ink);font-weight:500;font-family:var(--f-mono)}
+
+
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid var(--rule);background:var(--surface)}
+.kpi{padding:16px 18px;border-right:1px solid var(--rule);min-width:0}
+.kpi:last-child{border-right:0}
+.kpi .k{font-size:11px;letter-spacing:.08em;color:var(--muted)}
+.kpi .v{font-family:var(--f-mono);font-size:26px;font-weight:500;margin-top:2px}
+.kpi .s{font-size:12px;color:var(--muted);margin-top:2px}
+
+
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--rule-strong)}
+.tabs .wrap{display:flex;gap:2px;overflow-x:auto}
+.tab{appearance:none;border:0;background:none;color:var(--muted);font:inherit;font-weight:500;padding:13px 16px 11px;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
+.tab .ix{font-family:var(--f-mono);font-size:11px;color:var(--faint);margin-right:6px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--brass)}
+.tab:hover{color:var(--ink)}
+
+main{padding-block:26px 56px}
+.view{display:grid;gap:22px;grid-template-columns:minmax(0,1fr)}
+.view>*{min-width:0}
+.head{display:grid;gap:6px}
+.head h2{font-size:22px}
+.head p{margin:0;color:var(--muted)}
+.label{font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:2px}
+.panel>.ph{display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding:12px 16px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.panel>.ph h3{font-size:15px}
+.panel>.pb{padding:16px}
+.note{font-size:12px;color:var(--muted)}
+.tagx{font-family:var(--f-mono);font-size:10.5px;color:var(--faint);white-space:nowrap}
+
+
+.flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;background:var(--surface);border:1px solid var(--rule)}
+.flow .st{padding:14px 16px;position:relative;border-right:1px solid var(--rule);min-width:0}
+.flow .st:last-child{border-right:0}
+.flow .st:not(:last-child)::after{content:"";position:absolute;right:-7px;top:50%;width:12px;height:12px;background:var(--surface);border-top:1px solid var(--rule-strong);border-right:1px solid var(--rule-strong);transform:translateY(-50%) rotate(45deg);z-index:1}
+.flow .t{font-size:12px;color:var(--muted)}
+.flow .v{font-family:var(--f-mono);font-size:22px;font-weight:500}
+.flow .v small{font-size:12px;color:var(--muted);font-weight:400}
+.flow .r{font-size:11.5px;color:var(--faint);font-family:var(--f-mono)}
+
+
+.layer{display:grid;grid-template-columns:220px minmax(0,1fr);border:1px solid var(--rule);background:var(--surface)}
+.layer+.layer{border-top:0}
+.rail{padding:16px;border-right:1px solid var(--rule);background:var(--sunken);display:grid;gap:6px;align-content:start}
+.rail .code{font-family:var(--f-mono);font-size:11px;color:var(--brass);letter-spacing:.08em}
+.rail h3{font-size:17px}
+.rail .fig{font-family:var(--f-mono);font-size:18px}
+.rail .fig small{font-size:11px;color:var(--muted)}
+.rail .cap{font-size:12px;color:var(--muted)}
+.segs{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:0}
+.seg{padding:14px 16px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);display:grid;gap:8px;align-content:start;min-width:0}
+.seg h4{margin:0;font-size:14px;font-weight:600;display:flex;justify-content:space-between;gap:8px}
+.seg .irr{font-family:var(--f-mono);font-size:11px;color:var(--muted);white-space:nowrap}
+.seg .share{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+.sbar{height:6px;background:var(--bar-soft);position:relative}
+.sbar i{position:absolute;inset:0 auto 0 0;background:var(--bar)}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 8px;border:1px solid var(--rule);background:var(--surface);color:var(--muted);border-radius:2px;text-decoration:none;max-width:100%}
+.chip.r{color:var(--ink);border-color:var(--rule-strong);font-weight:500;cursor:pointer}
+.chip.r:hover{border-color:var(--ink)}
+.chip .d{width:7px;height:7px;border-radius:50%;flex:none;background:var(--none)}
+.chip .t{font-family:var(--f-mono);font-size:10.5px;color:var(--faint)}
+.d.機會,.d.強力買進,.d.買進{background:var(--pos)} .d.中立{background:var(--watch)} .d.放空,.d.強力放空{background:var(--neg)} .d.機會{background:var(--pos)} .d.觀察{background:var(--watch)} .d.偏貴{background:var(--neg)} .d.未估值{background:var(--none)} .d.收支不足{background:var(--gap)} .d.未上市{background:transparent;border:1.5px solid var(--faint)}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:12px;color:var(--muted);align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.facility{padding:14px 16px;color:var(--muted);font-size:13px}
+.axisB{font-size:12px;color:var(--muted);padding:10px 16px;border-top:1px dashed var(--rule-strong)}
+
+
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{font-size:11px;letter-spacing:.06em;color:var(--muted);font-weight:500;text-align:left;padding:9px 10px;border-bottom:1px solid var(--rule-strong);white-space:nowrap;background:var(--surface);position:sticky;top:0}
+td{padding:9px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+td.n,th.n{text-align:right;white-space:nowrap}
+tr:hover td{background:var(--sunken)}
+.co b{font-weight:600}
+.co .t{font-family:var(--f-mono);font-size:11px;color:var(--faint);margin-left:6px}
+.co .s{display:block;font-size:11.5px;color:var(--muted)}
+#v-position table{table-layout:fixed;min-width:860px}
+.score{display:grid;grid-template-columns:44px minmax(80px,1fr);gap:8px;align-items:center}
+.score .b{height:8px;background:var(--bar-soft);position:relative}
+.score .b i{position:absolute;inset:0 auto 0 0;background:var(--bar)}
+.mini{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.pill{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:2px;white-space:nowrap}
+.pill.強力買進,.pill.買進{color:var(--pos);background:var(--pos-bg)} .pill.強力買進,.pill.強力放空{outline:1.5px solid currentColor;outline-offset:-1.5px} .pill.中立{color:var(--watch);background:var(--watch-bg)} .pill.放空,.pill.強力放空{color:var(--neg);background:var(--neg-bg)} .pill.機會{color:var(--pos);background:var(--pos-bg)} .pill.觀察{color:var(--watch);background:var(--watch-bg)}
+.pill.偏貴{color:var(--neg);background:var(--neg-bg)} .pill.未估值{color:var(--none);background:var(--none-bg)} .pill.收支不足{color:var(--gap);background:var(--gap-bg)} .pill.未上市{color:var(--muted);background:transparent;border:1px solid var(--rule-strong)}
+.gate{font-size:11.5px;white-space:nowrap} .gate.ok{color:var(--pos)} .gate.no{color:var(--gap);font-weight:600}
+.up{color:var(--pos)} .dn{color:var(--neg)}
+.flag{font-size:11px;color:var(--watch);display:block}
+.stnote{font-size:11px;color:var(--muted);display:block}
+.filters{display:flex;flex-wrap:wrap;gap:6px}
+.fbtn{appearance:none;font:inherit;font-size:12px;padding:4px 10px;border:1px solid var(--rule-strong);background:var(--surface);color:var(--muted);border-radius:2px;cursor:pointer}
+.fbtn[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+
+
+.rng{position:relative;height:18px;min-width:180px}
+.rng .ax{position:absolute;top:50%;left:0;right:0;height:1px;background:var(--rule)}
+.rng .z{position:absolute;top:0;bottom:0;width:1px;background:var(--ink);opacity:.55}
+.rng .rs{position:absolute;top:6px;height:6px;background:var(--bar-soft)}
+.rng .c{position:absolute;top:3px;width:12px;height:12px;border-radius:50%;transform:translateX(-50%);border:2px solid var(--surface)}
+.rng .c.強力買進,.rng .c.買進{background:var(--pos)} .rng .c.中立{background:var(--watch)} .rng .c.放空,.rng .c.強力放空{background:var(--neg)} .rng .c.機會{background:var(--pos)} .rng .c.觀察{background:var(--watch)} .rng .c.偏貴{background:var(--neg)} .rng .c.收支不足{background:var(--gap)}
+.rng .o{position:absolute;top:1px;font-size:10px;font-family:var(--f-mono);color:var(--muted)}
+details summary{cursor:pointer;color:var(--muted);font-size:12px;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"＋ ";font-family:var(--f-mono)}
+details[open] summary::before{content:"－ "}
+.det{display:grid;gap:4px;font-size:12px;color:var(--muted);margin-top:6px;max-width:72ch}
+.det b{color:var(--ink);font-weight:500}
+
+
+.chart svg{width:100%;height:auto;display:block}
+.chart text{font-family:var(--f-body);fill:var(--muted);font-size:11px}
+.chart .lab{fill:var(--ink);font-size:11px}
+.chart .gl{stroke:var(--rule);stroke-width:1}
+.chart .zl{stroke:var(--ink);stroke-opacity:.5;stroke-width:1}
+.chart .q{fill:var(--brass);font-size:11px;letter-spacing:.06em}
+
+.callouts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.callout{background:var(--surface);border:1px solid var(--rule);padding:12px 14px;display:grid;gap:4px;font-size:12.5px;color:var(--muted);min-width:0}
+.callout b{color:var(--ink);font-size:13px}
+.def{display:grid;grid-template-columns:200px minmax(0,1fr);gap:0;border-top:1px solid var(--rule)}
+.def dt,.def dd{padding:10px 12px;border-bottom:1px solid var(--rule);margin:0}
+.def dt{font-weight:600;background:var(--sunken)}
+.def dd{color:var(--muted);min-width:0}
+.def dd code{font-family:var(--f-mono);font-size:12px;color:var(--ink)}
+
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.pcard{appearance:none;text-align:left;font:inherit;color:inherit;background:none;border:0;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:14px 16px;display:grid;gap:6px;cursor:pointer;min-width:0}
+.pcard:hover{background:var(--sunken)}
+.pcard .top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.pcard b{font-size:14px}
+.pcard .t{font-family:var(--f-mono);font-size:11px;color:var(--faint)}
+.pcard p{margin:0;font-size:12.5px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.grp{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;color:var(--brass);margin:6px 0 -12px}
+.linkish{appearance:none;background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left}
+.linkish:hover b,.linkish:hover{text-decoration:underline;text-underline-offset:3px}
+
+footer{border-top:1px solid var(--rule);padding-block:18px 28px;color:var(--faint);font-size:12px}
+
+@media (max-width:900px){
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpi:nth-child(2){border-right:0} .kpi:nth-child(-n+2){border-bottom:1px solid var(--rule)}
+  .flow{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .flow .st:nth-child(2){border-right:0}.flow .st:nth-child(-n+2){border-bottom:1px solid var(--rule)}
+  .flow .st::after{display:none}
+  .layer{grid-template-columns:1fr}
+  .rail{border-right:0;border-bottom:1px solid var(--rule)}
+  .callouts{grid-template-columns:1fr}
+  .def{grid-template-columns:1fr}
+}
+@media (max-width:480px){.mast h1{font-size:28px}.kpi .v{font-size:22px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* ---------- 軟體地圖專用 ---------- */
+.site-switch{display:flex;gap:0;margin:0 0 14px;border:1px solid #ffffff40;width:max-content;max-width:100%}
+.site-switch a,.site-switch span{padding:5px 16px;font-size:12.5px;letter-spacing:.06em;color:var(--navy-muted);text-decoration:none;border-right:1px solid #ffffff2e;white-space:nowrap}
+.site-switch>*:last-child{border-right:0}
+.site-switch a:hover{color:var(--navy-ink)}
+.site-switch [aria-current="page"]{background:var(--navy-ink);color:var(--navy);font-weight:600}
+.aid{display:inline-block;font-size:11px;font-weight:600;padding:1px 7px;border-radius:2px;white-space:nowrap}
+.aid.受益{color:var(--pos);background:var(--pos-bg)} .aid.分歧{color:var(--watch);background:var(--watch-bg)} .aid.侵蝕{color:var(--neg);background:var(--neg-bg)}
+.seg .meta2{display:grid;gap:2px;font-size:12px;color:var(--muted)}
+.seg .meta2 b{color:var(--ink);font-weight:500}
+.chip.m{border-color:var(--rule-strong);color:var(--ink);font-weight:500}
+a.chip.m:hover{border-color:var(--ink)}
+.chip.rev{border-style:dashed}
+.d.未建模{background:transparent;border:1.5px solid var(--faint)}
+.neg{color:var(--neg)} .pos{color:var(--pos)}
+.tbl table.v{min-width:1180px}
+.tbl table.v td,.tbl table.v th{padding:9px 8px}
+.tbl small{display:block;font-size:11px;color:var(--muted);font-family:var(--f-mono)}
+.sbcn{color:var(--muted)}
+.mcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.mc{padding:16px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);display:grid;gap:8px;align-content:start;min-width:0}
+.mc h3{font-size:17px;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.mc .tk{font-family:var(--f-mono);font-size:11px;color:var(--faint)}
+.mc .row{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--muted)}
+.mc .row b{color:var(--ink);font-weight:500;font-family:var(--f-mono)}
+.mc .warn{font-size:11.5px;color:var(--watch)}
+.mopen.off{color:var(--faint);border-style:dashed;pointer-events:none}
+.sub-h{font-family:var(--f-body);font-size:12px;letter-spacing:.1em;color:var(--brass);font-weight:600;margin:0}
+.srcnote{font-size:11.5px;color:var(--muted)}
+.tbl table.u{min-width:640px}
+.dim{color:var(--faint)}
+.leg-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px;vertical-align:middle}
+.defs{display:grid;gap:0;border-top:1px solid var(--rule)}
+ul.lim{margin:0;padding-left:1.2em;display:grid;gap:5px;color:var(--muted)}
+.sv{border-bottom:1px dotted var(--faint);cursor:help}
+.gate{display:block}
+</style>
+</head>
+<body>
+<header class="mast">
+  <div class="wrap">
+    <nav class="site-switch" aria-label="地圖">
+      <a href="../">算力</a>
+      <a href="../physical_ai/">實體 AI</a>
+      <span aria-current="page">軟體 AI</span>
+    </nav>
+    <div>
+      <div class="eyebrow">AI 軟體應用 · 價值重分配研究</div>
+      <h1>AI 軟體地圖</h1>
+      <p>追蹤 AI 進入軟體與網路服務後，價值在模型層、平台層、應用層之間如何重新分配：哪些企業軟體、SaaS、IT 服務、網路平台與 AI 原生應用公司因 AI 受益或被侵蝕。先看五個計價原型的單位經濟，再看各次產業的覆蓋公司、地位與個股模型估值。</p>
+    </div>
+    <div class="meta" id="meta"></div>
+  </div>
+</header>
+<section class="kpis" id="kpis" aria-label="摘要"></section>
+<nav class="tabs" aria-label="視角">
+  <div class="wrap" role="tablist">
+    <button class="tab" role="tab" id="t-map" data-v="map" aria-selected="true"><span class="ix">01</span>產業地圖</button>
+    <button class="tab" role="tab" id="t-position" data-v="position" aria-selected="false"><span class="ix">02</span>產業地位</button>
+    <button class="tab" role="tab" id="t-val" data-v="val" aria-selected="false"><span class="ix">03</span>估值與評等</button>
+    <button class="tab" role="tab" id="t-models" data-v="models" aria-selected="false"><span class="ix">04</span>我們的模型</button>
+    <button class="tab" role="tab" id="t-method" data-v="method" aria-selected="false"><span class="ix">附</span>方法</button>
+  </div>
+</nav>
+<main class="wrap">
+  <section class="view" id="v-map"></section>
+  <section class="view" id="v-position" hidden></section>
+  <section class="view" id="v-val" hidden></section>
+  <section class="view" id="v-models" hidden></section>
+  <section class="view" id="v-method" hidden></section>
+</main>
+<footer><div class="wrap" id="foot"></div></footer>
+<script>
+const D = /*__DATA__*/null;
+const DASH = "—";
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const nf = (v, d = 0) => v == null ? DASH : Number(v).toLocaleString("en-US", {minimumFractionDigits: d, maximumFractionDigits: d});
+const pct = (v, d = 1) => v == null ? DASH : (v > 0 ? "+" : "") + (v * 100).toFixed(d) + "%";
+const pct0 = (v, d = 1) => v == null ? DASH : (v * 100).toFixed(d) + "%";
+const SYM = {USD: "US$", JPY: "¥", KRW: "₩", TWD: "NT$", HKD: "HK$", CNY: "¥"};
+const srcOf = o => (o && o.cell) ? ((o.file ? o.file.split("/").pop() + " " : D.ue.file_name + " ") + o.cell + (o.label ? "｜" + o.label : "")) : "";
+const sv = (o, txt) => (o && o.value != null) ? `<span class="sv" title="${esc(srcOf(o))}">${txt}</span>` : DASH;
+const LAYERS = D.layers, SUBS = Object.fromEntries(D.subs.map(s => [s.code, s]));
+const RCLS = r => r || "未估值";
+
+/* ---------- header ---------- */
+function renderHead() {
+  const m = D.meta;
+  $("#meta").innerHTML =
+    `<span>版本</span><b>${esc(m.version)}（建置 ${esc(m.built)}）</b>` +
+    `<span>地位活頁簿</span><b>${esc(m.position_book)}</b>` +
+    `<span>單位經濟</span><b>${esc(m.ue_file)}（${esc(m.ue_version)}，${esc(m.ue_date)}）</b>` +
+    `<span>個股模型</span><b>${esc(m.models_note)}</b>`;
+  $("#kpis").innerHTML = D.kpis.map(k => `<div class="kpi"><div class="k">${esc(k.k)}</div><div class="v">${esc(k.v)}</div><div class="s">${esc(k.s)}</div></div>`).join("");
+  $("#foot").innerHTML = `資料日期：現價 ${esc(m.price_dates)}；單位經濟 ${esc(m.ue_date)}；相對倍數庫 ${esc(m.relmult_date)}；抽數 ${esc(m.extract_date)}。本頁所有數字來自 data.json（抽自各模型成品與活頁簿），網頁只呈現、不計算。游標停在數字上顯示來源儲存格。`;
+}
+
+/* ---------- 01 map ---------- */
+function ratingDot(tk) {
+  const m = D.models[tk];
+  if (!m) return null;
+  return m.status === "ok" ? (m.rec && m.rec.value || "未估值") : "未估值";
+}
+function chip(c) {
+  const m = D.models[c.tk];
+  const t = `<span class="t">${esc(c.tk)}</span>`;
+  if (m && m.status === "ok" && m.link) {
+    const r = ratingDot(c.tk);
+    return `<a class="chip m" href="${esc(m.link)}" title="${esc("個股模型 " + m.version + "｜" + (m.rec ? m.rec.value : ""))}"><span class="d ${esc(RCLS(r))}"></span>${esc(c.short)} ${t}</a>`;
+  }
+  if (m) return `<span class="chip m rev" title="個股模型改版中（dist 無現行成品）"><span class="d 未估值"></span>${esc(c.short)} ${t}</span>`;
+  return `<span class="chip" title="${esc(c.map_owner)}"><span class="d 未建模"></span>${esc(c.short)} ${t}</span>`;
+}
+function renderMap() {
+  const U = D.ue;
+  let h = `<div class="head"><h2>五個計價原型的 AI 淨效果</h2><p>計算單位一律是「AI 前的 1 個單位」。淨效果＝AI 營收增量 − 定價侵蝕 − 推論成本；表中為淨效果占 AI 前單位營收的比。參數多為假設、區間寬，讀方向與量級，不當點估計。IT 服務的負值是營收移轉（人力自動化省下的交付成本不在此計），不等於廠商毛利受損。</p></div>`;
+  h += `<div class="panel"><div class="ph"><h3>原型單位 AI 淨效果占單位營收比</h3><span class="tagx">${esc(U.file_name)}｜${esc(U.version)}</span></div><div class="tbl"><table class="u"><thead><tr><th>原型</th><th>適用次產業</th><th class="n">${U.years[0]}</th><th class="n">${U.years[1]}</th><th class="n">${U.years[2]}</th><th class="n">毛利率 ${U.years[0]}</th><th class="n">毛利率 ${U.years[2]}</th><th class="n">推論成本占營收成本 ${U.years[1]}</th></tr></thead><tbody>`;
+  for (const a of U.archetypes) {
+    const nv = y => { const o = a.netr && a.netr[y]; return o ? `<td class="n ${o.value < 0 ? "neg" : "pos"}">${sv(o, pct(o.value))}</td>` : `<td class="n">${DASH}</td>`; };
+    const g = y => { const o = a.gm && a.gm[y]; return `<td class="n">${o ? sv(o, pct0(o.value)) : DASH}</td>`; };
+    const ih = a.infsh && a.infsh[U.years[1]];
+    h += `<tr><td><b>${esc(a.code)}｜${esc(a.name)}</b></td><td>${esc(a.scope)}</td>${nv(U.years[0])}${nv(U.years[1])}${nv(U.years[2])}${g(U.years[0])}${g(U.years[2])}<td class="n">${ih ? sv(ih, pct0(ih.value)) : DASH}</td></tr>`;
+  }
+  h += `</tbody></table></div></div>`;
+  h += `<div class="panel"><div class="ph"><h3>第一批五個次產業：${U.years[1]} 年 AI 淨效果與移轉金額</h3><span class="tagx">十億美元（全球營收池口徑見單位經濟模型）</span></div><div class="tbl"><table class="u"><thead><tr><th>次產業</th><th>原型</th><th class="n">營收池（不含 AI）</th><th class="n">AI 淨效果</th><th class="n">AI 移轉金額</th><th class="n">淨效果 ÷ 營收池</th></tr></thead><tbody>`;
+  for (const s of U.subs) {
+    const c = k => s[k] && s[k][U.years[1]];
+    const n = c("net"), x = c("xfer"), b = c("base"), r = c("netsh");
+    h += `<tr><td><b>${esc(s.name)}</b><span class="tagx"> ${esc(s.code)}</span></td><td>${esc(s.archetype)}</td><td class="n">${b ? sv(b, nf(b.value, 1)) : DASH}</td><td class="n ${n && n.value < 0 ? "neg" : "pos"}">${n ? sv(n, nf(n.value, 1)) : DASH}</td><td class="n">${x ? sv(x, nf(x.value, 1)) : DASH}</td><td class="n">${r ? sv(r, pct(r.value)) : DASH}</td></tr>`;
+  }
+  h += `</tbody></table></div></div>`;
+  h += `<div class="head"><h2>價值鏈地圖：五層、${D.subs.length} 個次產業</h2><p>每格列次產業、AI 方向（判斷，不進分數）、計價原型、全球營收池與覆蓋公司。有個股模型者標評等色並可點入；虛線框為模型改版中；空心圓為尚未建模。</p></div>`;
+  h += `<div class="legend"><span><i class="d 買進 leg-dot"></i>買進以上</span><span><i class="d 中立 leg-dot"></i>中立</span><span><i class="d 放空 leg-dot"></i>放空以下</span><span><i class="d 收支不足 leg-dot"></i>收支不足</span><span><i class="d 未估值 leg-dot"></i>模型改版中</span><span><i class="d 未建模 leg-dot"></i>尚未建模</span></div>`;
+  for (const L of LAYERS) {
+    h += `<div class="layer"><div class="rail"><span class="code">${esc(L.code)}</span><h3>${esc(L.title)}</h3><div class="cap">${L.subs.length} 個次產業｜覆蓋 ${L.n_cov} 家｜已建模 ${L.n_model} 家</div></div><div class="segs">`;
+    for (const code of L.subs) {
+      const s = SUBS[code];
+      h += `<div class="seg"><h4><span>${esc(s.name)}</span><span class="irr">${esc(s.code)}</span></h4>` +
+        `<div><span class="aid ${esc(s.ai)}">AI ${esc(s.ai)}</span></div>` +
+        `<div class="meta2"><span>計價：<b>${esc(s.pricing)}</b></span><span>營收池：<b>${esc(s.pooltext)}</b></span>${s.archetype ? `<span>單位經濟原型：<b>${esc(s.archetype)}</b></span>` : ""}</div>` +
+        `<div class="chips">${s.companies.map(chip).join("")}</div></div>`;
+    }
+    h += `</div></div>`;
+  }
+  $("#v-map").innerHTML = h;
+}
+
+/* ---------- 02 position ---------- */
+const POSN = {1: "龍頭", 2: "前二／寡占", 3: "主要參與者", 4: "追隨者"};
+let posFilter = "ALL";
+function renderPosition() {
+  let h = `<div class="head"><h2>產業地位</h2><p>地位分數衡量「今天的市場地位」，不衡量 AI 讓它變好或變壞（後者是單位經濟與個股模型要回答的）。公司重要性 1 最重要；市場位置 1 龍頭、4 追隨者。亞太掛牌：「是」＝在日、韓、台、港、澳洲或中國 A 股掛牌。地圖歸屬：跨圖者以主圖模型為準。</p></div>`;
+  h += `<div class="filters" id="pf"><button class="fbtn" data-f="ALL" aria-pressed="${posFilter === "ALL"}">全部（${D.position.length}）</button>` +
+    D.subs.map(s => `<button class="fbtn" data-f="${esc(s.code)}" aria-pressed="${posFilter === s.code}">${esc(s.code)}（${s.n}）</button>`).join("") + `</div>`;
+  const rows = D.position.filter(p => posFilter === "ALL" || p.sub === posFilter);
+  h += `<div class="panel"><div class="tbl"><table style="min-width:980px"><thead><tr><th class="n">排名</th><th>公司</th><th>市場</th><th>亞太掛牌</th><th>次產業</th><th class="n">重要性</th><th>市場位置</th><th style="width:150px">地位分數</th><th>AI 方向</th><th>地圖歸屬</th></tr></thead><tbody>`;
+  for (const p of rows) {
+    const m = D.models[p.tk];
+    const mp = m && m.status === "ok" && m.rec ? ` <span class="pill ${esc(m.rec.value)}">${esc(m.rec.value)}</span>` : "";
+    h += `<tr><td class="n">${p.rank_all == null ? DASH : nf(p.rank_all)}</td><td class="co"><b>${esc(p.name)}</b><span class="t">${esc(p.tk)}</span>${mp}<span class="s">${esc(p.basis)}</span></td><td>${esc(p.market)}</td><td>${esc(p.apac)}</td><td>${esc(p.sub_name)}<span class="tagx"> ${esc(p.sub)}</span></td><td class="n">${esc(p.imp)}</td><td>${esc(POSN[p.posn] || p.posn)}</td><td><div class="score"><span class="num">${nf(p.score, 1)}</span><span class="b"><i style="width:${Math.max(0, Math.min(100, p.score))}%"></i></span></div></td><td><span class="aid ${esc(p.ai)}">${esc(p.ai)}</span></td><td>${esc(p.map_owner)}</td></tr>`;
+  }
+  h += `</tbody></table></div></div>`;
+  $("#v-position").innerHTML = h;
+}
+
+/* ---------- 03 valuation ---------- */
+function money(m, v, d) { return v == null ? DASH : (SYM[m.ccy] || m.ccy || "") + nf(v, d); }
+function relCell(m) {
+  const r = m.relmult;
+  if (!r || r.geo_base == null) return DASH;
+  const tip = `PS 讀數 ${r.ps_reading == null ? DASH : r.ps_reading.toFixed(2)}；PSG 讀數 ${r.psg_reading == null ? DASH : r.psg_reading.toFixed(2)}｜${r.file.split("/").pop()}`;
+  return `<span class="sv" title="${esc(tip)}">${r.geo_base.toFixed(2)}x</span><small>PS ${r.ps_reading == null ? DASH : r.ps_reading.toFixed(2)}／PSG ${r.psg_reading == null ? DASH : r.psg_reading.toFixed(2)}</small>` +
+    (r.divergence_gt_30pct ? `<small class="neg">兩讀數差異大</small>` : "");
+}
+function renderVal() {
+  let h = `<div class="head"><h2>估值與評等</h2><p>目標價＝DCF 與 Comparable 加權（12 個月後）；上檔空間為相對現價的價差，不是年化報酬。評等依上檔空間五級，收支關卡不通過時買進以上改判「收支不足」。以下全部引用各公司個股模型成品的值；v0.2 以前的成品沒有的欄位（股票薪酬加回 DCF、相對倍數讀數）顯示「—」。</p></div>`;
+  h += `<div class="panel"><div class="tbl"><table class="v"><thead><tr><th>公司</th><th class="n">現價</th><th class="n">DCF</th><th class="n">Comparable</th><th class="n">加權目標價</th><th class="n">上檔空間</th><th>評等</th><th>收支關卡</th><th class="n">相對倍數基準</th><th class="n">DCF（股票薪酬加回）<br>對照</th><th>模型</th></tr></thead><tbody>`;
+  for (const tk of D.model_order) {
+    const m = D.models[tk];
+    if (m.status !== "ok") {
+      h += `<tr><td class="co"><b>${esc(m.name)}</b><span class="t">${esc(tk)}</span><span class="s">${esc(m.sub_name)}</span></td><td colspan="9" class="dim">${esc(m.status)}</td><td>${DASH}</td></tr>`;
+      continue;
+    }
+    const d = (m.price && m.price.value >= 1000) ? 0 : 2;
+    const pr = m.price ? sv(m.price, money(m, m.price.value, d)) + `<small>${esc(m.price.date || DASH)}</small>` : DASH;
+    const up = m.upside ? `<span class="${m.upside.value < 0 ? "neg" : "pos"}">${sv(m.upside, pct(m.upside.value))}</span>` : DASH;
+    const rec = m.rec ? `<span class="pill ${esc(m.rec.value)}">${esc(m.rec.value)}</span>` : DASH;
+    const vr = m.rating && m.rec && m.rating.value !== m.rec.value ? `<small>估值評等 ${esc(m.rating.value)}</small>` : "";
+    const gt = m.gate && m.gate.basis ? `<span class="gate ${m.gate.status === "通過" ? "ok" : "no"}">${esc(m.gate.status)}</span><small title="${esc(srcOf(m.gate.basis))}">${nf(m.gate.basis.value, 0)}</small>` : DASH;
+    let sbc = DASH;
+    if (m.sbc_dcf) sbc = sv(m.sbc_dcf, money(m, m.sbc_dcf.value, d));
+    else if (m.sbc_abc) sbc = `<span class="sv" title="${esc(m.sbc_abc.cells[1] + "｜" + m.sbc_abc.label)}">${money(m, m.sbc_abc.values[1], d)}</span><small>情境 B</small>`;
+    const lk = m.link ? `<a href="${esc(m.link)}">${esc(m.version)}</a>` : esc(m.version);
+    h += `<tr><td class="co"><b>${esc(m.name)}</b><span class="t">${esc(tk)}</span><span class="s">${esc(m.sub_name)}</span></td><td class="n">${pr}</td><td class="n">${m.dcf ? sv(m.dcf, money(m, m.dcf.value, d)) : DASH}</td><td class="n">${m.comp ? sv(m.comp, money(m, m.comp.value, d)) : DASH}</td><td class="n"><b>${m.tp ? sv(m.tp, money(m, m.tp.value, d)) : DASH}</b></td><td class="n">${up}</td><td>${rec}${vr}</td><td>${gt}</td><td class="n">${relCell(m)}</td><td class="n sbcn">${sbc}</td><td>${lk}<small>${esc(m.date)}</small></td></tr>`;
+  }
+  h += `</tbody></table></div></div>`;
+  // scenarios
+  h += `<div class="panel"><div class="ph"><h3>情境 A／B／C</h3><span class="tagx">A 順利、B 基準、C 不如預期；各情境值取自模型 Val 頁</span></div><div class="tbl"><table class="v" style="min-width:900px"><thead><tr><th>公司</th><th class="n">加權目標價 A</th><th class="n">B</th><th class="n">C</th><th class="n">收支關卡 A</th><th class="n">B</th><th class="n">C</th><th class="n">AI 淨效果 A</th><th class="n">B</th><th class="n">C</th></tr></thead><tbody>`;
+  const tri = (o, d, fmt) => [0, 1, 2].map(i => `<td class="n">${o ? `<span class="sv" title="${esc(o.cells[i] + "｜" + o.label)}">${fmt(o.values[i], d)}</span>` : DASH}</td>`).join("");
+  for (const tk of D.model_order) {
+    const m = D.models[tk];
+    if (m.status !== "ok") continue;
+    const d = (m.price && m.price.value >= 1000) ? 0 : 2;
+    h += `<tr><td class="co"><b>${esc(m.name)}</b><span class="t">${esc(tk)}</span></td>${tri(m.scen, d, (v, dd) => money(m, v, dd))}${tri(m.gate && m.gate.abc, 0, (v) => nf(v, 0))}${tri(m.ai_net, 1, (v, dd) => nf(v, dd))}</tr>`;
+  }
+  h += `</tbody></table></div><div class="srcnote" style="padding:8px 12px">收支關卡的單位與口徑因公司而異（游標停在數字上看列標籤）；AI 淨效果為命題模組的 FY2032E 營業利益（或淨效果）情境值，單位見列標籤，沒有命題模組輸出者顯示「—」。</div></div>`;
+  h += `<div class="panel"><div class="ph"><h3>DCF 口徑說明：高股票薪酬公司的 DCF 為何遠低於現價</h3></div><div class="pb"><ul class="lim">` +
+    D.dcf_notes.map(t => `<li>${esc(t)}</li>`).join("") + `</ul></div></div>`;
+  $("#v-val").innerHTML = h;
+}
+
+/* ---------- 04 models ---------- */
+function renderModels() {
+  let h = `<div class="head"><h2>我們的模型</h2><p>每家一張卡，連到個股模型成品 HTML（站內相對路徑）。版本與日期取 dist/ 下最新成品；個股模型的命題、營收分部、損益表與估值細節都在各自頁面內。</p></div><div class="mcards">`;
+  for (const tk of D.model_order) {
+    const m = D.models[tk];
+    const ok = m.status === "ok";
+    h += `<div class="mc"><h3><span>${esc(m.name)}</span><span class="tk">${esc(tk)}</span></h3><div class="srcnote">${esc(m.sub_name)}｜${esc(m.layer)}</div>`;
+    if (ok) {
+      h += `<div class="row"><span>評等</span><span>${m.rec ? `<span class="pill ${esc(m.rec.value)}">${esc(m.rec.value)}</span>` : DASH}</span></div>` +
+        `<div class="row"><span>加權目標價</span><b>${m.tp ? money(m, m.tp.value, (m.price && m.price.value >= 1000) ? 0 : 2) : DASH}</b></div>` +
+        `<div class="row"><span>版本</span><b>${esc(m.version)}（${esc(m.date)}）</b></div>`;
+      if (m.link) h += `<a class="mopen" href="${esc(m.link)}">開啟 ${esc(m.version)} 個股模型</a>`;
+      else h += `<span class="mopen off">尚無 HTML 成品</span>`;
+      if (m.html_note) h += `<div class="warn">${esc(m.html_note)}</div>`;
+    } else {
+      h += `<div class="warn">${esc(m.status)}</div><span class="mopen off">個股模型改版中</span>`;
+    }
+    h += `</div>`;
+  }
+  h += `</div>`;
+  $("#v-models").innerHTML = h;
+}
+
+/* ---------- method ---------- */
+function renderMethod() {
+  const P = D.params;
+  const sec = (t, body) => `<div class="panel"><div class="ph"><h3>${t}</h3></div><div class="pb">${body}</div></div>`;
+  let h = `<div class="head"><h2>方法</h2><p>本頁說明地圖怎麼排、數字從哪來、哪些地方不能當真。數字一律來自活頁簿與模型成品。</p></div>`;
+  h += sec("地位分數", `<p>地位分數 ＝ ${P.w_irr} × 不可替代性分 ＋ ${P.w_pos} × 市場位置分 ＋ ${P.w_vc} × 價值鏈分量分。不可替代性分＝（次產業不可替代性換分＋公司重要性換分）÷ 2（1→${P.s_irr1}、2→${P.s_irr2}、3→${P.s_irr3}）。市場位置：龍頭→${P.s_pos1}、前二或寡占→${P.s_pos2}、主要參與者→${P.s_pos3}、追隨者→${P.s_pos4}。軟體沒有 BOM，價值鏈分量改用「次產業全球營收池」分級。同一公司可出現在多個次產業，排名以列計。</p>`);
+  h += sec("營收池分級", `<p>營收池中值（十億美元）≥ ${P.pool_t1} → 100；≥ ${P.pool_t2} → 75；≥ ${P.pool_t3} → 50；以下 25。營收池來自第三方研調與公司揭露（標 Analogy 或 Interested-party），為區間中值，單位經濟模型完成的次產業以模型為準。</p>`);
+  h += sec("單位經濟五原型", `<p>計算單位是「AI 前的 1 個單位」：按人力（L）、按席位（S）、按廣告（A）、按用量（U）、按防護範圍（P）。每個原型逐年（${D.ue.years.join("、")} 與其間年份）算：AI 營收增量、定價侵蝕、推論成本，淨效果＝增量 − 侵蝕 − 推論成本。推論成本只讀 Tokenomics 快照（${esc(D.ue.tokenomics)}），不自行估價；未來 token 單價路徑尚待登錄，以區間作敏感度。毛利路徑與推論成本占營收成本比同表呈現。</p>`);
+  h += sec("相對倍數：PS ＋ PSG", `<p>Comparable 使用的相對倍數，取本公司對同業的「歷史相對值」：PS＝市值 ÷ TTM 營收；PSG＝PS ÷ TTM 營收年增（以百分點計）。兩條序列各取最近 ${D.relmult_window} 個財季，有效點少於 ${D.relmult_min} 者只作參考、不進基準。PS 讀數＝PS 歷史相對中位數；PSG 讀數＝PSG 歷史相對中位數 × 目前本公司對同業的成長比。基準＝兩讀數的幾何平均；兩讀數差異過大時須寫明原因。規格見 software_ai/docs/plan 的「歷史相對倍數」。</p>`);
+  h += sec("DCF 與評等規格", `<ul class="lim">${D.dcf_spec.map(t => `<li>${esc(t)}</li>`).join("")}</ul>`);
+  h += sec("評等五級", `<div class="defs"><dl class="def" style="margin:0">${D.rating_bands.map(b => `<dt>${esc(b.name)}</dt><dd>${esc(b.rule)}</dd>`).join("")}</dl></div>`);
+  h += sec("限制與未找到摘要", `<ul class="lim">${D.limits.map(t => `<li>${esc(t)}</li>`).join("")}</ul>`);
+  h += sec("資料日期與來源", `<div class="defs"><dl class="def" style="margin:0">${D.sources.map(s => `<dt>${esc(s.k)}</dt><dd>${esc(s.v)}</dd>`).join("")}</dl></div>`);
+  $("#v-method").innerHTML = h;
+}
+
+/* ---------- tabs ---------- */
+const VIEWS = ["map", "position", "val", "models", "method"];
+function show(v) {
+  if (!VIEWS.includes(v)) v = "map";
+  for (const x of VIEWS) {
+    $("#v-" + x).hidden = x !== v;
+    $("#t-" + x).setAttribute("aria-selected", x === v ? "true" : "false");
+  }
+}
+document.addEventListener("click", e => {
+  const t = e.target.closest(".tab");
+  if (t) { show(t.dataset.v); try { history.replaceState(null, "", "#" + t.dataset.v); } catch (_) {} return; }
+  const f = e.target.closest("#pf .fbtn");
+  if (f) { posFilter = f.dataset.f; renderPosition(); }
+});
+renderHead(); renderMap(); renderPosition(); renderVal(); renderModels(); renderMethod();
+show((location.hash || "").slice(1));
+</script>
+</body>
+</html>

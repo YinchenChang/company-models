@@ -36,7 +36,7 @@ cfg = {
     {"type": "h3", "text": "重點觀察"},
     {"type": "list", "ordered": True, "items": [f"@README!A{r}" for r in range(6, 11)]},
     {"type": "h3", "text": "本版要點"},
-    {"type": "list", "items": [f"@README!A{r}" for r in range(15, 19)]}]},
+    {"type": "list", "items": [f"@README!A{r}" for r in range(15, 20)]}]},
   {"id": "valuation", "title": "估值", "blocks": [
     {"type": "bars", "title": "目標價與現價（美元；豎線＝現價）", "fmt": "n2",
      "items": [{"label": f"@Val!A{VR[k]}", "value": f"@Val!B{VR[k]}", "series": sr} for k, sr in (("dcf_tp", 1), ("comp_tp", 2), ("tp", 0))],
@@ -45,7 +45,9 @@ cfg = {
     {"type": "kv", "items": [[f"@Val!A{VR[k]}", f"@Val!B{VR[k]}|{f}"] for k, f in (("ke", "p2"), ("kdat", "p2"), ("wacc", "p2"), ("ronic", "p2"), ("g", "p2"))]},
     {"type": "table", "caption": "結論（情境加權）", "head": ["項目", "數值", "對照"], "rowgen": {"sheet": "Val", "rows": f"{VR['dcf_tp']}-{VR['rec']}", "cols": ["A", "B"], "fmts": ["", "n2"], "row_fmt": {str(VR['up']): {"B": "sp1"}, str(VR['rec']): {"B": ""}}}},
     {"type": "table", "caption": "DCF 彙總（三情境）", "head": ["項目", "情境 A", "情境 B", "情境 C"], "rowgen": {"sheet": "Val", "rows": f"{VR['pvx']}-{VR['tvsh']}", "cols": ["A", "C", "D", "E"], "fmts": ["", "n1", "n1", "n1"], "row_fmt": {str(VR['tvsh']): {c: "p1" for c in "CDE"}, str(VR['vps0']): {c: "n2" for c in "CDE"}, str(VR['dcf12']): {c: "n2" for c in "CDE"}}}},
-    {"type": "table", "caption": "Comparable（同業 EV／自由現金流）", "head": ["項目", "情境 A", "情境 B", "情境 C"], "rowgen": {"sheet": "Val", "rows": f"{VR['ntm']}-{VR['comp12']},{VR['wb']}-{VR['wc']}", "cols": ["A", "C", "D", "E"], "fmts": ["", "n1", "n1", "n1"], "row_fmt": {str(VR['mult']): {c: "x1" for c in "CDE"}, str(VR['comp12']): {c: "n2" for c in "CDE"}, str(VR['wb']): {c: "n2" for c in "CDE"}, str(VR['wc']): {c: "sp1" for c in "CDE"}}}},
+    {"type": "table", "caption": "DCF（股票薪酬加回）讀數（只作對照，不進加權目標價）", "head": ["項目", "情境 A", "情境 B", "情境 C"], "rowgen": {"sheet": "Val", "rows": f"{VR['sb_pvx']}-{VR['sb_dcf12']}", "cols": ["A", "C", "D", "E"], "fmts": ["", "n1", "n1", "n1"], "row_fmt": {str(VR['sb_vps0']): {c: "n2" for c in "CDE"}, str(VR['sb_dcf12']): {c: "n2" for c in "CDE"}}}},
+    {"type": "kv", "items": [[f"@Val!A{VR[k]}", f"@Val!B{VR[k]}|{f}"] for k, f in (("sb_tp", "n2"), ("sb_up", "sp1"), ("sb_tpw", "n2"))]},
+    {"type": "table", "caption": "Comparable（P/S 主腿；P/FCF 對照列不進加權）", "head": ["項目", "情境 A", "情境 B", "情境 C"], "rowgen": {"sheet": "Val", "rows": f"{VR['rv']}-{VR['ref_cur']},{VR['wb']}-{VR['wc']}", "cols": ["A", "C", "D", "E"], "fmts": ["", "n1", "n1", "n1"], "row_fmt": {str(VR['psm']): {c: "x1" for c in "CDE"}, str(VR['psc12']): {c: "n2" for c in "CDE"}, str(VR['mult']): {c: "x1" for c in "CDE"}, str(VR['comp12']): {c: "n2" for c in "CDE"}, str(VR['ref_cur']): {c: "n2" for c in "CDE"}, str(VR['wb']): {c: "n2" for c in "CDE"}, str(VR['wc']): {c: "sp1" for c in "CDE"}}}},
     {"type": "table", "collapse": True, "summary": "展開：同業倍數與淨現金", "head": ["項目", "數值"], "rowgen": {"sheet": "Val", "rows": f"{VR['cashx']}-{VR['sh']},{VR['pe1']}-{VR['pe_own']}", "cols": ["A", "B"], "fmts": ["", "n2"]}}]},
   {"id": "sens", "title": "敏感度", "blocks": [
     {"type": "tornado", "title": "加權目標價相對基準：輸入取低值（一次改一個，整本重算）", "sheet": "Sens", "rows": ",".join(map(str, tornL)), "label_col": "A", "value_col": "E", "fmt": "sp1"},

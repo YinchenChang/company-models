@@ -1,3 +1,4 @@
+import json
 # Palantir（PLTR）事實總帳：每個數字一列（工作單「共同規則」第 4 條）。本檔是唯一來源：
 #   - 產生 data/facts_palantir.csv（研究包）
 #   - build_palantir.py 的 Q／Hist／In 頁輸入由本檔取值（import FACTS）
@@ -151,6 +152,7 @@ f("sbc.rev.2025", "股票薪酬占營收", 0.1528, "比率", "FY2025", "Derived�
 # ---- 資產負債與股數（2026-09-30；封面 2026-10-26）----
 f("bs.cash", "現金及約當現金", 3619.414, "US$M", "2026-09-30", GAAP, U_Q3Q + "；資產負債表 p.3", "Verified")
 f("bs.sec", "有價證券（短期美國公債）", 6942.117, "US$M", "2026-09-30", GAAP, U_Q3Q + "；資產負債表 p.3", "Verified")
+f("bs.nci", "非控制權益帳面值（權益項下）", 117.119, "US$M", "2026-09-30", GAAP, U_Q3Q + "；資產負債表 p.3（Noncontrolling interests 117,119 千美元）", "Verified")
 f("bs.debt", "借款餘額（2014 Credit Facility 循環額度 500 百萬，2027-03-31 到期）", 0, "US$M", "2026-09-30", GAAP, U_Q3Q + "；Note 6", "Verified")
 f("bs.lease", "營業租賃負債（非流動）", 225.267, "US$M", "2026-09-30", GAAP, U_Q3Q + "；資產負債表 p.3", "Verified")
 f("bs.cash25", "現金及約當現金", 1423.796, "US$M", "2025-12-31", GAAP, U_K25 + "；資產負債表 p.85", "Verified")
@@ -203,7 +205,7 @@ f("mkt.px.1113", "PLTR 收盤價", 167.99, "US$", "2026-11-13", "普通股收盤
 f("mkt.px.1109", "PLTR 收盤價", 169.20, "US$", "2026-11-09", "普通股收盤（與 heygotrade 11-09 報導相符）", U_SA, "Verified")
 f("mkt.beta.y", "原始 β：Yahoo Finance「Beta (5Y Monthly)」", 1.60, "x", "頁面當日（日期未載）", "資料商計算", "https://finance.yahoo.com/quote/PLTR/key-statistics｜Yahoo Finance 關鍵統計頁", "Interested-party", "資料商計算值，無交易誘因；基準指數與日期未載")
 f("mkt.beta.s", "原始 β：StockAnalysis「Beta (5Y)」", 1.61, "x", "2026-11-13 收盤", "資料商計算", "https://stockanalysis.com/stocks/pltr/statistics/｜StockAnalysis 統計頁（更新 2026-11-14）", "Interested-party", "資料商計算值，無交易誘因")
-f("mkt.rf", "無風險利率（10 年美債）", 0.0499, "比率", "2026-10-27", "美國財政部每日殖利率曲線", "meta/dist/20261115_Meta個股模型_v0.2.1.xlsx In!E37（沿用跨模型取值；2026-10-27）", "Verified")
+f("mkt.rf", "無風險利率（10 年美債）", 0.0510, "比率", "2026-11-12", "FRED DGS10 收盤（現價日 2026-11-13 前 1 個交易日）", "https://fred.stlouisfed.org/series/DGS10（工作單 G5 第 2 條指定美國 10 年期 5.10%）", "Verified")
 f("mkt.mcap", "市值", 404770, "US$M", "2026-11-13", "資料商", "https://stockanalysis.com/stocks/pltr/statistics/", "Verified")
 f("mkt.evs", "EV／營收（TTM）", 54.12, "x", "2026-11-13", "資料商", "https://stockanalysis.com/stocks/pltr/statistics/", "Verified")
 f("cons.rev26", "賣方共識營收 FY2026（平均；29 家）", 8220, "US$M", "FY2026", "共識；2026-10-23 收盤，財報前", "https://finance.yahoo.com/quote/PLTR/analysis/｜Yahoo Finance 分析頁", "Interested-party", "賣方預估；投行業務關係；財報前，只作歷史對照")
@@ -229,6 +231,24 @@ PEERS = [
 for tk, nm, grp, evs, g3, dt, url in PEERS:
     f(f"peer.{tk}.evs", f"{nm}（{tk}）EV／營收", evs, "x", f"頁面更新 {dt}", "TTM 營收；US GAAP；EV 不含營業租賃", url, "Verified")
     f(f"peer.{tk}.g3", f"{nm}（{tk}）賣方 3 年營收成長預測", g3 / 100, "比率", f"頁面更新 {dt}", "賣方預測（年複合）", url, "Interested-party", "賣方預測")
+
+import csv as _csv, os as _os
+PSL = {}
+for tk, nm, grp, evs, g3, dt, url in PEERS:
+    _fp = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "data", "relmult_hist", f"{tk}.csv")
+    _rows = [r for r in _csv.reader(open(_fp, encoding="utf-8-sig"))][1:]
+    _rows = [r for r in _rows if r[5].strip()]
+    PSL[tk] = (_rows[-1][0], float(_rows[-1][5]), _rows[-1][1])
+    f(f"peer.{tk}.ps", f"{nm}（{tk}）P/S（市值÷TTM 營收；共用庫最近一季）", PSL[tk][1], "x", f"季末 {PSL[tk][0]}（財季實際期末 {PSL[tk][2]}）", "software_ai/data/relmult_hist/%s.csv 最近一季；Derived：市值÷TTM 營收（StockAnalysis 季度比率頁）" % tk, f"software_ai/data/relmult_hist/{tk}.csv", "Derived")
+PS13 = {}
+_pj = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "relmult_hist", "out", "peer_ps_20261113.json"), encoding="utf-8"))
+_allg = _pj["companies"]["palantir"]["groups"]["all"]
+_pd = {r["代號"]: r["價格日"] for r in csv.DictReader(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "relmult_hist", "peer_ps_20261113.csv"), encoding="utf-8-sig"))}
+for tk, nm, grp, evs, g3, dt, url in PEERS:
+    PS13[tk] = (_pd[tk], float(_allg["peers"][tk]))
+    f(f"peer.{tk}.ps13", f"{nm}（{tk}）P/S（現價日口徑；peer_ps_20261113.json all 群組）", PS13[tk][1], "x", f"價格日 {PS13[tk][0]}（基準日 {_pj['as_of']}）", "市值（收盤×股數）÷最新 TTM 營收", "software_ai/data/relmult_hist/out/peer_ps_20261113.json", "Derived")
+PS13_MED = float(_allg["peer_median_ps"])
+f("peer.all.ps13_med", "8 家同業 P/S 中位數（peer_ps_20261113.json all 群組）", PS13_MED, "x", f"基準日 {_pj['as_of']}", "8 家合併中位", "software_ai/data/relmult_hist/out/peer_ps_20261113.json", "Derived")
 FACT_BY_ID = {x["id"]: x for x in FACTS}
 def V(i): return FACT_BY_ID[i]["數值"]
 FIELDS = ["指標", "數值", "單位", "期間", "口徑", "出處", "擷取日", "標記", "來源誘因"]

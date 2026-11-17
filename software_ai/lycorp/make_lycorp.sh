@@ -1,11 +1,11 @@
 #!/bin/bash
-# LY 個股模型 v0.1：建置 → LibreOffice 重算 → 核對 → HTML。
+# LY 個股模型 v0.2：建置 → LibreOffice 重算 → 核對 → HTML。
 #   bash software_ai/lycorp/make_lycorp.sh              # 沿用 data/sens_v010_20261116.json
 #   SENS=1 bash software_ai/lycorp/make_lycorp.sh       # 重跑敏感度（約 1 分鐘）
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-VDATE="${VDATE:-20261116}"; VER="${VER:-0.1.1}"
+VDATE="${VDATE:-20261117}"; VER="${VER:-0.2.2}"
 OUTNAME="${VDATE}_LY個股模型_v${VER}.xlsx"
 SJ="software_ai/lycorp/data/sens_v${VER//./}_${VDATE}.json"
 python3 tools/tokenomics/import_tokenomics.py --check software_ai/lycorp/data/tokenomics_snapshot_v22.0.json

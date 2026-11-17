@@ -1,0 +1,32 @@
+{
+ "as_of": "2026-11-13",
+ "source": "software_ai/data/relmult_hist/out/peer_ps_20261113.json（StockAnalysis；Derived）",
+ "median": 9.05,
+ "db_median": {
+  "q": "2026-06-30",
+  "median": 9.75,
+  "n_peers": 5
+ },
+ "peers": {
+  "snow": {
+   "ps": 18.87,
+   "date": "2026-11-13"
+  },
+  "net": {
+   "ps": 40.11,
+   "date": "2026-11-13"
+  },
+  "mdb": {
+   "ps": 9.05,
+   "date": "2026-11-06"
+  },
+  "dt": {
+   "ps": 5.72,
+   "date": "2026-11-06"
+  },
+  "estc": {
+   "ps": 5.02,
+   "date": "2026-11-06"
+  }
+ }
+}

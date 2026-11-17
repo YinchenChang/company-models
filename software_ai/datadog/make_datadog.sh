@@ -1,14 +1,14 @@
 #!/bin/bash
-# Datadog 個股模型 v0.1：事實總帳 → Tokenomics 快照核對 → （敏感度）→ 建置 → LibreOffice 重算 → 核對 → HTML → 治理檢查。
-#   bash software_ai/datadog/make_datadog.sh              # 沿用 data/sens_v010_20261116.json
+# Datadog 個股模型 v0.2：事實總帳 → Tokenomics 快照核對 → （敏感度）→ 建置 → LibreOffice 重算 → 核對 → HTML → 治理檢查。
+#   bash software_ai/datadog/make_datadog.sh              # 沿用 data/sens_v022_20261117.json
 #   SENS=1 bash software_ai/datadog/make_datadog.sh       # 重跑敏感度（約 80 次整本重算）
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$ROOT"
 D=software_ai/datadog
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-VDATE="${VDATE:-20261116}"; VER="${VER:-0.1}"
+VDATE="${VDATE:-20261117}"; VER="${VER:-0.2.2}"
 OUTNAME="${VDATE}_Datadog個股模型_v${VER}.xlsx"
-SJ="$D/data/sens_v010_20261116.json"
+SJ="$D/data/sens_v022_20261117.json"
 python3 $D/facts_datadog.py
 if [ -n "${TOKENOMICS_DIR:-}" ]; then python3 tools/tokenomics/import_tokenomics.py --check $D/data/tokenomics_snapshot_v22.0.json --tokenomics "$TOKENOMICS_DIR"; fi
 if [ "${SENS:-0}" = "1" ]; then python3 $D/sens_datadog.py "$WD/sens" "$SJ" "${JOBS:-4}"; fi

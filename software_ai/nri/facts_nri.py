@@ -20,6 +20,8 @@ SRC = {
  "KB": "https://kabuyoho.jp/sp/reportAnalyst?bcode=4307｜株予報 NRI 業績予想（2026-07-24 共識）",
  "KT": "https://kabuyoho.jp/sp/reportTarget?bcode=4307｜株予報 NRI 目標株価（2026-09-10）",
  "YH": "https://finance.yahoo.co.jp/quote/4307.T/history｜Yahoo!ファイナンス 4307 時系列（最新日 2026-10-20）",
+ "TRD": "https://www.traders.co.jp/stocks/61_4307/historical｜Traders Web 4307 日足（2026-11-13 收盤 6,012；同頁 11-09 收盤 6,056，與 StockAnalysis 互證）",
+ "TE": "https://tradingeconomics.com/japan/government-bond-yield｜Trading Economics 日本 10 年期公債殖利率（2026-11-11）",
  "MOF": "https://www.mof.go.jp/english/policy/jgbs/auction/calendar/eresul/eresul20261105a.htm｜財務省 10年債入札結果（2026-11-05）",
 }
 CHK = "同一數字互證：FY2025 營收 764,813／營業利益 134,907 見 FS26 與 FS25；FY2024 營收 736,556 見 FS24 與 FS25；FY2023 營收 692,165 見 FS23 與 FS24；FY2026 營收 814,708 見 FS26 與 H1；H1 FY27 營收 429,906 見 H1 與 H1P"
@@ -79,7 +81,7 @@ M9_26OLD_EXT = {"Consulting": 46475, "Financial IT Solutions": 295450, "Industri
 BS27 = {"cash": 142837, "ofa": 14040, "debt": 218810, "mi": 3916, "eqo": 383746, "sh_iss": 561.197409, "sh_tre": 5.811620, "lease_mar26": 31736, "ofa_mar26": 61975}
 OTHER = {"emp": 16894, "sub_jp": 9500, "sub_off": 7000, "turnover": 0.036, "ai_inv_fy26": 18100, "backlog_mar26": 470600, "backlog_sep26": 341087, "orders_h1": 294549,
          "fx_usd_h1": 146.03, "fx_aud_h1": 94.50, "capex_guide27": 49500, "da_guide27": 40600, "guid_rev27": 870000, "guid_oi27": 180000, "guid_ni27": 123000, "guid_eps27": 218.50, "guid_dps27": 88,
-         "px": 6056.0, "px_val": 4952.0, "rf": 0.02768, "beta_raw": 0.34, "tp_cons_avg": 5978, "tp_cons_n": 14, "tp_cons_hi": 6700, "tp_cons_lo": 5190, "rev27_cons": 867500, "rev27_cons_hi": 884600, "rev27_cons_lo": 855800,
+         "px": 6012.0, "px_val": 4952.0, "rf": 0.0277, "beta_raw": 0.34, "tp_cons_avg": 5978, "tp_cons_n": 14, "tp_cons_hi": 6700, "tp_cons_lo": 5190, "rev27_cons": 867500, "rev27_cons_hi": 884600, "rev27_cons_lo": 855800,
          "rev27_kb": 858121, "oi27_kb": 178992, "ni27_kb": 122488}
 PEERS = [  # 代號, 名稱, 前瞻 P/E, EV/EBITDA, 資料日, 會計準則
  ("3626.T", "TIS", 15.42, 9.20, "2026-11-16", "IFRS"), ("8056.T", "BIPROGY", 13.86, 7.90, "2026-10-05", "IFRS"), ("6702.T", "Fujitsu", 23.96, 13.03, "2026-10-23", "IFRS"),
@@ -145,9 +147,11 @@ def rows():
     a("FY2027 DPS 指引（中間 42＋期末 46）", 88, "日圓", "FY2027", "公司指引", "H1", "Interested-party", "管理層指引", "p.1,9-10")
     a("FY2027 資本支出指引（不含使用權資產）", 49500, "百萬日圓", "FY2027", "公司指引", "H1P", "Interested-party", "管理層指引", "p.41")
     a("FY2027 折舊攤銷指引（不含使用權資產）", 40600, "百萬日圓", "FY2027", "公司指引", "H1P", "Interested-party", "管理層指引", "p.41")
-    a("現價（2026-11-09 收盤）", 6056, "日圓", "2026-11-09", "TSE 收盤（延遲報價）；單一來源，第二來源未找到", "SA", "Verified")
+    a("現價（2026-11-13 收盤；v0.2 基準）", 6012, "日圓", "2026-11-13", "TSE 收盤；第二來源（Traders Web）；11-09 收盤 6,056 兩來源互證", "TRD", "Verified")
+    a("現價（2026-11-09 收盤；v0.1 基準，對照）", 6056, "日圓", "2026-11-09", "TSE 收盤（StockAnalysis；與 Traders Web 互證）", "SA", "Verified")
     a("評價日收盤（2026-09-30）", 4952, "日圓", "2026-09-30", "TSE 收盤", "YH", "Verified")
-    a("10 年期日本公債殖利率（10 年債入札平均殖利率）", 0.02768, "比率", "2026-11-05", "財務省入札結果", "MOF", "Verified")
+    a("10 年期日本公債殖利率（v0.2 統一值）", 0.0277, "比率", "2026-11-11", "Trading Economics 報導約 2.77%", "TE", "Verified")
+    a("10 年期日本公債殖利率（10 年債入札平均殖利率；對照）", 0.02768, "比率", "2026-11-05", "財務省入札結果", "MOF", "Verified")
     a("Beta（5Y，資料商）", 0.34, "倍", "2026-11-09", "StockAnalysis；對照頁 2026-09-09 為 0.32", "SA", "Verified")
     a("賣方目標價平均（14 家）", 5978, "日圓", "更新 2026-09-11（財報前）", "S&P Global 經 StockAnalysis；高 6,700、低 5,190", "SAF", "Interested-party", "賣方分析師：評等與交易業務誘因，目標價傾向跟隨股價；財報前只作歷史對照")
     a("賣方 FY2027 營收共識平均", 867500, "百萬日圓", "更新 2026-09-11（財報前）", "高 884,600、低 855,800", "SAF", "Interested-party", "賣方分析師：財報前只作歷史對照")

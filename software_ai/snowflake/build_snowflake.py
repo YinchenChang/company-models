@@ -3,7 +3,7 @@
 用法：python3 build_snowflake.py <raw.xlsx> [--sens data/sens_v01.json] [--rowmap rowmap.json]
 所有計算為活公式；輸入在 In 頁（藍字）。LibreOffice 重算後才有快取值。
 """
-import datetime, hashlib, json, os, sys
+import datetime, hashlib, json, os, shutil, sys
 import openpyxl
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'tools'))
 import fcff_dcf as FD
@@ -14,7 +14,13 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = sys.argv[1]
 SENS = sys.argv[sys.argv.index("--sens") + 1] if "--sens" in sys.argv else None
 ROWMAP = sys.argv[sys.argv.index("--rowmap") + 1] if "--rowmap" in sys.argv else None
-VER, VDATE = "0.1.2", "20261117"
+VER, VDATE = "0.2.2", "20261117"
+PPJ = json.load(open(os.path.join(HERE, "../data/relmult_hist/out/peer_ps_20261113.json"), encoding="utf-8"))
+shutil.copy(os.path.join(HERE, "../data/relmult_hist/out/peer_ps_20261113.json"), os.path.join(HERE, "data/peer_ps_20261113.json"))
+PPS = PPJ["companies"]["snowflake"]; PPG = PPS["groups"]["all"]
+RMJ = json.load(open(os.path.join(HERE, "../data/relmult_hist/out/snowflake.json"), encoding="utf-8"))
+shutil.copy(os.path.join(HERE, "../data/relmult_hist/out/snowflake.json"), os.path.join(HERE, "data/relmult_snowflake.json"))
+RMG = RMJ["groups"]["all"]
 TK = json.load(open(os.path.join(HERE, "data/tokenomics_snapshot_v22.0.json"), encoding="utf-8"))
 TKI = TK["items"]
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
@@ -50,7 +56,8 @@ add("conv_prin", "可轉換優先票據本金（2027 與 2029 年票據各 1,150
 add("conv_px", "可轉債轉換價", "US$/股", None, 157.50, None, D0, Q2Q + " Note 10：2027 與 2029 年票據轉換價皆為 US$157.50")
 add("conv_sh", "可轉債轉換股數（兩檔合計）", "M股", None, 14.603, None, D0, Q2Q + " 每股盈餘附註：轉換選擇權基礎股數 14,603 千股")
 add("cap_px", "Capped call 上限價", "US$/股", None, 225.00, None, D0, Q2Q + " MD&A：capped call 上限價 US$225.00（履約價 157.50）；現價高於轉換價時以 if-converted 計入股數、債務為 0，並扣 capped call 在 157.50–225 區間的回收股數")
-add("rel_mult", "相對倍數調整係數（本公司 P/S ÷ 同業中位數的近五期中位數；夾在 0.5–2.0）", "倍", 1.0, "=Val!$B$@@RELM@@", 2.0, DE, "自算（Val 頁表）：StockAnalysis 各公司財務比率頁近五個會計年度末的 P/S，SNOW 除以八家同業中位數，取五期中位數，夾在 tools/relative_multiple.py 的 0.5–2.0（原則 G3 第 4 條）；低案 1.00＝未調整；高案＝夾值上限 2.0；期間為歷史落後 P/S，與前瞻倍數口徑不同，為承重輸入")
+add("peer_ps", "同業中位 P/S（主腿；現價日市值÷TTM 營收；Val 頁表）", "倍", None, "=Val!$B$@@PSMED@@", None, DE, "讀 software_ai/data/relmult_hist/out/peer_ps_20261113.json（" + PPJ["as_of"] + "；StockAnalysis，Derived）：七家同業（CRWD 缺值已排除）；逾期者：" + "、".join(PPG["stale"]) + "；Sens 對照案＝資料庫最近一季（" + PPG["db_last_quarter"]["q"] + "）中位 " + str(PPG["db_last_quarter"]["median"]))
+add("rel_mult", "相對倍數 rel_mult（本公司 P/S 相對同業中位數；共用庫 geo_base：PS 與 PSG 兩讀數幾何平均）", "倍", "=Val!$B$@@RELLO@@", "=Val!$B$@@RELM@@", "=Val!$B$@@RELHI@@", DE, "讀 software_ai/data/relmult_hist/out/snowflake.json（2026-11-17 產生；副本 data/relmult_snowflake.json）：base_source＝" + RMJ["base_source"] + "；低／高＝sens.low／sens.high（近 20 個財季 PS 與 PSG 相對值的區間）；Comparable 倍數為前瞻 P/S，與庫內 TTM P/S 相對值同為 P/S 口徑，直接套用")
 add("opx_a", "非 GAAP 營業費用：固定部分（US$M；營業費用＝固定＋變動×營收）", "US$M", 500, "=Q!$B$@@OPXA@@", 1000, DE, "Q 頁迴歸（FY2022–FY2027 實績）：最近三點（FY2025、FY2026、LTM 至 Q2 FY27）的截距，原則 G3 第 1 條；「全期持平」（固定 0、變動＝最近四季營業費用率）為 Sens 下緣案例")
 add("opx_v", "非 GAAP 營業費用：變動部分（每增加 1 美元營收增加的營業費用）", "比例", 0.40, "=Q!$B$@@OPXV@@", 0.5705, DE, "Q 頁迴歸：最近三點斜率；低案 0.40 較強規模經濟（假設）；高案 0.5705＝六點全樣本斜率（較弱的規模經濟）")
 add("sbc_a", "股票薪酬：固定部分（US$M；股票薪酬＝固定＋變動×營收）", "US$M", 800, "=Q!$B$@@SBCA@@", 1500, DE, "Q 頁迴歸：最近三點截距；「全期持平」（占營收比固定為最近四季）為 Sens 下緣案例")
@@ -106,7 +113,7 @@ SC = {
 
 ws = SH["In"]
 ws["A1"] = "Snowflake 個股模型 v0.1 輸入頁（藍字＝輸入；黑字＝公式）。金額 US$M，會計年度 2 月制（FY2027＝2026-02-01～2027-01-31）。"
-ws["A2"] = "基準欄 E 進主模型；D／F（敏感度低／高）只用於 Sens 頁一次動一個參數，不進目標價。情境專屬列（鍵尾 A／B／C）由「情境驅動對照」節並列。本版未做先驗。"
+ws["A2"] = "基準欄 E 進主模型；D／F（敏感度低／高）只用於 Sens 頁一次動一個參數，不進目標價。情境專屬列（鍵尾 A／B／C）由「情境驅動對照」節並列。本版未做事前驗證。"
 for j, h in enumerate(["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "來源誘因"], 1):
     c = ws.cell(3, j, h); c.font = BOLD; c.fill = HDR
 IR = {}
@@ -124,7 +131,7 @@ for key, label, unit, lo, base, hi, tag, src, inc in INP:
 _I = lambda k: f"In!$E${IR[k]}"
 PFD = dict(
     date="2026-11-13", ccy="US$", amt="US$M", shu="M股",
-    rf=(0.0499, "沿用 repo meta/README.md 所載 2026-10-27 10 年美債 4.99%；距股價日 2026-11-13 逾兩個交易日，標逾期", "本次未重讀財政部頁面", "無風險利率（10 年美債；2026-10-27，逾期）"),
+    rf=(0.051, "FRED DGS10（美國 10 年期公債）2026-11-12：5.10%；股價日 2026-11-13 前 1 個交易日（工作單 G5 第 2 條統一取值）", "https://fred.stlouisfed.org/series/DGS10", "無風險利率（10 年美債；FRED DGS10，2026-11-12）"),
     betas=[("StockAnalysis（5 年）", 1.32, SA + "（beta 1.32）；第二來源未取得；docs/plan/自算產業β_20261105.md 的軟體產業 β 本版未套用")],
     beta_lohi=(1.0, 1.5, "單一來源，區間為 Assumed"),
     erp=(0.04, 0.05, 0.06, "DCF 標準規格預設 5%（4–6%）"),
@@ -523,10 +530,10 @@ V = SH["Val"]
 VR = {}
 vrows = ["intro", "hint", "blank0", "cap", "px", "px_date", "tp_date", "dcf_tp", "comp_tp", "tp", "up", "val_rec", "gate", "gate_use", "gate_res", "rec", "tp_ref", "sp1", "wh", "ke", "kd", "kdat", "wacc", "ronic", "g", "emkt", "dmkt", "ewt",
          "sp2", "ndh", "cashx", "ndebt", "netcash", "sh", "dps", "sp3", "sumh", "pvx", "tvpv", "ev", "eq", "vps0", "dcf12", "tvsh", "sp4", "ch", "ntm", "mult", "eqc", "comp12", "sp5", "scenh", "wa", "wb", "wc", "chk_w", "dec_h", "dec_gap", "dec_sbc", "dec_res", "rerate",
-         "sp6", "peerh", "pe1", "pe2", "pe3", "pe4", "pe5", "pe6", "pe7", "pe8", "pe_med", "pe_n", "pe_own", "pe_pe", "rmx"]
+         "sp6", "peerh", "pe1", "pe2", "pe3", "pe4", "pe5", "pe6", "pe7", "pe8", "pe_med", "pe_n", "pe_own", "pe_pe", "cu_h", "cu1", "cu2", "cu3", "cu4", "cu5", "cu6", "cu7", "cu_med", "cu_own", "cu_db", "cu_pe", "fwd_h", "fwd_ntm", "fwd_cmp", "rmx"]
 for i, k in enumerate(vrows): VR[k] = 1 + i
-V.cell(VR["intro"], 1, "估值：DCF（FCFF；EBIT 已扣股票薪酬）與 Comparable（同業前瞻 P/S 中位數×目標時點 NTM 營收）加權；目標價為 12 個月後（評價日＋12 個月）。三情境 25／50／25。上檔空間不是年化報酬。")
-V.cell(VR["hint"], 1, "Comparable 的同業前瞻 P/S 取自 StockAnalysis statistics 頁（前瞻期間以市值÷前瞻 P/S 反推，與 NTM 不完全相同）；同業日期不一致（部分為 2026-11-06，逾期）。P/E 只作對照（SNOW 的非 GAAP EPS 偏低，P/E 不適合作主倍數）。相對倍數調整係數為 1.00（未調整：缺歷史前瞻倍數）。")
+V.cell(VR["intro"], 1, "估值：DCF（FCFF；EBIT 已扣股票薪酬）與 Comparable（同業現價 P/S 中位×rel_mult×目標時點 TTM 營收）加權；目標價為 12 個月後（評價日＋12 個月）。三情境 25／50／25。上檔空間不是年化報酬。")
+V.cell(VR["hint"], 1, "Comparable 主腿＝同業現價中位 P/S（市值÷TTM 營收，與 rel_mult 的 P/S 相對值同為 TTM 口徑）× rel_mult × 目標時點 TTM 營收 ÷ 稀釋股數；前瞻 P/S（StockAnalysis statistics 頁，期間與 TTM 不一）改為對照列，不進加權目標價。P/E 只作對照（非 GAAP EPS 與 DCF 口徑不同）。")
 V.cell(VR["cap"], 1, "結論（情境加權）").font = BOLD
 def vrow(k, label, b=None, c=None, d=None, e=None):
     r_ = VR[k]; V.cell(r_, 1, label)
@@ -567,8 +574,8 @@ V.cell(VR["sumh"], 1, "DCF 彙總（三情境）").font = BOLD
 for col, lab in zip("CDE", ("情境 A", "情境 B", "情境 C")): V[f"{col}{VR['sumh']}"] = lab
 vrow("pvx", "明確期 FCFF 現值（US$M）"); vrow("tvpv", "永續價值現值（US$M）"); vrow("ev", "企業價值 EV（US$M）"); vrow("eq", "股權價值（EV＋淨現金；US$M）")
 vrow("vps0", "每股價值（評價日；US$）"); vrow("dcf12", "DCF 情境目標價（12 個月後＝每股價值×(1+ke)−股利；US$）"); vrow("tvsh", "永續價值占 EV 比例")
-V.cell(VR["ch"], 1, "Comparable（目標時點 NTM 營收 × 同業前瞻 P/S 中位數）").font = BOLD
-vrow("ntm", "目標時點 NTM 營收（FY2028 與 FY2029 按剩餘月數加權；US$M）"); vrow("mult", "套用前瞻 P/S（同業中位數×調整係數）"); vrow("eqc", "Comparable 股權價值（US$M）"); vrow("comp12", "Comparable 情境目標價（US$；P/S 已是股權口徑，不加淨現金）")
+V.cell(VR["ch"], 1, "Comparable（同業中位 P/S × rel_mult × 目標時點 TTM 營收 ÷ 稀釋股數；P/S 為股權口徑，不加淨現金；無非控制權益（10-Q 2026-07-31 資產負債表無此列），故不扣；原則 G6、G7、G8）").font = BOLD
+vrow("ntm", "目標時點 TTM 營收（FY2027 與 FY2028 依日數加權；US$M）"); vrow("mult", "套用 P/S（同業現價中位×rel_mult）"); vrow("eqc", "Comparable 股權價值（US$M）"); vrow("comp12", "Comparable 情境目標價（US$；P/S 已是股權口徑，不加淨現金）")
 V.cell(VR["scenh"], 1, "情境權重與加權").font = BOLD
 vrow("wa", "情境權重 A／B／C", None, f"={wr('A')}", f"={wr('B')}", f"={wr('C')}")
 vrow("wb", "情境加權目標價（各情境 DCF 與 Comparable 加權；US$）", None, *(f"={I('w_dcf')}*{c}{VR['dcf12']}+(1-{I('w_dcf')})*{c}{VR['comp12']}" for c in "CDE"))
@@ -582,8 +589,8 @@ _tv_sbc = f"PL!K{sb['sbc']}*(1+B{VR['g']})*(1-B{VR['g']}/B{VR['ronic']})/(B{VR['
 vrow("dec_gap", "Comparable 減 DCF（情境 B）", f"=D{VR['comp12']}-D{VR['dcf12']}")
 vrow("dec_sbc", "其中：股票薪酬（DCF 扣除、P/S 未扣；稅後現值加永續價值，推到目標時點）", f"=(1-{I('tax')})*(({_pv_sbc})+{_tv_sbc})/B{VR['sh']}*(1+B{VR['ke']})")
 vrow("dec_res", "其餘：槓桿（淨債務）、時點、前瞻期間與倍數水準差（殘差）", f"=B{VR['dec_gap']}-B{VR['dec_sbc']}")
-vrow("rerate", "SNOW 前瞻 P/S 調整到同業中位數所隱含的價格（現價×同業中位數÷SNOW 自身；US$）", f"=B{VR['px']}*B{VR['pe_med']}/B{VR['pe_own']}")
-V.cell(VR["peerh"], 1, "同業前瞻倍數（StockAnalysis statistics；八家；欄：前瞻 P/S、前瞻 P/E、市值 US$B、日期）").font = BOLD
+vrow("rerate", "SNOW P/S 調整到同業現價中位數所隱含的價格（現價×同業中位數÷SNOW 自身；US$）", f"=B{VR['px']}*B{VR['cu_med']}/B{VR['cu_own']}")
+V.cell(VR["peerh"], 1, "對照：同業前瞻倍數（StockAnalysis statistics；八家；欄：前瞻 P/S、前瞻 P/E、市值 US$B、日期；不進加權目標價）").font = BOLD
 PEERS = [("Datadog（DDOG）", 12.73, 61.83, 66.49, "2026-11-13"), ("MongoDB（MDB）", 7.67, 45.04, 25.20, "2026-11-06（逾期）"), ("Cloudflare（NET）", 29.98, 174.39, 109.60, "2026-11-13"),
          ("CrowdStrike（CRWD）", 22.82, 115.53, 122.72, "頁面未載日期"), ("ServiceNow（NOW）", 5.75, 22.46, 105.84, "2026-11-06（逾期）"), ("Palantir（PLTR）", 33.91, 73.10, 404.77, "2026-11-13"),
          ("Elastic（ESTC）", 4.36, 24.48, 9.04, "2026-11-06（逾期）"), ("Zscaler（ZS）", 7.98, 39.22, 31.38, "2026-11-13")]
@@ -599,25 +606,35 @@ vrow("pe_own", "Snowflake 自身前瞻 P/S（2026-11-13；僅對照）", 14.31, 
 V.cell(VR["pe_own"], 5, "C＝前瞻 P/E；D＝市值 US$B；隱含前瞻營收（US$M）見 Recon")
 for col in "BCD": V[f"{col}{VR['pe_own']}"].font = BLUE
 vrow("pe_pe", "Snowflake 前瞻 P/S 相對同業中位數", f"=B{VR['pe_own']}/B{VR['pe_med']}-1")
+# ---- 主腿同業現價 P/S（G7）
+V.cell(VR["cu_h"], 1, "主腿同業 P/S（現價日 " + PPJ["as_of"] + "：市值÷最新 TTM 營收；七家，CRWD 缺值已排除；欄：P/S、逾期標示）").font = BOLD
+for i_, (tk_, v_) in enumerate(PPG["peers"].items()):
+    rw = VR[f"cu{i_+1}"]; st_ = [x for x in PPG["stale"] if x.startswith(tk_ + "(")]
+    V.cell(rw, 1, tk_); V.cell(rw, 2, v_).font = BLUE; V.cell(rw, 3, ("逾期：" + st_[0]) if st_ else "價格日 " + PPJ["as_of"]); V.cell(rw, 5, "Derived（StockAnalysis；peer_ps_20261113.json）")
+vrow("cu_med", "同業中位 P/S（現價；主腿）", f"=MEDIAN(B{VR['cu1']}:B{VR['cu7']})")
+vrow("cu_own", "Snowflake 自身 P/S（現價；僅對照）", PPS["own_ps"]); V[f"B{VR['cu_own']}"].font = BLUE
+vrow("cu_db", "同業中位 P/S（資料庫最近一季 " + PPG["db_last_quarter"]["q"] + "；v0.2 舊值；Sens 對照案）", PPG["db_last_quarter"]["median"]); V[f"B{VR['cu_db']}"].font = BLUE
+vrow("cu_pe", "Snowflake P/S 相對同業中位（現價）", f"=B{VR['cu_own']}/B{VR['cu_med']}-1")
+V.cell(VR["fwd_h"], 1, "對照列（不進加權目標價）：前瞻 P/S 中位 × rel_mult × NTM 營收（v0.2 口徑；前瞻 P/S 與 rel_mult 的 TTM 口徑不一，只作對照）").font = BOLD
+vrow("fwd_ntm", "目標時點 NTM 營收（FY2028 與 FY2029 按剩餘月數加權；US$M）")
+vrow("fwd_cmp", "對照：前瞻 P/S 口徑 Comparable 情境目標價（US$）")
 # rel_mult 表與 FD 摘要區在 DCF 檢查之後（見下）
-# ---- rel_mult：最近 5 個期間 SNOW 倍數 ÷ 同業中位數（原則 G3 第 3 條；Derived）
+# ---- rel_mult：讀共用庫 JSON（工作單 G5 第 1 條；Derived）
 RM0 = VR["rmx"] + 1
-V.cell(RM0, 1, "相對倍數 rel_mult：SNOW 最近 5 個期間的 trailing P/S ÷ 同業（八家）trailing P/S 中位數；取 5 期比值中位數，夾在 0.5–2.0（Derived）").font = BOLD
-RMH = ["期間（StockAnalysis 財務比率表，市值÷近四季營收）", "SNOW", "DDOG", "MDB", "NET", "CRWD", "NOW", "PLTR", "ESTC", "ZS", "同業中位數", "比值"]
-for j, h in enumerate(RMH, 1): V.cell(RM0 + 1, j, h).font = BOLD
-RMD = [("FY2026（2026-01-31）", 14.08, 13.92, 12.27, 31.85, 23.13, 11.97, 94.66, 2.76, 7.29),
-       ("FY2025（2025-01-31）", 16.52, 18.08, 10.14, 22.13, 24.80, 19.91, 60.12, 6.07, 16.63),
-       ("FY2024（2024-01-31）", 22.96, 18.74, 17.18, 21.56, 22.09, 16.11, 16.79, 8.13, 12.51),
-       ("FY2023（2023-01-31）", 24.36, 13.93, 11.56, 15.23, 10.50, 10.81, 7.01, 5.17, 14.47),
-       ("FY2022（2022-01-31）", 69.31, 54.02, 30.95, 64.45, 26.57, 21.91, 23.68, 8.25, 20.16)]
-for i, row in enumerate(RMD):
-    rw = RM0 + 2 + i
-    V.cell(rw, 1, row[0])
-    for j, v in enumerate(row[1:], 2): V.cell(rw, j, v).font = BLUE
-    V.cell(rw, 11, f"=MEDIAN(C{rw}:J{rw})"); V.cell(rw, 12, f"=B{rw}/K{rw}")
-RMR = RM0 + 2 + len(RMD)
-V.cell(RMR, 1, "rel_mult（5 期比值中位數，夾在 0.5–2.0）"); V.cell(RMR, 2, f"=MIN(2,MAX(0.5,MEDIAN(L{RM0+2}:L{RMR-1})))"); V.cell(RMR, 3, "Derived；來源與缺漏見 Recon；trailing P/S 與前瞻 P/S 口徑不同，為主要載重輸入")
-RELM_ROW = RMR
+V.cell(RM0, 1, "相對倍數 rel_mult：讀 software_ai/data/relmult_hist/out/snowflake.json（八家同業；近 20 個財季 PS 相對值與 PSG 相對值；Derived）").font = BOLD
+RMROWS = [("ps", "PS 讀數（相對值 20 季中位）", RMG["ps_reading"]), ("psg", "PSG 讀數（PS÷成長；相對值 16 季中位）", RMG["psg_reading"]),
+          ("geo", "geo_base＝兩讀數幾何平均（＝rel_mult 基準）", None), ("low", "sens.low", RMG["sens"]["low"]), ("high", "sens.high", RMG["sens"]["high"]),
+          ("div", "兩讀數差距 divergence（> 30% 時須說明成長比）", RMG["divergence"]), ("gr", "成長比（SNOW TTM 營收年增 ÷ 同業中位；" + RMG["growth_ratio"]["basis"] + "）", RMG["growth_ratio"]["value"])]
+RMX = {}
+for i_, (k_, lab_, v_) in enumerate(RMROWS):
+    rw = RM0 + 1 + i_; RMX[k_] = rw
+    V.cell(rw, 1, lab_)
+    if v_ is not None: V.cell(rw, 2, v_).font = BLUE
+V[f"B{RMX['geo']}"] = f"=SQRT(B{RMX['ps']}*B{RMX['psg']})"
+V.cell(RMX["geo"], 3, "Derived；與 JSON geo_base 核對差（應為 0）："); V[f"D{RMX['geo']}"] = f"=ROUND(B{RMX['geo']}-{RMG['geo_base']!r},6)"
+V.cell(RMX["div"], 3, "未超過 30%" if not RMG["divergence_gt_30pct"] else "超過 30%：兩讀數差距來自成長比（見 README）")
+RMR = RM0 + 1 + len(RMROWS)
+RELM_ROW = RMX["geo"]
 # ---- FD 摘要區（折現率、DCF 彙總）
 FS0 = RMR + 3
 FS = FD.write_summary(wb, V, FS0, FDR, ["A", "B", "C"], ["tp_wA", "tp_wB", "tp_wC"], px="px", beta_note="Blume 調整；單一來源")
@@ -631,8 +648,10 @@ for si, s_ in enumerate("ABC"):
     V[f"{col}{VR['pvx']}"] = f"=DCF!$C${D_['pvx']}"; V[f"{col}{VR['tvpv']}"] = f"=DCF!$C${D_['pvtv']}"; V[f"{col}{VR['ev']}"] = f"=DCF!$C${D_['ev']}"
     V[f"{col}{VR['eq']}"] = f"={col}{VR['ev']}+$B${VR['netcash']}"; V[f"{col}{VR['vps0']}"] = f"=DCF!$C${D_['val']}"
     V[f"{col}{VR['dcf12']}"] = f"=DCF!$C${D_['v12']}"; V[f"{col}{VR['tvsh']}"] = f"=DCF!$C${D_['tvsh']}"
-    V[f"{col}{VR['ntm']}"] = f"=((DATE(2028,1,31)-$B${VR['tp_date']})/365)*PL!G{PR[s_]['rev']}+(1-(DATE(2028,1,31)-$B${VR['tp_date']})/365)*PL!H{PR[s_]['rev']}"
-    V[f"{col}{VR['mult']}"] = f"=$B${VR['pe_med']}*{I('rel_mult')}"
+    V[f"{col}{VR['ntm']}"] = f"=((DATE(2027,1,31)-($B${VR['tp_date']}-365))/365)*PL!F{PR[s_]['rev']}+(1-(DATE(2027,1,31)-($B${VR['tp_date']}-365))/365)*PL!G{PR[s_]['rev']}"
+    V[f"{col}{VR['fwd_ntm']}"] = f"=((DATE(2028,1,31)-$B${VR['tp_date']})/365)*PL!G{PR[s_]['rev']}+(1-(DATE(2028,1,31)-$B${VR['tp_date']})/365)*PL!H{PR[s_]['rev']}"
+    V[f"{col}{VR['fwd_cmp']}"] = f"={col}{VR['fwd_ntm']}*$B${VR['pe_med']}*{I('rel_mult')}/$B${VR['sh']}"
+    V[f"{col}{VR['mult']}"] = f"={I('peer_ps')}*{I('rel_mult')}"
     V[f"{col}{VR['eqc']}"] = f"={col}{VR['ntm']}*{col}{VR['mult']}"
     V[f"{col}{VR['comp12']}"] = f"={col}{VR['eqc']}/$B${VR['sh']}"
 wb.defined_names["px"] = DefinedName("px", attr_text=f"In!$E${IR['px']}")
@@ -640,7 +659,7 @@ wb.defined_names["px"] = DefinedName("px", attr_text=f"In!$E${IR['px']}")
 for _row in SH['In'].iter_rows():
     for _c in _row:
         if isinstance(_c.value, str) and "@@" in _c.value:
-            _c.value = (_c.value.replace("@@RELM@@", str(RELM_ROW)).replace("@@OPXA@@", str(RS["opxa"])).replace("@@OPXV@@", str(RS["opxv"]))
+            _c.value = (_c.value.replace("@@PSMED@@", str(VR["cu_med"])).replace("@@RELM@@", str(RELM_ROW)).replace("@@RELLO@@", str(RMX["low"])).replace("@@RELHI@@", str(RMX["high"])).replace("@@OPXA@@", str(RS["opxa"])).replace("@@OPXV@@", str(RS["opxv"]))
                         .replace("@@SBCA@@", str(RS["sbca"])).replace("@@SBCV@@", str(RS["sbcv"])))
 
 # ---------------------------------------------------------------- RevDCF 頁
@@ -651,7 +670,7 @@ RD["A2"] = "讀法：隱含值是「DCF 每股價值（評價日）＝現價」�
 rv_rows = [("lab", "項目"), ("v0", "情境 B 每股價值（評價日；US$）"), ("px", "現價（US$）"), ("gap", "現價與 DCF 每股價值之差（股權價值；US$M）"),
            ("k_m", "EBIT 率全期平移 1 個百分點對股權價值的影響（US$M）"), ("d_m", "現價隱含的 EBIT 率平移（百分點）"), ("m_fy32", "情境 B FY2032E EBIT 率（非 GAAP 營業利益率−SBC 占營收）"), ("m_imp", "現價隱含的 FY2032 EBIT 率"),
            ("ev0", "情境 B 企業價值（US$M）"), ("ev_imp", "現價隱含的企業價值（US$M）"), ("scale", "現價隱含的營收規模倍數（相對情境 B；FCFF 與營收同比例）"),
-           ("mult_imp", "現價隱含的 EV／NTM 營收倍數（情境 B）"), ("mult_peer", "同業中位數前瞻 P/S"), ("ps", "分部加總：不適用（本模型為單一營運分部，Comparable 以前瞻 P/S）")]
+           ("mult_imp", "現價隱含的 EV／目標時點 TTM 營收倍數（情境 B）"), ("mult_peer", "同業現價中位 P/S"), ("ps", "分部加總：不適用（本模型為單一營運分部，Comparable 以前瞻 P/S）")]
 for i, (k, lab) in enumerate(rv_rows):
     RV[k] = 4 + i; RD.cell(4 + i, 1, lab)
 b_ = PR["B"]
@@ -666,7 +685,7 @@ RD[f"B{RV['ev0']}"] = f"=Val!D{VR['ev']}"
 RD[f"B{RV['ev_imp']}"] = f"=B{RV['px']}*Val!B{VR['sh']}-Val!B{VR['netcash']}"
 RD[f"B{RV['scale']}"] = f"=B{RV['ev_imp']}/B{RV['ev0']}"
 RD[f"B{RV['mult_imp']}"] = f"=B{RV['ev_imp']}/Val!D{VR['ntm']}"
-RD[f"B{RV['mult_peer']}"] = f"=Val!B{VR['pe_med']}"
+RD[f"B{RV['mult_peer']}"] = f"=Val!B{VR['cu_med']}"
 RD.cell(RV["ps"], 2, "—")
 
 # ---------------------------------------------------------------- Recon 頁
@@ -703,7 +722,7 @@ for k, lab, spec in rec_rows:
             if v is not None: Rc.cell(r, j, v)
     r += 1
 Rc[f"B{RCR['omgap']}"] = f"=B{RCR['om27']}/C{RCR['om27']}-1"; Rc[f"B{RCR['prodgap']}"] = f"=B{RCR['prod27']}/C{RCR['prod27']}-1"
-KREQ = os.path.join(HERE, "data/kreq_v012.json")
+KREQ = os.path.join(HERE, "data/kreq_v022.json")
 if os.path.exists(KREQ):
     for n_, kq in enumerate(json.load(open(KREQ, encoding="utf-8"))):
         RCR["kreq" if n_ == 0 else "kreq2"] = r
@@ -711,7 +730,7 @@ if os.path.exists(KREQ):
         Rc.cell(r, 2, kq["base"]); Rc.cell(r, 5, kq["req"]); Rc.cell(r, 6, kq["note"])
         r += 1
 Rc.cell(r + 1, 1, "3. 同業日期與口徑").font = BOLD
-Rc.cell(r + 2, 1, "同業前瞻 P/S 取自 StockAnalysis；MongoDB、ServiceNow、Elastic 為 2026-11-06（距股價日逾兩個交易日，標逾期），CrowdStrike 頁面未載日期；八家家數達規格門檻但前瞻期間不一，不做迴歸；以調整係數作敏感度。")
+Rc.cell(r + 2, 1, "主腿同業 P/S 讀 peer_ps_20261113.json（現價日市值÷TTM 營收；七家，CRWD 缺值排除；MDB、ESTC 為 2026-11-06 逾期）；前瞻 P/S（StockAnalysis statistics 頁；MDB、NOW、ESTC 2026-11-06 逾期）只作對照列，不進加權目標價。")
 Rc.cell(r + 3, 1, "4. Q3 FY27 實績（截至 2026-10-31）尚未公布，發布日未找到；本版以 Q2 FY27 為最新已公布季，Q3 指引（產品營收 1,588–1,593、非 GAAP 營業利益率 15.5%）只作對照。")
 Rc.cell(r + 6, 1, "6. 合理性關卡（工作單 G3 第 4 條）：觸發條件 DCF 目標價低於現價 25% 或高於 4 倍；任一情境企業價值為負；評等為強力放空或強力買進；FY2027 營收或營業利益率與指引差距超過 10%").font = BOLD
 RCR["g_dcf"] = r + 7; RCR["g_ev"] = r + 8; RCR["g_rec"] = r + 9; RCR["g_gap"] = r + 10; RCR["g_n"] = r + 11
@@ -721,6 +740,24 @@ Rc.cell(r + 9, 1, "估值評等（觸發：強力放空或強力買進）"); Rc[
 Rc.cell(r + 10, 1, "FY2027 營收與營業利益率相對指引差距之絕對值較大者（觸發：超過 10%）"); Rc[f"B{r+10}"] = f"=MAX(ABS(B{RCR['prodgap']}),ABS(B{RCR['omgap']}))"; Rc[f"C{r+10}"] = f"=IF(B{r+10}>0.1,1,0)"
 Rc.cell(r + 11, 1, "觸發數（0–4；C 欄為各項是否觸發）"); Rc[f"B{r+11}"] = f"=SUM(C{r+7}:C{r+10})"
 Rc.cell(r + 5, 1, "5. 未找到：AI 營收占比（公司只稱 meaningful step-up）、AI 專屬毛利率、Q2 FY27 租賃負債與流通股封面數、第二來源 Beta、FY2029 以後公司長期目標、共識的產品營收。")
+
+# ---- 7. DCF（股票薪酬加回）對照讀數（工作單 G5 第 3 條；只作對照，不進加權目標價）
+rb = RCR["g_n"] + 2
+RCR["sb_h"] = rb
+Rc.cell(rb, 1, "7. DCF（股票薪酬加回）對照讀數：EBIT 改為非 GAAP 營業利益（SBC 不扣），其餘同標準 DCF；只作對照，不進加權目標價").font = BOLD
+RCR["sb_v0"], RCR["sb_v12"], RCR["sb_w"], RCR["sb_d"] = rb + 1, rb + 2, rb + 3, rb + 4
+Rc.cell(rb + 1, 1, "每股價值（評價日；SBC 加回；US$）"); Rc.cell(rb + 2, 1, "DCF 情境目標價（12 個月後；SBC 加回；US$）")
+Rc.cell(rb + 3, 1, "DCF 目標價（情境加權；SBC 加回；US$）"); Rc.cell(rb + 4, 1, "相對標準 DCF 目標價的差（US$）")
+for si_, s_ in enumerate("ABC"):
+    col_ = "BCD"[si_]; pr_ = PR[s_]; Dd = FDR["paths"][s_]
+    pv_ = "+".join(f"PL!{YC['FY'+str(y)]}{pr_['sbc']}*DCF!{DCOL[y]}${FDR['frac']}*DCF!{DCOL[y]}{Dd['df']}" for y in DYR)
+    tv_ = f"PL!K{pr_['sbc']}*(1+g_tv)*(1-g_tv/ronic)/(wacc-g_tv)/(1+wacc)^{FDR['tvt']}"
+    Rc[f"{col_}{rb+1}"] = f"=MAX(0,DCF!$C${Dd['val']}+(1-tax_w)*(({pv_})+{tv_})/sh_v)"
+    Rc[f"{col_}{rb+2}"] = f"={col_}{rb+1}*(1+ke)^t_tgt-dps_tgt"
+Rc[f"B{rb+3}"] = f"={I('tp_wA')}*B{rb+2}+{I('tp_wB')}*C{rb+2}+{I('tp_wC')}*D{rb+2}"
+Rc[f"B{rb+4}"] = f"=B{rb+3}-Val!B{VR['dcf_tp']}"
+Rc.cell(rb + 1, 6, "每股價值＝標準 DCF 每股價值＋(1−稅率)×(SBC 現值＋SBC 永續價值現值)÷股數；SBC 費用化是標準規格，加回讀數等於假設 SBC 無經濟成本（上界）")
+for j_, h_ in enumerate(["情境 A", "情境 B", "情境 C"], 2): Rc.cell(rb, j_, h_).font = BOLD
 
 # ---------------------------------------------------------------- Sens 頁
 Se = SH["Sens"]
@@ -754,34 +791,34 @@ src_rows = [("Tokenomics 快照", f"{TK['source']['version']}（{TK['source']['f
             ("研究包", "software_ai/snowflake/data/research_snowflake.md、facts_snowflake.csv"),
             ("公司申報", "Snowflake 8-K 附件 99.1（Q2 FY27 2026-09-02；Q1 FY27 2026-05-27；Q4 FY26 2026-02-25；Q3 FY26 2025-12）；10-K FY2026；10-Q Q2 FY27"),
             ("同業倍數與股價", "StockAnalysis statistics 頁（SNOW、DDOG、MDB、NET、CRWD、NOW、PLTR、ESTC、ZS；擷取日 2026-11-16）；forecast 頁（共識，2026-11-12 更新）"),
-            ("本版先驗", "未做（Andy 2026-11-16 23:27）")]
+            ("本版事前驗證", "未做（專案負責人 2026-11-16 23:27）")]
 for i, (a, b2) in enumerate(src_rows, 3):
     So.cell(i, 1, a); So.cell(i, 2, b2)
 So.cell(2, 1, "項目"); So.cell(2, 2, "內容")
 
 # ---------------------------------------------------------------- README 頁
 Rm = SH["README"]
-Rm["A1"] = f"Snowflake 個股模型 v{VER}｜資料截止 2026-11-16（最新已公布季 Q2 FY27，截至 2026-07-31）｜成品日 {VDATE}｜股價基準日 2026-11-13｜build_id {BUILD_ID}｜本版未做先驗"
+Rm["A1"] = f"Snowflake 個股模型 v{VER}｜資料截止 2026-11-16（最新已公布季 Q2 FY27，截至 2026-07-31）｜成品日 {VDATE}｜股價基準日 2026-11-13｜build_id {BUILD_ID}｜本版未做事前驗證"
 Rm["A2"] = "命題、結論與重點觀察的數字由公式自本檔其他頁組字（不手寫）。"
 VB = lambda k, col="B": f"Val!{col}{VR[k]}"
 SB = SR["B"]
 Rm["A3"] = ('="命題：AI 進入按用量計價的資料平台後，產品營收＝核心平台消耗＋AI 工作負載；AI 淨效果＝AI 營收增量−核心被替代的侵蝕−推論成本。情境 B 在 FY2032 的 AI 淨效果為 "&TEXT(Seg!K' + str(SB["net"]) + '/1000,"0.0")&" 十億美元（AI 營收 "&TEXT(Seg!K' + str(SB["air"]) + '/1000,"0.0")&" − 核心侵蝕 "&TEXT(Seg!K' + str(SB["eros"]) + '/1000,"0.0")&" − 推論成本 "&TEXT(Seg!K' + str(SB["infc"]) + '/1000,"0.0")&"），AI 營收占產品營收 "&TEXT(Seg!K' + str(SB["aish"]) + ',"0%")&"。"')
 Rm["A4"] = "命題的可證偽指標：扣除價格因素後的用量成長（工作負載乘數）、AI 功能消耗的 credit 占比、產品毛利率是否因 AI 轉售而下降；任何一項偏離基準區間即須重估。"
 Rm["A5"] = (f'="投資建議（在 AI 工作負載與被替代落在情境 A 到 C 區間、推論成本取 Tokenomics 市場價的基準假設下）："&{VB("rec")}&"；加權目標價 "&TEXT({VB("tp")},"0.00")&" 美元，上檔空間 "&TEXT({VB("up")},"0.0%")&"（現價 "&TEXT({VB("px")},"0.00")&" 美元，"&TEXT({VB("px_date")},"yyyy-mm-dd")&"）；估值評等 "&{VB("val_rec")}&"；收支關卡（FY2026–FY2030 公司口徑自由現金流合計 "&TEXT({VB("gate_use")},"#,##0")&" 百萬美元）"&{VB("gate_res")}')
-Rm["A6"] = (f'="一、DCF 目標價 "&TEXT({VB("dcf_tp")},"0.00")&"、Comparable 目標價 "&TEXT({VB("comp_tp")},"0.00")&" 美元；情境 B 兩者相差 "&TEXT({VB("dec_gap")},"0.00")&" 美元，其中股票薪酬約 "&TEXT({VB("dec_sbc")},"0.00")&"、其餘（槓桿、時點與倍數）約 "&TEXT({VB("dec_res")},"0.00")&" 美元；同業中位數前瞻 P/S "&TEXT({VB("pe_med")},"0.0")&" 倍，SNOW 自身 "&TEXT({VB("pe_own")},"0.0")&" 倍（"&IF({VB("pe_pe")}>0,"高於","低於")&"中位數 "&TEXT(ABS({VB("pe_pe")}),"0%")&"），調整到中位數隱含價格 "&TEXT({VB("rerate")},"0.00")&" 美元。"')
+Rm["A6"] = (f'="一、DCF 目標價 "&TEXT({VB("dcf_tp")},"0.00")&"、Comparable 目標價 "&TEXT({VB("comp_tp")},"0.00")&" 美元；情境 B 兩者相差 "&TEXT({VB("dec_gap")},"0.00")&" 美元，其中股票薪酬約 "&TEXT({VB("dec_sbc")},"0.00")&"、其餘（槓桿、時點與倍數）約 "&TEXT({VB("dec_res")},"0.00")&" 美元；同業現價中位 P/S "&TEXT({VB("cu_med")},"0.0")&" 倍，SNOW 自身 "&TEXT({VB("cu_own")},"0.0")&" 倍（"&IF({VB("cu_pe")}>0,"高於","低於")&"中位數 "&TEXT(ABS({VB("cu_pe")}),"0%")&"），調整到中位數隱含價格 "&TEXT({VB("rerate")},"0.00")&" 美元。"')
 Rm["A7"] = (f'="二、情境 B FY2027 產品營收 "&TEXT(PL!F{SPR["Product revenue"]}/1000,"0.00")&" 十億美元，"&IF(PL!F{SPR["Product revenue"]}>Recon!C{RCR["prod27"]},"高於","低於")&"公司指引 "&TEXT(Recon!C{RCR["prod27"]}/1000,"0.00")&" 十億美元；非 GAAP 營業利益率 "&TEXT(PL!F{STR["營業利益率"]},"0.0%")&"，"&IF(PL!F{STR["營業利益率"]}>Recon!C{RCR["om27"]},"高於","低於")&"公司指引 "&TEXT(Recon!C{RCR["om27"]},"0.0%")&"（營業費用與股票薪酬依 FY2022–FY2027 實績迴歸的固定＋變動拆分推得，未對指引校準；差距見 Recon）。"')
 Rm["A8"] = (f'="三、情境 B FY2032 推論成本（市場價）占產品營業成本 "&TEXT(Seg!K{SB["infc"]}/(Seg!K{SB["infc"]}+Seg!K{SB["cogsx"]}),"0%")&"，產品毛利率由 FY2027 的 "&TEXT(Seg!F{SB["pgm"]},"0.0%")&" 變為 "&TEXT(Seg!K{SB["pgm"]},"0.0%")&"；以全成本計的推論成本僅 "&TEXT(Seg!K{SB["inf_full"]}/1000,"0.0")&" 十億美元（對照用）。"')
 Rm["A9"] = (f'="四、現價隱含 FY2032 EBIT 率（扣股票薪酬）"&TEXT(RevDCF!B{RV["m_imp"]},"0.0%")&"（情境 B 為 "&TEXT(RevDCF!B{RV["m_fy32"]},"0.0%")&"）；永續價值占 EV 約 "&TEXT(Val!D{VR["tvsh"]},"0%")&"。"')
 Rm["A10"] = (f'="五、情境 A／B／C 加權目標價 "&TEXT(Val!C{VR["wb"]},"0.00")&"／"&TEXT(Val!D{VR["wb"]},"0.00")&"／"&TEXT(Val!E{VR["wb"]},"0.00")&" 美元；分化來自 AI 工作負載、被替代、轉售加成與股票薪酬占比。"')
 Rm["A12"] = "v1.3 展示層"
-Rm["A13"] = (f'="Snowflake："&{VB("rec")}&"，加權目標價 "&TEXT({VB("tp")},"0.00")&" 美元（上檔 "&TEXT({VB("up")},"0.0%")&"）；本版未做先驗。"')
+Rm["A13"] = (f'="Snowflake："&{VB("rec")}&"，加權目標價 "&TEXT({VB("tp")},"0.00")&" 美元（上檔 "&TEXT({VB("up")},"0.0%")&"）；本版未做事前驗證。"')
 Rm["A14"] = "本版要點"
 Rm["A15"] = "單一營運分部（10-K）；營收列取公司固定揭露的 Product revenue 與 Professional services and other revenue；AI 營收不單列（未找到），核心與 AI 為本模型拆分（Assumed）。"
 Rm["A16"] = "損益表為非 GAAP 口徑（公司與賣方共識口徑）；DCF 的 EBIT 扣除股票薪酬，GAAP 營業利益與 EPS 為參考列。"
 Rm["A17"] = "推論成本只讀 Tokenomics v22.0 快照，不自行估 token 價格；未來價格路徑待 AI供應鏈 登錄，以 Assumed 區間作敏感度。"
-Rm["A18"] = "未做事項：先驗（Andy 指示本版跳過）。不適用：三層基準協調（Coord、C0、兩讀數）：非 Siliconomics 覆蓋；Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照：Snowflake 不自建算力，推論成本為向模型商購買。"
+Rm["A18"] = "未做事項：事前驗證（專案負責人 指示本版跳過）。不適用：三層基準協調（Coord、C0、兩讀數）：非 Siliconomics 覆蓋；Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照：Snowflake 不自建算力，推論成本為向模型商購買。"
 Rm["A20"] = "市場資料日期"
-Rm["A21"] = (f'="現價 "&TEXT({I("px_date")},"yyyy-mm-dd")&" 收盤；無風險利率 4.99% 為 2026-10-27 取值（距現價日 "&TEXT({I("px_date")}-DATE(2026,10,27),"0")&" 日，逾期）；同業前瞻 P/S 2026-11-06 至 2026-11-13（2026-11-06 者逾期，CrowdStrike 未載日期）；共識 2026-11-12。"')
+Rm["A21"] = (f'="現價 "&TEXT({I("px_date")},"yyyy-mm-dd")&" 收盤；無風險利率 5.10% 為 FRED DGS10 2026-11-12（現價日前 1 個交易日）；同業現價 P/S 價格日 2026-11-13（MDB、ESTC 為 2026-11-06，逾期；CRWD 缺值已排除）；共識 2026-11-12。"')
 Rm["A22"] = "主要失效條件（可觀察）：Q3 FY27 產品營收低於指引 1,588 以下、產品毛利率跌破指引 74%、RPO 年增低於 25%、淨營收留存率跌破 120%、AI 功能 credit 占比停滯。"
 Rm["A23"] = "風險登錄"
 Rm["A24"] = "風險"; Rm["B24"] = "是否建模"; Rm["C24"] = "理由"; Rm["D24"] = "觀察指標"
@@ -793,11 +830,11 @@ Rm.cell(31, 1, "工作表：README、In、Q、Seg、PL、DCF、Val、RevDCF、Re
 Rm["A33"] = "頁"; Rm["B33"] = "輸入"; Rm["C33"] = "推導量"; Rm["D33"] = "因果方向"
 mp = [("Seg", "q3g、q4g、U_w26、U_w32_A／B／C、U_e26、U_e32_A／B／C、U_j26、U_j32、U_mk_A／B／C、g_px、g_tok、ovh、U_tier、g_b28、g_b32", "基準消耗、AI 營收、核心侵蝕、推論成本、AI 淨效果", "基準消耗×(1＋w−e)＋轉售營收 → 產品營收；呼叫數×每次成本 → 推論成本"),
       ("PL", "U_gm0、gm_dr、opx_a、opx_v、sbc_a、sbc_v_A／B／C、fc_da、fc_cx、fc_wc、tax、yld", "毛利、非 GAAP 營業利益、EBIT、FCFF、EPS", "營收 − 成本 − 費用 → 非 GAAP 營業利益 → 扣 SBC → NOPAT → FCFF"),
-      ("Val", "rf、beta_1、erp、kd_sp、g_tv、ronic_sp、w_dcf、rel_mult、rsu、opt_n、conv_px", "WACC、DCF、Comparable、加權目標價、評等", "FCFF 折現＋同業前瞻 P/S × NTM 營收 → 加權"),
+      ("Val", "rf、beta_1、erp、kd_sp、g_tv、ronic_sp、w_dcf、rel_mult、rsu、opt_n、conv_px", "WACC、DCF、Comparable、加權目標價、評等", "FCFF 折現＋同業現價 P/S 中位 × rel_mult × TTM 營收 → 加權"),
       ("Sens", "In 頁敏感度低／高", "加權目標價、DCF 目標價、投資建議", "一次改一個輸入、整本重算")]
 for i, rk in enumerate(mp, 34):
     for j, v in enumerate(rk, 1): Rm.cell(i, j, v)
-Rm["A39"] = "版本沿革：v0.1（2026-11-16）首版；v0.1.1（2026-11-17）依工作單 G3 修正：規模經濟延伸、DCF 改接 tools/fcff_dcf.py、rel_mult 自算、補讀 RSU／選擇權／可轉債、合理性關卡診斷；未做先驗。"
+Rm["A39"] = "版本沿革：v0.1（2026-11-16）首版；v0.1.1（2026-11-17）依工作單 G3 修正：規模經濟延伸、DCF 改接 tools/fcff_dcf.py、rel_mult 自算、補讀 RSU／選擇權／可轉債、合理性關卡診斷；v0.2（2026-11-17）依工作單 G5：rel_mult 改讀共用庫 relmult_hist JSON（geo_base）、無風險利率統一為 FRED DGS10 5.10%、並列股票薪酬加回 DCF 對照讀數；未做事前驗證。；v0.2.2（2026-11-17）依工作單 G8：只改文字（個人情境用語中性化），數字不變；查 10-Q（截至 2026-07-31）無非控制權益，P/S 主腿與 DCF 股權橋不扣。"
 Rm["A40"] = "合理性關卡診斷（工作單 G3 第 4 條；觸發條件與當期判定見 Recon 第 6 節；診斷全文見 README.md）"
 Rm["A41"] = (f'="觸發數 "&TEXT(Recon!B{RCR["g_n"]},"0")&"／4：DCF 目標價 "&TEXT({VB("dcf_tp")},"0.00")&" 美元為現價 "&TEXT(Recon!B{RCR["g_dcf"]},"0%")&"；情境 C 企業價值 "&TEXT(Val!E{VR["ev"]},"#,##0")&" 百萬美元；評等 "&{VB("val_rec")}&"；FY2027 營收與營業利益率相對指引差距 "&TEXT(Recon!B{RCR["prodgap"]},"0.0%")&"／"&TEXT(Recon!B{RCR["omgap"]},"0.0%")&"。"')
 Rm["A42"] = "診斷：這不是計算錯誤。FCFF 營運資金符號（遞延收入增加為流入）、股數（RSU、選擇權、可轉債）、折舊攤銷（排除已被非 GAAP 排除的無形資產攤銷）、WACC 與終值公式已逐項核對；低 DCF 來自輸入：營業費用與股票薪酬的規模經濟只取自實績迴歸（不預設槓桿）、AI 推論使毛利率下降，使 FY2032 的 EBIT（扣股票薪酬）率僅個位數；現價隱含的 EBIT 率見 RevDCF。判斷屬經濟判斷：DCF 對股票薪酬與規模經濟的路徑高度敏感，Comparable 則由同業倍數與 rel_mult 決定，兩者落差分解見 Val。"
@@ -808,7 +845,7 @@ for ws_ in wb.worksheets:
 wb["In"].column_dimensions["B"].width = 60; wb["In"].column_dimensions["H"].width = 70
 wb.defined_names["PL_hdr"] = DefinedName("PL_hdr", attr_text="PL!$C$5:$K$5")
 wb.save(OUT)
-rowmap = {"IR": IR, "SR": SR, "PR": PR, "STR": STR, "SPR": SPR, "VR": VR, "DR": FDR, "FS": FS, "RM": {"rel_mult": RELM_ROW, "first": RM0 + 2}, "RV": RV, "RCR": RCR, "CK": CK, "QR": QR, "RS": RS, "SE_ROWS": SE_ROWS, "SE_END": SE_END, "SCN_H": SCN_H, "SCN_ROWS": SCN_ROWS,
+rowmap = {"IR": IR, "SR": SR, "PR": PR, "STR": STR, "SPR": SPR, "VR": VR, "DR": FDR, "FS": FS, "RM": {"rel_mult": RELM_ROW, "first": RM0 + 1, "last": RMR - 1, **RMX}, "RV": RV, "RCR": RCR, "CK": CK, "QR": QR, "RS": RS, "SE_ROWS": SE_ROWS, "SE_END": SE_END, "SCN_H": SCN_H, "SCN_ROWS": SCN_ROWS,
           "BUILD_ID": BUILD_ID, "FP": fp, "HDR_R": hdr_r, "GR0": GR0, "LAST_PARAM_ROW": LAST_PARAM_ROW}
 if ROWMAP: json.dump(rowmap, open(ROWMAP, "w"), ensure_ascii=False, indent=1)
 print("built", OUT, BUILD_ID)

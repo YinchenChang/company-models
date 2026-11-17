@@ -63,7 +63,13 @@ cfg = {
                 "row_fmt": {str(VR["tvsh"]): {c: "p1" for c in "BCD"}, str(VR["pm"]): {"B": "n2", "C": "", "D": ""}}}},
     {"type": "table", "caption": "DCF 與 Comparable 落差分解（情境 B）與現行倍數", "head": ["項目", "數值"],
      "rowgen": {"sheet": "Val", "rows": f"{VR['gap']}-{VR['rel']}", "cols": ["A", "B"], "fmts": ["", "n0"], "row_fmt": {str(VR["mdcf"]): {"B": "n2"}, str(VR["gap_c"]): {"B": "n3"}, str(VR["cur"]): {"B": "n2"}, str(VR["rel"]): {"B": "n2"}}}},
-    {"type": "note", "parts": [f"@Val!B{VR['stale']}"]}]},
+    {"type": "table", "caption": "對照列：EV/EBIT Comparable（盈餘型倍數；不進加權目標價）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
+     "rowgen": {"sheet": "Val", "rows": f"{VR['pmx']}-{VR['cx2w']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n0", "n0", "n0"],
+                "row_fmt": {str(VR[k]): {"B": "n2", "C": "", "D": ""} for k in ("pmx", "curx", "relx")} | {str(VR[k]): {"C": "", "D": ""} for k in ("cx1w", "cx2w")}}},
+    {"type": "note", "parts": [f"@Val!B{VR['stale']}", f"@README!A{RDR['rm1']}", f"@README!A{RDR['rm2']}"]},
+    {"type": "table", "caption": "DCF（股票薪酬加回）對照：只作對照，不進加權目標價", "head": ["項目", "情境 A", "情境 B", "情境 C", "情境加權", "說明"],
+     "rowgen": {"sheet": "Recon", "rows": f"{RCR['sb0']}-{RCR['sb3']}", "cols": list("ABCDEF"), "fmts": ["", "n0", "n0", "n0", "n0", ""]}},
+    {"type": "note", "parts": [f"@Recon!A{RCR['sbs']}"]}]},
   {"id": "sens", "title": "敏感度", "blocks": tors + [{"type": "note", "parts": ["@Sens!A1", "@Sens!A2"]}, case_tbl, kreq_tbl,
     {"type": "kv", "items": [[f"@Sens!A{SEM['ST']}", f"@Sens!D{SEM['ST']}"], ["build_id", f"@Sens!D{SEM['BID']}"]]}]},
   {"id": "revdcf", "title": "反向 DCF：現價隱含什麼", "blocks": [
@@ -113,7 +119,7 @@ cfg = {
     {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期（資料截止日、成品日、股價基準日）", f"@README!A{RDR['a1']}"], ["build_id", f"@Sens!D{SEM['BID']}"], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"], ["Tokenomics 快照", "@Sources!B2"]]},
     {"type": "h3", "text": "資料與口徑"}, {"type": "list", "items": ["@In!A2", "@Sources!B3", "@Sources!B4"]},
     {"type": "h3", "text": "市場資料日期、失效條件與承重假設"},
-    {"type": "list", "items": [f"@README!A{RDR[k]}" for k in ("md1", "diag", "f1", "f2", "f3", "l1", "l2", "l3", "na1", "na2", "na3", "na4")]},
+    {"type": "list", "items": [f"@README!A{RDR[k]}" for k in ("md1", "rm1", "rm2", "diag", "f1", "f2", "f3", "l1", "l2", "l3", "l4", "na1", "na2", "na3", "na4")]},
     {"type": "table", "caption": "風險登錄", "head": ["風險", "是否建模", "理由", "觀察指標"], "rowgen": {"sheet": "README", "rows": f"{rm['RISK_HDR'] + 1}-{rm['RISK_HDR'] + 5}", "cols": list("ABCD")}},
     {"type": "h3", "text": "「未找到」清單"},
     {"type": "list", "items": [f"@README!A{RDR['nf']}"]}]}]}

@@ -96,11 +96,14 @@ S.append({"id": "thesis", "title": "命題與核心問題", "blocks": [
     {"type": "list", "items": ["@README!A2"]}]})
 # ───────── 2. 估值 ─────────
 rf_f = {str(VR[k]): {c: f for c in "BCD"} for k, f in (("up", "sp1"), ("upc", "sp1"), ("updcf", "sp1"), ("tvsh2", "p1"), ("san_dcf", "n2"), ("san_g", "p1"), ("san_m27", "sp1"), ("bdist", "n1"),
-                                                      ("gap", "n2"), ("gap_sbc", "n2"), ("gap_time", "n2"), ("gap_lev", "n2"), ("gap_mult", "n2"), ("pe_hubs_now", "n1"), ("gatev", "n0"),
+                                                      ("gap", "n2"), ("gap_sbc", "n2"), ("ab_ps0", "n2"), ("ab_tp", "n2"), ("ab_up", "sp1"), ("gap_time", "n2"), ("gap_lev", "n2"), ("gap_mult", "n2"), ("pe_hubs_now", "n1"), ("gatev", "n0"),
                                                       ("gate_all", "n0"), ("per", "n2"), ("perel", "n2"), ("uattr", "sp1"), ("dep", "n2"), ("san_ev", "n0"), ("tpdcf", "n2"), ("tpcomp", "n2"), ("tp", "n2"),
                                                       ("px", "n2"), ("cons", "n2"))}
 for k in ("tier", "rec_val", "rec", "san_rec", "san_diag"):
     rf_f[str(VR[k])] = {c: "" for c in "BCD"}
+rf_f[str(VR["ab_up"])] = {"B": "sp1", "C": "", "D": ""}
+rf_f[str(VR["ab_ps0"])] = {"B": "n2", "C": "", "D": ""}
+rf_f[str(VR["ab_tp"])] = {"B": "n2", "C": "", "D": ""}
 rf_f[str(VR["perel"])] = {"B": "n2", "C": "sp1", "D": ""}
 rf_f[str(VR["bdist"])] = {"B": "n1", "C": "", "D": ""}
 rf_f[str(VR["san_dcf"])] = {"B": "n2", "C": "", "D": ""}
@@ -119,6 +122,9 @@ S.append({"id": "valuation", "title": "估值", "blocks": [
     {"type": "note", "parts": ["@Val!A1"]}, {"type": "note", "parts": ["@Val!A2"]}, {"type": "note", "parts": ["@Val!A3"]},
     {"type": "table", "caption": "@Val!A4", "head": ["項目", "數值", "對照", "對照", "說明"],
      "rowgen": {"sheet": "Val", "rows": f"{VR['tpdcf']}-{VR['san_diag']}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n2", "n2", "n2", ""], "row_fmt": rf_f}},
+    {"type": "note", "parts": [f"@Recon!A{RCA['ab_txt']}"]},
+    {"type": "table", "caption": "DCF 讀數並列：股票薪酬費用化（進加權目標價）與加回（只作對照）", "head": ["項目", "費用化（基準）", "加回（對照）", "差額"],
+     "rows": [[f"@Recon!A{RCA[k]}", f"@Recon!B{RCA[k]}|{f}", f"@Recon!C{RCA[k]}|{f}", f"@Recon!D{RCA[k]}|{f}"] for k, f in (("ab_ps", "n2"), ("ab_tp", "n2"), ("ab_up", "sp1"))]},
     {"type": "table", "caption": "折現率與股數", "head": ["項目", "數值"],
      "rowgen": {"sheet": "Val", "rows": f"{vw['rf']}-{vw['sh_val']}", "cols": ["A", "B"], "fmts": ["", "n3"],
                 "row_fmt": {str(vw[k]): {"B": "p2"} for k in ("rf", "erp", "ke", "kd", "wacc", "ronic")} | {str(vw["tax"]): {"B": "p1"}, str(vw["g"]): {"B": "p1"}, str(vw["wd"]): {"B": "p2"},
@@ -127,9 +133,9 @@ S.append({"id": "valuation", "title": "估值", "blocks": [
      "rowgen": {"sheet": "Val", "rows": f"{VR['dsum0']}-{VR['dsum0'] + 8}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"],
                 "row_fmt": {str(VR["dsum0"] + 4 + 1): {c: "n3" for c in "BCD"}, str(VR["dsum0"] + 6): {c: "n2" for c in "BCD"}, str(VR["dsum0"] + 7): {c: "n2" for c in "BCD"},
                             str(VR["dsum0"] + 8): {c: "p1" for c in "BCD"}}}},
-    {"type": "table", "caption": "Comparable（同業前瞻 P/E 中位數 × 目標時點 NTM 非 GAAP EPS）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
-     "rowgen": {"sheet": "Val", "rows": f"{VR['cmp0']}-{VR['cmp0'] + 5}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n2", "n2", "n2"],
-                "row_fmt": {str(VR["cmp0"] + 2): {c: "n3" for c in "BCD"}, str(VR["cmp0"] + 4): {c: "n1" for c in "BCD"}}}},
+    {"type": "table", "caption": "Comparable 主腿（同業中位 P/S × 相對倍數係數 × 目標時點 TTM 營收 ÷ 稀釋股數）與本益比對照列", "head": ["項目", "情境 A", "情境 B", "情境 C"],
+     "rowgen": {"sheet": "Val", "rows": f"{VR['cmp0']}-{VR['c_cmppe2']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n2", "n2", "n2"],
+                "row_fmt": {str(VR["c_" + k]): {c: f for c in "BCD"} for k, f in (("rev26", "n1"), ("rev27", "n1"), ("wt", "n3"), ("ttm", "n1"), ("ps", "n2"), ("shs", "n3"), ("w27", "n3"), ("pe1", "n1"), ("pe2", "n1"))}}},
     {"type": "table", "collapse": True, "summary": "展開：同業前瞻 P/E（逐家）", "head": ["同業", "前瞻 P/E（倍）"],
      "rowgen": {"sheet": "Val", "rows": f"{VR['peer0']}-{VR['peer_hubs']}", "cols": ["A", "B"], "fmts": ["", "x1"]}}]})
 # ───────── 3. 敏感度 ─────────
@@ -202,6 +208,8 @@ R = RCA
 S.append({"id": "recon", "title": "對帳：指引、共識與反解", "intro": "@Recon!A1", "blocks": [
     {"type": "table", "caption": f"@Recon!A{R['q4rev'] - 2}", "head": ["項目", "模型（情境 B）", "指引或共識", "差距", "說明"],
      "rowgen": {"sheet": "Recon", "rows": f"{R['q4rev']}-{R['tpc']}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n2", "n2", "sp1", ""]}},
+    {"type": "table", "caption": f"@Recon!A{R['ab_ps'] - 2}", "head": ["項目", "費用化（基準）", "加回（對照）", "差額", "說明"],
+     "rowgen": {"sheet": "Recon", "rows": f"{R['ab_ps']}-{R['ab_up']}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n2", "n2", "n2", ""], "row_fmt": {str(R["ab_up"]): {"B": "sp1", "C": "sp1", "D": "sp1"}}}},
     {"type": "table", "caption": f"@Recon!A{R['q4gap'] - 2}", "head": ["項目", "數值", "說明"],
      "rowgen": {"sheet": "Recon", "rows": f"{R['q4gap']}-{R['m27']}", "cols": ["A", "B", "C"], "fmts": ["", "n2", "p1"], "row_fmt": {str(R["q4_implied"]): {"B": "p1"}, str(R["q4_pct"]): {"B": "sp1"}, str(R["m27"]): {"B": "p1", "C": "p1"}}}},
     {"type": "table", "caption": f"@Recon!A{R['k_key'] - 2}", "head": ["項目", "數值", "說明"],
@@ -209,7 +217,7 @@ S.append({"id": "recon", "title": "對帳：指引、共識與反解", "intro": 
     {"type": "table", "caption": f"@Recon!A{R['d_rf'] - 2}", "head": ["項目", "資料日", "與股價基準日相差（交易日）", "狀態"],
      "rowgen": {"sheet": "Recon", "rows": f"{R['d_rf']}-{R['d_px']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "date", "n0", ""]}},
     {"type": "table", "caption": f"@Recon!A{R['peer0'] - 2}", "head": ["同業", "前瞻 P/E（倍）", "會計準則與租賃處理", "備註"],
-     "rowgen": {"sheet": "Recon", "rows": f"{R['peer0']}-{R['pe_rr']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "x1", "", ""], "row_fmt": {str(R["pe_ratio"]): {"B": "n2"}, str(R["pe_rr"]): {"B": "sp1"}}}},
+     "rowgen": {"sheet": "Recon", "rows": f"{R['peer0']}-{R['ps_rel']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "x1", "", ""], "row_fmt": {str(R["pe_ratio"]): {"B": "n2"}, str(R["pe_rr"]): {"B": "sp1"}, str(R["ps_med"]): {"B": "n2", "C": "n2"}, str(R["ps_rel"]): {"B": "n2", "C": "n2"}}}},
     {"type": "table", "caption": f"@Recon!A{R['ai_rev'] - 2}", "head": ["項目", "情境 A", "情境 B", "情境 C"],
      "rowgen": {"sheet": "Recon", "rows": f"{R['ai_rev']}-{R['ai_share']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"],
                 "row_fmt": {str(R["ai_brk"]): {c: "n2" for c in "BCD"}, str(R["ai_price"]): {c: "n2" for c in "BCD"}, str(R["ai_share"]): {c: "p1" for c in "BCD"}}}}]})
@@ -219,7 +227,7 @@ S.append({"id": "status", "title": "資料狀態", "blocks": [
     {"type": "h3", "text": "資料與口徑"},
     {"type": "list", "items": ["@In!A2", "@Hist!A1", "@Q4E!A1", "@Sens!A2"]},
     {"type": "h3", "text": "市場資料日期、失效條件與風險登錄"},
-    {"type": "list", "items": [f"@README!A{r}" for r in (29, 30, 31, 32, 33, 34)]},
+    {"type": "list", "items": [f"@README!A{r}" for r in (29, 30, 31, 32, 33, 34, 57, 58)]},
     {"type": "table", "caption": "風險登錄", "head": ["風險", "是否建模", "理由", "觀察指標"], "rowgen": {"sheet": "README", "rows": "38-42", "cols": ["A", "B", "C", "D"]}},
     {"type": "h3", "text": "未做與不適用"},
     {"type": "list", "items": [f"@README!A{r}" for r in (49, 50, 51, 52)]},

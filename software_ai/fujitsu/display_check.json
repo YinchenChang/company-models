@@ -25,7 +25,7 @@
   {
    "name": "Comparable 目標價",
    "sheet": "Val",
-   "find": "Comparable 目標價（分部加總",
+   "find": "Comparable 目標價（P/S 主腿",
    "col": "B",
    "fmt": "n2",
    "patterns": [
@@ -63,9 +63,9 @@
    "fmt": "n2"
   },
   {
-   "title": "Comparable（分部加總）目標價",
+   "title": "Comparable（P/S 主腿）目標價",
    "sheet": "Val",
-   "find": "Comparable 目標價（分部加總",
+   "find": "Comparable 目標價（P/S 主腿",
    "col": "B",
    "fmt": "n2"
   },

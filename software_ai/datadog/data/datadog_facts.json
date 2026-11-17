@@ -3192,13 +3192,13 @@
    "incentive": ""
   },
   {
-   "id": "mkt.rf.20261113",
-   "metric": "10 年期美國公債殖利率",
-   "value": 5.15,
+   "id": "mkt.rf.20261112",
+   "metric": "10 年期美國公債殖利率（FRED DGS10）",
+   "value": 5.1,
    "unit": "%",
-   "period": "2026-11-13",
-   "basis": "財政部日殖利率曲線",
-   "source": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202611",
+   "period": "2026-11-12",
+   "basis": "FRED DGS10（工作單 G5 第 2 條統一值；現價日前 1 個交易日）",
+   "source": "https://fred.stlouisfed.org/series/DGS10",
    "tag": "Verified",
    "incentive": ""
   },

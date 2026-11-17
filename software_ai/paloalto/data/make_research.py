@@ -176,15 +176,14 @@ for tk, px, mc, ev, evs, fpe, beta in [("FTNT", 127.22, 93.47, 89.23, 11.32, 33.
     add(f"同業 {tk} Beta", beta, "x", "2026-11-13", "5Y", base, "Verified", "", "")
 add("同業 PANW 前瞻本益比（資料商）", 77.10, "x", "2026-11-13", "Forward P/E", "SAS", "Interested-party", "共識 EPS 為賣方預估", "")
 add("同業 PANW EV／營收（TTM，資料商）", 22.88, "x", "2026-11-13", "TTM", "SAS", "Verified", "", "")
-# ---- 歷史相對倍數（G3 第 4 條；2026-11-17 擷取）
-_MT = {"PANW": "https://www.macrotrends.net/stocks/charts/PANW/palo-alto-networks/price-sales", "ZS": "https://www.macrotrends.net/stocks/charts/ZS/zscaler/price-sales", "FTNT": "https://www.macrotrends.net/stocks/charts/FTNT/fortinet/price-sales", "CHKP": "https://www.macrotrends.net/stocks/charts/CHKP/check-point-software-technologies/price-sales"}
-for _k, _u in _MT.items():
-    ROWS.append([f"{_k} 市銷率（TTM）逐季序列 2020-04 至 2025-04", "21 點，見模型 RelHist 頁", "x", "2020-04-30 至 2025-04-30", "TTM 市銷率（價格 ÷ 每股銷售額）；PANW、ZS 取財季末，FTNT、CHKP 取前一個日曆季末", f"macrotrends.net {_k} price-sales 頁 {_u}", "2026-11-17", "Verified", ""])
-ROWS.append(["PANW ÷ 同業中位市銷率：中位數", 0.924, "x", "2020-04 至 2025-04（21 點）", "同業＝ZS、FTNT、CHKP；Derived", "RelHist 頁（macrotrends 序列自算）", "2026-11-17", "Derived", ""])
-ROWS.append(["PANW ÷ 同業中位市銷率：最低", 0.577, "x", "2020-04 至 2025-04", "同上", "RelHist 頁", "2026-11-17", "Derived", ""])
-ROWS.append(["PANW ÷ 同業中位市銷率：最高", 1.794, "x", "2020-04 至 2025-04", "同上", "RelHist 頁", "2026-11-17", "Derived", ""])
-ROWS.append(["PANW ÷ 同業中位 EV／營收（現行）", 2.577, "x", "2026-11-13", "同業＝ZS、FTNT、CHKP（3 家）；含 NET 為 2.265", "RelHist 頁（StockAnalysis 現行值自算）", "2026-11-17", "Derived", ""])
-ROWS.append(["PANW 歷史前瞻本益比序列／NET 歷史市銷率", "未找到（共識 EPS 歷史不公開；macrotrends 禁止擷取 Cloudflare 頁）", "—", "—", "—", "—", "2026-11-17", "Verified", ""])
+# ---- 歷史相對倍數（G5 第 1 條；共用庫 software_ai/data/relmult_hist/out/paloalto.json，2026-11-17）
+_J = "共用庫 software_ai/data/relmult_hist/out/paloalto.json（資料商 StockAnalysis 季度比率頁；同業 FTNT、ZS、CHKP）"
+for _m, _v, _t in [("PS 讀數（歷史中位）", 1.1594302795370166, "Derived"), ("PSG 讀數", 1.4416760569670555, "Derived"), ("相對倍數基準 geo_base（兩讀數幾何平均）", 1.2928738816029726, "Derived"), ("Sens 低", 0.4982987722595606, "Derived"), ("Sens 高", 2.4330435896191496, "Derived"), ("成長比（本公司 ÷ 同業中位，TTM）", 1.3047030171601444, "Derived")]:
+    ROWS.append([_m, _v, "x", "2021-09 至 2026-06（20 個財季）", "PANW ÷ 同業中位；PS 與 PSG", _J, "2026-11-17", _t, ""])
+for _m, _v, _d in [("同業 P/S：Fortinet", 11.86, "2026-11-13"), ("同業 P/S：Zscaler", 9.36, "2026-11-13"), ("同業 P/S：Check Point", 5.44, "2026-11-13")]:
+    ROWS.append([_m, _v, "x", _d, "PS＝市值÷TTM 營收；市值÷最新 TTM 營收，價格日 2026-11-13（無逾期家數）", "共用庫 software_ai/data/relmult_hist/out/peer_ps_20261113.json", "2026-11-17", "Verified", ""])
+ROWS.append(["無風險利率（美國 10 年期）", 0.051, "比率", "2026-11-12", "FRED DGS10", "FRED https://fred.stlouisfed.org/series/DGS10（G5 第 2 條統一值）", "2026-11-17", "Verified", ""])
+ROWS.append(["PANW 歷史前瞻本益比序列", "未找到（共識 EPS 歷史不公開；相對倍數改用共用庫 PS／PSG）", "—", "—", "—", "—", "2026-11-17", "Verified", ""])
 with open(os.path.join(D, "facts_paloalto.csv"), "w", newline="", encoding="utf-8-sig") as f:
     w = csv.writer(f); w.writerow(["指標", "數值", "單位", "期間", "口徑", "出處", "擷取日", "標記", "來源誘因"]); w.writerows(ROWS)
 print(len(ROWS), "rows")

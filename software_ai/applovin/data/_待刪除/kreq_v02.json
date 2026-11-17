@@ -1,0 +1,51 @@
+{
+ "base_tp": 604.990270864384,
+ "pe_rel": {
+  "req": {
+   "solved": true,
+   "value": 1.2710758341684705,
+   "tp": 409.100000000001
+  },
+  "flip": {
+   "solved": true,
+   "value": 1.7379559800279414,
+   "tp": 511.375000000003
+  }
+ },
+ "beta": {
+  "req": {
+   "solved": false,
+   "value": null,
+   "tp": null
+  },
+  "flip": {
+   "solved": true,
+   "value": 15.736672889348519,
+   "tp": 511.375279818983
+  }
+ },
+ "u0_B": {
+  "req": {
+   "solved": false,
+   "value": null,
+   "tp": null
+  },
+  "flip": {
+   "solved": false,
+   "value": null,
+   "tp": null
+  }
+ },
+ "e0_B": {
+  "req": {
+   "solved": false,
+   "value": null,
+   "tp": null
+  },
+  "flip": {
+   "solved": false,
+   "value": null,
+   "tp": null
+  }
+ }
+}

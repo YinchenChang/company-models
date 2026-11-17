@@ -273,8 +273,20 @@
      }
     },
     {
+     "type": "note",
+     "parts": [
+      "@README!A61"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A64"
+     ]
+    },
+    {
      "type": "table",
-     "caption": "Comparable：同業前瞻本益比 × 目標時點下一年 EPS（三情境）",
+     "caption": "Comparable 主腿：同業中位 P/S × 相對倍數 × 目標時點 TTM 營收 ÷ 稀釋股數（三情境）",
      "head": [
       "項目",
       "情境 A",
@@ -297,7 +309,7 @@
        "n2"
       ],
       "row_fmt": {
-       "48": {
+       "46": {
         "B": "n3",
         "C": "n3",
         "D": "n3"
@@ -307,20 +319,20 @@
         "C": "n2",
         "D": "n2"
        },
-       "46": {
-        "B": "n2",
-        "C": "n2",
-        "D": "n2"
-       },
        "47": {
-        "B": "n2",
-        "C": "n2",
-        "D": "n2"
+        "B": "n0",
+        "C": "n0",
+        "D": "n0"
+       },
+       "48": {
+        "B": "n0",
+        "C": "n0",
+        "D": "n0"
        },
        "49": {
-        "B": "n2",
-        "C": "n2",
-        "D": "n2"
+        "B": "n0",
+        "C": "n0",
+        "D": "n0"
        },
        "51": {
         "B": "n2",
@@ -332,7 +344,7 @@
     },
     {
      "type": "table",
-     "caption": "情境加權",
+     "caption": "前瞻本益比對照（不進加權目標價；固定相對倍數與現行相對值兩讀）",
      "head": [
       "項目",
       "情境 A",
@@ -341,7 +353,7 @@
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "54-56",
+      "rows": "54-62",
       "cols": [
        "A",
        "B",
@@ -356,9 +368,9 @@
       ],
       "row_fmt": {
        "54": {
-        "B": "p0",
-        "C": "p0",
-        "D": "p0"
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
        },
        "55": {
         "B": "n2",
@@ -366,6 +378,85 @@
         "D": "n2"
        },
        "56": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "57": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "58": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "59": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "60": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "61": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "62": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       }
+      }
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A62"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "情境加權",
+     "head": [
+      "項目",
+      "情境 A",
+      "情境 B",
+      "情境 C"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "76-78",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D"
+      ],
+      "fmts": [
+       "",
+       "n2",
+       "n2",
+       "n2"
+      ],
+      "row_fmt": {
+       "76": {
+        "B": "p0",
+        "C": "p0",
+        "D": "p0"
+       },
+       "77": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "78": {
         "B": "sp1",
         "C": "sp1",
         "D": "sp1"
@@ -374,18 +465,84 @@
      }
     },
     {
+     "type": "note",
+     "parts": [
+      "@README!A54"
+     ]
+    },
+    {
      "type": "table",
-     "caption": "同業預估本益比（只作 Comparable 倍數）",
+     "caption": "DCF（股票薪酬稅後加回）對照讀數：只作對照，不進加權目標價",
      "head": [
-      "同業",
-      "預估本益比",
-      "資料日",
-      "逾期？",
-      "口徑"
+      "項目",
+      "情境 A",
+      "情境 B",
+      "情境 C"
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "61-67,68-70",
+      "rows": "65-69",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D"
+      ],
+      "fmts": [
+       "",
+       "n0",
+       "n0",
+       "n0"
+      ],
+      "row_fmt": {
+       "69": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       }
+      }
+     }
+    },
+    {
+     "type": "kv",
+     "items": [
+      [
+       "@Val!A70",
+       "@Val!B70|n2"
+      ],
+      [
+       "@Val!A71",
+       "@Val!B71|n2"
+      ],
+      [
+       "@Val!A72",
+       "@Val!B72|sp1"
+      ],
+      [
+       "@Val!A73",
+       "@Val!B73|n2"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Recon!A54"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "同業 P/S（Comparable 主腿；資料日與逾期標示）",
+     "head": [
+      "同業",
+      "P/S",
+      "資料日",
+      "逾期？",
+      "是否納入中位數"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "83-94",
       "cols": [
        "A",
        "B",
@@ -401,10 +558,53 @@
        ""
       ],
       "row_fmt": {
-       "70": {
+       "94": {
         "B": "sp1"
        },
-       "69": {
+       "93": {
+        "B": "n2"
+       },
+       "90": {
+        "B": ""
+       },
+       "91": {
+        "B": "n2"
+       }
+      }
+     }
+    },
+    {
+     "type": "table",
+     "caption": "同業預估本益比（對照列用；不進目標價）",
+     "head": [
+      "同業",
+      "預估本益比",
+      "資料日",
+      "逾期？",
+      "口徑"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "97-103,104-106",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "n2",
+       "",
+       "",
+       ""
+      ],
+      "row_fmt": {
+       "106": {
+        "B": "sp1"
+       },
+       "105": {
         "B": "n2"
        }
       }
@@ -420,7 +620,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準：輸入取低值",
      "sheet": "Sens",
-     "rows": "78-113",
+     "rows": "81-119",
      "label_col": "A",
      "value_col": "B",
      "fmt": "sp1"
@@ -429,7 +629,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準：輸入取高值",
      "sheet": "Sens",
-     "rows": "78-113",
+     "rows": "81-119",
      "label_col": "A",
      "value_col": "C",
      "fmt": "sp1"
@@ -462,7 +662,7 @@
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "4-67",
+      "rows": "4-70",
       "cols": [
        "A",
        "B",
@@ -489,20 +689,20 @@
      "type": "kv",
      "items": [
       [
-       "@Sens!A69",
-       "@Sens!D69|n2"
+       "@Sens!A72",
+       "@Sens!D72|n2"
       ],
       [
-       "@Sens!A70",
-       "@Sens!D70|n2"
+       "@Sens!A73",
+       "@Sens!D73|n2"
       ],
       [
        "模型狀態",
-       "@Sens!D73"
+       "@Sens!D76"
       ],
       [
        "build_id",
-       "@Sens!D74"
+       "@Sens!D77"
       ]
      ]
     }
@@ -1167,7 +1367,7 @@
      ],
      "rowgen": {
       "sheet": "CF",
-      "rows": "105",
+      "rows": "111",
       "cols": [
        "A",
        "B",
@@ -1413,41 +1613,41 @@
      "type": "table",
      "caption": "情境驅動（三情境並排，進加權目標價；In 頁最後一節）",
      "head": [
-      "@In!B96",
-      "@In!D96",
-      "@In!E96",
-      "@In!F96"
+      "@In!B105",
+      "@In!D105",
+      "@In!E105",
+      "@In!F105"
      ],
      "rows": [
       [
-       "@In!B97",
-       "@In!D97|p1",
-       "@In!E97|p1",
-       "@In!F97|p1"
+       "@In!B106",
+       "@In!D106|p1",
+       "@In!E106|p1",
+       "@In!F106|p1"
       ],
       [
-       "@In!B98",
-       "@In!D98|p1",
-       "@In!E98|p1",
-       "@In!F98|p1"
+       "@In!B107",
+       "@In!D107|p1",
+       "@In!E107|p1",
+       "@In!F107|p1"
       ],
       [
-       "@In!B99",
-       "@In!D99|p1",
-       "@In!E99|p1",
-       "@In!F99|p1"
+       "@In!B108",
+       "@In!D108|p1",
+       "@In!E108|p1",
+       "@In!F108|p1"
       ],
       [
-       "@In!B100",
-       "@In!D100|p1",
-       "@In!E100|p1",
-       "@In!F100|p1"
+       "@In!B109",
+       "@In!D109|p1",
+       "@In!E109|p1",
+       "@In!F109|p1"
       ],
       [
-       "@In!B101",
-       "@In!D101|p1",
-       "@In!E101|p1",
-       "@In!F101|p1"
+       "@In!B110",
+       "@In!D110|p1",
+       "@In!E110|p1",
+       "@In!F110|p1"
       ]
      ]
     },
@@ -1608,20 +1808,20 @@
        "@In!G39|tag"
       ],
       [
-       "@In!B90",
-       "@In!D90|p0",
-       "@In!E90|p0",
-       "@In!F90|p0",
-       "@In!C90",
-       "@In!G90|tag"
+       "@In!B99",
+       "@In!D99|p0",
+       "@In!E99|p0",
+       "@In!F99|p0",
+       "@In!C99",
+       "@In!G99|tag"
       ],
       [
-       "@In!B89",
-       "@In!D89|n2",
-       "@In!E89|n2",
-       "@In!F89|n2",
-       "@In!C89",
-       "@In!G89|tag"
+       "@In!B98",
+       "@In!D98|n2",
+       "@In!E98|n2",
+       "@In!F98|n2",
+       "@In!C98",
+       "@In!G98|tag"
       ]
      ]
     }
@@ -1771,9 +1971,9 @@
       ],
       [
        "@Recon!A32",
-       "@Recon!B32|p1",
-       "@Recon!C32|p1",
-       "@Recon!D32|p1",
+       "@Recon!B32|n3",
+       "@Recon!C32|n3",
+       "@Recon!D32|n3",
        "@Recon!E32"
       ],
       [
@@ -1782,12 +1982,103 @@
        "@Recon!C33|p1",
        "@Recon!D33|p1",
        "@Recon!E33"
+      ],
+      [
+       "@Recon!A34",
+       "@Recon!B34|p1",
+       "@Recon!C34|p1",
+       "@Recon!D34|p1",
+       "@Recon!E34"
       ]
      ]
     },
     {
      "type": "table",
-     "caption": "@Recon!A36",
+     "caption": "@Recon!A56",
+     "head": [
+      "項目",
+      "數值",
+      "說明"
+     ],
+     "rows": [
+      [
+       "@Recon!A58",
+       "@Recon!B58|n3",
+       "@Recon!C58"
+      ],
+      [
+       "@Recon!A59",
+       "@Recon!B59|n3",
+       "@Recon!C59"
+      ],
+      [
+       "@Recon!A60",
+       "@Recon!B60|n3",
+       "@Recon!C60"
+      ],
+      [
+       "@Recon!A61",
+       "@Recon!B61|n2",
+       "@Recon!C61"
+      ],
+      [
+       "@Recon!A62",
+       "@Recon!B62|p1",
+       "@Recon!C62"
+      ],
+      [
+       "@Recon!A63",
+       "@Recon!B63|p1",
+       "@Recon!C63"
+      ],
+      [
+       "@Recon!A64",
+       "@Recon!B64|n2",
+       "@Recon!C64"
+      ],
+      [
+       "@Recon!A65",
+       "@Recon!B65|n3",
+       "@Recon!C65"
+      ],
+      [
+       "@Recon!A66",
+       "@Recon!B66|n3",
+       "@Recon!C66"
+      ],
+      [
+       "@Recon!A67",
+       "@Recon!B67|n3",
+       "@Recon!C67"
+      ],
+      [
+       "@Recon!A68",
+       "@Recon!B68|n3",
+       "@Recon!C68"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Recon!A70"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A86"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Recon!A93"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A37",
      "head": [
       "項目",
       "數值",
@@ -1795,7 +2086,7 @@
      ],
      "rowgen": {
       "sheet": "Recon",
-      "rows": "38-42",
+      "rows": "39-43",
       "cols": [
        "A",
        "B",
@@ -1807,10 +2098,10 @@
        ""
       ],
       "row_fmt": {
-       "41": {
+       "42": {
         "B": "n1"
        },
-       "42": {
+       "43": {
         "B": "p1"
        }
       }
@@ -1840,7 +2131,7 @@
       ],
       [
        "build_id",
-       "@Sens!D74"
+       "@Sens!D77"
       ],
       [
        "來源 xlsx",
@@ -1908,16 +2199,16 @@
     {
      "type": "list",
      "items": [
-      "@README!A53",
-      "@README!A54",
-      "@README!A55",
-      "@README!A56",
-      "@README!A57",
-      "@README!A58",
-      "@README!A59",
-      "@README!A60",
-      "@README!A61",
-      "@README!A62"
+      "@README!A72",
+      "@README!A73",
+      "@README!A74",
+      "@README!A75",
+      "@README!A76",
+      "@README!A77",
+      "@README!A78",
+      "@README!A79",
+      "@README!A80",
+      "@README!A81"
      ]
     },
     {

@@ -236,6 +236,7 @@ Cloud／Enterprise（舊五分部口徑）,587.8,十億韓元,FY2025,舊口徑�
 NVIDIA 新發行股數（暫定）,7.241564,百萬股,2026-11,"每股 204,500 韓元，共約 1 兆韓元；繳款日 2026-11-06、上市日 2026-11-27",https://www.navercorp.com/en/media/pressReleasesDetail?seq=10034796（Naver 新聞稿）；3Q26 簡報,2026-11-16,Verified,
 NVIDIA 認購價,204500,韓元,2026-11,每股發行價（事件價）,https://www.navercorp.com/en/media/pressReleasesDetail?seq=10034796,2026-11-16,Verified,
 借款（有息負債，公司定義）,2996.3,十億韓元,2026-09-30,借款合計；租賃負債未找到、不計（營業租賃一律不計）,https://www.navercorp.com/api/article/download/0cdefb0e-a7c5-4a8b-b785-9e026da9c305,2026-11-16,Verified,
+非控制權益（合併財務狀況表帳面值）,1490.231,十億韓元,2026-06-30,"最近可得季末（3Q26 合併財務狀況表尚未於公開頁面取得）；StockAnalysis 季表 1,490,231 百萬韓元（2Q26）；同來源 3Q25 1,561,242、4Q25 1,371,056 百萬韓元與 Naver 官方合併財務報表（navercorp.com/api/article/download/de889222-5edf-4f6a-ab3d-4e6c2c271981、fb35768c-b7e8-42de-b316-47997bf32590）逐位一致",https://stockanalysis.com/quote/krx/035420/financials/balance-sheet/?p=quarterly,2026-11-16,Verified,
 合併現金與約當現金,7710.3,十億韓元,2026-09-30,含 NAVER Financial 之現金（金融事業現金不計入淨現金）,https://www.navercorp.com/api/article/download/0cdefb0e-a7c5-4a8b-b785-9e026da9c305,2026-11-16,Verified,
 淨現金（公司定義，不含 NAVER Financial）,1974.9,十億韓元,2026-09-30,公司揭露,https://www.navercorp.com/api/article/download/0cdefb0e-a7c5-4a8b-b785-9e026da9c305,2026-11-16,Verified,
 每股股利,2630,韓元,FY2025,股利總額 393.6 十億韓元；占兩年平均自由現金流 30%,https://www.navercorp.com/en/media/pressReleasesDetail?seq=10034882；FY2025 新聞稿 seq=10034311,2026-11-16,Verified,
@@ -245,7 +246,15 @@ EBITDA（第二來源）,2953,十億韓元,FY2025,MarketScreener；與公司口�
 資本支出（第二來源）,1235,十億韓元,FY2025,MarketScreener；公司未於簡報揭露年度資本支出（未找到）,https://www.marketscreener.com/quote/stock/NAVER-CORPORATION-6491497/finances/,2026-11-16,Derived,
 β（StockAnalysis）,1.19,倍,2026-11,5 年月,https://stockanalysis.com/quote/krx/035420/statistics/,2026-11-16,Verified,
 β（Yahoo Finance）,1.2,倍,2026-11,5 年月,https://finance.yahoo.com/quote/035420.KS/,2026-11-16,Verified,
-無風險利率（韓國 10 年期國債）,0.04,比例,2026-11-16,殖利率,https://tradingeconomics.com/south-korea/government-bond-yield,2026-11-16,Verified,
+無風險利率（韓國 10 年期國債）,0.0399,比例,2026-11-13,殖利率收盤；Trading Economics 頁載 2026-11-16 為 3.986%、單日變動 −0.001，11-13 約 3.987%（頁面無 11-12、11-13 逐日值）,https://tradingeconomics.com/south-korea/government-bond-yield,2026-11-16,Verified,
+歷史相對倍數基準（PS 與 PSG 兩讀數幾何平均）,0.5617479268406912,倍,2021-09 至 2026-06,本公司 ÷ 同業中位（GOOGL、META、PINS、Kakao、LY）；規格 docs/plan/歷史相對倍數_PS與PSG.md,software_ai/data/relmult_hist/out/naver.json（geo_base；base_source＝PS 與 PSG 兩讀數幾何平均）,2026-11-16,Derived,
+歷史相對倍數：PS 讀數（歷史相對中位）,0.6807807444453408,倍,2021-09 至 2026-06,20 季；最低 0.36、最高 1.17,同上（ps_reading）,2026-11-16,Derived,
+同業 P/S（TTM 營收口徑）：GOOGL,7.71,倍,2026-11-13,2026-11-13 現價口徑；資料日不是 11-13 者於 Val 標逾期（G7）；Comparable 主腿,software_ai/data/relmult_hist/out/peer_ps_20261113.json（data/relmult_hist/peer_ps_20261113.csv（StockAnalysis，WebFetch；Derived））,2026-11-16,Derived,
+同業 P/S（TTM 營收口徑）：META,6.8,倍,2026-11-13,2026-11-13 現價口徑；資料日不是 11-13 者於 Val 標逾期（G7）；Comparable 主腿,software_ai/data/relmult_hist/out/peer_ps_20261113.json（data/relmult_hist/peer_ps_20261113.csv（StockAnalysis，WebFetch；Derived））,2026-11-16,Derived,
+同業 P/S（TTM 營收口徑）：PINS,2.32,倍,2026-11-06,2026-11-13 現價口徑；資料日不是 11-13 者於 Val 標逾期（G7）；Comparable 主腿,software_ai/data/relmult_hist/out/peer_ps_20261113.json（data/relmult_hist/peer_ps_20261113.csv（StockAnalysis，WebFetch；Derived））,2026-11-16,Derived,
+同業 P/S（TTM 營收口徑）：KAKAO,1.6,倍,2026-10-23,2026-11-13 現價口徑；資料日不是 11-13 者於 Val 標逾期（G7）；Comparable 主腿,software_ai/data/relmult_hist/out/peer_ps_20261113.json（data/relmult_hist/peer_ps_20261113.csv（StockAnalysis，WebFetch；Derived））,2026-11-16,Derived,
+同業 P/S（TTM 營收口徑）：LYCORP,1.7,倍,2026-10-13,2026-11-13 現價口徑；資料日不是 11-13 者於 Val 標逾期（G7）；Comparable 主腿,software_ai/data/relmult_hist/out/peer_ps_20261113.json（data/relmult_hist/peer_ps_20261113.csv（StockAnalysis，WebFetch；Derived））,2026-11-16,Derived,
+歷史相對倍數：PSG 讀數（歷史相對中位 x 成長比）,0.4635277009294886,倍,2021-09 至 2026-06,16 季；成長比 0.722（TTM，本公司 14.6%、同業中位 20.2%）,同上（psg_reading）,2026-11-16,Derived,
 AI 對 1Q26 廣告成長的貢獻（公司稱）,0.5,占比（超過）,1Q26,公司稱 AI 貢獻廣告成長逾 50%,https://www.navercorp.com/api/article/download/896dc2b0-33ea-4dbf-a354-c9608c6d989b,2026-11-16,Interested-party,管理層向市場說明 AI 成效
 AI 對 2Q26 廣告成長的貢獻（公司稱）,0.6,占比（超過）,2Q26,公司稱 AI 貢獻廣告成長逾 60%,https://www.navercorp.com/api/article/download/07b3b329-bbbe-481c-ac47-b3d0d7fea855,2026-11-16,Interested-party,管理層向市場說明 AI 成效
 AI Briefing 廣告點擊率提升（公司稱）,0.3,比例,2026-07-21 起,AI Briefing 廣告上線後公司稱 CTR +30%、轉換 3 倍（非隨機對照）,https://www.navercorp.com/api/article/download/07b3b329-bbbe-481c-ac47-b3d0d7fea855,2026-11-16,Interested-party,管理層向市場說明 AI 成效
@@ -287,7 +296,7 @@ HyperCLOVA X 使用 GPU 數量與自用推論成本金額,未找到,—,—,不�
 租賃負債,未找到,—,—,不估計；模型以 Assumed 輸入並標明,—,2026-11-16,Assumed,
 權益法投資帳面價值,未找到,—,—,不估計；模型以 Assumed 輸入並標明,—,2026-11-16,Assumed,
 RSU、選擇權明細與稀釋股數,未找到,—,—,不估計；模型以 Assumed 輸入並標明,—,2026-11-16,Assumed,
-非控制權益拆分（歸屬母公司淨利）,未找到,—,—,不估計；模型以 Assumed 輸入並標明,—,2026-11-16,Assumed,
+歸屬母公司淨利拆分（非控制權益帳面值已取得）,未找到,—,—,不估計；模型以 Assumed 輸入並標明,—,2026-11-16,Assumed,
 FY2021–FY2025 每股盈餘（K-IFRS 基本）,未找到,—,—,不估計；模型以 Assumed 輸入並標明,—,2026-11-16,Assumed,
 4Q24 分部營業利益（新口徑）,未找到,—,—,不估計；模型以 Assumed 輸入並標明,—,2026-11-16,Assumed,
 第二個共識來源（FnGuide 僅見單季營業利益共識）,未找到,—,—,不估計；模型以 Assumed 輸入並標明,—,2026-11-16,Assumed,

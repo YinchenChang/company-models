@@ -1,12 +1,17 @@
 # Datadog（DDOG）個股模型 v0.1（命題＋官方營收分部 → 損益表；原型 U 按用量計價；docs/plan/個股模型原則_命題加營收分部.md、個股DCF標準規格.md、個股HTML版面規格.md v1.3）
-# 工作單：software_ai/docs/workorders/20261116_第一批_研究包與單位經濟.md 的 G 與 G2 節。本版未做先驗。
+# 工作單：software_ai/docs/workorders/20261116_第一批_研究包與單位經濟.md 的 G 與 G2 節。
 # 用法：python3 software_ai/datadog/build_datadog.py raw.xlsx [--sens sens.json] [--kreq kreq.json] [--set 鍵=值 ...]；再以 LibreOffice headless 重算（make_datadog.sh 一次跑完）。
 # 金額：百萬美元（US$M）；股數：百萬股；每股：美元。會計年度＝日曆年（12 月 31 日止）。
 # 欄位（模型頁共用）：C FY2023A、D FY2024A、E FY2025A、F 9M26A、G Q4 26E、H FY2026E（＝F＋G）、I–N FY2027–FY2032。評價日 2026-09-30。
+import json as _json
 import sys, os, json, argparse, re, hashlib, datetime
 import openpyxl
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
+_R0 = _json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "relmult_datadog.json"), encoding="utf-8"))
+RELP = _json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "relmult_peers.json"), encoding="utf-8"))
+RELN = _json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "peer_ps_20261113.json"), encoding="utf-8"))
+RELJ = {"geo_base": _R0["geo_base"], "base_source": _R0["base_source"], "sens": _R0["sens"], "div30": _R0["divergence_gt_30pct"]}
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ap = argparse.ArgumentParser()
@@ -20,7 +25,7 @@ for s_ in A.set:
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True)
 HDR = PatternFill("solid", fgColor="DDEBF7"); KEY = PatternFill("solid", fgColor="FFF2CC"); SUB = PatternFill("solid", fgColor="E2EFDA")
 wb = openpyxl.Workbook()
-VER = "v0.1"; VDATE = "2026-11-16"
+VER = "v0.2.2"; VDATE = "2026-11-17"
 
 
 def _build_id():
@@ -199,6 +204,7 @@ inp("conv_sh", "票據轉換股數（百萬股）＝1,000 ÷ 217.60", "百萬股
 inp("cash_0", "現金＋有價證券（2026-09-30）", "US$M", None, "=h_cash+h_mkt", None, "Derived", fs("bs.cash.20260930") + "；" + fs("bs.mkt.20260930"), "881.230＋4,352.357")
 inp("debt_0", "債務本金（2029 年到期 0.00% 可轉換票據）", "US$M", None, "=h_debt", None, "Verified", fs("debt.face.20260930"), "淨債務只計債務本金＋融資租賃，營業租賃不計（G2 第 5 條）")
 inp("fin_lease", "融資租賃負債（10-Q 未見融資租賃；未找到）", "US$M", None, 0.0, None, "Assumed", "未找到：資產負債表只列營業租賃負債（流動 46.177、非流動 274.462；不計入，因營業租賃費用已在營業利益）", "G2 第 5 條")
+inp("nci", "非控制權益帳面值（10-Q 資產負債表權益只列股東權益，無非控制權益；子公司均為全資）", "US$M", None, 0.0, None, "Verified", fs("bs.cash.20260930"), "G8：P/S 主腿股權口徑只扣非控制權益（帳面值、一次）；Datadog 為 0", "G7")
 sec("B. 營收：命題模組（原型 U 按用量計價：營收＝用量單位 × 單價；v0.2 改讀 unit_economics，本版先在此自建）")
 inp("q4_g", "Q4 26E 營收季增率（相對 3Q26）", "%", -0.01, 0.01, 0.03, "Assumed", "指引中點隱含 −0.2%（" + fs("guid.g_q4lo") + "）；近三季實績皆超出指引上緣 3.8%–4.7%（Recon）", "指引不入基準（X3）；基準＝略高於指引上緣的 +1.0%", judg=True)
 inp("ai_26", "AI 產品 credits 營收 FY2026E（Bits AI 等；公司未揭露）", "US$M", 20, 45, 90, "Assumed", "未找到：公司不揭露 AI 產品營收；約三分之一客戶使用 AI 產品（" + fs("ai.pen.3q26") + "）", "基準＝FY2026E 營收約 1%", judg=True)
@@ -259,8 +265,8 @@ inp("da_r", "折舊攤銷占營收", "%", 0.015, 0.017, 0.020, "Derived", "9M26 
 inp("cx_r", "資本支出＋資本化軟體占營收", "%", 0.03, 0.035, 0.04, "Interested-party", fs("guid.cx"), "9M26 實績 3.67%（（32.119＋89.897）÷ 3,324.970）", inc=INC_CO, judg=True)
 inp("wc_k", "營運資金增加 ÷ 營收增量（負＝流入；歷史：FY2024 −11.1%、FY2025 −18.3%、9M26 −1.5%，三期平均）", "%", -0.15, -0.103, 0.0, "Derived", "Hist 頁「營運資金與其他變動」÷ 營收增量，三期平均；遞延收入增加為現金流入（G3 第 2 條）", "原則第 23 條", judg=True)
 sec("E. 折現率與目標價規則")
-inp("rf", "無風險利率（10 年期美國公債，2026-11-13）", "%", 0.0465, fv("mkt.rf.20261113") / 100, 0.0565, "Verified", fs("mkt.rf.20261113"), "與現價同日", judg=True)
-inp("rf_date", "無風險利率基準日", "日期", None, datetime.date(2026, 11, 13), None, "Verified", fs("mkt.rf.20261113"), "與現價同日")
+inp("rf", "無風險利率（10 年期美國公債，FRED DGS10，2026-11-12）", "%", 0.0460, fv("mkt.rf.20261112") / 100, 0.0560, "Verified", fs("mkt.rf.20261112"), "統一規則（G5 第 2 條）：美國 10 年期取現價日前 1 個交易日 FRED DGS10", judg=True)
+inp("rf_date", "無風險利率基準日", "日期", None, datetime.date(2026, 11, 12), None, "Verified", fs("mkt.rf.20261112"), "現價日（2026-11-13）前 1 個交易日")
 inp("beta_si", "β 來源一：stockanalysis（5Y 月）", "x", None, fv("mkt.beta.si"), None, "Interested-party", fs("mkt.beta.si"), "", inc=INC_DATA)
 inp("beta_yh", "β 來源二：Yahoo Finance（5Y 月）", "x", None, fv("mkt.beta.yh"), None, "Interested-party", fs("mkt.beta.yh"), "兩來源相同、可能同源", inc=INC_DATA)
 inp("blume_a", "Blume 調整權重", "x", None, 0.67, None, "Assumed", "DCF 規格第 2 節（0.67×原始＋0.33×1）")
@@ -271,13 +277,15 @@ inp("g_tv", "永續成長率", "%", 0.02, 0.03, 0.04, "Assumed", "DCF 規格第 
 inp("ronic_sp", "RONIC − WACC（基準 0＝新投資價值中性）", "%", None, 0.0, 0.05, "Assumed", "DCF 規格第 3 節預設 RONIC＝WACC", "高＝+5 百分點", judg=True)
 inp("sbc_add", "DCF 加回股票薪酬（稅後；0＝不加回，預設）", "x", None, 0, 1, "Assumed", "DCF 規格第 1 節預設不加回", "加回只作敏感度", judg=True)
 inp("w_dcf", "DCF 權重（Comparable＝1−本值）", "%", 0.3, 0.5, 0.7, "Assumed", "原則第 4 節預設各半", "", judg=True)
-inp("w_pe", "Comparable 內 Forward P/E 腿的權重（其餘為 Forward P/S）", "%", 0.0, 0.5, 1.0, "Assumed", "判斷：兩個倍數各半", "", judg=True)
-inp("rel_m", "相對倍數調整係數（1.00＝未調整：缺同業成長與利潤率同口徑資料）", "x", 0.8, 1.0, 1.3, "Assumed", "原則第 18、47 條：缺資料不調整並列入承重輸入", "Sens 含 0.8／1.3；DDOG 資料商三年營收成長預估 25.6% 高於同業中位數 20.8%（Interested-party）", judg=True)
+inp("ps_db", "同業 P/S 取值開關（0＝2026-11-13 現價中位；1＝資料庫最近一季中位，G7 第 2 條對照）", "0/1", None, 0, 1, "Assumed", "G7：主腿預設用現價日同業 P/S", "Sens 高案＝資料庫最近一季中位（v0.2 的值）")
+inp("rel_m", "Comparable 相對倍數（本公司 ÷ 同業中位；近 20 財季 PS 與 PSG 相對值幾何平均）", "x", RELJ["sens"]["low"], RELJ["geo_base"], RELJ["sens"]["high"], "Derived", "software_ai/data/relmult_hist/out/datadog.json（本檔 data/relmult_datadog.json）：geo_base；base_source＝" + RELJ["base_source"], "低／高＝該檔 sens.low／sens.high；Sens 另有 ps_only（PS 讀數）與 psg_only（PSG 讀數）兩案；divergence_gt_30pct 為否，PS 與 PSG 兩讀數相近；近似說明：本模型 Comparable 為 P/S 與 P/E 兩腿，以 PS／PSG 相對值近似套用於 P/E 腿", judg=True)
 sec("F. 同業倍數（stockanalysis 統計頁；Forward 分母口徑未載明；日期不一→逾期標示見 Recon）")
 PEER = [("snow", "Snowflake（SNOW）", "2026-11-13"), ("net", "Cloudflare（NET）", "2026-11-13"), ("mdb", "MongoDB（MDB）", "2026-11-06"), ("dt", "Dynatrace（DT）", "2026-11-06"), ("estc", "Elastic（ESTC）", "2026-11-06")]
 for k, nm, dt in PEER:
-    inp(f"pm_ps_{k}", f"{nm} Forward P/S（{dt}）", "x", None, fv(f"peer.fps.{k}"), None, "Interested-party", fs(f"peer.fps.{k}"), "分母＝Forward 營收（FY 或 NTM 未載明）", inc=INC_DATA)
-    inp(f"pm_pe_{k}", f"{nm} Forward P/E（{dt}）", "x", None, fv(f"peer.fpe.{k}"), None, "Interested-party", fs(f"peer.fpe.{k}"), "分母＝Forward 非 GAAP EPS（口徑未載明）", inc=INC_DATA)
+    inp(f"pm_ps_{k}", f"{nm} P/S（2026-11-13 現價；Comparable 主腿）", "x", None, RELN["peers"][k]["ps"], None, "Interested-party", RELN["source"] + f"；價格日 {RELN['peers'][k]['date']}", "股權口徑：市值÷最新 TTM 營收（G7）；價格日非 2026-11-13 者於 Val 0.6 標逾期", inc=INC_DATA)
+    inp(f"pm_dp_{k}", f"{nm} P/S 價格日", "日期", None, datetime.date.fromisoformat(RELN["peers"][k]["date"]), None, "Derived", RELN["source"])
+    inp(f"pm_psq_{k}", f"{nm} P/S（資料庫最近一季，對照案用）", "x", None, RELP[k]["ps"], None, "Interested-party", RELP[k]["src"], "只供 Sens「同業 P/S＝資料庫最近一季中位」案（ps_db）", inc=INC_DATA)
+    inp(f"pm_pe_{k}", f"{nm} Forward P/E（對照列用；{dt}）", "x", None, fv(f"peer.fpe.{k}"), None, "Interested-party", fs(f"peer.fpe.{k}"), "分母＝Forward 非 GAAP EPS（口徑未載明）", inc=INC_DATA)
     inp(f"pm_dt_{k}", f"{nm} 倍數日期", "日期", None, datetime.date.fromisoformat(dt), None, "Verified", fs(f"peer.fps.{k}"))
 inp("pm_ps_ddog", "Datadog 現行 Forward P/S（資料商，2026-11-13）", "x", None, fv("peer.fps.ddog"), None, "Interested-party", fs("peer.fps.ddog"), "只作對照", inc=INC_DATA)
 inp("pm_pe_ddog", "Datadog 現行 Forward P/E（資料商，2026-11-13）", "x", None, fv("peer.fpe.ddog"), None, "Interested-party", fs("peer.fpe.ddog"), "只作對照", inc=INC_DATA)

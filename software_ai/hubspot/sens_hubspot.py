@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """HubSpot 敏感度與反解：一次改一個 In 輸入（低／高，另加聯動與路由案），整本以 LibreOffice 重算，讀 Val 頁加權目標價。
 用法：python3 sens_hubspot.py <工作資料夾> [--kreq]（環境變數 JOBS＝平行數，預設 4）
-輸出：data/sens_v01.json（敏感度）；--kreq 時另輸出 data/kreq_v01.json（主導變數反解：非 GAAP 營業費用率 ng_opex，使加權目標價＝現價；另解翻轉評等所需值）。
+輸出：data/sens_v02.json（敏感度）；--kreq 時另輸出 data/kreq_v02.json（主導變數反解：非 GAAP 營業費用率 ng_opex，使加權目標價＝現價；另解翻轉評等所需值）。
 """
 import json
 import os
@@ -57,7 +57,7 @@ def sens():
             o = f.result()
             cases.append({"key": key, "side": side, "label": label, "setting": setting, "tp": o["tp"], "dcf": o["dcf"], "cmp": o["cmp"]})
             print(key, side, round(o["tp"], 2), flush=True)
-    json.dump({"base": base, "cases": cases}, open(os.path.join(HERE, "data", "sens_v01.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    json.dump({"base": base, "cases": cases}, open(os.path.join(HERE, "data", "sens_v02.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     return base
 
 
@@ -84,7 +84,7 @@ def kreq():
     y, o2 = solve("inc_m", 0.75 * px, base, base - 0.05)
     z, o3 = solve("inc_m", 1.25 * px, base, base + 0.1)
     json.dump({"key": "inc_m", "base": base, "required": x, "margin27": o["m27"], "tp": o["tp"], "flip_m25": y, "flip_tp": o2["tp"], "flip_p25": z, "flip_p25_tp": o3["tp"], "px": px},
-              open(os.path.join(HERE, "data", "kreq_v01.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+              open(os.path.join(HERE, "data", "kreq_v02.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
 
 if __name__ == "__main__":

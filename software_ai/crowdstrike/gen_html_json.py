@@ -48,7 +48,9 @@ cfg = {
       "row_fmt": {"11": {"B": "sp1"}, "12": {"B": "sp1"}, "13": {"B": ""}, "14": {"B": ""}, "15": {"B": "n2", "C": "n2"}, "16": {"B": "n0"}, "17": {"B": "sp1"}, "18": {"B": "p1"}, "20": {"B": "sp1"}, "21": {"B": "sp1"}, "22": {"B": "sp1"},
                   "25": {"B": ""}, "26": {"B": "n0"}, "27": {"B": ""}, "28": {"B": ""}}}},
     {"type": "table", "caption": "DCF 彙總（三情境）", "head": ["項目", "情境 A", "情境 B", "情境 C"], "rowgen": {"sheet": "Val", "rows": "46-53", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"], "row_fmt": {"51": {c: "n2" for c in "BCD"}, "52": {c: "n2" for c in "BCD"}, "53": {c: "p1" for c in "BCD"}}}},
-    {"type": "table", "caption": "Comparable（同業 EV／營收，TTM）", "head": ["項目", "情境 A", "情境 B", "情境 C"], "rowgen": {"sheet": "Val", "rows": "60-64", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"], "row_fmt": {"64": {c: "n2" for c in "BCD"}}}},
+    {"type": "table", "caption": "Comparable 主腿（P/S 股權口徑；最後一列為 EV／營收口徑對照，不進加權目標價）", "head": ["項目", "情境 A", "情境 B", "情境 C"], "rowgen": {"sheet": "Val", "rows": "60-65", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"], "row_fmt": {"64": {c: "n2" for c in "BCD"}, "65": {c: "n2" for c in "BCD"}}}},
+    {"type": "table", "caption": "DCF 讀數並列：股票薪酬加回（只作對照，不進加權目標價）", "head": ["項目", "US$"], "rowgen": {"sheet": "Recon", "rows": "38-40", "cols": ["A", "B"], "fmts": ["", "n2"]}},
+    {"type": "note", "parts": ["@Recon!A41"]},
     {"type": "table", "collapse": True, "summary": "展開：折現率組成與資本結構", "head": ["項目", "數值"], "rowgen": {"sheet": "Val", "rows": "30-41", "cols": ["A", "B"], "fmts": ["", "n3"]}}]},
   {"id": "sens", "title": "敏感度", "blocks": [
     {"type": "tornado", "title": "加權目標價相對基準：輸入取低值（一次改一個，整本重算）", "sheet": "Sens", "rows": ",".join(map(str, tornL)), "label_col": "A", "value_col": "E", "fmt": "sp1"},
@@ -92,7 +94,7 @@ cfg = {
     {"type": "note", "parts": ["@Recon!A1"]},
     {"type": "table", "caption": "指引與共識對照", "head": ["項目", "本模型", "指引或共識", "差距", "說明", "來源"], "rowgen": {"sheet": "Recon", "rows": "5-12", "cols": list("ABCDEF"), "fmts": ["", "n2", "n2", "p1", "", ""]}},
     {"type": "table", "collapse": True, "summary": "展開：指引差距分解與 AI 淨效果對照", "head": ["項目", "A", "B", "C"], "rowgen": {"sheet": "Recon", "rows": "15-25", "cols": list("ABCD"), "fmts": ["", "n2", "n2", "n2"]}},
-    {"type": "table", "caption": "口徑與未找到", "head": ["項目", "說明"], "rowgen": {"sheet": "Recon", "rows": f"29-{wb['Recon'].max_row}", "cols": ["A", "C"], "fmts": ["", ""]}}]},
+    {"type": "table", "caption": "口徑與未找到", "head": ["項目", "說明"], "rowgen": {"sheet": "Recon", "rows": "29-34", "cols": ["A", "C"], "fmts": ["", ""]}}]},
   {"id": "status", "title": "資料狀態", "blocks": [
     {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期", "@README!A1"], ["build_id", f"@Sens!D{bid}"], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"], ["Tokenomics 快照", f"@Sources!B{L['reg']['Sources_tk']}"]]},
     {"type": "h3", "text": "合理性關卡診斷"},

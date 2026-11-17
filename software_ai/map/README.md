@@ -1,0 +1,34 @@
+# software_ai/map — AI 軟體地圖（暫名）v0.1
+
+仿 AI 算力地圖（`markets/invest_map/`）的軟體版：五層 × 17 次產業的價值鏈地圖、產業地位、14 家個股模型的估值與評等、模型卡、方法。公開 repo，不含任何個人情境。
+
+## 檔案
+
+| 檔案 | 內容 |
+|---|---|
+| `build_position.py` | 產生地位活頁簿 `dist/AI軟體地圖_產業地位_v*.xlsx`（17 次產業、個股地位、次產業優先序） |
+| `extract_models.py` | 讀 `software_ai/<公司>/dist/` 最新成品 xlsx（依日期＋版號，排除 `_待刪除/`）、`data/relmult_hist/out/<公司>.json`、`unit_economics/dist/` 最新 xlsx（LibreOffice 重算後讀值）→ `data/models_extract.json`（每值附檔名與儲存格；缺值為 null，網頁顯示「—」）。以列標籤定位，不寫死儲存格；`--include-superseded` 只供開發測試 |
+| `build_html.py`、`template.html` | 重算地位活頁簿＋抽數檔 → `dist/index.html`（單一自足 HTML）、`dist/data.json`；並把各模型最新 HTML 複製到 `dist/models/<公司>.html`（本機預覽，不進版控） |
+| `check_map.py` | 交付前核對：(1) 評等、投資建議、加權目標價等於模型成品值（重讀儲存格；確認引用 dist/ 最新成品）；(2) 次產業、公司數、地位分數等於活頁簿，單位經濟數字等於重算後成品；(3) 無外部網址、無錯誤值字樣；(4) 無個人情境字樣、頁面骨架 |
+| `publish_software_map.sh` | 在 gh-pages 追加一個 commit，只動站上 `software_ai/`（`index.html`＋`models/<公司>.html`）。**需 Andy 點名「發布」才可執行** |
+
+## 重建
+
+```
+python3 software_ai/map/build_position.py     # 只有改地位輸入時
+python3 software_ai/map/extract_models.py
+python3 software_ai/map/build_html.py
+python3 software_ai/map/check_map.py          # 全部通過結束碼 0
+```
+個股模型改版後，重跑後三步。
+
+## 頁面
+1 產業地圖（五原型 AI 淨效果、第一批五次產業 2030 年淨效果與移轉、五層×17 次產業）；2 產業地位（可依次產業篩選）；3 估值與評等（現價、DCF、Comparable、加權目標價、上檔、評等、收支關卡、PS／PSG 相對倍數基準、股票薪酬加回 DCF 對照、情境 A／B／C、DCF 口徑說明）；4 我們的模型；附 方法。頁首站際切換「算力｜實體 AI｜軟體 AI」。
+
+## 規則
+- 網頁不計算；數字全部來自 `data.json`。評等色與 AI 算力地圖相同。
+- 版面不載入外部字型或腳本，離線可開。
+- v0.2 才有的欄位（股票薪酬加回 DCF、相對倍數讀數）缺值顯示「—」，並列入方法頁「限制與未找到摘要」。
+
+## 版本紀錄
+- v0.1（2026-11-17）：首版。

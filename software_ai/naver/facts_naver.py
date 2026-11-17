@@ -73,12 +73,15 @@ ADJ_EBITDA = {"FY2021": 1914.6, "FY2022": 1802.8, "FY2023": 2133.8, "FY2024": 26
 COMM_ADS_Q = [308.3, 335.6, 366.3, 390.3]   # 1Q25–4Q25 商務廣告（舊分類）
 
 # 單點事實：key -> (指標, 數值, 單位, 期間, 口徑, 出處, 標記, 誘因)
+import json as _j, os as _o
+_PS = _j.load(open(_o.path.join(_o.path.dirname(_o.path.abspath(__file__)), "data", "peer_ps_naver.json"), encoding="utf-8"))
 SINGLE = {
   "px": ("股價（收盤）", 172500, "韓元", "2026-11-13", "KRX 收盤（11-13 為最近交易日）", "韓國投資證券個股頁（KIS，當日 −5.12%）；與教保證券報告 73.9% 上檔空間隱含價一致", "Verified", ""),
   "sh": ("流通股數（扣庫藏）", 149.86, "百萬股", "2026-10", "第二來源（StockAnalysis）；法定申報封面股數未取得（未找到）", "https://stockanalysis.com/quote/krx/035420/statistics/", "Derived", ""),
   "nv_sh": ("NVIDIA 新發行股數（暫定）", 7.241564, "百萬股", "2026-11", "每股 204,500 韓元，共約 1 兆韓元；繳款日 2026-11-06、上市日 2026-11-27", BRK + "（Naver 新聞稿）；3Q26 簡報", "Verified", ""),
   "nv_px": ("NVIDIA 認購價", 204500, "韓元", "2026-11", "每股發行價（事件價）", BRK, "Verified", ""),
   "debt": ("借款（有息負債，公司定義）", 2996.3, "十億韓元", "2026-09-30", "借款合計；租賃負債未找到、不計（營業租賃一律不計）", DECK["3Q26"], "Verified", ""),
+  "nci": ("非控制權益（合併財務狀況表帳面值）", 1490.231, "十億韓元", "2026-06-30", "最近可得季末（3Q26 合併財務狀況表尚未於公開頁面取得）；StockAnalysis 季表 1,490,231 百萬韓元（2Q26）；同來源 3Q25 1,561,242、4Q25 1,371,056 百萬韓元與 Naver 官方合併財務報表（navercorp.com/api/article/download/de889222-5edf-4f6a-ab3d-4e6c2c271981、fb35768c-b7e8-42de-b316-47997bf32590）逐位一致", "https://stockanalysis.com/quote/krx/035420/financials/balance-sheet/?p=quarterly", "Verified", ""),
   "cash": ("合併現金與約當現金", 7710.3, "十億韓元", "2026-09-30", "含 NAVER Financial 之現金（金融事業現金不計入淨現金）", DECK["3Q26"], "Verified", ""),
   "netcash": ("淨現金（公司定義，不含 NAVER Financial）", 1974.9, "十億韓元", "2026-09-30", "公司揭露", DECK["3Q26"], "Verified", ""),
   "dps": ("每股股利", 2630, "韓元", "FY2025", "股利總額 393.6 十億韓元；占兩年平均自由現金流 30%", PR3 + "；FY2025 新聞稿 seq=10034311", "Verified", ""),
@@ -88,7 +91,11 @@ SINGLE = {
   "capex25": ("資本支出（第二來源）", 1235, "十億韓元", "FY2025", "MarketScreener；公司未於簡報揭露年度資本支出（未找到）", "https://www.marketscreener.com/quote/stock/NAVER-CORPORATION-6491497/finances/", "Derived", ""),
   "beta_ss": ("β（StockAnalysis）", 1.19, "倍", "2026-11", "5 年月", "https://stockanalysis.com/quote/krx/035420/statistics/", "Verified", ""),
   "beta_yh": ("β（Yahoo Finance）", 1.20, "倍", "2026-11", "5 年月", "https://finance.yahoo.com/quote/035420.KS/", "Verified", ""),
-  "rf": ("無風險利率（韓國 10 年期國債）", 0.0400, "比例", "2026-11-16", "殖利率", "https://tradingeconomics.com/south-korea/government-bond-yield", "Verified", ""),
+  "rf": ("無風險利率（韓國 10 年期國債）", 0.0399, "比例", "2026-11-13", "殖利率收盤；Trading Economics 頁載 2026-11-16 為 3.986%、單日變動 −0.001，11-13 約 3.987%（頁面無 11-12、11-13 逐日值）", "https://tradingeconomics.com/south-korea/government-bond-yield", "Verified", ""),
+  "rm_geo": ("歷史相對倍數基準（PS 與 PSG 兩讀數幾何平均）", 0.5617479268406912, "倍", "2021-09 至 2026-06", "本公司 ÷ 同業中位（GOOGL、META、PINS、Kakao、LY）；規格 docs/plan/歷史相對倍數_PS與PSG.md", "software_ai/data/relmult_hist/out/naver.json（geo_base；base_source＝PS 與 PSG 兩讀數幾何平均）", "Derived", ""),
+  "rm_ps": ("歷史相對倍數：PS 讀數（歷史相對中位）", 0.6807807444453408, "倍", "2021-09 至 2026-06", "20 季；最低 0.36、最高 1.17", "同上（ps_reading）", "Derived", ""),
+  **{f"ps_{k.lower()}": (f"同業 P/S（TTM 營收口徑）：{k}", v["ps"], "倍", v["d"], "2026-11-13 現價口徑；資料日不是 11-13 者於 Val 標逾期（G7）；Comparable 主腿", _PS["source"], "Derived", "") for k, v in _PS["peers"].items()},
+  "rm_psg": ("歷史相對倍數：PSG 讀數（歷史相對中位 x 成長比）", 0.4635277009294886, "倍", "2021-09 至 2026-06", "16 季；成長比 0.722（TTM，本公司 14.6%、同業中位 20.2%）", "同上（psg_reading）", "Derived", ""),
   "ai_ads_1q": ("AI 對 1Q26 廣告成長的貢獻（公司稱）", 0.5, "占比（超過）", "1Q26", "公司稱 AI 貢獻廣告成長逾 50%", DECK["1Q26"], "Interested-party", "管理層向市場說明 AI 成效"),
   "ai_ads_2q": ("AI 對 2Q26 廣告成長的貢獻（公司稱）", 0.6, "占比（超過）", "2Q26", "公司稱 AI 貢獻廣告成長逾 60%", DECK["2Q26"], "Interested-party", "管理層向市場說明 AI 成效"),
   "ai_ctr": ("AI Briefing 廣告點擊率提升（公司稱）", 0.30, "比例", "2026-07-21 起", "AI Briefing 廣告上線後公司稱 CTR +30%、轉換 3 倍（非隨機對照）", DECK["2Q26"], "Interested-party", "管理層向市場說明 AI 成效"),
@@ -124,7 +131,7 @@ SINGLE = {
   "tp_kyobo": ("券商目標價：Kyobo（財報後）", 300000, "韓元", "2026-11-13", "由 390,000 下調；其 2027E 營收 15.9 兆、營業利益 2.3 兆", "同上", "Interested-party", "賣方預估"),
 }
 NOTFOUND = ["搜尋查詢量（年）", "AI Briefing 占查詢比例與每次回答的 token 量（公司未揭露，故每任務 token 無法以揭露校準）", "HyperCLOVA X 使用 GPU 數量與自用推論成本金額",
-            "年度資本支出（FY2023–FY2024 與逐季；公司簡報未揭露）", "折舊攤銷與股票薪酬金額（K-IFRS 附註未取得）", "租賃負債", "權益法投資帳面價值", "RSU、選擇權明細與稀釋股數", "非控制權益拆分（歸屬母公司淨利）",
+            "年度資本支出（FY2023–FY2024 與逐季；公司簡報未揭露）", "折舊攤銷與股票薪酬金額（K-IFRS 附註未取得）", "租賃負債", "權益法投資帳面價值", "RSU、選擇權明細與稀釋股數", "歸屬母公司淨利拆分（非控制權益帳面值已取得）",
             "FY2021–FY2025 每股盈餘（K-IFRS 基本）", "4Q24 分部營業利益（新口徑）", "第二個共識來源（FnGuide 僅見單季營業利益共識）", "NAVER Financial 與 Dunamu 合併換股比例與會計影響",
             "法定申報封面股數（DART 季報）", "Baidu 等未取得同業本益比"]
 

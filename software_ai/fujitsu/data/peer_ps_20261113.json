@@ -1,0 +1,593 @@
+{
+ "as_of": "2026-11-13",
+ "source": "data/relmult_hist/peer_ps_20261113.csv（StockAnalysis，WebFetch；Derived）",
+ "min_peers": 2,
+ "companies": {
+  "accenture": {
+   "ticker": "ACN",
+   "own_ps": 2.0,
+   "groups": {
+    "all": {
+     "peer_median_ps": 1.45,
+     "n_peers": 3,
+     "n_listed": 3,
+     "missing": [],
+     "n_stale": 3,
+     "stale": [
+      "CTSH(2026-10-27)",
+      "INFY(2026-10-26)",
+      "GIB(2026-10-23)"
+     ],
+     "peers": {
+      "CTSH": 1.38,
+      "INFY": 2.47,
+      "GIB": 1.45
+     },
+     "db_last_quarter": {
+      "q": "2026-09-30",
+      "median": 1.62,
+      "n_peers": 2
+     },
+     "change_vs_db": -0.1049382716049384,
+     "note": ""
+    }
+   }
+  },
+  "fujitsu": {
+   "ticker": "FUJITSU",
+   "own_ps": 2.18,
+   "groups": {
+    "all": {
+     "peer_median_ps": 1.7349999999999999,
+     "n_peers": 4,
+     "n_listed": 4,
+     "missing": [],
+     "n_stale": 2,
+     "stale": [
+      "NRI(2026-11-09)",
+      "BIPROGY(2026-10-30)"
+     ],
+     "peers": {
+      "HITACHI": 1.95,
+      "NEC": 1.52,
+      "NRI": 3.97,
+      "BIPROGY": 1.11
+     },
+     "db_last_quarter": {
+      "q": "2026-06-30",
+      "median": 1.615,
+      "n_peers": 4
+     },
+     "change_vs_db": 0.07430340557275539,
+     "note": ""
+    }
+   }
+  },
+  "nri": {
+   "ticker": "NRI",
+   "own_ps": 3.97,
+   "groups": {
+    "all": {
+     "peer_median_ps": 1.85,
+     "n_peers": 8,
+     "n_listed": 8,
+     "missing": [],
+     "n_stale": 7,
+     "stale": [
+      "TIS(2026-11-16)",
+      "BIPROGY(2026-10-30)",
+      "FUJITSU(2026-10-23)",
+      "NSSOL(2026-09-30)",
+      "OBIC(2026-10-16)",
+      "CTSH(2026-10-27)",
+      "INFY(2026-10-26)"
+     ],
+     "peers": {
+      "TIS": 1.49,
+      "BIPROGY": 1.11,
+      "FUJITSU": 2.18,
+      "NSSOL": 1.7,
+      "OBIC": 17.63,
+      "ACN": 2.0,
+      "CTSH": 1.38,
+      "INFY": 2.47
+     },
+     "db_last_quarter": {
+      "q": "2026-06-30",
+      "median": 1.565,
+      "n_peers": 8
+     },
+     "change_vs_db": 0.1821086261980831,
+     "note": ""
+    }
+   }
+  },
+  "salesforce": {
+   "ticker": "CRM",
+   "own_ps": 4.08,
+   "groups": {
+    "all": {
+     "peer_median_ps": 4.605,
+     "n_peers": 6,
+     "n_listed": 6,
+     "missing": [],
+     "n_stale": 2,
+     "stale": [
+      "WDAY(2026-10-26)",
+      "HUBS(2026-10-26)"
+     ],
+     "peers": {
+      "NOW": 6.88,
+      "ADBE": 3.64,
+      "WDAY": 4.95,
+      "INTU": 4.26,
+      "HUBS": 3.82,
+      "SAP": 6.03
+     },
+     "db_last_quarter": {
+      "q": "2026-06-30",
+      "median": 4.0649999999999995,
+      "n_peers": 6
+     },
+     "change_vs_db": 0.13284132841328433,
+     "note": ""
+    }
+   }
+  },
+  "hubspot": {
+   "ticker": "HUBS",
+   "own_ps": 3.82,
+   "groups": {
+    "all": {
+     "peer_median_ps": 4.95,
+     "n_peers": 11,
+     "n_listed": 11,
+     "missing": [],
+     "n_stale": 5,
+     "stale": [
+      "WDAY(2026-10-26)",
+      "TEAM(2026-10-26)",
+      "MNDY(2026-10-26)",
+      "DOCU(2026-10-26)",
+      "TWLO(2026-11-06)"
+     ],
+     "peers": {
+      "CRM": 4.08,
+      "NOW": 6.88,
+      "WDAY": 4.95,
+      "ADBE": 3.64,
+      "INTU": 4.26,
+      "TEAM": 8.19,
+      "MNDY": 3.22,
+      "DOCU": 4.73,
+      "TWLO": 5.57,
+      "ZM": 5.83,
+      "DDOG": 15.55
+     },
+     "db_last_quarter": {
+      "q": "2026-06-30",
+      "median": 4.03,
+      "n_peers": 11
+     },
+     "change_vs_db": 0.22828784119106693,
+     "note": ""
+    }
+   }
+  },
+  "lycorp": {
+   "ticker": "LYCORP",
+   "own_ps": 1.7,
+   "groups": {
+    "all": {
+     "peer_median_ps": 2.3049999999999997,
+     "n_peers": 10,
+     "n_listed": 10,
+     "missing": [],
+     "n_stale": 7,
+     "stale": [
+      "CYBERAGENT(2026-10-22)",
+      "RECRUIT(2026-10-23)",
+      "NAVER(2026-10-23)",
+      "RAKUTEN(2026-10-13)",
+      "MERCARI(2026-10-16)",
+      "MONOTARO(2026-10-16)",
+      "XYZ(2026-10-26)"
+     ],
+     "peers": {
+      "CYBERAGENT": 0.69,
+      "RECRUIT": 6.85,
+      "NAVER": 2.01,
+      "META": 6.8,
+      "RAKUTEN": 0.52,
+      "ZOZO": 4.37,
+      "MERCARI": 2.6,
+      "MONOTARO": 3.21,
+      "PYPL": 1.44,
+      "XYZ": 1.75
+     },
+     "db_last_quarter": {
+      "q": "2026-06-30",
+      "median": 2.395,
+      "n_peers": 10
+     },
+     "change_vs_db": -0.03757828810020891,
+     "note": ""
+    },
+    "Media": {
+     "peer_median_ps": 4.404999999999999,
+     "n_peers": 4,
+     "n_listed": 4,
+     "missing": [],
+     "n_stale": 3,
+     "stale": [
+      "CYBERAGENT(2026-10-22)",
+      "RECRUIT(2026-10-23)",
+      "NAVER(2026-10-23)"
+     ],
+     "peers": {
+      "CYBERAGENT": 0.69,
+      "RECRUIT": 6.85,
+      "NAVER": 2.01,
+      "META": 6.8
+     },
+     "db_last_quarter": {
+      "q": "2026-06-30",
+      "median": 3.185,
+      "n_peers": 4
+     },
+     "change_vs_db": 0.3830455259026686,
+     "note": ""
+    },
+    "Commerce": {
+     "peer_median_ps": 2.9050000000000002,
+     "n_peers": 4,
+     "n_listed": 4,
+     "missing": [],
+     "n_stale": 3,
+     "stale": [
+      "RAKUTEN(2026-10-13)",
+      "MERCARI(2026-10-16)",
+      "MONOTARO(2026-10-16)"
+     ],
+     "peers": {
+      "RAKUTEN": 0.52,
+      "ZOZO": 4.37,
+      "MERCARI": 2.6,
+      "MONOTARO": 3.21
+     },
+     "db_last_quarter": {
+      "q": "2026-06-30",
+      "median": 2.72,
+      "n_peers": 4
+     },
+     "change_vs_db": 0.06801470588235303,
+     "note": ""
+    },
+    "Strategic": {
+     "peer_median_ps": 1.44,
+     "n_peers": 3,
+     "n_listed": 3,
+     "missing": [],
+     "n_stale": 2,
+     "stale": [
+      "RAKUTEN(2026-10-13)",
+      "XYZ(2026-10-26)"
+     ],
+     "peers": {
+      "RAKUTEN": 0.52,
+      "PYPL": 1.44,
+      "XYZ": 1.75
+     },
+     "db_last_quarter": {
+      "q": "2026-06-30",
+      "median": 1.12,
+      "n_peers": 3
+     },
+     "change_vs_db": 0.2857142857142856,
+     "note": ""
+    }
+   }
+  },
+  "naver": {
+   "ticker": "NAVER",
+   "own_ps": 2.01,
+   "groups": {
+    "all": {
+     "peer_median_ps": 2.32,
+     "n_peers": 5,
+     "n_listed": 5,
+     "missing": [],
+     "n_stale": 3,
+     "stale": [
+      "PINS(2026-11-06)",
+      "KAKAO(2026-10-23)",
+      "LYCORP(2026-10-13)"
+     ],
+     "peers": {
+      "GOOGL": 7.71,
+      "META": 6.8,
+      "PINS": 2.32,
+      "KAKAO": 1.6,
+      "LYCORP": 1.7
+     },
+     "db_last_quarter": {
+      "q": "2026-06-30",
+      "median": 2.59,
+      "n_peers": 5
+     },
+     "change_vs_db": -0.10424710424710426,
+     "note": ""
+    }
+   }
+  },
+  "applovin": {
+   "ticker": "APP",
+   "own_ps": 17.81,
+   "groups": {
+    "all": {
+     "peer_median_ps": 6.475,
+     "n_peers": 6,
+     "n_listed": 6,
+     "missing": [],
+     "n_stale": 3,
+     "stale": [
+      "PINS(2026-11-06)",
+      "TTD(2026-11-06)",
+      "U(2026-10-26)"
+     ],
+     "peers": {
+      "PINS": 2.32,
+      "TTD": 2.05,
+      "RDDT": 6.15,
+      "U": 8.14,
+      "META": 6.8,
+      "GOOGL": 7.71
+     },
+     "db_last_quarter": {
+      "q": "2026-09-30",
+      "median": 8.26,
+      "n_peers": 5
+     },
+     "change_vs_db": -0.21610169491525422,
+     "note": ""
+    }
+   }
+  },
+  "snowflake": {
+   "ticker": "SNOW",
+   "own_ps": 18.87,
+   "groups": {
+    "all": {
+     "peer_median_ps": 9.36,
+     "n_peers": 7,
+     "n_listed": 8,
+     "missing": [
+      "CRWD"
+     ],
+     "n_stale": 2,
+     "stale": [
+      "MDB(2026-11-06)",
+      "ESTC(2026-11-06)"
+     ],
+     "peers": {
+      "DDOG": 15.55,
+      "MDB": 9.05,
+      "NET": 40.11,
+      "NOW": 6.88,
+      "PLTR": 55.53,
+      "ESTC": 5.02,
+      "ZS": 9.36
+     },
+     "db_last_quarter": {
+      "q": "2026-06-30",
+      "median": 16.555,
+      "n_peers": 8
+     },
+     "change_vs_db": -0.4346118997281788,
+     "note": ""
+    }
+   }
+  },
+  "datadog": {
+   "ticker": "DDOG",
+   "own_ps": 15.55,
+   "groups": {
+    "all": {
+     "peer_median_ps": 9.05,
+     "n_peers": 5,
+     "n_listed": 5,
+     "missing": [],
+     "n_stale": 3,
+     "stale": [
+      "MDB(2026-11-06)",
+      "DT(2026-11-06)",
+      "ESTC(2026-11-06)"
+     ],
+     "peers": {
+      "SNOW": 18.87,
+      "NET": 40.11,
+      "MDB": 9.05,
+      "DT": 5.72,
+      "ESTC": 5.02
+     },
+     "db_last_quarter": {
+      "q": "2026-06-30",
+      "median": 9.75,
+      "n_peers": 5
+     },
+     "change_vs_db": -0.07179487179487176,
+     "note": ""
+    }
+   }
+  },
+  "palantir": {
+   "ticker": "PLTR",
+   "own_ps": 55.53,
+   "groups": {
+    "all": {
+     "peer_median_ps": 7.965,
+     "n_peers": 8,
+     "n_listed": 8,
+     "missing": [],
+     "n_stale": 3,
+     "stale": [
+      "MDB(2026-11-06)",
+      "BAH(2026-10-26)",
+      "CACI(2026-10-26)"
+     ],
+     "peers": {
+      "SNOW": 18.87,
+      "DDOG": 15.55,
+      "NET": 40.11,
+      "MDB": 9.05,
+      "NOW": 6.88,
+      "BAH": 0.9,
+      "LDOS": 0.89,
+      "CACI": 1.51
+     },
+     "db_last_quarter": {
+      "q": "2026-09-30",
+      "median": 22.99,
+      "n_peers": 3
+     },
+     "change_vs_db": -0.6535450195737277,
+     "note": ""
+    },
+    "商業": {
+     "peer_median_ps": 15.55,
+     "n_peers": 5,
+     "n_listed": 5,
+     "missing": [],
+     "n_stale": 1,
+     "stale": [
+      "MDB(2026-11-06)"
+     ],
+     "peers": {
+      "SNOW": 18.87,
+      "DDOG": 15.55,
+      "NET": 40.11,
+      "MDB": 9.05,
+      "NOW": 6.88
+     },
+     "db_last_quarter": {
+      "q": "2026-09-30",
+      "median": 22.99,
+      "n_peers": 3
+     },
+     "change_vs_db": -0.32361896476729,
+     "note": ""
+    },
+    "政府": {
+     "peer_median_ps": 0.9,
+     "n_peers": 3,
+     "n_listed": 3,
+     "missing": [],
+     "n_stale": 2,
+     "stale": [
+      "BAH(2026-10-26)",
+      "CACI(2026-10-26)"
+     ],
+     "peers": {
+      "BAH": 0.9,
+      "LDOS": 0.89,
+      "CACI": 1.51
+     },
+     "db_last_quarter": {
+      "q": "2026-06-30",
+      "median": 0.78,
+      "n_peers": 3
+     },
+     "change_vs_db": 0.15384615384615374,
+     "note": ""
+    }
+   }
+  },
+  "crowdstrike": {
+   "ticker": "CRWD",
+   "own_ps": null,
+   "groups": {
+    "all": {
+     "peer_median_ps": 9.885,
+     "n_peers": 6,
+     "n_listed": 6,
+     "missing": [],
+     "n_stale": 1,
+     "stale": [
+      "S(2026-10-26)"
+     ],
+     "peers": {
+      "PANW": 22.93,
+      "FTNT": 11.86,
+      "ZS": 9.36,
+      "OKTA": 10.41,
+      "S": 8.08,
+      "CHKP": 5.44
+     },
+     "db_last_quarter": {
+      "q": "2026-06-30",
+      "median": 7.66,
+      "n_peers": 6
+     },
+     "change_vs_db": 0.29046997389033935,
+     "note": ""
+    }
+   }
+  },
+  "paloalto": {
+   "ticker": "PANW",
+   "own_ps": 22.93,
+   "groups": {
+    "all": {
+     "peer_median_ps": 9.36,
+     "n_peers": 3,
+     "n_listed": 3,
+     "missing": [],
+     "n_stale": 0,
+     "stale": [],
+     "peers": {
+      "FTNT": 11.86,
+      "ZS": 9.36,
+      "CHKP": 5.44
+     },
+     "db_last_quarter": {
+      "q": "2026-06-30",
+      "median": 7.29,
+      "n_peers": 3
+     },
+     "change_vs_db": 0.28395061728395055,
+     "note": ""
+    }
+   }
+  },
+  "trendmicro": {
+   "ticker": "TRENDMICRO",
+   "own_ps": 2.99,
+   "groups": {
+    "all": {
+     "peer_median_ps": 8.26,
+     "n_peers": 4,
+     "n_listed": 4,
+     "missing": [],
+     "n_stale": 2,
+     "stale": [
+      "GEN(2026-10-26)",
+      "QLYS(2026-10-26)"
+     ],
+     "peers": {
+      "CHKP": 5.44,
+      "GEN": 2.86,
+      "QLYS": 11.08,
+      "FTNT": 11.86
+     },
+     "db_last_quarter": {
+      "q": "2026-06-30",
+      "median": 5.92,
+      "n_peers": 4
+     },
+     "change_vs_db": 0.3952702702702702,
+     "note": ""
+    }
+   }
+  }
+ }
+}
