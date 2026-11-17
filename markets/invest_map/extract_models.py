@@ -269,7 +269,8 @@ SEMIS_V2 = (("NVDA", "nvidia"), ("AVGO", "avgo"), ("AMD", "amd"), ("2454", "medi
             ("2317", "foxconn"), ("2382", "quanta"), ("3231", "wistron"), ("6669", "wiwynn"), ("DELL", "dell"),
             ("SMCI", "smci"),
             ("2308", "delta"), ("3017", "avc"), ("2301", "liteon"), ("3324", "auras"), ("3653", "jentech"),
-            ("ARM", "arm"), ("3711", "ase"), ("2303", "umc"), ("5347", "vis"), ("6274", "tuc"), ("6223", "mpi"))  # 2026-10-31 新增 6 家（Andy 13:08）；2026-11-08 新增 Cerebras（Andy 21:38）
+            ("ARM", "arm"), ("3711", "ase"), ("2303", "umc"), ("5347", "vis"), ("6274", "tuc"), ("6223", "mpi"),
+            ("INTC", "intc"), ("GFS", "gfs"), ("8035", "tel"), ("VRT", "vrt"), ("ABBN", "abb"))  # 2026-10-31 新增 6 家（Andy 13:08）；2026-11-08 新增 Cerebras（Andy 21:38）；2026-11-17 新增 INTC、GFS、TEL、VRT、ABB（Andy 07:48）
 MEMORY_FCF = ("000660", "005930", "MU")   # 收支關卡用 Y 頁自由現金流（其餘先用淨利，待 AI半導體 補自由現金流列）
 
 

@@ -103,6 +103,9 @@ SEGMENTS = [
     ("storage", "L3 IT 設備", "儲存與管理", "{儲存與管理}|機架外儲存、管理網路，未拆", "儲存與管理", 3, 25,
      "AI半導體 次產業排序 v0.2.3：橋接表儲存與管理列（機架外儲存、管理網路），未拆、不建模；不可替代性 3 為判斷 [Derived]／[判斷]"),
     ("equipment", "L2 半導體製造與設備", "設備與材料", "約 7.5%（軸 B，不可與軸 A 相加）", 0.075, 1, 50, "AI半導體 次產業排序 v0.2.3（設備模型情境 A：2027 AI 相關設備 117.8B ÷ 1,565B）"),
+    # 2026-11-17 電力與機房範圍定案（docs/plan/電力與機房範圍定案_20261117.md）：L3 機房設施，占比讀 Wattonomics S7 廠房拆分（_FAC 於下方計算）
+    ("facility", "L3 機房設施", "機房電力與冷卻", "{FAC}", "{FAC}", 2, 75,
+     "{FACB}"),
 ]
 
 
@@ -118,7 +121,28 @@ def _seg_shares():
 
 
 _SH = _seg_shares()
+
+
+def _fac_share():
+    """L3 機房設施：讀 Wattonomics 現行快照 S7 廠房每 IT GW 拆分（2027）。電力與冷卻＝配電＋UPS＋冷卻＋發電機，占廠房合計。"""
+    wd = os.path.join(HERE, "..", "..", "wattonomics", "data")
+    fn = open(os.path.join(wd, "CURRENT_SNAPSHOT"), encoding="utf-8").read().strip()
+    w = json.load(open(os.path.join(wd, fn), encoding="utf-8"))
+    n, v = w["names"], w["source"]["version"]
+    parts = {k: n[f"WIF_Facility_{k}_2027"] for k in ("dist", "ups", "cool", "gen", "bldg", "labor", "land", "net", "prof", "resid")}
+    tot = sum(parts.values())
+    pc = parts["dist"] + parts["ups"] + parts["cool"] + parts["gen"]
+    txt = (f"{pc / tot:.1%} of 廠房（Wattonomics {v} S7，2027：配電 {parts['dist']:.2f}＋UPS {parts['ups']:.2f}＋冷卻 {parts['cool']:.2f}"
+           f"＋發電機 {parts['gen']:.2f}＝{pc:.2f}／廠房 {tot:.2f} $B/IT GW；不與 IT 設備相加）").replace(" of ", " 占")
+    basis = (f"電力與機房範圍定案（2026-11-17）：機櫃外的 UPS、配電／開關設備、變壓器、發電機、列級與機房級冷卻；權威層 Wattonomics {v}"
+             f"（WIF_Facility_*、WIF_Spend_fac_*）；機櫃內電源與散熱仍屬 L3 IT 設備「電源與散熱」[Derived]；不可替代性 2、分量分 75 為判斷"
+             f"（{pc:.2f} ÷ IT 37.59 約 18%，比照 10–20% 級距）")
+    return pc / tot, txt, basis
+
+
+_FAC = _fac_share()
 SEGMENTS = [
+    (k, ly, nm, _FAC[1], _FAC[0], irr, vc, _FAC[2]) if mid == "{FAC}" else
     (k, ly, nm, (f"{_SH[mid][0]:.1%}（VR200 2027 {_SH[mid][1]}" + ("；" + txt.split("|", 1)[1] if "|" in txt else "") + "）"
                  if isinstance(mid, str) else txt),
      (_SH[mid][0] if isinstance(mid, str) else mid), irr, vc, b)
@@ -181,7 +205,7 @@ COMPANY_META = {
 
 # v0.5（2026-10-25 Andy 18:14）：AI半導體 其餘個股全部接入。公司名、掛牌、次產業、重要性、地位依據取自候選母體；
 # 市場位置（1–4）預設由「次產業內優先序」換算（1→1、2→2、3–5→3、≥6→4），標 [判斷]，黃底可改。
-CCY_BY_LISTING = {"美": "USD", "台": "TWD", "日": "JPY", "韓": "KRW", "中": "CNY", "荷": "EUR", "港": "HKD"}
+CCY_BY_LISTING = {"美": "USD", "台": "TWD", "日": "JPY", "韓": "KRW", "中": "CNY", "荷": "EUR", "港": "HKD", "瑞士": "CHF"}  # 瑞士：2026-11-17 ABB
 
 
 def _add_semis():
