@@ -144,7 +144,7 @@ C["sens_cases"] = [("cap_adj", "產能係數", "x", "0.00"), ("ut_adj", "稼動�
 C["sens_read"] = "讀法：售價水準 ±3% 影響最大（加權目標價約 ±14%），其次是產能、折舊與每片現金成本（約 ±10%）、稼動率（約 ±6%，固定成本高）；DCF 另受資本支出強度（In 區間 25%／45% 約 +13%／−12%）與完全稀釋股數（0.57／0.62 十億股約 +5%／−3%）影響；矽光子營收 ±30% 約 ±7%。各案例都是一次動一個輸入，不是門檻。"
 C["pe_cmc"] = [None, None, None, None, None, None, 20.2, 32.9, None, 21.8]
 C["pe_sa"] = [None, None, None, None, None, None, 20.29, 32.87, None, 21.93]
-C["pe_note"] = "companiesmarketcap（2022 20.2、2023 32.9、2025 21.8；https://companiesmarketcap.com/globalfoundries/pe-ratio/）與 stockanalysis 年度 P/E 只有 FY2022（20.29）、FY2023（32.87）、FY2025（21.93）；FY2021、FY2024 為虧損無 P/E。上市（2021-10）以來只有三個有效年度，十年規則僅作參考。"
+C["pe_note"] = "companiesmarketcap（2022 20.2、2023 32.9、2025 21.8；網址見 Sources 頁）與 stockanalysis 年度 P/E 只有 FY2022（20.29）、FY2023（32.87）、FY2025（21.93）；FY2021、FY2024 為虧損無 P/E。上市（2021-10）以來只有三個有效年度，十年規則僅作參考。"
 C["recon"] = [("sec", "A. FY2026–27 錨點 vs 共識（Yahoo 2026-11-17 快照；第三方）"),
     ("FY2026 營收 vs 共識", "=cons_rev26", ("rev", 2026), "Yahoo 快照共識", "4Q26 為公司指引中點", "#,##0.000", False),
     ("FY2026 EPS（IFRS）vs 共識（非 IFRS）", "=cons_eps26", ("eps", 2026), "Yahoo 快照共識", "口徑不同：模型含 3Q26 政府股份發行費用 0.79 與股權激勵", "#,##0.00", False),
@@ -166,6 +166,7 @@ C["sources"] = [
     ("媒體：Finsee 3Q26 財報摘要（出貨季增、年增；與逐字稿口徑差異見 README）", FS3), ("媒體：24/7 Wall St 3Q26 財報摘要", W247),
     ("資料商：stockanalysis（FY2021–25 損益、現金流量、資產負債表、年度 P/E、ROE；原文為公司 20-F，轉錄等級）", SAI + "；" + SACF + "；" + SABS + "；" + SAR),
     ("第三方彙整：Yahoo Finance 2026-11-17 基本面快照（共識 EPS、目標價、β、同業 EPS）；只作交叉檢查與 Comparable 同業 EPS", YSN),
+    ("資料商：companiesmarketcap 年底 P/E（2022、2023、2025；第三方，Interested-party）", "https://companiesmarketcap.com/globalfoundries/pe-ratio/"),
     ("價格：2026-11-13 收盤（GFS、同業；只取自工作單指定兩個 CSV）", CSV1 + "；" + CSV2),
     ("行業層：Siliconomics 快照（AI 加速器顆數係數 um28／um29；本 repo，唯讀）", "siliconomics/data/CURRENT_SNAPSHOT；siliconomics/reader.py"),
     ("待補（人工）：產能與稼動率數值（公司未揭露）、終端市場完整比重（20-F 與投影片）、技術服務逐季金額、各平台 ASP 與晶圓數、Mubadala 現持股比例、庫藏股後續授權、美國政府股份發行的後續交割時程與費用、日美合作新廠的 GF 收費條件", "未找到"),
