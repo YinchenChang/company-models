@@ -1,10 +1,10 @@
 # AppLovin（APP）個股模型
 
-數位廣告科技，原型 A（按廣告計價）。命題模組＝安裝量 × 單次安裝淨收入的單位經濟，驅動單一官方分部 Advertising，再到損益表、現金流、DCF（FCFF 到 FY2032）與同業前瞻本益比，目標價＝兩腿各半加權，三情境 A／B／C 權重 25／50／25。
+數位廣告科技，原型 A（按廣告計價）。命題模組＝安裝量 × 單次安裝淨收入的單位經濟，驅動單一官方分部 Advertising，再到損益表、現金流、DCF（FCFF 到 FY2032）與同業 P/S 法（G6 起；前瞻本益比只作對照列、不進目標價），目標價＝DCF 與 Comparable 兩腿各半加權，三情境 A／B／C 權重 25／50／25。
 
 **版本表（由建置成品產生，不手寫；原則第 10 節第 51 條）：**
 
-<!-- version-table: dist/_待刪除/20261117_AppLovin個股模型_v0.1.xlsx｜dist/20261117_AppLovin個股模型_v0.2.xlsx -->
+<!-- version-table: dist/_待刪除/20261117_AppLovin個股模型_v0.1.xlsx｜dist/_待刪除/20261117_AppLovin個股模型_v0.2.xlsx｜dist/20261117_AppLovin個股模型_v0.2.1.xlsx -->
 | 項目 | v0.1 | v0.2 |
 |---|---|---|
 | 現價 | 409.10 | 409.10 |
@@ -16,7 +16,9 @@
 | 收支關卡 A／B／C（FY2027–FY2031，US$M） | 59,184.2／48,677.8／36,342.7 | 59,184.2／48,677.8／36,342.7 |
 <!-- /version-table -->
 
-**v0.2（2026-11-17）：** 工作單 G5：相對倍數改讀 `software_ai/data/relmult_hist/out/applovin.json` 的 geo_base（副本 `data/relmult_applovin.json`；PS 與 PSG 讀數差異大，成長比 2.60，原因見 README 頁與 HTML）、rf 統一 5.10%（FRED DGS10，2026-11-12）、DCF 並列股票薪酬加回讀數（只作對照）。v0.1 為工作單 G、G2、G3 首版（移 `dist/_待刪除/`）。建置 `bash software_ai/applovin/make_v02.sh`（`KREQ=1 SENS=1` 重跑反解與敏感度）。
+**v0.2.1（2026-11-17）：** 工作單 G6：Comparable 主腿由前瞻本益比改為 **P/S 口徑**，以與 PS／PSG 相對值同基礎（v0.2 把已含利潤率差異的 PS／PSG 相對值套到本益比，重複計入而高估）。每股價值＝同業中位 P/S（`software_ai/data/relmult_hist/` 資料庫最近一季，季末日與逾期標示見 Val 頁；副本 `data/relmult_ps_latest.csv`）× 相對倍數 geo_base × 目標時點 TTM 營收 ÷ 評價日稀釋股數。**盈餘類倍數（前瞻本益比）只作對照列，不進加權目標價**（Val 頁「前瞻本益比對照」：相對倍數 1.00 與本公司現行相對值兩讀）。Sens 的 sens.low、sens.high、ps_only、psg_only 四案皆落在新 P/S 腿。
+
+**v0.2（2026-11-17）：** 工作單 G5：相對倍數改讀 `software_ai/data/relmult_hist/out/applovin.json` 的 geo_base（副本 `data/relmult_applovin.json`；PS 與 PSG 讀數差異大，成長比 2.60，原因見 README 頁與 HTML）、rf 統一 5.10%（FRED DGS10，2026-11-12）、DCF 並列股票薪酬加回讀數（只作對照）。v0.1 為工作單 G、G2、G3 首版；v0.1 與 v0.2 成品皆移 `dist/_待刪除/`。建置 `bash software_ai/applovin/make_v02.sh`（`KREQ=1 SENS=1` 重跑反解與敏感度）。
 
 - **本版未做先驗**（工作單 G：2026-11-16 指示先建模、先驗略過）；先驗到位後改版。
 - **不適用：** Meta 式自建算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照（APP 運算以雲端租用為主，推論價格只讀 Tokenomics 快照）；三層協調（Coord 頁、C0、兩讀數）：不適用：非 Siliconomics 覆蓋。

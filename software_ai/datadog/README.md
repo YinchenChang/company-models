@@ -38,7 +38,7 @@ v0.2（2026-11-17，G5）：相對倍數讀歷史相對倍數 geo_base；無風�
 - 研究包的 `segments.json` 位於本資料夾（與 `data/` 並列）。
 
 ## 版本表（由成品產生，不手寫）
-<!-- version-table: dist/20261116_Datadog個股模型_v0.1.xlsx -->
+<!-- version-table: dist/_待刪除/20261116_Datadog個股模型_v0.1.xlsx｜dist/20261117_Datadog個股模型_v0.2.xlsx -->
 | 項目 | v0.1 |
 |---|---|
 | 現價 | 184.16 |

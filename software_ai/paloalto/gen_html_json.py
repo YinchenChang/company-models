@@ -31,7 +31,8 @@ DX = find("README", "合理性關卡診斷")
 RD = find("README", "不適用與未做項目")
 def yrs(sh, r, c1="C", c2="K"): return f"@{sh}!{c1}{r}:{c2}{r}"
 rec = V["rec"]
-tornAll = ",".join(map(str, rel_rows))
+def _side(col): return ",".join(str(r) for r in rel_rows if isinstance(wb["Sens"].cell(r, col).value, (int, float)) and abs(wb["Sens"].cell(r, col).value) >= 0.0005)
+tornLo, tornHi = _side(2), _side(3)
 
 cfg = {
  "company": "Palo Alto Networks", "ticker": "PANW", "thesis": "@README!A6",
@@ -70,8 +71,8 @@ cfg = {
     {"type": "table", "collapse": True, "summary": "展開：折現率組成與期間、評等邊界", "head": ["項目", "數值"],
      "rowgen": {"sheet": "Val", "rows": f"{V['rf']}-{V['ke']-1},{V['kd']+1}-{V['wacc']-1},{V['per_h']+1}-{V['att2']}", "cols": ["A", "B"], "fmts": ["", "n4"], "row_fmt": {str(V["att2"] - 1): {"B": "p1"}, str(V["att2"]): {"B": "p1"}, str(V["att2"] - 2): {"B": ""}, str(V["per_h"] + 4): {"B": ""}}}}]},
   {"id": "sens", "title": "敏感度", "blocks": [
-    {"type": "tornado", "title": "加權目標價相對基準：輸入取低值（一次改一個，整本重算）", "sheet": "Sens", "rows": tornAll, "label_col": "A", "value_col": "B", "fmt": "sp1"},
-    {"type": "tornado", "title": "加權目標價相對基準：輸入取高值（一次改一個，整本重算）", "sheet": "Sens", "rows": tornAll, "label_col": "A", "value_col": "C", "fmt": "sp1"},
+    {"type": "tornado", "title": "加權目標價相對基準：輸入取低值（一次改一個，整本重算）", "sheet": "Sens", "rows": tornLo, "label_col": "A", "value_col": "B", "fmt": "sp1"},
+    {"type": "tornado", "title": "加權目標價相對基準：輸入取高值（一次改一個，整本重算）", "sheet": "Sens", "rows": tornHi, "label_col": "A", "value_col": "C", "fmt": "sp1"},
     {"type": "note", "parts": ["@Sens!A2"]}, {"type": "note", "parts": ["@Sens!A9"]},
     {"type": "table", "collapse": True, "summary": "展開：全部案例（加權、DCF、Comparable 目標價）", "head": ["案例", "設定", "鍵", "低案加權", "高案加權", "低案 DCF", "高案 DCF", "低案 Comparable", "高案 Comparable"],
      "rowgen": {"sheet": "Sens", "rows": f"{case_first}-{case_last}", "cols": list("ABCDEFGHI"), "fmts": ["", "", "", "n2", "n2", "n2", "n2", "n2", "n2"]}},

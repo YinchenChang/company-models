@@ -117,7 +117,7 @@ valuation = {"id": "valuation", "title": "估值", "blocks": [
     {"type": "note", "parts": ["@README!A44"]},
     {"type": "table", "caption": "同業最近一季 P/S（Analogy；逾期＝季末日與現價基準日相差超過兩個交易日）", "head": ["公司", "分部", "P/S", "季末日", "逾期"],
      "rowgen": {"sheet": "Peers", "rows": "33-43", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "", "x1", "", ""]}},
-    {"type": "table", "caption": "對照列：分部 EV／EBITDA 加總（rel_mult＝1.00 與現行相對值；不進加權目標價）", "head": ["項目", "目標價"],
+    {"type": "table", "caption": "對照列：分部 EV／EBITDA 加總（rel_mult 取一與現行相對值兩讀數；不進加權目標價）", "head": ["項目", "目標價"],
      "rows": [[f"@Val!A{VR['tpeb1']}", vv("tpeb1", "B", "n2")], [f"@Val!A{VR['tpeb2']}", vv("tpeb2", "B", "n2")], [f"@Val!A{VR['tpps_alt']}", vv("tpps_alt", "B", "n2")]]},
     {"type": "table", "caption": "對照列明細：分部 EV／EBITDA（目標時點 TTM 分部 EBITDA × 同業原始中位倍數）", "head": ["分部", "情境 A", "情境 B", "情境 C", "倍數", "EBITDA 率"],
      "rowgen": {"sheet": "Val", "rows": f"{VR['s_media']}-{VR['s_ps']}", "cols": ["A", "B", "C", "D", "E", "F"], "fmts": ["", "n1", "n1", "n1", "x1", "p1"],

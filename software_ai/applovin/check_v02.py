@@ -1,4 +1,4 @@
-# AppLovin 成品核對（v0.1）：公式錯誤 0、各頁「檢查：」列為 0、敏感度未過期、固定列標籤存在、反解快照未過期。
+# AppLovin 成品核對：公式錯誤 0、各頁「檢查：」列為 0、敏感度未過期、固定列標籤存在、反解快照未過期。
 # 用法：python3 software_ai/applovin/check_v02.py <重算後的 xlsx>；失敗時非零結束。
 import sys
 import openpyxl

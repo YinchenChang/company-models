@@ -148,7 +148,7 @@ def price_block(b):
     if not date:                                               # 說明欄寫「股價基準日 2026-11-13」
         for cell in row:
             if isinstance(cell.value, str):
-                m = re.search(r"股價基準日\s*(\d{4}-\d{2}-\d{2})", cell.value)
+                m = re.search(r"(?:股價基準日|現價日)\s*(\d{4}-\d{2}-\d{2})", cell.value)
                 if m:
                     date = m.group(1)
     if not date:                                               # 獨立的「股價基準日」列
