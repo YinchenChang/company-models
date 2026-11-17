@@ -17,6 +17,6 @@
 6. 取不到任何一條時，用可取得的一條並寫明；兩條都取不到才用 1.00 並列承重輸入。
 
 ## 3. 資料
-- 共用資料庫：`software_ai/data/relmult_hist/`（每家一個 CSV：季末日、市值、TTM 營收、TTM 營收年增、PS、PSG、來源、擷取日）與 `software_ai/tools/relmult_hist.py`（計算相對序列與第 2 節讀數，輸出 JSON 供各模型讀取）。
+- 共用資料庫：`software_ai/data/relmult_hist/`（每家一個 CSV：季末日、市值、TTM 營收、TTM 營收年增、PS、PSG、來源、擷取日）與 `software_ai/data/tools/relmult_hist.py`（計算相對序列與第 2 節讀數，輸出 JSON 供各模型讀取）。
 - 來源以公開財報與公開股價為主（標 Derived）；資料商頁面為第二來源。shell 對外網路受限時以 WebFetch 取得後存 CSV。
 - 本資料庫歸 AI軟體應用；若 AI供應鏈 建同類庫，兩邊經 `交流/` 協調口徑，不建兩份可改副本。

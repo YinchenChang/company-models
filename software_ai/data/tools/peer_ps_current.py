@@ -12,7 +12,7 @@
 import csv, importlib.util, json, os, statistics as st
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)
+ROOT = os.path.dirname(os.path.dirname(HERE))      # software_ai/（本檔在 software_ai/data/tools/）
 DATA = os.path.join(ROOT, "data", "relmult_hist")
 OUT = os.path.join(DATA, "out")
 TARGET = "2026-11-13"

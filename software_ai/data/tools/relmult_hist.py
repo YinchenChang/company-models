@@ -23,7 +23,7 @@
 import argparse, csv, datetime as dt, json, math, os, statistics as st, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)                       # software_ai/
+ROOT = os.path.dirname(os.path.dirname(HERE))      # software_ai/（本檔在 software_ai/data/tools/）
 DATA = os.path.join(ROOT, "data", "relmult_hist")
 RAW, OUT = os.path.join(DATA, "raw"), os.path.join(DATA, "out")
 NM_G = 0.02          # TTM 年增低於此值記 N/M
