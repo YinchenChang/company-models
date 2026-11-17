@@ -6,7 +6,6 @@ AI 半導體 Project 代工層：成熟與特殊製程晶圓代工（美國、�
 |---|---|
 | `build_gfs.py` | 產生器（上半部為公司設定 C，下半部為與 `umc/build_umc.py` 相同的共用建置程式，格芯改動處見下） |
 | `gfs_post.py` | 後處理（只新增頁與列）：Hist 頁、PL 頁末標準損益表與分部營收推導、RevDCF 頁、Val 0.7 並列四個目標價、Sens 頁末加權目標價相對基準、Coord 頁 C0（公司實績）、README v1.3 白話列、Sources 新增來源 |
-| `alt_run_gfs.py` | 暫代 `tools/coord/alt_run.py`（逐行相同，只把建檔指令寫死）；`.github/workflows/ai-semis-build.yml` 尚無 `gfs` target，**待主串加入 workflow target 後改用 `python3 tools/coord/alt_run.py gfs`** |
 | `coord_alt.json` | 另一側讀數整本重建快照（Siliconomics v0.20；Wattonomics v0.3.6） |
 | `gen_html_json.py` → `html_src.json`／`segments.json` → `html.json` | HTML 設定、分部宣告、轉換結果（勿手改 `html.json`） |
 | `dist/20261117_格芯個股模型_v0.1.0.xlsx`、`.html` | 成品（LibreOffice 重算，錯誤格 0） |
@@ -78,5 +77,5 @@ AI 半導體 Project 代工層：成熟與特殊製程晶圓代工（美國、�
 ## 工具與整合備註
 
 - `tools/target_summary/universe.csv`／`peers.csv` 尚無 gfs：建置腳本在記憶體內補入（`RMX._universe`／`RMX._peers`），未改 tools。
-- `siliconomics/builder/seed/coord_meta_v*.json` 的 `hardware_companies` 尚未列入 gfs：**待主串加入 coord_meta**（並加 workflow target）；在此之前，Coord 頁與 `coord_alt.json` 由 `alt_run_gfs.py` 產生。
+- Coord：2026-11-17 主串已把 gfs 加入 Siliconomics coord_meta（hardware_companies）與 CI 建檔目標；`coord_alt.json` 改由 `python3 tools/coord/alt_run.py gfs` 產生（暫代腳本已刪）。
 - 地圖抽取程式、`prices.csv`、`model_status.csv` 未改（主串整合）。

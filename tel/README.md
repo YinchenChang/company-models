@@ -53,10 +53,10 @@
 
 - 重算錯誤格 0（#REF!／#VALUE!／#DIV/0!）；check_governance 通過（build_id 見 Excel README A1 與 Sens 頁）。
 - check_sens_coverage：同 accretech、amat，找不到 Sens 表頭而未過（全 repo 既有基線，非本模型獨有）；未修改 tools/。
-- Coord：`coord_alt.json` 由 `tel/alt_run_tel.py` 產生（accretech 版 `tools/coord/alt_run.py` 的複本，工作流查找改為固定指令）。待主串加入 `coord_meta`、workflow 與 `target_summary` 項目。
+- Coord：2026-11-17 主串已把 tel 加入 Siliconomics coord_meta（hardware_companies）與 CI 建檔目標；`coord_alt.json` 改由 `python3 tools/coord/alt_run.py tel` 產生（暫代腳本已刪）。
 
 ### 檔案
 
-- `build_tel.py`（建置）、`tel_post.py`（後處理）、`sens_tel.py`（敏感度快照，寫 `sens.json`）、`alt_run_tel.py`（兩讀數快照，寫 `coord_alt.json`）、`segments.json`、`html.json`。
+- `build_tel.py`（建置）、`tel_post.py`（後處理）、`sens_tel.py`（敏感度快照，寫 `sens.json`）、`tools/coord/alt_run.py tel`（兩讀數快照，寫 `coord_alt.json`）、`segments.json`、`html.json`。
 - 成品：`dist/20261117_東京威力科創個股模型_v0.1.0.xlsx`、`.html`。
-- 重建順序：`alt_run_tel.py`（`LO_PROFILE=file:///tmp/lo_<名>`）→ `sens_tel.py` → `build_tel.py <輸出.xlsx>` → LibreOffice 重算到 dist。改 In 頁後須重跑前兩步，否則 Sens 頁「模型狀態」為 STALE。
+- 重建順序：`python3 tools/coord/alt_run.py tel`（`LO_PROFILE=file:///tmp/lo_<名>`）→ `sens_tel.py` → `build_tel.py <輸出.xlsx>` → LibreOffice 重算到 dist。改 In 頁後須重跑前兩步，否則 Sens 頁「模型狀態」為 STALE。
