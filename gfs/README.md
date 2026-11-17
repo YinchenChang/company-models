@@ -54,7 +54,22 @@ AI 半導體 Project 代工層：成熟與特殊製程晶圓代工（美國、�
 | DCF 與 Comparable 差距 | DCF 15.57 vs Comparable 46.27 | Comparable 對 IFRS EPS 套非 GAAP 同業倍數（口徑偏高）；DCF 終值隱含 EV／EBITDA 偏低（重資本期 FCFF 薄） | DCF 權重 0.3／0.7：+19.9%／−19.9% |
 | 相對倍數調整 | 不調整（係數 1.00） | 格芯 Bloomberg 前瞻 P/E 只有五年，不足七年門檻 | — |
 | 同業組（Comparable） | 台積電、聯電、高塔半導體、德州儀器、中芯國際（`tools/target_summary` 尚無 gfs 條目，以建置腳本內名單代替，不改 tools） | Analogy | — |
+| 持股與庫藏股 | Mubadala 約七成持股、庫藏股後續授權不建模；股數只用公司指引 6.00 億股（含美國政府約 7%） | Interested-party（持股比例見 profile，第三方）；Sources 頁已標待補 | 稀釋區間見股數列 |
 | 歷史損益 | FY2022–FY2025 取 stockanalysis 對 20-F 的轉錄值，交叉核對公司 6-K | Verified（第三方轉錄） | — |
+
+## 檢查結果（2026-11-17）
+
+| 檢查 | 結果 |
+|---|---|
+| LibreOffice 重算錯誤格（#REF!／#VALUE!／#DIV/0! 等） | 0 |
+| `check_company_html gfs` | 全部通過 |
+| `check_layout_v13`（含 `--xlsx`） | 通過；全頁參數代號警告 3 項（fcff_dcf、g_cap 等，與 `umc/` 相同，不判失敗） |
+| `check_sens_coverage --require-keycol` | 通過（20 個有區間的鍵皆有案例；為此新增資本支出 25%／45% 與股數 0.57／0.62 兩組案例） |
+| `segment_check/check_segments.py gfs` | 符合 |
+| `baseline_coordination/check.py` | 0 項不符、8 項提醒（全為 Siliconomics 層級既有提醒） |
+| `check_rating_gate`、`check_display` | 不適用（無收支關卡列、無 `display_check.json`） |
+| `model_governance/check_governance.py` | **失敗 9 項**：Sens 頁無 build_id／模型狀態列、In／Q 頁無「來源誘因」欄、Q 頁 5 格標記為複合標記。這是 `umc/` 樣板系列同樣的既有狀態（對 `umc/dist` 跑同樣失敗），該檢查針對較新的 SpaceX 系列版型；若要通過須改共用建置程式或 `tools/`，本分支不動，請主串決定 |
+| `markets/invest_map/check_profiles.py` | 通過（主文無殘留出處標記） |
 
 ## 資料標籤與出處
 
