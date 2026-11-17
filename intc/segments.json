@@ -1,0 +1,16 @@
+{
+ "company": "Intel",
+ "ticker": "INTC",
+ "model_sheet": "Q",
+ "official_segments": [
+  {"name": "CCPG（客戶端運算與實體 AI）", "label": "CCPG（客戶端運算與實體 AI）", "period": "FY2025", "value": 32.228, "unit": "US$B", "source": "Intel 4Q25／FY2025 財報新聞稿與 10-K 分部資訊"},
+  {"name": "DCAI（資料中心與 AI）", "label": "DCAI（資料中心與 AI）", "period": "FY2025", "value": 16.919, "unit": "US$B", "source": "Intel 4Q25／FY2025 財報新聞稿與 10-K 分部資訊"},
+  {"name": "Intel Foundry（含對內銷售）", "label": "Intel Foundry（含對內銷售）", "period": "FY2025", "value": 17.826, "unit": "US$B", "source": "Intel 4Q25／FY2025 財報新聞稿與 10-K 分部資訊"},
+  {"name": "All Other", "label": "All Other", "period": "FY2025", "value": 3.563, "unit": "US$B", "source": "Intel 4Q25／FY2025 財報新聞稿與 10-K 分部資訊"}
+ ],
+ "sublines": [
+  {"parent": "Intel Foundry（含對內銷售）", "labels": ["分部間沖銷", "外部代工營收（Foundry＋沖銷）"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收"],
+ "note": "Foundry 分部營收含對內銷售，分部間沖銷後才是外部代工營收；合併營收＝CCPG＋DCAI＋All Other＋外部代工。最近四季 FY2025、1Q26–3Q26 為公司實績，4Q26 為依公司財測的模型值"
+}

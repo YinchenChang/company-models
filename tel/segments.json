@@ -1,0 +1,9 @@
+{
+ "company": "Tokyo Electron", "ticker": "8035", "model_sheet": "Q",
+ "official_segments": [
+  {"name": "單一應報導部門", "label": "營收", "period": "FY2025", "value": 2443.533, "unit": "¥B", "source": "公司決算短信（單一應報導部門：半導體製造裝置；營收構成依新設備與 Field Solutions 揭露）"}
+ ],
+ "sublines": [{"parent": "單一應報導部門", "labels": ["新設備銷售（SPE new equipment）", "Field Solutions 與其他（＝營收 − 新設備）"]}],
+ "check_labels": ["檢查：分部合計 − 合併營收"],
+ "note": "TEL 為單一應報導部門；營收構成為公司說明資料揭露的新設備銷售（終端市場占比見 In 頁 D 節）與 Field Solutions；其餘為殘差。"
+}
