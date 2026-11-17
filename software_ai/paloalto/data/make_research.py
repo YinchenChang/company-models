@@ -180,8 +180,8 @@ add("同業 PANW EV／營收（TTM，資料商）", 22.88, "x", "2026-11-13", "T
 _J = "共用庫 software_ai/data/relmult_hist/out/paloalto.json（資料商 StockAnalysis 季度比率頁；同業 FTNT、ZS、CHKP）"
 for _m, _v, _t in [("PS 讀數（歷史中位）", 1.1594302795370166, "Derived"), ("PSG 讀數", 1.4416760569670555, "Derived"), ("相對倍數基準 geo_base（兩讀數幾何平均）", 1.2928738816029726, "Derived"), ("Sens 低", 0.4982987722595606, "Derived"), ("Sens 高", 2.4330435896191496, "Derived"), ("成長比（本公司 ÷ 同業中位，TTM）", 1.3047030171601444, "Derived")]:
     ROWS.append([_m, _v, "x", "2021-09 至 2026-06（20 個財季）", "PANW ÷ 同業中位；PS 與 PSG", _J, "2026-11-17", _t, ""])
-for _m, _v, _d in [("同業 P/S：Fortinet", 16.64, "2026-09-30"), ("同業 P/S：Zscaler", 7.29, "2026-06-30"), ("同業 P/S：Check Point", 4.95, "2026-06-30")]:
-    ROWS.append([_m, _v, "x", _d, "PS＝市值÷TTM 營收；共用庫最近一季（與現價日相差逾 2 個交易日，逾期）", "共用庫 software_ai/data/relmult_hist/<同業>.csv", "2026-11-17", "Verified", ""])
+for _m, _v, _d in [("同業 P/S：Fortinet", 11.86, "2026-11-13"), ("同業 P/S：Zscaler", 9.36, "2026-11-13"), ("同業 P/S：Check Point", 5.44, "2026-11-13")]:
+    ROWS.append([_m, _v, "x", _d, "PS＝市值÷TTM 營收；市值÷最新 TTM 營收，價格日 2026-11-13（無逾期家數）", "共用庫 software_ai/data/relmult_hist/out/peer_ps_20261113.json", "2026-11-17", "Verified", ""])
 ROWS.append(["無風險利率（美國 10 年期）", 0.051, "比率", "2026-11-12", "FRED DGS10", "FRED https://fred.stlouisfed.org/series/DGS10（G5 第 2 條統一值）", "2026-11-17", "Verified", ""])
 ROWS.append(["PANW 歷史前瞻本益比序列", "未找到（共識 EPS 歷史不公開；相對倍數改用共用庫 PS／PSG）", "—", "—", "—", "—", "2026-11-17", "Verified", ""])
 with open(os.path.join(D, "facts_paloalto.csv"), "w", newline="", encoding="utf-8-sig") as f:
