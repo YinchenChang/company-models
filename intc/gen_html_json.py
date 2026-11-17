@@ -237,7 +237,7 @@ S["pl"]["blocks"] = [{"type": "note", "parts": [f"@PL!A{p0 + 1}"]}, is_chart, is
                      {"type": "pl", "collapse": True, "summary": "展開：三情境分部（FY2026 錨點、FY2027–FY2029）", "years": "@PL!D3:G3", "metrics": [
                          {"name": ["DCAI 營收（", "@PL!B8", "）"], "fmt": "n1", "rows": {"A": "@PL!D8:G8", "B": "@PL!D28:G28", "C": "@PL!D48:G48"}, "chart": True},
                          {"name": ["外部代工營收（", "@PL!B11", "）"], "fmt": "n1", "rows": {"A": "@PL!D11:G11", "B": "@PL!D31:G31", "C": "@PL!D51:G51"}, "chart": True},
-                         {"name": ["Intel Foundry 營業利益（", "@PL!B13", "）"], "fmt": "n1", "rows": {"A": "@PL!D13:G13", "B": "@PL!D33:G33", "C": "@PL!D53:G53"}, "chart": True},
+                         {"name": ["Intel Foundry 營業利益（", "@PL!B13", "）"], "fmt": "n1", "ymin": "auto", "rows": {"A": "@PL!D13:G13", "B": "@PL!D33:G33", "C": "@PL!D53:G53"}, "chart": True},
                          {"name": ["總資本支出（", "@PL!B21", "）"], "fmt": "n1", "rows": {"A": "@PL!D21:G21", "B": "@PL!D41:G41", "C": "@PL!D61:G61"}, "chart": True}]}]
 
 # ================= 6. 驅動因子 =================
@@ -349,7 +349,7 @@ dm_rows = [["@In!B" + str(I[k]), ["@In!E" + str(I[k]) + "|" + f, " ", "@In!C" + 
                ("aig27_B", "p1", "DCAI 中 AI 相關營收（FY2029，情境 B）：", f"I{r_dai}", "n1", "十億美元", "FY2028 起乘 Siliconomics 顆數係數"))]
 S["status"]["blocks"] = [
     {"type": "h3", "text": "本版要點"}, {"type": "note", "parts": [f"@README!A{RM['ver']}"]},
-    {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋（取代建置 commit，理由見 README）", "$sha"],
+    {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["來源 xlsx", "$xlsx"], ["build_id（README、Sens、HTML 三處相同）", f"@Sens!D{row_of('Sens', 'build_id')}"], ["來源 xlsx 的雜湊指紋（取代建置 commit，理由見 README）", "$sha"],
                              ["Tokenomics 快照版本", "本模型不直接讀取 Tokenomics 快照；行業變數（顆數情境係數、Wattonomics 錨定、代工與邏輯設備成長）讀 Siliconomics 快照，版本見 In 頁 A 節標題。"]]},
     {"type": "h3", "text": "上游成品（市場層）"}, {"type": "note", "parts": ["@In!A4"]},
     {"type": "h3", "text": "待複核項目"},

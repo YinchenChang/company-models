@@ -1970,6 +1970,7 @@
         "）"
        ],
        "fmt": "n1",
+       "ymin": "auto",
        "rows": {
         "A": "@PL!D13:G13",
         "B": "@PL!D33:G33",
@@ -4643,6 +4644,10 @@
       [
        "來源 xlsx",
        "$xlsx"
+      ],
+      [
+       "build_id（README、Sens、HTML 三處相同）",
+       "@Sens!D3904"
       ],
       [
        "來源 xlsx 的雜湊指紋（取代建置 commit，理由見 README）",
