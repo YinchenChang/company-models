@@ -101,10 +101,10 @@ def parse_ov(argv):
 EXTRA_CASES = [   # (標籤, 設定文字, 方向, [(鍵, 值)...], 鍵欄文字)
     ("token 價格與任務售價聯動（價格 2 倍）", "tk_pscale＝2；link_pass＝1（成本與售價同步）", "高", [("tk_pscale", 2.0), ("link_pass", 1.0)], "tk_pscale+link_pass"),
     ("token 價格與任務售價聯動（價格 0.5 倍）", "tk_pscale＝0.5；link_pass＝1（成本與售價同步）", "低", [("tk_pscale", 0.5), ("link_pass", 1.0)], "tk_pscale+link_pass"),
-    ("相對倍數取 PS 單讀數：relmult_hist 的 ps_only（工作單 G5.1）", "rel_mult＝ps_only 1.259（基準 geo_base 1.271）", "低", [("rel_mult", 1.2591749963481562)], "rel_mult+ps_only"),
-    ("相對倍數取 PSG 單讀數：relmult_hist 的 psg_only（工作單 G5.1）", "rel_mult＝psg_only 1.284（基準 geo_base 1.271）", "高", [("rel_mult", 1.283918493055893)], "rel_mult+psg_only"),
+    ("相對倍數取 PS 單讀數：relmult_hist 的 ps_only（工作單 G5.1）", "rel_mult＝ps_only 1.259（基準 1.271）", "低", [("rel_mult", 1.2591749963481562)], "rel_mult+ps_only"),
+    ("相對倍數取 PSG 單讀數：relmult_hist 的 psg_only（工作單 G5.1）", "rel_mult＝psg_only 1.284（基準 1.271）", "高", [("rel_mult", 1.283918493055893)], "rel_mult+psg_only"),
 ]
-SIDE_NOTE = {"rel_mult": "（relmult_hist 的 sens.low／sens.high）", "tk_pscale": "（上界：只動成本一邊，售價不連動；聯動案另列）", "route": "（路由到便宜模型：全部走 Luna）", "link_pass": "（價格傳導到售價）"}
+SIDE_NOTE = {"rel_mult": "（歷史低／高）", "tk_pscale": "（上界：只動成本一邊，售價不連動；聯動案另列）", "route": "（路由到便宜模型：全部走 Luna）", "link_pass": "（價格傳導到售價）"}
 
 
 def case_jobs():
@@ -626,10 +626,10 @@ def build(out, ov=None, sens=None, kreq=None):
        f'=IF(ABS(B{VR["up"]}-0.5)=B{VR["bdist"]}/100,"+50%",IF(ABS(B{VR["up"]}-0.25)=B{VR["bdist"]}/100,"+25%",IF(ABS(B{VR["up"]}+0.25)=B{VR["bdist"]}/100,"−25%","−50%")))',
        fe=f'=IF(B{VR["bdist"]}<5,"距評等界線不足 5 個百分點：評等對輸入微小變動敏感，翻轉條件見 Recon 與 Sens","距評等界線 5 個百分點以上")')
     vr("uattr", "上檔空間三段歸因：DCF 貢獻／未調整 Comparable 貢獻（係數＝1）／相對倍數調整", f"=w_dcf*B{VR['updcf']}", "+0.0%;-0.0%", f"=(1-w_dcf)*((B{VR['tpcomp']}/rel_mult)/px-1)",
-       f"=B{VR['up']}-B{VR['uattr']}-C{VR['uattr']}", fe="相對倍數係數取 relmult_hist 的 geo_base（Derived，PS 與 PSG 兩讀數幾何平均），第三項即其貢獻；Sens 有 ps_only、psg_only、sens.low、sens.high 四案")
+       f"=B{VR['up']}-B{VR['uattr']}-C{VR['uattr']}", fe="相對倍數係數取 相對倍數歷史讀數的幾何平均基準（Derived，PS 與 PSG 兩讀數幾何平均），第三項即其貢獻；Sens 有 PS 單讀數、PSG 單讀數、歷史低、歷史高四案")
     vr("dep", "加權目標價中 DCF／Comparable 各占的美元", f"=w_dcf*B{VR['tpdcf']}", "0.00", f"=(1-w_dcf)*B{VR['tpcomp']}")
     vr("perel", "現行相對倍數：HUBS 前瞻 P/E ÷ 同業中位數／隱含重估（係數 ÷ 現行 − 1）", "=c_pe_hubs/pe_med", "0.00", "=rel_mult/B" + str(VR["perel"]) + "-1", nfc="+0.0%;-0.0%",
-       fe=tf("HUBS 現行前瞻 P/E ", ("c_pe_hubs", "0.0"), " 倍對同業中位數 ", ("pe_med", "0.0"), " 倍；相對倍數係數基準 ", ("rel_mult", "0.00"), "（relmult_hist geo_base，Derived）"))
+       fe=tf("HUBS 現行前瞻 P/E ", ("c_pe_hubs", "0.0"), " 倍對同業中位數 ", ("pe_med", "0.0"), " 倍；相對倍數係數基準 ", ("rel_mult", "0.00"), "（相對倍數歷史讀數幾何平均基準，Derived）"))
     vr("gap", "DCF 與 Comparable 落差（每股，US$；Comparable − DCF，情境加權）", f"=B{VR['tpcomp']}-B{VR['tpdcf']}", "+0.00;-0.00", fe="以下四列公式分解（工作單 G2.8）")
     sbcw = "(" + "+".join(f"tp_w{s}*CF!C{CB[s]['sbcpv']}" for s in SC) + ")"
     vr("gap_sbc", "落差分解 1：股票薪酬（DCF 費用化、Comparable 的非 GAAP EPS 不扣；SBC 稅後現值每股）", f"={sbcw}", "+0.00;-0.00")
@@ -960,7 +960,7 @@ def recon(wb, RC, VR, kreq, keyrow):
     row("pe_med", "同業中位數（11 家）", ["=pe_med"], ["0.0"], "股權倍數（有槓桿）配本公司非 GAAP EPS（有槓桿）；乘目標時點 NTM EPS（FY2027、FY2028 依日期加權）")
     row("pe_hubs", "HUBS 現行前瞻 P/E（ChartRow）", ["=c_pe_hubs"], ["0.0"], "")
     row("pe_ratio", "現行倍數 ÷ 同業中位數", [f"=B{A['pe_hubs']}/B{A['pe_med']}"], ["0.00"], "")
-    row("pe_rr", "隱含重估：若 HUBS 回到同業中位數的倍數，相對現行倍數的變動", [f"=1/B{A['pe_ratio']}-1"], ["+0.0%;-0.0%"], "模型相對倍數係數 1.27（geo_base）高於 HUBS 現行前瞻 P/E 相對值：即假設 HUBS 倍數相對同業回到 PS／PSG 歷史水準")
+    row("pe_rr", "隱含重估：若 HUBS 回到同業中位數的倍數，相對現行倍數的變動", [f"=1/B{A['pe_ratio']}-1"], ["+0.0%;-0.0%"], "模型相對倍數係數 1.27（幾何平均基準）高於 HUBS 現行前瞻 P/E 相對值：即假設 HUBS 倍數相對同業回到 PS／PSG 歷史水準")
     r += 1
     sec("6. AI 淨效果（情境 A／B／C，FY2032E，US$M）", ["項目", "情境 A", "情境 B", "情境 C"])
     for k, lab, key, nf in [("ai_rev", "AI 增量：按任務計價營收", "aiRev", "#,##0.0"), ("ai_loss", "AI 侵蝕：席位被取代的營收損失", "loss", "#,##0.0"), ("ai_inc", "增量推論成本", "inc", "#,##0.0"),
@@ -995,7 +995,7 @@ def recon(wb, RC, VR, kreq, keyrow):
 def readme(wb, RD, build_id, VR, RVA, RCA, vw, SENS):
     TBB, PBB = TB["B"], PB["B"]
     f_(RD, "A1", tf(f"HubSpot（HUBS）個股模型 {VERSION}｜build_id {build_id}｜資料截止日 ", ("data_date", "yyyy-mm-dd"), f"｜成品日 {BUILD_DATE}｜股價基準日 ", ("px_date", "yyyy-mm-dd"), "｜評價日 ", ("val_date", "yyyy-mm-dd"), "｜本版未做先驗"))
-    f_(RD, "A2", tf(f"{VERSION} 要點（工作單 G5）：（1）相對倍數係數由 1.00 改讀 relmult_hist 的 geo_base ", ("rel_mult", "0.00"), "（Derived，PS 與 PSG 相對值幾何平均；Comparable 為前瞻 P/E，以 PS／PSG 相對值近似套用）；（2）無風險利率統一為美國 10 年期 ", ("rf", "0.00%"), "（FRED DGS10，", ("rf_date", "yyyy-mm-dd"), "）；（3）新增 DCF（股票薪酬加回）每股價值與目標價對照，不進加權目標價；（4）合理性關卡重跑。v0.1 為加權目標價 185.58、DCF 90.42、Comparable 280.74、評等中立（舊成品在 dist/_待刪除/）。"))
+    f_(RD, "A2", tf(f"{VERSION} 要點（工作單 G5）：（1）相對倍數係數由 1.00 改讀 相對倍數歷史讀數的幾何平均基準 ", ("rel_mult", "0.00"), "（Derived，PS 與 PSG 相對值幾何平均；Comparable 為前瞻 P/E，以 PS／PSG 相對值近似套用）；（2）無風險利率統一為美國 10 年期 ", ("rf", "0.00%"), "（FRED DGS10，", ("rf_date", "yyyy-mm-dd"), "）；（3）新增 DCF（股票薪酬加回）每股價值與目標價對照，不進加權目標價；（4）合理性關卡重跑。v0.1 為加權目標價 185.58、DCF 90.42、Comparable 280.74、評等中立（舊成品在 dist/_待刪除/）。"))
     f_(RD, "A3", tf("命題：AI 進入 CRM 後，HubSpot 的價值被重新分配：按任務計價的 AI 代理（Customer Agent 每次解決 0.50 美元）是增量，但席位被取代是侵蝕。情境 B 下 FY2032 AI 淨效果 US$M ", (f"Thesis!L{TB['B']['net']}", "#,##0"),
                     "（按任務營收 ", (f"Thesis!L{TB['B']['aiRev']}", "#,##0"), " − 席位取代損失 ", (f"Thesis!L{TB['B']['loss']}", "#,##0"), " − 增量推論成本 ", (f"Thesis!L{TB['B']['inc']}", "#,##0"), "）。"))
     f_(RD, "A4", tf("核心問題：FY2032 的 AI 淨效果在情境 A／B／C 各為 US$M ", (f"Thesis!L{TB['A']['net']}", "#,##0"), "／", (f"Thesis!L{TB['B']['net']}", "#,##0"), "／", (f"Thesis!L{TB['C']['net']}", "#,##0"),
@@ -1004,7 +1004,7 @@ def readme(wb, RD, build_id, VR, RVA, RCA, vw, SENS):
                     (f"Val!B{VR['tp']}", "0.00"), "（DCF ", (f"Val!B{VR['tpdcf']}", "0.00"), "、Comparable ", (f"Val!B{VR['tpcomp']}", "0.00"), "），上檔空間 ", (f"Val!B{VR['up']}", "+0.0%;-0.0%"),
                     "（現價 US$", ("px", "0.00"), "，", ("px_date", "yyyy-mm-dd"), "）。"))
     f_(RD, "A6", tf("重點觀察 1：DCF 與 Comparable 差 US$", (f"ABS(Val!B{VR['gap']})", "0.00"), "；股票薪酬費用化占 US$", (f"Val!B{VR['gap_sbc']}", "0.00"), "，其餘為同業倍數與成長差。現行 HUBS 前瞻 P/E 為同業中位數的 ",
-                    (f"Val!B{VR['perel']}", "0.00"), " 倍（相對倍數係數基準 ", ("rel_mult", "0.00"), "，relmult_hist geo_base，Derived；以 PS／PSG 相對值近似套用於前瞻 P/E）。"))
+                    (f"Val!B{VR['perel']}", "0.00"), " 倍（相對倍數係數基準 ", ("rel_mult", "0.00"), "，相對倍數歷史讀數幾何平均基準，Derived；以 PS／PSG 相對值近似套用於前瞻 P/E）。"))
     f_(RD, "A7", tf("重點觀察 2：距評等界線 ", (f"Val!B{VR['bdist']}", "0.0"), " 個百分點（最近界線 ", (f"Val!C{VR['bdist']}", "@"), "）；", (f"Val!E{VR['bdist']}", "@"), "。"))
     f_(RD, "A8", tf("重點觀察 3：收支關卡（FY2026–FY2030 自由現金流減股利，情境 B）US$M ", (f"Val!B{VR['gatev']}", "#,##0"), "，", (f"IF(Val!B{VR['gatev']}<0,\"未通過\",\"通過\")", "@"),
                     "；DCF 終值占 EV（情境 B）", (f"Val!C{VR['tvsh2']}", "0%"), "；現價要成立，FY2028 起現金流須為模型基準的 ", (f"RevDCF!B{RVA['evx']}", "0.0"), " 倍。"))
@@ -1059,7 +1059,7 @@ def readme(wb, RD, build_id, VR, RVA, RCA, vw, SENS):
     f_(RD, "A52", "未做：現金稅率橋（原則第 10 節第 40 條）；事件型尾端 Sens；選擇權庫藏股法（履約價未找到）與期末未歸屬 RSU（用 Q3 反稀釋加權代理）；每任務 token 公司揭露（未找到，以 Tokenomics 類比）。")
     f_(RD, "A53", "v0.3 待辦：改讀 software_ai/unit_economics 的 S 原型；補 seats-and-credits 揭露；以 10-K 核對 FY2021–FY2022 欄位。")
     f_(RD, "A54", "工作單 G2 十條落實：見 data/research_hubspot.md 末節與 README.md。")
-    f_(RD, "A57", tf("相對倍數（G5.1）：係數 ", ("rel_mult", "0.00"), "（geo_base；PS 單讀數 ", ("rm_ps", "0.00"), "、PSG 單讀數 ", ("rm_psg", "0.00"), "，兩讀數相差 2.0%，未超過 30%，不需寫分歧原因；HUBS 成長對同業成長比 1.52）。以 PS／PSG 相對值近似套用於前瞻 P/E；HUBS 現行前瞻 P/E 相對同業僅 ", (f"Val!B{VR['perel']}", "0.00"), "，故此係數假設倍數相對同業回到 PS／PSG 歷史水準，Sens 有 ps_only、psg_only、sens.low、sens.high 四案。"))
+    f_(RD, "A57", tf("相對倍數（G5.1）：係數 ", ("rel_mult", "0.00"), "（幾何平均基準；PS 單讀數 ", ("rm_ps", "0.00"), "、PSG 單讀數 ", ("rm_psg", "0.00"), "，兩讀數相差 2.0%，未超過 30%，不需寫分歧原因；HUBS 成長對同業成長比 1.52）。以 PS／PSG 相對值近似套用於前瞻 P/E；HUBS 現行前瞻 P/E 相對同業僅 ", (f"Val!B{VR['perel']}", "0.00"), "，故此係數假設倍數相對同業回到 PS／PSG 歷史水準，Sens 有 PS 單讀數、PSG 單讀數、歷史低、歷史高四案。"))
     f_(RD, "A58", tf("股票薪酬加回對照（G5.3）：DCF（加回）每股價值 US$", (f"Val!B{VR['ab_ps0']}", "0.00"), "（評價日）、目標價 US$", (f"Val!B{VR['ab_tp']}", "0.00"), "，相對現價 ", (f"Val!B{VR['ab_up']}", "+0.0%;-0.0%"), "；只作對照，不進加權目標價。"))
     f_(RD, "A56", tf("席位被 AI 取代的侵蝕大於按任務計價的增量；加權目標價 US$", (f"Val!B{VR['tp']}", "0.00"), "，現價 US$", ("px", "0.00"), "，評等", (f"Val!B{VR['rec']}", "@"), "；DCF 受股票薪酬費用化拖累。"))
     RD.column_dimensions["A"].width = 120
