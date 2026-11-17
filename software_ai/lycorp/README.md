@@ -1,4 +1,4 @@
-# LY Corporation（東證 4689）個股模型 v0.1.1
+# LY Corporation（東證 4689）個股模型 v0.2.0
 
 資料截止日 2026-11-16（FY2026 第 2 季，4 月制）。本版沒有做先驗（未預先設定任何投資觀點，結論全由 Assumed 輸入與公開資料推出）。
 
@@ -25,6 +25,12 @@ A／B／C 只在四個 AI 驅動分化：查詢分流占比（10%／20%／35%）
 ## G2／G3 共通必修落實（v0.1.1）
 G2：(1) 公司未揭露 token 量與代理任務量，無法校準，維持 Assumed 並標明，token 價格層級標 Analogy；(2) ptok 高案標上界，另有價格與成本聯動、模型路由兩個組合案例；(3) 營業利益率與營業成本率基準持平於最近四季實績（15.1%），收斂只在 Sens；(4) 股數以封面為主來源；(5) 淨債務口徑明寫；(6) Comparable 為同業 TTM 倍數 x 目標日 TTM 分部 EBITDA，列同業準則與逾期，揭露現行倍數 / 同業中位數；(7) Val 頁三列（估值評等、入不敷出判定用、投資建議），make 腳本跑 check_rating_gate --strict；(8) README 日期、指引、落差歸因由公式組字，DCF 與 Comparable 落差以公式分解；(9) 反解寫在 Recon（支持現價所需營業利益率 13.6%）；(10) 逾期標示在 Peers 與 Val。
 G3：(1) 費用率歷史無單調規模經濟證據（營業費用率 FY2023 至最近四季約 56 至 60% 先降後回），不延伸，Sens 保留高案；(2) 營運資金正值為流出，FCFF 以減項計；歷史比率未取得；(3) 合理性關卡：DCF/現價 1.32、EV 為正、評等中立、營收差距 -1.4% 皆未觸發；FY2026E EBITDA 對公司調整後指引 -14.8% 觸發，診斷為基準持平規則（H1 實績 17.8% 對 15.1%，約 62 十億日圓）加口徑差，是經濟判斷非建模錯誤（README 與 README 工作表 A42）；(4) rel_mult 自算：Media 0.74、Commerce 0.59、Strategic 0.83。
+
+## v0.2 改動（G5）
+1. 相對倍數改讀 `software_ai/data/relmult_hist/out/lycorp.json` 的 Media／Commerce／Strategic 分組 `geo_base`（PS 與 PSG 幾何平均，Derived；base_source 寫在 In 頁）：Media 0.58、Commerce 0.51、Strategic 1.31（v0.1.1 自算為 0.74、0.59、0.83）。Sens 加 ps_only、psg_only、sens.low、sens.high 四個組合案例（三分部同時改）。Comparable 倍數為 EV／EBITDA，以 PS／PSG 相對值近似套用。Strategic 兩讀數差異 119% 大於 30%：本公司 TTM 營收成長 8.1% 對同業中位 5.5%，成長比 1.46 使 PSG 讀數 1.94 遠高於 PS 讀數 0.89；同業僅 3 家，結論偏不穩。
+2. 無風險利率統一取日本 10 年期 2.77%（2026-11-11，Trading Economics）；距現價基準日 3 個交易日，Val 頁標逾期。
+3. Recon 與 HTML 並列 DCF（股票薪酬加回）對照讀數，不進加權目標價。LY 不揭露股票薪酬費用，以權益變動表股份基礎給付代理（營收約 0.05%），加回影響僅約 +3.4 日圓。
+4. 合理性關卡重跑：FY2026E EBITDA 對指引 -14.8% 仍觸發，診斷同 v0.1.1（基準持平規則與口徑差異，經濟判斷非建模錯誤）。
 
 ## 版本註記
 v0.2 起改讀 AI 軟體專案的 unit_economics 模型輸出，取代本版內建的單位經濟推導。
