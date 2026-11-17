@@ -407,6 +407,7 @@ def pl_block(r0, s):
     rsp = row("shr", "ABB 資料中心營收占 Wattonomics 配電＋UPS 設施支出（份額）", "%", PF)
     rdp = row("dcp", "資料中心占電氣化營收", "%", PF)
     rdg = row("dcg", "資料中心占集團營收（AI 暴露度）", "%", PF)
+    rot = row("oth", "非電氣化營收（馬達驅動＋自動化＋公司與其他及沖銷）", "US$B", NF)
     rck = row("chk", "檢查：分部合計 − 合併營收（應為 0）", "US$B", "0.000000")
     for y in YEARS:
         c = YC[y]; p = YC.get(y - 1)
@@ -466,6 +467,7 @@ def pl_block(r0, s):
         if y >= 2025:
             put(rw, y, f"=Wat!{c}$7", "#,##0.00"); put(rsp, y, f"={c}{rd}/({c}{rw}*wif_k)", PF)
             put(rdp, y, f"={c}{rd}/{c}{re_}", PF); put(rdg, y, f"={c}{rd}/{c}{rr}", PF)
+        put(rot, y, f"={c}{rm}+{c}{ra}+{c}{rc_}", NF)
         put(rck, y, f"={c}{re_}+{c}{rm}+{c}{ra}+{c}{rc_}-{c}{rr}", "0.000000")
     for y in (2024,):
         put(ryo, y, None, PF)
@@ -485,7 +487,7 @@ DW = wb.create_sheet("DCF")
 DW["A1"] = ("DCF — 標準版：無槓桿自由現金流 FCFF＝NOPAT＋折舊攤銷 − 資本支出 − 營運資金增加；WACC 折現到評價日 2026-12-31（期中慣例）；FY2027–FY2032 明確期。"
             "金額：十億美元（US$B）。FY2026 第四季（2026-10-01 到 2026-12-31）用 Q 頁模型的 stub 期 FCFF，加入淨現金。")
 DW["A2"] = ("EBIT＝損益表營業利益（PL 頁）：含收購攤銷與其他橋項，不含 Robotics（停業單位）；FY2027 起不含房產出售收益。稅率＝tax_f。折舊、資本支出占營收比例見 In 頁 G 節；"
-            "營運資金＝fc_wc × 營收增量。Robotics 出售價款以 In 頁 inv_v 加入淨現金；Rotork 收購與三菱電機 JV 未計入（價值中性假設，見 README）。")
+            "營運資金＝fc_wc × 營收增量。Robotics 出售價款在 In 頁以非營業投資加入淨現金；Rotork 收購與三菱電機 JV 未計入（價值中性假設，見 README）。")
 paths = [dict(name=s, label=f"情境 {s}（{SCN[s]}）", rev={y: f"PL!{YC[y]}{PB[s]['rev']}" for y in FY_X}, rev0=f"PL!{YC[2026]}{PB[s]['rev']}",
               ebit={y: f"PL!{YC[y]}{PB[s]['ebit']}" for y in FY_X}, tax={y: "tax_f" for y in FY_X}, stub_fcff=f"Q!$E${QR['fcff4']}") for s in SC]
 DW.cell(4, 1, "（資料中心營收的 Wattonomics 讀數見 Wat 頁；情境推導見 PL 頁）").font = Font(italic=True)
@@ -507,7 +509,9 @@ hdr(V, t0 + 1, ["項目", "A（順利）", "B（基準）", "C（不如預期）
 # 先寫 DCF 彙總（美元）在第 28 列起，再回填第 0 節
 S = FD.write_summary(wb, V, 30, R, list(SC), ["tp_wA", "tp_wB", "tp_wC"], fmt="#,##0.00", title="0.1 DCF（標準版：無槓桿自由現金流 FCFF＋WACC；美元；明細見 DCF 頁）",
                      beta_note="Yahoo β 1.05 去槓桿後依 ABB 的 D／E 重新加槓桿")
-V.cell(S["dcf"], 1, "DCF 目標價（情境加權；美元）"); V.cell(S["v12"], 1, "DCF 情境價值推到 12 個月後（美元；×（1＋ke）^t_tgt − 期間股利）")
+V.cell(S["dcf"], 1, "DCF 目標價（情境加權；美元）"); V.cell(S["v12"], 1, "DCF 情境價值推到 12 個月後（美元；以股權成本推到目標時點後扣期間股利）")
+V.cell(S["g"], 1, "永續成長率 g＝MIN(上限, rf)"); V.cell(S["ronic"], 1, "永續期 RONIC＝WACC 加成")
+V.cell(S["ronic"], 5, "終值再投資率＝g ÷ RONIC；基準加成 0"); V.cell(S["wacc"], 5, "(E × ke ＋ D × kd ×（1 − t）) ÷ (E ＋ D)；調整項只用於 Sens（基準 0）")
 q = S["dcf"] + 2
 V.cell(q, 1, "0.2 Comparable（美國、歐洲電氣設備同業前瞻 P/E；Yahoo 2026-11-17；來源單一）").font = BOLD
 hdr(V, q + 1, ["同業", "代號", "前瞻 P/E（下一會計年度 EPS）", "日期", "來源", "標記", "來源誘因"])
@@ -530,17 +534,17 @@ tset(q2 + 1, "pmed_a", "同業前瞻 P/E 中位數（含 pe_adj）", [f"=B{q2}+p
 tset(q2 + 2, "feps", "12 個月後的前瞻 EPS（情境加權；美元＝FY2028 EPS）", ["=" + "+".join(f"tp_w{s}*PL!{YC[2028]}{PB[s]['eps']}" for s in SC), None, None], "0.000",
      "目標時點 2027-12-31 的下一會計年度＝FY2028；同業倍數以現在的下一會計年度 EPS 計，時點口徑一致")
 tset(q2 + 3, "comp_usd", "Comparable 目標價（美元）", [f"=B{q2+1}*B{q2+2}", None, None], "#,##0.00", "同業中位數 × 上列 EPS")
-tset(q2 + 4, "tpw_usd", "加權目標價（美元）", [f"=tp_w_dcf*B{S['dcf']}+(1-tp_w_dcf)*B{q2+3}", None, None], "#,##0.00", "tp_w_dcf × DCF 目標價＋（1 − tp_w_dcf）× Comparable 目標價")
+tset(q2 + 4, "tpw_usd", "加權目標價（美元）", [f"=tp_w_dcf*B{S['dcf']}+(1-tp_w_dcf)*B{q2+3}", None, None], "#,##0.00", "DCF 權重 × DCF 目標價＋（1 − DCF 權重）× Comparable 目標價")
 defname("tp_w_usd", f"Val!$B${q2+4}")
 # 回填第 0 節
 r = t0 + 2
-tset(r, "px", f"現價（{PX_DATE} 收盤；ABBN.SW，瑞士法郎）", ["=px_chf", None, None], "#,##0.00", "markets/invest_map/data 兩個 CSV；匯率 CHF=X 0.83593（每美元）"); r += 1
+tset(r, "px", f"現價（{PX_DATE} 收盤；ABBN.SW，瑞士法郎）", ["=px_chf", None, None], "#,##0.00", "投資地圖資料夾的兩個收盤價 CSV；匯率 CHF=X 0.83593（每美元）"); r += 1
 tset(r, "dcf_s", "DCF 情境價值推到 12 個月後（瑞士法郎）", [f"={c}{S['v12']}*fx" for c in "BCD"], "#,##0.00", "美元情境價值（本頁 0.1 節）× 每美元兌瑞士法郎"); r += 1
-tset(r, "dcf", "DCF 目標價（情境加權）", [f"=B{S['dcf']}*fx", None, None], "#,##0.00", "瑞士法郎；情境權重見 In 頁 tp_wA／tp_wB／tp_wC"); r += 1
+tset(r, "dcf", "DCF 目標價（情境加權）", [f"=B{S['dcf']}*fx", None, None], "#,##0.00", "瑞士法郎；情境權重見 In 頁"); r += 1
 tset(r, "comp", "Comparable 目標價（市場主流同業法）", [f"=B{q2+3}*fx", None, None], "#,##0.00", "瑞士法郎；本模型未做相對倍數調整（ABB 沒有 10 年前瞻倍數歷史）"); r += 1
-tset(r, "tpw", "目標價（DCF 與 Comparable 加權）", ["=tp_w_dcf*B{}+(1-tp_w_dcf)*B{}".format(T["dcf"], T["comp"]), None, None], "#,##0.00", "tp_w_dcf × DCF 目標價＋（1 − tp_w_dcf）× Comparable 目標價；瑞士法郎"); r += 1
+tset(r, "tpw", "目標價（DCF 與 Comparable 加權）", ["=tp_w_dcf*B{}+(1-tp_w_dcf)*B{}".format(T["dcf"], T["comp"]), None, None], "#,##0.00", "DCF 權重 × DCF 目標價＋（1 − DCF 權重）× Comparable 目標價；瑞士法郎"); r += 1
 tset(r, "cons", "市場共識目標價", ["=cons_tp", None, None], "#,##0.00", "Yahoo 2026-11-17：27 家賣方平均（Interested-party）；瑞士法郎"); r += 1
-tset(r, "up", "上檔空間：加權目標價", [f"=B{T['tpw']}/B{T['px']}-1", None, None], "0.0%", "現價＝In 頁 px_chf（2026-11-13 收盤）"); r += 1
+tset(r, "up", "上檔空間：加權目標價", [f"=B{T['tpw']}/B{T['px']}-1", None, None], "0.0%", "現價＝In 頁現價（2026-11-13 收盤）"); r += 1
 tset(r, "upc", "上檔空間：Comparable 目標價", [f"=B{T['comp']}/B{T['px']}-1", None, None], "0.0%"); r += 1
 tset(r, "tier", "上檔空間級距（六級，供分組）", [f'=IF(B{T["up"]}>0.5,"大於 50%",IF(B{T["up"]}>0.25,"25%–50%",IF(B{T["up"]}>=0,"0%–25%",IF(B{T["up"]}>=-0.25,"0%～−25%",IF(B{T["up"]}>=-0.5,"−25%～−50%","小於 −50%")))))', None, None], "@", "Andy 2026-10-25 14:00"); r += 1
 tset(r, "rec", "投資建議", [f'=IF(B{T["up"]}>0.5,"強力買進",IF(B{T["up"]}>0.25,"買進",IF(B{T["up"]}>=-0.25,"中立",IF(B{T["up"]}>=-0.5,"放空","強力放空"))))', None, None], "@",
@@ -683,6 +687,8 @@ rec("非控制權益（帳面）：2025-12 公司 559 對 2026-09 Yahoo 483", h(
 rec("Q3 2026 營業利益：公司 1,846 對 Yahoo 1,856", 1846, 1856, "Yahoo 季營業利益不含其他收入（淨額），同 FY2025 差異原因", "Interested-party")
 rec("FY2026 營收：本模型對共識（US$B）", "=cons_rev26", f"=PL!{YC[2026]}{PB['B']['rev']}", "本模型＝9M 實績 27.910＋Q4 模型；共識 38.24（Yahoo；疑為美元，與 9M 實績加 Q4 指引相符）", "Interested-party", "#,##0.00")
 rec("FY2026 EPS：本模型對共識（美元）", "=cons_eps26", f"=PL!{YC[2026]}{PB['B']['eps']}", "共識 3.244 − 9M 實績 2.06＝隱含 Q4 EPS 1.18，高於本模型 Q4（含房產收益）；差異可能來自 Robotics 出售收益或共識為調整後口徑，口徑待核", "Interested-party", "0.000")
+rec("FY2026 Operational EBITA 率較 FY2025 的改善（公司指引：至少 +270 bps；含 Q4 房產收益）", 0.027, f"=(PL!{YC[2026]}{PB['B']['be_g']}+Q!$E${QR['pg']})/PL!{YC[2026]}{PB['B']['rev']}-PL!{YC[2025]}{PB['B']['be_r']}",
+    "公司 Q3 2026 新聞稿：FY2026 reported Operational EBITA 率至少改善 270 bps（Verified 指引）；本模型值為 Operational EBITA 加房產收益後的率，達標", "Verified", "0.0%")
 rec("FY2027 營收：本模型情境 B 對共識（US$B）", "=cons_rev27", f"=PL!{YC[2027]}{PB['B']['rev']}", "共識 43.30（Yahoo）", "Interested-party", "#,##0.00")
 rec("FY2027 EPS：本模型情境 B 對共識（美元）", "=cons_eps27", f"=PL!{YC[2027]}{PB['B']['eps']}", "共識 3.729（Yahoo）；本模型含收購攤銷與其他橋項（GAAP），共識口徑待核", "Interested-party", "0.000")
 rec("市場共識目標價（瑞士法郎）對本模型加權目標價", "=cons_tp", f"=Val!$B${T['tpw']}", "Yahoo 賣方平均 83.71（27 家）；本模型為 DCF 與 Comparable 各半", "Interested-party", "#,##0.00")
@@ -693,7 +699,7 @@ for c, w in zip("BCDEF", [16, 18, 12, 110, 16]): RC.column_dimensions[c].width =
 # =============================================================== Coord
 CO = wb.create_sheet("Coord")
 CO["A1"] = "Coord — 三層基準：本模型讀哪一層（ABB 為電氣設備廠，AI 資料中心變數讀 Wattonomics 設施電力，不讀 Siliconomics；設施供應商例外）。"
-CO["A2"] = "狀態：另一側讀數（Wattonomics 對帳中旗標、tools/coord/alt_run.py）尚未建置——Coord 讀 Wattonomics，alt 讀數待主串。本頁不含對帳中判定。"
+CO["A2"] = "狀態：另一側讀數（Wattonomics 對帳中旗標與另一側整本重建工具）尚未建置——Coord 讀 Wattonomics，alt 讀數待主串。本頁不含對帳中判定。"
 hdr(CO, 4, ["讀取項目（Wattonomics 快照名稱）", "版本", "sha256 前 8 碼", "用在哪裡", "FY2025", "FY2026", "FY2027", "FY2030", "單位", "標記"])
 for i, (nm, use) in enumerate((("WIF_Spend_fac_dist（配電）", "Wat 頁第 5 列 → PL 頁資料中心營收"), ("WIF_Spend_fac_ups（UPS）", "Wat 頁第 6 列 → PL 頁資料中心營收"),
                                ("配電＋UPS（本模型採用）", "Wat 頁第 7 列；ABB 份額分母"), ("WIF_MktGW_Add（全市場新增 IT GW）", "對照（Wat 頁第 10 列）"))):
@@ -703,7 +709,7 @@ for i, (nm, use) in enumerate((("WIF_Spend_fac_dist（配電）", "Wat 頁第 5 
         CO.cell(r_, 5 + j, f"=Wat!{YC[y]}{wr}").number_format = "#,##0.00"
     CO.cell(r_, 9, "GW" if wr == 10 else "US$B"); CO.cell(r_, 10, "Derived")
 CO.cell(10, 1, "邊界：機櫃外的設施（配電、UPS）屬 ABB 範圍；機櫃內屬 IT。冷卻與發電機（ABB 非主要供應商）不納入。ABB 資料中心營收只是 Electrification 的一部分，其餘事業用公司成長假設（Assumed，In 頁 D、E 節）。")
-CO.cell(11, 1, "ABB 份額＝資料中心營收 ÷ (配電＋UPS) 為 Derived（PL 頁），區間與敏感度見 In 頁 shr27／shr32／wif_k 與 Sens。")
+CO.cell(11, 1, "ABB 份額＝資料中心營收 ÷ (配電＋UPS) 為 Derived（PL 頁），區間與敏感度見 In 頁的份額與係數及 Sens。")
 CO.cell(12, 1, "尚未做：Wattonomics 另一側讀數、對帳中旗標。建議補進 Wattonomics：以 ABB 為樣本的「機櫃外設施供應商份額」對照（見 README）。")
 CO.column_dimensions["A"].width = 56; CO.column_dimensions["D"].width = 50
 

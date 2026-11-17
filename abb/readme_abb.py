@@ -34,8 +34,8 @@ def build(wb, c):
 
     put(f"ABB（ABBN）個股模型 {c['VER']}　成品日 {c['BUILD_DATE']}；股價基準日 {c['PX_DATE']}（收盤）；build_id {c['BID']}。AI 供應鏈 Project：電源與散熱；新增五家（工作單 2026-11-17）。", True)
     put("用途：以 Excel 為事實基礎，檢驗 ABB 的 AI 資料中心暴露度與估值。金額：十億美元（報表幣別）；股價與目標價：瑞士法郎（SIX：ABBN）；匯率 CHF=X 0.83593（每美元）；會計年度＝日曆年。")
-    put("分部：Electrification（電氣化）、Motion（馬達驅動）、Automation（自動化；2026 年起 ABB 新聞稿使用此名，原 Process Automation）。Robotics 已簽約出售給 SoftBank（企業價值約 54 億美元，預計 2026 下半年交割），原文為停業單位，本模型 FCFF 不含，出售淨款以 In 頁 inv_v 加入淨現金。")
-    put("三層基準：ABB 的 AI 資料中心變數讀 Wattonomics（設施電力：機櫃外的配電與 UPS；機櫃內屬 IT），不讀 Siliconomics（設施供應商例外；見 Coord 頁）。快照 wattonomics/data/wattonomics_snapshot_v0.3.6.json（sha256 前 8 碼 " + c["WSHA"] + "）。")
+    put("分部：Electrification（電氣化）、Motion（馬達驅動）、Automation（自動化；2026 年起 ABB 新聞稿使用此名，原 Process Automation）。Robotics 已簽約出售給 SoftBank（企業價值約 54 億美元，預計 2026 下半年交割），原文為停業單位，本模型 FCFF 不含，出售淨款在 In 頁以非營業投資加入淨現金。")
+    put("三層基準：ABB 的 AI 資料中心變數讀 Wattonomics（設施電力：機櫃外的配電與 UPS；機櫃內屬 IT），不讀 Siliconomics（設施供應商例外；見 Coord 頁）。快照 v0.3.6（檔名與 sha256 前 8 碼 " + c["WSHA"] + " 見 Wat 頁）。")
     put(F("估值：目標價＝DCF（標準版 FCFF、WACC ", (f"wacc", "0.0%"), "、永續成長 ", (f"g_tv", "0.0%"), "）與 Comparable（同業前瞻 P/E 中位數 ", (v("pmed"), "0.0"), " 倍 × FY2028 EPS）各半；DCF 情境價值以股權成本推到 12 個月後；評等依上檔空間固定規則（五級）。"))
     put("展示層", True)
     put(F("ABB 的 AI 資料中心只占營收約 ", (b("dcg", 2026), "0%"), "（FY2026E），其餘靠電網、工業電氣化、馬達與自動化；股價已以 AI 電力主題定價，本模型加權目標價 ",
