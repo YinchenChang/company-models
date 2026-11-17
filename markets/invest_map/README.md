@@ -14,6 +14,7 @@
 | `data/tokenomics_snapshot_v*.json` | Tokenomics 官方取數快照（`tools/tokenomics/import_tokenomics.py`；名稱清單 `data/tokenomics_names.txt`） |
 | `data/universe_ai_semis_v*.csv`、`data/segments_ai_semis_v*.csv` | AI半導體 候選母體與次產業排序的抄錄（權威在 AI半導體 Project Drive） |
 | `data/prices.csv`、`data/prices_*_sources.md` | 同日收盤價與來源 |
+| `data/cross_map.csv` | 跨圖標註（v0.6.52 起）：本圖為主圖、實體 AI 地圖照列的公司（權威在 AI實體應用 Drive「實體 AI 產業地位」個股地位頁「地圖歸屬」欄） |
 | `build_xlsx.py` | 產生資料活頁簿 `dist/<日期>_AI算力地圖_資料_v*.xlsx`（v0.6.49 以前為 `AI投資地圖_資料`，`build_xlsx.py`／`build_html.py` 兩種檔名都認，依日期＋版號排序）（**事實與判斷的權威位置**；黃底＝判斷輸入，重建時讀回） |
 | `counter/Code.gs`、`counter/endpoint.txt` | 造訪計數器（Apps Script 原始碼；部署後網址） |
 | `build_html.py`、`template.html` | LibreOffice 重算活頁簿 → 產生 `dist/index.html`（網站只呈現值，不計算）與 `dist/data.json` |
@@ -47,6 +48,16 @@ python3 markets/invest_map/build_html.py
   - 若要附模型成品，放 `physical_ai/models/…`，不要用站根的 `models/`（本地圖 `publish_map_only.sh` 每次 `rm -rf models/` 後重建）。
   - 發布：比照 `wattonomics/`、`siliconomics/`，在 gh-pages 上追加 commit、只動 `physical_ai/`。**注意**：本目錄 `publish_pages.sh` 以全新歷史 force 覆寫整個 gh-pages，目前只帶 `index.html`、`models/`、`siliconomics/`、`wattonomics/`；實體 AI 頁上線前，`publish_pages.sh` 須先加一段產生或複製 `physical_ai/`（缺檔即停），否則全站重發會把它刪掉。`publish_map_only.sh` 不受影響。
   - 造訪計數器（`counter/`）只計本地圖；實體 AI 頁要計數須另行約定（`Code.gs` 的 `TABS` 只認本地圖分頁）。
+
+## 跨圖標註：另見實體 AI 地圖（v0.6.52 起）
+
+**規則**（AI實體應用 專案來訊，Andy 2026-11-16 22:09「同意你的做法」）：同一家公司同時出現在 AI 算力地圖與實體 AI 地圖時，**主圖＝持有該公司個股模型的專案所屬地圖**；另一張圖照列（計入該圖排名）並標「跨圖」；**公司檔案、目標價、評等只讀主圖的模型**。兩圖的地位分數可以不同（價值鏈分母不同：本圖為每 GW AI 資本支出，實體 AI 地圖為人形機器人每台 BOM 等），不互相覆寫。
+
+- **資料來源**：`data/cross_map.csv`（ticker、公司、另見地圖、實體AI列代號、實體AI次產業、地圖歸屬原文、說明、來源）。權威在 Drive `02-Projects/03-AI實體應用/20261116_實體AI產業地位_v0.5.xlsx`「個股地位」頁「地圖歸屬」欄；本檔只抄錄**本圖為主圖**的列（「跨圖（主圖：AI 算力地圖…）」與 Waymo 的「跨圖分部（母公司 Alphabet 主圖：AI 算力地圖）」）。實體 AI 地圖為主圖的公司（例如 Tesla）不在本圖，不列。
+- **目前 7 家**：NVIDIA（實體 AI 列 NVDA-C 運算晶片）、台積電（運算晶片代工）、Alphabet（Waymo 分部，Robotaxi 營運）、Amazon（Zoox／Amazon Robotics）、Teradyne（Universal Robots 協作機器人）、台達電（伺服與驅動）、鴻海（整機代工與組裝）。
+- **顯示位置**（`template.html`，`xmapTag()`）：公司檔案卡片（視角 04，次產業與地位下方）、公司檔案面板頁首（名稱下方一行說明）、可投資性表格「公司」欄；方法與來源頁「跨圖（v0.6.52）」列寫規則。標籤文字「另見實體 AI 地圖（跨圖）· 建置中」。
+- **不做連結**：實體 AI 地圖頁（`physical_ai/`）尚未上線；上線後把 `build_html.py` 的 `CROSS[...]["url"]` 填 `physical_ai/`（或該頁錨點）、`status` 清空，再在 `xmapTag()` 改成 `<a>`。
+- **只作標籤**：`cross_map` 不進資料活頁簿、不影響估值、地位分數與評等。`build_html.py` 檢查 csv 每個代號都在估值清單內，不在即停。實體 AI 產業地位改版（地圖歸屬變動）時，對照新版「地圖歸屬」欄更新本 csv 並升版。
 
 ## 固定規格（2026-10-25，Andy 要求）
 
@@ -88,6 +99,7 @@ python3 markets/invest_map/build_html.py
 
 ## 版本
 
+- v0.6.52（2026-11-17）：**跨圖標註：7 家另見實體 AI 地圖**（AI實體應用 專案來訊；Andy 2026-11-16 22:09 同意「主圖＝持有個股模型的專案所屬地圖，另一張圖照列並標跨圖；公司檔案、目標價、評等只讀主圖模型」）。新增 `data/cross_map.csv`（抄錄 Drive `20261116_實體AI產業地位_v0.5.xlsx`「個股地位」頁「地圖歸屬」欄中主圖為本圖的 7 家：NVIDIA、台積電、Alphabet〔Waymo 分部〕、Amazon、Teradyne、台達電、鴻海）；`build_html.py` 讀入 `data.json` 的 `cross_map`；`template.html` 在公司檔案卡片、公司檔案面板頁首、可投資性表格加「另見實體 AI 地圖（跨圖）· 建置中」小標籤（實體 AI 地圖未上線，不做連結），方法與來源頁新增「跨圖」列（主圖規則；地位分數兩圖可不同）。新增「跨圖標註」一節。不重抽（`models_extract.json` 不動）；黃底判斷讀回 v0.6.51，舊活頁簿移 `dist/_待刪除/`。**數值 0 改變**（對 main 2f95d42 的 v0.6.51）：(1) `data.json` 葉值舊 10,315／新 10,371，差異 59 項＝meta 的 version、book、cm_commit 3 項＋新增 `cross_map` 56 項，其餘 0；(2) 新舊活頁簿各以 LibreOffice 重算後逐格比對（非空 4,958 格、數值 1,720 格；公式 5,033 格），差異只有 README!A1 版本字串；(3) `index.html` 內嵌資料與 `data.json` 相同，去掉內嵌資料後只差標籤樣式、`xmapTag()`、三處顯示與方法說明一列。估值、上檔空間、評等、收支關卡、地位分數皆不變。
 - v0.6.51（2026-11-17）：**公司檔案出處全面改寫到現行模型＋模型舊日期標籤修正**（Andy 2026-11-16 23:45「請繼續完成」）。公司檔案 64 檔、515 個引用舊模型檔的出處標記（DIFF 435、NOCUR 76〔CoreWeave、WhiteFiber 樣板重建整份重寫；NAND v0.3 即現行檔〕、NOCELL 4）依現行模型儲存格改寫數字與檔名；模型已不支撐的數字句刪除（紀錄 `data/profile_rewrite_progress_A.md`、`_B.md`）。`audit_profile_cites.py` 納入 markets/*/dist 現行檔，稽核 0 列；未參與代理抽查 80 處 0 不支持。模型標籤（同版原地重建）：智譜、MiniMax、韓美、BESI、SpaceX、WhiteFiber、奇鋐、台積電、Broadcom、Marvell 殘留「11-05」等文字改為現況；Lumentum 換股對照改讀 MRVL v0.3.6（72.87）。另帶入 #633 Siliconomics v0.20 重建後的硬體股新版：加權目標價變動均在約 ±0.02% 內，最終分級 0 改變。
 - v0.6.50（2026-11-16）：**AI 投資地圖改名 AI 算力地圖（只改文字；取代 #630）**（Andy 2026-11-16 22:06，見「舊名對照」）。前一版＝v0.6.49（11-13 收盤換價）。改：網頁 `<title>` 與頁首 `<h1>`；資料活頁簿檔名 `20261116_AI算力地圖_資料_v0.6.50.xlsx` 與 README 頁 A1、A2（`build_xlsx.py`／`build_html.py` 讀前版時新舊檔名都認，以 `_book_key()` 依日期＋版號排序——同日新舊檔名並存時字串排序不可靠）；本目錄程式、`profiles/00_格式規格.md`、發布腳本、`counter/Code.gs` 註解、`invest-map-check.yml` 註解的名稱字串；新增「舊名對照」「導覽入口：實體 AI 地圖」兩節。不重抽（`extract_models.py` 對 main 54444b9 重跑，`models_extract.json` 0 差異）；黃底判斷讀回 v0.6.49。**數值 0 改變**（對 main 的 v0.6.49）：(1) `data.json` 10,284 個葉值逐一比對，差異只有 meta 的 version、book、cm_commit 3 項；(2) 新舊活頁簿各以 LibreOffice 重算後 8 頁逐格比對（非空 4,958 格、數值 1,720 格），值差只有 README!A1、A2 兩格名稱，公式差 0；(3) `index.html` 去掉內嵌資料後只差 `<title>`、`<h1>` 兩行，內嵌資料與 `data.json` 相同。估值、上檔空間、評等、收支關卡、地位分數皆不變。目標價總表（`tools/target_summary/`）不含地圖名稱，不重出。
 - v0.6.49（2026-11-16）：**個股模型全面換 2026-11-13 收盤後重抽**（Andy 2026-11-16 18:43、18:45：模型與地圖價格至少更新到 11-13 收盤，上檔空間、可投資性圖表與文字一併更新）。工作單 `docs/workorders/20261116_px1113_現價與同業報價換11-13收盤.md`：72 檔上市個股模型的現價、Comparable 同業報價與模型內股價改 11-13 收盤（價格檔 `data/closes_20261020_20261113.csv`），共識 EPS、rf、假設不變；各模型升一版。地圖重抽後 72 檔模型價日期皆為 11-13，偏離超過 20% 家數 9 → 0（可投資性頁該段改為「模型現價與最新收盤同日」）；最終分級變動 10 家（Broadcom、Astera Labs、京元電 強力放空→放空；Advantest 放空→中立；世芯、金像電、Teradyne、光寶 中立→買進；雙鴻 買進→強力買進；CoreWeave 收支不足→中立）。PRICE_NOTE、方法說明股價列、`data/model_status.csv` 改為現況；`extract_models.py` MiniMax／智譜現價日期改 11-13；公司檔案出處 SAME 1,123 處改指現行檔名（`audit_profile_cites.py --apply`，舊檔由 a0e82b5 取回），剩 DIFF 380、NOCUR 76、NOOLD 56、NOCELL 3 待人工改寫。Anthropic 未掛牌（11-19 交易），沿用 IPO 中點。
