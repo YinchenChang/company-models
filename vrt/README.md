@@ -36,8 +36,8 @@ AI 供應鏈：電源與散熱（機房設施端）。命題＝Vertiv 資料中�
 ## 建議補進 Siliconomics／Wattonomics
 Wattonomics：設施市場官方上下情境；2030–2032 設施端更換與服務需求；機櫃內外邊界與每 GW 內容對照；支出與認列的時差。
 
-## 待主串
-- `tools/target_summary/universe.csv`／`peers.csv`、`.github/workflows/ai-semis-build.yml` targets、`siliconomics` 的 `coord_meta` 尚無 vrt：待主串加入 coord_meta。本模型讀 Wattonomics 層，Coord 讀 Wattonomics，alt 讀數待主串（`tools/coord/alt_run.py vrt` 需先有建檔目標）。
+## 主串處理（2026-11-17）
+- Coord／alt 讀數：不適用（電力與機房範圍定案 2026-11-17）：機房設施供應商只讀 Wattonomics 廠房拆分，該數字只有 Wattonomics 一個權威層、沒有 Siliconomics 側的另一讀數，三層協調 C4 兩讀數不適用；與 Wattonomics 的差異走對帳單。 CI 建檔目標已由主串加入（2026-11-17）。
 - 相對倍數調整以 `RMX.add_block` 直接接入（own＝VRT、同業 ETN／SU.PA／2308.TW）；universe.csv 補齊後可改用 `RMX.apply`。
 
 ## 檢查結果（2026-11-17）

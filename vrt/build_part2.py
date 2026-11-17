@@ -162,7 +162,7 @@ for c in "CDEFGIJ": SE.column_dimensions[c].width = 16
 CO = wb.create_sheet("Coord")
 CO["A1"] = "Coord — 三層協調：Vertiv 的機房設施市場讀 Wattonomics v0.3.6（不讀 Siliconomics 的電源與散熱）；公司實績對層級隱含值並列。"
 CO["A2"] = ("對帳狀態：本模型讀 Wattonomics 層，未發現 Wattonomics 快照有「對帳中」旗標（names 內只有 NV 對帳項 WIF_Recon_NV_*，不含設施層），故不建 co_flag；"
-            "另一側讀數（alt_run）待主串把 vrt 加入 coord_meta 與建檔目標後再跑：Coord 讀 Wattonomics，alt 讀數待主串。")
+            "另一側讀數：不適用（電力與機房範圍定案 2026-11-17）：機房設施供應商只讀 Wattonomics 廠房拆分，該數字只有 Wattonomics 一個權威層、沒有 Siliconomics 側的另一讀數，三層協調 C4 兩讀數不適用；與 Wattonomics 的差異走對帳單。")
 hdr(CO, 4, ["讀取的層級與用途", "層級", "版本", "用在哪裡"])
 CO["A5"] = "機房設施支出（配電、UPS、冷卻）"; CO["B5"] = "Wattonomics"; CO["C5"] = "v0.3.6"; CO["D5"] = "Units 頁可及市場 → PL 頁資料中心設施產品營收（FY2027–FY2029）"
 CO["A6"] = "快照檔"; CO["B6"] = "wattonomics/data/wattonomics_snapshot_v0.3.6.json"; CO["C6"] = WSHA; CO["D6"] = "names.WIF_Spend_fac_<dist|ups|cool|gen|sum>_<年>"

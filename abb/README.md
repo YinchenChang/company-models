@@ -56,7 +56,7 @@
 - Robotics 為停業單位，不在 FCFF；出售淨款以 In 頁非營業投資加入。
 
 ## Coord
-- Coord 讀 Wattonomics，alt 讀數待主串：tools/coord/alt_run.py abb 失敗（workflow 目標未登錄 abb，且只支援 Siliconomics）；本分支不得改 .github 與 tools，未處理。
+- Coord／alt 讀數：不適用（電力與機房範圍定案 2026-11-17）：機房設施供應商只讀 Wattonomics 廠房拆分，該數字只有 Wattonomics 一個權威層、沒有 Siliconomics 側的另一讀數，三層協調 C4 兩讀數不適用；與 Wattonomics 的差異走對帳單。 CI 建檔目標已由主串加入（2026-11-17）。
 
 ## 檢查結果
 - check_company_html.py abb：全部通過。

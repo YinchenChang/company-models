@@ -67,7 +67,7 @@ def build(wb, c):
     for t in ["首版：新增五家工作單（2026-11-17）；公司原文為 Q4 2025 financial information（FY2025／FY2024，Robotics 重編後）與 Q3 2026 新聞稿（9M 2026、資產負債表、指引）。",
               "FY2026E＝前九個月實績＋Q4 模型（公司指引：Q4 可比營收成長與 Q3 相近、Operational EBITA 率季減幅小於歷史；Q4 另有約 2.4 億瑞士法郎房產出售收益）。",
               "三情境 A 順利／B 基準／C 不如預期，權重 0.3／0.5／0.2；FY2027–FY2032 為明確期；終值以 g＝MIN(3%, 美元 10 年期公債殖利率)、RONIC＝WACC。",
-              "Coord：讀 Wattonomics，alt 讀數待主串（tools/coord/alt_run.py 只支援 Siliconomics 與 workflow 登錄的建檔目標；本分支不得改 .github 與 tools）。"]:
+              "Coord／alt 讀數：不適用（電力與機房範圍定案 2026-11-17）：機房設施供應商只讀 Wattonomics 廠房拆分，該數字只有 Wattonomics 一個權威層、沒有 Siliconomics 側的另一讀數，三層協調 C4 兩讀數不適用；與 Wattonomics 的差異走對帳單。"]:
         put("• " + t)
     put("待判斷（區間與標記；判斷由 Andy 或未參與者複核）", True)
     for t in ["1. 資料中心營收拆分：ABB 不揭露。FY2025 占電氣化 10%–18%（基準 14%）、FY2026E 17%–27%（基準 22%）[Assumed]；Sens「資料中心校準」案例。",

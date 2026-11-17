@@ -699,7 +699,7 @@ for c, w in zip("BCDEF", [16, 18, 12, 110, 16]): RC.column_dimensions[c].width =
 # =============================================================== Coord
 CO = wb.create_sheet("Coord")
 CO["A1"] = "Coord — 三層基準：本模型讀哪一層（ABB 為電氣設備廠，AI 資料中心變數讀 Wattonomics 設施電力，不讀 Siliconomics；設施供應商例外）。"
-CO["A2"] = "狀態：另一側讀數（Wattonomics 對帳中旗標與另一側整本重建工具）尚未建置——Coord 讀 Wattonomics，alt 讀數待主串。本頁不含對帳中判定。"
+CO["A2"] = "狀態：另一側讀數不適用（電力與機房範圍定案 2026-11-17）：機房設施供應商只讀 Wattonomics 廠房拆分，該數字只有 Wattonomics 一個權威層、沒有 Siliconomics 側的另一讀數，三層協調 C4 兩讀數不適用；與 Wattonomics 的差異走對帳單。本頁不含對帳中判定。"
 hdr(CO, 4, ["讀取項目（Wattonomics 快照名稱）", "版本", "sha256 前 8 碼", "用在哪裡", "FY2025", "FY2026", "FY2027", "FY2030", "單位", "標記"])
 for i, (nm, use) in enumerate((("WIF_Spend_fac_dist（配電）", "Wat 頁第 5 列 → PL 頁資料中心營收"), ("WIF_Spend_fac_ups（UPS）", "Wat 頁第 6 列 → PL 頁資料中心營收"),
                                ("配電＋UPS（本模型採用）", "Wat 頁第 7 列；ABB 份額分母"), ("WIF_MktGW_Add（全市場新增 IT GW）", "對照（Wat 頁第 10 列）"))):

@@ -51,7 +51,7 @@ TODO = ["資料中心設施產品占營收比例 dcp：FY2026 取 0.72（範圍 
         "EPS 口徑：本模型 GAAP，共識與同業前瞻 EPS 為調整後或混合口徑；Comparable 因此略偏高（約加回攤銷的 0.7–0.9 美元），未另行調整。",
         "稀釋股數：評價用 3Q26 稀釋加權 392.7M（流通 385.1M），較保守。",
         "折現率：無風險利率 5.00%（同 NVIDIA 模型）、β 1.74、ERP 5% 使 WACC 約 13.3%（β 區間 1.45–2.05 對應 WACC 約 11.9%–14.8%）；終值隱含 EV／EBITDA 僅約 5 倍，是 DCF 遠低於同業倍數法的主因，不另行調整。",
-        "Coord／alt 讀數：待主串加入 coord_meta（vrt 讀 Wattonomics 層，非 Siliconomics hardware_companies）與建檔目標後，才能跑 tools/coord/alt_run.py vrt；Coord 讀 Wattonomics，alt 讀數待主串。"]
+        "Coord／alt 讀數：不適用（電力與機房範圍定案 2026-11-17）：機房設施供應商只讀 Wattonomics 廠房拆分，該數字只有 Wattonomics 一個權威層、沒有 Siliconomics 側的另一讀數，三層協調 C4 兩讀數不適用；與 Wattonomics 的差異走對帳單。"]
 for i, t in enumerate(TODO, 1): put(f"todo{i}", f"{i}. {t}")
 put("sp5", "")
 put("h_sug", "建議補進 Siliconomics／Wattonomics（本模型以 Assumed 暫代，不自行改上游）", True)
