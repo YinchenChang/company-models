@@ -25,7 +25,7 @@
   {
    "name": "Comparable 目標價",
    "sheet": "Val",
-   "find": "Comparable 目標價（同業",
+   "find": "Comparable 目標價（",
    "col": "B",
    "fmt": "n2",
    "patterns": [
@@ -65,7 +65,7 @@
   {
    "title": "Comparable 目標價",
    "sheet": "Val",
-   "find": "Comparable 目標價（同業",
+   "find": "Comparable 目標價（",
    "col": "B",
    "fmt": "n2"
   },

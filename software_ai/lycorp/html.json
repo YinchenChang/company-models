@@ -410,7 +410,7 @@
     },
     {
      "type": "table",
-     "caption": "對照列：分部 EV／EBITDA 加總（rel_mult＝1.00 與現行相對值；不進加權目標價）",
+     "caption": "對照列：分部 EV／EBITDA 加總（rel_mult 取一與現行相對值兩讀數；不進加權目標價）",
      "head": [
       "項目",
       "目標價"

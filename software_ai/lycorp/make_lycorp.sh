@@ -5,7 +5,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-VDATE="${VDATE:-20261117}"; VER="${VER:-0.2.0}"
+VDATE="${VDATE:-20261117}"; VER="${VER:-0.2.1}"
 OUTNAME="${VDATE}_LY個股模型_v${VER}.xlsx"
 SJ="software_ai/lycorp/data/sens_v${VER//./}_${VDATE}.json"
 python3 tools/tokenomics/import_tokenomics.py --check software_ai/lycorp/data/tokenomics_snapshot_v22.0.json

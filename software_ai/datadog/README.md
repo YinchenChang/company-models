@@ -17,7 +17,7 @@ DCF 為標準 FCFF 到 FY2032（股票薪酬視為費用、期中折現、RONIC�
 3. 比率基準持平於近四季；歷史有證據者（股票薪酬占營收：FY2023 22.7% → 近四季 20.1%）依斜率延伸並設下限，Sens 低案為全期持平。non-GAAP 費用率三項合計歷史無一致下降（56.9%／58.6%／56.2%），故持平。
 4. 股數取 10-Q 封面；含 RSU 與選擇權庫藏股法；2029 可轉換票據預設視為債務（現價低於轉換價），if-converted 為 Sens。
 5. 淨債務只計票據本金與融資租賃；營業租賃不計。
-6. Comparable 倍數標分母期間（資料商未載明）與會計準則（US GAAP；租賃處理未找到）；揭露本公司現行倍數 ÷ 同業中位數與隱含重估。相對倍數 rel_m 改讀 software_ai/data/relmult_hist/out/datadog.json 的 geo_base（近 20 財季 PS 與 PSG 相對值幾何平均，Derived；base_source 見 In 頁）；本模型 Comparable 為 P/S 與 P/E 兩腿，以 PS／PSG 相對值近似套用於 P/E 腿；divergence_gt_30pct 為否（PS 與 PSG 兩讀數相近），無需另述成長比原因。Sens 另有 ps_only、psg_only、sens.low、sens.high 四案。
+6. Comparable 倍數標分母期間（資料商未載明）與會計準則（US GAAP；租賃處理未找到）；揭露本公司現行倍數 ÷ 同業中位數與隱含重估。相對倍數 rel_m 改讀 software_ai/data/relmult_hist/out/datadog.json 的 geo_base（近 20 財季 PS 與 PSG 相對值幾何平均，Derived；base_source 見 In 頁）；G6：Comparable 主腿為同業 P/S（relmult_hist 最近一季）× rel_m × 目標時點 TTM 營收 ÷ 稀釋股數，與 PS／PSG 相對值同口徑；Forward P/E 腿改為對照列（rel_m＝1.00 與本公司現行相對值兩讀數），不進加權目標價，故不需把 PS／PSG 相對值套到盈餘型倍數；divergence_gt_30pct 為否（PS 與 PSG 兩讀數相近），無需另述成長比原因。Sens 另有 ps_only、psg_only、sens.low、sens.high 四案。
 7. Val 頁有「估值評等」「入不敷出判定用」「投資建議」三列；`check_rating_gate.py --strict` 已跑。
 8. README 頁文字數字由公式組字；DCF 與 Comparable 落差以公式分解。
 9. 主導變數整本重算反解寫在 Recon 第 6 節（rel_m：Comparable 需要的相對倍數；DCF 一腿無單一營運變數可支持現價）。
@@ -39,12 +39,12 @@ v0.2（2026-11-17，G5）：相對倍數讀歷史相對倍數 geo_base；無風�
 
 ## 版本表（由成品產生，不手寫）
 <!-- version-table: dist/_待刪除/20261116_Datadog個股模型_v0.1.xlsx｜dist/20261117_Datadog個股模型_v0.2.xlsx -->
-| 項目 | v0.1 |
-|---|---|
-| 現價 | 184.16 |
-| DCF 目標價 | 21.23 |
-| Comparable 目標價 | 139.81 |
-| 加權目標價（上檔空間） | 80.52（-56.3%） |
-| 投資建議 | 強力放空 |
-| 收支關卡 A／B／C（FY2026–FY2030，US$M） | 8,349.3／7,657.4／6,726.2 |
+| 項目 | v0.1 | v0.2 |
+|---|---|---|
+| 現價 | 184.16 | 184.16 |
+| DCF 目標價 | 21.23 | 21.27 |
+| Comparable 目標價 | 139.81 | 199.46 |
+| 加權目標價（上檔空間） | 80.52（-56.3%） | 110.36（-40.1%） |
+| 投資建議 | 強力放空 | 放空 |
+| 收支關卡 A／B／C（FY2026–FY2030，US$M） | 8,349.3／7,657.4／6,726.2 | 8,349.3／7,657.4／6,726.2 |
 <!-- /version-table -->
