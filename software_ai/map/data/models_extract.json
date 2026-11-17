@@ -1,0 +1,2520 @@
+{
+ "generated": "2026-11-17",
+ "models": {
+  "SNOW": {
+   "folder": "snowflake",
+   "ticker": "SNOW",
+   "status": "ok",
+   "html": {
+    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.html",
+    "name": "20261117_Snowflake個股模型_v0.2.html",
+    "date": "20261117",
+    "version": "v0.2",
+    "title": "Snowflake個股模型"
+   },
+   "xlsx": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.xlsx",
+   "date": "2026-11-17",
+   "version": "v0.2",
+   "title": "Snowflake個股模型",
+   "html_matches": true,
+   "recalculated": false,
+   "price": {
+    "value": 291,
+    "cell": "Val!B5",
+    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.xlsx",
+    "label": "現價（US$）",
+    "date": "2026-11-13"
+   },
+   "dcf": {
+    "value": 24.1569811012914,
+    "cell": "Val!B8",
+    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.xlsx",
+    "label": "DCF 目標價（情境加權；US$）"
+   },
+   "comp": {
+    "value": 302.976147969541,
+    "cell": "Val!B9",
+    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.xlsx",
+    "label": "Comparable 目標價（情境加權；US$）"
+   },
+   "tp": null,
+   "upside": {
+    "value": -0.437915585788948,
+    "cell": "Val!B11",
+    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.xlsx",
+    "label": "上檔空間（相對現價）"
+   },
+   "rating": {
+    "value": "放空",
+    "cell": "Val!B12",
+    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.xlsx",
+    "label": "估值評等（只看上檔空間）"
+   },
+   "rec": {
+    "value": "放空",
+    "cell": "Val!B16",
+    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.xlsx",
+    "label": "投資建議"
+   },
+   "gate": {
+    "basis": {
+     "value": 10722.9152037658,
+     "cell": "Val!B14",
+     "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.xlsx",
+     "label": "入不敷出判定用（情境 B 期間合計；US$M）"
+    },
+    "abc": {
+     "values": [
+      11814.316405943,
+      10722.9152037658,
+      9296.43546759124
+     ],
+     "cells": [
+      "Val!C13",
+      "Val!D13",
+      "Val!E13"
+     ],
+     "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.xlsx",
+     "label": "收支關卡（FY2026–FY2030 公司口徑自由現金流合計，未扣股利因無股利；情境 A／B／C；US$M）"
+    },
+    "verdict": {
+     "value": "通過",
+     "cell": "Val!B15",
+     "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.xlsx",
+     "label": "入不敷出判定"
+    }
+   },
+   "scen": {
+    "values": [
+     183.260536753587,
+     163.949336301646,
+     143.107048784785
+    ],
+    "cells": [
+     "Val!C54",
+     "Val!D54",
+     "Val!E54"
+    ],
+    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.xlsx",
+    "label": "情境加權目標價（各情境 DCF 與 Comparable 加權；US$）"
+   },
+   "sbc_dcf": {
+    "value": 71.5513470870952,
+    "cell": "Recon!B36",
+    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.xlsx",
+    "label": "DCF 目標價（情境加權；SBC 加回；US$）"
+   },
+   "sbc_abc": {
+    "values": [
+     86.6644343151073,
+     72.075667236803,
+     55.3896195596677
+    ],
+    "cells": [
+     "Recon!B35",
+     "Recon!C35",
+     "Recon!D35"
+    ],
+    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.xlsx",
+    "label": "DCF 情境目標價（12 個月後；SBC 加回；US$）"
+   },
+   "sbc_note": null,
+   "ai_net": null,
+   "missing": [
+    "tp",
+    "ai_net"
+   ],
+   "relmult": {
+    "file": "software_ai/data/relmult_hist/out/snowflake.json",
+    "generated": "2026-11-17",
+    "ccy": "USD",
+    "peers": [
+     "DDOG",
+     "MDB",
+     "NET",
+     "CRWD",
+     "NOW",
+     "PLTR",
+     "ESTC",
+     "ZS"
+    ],
+    "peers_missing": [],
+    "ps_reading": 1.255454446397374,
+    "psg_reading": 1.148179737728738,
+    "geo_base": 1.2006195721355348,
+    "base_source": "PS 與 PSG 兩讀數幾何平均（Derived）",
+    "divergence": 0.08544691444318775,
+    "divergence_gt_30pct": false,
+    "valid_points": {
+     "ps": 20,
+     "psg": 16,
+     "window_quarters": 20,
+     "min_required": 12,
+     "meets_12": true
+    },
+    "sens": {
+     "low": 0.7416301334372669,
+     "high": 2.108309755284493,
+     "ps_only": 1.255454446397374,
+     "psg_only": 1.148179737728738,
+     "ps_low": 0.6855231143552312,
+     "ps_high": 2.4099443671766343,
+     "psg_low": 0.8023292625800009,
+     "psg_high": 1.8444284792496077
+    },
+    "gaps": [],
+    "groups": []
+   }
+  },
+  "DDOG": {
+   "folder": "datadog",
+   "ticker": "DDOG",
+   "status": "ok",
+   "html": {
+    "file": "software_ai/datadog/dist/20261116_Datadog個股模型_v0.1.html",
+    "name": "20261116_Datadog個股模型_v0.1.html",
+    "date": "20261116",
+    "version": "v0.1",
+    "title": "Datadog個股模型"
+   },
+   "xlsx": "software_ai/datadog/dist/20261117_Datadog個股模型_v0.2.xlsx",
+   "date": "2026-11-17",
+   "version": "v0.2",
+   "title": "Datadog個股模型",
+   "html_matches": false,
+   "recalculated": false,
+   "price": {
+    "value": 184.16,
+    "cell": "Val!B11",
+    "file": "software_ai/datadog/dist/20261117_Datadog個股模型_v0.2.xlsx",
+    "label": "現價（2026-11-13 收盤）",
+    "date": "2026-11-13"
+   },
+   "dcf": {
+    "value": 21.267754804324,
+    "cell": "Val!B6",
+    "file": "software_ai/datadog/dist/20261117_Datadog個股模型_v0.2.xlsx",
+    "label": "DCF 目標價（情境加權）"
+   },
+   "comp": {
+    "value": 202.792343664452,
+    "cell": "Val!B9",
+    "file": "software_ai/datadog/dist/20261117_Datadog個股模型_v0.2.xlsx",
+    "label": "Comparable 目標價（同業 Forward 倍數，情境加權）"
+   },
+   "tp": null,
+   "upside": {
+    "value": -0.391670019361491,
+    "cell": "Val!B13",
+    "file": "software_ai/datadog/dist/20261117_Datadog個股模型_v0.2.xlsx",
+    "label": "上檔空間：加權目標價"
+   },
+   "rating": {
+    "value": "放空",
+    "cell": "Val!B16",
+    "file": "software_ai/datadog/dist/20261117_Datadog個股模型_v0.2.xlsx",
+    "label": "估值評等（依加權目標價上檔空間，不含收支關卡）"
+   },
+   "rec": {
+    "value": "放空",
+    "cell": "Val!B19",
+    "file": "software_ai/datadog/dist/20261117_Datadog個股模型_v0.2.xlsx",
+    "label": "投資建議"
+   },
+   "gate": {
+    "basis": {
+     "value": 7657.37354733278,
+     "cell": "Val!B18",
+     "file": "software_ai/datadog/dist/20261117_Datadog個股模型_v0.2.xlsx",
+     "label": "入不敷出判定用：基準情境 B 收支關卡合計（US$M）"
+    },
+    "abc": null,
+    "verdict": {
+     "value": "通過（FY2026 至 FY2030 自由現金流合計為正）",
+     "cell": "Val!B17",
+     "file": "software_ai/datadog/dist/20261117_Datadog個股模型_v0.2.xlsx",
+     "label": "收支關卡判定"
+    }
+   },
+   "scen": {
+    "values": [
+     121.847941228702,
+     112.933434998152,
+     100.405385712546
+    ],
+    "cells": [
+     "Val!B20",
+     "Val!C20",
+     "Val!D20"
+    ],
+    "file": "software_ai/datadog/dist/20261117_Datadog個股模型_v0.2.xlsx",
+    "label": "情境目標價 A／B／C（DCF 與 Comparable 加權）"
+   },
+   "sbc_dcf": {
+    "value": 57.5740315411229,
+    "cell": "Val!B8",
+    "file": "software_ai/datadog/dist/20261117_Datadog個股模型_v0.2.xlsx",
+    "label": "DCF（股票薪酬加回）目標價（情境加權；只作對照）"
+   },
+   "sbc_abc": null,
+   "sbc_note": null,
+   "ai_net": {
+    "values": [
+     2528.7202489099,
+     1345.78213010299,
+     300.767202899032
+    ],
+    "cells": [
+     "Val!B75",
+     "Val!C75",
+     "Val!D75"
+    ],
+    "file": "software_ai/datadog/dist/20261117_Datadog個股模型_v0.2.xlsx",
+    "label": "AI 淨效果（FY2032E，Thesis 頁；US$M）A／B／C"
+   },
+   "missing": [
+    "tp"
+   ],
+   "relmult": {
+    "file": "software_ai/data/relmult_hist/out/datadog.json",
+    "generated": "2026-11-17",
+    "ccy": "USD",
+    "peers": [
+     "SNOW",
+     "NET",
+     "MDB",
+     "DT",
+     "ESTC"
+    ],
+    "peers_missing": [],
+    "ps_reading": 1.4440433212996389,
+    "psg_reading": 1.4570048893192393,
+    "geo_base": 1.450509627517986,
+    "base_source": "PS 與 PSG 兩讀數幾何平均（Derived）",
+    "divergence": 0.00897588585357334,
+    "divergence_gt_30pct": false,
+    "valid_points": {
+     "ps": 19,
+     "psg": 15,
+     "window_quarters": 20,
+     "min_required": 12,
+     "meets_12": true
+    },
+    "sens": {
+     "low": 0.8712651138253313,
+     "high": 2.3958974358974356,
+     "ps_only": 1.4440433212996389,
+     "psg_only": 1.4570048893192393,
+     "ps_low": 0.8670129870129871,
+     "ps_high": 2.3958974358974356,
+     "psg_low": 0.8755380945149521,
+     "psg_high": 2.3958974358974356
+    },
+    "gaps": [],
+    "groups": []
+   }
+  },
+  "PLTR": {
+   "folder": "palantir",
+   "ticker": "PLTR",
+   "status": "ok",
+   "html": {
+    "file": "software_ai/palantir/dist/20261117_Palantir個股模型_v0.2.html",
+    "name": "20261117_Palantir個股模型_v0.2.html",
+    "date": "20261117",
+    "version": "v0.2",
+    "title": "Palantir個股模型"
+   },
+   "xlsx": "software_ai/palantir/dist/20261117_Palantir個股模型_v0.2.xlsx",
+   "date": "2026-11-17",
+   "version": "v0.2",
+   "title": "Palantir個股模型",
+   "html_matches": true,
+   "recalculated": false,
+   "price": {
+    "value": 167.99,
+    "cell": "Val!B5",
+    "file": "software_ai/palantir/dist/20261117_Palantir個股模型_v0.2.xlsx",
+    "label": "現價（US$）",
+    "date": "2026-11-13"
+   },
+   "dcf": {
+    "value": 39.5202113154738,
+    "cell": "Val!B8",
+    "file": "software_ai/palantir/dist/20261117_Palantir個股模型_v0.2.xlsx",
+    "label": "DCF 目標價（情境加權）"
+   },
+   "comp": {
+    "value": 203.324454263946,
+    "cell": "Val!B9",
+    "file": "software_ai/palantir/dist/20261117_Palantir個股模型_v0.2.xlsx",
+    "label": "Comparable 目標價（情境加權）"
+   },
+   "tp": null,
+   "upside": {
+    "value": -0.277204995596702,
+    "cell": "Val!B12",
+    "file": "software_ai/palantir/dist/20261117_Palantir個股模型_v0.2.xlsx",
+    "label": "上檔空間：加權目標價"
+   },
+   "rating": {
+    "value": "放空",
+    "cell": "Val!B18",
+    "file": "software_ai/palantir/dist/20261117_Palantir個股模型_v0.2.xlsx",
+    "label": "估值評等（依上檔空間五級）"
+   },
+   "rec": {
+    "value": "放空",
+    "cell": "Val!B20",
+    "file": "software_ai/palantir/dist/20261117_Palantir個股模型_v0.2.xlsx",
+    "label": "投資建議"
+   },
+   "gate": {
+    "basis": {
+     "value": 43897.7081133938,
+     "cell": "Val!B19",
+     "file": "software_ai/palantir/dist/20261117_Palantir個股模型_v0.2.xlsx",
+     "label": "入不敷出判定用：FY2026–30 自由現金流扣股利合計（B）"
+    },
+    "abc": null,
+    "verdict": null
+   },
+   "scen": null,
+   "sbc_dcf": {
+    "value": 49.8841826568691,
+    "cell": "Val!B15",
+    "file": "software_ai/palantir/dist/20261117_Palantir個股模型_v0.2.xlsx",
+    "label": "DCF（股票薪酬加回）目標價（情境加權；只作對照，不進加權目標價）"
+   },
+   "sbc_abc": null,
+   "sbc_note": null,
+   "ai_net": null,
+   "missing": [
+    "tp",
+    "scen",
+    "ai_net"
+   ],
+   "relmult": {
+    "file": "software_ai/data/relmult_hist/out/palantir.json",
+    "generated": "2026-11-17",
+    "ccy": "USD",
+    "peers": [
+     "SNOW",
+     "DDOG",
+     "NET",
+     "MDB",
+     "NOW",
+     "BAH",
+     "LDOS",
+     "CACI"
+    ],
+    "peers_missing": [],
+    "ps_reading": 1.6473487917887346,
+    "psg_reading": 6.274805520475712,
+    "geo_base": 3.2150883802572126,
+    "base_source": "PS 與 PSG 兩讀數幾何平均（Derived）",
+    "divergence": 2.8090327632816385,
+    "divergence_gt_30pct": true,
+    "valid_points": {
+     "ps": 20,
+     "psg": 16,
+     "window_quarters": 20,
+     "min_required": 12,
+     "meets_12": true
+    },
+    "sens": {
+     "low": 1.2966074222881387,
+     "high": 10.480120018584511,
+     "ps_only": 1.6473487917887346,
+     "psg_only": 6.274805520475712,
+     "ps_low": 0.6267322306660705,
+     "ps_high": 8.596919127086007,
+     "psg_low": 2.682470639408439,
+     "psg_high": 12.775846088616696
+    },
+    "gaps": [],
+    "groups": [
+     "商業",
+     "政府"
+    ]
+   }
+  },
+  "CRWD": {
+   "folder": "crowdstrike",
+   "ticker": "CRWD",
+   "status": "ok",
+   "html": {
+    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.html",
+    "name": "20261117_CrowdStrike個股模型_v0.2.html",
+    "date": "20261117",
+    "version": "v0.2",
+    "title": "CrowdStrike個股模型"
+   },
+   "xlsx": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.xlsx",
+   "date": "2026-11-17",
+   "version": "v0.2",
+   "title": "CrowdStrike個股模型",
+   "html_matches": true,
+   "recalculated": false,
+   "price": {
+    "value": 226.61,
+    "cell": "Val!B9",
+    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.xlsx",
+    "label": "現價（拆股後）",
+    "date": "2026-11-13"
+   },
+   "dcf": {
+    "value": 5.17560539872742,
+    "cell": "Val!B6",
+    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.xlsx",
+    "label": "DCF 目標價（情境加權）"
+   },
+   "comp": {
+    "value": 113.64496791417,
+    "cell": "Val!B7",
+    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.xlsx",
+    "label": "Comparable 目標價（同業 EV／營收法；單一分部）"
+   },
+   "tp": null,
+   "upside": {
+    "value": -0.737830251725659,
+    "cell": "Val!B11",
+    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.xlsx",
+    "label": "上檔空間：加權目標價"
+   },
+   "rating": {
+    "value": "強力放空",
+    "cell": "Val!B25",
+    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.xlsx",
+    "label": "估值評等（只看上檔空間）"
+   },
+   "rec": {
+    "value": "強力放空",
+    "cell": "Val!B14",
+    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.xlsx",
+    "label": "投資建議"
+   },
+   "gate": {
+    "basis": {
+     "value": 10416.3878745828,
+     "cell": "Val!B26",
+     "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.xlsx",
+     "label": "入不敷出判定用（收支關卡：三情境最小值，同 B16，US$M）"
+    },
+    "abc": null,
+    "verdict": {
+     "value": "通過",
+     "cell": "Val!B27",
+     "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.xlsx",
+     "label": "入不敷出判定"
+    }
+   },
+   "scen": null,
+   "sbc_dcf": {
+    "value": 25.9602998146609,
+    "cell": "Recon!B39",
+    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.xlsx",
+    "label": "DCF 目標價（目標時點，三情境加權），股票薪酬加回"
+   },
+   "sbc_abc": null,
+   "sbc_note": null,
+   "ai_net": null,
+   "missing": [
+    "tp",
+    "scen",
+    "ai_net"
+   ],
+   "relmult": {
+    "file": "software_ai/data/relmult_hist/out/crowdstrike.json",
+    "generated": "2026-11-17",
+    "ccy": "USD",
+    "peers": [
+     "PANW",
+     "FTNT",
+     "ZS",
+     "OKTA",
+     "S",
+     "CHKP"
+    ],
+    "peers_missing": [],
+    "ps_reading": 1.9620140790097227,
+    "psg_reading": 1.4872292638208602,
+    "geo_base": 1.7082051265383187,
+    "base_source": "PS 與 PSG 兩讀數幾何平均（Derived）",
+    "divergence": 0.2419884853367098,
+    "divergence_gt_30pct": false,
+    "valid_points": {
+     "ps": 20,
+     "psg": 16,
+     "window_quarters": 20,
+     "min_required": 12,
+     "meets_12": true
+    },
+    "sens": {
+     "low": 1.0927646502178614,
+     "high": 3.4734804412976454,
+     "ps_only": 1.9620140790097227,
+     "psg_only": 1.4872292638208602,
+     "ps_low": 1.2773722627737225,
+     "ps_high": 4.702349869451697,
+     "psg_low": 0.934836786085199,
+     "psg_high": 2.565752594135258
+    },
+    "gaps": [],
+    "groups": []
+   }
+  },
+  "PANW": {
+   "folder": "paloalto",
+   "ticker": "PANW",
+   "status": "ok",
+   "html": {
+    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.html",
+    "name": "20261117_Palo Alto Networks個股模型_v0.2.html",
+    "date": "20261117",
+    "version": "v0.2",
+    "title": "Palo Alto Networks個股模型"
+   },
+   "xlsx": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.xlsx",
+   "date": "2026-11-17",
+   "version": "v0.2",
+   "title": "Palo Alto Networks個股模型",
+   "html_matches": true,
+   "recalculated": false,
+   "price": {
+    "value": 322.24,
+    "cell": "Val!B15",
+    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.xlsx",
+    "label": "現價（2026-11-13 收盤）",
+    "date": "2026-11-13"
+   },
+   "dcf": {
+    "value": 49.1517201516108,
+    "cell": "Val!B17",
+    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.xlsx",
+    "label": "DCF 目標價（三情境加權）"
+   },
+   "comp": {
+    "value": 225.129277814184,
+    "cell": "Val!B18",
+    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.xlsx",
+    "label": "Comparable 目標價（同業前瞻本益比中位數法，三情境加權）"
+   },
+   "tp": {
+    "value": 137.140498982898,
+    "cell": "Val!B16",
+    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.xlsx",
+    "label": "加權目標價（DCF 與同業本益比加權）"
+   },
+   "upside": {
+    "value": -0.574415035430432,
+    "cell": "Val!B20",
+    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.xlsx",
+    "label": "加權目標價上檔空間"
+   },
+   "rating": {
+    "value": "強力放空",
+    "cell": "Val!B24",
+    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.xlsx",
+    "label": "估值評等（只看上檔空間）"
+   },
+   "rec": {
+    "value": "強力放空",
+    "cell": "Val!B28",
+    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.xlsx",
+    "label": "投資建議"
+   },
+   "gate": {
+    "basis": {
+     "value": 29033.5528244749,
+     "cell": "Val!B25",
+     "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.xlsx",
+     "label": "入不敷出判定用（收支關卡：FY2027–FY2031 自由現金流扣股利合計，情境 B）"
+    },
+    "abc": {
+     "values": [
+      30331.2255391138,
+      29033.5528244749,
+      26164.1506205777
+     ],
+     "cells": [
+      "Val!B26",
+      "Val!C26",
+      "Val!D26"
+     ],
+     "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.xlsx",
+     "label": "收支關卡 A／B／C（FY2027–FY2031 自由現金流扣股利合計，US$M）"
+    },
+    "verdict": {
+     "value": "通過",
+     "cell": "Val!B27",
+     "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.xlsx",
+     "label": "入不敷出判定"
+    }
+   },
+   "scen": {
+    "values": [
+     141.693306697617,
+     139.247820075655,
+     128.373049082663
+    ],
+    "cells": [
+     "Val!B29",
+     "Val!C29",
+     "Val!D29"
+    ],
+    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.xlsx",
+    "label": "情境目標價 A／B／C"
+   },
+   "sbc_dcf": {
+    "value": 82.731600181245,
+    "cell": "Val!B32",
+    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.xlsx",
+    "label": "DCF（股票薪酬加回）目標價（三情境加權；只作對照，不進加權目標價）"
+   },
+   "sbc_abc": {
+    "values": [
+     90.2162985651665,
+     84.5745481021691,
+     71.5610059554754
+    ],
+    "cells": [
+     "Val!B33",
+     "Val!C33",
+     "Val!D33"
+    ],
+    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.xlsx",
+    "label": "情境 DCF（股票薪酬加回）目標價 A／B／C"
+   },
+   "sbc_note": null,
+   "ai_net": null,
+   "missing": [
+    "ai_net"
+   ],
+   "relmult": {
+    "file": "software_ai/data/relmult_hist/out/paloalto.json",
+    "generated": "2026-11-17",
+    "ccy": "USD",
+    "peers": [
+     "FTNT",
+     "ZS",
+     "CHKP"
+    ],
+    "peers_missing": [],
+    "ps_reading": 1.1594302795370166,
+    "psg_reading": 1.4416760569670555,
+    "geo_base": 1.2928738816029726,
+    "base_source": "PS 與 PSG 兩讀數幾何平均（Derived）",
+    "divergence": 0.24343488557392612,
+    "divergence_gt_30pct": false,
+    "valid_points": {
+     "ps": 20,
+     "psg": 16,
+     "window_quarters": 20,
+     "min_required": 12,
+     "meets_12": true
+    },
+    "sens": {
+     "low": 0.4982987722595606,
+     "high": 2.4330435896191496,
+     "ps_only": 1.1594302795370166,
+     "psg_only": 1.4416760569670555,
+     "ps_low": 0.33604419211293535,
+     "ps_high": 3.231824417009602,
+     "psg_low": 0.7388958722189074,
+     "psg_high": 1.8316901988333634
+    },
+    "gaps": [],
+    "groups": []
+   }
+  },
+  "4704": {
+   "folder": "trendmicro",
+   "ticker": "4704",
+   "status": "ok",
+   "html": {
+    "file": "software_ai/trendmicro/dist/20261117_趨勢科技個股模型_v0.2.html",
+    "name": "20261117_趨勢科技個股模型_v0.2.html",
+    "date": "20261117",
+    "version": "v0.2",
+    "title": "趨勢科技個股模型"
+   },
+   "xlsx": "software_ai/trendmicro/dist/20261117_趨勢科技個股模型_v0.2.xlsx",
+   "date": "2026-11-17",
+   "version": "v0.2",
+   "title": "趨勢科技個股模型",
+   "html_matches": true,
+   "recalculated": false,
+   "price": {
+    "value": 7214,
+    "cell": "Val!B28",
+    "file": "software_ai/trendmicro/dist/20261117_趨勢科技個股模型_v0.2.xlsx",
+    "label": "現價（2026-11-13 收盤）",
+    "date": "2026-11-13"
+   },
+   "dcf": {
+    "value": 9656.68766081895,
+    "cell": "Val!B24",
+    "file": "software_ai/trendmicro/dist/20261117_趨勢科技個股模型_v0.2.xlsx",
+    "label": "DCF 目標價（情境加權）"
+   },
+   "comp": {
+    "value": 4651.90967481356,
+    "cell": "Val!B25",
+    "file": "software_ai/trendmicro/dist/20261117_趨勢科技個股模型_v0.2.xlsx",
+    "label": "Comparable 目標價（情境加權）"
+   },
+   "tp": null,
+   "upside": {
+    "value": -0.00827575993675456,
+    "cell": "Val!B29",
+    "file": "software_ai/trendmicro/dist/20261117_趨勢科技個股模型_v0.2.xlsx",
+    "label": "加權目標價上檔空間（持有期間 12 個月，非年化）"
+   },
+   "rating": {
+    "value": "中立",
+    "cell": "Val!B32",
+    "file": "software_ai/trendmicro/dist/20261117_趨勢科技個股模型_v0.2.xlsx",
+    "label": "估值評等（只看上檔空間；> +50%、> +25%、≥ −25%、≥ −50%）"
+   },
+   "rec": {
+    "value": "中立",
+    "cell": "Val!B35",
+    "file": "software_ai/trendmicro/dist/20261117_趨勢科技個股模型_v0.2.xlsx",
+    "label": "投資建議（收支不足＝入不敷出且估值評等為買進以上）"
+   },
+   "gate": {
+    "basis": {
+     "value": 137.730839340298,
+     "cell": "Val!B33",
+     "file": "software_ai/trendmicro/dist/20261117_趨勢科技個股模型_v0.2.xlsx",
+     "label": "入不敷出判定用（基準情境 B；FY2026–FY2030 自由現金流扣股利合計，¥B）"
+    },
+    "abc": null,
+    "verdict": {
+     "value": "通過",
+     "cell": "Val!B34",
+     "file": "software_ai/trendmicro/dist/20261117_趨勢科技個股模型_v0.2.xlsx",
+     "label": "入不敷出判定"
+    }
+   },
+   "scen": {
+    "values": [
+     9355.14719947216,
+     7425.78666070414,
+     4410.47415038457
+    ],
+    "cells": [
+     "Val!B22",
+     "Val!C22",
+     "Val!D22"
+    ],
+    "file": "software_ai/trendmicro/dist/20261117_趨勢科技個股模型_v0.2.xlsx",
+    "label": "各情境加權目標價（w_dcf×DCF＋(1−w_dcf)×Comparable）"
+   },
+   "sbc_dcf": {
+    "value": 9689.47849614937,
+    "cell": "Val!B40",
+    "file": "software_ai/trendmicro/dist/20261117_趨勢科技個股模型_v0.2.xlsx",
+    "label": "DCF 目標價（股票薪酬加回；情境加權；對照，不進加權目標價）"
+   },
+   "sbc_abc": null,
+   "sbc_note": null,
+   "ai_net": null,
+   "missing": [
+    "tp",
+    "ai_net"
+   ],
+   "relmult": {
+    "file": "software_ai/data/relmult_hist/out/trendmicro.json",
+    "generated": "2026-11-17",
+    "ccy": "JPY",
+    "peers": [
+     "CHKP",
+     "GEN",
+     "QLYS",
+     "FTNT"
+    ],
+    "peers_missing": [],
+    "ps_reading": 0.49771309313203926,
+    "psg_reading": 0.24585125400463764,
+    "geo_base": 0.3498047856748659,
+    "base_source": "PS 與 PSG 兩讀數幾何平均（Derived）",
+    "divergence": 0.5060382027373844,
+    "divergence_gt_30pct": true,
+    "valid_points": {
+     "ps": 20,
+     "psg": 14,
+     "window_quarters": 20,
+     "min_required": 12,
+     "meets_12": true
+    },
+    "sens": {
+     "low": 0.2643425299011246,
+     "high": 0.7447435031218863,
+     "ps_only": 0.49771309313203926,
+     "psg_only": 0.24585125400463764,
+     "ps_low": 0.40414507772020725,
+     "ps_high": 0.6619318181818182,
+     "psg_low": 0.17290071552697056,
+     "psg_high": 0.837915432084443
+    },
+    "gaps": [],
+    "groups": []
+   }
+  },
+  "CRM": {
+   "folder": "salesforce",
+   "ticker": "CRM",
+   "status": "dist 無現行成品（改版中；_待刪除/ 不計）",
+   "relmult": {
+    "file": "software_ai/data/relmult_hist/out/salesforce.json",
+    "generated": "2026-11-17",
+    "ccy": "USD",
+    "peers": [
+     "NOW",
+     "ADBE",
+     "WDAY",
+     "INTU",
+     "HUBS",
+     "SAP"
+    ],
+    "peers_missing": [],
+    "ps_reading": 0.664042432104019,
+    "psg_reading": 0.7915395672351249,
+    "geo_base": 0.7249936960645761,
+    "base_source": "PS 與 PSG 兩讀數幾何平均（Derived）",
+    "divergence": 0.19200148810841955,
+    "divergence_gt_30pct": false,
+    "valid_points": {
+     "ps": 20,
+     "psg": 16,
+     "window_quarters": 20,
+     "min_required": 12,
+     "meets_12": true
+    },
+    "sens": {
+     "low": 0.5095393377766311,
+     "high": 0.9702393013170524,
+     "ps_only": 0.664042432104019,
+     "psg_only": 0.7915395672351249,
+     "ps_low": 0.534610630407911,
+     "ps_high": 0.8473244968090329,
+     "psg_low": 0.4856437975124967,
+     "psg_high": 1.110984404871235
+    },
+    "gaps": [],
+    "groups": []
+   }
+  },
+  "HUBS": {
+   "folder": "hubspot",
+   "ticker": "HUBS",
+   "status": "ok",
+   "html": {
+    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.html",
+    "name": "20261117_HubSpot個股模型_v0.2.html",
+    "date": "20261117",
+    "version": "v0.2",
+    "title": "HubSpot個股模型"
+   },
+   "xlsx": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.xlsx",
+   "date": "2026-11-17",
+   "version": "v0.2",
+   "title": "HubSpot個股模型",
+   "html_matches": true,
+   "recalculated": false,
+   "price": {
+    "value": 217.25,
+    "cell": "Val!B9",
+    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.xlsx",
+    "label": "現價",
+    "date": "2026-11-13"
+   },
+   "dcf": {
+    "value": 90.6907168554095,
+    "cell": "Val!B6",
+    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.xlsx",
+    "label": "DCF 目標價（情境加權）"
+   },
+   "comp": {
+    "value": 356.966475029558,
+    "cell": "Val!B7",
+    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.xlsx",
+    "label": "Comparable 目標價（同業前瞻 P/E 中位數法；情境加權）"
+   },
+   "tp": null,
+   "upside": {
+    "value": 0.0302812241311097,
+    "cell": "Val!B11",
+    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.xlsx",
+    "label": "上檔空間：加權目標價"
+   },
+   "rating": {
+    "value": "中立",
+    "cell": "Val!B15",
+    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.xlsx",
+    "label": "估值評等（依加權目標價上檔空間；五級）"
+   },
+   "rec": {
+    "value": "中立",
+    "cell": "Val!B17",
+    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.xlsx",
+    "label": "投資建議"
+   },
+   "gate": {
+    "basis": {
+     "value": 4080.72061589778,
+     "cell": "Val!B16",
+     "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.xlsx",
+     "label": "入不敷出判定用：收支關卡（情境 B；FY2026–FY2030 自由現金流減股利合計，US$M）"
+    },
+    "abc": {
+     "values": [
+      4219.59451018647,
+      4080.72061589778,
+      3897.59920776701
+     ],
+     "cells": [
+      "Val!B19",
+      "Val!C19",
+      "Val!D19"
+     ],
+     "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.xlsx",
+     "label": "收支關卡：FY2026–FY2030 自由現金流減股利合計（US$M；情境 A／B／C）"
+    },
+    "verdict": null
+   },
+   "scen": null,
+   "sbc_dcf": {
+    "value": 207.176339841715,
+    "cell": "Val!B31",
+    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.xlsx",
+    "label": "對照：DCF（股票薪酬加回）目標價（US$；情境加權；不進加權目標價）"
+   },
+   "sbc_abc": null,
+   "sbc_note": null,
+   "ai_net": null,
+   "missing": [
+    "tp",
+    "scen",
+    "ai_net"
+   ],
+   "relmult": {
+    "file": "software_ai/data/relmult_hist/out/hubspot.json",
+    "generated": "2026-11-17",
+    "ccy": "USD",
+    "peers": [
+     "CRM",
+     "NOW",
+     "WDAY",
+     "ADBE",
+     "INTU",
+     "TEAM",
+     "MNDY",
+     "DOCU",
+     "TWLO",
+     "ZM",
+     "DDOG"
+    ],
+    "peers_missing": [],
+    "ps_reading": 1.2591749963481562,
+    "psg_reading": 1.283918493055893,
+    "geo_base": 1.2714865566748963,
+    "base_source": "PS 與 PSG 兩讀數幾何平均（Derived）",
+    "divergence": 0.019650562296342766,
+    "divergence_gt_30pct": false,
+    "valid_points": {
+     "ps": 20,
+     "psg": 16,
+     "window_quarters": 20,
+     "min_required": 12,
+     "meets_12": true
+    },
+    "sens": {
+     "low": 0.6465043833518652,
+     "high": 1.579667603932714,
+     "ps_only": 1.2591749963481562,
+     "psg_only": 1.283918493055893,
+     "ps_low": 0.672456575682382,
+     "ps_high": 1.6618106139438087,
+     "psg_low": 0.6215537669016595,
+     "psg_high": 1.501584908639233
+    },
+    "gaps": [],
+    "groups": []
+   }
+  },
+  "ACN": {
+   "folder": "accenture",
+   "ticker": "ACN",
+   "status": "dist 無現行成品（改版中；_待刪除/ 不計）",
+   "relmult": {
+    "file": "software_ai/data/relmult_hist/out/accenture.json",
+    "generated": "2026-11-17",
+    "ccy": "USD",
+    "peers": [
+     "CTSH",
+     "INFY",
+     "GIB"
+    ],
+    "peers_missing": [],
+    "ps_reading": 1.4204617330803289,
+    "psg_reading": 1.4382052929112343,
+    "geo_base": 1.429305979450864,
+    "base_source": "PS 與 PSG 兩讀數幾何平均（Derived）",
+    "divergence": 0.01249140291335249,
+    "divergence_gt_30pct": false,
+    "valid_points": {
+     "ps": 20,
+     "psg": 13,
+     "window_quarters": 20,
+     "min_required": 12,
+     "meets_12": true
+    },
+    "sens": {
+     "low": 0.7752901490281132,
+     "high": 2.120387678074023,
+     "ps_only": 1.4204617330803289,
+     "psg_only": 1.4382052929112343,
+     "ps_low": 0.9691358024691358,
+     "ps_high": 1.6666666666666667,
+     "psg_low": 0.6202173252176147,
+     "psg_high": 2.6976263431968888
+    },
+    "gaps": [],
+    "groups": []
+   }
+  },
+  "6702": {
+   "folder": "fujitsu",
+   "ticker": "6702",
+   "status": "ok",
+   "html": {
+    "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.html",
+    "name": "20261117_Fujitsu個股模型_v0.2.html",
+    "date": "20261117",
+    "version": "v0.2",
+    "title": "Fujitsu個股模型"
+   },
+   "xlsx": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.xlsx",
+   "date": "2026-11-17",
+   "version": "v0.2",
+   "title": "Fujitsu個股模型",
+   "html_matches": true,
+   "recalculated": false,
+   "price": {
+    "value": 3455,
+    "cell": "Val!B5",
+    "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.xlsx",
+    "label": "現價（¥）",
+    "date": "2026-11-13"
+   },
+   "dcf": {
+    "value": 3218.96371033942,
+    "cell": "Val!B8",
+    "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.xlsx",
+    "label": "DCF 目標價（情境加權；¥）"
+   },
+   "comp": {
+    "value": 3575.74062410568,
+    "cell": "Val!B9",
+    "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.xlsx",
+    "label": "Comparable 目標價（分部加總；情境加權；¥）"
+   },
+   "tp": null,
+   "upside": {
+    "value": -0.0166853351020116,
+    "cell": "Val!B11",
+    "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.xlsx",
+    "label": "上檔空間（相對現價）"
+   },
+   "rating": {
+    "value": "中立",
+    "cell": "Val!B12",
+    "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.xlsx",
+    "label": "估值評等（DCF 與 Comparable 加權，只看上檔空間）"
+   },
+   "rec": {
+    "value": "中立",
+    "cell": "Val!B14",
+    "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.xlsx",
+    "label": "投資建議"
+   },
+   "gate": {
+    "basis": {
+     "value": 1152885.32870175,
+     "cell": "Val!B13",
+     "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.xlsx",
+     "label": "入不敷出判定用：基準情境 FY2026–FY2030 收支合計（¥百萬）"
+    },
+    "abc": null,
+    "verdict": null
+   },
+   "scen": {
+    "values": [
+     3922.27753820086,
+     3512.02711534702,
+     2643.07689999529
+    ],
+    "cells": [
+     "Val!C78",
+     "Val!D78",
+     "Val!E78"
+    ],
+    "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.xlsx",
+    "label": "情境加權目標價（各情境 DCF 與 Comparable 加權；¥）"
+   },
+   "sbc_dcf": null,
+   "sbc_abc": null,
+   "sbc_note": "未找到",
+   "ai_net": null,
+   "missing": [
+    "tp",
+    "sbc_dcf",
+    "ai_net"
+   ],
+   "relmult": {
+    "file": "software_ai/data/relmult_hist/out/fujitsu.json",
+    "generated": "2026-11-17",
+    "ccy": "JPY",
+    "peers": [
+     "HITACHI",
+     "NEC",
+     "NRI",
+     "BIPROGY"
+    ],
+    "peers_missing": [],
+    "ps_reading": 1.0938155136268346,
+    "psg_reading": 11.590192106270523,
+    "geo_base": 1.0938155136268346,
+    "base_source": "只有 PS（PSG 讀數無法計：PSG 有效點不足 12）",
+    "divergence": null,
+    "divergence_gt_30pct": null,
+    "valid_points": {
+     "ps": 18,
+     "psg": 6,
+     "window_quarters": 20,
+     "min_required": 12,
+     "meets_12": false
+    },
+    "sens": {
+     "low": 0.8413793103448276,
+     "high": 1.4951923076923075,
+     "ps_only": 1.0938155136268346,
+     "psg_only": null
+    },
+    "gaps": [
+     "FUJITSU 2025-03-31：PS 缺（資料商未提供）",
+     "FUJITSU 2026-03-31：隱含 TTM 營收單季變動 +43%（重編／併購／資料錯誤，使用前核對）",
+     "PSG 有效點 6 < 12"
+    ],
+    "groups": []
+   }
+  },
+  "4307": {
+   "folder": "nri",
+   "ticker": "4307",
+   "status": "dist 無現行成品（改版中；_待刪除/ 不計）",
+   "relmult": {
+    "file": "software_ai/data/relmult_hist/out/nri.json",
+    "generated": "2026-11-17",
+    "ccy": "JPY",
+    "peers": [
+     "TIS",
+     "BIPROGY",
+     "FUJITSU",
+     "NSSOL",
+     "OBIC",
+     "ACN",
+     "CTSH",
+     "INFY"
+    ],
+    "peers_missing": [],
+    "ps_reading": 1.9630785821721486,
+    "psg_reading": 2.167366145403108,
+    "geo_base": 2.0626948537691776,
+    "base_source": "PS 與 PSG 兩讀數幾何平均（Derived）",
+    "divergence": 0.10406489331920432,
+    "divergence_gt_30pct": false,
+    "valid_points": {
+     "ps": 20,
+     "psg": 16,
+     "window_quarters": 20,
+     "min_required": 12,
+     "meets_12": true
+    },
+    "sens": {
+     "low": 1.0657420949562995,
+     "high": 3.06616121260642,
+     "ps_only": 1.9630785821721486,
+     "psg_only": 2.167366145403108,
+     "ps_low": 1.6273291925465838,
+     "ps_high": 2.611111111111111,
+     "psg_low": 0.6979572530032692,
+     "psg_high": 3.6005149461799424
+    },
+    "gaps": [
+     "同業 FUJITSU 2025-03-31：PS 缺（資料商未提供）",
+     "同業 FUJITSU 2026-03-31：隱含 TTM 營收單季變動 +43%（重編／併購／資料錯誤，使用前核對）"
+    ],
+    "groups": []
+   }
+  },
+  "APP": {
+   "folder": "applovin",
+   "ticker": "APP",
+   "status": "ok",
+   "html": {
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.html",
+    "name": "20261117_AppLovin個股模型_v0.2.html",
+    "date": "20261117",
+    "version": "v0.2",
+    "title": "AppLovin個股模型"
+   },
+   "xlsx": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.xlsx",
+   "date": "2026-11-17",
+   "version": "v0.2",
+   "title": "AppLovin個股模型",
+   "html_matches": true,
+   "recalculated": false,
+   "price": {
+    "value": 409.1,
+    "cell": "Val!B12",
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.xlsx",
+    "label": "現價（股價基準日收盤）",
+    "date": "2026-11-13"
+   },
+   "dcf": {
+    "value": 261.314974614017,
+    "cell": "Val!B9",
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.xlsx",
+    "label": "DCF 目標價（情境加權；12 個月後）"
+   },
+   "comp": {
+    "value": 948.665567114752,
+    "cell": "Val!B10",
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.xlsx",
+    "label": "Comparable 目標價（情境加權；同業前瞻本益比）"
+   },
+   "tp": null,
+   "upside": {
+    "value": 0.478832243618637,
+    "cell": "Val!B4",
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.xlsx",
+    "label": "上檔空間：加權目標價"
+   },
+   "rating": {
+    "value": "買進",
+    "cell": "Val!B6",
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.xlsx",
+    "label": "估值評等（五級）"
+   },
+   "rec": {
+    "value": "買進",
+    "cell": "Val!B8",
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.xlsx",
+    "label": "投資建議"
+   },
+   "gate": {
+    "basis": {
+     "value": 48677.819408233,
+     "cell": "Val!B7",
+     "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.xlsx",
+     "label": "入不敷出判定用：收支關卡合計（情境 B）"
+    },
+    "abc": null,
+    "verdict": null
+   },
+   "scen": {
+    "values": [
+     723.593409462883,
+     611.10044052858,
+     474.166792937495
+    ],
+    "cells": [
+     "Val!B66",
+     "Val!C66",
+     "Val!D66"
+    ],
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.xlsx",
+    "label": "情境目標價＝DCF 權重×DCF＋(1−DCF 權重)×Comparable"
+   },
+   "sbc_dcf": {
+    "value": 268.733116349329,
+    "cell": "Val!B59",
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.xlsx",
+    "label": "DCF 目標價（加回；情境加權）"
+   },
+   "sbc_abc": null,
+   "sbc_note": null,
+   "ai_net": null,
+   "missing": [
+    "tp",
+    "ai_net"
+   ],
+   "relmult": {
+    "file": "software_ai/data/relmult_hist/out/applovin.json",
+    "generated": "2026-11-17",
+    "ccy": "USD",
+    "peers": [
+     "PINS",
+     "TTD",
+     "RDDT",
+     "U",
+     "META",
+     "GOOGL"
+    ],
+    "peers_missing": [],
+    "ps_reading": 1.226060620570772,
+    "psg_reading": 3.8240730136497403,
+    "geo_base": 2.1653049051399997,
+    "base_source": "PS 與 PSG 兩讀數幾何平均（Derived）",
+    "divergence": 2.1189917933009763,
+    "divergence_gt_30pct": true,
+    "valid_points": {
+     "ps": 20,
+     "psg": 13,
+     "window_quarters": 20,
+     "min_required": 12,
+     "meets_12": true
+    },
+    "sens": {
+     "low": 0.483102896454194,
+     "high": 10.15656211706674,
+     "ps_only": 1.226060620570772,
+     "psg_only": 3.8240730136497403,
+     "ps_low": 0.23639455782312924,
+     "ps_high": 5.609348914858097,
+     "psg_low": 0.9872833398180566,
+     "psg_high": 18.38996924662598
+    },
+    "gaps": [],
+    "groups": []
+   }
+  },
+  "035420": {
+   "folder": "naver",
+   "ticker": "035420",
+   "status": "ok",
+   "html": {
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.html",
+    "name": "20261117_Naver個股模型_v0.2.html",
+    "date": "20261117",
+    "version": "v0.2",
+    "title": "Naver個股模型"
+   },
+   "xlsx": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.xlsx",
+   "date": "2026-11-17",
+   "version": "v0.2",
+   "title": "Naver個股模型",
+   "html_matches": true,
+   "recalculated": false,
+   "price": {
+    "value": 172500,
+    "cell": "Val!B9",
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.xlsx",
+    "label": "現價（2026-11-13 收盤）",
+    "date": "2026-11-13"
+   },
+   "dcf": {
+    "value": 208800.84856134,
+    "cell": "Val!B6",
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.xlsx",
+    "label": "DCF 目標價（情境加權）"
+   },
+   "comp": {
+    "value": 176800.199823595,
+    "cell": "Val!B7",
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.xlsx",
+    "label": "Comparable 目標價（分部 NTM NOPAT x 同業前瞻本益比，情境加權）"
+   },
+   "tp": null,
+   "upside": {
+    "value": 0.117684198217202,
+    "cell": "Val!B11",
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.xlsx",
+    "label": "上檔空間：加權目標價"
+   },
+   "rating": {
+    "value": "中立",
+    "cell": "Val!B14",
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.xlsx",
+    "label": "估值評等（依加權目標價上檔空間）"
+   },
+   "rec": {
+    "value": "中立",
+    "cell": "Val!B16",
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.xlsx",
+    "label": "投資建議"
+   },
+   "gate": {
+    "basis": {
+     "value": 3286.77934059906,
+     "cell": "Val!B15",
+     "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.xlsx",
+     "label": "入不敷出判定用收支合計（十億韓元，FY2026–FY2030）"
+    },
+    "abc": null,
+    "verdict": null
+   },
+   "scen": {
+    "values": [
+     204630.082199287,
+     194029.09014652,
+     178513.834277543
+    ],
+    "cells": [
+     "Val!B102",
+     "Val!B103",
+     "Val!B104"
+    ],
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.xlsx",
+    "label": "情境 A／B／C 目標價"
+   },
+   "sbc_dcf": {
+    "value": 208800.84856134,
+    "cell": "Recon!B39",
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.xlsx",
+    "label": "DCF 目標價（股票薪酬加回，情境加權）"
+   },
+   "sbc_abc": null,
+   "sbc_note": null,
+   "ai_net": {
+    "values": [
+     242.936823809413,
+     -130.87729544876,
+     -675.643434119166
+    ],
+    "cells": [
+     "Val!B110",
+     "Val!C110",
+     "Val!D110"
+    ],
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.xlsx",
+    "label": "AI 淨效果（營業利益，相對 FY2026）FY2032E：A／B／C（十億韓元）"
+   },
+   "missing": [
+    "tp"
+   ],
+   "relmult": {
+    "file": "software_ai/data/relmult_hist/out/naver.json",
+    "generated": "2026-11-17",
+    "ccy": "KRW",
+    "peers": [
+     "GOOGL",
+     "META",
+     "PINS",
+     "KAKAO",
+     "LYCORP"
+    ],
+    "peers_missing": [],
+    "ps_reading": 0.6807807444453408,
+    "psg_reading": 0.4635277009294886,
+    "geo_base": 0.5617479268406912,
+    "base_source": "PS 與 PSG 兩讀數幾何平均（Derived）",
+    "divergence": 0.3191233672345667,
+    "divergence_gt_30pct": true,
+    "valid_points": {
+     "ps": 20,
+     "psg": 16,
+     "window_quarters": 20,
+     "min_required": 12,
+     "meets_12": true
+    },
+    "sens": {
+     "low": 0.18787194901548182,
+     "high": 0.9695283016360872,
+     "ps_only": 0.6807807444453408,
+     "psg_only": 0.4635277009294886,
+     "ps_low": 0.3604651162790698,
+     "ps_high": 1.1696869851729819,
+     "psg_low": 0.09791757269391349,
+     "psg_high": 0.8036210880249673
+    },
+    "gaps": [
+     "同業 KAKAO 2024-12-31：PS 缺（資料商未提供）",
+     "同業 KAKAO 2025-12-31：隱含 TTM 營收單季變動 +37%（重編／併購／資料錯誤，使用前核對）"
+    ],
+    "groups": []
+   }
+  },
+  "4689": {
+   "folder": "lycorp",
+   "ticker": "4689",
+   "status": "ok",
+   "html": {
+    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.html",
+    "name": "20261117_LY個股模型_v0.2.0.html",
+    "date": "20261117",
+    "version": "v0.2.0",
+    "title": "LY個股模型"
+   },
+   "xlsx": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
+   "date": "2026-11-17",
+   "version": "v0.2.0",
+   "title": "LY個股模型",
+   "html_matches": true,
+   "recalculated": false,
+   "price": {
+    "value": 543.3,
+    "cell": "Val!B9",
+    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
+    "label": "現價（2026-11-16 收盤）",
+    "date": "2026-11-16"
+   },
+   "dcf": {
+    "value": 732.884593684852,
+    "cell": "Val!B6",
+    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
+    "label": "DCF 目標價（情境加權）"
+   },
+   "comp": {
+    "value": 456.431505723662,
+    "cell": "Val!B7",
+    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
+    "label": "Comparable 目標價（分部加總，情境加權）"
+   },
+   "tp": null,
+   "upside": {
+    "value": 0.0945298172358859,
+    "cell": "Val!B11",
+    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
+    "label": "上檔空間：加權目標價"
+   },
+   "rating": {
+    "value": "中立",
+    "cell": "Val!B14",
+    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
+    "label": "估值評等（依加權目標價上檔空間，不含收支關卡）"
+   },
+   "rec": {
+    "value": "中立",
+    "cell": "Val!B17",
+    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
+    "label": "投資建議"
+   },
+   "gate": {
+    "basis": {
+     "value": 918.736738009812,
+     "cell": "Val!B16",
+     "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
+     "label": "入不敷出判定用：基準情境 B 收支關卡合計（十億日圓）"
+    },
+    "abc": null,
+    "verdict": {
+     "value": "通過（FY2026–FY2030 自由現金流扣利息與股利合計為正）",
+     "cell": "Val!B15",
+     "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
+     "label": "收支關卡判定"
+    }
+   },
+   "scen": {
+    "values": [
+     634.588574679236,
+     595.214066634455,
+     553.61549086888
+    ],
+    "cells": [
+     "Val!B59",
+     "Val!B60",
+     "Val!B61"
+    ],
+    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
+    "label": "情境 A／B／C 目標價"
+   },
+   "sbc_dcf": {
+    "value": 736.304595788328,
+    "cell": "Val!B103",
+    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
+    "label": "DCF 目標價（SBC 加回；三情境加權）"
+   },
+   "sbc_abc": null,
+   "sbc_note": null,
+   "ai_net": {
+    "values": [
+     52.3304803632574,
+     10.4336994358429,
+     -33.4117840315841
+    ],
+    "cells": [
+     "Val!B67",
+     "Val!C67",
+     "Val!D67"
+    ],
+    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
+    "label": "AI 淨效果（營業利益）FY2032E：A／B／C（十億日圓）"
+   },
+   "missing": [
+    "tp"
+   ],
+   "relmult": {
+    "file": "software_ai/data/relmult_hist/out/lycorp.json",
+    "generated": "2026-11-17",
+    "ccy": "JPY",
+    "peers": [
+     "CYBERAGENT",
+     "RECRUIT",
+     "NAVER",
+     "META",
+     "RAKUTEN",
+     "ZOZO",
+     "MERCARI",
+     "MONOTARO",
+     "PYPL",
+     "XYZ"
+    ],
+    "peers_missing": [],
+    "ps_reading": 0.6335978835978835,
+    "psg_reading": 0.65505020143215,
+    "geo_base": 0.6442347563410232,
+    "base_source": "PS 與 PSG 兩讀數幾何平均（Derived）",
+    "divergence": 0.03385793795971903,
+    "divergence_gt_30pct": false,
+    "valid_points": {
+     "ps": 20,
+     "psg": 16,
+     "window_quarters": 20,
+     "min_required": 12,
+     "meets_12": true
+    },
+    "sens": {
+     "low": 0.4882645085778721,
+     "high": 0.9059939160280582,
+     "ps_only": 0.6335978835978835,
+     "psg_only": 0.65505020143215,
+     "ps_low": 0.5179856115107914,
+     "ps_high": 0.8274509803921569,
+     "psg_low": 0.46024875023352696,
+     "psg_high": 0.9919922694282622
+    },
+    "gaps": [],
+    "groups": [
+     "Media",
+     "Commerce",
+     "Strategic"
+    ]
+   }
+  }
+ },
+ "unit_econ": {
+  "file": "software_ai/unit_economics/dist/20261116_AI對軟體單位經濟_v0.1.xlsx",
+  "date": "2026-11-16",
+  "version": "v0.1",
+  "recalc_errors": 0,
+  "archetypes": [
+   {
+    "code": "L",
+    "name": "按人力計價",
+    "scope": "IT 服務、BPO",
+    "title": "L 按人力計價（IT 服務、BPO）— 每 1 名交付人員年（AI 前工作範圍）",
+    "netr": {
+     "2026": {
+      "value": -0.0327940736,
+      "cell": "L!D28"
+     },
+     "2030": {
+      "value": -0.0973598896557866,
+      "cell": "L!H28"
+     },
+     "2032": {
+      "value": -0.129346264297752,
+      "cell": "L!J28"
+     }
+    },
+    "netr_label": "AI 淨效果占單位營收比（÷ AI 前單位營收 R0）",
+    "gm": {
+     "2026": {
+      "value": 0.338849097520661,
+      "cell": "L!D25"
+     },
+     "2030": {
+      "value": 0.38655375268435,
+      "cell": "L!H25"
+     },
+     "2032": {
+      "value": 0.413356717137247,
+      "cell": "L!J25"
+     }
+    },
+    "gm_label": "毛利率",
+    "infsh": {
+     "2026": {
+      "value": 0.00124075148935879,
+      "cell": "L!D26"
+     },
+     "2030": {
+      "value": 0.00305217269794072,
+      "cell": "L!H26"
+     },
+     "2032": {
+      "value": 0.00360706803298654,
+      "cell": "L!J26"
+     }
+    },
+    "infsh_label": "推論成本占營收成本比",
+    "incrr": {
+     "2026": {
+      "value": 0.02,
+      "cell": "L!D29"
+     },
+     "2030": {
+      "value": 0.0733333333333333,
+      "cell": "L!H29"
+     },
+     "2032": {
+      "value": 0.1,
+      "cell": "L!J29"
+     }
+    },
+    "incrr_label": "　增量 ÷ R0",
+    "erosr": {
+     "2026": {
+      "value": 0.052,
+      "cell": "L!D30"
+     },
+     "2030": {
+      "value": 0.169,
+      "cell": "L!H30"
+     },
+     "2032": {
+      "value": 0.2275,
+      "cell": "L!J30"
+     }
+    },
+    "erosr_label": "　侵蝕 ÷ R0",
+    "infr": {
+     "2026": {
+      "value": 0.0007940736,
+      "cell": "L!D31"
+     },
+     "2030": {
+      "value": 0.00169322298912,
+      "cell": "L!H31"
+     },
+     "2032": {
+      "value": 0.001846264297752,
+      "cell": "L!J31"
+     }
+    },
+    "infr_label": "　推論成本（市場價）÷ R0"
+   },
+   {
+    "code": "S",
+    "name": "按席位計價",
+    "scope": "CRM、設計與生產力、人資、工作流",
+    "title": "S 按席位計價（CRM、設計與生產力、人資、工作流）— 每 1 個 AI 前付費席位年",
+    "netr": {
+     "2026": {
+      "value": 0.0114522604367754,
+      "cell": "S!D28"
+     },
+     "2030": {
+      "value": 0.176840104142223,
+      "cell": "S!H28"
+     },
+     "2032": {
+      "value": 0.190131862163411,
+      "cell": "S!J28"
+     }
+    },
+    "netr_label": "AI 淨效果占單位營收比（÷ AI 前單位營收 R0）",
+    "gm": {
+     "2026": {
+      "value": 0.779458755372308,
+      "cell": "S!D25"
+     },
+     "2030": {
+      "value": 0.77382912160893,
+      "cell": "S!H25"
+     },
+     "2032": {
+      "value": 0.772715826427281,
+      "cell": "S!J25"
+     }
+    },
+    "gm_label": "毛利率",
+    "infsh": {
+     "2026": {
+      "value": 0.00245416510914298,
+      "cell": "S!D26"
+     },
+     "2030": {
+      "value": 0.0272841421272636,
+      "cell": "S!H26"
+     },
+     "2032": {
+      "value": 0.0320487496257134,
+      "cell": "S!J26"
+     }
+    },
+    "infsh_label": "推論成本占營收成本比",
+    "incrr": {
+     "2026": {
+      "value": 0.02,
+      "cell": "S!D29"
+     },
+     "2030": {
+      "value": 0.266814,
+      "cell": "S!H29"
+     },
+     "2032": {
+      "value": 0.3188646,
+      "cell": "S!J29"
+     }
+    },
+    "incrr_label": "　增量 ÷ R0",
+    "erosr": {
+     "2026": {
+      "value": 0.008,
+      "cell": "S!D30"
+     },
+     "2030": {
+      "value": 0.0826666666666667,
+      "cell": "S!H30"
+     },
+     "2032": {
+      "value": 0.12,
+      "cell": "S!J30"
+     }
+    },
+    "erosr_label": "　侵蝕 ÷ R0",
+    "infr": {
+     "2026": {
+      "value": 0.000547739563224557,
+      "cell": "S!D31"
+     },
+     "2030": {
+      "value": 0.00730722919110985,
+      "cell": "S!H31"
+     },
+     "2032": {
+      "value": 0.00873273783658865,
+      "cell": "S!J31"
+     }
+    },
+    "infr_label": "　推論成本（市場價）÷ R0"
+   },
+   {
+    "code": "A",
+    "name": "按廣告計價",
+    "scope": "數位廣告",
+    "title": "A 按廣告計價（數位廣告）— 每 1,000 次 AI 前查詢",
+    "netr": {
+     "2026": {
+      "value": -0.053215666820236,
+      "cell": "A!D28"
+     },
+     "2030": {
+      "value": -0.115945808638797,
+      "cell": "A!H28"
+     },
+     "2032": {
+      "value": -0.148680659839515,
+      "cell": "A!J28"
+     }
+    },
+    "netr_label": "AI 淨效果占單位營收比（÷ AI 前單位營收 R0）",
+    "gm": {
+     "2026": {
+      "value": 0.567468015414856,
+      "cell": "A!D25"
+     },
+     "2030": {
+      "value": 0.565055182767645,
+      "cell": "A!H25"
+     },
+     "2032": {
+      "value": 0.565323310370931,
+      "cell": "A!J25"
+     }
+    },
+    "gm_label": "毛利率",
+    "infsh": {
+     "2026": {
+      "value": 0.0289735442274026,
+      "cell": "A!D26"
+     },
+     "2030": {
+      "value": 0.0343602605209827,
+      "cell": "A!H26"
+     },
+     "2032": {
+      "value": 0.0337646116740074,
+      "cell": "A!J26"
+     }
+    },
+    "infsh_label": "推論成本占營收成本比",
+    "incrr": {
+     "2026": {
+      "value": 0.0188,
+      "cell": "A!D29"
+     },
+     "2030": {
+      "value": 0.0508,
+      "cell": "A!H29"
+     },
+     "2032": {
+      "value": 0.064,
+      "cell": "A!J29"
+     }
+    },
+    "incrr_label": "　增量 ÷ R0",
+    "erosr": {
+     "2026": {
+      "value": 0.06,
+      "cell": "A!D30"
+     },
+     "2030": {
+      "value": 0.153333333333333,
+      "cell": "A!H30"
+     },
+     "2032": {
+      "value": 0.2,
+      "cell": "A!J30"
+     }
+    },
+    "erosr_label": "　侵蝕 ÷ R0",
+    "infr": {
+     "2026": {
+      "value": 0.012015666820236,
+      "cell": "A!D31"
+     },
+     "2030": {
+      "value": 0.0134124753054641,
+      "cell": "A!H31"
+     },
+     "2032": {
+      "value": 0.0126806598395152,
+      "cell": "A!J31"
+     }
+    },
+    "infr_label": "　推論成本（市場價）÷ R0"
+   },
+   {
+    "code": "U",
+    "name": "按用量計價",
+    "scope": "資料平台",
+    "title": "U 按用量計價（資料平台）— 每 1 美元 AI 前運算額度營收",
+    "netr": {
+     "2026": {
+      "value": 0.0375528138693508,
+      "cell": "U!D29"
+     },
+     "2030": {
+      "value": 0.251413940018193,
+      "cell": "U!H29"
+     },
+     "2032": {
+      "value": 0.352110999644333,
+      "cell": "U!J29"
+     }
+    },
+    "netr_label": "AI 淨效果占單位營收比（÷ AI 前單位營收 R0）",
+    "gm": {
+     "2026": {
+      "value": 0.685549100266685,
+      "cell": "U!D26"
+     },
+     "2030": {
+      "value": 0.657549029013109,
+      "cell": "U!H26"
+     },
+     "2032": {
+      "value": 0.655253078558116,
+      "cell": "U!J26"
+     }
+    },
+    "gm_label": "毛利率",
+    "infsh": {
+     "2026": {
+      "value": 0.0753376746032642,
+      "cell": "U!D27"
+     },
+     "2030": {
+      "value": 0.203216698482885,
+      "cell": "U!H27"
+     },
+     "2032": {
+      "value": 0.212781041276065,
+      "cell": "U!J27"
+     }
+    },
+    "infsh_label": "推論成本占營收成本比",
+    "incrr": {
+     "2026": {
+      "value": 0.07272886010052,
+      "cell": "U!D30"
+     },
+     "2030": {
+      "value": 0.401682628967723,
+      "cell": "U!H30"
+     },
+     "2032": {
+      "value": 0.539147665125443,
+      "cell": "U!J30"
+     }
+    },
+    "incrr_label": "　增量 ÷ R0",
+    "erosr": {
+     "2026": {
+      "value": 0.01,
+      "cell": "U!D31"
+     },
+     "2030": {
+      "value": 0.0566666666666667,
+      "cell": "U!H31"
+     },
+     "2032": {
+      "value": 0.08,
+      "cell": "U!J31"
+     }
+    },
+    "erosr_label": "　侵蝕 ÷ R0",
+    "infr": {
+     "2026": {
+      "value": 0.0251760462311692,
+      "cell": "U!D32"
+     },
+     "2030": {
+      "value": 0.093602022282864,
+      "cell": "U!H32"
+     },
+     "2032": {
+      "value": 0.10703666548111,
+      "cell": "U!J32"
+     }
+    },
+    "infr_label": "　推論成本（市場價）÷ R0"
+   },
+   {
+    "code": "P",
+    "name": "按防護範圍計價",
+    "scope": "資安",
+    "title": "P 按防護範圍計價（資安）— 每 1 個 AI 前受保護身分或端點年",
+    "netr": {
+     "2026": {
+      "value": 0.0122613021838772,
+      "cell": "P!D29"
+     },
+     "2030": {
+      "value": 0.0790886492065596,
+      "cell": "P!H29"
+     },
+     "2032": {
+      "value": 0.115445436939019,
+      "cell": "P!J29"
+     }
+    },
+    "netr_label": "AI 淨效果占單位營收比（÷ AI 前單位營收 R0）",
+    "gm": {
+     "2026": {
+      "value": 0.767301775550618,
+      "cell": "P!D26"
+     },
+     "2030": {
+      "value": 0.75847815194494,
+      "cell": "P!H26"
+     },
+     "2032": {
+      "value": 0.757119855698247,
+      "cell": "P!J26"
+     }
+    },
+    "gm_label": "毛利率",
+    "infsh": {
+     "2026": {
+      "value": 0.0115953804794458,
+      "cell": "P!D27"
+     },
+     "2030": {
+      "value": 0.0477051999553817,
+      "cell": "P!H27"
+     },
+     "2032": {
+      "value": 0.0530308656509646,
+      "cell": "P!J27"
+     }
+    },
+    "infsh_label": "推論成本占營收成本比",
+    "incrr": {
+     "2026": {
+      "value": 0.025,
+      "cell": "P!D30"
+     },
+     "2030": {
+      "value": 0.128333333333333,
+      "cell": "P!H30"
+     },
+     "2032": {
+      "value": 0.18,
+      "cell": "P!J30"
+     }
+    },
+    "incrr_label": "　增量 ÷ R0",
+    "erosr": {
+     "2026": {
+      "value": 0.01,
+      "cell": "P!D31"
+     },
+     "2030": {
+      "value": 0.0366666666666667,
+      "cell": "P!H31"
+     },
+     "2032": {
+      "value": 0.05,
+      "cell": "P!J31"
+     }
+    },
+    "erosr_label": "　侵蝕 ÷ R0",
+    "infr": {
+     "2026": {
+      "value": 0.00273869781612279,
+      "cell": "P!D32"
+     },
+     "2030": {
+      "value": 0.0125780174601071,
+      "cell": "P!H32"
+     },
+     "2032": {
+      "value": 0.0145545630609811,
+      "cell": "P!J32"
+     }
+    },
+    "infr_label": "　推論成本（市場價）÷ R0"
+   }
+  ],
+  "subs": [
+   {
+    "code": "ITS",
+    "ue_code": "IT",
+    "archetype": "L",
+    "label": "IT 服務（原型 L；營收池口徑：Gartner「IT Services」終端支出）",
+    "base": {
+     "2026": {
+      "value": 1753.44,
+      "cell": "次產業!D5"
+     },
+     "2030": {
+      "value": 2051.2767934464,
+      "cell": "次產業!H5"
+     },
+     "2032": {
+      "value": 2218.66097979163,
+      "cell": "次產業!J5"
+     }
+    },
+    "base_unit": "$B",
+    "net": {
+     "2026": {
+      "value": -34.5014642479104,
+      "cell": "次產業!D11"
+     },
+     "2030": {
+      "value": -133.141388175612,
+      "cell": "次產業!H11"
+     },
+     "2032": {
+      "value": -200.882856635466,
+      "cell": "次產業!J11"
+     }
+    },
+    "net_unit": "$B",
+    "xfer": {
+     "2026": {
+      "value": 55.5427442479104,
+      "cell": "次產業!D14"
+     },
+     "2030": {
+      "value": 233.426031410769,
+      "cell": "次產業!H14"
+     },
+     "2032": {
+      "value": 356.18912522088,
+      "cell": "次產業!J14"
+     }
+    },
+    "xfer_unit": "$B",
+    "netsh": {
+     "2026": {
+      "value": -0.01967644416,
+      "cell": "次產業!D13"
+     },
+     "2030": {
+      "value": -0.0649065931038578,
+      "cell": "次產業!H13"
+     },
+     "2032": {
+      "value": -0.0905423850084264,
+      "cell": "次產業!J13"
+     }
+    },
+    "netsh_unit": "%"
+   },
+   {
+    "code": "CRM",
+    "ue_code": "CRM",
+    "archetype": "S",
+    "label": "CRM（原型 S；營收池口徑：CRM 應用軟體營收）",
+    "base": {
+     "2026": {
+      "value": 90.1,
+      "cell": "次產業!D17"
+     },
+     "2030": {
+      "value": 113.749174096,
+      "cell": "次產業!H17"
+     },
+     "2032": {
+      "value": 127.808572014266,
+      "cell": "次產業!J17"
+     }
+    },
+    "base_unit": "$B",
+    "net": {
+     "2026": {
+      "value": 0.773886499015101,
+      "cell": "次產業!D23"
+     },
+     "2030": {
+      "value": 15.7570757046957,
+      "cell": "次產業!H23"
+     },
+     "2032": {
+      "value": 19.440385438015,
+      "cell": "次產業!J23"
+     }
+    },
+    "net_unit": "$B",
+    "xfer": {
+     "2026": {
+      "value": 0.5776135009849,
+      "cell": "次產業!D26"
+     },
+     "2030": {
+      "value": 8.01699080281692,
+      "cell": "次產業!H26"
+     },
+     "2032": {
+      "value": 13.162517915505,
+      "cell": "次產業!J26"
+     }
+    },
+    "xfer_unit": "$B",
+    "netsh": {
+     "2026": {
+      "value": 0.00858919532758158,
+      "cell": "次產業!D25"
+     },
+     "2030": {
+      "value": 0.138524748244742,
+      "cell": "次產業!H25"
+     },
+     "2032": {
+      "value": 0.152105489730729,
+      "cell": "次產業!J25"
+     }
+    },
+    "netsh_unit": "%"
+   },
+   {
+    "code": "ADS",
+    "ue_code": "AD",
+    "archetype": "A",
+    "label": "數位廣告（原型 A；營收池口徑：純數位媒體廣告營收（WPP Media pure-play digital））",
+    "base": {
+     "2026": {
+      "value": 846.37,
+      "cell": "次產業!D29"
+     },
+     "2030": {
+      "value": 1109.4184189837,
+      "cell": "次產業!H29"
+     },
+     "2032": {
+      "value": 1270.17314789444,
+      "cell": "次產業!J29"
+     }
+    },
+    "base_unit": "$B",
+    "net": {
+     "2026": {
+      "value": -15.7640503743251,
+      "cell": "次產業!D35"
+     },
+     "2030": {
+      "value": -53.5968398782672,
+      "cell": "次產業!H35"
+     },
+     "2032": {
+      "value": -84.9825817827207,
+      "cell": "次產業!J35"
+     }
+    },
+    "net_unit": "$B",
+    "xfer": {
+     "2026": {
+      "value": 21.3331649743251,
+      "cell": "次產業!D38"
+     },
+     "2030": {
+      "value": 77.0795297467556,
+      "cell": "次產業!H38"
+     },
+     "2032": {
+      "value": 121.563568442081,
+      "cell": "次產業!J38"
+     }
+    },
+    "xfer_unit": "$B",
+    "netsh": {
+     "2026": {
+      "value": -0.0186254833870826,
+      "cell": "次產業!D37"
+     },
+     "2030": {
+      "value": -0.0483107535994989,
+      "cell": "次產業!H37"
+     },
+     "2032": {
+      "value": -0.0669062969277819,
+      "cell": "次產業!J37"
+     }
+    },
+    "netsh_unit": "%"
+   },
+   {
+    "code": "DATA",
+    "ue_code": "DATA",
+    "archetype": "U",
+    "label": "資料平台（原型 U；營收池口徑：資料庫管理系統（DBMS）營收）",
+    "base": {
+     "2026": {
+      "value": 144.48,
+      "cell": "次產業!D41"
+     },
+     "2030": {
+      "value": 227.3420771328,
+      "cell": "次產業!H41"
+     },
+     "2032": {
+      "value": 285.177901555385,
+      "cell": "次產業!J41"
+     }
+    },
+    "base_unit": "$B",
+    "net": {
+     "2026": {
+      "value": 2.98409680131409,
+      "cell": "次產業!D47"
+     },
+     "2030": {
+      "value": 37.1520287735201,
+      "cell": "次產業!H47"
+     },
+     "2032": {
+      "value": 70.2899931951978,
+      "cell": "次產業!J47"
+     }
+    },
+    "net_unit": "$B",
+    "xfer": {
+     "2026": {
+      "value": 2.79522933771363,
+      "cell": "次產業!D50"
+     },
+     "2030": {
+      "value": 22.2055573179758,
+      "cell": "次產業!H50"
+     },
+     "2032": {
+      "value": 37.3371066430736,
+      "cell": "次產業!J50"
+     }
+    },
+    "xfer_unit": "$B",
+    "netsh": {
+     "2026": {
+      "value": 0.0206540476281429,
+      "cell": "次產業!D49"
+     },
+     "2030": {
+      "value": 0.163419061011825,
+      "cell": "次產業!H49"
+     },
+     "2032": {
+      "value": 0.246477699751033,
+      "cell": "次產業!J49"
+     }
+    },
+    "netsh_unit": "%"
+   },
+   {
+    "code": "SEC",
+    "ue_code": "SEC",
+    "archetype": "P",
+    "label": "資安（原型 P；營收池口徑：Gartner「Security Software」終端支出）",
+    "base": {
+     "2026": {
+      "value": 116.6,
+      "cell": "次產業!D53"
+     },
+     "2030": {
+      "value": 170.71406,
+      "cell": "次產業!H53"
+     },
+     "2032": {
+      "value": 206.5640126,
+      "cell": "次產業!J53"
+     }
+    },
+    "base_unit": "$B",
+    "net": {
+     "2026": {
+      "value": 0.85780070078405,
+      "cell": "次產業!D59"
+     },
+     "2030": {
+      "value": 9.00102960397838,
+      "cell": "次產業!H59"
+     },
+     "2032": {
+      "value": 16.6928108833388,
+      "cell": "次產業!J59"
+     }
+    },
+    "net_unit": "$B",
+    "xfer": {
+     "2026": {
+      "value": 0.89119929921595,
+      "cell": "次產業!D62"
+     },
+     "2030": {
+      "value": 5.60450664046607,
+      "cell": "次產業!H62"
+     },
+     "2032": {
+      "value": 9.3342547042612,
+      "cell": "次產業!J62"
+     }
+    },
+    "xfer_unit": "$B",
+    "netsh": {
+     "2026": {
+      "value": 0.00735678131032633,
+      "cell": "次產業!D61"
+     },
+     "2030": {
+      "value": 0.0527257661377064,
+      "cell": "次產業!H61"
+     },
+     "2032": {
+      "value": 0.0808118058573132,
+      "cell": "次產業!J61"
+     }
+    },
+    "netsh_unit": "%"
+   }
+  ]
+ }
+}

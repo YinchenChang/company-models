@@ -1,8 +1,8 @@
-# software_ai/nri/ — 野村總合研究所 NRI（東證 4307）個股模型 v0.2（原型 L：按人力計價）
+# software_ai/nri/ — 野村總合研究所 NRI（東證 4307）個股模型 v0.2.1（原型 L：按人力計價）
 
-**v0.2（2026-11-17，G5）：** 相對倍數改取 `software_ai/data/relmult_hist/out/nri.json` 的 geo_base（Derived）；現價更新為 2026-11-13 收盤；無風險利率統一為 2.77%（2026-11-11）；Recon 與 HTML 估值章新增 DCF（股票薪酬加回）對照。**本版未做先驗。** 工作單：`software_ai/docs/workorders/20261116_第一批_研究包與單位經濟.md` G、G2、G3 節。
+**v0.2.1（2026-11-17，G6）：** Comparable 主腿改 P/S 口徑（同業中位 P/S × rel_mult × 目標時點 TTM 營收 ÷ 股數），與 PS／PSG 相對值同口徑；前瞻 P/E 改對照列（rel_mult＝1.00 與現行相對值兩讀數），不進加權目標價。**v0.2（2026-11-17，G5）：** 相對倍數改取 `software_ai/data/relmult_hist/out/nri.json` 的 geo_base（Derived）；現價更新為 2026-11-13 收盤；無風險利率統一為 2.77%（2026-11-11）；Recon 與 HTML 估值章新增 DCF（股票薪酬加回）對照。**本版未做先驗。** 工作單：`software_ai/docs/workorders/20261116_第一批_研究包與單位經濟.md` G、G2、G3 節。
 
-**建置：** `bash software_ai/nri/make_nri.sh`（`SENS=1` 重跑敏感度與反解）。成品 `dist/20261117_野村總研個股模型_v0.2.xlsx`／`.html`。投資建議、目標價與各數字見成品 README 頁與 HTML（由公式組字，本檔不手寫）。
+**建置：** `bash software_ai/nri/make_nri.sh`（`SENS=1` 重跑敏感度與反解）。成品 `dist/20261117_野村總研個股模型_v0.2.1.xlsx`／`.html`。投資建議、目標價與各數字見成品 README 頁與 HTML（由公式組字，本檔不手寫）。
 
 **命題：** AI 進入 IT 服務後，人力計價營收＝人數 × 利用率 × 每人年工時 × 實現小時單價；AI 淨效果＝AI 新專案增量 − 價格侵蝕（客戶分享生產力）− 推論成本，營業利益再加省下的人力成本。推論成本只讀 Tokenomics v22.0 快照（`data/tokenomics_snapshot_v22.0.json`，市場價）。變數名稱沿用 `software_ai/unit_economics`。
 
@@ -18,7 +18,7 @@
 - 財報數字經 WebFetch 摘要模型轉錄，非逐字人工核對；現價二來源互證（Traders Web、StockAnalysis；2026-11-13）；同業前瞻 P/E 日期不一致且逾期；rf 單一來源。
 - 每任務 token 與價格層級為 Analogy，額外推論倍數與利用率、單價、價格保留率、自動化比例為 Assumed。
 
-<!-- version-table: dist/_待刪除/20261116_野村總研個股模型_v0.1.xlsx｜dist/20261117_野村總研個股模型_v0.2.xlsx -->
+<!-- version-table: dist/_待刪除/20261116_野村總研個股模型_v0.1.xlsx｜dist/_待刪除/20261117_野村總研個股模型_v0.2.xlsx｜dist/20261117_野村總研個股模型_v0.2.1.xlsx -->
 | 項目 | v0.1 | v0.2 |
 |---|---|---|
 | 現價 | 6,056.00 | 6,012.00 |

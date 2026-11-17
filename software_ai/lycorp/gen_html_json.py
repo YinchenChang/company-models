@@ -191,7 +191,7 @@ recon = {"id": "recon", "title": "對帳：公司指引與市場共識", "blocks
 status = {"id": "status", "title": "資料狀態", "blocks": [
     {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期", "@README!A1"], ["build_id", f"@Sens!D{rm['SE_BID']}"], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"]]},
     {"type": "h3", "text": "本版要點與限制"},
-    {"type": "list", "items": ["@README!A2", "@README!A14", "@README!A15", "@README!A16", "@README!A17", "@README!A41", "@README!A42", "@README!A43"]},
+    {"type": "list", "items": ["@README!A2", "@README!A14", "@README!A15", "@README!A16", "@README!A17", "@README!A41", "@README!A42", "@README!A43", "@README!A44"]},
     {"type": "h3", "text": "市場資料日期與失效條件"},
     {"type": "list", "items": ["@README!A29", "@README!A31"]},
     {"type": "table", "caption": "風險登錄", "head": ["風險", "是否建模", "理由", "觀察指標"], "rowgen": {"sheet": "README", "rows": "34-38", "cols": ["A", "B", "C", "D"]}},

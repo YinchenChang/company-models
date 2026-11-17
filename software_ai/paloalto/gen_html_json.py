@@ -13,7 +13,7 @@ def find(sh, text, col=1, start=1, exact=False):
 
 V = {k: find("Val", t) for k, t in dict(
     wacc_h="折現率", rf="無風險利率", ke="股權成本", kd="稅後債務成本", wacc="WACC", g="永續成長率", ronic="RONIC", px="現價", tp="加權目標價", dcf="DCF 目標價（三情境", cmp="Comparable 目標價（同業", cons="市場共識", up="加權目標價上檔",
-    rec="投資建議", scn_tp="情境目標價 A", gate_scn="收支關卡 A", dcf_h="DCF 彙總", pvx="明確期 FCFF", dcfv="DCF 目標價", tvsh="永續價值占 EV", peh="同業本益比（Comparable）", pe1="同業前瞻本益比：Fortinet", pe_rel="PANW 資料商前瞻", pxpe="PANW 現價 ÷", per_h="期間與評等邊界", att2="上檔空間歸因：歷史相對倍數", pemed="同業中位數", rel="相對倍數調整係數", eps="FY2028 Non-GAAP EPS", cmpabc="Comparable 目標價（A／B／C）", lvl="級距", scncmp="情境 Comparable 目標價 A", tpsb="DCF（股票薪酬加回）目標價（三", valr="估值評等", gate="入不敷出判定用", gtxt="入不敷出判定", wts="情境權重", sdcf="情境 DCF 目標價", scmp="情境 Comparable 目標價").items()}
+    rec="投資建議", scn_tp="情境目標價 A", gate_scn="收支關卡 A", dcf_h="DCF 彙總", pvx="明確期 FCFF", dcfv="DCF 目標價", tvsh="永續價值占 EV", peh="同業 P/S（Comparable", pe1="同業 P/S：Fortinet", pe_rel="PANW 資料商前瞻", pxpe="PANW 現價 ÷", per_h="期間與評等邊界", att2="上檔空間歸因：歷史相對倍數", pemed="同業中位數", rel="相對倍數調整係數", eps="FY2028 Non-GAAP EPS", cmpabc="Comparable 目標價（A／B／C）", lvl="級距", scncmp="情境 Comparable 目標價 A", tpsb="DCF（股票薪酬加回）目標價（三", valr="估值評等", gate="入不敷出判定用", gtxt="入不敷出判定", wts="情境權重", sdcf="情境 DCF 目標價", scmp="情境 Comparable 目標價").items()}
 SC = {k: find("Sens", t) for k, t in dict(hdr="案例", rel="加權目標價相對基準", note="未涵蓋說明").items()}
 rel_hdr = SC["rel"] + 1
 rel_rows = [r for r in range(rel_hdr + 1, SC["note"]) if wb["Sens"].cell(r, 1).value]
@@ -63,7 +63,7 @@ cfg = {
     {"type": "table", "caption": "DCF（股票薪酬加回）對照：只作對照，不進加權目標價", "head": ["項目", "值／情境 A", "情境 B", "情境 C"], "rowgen": {"sheet": "Val", "rows": f"{V['tpsb']}-{V['tpsb']+2}", "cols": list("ABCD"), "fmts": ["", "n2", "n2", "n2"]}},
     {"type": "table", "caption": "DCF 彙總（三情境；百萬美元，股數為百萬股，每股為美元）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
      "rowgen": {"sheet": "Val", "rows": f"{V['pvx']}-{V['tvsh']}", "cols": list("ABCD")[:1] + list("BCD"), "fmts": ["", "n1", "n1", "n1"], "row_fmt": {str(V["tvsh"]): {c: "p1" for c in "BCD"}, str(V["dcfv"]): {c: "n2" for c in "BCD"}, str(V["dcfv"] - 1): {c: "n2" for c in "BCD"}, str(V["dcfv"] - 2): {c: "n0" for c in "BCD"}}}},
-    {"type": "table", "caption": "Comparable（同業前瞻本益比中位數；倍數分母為 FY2028 Non-GAAP EPS）", "head": ["項目", "值／情境 A", "情境 B", "情境 C"],
+    {"type": "table", "caption": "Comparable（同業 P/S × 歷史相對倍數 × 目標時點 TTM 營收；盈餘型倍數僅對照）", "head": ["項目", "值／情境 A", "情境 B", "情境 C"],
      "rowgen": {"sheet": "Val", "rows": f"{V['peh']+1}-{V['pxpe']}", "cols": list("ABCD"), "fmts": ["", "n2", "n2", "n2"], "row_fmt": {str(V["rel"]): {"C": ""}, str(V["pe_rel"]): {"C": ""}, str(V["pemed"]): {"B": "n2"}}}},
     {"type": "table", "collapse": True, "summary": "展開：歷史相對倍數逐季（共用庫讀值；PS 與 PSG）", "head": ["財季末", "實際財季末", "PANW 市銷率", "同業中位市銷率", "同業家數", "PS 相對值", "PSG 相對值"], "rowgen": {"sheet": "RelHist", "rows": f"7-{RH_END}", "cols": list("ABCDEFG"), "fmts": ["", "", "n2", "n2", "n0", "n2", "n2"]}},
     {"type": "table", "collapse": True, "summary": "展開：歷史相對倍數讀數、Sens 區間與現行比值", "head": ["項目", "數值"], "rowgen": {"sheet": "RelHist", "rows": f"{RH_END+2}-{wb['RelHist'].max_row}", "cols": ["A", "B"], "fmts": ["", "n2"]}},

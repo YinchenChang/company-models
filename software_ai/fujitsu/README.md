@@ -1,12 +1,12 @@
-# software_ai/fujitsu/ — 富士通（6702）個股模型 v0.2（原型 L：按人力計價，套用於 Service Solutions）
+# software_ai/fujitsu/ — 富士通（6702）個股模型 v0.2.1（原型 L：按人力計價，套用於 Service Solutions）
 
 **本版未做先驗**（Andy 2026-11-16 23:27 指示）。工作單：`software_ai/docs/workorders/20261116_第一批_研究包與單位經濟.md` C 節與 G、G2、G3 節。
 
-**建置：** `bash software_ai/fujitsu/make_v02.sh`（`SENS=1` 重跑敏感度與反解）。成品 `dist/20261117_Fujitsu個股模型_v0.2.xlsx`／`.html`。投資建議、目標價與各數字見成品 README 頁與 HTML（由公式組字，本檔不手寫）。
+**建置：** `bash software_ai/fujitsu/make_v021.sh`（`SENS=1` 重跑敏感度與反解）。成品 `dist/20261117_Fujitsu個股模型_v0.2.1.xlsx`／`.html`。投資建議、目標價與各數字見成品 README 頁與 HTML（由公式組字，本檔不手寫）。
 
 **版本表（由建置成品產生，不手寫）：**
 
-<!-- version-table: dist/20261117_Fujitsu個股模型_v0.2.xlsx -->
+<!-- version-table: dist/20261117_Fujitsu個股模型_v0.2.1.xlsx -->
 | 項目 | v0.2 |
 |---|---|
 | 現價 | 3,455.00 |
@@ -23,13 +23,17 @@
 
 **情境：** A 樂觀／B 基準／C 保守，在 AI 淨效果上分化（自動化比例 `a32`、價格保留率 `r`、新專案占比 `n32`），依據與標記見 In 頁。
 
-**檔案：** `build_fujitsu.py`、`sens_fujitsu.py`、`gen_html_json.py`、`segments.json`、`html.json`、`display_check.json`、`make_v02.sh`、`data/`、`dist/`。
+**檔案：** `build_fujitsu.py`、`sens_fujitsu.py`、`gen_html_json.py`、`segments.json`、`html.json`、`display_check.json`、`make_v021.sh`、`data/`、`dist/`。
 
 ## v0.2 改版（G5，2026-11-17）
 - Comparable 相對倍數（rel_mult／cm_adj）改讀 `software_ai/data/relmult_hist/out/fujitsu.json` 的 `geo_base`（Derived；副本 `data/relmult_hist_fujitsu.json`）；Sens 加 `ps_only`／`psg_only`（缺者寫明）與 `sens.low`／`sens.high`（即 cm_adj 低高端）。倍數為 EV／EBIT，以 PS／PSG 相對值近似套用。
 - 無風險利率統一：日本 10 年期 2.77%（Trading Economics，2026-11-11）。
 - 股票薪酬加回 DCF 讀數：Val 與 Recon 並列，只作對照，不進加權目標價。
 - 舊成品移 `dist/_待刪除/`；`data/_待刪除/` 放 v0.1 敏感度與反解結果。
+
+## v0.2.1（G6，2026-11-17）
+- Comparable 主腿改整體 P/S 口徑：同業中位 P/S（relmult_hist 最近一季 2026-06-30，4 家，已標逾期）× rel_mult（geo_base，只用 PS）× 目標時點 TTM 營收 ÷ 股數。原因：PS／PSG 相對值已含利潤率差，套到 EV／EBIT 會重複計入。
+- 分部 EV／EBIT 加總改對照列（rel_mult＝1.00 與本公司現行相對值兩讀數），不進加權目標價。Sens 的 ps_only、sens.low、sens.high 套在 P/S 主腿（psg_only 缺）。
 
 ## 不適用與未做
 - Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照：不適用：富士通不以自建算力為命題。

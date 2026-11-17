@@ -582,7 +582,7 @@ def build(out, ov=None, sens=None, kreq=None):
     VR["dsum0"] = d0 + 2
     c0 = VR["dsum0"] + len(dsum_keys) + 2
     VR["cmp_hdr"] = c0
-    cmp_keys = ["eps27", "eps28", "w27", "ntm", "pe", "cmpps"]
+    cmp_keys = ["rev26", "rev27", "wt", "ttm", "ps", "shs", "cmpps", "eps27", "eps28", "w27", "ntm", "pe1", "cmppe1", "pe2", "cmppe2"]
     VR["cmp0"] = c0 + 2
     p0 = VR["cmp0"] + len(cmp_keys) + 2
     VR["peer_hdr"] = p0
@@ -607,7 +607,7 @@ def build(out, ov=None, sens=None, kreq=None):
             f_(V, f"E{r_}", fe)
     cmpr = {k: VR["cmp0"] + i for i, k in enumerate(cmp_keys)}
     vr("tpdcf", "DCF 目標價（情境加權）", "=" + "+".join(f"tp_w{s}*CF!C{CB[s]['ps1']}" for s in SC), "0.00", fe="情境權重 25／50／25")
-    vr("tpcomp", "Comparable 目標價（同業前瞻 P/E 中位數法；情境加權）", "=" + "+".join(f"tp_w{s}*{c}{cmpr['cmpps']}" for s, c in zip(SC, "BCD")), "0.00")
+    vr("tpcomp", "Comparable 目標價（同業 P/S 中位數法；情境加權）", "=" + "+".join(f"tp_w{s}*{c}{cmpr['cmpps']}" for s, c in zip(SC, "BCD")), "0.00")
     vr("tp", "目標價（DCF 與 Comparable 加權）", f"=w_dcf*B{VR['tpdcf']}+(1-w_dcf)*B{VR['tpcomp']}", "0.00", fe=tf("DCF 權重 ", ("w_dcf", "0%"), "、Comparable ", ("1-w_dcf", "0%")))
     vr("px", "現價", "=px", "0.00", fe=tf("股價基準日 ", ("px_date", "yyyy-mm-dd"), "（QuiverQuant 與 ChartRow 兩處同值）"))
     vr("cons", "賣方平均目標價（只作對照）", "=c_tp", "0.00", fe="TickFlow 2026-11-16，49 位；只作對照")
@@ -628,8 +628,8 @@ def build(out, ov=None, sens=None, kreq=None):
     vr("uattr", "上檔空間三段歸因：DCF 貢獻／未調整 Comparable 貢獻（係數＝1）／相對倍數調整", f"=w_dcf*B{VR['updcf']}", "+0.0%;-0.0%", f"=(1-w_dcf)*((B{VR['tpcomp']}/rel_mult)/px-1)",
        f"=B{VR['up']}-B{VR['uattr']}-C{VR['uattr']}", fe="相對倍數係數取 相對倍數歷史讀數的幾何平均基準（Derived，PS 與 PSG 兩讀數幾何平均），第三項即其貢獻；Sens 有 PS 單讀數、PSG 單讀數、歷史低、歷史高四案")
     vr("dep", "加權目標價中 DCF／Comparable 各占的美元", f"=w_dcf*B{VR['tpdcf']}", "0.00", f"=(1-w_dcf)*B{VR['tpcomp']}")
-    vr("perel", "現行相對倍數：HUBS 前瞻 P/E ÷ 同業中位數／隱含重估（係數 ÷ 現行 − 1）", "=c_pe_hubs/pe_med", "0.00", "=rel_mult/B" + str(VR["perel"]) + "-1", nfc="+0.0%;-0.0%",
-       fe=tf("HUBS 現行前瞻 P/E ", ("c_pe_hubs", "0.0"), " 倍對同業中位數 ", ("pe_med", "0.0"), " 倍；相對倍數係數基準 ", ("rel_mult", "0.00"), "（相對倍數歷史讀數幾何平均基準，Derived）"))
+    vr("perel", "現行相對倍數：HUBS 最近一季 P/S ÷ 同業中位數／隱含重估（係數 ÷ 現行 − 1）", "=rel_ps_now", "0.00", "=rel_mult/B" + str(VR["perel"]) + "-1", nfc="+0.0%;-0.0%",
+       fe=tf("HUBS 最近一季末（", ("ps_peer_date", "yyyy-mm-dd"), "）P/S 對同業中位數 ", ("rel_ps_now", "0.00"), " 倍；現行前瞻 P/E 對同業 ", ("c_pe_hubs/pe_med", "0.00"), " 倍；相對倍數係數基準 ", ("rel_mult", "0.00"), "（相對倍數歷史讀數幾何平均基準，Derived）"))
     vr("gap", "DCF 與 Comparable 落差（每股，US$；Comparable − DCF，情境加權）", f"=B{VR['tpcomp']}-B{VR['tpdcf']}", "+0.00;-0.00", fe="以下四列公式分解（工作單 G2.8）")
     sbcw = "(" + "+".join(f"tp_w{s}*CF!C{CB[s]['sbcpv']}" for s in SC) + ")"
     vr("gap_sbc", "落差分解 1：股票薪酬（DCF 費用化、Comparable 的非 GAAP EPS 不扣；SBC 稅後現值每股）", f"={sbcw}", "+0.00;-0.00")
@@ -683,21 +683,37 @@ def build(out, ov=None, sens=None, kreq=None):
         for c, s in zip("BCD", SC):
             f_(V, f"{c}{rr}", f"=CF!C{CB[s][k]}", dsum[k][1])
     # Comparable 表
-    f_(V, f"A{c0}", "Comparable（情境 A／B／C；同業前瞻 P/E 中位數 × 相對倍數係數 × 目標時點 NTM 非 GAAP EPS）", bold=True)
+    f_(V, f"A{c0}", "Comparable 主腿（情境 A／B／C；同業中位 P/S × 相對倍數係數 × 目標時點 TTM 營收 ÷ 稀釋股數）；其後為本益比對照列（不進加權目標價）", bold=True)
     for j, h in enumerate(["項目", "情境 A", "情境 B", "情境 C"], 1):
         f_(V, f"{L_(j)}{c0 + 1}", h, bold=True, fill=HDR)
+    clab0 = {"rev26": ("FY2026E 營收（US$M）", "#,##0.0"), "rev27": ("FY2027E 營收（US$M）", "#,##0.0"), "wt": ("FY2026 權重＝((2026-12-31) − (目標時點 − 365 天)) ÷ 365", "0.000"),
+             "ttm": ("目標時點 TTM 營收（US$M；日期加權）", "#,##0.0"), "ps": ("採用 P/S（同業中位 P/S × 相對倍數係數）", "0.00"), "shs": ("稀釋股數（百萬股；評價股數）", "0.000"),
+             "cmpps": ("主腿每股價值（目標時點，US$）", "0.00"), "pe1": ("對照：P/E（同業中位數，係數＝1.00）", "0.0"), "cmppe1": ("對照：P/E 每股價值（係數＝1.00，US$）", "0.00"),
+             "pe2": ("對照：P/E（HUBS 現行相對值，即現行前瞻 P/E）", "0.0"), "cmppe2": ("對照：P/E 每股價值（現行相對值，US$）", "0.00")}
     clab = {"eps27": ("FY2027E 非 GAAP EPS（US$）", "0.00"), "eps28": ("FY2028E 非 GAAP EPS（US$）", "0.00"),
             "w27": ("FY2027 權重＝(2027-12-31 − 目標時點) ÷ 365", "0.000"), "ntm": ("目標時點 NTM 非 GAAP EPS（US$）", "0.00"),
-            "pe": ("採用 P/E（同業中位數 × 相對倍數係數；倍數分母＝前瞻一年每股盈餘）", "0.0"), "cmpps": ("每股價值（目標時點，US$）", "0.00")}
+            }
+    clab.update(clab0)
     for i, k in enumerate(cmp_keys):
         f_(V, f"A{cmpr[k]}", clab[k][0])
+    for k, r_ in cmpr.items():
+        VR["c_" + k] = r_
     for c, s in zip("BCD", SC):
         f_(V, f"{c}{cmpr['eps27']}", f"=PL!H{PB[s]['ngeps']}", "0.00")
         f_(V, f"{c}{cmpr['eps28']}", f"=PL!I{PB[s]['ngeps']}", "0.00")
         f_(V, f"{c}{cmpr['w27']}", "=(DATE(2027,12,31)-tp_date)/365", "0.000")
         f_(V, f"{c}{cmpr['ntm']}", f"={c}{cmpr['w27']}*{c}{cmpr['eps27']}+(1-{c}{cmpr['w27']})*{c}{cmpr['eps28']}", "0.00")
-        f_(V, f"{c}{cmpr['pe']}", "=pe_med*rel_mult", "0.0")
-        f_(V, f"{c}{cmpr['cmpps']}", f"={c}{cmpr['pe']}*{c}{cmpr['ntm']}", "0.00")
+        f_(V, f"{c}{cmpr['rev26']}", f"=PL!F{PB[s]['rev']}", "#,##0.0")
+        f_(V, f"{c}{cmpr['rev27']}", f"=PL!G{PB[s]['rev']}", "#,##0.0")
+        f_(V, f"{c}{cmpr['wt']}", "=(DATE(2026,12,31)-(tp_date-365))/365", "0.000")
+        f_(V, f"{c}{cmpr['ttm']}", f"={c}{cmpr['wt']}*{c}{cmpr['rev26']}+(1-{c}{cmpr['wt']})*{c}{cmpr['rev27']}", "#,##0.0")
+        f_(V, f"{c}{cmpr['ps']}", "=ps_peer*rel_mult", "0.00")
+        f_(V, f"{c}{cmpr['shs']}", "=sh_val", "0.000")
+        f_(V, f"{c}{cmpr['cmpps']}", f"={c}{cmpr['ps']}*{c}{cmpr['ttm']}/{c}{cmpr['shs']}", "0.00")
+        f_(V, f"{c}{cmpr['pe1']}", "=pe_med", "0.0")
+        f_(V, f"{c}{cmpr['cmppe1']}", f"={c}{cmpr['pe1']}*{c}{cmpr['ntm']}", "0.00")
+        f_(V, f"{c}{cmpr['pe2']}", "=c_pe_hubs", "0.0")
+        f_(V, f"{c}{cmpr['cmppe2']}", f"={c}{cmpr['pe2']}*{c}{cmpr['ntm']}", "0.00")
     # 同業表
     f_(V, f"A{p0}", "同業前瞻 P/E（ChartRow，2026-11-13；分母口徑與租賃處理未核；皆為美國 GAAP 申報人）", bold=True)
     for j, h in enumerate(["同業", "前瞻 P/E（倍）"], 1):
@@ -853,8 +869,8 @@ def revdcf(wb, RV, VR, vw):
         f_(RV, f"D{r}", f"=B{r}/C{r}-1", "+0.0%;-0.0%")
         A[key] = r
         r += 1
-    cmp_("sps", "情境 B 每股價值（目標時點；Comparable，美元）", "=px", f"=Val!C{cmpb + 5}", "0.00")
-    cmp_("spe", "隱含 P/E（現價 ÷ 目標時點 NTM 非 GAAP EPS；倍）", f"=px/{ntm}", "=pe_med*rel_mult", "0.0")
+    cmp_("sps", "情境 B 每股價值（目標時點；Comparable 主腿 P/S，美元）", "=px", f"=Val!C{VR['c_cmpps']}", "0.00")
+    cmp_("spe", "隱含 P/S（現價 ÷ 目標時點每股 TTM 營收；倍）", f"=px/(Val!$C${VR['c_ttm']}/Val!$C${VR['c_shs']})", "=ps_peer*rel_mult", "0.00")
     cmp_("scmp", "加權（DCF 不變）：支持現價所需的 Comparable 每股價值（情境加權；美元）", f"=(px-w_dcf*Val!$B${VR['tpdcf']})/(1-w_dcf)", f"=Val!$B${VR['tpcomp']}", "0.00")
     r += 1
     f_(RV, f"A{r}", "C. 摘要（HTML 用；公式帶數字）", bold=True)
@@ -865,8 +881,8 @@ def revdcf(wb, RV, VR, vw):
                       "）；或預測期營業利益率 ", (f"B{A['m1']}", "0%"), "（模型等效約 ", (f"B{A['m0']}", "0%"), "，終值年權重大）。"))
     A["sum_dcf"] = r
     r += 1
-    f_(RV, f"A{r}", tf("同業倍數法：現價 ", ("px", "0.00"), " 美元相當於目標時點 NTM 非 GAAP EPS 的 ", (f"B{A['spe']}", "0.0"), " 倍 P/E，模型採用同業中位數 ", (f"C{A['spe']}", "0.0"),
-                      " 倍；現價對模型 EPS 的倍數比同業中位數", ("IF(B" + str(A['spe']) + "<C" + str(A['spe']) + ",\"低\",\"高\")", "@"), (f"ABS(D{A['spe']})", "0%"), "。"))
+    f_(RV, f"A{r}", tf("同業倍數法：現價 ", ("px", "0.00"), " 美元相當於目標時點每股 TTM 營收的 ", (f"B{A['spe']}", "0.00"), " 倍 P/S，模型採用 ", (f"C{A['spe']}", "0.00"),
+                      " 倍；現價的 P/S 比模型採用值", ("IF(B" + str(A['spe']) + "<C" + str(A['spe']) + ",\"低\",\"高\")", "@"), (f"ABS(D{A['spe']})", "0%"), "。"))
     A["sum_cmp"] = r
     RV.column_dimensions["A"].width = 76
     for c in "BCDEFGH":
@@ -936,7 +952,7 @@ def recon(wb, RC, VR, kreq, keyrow):
     row("k_up", "評等翻轉（中立→買進）：上檔空間觸及 +25% 所需的增量利益率", [kr.get("flip_p25", None)], ["0.0%"], "整本重算快照")
     r += 1
     sec("4. 資料日期核對（相對股價基準日；超過 2 個交易日標逾期；工作單 G2.10）", ["項目", "資料日", "與股價基準日相差（交易日）", "狀態"])
-    for key, lab, dn in [("d_rf", "無風險利率", "rf_date"), ("d_pe", "同業前瞻 P/E", "pe_date"), ("d_cons", "賣方共識", "c_date"), ("d_px", "現價", "px_date")]:
+    for key, lab, dn in [("d_rf", "無風險利率", "rf_date"), ("d_pe", "同業前瞻 P/E（對照）", "pe_date"), ("d_ps", "同業 P/S（主腿；relmult_hist 季末）", "ps_peer_date"), ("d_cons", "賣方共識", "c_date"), ("d_px", "現價", "px_date")]:
         f_(RC, f"A{r}", lab)
         f_(RC, f"B{r}", f"={dn}", "yyyy-mm-dd")
         f_(RC, f"C{r}", f"=NETWORKDAYS(MIN(B{r},px_date),MAX(B{r},px_date))-1", "0")
@@ -1052,7 +1068,7 @@ def readme(wb, RD, build_id, VR, RVA, RCA, vw, SENS):
     f_(RD, "A45", tf("1. AI 為 HubSpot 帶來增量還是侵蝕：FY2032 情境 A／B／C 的 AI 淨效果 US$M ", (f"Thesis!L{TB['A']['net']}", "#,##0"), "／", (f"Thesis!L{TB['B']['net']}", "#,##0"), "／", (f"Thesis!L{TB['C']['net']}", "#,##0"),
                     "（按任務營收減席位取代損失與增量推論成本）；按任務計價營收在情境 A 亦僅占 FY2032 營收 ", (f"Thesis!L{TB['A']['aiRev']}/Thesis!L{TB['A']['rev']}", "0.0%"), "。"))
     f_(RD, "A46", tf("2. 推論成本是否吃掉毛利：情境 B 的 FY2032 推論成本占非 GAAP 營業成本 ", (f"Thesis!L{TB['B']['share']}", "0.0%"), "；每解決任務推論成本占單價 ", ("Thesis!D9", "0.0%"), "；損益兩平每任務單價 US$", (f"Thesis!L{TB['B']['brk']}", "0.00"), "。"))
-    f_(RD, "A47", tf("3. 現價隱含什麼：FY2028 起現金流須為情境 B 基準的 ", (f"RevDCF!B{RVA['evx']}", "0.0"), " 倍；或目標時點 NTM 非 GAAP EPS 的 P/E 為 ", (f"RevDCF!B{RVA['spe']}", "0.0"), " 倍（同業中位數 ", ("pe_med", "0.0"), "）。"))
+    f_(RD, "A47", tf("3. 現價隱含什麼：FY2028 起現金流須為情境 B 基準的 ", (f"RevDCF!B{RVA['evx']}", "0.0"), " 倍；或目標時點每股 TTM 營收的 P/S 為 ", (f"RevDCF!B{RVA['spe']}", "0.00"), " 倍（模型採用 ", (f"RevDCF!C{RVA['spe']}", "0.00"), "）。"))
     f_(RD, "A49", "未做先驗：本版未套用任何先驗（依工作單先跳過）；公開 repo，內容只含公司與市場事實。")
     f_(RD, "A50", "不適用：算力 MW、Tokenomics 自用 AI 讀法 2、Wattonomics（HubSpot 不自建算力，推論成本向模型商購買）。")
     f_(RD, "A51", "不適用：三層協調（Coord 頁、C0、兩讀數）：非 Siliconomics 覆蓋。")

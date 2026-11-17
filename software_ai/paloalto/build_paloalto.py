@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Palo Alto Networks（PANW）個股模型 v0.2：命題（原型 P 按防護範圍計價）＋營收線 → 損益表 → FCFF DCF／同業本益比。
+"""Palo Alto Networks（PANW）個股模型 v0.2：命題（原型 P 按防護範圍計價）＋營收線 → 損益表 → FCFF DCF／同業 P/S。
 用法：python3 software_ai/paloalto/build_paloalto.py [--sens-only] [--no-sens]
   1. 建基準檔並以 LibreOffice 重算；2. 逐案整本重算（Sens）；3. 寫成品 dist/<日期>_Palo Alto Networks個股模型_v0.2.xlsx 並重算。
 需要：python3＋openpyxl、LibreOffice（soffice）。暫存檔在 /home/claude/scratch/paloalto。"""
@@ -133,6 +133,10 @@ inp("pe_z", "同業前瞻本益比 Zscaler（ZS）", "x", None, 39.22, None, "In
 inp("pe_c", "同業前瞻本益比 Check Point（CHKP）", "x", None, 13.70, None, "Interested-party", "StockAnalysis.com CHKP 統計頁（同上）", "US GAAP（以色列公司，申報 US GAAP）", INC_DATA, "0.00")
 inp("pe_n", "同業前瞻本益比 Cloudflare（NET）", "x", None, 174.39, None, "Interested-party", "StockAnalysis.com NET 統計頁（同上）", "US GAAP", INC_DATA, "0.00")
 inp("pe_p", "PANW 資料商前瞻本益比（展示；同源同日）", "x", None, 77.10, None, "Interested-party", SRC["SAS"], "只用於相對倍數高案與 Recon 展示", INC_DATA, "0.00")
+_PSS = "共用庫 software_ai/data/relmult_hist/%s.csv（StockAnalysis 季度比率頁；PS＝市值÷TTM 營收）"
+inp("ps_f", "同業 P/S Fortinet（FTNT；季末 2026-09-30）", "x", None, 16.64, None, "Verified", _PSS % "FTNT", "最近一季；季末日與現價日相差逾 2 個交易日，標逾期（第 15 條）", "", "0.00")
+inp("ps_z", "同業 P/S Zscaler（ZS；季末 2026-06-30）", "x", None, 7.29, None, "Verified", _PSS % "ZS", "最近一季；逾期（同上）", "", "0.00")
+inp("ps_c", "同業 P/S Check Point（CHKP；季末 2026-06-30）", "x", None, 4.95, None, "Verified", _PSS % "CHKP", "最近一季；逾期（同上）", "", "0.00")
 inp("rel_adj", "相對倍數調整係數（本公司 ÷ 同業中位數的歷史相對倍數；以 PS／PSG 相對值近似套用於前瞻本益比）", "x", "=rel_lo", "=rel_med", "=rel_hi", "Derived", "共用庫 software_ai/data/relmult_hist/out/paloalto.json（" + RELJ["generated"] + "）的 geo_base；base_source：" + RELG["base_source"] + "；同業 " + "、".join(RELG["peers"]) + "；RelHist 頁逐點", "基準＝PS 與 PSG 兩讀數的幾何平均；低／高＝共用庫 sens.low／sens.high；ps_only、psg_only 另列 Sens 案；列入承重輸入（第 18 條）", "", "0.00")
 
 sec("G. 只作對照的公司指引、目標與共識（不進模型）")
@@ -456,8 +460,9 @@ def scenario(wb, ws, sc):
         ("vpss", "每股價值（股票薪酬加回；評價日；對照）", "US$", "=(C{evsb}+C{ncash})/C{shv}"),
         ("tpdcfs", "DCF（股票薪酬加回）目標價（目標時點；對照，不進加權目標價）", "US$", "=MAX(0,C{vpss}*C{roll})"),
         ("tvsh", "永續價值占 EV", "%", '=IF(C{ev}>0,C{pvtv}/C{ev},"N/M")'),
-        ("tpcmp", "同業本益比目標價（同業中位前瞻本益比 × 調整係數 × FY2028 Non-GAAP EPS）", "US$", "=pe_med*rel_adj*G{ngeps}"),
-        ("tps", "情境目標價（DCF 與同業本益比依權重）", "US$", "=w_dcf*C{tpdcf}+(1-w_dcf)*C{tpcmp}"),
+        ("ttmt", "目標時點 TTM 營收（FY2027 ＋ 目標日距 FY2027 年底的比例 × FY2028 增量）", "US$M", "=F{rev}+MIN(1,MAX(0,(tp_date-DATE(2027,7,31))/365))*(G{rev}-F{rev})"),
+        ("tpcmp", "Comparable 目標價（同業中位 P/S × 歷史相對倍數 × 目標時點 TTM 營收 ÷ 評價日稀釋股數）", "US$", "=ps_med*rel_adj*C{ttmt}/C{shv}"),
+        ("tps", "情境目標價（DCF 與 Comparable 依權重）", "US$", "=w_dcf*C{tpdcf}+(1-w_dcf)*C{tpcmp}"),
         ("gate", "收支關卡：FY2027–FY2031 自由現金流（扣股利）合計", "US$M", "=SUM(F{fcf}:J{fcf})"),
     ]
     r = scal_start; ws.cell(r - 1, 1, "六、DCF 彙總與目標價").font = BOLD
@@ -582,7 +587,7 @@ def tier_f(u):
 
 def valuation(wb, S, RW):
     ws = S["Val"]; R = RW["PL"]
-    ws["A1"] = "Val — 估值：DCF（FCFF）與同業本益比（Comparable）加權；三情境各算一次再依權重加權"
+    ws["A1"] = "Val — 估值：DCF（FCFF）與同業 P/S（Comparable）加權；三情境各算一次再依權重加權"
     rows = {}
     def put(key, label, b=None, c=None, d=None, fmt="#,##0.00", note="", bold=False):
         r = put.r; rows[key] = r; put.r += 1
@@ -613,9 +618,9 @@ def valuation(wb, S, RW):
     # 目標價摘要
     put("sec2", "目標價與評等（目標時點＝現價日起 12 個月）", bold=True)
     put("px", "現價（2026-11-13 收盤）", "=px", fmt="#,##0.00")
-    put("tp", "加權目標價（DCF 與同業本益比加權）", "=w_dcf*B{tpdcf}+(1-w_dcf)*B{tpcmp}", bold=True)
+    put("tp", "加權目標價（DCF 與 Comparable 加權）", "=w_dcf*B{tpdcf}+(1-w_dcf)*B{tpcmp}", bold=True)
     put("tpdcf", "DCF 目標價（三情境加權）", "=tp_wA*PL_A!C%d+tp_wB*PL!C%d+tp_wC*PL_C!C%d" % ((R["tpdcf"],) * 3))
-    put("tpcmp", "Comparable 目標價（同業前瞻本益比中位數法，三情境加權）", "=tp_wA*PL_A!C%d+tp_wB*PL!C%d+tp_wC*PL_C!C%d" % ((R["tpcmp"],) * 3))
+    put("tpcmp", "Comparable 目標價（同業 P/S 法，三情境加權）", "=tp_wA*PL_A!C%d+tp_wB*PL!C%d+tp_wC*PL_C!C%d" % ((R["tpcmp"],) * 3))
     put("cons", "市場共識目標價（賣方 55 家平均，2026-11-14）", "=cons_tp", note="顯示用，只作對照，不進模型")
     put("up", "加權目標價上檔空間", "=B{tp}/B{px}-1", fmt="+0.0%;-0.0%")
     put("upd", "DCF 目標價上檔空間", "=B{tpdcf}/B{px}-1", fmt="+0.0%;-0.0%")
@@ -637,16 +642,24 @@ def valuation(wb, S, RW):
     for k, lab, u in [("pvx", "明確期 FCFF 現值", "#,##0"), ("pvtv", "永續價值現值", "#,##0"), ("ev", "企業價值 EV", "#,##0"), ("ncash", "淨現金", "#,##0"), ("eqv", "股權價值", "#,##0"),
                       ("shv", "評價日股數（百萬）", "#,##0.0"), ("vps", "每股價值（評價日）", "#,##0.00"), ("tpdcf", "DCF 目標價", "#,##0.00"), ("tvsh", "永續價值占 EV", "0.0%")]:
         put("d_" + k, lab, "=PL_A!C%d" % R[k], "=PL!C%d" % R[k], "=PL_C!C%d" % R[k], fmt=u)
-    put("sec4", "同業本益比（Comparable）", bold=True)
+    put("sec4", "同業 P/S（Comparable 主腿；與歷史相對倍數同口徑）", bold=True)
+    put("psf", "同業 P/S：Fortinet（季末 2026-09-30；逾期）", "=ps_f", fmt="0.00")
+    put("psz", "同業 P/S：Zscaler（季末 2026-06-30；逾期）", "=ps_z", fmt="0.00")
+    put("psc", "同業 P/S：Check Point（季末 2026-06-30；逾期）", "=ps_c", fmt="0.00")
+    put("psmed", "同業中位 P/S（3 家；不做迴歸）", "=MEDIAN(B{psf}:B{psc})", fmt="0.00", bold=True)
+    put("adj", "歷史相對倍數（geo_base；PS 與 PSG 兩讀數幾何平均）", "=rel_adj", fmt="0.00", note="共用庫 relmult_hist（RelHist 頁；Derived）；主腿用 P/S 是為與 PS／PSG 相對值同口徑，避免重複計入利潤率差")
+    put("ttm", "目標時點 TTM 營收（A／B／C；US$M）", "=PL_A!C%d" % R["ttmt"], "=PL!C%d" % R["ttmt"], "=PL_C!C%d" % R["ttmt"], fmt="#,##0")
+    put("cmp", "Comparable 目標價（A／B／C）", "=PL_A!C%d" % R["tpcmp"], "=PL!C%d" % R["tpcmp"], "=PL_C!C%d" % R["tpcmp"])
+    put("sec4b", "對照：前瞻本益比 Comparable（不進加權目標價；盈餘型倍數與 PS 相對值口徑不同）", bold=True)
     put("pef", "同業前瞻本益比：Fortinet", "=pe_f", fmt="0.00")
     put("pez", "同業前瞻本益比：Zscaler", "=pe_z", fmt="0.00")
     put("pec", "同業前瞻本益比：Check Point", "=pe_c", fmt="0.00")
     put("pen", "同業前瞻本益比：Cloudflare", "=pe_n", fmt="0.00")
-    put("pemed", "同業中位數（4 家；不做迴歸）", "=MEDIAN(B{pef}:B{pen})", fmt="0.00", bold=True)
-    put("adj", "相對倍數調整係數", "=rel_adj", fmt="0.00", note="歷史相對倍數中位數（RelHist 頁，PANW ÷ 同業中位市銷率，近 5 年 21 點；Derived）")
+    put("pemed", "同業前瞻本益比中位數（4 家；不做迴歸）", "=MEDIAN(B{pef}:B{pen})", fmt="0.00", bold=True)
     put("eps28", "FY2028 Non-GAAP EPS（A／B／C）", "=PL_A!G%d" % R["ngeps"], "=PL!G%d" % R["ngeps"], "=PL_C!G%d" % R["ngeps"])
-    put("cmp", "Comparable 目標價（A／B／C）", "=PL_A!C%d" % R["tpcmp"], "=PL!C%d" % R["tpcmp"], "=PL_C!C%d" % R["tpcmp"])
-    put("pxpe", "PANW 資料商前瞻本益比 ÷ 同業中位數（展示；同一資料商同日口徑）", "=pe_p/B{pemed}", fmt="0.00", note="分子為 StockAnalysis 2026-11-13 前瞻本益比（Interested-party，資料商口徑）；高案相對倍數係數取此值")
+    put("pxpe", "PANW 資料商前瞻本益比 ÷ 同業中位數（展示；本公司現行相對值）", "=pe_p/B{pemed}", fmt="0.00", note="分子為 StockAnalysis 2026-11-13 前瞻本益比（Interested-party，資料商口徑）")
+    put("pe1", "對照：前瞻本益比目標價，相對值 1.00（A／B／C）", "=B{pemed}*B{eps28}", "=B{pemed}*C{eps28}", "=B{pemed}*D{eps28}", note="不進加權目標價")
+    put("pe2", "對照：前瞻本益比目標價，本公司現行相對值（A／B／C）", "=B{pemed}*B{pxpe}*B{eps28}", "=B{pemed}*B{pxpe}*C{eps28}", "=B{pemed}*B{pxpe}*D{eps28}", note="不進加權目標價")
     put("pemod", "PANW 現價 ÷ 模型 FY2027 Non-GAAP EPS（情境 B；NTM 近似）", "=px/PL!F%d" % R["ngeps"], fmt="0.00")
     put("sec5", "期間與評等邊界", bold=True)
     put("per_d", "折現期間（評價日 → 目標時點，年）", "=(tp_date-val_date)/365", fmt="0.00")
@@ -664,7 +677,7 @@ def valuation(wb, S, RW):
                 c.value = re.sub(r"\{(\w+)\}", lambda m: str(rows[m.group(1)]), c.value)
         a = ws.cell(r, 1)
     for k in ("ke", "wacc"): bname(wb, k, f"Val!$B${rows[k]}")
-    bname(wb, "pe_med", f"Val!$B${rows['pemed']}")
+    bname(wb, "pe_med", f"Val!$B${rows['pemed']}"); bname(wb, "ps_med", f"Val!$B${rows['psmed']}")
     bname(wb, "pe_rel_live", f"Val!$B${rows['pxpe']}")
     ws.column_dimensions["A"].width = 78; ws.column_dimensions["E"].width = 70
     for c in "BCD": ws.column_dimensions[c].width = 14
@@ -678,7 +691,7 @@ def relhist(wb, ws):
     ws["A1"] = "RelHist — 歷史相對倍數（共用庫讀值）：本公司 ÷ 同業中位數的 PS 與 PSG 相對值；基準＝兩讀數幾何平均（Derived）"
     ws["A2"] = "來源：software_ai/data/relmult_hist/out/paloalto.json（" + RELJ["generated"] + "）；同業 " + "、".join(g["peers"]) + "；資料為共用庫自 StockAnalysis 季度比率頁取得。本頁數值為庫內讀值的逐點複製，改版時重讀 JSON。"
     ws["A3"] = RELJ["method"] + "。" + RELJ["align"] + "。" + RELJ["ttm_growth_method"]
-    ws["A4"] = "套用：本公司 Comparable 倍數為前瞻本益比，以 PS／PSG 相對值近似套用於前瞻本益比（PANW 與同業的利益率不同，屬近似）。"
+    ws["A4"] = "套用（G6）：Comparable 主腿為同業 P/S × 本頁相對倍數 × 目標時點 TTM 營收 ÷ 稀釋股數，與 PS／PSG 相對值同口徑（相對值已內含利潤率差，不再套到盈餘型倍數）；前瞻本益比 Comparable 只作對照列。"
     for j, h in enumerate(["財季末（對齊日曆季末）", "實際財季末", "PANW 市銷率", "同業中位市銷率", "同業家數", "PS 相對值", "PSG 相對值"]):
         ws.cell(6, 1 + j, h).font = BOLD
     r0 = 7
@@ -701,7 +714,7 @@ def relhist(wb, ws):
         if nm: bname(wb, nm, f"RelHist!$B${r}")
         r += 1
     ws.cell(r, 1, "base_source"); ws.cell(r, 2, g["base_source"]); r += 1
-    ws.cell(r, 1, "現行相對倍數：前瞻本益比（資料商，Val 頁；展示，不進基準）"); c = ws.cell(r, 2, "=pe_rel_live"); c.number_format = "0.00"
+    ws.cell(r, 1, "本公司現行前瞻本益比相對值（資料商，Val 頁；對照，不進基準）"); c = ws.cell(r, 2, "=pe_rel_live"); c.number_format = "0.00"
     ws.column_dimensions["A"].width = 70
     for c in "BCDEFG": ws.column_dimensions[c].width = 18
 
@@ -875,7 +888,7 @@ def make_cases():
 # ====================================================================== Sens
 def sensitivity(wb, ws, V, sens, fp, rec_tp, build_id):
     ws["A1"] = "Sens — 敏感度：一次動一個輸入，整本重算（LibreOffice）後記錄目標價；本頁為建置快照（X6），不是活公式"
-    ws["A2"] = "讀法：低案、高案＝In 頁敏感度低、敏感度高欄；加權目標價＝DCF 與同業本益比依 w 加權。群組案「三情境 AI 參數同時取情境 B」說明情境分化的貢獻。每 MW 持有成本群組不適用：本模型不讀 Tokenomics 每 MW 持有成本。"
+    ws["A2"] = "讀法：低案、高案＝In 頁敏感度低、敏感度高欄；加權目標價＝DCF 與 Comparable（P/S）依 w 加權。群組案「三情境 AI 參數同時取情境 B」說明情境分化的貢獻。每 MW 持有成本群組不適用：本模型不讀 Tokenomics 每 MW 持有成本。"
     ws["A3"] = "build_id"; ws["D3"] = build_id
     ws["A4"] = "模型狀態"
     ws["A5"] = "輸入指紋（敏感度重算時記錄；In 頁 D 至 F 欄數值合計）"; ws["D5"] = fp
@@ -929,7 +942,7 @@ def readme(wb, ws, RW, V, build_id, sens):
     put.r = 4
     v = lambda k, c="B": f"Val!{c}{V[k]}"
     tx = lambda ref, f: f'TEXT({ref},"{f}")'
-    put("hero", '="估值評等"&' + v("vrate") + '&"；投資建議"&' + v("rec") + '&"。加權目標價 "&' + tx(v("tp"), "0") + '&" 美元對現價 "&' + tx(v("px"), "0.00") + '&" 美元（"&TEXT(px_date,"yyyy-mm-dd")&" 收盤）"&' + tx(v("up"), "+0%;-0%") + '&"；DCF "&' + tx(v("tpdcf"), "0") + '&"、同業本益比 "&' + tx(v("tpcmp"), "0") + '&"、賣方共識 "&' + tx("cons_tp", "0") + '&"。條件：核心營業利益率每年小幅改善、股票薪酬占營收逐年下降（歷史規模經濟，Sens 有全期持平案）；"&IF(RevDCF!B{m1}>1,"反向 DCF 無解（所需營業利益率 "&TEXT(RevDCF!B{m1},"0%")&"，超過 100%）","現價隱含核心營業利益率 "&TEXT(RevDCF!B{m1},"0%")&"，模型 "&TEXT(nm0,"0%"))&"。"')
+    put("hero", '="估值評等"&' + v("vrate") + '&"；投資建議"&' + v("rec") + '&"。加權目標價 "&' + tx(v("tp"), "0") + '&" 美元對現價 "&' + tx(v("px"), "0.00") + '&" 美元（"&TEXT(px_date,"yyyy-mm-dd")&" 收盤）"&' + tx(v("up"), "+0%;-0%") + '&"；DCF "&' + tx(v("tpdcf"), "0") + '&"、Comparable（P/S）"&' + tx(v("tpcmp"), "0") + '&"、賣方共識 "&' + tx("cons_tp", "0") + '&"。條件：核心營業利益率每年小幅改善、股票薪酬占營收逐年下降（歷史規模經濟，Sens 有全期持平案）；"&IF(RevDCF!B{m1}>1,"反向 DCF 無解（所需營業利益率 "&TEXT(RevDCF!B{m1},"0%")&"，超過 100%）","現價隱含核心營業利益率 "&TEXT(RevDCF!B{m1},"0%")&"，模型 "&TEXT(nm0,"0%"))&"。"')
     put("rec", '="上檔空間 "&' + tx(v("up"), "+0%;-0%") + '&"：DCF 貢獻 "&' + tx(v("attr_d"), "+0%;-0%") + '&"、同業中位倍數 "&' + tx(v("attr_c1"), "+0%;-0%") + '&"、歷史相對倍數調整 "&' + tx(v("attr_c2"), "+0%;-0%") + '&"（三段相加）。DCF（RONIC＝WACC）假設無持續競爭優勢，Comparable 以同業倍數隱含優勢延續，兩法假設相反。失效條件：費用率與同業估值。"')
     put("t1", '="命題：AI 讓資安的受保護範圍從人與端點擴大到代理（非人類身分），NGS ARR ＝ 受保護單位 × 每單位營收，使用者問的是 AI 帶來的營收增量，能否大於定價侵蝕與推論成本。"')
     put("t2", '="營收線：Product 與 Subscription and support（單一應報導分部下 10-K 固定揭露的兩條線）；命題模組只驅動 Subscription and support 之下的 NGS ARR 相關營收。"')
@@ -937,20 +950,20 @@ def readme(wb, ws, RW, V, build_id, sens):
     put("a1", '="問題一：AI 增量是否大於侵蝕與推論成本？答：情境 B 下 FY2032 AI 淨效果（增量 − 侵蝕 − 推論成本）為 "&TEXT(PL!K' + str(R["ainet"]) + ',"#,##0")&" 百萬美元（情境 A "&TEXT(PL_A!K' + str(R["ainet"]) + ',"#,##0")&"、情境 C "&TEXT(PL_C!K' + str(R["ainet"]) + ',"#,##0")&"）；推論成本增量只占營業成本的 "&TEXT(PL!K' + str(R["infsh"]) + ',"0.00%")&"，量級遠小於增量與侵蝕，因此結果由代理身分數、加購與侵蝕三個 Assumed 決定，不由推論成本決定。"')
     put("a2", '="問題二：現價要求什麼？答：DCF 單法下，"&RevDCF!B{note}&"現價隱含 EV 為 FY2027E 營收的 "&TEXT(RevDCF!B{evs},"0.0")&" 倍。這是模型輸出，不是獨立證據。"')
     put("a3", '="問題三：與管理層目標的差距？答：模型情境 B 的 FY2030 NGS ARR 為 "&TEXT(PL!I' + str(R["ARR"]) + ',"0.0")&" 十億美元，管理層目標 "&TEXT(t_arr30,"0")&" 十億美元；差距需要每年額外 "&TEXT(Recon!B{req}*100,"0.0")&" 個百分點的成長才能彌補（管理層目標為 Interested-party，不校準）。"')
-    put("o1", '="1. 評等主要由估值決定：加權目標價 "&' + tx(v("tp"), "0.00") + '&" 美元、上檔空間 "&' + tx(v("up"), "+0.0%;-0.0%") + '&"（收支關卡"&' + v("gtxt") + '&"，FY2027–FY2031 自由現金流合計 "&' + tx(v("gate"), "#,##0") + '&" 百萬美元）；DCF "&' + tx(v("tpdcf"), "0") + '&"、同業本益比 "&' + tx(v("tpcmp"), "0") + '&" 美元，兩者"&IF(MAX(' + v("tpdcf") + ',' + v("tpcmp") + ')<' + v("px") + ',"都低於","並非都低於")&"現價 "&' + tx(v("px"), "0.00") + '&" 美元。"')
+    put("o1", '="1. 評等主要由估值決定：加權目標價 "&' + tx(v("tp"), "0.00") + '&" 美元、上檔空間 "&' + tx(v("up"), "+0.0%;-0.0%") + '&"（收支關卡"&' + v("gtxt") + '&"，FY2027–FY2031 自由現金流合計 "&' + tx(v("gate"), "#,##0") + '&" 百萬美元）；DCF "&' + tx(v("tpdcf"), "0") + '&"、Comparable "&' + tx(v("tpcmp"), "0") + '&" 美元，兩者"&IF(MAX(' + v("tpdcf") + ',' + v("tpcmp") + ')<' + v("px") + ',"都低於","並非都低於")&"現價 "&' + tx(v("px"), "0.00") + '&" 美元。"')
     put("o2", '="2. DCF 偏低的主因是股票薪酬：FY2032 股票薪酬占營收 "&TEXT(RevDCF!B{sbc},"0.0%")&"，標準 FCFF 以 NOPAT 扣股票薪酬、不加回；Sens 有股票薪酬占營收低案與每年下降案。"')
     put("o3", '="3. 營收成長含併購：FY2026 有機年增 "&TEXT(Recon!B{orgg},"0.0%")&"，合併年增 "&TEXT(h_rev_26/h_rev_25-1,"0.0%")&"；模型 FY2027 營收 "&TEXT(PL!F' + str(R["rev"]) + '/1000,"0.0")&" 十億美元，"&Recon!F{rev}&"。"')
-    put("o4", '="4. 同業中位前瞻本益比 "&' + tx(v("pemed"), "0.0") + '&" 倍（4 家，不做迴歸）；歷史相對倍數取共用庫（PS 讀數 "&TEXT(rel_ps,"0.00")&"、PSG 讀數 "&TEXT(rel_psg,"0.00")&"，幾何平均 "&TEXT(rel_med,"0.00")&" 為基準，Sens "&TEXT(rel_lo,"0.00")&"–"&TEXT(rel_hi,"0.00")&"；以 PS／PSG 相對值近似套用於前瞻本益比），現行資料商前瞻本益比比值 "&' + tx(v("pxpe"), "0.00") + '&"。"&IF(rel_div=1,"兩讀數差異超過 30%，原因：成長比 "&TEXT(rel_gr,"0.00")&"。","")&"DCF（RONIC＝WACC）假設無持續競爭優勢，Comparable 沿用同業級倍數與歷史相對倍數，隱含優勢延續，兩法對競爭優勢的假設相反，加權值是折衷。"')
+    put("o4", '="4. Comparable 主腿改為同業 P/S：中位 "&TEXT(ps_med,"0.00")&" 倍（3 家，最近一季，季末 2026-06-30 至 09-30，逾期）× 歷史相對倍數（共用庫：PS 讀數 "&TEXT(rel_ps,"0.00")&"、PSG 讀數 "&TEXT(rel_psg,"0.00")&"，幾何平均 "&TEXT(rel_med,"0.00")&"，Sens "&TEXT(rel_lo,"0.00")&"–"&TEXT(rel_hi,"0.00")&"），與 PS／PSG 相對值同口徑；前瞻本益比 Comparable（中位 "&' + tx(v("pemed"), "0.0") + '&" 倍）只作對照、不進目標價。"&IF(rel_div=1,"兩讀數差異超過 30%，原因：成長比 "&TEXT(rel_gr,"0.00")&"。","")&"DCF（RONIC＝WACC）假設無持續競爭優勢，Comparable 沿用同業級倍數，隱含優勢延續，兩法假設相反，加權值是折衷。"')
     put("o5", '="5. AI 推論成本不是重點：FY2032 推論成本增量只占營業成本 "&TEXT(PL!K' + str(R["infsh"]) + ',"0.00%")&"；全成本對照（模型商自做）占 "&TEXT(PL!K' + str(R["infsh2"]) + ',"0.000%")&"。可證偽指標：Subscription and support 毛利率走勢（FY2026 "&TEXT(0.692,"0.0%")&"）。"')
     put("drv", '="驅動因子：Product＝上年 ×（1＋成長）；Subscription and support＝NGS ARR 相關營收（年平均 NGS ARR × 列入比例）＋其他；NGS ARR＝受保護單位 × 每單位營收（R0 ×（1 − 侵蝕 ＋ 加購 ＋ 代理身分數 × 代理單價比））；三項相加為合併營收。"')
-    put("ver", '="v' + VER + '（2026-11-17）：v0.2：相對倍數改讀共用庫（PS／PSG 幾何平均）、無風險利率統一 5.10%、新增股票薪酬加回 DCF 對照讀數；v0.1 為 2026-11-16 首版。命題原型 P；DCF 標準 FCFF 至 FY2032；同業本益比 4 家；Sens 整本重算 "&COUNTA(Sens!C12:C60)&" 個鍵；未做先驗。"')
-    put("dx", '="合理性關卡診斷（G3 第 3 條）：DCF 目標價 "&' + tx(v("tpdcf"), "0") + '&" 美元為現價的 "&TEXT(' + v("tpdcf") + '/' + v("px") + ',"0%")&"，評等"&' + v("vrate") + '&"，觸發診斷。結論：經濟判斷，不是建模錯誤。依據：(1) 企業價值為正（情境 B "&TEXT(' + v("d_ev", "C") + ',"#,##0")&" 百萬美元），FY2027 營收與利益率和指引差距都在 10% 內；(2) 費用率已依歷史規模經濟延伸，全期持平只列 Sens 下緣；(3) 費用率改善、折現率下調、終值替代法同時取最樂觀，DCF 目標價仍只有 "&TEXT(IFERROR(INDEX(Sens!G:G,MATCH("best_stack",Sens!C:C,0)),0),"0")&" 美元；(4) 反向 DCF："&RevDCF!B{note}&"現價依賴 FY2032 之後長期高成長與高報酬，終值只給 RONIC＝WACC、永續成長 "&TEXT(g,"0%")&"；(5) 同業本益比法也只到 "&' + tx(v("tpcmp"), "0") + '&" 美元。"')
+    put("ver", '="v' + VER + '（2026-11-17）：v0.2：相對倍數改讀共用庫（PS／PSG 幾何平均）、Comparable 主腿改 P/S（G6）、無風險利率統一 5.10%、新增股票薪酬加回 DCF 對照讀數；v0.1 為 2026-11-16 首版。命題原型 P；DCF 標準 FCFF 至 FY2032；同業本益比 4 家；Sens 整本重算 "&COUNTA(Sens!C12:C60)&" 個鍵；未做先驗。"')
+    put("dx", '="合理性關卡診斷（G3 第 3 條）：DCF 目標價 "&' + tx(v("tpdcf"), "0") + '&" 美元為現價的 "&TEXT(' + v("tpdcf") + '/' + v("px") + ',"0%")&"，評等"&' + v("vrate") + '&"，觸發診斷。結論：經濟判斷，不是建模錯誤。依據：(1) 企業價值為正（情境 B "&TEXT(' + v("d_ev", "C") + ',"#,##0")&" 百萬美元），FY2027 營收與利益率和指引差距都在 10% 內；(2) 費用率已依歷史規模經濟延伸，全期持平只列 Sens 下緣；(3) 費用率改善、折現率下調、終值替代法同時取最樂觀，DCF 目標價仍只有 "&TEXT(IFERROR(INDEX(Sens!G:G,MATCH("best_stack",Sens!C:C,0)),0),"0")&" 美元；(4) 反向 DCF："&RevDCF!B{note}&"現價依賴 FY2032 之後長期高成長與高報酬，終值只給 RONIC＝WACC、永續成長 "&TEXT(g,"0%")&"；(5) Comparable（P/S）也只到 "&' + tx(v("tpcmp"), "0") + '&" 美元。"')
     r = put.r + 1
     ws.cell(r, 1, "不適用與未做項目（工作單 G 節）").font = BOLD; r += 1
     for t in ["不適用：Wattonomics 對照與自用算力（Meta 的自用 AI 讀法 2、在役 MW、Wattonomics 上線時程）——理由：PANW 不自建算力，推論成本以向模型商購買的市場價計（Tokenomics 快照，只讀）。",
               "不適用：Tokenomics 每 MW 持有成本（IF_HoldEcon）群組與 he_all 案——理由：本模型不讀每 MW 成本。",
               "不適用：三層協調（Coord 頁、C0、兩讀數）——理由：非 Siliconomics 覆蓋。",
-              "不適用：分部加總（SOTP）——理由：單一應報導分部；Comparable 以合併 non-GAAP EPS × 同業中位本益比。",
+              "不適用：分部加總（SOTP）——理由：單一應報導分部；Comparable 以合併營收與同業中位 P/S。",
               "不適用：收支模組、反向 DCF 之外的融資瀑布——理由：淨現金為正（FY2026 年底現金與投資 7.9 十億美元），不以新債補缺口。",
               "未做：先驗（工作單 G 節 2026-11-16 23:27：先驗跳過）。",
               "v0.2 計畫：該版改讀 software_ai/unit_economics 的 P 原型輸出（本版 In 頁自建，變數名稱一致）。",
@@ -990,7 +1003,7 @@ def read_out(path):
     wb = openpyxl.load_workbook(path, data_only=True)
     v = wb["Val"]; lab = {str(v.cell(r, 1).value): r for r in range(1, v.max_row + 1) if v.cell(r, 1).value}
     g = lambda s: v.cell(lab[s], 2).value
-    out = {"tp": g("加權目標價（DCF 與同業本益比加權）"), "dcf": g("DCF 目標價（三情境加權）"), "cmp": g("Comparable 目標價（同業前瞻本益比中位數法，三情境加權）")}
+    out = {"tp": g("加權目標價（DCF 與 Comparable 加權）"), "dcf": g("DCF 目標價（三情境加權）"), "cmp": g("Comparable 目標價（同業 P/S 法，三情境加權）")}
     return out, wb
 
 def input_hash():

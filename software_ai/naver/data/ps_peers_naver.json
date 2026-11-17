@@ -1,0 +1,32 @@
+{
+ "GOOGL": {
+  "q": "2026-09-30",
+  "ps": 8.89,
+  "src": "https://stockanalysis.com/stocks/googl/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）",
+  "retrieved": "2026-11-17"
+ },
+ "META": {
+  "q": "2026-09-30",
+  "ps": 7.65,
+  "src": "https://stockanalysis.com/stocks/meta/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）",
+  "retrieved": "2026-11-17"
+ },
+ "PINS": {
+  "q": "2026-06-30",
+  "ps": 2.59,
+  "src": "https://stockanalysis.com/stocks/pins/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）",
+  "retrieved": "2026-11-17"
+ },
+ "KAKAO": {
+  "q": "2026-06-30",
+  "ps": 1.84,
+  "src": "(gap)（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）",
+  "retrieved": "2026-11-17"
+ },
+ "LYCORP": {
+  "q": "2026-06-30",
+  "ps": 1.42,
+  "src": "https://stockanalysis.com/quote/tyo/4689/financials/ratios/?p=quarterly（WebFetch 取自 StockAnalysis；Derived：TTM 營收＝市值÷PS）",
+  "retrieved": "2026-11-17"
+ }
+}
