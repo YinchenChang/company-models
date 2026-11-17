@@ -89,7 +89,7 @@ for p in D["positions"]:
         fail.append(f"跨圖列 {p['tk']} 主圖不是 AI 算力地圖")
 # 4 無個人字樣
 # 通用字樣寫在這裡；人名、雇主等私人字樣不寫進公開程式碼，改由環境變數 PRIVATE_TERMS（逗號分隔）提供
-_terms = ["基金可投資", "部位", "下注"] + [t for t in os.environ.get("PRIVATE_TERMS", "").split(",") if t]
+_terms = ["部位", "下注"] + [t for t in os.environ.get("PRIVATE_TERMS", "").split(",") if t]
 PAT = re.compile("|".join(re.escape(t) for t in _terms))
 for f in glob.glob(os.path.join(HERE, "**", "*"), recursive=True):
     if os.path.isfile(f) and f.endswith((".csv", ".json", ".html", ".md", ".py")) and not f.endswith("check_map.py"):

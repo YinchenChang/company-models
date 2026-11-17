@@ -12,6 +12,8 @@ def clean(v):
     s = str(v)
     NM = "\u0041\u006e\u0064\u0079"   # 人名（以跳脫碼寫，避免本檔出現該字）
     s = re.sub(r"[（(]?" + NM + r"[^，；）)]*?(?=[，；）)]|$)[）)]?", "", s)  # 移除人名與其後的日期註記
+    if s.count("（") > s.count("）"):  # 人名在括號尾端被移除時補回右括號
+        s = s.rstrip("；，、 ") + "）"
     s = s.replace(NM, "")
     return s.strip()
 wb = openpyxl.load_workbook(SRC, data_only=True)
