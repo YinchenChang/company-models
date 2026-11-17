@@ -803,7 +803,7 @@
      "value_col": "D",
      "fmt": "sp1",
      "title": "加權目標價相對基準：輸入取低值",
-     "rows": "19,31,23,27,30,35,15,37,32,33,24,40,25,26,41,11,28,34,36,42,38,14,13,39,29,10,8,9,17",
+     "rows": "19,31,23,27,30,35,15,37,32,33,24,40,41,25,26,11,28,34,36,42,38,14,13,39,29,10,8,9,17",
      "collapse": true,
      "summary": "展開：加權目標價相對基準：輸入取低值，變動未達兩位數百分比的案例"
     },
@@ -3068,7 +3068,8 @@
       "@README!A23",
       "@README!A24",
       "@README!A25",
-      "@README!A26"
+      "@README!A26",
+      "@README!A27"
      ]
     },
     {
@@ -3146,7 +3147,6 @@
     {
      "type": "list",
      "items": [
-      "@README!A28",
       "@README!A29",
       "@README!A30",
       "@README!A31",
@@ -3158,7 +3158,8 @@
       "@README!A37",
       "@README!A38",
       "@README!A39",
-      "@README!A40"
+      "@README!A40",
+      "@README!A41"
      ]
     },
     {
@@ -3168,10 +3169,10 @@
     {
      "type": "list",
      "items": [
-      "@README!A42",
       "@README!A43",
       "@README!A44",
-      "@README!A45"
+      "@README!A45",
+      "@README!A46"
      ]
     },
     {
@@ -3181,10 +3182,10 @@
     {
      "type": "list",
      "items": [
-      "@README!A47",
       "@README!A48",
       "@README!A49",
-      "@README!A50"
+      "@README!A50",
+      "@README!A51"
      ]
     },
     {
@@ -3194,11 +3195,11 @@
     {
      "type": "list",
      "items": [
-      "@README!A52",
       "@README!A53",
       "@README!A54",
       "@README!A55",
-      "@README!A56"
+      "@README!A56",
+      "@README!A57"
      ]
     },
     {

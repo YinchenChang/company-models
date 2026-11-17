@@ -169,12 +169,12 @@ P = dict(date="2026-12-31", ccy="US$", amt="US$B", shu="十億股",
          debt=(7.620, "Verified", "ABB Q3 2026 新聞稿：總債務 7,620 百萬美元（2026-09-30；短期 1,157＋長期 6,463）", "—"),
          lease=(0.786, "Verified", "ABB Q4 2025 financial information：營業租賃負債 786 百萬美元（2025-12-31；Q3 2026 未揭露，沿用）", "—"),
          cash=(6.288, "Verified", "ABB Q3 2026 新聞稿：現金 3,810＋短期投資與有價證券 2,478＝6,288 百萬美元（2026-09-30）", "—"),
-         inv=(5.0, "Assumed", "Robotics 出售（SoftBank，企業價值約 54 億美元，預計 2026 下半年交割）的稅後淨款假設 50 億美元（Sens 低 44／高 54）；FCFF 不含 Robotics", "價款稅負與分離成本為假設；列 README 待判斷"),
+         inv=(5.0, "Assumed", "Robotics 出售（SoftBank，企業價值約 54 億美元）：2026-11-05 報導中國外資安全審查禁止 SoftBank 收購其中國業務，交易未完成、雙方仍在協商（Robotics247、Supply Chain Digital；Interested-party）。價值仍以 50 億美元計：交割則收稅後淨款，不交割則保留事業，其價值約當出價（Assumed）；Sens 低 35 億（交易失敗且保留事業價值打折）／高 54。FCFF 不含 Robotics", "價款稅負與分離成本為假設；交割與否、時點與保留價值皆列 README 待判斷"),
          mi=(0.559, "Verified", "ABB Q4 2025 financial information：非控制權益 559 百萬美元（2025-12-31，帳面）；Yahoo 2026-09 為 483；ABB India 上市市值未用 CSV 定價", "帳面值；ABB India 市價可能較高（Sens 高＝3.0 十億美元，Assumed；外部事實未檢核），影響約 −2%（README 待判斷）"),
          sh=("=sh_q+0.006", "Derived", "Q3 2026 期末流通股 1,808 百萬＋稀釋約 6 百萬（Yahoo Q3 2026 稀釋加權 1,814）", "—"),
          fc_da=(None, 0.024, None, "Assumed", "Q3 2026 折舊攤銷 229 百萬 ÷ 營收 9,701＝2.4%（公司原文換算）", "—"),
          fc_da_ss=(0.025, "Assumed", "穩態略高於近期（資本支出增加）", "—"),
-         fc_cx=(None, 0.026, None, "Assumed", "公司：資本支出年約 10 億美元、中期不再增加；FY2027 營收約 42 億美元 → 約 2.4–2.6%", "—"),
+         fc_cx=(None, 0.026, None, "Assumed", "公司：資本支出年約 10 億美元、中期不再增加；FY2027 營收約 420 億美元 → 約 2.4–2.6%", "—"),
          fc_cx_ss=(0.027, "Assumed", "最後一年須 ≥ 折舊 ×（1＋g）", "—"),
          fc_wc=(0.05, 0.08, 0.11, "Derived", "淨營運資金 2,827 百萬美元（2026-09-30）÷ 近四季營收約 36,600 百萬＝7.7%（公司原文換算）；Sens 5%／11%", "—"),
          stub=dict(bs_date="2026-09-30", val_date="2026-12-31", bs_src="ABB Q3 2026 新聞稿資產負債表（2026-09-30）",
@@ -182,7 +182,7 @@ P = dict(date="2026-12-31", ccy="US$", amt="US$B", shu="十億股",
                    div=(0.0, "Assumed", "Q4 無已宣告股利；買回以每股價值中性處理，不調整現金與股數", "—")),
          dps=(0.0, "Assumed", "ABB 年度股利 2026-03 已付；評價日（2026-12-31）到 2027-12-31 的股利（約 0.9 瑞士法郎）未扣除，列 README 待判斷", "—"))
 dcf_rows = FD.in_rows(P)
-LOHI = {"inv_v": (4.4, 5.4), "mi_v": (0.483, 3.0)}   # Robotics 淨款 44／54 億美元；非控制權益：Yahoo 2026-09 帳面 0.483／ABB India 市價假設 3.0（Assumed）
+LOHI = {"inv_v": (3.5, 5.4), "mi_v": (0.483, 3.0)}   # Robotics 價值 35／54 億美元（35＝交易失敗且保留事業價值打折）；非控制權益：Yahoo 2026-09 帳面 0.483／ABB India 市價假設 3.0（Assumed）
 sec("G. 折現率與無槓桿自由現金流（標準版 DCF；tools/fcff_dcf.py；評價日 2026-12-31）")
 inrow("beta_de", "債務與租賃 ÷ 權益市值（β 重新加槓桿用；＝(債務＋租賃) ÷ (現價 × 股數)）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "In 頁債務、租賃、現價與股數")
 inrow("beta_du", "β_u 敏感度幅度（± ）", "x", None, 0.3, None, "Assumed", "規格預設 ±0.3")
@@ -252,7 +252,7 @@ hrow("e_au", "Automation Operational EBITA", 1080, 1132)
 hrow("e_co", "Corporate and Other Operational EBITA", -546, -499)
 hrow("e_grp", "集團 Operational EBITA", 5572, 6314)
 hrow("o_grp", "集團訂單", 31482, 36765)
-hrow("rob_rev", "停業單位 Robotics 營收", 2267, 2331, note="SoftBank 約 54 億美元企業價值；預計 2026 下半年交割")
+hrow("rob_rev", "停業單位 Robotics 營收", 2267, 2331, note="SoftBank 約 54 億美元企業價值；2026-11-05 報導中國禁止其中國業務收購，交易未完成、協商中")
 hrow("rob_ebit", "停業單位 Robotics 營業利益", 331, 294)
 H.cell(H.max_row + 2, 1, "資產負債表（2025-12-31 與 2026-09-30）").font = BOLD
 hdr(H, H.max_row + 1, ["項目", "2025-12-31", "2026-09-30", "單位", "標記", "來源", "來源誘因", "Yahoo 2025-12", "Yahoo 2026-09", "", "說明"])
