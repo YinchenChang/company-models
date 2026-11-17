@@ -1135,7 +1135,7 @@ for i_, rowv in enumerate(RISKS):
         put(RD, f"{L(j+1)}{34+i_}", v)
 put(RD, "A41", f'="歷史相對倍數（G4，PS 與 PSG）：相對倍數 基準＝兩讀數幾何平均 "&TEXT({Vv("rm_geo")},"0.00")&"（PS 讀數 "&TEXT({Vv("rm_ps")},"0.00")&"、PSG 讀數 "&TEXT({Vv("rm_psg")},"0.00")&"），Comparable 主腿改為 P/S 口徑（G6），與 PS／PSG 相對值同口徑。兩讀數差 "&TEXT({Vv("rm_div")},"0%")&IF({Vv("rm_div")}>0.3,"，大於 30%：原因是本公司 TTM 營收年增 "&TEXT({Vv("rm_cg")},"0.0%")&" 低於同業中位 "&TEXT({Vv("rm_pg")},"0.0%")&"（成長比 "&TEXT({Vv("rm_g")},"0.00")&"），PSG 把歷史每單位成長的溢價按較低成長比折算，故低於 PS 讀數","，未超過 30%")&"。"')
 put(RD, "A42", f'="DCF（股票薪酬加回）對照：每股價值 "&TEXT(Recon!C{SB["shv"]},"#,##0")&" 韓元（情境 B），目標價 "&TEXT(Recon!B{RCR["sbc_tp"]},"#,##0")&" 韓元（情境加權），標準 DCF "&TEXT({Vv("tpdcf")},"#,##0")&"；股票薪酬金額未找到，占營收比 Assumed "&TEXT({I("sbc_pct")},"0.0%")&"，故兩者相同。只作對照，不進加權目標價。"')
-put(RD, "A44", "G6 口徑一致：歷史 PS 與 PSG 相對值已含利潤率差，不能再套前瞻本益比；Comparable 主腿因此改為同業中位 P/S（各家最近一季，季末日逐家標示，逾期者旗標）乘相對倍數乘目標日 TTM 營收除以稀釋股數。前瞻本益比 Comparable 降為對照列（相對倍數 1.00 與本公司現行比值兩個讀數），不進加權目標價。敏感度情境 ps_only、psg_only、低案、高案套用在 P/S 主腿。")
+put(RD, "A44", "G6 口徑一致：歷史 PS 與 PSG 相對值已含利潤率差，不能再套前瞻本益比；Comparable 主腿因此改為同業中位 P/S（各家最近一季，季末日逐家標示，逾期者旗標）乘相對倍數乘目標日 TTM 營收除以稀釋股數。前瞻本益比 Comparable 降為對照列（相對倍數 1.00 與本公司現行比值兩個讀數），不進加權目標價。敏感度四案（只用 PS、只用 PSG、低案、高案）套用在 P/S 主腿。")
 put(RD, "A40", "工作表：README／In／Q／Hist／PL／DCF／CF／Val／RevDCF／Recon／Sens／Sources。成品 dist/<日期>_Naver個股模型_v0.2.1.xlsx 與 .html。")
 for rr_ in list(range(1, 18)) + [30, 41, 42]:
     RD[f"A{rr_}"].alignment = Alignment(wrap_text=True, vertical="top")
