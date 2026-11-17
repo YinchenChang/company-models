@@ -77,6 +77,11 @@ main{padding-block:26px 56px}
 .panel>.pb{padding:16px}
 .note{font-size:12px;color:var(--muted)}
 .tagx{font-family:var(--f-mono);font-size:10.5px;color:var(--faint);white-space:nowrap}
+/* v0.6.52 跨圖標籤（data/cross_map.csv）：實體 AI 地圖尚未上線，標籤不做連結 */
+.xmap{display:inline-block;font-size:10.5px;font-weight:600;line-height:1.5;padding:0 6px;border:1px solid var(--brass);color:var(--ink);border-radius:2px;white-space:nowrap;vertical-align:1px}
+.xmap i{font-style:normal;font-weight:400;color:var(--muted)}
+.dh .xmap{border-color:var(--brass);color:var(--navy-ink)} .dh .xmap i{color:var(--navy-muted)}
+.dh .xnote{font-size:12px;color:var(--navy-muted)}
 
 /* flow ribbon */
 .flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;background:var(--surface);border:1px solid var(--rule)}
@@ -299,6 +304,9 @@ function px(v,c){if(v==null)return"—";const dp={USD:2,HKD:2,CNY:2,TWD:0,KRW:0,
 const CCY={USD:"US$",HKD:"HK$",CNY:"¥",TWD:"NT$",KRW:"₩",JPY:"¥"};
 const V=Object.fromEntries(D.valuation.map(v=>[v.tk,v]));
 const P=Object.fromEntries(D.position.map(p=>[p.tk,p]));
+/* v0.6.52 跨圖：主圖＝持有個股模型的專案所屬地圖；本地圖為主圖、實體 AI 地圖照列者加註。頁面建置中，不做連結。 */
+const XM=D.cross_map||{};
+const xmapTag=tk=>{const x=XM[tk]; return x?` <span class="xmap" title="${esc(x.map)}也列此公司（${esc(x.seg)}）；公司檔案、目標價與評等只讀本地圖的個股模型。${esc(x.map)}${esc(x.status)}。">另見${esc(x.map)}（跨圖）<i>· ${esc(x.status)}</i></span>`:"";};
 const G=k=>D.pergw[k];
 
 /* meta + kpis */
@@ -360,8 +368,8 @@ function renderMap(){
   <div>
   ${layer("L5","AI 模型商",`$${rev.base.toFixed(1)}B <small>/GW·年 營收</small>`,"每 GW 產出的付費 token × 實收單價（2027 VR200；以 OpenAI 2026 Q2 實收校準）。收入池的源頭。",grid(segs("L5 模型商")),extraModel)}
   ${layer("L4","算力平台",`$${hold.base.toFixed(1)}B <small>/GW·年 持有成本</small>`,"持有並出租 GPU。上游資本支出的付款方，回本比值的承擔者。",grid(segs("L4 算力平台")))}
-  ${layer("L3","AI 資料中心建置",`$${cx.base.toFixed(1)}B <small>/GW 資本支出</small>`,`＝IT 設備 $${it.base.toFixed(1)}B＋廠房 $${(cx.base-it.base).toFixed(1)}B。下列比例皆占 IT 設備（GB300、2026 年價格；AI半導體 次產業排序 v0.2.3），運算、記憶體、網通、代工與封測、載板、電源與散熱、伺服器組裝、儲存與管理八塊互斥、合計 100%（＝IT 設備）。運算只含 NVIDIA 晶片毛利＋CPU，台積電另列代工與封測。VR200 加 2027 HBM 價時記憶體升到約 23%、運算降到約 33%。只含 NVIDIA 平台（ASIC 未入）。`,grid(segs("L3 IT 設備"))+l3sum(),
-    `<div class="facility"><b>設施：電力、機房、冷卻</b> · <span class="num">$${fac.base.toFixed(1)}B/GW</span>（${fac.lo.toFixed(1)}–${fac.hi.toFixed(1)}） · 尚無研究專案覆蓋（電力基建另案待開）</div>`)}
+  ${layer("L3","AI 資料中心建置",`$${cx.base.toFixed(1)}B <small>/GW 資本支出</small>`,`＝IT 設備 $${it.base.toFixed(1)}B＋廠房 $${(cx.base-it.base).toFixed(1)}B。下列比例皆占 IT 設備（GB300、2026 年價格；AI半導體 次產業排序 v0.2.3），運算、記憶體、網通、代工與封測、載板、電源與散熱（機櫃內）、伺服器組裝、儲存與管理八塊互斥、合計 100%（＝IT 設備）。運算只含 NVIDIA 晶片毛利＋CPU，台積電另列代工與封測。VR200 加 2027 HBM 價時記憶體升到約 23%、運算降到約 33%。只含 NVIDIA 平台（ASIC 未入）。`,grid(segs("L3 IT 設備"))+l3sum(),
+    `<div class="facility"><b>廠房：電力、機房、冷卻</b> · <span class="num">$${fac.base.toFixed(1)}B/GW</span>（${fac.lo.toFixed(1)}–${fac.hi.toFixed(1)}）。電力與機房範圍定案（2026-11-17）：機櫃外的電力與冷卻納入，拆分讀 Wattonomics；比例占廠房，不與上列 IT 設備相加。</div>`+grid(segs("L3 機房設施")))}
   ${layer("L2","半導體製造與設備",`軸 B <small>不與 L3 相加</small>`,"設備的營收來自代工與記憶體廠的資本支出（代工與封測自 v0.5.2 起列在 L3）。",grid(segs("L2 半導體製造與設備")),
     `<div class="axisB">會計恆等式：L3 各塊加總＝買方付出的總額。L2 的數字是另一條軸（晶片怎麼造），只用來看位置與瓶頸，不可加回 L3。</div>`)}
   </div>`;
@@ -455,7 +463,7 @@ function renderInvest(){
    <div class="filters">${["全部",...Object.keys(order).filter(t=>cnt(t))].map(l=>`<button class="fbtn" data-if="${l}" aria-pressed="${l===invFilter}">${l}</button>`).join("")}</div></div>
   <div class="tbl"><table><thead><tr><th>公司</th><th>分級</th><th>收支關卡</th><th class="n">現價</th><th class="n">中心價</th><th class="n">中心空間</th><th class="n">悲觀情境空間</th><th>悲觀情境 ～ 中心（−100% ～ +150%）</th><th>方法 · 依據</th></tr></thead>
   <tbody>${list.map(v=>`<tr id="r-${esc(v.tk)}">
-   <td class="co"><button class="linkish" data-open="${esc(v.tk)}"><b>${esc(v.name)}</b></button><span class="t">${esc(v.tk)}</span><span class="s">${esc(v.seg)}</span></td>
+   <td class="co"><button class="linkish" data-open="${esc(v.tk)}"><b>${esc(v.name)}</b></button><span class="t">${esc(v.tk)}</span><span class="s">${esc(v.seg)}</span>${XM[v.tk]?`<span>${xmapTag(v.tk)}</span>`:""}</td>
    <td><span class="pill ${esc(v.tier)}">${esc(v.tier)}</span>${v.mtier&&v.mtier!==v.vtier?`<span class="co"><span class="s">模型日評價：${esc(v.mtier)}（${pct(v.mup)}）</span></span>`:""}${v.tier==="收支不足"&&v.vtier&&v.vtier!=="未估值"?`<span class="co"><span class="s">評價：${esc(v.vtier)}</span></span>`:(v.gate==="不通過"&&v.tier!=="未上市"&&v.tier!=="收支不足"?`<span class="co"><span class="s">另：入不敷出</span></span>`:"")}</td>
    <td><span class="gate ${v.gate==="不通過"?"no":"ok"}">${esc(v.gate)}</span><span class="co"><span class="s">${v.gbasis==="淨利"?"淨利（無現金流）":"合計 "+(v.gsum==null?"—":v.gsum.toLocaleString("en-US",{maximumFractionDigits:1}))}</span></span></td>
    <td class="n">${v.tier==="未上市"?"—":`${CCY[v.ccy]||""}${px(v.price,v.ccy)}<span class="co"><span class="s">${esc(v.price_date)}</span></span>`}</td>
@@ -485,7 +493,7 @@ function renderProfiles(){
     const list=D.position.filter(p=>p.layer===L).sort((a,b)=>b.score-a.score);
     h+=`<div class="grp">${esc(L)}</div><div class="pgrid">${list.map(p=>{const v=V[p.tk],pf=PF[p.tk];
       return `<button class="pcard" data-open="${esc(p.tk)}"><span class="top"><b>${esc(p.name)} <span class="t">${esc(p.tk)}</span></b><span class="pill ${esc(v.tier)}">${esc(v.tier)}</span></span>
-      <span class="co"><span class="s">${esc(p.seg)} · 地位 ${f1(p.score)}</span></span><p>${pf?pf.oneliner:"（撰寫中）"}</p></button>`}).join("")}</div>`;
+      <span class="co"><span class="s">${esc(p.seg)} · 地位 ${f1(p.score)}</span>${XM[p.tk]?`<span>${xmapTag(p.tk)}</span>`:""}</span><p>${pf?pf.oneliner:"（撰寫中）"}</p></button>`}).join("")}</div>`;
   });
   $("#v-profiles").innerHTML=h;
 }
@@ -540,7 +548,7 @@ function openDrawer(tk,tab){
   curTk=tk; lastFocus=document.activeElement; track("profile",tk);
   const m=pf?pf.meta:{};
   const stats=[["產業位置",`${esc(p.seg)}`],["地位分數",`${f1(p.score)} · 第 ${p.rank} 名`],["可投資性",`<span class="pill ${esc(v.tier)}">${esc(v.tier)}</span> <span class="gate ${v.gate==="不通過"?"no":"ok"}">收支${v.gate==="不通過"?"不通過":"通過"}</span>`],["中心空間",v.cu==null?"—":`<span class="${cls(v.cu)}">${pct(v.cu)}</span>`]];
-  $("#drawer").innerHTML=`<div class="dh"><div class="row1"><div><div class="sub">${esc(p.layer)} · ${m.listing||esc(p.tk)}</div><h2 id="dname">${esc(p.name)}</h2></div><button class="close" id="dclose">關閉 Esc</button></div>
+  $("#drawer").innerHTML=`<div class="dh"><div class="row1"><div><div class="sub">${esc(p.layer)} · ${m.listing||esc(p.tk)}</div><h2 id="dname">${esc(p.name)}</h2>${XM[tk]?`<div class="xnote">${xmapTag(tk)} 該圖列於「${esc(XM[tk].seg)}」；主圖為本地圖（持有個股模型），公司檔案、目標價與評等以本頁為準。</div>`:""}</div><button class="close" id="dclose">關閉 Esc</button></div>
    <div class="one">${pf?pf.oneliner:"公司檔案撰寫中。"}</div>
    ${pf?`<div class="dmeta" style="color:var(--navy-muted)">${["name_full","hq","founded","employees","fiscal_year_end","asof"].filter(k=>m[k]).map(k=>`<span class="mi"><span>${{name_full:"全名",hq:"總部",founded:"成立",employees:"員工",fiscal_year_end:"會計年度結束",asof:"資料日"}[k]}</span><b style="color:var(--navy-ink)">${m[k]}</b></span>`).join("")}</div>`:""}</div>
    <div class="dstats">${stats.map(([k,x])=>`<div><div class="k">${k}</div><div class="v">${x}</div></div>`).join("")}</div>
@@ -569,6 +577,7 @@ function renderMethod(){
    ${row("股價",`${esc(D.meta.last_close_date||"")} 收盤，Yahoo Finance 日線收盤（來源記於 data/prices_*_sources.md）。各模型內的現價與同業報價已於 v0.6.49 全部改為 2026-11-13 收盤（工作單 px1113；Anthropic 未掛牌除外）；日後模型現價與最新收盤差距超過 20% 時標示。`)}
    ${row("地位分數","不可替代性（次產業與公司平均）、市場位置（次產業內 1–4 級）、價值鏈分量（占 AI IT 資本支出比例分級），加權合成。")}
    ${row("個股模型","公司檔案的「個股模型」分頁嵌入各公司模型成品的 HTML 版（<code>&lt;資料夾&gt;/dist/*.html</code>，與抽數用的 xlsx 同一版次）；GitHub Pages 發布時一併複製到 <code>models/</code>。")}
+   ${row("跨圖（v0.6.52）",`同一家公司同時出現在 AI 算力地圖與實體 AI 地圖時，<b>主圖＝持有該公司個股模型的專案所屬地圖</b>；另一張圖照列並標「跨圖」，公司檔案、目標價與評等只讀主圖的模型（Andy 2026-11-16 同意）。<b>地位分數兩圖可不同</b>（兩圖的價值鏈分母不同：本圖為每 GW AI 資本支出，實體 AI 地圖為人形機器人每台 BOM 等）。本圖為主圖、實體 AI 地圖照列者 ${Object.keys(XM).length} 家：${Object.keys(XM).map(t=>esc((P[t]||{}).name||t)).join("、")}，標「另見實體 AI 地圖（跨圖）」；實體 AI 地圖建置中，標籤暫不連結。來源：AI實體應用 專案「實體 AI 產業地位 v0.5」個股地位頁「地圖歸屬」欄（抄錄於 <code>data/cross_map.csv</code>）。`)}
    ${row("公司檔案","每家一份 Markdown（<code>markets/invest_map/profiles/&lt;代號&gt;.md</code>），由研究代理依同一規格撰寫、附來源標記，經未參與撰寫的代理抽查數字。背景知識用途，不是投資結論。")}
    ${row("限制","各模型估值方法不同，空間只能粗略比較；MAG 三家模型終值占 EV 逾 90%，評價口徑待 MAG v0.3；MiniMax、智譜三情境 DCF 皆觸及淨現金下限（目標價主要由同業倍數支撐）；未上市的 OpenAI 只列在地圖（Anthropic 以 IPO 價格區間中點評等）。")}
   </dl>`;

@@ -69,7 +69,10 @@
   "emc",
   "victory_giant",
   "tuc",
-  "gce"
+  "gce",
+  "intc",
+  "gfs",
+  "tel"
  ],
  "depends_on_years": {
   "nvidia": [
@@ -425,6 +428,24 @@
    "2027",
    "2028",
    "2029"
+  ],
+  "intc": [
+   "2026",
+   "2027",
+   "2028",
+   "2029"
+  ],
+  "gfs": [
+   "2026",
+   "2027",
+   "2028",
+   "2029"
+  ],
+  "tel": [
+   "2026",
+   "2027",
+   "2028",
+   "2029"
   ]
  },
  "c0": {
@@ -446,5 +467,6 @@
   "gpu_asic": {
    "alchip_ub": "Drive 02-AI供應鏈/對帳/20261116_對帳單_世芯_Trainium營收上限對Siliconomics.md"
   }
- }
+ },
+ "_note_new5": "2026-11-17：hardware_companies 加入 intc、gfs、tel（新增五家）；vrt、abb 為機房設施供應商，讀 Wattonomics 廠房拆分，不列入（電力與機房範圍定案，docs/plan/電力與機房範圍定案_20261117.md）。"
 }

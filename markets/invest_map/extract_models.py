@@ -181,7 +181,8 @@ def cash_rows(b, sheet, label_pats, hdr_row=None):
 
 
 NI_LABELS = {"淨利", "歸屬母公司淨利", "歸母淨利", "淨利（歸屬母公司）", "淨利（不含權益證券損益）", "淨利（non-GAAP）",
-             "歸屬淨利", "稅後淨利", "non-GAAP 淨利", "稅後淨利（non-GAAP）", "稅後淨利（歸屬母公司）"}  # v0.5：新模型的列名；2026-10-31 加 ARM、台燿的列名
+             "歸屬淨利", "稅後淨利", "non-GAAP 淨利", "稅後淨利（non-GAAP）", "稅後淨利（歸屬母公司）",
+             "歸屬 Intel 淨利", "稅後淨利（歸屬 ABB）"}  # 2026-11-17 新增五家的列名  # v0.5：新模型的列名；2026-10-31 加 ARM、台燿的列名
 
 
 def net_income_rows(b):
@@ -269,7 +270,8 @@ SEMIS_V2 = (("NVDA", "nvidia"), ("AVGO", "avgo"), ("AMD", "amd"), ("2454", "medi
             ("2317", "foxconn"), ("2382", "quanta"), ("3231", "wistron"), ("6669", "wiwynn"), ("DELL", "dell"),
             ("SMCI", "smci"),
             ("2308", "delta"), ("3017", "avc"), ("2301", "liteon"), ("3324", "auras"), ("3653", "jentech"),
-            ("ARM", "arm"), ("3711", "ase"), ("2303", "umc"), ("5347", "vis"), ("6274", "tuc"), ("6223", "mpi"))  # 2026-10-31 新增 6 家（Andy 13:08）；2026-11-08 新增 Cerebras（Andy 21:38）
+            ("ARM", "arm"), ("3711", "ase"), ("2303", "umc"), ("5347", "vis"), ("6274", "tuc"), ("6223", "mpi"),
+            ("INTC", "intc"), ("GFS", "gfs"), ("8035", "tel"), ("VRT", "vrt"), ("ABBN", "abb"))  # 2026-10-31 新增 6 家（Andy 13:08）；2026-11-08 新增 Cerebras（Andy 21:38）；2026-11-17 新增 INTC、GFS、TEL、VRT、ABB（Andy 07:48）
 MEMORY_FCF = ("000660", "005930", "MU")   # 收支關卡用 Y 頁自由現金流（其餘先用淨利，待 AI半導體 補自由現金流列）
 
 
