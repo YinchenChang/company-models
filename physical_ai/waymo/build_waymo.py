@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Waymo（Alphabet 分部，視同未上市）個股模型 v0.1 建置腳本。
+"""Waymo（Alphabet 分部，視同未上市）個股模型 v0.2 建置腳本（v0.2：對帳 2，市場、滲透、份額、價格、營運成本、稼動率改讀線 1a v0.2）。
 
-Robotaxi 分部模型特別規格（Andy 2026-11-16 22:33／22:38）：主頁＝「滲透」，最上方為「價格」區塊（每英里實收價格）；
+Robotaxi 分部模型特別規格（專案規格 2026-11-16）：主頁＝「滲透」，最上方為「價格」區塊（每英里實收價格）；
 其次「市場天花板與情境」「每英里經濟」「估值」「資料來源比較」「對帳」。頁面與口徑與 physical_ai/tesla_robotaxi/ 一致。
 
-用法：python3 physical_ai/waymo/build_waymo.py   →  physical_ai/waymo/dist/20261116_Waymo個股模型_v0.1.xlsx
+用法：python3 physical_ai/waymo/build_waymo.py   →  physical_ai/waymo/dist/20261117_Waymo個股模型_v0.2.xlsx
 建置後自動：LibreOffice 重算 → 0 錯誤值檢查 → xlsx 與 Python 鏡像逐情境比對 → in_layout／sens_coverage／governance 核對。
 """
 import datetime as dt
@@ -16,6 +16,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import glob
 
 import openpyxl
 from openpyxl.styles import Alignment, Font, PatternFill
@@ -24,9 +25,9 @@ from openpyxl.utils import get_column_letter as CL
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
-VERSION = "v0.1"
-AS_OF = "2026-11-16"
-OUT = os.path.join(HERE, "dist", f"20261116_Waymo個股模型_{VERSION}.xlsx")
+VERSION = "v0.2"
+AS_OF = "2026-11-17"
+OUT = os.path.join(HERE, "dist", f"20261117_Waymo個股模型_{VERSION}.xlsx")
 
 BLUE = Font(color="0000FF")
 BOLD = Font(bold=True)
@@ -36,55 +37,99 @@ WRAP = Alignment(wrap_text=True, vertical="top")
 YEARS = list(range(2026, 2036))
 YC = {y: CL(3 + i) for i, y in enumerate(YEARS)}  # C..L
 SCN = ["A", "B", "C"]
-SCN_NAME = {"A": "情境 A（樂觀：價格大降＋傑文斯效應實現）", "B": "情境 B（基準）", "C": "情境 C（保守：滲透慢、價格不降）"}
+SCN_NAME = {"A": "情境 A（線高滲透：低價、低成本、Tesla 份額較高）", "B": "情境 B（線基準）", "C": "情境 C（線低滲透：高價、高成本）"}
+
+# ---------------------------------------------------------------------------
+# 〇、線 1a v0.2 讀入（線權威；對帳 2 工程結論）。情境 A＝線高滲透（配低成本、低價），B＝基準，C＝低滲透（配高成本、高價）
+# ---------------------------------------------------------------------------
+LINE_GLOB = os.path.join(HERE, "..", "lines", "robotaxi", "dist", "*Robotaxi單位經濟_v0.2.xlsx")
+LINE_ANCH = [2026, 2028, 2030, 2032]
+LINE_BLK = {"A": 85, "B": 44, "C": 3}                    # 情境頁各情境區塊首列
+LINE_BLK_LAB = {"A": "高（高滲透）", "B": "基準（基準）", "C": "低（低滲透）"}
+LINE_CASE = {"A": 0, "B": 1, "C": 2}                     # 成本／價格欄：低成本＋低價／基準／高成本＋高價
+LINE_CASE_LAB = {"A": "低成本／低價", "B": "基準", "C": "高成本／高價"}
+LINE_OFF = {"trips": (2, "美國叫車趟數"), "pen": (6, "Robotaxi 滲透率"), "wsh": (27, "Waymo 份額")}
+ST_W, ST_W_PMD, CI_W_PRICE = 5, 20, 31                  # 堆疊頁 Waymo 第 1 項列、稼動率備忘列；成本輸入頁 W_PRICE 列
+
+
+def _geo_path(v):
+    """錨點 2026/28/30/32 → 2026–2035：奇數年取相鄰錨點幾何平均，2033 起持平於 2032（對帳 1 判斷題 2 預設）"""
+    return {y: v[y] if y in v else (math.sqrt(v[y - 1] * v[y + 1]) if y < 2032 else v[2032]) for y in YEARS}
+
+
+def load_line():
+    path = sorted(glob.glob(LINE_GLOB))[-1]
+    wb = openpyxl.load_workbook(path, data_only=True)
+    sc, st, ci, inp, pr = wb["情境"], wb["每英里成本堆疊"], wb["成本輸入"], wb["輸入"], wb["每英里價格"]
+    fn = os.path.basename(path)
+    L = {"file": fn, "src": {}}
+    for s, b in LINE_BLK.items():                         # 版面斷言：列號改動時立即失敗
+        assert str(sc.cell(b, 1).value).startswith("情境："), (s, b)
+        for k, (o, lab) in LINE_OFF.items():
+            assert str(sc.cell(b + o, 1).value).startswith(lab), (s, k, sc.cell(b + o, 1).value)
+            for i, y in enumerate(YEARS):
+                L[(k, s, y)] = sc.cell(b + o, 3 + i).value
+                L["src"][(k, s, y)] = f"{fn}｜情境!{CL(3 + i)}{b + o}（{LINE_BLK_LAB[s]}：{lab}）"
+    assert st.cell(ST_W - 2, 1).value == "Waymo" and str(st.cell(ST_W, 1).value).startswith("1 車輛")
+    assert str(st.cell(ST_W + 2, 1).value).startswith("3 能源") and str(st.cell(ST_W + 7, 1).value).startswith("8 場站")
+    assert str(st.cell(ST_W_PMD, 1).value).startswith("備忘：每車每日付費英里") and ci.cell(CI_W_PRICE, 1).value == "W_PRICE"
+    for s, c in LINE_CASE.items():
+        ox, pm, pp = {}, {}, {}
+        for i, y in enumerate(LINE_ANCH):
+            sc_, ic = 3 + i * 3 + c, 5 + i * 3 + c
+            ox[y] = sum(st.cell(ST_W + k, sc_).value for k in range(2, 8))
+            pm[y] = st.cell(ST_W_PMD, sc_).value
+            pp[y] = ci.cell(CI_W_PRICE, ic).value
+            L["src"][("opx", s, y)] = f"{fn}｜每英里成本堆疊!{CL(sc_)}{ST_W + 2}:{CL(sc_)}{ST_W + 7}（Waymo 第 3–8 項，{LINE_CASE_LAB[s]}）"
+            L["src"][("pmd", s, y)] = f"{fn}｜每英里成本堆疊!{CL(sc_)}{ST_W_PMD}（Waymo 每車每日付費英里，{LINE_CASE_LAB[s]}）"
+            L["src"][("price", s, y)] = f"{fn}｜成本輸入!{CL(ic)}{CI_W_PRICE}（W_PRICE，{LINE_CASE_LAB[s]}）"
+        for k, v in (("opx", ox), ("pmd", pm), ("price", pp)):
+            for y, x in _geo_path(v).items():
+                L[(k, s, y)] = x
+                if y not in LINE_ANCH:
+                    L["src"][(k, s, y)] = f"{fn}｜" + (f"{y - 1}／{y + 1} 錨點的幾何平均" if y < 2032 else "2032 錨點持平（線的權威只到 2032）")
+    row = {inp.cell(r, 1).value: r for r in range(1, inp.max_row + 1)}
+    L["trip_mkt"] = (inp.cell(row["M_TRIP_MI"], 4).value, inp.cell(row["M_TRIP_MI"], 5).value, inp.cell(row["M_TRIP_MI"], 6).value)
+    L["src"]["trip_mkt"] = f"{fn}｜輸入!D{row['M_TRIP_MI']}:F{row['M_TRIP_MI']}（M_TRIP_MI，Assumed）"
+    el = [inp.cell(row["P_ELAST"], c).value for c in (4, 5, 6)]  # 低／基準／高滲透
+    L["eps"] = {"A": -el[2], "B": -el[1], "C": -el[0]}
+    L["src"]["eps"] = f"{fn}｜輸入!D{row['P_ELAST']}:F{row['P_ELAST']}（P_ELAST，Analogy：NBER w31330）"
+    rr = next(r for r in range(1, pr.max_row + 1) if str(pr.cell(r, 1).value or "").startswith("CPUC 每趟付費英里"))
+    L["tl0"] = pr.cell(rr, 2).value
+    L["src"]["tl0"] = f"{fn}｜每英里價格!B{rr}（CPUC Q2 2026 總英里÷趟數×付費占比）"
+    return L
+
+
+LINE = load_line()
+LINE_KEYS = (("trips", "lt", "線 美國叫車年趟數（不含誘發）", "百萬趟"), ("pen", "lpen", "線 Robotaxi 滲透率（替代趟數÷叫車趟數）", "%"),
+             ("wsh", "lws", "線 Waymo 占美國 Robotaxi 趟數份額", "%"), ("price", "lp", "線 Waymo 每付費英里價格", "US$/英里"),
+             ("opx", "lx", "線 Waymo 單位營運成本第 3–8 項（不含車輛攤提、融資）", "US$/英里"), ("pmd", "lm", "線 Waymo 每車每日付費英里", "英里/日"))
 
 # ---------------------------------------------------------------------------
 # 一、輸入（In 頁）：鍵、項目、單位、低、基準、高、標記、出處、來源誘因、說明
 # ---------------------------------------------------------------------------
 IN = [
-    ("§", "A. 市場（美國叫車，線 1a 口徑）"),
-    ("us_trips25", "美國叫車（Uber＋Lyft 等）年趟數 2025", "十億趟", 3.0, 3.5, 4.2, "Derived",
-     "Lyft FY2025 新聞稿（2026-02-10）：全年 945.5 百萬趟（含 2025 年中併入的 FreeNow 歐洲）；Lyft 美國份額約 24%（Second Measure，2024-03，經 Backlinko 轉述）",
-     "", "≈（945.5 − FreeNow 歐洲，未取得）÷ 0.24–0.30；Uber 全球 13,567 百萬趟含外送，無法拆美國叫車，故不用"),
-    ("g_mkt", "美國叫車趟數年成長（人類叫車基底）", "%/年", 0.03, 0.05, 0.07, "Assumed", "—", "",
-     "Lyft 2025 趟數 +14%、Uber 全球 +20%（含外送與國際）；成熟後基底成長放緩，給區間"),
-    ("w_trips26", "Waymo 2026 全年付費趟數", "百萬趟", 24, 28, 34, "Derived",
-     "Waymo 部落格：2026-02-02 每週 40 萬＋；2026-03-26 每週 50 萬＋；TechCrunch 2026-09-24：平均每週約 50 萬；年底目標每週 100 萬（Bloomberg 2026-02-11，共同執行長）",
-     "", "≈ 52 週 × 平均每週 0.5–0.65 百萬；Q4 爬坡未取得官方數字"),
-    ("w_avshare26", "Waymo 占美國付費無人 Robotaxi 趟數份額 2026", "%", 0.85, 0.90, 0.95, "Assumed", "—", "",
-     "Tesla（奧斯汀、灣區有安全員）、Zoox（拉斯維加斯 2026-07 起收費）規模遠小於 Waymo；精確份額未取得"),
-    ("ph", "人類叫車每付費英里乘客實付價格（含小費，全美）", "US$/英里", 2.8, 3.7, 4.5, "Derived",
+    ("§", "A. 市場（美國叫車趟數、滲透率、Waymo 份額皆讀線 1a v0.2，見本頁 E 節；v0.2 起本節只留轉換閘門與錨）"),
+    ("ph", "人類叫車每付費英里乘客實付價格（含小費，全美；顯示錨）", "US$/英里", None, 3.7, None, "Derived",
      "Gridwise 2026 Q3：Uber 司機每英里毛收入 US$2.65、平台抽成中位數 22.44%（線 1a 框架）",
-     "", "2.65 ÷（1 − 0.2244）× 1.08（小費，與 tesla_robotaxi 同）≈ 3.69；舊金山 Obi 2026-01 Uber 均價 17.47 ÷ 3.4 英里 ≈ 5.1（高價城市）→ 區間取 2.8–4.5"),
+     "", "2.65 ÷（1 − 0.2244）× 1.08 ≈ 3.69。v0.2 起不進誘發公式（誘發改以 Waymo 自身價格相對 2026，對帳 2），只在滲透頁與每英里經濟頁作錨"),
     ("vmt", "美國 12 個月移動車輛行駛里程（2026-08）", "十億英里", None, 3335.695, None, "Verified", "FRED／FHWA TRAVLTRS（與 tesla_robotaxi 同值）", "", "政府統計"),
     ("ldv_sh", "VMT 中可被 Robotaxi 取代的小客車占比", "%", 0.85, 0.90, 0.92, "Assumed", "—", "", "與 tesla_robotaxi 同"),
     ("p_own", "自有車每英里全成本（AAA 2025，15,000 英里／年平均）", "US$/英里", 0.5587, 0.772, None, "Verified", "AAA Your Driving Costs 2025-09-16：年 11,577 美元；小轎車 55.87 美分（低）", "", "與 tesla_robotaxi 同"),
-    ("cf", "便利溢價（Robotaxi 每英里價格可高於自有車成本的倍數，轉換閘門門檻）", "倍", 1.2, 1.5, 2.0, "Assumed", "—", "", "閘門＝MIN(1,MAX(0,(1.5×門檻−價)/(0.5×門檻)))，門檻＝p_own×cf；與 tesla_robotaxi 同式"),
-    ("§", "B. Waymo 營運參數（每英里與車隊）"),
-    ("pmi_trip", "每趟付費（載客）英里", "英里/趟", 3.4, 4.0, 5.5, "Analogy",
-     "Findings Press（2026）以 CPUC 未遮蔽資料：加州 2023-08～2025-12 每趟載客約 3.4 英里（推算）", "",
-     "類比：加州（舊金山為主、短程）＝下緣；全美含機場與高速公路行程較長；上緣 5.5 為 Assumed"),
-    ("paid_sh26", "付費英里占總行駛英里 2026", "%", 0.55, 0.59, 0.62, "Derived",
-     "CPUC 月報（Platform Aeronaut 彙整）：2026-01～06 空駛比 40.7%–45.0%", "", "1 − 空駛比；部分月份有遮蔽（＋號）"),
-    ("paid_sh35", "付費英里占總行駛英里 2035", "%", 0.60, 0.65, 0.70, "Assumed", "—", "", "規模與調度改善；人類叫車類比 55–65%（線 1a）"),
-    ("rpm26", "Waymo 每付費英里實收價格 2026（全美平均）", "US$/英里", 3.5, 4.5, 5.8, "Derived",
-     "Obi（TechCrunch 2026-01-27）：舊金山 Waymo 均價 US$19.69／趟；÷ 每趟 3.4 英里 ≈ 5.79（舊金山＝上緣）", "",
-     "其他城市 Waymo 牌價較低（RideWise 費率表，可靠度低）；全美平均未取得"),
-    ("cpm_rao", "遠端協助每車英里 2026", "US$/英里", 0.05, 0.12, 0.20, "Assumed", "Markey 參議員報告（2026）：各家未揭露 RAO 比例；Waymo 約半數 RAO 在菲律賓", "", "RAO：車 1:10–1:40 × 時薪"),
-    ("cpm_ins", "保險每車英里 2026", "US$/英里", 0.10, 0.20, 0.30, "Assumed", "未取得", "", "商用車隊保險；Waymo 未揭露"),
-    ("cpm_nrg", "能源每車英里 2026", "US$/英里", 0.04, 0.06, 0.08, "Assumed", "—", "", "約 0.3 kWh/英里 × 商用電價（含充電損失）"),
-    ("cpm_mnt", "維修與清潔每車英里 2026", "US$/英里", 0.15, 0.25, 0.35, "Assumed", "未取得", "", "含感測器校正、內裝清潔"),
-    ("cpm_depot", "場站與車隊管理每車英里 2026", "US$/英里", 0.12, 0.22, 0.40, "Assumed", "未取得", "", "場站租金、充電樁、現場人員"),
-    ("cpm_dec", "每車英里現金成本年降幅", "%/年", 0.06, 0.12, 0.15, "Assumed", "—", "", "規模經濟、場站利用率、RAO 比例改善"),
+    ("cf", "便利溢價（Robotaxi 每英里價格可高於自有車成本的倍數，轉換閘門門檻）", "倍", None, 1.0, 1.5, "Assumed", "—", "",
+     "v0.2 基準 1.5→1.0（與 tesla_robotaxi v0.2 同：對帳 1 判斷題 1 預設乙，價格 ≤ 0.77 全開、≥ 1.155 關閉）；高＝1.5（v0.1）。閘門＝MIN(1,MAX(0,(1.5×門檻−價)/(0.5×門檻)))，門檻＝p_own×cf"),
+    ("§", "B. Waymo 營運參數（價格、營運成本、稼動率讀線，見 E 節；本節為 Waymo 自有參數）"),
+    ("tl_end", "Waymo 每趟付費英里 2035（2026 讀線 CPUC 實測 tl0，線性收斂至此值）", "英里/趟", 3.73, 6.0, 7.1, "Assumed",
+     "線 1a M_TRIP_MI：美國叫車平均每趟 6.0 英里（4.5–7.1）；CPUC：Waymo 加州 2026 Q2 每趟約 3.7 付費英里", "",
+     "對帳 2 判斷題 2 預設丙：服務區擴到高速公路與機場後行程變長，2035 收斂到全美叫車平均；低＝乙（維持 2026 實測 3.73）；高＝線上緣 7.1"),
+    ("util_k", "稼動率乘數（對線每車每日付費英里的調整；基準 1.0）", "倍", 0.8, 1.0, 1.2, "Assumed", "—", "", "與 tesla_robotaxi util_k 同；只在 Sens 動"),
     ("vcost26", "單車取得成本 2026（Ojai＋第六代套件）", "千美元", 100, 125, 160, "Interested-party",
-     "Morgan Stanley 估計（TNW 轉述，線 1a）：Ojai 約 12.5 萬美元；舊款 I-PACE 約 20 萬", "券商估計（有覆蓋 GOOGL 的利益）", ""),
+     "Morgan Stanley 估計（TNW 轉述，線 1a）：Ojai 約 12.5 萬美元；舊款 I-PACE 約 20 萬", "券商估計（有覆蓋 GOOGL 的利益）", "線 W_VEH 2026 基準 14 萬；車輛攤提不讀線（與 tesla_robotaxi 同規則：只讀第 3–8 項）"),
     ("vcost_dec", "單車成本年降幅", "%/年", 0.04, 0.08, 0.12, "Assumed", "—", "", "套件成本下降、Zeekr／Hyundai 量產"),
     ("vlife", "車輛經濟壽命", "年", 5, 6, 8, "Assumed", "—", "", "生涯 30–50 萬英里（線 1a）÷ 每車年英里"),
-    ("tpvd", "每車每日付費趟數", "趟/車/日", 15, 20, 26, "Derived",
-     "每週 50 萬趟 ÷ 7 ÷ 車隊約 3,000（2026-04）≈ 24；÷ 約 4,000（2026-09）≈ 18", "", "時點不完全一致；中國同業 21–25（線 1a）"),
     ("fix26", "固定營運費用 2026（研發、地圖、管銷、擴城）", "十億美元", 3.5, 5.0, 6.5, "Derived",
      "Alphabet 2026 Q3 Other Bets 營業虧損 US$20.5 億、營收 3.72 億（Fortune 2026-10-30）；年化約 82 億為 Other Bets 合計", "",
-     "Waymo 未單獨揭露；扣除 Wing、Verily 等其他單位後取 3.5–6.5"),
+     "Waymo 未單獨揭露；扣除 Wing、Verily 等其他單位後取 3.5–6.5。不讀線第 9–10 項（線按車隊分攤，口徑不同；與 tesla_robotaxi 同規則）"),
     ("fix_g", "固定營運費用年成長", "%/年", 0.0, 0.02, 0.05, "Assumed", "—", "", "擴城與國際化 vs 研發成熟"),
     ("§", "C. 估值"),
     ("tax", "稅率（獲利時）", "%", 0.21, 0.21, 0.25, "Verified", "美國聯邦法定稅率 21%（州稅另計為敏感度高）", "", "虧損年不計稅盾（獨立估值口徑）"),
@@ -100,25 +145,33 @@ IN = [
 ]
 SCN_IN = {
     # 鍵前綴: (項目, 單位, A, B, C, 說明)
-    "avpen30": ("Robotaxi 占美國叫車（人類替代部分）滲透率 2030", "%", 0.20, 0.10, 0.03, "2026 起幾何內插；2026 起點由 Waymo 趟數反推（約 0.9%）"),
-    "avpen35": ("Robotaxi 占美國叫車（人類替代部分）滲透率 2035", "%", 0.50, 0.25, 0.08, "2030→2035 線性；2035 值與 tesla_robotaxi s35 相同（線 1a 共用）"),
     "c35": ("自有車 VMT 轉換為 Robotaxi 的比例（閘門開啟時）2035", "%", 0.10, 0.03, 0.005, "與 tesla_robotaxi c35 相同；2027 起線性 × 閘門"),
-    "wsh30": ("Waymo 占美國 Robotaxi 趟數份額 2030", "%", 0.65, 0.55, 0.35, "Tesla、Zoox、Uber 平台二線營運商進入"),
-    "wsh35": ("Waymo 占美國 Robotaxi 趟數份額 2035", "%", 0.55, 0.45, 0.25, ""),
-    "rpm35": ("Waymo 每付費英里實收價格 2035", "US$/英里", 1.8, 2.3, 3.0, "2026 起幾何內插；Tesla 奧斯汀牌價 US$1/英里＋起跳 3.25 為價格戰參照"),
-    "eps": ("價格彈性（傑文斯效應）：誘發需求 ＝ MAX(1, 人類價格 ÷ Robotaxi 價格)^ε", "倍數", 1.2, 0.7, 0.3, "觀察到的彈性未取得（見滲透頁 A4）"),
-    "intl35": ("國際趟數 ÷ 美國趟數 2035", "%", 0.30, 0.15, 0.0, "倫敦、東京（2026 宣布）、加拿大、德國、新加坡、西班牙（Q3 法說）；2027 起線性"),
+    "eps": ("價格彈性（誘發需求）：誘發倍數＝(Waymo 2026 價格 ÷ 當年價格)^ε", "倍數", LINE["eps"]["A"], LINE["eps"]["B"], LINE["eps"]["C"],
+            "讀線 P_ELAST（Analogy：NBER w31330；線高／基準／低滲透）；相對 2026 是因 2026 趟數已含當時價格（對帳 2 工程結論，避免重複計入）"),
+    "intl35": ("國際趟數 ÷ 美國趟數 2035", "%", 0.30, 0.15, 0.0, "倫敦、東京（2026 宣布）、加拿大、德國、新加坡、西班牙（Q3 法說）；2027 起線性。線無海外，沿用本模型"),
 }
 SCN_W = {"A": 0.25, "B": 0.50, "C": 0.25}
+
+
+def line_rows():
+    """In 頁 E 節：(鍵, 標籤, 單位, 值, 出處)；值由 load_line() 從線成品讀入（不手打）"""
+    rows = [("trip_mkt", "線 美國叫車平均每趟付費英里（M_TRIP_MI 基準；tl_end 的基準值同此）", "英里/趟", LINE["trip_mkt"][1], LINE["src"]["trip_mkt"]),
+            ("tl0", "線 Waymo 每趟付費英里 2026（CPUC 推算）", "英里/趟", LINE["tl0"], LINE["src"]["tl0"])]
+    for kind, pre, lab, unit in LINE_KEYS:
+        for y in YEARS:
+            for s in SCN:
+                rows.append((f"{pre}_{y}_{s}", f"情境 {s}：{lab} {y}", unit, LINE[(kind, s, y)], LINE["src"][(kind, s, y)]))
+    return rows
 
 
 def base_params():
     p = {r[0]: r[4] for r in IN if r[0] != "§"}
     p["stub"] = 45 / 365
-    p["cpm26"] = p["cpm_rao"] + p["cpm_ins"] + p["cpm_nrg"] + p["cpm_mnt"] + p["cpm_depot"]
     for k, v in SCN_IN.items():
         for i, s in enumerate(SCN):
             p[f"{k}_{s}"] = v[2 + i]
+    for k, lab, unit, v, src in line_rows():
+        p[k] = v
     return p
 
 
@@ -126,39 +179,35 @@ def base_params():
 # 二、Python 鏡像（與 xlsx 公式一一對應；Sens 與反解用）
 # ---------------------------------------------------------------------------
 def run(p, s):
-    p = dict(p)
-    p["cpm26"] = p["cpm_rao"] + p["cpm_ins"] + p["cpm_nrg"] + p["cpm_mnt"] + p["cpm_depot"]
-    us26 = p["us_trips25"] * (1 + p["g_mkt"])
-    pen26 = p["w_trips26"] / 1000 / p["w_avshare26"] / us26
-    out = {k: {} for k in ["us", "pen", "rpm", "jev", "gate", "conv", "av", "wsh", "wus", "intl", "trips", "wk", "fleet", "pm",
-                           "psh", "vm", "cpm", "vc", "dep_mi", "opc", "fix", "fix_mi", "full", "rev", "var", "dep",
+    out = {k: {} for k in ["us", "pen", "rpm", "jev", "gate", "conv", "av", "wsh", "wus", "intl", "trips", "wk", "fleet", "pm", "L",
+                           "cpm", "vc", "mpv", "dep_mi", "opc", "fix", "fix_mi", "full", "rev", "var", "dep",
                            "ebit", "nopat", "capex", "dnwc", "fcff", "pv"]}
     prev_fleet = prev_rev = None
     for y in YEARS:
         n = y - 2026
-        us = p["us_trips25"] * (1 + p["g_mkt"]) ** (y - 2025)
-        pen = pen26 * (p[f"avpen30_{s}"] / pen26) ** (n / 4) if y <= 2030 else p[f"avpen30_{s}"] + (p[f"avpen35_{s}"] - p[f"avpen30_{s}"]) * (y - 2030) / 5
-        rpm = p["rpm26"] * (p[f"rpm35_{s}"] / p["rpm26"]) ** (n / 9)
-        jev = max(1, p["ph"] / rpm) ** p[f"eps_{s}"]
+        us = p[f"lt_{y}_{s}"] / 1000
+        pen = p[f"lpen_{y}_{s}"]
+        rpm = p[f"lp_{y}_{s}"]
+        jev = (p[f"lp_2026_{s}"] / rpm) ** p[f"eps_{s}"]
         gate = min(1, max(0, (1.5 * p["p_own"] * p["cf"] - rpm) / (0.5 * p["p_own"] * p["cf"])))
         conv = p["vmt"] * p["ldv_sh"] * p[f"c35_{s}"] * n / 9 * gate
-        av = us * pen * jev + conv / p["pmi_trip"]
-        wsh = p["w_avshare26"] + (p[f"wsh30_{s}"] - p["w_avshare26"]) * n / 4 if y <= 2030 else p[f"wsh30_{s}"] + (p[f"wsh35_{s}"] - p[f"wsh30_{s}"]) * (y - 2030) / 5
+        L = p["tl0"] + (p["tl_end"] - p["tl0"]) * n / 9
+        av = us * pen * jev + conv / L
+        wsh = p[f"lws_{y}_{s}"]
         wus = av * wsh * 1000
         intl = p[f"intl35_{s}"] * n / 9
         trips = wus * (1 + intl)
-        fleet = trips / (p["tpvd"] * 365) * 1000
-        pm = trips * p["pmi_trip"]
-        psh = p["paid_sh26"] + (p["paid_sh35"] - p["paid_sh26"]) * n / 9
-        vm = pm / psh
-        cpm = p["cpm26"] * (1 - p["cpm_dec"]) ** n
+        pm = trips * L
+        fleet = pm * 1000 / (p[f"lm_{y}_{s}"] * p["util_k"] * 365)
+        cpm = p[f"lx_{y}_{s}"]
         vc = p["vcost26"] * (1 - p["vcost_dec"]) ** n
-        dep_mi = vc / p["vlife"] / (vm / fleet)
-        opc = (cpm + dep_mi) / psh
+        mpv = p[f"lm_{y}_{s}"] * p["util_k"] * 365 / 1000
+        dep_mi = vc / p["vlife"] / mpv
+        opc = cpm + dep_mi
         fix = p["fix26"] * (1 + p["fix_g"]) ** n
         fix_mi = fix * 1000 / pm
         rev = pm * rpm / 1000
-        var = vm * cpm / 1000
+        var = pm * cpm / 1000
         dep = fleet * vc / p["vlife"] / 1000
         ebit = rev - var - fix - dep
         nopat = ebit - max(0, ebit) * p["tax"]
@@ -170,7 +219,7 @@ def run(p, s):
         t = p["stub"] / 2 if y == 2026 else p["stub"] + (y - 2027) + 0.5
         pv = fcff * frac / (1 + p["wacc"]) ** t
         for k, v in dict(us=us, pen=pen, rpm=rpm, jev=jev, gate=gate, conv=conv, av=av, wsh=wsh, wus=wus, intl=intl, trips=trips, wk=trips / 52,
-                         fleet=fleet, pm=pm, psh=psh, vm=vm, cpm=cpm, vc=vc, dep_mi=dep_mi, opc=opc, fix=fix, fix_mi=fix_mi,
+                         fleet=fleet, pm=pm, L=L, cpm=cpm, vc=vc, mpv=mpv, dep_mi=dep_mi, opc=opc, fix=fix, fix_mi=fix_mi,
                          full=opc + fix_mi, rev=rev, var=var, dep=dep, ebit=ebit, nopat=nopat, capex=capex, dnwc=dnwc,
                          fcff=fcff, pv=pv).items():
             out[k][y] = v
@@ -180,8 +229,16 @@ def run(p, s):
     tv = n36 * (1 - p["g_tv"] / p["wacc"]) / (p["wacc"] - p["g_tv"])
     pvtv = tv / (1 + p["wacc"]) ** (p["stub"] + 9)
     ev = sum_pv + pvtv
-    out.update(sum_pv=sum_pv, tv=tv, pvtv=pvtv, ev=ev, eq=ev + p["netcash"], pen26=pen26)
+    out.update(sum_pv=sum_pv, tv=tv, pvtv=pvtv, ev=ev, eq=ev + p["netcash"], pen26=out["pen"][2026])
     return out
+
+
+def swap(p, pre, frm, to="B"):
+    """Sens 用：把情境 to 的線路徑（鍵前綴 pre）換成情境 frm 的路徑"""
+    q = dict(p)
+    for y in YEARS:
+        q[f"{pre}_{y}_{to}"] = p[f"{pre}_{y}_{frm}"]
+    return q
 
 
 def weighted(p):
@@ -254,10 +311,11 @@ def build():
         k = f"scn_w{s}"
         put(ws, r, 1, k); put(ws, r, 2, f"情境權重 {s}"); put(ws, r, 3, "%"); put(ws, r, 5, SCN_W[s], BLUE)
         put(ws, r, 7, "Assumed"); put(ws, r, 8, "DCF 標準規格：預設 25／50／25"); name(wb, k, f"In!$E${r}"); inrow[k] = r; r += 1
-    # 衍生：cpm26
-    put(ws, r, 1, "cpm26"); put(ws, r, 2, "每車英里現金成本 2026（五項合計）"); put(ws, r, 3, "US$/英里")
-    put(ws, r, 5, "=cpm_rao+cpm_ins+cpm_nrg+cpm_mnt+cpm_depot"); put(ws, r, 7, "Derived"); put(ws, r, 8, "上列五項加總")
-    name(wb, "cpm26", f"In!$E${r}"); r += 1
+    put(ws, r, 1, f"E. 線 1a v0.2 讀入（Derived；建置程式從 {LINE['file']} 讀值，不手打；情境 A＝線高滲透＋低成本＋低價、B＝基準、C＝低滲透＋高成本＋高價）", BOLD, fill=SEC); r += 1
+    for k, lab, unit, v, src in line_rows():
+        put(ws, r, 1, k); put(ws, r, 2, lab); put(ws, r, 3, unit); put(ws, r, 5, v, BLUE)
+        put(ws, r, 7, "Derived"); put(ws, r, 8, src); put(ws, r, 10, "線權威（規則第 13 條）；改值請改線")
+        name(wb, k, f"In!$E${r}"); inrow[k] = r; r += 1
     put(ws, r, 1, "stub"); put(ws, r, 2, "評價日（2026-11-16）至 FY2026 年底的年數"); put(ws, r, 3, "年")
     put(ws, r, 5, "=(DATE(2026,12,31)-DATE(2026,11,16))/365"); put(ws, r, 7, "Derived"); name(wb, "stub", f"In!$E${r}"); r += 2
     put(ws, r, 1, "情境驅動對照（純展示；修改請改上方藍字）", BOLD, fill=SEC); r += 1
@@ -269,6 +327,12 @@ def build():
         for c, s in zip((4, 5, 6), SCN):
             put(ws, r, c, f"=E{inrow[f'{pre}_{s}']}")
         put(ws, r, 8, f"引用 In 頁 {pre}_A／{pre}_B／{pre}_C；全部 Assumed"); r += 1
+    for kind, pre, lab, unit in LINE_KEYS:
+        for y in YEARS:
+            put(ws, r, 1, f"{pre}_{y}"); put(ws, r, 2, f"{lab} {y}")
+            for c, s_ in zip((4, 5, 6), SCN):
+                put(ws, r, c, f"=E{inrow[f'{pre}_{y}_{s_}']}")
+            put(ws, r, 8, f"引用 In 頁 {pre}_{y}_A／{pre}_{y}_B／{pre}_{y}_C；讀線（E 節）"); r += 1
     put(ws, r, 1, "scn_w"); put(ws, r, 2, "情境權重")
     for c, s in zip((4, 5, 6), SCN):
         put(ws, r, c, f"=E{inrow['scn_w' + s]}")
@@ -278,15 +342,15 @@ def build():
 
     # ---------------- 市場天花板與情境 ----------------
     ws = W["市場天花板與情境"]
-    put(ws, 1, 1, "市場天花板與情境 — 美國叫車總趟數 × Robotaxi 滲透 × 傑文斯誘發需求 × Waymo 份額 ×（1＋國際）→ Waymo 趟數、車隊、付費里程（十億／百萬趟）", BOLD)
-    put(ws, 2, 1, "2026 起點滲透率（由 Waymo 2026 趟數反推）"); put(ws, 2, 3, "=w_trips26/1000/w_avshare26/(us_trips25*(1+g_mkt))", fmt="0.00%")
+    put(ws, 1, 1, "市場天花板與情境 — 美國叫車總趟數 × Robotaxi 滲透 × 誘發需求 × Waymo 份額 ×（1＋國際）→ Waymo 趟數 × 每趟英里 → 付費里程、車隊。趟數、滲透、份額、價格讀線 1a v0.2（In 頁 E 節）", BOLD)
+    put(ws, 2, 1, "2026 起點滲透率（線校準值，情境 B）"); put(ws, 2, 3, "=lpen_2026_B", fmt="0.00%")
     name(wb, "pen26", "'市場天花板與情境'!$C$2")
-    put(ws, 3, 1, "天花板讀法：叫車市場只是美國出行的一小部分；AAA 2025 自有車每英里 0.77 美元（小轎車 0.56），Robotaxi 價格若逼近此線，可替代的不只叫車而是自有車里程——本版兩條路徑（與 tesla_robotaxi 同式）：(1) 傑文斯係數 ε 放大『低於人類叫車價格』的叫車需求；(2) 價格低於 自有車成本×便利溢價 時，閘門開啟，部分小客車 VMT 轉入 Robotaxi（c35）。單位換算：轉入英里 ÷ 每趟英里＝趟數。", wrap=True)
-    VROWS = ["us", "pen", "rpm", "jev", "gate", "conv", "av", "wsh", "wus", "intl", "trips", "wk", "shus", "fleet", "pm"]
-    VLAB = {"us": ("美國叫車基底趟數", "十億趟"), "pen": ("Robotaxi 滲透率（人類叫車替代）", "%"),
-            "rpm": ("Waymo 每付費英里實收價格", "US$/英里"), "jev": ("傑文斯誘發係數 MAX(1,人類價÷RT價)^ε", "倍"),
+    put(ws, 3, 1, "天花板讀法：叫車市場只是美國出行的一小部分；AAA 2025 自有車每英里 0.77 美元（小轎車 0.56），Robotaxi 價格若逼近此線，可替代的不只叫車而是自有車里程——本版兩條路徑（與 tesla_robotaxi 同式）：(1) 誘發倍數＝(Waymo 2026 價格 ÷ 當年價格)^ε（ε 讀線 P_ELAST）；(2) 價格低於 自有車成本×便利溢價 時，閘門開啟，部分小客車 VMT 轉入 Robotaxi（c35）。單位換算：轉入英里 ÷ 每趟英里＝趟數。v0.2 份額讀線：Waymo＋Tesla＋其他＝100%（對帳 2）。", wrap=True)
+    VROWS = ["us", "pen", "rpm", "jev", "gate", "conv", "av", "wsh", "wus", "intl", "trips", "wk", "shus", "L", "pm", "fleet"]
+    VLAB = {"us": ("美國叫車基底趟數（線）", "十億趟"), "pen": ("Robotaxi 滲透率（人類叫車替代，線）", "%"),
+            "rpm": ("Waymo 每付費英里實收價格（線）", "US$/英里"), "jev": ("誘發倍數 (2026 價÷當年價)^ε", "倍"), "L": ("Waymo 每趟付費英里", "英里/趟"),
             "gate": ("自有車轉換閘門（價格 vs 自有車成本×便利溢價）", "0–1"), "conv": ("自有車里程轉入 Robotaxi", "十億英里"),
-            "av": ("美國 Robotaxi 趟數", "十億趟"), "wsh": ("Waymo 占 Robotaxi 份額", "%"), "wus": ("Waymo 美國趟數", "百萬趟"),
+            "av": ("美國 Robotaxi 趟數", "十億趟"), "wsh": ("Waymo 占 Robotaxi 份額（線）", "%"), "wus": ("Waymo 美國趟數", "百萬趟"),
             "intl": ("國際 ÷ 美國", "%"), "trips": ("Waymo 全球付費趟數", "百萬趟"), "wk": ("每週付費趟數", "百萬趟/週"),
             "shus": ("Waymo 美國趟數 ÷ 美國叫車基底", "%"), "fleet": ("所需車隊", "千台"), "pm": ("付費（載客）英里", "百萬英里")}
     VR = {}  # (s,key)->row
@@ -304,54 +368,52 @@ def build():
             c = YC[y]; n = y - 2026; col = YEARS.index(y) + 3
             prev = YC.get(y - 1)
             f = {
-                "us": f"=us_trips25*(1+g_mkt)^({y}-2025)",
-                "pen": (f"=pen26*(avpen30_{s}/pen26)^({n}/4)" if y <= 2030 else f"=avpen30_{s}+(avpen35_{s}-avpen30_{s})*({y}-2030)/5"),
-                "rpm": f"=rpm26*(rpm35_{s}/rpm26)^({n}/9)",
-                "jev": f"=MAX(1,ph/{c}{R('rpm')})^eps_{s}",
+                "us": f"=lt_{y}_{s}/1000",
+                "pen": f"=lpen_{y}_{s}",
+                "rpm": f"=lp_{y}_{s}",
+                "jev": f"=(lp_2026_{s}/{c}{R('rpm')})^eps_{s}",
+                "L": f"=tl0+(tl_end-tl0)*{n}/9",
                 "gate": f"=MIN(1,MAX(0,(1.5*p_own*cf-{c}{R('rpm')})/(0.5*p_own*cf)))",
                 "conv": f"=vmt*ldv_sh*c35_{s}*{n}/9*{c}{R('gate')}",
-                "av": f"={c}{R('us')}*{c}{R('pen')}*{c}{R('jev')}+{c}{R('conv')}/pmi_trip",
-                "wsh": (f"=w_avshare26+(wsh30_{s}-w_avshare26)*{n}/4" if y <= 2030 else f"=wsh30_{s}+(wsh35_{s}-wsh30_{s})*({y}-2030)/5"),
+                "av": f"={c}{R('us')}*{c}{R('pen')}*{c}{R('jev')}+{c}{R('conv')}/{c}{R('L')}",
+                "wsh": f"=lws_{y}_{s}",
                 "wus": f"={c}{R('av')}*{c}{R('wsh')}*1000",
                 "intl": f"=intl35_{s}*{n}/9",
                 "trips": f"={c}{R('wus')}*(1+{c}{R('intl')})",
                 "wk": f"={c}{R('trips')}/52",
                 "shus": f"={c}{R('wus')}/({c}{R('us')}*1000)",
-                "fleet": f"={c}{R('trips')}/(tpvd*365)*1000",
-                "pm": f"={c}{R('trips')}*pmi_trip",
+                "fleet": f"={c}{R('pm')}*1000/(lm_{y}_{s}*util_k*365)",
+                "pm": f"={c}{R('trips')}*{c}{R('L')}",
             }
             for k in VROWS:
-                fmt = "0.0%" if k in ("pen", "wsh", "intl", "shus") else ("0.00" if k in ("rpm", "jev", "gate", "us", "av", "wk") else "#,##0.0")
+                fmt = "0.0%" if k in ("pen", "wsh", "intl", "shus") else ("0.00" if k in ("rpm", "jev", "gate", "us", "av", "wk", "L") else "#,##0.0")
                 put(ws, R(k), col, f[k], fmt=fmt)
     ws.column_dimensions["A"].width = 40; ws.column_dimensions["B"].width = 12
 
     # ---------------- 每英里經濟 ----------------
     ws = W["每英里經濟"]
-    put(ws, 1, 1, "每英里經濟 — 價格 vs 每英里全成本（US$／付費英里）；收支只作估值的一環。成本口徑：營運成本＝（每車英里現金成本＋每車英里折舊）÷ 付費英里占比；全載成本＝營運成本＋固定費用 ÷ 付費英里", BOLD)
-    put(ws, 3, 1, "2026 每車英里現金成本拆解（Assumed；與線 1a 同式）", BOLD, fill=SEC)
-    comps = [("cpm_rao", "遠端協助"), ("cpm_ins", "保險"), ("cpm_nrg", "能源"), ("cpm_mnt", "維修清潔"), ("cpm_depot", "場站與車隊管理"), ("cpm26", "合計（每車英里）")]
-    for c, h in enumerate(["項目", "鍵", "低", "基準", "高"], 1): put(ws, 4, c, h, BOLD, fill=HDR)
+    put(ws, 1, 1, "每英里經濟 — 價格 vs 每英里成本（US$／付費英里）；收支只作估值的一環。v0.2 口徑：營運成本＝線 Waymo 第 3–8 項（每付費英里）＋車輛折舊 ÷ 每車年付費英里；全載成本＝營運成本＋固定費用 ÷ 付費英里", BOLD)
+    put(ws, 3, 1, "線 Waymo 單位營運成本第 3–8 項（能源、維修清潔、保險理賠、遠端營運、安全員、場站）與稼動率（讀 In 頁 E 節）", BOLD, fill=SEC)
+    for c, h in enumerate(["項目", "年", "情境 A（低成本）", "情境 B（基準）", "情境 C（高成本）"], 1): put(ws, 4, c, h, BOLD, fill=HDR)
     r = 5
-    for k, lab in comps:
-        put(ws, r, 1, lab); put(ws, r, 2, k)
-        if k == "cpm26":
-            put(ws, r, 3, "=SUM(C5:C9)", fmt="0.00"); put(ws, r, 4, "=cpm26", fmt="0.00"); put(ws, r, 5, "=SUM(E5:E9)", fmt="0.00")
-        else:
-            put(ws, r, 3, f"=In!D{inrow[k]}", fmt="0.00"); put(ws, r, 4, f"={k}", fmt="0.00"); put(ws, r, 5, f"=In!F{inrow[k]}", fmt="0.00")
-        r += 1
+    for pre, lab in (("lx", "營運成本第 3–8 項（US$/英里）"), ("lm", "每車每日付費英里")):
+        for y in (2026, 2030, 2032):
+            put(ws, r, 1, lab); put(ws, r, 2, y)
+            for c, s_ in zip((3, 4, 5), SCN): put(ws, r, c, f"={pre}_{y}_{s_}", fmt="0.00" if pre == "lx" else "0")
+            r += 1
     put(ws, 11, 1, "錨（每英里）", BOLD, fill=SEC)
     anchors = [("人類叫車乘客實付（含小費，全美）ph", "=ph", "Derived：Gridwise 2026 Q3"),
                ("AAA 2025 自有車全成本（15,000 英里／年，平均）", "=11577/15000", "Verified：AAA Your Driving Costs 2025-09-16（年 11,577 美元）"),
                ("AAA 2025 小轎車", 0.5587, "Verified：同上，55.87 美分"),
-               ("Tesla 奧斯汀牌價（每英里部分，不含起跳 3.25）", 1.00, "Verified（媒體轉述 app 價格，線 1a）"),
+               ("Tesla 奧斯汀牌價（每英里部分，不含起跳 3.00；2026-03-12 起）", 1.40, "Verified（媒體轉述 app 價格，線 1a v0.2 更正）"),
                ("Tesla 營運成本目標", 0.30, "Interested-party：Tesla 管理層（線 1a）")]
     r = 12
     for lab, v, src in anchors:
         put(ws, r, 1, lab); put(ws, r, 3, v, BLUE if not isinstance(v, str) else None, fmt="0.00"); put(ws, r, 4, src); r += 1
-    MROWS = ["rpm", "psh", "vm", "cpm", "vc", "mpv", "dep_mi", "opc", "fix", "fix_mi", "full", "gap", "flag", "vsaaa"]
-    MLAB = {"rpm": ("每付費英里實收價格", "US$/英里"), "psh": ("付費英里占比", "%"), "vm": ("總行駛英里", "百萬英里"),
-            "cpm": ("每車英里現金成本", "US$/英里"), "vc": ("單車成本", "千美元"), "mpv": ("每車年行駛英里", "千英里"),
-            "dep_mi": ("每車英里折舊", "US$/英里"), "opc": ("營運成本（每付費英里，含折舊）", "US$/英里"),
+    MROWS = ["rpm", "cpm", "vc", "mpv", "dep_mi", "opc", "fix", "fix_mi", "full", "gap", "flag", "vsaaa"]
+    MLAB = {"rpm": ("每付費英里實收價格", "US$/英里"),
+            "cpm": ("營運成本第 3–8 項（線，每付費英里）", "US$/英里"), "vc": ("單車成本", "千美元"), "mpv": ("每車年付費英里（線稼動率 × util_k）", "千英里"),
+            "dep_mi": ("每付費英里折舊", "US$/英里"), "opc": ("營運成本（每付費英里，含折舊）", "US$/英里"),
             "fix": ("固定費用", "十億美元"), "fix_mi": ("固定費用 ÷ 付費英里", "US$/英里"), "full": ("全載成本（每付費英里）", "US$/英里"),
             "gap": ("價格 − 營運成本", "US$/英里"), "flag": ("補貼訊號（公式判定）", ""), "vsaaa": ("價格 ÷ AAA 自有車每英里", "倍")}
     MR = {}
@@ -370,13 +432,11 @@ def build():
             c = YC[y]; n = y - 2026; col = YEARS.index(y) + 3
             f = {
                 "rpm": f"={V}{c}{VR[(s, 'rpm')]}",
-                "psh": f"=paid_sh26+(paid_sh35-paid_sh26)*{n}/9",
-                "vm": f"={V}{c}{VR[(s, 'pm')]}/{c}{R('psh')}",
-                "cpm": f"=cpm26*(1-cpm_dec)^{n}",
+                "cpm": f"=lx_{y}_{s}",
                 "vc": f"=vcost26*(1-vcost_dec)^{n}",
-                "mpv": f"={c}{R('vm')}/{V}{c}{VR[(s, 'fleet')]}",
+                "mpv": f"=lm_{y}_{s}*util_k*365/1000",
                 "dep_mi": f"={c}{R('vc')}/vlife/{c}{R('mpv')}",
-                "opc": f"=({c}{R('cpm')}+{c}{R('dep_mi')})/{c}{R('psh')}",
+                "opc": f"={c}{R('cpm')}+{c}{R('dep_mi')}",
                 "fix": f"=fix26*(1+fix_g)^{n}",
                 "fix_mi": f"={c}{R('fix')}*1000/{V}{c}{VR[(s, 'pm')]}",
                 "full": f"={c}{R('opc')}+{c}{R('fix_mi')}",
@@ -385,7 +445,7 @@ def build():
                 "vsaaa": f"={c}{R('rpm')}/(11577/15000)",
             }
             for k in MROWS:
-                fmt = "0.0%" if k == "psh" else ("#,##0" if k in ("vm",) else "0.00")
+                fmt = "0.00"
                 put(ws, R(k), col, f[k], fmt=fmt)
     ws.column_dimensions["A"].width = 44; ws.column_dimensions["D"].width = 12
 
@@ -394,7 +454,7 @@ def build():
     put(ws, 1, 1, "估值 — 分部 DCF（FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加；明確期 FY2026 殘期～FY2035；永續 NOPAT(2036)×(1−g/RONIC)/(WACC−g)，RONIC＝WACC）。十億美元。評等：未上市。", BOLD)
     put(ws, 2, 1, "營收分部：Waymo 未上市、無報告分部；營收列＝「Robotaxi 乘車營收（美國＋國際）」一列（直營 app 與 Uber 平台城市的拆分未揭露）。")
     DROWS = ["rev", "var", "fix", "dep", "ebit", "tax", "nopat", "capex", "dnwc", "fcff", "frac", "t", "pv"]
-    DLAB = {"rev": "Robotaxi 乘車營收（美國＋國際）", "var": "變動現金成本（總行駛英里 × 每車英里現金成本）", "fix": "固定費用",
+    DLAB = {"rev": "Robotaxi 乘車營收（美國＋國際）", "var": "變動營運成本（付費英里 × 線第 3–8 項）", "fix": "固定費用",
             "dep": "折舊（車隊 × 單車成本 ÷ 壽命）", "ebit": "營業利益 EBIT", "tax": "稅（只在 EBIT>0）", "nopat": "NOPAT",
             "capex": "資本支出（新增車＋汰換）", "dnwc": "營運資金增加", "fcff": "FCFF", "frac": "計入比例（2026 殘期）",
             "t": "折現期（期中）", "pv": "FCFF 現值"}
@@ -419,7 +479,7 @@ def build():
             pfleet = f"{V}{p_}{VR[(s, 'fleet')]}" if p_ else fleet
             f = {
                 "rev": f"={V}{c}{VR[(s, 'pm')]}*{M}{c}{MR[(s, 'rpm')]}/1000",
-                "var": f"={M}{c}{MR[(s, 'vm')]}*{M}{c}{MR[(s, 'cpm')]}/1000",
+                "var": f"={V}{c}{VR[(s, 'pm')]}*{M}{c}{MR[(s, 'cpm')]}/1000",
                 "fix": f"={M}{c}{MR[(s, 'fix')]}",
                 "dep": f"={fleet}*{M}{c}{MR[(s, 'vc')]}/vlife/1000",
                 "ebit": f"={c}{R('rev')}-{c}{R('var')}-{c}{R('fix')}-{c}{R('dep')}",
@@ -476,14 +536,14 @@ def build():
     ws = W["Sens"]
     base_w = weighted(P)
     put(ws, 1, 1, "Sens — 一次動一個 In 頁輸入至敏感度低／高（D／F 欄），整本重算三情境後加權（Python 鏡像與 xlsx 公式同式；建置時核對基準一致）。單位：十億美元。", BOLD)
-    put(ws, 2, 1, "註：tax 低＝基準（21%）只列高；val_round 只作對照，不進模型。情境專屬輸入（*_A／_B／_C）無低／高欄，其不確定性由三情境表達。")
+    put(ws, 2, 1, "註：tax 低＝基準（21%）只列高；cf 低＝基準（1.0）只列高；val_round 只作對照，不進模型。情境專屬輸入（*_A／_B／_C）與線讀入（In 頁 E 節）無低／高欄，其不確定性由三情境與下方「情境 B 改用 A／C 路徑」案例表達。")
     hdr = 4
     for c, h in enumerate(["驅動", "設定", "鍵", "加權目標價（股權價值）", "相對基準", "情境 B 股權價值"], 1): put(ws, hdr, c, h, BOLD, fill=HDR)
     r = hdr + 1
     put(ws, r, 1, "基準"); put(ws, r, 2, "In 頁 E 欄"); put(ws, r, 4, round(base_w, 4)); put(ws, r, 5, 0, fmt="0.0%"); put(ws, r, 6, round(run(P, "B")["eq"], 4)); r += 1
     sens_rows = []
     for row in IN:
-        if row[0] == "§" or row[3] is None: continue
+        if row[0] == "§" or (row[3] is None and row[5] is None): continue
         k, lab, unit, lo, b, hi = row[:6]
         for side, v in (("低", lo), ("高", hi)):
             if v is None or v == b: continue
@@ -494,6 +554,14 @@ def build():
     for d in (-0.01, 0.01):
         p2 = {**P, "wacc": P["wacc"] + d}
         sens_rows.append((abs(weighted(p2) - base_w), f"WACC {'+' if d > 0 else '−'}1pt", f"wacc＝{P['wacc'] + d:.2f}", "wacc", weighted(p2), run(p2, "B")["eq"]))
+    # 線路徑：情境 B 改用情境 A／C 的路徑（一次只換一組；鍵為情境專屬，無低／高欄）
+    for pre, lab in (("lp", "線價格路徑"), ("lx", "線營運成本路徑（第 3–8 項）"), ("lm", "線稼動率路徑"), ("lws", "線 Waymo 份額路徑"),
+                     ("lpen", "線滲透率路徑"), ("lt", "線美國叫車趟數路徑")):
+        for frm in ("A", "C"):
+            p2 = swap(P, pre, frm)
+            sens_rows.append((abs(weighted(p2) - base_w), f"{lab}：情境 B 改用情境 {frm}", f"{pre}_<年>_B ← {pre}_<年>_{frm}", f"{pre}_*_B", weighted(p2), run(p2, "B")["eq"]))
+    p2 = {**P, "scn_wA": 0, "scn_wB": 1, "scn_wC": 0}
+    sens_rows.append((abs(run(P, "B")["eq"] - base_w), "情境權重只用情境 B", "權重 0／100／0", "scn_w*", run(P, "B")["eq"], run(P, "B")["eq"]))
     sens_rows.sort(key=lambda x: -x[0])
     for _, lab, setting, k, w2, b2 in sens_rows:
         put(ws, r, 1, lab); put(ws, r, 2, setting); put(ws, r, 3, k); put(ws, r, 4, round(w2, 4), fmt="#,##0.0")
@@ -510,11 +578,11 @@ def build():
     ws = W["估值"]
     r = REVR
     rev_items = []
-    rev_items.append(("情境 B：avpen35_B＝100%（其他不變）時的股權價值", run({**P, "avpen35_B": 1.0}, "B")["eq"], "#,##0.0", "十億美元；仍低於融資估值 → 單靠滲透率不可達"))
-    rev_items.append(("情境 A 股權價值＝融資估值所需的 WACC", solve(P, "wacc", P["val_round"], 0.035, 0.30, "A"), "0.0%", "g＝3%；基準 WACC 12%"))
-    rev_items.append(("情境 B 股權價值＝0 所需的 2035 每付費英里價格（rpm35_B）", solve(P, "rpm35_B", 0.0, 1.0, 8.0, "B"), "0.00", "US$/英里；價格提高同時壓低傑文斯誘發需求"))
-    rev_items.append(("情境 B 股權價值＝0 所需的價格彈性（eps_B）", solve(P, "eps_B", 0.0, 0.0, 5.0, "B"), "0.00", "傑文斯效應需多強"))
-    rev_items.append(("情境 B 股權價值＝0 的 2026 固定費用（fix26）", solve(P, "fix26", 0.0, 0.0, 15.0, "B"), "0.00", "十億美元／年，2% 成長"))
+    rev_items.append(("情境 B：Waymo 份額改用線低滲透情境路徑（2035 55%）時的股權價值", run(swap(P, "lws", "C"), "B")["eq"], "#,##0.0", "十億美元；份額權威在線（對帳 2 判斷題 1 的替代讀法）"))
+    rev_items.append(("情境 A 股權價值＝融資估值所需的 WACC", solve(P, "wacc", P["val_round"], 0.02, 0.30, "A"), "0.0%", "g＝3%；基準 WACC 12%"))
+    rev_items.append(("情境 B 股權價值＝0 所需的 2035 每趟付費英里（tl_end）", solve(P, "tl_end", 0.0, 1.0, 12.0, "B"), "0.00", "英里/趟；2026 為 CPUC 實測 3.73"))
+    rev_items.append(("情境 B 股權價值＝0 的 2026 固定費用（fix26）", solve(P, "fix26", 0.0, 0.0, 30.0, "B"), "0.00", "十億美元／年，2% 成長"))
+    rev_items.append(("加權股權價值＝融資估值所需的 WACC", solve(P, "wacc", P["val_round"], 0.02, 0.30, wt=True), "0.0%", "三情境 25／50／25"))
     for lab, v, fmt, note in rev_items:
         put(ws, r, 1, lab); put(ws, r, 6, v if v is not None else "區間內無解", fmt=fmt); put(ws, r, 7, note); r += 1
 
@@ -523,9 +591,10 @@ def build():
     put(ws, 1, 1, f"Waymo（Alphabet 分部，視同未上市）個股模型 {VERSION}｜build_id {build_id}｜資料截止日 {AS_OF}｜成品日 {AS_OF}｜股價基準日：不適用（未上市）", BOLD)
     lines = [
         "命題：Waymo 的價值取決於 Robotaxi 在美國（及全球）叫車的滲透速度，以及每英里實收價格能降到哪裡（決定傑文斯效應能否實現）；收支只是估值的一環。",
+        "v0.2（對帳 2）：美國叫車趟數、滲透率、Waymo 份額、價格、營運成本（第 3–8 項）、稼動率改讀線 1a v0.2（In 頁 E 節）；與 tesla_robotaxi 共用同一組份額（Waymo＋Tesla＋其他＝100%）；每趟英里由 CPUC 實測 3.73 收斂到全美叫車平均 6.0（2035）；誘發倍數改為相對 2026 價格、ε 讀線；便利溢價 cf 1.0。",
         "主頁＝「滲透」：最上方「價格」區塊（Waymo 每英里實收價格時間序列與人類叫車、自有車兩個錨）、全國里程碑、各城市、加州 CPUC 月度、全國份額。",
         "頁面（與 physical_ai/tesla_robotaxi/ 同一套）：滲透｜市場天花板與情境｜每英里經濟｜估值｜資料來源比較｜對帳｜In｜Sens。",
-        "估值口徑：分部 DCF（FCFF，WACC 12%，g 3%，RONIC＝WACC）三情境 25／50／25；以 2026-02 融資投後 1,260 億美元為對照；同業倍數腿未建（理由見 README.md）。評等：未上市。",
+        "估值口徑：分部 DCF（FCFF，WACC 12%，g 3%，RONIC＝WACC）三情境 25／50／25（A＝線高滲透、B＝線基準、C＝線低滲透）；以 2026-02 融資投後 1,260 億美元為對照；同業倍數腿未建（理由見 README.md）。評等：未上市。",
         "不讀 Siliconomics／Tokenomics／Wattonomics 協調檔（實體 AI 線不適用）；車用晶片、LiDAR 單價屬 AI供應鏈／共用零組件層，只讀未用。",
     ]
     for i, t in enumerate(lines, 3): put(ws, i, 1, t, wrap=True)
@@ -553,7 +622,7 @@ OBI = [  # 期間, Waymo 均價, Uber, Lyft, Tesla, 樣本, 出處, 標記
 
 def build_penetration(ws, wb, P, VR):
     put(ws, 1, 1, "滲透（主頁）— Waymo｜價格 → 量 → 份額。資料截止 2026-11-16。標記見各列；查不到寫「未取得」。", BOLD)
-    put(ws, 2, 1, "核心指標：每英里實收價格（Andy 2026-11-16 22:38：決定傑文斯效應能否實現）。口徑：乘客實付（含起跳價與費用，不含小費）÷ 載客英里；人類叫車錨＝UberX／Lyft 乘客實付 ×（1＋小費率）；自有車錨＝AAA 每車英里全成本。", wrap=True)
+    put(ws, 2, 1, "核心指標：每英里實收價格（專案規格 2026-11-16：決定傑文斯效應能否實現）。口徑：乘客實付（含起跳價與費用，不含小費）÷ 載客英里；人類叫車錨＝UberX／Lyft 乘客實付 ×（1＋小費率）；自有車錨＝AAA 每車英里全成本。", wrap=True)
     put(ws, 4, 1, "A1. 價格時間序列（舊金山，同路線比價；Obi）", BOLD, fill=SEC)
     put(ws, 5, 1, "小費率（人類叫車）"); put(ws, 5, 3, 0.08, BLUE, fmt="0%"); put(ws, 5, 4, "Assumed（5–15%）；與 tesla_robotaxi tip 同值（RideWise 以 15% 計，為上緣）"); name(wb, "tip", "'滲透'!$C$5")
     put(ws, 6, 1, "每趟載客英里（換算用）"); put(ws, 6, 3, 3.4, BLUE, fmt="0.0"); put(ws, 6, 4, "Derived：CPUC 加州每趟 3.4 英里（Findings Press）；Obi 同路線比價，故各家同分母"); name(wb, "mi_trip_sf", "'滲透'!$C$6")
@@ -605,7 +674,7 @@ def build_penetration(ws, wb, P, VR):
                               ("人類叫車（全美，乘客實付含小費）", "=ph", "In 頁 ph（Gridwise 2026 Q3 推算）", "Derived"),
                               ("自有車全成本，平均（15,000 英里／年）", "=11577/15000", "AAA Your Driving Costs，2025-09-16：年 11,577 美元", "Verified"),
                               ("自有車全成本，小轎車", 0.5587, "AAA 2025：55.87 美分／英里", "Verified"),
-                              ("Waymo 全美平均 2026（模型輸入）", "=rpm26", "In 頁 rpm26", "Derived")]:
+                              ("Waymo 全美平均 2026（讀線，情境 B）", "=lp_2026_B", "In 頁 lp_2026_B（線 W_PRICE）", "Derived")]:
         put(ws, r, 1, lab); put(ws, r, 2, v, BLUE if not isinstance(v, str) else None, fmt="0.00"); put(ws, r, 3, src); put(ws, r, 4, tag); r += 1
     r += 1
     put(ws, r, 1, "A4. 觀察到的價格彈性：Δln(付費里程) ÷ Δln(價格)（同城市）", BOLD, fill=SEC); r += 1
@@ -687,8 +756,8 @@ def build_penetration(ws, wb, P, VR):
 
     # E. 全國份額
     put(ws, r, 1, "E. 全國份額（Derived）", BOLD, fill=SEC); r += 1
-    put(ws, r, 1, "Waymo 2026 年趟數 ÷ 美國叫車年趟數"); put(ws, r, 3, "=w_trips26/1000/(us_trips25*(1+g_mkt))", fmt="0.00%"); r += 1
-    put(ws, r, 1, "年底目標（每週 100 萬）年化 ÷ 美國叫車年趟數"); put(ws, r, 3, "=1*52/1000/(us_trips25*(1+g_mkt)^2)", fmt="0.00%"); r += 1
+    put(ws, r, 1, "Waymo 2026 年趟數（線，Q2 年化）÷ 美國叫車年趟數"); put(ws, r, 3, "=lpen_2026_B*lws_2026_B", fmt="0.00%"); r += 1
+    put(ws, r, 1, "年底目標（每週 100 萬）年化 ÷ 美國叫車年趟數（線 2027）"); put(ws, r, 3, "=1*52/lt_2027_B", fmt="0.00%"); r += 1
     put(ws, r, 1, "情境 B：2030 每週趟數（百萬）"); put(ws, r, 3, f"='市場天花板與情境'!G{VR[('B', 'wk')]}", fmt="0.0"); r += 1
     put(ws, r, 1, "情境 B：2035 每週趟數（百萬）"); put(ws, r, 3, f"='市場天花板與情境'!L{VR[('B', 'wk')]}", fmt="0.0"); r += 1
     ws.column_dimensions["A"].width = 34
@@ -701,19 +770,19 @@ def build_sources(ws):
     hd = ["來源", "涵蓋", "頻率", "可靠度", "建議用途", "本模型使用處", "標記", "網址／備註"]
     for c, h in enumerate(hd, 1): put(ws, 2, c, h, BOLD, fill=HDR)
     rows = [
-        ("Waymo 部落格、FAQ、新聞稿", "全國每週付費趟數、城市開放、累計英里、融資", "不定期（里程碑）", "高（數字可信但選擇性揭露，只報好消息）", "全國量的錨；年底目標作 Interested-party", "滲透 B、In w_trips26", "Interested-party", "waymo.com/blog；經 robotaxistats.com 彙整"),
+        ("Waymo 部落格、FAQ、新聞稿", "全國每週付費趟數、城市開放、累計英里、融資", "不定期（里程碑）", "高（數字可信但選擇性揭露，只報好消息）", "全國量的錨；年底目標作 Interested-party", "滲透 B；線 1a 份額校準", "Interested-party", "waymo.com/blog；經 robotaxistats.com 彙整"),
         ("Alphabet 法說與 10-Q", "Other Bets 營收與營業虧損、城市數、英里", "季", "高（法定申報），但 Waymo 不單獨揭露", "燒錢上限（fix26）", "In fix26", "Verified", "Q3 2026 逐字稿 2026-10-28"),
-        ("加州 CPUC AV 季報（含彙整網站）", "加州月度趟數、乘客、行駛英里、空駛比", "季（月資料）", "高（監管申報），但公開版大量遮蔽；需經彙整網站", "空駛比、每趟英里、加州量；彈性粗算", "滲透 D、In paid_sh26、pmi_trip", "Verified", "avrideshare.platformaeronaut.com；Findings Press 論文"),
+        ("加州 CPUC AV 季報（含彙整網站）", "加州月度趟數、乘客、行駛英里、空駛比", "季（月資料）", "高（監管申報），但公開版大量遮蔽；需經彙整網站", "空駛比、每趟英里、加州量；彈性粗算", "滲透 D、線 1a（tl0、稼動率）", "Verified", "avrideshare.platformaeronaut.com；Findings Press 論文"),
         ("加州 DMV", "測試／部署許可、脫離報告", "年／即時", "高，但不含商業量", "許可追蹤", "未用", "Verified", "未取得數值"),
         ("NHTSA SGO 事故資料", "事故報告", "月", "高（強制申報），分母（英里）需另找", "停駛風險追蹤", "未用（風險登錄）", "Verified", "未取得數值"),
         ("德州 DMV 車籍（經媒體）", "德州車隊數", "不定期", "中（媒體整理，未具名資料集）", "車隊規模", "滲透 B、C", "Derived", "TechCrunch 2026-09-24"),
-        ("robotaxitracker.com（Andy 常用）", "Tesla、Waymo、Zoox、Avride：車輛名錄、服務區地圖、乘車統計、價格、等候、政府資料（CPUC、DMV、NHTSA、奧斯汀事件、亞利桑那 MVD）", "持續（社群）", "中低：社群投稿＋等候時間遙測＋政府紀錄＋審核流程；Methodology 頁於本環境無法讀取內文（前端渲染、代理封鎖），只見來源類別；與公司無關聯", "等候與價格的高頻趨勢、車隊名錄交叉核對；不作估值錨", "未直接取數（本環境讀不到數值）", "Interested-party", "社群；robotaxitracker.com/methodology"),
+        ("robotaxitracker.com（專案常用）", "Tesla、Waymo、Zoox、Avride：車輛名錄、服務區地圖、乘車統計、價格、等候、政府資料（CPUC、DMV、NHTSA、奧斯汀事件、亞利桑那 MVD）", "持續（社群）", "中低：社群投稿＋等候時間遙測＋政府紀錄＋審核流程；Methodology 頁於本環境無法讀取內文（前端渲染、代理封鎖），只見來源類別；與公司無關聯", "等候與價格的高頻趨勢、車隊名錄交叉核對；不作估值錨", "未直接取數（本環境讀不到數值）", "Interested-party", "社群；robotaxitracker.com/methodology"),
         ("robotaxistats.com", "城市狀態、里程碑時間軸（引公司原文）", "週", "中：彙整公司原文，頁面日期有不一致", "城市清單與日期", "滲透 B、C", "Derived", "robotaxistats.com/services/waymo"),
         ("Obi（叫車比價）", "舊金山同路線 Waymo／Uber／Lyft／Tesla 價格與等候", "半年", "中高：大樣本（9–9.4 萬筆）但只限灣區；為比價 app 商", "價格區塊主來源；人類叫車錨", "滲透 A1、A2", "Verified", "TechCrunch 2025-06-12、2026-01-27"),
         ("YipitData（經 Business Insider）", "城市叫車訂單金額份額", "月", "中：卡片交易樣本推估；服務區擴張使口徑漂移", "城市份額", "滲透 C", "Interested-party", "Uber CFO 曾引用同系列"),
         ("Gridwise", "司機每英里收入、平台抽成", "季", "中：司機樣本", "人類叫車錨（ph）", "In ph", "Derived", "gridwise.io"),
         ("RideWise", "各城牌價、行程情境", "不定期", "低：自身範例與結論矛盾；費率卡不含服務費", "只作形狀參考", "滲透 A2、C", "Interested-party", "getridewise.com"),
-        ("Uber／Lyft 財報", "全球趟數、總訂單金額", "季", "高；但美國叫車趟數未拆", "市場天花板（us_trips25）", "In us_trips25", "Verified", "Lyft FY2025：945.5 百萬趟"),
+        ("Uber／Lyft 財報", "全球趟數、總訂單金額", "季", "高；但美國叫車趟數未拆", "市場天花板（線 1a RT_US_TRIPS）", "線 1a", "Verified", "Lyft FY2025：945.5 百萬趟"),
         ("AAA Your Driving Costs", "自有車每英里全成本", "年", "高", "自有車錨", "滲透 A3、每英里經濟", "Verified", "2025-09-16"),
         ("券商（Morgan Stanley、MoffettNathanson）", "單車成本、車隊預測", "不定期", "中：有覆蓋利益", "單車成本", "In vcost26", "Interested-party", "經 TNW、Dealroom 轉述"),
     ]
@@ -724,36 +793,28 @@ def build_sources(ws):
 
 
 def build_recon(ws, P):
-    put(ws, 1, 1, "對帳 — 本模型使用的線層級變數（線 1a Robotaxi 為主）。線模型完成版本代理讀不到；取值先參考線框架 v0.1，不同處照寫、不靜默改口徑。", BOLD)
-    hd = ["變數", "所屬線", "本模型使用值（或區間）", "單位", "口徑", "出處", "標記", "影響本模型哪些儲存格", "與線框架 v0.1 的差異"]
+    put(ws, 1, 1, f"對帳 — 本模型使用的線層級變數（線 1a Robotaxi v0.2 為權威：{LINE['file']}）。v0.2 依對帳 2（2026-11-17）改讀線；與 tesla_robotaxi v0.3 同一組市場、滲透、份額。", BOLD)
+    hd = ["變數", "所屬線", "本模型使用值（或區間）", "單位", "口徑", "出處（讀線儲存格見 In 頁 E 節 H 欄）", "標記", "影響本模型哪些儲存格", "與 v0.1 的差異／對帳 2 結論"]
     for c, h in enumerate(hd, 1): put(ws, 2, c, h, BOLD, fill=HDR)
+    f2 = lambda x: f"{x:.2f}"
     rows = [
-        ("美國叫車年趟數 2025", "1a", "3.5（3.0–4.2）", "十億趟", "Uber＋Lyft 等人類叫車，美國", "Lyft FY2025 ÷ 美國份額", "Derived", "In us_trips25 → 市場天花板 各情境第 1 列", "線框架未給；新增，請 1a 採同口徑"),
-        ("美國叫車基底成長", "1a", "5%（3–7%）", "%/年", "趟數", "—", "Assumed", "In g_mkt", "線框架未給"),
-        ("Robotaxi 滲透率（人類叫車替代）2030／2035", "1a", "A 20%／50%；B 10%／25%；C 3%／8%", "%", "占美國叫車基底（本模型以趟數、tesla_robotaxi 以里程）", "—", "Assumed", "In avpen30_*、avpen35_*", "線框架未給；2035 值與 tesla_robotaxi s35 相同；路徑不同（本模型 2026 起幾何內插＋2030 後線性；Tesla 為 S 曲線）"),
-        ("自有車 VMT 轉換（閘門）", "1a／1b", "VMT 3,335.7 十億英里 × 小客車 90% × c35（A 10%／B 3%／C 0.5%）× 閘門；門檻＝0.772 × 便利溢價 1.5", "十億英里", "價格≤門檻全開、≥1.5×門檻關閉", "FRED；AAA；Assumed", "Assumed", "市場天花板 gate、conv 列", "與 tesla_robotaxi 同式同值；Waymo 各情境 2035 價格（1.8–3.0）均高於 1.5×門檻（1.73），閘門關閉 → 本模型此路徑為 0"),
-        ("人類叫車小費率", "1a", "8%（5–15%）", "%", "乘客實付 ÷ 車資", "Assumed", "Assumed", "滲透 A1、In ph", "與 tesla_robotaxi 同；RideWise 用 15%"),
-        ("Robotaxi 營運商份額（Waymo＋Tesla）", "1a", "Waymo 2035：A 55%／B 45%／C 25%（趟數）", "%", "Tesla 端 sig35：A 45%／B 30%／C 12%（里程）", "—", "Assumed", "In wsh35_*", "兩模型情境 A 合計 100%，不可同時成立；B 合計 75%，餘 25% 給 Zoox、Uber 平台二線營運商等"),
-        ("價格彈性 ε 的結構", "1a", "Waymo：情境專屬（A 1.2／B 0.7／C 0.3）＋ MAX(1,…)（價格高於人類時不抑制）", "—", "Tesla：單一輸入 0.7（0.3–1.2）", "—", "Assumed", "In eps_*", "數值相同、結構不同，對帳時統一"),
-        ("價格彈性 ε（傑文斯）", "1a", "A 1.2；B 0.7；C 0.3", "—", "誘發係數＝MAX(1, 人類價÷RT 價)^ε", "觀察值未取得", "Assumed", "In eps_*", "線框架未給；Andy 22:38 指為核心"),
-        ("人類叫車乘客每英里實付（含小費）", "1a", "3.7（2.8–4.5）＝2.65 ÷（1−22.44%）× 1.08", "US$/英里", "全美；乘客實付", "Gridwise：司機 2.65 ÷（1−22.44%）", "Derived", "In ph → 傑文斯係數", "線框架給司機 2.65（司機端），本模型換算成乘客端"),
-        ("Waymo 舊金山每英里票價", "1a", "5.79（＝19.69 ÷ 3.4 英里）", "US$/英里", "乘客實付，不含小費", "Obi 2026-01；CPUC 每趟 3.4 英里", "Derived", "In rpm26 上緣；滲透 A1", "線框架寫「5.72／公里（≈9.2／英里）」；本模型判斷 5.72 實為每英里：19.69 ÷ 5.72 ＝ 3.44，與 CPUC 每趟 3.4 英里吻合；若為每公里則每趟僅 2.1 英里，與 CPUC 矛盾。請 1a 更正"),
-        ("每趟載客英里", "1a", "4.0（3.4–5.5）", "英里", "Waymo 全美平均（加州 3.4 為下緣）", "Findings Press（CPUC）", "Analogy", "In pmi_trip", "線框架未給；tesla_robotaxi 的人類叫車行程長度約 7.1 英里（Gridwise 推算）——Waymo 加州實測顯著較短，兩者不同口徑"),
-        ("付費英里占比（1−空駛）", "1a", "2026 59%（55–62%）→ 2035 65%", "%", "總行駛英里", "CPUC 月報", "Derived", "In paid_sh26／paid_sh35", "線框架以人類叫車類比 55–65%；本模型用 CPUC 實測"),
-        ("單車取得成本", "1a", "125（100–160），年降 8%", "千美元", "Ojai＋第六代套件", "Morgan Stanley（TNW）", "Interested-party", "In vcost26／vcost_dec", "同線框架"),
-        ("車輛經濟壽命", "1a", "6 年（5–8）", "年", "≈ 30–50 萬英里", "—", "Assumed", "In vlife", "線框架以英里表示（30–50 萬）；本模型每車年約 5–6 萬英里，6 年≈ 33 萬英里，落在區間內"),
-        ("遠端協助每車英里", "1a", "0.12（0.05–0.20）", "US$/英里", "", "Markey 報告（比例未揭露）", "Assumed", "In cpm_rao", "線框架給比例 1:10–1:40，本模型換成每英里"),
-        ("保險、能源、維修清潔、場站每車英里", "1a", "0.20／0.06／0.25／0.22", "US$/英里", "", "未取得", "Assumed", "In cpm_ins／nrg／mnt／depot", "線框架列「未取得」；本模型給區間"),
-        ("每車每日付費趟數", "1a", "20（15–26）", "趟", "全美平均", "Waymo 每週趟數 ÷ 車隊", "Derived", "In tpvd → 車隊", "線框架：美國未揭露；中國 21–25"),
-        ("Uber 平台抽成", "1a", "22.44%", "%", "中位數", "Gridwise 2026 Q3", "Verified", "In ph 換算", "同線框架"),
-        ("AAA 自有車每英里全成本", "1b／1a", "0.772（小轎車 0.559）", "US$/英里", "15,000 英里／年", "AAA 2025-09-16", "Verified", "滲透 A3、每英里經濟 錨", "線框架未列；Andy 22:38 指定"),
-        ("Other Bets 營業虧損", "1a", "2026 Q3 20.5 億美元", "十億美元/季", "Alphabet 分部", "Fortune 2026-10-30", "Verified", "In fix26 依據", "同線框架"),
-        ("Waymo 每週付費趟數", "1a", "50 萬＋（2026-03）；年底目標 100 萬", "趟/週", "全國", "Waymo", "Interested-party", "In w_trips26", "同線框架"),
-        ("Waymo 車隊", "1a", "約 4,000（2026-09）", "台", "", "TechCrunch", "Derived", "In tpvd 依據", "同線框架"),
+        ("美國叫車年趟數", "1a", f"2026 {P['lt_2026_B']/1000:.2f}；2035 A {P['lt_2035_A']/1000:.2f}／B {P['lt_2035_B']/1000:.2f}／C {P['lt_2035_C']/1000:.2f}", "十億趟", "Uber＋Lyft，由 Lyft 趟數÷趟數份額", "線 情境頁", "Derived", "In lt_*；市場天花板 第 1 列", "v0.1 自建 3.5（2025）×1.05；tesla_robotaxi v0.2 為 3.79（每趟 7.1 英里換成里程）。三者改為同一值"),
+        ("Robotaxi 滲透率（趟數）2035", "1a", f"A {P['lpen_2035_A']:.1%}／B {P['lpen_2035_B']:.1%}／C {P['lpen_2035_C']:.1%}", "%", "覆蓋率 × 都會區內份額 S 曲線；2026 校準", "線 情境頁", "Derived（輸入 Assumed）", "In lpen_*", "v0.1 自設 50／25／8%（與 tesla_robotaxi 同值、路徑不同）"),
+        ("營運商份額 2035（Waymo／Tesla／其他）", "1a", f"A {P['lws_2035_A']:.0%}／50%／20%；B {P['lws_2035_B']:.0%}／35%／25%；C {P['lws_2035_C']:.0%}／20%／25%", "%", "占美國 Robotaxi 趟數；三家合計 100%", "線 情境頁", "Assumed（線）", "In lws_*", "v0.1 Waymo 55／45／25% 與 tesla_robotaxi 45／30／12% 在情境 A 合計 100%（其他 0%），C 合計 37%。改讀線後各情境合計 = 100%（對帳 2 議題 1）。情境 A 是 Tesla 勝出的高滲透世界，Waymo 份額最低"),
+        ("每趟付費英里", "1a", f"2026 {P['tl0']:.2f}（CPUC）→ 2035 {P['tl_end']:.1f}（tl_end）", "英里/趟", "Waymo 自身行程；市場平均 6.0 只用於收斂終點", "線 每英里價格頁、輸入 M_TRIP_MI", "Derived／Assumed", "In tl0、tl_end；市場天花板 L 列", "v0.1 固定 4.0（3.4–5.5）；tesla_robotaxi v0.2 用人類叫車 7.1 換算市場里程。對帳 2 議題 2：預設丙（收斂），低＝乙 3.73 不變"),
+        ("Waymo 每付費英里價格", "1a", f"2026 {P['lp_2026_B']:.2f}；2032 A {P['lp_2032_A']:.2f}／B {P['lp_2032_B']:.2f}／C {P['lp_2032_C']:.2f}；2033 起持平", "US$/英里", "乘客實付，不含小費", "線 成本輸入 W_PRICE", "Assumed（線）", "In lp_*", "v0.1 自設 4.5 → 2035 1.8／2.3／3.0（幾何）"),
+        ("Waymo 營運成本第 3–8 項", "1a", f"2026 {P['lx_2026_B']:.2f}；2030 A {P['lx_2030_A']:.2f}／B {P['lx_2030_B']:.2f}／C {P['lx_2030_C']:.2f}", "US$/付費英里", "能源、維修清潔、保險理賠、遠端營運、安全員、場站", "線 每英里成本堆疊", "Derived（線）", "In lx_*；每英里經濟 cpm 列", "v0.1 自建每車英里 0.85、年降 12%、÷ 付費占比 59%（約 1.44／付費英里）。車輛攤提與融資不讀線（與 tesla_robotaxi 同規則）"),
+        ("Waymo 稼動率（每車每日付費英里）", "1a", f"2026 {P['lm_2026_B']:.0f}；2032 A {P['lm_2032_A']:.0f}／B {P['lm_2032_B']:.0f}／C {P['lm_2032_C']:.0f}", "英里/日", "承重變數", "線 每英里成本堆疊備忘列", "Derived／Assumed（線）", "In lm_*；車隊、折舊", "v0.1 每車每日 20 趟 × 4.0 英里 ＝ 80，且不隨時間改善"),
+        ("價格彈性 ε", "1a", f"A {P['eps_A']}／B {P['eps_B']}／C {P['eps_C']}", "—", "誘發倍數＝(2026 價÷當年價)^ε", "線 輸入 P_ELAST（NBER w31330）", "Analogy", "In eps_*", "v0.1 MAX(1, 人類價÷Waymo 價)^ε，ε 1.2／0.7／0.3。改為相對 2026，避免與已校準的 2026 趟數重複計入（對帳 2 工程結論）；線情境頁的市場倍數用市場價格路徑，與營運商價格不一致，不採用（線 v0.3 待修）"),
+        ("自有車 VMT 轉換（閘門）", "1a／1b", "VMT 3,335.7 十億英里 × 小客車 90% × c35 × 閘門；門檻＝0.772 × cf 1.0", "十億英里", "價格≤門檻全開、≥1.5×門檻關閉", "FRED；AAA；Assumed", "Assumed", "市場天花板 gate、conv 列", "cf 1.5→1.0（對帳 1 預設乙）；Waymo 價格（2032 A 1.5）仍高於 1.155，閘門關閉，此路徑為 0"),
+        ("單車取得成本、壽命", "1a", "125 千美元（年降 8%）、6 年", "千美元／年", "", "Morgan Stanley（TNW）", "Interested-party／Assumed", "In vcost26、vlife", "線 W_VEH 2026 基準 140 千美元，未讀（與 tesla_robotaxi 同：只讀第 3–8 項）"),
+        ("固定營運費用", "1a", "5.0（3.5–6.5），年增 2%", "十億美元", "研發、地圖、管銷、擴城", "Alphabet Other Bets", "Derived", "In fix26", "不讀線第 9–10 項（線按車隊分攤，口徑不同；與 tesla_robotaxi 用營收 15% 不同，屬各自公司資料）"),
+        ("海外", "—", "intl35 A 30%／B 15%／C 0%", "%", "國際趟數 ÷ 美國", "管理層、媒體", "Assumed", "In intl35_*", "線無海外，沿用 v0.1"),
+        ("AAA 自有車每英里全成本", "1b／1a", "0.772（小轎車 0.559）", "US$/英里", "15,000 英里／年", "AAA 2025-09-16", "Verified", "閘門、錨", "不變"),
     ]
     for i, row in enumerate(rows, 3):
         for c, v in enumerate(row, 1): put(ws, i, c, v, wrap=True)
-    for c, w in zip("ABCDEFGHI", (30, 8, 26, 12, 24, 30, 14, 30, 50)): ws.column_dimensions[c].width = w
+    for c, w in zip("ABCDEFGHI", (30, 8, 34, 12, 26, 30, 14, 26, 60)): ws.column_dimensions[c].width = w
 
 
 # ---------------------------------------------------------------------------
@@ -796,7 +857,9 @@ def main():
     # 摘要
     out = {s: run(P, s) for s in SCN}
     summ = {"build_id": build_id, "eq": {s: out[s]["eq"] for s in SCN}, "eq_w": weighted(P),
-            "wk_B": {y: out["B"]["wk"][y] for y in (2026, 2030, 2035)}, "pen26": out["B"]["pen26"]}
+            "wk_B": {y: out["B"]["wk"][y] for y in (2026, 2030, 2035)}, "pen26": out["B"]["pen26"],
+            "pm_2035": {s: out[s]["pm"][2035] for s in SCN}, "rev_2035": {s: out[s]["rev"][2035] for s in SCN},
+            "full_2032": {s: out[s]["full"][2032] for s in SCN}, "line_file": LINE["file"]}
     json.dump(summ, open(os.path.join(HERE, "dist", "summary.json"), "w"), ensure_ascii=False, indent=1)
     print(json.dumps(summ, ensure_ascii=False, indent=1))
 

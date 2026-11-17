@@ -529,7 +529,7 @@ def build(path):
      ("3. 只做美國人工基準；中國與亞太時薪未取得。", None),
      ("4. 市場口徑：行動機器人（Interact）含製造業與自主堆高機；AS/RS（MarketsandMarkets）含製造與汽車，2025 為 2025-01 的預估。兩者不可相加成『倉儲自動化市場』。", None),
      ("5. 未建模：空間節省（AutoStore 宣稱省 25% 面積）、電力、保險、勞動法規；Symbotic／Walmart 客戶集中（只在追蹤頁）。", None),
-     ("6. 本模型不含 Andy 個人情境；不放部位。", None),
+     ("6. 本模型不含個人情境；不放部位。", None),
     ]
     for i, (t, f) in enumerate(L, 1):
         c = ws0.cell(i, 1, t)

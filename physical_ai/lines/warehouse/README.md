@@ -29,7 +29,7 @@ python3 build_warehouse.py
 
 ## 固定規格
 
-- 以 Andy 2026-11-16 指示的線模型規格為準：藍字輸入、公式可追溯、標記欄、Analogy／Assumed 給三值、LibreOffice 重算 0 錯誤值。
+- 以專案 2026-11-16 線模型規格為準：藍字輸入、公式可追溯、標記欄、Analogy／Assumed 給三值、LibreOffice 重算 0 錯誤值。
 - 下游至少要有：AMR 與 AS/RS 市場規模情境（`WH_AMR_MKT_*`、`WH_ASRS_MKT_*`）、AMR 回本期（`WH_AMR_PAYBACK*`）、各方案每單位處理成本（`WH_COST_*`、`WH_HUMANOID_COST_HR`）。
 - 公開 repo，不放任何個人情境或部位。
 
