@@ -1,11 +1,11 @@
 {
  "meta": {
-  "version": "v0.6.54",
-  "book": "20261117_AI算力地圖_資料_v0.6.54.xlsx",
+  "version": "v0.6.55",
+  "book": "20261117_AI算力地圖_資料_v0.6.55.xlsx",
   "tk_file": "20261102_Tokenomics_v21.8.xlsx",
   "tk_version": "v21.8",
   "tk_commit": "91db9ac",
-  "cm_commit": "4dc557b",
+  "cm_commit": "10645dc",
   "built": "2026-11-17",
   "price_date": "上市公司一律用 2026-11-13 收盤（Yahoo Finance 日線）；v0.6.49 起各個股模型的現價、同業報價與目標價也已改以 2026-11-13 收盤重算（工作單 px1113），模型價與收盤同日；Anthropic 未掛牌，用 IPO 價格區間中點（上檔空間＝模型目標價 ÷ 最新收盤 − 1）",
   "last_close_date": "2026-11-13",
@@ -6195,8 +6195,8 @@
    "rule": "跨圖（主圖：AI 算力地圖；模型權威 AI供應鏈）",
    "note": "機器人與車用 SoC；另列實體 AI 觀察名單（Isaac、GR00T、Cosmos）",
    "src": "Drive 02-Projects/03-AI實體應用/20261116_實體AI產業地位_v0.5.xlsx「個股地位」頁「地圖歸屬」欄",
-   "url": "",
-   "status": "建置中"
+   "url": "physical/",
+   "status": ""
   },
   "2330": {
    "map": "實體 AI 地圖",
@@ -6205,8 +6205,8 @@
    "rule": "跨圖（主圖：AI 算力地圖；模型權威 AI供應鏈）",
    "note": "Tesla AI5 等機器人與車用晶片代工",
    "src": "Drive 02-Projects/03-AI實體應用/20261116_實體AI產業地位_v0.5.xlsx「個股地位」頁「地圖歸屬」欄",
-   "url": "",
-   "status": "建置中"
+   "url": "physical/",
+   "status": ""
   },
   "GOOGL": {
    "map": "實體 AI 地圖",
@@ -6215,8 +6215,8 @@
    "rule": "跨圖分部（母公司 Alphabet 主圖：AI 算力地圖；Waymo 分部估值權威：AI實體應用）",
    "note": "Waymo 視同未上市公司評估；分部估值經交流證據回流 Alphabet 模型",
    "src": "Drive 02-Projects/03-AI實體應用/20261116_實體AI產業地位_v0.5.xlsx「個股地位」頁「地圖歸屬」欄",
-   "url": "",
-   "status": "建置中"
+   "url": "physical/",
+   "status": ""
   },
   "AMZN": {
    "map": "實體 AI 地圖",
@@ -6225,8 +6225,8 @@
    "rule": "跨圖（主圖：AI 算力地圖；模型權威 AI供應鏈）",
    "note": "Zoox 專用車型；倉儲機器人自用規模最大",
    "src": "Drive 02-Projects/03-AI實體應用/20261116_實體AI產業地位_v0.5.xlsx「個股地位」頁「地圖歸屬」欄",
-   "url": "",
-   "status": "建置中"
+   "url": "physical/",
+   "status": ""
   },
   "TER": {
    "map": "實體 AI 地圖",
@@ -6235,8 +6235,8 @@
    "rule": "跨圖（主圖：AI 算力地圖；模型權威 AI供應鏈）",
    "note": "協作型機器人龍頭（主業為半導體測試）",
    "src": "Drive 02-Projects/03-AI實體應用/20261116_實體AI產業地位_v0.5.xlsx「個股地位」頁「地圖歸屬」欄",
-   "url": "",
-   "status": "建置中"
+   "url": "physical/",
+   "status": ""
   },
   "2308": {
    "map": "實體 AI 地圖",
@@ -6245,8 +6245,8 @@
    "rule": "跨圖（主圖：AI 算力地圖；模型權威 AI供應鏈）",
    "note": "伺服與驅動；主業電源",
    "src": "Drive 02-Projects/03-AI實體應用/20261116_實體AI產業地位_v0.5.xlsx「個股地位」頁「地圖歸屬」欄",
-   "url": "",
-   "status": "建置中"
+   "url": "physical/",
+   "status": ""
   },
   "2317": {
    "map": "實體 AI 地圖",
@@ -6255,8 +6255,8 @@
    "rule": "跨圖（主圖：AI 算力地圖；模型權威 AI供應鏈）",
    "note": "與 NVIDIA 合作人形與機器人工廠",
    "src": "Drive 02-Projects/03-AI實體應用/20261116_實體AI產業地位_v0.5.xlsx「個股地位」頁「地圖歸屬」欄",
-   "url": "",
-   "status": "建置中"
+   "url": "physical/",
+   "status": ""
   }
  },
  "profiles": {

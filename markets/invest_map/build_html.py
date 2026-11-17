@@ -35,14 +35,14 @@ if os.path.exists(_sf):
         STATUS = {r["ticker"]: r["status"] for r in _csv.DictReader(_f)}
 
 # v0.6.52：跨圖標註（data/cross_map.csv）——重複個股主圖＝持有個股模型的專案所屬地圖；
-# 本地圖為主圖、實體 AI 地圖照列者加註「另見實體 AI 地圖（跨圖）」。只作標籤，不影響估值與評等。
+# 本地圖為主圖、實體 AI 地圖照列者加註「另見實體 AI 地圖（跨圖）」並連到該圖（v0.6.55）。不影響估值與評等。
 CROSS = {}
 _cf = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "cross_map.csv")
 if os.path.exists(_cf):
     with open(_cf, encoding="utf-8") as _f:
         CROSS = {r["ticker"]: {"map": r["另見地圖"], "row": r["實體AI列代號"], "seg": r["實體AI次產業"],
                                "rule": r["地圖歸屬原文"], "note": r["說明"], "src": r["來源"],
-                               "url": "", "status": "建置中"}  # 實體 AI 地圖頁（physical_ai/）尚未上線：不做連結
+                               "url": "physical/", "status": ""}  # v0.6.55：實體 AI 地圖 v0.1 在 gh-pages physical/，標籤連過去（該頁無個股錨點，連頁首）
                  for r in csv.DictReader(_f)}
 
 

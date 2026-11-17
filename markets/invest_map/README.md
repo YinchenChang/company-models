@@ -58,8 +58,8 @@ python3 markets/invest_map/build_html.py
 
 - **資料來源**：`data/cross_map.csv`（ticker、公司、另見地圖、實體AI列代號、實體AI次產業、地圖歸屬原文、說明、來源）。權威在 Drive `02-Projects/03-AI實體應用/20261116_實體AI產業地位_v0.5.xlsx`「個股地位」頁「地圖歸屬」欄；本檔只抄錄**本圖為主圖**的列（「跨圖（主圖：AI 算力地圖…）」與 Waymo 的「跨圖分部（母公司 Alphabet 主圖：AI 算力地圖）」）。實體 AI 地圖為主圖的公司（例如 Tesla）不在本圖，不列。
 - **目前 7 家**：NVIDIA（實體 AI 列 NVDA-C 運算晶片）、台積電（運算晶片代工）、Alphabet（Waymo 分部，Robotaxi 營運）、Amazon（Zoox／Amazon Robotics）、Teradyne（Universal Robots 協作機器人）、台達電（伺服與驅動）、鴻海（整機代工與組裝）。
-- **顯示位置**（`template.html`，`xmapTag()`）：公司檔案卡片（視角 04，次產業與地位下方）、公司檔案面板頁首（名稱下方一行說明）、可投資性表格「公司」欄；方法與來源頁「跨圖（v0.6.52）」列寫規則。標籤文字「另見實體 AI 地圖（跨圖）· 建置中」。
-- **不做連結**（v0.6.52 時實體 AI 地圖未上線；2026-11-17 v0.1 已在 gh-pages `physical/`，頁首切換 v0.6.54 已連；標籤是否改連結待下次跨圖改版一併處理）：要連時把 `build_html.py` 的 `CROSS[...]["url"]` 填 `physical_ai/`（或該頁錨點）、`status` 清空，再在 `xmapTag()` 改成 `<a>`。
+- **顯示位置**（`template.html`，`xmapTag()`）：公司檔案卡片（視角 04，次產業與地位下方）、公司檔案面板頁首（名稱下方一行說明）、可投資性表格「公司」欄；方法與來源頁「跨圖（v0.6.52）」列寫規則。標籤文字「另見實體 AI 地圖（跨圖）↗」（v0.6.52–v0.6.54 為「· 建置中」、不連結）。
+- **連結（v0.6.55 起）**：`build_html.py` 的 `CROSS[...]` 設 `url`＝`physical/`、`status` 空白；`xmapTag()` 有 url 時輸出 `<span class="xmap xlink" data-xurl>`（卡片本身是 `<button>`，不能內嵌 `<a>`），由擷取階段的 click／Enter 處理換頁並擋下開公司檔案。實體 AI 地圖 v0.1 沒有個股錨點，連到該頁頁首；對方加錨點後可改連 `physical/#<代號>`。實體 AI 地圖若搬到 `physical_ai/`，此處與頁首切換一起改。
 - **只作標籤**：`cross_map` 不進資料活頁簿、不影響估值、地位分數與評等。`build_html.py` 檢查 csv 每個代號都在估值清單內，不在即停。實體 AI 產業地位改版（地圖歸屬變動）時，對照新版「地圖歸屬」欄更新本 csv 並升版。
 
 ## 固定規格（2026-10-25，Andy 要求）
@@ -102,6 +102,7 @@ python3 markets/invest_map/build_html.py
 
 ## 版本
 
+- v0.6.55（2026-11-17）：**跨圖標籤改為連結**（Andy 2026-11-17 14:22「just fix it」）。7 家「另見實體 AI 地圖（跨圖）」標籤（公司檔案卡片、公司檔案面板頁首、可投資性表格）點擊連到 `physical/`，拿掉「· 建置中」；方法與來源頁跨圖列同步改寫。黃底判斷讀回 v0.6.54，舊活頁簿移 `dist/_待刪除/`。**數值 0 改變**：`data.json` 只差 meta 3 項與 `cross_map` 7 家的 url、status。
 - v0.6.54（2026-11-17）：**頁首加站際切換「算力｜實體 AI｜軟體 AI」**（Andy 2026-11-17 14:00）。`template.html` 在頁首最上方加 `.site-switch`（與 AI 軟體地圖同標記與樣式），「實體 AI」連 `physical/`、「軟體 AI」連 `software_ai/`；「導覽入口」一節改寫為固定規格。黃底判斷讀回 v0.6.53，舊活頁簿移 `dist/_待刪除/`。**數值 0 改變**：`data.json` 只有 meta 的 version、book、cm_commit 3 項不同；`index.html` 只多導覽標記與樣式。
 - v0.6.53（2026-11-17）：**新增五家個股模型與 L3 機房設施**（Andy 2026-11-17 07:48「Intel、GlobalFoundries、Vertiv、ABB、TEL 補上內容與個股模型」；08:01「電力與機房範圍定案也一起做掉」）。新模型 v0.1.0（皆 11-13 收盤）：Intel `intc/`、GlobalFoundries `gfs/`、Tokyo Electron `tel/`、Vertiv `vrt/`、ABB `abb/`（股價 CHF）；`extract_models.py` SEMIS_V2 加五家、NI_LABELS 加兩個列名；候選母體升 v0.2.6（VRT、ABBN 移入新次產業「機房電力與冷卻」，五家狀態改建置中；v0.2.5 移 `data/_待刪除/`）；`build_xlsx.py` 新增層級「L3 機房設施」（占比讀 Wattonomics 現行快照 S7 廠房拆分：配電＋UPS＋冷卻＋發電機 ÷ 廠房，2027＝53.7%，不與 IT 設備相加）、掛牌「瑞士」→ CHF；`template.html` L3 廠房說明改為範圍定案文字並顯示新次產業卡片。規則見 `docs/plan/電力與機房範圍定案_20261117.md`。其餘 74 檔估值與評等 0 改變（評等統計只多出五家：放空 +4、強力放空 +1）。
 - v0.6.52（2026-11-17）：**跨圖標註：7 家另見實體 AI 地圖**（AI實體應用 專案來訊；Andy 2026-11-16 22:09 同意「主圖＝持有個股模型的專案所屬地圖，另一張圖照列並標跨圖；公司檔案、目標價、評等只讀主圖模型」）。新增 `data/cross_map.csv`（抄錄 Drive `20261116_實體AI產業地位_v0.5.xlsx`「個股地位」頁「地圖歸屬」欄中主圖為本圖的 7 家：NVIDIA、台積電、Alphabet〔Waymo 分部〕、Amazon、Teradyne、台達電、鴻海）；`build_html.py` 讀入 `data.json` 的 `cross_map`；`template.html` 在公司檔案卡片、公司檔案面板頁首、可投資性表格加「另見實體 AI 地圖（跨圖）· 建置中」小標籤（實體 AI 地圖未上線，不做連結），方法與來源頁新增「跨圖」列（主圖規則；地位分數兩圖可不同）。新增「跨圖標註」一節。不重抽（`models_extract.json` 不動）；黃底判斷讀回 v0.6.51，舊活頁簿移 `dist/_待刪除/`。**數值 0 改變**（對 main 2f95d42 的 v0.6.51）：(1) `data.json` 葉值舊 10,315／新 10,371，差異 59 項＝meta 的 version、book、cm_commit 3 項＋新增 `cross_map` 56 項，其餘 0；(2) 新舊活頁簿各以 LibreOffice 重算後逐格比對（非空 4,958 格、數值 1,720 格；公式 5,033 格），差異只有 README!A1 版本字串；(3) `index.html` 內嵌資料與 `data.json` 相同，去掉內嵌資料後只差標籤樣式、`xmapTag()`、三處顯示與方法說明一列。估值、上檔空間、評等、收支關卡、地位分數皆不變。
