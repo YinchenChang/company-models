@@ -1,0 +1,115 @@
+<meta charset="utf-8">
+<title>實體 AI 地圖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap">
+/*CSS*/
+.lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px}
+.lcard{background:var(--surface);border:1px solid var(--rule);display:grid;align-content:start}
+.lcard .lh{padding:12px 16px;border-bottom:1px solid var(--rule);background:var(--sunken)}
+.lcard .lh .code{font-family:var(--f-mono);font-size:11px;color:var(--brass);letter-spacing:.08em}
+.lcard .lh h3{font-size:17px;margin-top:2px}
+.lcard .lh p{margin:4px 0 0;font-size:12.5px;color:var(--muted)}
+.mtab{width:100%;border-collapse:collapse;font-size:12.5px}
+.mtab td{padding:6px 16px;border-bottom:1px solid var(--rule)}
+.mtab td.n{font-family:var(--f-mono);text-align:right;white-space:nowrap}
+.mtab .rg{color:var(--faint);font-size:11px}
+.sgl{padding:10px 16px;display:grid;gap:8px}
+.sgl .sn{font-size:12.5px;font-weight:600}
+.v[data-src]{border-bottom:1px dotted var(--faint);cursor:help}
+.xbadge{font-family:var(--f-mono);font-size:10px;color:var(--brass);border:1px solid var(--brass);padding:0 4px;border-radius:2px;margin-left:4px}
+.pbody{padding:18px 22px;overflow:auto;display:grid;gap:14px;align-content:start}
+.kv{display:grid;grid-template-columns:180px minmax(0,1fr);border-top:1px solid var(--rule)}
+.kv dt,.kv dd{padding:8px 10px;border-bottom:1px solid var(--rule);margin:0;font-size:13px}
+.kv dt{background:var(--sunken);font-weight:600}
+</style>
+<header class="mast"><div class="wrap">
+  <div class="eyebrow">AI 實體應用研究｜產業地圖</div>
+  <h1>實體 AI 地圖</h1>
+  <p>把 AI 進入實體世界的研究（Robotaxi、智慧車、工業與人形機器人、倉儲物流自動化、共用零組件）依六條線排列：每條線的單位經濟重點、各次產業與公司的產業地位，以及有個股模型者的估值與評等。數字只出自本專案的線模型與個股模型；與 AI 算力地圖重複的公司標「跨圖」，目標價與評等讀主圖模型。</p>
+  <div class="meta"><span>版本</span><b id="m-ver"></b><span>建置</span><b id="m-built"></b><span>收盤</span><b id="m-px"></b></div>
+</div></header>
+<section class="kpis" id="kpis"></section>
+<nav class="tabs" role="tablist"><div class="wrap">
+  <button class="tab" role="tab" data-v="lines" aria-selected="true"><span class="ix">01</span>六條線地圖</button>
+  <button class="tab" role="tab" data-v="position"><span class="ix">02</span>產業地位</button>
+  <button class="tab" role="tab" data-v="invest"><span class="ix">03</span>可投資性</button>
+  <button class="tab" role="tab" data-v="method"><span class="ix">04</span>方法與限制</button>
+</div></nav>
+<main class="wrap">
+  <section class="view" id="v-lines"></section>
+  <section class="view" id="v-position" hidden></section>
+  <section class="view" id="v-invest" hidden></section>
+  <section class="view" id="v-method" hidden></section>
+</main>
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" hidden></aside>
+<script>
+const D=/*DATA*/;
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const $=s=>document.querySelector(s);
+const fmtv=(v,f)=>{if(v===null||v===undefined||v==="")return "—"; if(typeof v!=="number")return esc(v);
+  if(f==="pct")return (v*100).toFixed(1)+"%"; if(f==="usd2")return v.toFixed(2); if(f==="f1")return v.toLocaleString("en-US",{maximumFractionDigits:1,minimumFractionDigits:1});
+  return Math.round(v).toLocaleString("en-US");};
+const pct=v=>(typeof v==="number")?((v>=0?"+":"")+(v*100).toFixed(1)+"%"):"—";
+const num=(v,d=2)=>(typeof v==="number")?v.toLocaleString("en-US",{maximumFractionDigits:d,minimumFractionDigits:d}):"—";
+const V=(txt,src)=>`<span class="v" data-src="${esc(src)}">${txt}</span>`;
+const LINE_ORDER=["1a","1b","2a","2b","3","6"];
+const lineOf=p=>{const s=String(p.line||""); for(const c of LINE_ORDER){ if(c==="6"? s.startsWith("共用"): s.startsWith(c)) return c;} return s.startsWith("製造")?"6":"";};
+function chip(p){const c=p.val_key||p.seg_key; return `<button class="chip ${c?"r":""}" data-tk="${esc(p.tk)}"><span class="d ${esc(p.tier)}"></span>${esc(p.name.replace(/（.*$/,""))}<span class="t">${esc(p.tk)}</span>${p.cross?'<span class="xbadge">跨圖</span>':""}</button>`;}
+function kpis(){const t=D.meta.tiers; const k=[["個股列數",D.meta.n_pos,"含同公司多列"],["有估值",Object.keys(D.valuation).length,"本專案 6 家＋跨圖 6 家"],["跨圖",D.meta.n_cross,"主圖：AI 算力地圖"],["未上市分部",Object.keys(D.segvals).length,"Waymo、Tesla Robotaxi"]];
+  $("#kpis").innerHTML=k.map(x=>`<div class="kpi"><div class="k">${x[0]}</div><div class="v">${x[1]}</div><div class="s">${x[2]}</div></div>`).join("");}
+function vLines(){
+  const segBy={}; D.segments.forEach(s=>{const c=LINE_ORDER.find(c=>c==="6"?String(s.line).startsWith("共用")||String(s.line).startsWith("製造"):String(s.line).startsWith(c))||"6"; (segBy[c]=segBy[c]||[]).push(s);});
+  let h=`<div class="head"><h2>六條線地圖</h2><p>每條線上方是線模型的重點數字（低／基準／高；滑鼠停在數字上看出處），下方是該線的次產業與公司；點有色點的公司看估值摘要。</p></div>
+  <div class="legend">${["強力買進","買進","中立","放空","強力放空","收支不足","未估值","未上市"].map(t=>`<span><i class="d ${t}" style="width:9px;height:9px;border-radius:50%;display:inline-block"></i>${t}</span>`).join("")}<span><span class="xbadge">跨圖</span>主圖為 AI 算力地圖</span></div><div class="lgrid">`;
+  for(const L of D.lines){
+    const ms=L.metrics.map(m=>`<tr><td>${esc(m.lab)}<div class="rg">${esc(m.unit)}</div></td><td class="n">${V(fmtv(m.base,m.fmt),m.src)}<div class="rg">${(m.lo!==null&&m.lo!==undefined)?fmtv(m.lo,m.fmt)+"～"+fmtv(m.hi,m.fmt):""}</div></td></tr>`).join("");
+    const sg=(segBy[L.code]||[]).map(s=>{const ps=D.positions.filter(p=>p.seg===s.code).sort((a,b)=>b.score-a.score); return `<div><div class="sn">${esc(s.name)}</div><div class="chips">${ps.map(chip).join("")}</div></div>`;}).join("");
+    h+=`<article class="lcard"><div class="lh"><div class="code">線 ${esc(L.code)}</div><h3>${esc(L.name)}</h3><p>${esc(L.q)}</p></div><table class="mtab">${ms}</table><div class="sgl">${sg}</div></article>`;}
+  $("#v-lines").innerHTML=h+"</div>";}
+let posFilter="全部";
+function vPosition(){
+  const lines=["全部",...LINE_ORDER];
+  const rows=D.positions.filter(p=>posFilter==="全部"||lineOf(p)===posFilter).sort((a,b)=>a.rank-b.rank||b.score-a.score);
+  $("#v-position").innerHTML=`<div class="head"><h2>產業地位</h2><p>地位分數＝0.40 × 不可替代性＋0.35 × 市場位置＋0.25 × 價值鏈分量（零組件以人形每台 BOM 占比分級）。同一公司可出現在多個次產業，排名以列計。</p></div>
+  <div class="filters">${lines.map(l=>`<button class="fbtn" data-f="${l}" aria-pressed="${l===posFilter}">${l==="全部"?"全部":"線 "+l}</button>`).join("")}</div>
+  <div class="panel tbl"><table><thead><tr><th class="n">排名</th><th>公司</th><th>次產業</th><th>地位分數</th><th>依據</th><th>分級</th></tr></thead><tbody>${rows.map(p=>`<tr><td class="n mono">${p.rank}</td><td class="co"><button class="linkish" data-tk="${esc(p.tk)}"><b>${esc(p.name)}</b></button><span class="t">${esc(p.tk)}</span>${p.cross?'<span class="xbadge">跨圖</span>':""}<span class="s">${esc(p.mkt)}${p.asia?"｜亞太掛牌":""}</span></td><td>${esc(p.segname)}<span class="stnote">${esc(p.line)}</span></td><td><div class="score"><span class="mono">${num(p.score,1)}</span><span class="b"><i style="width:${p.score}%"></i></span></div></td><td><span class="stnote">${esc(p.basis)}</span></td><td><span class="pill ${esc(p.tier)}">${esc(p.tier)}</span></td></tr>`).join("")}</tbody></table></div>`;
+  document.querySelectorAll("#v-position .fbtn").forEach(b=>b.onclick=()=>{posFilter=b.dataset.f;vPosition();});}
+function vInvest(){
+  const seen=new Set(); const rows=[];
+  D.positions.forEach(p=>{if(p.val_key&&!seen.has(p.val_key)){seen.add(p.val_key);rows.push(p);}});
+  rows.sort((a,b)=>D.valuation[b.val_key].up-D.valuation[a.val_key].up);
+  const tr=rows.map(p=>{const v=D.valuation[p.val_key]; return `<tr><td class="co"><button class="linkish" data-tk="${esc(p.tk)}"><b>${esc(p.name.replace(/（.*$/,""))}</b></button><span class="t">${esc(p.val_key)}</span>${p.cross?'<span class="xbadge">跨圖</span>':""}<span class="s">主圖：${esc(v.map)}${p.asia?"｜亞太掛牌":""}</span></td>
+   <td class="n">${v.tp===null?'<span class="stnote">台股不公開</span>':V(num(v.tp),v.tp_src)}</td><td class="n">${V(num(v.close),v.close_src)}<span class="stnote">${esc(v.ccy)}｜${esc(v.close_date)}</span></td>
+   <td class="n ${v.up>=0?"up":"dn"}">${V(pct(v.up),v.up_src)}</td><td><span class="pill ${esc(v.vtier)}">${esc(v.vtier)}</span></td>
+   <td>${V(`<span class="gate ${v.gate>=0?"ok":"no"}">${v.gate>=0?"通過":"入不敷出"}</span>`,v.gate_src)}</td><td><span class="pill ${esc(v.tier)}">${esc(v.tier)}</span></td></tr>`;}).join("");
+  const sg=Object.entries(D.segvals).map(([k,s])=>{const p=D.positions.find(x=>x.tk===k); return `<tr><td class="co"><button class="linkish" data-tk="${esc(k)}"><b>${esc(p.name.replace(/（.*$/,""))}</b></button><span class="s">${esc(s.note)}</span></td><td class="n">${V(num(s.lo,1),s.src)}</td><td class="n">${V(num(s.base,1),s.src)}</td><td class="n">${V(num(s.hi,1),s.src)}</td><td><span class="pill 未上市">未上市</span></td></tr>`;}).join("");
+  $("#v-invest").innerHTML=`<div class="head"><h2>可投資性</h2><p>上檔空間＝最新一份模型目標價 ÷ ${esc(D.meta.close_date)} 收盤 − 1；五級評等：> +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、< −50% 強力放空。評價為買進以上但模型期間收支為負者改列「收支不足」。跨圖公司的目標價讀 AI 算力地圖所引模型；收盤日與算力地圖可能不同，評等以本頁收盤重算。</p></div>
+  <div class="panel tbl"><table><thead><tr><th>公司</th><th class="n">模型目標價</th><th class="n">收盤</th><th class="n">上檔空間</th><th>估值評等</th><th>收支關卡</th><th>最終分級</th></tr></thead><tbody>${tr}</tbody></table></div>
+  <div class="panel"><div class="ph"><h3>未上市分部（視同未上市公司評估）</h3><span class="tagx">十億美元</span></div><div class="tbl"><table><thead><tr><th>分部</th><th class="n">低（情境 C）</th><th class="n">基準（加權）</th><th class="n">高（情境 A）</th><th>分級</th></tr></thead><tbody>${sg}</tbody></table></div></div>`;}
+function vMethod(){
+  $("#v-method").innerHTML=`<div class="head"><h2>方法與限制</h2></div><dl class="def">
+  <dt>資料來源</dt><dd>六條線數字只讀本專案線模型成品；個股估值只讀個股模型成品（Val 頁目標價、收支關卡）；產業地位抄錄自本專案產業地位活頁簿；網站不做計算，所有數字來自資料活頁簿 <code>${esc(D.meta.book)}</code>。</dd>
+  <dt>收盤</dt><dd>${esc(D.meta.price_note)}</dd>
+  <dt>跨圖</dt><dd>與 AI 算力地圖重複的公司照列、計入排名；主圖＝持有個股模型的專案所屬地圖，目標價與評等只讀主圖模型。</dd>
+  <dt>未上市分部</dt><dd>Waymo、Tesla Robotaxi 視同未上市公司，以分部 DCF 估值，只給價值區間，不給目標價；Tesla 個股模型的分部加總讀 Tesla Robotaxi 分部價值。</dd>
+  <dt>觀察名單（未計分）</dt><dd>${D.watch.map(w=>esc(w["公司"])+"（"+esc(w["說明"])+"）").join("；")}</dd>
+  <dt>限制</dt><dd>產業地位的市場份額未逐家查證；公司檔案第一版只有估值摘要（管理層、近期事件、客戶與股東未做）；本專案未建模的公司顯示「未估值」。數字為模型輸出，不是獨立證據；本網站不構成投資建議。</dd></dl>`;}
+function drawer(tk){
+  const p=D.positions.find(x=>x.tk===tk); if(!p)return; const v=p.val_key?D.valuation[p.val_key]:null; const s=p.seg_key?D.segvals[p.seg_key]:null;
+  let kv=`<dt>次產業</dt><dd>${esc(p.segname)}（${esc(p.line)}）</dd><dt>地位分數／排名</dt><dd>${num(p.score,1)}／第 ${p.rank} 名</dd><dt>地位依據</dt><dd>${esc(p.basis)} ${esc(p.tag)}</dd><dt>實體 AI 營收曝險</dt><dd>${esc(p.exp)}（判斷，不進分數）</dd><dt>地圖歸屬</dt><dd>${esc(p.mapnote)}</dd>`;
+  if(v) kv+=`<dt>模型目標價</dt><dd>${v.tp===null?"台股不公開":V(num(v.tp)+" "+esc(v.ccy),v.tp_src)}</dd><dt>收盤</dt><dd>${V(num(v.close)+"（"+esc(v.close_date)+"）",v.close_src)}</dd><dt>上檔空間／估值評等</dt><dd>${pct(v.up)}／${esc(v.vtier)}</dd><dt>收支關卡</dt><dd>${V(num(v.gate,1)+"（"+(v.gate>=0?"通過":"入不敷出")+"）",v.gate_src)}</dd><dt>最終分級</dt><dd><span class="pill ${esc(v.tier)}">${esc(v.tier)}</span></dd>${v.mpx?`<dt>模型現價（模型日）</dt><dd>${num(v.mpx)}（${esc(v.mpd)}）</dd>`:""}<dt>模型檔</dt><dd><code>${esc(v.mfile)}</code></dd>`;
+  else if(s) kv+=`<dt>分部價值</dt><dd>${V(num(s.lo,1)+"／"+num(s.base,1)+"／"+num(s.hi,1)+" 十億美元（低／基準／高）",s.src)}</dd><dt>說明</dt><dd>${esc(s.note)}</dd><dt>模型檔</dt><dd><code>${esc(s.mfile)}</code></dd>`;
+  else kv+=`<dt>估值</dt><dd>本專案未建立個股模型</dd>`;
+  const d=$("#drawer"); d.innerHTML=`<div class="dh"><div class="row1"><h2>${esc(p.name)}</h2><button class="close" id="dclose">關閉</button></div><div class="sub">${esc(p.tk)}｜${esc(p.mkt)}${p.asia?"｜亞太掛牌":""}${p.cross?"｜跨圖":""}</div></div><div></div><div class="pbody"><dl class="kv">${kv}</dl></div>`;
+  d.hidden=false; $("#scrim").hidden=false; $("#dclose").onclick=close;}
+function close(){$("#drawer").hidden=true;$("#scrim").hidden=true;}
+$("#scrim").onclick=close; document.addEventListener("keydown",e=>{if(e.key==="Escape")close();});
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-tk]"); if(b&&(b.classList.contains("r")||b.classList.contains("linkish"))) drawer(b.dataset.tk);});
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x===t)); document.querySelectorAll(".view").forEach(v=>v.hidden=v.id!=="v-"+t.dataset.v);});
+(function(){const tip=document.createElement("div"); tip.id="srctip"; tip.hidden=true; document.body.appendChild(tip);
+  const show=el=>{tip.innerHTML=`<div class="h">資料出處</div>${esc(el.getAttribute("data-src"))}`; tip.hidden=false; const r=el.getBoundingClientRect(); let x=Math.min(r.left,innerWidth-tip.offsetWidth-12), y=r.bottom+6; if(y+tip.offsetHeight>innerHeight)y=r.top-tip.offsetHeight-6; tip.style.left=Math.max(8,x)+"px"; tip.style.top=y+"px";};
+  document.addEventListener("mouseover",e=>{const el=e.target.closest&&e.target.closest("[data-src]"); el?show(el):tip.hidden=true;});})();
+$("#m-ver").textContent=D.meta.version; $("#m-built").textContent=D.meta.built; $("#m-px").textContent=D.meta.close_date;
+kpis(); vLines(); vPosition(); vInvest(); vMethod();
+</script>
