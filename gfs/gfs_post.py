@@ -572,6 +572,7 @@ def readme13(wb, PLA, RVA, SNS, CR, CO):
     RD = wb["README"]; V = wb["Val"]; SE = wb["Sens"]
     vb = lambda p: f"Val!B{lab(V, p, exact=True)}"
     tp, up, rec, dcf, cu, cadj = vb("目標價（DCF 與 Comparable 加權）"), vb("上檔空間：加權目標價"), vb("投資建議"), vb("DCF 目標價（情境加權）"), vb("Comparable 目標價（市場主流同業法）"), vb("Comparable 目標價（相對倍數調整後）")
+    tvr = lab(V, "其中：終值現值占 EV")
     coef, pmed, feps, cons = vb("相對倍數調整係數"), vb("同業前瞻 P/E 中位數"), vb("12 個月後的前瞻 EPS（情境加權）"), vb("市場共識目標價")
     sens_r = lambda key: next(r for r in range(SNS["first"], SNS["last"] + 1) if str(SE.cell(r, 1).value or "").startswith(key))
     s_asp, s_ut, s_ai = sens_r("售價水準"), sens_r("稼動率"), sens_r("矽光子營收 ±30%")
@@ -584,7 +585,8 @@ def readme13(wb, PLA, RVA, SNS, CR, CO):
         nonlocal r
         RD.cell(r, 1, F(*parts)); out[key] = r; r += 1
     put("hero", T("加權目標價 "), TX(tp, "#,##0.0"), T(" 元，相對現價 "), TX(up, SP), T("，評等"), rec, T("：DCF "), TX(dcf, "#,##0.0"), T(" 元，同業比較法（相對倍數調整後）"), TX(cadj, "#,##0.0"), T(" 元。"))
-    put("rec", T("評等「"), rec, T("」：同業比較法採格芯過去十年相對同業的本益比倍數（"), TX(coef, "0.00"), T(" 倍）；未調整的市場主流同業法 "), TX(cu, "#,##0.0"), T(" 元。"))
+    put("rec", T("評等「"), rec, T("」：同業比較法採格芯過去十年相對同業的本益比倍數（"), TX(coef, "0.00"), T(" 倍）；未調整的市場主流同業法 "), TX(cu, "#,##0.0"), T(" 元。"),
+        f'IF(ABS(ABS({up})-0.25)<0.01,"評等貼邊：上檔空間 "&TEXT({up},"+0.0%;-0.0%")&"，距中立邊界（±25%）只差 "&TEXT(ABS(ABS({up})-0.25)*100,"0.00")&" 個百分點，稼動率或售價小幅調整即可改變評等。","")')
     put("o1", T("目標價：加權目標價 "), TX(tp, "#,##0.0"), T(" 元，現價 "), TX("px", "#,##0.0"), T(" 元，差距 "), TX(up, SP), T("。同業比較法（中位數 "), TX(pmed, "0.0"), T(" 倍 × 係數 "), TX(coef, "0.00"),
         T(" × 12 個月後 EPS "), TX(feps, "0.00"), T(" 元）得 "), TX(cadj, "#,##0.0"), T(" 元，DCF 得 "), TX(dcf, "#,##0.0"), T(" 元，分析師共識 "), TX(cons, "#,##0.0"), T(" 元（共識 EPS 為 non-GAAP，本模型為 IFRS）。"))
     put("o2", T("獲利由製造服務的稼動率與美元售價決定（固定成本高）：情境 B 的 FY2028 稼動率 "), TX(f"PL!H{PLA['s_ut']}", "0%"), T("、售價每片約 "), TX(f"PL!H{PLA['s_asp']}", "#,##0"),
@@ -592,7 +594,8 @@ def readme13(wb, PLA, RVA, SNS, CR, CO):
     put("o3", T("最大變數（加權目標價相對基準）：售價 ±3% "), TX(f"Sens!B{s_asp}", SP), T("／"), TX(f"Sens!C{s_asp}", SP), T("；稼動率 ±3 個百分點 "), TX(f"Sens!B{s_ut}", SP), T("／"), TX(f"Sens!C{s_ut}", SP),
         T("；矽光子營收 ±30% 只有 "), TX(f"Sens!B{s_ai}", SP), T("／"), TX(f"Sens!C{s_ai}", SP), T("。這些是測試案例，不是門檻。"))
     put("o4", T("反向 DCF：WACC "), TX("wacc", "0.0%"), T("，要使 DCF 等於現價，折現率須降到 "), TX(rv("w1"), "0.0%"), T("，或 FY2028 起現金流放大 "), TX(rv("s1"), "0.00"),
-        T(" 倍；現價相當於 12 個月後 EPS 的 "), TX(rv("pe1"), "0.0"), T(" 倍。"))
+        T(" 倍；現價相當於 12 個月後 EPS 的 "), TX(rv("pe1"), "0.0"), T(" 倍。終值現值占 EV 情境 A／B／C 為 "), TX(f"Val!B{tvr}", "0.0%"), T("／"), TX(f"Val!C{tvr}", "0.0%"), T("／"), TX(f"Val!D{tvr}", "0.0%"),
+        f'IF(MAX(Val!B{tvr}:D{tvr})>0.8,"，皆超過標準規格 80% 門檻（情境 C 超過 100% 代表明確期自由現金流現值為負），DCF 幾乎全由終值決定、對 WACC 與穩態資本支出敏感。","。")')
     put("o5", T("對帳中：CY2027–CY2029 的 AI 加速器顆數，Wattonomics 換算值只有 Siliconomics 基準的 "), TX(f"Coord!C{CR['ratio']}", "0.00"), T("～"), TX(f"Coord!D{CR['ratio']}", "0.00"),
         T(" 倍；格芯只有矽光子營收受影響，另一側讀數加權目標價 "), TX(f"Coord!C{CR['tp']}", "#,##0.0"), T(" 元（"), f"Coord!C{CR['rec']}", T("），個股不裁決。公司實績（季營收、出貨、稼動率、資本支出）對層級：無可比實績。"))
     put("drv", T("分部營收推導（情境 B）：製造服務晶圓＝產能 × 稼動率 × 美元售價，加上矽光子與技術服務。FY2028 出貨 "),
