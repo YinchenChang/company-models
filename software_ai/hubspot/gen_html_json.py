@@ -133,9 +133,9 @@ S.append({"id": "valuation", "title": "估值", "blocks": [
      "rowgen": {"sheet": "Val", "rows": f"{VR['dsum0']}-{VR['dsum0'] + 8}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"],
                 "row_fmt": {str(VR["dsum0"] + 4 + 1): {c: "n3" for c in "BCD"}, str(VR["dsum0"] + 6): {c: "n2" for c in "BCD"}, str(VR["dsum0"] + 7): {c: "n2" for c in "BCD"},
                             str(VR["dsum0"] + 8): {c: "p1" for c in "BCD"}}}},
-    {"type": "table", "caption": "Comparable（同業前瞻 P/E 中位數 × 目標時點 NTM 非 GAAP EPS）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
-     "rowgen": {"sheet": "Val", "rows": f"{VR['cmp0']}-{VR['cmp0'] + 5}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n2", "n2", "n2"],
-                "row_fmt": {str(VR["cmp0"] + 2): {c: "n3" for c in "BCD"}, str(VR["cmp0"] + 4): {c: "n1" for c in "BCD"}}}},
+    {"type": "table", "caption": "Comparable 主腿（同業中位 P/S × 相對倍數係數 × 目標時點 TTM 營收 ÷ 稀釋股數）與本益比對照列", "head": ["項目", "情境 A", "情境 B", "情境 C"],
+     "rowgen": {"sheet": "Val", "rows": f"{VR['cmp0']}-{VR['c_cmppe2']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n2", "n2", "n2"],
+                "row_fmt": {str(VR["c_" + k]): {c: f for c in "BCD"} for k, f in (("rev26", "n1"), ("rev27", "n1"), ("wt", "n3"), ("ttm", "n1"), ("ps", "n2"), ("shs", "n3"), ("w27", "n3"), ("pe1", "n1"), ("pe2", "n1"))}}},
     {"type": "table", "collapse": True, "summary": "展開：同業前瞻 P/E（逐家）", "head": ["同業", "前瞻 P/E（倍）"],
      "rowgen": {"sheet": "Val", "rows": f"{VR['peer0']}-{VR['peer_hubs']}", "cols": ["A", "B"], "fmts": ["", "x1"]}}]})
 # ───────── 3. 敏感度 ─────────
@@ -217,7 +217,7 @@ S.append({"id": "recon", "title": "對帳：指引、共識與反解", "intro": 
     {"type": "table", "caption": f"@Recon!A{R['d_rf'] - 2}", "head": ["項目", "資料日", "與股價基準日相差（交易日）", "狀態"],
      "rowgen": {"sheet": "Recon", "rows": f"{R['d_rf']}-{R['d_px']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "date", "n0", ""]}},
     {"type": "table", "caption": f"@Recon!A{R['peer0'] - 2}", "head": ["同業", "前瞻 P/E（倍）", "會計準則與租賃處理", "備註"],
-     "rowgen": {"sheet": "Recon", "rows": f"{R['peer0']}-{R['pe_rr']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "x1", "", ""], "row_fmt": {str(R["pe_ratio"]): {"B": "n2"}, str(R["pe_rr"]): {"B": "sp1"}}}},
+     "rowgen": {"sheet": "Recon", "rows": f"{R['peer0']}-{R['ps_rel']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "x1", "", ""], "row_fmt": {str(R["pe_ratio"]): {"B": "n2"}, str(R["pe_rr"]): {"B": "sp1"}, str(R["ps_med"]): {"B": "n2"}, str(R["ps_rel"]): {"B": "n2", "C": "n2"}}}},
     {"type": "table", "caption": f"@Recon!A{R['ai_rev'] - 2}", "head": ["項目", "情境 A", "情境 B", "情境 C"],
      "rowgen": {"sheet": "Recon", "rows": f"{R['ai_rev']}-{R['ai_share']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"],
                 "row_fmt": {str(R["ai_brk"]): {c: "n2" for c in "BCD"}, str(R["ai_price"]): {c: "n2" for c in "BCD"}, str(R["ai_share"]): {c: "p1" for c in "BCD"}}}}]})

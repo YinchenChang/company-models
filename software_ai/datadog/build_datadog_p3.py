@@ -42,7 +42,7 @@ widths(DC)
 # ====================================================================================================== Val
 V["A1"] = '="Val — 目標價（股價基準日＋12 個月＝"&TEXT(tp_date,"yyyy-mm-dd")&"）＝DCF "&TEXT(w_dcf,"0%")&"＋Comparable "&TEXT(1-w_dcf,"0%")&"；情境權重 A "&TEXT(tp_wA,"0%")&"／B "&TEXT(tp_wB,"0%")&"／C "&TEXT(tp_wC,"0%")&"。金額 US$M，每股美元"'
 V["A2"] = ("DCF：FCFF（股票薪酬視為費用、不加回）以 WACC 折現到評價日（期中），每股價值以 ke 推到目標時點；評價股數含未歸屬 RSU（扣預期沒收）與選擇權庫藏股法，2029 票據預設視為債務。"
-           "Comparable：同業 Forward 倍數（Analogy，分母期間資料商未載明）× 本模型目標時點 NTM 營收與 non-GAAP EPS，兩個倍數腿以 w_pe 加權；相對倍數 rel_m 取近 20 財季本公司 ÷ 同業中位的 PS 與 PSG 相對值幾何平均（Derived）。"
+           "Comparable（G6）：主腿為 P/S——同業中位 P/S（relmult_hist 最近一季，市值÷TTM 營收）× rel_m × 本模型目標時點 TTM 營收 ÷ 稀釋股數，與 PS／PSG 相對值同口徑；盈餘型倍數（Forward P/E）只列對照，不進加權目標價；相對倍數 rel_m 取近 20 財季本公司 ÷ 同業中位的 PS 與 PSG 相對值幾何平均（Derived）。"
            "五級評等：> +50% 強力買進、> +25% 買進、≥ −25% 中立、≥ −50% 放空、其餘強力放空；先看收支關卡。")
 VR = {}
 r = 4
@@ -67,9 +67,9 @@ for k, lab in (("pvx", "明確期 FCFF 現值（含 Q4 26E stub）"), ("nop33", 
 r += 1
 V.cell(r, 1, "0.0 Comparable（同業 Forward 倍數 × 目標時點 NTM；每股，目標時點）").font = BOLD; r += 1
 VR["ch"] = r; hdr(V, r, ["項目", "情境 A", "情境 B", "情境 C", "說明"]); r += 1
-for k, lab in (("fmix", "NTM 權重：目標年度（FY2027）剩餘比例＝(該年 12-31 − 目標時點) ÷ 365"), ("ntm_rev", "目標時點 NTM 營收（US$M）＝FY2027 與 FY2028 加權"), ("ntm_eps", "目標時點 NTM non-GAAP EPS（美元）"),
-               ("ntm_sh", "目標時點 NTM 稀釋加權股數（百萬股）"), ("m_ps", "同業 Forward P/S 中位數（五家；分母期間未載明；US GAAP、租賃處理未找到）"), ("m_pe", "同業 Forward P/E 中位數（五家；分母＝Forward non-GAAP EPS，口徑未載明）"),
-               ("px_ps", "P/S 腿每股＝倍數 × NTM 營收 ÷ NTM 股數"), ("px_pe", "P/E 腿每股＝倍數 × NTM non-GAAP EPS"), ("comp", "Comparable 每股＝rel_m ×［w_pe × P/E 腿 ＋ (1 − w_pe) × P/S 腿］")):
+for k, lab in (("fmix", "權重：目標年度（FY2027）剩餘比例＝(該年 12-31 − 目標時點) ÷ 365"), ("ttm_rev", "目標時點 TTM 營收（US$M）＝FY2026 與 FY2027 加權（主腿分母）"), ("ttm_sh", "目標時點 TTM 稀釋加權股數（百萬股）"), ("ntm_rev", "目標時點 NTM 營收（US$M）＝FY2027 與 FY2028 加權"), ("ntm_eps", "目標時點 NTM non-GAAP EPS（美元）"),
+               ("ntm_sh", "目標時點 NTM 稀釋加權股數（百萬股）"), ("m_ps", "同業 P/S 中位數（五家；relmult_hist 最近一季，市值÷TTM 營收）"), ("m_pe", "對照：同業 Forward P/E 中位數（五家；分母期間未載明）"),
+               ("px_ps", "P/S 腿每股＝同業 P/S 中位 × TTM 營收 ÷ TTM 股數（未乘相對倍數）"), ("comp", "Comparable 每股（主腿）＝rel_m × P/S 腿"), ("px_pe", "對照列：P/E 腿每股（rel_m＝1.00；同業 Forward P/E 中位 × NTM non-GAAP EPS；不進加權）"), ("px_pe_c", "對照列：P/E 腿每股 × 本公司現行 Forward P/E ÷ 同業中位（本公司現行相對值；不進加權）")):
     VR[k] = r; V.cell(r, 1, lab); r += 1
 r += 1
 V.cell(r, 1, "情境目標價與收支關卡").font = BOLD; r += 1
@@ -89,7 +89,7 @@ for k, lab in (("c_ps", "本公司現行 Forward P/S（資料商同日同口徑�
     VR[k] = r; V.cell(r, 1, lab); r += 1
 r += 1
 V.cell(r, 1, "0.6 同業倍數逐家與逾期核對（原則第 15 條；與現價基準日相差超過 2 個交易日標逾期；皆為美國會計準則 US GAAP，租賃處理資料商未載明＝未找到）").font = BOLD; r += 1
-VR["ph"] = r; hdr(V, r, ["項目", "Forward P/S", "Forward P/E", "資料日", "狀態／說明"]); r += 1
+VR["ph"] = r; hdr(V, r, ["項目", "P/S（主腿；最近一季）", "Forward P/E（對照）", "P/S 季末日", "狀態／說明"]); r += 1
 for k, nm, dt in PEER:
     VR["p_" + k] = r; V.cell(r, 1, nm + "（US GAAP；租賃處理未找到）"); r += 1
 VR["p_ddog"] = r; V.cell(r, 1, "Datadog 現行（資料商，只作對照；US GAAP）"); r += 1
@@ -124,6 +124,8 @@ for s in "ABC":
     vset(f"{c}{VR['dcf12_s']}", f"=MAX(0,({c}{VR['ev_s']}+{c}{VR['nc']})/{c}{VR['shv']})*(1+$B${VR['ke']})^t_tgt", "#,##0.00")
     # Comparable
     vset(f"{c}{VR['fmix']}", "=(DATE(YEAR(tp_date),12,31)-tp_date)/365", "0.000")
+    vset(f"{c}{VR['ttm_rev']}", f"={c}{VR['fmix']}*PL!H{PR['rev']}+(1-{c}{VR['fmix']})*PL!I{PR['rev']}", "#,##0.0")
+    vset(f"{c}{VR['ttm_sh']}", f"={c}{VR['fmix']}*PL!H{PR['dsh']}+(1-{c}{VR['fmix']})*PL!I{PR['dsh']}", "#,##0.0")
     vset(f"{c}{VR['ntm_rev']}", f"={c}{VR['fmix']}*PL!I{PR['rev']}+(1-{c}{VR['fmix']})*PL!J{PR['rev']}", "#,##0.0")
     vset(f"{c}{VR['ntm_eps']}", f"={c}{VR['fmix']}*PL!I{PR['ngeps']}+(1-{c}{VR['fmix']})*PL!J{PR['ngeps']}", "#,##0.00")
     vset(f"{c}{VR['ntm_sh']}", f"={c}{VR['fmix']}*PL!I{PR['dsh']}+(1-{c}{VR['fmix']})*PL!J{PR['dsh']}", "#,##0.0")
@@ -132,9 +134,10 @@ PS_L = ",".join(f"pm_ps_{k}" for k, _, _ in PEER); PE_L = ",".join(f"pm_pe_{k}" 
 vset(f"B{VR['m_ps']}", f"=MEDIAN({PS_L})", "0.00"); vset(f"B{VR['m_pe']}", f"=MEDIAN({PE_L})", "0.00")
 for s in "ABC":
     c = SC3[s]
-    vset(f"{c}{VR['px_ps']}", f"=$B${VR['m_ps']}*{c}{VR['ntm_rev']}/{c}{VR['ntm_sh']}", "#,##0.00")
+    vset(f"{c}{VR['px_ps']}", f"=$B${VR['m_ps']}*{c}{VR['ttm_rev']}/{c}{VR['ttm_sh']}", "#,##0.00")
     vset(f"{c}{VR['px_pe']}", f"=$B${VR['m_pe']}*{c}{VR['ntm_eps']}", "#,##0.00")
-    vset(f"{c}{VR['comp']}", f"=rel_m*(w_pe*{c}{VR['px_pe']}+(1-w_pe)*{c}{VR['px_ps']})", "#,##0.00")
+    vset(f"{c}{VR['comp']}", f"=rel_m*{c}{VR['px_ps']}", "#,##0.00")
+    vset(f"{c}{VR['px_pe_c']}", f"={c}{VR['px_pe']}*$D${VR['c_pe']}", "#,##0.00")
     vset(f"B{VR['t_' + s]}", f"=w_dcf*{c}{VR['dcf12']}+(1-w_dcf)*{c}{VR['comp']}", "#,##0.00")
     vset(f"B{VR['gate_' + s] if s != 'B' else VR['fcf_gate']}".replace("BB", "B") if False else (f"B{VR['gate_' + s]}" if s != "B" else f"B{VR['fcf_gate']}"), f"=SUM(CF!H{C_[s]['fcf']}:L{C_[s]['fcf']})", "#,##0.0")
     vset(f"{c}{VR['ai_net']}", f"=Thesis!N{T[s]['net']}", "#,##0.0")
@@ -159,7 +162,7 @@ vset(f"B{VR['g_tot']}", f"=C{VR['comp']}-C{VR['dcf12']}"); vset(f"B{VR['g_sbc']}
 vset(f"B{VR['g_mult']}", f"=C{VR['comp']}-C{VR['dcf12_s']}"); vset(f"B{VR['g_lev']}", f"=(cash_0-(1-conv_if)*debt_0-fin_lease)/C{VR['shv']}")
 vset(f"B{VR['g_time']}", f"=C{VR['dcf12']}-MAX(0,C{VR['psv']})"); vset(f"B{VR['g_chk']}", f"=B{VR['g_sbc']}+B{VR['g_mult']}-B{VR['g_tot']}", "0.000")
 vset(f"B{VR['g_evx']}", f"=C{VR['ev']}/C{VR['ntm_rev']}", "0.00")
-vset(f"B{VR['g_cmx']}", f"=C{VR['comp']}*C{VR['ntm_sh']}/C{VR['ntm_rev']}", "0.00")
+vset(f"B{VR['g_cmx']}", f"=C{VR['comp']}*C{VR['ttm_sh']}/C{VR['ttm_rev']}", "0.00")
 # 現行倍數 ÷ 同業中位數
 vset(f"B{VR['c_ps']}", "=pm_ps_ddog", "0.00"); vset(f"C{VR['c_ps']}", f"=B{VR['m_ps']}", "0.00"); vset(f"D{VR['c_ps']}", f"=B{VR['c_ps']}/C{VR['c_ps']}", "0.00"); vset(f"E{VR['c_ps']}", f"=C{VR['c_ps']}/B{VR['c_ps']}-1", "+0.0%;-0.0%")
 vset(f"B{VR['c_pe']}", "=pm_pe_ddog", "0.00"); vset(f"C{VR['c_pe']}", f"=B{VR['m_pe']}", "0.00"); vset(f"D{VR['c_pe']}", f"=B{VR['c_pe']}/C{VR['c_pe']}", "0.00"); vset(f"E{VR['c_pe']}", f"=C{VR['c_pe']}/B{VR['c_pe']}-1", "+0.0%;-0.0%")
@@ -167,7 +170,7 @@ vset(f"B{VR['c_den']}", f"=px*sh_out/pm_ps_ddog", "#,##0"); vset(f"C{VR['c_den']
 # 同業逐家
 for k, nm, dt in PEER:
     rr = VR["p_" + k]
-    vset(f"B{rr}", f"=pm_ps_{k}", "0.00"); vset(f"C{rr}", f"=pm_pe_{k}", "0.00"); vset(f"D{rr}", f"=pm_dt_{k}", "yyyy-mm-dd")
+    vset(f"B{rr}", f"=pm_ps_{k}", "0.00"); vset(f"C{rr}", f"=pm_pe_{k}", "0.00"); vset(f"D{rr}", f"=pm_dp_{k}", "yyyy-mm-dd")
     V[f"E{rr}"] = f'=IF(NETWORKDAYS(D{rr},px_date)-1>2,"逾期","正常")'
 rr = VR["p_ddog"]; vset(f"B{rr}", "=pm_ps_ddog", "0.00"); vset(f"C{rr}", "=pm_pe_ddog", "0.00"); vset(f"D{rr}", "=px_date", "yyyy-mm-dd"); V[f"E{rr}"] = "同日（2026-11-13）"
 vset(f"B{VR['o_rf']}", "=rf_date", "yyyy-mm-dd"); V[f"C{VR['o_rf']}"] = f'=IF(NETWORKDAYS(B{VR["o_rf"]},px_date)-1>2,"逾期","正常")'
@@ -176,7 +179,7 @@ vset(f"B{VR['o_cons']}", "=cons_date", "yyyy-mm-dd"); V[f"C{VR['o_cons']}"] = f'
 NOTES = {"psv_s": ("DCF（股票薪酬加回）每股價值（情境加權，評價日；只作對照）", "FCFF 與終值 NOPAT 加回全額股票薪酬；不進加權目標價（工作單 G5 第 3 條）"),
          "tpdcf_s": ("DCF（股票薪酬加回）目標價（情境加權；只作對照）", "每股價值以 ke 推到目標時點；不進加權目標價、不影響評等"),
          "tpdcf": ("DCF 目標價（情境加權）", "三情境 DCF 每股價值推到目標時點，依情境權重加權；股票薪酬視為費用"),
-         "tpcomp": ("Comparable 目標價（同業 Forward 倍數，情境加權）", "同業 Forward P/S 與 P/E 中位數（Analogy）× 本模型目標時點 NTM 營收與 non-GAAP EPS"),
+         "tpcomp": ("Comparable 目標價（P/S 主腿，情境加權）", "同業 P/S 中位（relmult_hist）× rel_m × 本模型目標時點 TTM 營收 ÷ 稀釋股數；與 PS／PSG 相對值同口徑，盈餘型倍數只作對照"),
          "tp": ("加權目標價（DCF 與 Comparable 加權）", "DCF 與 Comparable 依 w_dcf 加權；投資建議依此判定"),
          "px": ("現價（2026-11-13 收盤）", "兩來源前收價相符；財報後（2026-11-04）單日大跌"),
          "cons": ("市場共識目標價（賣方平均）", "TipRanks 2026-11-12，高 335、低 171；只作對照，不進模型"),

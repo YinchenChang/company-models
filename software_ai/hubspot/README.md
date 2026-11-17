@@ -24,13 +24,20 @@
 - 未找到：每任務 token 數公司未揭露、選擇權履約價、融資租賃餘額、Blume 第二來源以外的 beta 來源等，見 `data/research_hubspot.md` 第 9 節與 HTML 未找到清單。
 
 ## G5 v0.2 五條逐條
-1. 相對倍數：`rel_mult` 讀 `software_ai/data/relmult_hist/out/hubspot.json` 的 `geo_base`＝1.2715（Derived；base_source：PS 與 PSG 兩讀數幾何平均；窗口 2021-09-30 至 2026-06-30，同業 11 家）。低／高取 `sens.low`／`sens.high`＝0.6465／1.5797。Sens 四案齊備：`ps_only`（1.2592）、`psg_only`（1.2839）、`sens.low`、`sens.high`（後兩者即 rel_mult 低／高案）。本模型 Comparable 為前瞻 P/E，**以 PS／PSG 相對值近似套用於前瞻 P/E**。`divergence_gt_30pct` 為假（PS 與 PSG 兩讀數相差 2.0%），不需寫分歧原因；HUBS 與同業 TTM 營收成長比 1.52。提醒：HUBS 現行前瞻 P/E（13.2）僅為同業中位數（15.4）的 0.86 倍，歷史 PS／PSG 相對值 1.27 高於現行 P/E 相對值，Comparable 因此較 v0.1 高。
+1. 相對倍數：`rel_mult` 讀 `software_ai/data/relmult_hist/out/hubspot.json` 的 `geo_base`＝1.2715（Derived；base_source：PS 與 PSG 兩讀數幾何平均；窗口 2021-09-30 至 2026-06-30，同業 11 家）。低／高取 `sens.low`／`sens.high`＝0.6465／1.5797。Sens 四案齊備：`ps_only`（1.2592）、`psg_only`（1.2839）、`sens.low`、`sens.high`（後兩者即 rel_mult 低／高案）。Comparable 主腿依 G6 改為 P/S 口徑，與 PS／PSG 相對值同口徑（不再近似套用於前瞻 P/E）。`divergence_gt_30pct` 為假（PS 與 PSG 兩讀數相差 2.0%），不需寫分歧原因；HUBS 與同業 TTM 營收成長比 1.52。提醒：HUBS 最近一季（2026-06-30）P/S 相對值僅 0.67，低於係數 1.27，Comparable 因此較 v0.1 高。
 2. 無風險利率：美國 10 年期 5.10%（FRED DGS10，2026-11-12，現價日前 1 個交易日；Verified），取代 v0.1 的 5.15%（Trading Economics）。
 3. 股票薪酬加回 DCF 讀數：Val 頁、Recon 第 7 節與 HTML 估值章並列「DCF（股票薪酬加回）每股價值與目標價」，公式組字；＝費用化讀數加稅後 SBC 現值（含終值），股數不變；只作對照，不進加權目標價。
-4. 版本 v0.2；v0.1 成品移 `dist/_待刪除/`；全部檢查與 SENS=1 重跑；合理性關卡重跑，診斷結論見下。
+4. 版本 v0.2（G6 併入 v0.2）；v0.1 成品移 `dist/_待刪除/`；全部檢查與 SENS=1 重跑；合理性關卡重跑，診斷結論見下。
 5. 回報：新舊目標價、rel_mult 新舊值、SBC 加回讀數與檢查結果見回報訊息；數字以成品 README 頁為準。
 
-**v0.2 合理性關卡診斷：** 四關皆過（DCF 目標價為現價的 42%、EV 為正、評等中立、FY2026 對指引最大差距 2.5%），未觸發。Comparable 與 DCF 的落差擴大（相對倍數係數提高），股票薪酬約占落差 44%，其餘為同業 P/E 隱含的成長與風險溢酬；加回股票薪酬的 DCF 目標價接近現價，只作對照。
+**v0.2 合理性關卡診斷：** 四關皆過（DCF 目標價為現價的 42%、EV 為正、評等中立、FY2026 對指引最大差距 2.5%），未觸發。Comparable（P/S 主腿）與 DCF 的落差擴大，股票薪酬約占落差三成以下，其餘為同業 P/S 隱含的成長與風險溢酬與 HUBS 利潤率差；加回股票薪酬的 DCF 目標價接近現價，只作對照。
+
+## G6 相對倍數口徑一致（併入 v0.2）
+1. Comparable 主腿改 P/S：同業中位 P/S 4.03（`software_ai/data/relmult_hist/out/hubspot.json` 的 ps_series 最後一點，季末 2026-06-30，11 家；Derived）× `rel_mult`（geo_base 1.2715）× 目標時點 TTM 營收（日期加權 FY2026E／FY2027E）÷ 稀釋股數（評價股數）。該季末距現價日逾 2 個交易日，Recon 第 4 節標逾期；現價日的同業 P/S 未取得。
+2. 前瞻 P/E 法改為對照列（Val 頁 Comparable 區塊下半）：係數 1.00 與 HUBS 現行相對值兩讀數，不進加權目標價。
+3. Sens 保留四案（PS 單讀數、PSG 單讀數、歷史低、歷史高），套在 P/S 主腿。
+4. 主腿改 P/S 是為了與 PS／PSG 相對值同口徑（相對值已內含利潤率差，不能直接套本益比）；盈餘型倍數只作對照。README 頁、Val 頁與 HTML 均已寫明。
+5. 重跑全部檢查、SENS=1 與合理性關卡（見上方診斷）。
 
 ## G2 共通必修十條逐條
 1. 每任務 token 以公司揭露校準：公司只揭露每解決任務單價與 Customer Agent 營收，token 數未找到，取 Tokenomics 0.1 小時任務（類比），標記於 In 頁。做到（以類比，已註明）。
@@ -38,7 +45,7 @@
 3. 比率參數除非有證據否則持平：有歷史規模經濟證據者改為固定加變動拆分（見 G3.1）。做到。
 4. 股數：RSU 扣除沒收、選擇權庫藏股法。RSU 淨沒收做到；選擇權履約價未找到，以稀釋股數代理並列為未做。部分做到。
 5. 淨負債＝本金加融資租賃：公司無借款，融資租賃餘額未找到。部分做到（債務為零，已註明）。
-6. Comparable 同一口徑：同業前瞻 P/E 乘 HUBS 目標時點 NTM 非 GAAP EPS；Recon 列出同業準則差異與 HUBS 現行 P/E 相對同業。做到。
+6. Comparable 同一口徑：v0.2 起主腿為同業中位 P/S 乘係數乘 HUBS 目標時點 TTM 營收（G6）；前瞻 P/E 為對照列；Recon 列出同業準則差異與 HUBS 現行 P/E 相對同業。做到。
 7. 收支關卡列：Val 三列齊備，`check_rating_gate --strict` 通過。做到。
 8. 公式組字與 DCF 對 Comparable 差距分解：股票薪酬、時點、槓桿、其餘。做到。
 9. 反解主導變數：Recon 第 3 節對增量營業利益率 inc_m 反解（現價所需值、評等翻轉值）。做到。

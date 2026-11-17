@@ -1,6 +1,12 @@
-# Naver（韓國 035420）個股模型 v0.2
+# Naver（韓國 035420）個股模型 v0.2.1
 
 資料截止日 2026-11-16（最新財報 3Q26）。成品日 2026-11-17。本版沒有做先驗（未預先設定任何投資觀點，結論全由資料與 Assumed 輸入推出）。金額十億韓元，K-IFRS，曆年制。
+
+## v0.2.1 變更（2026-11-17，工作單 G6）
+- 口徑一致：歷史 PS 與 PSG 相對倍數已含利潤率差，不能再套前瞻本益比。Comparable 主腿改為 P/S 口徑：同業中位 P/S（`data/ps_peers_naver.json`，取自 `software_ai/data/relmult_hist` 各家最近一季，季末日逐家標示，逾期者旗標，Derived）x 相對倍數（geo_base）x 目標日 TTM 營收（FY2026E 與 FY2027E 依已過天數加權）÷ 稀釋股數，三情境加權。
+- 前瞻本益比 Comparable（分部 NTM NOPAT x 同業前瞻本益比）改為對照列：相對倍數 1.00 與本公司現行比值兩個讀數，不進加權目標價。
+- Sens 保留 ps_only、psg_only、sens.low、sens.high 四案，套用在 P/S 主腿；落差分解與 RevDCF 改為 P/S 口徑。
+- 舊版 v0.2 成品移至 `dist/_待刪除/`。
 
 ## v0.2 變更（2026-11-17，工作單 G4、G5）
 - 相對倍數 rel_mult 改讀 `data/relmult_naver.json`（來源 `software_ai/data/relmult_hist/out/naver.json` 的 geo_base，Derived）：歷史 PS 與 PSG 兩讀數幾何平均；Sens 加只用 PS、只用 PSG、sens.low、sens.high 四案。Comparable 用前瞻本益比，以 PS／PSG 相對值近似套用。兩讀數差異大於 30%，原因（本公司 TTM 營收成長低於同業中位，成長比 0.72）寫在模型 README 與 HTML。

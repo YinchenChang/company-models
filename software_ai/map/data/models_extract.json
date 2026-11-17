@@ -37,7 +37,12 @@
     "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.xlsx",
     "label": "Comparable 目標價（情境加權；US$）"
    },
-   "tp": null,
+   "tp": {
+    "value": 163.566564535416,
+    "cell": "Val!B10",
+    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.xlsx",
+    "label": "加權目標價（DCF 與 Comparable 加權；US$）"
+   },
    "upside": {
     "value": -0.437915585788948,
     "cell": "Val!B11",
@@ -121,7 +126,6 @@
    "sbc_note": null,
    "ai_net": null,
    "missing": [
-    "tp",
     "ai_net"
    ],
    "relmult": {
@@ -202,7 +206,12 @@
     "file": "software_ai/datadog/dist/20261117_Datadog個股模型_v0.2.xlsx",
     "label": "Comparable 目標價（同業 Forward 倍數，情境加權）"
    },
-   "tp": null,
+   "tp": {
+    "value": 112.030049234388,
+    "cell": "Val!B10",
+    "file": "software_ai/datadog/dist/20261117_Datadog個股模型_v0.2.xlsx",
+    "label": "加權目標價（DCF 與 Comparable 加權）"
+   },
    "upside": {
     "value": -0.391670019361491,
     "cell": "Val!B13",
@@ -272,9 +281,7 @@
     "file": "software_ai/datadog/dist/20261117_Datadog個股模型_v0.2.xlsx",
     "label": "AI 淨效果（FY2032E，Thesis 頁；US$M）A／B／C"
    },
-   "missing": [
-    "tp"
-   ],
+   "missing": [],
    "relmult": {
     "file": "software_ai/data/relmult_hist/out/datadog.json",
     "generated": "2026-11-17",
@@ -350,7 +357,12 @@
     "file": "software_ai/palantir/dist/20261117_Palantir個股模型_v0.2.xlsx",
     "label": "Comparable 目標價（情境加權）"
    },
-   "tp": null,
+   "tp": {
+    "value": 121.42233278971,
+    "cell": "Val!B10",
+    "file": "software_ai/palantir/dist/20261117_Palantir個股模型_v0.2.xlsx",
+    "label": "目標價（DCF 與 Comparable 加權）"
+   },
    "upside": {
     "value": -0.277204995596702,
     "cell": "Val!B12",
@@ -390,7 +402,6 @@
    "sbc_note": null,
    "ai_net": null,
    "missing": [
-    "tp",
     "scen",
     "ai_net"
    ],
@@ -475,7 +486,12 @@
     "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.xlsx",
     "label": "Comparable 目標價（同業 EV／營收法；單一分部）"
    },
-   "tp": null,
+   "tp": {
+    "value": 59.4102866564485,
+    "cell": "Val!B8",
+    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.xlsx",
+    "label": "目標價（DCF 與 Comparable 加權）"
+   },
    "upside": {
     "value": -0.737830251725659,
     "cell": "Val!B11",
@@ -520,7 +536,6 @@
    "sbc_note": null,
    "ai_net": null,
    "missing": [
-    "tp",
     "scen",
     "ai_net"
    ],
@@ -764,7 +779,12 @@
     "file": "software_ai/trendmicro/dist/20261117_趨勢科技個股模型_v0.2.xlsx",
     "label": "Comparable 目標價（情境加權）"
    },
-   "tp": null,
+   "tp": {
+    "value": 7154.29866781625,
+    "cell": "Val!B26",
+    "file": "software_ai/trendmicro/dist/20261117_趨勢科技個股模型_v0.2.xlsx",
+    "label": "加權目標價（DCF 與 Comparable 加權；目標時點 12 個月）"
+   },
    "upside": {
     "value": -0.00827575993675456,
     "cell": "Val!B29",
@@ -822,7 +842,6 @@
    "sbc_note": null,
    "ai_net": null,
    "missing": [
-    "tp",
     "ai_net"
    ],
    "relmult": {
@@ -943,7 +962,12 @@
     "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.xlsx",
     "label": "Comparable 目標價（同業前瞻 P/E 中位數法；情境加權）"
    },
-   "tp": null,
+   "tp": {
+    "value": 223.828595942484,
+    "cell": "Val!B8",
+    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.xlsx",
+    "label": "目標價（DCF 與 Comparable 加權）"
+   },
    "upside": {
     "value": 0.0302812241311097,
     "cell": "Val!B11",
@@ -996,7 +1020,6 @@
    "sbc_note": null,
    "ai_net": null,
    "missing": [
-    "tp",
     "scen",
     "ai_net"
    ],
@@ -1089,91 +1112,7 @@
   "6702": {
    "folder": "fujitsu",
    "ticker": "6702",
-   "status": "ok",
-   "html": {
-    "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.html",
-    "name": "20261117_Fujitsu個股模型_v0.2.html",
-    "date": "20261117",
-    "version": "v0.2",
-    "title": "Fujitsu個股模型"
-   },
-   "xlsx": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.xlsx",
-   "date": "2026-11-17",
-   "version": "v0.2",
-   "title": "Fujitsu個股模型",
-   "html_matches": true,
-   "recalculated": false,
-   "price": {
-    "value": 3455,
-    "cell": "Val!B5",
-    "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.xlsx",
-    "label": "現價（¥）",
-    "date": "2026-11-13"
-   },
-   "dcf": {
-    "value": 3218.96371033942,
-    "cell": "Val!B8",
-    "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.xlsx",
-    "label": "DCF 目標價（情境加權；¥）"
-   },
-   "comp": {
-    "value": 3575.74062410568,
-    "cell": "Val!B9",
-    "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.xlsx",
-    "label": "Comparable 目標價（分部加總；情境加權；¥）"
-   },
-   "tp": null,
-   "upside": {
-    "value": -0.0166853351020116,
-    "cell": "Val!B11",
-    "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.xlsx",
-    "label": "上檔空間（相對現價）"
-   },
-   "rating": {
-    "value": "中立",
-    "cell": "Val!B12",
-    "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.xlsx",
-    "label": "估值評等（DCF 與 Comparable 加權，只看上檔空間）"
-   },
-   "rec": {
-    "value": "中立",
-    "cell": "Val!B14",
-    "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.xlsx",
-    "label": "投資建議"
-   },
-   "gate": {
-    "basis": {
-     "value": 1152885.32870175,
-     "cell": "Val!B13",
-     "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.xlsx",
-     "label": "入不敷出判定用：基準情境 FY2026–FY2030 收支合計（¥百萬）"
-    },
-    "abc": null,
-    "verdict": null
-   },
-   "scen": {
-    "values": [
-     3922.27753820086,
-     3512.02711534702,
-     2643.07689999529
-    ],
-    "cells": [
-     "Val!C78",
-     "Val!D78",
-     "Val!E78"
-    ],
-    "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.xlsx",
-    "label": "情境加權目標價（各情境 DCF 與 Comparable 加權；¥）"
-   },
-   "sbc_dcf": null,
-   "sbc_abc": null,
-   "sbc_note": "未找到",
-   "ai_net": null,
-   "missing": [
-    "tp",
-    "sbc_dcf",
-    "ai_net"
-   ],
+   "status": "dist 無現行成品（改版中；_待刪除/ 不計）",
    "relmult": {
     "file": "software_ai/data/relmult_hist/out/fujitsu.json",
     "generated": "2026-11-17",
@@ -1297,7 +1236,12 @@
     "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.xlsx",
     "label": "Comparable 目標價（情境加權；同業前瞻本益比）"
    },
-   "tp": null,
+   "tp": {
+    "value": 604.990270864384,
+    "cell": "Val!B3",
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.xlsx",
+    "label": "目標價（DCF 與 Comparable 加權）"
+   },
    "upside": {
     "value": 0.478832243618637,
     "cell": "Val!B4",
@@ -1350,7 +1294,6 @@
    "sbc_note": null,
    "ai_net": null,
    "missing": [
-    "tp",
     "ai_net"
    ],
    "relmult": {
@@ -1429,7 +1372,12 @@
     "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.xlsx",
     "label": "Comparable 目標價（分部 NTM NOPAT x 同業前瞻本益比，情境加權）"
    },
-   "tp": null,
+   "tp": {
+    "value": 192800.524192467,
+    "cell": "Val!B8",
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.xlsx",
+    "label": "目標價（DCF 與 Comparable 加權）"
+   },
    "upside": {
     "value": 0.117684198217202,
     "cell": "Val!B11",
@@ -1494,9 +1442,7 @@
     "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.xlsx",
     "label": "AI 淨效果（營業利益，相對 FY2026）FY2032E：A／B／C（十億韓元）"
    },
-   "missing": [
-    "tp"
-   ],
+   "missing": [],
    "relmult": {
     "file": "software_ai/data/relmult_hist/out/naver.json",
     "generated": "2026-11-17",
@@ -1542,112 +1488,7 @@
   "4689": {
    "folder": "lycorp",
    "ticker": "4689",
-   "status": "ok",
-   "html": {
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.html",
-    "name": "20261117_LY個股模型_v0.2.0.html",
-    "date": "20261117",
-    "version": "v0.2.0",
-    "title": "LY個股模型"
-   },
-   "xlsx": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
-   "date": "2026-11-17",
-   "version": "v0.2.0",
-   "title": "LY個股模型",
-   "html_matches": true,
-   "recalculated": false,
-   "price": {
-    "value": 543.3,
-    "cell": "Val!B9",
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
-    "label": "現價（2026-11-16 收盤）",
-    "date": "2026-11-16"
-   },
-   "dcf": {
-    "value": 732.884593684852,
-    "cell": "Val!B6",
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
-    "label": "DCF 目標價（情境加權）"
-   },
-   "comp": {
-    "value": 456.431505723662,
-    "cell": "Val!B7",
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
-    "label": "Comparable 目標價（分部加總，情境加權）"
-   },
-   "tp": null,
-   "upside": {
-    "value": 0.0945298172358859,
-    "cell": "Val!B11",
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
-    "label": "上檔空間：加權目標價"
-   },
-   "rating": {
-    "value": "中立",
-    "cell": "Val!B14",
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
-    "label": "估值評等（依加權目標價上檔空間，不含收支關卡）"
-   },
-   "rec": {
-    "value": "中立",
-    "cell": "Val!B17",
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
-    "label": "投資建議"
-   },
-   "gate": {
-    "basis": {
-     "value": 918.736738009812,
-     "cell": "Val!B16",
-     "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
-     "label": "入不敷出判定用：基準情境 B 收支關卡合計（十億日圓）"
-    },
-    "abc": null,
-    "verdict": {
-     "value": "通過（FY2026–FY2030 自由現金流扣利息與股利合計為正）",
-     "cell": "Val!B15",
-     "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
-     "label": "收支關卡判定"
-    }
-   },
-   "scen": {
-    "values": [
-     634.588574679236,
-     595.214066634455,
-     553.61549086888
-    ],
-    "cells": [
-     "Val!B59",
-     "Val!B60",
-     "Val!B61"
-    ],
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
-    "label": "情境 A／B／C 目標價"
-   },
-   "sbc_dcf": {
-    "value": 736.304595788328,
-    "cell": "Val!B103",
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
-    "label": "DCF 目標價（SBC 加回；三情境加權）"
-   },
-   "sbc_abc": null,
-   "sbc_note": null,
-   "ai_net": {
-    "values": [
-     52.3304803632574,
-     10.4336994358429,
-     -33.4117840315841
-    ],
-    "cells": [
-     "Val!B67",
-     "Val!C67",
-     "Val!D67"
-    ],
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.0.xlsx",
-    "label": "AI 淨效果（營業利益）FY2032E：A／B／C（十億日圓）"
-   },
-   "missing": [
-    "tp"
-   ],
+   "status": "dist 無現行成品（改版中；_待刪除/ 不計）",
    "relmult": {
     "file": "software_ai/data/relmult_hist/out/lycorp.json",
     "generated": "2026-11-17",

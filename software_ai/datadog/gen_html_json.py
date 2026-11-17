@@ -88,12 +88,12 @@ valuation = {"id": "valuation", "title": "估值", "blocks": [
     {"type": "table", "caption": "DCF 彙總（三情境；百萬美元，每股為美元）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
      "rowgen": {"sheet": "Val", "rows": f"{VR['pvx']}-{VR['dcf12_s']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"],
                 "row_fmt": {str(VR["tvsh"]): {c: "p1" for c in "BCD"}, str(VR["shv"]): {c: "n2" for c in "BCD"}, str(VR["psv"]): {c: "n2" for c in "BCD"}, str(VR["dcf12"]): {c: "n2" for c in "BCD"}, str(VR["dcf12_s"]): {c: "n2" for c in "BCD"}}}},
-    {"type": "table", "caption": "Comparable（同業 Forward 倍數 × 目標時點 NTM）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
-     "rowgen": {"sheet": "Val", "rows": f"{VR['fmix']}-{VR['comp']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n2", "n2", "n2"],
-                "row_fmt": {str(VR["fmix"]): {c: "n3" for c in "BCD"}, str(VR["ntm_rev"]): {c: "n0" for c in "BCD"}, str(VR["ntm_sh"]): {c: "n1" for c in "BCD"}, str(VR["m_ps"]): {"B": "n2"}, str(VR["m_pe"]): {"B": "n2"}}}},
+    {"type": "table", "caption": "Comparable（同業 P/S 主腿 × 相對倍數；盈餘型倍數只作對照）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
+     "rowgen": {"sheet": "Val", "rows": f"{VR['fmix']}-{VR['px_pe_c']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n2", "n2", "n2"],
+                "row_fmt": {str(VR["fmix"]): {c: "n3" for c in "BCD"}, str(VR["ntm_rev"]): {c: "n0" for c in "BCD"}, str(VR["ttm_rev"]): {c: "n0" for c in "BCD"}, str(VR["ttm_sh"]): {c: "n1" for c in "BCD"}, str(VR["ntm_sh"]): {c: "n1" for c in "BCD"}, str(VR["m_ps"]): {"B": "n2"}, str(VR["m_pe"]): {"B": "n2"}}}},
     {"type": "table", "caption": f"@Val!A{VR['g_tot'] - 1}", "head": ["項目", "每股（美元）"],
      "rows": [[f"@Val!A{VR[k]}", vv(k, "B", f)] for k, f in (("g_tot", "sp2"), ("g_sbc", "sp2"), ("g_mult", "sp2"), ("g_lev", "n2"), ("g_time", "sp2"), ("g_chk", "n3"))]},
-    {"type": "table", "caption": "同業倍數、本公司現行倍數與逾期核對", "head": ["項目", "Forward P/S", "Forward P/E", "資料日", "狀態"],
+    {"type": "table", "caption": "同業倍數、本公司現行倍數與逾期核對", "head": ["項目", "P/S（主腿；最近一季）", "Forward P/E（對照）", "P/S 季末日", "狀態"],
      "rowgen": {"sheet": "Val", "rows": f"{VR['p_snow']}-{VR['p_ddog']}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n2", "n2", "", ""]}},
     {"type": "table", "caption": "現行倍數 ÷ 同業中位數與隱含重估", "head": ["項目", "本公司", "同業中位數", "比值", "隱含重估"],
      "rows": [[f"@Val!A{VR[k]}", f"@Val!B{VR[k]}|n2", f"@Val!C{VR[k]}|n2", f"@Val!D{VR[k]}|n2", f"@Val!E{VR[k]}|sp1"] for k in ("c_ps", "c_pe")]},
@@ -137,7 +137,7 @@ drivers = {"id": "drivers", "title": "驅動因子：命題推導（用量 × �
     {"type": "table", "caption": "單一參數區間（基準進主模型；敏感度低／高只用於敏感度頁）", "head": ["@In!B3", "@In!D3", "@In!E3", "@In!F3", "@In!G3"],
      "rows": [[f"@In!B{INR[k]}", f"@In!D{INR[k]}|{f}", f"@In!E{INR[k]}|{f}", f"@In!F{INR[k]}|{f}", f"@In!G{INR[k]}|tag"]
               for k, f in (("sa_26", "p0"), ("vn_32", "p0"), ("va_32", "p0"), ("pn_g", "p1"), ("cost_sh", "p0"), ("tk_px", "n3"), ("route_sh", "p0"), ("pt_k", "p0"), ("gm_core", "p1"), ("sbc_st", "p2"), ("sbc_floor", "p0"),
-                           ("wc_k", "p1"), ("beta", "n2"), ("erp", "p1"), ("g_tv", "p1"), ("w_dcf", "p0"), ("w_pe", "p0"), ("rel_m", "n2"))]}]}
+                           ("wc_k", "p1"), ("beta", "n2"), ("erp", "p1"), ("g_tv", "p1"), ("w_dcf", "p0"), ("rel_m", "n2"))]}]}
 recon = {"id": "recon", "title": "對帳：公司指引、共識、校準與合理性關卡", "blocks": [
     {"type": "note", "parts": ["@Recon!A2"]},
     {"type": "table", "caption": "公司指引 vs 模型情境 B（公司指引＝Interested-party）", "head": ["項目", "期間", "模型", "指引下緣", "指引上緣", "模型相對指引中點"],

@@ -13,7 +13,7 @@ def find(sh, text, col=1, start=1, exact=False):
 
 V = {k: find("Val", t) for k, t in dict(
     wacc_h="折現率", rf="無風險利率", ke="股權成本", kd="稅後債務成本", wacc="WACC", g="永續成長率", ronic="RONIC", px="現價", tp="加權目標價", dcf="DCF 目標價（三情境", cmp="Comparable 目標價（同業", cons="市場共識", up="加權目標價上檔",
-    rec="投資建議", scn_tp="情境目標價 A", gate_scn="收支關卡 A", dcf_h="DCF 彙總", pvx="明確期 FCFF", dcfv="DCF 目標價", tvsh="永續價值占 EV", peh="同業 P/S（Comparable", pe1="同業 P/S：Fortinet", pe_rel="PANW 資料商前瞻", pxpe="PANW 現價 ÷", per_h="期間與評等邊界", att2="上檔空間歸因：歷史相對倍數", pemed="同業中位數", rel="相對倍數調整係數", eps="FY2028 Non-GAAP EPS", cmpabc="Comparable 目標價（A／B／C）", lvl="級距", scncmp="情境 Comparable 目標價 A", tpsb="DCF（股票薪酬加回）目標價（三", valr="估值評等", gate="入不敷出判定用", gtxt="入不敷出判定", wts="情境權重", sdcf="情境 DCF 目標價", scmp="情境 Comparable 目標價").items()}
+    rec="投資建議", scn_tp="情境目標價 A", gate_scn="收支關卡 A", dcf_h="DCF 彙總", pvx="明確期 FCFF", dcfv="DCF 目標價", tvsh="永續價值占 EV", peh="同業 P/S（Comparable", pe1="同業 P/S：Fortinet", pe_rel="PANW 資料商前瞻", pxpe="PANW 現價 ÷", per_h="期間與評等邊界", att2="上檔空間歸因：歷史相對倍數", pemed="同業前瞻本益比中位數", rel="歷史相對倍數（geo_base", eps="FY2028 Non-GAAP EPS", cmpabc="Comparable 目標價（A／B／C）", lvl="級距", scncmp="情境 Comparable 目標價 A", tpsb="DCF（股票薪酬加回）目標價（三", valr="估值評等", gate="入不敷出判定用", gtxt="入不敷出判定", wts="情境權重", sdcf="情境 DCF 目標價", scmp="情境 Comparable 目標價").items()}
 SC = {k: find("Sens", t) for k, t in dict(hdr="案例", rel="加權目標價相對基準", note="未涵蓋說明").items()}
 rel_hdr = SC["rel"] + 1
 rel_rows = [r for r in range(rel_hdr + 1, SC["note"]) if wb["Sens"].cell(r, 1).value]

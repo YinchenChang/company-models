@@ -42,13 +42,19 @@ def art_key(fn):
     return (m.group(1), tuple(int(x) for x in m.group(3).split("."))) if m else None
 
 
+INCLUDE_SUPERSEDED = False     # 只供開發測試（--include-superseded）：連 _待刪除/ 也找，驗證舊版面（v0.1）讀得通
+
+
 def latest(folder, ext):
     """dist/ 頂層（排除 _待刪除/）最新成品；回傳 (路徑, 日期, 版號, 標題) 或 None。"""
     best = None
-    for p in glob.glob(os.path.join(SW, folder, "dist", "*." + ext)):
+    pats = [os.path.join(SW, folder, "dist", "*." + ext)]
+    if INCLUDE_SUPERSEDED:
+        pats.append(os.path.join(SW, folder, "dist", "_待刪除", "*." + ext))
+    for p in (q for pat in pats for q in glob.glob(pat)):
         fn = os.path.basename(p)
         k = art_key(fn)
-        if not k or "_待刪除" in p:
+        if not k or ("_待刪除" in p and not INCLUDE_SUPERSEDED):
             continue
         if best is None or k > best[0]:
             m = NAME_RE.match(fn)
@@ -97,7 +103,7 @@ class Book:
                     vals.append((c.coordinate, v.strip()))
                 elif kind == "any" and v is not None:
                     vals.append((c.coordinate, v))
-            if single and len(vals) != 1:                      # 情境 A／B／C 三欄的列不是「情境加權」單值
+            if single and len(vals) != 1 and not re.search(r"情境加權", a):   # 情境 A／B／C 三欄的列不是「情境加權」單值
                 continue
             if vals:
                 hit = {"values": vals, "label": a, "row": row[0].row}
@@ -250,8 +256,9 @@ def read_model(folder, tk, tmp):
     rec["recalculated"] = b.recalculated
     rec["price"] = price_block(b)
     rec["dcf"] = b.one("Val", r"^DCF 目標價（(三)?情境加權", r"加回", single=True)
-    rec["comp"] = b.one("Val", r"^Comparable 目標價（", r"只看|A／B／C", single=True)
-    rec["tp"] = b.one("Val", r"^(加權)?目標價（DCF 與.{0,6}(Comparable|同業本益比)加權", single=True)
+    rec["comp"] = (b.one("Val", r"^Comparable 目標價（相對倍數調整後", single=True)       # 有「調整後」列者以調整後為進加權的那一列
+                   or b.one("Val", r"^Comparable 目標價（", r"只看|A／B／C", single=True))
+    rec["tp"] = b.one("Val", r"^(加權)?目標價（DCF 與.{0,6}(Comparable|同業本益比) ?加權", single=True)
     rec["upside"] = b.one("Val", r"^(上檔空間(（相對現價）|：加權目標價)|加權目標價上檔空間)", single=True)
     rec["rating"] = b.one("Val", r"^估值評等", r"觸發|強力買進或強力放空|須診斷", kind="str")
     rec["rec"] = b.one("Val", r"^投資建議(?!為)", kind="str")
@@ -333,6 +340,15 @@ def unit_econ(tmp):
 
 
 def main():
+    global INCLUDE_SUPERSEDED, OUT
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--include-superseded", action="store_true", help="開發測試：連 _待刪除/ 也找（不得用於正式建置）")
+    ap.add_argument("--out", help="輸出路徑（測試用）")
+    a = ap.parse_args()
+    INCLUDE_SUPERSEDED = a.include_superseded
+    if a.out:
+        OUT = a.out
     tmp = tempfile.mkdtemp()
     try:
         models = {}

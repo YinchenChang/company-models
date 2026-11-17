@@ -9,6 +9,7 @@ import openpyxl
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 _R0 = _json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "relmult_datadog.json"), encoding="utf-8"))
+RELP = _json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "relmult_peers.json"), encoding="utf-8"))
 RELJ = {"geo_base": _R0["geo_base"], "base_source": _R0["base_source"], "sens": _R0["sens"], "div30": _R0["divergence_gt_30pct"]}
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -274,13 +275,13 @@ inp("g_tv", "永續成長率", "%", 0.02, 0.03, 0.04, "Assumed", "DCF 規格第 
 inp("ronic_sp", "RONIC − WACC（基準 0＝新投資價值中性）", "%", None, 0.0, 0.05, "Assumed", "DCF 規格第 3 節預設 RONIC＝WACC", "高＝+5 百分點", judg=True)
 inp("sbc_add", "DCF 加回股票薪酬（稅後；0＝不加回，預設）", "x", None, 0, 1, "Assumed", "DCF 規格第 1 節預設不加回", "加回只作敏感度", judg=True)
 inp("w_dcf", "DCF 權重（Comparable＝1−本值）", "%", 0.3, 0.5, 0.7, "Assumed", "原則第 4 節預設各半", "", judg=True)
-inp("w_pe", "Comparable 內 Forward P/E 腿的權重（其餘為 Forward P/S）", "%", 0.0, 0.5, 1.0, "Assumed", "判斷：兩個倍數各半", "", judg=True)
 inp("rel_m", "Comparable 相對倍數（本公司 ÷ 同業中位；近 20 財季 PS 與 PSG 相對值幾何平均）", "x", RELJ["sens"]["low"], RELJ["geo_base"], RELJ["sens"]["high"], "Derived", "software_ai/data/relmult_hist/out/datadog.json（本檔 data/relmult_datadog.json）：geo_base；base_source＝" + RELJ["base_source"], "低／高＝該檔 sens.low／sens.high；Sens 另有 ps_only（PS 讀數）與 psg_only（PSG 讀數）兩案；divergence_gt_30pct 為否，PS 與 PSG 兩讀數相近；近似說明：本模型 Comparable 為 P/S 與 P/E 兩腿，以 PS／PSG 相對值近似套用於 P/E 腿", judg=True)
 sec("F. 同業倍數（stockanalysis 統計頁；Forward 分母口徑未載明；日期不一→逾期標示見 Recon）")
 PEER = [("snow", "Snowflake（SNOW）", "2026-11-13"), ("net", "Cloudflare（NET）", "2026-11-13"), ("mdb", "MongoDB（MDB）", "2026-11-06"), ("dt", "Dynatrace（DT）", "2026-11-06"), ("estc", "Elastic（ESTC）", "2026-11-06")]
 for k, nm, dt in PEER:
-    inp(f"pm_ps_{k}", f"{nm} Forward P/S（{dt}）", "x", None, fv(f"peer.fps.{k}"), None, "Interested-party", fs(f"peer.fps.{k}"), "分母＝Forward 營收（FY 或 NTM 未載明）", inc=INC_DATA)
-    inp(f"pm_pe_{k}", f"{nm} Forward P/E（{dt}）", "x", None, fv(f"peer.fpe.{k}"), None, "Interested-party", fs(f"peer.fpe.{k}"), "分母＝Forward 非 GAAP EPS（口徑未載明）", inc=INC_DATA)
+    inp(f"pm_ps_{k}", f"{nm} P/S（relmult_hist 最近一季；Comparable 主腿）", "x", None, RELP[k]["ps"], None, "Interested-party", RELP[k]["src"], "與 PS／PSG 相對值同口徑（G6）：市值÷TTM 營收", inc=INC_DATA)
+    inp(f"pm_dp_{k}", f"{nm} P/S 季末日", "日期", None, datetime.date.fromisoformat(RELP[k]["q"]), None, "Verified", RELP[k]["src"])
+    inp(f"pm_pe_{k}", f"{nm} Forward P/E（對照列用；{dt}）", "x", None, fv(f"peer.fpe.{k}"), None, "Interested-party", fs(f"peer.fpe.{k}"), "分母＝Forward 非 GAAP EPS（口徑未載明）", inc=INC_DATA)
     inp(f"pm_dt_{k}", f"{nm} 倍數日期", "日期", None, datetime.date.fromisoformat(dt), None, "Verified", fs(f"peer.fps.{k}"))
 inp("pm_ps_ddog", "Datadog 現行 Forward P/S（資料商，2026-11-13）", "x", None, fv("peer.fps.ddog"), None, "Interested-party", fs("peer.fps.ddog"), "只作對照", inc=INC_DATA)
 inp("pm_pe_ddog", "Datadog 現行 Forward P/E（資料商，2026-11-13）", "x", None, fv("peer.fpe.ddog"), None, "Interested-party", fs("peer.fpe.ddog"), "只作對照", inc=INC_DATA)

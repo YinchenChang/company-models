@@ -236,3 +236,11 @@ Leidos（LDOS）EV／營收,1.23,x,頁面更新 2026-11-15,TTM 營收；US GAAP�
 Leidos（LDOS）賣方 3 年營收成長預測,0.0416,比率,頁面更新 2026-11-15,賣方預測（年複合）,https://stockanalysis.com/stocks/ldos/statistics/,2026-11-16,Interested-party,賣方預測
 CACI International（CACI）EV／營收,2.03,x,頁面更新 2026-10-26,TTM 營收；US GAAP；EV 不含營業租賃,https://stockanalysis.com/stocks/caci/statistics/,2026-11-16,Verified,
 CACI International（CACI）賣方 3 年營收成長預測,0.08349999999999999,比率,頁面更新 2026-10-26,賣方預測（年複合）,https://stockanalysis.com/stocks/caci/statistics/,2026-11-16,Interested-party,賣方預測
+Snowflake（SNOW）P/S（市值÷TTM 營收；共用庫最近一季）,18.7,x,季末 2026-06-30（財季實際期末 2026-07-31）,software_ai/data/relmult_hist/SNOW.csv 最近一季；Derived：市值÷TTM 營收（StockAnalysis 季度比率頁）,software_ai/data/relmult_hist/SNOW.csv,2026-11-16,Derived,
+Datadog（DDOG）P/S（市值÷TTM 營收；共用庫最近一季）,22.99,x,季末 2026-09-30（財季實際期末 2026-09-30）,software_ai/data/relmult_hist/DDOG.csv 最近一季；Derived：市值÷TTM 營收（StockAnalysis 季度比率頁）,software_ai/data/relmult_hist/DDOG.csv,2026-11-16,Derived,
+Cloudflare（NET）P/S（市值÷TTM 營收；共用庫最近一季）,45.25,x,季末 2026-09-30（財季實際期末 2026-09-30）,software_ai/data/relmult_hist/NET.csv 最近一季；Derived：市值÷TTM 營收（StockAnalysis 季度比率頁）,software_ai/data/relmult_hist/NET.csv,2026-11-16,Derived,
+MongoDB（MDB）P/S（市值÷TTM 營收；共用庫最近一季）,9.75,x,季末 2026-06-30（財季實際期末 2026-07-31）,software_ai/data/relmult_hist/MDB.csv 最近一季；Derived：市值÷TTM 營收（StockAnalysis 季度比率頁）,software_ai/data/relmult_hist/MDB.csv,2026-11-16,Derived,
+ServiceNow（NOW）P/S（市值÷TTM 營收；共用庫最近一季）,8.98,x,季末 2026-09-30（財季實際期末 2026-09-30）,software_ai/data/relmult_hist/NOW.csv 最近一季；Derived：市值÷TTM 營收（StockAnalysis 季度比率頁）,software_ai/data/relmult_hist/NOW.csv,2026-11-16,Derived,
+Booz Allen Hamilton（BAH）P/S（市值÷TTM 營收；共用庫最近一季）,0.66,x,季末 2026-06-30（財季實際期末 2026-06-30）,software_ai/data/relmult_hist/BAH.csv 最近一季；Derived：市值÷TTM 營收（StockAnalysis 季度比率頁）,software_ai/data/relmult_hist/BAH.csv,2026-11-16,Derived,
+Leidos（LDOS）P/S（市值÷TTM 營收；共用庫最近一季）,0.78,x,季末 2026-06-30（財季實際期末 2026-07-03）,software_ai/data/relmult_hist/LDOS.csv 最近一季；Derived：市值÷TTM 營收（StockAnalysis 季度比率頁）,software_ai/data/relmult_hist/LDOS.csv,2026-11-16,Derived,
+CACI International（CACI）P/S（市值÷TTM 營收；共用庫最近一季）,1.07,x,季末 2026-06-30（財季實際期末 2026-06-30）,software_ai/data/relmult_hist/CACI.csv 最近一季；Derived：市值÷TTM 營收（StockAnalysis 季度比率頁）,software_ai/data/relmult_hist/CACI.csv,2026-11-16,Derived,

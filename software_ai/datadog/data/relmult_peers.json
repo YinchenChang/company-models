@@ -1,0 +1,32 @@
+{
+ "snow": {
+  "q": "2026-06-30",
+  "ps": 18.7,
+  "src": "software_ai/data/relmult_hist/SNOW.csv 最近一季（季末 2026-06-30；PS＝市值÷TTM 營收，資料商 StockAnalysis 季度比率頁）"
+ },
+ "net": {
+  "q": "2026-09-30",
+  "ps": 45.25,
+  "src": "software_ai/data/relmult_hist/NET.csv 最近一季（季末 2026-09-30；PS＝市值÷TTM 營收，資料商 StockAnalysis 季度比率頁）"
+ },
+ "mdb": {
+  "q": "2026-06-30",
+  "ps": 9.75,
+  "src": "software_ai/data/relmult_hist/MDB.csv 最近一季（季末 2026-06-30；PS＝市值÷TTM 營收，資料商 StockAnalysis 季度比率頁）"
+ },
+ "dt": {
+  "q": "2026-06-30",
+  "ps": 6.11,
+  "src": "software_ai/data/relmult_hist/DT.csv 最近一季（季末 2026-06-30；PS＝市值÷TTM 營收，資料商 StockAnalysis 季度比率頁）"
+ },
+ "estc": {
+  "q": "2026-06-30",
+  "ps": 3.8,
+  "src": "software_ai/data/relmult_hist/ESTC.csv 最近一季（季末 2026-06-30；PS＝市值÷TTM 營收，資料商 StockAnalysis 季度比率頁）"
+ },
+ "ddog": {
+  "q": "2026-09-30",
+  "ps": 22.99,
+  "src": "software_ai/data/relmult_hist/DDOG.csv 最近一季（季末 2026-09-30；PS＝市值÷TTM 營收，資料商 StockAnalysis 季度比率頁）"
+ }
+}

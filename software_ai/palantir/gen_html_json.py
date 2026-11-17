@@ -60,7 +60,7 @@ val_blocks = [
     {"type": "table", "caption": "DCF 彙總（三情境）", "head": ["項目", "情境 A", "情境 B", "情境 C"], "rows": val_rows(["d_pv", "d_pvtv", "d_ev", "d_nc", "d_eq", "d_ps", "d_pstp", "d_tvsh"], fmts={"d_tvsh": "p1"})},
     {"type": "table", "caption": "DCF（股票薪酬加回）對照讀數（只作對照，不進加權目標價）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
      "rows": val_rows(["d_pstp", "d_pstp_sbc"]) + [[f"@Val!A{V_['tpdcf_sbc']}", f"@Val!B{V_['tpdcf_sbc']}|n2", "", ""], [f"@Val!A{V_['updcf_sbc']}", f"@Val!B{V_['updcf_sbc']}|sp1", "", ""]]},
-    {"type": "table", "caption": "Comparable：同業 EV／營收（TTM）與成長調整（三情境）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
+    {"type": "table", "caption": "Comparable 主腿：同業 P/S × 相對倍數（三情境）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
      "rows": [[f"@Val!A{V_['m_c']}", f"@Val!B{V_['m_c']}|n2", "", ""], [f"@Val!A{V_['m_g']}", f"@Val!B{V_['m_g']}|n2", "", ""], [f"@Val!A{V_['pg_c']}", f"@Val!B{V_['pg_c']}|p1", "", ""], [f"@Val!A{V_['pg_g']}", f"@Val!B{V_['pg_g']}|p1", "", ""]]
              + val_rows(["sg_c", "sg_g"], fmts={"sg_c": "p1", "sg_g": "p1"}) + val_rows(["rl_c", "rl_g"]) + val_rows(["rr_c", "rc_c", "rr_g", "rc_g", "ma_c", "ma_g", "ttm_c", "ttm_g", "ev_t", "nc_t", "ps_c", "ps_u", "imp_m"], fmts={"ttm_c": "n0", "ttm_g": "n0", "ev_t": "n0", "nc_t": "n0"})
              + val_rows(["clamp"], fmts={"clamp": ""})},

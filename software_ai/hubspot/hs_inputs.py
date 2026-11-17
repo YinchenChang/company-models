@@ -86,7 +86,7 @@ INP = [
     ("pe_zm", "同業前瞻 P/E：Zoom（美國 GAAP）", "x", None, 15.4, None, "Analogy", CR.format("zm"), "同上", None),
     ("pe_ddog", "同業前瞻 P/E：Datadog（美國 GAAP）", "x", None, 57.9, None, "Analogy", CR.format("ddog"), "同上；成長 35% 遠高於 HubSpot，倍數不可比（中位數不受影響）", None),
     ("pe_date", "同業倍數資料日", "日期", None, D(2026, 11, 13), None, "Verified", "同上", "供逾期核對", None),
-    ("pe_med", "同業前瞻 P/E 中位數", "x", None, "=MEDIAN(pe_crm,pe_now,pe_wday,pe_adbe,pe_intu,pe_team,pe_mndy,pe_docu,pe_twlo,pe_zm,pe_ddog)", None, "Derived", "11 家中位數；少於約 8 家才不做迴歸，此處 11 家但分母口徑未核，不做迴歸", "股權倍數（有槓桿）配本公司非 GAAP EPS（有槓桿）；乘目標時點 NTM EPS（工作單 G2.6）", None),
+    ("pe_med", "同業前瞻 P/E 中位數", "x", None, "=MEDIAN(pe_crm,pe_now,pe_wday,pe_adbe,pe_intu,pe_team,pe_mndy,pe_docu,pe_twlo,pe_zm,pe_ddog)", None, "Derived", "11 家中位數；少於約 8 家才不做迴歸，此處 11 家但分母口徑未核，不做迴歸", "股權倍數（有槓桿）配本公司非 GAAP EPS（有槓桿）；本益比法只作對照列（工作單 G6）", None),
     ("ps_peer", "同業中位 P/S（最近一季末；relmult_hist，11 家）", "x", None, 4.03, None, "Derived", "software_ai/data/relmult_hist/HUBS.csv 與 out/hubspot.json 的 ps_series 最後一點：peer_median（季末 2026-06-30；市值÷TTM 營收，StockAnalysis）", "Comparable 主腿（工作單 G6）：P/S 口徑與 PS／PSG 相對值一致；季末距現價日逾 2 個交易日，已於 Recon 標逾期", None),
     ("ps_peer_date", "同業 P/S 資料日（季末）", "日期", None, D(2026, 6, 30), None, "Verified", "同上", "供逾期核對（Recon）", None),
     ("rel_ps_now", "HUBS 現行 P/S 相對值（最近一季末 ÷ 同業中位）", "x", None, 0.672456575682382, None, "Derived", "software_ai/data/relmult_hist/out/hubspot.json：ps_series 最後一點 rel（HUBS 2.71 ÷ 同業 4.03）", "只供對照（Val 與 Recon 的現行相對值）；不進主模型", None),

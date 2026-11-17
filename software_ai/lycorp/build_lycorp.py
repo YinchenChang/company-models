@@ -665,7 +665,7 @@ r += 1
 for j, h in enumerate(["項目", "數值", "對照", "對照", "說明"]):
     put(V, f"{L(j+1)}{r}", h, BOLD, HDR)
 r += 1
-for k in ("tpdcf", "tpcomp", "tp", "px", "cons", "up", "upc", "tpeb1", "tpeb2", "tier", "valrate", "gate_chk", "gate_in", "rec"):
+for k in ("tpdcf", "tpcomp", "tp", "px", "cons", "up", "upc", "tpeb1", "tpeb2", "tpps_alt", "tier", "valrate", "gate_chk", "gate_in", "rec"):
     VR[k] = r
     r += 1
 r += 1
@@ -824,6 +824,7 @@ for k_, ik_, rk_ in (("pm_media", "psm_media", "rel_media"), ("pm_com", "psm_com
     put(V, f"E{VR[k_]}", f"={I(ik_)}*{I(rk_)}", None, None, "0.00")
     put(V, f"F{VR[k_]}", f"={I(rk_)}", None, None, "0.000")
 put(V, f"B{VR['tpcomp']}", f"={I('tpw_A')}*B{VR['pm_ps']}+{I('tpw_B')}*C{VR['pm_ps']}+{I('tpw_C')}*D{VR['pm_ps']}", None, None, "#,##0.00")
+put(V, f"B{VR['tpps_alt']}", f"=(({I('tpw_A')}*B{VR['pm_ev']}+{I('tpw_B')}*C{VR['pm_ev']}+{I('tpw_C')}*D{VR['pm_ev']})+C{VR['pm_nci']})*1000/{I('sh_dil')}", None, None, "#,##0.00")
 put(V, f"B{VR['tpeb1']}", f"={I('tpw_A')}*B{VR['s_ps']}+{I('tpw_B')}*C{VR['s_ps']}+{I('tpw_C')}*D{VR['s_ps']}", None, None, "#,##0.00")
 put(V, f"B{VR['tpeb2']}", f"=((B{VR['s_ev']}*{I('tpw_A')}+C{VR['s_ev']}*{I('tpw_B')}+D{VR['s_ev']}*{I('tpw_C')})*B{VR['c_ratio_eb']}+C{VR['s_nd']}+C{VR['s_nci']})*1000/{I('sh_dil')}", None, None, "#,##0.00")
 put(V, f"B{VR['tp']}", f"={I('w_dcf')}*B{VR['tpdcf']}+(1-{I('w_dcf')})*B{VR['tpcomp']}", None, None, "#,##0.00")
@@ -865,6 +866,7 @@ put(V, f"C{VR['o_peer']}", '=COUNTIF(Peers!$J$4:$J$14,"逾期")&" 列逾期（�
 for k, lab, note in (("tpdcf", "DCF 目標價（情境加權）", "三情境 DCF 推到 12 個月後（扣期間股利）依權重 25／50／25 加權"),
                      ("tpcomp", "Comparable 目標價（P/S 主腿，情境加權）", "同業最近一季中位 P/S（Analogy）× rel_mult（PS／PSG 幾何平均，Derived）× 目標時點 TTM 分部營收，扣淨債務與非控制權益"),
                      ("tpeb1", "對照：分部 EV／EBITDA 加總目標價（rel_mult＝1.00；不進加權）", "G6 第 2 條：盈餘型倍數只作對照"), ("tpeb2", "對照：分部 EV／EBITDA 加總目標價（乘本公司現行相對值；不進加權）", "現行 EV／EBITDA ÷ 同業原始加權中位數"),
+                     ("tpps_alt", "對照：P/S 主腿若視為股權口徑（只扣非控制權益，不再扣淨債務；不進加權）", "P/S 以市值為分子，已隱含淨債務；工作單 G6 指定扣淨債務，此列供判讀雙重扣除的影響"),
                      ("tp", "目標價（DCF 與 Comparable 加權）", "DCF 與分部加總依 In 頁權重加權"),
                      ("px", "現價（2026-11-16 收盤）", "traders.co.jp 與 Yahoo!ファイナンス兩源一致"),
                      ("cons", "市場共識目標價", "kabuyoho.jp 10 家，2026-09-08，已早於 Q2 財報（2026-11-05）上修；只作對照"),
@@ -1209,7 +1211,7 @@ put(RD, "A42", f'="合理性關卡診斷（G3 第 3 條）：DCF 目標價 ÷ �
 put(RD, "A43", f'="相對倍數（G5 第 1 條）：Media "&TEXT({I("rel_media")},"0.00")&"、Commerce "&TEXT({I("rel_com")},"0.00")&"、Strategic "&TEXT({I("rel_str")},"0.00")&"（PS 與 PSG 讀數幾何平均；Media 兩讀數 "&TEXT(Peers!B25,"0.00")&"／"&TEXT(Peers!C25,"0.00")&"，Commerce "&TEXT(Peers!B26,"0.00")&"／"&TEXT(Peers!C26,"0.00")&"，Strategic "&TEXT(Peers!B27,"0.00")&"／"&TEXT(Peers!C27,"0.00")&"）。本公司 Comparable 主腿為 P/S，與 PS／PSG 相對值同口徑（G6）。"&IF(Peers!F27="是","Strategic 兩讀數差異 "&TEXT(Peers!E27,"0%")&" 大於 30%：原因是本公司 TTM 營收成長 "&TEXT(Peers!H27,"0.0%")&" 對 Strategic 同業中位 "&TEXT(Peers!I27,"0.0%")&"，成長比 "&TEXT(Peers!G27,"0.00")&" 使 PSG 讀數（"&TEXT(Peers!C27,"0.00")&"）遠高於 PS 讀數（"&TEXT(Peers!B27,"0.00")&"）；Strategic 同業只有 3 家（Rakuten、PayPal、Block），結論偏不穩，已在 Sens 列 ps_only 與 psg_only。","")&IF(Peers!F25="是","Media 兩讀數差異大於 30%。","")&IF(Peers!F26="是","Commerce 兩讀數差異大於 30%。","")')
 put(RD, "A40", "工作表：README／In／Q／PL／DCF／Val／Peers／RevDCF／Recon／Sens／Sources。成品 dist/<日期>_LY個股模型_v0.2.1.xlsx 與 .html。")
 put(RD, "A41", f'="DCF 與 Comparable 落差歸因（情境 B）：Comparable（P/S 主腿）"&TEXT(Val!C{VR["pm_ps"]},"#,##0.0")&" − DCF "&TEXT(Val!C{VR["dcf12"]},"#,##0.0")&" ＝ "&TEXT(Val!B{VR["g_tot"]},"+#,##0.0;-#,##0.0")&" 日圓／股：倍數 "&TEXT(Val!B{VR["g_mult"]},"+#,##0.0;-#,##0.0")&"、槓桿 "&TEXT(Val!B{VR["g_lev"]},"+#,##0.0;-#,##0.0")&"、時點 "&TEXT(Val!B{VR["g_time"]},"+#,##0.0;-#,##0.0")&"、股票薪酬 未取得（LY 不揭露 SBC）。P/S 主腿使用加權 P/S "&TEXT(Val!B{VR["g_sum"]},"0.00")&" 倍（含 rel_mult），DCF 隱含 "&TEXT(Val!B{VR["g_imp"]},"0.00")&" 倍；本公司現行 P/S "&TEXT(Val!B{VR["c_ps"]},"0.00")&" 倍 ÷ 同業原始加權中位 "&TEXT(Val!B{VR["c_psp"]},"0.00")&" 倍＝"&TEXT(Val!B{VR["c_ratio"]},"0.00")&"，主腿採用 P/S 對現行的隱含重估 "&TEXT(Val!B{VR["c_rr"]},"+0%;-0%")&"。"')
-put(RD, "A44", f'="Comparable 口徑（G6）：主腿改為 P/S，是為了與 PS／PSG 相對值（已含利潤率差）同口徑；EV／EBITDA 加總降為對照列，不進加權：rel_mult＝1.00 讀數 "&TEXT(Val!B{VR["tpeb1"]},"#,##0.0")&"、乘本公司現行相對值（"&TEXT(Val!B{VR["c_ratio_eb"]},"0.00")&"）讀數 "&TEXT(Val!B{VR["tpeb2"]},"#,##0.0")&" 日圓，對照主腿 "&TEXT(Val!B{VR["tpcomp"]},"#,##0.0")&" 日圓。同業 P/S 取各家最近一季（季末日見 Peers 頁，皆已逾期，最舊 "&TEXT(MIN(Peers!$D$33:$D$43),"yyyy-mm-dd")&"）。分部營收只含 Media、Commerce、Strategic，Other 與 Adjustments 淨額小，未計。"')
+put(RD, "A44", f'="Comparable 口徑（G6）：主腿改為 P/S，是為了與 PS／PSG 相對值（已含利潤率差）同口徑；EV／EBITDA 加總降為對照列，不進加權：rel_mult＝1.00 讀數 "&TEXT(Val!B{VR["tpeb1"]},"#,##0.0")&"、乘本公司現行相對值（"&TEXT(Val!B{VR["c_ratio_eb"]},"0.00")&"）讀數 "&TEXT(Val!B{VR["tpeb2"]},"#,##0.0")&" 日圓，對照主腿 "&TEXT(Val!B{VR["tpcomp"]},"#,##0.0")&" 日圓。P/S 以市值為分子，已隱含淨債務，主腿依工作單再扣淨債務與非控制權益；若只扣非控制權益則為 "&TEXT(Val!B{VR["tpps_alt"]},"#,##0.0")&" 日圓（對照，不進加權）。同業 P/S 取各家最近一季（季末日見 Peers 頁，皆已逾期，最舊 "&TEXT(MIN(Peers!$D$33:$D$43),"yyyy-mm-dd")&"）。分部營收只含 Media、Commerce、Strategic，Other 與 Adjustments 淨額小，未計。"')
 for rr_ in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 29, 31, 41, 42, 43, 44):
     RD[f"A{rr_}"].alignment = Alignment(wrap_text=True, vertical="top")
 RD.column_dimensions["A"].width = 120

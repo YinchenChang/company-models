@@ -229,6 +229,15 @@ PEERS = [
 for tk, nm, grp, evs, g3, dt, url in PEERS:
     f(f"peer.{tk}.evs", f"{nm}（{tk}）EV／營收", evs, "x", f"頁面更新 {dt}", "TTM 營收；US GAAP；EV 不含營業租賃", url, "Verified")
     f(f"peer.{tk}.g3", f"{nm}（{tk}）賣方 3 年營收成長預測", g3 / 100, "比率", f"頁面更新 {dt}", "賣方預測（年複合）", url, "Interested-party", "賣方預測")
+
+import csv as _csv, os as _os
+PSL = {}
+for tk, nm, grp, evs, g3, dt, url in PEERS:
+    _fp = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "data", "relmult_hist", f"{tk}.csv")
+    _rows = [r for r in _csv.reader(open(_fp, encoding="utf-8-sig"))][1:]
+    _rows = [r for r in _rows if r[5].strip()]
+    PSL[tk] = (_rows[-1][0], float(_rows[-1][5]), _rows[-1][1])
+    f(f"peer.{tk}.ps", f"{nm}（{tk}）P/S（市值÷TTM 營收；共用庫最近一季）", PSL[tk][1], "x", f"季末 {PSL[tk][0]}（財季實際期末 {PSL[tk][2]}）", "software_ai/data/relmult_hist/%s.csv 最近一季；Derived：市值÷TTM 營收（StockAnalysis 季度比率頁）" % tk, f"software_ai/data/relmult_hist/{tk}.csv", "Derived")
 FACT_BY_ID = {x["id"]: x for x in FACTS}
 def V(i): return FACT_BY_ID[i]["數值"]
 FIELDS = ["指標", "數值", "單位", "期間", "口徑", "出處", "擷取日", "標記", "來源誘因"]

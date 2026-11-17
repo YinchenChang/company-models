@@ -103,13 +103,15 @@ valuation = {"id": "valuation", "title": "估值", "blocks": [
     {"type": "table", "caption": "DCF 彙總（三情境；十億韓元，每股為韓元）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
      "rowgen": {"sheet": "Val", "rows": f"{VR['pvx']}-{VR['dcf12']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"],
                 "row_fmt": {str(VR["tvsh"]): {c: "p1" for c in "BCD"}, str(VR["shv"]): {c: "n0" for c in "BCD"}, str(VR["nonop_ps"]): {c: "n0" for c in "BCD"}, str(VR["dcf12"]): {c: "n0" for c in "BCD"}}}},
-    {"type": "table", "caption": "Comparable：分部 NTM NOPAT 乘同業前瞻本益比（目標時點）", "head": ["項目", "情境 A", "情境 B", "情境 C", "同業群組倍數"],
-     "rowgen": {"sheet": "Val", "rows": f"{VR['n_np']}-{VR['ntm_mult']}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n1", "n1", "n1", "x1"],
-                "row_fmt": {str(VR["s_ps"]): {c: "n0" for c in "BCD"}, str(VR["ntm_mult"]): {c: "x1" for c in "BCD"}, str(VR["v_np"]): {"E": "x1"}, str(VR["v_fin"]): {"E": "x1"}, str(VR["v_glob"]): {"E": "x1"}}}},
-    {"type": "table", "caption": "同業前瞻本益比逐家（會計準則、基準日與逾期旗標）", "head": ["同業", "前瞻本益比", "基準日", "會計準則與租賃處理", "逾期", "群組"],
-     "rowgen": {"sheet": "Val", "rows": f"{VR['peh'] + 1}-{VR['peer_end']}", "cols": list("ABCDEF"), "fmts": ["", "n2", "date", "", "", ""]}},
+    {"type": "note", "parts": ["@README!A44"]},
+    {"type": "kv", "items": [[f"@Val!A{VR[k]}", vv(k, "B", f)] for k, f in (("ps_med", "n2"), ("rel", "n2"), ("ps_x", "n2"), ("ttm_el", "n2"))]},
+    {"type": "table", "caption": "Comparable 主腿：同業中位 P/S 乘相對倍數乘 TTM 營收；其下前瞻本益比只作對照（不進加權）", "head": ["項目", "情境 A", "情境 B", "情境 C", "同業群組倍數（對照）"],
+     "rowgen": {"sheet": "Val", "rows": f"{VR['ttm_t']}-{VR['ntm_mult']}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n1", "n1", "n1", "x1"],
+                "row_fmt": {str(VR["ps_eq"]): {c: "n0" for c in "BCD"}, str(VR["ps_ps"]): {c: "n0" for c in "BCD"}, str(VR["s_ps"]): {c: "n0" for c in "BCD"}, str(VR["ntm_mult"]): {c: "x1" for c in "BCD"}, str(VR["v_np"]): {"E": "x1"}, str(VR["v_fin"]): {"E": "x1"}, str(VR["v_glob"]): {"E": "x1"}}}},
+    {"type": "table", "caption": "同業逐家：P/S 主腿（季末日與逾期旗標）與前瞻本益比對照", "head": ["同業", "前瞻本益比（對照）", "基準日", "會計準則與租賃處理", "逾期", "群組", "P/S", "P/S 季末日", "P/S 逾期"],
+     "rowgen": {"sheet": "Val", "rows": f"{VR['peh'] + 1}-{VR['peer_end']}", "cols": list("ABCDEFGHI"), "fmts": ["", "n2", "date", "", "", "", "n2", "date", ""]}},
     {"type": "table", "caption": "本公司現行倍數與 DCF／Comparable 落差分解（情境 B）", "head": ["項目", "數值"],
-     "rows": [[f"@Val!A{VR[k]}", vv(k, "B", f)] for k, f in (("own_pe", "n1"), ("own_ratio", "n2"), ("own_rerate", "sp1"), ("rm_geo", "n2"), ("rm_ps", "n2"), ("rm_psg", "n2"), ("rm_g", "n2"), ("rm_cg", "p1"), ("rm_pg", "p1"), ("rm_div", "p0"), ("comp_alt", "n0"), ("tp_alt", "n0"), ("gp_gap", "n0"), ("gp_sbc", "n0"), ("gp_lev", "n0"), ("gp_time", "n0"), ("gp_mult", "n0"), ("gp_chk", "n0"), ("gp_dcfmult", "n1"))]},
+     "rows": [[f"@Val!A{VR[k]}", vv(k, "B", f)] for k, f in (("own_pe", "n1"), ("own_ratio", "n2"), ("own_rerate", "sp1"), ("rm_geo", "n2"), ("rm_ps", "n2"), ("rm_psg", "n2"), ("rm_g", "n2"), ("rm_cg", "p1"), ("rm_pg", "p1"), ("rm_div", "p0"), ("comp_pe1", "n0"), ("comp_alt", "n0"), ("tp_alt", "n0"), ("gp_gap", "n0"), ("gp_sbc", "n0"), ("gp_lev", "n0"), ("gp_time", "n0"), ("gp_mult", "n0"), ("gp_chk", "n0"), ("gp_dcfmult", "n1"))]},
     {"type": "table", "caption": "情境目標價與收支關卡", "head": ["項目", "數值"],
      "rows": [[f"@Val!A{VR[k]}", vv(k, "B", f)] for k, f in (("t_A", "n0"), ("t_B", "n0"), ("t_C", "n0"), ("wsum", "p0"), ("per", "n1"), ("gate_A", "n0"), ("gate_B", "n0"), ("gate_C", "n0"))]}]}
 _main = [b for b in sens_blocks if not b.get("collapse") and b["type"] == "tornado"]
@@ -119,8 +121,8 @@ revdcf = {"id": "revdcf", "title": "反向 DCF：現價隱含什麼", "blocks": 
     {"type": "table", "caption": "現金流折現法（情境 B 營收路徑）：現價隱含值與模型", "head": ["項目", "現價隱含", "模型情境 B"],
      "rows": [[f"@RevDCF!A{RVR['m1']}", f"@RevDCF!B{RVR['m1']}|p1", f"@RevDCF!B{RVR['m0']}|p1"], [f"@RevDCF!A{RVR['evr']}", f"@RevDCF!B{RVR['evr']}|n0", "—"],
               [f"@RevDCF!A{RVR['rv0']}", "—", f"@RevDCF!B{RVR['rv0']}|n0"], [f"@RevDCF!A{RVR['w0']}", "—", f"@RevDCF!B{RVR['w0']}|p2"]]},
-    {"type": "table", "caption": "Comparable：現價隱含的營運倍數與模型", "head": ["項目", "數值"],
-     "rows": [[f"@RevDCF!A{RVR[k]}", f"@RevDCF!B{RVR[k]}|{f}"] for k, f in (("smul", "n1"), ("smod", "n1"), ("sps", "n2"))]}]}
+    {"type": "table", "caption": "Comparable 主腿：現價隱含的 P/S 與模型", "head": ["項目", "數值"],
+     "rows": [[f"@RevDCF!A{RVR[k]}", f"@RevDCF!B{RVR[k]}|{f}"] for k, f in (("smul", "n2"), ("smod", "n2"), ("sps", "n2"))]}]}
 pl = {"id": "pl", "title": "損益（標準損益表）", "blocks": [
     {"type": "note", "parts": ["損益表採 K-IFRS 口徑（GAAP 口徑，非 Non-GAAP 調整後數字）。", f"@PL!A{rm['STD_NOTE']}"]},
     {"type": "theme", "title": "營收（十億韓元）與毛利率、營業利益率、淨利率：FY2023A–FY2032E（情境 B）", "x": f"@PL!C{STDH}:L{STDH}", "fmt": "n0", "fmt_r": "p0", "stack": True, "pad": 1.6,
