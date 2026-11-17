@@ -1,11 +1,11 @@
-# software_ai/crowdstrike/ — CrowdStrike（CRWD）個股模型 v0.2（原型 P：按防護範圍計價）
+# software_ai/crowdstrike/ — CrowdStrike（CRWD）個股模型 v0.2.1（原型 P：按防護範圍計價）
 
-**本版未做先驗**（Andy 2026-11-16 23:27 指示）。工作單：`software_ai/docs/workorders/20261116_第一批_研究包與單位經濟.md` F、G、G2、G3、G5 節。公開 repo：只含公司與市場事實，無任何個人情境。
+**本版未做先驗**（Andy 2026-11-16 23:27 指示）。工作單：`software_ai/docs/workorders/20261116_第一批_研究包與單位經濟.md` F、G、G2、G3、G5、G6、G7 節。公開 repo：只含公司與市場事實，無任何個人情境。
 
 **建置：**
-1. `python3 software_ai/crowdstrike/build_crowdstrike.py`（全部活公式；含整本重算敏感度，約 2 分鐘；`--quick` 沿用 `data/sens_v01.json`；`--reverse` 重算 `data/reverse_v01.json` 整本重算反解）。成品 `dist/20261117_CrowdStrike個股模型_v0.2.xlsx`（LibreOffice 重算後存檔）。
+1. `python3 software_ai/crowdstrike/build_crowdstrike.py`（全部活公式；含整本重算敏感度，約 2 分鐘；`--quick` 沿用 `data/sens_v01.json`；`--reverse` 重算 `data/reverse_v01.json` 整本重算反解）。成品 `dist/20261117_CrowdStrike個股模型_v0.2.1.xlsx`（LibreOffice 重算後存檔）。
 2. `python3 software_ai/crowdstrike/gen_html_json.py <xlsx> <layout.json> software_ai/crowdstrike/html.json`（layout.json 由步驟 1 寫到暫存目錄）。
-3. `python3 tools/company_html/build_company_html.py software_ai/crowdstrike` → `dist/…_v0.2.html`。
+3. `python3 tools/company_html/build_company_html.py software_ai/crowdstrike` → `dist/…_v0.2.1.html`。
 
 投資建議、目標價與各數字見成品 README 頁與 HTML（由公式組字，本檔不手寫）。
 
@@ -18,6 +18,7 @@
 | v0.1.1 | 2026-11-17 | G3：(1) 規模經濟改以 FY2023–FY2026 回歸的固定＋變動成本延伸（non-GAAP 成本固定部分、SBC 固定部分取 0、資本支出固定部分），全期持平改為 Sens 下緣；(2) 營運資金符號核對，折舊攤銷改由前一年資本支出推得（`da_k`）；(3) `rel_mult` 改用最近 5 個會計年度末自算平均（`data/relmult_history.csv`）；(4) 合理性關卡診斷寫入成品 README 頁；新增事件尾端 Sens（`ev_hc`、`ev_delta`） |
 | v0.1.2 | 2026-11-17 | 批次獨立核對修正：(1) 合理性關卡補第三項診斷：情境 A 的 DCF 企業價值為負；(2) 揭露三情境 DCF 排序倒掛（終值現值皆為負、營收越大負終值越大，比照原則第 60 條）；(3) EV 小於或等於零時終值占 EV 顯示 N/M，Val 頁新增 DCF 有效性檢查（情境 A 不通過），DCF 失效條件加「EV 小於或等於零」；(4) 收支關卡 B16／B26 統一為三情境最小值（CF 頁 B3） |
 | v0.2 | 2026-11-17 | G5：(1) `rel_mult` 改讀 `software_ai/data/relmult_hist/out/crowdstrike.json` 的 `geo_base`（PS 與 PSG 兩讀數幾何平均，Derived），取代自算的年度 EV／營收值；以 PS／PSG 相對值近似套用於本模型的 EV／營收（TTM）倍數；Sens 低／高＝`sens.low`／`sens.high`，另列 `ps_only`、`psg_only` 兩案；`divergence_gt_30pct` 為假，無需另寫成長比原因；(2) 無風險利率改 FRED DGS10 5.10%（2026-11-12）；(3) Recon 與 HTML 估值章並列 DCF（股票薪酬加回）讀數，不進加權目標價；(4) 合理性關卡重跑，診斷不變（情境 A EV 為負、DCF 偏低、強力放空） |
+| v0.2.1 | 2026-11-17 | G6／G7：Comparable 主腿改 P/S 股權口徑：同業中位 P/S 讀 `software_ai/data/relmult_hist/out/peer_ps_20261113.json`（價格日 2026-11-13；SentinelOne 為 2026-10-26，標逾期）× `geo_base` × 目標時點 TTM 營收（相鄰兩個會計年度依日數加權）÷ 稀釋股數，不加淨現金；主腿用 P/S 是為了與 PS／PSG 相對值同口徑；原 EV／營收改為 Val 頁對照列，不進加權目標價；Sens 加「同業 P/S＝資料庫最近一季中位」案（`ps_med` 低值）；`ps_only`、`psg_only`、`sens.low`、`sens.high` 四案套在新主腿 |
 
 ## 合理性關卡診斷（G3-3，v0.1.2 更新）
 觸發三項：(a) DCF 目標價低於現價的 25%；(b) 情境 A 的 DCF 企業價值為負（情境 B、C 為正）；(c) 評等為強力放空。FY2027 營收與 non-GAAP 營業利益和指引的差距未超過 10%。

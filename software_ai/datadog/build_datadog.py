@@ -282,7 +282,7 @@ sec("F. 同業倍數（stockanalysis 統計頁；Forward 分母口徑未載明�
 PEER = [("snow", "Snowflake（SNOW）", "2026-11-13"), ("net", "Cloudflare（NET）", "2026-11-13"), ("mdb", "MongoDB（MDB）", "2026-11-06"), ("dt", "Dynatrace（DT）", "2026-11-06"), ("estc", "Elastic（ESTC）", "2026-11-06")]
 for k, nm, dt in PEER:
     inp(f"pm_ps_{k}", f"{nm} P/S（2026-11-13 現價；Comparable 主腿）", "x", None, RELN["peers"][k]["ps"], None, "Interested-party", RELN["source"] + f"；價格日 {RELN['peers'][k]['date']}", "股權口徑：市值÷最新 TTM 營收（G7）；價格日非 2026-11-13 者於 Val 0.6 標逾期", inc=INC_DATA)
-    inp(f"pm_dp_{k}", f"{nm} P/S 價格日", "日期", None, datetime.date.fromisoformat(RELN["peers"][k]["date"]), None, "Verified", RELN["source"])
+    inp(f"pm_dp_{k}", f"{nm} P/S 價格日", "日期", None, datetime.date.fromisoformat(RELN["peers"][k]["date"]), None, "Derived", RELN["source"])
     inp(f"pm_psq_{k}", f"{nm} P/S（資料庫最近一季，對照案用）", "x", None, RELP[k]["ps"], None, "Interested-party", RELP[k]["src"], "只供 Sens「同業 P/S＝資料庫最近一季中位」案（ps_db）", inc=INC_DATA)
     inp(f"pm_pe_{k}", f"{nm} Forward P/E（對照列用；{dt}）", "x", None, fv(f"peer.fpe.{k}"), None, "Interested-party", fs(f"peer.fpe.{k}"), "分母＝Forward 非 GAAP EPS（口徑未載明）", inc=INC_DATA)
     inp(f"pm_dt_{k}", f"{nm} 倍數日期", "日期", None, datetime.date.fromisoformat(dt), None, "Verified", fs(f"peer.fps.{k}"))

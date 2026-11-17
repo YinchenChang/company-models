@@ -48,7 +48,7 @@ cfg = {
       "row_fmt": {"11": {"B": "sp1"}, "12": {"B": "sp1"}, "13": {"B": ""}, "14": {"B": ""}, "15": {"B": "n2", "C": "n2"}, "16": {"B": "n0"}, "17": {"B": "sp1"}, "18": {"B": "p1"}, "20": {"B": "sp1"}, "21": {"B": "sp1"}, "22": {"B": "sp1"},
                   "25": {"B": ""}, "26": {"B": "n0"}, "27": {"B": ""}, "28": {"B": ""}}}},
     {"type": "table", "caption": "DCF 彙總（三情境）", "head": ["項目", "情境 A", "情境 B", "情境 C"], "rowgen": {"sheet": "Val", "rows": "46-53", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"], "row_fmt": {"51": {c: "n2" for c in "BCD"}, "52": {c: "n2" for c in "BCD"}, "53": {c: "p1" for c in "BCD"}}}},
-    {"type": "table", "caption": "Comparable 主腿（P/S 股權口徑；第 65 列為 EV／營收口徑對照，不進加權目標價）", "head": ["項目", "情境 A", "情境 B", "情境 C"], "rowgen": {"sheet": "Val", "rows": "60-65", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"], "row_fmt": {"64": {c: "n2" for c in "BCD"}, "65": {c: "n2" for c in "BCD"}}}},
+    {"type": "table", "caption": "Comparable 主腿（P/S 股權口徑；最後一列為 EV／營收口徑對照，不進加權目標價）", "head": ["項目", "情境 A", "情境 B", "情境 C"], "rowgen": {"sheet": "Val", "rows": "60-65", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"], "row_fmt": {"64": {c: "n2" for c in "BCD"}, "65": {c: "n2" for c in "BCD"}}}},
     {"type": "table", "caption": "DCF 讀數並列：股票薪酬加回（只作對照，不進加權目標價）", "head": ["項目", "US$"], "rowgen": {"sheet": "Recon", "rows": "38-40", "cols": ["A", "B"], "fmts": ["", "n2"]}},
     {"type": "note", "parts": ["@Recon!A41"]},
     {"type": "table", "collapse": True, "summary": "展開：折現率組成與資本結構", "head": ["項目", "數值"], "rowgen": {"sheet": "Val", "rows": "30-41", "cols": ["A", "B"], "fmts": ["", "n3"]}}]},
