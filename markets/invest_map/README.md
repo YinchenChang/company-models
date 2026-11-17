@@ -42,11 +42,11 @@ python3 markets/invest_map/build_html.py
   - 頁首：`template.html` 第 258–267 行 `<header class="mast">`（第 261 行 `.eyebrow`「算力收支 · AI 半導體 研究整合」、第 262 行 `<h1>`）。
   - 視角分頁：第 269–277 行 `<nav class="tabs" aria-label="視角">`（01–04、附），這是頁內視角切換，不是站際導覽。
   - 分頁點擊處理：第 597–613 行（`views` 陣列與 `document.addEventListener("click", …)`；凡 `.tab` 元素都會被攔截改呼叫 `show()`）。
-- **預定加法**：在 `<header class="mast">` 的 `.wrap` 內（`<h1>` 上方，取代或併入 `.eyebrow`）加一個站際切換，例如 `<nav class="site-switch" aria-label="地圖"><a aria-current="page">算力</a>｜<a href="physical_ai/">實體 AI</a></nav>`，樣式加在第 39–46 行 `.mast` 一帶。**不可**用 `.tab` class，也不可放進 `<nav class="tabs">`，否則會被分頁點擊處理攔截。相對路徑 `physical_ai/` 在 Pages 上指向站根下的實體 AI 地圖；本機開檔（file://）時不保證可用。
+- **預定加法**：在 `<header class="mast">` 的 `.wrap` 內（`<h1>` 上方，取代或併入 `.eyebrow`）加一個站際切換，例如 `<nav class="site-switch" aria-label="地圖"><a aria-current="page">算力</a>｜<a href="physical_ai/">實體 AI</a>｜<a href="software_ai/">軟體 AI</a></nav>`（「軟體 AI」連 AI軟體應用 的站內頁 `software_ai/`，與「實體 AI」用同一種標記；2026-11-17 repo 治理 PR 補記，範本尚未加導覽），樣式加在第 39–46 行 `.mast` 一帶。**不可**用 `.tab` class，也不可放進 `<nav class="tabs">`，否則會被分頁點擊處理攔截。相對路徑 `physical_ai/` 在 Pages 上指向站根下的實體 AI 地圖；本機開檔（file://）時不保證可用。
 - **對方要放的檔案與介面**：
   - `physical_ai/index.html`：單一自足 HTML（樣式與資料內嵌，`<html lang="zh-Hant">`、`<meta charset="utf-8">`、viewport），同樣在頁首放「算力｜實體 AI」切換，「算力」連回 `../`（本地圖）。
   - 若要附模型成品，放 `physical_ai/models/…`，不要用站根的 `models/`（本地圖 `publish_map_only.sh` 每次 `rm -rf models/` 後重建）。
-  - 發布：比照 `wattonomics/`、`siliconomics/`，在 gh-pages 上追加 commit、只動 `physical_ai/`。**注意**：本目錄 `publish_pages.sh` 以全新歷史 force 覆寫整個 gh-pages，目前只帶 `index.html`、`models/`、`siliconomics/`、`wattonomics/`；實體 AI 頁上線前，`publish_pages.sh` 須先加一段產生或複製 `physical_ai/`（缺檔即停），否則全站重發會把它刪掉。`publish_map_only.sh` 不受影響。
+  - 發布：比照 `wattonomics/`、`siliconomics/`，在 gh-pages 上追加 commit、只動 `physical_ai/`。**注意**：本目錄 `publish_pages.sh` 以全新歷史 force 覆寫整個 gh-pages；2026-11-17 起（repo 治理 PR）發布前先從現有 gh-pages 原樣複製 `physical_ai/`、`software_ai/`、`physical/`（實體 AI 地圖 v0.1 現行位置）、`tokenomics/`，複製失敗或檔數不符即停止，全站重發不再刪掉其他專案的頁面。`publish_map_only.sh` 不受影響。
   - 造訪計數器（`counter/`）只計本地圖；實體 AI 頁要計數須另行約定（`Code.gs` 的 `TABS` 只認本地圖分頁）。
 
 ## 跨圖標註：另見實體 AI 地圖（v0.6.52 起）

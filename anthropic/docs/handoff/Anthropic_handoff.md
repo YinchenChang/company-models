@@ -10,7 +10,7 @@
 ## 2. 位置
 - repo `YinchenChang/company-models`，資料夾 `anthropic/`；建置分支 `claude/anthropic-v0.1`，PR #22（base `main`；A5 完成後轉 ready，待 chat 端審查合併）。
 - 規格 `docs/plan/20261008_Anthropic_v0.1_規格.md`（r1）；共同規則與 A1–A5 工作單 `docs/workorders/20261008_anthropic_*`。
-- 成品：`dist/`；Drive `02-算力收支/Anthropic/`（chat 端放置）。
+- 成品：`dist/`；Drive `02-AI供應鏈/個股模型/模型商/`（chat 端放置）。
 
 ## 2b. 2026-11-02／11-03 更新（chat 端；11-03 為 v0.1.8 建置代理）
 - v0.1.7 已合併（#289、#291，main `11b56a5`）。

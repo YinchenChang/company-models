@@ -1,0 +1,90 @@
+name: software-ai-build
+
+# AI軟體應用（software_ai/）的輕量檢查；只在 software_ai/ 有變動時執行（docs/OWNERSHIP.md 第 5 條）。
+# 不重建、不重算（重建需 LibreOffice 與整本重算，由各公司 make_*.sh 在本機執行）；只做不需網路的檢查：
+#   1. 全部 .py 可編譯；
+#   2. 每個公司資料夾有 dist/ 且其中至少一個 .xlsx；
+#   3. 各公司的 check_*.py 對 dist/ 內已提交的（已重算）xlsx 執行；
+#   4. HTML 展示層檢核（tools/company_html/check_company_html.py）：先以警告呈現，不讓 CI 失敗（見該步驟說明）。
+on:
+  push:
+    paths:
+      - 'software_ai/**'
+      - '.github/workflows/software-ai-build.yml'
+  pull_request:
+    paths:
+      - 'software_ai/**'
+      - '.github/workflows/software-ai-build.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安裝 python3、openpyxl
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends python3 python3-openpyxl
+
+      - name: 全部 .py 可編譯
+        run: |
+          python3 - <<'PY'
+          import glob, py_compile, sys, tempfile, os
+          bad = 0
+          tmp = os.path.join(tempfile.mkdtemp(), "x.pyc")
+          files = sorted(glob.glob("software_ai/**/*.py", recursive=True))
+          for f in files:
+              try:
+                  py_compile.compile(f, cfile=tmp, doraise=True)
+              except py_compile.PyCompileError as e:
+                  bad += 1
+                  print(f"::error file={f}::{e.msg}")
+          print(f"編譯 {len(files)} 個 .py，失敗 {bad} 個")
+          sys.exit(1 if bad else 0)
+          PY
+
+      - name: 每個公司資料夾有 dist/ 與 xlsx
+        run: |
+          failed=0
+          for d in software_ai/*/; do
+            d=${d%/}; n=$(basename "$d")
+            case "$n" in docs) continue;; esac
+            if ! ls "$d"/dist/*.xlsx > /dev/null 2>&1; then
+              echo "::error::$d 沒有 dist/*.xlsx"; failed=1
+            else
+              echo "$d：$(ls "$d"/dist/*.xlsx | wc -l) 個 xlsx"
+            fi
+          done
+          exit $failed
+
+      - name: 各公司 check_*.py（對 dist/ 內已提交的 xlsx）
+        run: |
+          failed=0
+          for c in software_ai/*/check_*.py; do
+            [ -e "$c" ] || continue
+            d=$(dirname "$c")
+            mapfile -t xs < <(ls "$d"/dist/*.xlsx 2>/dev/null)
+            if [ "${#xs[@]}" -ne 1 ]; then
+              echo "::error::$d/dist 應剛好一個 xlsx，實際 ${#xs[@]} 個"; failed=1; continue
+            fi
+            echo "::group::$c"
+            if ! python3 "$c" "${xs[0]}"; then echo "::error::$c 未通過"; failed=1; fi
+            echo "::endgroup::"
+          done
+          exit $failed
+
+      - name: HTML 展示層檢核（警告，不擋 CI）
+        # 2026-11-17 起加入時，crowdstrike 的 HTML 含外部網址（自含檢核不過），屬 AI軟體應用 待修；
+        # 修好後可把 continue-on-error 拿掉，改為必過。
+        continue-on-error: true
+        run: |
+          dirs=$(ls software_ai/*/html.json 2>/dev/null | xargs -r -n1 dirname)
+          [ -n "$dirs" ] || { echo "沒有 html.json，略過"; exit 0; }
+          python3 tools/company_html/check_company_html.py $dirs

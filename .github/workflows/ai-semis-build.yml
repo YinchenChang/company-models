@@ -87,6 +87,9 @@ on:
       - 'sndk/**'
       - 'kioxia/**'
       - '.github/workflows/ai-semis-build.yml'
+      # 其他專案的路徑不觸發本 workflow（docs/OWNERSHIP.md）；'**/html.json' 會比對到 software_ai/*/html.json，須排除
+      - '!software_ai/**'
+      - '!physical_ai/**'
   pull_request:
     paths:
       - 'markets/**'
@@ -169,6 +172,9 @@ on:
       - 'sndk/**'
       - 'kioxia/**'
       - '.github/workflows/ai-semis-build.yml'
+      # 其他專案的路徑不觸發本 workflow（docs/OWNERSHIP.md）；'**/html.json' 會比對到 software_ai/*/html.json，須排除
+      - '!software_ai/**'
+      - '!physical_ai/**'
 
 permissions:
   contents: read
