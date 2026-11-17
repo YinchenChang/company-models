@@ -6,7 +6,7 @@
 #   Val 頁末：0.7 估值並列四個目標價；Sens 頁末：加權目標價相對基準（連本頁既有逐案整本重算結果）
 #   Coord 頁末：三層協調——讀取層級、讀取層級核對（同源，不判定）、層級之間（參考）、對帳中年份、C0（實績）
 #   Sources 頁：新增來源；README 頁末：v1.3 展示層白話列與本版說明
-import os, re
+import os, re, json
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
@@ -637,4 +637,53 @@ def apply(wb, here, SIL, CR, G):
         ("公司：4Q23 與 FY2023 財報新聞稿（2024-01-25，8-K 附件；FY2022 損益表比較欄；Hist 頁用）", Q423))):
         SO.cell(rr + i, 1, t); SO.cell(rr + i, 2, u)
     wb._v010 = dict(HR=HR, PL=PLA, RV=RVA, VG=VG, SNS=SNS, RM=RMA, CO=CO)
-    return f"v010_post：Hist 頁；PL 標準損益表 {PLA['start']} 起；RevDCF 頁；Val 0.7 {VG} 起；Sens 相對基準 {SNS['t0']} 起；Coord C0 {CO['rd0']}–{CO['last']}；README v1.3 {len(RMA)} 列"
+    BID = governance(wb, here)
+    return f"v010_post：Hist 頁；PL 標準損益表 {PLA['start']} 起；RevDCF 頁；Val 0.7 {VG} 起；Sens 相對基準 {SNS['t0']} 起；Coord C0 {CO['rd0']}–{CO['last']}；README v1.3 {len(RMA)} 列；build_id {BID}"
+
+
+# ---------- 治理（check_governance）：單一主要標記、來源誘因、build_id、模型狀態 ----------
+import hashlib, os as _os
+_INC = "公司指引、自揭數字或轉載的公司說法：預期管理誘因，口徑由提供者定義"
+
+
+def governance(wb, here):
+    from openpyxl.styles import Font
+    for sh, tcol, scol, icol in (("In", 7, 8, 10), ("Q", 8, 9, 11)):
+        ws = wb[sh]
+        hr = next(r for r in range(1, 15) if ws.cell(r, tcol).value == "標記")
+        ws.cell(hr, icol, "來源誘因").font = Font(bold=True); ws.column_dimensions[ws.cell(hr, icol).column_letter].width = 50
+        for r in range(hr + 1, ws.max_row + 1):
+            t = ws.cell(r, tcol).value
+            if not isinstance(t, str) or t == "標記": continue
+            if t not in ("Verified", "Interested-party", "Analogy", "Assumed", "Derived", "—"):
+                p = [x.strip() for x in re.split(r"／|（", t)]
+                prim = "Interested-party" if any(x.startswith("Interested-party") for x in p) else p[0]
+                if prim not in ("Verified", "Interested-party", "Analogy", "Assumed", "Derived", "—"): prim = "Assumed"
+                ws.cell(r, tcol).value = prim
+                ws.cell(r, icol, ("混標「" + t + "」：主要標記取較弱者；" + _INC) if prim == "Interested-party" else "混標「" + t + "」：主要標記取第一項")
+                t = prim
+            if t == "Interested-party" and not ws.cell(r, icol).value: ws.cell(r, icol, _INC)
+            src = str(ws.cell(r, scol).value or "")
+            if t == "Verified" and re.search(r"；(Derived|Interested-party)）$", src): ws.cell(r, tcol).value = "Derived"
+    SE = wb["Sens"]; V = wb["Val"]
+    tpr = next(r for r in range(1, V.max_row + 1) if str(V.cell(r, 1).value or "").startswith("目標價（DCF 與 Comparable 加權）"))
+    snap = json.load(open(_os.path.join(here, "gov_snapshot.json"))) if _os.path.exists(_os.path.join(here, "gov_snapshot.json")) else {}
+    IN = wb["In"]; hr = next(r for r in range(1, 15) if IN.cell(r, 7).value == "標記")
+    last = next(r for r in range(hr + 1, IN.max_row + 1) if str(IN.cell(r, 1).value or "").startswith("情境驅動對照")) - 1
+    rng = f"In!$D${hr + 1}:$F${last}"
+    r = SE.max_row + 3
+    SE.cell(r, 1, "模型治理：Sens 主表為活頁簿公式；HTML 與敏感度快照是建置快照。只在 Excel 改 In 頁而未重跑建置時，下方模型狀態顯示 STALE").font = Font(bold=True); r += 1
+    SE.cell(r, 1, "輸入指紋（本檔即時重算；In 頁低／基準／高欄，情境驅動對照以上）"); SE.cell(r, 4, f"=SUMPRODUCT(N(+{rng}),ROW({rng})*3+COLUMN({rng}))").number_format = "0.000000"; fp = r; r += 1
+    SE.cell(r, 1, "輸入指紋（建置快照）"); SE.cell(r, 4, snap.get("fp")); fb = r; r += 1
+    SE.cell(r, 1, "加權目標價（建置快照）"); SE.cell(r, 4, snap.get("tp")); tb = r; r += 1
+    SE.cell(r, 1, "模型狀態（CURRENT＝快照、HTML、README 與本檔輸入一致；STALE＝In 頁已改、須重跑建置）").font = Font(bold=True)
+    SE.cell(r, 4, f'=IF(AND(ISNUMBER(D{fb}),ISNUMBER(D{tb}),ABS(D{fp}-D{fb})<=0.000000001*MAX(1,ABS(D{fb})),ABS(Val!$B${tpr}-D{tb})<0.005),"CURRENT","STALE")'); r += 1
+    h = hashlib.sha256(b"0.1.0")
+    for fn in sorted(["build_intc.py", "v010_post.py", "show_intc.py", "segments.json", "coord_alt.json"]):
+        p = _os.path.join(here, fn)
+        if _os.path.exists(p): h.update(fn.encode()); h.update(open(p, "rb").read())
+    bid = "intc-v0.1.0-" + h.hexdigest()[:10]
+    SE.cell(r, 1, "build_id（README、Sens、HTML 三處相同）"); SE.cell(r, 4, bid)
+    a1 = wb["README"]["A1"].value
+    wb["README"]["A1"].value = (a1 + ("" if str(a1).endswith('"') or not str(a1).startswith("=") else "") ) if False else (str(a1) + '&"；build_id ' + bid + '。"' if str(a1).startswith("=") else str(a1) + "；build_id " + bid + "。")
+    return bid

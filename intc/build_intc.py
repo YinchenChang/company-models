@@ -124,8 +124,8 @@ C["dcf_P"] = dict(
     date="2026-12-31（工作單評價日）", ccy="US$", amt="US$B", shu="十億股",
     rf=(0.0500, TRS + "；2026-11-05 讀取（repo AMD／NVIDIA 模型同源）", "FRED DGS10（同一序列）；利率日 2026-10-23，股價日 2026-11-13（利率未更新：未取得較新值）", "無風險利率（美國 10 年期公債殖利率，2026-10-23）"),
     beta_fixed=("=(beta_u-beta_du)*(1+(1-tax_w)*beta_de)", "=beta_u*(1+(1-tax_w)*beta_de)", "=(beta_u+beta_du)*(1+(1-tax_w)*beta_de)", "Derived",
-                "自算產業 β：US 半導體 同業 13 家中位數（含 Intel；Yahoo Finance 月報酬 2021-11～2026-10，對 S&P 500 迴歸，Hamada 去槓桿、現金修正）；Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）；以本公司市值 D/E 與稅率重新加槓桿",
-                "Sens 低／高（Analogy）：β_u ∓ beta_du（0.3），各自同式重新加槓桿（Andy 2026-11-05 23:16 定案）；個股迴歸 β（Yahoo 2.43）未採用"),
+                "自算產業 β：US 半導體 同業 13 家中位數（含 Intel；Yahoo Finance 月報酬 2021-11～2026-10，對 S&P 500 迴歸，Hamada 去槓桿、現金修正）；Blume 調整 0.67β＋0.33（專案規則）；以本公司市值 D/E 與稅率重新加槓桿",
+                "Sens 低／高（Analogy）：β_u ∓ beta_du（0.3），各自同式重新加槓桿（專案規則）；個股迴歸 β（Yahoo 2.43）未採用"),
     kd=("=0.0425", "Assumed", "債務平均票面利率：未找到（10-Q 債務附註）；取 4.25%（Assumed）", "債務占資本約 14%，對 WACC 影響小"),
     tax_w=("=tax", "Derived", "＝In 頁 tax（FY2027 起有效稅率 13%）", "NOPAT 用同一稅率"),
     debt=(50.134, "Verified", SABS + "：短期債務 3,817＋長期債務 46,317（US$M）", "不含租賃與合資夥伴的優先權益"),
@@ -141,7 +141,7 @@ C["dcf_P"] = dict(
            "折舊 ÷ 營收：FY2025 10.757／52.853（新聞稿 4Q25）、FY2026 約 11.9／61.7（Q 頁）；平均約 19.8%", "DCF 頁 FY2027–29 取 PL 頁各情境折舊，本比例用於 stub 後的收斂與 Sens"),
     fc_cx=(None, "=AVERAGE(17.672/52.853,16.3/61.7)", None, "Derived",
            "總資本支出 ÷ 營收：FY2025 17.672／52.853、FY2026 約 16.3／61.7（Q 頁）；平均約 29.9%", "FY2027–29 取 PL 頁各情境資本支出；Sens 用 fc_cx_d ±1pt"),
-    fc_cx_ss=("=MAX(fc_da_ss*(1+g_tv),(fc_cx+fc_da_ss*(1+g_tv))/2)", "Assumed", "FY2030 起線性收斂，FY2032 達到：近期比例與維持水準（折舊 ×（1＋g））的中點，下限為維持水準", "Andy 可改"),
+    fc_cx_ss=("=MAX(fc_da_ss*(1+g_tv),(fc_cx+fc_da_ss*(1+g_tv))/2)", "Assumed", "FY2030 起線性收斂，FY2032 達到：近期比例與維持水準（折舊 ×（1＋g））的中點，下限為維持水準", "可改"),
     fc_wc=(0.05, "=(3.839+11.618-9.882)/52.853", 0.20, "Derived",
            "FY2025 年底營運資金 ÷ 營收：應收 3.839＋存貨 11.618 − 應付 9.882（公司新聞稿 4Q25 資產負債表）÷ 52.853＝10.5%；FY2023–24 資產負債表未取得", "Sens 低／高 5%／20%（Assumed）"))
 C["dcf_ncbs"] = ("21.846+32.159+8.481-50.134-0+0-16.642", "2026-09-30 資產負債表（US$B）：現金 21.846＋短期投資 32.159＋權益投資 8.481（1Q26）− 債務 50.134 − 租賃 0（未找到）− 非控制權益 16.642")
@@ -169,7 +169,7 @@ C["readme"] = [
  ("公司特有：外部代工營收、Foundry 營業利益率路徑、CCPG／DCAI 營業利益率、資本支出（見上）。", False)]
 C["obs"] = ["目標價 US$0（現價 0（2026-11-13 收盤））。Comparable 單獨為 0。", "（建置後由公式取代）", "（建置後由公式取代）"]
 
-# ======================= 共用建置程式（聯電、世界先進同一套結構；數字與文字在上方 C 設定） =======================
+# ======================= 建置程式（結構改寫自聯電 umc/build_umc.py；數字與文字在上方 C 設定） =======================
 import sys, os, json, re
 import openpyxl
 from openpyxl.styles import Font, PatternFill
@@ -245,7 +245,7 @@ sec("C. Intel Foundry：營收（內部銷售＋外部）、營業利益率路�
 inp("iota", "內部銷售占 Intel Products 營收比（FY2027 起）", "%", None, "=a26_iota", None, "Derived", "FY2026 由 Q 頁（分部間沖銷 ÷ Intel Products 營收）推得；FY2025 36%、1Q–3Q26 41%／36%／41%", "三情境相同；影響 Foundry 營收規模與沖銷，不影響合併營收")
 for y in (27, 28, 29):
     for s in SC:
-        inp(f"ext{y}_{s}", f"FY20{y} 外部代工營收（情境 {s}；18A／14A 與先進封裝 EMIB／Foveros 對外）", "US$B", None, C["ext"][y][s], None, "Assumed", C["ext_src"] if (s == "A" and y == 27) else "同上", "FY2026 約 12 億美元（Q 頁）；客戶名單與合約金額公司未揭露" if (s == "A" and y == 27) else "—")
+        inp(f"ext{y}_{s}", f"FY20{y} 外部代工營收（情境 {s}）：18A／14A 與先進封裝 EMIB／Foveros 對外", "US$B", None, C["ext"][y][s], None, "Assumed", C["ext_src"] if (s == "A" and y == 27) else "同上", "FY2026 約 12 億美元（Q 頁）；客戶名單與合約金額公司未揭露" if (s == "A" and y == 27) else "—")
 inp("ext_adj", "外部代工營收係數（Sens 用；FY2027 起）", "x", 0.5, 1.0, 1.5, "Assumed", "無", "±50%")
 for y in (27, 28, 29):
     for s in SC:
@@ -266,7 +266,7 @@ inp("sh_g", "加權股數年變動（FY2027 起）", "%", None, 0.01, None, "Ass
 inp("da_g", "折舊年增（FY2027 起）", "%", 0.02, 0.04, 0.06, "Assumed", "FY2025 107.57 億、FY2026 約 119 億（Q 頁）", "資本支出高於折舊使折舊上升")
 for y in (27, 28, 29):
     for s in SC:
-        inp(f"cx{y}_{s}", f"FY20{y} 總資本支出（投資活動＋融資活動的 PP&E 增加；情境 {s}）", "US$B", None, C["cx"][y][s], None, "Assumed", C["cx_src"] if (s == "A" and y == 27) else "同上", "A 最有利者資本支出最高（外部客戶需要產能）；FY2026 約 163 億（Q 頁）" if (s == "A" and y == 27) else "—")
+        inp(f"cx{y}_{s}", f"FY20{y} 總資本支出（情境 {s}）：投資活動＋融資活動的 PP&E 增加", "US$B", None, C["cx"][y][s], None, "Assumed", C["cx_src"] if (s == "A" and y == 27) else "同上", "A 最有利者資本支出最高（外部客戶需要產能）；FY2026 約 163 億（Q 頁）" if (s == "A" and y == 27) else "—")
 inp("cx_adj", "總資本支出係數（Sens 用；FY2027 起）", "x", 0.9, 1.0, 1.1, "Assumed", "無", "±10%")
 
 sec("E. FY2026 錨點（1Q–3Q26 實績＋4Q26 公司指引或假設）")
@@ -285,13 +285,13 @@ inp("cons_feps", C["cfeps_lab"], "US$", None, C["cfeps"], None, "Derived", C["cf
 inp("cons_tp", "市場共識目標價（賣方平均）", "US$", None, C["cons_tp"], None, "Interested-party", C["cons_tp_src"], C["cons_tp_src2"])
 inp("nim_5", "近三年平均淨利率（FY2023–25；對照用）", "%", None, C["nim5"], None, "Derived", C["nim5_src"], "十年平均（2016–2025）：未找到；收斂法依工作單改用最後一年 × 0.8")
 
-sec("H. 目標價與收斂法參數（黃底；Assumed，Andy 可改）")
+sec("H. 目標價與收斂法參數（黃底；Assumed，可改）")
 TP_KEYS = []
 for s, w in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
-    inp(f"tp_w{s}", f"目標價情境權重 {s}（A 樂觀／B 基準／C 保守）", "%", None, w, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 A 0.3／B 0.5／C 0.2）", "三者合計應為 100%")
+    inp(f"tp_w{s}", f"目標價情境權重 {s}（A 樂觀／B 基準／C 保守）", "%", None, w, None, "Assumed", "可改（工作單 2026-10-25 預設 A 0.3／B 0.5／C 0.2）", "三者合計應為 100%")
     TP_KEYS.append(f"tp_w{s}")
-inp("tp_g", "PL 延伸期營收年增的收斂目標（情境 B；FY2032；DCF 永續成長率見 g_tv）", "%", None, 0.04, None, "Assumed", "Andy 可改（工作單預設 4%）", "只決定 FY2030–FY2032 營收收斂路徑")
-inp("tp_w_dcf", "目標價中 DCF 的權重；其餘為 Comparable", "%", None, 0.5, None, "Assumed", "Andy 可改（2026-10-25 11:53 定 DCF／Comparable 各半）", "—")
+inp("tp_g", "PL 延伸期營收年增的收斂目標（情境 B；FY2032；DCF 永續成長率見 g_tv）", "%", None, 0.04, None, "Assumed", "可改（工作單預設 4%）", "只決定 FY2030–FY2032 營收收斂路徑")
+inp("tp_w_dcf", "目標價中 DCF 的權重；其餘為 Comparable", "%", None, 0.5, None, "Assumed", "可改（2026-10-25 11:53 定 DCF／Comparable 各半）", "—")
 inp("fade_gA", "情境 A：FY2032 營收年增收斂目標（tp_g＋2pt）", "%", None, "=tp_g+0.02", None, "Assumed", "工作單 2026-10-25 11:20 收斂法", "FY2030 起由 FY2029 年增線性收斂")
 inp("fade_gB", "情境 B：FY2032 營收年增收斂目標（＝tp_g）", "%", None, "=tp_g", None, "Assumed", "同上", "—")
 inp("fade_gC", "情境 C：FY2032 營收年增收斂目標（tp_g−2pt）", "%", None, "=tp_g-0.02", None, "Assumed", "同上", "—")
@@ -302,8 +302,8 @@ for _row in FD.in_rows(C["dcf_P"]):
     rows.append(_row)
 inp("beta_u", "產業無槓桿 β（採用）：自算 US 半導體 同業中位數 Blume 調整（0.67 × 中位數＋0.33）", "x", None, 1.884, None, "Analogy",
     "自算產業 β：US 半導體 同業 13 家（NVDA AMD AVGO MRVL QCOM INTC MU ARM CRDO ALAB RMBS MTSI GFS；含 Intel 本身）無槓桿 β 中位數 2.32（Yahoo Finance 月報酬 2021-11～2026-10，對 S&P 500 迴歸，Hamada 去槓桿、現金修正）→ Blume 調整 1.884（docs/plan/自算產業β_20261105.md）",
-    "Blume 調整 0.67β＋0.33（Andy 2026-11-05 22:55）；個股 Yahoo beta 2.43（YFW）未採用")
-inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新加槓桿）", "x", None, 0.3, None, "Assumed", "工作單第二輪修正（Andy 2026-11-05 23:16 定案）：β 敏感度改為 β_u ± 0.3", "—")
+    "Blume 調整 0.67β＋0.33（專案規則）；個股 Yahoo beta 2.43（YFW）未採用")
+inp("beta_du", "β 敏感度幅度（低／高＝β_u ∓ 本值，各自重新加槓桿）", "x", None, 0.3, None, "Assumed", "工作單第二輪修正（專案規則）：β 敏感度改為 β_u ± 0.3", "—")
 inp("beta_de", "市值負債權益比 D/E（重新加槓桿用）", "x", None, "=(debt_v+lease_v)/(px*sh_v)", None, "Derived", "＝(債務本金 debt_v ＋ 租賃 lease_v) ÷ (股價 px × 股數 sh_v)", "與 WACC 權重同一口徑")
 TP_KEYS += ["tp_g", "tp_w_dcf", "fade_gA", "fade_gB", "fade_gC", "fade_mA", "fade_mB", "fade_mC"]
 
@@ -608,7 +608,7 @@ for i, s in enumerate(SC, CY0 + 2):
     V.cell(i, 5, f'=IF(B{i}=2029,"是：營收到觀測期末仍在增加","否")')
     V.cell(i, 6, "tools/cycle_position.py excel_rule；營收最高年取代設備市場見頂年" if s == "A" else "同上")
 R30 = CY0 + 6
-V.cell(R30, 1, "3. 規則值隱含股價（新台幣；約 FY2027 年底，未折現）＝ FY2027 EPS × 規則倍數").font = BOLD
+V.cell(R30, 1, "3. 規則值隱含股價（美元；約 FY2027 年底，未折現）＝ FY2027 EPS × 規則倍數").font = BOLD
 hdr(V, R30 + 1, ["情境", "FY2027 EPS", "（同左）", "規則倍數", "隱含股價", "相對現價", "現價 ÷ FY2027 EPS"])
 VAL = {}
 for j, s in enumerate(SC):
@@ -632,7 +632,7 @@ for x in (1.0, 1.1, 1.21, 1.5, 2.0):
         V.cell(vr, 2 + j, f"=px*A{vr}/PL!F{SUMR[(s, 'eps')]}").number_format = "0.0"
     V.cell(vr, 5, "=pe_mid").number_format = "0.0"
     vr += 1
-V.cell(vr, 1, "讀法：1.00＝價格不變、1.21＝一年約 21%。所需倍數低於歷史中位數時，現價相對便宜；倍數是否合理，另看前瞻 P/E 歷史（Bloomberg）。本版未做先驗，無 Andy 合理 P/E 對照。")
+V.cell(vr, 1, "讀法：1.00＝價格不變、1.21＝一年約 21%。所需倍數低於歷史中位數時，現價相對便宜；倍數是否合理，另看前瞻 P/E 歷史（Bloomberg）。本版未做先驗，無 專案 合理 P/E 對照。")
 WMT_NOTE = vr
 T10 = vr + 2
 V.cell(T10, 1, "5. 十年 P/E（2016–2025 年底；兩來源平均，分位排名用；無負值或 >200 需剔除）").font = BOLD
@@ -653,7 +653,7 @@ block_end = VR.add_rule_block(V, RB0, [{"id": "P/E", "name": "P/E", "sources": [
         {"case": "見頂", "pos": "25 分位", "q": 25, "basis_label": "FY2027 EPS（B）", "basis": f"=C{VAL['B']}"},
         {"case": "中段", "pos": "中位數", "q": 50, "basis_label": "FY2027 EPS（B）", "basis": f"=C{VAL['B']}"},
         {"case": "谷底", "pos": "75 分位", "q": 75, "basis_label": "FY2027 EPS（B）", "basis": f"=C{VAL['B']}"}]}],
-    "0.00", "規則（Andy 2026-10-13）：合理倍數＝2016–2025 年底 P/E 依循環位置取分位，兩個來源分別取分位再平均。" + C["pe_note"])
+    "0.00", "規則（專案規則）：合理倍數＝2016–2025 年底 P/E 依循環位置取分位，兩個來源分別取分位再平均。" + C["pe_note"])
 assert V.cell(RB0 + 5, 1).value == "2016" and V.cell(RB0 + 14, 1).value == "2025", (V.cell(RB0 + 5, 1).value, V.cell(RB0 + 14, 1).value)
 rule_rows = [rw for rw in range(RB0, block_end) if str(V.cell(rw, 1).value or "").startswith("規則值：")]
 assert len(rule_rows) == 3, rule_rows
@@ -872,10 +872,10 @@ _up = T["upw"]
 GRADE_ROW = V.max_row + 2; REC_ROW = GRADE_ROW + 1
 V.cell(GRADE_ROW, 1, "上檔空間級距（六級，供分組）")
 V.cell(GRADE_ROW, 2, f'=IF(B{_up}>0.5,"大於 50%",IF(B{_up}>0.25,"25%–50%",IF(B{_up}>=0,"0%–25%",IF(B{_up}>=-0.25,"0%～−25%",IF(B{_up}>=-0.5,"−25%～−50%","小於 −50%")))))')
-V.cell(GRADE_ROW, 5, f"以「上檔空間：加權目標價」（B{_up}）分六級（Andy 2026-10-25 14:00）")
+V.cell(GRADE_ROW, 5, f"以「上檔空間：加權目標價」（B{_up}）分六級（專案規則）")
 V.cell(REC_ROW, 1, "投資建議")
 V.cell(REC_ROW, 2, f'=IF(B{_up}>0.5,"強力買進",IF(B{_up}>0.25,"買進",IF(B{_up}>=-0.25,"中立",IF(B{_up}>=-0.5,"放空","強力放空"))))')
-V.cell(REC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
+V.cell(REC_ROW, 5, "依上檔空間固定規則（專案規則）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
 _rr = RD.max_row + 1
 RD.cell(_rr, 1, "")
 RD.cell(_rr + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"').font = Font(bold=True)
@@ -898,7 +898,7 @@ for _r in range(4, IN.max_row + 1):   # v0.2.2（第三輪修正第 15、23 點�
         for _j, _h in zip((4, 5, 6), ("情境 A（樂觀）", "情境 B（基準）", "情境 C（保守）")): IN.cell(_r + 1, _j).value = _h
     if str(IN.cell(_r, 1).value or "").startswith("scn_fade"): IN.cell(_r, 2).value = re.sub(r"（[^）]*）$", "", str(IN.cell(_r, 2).value))
 # ---------------- v0.13（2026-11-04）：Sens「Wattonomics 錨定」案例（三層校準原則；決策 S37）。In 頁最後三列、Sens 頁最下方小表與案例區塊；既有格不動 ----------------
-WTA_NOTE = "Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改。"
+WTA_NOTE = "Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（專案規則）；個股基準暫不改。"
 WTA_MF = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
 def wta_in_rows():
     r = IN.max_row + 2
