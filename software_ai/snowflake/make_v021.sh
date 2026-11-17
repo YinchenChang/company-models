@@ -1,12 +1,12 @@
 #!/bin/bash
 # Snowflake 個股模型 v0.2.1：建置 → LibreOffice 重算 → 核對。需要 python3＋openpyxl、LibreOffice。
-#   bash software_ai/snowflake/make_v01.sh            # 沿用已存的敏感度與反解 data/sens_v02_20261117.json、data/kreq_v021.json
+#   bash software_ai/snowflake/make_v01.sh            # 沿用已存的敏感度與反解 data/sens_v021_20261117.json、data/kreq_v021.json
 #   SENS=1 bash software_ai/snowflake/make_v01.sh     # 改了輸入或公式後重跑敏感度與反解（約 90 案＋14 次反解，約 4 分鐘）
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$ROOT"
 D=software_ai/snowflake
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD/out" $D/dist /home/claude/scratch/snowflake
-S=$D/data/sens_v02_20261117.json
+S=$D/data/sens_v021_20261117.json
 K=$D/data/kreq_v021.json
 OUT=$D/dist/20261117_Snowflake個股模型_v0.2.1.xlsx
 python3 $D/build_snowflake.py "$WD/raw0.xlsx" --rowmap "$WD/rowmap.json"

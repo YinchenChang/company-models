@@ -1,10 +1,11 @@
-# software_ai/snowflake/ — Snowflake（SNOW）個股模型 v0.2（原型 U：按用量計價）
+# software_ai/snowflake/ — Snowflake（SNOW）個股模型 v0.2.1（原型 U：按用量計價）
 
-**v0.2（2026-11-17；工作單 G5）：** (1) rel_mult 改讀 `software_ai/data/relmult_hist/out/snowflake.json` 的 `geo_base`＝1.201（PS 讀數 1.255 與 PSG 讀數 1.148 的幾何平均；Derived；base_source：PS 與 PSG 兩讀數幾何平均），取代 v0.1.1 自算的年度 trailing 比值中位數 1.352；Comparable 倍數是前瞻 P/S，與庫內 P/S 相對值同口徑，直接套用；`divergence`＝8.5%（未超過 30%，不需成長比說明；成長比 1.26）；Sens 加 `ps_only`（1.255）、`psg_only`（1.148）與 `sens.low`／`sens.high`（0.742／2.108，為 In 頁 rel_mult 低／高案）；副本 `data/relmult_snowflake.json`。(2) 無風險利率統一為美國 10 年期 5.10%（FRED DGS10，2026-11-12；原 4.99%，2026-10-27 逾期）。(3) Recon 第 7 節與 HTML 估值章並列「DCF（股票薪酬加回）」對照讀數：情境 A／B／C 每股價值 78.0／64.8／49.8、12 個月目標價 86.7／72.1／55.4、情境加權 71.6 美元（比標準 DCF 24.2 高 47.4）；只作對照，不進加權目標價。
+**v0.2.1（2026-11-17；工作單 G6、G7）：** Comparable 主腿改為「同業中位 P/S（現價日 2026-11-13：市值÷最新 TTM 營收；讀 `software_ai/data/relmult_hist/out/peer_ps_20261113.json`，副本 `data/peer_ps_20261113.json`；七家，CRWD 缺值已排除；MDB、ESTC 價格日 2026-11-06 逾期）× rel_mult（geo_base 1.201）× 目標時點 TTM 營收（FY2027 與 FY2028 依日數加權）÷ 評價日稀釋股數」；P/S 為股權口徑，不加淨現金。**更正 v0.2 的錯誤說法：** v0.2 曾寫「前瞻 P/S 與庫內 P/S 相對值同口徑」，這是錯的：rel_mult 來自 TTM 口徑的 PS／PSG 歷史相對值，前瞻 P/S 的分母期間不同，兩者相乘口徑不一，故主腿改用同為 TTM 口徑的 P/S，前瞻 P/S 中位 × rel_mult × NTM 營收改為對照列（Val 頁，不進加權目標價）。同業中位 P/S 新值 9.36（現價日七家）對舊值：v0.2 的前瞻 P/S 中位 10.355、資料庫最近一季（2026-06-30）中位 16.555（Sens 對照案「peer_ps＝資料庫最近一季中位」）。Sens 保留 G5 四案（ps_only、psg_only、sens.low、sens.high）套在新主腿。
+**v0.2（2026-11-17；工作單 G5）：** (1) rel_mult 改讀 `software_ai/data/relmult_hist/out/snowflake.json` 的 `geo_base`＝1.201（PS 讀數 1.255 與 PSG 讀數 1.148 的幾何平均；Derived；base_source：PS 與 PSG 兩讀數幾何平均），取代 v0.1.1 自算的年度 trailing 比值中位數 1.352；`divergence`＝8.5%（未超過 30%，不需成長比說明；成長比 1.26）；Sens 加 `ps_only`（1.255）、`psg_only`（1.148）與 `sens.low`／`sens.high`（0.742／2.108，為 In 頁 rel_mult 低／高案）；副本 `data/relmult_snowflake.json`。(2) 無風險利率統一為美國 10 年期 5.10%（FRED DGS10，2026-11-12；原 4.99%，2026-10-27 逾期）。(3) Recon 第 7 節與 HTML 估值章並列「DCF（股票薪酬加回）」對照讀數：情境 A／B／C 每股價值 78.0／64.8／49.8、12 個月目標價 86.7／72.1／55.4、情境加權 71.6 美元（比標準 DCF 24.2 高 47.4）；只作對照，不進加權目標價。
 
 **本版未做先驗**（Andy 2026-11-16 23:27 指示）。工作單：`software_ai/docs/workorders/20261116_第一批_研究包與單位經濟.md` G、G2、G3 節。v0.2（2026-11-17）依 G3 四條由 v0.1 修正；v0.1、v0.1.1、v0.1.2 成品移到 `dist/_待刪除/`（待 Andy 決定刪除）。
 
-**建置：** `bash software_ai/snowflake/make_v02.sh`（`SENS=1` 重跑敏感度與反解，約 10 分鐘）。成品 `dist/20261117_Snowflake個股模型_v0.2.xlsx`／`.html`。投資建議、目標價與各數字見成品 README 頁與 HTML（由公式組字，本檔只記結論摘要與診斷）。
+**建置：** `bash software_ai/snowflake/make_v021.sh`（`SENS=1` 重跑敏感度與反解，約 10 分鐘）。成品 `dist/20261117_Snowflake個股模型_v0.2.1.xlsx`／`.html`。投資建議、目標價與各數字見成品 README 頁與 HTML（由公式組字，本檔只記結論摘要與診斷）。
 
 **命題：** AI 進入按用量計價的資料平台後，產品營收＝核心平台消耗＋AI 工作負載；AI 淨效果＝AI 營收增量 − 核心被替代的侵蝕 − 推論成本。AI 營收＝基準消耗 B ×（代理工作負載乘數 w ＋ 呼叫數 j × 每次推論成本 ×（1＋轉售加成 U_mk））；推論成本只讀 Tokenomics v22.0 快照（`data/tokenomics_snapshot_v22.0.json`，「推理聊天」任務），不自行估 token 價格。變數名稱與 `software_ai/unit_economics` 一致。
 
@@ -21,16 +22,16 @@
 另修正 v0.1 的一個錯誤：折舊攤銷改只加回「非 GAAP 營業利益未排除的部分」（FY2026 與 FY2025 皆約 2.36% 營收；公司總折舊攤銷含被併購無形資產攤銷，該項已被非 GAAP 排除），v0.1 誤用 4.5% 而雙重加回。公司口徑自由現金流不計虧損期稅盾。
 
 ## 合理性關卡診斷（G3 第 4 條；數字見成品 Recon 第 6 節、README 頁 A41）
-**觸發 2／4：** (a) DCF 目標價 24.16 美元＝現價 291 的 8.3%（低於 25%）；(b) 情境 C 企業價值 −2,549 百萬美元（為負）。未觸發：評等為放空（非強力放空）；FY2027 產品營收差距 +0.6%、營業利益率差距 +3.3%（皆小於 10%）。
+**觸發 3／4：** (a) DCF 目標價 24.16 美元＝現價 291 的 8.3%（低於 25%）；(b) 情境 C 企業價值 −2,549 百萬美元（為負）。(c) 估值評等為強力放空（v0.2 為放空；主腿改現價 P/S 與 TTM 營收後 Comparable 降到 219.0）。未觸發：FY2027 產品營收差距 +0.6%、營業利益率差距 +3.3%（皆小於 10%）。
 
 **診斷（這不是計算錯誤，是輸入與估值結構的經濟判斷）：**
 - 已逐項核對、非原因：FCFF 營運資金符號（遞延收入為流入）；股數（RSU、選擇權、可轉債 if-converted 與 capped call）；折舊攤銷雙重加回（已修）；WACC（ke 11.17%＝rf 5.10% ＋ Blume β 1.214 × ERP 5%，債務 0）；終值公式（FD 標準：NOPAT×(1+g)×(1−g/RONIC)÷(WACC−g)）。DCF 頁各情境「FCFF 各列加總」檢查為 0。
 - **原因一：EBIT（扣 SBC）率低。** 情境 B FY2032 非 GAAP 營業利益率 19.2%、SBC 占營收 16.3%，EBIT 率僅 2.9%；A 為 8.6%，C 為 −4.9%。規模經濟只取自實績迴歸：近三點營業費用變動部分 0.457、SBC 變動部分 0.091，且 AI 推論使產品毛利率由 FY2027 的 75.3% 降到 FY2032 的 70.7%（B）。SBC 一年約 1.7–2.6 十億美元，對 DCF 是真實成本（不加回）。LTM 非 GAAP 營業利益率僅 12.4%，成熟同業可達 25–30%；模型沒有預設這種收斂，因為 G3 要求「以實績迴歸，不預設槓桿」。
 - **原因二：情境 C 終值為負。** C 的 EBIT 率到 FY2032 仍為 −4.9%（sbc_v 0.15、轉售加成低、被替代高、AI 推論侵蝕毛利），永續價值現值 −2,617，使 EV 為負；每股價值被 `MAX(0,…)` 截在 4.38（評價日）。C 是壓力情境，其現金流（公司口徑 FCF 率約 20–27%）為正但 SBC 費用化後 EBIT 為負；負 EV 表示「這個成本結構永遠不會被管理層修正」的假設不可信，應解讀為下界而非預測，已列入 Sens（`sbc_v`）。
 - **原因三（估值結構，非輸入）：終值截斷於高成長期。** 明確期到 FY2032 時情境 B 營收年增仍約 13%（A 約 16%、C 約 9%），標準版終值從 FY2033 起直接取 g＝3% 且 RONIC＝WACC，成長不創造價值（Sens g_tv ±1pt 只動 DCF 0.1 美元；RONIC＝WACC＋5pt 只加 0.6 美元）。對於仍在高成長的公司，這個規格會系統性低估；本版不改標準規格，回報協調者。
-- **現價與 DCF 的距離：** 反向 DCF（RevDCF 頁）顯示現價隱含企業價值約 1,113 億美元，約為情境 B 的 25 倍；即使營業費用變動部分降到 0，加權目標價也只有 226.5 美元（Recon 反解：無解）；Comparable 要達到現價需 rel_mult＝2.21（基準 1.20）。即：DCF 在此規格下無法支持現價，現價由 Comparable 倍數（市場給的成長溢價）承擔。
-- **DCF 與 Comparable 落差分解：** 情境 B 差約 290 美元，其中 SBC（DCF 扣、P/S 未扣）約 47.4，其餘為倍數水準與時點等殘差 為倍數水準與時點等殘差（Val 頁）。
-- **結論：** 放空（加權目標價 163.57，上檔 −43.8%）建立在 DCF 24.2 美元與 Comparable 303.0 美元各占 50% 的平均上；評等對 w_dcf 敏感（w_dcf 0.3 時 246 美元、0.7 時 119 美元）。DCF 低估的主因是規格與成本結構判斷，不是資料錯誤；是否採信 DCF 為 Andy 的判斷。
+- **現價與 DCF 的距離：** 反向 DCF（RevDCF 頁）顯示現價隱含企業價值約 1,113 億美元，約為情境 B 的 25 倍；即使營業費用變動部分降到 0，加權目標價也只有 184.5 美元（Recon 反解：無解）；Comparable 要達到現價需 rel_mult＝3.06（基準 1.20）。即：DCF 在此規格下無法支持現價，現價由 Comparable 倍數（市場給的成長溢價）承擔。
+- **DCF 與 Comparable 落差分解：** 情境 B 差約 195 美元，其中 SBC（DCF 扣、P/S 未扣）約 47.4，其餘為倍數水準與時點等殘差 為倍數水準與時點等殘差（Val 頁）。
+- **結論：** 強力放空（加權目標價 121.56，上檔 −58.2%）建立在 DCF 24.2 美元與 Comparable 219.0 美元各占 50% 的平均上；評等對 w_dcf 敏感（w_dcf 0.3 時 160.5 美元、0.7 時 82.6 美元）。DCF 低估的主因是規格與成本結構判斷，不是資料錯誤；是否採信 DCF 為 Andy 的判斷。
 
 ## G2 十條逐項（v0.2）
 1. 以揭露校準 token 與推論成本：做到（讀 Tokenomics v22.0，成本佔產品營業成本 75% 的揭露只作校準對照）。
@@ -38,14 +39,14 @@
 3. 費用率持平：改為規模經濟（G3 第 1 條）；持平放 Sens 下緣。
 4. 股數、RSU、選擇權：做到（本版補讀 10-Q；RSU 沒收率未揭露，全額計入並列 Sens 不計案例）。
 5. 淨債務不含營業租賃：做到（營業租賃 479.8 不計；融資租賃未找到，以 0）。
-6. Comparable 口徑一致：做到（P/S 為股權口徑，不加淨現金；rel_mult 為 trailing 近似，已標示）。
+6. Comparable 口徑一致：做到（v0.2.1：主腿＝同業現價 P/S × rel_mult × 目標時點 TTM 營收，P/S 為股權口徑、不加淨現金；前瞻 P/S 為對照列）。
 7. 收支關卡列：做到（`check_rating_gate --strict` 通過）。
 8. 公式組字 README 與 DCF 對 Comparable 分解：做到。
-9. 反解寫入 Recon：做到（`opx_v`：無解；`rel_mult`：2.21）。
+9. 反解寫入 Recon：做到（`opx_v`：無解；`rel_mult`：3.06）。
 10. 逾期標記：做到（rf 改為 FRED 2026-11-12 未逾期；同業前瞻 P/S 2026-11-06 標逾期）。
 
 ## 檔案
-`build_snowflake.py`（Excel 產生器，全部活公式）、`sens_snowflake.py`（敏感度與反解，整本重算）、`gen_html_json.py`、`segments.json`、`html.json`、`make_v02.sh`、`data/`（研究包 `research_snowflake.md`、`facts_snowflake.csv`、Tokenomics 快照、`sens_v02_20261117.json`、`kreq_v02.json`）、`dist/`、`dist/_待刪除/`（舊版成品，待 Andy 決定）。
+`build_snowflake.py`（Excel 產生器，全部活公式）、`sens_snowflake.py`（敏感度與反解，整本重算）、`gen_html_json.py`、`segments.json`、`html.json`、`make_v021.sh`、`data/`（研究包 `research_snowflake.md`、`facts_snowflake.csv`、Tokenomics 快照、`sens_v021_20261117.json`、`kreq_v021.json`）、`dist/`、`dist/_待刪除/`（舊版成品，待 Andy 決定）。
 
 ## 不適用與未做
 - Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照：不適用：Snowflake 不自建算力，推論成本為向模型商購買。
