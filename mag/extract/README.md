@@ -4,7 +4,7 @@
 **不改 company.json**；候選值須逐項對原文核對後，才由建置代理依 MAG 工作單填入。
 
 ## 文件來源（2026-10-27 定）
-- SEC 會擋 GitHub 雲端 IP（實測 403），**不得繞過**。Andy 10-27 選定：每季由 Andy 手動下載 10-Q 與財報新聞稿到 Drive `02-算力收支/MAG財報下載/`，其餘自動處理。
+- SEC 會擋 GitHub 雲端 IP（實測 403），**不得繞過**。Andy 10-27 選定：每季由 Andy 手動下載 10-Q 與財報新聞稿到 Drive `02-AI供應鏈/MAG財報下載/`，其餘自動處理。
 - 請求檔用 `files`（repo 內路徑，例 `mag/extract/docs/microsoft_FY27Q1_10-Q.pdf`）或 `drive_ids`（Drive 檔案 id；需該資料夾開放「知道連結者可檢視」）。兩者皆無時才走 EDGAR 直連（目前不可用）。
 - PDF 用 `pdftotext -layout` 轉文字；HTML 轉文字；其餘當純文字。
 

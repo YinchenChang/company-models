@@ -2,6 +2,7 @@
 # 把 dist/index.html 發布到 gh-pages 分支（GitHub Pages：https://yinchenchang.github.io/company-models/）
 # 另發布 Siliconomics 展示層：https://yinchenchang.github.io/company-models/siliconomics/
 # 每次以只含網站檔案的全新歷史覆寫 gh-pages（成品分支，不保留歷史；原始碼歷史在 main）。
+# 其他專案的站內子目錄（physical_ai/、software_ai/ 等，見下方 PRESERVE）由現有 gh-pages 原樣帶過來。
 # 用法：bash markets/invest_map/publish_pages.sh
 set -euo pipefail
 ROOT=$(git rev-parse --show-toplevel)
@@ -44,6 +45,24 @@ if not body.lstrip().lower().startswith("<!doctype"):
     open(p, "w", encoding="utf-8").write(body)
 PY
 echo "Wattonomics 互動頁：v$WV"
+# 其他專案（及其他 repo）在 gh-pages 上自行發布的子目錄：全新歷史覆寫前，先從現有 gh-pages 原樣複製（docs/OWNERSHIP.md）。
+#   physical_ai/、software_ai/：AI實體應用、AI軟體應用 的站內頁；physical/：實體 AI 地圖 v0.1 的現行位置；tokenomics/：Tokenomics 展示頁。
+# 現有 gh-pages 有該目錄而複製失敗或檔數不符時即停止，不發布。
+PRESERVE=(physical_ai software_ai physical tokenomics)
+if git -C "$ROOT" ls-remote --exit-code -q origin refs/heads/gh-pages > /dev/null; then
+  git -C "$ROOT" fetch -q --depth=1 origin gh-pages || { echo "停止：無法取得現有 gh-pages，無法保留其他專案的子目錄；不發布" >&2; exit 1; }
+  GHP=$(git -C "$ROOT" rev-parse FETCH_HEAD)
+  for d in "${PRESERVE[@]}"; do
+    if git -C "$ROOT" cat-file -e "$GHP:$d" 2>/dev/null; then
+      [ ! -e "$TMP/$d" ] || { echo "停止：$d/ 與本腳本產生的檔案同名；不發布" >&2; exit 1; }
+      NSRC=$(git -C "$ROOT" ls-tree -r --name-only "$GHP" -- "$d" | wc -l)
+      git -C "$ROOT" archive "$GHP" "$d" | tar -x -C "$TMP" || { echo "停止：從 gh-pages 複製 $d/ 失敗；不發布，避免覆寫後少了 $d/" >&2; exit 1; }
+      NDST=$(find "$TMP/$d" -type f | wc -l)
+      [ "$NSRC" -eq "$NDST" ] || { echo "停止：$d/ 複製後檔數不符（gh-pages $NSRC、複製 $NDST）；不發布" >&2; exit 1; }
+      echo "保留 gh-pages 子目錄 $d/：$NDST 個檔"
+    fi
+  done
+fi
 printf '# AI 算力地圖（GitHub Pages 發布分支）\n\n本分支只放網站成品，由 main 的 `markets/invest_map/publish_pages.sh` 產生（來源 %s）。研究整理，非投資建議。\n' "$SHA" > "$TMP/README.md"
 cd "$TMP"
 git init -q -b gh-pages

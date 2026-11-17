@@ -8,7 +8,7 @@
 
 ## 2. 位置
 - repo `YinchenChang/company-models`，資料夾 `zhipu/`；建置分支 `claude/zhipu-v0.1`（單一 PR）。
-- 成品：`dist/`；Drive `02-算力收支/Zhipu/`（chat 端放置）。
+- 成品：`dist/`；Drive `02-AI供應鏈/個股模型/模型商/`（chat 端放置）。
 
 ## 3.0 v0.1.1 TK 同步（2026-10-22）
 - Excel 現行：`model/20261022_Zhipu_v0.1.1.xlsx`（v0.1 在 `model/archive/20261008_Zhipu_v0.1.xlsx`）；成品 `dist/20261022_智譜收支模型_v0_1_1.html／.xlsx`；報告 `docs/reports/20261022_v0.1.1_TK同步.md`（分支 `claude/zhipu-tk-v19-sync`，PR #73）。

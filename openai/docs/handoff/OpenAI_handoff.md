@@ -11,7 +11,7 @@
 - repo `YinchenChang/company-models`，資料夾 `openai/`（2026-10-07 由 `YinchenChang/openai-model` 搬入，來源 `main@13c16f0`；舊 repo 停用，Andy 可封存）。
 - 規格：`docs/workorders/20261004_openai_v0.6.md`（r6；第 2 節 V1–V16 為全部已定決定，第 5–9 節為 P1 審查紀錄）。
 - 分段工作單：`docs/workorders/20261007_openai_*`（共同規則＋S1–S6）。
-- 成品：`dist/`（v0.6：HTML 一頁摘要＋xlsx）；Drive `02-算力收支/OpenAI/`（chat 端放置）。
+- 成品：`dist/`（v0.6：HTML 一頁摘要＋xlsx）；Drive `02-AI供應鏈/個股模型/模型商/`（chat 端放置）。
 
 ## 3. 流程（2026-10-07 起）
 - 自主建置：chat 端寫工作單 → 建置代理執行（每步 commit＋push、進度檔）→ chat 端審查並合併；判斷類套用工作單預設，彙總給 Andy 在里程碑（S5＝v0.6）審查。
@@ -68,7 +68,7 @@ V1 時變世代組合；V2 η 以 2025 推論支出校準；V3 算力成本＝�
 - S-1 公開後補：現金、承諾、股權報酬、人數、Microsoft 分成在財報中的位置。
 - 競爭（Anthropic 等）與價格戰情境（未建）。
 - 已修正（chat 端 2026-10-08）：P5 報告「有利組合」2030 營收淨額由 142.1（未截頂 263.9、係數 0.54）更正為 Excel 值 138.1（273.95、0.504）。
-- 成品放 Drive `02-算力收支/OpenAI/`（chat 端）。
+- 成品放 Drive `02-AI供應鏈/個股模型/模型商/`（chat 端）。
 
 ## 9. P×Q 回本比值規格（Andy 2026-10-21～22 原話；v0.6.1；Project Instructions 第 2 條）
 權威來源：`docs/plan/20261022_OpenAI_PxQ回本比值_交接.md` 第 2 節。實作：`PxQ` 頁、`TK_PxQ`（Tokenomics v19.0 第二快照，`TKQ_`）、INP_276–288、SRC_OAI_138–140、Checks C131–C154。以下定義由 `tests/parity/test_builder.py`（PxQ 引用白名單、E6、不回饋）與 Checks 把關。
