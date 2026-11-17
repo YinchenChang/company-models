@@ -6,6 +6,7 @@
 用法：python3 software_ai/map/check_map.py   （全部通過結束碼 0）
 """
 import glob
+import zipfile
 import json
 import os
 import re
@@ -125,6 +126,24 @@ def main():
     banned = ["玉山", "基金", "部位", "持倉", "持股", "Andy", "董事長", "投資處", "先驗", "可投資", "同事", "個人"]
     hits = [b for b in banned if b in html]
     ok(not hits, f"不含個人情境字樣（{'、'.join(banned)}）" + (f"：命中 {hits}" if hits else ""))
+    # 個股網頁複本與地圖活頁簿：只查明確的個人情境字樣（「先驗」「持股」在個股文中為方法／會計用語，不列）
+    personal = ["玉山", "基金", "部位", "持倉", "Andy", "董事長", "投資處", "可投資", "同事"]
+    mdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dist", "models")
+    mh = {}
+    for fn in sorted(os.listdir(mdir)) if os.path.isdir(mdir) else []:
+        if fn.endswith(".html"):
+            t = open(os.path.join(mdir, fn), encoding="utf-8").read()
+            h = [b for b in personal if b in t]
+            if h: mh[fn] = h
+    ok(not mh, "個股網頁複本不含個人情境字樣" + (f"：{mh}" if mh else ""))
+
+    xh = {}
+    for xp in glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), "dist", "*.xlsx")):
+        with zipfile.ZipFile(xp) as z:
+            t = "".join(z.read(n).decode("utf-8", "ignore") for n in z.namelist() if n.endswith(".xml"))
+        h = [b for b in personal if b in t]
+        if h: xh[os.path.basename(xp)] = h
+    ok(not xh, "地圖活頁簿不含個人情境字樣" + (f"：{xh}" if xh else ""))
     ok('<html lang="zh-Hant">' in html and '<meta charset="utf-8">' in html and 'name="viewport"' in html, "html lang、charset、viewport")
     sw = re.search(r'<nav class="site-switch".*?</nav>', html, re.S)
     ok(sw is not None and 'href="../"' in sw.group(0) and 'href="../physical_ai/"' in sw.group(0) and "軟體 AI" in sw.group(0) and 'class="tab' not in sw.group(0), "站際切換 算力｜實體 AI｜軟體 AI，未用 .tab")

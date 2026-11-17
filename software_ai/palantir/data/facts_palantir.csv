@@ -159,6 +159,7 @@ GAAP 營業利益率,0.316,比率,FY2025,"Derived（1,414.015 ÷ 4,475.446）",h
 股票薪酬占營收,0.1528,比率,FY2025,"Derived（684.033 ÷ 4,475.446）",https://investors.palantir.com/files/2025%20FY%20PLTR%2010-K.pdf｜10-K FY2025,2026-11-16,Derived,
 現金及約當現金,3619.414,US$M,2026-09-30,GAAP,https://www.sec.gov/Archives/edgar/data/0001321655/000132165526000048/pltr-20260930.htm｜10-Q（2026-09-30）；資產負債表 p.3,2026-11-16,Verified,
 有價證券（短期美國公債）,6942.117,US$M,2026-09-30,GAAP,https://www.sec.gov/Archives/edgar/data/0001321655/000132165526000048/pltr-20260930.htm｜10-Q（2026-09-30）；資產負債表 p.3,2026-11-16,Verified,
+非控制權益帳面值（權益項下）,117.119,US$M,2026-09-30,GAAP,"https://www.sec.gov/Archives/edgar/data/0001321655/000132165526000048/pltr-20260930.htm｜10-Q（2026-09-30）；資產負債表 p.3（Noncontrolling interests 117,119 千美元）",2026-11-16,Verified,
 借款餘額（2014 Credit Facility 循環額度 500 百萬，2027-03-31 到期）,0,US$M,2026-09-30,GAAP,https://www.sec.gov/Archives/edgar/data/0001321655/000132165526000048/pltr-20260930.htm｜10-Q（2026-09-30）；Note 6,2026-11-16,Verified,
 營業租賃負債（非流動）,225.267,US$M,2026-09-30,GAAP,https://www.sec.gov/Archives/edgar/data/0001321655/000132165526000048/pltr-20260930.htm｜10-Q（2026-09-30）；資產負債表 p.3,2026-11-16,Verified,
 現金及約當現金,1423.796,US$M,2025-12-31,GAAP,https://investors.palantir.com/files/2025%20FY%20PLTR%2010-K.pdf｜10-K FY2025；資產負債表 p.85,2026-11-16,Verified,

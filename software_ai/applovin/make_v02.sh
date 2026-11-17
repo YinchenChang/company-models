@@ -10,7 +10,7 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$ROOT"
 D=software_ai/applovin
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-VER="${VER:-0.2.2}"; VDATE="${VDATE:-20261117}"
+VER="${VER:-0.2.3}"; VDATE="${VDATE:-20261117}"
 OUTNAME="${VDATE}_AppLovin個股模型_v${VER}.xlsx"
 SJ="$D/data/sens_v${VER//./}_${VDATE}.json"; KJ="$D/data/kreq_v${VER//./}.json"
 if [ -n "${TOKENOMICS_DIR:-}" ]; then python3 tools/tokenomics/import_tokenomics.py --check $D/data/tokenomics_snapshot.json --tokenomics "$TOKENOMICS_DIR"; fi

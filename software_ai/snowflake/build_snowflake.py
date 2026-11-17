@@ -14,7 +14,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = sys.argv[1]
 SENS = sys.argv[sys.argv.index("--sens") + 1] if "--sens" in sys.argv else None
 ROWMAP = sys.argv[sys.argv.index("--rowmap") + 1] if "--rowmap" in sys.argv else None
-VER, VDATE = "0.2.1", "20261117"
+VER, VDATE = "0.2.2", "20261117"
 PPJ = json.load(open(os.path.join(HERE, "../data/relmult_hist/out/peer_ps_20261113.json"), encoding="utf-8"))
 shutil.copy(os.path.join(HERE, "../data/relmult_hist/out/peer_ps_20261113.json"), os.path.join(HERE, "data/peer_ps_20261113.json"))
 PPS = PPJ["companies"]["snowflake"]; PPG = PPS["groups"]["all"]
@@ -113,7 +113,7 @@ SC = {
 
 ws = SH["In"]
 ws["A1"] = "Snowflake 個股模型 v0.1 輸入頁（藍字＝輸入；黑字＝公式）。金額 US$M，會計年度 2 月制（FY2027＝2026-02-01～2027-01-31）。"
-ws["A2"] = "基準欄 E 進主模型；D／F（敏感度低／高）只用於 Sens 頁一次動一個參數，不進目標價。情境專屬列（鍵尾 A／B／C）由「情境驅動對照」節並列。本版未做先驗。"
+ws["A2"] = "基準欄 E 進主模型；D／F（敏感度低／高）只用於 Sens 頁一次動一個參數，不進目標價。情境專屬列（鍵尾 A／B／C）由「情境驅動對照」節並列。本版未做事前驗證。"
 for j, h in enumerate(["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "來源誘因"], 1):
     c = ws.cell(3, j, h); c.font = BOLD; c.fill = HDR
 IR = {}
@@ -574,7 +574,7 @@ V.cell(VR["sumh"], 1, "DCF 彙總（三情境）").font = BOLD
 for col, lab in zip("CDE", ("情境 A", "情境 B", "情境 C")): V[f"{col}{VR['sumh']}"] = lab
 vrow("pvx", "明確期 FCFF 現值（US$M）"); vrow("tvpv", "永續價值現值（US$M）"); vrow("ev", "企業價值 EV（US$M）"); vrow("eq", "股權價值（EV＋淨現金；US$M）")
 vrow("vps0", "每股價值（評價日；US$）"); vrow("dcf12", "DCF 情境目標價（12 個月後＝每股價值×(1+ke)−股利；US$）"); vrow("tvsh", "永續價值占 EV 比例")
-V.cell(VR["ch"], 1, "Comparable（同業中位 P/S × rel_mult × 目標時點 TTM 營收 ÷ 稀釋股數；P/S 為股權口徑，不加淨現金；原則 G6、G7）").font = BOLD
+V.cell(VR["ch"], 1, "Comparable（同業中位 P/S × rel_mult × 目標時點 TTM 營收 ÷ 稀釋股數；P/S 為股權口徑，不加淨現金；無非控制權益（10-Q 2026-07-31 資產負債表無此列），故不扣；原則 G6、G7、G8）").font = BOLD
 vrow("ntm", "目標時點 TTM 營收（FY2027 與 FY2028 依日數加權；US$M）"); vrow("mult", "套用 P/S（同業現價中位×rel_mult）"); vrow("eqc", "Comparable 股權價值（US$M）"); vrow("comp12", "Comparable 情境目標價（US$；P/S 已是股權口徑，不加淨現金）")
 V.cell(VR["scenh"], 1, "情境權重與加權").font = BOLD
 vrow("wa", "情境權重 A／B／C", None, f"={wr('A')}", f"={wr('B')}", f"={wr('C')}")
@@ -722,7 +722,7 @@ for k, lab, spec in rec_rows:
             if v is not None: Rc.cell(r, j, v)
     r += 1
 Rc[f"B{RCR['omgap']}"] = f"=B{RCR['om27']}/C{RCR['om27']}-1"; Rc[f"B{RCR['prodgap']}"] = f"=B{RCR['prod27']}/C{RCR['prod27']}-1"
-KREQ = os.path.join(HERE, "data/kreq_v021.json")
+KREQ = os.path.join(HERE, "data/kreq_v022.json")
 if os.path.exists(KREQ):
     for n_, kq in enumerate(json.load(open(KREQ, encoding="utf-8"))):
         RCR["kreq" if n_ == 0 else "kreq2"] = r
@@ -791,14 +791,14 @@ src_rows = [("Tokenomics 快照", f"{TK['source']['version']}（{TK['source']['f
             ("研究包", "software_ai/snowflake/data/research_snowflake.md、facts_snowflake.csv"),
             ("公司申報", "Snowflake 8-K 附件 99.1（Q2 FY27 2026-09-02；Q1 FY27 2026-05-27；Q4 FY26 2026-02-25；Q3 FY26 2025-12）；10-K FY2026；10-Q Q2 FY27"),
             ("同業倍數與股價", "StockAnalysis statistics 頁（SNOW、DDOG、MDB、NET、CRWD、NOW、PLTR、ESTC、ZS；擷取日 2026-11-16）；forecast 頁（共識，2026-11-12 更新）"),
-            ("本版先驗", "未做（Andy 2026-11-16 23:27）")]
+            ("本版事前驗證", "未做（專案負責人 2026-11-16 23:27）")]
 for i, (a, b2) in enumerate(src_rows, 3):
     So.cell(i, 1, a); So.cell(i, 2, b2)
 So.cell(2, 1, "項目"); So.cell(2, 2, "內容")
 
 # ---------------------------------------------------------------- README 頁
 Rm = SH["README"]
-Rm["A1"] = f"Snowflake 個股模型 v{VER}｜資料截止 2026-11-16（最新已公布季 Q2 FY27，截至 2026-07-31）｜成品日 {VDATE}｜股價基準日 2026-11-13｜build_id {BUILD_ID}｜本版未做先驗"
+Rm["A1"] = f"Snowflake 個股模型 v{VER}｜資料截止 2026-11-16（最新已公布季 Q2 FY27，截至 2026-07-31）｜成品日 {VDATE}｜股價基準日 2026-11-13｜build_id {BUILD_ID}｜本版未做事前驗證"
 Rm["A2"] = "命題、結論與重點觀察的數字由公式自本檔其他頁組字（不手寫）。"
 VB = lambda k, col="B": f"Val!{col}{VR[k]}"
 SB = SR["B"]
@@ -811,12 +811,12 @@ Rm["A8"] = (f'="三、情境 B FY2032 推論成本（市場價）占產品營業
 Rm["A9"] = (f'="四、現價隱含 FY2032 EBIT 率（扣股票薪酬）"&TEXT(RevDCF!B{RV["m_imp"]},"0.0%")&"（情境 B 為 "&TEXT(RevDCF!B{RV["m_fy32"]},"0.0%")&"）；永續價值占 EV 約 "&TEXT(Val!D{VR["tvsh"]},"0%")&"。"')
 Rm["A10"] = (f'="五、情境 A／B／C 加權目標價 "&TEXT(Val!C{VR["wb"]},"0.00")&"／"&TEXT(Val!D{VR["wb"]},"0.00")&"／"&TEXT(Val!E{VR["wb"]},"0.00")&" 美元；分化來自 AI 工作負載、被替代、轉售加成與股票薪酬占比。"')
 Rm["A12"] = "v1.3 展示層"
-Rm["A13"] = (f'="Snowflake："&{VB("rec")}&"，加權目標價 "&TEXT({VB("tp")},"0.00")&" 美元（上檔 "&TEXT({VB("up")},"0.0%")&"）；本版未做先驗。"')
+Rm["A13"] = (f'="Snowflake："&{VB("rec")}&"，加權目標價 "&TEXT({VB("tp")},"0.00")&" 美元（上檔 "&TEXT({VB("up")},"0.0%")&"）；本版未做事前驗證。"')
 Rm["A14"] = "本版要點"
 Rm["A15"] = "單一營運分部（10-K）；營收列取公司固定揭露的 Product revenue 與 Professional services and other revenue；AI 營收不單列（未找到），核心與 AI 為本模型拆分（Assumed）。"
 Rm["A16"] = "損益表為非 GAAP 口徑（公司與賣方共識口徑）；DCF 的 EBIT 扣除股票薪酬，GAAP 營業利益與 EPS 為參考列。"
 Rm["A17"] = "推論成本只讀 Tokenomics v22.0 快照，不自行估 token 價格；未來價格路徑待 AI供應鏈 登錄，以 Assumed 區間作敏感度。"
-Rm["A18"] = "未做事項：先驗（Andy 指示本版跳過）。不適用：三層基準協調（Coord、C0、兩讀數）：非 Siliconomics 覆蓋；Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照：Snowflake 不自建算力，推論成本為向模型商購買。"
+Rm["A18"] = "未做事項：事前驗證（專案負責人 指示本版跳過）。不適用：三層基準協調（Coord、C0、兩讀數）：非 Siliconomics 覆蓋；Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照：Snowflake 不自建算力，推論成本為向模型商購買。"
 Rm["A20"] = "市場資料日期"
 Rm["A21"] = (f'="現價 "&TEXT({I("px_date")},"yyyy-mm-dd")&" 收盤；無風險利率 5.10% 為 FRED DGS10 2026-11-12（現價日前 1 個交易日）；同業現價 P/S 價格日 2026-11-13（MDB、ESTC 為 2026-11-06，逾期；CRWD 缺值已排除）；共識 2026-11-12。"')
 Rm["A22"] = "主要失效條件（可觀察）：Q3 FY27 產品營收低於指引 1,588 以下、產品毛利率跌破指引 74%、RPO 年增低於 25%、淨營收留存率跌破 120%、AI 功能 credit 占比停滯。"
@@ -834,7 +834,7 @@ mp = [("Seg", "q3g、q4g、U_w26、U_w32_A／B／C、U_e26、U_e32_A／B／C、U
       ("Sens", "In 頁敏感度低／高", "加權目標價、DCF 目標價、投資建議", "一次改一個輸入、整本重算")]
 for i, rk in enumerate(mp, 34):
     for j, v in enumerate(rk, 1): Rm.cell(i, j, v)
-Rm["A39"] = "版本沿革：v0.1（2026-11-16）首版；v0.1.1（2026-11-17）依工作單 G3 修正：規模經濟延伸、DCF 改接 tools/fcff_dcf.py、rel_mult 自算、補讀 RSU／選擇權／可轉債、合理性關卡診斷；v0.2（2026-11-17）依工作單 G5：rel_mult 改讀共用庫 relmult_hist JSON（geo_base）、無風險利率統一為 FRED DGS10 5.10%、並列股票薪酬加回 DCF 對照讀數；未做先驗。"
+Rm["A39"] = "版本沿革：v0.1（2026-11-16）首版；v0.1.1（2026-11-17）依工作單 G3 修正：規模經濟延伸、DCF 改接 tools/fcff_dcf.py、rel_mult 自算、補讀 RSU／選擇權／可轉債、合理性關卡診斷；v0.2（2026-11-17）依工作單 G5：rel_mult 改讀共用庫 relmult_hist JSON（geo_base）、無風險利率統一為 FRED DGS10 5.10%、並列股票薪酬加回 DCF 對照讀數；未做事前驗證。；v0.2.2（2026-11-17）依工作單 G8：只改文字（個人情境用語中性化），數字不變；查 10-Q（截至 2026-07-31）無非控制權益，P/S 主腿與 DCF 股權橋不扣。"
 Rm["A40"] = "合理性關卡診斷（工作單 G3 第 4 條；觸發條件與當期判定見 Recon 第 6 節；診斷全文見 README.md）"
 Rm["A41"] = (f'="觸發數 "&TEXT(Recon!B{RCR["g_n"]},"0")&"／4：DCF 目標價 "&TEXT({VB("dcf_tp")},"0.00")&" 美元為現價 "&TEXT(Recon!B{RCR["g_dcf"]},"0%")&"；情境 C 企業價值 "&TEXT(Val!E{VR["ev"]},"#,##0")&" 百萬美元；評等 "&{VB("val_rec")}&"；FY2027 營收與營業利益率相對指引差距 "&TEXT(Recon!B{RCR["prodgap"]},"0.0%")&"／"&TEXT(Recon!B{RCR["omgap"]},"0.0%")&"。"')
 Rm["A42"] = "診斷：這不是計算錯誤。FCFF 營運資金符號（遞延收入增加為流入）、股數（RSU、選擇權、可轉債）、折舊攤銷（排除已被非 GAAP 排除的無形資產攤銷）、WACC 與終值公式已逐項核對；低 DCF 來自輸入：營業費用與股票薪酬的規模經濟只取自實績迴歸（不預設槓桿）、AI 推論使毛利率下降，使 FY2032 的 EBIT（扣股票薪酬）率僅個位數；現價隱含的 EBIT 率見 RevDCF。判斷屬經濟判斷：DCF 對股票薪酬與規模經濟的路徑高度敏感，Comparable 則由同業倍數與 rel_mult 決定，兩者落差分解見 Val。"

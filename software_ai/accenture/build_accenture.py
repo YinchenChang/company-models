@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Accenture 個股模型 v0.2（原型 L：按人力計價；命題＋官方分部營收 → 損益表 → FCFF DCF＋分部加總 Comparable）。
-用法：python3 build_accenture.py <raw.xlsx> [--sens data/sens_v022_20261117.json] [--rowmap rowmap.json] [--rev data/rev_solve_v022.json] [--set key=value ...]
-所有計算為活公式；輸入在 In 頁（藍字）。LibreOffice 重算後才有快取值。本版未做先驗。
+用法：python3 build_accenture.py <raw.xlsx> [--sens data/sens_v023_20261117.json] [--rowmap rowmap.json] [--rev data/rev_solve_v023.json] [--set key=value ...]
+所有計算為活公式；輸入在 In 頁（藍字）。LibreOffice 重算後才有快取值。本版未做事前驗證。
 """
 import datetime, hashlib, json, os, sys
 import openpyxl
@@ -16,7 +16,7 @@ SETS = {}
 for i, a in enumerate(sys.argv):
     if a == "--set":
         k, v = sys.argv[i + 1].split("=", 1); SETS[k] = float(v)
-VER, VDATE = "0.2.2", "20261117"
+VER, VDATE = "0.2.3", "20261117"
 PP = json.load(open(os.path.join(HERE, "data", "peer_ps_20261113.json"), encoding="utf-8"))
 PPC = PP["companies"]["accenture"]["groups"]["all"]
 # G7：同業 P/S（現價日；software_ai/data/relmult_hist/out/peer_ps_20261113.json 副本）
@@ -115,7 +115,7 @@ for k, v in SETS.items():
 
 ws = SH["In"]
 ws["A1"] = "Accenture 個股模型 v0.1 輸入頁（藍字＝輸入；黑字＝公式）。金額 US$M，會計年度 9 月制（FY2027＝2026-09-01～2027-08-31）。"
-ws["A2"] = "基準欄 E 進主模型；D／F（敏感度低／高）只用於 Sens 頁一次動一個參數，不進目標價。情境專屬列（鍵尾 _A／_B／_C）由「情境驅動對照」節並列。本版未做先驗。"
+ws["A2"] = "基準欄 E 進主模型；D／F（敏感度低／高）只用於 Sens 頁一次動一個參數，不進目標價。情境專屬列（鍵尾 _A／_B／_C）由「情境驅動對照」節並列。本版未做事前驗證。"
 for j, h in enumerate(["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "來源誘因"], 1):
     c = ws.cell(3, j, h); c.font = BOLD; c.fill = HDR
 IR = {}
@@ -480,7 +480,7 @@ for si, s in enumerate("ABC"):
     V[f"{col}{VR['ttm_tot']}"] = f"=SUM({col}{VR['ttm_am']}:{col}{VR['ttm_ap']})"
     V[f"{col}{VR['ttm_rev']}"] = f"={w}*PL!F{PR[s]['rev']}+(1-{w})*PL!G{PR[s]['rev']}"
     V[f"{col}{VR['mult']}"] = f"=$B${VR['ps_med']}*{I('cm_adj')}"
-    V[f"{col}{VR['ev_c']}"] = f"={col}{VR['ttm_rev']}*{col}{VR['mult']}"
+    V[f"{col}{VR['ev_c']}"] = f"={col}{VR['ttm_rev']}*{col}{VR['mult']}-$B${VR['nciv']}"
     V[f"{col}{VR['comp12']}"] = f"={col}{VR['ev_c']}/$B${VR['sh']}"
     V[f"{col}{VR['ref1']}"] = f"=({col}{VR['ttm_tot']}*$B${VR['pe_med']}+$B${VR['netcash']})/$B${VR['sh']}"
     V[f"{col}{VR['ref2']}"] = f"=({col}{VR['ttm_tot']}*$B${VR['pe_med']}*$B${VR['own_ratio']}+$B${VR['netcash']})/$B${VR['sh']}"
@@ -490,7 +490,7 @@ vrow("pvx", "明確期 FCFF 現值（US$M）"); vrow("tvpv", "永續價值現值
 vrow("vps0", "每股價值（評價日；US$）"); vrow("dcf12", "DCF 情境目標價（12 個月後＝每股價值×(1+ke)−股利；US$）"); vrow("tvsh", "永續價值占 EV 比例")
 V.cell(VR["ch"], 1, "Comparable（P/S 主腿：同業中位 P/S × rel_mult × 目標日 TTM 營收 ÷ 股數；下方 EV／EBIT 為對照）").font = BOLD
 vrow("ttm_am", "對照：Americas 目標日 TTM 營業利益（US$M）"); vrow("ttm_em", "EMEA 目標日 TTM 營業利益（US$M）"); vrow("ttm_ap", "Asia Pacific 目標日 TTM 營業利益（US$M）"); vrow("ttm_tot", "三分部 TTM 營業利益合計（US$M）")
-vrow("ttm_rev", "目標日 TTM 營收（US$M；FY2027 與 FY2028 依目標日窗口加權）"); vrow("mult", "套用 P/S（同業中位 P/S × rel_mult〔cm_adj，PS／PSG 兩讀數幾何平均〕）"); vrow("ev_c", "Comparable 股權價值（P/S × 目標日 TTM 營收；US$M）"); vrow("comp12", "Comparable 情境目標價（P/S 主腿；US$；股權價值÷評價股數）")
+vrow("ttm_rev", "目標日 TTM 營收（US$M；FY2027 與 FY2028 依目標日窗口加權）"); vrow("mult", "套用 P/S（同業中位 P/S × rel_mult〔cm_adj，PS／PSG 兩讀數幾何平均〕）"); vrow("ev_c", "Comparable 股權價值（P/S × 目標日 TTM 營收 − 非控制權益帳面值；US$M）"); vrow("comp12", "Comparable 情境目標價（P/S 主腿；US$；股權價值÷評價股數）")
 vrow("ref1", "對照（不進加權）：EV／EBIT 分部加總，同業中位 × 1.00（US$）"); vrow("ref2", "對照（不進加權）：EV／EBIT 分部加總，同業中位 × 本公司現行相對值（US$）")
 V.cell(VR["gaph"], 1, "DCF 與 Comparable 落差分解（情境 B；每股 US$；公式組成）").font = BOLD
 vrow("gap", "落差：DCF 情境 B 目標價 − Comparable 情境 B 目標價", f"=D{VR['dcf12']}-D{VR['comp12']}")
@@ -679,13 +679,13 @@ So["A1"] = "來源與版本"; So.cell(2, 1, "項目"); So.cell(2, 2, "內容")
 src_rows = [("Tokenomics 快照", f"{TK['source']['version']}（{TK['source']['file']}；commit {TK['source']['commit'][:7]}）；名稱：IF_TaskLen、IF_TaskTokFresh／Cached／Dec、IF_PriceFresh／Cached／Out_Terra／Sol／Astra、IF_TaskSucc_Terra／Sol／Astra（data/tokenomics_snapshot_v22.0.json）"),
             ("研究包", RES), ("公司申報", "10-K FY2026（SEC 0001467373-26-000049，2026-10-16）；10-K FY2025；10-Q FY2026 Q1–Q3；8-K 2026-10-01 Q4 FY26 新聞稿"),
             ("同業倍數", "StockAnalysis statistics 頁（CTSH 2026-10-27、INFY 2026-10-21、CGI（GIB）2026-10-26、ACN 2026-10-31）"), ("歷史相對倍數", "software_ai/data/relmult_hist/out/accenture.json（2026-11-17；PS 20 點、PSG 13 點；副本 data/relmult_hist_accenture.json）"), ("市場資料", "FRED DGS10 10 年美債 2026-11-12；StockAnalysis ACN 股價與 Beta"),
-            ("本版先驗", "未做（Andy 2026-11-16 23:27）")]
+            ("本版事前驗證", "未做（專案負責人 2026-11-16 23:27）")]
 for i, (a, b2) in enumerate(src_rows, 3): So.cell(i, 1, a); So.cell(i, 2, b2)
 
 # ---------------- README 頁
 Rm = SH["README"]
 VB = lambda k, col="B": f"Val!{col}{VR[k]}"
-Rm["A1"] = (f'="Accenture 個股模型 v{VER}｜資料截止 2026-11-16（最新年度 FY2026，截至 "&TEXT({I("bs_date")},"yyyy-mm-dd")&"）｜成品日 {VDATE}｜股價基準日 "&TEXT({I("px_date")},"yyyy-mm-dd")&"｜build_id {BUILD_ID}｜本版未做先驗"')
+Rm["A1"] = (f'="Accenture 個股模型 v{VER}｜資料截止 2026-11-16（最新年度 FY2026，截至 "&TEXT({I("bs_date")},"yyyy-mm-dd")&"）｜成品日 {VDATE}｜股價基準日 "&TEXT({I("px_date")},"yyyy-mm-dd")&"｜build_id {BUILD_ID}｜本版未做事前驗證"')
 Rm["A2"] = "命題、結論與重點觀察的數字由公式自本檔其他頁組字（不手寫）。"
 sb = SR["B"]
 Rm["A3"] = (f'="命題：AI 進入按人力計價的 IT 服務後，每單位營收＝AI 新專案增量 − 定價侵蝕 − 推論成本。本模型以交付人力 × 利用率 × 可用工時 × 時薪推 AI 前營收，再依自動化比例、價格保留率與新專案占比推 AI 後營收。情境 B 在 FY2032 的 AI 淨效果為 "&TEXT(Seg!K{sb["net"]}/1000,"0.0")&" 十億美元（新專案 "&TEXT(Seg!K{sb["incr"]}/1000,"0.0")&" − 定價侵蝕 "&TEXT(Seg!K{sb["eros"]}/1000,"0.0")&" − 推論成本 "&TEXT(Seg!K{sb["inf"]}/1000,"0.00")&"），AI 後所需交付人力 "&TEXT(Seg!K{sb["hc_ai"]},"0")&" 千人（AI 前 "&TEXT(Seg!K{sb["hc0"]},"0")&" 千人）。"')
@@ -697,12 +697,12 @@ Rm["A8"] = (f'="三、每任務推論成本（Tokenomics Sol 層級）"&TEXT({I(
 Rm["A9"] = (f'="四、現價隱含 FY2032 營業利益率 "&TEXT(RevDCF!B{RV["m_imp"]},"0.0%")&"（情境 B 為 "&TEXT(RevDCF!B{RV["m_fy32"]},"0.0%")&"）；現行 EV／EBIT "&TEXT({VB("own_mult")},"0.0")&" 倍，為同業中位數 "&TEXT({VB("pe_med")},"0.0")&" 倍的 "&TEXT({VB("own_ratio")},"0.00")&" 倍；永續價值占 EV 約 "&TEXT(Val!D{VR["tvsh"]},"0%")&"。"')
 Rm["A10"] = (f'="五、情境 A／B／C 加權目標價 "&TEXT(Val!C{VR["wb"]},"0.00")&"／"&TEXT(Val!D{VR["wb"]},"0.00")&"／"&TEXT(Val!E{VR["wb"]},"0.00")&" 美元；分化主要來自自動化比例、價格保留率與新專案占比（FY2032 AI 淨效果 A／B／C 為 "&TEXT(Seg!K{SR["A"]["net"]}/1000,"0.0")&"／"&TEXT(Seg!K{SR["B"]["net"]}/1000,"0.0")&"／"&TEXT(Seg!K{SR["C"]["net"]}/1000,"0.0")&" 十億美元）。"')
 Rm["A12"] = "v1.3 展示層"
-Rm["A13"] = (f'="Accenture："&{VB("rec")}&"，加權目標價 "&TEXT({VB("tp")},"0.00")&" 美元（上檔 "&TEXT({VB("up")},"+0.0%;-0.0%")&"）；本版未做先驗。"')
+Rm["A13"] = (f'="Accenture："&{VB("rec")}&"，加權目標價 "&TEXT({VB("tp")},"0.00")&" 美元（上檔 "&TEXT({VB("up")},"+0.0%;-0.0%")&"）；本版未做事前驗證。"')
 Rm["A14"] = "本版要點"
 Rm["A15"] = "官方報告分部三個（Americas、EMEA、Asia Pacific；FY2024 為 10-K FY2026 新口徑重編值）；分部營收與營業利益皆取公司法定附註，三分部合計與合併值差 0。"
 Rm["A16"] = "命題模組為原型 L；公司不揭露計費工時、時薪、價量拆分，時薪由 FY2026 營收與員工數、利用率反推（Derived），自動化比例、價格保留率、新專案占比為 Assumed，情境分化依據見 In 頁。"
 Rm["A17"] = "推論成本只讀 Tokenomics v22.0 快照任務 5（類比）；公司未揭露 token 量與代理任務量，不以聊天基數乘倍數；token 價格路徑待 AI供應鏈 登錄。Comparable 主腿改為 P/S 口徑：同業中位 P/S（現價日 2026-11-13，peer_ps_20261113，非當日者標逾期）× rel_mult（geo_base，PS 與 PSG 兩讀數幾何平均，Derived）× 目標時點 TTM 營收 ÷ 股數；原因：PS／PSG 相對值已含利潤率差，套到 EV／EBIT 會重複計入，故 EV／EBIT 分部加總只作對照列、不進加權目標價（G6）；兩讀數差異未超過 30%，不需另述原因。"
-Rm["A18"] = "未做事項：股票薪酬加回 DCF 只作對照（Val 與 Recon 並列，不進加權目標價）；先驗（Andy 指示本版跳過）；三層基準協調（Coord、C0、兩讀數）不適用：非 Siliconomics 覆蓋；Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照不適用：Accenture 不自建算力；v0.2 改讀 unit_economics。"
+Rm["A18"] = "未做事項：股票薪酬加回 DCF 只作對照（Val 與 Recon 並列，不進加權目標價）；事前驗證（專案負責人 指示本版跳過）；三層基準協調（Coord、C0、兩讀數）不適用：非 Siliconomics 覆蓋；Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照不適用：Accenture 不自建算力；v0.2 改讀 unit_economics。"
 Rm["A19"] = (f'="合理性關卡（工作單 G3 第 3 條）："&IF({VB("g3_flag")}=1,"觸發，須診斷：","未觸發；")&"DCF 目標價÷現價 "&TEXT({VB("g3_dcf")},"0.00")&"、EV 最小值 "&TEXT({VB("g3_ev")}/1000,"0.0")&" 十億美元、FY2027 營收對指引中點差 "&TEXT({VB("g3_rev")},"0.0%")&"、營業利益率相對差 "&TEXT({VB("g3_om")},"0.0%")&"、評等 "&{VB("valr")}&"。診斷結論：本模型評等由 AI 淨效果之成本節省比例 cs（Assumed，Sens 最敏感）與同業倍數與歷史相對倍數（geo_base，Derived；PS／PSG 讀數見 In 頁）決定；兩法與現價的落差見 Val 的落差分解與現行倍數÷同業中位數，屬經濟判斷而非建模錯誤；恆等式核對皆為 0。"')
 Rm["A20"] = "市場資料日期"
 Rm["A21"] = (f'="現價 "&TEXT({I("px_date")},"yyyy-mm-dd")&" 收盤；無風險利率 "&TEXT({I("rf_date")},"yyyy-mm-dd")&"（與現價日相差 "&TEXT({VB("stale_rf")},"0")&" 個交易日，"&{VB("stale_rf","C")}&"）；同業倍數 2026-10-21 至 2026-10-27，已標逾期（Val 頁）；無風險利率取 FRED DGS10（與同批模型統一，G5 第 2 條）。"')
@@ -721,7 +721,7 @@ mp = [("Seg", "hc_y26、util、hrs、hg、rg、a27、a32_A/B/C、r_A/B/C、n27�
       ("Sens", "In 頁敏感度低／高", "加權目標價、DCF 目標價、投資建議", "一次改一個輸入、整本重算")]
 for i, rk in enumerate(mp, 34):
     for j, v in enumerate(rk, 1): Rm.cell(i, j, v)
-Rm["A39"] = "版本沿革：v0.2.2（2026-11-17）G7：同業 P/S 改現價日 peer_ps_20261113，資料庫最近一季中位列 Sens 對照；v0.2.1（2026-11-17）G6：Comparable 主腿改 P/S，EV／EBIT 改對照；v0.2（2026-11-17）G5：Comparable 倍數改用歷史相對倍數 geo_base（PS／PSG；Derived）、無風險利率統一為 FRED DGS10 5.10%（2026-11-12）、新增股票薪酬加回 DCF 對照讀數；v0.1（2026-11-16）首版。皆未做先驗。"
+Rm["A39"] = "版本沿革：v0.2.3（2026-11-17）G8：Comparable 股權價值改為 P/S × 目標日 TTM 營收 − 非控制權益帳面值（Val!C52:E52 公式，扣一次）；v0.2.2（2026-11-17）G7：同業 P/S 改現價日 peer_ps_20261113，資料庫最近一季中位列 Sens 對照；v0.2.1（2026-11-17）G6：Comparable 主腿改 P/S，EV／EBIT 改對照；v0.2（2026-11-17）G5：Comparable 倍數改用歷史相對倍數 geo_base（PS／PSG；Derived）、無風險利率統一為 FRED DGS10 5.10%（2026-11-12）、新增股票薪酬加回 DCF 對照讀數；v0.1（2026-11-16）首版。皆未做事前驗證。"
 for ws_ in wb.worksheets:
     ws_.column_dimensions["A"].width = 52
     for col in "BCDEFGHIJK": ws_.column_dimensions[col].width = 14

@@ -1,16 +1,16 @@
 #!/bin/bash
-# Accenture 個股模型 v0.2.2：建置 → （敏感度與反解）→ LibreOffice 重算 → 核對。需要 python3＋openpyxl、LibreOffice。
-#   bash software_ai/accenture/make_v022.sh            # 沿用已提交的 data/sens_v022_20261117.json 與 data/rev_solve_v022.json
-#   SENS=1 bash software_ai/accenture/make_v022.sh     # 改了輸入或公式後重跑敏感度與反解（約 70 次整本重算）
+# Fujitsu 個股模型 v0.2.3：建置 → （敏感度與反解）→ LibreOffice 重算 → 核對。需要 python3＋openpyxl、LibreOffice。
+#   bash software_ai/fujitsu/make_v023.sh            # 沿用已提交的 data/sens_v023_20261117.json 與 data/rev_solve_v023.json
+#   SENS=1 bash software_ai/fujitsu/make_v023.sh     # 改了輸入或公式後重跑敏感度與反解（約 70 次整本重算）
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$ROOT"
-F=software_ai/accenture
+F=software_ai/fujitsu
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD/out" $F/dist
-S=$F/data/sens_v022_20261117.json; RV=$F/data/rev_solve_v022.json
-OUT=$F/dist/20261117_Accenture個股模型_v0.2.2.xlsx
-python3 $F/build_accenture.py "$WD/raw0.xlsx" --rowmap "$WD/rowmap.json"
-if [ "${SENS:-0}" = "1" ]; then python3 $F/sens_accenture.py "$WD/raw0.xlsx" "$WD/rowmap.json" "$S" "$RV" 4; fi
-python3 $F/build_accenture.py "$WD/raw.xlsx" --rowmap "$WD/rowmap.json" --sens "$S" --rev "$RV"
+S=$F/data/sens_v023_20261117.json; RV=$F/data/rev_solve_v023.json
+OUT=$F/dist/20261117_Fujitsu個股模型_v0.2.3.xlsx
+python3 $F/build_fujitsu.py "$WD/raw0.xlsx" --rowmap "$WD/rowmap.json"
+if [ "${SENS:-0}" = "1" ]; then python3 $F/sens_fujitsu.py "$WD/raw0.xlsx" "$WD/rowmap.json" "$S" "$RV" 4; fi
+python3 $F/build_fujitsu.py "$WD/raw.xlsx" --rowmap "$WD/rowmap.json" --sens "$S" --rev "$RV"
 LC_ALL=C.UTF-8 soffice -env:UserInstallation=file://$WD/lo --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir "$WD/out" "$WD/raw.xlsx" >/dev/null 2>&1
 cp "$WD/out/raw.xlsx" "$OUT"
 python3 - "$OUT" <<'PY'

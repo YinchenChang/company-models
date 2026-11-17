@@ -4,7 +4,7 @@
 用法：
   python3 software_ai/naver/build_naver.py <raw.xlsx> [--sens sens.json] [--set key=value ...]
   （--set 只改 In 頁基準欄 E，供 sens_naver.py 逐案整本重算用）
-本版未做先驗（工作單 G 節）。金額＝十億韓元（K-IFRS，會計年度＝曆年），除非另註。歷史數字取自 facts_naver.py（同一份資料寫出 data/facts_naver.csv）。
+本版未預設投資觀點（工作單 G 節）。金額＝十億韓元（K-IFRS，會計年度＝曆年），除非另註。歷史數字取自 facts_naver.py（同一份資料寫出 data/facts_naver.csv）。
 """
 import datetime, hashlib, json, os, sys
 import openpyxl
@@ -15,7 +15,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import facts_naver as FN  # noqa: E402
 
-VER = "0.2.2"
+VER = "0.2.3"
 PXDATE = datetime.date(2026, 11, 13)
 VALDATE = datetime.date(2026, 9, 30)
 DATADATE = datetime.date(2026, 11, 16)
@@ -101,7 +101,7 @@ inp("dil", "稀釋係數（RSU 扣預期沒收、選擇權庫藏股法）", "%",
 inp("sh_val", "評價日完全稀釋股數", "百萬股", None, "=(E7+E8)*(1+E10)", None, "Derived", "（流通股＋NVIDIA 新股）×（1＋稀釋係數）", "", "0.000")
 inp("netcash0", "淨現金（公司定義，不含 NAVER Financial；2026-09-30）", "十億韓元", None, sg("netcash")[1], None, "Verified", D3, "G2 第 5 條：只計債務本金與融資租賃；租賃負債未找到、營業租賃不計", "#,##0.0")
 inp("debt0", "借款（有息負債，2026-09-30）", "十億韓元", None, sg("debt")[1], None, "Verified", D3, "只用於資本結構權重與利息；淨現金已含其扣減", "#,##0.0")
-inp("nci_v", "非控制權益（價值）", "十億韓元", 0, 0, 200, "Assumed", "非控制權益拆分未找到；暫為 0", "高案 200 為判斷", "#,##0")
+inp("nci_v", "非控制權益（帳面值，2026-06-30）", "十億韓元", 1371.056, sg("nci")[1], 1566.831, "Verified", sg("nci")[5], "最近可得季末 2Q26（3Q26 合併財務狀況表未取得）；DCF 股權橋與 P/S 主腿各扣一次；Sens 區間＝近六季（1Q25–2Q26）最低 1,371.1（4Q25）與最高 1,566.8（1Q25）", "#,##0.0")
 inp("eqm_inc", "權益法投資年化收益（採計 NAVER 以外的投資組合）", "十億韓元", 50, 150, 300, "Assumed", "權益法損益 1Q25–3Q26 各季 −131.5 至 +276.2，無穩定基準（facts_naver.csv）；權益法投資帳面價值未找到", "同時作為預測期營業外收益（不入 EBIT）與非營運資產估值基礎", "#,##0")
 inp("pe_inv", "權益法投資採用的本益比（類比：LY Corporation 前瞻 P/E）", "倍", 10, sg("pe_ly")[1], 22, "Analogy", sg("pe_ly")[5] + "（2026-10-13，逾期）", "類比，非同一資產；Naver 持有之被投資公司無獨立揭露", "0.0")
 
@@ -207,7 +207,7 @@ NAMES_SCN = {"sai_A", "sai_B", "sai_C", "rai_A", "rai_B", "rai_C", "lam_A", "lam
 SENS_SKIP = {"r_link", "route_pen"}
 SENS_NOMODEL = {"sbc_pct"}   # 只在組合案中有效果，由組合案列涵蓋
 
-put(IN, "A1", "In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁，不進目標價）。標記＝Verified／Interested-party／Analogy／Assumed／Derived。本版未做先驗。", BOLD)
+put(IN, "A1", "In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁，不進目標價）。標記＝Verified／Interested-party／Analogy／Assumed／Derived。本版未預設投資觀點。", BOLD)
 put(IN, "A2", "事實來源：facts_naver.py（寫出 data/facts_naver.csv）、data/research_naver.md；推論成本只讀 data/tokenomics_snapshot_v22.0.json（Tokenomics v22.0）。金額十億韓元，EPS 與股價韓元。曆年制，FY2026＝2026-01～2026-12。", None)
 for j, h in enumerate(["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "來源誘因／說明"]):
     put(IN, f"{L(j+1)}3", h, BOLD, HDR)
@@ -744,7 +744,7 @@ VR["sh"] = r
 for j, h in enumerate(["項目", "情境 A", "情境 B", "情境 C", "同業群組倍數"]):
     put(V, f"{L(j+1)}{r}", h, BOLD, HDR)
 r += 1
-for k, lab in (("ttm_t", "目標時點 TTM 營收（十億韓元）"), ("ps_eq", "主腿股權價值＝主腿倍數 x TTM 營收（十億韓元）"), ("ps_ps", "主腿每股價值（韓元，目標時點）＝Comparable 主腿"),
+for k, lab in (("ttm_t", "目標時點 TTM 營收（十億韓元）"), ("ps_eq", "主腿股權價值＝主腿倍數 x TTM 營收 − 非控制權益（十億韓元）"), ("ps_ps", "主腿每股價值（韓元，目標時點）＝Comparable 主腿"),
                ("n_np", "對照：Naver Platform NTM NOPAT（十億韓元）"), ("n_fin", "Financial Platform NTM NOPAT"), ("n_glob", "Global Opportunities（含 AI Factory）NTM NOPAT（負值不計價，下限 0）"),
                ("v_np", "Naver Platform 價值（Platforms 群組倍數）"), ("v_fin", "Financial Platform 價值（Korea／Japan 群組倍數）"), ("v_glob", "Global Opportunities 價值（Korea／Japan 群組倍數）"),
                ("v_op", "營運事業價值（分部加總）"), ("c_nonop", "＋非營運資產（淨現金、增資款、權益法投資 − 非控制權益）"), ("c_eq", "股權價值"), ("s_ps", "對照：前瞻本益比口徑每股價值（相對倍數 1.00；韓元，目標時點；不進目標價）"),
@@ -855,7 +855,7 @@ for s in "ABC":
     put(V, f"{c}{VR['c_eq']}", f"={c}{VR['v_op']}+{c}{VR['c_nonop']}", None, None, "#,##0")
     put(V, f"{c}{VR['s_ps']}", f"={c}{VR['c_eq']}*1000/{I('sh_val')}", None, None, "#,##0")
     put(V, f"{c}{VR['ttm_t']}", f"=$B${VR['ttm_el']}*PL!{CL[4]}{R['rev']}+(1-$B${VR['ttm_el']})*PL!{CL[3]}{R['rev']}", None, None, "#,##0.0")
-    put(V, f"{c}{VR['ps_eq']}", f"=$B${VR['ps_x']}*{c}{VR['ttm_t']}", None, None, "#,##0")
+    put(V, f"{c}{VR['ps_eq']}", f"=$B${VR['ps_x']}*{c}{VR['ttm_t']}-{I('nci_v')}", None, None, "#,##0")
     put(V, f"{c}{VR['ps_ps']}", f"={c}{VR['ps_eq']}*1000/{I('sh_val')}", None, None, "#,##0")
     put(V, f"{c}{VR['ntm_tot']}", f"={c}{VR['n_np']}+{c}{VR['n_fin']}+{c}{VR['n_glob']}", None, None, "#,##0.0")
     put(V, f"{c}{VR['ntm_mult']}", f"={c}{VR['v_op']}/{c}{VR['ntm_tot']}", None, None, "0.0")
@@ -1012,7 +1012,7 @@ RCR["sbc_tp"] = r
 put(RC, f"A{r}", "DCF 目標價（股票薪酬加回，情境加權）"); put(RC, f"B{r}", f"={I('tpw_A')}*B{SB['d12']}+{I('tpw_B')}*C{SB['d12']}+{I('tpw_C')}*D{SB['d12']}", None, None, "#,##0"); put(RC, f"E{r}", "對照：標準 DCF 目標價見 Val 頁；不進加權目標價"); r += 1
 RCR["sbc_tp2"] = r
 put(RC, f"A{r}", "加權目標價（以加回後 DCF 代入，診斷對照）"); put(RC, f"B{r}", f"={I('w_dcf')}*B{RCR['sbc_tp']}+(1-{I('w_dcf')})*Val!B{VR['tpcomp']}", None, None, "#,##0"); put(RC, f"E{r}", "只作對照"); r += 2
-put(RC, f"A{r}", "未找到：公司年度指引、第二個共識來源、法定申報封面股數、RSU 與選擇權、非控制權益、租賃負債、折舊攤銷與股票薪酬、年度資本支出、查詢量與 AI token 量（見研究包第 9 節）。")
+put(RC, f"A{r}", "未找到：公司年度指引、第二個共識來源、法定申報封面股數、RSU 與選擇權、3Q26 季末非控制權益、租賃負債、折舊攤銷與股票薪酬、年度資本支出、查詢量與 AI token 量（見研究包第 9 節）。")
 RC.column_dimensions["A"].width = 70; RC.column_dimensions["F"].width = 70
 
 # =====================================================================================
@@ -1033,6 +1033,7 @@ for row_ in IN_ROWS:
         if isinstance(v, str): continue
         ex = "（上界：只動成本一邊）" if k == "ptok_idx" and side == "高" else ""
         SENS_DEF.append((k, side, {k: v}, lab + ex, f"基準 → {v}"))
+SENS_DEF.append(("nci_v,zero", "高", {"nci_v": 0}, "非控制權益不扣（前版 v0.2.2 口徑，僅作對照）", "nci_v＝0"))
 SENS_DEF.append(("rel_adj,ps_only", "高", {"rel_adj": RMG["sens"]["ps_only"]}, "相對倍數只用 PS 讀數（歷史相對中位）", f"rel_adj＝{RMG['sens']['ps_only']:.3f}"))
 SENS_DEF.append(("rel_adj,psg_only", "低", {"rel_adj": RMG["sens"]["psg_only"]}, "相對倍數只用 PSG 讀數", f"rel_adj＝{RMG['sens']['psg_only']:.3f}"))
 SENS_DEF.append(("ptok_idx,r_link", "高", {"ptok_idx": 3, "r_link": 0.08}, "價格與成本聯動：token 單價取市場價級距，同時 R 上調 0.08（高價模型換得較高變現）", "ptok_idx＝3；r_link＝0.08"))
@@ -1091,7 +1092,7 @@ SE.column_dimensions["A"].width = 70
 # =====================================================================================
 RD = S["README"]
 Vv = lambda k, col="B": f"Val!{col}{VR[k]}"
-put(RD, "A1", f'="Naver（035420）個股模型 v{VER}｜build_id "&Sens!D{SE_BID}&"｜資料截止日 "&TEXT({I("data_date")},"yyyy-mm-dd")&"｜成品日 {BUILDDATE.isoformat()}｜股價基準日 "&TEXT({I("px_date")},"yyyy-mm-dd")&"｜評價日 "&TEXT({I("val_date")},"yyyy-mm-dd")&"｜目標時點 "&TEXT({I("tp_date")},"yyyy-mm-dd")&"（本版沒有做先驗；Tokenomics 快照 {TKV}）"')
+put(RD, "A1", f'="Naver（035420）個股模型 v{VER}｜build_id "&Sens!D{SE_BID}&"｜資料截止日 "&TEXT({I("data_date")},"yyyy-mm-dd")&"｜成品日 {BUILDDATE.isoformat()}｜股價基準日 "&TEXT({I("px_date")},"yyyy-mm-dd")&"｜評價日 "&TEXT({I("val_date")},"yyyy-mm-dd")&"｜目標時點 "&TEXT({I("tp_date")},"yyyy-mm-dd")&"（本版未預設投資觀點；Tokenomics 快照 {TKV}）"')
 put(RD, "A2", "v0.2.1 要點（G6）：Comparable 主腿改為 P/S 口徑，前瞻本益比 Comparable 改為對照列、不進加權。v0.2 要點：相對倍數改為歷史 PS 與 PSG 兩讀數幾何平均、無風險利率統一取 2026-11-13、並列 DCF（股票薪酬加回）對照，其餘同 v0.1。命題與結構：命題＝原型 A（按廣告計價）的單位經濟：查詢量、廣告負載、點擊率、每次點擊價格；官方分部 Naver Platform、Financial Platform、Global Opportunities（2026 年起新口徑）；DCF（標準 FCFF）與 Comparable（分部 NTM 淨利乘同業前瞻本益比）各 50%，三情境只在 AI 驅動分化。不適用項目：算力、Wattonomics 與 Tokenomics 自用讀法 2（Naver 的自用 AI 成本放在命題模組）、三層協調。")
 put(RD, "A3", "命題：AI 進入 Naver 搜尋後，每單位廣告營收的變化＝AI 簡報帶來的營收增量（AI 回答查詢的廣告負載、點擊率與價格相對值，扣除版面擠壓）減去外部 AI 分流造成的侵蝕，再減去自建 HyperCLOVA X 的推論成本；三情境檢驗淨效果的正負與大小。")
 put(RD, "A4", f'="核心問題：FY2032E 的 AI 淨效果（營收層）三情境為 "&TEXT({Vv("ai_net")},"#,##0")&"／"&TEXT({Vv("ai_net","C")},"#,##0")&"／"&TEXT({Vv("ai_net","D")},"#,##0")&" 十億韓元（A／B／C），損益平衡 R* 在基準為 "&TEXT(PL!{CL[9]}{PR["B"]["rstar"]},"0.00")&"。"')
@@ -1104,9 +1105,9 @@ put(RD, "A10", f'="觀察五：FY2026E 營收 "&TEXT(Recon!C{RCR["rev26"]},"#,##
 put(RD, "A11", f'="橫幅："&{Vv("rec")}&"；加權目標價 "&TEXT({Vv("tp")},"#,##0")&" 韓元（上檔空間 "&TEXT({Vv("up")},"+0.0%;-0.0%")&"，現價 "&TEXT({I("px")},"#,##0")&"）。AI 淨效果三情境分化；查詢量與利益率路徑為 Assumed。"')
 put(RD, "A12", f'="落差歸因（情境 B，每股）：Comparable 比 DCF 高 "&TEXT({Vv("gp_gap")},"#,##0")&" 韓元＝倍數與口徑 "&TEXT({Vv("gp_mult")},"#,##0")&"＋時點 "&TEXT({Vv("gp_time")},"#,##0")&"＋股票薪酬 "&TEXT({Vv("gp_sbc")},"0")&"＋槓桿 "&TEXT({Vv("gp_lev")},"0")&"；DCF 隱含 P/S "&TEXT({Vv("gp_dcfmult")},"0.00")&" 倍，Comparable 主腿 P/S "&TEXT({Vv("ps_x")},"0.00")&" 倍（同業中位 "&TEXT({Vv("ps_med")},"0.00")&" x 相對倍數 "&TEXT({Vv("rel")},"0.00")&"）；對照列現行本益比 "&TEXT({Vv("own_pe")},"0.0")&" 倍，為同業中位數的 "&TEXT({Vv("own_ratio")},"0.00")&" 倍。"')
 put(RD, "A13", "情境分化依據：A／B／C 只在三個 AI 驅動分化——FY2032 AI 回答占查詢比例（A 60%／B 50%／C 50%）、AI 回答查詢的每查詢營收相對值 R（1.15／1.04／0.85）、外部 AI 分流占比（0%／3%／8%）。依據：公司只揭露 AI 貢獻 1Q26 廣告成長逾 50%、2Q26 逾 60%，與 AI 簡報廣告點擊率 +30%（均為 Interested-party，非隨機對照），無查詢量與營收拆分；分化幅度為判斷，不是觀測值。其他分部成長三情境相同。權重 25／50／25（Assumed）。")
-put(RD, "A14", "與標準規格的偏離：(1) 股數取第二來源，未取法定申報封面；RSU、選擇權明細未找到，以稀釋係數 Assumed 取代庫藏股法；(2) 非控制權益拆分未找到，暫為 0；(3) 比率參數（Naver Platform、Financial Platform、Global 利益率、營業成本率）基準持平於近四季，收斂與回升只放敏感度（G2 第 3 條；G3 第 1 條：FY2021–FY2025 營業利益率 19.4%、15.9%、15.4%、18.4%、18.3%，無規模經濟趨勢可延伸，故不加改善路徑，Sens 低案為單季 24.0%）；營運資金歷史比率未找到，非訂閱制，取 Assumed 3%（G3 第 2 條）；(4) 折舊攤銷與資本支出歷史由第二來源推得，公司未揭露；(5) 評價日取資產負債表日 2026-09-30，NVIDIA 增資款依事件價另加；(6) Comparable 的同業只有 5 家，不足 8 家不做迴歸，Global Opportunities 若為負盈餘不計價；相對倍數用 PS／PSG 歷史相對值近似套用於前瞻本益比（A41）；(7) AI Factory 資產由 Asset Co 持有，其資本支出與負債未入模型。")
+put(RD, "A14", "與標準規格的偏離：(1) 股數取第二來源，未取法定申報封面；RSU、選擇權明細未找到，以稀釋係數 Assumed 取代庫藏股法；(2) 非控制權益取 2026-06-30 帳面值 1,490.2 十億韓元（3Q26 合併財務狀況表未取得，Verified 但日期落後一季），P/S 主腿與 DCF 股權橋各扣一次；歸屬母公司淨利拆分未找到，EPS 以合計淨利計；(3) 比率參數（Naver Platform、Financial Platform、Global 利益率、營業成本率）基準持平於近四季，收斂與回升只放敏感度（G2 第 3 條；G3 第 1 條：FY2021–FY2025 營業利益率 19.4%、15.9%、15.4%、18.4%、18.3%，無規模經濟趨勢可延伸，故不加改善路徑，Sens 低案為單季 24.0%）；營運資金歷史比率未找到，非訂閱制，取 Assumed 3%（G3 第 2 條）；(4) 折舊攤銷與資本支出歷史由第二來源推得，公司未揭露；(5) 評價日取資產負債表日 2026-09-30，NVIDIA 增資款依事件價另加；(6) Comparable 的同業只有 5 家，不足 8 家不做迴歸，Global Opportunities 若為負盈餘不計價；相對倍數用 PS／PSG 歷史相對值近似套用於前瞻本益比（A41）；(7) AI Factory 資產由 Asset Co 持有，其資本支出與負債未入模型。")
 put(RD, "A15", "不適用：算力與 Wattonomics、Tokenomics 自用 AI 讀法 2（Naver 自建 HyperCLOVA X，其自用推論成本在命題模組，只讀 Tokenomics 全成本，標類比）；三層協調（Coord 頁、C0、兩個讀數）：非 Siliconomics 覆蓋；對帳中兩讀數目標價不適用。")
-put(RD, "A16", "已知限制：搜尋查詢量、AI 簡報 token 量、HyperCLOVA X 自用成本、年度資本支出、折舊攤銷、股票薪酬、租賃負債、RSU 與選擇權、非控制權益、公司年度指引均未找到（見 data/research_naver.md 第 9 節）；2026 年起分部與費用分類重編，FY2023A–FY2024A 無新口徑分部，歷史為舊口徑（Hist 頁）。NAVER Financial 與 Dunamu 合併未入模型。")
+put(RD, "A16", "已知限制：搜尋查詢量、AI 簡報 token 量、HyperCLOVA X 自用成本、年度資本支出、折舊攤銷、股票薪酬、租賃負債、RSU 與選擇權、3Q26 季末非控制權益、公司年度指引均未找到（見 data/research_naver.md 第 9 節）；2026 年起分部與費用分類重編，FY2023A–FY2024A 無新口徑分部，歷史為舊口徑（Hist 頁）。NAVER Financial 與 Dunamu 合併未入模型。")
 put(RD, "A17", f'="逾期標示（G2 第 10 條，與現價基準日 "&TEXT({I("px_date")},"yyyy-mm-dd")&" 相差超過 2 個交易日者）：無風險利率 "&{Vv("rf_flag")}&"；同業倍數 PINS "&IF({Vv("pe_pins","E").replace("B","E",1) if False else "Val!E"+str(VR["peers"]["pe_pins"])}="","未逾期","逾期")&"、Kakao "&IF(Val!E{VR["peers"]["pe_kakao"]}="","未逾期","逾期")&"、LY "&IF(Val!E{VR["peers"]["pe_ly"]}="","未逾期","逾期")&"、GOOGL "&IF(Val!E{VR["peers"]["pe_goog"]}="","未逾期","逾期")&"、META "&IF(Val!E{VR["peers"]["pe_meta"]}="","未逾期","逾期")&"。逾期倍數仍列入群組中位數，下次改版更新。"')
 put(RD, "A18", "驅動 → 推導對照表（每頁輸入、推導量、因果方向）", BOLD)
 for j, h in enumerate(["頁", "輸入", "推導量", "因果方向"]):

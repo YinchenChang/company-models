@@ -1,5 +1,5 @@
 # Datadog（DDOG）個股模型 v0.1（命題＋官方營收分部 → 損益表；原型 U 按用量計價；docs/plan/個股模型原則_命題加營收分部.md、個股DCF標準規格.md、個股HTML版面規格.md v1.3）
-# 工作單：software_ai/docs/workorders/20261116_第一批_研究包與單位經濟.md 的 G 與 G2 節。本版未做先驗。
+# 工作單：software_ai/docs/workorders/20261116_第一批_研究包與單位經濟.md 的 G 與 G2 節。
 # 用法：python3 software_ai/datadog/build_datadog.py raw.xlsx [--sens sens.json] [--kreq kreq.json] [--set 鍵=值 ...]；再以 LibreOffice headless 重算（make_datadog.sh 一次跑完）。
 # 金額：百萬美元（US$M）；股數：百萬股；每股：美元。會計年度＝日曆年（12 月 31 日止）。
 # 欄位（模型頁共用）：C FY2023A、D FY2024A、E FY2025A、F 9M26A、G Q4 26E、H FY2026E（＝F＋G）、I–N FY2027–FY2032。評價日 2026-09-30。
@@ -25,7 +25,7 @@ for s_ in A.set:
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True)
 HDR = PatternFill("solid", fgColor="DDEBF7"); KEY = PatternFill("solid", fgColor="FFF2CC"); SUB = PatternFill("solid", fgColor="E2EFDA")
 wb = openpyxl.Workbook()
-VER = "v0.2.1"; VDATE = "2026-11-17"
+VER = "v0.2.2"; VDATE = "2026-11-17"
 
 
 def _build_id():
@@ -204,6 +204,7 @@ inp("conv_sh", "票據轉換股數（百萬股）＝1,000 ÷ 217.60", "百萬股
 inp("cash_0", "現金＋有價證券（2026-09-30）", "US$M", None, "=h_cash+h_mkt", None, "Derived", fs("bs.cash.20260930") + "；" + fs("bs.mkt.20260930"), "881.230＋4,352.357")
 inp("debt_0", "債務本金（2029 年到期 0.00% 可轉換票據）", "US$M", None, "=h_debt", None, "Verified", fs("debt.face.20260930"), "淨債務只計債務本金＋融資租賃，營業租賃不計（G2 第 5 條）")
 inp("fin_lease", "融資租賃負債（10-Q 未見融資租賃；未找到）", "US$M", None, 0.0, None, "Assumed", "未找到：資產負債表只列營業租賃負債（流動 46.177、非流動 274.462；不計入，因營業租賃費用已在營業利益）", "G2 第 5 條")
+inp("nci", "非控制權益帳面值（10-Q 資產負債表權益只列股東權益，無非控制權益；子公司均為全資）", "US$M", None, 0.0, None, "Verified", fs("bs.cash.20260930"), "G8：P/S 主腿股權口徑只扣非控制權益（帳面值、一次）；Datadog 為 0", "G7")
 sec("B. 營收：命題模組（原型 U 按用量計價：營收＝用量單位 × 單價；v0.2 改讀 unit_economics，本版先在此自建）")
 inp("q4_g", "Q4 26E 營收季增率（相對 3Q26）", "%", -0.01, 0.01, 0.03, "Assumed", "指引中點隱含 −0.2%（" + fs("guid.g_q4lo") + "）；近三季實績皆超出指引上緣 3.8%–4.7%（Recon）", "指引不入基準（X3）；基準＝略高於指引上緣的 +1.0%", judg=True)
 inp("ai_26", "AI 產品 credits 營收 FY2026E（Bits AI 等；公司未揭露）", "US$M", 20, 45, 90, "Assumed", "未找到：公司不揭露 AI 產品營收；約三分之一客戶使用 AI 產品（" + fs("ai.pen.3q26") + "）", "基準＝FY2026E 營收約 1%", judg=True)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Salesforce 個股模型 v0.2.2（原型 S：按席位計價；命題＋營收分部 → 損益表 → FCFF DCF＋Comparable）。
+"""Salesforce 個股模型 v0.2.3（原型 S：按席位計價；命題＋營收分部 → 損益表 → FCFF DCF＋Comparable）。
 用法：python3 build_salesforce.py <raw.xlsx> [--sens data/sens_v01.json] [--rowmap rowmap.json]
 所有計算為活公式；輸入在 In 頁（藍字）。LibreOffice 重算後才有快取值。
 """
@@ -12,7 +12,7 @@ OUT = sys.argv[1]
 SENS = sys.argv[sys.argv.index("--sens") + 1] if "--sens" in sys.argv else None
 KREQ = sys.argv[sys.argv.index("--kreq") + 1] if "--kreq" in sys.argv else None
 ROWMAP = sys.argv[sys.argv.index("--rowmap") + 1] if "--rowmap" in sys.argv else None
-VER, VDATE = "0.2.2", "20261117"
+VER, VDATE = "0.2.3", "20261117"
 PP = json.load(open("/home/claude/company-models/software_ai/data/relmult_hist/out/peer_ps_20261113.json", encoding="utf-8"))["companies"]["salesforce"]["groups"]["all"]
 PPD = json.load(open("/home/claude/company-models/software_ai/data/relmult_hist/out/peer_ps_20261113.json", encoding="utf-8"))["as_of"]
 RM = json.load(open("/home/claude/company-models/software_ai/data/relmult_hist/out/salesforce.json", encoding="utf-8"))["groups"]["all"]
@@ -116,7 +116,7 @@ SC = {  # 情境專屬列（A 樂觀／B 基準／C 保守）：key 前綴 → (
 
 ws = SH["In"]
 ws["A1"] = "Salesforce 個股模型 v0.1 輸入頁（藍字＝輸入；黑字＝公式）。金額 US$M，會計年度 2 月制（FY2027＝2026-02-01～2027-01-31）。"
-ws["A2"] = "基準欄 E 進主模型；D／F（敏感度低／高）只用於 Sens 頁一次動一個參數，不進目標價。情境專屬列（鍵尾 A／B／C）由「情境驅動對照」節並列。本版未做先驗。"
+ws["A2"] = "基準欄 E 進主模型；D／F（敏感度低／高）只用於 Sens 頁一次動一個參數，不進目標價。情境專屬列（鍵尾 A／B／C）由「情境驅動對照」節並列。本版未做事前驗證。"
 for j, h in enumerate(["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "來源誘因"], 1):
     c = ws.cell(3, j, h); c.font = BOLD; c.fill = HDR
 IR = {}  # key -> row
@@ -667,7 +667,7 @@ if kq: Rc.cell(r + 13 + len(kq["rows"]), 1, "反解結果對應輸入指紋 " + 
 Rc.cell(r + 13 + len(kq["rows"] if kq else []) + 2, 1, "9. DCF 股票薪酬加回對照（不進加權目標價）").font = BOLD
 Rc.cell(r + 13 + len(kq["rows"] if kq else []) + 3, 1, f'="DCF（股票薪酬加回）每股價值（評價日）：情境 A／B／C＝"&TEXT(Val!C{VR["sb_vps0"]},"0.00")&"／"&TEXT(Val!D{VR["sb_vps0"]},"0.00")&"／"&TEXT(Val!E{VR["sb_vps0"]},"0.00")&" 美元；不加回＝"&TEXT(Val!C{VR["vps0"]},"0.00")&"／"&TEXT(Val!D{VR["vps0"]},"0.00")&"／"&TEXT(Val!E{VR["vps0"]},"0.00")&" 美元"')
 Rc.cell(r + 13 + len(kq["rows"] if kq else []) + 4, 1, f'="DCF（股票薪酬加回）目標價（情境加權）"&TEXT(Val!B{VR["sb_tp"]},"0.00")&" 美元，相對現價 "&TEXT(Val!B{VR["sb_up"]},"0.0%")&"；不加回 DCF 目標價 "&TEXT(Val!B{VR["dcf_tp"]},"0.00")&" 美元；差額主要來自股票薪酬占營收約 8%（加回後 DCF 與 Comparable 的現金流口徑一致）。"')
-Rc.cell(r + 5, 1, "6. 未找到清單：見 research_salesforce.md 第 9 節；另 Blume β 只有單一來源、公司債有效利率未找到、持股淨額於 ASR 結算後的股數未找到。")
+Rc.cell(r + 5, 1, "6. 未找到清單：見 research_salesforce.md 第 9 節；另 Blume β 只有單一來源、公司債有效利率未找到、流通股數淨額於 ASR 結算後的股數未找到。")
 
 # ---------------------------------------------------------------- Sens 頁
 Se = SH["Sens"]
@@ -702,14 +702,14 @@ src_rows = [("Tokenomics 快照", f"{TK['source']['version']}（{TK['source']['f
             ("研究包", "software_ai/salesforce/data/research_salesforce.md、facts_salesforce.csv"),
             ("公司申報", "Salesforce 8-K 附件 99.1（2026-08-26 Q2 FY27；2026-05 Q1 FY27；2026-02-25 Q4 FY26；2025-12-03 Q3 FY26）；10-K FY2026（2026-03-02）；10-K FY2025"),
             ("同業倍數", "StockAnalysis statistics 頁（NOW、ADBE、WDAY、INTU、HUBS、SAP、CRM）"),
-            ("本版先驗", "未做（Andy 2026-11-16 23:27）")]
+            ("本版事前驗證", "未做（專案負責人 2026-11-16 23:27）")]
 for i, (a, b2) in enumerate(src_rows, 3):
     So.cell(i, 1, a); So.cell(i, 2, b2)
 So.cell(2, 1, "項目"); So.cell(2, 2, "內容")
 
 # ---------------------------------------------------------------- README 頁
 Rm = SH["README"]
-Rm["A1"] = (f'="Salesforce 個股模型 v{VER}｜資料截止 "&TEXT({I("data_date")},"yyyy-mm-dd")&"（最新已公布季 Q2 FY27，截至 2026-07-31）｜成品日 "&TEXT({I("build_date")},"yyyy-mm-dd")&"｜股價基準日 "&TEXT({I("px_date")},"yyyy-mm-dd")&"｜build_id {BUILD_ID}｜本版未做先驗"')
+Rm["A1"] = (f'="Salesforce 個股模型 v{VER}｜資料截止 "&TEXT({I("data_date")},"yyyy-mm-dd")&"（最新已公布季 Q2 FY27，截至 2026-07-31）｜成品日 "&TEXT({I("build_date")},"yyyy-mm-dd")&"｜股價基準日 "&TEXT({I("px_date")},"yyyy-mm-dd")&"｜build_id {BUILD_ID}｜本版未做事前驗證"')
 Rm["A2"] = "命題、結論與重點觀察的數字由公式自本檔其他頁組字（不手寫）。"
 VB = lambda k, col="B": f"Val!{col}{VR[k]}"
 Rm["A3"] = ('="命題：AI 進入席位型軟體後，每單位營收＝AI 帶來的代理營收增量 − 席位被替代的侵蝕 − 推論成本；本模型以 Salesforce 的席位型營收（席位 × 每席位年費，扣替代）加上代理任務數 × 每任務單價推導 Agentforce Apps，其餘沿用公司揭露口徑。情境 B 在 FY"'
@@ -722,13 +722,13 @@ Rm["A8"] = (f'="三、每任務推論成本（公司揭露的 token 數 × Token
 Rm["A9"] = (f'="四、現價隱含 FY2032 營業利益率 "&TEXT(RevDCF!B{RV["m_imp"]},"0.0%")&"（情境 B 為 "&TEXT(RevDCF!B{RV["m_fy32"]},"0.0%")&"）；永續價值占 EV 約 "&TEXT(Val!D{VR["tvsh"]},"0%")&"。"')
 Rm["A10"] = (f'="五、上檔空間 "&TEXT({VB("u_tot")},"0.0%")&"＝DCF 貢獻 "&TEXT({VB("u_dcf")},"0.0%")&"＋未調整 Comparable 貢獻 "&TEXT({VB("u_comp")},"0.0%")&"＋相對倍數調整貢獻 "&TEXT({VB("u_adj")},"0.0%")&"；相對倍數 rel_mult＝"&TEXT({I("cm_adj")},"0.00")&"（PS 與 PSG 歷史相對值幾何平均，Derived；PS 單用 "&TEXT({I("rel_ps")},"0.00")&"、PSG 單用 "&TEXT({I("rel_psg")},"0.00")&"），套在同業中位 P／S 上（口徑一致，G6）；兩讀數分歧 "&TEXT({I("rel_div")},"0%")&IF({I("rel_div")}>0.3,"，超過 30%：原因為成長比 "&TEXT({I("rel_gr")},"0.00")&"（本公司營收年增低於同業）","，未超過 30%")&"；本公司現行 P／FCF 為同業中位數的 "&TEXT({VB("pe_ratio")},"0.00")&" 倍。"')
 Rm["A12"] = "v1.3 展示層"
-Rm["A13"] = (f'="Salesforce："&{VB("rec")}&"，加權目標價 "&TEXT({VB("tp")},"0.00")&" 美元（上檔 "&TEXT({VB("up")},"0.0%")&"）；本版未做先驗。"')
+Rm["A13"] = (f'="Salesforce："&{VB("rec")}&"，加權目標價 "&TEXT({VB("tp")},"0.00")&" 美元（上檔 "&TEXT({VB("up")},"0.0%")&"）；本版未做事前驗證。"')
 Rm["A14"] = "本版要點"
 Rm["A15"] = "單一營運分部（10-K）；營收分部取公司自 FY2027 Q1 起揭露的新二分類（Agentforce Apps、Data 360 等）與營收型態；舊五分類只有歷史。"
 Rm["A16"] = "命題子列（席位型、代理營收）合計等於 Agentforce Apps；子列為本模型拆分（Assumed），不是公司揭露。"
 Rm["A17"] = "推論成本只讀 Tokenomics v22.0 快照，不自行估 token 價格；每任務 token 取公司揭露的累計 token÷累計 AWU（Derived／Interested-party），ptok 為 Analogy，待 AI供應鏈 登錄。"
 Rm["A19"] = (f'="DCF（股票薪酬加回）每股價值（情境 B，評價日）"&TEXT({VB("sb_vps0","D")},"0.00")&" 美元、目標價（情境加權）"&TEXT({VB("sb_tp")},"0.00")&" 美元（相對現價 "&TEXT({VB("sb_up")},"0.0%")&"），不加回的 DCF 目標價 "&TEXT({VB("dcf_tp")},"0.00")&" 美元；僅作對照，不進加權目標價。"')
-Rm["A18"] = "未做事項：先驗（Andy 指示本版跳過）；三層基準協調（Coord、C0、兩讀數）不適用：非 Siliconomics 覆蓋；Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照不適用：Salesforce 不自建算力；非 GAAP 預測、新二分類 FY2026 回溯值：未找到。"
+Rm["A18"] = "未做事項：事前驗證（專案負責人 指示本版跳過）；三層基準協調（Coord、C0、兩讀數）不適用：非 Siliconomics 覆蓋；Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照不適用：Salesforce 不自建算力；非 GAAP 預測、新二分類 FY2026 回溯值：未找到。"
 Rm["A20"] = "市場資料日期"
 Rm["A21"] = (f'="現價 "&TEXT({I("px_date")},"yyyy-mm-dd")&" 收盤；無風險利率日期 "&TEXT({I("rf_date")},"yyyy-mm-dd")&IF(NETWORKDAYS({I("rf_date")},{I("px_date")})-1>2,"（逾期）","")&"；同業倍數日期 "&TEXT(MIN(Val!F{VR["pe1"]}:F{VR["pe6"]}),"yyyy-mm-dd")&" 至 "&TEXT(MAX(Val!F{VR["pe1"]}:F{VR["pe6"]}),"yyyy-mm-dd")&"，逾期 "&COUNTIF(Val!I{VR["pe1"]}:I{VR["pe6"]},"逾期")&" 家；同業 P／S 價格日 "&TEXT({I("ps_peer_date")},"yyyy-mm-dd")&"（逾期 2 家：WDAY、HUBS，2026-10-26）；股數取 10-Q 封面（Q1 FY27，2026-05-21）。"')
 Rm["A22"] = (f'="主要失效條件（可觀察）：Q3 FY27 cRPO 年增（固定匯率）低於指引 "&TEXT({I("crpo_g")},"0%")&"；Agentforce ARR 單季增量轉負（Q2 FY27 逾 1.5 十億美元）；席位年增轉為負；每任務推論成本占單價超過本頁基準 "&TEXT(Seg!G{SR["B"]["inf"]}/Seg!G{SR["B"]["agent"]},"0%")&"。"')
@@ -746,7 +746,7 @@ mp = [("Seg", "gs、pu、rho_A／B／C、gt0_A／B／C、dp_A／B／C、agent27�
       ("Sens", "In 頁敏感度低／高", "加權目標價、DCF 目標價、投資建議", "一次改一個輸入、整本重算")]
 for i, rk in enumerate(mp, 34):
     for j, v in enumerate(rk, 1): Rm.cell(i, j, v)
-Rm["A39"] = "版本沿革：v0.1（2026-11-16）首版；未做先驗；本版與其他版本無對照。"
+Rm["A39"] = "版本沿革：v0.1（2026-11-16）首版；未做事前驗證；v0.2.3（2026-11-17）依工作單 G8 只改文字（個人情境用語中性化），數字不變；本版與其他版本無對照。"
 
 # ---------------------------------------------------------------- 樣式與輸出
 for ws_ in wb.worksheets:

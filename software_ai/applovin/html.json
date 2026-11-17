@@ -2067,7 +2067,7 @@
     {
      "type": "note",
      "parts": [
-      "@README!A84"
+      "@README!A86"
      ]
     },
     {
@@ -2199,8 +2199,6 @@
     {
      "type": "list",
      "items": [
-      "@README!A70",
-      "@README!A71",
       "@README!A72",
       "@README!A73",
       "@README!A74",
@@ -2208,7 +2206,9 @@
       "@README!A76",
       "@README!A77",
       "@README!A78",
-      "@README!A79"
+      "@README!A79",
+      "@README!A80",
+      "@README!A81"
      ]
     },
     {

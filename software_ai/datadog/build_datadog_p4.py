@@ -171,8 +171,8 @@ for col, w in zip("ABCDEF", [6, 80, 18, 60, 18, 60]): SO.column_dimensions[col].
 VB = lambda k, c="B": f"Val!{c}{VR[k]}"
 TB = T["B"]
 RD["A1"] = (f'="Datadog（DDOG）個股模型 {VER}｜build_id "&Sens!D{SE_BID}&"｜資料截止日 "&TEXT(data_date,"yyyy-mm-dd")&"｜成品日 {VDATE}｜股價基準日 "&TEXT(px_date,"yyyy-mm-dd")'
-            f'&"｜評價日 "&TEXT(val_date,"yyyy-mm-dd")&"｜目標時點 "&TEXT(tp_date,"yyyy-mm-dd")&"（本版未做先驗；Tokenomics 快照 v22.0；命題＝原型 U 按用量計價，單位經濟在 In 頁自建，v0.2 改讀 unit_economics）"')
-RD["A2"] = ("v0.2.1 要點（同業 P/S 改現價日 peer_ps_20261113，G7；相對倍數改讀歷史相對倍數 geo_base、無風險利率統一為 5.10%、並列股票薪酬加回 DCF 對照）：命題＋官方單一分部 → 損益表；套用共通必修 G2 十條與 G3 四條；DCF 為 FCFF（股票薪酬視為費用）到 FY2032，Comparable 主腿為同業 P/S（與 PS／PSG 相對值同口徑，G6），Forward P/E 只列對照；"
+            f'&"｜評價日 "&TEXT(val_date,"yyyy-mm-dd")&"｜目標時點 "&TEXT(tp_date,"yyyy-mm-dd")&"（Tokenomics 快照 v22.0；命題＝原型 U 按用量計價，單位經濟在 In 頁自建，v0.2 改讀 unit_economics）"')
+RD["A2"] = ("v0.2.2 要點（G8：P/S 主腿股數改評價日稀釋股數、並列扣非控制權益＝0；v0.2.1：同業 P/S 改現價日 peer_ps_20261113，G7；相對倍數改讀歷史相對倍數 geo_base、無風險利率統一為 5.10%、並列股票薪酬加回 DCF 對照）：命題＋官方單一分部 → 損益表；套用共通必修 G2 十條與 G3 四條；DCF 為 FCFF（股票薪酬視為費用）到 FY2032，Comparable 主腿為同業 P/S（與 PS／PSG 相對值同口徑，G6），Forward P/E 只列對照；"
             "股票薪酬占營收依歷史規模經濟斜率延伸（下限 sbc_floor），其餘比率持平；三情境只在 AI 驅動分化（非 AI 與 AI 原生客戶用量、AI 原生客戶價格讓利、AI credits）。")
 RD["A3"] = "命題：Datadog 的營收按用量計價（營收＝客戶用量 × 單價）。AI 原生客戶帶來用量爆發，但也以大額承諾換取較低單價；AI 產品 credits 帶來新營收卻需向模型商買推論。本模型檢驗 AI 淨效果（增量 − 價格讓利 − 推論成本）的正負，以及它是否足以支持現價。"
 RD["A4"] = (f'="核心問題：FY2032E 的 AI 淨效果（營業利益前毛利）在情境 A／B／C 分別為 "&TEXT({VB("ai_net")},"#,##0")&"／"&TEXT({VB("ai_net","C")},"#,##0")&"／"&TEXT({VB("ai_net","D")},"#,##0")&" 百萬美元；基準下 AI 增量是否大於價格讓利與推論成本。"')
@@ -220,7 +220,7 @@ for i_, rowv in enumerate(RISKS):
     for j, v in enumerate(rowv): RD.cell(35 + i_, j + 1, v)
 RD["A41"] = "工作表：README／In／Hist／Q／Thesis／Seg／PL／CF／DCF／Val／RevDCF／Recon／Sens／Sources。成品 dist/<日期>_Datadog個股模型_v0.2.1.xlsx 與 .html。"
 RD["A42"] = (f'="DCF 與 Comparable 落差歸因（情境 B）：Comparable "&TEXT({VB("comp","C")},"#,##0.00")&" − DCF "&TEXT({VB("dcf12","C")},"#,##0.00")&" ＝ "&TEXT({VB("g_tot")},"+#,##0.00;-#,##0.00")&" 美元／股：股票薪酬 "&TEXT({VB("g_sbc")},"+#,##0.00;-#,##0.00")&"、倍數與成長殘差 "&TEXT({VB("g_mult")},"+#,##0.00;-#,##0.00")&"；槓桿 兩法皆為股權每股價值（每股淨現金 "&TEXT({VB("g_lev")},"0.00")&" 已含）；時點 兩法皆在目標時點（DCF 評價日起以 ke 滾動 "&TEXT({VB("g_time")},"+0.00")&" 已含在 DCF 內）。"')
-RD["A43"] = "未做先驗：本版沒有先驗（未預先設定任何投資觀點，結論全由 Assumed 輸入與公開資料推出）。"
+RD["A43"] = "無預設觀點：本版未預先設定任何投資觀點，結論全由 Assumed 輸入與公開資料推出。"
 for rr_ in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 30, 32, 42, 43):
     RD[f"A{rr_}"].alignment = openpyxl.styles.Alignment(wrap_text=True, vertical="top")
 RD.column_dimensions["A"].width = 120
