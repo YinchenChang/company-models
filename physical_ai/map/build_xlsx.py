@@ -12,7 +12,7 @@ from openpyxl.workbook.defined_name import DefinedName
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
-VERSION = "v0.1"
+VERSION = "v0.2"
 DATE = "20261117"
 OUT = os.path.join(HERE, "dist", f"{DATE}_實體AI地圖_資料_{VERSION}.xlsx")
 YEL = PatternFill("solid", fgColor="FFF2CC")
@@ -40,39 +40,40 @@ def rel(p):
 # ------------------------------------------------------------------ 六條線重點數字
 # (線代碼, 線名, 資料夾, 工作表, 查列方式, 鍵, 年, 欄(低,基準,高), 顯示標籤, 單位, 格式)
 LINES = [
-    ("1a", "Robotaxi", "lines/robotaxi", "下游取數", "id", "RT_PEN_2030", None, "CDE", "美國 Robotaxi 滲透率 2030（趟數）", "%", "pct"),
-    ("1a", "Robotaxi", "lines/robotaxi", "下游取數", "id", "RT_PEN_2035", None, "CDE", "美國 Robotaxi 滲透率 2035（趟數）", "%", "pct"),
-    ("1a", "Robotaxi", "lines/robotaxi", "下游取數", "id", "RT_OPEX_WAYMO_2030", None, "CDE", "Waymo 每付費英里單位營運成本 2030", "US$/英里", "usd2"),
-    ("1a", "Robotaxi", "lines/robotaxi", "下游取數", "id", "RT_OPEX_TSLA_FLEET_2030", None, "CDE", "Tesla 車隊每付費英里單位營運成本 2030", "US$/英里", "usd2"),
-    ("1a", "Robotaxi", "lines/robotaxi", "下游取數", "id", "RT_OPPRICE_WAYMO_2030", None, "CDE", "Waymo 每付費英里價格 2030", "US$/英里", "usd2"),
-    ("1a", "Robotaxi", "lines/robotaxi", "下游取數", "id", "RT_PRICE_OWN_AVG", None, "CDE", "門檻：自有車每英里全成本（AAA）", "US$/英里", "usd2"),
-    ("1b", "智慧車", "lines/smart_car", "下游取數", "name", "FSD 活躍數（年末，含早期買斷）", 2030, "CDE", "Tesla FSD 活躍數 2030", "百萬", "f1"),
-    ("1b", "智慧車", "lines/smart_car", "下游取數", "name", "FSD 年末年化營收", 2030, "CDE", "FSD 年末年化營收 2030", "十億 USD", "f1"),
-    ("1b", "智慧車", "lines/smart_car", "下游取數", "name", "中國城市 NOA 滲透率", 2030, "CDE", "中國城市 NOA 滲透率 2030", "%", "pct"),
-    ("1b", "智慧車", "lines/smart_car", "下游取數", "name", "每車智能內容（中國新車平均）", 2030, "CDE", "中國新車每車智能內容 2030", "USD/車", "f0"),
-    ("1b", "智慧車", "lines/smart_car", "下游取數", "name", "中國智能內容市場", 2030, "CDE", "中國智能內容市場 2030", "十億 USD", "f1"),
-    ("2a", "工業機器人（含協作）", "lines/industrial_robot", "下游取數", "idv", "IR.inst.global.2026.base", None, "E", "全球工業機器人裝機 2026（基準）", "台", "f0"),
-    ("2a", "工業機器人（含協作）", "lines/industrial_robot", "下游取數", "idv", "IR.inst.global.2030.base", None, "E", "全球工業機器人裝機 2030（基準）", "台", "f0"),
-    ("2a", "工業機器人（含協作）", "lines/industrial_robot", "下游取數", "idv", "IR.share.cobot.2030.base", None, "E", "協作占全球裝機比 2030（基準）", "%", "pct"),
-    ("2a", "工業機器人（含協作）", "lines/industrial_robot", "下游取數", "idv", "IR.red.rv.units.2030.base", None, "E", "機器人 RV 減速機需求 2030（基準）", "顆", "f0"),
-    ("2b", "人形機器人（硬體）", "lines/humanoid", "下游取數", "id", "HUM_BOM_2026", None, "CDE", "全尺寸人形每台 BOM 2026", "USD/台", "f0"),
-    ("2b", "人形機器人（硬體）", "lines/humanoid", "下游取數", "id", "HUM_BOM_2030", None, "CDE", "全尺寸人形每台 BOM 2030（低／基準／高＝成本情境）", "USD/台", "f0"),
-    ("2b", "人形機器人（硬體）", "lines/humanoid", "下游取數", "id", "HUM_PAYBACK_2026", None, "CDE", "對美國工人回本期 2026（假設生產力已到位）", "年", "f1"),
-    ("2b", "人形機器人（硬體）", "lines/humanoid", "下游取數", "id", "SHIP_2030", None, "CDE", "全球人形出貨 2030", "台/年", "f0"),
-    ("3", "倉儲物流自動化", "lines/warehouse", "下游取數", "id", "WH_AMR_MKT_2030", None, "CDE", "行動機器人營收 2030", "十億 USD", "f1"),
-    ("3", "倉儲物流自動化", "lines/warehouse", "下游取數", "id", "WH_ASRS_MKT_2030", None, "CDE", "AS/RS 市場 2030", "十億 USD", "f1"),
-    ("3", "倉儲物流自動化", "lines/warehouse", "下游取數", "id", "WH_AMR_PAYBACK", None, "CDE", "每台 AMR 回本期（穩態，悲觀／基準／樂觀）", "年", "f1"),
-    ("3", "倉儲物流自動化", "lines/warehouse", "下游取數", "id", "WH_COST_MANUAL", None, "CDE", "人工揀貨每訂單行成本", "USD/行", "usd2"),
-    ("3", "倉儲物流自動化", "lines/warehouse", "下游取數", "id", "WH_COST_AMR", None, "CDE", "AMR 貨到人每訂單行成本", "USD/行", "usd2"),
+    ("1", "Robotaxi", "lines/robotaxi", "下游取數", "id", "RT_PEN_2030", None, "CDE", "美國 Robotaxi 滲透率 2030（趟數）", "%", "pct"),
+    ("1", "Robotaxi", "lines/robotaxi", "下游取數", "id", "RT_PEN_2035", None, "CDE", "美國 Robotaxi 滲透率 2035（趟數）", "%", "pct"),
+    ("1", "Robotaxi", "lines/robotaxi", "下游取數", "id", "RT_OPEX_WAYMO_2030", None, "CDE", "Waymo 每付費英里單位營運成本 2030", "US$/英里", "usd2"),
+    ("1", "Robotaxi", "lines/robotaxi", "下游取數", "id", "RT_OPEX_TSLA_FLEET_2030", None, "CDE", "Tesla 車隊每付費英里單位營運成本 2030", "US$/英里", "usd2"),
+    ("1", "Robotaxi", "lines/robotaxi", "下游取數", "id", "RT_OPPRICE_WAYMO_2030", None, "CDE", "Waymo 每付費英里價格 2030", "US$/英里", "usd2"),
+    ("1", "Robotaxi", "lines/robotaxi", "下游取數", "id", "RT_PRICE_OWN_AVG", None, "CDE", "門檻：自有車每英里全成本（AAA）", "US$/英里", "usd2"),
+    ("2", "智慧車", "lines/smart_car", "下游取數", "name", "FSD 活躍數（年末，含早期買斷）", 2030, "CDE", "Tesla FSD 活躍數 2030", "百萬", "f1"),
+    ("2", "智慧車", "lines/smart_car", "下游取數", "name", "FSD 年末年化營收", 2030, "CDE", "FSD 年末年化營收 2030", "十億 USD", "f1"),
+    ("2", "智慧車", "lines/smart_car", "下游取數", "name", "中國城市 NOA 滲透率", 2030, "CDE", "中國城市 NOA 滲透率 2030", "%", "pct"),
+    ("2", "智慧車", "lines/smart_car", "下游取數", "name", "每車智能內容（中國新車平均）", 2030, "CDE", "中國新車每車智能內容 2030", "USD/車", "f0"),
+    ("2", "智慧車", "lines/smart_car", "下游取數", "name", "中國智能內容市場", 2030, "CDE", "中國智能內容市場 2030", "十億 USD", "f1"),
+    ("3", "工業機器人（含協作）", "lines/industrial_robot", "下游取數", "idv", "IR.inst.global.2026.base", None, "E", "全球工業機器人裝機 2026（基準）", "台", "f0"),
+    ("3", "工業機器人（含協作）", "lines/industrial_robot", "下游取數", "idv", "IR.inst.global.2030.base", None, "E", "全球工業機器人裝機 2030（基準）", "台", "f0"),
+    ("3", "工業機器人（含協作）", "lines/industrial_robot", "下游取數", "idv", "IR.share.cobot.2030.base", None, "E", "協作占全球裝機比 2030（基準）", "%", "pct"),
+    ("3", "工業機器人（含協作）", "lines/industrial_robot", "下游取數", "idv", "IR.red.rv.units.2030.base", None, "E", "機器人 RV 減速機需求 2030（基準）", "顆", "f0"),
+    ("4", "人形機器人（硬體）", "lines/humanoid", "下游取數", "id", "HUM_BOM_2026", None, "CDE", "全尺寸人形每台 BOM 2026", "USD/台", "f0"),
+    ("4", "人形機器人（硬體）", "lines/humanoid", "下游取數", "id", "HUM_BOM_2030", None, "CDE", "全尺寸人形每台 BOM 2030（低／基準／高＝成本情境）", "USD/台", "f0"),
+    ("4", "人形機器人（硬體）", "lines/humanoid", "下游取數", "id", "HUM_PAYBACK_2026", None, "CDE", "對美國工人回本期 2026（假設生產力已到位）", "年", "f1"),
+    ("4", "人形機器人（硬體）", "lines/humanoid", "下游取數", "id", "SHIP_2030", None, "CDE", "全球人形出貨 2030", "台/年", "f0"),
+    ("5", "倉儲物流自動化", "lines/warehouse", "下游取數", "id", "WH_AMR_MKT_2030", None, "CDE", "行動機器人營收 2030", "十億 USD", "f1"),
+    ("5", "倉儲物流自動化", "lines/warehouse", "下游取數", "id", "WH_ASRS_MKT_2030", None, "CDE", "AS/RS 市場 2030", "十億 USD", "f1"),
+    ("5", "倉儲物流自動化", "lines/warehouse", "下游取數", "id", "WH_AMR_PAYBACK", None, "CDE", "每台 AMR 回本期（穩態，悲觀／基準／樂觀）", "年", "f1"),
+    ("5", "倉儲物流自動化", "lines/warehouse", "下游取數", "id", "WH_COST_MANUAL", None, "CDE", "人工揀貨每訂單行成本", "USD/行", "usd2"),
+    ("5", "倉儲物流自動化", "lines/warehouse", "下游取數", "id", "WH_COST_AMR", None, "CDE", "AMR 貨到人每訂單行成本", "USD/行", "usd2"),
     ("6", "共用零組件", "lines/components", "下游取數", "name", "諧波減速機市場規模 2030", None, "BCD", "諧波減速機市場 2030", "百萬 USD", "f0"),
     ("6", "共用零組件", "lines/components", "下游取數", "name", "RV 減速機市場規模 2030", None, "BCD", "RV 減速機市場 2030", "百萬 USD", "f0"),
     ("6", "共用零組件", "lines/components", "下游取數", "name", "行星滾柱絲杠市場規模 2030（基準單價口徑＝覓途）", None, "BCD", "行星滾柱絲杠市場 2030", "百萬 USD", "f0"),
     ("6", "共用零組件", "lines/components", "下游取數", "name", "LiDAR 市場規模 2030", None, "BCD", "LiDAR 市場 2030", "百萬 USD", "f0"),
     ("6", "共用零組件", "lines/components", "下游取數", "name", "零組件不重複合計 2030", None, "BCD", "五線零組件不重複合計 2030", "百萬 USD", "f0"),
 ]
-LINE_META = {"1a": ("Robotaxi", "每英里成本何時低於價格與自有車成本？"), "1b": ("智慧車（四輪機器人）", "自駕滲透率 × 每車智能內容"),
-             "2a": ("工業機器人（含協作）", "AI 能否把機器人從固定工位推向彈性產線？"), "2b": ("人形機器人（硬體）", "每台 BOM、售價與回本期何時跨過門檻？"),
-             "3": ("倉儲物流自動化（AMR、AS/RS）", "每訂單行成本與回本期"), "6": ("共用零組件", "減速機、絲杠、馬達、感測：誰供應哪幾條線？")}
+LINE_META = {"1": ("Robotaxi", "每英里成本何時低於價格與自有車成本？"), "2": ("智慧車（四輪機器人）", "自駕滲透率 × 每車智能內容"),
+             "3": ("工業機器人（含協作）", "AI 能否把機器人從固定工位推向彈性產線？"), "4": ("人形機器人（硬體）", "每台 BOM、售價與回本期何時跨過門檻？"),
+             "5": ("倉儲物流自動化（AMR、AS/RS）", "每訂單行成本與回本期"), "6": ("共用零組件", "減速機、絲杠、馬達、感測：誰供應哪幾條線？")}
+# v0.2（2026-11-17）：線號改 1–6（前五為應用端、6 為共用零組件；產業地位活頁簿的「所屬線」原文 1a／1b／2a／2b／3 不改，地圖以 data/map_groups.csv 分組）
 
 
 def line_values():
@@ -211,6 +212,21 @@ def main():
         for c, v in enumerate([x["code"], nm, q, x["lab"], x["lo"], x["base"], x["hi"], x["unit"], x["fmt"], x["src"]], 1):
             W.cell(i, c, v)
     W.column_dimensions["D"].width = 44; W.column_dimensions["J"].width = 80
+
+    # 地圖分組（判斷：線 6 共用零組件拆為 6A–6D；黃底）
+    import csv as _csv
+    GR = wb.create_sheet("地圖分組")
+    grows = list(_csv.DictReader(open(os.path.join(HERE, "data", "map_groups.csv"), encoding="utf-8")))
+    gh = list(grows[0].keys()) + ["標記"]
+    for c, h in enumerate(gh, 1):
+        GR.cell(1, c, h).font = BOLD; GR.cell(1, c).fill = HDR
+    for i, r in enumerate(grows, 2):
+        for c, h in enumerate(gh[:-1], 1):
+            GR.cell(i, c, r[h]).fill = YEL
+        GR.cell(i, len(gh), "判斷（2026-11-17；線 6 拆 6A–6D 為地圖呈現分組，不影響地位分數與估值）")
+    allsub = {x for r in grows for x in r["次產業代碼"].split()}
+    assert allsub == {r["代碼"] for r in segs}, ("地圖分組未涵蓋全部次產業", allsub ^ {r["代碼"] for r in segs})
+    GR.column_dimensions["C"].width = 50; GR.column_dimensions["E"].width = 22
 
     # 次產業
     S = wb.create_sheet("次產業")
