@@ -96,7 +96,8 @@ C["peer_note"] = "晶圓代工與 CPU 同業（台積電、AMD、聯電、格芯
 C["sens_cases"] = [("ai_adj", "DCAI 中 AI 相關營收係數", "x", "0.00"), ("ext_adj", "外部代工營收係數", "x", "0.00"), ("fm_adj", "Foundry 營業利益率調整", "pt", "0.0%"),
                    ("dcm_adj", "DCAI 營業利益率調整", "pt", "0.0%"), ("ccm_adj", "CCPG 營業利益率調整", "pt", "0.0%"), ("ccg_adj", "CCPG 營收年增調整", "pt", "0.0%"),
                    ("cx_adj", "總資本支出係數", "x", "0.00"), ("opx_adj", "營業費用係數", "x", "0.00"), ("nonop_f", "營業外淨額", "US$B", "0.0"),
-                   ("tax", "稅率", "%", "0%"), ("nci_r", "非控制權益報酬率", "%", "0.0%")]
+                   ("tax", "稅率", "%", "0%"), ("nci_r", "非控制權益報酬率", "%", "0.0%"),
+                   ("cu_f", "Corporate Unallocated（FY2027 起每年）", "US$B", "0.0"), ("da_g", "折舊年增（FY2027 起）", "%", "0.0%")]
 C["sens_read"] = "資本支出、Foundry 營業利益率與 CCPG／DCAI 營業利益率是加權目標價最敏感的輸入（Foundry 年虧規模大，利益率每 5 個百分點約 4–7 億美元／年；資本支出每 10% 約 16 億美元／年的自由現金流）；DCAI 中 AI 相關營收 ±30% 與外部代工營收 ±50% 的影響較小。"
 C["recon"] = [("sec", "A. FY2026 錨點 vs 共識（non-GAAP；GAAP 與 non-GAAP 口徑不同，差距不代表錯誤）"),
     ("FY2026 營收 vs 共識（Yahoo 61.74B）", "=61.74", ("rev", 2026), "Yahoo 2026-11-17", "共識營收與 4Q26 指引中點接近", "#,##0.00", False),
@@ -166,7 +167,7 @@ C["readme"] = [
  ("情境對照表（A／B／C 讀同字母的行業情境；公司特有變數 A 最有利、C 最不利）", True),
  ("行業：DCAI 中 AI 相關營收 FY2028–29 乘 Siliconomics um28／um29（A 1.0／1.0、B 0.8／0.71、C 0.6／0.6）；Siliconomics 代工與邏輯設備年增（eq_g_fd：2026 18.9%、2027 18.1%、2028 13.6%）只作 Intel 資本支出的對照（Recon）。Siliconomics 沒有伺服器 CPU、客戶端 PC、代工利益率、外部代工營收的變數，皆為公司層級假設（建議補進 Siliconomics，見 README 檔）。", False),
  ("公司特有：外部代工營收、Foundry 營業利益率路徑、CCPG／DCAI 營業利益率、資本支出（見上）。", False)]
-C["obs"] = ["（建置後由公式取代）", "（建置後由公式取代）", "（建置後由公式取代）"]
+C["obs"] = ["目標價 US$0（現價 0（2026-11-13 收盤））。Comparable 單獨為 0。", "（建置後由公式取代）", "（建置後由公式取代）"]
 
 # ======================= 共用建置程式（聯電、世界先進同一套結構；數字與文字在上方 C 設定） =======================
 import sys, os, json, re
@@ -413,7 +414,7 @@ FYS = (2025, 2026, 2027, 2028, 2029); FC = {2025: "C", 2026: "D", 2027: "E", 202
 FADE = (2030, 2031, 2032); FADEFILL = PatternFill("solid", fgColor="E7E6E6")
 BU = (2026, 2027, 2028, 2029); F3 = (2027, 2028, 2029)
 DEFP = dict(scn="A", ai_adj="ai_adj", ext_adj="ext_adj", fm_adj="fm_adj", dcm_adj="dcm_adj", ccm_adj="ccm_adj", ccg_adj="ccg_adj", cx_adj="cx_adj", opx_adj="opx_adj",
-            nonop_f="nonop_f", tax="tax", nci_r="nci_r", fm_self=False, wm=None)
+            nonop_f="nonop_f", tax="tax", nci_r="nci_r", cu_f="cu_f", da_g="da_g", fm_self=False, wm=None)
 FM_FACTOR = {"A": "1", "B": "0.9", "C": "0.8"}
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
@@ -456,7 +457,7 @@ def engine(ws, r0, title, **over):
     row("elim", "分部間沖銷", "US$B", {"C": "=a25_elim", "D": "=a26_elim", **{FC[y]: f"={FC[y]}{R['ext']}-{FC[y]}{R['fnd']}" for y in F3}})
     row("fm", "Intel Foundry 營業利益率（占 Foundry 營收）", "%", {"C": "=a25_fnd_oi/a25_fnd", "D": "=a26_fnd_oi/a26_fnd", **{FC[y]: f"=fm{yy(y)}_{s}+{P['fm_adj']}" for y in F3}}, "0.0%")
     row("fndoi", "Intel Foundry 營業利益（虧損）", "US$B", {"C": "=a25_fnd_oi", "D": "=a26_fnd_oi", **{FC[y]: f"={FC[y]}{R['fnd']}*{FC[y]}{R['fm']}" for y in F3}})
-    row("cu", "Corporate Unallocated", "US$B", {"C": "=a25_cu", "D": "=a26_cu", **{FC[y]: "=cu_f" for y in F3}})
+    row("cu", "Corporate Unallocated", "US$B", {"C": "=a25_cu", "D": "=a26_cu", **{FC[y]: "=" + P["cu_f"] for y in F3}})
     row("elimoi", "分部間沖銷的營業利益", "US$B", {"C": "=a25_elimoi", "D": "=a26_elimoi", **{FC[y]: "=0" for y in F3}})
     sec_("C. 合併損益")
     row("rev", "營收（CCPG＋DCAI＋All Other＋外部代工）", "US$B", {FC[y]: f"={FC[y]}{R['ccg']}+{FC[y]}{R['dcr']}+{FC[y]}{R['oth']}+{FC[y]}{R['ext']}" for y in FYS})
@@ -477,7 +478,7 @@ def engine(ws, r0, title, **over):
     row("epsg", "EPS 年增", "%", {FC[y]: f"=IF({FC[y - 1]}{R['eps']}>0,{FC[y]}{R['eps']}/{FC[y - 1]}{R['eps']}-1,\"n/a\")" for y in FYS[1:]}, "0.0%")
     row("nim", "淨利率（歸屬 Intel 淨利 ÷ 營收）", "%", {FC[y]: f"={FC[y]}{R['ni']}/{FC[y]}{R['rev']}" for y in FYS}, "0.00%")
     sec_("D. 資本支出與折舊（DCF 逐年取用）")
-    row("da", "折舊", "US$B", {"C": "=a25_da", "D": "=a26_da", **{FC[y]: f"={FC[y - 1]}{r}*(1+da_g)" for y in F3}})
+    row("da", "折舊", "US$B", {"C": "=a25_da", "D": "=a26_da", **{FC[y]: f"={FC[y - 1]}{r}*(1+{P['da_g']})" for y in F3}})
     row("cx", "總資本支出（投資活動＋融資活動的 PP&E 增加）", "US$B", {"C": "=a25_cx", "D": "=a26_cx", **{FC[y]: f"=cx{yy(y)}_{s}*{P['cx_adj']}" for y in F3}}, note="不計合資夥伴挹注與政府補助（保守；夥伴挹注以非控制權益餘額與報酬率處理）")
     row("cxg", "總資本支出年增", "%", {FC[y]: f"={FC[y]}{R['cx']}/{FC[y - 1]}{R['cx']}-1" for y in BU}, "0.0%")
     row("cxs", "總資本支出 ÷ 營收", "%", {FC[y]: f"={FC[y]}{R['cx']}/{FC[y]}{R['rev']}" for y in FYS}, "0.0%")
