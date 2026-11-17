@@ -841,9 +841,10 @@ for key, lab, fmt in (("pe_rel", "相對倍數調整係數", "0.000"), ("beta", 
     RC.cell(r, 1, f"{lab}（{key}）"); RC.cell(r, 2, f"={key}").number_format = fmt
     kk = KREQ.get(key)
     if kk:
-        RC.cell(r, 3, kk["req"]["value"]).number_format = fmt; RC.cell(r, 3).font = BLUE
-        RC.cell(r, 4, kk["flip"]["value"]).number_format = fmt; RC.cell(r, 4).font = BLUE
-        RC.cell(r, 5, "已解" if kk["req"]["solved"] and kk["flip"]["solved"] else "未收斂")
+        for cc, nm_ in ((3, "req"), (4, "flip")):
+            v_ = kk[nm_]["value"]
+            RC.cell(r, cc, v_ if v_ is not None else "無解（變數範圍內達不到）"); RC.cell(r, cc).number_format = fmt; RC.cell(r, cc).font = BLUE
+        RC.cell(r, 5, "已解" if kk["req"]["solved"] and kk["flip"]["solved"] else ("部分無解：另一腿（Comparable）固定" if (kk["req"]["solved"] or kk["flip"]["solved"]) else "無解：另一腿（Comparable）固定，單變數達不到"))
     else:
         RC.cell(r, 5, "尚未重跑（KREQ＝1）")
     r += 1

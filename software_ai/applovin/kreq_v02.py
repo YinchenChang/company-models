@@ -26,14 +26,20 @@ def run(key, v):
 
 def solve(key, target_up, a, b):
     f = lambda v: run(key, v)[0] / run(key, v)[1] - 1 - target_up
-    fa, fb = f(a), f(b)
+    try:
+        fa, fb = f(a), f(b)
+    except Exception:
+        return {"solved": False, "value": None, "tp": None}
     for _ in range(25):
+        if not (-50 < b < 50): return {"solved": False, "value": None, "tp": None}
         if fb == fa: break
         c = b - fb * (b - a) / (fb - fa)
-        a, fa, b, fb = b, fb, c, f(c)
+        if not (-50 < c < 50) or c <= 0: return {"solved": False, "value": None, "tp": None}
+        try: a, fa, b, fb = b, fb, c, f(c)
+        except Exception: return {"solved": False, "value": None, "tp": None}
         print(key, round(b, 5), round(fb, 6), flush=True)
         if abs(fb) < 1e-5: break
-    return {"solved": abs(fb) < 1e-4, "value": b, "tp": run(key, b)[0]}
+    return {"solved": abs(fb) < 1e-4, "value": b if abs(fb) < 1e-4 else None, "tp": run(key, b)[0]}
 
 
 res = {"base_tp": run("beta", 2.0251)[0]}

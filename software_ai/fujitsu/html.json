@@ -357,6 +357,12 @@
      }
     },
     {
+     "type": "note",
+     "parts": [
+      "@Val!A95"
+     ]
+    },
+    {
      "type": "table",
      "collapse": true,
      "summary": "展開：同業倍數（含日期與逾期旗標）與淨現金",
@@ -439,7 +445,7 @@
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "10-83",
+      "rows": "10-84",
       "cols": [
        "A",
        "B",
@@ -1149,6 +1155,26 @@
       "fmts": [
        "",
        "n3"
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "caption": "股票薪酬加回 DCF 讀數（對照）",
+     "head": [
+      "項目",
+      "數值"
+     ],
+     "rowgen": {
+      "sheet": "Recon",
+      "rows": "33-35",
+      "cols": [
+       "A",
+       "B"
+      ],
+      "fmts": [
+       "",
+       "n2"
       ]
      }
     },
