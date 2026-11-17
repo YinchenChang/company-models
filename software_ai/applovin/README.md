@@ -4,7 +4,7 @@
 
 **版本表（由建置成品產生，不手寫；原則第 10 節第 51 條）：**
 
-<!-- version-table: dist/_待刪除/20261117_AppLovin個股模型_v0.1.xlsx｜dist/_待刪除/20261117_AppLovin個股模型_v0.2.xlsx｜dist/20261117_AppLovin個股模型_v0.2.1.xlsx -->
+<!-- version-table: dist/_待刪除/20261117_AppLovin個股模型_v0.1.xlsx｜dist/_待刪除/20261117_AppLovin個股模型_v0.2.xlsx｜dist/_待刪除/20261117_AppLovin個股模型_v0.2.1.xlsx｜dist/20261117_AppLovin個股模型_v0.2.2.xlsx -->
 | 項目 | v0.1 | v0.2 | v0.2.1 |
 |---|---|---|---|
 | 現價 | 409.10 | 409.10 | 409.10 |
@@ -16,7 +16,9 @@
 | 收支關卡 A／B／C（FY2027–FY2031，US$M） | 59,184.2／48,677.8／36,342.7 | 59,184.2／48,677.8／36,342.7 | 59,184.2／48,677.8／36,342.7 |
 <!-- /version-table -->
 
-**v0.2.1（2026-11-17）：** 工作單 G6：Comparable 主腿由前瞻本益比改為 **P/S 口徑**，以與 PS／PSG 相對值同基礎（v0.2 把已含利潤率差異的 PS／PSG 相對值套到本益比，重複計入而高估）。每股價值＝同業中位 P/S（`software_ai/data/relmult_hist/` 資料庫最近一季，季末日與逾期標示見 Val 頁；副本 `data/relmult_ps_latest.csv`）× 相對倍數 geo_base × 目標時點 TTM 營收 ÷ 評價日稀釋股數。**盈餘類倍數（前瞻本益比）只作對照列，不進加權目標價**（Val 頁「前瞻本益比對照」：相對倍數 1.00 與本公司現行相對值兩讀）。Sens 的 sens.low、sens.high、ps_only、psg_only 四案皆落在新 P/S 腿。
+**v0.2.2（2026-11-17）：** 工作單 G7：同業中位 P/S 改讀 `software_ai/data/relmult_hist/out/peer_ps_20261113.json`（現價日 2026-11-13；副本 `data/peer_ps_20261113.json`；非 11-13 者逐家標逾期，Val 頁）；rel_mult 仍為 geo_base。Sens 加「同業 P/S＝資料庫最近一季中位」對照案（即 v0.2.1 的值）。P/S 主腿為股權口徑，分母為目標時點 TTM 營收。
+
+**v0.2.1（2026-11-17）：** 工作單 G6：Comparable 主腿由前瞻本益比改為 **P/S 口徑**，以與 PS／PSG 相對值同基礎（v0.2 把已含利潤率差異的 PS／PSG 相對值套到本益比，重複計入而高估）。每股價值＝同業中位 P/S（`software_ai/data/relmult_hist/` 資料庫最近一季，季末日與逾期標示見 Val 頁；現已由 G7 改讀現價日資料）× 相對倍數 geo_base × 目標時點 TTM 營收 ÷ 評價日稀釋股數。**盈餘類倍數（前瞻本益比）只作對照列，不進加權目標價**（Val 頁「前瞻本益比對照」：相對倍數 1.00 與本公司現行相對值兩讀）。Sens 的 sens.low、sens.high、ps_only、psg_only 四案皆落在新 P/S 腿。
 
 **v0.2（2026-11-17）：** 工作單 G5：相對倍數改讀 `software_ai/data/relmult_hist/out/applovin.json` 的 geo_base（副本 `data/relmult_applovin.json`；PS 與 PSG 讀數差異大，成長比 2.60，原因見 README 頁與 HTML）、rf 統一 5.10%（FRED DGS10，2026-11-12）、DCF 並列股票薪酬加回讀數（只作對照）。v0.1 為工作單 G、G2、G3 首版；v0.1 與 v0.2 成品皆移 `dist/_待刪除/`。建置 `bash software_ai/applovin/make_v02.sh`（`KREQ=1 SENS=1` 重跑反解與敏感度）。
 

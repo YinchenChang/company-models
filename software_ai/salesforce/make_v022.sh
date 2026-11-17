@@ -1,12 +1,12 @@
 #!/bin/bash
-# Salesforce 個股模型 v0.2.1：建置 → 敏感度與反解 → 重算 → 全部核對。需要 python3＋openpyxl、LibreOffice。
-#   bash software_ai/salesforce/make_v021.sh            # 沿用已提交的敏感度與反解
-#   SENS=1 bash software_ai/salesforce/make_v021.sh     # 改了輸入或公式後重跑敏感度（約 77 案）與反解（約 30 次重算）
+# Salesforce 個股模型 v0.2.2：建置 → 敏感度與反解 → 重算 → 全部核對。需要 python3＋openpyxl、LibreOffice。
+#   bash software_ai/salesforce/make_v022.sh            # 沿用已提交的敏感度與反解
+#   SENS=1 bash software_ai/salesforce/make_v022.sh     # 改了輸入或公式後重跑敏感度（約 77 案）與反解（約 30 次重算）
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD/out" software_ai/salesforce/dist
-S=software_ai/salesforce/data/sens_v021_20261117.json; K=software_ai/salesforce/data/kreq_v021.json
-OUT=software_ai/salesforce/dist/20261117_Salesforce個股模型_v0.2.1.xlsx
+S=software_ai/salesforce/data/sens_v022_20261117.json; K=software_ai/salesforce/data/kreq_v022.json
+OUT=software_ai/salesforce/dist/20261117_Salesforce個股模型_v0.2.2.xlsx
 python3 software_ai/salesforce/build_salesforce.py "$WD/raw0.xlsx" --rowmap "$WD/rowmap.json"
 if [ "${SENS:-0}" = "1" ]; then
   python3 software_ai/salesforce/sens_salesforce.py "$WD/raw0.xlsx" "$WD/rowmap.json" "$S" 4

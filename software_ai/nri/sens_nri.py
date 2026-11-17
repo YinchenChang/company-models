@@ -34,6 +34,8 @@ rets = {x: Ib.cell(IR["ret_" + x], 5).value for x in "ABC"}
 cases.append(([("tk_tier", 3), ("inf_mult", 50)] + [("ret_" + x, min(1.0, rets[x] + 0.05)) for x in "ABC"], "高", "tk_tier,inf_mult,ret_A,ret_B,ret_C", "價格與成本聯動：推論成本取高端（最高層級、額外倍數 50）且成本轉嫁客戶（價格保留率各情境 +5 個百分點；同步變動）", "聯動高"))
 cases.append(([("tk_tier", 1), ("inf_mult", 1)] + [("ret_" + x, rets[x] - 0.05) for x in "ABC"], "低", "tk_tier,inf_mult,ret_A,ret_B,ret_C", "模型組合路由到便宜模型：推論成本取低端（最低層級、額外倍數 1），客戶同步要求分享（價格保留率各情境 −5 個百分點）", "聯動低"))
 _g = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "relmult_hist", "out", "nri.json"), encoding="utf-8"))["groups"]["all"]["sens"]
+_pdb = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "relmult_hist", "out", "peer_ps_20261113.json"), encoding="utf-8"))["companies"]["nri"]["groups"]["all"]["db_last_quarter"]["median"]
+cases.append(([("ps_med", _pdb)], "基準", "ps_med", "同業 P/S＝資料庫最近一季中位（對照；v0.2.1 的值）", f"ps_med＝{_pdb:.4g}（資料庫 2026-06-30）"))
 cases.append(([("rm_adj", _g["ps_only"])], "基準", "rm_adj", "相對倍數 ps_only（只用 PS 讀數；relmult_hist）", f"rm_adj＝{_g['ps_only']:.4g}（ps_only）"))
 cases.append(([("rm_adj", _g["psg_only"])], "基準", "rm_adj", "相對倍數 psg_only（只用 PSG 讀數；relmult_hist）", f"rm_adj＝{_g['psg_only']:.4g}（psg_only）"))
 def run(i):

@@ -10,6 +10,7 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 _R0 = _json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "relmult_datadog.json"), encoding="utf-8"))
 RELP = _json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "relmult_peers.json"), encoding="utf-8"))
+RELN = _json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "peer_ps_20261113.json"), encoding="utf-8"))
 RELJ = {"geo_base": _R0["geo_base"], "base_source": _R0["base_source"], "sens": _R0["sens"], "div30": _R0["divergence_gt_30pct"]}
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -24,7 +25,7 @@ for s_ in A.set:
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True)
 HDR = PatternFill("solid", fgColor="DDEBF7"); KEY = PatternFill("solid", fgColor="FFF2CC"); SUB = PatternFill("solid", fgColor="E2EFDA")
 wb = openpyxl.Workbook()
-VER = "v0.2"; VDATE = "2026-11-17"
+VER = "v0.2.1"; VDATE = "2026-11-17"
 
 
 def _build_id():
@@ -275,12 +276,14 @@ inp("g_tv", "永續成長率", "%", 0.02, 0.03, 0.04, "Assumed", "DCF 規格第 
 inp("ronic_sp", "RONIC − WACC（基準 0＝新投資價值中性）", "%", None, 0.0, 0.05, "Assumed", "DCF 規格第 3 節預設 RONIC＝WACC", "高＝+5 百分點", judg=True)
 inp("sbc_add", "DCF 加回股票薪酬（稅後；0＝不加回，預設）", "x", None, 0, 1, "Assumed", "DCF 規格第 1 節預設不加回", "加回只作敏感度", judg=True)
 inp("w_dcf", "DCF 權重（Comparable＝1−本值）", "%", 0.3, 0.5, 0.7, "Assumed", "原則第 4 節預設各半", "", judg=True)
+inp("ps_db", "同業 P/S 取值開關（0＝2026-11-13 現價中位；1＝資料庫最近一季中位，G7 第 2 條對照）", "0/1", None, 0, 1, "Assumed", "G7：主腿預設用現價日同業 P/S", "Sens 高案＝資料庫最近一季中位（v0.2 的值）")
 inp("rel_m", "Comparable 相對倍數（本公司 ÷ 同業中位；近 20 財季 PS 與 PSG 相對值幾何平均）", "x", RELJ["sens"]["low"], RELJ["geo_base"], RELJ["sens"]["high"], "Derived", "software_ai/data/relmult_hist/out/datadog.json（本檔 data/relmult_datadog.json）：geo_base；base_source＝" + RELJ["base_source"], "低／高＝該檔 sens.low／sens.high；Sens 另有 ps_only（PS 讀數）與 psg_only（PSG 讀數）兩案；divergence_gt_30pct 為否，PS 與 PSG 兩讀數相近；近似說明：本模型 Comparable 為 P/S 與 P/E 兩腿，以 PS／PSG 相對值近似套用於 P/E 腿", judg=True)
 sec("F. 同業倍數（stockanalysis 統計頁；Forward 分母口徑未載明；日期不一→逾期標示見 Recon）")
 PEER = [("snow", "Snowflake（SNOW）", "2026-11-13"), ("net", "Cloudflare（NET）", "2026-11-13"), ("mdb", "MongoDB（MDB）", "2026-11-06"), ("dt", "Dynatrace（DT）", "2026-11-06"), ("estc", "Elastic（ESTC）", "2026-11-06")]
 for k, nm, dt in PEER:
-    inp(f"pm_ps_{k}", f"{nm} P/S（relmult_hist 最近一季；Comparable 主腿）", "x", None, RELP[k]["ps"], None, "Interested-party", RELP[k]["src"], "與 PS／PSG 相對值同口徑（G6）：市值÷TTM 營收", inc=INC_DATA)
-    inp(f"pm_dp_{k}", f"{nm} P/S 季末日", "日期", None, datetime.date.fromisoformat(RELP[k]["q"]), None, "Verified", RELP[k]["src"])
+    inp(f"pm_ps_{k}", f"{nm} P/S（2026-11-13 現價；Comparable 主腿）", "x", None, RELN["peers"][k]["ps"], None, "Interested-party", RELN["source"] + f"；價格日 {RELN['peers'][k]['date']}", "股權口徑：市值÷最新 TTM 營收（G7）；價格日非 2026-11-13 者於 Val 0.6 標逾期", inc=INC_DATA)
+    inp(f"pm_dp_{k}", f"{nm} P/S 價格日", "日期", None, datetime.date.fromisoformat(RELN["peers"][k]["date"]), None, "Verified", RELN["source"])
+    inp(f"pm_psq_{k}", f"{nm} P/S（資料庫最近一季，對照案用）", "x", None, RELP[k]["ps"], None, "Interested-party", RELP[k]["src"], "只供 Sens「同業 P/S＝資料庫最近一季中位」案（ps_db）", inc=INC_DATA)
     inp(f"pm_pe_{k}", f"{nm} Forward P/E（對照列用；{dt}）", "x", None, fv(f"peer.fpe.{k}"), None, "Interested-party", fs(f"peer.fpe.{k}"), "分母＝Forward 非 GAAP EPS（口徑未載明）", inc=INC_DATA)
     inp(f"pm_dt_{k}", f"{nm} 倍數日期", "日期", None, datetime.date.fromisoformat(dt), None, "Verified", fs(f"peer.fps.{k}"))
 inp("pm_ps_ddog", "Datadog 現行 Forward P/S（資料商，2026-11-13）", "x", None, fv("peer.fps.ddog"), None, "Interested-party", fs("peer.fps.ddog"), "只作對照", inc=INC_DATA)

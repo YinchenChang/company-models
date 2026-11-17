@@ -15,7 +15,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import facts_naver as FN  # noqa: E402
 
-VER = "0.2.1"
+VER = "0.2.2"
 PXDATE = datetime.date(2026, 11, 13)
 VALDATE = datetime.date(2026, 9, 30)
 DATADATE = datetime.date(2026, 11, 16)
@@ -40,7 +40,7 @@ TKV = SNAP["source"]["version"]
 TKI = SNAP["items"]
 RM = json.load(open(os.path.join(HERE, "data", "relmult_naver.json"), encoding="utf-8"))
 RMG = RM["groups"]["all"]
-PSP = json.load(open(os.path.join(HERE, "data", "ps_peers_naver.json"), encoding="utf-8"))
+PSP = json.load(open(os.path.join(HERE, "data", "peer_ps_naver.json"), encoding="utf-8"))
 tk_price = TKI["IF_PriceRef_Terra"]["values"]
 tk_full = TKI["IF_FullCost_Terra"]["values"]["GB300 NVL72"]["基準"]
 tk_def = TKI["IF_FullCostDefault_Terra"]["values"]["GB300 NVL72"]["基準"]
@@ -196,6 +196,7 @@ inp("kd_sp", "負債成本相對無風險利率的利差", "%", 0.003, 0.006, 0.
 inp("g_tv", "永續成長率", "%", 0.02, 0.03, 0.04, "Assumed", "DCF 標準規格預設 3%", "", "0.0%")
 inp("rel_adj", "同業倍數相對調整 相對倍數（本公司 ÷ 同業；歷史 PS 與 PSG 兩讀數幾何平均）", "倍", RMG["sens"]["low"], RMG["geo_base"], RMG["sens"]["high"], "Derived", "software_ai/data/relmult_hist/out/naver.json（data/relmult_naver.json）：geo_base；" + RMG["base_source"] + "；規格 docs/plan/歷史相對倍數_PS與PSG.md", "G5 第 1 條：低／高＝sens.low／sens.high；Sens 另列只用 PS、只用 PSG 兩案。G6：Comparable 主腿為 P/S 口徑，與此相對值同口徑；前瞻本益比只作對照列", "0.000")
 inp("sbc_pct", "股票薪酬占營收（只作對照，不進模型）", "%", 0.0, 0.0, 0.03, "Assumed", "未找到：股票薪酬金額未取得；0＝DCF（股票薪酬加回）讀數與標準 DCF 相同", "只作對照，不進模型；Recon 並列加回讀數（G4 第 2 條）", "0.0%")
+inp("ps_med_in", "同業 P/S＝資料庫最近一季中位（高案）；基準取 11-13 現價中位", "倍", None, PSP["peer_median_ps"], PSP["db_last_quarter"]["median"], "Derived", "data/peer_ps_naver.json（software_ai/data/relmult_hist/out/peer_ps_20261113.json；Val 同業表 P/S 欄之中位數）", "G7：主腿同業中位 P/S 取 2026-11-13 現價；高案改取歷史資料庫最近一季中位（季末日 2026-06-30）。Val 同業表有核對列", "0.00")
 inp("w_dcf", "加權目標價：DCF 權重", "%", 0.3, 0.5, 0.7, "Assumed", "預設 DCF 50%＋Comparable 50%（個股模型原則第 4 節）", "", "0%")
 inp("tpw_A", "情境權重 A（樂觀）", "%", None, 0.25, None, "Assumed", "DCF 標準規格第 3 節預設 25／50／25", "", "0%")
 inp("tpw_B", "情境權重 B（基準）", "%", None, 0.50, None, "Assumed", "同上", "", "0%")
@@ -735,7 +736,7 @@ for k, lab in (("pvx", "明確期 FCFF 現值（含 stub）"), ("nop33", "FY2033
     VR[k] = r; put(V, f"A{r}", lab); r += 1
 r += 1
 put(V, f"A{r}", "0.0 Comparable 主腿：同業中位 P/S x 相對倍數 x 目標時點 TTM 營收 ÷ 股數（G6，與 PS／PSG 相對值同口徑）；其下前瞻本益比分部加總只作對照", BOLD); r += 1
-for k, lab in (("ps_med", "同業中位 P/S（Val 同業表各家最近一季，季末日逐家標示；5 家，不做迴歸）"), ("ps_x", "主腿倍數＝同業中位 P/S x 相對倍數（歷史 PS 與 PSG 幾何平均）"), ("ttm_el", "目標日在 FY2027 內已過比例（TTM＝比例 x FY2027E ＋ (1 − 比例) x FY2026E）"),
+for k, lab in (("ps_med", "同業中位 P/S（2026-11-13 現價口徑，取 In 頁；Val 同業表逐家列出、資料日非 11-13 者標逾期；5 家，不做迴歸）"), ("ps_x", "主腿倍數＝同業中位 P/S x 相對倍數（歷史 PS 與 PSG 幾何平均）"), ("ttm_el", "目標日在 FY2027 內已過比例（TTM＝比例 x FY2027E ＋ (1 − 比例) x FY2026E）"),
                ("ntm_w", "對照：NTM 中 FY2027E 權重 w＝(FY2027 年底 − 目標日) ÷ 365（NTM＝w x FY2027E ＋ (1 − w) x FY2028E）"), ("pe_plat", "Platforms 群組前瞻本益比（GOOGL、META、PINS 中位數；3 家，不足 8 家，不做迴歸）"),
                ("pe_kj", "Korea／Japan 群組前瞻本益比（Kakao、LY 中位數；2 家，不做迴歸）"), ("pe_all", "全部同業前瞻本益比中位數"), ("rel", "相對倍數（歷史 PS 與 PSG 幾何平均，Derived；前瞻本益比對照列不套用）")):
     VR[k] = r; put(V, f"A{r}", lab); r += 1
@@ -750,9 +751,9 @@ for k, lab in (("ttm_t", "目標時點 TTM 營收（十億韓元）"), ("ps_eq",
                ("ntm_tot", "NTM NOPAT 合計"), ("ntm_mult", "對照：前瞻本益比口徑隱含營運倍數（營運事業價值 ÷ NTM NOPAT 合計）")):
     VR[k] = r; put(V, f"A{r}", lab); r += 1
 r += 1
-put(V, f"A{r}", "同業逐家：P/S（主腿；TTM 營收口徑，季末日）與前瞻本益比（對照；NTM EPS 口徑，分母期間＝NTM）", BOLD); r += 1
+put(V, f"A{r}", "同業逐家：P/S（主腿；TTM 營收口徑，2026-11-13 現價，資料日逐家標示）與前瞻本益比（對照；NTM EPS 口徑，分母期間＝NTM）", BOLD); r += 1
 VR["peh"] = r
-for j, h in enumerate(["同業", "前瞻本益比", "基準日", "會計準則與租賃處理", "與現價日相差", "群組", "P/S（TTM）", "P/S 季末日", "P/S 逾期"]):
+for j, h in enumerate(["同業", "前瞻本益比", "基準日", "會計準則與租賃處理", "與現價日相差", "群組", "P/S（TTM，11-13 現價）", "P/S 資料日", "P/S 逾期"]):
     put(V, f"{L(j+1)}{r}", h, BOLD, HDR)
 r += 1
 PEERS = [("pe_goog", "Alphabet（GOOGL）", "US GAAP（營業租賃費用化，租賃不計入 EBIT 以下利息）", "Platforms"), ("pe_meta", "Meta（META）", "US GAAP（同上）", "Platforms"), ("pe_pins", "Pinterest（PINS）", "US GAAP（同上）", "Platforms"),
@@ -763,8 +764,8 @@ for k, nm, acct, grp in PEERS:
     put(V, f"A{r}", nm); put(V, f"B{r}", f"=Q!$D${QS1[k]}", None, None, "0.00"); put(V, f"C{r}", f"=Q!$J${QS1[k]}", None, None, "yyyy-mm-dd"); put(V, f"D{r}", acct)
     put(V, f"E{r}", f'=IF(ABS(NETWORKDAYS(MIN(C{r},{I("px_date")}),MAX(C{r},{I("px_date")}))-1)>2,"逾期","")'); put(V, f"F{r}", grp)
     pk = {"pe_goog": "GOOGL", "pe_meta": "META", "pe_pins": "PINS", "pe_kakao": "KAKAO", "pe_ly": "LYCORP"}[k]
-    put(V, f"G{r}", PSP[pk]["ps"], BLUE, None, "0.00"); put(V, f"H{r}", datetime.date.fromisoformat(PSP[pk]["q"]), None, None, "yyyy-mm-dd")
-    put(V, f"I{r}", f'=IF(ABS(NETWORKDAYS(MIN(H{r},{I("px_date")}),MAX(H{r},{I("px_date")}))-1)>2,"逾期（季末資料）","")')
+    put(V, f"G{r}", PSP["peers"][pk]["ps"], BLUE, None, "0.00"); put(V, f"H{r}", datetime.date.fromisoformat(PSP["peers"][pk]["d"]), None, None, "yyyy-mm-dd")
+    put(V, f"I{r}", f'=IF(H{r}<{I("px_date")},"逾期（資料日早於現價日）","")')
     r += 1
 VR["peer_end"] = r - 1
 r += 1
@@ -819,7 +820,9 @@ put(V, f"B{VR['rel']}", f"={I('rel_adj')}", None, None, "0.00")
 put(V, f"E{VR['v_np']}", f"=B{VR['pe_plat']}", None, None, "0.00")
 put(V, f"E{VR['v_fin']}", f"=B{VR['pe_kj']}", None, None, "0.00")
 put(V, f"E{VR['v_glob']}", f"=B{VR['pe_kj']}", None, None, "0.00")
-put(V, f"B{VR['ps_med']}", f"=MEDIAN(G{VR['peers']['pe_goog']}:G{VR['peer_end']})", None, None, "0.00")
+put(V, f"B{VR['ps_med']}", f"={I('ps_med_in')}", None, None, "0.00")
+put(V, f"C{VR['ps_med']}", f"=MEDIAN(G{VR['peers']['pe_goog']}:G{VR['peer_end']})", None, None, "0.00")
+put(V, f"D{VR['ps_med']}", f'=IF(ABS(C{VR["ps_med"]}-B{VR["ps_med"]})<0.005,"核對：與同業表中位一致","核對：不一致（高案覆寫或表內更動）")')
 put(V, f"B{VR['ps_x']}", f"=B{VR['ps_med']}*B{VR['rel']}", None, None, "0.000")
 put(V, f"B{VR['ttm_el']}", f"=({I('tp_date')}-DATE(2026,12,31))/365", None, None, "0.000")
 nonop_sum = f"({I('netcash0')}+{I('nv_sh')}*{I('nv_px')}/1000+{I('eqm_inc')}*{I('pe_inv')}-{I('nci_v')})"
@@ -1135,7 +1138,8 @@ for i_, rowv in enumerate(RISKS):
         put(RD, f"{L(j+1)}{34+i_}", v)
 put(RD, "A41", f'="歷史相對倍數（G4，PS 與 PSG）：相對倍數 基準＝兩讀數幾何平均 "&TEXT({Vv("rm_geo")},"0.00")&"（PS 讀數 "&TEXT({Vv("rm_ps")},"0.00")&"、PSG 讀數 "&TEXT({Vv("rm_psg")},"0.00")&"），Comparable 主腿改為 P/S 口徑（G6），與 PS／PSG 相對值同口徑。兩讀數差 "&TEXT({Vv("rm_div")},"0%")&IF({Vv("rm_div")}>0.3,"，大於 30%：原因是本公司 TTM 營收年增 "&TEXT({Vv("rm_cg")},"0.0%")&" 低於同業中位 "&TEXT({Vv("rm_pg")},"0.0%")&"（成長比 "&TEXT({Vv("rm_g")},"0.00")&"），PSG 把歷史每單位成長的溢價按較低成長比折算，故低於 PS 讀數","，未超過 30%")&"。"')
 put(RD, "A42", f'="DCF（股票薪酬加回）對照：每股價值 "&TEXT(Recon!C{SB["shv"]},"#,##0")&" 韓元（情境 B），目標價 "&TEXT(Recon!B{RCR["sbc_tp"]},"#,##0")&" 韓元（情境加權），標準 DCF "&TEXT({Vv("tpdcf")},"#,##0")&"；股票薪酬金額未找到，占營收比 Assumed "&TEXT({I("sbc_pct")},"0.0%")&"，故兩者相同。只作對照，不進加權目標價。"')
-put(RD, "A44", "G6 口徑一致：歷史 PS 與 PSG 相對值已含利潤率差，不能再套前瞻本益比；Comparable 主腿因此改為同業中位 P/S（各家最近一季，季末日逐家標示，逾期者旗標）乘相對倍數乘目標日 TTM 營收除以稀釋股數。前瞻本益比 Comparable 降為對照列（相對倍數 1.00 與本公司現行比值兩個讀數），不進加權目標價。敏感度四案（只用 PS、只用 PSG、低案、高案）套用在 P/S 主腿。")
+put(RD, "A44", "G6 口徑一致：歷史 PS 與 PSG 相對值已含利潤率差，不能再套前瞻本益比；Comparable 主腿因此改為同業中位 P/S（2026-11-13 現價口徑，資料日非 11-13 者標逾期）乘相對倍數乘目標日 TTM 營收除以稀釋股數。前瞻本益比 Comparable 降為對照列（相對倍數 1.00 與本公司現行比值兩個讀數），不進加權目標價。敏感度四案（只用 PS、只用 PSG、低案、高案）套用在 P/S 主腿，另加「同業 P/S＝資料庫最近一季中位」案（G7）。")
+put(RD, "A45", f'="G7 同業 P/S：中位數改取 2026-11-13 現價口徑 "&TEXT({Vv("ps_med")},"0.00")&"（前版取各家最近一季 2.59）；資料日早於現價日者於 Val 同業表標逾期（"&COUNTIF(Val!I{VR["peers"]["pe_goog"]}:I{VR["peer_end"]},"逾期*")&" 家）。敏感度加一案：同業 P/S＝資料庫最近一季中位。"')
 put(RD, "A40", "工作表：README／In／Q／Hist／PL／DCF／CF／Val／RevDCF／Recon／Sens／Sources。成品 dist/<日期>_Naver個股模型_v0.2.1.xlsx 與 .html。")
 for rr_ in list(range(1, 18)) + [30, 41, 42]:
     RD[f"A{rr_}"].alignment = Alignment(wrap_text=True, vertical="top")

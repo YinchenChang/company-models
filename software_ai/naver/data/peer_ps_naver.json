@@ -1,0 +1,35 @@
+{
+ "as_of": "2026-11-13",
+ "source": "software_ai/data/relmult_hist/out/peer_ps_20261113.json（data/relmult_hist/peer_ps_20261113.csv（StockAnalysis，WebFetch；Derived））",
+ "retrieved": "2026-11-17",
+ "own_ps": 2.01,
+ "peer_median_ps": 2.32,
+ "db_last_quarter": {
+  "q": "2026-06-30",
+  "median": 2.59,
+  "n_peers": 5
+ },
+ "change_vs_db": -0.10424710424710426,
+ "peers": {
+  "GOOGL": {
+   "ps": 7.71,
+   "d": "2026-11-13"
+  },
+  "META": {
+   "ps": 6.8,
+   "d": "2026-11-13"
+  },
+  "PINS": {
+   "ps": 2.32,
+   "d": "2026-11-06"
+  },
+  "KAKAO": {
+   "ps": 1.6,
+   "d": "2026-10-23"
+  },
+  "LYCORP": {
+   "ps": 1.7,
+   "d": "2026-10-13"
+  }
+ }
+}

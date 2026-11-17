@@ -73,6 +73,8 @@ ADJ_EBITDA = {"FY2021": 1914.6, "FY2022": 1802.8, "FY2023": 2133.8, "FY2024": 26
 COMM_ADS_Q = [308.3, 335.6, 366.3, 390.3]   # 1Q25–4Q25 商務廣告（舊分類）
 
 # 單點事實：key -> (指標, 數值, 單位, 期間, 口徑, 出處, 標記, 誘因)
+import json as _j, os as _o
+_PS = _j.load(open(_o.path.join(_o.path.dirname(_o.path.abspath(__file__)), "data", "peer_ps_naver.json"), encoding="utf-8"))
 SINGLE = {
   "px": ("股價（收盤）", 172500, "韓元", "2026-11-13", "KRX 收盤（11-13 為最近交易日）", "韓國投資證券個股頁（KIS，當日 −5.12%）；與教保證券報告 73.9% 上檔空間隱含價一致", "Verified", ""),
   "sh": ("流通股數（扣庫藏）", 149.86, "百萬股", "2026-10", "第二來源（StockAnalysis）；法定申報封面股數未取得（未找到）", "https://stockanalysis.com/quote/krx/035420/statistics/", "Derived", ""),
@@ -91,11 +93,7 @@ SINGLE = {
   "rf": ("無風險利率（韓國 10 年期國債）", 0.0399, "比例", "2026-11-13", "殖利率收盤；Trading Economics 頁載 2026-11-16 為 3.986%、單日變動 −0.001，11-13 約 3.987%（頁面無 11-12、11-13 逐日值）", "https://tradingeconomics.com/south-korea/government-bond-yield", "Verified", ""),
   "rm_geo": ("歷史相對倍數基準（PS 與 PSG 兩讀數幾何平均）", 0.5617479268406912, "倍", "2021-09 至 2026-06", "本公司 ÷ 同業中位（GOOGL、META、PINS、Kakao、LY）；規格 docs/plan/歷史相對倍數_PS與PSG.md", "software_ai/data/relmult_hist/out/naver.json（geo_base；base_source＝PS 與 PSG 兩讀數幾何平均）", "Derived", ""),
   "rm_ps": ("歷史相對倍數：PS 讀數（歷史相對中位）", 0.6807807444453408, "倍", "2021-09 至 2026-06", "20 季；最低 0.36、最高 1.17", "同上（ps_reading）", "Derived", ""),
-  "ps_googl": ("同業 P/S（TTM 營收口徑）：GOOGL", 8.89, "倍", "2026-09-30", "software_ai/data/relmult_hist 最近一季；季末日如左，Comparable 主腿（G6）", "software_ai/data/relmult_hist/GOOGL.csv（擷取 2026-11-17）", "Derived", ""),
-  "ps_meta": ("同業 P/S（TTM 營收口徑）：META", 7.65, "倍", "2026-09-30", "software_ai/data/relmult_hist 最近一季；季末日如左，Comparable 主腿（G6）", "software_ai/data/relmult_hist/META.csv（擷取 2026-11-17）", "Derived", ""),
-  "ps_pins": ("同業 P/S（TTM 營收口徑）：PINS", 2.59, "倍", "2026-06-30", "software_ai/data/relmult_hist 最近一季；季末日如左，Comparable 主腿（G6）", "software_ai/data/relmult_hist/PINS.csv（擷取 2026-11-17）", "Derived", ""),
-  "ps_kakao": ("同業 P/S（TTM 營收口徑）：KAKAO", 1.84, "倍", "2026-06-30", "software_ai/data/relmult_hist 最近一季；季末日如左，Comparable 主腿（G6）", "software_ai/data/relmult_hist/KAKAO.csv（擷取 2026-11-17）", "Derived", ""),
-  "ps_lycorp": ("同業 P/S（TTM 營收口徑）：LYCORP", 1.42, "倍", "2026-06-30", "software_ai/data/relmult_hist 最近一季；季末日如左，Comparable 主腿（G6）", "software_ai/data/relmult_hist/LYCORP.csv（擷取 2026-11-17）", "Derived", ""),
+  **{f"ps_{k.lower()}": (f"同業 P/S（TTM 營收口徑）：{k}", v["ps"], "倍", v["d"], "2026-11-13 現價口徑；資料日不是 11-13 者於 Val 標逾期（G7）；Comparable 主腿", _PS["source"], "Derived", "") for k, v in _PS["peers"].items()},
   "rm_psg": ("歷史相對倍數：PSG 讀數（歷史相對中位 x 成長比）", 0.4635277009294886, "倍", "2021-09 至 2026-06", "16 季；成長比 0.722（TTM，本公司 14.6%、同業中位 20.2%）", "同上（psg_reading）", "Derived", ""),
   "ai_ads_1q": ("AI 對 1Q26 廣告成長的貢獻（公司稱）", 0.5, "占比（超過）", "1Q26", "公司稱 AI 貢獻廣告成長逾 50%", DECK["1Q26"], "Interested-party", "管理層向市場說明 AI 成效"),
   "ai_ads_2q": ("AI 對 2Q26 廣告成長的貢獻（公司稱）", 0.6, "占比（超過）", "2Q26", "公司稱 AI 貢獻廣告成長逾 60%", DECK["2Q26"], "Interested-party", "管理層向市場說明 AI 成效"),

@@ -93,7 +93,7 @@ valuation = {"id": "valuation", "title": "估值", "blocks": [
                 "row_fmt": {str(VR["fmix"]): {c: "n3" for c in "BCD"}, str(VR["ntm_rev"]): {c: "n0" for c in "BCD"}, str(VR["ttm_rev"]): {c: "n0" for c in "BCD"}, str(VR["ttm_sh"]): {c: "n1" for c in "BCD"}, str(VR["ntm_sh"]): {c: "n1" for c in "BCD"}, str(VR["m_ps"]): {"B": "n2"}, str(VR["m_pe"]): {"B": "n2"}}}},
     {"type": "table", "caption": f"@Val!A{VR['g_tot'] - 1}", "head": ["項目", "每股（美元）"],
      "rows": [[f"@Val!A{VR[k]}", vv(k, "B", f)] for k, f in (("g_tot", "sp2"), ("g_sbc", "sp2"), ("g_mult", "sp2"), ("g_lev", "n2"), ("g_time", "sp2"), ("g_chk", "n3"))]},
-    {"type": "table", "caption": "同業倍數、本公司現行倍數與逾期核對", "head": ["項目", "P/S（主腿；最近一季）", "Forward P/E（對照）", "P/S 季末日", "狀態"],
+    {"type": "table", "caption": "同業倍數、本公司現行倍數與逾期核對", "head": ["項目", "P/S（主腿；2026-11-13 現價）", "Forward P/E（對照）", "P/S 價格日", "狀態"],
      "rowgen": {"sheet": "Val", "rows": f"{VR['p_snow']}-{VR['p_ddog']}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n2", "n2", "", ""]}},
     {"type": "table", "caption": "現行倍數 ÷ 同業中位數與隱含重估", "head": ["項目", "本公司", "同業中位數", "比值", "隱含重估"],
      "rows": [[f"@Val!A{VR[k]}", f"@Val!B{VR[k]}|n2", f"@Val!C{VR[k]}|n2", f"@Val!D{VR[k]}|n2", f"@Val!E{VR[k]}|sp1"] for k in ("c_ps", "c_pe")]},

@@ -1,11 +1,11 @@
 #!/bin/bash
-# Palo Alto Networks 個股模型 v0.2：建置（含敏感度整本重算）→ LibreOffice 重算 → html.json → HTML → 全部核對。
+# Palo Alto Networks 個股模型 v0.2.1：建置（含敏感度整本重算）→ LibreOffice 重算 → html.json → HTML → 全部核對。
 #   bash software_ai/paloalto/make_paloalto.sh      # 約 1.5 分鐘；需要 python3＋openpyxl、LibreOffice
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$ROOT"
 P=software_ai/paloalto
 python3 $P/build_paloalto.py
-OUT="$P/dist/20261117_Palo Alto Networks個股模型_v0.2.xlsx"
+OUT="$P/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx"
 python3 $P/gen_html_json.py "$OUT" $P/html.json
 python3 tools/segment_check/check_segments.py $P
 python3 tools/in_layout/check_in_layout.py "$OUT"

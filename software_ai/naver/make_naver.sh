@@ -1,11 +1,11 @@
 #!/bin/bash
-# Naver 個股模型 v0.2.1：建置 → LibreOffice 重算 → 核對 → HTML。
-#   bash software_ai/naver/make_naver.sh              # 沿用 data/sens_v021_20261117.json
+# Naver 個股模型 v0.2.2：建置 → LibreOffice 重算 → 核對 → HTML。
+#   bash software_ai/naver/make_naver.sh              # 沿用 data/sens_v022_20261117.json
 #   SENS=1 bash software_ai/naver/make_naver.sh       # 重跑敏感度與反解（約 10 分鐘）
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-VDATE="${VDATE:-20261117}"; VER="${VER:-0.2.1}"
+VDATE="${VDATE:-20261117}"; VER="${VER:-0.2.2}"
 N=software_ai/naver
 OUTNAME="${VDATE}_Naver個股模型_v${VER}.xlsx"
 SJ="$N/data/sens_v${VER//./}_${VDATE}.json"

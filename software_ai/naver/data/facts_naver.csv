@@ -248,11 +248,11 @@ EBITDA（第二來源）,2953,十億韓元,FY2025,MarketScreener；與公司口�
 無風險利率（韓國 10 年期國債）,0.0399,比例,2026-11-13,殖利率收盤；Trading Economics 頁載 2026-11-16 為 3.986%、單日變動 −0.001，11-13 約 3.987%（頁面無 11-12、11-13 逐日值）,https://tradingeconomics.com/south-korea/government-bond-yield,2026-11-16,Verified,
 歷史相對倍數基準（PS 與 PSG 兩讀數幾何平均）,0.5617479268406912,倍,2021-09 至 2026-06,本公司 ÷ 同業中位（GOOGL、META、PINS、Kakao、LY）；規格 docs/plan/歷史相對倍數_PS與PSG.md,software_ai/data/relmult_hist/out/naver.json（geo_base；base_source＝PS 與 PSG 兩讀數幾何平均）,2026-11-16,Derived,
 歷史相對倍數：PS 讀數（歷史相對中位）,0.6807807444453408,倍,2021-09 至 2026-06,20 季；最低 0.36、最高 1.17,同上（ps_reading）,2026-11-16,Derived,
-同業 P/S（TTM 營收口徑）：GOOGL,8.89,倍,2026-09-30,software_ai/data/relmult_hist 最近一季；季末日如左，Comparable 主腿（G6）,software_ai/data/relmult_hist/GOOGL.csv（擷取 2026-11-17）,2026-11-16,Derived,
-同業 P/S（TTM 營收口徑）：META,7.65,倍,2026-09-30,software_ai/data/relmult_hist 最近一季；季末日如左，Comparable 主腿（G6）,software_ai/data/relmult_hist/META.csv（擷取 2026-11-17）,2026-11-16,Derived,
-同業 P/S（TTM 營收口徑）：PINS,2.59,倍,2026-06-30,software_ai/data/relmult_hist 最近一季；季末日如左，Comparable 主腿（G6）,software_ai/data/relmult_hist/PINS.csv（擷取 2026-11-17）,2026-11-16,Derived,
-同業 P/S（TTM 營收口徑）：KAKAO,1.84,倍,2026-06-30,software_ai/data/relmult_hist 最近一季；季末日如左，Comparable 主腿（G6）,software_ai/data/relmult_hist/KAKAO.csv（擷取 2026-11-17）,2026-11-16,Derived,
-同業 P/S（TTM 營收口徑）：LYCORP,1.42,倍,2026-06-30,software_ai/data/relmult_hist 最近一季；季末日如左，Comparable 主腿（G6）,software_ai/data/relmult_hist/LYCORP.csv（擷取 2026-11-17）,2026-11-16,Derived,
+同業 P/S（TTM 營收口徑）：GOOGL,7.71,倍,2026-11-13,2026-11-13 現價口徑；資料日不是 11-13 者於 Val 標逾期（G7）；Comparable 主腿,software_ai/data/relmult_hist/out/peer_ps_20261113.json（data/relmult_hist/peer_ps_20261113.csv（StockAnalysis，WebFetch；Derived））,2026-11-16,Derived,
+同業 P/S（TTM 營收口徑）：META,6.8,倍,2026-11-13,2026-11-13 現價口徑；資料日不是 11-13 者於 Val 標逾期（G7）；Comparable 主腿,software_ai/data/relmult_hist/out/peer_ps_20261113.json（data/relmult_hist/peer_ps_20261113.csv（StockAnalysis，WebFetch；Derived））,2026-11-16,Derived,
+同業 P/S（TTM 營收口徑）：PINS,2.32,倍,2026-11-06,2026-11-13 現價口徑；資料日不是 11-13 者於 Val 標逾期（G7）；Comparable 主腿,software_ai/data/relmult_hist/out/peer_ps_20261113.json（data/relmult_hist/peer_ps_20261113.csv（StockAnalysis，WebFetch；Derived））,2026-11-16,Derived,
+同業 P/S（TTM 營收口徑）：KAKAO,1.6,倍,2026-10-23,2026-11-13 現價口徑；資料日不是 11-13 者於 Val 標逾期（G7）；Comparable 主腿,software_ai/data/relmult_hist/out/peer_ps_20261113.json（data/relmult_hist/peer_ps_20261113.csv（StockAnalysis，WebFetch；Derived））,2026-11-16,Derived,
+同業 P/S（TTM 營收口徑）：LYCORP,1.7,倍,2026-10-13,2026-11-13 現價口徑；資料日不是 11-13 者於 Val 標逾期（G7）；Comparable 主腿,software_ai/data/relmult_hist/out/peer_ps_20261113.json（data/relmult_hist/peer_ps_20261113.csv（StockAnalysis，WebFetch；Derived））,2026-11-16,Derived,
 歷史相對倍數：PSG 讀數（歷史相對中位 x 成長比）,0.4635277009294886,倍,2021-09 至 2026-06,16 季；成長比 0.722（TTM，本公司 14.6%、同業中位 20.2%）,同上（psg_reading）,2026-11-16,Derived,
 AI 對 1Q26 廣告成長的貢獻（公司稱）,0.5,占比（超過）,1Q26,公司稱 AI 貢獻廣告成長逾 50%,https://www.navercorp.com/api/article/download/896dc2b0-33ea-4dbf-a354-c9608c6d989b,2026-11-16,Interested-party,管理層向市場說明 AI 成效
 AI 對 2Q26 廣告成長的貢獻（公司稱）,0.6,占比（超過）,2Q26,公司稱 AI 貢獻廣告成長逾 60%,https://www.navercorp.com/api/article/download/07b3b329-bbbe-481c-ac47-b3d0d7fea855,2026-11-16,Interested-party,管理層向市場說明 AI 成效

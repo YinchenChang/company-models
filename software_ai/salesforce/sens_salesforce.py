@@ -24,6 +24,7 @@ for k, r in IR.items():
             cases.append((k, side, v, e, lab))
 COMBO = [("ptok,p0", "高", {"ptok": "F", "p0": "F"}, "價格與成本聯動：token 價格與每任務單價同取高端（同步變動）"),
          ("ptok,p0", "低", {"ptok": "D", "p0": "D"}, "價格與成本聯動：token 價格與每任務單價同取低端（同步變動）"),
+         ("ps_peer", "資料庫", {"ps_peer": ("in", "ps_peer_db")}, "同業 P／S＝資料庫最近一季中位（對照；v0.2.1 的值）"),
          ("cm_adj", "PS", {"cm_adj": ("in", "rel_ps")}, "相對倍數僅 PS 讀數（ps_only）"),
          ("cm_adj", "PSG", {"cm_adj": ("in", "rel_psg")}, "相對倍數僅 PSG 讀數（psg_only）")]
 WD = tempfile.mkdtemp(prefix="sfsens_", dir="/home/claude/scratch/salesforce")

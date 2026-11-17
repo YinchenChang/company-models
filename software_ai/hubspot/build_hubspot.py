@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""HubSpot（HUBS）個股模型 v0.2 建置腳本（AI 軟體應用 Project；原型 S：按席位計價，AI 代理按任務計價）。
+"""HubSpot（HUBS）個股模型 v0.2.1 建置腳本（AI 軟體應用 Project；原型 S：按席位計價，AI 代理按任務計價）。
 
 用法（由 make_v01.sh 呼叫；敏感度與反解由 敏感度程式 呼叫本檔）：
   python3 build_hubspot.py <輸出 raw.xlsx> [--sens data/sens_v01.json] [--kreq data/kreq_v01.json] [--set 鍵=值 ...]
@@ -21,7 +21,7 @@ from hs_inputs import D, HCOLS, HIST, HLAB, HSUF, INP, SCN_ROWS, SEC
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
-VERSION = "v0.2"
+VERSION = "v0.2.1"
 BUILD_DATE = "2026-11-17"
 FILE_DATE = "20261117"
 YEARS = list(range(2023, 2033))
@@ -101,6 +101,7 @@ def parse_ov(argv):
 EXTRA_CASES = [   # (標籤, 設定文字, 方向, [(鍵, 值)...], 鍵欄文字)
     ("token 價格與任務售價聯動（價格 2 倍）", "tk_pscale＝2；link_pass＝1（成本與售價同步）", "高", [("tk_pscale", 2.0), ("link_pass", 1.0)], "tk_pscale+link_pass"),
     ("token 價格與任務售價聯動（價格 0.5 倍）", "tk_pscale＝0.5；link_pass＝1（成本與售價同步）", "低", [("tk_pscale", 0.5), ("link_pass", 1.0)], "tk_pscale+link_pass"),
+    ("同業 P/S＝資料庫最近一季中位（工作單 G7 對照案）", "ps_peer＝4.03（v0.2 的值；基準 4.95）", "低", [("ps_peer", 4.03)], "ps_peer+db"),
     ("相對倍數取 PS 單讀數：relmult_hist 的 ps_only（工作單 G5.1）", "rel_mult＝ps_only 1.259（基準 1.271）", "低", [("rel_mult", 1.2591749963481562)], "rel_mult+ps_only"),
     ("相對倍數取 PSG 單讀數：relmult_hist 的 psg_only（工作單 G5.1）", "rel_mult＝psg_only 1.284（基準 1.271）", "高", [("rel_mult", 1.283918493055893)], "rel_mult+psg_only"),
 ]
@@ -589,7 +590,7 @@ def build(out, ov=None, sens=None, kreq=None):
     VR["peer0"] = p0 + 2
     f_(V, "A1", tf("Val — 目標價（股價基準日＋12 個月＝", ("tp_date", "yyyy-mm-dd"), "）＝DCF ", ("w_dcf", "0%"), "＋Comparable ", ("1-w_dcf", "0%"), "（情境 A／B／C 依權重加權）"))
     f_(V, "A2", "DCF：FCFF（NOPAT＋折舊攤銷 − 資本支出＋營運資金流入；股票薪酬不加回）以 WACC 折現到評價日（期中慣例），終值＝NOPAT(FY2033) ×(1 − g ÷ RONIC)÷(WACC − g)，再以 ke 推到目標時點。")
-    f_(V, "A3", tf("Comparable 主腿：同業中位 P/S（相對倍數歷史資料 最近一季末 ", ("ps_peer_date", "yyyy-mm-dd"), "，11 家）× 相對倍數係數 × HUBS 目標時點 TTM 營收 ÷ 稀釋股數。改用 P/S 是為了與 PS／PSG 相對值同口徑（相對值已內含利潤率差，不能直接套在本益比上，工作單 G6）；前瞻 P/E 法只作對照列，不進加權目標價；單一分部，不做分部加總。"))
+    f_(V, "A3", tf("Comparable 主腿：同業中位 P/S（價格日 2026-11-13，11 家；最舊同業資料日 ", ("ps_peer_date", "yyyy-mm-dd"), "，逾期者見 Recon 第 4 節）× 相對倍數係數 × HUBS 目標時點 TTM 營收 ÷ 稀釋股數。改用 P/S 是為了與 PS／PSG 相對值同口徑（相對值已內含利潤率差，不能直接套在本益比上，工作單 G6）；前瞻 P/E 法只作對照列，不進加權目標價；單一分部，不做分部加總。"))
     f_(V, "A4", "結論", bold=True)
     for j, h in enumerate(["項目", "數值", "對照", "對照", "說明"], 1):
         f_(V, f"{L_(j)}5", h, bold=True, fill=HDR)
@@ -628,8 +629,8 @@ def build(out, ov=None, sens=None, kreq=None):
     vr("uattr", "上檔空間三段歸因：DCF 貢獻／未調整 Comparable 貢獻（係數＝1）／相對倍數調整", f"=w_dcf*B{VR['updcf']}", "+0.0%;-0.0%", f"=(1-w_dcf)*((B{VR['tpcomp']}/rel_mult)/px-1)",
        f"=B{VR['up']}-B{VR['uattr']}-C{VR['uattr']}", fe="相對倍數係數取 相對倍數歷史讀數的幾何平均基準（Derived，PS 與 PSG 兩讀數幾何平均），第三項即其貢獻；Sens 有 PS 單讀數、PSG 單讀數、歷史低、歷史高四案")
     vr("dep", "加權目標價中 DCF／Comparable 各占的美元", f"=w_dcf*B{VR['tpdcf']}", "0.00", f"=(1-w_dcf)*B{VR['tpcomp']}")
-    vr("perel", "現行相對倍數：HUBS 最近一季 P/S ÷ 同業中位數／隱含重估（係數 ÷ 現行 − 1）", "=rel_ps_now", "0.00", "=rel_mult/B" + str(VR["perel"]) + "-1", nfc="+0.0%;-0.0%",
-       fe=tf("HUBS 最近一季末（", ("ps_peer_date", "yyyy-mm-dd"), "）P/S 對同業中位數 ", ("rel_ps_now", "0.00"), " 倍；現行前瞻 P/E 對同業 ", ("c_pe_hubs/pe_med", "0.00"), " 倍；相對倍數係數基準 ", ("rel_mult", "0.00"), "（相對倍數歷史讀數幾何平均基準，Derived）"))
+    vr("perel", "現行相對倍數：HUBS 現價日 P/S ÷ 同業中位數／隱含重估（係數 ÷ 現行 − 1）", "=rel_ps_now", "0.00", "=rel_mult/B" + str(VR["perel"]) + "-1", nfc="+0.0%;-0.0%",
+       fe=tf("HUBS 現價日 P/S 對同業中位數 ", ("rel_ps_now", "0.00"), " 倍；現行前瞻 P/E 對同業 ", ("c_pe_hubs/pe_med", "0.00"), " 倍；相對倍數係數基準 ", ("rel_mult", "0.00"), "（相對倍數歷史讀數幾何平均基準，Derived）"))
     vr("gap", "DCF 與 Comparable 落差（每股，US$；Comparable − DCF，情境加權）", f"=B{VR['tpcomp']}-B{VR['tpdcf']}", "+0.00;-0.00", fe="以下四列公式分解（工作單 G2.8）")
     sbcw = "(" + "+".join(f"tp_w{s}*CF!C{CB[s]['sbcpv']}" for s in SC) + ")"
     vr("gap_sbc", "落差分解 1：股票薪酬（DCF 費用化、Comparable 的非 GAAP EPS 不扣；SBC 稅後現值每股）", f"={sbcw}", "+0.00;-0.00")
@@ -951,7 +952,7 @@ def recon(wb, RC, VR, kreq, keyrow):
     row("k_up", "評等翻轉（中立→買進）：上檔空間觸及 +25% 所需的增量利益率", [kr.get("flip_p25", None)], ["0.0%"], "整本重算快照")
     r += 1
     sec("4. 資料日期核對（相對股價基準日；超過 2 個交易日標逾期；工作單 G2.10）", ["項目", "資料日", "與股價基準日相差（交易日）", "狀態"])
-    for key, lab, dn in [("d_rf", "無風險利率", "rf_date"), ("d_pe", "同業前瞻 P/E（對照）", "pe_date"), ("d_ps", "同業 P/S（主腿；相對倍數歷史資料 季末）", "ps_peer_date"), ("d_cons", "賣方共識", "c_date"), ("d_px", "現價", "px_date")]:
+    for key, lab, dn in [("d_rf", "無風險利率", "rf_date"), ("d_pe", "同業前瞻 P/E（對照）", "pe_date"), ("d_ps", "同業 P/S（主腿；最舊同業資料日）", "ps_peer_date"), ("d_cons", "賣方共識", "c_date"), ("d_px", "現價", "px_date")]:
         f_(RC, f"A{r}", lab)
         f_(RC, f"B{r}", f"={dn}", "yyyy-mm-dd")
         f_(RC, f"C{r}", f"=NETWORKDAYS(MIN(B{r},px_date),MAX(B{r},px_date))-1", "0")
@@ -976,8 +977,8 @@ def recon(wb, RC, VR, kreq, keyrow):
     row("pe_hubs", "HUBS 現行前瞻 P/E（ChartRow）", ["=c_pe_hubs"], ["0.0"], "")
     row("pe_ratio", "現行倍數 ÷ 同業中位數", [f"=B{A['pe_hubs']}/B{A['pe_med']}"], ["0.00"], "")
     row("pe_rr", "隱含重估：若 HUBS 回到同業中位數的倍數，相對現行倍數的變動", [f"=1/B{A['pe_ratio']}-1"], ["+0.0%;-0.0%"], "模型相對倍數係數 1.27（幾何平均基準）高於 HUBS 現行前瞻 P/E 相對值：即假設 HUBS 倍數相對同業回到 PS／PSG 歷史水準")
-    row("ps_med", "同業中位 P/S（主腿；相對倍數歷史資料 最近一季末）", ["=ps_peer"], ["0.00"], "11 家；季末距現價日逾 2 個交易日，見第 4 節；市值÷TTM 營收（StockAnalysis）")
-    row("ps_rel", "HUBS 現行 P/S 相對值（最近一季末）／模型相對倍數係數", ["=rel_ps_now", "=rel_mult"], ["0.00", "0.00"], "係數取歷史 PS 與 PSG 相對值幾何平均；現行相對值低於係數，Comparable 主腿因此隱含倍數相對同業回升")
+    row("ps_med", "同業中位 P/S（主腿；價格日 2026-11-13）", ["=ps_peer", "=ps_peer_db"], ["0.00", "0.00"], "B＝現價日中位（v0.2.1）；C＝資料庫最近一季中位（v0.2；Sens 對照案）；11 家中 5 家資料日早於 2026-11-13，見第 4 節；市值÷TTM 營收（StockAnalysis）")
+    row("ps_rel", "HUBS 現行 P/S 相對值（現價日）／模型相對倍數係數", ["=rel_ps_now", "=rel_mult"], ["0.00", "0.00"], "係數取歷史 PS 與 PSG 相對值幾何平均；現行相對值低於係數，Comparable 主腿因此隱含倍數相對同業回升")
     r += 1
     sec("6. AI 淨效果（情境 A／B／C，FY2032E，US$M）", ["項目", "情境 A", "情境 B", "情境 C"])
     for k, lab, key, nf in [("ai_rev", "AI 增量：按任務計價營收", "aiRev", "#,##0.0"), ("ai_loss", "AI 侵蝕：席位被取代的營收損失", "loss", "#,##0.0"), ("ai_inc", "增量推論成本", "inc", "#,##0.0"),
@@ -1076,7 +1077,7 @@ def readme(wb, RD, build_id, VR, RVA, RCA, vw, SENS):
     f_(RD, "A52", "未做：現金稅率橋（原則第 10 節第 40 條）；事件型尾端 Sens；選擇權庫藏股法（履約價未找到）與期末未歸屬 RSU（用 Q3 反稀釋加權代理）；每任務 token 公司揭露（未找到，以 Tokenomics 類比）。")
     f_(RD, "A53", "v0.3 待辦：改讀 software_ai/unit_economics 的 S 原型；補 seats-and-credits 揭露；以 10-K 核對 FY2021–FY2022 欄位。")
     f_(RD, "A54", "工作單 G2 十條落實：見 data/research_hubspot.md 末節與 README.md。")
-    f_(RD, "A57", tf("相對倍數與口徑（G5.1、G6）：係數 ", ("rel_mult", "0.00"), "（幾何平均基準；PS 單讀數 ", ("rm_ps", "0.00"), "、PSG 單讀數 ", ("rm_psg", "0.00"), "，兩讀數相差 2.0%，未超過 30%，不需寫分歧原因；HUBS 成長對同業成長比 1.52）。Comparable 主腿改為 P/S 口徑：同業中位 P/S ", ("ps_peer", "0.00"), "（季末 ", ("ps_peer_date", "yyyy-mm-dd"), "）× 係數 × 目標時點 TTM 營收 ÷ 稀釋股數，與 PS／PSG 相對值同口徑；前瞻 P/E 法只作對照列（係數 1.00 與現行相對值兩讀數），不進加權目標價。HUBS 最近一季 P/S 相對值僅 ", (f"Val!B{VR['perel']}", "0.00"), "，低於係數：主腿隱含倍數相對同業回升；Sens 有 PS 單讀數、PSG 單讀數、歷史低、歷史高四案。"))
+    f_(RD, "A57", tf("相對倍數與口徑（G5.1、G6）：係數 ", ("rel_mult", "0.00"), "（幾何平均基準；PS 單讀數 ", ("rm_ps", "0.00"), "、PSG 單讀數 ", ("rm_psg", "0.00"), "，兩讀數相差 2.0%，未超過 30%，不需寫分歧原因；HUBS 成長對同業成長比 1.52）。Comparable 主腿改為 P/S 口徑：同業中位 P/S ", ("ps_peer", "0.00"), "（價格日 2026-11-13；5 家同業資料較舊，最舊 ", ("ps_peer_date", "yyyy-mm-dd"), "，標逾期）× 係數 × 目標時點 TTM 營收 ÷ 稀釋股數，與 PS／PSG 相對值同口徑；前瞻 P/E 法只作對照列（係數 1.00 與現行相對值兩讀數），不進加權目標價。HUBS 現價日 P/S 相對值 ", (f"Val!B{VR['perel']}", "0.00"), "，低於係數：主腿隱含倍數相對同業回升；Sens 另有同業 P/S 取資料庫最近一季中位（v0.2 的值）對照案，以及 PS 單讀數、PSG 單讀數、歷史低、歷史高四案。"))
     f_(RD, "A58", tf("股票薪酬加回對照（G5.3）：DCF（加回）每股價值 US$", (f"Val!B{VR['ab_ps0']}", "0.00"), "（評價日）、目標價 US$", (f"Val!B{VR['ab_tp']}", "0.00"), "，相對現價 ", (f"Val!B{VR['ab_up']}", "+0.0%;-0.0%"), "；只作對照，不進加權目標價。"))
     f_(RD, "A56", tf("席位被 AI 取代的侵蝕大於按任務計價的增量；加權目標價 US$", (f"Val!B{VR['tp']}", "0.00"), "，現價 US$", ("px", "0.00"), "，評等", (f"Val!B{VR['rec']}", "@"), "；DCF 受股票薪酬費用化拖累。"))
     RD.column_dimensions["A"].width = 120

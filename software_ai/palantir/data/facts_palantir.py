@@ -1,3 +1,4 @@
+import json
 # Palantir（PLTR）事實總帳：每個數字一列（工作單「共同規則」第 4 條）。本檔是唯一來源：
 #   - 產生 data/facts_palantir.csv（研究包）
 #   - build_palantir.py 的 Q／Hist／In 頁輸入由本檔取值（import FACTS）
@@ -238,6 +239,15 @@ for tk, nm, grp, evs, g3, dt, url in PEERS:
     _rows = [r for r in _rows if r[5].strip()]
     PSL[tk] = (_rows[-1][0], float(_rows[-1][5]), _rows[-1][1])
     f(f"peer.{tk}.ps", f"{nm}（{tk}）P/S（市值÷TTM 營收；共用庫最近一季）", PSL[tk][1], "x", f"季末 {PSL[tk][0]}（財季實際期末 {PSL[tk][2]}）", "software_ai/data/relmult_hist/%s.csv 最近一季；Derived：市值÷TTM 營收（StockAnalysis 季度比率頁）" % tk, f"software_ai/data/relmult_hist/{tk}.csv", "Derived")
+PS13 = {}
+_pj = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "relmult_hist", "out", "peer_ps_20261113.json"), encoding="utf-8"))
+_allg = _pj["companies"]["palantir"]["groups"]["all"]
+_pd = {r["代號"]: r["價格日"] for r in csv.DictReader(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "relmult_hist", "peer_ps_20261113.csv"), encoding="utf-8-sig"))}
+for tk, nm, grp, evs, g3, dt, url in PEERS:
+    PS13[tk] = (_pd[tk], float(_allg["peers"][tk]))
+    f(f"peer.{tk}.ps13", f"{nm}（{tk}）P/S（現價日口徑；peer_ps_20261113.json all 群組）", PS13[tk][1], "x", f"價格日 {PS13[tk][0]}（基準日 {_pj['as_of']}）", "市值（收盤×股數）÷最新 TTM 營收", "software_ai/data/relmult_hist/out/peer_ps_20261113.json", "Derived")
+PS13_MED = float(_allg["peer_median_ps"])
+f("peer.all.ps13_med", "8 家同業 P/S 中位數（peer_ps_20261113.json all 群組）", PS13_MED, "x", f"基準日 {_pj['as_of']}", "8 家合併中位", "software_ai/data/relmult_hist/out/peer_ps_20261113.json", "Derived")
 FACT_BY_ID = {x["id"]: x for x in FACTS}
 def V(i): return FACT_BY_ID[i]["數值"]
 FIELDS = ["指標", "數值", "單位", "期間", "口徑", "出處", "擷取日", "標記", "來源誘因"]

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Salesforce 個股模型 v0.2.1（原型 S：按席位計價；命題＋營收分部 → 損益表 → FCFF DCF＋Comparable）。
+"""Salesforce 個股模型 v0.2.2（原型 S：按席位計價；命題＋營收分部 → 損益表 → FCFF DCF＋Comparable）。
 用法：python3 build_salesforce.py <raw.xlsx> [--sens data/sens_v01.json] [--rowmap rowmap.json]
 所有計算為活公式；輸入在 In 頁（藍字）。LibreOffice 重算後才有快取值。
 """
@@ -12,7 +12,9 @@ OUT = sys.argv[1]
 SENS = sys.argv[sys.argv.index("--sens") + 1] if "--sens" in sys.argv else None
 KREQ = sys.argv[sys.argv.index("--kreq") + 1] if "--kreq" in sys.argv else None
 ROWMAP = sys.argv[sys.argv.index("--rowmap") + 1] if "--rowmap" in sys.argv else None
-VER, VDATE = "0.2.1", "20261117"
+VER, VDATE = "0.2.2", "20261117"
+PP = json.load(open("/home/claude/company-models/software_ai/data/relmult_hist/out/peer_ps_20261113.json", encoding="utf-8"))["companies"]["salesforce"]["groups"]["all"]
+PPD = json.load(open("/home/claude/company-models/software_ai/data/relmult_hist/out/peer_ps_20261113.json", encoding="utf-8"))["as_of"]
 RM = json.load(open("/home/claude/company-models/software_ai/data/relmult_hist/out/salesforce.json", encoding="utf-8"))["groups"]["all"]
 TK = json.load(open("/home/claude/company-models/software_ai/salesforce/data/tokenomics_snapshot_v22.0.json", encoding="utf-8"))
 TKI = TK["items"]
@@ -59,8 +61,9 @@ add("tax", "稅率（用於 NOPAT）", "比例", 0.18, 0.21, 0.25, IP, "公司 F
 add("w_dcf", "DCF 權重（其餘為 Comparable）", "比例", 0.3, 0.5, 0.7, AS, "原則第 4 節預設 50／50")
 add("cm_adj", "相對倍數 rel_mult（本公司 ÷ 同業中位數；乘在同業中位 P／S 上）", "倍", RM["sens"]["low"], RM["geo_base"], RM["sens"]["high"], DE, "讀 software_ai/data/relmult_hist/out/salesforce.json（2026-11-17）：geo_base＝" + RM["base_source"] + "；PS 讀數 %.3f、PSG 讀數 %.3f；低／高取 sens.low／sens.high；窗口 %s 至 %s（%d 季）；Comparable 主腿為 P／S，與 PS／PSG 相對值同口徑（G6）" % (RM["ps_reading"], RM["psg_reading"], "2021-09-30", "2026-06-30", RM["valid_points"]["window_quarters"]))
 PSS = RM["ps_series"][-1]
-add("ps_peer", "同業中位 P／S（relmult_hist 最近一季；Comparable 主腿）", "倍", None, PSS["peer_median"], None, DE, "software_ai/data/relmult_hist/out/salesforce.json ps_series 最近一季（季末 %s，財季實際期末 %s；同業 %d 家中位數；本公司 P／S %.2f，rel＝%.3f）；市值÷TTM 營收（StockAnalysis 反推）" % (PSS["q"], PSS["actual"], PSS["n_peers"], PSS["company"], PSS["rel"]))
-add("ps_peer_date", "同業 P／S 季末日", "日期", None, datetime.date.fromisoformat(PSS["q"]), None, DE, "relmult_hist（最近一季的日曆季末；相對現價日逾期，原則第 15 條）")
+add("ps_peer", "同業中位 P／S（現價日；Comparable 主腿）", "倍", None, PP["peer_median_ps"], None, DE, "software_ai/data/relmult_hist/out/peer_ps_20261113.json（StockAnalysis；市值÷最新 TTM 營收；價格日目標 %s；同業 %d 家中位數；逾期 %d 家：%s）" % (PPD, PP["n_peers"], PP["n_stale"], "、".join(PP["stale"])))
+add("ps_peer_date", "同業 P／S 價格日（目標日；個別同業逾期見說明）", "日期", None, datetime.date.fromisoformat(PPD), None, DE, "peer_ps_20261113.json as_of；逾期同業 %s（照原則第 15 條標示）" % "、".join(PP["stale"]))
+add("ps_peer_db", "同業中位 P／S：資料庫最近一季中位（對照；Sens 用，即 v0.2.1 的值）", "倍", None, PP["db_last_quarter"]["median"], None, DE, "peer_ps_20261113.json db_last_quarter（季末 %s，%d 家）；相對現價日逾期" % (PP["db_last_quarter"]["q"], PP["db_last_quarter"]["n_peers"]))
 add("rel_ps", "相對倍數：僅 PS 讀數（ps_only；Sens 用）", "倍", None, RM["sens"]["ps_only"], None, DE, "relmult_hist JSON sens.ps_only")
 add("rel_psg", "相對倍數：僅 PSG 讀數（psg_only；Sens 用）", "倍", None, RM["sens"]["psg_only"], None, DE, "relmult_hist JSON sens.psg_only")
 add("rel_div", "相對倍數：PS 與 PSG 兩讀數分歧度（divergence）", "比例", None, RM["divergence"], None, DE, "relmult_hist JSON divergence；divergence_gt_30pct＝" + str(RM["divergence_gt_30pct"]))
@@ -441,7 +444,7 @@ for i, k in enumerate(vrows): VR[k] = 1 + i
 V["A1"] = None
 for k in ("intro", "hint", "cap"): pass
 V.cell(VR["intro"], 1, "估值：DCF（FCFF）與 Comparable（P／S 主腿：同業中位 P／S × rel_mult × 目標日 TTM 營收 ÷ 評價股數）加權；P／FCF Comparable 只作對照列，不進加權。目標價為 12 個月後（評價日＋12 個月）。三情境 25／50／25。上檔空間不是年化報酬。")
-V.cell(VR["hint"], 1, "口徑一致：PS／PSG 歷史相對值已內含本公司與同業的利潤率差，故主腿用 P／S；若把它套在 P／FCF 等盈餘型倍數會重複計入利潤率差（工作單 G6）。同業 P／S 取 relmult_hist 最近一季（季末 2026-06-30，相對現價日逾期）；P／FCF 對照列給 rel_mult＝1.00 與本公司現行相對值兩讀數。同業家數 6，不做迴歸。")
+V.cell(VR["hint"], 1, "口徑一致：PS／PSG 歷史相對值已內含本公司與同業的利潤率差，故主腿用 P／S；若把它套在 P／FCF 等盈餘型倍數會重複計入利潤率差（工作單 G6）。同業 P／S 取 peer_ps_20261113.json（現價日 2026-11-13；WDAY、HUBS 為 2026-10-26，逾期）；P／S 一律股權口徑；P／FCF 對照列給 rel_mult＝1.00 與本公司現行相對值兩讀數。同業家數 6，不做迴歸。")
 V.cell(VR["cap"], 1, "結論（情境加權）").font = BOLD
 hdrs = {"A": "項目", "B": "數值", "C": "情境 A", "D": "情境 B", "E": "情境 C"}
 def vrow(k, label, b=None, c=None, d=None, e=None):
@@ -502,7 +505,7 @@ for si, s in enumerate("ABC"):
 vrow("pvx", "明確期 FCFF 現值（US$M）"); vrow("tvpv", "永續價值現值（US$M）"); vrow("ev", "企業價值 EV（US$M）"); vrow("eq", "股權價值（EV＋淨現金；US$M）")
 vrow("vps0", "每股價值（評價日；US$）"); vrow("dcf12", "DCF 情境目標價（12 個月後＝每股價值×(1+ke)−股利；US$）"); vrow("tvsh", "永續價值占 EV 比例")
 V.cell(VR["ch"], 1, "Comparable（目標時點 NTM 自由現金流 × 同業 EV／FCF）").font = BOLD
-vrow("rv", "目標日 TTM 營收（FY2027E 與 FY2028E 按日數加權；US$M）"); vrow("psm", "套用倍數（同業中位 P／S，分母期間 TTM，季末 2026-06-30，逾期；×rel_mult）"); vrow("ps_eq", "P／S 股權價值（目標日；US$M）"); vrow("psc12", "Comparable 情境目標價（P／S 主腿；US$；股權價值÷評價股數）")
+vrow("rv", "目標日 TTM 營收（FY2027E 與 FY2028E 按日數加權；US$M）"); vrow("psm", "套用倍數（同業中位 P／S，現價日 2026-11-13，WDAY 與 HUBS 逾期；分母期間 TTM；×rel_mult）"); vrow("ps_eq", "P／S 股權價值（目標日；US$M）"); vrow("psc12", "Comparable 情境目標價（P／S 主腿；US$；股權價值÷評價股數）")
 vrow("ntm", "對照列（不進加權）：目標日 TTM 有槓桿自由現金流（FY2027E 與 FY2028E 按日數加權；US$M）"); vrow("mult", "對照列：套用倍數（同業中位 P／FCF，TTM；rel_mult＝1.00）"); vrow("ev_c", "對照列：P／FCF 股權價值（rel_mult＝1.00；US$M）"); vrow("comp12", "對照列：P／FCF 目標價（rel_mult＝1.00；US$；不進加權）")
 vrow("ref_cur", "對照列：P／FCF 目標價（本公司現行相對值＝本公司現行 P／FCF；US$；不進加權）")
 V.cell(VR["scenh"], 1, "情境權重與加權").font = BOLD
@@ -727,7 +730,7 @@ Rm["A17"] = "推論成本只讀 Tokenomics v22.0 快照，不自行估 token 價
 Rm["A19"] = (f'="DCF（股票薪酬加回）每股價值（情境 B，評價日）"&TEXT({VB("sb_vps0","D")},"0.00")&" 美元、目標價（情境加權）"&TEXT({VB("sb_tp")},"0.00")&" 美元（相對現價 "&TEXT({VB("sb_up")},"0.0%")&"），不加回的 DCF 目標價 "&TEXT({VB("dcf_tp")},"0.00")&" 美元；僅作對照，不進加權目標價。"')
 Rm["A18"] = "未做事項：先驗（Andy 指示本版跳過）；三層基準協調（Coord、C0、兩讀數）不適用：非 Siliconomics 覆蓋；Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照不適用：Salesforce 不自建算力；非 GAAP 預測、新二分類 FY2026 回溯值：未找到。"
 Rm["A20"] = "市場資料日期"
-Rm["A21"] = (f'="現價 "&TEXT({I("px_date")},"yyyy-mm-dd")&" 收盤；無風險利率日期 "&TEXT({I("rf_date")},"yyyy-mm-dd")&IF(NETWORKDAYS({I("rf_date")},{I("px_date")})-1>2,"（逾期）","")&"；同業倍數日期 "&TEXT(MIN(Val!F{VR["pe1"]}:F{VR["pe6"]}),"yyyy-mm-dd")&" 至 "&TEXT(MAX(Val!F{VR["pe1"]}:F{VR["pe6"]}),"yyyy-mm-dd")&"，逾期 "&COUNTIF(Val!I{VR["pe1"]}:I{VR["pe6"]},"逾期")&" 家；同業 P／S 季末日 "&TEXT({I("ps_peer_date")},"yyyy-mm-dd")&IF(NETWORKDAYS({I("ps_peer_date")},{I("px_date")})-1>2,"（逾期）","")&"；股數取 10-Q 封面（Q1 FY27，2026-05-21）。"')
+Rm["A21"] = (f'="現價 "&TEXT({I("px_date")},"yyyy-mm-dd")&" 收盤；無風險利率日期 "&TEXT({I("rf_date")},"yyyy-mm-dd")&IF(NETWORKDAYS({I("rf_date")},{I("px_date")})-1>2,"（逾期）","")&"；同業倍數日期 "&TEXT(MIN(Val!F{VR["pe1"]}:F{VR["pe6"]}),"yyyy-mm-dd")&" 至 "&TEXT(MAX(Val!F{VR["pe1"]}:F{VR["pe6"]}),"yyyy-mm-dd")&"，逾期 "&COUNTIF(Val!I{VR["pe1"]}:I{VR["pe6"]},"逾期")&" 家；同業 P／S 價格日 "&TEXT({I("ps_peer_date")},"yyyy-mm-dd")&"（逾期 2 家：WDAY、HUBS，2026-10-26）；股數取 10-Q 封面（Q1 FY27，2026-05-21）。"')
 Rm["A22"] = (f'="主要失效條件（可觀察）：Q3 FY27 cRPO 年增（固定匯率）低於指引 "&TEXT({I("crpo_g")},"0%")&"；Agentforce ARR 單季增量轉負（Q2 FY27 逾 1.5 十億美元）；席位年增轉為負；每任務推論成本占單價超過本頁基準 "&TEXT(Seg!G{SR["B"]["inf"]}/Seg!G{SR["B"]["agent"]},"0%")&"。"')
 Rm["A23"] = "風險登錄"
 Rm["A24"] = "風險"; Rm["B24"] = "是否建模"; Rm["C24"] = "理由"; Rm["D24"] = "觀察指標"

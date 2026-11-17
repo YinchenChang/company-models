@@ -14,7 +14,7 @@ base_raw = os.path.join(WD, "base_raw.xlsx")
 subprocess.run([sys.executable, os.path.join(HERE, "build_naver.py"), base_raw], check=True, env=dict(os.environ, ROWMAP=rm_path), stdout=subprocess.DEVNULL)
 rm = json.load(open(rm_path, encoding="utf-8"))
 VR = rm["VR"]
-NONOP = {"beta", "erp", "kd_sp", "g_tv", "rel_adj", "w_dcf", "pe_inv", "dil", "fx", "ptok_idx", "tok_mult", "route", "nci_v", "eqm_inc", "af_m28", "af_m27", "dps_g"}
+NONOP = {"beta", "erp", "kd_sp", "g_tv", "rel_adj", "w_dcf", "pe_inv", "dil", "fx", "ptok_idx", "tok_mult", "route", "ps_med_in", "nci_v", "eqm_inc", "af_m28", "af_m27", "dps_g"}
 
 
 def recalc(raw, tag):

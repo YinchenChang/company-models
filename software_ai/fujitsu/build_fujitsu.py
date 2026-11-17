@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """富士通（6702）個股模型 v0.2（原型 L：按人力計價，套用於 Service Solutions；命題＋官方分部營收 → 損益表 → FCFF DCF＋分部加總 Comparable）。
-用法：python3 build_fujitsu.py <raw.xlsx> [--sens data/sens_v021_20261117.json] [--rowmap rowmap.json] [--rev data/rev_solve_v021.json] [--set key=value ...]
+用法：python3 build_fujitsu.py <raw.xlsx> [--sens data/sens_v022_20261117.json] [--rowmap rowmap.json] [--rev data/rev_solve_v022.json] [--set key=value ...]
 所有計算為活公式；輸入在 In 頁（藍字）。LibreOffice 重算後才有快取值。本版未做先驗。金額 ¥百萬；會計年度 4 月制（FY2026＝2026-04-01～2027-03-31）。
 """
 import datetime, hashlib, json, os, sys
@@ -16,7 +16,10 @@ SETS = {}
 for i, a in enumerate(sys.argv):
     if a == "--set":
         k, v = sys.argv[i + 1].split("=", 1); SETS[k] = float(v)
-VER, VDATE = "0.2.1", "20261117"
+VER, VDATE = "0.2.2", "20261117"
+PP = json.load(open(os.path.join(HERE, "data", "peer_ps_20261113.json"), encoding="utf-8"))
+PPC = PP["companies"]["fujitsu"]["groups"]["all"]
+# G7：同業 P/S（現價日；software_ai/data/relmult_hist/out/peer_ps_20261113.json 副本）
 RM = json.load(open(os.path.join(HERE, "data", "relmult_hist_fujitsu.json"), encoding="utf-8"))   # G5：歷史相對倍數（software_ai/data/relmult_hist/out/fujitsu.json 副本）
 TK = json.load(open(os.path.join(HERE, "data", "tokenomics_snapshot_v22.0.json"), encoding="utf-8"))
 TKI = TK["items"]
@@ -71,6 +74,8 @@ add("tax", "稅率（NOPAT 與損益）", "比例", 0.25, 0.287, 0.31, DE, "2026
 add("w_dcf", "DCF 權重（其餘為 Comparable）", "比例", 0.3, 0.5, 0.7, AS, "原則第 4 節預設 50／50")
 add("cm_adj", "Comparable 倍數調整係數（本公司對同業中位數的歷史相對倍數；rel_mult 基準）", "倍", RM["sens"]["low"], RM["geo_base"], RM["sens"]["high"], DE,
     "software_ai/data/relmult_hist/out/fujitsu.json（2026-11-17）geo_base＝PS 讀數 %.4f；base_source：%s；PSG 有效點 6 少於 12，參考讀數 %.2f 不進基準；低／高＝sens.low／sens.high（PS 歷史最低／最高）；同業 HITACHI、NEC、NRI、BIPROGY；G6：套用於整體 P/S 主腿" % (RM["ps_reading"], RM["base_source"], RM["psg_reading"]))
+add("ps_use_db", "同業 P/S 來源切換（0＝現價日 peer_ps_20261113；1＝資料庫最近一季中位，v0.2／v0.2.1 的值；Sens 對照案）", "旗標", None, 0, None, AS, "G7 第 2 條：Sens 對照案，基準 0")
+add("ps_med_db", "同業 P/S：資料庫最近一季中位（對照用）", "倍", None, PPC["db_last_quarter"]["median"], None, DE, "peer_ps_20261113.json db_last_quarter（季末 %s，%d 家；Derived）" % (PPC["db_last_quarter"]["q"], PPC["db_last_quarter"]["n_peers"]))
 add("hw_disc", "Hardware／Ubiquitous 倍數相對 Service 倍數", "倍", 0.4, 0.6, 0.8, AS, "找不到硬體與終端同業倍數；以折扣假設（硬體利益率 5.7% 對 Service 15.6%，LTM，Derived）")
 # ---- 命題（原型 L，套用於 Service Solutions）
 add("hc_y25", "期末連結員工數 FY2025（含全部分部）", "千人", None, 99.203, None, D0, RF25 + " 主要經營指標；FY2024 的 112,743 含已出售的 Device Solutions，口徑不可比")
@@ -526,15 +531,17 @@ V.cell(VR["pe_own"], 1, "富士通自身 EV／EBIT（StockAnalysis 2026-10-23，
 V.cell(VR["stale_rf"], 1, "rf 基準日與現價日相差（交易日；超過 2 個交易日標逾期）")
 V[f"B{VR['stale_rf']}"] = f"=NETWORKDAYS(MIN({I('rf_date')},{I('px_date')}),MAX({I('rf_date')},{I('px_date')}))-1"
 V[f"C{VR['stale_rf']}"] = f'=IF(B{VR["stale_rf"]}>2,"逾期","未逾期")'
-V.cell(VR["psh"], 1, "同業 P/S（software_ai/data/relmult_hist 各同業 CSV，最近一季＝2026-06-30；2026-09-30 只有 1 家，不足 2 家）").font = BOLD
-PSP = [("日立製作所（HITACHI）", 1.82), ("NEC", 1.41), ("野村総合研究所（NRI）", 3.10), ("BIPROGY", 0.96)]
-for i, (nm, mv) in enumerate(PSP):
+V.cell(VR["psh"], 1, "同業 P/S（G7：software_ai/data/relmult_hist/out/peer_ps_20261113.json；價格日 2026-11-13）").font = BOLD
+_STALE = {x.split("(")[0]: x.split("(")[1].rstrip(")") for x in PPC["stale"]}
+_NAMES = {'HITACHI': '日立製作所（HITACHI）', 'NEC': 'NEC', 'NRI': '野村総合研究所（NRI）', 'BIPROGY': 'BIPROGY'}
+for i, tk in enumerate(PPC["peers"]):
     rw = VR[f"ps{i+1}"]
-    V.cell(rw, 1, nm); V.cell(rw, 2, mv).font = BLUE; V.cell(rw, 3, datetime.date(2026, 6, 30)).number_format = "yyyy-mm-dd"; V.cell(rw, 4, "relmult_hist CSV（StockAnalysis 季度比率；Derived）")
+    _d = datetime.date.fromisoformat(_STALE.get(tk, PP["as_of"]))
+    V.cell(rw, 1, _NAMES[tk]); V.cell(rw, 2, PPC["peers"][tk]).font = BLUE; V.cell(rw, 3, _d).number_format = "yyyy-mm-dd"; V.cell(rw, 4, "peer_ps_20261113.json（StockAnalysis；價格日 2026-11-13，非當日者列 stale；Derived）")
     V.cell(rw, 5, f'=IF(NETWORKDAYS(MIN(C{rw},{I("px_date")}),MAX(C{rw},{I("px_date")}))-1>2,"逾期","")')
-vrow("ps_med", "同業中位數 P/S（最近一季 2026-06-30，4 家）", f"=MEDIAN(B{VR['ps1']}:B{VR['ps4']})")
+vrow("ps_med", "同業中位數 P/S（現價日 peer_ps_20261113；Sens 對照案可切換為資料庫最近一季中位）", f"=IF({I('ps_use_db')}=1,{I('ps_med_db')},MEDIAN(B{VR['ps1']}:B{VR['ps4']}))")
 vrow("ps_n", "家數", f"=COUNT(B{VR['ps1']}:B{VR['ps4']})")
-V.cell(VR["ps_note"], 1, "季末日距現價日超過 2 個交易日，標「逾期」（季度資料無法更近）；富士通自身 2026-06-30 P/S 1.60、2026-09-30 為 1.93；rel_mult 只用 PS 讀數（PSG 有效點不足），Derived。")
+V.cell(VR["ps_note"], 1, "G7：同業 P/S 取現價日（市值÷最新 TTM 營收），日期非 2026-11-13 者逐家標日期與「逾期」；v0.2.1 為資料庫最近一季中位（1.615，2026-06-30，4 家），列為 Sens 對照案。富士通 自身 P/S 見 peer_ps_20261113.json。rel_mult 仍取 geo_base（Derived）。")
 V.cell(VR["pe_note"], 1, "同業倍數基準日早於現價日 2 個交易日以上者標「逾期」，使用前須更新；本版未更新。交易日以週一至週五計，未扣日本假日。")
 V.cell(VR["sbch"], 1, "股票薪酬加回 DCF 對照讀數（G5 第 3 條；只作對照，不進加權目標價）").font = BOLD
 V.cell(VR["sbc_na"], 1, "DCF（股票薪酬加回）情境目標價"); V.cell(VR["sbc_na"], 2, "未找到")
@@ -621,7 +628,7 @@ else:
     Rc.cell(RC_REV, 2, "未解（尚未跑反解）")
 r = RC_REV + 5
 Rc.cell(r, 1, "5. 口徑與未找到").font = BOLD
-Rc.cell(r + 1, 1, "同業 P/S 取自 relmult_hist（2026-06-30；4 家；已標逾期）；EV／EBIT 對照列的同業倍數取自 StockAnalysis，日期 2026-10-05 至 11-13，與現價日不一致、逾期者已標；家數 4；準則與租賃處理未逐家核對；未取得 NTM 口徑倍數，以 TTM 倍數乘目標日 TTM 營業利益；本公司歷史相對倍數（5 年）未自算（G3 第 4 條未做）。")
+Rc.cell(r + 1, 1, "同業 P/S 取自 peer_ps_20261113（現價日；逾期者逐家標示）；EV／EBIT 對照列的同業倍數取自 StockAnalysis，日期 2026-10-05 至 11-13，與現價日不一致、逾期者已標；家數 4；準則與租賃處理未逐家核對；未取得 NTM 口徑倍數，以 TTM 倍數乘目標日 TTM 營業利益；本公司歷史相對倍數（5 年）未自算（G3 第 4 條未做）。")
 Rc.cell(r + 2, 1, "2026 下半年實績（至 2027-03）預計 2027-04 下旬公布；本版以 2026 上半年（至 2026-09-30）為最新已公布期。FY2026 DCF 的下半年現金流以全年 FCFF 乘 0.5 近似。")
 Rc.cell(r + 3, 1, "未找到：分部員工數與利用率、計費工時與時薪、token 量與代理任務量（公司不揭露）、Blume β 第二來源、債券有效利率、退休金淨負債、稀釋證券明細、FY2025 所得稅與歷史營運資金比率（淨利含非繼續營業）、決算後的賣方平均目標價與共識 EPS、匯率來源；詳見 research_fujitsu.md 第 9 節。")
 RC_END = r + 3
@@ -685,7 +692,7 @@ Rm["A13"] = (f'="富士通："&{VB("rec")}&"，加權目標價 "&TEXT({VB("tp")}
 Rm["A14"] = "本版要點"
 Rm["A15"] = "官方報告分部四列（Service Solutions、Hardware Solutions、Ubiquitous Solutions、Elimination/Corporate）；分部營收與分部利益（調整後營業利益）合計與合併值在 FY2024、FY2025 與 2025、2026 上半年差 0（決算短信 ¥百萬）。"
 Rm["A16"] = "命題模組為原型 L，只套用於 Service Solutions；公司不揭露分部員工、利用率、計費工時、時薪，時薪由 FY2025 Service 營收反推（Derived），自動化比例、價格保留率、新專案占比為 Assumed，分化依據見 In 頁。"
-Rm["A17"] = "推論成本只讀 Tokenomics v22.0 快照任務 5（類比）；公司未揭露 token 量與代理任務量，不以聊天基數乘倍數；token 價格路徑待 AI供應鏈 登錄。分部利益為公司自訂的調整後營業利益，合併營業利益取 IFRS。Comparable 主腿改為整體 P/S 口徑：同業中位 P/S（2026-06-30，4 家，已標逾期）× rel_mult（只用 PS 讀數，Derived；PSG 有效點 6 少於 12，不進基準）× 目標時點 TTM 營收 ÷ 股數；原因：PS／PSG 相對值已含利潤率差，套到 EV／EBIT 會重複計入，故分部 EV／EBIT 加總只作對照列、不進加權目標價（G6）；兩讀數差異未計（PSG 不進基準；PSG 參考讀數偏離的原因：本公司與同業成長比 5.5，TTM 營收年增含重編／併購單季跳升）。"
+Rm["A17"] = "推論成本只讀 Tokenomics v22.0 快照任務 5（類比）；公司未揭露 token 量與代理任務量，不以聊天基數乘倍數；token 價格路徑待 AI供應鏈 登錄。分部利益為公司自訂的調整後營業利益，合併營業利益取 IFRS。Comparable 主腿改為整體 P/S 口徑：同業中位 P/S（現價日 2026-11-13，peer_ps_20261113，非當日者標逾期）× rel_mult（只用 PS 讀數，Derived；PSG 有效點 6 少於 12，不進基準）× 目標時點 TTM 營收 ÷ 股數；原因：PS／PSG 相對值已含利潤率差，套到 EV／EBIT 會重複計入，故分部 EV／EBIT 加總只作對照列、不進加權目標價（G6）；兩讀數差異未計（PSG 不進基準；PSG 參考讀數偏離的原因：本公司與同業成長比 5.5，TTM 營收年增含重編／併購單季跳升）。"
 Rm["A18"] = "未做事項：股票報酬加回 DCF 讀數未找到（金額未單列）；先驗（Andy 指示本版跳過）；三層基準協調（Coord、C0、兩讀數）不適用：非 Siliconomics 覆蓋；Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照不適用：富士通非以自建算力為命題；v0.2 改讀 unit_economics。"
 Rm["A19"] = (f'="合理性關卡（工作單 G3 第 3 條）："&IF({VB("g3_flag")}=1,"觸發，須診斷。","未觸發，無須診斷。")&"DCF 目標價÷現價 "&TEXT({VB("g3_dcf")},"0.00")&"（門檻 0.25 至 4）、EV 最小值 "&TEXT({VB("g3_ev")}/1000,"#,##0")&" 十億日圓、FY2026 營收對指引差 "&TEXT({VB("g3_rev")},"0.0%")&"、調整後營業利益率相對差 "&TEXT({VB("g3_om")},"0.0%")&"（門檻 10%，接近門檻，原因：分部利益率持平於 LTM，公司指引隱含下半年回升）、評等 "&{VB("valr")}&"。現價 2026-11-13 較 2026-10-23 低約 23%（決算後），股價為單一來源（traders.co.jp），待核對。"')
 Rm["A20"] = "市場資料日期"
@@ -705,7 +712,7 @@ mp = [("Seg", "hc_y25、svc_sh、util、hrs、hg、rg、a26、a32_A/B/C、r_A/B/
       ("Sens", "In 頁敏感度低／高", "加權目標價、DCF 目標價、投資建議", "一次改一個輸入、整本重算")]
 for i, rk in enumerate(mp, 34):
     for j, v in enumerate(rk, 1): Rm.cell(i, j, v)
-Rm["A39"] = "版本沿革：v0.2.1（2026-11-17）G6：Comparable 主腿改整體 P/S，分部 EV／EBIT 改對照；v0.2（2026-11-17）G5：Comparable 倍數改用歷史相對倍數 geo_base（只用 PS，PSG 有效點不足；Derived）、無風險利率統一為日本 10 年期 2.77%（2026-11-11）、股票薪酬加回 DCF 讀數未找到；v0.1（2026-11-16）首版。皆未做先驗。"
+Rm["A39"] = "版本沿革：v0.2.2（2026-11-17）G7：同業 P/S 改現價日 peer_ps_20261113，資料庫最近一季中位列 Sens 對照；v0.2.1（2026-11-17）G6：Comparable 主腿改整體 P/S，分部 EV／EBIT 改對照；v0.2（2026-11-17）G5：Comparable 倍數改用歷史相對倍數 geo_base（只用 PS，PSG 有效點不足；Derived）、無風險利率統一為日本 10 年期 2.77%（2026-11-11）、股票薪酬加回 DCF 讀數未找到；v0.1（2026-11-16）首版。皆未做先驗。"
 for ws_ in wb.worksheets:
     ws_.column_dimensions["A"].width = 52
     for col in "BCDEFGHIJK": ws_.column_dimensions[col].width = 14

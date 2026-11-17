@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Accenture 個股模型 v0.2（原型 L：按人力計價；命題＋官方分部營收 → 損益表 → FCFF DCF＋分部加總 Comparable）。
-用法：python3 build_accenture.py <raw.xlsx> [--sens data/sens_v021_20261117.json] [--rowmap rowmap.json] [--rev data/rev_solve_v021.json] [--set key=value ...]
+用法：python3 build_accenture.py <raw.xlsx> [--sens data/sens_v022_20261117.json] [--rowmap rowmap.json] [--rev data/rev_solve_v022.json] [--set key=value ...]
 所有計算為活公式；輸入在 In 頁（藍字）。LibreOffice 重算後才有快取值。本版未做先驗。
 """
 import datetime, hashlib, json, os, sys
@@ -16,7 +16,10 @@ SETS = {}
 for i, a in enumerate(sys.argv):
     if a == "--set":
         k, v = sys.argv[i + 1].split("=", 1); SETS[k] = float(v)
-VER, VDATE = "0.2.1", "20261117"
+VER, VDATE = "0.2.2", "20261117"
+PP = json.load(open(os.path.join(HERE, "data", "peer_ps_20261113.json"), encoding="utf-8"))
+PPC = PP["companies"]["accenture"]["groups"]["all"]
+# G7：同業 P/S（現價日；software_ai/data/relmult_hist/out/peer_ps_20261113.json 副本）
 RM = json.load(open(os.path.join(HERE, "data", "relmult_hist_accenture.json"), encoding="utf-8"))   # G5：歷史相對倍數（PS 與 PSG；software_ai/data/relmult_hist/out/accenture.json 副本）
 TK = json.load(open(os.path.join(HERE, "data", "tokenomics_snapshot_v22.0.json"), encoding="utf-8"))
 TKI = TK["items"]
@@ -70,6 +73,8 @@ add("tax", "稅率（NOPAT 與損益）", "比例", 0.22, 0.251, 0.27, AS, "FY20
 add("w_dcf", "DCF 權重（其餘為 Comparable）", "比例", 0.3, 0.5, 0.7, AS, "原則第 4 節預設 50／50")
 add("cm_adj", "Comparable 倍數調整係數（本公司對同業中位數的歷史相對倍數；rel_mult 基準）", "倍", RM["sens"]["low"], RM["geo_base"], RM["sens"]["high"], DE,
     "software_ai/data/relmult_hist/out/accenture.json（2026-11-17）G6：套用於 P/S 主腿；geo_base＝PS 與 PSG 兩讀數幾何平均（PS 讀數 %.4f、PSG 讀數 %.4f；base_source：%s）；低／高＝sens.low／sens.high；同業 CTSH、INFY、GIB" % (RM["ps_reading"], RM["psg_reading"], RM["base_source"]))
+add("ps_use_db", "同業 P/S 來源切換（0＝現價日 peer_ps_20261113；1＝資料庫最近一季中位，v0.2／v0.2.1 的值；Sens 對照案）", "旗標", None, 0, None, AS, "G7 第 2 條：Sens 對照案，基準 0")
+add("ps_med_db", "同業 P/S：資料庫最近一季中位（對照用）", "倍", None, PPC["db_last_quarter"]["median"], None, DE, "peer_ps_20261113.json db_last_quarter（季末 %s，%d 家；Derived）" % (PPC["db_last_quarter"]["q"], PPC["db_last_quarter"]["n_peers"]))
 add("sbc_pct", "股票薪酬占營收（只用於「股票薪酬加回」DCF 對照讀數）", "比例", None, 0.0283, None, DE, "FY2026 股票薪酬 2,100.433÷營收 74,183.445＝2.83%（10-K FY2026 現金流量表；Derived）；預測期持平；對照讀數不進加權目標價")
 # ---------------- 命題（原型 L）
 add("hc_y25", "期末員工數 FY2025", "千人", None, 779, None, IP, "10-K FY2026 MD&A People Metrics（約數）", "公司自揭 KPI，約數")
@@ -524,16 +529,17 @@ V.cell(VR["pe_own"], 1, "Accenture 自身 EV／EBIT（StockAnalysis 2026-10-31�
 V.cell(VR["stale_rf"], 1, "rf 基準日與現價日相差（交易日；超過 2 個交易日標逾期）")
 V[f"B{VR['stale_rf']}"] = f"=NETWORKDAYS(MIN({I('rf_date')},{I('px_date')}),MAX({I('rf_date')},{I('px_date')}))-1"
 V[f"C{VR['stale_rf']}"] = f'=IF(B{VR["stale_rf"]}>2,"逾期","未逾期")'
-V.cell(VR["psh"], 1, "同業 P/S（software_ai/data/relmult_hist 各同業 CSV，最近一季；季末日如下；同業中位數須 2 家以上）").font = BOLD
-PSP = [("Cognizant（CTSH）", 1.18, datetime.date(2026, 9, 30)), ("Infosys（INFY）", 2.06, datetime.date(2026, 9, 30))]
-for i, (nm, mv, dt) in enumerate(PSP):
+V.cell(VR["psh"], 1, "同業 P/S（G7：software_ai/data/relmult_hist/out/peer_ps_20261113.json；價格日 2026-11-13）").font = BOLD
+_STALE = {x.split("(")[0]: x.split("(")[1].rstrip(")") for x in PPC["stale"]}
+_NAMES = {'CTSH': 'Cognizant（CTSH）', 'INFY': 'Infosys（INFY）', 'GIB': 'CGI（GIB）'}
+for i, tk in enumerate(PPC["peers"]):
     rw = VR[f"ps{i+1}"]
-    V.cell(rw, 1, nm); V.cell(rw, 2, mv).font = BLUE; V.cell(rw, 3, dt).number_format = "yyyy-mm-dd"; V.cell(rw, 4, "relmult_hist CSV（StockAnalysis 季度比率；Derived）")
+    _d = datetime.date.fromisoformat(_STALE.get(tk, PP["as_of"]))
+    V.cell(rw, 1, _NAMES[tk]); V.cell(rw, 2, PPC["peers"][tk]).font = BLUE; V.cell(rw, 3, _d).number_format = "yyyy-mm-dd"; V.cell(rw, 4, "peer_ps_20261113.json（StockAnalysis；價格日 2026-11-13，非當日者列 stale；Derived）")
     V.cell(rw, 5, f'=IF(NETWORKDAYS(MIN(C{rw},{I("px_date")}),MAX(C{rw},{I("px_date")}))-1>2,"逾期","")')
-V.cell(VR["ps3"], 1, "CGI（GIB）"); V.cell(VR["ps3"], 2, "未找到"); V.cell(VR["ps3"], 4, "2026-09-30 無資料（最近一季 2026-06-30 為 1.17）；不計入本季中位數")
-vrow("ps_med", "同業中位數 P/S（最近一季 2026-09-30，2 家）", f"=MEDIAN(B{VR['ps1']}:B{VR['ps3']})")
+vrow("ps_med", "同業中位數 P/S（現價日 peer_ps_20261113；Sens 對照案可切換為資料庫最近一季中位）", f"=IF({I('ps_use_db')}=1,{I('ps_med_db')},MEDIAN(B{VR['ps1']}:B{VR['ps3']}))")
 vrow("ps_n", "家數", f"=COUNT(B{VR['ps1']}:B{VR['ps3']})")
-V.cell(VR["ps_note"], 1, "季末日距現價日超過 2 個交易日，標「逾期」（季度資料無法更近）；Accenture 自身同日 P/S 1.57、歷史相對值 0.97（最近一季），rel_mult 取 PS 與 PSG 兩讀數幾何平均（Derived）。")
+V.cell(VR["ps_note"], 1, "G7：同業 P/S 取現價日（市值÷最新 TTM 營收），日期非 2026-11-13 者逐家標日期與「逾期」；v0.2.1 為資料庫最近一季中位（1.62，2026-09-30，2 家），列為 Sens 對照案。Accenture 自身 P/S 見 peer_ps_20261113.json。rel_mult 仍取 geo_base（Derived）。")
 V.cell(VR["pe_note"], 1, "同業倍數基準日全部早於現價日 2 個交易日以上者標「逾期」，使用前須更新；本版未更新（同業日期 2026-10-21 至 10-27，現價日 2026-11-13）。EPAM 頁無日期且資料為 2025 年，已排除。")
 
 V.cell(VR["sbch"], 1, "股票薪酬加回 DCF 對照讀數（G5 第 3 條；只作對照，不進加權目標價；FCFF 與永續價值的營業利潤基礎各加回股票薪酬＝營收 × 股票薪酬占營收）").font = BOLD
@@ -628,7 +634,7 @@ else:
     Rc.cell(RC_REV, 2, "未解（尚未跑反解）")
 r = RC_REV + 5
 Rc.cell(r, 1, "5. 口徑與未找到").font = BOLD
-Rc.cell(r + 1, 1, "同業 P/S 取自 relmult_hist（2026-09-30；2 家；已標逾期）；EV／EBIT 對照列的同業倍數取自 StockAnalysis，日期 2026-10-21 至 10-27，與現價日不一致、已標逾期；家數 3；準則與租賃處理未核對；未取得 NTM 口徑倍數（原則第 10 節第 7 條），以 TTM 倍數乘目標日 TTM 營業利益。")
+Rc.cell(r + 1, 1, "同業 P/S 取自 peer_ps_20261113（現價日；逾期者逐家標示）；EV／EBIT 對照列的同業倍數取自 StockAnalysis，日期 2026-10-21 至 10-27，與現價日不一致、已標逾期；家數 3；準則與租賃處理未核對；未取得 NTM 口徑倍數（原則第 10 節第 7 條），以 TTM 倍數乘目標日 TTM 營業利益。")
 Rc.cell(r + 2, 1, "FY2027 Q1（2026-09 至 11）實績預計 2026-12 下旬公布；本版以 FY2026（截至 2026-08-31）為最新年度。")
 Rc.cell(r + 3, 1, "未找到：Blume β 第二來源、公司債有效利率、融資租賃餘額、FY2024 GenAI 數字官方 8-K 原文、利用率定義、計費工時與時薪（公司不揭露）、平均賣方目標價與家數；詳見 research_accenture.md 第 9 節。")
 RC_END = r + 3
@@ -695,7 +701,7 @@ Rm["A13"] = (f'="Accenture："&{VB("rec")}&"，加權目標價 "&TEXT({VB("tp")}
 Rm["A14"] = "本版要點"
 Rm["A15"] = "官方報告分部三個（Americas、EMEA、Asia Pacific；FY2024 為 10-K FY2026 新口徑重編值）；分部營收與營業利益皆取公司法定附註，三分部合計與合併值差 0。"
 Rm["A16"] = "命題模組為原型 L；公司不揭露計費工時、時薪、價量拆分，時薪由 FY2026 營收與員工數、利用率反推（Derived），自動化比例、價格保留率、新專案占比為 Assumed，情境分化依據見 In 頁。"
-Rm["A17"] = "推論成本只讀 Tokenomics v22.0 快照任務 5（類比）；公司未揭露 token 量與代理任務量，不以聊天基數乘倍數；token 價格路徑待 AI供應鏈 登錄。Comparable 主腿改為 P/S 口徑：同業中位 P/S（2026-09-30，2 家，已標逾期）× rel_mult（geo_base，PS 與 PSG 兩讀數幾何平均，Derived）× 目標時點 TTM 營收 ÷ 股數；原因：PS／PSG 相對值已含利潤率差，套到 EV／EBIT 會重複計入，故 EV／EBIT 分部加總只作對照列、不進加權目標價（G6）；兩讀數差異未超過 30%，不需另述原因。"
+Rm["A17"] = "推論成本只讀 Tokenomics v22.0 快照任務 5（類比）；公司未揭露 token 量與代理任務量，不以聊天基數乘倍數；token 價格路徑待 AI供應鏈 登錄。Comparable 主腿改為 P/S 口徑：同業中位 P/S（現價日 2026-11-13，peer_ps_20261113，非當日者標逾期）× rel_mult（geo_base，PS 與 PSG 兩讀數幾何平均，Derived）× 目標時點 TTM 營收 ÷ 股數；原因：PS／PSG 相對值已含利潤率差，套到 EV／EBIT 會重複計入，故 EV／EBIT 分部加總只作對照列、不進加權目標價（G6）；兩讀數差異未超過 30%，不需另述原因。"
 Rm["A18"] = "未做事項：股票薪酬加回 DCF 只作對照（Val 與 Recon 並列，不進加權目標價）；先驗（Andy 指示本版跳過）；三層基準協調（Coord、C0、兩讀數）不適用：非 Siliconomics 覆蓋；Meta 的算力、Tokenomics 自用 AI 讀法 2、Wattonomics 對照不適用：Accenture 不自建算力；v0.2 改讀 unit_economics。"
 Rm["A19"] = (f'="合理性關卡（工作單 G3 第 3 條）："&IF({VB("g3_flag")}=1,"觸發，須診斷：","未觸發；")&"DCF 目標價÷現價 "&TEXT({VB("g3_dcf")},"0.00")&"、EV 最小值 "&TEXT({VB("g3_ev")}/1000,"0.0")&" 十億美元、FY2027 營收對指引中點差 "&TEXT({VB("g3_rev")},"0.0%")&"、營業利益率相對差 "&TEXT({VB("g3_om")},"0.0%")&"、評等 "&{VB("valr")}&"。診斷結論：本模型評等由 AI 淨效果之成本節省比例 cs（Assumed，Sens 最敏感）與同業倍數與歷史相對倍數（geo_base，Derived；PS／PSG 讀數見 In 頁）決定；兩法與現價的落差見 Val 的落差分解與現行倍數÷同業中位數，屬經濟判斷而非建模錯誤；恆等式核對皆為 0。"')
 Rm["A20"] = "市場資料日期"
@@ -715,7 +721,7 @@ mp = [("Seg", "hc_y26、util、hrs、hg、rg、a27、a32_A/B/C、r_A/B/C、n27�
       ("Sens", "In 頁敏感度低／高", "加權目標價、DCF 目標價、投資建議", "一次改一個輸入、整本重算")]
 for i, rk in enumerate(mp, 34):
     for j, v in enumerate(rk, 1): Rm.cell(i, j, v)
-Rm["A39"] = "版本沿革：v0.2.1（2026-11-17）G6：Comparable 主腿改 P/S，EV／EBIT 改對照；v0.2（2026-11-17）G5：Comparable 倍數改用歷史相對倍數 geo_base（PS／PSG；Derived）、無風險利率統一為 FRED DGS10 5.10%（2026-11-12）、新增股票薪酬加回 DCF 對照讀數；v0.1（2026-11-16）首版。皆未做先驗。"
+Rm["A39"] = "版本沿革：v0.2.2（2026-11-17）G7：同業 P/S 改現價日 peer_ps_20261113，資料庫最近一季中位列 Sens 對照；v0.2.1（2026-11-17）G6：Comparable 主腿改 P/S，EV／EBIT 改對照；v0.2（2026-11-17）G5：Comparable 倍數改用歷史相對倍數 geo_base（PS／PSG；Derived）、無風險利率統一為 FRED DGS10 5.10%（2026-11-12）、新增股票薪酬加回 DCF 對照讀數；v0.1（2026-11-16）首版。皆未做先驗。"
 for ws_ in wb.worksheets:
     ws_.column_dimensions["A"].width = 52
     for col in "BCDEFGHIJK": ws_.column_dimensions[col].width = 14

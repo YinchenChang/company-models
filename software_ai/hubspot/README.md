@@ -1,20 +1,12 @@
-# software_ai/hubspot/ — HubSpot（HUBS）個股模型 v0.2（原型 S：按席位計價）
+# software_ai/hubspot/ — HubSpot（HUBS）個股模型 v0.2.1（原型 S：按席位計價）
 
-**本版未做先驗。** 工作單：`software_ai/docs/workorders/20261116_第一批_研究包與單位經濟.md` G、G2、G3、G5 節。v0.2（2026-11-17）依 G5 改版；v0.1 成品在 `dist/_待刪除/`。
+**本版未做先驗。** 工作單：`software_ai/docs/workorders/20261116_第一批_研究包與單位經濟.md` G、G2、G3、G5、G6、G7 節。v0.2（2026-11-17）依 G5、G6 改版；v0.2.1 依 G7 改同業 P/S；舊成品在 `dist/_待刪除/`。
 
-**建置：** `bash software_ai/hubspot/make_v02.sh`（`SENS=1` 重跑敏感度與反解）。成品 `dist/20261117_HubSpot個股模型_v0.2.xlsx`／`.html`。投資建議、目標價與各數字見成品 README 頁與 HTML（由公式組字，本檔不手寫）。
+**建置：** `bash software_ai/hubspot/make_v02.sh`（`SENS=1` 重跑敏感度與反解）。成品 `dist/20261117_HubSpot個股模型_v0.2.1.xlsx`／`.html`。投資建議、目標價與各數字見成品 README 頁與 HTML（由公式組字，本檔不手寫）。
 
 **版本表（由建置成品產生，不手寫）：**
 
-<!-- version-table: dist/_待刪除/20261116_HubSpot個股模型_v0.1.xlsx｜dist/20261117_HubSpot個股模型_v0.2.xlsx -->
-| 項目 | v0.1 | v0.2 |
-|---|---|---|
-| 現價 | 217.25 | 217.25 |
-| DCF 目標價 | 90.42 | 90.69 |
-| Comparable 目標價 | 280.74 | 398.14 |
-| 加權目標價（上檔空間） | 185.58（-14.6%） | 244.42（+12.5%） |
-| 投資建議 | 中立 | 中立 |
-| 收支關卡 A／B／C（FY2026–FY2030，US$M） | 4,219.6／4,080.7／3,897.6 | 4,219.6／4,080.7／3,897.6 |
+<!-- version-table: dist/_待刪除/20261116_HubSpot個股模型_v0.1.xlsx｜dist/_待刪除/20261117_HubSpot個股模型_v0.2.xlsx｜dist/20261117_HubSpot個股模型_v0.2.1.xlsx -->
 <!-- /version-table -->
 
 **命題：** AI 進入 CRM 後，每客戶訂閱營收受席位被 AI 取代而侵蝕；AI 代理（Customer Agent）按解決任務計價為增量；推論成本只讀 Tokenomics v22.0 快照（`data/tokenomics_snapshot_v22.0.json`，0.1 小時任務向量，類比）。三情境在席位取代率、agent 採用率與單價變動上分化。
@@ -46,6 +38,12 @@
 3. Sens 保留四案（PS 單讀數、PSG 單讀數、歷史低、歷史高），套在 P/S 主腿。
 4. 主腿改 P/S 是為了與 PS／PSG 相對值同口徑（相對值已內含利潤率差，不能直接套本益比）；盈餘型倍數只作對照。README 頁、Val 頁與 HTML 均已寫明。
 5. 重跑全部檢查、SENS=1 與合理性關卡（見上方診斷）。
+
+## G7 同業 P/S 改用現價（v0.2.1）
+1. 主腿同業中位 P/S 改讀 `software_ai/data/relmult_hist/out/peer_ps_20261113.json` 的 hubspot：中位 4.95（2026-11-13 價格日，11 家）。v0.2 用資料庫最近一季（2026-06-30）中位 4.03。11 家中 5 家非 11-13 資料：WDAY、TEAM、MNDY、DOCU 為 2026-10-26，TWLO 為 2026-11-06，Recon 第 4 節標逾期。`rel_mult` 仍為 geo_base 1.2715。
+2. Sens 新增「同業 P/S＝資料庫最近一季中位」對照案（即 4.03）。
+3. 股權口徑：P/S 主腿不加淨現金、不扣淨債務；HubSpot 無非控制權益。分母為目標時點 TTM 營收（FY2026E／FY2027E 依日數加權），股數為評價股數。
+4. **評等變動：** 同業中位 P/S 由 4.03 升為 4.95，Comparable 隨之上升，評等由中立變為買進；加權目標價距 +25% 界線 8.4 個百分點（≥ 5，未觸發標明）。此結論高度依賴 Comparable 主腿（DCF 目標價仍低於現價），見 Sens 的對照案與相對倍數低／高案。
 
 ## G2 共通必修十條逐條
 1. 每任務 token 以公司揭露校準：公司只揭露每解決任務單價與 Customer Agent 營收，token 數未找到，取 Tokenomics 0.1 小時任務（類比），標記於 In 頁。做到（以類比，已註明）。

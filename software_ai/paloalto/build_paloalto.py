@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Palo Alto Networks（PANW）個股模型 v0.2：命題（原型 P 按防護範圍計價）＋營收線 → 損益表 → FCFF DCF／同業 P/S。
+"""Palo Alto Networks（PANW）個股模型 v0.2.1：命題（原型 P 按防護範圍計價）＋營收線 → 損益表 → FCFF DCF／同業 P/S。
 用法：python3 software_ai/paloalto/build_paloalto.py [--sens-only] [--no-sens]
-  1. 建基準檔並以 LibreOffice 重算；2. 逐案整本重算（Sens）；3. 寫成品 dist/<日期>_Palo Alto Networks個股模型_v0.2.xlsx 並重算。
+  1. 建基準檔並以 LibreOffice 重算；2. 逐案整本重算（Sens）；3. 寫成品 dist/<日期>_Palo Alto Networks個股模型_v0.2.1.xlsx 並重算。
 需要：python3＋openpyxl、LibreOffice（soffice）。暫存檔在 /home/claude/scratch/paloalto。"""
 import copy, datetime, glob, hashlib, json, os, re, shutil, subprocess, sys
 import openpyxl
@@ -12,9 +12,11 @@ from openpyxl.workbook.defined_name import DefinedName
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
 SCR = "/home/claude/scratch/paloalto"
-VER, VDATE = "0.2", "20261117"
+VER, VDATE = "0.2.1", "20261117"
 RELJ = json.load(open(os.path.join(ROOT, "software_ai", "data", "relmult_hist", "out", "paloalto.json"), encoding="utf-8"))
 RELG = RELJ["groups"]["all"] if "groups" in RELJ else RELJ
+PSJ = json.load(open(os.path.join(ROOT, "software_ai", "data", "relmult_hist", "out", "peer_ps_20261113.json"), encoding="utf-8"))
+PSG = PSJ["companies"]["paloalto"]["groups"]["all"]
 OUTNAME = f"{VDATE}_Palo Alto Networks個股模型_v{VER}.xlsx"
 TKJ = os.path.join(ROOT, "software_ai", "unit_economics", "data", "tk_snapshot.json")
 TK = json.load(open(TKJ, encoding="utf-8"))
@@ -62,7 +64,7 @@ inp("capcall", "Capped call 公允價值（非營業資產）", "US$M", None, 15
 inp("sh_q4", "FY2026 Q4 稀釋股數（期末水準）", "百萬股", None, 832, None, "Interested-party", SRC["R26Q4"] + "；調節表 non-GAAP 稀釋股數", "預測股數起點", INC_CO, N0)
 
 sec("B. 折現率與終值")
-inp("rf", "無風險利率（10 年美債）", "%", None, 0.051, None, "Verified", "FRED DGS10 2026-11-12 5.10%（現價日前 1 個交易日；G5 第 2 條統一值）https://fred.stlouisfed.org/series/DGS10", "與現價日相差逾 2 個交易日，標逾期（第 15 條）；跨模型共用值，下次全面改版一併更新", "", PCT1)
+inp("rf", "無風險利率（10 年美債）", "%", None, 0.051, None, "Verified", "FRED DGS10 2026-11-12 5.10%（現價日前 1 個交易日；G5 第 2 條統一值）https://fred.stlouisfed.org/series/DGS10", "現價日前 1 個交易日，未逾期（第 15 條）；G5 統一值", "", PCT1)
 inp("beta", "β（Blume 調整後兩來源中位數）", "x", "=0.67*0.93+0.33", "=MEDIAN(0.67*0.97+0.33,0.67*0.93+0.33)", "=0.67*0.97+0.33", "Derived", SRC["SAS"] + "原始 0.97；" + SRC["YF"] + "原始 0.93", "低／高＝兩來源各自的 Blume 調整值", "", "0.000")
 inp("erp", "股權風險溢酬", "%", 0.04, 0.05, 0.06, "Assumed", "DCF 標準規格第 2 節（預設 5%，區間 4–6%）", "", "", PCT)
 inp("kd", "稅前債務成本＝rf＋利差", "%", None, 0.0569, None, "Derived", "同 Meta v0.2.1 In 頁 kd（rf＋0.70%）", "債務只占資本約 0.7%，影響極小", "", PCT1)
@@ -133,10 +135,10 @@ inp("pe_z", "同業前瞻本益比 Zscaler（ZS）", "x", None, 39.22, None, "In
 inp("pe_c", "同業前瞻本益比 Check Point（CHKP）", "x", None, 13.70, None, "Interested-party", "StockAnalysis.com CHKP 統計頁（同上）", "US GAAP（以色列公司，申報 US GAAP）", INC_DATA, "0.00")
 inp("pe_n", "同業前瞻本益比 Cloudflare（NET）", "x", None, 174.39, None, "Interested-party", "StockAnalysis.com NET 統計頁（同上）", "US GAAP", INC_DATA, "0.00")
 inp("pe_p", "PANW 資料商前瞻本益比（展示；同源同日）", "x", None, 77.10, None, "Interested-party", SRC["SAS"], "只用於相對倍數高案與 Recon 展示", INC_DATA, "0.00")
-_PSS = "共用庫 software_ai/data/relmult_hist/%s.csv（StockAnalysis 季度比率頁；PS＝市值÷TTM 營收）"
-inp("ps_f", "同業 P/S Fortinet（FTNT；季末 2026-09-30）", "x", None, 16.64, None, "Verified", _PSS % "FTNT", "最近一季；季末日與現價日相差逾 2 個交易日，標逾期（第 15 條）", "", "0.00")
-inp("ps_z", "同業 P/S Zscaler（ZS；季末 2026-06-30）", "x", None, 7.29, None, "Verified", _PSS % "ZS", "最近一季；逾期（同上）", "", "0.00")
-inp("ps_c", "同業 P/S Check Point（CHKP；季末 2026-06-30）", "x", None, 4.95, None, "Verified", _PSS % "CHKP", "最近一季；逾期（同上）", "", "0.00")
+_PSS = "共用庫 software_ai/data/relmult_hist/out/peer_ps_20261113.json（%s；市值÷最新 TTM 營收；價格日 2026-11-13；" + PSJ["source"] + "）"
+inp("ps_f", "同業 P/S Fortinet（FTNT；價格日 2026-11-13）", "x", None, PSG["peers"]["FTNT"], None, "Verified", _PSS % "FTNT", "股權口徑；非 11-13 者列 stale：" + ("、".join(PSG["stale"]) or "無"), "", "0.00")
+inp("ps_z", "同業 P/S Zscaler（ZS；價格日 2026-11-13）", "x", None, PSG["peers"]["ZS"], None, "Verified", _PSS % "ZS", "同上", "", "0.00")
+inp("ps_c", "同業 P/S Check Point（CHKP；價格日 2026-11-13）", "x", None, PSG["peers"]["CHKP"], None, "Verified", _PSS % "CHKP", "同上", "", "0.00")
 inp("rel_adj", "相對倍數調整係數（本公司 ÷ 同業中位數的歷史相對倍數；以 PS／PSG 相對值近似套用於前瞻本益比）", "x", "=rel_lo", "=rel_med", "=rel_hi", "Derived", "共用庫 software_ai/data/relmult_hist/out/paloalto.json（" + RELJ["generated"] + "）的 geo_base；base_source：" + RELG["base_source"] + "；同業 " + "、".join(RELG["peers"]) + "；RelHist 頁逐點", "基準＝PS 與 PSG 兩讀數的幾何平均；低／高＝共用庫 sens.low／sens.high；ps_only、psg_only 另列 Sens 案；列入承重輸入（第 18 條）", "", "0.00")
 
 sec("G. 只作對照的公司指引、目標與共識（不進模型）")
@@ -643,9 +645,9 @@ def valuation(wb, S, RW):
                       ("shv", "評價日股數（百萬）", "#,##0.0"), ("vps", "每股價值（評價日）", "#,##0.00"), ("tpdcf", "DCF 目標價", "#,##0.00"), ("tvsh", "永續價值占 EV", "0.0%")]:
         put("d_" + k, lab, "=PL_A!C%d" % R[k], "=PL!C%d" % R[k], "=PL_C!C%d" % R[k], fmt=u)
     put("sec4", "同業 P/S（Comparable 主腿；與歷史相對倍數同口徑）", bold=True)
-    put("psf", "同業 P/S：Fortinet（季末 2026-09-30；逾期）", "=ps_f", fmt="0.00")
-    put("psz", "同業 P/S：Zscaler（季末 2026-06-30；逾期）", "=ps_z", fmt="0.00")
-    put("psc", "同業 P/S：Check Point（季末 2026-06-30；逾期）", "=ps_c", fmt="0.00")
+    put("psf", "同業 P/S：Fortinet（價格日 2026-11-13）", "=ps_f", fmt="0.00")
+    put("psz", "同業 P/S：Zscaler（價格日 2026-11-13）", "=ps_z", fmt="0.00")
+    put("psc", "同業 P/S：Check Point（價格日 2026-11-13）", "=ps_c", fmt="0.00")
     put("psmed", "同業中位 P/S（3 家；不做迴歸）", "=MEDIAN(B{psf}:B{psc})", fmt="0.00", bold=True)
     put("adj", "歷史相對倍數（geo_base；PS 與 PSG 兩讀數幾何平均）", "=rel_adj", fmt="0.00", note="共用庫 relmult_hist（RelHist 頁；Derived）；主腿用 P/S 是為與 PS／PSG 相對值同口徑，避免重複計入利潤率差")
     put("ttm", "目標時點 TTM 營收（A／B／C；US$M）", "=PL_A!C%d" % R["ttmt"], "=PL!C%d" % R["ttmt"], "=PL_C!C%d" % R["ttmt"], fmt="#,##0")
@@ -879,6 +881,7 @@ def make_cases():
         for L in "AC": cs[f"{k}_{L}"] = b[f"{k}_B"]
     out.append(("三情境 AI 參數同時取情境 B（情境分化歸零）", "scn_collapse", "n32、m32、e32、k32 的情境 A、C 都設成情境 B 的值", cs, None))
     out.append(("最樂觀疊加（費用率改善、折現率下調、終值替代法同時取）", "best_stack", "nm_up 0.01、sbc_dn 0.012、wacc_adj −0.01、tv_alt 1 同時取；只有高案，用來檢驗 DCF 偏低是否為單一輸入造成（G3 第 3 條）", None, {"nm_up": 0.01, "sbc_dn": 0.012, "wacc_adj": -0.01, "tv_alt": 1.0}))
+    out.append(("同業 P/S＝資料庫最近一季中位（對照；即 v0.2 的值）", "ps_db", "ps_f、ps_z、ps_c 都取共用庫最近一季中位 " + str(PSG["db_last_quarter"]["median"]) + "（季末 " + PSG["db_last_quarter"]["q"] + "）", {"ps_f": PSG["db_last_quarter"]["median"], "ps_z": PSG["db_last_quarter"]["median"], "ps_c": PSG["db_last_quarter"]["median"]}, None))
     out.append(("歷史相對倍數：PS 單獨（共用庫 ps_only）", "rel_ps_only", "rel_adj 取 PS 讀數", None, {"rel_adj": RELG["sens"]["ps_only"]}))
     out.append(("歷史相對倍數：PSG 單獨（共用庫 psg_only）", "rel_psg_only", "rel_adj 取 PSG 讀數", None, {"rel_adj": RELG["sens"]["psg_only"]}))
     out.append(("價格與成本聯動（路由到便宜模型）", "cost_link", "P_tier 取 1（最低層級）且 g_px 取低值；低案＝聯動降本，高案＝層級 3 且單價不降", {"P_tier": 1.0, "g_px": -0.5}, {"P_tier": 3.0, "g_px": 0.0}))
@@ -953,10 +956,10 @@ def readme(wb, ws, RW, V, build_id, sens):
     put("o1", '="1. 評等主要由估值決定：加權目標價 "&' + tx(v("tp"), "0.00") + '&" 美元、上檔空間 "&' + tx(v("up"), "+0.0%;-0.0%") + '&"（收支關卡"&' + v("gtxt") + '&"，FY2027–FY2031 自由現金流合計 "&' + tx(v("gate"), "#,##0") + '&" 百萬美元）；DCF "&' + tx(v("tpdcf"), "0") + '&"、Comparable "&' + tx(v("tpcmp"), "0") + '&" 美元，兩者"&IF(MAX(' + v("tpdcf") + ',' + v("tpcmp") + ')<' + v("px") + ',"都低於","並非都低於")&"現價 "&' + tx(v("px"), "0.00") + '&" 美元。"')
     put("o2", '="2. DCF 偏低的主因是股票薪酬：FY2032 股票薪酬占營收 "&TEXT(RevDCF!B{sbc},"0.0%")&"，標準 FCFF 以 NOPAT 扣股票薪酬、不加回；Sens 有股票薪酬占營收低案與每年下降案。"')
     put("o3", '="3. 營收成長含併購：FY2026 有機年增 "&TEXT(Recon!B{orgg},"0.0%")&"，合併年增 "&TEXT(h_rev_26/h_rev_25-1,"0.0%")&"；模型 FY2027 營收 "&TEXT(PL!F' + str(R["rev"]) + '/1000,"0.0")&" 十億美元，"&Recon!F{rev}&"。"')
-    put("o4", '="4. Comparable 主腿改為同業 P/S：中位 "&TEXT(ps_med,"0.00")&" 倍（3 家，最近一季，季末 2026-06-30 至 09-30，逾期）× 歷史相對倍數（共用庫：PS 讀數 "&TEXT(rel_ps,"0.00")&"、PSG 讀數 "&TEXT(rel_psg,"0.00")&"，幾何平均 "&TEXT(rel_med,"0.00")&"，Sens "&TEXT(rel_lo,"0.00")&"–"&TEXT(rel_hi,"0.00")&"），與 PS／PSG 相對值同口徑；前瞻本益比 Comparable（中位 "&' + tx(v("pemed"), "0.0") + '&" 倍）只作對照、不進目標價。"&IF(rel_div=1,"兩讀數差異超過 30%，原因：成長比 "&TEXT(rel_gr,"0.00")&"。","")&"DCF（RONIC＝WACC）假設無持續競爭優勢，Comparable 沿用同業級倍數，隱含優勢延續，兩法假設相反，加權值是折衷。"')
+    put("o4", '="4. Comparable 主腿改為同業 P/S：中位 "&TEXT(ps_med,"0.00")&" 倍（3 家，價格日 2026-11-13，與現價同日，無逾期家數）× 歷史相對倍數（共用庫：PS 讀數 "&TEXT(rel_ps,"0.00")&"、PSG 讀數 "&TEXT(rel_psg,"0.00")&"，幾何平均 "&TEXT(rel_med,"0.00")&"，Sens "&TEXT(rel_lo,"0.00")&"–"&TEXT(rel_hi,"0.00")&"），與 PS／PSG 相對值同口徑；前瞻本益比 Comparable（中位 "&' + tx(v("pemed"), "0.0") + '&" 倍）只作對照、不進目標價。"&IF(rel_div=1,"兩讀數差異超過 30%，原因：成長比 "&TEXT(rel_gr,"0.00")&"。","")&"DCF（RONIC＝WACC）假設無持續競爭優勢，Comparable 沿用同業級倍數，隱含優勢延續，兩法假設相反，加權值是折衷。"')
     put("o5", '="5. AI 推論成本不是重點：FY2032 推論成本增量只占營業成本 "&TEXT(PL!K' + str(R["infsh"]) + ',"0.00%")&"；全成本對照（模型商自做）占 "&TEXT(PL!K' + str(R["infsh2"]) + ',"0.000%")&"。可證偽指標：Subscription and support 毛利率走勢（FY2026 "&TEXT(0.692,"0.0%")&"）。"')
     put("drv", '="驅動因子：Product＝上年 ×（1＋成長）；Subscription and support＝NGS ARR 相關營收（年平均 NGS ARR × 列入比例）＋其他；NGS ARR＝受保護單位 × 每單位營收（R0 ×（1 − 侵蝕 ＋ 加購 ＋ 代理身分數 × 代理單價比））；三項相加為合併營收。"')
-    put("ver", '="v' + VER + '（2026-11-17）：v0.2：相對倍數改讀共用庫（PS／PSG 幾何平均）、Comparable 主腿改 P/S（G6）、無風險利率統一 5.10%、新增股票薪酬加回 DCF 對照讀數；v0.1 為 2026-11-16 首版。命題原型 P；DCF 標準 FCFF 至 FY2032；同業本益比 4 家；Sens 整本重算 "&COUNTA(Sens!C12:C60)&" 個鍵；未做先驗。"')
+    put("ver", '="v' + VER + '（2026-11-17）：v0.2.1：同業 P/S 改讀 2026-11-13 價格日資料庫（G7）；v0.2：相對倍數改讀共用庫（PS／PSG 幾何平均）、Comparable 主腿改 P/S（G6）、無風險利率統一 5.10%、新增股票薪酬加回 DCF 對照讀數；v0.1 為 2026-11-16 首版。命題原型 P；DCF 標準 FCFF 至 FY2032；同業本益比 4 家；Sens 整本重算 "&COUNTA(Sens!C12:C60)&" 個鍵；未做先驗。"')
     put("dx", '="合理性關卡診斷（G3 第 3 條）：DCF 目標價 "&' + tx(v("tpdcf"), "0") + '&" 美元為現價的 "&TEXT(' + v("tpdcf") + '/' + v("px") + ',"0%")&"，評等"&' + v("vrate") + '&"，觸發診斷。結論：經濟判斷，不是建模錯誤。依據：(1) 企業價值為正（情境 B "&TEXT(' + v("d_ev", "C") + ',"#,##0")&" 百萬美元），FY2027 營收與利益率和指引差距都在 10% 內；(2) 費用率已依歷史規模經濟延伸，全期持平只列 Sens 下緣；(3) 費用率改善、折現率下調、終值替代法同時取最樂觀，DCF 目標價仍只有 "&TEXT(IFERROR(INDEX(Sens!G:G,MATCH("best_stack",Sens!C:C,0)),0),"0")&" 美元；(4) 反向 DCF："&RevDCF!B{note}&"現價依賴 FY2032 之後長期高成長與高報酬，終值只給 RONIC＝WACC、永續成長 "&TEXT(g,"0%")&"；(5) Comparable（P/S）也只到 "&' + tx(v("tpcmp"), "0") + '&" 美元。"')
     r = put.r + 1
     ws.cell(r, 1, "不適用與未做項目（工作單 G 節）").font = BOLD; r += 1
@@ -1010,7 +1013,7 @@ def input_hash():
     h = hashlib.sha256()
     for it in IN:
         h.update(repr(it).encode("utf-8"))
-    h.update(TK["source"]["commit"].encode()); h.update(json.dumps(RELG, sort_keys=True).encode())
+    h.update(TK["source"]["commit"].encode()); h.update(json.dumps(RELG, sort_keys=True).encode()); h.update(json.dumps(PSG, sort_keys=True).encode())
     return h.hexdigest()[:10]
 
 def main():

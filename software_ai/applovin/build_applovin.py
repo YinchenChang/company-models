@@ -9,7 +9,7 @@ from openpyxl.styles import Font, PatternFill, Alignment
 from openpyxl.utils import get_column_letter as L
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VER = "0.2.1"
+VER = "0.2.2"
 BUILD_DATE = dt.date(2026, 11, 17)
 DATA_DATE = dt.date(2026, 11, 16)
 PX_DATE = dt.date(2026, 11, 13)
@@ -21,8 +21,14 @@ for r in csv.DictReader(open(os.path.join(HERE, "data", "facts_applovin.csv"), e
     FACTS[(r["指標"], r["期間"])] = r
 
 
-PSL = {r["代號"]: r for r in csv.DictReader(open(os.path.join(HERE, "data", "relmult_ps_latest.csv"), encoding="utf-8-sig"))}
-PSQ_LATEST = max(r["季末日（對齊日曆季末）"] for r in PSL.values())
+PPS = json.load(open(os.path.join(HERE, "data", "peer_ps_20261113.json"), encoding="utf-8"))
+PPA = PPS["companies"]["applovin"]; PPG = PPA["groups"]["all"]
+PS_ASOF = PPS["as_of"]
+PS_DATE = {}   # 同業代號 → 資料日（非 as_of 者取自 stale）
+for _t in PPG["peers"]: PS_DATE[_t] = PS_ASOF
+for _x in PPG["stale"]:
+    _m = re.match(r"(\w+)\((\d{4}-\d{2}-\d{2})\)", _x); PS_DATE[_m.group(1)] = _m.group(2)
+DB_LQ = PPG["db_last_quarter"]   # 資料庫最近一季中位（v0.2／v0.2.1 的值）
 REL = json.load(open(os.path.join(HERE, "data", "relmult_applovin.json"), encoding="utf-8"))["groups"]["all"]
 
 
@@ -150,13 +156,15 @@ S("D. 命題模組（原型 A：按廣告計價；安裝量 × 單次安裝淨�
   E("wc_q", "2026Q4 營運資金增加 ÷ 季營收季增（Q3 淨營運資金 ÷ Q3 營收）", "x", None, "=(bs_ar-bs_ap-bs_accr)/rev_q3", None, "Derived", SRC_Q3 + " 資產負債表與損益表", ""),
 )
 def PSE(tk, key, nm):
-    r = PSL[tk]
-    return E(key, f"同業 P/S：{nm}（季末 {r['季末日（對齊日曆季末）']}）", "x", None, float(r["PS"]), None, "Derived",
-             "software_ai/data/relmult_hist/" + tk + ".csv 最後一列（副本 data/relmult_ps_latest.csv）；來源 StockAnalysis 季度比率（WebFetch）；Derived：市值÷TTM 營收",
-             "G6：P/S＝市值÷TTM 營收（季末）；擷取日 " + r["擷取日"] + "；" + ("本季為資料庫最近一季，納入中位數" if r["季末日（對齊日曆季末）"] == PSQ_LATEST else "最近一季落後（資料庫尚無 " + PSQ_LATEST + "），不納入中位數"), IP_WEB)
+    d = PS_DATE[tk]
+    return E(key, f"同業 P/S：{nm}（{d}）", "x", None, float(PPG["peers"][tk]), None, "Derived",
+             "software_ai/data/relmult_hist/out/peer_ps_20261113.json（副本 data/peer_ps_20261113.json）；來源 StockAnalysis（WebFetch）；Derived：市值÷最新 TTM 營收",
+             "G7：價格日目標 " + PS_ASOF + "；" + ("資料日 " + d + "，" + ("逾期：與現價日相差超過 2 個交易日" if d != PS_ASOF else "與現價日相同")), IP_WEB)
 S("E. 估值（同業 P/S 主腿；前瞻本益比只作對照；權重）",
   PSE("PINS", "ps_pins", "PINS"), PSE("TTD", "ps_ttd", "TTD"), PSE("RDDT", "ps_rddt", "RDDT"), PSE("U", "ps_u", "Unity"), PSE("META", "ps_meta", "META"), PSE("GOOGL", "ps_googl", "GOOGL"),
-  E("ps_app", f"APP 自身 P/S（季末 {PSL['APP']['季末日（對齊日曆季末）']}；只作對照）", "x", None, float(PSL["APP"]["PS"]), None, "Derived", "software_ai/data/relmult_hist/APP.csv 最後一列（副本 data/relmult_ps_latest.csv）", "G6：只作對照，不進模型、不計入同業中位數", IP_WEB),
+  E("ps_app", f"APP 自身 P/S（{PS_ASOF}；只作對照）", "x", None, float(PPA["own_ps"]), None, "Derived", "peer_ps_20261113.json（副本 data/peer_ps_20261113.json）own_ps", "G6：只作對照，不進模型、不計入同業中位數", IP_WEB),
+  E("ps_med_db", "同業 P/S 中位：資料庫最近一季（" + DB_LQ["q"] + "；v0.2／v0.2.1 的值；對照案用）", "x", None, float(DB_LQ["median"]), None, "Derived", "peer_ps_20261113.json db_last_quarter（n_peers＝" + str(DB_LQ["n_peers"]) + "）", "G7-2：只在 Sens「同業 P/S＝資料庫最近一季中位」案取用；基準不使用", IP_WEB),
+  E("ps_ovr", "同業中位 P/S 覆寫（0＝不覆寫，用現價日同業中位）", "x", None, 0, None, "Assumed", "模型開關", "G7-2：Sens 對照案把它設為 ps_med_db", ""),
   E("pe_pins", "同業預估本益比：PINS（2026-11-06）", "x", None, 8.89, None, "Interested-party", "https://stockanalysis.com/stocks/pins/statistics/", "逾期：2026-11-06 與現價日相差超過 2 個交易日。口徑：分母為賣方共識 EPS（多為 non-GAAP，排除股票薪酬）、期間未載；與 APP 的 GAAP EPS 口徑不同（原則第 10 節第 30 條）", IP_SELL),
   E("pe_ttd", "同業預估本益比：TTD（2026-11-06）", "x", None, 13.87, None, "Interested-party", "https://stockanalysis.com/stocks/ttd/statistics/", "逾期：2026-11-06 與現價日相差超過 2 個交易日；口徑同上", IP_SELL),
   E("pe_rddt", "同業預估本益比：RDDT（2026-11-13）", "x", None, 15.68, None, "Interested-party", "https://stockanalysis.com/stocks/rddt/statistics/", "同上", IP_SELL),
@@ -207,6 +215,7 @@ def make_cases():
     def tv(k, s): return tk[k]["lo" if s == "低" else "hi"]
     cases.append(dict(id="pe_rel_ps|低", keys=["pe_rel"], side="低", label="相對倍數只用 PS 讀數（ps_only）", sets=[["pe_rel", REL["sens"]["ps_only"]]]))
     cases.append(dict(id="pe_rel_psg|高", keys=["pe_rel"], side="高", label="相對倍數只用 PSG 讀數（psg_only）", sets=[["pe_rel", REL["sens"]["psg_only"]]]))
+    cases.append(dict(id="ps_db|低", keys=["ps_ovr"], side="低", label="同業 P/S＝資料庫最近一季中位（G7 對照）", sets=[["ps_ovr", float(DB_LQ["median"])]]))
     cases.append(dict(id="tkjoint|高", keys=["tk_px", "tk_mult"], side="高", label="成本聯動上界：價格與任務 token 倍數同取高值",
                       sets=[["tk_px", tv("tk_px", "高")], ["tk_mult", tv("tk_mult", "高")]]))
     cases.append(dict(id="tkroute|高", keys=["tk_px", "tk_mult"], side="高", label="路由到便宜模型：價格取低層、任務 token 取高倍數",
@@ -643,17 +652,17 @@ hdr(V, WS, ["情境加權", "情境 A", "情境 B", "情境 C", "說明"])
 for k, l in (("w", "情境權重"), ("tp_s", "情境目標價＝DCF 權重×DCF＋(1−DCF 權重)×Comparable"), ("up_s", "情境上檔空間"), ("wchk", "檢查：情境權重合計 − 1"), ("sc_chk", "檢查：加權 DCF／Comparable 與加權目標價")):
     vrow(k, l)
 _vr[0] += 1
-PSS = vsec("同業 P/S（G6 主腿；relmult_hist 資料庫最近一季；P/S＝市值÷TTM 營收）")
-hdr(V, PSS, ["同業", "P/S", "季末日", "逾期？（與現價日相差 > 2 個交易日）", "是否為最近一季（納入中位數）"])
+PSS = vsec("同業 P/S（主腿；現價日 peer_ps_20261113；P/S＝市值÷最新 TTM 營收）")
+hdr(V, PSS, ["同業", "P/S", "資料日", "逾期？（與現價日相差 > 2 個交易日）", "是否納入中位數"])
 PSPEERS = [("PINS", "ps_pins", "PINS"), ("TTD", "ps_ttd", "TTD"), ("RDDT", "ps_rddt", "RDDT"), ("Unity", "ps_u", "U"), ("META", "ps_meta", "META"), ("GOOGL", "ps_googl", "GOOGL")]
-PS_ROWS = []; PS_INC = []
+PS_ROWS = []
 for nm, key, tk in PSPEERS:
-    qd = dt.datetime.strptime(PSL[tk]["季末日（對齊日曆季末）"], "%Y-%m-%d"); inc = PSL[tk]["季末日（對齊日曆季末）"] == PSQ_LATEST
-    r = vrow("psp_" + key, nm, [f"={key}", qd, f'=IF(NETWORKDAYS(C{_vr[0]},px_date)-1>2,"逾期","")', "是（納入）" if inc else "否（季別落後，不納入）"], "0.00")
+    qd = dt.datetime.strptime(PS_DATE[tk], "%Y-%m-%d")
+    r = vrow("psp_" + key, nm, [f"={key}", qd, f'=IF(NETWORKDAYS(C{_vr[0]},px_date)-1>2,"逾期","")', "是（納入）"], "0.00")
     V.cell(r, 3).number_format = "yyyy-mm-dd"; PS_ROWS.append(r)
-    if inc: PS_INC.append(r)
-vrow("ps_med", f"同業中位 P/S（最近一季 {PSQ_LATEST}；{len(PS_INC)} 家）", ["=MEDIAN(" + ",".join(f"B{x}" for x in PS_INC) + ")"], "0.00", "資料庫最近一季對齊之同業中位；與 relmult_hist ps_series 最後一點一致；逾期標示以季末日對現價日計，所有季末值皆較現價日早")
-vrow("ps_q", "最近一季季末日", [dt.datetime.strptime(PSQ_LATEST, "%Y-%m-%d")], "yyyy-mm-dd")
+vrow("ps_med", f"同業中位 P/S（價格日 {PS_ASOF}；{len(PS_ROWS)} 家；非該日者標逾期）", [f"=IF(ps_ovr>0,ps_ovr,MEDIAN(" + ",".join(f"B{x}" for x in PS_ROWS) + "))"], "0.00", "G7：市值÷最新 TTM 營收；ps_ovr＝0 時為六家中位；Sens 對照案改為資料庫最近一季中位")
+vrow("ps_q", "同業 P/S 價格日", [dt.datetime.strptime(PS_ASOF, "%Y-%m-%d")], "yyyy-mm-dd")
+vrow("ps_db", "對照：資料庫最近一季同業中位 P/S（舊值）", ["=ps_med_db"], "0.00", f"季末 {DB_LQ['q']}；v0.2／v0.2.1 採用")
 vrow("ps_app", "APP 自身 P/S（同一季末；只作對照）", ["=ps_app"], "0.00")
 vrow("ps_ratio", "本公司現行 P/S ÷ 同業中位 P/S", ["=B{0}/B{1}".format(VR["ps_app"], VR["ps_med"])], "0.00", "與採用的相對倍數（geo_base）並看；PS 讀數取近 20 季中位")
 vrow("ps_rerate", "隱含重估：若 APP P/S 回到同業中位數的價格變動", ["=B{0}/B{1}-1".format(VR["ps_med"], VR["ps_app"])], "+0.0%;-0.0%;0.0%", "只作展示；不進目標價")
@@ -913,7 +922,7 @@ RC.cell(r, 1, "FY2027E LLM 推論成本占營收比"); RC.cell(r, 2, f"=B{r - 1}
 RC.cell(r, 1, "6. 逾期標示（與股價基準日相差超過 2 個交易日）").font = BOLD; RCR["s6"] = r; r += 1
 for lab, dtv in (("無風險利率 rf（2026-11-12，FRED DGS10；G5-2 統一）", dt.datetime(2026, 11, 12)), ("Unity 預估本益比（2026-10-26）", dt.datetime(2026, 10, 26)),
                  ("PINS、TTD、APP 預估本益比（2026-11-06；本益比只作對照）", dt.datetime(2026, 11, 6)),
-                 ("同業 P/S（資料庫最近一季季末；PINS 為 2026-06-30，不納入中位數）", dt.datetime.strptime(PSQ_LATEST, "%Y-%m-%d")), ("PINS P/S（季別落後一季）", dt.datetime.strptime(PSL["PINS"]["季末日（對齊日曆季末）"], "%Y-%m-%d"))):
+                 ("同業 P/S：PINS、TTD（2026-11-06）", dt.datetime(2026, 11, 6)), ("同業 P/S：Unity（2026-10-26）", dt.datetime(2026, 10, 26))):
     RC.cell(r, 1, lab); c = RC.cell(r, 2, dtv); c.number_format = "yyyy-mm-dd"
     RC.cell(r, 3, f'=IF(NETWORKDAYS(B{r},px_date)-1>2,"逾期","")'); r += 1
 r += 1
@@ -950,19 +959,22 @@ NF = ["電商（e-commerce）廣告營收：未找到（公司未分項揭露）
 for t in NF: RC.cell(r, 1, t); r += 1
 r += 1
 RC.cell(r, 1, "10. 版次對照（G6：Comparable 主腿由前瞻本益比改為 P/S）").font = BOLD; RCR["s10"] = r; r += 1
-hdr(RC, r, ["項目", "v0.1", "v0.2（舊成品；已移 _待刪除）", "本版", "說明"]); r += 1
+hdr(RC, r, ["項目", "v0.1", "v0.2（舊成品；已移 _待刪除）", "本版", "說明", "v0.2.1（舊成品；已移 _待刪除）"]); r += 1
 VC = {}
 for k, lab, a_, b_, c_, fmt in (("tp", "加權目標價（美元）", 350.62, 604.99, f"=Val!B{VR['tp']}", "#,##0.00"), ("dcf", "DCF 目標價（美元）", 263.13, 261.31, f"=Val!B{VR['tpdcf']}", "#,##0.00"),
                                 ("cmp", "Comparable 目標價（美元）", 438.12, 948.67, f"=Val!B{VR['tpcomp']}", "#,##0.00"), ("up", "上檔空間", None, None, f"=Val!B{VR['up']}", "+0.0%;-0.0%")):
     VC[k] = r; RC.cell(r, 1, lab)
     for j, v_ in ((2, a_), (3, b_)):
         if v_ is not None: cc = RC.cell(r, j, v_); cc.number_format = fmt; cc.font = BLUE
-    RC.cell(r, 4, c_).number_format = fmt; r += 1
-VC["rate"] = r; RC.cell(r, 1, "投資建議"); RC.cell(r, 2, "中立").font = BLUE; RC.cell(r, 3, "買進").font = BLUE; RC.cell(r, 4, f"=Val!B{VR['rec']}"); r += 1
+    RC.cell(r, 4, c_).number_format = fmt
+    o_ = {"tp": 401.92, "dcf": 261.31, "cmp": 542.52}.get(k)
+    if o_ is not None: cc = RC.cell(r, 6, o_); cc.number_format = fmt; cc.font = BLUE
+    r += 1
+VC["rate"] = r; RC.cell(r, 1, "投資建議"); RC.cell(r, 2, "中立").font = BLUE; RC.cell(r, 3, "買進").font = BLUE; RC.cell(r, 4, f"=Val!B{VR['rec']}"); RC.cell(r, 6, "中立").font = BLUE; r += 1
 RC.cell(VC["tp"], 5, "舊版數值為各版成品之輸出（Derived；v0.1：本益比 × 相對倍數 1.00；v0.2：相對值 geo_base 套到本益比；v0.2.1：P/S 主腿）")
 RCR["ver_txt"] = r
-RC.cell(r, 1, fx("版次對照：v0.2.1 加權目標價 ", T(f"D{VC['tp']}", "0.00"), " 美元（", ("f", f"D{VC['rate']}"), "），v0.2 為 ", T(f"C{VC['tp']}", "0.00"), " 美元（", ("f", f"C{VC['rate']}"), "），v0.1 為 ", T(f"B{VC['tp']}", "0.00"),
-                 " 美元（", ("f", f"B{VC['rate']}"), "）；Comparable 由 ", T(f"C{VC['cmp']}", "0.00"), " 變為 ", T(f"D{VC['cmp']}", "0.00"), " 美元；DCF 為 ", T(f"D{VC['dcf']}", "0.00"), " 美元（v0.2 為 ", T(f"C{VC['dcf']}", "0.00"), "，本版未改 DCF）。"))
+RC.cell(r, 1, fx("版次對照：v0.2.2 加權目標價 ", T(f"D{VC['tp']}", "0.00"), " 美元（", ("f", f"D{VC['rate']}"), "），v0.2.1 為 ", T(f"F{VC['tp']}", "0.00"), " 美元（中立），v0.2 為 ", T(f"C{VC['tp']}", "0.00"), " 美元（", ("f", f"C{VC['rate']}"), "），v0.1 為 ", T(f"B{VC['tp']}", "0.00"),
+                 " 美元（", ("f", f"B{VC['rate']}"), "）；Comparable 依序為 ", T(f"B{VC['cmp']}", "0.00"), "、", T(f"C{VC['cmp']}", "0.00"), "、", T(f"F{VC['cmp']}", "0.00"), "、", T(f"D{VC['cmp']}", "0.00"), " 美元；DCF 為 ", T(f"D{VC['dcf']}", "0.00"), " 美元（v0.2 與 v0.2.1 為 ", T(f"C{VC['dcf']}", "0.00"), "，本版未改 DCF）。"))
 r += 1
 RC.column_dimensions["A"].width = 70
 for c in "BCDEFG": RC.column_dimensions[c].width = 16
@@ -1068,15 +1080,15 @@ rd("rec", fx("投資建議：", ("f", Vb("rec")), "（估值評等 ", ("f", Vb("
               T(Vb("tpdcf"), "0.00"), " 與 ", T(Vb("tpcomp"), "0.00"), " 美元。"))
 rd("o1", fx("營收：AI 提升與新垂直為增量，分流為侵蝕；情境 B 的 FY2027 營收年增 ", T(f"PL!G{PBr['yoy']}", "0.0%"), "，FY2032 年增 ", T(f"PL!L{PBr['yoy']}", "0.0%"), "。公司只揭露安裝量與單次安裝淨收入的年增率。"))
 rd("o2", fx("DCF：β ", T("beta", "0.00"), " 使 ke ", T(Vb("ke"), "0.0%"), "、WACC ", T(Vb("wacc"), "0.0%"), "；DCF 每股 ", T(Vb("tpdcf"), "0.00"), " 美元，永續價值占 EV ", T(f"Val!C{VR['tvsh']}", "0%"), "。反解見對帳章。"))
-rd("o3", fx("Comparable（P/S 主腿）：同業中位 P/S ", T(Vb("ps_med"), "0.00"), " 倍（", T(Vb("ps_q"), "yyyy-mm-dd"), " 季末）× 相對倍數 ", T("pe_rel", "0.00"), " ＝ 採用 ", T(f"Val!C{VR['mult']}", "0.0"), " 倍，乘目標時點 TTM 營收並除以稀釋股數；APP 現行 P/S 為同業中位的 ", T(Vb("ps_ratio"), "0.00"), " 倍。前瞻本益比只作對照列，不進加權。"))
+rd("o3", fx("Comparable（P/S 主腿）：同業中位 P/S ", T(Vb("ps_med"), "0.00"), " 倍（價格日 ", T(Vb("ps_q"), "yyyy-mm-dd"), "；舊值資料庫最近一季 ", T(Vb("ps_db"), "0.00"), "）× 相對倍數 ", T("pe_rel", "0.00"), " ＝ 採用 ", T(f"Val!C{VR['mult']}", "0.0"), " 倍，乘目標時點 TTM 營收並除以稀釋股數；APP 現行 P/S 為同業中位的 ", T(Vb("ps_ratio"), "0.00"), " 倍。前瞻本益比只作對照列，不進加權。"))
 rd("o4", fx("AI 淨效果：FY2032 情境 A／B／C 為 ", T(f"Thesis!C{THR['c_net']}", "#,##0"), "／", T(f"Thesis!D{THR['c_net']}", "#,##0"), "／", T(f"Thesis!E{THR['c_net']}", "#,##0"), " 百萬美元；LLM 推論成本只讀 Tokenomics，占營收比 ", T(f"Recon!B{TKR['share27']}", "0.00%"), "。"))
 rd("o5", fx("利潤率：資料中心成本率 FY2023 ", T(f"PL!C{PBr['dcr']}", "0.0%"), "、FY2025 ", T(f"PL!E{PBr['dcr']}", "0.0%"), "、基準 ", T("dc_26", "0.0%"), "；回到歷史高點將壓低營業利益率。收支關卡合計（五年）", T(Vb("gate"), "#,##0"), " 百萬美元。"))
 rd("drv", "驅動 → 推導：安裝量（年增）與單次安裝淨收入（AI 提升、新垂直、分流）決定 Advertising 營收；營收乘各成本率得損益表；自由現金流決定買回與股數；FCFF 與 WACC 決定 DCF；同業 P/S 乘相對倍數與 TTM 營收得 Comparable。")
-rd("ver", fx(f"v{VER}：v0.2 改版（工作單 G6）。Comparable 主腿由前瞻本益比改為 P/S，以與 PS／PSG 相對值同口徑；盈餘類倍數（本益比）只作對照，不進加權目標價；相對倍數沿用 relmult_hist 的 geo_base（", T("pe_rel", "0.00"), "）；Sens 逐鍵案例 ", T(f"COUNTA(Sens!A4:A{SE_END})", "0"), " 列。版次對照：", ("f", f"Recon!A{RCR['ver_txt']}"), " 本版未做先驗。"))
+rd("ver", fx(f"v{VER}：v0.2.1 改版（工作單 G7）：同業中位 P/S 改讀現價日 peer_ps_20261113，Sens 加資料庫最近一季中位對照案；先前（G6）Comparable 主腿由前瞻本益比改為 P/S，以與 PS／PSG 相對值同口徑；盈餘類倍數（本益比）只作對照，不進加權目標價；相對倍數沿用 relmult_hist 的 geo_base（", T("pe_rel", "0.00"), "）；Sens 逐鍵案例 ", T(f"COUNTA(Sens!A4:A{SE_END})", "0"), " 列。版次對照：", ("f", f"Recon!A{RCR['ver_txt']}"), " 本版未做先驗。"))
 rdr[0] += 1
 rd("mkt", "市場資料日期", bold=True)
 rd("mkt1", fx("現價 ", T("px", "0.00"), " 美元（", T("px_date", "yyyy-mm-dd"), " 收盤，單一來源 StockAnalysis）；β 來自 StockAnalysis 與 Yahoo Finance；共識目標價（32 位，2026-11-10）與同業倍數（P/S 為資料庫 StockAnalysis 季度比率）為 Interested-party 或第三方，日期見 In 與 Val 頁，逾期者已標示。"))
-rd("mkt2", "rf 為美國 10 年期公債殖利率 5.10%（FRED DGS10，2026-11-12，現價日前 1 個交易日；工作單 G5-2 統一，Verified）；同業 P/S 取資料庫最近一季季末（PINS 落後一季，不納入）；Unity 預估本益比（對照列）為 2026-10-26（逾期）。")
+rd("mkt2", "rf 為美國 10 年期公債殖利率 5.10%（FRED DGS10，2026-11-12，現價日前 1 個交易日；工作單 G5-2 統一，Verified）；同業 P/S 取 2026-11-13 現價日（PINS、TTD 為 2026-11-06、Unity 為 2026-10-26，標逾期）；Unity 預估本益比（對照列）為 2026-10-26（逾期）。")
 rdr[0] += 1
 rd("fail", "主要失效條件", bold=True)
 rd("fail1", "新模型（AXON）AI 提升低於情境 C，或單次安裝淨收入年增快速收斂，使營收增量不足。")
@@ -1108,11 +1120,14 @@ rd("g5_3", fx("G5-3 DCF 股票薪酬加回讀數：", ("f", f"Recon!A{RCR['sb_tx
 rd("g5_4", "G5-4 版次升為 v0.2；舊成品移 dist/_待刪除/；全部檢查與 SENS=1、KREQ=1 重跑；合理性關卡重跑（見下方診斷）。")
 rdr[0] += 1
 rd("g6", "工作單 G6（v0.2.1）對照", bold=True)
-rd("g6_1", fx("G6-1 主腿改為 P/S：同業中位 P/S ", T(Vb("ps_med"), "0.00"), " 倍（relmult_hist 最近一季，季末 ", T(Vb("ps_q"), "yyyy-mm-dd"), "；", ("f", f'IF(NETWORKDAYS(Val!B{VR["ps_q"]},px_date)-1>2,"與現價日相差超過 2 個交易日，標逾期","未逾期")'),
-              "）× 相對倍數 ", T("pe_rel", "0.00"), " × 目標時點 TTM 營收 ÷ 評價日稀釋股數；情境 B 每股 ", T(f"Val!C{VR['tpc_s']}", "0.00"), " 美元。"))
+rd("g6_1", fx("G6-1 主腿改為 P/S：同業中位 P/S ", T(Vb("ps_med"), "0.00"), " 倍（G7：peer_ps_20261113，價格日 ", T(Vb("ps_q"), "yyyy-mm-dd"), "，非該日者逐家標逾期）× 相對倍數 ", T("pe_rel", "0.00"), " × 目標時點 TTM 營收 ÷ 評價日稀釋股數；情境 B 每股 ", T(f"Val!C{VR['tpc_s']}", "0.00"), " 美元。"))
 rd("g6_2", "G6-2 改版原因：v0.2 將 PS／PSG 相對值套到前瞻本益比，但相對值已含利潤率差異，且 APP 現行本益比相對同業只略高（見 Val 本益比表），套用造成重複計入而高估；主腿改為 P/S 後，倍數與相對值同口徑。")
 rd("g6_3", fx("G6-3 本益比 Comparable 改為對照列、不進加權：相對倍數 1.00 時每股 ", T(f"Val!C{VR['pe_v1']}", "0.00"), " 美元，採本公司現行相對值 ", T(Vb("app_ratio"), "0.00"), " 時 ", T(f"Val!C{VR['pe_v2']}", "0.00"), " 美元（情境 B；Val 頁對照段）。盈餘類倍數僅作對照。"))
-rd("g6_4", "G6-4 版次升為 v0.2.1；舊成品移 dist/_待刪除/；全部檢查與 SENS=1、KREQ=1 重跑；合理性關卡重跑（見下方診斷）。")
+rd("g7", "工作單 G7（v0.2.2）對照", bold=True)
+rd("g7_1", fx("G7-1 同業中位 P/S 改讀 peer_ps_20261113（現價日）：新值 ", T(Vb("ps_med"), "0.00"), " 倍，舊值（資料庫最近一季）", T(Vb("ps_db"), "0.00"), " 倍；非 2026-11-13 者逐家列於 Val 頁並標逾期；相對倍數仍讀 geo_base。"))
+rd("g7_2", fx("G7-2 Sens 加「同業 P/S＝資料庫最近一季中位」案（即 v0.2／v0.2.1 的值）：見 Sens 頁。"))
+rd("g7_3", "G7-3、G7-4：P/S 主腿為股權口徑（不加淨現金、不扣淨債務；APP 無非控制權益）；分母為目標時點 TTM 營收（FY2026 與 FY2027 依日數加權），股數為評價日稀釋股數。")
+rd("g6_4", "G6-4 版次升為 v0.2.1（G7 後為 v0.2.2）；舊成品移 dist/_待刪除/；全部檢查與 SENS=1、KREQ=1 重跑；合理性關卡重跑（見下方診斷）。")
 rdr[0] += 1
 rd("g2", "工作單 G2 共通必修對照（逐條）", bold=True)
 for t in ("G2-1 每任務 token 以揭露校準：公司未揭露 token 量與代理任務量（未找到），無法校準；採快照倍數並標 Assumed，token 價格層級標 Analogy。",
@@ -1120,11 +1135,11 @@ for t in ("G2-1 每任務 token 以揭露校準：公司未揭露 token 量與�
           "G2-3 比率持平：營業費用率取最近四季實績並全期持平，收斂只放 Sens；資料中心與其他營業成本率取 2026 年前三季（2025Q4 單季資料中心成本未找到）。",
           "G2-4 股數：評價日股數含 RSU 全額（沒收率未揭露）與選擇權庫藏股法；法定封面最新股數未找到，改用 2026-09-30 資產負債表；PSU 不計。",
           "G2-5 淨債務：只計票據本金與融資租賃（列 0，未找到）；營業租賃不計。",
-          "G2-6 Comparable：G6 起主腿為同業 P/S（市值÷TTM 營收，口徑一致，逐家季末日在 Val 頁）；前瞻本益比（分母多為 non-GAAP、期間未載）只作對照列；揭露 APP 現行 P/S 與本益比各自 ÷ 同業中位數及隱含重估。",
+          "G2-6 Comparable：G6 起主腿為同業 P/S（市值÷TTM 營收，口徑一致，逐家資料日在 Val 頁）；前瞻本益比（分母多為 non-GAAP、期間未載）只作對照列；揭露 APP 現行 P/S 與本益比各自 ÷ 同業中位數及隱含重估。",
           "G2-7 收支關卡：Val 頁有估值評等、入不敷出判定用、投資建議三列；make_v02.sh 跑 check_rating_gate.py。",
           "G2-8 文字組字：README 日期、數字由公式組字；DCF 與 Comparable 落差以公式分解（Recon 第 3 節）。",
           "G2-9 反解：β、情境 B 的 AI 提升與新垂直增量，整本重算反解，結果在 Recon 第 4 節。",
-          "G2-10 逾期標示：同業 P/S 季末日（2026-09-30；PINS 為 2026-06-30）與本益比對照列的資料日（Unity、PINS、TTD、APP）與現價日相差超過 2 個交易日，已標逾期（In、Val、Recon）；rf 為 2026-11-12 的 5.10%，不逾期。"):
+          "G2-10 逾期標示：同業 P/S 資料日非 2026-11-13 者（PINS、TTD 為 2026-11-06，Unity 為 2026-10-26）與本益比對照列的資料日（Unity、PINS、TTD、APP）與現價日相差超過 2 個交易日，已標逾期（In、Val、Recon）；rf 為 2026-11-12 的 5.10%，不逾期。"):
     rd("g2_r", t)
 rdr[0] += 1
 rd("nf", "未找到清單：見 Recon 第 7 節與 data/research_applovin.md 第 9 節。")

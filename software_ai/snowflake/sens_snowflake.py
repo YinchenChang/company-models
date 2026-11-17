@@ -108,6 +108,8 @@ Vv = wbv["Val"]; RMr = rm["RM"]
 for k_, nm_ in (("ps", "ps_only：只用 PS 讀數"), ("psg", "psg_only：只用 PSG 讀數")):
     v_ = Vv.cell(RMr[k_], 2).value
     cases.append(("rel_mult", "高" if v_ > val("rel_mult") else "低", {"rel_mult": v_}, f"rel_mult＝{v_:.3f}（共用庫 {nm_}；基準 {val('rel_mult'):.3f}）", f"相對倍數 {nm_}（共用庫 relmult_hist）"))
+v_db = Vv.cell(rm["VR"]["cu_db"], 2).value
+cases.append(("peer_ps", "高", {"peer_ps": v_db}, f"peer_ps＝{v_db:.3f}（資料庫最近一季中位；基準 {val('peer_ps'):.3f}）", "同業 P/S＝資料庫最近一季中位（v0.2 舊值；對照）"))
 groups = defaultdict(list)
 for i in range(len(cases)): groups[i % JOBS].append(i)
 res = {}

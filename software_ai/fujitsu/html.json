@@ -445,7 +445,7 @@
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "10-84",
+      "rows": "10-85",
       "cols": [
        "A",
        "B",
@@ -993,14 +993,14 @@
      "type": "table",
      "caption": "情境驅動（三情境並排，進加權目標價；In 頁情境驅動對照）",
      "head": [
-      "@In!B69",
-      "@In!D69",
-      "@In!E69",
-      "@In!F69"
+      "@In!B71",
+      "@In!D71",
+      "@In!E71",
+      "@In!F71"
      ],
      "rowgen": {
       "sheet": "In",
-      "rows": "70-73",
+      "rows": "72-75",
       "cols": [
        "B",
        "D",
@@ -1027,7 +1027,7 @@
      ],
      "rowgen": {
       "sheet": "In",
-      "rows": "4-54",
+      "rows": "4-56",
       "cols": [
        "B",
        "D",

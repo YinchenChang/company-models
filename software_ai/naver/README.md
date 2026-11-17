@@ -1,9 +1,14 @@
-# Naver（韓國 035420）個股模型 v0.2.1
+# Naver（韓國 035420）個股模型 v0.2.2
 
 資料截止日 2026-11-16（最新財報 3Q26）。成品日 2026-11-17。本版沒有做先驗（未預先設定任何投資觀點，結論全由資料與 Assumed 輸入推出）。金額十億韓元，K-IFRS，曆年制。
 
+## v0.2.2 變更（2026-11-17，工作單 G7）
+- 同業中位 P/S 改讀 `software_ai/data/relmult_hist/out/peer_ps_20261113.json`（Naver 組，StockAnalysis，2026-11-13 現價口徑，Derived；存為 `data/peer_ps_naver.json`）：中位數由 2.59（前版各家最近一季）改為 2.32。資料日早於現價日者於 Val 同業表標逾期（PINS 11-06、Kakao 10-23、LY 10-13）。
+- Sens 加「同業 P/S＝資料庫最近一季中位」案（2.59，高案）。
+- 舊版 v0.2.1 成品移至 `dist/_待刪除/`。
+
 ## v0.2.1 變更（2026-11-17，工作單 G6）
-- 口徑一致：歷史 PS 與 PSG 相對倍數已含利潤率差，不能再套前瞻本益比。Comparable 主腿改為 P/S 口徑：同業中位 P/S（`data/ps_peers_naver.json`，取自 `software_ai/data/relmult_hist` 各家最近一季，季末日逐家標示，逾期者旗標，Derived）x 相對倍數（geo_base）x 目標日 TTM 營收（FY2026E 與 FY2027E 依已過天數加權）÷ 稀釋股數，三情境加權。
+- 口徑一致：歷史 PS 與 PSG 相對倍數已含利潤率差，不能再套前瞻本益比。Comparable 主腿改為 P/S 口徑：同業中位 P/S（v0.2.2 起改讀 11-13 現價口徑，見上）x 相對倍數（geo_base）x 目標日 TTM 營收（FY2026E 與 FY2027E 依已過天數加權）÷ 稀釋股數，三情境加權。
 - 前瞻本益比 Comparable（分部 NTM NOPAT x 同業前瞻本益比）改為對照列：相對倍數 1.00 與本公司現行比值兩個讀數，不進加權目標價。
 - Sens 保留只用 PS、只用 PSG、低案、高案四案，套用在 P/S 主腿；落差分解與 RevDCF 改為 P/S 口徑。
 - 舊版 v0.2 成品移至 `dist/_待刪除/`。

@@ -217,7 +217,7 @@ S.append({"id": "recon", "title": "對帳：指引、共識與反解", "intro": 
     {"type": "table", "caption": f"@Recon!A{R['d_rf'] - 2}", "head": ["項目", "資料日", "與股價基準日相差（交易日）", "狀態"],
      "rowgen": {"sheet": "Recon", "rows": f"{R['d_rf']}-{R['d_px']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "date", "n0", ""]}},
     {"type": "table", "caption": f"@Recon!A{R['peer0'] - 2}", "head": ["同業", "前瞻 P/E（倍）", "會計準則與租賃處理", "備註"],
-     "rowgen": {"sheet": "Recon", "rows": f"{R['peer0']}-{R['ps_rel']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "x1", "", ""], "row_fmt": {str(R["pe_ratio"]): {"B": "n2"}, str(R["pe_rr"]): {"B": "sp1"}, str(R["ps_med"]): {"B": "n2"}, str(R["ps_rel"]): {"B": "n2", "C": "n2"}}}},
+     "rowgen": {"sheet": "Recon", "rows": f"{R['peer0']}-{R['ps_rel']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "x1", "", ""], "row_fmt": {str(R["pe_ratio"]): {"B": "n2"}, str(R["pe_rr"]): {"B": "sp1"}, str(R["ps_med"]): {"B": "n2", "C": "n2"}, str(R["ps_rel"]): {"B": "n2", "C": "n2"}}}},
     {"type": "table", "caption": f"@Recon!A{R['ai_rev'] - 2}", "head": ["項目", "情境 A", "情境 B", "情境 C"],
      "rowgen": {"sheet": "Recon", "rows": f"{R['ai_rev']}-{R['ai_share']}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"],
                 "row_fmt": {str(R["ai_brk"]): {c: "n2" for c in "BCD"}, str(R["ai_price"]): {c: "n2" for c in "BCD"}, str(R["ai_share"]): {c: "p1" for c in "BCD"}}}}]})
