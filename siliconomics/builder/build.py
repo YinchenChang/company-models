@@ -69,6 +69,37 @@ def load_base_inputs(path):
     return out
 
 
+def _display_only_guard(wb, corow, rcrow):
+    """v0.20 r1：只顯示的列（Coord D 節觀測數列、Recon G 節季節讀數）與其輸入（In M31）不得被其他格引用（規則 v1.5 草案 C3、C0 第 11 點；
+    工作單 W2-05A「新列不得被 Coord 頁以外任何格引用」）。建置時掃描全活頁簿公式，有違反即中止。"""
+    import re as _re
+    dcoord = {corow[k] for k in ("mid_i", "mid_ii", "mid_iii", "mid_lo", "mid_hi", "dec0", "dec05", "dec1") if k in corow}
+    drecon = {v for k, v in rcrow.items() if k.startswith("sw_")}
+    tok = _re.compile(r"(?<![A-Za-z0-9_.])(sw_h1(?:_fy2[456])?(?:_lo|_hi)?|crd_lam_(?:0|05|1)(?:_lo|_hi)?)(?![A-Za-z0-9_])")
+    ref = _re.compile(r"(?:(\w+)!)?\$?([A-Z]{1,3})\$?(\d+)")
+    bad = []
+    for ws in wb.worksheets:
+        for row in ws.iter_rows():
+            for c in row:
+                f = c.value
+                if not (isinstance(f, str) and f.startswith("=")):
+                    continue
+                own_d = (ws.title == "Coord" and c.row in dcoord) or (ws.title == "Recon" and c.row in drecon)
+                if tok.search(f) and not own_d and ws.title != "In":
+                    bad.append(f"{ws.title}!{c.coordinate} 讀只顯示輸入：{f[:80]}")
+                for sh, col, rr in ref.findall(_re.sub(r'"[^"]*"', "", f)):
+                    tgt = sh or ws.title
+                    if (tgt == "Coord" and int(rr) in dcoord or tgt == "Recon" and int(rr) in drecon) and not own_d:
+                        bad.append(f"{ws.title}!{c.coordinate} 讀只顯示列 {tgt}!{col}{rr}")
+    for nm, dn in wb.defined_names.items():
+        for sh, rng in dn.destinations:
+            rows_ = {int(x) for x in _re.findall(r"\$?[A-Z]+\$?(\d+)", rng)}
+            if (sh == "Coord" and rows_ & dcoord) or (sh == "Recon" and rows_ & drecon):
+                bad.append(f"名稱 {nm} 指向只顯示列 {sh}!{rng}")
+    if bad:
+        sys.exit("只顯示列被引用（不得進基準或任何計算）：\n" + "\n".join(bad[:20]))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--base")
@@ -118,8 +149,13 @@ def main():
     # ---------------- In：藍字輸入（Excel 擁有） ----------------
     IN["A1"] = "In — 產業輸入（藍字＝輸入，由本活頁簿擁有；要改值直接改本頁，builder 重建時讀回）。每列具名範圍＝鍵（指向 E 欄），另有 _lo／_hi（D、F 欄）"
     IN["A2"] = "標記：Verified／Interested-party（寫明是誰）／Analogy／Assumed（給低／高區間）／Derived（寫明換算）。v0.1 內容由 markets/memory/market.py 逐字搬入（數值、標記、來源文字不變）"
-    hdr(IN, 4, ["鍵", "項目", "單位", "低", "基準", "高", "標記", "來源／說明", "Interface 名稱", "第二來源／說明"])
+    hdr(IN, 4, ["鍵", "項目", "單位", "低", "基準", "高", "標記", "來源／說明", "Interface 名稱", "第二來源／說明", "顆數單位口徑（v0.20 r1）"])
+    import re as _re
+    UNIT_PKG = ("封裝（package），非晶粒。依據：docs/reports/20261118_三層對帳/unit-basis/20261118_顆數來源口徑查核.md"
+                "（兩層顆數都是封裝數；Tokenomics IF_GPUsPerGW 為每 GW 封裝數；Morgan Stanley 2027 約 700 萬顆與 NVL72 約 9 萬櫃只在封裝口徑下一致）")
     INROW = {}
+    # v0.20 r1：只供顯示列（Coord D 節、Recon G 節）的輸入，不輸出 Interface 名稱（工作單 W2-05A「不新增 Interface 名稱」）
+    NO_IF = {"sw_h1_fy24", "sw_h1_fy25", "sw_h1_fy26", "sw_h1", "crd_lam_0", "crd_lam_05", "crd_lam_1"}
     r = 5
     for row in seed_rows:
         if "sec" in row:
@@ -131,8 +167,9 @@ def main():
             if x is not None:
                 c = IN.cell(r, j, x); c.font = BLUE
                 if row["unit"] == "%": c.number_format = "0.0%"
-        IN.cell(r, 7, tag); IN.cell(r, 8, src); IN.cell(r, 9, "SIF_" + k)
+        IN.cell(r, 7, tag); IN.cell(r, 8, src); IN.cell(r, 9, "（不輸出；只顯示）" if k in NO_IF else "SIF_" + k)
         if src2: IN.cell(r, 10, src2)
+        if _re.fullmatch(r"u_[a-z]+_\d\d", k): IN.cell(r, 11, UNIT_PKG)   # v0.20 r1：顆數單位口徑（只加註；快照不讀 K 欄）
         name(wb, k, f"In!$E${r}")
         if lo is not None: name(wb, k + "_lo", f"In!$D${r}")
         if hi is not None: name(wb, k + "_hi", f"In!$F${r}")
@@ -151,7 +188,7 @@ def main():
     #   覆蓋未補齊（crd_cov_done＝0）時各年等於現行係數，數值與 v0.18 逐格相同。
     COORD = "crd_cov_done" in INROW
     globals()["COORD"] = COORD
-    for col, w in zip("ABCDEFGHIJ", (14, 52, 8, 9, 10, 9, 18, 70, 18, 50)):
+    for col, w in zip("ABCDEFGHIJK", (14, 52, 8, 9, 10, 9, 18, 70, 18, 50, 40)):
         IN.column_dimensions[col].width = w
 
     # ---------------- Path、Mkt：記憶體價格路徑與 HBM 市場（公式與 markets/memory/market.py write() 同一份） ----------------
@@ -190,7 +227,7 @@ def main():
     UN = None; UROW = {}
     if "g29_bw" in INROW:
         UN = wb.create_sheet("Units", index=wb.sheetnames.index("Path"))
-        UN["A1"] = "Units — 加速器平台別顆數（百萬顆；原始顆數＝舊情境 A，未乘係數；v0.12 起本庫基準＝合計（情境 B）列）。2026–2028＝In 頁 M2；2029＝2028 ×（1＋In 頁 M5 平台別成長率）。情境 B、C 再乘 Scen 頁係數（2028–29）"
+        UN["A1"] = "Units — 加速器平台別顆數（百萬顆；原始顆數＝舊情境 A，未乘係數；v0.12 起本庫基準＝合計（情境 B）列）。2026–2028＝In 頁 M2；2029＝2028 ×（1＋In 頁 M5 平台別成長率）。情境 B、C 再乘 Scen 頁係數（2028–29）。單位：封裝（package），非晶粒（v0.20 r1 加註；兩層顆數皆為封裝數，依據 docs/reports/20261118_三層對帳/unit-basis/20261118_顆數來源口徑查核.md）"
         hdr(UN, 3, ["平台", "鍵", "2026", "2027", "2028", "2029", "2029 成長"])
         r = 4
         for g in seed["unit_groups"]:
@@ -543,7 +580,8 @@ def main():
         co("sup", "供給側讀數：原始顆數部署 GW（不乘係數；成本等值、出貨年）", lambda y, col, yy: f"=Deploy!{col}{DROW['itc']}/Deploy!{col}{DROW['itpg']}", bold=True,
            note="Deploy 頁 AI IT 資本支出（未乘係數）÷ 每 GW IT 資本支出；2027 已含 v0.18 HBM 截頂（u_*_27 × 0.9404）；個股情境 A（J5）")
         co("s33", "現行係數（S33：2026–27＝1，2028–29＝um28_B／um29_B）", lambda y, col, yy: "=1" if y <= 2027 else f"=um{yy}_B", note="決策 S33；只作『維持現行』年份的係數與情境參照")
-        co("cur", "現行基準（原始 × 現行係數＝v0.18 取法）", lambda y, col, yy: f"={R_('sup', col)}*{R_('s33', col)}")
+        co("cur", "舊取法（原始 × 情境 B 顆數係數；非基準）", lambda y, col, yy: f"={R_('sup', col)}*{R_('s33', col)}",
+           note="v0.18 的基準取法（原始顆數 × S33 係數）；只供對照、中間估計 (ii)。現行基準只有 C 節 base（SIF_DeployGW_Base）。Interface：SIF_DeployGW_LegacyS33_<年>（語義明確的新名）；SIF_DeployGW_Current_<年> 為相容別名，下一版刪除（三層對帳工作單 A7、PR #646 方案）")
         co("dem", "需求側讀數：Wattonomics 換算值（平滑法 x2）", lambda y, col, yy: f"=crd_x2_{yy}", bold=True, note="In 頁 M30 crd_x2（Wattonomics v0.3.6；siliconomics/tools/baseline_bridge.py → docs/reports/20261116_協調橋接_v0.3.6.xlsx）")
         COROW["_r"] += 1
         CO.cell(COROW["_r"], 1, "B. 證據狀態（C3；只看狀態、不看數值高低）").font = BOLD; COROW["_r"] += 1
@@ -568,7 +606,7 @@ def main():
         co("st", "狀態（甲／乙／丙／待定）", lambda y, col, yy: f'=IF({R_("pend", col)}=1,"待定",{R_("st0", col)})', "@", fill=KEY, bold=True)
         co("lead", "由誰定基準", lambda y, col, yy: f'=IF({R_("st", col)}="待定","待定（維持現行；下次重判）",IF({R_("st", col)}="甲","兩層對帳（證據等級高者）",IF({R_("st", col)}="丙","Wattonomics（上游約束）",IF({R_("hw", col)}=1,"Wattonomics","Siliconomics"))))', "@")
         co("up", "上游定基準（丙，或 Wattonomics 有證據的乙；待定＝0；1／0）", lambda y, col, yy: f'=IF(OR({R_("st", col)}="丙",AND({R_("st", col)}="乙",{R_("hw", col)}=1)),1,0)', "0")
-        co("res", "甲狀態殘差（現行 ÷ 換算值 − 1；容差 rc_tol）", lambda y, col, yy: f"={R_('cur', col)}/{R_('dem', col)}-1", "+0.0%;-0.0%", note="只在甲狀態用；乙、丙狀態只供參考")
+        co("res", "甲狀態殘差（舊取法 ÷ 換算值 − 1；容差 rc_tol）", lambda y, col, yy: f"={R_('cur', col)}/{R_('dem', col)}-1", "+0.0%;-0.0%", note="只在甲狀態用；乙、丙狀態只供參考")
         COROW["_r"] += 1
         CO.cell(COROW["_r"], 1, "C. 依規則的基準").font = BOLD; COROW["_r"] += 1
         co("use", "改用換算值（上游定基準且覆蓋已補齊；1／0）", lambda y, col, yy: f"=IF(AND({R_('up', col)}=1,crd_cov_done=1),1,0)", "0")
@@ -594,7 +632,40 @@ def main():
         co("alt", "另一側讀數（未被採為基準的一條；C4 兩讀數目標價用；連續法年份＝換算值本身）", lambda y, col, yy: f"=IF({R_('use', col)}=1,IF({R_('chain', col)}=1,{R_('dem', col)},{R_('sup', col)}),{R_('dem', col)})")
         co("altr", "另一側讀數 ÷ 基準", lambda y, col, yy: f"={R_('alt', col)}/{R_('base', col)}", "0.000", note="個股以基準算出的產業量 × 本比值＝另一側讀數的產業量（近似；各平台等比例）")
         co("c7", "C7 供給側 ÷ 需求側 − 1（認知落差假說；逐季記錄哪一側收斂）", lambda y, col, yy: f"={R_('sup', col)}/{R_('dem', col)}-1", "+0.0%;-0.0%")
-        co("chg", "依規則基準 ÷ 現行 − 1", lambda y, col, yy: f"={R_('base', col)}/{R_('cur', col)}-1", "+0.0%;-0.0%")
+        co("chg", "依規則基準 ÷ 舊取法 − 1", lambda y, col, yy: f"={R_('base', col)}/{R_('cur', col)}-1", "+0.0%;-0.0%")
+        # v0.20 r1（三層對帳工作單 W2-05A；規則 v1.5 草案 C3「中間估計數列」「連續法的衰減寫法」，Andy 已核可方向 r2-J1 (a)，條文待逐條核可）：
+        # 只顯示。本節各列不得被 Coord 頁以外任何格引用（建置時 _display_only_guard 檢查）；不新增 Interface 名稱；不進基準、crd_k、任何個股計算
+        if "crd_lam_0" in INROW:
+            OBS = "權重未校準；不得作為基準或個股讀數（規則 v1.5 草案，待 Andy 核可）"
+            COROW["_r"] += 1
+            CO.cell(COROW["_r"], 1, "D. 觀測數列（規則 v1.5 草案 C3；只顯示、不進基準、不進任何個股計算；權重未校準）").font = BOLD; COROW["_r"] += 1
+            st_ = lambda col: R_("st", col)
+            wavg = lambda E, S, col, X: f"({E}*{R_('dem', col)}+{S}*{X})/({E}+{S})"
+            co("mid_i", "中間估計 (i)：證據比例加權，Siliconomics 取供給側讀數（原始顆數）",
+               lambda y, col, yy: f'=IF({st_(col)}="待定",IF({R_("ew", col)}+{R_("es", col)}=0,"權重無定義",{wavg(R_("ew", col), R_("es", col), col, R_("sup", col))}),"—")',
+               note=OBS + "。（Wattonomics 證據比例 × 需求側＋Siliconomics 證據比例 × 供給側）÷ 兩者之和；只在 C3 待定年份顯示")
+            co("mid_ii", "中間估計 (ii)：同 (i)，Siliconomics 取舊取法（原始 × 情境 B 顆數係數）",
+               lambda y, col, yy: f'=IF({st_(col)}="待定",IF({R_("ew", col)}+{R_("es", col)}=0,"權重無定義",{wavg(R_("ew", col), R_("es", col), col, R_("cur", col))}),"—")',
+               note=OBS + "。與 (i) 的差只來自 um28_B／um29_B（無外部校準的 [Assumed] 係數）是否計入")
+            co("mid_iii", "中間估計 (iii)：簡單中點（供給側＋需求側）÷ 2",
+               lambda y, col, yy: f'=IF({st_(col)}="待定",({R_("sup", col)}+{R_("dem", col)})/2,"—")', note=OBS)
+            def _mid_terms(col):
+                mid3 = f'({R_("sup", col)}+{R_("dem", col)})/2'
+                t = [mid3]
+                for E in ("ew_lo", "ew", "ew_hi"):
+                    for S in ("es_lo", "es", "es_hi"):
+                        for X in ("sup", "cur"):
+                            t.append(f'IF({R_(E, col)}+{R_(S, col)}=0,{mid3},{wavg(R_(E, col), R_(S, col), col, R_(X, col))})')
+                return ",".join(t)
+            co("mid_lo", "中間估計顯示區間：下緣（兩層證據比例低／基準／高九種組合代入 (i)、(ii)，與 (iii) 取最小）",
+               lambda y, col, yy: f'=IF({st_(col)}="待定",MIN({_mid_terms(col)}),"—")',
+               note=OBS + "。證據比例只決定顯示區間的寬窄，不得用來決定基準（草案 C3 中間估計第 3 點）；比例和為 0 的組合以 (iii) 代入")
+            co("mid_hi", "中間估計顯示區間：上緣（同上取最大）", lambda y, col, yy: f'=IF({st_(col)}="待定",MAX({_mid_terms(col)}),"—")', note=OBS)
+            for key, lam in (("dec0", "crd_lam_0"), ("dec05", "crd_lam_05"), ("dec1", "crd_lam_1")):
+                co(key, f"衰減寫法（λ＝In 頁 {lam}）：換算值＋λ ×（前一年基準 − 前一年換算值）",
+                   lambda y, col, yy, lam=lam: "=\"—\"" if col == "C" else
+                   f'=IF({R_("chain", col)}=1,{R_("dem", col)}+{lam}*({PV[col]}{COROW["base"]}-{PV[col]}{COROW["dem"]}),"—")',
+                   note=OBS + "。λ 標 [Assumed]、不設預設值，只作敏感度；只在連續法年份顯示。現行基準是乘法式連續法（前一年基準 × 換算值成長率），與 λ＝1 的加法式不同")
         CO.column_dimensions["A"].width = 6; CO.column_dimensions["B"].width = 62; CO.column_dimensions["G"].width = 80
         for col in "CDEF": CO.column_dimensions[col].width = 12
 
@@ -1157,6 +1228,29 @@ def main():
             RC.cell(r, 1, lab)
             RC.cell(r, 3, "=" + "+".join(f'COUNTIF({rg},"{lab}")' for rg in st_rng))
             RCROW["n_" + lab] = r; r += 1
+        # v0.20 r1（三層對帳工作單 A4／B3；規則 v1.5 草案 C0 第 11 點）：期中實績第三讀數「季節權重法」。只顯示：不進 E 節彙總、不進 Coord c0f／c0_fail，
+        # 判定邏輯不改；權重只用已完結會計年度 FY2024–FY2026（不含 FY2027 任何季度），低＝最小、基準＝中位數、高＝最大（事前寫定的機械規則）
+        if "sw_h1" in INROW and "nv_act" in RCROW:
+            r += 1
+            SWN = "只顯示；不進 E 節彙總與 Coord c0f（c0_fail 判定不改；規則 v1.5 草案 C0 第 11 點，待 Andy 核可）"
+            RC.cell(r, 1, "G. 季節權重讀數（第三讀數；規則 v1.5 草案 C0 第 11 點）：已公布季累計 ÷（層級全年 × 歷史上半年占比）− 1。" + SWN).font = BOLD; r += 1
+            WL = (("lo", "低", "sw_h1_lo"), ("base", "基準", "sw_h1"), ("hi", "高", "sw_h1_hi"))
+            for k, lab, nm in WL:
+                RC.cell(r, 1, f"季節讀數權重（{lab}）：NVIDIA 資料中心營收上半年占全年"); c = RC.cell(r, 4, f"={nm}"); c.number_format = "0.0%"
+                RC.cell(r, 8, "In 頁 M31 sw_h1（FY2024／FY2025／FY2026 三個已完結會計年度；低＝最小、基準＝中位數、高＝最大）；" + SWN); RCROW["sw_w_" + k] = r; r += 1
+            for k, lab, nm in WL:
+                RC.cell(r, 1, f"季節讀數 F 節（{lab}）：實績 ÷（層級全年 × 權重）− 1")
+                c = RC.cell(r, 4, f"=D{RCROW['nv_act']}/(D{RCROW['nv_implied']}*D{RCROW['sw_w_' + k]})-1"); c.number_format = "+0.0%;-0.0%"
+                RC.cell(r, 8, SWN); RCROW["sw_f_" + k] = r; r += 1
+            if "d1_nv" in RCROW and "d1_act_nv_m" in RCROW:
+                for k, lab, nm in WL:
+                    RC.cell(r, 1, f"季節讀數 D1 NVIDIA（{lab}）：實績 ÷（層級 NVIDIA × 權重）− 1")
+                    c = RC.cell(r, 4, f"=D{RCROW['d1_act_nv_m']}/(D{RCROW['d1_nv']}*D{RCROW['sw_w_' + k]})-1"); c.number_format = "+0.0%;-0.0%"
+                    RC.cell(r, 8, SWN); RCROW["sw_d1nv_" + k] = r; r += 1
+                for k, lab, nm in WL:
+                    RC.cell(r, 1, f"季節讀數 D1 市場層（{lab}）：由下往上 ÷ 市場值（NVIDIA 改為實績 ÷ 權重；Broadcom 與其他不動）")
+                    c = RC.cell(r, 4, f"=(D{RCROW['d1_bu_m']}-D{RCROW['d1_act_nv_m']}*12/6+D{RCROW['d1_act_nv_m']}/D{RCROW['sw_w_' + k]})/D{RCROW['d1_mkt']}"); c.number_format = "0.000"
+                    RC.cell(r, 8, SWN); RCROW["sw_d1m_" + k] = r; r += 1
         RC.column_dimensions["A"].width = 46; RC.column_dimensions["B"].width = 44; RC.column_dimensions["H"].width = 80
         for col in "CDEFG": RC.column_dimensions[col].width = 11
 
@@ -1271,8 +1365,10 @@ def main():
     IF.cell(r, 1, "A. 輸入（純量）").font = BOLD; r += 1
     IFNAMES = []
     for k, (ir, lab, unit, has_lo, has_hi, tag) in INROW.items():
+        if k in NO_IF:
+            continue
         nm_ = "SIF_" + k
-        IF.cell(r, 1, nm_); IF.cell(r, 2, lab); IF.cell(r, 3, unit)
+        IF.cell(r, 1, nm_); IF.cell(r, 2, lab); IF.cell(r, 3, "百萬顆（封裝）" if _re.fullmatch(r"u_[a-z]+_\d\d", k) else unit)   # v0.20 r1：顆數單位＝封裝
         if has_lo: IF.cell(r, 4, f"=In!D{ir}").font = GREEN
         c = IF.cell(r, 5, f'=IF(ISBLANK(In!E{ir}),"",In!E{ir})' if k.startswith("crd_prev") else f"=In!E{ir}"); c.font = GREEN   # v0.19：上次判定空白＝首次判定，不得顯示為 0
         if has_hi: IF.cell(r, 6, f"=In!F{ir}").font = GREEN
@@ -1287,7 +1383,7 @@ def main():
     M = wb["Mkt"]
     derived = [("SIF_HBM_DemandEB", "dem", "HBM 需求（加速器裝載，情境 A（原始顆數））", "EB"),
                ("SIF_HBM_DemandGrossEB", "demg", "HBM 需求 × 出貨係數（情境 A（原始顆數））", "EB"),
-               ("SIF_Units_Total", "units", "加速器顆數合計（情境 A（原始顆數））", "百萬顆"),
+               ("SIF_Units_Total", "units", "加速器顆數合計（情境 A（原始顆數））", "百萬顆（封裝）"),
                ("SIF_HBM_GBperUnit", "gbavg", "每顆平均 HBM", "GB"),
                ("SIF_HBM_SupplyEB", "sup", "HBM 位元供給（三情境相同）", "EB")]
     for s in SCL:
@@ -1312,7 +1408,7 @@ def main():
                  + [(f"SIF_UnitsPlat_Total_{s_}", "tot" + s_, f"加速器顆數合計（{s_}）") for s_ in SCL])
         for nm_, key, lab in items:
             ur = UROW[key]
-            IF.cell(r, 1, nm_); IF.cell(r, 2, lab); IF.cell(r, 3, "百萬顆")
+            IF.cell(r, 1, nm_); IF.cell(r, 2, lab); IF.cell(r, 3, "百萬顆（封裝）")   # v0.20 r1：顆數單位＝封裝（package），非晶粒
             IF.cell(r, 4, "")
             for j in range(4):
                 c = IF.cell(r, 5 + j, f"=Units!{'CDEF'[j]}{ur}"); c.font = GREEN; c.number_format = "0.00"
@@ -1590,7 +1686,7 @@ def main():
         hdr(IF, r, ["名稱", "項目", "單位", "", "值", "", "", "", "來源位置"]); r += 1
         for key, stem, lab, unit, fm in (("sup", "SIF_DeployGW_Supply", "供給側讀數：原始顆數部署 GW（不乘係數；情境 A）", "GW", "0.00"),
                                          ("dem", "SIF_DeployGW_Demand", "需求側讀數：Wattonomics 換算值（平滑法）", "GW", "0.00"),
-                                         ("cur", "SIF_DeployGW_Current", "現行取法（原始 × S33 係數；v0.18 基準）", "GW", "0.00"),
+                                         ("cur", "SIF_DeployGW_Current", "【相容別名，下一版刪除】同 SIF_DeployGW_LegacyS33：舊取法（原始 × 情境 B 顆數係數；v0.18 基準）；非基準，現行基準只有 SIF_DeployGW_Base", "GW", "0.00"),
                                          ("alt", "SIF_DeployGW_Alt", "另一側讀數（未被採為基準的一條）", "GW", "0.00"),
                                          ("altr", "SIF_DeployGW_AltRatio", "另一側讀數 ÷ 基準", "x", "0.000"),
                                          ("st", "SIF_RecoStatus", "證據狀態（甲／乙／丙／待定；v1.3 區間跨線即待定）", "文字", "@"),
@@ -1617,6 +1713,19 @@ def main():
                 c = IF.cell(r, 5 + j, f"=Recon!{'DEFG'[j]}{RCROW[key]}"); c.font = GREEN; c.number_format = "0.0"
             IF.cell(r, 9, f"Recon!D{RCROW[key]}:G{RCROW[key]}")
             name(wb, nm_, f"Interface!$E${r}:$H${r}"); IFNAMES.append(nm_); r += 1
+    if CO is not None:
+        # v0.20 r1（三層對帳工作單 A7；PR #646 決定的方案）：語義明確的新名 SIF_DeployGW_LegacyS33_<年>＝舊取法（值同 SIF_DeployGW_Current_<年>）。
+        # 放在本頁最後，不移動既有名稱的列位；SIF_DeployGW_Current_<年> 保留一版作相容別名，下一版刪除
+        r += 1
+        IF.cell(r, 1, "E2. 舊取法的語義明確名稱（v0.20 r1；三層對帳工作單 A7）。SIF_DeployGW_LegacyS33_<年>＝舊取法（原始 × 情境 B 顆數係數，v0.18 基準），只供對照，"
+                      "不是現行基準（現行基準只有 SIF_DeployGW_Base）；E 節 SIF_DeployGW_Current_<年> 為其相容別名，下一版刪除").font = BOLD; r += 1
+        hdr(IF, r, ["名稱", "項目", "單位", "", "值", "", "", "", "來源位置"]); r += 1
+        for j, y in enumerate((2026, 2027, 2028, 2029)):
+            nm_ = f"SIF_DeployGW_LegacyS33_{y}"; col = "CDEF"[j]
+            IF.cell(r, 1, nm_); IF.cell(r, 2, f"{y} 舊取法（原始 × 情境 B 顆數係數；非基準；只供對照）"); IF.cell(r, 3, "GW")
+            c = IF.cell(r, 5, f"=Coord!{col}{COROW['cur']}"); c.font = GREEN; c.number_format = "0.00"
+            IF.cell(r, 9, f"Coord!{col}{COROW['cur']}")
+            name(wb, nm_, f"Interface!$E${r}"); IFNAMES.append(nm_); r += 1
     for col, w in zip("ABCDEFGHI", (30, 50, 9, 10, 10, 10, 10, 14, 16)):
         IF.column_dimensions[col].width = w
 
@@ -1812,6 +1921,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.20 r1（2026-11-18；原地修補、不升版、不改任何既有數值）：Coord 舊取法列改名、Interface 新增 SIF_DeployGW_LegacyS33_<年>（Current 為相容別名，下一版刪除）；顆數單位加註「封裝，非晶粒」；Recon G 節季節權重讀數（三個已完結會計年度 FY2024–FY2026；只顯示）；Coord D 節中間估計與衰減寫法（規則 v1.5 草案；權重未校準；只顯示）；In 頁 M31。決策 S51。", False),
         ("v0.20（2026-11-16）：改讀 Wattonomics v0.3.6（換算值 crd_x2 依 baseline_bridge.py 重算；Wattonomics 證據比例區間 WIF_Evidence_Lo_／Hi_ 讀入狀態判定）；規則 v1.4.3：Coord 頁新增 C0 實績對帳列（c0f），甲年實績不過標「有條件一致」（2026：NVIDIA 資料中心營收純實績 FY27 Q1＋Q2 對層級同期間 −26.8%），Interface SIF_RecoC0Fail_<年>；Recon B 節狀態改讀 Coord（刪「兩邊都不錨定」）、F 節改純實績主讀數（含指引的比值移參考列）、D 節第 1 市場 GPU／ASIC 晶片金額建立（已建模個股加總＋殘差＝市場值；Checks K11-gpu*；Interface SIF_GpuAsicMkt_Base、SIF_GpuAsicResid_Base）；In 頁 M6 新增 core_trn；TK_In 改 Tokenomics v22.0（本庫讀的值逐值不變）。基準值只因換算值機械性變動：2029 連續法 42.70 → 42.68 GW。決策 S50。", False),
         ("v0.19（2026-11-14）：依三層基準協調規則 v1.4 C3 決定基準（Andy 2026-11-14 13:06 確認 NVIDIA 試作後轉正式）：In 頁 M30（Wattonomics v0.3.2 換算值、兩層證據比例、cov_done＝1、上次判定）＋ Coord 頁（逐年狀態、由誰定基準、該年標示、依規則的基準與基準係數 crd_k）；基準鏈上的 S33 係數改讀 crd_k：2026 甲（一致）、2027–28 待定（維持現行 1／0.80，對帳中）、2029 丙＋連續法（0.85 → 0.710，對帳中）；部署 GW 2029 51.12 → 42.70。Interface E 節新增供給側／需求側讀數、另一側讀數、狀態與對帳中旗標。下游經 siliconomics/coef_rule.py 讀 um28_B／um29_B＝SIF_UnitsCoef_Base。對帳單：Drive 02-AI供應鏈/對帳/20261114_對帳單_Siliconomics基準對Wattonomics換算_2026-2029.md（r3，期限 2027-02-28）。", False),
         ("v0.18：2027 基準依 HBM 本庫自算供給截頂（三層校準原則第 2 條；Andy 11-05 同意，條件為本庫供給）：各平台 2027 顆數 × 0.9404（＝可支撐部署 GW 39.16 ÷ 原基準 41.65），不遞延到 2028；2027 部署 GW 41.65 → 39.16、HBM 需求 ÷ 供給 106% → 100%。決策 S48。", False),
@@ -1854,6 +1964,7 @@ def main():
         if b: c.font = Font(bold=True, size=13)
     RD.column_dimensions["A"].width = 150
 
+    _display_only_guard(wb, COROW, RCROW)
     wb.save(a.out)
     print(f"寫出 {a.out}：In {len(INROW)} 鍵、Interface {len(IFNAMES)} 名稱、衝突 {len(conflicts)} 項")
 

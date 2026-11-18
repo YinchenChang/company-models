@@ -65,3 +65,13 @@
 ## 欄位語義補充（2026-11-18，三層對帳工作單 A7）
 
 `SIF_DeployGW_*` 五組欄位的唯一語義、誰可以讀與改名方案見 `siliconomics/README.md`「欄位語義」。取數規則補一條：**硬體個股計算基準只能讀 `SIF_DeployGW_Base`**；`Supply`、`Alt`、`AltRatio` 只可並列顯示或作情境（兩讀數目標價）；`Current`（舊 S33 取法）與 `Demand`（Wattonomics 換算值）硬體個股不得讀（唯一登錄例外：`nvidia/coord_post.py` 的「改前現行值」對照欄）。`tools/baseline_coordination/check.py` 第 [14] 項在 CI 檢查。下一個 Siliconomics 版本新增 `SIF_DeployGW_LegacyS33_<年>`（＝`Current`，同值），`Current` 保留一版作相容別名後刪除。
+
+## v0.20 r1（2026-11-18；原地修補、不升版、既有名稱逐值不變）
+
+| 版本 | 日期 | 名稱變動 | 下游影響 |
+|---|---|---|---|
+| v0.20 r1 | 2026-11-18 | 新增 `SIF_DeployGW_LegacyS33_<年>`（2026–2029；舊取法＝原始 × 情境 B 顆數係數；值同 `SIF_DeployGW_Current_<年>`；Interface E2 節）。`SIF_DeployGW_Current_<年>` 改標「相容別名，下一版刪除」。顆數相關名稱（`SIF_u_*`、`SIF_UnitsPlat_*`、`SIF_Units_Total`）的單位標示改為「百萬顆（封裝）」（只改 Interface 單位欄文字）。其餘 1,931 個名稱逐值不變；快照 `rows` 只在 M30 之後插入 M31 節（`sw_h1*`、`crd_lam_*`，不輸出 Interface 名稱） | 無：全部下游重建後與 dist 逐格相同（見 CHANGELOG v0.20 r1）。讀 `Current` 的程式請改讀 `LegacyS33`（目前只有 `nvidia/coord_post.py` 的對照欄） |
+
+- **顆數單位：** 本庫所有加速器顆數都是**封裝（package）數，非晶粒數**（`docs/reports/20261118_三層對帳/unit-basis/20261118_顆數來源口徑查核.md`）。下游若把本庫顆數與外部「GPU 數」比較，先確認對方口徑（NVIDIA 2025 年的 Blackwell 數字是晶粒口徑）。
+- **只顯示的觀測數列與季節讀數（規則 v1.5 草案）：** Coord 頁 D 節、Recon 頁 G 節、狀態檔 `years.<年>.observations` 只供顯示，**不提供 Interface 名稱**；個股不得讀取（規則 v1.5 草案第 10 節第 15 項，`check.py` 實作由共用區另案）。
+
