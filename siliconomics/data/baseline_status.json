@@ -1,15 +1,15 @@
 {
- "_note": "由 siliconomics/tools/export_baseline_status.py 自 20261116_Siliconomics_v0.20.xlsx 匯出；換算值與 Wattonomics 證據比例（含 v0.3.6 起的低／高區間）取自 Wattonomics v0.3.6（20261116_Wattonomics_v0.3.6.xlsx）；continuity＝規則 v1.4 連續法（基準＝前一年基準 × 換算值成長率，非換算值本身）",
+ "_note": "由 siliconomics/tools/export_baseline_status.py 自 20261116_Siliconomics_v0.20.xlsx 匯出；換算值與 Wattonomics 證據比例（含 v0.3.6 起的低／高區間）取自 Wattonomics v0.3.7（20261118_Wattonomics_v0.3.7.xlsx）；continuity＝規則 v1.4 連續法（基準＝前一年基準 × 換算值成長率，非換算值本身）",
  "source": "20261116_Siliconomics_v0.20.xlsx",
- "source_sha256": "68e9937a2cd44ac84c3d4e3985251f01feeb9d1a7ee84ab1313d318d0e12d31d",
+ "source_sha256": "baca41602b00b2ed1f67d5debd99f9e00dd90108f16f2f5c67ef450534b69a87",
  "method": "export_baseline_status.py：只讀 Siliconomics Interface 的 SIF_ 名稱（Coord 頁推導）、Wattonomics 快照 WIF_Recon_NV_*、協調橋接檔 Bridge 頁 g2c／g2p；判斷類欄位讀 builder/seed/coord_meta_v*.json；本程式不做判定或計算（規則 v1.4.3 C3）",
  "generated": "2026-11-18",
- "wattonomics_version": "v0.3.6",
- "wattonomics_source_sha256": "acb92d6fd80c6872e8f23d64e4e93651ef580f60f1a27b213f1a826e377adb58",
+ "wattonomics_version": "v0.3.7",
+ "wattonomics_source_sha256": "646b3120e1e91d4764bbd1baac869af9980c71ce985f21161e4f0abc43edcd19",
  "bridge": {
-  "file": "20261116_協調橋接_v0.3.6.xlsx",
-  "sha256": "60ae4c91aca5db0112e8d3afa29d34b6ee26d3188553a735f42e4dcb2b0688ed",
-  "in_title": "In — 輸入（藍字）。來源：20261114_Siliconomics_v0.19.xlsx、20261116_Wattonomics_v0.3.6.xlsx、R4 橋接（siliconomics/tools/r4_bridge.py）。產生日 2026-11-16",
+  "file": "20261118_協調橋接_v0.3.7.xlsx",
+  "sha256": "0ed40aa93b953c0e41d59131534b3219b715ab88edf8abbb2f1484b52b742773",
+  "in_title": "In — 輸入（藍字）。來源：20261116_Siliconomics_v0.20.xlsx、20261118_Wattonomics_v0.3.7.xlsx、R4 橋接（siliconomics/tools/r4_bridge.py）。產生日 2026-11-18。注意：本檔讀的 Siliconomics 是執行當時 model/CURRENT 指向的版本（20261116_Siliconomics_v0.20.xlsx，通常是「前一版」）；本檔換算值 x2 再被下一版的 In 頁 crd_x2 讀入，所以來源版本落後一版是設計，不是標錯（三層對帳工作單 A8）",
   "note": "timing_cum（GW）＝Bridge g2c、timing_cum_ratio＝g2p；橋接檔於建置當時讀「前一版」Siliconomics 基準（見 in_title），其輸出再餵進本版 In 頁 crd_x2，故來源標示版本落後一版屬設計"
  },
  "threshold": 0.5,
@@ -125,9 +125,9 @@
   "2028": {
    "wattonomics": {
     "evidence_share": {
-     "lo": 0.518,
+     "lo": 0.454,
      "base": 0.518,
-     "hi": 0.518
+     "hi": 0.545
     },
     "prev_has_evidence": true
    },
@@ -161,8 +161,8 @@
      "i": 35.8862819802845,
      "ii": 32.5815221359517,
      "iii": 40.488069095624,
-     "lo": 31.5153746672058,
-     "hi": 40.7552962808925
+     "lo": 31.3879708201597,
+     "hi": 41.5639022728293
     },
     "decay": {
      "0": null,
@@ -177,9 +177,9 @@
   "2029": {
    "wattonomics": {
     "evidence_share": {
-     "lo": 0.208,
+     "lo": 0.182,
      "base": 0.208,
-     "hi": 0.208
+     "hi": 0.218
     },
     "prev_has_evidence": false
    },
@@ -207,7 +207,7 @@
    "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
    "sil_base": 42.6802634108182,
    "timing_cum": 4.6564777232326,
-   "timing_cum_ratio": 0.109040078772243,
+   "timing_cum_ratio": 0.109101428883223,
    "observations": {
     "mid": {
      "i": null,

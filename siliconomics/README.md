@@ -4,7 +4,7 @@ AI 半導體 Project 的「唯一事實」Excel：加速器顆數、記憶體與
 
 | 項目 | 內容 |
 |---|---|
-| 現行版本 | 見 `model/CURRENT`（v0.20，2026-11-16；2026-11-18 原地修補 r1，數值不變；Wattonomics v0.3.6、Tokenomics v22.0、規則 v1.4.3） |
+| 現行版本 | 見 `model/CURRENT`（v0.20，2026-11-16；2026-11-18 原地修補 r1，數值不變；r2 改讀 Wattonomics v0.3.7，只動 crd_ew_28／29 低高；Wattonomics v0.3.7、Tokenomics v22.0、規則 v1.4.3） |
 | 下游快照 | `data/CURRENT_SNAPSHOT` 指向的 `data/siliconomics_snapshot_v*.json`（由 `tools/export_snapshot.py` 產生） |
 | Tokenomics 快照 | `data/tokenomics_snapshot_v22.0.json`（v0.20 起；名稱清單 `data/tokenomics_names.txt`；下游 chip_bridge 仍讀 `v21.7`，見 Checks K3） |
 | 協調狀態檔 | `data/baseline_status.json`（`tools/export_baseline_status.py`；逐年狀態的唯一權威，規則 v1.4.3 C3；2026-11-18 起含 `method`、`generated`、`source_sha256`、`wattonomics_source_sha256`、`bridge`〔協調橋接檔名與雜湊〕與逐年 `timing_cum`／`timing_cum_ratio`） |
