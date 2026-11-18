@@ -1,6 +1,6 @@
 # 三層基準協調檢查
 
-規則本文：`docs/plan/三層基準協調規則.md`（第 10 節列出檢查項目，現行 v1.4.3 共 12 項；2026-11-18 起另有程式內的 [13]、[14] 兩項，三層對帳工作單 A8、A7，尚未寫入規則本文第 10 節）。
+規則本文：`docs/plan/三層基準協調規則.md`（第 10 節列出檢查項目，現行 v1.4.3 共 12 項；2026-11-18 起另有程式內的 [13]、[14]、[15] 三項，三層對帳工作單 A8、A7、W2-05B，尚未寫入規則本文第 10 節）。
 
 - **現況（v1.4.3）：** 已接 CI：`.github/workflows/coord-check.yml`（PR 與 push 到 main，路徑含 `wattonomics/**`、`siliconomics/**`、`tools/baseline_coordination/**`、`tools/coord/**`、規則本文）。同一 workflow 另跑 `wattonomics/tools/check.py`（讀活頁簿快取值，不需要 LibreOffice）。狀態檔 `siliconomics/data/baseline_status.json` 不存在時只印「未啟用」並正常結束。
 - **執行：** `python3 tools/baseline_coordination/check.py [--status 路徑] [--today YYYY-MM-DD]`。
@@ -27,4 +27,8 @@
   - 頂層 `method`、`generated`、`source_sha256`（Siliconomics 活頁簿）、`wattonomics_source_sha256`、`bridge`（`file`、`sha256`、`in_title`、`note`）。逐年 `legacy_s33`（舊 S33 取法，僅供對照；`current_s33` 保留一版作別名）。
   - [13] 來源雜湊一致：Siliconomics 與 Wattonomics 的 CURRENT 快照 `source.sha256` ＝ `model/` 內該檔實際 SHA-256；狀態檔 `source_sha256`、`wattonomics_source_sha256`、`bridge.sha256` 亦同；不一致＝不符。活頁簿重存（LibreOffice 重算）會改變位元組，故快照與狀態檔匯出須是定稿後的最後一步。
   - [14] 欄位語義（`SIF_DeployGW_*` 五組，語義見 `siliconomics/README.md`「欄位語義」）：硬體個股（`hardware_companies` 資料夾 `*.py`）不得讀 `Current`、`Demand`（唯一登錄用途：`nvidia/coord_post.py` 的「改前現行值」對照欄與註解，`SEM_ALLOW`）；AST 檢查「目標名稱含 base 的指派」右側不得含 `Current／Supply／Demand／Alt／AltRatio`（`Supply`、`Alt`、`AltRatio` 只可並列顯示或作情境）。已知例外登錄於 `SEM_BASE_EXC`（現況：`nvidia/coord_post.py` 的退回路徑，以提醒列出；例外已不需要時也以提醒列出）。靜態檢查，擋不住間接使用。
+  - [15] 只顯示的觀測數列（W2-05B；依據：**規則 v1.5 草案 C3（待 Andy 核可）；本項只防止只顯示數列被讀取，不改任何判定**）。狀態檔 `years.<年>.observations`（`mid`＝i／ii／iii／lo／hi 中間估計、`decay`＝λ 0／0.5／1 衰減寫法、`display_only`、`rule`；不適用年份的子項為 null）只供 Siliconomics Coord 頁顯示。
+    - (a) 狀態檔每年若有 `observations`，`display_only` 必須為 `true`，否則＝不符；沒有 `observations`（舊狀態檔或不適用年份）只列提醒。
+    - (b) 掃描全 repo 的 `*.py`（排除 `siliconomics/`、`docs/`、`tools/baseline_coordination/`、`.git` 與隱藏資料夾），先挑出文字含 `SIF_`、`baseline_status` 或 `siliconomics`（不分大小寫）的腳本，再以 AST 比對：字串常數（含 f-string 片段與下標鍵）整串等於 `observations`、字串含整詞 `mid_i／mid_ii／mid_iii／mid_lo／mid_hi／dec0／dec05／dec1` 或前綴 `crd_lam_`、屬性 `.observations`。命中＝不符，印檔名與行號；無命中時印一則提醒說明掃描支數。
+    - 已知限制：靜態檢查。(1) 註解與說明文字不進 AST，所以不會誤判（也不會擋註解）；(2) 整詞比對要求前後不緊接英數或底線，所以 `w_mid_lo` 之類不算命中，但名稱前面加了底線前綴的真實鍵（例：`SIF_x_mid_i`）也不會被抓；(3) 只看字串常數與屬性，變數名稱（例：變數 `dec1`）不算；(4) 以動態組字串（拼接、`getattr`）取得 `observations` 擋不住；(5) 只掃 `*.py`，不含 JS／HTML／Excel 公式；(6) 檔案文字完全不含 `SIF_`／`baseline_status`／`siliconomics` 者不掃。
 - 欄位定義若有調整，以本檔、程式與狀態檔匯出程式（`siliconomics/tools/export_baseline_status.py`）同一個 PR 更新。
