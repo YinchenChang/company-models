@@ -319,9 +319,10 @@ def recon(wb, SJ, V37):
     tp = f"Val!$B${lab(V, '目標價（DCF 與 Comparable 加權）')}"; dcf = f"Val!$B${lab(V, 'DCF 目標價（情境加權）')}"
     feps = f"Val!$B${lab(V, '12 個月後的前瞻 EPS')}"; pmed = f"Val!$B${lab(V, '同業前瞻 P/E 中位數')}"
     up = f"Val!$B${lab(V, '上檔空間：加權目標價')}"
-    RC.cell(r, 1, "評等級距邊界：升一級（上檔空間）"); RC.cell(r, 2, f"=IF({up}<-0.5,-0.5,IF({up}<-0.25,-0.25,IF({up}<0.25,0.25,IF({up}<0.5,0.5,NA()))))").number_format = "+0%;-0%"
+    RC.cell(r, 1, "評等級距邊界：升一級（上檔空間）"); RC.cell(r, 2, f'=IF({up}<-0.5,-0.5,IF({up}<-0.25,-0.25,IF({up}<0.25,0.25,IF({up}<0.5,0.5,"無（已是最高級）"))))').number_format = "+0%;-0%"
     RC.cell(r, 10, "級距：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空（Andy 2026-10-25）"); G["e_up"] = r; r += 1
-    RC.cell(r, 1, "評等級距邊界：降一級（上檔空間）"); RC.cell(r, 2, f"=IF({up}>0.5,0.5,IF({up}>0.25,0.25,IF({up}>-0.25,-0.25,IF({up}>-0.5,-0.5,NA()))))").number_format = "+0%;-0%"; G["e_dn"] = r; r += 1
+    RC.cell(r, 1, "評等級距邊界：降一級（上檔空間）"); RC.cell(r, 2, f'=IF({up}>0.5,0.5,IF({up}>0.25,0.25,IF({up}>-0.25,-0.25,IF({up}>-0.5,-0.5,"無（已是最低級）"))))').number_format = "+0%;-0%"; G["e_dn"] = r; r += 1
+    # 2026-11-18（工程類，不改值）：已是最高／最低級時邊界原為 NA()，使反解列與 README 說明出現 #N/A（S3b 試算 alab 強力放空 9 格）；改為文字並在下游以 ISNUMBER 判斷
     for j, h in enumerate(["項目", "需要的值", "模型現值", "需要的變動"], 1): RC.cell(r, j, h).font = BOLD
     r += 1
     w = "tp_w_dcf"; G["inv"] = {}
@@ -332,8 +333,11 @@ def recon(wb, SJ, V37):
                                   ("eps", f"=({tgt[t]}-{w}*{dcf})/((1-{w})*{pmed}*rm_factor)", "0.00", f"={feps}")):
             labl = (f"{nm[t]}所需的 Comparable 採用倍數（同業中位數 × 相對倍數係數；DCF 不變）" if kind == "pe"
                     else f"{nm[t]}所需的 12 個月後前瞻 EPS（同業中位數 × 係數；DCF 不變）")
+            if t != "px":   # 無更高／更低一級時（邊界為文字）顯示文字，不產生錯誤值
+                eb = G["e_up"] if t == "up" else G["e_dn"]
+                f = f'=IF(ISNUMBER(B{eb}),{f[1:]},B{eb})'
             RC.cell(r, 1, labl); RC.cell(r, 2, f).number_format = fmt; RC.cell(r, 3, cur).number_format = fmt
-            RC.cell(r, 4, f"=B{r}/C{r}-1").number_format = "+0.0%;-0.0%"
+            RC.cell(r, 4, f'=IF(ISNUMBER(B{r}),B{r}/C{r}-1,"—")').number_format = "+0.0%;-0.0%"
             RC.cell(r, 10, "閉式：加權目標價＝w × DCF＋（1 − w）× 倍數 × EPS；DCF 目標價固定。反解值是目標價等於該點的值")
             G["inv"][f"{kind}_{t}"] = r; r += 1
     if V37 and SJ and SJ.get("xk"):
@@ -445,8 +449,8 @@ def readme(wb, ctx, bid, G):
     inv = G["recon"]["inv"]
     G["fail_h"] = put("主要失效條件（可觀察；原則 3）", True)
     E_up, E_dn = f"Recon!B{G['recon']['e_up']}", f"Recon!B{G['recon']['e_dn']}"
-    fails = [f'="(1) 倍數：Comparable 採用倍數（同業中位數 × 相對倍數係數；目前 "&TEXT({pmed}*rm_factor,"0.0")&" 倍）升到約 "&TEXT(Recon!B{inv["pe_up"]},"0.0")&" 倍，上檔空間到 "&TEXT({E_up},"+0%;-0%")&"、評等升一級；降到約 "&TEXT(Recon!B{inv["pe_dn"]},"0.0")&" 倍則降一級；支持現價需約 "&TEXT(Recon!B{inv["pe_px"]},"0.0")&" 倍。"',
-             f'="(2) 盈餘：12 個月後前瞻 EPS（情境加權；模型 "&TEXT(Recon!C{inv["eps_up"]},"0.00")&" 美元）在同業中位數下需到約 "&TEXT(Recon!B{inv["eps_up"]},"0.00")&" 美元評等才升一級；降到約 "&TEXT(Recon!B{inv["eps_dn"]},"0.00")&" 美元則降一級；支持現價需約 "&TEXT(Recon!B{inv["eps_px"]},"0.00")&" 美元。可觀察：4Q26、1Q27 營收與 non-GAAP EPS 對指引、FY2027 指引。"']
+    fails = [f'="(1) 倍數：Comparable 採用倍數（同業中位數 × 相對倍數係數；目前 "&TEXT({pmed}*rm_factor,"0.0")&" 倍）"&IF(ISNUMBER(Recon!B{inv["pe_up"]}),"升到約 "&TEXT(Recon!B{inv["pe_up"]},"0.0")&" 倍，上檔空間到 "&TEXT({E_up},"+0%;-0%")&"、評等升一級","已是最高一級，沒有再升一級")&"；"&IF(ISNUMBER(Recon!B{inv["pe_dn"]}),"降到約 "&TEXT(Recon!B{inv["pe_dn"]},"0.0")&" 倍則降一級","已是最低一級，沒有再降一級")&"；支持現價需約 "&TEXT(Recon!B{inv["pe_px"]},"0.0")&" 倍。"',
+             f'="(2) 盈餘：12 個月後前瞻 EPS（情境加權；模型 "&TEXT(Recon!C{inv["eps_up"]},"0.00")&" 美元）"&IF(ISNUMBER(Recon!B{inv["eps_up"]}),"在同業中位數下需到約 "&TEXT(Recon!B{inv["eps_up"]},"0.00")&" 美元評等才升一級","已是最高一級，沒有再升一級")&"；"&IF(ISNUMBER(Recon!B{inv["eps_dn"]}),"降到約 "&TEXT(Recon!B{inv["eps_dn"]},"0.00")&" 美元則降一級","已是最低一級，沒有再降一級")&"；支持現價需約 "&TEXT(Recon!B{inv["eps_px"]},"0.00")&" 美元。可觀察：4Q26、1Q27 營收與 non-GAAP EPS 對指引、FY2027 指引。"']
     if "xk_up" in inv:
         _x = lambda k: f'IF(ISNUMBER(Recon!B{inv[k]}),TEXT(Recon!B{inv[k]},"0.00")&" 倍","超出測試範圍")'
         fails.append(f'="(3) Scorpio X 份額：三情境份額相對值同乘約 "&{_x("xk_up")}&"時評等升一級、約 "&{_x("xk_dn")}&"時降一級；支持現價需約 "&{_x("xk_px")}&"。可觀察：Scorpio X 量產客戶數、公司揭露的 Scorpio 占營收比例。"')

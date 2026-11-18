@@ -5,7 +5,7 @@
 #   write_sheet(wb, here)：新增 Coord 頁——兩讀數 GW、兩讀數目標價與評等、橫幅揭露文字、損益表年度標示（HTML 用）、快照一致性核對。
 #   另一側讀數的數值由 nvidia/coord_alt.py 整本重建（NV_OVERRIDE="_coord=1"：情境 B、C 於 CY2027 起產業量 × co_r（情境 A＝供給側讀數不縮放），其他輸入不變）後寫入 coord_alt.json。
 # 集中輸入：load()。Siliconomics 快照有 SIF_DeployGW_Demand_<yyyy>／SIF_RecoFlag_<yyyy> 時改讀快照；否則讀 coord_inputs.json 的暫值（標「暫值，待 Siliconomics 試作分支」）。
-import json, os
+import json, os, re
 from openpyxl.styles import Font
 from openpyxl.workbook.defined_name import DefinedName
 
@@ -228,7 +228,9 @@ def relabel(wb):
     IN = wb["In"]
     r = next(r for r in range(4, IN.max_row + 1) if IN.cell(r, 1).value == "um29_C")
     old = IN.cell(r, 9).value
-    assert ("×0.706（基準係數 0.85）" in str(old)) or ("基準係數 0.7" in str(old)), old   # v0.18 口徑或 v0.19 起 reader 口徑（Siliconomics v0.20：0.7097）
+    # v0.18 口徑或 v0.19 起 reader 口徑（Siliconomics v0.20：0.7097）。2026-11-18（工程類，不改值）：原只容許「基準係數 0.7」，
+    # 連續法使 2029 係數降到 0.7 以下（例：自建顆數試算 0.589）時建檔失敗；改為只檢查 reader 口徑的文字結構（基準係數 0.xxx）
+    assert ("×0.706（基準係數 0.85）" in str(old)) or re.search(r"基準係數 0\.\d", str(old)), old
     IN.cell(r, 9).value = ('="個股自訂情境 C：＝Siliconomics 基準 ×"&TEXT(um29_C/co_ucoef_29,"0.000")&"（基準係數 "&TEXT(co_ucoef_29,"0.000")&"，SIF_UnitsCoef_Base，2029 連續法；v0.3.8）；2029 產業 GW 相對另一側讀數（Wattonomics 換算值）"'
                            '&TEXT(co_gws_29*um29_C/co_gwa_29-1,"+0%;-0%")&"（現行基準 "&TEXT(co_gwb_29/co_gwa_29-1,"+0%;-0%")&"）。原說明（Siliconomics reader 產生）：' + str(old).replace('"', '""') + '"')
     n += 1
