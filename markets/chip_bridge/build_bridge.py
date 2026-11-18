@@ -9,7 +9,7 @@ from openpyxl.utils import get_column_letter as L
 # ---------------- Tokenomics 取數 ----------------
 # 契約名稱（IF_）：取自版本固定快照（tools/tokenomics/import_tokenomics.py 產生；Tokenomics 唯讀）
 HERE = os.path.dirname(os.path.abspath(__file__))
-SNAPSHOT = os.path.join(os.path.dirname(os.path.dirname(HERE)), "siliconomics", "data", "tokenomics_snapshot_v21.7.json")   # v0.2.2 起讀 Siliconomics 的 TK 快照（本專案單一份）
+SNAPSHOT = os.path.join(os.path.dirname(os.path.dirname(HERE)), "siliconomics", "data", "tokenomics_snapshot_v22.0.json")   # v0.2.2 起讀 Siliconomics 的 TK 快照（本專案單一份）
 _snap = json.load(open(SNAPSHOT, encoding="utf-8"))
 _gen = {g["code"]: g["name"] for g in _snap["source"]["generations"]}
 def tk(name):
@@ -275,7 +275,8 @@ for col in "BCDEFGHIJKLM": se.column_dimensions[col].width = 13
 # ---------------- README ----------------
 rd = wb.create_sheet("README", 0)
 lines = [
- ("每 GW 晶片內容橋接表（AI 半導體專案 步驟 0）v0.2.3　2026-11-05", True),
+ ("每 GW 晶片內容橋接表（AI 半導體專案 步驟 0）v0.2.4　2026-11-18", True),
+ ("v0.2.4：Tokenomics 快照改讀 v22.0（siliconomics/data/tokenomics_snapshot_v22.0.json；Tokenomics model/20261105_Tokenomics_v22.0.xlsx，commit 79f6b30）。本表讀的八個 IF_ 名稱（IF_RackPrice、IF_RacksPerGW、IF_GPUsPerGW、IF_ScaleOutShare、IF_StoragePerGPU、IF_CapexIT、IF_CapexFacility、IF_CapexTotal）在 v21.7 與 v22.0 快照逐值相同（程式比對，差異 0），所以所有輸入、公式與數值不變；只有來源與版本文字更新。v21.7→v22.0 只有 IF_NonNV_Out_TPU、IF_NonNV_Out_Trn 不同，本表不讀。", False),
  ("v0.2.3：Bridge 第 44 列（NVIDIA 合計 ÷ IT capex）是混合口徑——GPU 部分為 NVIDIA 晶片毛利（Rack 第 19 列＝模組售價 − HBM − 台積電 − 其他製造），CPU、NIC、NVLink、殘差為售價，scale-out 中 NVIDIA 份額未計（算力收支 11-03 診斷、11-05 請確認，AI半導體 11-05 回執確認）。新增第 45–50 列 NVIDIA 營收口徑：低（模組售價＋CPU＋NIC/DPU＋NVLink 交換晶片）、基準（＋交換匣其他＋殘差）、高（＋LPDDR＋scale-out × NVIDIA 份額）。第 44 列保留供對照；所有既有列與數值不變。In 頁新增 so_nv（Assumed 30／50／70%）。", False),
  ("v0.2.2：Tokenomics 快照改讀 Siliconomics 的 v21.7（siliconomics/data/tokenomics_snapshot_v21.7.json，本專案單一份）；機架價、scale-out 比率、每 GPU 儲存改讀 v21.0 起的契約名稱 IF_RackPrice、IF_ScaleOutShare、IF_StoragePerGPU（R1 已上線，不再抄錄）。基準值全部不變；只有 VR200 低成本欄變動：機架價 7.8 → 7.5（Tokenomics v21.3）、IT 與總資本支出 33.27 → 32.00、43.49 → 42.21 $B／GW。", False),
  ("v0.2.1：Tokenomics 快照改 v20.1（v19.0→v20.1 為 LifeSelf 主口徑與 L1_PriceReqBE 的 L 改動，與本表使用的名稱無關）；IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_GPUsPerGW、IF_RacksPerGW 逐值相同，只更新版本標籤與說明文字，數值不變。", False),
@@ -313,6 +314,7 @@ rq.column_dimensions["A"].width = 6; rq.column_dimensions["B"].width = 26; rq.co
 # ---------------- Sources ----------------
 so = wb.create_sheet("Sources")
 srcs = [
+ ("Tokenomics v22.0（v0.2.4 起讀；commit 79f6b30）", "https://github.com/YinchenChang/Tokenomics/blob/master/model/20261105_Tokenomics_v22.0.xlsx"),
  ("Tokenomics v20.1", "https://github.com/YinchenChang/Tokenomics/blob/master/model/20261023_Tokenomics_v20.1.xlsx"),
  ("Tokenomics v19.0（對照：數值與 v20.1 相同）", "https://github.com/YinchenChang/Tokenomics/blob/master/model/archive/20261022_Tokenomics_v19.0.xlsx"),
  ("Wing VC / Data Gravity, How Much Does an NVIDIA NVL72 Cost?（2026-08）", "https://www.wing.vc/content/how-much-does-an-nvidia-nvl72-cost"),
