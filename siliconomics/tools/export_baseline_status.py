@@ -7,6 +7,9 @@
 #   2026-11-18（三層對帳工作單 A1、A8；不改任何基準值）：逐年 timing_cum（C2 ② 累計 GW）與 timing_cum_ratio（② 累計 ÷ 當年基準）讀協調橋接檔
 #   Bridge 頁 g2c、g2p 列（檔案＝docs/reports/*協調橋接_<Wattonomics 版本>*.xlsx 最新一份）；頂層新增 method、generated、source_sha256、
 #   wattonomics_source_sha256、bridge（檔名、sha256、橋接當時讀的 Siliconomics 版本）。
+#   v0.20 r1（2026-11-18；工作單 W2-05B 的 Siliconomics 部分）：逐年 observations＝Coord 頁 D 節觀測數列（中間估計 mid i／ii／iii／lo／hi、衰減寫法 λ＝0／0.5／1），
+#   display_only＝true、rule＝"v1.5"（草案，待 Andy 核可）；不適用年份（非待定／非連續法）為 null。D 節不輸出 Interface 名稱（W2-05A），故本欄依 Coord 頁 A 欄鍵讀值；
+#   只供顯示，個股不得讀（規則 v1.5 草案第 10 節第 15 項，check.py 由共用區另案實作）。legacy_s33 已可讀到新名 SIF_DeployGW_LegacyS33_<年>。
 import datetime, glob, hashlib, json, os, re, sys
 import openpyxl
 
@@ -53,6 +56,19 @@ def main():
         lo = v(k + "_lo") if k + "_lo" in wb.defined_names else b
         hi = v(k + "_hi") if k + "_hi" in wb.defined_names else b
         return {"lo": b if lo is None else lo, "base": b, "hi": b if hi is None else hi}
+    # Coord 頁 D 節（觀測數列；只顯示）：A 欄鍵 → 列號；欄 C–F＝2026–2029
+    CO = wb["Coord"] if "Coord" in wb.sheetnames else None
+    corow = {CO.cell(r, 1).value: r for r in range(1, CO.max_row + 1) if CO.cell(r, 1).value} if CO is not None else {}
+
+    def obs(y):
+        if "mid_i" not in corow:
+            return None
+        col = 3 + YRS.index(y)
+        num = lambda k: (lambda x: x if isinstance(x, (int, float)) and not isinstance(x, bool) else None)(CO.cell(corow[k], col).value)
+        return {"mid": {"i": num("mid_i"), "ii": num("mid_ii"), "iii": num("mid_iii"), "lo": num("mid_lo"), "hi": num("mid_hi")},
+                "decay": {"0": num("dec0"), "0.5": num("dec05"), "1": num("dec1")},
+                "display_only": True, "rule": "v1.5",
+                "note": "規則 v1.5 草案 C3（待 Andy 核可）；權重未校準；只顯示，不得作為基準或個股讀數；Coord 頁 D 節（不輸出 Interface 名稱）；非適用年份為 null"}
     root = os.path.dirname(SIL)
     wt_file = open(os.path.join(root, "wattonomics", "model", "CURRENT")).read().strip()
     wt_ver = re.search(r"v\d+(?:\.\d+)+", wt_file).group(0)
@@ -94,6 +110,9 @@ def main():
             rec["c0_point"] = (c0 or {}).get("point")
         if y in timing and timing[y][0] is not None:   # C2 ② 累計（單位 GW；check.py 第 7 項以 |timing_cum| ≤ 15% × sil_base 判定）
             rec["timing_cum"], rec["timing_cum_ratio"] = timing[y]
+        o_ = obs(y)
+        if o_ is not None:
+            rec["observations"] = o_
         years[str(y)] = rec
         if not rec["use_converted"] and y >= 2028:
             coefs.append({"name": f"um{yy}_B（S33；經 crd_k_{yy} 帶入 {y} 基準）", "year": y, "tag": "Assumed",
