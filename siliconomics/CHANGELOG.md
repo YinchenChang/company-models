@@ -1,5 +1,15 @@
 # Siliconomics 變更紀錄
 
+## v0.21-trial（2026-11-18；**會改值的草案，不合併前須 Andy 確認**；`model/20261118_Siliconomics_v0.21-trial.xlsx`；決策 S52）
+
+- **2028 待定年份的水準改用連續法往前延一年**（三層對帳第二波 V1；Andy 2026-11-18 選首選）：In 頁新增 M32 `crd_pc_28`＝1；Coord C 節基準：`crd_pc_<yy>`＝1 且狀態待定時，基準＝前一年基準 × 該年換算值 ÷ 前一年換算值（取代舊取法 × um28_B 0.8，R4 報告：0.8 無外部依據）；`crd_k` 隨之＝基準 ÷ 供給側讀數。標示 2028「待定（對帳中）」→「待定（水準＝連續法，對帳中）」，由誰定基準改「待定（水準＝連續法；下次重判）」；狀態、對帳中旗標、期限不變。
+  - 基準部署 GW 2026–2029：23.40／39.16／**42.23 → 45.07**／**42.68 → 45.55**（各 +6.73%）；`SIF_UnitsCoef_Base` 2028 0.8000 → **0.8538**、2029 0.7097 → **0.7574**。
+  - 會變的 Interface 名稱 34 個（另新增 `SIF_crd_pc_28`）；明細與下游影響見 `docs/reports/20261118_v0.21-trial_V1_2028連續法_影響分析.md`。
+- 狀態檔：逐年 `pending_continuity`；2028 不再列入 `level_coefficients`（基準鏈不讀 um28_B），`tools/baseline_coordination/check.py` 第 [3] 項提醒消失（0 項不符、4 項提醒）。
+- R4 橋接 r13（`docs/reports/r4_bridge/20261118_R4對帳橋接_Siliconomics側_r13.xlsx`）、Recon 快照 `data/recon_snapshot_v0.21-trial.json`（依 README 建置步驟 4）。
+- **-trial 的理由**：K1（本庫 HBM 市場 vs SK 海力士成品）2028、2029 須 SK 海力士以新快照重建後自舉（SGOV_Errors＝2，屬預期）；個股重建屬另一層，不在本 PR。Andy 確認後：cascade（含 SK 海力士）→ 以 v0.21 正式版號重建本庫 → 刪 `SIF_DeployGW_Current_<年>` 別名。
+- **回復方案**：In 頁 `crd_pc_28` 改 0（或 revert 本 PR）即回到 v0.20 r1 的取法，數值逐格回到 v0.20 r1。
+
 ## v0.20 r1（2026-11-18；**原地修補、不升版**；`model/20261116_Siliconomics_v0.20.xlsx` 同檔名重建；既有數值一律不變；決策 S51）
 
 - **A7 舊取法改名收尾**（PR #646 方案）：Coord 頁 A 節 `cur` 列標籤「現行基準（原始 × 現行係數＝v0.18 取法）」改為「舊取法（原始 × 情境 B 顆數係數；非基準）」，B 節 `res`、C 節 `chg` 列標籤同步；Interface 新增 E2 節 `SIF_DeployGW_LegacyS33_2026–2029`（值同 `Current`），E 節 `SIF_DeployGW_Current_<年>` 標籤改「相容別名，下一版刪除」；狀態檔 `legacy_s33` 讀新名。

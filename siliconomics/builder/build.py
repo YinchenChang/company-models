@@ -604,13 +604,16 @@ def main():
                                                                       f'{R_("hs_lo", col)}<>{R_("hs", col)},{R_("hs_hi", col)}<>{R_("hs", col)}),1,0)'), "0",
            note="任一層的區間端點與基準值落在門檻（含緩衝區）兩側 → 狀態不同 → 待定：維持現行基準、標對帳中、個股並列兩讀數，下次重判再定")
         co("st", "狀態（甲／乙／丙／待定）", lambda y, col, yy: f'=IF({R_("pend", col)}=1,"待定",{R_("st0", col)})', "@", fill=KEY, bold=True)
-        co("lead", "由誰定基準", lambda y, col, yy: f'=IF({R_("st", col)}="待定","待定（維持現行；下次重判）",IF({R_("st", col)}="甲","兩層對帳（證據等級高者）",IF({R_("st", col)}="丙","Wattonomics（上游約束）",IF({R_("hw", col)}=1,"Wattonomics","Siliconomics"))))', "@")
+        co("lead", "由誰定基準", lambda y, col, yy: f'=IF({R_("st", col)}="待定",' + (f'IF(crd_pc_{yy}=1,"待定（水準＝連續法；下次重判）","待定（維持現行；下次重判）")' if (col != "C" and f"crd_pc_{yy}" in INROW) else '"待定（維持現行；下次重判）"') + f',IF({R_("st", col)}="甲","兩層對帳（證據等級高者）",IF({R_("st", col)}="丙","Wattonomics（上游約束）",IF({R_("hw", col)}=1,"Wattonomics","Siliconomics"))))', "@")
         co("up", "上游定基準（丙，或 Wattonomics 有證據的乙；待定＝0；1／0）", lambda y, col, yy: f'=IF(OR({R_("st", col)}="丙",AND({R_("st", col)}="乙",{R_("hw", col)}=1)),1,0)', "0")
         co("res", "甲狀態殘差（舊取法 ÷ 換算值 − 1；容差 rc_tol）", lambda y, col, yy: f"={R_('cur', col)}/{R_('dem', col)}-1", "+0.0%;-0.0%", note="只在甲狀態用；乙、丙狀態只供參考")
         COROW["_r"] += 1
         CO.cell(COROW["_r"], 1, "C. 依規則的基準").font = BOLD; COROW["_r"] += 1
         co("use", "改用換算值（上游定基準且覆蓋已補齊；1／0）", lambda y, col, yy: f"=IF(AND({R_('up', col)}=1,crd_cov_done=1),1,0)", "0")
         PV = {"D": "C", "E": "D", "F": "E"}   # 前一年欄
+        # v0.21（三層對帳第二波 V1；Andy 2026-11-18 選首選「連續法往前延一年」）：In 頁 crd_pc_<yy>＝1 的待定年份，水準改用連續法
+        # （前一年基準 × 該年換算值 ÷ 前一年換算值）取代舊取法（原始 × 情境 B 顆數係數）；狀態仍為待定、仍標對帳中。目前只有 2028
+        PC = lambda col, yy: (f'AND(crd_pc_{yy}=1,{R_("st", col)}="待定")' if (col != "C" and f"crd_pc_{yy}" in INROW) else "FALSE")
         co("chain", "連續法（1／0；規則 v1.4）：上游定基準且前一年為待定、甲且維持現行，或前一年本身用連續法",
            lambda y, col, yy: "=0" if col == "C" else
            (f'=IF(AND({R_("use", col)}=1,OR({R_("st", PV[col])}="待定",AND({R_("st", PV[col])}="甲",{R_("use", PV[col])}=0),{PV[col]}{COROW["_r"]}=1)),1,0)'),
@@ -620,11 +623,13 @@ def main():
                                                     + '),1,0)'), "0",
            note="待定（v1.3）；上游定基準但覆蓋未補齊（C3 乙前提）；甲狀態殘差超出容差（待診斷）；連續法且水準取決於前一年待定（v1.4：水準等前一年的待定解決）")
         co("base", "基準部署 GW（依規則）", lambda y, col, yy: (f"=IF({R_('use', col)}=1,{R_('dem', col)},{R_('cur', col)})" if col == "C" else
-           f"=IF({R_('use', col)}=1,IF({R_('chain', col)}=1,{PV[col]}{COROW['_r']}*{R_('dem', col)}/{R_('dem', PV[col])},{R_('dem', col)}),{R_('cur', col)})"), fill=KEY, bold=True)
+           f"=IF({R_('use', col)}=1,IF({R_('chain', col)}=1,{PV[col]}{COROW['_r']}*{R_('dem', col)}/{R_('dem', PV[col])},{R_('dem', col)}),"
+           + (f"IF({PC(col, yy)},{PV[col]}{COROW['_r']}*{R_('dem', col)}/{R_('dem', PV[col])},{R_('cur', col)}))" if PC(col, yy) != "FALSE" else f"{R_('cur', col)})")),
+           fill=KEY, bold=True, note="v0.21：In 頁 crd_pc_<yy>＝1 的待定年份（2028）水準＝前一年基準 × 換算值成長率（連續法往前延一年），取代舊取法 × um28_B（0.8，無外部校準）")
         co("c0f", "C0 公司實績對帳超出容差（1／0；規則 v1.4.3 C0 第 8 點；讀 Recon 頁 F 節 NVIDIA 資料中心營收純實績、D 節市場層對帳點）", lambda y, col, yy: "=0", "0",
            note="任一層對公司實績的對帳點（純實績，只到最近已公布期間）兩讀數同號超出 ±15% → 1。甲年標示改「有條件一致」（不並列兩讀數）；非甲年標示不變但同樣登錄對帳單（baseline_status.json c0_fail／c0_recon_doc／c0_deadline）")
-        co("lab", "該年標示", lambda y, col, yy: f'=IF({R_("use", col)}=1,IF({R_("chain", col)}=1,IF({R_("flag", col)}=1,"連續法（前一年待定，對帳中）","連續法（換算值成長率）"),"改用換算值"),IF({R_("st", col)}="待定","待定（對帳中）",IF({R_("flag", col)}=1,"對帳中",IF({R_("st", col)}="甲",IF({R_("c0f", col)}=1,"有條件一致","一致"),"維持（本層有證據）"))))', "@", fill=KEY)
-        co("k", "基準係數 crd_k（＝基準 ÷ 供給側讀數；維持現行的年份＝現行係數）", lambda y, col, yy: f"=IF({R_('use', col)}=1,{R_('base', col)}/{R_('sup', col)},{R_('s33', col)})", "0.0000",
+        co("lab", "該年標示", lambda y, col, yy: f'=IF({R_("use", col)}=1,IF({R_("chain", col)}=1,IF({R_("flag", col)}=1,"連續法（前一年待定，對帳中）","連續法（換算值成長率）"),"改用換算值"),IF({R_("st", col)}="待定",' + (f'IF({PC(col, yy)},"待定（水準＝連續法，對帳中）","待定（對帳中）")' if PC(col, yy) != "FALSE" else '"待定（對帳中）"') + f',IF({R_("flag", col)}=1,"對帳中",IF({R_("st", col)}="甲",IF({R_("c0f", col)}=1,"有條件一致","一致"),"維持（本層有證據）"))))', "@", fill=KEY)
+        co("k", "基準係數 crd_k（＝基準 ÷ 供給側讀數；維持現行的年份＝現行係數）", lambda y, col, yy: f"=IF(OR({R_('use', col)}=1,{PC(col, yy)}),{R_('base', col)}/{R_('sup', col)},{R_('s33', col)})", "0.0000",
            note="基準鏈（Units、Deploy、Mkt、ABF、Rack、Equip、Cap）各年乘本列；Interface SIF_UnitsCoef_Base 隨之")
         for y, col in CC_.items():
             name(wb, f"crd_k_{y % 100}", f"Coord!${col}${COROW['k']}")
@@ -1921,6 +1926,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.21-trial（2026-11-18；會改值的草案，待 Andy 確認）：2028 待定年份的水準改用連續法往前延一年（In 頁 M32 crd_pc_28＝1）：2028 基準 42.23 → 45.07 GW（等同係數 0.854，取代無外部校準的 um28_B 0.8）、2029 連續法 42.68 → 45.55 GW；狀態不變（2028 待定、對帳中）。R4 橋接 r13、recon 快照 v0.21-trial。K1 須下游重建後自舉（SGOV_Errors 2 為預期，-trial）。決策 S52。", False),
         ("v0.20 r1（2026-11-18；原地修補、不升版、不改任何既有數值）：Coord 舊取法列改名、Interface 新增 SIF_DeployGW_LegacyS33_<年>（Current 為相容別名，下一版刪除）；顆數單位加註「封裝，非晶粒」；Recon G 節季節權重讀數（三個已完結會計年度 FY2024–FY2026；只顯示）；Coord D 節中間估計與衰減寫法（規則 v1.5 草案；權重未校準；只顯示）；In 頁 M31。決策 S51。", False),
         ("v0.20（2026-11-16）：改讀 Wattonomics v0.3.6（換算值 crd_x2 依 baseline_bridge.py 重算；Wattonomics 證據比例區間 WIF_Evidence_Lo_／Hi_ 讀入狀態判定）；規則 v1.4.3：Coord 頁新增 C0 實績對帳列（c0f），甲年實績不過標「有條件一致」（2026：NVIDIA 資料中心營收純實績 FY27 Q1＋Q2 對層級同期間 −26.8%），Interface SIF_RecoC0Fail_<年>；Recon B 節狀態改讀 Coord（刪「兩邊都不錨定」）、F 節改純實績主讀數（含指引的比值移參考列）、D 節第 1 市場 GPU／ASIC 晶片金額建立（已建模個股加總＋殘差＝市場值；Checks K11-gpu*；Interface SIF_GpuAsicMkt_Base、SIF_GpuAsicResid_Base）；In 頁 M6 新增 core_trn；TK_In 改 Tokenomics v22.0（本庫讀的值逐值不變）。基準值只因換算值機械性變動：2029 連續法 42.70 → 42.68 GW。決策 S50。", False),
         ("v0.19（2026-11-14）：依三層基準協調規則 v1.4 C3 決定基準（Andy 2026-11-14 13:06 確認 NVIDIA 試作後轉正式）：In 頁 M30（Wattonomics v0.3.2 換算值、兩層證據比例、cov_done＝1、上次判定）＋ Coord 頁（逐年狀態、由誰定基準、該年標示、依規則的基準與基準係數 crd_k）；基準鏈上的 S33 係數改讀 crd_k：2026 甲（一致）、2027–28 待定（維持現行 1／0.80，對帳中）、2029 丙＋連續法（0.85 → 0.710，對帳中）；部署 GW 2029 51.12 → 42.70。Interface E 節新增供給側／需求側讀數、另一側讀數、狀態與對帳中旗標。下游經 siliconomics/coef_rule.py 讀 um28_B／um29_B＝SIF_UnitsCoef_Base。對帳單：Drive 02-AI供應鏈/對帳/20261114_對帳單_Siliconomics基準對Wattonomics換算_2026-2029.md（r3，期限 2027-02-28）。", False),
