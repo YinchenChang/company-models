@@ -440,7 +440,7 @@ def coord_c0(wb, SIL):
             if v is None: continue
             C.cell(r, 2 + j, v).number_format = fmt
         C.cell(r, 6, src); r += 1
-    arow("Google TPU 市場顆數（情境 A 原始顆數；百萬顆）", [f"=PL!{c}{r_utpu}" for c in "DEFG"], f"{ver}：SIF_UnitsPlat_tpu，經台積電個股模型 v0.5.4 成品（tsmc/dist；該模型讀 Siliconomics v0.20）取得（In 頁 u_tpu_26–28、g29_tpu；唯讀）")
+    arow("Google TPU 市場顆數（情境 A 原始顆數；百萬顆）", [f"=PL!{c}{r_utpu}" for c in "DEFG"], f"{ver}：SIF_UnitsPlat_tpu，經台積電個股模型 v0.5.4 成品（tsmc/dist；該模型讀 Siliconomics v0.21）取得（In 頁 u_tpu_26–28、g29_tpu；唯讀）")
     arow("聯發科占 Google TPU 顆數份額", ["=mtk_tpu_26", "=mtk_tpu_27", "=mtk_tpu_28", "=mtk_tpu_28"], f"{ver}：SIF_mtk_tpu_26／27／28（In 頁 M7；CY2029 沿用 CY2028；Assumed）")
     arow("TPU 每顆核心售價（US$K）", ["=core_tpu"] * 4, f"{ver} SIF_core_tpu，經 Broadcom 個股模型 v0.5.7（avgo/dist）取得（In 頁 core_tpu；唯讀）", "0.0")
     arow("Wattonomics 錨定係數（只進 Sens 案例，不改基準）", [None] + [f"=wta_{y}" for y in (27, 28, 29)], f"{ver}：SIF_WTAnchor_Base（R4 比值＝Wattonomics ÷ 本庫推得上線 GW）；Wattonomics 現行版本 v0.3.2")
@@ -519,7 +519,7 @@ def coord_c0(wb, SIL):
     # ---- E ----
     C.cell(r, 1, "E. C0（實績）：公司實績 vs 層級隱含值（規則 v1.4.2 C0 第 2 點；Andy 11-14 17:40 固定規格；差距超過 ±15% 且兩讀數同號標「對帳中」）").font = BOLD
     R["E"] = r; r += 1
-    C.cell(r, 1, "比較方法：個股側只用公司已公布實績（月營收、季報；Verified）；層級側用 Siliconomics v0.20 同口徑隱含值。時差：層級值為日曆年 CY2026，聯發科會計年度＝日曆年；主讀數＝2026 年已公布期間累計實績 vs 層級 CY2026 × 已公布月數 ÷ 12；"
+    C.cell(r, 1, "比較方法：個股側只用公司已公布實績（月營收、季報；Verified）；層級側用 Siliconomics v0.21 同口徑隱含值。時差：層級值為日曆年 CY2026，聯發科會計年度＝日曆年；主讀數＝2026 年已公布期間累計實績 vs 層級 CY2026 × 已公布月數 ÷ 12；"
                  "第二讀數＝最近一季 × 4 vs 層級 CY2026。判定：兩讀數差距都超過 ±15% 且同號＝對帳中；只有一個超過＝時差邊界（參考）；都在內＝一致；公司側或層級側沒有同口徑值＝無可比實績（不以模型預測、指引或同源值補位）。"
                  "AI ASIC 營收：聯發科至今未揭露金額（首顆 ASIC 4Q26 才量產，線性時差近似也不適用：全年金額幾乎全落在 4Q），故公司側無實績；層級側隱含值＝TPU 顆數 × 聯發科份額 × 每顆營收（核心售價＋代購 HBM），"
                  "取「校準前」值（本模型以係數 k 把 FY2026 校準到公司資料中心說法，校準後的 CY2026 值與公司說法同值，屬同源、無檢驗力，不採用）。公司指引（4Q26 雲端 ASIC 25 億美元、2027 年目標）、賣方估計只列參考，不判定。")
@@ -546,11 +546,11 @@ def coord_c0(wb, SIL):
         C.cell(r, 6, src); r += 1
     row("聯發科 AI ASIC（雲端／資料中心）營收（US$B）", "無實績（未揭露）", "無實績（未揭露）", f"=PL!D{r_xraw}",
         f"公司側：1Q26–3Q26 沒有 AI ASIC 營收金額實績。3Q26 法說（2026-10-30）只說首顆 AI 加速器 ASIC 9 月開始出貨初期訂單、未給金額（出處網址見本頁下方輸入表與 Sources 頁）；4Q26 雲端 ASIC 營收預估 25 億美元是指引、不是實績。"
-        "層級側：PL 頁情境 A 區塊「AI ASIC 營收（未校準）」CY2026＝TPU 顆數 × 聯發科份額 × 每顆營收（Siliconomics v0.20 份額與顆數；每顆規格讀 Broadcom v0.5.7）。"
+        "層級側：PL 頁情境 A 區塊「AI ASIC 營收（未校準）」CY2026＝TPU 顆數 × 聯發科份額 × 每顆營收（Siliconomics v0.21 份額與顆數；每顆規格讀 Broadcom v0.5.7）。"
         "層級份額於 Siliconomics v0.3 取自本模型原值（同源，非獨立估計）。無可比實績：缺公司的 ASIC 營收揭露（最早 2027-01 月營收、2027-02 法說的 4Q26 實績）", "#,##0.00", 9)
     row("合併營收（NT$B；層級無聯發科合併營收）", f"=B{r_cum}", "=Q!E4*4", "無同口徑隱含值",
         "公司實績：1–10 月月營收累計 524.416 十億元（公司月營收公告，科技新報 2026-11-10；輸入區；Verified）；第二讀數＝3Q26 營收 168.057 × 4（Q 頁；7–9 月月營收合計，Verified）。"
-        "層級側：Siliconomics v0.20 沒有聯發科（或手機 SoC、智慧邊緣平台）的營收或份額，只有 ASIC 份額與市場顆數。無可比實績：缺層級的聯發科合併營收", "#,##0.0", 10)
+        "層級側：Siliconomics v0.21 沒有聯發科（或手機 SoC、智慧邊緣平台）的營收或份額，只有 ASIC 份額與市場顆數。無可比實績：缺層級的聯發科合併營收", "#,##0.0", 10)
     R["E_last"] = r - 1
     C.cell(r, 1, "參考（不判定）：公司 FY2026 資料中心 ASIC 指引 vs 層級隱含 CY2026（US$B）")
     C.cell(r, 2, "=dc26").number_format = "0.00"; C.cell(r, 3, "—"); C.cell(r, 4, f"=PL!D{r_xraw}").number_format = "0.00"

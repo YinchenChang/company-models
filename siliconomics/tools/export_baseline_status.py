@@ -9,6 +9,7 @@
 #   wattonomics_source_sha256、bridge（檔名、sha256、橋接當時讀的 Siliconomics 版本）。
 #   v0.20 r1（2026-11-18；工作單 W2-05B 的 Siliconomics 部分）：逐年 observations＝Coord 頁 D 節觀測數列（中間估計 mid i／ii／iii／lo／hi、衰減寫法 λ＝0／0.5／1），
 #   display_only＝true、rule＝"v1.5"（草案，待 Andy 核可）；不適用年份（非待定／非連續法）為 null。D 節不輸出 Interface 名稱（W2-05A），故本欄依 Coord 頁 A 欄鍵讀值；
+#   v0.21：逐年 pending_continuity（待定年份水準改用連續法，crd_pc_<yy>＝1）；該年不再列入 level_coefficients（基準鏈不讀 um<yy>_B）。
 #   只供顯示，個股不得讀（規則 v1.5 草案第 10 節第 15 項，check.py 由共用區另案實作）。legacy_s33 已可讀到新名 SIF_DeployGW_LegacyS33_<年>。
 import datetime, glob, hashlib, json, os, re, sys
 import openpyxl
@@ -88,12 +89,15 @@ def main():
             "converted": v(f"SIF_DeployGW_Demand_{y}"),
             "supply_side": v(f"SIF_DeployGW_Supply_{y}"),
             # 舊 S33 係數取法（v0.18 基準；只供對照，不是現行基準，見 README「欄位語義」）。優先讀語義明確的新名 SIF_DeployGW_LegacyS33_<年>（下一版新增），
-            # 沒有就讀舊名 SIF_DeployGW_Current_<年>；current_s33 保留一版作相容別名（無讀取者），之後刪除。
+            # 沒有就讀舊名 SIF_DeployGW_Current_<年>（v0.20 以前）。v0.21 起 Siliconomics 已刪除 Current 別名，current_s33 欄一併刪除（決策 S58）。
             "legacy_s33": v(f"SIF_DeployGW_LegacyS33_{y}" if f"SIF_DeployGW_LegacyS33_{y}" in wb.defined_names else f"SIF_DeployGW_Current_{y}"),
-            "current_s33": v(f"SIF_DeployGW_Current_{y}"),
+            # v0.21：產業基準註記（SIF_RecoNote_<年>；例：2027 年 NVIDIA 顆數為自建估計與區間、重估時點）；空白＝無
+            "note": (v(f"SIF_RecoNote_{y}") or None) if f"SIF_RecoNote_{y}" in wb.defined_names else None,
             "use_converted": bool(v(f"SIF_RecoUseConv_{y}")),
             "continuity": bool(v(f"SIF_RecoChain_{y}")) if f"SIF_RecoChain_{y}" in wb.defined_names else False,
             "reconciling": bool(v(f"SIF_RecoFlag_{y}")),
+            # v0.21（三層對帳第二波 V1）：待定年份的水準改用連續法（In 頁 crd_pc_<yy>＝1）；此時基準鏈不再讀 um<yy>_B
+            "pending_continuity": bool(st == "待定" and f"SIF_crd_pc_{yy}" in wb.defined_names and v(f"SIF_crd_pc_{yy}") == 1),
             "recon_doc": meta.get("recon_doc", {}).get(str(y)),
             "deadline": meta.get("deadline", {}).get(str(y)),
             "c0_fail": bool(v(f"SIF_RecoC0Fail_{y}")) if f"SIF_RecoC0Fail_{y}" in wb.defined_names else False,
@@ -114,7 +118,7 @@ def main():
         if o_ is not None:
             rec["observations"] = o_
         years[str(y)] = rec
-        if not rec["use_converted"] and y >= 2028:
+        if not rec["use_converted"] and not rec["pending_continuity"] and y >= 2028:
             coefs.append({"name": f"um{yy}_B（S33；經 crd_k_{yy} 帶入 {y} 基準）", "year": y, "tag": "Assumed",
                           "note": "覆蓋未補齊、該年維持現行（對帳中）；改用換算值後不再在基準鏈上"})
     wsnap = json.load(open(os.path.join(root, "wattonomics", "data", open(os.path.join(root, "wattonomics", "data", "CURRENT_SNAPSHOT")).read().strip()), encoding="utf-8"))["names"]

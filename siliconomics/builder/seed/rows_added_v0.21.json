@@ -1,0 +1,47 @@
+[
+ {
+  "after_section_end": "M28.",
+  "section": "M28b. 每封裝 NVIDIA 資料中心營收（NVIDIA 認列口徑；v0.21；三層對帳條件 (1)；Andy 2026-11-18 21:20；決策 S57）。每 GW NVIDIA 內容（SIF_NVContentGW_GB200／VR200_26／VR200／RU）改＝本節 × Tokenomics 每 GW 封裝數；GB300、H100 仍為 M28 × IT capex",
+  "rows": [
+   {
+    "id": "ppr_bw",
+    "label": "Blackwell 每封裝 NVIDIA 資料中心營收（GB200／GB300；NVIDIA 認列口徑，含 NVIDIA 自賣網通）",
+    "unit": "千美元／封裝",
+    "lo": 43,
+    "base": 50,
+    "hi": 55,
+    "tag": "Derived",
+    "src": "docs/reports/20261118_三層對帳/rubin-price/20261118_Rubin單價與顆數更新.md 結論 2（同名 xlsx 價格!B3:D3）：四條證據線 B1（$150B ÷ 300 萬封裝，Interested-party 推得）、B2（黃仁勳「2025 年出貨 4–5 百萬顆」，二手）、B3（每 GW 250 億 ÷ GB300 密度）、B4（IREN 向 Dell 採購 $5.8B、200 MW IT，金額與 MW 為 Verified、NVIDIA 占比 Assumed）基準落在 4.5–5.1 萬、相差 < 15%，沿用 43／50／55。B1–B3 部分源自 NVIDIA 自己的營收或每 GW 說法，對 NVIDIA 實績有循環成分；只有 B4 獨立",
+    "src2": "口徑：NVIDIA 認列的資料中心營收（含 NVIDIA 自己賣的 InfiniBand／Spectrum-X 交換器、線纜光模組與軟體），與 M28 nvr_*（晶片內容橋接表：機架內 NVIDIA 內容，不含機架外 scale-out 網通）不同。用途：GB200 每 GW 內容（GB200 原為以 GB300 比例代入的 Analogy）；GB300 依同法 20.94／24.35／26.79 $B/GW，現值 24.88 落在區間內，不動"
+   },
+   {
+    "id": "ppr_rb",
+    "label": "Rubin（VR200）每封裝 NVIDIA 資料中心營收（NVIDIA 認列口徑，含 NVIDIA 自賣網通）",
+    "unit": "千美元／封裝",
+    "lo": 95.9079283887468,
+    "base": 114.08,
+    "hi": 139.341936468423,
+    "tag": "Derived",
+    "src": "docs/reports/20261118_三層對帳/rubin-price/20261118_Rubin單價與顆數更新.md 結論 1（同名 xlsx 價格!B19:D19；R1、R2、R3 重疊：低＝三者低值最大、高＝三者高值最小、基準＝三者基準中位數）：R1 NVIDIA 每 GW 說法比值（Kress／黃仁勳 2026-08-26 Q2 FY27 法說「$40 billion per gigawatt」，Interested-party）、R2 NVIDIA 機房密度示意（技術部落格 2026-08-24，Interested-party）、R3 Nscale 向 SEC 申報的公開說明書（S-1/A 2026-11-12，運算設備 $21–22B，Verified 公司估計）÷ Monarch 封裝數 × NVIDIA 占比（Assumed）",
+    "src2": "最弱輸入（照實寫）：(1) Nscale Monarch 460 MW 是 IT 還是總電力未驗證（Bloomberg 經轉載，公司說明書沒寫；若為總電力，R3 變 14.0–20.3 萬、自建 2027 顆數最可能值降到約 565 萬）；(2) Nebius 為反證（若其 GW 是 IT 口徑，每 GW NVIDIA 內容 250–300 億，單價偏低、顆數往 839 萬方向）；(3) R1、R2 兩條證據線共用 NVIDIA 自己的「每 GW 400 億」說法，不是兩個獨立證據。GW 口徑：NVIDIA 未定義，以 Blackwell 反推判斷較接近 IT（Derived，未驗證）"
+   }
+  ]
+ },
+ {
+  "after_section_end": "M31.",
+  "section": "M32. 待定年份的水準取法（v0.21；三層對帳第二波 V1／#661；首選方法由規則選出，Andy 2026-11-18 21:20 連同自建顆數一併同意；決策 S54）",
+  "rows": [
+   {
+    "id": "crd_pc_28",
+    "label": "2028 待定年份的水準改用連續法（1＝是：前一年基準 × 換算值成長率；0＝舊取法：原始 × um28_B）",
+    "unit": "旗標",
+    "lo": 0,
+    "base": 1,
+    "hi": 1,
+    "tag": "Assumed",
+    "src": "方法選擇（判斷類，不是 Derived）：依「證據到哪就做到哪」的方法選擇規則（CE）選出首選＝連續法往前延一年；次佳＝以 2026 年實績比率並列區間 0.73–0.96；第三＝維持 0.8 並標「無外部校準」。依據：docs/reports/20261118_三層對帳/analysis-K/20261118_R4_S33係數依據.md（0.8 無依據）；自建 2027 顆數下不採連續法會產生 2027→2028 +38.7% 的人為斷點（影響分析 2.1 節）",
+    "src2": "低＝0（舊取法，回復方案）；基準＝高＝1。狀態仍為待定、仍標對帳中；規則 v1.4.3 C3「待定維持現行」的修文另案（只改文字）"
+   }
+  ]
+ }
+]

@@ -628,8 +628,8 @@ def c0_actuals(wb, C, r, l3, rs_l, d5):
     a_rev = row2("　公司實績：營收（主：1–10 月累計；第二：3Q26 × 4）", f"=B{cum}", f"=B{q3}*4", "#,##0.0", "NT$B；合併營收", VERIF)
     a_rat = row2("　× AI 伺服器占營收比例", f"=B{ratio}", f"=B{ratio}", "0.0%", "見 4.2", "Derived／Interested-party")
     a_ai = row2("　＝ 公司實績側 AI 伺服器營收", f"=B{a_rev}*B{a_rat}", f"=C{a_rev}*C{a_rat}", "#,##0.0", "NT$B；主讀數為 10 個月累計；第二讀數為年化", "Derived（口徑換算）", True)
-    l_mk = row2("　層級：整櫃組裝市場 CY2026（Siliconomics 基準層）", f"=B{l3}", f"=B{l3}", "#,##0.0", "US$B；連到下方「讀取層級」第 (3) 項的 Siliconomics 層列", "Siliconomics v0.20；Derived")
-    l_sh = row2("　× 緯穎份額（Siliconomics 份額表）", f"=B{rs_l}", f"=B{rs_l}", "0.0%", "連到下方 (5) 的 Siliconomics 份額列（FY2026 尚未乘 ASIC 傾斜係數，傾斜＝1）", "Siliconomics v0.20；Derived（由本模型 FY2026 錨點校準，見提醒）")
+    l_mk = row2("　層級：整櫃組裝市場 CY2026（Siliconomics 基準層）", f"=B{l3}", f"=B{l3}", "#,##0.0", "US$B；連到下方「讀取層級」第 (3) 項的 Siliconomics 層列", "Siliconomics v0.21；Derived")
+    l_sh = row2("　× 緯穎份額（Siliconomics 份額表）", f"=B{rs_l}", f"=B{rs_l}", "0.0%", "連到下方 (5) 的 Siliconomics 份額列（FY2026 尚未乘 ASIC 傾斜係數，傾斜＝1）", "Siliconomics v0.21；Derived（由本模型 FY2026 錨點校準，見提醒）")
     l_fx = row2("　× 匯率（新台幣 ÷ 美元；In 頁 fx）", "=fx", "=fx", "0.0", "NT$/US$", "Derived（本模型 In 頁 fx）")
     l_fy = row2("　＝ 層級隱含 CY2026 全年 AI 伺服器營收", f"=B{l_mk}*B{l_sh}*B{l_fx}", f"=C{l_mk}*C{l_sh}*C{l_fx}", "#,##0.0", "NT$B；全年", "Derived", True)
     l_tf = row2("　× 期間係數（主：已公布月數 ÷ 12；第二：1）", f"=COUNT(B{m0}:B{m1})/12", "=1", "0.000", "線性時差近似（層級值為日曆年）", "Derived")
@@ -692,7 +692,7 @@ def coord_c0(wb, SIL, R):
         ("硬體股讀哪一層", "Siliconomics（零組件層；基準）", ver, "產業部署量、AI IT 資本支出、整櫃組裝市場、顆數係數、份額表、對帳中旗標（reader.py）", "下游只註明版本、不自行重估（專案規則第 3 條）"),
         ("AI IT 資本支出 SIF_AIITCapex_Base（情境 A 供給側；情境 B 以顆數係數縮放）", "US$B；見下表", "markets/network v0.2.3（Mkt!C27:F27）", "In 頁 itc_26–itc_29", "數值與 Siliconomics 基準相同（核對見下表）"),
         ("每 GW IT 資本支出 SIF_ITCapexPerGW、每 GW 機架數", "33.4／37.6／37.6／37.6 US$B", "markets/chip_bridge v0.2.3（Tokenomics v21.x 經橋接表）", "In 頁 itpg_gb、itpg_vr、racks_gb、racks_vr", "唯讀"),
-        ("情境顆數係數（2028、2029）", "A 1.0／1.0；B 0.8／0.71；C 0.6／0.6", "tsmc v0.5.4（In!E37:E42；Siliconomics v0.20 基準係數）", "In 頁 um28_A–um29_C", "情境 B＝Siliconomics 基準"),
+        ("情境顆數係數（2028、2029）", "A 1.0／1.0；B 0.8／0.71；C 0.6／0.6", "tsmc v0.5.4（In!E37:E42；Siliconomics v0.21 基準係數）", "In 頁 um28_A–um29_C", "情境 B＝Siliconomics 基準"),
         ("客戶 ASIC 顆數與全部加速器顆數 → ASIC 傾斜係數 SIF_AsmWyTilt", "1.00／" + "／".join(f"{N['SIF_AsmWyTilt'][i]:.2f}" for i in (1, 2, 3)), "tsmc v0.5.4（In!E5:E36）；" + ver, "In 頁 ua_26–ua_29、ut_26–ut_29、asic_mix", "傾斜係數放大緯穎有效份額（Trainium 等 ASIC 成長快於全部加速器）；「其他 ASIC」含非緯穎客戶（已知限制）"),
         ("ODM 整櫃價格、每 GW 價值", "4.0／6.75 US$M／架；每 GW 價值 2028、2029 ÷ 2027＝1.0", "quanta v0.4.8（In!D24:F27；Siliconomics M18）", "In 頁 odm_gb、odm_vr、vpg_28、vpg_29", "唯讀（緯穎假設與廣達相同的每 GW 整櫃價值）"),
         ("份額快照 asm_wysh_26、asm_wyrel_27–29、asm_wyam、asm_wyai_26", f"{SIL.V['asm_wysh_26']['base']:.4f}／1.0／1.0／0.95；ASIC 比重 90%；AI 占營收 48%", ver, "In 頁 rel_27–rel_29、asic_mix、ais_26；FY2026 有效份額由公司揭露比例校準", "公司模型以自身營收校準，Siliconomics 只存快照（快照註記「公司模型校準值」）"),

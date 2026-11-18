@@ -624,9 +624,9 @@ def c0_actuals(wb, C, r, lay):
     a_rev = row2("　公司實績：合併營收（主：1–10 月累計；第二：3Q26 × 4）", f"=B{cum}", f"=B{q3}*4", "#,##0.0", "NT$B；合併營收；主讀數為 10 個月累計、第二讀數為年化", VERIF, True)
     l_wm = row2("　層級：白牌 AI 乙太網路交換器市場 CY2026", f"=PL!D{lay['wmk']}", f"=PL!D{lay['wmk']}", "#,##0.00", "US$B；markets/network 市場層 × 乙太網路占比 × 白牌占比（後兩者為本模型 Assumed）", "markets/network v0.2.3；Derived／Assumed")
     l_sh = row2("　× 智邦白牌有效份額（FY2026 校準）", f"=PL!D{lay['sh0']}", f"=PL!D{lay['sh0']}", "0.0%", "＝本模型錨點 AI 交換器營收 ÷ 匯率 ÷ 白牌市場（同源）", "Derived（由本模型 FY2026 錨點校準）")
-    l_fx = row2("　× 匯率（新台幣 ÷ 美元；In 頁 fx）", "=fx", "=fx", "0.0", "NT$/US$", "Siliconomics v0.20（匯率基準值）")
+    l_fx = row2("　× 匯率（新台幣 ÷ 美元；In 頁 fx）", "=fx", "=fx", "0.0", "NT$/US$", "Siliconomics v0.21（匯率基準值）")
     l_sw = row2("　＝ 層級隱含 AI 交換器營收", f"=B{l_wm}*B{l_sh}*B{l_fx}", f"=C{l_wm}*C{l_sh}*C{l_fx}", "#,##0.0", "NT$B；全年", "Derived")
-    l_tr = row2("　層級：Trainium 顆數 CY2026", f"=PL!D{lay['trn']}", f"=PL!D{lay['trn']}", "0.00", "百萬顆；市場層，與 Siliconomics 相同（見下方讀取層級）", "markets/network v0.2.3＝Siliconomics v0.20；Assumed")
+    l_tr = row2("　層級：Trainium 顆數 CY2026", f"=PL!D{lay['trn']}", f"=PL!D{lay['trn']}", "0.00", "百萬顆；市場層，與 Siliconomics 相同（見下方讀取層級）", "markets/network v0.2.3＝Siliconomics v0.21；Assumed")
     l_vp = row2("　× 每顆 Trainium 的智邦營收（FY2026 校準）", f"=PL!D{lay['vpc0']}", f"=PL!D{lay['vpc0']}", "#,##0.0", "千新台幣／顆＝錨點網路應用產品營收 ÷ 顆數（同源）", "Derived（由本模型 FY2026 錨點校準）")
     l_np = row2("　＝ 層級隱含網路應用產品營收", f"=B{l_tr}*B{l_vp}", f"=C{l_tr}*C{l_vp}", "#,##0.0", "NT$B；全年", "Derived")
     l_na = row2("　＋ 非 AI 營收（本模型 FY2026）", f"=PL!D{lay['nai']}", f"=PL!D{lay['nai']}", "#,##0.0", "NT$B；FY2025 依公司揭露比例推得 × 成長率（層級無此量）", "Derived／Assumed（本模型）")
@@ -681,7 +681,7 @@ def coord_c0(wb, SIL, R):
         ("非 NVIDIA scale-up 乙太網路交換匣市場", "US$B；In 頁 su_26–su_29（公式）", NET + "（Units 頁顆數 × In 頁每顆內容）", "PL 白牌市場的一部分", "每顆內容與 Siliconomics c_TRN／c_ASIC／c_AMD 同值"),
         ("AWS Trainium 顆數", "／".join(f"{N['SIF_UnitsPlat_trn'][i]:.2f}" for i in (1, 2, 3, 4)) + " 百萬顆", NET + "（Units!B10:E10）＝" + ver + " SIF_UnitsPlat_trn", "In 頁 trn_26–trn_29；網路應用產品營收", "同源（見第 2 節）"),
         ("AI IT 資本支出（情境 B＝原始 × 顆數係數）", "／".join(f"{v:,.0f}" for v in N["SIF_AIITCapex_Base"]) + " US$B", NET + "（Mkt!C27:F27）；" + ver + " SIF_AIITCapex_Base", "In 頁 itc_26–itc_29（只用於 Units、Recon 對照）", "同源（見第 2 節）"),
-        ("情境顆數係數（2028、2029）", "A 1.0／1.0；B 0.8／0.71；C 0.6／0.6", "tsmc v0.5.4（In!E37:E42；Siliconomics v0.20 基準係數）", "In 頁 um28_A–um29_C", "情境 B＝Siliconomics 基準"),
+        ("情境顆數係數（2028、2029）", "A 1.0／1.0；B 0.8／0.71；C 0.6／0.6", "tsmc v0.5.4（In!E37:E42；Siliconomics v0.21 基準係數）", "In 頁 um28_A–um29_C", "情境 B＝Siliconomics 基準"),
         ("匯率（Siliconomics 基準值）", f"{SIL.base('fx_twd'):.1f} NT$/US$", ver, "In 頁 fx", "唯讀"),
         ("Wattonomics 錨定 SIF_WTAnchor_Base（wta_27–29）", wt, ver, "只用於 Sens「Wattonomics 錨定」案例，不進目標價", "Wattonomics 現行版本 v0.3.2（本模型不直接讀）"),
         ("對帳中旗標 SIF_RecoFlag_<yyyy>、SIF_DeployGW_AltRatio_<yyyy>", f"旗標 {flg}；比值 {alt}", ver, "C4 兩讀數（本頁上方）", "另一側讀數＝Wattonomics 換算的產業 GW；本模型交換器市場與 Trainium 顆數同乘比值")):

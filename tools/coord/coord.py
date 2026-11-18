@@ -107,9 +107,13 @@ def add_sheet(wb, folder, SIL):
     R["lab_cur"] = r; ws.cell(r, 1, "目標價區標籤：現行"); ws.cell(r, 2, "現行基準讀數（Siliconomics 基準；橫幅主值）"); r += 1
     R["lab_alt"] = r; ws.cell(r, 1, "目標價區標籤：另一側"); ws.cell(r, 2, "另一側讀數（Wattonomics 換算的產業 GW）"); r += 1
     rr = ["TEXT(" + f"{'BCDE'[YEARS.index(y)]}{R['ratio']}" + ',"0.00")' for y in ys]
+    # Siliconomics v0.21 起（三層對帳條件 (3)）：產業基準註記（SIF_RecoNote_<年>；例「2027 年 NVIDIA 顆數為自建估計（區間 …），2027 年 2 月重估」）。
+    # 只取對帳中年份且有註記者；接在目標價區說明之後（HTML 估值章開頭），各家不必逐一手寫
+    bn = "；".join(t for t in (SIL.NAMES.get(f"SIF_RecoNote_{y}") or "" for y in ys) if t)
+    R["bnote"] = r; ws.cell(r, 1, "產業基準註記（Siliconomics SIF_RecoNote_<年>）"); ws.cell(r, 2, bn or "—"); r += 1
     R["note"] = r; ws.cell(r, 1, "目標價區說明")
     ws.cell(r, 2, f'="兩讀數只差產業部署 GW 一個輸入：{ys_txt} 另一側讀數為現行基準的 "&' + '&"／"&'.join(rr) +
-            '&" 倍（情境 B、C 的產業量同乘；情境 A＝供給側讀數不變），其他假設不變。個股不裁決哪一側正確，對帳在 Siliconomics 對帳單處理（期限 2027-02-28）；結案前兩個目標價並列。"'); r += 1
+            '&" 倍（情境 B、C 的產業量同乘；情境 A＝供給側讀數不變），其他假設不變。個股不裁決哪一側正確，對帳在 Siliconomics 對帳單處理（期限 2027-02-28）；結案前兩個目標價並列。"' + (f'&"產業基準註記："&B{R["bnote"]}&"。"' if bn else "")); r += 1
     if not any(re.match(r"^現價（", str(wb["Val"].cell(i, 1).value or "")) for i in range(1, wb["Val"].max_row + 1)):   # Val 頁沒有現價列（記憶體模型）：由加權目標價 ÷（1＋上檔空間）還原，供長條圖現價線
         R["px"] = r; ws.cell(r, 1, "現價（＝加權目標價 ÷（1＋上檔空間），Val 頁）"); ws.cell(r, 2, f"=B{R['tp']}/(1+B{R['up']})").number_format = "#,##0.00"; r += 1
     R["hero"] = r; ws.cell(r, 1, "橫幅揭露")
