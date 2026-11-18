@@ -2,7 +2,9 @@
 # 方向：Wattonomics 上線 GW →（C2 ② 時差與庫存反推）實體出貨 GW →（本庫實體／成本等值比）成本等值出貨 GW，
 #       與 Siliconomics 現行基準、原始顆數讀數（供給側）並排；差距拆 C2 三類；每年標 C3 狀態（門檻 50%、67%）。
 # 用法：python3 siliconomics/tools/baseline_bridge.py <輸出 xlsx>   之後以 LibreOffice 重算。本工具不改任何模型。
-import os, sys, datetime
+# 2026-11-18（三層對帳第二波 W2-02／W2-03／W2-04A；不改任何既有數值）：Bridge 頁在 x0 與 s0 之間新增「付款年 GW 交叉檢核」p1–p4（只檢核，不被任何既有列引用）；
+#   新增 Stock 頁（出貨到上線存量帳，A／B／C 三節，stk_2025 低／基準／高三組）與 Residual 頁（殘差帳骨架，歸因項讀 builder/seed/residual_items_v0.1.json）。
+import os, sys, json, datetime
 import openpyxl
 from openpyxl.styles import Font, PatternFill
 from openpyxl.utils import get_column_letter as CL
@@ -107,6 +109,16 @@ for y, (lo, b, hi, src) in {
         2028: (0.161, 0.236, 0.541, "同上（NVIDIA 採購承諾）"),
         2029: (0.030, 0.079, 0.181, "同上（NVIDIA FY29、FY30 採購承諾）")}.items():
     inp(f"scov_{y}", "Siliconomics 證據比例（基準值中由實績、已簽約支撐的比例）", "比", y, lo, b, hi, "Assumed", src)
+# W2-02 付款年 GW 交叉檢核用輸入（只檢核；口徑待確認，見 Bridge 頁 p 列說明）
+_itpg = cells(S, "SIF_ITCapexPerGW")  # 2026–2029 四年
+for i, y in enumerate(YRS[:2]):
+    inp(f"wsp_{y}", "Wattonomics IT 支出合計（WIF_Spend_it_sum）", "十億美元", y, None, cells(W, f"WIF_Spend_it_sum_{y}")[0], None, "Derived",
+        f"{wt_f} WIF_Spend_it_sum_{y}（口徑待確認（查核中）：是否為付款年口徑、是否含非 AI 與非 NVIDIA 持有成本比換算）")
+    inp(f"itpg_{y}", "Siliconomics 每 GW IT 資本支出", "十億美元／GW", y, None, _itpg[i], None, "Derived",
+        f"{sil_f} SIF_ITCapexPerGW（四年值取第 {i + 1} 個；與 Siliconomics 成本等值 GW 同一分母）")
+# W2-03 2025 年底已出貨未上線存量（實體 GW）。寫單者建議，chat 端 2026-11-18 採用：[Assumed]，基準＝inv_on × ship_2025，低／高用 inv_on 的 5%／20%
+inp("stk_2025", "2025 年底已出貨未上線存量（實體 GW）", "GW", 2025, "=inv_on_lo*ship_2025", "=inv_on*ship_2025", "=inv_on_hi*ship_2025", "Assumed",
+    "inv_on（低 5%／基準 10%／高 20%）× ship_2025；無外部實績可檢驗，三個值都要顯示、不得只用單點（W2-03；chat 端 2026-11-18 採寫單者建議）")
 for k, ref in N.items():
     wb.defined_names[k] = openpyxl.workbook.defined_name.DefinedName(k, attr_text=ref)
 for j, w in enumerate([12, 52, 6, 6, 8, 9, 8, 10, 110], 1):
@@ -166,8 +178,19 @@ row("x2", "換算值（補覆蓋）＝上游定基準時的基準", "s2 ÷ rt", 
 row("x2a", "換算值（不補覆蓋）", "s2a ÷ rt", lambda y: None if y == 2025 else f"={C(y)}{R['s2a']}/{C(y)}{R['rt']}")
 row("x0", "對照：上線 GW 直接換成本等值（不做時差反推）", "w4a ÷ rt", lambda y: None if y == 2025 else f"={C(y)}{R['w4a']}/{C(y)}{R['rt']}")
 br += 1
+B.cell(br, 1, "付款年 GW 交叉檢核（只檢核，不進 C2 拆解；r2 A5。Wattonomics 付款年 IT 支出 ÷ Siliconomics 每 GW IT 資本支出＝成本等值 GW）").font = BOLD; br += 1
+_p0 = br
+_OK = (2026, 2027)
+_PN = "；口徑待確認（查核中）：WIF_Spend_it_sum 是否付款年口徑、與 Siliconomics 分母是否重複換算（W2-02 待 chat 端判斷）。r2 A5 只要求 2026–2027，其餘年留空"
+row("p1", "付款年 GW（成本等值）＝WIF_Spend_it_sum ÷ SIF_ITCapexPerGW", "[Derived]，只供核對量級" + _PN,
+    lambda y: f"=wsp_{y}/itpg_{y}" if y in _OK else None, True)
+row("p2", "　p1 對換算值 x2 的差異％", "p1 ÷ x2 − 1" + _PN, lambda y: f"={C(y)}{_p0}/{C(y)}{R['x2']}-1" if y in _OK else None, fmt="0.0%")
+row("p3", "　p1 對供給側讀數 s0r 的差異％", "p1 ÷ s0r − 1" + _PN, lambda y: f"={C(y)}{_p0}/{C(y)}{_p0 + 6}-1" if y in _OK else None, fmt="0.0%")
+row("p4", "　p1 對 Siliconomics 基準 s0 的差異％", "p1 ÷ s0 − 1" + _PN, lambda y: f"={C(y)}{_p0}/{C(y)}{_p0 + 5}-1" if y in _OK else None, fmt="0.0%")
+br += 1
 row("s0", "Siliconomics 現行基準（成本等值、出貨年）", "SIF_DeployGW_Base＝原始 × S33 係數", lambda y: None if y == 2025 else f"=sil_{y}", True, fill=KEY)
 row("s0r", "Siliconomics 原始顆數讀數（供給側讀數）", "現行基準 ÷ 係數", lambda y: None if y == 2025 else f"=sil_{y}/coef_{y}", True)
+assert R["s0"] == _p0 + 5 and R["s0r"] == _p0 + 6, "p3／p4 的前向參照列位置與 s0／s0r 不符"
 br += 1
 B.cell(br, 1, "C2 差距拆解（現行基準 − 上線直接換算 ＝ ① ＋ ② ＋ ③）").font = BOLD; br += 1
 row("g", "總差距", "s0 − x0", lambda y: None if y == 2025 else f"={C(y)}{R['s0']}-{C(y)}{R['x0']}", True)
@@ -246,6 +269,121 @@ trow("graw", "年增：原始顆數", "", lambda y: "" if y == 2026 else f"={CL(
 T.column_dimensions["A"].width = 6; T.column_dimensions["B"].width = 44; T.column_dimensions["C"].width = 50
 for y in YRS:
     T.column_dimensions[CL(TC[y])].width = 12
+
+# ---------------- Stock（W2-03：出貨到上線存量帳；單位＝實體 GW） ----------------
+K = wb.create_sheet("Stock")
+K["A1"] = ("Stock — 出貨到上線的存量帳（單位：實體 GW）。恆等式：期末存量＝期初存量＋出貨 − 上線；不假設時差或庫存比例推存量，不設上限、不截斷（可為負值，負值代表上線快於出貨、須檢討輸入）。"
+           "2025 年底存量 stk_2025 為 [Assumed]（低 inv_on 5%／基準 10%／高 20% × ship_2025，無外部實績），三組都顯示。"
+           "A 節＝需求側自洽（Bridge s2 平滑法實體出貨對 w4 上線）；B 節＝若 Siliconomics 的出貨都是真的（SIF_DeployGWPhys_Base 對 w4）；C 節＝現行單一係數 k 隱含的存量對照")
+K["A1"].font = BOLD
+for j, h in enumerate(["列", "項目", "說明", "2025"] + [str(y) for y in YRS], 1):
+    c = K.cell(3, j, h); c.font = BOLD; c.fill = HDR
+kr = 4; KR = {}
+SC = [("lo", "低"), ("b", "基準"), ("hi", "高")]
+SK = {"lo": "stk_2025_lo", "b": "stk_2025", "hi": "stk_2025_hi"}
+
+
+def krow(key, label, note, f, bold=False, fmt="0.00", fill=None):
+    global kr
+    K.cell(kr, 1, key); K.cell(kr, 2, label); K.cell(kr, 3, note)
+    for y in [2025] + YRS:
+        v = f(y)
+        if v is not None:
+            c = K.cell(kr, COL[y], v); c.number_format = fmt
+            if fill: c.fill = fill
+    if bold:
+        for j in (1, 2):
+            K.cell(kr, j).font = BOLD
+    KR[key] = kr; kr += 1
+
+
+def ksec(title):
+    global kr
+    K.cell(kr, 1, title).font = BOLD; kr += 1
+
+
+def stock_section(tag, title, ship_label, ship_note, ship_f):
+    ksec(title)
+    krow(tag + "_ship", ship_label, ship_note, lambda y: None if y == 2025 else ship_f(y), True)
+    krow(tag + "_on", "上線（Bridge w4，補覆蓋；Wattonomics 年新增上線 IT GW）", "實體 GW", lambda y: None if y == 2025 else f"=Bridge!{C(y)}{R['w4']}", True)
+    krow(tag + "_open", "期初存量（基準情境）", "＝上年期末（基準）", lambda y: None if y == 2025 else f"={CL(COL[y] - 1)}{kr + 2}")
+    for sk, sn in SC:
+        krow(f"{tag}_end_{sk}", f"期末存量（{sn}）＝期初＋出貨 − 上線", ("2025＝stk_2025 " + sn if sk == "b" else "同上，2025 起點用 stk_2025 " + sn),
+             lambda y, sk=sk: f"={SK[sk]}" if y == 2025 else f"={CL(COL[y] - 1)}{kr}+{C(y)}{KR[tag + '_ship']}-{C(y)}{KR[tag + '_on']}",
+             sk == "b", fill=KEY if sk == "b" else None)
+    krow(tag + "_chk", "　守恆檢查（應為 0）：期末 −（stk_2025＋累計出貨 − 累計上線），取三情境絕對值最大者", "累計式與逐年遞推獨立計算",
+         lambda y: None if y == 2025 else "=MAX(" + ",".join(
+             f"ABS({C(y)}{KR[tag + '_end_' + sk]}-({SK[sk]}+SUM($E{KR[tag + '_ship']}:{C(y)}{KR[tag + '_ship']})-SUM($E{KR[tag + '_on']}:{C(y)}{KR[tag + '_on']})))"
+             for sk, _ in SC) + ")", fmt="0.000000")
+    krow(tag + "_mo", "　期末存量（基準）÷ 當年出貨", "存量相當於幾年的出貨（只顯示）", lambda y: None if y == 2025 else f"={C(y)}{KR[tag + '_end_b']}/{C(y)}{KR[tag + '_ship']}", fmt="0.0%")
+
+
+stock_section("a", "A 節　需求側自洽（Bridge s2 平滑法實體出貨 對 w4 上線）", "實體出貨（Bridge s2，平滑法、補覆蓋）", "Wattonomics 上線反推，k＝lag_on÷12＋inv_on",
+              lambda y: f"=Bridge!{C(y)}{R['s2']}")
+kr += 1
+stock_section("b", "B 節　供給側出貨對需求側上線（若 Siliconomics 的出貨都是真的，Wattonomics 的上線速度意味著累積多少未上線存量）", "實體出貨（SIF_DeployGWPhys_Base，In 頁 phys）", "Siliconomics 現行基準的實體部署 GW（出貨年）",
+              lambda y: f"=phys_{y}")
+kr += 1
+ksec("C 節　單一係數對照（現行做法隱含的存量＝inv_on × 出貨 ＋ lag_on÷12 × 出貨＝k × 出貨）")
+krow("c_ka", "係數隱含存量（A 節出貨）", "k × s2；k 用基準（Wattonomics 權威，J3）", lambda y: None if y == 2025 else f"=Bridge!{C(y)}{R['k']}*{C(y)}{KR['a_ship']}")
+krow("c_kb", "係數隱含存量（B 節出貨）", "k × phys", lambda y: None if y == 2025 else f"=Bridge!{C(y)}{R['k']}*{C(y)}{KR['b_ship']}")
+for tag, nm in (("a", "A"), ("b", "B")):
+    for sk, sn in SC:
+        krow(f"c_r{tag}_{sk}", f"恆等式存量 ÷ 係數隱含存量（{nm} 節；stk_2025 {sn}）", "期末存量（恆等式）÷ 係數隱含存量；1＝與單一係數一致",
+             lambda y, tag=tag, sk=sk: None if y == 2025 else f"={C(y)}{KR[tag + '_end_' + sk]}/{C(y)}{KR['c_k' + tag]}", fmt="0.00", fill=KEY if sk == "b" else None)
+K.column_dimensions["A"].width = 10; K.column_dimensions["B"].width = 70; K.column_dimensions["C"].width = 44
+for y in [2025] + YRS:
+    K.column_dimensions[C(y)].width = 10
+
+# ---------------- Residual（W2-04A：殘差帳骨架；歸因項讀種子檔） ----------------
+SEED = os.path.join(ROOT, "siliconomics/builder/seed/residual_items_v0.1.json")
+seed = json.load(open(SEED, encoding="utf-8"))
+items = seed.get("items", [])
+GRADES = {"Verified", "Interested-party", "Analogy", "Assumed", "Derived"}
+for it in items:  # 查不到來源者不得列入；缺欄位直接報錯
+    miss = [k for k in ("name", "gw", "evidence_grade", "testable_actual", "source", "workorder") if not it.get(k)]
+    if miss or it["evidence_grade"] not in GRADES:
+        raise SystemExit(f"殘差歸因項不合格（缺 {miss} 或等級不在 {sorted(GRADES)}）：{it.get('name')}")
+D = wb.create_sheet("Residual")
+D["A1"] = (f"Residual — 殘差帳：Bridge ③ 殘差（g3）逐項歸因，最後一列「未歸因殘差」永遠顯示（不得設為 0 或隱藏）。種子檔 residual_items_v{seed.get('version')}.json 共 {len(items)} 項。"
+           "不設任何結案百分比門檻（r2 不採）；歸因項只可因有來源與可檢驗實績而列入，不得為了讓殘差變小而列入。單位：成本等值 GW")
+D["A1"].font = BOLD
+for j, h in enumerate(["列", "項目", "說明"] + [str(y) for y in YRS] + ["證據等級", "可檢驗的實績", "來源", "對應工作單"], 1):
+    c = D.cell(3, j, h); c.font = BOLD; c.fill = HDR
+dr = 4; DR = {}
+DC = {y: 4 + i for i, y in enumerate(YRS)}
+for j, y in enumerate(YRS):
+    pass
+D.cell(dr, 1, "g3"); D.cell(dr, 2, "③ 殘差（Bridge g3＝現行基準 − 換算值）").font = BOLD; D.cell(dr, 3, "分歧部分；正值＝Siliconomics 高於 Wattonomics 換算值")
+for y in YRS:
+    c = D.cell(dr, DC[y], f"=Bridge!{C(y)}{R['g3']}"); c.number_format = "0.00"; c.fill = KEY
+DR["g3"] = dr; dr += 1
+first_item = dr
+for n, it in enumerate(items, 1):
+    D.cell(dr, 1, f"i{n}"); D.cell(dr, 2, it["name"]); D.cell(dr, 3, "歸因項（種子檔）")
+    for y in YRS:
+        v = it["gw"].get(str(y))
+        if v is not None:
+            c = D.cell(dr, DC[y], v); c.number_format = "0.00"; c.font = BLUE
+    for j, k in zip((8, 9, 10, 11), ("evidence_grade", "testable_actual", "source", "workorder")):
+        D.cell(dr, j, it[k])
+    dr += 1
+last_item = dr - 1
+D.cell(dr, 1, "sum"); D.cell(dr, 2, "歸因項合計"); D.cell(dr, 3, "空清單時為 0")
+for y in YRS:
+    cl = CL(DC[y])
+    c = D.cell(dr, DC[y], f"=SUM({cl}{first_item}:{cl}{last_item})" if items else 0); c.number_format = "0.00"
+DR["sum"] = dr; dr += 1
+D.cell(dr, 1, "un"); D.cell(dr, 2, "未歸因殘差＝g3 − 歸因項合計").font = BOLD; D.cell(dr, 3, "永遠顯示；沒有結案門檻")
+for y in YRS:
+    cl = CL(DC[y])
+    c = D.cell(dr, DC[y], f"={cl}{DR['g3']}-{cl}{DR['sum']}"); c.number_format = "0.00"; c.fill = KEY; c.font = BOLD
+DR["un"] = dr; dr += 1
+D.column_dimensions["A"].width = 6; D.column_dimensions["B"].width = 46; D.column_dimensions["C"].width = 44
+for y in YRS:
+    D.column_dimensions[CL(DC[y])].width = 12
+for col, w in zip("HIJK", (14, 40, 40, 14)):
+    D.column_dimensions[col].width = w
 
 out = sys.argv[1]
 wb.save(out)
