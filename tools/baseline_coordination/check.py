@@ -336,7 +336,6 @@ SEM_ALLOW = {
 }
 # 例外：目前已知違規、待修（修完後這裡可刪；例外已不再需要時只列提醒，不算不符）
 SEM_BASE_EXC = {
-    "nvidia/coord_post.py": "基準指派在讀不到 SIF_DeployGW_Base 時退回讀 SIF_DeployGW_Current_<年>（本單另開 PR 改成報錯；該 PR 合併後可刪此例外）",
 }
 
 

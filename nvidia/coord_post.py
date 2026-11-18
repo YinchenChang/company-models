@@ -36,13 +36,16 @@ def load(SIL):
     if T is not None:
         uc = T["SIF_UnitsCoef_Base"]; uc = dict(zip(range(2029 - len(uc) + 1, 2030), uc))
         assert uc[2026] == 1 and uc[2027] == 1, uc   # 本模型 2026–27 顆數係數固定為 1（引擎）；不為 1 時須改引擎，交判斷
-        bl = T.get("SIF_DeployGW_Base")   # 現行基準＝本庫基準（cov_done＝1 起由規則決定；Current_<yyyy> 為改前的現行值，只作對照）
-        base = dict(zip(YEARS, bl)) if bl else {y: T[f"SIF_DeployGW_Current_{y}"] for y in YEARS}
+        bl = T.get("SIF_DeployGW_Base")   # 現行基準＝本庫基準（cov_done＝1 起由規則決定；Current_<yyyy> 為舊 S33 取法，只作「改前現行值」對照，不是基準）
+        # 三層對帳工作單 A7：讀不到 SIF_DeployGW_Base 就報錯，不再退回讀 SIF_DeployGW_Current_<年>（舊 S33 取法 ≠ 現行基準；2029 為 51.118 vs 42.680）
+        if not bl:
+            raise RuntimeError(f"{tag} 讀不到 SIF_DeployGW_Base：硬體個股基準只能讀它，不得退回 SIF_DeployGW_Current_<年>（舊 S33 取法，僅供對照）")
+        base = dict(zip(YEARS, bl))
         C = dict(base=base, prev={y: T.get(f"SIF_DeployGW_Current_{y}") for y in YEARS}, supply={y: T[f"SIF_DeployGW_Supply_{y}"] for y in YEARS}, alt={y: T[f"SIF_DeployGW_Alt_{y}"] for y in YEARS},
                  ratio={y: T[f"SIF_DeployGW_AltRatio_{y}"] for y in YEARS}, flag={y: int(T[f"SIF_RecoFlag_{y}"]) for y in YEARS},
                  rstatus={y: T.get(f"SIF_RecoStatus_{y}", "") for y in YEARS}, lead={y: T.get(f"SIF_RecoLead_{y}", "") for y in YEARS},
                  ucoef={2028: uc[2028], 2029: uc[2029]}, cov_done=T.get("SIF_crd_cov_done"), temp=False, mode=mode, status_txt=tag,
-                 src_base=f"{tag} SIF_DeployGW_Base" if bl else f"{tag} SIF_DeployGW_Current_<yyyy>", src_supply=f"{tag} SIF_DeployGW_Supply_<yyyy>", src_alt=f"{tag} SIF_DeployGW_Alt_<yyyy>", src_ratio=f"{tag} SIF_DeployGW_AltRatio_<yyyy>",
+                 src_base=f"{tag} SIF_DeployGW_Base", src_supply=f"{tag} SIF_DeployGW_Supply_<yyyy>", src_alt=f"{tag} SIF_DeployGW_Alt_<yyyy>", src_ratio=f"{tag} SIF_DeployGW_AltRatio_<yyyy>",
                  src_flag=f"{tag} SIF_RecoFlag_<yyyy>", src_ucoef=f"{tag} SIF_UnitsCoef_Base")
     else:
         C = dict(base=sb, prev=dict(sb), supply=None, src_supply="", alt={y: J["alt_gw"][str(y)] for y in YEARS}, ratio=None, flag={y: int(J["reco_flag"][str(y)]) for y in YEARS},
