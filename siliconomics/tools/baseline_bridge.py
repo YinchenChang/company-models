@@ -2,6 +2,7 @@
 # 方向：Wattonomics 上線 GW →（C2 ② 時差與庫存反推）實體出貨 GW →（本庫實體／成本等值比）成本等值出貨 GW，
 #       與 Siliconomics 現行基準、原始顆數讀數（供給側）並排；差距拆 C2 三類；每年標 C3 狀態（門檻 50%、67%）。
 # 用法：python3 siliconomics/tools/baseline_bridge.py <輸出 xlsx>   之後以 LibreOffice 重算。本工具不改任何模型。
+# 2026-11-18 r2 收尾：p1–p4 改標「上線年 GW 交叉檢核」（查核確認口徑）；新增 q1–q4 付款年讀數；s0 標籤改「Siliconomics 基準（SIF_DeployGW_Base）」；不改既有數值。
 # 2026-11-18（三層對帳第二波 W2-02／W2-03／W2-04A；不改任何既有數值）：Bridge 頁在 x0 與 s0 之間新增「付款年 GW 交叉檢核」p1–p4（只檢核，不被任何既有列引用）；
 #   新增 Stock 頁（出貨到上線存量帳，A／B／C 三節，stk_2025 低／基準／高三組）與 Residual 頁（殘差帳骨架，歸因項讀 builder/seed/residual_items_v0.1.json）。
 import os, sys, json, datetime
@@ -109,13 +110,23 @@ for y, (lo, b, hi, src) in {
         2028: (0.161, 0.236, 0.541, "同上（NVIDIA 採購承諾）"),
         2029: (0.030, 0.079, 0.181, "同上（NVIDIA FY29、FY30 採購承諾）")}.items():
     inp(f"scov_{y}", "Siliconomics 證據比例（基準值中由實績、已簽約支撐的比例）", "比", y, lo, b, hi, "Assumed", src)
-# W2-02 付款年 GW 交叉檢核用輸入（只檢核；口徑待確認，見 Bridge 頁 p 列說明）
+# W2-02 上線年 GW 交叉檢核用輸入（只檢核；查核確認為上線年口徑，見 Bridge 頁 p 列說明）
 _itpg = cells(S, "SIF_ITCapexPerGW")  # 2026–2029 四年
 for i, y in enumerate(YRS[:2]):
     inp(f"wsp_{y}", "Wattonomics IT 支出合計（WIF_Spend_it_sum）", "十億美元", y, None, cells(W, f"WIF_Spend_it_sum_{y}")[0], None, "Derived",
-        f"{wt_f} WIF_Spend_it_sum_{y}（口徑待確認（查核中）：是否為付款年口徑、是否含非 AI 與非 NVIDIA 持有成本比換算）")
+        f"{wt_f} WIF_Spend_it_sum_{y}（上線年口徑、不含非 AI、非 NVIDIA 已用 spend_nnv_hold 換算；wattonomics/docs/reports/20261118_W2_B_非NVIDIA廠房持有比口徑.md 第 4 節）")
     inp(f"itpg_{y}", "Siliconomics 每 GW IT 資本支出", "十億美元／GW", y, None, _itpg[i], None, "Derived",
         f"{sil_f} SIF_ITCapexPerGW（四年值取第 {i + 1} 個；與 Siliconomics 成本等值 GW 同一分母）")
+# W2-02 r2 付款年讀數用輸入：ShipGW（出貨年實體 GW；七家與 xAI 付款年、其餘鏡像反推）與成本等值換算係數 capfx（Compare 頁，無具名範圍，以鍵列＋年份欄讀取）
+_CP = W["Compare"]
+_hdr = next(r for r in range(1, _CP.max_row + 1) if _CP.cell(r, 2).value == "鍵" and _CP.cell(r, 4).value == "2023")
+_ycol = {int(_CP.cell(_hdr, c).value): c for c in range(4, _CP.max_column + 1) if str(_CP.cell(_hdr, c).value).isdigit()}
+_capfx_r = next(r for r in range(1, _CP.max_row + 1) if _CP.cell(r, 2).value == "capfx")
+for y in YRS[:2]:
+    inp(f"wship_{y}", "Wattonomics 出貨年實體 GW（WIF_Recon_NV_ShipGW；七家與 xAI 付款年，其餘由上線年鏡像反推）", "GW", y, None, cells(W, f"WIF_Recon_NV_ShipGW_{y}")[0], None, "Derived",
+        f"{wt_f} WIF_Recon_NV_ShipGW_{y}（Compare 第 F 節）")
+    inp(f"wcapfx_{y}", "Wattonomics 成本等值換算係數 capfx（每 IT GW IT 資本支出 ÷ SIF_ITCapexPerGW）", "x", y, None, _CP.cell(_capfx_r, _ycol[y]).value, None, "Derived",
+        f"{wt_f} Compare!{CL(_ycol[y])}{_capfx_r}（鍵 capfx；無具名範圍）")
 # W2-03 2025 年底已出貨未上線存量（實體 GW）。寫單者建議，chat 端 2026-11-18 採用：[Assumed]，基準＝inv_on × ship_2025，低／高用 inv_on 的 5%／20%
 inp("stk_2025", "2025 年底已出貨未上線存量（實體 GW）", "GW", 2025, "=inv_on_lo*ship_2025", "=inv_on*ship_2025", "=inv_on_hi*ship_2025", "Assumed",
     "inv_on（低 5%／基準 10%／高 20%）× ship_2025；無外部實績可檢驗，三個值都要顯示、不得只用單點（W2-03；chat 端 2026-11-18 採寫單者建議）")
@@ -178,19 +189,28 @@ row("x2", "換算值（補覆蓋）＝上游定基準時的基準", "s2 ÷ rt", 
 row("x2a", "換算值（不補覆蓋）", "s2a ÷ rt", lambda y: None if y == 2025 else f"={C(y)}{R['s2a']}/{C(y)}{R['rt']}")
 row("x0", "對照：上線 GW 直接換成本等值（不做時差反推）", "w4a ÷ rt", lambda y: None if y == 2025 else f"={C(y)}{R['w4a']}/{C(y)}{R['rt']}")
 br += 1
-B.cell(br, 1, "付款年 GW 交叉檢核（只檢核，不進 C2 拆解；r2 A5。Wattonomics 付款年 IT 支出 ÷ Siliconomics 每 GW IT 資本支出＝成本等值 GW）").font = BOLD; br += 1
+B.cell(br, 1, "上線年 GW 交叉檢核（成本等值；原工作單稱付款年，查核確認為上線年口徑）（只檢核，不進 C2 拆解；r2 A5。WIF_Spend_it_sum ÷ Siliconomics 每 GW IT 資本支出＝上線年成本等值 GW）").font = BOLD; br += 1
 _p0 = br
 _OK = (2026, 2027)
-_PN = "；口徑待確認（查核中）：WIF_Spend_it_sum 是否付款年口徑、與 Siliconomics 分母是否重複換算（W2-02 待 chat 端判斷）。r2 A5 只要求 2026–2027，其餘年留空"
-row("p1", "付款年 GW（成本等值）＝WIF_Spend_it_sum ÷ SIF_ITCapexPerGW", "[Derived]，只供核對量級" + _PN,
+_PN = "；查核結論（wattonomics/docs/reports/20261118_W2_B_非NVIDIA廠房持有比口徑.md 第 4 節）：WIF_Spend_it_sum 為上線年口徑、不含非 AI、非 NVIDIA 已以 spend_nnv_hold 換算，除以 SIF_ITCapexPerGW 不算重複換算。r2 A5 只要求 2026–2027，其餘年留空"
+row("p1", "上線年 GW 交叉檢核（成本等值；原工作單稱付款年，查核確認為上線年口徑）＝WIF_Spend_it_sum ÷ SIF_ITCapexPerGW", "[Derived]，只供核對量級" + _PN,
     lambda y: f"=wsp_{y}/itpg_{y}" if y in _OK else None, True)
-row("p2", "　p1 對換算值 x2 的差異％", "p1 ÷ x2 − 1" + _PN, lambda y: f"={C(y)}{_p0}/{C(y)}{R['x2']}-1" if y in _OK else None, fmt="0.0%")
-row("p3", "　p1 對供給側讀數 s0r 的差異％", "p1 ÷ s0r − 1" + _PN, lambda y: f"={C(y)}{_p0}/{C(y)}{_p0 + 6}-1" if y in _OK else None, fmt="0.0%")
-row("p4", "　p1 對 Siliconomics 基準 s0 的差異％", "p1 ÷ s0 − 1" + _PN, lambda y: f"={C(y)}{_p0}/{C(y)}{_p0 + 5}-1" if y in _OK else None, fmt="0.0%")
+row("p2", "　上線年 GW 交叉檢核（成本等值）p1 對換算值 x2 的差異％", "p1 ÷ x2 − 1" + _PN, lambda y: f"={C(y)}{_p0}/{C(y)}{R['x2']}-1" if y in _OK else None, fmt="0.0%")
+row("p3", "　上線年 GW 交叉檢核（成本等值）p1 對供給側讀數 s0r 的差異％", "p1 ÷ s0r − 1" + _PN, lambda y: f"={C(y)}{_p0}/{C(y)}{_p0 + 12}-1" if y in _OK else None, fmt="0.0%")
+row("p4", "　上線年 GW 交叉檢核（成本等值）p1 對 Siliconomics 基準 s0 的差異％", "p1 ÷ s0 − 1" + _PN, lambda y: f"={C(y)}{_p0}/{C(y)}{_p0 + 11}-1" if y in _OK else None, fmt="0.0%")
 br += 1
-row("s0", "Siliconomics 現行基準（成本等值、出貨年）", "SIF_DeployGW_Base＝原始 × S33 係數", lambda y: None if y == 2025 else f"=sil_{y}", True, fill=KEY)
+B.cell(br, 1, "付款年讀數（r2 收尾；出貨年實體 GW × capfx 再成本等值化；只填 2026、2027；只檢核，不被任何既有列引用）").font = BOLD; br += 1
+_q0 = br
+_QN = "；來源：WIF_Recon_NV_ShipGW × Compare capfx（＝每 IT GW IT 資本支出 ÷ SIF_ITCapexPerGW；查核報告第 4 節(1) 指定算法）。2026–2027 以外留空"
+row("q1", "付款年 GW（成本等值）＝WIF_Recon_NV_ShipGW × capfx", "[Derived]" + _QN, lambda y: f"=wship_{y}*wcapfx_{y}" if y in _OK else None, True)
+row("q2", "　付款年讀數 q1 對換算值 x2 的差異％", "q1 ÷ x2 − 1" + _QN, lambda y: f"={C(y)}{_q0}/{C(y)}{R['x2']}-1" if y in _OK else None, fmt="0.0%")
+row("q3", "　付款年讀數 q1 對供給側讀數 s0r 的差異％", "q1 ÷ s0r − 1" + _QN, lambda y: f"={C(y)}{_q0}/{C(y)}{_q0 + 6}-1" if y in _OK else None, fmt="0.0%")
+row("q4", "　付款年讀數 q1 對 Siliconomics 基準 s0 的差異％", "q1 ÷ s0 − 1" + _QN, lambda y: f"={C(y)}{_q0}/{C(y)}{_q0 + 5}-1" if y in _OK else None, fmt="0.0%")
+br += 1
+row("s0", "Siliconomics 基準（SIF_DeployGW_Base）（成本等值、出貨年）", "SIF_DeployGW_Base＝原始 × S33 係數", lambda y: None if y == 2025 else f"=sil_{y}", True, fill=KEY)
 row("s0r", "Siliconomics 原始顆數讀數（供給側讀數）", "現行基準 ÷ 係數", lambda y: None if y == 2025 else f"=sil_{y}/coef_{y}", True)
-assert R["s0"] == _p0 + 5 and R["s0r"] == _p0 + 6, "p3／p4 的前向參照列位置與 s0／s0r 不符"
+assert R["s0"] == _q0 + 5 and R["s0r"] == _q0 + 6, "q3／q4 的前向參照列位置與 s0／s0r 不符"
+assert R["q1"] == _q0 and R["p1"] == _p0 and R["s0"] == _p0 + 11, "p3／p4 前向參照列位置不符"
 br += 1
 B.cell(br, 1, "C2 差距拆解（現行基準 − 上線直接換算 ＝ ① ＋ ② ＋ ③）").font = BOLD; br += 1
 row("g", "總差距", "s0 − x0", lambda y: None if y == 2025 else f"={C(y)}{R['s0']}-{C(y)}{R['x0']}", True)
