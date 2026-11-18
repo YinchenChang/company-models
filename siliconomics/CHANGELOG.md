@@ -14,6 +14,7 @@
 - **Interface**：刪 `SIF_DeployGW_Current_<年>`（4）；新增 17（`SIF_RecoNote_<年>`、`SIF_ppr_*`、`SIF_crd_pc_28*`、`SIF_u_bw／rb_27_lo／_hi`）；改值 84（含 `SGOV_Warn`）。2026 年只有 `SIF_NVContentGW_VR200_26*` 與 `SIF_GpuAsicMkt_Base` 2026 欄改值。
 - **標示（條件 3）**：Coord 頁「產業基準註記」列 → `SIF_RecoNote_2027`，併入 `SIF_RecoLabel_2027`；`tools/coord/coord.py`、`nvidia/coord_post.py` 的 Coord 頁新增同名列並接到「目標價區說明」（HTML 估值章開頭）。
 - **工具**：R4 橋接 r13、recon 快照 v0.21、協調橋接 `docs/reports/20261118_協調橋接_v0.3.7r2.xlsx`（換算值 crd_x2 照設計仍讀前一版，未改）；`export_baseline_status.py` 刪 `current_s33`、加逐年 `note`、`pending_continuity`；K1 自舉（SK 海力士以暫用快照重建 → 本庫重建，SGOV_Errors 0）。
+- **NVIDIA 個股 v0.3.12**（chat 端裁示屬條件 (1)）：Blackwell、Rubin 模組售價改由 `SIF_ppr_*` 倒推（扣 CPU、LPDDR、匣級、每封裝網通），FY2028 情境 B 資料中心營收 415.7 → 491.6（main 583.2），目標價 283.30 → 329.77，評等不變；與 Recon F 635.0 的差額為 k_rec 0.769（報告 4.4）。
 - **下游**：見報告第 4 節（66 家目標價、11 家評等改變；cascade 收斂；sens、coord_alt、HTML 全部重產）。
 
 ## v0.20 r3（2026-11-18；**原地修補、不升版、不改任何數值**；`model/20261116_Siliconomics_v0.20.xlsx` 同檔名重建；決策 S53）

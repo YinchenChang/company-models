@@ -574,7 +574,7 @@ def write_c0(ws, wb, r, L):
     r += 1
     return {"F1": (F1a, F1b), "F1chk": RF_chk, "F2h": RF_h, "F2": (F2a, F2b), "n": RF_n, "sum": RF_s, "F3": (F3h, F3hh, F3a, F3b, rd1, rd2, rjd, RF3N, RF3S, RF_read, RF3K, RF3S1)}
 
-VER = "0.3.11"
+VER = "0.3.12"
 NOTE_VER = "0.3.8"   # In 頁既有說明欄的版本字樣維持 v0.3.8（本版只新增 Coord 頁 F 節）
 
 

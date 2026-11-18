@@ -1,9 +1,9 @@
 {
  "_note": "由 siliconomics/tools/export_baseline_status.py 自 20261118_Siliconomics_v0.21.xlsx 匯出；換算值與 Wattonomics 證據比例（含 v0.3.6 起的低／高區間）取自 Wattonomics v0.3.7（20261118_Wattonomics_v0.3.7.xlsx）；continuity＝規則 v1.4 連續法（基準＝前一年基準 × 換算值成長率，非換算值本身）",
  "source": "20261118_Siliconomics_v0.21.xlsx",
- "source_sha256": "da3254c448f89b139a4352de2969e81d15076b0123aea89b0035b49bb7f94eb0",
+ "source_sha256": "9b8cd8bb84543e0638087ce3e901b98190e55e3ecc0e3205ab0ae0058420b799",
  "method": "export_baseline_status.py：只讀 Siliconomics Interface 的 SIF_ 名稱（Coord 頁推導）、Wattonomics 快照 WIF_Recon_NV_*、協調橋接檔 Bridge 頁 g2c／g2p；判斷類欄位讀 builder/seed/coord_meta_v*.json；本程式不做判定或計算（規則 v1.4.3 C3）",
- "generated": "2026-11-18",
+ "generated": "2026-11-19",
  "wattonomics_version": "v0.3.7",
  "wattonomics_source_sha256": "646b3120e1e91d4764bbd1baac869af9980c71ce985f21161e4f0abc43edcd19",
  "bridge": {
