@@ -1,5 +1,7 @@
 # nvidia/ — NVIDIA（NVDA）個股模型 v0.3.11
 
+**2026-11-18 治理修補（不升版；三層對帳工作單 A7）：** `coord_post.py` 讀不到 `SIF_DeployGW_Base` 時改為報錯，不再退回讀 `SIF_DeployGW_Current_<年>`（舊 S33 取法，2029 為 51.118，≠ 現行基準 42.680）。快照有 Base 時行為與輸出不變；成品只有 build_id 與雜湊指紋（含 `coord_post.py` 雜湊）改變，xlsx 其餘 14,288 格與 HTML 其餘內容逐格相同。
+
 ## v0.3.11（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
 
 依據：`docs/workorders/20261116_px1113_現價與同業報價換11-13收盤.md`；價格只取 `markets/invest_map/data/closes_20261020_20261113.csv`。base＝v0.3.10。
