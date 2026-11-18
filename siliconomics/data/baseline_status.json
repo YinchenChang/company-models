@@ -1,7 +1,7 @@
 {
- "_note": "由 siliconomics/tools/export_baseline_status.py 自 20261116_Siliconomics_v0.20.xlsx 匯出；換算值與 Wattonomics 證據比例（含 v0.3.6 起的低／高區間）取自 Wattonomics v0.3.6（20261116_Wattonomics_v0.3.6.xlsx）；continuity＝規則 v1.4 連續法（基準＝前一年基準 × 換算值成長率，非換算值本身）",
- "source": "20261116_Siliconomics_v0.20.xlsx",
- "source_sha256": "68e9937a2cd44ac84c3d4e3985251f01feeb9d1a7ee84ab1313d318d0e12d31d",
+ "_note": "由 siliconomics/tools/export_baseline_status.py 自 20261118_Siliconomics_v0.21-trial2.xlsx 匯出；換算值與 Wattonomics 證據比例（含 v0.3.6 起的低／高區間）取自 Wattonomics v0.3.6（20261116_Wattonomics_v0.3.6.xlsx）；continuity＝規則 v1.4 連續法（基準＝前一年基準 × 換算值成長率，非換算值本身）",
+ "source": "20261118_Siliconomics_v0.21-trial2.xlsx",
+ "source_sha256": "8807d961e1376e792fbf8a878a9ffe483652a24f48cec409633836443c92329e",
  "method": "export_baseline_status.py：只讀 Siliconomics Interface 的 SIF_ 名稱（Coord 頁推導）、Wattonomics 快照 WIF_Recon_NV_*、協調橋接檔 Bridge 頁 g2c／g2p；判斷類欄位讀 builder/seed/coord_meta_v*.json；本程式不做判定或計算（規則 v1.4.3 C3）",
  "generated": "2026-11-18",
  "wattonomics_version": "v0.3.6",
@@ -91,9 +91,9 @@
    "lead": null,
    "label": "待定（對帳中）",
    "converted": 24.488,
-   "supply_side": 39.1637387089335,
-   "legacy_s33": 39.1637387089335,
-   "current_s33": 39.1637387089335,
+   "supply_side": 38.7392066828761,
+   "legacy_s33": 38.7392066828761,
+   "current_s33": 38.7392066828761,
    "use_converted": false,
    "continuity": false,
    "reconciling": true,
@@ -101,16 +101,16 @@
    "deadline": "2027-02-28",
    "c0_fail": false,
    "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
-   "sil_base": 39.1637387089335,
+   "sil_base": 38.7392066828761,
    "timing_cum": 4.40274400489573,
    "timing_cum_ratio": 0.112418889259197,
    "observations": {
     "mid": {
-     "i": 31.6344466756546,
-     "ii": 31.6344466756546,
-     "iii": 31.8258693544668,
-     "lo": 29.2540759151199,
-     "hi": 33.7718921393507
+     "i": 31.4277180368788,
+     "ii": 31.4277180368788,
+     "iii": 31.6136033414381,
+     "lo": 29.1162053857572,
+     "hi": 33.5033326059748
     },
     "decay": {
      "0": null,

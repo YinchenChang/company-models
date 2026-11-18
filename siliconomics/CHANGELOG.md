@@ -1,5 +1,13 @@
 # Siliconomics 變更紀錄
 
+## v0.21-trial2（2026-11-18；**會改值的草案，不合併前須 Andy 確認**；`model/20261118_Siliconomics_v0.21-trial2.xlsx`；決策 S53）
+
+- **Rubin Ultra 重複計算修正（三層對帳第二波 V2）**：In 頁 `u_rb_27` 的來源 Morgan Stanley 2027「Rubin 及 Rubin Ultra 接近 700 萬顆」（TechNews 2026-07-13 轉述原文，已讀）是兩個世代的合計；`u_ru_27` 的 0.3 是本庫時程假設（無外部來源），兩者相加重複計算 0.3 百萬顆（原始）。修正：Rubin 原始 **7.0 → 6.7**、Rubin Ultra 0.3 保留；HBM 截頂係數依決策 S48 重算 **0.9404 → 0.9537**（修正後原始 HBM 需求仍高於本庫自算供給 6.67 EB），2027 八個平台顆數同乘（In 頁 `u_*_27` 與來源欄）。
+  - 2027 基準部署 GW **39.16 → 38.74（−1.08%）**；實體部署 GW 43.68 → 43.32；2026、2028、2029 不變（2028 基準＝原始 2028 × 0.8，與 2027 無關；2029 連續法讀 2028）。
+  - 會變的 Interface 名稱與下游影響見 `docs/reports/20261118_v0.21-trial2_V2_RubinUltra重複計算_影響分析.md`。
+- R4 橋接 r13-V2、Recon 快照 `data/recon_snapshot_v0.21-trial2.json`。SGOV_Errors＝0（HBM 市場 2027 不變，K1 不受影響）。
+- **回復方案**：revert 本 PR（In 頁 `u_*_27` 回到 v0.20 r1 值）。
+
 ## v0.20 r1（2026-11-18；**原地修補、不升版**；`model/20261116_Siliconomics_v0.20.xlsx` 同檔名重建；既有數值一律不變；決策 S51）
 
 - **A7 舊取法改名收尾**（PR #646 方案）：Coord 頁 A 節 `cur` 列標籤「現行基準（原始 × 現行係數＝v0.18 取法）」改為「舊取法（原始 × 情境 B 顆數係數；非基準）」，B 節 `res`、C 節 `chg` 列標籤同步；Interface 新增 E2 節 `SIF_DeployGW_LegacyS33_2026–2029`（值同 `Current`），E 節 `SIF_DeployGW_Current_<年>` 標籤改「相容別名，下一版刪除」；狀態檔 `legacy_s33` 讀新名。
