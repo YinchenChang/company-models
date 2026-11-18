@@ -30,9 +30,12 @@ def _sil_r1_on():
 
 SIL_R1_ON = _sil_r1_on()
 # 獨立核對 R2：markets/chip_bridge 的分世代 NVIDIA 內容（只作備忘）
-CB_FILE = os.path.join(ROOT, "markets", "chip_bridge", "dist", "20261027_晶片內容橋接表_v0.2.2.xlsx")
-if not os.path.exists(CB_FILE):   # v0.3.1：v0.2.2 已由 v0.2.3 取代（main 7fd5ccb）；第 44、7 列同義、B–D 值相同；只作備忘，In 值以 --base 為準
-    CB_FILE = os.path.join(ROOT, "markets", "chip_bridge", "dist", "20261105_晶片內容橋接表_v0.2.3.xlsx")
+# v0.3.6 之後：橋接表成品每次升版都換檔名（v0.2.2→v0.2.3→v0.2.4），且 CI 要求 dist 只有一個 xlsx，
+# 因此不再寫死檔名，改取 dist 內唯一的 xlsx（只作備忘；第 44、7 列同義、B–D 值與舊版相同；In 值以 --base 為準）
+import glob
+_cb = sorted(glob.glob(os.path.join(ROOT, "markets", "chip_bridge", "dist", "*.xlsx")))
+assert len(_cb) == 1, f"markets/chip_bridge/dist 內應剛好一個 xlsx，實際 {len(_cb)} 個"
+CB_FILE = _cb[0]
 
 
 def _cb_nvc():
