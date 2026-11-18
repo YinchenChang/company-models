@@ -1,6 +1,6 @@
 # 三層基準協調檢查
 
-規則本文：`docs/plan/三層基準協調規則.md`（第 10 節列出檢查項目，現行 v1.4.3 共 12 項）。
+規則本文：`docs/plan/三層基準協調規則.md`（第 10 節列出檢查項目，現行 v1.4.3 共 12 項；2026-11-18 起另有程式內的 [13]、[14] 兩項，三層對帳工作單 A8、A7，尚未寫入規則本文第 10 節）。
 
 - **現況（v1.4.3）：** 已接 CI：`.github/workflows/coord-check.yml`（PR 與 push 到 main，路徑含 `wattonomics/**`、`siliconomics/**`、`tools/baseline_coordination/**`、`tools/coord/**`、規則本文）。同一 workflow 另跑 `wattonomics/tools/check.py`（讀活頁簿快取值，不需要 LibreOffice）。狀態檔 `siliconomics/data/baseline_status.json` 不存在時只印「未啟用」並正常結束。
 - **執行：** `python3 tools/baseline_coordination/check.py [--status 路徑] [--today YYYY-MM-DD]`。
@@ -22,4 +22,9 @@
   - [10] 只有 Lo 或只有 Hi → 不符；兩者皆缺 → 提醒，逐年列出。
   - [6] 只在 coord-check 被觸發時檢查；個股 HTML 變動也會觸發（paths 含 `*/dist/*.html`）。有條件一致的年份不要求兩讀數（C0 第 8 點例外於 C4）。
 - **Siliconomics v0.20 狀態檔（`export_baseline_status.py`）已輸出：** `wattonomics_version`（取自 `wattonomics/model/CURRENT`）、逐年 `c0_fail`（讀 `SIF_RecoC0Fail_<年>`）與 `c0_recon_doc`／`c0_deadline`／`c0_point`（`builder/seed/coord_meta_v0.20.json` 的 `c0`）、頂層 `c0_actuals.<年>`（值讀 Wattonomics 快照 `WIF_Recon_NV_*_<年>`，對帳單與期限讀 meta 的 `c0_actuals`）。
+- **2026-11-18 新增（三層對帳工作單 A1、A7、A8；不改任何基準數值）：**
+  - `years.<年>.timing_cum`（C2 ② 累計，**GW**）與 `timing_cum_ratio`（② 累計 ÷ 當年基準）：`export_baseline_status.py` 讀協調橋接檔 Bridge 頁 `g2c`、`g2p`（`siliconomics/docs/reports/*協調橋接_<Wattonomics 版本>*.xlsx` 最新一份）。[7] 因此四年皆有實際判定（現況 11.9／11.2／10.7／10.9%，皆 ≤ 15%）。找不到橋接檔時不寫欄位、[7] 仍印「未量測」。
+  - 頂層 `method`、`generated`、`source_sha256`（Siliconomics 活頁簿）、`wattonomics_source_sha256`、`bridge`（`file`、`sha256`、`in_title`、`note`）。逐年 `legacy_s33`（舊 S33 取法，僅供對照；`current_s33` 保留一版作別名）。
+  - [13] 來源雜湊一致：Siliconomics 與 Wattonomics 的 CURRENT 快照 `source.sha256` ＝ `model/` 內該檔實際 SHA-256；狀態檔 `source_sha256`、`wattonomics_source_sha256`、`bridge.sha256` 亦同；不一致＝不符。活頁簿重存（LibreOffice 重算）會改變位元組，故快照與狀態檔匯出須是定稿後的最後一步。
+  - [14] 欄位語義（`SIF_DeployGW_*` 五組，語義見 `siliconomics/README.md`「欄位語義」）：硬體個股（`hardware_companies` 資料夾 `*.py`）不得讀 `Current`、`Demand`（唯一登錄用途：`nvidia/coord_post.py` 的「改前現行值」對照欄與註解，`SEM_ALLOW`）；AST 檢查「目標名稱含 base 的指派」右側不得含 `Current／Supply／Demand／Alt／AltRatio`（`Supply`、`Alt`、`AltRatio` 只可並列顯示或作情境）。已知例外登錄於 `SEM_BASE_EXC`（現況：`nvidia/coord_post.py` 的退回路徑，以提醒列出；例外已不需要時也以提醒列出）。靜態檢查，擋不住間接使用。
 - 欄位定義若有調整，以本檔、程式與狀態檔匯出程式（`siliconomics/tools/export_baseline_status.py`）同一個 PR 更新。
