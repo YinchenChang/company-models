@@ -1,5 +1,12 @@
 # Siliconomics 變更紀錄
 
+## v0.20 r3（2026-11-18；**原地修補、不升版、不改任何數值**；`model/20261116_Siliconomics_v0.20.xlsx` 同檔名重建；決策 S53）
+
+- **2026 年對帳單裁定後改期限**（依 `docs/reports/20261118_三層對帳/adjudication/20261118_裁定紀錄_2026年對帳單.md`：證據打平，維持現行；下次重判 NVIDIA FY2027 第四季公布後）：種子檔 `builder/seed/coord_meta_v0.20.json` 的 `c0.2026.deadline` 2026-11-30 → **2027-02-28**；`recon_doc` 原路徑之後補記裁定結論與紀錄路徑。`point` 不改。種子檔與活頁簿不含 NVIDIA FY2027 第三季數值。
+- **活頁簿差異只有 8 格**：Recon!D94（C0 對帳單文字格）與 Decisions 新增一列 S53（A–G）。基準、`crd_k`、逐年狀態、`c0_fail`、Interface 既有名稱逐值不變。
+- **狀態檔**：只有 2026 年 `c0_deadline`、`c0_recon_doc`，以及 `source_sha256`（活頁簿重建）改變；快照只有 `source.sha256`。
+- **為何不升版**：同 S51。下游 70 個目標以 CI 同一流程重建，全部與 dist 逐格相同（0 個重產）。
+
 ## v0.20 r2（2026-11-18；**原地修補、不升版**；`model/20261116_Siliconomics_v0.20.xlsx` 同檔名重建；決策 S52；與 Wattonomics v0.3.7〔#657〕同一原子 PR）
 
 - **改讀 Wattonomics v0.3.7**（C4a：2028–29 證據比例區間）：In 頁 `crd_ew_28`、`crd_ew_29` 的低／高 0.518／0.518 → **0.454／0.545**、0.208／0.208 → **0.182／0.218**（基準不變）。Interface 只有 `SIF_crd_ew_28_lo／_hi`、`SIF_crd_ew_29_lo／_hi` 4 個名稱改值；既有名稱無新增、無刪除，`SIF_DeployGW_Base` 與其餘既有 Interface 名稱逐值不變。換算值 `crd_x2_26–29` 重算後與 v0.3.6 逐值相同（20.972／24.488／28.184／28.482）。

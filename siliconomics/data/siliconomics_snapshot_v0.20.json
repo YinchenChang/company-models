@@ -2,7 +2,7 @@
  "source": {
   "file": "20261116_Siliconomics_v0.20.xlsx",
   "version": "v0.20",
-  "sha256": "baca41602b00b2ed1f67d5debd99f9e00dd90108f16f2f5c67ef450534b69a87",
+  "sha256": "22915c35823262fd4811b4fd3b5f4104a13d5de70cf303a131946facf096f014",
   "note": "Siliconomics 快照；下游只讀本檔。SGOV_Errors 須為 0"
  },
  "scen": [
