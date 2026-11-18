@@ -325,15 +325,17 @@ def write_sheet(wb, C):
                         ("eps_B_2028", "EPS 情境 B FY2028", "0.00"), ("eps_B_2029", "EPS 情境 B FY2029", "0.00"), ("eps_B_2030", "EPS 情境 B FY2030", "0.00"),
                         ("dcf", "DCF 目標價（情境加權）", "#,##0.00"), ("comp", "Comparable 目標價（進加權）", "#,##0.00"), ("tp", "加權目標價", "#,##0.00"), ("up", "上檔空間", "0.0%")]:
         RE[k] = r; ws.cell(r, 1, lab)
-        ws.cell(r, 2, f"=B{RB[k]}"); ws.cell(r, 3, A["absorb"][k]); ws.cell(r, 4, f"=C{RB[k]}")
+        ws.cell(r, 2, f"=B{RB[k]}"); ws.cell(r, 3, A["absorb"][k] if A.get("absorb") else ("不可行" if k == "tp" else "—")); ws.cell(r, 4, f"=C{RB[k]}")
         ws.cell(r, 5, A["alt_absorb"][k] if A.get("alt_absorb") else ("不可行" if k == "tp" else "—"))
         for c in (2, 3, 4, 5): ws.cell(r, c).number_format = fmt
         for c in (3, 5): ws.cell(r, c).font = Font(color="7F7F7F")
         r += 1
     ws.cell(r, 1, "投資建議（五級固定規則）")
-    for c in ("BCDE" if A.get("alt_absorb") else "BCD"): ws[f"{c}{r}"] = "=" + REC(f"{c}{RE['up']}")
+    for c in "BCDE":
+        if (c == "C" and not A.get("absorb")) or (c == "E" and not A.get("alt_absorb")): continue
+        ws[f"{c}{r}"] = "=" + REC(f"{c}{RE['up']}")
     RE["rec"] = r; r += 1
-    ws.cell(r, 1, "加權目標價：全吸收相對等比例分配"); ws.cell(r, 3, f"=C{RE['tp']}/B{RE['tp']}-1").number_format = '+0.0%;-0.0%'; ws.cell(r, 5, f"=E{RE['tp']}/D{RE['tp']}-1" if A.get("alt_absorb") else "—").number_format = '+0.0%;-0.0%'; RE["d"] = r; r += 1
+    ws.cell(r, 1, "加權目標價：全吸收相對等比例分配"); ws.cell(r, 3, f"=C{RE['tp']}/B{RE['tp']}-1" if A.get("absorb") else "—").number_format = '+0.0%;-0.0%'; ws.cell(r, 5, f"=E{RE['tp']}/D{RE['tp']}-1" if A.get("alt_absorb") else "—").number_format = '+0.0%;-0.0%'; RE["d"] = r; r += 1
     for y in APPLY:   # 可行性：總量缺口 ÷ NVIDIA 原始顆數（情境 B）；> 100% 即 NVIDIA 全部顆數也不夠吸收
         um = "1" if y == 2027 else f"um{y % 100}_B"
         ws.cell(r, 1, f"總量缺口 ÷ NVIDIA 原始顆數（情境 B）CY{y}")

@@ -218,7 +218,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!B21"
+      "@Coord!B22"
      ]
     },
     {
@@ -291,13 +291,13 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!A98"
+      "@Coord!A99"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A99"
+      "@Coord!A100"
      ]
     },
     {
@@ -1059,8 +1059,8 @@
      "label_col": "A",
      "value_col": "B",
      "fmt": "sp1",
-     "title": "加權目標價相對基準：輸入取低值，變動最大的案例",
-     "rows": "1197,1198,1206,1207,1208"
+     "title": "加權目標價相對基準：輸入取低值，變動達兩位數百分比的案例",
+     "rows": "1206,1207"
     },
     {
      "type": "tornado",
@@ -1084,7 +1084,7 @@
      "value_col": "B",
      "fmt": "sp1",
      "title": "加權目標價相對基準：輸入取低值",
-     "rows": "1196,1199,1201,1202,1203,1205",
+     "rows": "1196,1197,1198,1199,1201,1202,1203,1205,1208",
      "collapse": true,
      "summary": "展開：加權目標價相對基準：輸入取低值，其餘案例"
     },
@@ -1179,9 +1179,20 @@
     },
     {
      "type": "tornado",
+     "title": "加權目標價相對基準的變動（變動達兩位數百分比的案例；一次改一個輸入，整本重算）",
+     "sheet": "Sens",
+     "rows": "1145",
+     "label_col": "A",
+     "value_col": "D",
+     "fmt": "sp1",
+     "collapse": true,
+     "summary": "展開：對照：FY2028 EPS 敏感度（一次動一個輸入）"
+    },
+    {
+     "type": "tornado",
      "title": "加權目標價相對基準的變動（未達兩位數百分比）",
      "sheet": "Sens",
-     "rows": "1135,1136,1137,1138,1140,1141,1142,1144,1145",
+     "rows": "1135,1136,1137,1138,1140,1141,1142,1144",
      "label_col": "A",
      "value_col": "D",
      "fmt": "sp1",
@@ -4246,13 +4257,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!A58"
-     ]
-    },
-    {
-     "type": "note",
-     "parts": [
-      "@Coord!A93"
+      "@Coord!A59"
      ]
     },
     {
@@ -4268,23 +4273,24 @@
      ]
     },
     {
+     "type": "note",
+     "parts": [
+      "@Coord!A96"
+     ]
+    },
+    {
      "type": "table",
-     "caption": "@Coord!A78",
+     "caption": "@Coord!A79",
      "head": [
-      "@Coord!A79",
-      "@Coord!B79",
-      "@Coord!C79"
+      "@Coord!A80",
+      "@Coord!B80",
+      "@Coord!C80"
      ],
      "rows": [
       [
-       "@Coord!A80",
-       "@Coord!B80|n1",
-       "@Coord!C80|n1"
-      ],
-      [
        "@Coord!A81",
-       "@Coord!B81|",
-       "@Coord!C81|"
+       "@Coord!B81|n1",
+       "@Coord!C81|n1"
       ],
       [
        "@Coord!A82",
@@ -4305,6 +4311,11 @@
        "@Coord!A85",
        "@Coord!B85|",
        "@Coord!C85|"
+      ],
+      [
+       "@Coord!A86",
+       "@Coord!B86|",
+       "@Coord!C86|"
       ]
      ]
     },
@@ -4314,16 +4325,11 @@
      "collapse": true,
      "summary": "展開：公司實績對照各列的單位、口徑、來源與證據等級",
      "head": [
-      "@Coord!A79",
-      "@Coord!F79",
-      "@Coord!G79"
+      "@Coord!A80",
+      "@Coord!F80",
+      "@Coord!G80"
      ],
      "rows": [
-      [
-       "@Coord!A80",
-       "@Coord!F80|",
-       "@Coord!G80|"
-      ],
       [
        "@Coord!A81",
        "@Coord!F81|",
@@ -4350,9 +4356,9 @@
        "@Coord!G85|"
       ],
       [
-       "@Coord!A88",
-       "@Coord!F88|",
-       "@Coord!G88|"
+       "@Coord!A86",
+       "@Coord!F86|",
+       "@Coord!G86|"
       ],
       [
        "@Coord!A89",
@@ -4363,27 +4369,26 @@
        "@Coord!A90",
        "@Coord!F90|",
        "@Coord!G90|"
+      ],
+      [
+       "@Coord!A91",
+       "@Coord!F91|",
+       "@Coord!G91|"
       ]
      ]
     },
     {
      "type": "table",
-     "caption": "@Coord!A61",
+     "caption": "@Coord!A62",
      "collapse": true,
      "summary": "展開：公司已公布實績與揭露（月營收、季報）的數值、來源與證據等級",
      "head": [
-      "@Coord!A62",
-      "@Coord!B62",
-      "@Coord!F62",
-      "@Coord!G62"
+      "@Coord!A63",
+      "@Coord!B63",
+      "@Coord!F63",
+      "@Coord!G63"
      ],
      "rows": [
-      [
-       "@Coord!A63",
-       "@Coord!B63|n3",
-       "@Coord!F63|",
-       "@Coord!G63|"
-      ],
       [
        "@Coord!A64",
        "@Coord!B64|n3",
@@ -4422,30 +4427,30 @@
       ],
       [
        "@Coord!A70",
-       "@Coord!B70|n0",
+       "@Coord!B70|n3",
        "@Coord!F70|",
        "@Coord!G70|"
+      ],
+      [
+       "@Coord!A71",
+       "@Coord!B71|n0",
+       "@Coord!F71|",
+       "@Coord!G71|"
       ]
      ]
     },
     {
      "type": "table",
-     "caption": "@Coord!A72",
+     "caption": "@Coord!A73",
      "collapse": true,
      "summary": "展開：層級隱含值（Siliconomics 現行版）的組成",
      "head": [
-      "@Coord!A73",
-      "@Coord!B73",
-      "@Coord!F73",
-      "@Coord!G73"
+      "@Coord!A74",
+      "@Coord!B74",
+      "@Coord!F74",
+      "@Coord!G74"
      ],
      "rows": [
-      [
-       "@Coord!A74",
-       "@Coord!B74|n2",
-       "@Coord!F74|",
-       "@Coord!G74|"
-      ],
       [
        "@Coord!A75",
        "@Coord!B75|n2",
@@ -4457,13 +4462,19 @@
        "@Coord!B76|n2",
        "@Coord!F76|",
        "@Coord!G76|"
+      ],
+      [
+       "@Coord!A77",
+       "@Coord!B77|n2",
+       "@Coord!F77|",
+       "@Coord!G77|"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A59"
+      "@Coord!A60"
      ]
     },
     {
@@ -4473,13 +4484,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!A26"
-     ]
-    },
-    {
-     "type": "note",
-     "parts": [
-      "@Coord!A52"
+      "@Coord!A27"
      ]
     },
     {
@@ -4497,7 +4502,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!A98"
+      "@Coord!A55"
      ]
     },
     {
@@ -4507,23 +4512,22 @@
      ]
     },
     {
+     "type": "note",
+     "parts": [
+      "@Coord!A100"
+     ]
+    },
+    {
      "type": "table",
      "caption": "讀取層級（同源，不判定）：本模型的產業量讀自 Siliconomics（份額由本公司模型校準後寫入），與層級值逐年對照的差距無檢驗力，不計入對帳中；下方「層級之間」列僅供參考",
      "head": [
-      "@Coord!A40",
-      "@Coord!B40",
-      "@Coord!C40",
-      "@Coord!D40",
-      "@Coord!E40"
+      "@Coord!A41",
+      "@Coord!B41",
+      "@Coord!C41",
+      "@Coord!D41",
+      "@Coord!E41"
      ],
      "rows": [
-      [
-       "@Coord!A41",
-       "@Coord!B41|n2",
-       "@Coord!C41|n2",
-       "@Coord!D41|n2",
-       "@Coord!E41|n2"
-      ],
       [
        "@Coord!A42",
        "@Coord!B42|n2",
@@ -4533,24 +4537,24 @@
       ],
       [
        "@Coord!A43",
-       "@Coord!B43|sp1",
-       "@Coord!C43|sp1",
-       "@Coord!D43|sp1",
-       "@Coord!E43|sp1"
+       "@Coord!B43|n2",
+       "@Coord!C43|n2",
+       "@Coord!D43|n2",
+       "@Coord!E43|n2"
       ],
       [
        "@Coord!A44",
-       "@Coord!B44|",
-       "@Coord!C44|",
-       "@Coord!D44|",
-       "@Coord!E44|"
+       "@Coord!B44|sp1",
+       "@Coord!C44|sp1",
+       "@Coord!D44|sp1",
+       "@Coord!E44|sp1"
       ],
       [
        "@Coord!A45",
-       "@Coord!B45|p1",
-       "@Coord!C45|p1",
-       "@Coord!D45|p1",
-       "@Coord!E45|p1"
+       "@Coord!B45|",
+       "@Coord!C45|",
+       "@Coord!D45|",
+       "@Coord!E45|"
       ],
       [
        "@Coord!A46",
@@ -4561,74 +4565,75 @@
       ],
       [
        "@Coord!A47",
-       "@Coord!B47|sp1",
-       "@Coord!C47|sp1",
-       "@Coord!D47|sp1",
-       "@Coord!E47|sp1"
+       "@Coord!B47|p1",
+       "@Coord!C47|p1",
+       "@Coord!D47|p1",
+       "@Coord!E47|p1"
       ],
       [
        "@Coord!A48",
-       "@Coord!B48|",
-       "@Coord!C48|",
-       "@Coord!D48|",
-       "@Coord!E48|"
+       "@Coord!B48|sp1",
+       "@Coord!C48|sp1",
+       "@Coord!D48|sp1",
+       "@Coord!E48|sp1"
+      ],
+      [
+       "@Coord!A49",
+       "@Coord!B49|",
+       "@Coord!C49|",
+       "@Coord!D49|",
+       "@Coord!E49|"
       ],
       {
-       "sub": "@Coord!A49"
+       "sub": "@Coord!A50"
       }
      ]
     },
     {
      "type": "table",
-     "caption": "@Coord!A39",
+     "caption": "@Coord!A40",
      "collapse": true,
      "summary": "展開：各列的單位、口徑、來源與證據等級",
      "head": [
-      "@Coord!A40",
-      "@Coord!F40",
-      "@Coord!G40"
+      "@Coord!A41",
+      "@Coord!F41",
+      "@Coord!G41"
      ],
      "rows": [
-      [
-       "@Coord!A41",
-       "@Coord!F41|",
-       "@Coord!G41|"
-      ],
       [
        "@Coord!A42",
        "@Coord!F42|",
        "@Coord!G42|"
       ],
       [
-       "@Coord!A45",
-       "@Coord!F45|",
-       "@Coord!G45|"
+       "@Coord!A43",
+       "@Coord!F43|",
+       "@Coord!G43|"
       ],
       [
        "@Coord!A46",
        "@Coord!F46|",
        "@Coord!G46|"
+      ],
+      [
+       "@Coord!A47",
+       "@Coord!F47|",
+       "@Coord!G47|"
       ]
      ]
     },
     {
      "type": "table",
-     "caption": "@Coord!A28",
+     "caption": "@Coord!A29",
      "collapse": true,
      "summary": "展開：本模型讀哪一層、哪一版、用在哪裡",
      "head": [
-      "@Coord!A29",
-      "@Coord!B29",
-      "@Coord!C29",
-      "@Coord!D29"
+      "@Coord!A30",
+      "@Coord!B30",
+      "@Coord!C30",
+      "@Coord!D30"
      ],
      "rows": [
-      [
-       "@Coord!A30",
-       "@Coord!B30|",
-       "@Coord!C30|",
-       "@Coord!D30|"
-      ],
       [
        "@Coord!A31",
        "@Coord!B31|",
@@ -4670,6 +4675,12 @@
        "@Coord!B37|",
        "@Coord!C37|",
        "@Coord!D37|"
+      ],
+      [
+       "@Coord!A38",
+       "@Coord!B38|",
+       "@Coord!C38|",
+       "@Coord!D38|"
       ]
      ]
     },
@@ -4998,7 +5009,7 @@
   "note": [
    "@README!A57",
    " ",
-   "@Coord!B22"
+   "@Coord!B23"
   ]
  },
  "layout": "v1.3"

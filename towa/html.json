@@ -269,7 +269,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!B21"
+      "@Coord!B22"
      ]
     },
     {
@@ -4365,12 +4365,6 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!A77"
-     ]
-    },
-    {
-     "type": "note",
-     "parts": [
       "@Coord!A78"
      ]
     },
@@ -4381,27 +4375,24 @@
      ]
     },
     {
+     "type": "note",
+     "parts": [
+      "@Coord!A80"
+     ]
+    },
+    {
      "type": "table",
      "caption": "營收：公司決算短信實績 vs 層級隱含值（層級沒有 TOWA 份額；份額沿用 FY2025 實績的兩列為假設，只列參考、不判定；已公布期間為上半年）",
      "head": [
-      "@Coord!A90",
-      "@Coord!B90",
-      "@Coord!C90",
-      "@Coord!D90",
-      "@Coord!E90",
-      "@Coord!F90",
-      "@Coord!G90"
+      "@Coord!A91",
+      "@Coord!B91",
+      "@Coord!C91",
+      "@Coord!D91",
+      "@Coord!E91",
+      "@Coord!F91",
+      "@Coord!G91"
      ],
      "rows": [
-      [
-       "@Coord!A91",
-       "@Coord!B91",
-       "@Coord!C91",
-       "@Coord!D91|n1",
-       "@Coord!E91|n1",
-       "@Coord!F91|sp1",
-       "@Coord!G91"
-      ],
       [
        "@Coord!A92",
        "@Coord!B92",
@@ -4426,22 +4417,31 @@
        "@Coord!C94",
        "@Coord!D94|n1",
        "@Coord!E94|n1",
-       "@Coord!F94|p1",
+       "@Coord!F94|sp1",
        "@Coord!G94"
+      ],
+      [
+       "@Coord!A95",
+       "@Coord!B95",
+       "@Coord!C95",
+       "@Coord!D95|n1",
+       "@Coord!E95|n1",
+       "@Coord!F95|p1",
+       "@Coord!G95"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A95"
+      "@Coord!A96"
      ]
     },
     {
      "type": "note",
      "parts": [
       "對帳中項目數：",
-      "@Coord!G96|n0",
+      "@Coord!G97|n0",
       "。"
      ]
     },
@@ -4451,22 +4451,14 @@
      "collapse": true,
      "summary": "展開：實績、層級值、換算參數與出處",
      "head": [
-      "@Coord!A80",
-      "@Coord!B80",
-      "@Coord!C80",
-      "@Coord!D80",
-      "@Coord!E80",
-      "@Coord!H80"
+      "@Coord!A81",
+      "@Coord!B81",
+      "@Coord!C81",
+      "@Coord!D81",
+      "@Coord!E81",
+      "@Coord!H81"
      ],
      "rows": [
-      [
-       "@Coord!A81",
-       "@Coord!B81",
-       "@Coord!C81",
-       "@Coord!D81|n1",
-       "@Coord!E81",
-       "@Coord!H81"
-      ],
       [
        "@Coord!A82",
        "@Coord!B82",
@@ -4479,7 +4471,7 @@
        "@Coord!A83",
        "@Coord!B83",
        "@Coord!C83",
-       "@Coord!D83|n0",
+       "@Coord!D83|n1",
        "@Coord!E83",
        "@Coord!H83"
       ],
@@ -4487,7 +4479,7 @@
        "@Coord!A84",
        "@Coord!B84",
        "@Coord!C84",
-       "@Coord!D84|n3",
+       "@Coord!D84|n0",
        "@Coord!E84",
        "@Coord!H84"
       ],
@@ -4503,7 +4495,7 @@
        "@Coord!A86",
        "@Coord!B86",
        "@Coord!C86",
-       "@Coord!D86|n1",
+       "@Coord!D86|n3",
        "@Coord!E86",
        "@Coord!H86"
       ],
@@ -4522,31 +4514,31 @@
        "@Coord!D88|n1",
        "@Coord!E88",
        "@Coord!H88"
+      ],
+      [
+       "@Coord!A89",
+       "@Coord!B89",
+       "@Coord!C89",
+       "@Coord!D89|n1",
+       "@Coord!E89",
+       "@Coord!H89"
       ]
      ]
     },
     {
      "type": "table",
-     "caption": "@Coord!A98",
+     "caption": "@Coord!A99",
      "collapse": true,
      "summary": "展開：營業利益、淨利、半導體事業營收與受注的實績（層級無可比量，列示供對照）",
      "head": [
-      "@Coord!A99",
-      "@Coord!B99",
-      "@Coord!C99",
-      "@Coord!D99",
-      "@Coord!E99",
-      "@Coord!G99"
+      "@Coord!A100",
+      "@Coord!B100",
+      "@Coord!C100",
+      "@Coord!D100",
+      "@Coord!E100",
+      "@Coord!G100"
      ],
      "rows": [
-      [
-       "@Coord!A100",
-       "@Coord!B100",
-       "@Coord!C100",
-       "@Coord!D100|n1",
-       "@Coord!E100|n1",
-       "@Coord!G100"
-      ],
       [
        "@Coord!A101",
        "@Coord!B101",
@@ -4570,6 +4562,14 @@
        "@Coord!D103|n1",
        "@Coord!E103|n1",
        "@Coord!G103"
+      ],
+      [
+       "@Coord!A104",
+       "@Coord!B104",
+       "@Coord!C104",
+       "@Coord!D104|n1",
+       "@Coord!E104|n1",
+       "@Coord!G104"
       ]
      ]
     },
@@ -4580,13 +4580,13 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!A39"
+      "@Coord!A40"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A40"
+      "@Coord!A41"
      ]
     },
     {
@@ -4595,24 +4595,15 @@
      "collapse": true,
      "summary": "展開：讀取層級核對（同源，不判定）",
      "head": [
-      "@Coord!A41",
-      "@Coord!B41",
-      "@Coord!C41",
-      "@Coord!D41",
-      "@Coord!E41",
-      "@Coord!F41",
-      "@Coord!G41"
+      "@Coord!A42",
+      "@Coord!B42",
+      "@Coord!C42",
+      "@Coord!D42",
+      "@Coord!E42",
+      "@Coord!F42",
+      "@Coord!G42"
      ],
      "rows": [
-      [
-       "@Coord!A42",
-       "@Coord!B42",
-       "@Coord!C42",
-       "@Coord!D42|n1",
-       "@Coord!E42|n1",
-       "@Coord!F42|sp1",
-       "@Coord!G42"
-      ],
       [
        "@Coord!A43",
        "@Coord!B43",
@@ -4689,8 +4680,8 @@
        "@Coord!A51",
        "@Coord!B51",
        "@Coord!C51",
-       "@Coord!D51|n3",
-       "@Coord!E51|n3",
+       "@Coord!D51|n1",
+       "@Coord!E51|n1",
        "@Coord!F51|sp1",
        "@Coord!G51"
       ],
@@ -4756,46 +4747,46 @@
        "@Coord!E58|n3",
        "@Coord!F58|sp1",
        "@Coord!G58"
+      ],
+      [
+       "@Coord!A59",
+       "@Coord!B59",
+       "@Coord!C59",
+       "@Coord!D59|n3",
+       "@Coord!E59|n3",
+       "@Coord!F59|sp1",
+       "@Coord!G59"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A60"
+      "@Coord!A61"
      ]
     },
     {
      "type": "h3",
-     "text": "@Coord!A61"
+     "text": "@Coord!A62"
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A62"
+      "@Coord!A63"
      ]
     },
     {
      "type": "table",
      "head": [
-      "@Coord!A63",
-      "@Coord!B63",
-      "@Coord!C63",
-      "@Coord!D63",
-      "@Coord!E63",
-      "@Coord!F63",
-      "@Coord!G63"
+      "@Coord!A64",
+      "@Coord!B64",
+      "@Coord!C64",
+      "@Coord!D64",
+      "@Coord!E64",
+      "@Coord!F64",
+      "@Coord!G64"
      ],
      "rows": [
-      [
-       "@Coord!A64",
-       "@Coord!B64",
-       "@Coord!C64",
-       "@Coord!D64|n3",
-       "@Coord!E64|n3",
-       "@Coord!F64|sp1",
-       "@Coord!G64"
-      ],
       [
        "@Coord!A65",
        "@Coord!B65",
@@ -4840,19 +4831,28 @@
        "@Coord!E69|n3",
        "@Coord!F69|sp1",
        "@Coord!G69"
+      ],
+      [
+       "@Coord!A70",
+       "@Coord!B70",
+       "@Coord!C70",
+       "@Coord!D70|n3",
+       "@Coord!E70|n3",
+       "@Coord!F70|sp1",
+       "@Coord!G70"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A73"
+      "@Coord!A74"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A74"
+      "@Coord!A75"
      ]
     },
     {
@@ -4866,11 +4866,6 @@
       "層級名稱與版本／口徑／證據等級／備註"
      ],
      "rows": [
-      [
-       "@Coord!A42",
-       "@Coord!C42",
-       "@Coord!H42"
-      ],
       [
        "@Coord!A43",
        "@Coord!C43",
@@ -4950,29 +4945,27 @@
        "@Coord!A58",
        "@Coord!C58",
        "@Coord!H58"
+      ],
+      [
+       "@Coord!A59",
+       "@Coord!C59",
+       "@Coord!H59"
       ]
      ]
     },
     {
      "type": "table",
-     "caption": "@Coord!A26",
+     "caption": "@Coord!A27",
      "head": [
-      "@Coord!A27",
-      "@Coord!B27",
-      "@Coord!C27",
-      "@Coord!D27",
-      "@Coord!E27"
+      "@Coord!A28",
+      "@Coord!B28",
+      "@Coord!C28",
+      "@Coord!D28",
+      "@Coord!E28"
      ],
      "collapse": true,
      "summary": "展開：本模型讀哪一層、哪一版（下游只註明版本、不自行重估）",
      "rows": [
-      [
-       "@Coord!A28",
-       "@Coord!B28",
-       "@Coord!C28",
-       "@Coord!D28",
-       "@Coord!E28"
-      ],
       [
        "@Coord!A29",
        "@Coord!B29",
@@ -5010,7 +5003,7 @@
       ],
       [
        "@Coord!A34",
-       "@Coord!B34|n3",
+       "@Coord!B34",
        "@Coord!C34",
        "@Coord!D34",
        "@Coord!E34"
@@ -5031,10 +5024,17 @@
       ],
       [
        "@Coord!A37",
-       "@Coord!B37",
+       "@Coord!B37|n3",
        "@Coord!C37",
        "@Coord!D37",
        "@Coord!E37"
+      ],
+      [
+       "@Coord!A38",
+       "@Coord!B38",
+       "@Coord!C38",
+       "@Coord!D38",
+       "@Coord!E38"
       ]
      ]
     },
@@ -5611,7 +5611,7 @@
   "note": [
    "@README!A53",
    " ",
-   "@Coord!B22"
+   "@Coord!B23"
   ]
  },
  "layout": "v1.3"
