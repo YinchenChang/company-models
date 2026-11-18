@@ -15,6 +15,8 @@ env0 = {k: v for k, v in os.environ.items() if k not in ("NV_OVERRIDE", "NV_V36_
 raw, rc = os.path.join(TMP, "raw"), os.path.join(TMP, "rc")
 shutil.rmtree(TMP, ignore_errors=True); os.makedirs(raw); os.makedirs(rc)
 JOBS = [("base", "_noop=1"), ("alt", "_coord=1"), ("absorb", "_absorb=1")]   # 皆設覆寫（不跑展示層後處理）
+# 2026-11-18（Siliconomics v0.21；工程類，不改基準數值）：現行基準讀數的全吸收也先判可行性（各年 (1 − 情境 B 係數) ÷ NVIDIA 占原始顆數 ≤ 1）。
+# 自建 2027 顆數＋連續法使 2029 缺口 ÷ NVIDIA 原始顆數 > 1（1.17）：NVIDIA 顆數觸到下限 0，模型除以零（189 格錯誤）。不可行時不採該建置，Coord E 節標「不可行」
 # 另一側讀數＋全吸收：先以基準檔判斷可行性（各年 (1 − 情境 B 係數 × 比值) ÷ NVIDIA 占原始顆數 ≤ 1）；不可行時不建（NVIDIA 顆數 < 0，模型除以零）
 FEAS = None
 for nm, ov in JOBS:
@@ -43,6 +45,16 @@ def feas(nm):
         sh, co = next(iter(wb.defined_names[k].destinations)); return wb[sh][co.replace("$", "")].value
     return {y: (1 - (1 if y == 2027 else nv(f"um{y % 100}_B")) * nv(f"co_r_{y % 100}")) / nv(f"co_ns_{y % 100}") for y in CO.APPLY}
 FEAS = feas("base"); print("另一側讀數全吸收：缺口 ÷ NVIDIA 原始顆數", {y: round(v, 3) for y, v in FEAS.items()})
+
+
+def feas_cur(nm):
+    wb = openpyxl.load_workbook(os.path.join(rc, f"{nm}.xlsx"), data_only=True)
+    def nv(k):
+        sh, co = next(iter(wb.defined_names[k].destinations)); return wb[sh][co.replace("$", "")].value
+    return {y: (1 - (1 if y == 2027 else nv(f"um{y % 100}_B"))) / nv(f"co_ns_{y % 100}") for y in CO.APPLY}
+FEAS_CUR = feas_cur("base"); print("現行基準讀數全吸收：缺口 ÷ NVIDIA 原始顆數", {y: round(v, 3) for y, v in FEAS_CUR.items()})
+if max(FEAS_CUR.values()) > 1:
+    JOBS = [j for j in JOBS if j[0] != "absorb"]
 if max(FEAS.values()) <= 1:
     subprocess.run([sys.executable, os.path.join(HERE, "build_nvidia.py"), os.path.join(raw, "alt_absorb.xlsx")], check=True, env={**env0, "NV_OVERRIDE": "_coord=1;_absorb=1"}, stdout=subprocess.DEVNULL)
     subprocess.run(["soffice", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", rc, os.path.join(raw, "alt_absorb.xlsx")], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -52,7 +64,7 @@ assert all(e == 0 for _, _, e in RES.values()), {k: v[2] for k, v in RES.items()
 b, rb, _ = RES["base"]; a, ra, _ = RES["alt"]
 assert rb == ra
 out = {"_說明": "兩讀數與「總量缺口全由 NVIDIA 吸收」敏感度的整本重建快照（nvidia/coord_alt.py）；Coord 頁 B、E 節讀入", "ratio": ra,
-       "base": b, "alt": a, "absorb": RES["absorb"][0], "alt_absorb": RES["alt_absorb"][0] if "alt_absorb" in RES else None, "alt_absorb_gap": {str(y): v for y, v in FEAS.items()}}
+       "base": b, "alt": a, "absorb": RES["absorb"][0] if "absorb" in RES else None, "absorb_gap": {str(y): v for y, v in FEAS_CUR.items()}, "alt_absorb": RES["alt_absorb"][0] if "alt_absorb" in RES else None, "alt_absorb_gap": {str(y): v for y, v in FEAS.items()}}
 json.dump(out, open(os.path.join(HERE, "coord_alt.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 for k in ("tp", "dcf", "comp", "fwd", "up", "eps_B_2028", "eps_B_2029", "eps_B_2030", "rev_B_2028", "nvu_B_2028"):
-    print(f"{k:12s} 現行 {b[k]:10.4f}  另一側 {a[k]:10.4f}  吸收(現行) {out['absorb'][k]:10.4f}  吸收(另一側) {(out['alt_absorb'] or {}).get(k, float('nan')):10.4f}")
+    print(f"{k:12s} 現行 {b[k]:10.4f}  另一側 {a[k]:10.4f}  吸收(現行) {(out['absorb'] or {}).get(k, float('nan')):10.4f}  吸收(另一側) {(out['alt_absorb'] or {}).get(k, float('nan')):10.4f}")

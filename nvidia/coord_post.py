@@ -5,7 +5,7 @@
 #   write_sheet(wb, here)：新增 Coord 頁——兩讀數 GW、兩讀數目標價與評等、橫幅揭露文字、損益表年度標示（HTML 用）、快照一致性核對。
 #   另一側讀數的數值由 nvidia/coord_alt.py 整本重建（NV_OVERRIDE="_coord=1"：情境 B、C 於 CY2027 起產業量 × co_r（情境 A＝供給側讀數不縮放），其他輸入不變）後寫入 coord_alt.json。
 # 集中輸入：load()。Siliconomics 快照有 SIF_DeployGW_Demand_<yyyy>／SIF_RecoFlag_<yyyy> 時改讀快照；否則讀 coord_inputs.json 的暫值（標「暫值，待 Siliconomics 試作分支」）。
-import json, os
+import json, os, re
 from openpyxl.styles import Font
 from openpyxl.workbook.defined_name import DefinedName
 
@@ -36,12 +36,12 @@ def load(SIL):
     if T is not None:
         uc = T["SIF_UnitsCoef_Base"]; uc = dict(zip(range(2029 - len(uc) + 1, 2030), uc))
         assert uc[2026] == 1 and uc[2027] == 1, uc   # 本模型 2026–27 顆數係數固定為 1（引擎）；不為 1 時須改引擎，交判斷
-        bl = T.get("SIF_DeployGW_Base")   # 現行基準＝本庫基準（cov_done＝1 起由規則決定；Current_<yyyy> 為舊 S33 取法，只作「改前現行值」對照，不是基準）
+        bl = T.get("SIF_DeployGW_Base")   # 現行基準＝本庫基準（cov_done＝1 起由規則決定；LegacyS33_<yyyy>〔v0.20 以前名 Current_<yyyy>，Siliconomics v0.21 刪除〕為舊 S33 取法，只作「改前現行值」對照，不是基準）
         # 三層對帳工作單 A7：讀不到 SIF_DeployGW_Base 就報錯，不再退回讀 SIF_DeployGW_Current_<年>（舊 S33 取法 ≠ 現行基準；2029 為 51.118 vs 42.680）
         if not bl:
             raise RuntimeError(f"{tag} 讀不到 SIF_DeployGW_Base：硬體個股基準只能讀它，不得退回 SIF_DeployGW_Current_<年>（舊 S33 取法，僅供對照）")
         base = dict(zip(YEARS, bl))
-        C = dict(base=base, prev={y: T.get(f"SIF_DeployGW_Current_{y}") for y in YEARS}, supply={y: T[f"SIF_DeployGW_Supply_{y}"] for y in YEARS}, alt={y: T[f"SIF_DeployGW_Alt_{y}"] for y in YEARS},
+        C = dict(base=base, prev={y: T.get(f"SIF_DeployGW_LegacyS33_{y}", T.get(f"SIF_DeployGW_Current_{y}")) for y in YEARS}, supply={y: T[f"SIF_DeployGW_Supply_{y}"] for y in YEARS}, alt={y: T[f"SIF_DeployGW_Alt_{y}"] for y in YEARS},
                  ratio={y: T[f"SIF_DeployGW_AltRatio_{y}"] for y in YEARS}, flag={y: int(T[f"SIF_RecoFlag_{y}"]) for y in YEARS},
                  rstatus={y: T.get(f"SIF_RecoStatus_{y}", "") for y in YEARS}, lead={y: T.get(f"SIF_RecoLead_{y}", "") for y in YEARS},
                  ucoef={2028: uc[2028], 2029: uc[2029]}, cov_done=T.get("SIF_crd_cov_done"), temp=False, mode=mode, status_txt=tag,
@@ -64,7 +64,7 @@ def load(SIL):
 def extract(snap, branch, sha):
     """把 Siliconomics 試作分支快照摘錄進 coord_inputs.json（mode＝trial）。"""
     d = json.load(open(snap, encoding="utf-8")); N = d["names"]
-    keep = {k: v for k, v in N.items() if k == "SIF_DeployGW_Base" or k.startswith(("SIF_DeployGW_Supply_", "SIF_DeployGW_Demand_", "SIF_DeployGW_Current_", "SIF_DeployGW_Alt_", "SIF_DeployGW_AltRatio_",
+    keep = {k: v for k, v in N.items() if k == "SIF_DeployGW_Base" or k.startswith(("SIF_DeployGW_Supply_", "SIF_DeployGW_Demand_", "SIF_DeployGW_LegacyS33_", "SIF_DeployGW_Current_", "SIF_DeployGW_Alt_", "SIF_DeployGW_AltRatio_",
                                                          "SIF_RecoStatus_", "SIF_RecoLead_", "SIF_RecoLabel_", "SIF_RecoFlag_", "SIF_RecoUseConv_")) or k in ("SIF_UnitsCoef_Base", "SIF_crd_cov_done")}
     p = os.path.join(HERE, "coord_inputs.json"); J = json.load(open(p, encoding="utf-8"))
     J["mode"] = "trial"
@@ -228,7 +228,9 @@ def relabel(wb):
     IN = wb["In"]
     r = next(r for r in range(4, IN.max_row + 1) if IN.cell(r, 1).value == "um29_C")
     old = IN.cell(r, 9).value
-    assert ("×0.706（基準係數 0.85）" in str(old)) or ("基準係數 0.7" in str(old)), old   # v0.18 口徑或 v0.19 起 reader 口徑（Siliconomics v0.20：0.7097）
+    # v0.18 口徑或 v0.19 起 reader 口徑（Siliconomics v0.20：0.7097）。2026-11-18（工程類，不改值）：原只容許「基準係數 0.7」，
+    # 連續法使 2029 係數降到 0.7 以下（例：自建顆數試算 0.589）時建檔失敗；改為只檢查 reader 口徑的文字結構（基準係數 0.xxx）
+    assert ("×0.706（基準係數 0.85）" in str(old)) or re.search(r"基準係數 0\.\d", str(old)), old
     IN.cell(r, 9).value = ('="個股自訂情境 C：＝Siliconomics 基準 ×"&TEXT(um29_C/co_ucoef_29,"0.000")&"（基準係數 "&TEXT(co_ucoef_29,"0.000")&"，SIF_UnitsCoef_Base，2029 連續法；v0.3.8）；2029 產業 GW 相對另一側讀數（Wattonomics 換算值）"'
                            '&TEXT(co_gws_29*um29_C/co_gwa_29-1,"+0%;-0%")&"（現行基準 "&TEXT(co_gwb_29/co_gwa_29-1,"+0%;-0%")&"）。原說明（Siliconomics reader 產生）：' + str(old).replace('"', '""') + '"')
     n += 1
@@ -301,8 +303,12 @@ def write_sheet(wb, C):
     ws.cell(r, 2, f'=IF({anyf},"對帳中（"&B{RC["years"]}&" 產業 GW）：另一側讀數目標價 "&TEXT(C{RB["tp"]},"0.00")&" 美元（"&C{RB["rec"]}&"）"&IF(B{RB["same"]}="相同","，評等與現行基準讀數相同。","，與現行基準讀數（"&B{RB["rec"]}&"）評等不同。"),"")'); r += 1
     RC["lab_cur"] = r; ws.cell(r, 1, "目標價區標籤：現行基準讀數"); ws.cell(r, 2, "現行基準讀數（Siliconomics 基準；橫幅主值）"); r += 1
     RC["lab_alt"] = r; ws.cell(r, 1, "目標價區標籤：另一側讀數"); ws.cell(r, 2, '="另一側讀數（Wattonomics 換算的產業 GW"&IF(' + ("TRUE" if C["temp"] else "FALSE") + ',"；暫值","")&"）"'); r += 1
+    # Siliconomics v0.21 起（三層對帳條件 (3)）：產業基準註記（SIF_RecoNote_<年>），接在目標價區說明之後（HTML 估值章開頭）
+    import reader as _SIL   # Siliconomics 快照（與 build_nvidia 同一份）
+    _bn = "；".join(t for t in (_SIL.NAMES.get(f"SIF_RecoNote_{y}") or "" for y in YEARS if int(C["flag"].get(y, 0)) == 1) if t)
+    RC["bnote"] = r; ws.cell(r, 1, "產業基準註記（Siliconomics SIF_RecoNote_<年>）"); ws.cell(r, 2, _bn or "—"); r += 1
     RC["note"] = r; ws.cell(r, 1, "目標價區說明")
-    ws.cell(r, 2, f'="兩讀數只差產業部署 GW 一個輸入：CY2027–CY2029 另一側讀數為現行基準的 "&TEXT(co_r_27,"0.00")&"／"&TEXT(co_r_28,"0.00")&"／"&TEXT(co_r_29,"0.00")&" 倍（情境 B、C 的運算顆數與網通營收同乘；情境 A＝供給側讀數不變），其他假設不變。個股不裁決哪一側正確，對帳在 Siliconomics 對帳單處理；結案前兩個目標價並列。"' + ('&"另一側讀數目前為暫值，待 Siliconomics 試作分支提供。"' if C["temp"] else ('&"兩讀數取自 Siliconomics 協調試作分支（未合併）。"' if C["mode"] == "trial" else '&"兩讀數取自 ' + C["status_txt"] + '（對帳單 Drive 02-AI供應鏈/對帳/，期限 2027-02-28）。"'))); r += 1
+    ws.cell(r, 2, (f'=B{RC["bnote"]}&"。"&' if _bn else "=") + f'"兩讀數只差產業部署 GW 一個輸入：CY2027–CY2029 另一側讀數為現行基準的 "&TEXT(co_r_27,"0.00")&"／"&TEXT(co_r_28,"0.00")&"／"&TEXT(co_r_29,"0.00")&" 倍（情境 B、C 的運算顆數與網通營收同乘；情境 A＝供給側讀數不變），其他假設不變。個股不裁決哪一側正確，對帳在 Siliconomics 對帳單處理；結案前兩個目標價並列。"' + ('&"另一側讀數目前為暫值，待 Siliconomics 試作分支提供。"' if C["temp"] else ('&"兩讀數取自 Siliconomics 協調試作分支（未合併）。"' if C["mode"] == "trial" else '&"兩讀數取自 ' + C["status_txt"] + '（對帳單 Drive 02-AI供應鏈/對帳/，期限 2027-02-28）。"'))); r += 1
     RC["pl"] = r; ws.cell(r, 1, "損益表年度標示（FY2027E–FY2031E）")
     for j, fy in enumerate(range(2027, 2032)):
         cy = next(y for y, fs in FY_OF.items() if fy in fs)
@@ -319,15 +325,17 @@ def write_sheet(wb, C):
                         ("eps_B_2028", "EPS 情境 B FY2028", "0.00"), ("eps_B_2029", "EPS 情境 B FY2029", "0.00"), ("eps_B_2030", "EPS 情境 B FY2030", "0.00"),
                         ("dcf", "DCF 目標價（情境加權）", "#,##0.00"), ("comp", "Comparable 目標價（進加權）", "#,##0.00"), ("tp", "加權目標價", "#,##0.00"), ("up", "上檔空間", "0.0%")]:
         RE[k] = r; ws.cell(r, 1, lab)
-        ws.cell(r, 2, f"=B{RB[k]}"); ws.cell(r, 3, A["absorb"][k]); ws.cell(r, 4, f"=C{RB[k]}")
+        ws.cell(r, 2, f"=B{RB[k]}"); ws.cell(r, 3, A["absorb"][k] if A.get("absorb") else ("不可行" if k == "tp" else "—")); ws.cell(r, 4, f"=C{RB[k]}")
         ws.cell(r, 5, A["alt_absorb"][k] if A.get("alt_absorb") else ("不可行" if k == "tp" else "—"))
         for c in (2, 3, 4, 5): ws.cell(r, c).number_format = fmt
         for c in (3, 5): ws.cell(r, c).font = Font(color="7F7F7F")
         r += 1
     ws.cell(r, 1, "投資建議（五級固定規則）")
-    for c in ("BCDE" if A.get("alt_absorb") else "BCD"): ws[f"{c}{r}"] = "=" + REC(f"{c}{RE['up']}")
+    for c in "BCDE":
+        if (c == "C" and not A.get("absorb")) or (c == "E" and not A.get("alt_absorb")): continue
+        ws[f"{c}{r}"] = "=" + REC(f"{c}{RE['up']}")
     RE["rec"] = r; r += 1
-    ws.cell(r, 1, "加權目標價：全吸收相對等比例分配"); ws.cell(r, 3, f"=C{RE['tp']}/B{RE['tp']}-1").number_format = '+0.0%;-0.0%'; ws.cell(r, 5, f"=E{RE['tp']}/D{RE['tp']}-1" if A.get("alt_absorb") else "—").number_format = '+0.0%;-0.0%'; RE["d"] = r; r += 1
+    ws.cell(r, 1, "加權目標價：全吸收相對等比例分配"); ws.cell(r, 3, f"=C{RE['tp']}/B{RE['tp']}-1" if A.get("absorb") else "—").number_format = '+0.0%;-0.0%'; ws.cell(r, 5, f"=E{RE['tp']}/D{RE['tp']}-1" if A.get("alt_absorb") else "—").number_format = '+0.0%;-0.0%'; RE["d"] = r; r += 1
     for y in APPLY:   # 可行性：總量缺口 ÷ NVIDIA 原始顆數（情境 B）；> 100% 即 NVIDIA 全部顆數也不夠吸收
         um = "1" if y == 2027 else f"um{y % 100}_B"
         ws.cell(r, 1, f"總量缺口 ÷ NVIDIA 原始顆數（情境 B）CY{y}")
@@ -532,15 +540,16 @@ def write_c0(ws, wb, r, L):
     # 口徑換算與 n2 敏感度（獨立核對必修）
     r += 1
     ws.cell(r, 1, "口徑換算（層級隱含 vs 公司資料中心營收）"); RF3K = r
-    ws.cell(r, 2, "層級 n2（每 IT GW NVIDIA 營收）基準只含機架內 NVIDIA 硬體與殘差，不含 scale-out 網通、LPDDR、軟體與服務（晶片內容橋接表 v0.2.3 第 46–49 列）；層級含中國 H200 約 US$14.4B（約 3.2%），公司實績與指引不含中國運算；n1 為出貨年，與認列可能差約一季（Assumed）。"
+    ws.cell(r, 2, "層級 n2（每 IT GW NVIDIA 營收）：GB300 部分（2026 年占 1 − vr26）只含機架內 NVIDIA 硬體與殘差，不含 scale-out 網通、LPDDR、軟體與服務（晶片內容橋接表 v0.2.3 第 46–49 列）；"
+                 "VR200 部分（占 vr26）自 Siliconomics v0.21 起為 NVIDIA 認列的資料中心營收口徑（每封裝營收 × Tokenomics 每 GW 封裝數，含 NVIDIA 自賣網通；Siliconomics 決策 S57）；層級含中國 H200 約 US$14.4B（約 3.2%），公司實績與指引不含中國運算；n1 為出貨年，與認列可能差約一季（Assumed）。"
                  "補上網通與軟體會使層級更高、差距更大，所以口徑差不能解釋缺口；判定真正敏感的是 n2 取低值或高值（下表）。"); r += 1
-    ws.cell(r, 1, "n2 敏感度（只換每 IT GW 內容；數值由 Siliconomics v0.20 快照 SIF_NVContentGW_GB300、SIF_NVContentGW_VR200_26 的低／基準／高值，依 SIF_vr26 2026 Rubin 占比混合；n1 與實績不變）").font = BOLD; RF3S1 = r; r += 1
+    ws.cell(r, 1, f"n2 敏感度（只換每 IT GW 內容；數值由 Siliconomics {V} 快照 SIF_NVContentGW_GB300、SIF_NVContentGW_VR200_26 的低／基準／高值，依 SIF_vr26 2026 Rubin 占比混合；n1 與實績不變）").font = BOLD; RF3S1 = r; r += 1
     for j, h in enumerate(["n2 取值", "每 IT GW 內容（混合，US$B／GW）", "層級隱含 CY2026（US$B）", "主讀數差距", "第二讀數差距", "判定"], 1): ws.cell(r, j, h).font = BOLD
     r += 1
     mx = N["SIF_vr26"]; mx = mx[1] if isinstance(mx, list) else mx
     mixv = lambda sfx: N["SIF_NVContentGW_GB300" + sfx] * (1 - mx) + N["SIF_NVContentGW_VR200_26" + sfx] * mx
     SENS = {}
-    for key, lab, sfx in (("lo", "低值（模組＋CPU＋NIC＋NVLink）", "_lo"), ("base", "基準（本表主判定）", ""), ("hi", "高值", "_hi")):
+    for key, lab, sfx in (("lo", "低值（GB300：模組＋CPU＋NIC＋NVLink；VR200：每封裝營收低值）", "_lo"), ("base", "基準（本表主判定）", ""), ("hi", "高值", "_hi")):
         SENS[key] = r
         ws.cell(r, 1, lab); ws.cell(r, 2, mixv(sfx)).number_format = "0.000"; ws.cell(r, 2).font = BLUE
         ws.cell(r, 3, f"=D{rim}*B{r}/B{SENS['base'] if key != 'base' else r}" if key == "base" else f"=D{rim}*B{r}/B{r + (1 if key == 'lo' else -1)}").number_format = "#,##0.0"
@@ -565,7 +574,7 @@ def write_c0(ws, wb, r, L):
     r += 1
     return {"F1": (F1a, F1b), "F1chk": RF_chk, "F2h": RF_h, "F2": (F2a, F2b), "n": RF_n, "sum": RF_s, "F3": (F3h, F3hh, F3a, F3b, rd1, rd2, rjd, RF3N, RF3S, RF_read, RF3K, RF3S1)}
 
-VER = "0.3.11"
+VER = "0.3.12"
 NOTE_VER = "0.3.8"   # In 頁既有說明欄的版本字樣維持 v0.3.8（本版只新增 Coord 頁 F 節）
 
 

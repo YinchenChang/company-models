@@ -327,7 +327,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!B21"
+      "@Coord!B22"
      ]
     },
     {
@@ -1817,13 +1817,13 @@
       "@PL!C165",
       "@PL!D165",
       "@PL!E165",
-      "@Coord!B45",
-      "@Coord!C45",
-      "@Coord!D45",
-      "@Coord!E45",
-      "@Coord!F45",
-      "@Coord!G45",
-      "@Coord!H45"
+      "@Coord!B46",
+      "@Coord!C46",
+      "@Coord!D46",
+      "@Coord!E46",
+      "@Coord!F46",
+      "@Coord!G46",
+      "@Coord!H46"
      ],
      "rows": [
       [
@@ -4113,7 +4113,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!A49"
+      "@Coord!A50"
      ]
     },
     {
@@ -4129,14 +4129,6 @@
      ],
      "rows": [
       [
-       "@Coord!A68",
-       "@Coord!B68|n3",
-       "@Coord!C68|n3",
-       "@Coord!D68|sp1",
-       "@Coord!E68",
-       "@Coord!I68"
-      ],
-      [
        "@Coord!A69",
        "@Coord!B69|n3",
        "@Coord!C69|n3",
@@ -4146,9 +4138,9 @@
       ],
       [
        "@Coord!A70",
-       "",
-       "",
-       "",
+       "@Coord!B70|n3",
+       "@Coord!C70|n3",
+       "@Coord!D70|sp1",
        "@Coord!E70",
        "@Coord!I70"
       ],
@@ -4162,18 +4154,26 @@
       ],
       [
        "@Coord!A72",
-       "@Coord!B72|n3",
-       "@Coord!C72|n3",
-       "@Coord!D72|sp1",
+       "",
+       "",
+       "",
        "@Coord!E72",
        "@Coord!I72"
+      ],
+      [
+       "@Coord!A73",
+       "@Coord!B73|n3",
+       "@Coord!C73|n3",
+       "@Coord!D73|sp1",
+       "@Coord!E73",
+       "@Coord!I73"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A48"
+      "@Coord!A49"
      ],
      "collapse": true,
      "summary": "展開：實績對帳的方法（期間、口徑、兩讀數與判定規則）"
@@ -4184,20 +4184,13 @@
      "collapse": true,
      "summary": "展開：實績對帳輸入與同源校準的核對（實績、層級、份額、乘積）",
      "head": [
-      "@Coord!A51",
-      "@Coord!B51",
-      "@Coord!C51",
-      "@Coord!D51",
-      "@Coord!F51"
+      "@Coord!A52",
+      "@Coord!B52",
+      "@Coord!C52",
+      "@Coord!D52",
+      "@Coord!F52"
      ],
      "rows": [
-      [
-       "@Coord!A52",
-       "@Coord!B52|n3",
-       "@Coord!C52",
-       "@Coord!D52",
-       "@Coord!F52"
-      ],
       [
        "@Coord!A53",
        "@Coord!B53|n3",
@@ -4228,28 +4221,28 @@
       ],
       [
        "@Coord!A57",
-       "@Coord!B57|p1",
+       "@Coord!B57|n3",
        "@Coord!C57",
        "@Coord!D57",
        "@Coord!F57"
       ],
       [
        "@Coord!A58",
-       "@Coord!B58|n3",
+       "@Coord!B58|p1",
        "@Coord!C58",
        "@Coord!D58",
        "@Coord!F58"
       ],
       [
        "@Coord!A59",
-       "@Coord!B59|p1",
+       "@Coord!B59|n3",
        "@Coord!C59",
        "@Coord!D59",
        "@Coord!F59"
       ],
       [
        "@Coord!A60",
-       "@Coord!B60|n3",
+       "@Coord!B60|p1",
        "@Coord!C60",
        "@Coord!D60",
        "@Coord!F60"
@@ -4288,15 +4281,22 @@
        "@Coord!C65",
        "@Coord!D65",
        "@Coord!F65"
+      ],
+      [
+       "@Coord!A66",
+       "@Coord!B66|n3",
+       "@Coord!C66",
+       "@Coord!D66",
+       "@Coord!F66"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A74",
+      "@Coord!A75",
       "：",
-      "@Coord!B74"
+      "@Coord!B75"
      ]
     },
     {
@@ -4310,13 +4310,6 @@
       "狀態"
      ],
      "rows": [
-      [
-       "@Coord!A37",
-       "@Coord!B37|n1",
-       "@Coord!C37|n1",
-       "@Coord!D37|sp1",
-       "@Coord!E37"
-      ],
       [
        "@Coord!A38",
        "@Coord!B38|n1",
@@ -4337,6 +4330,13 @@
        "@Coord!C40|n1",
        "@Coord!D40|sp1",
        "@Coord!E40"
+      ],
+      [
+       "@Coord!A41",
+       "@Coord!B41|n1",
+       "@Coord!C41|n1",
+       "@Coord!D41|sp1",
+       "@Coord!E41"
       ]
      ]
     },
@@ -4346,20 +4346,13 @@
      "collapse": true,
      "summary": "展開：讀取層級（本模型讀哪一層、哪一版、哪些名稱）",
      "head": [
-      "@Coord!A25",
-      "@Coord!B25",
-      "@Coord!C25",
-      "@Coord!D25",
-      "@Coord!E25"
+      "@Coord!A26",
+      "@Coord!B26",
+      "@Coord!C26",
+      "@Coord!D26",
+      "@Coord!E26"
      ],
      "rows": [
-      [
-       "@Coord!A26",
-       "@Coord!B26",
-       "@Coord!C26",
-       "@Coord!D26",
-       "@Coord!E26"
-      ],
       [
        "@Coord!A27",
        "@Coord!B27",
@@ -4401,6 +4394,13 @@
        "@Coord!C32",
        "@Coord!D32",
        "@Coord!E32"
+      ],
+      [
+       "@Coord!A33",
+       "@Coord!B33",
+       "@Coord!C33",
+       "@Coord!D33",
+       "@Coord!E33"
       ]
      ]
     },
@@ -5150,7 +5150,7 @@
   "note": [
    "@README!A98",
    " ",
-   "@Coord!B22"
+   "@Coord!B23"
   ]
  },
  "layout": "v1.3"

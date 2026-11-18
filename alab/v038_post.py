@@ -600,8 +600,9 @@ def readme13(wb, RVA, PLA, SEN, CO):
     put("hero", T("現金流折現 "), f'TEXT({dcf},"0")', T(" 美元、同業比較法 "), f'TEXT({cadj},"0")', T(" 美元，加權目標價 "), f'TEXT({tp},"0")', T(" 美元，比現價 "), 'TEXT(px,"0")',
         f'IF({up}<0," 美元低 "," 美元高 ")', f'TEXT(ABS({up}),"0%")', T("，評等"), rec, T("。主因：現價給的倍數遠高於同業，且基準情境的 2028 年顆數下修。"))
     put("rec", T("投資建議「"), rec, T("」成立的前提：Comparable 採用同業前瞻本益比中位數 "), f'TEXT({pmed},"0.0")', T(" 倍（相對倍數調整係數 "), f'TEXT({coef},"0.00")',
-        T("，資料不足故未調整）；基準情境 CY2028 顆數 ×0.8；Scorpio X 與 PCIe 等的份額相對值走基準路徑。Comparable 倍數升到約 "), f'TEXT(Recon!B{up_m},"0.0")',
-        T(" 倍評等升一級、降到約 "), f'TEXT(Recon!B{dn_m},"0.0")', T(" 倍降一級；要支持現價需約 "), f'TEXT(Recon!B{px_m},"0.0")', T(" 倍。"))
+        T("，資料不足故未調整）；基準情境 CY2028 顆數 ×0.8；Scorpio X 與 PCIe 等的份額相對值走基準路徑。Comparable 倍數"),
+        f'IF(ISNUMBER(Recon!B{up_m}),"升到約 "&TEXT(Recon!B{up_m},"0.0")&" 倍評等升一級","已是最高一級")', T("、"),
+        f'IF(ISNUMBER(Recon!B{dn_m}),"降到約 "&TEXT(Recon!B{dn_m},"0.0")&" 倍降一級","已是最低一級、沒有再降一級")', T("；要支持現價需約 "), f'TEXT(Recon!B{px_m},"0.0")', T(" 倍。"))
     put("o1", T("目標價：加權目標價 "), f'TEXT({tp},"0.00")', T(" 美元，比現價 "), 'TEXT(px,"0.00")', f'IF({up}<0," 低 "," 高 ")', f'TEXT(ABS({up}),"0.0%")', T("，評等「"), rec,
         T("」。現金流折現 "), f'TEXT({dcf},"0.00")', T(" 美元（折現率 "), 'TEXT(wacc,"0.0%")', T("）；同業比較法 "), f'TEXT({cadj},"0.00")', T(" 美元＝中位數 "), f'TEXT({pmed},"0.0")', T(" 倍 × 前瞻 EPS "), f'TEXT({feps},"0.00")', T("。"))
     put("o2", T("現價隱含：要讓現金流折現法支持現價，"), f'IF({rv("w_res")}<-0.01,"折現率即使降到搜尋下限 "&TEXT({rv("w1")},"0.0%")&" 仍不足","折現率須降到 "&TEXT({rv("w1")},"0.0%"))', T("（模型 "), 'TEXT(wacc,"0.0%")', T("），或 FY2028 起營收全面放大 "),
@@ -611,7 +612,8 @@ def readme13(wb, RVA, PLA, SEN, CO):
     put("o4", T("最敏感的輸入：Scorpio X 份額相對值取低／高路徑，加權目標價 "), f'TEXT(Sens!B{sb("Scorpio X 有效份額")},"+0%;-0%")', T("／"), f'TEXT(Sens!C{sb("Scorpio X 有效份額")},"+0%;-0%")',
         T("；PCIe 等份額 "), f'TEXT(Sens!B{sb("PCIe 等有效份額")},"+0%;-0%")', T("／"), f'TEXT(Sens!C{sb("PCIe 等有效份額")},"+0%;-0%")', T("。Scorpio X FY2026 營收是假設（公司未揭露產品線）。"))
     put("o5", T("客戶集中與評等邊界：單一終端客戶逾七成（FY2025 10-K），其 PCIe 等內容轉單五成時加權目標價 "), f'TEXT(Sens!C{sb("最大終端客戶轉單")},"+0%;-0%")',
-        T("；評等降一級只需 Comparable 倍數由 "), f'TEXT(Recon!C{dn_m},"0.0")', T(" 降到 "), f'TEXT(Recon!B{dn_m},"0.0")', T("。"))
+        f'IF(ISNUMBER(Recon!B{dn_m}),"；評等降一級只需 Comparable 倍數由 "&TEXT(Recon!C{dn_m},"0.0")&" 降到 "&TEXT(Recon!B{dn_m},"0.0")&"。","；評等已是最低一級（強力放空），沒有再降一級。")')
+    # 2026-11-18（工程類，不改值）：rec、o5 兩列在評等已是最高／最低級時原為 #N/A，改以 ISNUMBER 判斷顯示文字
     put("drv", T("分部營收推導（情境 B）：營收＝Scorpio X＋PCIe 與訊號調節。Scorpio X＝非 NVIDIA scale-up 交換晶片市場 × Astera 有效份額（FY2026 以假設營收校準）× 份額相對值；"
                  "PCIe 等＝AI 加速器顆數 × 每顆內容 × 有效份額 × 相對值（FY2026 為錨點殘差）。FY2028：市場 "), f'TEXT(PL!F{msx_b},"0.0")', T("、有效份額 "), f'TEXT(PL!F{shx_b},"0.0%")',
         T("，Scorpio X "), f'TEXT(PL!F{x_b},"0.00")', T("；PCIe 等 "), f'TEXT(PL!F{p_b},"0.00")', T("，合計 "), f'TEXT(PL!F{rev_b},"0.00")', T(" 十億美元。"))

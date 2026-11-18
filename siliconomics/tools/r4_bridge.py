@@ -157,9 +157,18 @@ _cbn = os.path.basename(_cb)
 # v0.15.1：改用晶片內容橋接表 v0.2.3 的營收口徑（第 48–50 列＝每 IT GW NVIDIA 營收 低／基準／高；第 44 列混合口徑只作對照）
 inp("nvc_gb", "每 IT GW NVIDIA 營收（GB300；營收口徑）", "$B/GW", round(_cbv(48, 2), 3), round(_cbv(49, 2), 3), round(_cbv(50, 2), 3), "Derived",
     f"markets/chip_bridge/dist/{_cbn} Bridge!B48／B49／B50（低＝模組售價＋CPU＋NIC/DPU＋NVLink 晶片；基準＝＋交換匣其他＋殘差；高＝＋LPDDR＋scale-out × NVIDIA 份額）")
-inp("nvc_vr26", "每 IT GW NVIDIA 營收（VR200，2026 HBM 價；營收口徑）", "$B/GW", round(_cbv(48, 3), 3), round(_cbv(49, 3), 3), round(_cbv(50, 3), 3), "Derived", "同上 C48／C49／C50")
-inp("nvc_vr27", "每 IT GW NVIDIA 營收（VR200，2027 HBM 價、NVIDIA 吸收；營收口徑）", "$B/GW", round(_cbv(48, 4), 3), round(_cbv(49, 4), 3), round(_cbv(50, 4), 3), "Derived",
-    "同上 D48／D49／D50；營收口徑下 NVIDIA 吸收 HBM 漲價時售價不變，與 2026 相同")
+if "ppr_rb" in S.defined_names:
+    # Siliconomics v0.21（決策 S57；三層對帳條件 (1)）：VR200 每 IT GW NVIDIA 營收改讀 Siliconomics SIF_NVContentGW_VR200_26／VR200（＝In 頁 M28b 每封裝
+    # NVIDIA 資料中心營收〔NVIDIA 認列口徑，含自賣網通〕× Tokenomics 每 GW 封裝數）；唯一來源在 Siliconomics In 頁。GB300 仍讀晶片內容橋接表（值與 SIF_NVContentGW_GB300 相同）
+    _sv = lambda n: tuple(round(nv(S, n + x), 3) for x in ("_lo", "", "_hi"))
+    inp("nvc_vr26", "每 IT GW NVIDIA 資料中心營收（VR200，2026；NVIDIA 認列口徑）", "$B/GW", *_sv("SIF_NVContentGW_VR200_26"), "Derived",
+        f"{sil_f} SIF_NVContentGW_VR200_26（_lo／_hi）＝In ppr_rb × TK IF_GPUsPerGW_VR200（v0.21 起；原讀晶片內容橋接表 C48／C49／C50，機架內 NVIDIA 內容 19.67／26.13／29.30）")
+    inp("nvc_vr27", "每 IT GW NVIDIA 資料中心營收（VR200，2027；NVIDIA 認列口徑）", "$B/GW", *_sv("SIF_NVContentGW_VR200"), "Derived",
+        f"{sil_f} SIF_NVContentGW_VR200（_lo／_hi）；同上，2026 與 2027 同值")
+else:
+    inp("nvc_vr26", "每 IT GW NVIDIA 營收（VR200，2026 HBM 價；營收口徑）", "$B/GW", round(_cbv(48, 3), 3), round(_cbv(49, 3), 3), round(_cbv(50, 3), 3), "Derived", "同上 C48／C49／C50")
+    inp("nvc_vr27", "每 IT GW NVIDIA 營收（VR200，2027 HBM 價、NVIDIA 吸收；營收口徑）", "$B/GW", round(_cbv(48, 4), 3), round(_cbv(49, 4), 3), round(_cbv(50, 4), 3), "Derived",
+        "同上 D48／D49／D50；營收口徑下 NVIDIA 吸收 HBM 漲價時售價不變，與 2026 相同")
 inp("nvcm_gb", "對照：混合口徑每 IT GW NVIDIA 內容（GB300；GPU 取毛利）", "$B/GW", None, round(_cbv(44, 2) * _cbv(7, 2), 3), None, "Derived", f"{_cbn} Bridge!B44 × B7（v0.15 以前的口徑）")
 inp("nvcm_vr26", "對照：混合口徑（VR200，2026 HBM 價）", "$B/GW", None, round(_cbv(44, 3) * _cbv(7, 3), 3), None, "Derived", "同上 C44 × C7")
 inp("nvcm_vr27", "對照：混合口徑（VR200，2027 HBM 價）", "$B/GW", None, round(_cbv(44, 4) * _cbv(7, 4), 3), None, "Derived", "同上 D44 × D7")
@@ -298,7 +307,7 @@ if "phys_2026" in names:
 br += 1
 B.cell(br, 1, "NVIDIA 資料中心營收對帳點（只作診斷；2026＝FY2027 錨點、2027＝FY2028 指引推得）").font = BOLD; br += 1
 brow("n1", "NVIDIA 成本等值 GW（出貨年；基準）", "b1 − 非 NVIDIA 成本等值 GW（b2a）", lambda y: None if y in (2025, 2028, 2029) else f"={C(y)}{R['b1']}-{C(y)}{R['b2a']}")
-brow("n2", "每 IT GW NVIDIA 營收（營收口徑基準）", "2026＝GB300 與 VR200 依 vr26 混合；2027＝VR200（2027 HBM 價）；chip_bridge v0.2.3 第 49 列", lambda y: {2026: "=nvc_gb*(1-vr26_mix)+nvc_vr26*vr26_mix", 2027: "=nvc_vr27"}.get(y))
+brow("n2", "每 IT GW NVIDIA 營收（營收口徑基準）", "2026＝GB300 與 VR200 依 vr26 混合；2027＝VR200；GB300 讀 chip_bridge 第 49 列，VR200 v0.21 起讀 Siliconomics SIF_NVContentGW_VR200（NVIDIA 認列口徑）", lambda y: {2026: "=nvc_gb*(1-vr26_mix)+nvc_vr26*vr26_mix", 2027: "=nvc_vr27"}.get(y))
 brow("n3", "隱含 NVIDIA 資料中心營收（$B）", "n1 × n2", lambda y: None if y not in (2026, 2027) else f"={C(y)}{R['n1']}*{C(y)}{R['n2']}")
 brow("n4", "NVIDIA 資料中心營收（公司；$B）", "2026 錨點 nv_dc_26；2027 指引推得 nv_dc_27", lambda y: {2026: "=nv_dc_26", 2027: "=nv_dc_27"}.get(y))
 brow("n5", "比值（隱含 ÷ 公司）", "1 附近＝顆數與每 GW 內容一致；> 1 本庫 NVIDIA 出貨 GW 偏多或內容偏高", lambda y: None if y not in (2026, 2027) else f"={C(y)}{R['n3']}/{C(y)}{R['n4']}", True)

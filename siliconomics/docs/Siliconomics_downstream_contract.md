@@ -75,3 +75,11 @@
 - **顆數單位：** 本庫所有加速器顆數都是**封裝（package）數，非晶粒數**（`docs/reports/20261118_三層對帳/unit-basis/20261118_顆數來源口徑查核.md`）。下游若把本庫顆數與外部「GPU 數」比較，先確認對方口徑（NVIDIA 2025 年的 Blackwell 數字是晶粒口徑）。
 - **只顯示的觀測數列與季節讀數（規則 v1.5 草案）：** Coord 頁 D 節、Recon 頁 G 節、狀態檔 `years.<年>.observations` 只供顯示，**不提供 Interface 名稱**；個股不得讀取（規則 v1.5 草案第 10 節第 15 項，`check.py` 實作由共用區另案）。
 
+
+## v0.21（2026-11-18；會改值；Andy 2026-11-18 21:13／21:20；決策 S54–S58）
+
+**2027 年 NVIDIA 顆數為自建估計（區間 400–839 萬封裝），2027 年 2 月重估。** 下游讀 2027 年部署量時，請把這句話視為該年基準的前提（`SIF_RecoNote_2027`；`SIF_RecoLabel_2027` 也含此句）。
+
+| 版本 | 日期 | 名稱變動 | 下游影響 |
+|---|---|---|---|
+| v0.21 | 2026-11-18 | **刪除** `SIF_DeployGW_Current_<年>`（4 個；改讀 `SIF_DeployGW_LegacyS33_<年>`，同值）。**新增** `SIF_RecoNote_<年>`（產業基準註記；2027＝上句，其餘年份空白）、`SIF_ppr_bw`、`SIF_ppr_rb`（每封裝 NVIDIA 資料中心營收，千美元，含 _lo／_hi）、`SIF_crd_pc_28`（含 _lo／_hi）、`SIF_u_bw_27_lo／_hi`、`SIF_u_rb_27_lo／_hi`。**改值** 84 個名稱：2027 平台顆數（`SIF_u_*_27`、`SIF_UnitsPlat_*`）、2027–2029 基準鏈（`SIF_DeployGW_Base` 30.45／35.05／35.42、`SIF_UnitsCoef_Base` 2028／2029 0.664／0.589、HBM、ABF、組裝、電源、液冷、PCB、CCL、測試、GPU 系統等市場）、`SIF_DeployGW_AltRatio_2027–2029`（0.804）、`SIF_RecoLabel_2027／2028`、`SIF_RecoLead_2028`、`SIF_NVContentGW_GB200／VR200_26／VR200／RU`（改 NVIDIA 認列口徑）、`SIF_GpuAsicMkt_Base`（含 2026） | 硬體個股 2027–2029 量隨之改變（目標價、評等見 `docs/reports/20261118_v0.21_build.md`）。**2026 年基準不變**；2026 年只有 `SIF_NVContentGW_VR200_26` 與 `SIF_GpuAsicMkt_Base` 2026 欄改值（對帳用）。`SIF_NVContentGW_*` 的口徑由「機架內 NVIDIA 內容」改為「NVIDIA 認列的資料中心營收」（GB200、VR200、RU；GB300、H100 不變），機架內口徑仍在 `SIF_nvr_*`。Wattonomics `SIL_In` 鏡像下次升版時跟著變 |

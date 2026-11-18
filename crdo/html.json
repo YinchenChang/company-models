@@ -311,7 +311,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!B21"
+      "@Coord!B22"
      ]
     },
     {
@@ -1264,7 +1264,7 @@
      "type": "tornado",
      "title": "FY2028 EPS 相對基準的變動（變動達兩位數百分比的案例；情境 A，一次動一個輸入）",
      "sheet": "Sens",
-     "rows": "5,6,7,14,15,19",
+     "rows": "5,6,7,14,15,18,19",
      "label_col": "A",
      "value_col": "G",
      "fmt": "sp1",
@@ -1275,7 +1275,7 @@
      "type": "tornado",
      "title": "FY2028 EPS 相對基準的變動（未達兩位數百分比）",
      "sheet": "Sens",
-     "rows": "8,9,10,11,12,13,16,17,18",
+     "rows": "8,9,10,11,12,13,16,17",
      "label_col": "A",
      "value_col": "G",
      "fmt": "sp1",
@@ -1759,12 +1759,12 @@
       "@PL!C168",
       "@PL!D168",
       "@PL!E168",
-      "@Coord!B48",
-      "@Coord!C48",
-      "@Coord!D48",
-      "@Coord!E48",
-      "@Coord!F48",
-      "@Coord!G48"
+      "@Coord!B49",
+      "@Coord!C49",
+      "@Coord!D49",
+      "@Coord!E49",
+      "@Coord!F49",
+      "@Coord!G49"
      ],
      "rows": [
       [
@@ -3898,7 +3898,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!A51"
+      "@Coord!A52"
      ]
     },
     {
@@ -3914,14 +3914,6 @@
      ],
      "rows": [
       [
-       "@Coord!A66",
-       "@Coord!B66|n2",
-       "@Coord!C66|n2",
-       "@Coord!D66|sp1",
-       "@Coord!E66",
-       "@Coord!I66"
-      ],
-      [
        "@Coord!A67",
        "@Coord!B67|n2",
        "@Coord!C67|n2",
@@ -3931,22 +3923,30 @@
       ],
       [
        "@Coord!A68",
-       "",
-       "",
-       "",
+       "@Coord!B68|n2",
+       "@Coord!C68|n2",
+       "@Coord!D68|sp1",
        "@Coord!E68",
        "@Coord!I68"
+      ],
+      [
+       "@Coord!A69",
+       "",
+       "",
+       "",
+       "@Coord!E69",
+       "@Coord!I69"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A70",
+      "@Coord!A71",
       "：",
-      "@Coord!B70|n0",
+      "@Coord!B71|n0",
       "。",
-      "@Coord!A71"
+      "@Coord!A72"
      ]
     },
     {
@@ -3955,22 +3955,14 @@
      "collapse": true,
      "summary": "展開：實績與層級輸入（期間、出處、等級）",
      "head": [
-      "@Coord!A53",
-      "@Coord!B53",
-      "@Coord!C53",
-      "@Coord!D53",
-      "@Coord!E53",
-      "@Coord!F53"
+      "@Coord!A54",
+      "@Coord!B54",
+      "@Coord!C54",
+      "@Coord!D54",
+      "@Coord!E54",
+      "@Coord!F54"
      ],
      "rows": [
-      [
-       "@Coord!A54",
-       "@Coord!B54|n3",
-       "@Coord!C54",
-       "@Coord!D54",
-       "@Coord!E54",
-       "@Coord!F54"
-      ],
       [
        "@Coord!A55",
        "@Coord!B55|n3",
@@ -3981,7 +3973,7 @@
       ],
       [
        "@Coord!A56",
-       "@Coord!B56|n0",
+       "@Coord!B56|n3",
        "@Coord!C56",
        "@Coord!D56",
        "@Coord!E56",
@@ -3989,7 +3981,7 @@
       ],
       [
        "@Coord!A57",
-       "@Coord!B57|n3",
+       "@Coord!B57|n0",
        "@Coord!C57",
        "@Coord!D57",
        "@Coord!E57",
@@ -3997,7 +3989,7 @@
       ],
       [
        "@Coord!A58",
-       "@Coord!B58|p2",
+       "@Coord!B58|n3",
        "@Coord!C58",
        "@Coord!D58",
        "@Coord!E58",
@@ -4005,7 +3997,7 @@
       ],
       [
        "@Coord!A59",
-       "@Coord!B59|n3",
+       "@Coord!B59|p2",
        "@Coord!C59",
        "@Coord!D59",
        "@Coord!E59",
@@ -4013,7 +4005,7 @@
       ],
       [
        "@Coord!A60",
-       "@Coord!B60|p2",
+       "@Coord!B60|n3",
        "@Coord!C60",
        "@Coord!D60",
        "@Coord!E60",
@@ -4021,7 +4013,7 @@
       ],
       [
        "@Coord!A61",
-       "@Coord!B61|n3",
+       "@Coord!B61|p2",
        "@Coord!C61",
        "@Coord!D61",
        "@Coord!E61",
@@ -4042,6 +4034,14 @@
        "@Coord!D63",
        "@Coord!E63",
        "@Coord!F63"
+      ],
+      [
+       "@Coord!A64",
+       "@Coord!B64|n3",
+       "@Coord!C64",
+       "@Coord!D64",
+       "@Coord!E64",
+       "@Coord!F64"
       ]
      ]
     },
@@ -4060,20 +4060,20 @@
      ],
      "rows": [
       [
-       "@Coord!A35",
-       "@Coord!B35|n3",
-       "@Coord!C35|n3",
-       "@Coord!D35|sp1",
-       "@Coord!E35",
-       "@Coord!I35"
-      ],
-      [
        "@Coord!A36",
        "@Coord!B36|n3",
        "@Coord!C36|n3",
        "@Coord!D36|sp1",
        "@Coord!E36",
        "@Coord!I36"
+      ],
+      [
+       "@Coord!A37",
+       "@Coord!B37|n3",
+       "@Coord!C37|n3",
+       "@Coord!D37|sp1",
+       "@Coord!E37",
+       "@Coord!I37"
       ]
      ]
     },
@@ -4088,13 +4088,6 @@
       "狀態"
      ],
      "rows": [
-      [
-       "@Coord!A40",
-       "@Coord!B40|n2",
-       "@Coord!C40|n2",
-       "@Coord!D40|sp1",
-       "@Coord!E40"
-      ],
       [
        "@Coord!A41",
        "@Coord!B41|n2",
@@ -4115,6 +4108,13 @@
        "@Coord!C43|n2",
        "@Coord!D43|sp1",
        "@Coord!E43"
+      ],
+      [
+       "@Coord!A44",
+       "@Coord!B44|n2",
+       "@Coord!C44|n2",
+       "@Coord!D44|sp1",
+       "@Coord!E44"
       ]
      ]
     },
@@ -4693,7 +4693,7 @@
   "note": [
    "@README!A60",
    " ",
-   "@Coord!B22"
+   "@Coord!B23"
   ]
  },
  "layout": "v1.3"

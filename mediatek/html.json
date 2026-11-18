@@ -315,7 +315,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!B21"
+      "@Coord!B22"
      ]
     },
     {
@@ -1173,7 +1173,7 @@
      "type": "tornado",
      "title": "FY2027 EPS 相對基準的變動（情境 A，一次動一個輸入；另列情境 B、C）（變動達兩位數百分比的案例）",
      "sheet": "Sens",
-     "rows": "5,6,19,25",
+     "rows": "5,6,7,8,11,14,15,19,25",
      "label_col": "A",
      "value_col": "F",
      "fmt": "sp1",
@@ -1184,7 +1184,7 @@
      "type": "tornado",
      "title": "FY2027 EPS 相對基準的變動（情境 A，一次動一個輸入；另列情境 B、C）（未達兩位數百分比的案例）",
      "sheet": "Sens",
-     "rows": "7,8,11,12,13,14,15,16,17,18,20,21,22,23,24",
+     "rows": "12,13,16,17,18,20,21,22,23,24",
      "label_col": "A",
      "value_col": "F",
      "fmt": "sp1",
@@ -1578,11 +1578,11 @@
       "@PL!D228",
       "@PL!E228",
       "@PL!F228",
-      "@Coord!B64",
-      "@Coord!C64",
-      "@Coord!D64",
-      "@Coord!E64",
-      "@Coord!F64"
+      "@Coord!B65",
+      "@Coord!C65",
+      "@Coord!D65",
+      "@Coord!E65",
+      "@Coord!F65"
      ],
      "rows": [
       [
@@ -4103,44 +4103,34 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!B73"
+      "@Coord!B74"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A67"
+      "@Coord!A68"
      ]
     },
     {
      "type": "table",
-     "caption": "@Coord!A66",
+     "caption": "@Coord!A67",
      "head": [
-      "@Coord!A68",
-      "@Coord!B68",
-      "@Coord!C68",
-      "@Coord!D68",
-      "@Coord!G68",
-      "@Coord!H68",
-      "@Coord!E68",
-      "@Coord!F68"
+      "@Coord!A69",
+      "@Coord!B69",
+      "@Coord!C69",
+      "@Coord!D69",
+      "@Coord!G69",
+      "@Coord!H69",
+      "@Coord!E69",
+      "@Coord!F69"
      ],
      "rows": [
       [
-       "@Coord!A69",
-       "@Coord!B69",
-       "@Coord!C69",
-       "@Coord!D69|n2",
-       "@Coord!G69",
-       "@Coord!H69",
-       "@Coord!E69",
-       "@Coord!F69"
-      ],
-      [
        "@Coord!A70",
-       "@Coord!B70|n1",
-       "@Coord!C70|n1",
-       "@Coord!D70",
+       "@Coord!B70",
+       "@Coord!C70",
+       "@Coord!D70|n2",
        "@Coord!G70",
        "@Coord!H70",
        "@Coord!E70",
@@ -4148,10 +4138,10 @@
       ],
       [
        "@Coord!A71",
-       "@Coord!B71|n2",
-       "@Coord!C71",
-       "@Coord!D71|n2",
-       "@Coord!G71|sp1",
+       "@Coord!B71|n1",
+       "@Coord!C71|n1",
+       "@Coord!D71",
+       "@Coord!G71",
        "@Coord!H71",
        "@Coord!E71",
        "@Coord!F71"
@@ -4165,25 +4155,35 @@
        "@Coord!H72",
        "@Coord!E72",
        "@Coord!F72"
+      ],
+      [
+       "@Coord!A73",
+       "@Coord!B73|n2",
+       "@Coord!C73",
+       "@Coord!D73|n2",
+       "@Coord!G73|sp1",
+       "@Coord!H73",
+       "@Coord!E73",
+       "@Coord!F73"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!B45"
+      "@Coord!B46"
      ]
     },
     {
      "type": "table",
-     "caption": "@Coord!A35",
+     "caption": "@Coord!A36",
      "head": [
-      "@Coord!A36",
-      "@Coord!B36",
-      "@Coord!C36",
-      "@Coord!D36",
-      "@Coord!E36",
-      "@Coord!F36"
+      "@Coord!A37",
+      "@Coord!B37",
+      "@Coord!C37",
+      "@Coord!D37",
+      "@Coord!E37",
+      "@Coord!F37"
      ],
      "rows": [],
      "collapse": true,
@@ -4191,31 +4191,23 @@
     },
     {
      "type": "table",
-     "caption": "@Coord!A47",
+     "caption": "@Coord!A48",
      "head": [
-      "@Coord!A48",
-      "@Coord!B48",
-      "@Coord!C48",
-      "@Coord!D48",
-      "@Coord!E48",
-      "@Coord!F48"
+      "@Coord!A49",
+      "@Coord!B49",
+      "@Coord!C49",
+      "@Coord!D49",
+      "@Coord!E49",
+      "@Coord!F49"
      ],
      "rows": [
-      [
-       "@Coord!A49",
-       "@Coord!B49|n2",
-       "@Coord!C49|n2",
-       "@Coord!D49|sp1",
-       "@Coord!E49",
-       "@Coord!F49"
-      ],
       [
        "@Coord!A50",
        "@Coord!B50|n2",
        "@Coord!C50|n2",
        "@Coord!D50|sp1",
        "@Coord!E50",
-       ""
+       "@Coord!F50"
       ],
       [
        "@Coord!A51",
@@ -4232,13 +4224,15 @@
        "@Coord!D52|sp1",
        "@Coord!E52",
        ""
+      ],
+      [
+       "@Coord!A53",
+       "@Coord!B53|n2",
+       "@Coord!C53|n2",
+       "@Coord!D53|sp1",
+       "@Coord!E53",
+       ""
       ]
-     ]
-    },
-    {
-     "type": "note",
-     "parts": [
-      "@Coord!A55"
      ]
     },
     {
@@ -4254,49 +4248,47 @@
      ]
     },
     {
+     "type": "note",
+     "parts": [
+      "@Coord!A58"
+     ]
+    },
+    {
      "type": "table",
      "collapse": true,
      "summary": "展開：本模型讀哪一層、哪一版（Siliconomics 版本與讀入項目）",
-     "caption": "@Coord!A26",
+     "caption": "@Coord!A27",
      "head": [
-      "@Coord!A27",
-      "@Coord!B27",
-      "@Coord!C27",
-      "@Coord!D27",
-      "@Coord!E27",
-      "@Coord!F27"
+      "@Coord!A28",
+      "@Coord!B28",
+      "@Coord!C28",
+      "@Coord!D28",
+      "@Coord!E28",
+      "@Coord!F28"
      ],
      "rows": [
       [
-       "@Coord!A28",
-       "@Coord!B28|n3",
-       "@Coord!C28|n3",
-       "@Coord!D28|n3",
-       "@Coord!E28|n3",
-       "@Coord!F28"
-      ],
-      [
        "@Coord!A29",
-       "@Coord!B29|p0",
-       "@Coord!C29|p0",
-       "@Coord!D29|p0",
-       "@Coord!E29|p0",
+       "@Coord!B29|n3",
+       "@Coord!C29|n3",
+       "@Coord!D29|n3",
+       "@Coord!E29|n3",
        "@Coord!F29"
       ],
       [
        "@Coord!A30",
-       "@Coord!B30|n1",
-       "@Coord!C30|n1",
-       "@Coord!D30|n1",
-       "@Coord!E30|n1",
+       "@Coord!B30|p0",
+       "@Coord!C30|p0",
+       "@Coord!D30|p0",
+       "@Coord!E30|p0",
        "@Coord!F30"
       ],
       [
        "@Coord!A31",
-       "@Coord!B31|n3",
-       "@Coord!C31|n3",
-       "@Coord!D31|n3",
-       "@Coord!E31|n3",
+       "@Coord!B31|n1",
+       "@Coord!C31|n1",
+       "@Coord!D31|n1",
+       "@Coord!E31|n1",
        "@Coord!F31"
       ],
       [
@@ -4306,13 +4298,21 @@
        "@Coord!D32|n3",
        "@Coord!E32|n3",
        "@Coord!F32"
+      ],
+      [
+       "@Coord!A33",
+       "@Coord!B33|n3",
+       "@Coord!C33|n3",
+       "@Coord!D33|n3",
+       "@Coord!E33|n3",
+       "@Coord!F33"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A33"
+      "@Coord!A34"
      ]
     },
     {
@@ -4797,7 +4797,7 @@
   "note": [
    "@README!A53",
    " ",
-   "@Coord!B22"
+   "@Coord!B23"
   ]
  },
  "layout": "v1.3"

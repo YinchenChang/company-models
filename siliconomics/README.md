@@ -4,7 +4,8 @@ AI 半導體 Project 的「唯一事實」Excel：加速器顆數、記憶體與
 
 | 項目 | 內容 |
 |---|---|
-| 現行版本 | 見 `model/CURRENT`（v0.20，2026-11-16；2026-11-18 原地修補 r1，數值不變；r2 改讀 Wattonomics v0.3.7，只動 crd_ew_28／29 低高；Wattonomics v0.3.7、Tokenomics v22.0、規則 v1.4.3） |
+| 現行版本 | 見 `model/CURRENT`（v0.21，2026-11-18；會改值：2027 NVIDIA 顆數改自建估計、2028 連續法、每 GW NVIDIA 內容改認列口徑；Wattonomics v0.3.7、Tokenomics v22.0、規則 v1.4.3） |
+| **2027 年基準註記** | **2027 年 NVIDIA 顆數為自建估計（區間 400–839 萬封裝），2027 年 2 月重估**（Andy 2026-11-18；決策 S56；`SIF_RecoNote_2027`） |
 | 下游快照 | `data/CURRENT_SNAPSHOT` 指向的 `data/siliconomics_snapshot_v*.json`（由 `tools/export_snapshot.py` 產生） |
 | Tokenomics 快照 | `data/tokenomics_snapshot_v22.0.json`（v0.20 起；名稱清單 `data/tokenomics_names.txt`；下游 chip_bridge 仍讀 `v21.7`，見 Checks K3） |
 | 協調狀態檔 | `data/baseline_status.json`（`tools/export_baseline_status.py`；逐年狀態的唯一權威，規則 v1.4.3 C3；2026-11-18 起含 `method`、`generated`、`source_sha256`、`wattonomics_source_sha256`、`bridge`〔協調橋接檔名與雜湊〕與逐年 `timing_cum`／`timing_cum_ratio`） |
@@ -48,12 +49,12 @@ Interface E 節有五組部署 GW 欄位。**每一組只有一種語義**；寫
 
 | 名稱 | 語義（唯一） | 2029 現值（GW） | 誰可以讀、怎麼用 |
 |---|---|---|---|
-| `SIF_DeployGW_Base`（向量，欄 E–H＝2026–2029） | **依規則的基準**（規則 v1.4.3 C3：甲／乙／丙／待定／連續法決定）。成本等值、出貨年 | 42.680 | 硬體個股**計算基準的唯一來源**；個股不裁決 |
+| `SIF_DeployGW_Base`（向量，欄 E–H＝2026–2029） | **依規則的基準**（規則 v1.4.3 C3：甲／乙／丙／待定／連續法決定）。成本等值、出貨年 | 42.680（v0.21：35.420） | 硬體個股**計算基準的唯一來源**；個股不裁決 |
 | `SIF_DeployGW_Supply_<年>` | 供給側讀數＝原始顆數部署 GW（不乘任何係數；情境 A） | 60.139 | 只並列顯示與對照（個股 Coord 頁、對帳）；**不得進基準計算** |
 | `SIF_DeployGW_Demand_<年>` | 需求側讀數＝Wattonomics 換算值（平滑法 x2，由 `tools/baseline_bridge.py` 重算） | 28.482 | 只用於 Coord 頁判定與狀態檔；個股**不得讀** |
 | `SIF_DeployGW_Alt_<年>`／`SIF_DeployGW_AltRatio_<年>` | 另一側讀數（未被採為基準的那一條）及其 ÷ 基準 | 28.482／0.667 | 只用於對帳中年份的並列顯示與**兩讀數目標價（情境）**；不得取代基準 |
 | `SIF_DeployGW_LegacyS33_<年>`（v0.20 r1 新增；Interface E2 節） | **舊取法**＝原始顆數 × 情境 B 顆數係數（舊 S33 係數；v0.18 基準）。**不是基準**；Coord 頁 A 節 `cur` 列「舊取法（原始 × 情境 B 顆數係數；非基準）」 | 51.118 | 只供「改前現行值」對照與中間估計 (ii)；**任何程式不得拿它算基準** |
-| `SIF_DeployGW_Current_<年>` | **相容別名，下一版刪除**：值同 `SIF_DeployGW_LegacyS33_<年>`（舊名「Current」易被誤讀為現行基準）；2029 為 51.118，≠ Base 42.680 | 51.118 | 舊讀取者（`nvidia/coord_post.py`）改讀 `LegacyS33` 後刪除；新程式一律讀 `LegacyS33` |
+| ~~`SIF_DeployGW_Current_<年>`~~ | **v0.21 已刪除**（決策 S58）；原為 `SIF_DeployGW_LegacyS33_<年>` 的相容別名 | — | 讀取端 `nvidia/coord_post.py`、`export_baseline_status.py` 已改讀 `LegacyS33` |
 
 **誰在讀（2026-11-18 全 repo 盤點；逐支用途見 `docs/reports/20261118_三層對帳_s-gov_A1A4A7A8.md` 第 2 節）：**
 
@@ -67,6 +68,12 @@ Interface E 節有五組部署 GW 欄位。**每一組只有一種語義**；寫
 
 **改名方案（選風險較低者）：「新增新名＋舊名保留一版作別名」，不直接改名。** 理由：(1) 直接改名＝刪除 Interface 名稱，依下游契約屬主版變動，且需同步所有讀取端；(2) 讀取端雖只有 2 支，但舊快照（v0.19／v0.19-trial／`nvidia/coord_inputs.json` 的 trial 摘錄）仍含舊名；(3) 新增名稱屬次版、不影響既有讀取者。
 **為何本 PR 不改活頁簿：** 新增名稱必須升版（連帶 SIL.VERSION 文字改變）→ 約 65 個下游模型須整批重建（`tools/cascade.sh` 兩輪），超出本單範圍與只動 `siliconomics/`、`tools/baseline_coordination/` 的邊界。已驗證的 builder 修補與驗證結果寫在報告第 3 節，等下一個 Siliconomics 版本一併套用。本 PR 做的是：語義寫入 README／契約、狀態檔讀取端先支援新名（有 `LegacyS33` 就讀它）、`tools/baseline_coordination/check.py` 第 [14] 項在 CI 擋住誤用。
+
+## 每 GW NVIDIA 內容的兩種口徑（v0.21；決策 S57）
+
+- `SIF_NVContentGW_GB200／VR200_26／VR200／RU`：**NVIDIA 認列的資料中心營收**口徑（含 NVIDIA 自賣網通與軟體）＝In 頁 M28b 每封裝營收（`ppr_bw`、`ppr_rb`；rubin-price 報告）× Tokenomics 每 GW 封裝數；Rubin Ultra＝VR200 × Tokenomics 每 GW IT capex 結構比。用途：Recon F（R4 橋接 n2）、Recon D1、Wattonomics Compare F、NVIDIA 個股 Coord F3——都是拿來對 NVIDIA 公司資料中心營收。
+- `SIF_NVContentGW_GB300／H100` 與 `SIF_nvr_*`：**機架內 NVIDIA 內容**（晶片內容橋接表；不含機架外 scale-out 網通）。GB300 依每封裝證據同法 20.94–26.79，現值 24.88 在區間內，不動。
+- 改每 GW 內容只動對帳點，不動基準與換算值 x2。
 
 ## 原則（比照 Tokenomics CLAUDE.md）
 

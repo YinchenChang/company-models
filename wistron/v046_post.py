@@ -643,8 +643,8 @@ def c0_actuals(wb, C, r, l3, rs_m, rs_l, d5):
     a_rev = row2("　公司實績：合併營收（主：1–10 月累計；第二：3Q26 × 4）", f"=B{cum}", f"=B{q3}*4", "#,##0.0", "NT$B；合併營收（含 100% 緯穎）", VERIF)
     C.cell(r, 1, "　公司實績側 AI 伺服器營收（本體 L10／L11 整櫃）"); C[f"B{r}"] = "無法計算"; C[f"C{r}"] = "無法計算"
     C.cell(r, 4, "缺揭露：AI 伺服器營收金額或占營收比例（見 4.2 末列）；不以口述占比或模型預測補位"); C.cell(r, 5, "規則 v1.4.2 C0 第 2 點"); out["act_ai"] = r; r += 1
-    l_mk = row2("　層級：整櫃組裝市場 CY2026（Siliconomics 基準層）", f"=B{l3}", f"=B{l3}", "#,##0.0", "US$B；連到下方「讀取層級」第 (3) 項的 Siliconomics 層列", "Siliconomics v0.20；Derived")
-    l_sh = row2("　× 緯創本體份額（Siliconomics 份額表的基準份額）", f"=B{rs_l}", f"=B{rs_l}", "0.0%", "連到下方 (5) 的 Siliconomics 份額列", "Siliconomics v0.20；Derived（由本模型 FY2026 錨點校準，見說明）")
+    l_mk = row2("　層級：整櫃組裝市場 CY2026（Siliconomics 基準層）", f"=B{l3}", f"=B{l3}", "#,##0.0", "US$B；連到下方「讀取層級」第 (3) 項的 Siliconomics 層列", "Siliconomics v0.21；Derived")
+    l_sh = row2("　× 緯創本體份額（Siliconomics 份額表的基準份額）", f"=B{rs_l}", f"=B{rs_l}", "0.0%", "連到下方 (5) 的 Siliconomics 份額列", "Siliconomics v0.21；Derived（由本模型 FY2026 錨點校準，見說明）")
     l_fx = row2("　× 匯率（新台幣 ÷ 美元；In 頁 fx）", "=fx", "=fx", "0.0", "NT$/US$", "Derived（與廣達、鴻海模型相同）")
     l_fy = row2("　＝ 層級隱含 CY2026 全年本體 AI 系統營收", f"=B{l_mk}*B{l_sh}*B{l_fx}", f"=C{l_mk}*C{l_sh}*C{l_fx}", "#,##0.0", "NT$B；全年", "Derived", True)
     out["fy"] = l_fy

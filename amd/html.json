@@ -313,7 +313,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!B21"
+      "@Coord!B22"
      ]
     },
     {
@@ -1646,7 +1646,7 @@
      "type": "tornado",
      "title": "FY2028 EPS 相對基準的變動（情境 B，一次動一個輸入；變動達兩位數百分比的案例）",
      "sheet": "Sens",
-     "rows": "7,8,13,14,19,20",
+     "rows": "7,13,14,19,20",
      "label_col": "A",
      "value_col": "J",
      "fmt": "sp1",
@@ -1657,7 +1657,7 @@
      "type": "tornado",
      "title": "FY2028 EPS 相對基準的變動（情境 B，一次動一個輸入；未達兩位數百分比）",
      "sheet": "Sens",
-     "rows": "5,6,9,10,11,12,15,16,17,18",
+     "rows": "5,6,8,9,10,11,12,15,16,17,18",
      "label_col": "A",
      "value_col": "J",
      "fmt": "sp1",
@@ -2093,13 +2093,13 @@
       "@PL!C248",
       "@PL!D248",
       "@PL!E248",
-      "@Coord!B51",
-      "@Coord!C51",
-      "@Coord!D51",
-      "@Coord!E51",
-      "@Coord!F51",
-      "@Coord!G51",
-      "@Coord!H51"
+      "@Coord!B52",
+      "@Coord!C52",
+      "@Coord!D52",
+      "@Coord!E52",
+      "@Coord!F52",
+      "@Coord!G52",
+      "@Coord!H52"
      ],
      "rows": [
       [
@@ -4584,7 +4584,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!A54"
+      "@Coord!A55"
      ]
     },
     {
@@ -4600,18 +4600,10 @@
      ],
      "rows": [
       [
-       "@Coord!A70",
-       "",
-       "",
-       "",
-       "@Coord!E70",
-       "@Coord!I70"
-      ],
-      [
        "@Coord!A71",
-       "@Coord!B71|n2",
-       "@Coord!C71|n2",
-       "@Coord!D71|sp1",
+       "",
+       "",
+       "",
        "@Coord!E71",
        "@Coord!I71"
       ],
@@ -4638,17 +4630,25 @@
        "@Coord!D74|sp1",
        "@Coord!E74",
        "@Coord!I74"
+      ],
+      [
+       "@Coord!A75",
+       "@Coord!B75|n2",
+       "@Coord!C75|n2",
+       "@Coord!D75|sp1",
+       "@Coord!E75",
+       "@Coord!I75"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A76",
+      "@Coord!A77",
       "：",
-      "@Coord!B76|n0",
+      "@Coord!B77|n0",
       "。",
-      "@Coord!A77"
+      "@Coord!A78"
      ]
     },
     {
@@ -4657,22 +4657,14 @@
      "collapse": true,
      "summary": "展開：實績與層級輸入（期間、出處、等級）",
      "head": [
-      "@Coord!A56",
-      "@Coord!B56",
-      "@Coord!C56",
-      "@Coord!D56",
-      "@Coord!E56",
-      "@Coord!F56"
+      "@Coord!A57",
+      "@Coord!B57",
+      "@Coord!C57",
+      "@Coord!D57",
+      "@Coord!E57",
+      "@Coord!F57"
      ],
      "rows": [
-      [
-       "@Coord!A57",
-       "@Coord!B57|n3",
-       "@Coord!C57",
-       "@Coord!D57",
-       "@Coord!E57",
-       "@Coord!F57"
-      ],
       [
        "@Coord!A58",
        "@Coord!B58|n3",
@@ -4691,7 +4683,7 @@
       ],
       [
        "@Coord!A60",
-       "@Coord!B60|n0",
+       "@Coord!B60|n3",
        "@Coord!C60",
        "@Coord!D60",
        "@Coord!E60",
@@ -4699,7 +4691,7 @@
       ],
       [
        "@Coord!A61",
-       "@Coord!B61|n3",
+       "@Coord!B61|n0",
        "@Coord!C61",
        "@Coord!D61",
        "@Coord!E61",
@@ -4707,7 +4699,7 @@
       ],
       [
        "@Coord!A62",
-       "@Coord!B62|n1",
+       "@Coord!B62|n3",
        "@Coord!C62",
        "@Coord!D62",
        "@Coord!E62",
@@ -4715,7 +4707,7 @@
       ],
       [
        "@Coord!A63",
-       "@Coord!B63|n3",
+       "@Coord!B63|n1",
        "@Coord!C63",
        "@Coord!D63",
        "@Coord!E63",
@@ -4752,6 +4744,14 @@
        "@Coord!D67",
        "@Coord!E67",
        "@Coord!F67"
+      ],
+      [
+       "@Coord!A68",
+       "@Coord!B68|n3",
+       "@Coord!C68",
+       "@Coord!D68",
+       "@Coord!E68",
+       "@Coord!F68"
       ]
      ]
     },
@@ -4769,14 +4769,6 @@
       "說明"
      ],
      "rows": [
-      [
-       "@Coord!A36",
-       "@Coord!B36|n3",
-       "@Coord!C36|n3",
-       "@Coord!D36|sp1",
-       "@Coord!E36",
-       "@Coord!I36"
-      ],
       [
        "@Coord!A37",
        "@Coord!B37|n3",
@@ -4800,6 +4792,14 @@
        "@Coord!D39|sp1",
        "@Coord!E39",
        "@Coord!I39"
+      ],
+      [
+       "@Coord!A40",
+       "@Coord!B40|n3",
+       "@Coord!C40|n3",
+       "@Coord!D40|sp1",
+       "@Coord!E40",
+       "@Coord!I40"
       ]
      ]
     },
@@ -4814,13 +4814,6 @@
       "狀態"
      ],
      "rows": [
-      [
-       "@Coord!A43",
-       "@Coord!B43|n2",
-       "@Coord!C43|n2",
-       "@Coord!D43|sp1",
-       "@Coord!E43"
-      ],
       [
        "@Coord!A44",
        "@Coord!B44|n2",
@@ -4841,6 +4834,13 @@
        "@Coord!C46|n2",
        "@Coord!D46|sp1",
        "@Coord!E46"
+      ],
+      [
+       "@Coord!A47",
+       "@Coord!B47|n2",
+       "@Coord!C47|n2",
+       "@Coord!D47|sp1",
+       "@Coord!E47"
       ]
      ]
     },
@@ -5809,7 +5809,7 @@
   "note": [
    "@README!A105",
    " ",
-   "@Coord!B22"
+   "@Coord!B23"
   ]
  },
  "layout": "v1.3"

@@ -138,7 +138,7 @@ SPEC = {
   ["資料中心加速器（GPU 與整櫃系統）", [
     ["NVIDIA 各世代顆數", ["u_bw_26", "u_bw_27", "u_bw_28", "g29_bw", "u_rb_26", "u_rb_27", "u_rb_28", "g29_rb", "u_ru_26", "u_ru_27", "u_ru_28", "g29_ru", "u_hp_26", "u_hp_27", "u_hp_28", "g29_hp"]],
     ["情境顆數係數與顆數敏感度", ["um28_A", "um29_A", "um28_B", "um29_B", "um28_C", "um29_C", "uk"]],
-    ["每顆售價（GPU 模組＋CPU＋LPDDR＋匣級加價）", ["pm_bw", "pm_rb", "pm_ru", "pm_hp", "pcpu_bw", "plp_bw", "pres_bw", "pcpu_rb", "plp_rb", "pres_rb", "pcpu_ru", "plp_ru", "pres_ru", "pcpu_hp", "plp_hp", "pres_hp", "k_tray"]],
+    ["每顆售價（每封裝 NVIDIA 營收倒推：GPU 模組＋CPU＋LPDDR＋匣級加價＋網通）", ["ppr_bw", "ppr_rb", "netpp_bw", "netpp_rb", "pm_bw", "pm_rb", "pm_ru", "pm_hp", "pcpu_bw", "plp_bw", "pres_bw", "pcpu_rb", "plp_rb", "pres_rb", "pcpu_ru", "plp_ru", "pres_ru", "pcpu_hp", "plp_hp", "pres_hp", "k_tray"]],
     ["HBM 容量、單價與吸收比例", ["gb_bw_26", "gb_bw_27", "gb_bw_28", "gb_rb_26", "gb_rb_27", "gb_rb_28", "gb_ru_26", "gb_ru_27", "gb_ru_28", "gb_hp_26", "gb_hp_27", "gb_hp_28", "hpx_bw", "hpx_rb", "hpx_ru", "hpx_hp", "abs_mem"]],
     ["記憶體價格路徑（讀 SK hynix 模型）", ["hbm_A_26", "hbm_A_27", "hbm_A_28", "hbm_A_29", "hbm_B_26", "hbm_B_27", "hbm_B_28", "hbm_B_29", "hbm_C_26", "hbm_C_27", "hbm_C_28", "hbm_C_29",
                                      "cdx_A_26", "cdx_A_27", "cdx_A_28", "cdx_A_29", "cdx_B_26", "cdx_B_27", "cdx_B_28", "cdx_B_29", "cdx_C_26", "cdx_C_27", "cdx_C_28", "cdx_C_29"]],
@@ -349,7 +349,7 @@ def _v13():
     r13 = find("README", "v1.3 展示層")
     RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
     assert str(RD[f"A{RM['ver']}"].value).startswith("v0.3.7"), RD[f"A{RM['ver']}"].value
-    assert str(RD[f"A{RD.max_row}"].value).startswith("v0.3.11"), RD[f"A{RD.max_row}"].value
+    assert str(RD[f"A{RD.max_row}"].value).startswith("v0.3.12"), RD[f"A{RD.max_row}"].value   # v0.3.12（2026-11-18）起最後一列為 v0.3.12 沿革
     cfg["layout"] = "v1.3"
     # ---- 橫幅：只留 ≤200 字白話（規則與歸因移到估值章）----
     old_note = cfg["hero"]["note"]

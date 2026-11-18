@@ -126,9 +126,24 @@ for k in NVP:
         inp(f"gb_{k}_{y}", f"{PNAME[k]} 每顆 HBM 20{y}", "GB", None, gb[i], None, "Interested-party", "markets/memory/market.py UNITS（GB300：B300 288；Rubin 288；Rubin Ultra：NVIDIA 1 TB／封裝）", "2029 沿用 2028" if i == 0 else "同上")
 
 sec("B. 每顆售價（運算部分）：GPU 模組＋CPU＋LPDDR＋匣級加價中 NVIDIA 保留的部分（US$K／顆；橋接表 v0.2.1 Rack 頁）")
-inp("pm_bw", "GPU 模組售價：Blackwell（GB300，NVIDIA 對買方）", "US$K", GPUP[0], BR["module"][0], GPUP[2], "Derived", BRG_REF("module", "B"), f"橋接表 In!D15:F15（低／基準／高）；Tokenomics v20.1 機架基準價 $4.3M。B200 較 B300 便宜，本模型不分（在 Recon 列為顆數＋價格差額的候選來源）")
-inp("pm_rb", "GPU 模組售價：Rubin（VR200，2026 HBM 價）", "US$K", GPUP[3], BR["module"][1], GPUP[5], "Derived", BRG_REF("module", "C"), "橋接表 In!G15:I15；Bernstein 估 VR200 機架 $9.1M、Fubon 估 Rubin GPU $78–80K（二手，Interested-party）高於此基準，未採")
-inp("pm_ru", "GPU 模組售價：Rubin Ultra", "US$K", 60, 75, 100, "Assumed", "無：未發布。基準＝VR200 55 ×（VR200／GB300 的 1.36 倍外推）＝75", "BofA 估 Rubin Ultra 機架約 $21M（二手；每封裝約 $146K 是本模型算術，封裝數有爭議；wccftech）。擁有者待定區間")
+# v0.3.12（2026-11-18；Siliconomics v0.21 決策 S57；chat 端裁示：條件 (1)「每 GW 金額」含 NVIDIA 個股每顆售價）：
+# Blackwell、Rubin 的 GPU 模組售價改由「每封裝 NVIDIA 資料中心營收」（Siliconomics In 頁 M28b ppr_bw／ppr_rb，NVIDIA 認列口徑，含 NVIDIA 自賣網通）倒推：
+#   模組價＝每封裝營收 − CPU − LPDDR − k_tray × 匣級加價 − 每封裝網通營收（本模型網通另列，避免重複計入）。
+# 每封裝網通營收＝本模型網通歸屬 ÷ 同年市場層 NVIDIA 顆數（Blackwell 用 2026、Rubin 用 2027，與 ppr 證據年份對應）。原橋接表模組價（40.4／55）留在說明欄
+_pb, _pr = SIL.row9("ppr_bw"), SIL.row9("ppr_rb")
+inp("ppr_bw", "每封裝 NVIDIA 資料中心營收：Blackwell（NVIDIA 認列口徑，含網通）", "US$K", _pb[3], _pb[4], _pb[5], "Derived",
+    f"Siliconomics {SIL.VERSION} SIF_ppr_bw（In 頁 M28b；docs/reports/20261118_三層對帳/rubin-price/20261118_Rubin單價與顆數更新.md 結論 2：四條證據線 B1–B4）", "同步來源：Siliconomics 快照（建置時讀取，不另抄）；B1–B3 部分源自 NVIDIA 自己的說法，只有 B4（IREN）獨立")
+inp("ppr_rb", "每封裝 NVIDIA 資料中心營收：Rubin（VR200；NVIDIA 認列口徑，含網通）", "US$K", _pr[3], _pr[4], _pr[5], "Derived",
+    f"Siliconomics {SIL.VERSION} SIF_ppr_rb（In 頁 M28b；rubin-price 報告結論 1：R1、R2、R3 重疊）", "同步來源：Siliconomics 快照；最弱輸入：Nscale Monarch 460 MW 口徑未驗證、Nebius 為反證、R1 與 R2 共用 NVIDIA 每 GW 400 億說法")
+inp("netpp_bw", "每封裝網通營收（Blackwell 用；2026＝net_26 ÷ 市場層 NVIDIA 顆數 2026）", "US$K", None, "=net_26/(u_bw_26+u_rb_26+u_ru_26+u_hp_26)", None, "Derived", "本頁 D 節 net_26 與 A 節 u_*_26", "倒推模組價時扣除，因為本模型的網通營收另列（PL 網通列）")
+inp("netpp_rb", "每封裝網通營收（Rubin 用；2027＝net_27 ÷ 市場層 NVIDIA 顆數 2027）", "US$K", None, "=net_27/(u_bw_27+u_rb_27+u_ru_27+u_hp_27)", None, "Derived", "本頁 D 節 net_27 與 A 節 u_*_27", "同上")
+_PM = lambda k, sfx: f"=ppr_{k}{sfx}-pcpu_{k}-plp_{k}-k_tray*pres_{k}-netpp_{k}"
+inp("pm_bw", "GPU 模組售價：Blackwell（GB300，NVIDIA 對買方；由每封裝營收倒推）", "US$K", _PM("bw", "_lo"), _PM("bw", ""), _PM("bw", "_hi"), "Derived",
+    "＝ppr_bw − pcpu_bw − plp_bw − k_tray × pres_bw − netpp_bw（v0.3.12 起；Siliconomics v0.21 決策 S57）", f"v0.3.11 以前＝{BRG_REF('module', 'B')} 橋接表 In!D15:F15 {GPUP[0]}／{BR['module'][0]}／{GPUP[2]}（機架內口徑）")
+inp("pm_rb", "GPU 模組售價：Rubin（VR200；由每封裝營收倒推）", "US$K", _PM("rb", "_lo"), _PM("rb", ""), _PM("rb", "_hi"), "Derived",
+    "＝ppr_rb − pcpu_rb − plp_rb − k_tray × pres_rb − netpp_rb（v0.3.12 起；2026 與 2027 同值）", f"v0.3.11 以前＝{BRG_REF('module', 'C')} 橋接表 In!G15:I15 {GPUP[3]}／{BR['module'][1]}／{GPUP[5]}；Bernstein、Fubon 二手估計見 Recon")
+inp("pm_ru", "GPU 模組售價：Rubin Ultra（對 Rubin 結構比）", "US$K", "=pm_rb*60/55", "=pm_rb*75/55", "=pm_rb*100/55", "Assumed",
+    "無：未發布。維持 v0.3.11 對 Rubin 的結構比（低／基準／高＝60／75／100 對 55）× pm_rb", "v0.3.11 以前 60／75／100（BofA 估 Rubin Ultra 機架約 $21M，二手）")
 inp("pm_hp", "GPU 模組售價：Hopper（H200 等）", "US$K", 25, 30, 35, "Assumed", "無：2026 出貨僅 0.5M，影響小", "第二來源：未找到")
 for k, col, nm in (("bw", "B", "GB300"), ("rb", "C", "VR200")):
     inp(f"pcpu_{k}", f"CPU 每顆 GPU 分攤（{nm}）", "US$K", None, round(BR["cpu"][0 if col == "B" else 1] * 1000 / 72, 6), None, "Derived", BRG_REF("cpu", col) + "（$M／架 × 1000 ÷ 72）", "NVIDIA 自家 Grace／Vera")
@@ -1173,6 +1188,8 @@ if V36 and not OVR:
     import px1113_post  # noqa: E402
     print(px1113_post.apply(wb, "v0.3.11",
         "v0.3.11（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113；Yahoo Finance 日線收盤，markets/invest_map/data/closes_20261020_20261113.csv）。現價 181.60 → 162.85；同業前瞻 P/E 中位數 16.93 → 19.95（AMD 36.12→47.70、Broadcom 16.76→19.95、Marvell 23.66→27.77、台積電 ADR 16.58→18.72、Qualcomm 16.93→18.63；新倍數＝v0.3.10 倍數 × 11-13 收盤 ÷ 11-05 收盤，共識 EPS 不變）；加權目標價 248.46（上檔 +36.8%，買進）→ 283.32（上檔 +74.0%，強力買進）；股價基準日與資料截止日改 2026-11-13（目標時點＝現價日＋12 個月隨之後移）。共識 EPS、rf、β、ERP、情境權重與營運假設不變；市值計 WACC 權重隨現價重算；Sens、Coord 快照已重跑。Recon F 節「評等升一級」邊界：上檔空間已超過 +50%（最高級距）時無升一級邊界，原公式回 #N/A，改顯示「不適用」（Recon!B44、B47–B49、D47–D49 與 README 失效條件 (3) 加 ISNUMBER 判斷；其他公式不變）。"))
+    print(px1113_post.apply(wb, "v0.3.12",
+        "v0.3.12（2026-11-18）：Siliconomics v0.21（2027 年 NVIDIA 顆數改自建估計 613 萬封裝，區間 400–839 萬，2027 年 2 月重估；決策 S56、S57）。依 chat 端裁示（條件 (1)「每 GW 金額」含本模型每顆售價），Blackwell、Rubin 的 GPU 模組售價改由每封裝 NVIDIA 資料中心營收（Siliconomics SIF_ppr_bw 43／50／55、SIF_ppr_rb 95.9／114.08／139.3 千美元，NVIDIA 認列口徑，含網通）倒推：模組價＝每封裝營收 − CPU − LPDDR − k_tray × 匣級加價 − 每封裝網通營收（網通另列，不重複計入）；Rubin Ultra 維持對 Rubin 的結構比。原橋接表模組價 40.4／55 留在 In 頁說明欄。k_rec 隨之依 FY2027 錨點重算。不使用 NVIDIA FY2027 第三季實績。"))
 wb.save(sys.argv[1])
 if os.environ.get("NV_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

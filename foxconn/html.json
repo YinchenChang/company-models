@@ -230,7 +230,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!B21"
+      "@Coord!B22"
      ]
     },
     {
@@ -1052,7 +1052,7 @@
      "value_col": "B",
      "fmt": "sp1",
      "title": "加權目標價相對基準：輸入取低值，變動達兩位數百分比的案例",
-     "rows": "1097,1102,1109,1110,1118"
+     "rows": "1097,1109,1110,1118"
     },
     {
      "type": "tornado",
@@ -1061,7 +1061,7 @@
      "value_col": "C",
      "fmt": "sp1",
      "title": "加權目標價相對基準：輸入取高值，變動達兩位數百分比的案例",
-     "rows": "1097,1102,1110"
+     "rows": "1110"
     },
     {
      "type": "note",
@@ -1076,7 +1076,7 @@
      "value_col": "B",
      "fmt": "sp1",
      "title": "加權目標價相對基準：輸入取低值",
-     "rows": "1098,1099,1100,1101,1103,1104,1105,1106,1107,1108,1111,1112,1114,1115,1116,1119",
+     "rows": "1098,1099,1100,1101,1102,1103,1104,1105,1106,1107,1108,1111,1112,1114,1115,1116,1119",
      "collapse": true,
      "summary": "展開：加權目標價相對基準：輸入取低值，變動未達兩位數百分比的案例（幾乎為零者見全部案例表）"
     },
@@ -1087,7 +1087,7 @@
      "value_col": "C",
      "fmt": "sp1",
      "title": "加權目標價相對基準：輸入取高值",
-     "rows": "1098,1099,1100,1101,1103,1104,1105,1106,1107,1108,1109,1111,1113,1114,1115,1117,1119",
+     "rows": "1097,1098,1099,1100,1101,1102,1103,1104,1105,1106,1107,1108,1109,1111,1113,1114,1115,1117,1119",
      "collapse": true,
      "summary": "展開：加權目標價相對基準：輸入取高值，變動未達兩位數百分比的案例（幾乎為零者見全部案例表）"
     },
@@ -4260,13 +4260,13 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!B78"
+      "@Coord!B79"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A81"
+      "@Coord!A82"
      ]
     },
     {
@@ -4281,23 +4281,16 @@
      ],
      "rows": [
       [
-       "@Coord!A121",
-       "@Coord!B121|n1",
-       "@Coord!C121|n1",
-       "@Coord!D121",
-       "@Coord!E121"
-      ],
-      [
        "@Coord!A122",
-       "@Coord!B122|p1",
-       "@Coord!C122|p1",
+       "@Coord!B122|n1",
+       "@Coord!C122|n1",
        "@Coord!D122",
        "@Coord!E122"
       ],
       [
        "@Coord!A123",
-       "@Coord!B123|n1",
-       "@Coord!C123|n1",
+       "@Coord!B123|p1",
+       "@Coord!C123|p1",
        "@Coord!D123",
        "@Coord!E123"
       ],
@@ -4310,15 +4303,15 @@
       ],
       [
        "@Coord!A125",
-       "@Coord!B125|p1",
-       "@Coord!C125|p1",
+       "@Coord!B125|n1",
+       "@Coord!C125|n1",
        "@Coord!D125",
        "@Coord!E125"
       ],
       [
        "@Coord!A126",
-       "@Coord!B126|n1",
-       "@Coord!C126|n1",
+       "@Coord!B126|p1",
+       "@Coord!C126|p1",
        "@Coord!D126",
        "@Coord!E126"
       ],
@@ -4331,8 +4324,8 @@
       ],
       [
        "@Coord!A128",
-       "@Coord!B128|n3",
-       "@Coord!C128|n3",
+       "@Coord!B128|n1",
+       "@Coord!C128|n1",
        "@Coord!D128",
        "@Coord!E128"
       ],
@@ -4345,45 +4338,45 @@
       ],
       [
        "@Coord!A130",
-       "@Coord!B130|n1",
-       "@Coord!C130|n1",
+       "@Coord!B130|n3",
+       "@Coord!C130|n3",
        "@Coord!D130",
        "@Coord!E130"
       ],
       [
        "@Coord!A131",
-       "@Coord!B131|p1",
-       "@Coord!C131|p1",
+       "@Coord!B131|n1",
+       "@Coord!C131|n1",
        "@Coord!D131",
-       ""
+       "@Coord!E131"
       ],
       [
        "@Coord!A132",
-       "@Coord!B132|",
-       "",
+       "@Coord!B132|p1",
+       "@Coord!C132|p1",
        "@Coord!D132",
-       "@Coord!E132"
+       ""
       ],
       [
        "@Coord!A133",
        "@Coord!B133|",
        "",
        "@Coord!D133",
-       ""
+       "@Coord!E133"
       ],
       [
        "@Coord!A134",
-       "@Coord!B134|p1",
-       "@Coord!C134|p1",
+       "@Coord!B134|",
+       "",
        "@Coord!D134",
        ""
       ],
       [
        "@Coord!A135",
        "@Coord!B135|p1",
-       "",
+       "@Coord!C135|p1",
        "@Coord!D135",
-       "@Coord!E135"
+       ""
       ],
       [
        "@Coord!A136",
@@ -4433,13 +4426,20 @@
        "",
        "@Coord!D142",
        "@Coord!E142"
+      ],
+      [
+       "@Coord!A143",
+       "@Coord!B143|p1",
+       "",
+       "@Coord!D143",
+       "@Coord!E143"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A82"
+      "@Coord!A83"
      ]
     },
     {
@@ -4452,12 +4452,6 @@
       "來源與證據等級"
      ],
      "rows": [
-      [
-       "@Coord!A85",
-       "@Coord!B85|n1",
-       "@Coord!D85",
-       "@Coord!E85"
-      ],
       [
        "@Coord!A86",
        "@Coord!B86|n1",
@@ -4544,7 +4538,7 @@
       ],
       [
        "@Coord!A100",
-       "@Coord!B100|n3",
+       "@Coord!B100|n1",
        "@Coord!D100",
        "@Coord!E100"
       ],
@@ -4566,15 +4560,15 @@
        "@Coord!D103",
        "@Coord!E103"
       ],
-      {
-       "sub": "@Coord!A104"
-      },
       [
-       "@Coord!A105",
-       "@Coord!B105|p1",
-       "@Coord!D105",
-       "@Coord!E105"
+       "@Coord!A104",
+       "@Coord!B104|n3",
+       "@Coord!D104",
+       "@Coord!E104"
       ],
+      {
+       "sub": "@Coord!A105"
+      },
       [
        "@Coord!A106",
        "@Coord!B106|p1",
@@ -4589,7 +4583,7 @@
       ],
       [
        "@Coord!A108",
-       "@Coord!B108|n1",
+       "@Coord!B108|p1",
        "@Coord!D108",
        "@Coord!E108"
       ],
@@ -4613,7 +4607,7 @@
       ],
       [
        "@Coord!A112",
-       "@Coord!B112|p1",
+       "@Coord!B112|n1",
        "@Coord!D112",
        "@Coord!E112"
       ],
@@ -4637,27 +4631,33 @@
       ],
       [
        "@Coord!A116",
-       "@Coord!B116|n1",
+       "@Coord!B116|p1",
        "@Coord!D116",
        "@Coord!E116"
       ],
       [
        "@Coord!A117",
-       "@Coord!B117|p1",
+       "@Coord!B117|n1",
        "@Coord!D117",
        "@Coord!E117"
       ],
       [
        "@Coord!A118",
-       "@Coord!B118|n1",
+       "@Coord!B118|p1",
        "@Coord!D118",
        "@Coord!E118"
       ],
       [
        "@Coord!A119",
-       "@Coord!B119|n2",
+       "@Coord!B119|n1",
        "@Coord!D119",
        "@Coord!E119"
+      ],
+      [
+       "@Coord!A120",
+       "@Coord!B120|n2",
+       "@Coord!D120",
+       "@Coord!E120"
       ]
      ],
      "collapse": true,
@@ -4677,181 +4677,172 @@
      ],
      "rows": [
       {
-       "sub": "@Coord!A38"
+       "sub": "@Coord!A39"
       },
-      [
-       "@Coord!A39",
-       "@Coord!B39|n1",
-       "@Coord!C39|n1",
-       "@Coord!D39|n1",
-       "@Coord!E39|n1",
-       "@Coord!F39",
-       "@Coord!G39"
-      ],
       [
        "@Coord!A40",
        "@Coord!B40|n1",
        "@Coord!C40|n1",
        "@Coord!D40|n1",
        "@Coord!E40|n1",
-       "",
-       ""
+       "@Coord!F40",
+       "@Coord!G40"
       ],
       [
        "@Coord!A41",
-       "@Coord!B41|p1",
-       "@Coord!C41|p1",
-       "@Coord!D41|p1",
-       "@Coord!E41|p1",
+       "@Coord!B41|n1",
+       "@Coord!C41|n1",
+       "@Coord!D41|n1",
+       "@Coord!E41|n1",
        "",
        ""
       ],
       [
        "@Coord!A42",
-       "@Coord!B42|",
-       "@Coord!C42|",
-       "@Coord!D42|",
-       "@Coord!E42|",
+       "@Coord!B42|p1",
+       "@Coord!C42|p1",
+       "@Coord!D42|p1",
+       "@Coord!E42|p1",
+       "",
+       ""
+      ],
+      [
+       "@Coord!A43",
+       "@Coord!B43|",
+       "@Coord!C43|",
+       "@Coord!D43|",
+       "@Coord!E43|",
        "",
        ""
       ],
       {
-       "sub": "@Coord!A43"
+       "sub": "@Coord!A44"
       },
-      [
-       "@Coord!A44",
-       "@Coord!B44|n2",
-       "@Coord!C44|n2",
-       "@Coord!D44|n2",
-       "@Coord!E44|n2",
-       "@Coord!F44",
-       "@Coord!G44"
-      ],
       [
        "@Coord!A45",
        "@Coord!B45|n2",
        "@Coord!C45|n2",
        "@Coord!D45|n2",
        "@Coord!E45|n2",
-       "",
-       ""
+       "@Coord!F45",
+       "@Coord!G45"
       ],
       [
        "@Coord!A46",
-       "@Coord!B46|p1",
-       "@Coord!C46|p1",
-       "@Coord!D46|p1",
-       "@Coord!E46|p1",
+       "@Coord!B46|n2",
+       "@Coord!C46|n2",
+       "@Coord!D46|n2",
+       "@Coord!E46|n2",
        "",
        ""
       ],
       [
        "@Coord!A47",
-       "@Coord!B47|",
-       "@Coord!C47|",
-       "@Coord!D47|",
-       "@Coord!E47|",
+       "@Coord!B47|p1",
+       "@Coord!C47|p1",
+       "@Coord!D47|p1",
+       "@Coord!E47|p1",
+       "",
+       ""
+      ],
+      [
+       "@Coord!A48",
+       "@Coord!B48|",
+       "@Coord!C48|",
+       "@Coord!D48|",
+       "@Coord!E48|",
        "",
        ""
       ],
       {
-       "sub": "@Coord!A48"
+       "sub": "@Coord!A49"
       },
-      [
-       "@Coord!A49",
-       "@Coord!B49|n1",
-       "@Coord!C49|n1",
-       "@Coord!D49|n1",
-       "@Coord!E49|n1",
-       "@Coord!F49",
-       "@Coord!G49"
-      ],
       [
        "@Coord!A50",
        "@Coord!B50|n1",
        "@Coord!C50|n1",
        "@Coord!D50|n1",
        "@Coord!E50|n1",
-       "",
-       ""
+       "@Coord!F50",
+       "@Coord!G50"
       ],
       [
        "@Coord!A51",
-       "@Coord!B51|p1",
-       "@Coord!C51|p1",
-       "@Coord!D51|p1",
-       "@Coord!E51|p1",
+       "@Coord!B51|n1",
+       "@Coord!C51|n1",
+       "@Coord!D51|n1",
+       "@Coord!E51|n1",
        "",
        ""
       ],
       [
        "@Coord!A52",
-       "@Coord!B52|",
-       "@Coord!C52|",
-       "@Coord!D52|",
-       "@Coord!E52|",
+       "@Coord!B52|p1",
+       "@Coord!C52|p1",
+       "@Coord!D52|p1",
+       "@Coord!E52|p1",
+       "",
+       ""
+      ],
+      [
+       "@Coord!A53",
+       "@Coord!B53|",
+       "@Coord!C53|",
+       "@Coord!D53|",
+       "@Coord!E53|",
        "",
        ""
       ],
       {
-       "sub": "@Coord!A53"
+       "sub": "@Coord!A54"
       },
-      [
-       "@Coord!A54",
-       "@Coord!B54|n2",
-       "@Coord!C54|n2",
-       "@Coord!D54|n2",
-       "@Coord!E54|n2",
-       "@Coord!F54",
-       "@Coord!G54"
-      ],
       [
        "@Coord!A55",
        "@Coord!B55|n2",
        "@Coord!C55|n2",
        "@Coord!D55|n2",
        "@Coord!E55|n2",
-       "",
-       ""
+       "@Coord!F55",
+       "@Coord!G55"
       ],
       [
        "@Coord!A56",
-       "@Coord!B56|p1",
-       "@Coord!C56|p1",
-       "@Coord!D56|p1",
-       "@Coord!E56|p1",
+       "@Coord!B56|n2",
+       "@Coord!C56|n2",
+       "@Coord!D56|n2",
+       "@Coord!E56|n2",
        "",
        ""
       ],
       [
        "@Coord!A57",
-       "@Coord!B57|",
-       "@Coord!C57|",
-       "@Coord!D57|",
-       "@Coord!E57|",
+       "@Coord!B57|p1",
+       "@Coord!C57|p1",
+       "@Coord!D57|p1",
+       "@Coord!E57|p1",
+       "",
+       ""
+      ],
+      [
+       "@Coord!A58",
+       "@Coord!B58|",
+       "@Coord!C58|",
+       "@Coord!D58|",
+       "@Coord!E58|",
        "",
        ""
       ],
       {
-       "sub": "@Coord!A58"
+       "sub": "@Coord!A59"
       },
-      [
-       "@Coord!A59",
-       "@Coord!B59|p1",
-       "@Coord!C59|p1",
-       "@Coord!D59|p1",
-       "@Coord!E59|p1",
-       "@Coord!F59",
-       "@Coord!G59"
-      ],
       [
        "　鴻海有效份額（Siliconomics 份額表：FY2026 基準份額 × 份額相對值）",
        "@Coord!B60|p1",
        "@Coord!C60|p1",
        "@Coord!D60|p1",
        "@Coord!E60|p1",
-       "",
-       ""
+       "@Coord!F60",
+       "@Coord!G60"
       ],
       [
        "@Coord!A61",
@@ -4869,7 +4860,7 @@
        "@Coord!D62|p1",
        "@Coord!E62|p1",
        "",
-       "@Coord!G62"
+       ""
       ],
       [
        "@Coord!A63",
@@ -4878,83 +4869,92 @@
        "@Coord!D63|p1",
        "@Coord!E63|p1",
        "",
-       ""
+       "@Coord!G63"
       ],
       [
        "@Coord!A64",
-       "@Coord!B64|n4",
-       "@Coord!C64|n4",
-       "@Coord!D64|n4",
-       "@Coord!E64|n4",
+       "@Coord!B64|p1",
+       "@Coord!C64|p1",
+       "@Coord!D64|p1",
+       "@Coord!E64|p1",
        "",
        ""
       ],
       [
        "@Coord!A65",
-       "@Coord!B65|p1",
-       "@Coord!C65|p1",
-       "@Coord!D65|p1",
-       "@Coord!E65|p1",
+       "@Coord!B65|n4",
+       "@Coord!C65|n4",
+       "@Coord!D65|n4",
+       "@Coord!E65|n4",
        "",
        ""
       ],
       [
        "@Coord!A66",
-       "@Coord!B66|n1",
-       "@Coord!C66|n1",
-       "@Coord!D66|n1",
-       "@Coord!E66|n1",
+       "@Coord!B66|p1",
+       "@Coord!C66|p1",
+       "@Coord!D66|p1",
+       "@Coord!E66|p1",
        "",
-       "@Coord!G66"
+       ""
+      ],
+      [
+       "@Coord!A67",
+       "@Coord!B67|n1",
+       "@Coord!C67|n1",
+       "@Coord!D67|n1",
+       "@Coord!E67|n1",
+       "",
+       "@Coord!G67"
       ],
       {
-       "sub": "@Coord!A68"
+       "sub": "@Coord!A69"
       },
       [
-       "@Coord!A69",
-       "@Coord!B69|n1",
-       "@Coord!C69|n1",
-       "@Coord!D69|n1",
-       "@Coord!E69|n1",
+       "@Coord!A70",
+       "@Coord!B70|n1",
+       "@Coord!C70|n1",
+       "@Coord!D70|n1",
+       "@Coord!E70|n1",
        "",
        ""
       ],
       {
-       "sub": "@Coord!A70"
+       "sub": "@Coord!A71"
       },
-      [
-       "@Coord!A71",
-       "@Coord!B71|n2",
-       "@Coord!C71|n2",
-       "@Coord!D71|n2",
-       "@Coord!E71|n2",
-       "@Coord!F71",
-       "@Coord!G71"
-      ],
       [
        "@Coord!A72",
        "@Coord!B72|n2",
        "@Coord!C72|n2",
        "@Coord!D72|n2",
        "@Coord!E72|n2",
-       "",
-       ""
+       "@Coord!F72",
+       "@Coord!G72"
       ],
       [
        "@Coord!A73",
-       "@Coord!B73|p1",
-       "@Coord!C73|p1",
-       "@Coord!D73|p1",
-       "@Coord!E73|p1",
+       "@Coord!B73|n2",
+       "@Coord!C73|n2",
+       "@Coord!D73|n2",
+       "@Coord!E73|n2",
        "",
        ""
       ],
       [
        "@Coord!A74",
-       "@Coord!B74|",
-       "@Coord!C74|",
-       "@Coord!D74|",
-       "@Coord!E74|",
+       "@Coord!B74|p1",
+       "@Coord!C74|p1",
+       "@Coord!D74|p1",
+       "@Coord!E74|p1",
+       "",
+       ""
+      ],
+      [
+       "@Coord!A75",
+       "@Coord!B75|",
+       "@Coord!C75|",
+       "@Coord!D75|",
+       "@Coord!E75|",
        "",
        ""
       ]
@@ -4973,13 +4973,6 @@
       "備註"
      ],
      "rows": [
-      [
-       "@Coord!A28",
-       "@Coord!B28",
-       "@Coord!C28",
-       "@Coord!D28",
-       "@Coord!E28"
-      ],
       [
        "@Coord!A29",
        "@Coord!B29",
@@ -5021,6 +5014,13 @@
        "@Coord!C34",
        "@Coord!D34",
        "@Coord!E34"
+      ],
+      [
+       "@Coord!A35",
+       "@Coord!B35",
+       "@Coord!C35",
+       "@Coord!D35",
+       "@Coord!E35"
       ]
      ],
      "collapse": true,
@@ -5735,7 +5735,7 @@
   "note": [
    "@README!A62",
    " ",
-   "@Coord!B22"
+   "@Coord!B23"
   ]
  },
  "layout": "v1.3"
