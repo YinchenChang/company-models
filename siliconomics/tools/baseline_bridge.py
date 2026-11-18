@@ -5,6 +5,7 @@
 # 2026-11-18 r2 收尾：p1–p4 改標「上線年 GW 交叉檢核」（查核確認口徑）；新增 q1–q4 付款年讀數；s0 標籤改「Siliconomics 基準（SIF_DeployGW_Base）」；不改既有數值。
 # 2026-11-18（三層對帳第二波 W2-02／W2-03／W2-04A；不改任何既有數值）：Bridge 頁在 x0 與 s0 之間新增「付款年 GW 交叉檢核」p1–p4（只檢核，不被任何既有列引用）；
 #   新增 Stock 頁（出貨到上線存量帳，A／B／C 三節，stk_2025 低／基準／高三組）與 Residual 頁（殘差帳骨架，歸因項讀 builder/seed/residual_items_v0.1.json）。
+# 2026-11-18（三層對帳第三波 W-SF-01／04／05；不改任何既有數值）：Stock 頁新增 D–G 節（通路 S1、買方端 S2 兩段存量帳，內生停留時間，與單一係數並列，stk_2025 自洽版對照）；新增 Check 頁（通路容量、金額、改放買方端三個核對，只輸出放得下／放不下多少 GW，不設門檻）與 ChanObs、BuyerObs、OdmMonthly 三個觀測頁（讀 builder/seed/channel_obs_v0.1.json）。
 import os, sys, json, datetime
 import openpyxl
 from openpyxl.styles import Font, PatternFill
@@ -130,6 +131,40 @@ for y in YRS[:2]:
 # W2-03 2025 年底已出貨未上線存量（實體 GW）。寫單者建議，chat 端 2026-11-18 採用：[Assumed]，基準＝inv_on × ship_2025，低／高用 inv_on 的 5%／20%
 inp("stk_2025", "2025 年底已出貨未上線存量（實體 GW）", "GW", 2025, "=inv_on_lo*ship_2025", "=inv_on*ship_2025", "=inv_on_hi*ship_2025", "Assumed",
     "inv_on（低 5%／基準 10%／高 20%）× ship_2025；無外部實績可檢驗，三個值都要顯示、不得只用單點（W2-03；chat 端 2026-11-18 採寫單者建議）")
+# ---- W-SF-01／04／05（2026-11-18 第三波）輸入：種子檔與單值參數（不改任何既有輸入）----
+CHS = os.path.join(ROOT, "siliconomics/builder/seed/channel_obs_v0.1.json")
+_chs_txt = open(CHS, encoding="utf-8").read()
+if "107.6" in _chs_txt:   # 共同規則第 1 條：NVIDIA FY2027 第三季實績不得進任何種子檔
+    raise SystemExit("channel_obs 種子檔含 107.6（疑為 NVIDIA FY2027 第三季實績）：停止，請回報，不得自行刪改")
+chs = json.loads(_chs_txt)
+_G5 = {"Verified", "Interested-party", "Analogy", "Assumed", "Derived"}
+for _r in chs["odm_quarterly"] + chs["buyer_quarterly"]:
+    _miss = [k for k in ("company", "quarter", "evidence_grade", "source_ids") if not _r.get(k)]
+    if _miss or _r["evidence_grade"] not in _G5 or any(s not in chs["sources"] for s in _r["source_ids"]):
+        raise SystemExit(f"channel_obs 觀測列不合格（缺 {_miss}、等級不在五種或來源 ID 不在 sources）：{_r.get('company')} {_r.get('quarter')}")
+if chs["monthly_revenue"]["evidence_grade"] not in _G5:
+    raise SystemExit("channel_obs 月營收等級不合格")
+_rc = S["Recon"]
+assert str(_rc.cell(3, 5).value) == "2027", "Siliconomics Recon 頁欄位位置改變（E 欄應為 2027）"
+_nvr = next(r_ for r_ in range(1, _rc.max_row + 1) if str(_rc.cell(r_, 1).value).startswith("隱含 NVIDIA 資料中心營收（層級"))
+inp("wship_2025", "Wattonomics 出貨年實體 GW 2025（WIF_Recon_NV_ShipGW；階段 ② 起點）", "GW", 2025, None, cells(W, "WIF_Recon_NV_ShipGW_2025")[0], None, "Derived",
+    f"{wt_f} WIF_Recon_NV_ShipGW_2025（只供 Stock D–G 節）")
+inp("s1sh", "2025 年底存量中屬通路（S1）的比例", "比", 2025, 0.3, 0.5, 0.7, "Assumed",
+    "無依據（設計書 W-SF-01）；只影響起點在兩段之間的分配，S1＋S2 合計不變；2027 年 S1、S2 各約差 ±0.3 GW 以內")
+inp("ai_sh", "AI 在組裝廠存貨與營收中的占比（四家台廠與 Dell、Supermicro 共用；公司都沒拆）", "比", None, 0.35, "=2719.19/3998.81", 0.85, "Assumed",
+    "基準＝廣達模型 FY2026 AI 伺服器營收 ÷ 營收（Derived 0.68，非公司揭露）套用到全部公司是假設；低＝公司說法中最低的 Dell（AI 伺服器營收 16.4B ÷ 46.97B＝35%，二手）；高 0.85 無依據（判斷上限）。"
+    "同一組區間用於存貨換算（Check）與月營收換算（OdmMonthly，只顯示）")
+inp("fxtw", "匯率 NT$／US$", "NT$/US$", None, cells(S, "fx_twd_lo")[0], cells(S, "fx_twd")[0], cells(S, "fx_twd_hi")[0], "Assumed", f"{sil_f} In fx_twd（低 30.5／基準 32／高 33）")
+inp("qsh_26", "廣達 AI 伺服器組裝份額 2026（只供原型對照列）", "比", 2026, None, cells(S, "asm_qush_26")[0], None, "Derived", f"{sil_f} In asm_qush_26（ShareTbl；2026 公司模型校準）")
+inp("asmsum_26", "四家台廠有效組裝份額合計 2026（SIF_AsmShareSum）", "比", 2026, None, cells(S, "SIF_AsmShareSum")[0], None, "Derived", f"{sil_f} SIF_AsmShareSum（鴻海、廣達、緯創、緯穎）")
+_odm = cells(S, "SIF_ODMValPerGW")
+inp("odm_26", "每 GW ODM 整櫃價值 2026", "十億美元／GW", 2026, None, _odm[0], None, "Derived", f"{sil_f} SIF_ODMValPerGW（Tokenomics 每 GW 架數 × ODM 每櫃價格）")
+inp("odm_27", "每 GW ODM 整櫃價值 2027", "十億美元／GW", 2027, None, _odm[1], None, "Derived", f"{sil_f} SIF_ODMValPerGW")
+inp("nv_sil27", "Siliconomics 隱含 NVIDIA 資料中心營收 CY2027（層級值，含指引；供顯示）", "十億美元", 2027, None, _rc.cell(_nvr, 5).value, None, "Derived",
+    f"{sil_f} Recon!E{_nvr}（與 2027 年對帳單凍結紀錄同值；未使用 NVIDIA FY2027 第三季實績）")
+inp("nv_wt27", "Wattonomics 隱含 NVIDIA 資料中心營收 CY2027", "十億美元", 2027, None, cells(W, "WIF_Recon_NV_ImpliedRev_2027")[0], None, "Derived", f"{wt_f} WIF_Recon_NV_ImpliedRev_2027")
+inp("nvcpg27", "NVIDIA 每 GW 內容 2027（營收口徑）", "十億美元／GW", 2027, cells(S, "SIF_NVContentGW_VR200_lo")[0], cells(W, "WIF_Recon_NV_ContentPerGW_2027")[0], cells(S, "SIF_NVContentGW_VR200_hi")[0],
+    "Derived", f"基準＝{wt_f} WIF_Recon_NV_ContentPerGW_2027；低／高＝{sil_f} SIF_NVContentGW_VR200_lo／_hi（VR200 內容區間）")
 for k, ref in N.items():
     wb.defined_names[k] = openpyxl.workbook.defined_name.DefinedName(k, attr_text=ref)
 for j, w in enumerate([12, 52, 6, 6, 8, 9, 8, 10, 110], 1):
@@ -351,6 +386,70 @@ for tag, nm in (("a", "A"), ("b", "B")):
     for sk, sn in SC:
         krow(f"c_r{tag}_{sk}", f"恆等式存量 ÷ 係數隱含存量（{nm} 節；stk_2025 {sn}）", "期末存量（恆等式）÷ 係數隱含存量；1＝與單一係數一致",
              lambda y, tag=tag, sk=sk: None if y == 2025 else f"={C(y)}{KR[tag + '_end_' + sk]}/{C(y)}{KR['c_k' + tag]}", fmt="0.00", fill=KEY if sk == "b" else None)
+# ---- W-SF-01：Stock 頁新增 D–G 節（原有 A、B、C 節不動；單位：實體 GW）----
+kr += 1
+ksec("D 節　通路（晶片商出貨 → 買方收貨）S1：期末＝期初＋① 晶片商出貨 − ② 買方收貨；不設上限、不截斷；內生停留時間（月）＝期末存量 ÷ 當年流出 × 12")
+krow("d_ship", "① 晶片商出貨（認列營收；供給側）", "In phys（Siliconomics 實體部署 GW）；2025＝ship_2025 [Derived]", lambda y: "=ship_2025" if y == 2025 else f"=phys_{y}", True)
+krow("d_pay", "② 買方收貨（付款年；需求側）", "2025–27＝WIF_Recon_NV_ShipGW；2028–29 無名稱，取 Bridge s2（平滑法同式鏡像）[Derived]",
+     lambda y: f"=wship_{y}" if y <= 2027 else f"=Bridge!{C(y)}{R['s2']}", True)
+krow("d_on", "③ 上線（通電；Bridge w4，補覆蓋；同 A、B 節）", "實體 GW", lambda y: None if y == 2025 else f"=Bridge!{C(y)}{R['w4']}", True)
+krow("d_open", "S1 期初存量（基準）", "＝上年期末（基準）", lambda y: None if y == 2025 else f"={CL(COL[y] - 1)}{kr + 2}")
+for sk, sn in SC:
+    krow(f"d_end_{sk}", f"S1 通路期末存量（{sn}）＝期初＋① − ②", "2025＝stk_2025 " + sn + " × s1sh（Assumed 比例）",
+         lambda y, sk=sk: f"={SK[sk]}*s1sh" if y == 2025 else f"={CL(COL[y] - 1)}{kr}+{C(y)}{KR['d_ship']}-{C(y)}{KR['d_pay']}",
+         sk == "b", fill=KEY if sk == "b" else None)
+krow("d_chk", "　守恆檢查（應為 0）：S1 期末 −（起點 S1＋累計① − 累計②），取三情境絕對值最大者", "累計式與逐年遞推獨立計算",
+     lambda y: None if y == 2025 else "=MAX(" + ",".join(
+         f"ABS({C(y)}{KR['d_end_' + sk]}-({SK[sk]}*s1sh+SUM($E{KR['d_ship']}:{C(y)}{KR['d_ship']})-SUM($E{KR['d_pay']}:{C(y)}{KR['d_pay']})))" for sk, _ in SC) + ")", fmt="0.000000")
+krow("d_tau", "　內生停留 τ1（月）＝S1 期末（基準）÷ ② × 12", "現行做法隱含 0（橋接表 B 節把出貨直接對上線）", lambda y: None if y == 2025 else f"={C(y)}{KR['d_end_b']}/{C(y)}{KR['d_pay']}*12", fmt="0.0", fill=KEY)
+krow("d_tau_lo", "　　τ1（月；stk_2025 低）", "", lambda y: None if y == 2025 else f"={C(y)}{KR['d_end_lo']}/{C(y)}{KR['d_pay']}*12", fmt="0.0")
+krow("d_tau_hi", "　　τ1（月；stk_2025 高）", "", lambda y: None if y == 2025 else f"={C(y)}{KR['d_end_hi']}/{C(y)}{KR['d_pay']}*12", fmt="0.0")
+kr += 1
+ksec("E 節　買方端（買方收貨 → 通電）S2：期末＝期初＋② 買方收貨 − ③ 上線；內生停留時間（月）＝期末存量 ÷ 當年流出 × 12")
+krow("e_pay", "② 買方收貨（流入；同 D 節）", "", lambda y: None if y == 2025 else f"={C(y)}{KR['d_pay']}", True)
+krow("e_on", "③ 上線（流出；同 D 節）", "", lambda y: None if y == 2025 else f"={C(y)}{KR['d_on']}", True)
+krow("e_open", "S2 期初存量（基準）", "＝上年期末（基準）", lambda y: None if y == 2025 else f"={CL(COL[y] - 1)}{kr + 2}")
+for sk, sn in SC:
+    krow(f"e_end_{sk}", f"S2 買方端期末存量（{sn}）＝期初＋② − ③", "2025＝stk_2025 " + sn + " ×（1 − s1sh）",
+         lambda y, sk=sk: f"={SK[sk]}*(1-s1sh)" if y == 2025 else f"={CL(COL[y] - 1)}{kr}+{C(y)}{KR['e_pay']}-{C(y)}{KR['e_on']}",
+         sk == "b", fill=KEY if sk == "b" else None)
+krow("e_chk", "　守恆檢查（應為 0）：S2 期末 −（起點 S2＋累計② − 累計③），取三情境絕對值最大者", "累計式與逐年遞推獨立計算",
+     lambda y: None if y == 2025 else "=MAX(" + ",".join(
+         f"ABS({C(y)}{KR['e_end_' + sk]}-({SK[sk]}*(1-s1sh)+SUM($E{KR['e_pay']}:{C(y)}{KR['e_pay']})-SUM($E{KR['e_on']}:{C(y)}{KR['e_on']})))" for sk, _ in SC) + ")", fmt="0.000000")
+krow("e_tau", "　內生停留 τ2（月）＝S2 期末（基準）÷ ③ × 12", "現行單一係數 k 全部放在這一段（見 F 節）", lambda y: None if y == 2025 else f"={C(y)}{KR['e_end_b']}/{C(y)}{KR['e_on']}*12", fmt="0.0", fill=KEY)
+krow("e_tau_lo", "　　τ2（月；stk_2025 低）", "", lambda y: None if y == 2025 else f"={C(y)}{KR['e_end_lo']}/{C(y)}{KR['e_on']}*12", fmt="0.0")
+krow("e_tau_hi", "　　τ2（月；stk_2025 高）", "", lambda y: None if y == 2025 else f"={C(y)}{KR['e_end_hi']}/{C(y)}{KR['e_on']}*12", fmt="0.0")
+kr += 1
+ksec("F 節　兩段合計對 B 節守恆，並與現行單一係數（lag_on、inv_on、k）隱含值並列（只顯示）")
+krow("f_tot", "S1＋S2 合計（基準）", "應等於 B 節期末存量（基準）", lambda y: f"={C(y)}{KR['d_end_b']}+{C(y)}{KR['e_end_b']}", True)
+krow("f_chk", "　守恆檢查（應為 0）：（S1＋S2）− B 節期末存量，取三情境絕對值最大者", "兩段加總須回到既有 B 節",
+     lambda y: "=MAX(" + ",".join(f"ABS({C(y)}{KR['d_end_' + sk]}+{C(y)}{KR['e_end_' + sk]}-{C(y)}{KR['b_end_' + sk]})" for sk, _ in SC) + ")", fmt="0.000000")
+krow("f_lag", "現行 lag_on（月）", "Wattonomics 權威（J3）；現行只放在買方端", lambda y: None if y == 2025 else "=lag_on", fmt="0.0")
+krow("f_inv", "現行 inv_on × 12（月）", "同上", lambda y: None if y == 2025 else "=inv_on*12", fmt="0.0")
+krow("f_k", "現行 k（月）＝lag_on＋inv_on × 12", "全部放買方端；通路隱含 0", lambda y: None if y == 2025 else "=lag_on+inv_on*12", fmt="0.0")
+krow("f_t1", "內生 τ1 通路（月）", "D 節", lambda y: None if y == 2025 else f"={C(y)}{KR['d_tau']}", fmt="0.0")
+krow("f_t2", "內生 τ2 買方端（月）", "E 節", lambda y: None if y == 2025 else f"={C(y)}{KR['e_tau']}", fmt="0.0")
+krow("f_tt", "內生 τ 合計＝（S1＋S2）÷ ③ × 12（月）", "若硬把兩段塞進單一係數 k 要多大", lambda y: None if y == 2025 else f"={C(y)}{KR['f_tot']}/{C(y)}{KR['d_on']}*12", fmt="0.0")
+krow("f_kr", "　內生 τ2 ÷ 現行 k", "1＝買方端與單一係數一致", lambda y: None if y == 2025 else f"={C(y)}{KR['f_t2']}/{C(y)}{KR['f_k']}", fmt="0.00")
+kr += 1
+ksec("G 節　stk_2025 自洽版對照（含在途量；只當對照，不改 stk_2025）：2025 年底 S2＝k × ②₂₀₂₅（與單一係數自洽）、S1＝τ1obs ÷ 12 × ①₂₀₂₅（τ1obs＝ChanObs 最近季存貨天數，低／基準／高＝六家最小／廣達／六家最大）")
+T1N = {"lo": "t1o_lo", "b": "t1o", "hi": "t1o_hi"}
+for sk, sn in SC:
+    krow(f"g_s1a_{sk}", f"S1 通路期末存量（自洽版；τ1obs {sn}）", "2025＝τ1obs ÷ 12 × ①₂₀₂₅；之後同 D 節遞推",
+         lambda y, sk=sk: f"={T1N[sk]}/12*{C(y)}{KR['d_ship']}" if y == 2025 else f"={CL(COL[y] - 1)}{kr}+{C(y)}{KR['d_ship']}-{C(y)}{KR['d_pay']}",
+         sk == "b", fill=KEY if sk == "b" else None)
+krow("g_s2a", "S2 買方端期末存量（自洽版）", "2025＝（lag_on÷12＋inv_on）× ②₂₀₂₅；之後同 E 節遞推",
+     lambda y: f"=(lag_on/12+inv_on)*{C(y)}{KR['d_pay']}" if y == 2025 else f"={CL(COL[y] - 1)}{kr}+{C(y)}{KR['e_pay']}-{C(y)}{KR['e_on']}", True)
+for sk, sn in SC:
+    krow(f"g_tot_{sk}", f"S1＋S2 合計（自洽版；τ1obs {sn}）", "", lambda y, sk=sk: f"={C(y)}{KR['g_s1a_' + sk]}+{C(y)}{KR['g_s2a']}", sk == "b")
+krow("g_diff", "　自洽版合計（基準）− B 節期末存量（基準）", "＝補上在途量後多出的量；2025 欄＝自洽版起點 − stk_2025", lambda y: f"={C(y)}{KR['g_tot_b']}-{C(y)}{KR['b_end_b']}", fmt="0.00")
+krow("g_chk", "　守恆檢查（應為 0）：自洽版合計 −（自洽版 2025 合計＋累計① − 累計③），取三情境絕對值最大者", "",
+     lambda y: None if y == 2025 else "=MAX(" + ",".join(
+         f"ABS({C(y)}{KR['g_tot_' + sk]}-($D{KR['g_tot_' + sk]}+SUM($E{KR['d_ship']}:{C(y)}{KR['d_ship']})-SUM($E{KR['d_on']}:{C(y)}{KR['d_on']})))" for sk, _ in SC) + ")", fmt="0.000000")
+krow("g_t1", "　內生 τ1（月；自洽版，基準）", "", lambda y: f"={C(y)}{KR['g_s1a_b']}/{C(y)}{KR['d_pay']}*12", fmt="0.0")
+krow("g_t2", "　內生 τ2（月；自洽版）", "≈ 現行 k（月）：需求側本身自洽", lambda y: None if y == 2025 else f"={C(y)}{KR['g_s2a']}/{C(y)}{KR['d_on']}*12", fmt="0.0")
+krow("g_lagimp", "　反推隱含 lag_on（月）＝自洽版 τ2 − inv_on × 12", "inv_on 維持現值時，買方端存量隱含的 lag_on；兩者拆不開，只顯示", lambda y: None if y == 2025 else f"={C(y)}{KR['g_t2']}-inv_on*12", fmt="0.0")
+krow("g_invimp", "　反推隱含 inv_on＝自洽版 S2 ÷ ② − lag_on ÷ 12", "lag_on 維持現值時；只顯示", lambda y: None if y == 2025 else f"={C(y)}{KR['g_s2a']}/{C(y)}{KR['e_pay']}-lag_on/12", fmt="0.000")
 K.column_dimensions["A"].width = 10; K.column_dimensions["B"].width = 70; K.column_dimensions["C"].width = 44
 for y in [2025] + YRS:
     K.column_dimensions[C(y)].width = 10
@@ -404,6 +503,274 @@ for y in YRS:
     D.column_dimensions[CL(DC[y])].width = 12
 for col, w in zip("HIJK", (14, 40, 40, 14)):
     D.column_dimensions[col].width = w
+
+# ================= 新增頁：Check、ChanObs、BuyerObs、OdmMonthly（W-SF-04／05；只顯示、不被任何既有列引用；不設任何通過門檻）=================
+NUM = "#,##0"
+Z = wb.create_sheet("Check")      # 先佔位置，內容最後填
+H = wb.create_sheet("ChanObs")
+BY = wb.create_sheet("BuyerObs")
+OM = wb.create_sheet("OdmMonthly")
+SRC = chs["sources"]
+_sc_txt = lambda ids: "；".join(f"{i}（{SRC[i]['desc'][:40]}）" for i in ids)
+
+# ---------- ChanObs ----------
+H["A1"] = (f"ChanObs — 通路（ODM／OEM）季報觀測（種子檔 channel_obs_v{chs['version']}.json 逐筆；藍字＝觀測值）。存貨天數＝期末存貨 ÷ 當季營業成本 × 當季天數；通路停留（月）＝期末存貨 ÷ 當季營業成本 × 3。"
+           "口徑是全公司，含非 AI、含尚未上板的原料與零組件，所以當作 AI 通路停留的上界（偏寬）。AI 與非 AI 公司都沒拆。廣達、鴻海、緯創為二手（S&P Global 經 stockanalysis.com，公司原文未取得，標 Interested-party）；緯穎為公司財報 PDF（Verified）；"
+           "Dell、Supermicro 為 SEC XBRL 申報值（Verified；由年度累計相減推得者標 Derived）。Dell FQ3 FY27 截至 2026-11-18 尚未公布，最近季為 2026Q2。未使用 NVIDIA FY2027 第三季實績")
+H["A1"].font = BOLD
+for j, h_ in enumerate(["鍵", "公司", "曆季", "財報期末", "單位", "營收", "營業成本", "期末存貨", "當季天數", "存貨天數（日）", "通路停留（月）", "等級", "來源類別", "來源ID", "備註（種子檔）"], 1):
+    c = H.cell(3, j, h_); c.font = BOLD; c.fill = HDR
+hr = 4
+LAST = {}   # 公司 → 最近季列號
+for n, o in enumerate(chs["odm_quarterly"], 1):
+    H.cell(hr, 1, f"o{n}"); H.cell(hr, 2, o["company"]); H.cell(hr, 3, o["quarter"]); H.cell(hr, 4, o["period_end"]); H.cell(hr, 5, o["unit"])
+    for j, k in ((6, "revenue"), (7, "cogs"), (8, "inventory"), (9, "days_in_quarter")):
+        c = H.cell(hr, j, o[k]); c.font = BLUE; c.number_format = NUM
+    c = H.cell(hr, 10, f"=H{hr}/G{hr}*I{hr}"); c.number_format = "0.0"
+    c = H.cell(hr, 11, f"=H{hr}/G{hr}*3"); c.number_format = "0.00"
+    H.cell(hr, 12, o["evidence_grade"]); H.cell(hr, 13, o["source_class"]); H.cell(hr, 14, "；".join(o["source_ids"])); H.cell(hr, 15, o["note"][:200])
+    LAST[o["company"]] = hr
+    hr += 1
+hr += 1
+H.cell(hr, 1, "最近季摘要（每家一列；停留月與存貨天數直接引用上表）").font = BOLD; hr += 1
+for j, h_ in enumerate(["鍵", "公司", "最近季", "單位", "期末存貨（本幣百萬）", "期末存貨（US$B，匯率取基準）", "通路停留（月）", "存貨天數（日）", "等級"], 1):
+    c = H.cell(hr, j, h_); c.font = BOLD; c.fill = HDR
+hr += 1
+FIRMS = ["廣達 2382", "鴻海 2317", "緯創 3231", "緯穎 6669", "Dell", "Supermicro"]
+CS = {}   # 公司 → 摘要列號
+for n, f_ in enumerate(FIRMS, 1):
+    s_ = LAST[f_]
+    H.cell(hr, 1, f"s{n}"); H.cell(hr, 2, f_); H.cell(hr, 3, f"=C{s_}"); H.cell(hr, 4, f"=E{s_}")
+    c = H.cell(hr, 5, f"=H{s_}"); c.number_format = NUM
+    c = H.cell(hr, 6, f"=E{hr}/1000/fxtw" if f_.split()[0] in ("廣達", "鴻海", "緯創", "緯穎") else f"=E{hr}/1000"); c.number_format = "0.0"
+    c = H.cell(hr, 7, f"=K{s_}"); c.number_format = "0.00"
+    c = H.cell(hr, 8, f"=J{s_}"); c.number_format = "0.0"
+    H.cell(hr, 9, f"=L{s_}")
+    CS[f_] = hr; hr += 1
+_g = lambda: f"G{CS[FIRMS[0]]}:G{CS[FIRMS[-1]]}"
+H.cell(hr, 1, "t_lo"); H.cell(hr, 2, "六家最近季通路停留 最小（τ1obs 低）"); c = H.cell(hr, 7, f"=MIN({_g()})"); c.number_format = "0.00"; c.fill = KEY; T_LO = hr; hr += 1
+H.cell(hr, 1, "t_b"); H.cell(hr, 2, "廣達 3Q26（τ1obs 基準；沿用設計書原型，廣達是模型已校準的組裝廠；不是六家的中位數）"); c = H.cell(hr, 7, f"=G{CS['廣達 2382']}"); c.number_format = "0.00"; c.fill = KEY; T_B = hr; hr += 1
+H.cell(hr, 1, "t_med"); H.cell(hr, 2, "六家最近季通路停留 中位數（對照，不用於基準）"); c = H.cell(hr, 7, f"=MEDIAN({_g()})"); c.number_format = "0.00"; hr += 1
+H.cell(hr, 1, "t_hi"); H.cell(hr, 2, "六家最近季通路停留 最大（τ1obs 高；Supermicro 2026Q2 曾達約 4.2 個月，見上表）"); c = H.cell(hr, 7, f"=MAX({_g()})"); c.number_format = "0.00"; c.fill = KEY; T_HI = hr; hr += 1
+for nm, rr in (("t1o_lo", T_LO), ("t1o", T_B), ("t1o_hi", T_HI)):
+    wb.defined_names[nm] = openpyxl.workbook.defined_name.DefinedName(nm, attr_text=f"ChanObs!$G${rr}")
+for col, w in zip("ABCDEFGHIJKLMNO", (6, 40, 10, 12, 10, 12, 12, 12, 10, 12, 12, 16, 40, 18, 60)):
+    H.column_dimensions[col].width = w
+
+# ---------- BuyerObs ----------
+BY["A1"] = (f"BuyerObs — 買方在建工程與現金資本支出（種子檔 channel_obs_v{chs['version']}.json；SEC XBRL 申報與 10-Q 附註，Verified；US$百萬）。"
+            "在建工程含建物，Meta、Oracle、CoreWeave 未拆建物與 IT；Alphabet 為『assets not yet in service』，含建物與 IT。所以由在建工程換算的 IT 量是上界。Microsoft、Amazon 沒有逐季在建工程揭露或本輪沒找到，未列入。"
+            "Oracle 曆季對應財季：2026Q2＝FQ4 FY26（5/31）、2026Q3＝FQ1 FY27（8/31）；11 月與 2 月 10-Q 未列在建工程。通路停留（月）＝在建工程 ÷（最近季現金資本支出 × 4）× 12，僅供對照")
+BY["A1"].font = BOLD
+for j, h_ in enumerate(["鍵", "公司", "曆季", "財報期末", "現金資本支出（US$M）", "在建工程（US$M）", "在建工程口徑", "等級", "來源ID", "在建工程 ÷ 年化現金資本支出（月）", "備註（種子檔）"], 1):
+    c = BY.cell(3, j, h_); c.font = BOLD; c.fill = HDR
+br_ = 4
+BROWS = {}
+for n, o in enumerate(chs["buyer_quarterly"], 1):
+    BY.cell(br_, 1, f"b{n}"); BY.cell(br_, 2, o["company"]); BY.cell(br_, 3, o["quarter"]); BY.cell(br_, 4, o["period_end"])
+    c = BY.cell(br_, 5, o["cash_capex_usd_m"]); c.font = BLUE; c.number_format = NUM
+    if o.get("cip_usd_m") is not None:
+        c = BY.cell(br_, 6, o["cip_usd_m"]); c.font = BLUE; c.number_format = NUM
+        c = BY.cell(br_, 10, f"=F{br_}/(E{br_}*4)*12"); c.number_format = "0.0"
+    BY.cell(br_, 7, o.get("cip_scope")); BY.cell(br_, 8, o["evidence_grade"]); BY.cell(br_, 9, "；".join(o["source_ids"])); BY.cell(br_, 11, o["note"][:160])
+    BROWS.setdefault(o["company"], []).append(br_)
+    br_ += 1
+br_ += 1
+BY.cell(br_, 1, "最近季摘要（2026Q3）").font = BOLD; br_ += 1
+for j, h_ in enumerate(["鍵", "公司", "最近季", "在建工程（US$B）", "最近季現金資本支出（US$B）", "近四季現金資本支出合計（US$B）", "停留（月；季年化分母）", "停留（月；近四季分母）", "口徑"], 1):
+    c = BY.cell(br_, j, h_); c.font = BOLD; c.fill = HDR
+br_ += 1
+BS = {}
+for n, nm in enumerate(["Meta", "Alphabet", "Oracle", "CoreWeave"], 1):
+    rows_ = BROWS[nm]; last_ = rows_[-1]
+    BY.cell(br_, 1, f"bs{n}"); BY.cell(br_, 2, nm); BY.cell(br_, 3, f"=C{last_}")
+    c = BY.cell(br_, 4, f"=F{last_}/1000"); c.number_format = "0.0"
+    c = BY.cell(br_, 5, f"=E{last_}/1000"); c.number_format = "0.0"
+    c = BY.cell(br_, 6, f"=SUM(E{rows_[0]}:E{last_})/1000"); c.number_format = "0.0"
+    c = BY.cell(br_, 7, f"=D{br_}/(E{br_}*4)*12"); c.number_format = "0.0"
+    c = BY.cell(br_, 8, f"=D{br_}/F{br_}*12"); c.number_format = "0.0"
+    BY.cell(br_, 9, "assets not yet in service（含建物與 IT）" if nm == "Alphabet" else "在建工程（含建物，未拆）")
+    BS[nm] = br_; br_ += 1
+for col, w in zip("ABCDEFGHIJK", (6, 12, 10, 14, 18, 18, 36, 14, 22, 20, 60)):
+    BY.column_dimensions[col].width = w
+
+# ---------- OdmMonthly（W-SF-05；只顯示）----------
+OM["A1"] = ("OdmMonthly — 四家台廠月營收追蹤（NT$百萬；種子檔月營收，二手：Yahoo 奇摩股市與 HiStock 互核，轉載公司月營收公告，標 Interested-party；鴻海 2026-10 單一來源）。"
+            "只列月營收、季加總（對季報營收）、年增；AI 占比換算列為 [Assumed] 區間，只顯示。本頁不與 2027 年對帳單檢驗點的任何門檻比較、不做任何判定（檢驗點的方法與判定在 adjudication/20261118_2027年對帳單_檢驗點事前寫定.md）；不被任何既有列引用")
+OM["A1"].font = BOLD
+for j, h_ in enumerate(["鍵", "月份", "廣達", "鴻海", "緯創", "緯穎", "四家合計", "廣達 年增", "鴻海 年增", "緯創 年增", "緯穎 年增", "四家合計 年增"], 1):
+    c = OM.cell(3, j, h_); c.font = BOLD; c.fill = HDR
+mm = chs["monthly_revenue"]["months"]
+orow = 4
+MR = {}
+for n, m_ in enumerate(mm):
+    OM.cell(orow, 1, f"m{n + 1}"); OM.cell(orow, 2, m_["month"])
+    for j, k in ((3, "quanta"), (4, "hon_hai"), (5, "wistron"), (6, "wiwynn")):
+        c = OM.cell(orow, j, m_[k]); c.font = BLUE; c.number_format = NUM
+    c = OM.cell(orow, 7, f"=SUM(C{orow}:F{orow})"); c.number_format = NUM
+    if n >= 12:
+        for j in range(8, 13):
+            c = OM.cell(orow, j, f"={CL(j - 5)}{orow}/{CL(j - 5)}{orow - 12}-1"); c.number_format = "0.0%"
+    MR[m_["month"]] = orow
+    orow += 1
+m_first, m_last = 4, orow - 1
+orow += 1
+OM.cell(orow, 1, "季加總對季報營收（NT$百萬；季報營收取自種子檔 odm_quarterly；2026Q4 只有 10 月，標『不完整』，不計年增）").font = BOLD; orow += 1
+for j, h_ in enumerate(["鍵", "曆季", "廣達 月加總", "鴻海 月加總", "緯創 月加總", "緯穎 月加總", "四家月加總", "廣達 季報", "鴻海 季報", "緯創 季報", "緯穎 季報", "四家季報",
+                        "廣達 差異％", "鴻海 差異％", "緯創 差異％", "緯穎 差異％", "四家月加總 年增", "備註"], 1):
+    c = OM.cell(orow, j, h_); c.font = BOLD; c.fill = HDR
+orow += 1
+QREV = {}
+for o in chs["odm_quarterly"]:
+    QREV[(o["company"], o["quarter"])] = o["revenue"]
+QTRS = ["2025Q1", "2025Q2", "2025Q3", "2025Q4", "2026Q1", "2026Q2", "2026Q3", "2026Q4"]
+QROW = {}
+TW = ["廣達 2382", "鴻海 2317", "緯創 3231", "緯穎 6669"]
+for qi, q in enumerate(QTRS):
+    y_, qn = int(q[:4]), int(q[5])
+    ms = [f"{y_}-{(qn - 1) * 3 + k:02d}" for k in (1, 2, 3)]
+    rows_m = [MR[m] for m in ms if m in MR]
+    OM.cell(orow, 1, f"q{qi + 1}"); OM.cell(orow, 2, q)
+    for j in range(4):
+        col = CL(3 + j)
+        c = OM.cell(orow, 3 + j, f"=SUM({col}{rows_m[0]}:{col}{rows_m[-1]})"); c.number_format = NUM
+    c = OM.cell(orow, 7, f"=SUM(C{orow}:F{orow})"); c.number_format = NUM
+    if q != "2026Q4":
+        for j, f_ in enumerate(TW):
+            c = OM.cell(orow, 8 + j, QREV[(f_, q)]); c.font = BLUE; c.number_format = NUM
+            c = OM.cell(orow, 13 + j, f"={CL(3 + j)}{orow}/{CL(8 + j)}{orow}-1"); c.number_format = "0.0%"
+        c = OM.cell(orow, 12, f"=SUM(H{orow}:K{orow})"); c.number_format = NUM
+        if qi >= 4:
+            c = OM.cell(orow, 17, f"=G{orow}/G{QROW[QTRS[qi - 4]]}-1"); c.number_format = "0.0%"
+    else:
+        OM.cell(orow, 18, "不完整：只有 2026-10 一個月")
+    QROW[q] = orow
+    orow += 1
+orow += 1
+OM.cell(orow, 1, "AI 占比換算（只顯示；AI 占比 [Assumed] 低／基準／高＝ai_sh，四家共用，公司都沒拆；不得與任何門檻比較）：四家月營收合計 × ai_sh（NT$百萬）").font = BOLD; orow += 1
+for j, h_ in enumerate(["鍵", "月份", "低", "基準", "高", "註"], 1):
+    c = OM.cell(orow, j, h_); c.font = BOLD; c.fill = HDR
+orow += 1
+for n, m_ in enumerate(mm):
+    r_ = MR[m_["month"]]
+    OM.cell(orow, 1, f"a{n + 1}"); OM.cell(orow, 2, m_["month"])
+    for j, nm in ((3, "ai_sh_lo"), (4, "ai_sh"), (5, "ai_sh_hi")):
+        c = OM.cell(orow, j, f"=G{r_}*{nm}"); c.number_format = NUM
+    if n == 0:
+        OM.cell(orow, 6, "[Assumed]；只顯示；鴻海含大量非 AI 營收，同一占比套用到四家會高估")
+    orow += 1
+for col, w in zip("ABCDEFGHIJKLMNOPQR", (6, 10, 12, 12, 12, 12, 13, 12, 12, 12, 12, 13, 11, 11, 11, 11, 14, 30)):
+    OM.column_dimensions[col].width = w
+
+# ---------- Check ----------
+Z["A1"] = ("Check — 把存量帳的兩段要放的量，對照可觀測的量：(i) 通路容量、(ii) 金額、(iii) 改放買方端。每個核對輸出『放得下／放不下多少 GW』（低／基準／高），"
+           "【不做判定、不設任何通過門檻】；本頁不被任何既有列引用，也不進任何基準或殘差帳（不得用來縮小 Residual 頁的未歸因殘差）。"
+           "列的『低／基準／高』指結果的低／基準／高（放不下的量由小到大），不是各輸入同步取低值。正值＝放不下，負值＝放得下。單位：實體 GW，金額 US$B")
+Z["A1"].font = BOLD
+for j, h_ in enumerate(["列", "項目", "說明", "低", "基準", "高", "等級"], 1):
+    c = Z.cell(3, j, h_); c.font = BOLD; c.fill = HDR
+zr = 4
+ZR = {}
+S_ = lambda key, yr=2027: f"Stock!{C(yr)}{KR[key]}"
+
+
+def zrow(key, label, note, d=None, e=None, f=None, tag="Derived", fmt="0.00", fill=None, bold=False):
+    global zr
+    Z.cell(zr, 1, key); Z.cell(zr, 2, label); Z.cell(zr, 3, note)
+    for j, v in zip((4, 5, 6), (d, e, f)):
+        if v is not None:
+            c = Z.cell(zr, j, v); c.number_format = fmt
+            if fill: c.fill = fill
+    Z.cell(zr, 7, tag)
+    if bold:
+        Z.cell(zr, 2).font = BOLD
+    ZR[key] = zr; zr += 1
+
+
+def zsec(t):
+    global zr
+    Z.cell(zr, 1, t).font = BOLD; zr += 1
+
+
+def ztxt(key, label, src_key, note=""):
+    r0 = ZR[src_key]
+    zrow(key, label, note, *[f'=IF({c}{r0}>0,"放不下 "&TEXT({c}{r0},"0.0")&" GW","放得下，餘 "&TEXT(-{c}{r0},"0.0")&" GW")' for c in "DEF"], tag="Derived", fmt="@")
+
+
+zsec("A. 2027 年底各段要放的量（Stock 頁 D、E、G 節；低／基準／高＝stk_2025 低／基準／高起點）")
+zrow("a1", "S1 通路需要放的量", "Stock d_end；起點 stk_2025 × s1sh", f"={S_('d_end_lo')}", f"={S_('d_end_b')}", f"={S_('d_end_hi')}", "Derived（stk_2025 Assumed）", fill=KEY, bold=True)
+zrow("a2", "S1 通路需要放的量（起點自洽版，含在途量）", "Stock g_s1a；低／基準／高＝τ1obs 低／基準／高（對照，不是基準）", f"={S_('g_s1a_lo')}", f"={S_('g_s1a_b')}", f"={S_('g_s1a_hi')}", "Derived（τ1obs Interested-party／Verified）")
+zrow("a3", "S2 買方端需要放的量（需求側自洽）", "Stock e_end_b", None, f"={S_('e_end_b')}", None, "Derived")
+zr += 1
+zsec("B. (i) 通路容量核對——停留時間法：通路能放的量＝觀測停留時間 ÷ 12 × 2027 年出貨 ①（假設存貨隨出貨同比例放大）")
+zrow("b1", "通路停留 τ1obs（月）", "低＝六家最近季最小；基準＝廣達 3Q26（沿用設計書原型）；高＝六家最大。全公司口徑含非 AI 與原料，偏寬（上界）", "=t1o_lo", "=t1o", "=t1o_hi", "Derived（存貨 Interested-party／Verified）", fmt="0.00")
+zrow("b2", "通路容量（GW）", "τ1obs ÷ 12 × 2027 ①（phys_2027）", f"=D{ZR['b1']}/12*phys_2027", f"=E{ZR['b1']}/12*phys_2027", f"=F{ZR['b1']}/12*phys_2027", "Derived", bold=True)
+zrow("b3", "放不下的量（只動容量；需要放＝a1 基準）", "低＝容量取高端；高＝容量取低端", f"=$E${ZR['a1']}-F{ZR['b2']}", f"=$E${ZR['a1']}-E{ZR['b2']}", f"=$E${ZR['a1']}-D{ZR['b2']}", "Derived", fill=KEY, bold=True)
+ztxt("b3t", "　　文字", "b3")
+zrow("b4", "放不下的量（容量與起點同時動；最寬範圍）", "低＝需要放取低且容量取高；高＝需要放取高且容量取低", f"=D{ZR['a1']}-F{ZR['b2']}", f"=E{ZR['a1']}-E{ZR['b2']}", f"=F{ZR['a1']}-D{ZR['b2']}", "Derived")
+zrow("b5", "放不下的量（起點自洽版 a2；對照）", "補上在途量後需要放更多", f"=$E${ZR['a2']}-F{ZR['b2']}", f"=$E${ZR['a2']}-E{ZR['b2']}", f"=$E${ZR['a2']}-D{ZR['b2']}", "Derived")
+zr += 1
+zsec("C. (i) 通路容量核對——存貨水準法：各家最近季存貨 × AI 占比（[Assumed]）÷ 每 GW ODM 整櫃價值＝AI 存貨相當幾 GW；再按 2027 年出貨對 2026 年出貨放大")
+CF = {}
+for f_ in FIRMS:
+    r_ = CS[f_]
+    nt = f_.split()[0] in ("廣達", "鴻海", "緯創", "緯穎")
+    d_ = f"=ChanObs!$E${r_}/1000/fxtw_hi*ai_sh_lo/odm_26" if nt else f"=ChanObs!$E${r_}/1000*ai_sh_lo/odm_26"
+    e_ = f"=ChanObs!$E${r_}/1000/fxtw*ai_sh/odm_26" if nt else f"=ChanObs!$E${r_}/1000*ai_sh/odm_26"
+    h_ = f"=ChanObs!$E${r_}/1000/fxtw_lo*ai_sh_hi/odm_26" if nt else f"=ChanObs!$E${r_}/1000*ai_sh_hi/odm_26"
+    zrow("c_" + f_.split()[0], f"{f_} 最近季存貨換算 AI 存貨（GW）", "存貨 [Interested-party／Verified]；AI 占比與匯率取低／基準／高端", d_, e_, h_, "Derived（AI 占比 Assumed）", fmt="0.000")
+    CF[f_] = ZR["c_" + f_.split()[0]]
+tw0, tw1 = CF[FIRMS[0]], CF[FIRMS[3]]
+zrow("c_tw4", "四家台廠合計（GW）", "鴻海存貨以全公司計、AI 占比同一組，會高估", *[f"=SUM({c}{tw0}:{c}{tw1})" for c in "DEF"], "Derived", fmt="0.000")
+zrow("c_us2", "Dell＋Supermicro（GW；不併入下面的全市場外推，兩者是否已在四家台廠份額之外未驗證）", "Dell 最近季為 2026Q2", *[f"={c}{CF['Dell']}+{c}{CF['Supermicro']}" for c in "DEF"], "Derived", fmt="0.000")
+zrow("c_ext", "全市場 AI 存貨（GW）＝四家台廠合計 ÷ 四家有效份額合計 2026", "SIF_AsmShareSum 2026；份額分母含其他組裝廠", *[f"={c}{ZR['c_tw4']}/asmsum_26" for c in "DEF"], "Derived", bold=True)
+zrow("c_extusd", "　全市場 AI 存貨（US$B）", "× 2026 每 GW ODM 整櫃價值", *[f"={c}{ZR['c_ext']}*odm_26" for c in "DEF"], "Derived", fmt="0")
+zrow("c_needusd", "　S1 通路需要放的存貨（US$B，a1 × 2027 每 GW ODM 價值）", "", *[f"={c}{ZR['a1']}*odm_27" for c in "DEF"], "Derived", fmt="0")
+zrow("c_mult", "　需要放 ÷ 3Q26 全市場 AI 存貨（倍）", "低＝需要取低且觀測取高", f"=D{ZR['c_needusd']}/F{ZR['c_extusd']}", f"=E{ZR['c_needusd']}/E{ZR['c_extusd']}", f"=F{ZR['c_needusd']}/D{ZR['c_extusd']}", "Derived", fmt="0.0")
+zrow("c_cap", "通路容量（GW）＝全市場 AI 存貨 × 2027 ① ÷ 2026 ①", "存貨隨年出貨同比例放大（與 B 節同一假設）", *[f"={c}{ZR['c_ext']}*phys_2027/phys_2026" for c in "DEF"], "Derived", bold=True)
+zrow("c_exc", "放不下的量（需要放＝a1 基準）", "低＝容量取高端；高＝容量取低端", f"=$E${ZR['a1']}-F{ZR['c_cap']}", f"=$E${ZR['a1']}-E{ZR['c_cap']}", f"=$E${ZR['a1']}-D{ZR['c_cap']}", "Derived", fill=KEY, bold=True)
+ztxt("c_exct", "　　文字", "c_exc")
+q_ = CS["廣達 2382"]
+zrow("c_q", "原型對照（只廣達）：3Q26 AI 存貨（GW）＝存貨 ÷ 匯率 × AI 占比 ÷ 廣達份額 ÷ 每 GW 價值", "設計書原型約 5.0 GW；基準欄", None, f"=ChanObs!$E${q_}/1000/fxtw*ai_sh/qsh_26/odm_26", None, "Derived", fmt="0.00")
+zrow("c_q27", "　同上放大到 2027（GW）", "設計書原型約 8.8 GW", None, f"=E{ZR['c_q']}*phys_2027/phys_2026", None, "Derived", fmt="0.00")
+zr += 1
+zsec("D. (ii) 金額核對——兩側隱含的 2027 年 NVIDIA 資料中心營收差額，換算成 GW（只 NVIDIA、只算一年的流量差）")
+zrow("d1", "Siliconomics 隱含 NVIDIA 資料中心營收 CY2027（US$B）", "層級值（含指引）；與 2027 年對帳單凍結紀錄同值", None, "=nv_sil27", None, "Derived", fmt="0.0")
+zrow("d2", "Wattonomics 隱含 NVIDIA 資料中心營收 CY2027（US$B）", "", None, "=nv_wt27", None, "Derived", fmt="0.0")
+zrow("d3", "兩側差額（US$B）", "d1 − d2", None, f"=E{ZR['d1']}-E{ZR['d2']}", None, "Derived", fmt="0.0")
+zrow("d4", "差額換算 GW（金額面放不下的量）", "÷ 2027 NVIDIA 每 GW 內容；低＝內容取高端（VR200_hi）；高＝內容取低端（VR200_lo）", f"=E{ZR['d3']}/nvcpg27_hi", f"=E{ZR['d3']}/nvcpg27", f"=E{ZR['d3']}/nvcpg27_lo", "Derived（內容區間 Assumed）", fill=KEY, bold=True)
+ztxt("d4t", "　　文字", "d4", "＝若 Wattonomics 的金額是對的，供給側的 2027 年出貨在金額上有這麼多 GW 沒有對應的買方錢")
+zrow("d5", "　對照：通路放不下的量（B 節 b3）減金額面放不下的量（d4）", "兩者量級對照，只顯示；金額面是一年的流量差，通路是年底存量，不是同一個量", f"=D{ZR['b3']}-D{ZR['d4']}", f"=E{ZR['b3']}-E{ZR['d4']}", f"=F{ZR['b3']}-F{ZR['d4']}", "Derived")
+zr += 1
+zsec("E. (iii) 改放買方端的試算——若把通路放不下的量全部移到買方端（已收貨、未通電），對照買方在建工程")
+zrow("e1", "買方端 2027 年底要放的量（情境 Y）＝S2（需求側）＋通路放不下的量（b3，負值取 0）", "低／基準／高＝b3 低／基準／高", *[f"={S_('e_end_b')}+MAX(0,{c}{ZR['b3']})" for c in "DEF"], "Derived", bold=True)
+for nm in ["Meta", "Alphabet", "Oracle", "CoreWeave"]:
+    zrow("e_" + nm, f"{nm} 最近季在建工程（US$B）", "含建物，上界；" + ("assets not yet in service（含 IT）" if nm == "Alphabet" else "未拆建物與 IT"), None, f"=BuyerObs!$D${BS[nm]}", None, "Verified", fmt="0.0")
+zrow("e_cip", "四家在建工程合計（US$B）", "低＝只含標為在建工程的三家（Meta、Oracle、CoreWeave，不含 Alphabet 的『未投入使用』）；基準與高＝四家。缺 Microsoft、Amazon 與其他買方",
+     f"=E{ZR['e_Meta']}+E{ZR['e_Oracle']}+E{ZR['e_CoreWeave']}", f"=SUM(E{ZR['e_Meta']}:E{ZR['e_CoreWeave']})", f"=SUM(E{ZR['e_Meta']}:E{ZR['e_CoreWeave']})", "Verified", fmt="0.0")
+zrow("e_cipgw", "在建工程換算 GW 上限（若全是 IT）", "÷ 每 GW IT 資本支出；低與基準取 2027（37.6）、高取 2026（33.4）；含建物故為上界，但只含四家故也可能偏小——兩個偏誤方向相反，未量化",
+     f"=D{ZR['e_cip']}/itpg_2027", f"=E{ZR['e_cip']}/itpg_2027", f"=F{ZR['e_cip']}/itpg_2026", "Derived", bold=True)
+zrow("e_x1", "放不下的量（在建工程金額法）", "e1 − 在建工程換算 GW；低＝需要取低且容量取高", f"=D{ZR['e1']}-F{ZR['e_cipgw']}", f"=E{ZR['e1']}-E{ZR['e_cipgw']}", f"=F{ZR['e1']}-D{ZR['e_cipgw']}", "Derived", fill=KEY)
+ztxt("e_x1t", "　　文字", "e_x1")
+for nm in ["Meta", "Alphabet", "Oracle", "CoreWeave"]:
+    zrow("e_t_" + nm, f"{nm} 在建工程停留（月；季年化／近四季）", "基準欄＝在建工程 ÷（最近季現金資本支出 × 4）；高欄＝在建工程 ÷ 近四季現金資本支出合計（BuyerObs）；含建物，上界。本列的欄位不是低／基準／高", None, f"=BuyerObs!$G${BS[nm]}", f"=BuyerObs!$H${BS[nm]}", "Derived", fmt="0.0")
+_ta = ",".join(f"E{ZR['e_t_' + n_]}:F{ZR['e_t_' + n_]}" for n_ in ["Meta", "Alphabet", "Oracle", "CoreWeave"])
+_tq = ",".join(f"E{ZR['e_t_' + n_]}" for n_ in ["Meta", "Alphabet", "Oracle", "CoreWeave"])
+zrow("e_tau", "買方端停留 τ2obs（月）", "低＝八個值最小；基準＝四家季年化值的中位數；高＝八個值最大", f"=MIN({_ta})", f"=MEDIAN({_tq})", f"=MAX({_ta})", "Derived", fmt="0.0")
+zrow("e_cap", "買方端容量（GW）＝τ2obs ÷ 12 × 2027 ③（Stock e_on）", "", *[f"={c}{ZR['e_tau']}/12*{S_('e_on')}" for c in "DEF"], "Derived", bold=True)
+zrow("e_x2", "放不下的量（停留時間法）", "e1 − 容量；低＝需要取低且容量取高", f"=D{ZR['e1']}-F{ZR['e_cap']}", f"=E{ZR['e1']}-E{ZR['e_cap']}", f"=F{ZR['e1']}-D{ZR['e_cap']}", "Derived", fill=KEY)
+ztxt("e_x2t", "　　文字", "e_x2")
+zrow("e_tauy", "　對照：情境 Y 隱含的買方端停留（月）＝e1 ÷ 2027 ③ × 12", "", *[f"={c}{ZR['e1']}/{S_('e_on')}*12" for c in "DEF"], "Derived", fmt="0.0")
+zr += 1
+zsec("說明（不是判定）")
+for t in ["本頁所有『放不下』只是算術差；不設通過門檻、不做結論，也不改任何基準；不得用來縮小 Residual 頁的未歸因殘差（規則：沒有可檢驗實績不得歸因）。",
+          "通路觀測是全公司口徑（含非 AI、含尚未上板的原料），AI 與非 AI 公司都沒拆，AI 占比 [Assumed]（ai_sh）；停留時間法因此偏寬（容量偏大），水準法的鴻海因同一占比套用而可能高估。兩個偏誤都往『容量偏大』的方向。",
+          "買方在建工程含建物（Alphabet 為含 IT 的未投入使用資產），換算 GW 是上界；但只含四家買方，缺 Microsoft、Amazon 與主權、新雲，實際可能更大。方向相反的兩個偏誤，未量化。",
+          "2028–29 的 ② 買方收貨無 Wattonomics 名稱，取 Bridge s2 鏡像；本頁只用 2027 年底值。",
+          "未使用 NVIDIA FY2027 第三季實績；本頁沒有任何數值取自 2026-08 之後才公布的 NVIDIA 資料。"]:
+    Z.cell(zr, 2, t); zr += 1
+for col, w in zip("ABCDEFG", (9, 66, 70, 12, 12, 12, 28)):
+    Z.column_dimensions[col].width = w
 
 out = sys.argv[1]
 wb.save(out)

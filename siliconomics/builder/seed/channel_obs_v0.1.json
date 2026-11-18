@@ -1,0 +1,1286 @@
+{
+ "version": "0.1",
+ "date": "2026-11-18",
+ "purpose": "通路（ODM／OEM）與買方端存量的公開觀測值，供橋接表 Check、ChanObs、BuyerObs、OdmMonthly 頁讀取（W-SF-02／03／04／05）。只放觀測值，不放任何判斷或門檻。",
+ "origin": "docs/reports/20261118_三層對帳/channel-stock/20261118_通路與買方端存量_資料.xlsx（逐筆原始值；本檔為其中橋接表要用的子集）",
+ "grade_rule": "evidence_grade 只用 Verified／Interested-party／Analogy／Assumed／Derived 五種；原資料標 [二手] 者記為 Interested-party，並以 source_class 保留『二手』字樣。Dell 與 Supermicro 的 XBRL 申報值為 Verified；營收與營業成本由年度累計相減推得者記 Derived；緯穎 Q4 營收與營業成本由全年值減前三季推得，記 Derived。",
+ "hard_limits": "未使用 NVIDIA FY2027 第三季實績。Dell FQ3 FY27（2026-08～10）截至 2026-11-18 尚未公布，故 Dell 最近季為 2026Q2。",
+ "not_obtained": "廣達、鴻海、緯創的公司原文（觀測站、公司 IR 皆被擋）；台股月營收的公司公告原文；Dell 新聞稿原文；各 10-Q 網頁原文經擷取工具轉述（SEC Archives 直連被擋、未繞過）。",
+ "odm_quarterly": [
+  {
+   "company": "廣達 2382",
+   "quarter": "2025Q1",
+   "period_end": "2025-03-31",
+   "unit": "NT$百萬",
+   "revenue": 485672,
+   "cogs": 447189,
+   "inventory": 277148,
+   "days_in_quarter": 90,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "廣達 2382",
+   "quarter": "2025Q2",
+   "period_end": "2025-06-30",
+   "unit": "NT$百萬",
+   "revenue": 504122,
+   "cogs": 468588,
+   "inventory": 286282,
+   "days_in_quarter": 91,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "廣達 2382",
+   "quarter": "2025Q3",
+   "period_end": "2025-09-30",
+   "unit": "NT$百萬",
+   "revenue": 495258,
+   "cogs": 461340,
+   "inventory": 334618,
+   "days_in_quarter": 92,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "廣達 2382",
+   "quarter": "2025Q4",
+   "period_end": "2025-12-31",
+   "unit": "NT$百萬",
+   "revenue": 638637,
+   "cogs": 598239,
+   "inventory": 512946,
+   "days_in_quarter": 92,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "廣達 2382",
+   "quarter": "2026Q1",
+   "period_end": "2026-03-31",
+   "unit": "NT$百萬",
+   "revenue": 809221,
+   "cogs": 770524,
+   "inventory": 673886,
+   "days_in_quarter": 90,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "廣達 2382",
+   "quarter": "2026Q2",
+   "period_end": "2026-06-30",
+   "unit": "NT$百萬",
+   "revenue": 1036593,
+   "cogs": 984514,
+   "inventory": 790184,
+   "days_in_quarter": 91,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "廣達 2382",
+   "quarter": "2026Q3",
+   "period_end": "2026-09-30",
+   "unit": "NT$百萬",
+   "revenue": 1115545,
+   "cogs": 1062520,
+   "inventory": 856064,
+   "days_in_quarter": 92,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）；存貨 856,064 與優分析、財報狗『8,561 億』一致（見核對結果）；公司觀測站原文未取得"
+  },
+  {
+   "company": "鴻海 2317",
+   "quarter": "2025Q1",
+   "period_end": "2025-03-31",
+   "unit": "NT$百萬",
+   "revenue": 1644316,
+   "cogs": 1543767,
+   "inventory": 1047613,
+   "days_in_quarter": 90,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "鴻海 2317",
+   "quarter": "2025Q2",
+   "period_end": "2025-06-30",
+   "unit": "NT$百萬",
+   "revenue": 1793468,
+   "cogs": 1679939,
+   "inventory": 935827,
+   "days_in_quarter": 91,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "鴻海 2317",
+   "quarter": "2025Q3",
+   "period_end": "2025-09-30",
+   "unit": "NT$百萬",
+   "revenue": 2058949,
+   "cogs": 1928192,
+   "inventory": 1185675,
+   "days_in_quarter": 92,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "鴻海 2317",
+   "quarter": "2025Q4",
+   "period_end": "2025-12-31",
+   "unit": "NT$百萬",
+   "revenue": 2606372,
+   "cogs": 2453045,
+   "inventory": 1095574,
+   "days_in_quarter": 92,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "鴻海 2317",
+   "quarter": "2026Q1",
+   "period_end": "2026-03-31",
+   "unit": "NT$百萬",
+   "revenue": 2119533,
+   "cogs": 1988553,
+   "inventory": 1209878,
+   "days_in_quarter": 90,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "鴻海 2317",
+   "quarter": "2026Q2",
+   "period_end": "2026-06-30",
+   "unit": "NT$百萬",
+   "revenue": 2525894,
+   "cogs": 2371361,
+   "inventory": 1370073,
+   "days_in_quarter": 91,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "鴻海 2317",
+   "quarter": "2026Q3",
+   "period_end": "2026-09-30",
+   "unit": "NT$百萬",
+   "revenue": 3015634,
+   "cogs": 2834121,
+   "inventory": 1507485,
+   "days_in_quarter": 92,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）；營收 3,015,634 與財報狗『3 兆 156.34 億』一致"
+  },
+  {
+   "company": "緯創 3231",
+   "quarter": "2025Q1",
+   "period_end": "2025-03-31",
+   "unit": "NT$百萬",
+   "revenue": 346485,
+   "cogs": 319430,
+   "inventory": 270414,
+   "days_in_quarter": 90,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "緯創 3231",
+   "quarter": "2025Q2",
+   "period_end": "2025-06-30",
+   "unit": "NT$百萬",
+   "revenue": 551291,
+   "cogs": 526838,
+   "inventory": 347969,
+   "days_in_quarter": 91,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "緯創 3231",
+   "quarter": "2025Q3",
+   "period_end": "2025-09-30",
+   "unit": "NT$百萬",
+   "revenue": 567805,
+   "cogs": 525840,
+   "inventory": 425314,
+   "days_in_quarter": 92,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "緯創 3231",
+   "quarter": "2025Q4",
+   "period_end": "2025-12-31",
+   "unit": "NT$百萬",
+   "revenue": 720941,
+   "cogs": 680431,
+   "inventory": 355474,
+   "days_in_quarter": 92,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "緯創 3231",
+   "quarter": "2026Q1",
+   "period_end": "2026-03-31",
+   "unit": "NT$百萬",
+   "revenue": 846303,
+   "cogs": 802209,
+   "inventory": 611556,
+   "days_in_quarter": 90,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "緯創 3231",
+   "quarter": "2026Q2",
+   "period_end": "2026-06-30",
+   "unit": "NT$百萬",
+   "revenue": 895443,
+   "cogs": 844779,
+   "inventory": 532898,
+   "days_in_quarter": 91,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "緯創 3231",
+   "quarter": "2026Q3",
+   "period_end": "2026-09-30",
+   "unit": "NT$百萬",
+   "revenue": 1149090,
+   "cogs": 1081290,
+   "inventory": 641845,
+   "days_in_quarter": 92,
+   "source_ids": [
+    "SA-BS",
+    "SA-IS"
+   ],
+   "evidence_grade": "Interested-party",
+   "source_class": "二手（S&P Global 經 stockanalysis.com 轉載；公司原文未取得）",
+   "note": "S&P Global 經 stockanalysis.com；營業成本＝頁面營收－毛利；合約負債＝頁面『Current Unearned Revenue』（科目名稱與公司原文是否一致僅緯穎驗證過）"
+  },
+  {
+   "company": "緯穎 6669",
+   "quarter": "2025Q1",
+   "period_end": "2025-03-31",
+   "unit": "NT$百萬",
+   "revenue": 170655.284,
+   "cogs": 155805.809,
+   "inventory": 124074.609,
+   "days_in_quarter": 90,
+   "source_ids": [
+    "WY"
+   ],
+   "evidence_grade": "Verified",
+   "source_class": "公司財報 PDF（KPMG 核閱）",
+   "note": "公司網站 PDF（KPMG 核閱，非查核）；原單位 NT$千元，已除以 1000"
+  },
+  {
+   "company": "緯穎 6669",
+   "quarter": "2025Q2",
+   "period_end": "2025-06-30",
+   "unit": "NT$百萬",
+   "revenue": 220743.5,
+   "cogs": 201800.059,
+   "inventory": 126751.972,
+   "days_in_quarter": 91,
+   "source_ids": [
+    "WY"
+   ],
+   "evidence_grade": "Verified",
+   "source_class": "公司財報 PDF（KPMG 核閱）",
+   "note": "公司網站 PDF（KPMG 核閱，非查核）；原單位 NT$千元，已除以 1000"
+  },
+  {
+   "company": "緯穎 6669",
+   "quarter": "2025Q3",
+   "period_end": "2025-09-30",
+   "unit": "NT$百萬",
+   "revenue": 266824.045,
+   "cogs": 243292.404,
+   "inventory": 156424.484,
+   "days_in_quarter": 92,
+   "source_ids": [
+    "WY"
+   ],
+   "evidence_grade": "Verified",
+   "source_class": "公司財報 PDF（KPMG 核閱）",
+   "note": "公司網站 PDF（KPMG 核閱，非查核）；原單位 NT$千元，已除以 1000"
+  },
+  {
+   "company": "緯穎 6669",
+   "quarter": "2025Q4",
+   "period_end": "2025-12-31",
+   "unit": "NT$百萬",
+   "revenue": 292440.481,
+   "cogs": 271311.015,
+   "inventory": 136257.029,
+   "days_in_quarter": 92,
+   "source_ids": [
+    "WY"
+   ],
+   "evidence_grade": "Derived",
+   "source_class": "公司財報 PDF（KPMG 核閱）",
+   "note": "營收與營業成本＝全年值－前三季（Excel 公式，全年值見表下方輔助列）；存貨取自同季財報；原單位 NT$千元"
+  },
+  {
+   "company": "緯穎 6669",
+   "quarter": "2026Q1",
+   "period_end": "2026-03-31",
+   "unit": "NT$百萬",
+   "revenue": 276507.734,
+   "cogs": 255626.566,
+   "inventory": 229166.239,
+   "days_in_quarter": 90,
+   "source_ids": [
+    "WY"
+   ],
+   "evidence_grade": "Verified",
+   "source_class": "公司財報 PDF（KPMG 核閱）",
+   "note": "公司網站 PDF（KPMG 核閱，非查核）；原單位 NT$千元，已除以 1000"
+  },
+  {
+   "company": "緯穎 6669",
+   "quarter": "2026Q2",
+   "period_end": "2026-06-30",
+   "unit": "NT$百萬",
+   "revenue": 278152.592,
+   "cogs": 252389.643,
+   "inventory": 207440.874,
+   "days_in_quarter": 91,
+   "source_ids": [
+    "WY"
+   ],
+   "evidence_grade": "Verified",
+   "source_class": "公司財報 PDF（KPMG 核閱）",
+   "note": "公司網站 PDF（KPMG 核閱，非查核）；原單位 NT$千元，已除以 1000"
+  },
+  {
+   "company": "緯穎 6669",
+   "quarter": "2026Q3",
+   "period_end": "2026-09-30",
+   "unit": "NT$百萬",
+   "revenue": 434617.69,
+   "cogs": 396064.488,
+   "inventory": 308423.138,
+   "days_in_quarter": 92,
+   "source_ids": [
+    "WY"
+   ],
+   "evidence_grade": "Verified",
+   "source_class": "公司財報 PDF（KPMG 核閱）",
+   "note": "公司網站 PDF（KPMG 核閱，非查核）；原單位 NT$千元，已除以 1000"
+  },
+  {
+   "company": "Dell",
+   "quarter": "2025Q1",
+   "period_end": "2025-05-02",
+   "unit": "US$百萬",
+   "revenue": 23378,
+   "cogs": 18441,
+   "inventory": 7415,
+   "days_in_quarter": 90,
+   "source_ids": [
+    "X-DELL"
+   ],
+   "evidence_grade": "Verified",
+   "source_class": "SEC XBRL 公司申報值",
+   "note": "XBRL；財報期末 2025-05-02；來源申報 https://www.sec.gov/Archives/edgar/data/1571996/000157199626000030/（申報日 2026-06-09；算法：Q）"
+  },
+  {
+   "company": "Dell",
+   "quarter": "2025Q2",
+   "period_end": "2025-08-01",
+   "unit": "US$百萬",
+   "revenue": 29776,
+   "cogs": 24329,
+   "inventory": 7211,
+   "days_in_quarter": 91,
+   "source_ids": [
+    "X-DELL"
+   ],
+   "evidence_grade": "Verified",
+   "source_class": "SEC XBRL 公司申報值",
+   "note": "XBRL；財報期末 2025-08-01；來源申報 https://www.sec.gov/Archives/edgar/data/1571996/000157199626000046/（申報日 2026-09-08；算法：Q）"
+  },
+  {
+   "company": "Dell",
+   "quarter": "2025Q3",
+   "period_end": "2025-10-31",
+   "unit": "US$百萬",
+   "revenue": 27005,
+   "cogs": 21412,
+   "inventory": 6949,
+   "days_in_quarter": 92,
+   "source_ids": [
+    "X-DELL"
+   ],
+   "evidence_grade": "Verified",
+   "source_class": "SEC XBRL 公司申報值",
+   "note": "XBRL；財報期末 2025-10-31；來源申報 https://www.sec.gov/Archives/edgar/data/1571996/000157199625000127/（申報日 2025-12-09；算法：Q）"
+  },
+  {
+   "company": "Dell",
+   "quarter": "2025Q4",
+   "period_end": "2026-01-30",
+   "unit": "US$百萬",
+   "revenue": 33379,
+   "cogs": 26649,
+   "inventory": 10437,
+   "days_in_quarter": 92,
+   "source_ids": [
+    "X-DELL"
+   ],
+   "evidence_grade": "Derived",
+   "source_class": "SEC XBRL 公司申報值",
+   "note": "XBRL；財報期末 2026-01-30；來源申報 https://www.sec.gov/Archives/edgar/data/1571996/000157199626000008/（申報日 2026-03-16；算法：YTDdiff）"
+  },
+  {
+   "company": "Dell",
+   "quarter": "2026Q1",
+   "period_end": "2026-05-01",
+   "unit": "US$百萬",
+   "revenue": 43842,
+   "cogs": 36060,
+   "inventory": 15052,
+   "days_in_quarter": 90,
+   "source_ids": [
+    "X-DELL"
+   ],
+   "evidence_grade": "Verified",
+   "source_class": "SEC XBRL 公司申報值",
+   "note": "XBRL；財報期末 2026-05-01；來源申報 https://www.sec.gov/Archives/edgar/data/1571996/000157199626000030/（申報日 2026-06-09；算法：Q）"
+  },
+  {
+   "company": "Dell",
+   "quarter": "2026Q2",
+   "period_end": "2026-07-31",
+   "unit": "US$百萬",
+   "revenue": 46971,
+   "cogs": 37141,
+   "inventory": 21290,
+   "days_in_quarter": 91,
+   "source_ids": [
+    "X-DELL"
+   ],
+   "evidence_grade": "Verified",
+   "source_class": "SEC XBRL 公司申報值",
+   "note": "XBRL；財報期末 2026-07-31；來源申報 https://www.sec.gov/Archives/edgar/data/1571996/000157199626000046/（申報日 2026-09-08；算法：Q）"
+  },
+  {
+   "company": "Supermicro",
+   "quarter": "2025Q1",
+   "period_end": "2025-03-31",
+   "unit": "US$百萬",
+   "revenue": 4599.913,
+   "cogs": 4159.695,
+   "inventory": 3870.243,
+   "days_in_quarter": 90,
+   "source_ids": [
+    "X-SMCI"
+   ],
+   "evidence_grade": "Verified",
+   "source_class": "SEC XBRL 公司申報值",
+   "note": "XBRL；財報期末 2025-03-31；來源申報 https://www.sec.gov/Archives/edgar/data/1375365/000137536526000014/（申報日 2026-05-11；算法：Q）"
+  },
+  {
+   "company": "Supermicro",
+   "quarter": "2025Q2",
+   "period_end": "2025-06-30",
+   "unit": "US$百萬",
+   "revenue": 5756.911,
+   "cogs": 5212.809,
+   "inventory": 4680.375,
+   "days_in_quarter": 91,
+   "source_ids": [
+    "X-SMCI"
+   ],
+   "evidence_grade": "Derived",
+   "source_class": "SEC XBRL 公司申報值",
+   "note": "XBRL；財報期末 2025-06-30；來源申報 https://www.sec.gov/Archives/edgar/data/1375365/000137536526000022/（申報日 2026-08-31；算法：YTDdiff）"
+  },
+  {
+   "company": "Supermicro",
+   "quarter": "2025Q3",
+   "period_end": "2025-09-30",
+   "unit": "US$百萬",
+   "revenue": 5017.79,
+   "cogs": 4550.417,
+   "inventory": 5730.002,
+   "days_in_quarter": 92,
+   "source_ids": [
+    "X-SMCI"
+   ],
+   "evidence_grade": "Verified",
+   "source_class": "SEC XBRL 公司申報值",
+   "note": "XBRL；財報期末 2025-09-30；來源申報 https://www.sec.gov/Archives/edgar/data/1375365/000137536526000027/（申報日 2026-11-06；算法：Q）"
+  },
+  {
+   "company": "Supermicro",
+   "quarter": "2025Q4",
+   "period_end": "2025-12-31",
+   "unit": "US$百萬",
+   "revenue": 12682.491,
+   "cogs": 11883.924,
+   "inventory": 10595.448,
+   "days_in_quarter": 92,
+   "source_ids": [
+    "X-SMCI"
+   ],
+   "evidence_grade": "Verified",
+   "source_class": "SEC XBRL 公司申報值",
+   "note": "XBRL；財報期末 2025-12-31；來源申報 https://www.sec.gov/Archives/edgar/data/1375365/000137536526000007/（申報日 2026-02-06；算法：Q）"
+  },
+  {
+   "company": "Supermicro",
+   "quarter": "2026Q1",
+   "period_end": "2026-03-31",
+   "unit": "US$百萬",
+   "revenue": 10243.014,
+   "cogs": 9224.334,
+   "inventory": 11103.376,
+   "days_in_quarter": 90,
+   "source_ids": [
+    "X-SMCI"
+   ],
+   "evidence_grade": "Verified",
+   "source_class": "SEC XBRL 公司申報值",
+   "note": "XBRL；財報期末 2026-03-31；來源申報 https://www.sec.gov/Archives/edgar/data/1375365/000137536526000014/（申報日 2026-05-11；算法：Q）"
+  },
+  {
+   "company": "Supermicro",
+   "quarter": "2026Q2",
+   "period_end": "2026-06-30",
+   "unit": "US$百萬",
+   "revenue": 11119.777,
+   "cogs": 9177.146,
+   "inventory": 12895.949,
+   "days_in_quarter": 91,
+   "source_ids": [
+    "X-SMCI"
+   ],
+   "evidence_grade": "Derived",
+   "source_class": "SEC XBRL 公司申報值",
+   "note": "XBRL；財報期末 2026-06-30；來源申報 https://www.sec.gov/Archives/edgar/data/1375365/000137536526000022/（申報日 2026-08-31；算法：YTDdiff）"
+  },
+  {
+   "company": "Supermicro",
+   "quarter": "2026Q3",
+   "period_end": "2026-09-30",
+   "unit": "US$百萬",
+   "revenue": 19945.832,
+   "cogs": 17404.789,
+   "inventory": 15053.64,
+   "days_in_quarter": 92,
+   "source_ids": [
+    "X-SMCI"
+   ],
+   "evidence_grade": "Verified",
+   "source_class": "SEC XBRL 公司申報值",
+   "note": "XBRL；財報期末 2026-09-30；來源申報 https://www.sec.gov/Archives/edgar/data/1375365/000137536526000027/（申報日 2026-11-06；算法：Q）"
+  }
+ ],
+ "monthly_revenue": {
+  "unit": "NT$百萬",
+  "evidence_grade": "Interested-party",
+  "source_class": "二手（Yahoo 奇摩股市與 HiStock 互核，轉載公司月營收公告；鴻海 2026-10 單一來源 HiStock）",
+  "source_ids": [
+   "YH-M",
+   "HS-M"
+  ],
+  "months": [
+   {
+    "month": "2025-01",
+    "quanta": 142560.447,
+    "hon_hai": 538665.759,
+    "wistron": 90786.162,
+    "wiwynn": 37506.396
+   },
+   {
+    "month": "2025-02",
+    "quanta": 150564.741,
+    "hon_hai": 551382.882,
+    "wistron": 102714.136,
+    "wiwynn": 46516.815
+   },
+   {
+    "month": "2025-03",
+    "quanta": 192546.802,
+    "hon_hai": 552124.573,
+    "wistron": 152984.771,
+    "wiwynn": 86632.073
+   },
+   {
+    "month": "2025-04",
+    "quanta": 154010.874,
+    "hon_hai": 641365.597,
+    "wistron": 133703.546,
+    "wiwynn": 63802.622
+   },
+   {
+    "month": "2025-05",
+    "quanta": 160242.327,
+    "hon_hai": 615744.933,
+    "wistron": 208405.603,
+    "wiwynn": 71132.658
+   },
+   {
+    "month": "2025-06",
+    "quanta": 189868.451,
+    "hon_hai": 540236.697,
+    "wistron": 209182.302,
+    "wiwynn": 85808.22
+   },
+   {
+    "month": "2025-07",
+    "quanta": 158342.022,
+    "hon_hai": 613864.601,
+    "wistron": 191725.748,
+    "wiwynn": 84528.726
+   },
+   {
+    "month": "2025-08",
+    "quanta": 152807.846,
+    "hon_hai": 606512.275,
+    "wistron": 172642.595,
+    "wiwynn": 95978.718
+   },
+   {
+    "month": "2025-09",
+    "quanta": 184108.513,
+    "hon_hai": 837067.572,
+    "wistron": 203436.94,
+    "wiwynn": 86316.601
+   },
+   {
+    "month": "2025-10",
+    "quanta": 173195.793,
+    "hon_hai": 895708.525,
+    "wistron": 185061.565,
+    "wiwynn": 91264.205
+   },
+   {
+    "month": "2025-11",
+    "quanta": 192946.811,
+    "hon_hai": 844275.843,
+    "wistron": 280624.451,
+    "wiwynn": 96885.487
+   },
+   {
+    "month": "2025-12",
+    "quanta": 272494.82,
+    "hon_hai": 862861.362,
+    "wistron": 255254.817,
+    "wiwynn": 104290.789
+   },
+   {
+    "month": "2026-01",
+    "quanta": 230834.858,
+    "hon_hai": 730039.42,
+    "wistron": 228366.631,
+    "wiwynn": 83225.29
+   },
+   {
+    "month": "2026-02",
+    "quanta": 215583.149,
+    "hon_hai": 595813.348,
+    "wistron": 284893.08,
+    "wiwynn": 94633.137
+   },
+   {
+    "month": "2026-03",
+    "quanta": 362803.048,
+    "hon_hai": 803737.716,
+    "wistron": 333043.315,
+    "wiwynn": 98649.307
+   },
+   {
+    "month": "2026-04",
+    "quanta": 339921.315,
+    "hon_hai": 832097.956,
+    "wistron": 283437.176,
+    "wiwynn": 82730.996
+   },
+   {
+    "month": "2026-05",
+    "quanta": 311481.017,
+    "hon_hai": 859409.333,
+    "wistron": 290183.471,
+    "wiwynn": 84050.473
+   },
+   {
+    "month": "2026-06",
+    "quanta": 385190.82,
+    "hon_hai": 821762.936,
+    "wistron": 321821.969,
+    "wiwynn": 111371.123
+   },
+   {
+    "month": "2026-07",
+    "quanta": 366274.08,
+    "hon_hai": 946512.543,
+    "wistron": 308219.198,
+    "wiwynn": 117685.53
+   },
+   {
+    "month": "2026-08",
+    "quanta": 423970.932,
+    "hon_hai": 921766.023,
+    "wistron": 460065.063,
+    "wiwynn": 144311.808
+   },
+   {
+    "month": "2026-09",
+    "quanta": 325299.509,
+    "hon_hai": 1158633.235,
+    "wistron": 380806.168,
+    "wiwynn": 172620.352
+   },
+   {
+    "month": "2026-10",
+    "quanta": 353250.4,
+    "hon_hai": 1305319.552,
+    "wistron": 402614.784,
+    "wiwynn": 165131.828
+   }
+  ]
+ },
+ "buyer_quarterly": [
+  {
+   "company": "Meta",
+   "quarter": "2025Q4",
+   "period_end": "2025-12-31",
+   "cash_capex_usd_m": 21383,
+   "cip_usd_m": 50521,
+   "cip_scope": "CIP（含建物；Meta 未拆建物與 IT）",
+   "ppe_equipment_gross_usd_m": 98040,
+   "ppe_scope": "Servers and network assets（毛額）",
+   "source_ids": [
+    "X-META",
+    "D-META-3Q26"
+   ],
+   "evidence_grade": "Verified",
+   "note": "現金資本支出 YTDdiff；申報 https://www.sec.gov/Archives/edgar/data/1326801/000162828026003942/（申報日 2026-01-29）；未起租租賃取自 XBRL 標籤 UnrecordedUnconditionalPurchaseObligationBalanceSheetAmount；僅 2026Q3 經 10-Q 文字確認為『尚未起租的租賃 355.73B』，其餘季度依標籤、未逐季讀文字；Meta 公布的『含融資租賃本金』資本支出＝現金＋融資租賃本金（口徑B）"
+  },
+  {
+   "company": "Meta",
+   "quarter": "2026Q1",
+   "period_end": "2026-03-31",
+   "cash_capex_usd_m": 18997,
+   "cip_usd_m": 61017,
+   "cip_scope": "CIP（含建物；Meta 未拆建物與 IT）",
+   "ppe_equipment_gross_usd_m": 105987,
+   "ppe_scope": "Servers and network assets（毛額）",
+   "source_ids": [
+    "X-META",
+    "D-META-1Q26"
+   ],
+   "evidence_grade": "Verified",
+   "note": "現金資本支出 Q；申報 https://www.sec.gov/Archives/edgar/data/1326801/000162828026028526/（申報日 2026-04-30）；未起租租賃取自 XBRL 標籤 UnrecordedUnconditionalPurchaseObligationBalanceSheetAmount；僅 2026Q3 經 10-Q 文字確認為『尚未起租的租賃 355.73B』，其餘季度依標籤、未逐季讀文字；Meta 公布的『含融資租賃本金』資本支出＝現金＋融資租賃本金（口徑B）"
+  },
+  {
+   "company": "Meta",
+   "quarter": "2026Q2",
+   "period_end": "2026-06-30",
+   "cash_capex_usd_m": 30116,
+   "cip_usd_m": 80345,
+   "cip_scope": "CIP（含建物；Meta 未拆建物與 IT）",
+   "ppe_equipment_gross_usd_m": 119683,
+   "ppe_scope": "Servers and network assets（毛額）",
+   "source_ids": [
+    "X-META",
+    "D-META-2Q26"
+   ],
+   "evidence_grade": "Verified",
+   "note": "現金資本支出 YTDdiff；申報 https://www.sec.gov/Archives/edgar/data/1326801/000162828026050705/（申報日 2026-07-30）；未起租租賃取自 XBRL 標籤 UnrecordedUnconditionalPurchaseObligationBalanceSheetAmount；僅 2026Q3 經 10-Q 文字確認為『尚未起租的租賃 355.73B』，其餘季度依標籤、未逐季讀文字；Meta 公布的『含融資租賃本金』資本支出＝現金＋融資租賃本金（口徑B）"
+  },
+  {
+   "company": "Meta",
+   "quarter": "2026Q3",
+   "period_end": "2026-09-30",
+   "cash_capex_usd_m": 33942,
+   "cip_usd_m": 89499,
+   "cip_scope": "CIP（含建物；Meta 未拆建物與 IT）",
+   "ppe_equipment_gross_usd_m": 133626,
+   "ppe_scope": "Servers and network assets（毛額）",
+   "source_ids": [
+    "X-META",
+    "D-META-3Q26"
+   ],
+   "evidence_grade": "Verified",
+   "note": "現金資本支出 YTDdiff；申報 https://www.sec.gov/Archives/edgar/data/1326801/000162828026066773/（申報日 2026-10-22）；未起租租賃取自 XBRL 標籤 UnrecordedUnconditionalPurchaseObligationBalanceSheetAmount；僅 2026Q3 經 10-Q 文字確認為『尚未起租的租賃 355.73B』，其餘季度依標籤、未逐季讀文字；Meta 公布的『含融資租賃本金』資本支出＝現金＋融資租賃本金（口徑B）"
+  },
+  {
+   "company": "Alphabet",
+   "quarter": "2025Q4",
+   "period_end": "2025-12-31",
+   "cash_capex_usd_m": 27851,
+   "cip_usd_m": 78592,
+   "cip_scope": "assets not yet in service（含建物、IT；未拆）",
+   "ppe_equipment_gross_usd_m": null,
+   "ppe_scope": null,
+   "source_ids": [
+    "X-GOOGL",
+    "D-GOOGL-3Q26"
+   ],
+   "evidence_grade": "Verified",
+   "note": "現金資本支出 YTDdiff；申報 https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/（申報日 2026-02-05）"
+  },
+  {
+   "company": "Alphabet",
+   "quarter": "2026Q1",
+   "period_end": "2026-03-31",
+   "cash_capex_usd_m": 35674,
+   "cip_usd_m": 108597,
+   "cip_scope": "assets not yet in service（含建物、IT；未拆）",
+   "ppe_equipment_gross_usd_m": null,
+   "ppe_scope": null,
+   "source_ids": [
+    "X-GOOGL",
+    "D-GOOGL-1Q26"
+   ],
+   "evidence_grade": "Verified",
+   "note": "現金資本支出 Q；申報 https://www.sec.gov/Archives/edgar/data/1652044/000165204426000048/（申報日 2026-04-30）"
+  },
+  {
+   "company": "Alphabet",
+   "quarter": "2026Q2",
+   "period_end": "2026-06-30",
+   "cash_capex_usd_m": 44924,
+   "cip_usd_m": 122814,
+   "cip_scope": "assets not yet in service（含建物、IT；未拆）",
+   "ppe_equipment_gross_usd_m": null,
+   "ppe_scope": null,
+   "source_ids": [
+    "X-GOOGL",
+    "D-GOOGL-2Q26"
+   ],
+   "evidence_grade": "Verified",
+   "note": "現金資本支出 YTDdiff；申報 https://www.sec.gov/Archives/edgar/data/1652044/000165204426000071/（申報日 2026-07-23）"
+  },
+  {
+   "company": "Alphabet",
+   "quarter": "2026Q3",
+   "period_end": "2026-09-30",
+   "cash_capex_usd_m": 51355,
+   "cip_usd_m": 145270,
+   "cip_scope": "assets not yet in service（含建物、IT；未拆）",
+   "ppe_equipment_gross_usd_m": null,
+   "ppe_scope": null,
+   "source_ids": [
+    "X-GOOGL",
+    "D-GOOGL-3Q26"
+   ],
+   "evidence_grade": "Verified",
+   "note": "現金資本支出 YTDdiff；申報 https://www.sec.gov/Archives/edgar/data/1652044/000165204426000084/（申報日 2026-10-29）"
+  },
+  {
+   "company": "Oracle",
+   "quarter": "2025Q4",
+   "period_end": "2025-11-30",
+   "cash_capex_usd_m": 12033,
+   "cip_usd_m": null,
+   "cip_scope": null,
+   "ppe_equipment_gross_usd_m": null,
+   "ppe_scope": null,
+   "source_ids": [
+    "X-ORCL"
+   ],
+   "evidence_grade": "Verified",
+   "note": "現金資本支出 YTDdiff；申報 https://www.sec.gov/Archives/edgar/data/1341439/000119312525315925/（申報日 2025-12-11）"
+  },
+  {
+   "company": "Oracle",
+   "quarter": "2026Q1",
+   "period_end": "2026-02-28",
+   "cash_capex_usd_m": 18635,
+   "cip_usd_m": null,
+   "cip_scope": null,
+   "ppe_equipment_gross_usd_m": null,
+   "ppe_scope": null,
+   "source_ids": [
+    "X-ORCL"
+   ],
+   "evidence_grade": "Verified",
+   "note": "現金資本支出 YTDdiff；申報 https://www.sec.gov/Archives/edgar/data/1341439/000119312526101045/（申報日 2026-03-11）"
+  },
+  {
+   "company": "Oracle",
+   "quarter": "2026Q2",
+   "period_end": "2026-05-31",
+   "cash_capex_usd_m": 16493,
+   "cip_usd_m": 39973,
+   "cip_scope": "CIP（含建物；未拆）",
+   "ppe_equipment_gross_usd_m": 59634,
+   "ppe_scope": "Computer, network, machinery and equipment（毛額，XBRL MachineryAndEquipmentGross）",
+   "source_ids": [
+    "X-ORCL"
+   ],
+   "evidence_grade": "Verified",
+   "note": "現金資本支出 YTDdiff；申報 https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/（申報日 2026-06-22）；Oracle 10-Q 只在第 1 財季列 CIP；5 月底值取自 10-K／XBRL"
+  },
+  {
+   "company": "Oracle",
+   "quarter": "2026Q3",
+   "period_end": "2026-08-31",
+   "cash_capex_usd_m": 28499,
+   "cip_usd_m": 48546,
+   "cip_scope": "CIP（含建物；未拆）",
+   "ppe_equipment_gross_usd_m": 77755,
+   "ppe_scope": "Computer, network, machinery and equipment（毛額，XBRL MachineryAndEquipmentGross）",
+   "source_ids": [
+    "X-ORCL",
+    "D-ORCL-1QFY27"
+   ],
+   "evidence_grade": "Verified",
+   "note": "現金資本支出 Q；申報 https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/（申報日 2026-09-11）；Oracle FQ1 FY27（2026-06～08）；10-Q 文字：未起租租賃 $288 billion（預計 FY27Q2～FY2029 起租）"
+  },
+  {
+   "company": "CoreWeave",
+   "quarter": "2025Q4",
+   "period_end": "2025-12-31",
+   "cash_capex_usd_m": 4060,
+   "cip_usd_m": 9376,
+   "cip_scope": "CIP（含建物；未拆）",
+   "ppe_equipment_gross_usd_m": 20903,
+   "ppe_scope": "Technology equipment（毛額）",
+   "source_ids": [
+    "X-CRWV",
+    "D-CRWV-3Q26"
+   ],
+   "evidence_grade": "Verified",
+   "note": "現金資本支出 YTDdiff；申報 https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/（申報日 2026-03-02）"
+  },
+  {
+   "company": "CoreWeave",
+   "quarter": "2026Q1",
+   "period_end": "2026-03-31",
+   "cash_capex_usd_m": 7695,
+   "cip_usd_m": 9581,
+   "cip_scope": "CIP（含建物；未拆）",
+   "ppe_equipment_gross_usd_m": 26627,
+   "ppe_scope": "Technology equipment（毛額）",
+   "source_ids": [
+    "X-CRWV",
+    "D-CRWV-1Q26"
+   ],
+   "evidence_grade": "Verified",
+   "note": "現金資本支出 Q；申報 https://www.sec.gov/Archives/edgar/data/1769628/000176962826000222/（申報日 2026-05-08）；未起租租賃＝估計未來未折現租金；2025Q3 取自 10-Q 文字"
+  },
+  {
+   "company": "CoreWeave",
+   "quarter": "2026Q2",
+   "period_end": "2026-06-30",
+   "cash_capex_usd_m": 6422,
+   "cip_usd_m": 11918,
+   "cip_scope": "CIP（含建物；未拆）",
+   "ppe_equipment_gross_usd_m": 33823,
+   "ppe_scope": "Technology equipment（毛額）",
+   "source_ids": [
+    "X-CRWV",
+    "D-CRWV-2Q26"
+   ],
+   "evidence_grade": "Verified",
+   "note": "現金資本支出 YTDdiff；申報 https://www.sec.gov/Archives/edgar/data/1769628/000176962826000366/（申報日 2026-08-12）；未起租租賃＝估計未來未折現租金；2025Q3 取自 10-Q 文字"
+  },
+  {
+   "company": "CoreWeave",
+   "quarter": "2026Q3",
+   "period_end": "2026-09-30",
+   "cash_capex_usd_m": 9441,
+   "cip_usd_m": 9339,
+   "cip_scope": "CIP（含建物；未拆）",
+   "ppe_equipment_gross_usd_m": 47023,
+   "ppe_scope": "Technology equipment（毛額）",
+   "source_ids": [
+    "X-CRWV",
+    "D-CRWV-3Q26"
+   ],
+   "evidence_grade": "Verified",
+   "note": "現金資本支出 YTDdiff；申報 https://www.sec.gov/Archives/edgar/data/1769628/000176962826000465/（申報日 2026-11-12）；未起租租賃＝估計未來未折現租金；2025Q3 取自 10-Q 文字"
+  }
+ ],
+ "ai_share_refs": [
+  {
+   "company": "Dell",
+   "basis": "AI 伺服器營收 16.4B ÷ 當季營收 46.971B（Q2 FY27）",
+   "value": 0.3492,
+   "evidence_grade": "Interested-party",
+   "source": "PU-D（二手轉述，公司新聞稿原文未取得）",
+   "use": "只參照，不入模型；用來定 AI 占比低值"
+  },
+  {
+   "company": "Supermicro",
+   "basis": "AI 解決方案約占 FQ1 FY27 營收 71%",
+   "value": 0.71,
+   "evidence_grade": "Interested-party",
+   "source": "SM-R（公司簡報，經擷取工具轉述）",
+   "use": "只參照"
+  },
+  {
+   "company": "廣達",
+   "basis": "廣達模型 FY2026 AI 伺服器營收 2,719.19 ÷ 營收 3,998.81（quanta v0.4.10；公司本身未揭露占比）",
+   "value": 0.68,
+   "evidence_grade": "Derived",
+   "source": "廣達個股模型（非公司揭露）",
+   "use": "AI 占比基準值；套用到其他公司為假設"
+  },
+  {
+   "company": "鴻海",
+   "basis": "雲端網路產品占營收 54%（含非 AI）；AI 伺服器占比未揭露",
+   "value": null,
+   "evidence_grade": "Interested-party",
+   "source": "SD-H; UA-H2",
+   "use": "不可當 AI 占比，只作脈絡"
+  },
+  {
+   "company": "緯創",
+   "basis": "AI 占比未揭露",
+   "value": null,
+   "evidence_grade": "Interested-party",
+   "source": "UA-W",
+   "use": "無依據"
+  },
+  {
+   "company": "緯穎",
+   "basis": "『roughly half』來自可靠度低的轉述（頁面自述 AI 生成）",
+   "value": null,
+   "evidence_grade": "Interested-party",
+   "source": "FU-WY",
+   "use": "不得作為數值使用"
+  }
+ ],
+ "sources": {
+  "D-CRWV-1Q26": {
+   "desc": "CoreWeave 10-Q 2026-03-31",
+   "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000222/crwv-20260331.htm",
+   "date": "2026-05-08",
+   "label": "[Verified]（公司 SEC 申報原文）"
+  },
+  "D-CRWV-2Q26": {
+   "desc": "CoreWeave 10-Q 2026-06-30",
+   "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000366/crwv-20260630.htm",
+   "date": "2026-08-12",
+   "label": "[Verified]（公司 SEC 申報原文）"
+  },
+  "D-CRWV-3Q26": {
+   "desc": "CoreWeave 10-Q 2026-09-30",
+   "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000465/crwv-20260930.htm",
+   "date": "2026-11-12",
+   "label": "[Verified]（公司 SEC 申報原文）"
+  },
+  "D-GOOGL-1Q26": {
+   "desc": "Alphabet 10-Q 2026-03-31",
+   "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000048/goog-20260331.htm",
+   "date": "2026-04-30",
+   "label": "[Verified]（公司 SEC 申報原文）"
+  },
+  "D-GOOGL-2Q26": {
+   "desc": "Alphabet 10-Q 2026-06-30",
+   "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000071/goog-20260630.htm",
+   "date": "2026-07-23",
+   "label": "[Verified]（公司 SEC 申報原文）"
+  },
+  "D-GOOGL-3Q26": {
+   "desc": "Alphabet 10-Q 2026-09-30（Note 7 P&E；Note 4 租賃；Note 10 承諾）",
+   "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000084/goog-20260930.htm",
+   "date": "2026-10-29",
+   "label": "[Verified]（公司 SEC 申報原文）"
+  },
+  "D-META-1Q26": {
+   "desc": "Meta 10-Q 2026-03-31",
+   "url": "https://www.sec.gov/Archives/edgar/data/1326801/000162828026028526/meta-20260331.htm",
+   "date": "2026-04-30",
+   "label": "[Verified]（公司 SEC 申報原文）"
+  },
+  "D-META-2Q26": {
+   "desc": "Meta 10-Q 2026-06-30",
+   "url": "https://www.sec.gov/Archives/edgar/data/1326801/000162828026050705/meta-20260630.htm",
+   "date": "2026-07-30",
+   "label": "[Verified]（公司 SEC 申報原文）"
+  },
+  "D-META-3Q26": {
+   "desc": "Meta 10-Q 2026-09-30（附註：Property and equipment；Commitments）",
+   "url": "https://www.sec.gov/Archives/edgar/data/1326801/000162828026066773/meta-20260930.htm",
+   "date": "2026-10-22",
+   "label": "[Verified]（公司 SEC 申報原文）"
+  },
+  "D-ORCL-1QFY27": {
+   "desc": "Oracle 10-Q 2026-08-31",
+   "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm",
+   "date": "2026-09-11",
+   "label": "[Verified]（公司 SEC 申報原文）"
+  },
+  "HS-M": {
+   "desc": "HiStock 月營收頁（含 2026-10；數字為單精度浮點，末位進位）",
+   "url": "https://histock.tw/stock/financial.aspx?no={2382|2317|3231|6669}&t=2",
+   "date": "取用 2026-11-18",
+   "label": "[二手]（轉載公司月營收公告）"
+  },
+  "SA-BS": {
+   "desc": "S&P Global 資料經 stockanalysis.com 季資產負債表（廣達 2382／鴻海 2317／緯創 3231；與緯穎公司原文 11 季逐季相符，見核對結果）",
+   "url": "https://stockanalysis.com/quote/tpe/{2382|2317|3231}/financials/balance-sheet/?period=quarterly",
+   "date": "取用 2026-11-18（頁面標示更新至 2026-11-12）",
+   "label": "[二手]"
+  },
+  "SA-IS": {
+   "desc": "S&P Global 資料經 stockanalysis.com 季損益表（營收、營業成本＝營收－毛利，由頁面推導）",
+   "url": "https://stockanalysis.com/quote/tpe/{2382|2317|3231}/financials/?period=quarterly",
+   "date": "取用 2026-11-18",
+   "label": "[二手]"
+  },
+  "WY": {
+   "desc": "緯穎 公司網站合併財報 PDF（KPMG 核閱）：Wiwynn_2025Q1/2025Q4/2026Q1/2026Q2/2026Q3_Financial.pdf、2025Q2_WYHQ_FS_EN.pdf、2025Q3_WYHQ_FS_EN.pdf（Q2 2026 核閱報告日 2026-08-07）",
+   "url": "https://www.wiwynn.com/hubfs/Investors/Financial_Report/",
+   "date": "各季財報；取用 2026-11-18",
+   "label": "[Verified]"
+  },
+  "X-CRWV": {
+   "desc": "CRWV SEC XBRL companyfacts（公司 10-Q/10-K 的 XBRL 申報值；每格的 accession 見資料列備註/來源欄）",
+   "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001769628.json",
+   "date": "取用 2026-11-18",
+   "label": "[Verified]（公司申報 XBRL）"
+  },
+  "X-DELL": {
+   "desc": "DELL SEC XBRL companyfacts（公司 10-Q/10-K 的 XBRL 申報值；每格的 accession 見資料列備註/來源欄）",
+   "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001571996.json",
+   "date": "取用 2026-11-18",
+   "label": "[Verified]（公司申報 XBRL）"
+  },
+  "X-GOOGL": {
+   "desc": "GOOGL SEC XBRL companyfacts（公司 10-Q/10-K 的 XBRL 申報值；每格的 accession 見資料列備註/來源欄）",
+   "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001652044.json",
+   "date": "取用 2026-11-18",
+   "label": "[Verified]（公司申報 XBRL）"
+  },
+  "X-META": {
+   "desc": "META SEC XBRL companyfacts（公司 10-Q/10-K 的 XBRL 申報值；每格的 accession 見資料列備註/來源欄）",
+   "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001326801.json",
+   "date": "取用 2026-11-18",
+   "label": "[Verified]（公司申報 XBRL）"
+  },
+  "X-ORCL": {
+   "desc": "ORCL SEC XBRL companyfacts（公司 10-Q/10-K 的 XBRL 申報值；每格的 accession 見資料列備註/來源欄）",
+   "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001341439.json",
+   "date": "取用 2026-11-18",
+   "label": "[Verified]（公司申報 XBRL）"
+  },
+  "X-SMCI": {
+   "desc": "SMCI SEC XBRL companyfacts（公司 10-Q/10-K 的 XBRL 申報值；每格的 accession 見資料列備註/來源欄）",
+   "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001375365.json",
+   "date": "取用 2026-11-18",
+   "label": "[Verified]（公司申報 XBRL）"
+  },
+  "YH-M": {
+   "desc": "Yahoo 奇摩股市月營收頁（2025-01 至 2026-09，千元精確值）",
+   "url": "https://tw.stock.yahoo.com/quote/{2382|2317|3231|6669}.TW/revenue",
+   "date": "取用 2026-11-18",
+   "label": "[二手]（轉載公司月營收公告）"
+  }
+ }
+}
