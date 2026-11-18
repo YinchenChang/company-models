@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>三層對帳第二波匯總報告</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* 版面：單欄長文報告，左側固定目錄（寬螢幕）；摘要先於細節；狀態用色塊標示 */
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --ink:#1b2430; --muted:#5b6777; --line:#d9dee6;
+  --accent:#0f5e7a; --accent-soft:#e3f0f4;
+  --good:#1f7a4d; --good-bg:#e2f3ea; --warn:#9a6200; --warn-bg:#fbefd5; --bad:#a8322b; --bad-bg:#f9e3e1; --none:#5b6777; --none-bg:#e9ecf1;
+  --supply:#0f5e7a; --demand:#c47a1b;
+  --font-display:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --font-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#12171e; --surface:#1a212b; --ink:#e6eaf0; --muted:#9aa6b6; --line:#2e3846;
+    --accent:#6cc3de; --accent-soft:#1d3440;
+    --good:#6fd3a0; --good-bg:#173527; --warn:#f0c264; --warn-bg:#3a2e12; --bad:#f09a93; --bad-bg:#40201e; --none:#9aa6b6; --none-bg:#273140;
+    --supply:#6cc3de; --demand:#e8a857;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#12171e; --surface:#1a212b; --ink:#e6eaf0; --muted:#9aa6b6; --line:#2e3846;
+  --accent:#6cc3de; --accent-soft:#1d3440;
+  --good:#6fd3a0; --good-bg:#173527; --warn:#f0c264; --warn-bg:#3a2e12; --bad:#f09a93; --bad-bg:#40201e; --none:#9aa6b6; --none-bg:#273140;
+  --supply:#6cc3de; --demand:#e8a857;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.75}
+.wrap{max-width:1180px;margin:0 auto;padding:32px 20px 80px;display:grid;grid-template-columns:1fr;gap:32px}
+@media (min-width:1040px){.wrap{grid-template-columns:200px minmax(0,1fr)}}
+nav{font-size:14px}
+@media (min-width:1040px){nav{position:sticky;top:24px;align-self:start}}
+nav p{margin:0 0 8px;color:var(--muted);font-size:13px}
+nav ol{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:4px 14px}
+@media (min-width:1040px){nav ol{flex-direction:column;gap:6px}}
+nav a{color:var(--ink);text-decoration:none;border-bottom:1px solid transparent}
+nav a:hover{border-bottom-color:var(--accent);color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+main{min-width:0;display:flex;flex-direction:column;gap:40px}
+header .meta{color:var(--muted);font-size:14px;margin:0 0 6px}
+h1{font-family:var(--font-display);font-size:32px;line-height:1.3;margin:0 0 20px;text-wrap:balance}
+h2{font-family:var(--font-display);font-size:23px;line-height:1.4;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid var(--accent);text-wrap:balance}
+h3{font-size:17px;margin:22px 0 8px}
+p{margin:0 0 12px;max-width:44em}
+section{display:flex;flex-direction:column}
+.lead{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:6px;padding:18px 22px}
+.lead p{margin:0;max-width:none;font-size:17px}
+.yearcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px;margin:4px 0 6px}
+.yc{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.yc .y{font-family:var(--font-display);font-size:22px;line-height:1.2}
+.yc .t{font-size:13.5px;color:var(--muted);line-height:1.55}
+.pill{display:inline-block;font-size:12.5px;font-weight:700;padding:1px 9px;border-radius:999px;white-space:nowrap;align-self:flex-start}
+.p-good{color:var(--good);background:var(--good-bg)} .p-warn{color:var(--warn);background:var(--warn-bg)}
+.p-bad{color:var(--bad);background:var(--bad-bg)} .p-none{color:var(--none);background:var(--none-bg)}
+.tw{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px;margin:6px 0 14px}
+table{border-collapse:collapse;width:100%;font-size:14.5px;line-height:1.6}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{font-weight:700;background:var(--accent-soft);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.k{font-weight:700;white-space:nowrap}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin:6px 0 14px}
+.chart .legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13.5px;color:var(--muted);margin-bottom:10px}
+.sw{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.row{display:grid;grid-template-columns:48px minmax(0,1fr);gap:10px;align-items:center;padding:6px 0;border-top:1px dashed var(--line)}
+.row:first-of-type{border-top:none}
+.row .yr{font-weight:700;font-variant-numeric:tabular-nums}
+.bars{display:flex;flex-direction:column;gap:4px}
+.bar{display:flex;align-items:center;gap:8px;font-size:13px;font-variant-numeric:tabular-nums}
+.bar i{display:block;height:13px;border-radius:2px}
+.bar .s{background:var(--supply)} .bar .d{background:var(--demand)}
+.bar .x{height:13px;border:1px dashed var(--muted);border-radius:2px;width:60px}
+.note{font-size:14px;color:var(--muted)}
+ol.pts,ul.pts{margin:0 0 12px;padding-left:1.4em;max-width:46em}
+ol.pts li,ul.pts li{margin-bottom:8px}
+.tag{font-size:12.5px;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 5px;white-space:nowrap}
+.rank{font-weight:700;color:var(--accent)}
+.deadline{font-weight:700;color:var(--bad)}
+footer{color:var(--muted);font-size:13.5px;border-top:1px solid var(--line);padding-top:14px}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;background:var(--accent-soft);padding:0 4px;border-radius:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav aria-label="目錄">
+  <p>目錄</p>
+  <ol>
+    <li><a href="#sec-today">今天做了什麼</a></li>
+    <li><a href="#sec-years">1 逐年完成度與信心度</a></li>
+    <li><a href="#sec-bottleneck">2 瓶頸與權宜辦法</a></li>
+    <li><a href="#sec-limits">3 使用限制</a></li>
+    <li><a href="#sec-andy">4 需要你協助</a></li>
+    <li><a href="#sec-peers">5 同業做法</a></li>
+    <li><a href="#sec-pr">開著的 PR</a></li>
+  </ol>
+</nav>
+
+<main>
+<header>
+  <p class="meta">2026-11-18　chat 端　對象：Andy</p>
+  <h1>三層對帳第二波匯總報告</h1>
+  <div class="lead"><p>三層對帳在 <strong>2026 年可以用</strong>：兩側差 10%，實績檢驗打平。<strong>2027–2029 年仍未對上</strong>，兩側每年差約 14 GW；今天排除了三個候選原因、確認了一個重複計算，但沒有找到能解釋主要差距的單一原因。<strong>2030 年沒有對帳</strong>，因為供給側沒建。有 4 個會改值的 PR 等你決定，最急的是 11-30 的期限裁定。</p></div>
+</header>
+
+<section id="sec-today">
+<h2>今天做了什麼</h2>
+<div class="tw"><table>
+<thead><tr><th>項目</th><th>結果</th><th>狀態</th></tr></thead>
+<tbody>
+<tr><td class="k">#647 規則 v1.5 草案</td><td>第三季條款已照「不進模型、不校準，可作對帳與裁定證據；方法須事前寫定」修正。全文沒有出現第三季數值</td><td><span class="pill p-warn">等你逐條核可</span></td></tr>
+<tr><td class="k">期限裁定材料（11-30）</td><td>主讀數：供給側 +11.9%、需求側 −12.0%，結果是打平、維持現行</td><td><span class="pill p-warn">等你裁定</span></td></tr>
+<tr><td class="k">#648 NVIDIA 腳本</td><td>比對不過的原因：AMD、Broadcom 的 HTML 內嵌 NVIDIA 的建置編號，各差 1 處字串。重產後通過，已刪檢查第 14 項例外</td><td><span class="pill p-good">已合併</span></td></tr>
+<tr><td class="k">#650 拆開</td><td>#657 只含 2028–29 證據區間（4 個名稱）；#658 是 xAI 存量與資金缺口頁（122 個名稱）。#650 已關閉</td><td><span class="pill p-warn">兩個會改值草稿</span></td></tr>
+<tr><td class="k">Siliconomics v0.20 原地修補</td><td>舊取法改名、顆數加註「封裝」、季節讀數改三年權重、觀測數列顯示列。我獨立核對：既有 1,931 個名稱 0 差異</td><td><span class="pill p-good">#659 已合併</span></td></tr>
+<tr><td class="k">2028 年 0.8 改連續法</td><td>2028：42.23 → 45.07；2029：42.68 → 45.55</td><td><span class="pill p-warn">#661 會改值草稿</span></td></tr>
+<tr><td class="k">Rubin Ultra 重複計算</td><td>查證屬實；2027：39.16 → 38.74</td><td><span class="pill p-warn">#662 會改值草稿</span></td></tr>
+<tr><td class="k">橋接表三項新增</td><td>付款年檢核列、存量帳、殘差帳骨架</td><td><span class="pill p-none">#654 未合併</span></td></tr>
+<tr><td class="k">晶片橋接表改讀 Tokenomics v22.0</td><td>數值 0 差異，但合併後三家個股與 Wattonomics 要跟著改</td><td><span class="pill p-none">#655 未合併</span></td></tr>
+<tr><td class="k">Wattonomics 三份查核報告</td><td>Blackwell、非 NVIDIA 廠房口徑、兩層營收帳設計</td><td><span class="pill p-good">#660 已合併</span></td></tr>
+<tr><td class="k">HBM 獨立供給、同業做法研究</td><td>完成</td><td><span class="pill p-good">#656 已合併</span></td></tr>
+<tr><td class="k">Tokenomics 工作單</td><td>M4 比值名稱、Rubin Ultra 規格口徑查證</td><td><span class="pill p-none">Tokenomics #201 草稿</span></td></tr>
+<tr><td class="k">2027 年隱含值凍結</td><td>供給側 743.8、需求側 408.8（NVIDIA 資料中心營收，十億美元）</td><td><span class="pill p-good">已入 repo</span></td></tr>
+</tbody></table></div>
+<p><strong>第二波工作單完成情形：</strong>W2-01、02、03、04A、05A、06A 完成；05B、08 部分完成；01b、04B、06B、07（6 段）未做。</p>
+</section>
+
+<section id="sec-years">
+<h2>1　到 2030 年逐年的完成度與信心度</h2>
+<p>信心度用序位與文字，不打分數。</p>
+<div class="yearcards">
+  <div class="yc"><span class="y">2025</span><span class="pill p-warn">中</span><span class="t">只有需求側對 NVIDIA 實績的單邊檢驗（比值 0.826）</span></div>
+  <div class="yc"><span class="y">2026</span><span class="pill p-good">中高</span><span class="t">兩側差 10%；前三季實績下各偏 12%，一高一低</span></div>
+  <div class="yc"><span class="y">2027</span><span class="pill p-bad">低</span><span class="t">差 14.7 GW；86.8% 集中在 NVIDIA</span></div>
+  <div class="yc"><span class="y">2028</span><span class="pill p-bad">低</span><span class="t">差 14.1 GW；供給側證據比例只有四分之一</span></div>
+  <div class="yc"><span class="y">2029</span><span class="pill p-bad">很低</span><span class="t">差 14.2 GW；兩側多數是外推</span></div>
+  <div class="yc"><span class="y">2030</span><span class="pill p-none">無</span><span class="t">供給側未建，沒有對帳</span></div>
+</div>
+
+<div class="chart" role="img" aria-label="2026 至 2030 年供給側與需求側部署 GW 對照">
+  <div class="legend"><span><span class="sw" style="background:var(--supply)"></span>供給側 Siliconomics 基準（GW）</span><span><span class="sw" style="background:var(--demand)"></span>需求側 Wattonomics 換算值（GW）</span></div>
+  <div class="row"><span class="yr">2026</span><div class="bars"><div class="bar"><i class="s" style="width:39.0%"></i>23.40</div><div class="bar"><i class="d" style="width:35.0%"></i>20.97</div></div></div>
+  <div class="row"><span class="yr">2027</span><div class="bars"><div class="bar"><i class="s" style="width:65.3%"></i>39.16</div><div class="bar"><i class="d" style="width:40.8%"></i>24.49</div></div></div>
+  <div class="row"><span class="yr">2028</span><div class="bars"><div class="bar"><i class="s" style="width:70.4%"></i>42.23</div><div class="bar"><i class="d" style="width:47.0%"></i>28.18</div></div></div>
+  <div class="row"><span class="yr">2029</span><div class="bars"><div class="bar"><i class="s" style="width:71.1%"></i>42.68</div><div class="bar"><i class="d" style="width:47.5%"></i>28.48</div></div></div>
+  <div class="row"><span class="yr">2030</span><div class="bars"><div class="bar"><span class="x"></span>未建</div><div class="bar"><span class="note">有需求側讀數，無供給側可比</span></div></div></div>
+</div>
+
+<div class="tw"><table>
+<thead><tr><th>年</th><th class="n">供給側（GW）</th><th class="n">需求側（GW）</th><th class="n">差距</th><th class="n">證據比例<br>供給／需求</th><th>完成度</th><th>信心度</th></tr></thead>
+<tbody>
+<tr><td class="k">2025</td><td class="n">未建</td><td class="n">比值 0.826<br><span class="note">#658 後 0.877</span></td><td class="n">無法算</td><td class="n">—</td><td>只有需求側單邊檢驗</td><td><span class="pill p-warn">中</span> 有全年實績可比，但只有一側</td></tr>
+<tr><td class="k">2026</td><td class="n">23.40</td><td class="n">20.97</td><td class="n">2.4（10%）</td><td class="n">0.79／0.86</td><td>兩側讀數、實績檢驗、期限裁定材料都齊</td><td><span class="pill p-good">中高</span> 前三季實績下兩側各偏 12%</td></tr>
+<tr><td class="k">2027</td><td class="n">39.16<br><span class="note">#662 後 38.74</span></td><td class="n">24.49</td><td class="n">14.7</td><td class="n">0.45／0.47</td><td>兩側讀數齊；平台別拆解、存量帳完成；原因未定</td><td><span class="pill p-bad">低</span> 差距 37%，86.8% 在 NVIDIA（區間 66%–107%）</td></tr>
+<tr><td class="k">2028</td><td class="n">42.23<br><span class="note">原始 52.79；#661 後 45.07</span></td><td class="n">28.18</td><td class="n">14.1</td><td class="n">0.24／0.52</td><td>兩側讀數齊；無法拆平台；基準含一個沒有外部校準的係數</td><td><span class="pill p-bad">低</span></td></tr>
+<tr><td class="k">2029</td><td class="n">42.68<br><span class="note">原始 60.14；#661 後 45.55</span></td><td class="n">28.48</td><td class="n">14.2</td><td class="n">0.08／0.21</td><td>供給側用連續法接 2028，沒有獨立水準</td><td><span class="pill p-bad">很低</span></td></tr>
+<tr><td class="k">2030</td><td class="n">未建</td><td class="n">有</td><td class="n">無法算</td><td class="n">—／0.22</td><td>沒有對帳</td><td><span class="pill p-none">無</span> 只有需求側單邊外推</td></tr>
+</tbody></table></div>
+<p class="note">證據比例＝該年讀數中有已公布實績、已簽約或已確認站點支撐的比重。</p>
+
+<h3>三個要點</h3>
+<ol class="pts">
+<li><strong>「到 2030」目前實際只到 2029。</strong>Siliconomics 的顆數只建到 2029。要對到 2030，得先決定供給側 2030 怎麼建（第 4 節第 7 題）。</li>
+<li><strong>2027–2029 的差距不是時差。</strong>新建的存量帳顯示：如果兩側都是真的，到 2027 年底會有約 25 GW 已出貨未上線，2029 年底約 55 GW。這是單一時差係數隱含存量的 1.2 倍（2027）到 2.6 倍（2029），逐年擴大。兩側不可能同時為真。<span class="tag">Derived</span>　起始存量是 <span class="tag">Assumed</span> 0.8／1.6／3.2 GW，對結論影響不到 2 GW。</li>
+<li><strong>2026 年的「中高」有一個未解因素。</strong>公司的資料中心營收含網通，兩層的隱含值不含。扣掉後對需求側有利，幅度沒量化。</li>
+</ol>
+</section>
+
+<section id="sec-bottleneck">
+<h2>2　最大的瓶頸與權宜辦法</h2>
+<p>依對結論的影響排序。</p>
+<div class="tw"><table>
+<thead><tr><th>#</th><th>瓶頸</th><th>今天查到什麼</th><th>權宜辦法</th></tr></thead>
+<tbody>
+<tr><td class="k">1</td><td><strong>2027 年起 NVIDIA 顆數兩側差一倍</strong>（912 萬對 438 萬封裝）。需求側的 NVIDIA 拆分讀的是供給側的買方份額，不是獨立證據</td><td>排除三個原因：封裝與晶粒口徑（兩層都是封裝）、「2027 不計 Blackwell」（只影響 0.2–0.3 GW）、非 NVIDIA 廠房口徑（方向相反）。確認一個：Rubin Ultra 重複計算（0.4 GW，占差距 3%）</td><td><span class="rank">首選</span> 兩讀數並列、基準不動，等 2027 年 5 月起的期中實績（檢驗標的已凍結）<br><span class="rank">次佳</span> 顯示中間估計（已建，只顯示）<br><span class="rank">第三</span> 取券商原文重核顆數，需要你提供原文</td></tr>
+<tr><td class="k">2</td><td><strong>回測樣本只有 2 個獨立點</strong>，分不出哪一側準；最早 2028 年底才有 5 個</td><td>同業研究：沒有機構公開過 2027–2029 級別的預測誤差</td><td><span class="rank">首選</span> 凍結每一版預測當版本庫，日後逐版檢驗（今天已開始）<br><span class="rank">次佳</span> 加第三家可比公司（AMD 不揭露 GPU 營收，目前不可行）<br><span class="rank">第三</span> 回測同業的歷史版本變動</td></tr>
+<tr><td class="k">3</td><td><strong>站點實體讀數只看到 41%</strong>（2027 年七家資本支出路徑 18.16 GW，站點只有 7.50 GW）</td><td>Epoch AI 自估其站點資料庫只覆蓋全球已部署算力約 44%（90% 區間 29%–77%）<span class="tag">Verified，已抽查原頁</span>。這是類比，不證明我們的缺口相同</td><td><span class="rank">首選</span> 需求側另列「覆蓋率調整後」區間，不改基準<br><span class="rank">次佳</span> 少數大站點用空污許可的備用發電機容量校準<br><span class="rank">第三</span> 維持現狀並標明</td></tr>
+<tr><td class="k">4</td><td><strong>2028 年基準含一個沒有外部校準的 0.8</strong></td><td>#661 已照你選的首選做出影響分析</td><td>見第 4 節第 3 題</td></tr>
+<tr><td class="k">5</td><td><strong>HBM 供給上限不獨立</strong>（現行值由需求推得）</td><td>三家公司都沒有揭露 HBM 位元或晶圓產能。自建估計 2027 年只有現行值的 57%，但晶圓投片數來自媒體估計 <span class="tag">Analogy</span>，區間很寬（2.1–7.0 EB）</td><td><span class="rank">首選</span> 只進檢查頁、不改出貨<br><span class="rank">次佳</span> 等公司揭露<br><span class="rank">第三</span> 不建<br>不建議現在入模型</td></tr>
+<tr><td class="k">6</td><td><strong>單層升版必然讓檢查先變紅</strong></td><td>Wattonomics 升版後要等 Siliconomics 重匯狀態檔</td><td><span class="rank">首選</span> 兩個 PR 背靠背合併<br><span class="rank">次佳</span> 把該項改成提醒（要修規則）</td></tr>
+<tr><td class="k">7</td><td>Siliconomics 與個股之間：13 個對帳點只有 2 個以個股實績檢驗，4 個未建</td><td>今天沒做（W2-07）</td><td>下一波的主要工作</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="sec-limits">
+<h2>3　使用限制</h2>
+<ol class="pts">
+<li><strong>2026 年</strong>的部署 GW 可以當個股模型的輸入。<strong>2027 年起</strong>的部署 GW 是供給側讀數，比需求側高 50%–60%；用它推硬體個股營收時，要同時看需求側讀數下的結果。</li>
+<li><strong>2028、2029 年</strong>的基準不是預測，是「2027 基準 × 需求側成長率」的延伸，水準完全繼承 2027 年的未決差距。</li>
+<li><strong>中間估計與衰減寫法</strong>只顯示。權重沒有校準，不能當基準或個股讀數；程式已加防護，被引用就中止建置。</li>
+<li><strong>NVIDIA 第三季</strong>沒有進任何模型、快照、種子檔、係數或權重。它只出現在裁定材料與回測的樣本外段落。</li>
+<li><strong>季節權重</strong>只有三個歷史年度，低端 30.7% 來自 FY2024 起飛年；用低端時讀數會翻號。</li>
+<li><strong>資金缺口頁的歷史年</strong>（2024–2025）用 GW 重建，沒用實績。xAI 2024 年模型值是法定文件揭露值的 1.8 倍（#658 合併後 3.8 倍）。歷史年的缺口數字目前不宜引用。</li>
+<li><strong>營運者 × 使用者矩陣</strong>只有 2025–2027 年底值，「未分配」占 35%–40%，還不能用來做兩層營收帳。</li>
+</ol>
+<h3>今天沒驗證的事</h3>
+<ul class="pts">
+<li>各代理的活頁簿沒有逐格複核。我只獨立核對了 #659 的名稱值與裁定試算。</li>
+<li>#661、#662 的個股影響是代理在暫存區跑的，沒有另派代理獨立核對。規則草案 C9 第 4 點要求基準變更要獨立核對，合併前要補。</li>
+<li>券商與研調原文仍未取得。</li>
+<li>同業研究只抽查兩處（Epoch 的覆蓋率、Cahn 的 1.5 兆美元），其餘未逐條複核。</li>
+<li>#659 合併後主線的重建檢查，報告完成時還在跑；合併前該 PR 自己的檢查是過的。</li>
+</ul>
+</section>
+
+<section id="sec-andy">
+<h2>4　需要你協助的地方</h2>
+<h3>要你決定</h3>
+<div class="tw"><table>
+<thead><tr><th>#</th><th>題目</th><th>選項</th><th>建議預設</th><th>期限</th></tr></thead>
+<tbody>
+<tr><td class="k">1</td><td>2026 年期限裁定</td><td>(a) 打平、維持現行<br>(b) 改判需求側 20.97 GW<br>(c) 延到全年實績</td><td><strong>(a)</strong></td><td class="deadline">11-30</td></tr>
+<tr><td class="k">2</td><td>規則 v1.5 逐條核可（#647，6 題加 3 個細項）</td><td>逐條</td><td>CE、中間估計、衰減寫法、C0 第 11 點、C10 五條不改值，可先生效</td><td class="deadline">11-30 前</td></tr>
+<tr><td class="k">3</td><td>#661：2028 年 0.8 改連續法</td><td>合併／不合併</td><td>方法是你選的首選，但<strong>會讓 3 家投資建議改變</strong>：日月光 強力放空→放空、新易盛 買進→強力買進、格羅方德 放空→中立。71 家目標價 +0% 至 +3.5%。建議先補獨立核對再決定</td><td>不急</td></tr>
+<tr><td class="k">4</td><td>#662：Rubin Ultra 重複計算</td><td>(A) Rubin 7.0→6.7 並重算 HBM 截頂（2027：38.74）<br>(B) Rubin Ultra 歸零（39.18）</td><td><strong>(A)</strong>。投資建議變動 0 家，目標價 −0.2% 至 +0.9%</td><td>不急</td></tr>
+<tr><td class="k">5</td><td>#657：2028–29 需求側證據比例改區間</td><td>合併／不合併</td><td>合併。基準不變；2028 年低端 0.454 只比退出門檻 0.45 高 0.004</td><td>不急</td></tr>
+<tr><td class="k">6</td><td>#658：xAI 2024 存量與資金缺口頁</td><td>首選：歷史年改讀實績<br>次佳：缺口頁不含補入存量<br>第三：照現做加實績對照列</td><td><strong>首選</strong>，另開一版。#658 本身先不合：合併會讓 2025 年對帳單機械性結案（比值 0.826 → 0.877 進入容差）</td><td>不急</td></tr>
+<tr><td class="k">7</td><td>對帳範圍要不要真的延到 2030</td><td>(a) 供給側延連續法<br>(b) 建 2030 顆數<br>(c) 維持到 2029</td><td>(a)：成本最低，但 2030 沒有獨立資訊</td><td>不急</td></tr>
+<tr><td class="k">8</td><td>第三季同一份 10-Q 的採購承諾算不算保留</td><td>(a) 只保留營收<br>(b) 整份保留</td><td>不給預設（草案也沒給）</td><td>下次更新證據比例前</td></tr>
+</tbody></table></div>
+<h3>要你提供</h3>
+<ul class="pts">
+<li><strong>券商原文：</strong>Morgan Stanley 的 NVIDIA 顆數報告（Rubin 與 Rubin Ultra 怎麼拆、是上限還是點值）。這是瓶頸 1 的最短路徑。</li>
+<li><strong>Drive 舊檔搬移：</strong>連結的資料夾這次仍掛不上命令列，只能逐檔寫入，舊版模型檔沒辦法移到 <code>_待刪除/</code>。</li>
+</ul>
+</section>
+
+<section id="sec-peers">
+<h2>5　同業做法與可借鏡之處</h2>
+<p>「強」指資料、方法透明度或驗證做法，不是預測績效，因為沒有人公布預測績效。</p>
+<div class="tw"><table>
+<thead><tr><th>機構</th><th>強在哪</th><th>做法</th><th>條件與我們的差異</th><th>能否複製</th></tr></thead>
+<tbody>
+<tr><td class="k">SemiAnalysis</td><td>資料：逐站追蹤</td><td>每座機房分五階段排時程；晶片出貨轉成系統功耗後對機房管線</td><td>付費客戶、供應鏈訪談、衛星影像、全職團隊；對帳結果在付費牆後，無法查核</td><td><span class="pill p-warn">框架可以</span></td></tr>
+<tr><td class="k">Epoch AI</td><td>方法透明，公布自己的覆蓋率與誤差</td><td>兩套獨立模型（冷卻設備推功率、晶片顆數推功率）互相校驗；晶片銷售到部署預設延遲一季</td><td>非營利、同樣只靠公開資料，條件最接近我們</td><td><span class="pill p-good">可直接複製</span></td></tr>
+<tr><td class="k">LBNL</td><td>驗證：單因子敏感度</td><td>出貨量、壽命、使用率、閒置功耗各自對結果的影響，再疊成上下界</td><td>政府實驗室、有付費資料；只做美國用電</td><td><span class="pill p-good">架構可以</span></td></tr>
+<tr><td class="k">IEA</td><td>情境設計</td><td>四個情境由外生驅動力區分，供應鏈限制寫成情境變數</td><td>可取得各國公用事業資料；底層未公開</td><td><span class="pill p-warn">呈現方式可以</span></td></tr>
+<tr><td class="k">AI Futures Project</td><td>上游瓶頸硬上限的公開寫法</td><td>CoWoS 與 HBM 各給成長率再打折</td><td>情境研究，自陳資料稀少</td><td><span class="pill p-good">可直接複製</span></td></tr>
+<tr><td class="k">Sequoia／David Cahn</td><td>終端營收對資本支出</td><td>晶片營收 ×2（總資本支出）×2（毛利）＝所需終端營收；2026 年版約 1.5 兆美元 <span class="tag">Verified，已抽查原文</span></td><td>只有三個乘數；自稱有預測力但無獨立查核</td><td><span class="pill p-good">可直接複製</span></td></tr>
+<tr><td class="k">Goldman Sachs</td><td>工作負載分類與占用率情境</td><td>雲端、傳統、AI 分別預測；明言沒有調和晶片需求與機房容量</td><td>有公司接觸管道</td><td><span class="pill p-warn">情境框架可以</span></td></tr>
+</tbody></table></div>
+<h3>可借鏡，依證據強度相對成本排序</h3>
+<ol class="pts">
+<li><span class="rank">首選</span>　把「出貨→交付→通電」做成顯式存量流量（Epoch、SemiAnalysis）。今天的存量帳是第一步；下一步是把時差從單一係數改成分階段。約 2–4 個工作天。</li>
+<li><span class="rank">次佳</span>　LBNL 式單因子敏感度，回答「14 GW 差距各來自哪個參數」。約 3–5 個工作天。</li>
+<li><span class="rank">第三</span>　需求側加覆蓋率區間（Epoch 的做法），處理站點只看到 41% 的問題。</li>
+<li>之後：Cahn 式營收對資本支出交叉檢查（與兩層營收帳合併做）、CoWoS／HBM 折減式上限。</li>
+</ol>
+<div class="lead"><p>最重要的一個發現：同業對 2027–2029 也都只給區間，沒有人公開把供給側與需求側逐年對到點值。我們對不上不算落後；差別在於我們把差距明列出來。</p></div>
+</section>
+
+<section id="sec-pr">
+<h2>開著的 PR</h2>
+<div class="tw"><table>
+<thead><tr><th>PR</th><th>內容</th><th>會改值</th><th>下一步</th></tr></thead>
+<tbody>
+<tr><td class="k">#647</td><td>規則 v1.5 草案</td><td>否</td><td>你逐條核可</td></tr>
+<tr><td class="k">#654</td><td>橋接表三項新增</td><td>否<br><span class="note">重產時 2029 年四格隨 v0.20 微調：42.70 → 42.68</span></td><td>補一處標示後合併：查核確認檢核列是上線年口徑，不是付款年；付款年讀數應為 21.15／26.20 GW</td></tr>
+<tr><td class="k">#655</td><td>晶片橋接表 v0.2.4</td><td>否</td><td>與 Wattonomics 改讀路徑、三家個股重建一起合，否則主線檢查會紅</td></tr>
+<tr><td class="k">#657、#658</td><td>Wattonomics v0.3.7、v0.3.8</td><td>是</td><td>第 4 節第 5、6 題</td></tr>
+<tr><td class="k">#661、#662</td><td>Siliconomics 兩個試行版</td><td>是</td><td>第 4 節第 3、4 題；合併前補獨立核對與個股連動 PR</td></tr>
+<tr><td class="k">Tokenomics #201</td><td>工作單草稿</td><td>否</td><td>你核可 C8 後定稿：建議用 <code>L1_</code> 名稱（契約已允許），主版 v23.0</td></tr>
+</tbody></table></div>
+<p><strong>一個更正：</strong>交接檔把季節權重寫成 FY2025 41.4%、FY2026 42.4%，實際相反（FY2025 42.4%、FY2026 41.4%）。三個數的集合相同，低／基準／高不受影響。</p>
+</section>
+
+<footer>
+完整分項報告在 GitHub <code>YinchenChang/company-models</code> 的 <code>docs/reports/20261118_三層對帳/</code>（<code>summary/</code>、<code>adjudication/</code>、<code>peers/</code>、<code>hbm/</code>），Drive 副本在 <code>Claude outputs/</code> 與 <code>02-AI供應鏈/對帳/</code>。本頁內容與同資料夾的 Markdown 版相同。
+</footer>
+</main>
+</div>
+</body>
+</html>

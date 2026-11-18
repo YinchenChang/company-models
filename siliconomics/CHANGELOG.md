@@ -1,5 +1,14 @@
 # Siliconomics 變更紀錄
 
+## v0.20 r1（2026-11-18；**原地修補、不升版**；`model/20261116_Siliconomics_v0.20.xlsx` 同檔名重建；既有數值一律不變；決策 S51）
+
+- **A7 舊取法改名收尾**（PR #646 方案）：Coord 頁 A 節 `cur` 列標籤「現行基準（原始 × 現行係數＝v0.18 取法）」改為「舊取法（原始 × 情境 B 顆數係數；非基準）」，B 節 `res`、C 節 `chg` 列標籤同步；Interface 新增 E2 節 `SIF_DeployGW_LegacyS33_2026–2029`（值同 `Current`），E 節 `SIF_DeployGW_Current_<年>` 標籤改「相容別名，下一版刪除」；狀態檔 `legacy_s33` 讀新名。
+- **顆數單位加註**：In 頁新增 K 欄「顆數單位口徑」（`u_*` 24 列：封裝，非晶粒）、Units 頁標題、Interface 單位欄（「百萬顆（封裝）」）。In 頁顆數列的標籤、單位欄、來源文字不改（記憶體模型逐字重播 M2 節）。依據：`docs/reports/20261118_三層對帳/unit-basis/20261118_顆數來源口徑查核.md`。
+- **季節權重讀數（規則 v1.5 草案 C0 第 11 點；只顯示）**：In 頁新增 M31（`sw_h1_fy24`／`fy25`／`fy26`＝NVIDIA 資料中心營收上半年占全年 **30.7%／42.4%／41.4%**，[Derived]；`sw_h1` 低＝最小 30.7%、基準＝中位數 41.4%、高＝最大 42.4%）；Recon 頁新增 G 節：F 節季節讀數 **+19.2%／−11.5%／−13.5%**（低／基準／高）、D1 NVIDIA **+21.1%／−10.2%／−12.2%**、D1 市場層 **1.172／0.914／0.897**。不進 E 節彙總、Coord `c0f`、`c0_fail`；FY2027 任何季度不進權重。`tools/seasonal_h1_reading.py` 改用三年並核對活頁簿。
+- **觀測數列（規則 v1.5 草案 C3；工作單 W2-05A；只顯示）**：Coord 頁新增 D 節（`mid_i`／`mid_ii`／`mid_iii`／`mid_lo`／`mid_hi`、`dec0`／`dec05`／`dec1`），每列標「權重未校準；不得作為基準或個股讀數（規則 v1.5 草案，待 Andy 核可）」；In 頁 M31 新增 `crd_lam_0`／`crd_lam_05`／`crd_lam_1`（[Assumed]，敏感度點，不設預設值）。值：2027 (i) 31.63、(ii) 31.63、(iii) 31.83、區間 29.25–33.77；2028 (i) 35.89、(ii) 32.58、(iii) 40.49、區間 31.52–40.76；2029 衰減 λ＝0／0.5／1：28.48／35.51／42.53（與工作單試算相同）。不新增 Interface 名稱；`builder/build.py` 新增 `_display_only_guard`（建置時任何格或名稱引用只顯示列即中止；負向測試 4 種皆擋住）。
+- **狀態檔**：逐年新增 `observations`（`display_only: true`、`rule: "v1.5"`；不適用年份為 null）。`tools/baseline_coordination/check.py` 第 15 項屬共用區，本次未動。
+- **為何不升版**：升版會改 `SIL.VERSION`，約 65 個下游模型與 HTML 內嵌的版本字串全部改變，CI `ai-semis-build` 逐格比對必然失敗，必須整批重建，超出單層 PR。本修補只新增名稱與只顯示列，已以 CI 同一流程重建全部下游並與 dist 逐格比對（結果見 PR 描述）。版本命名規則（新增名稱屬次版）與此不同，屬刻意例外；下一個會改值的版本（v0.21）一併正式升版並刪除 `Current` 別名。
+
 ## v0.20 之後的治理補充（2026-11-18；**未升版**；三層對帳工作單 A1、A4、A7、A8；基準數值一律不動）
 
 - 狀態檔 `data/baseline_status.json` 新增逐年 `timing_cum`／`timing_cum_ratio`（讀協調橋接檔 g2c／g2p）與頂層 `method`、`generated`、`source_sha256`、`wattonomics_source_sha256`、`bridge`；`tools/baseline_coordination/check.py` 第 [7] 項四年皆有實際判定。

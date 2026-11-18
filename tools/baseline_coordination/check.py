@@ -1,4 +1,4 @@
-"""三層基準協調檢查（規則見 docs/plan/三層基準協調規則.md 第 10 節；第 13 項來源雜湊（A8）、第 14 項欄位語義（A7）為三層對帳工作單新增；v1.4.3 起接 CI：.github/workflows/coord-check.yml）。
+"""三層基準協調檢查（規則見 docs/plan/三層基準協調規則.md 第 10 節；第 13 項來源雜湊（A8）、第 14 項欄位語義（A7）、第 15 項只顯示數列（W2-05B）為三層對帳工作單新增；v1.4.3 起接 CI：.github/workflows/coord-check.yml）。
 
 狀態檔 siliconomics/data/baseline_status.json 不存在時只印「未啟用」並以 0 結束。
 輸出兩類：「不符」（以 1 結束）與「提醒 [n]」（不影響結束碼）。
@@ -336,7 +336,6 @@ SEM_ALLOW = {
 }
 # 例外：目前已知違規、待修（修完後這裡可刪；例外已不再需要時只列提醒，不算不符）
 SEM_BASE_EXC = {
-    "nvidia/coord_post.py": "基準指派在讀不到 SIF_DeployGW_Base 時退回讀 SIF_DeployGW_Current_<年>（本單另開 PR 改成報錯；該 PR 合併後可刪此例外）",
 }
 
 
@@ -393,6 +392,67 @@ def check_field_semantics(st):
     return errs
 
 
+# 15. 只顯示的觀測數列（三層對帳 W2-05B）。依據：規則 v1.5 草案 C3（待 Andy 核可）；本項只防止只顯示數列被讀取，不改任何判定。
+#     (a) 狀態檔每年若有 observations，display_only 必須為 true；沒有 observations（舊狀態檔或不適用年份）只列提醒。
+#     (b) 讀取 Siliconomics 名稱或狀態檔的腳本（全 repo *.py；排除 siliconomics/、docs/、tools/baseline_coordination/、.git 與隱藏資料夾）不得出現讀取
+#         observations 或其欄位的程式碼。靜態檢查（AST）：只看字串常數、屬性名稱，不看註解與說明文字（註解不會進 AST）。
+OBS_SKIP = ("siliconomics/", "docs/", "tools/baseline_coordination/")
+OBS_FILE_PAT = re.compile(r"SIF_|baseline_status|siliconomics", re.I)  # 先挑出「讀 Siliconomics 名稱或狀態檔」的腳本
+OBS_KEY_PAT = re.compile(r"^observations$")  # 整個字串＝鍵名
+# 欄位名稱：整詞比對（前後不得緊接英數或底線，避免 w_mid_lo、dec10 之類誤判）；crd_lam_ 為前綴（crd_lam_0／_05／_1）
+OBS_FIELD_PAT = re.compile(r"(?<![A-Za-z0-9_])(?:mid_(?:iii|ii|i|lo|hi)|dec(?:05|0|1)|crd_lam_[A-Za-z0-9_]*)(?![A-Za-z0-9_])")
+
+
+def _obs_hits(tree):
+    """AST：回傳 (行號, 說明)。字串常數（含 f-string 片段、下標鍵）、屬性名稱命中 observations 或其欄位名；變數名稱、註解不算。"""
+    hits = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            v = node.value
+            if OBS_KEY_PAT.match(v.strip()):
+                hits.append((node.lineno, "字串 'observations'"))
+            for m in OBS_FIELD_PAT.finditer(v):
+                hits.append((node.lineno, f"字串含 {m.group(0)}"))
+        elif isinstance(node, ast.Attribute) and node.attr == "observations":
+            hits.append((node.lineno, "屬性 .observations"))
+    return hits
+
+
+def check_observations(st):
+    errs = []
+    missing = []
+    for y, v in sorted((st.get("years") or {}).items()):
+        if "observations" not in v:
+            missing.append(y)
+            continue
+        ob = v["observations"]
+        if not isinstance(ob, dict) or ob.get("display_only") is not True:
+            got = ob.get("display_only") if isinstance(ob, dict) else type(ob).__name__
+            errs.append(f"[15] 狀態檔 years.{y}.observations.display_only 必須為 true（只顯示數列；規則 v1.5 草案 C3，待 Andy 核可），實際為 {got}")
+    if missing:
+        note(f"提醒 [15] 狀態檔 {'、'.join(missing)} 年沒有 observations 欄位（舊狀態檔或不適用），display_only 未檢查")
+    n, bad = 0, 0
+    for f in sorted(ROOT.rglob("*.py")):
+        rel = f.relative_to(ROOT).as_posix()
+        if rel.startswith(OBS_SKIP) or any(part.startswith(".") for part in rel.split("/")):
+            continue
+        txt = f.read_text(encoding="utf-8", errors="ignore")
+        if not OBS_FILE_PAT.search(txt):
+            continue
+        n += 1
+        try:
+            tree = ast.parse(txt)
+        except SyntaxError:
+            note(f"提醒 [15] {rel} 無法解析（語法錯誤），observations 讀取未檢查")
+            continue
+        for ln, what in _obs_hits(tree):
+            bad += 1
+            errs.append(f"[15] {rel}:{ln} 讀取只顯示的觀測數列（{what}）：observations 與其欄位（mid_*／dec*／crd_lam_*）只供 Siliconomics Coord 頁顯示，個股與下游腳本不得讀取（規則 v1.5 草案 C3，待 Andy 核可）")
+    if not bad:
+        note(f"提醒 [15] 已掃描 {n} 支讀取 Siliconomics 名稱或狀態檔的腳本，無一讀取 observations（規則 v1.5 草案 C3，待 Andy 核可）")
+    return errs
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--status", default=str(DEFAULT_STATUS))
@@ -405,7 +465,7 @@ def main():
     st = json.loads(p.read_text(encoding="utf-8"))
     today = datetime.date.fromisoformat(a.today)
     errs = (check_status(st, today) + check_c0_actuals(st, today) + check_company_reads(st)
-            + check_version_drift(st) + check_recon_residual() + check_evidence_range() + check_source_hashes(st) + check_field_semantics(st))
+            + check_version_drift(st) + check_recon_residual() + check_evidence_range() + check_source_hashes(st) + check_field_semantics(st) + check_observations(st))
     for n in NOTES:
         print(n)
     for e in errs:

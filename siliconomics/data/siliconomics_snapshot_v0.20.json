@@ -2,7 +2,7 @@
  "source": {
   "file": "20261116_Siliconomics_v0.20.xlsx",
   "version": "v0.20",
-  "sha256": "ad8dfaaff66e4a0b829ce2d3eede3338bfce4b55c7d033223b4208ff0128527d",
+  "sha256": "68e9937a2cd44ac84c3d4e3985251f01feeb9d1a7ee84ab1313d318d0e12d31d",
   "note": "Siliconomics 快照；下游只讀本檔。SGOV_Errors 須為 0"
  },
  "scen": [
@@ -7090,6 +7090,86 @@
    "tag": "Derived",
    "src": "規則 v1.4 首次判定：Siliconomics 證據比例本輪（docs/reports/20261114_供給側證據比例.xlsx）是第一次以 v1.1 定義實際量測 → 留空＝首次判定（50%）；先前手填 0.44／0 不算上次判定（Andy 2026-11-14 待判斷 8）",
    "src2": ""
+  },
+  {
+   "sec": "M31. 觀測數列與季節讀數的輸入（v0.20 r1；規則 v1.5 草案 C0 第 11 點、C3；只顯示：不進基準鏈、不進 crd_k、不輸出 Interface 名稱）"
+  },
+  {
+   "id": "sw_h1_fy24",
+   "label": "NVIDIA 資料中心營收上半年占全年：FY2024（2023-02～2024-01）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.307157894736842,
+   "hi": null,
+   "tag": "Derived",
+   "src": "＝（全年 47.5 − Q3 14.51 − Q4 18.4）÷ 全年 47.5（US$B；三個值皆 Verified：NVIDIA FY2024 第三季、第四季新聞稿）。repo 出處：docs/reports/20261118_三層對帳/analysis-K/20261118_K1_歷史回測.xlsx 輸入頁 nv24fy／nv24q3／nv24q4",
+   "src2": "已完結會計年度；只供 Recon G 節季節讀數（只顯示）。FY2024 為 AI 需求爆發第一年（Q1 4.28 → Q4 18.4），上半年占比特別低"
+  },
+  {
+   "id": "sw_h1_fy25",
+   "label": "NVIDIA 資料中心營收上半年占全年：FY2025（2024-02～2025-01）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.423611111111111,
+   "hi": null,
+   "tag": "Derived",
+   "src": "＝（全年 115.2 − Q3 30.8 − Q4 35.6）÷ 全年 115.2（US$B；Verified：NVIDIA FY2025 第三季、第四季新聞稿）。repo 出處：docs/reports/20261118_三層對帳/analysis-K/20261118_K1_歷史回測.xlsx 輸入頁 nv25fy／nv25q3／nv25q4",
+   "src2": "已完結會計年度；只供 Recon G 節季節讀數"
+  },
+  {
+   "id": "sw_h1_fy26",
+   "label": "NVIDIA 資料中心營收上半年占全年：FY2026（2025-02～2026-01）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.414042333505421,
+   "hi": null,
+   "tag": "Derived",
+   "src": "＝（Q1 39.1＋Q2 41.1）÷ 全年 193.7（US$B；Verified：NVIDIA 8-K）。repo 出處：nvidia/dist NVIDIA 個股模型 Q 頁 Data Center 營收列 B–F 欄",
+   "src2": "已完結會計年度；只供 Recon G 節季節讀數"
+  },
+  {
+   "id": "sw_h1",
+   "label": "季節權重：上半年占全年（低＝三年最小、基準＝三年中位數、高＝三年最大）",
+   "unit": "%",
+   "lo": 0.307157894736842,
+   "base": 0.414042333505421,
+   "hi": 0.423611111111111,
+   "tag": "Derived",
+   "src": "規則 v1.5 草案 C0 第 11 點；取法事前寫定（chat 端裁定材料）：低＝最小、基準＝中位數、高＝最大。只用 FY2026 以前已完結會計年度（FY2024、FY2025、FY2026，n＝3）；FY2027 任何季度都不進權重（Q1、Q2 是被檢驗的實績；Q3 為樣本外保留）",
+   "src2": "只顯示（Recon G 節）；不進 c0_fail、不進任何基準或個股計算。取代 PR #646 試算的 n＝1（FY2026）權重 0.392／0.414／0.475"
+  },
+  {
+   "id": "crd_lam_0",
+   "label": "衰減寫法 λ（敏感度點 1／3）：0＝前一年水準差當年全部消失",
+   "unit": "x",
+   "lo": 0,
+   "base": 0,
+   "hi": 1,
+   "tag": "Assumed",
+   "src": "規則 v1.5 草案 C3「連續法的衰減寫法」：λ 不設預設值，只作敏感度；三個敏感度點 0／0.5／1 各一列（本列＝0），低／高欄＝可能範圍 0–1",
+   "src2": "只供 Coord 頁 D 節 dec0；不進基準、crd_k、Interface"
+  },
+  {
+   "id": "crd_lam_05",
+   "label": "衰減寫法 λ（敏感度點 2／3）：0.5",
+   "unit": "x",
+   "lo": 0,
+   "base": 0.5,
+   "hi": 1,
+   "tag": "Assumed",
+   "src": "同上（本列＝0.5；不是預設值，r2 已收回「λ＝0.5 預設」）",
+   "src2": "只供 Coord 頁 D 節 dec05；不進基準、crd_k、Interface"
+  },
+  {
+   "id": "crd_lam_1",
+   "label": "衰減寫法 λ（敏感度點 3／3）：1＝前一年水準差全額延續（加法式）",
+   "unit": "x",
+   "lo": 0,
+   "base": 1,
+   "hi": 1,
+   "tag": "Assumed",
+   "src": "同上（本列＝1；現行基準是乘法式連續法，與本列加法式數值不同）",
+   "src2": "只供 Coord 頁 D 節 dec1；不進基準、crd_k、Interface"
   }
  ],
  "names": {
@@ -7946,6 +8026,10 @@
   "SIF_DeployGW_Demand_2027": 24.488,
   "SIF_DeployGW_Demand_2028": 28.184,
   "SIF_DeployGW_Demand_2029": 28.482,
+  "SIF_DeployGW_LegacyS33_2026": 23.3995380420639,
+  "SIF_DeployGW_LegacyS33_2027": 39.1637387089335,
+  "SIF_DeployGW_LegacyS33_2028": 42.2337105529984,
+  "SIF_DeployGW_LegacyS33_2029": 51.1178029756948,
   "SIF_DeployGW_Supply_2026": 23.3995380420639,
   "SIF_DeployGW_Supply_2027": 39.1637387089335,
   "SIF_DeployGW_Supply_2028": 52.792138191248,

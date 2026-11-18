@@ -1,0 +1,5 @@
+{
+  "_說明": "殘差帳歸因項（W2-04A 骨架；v0.1 為空清單）。由 siliconomics/tools/baseline_bridge.py 讀入 Residual 頁。每項欄位：name（名稱）、gw（{\"2026\":數,\"2027\":數,\"2028\":數,\"2029\":數}，成本等值 GW，正值＝解釋 ③ 殘差的正向部分）、evidence_grade（Verified／Interested-party／Analogy／Assumed／Derived）、testable_actual（可檢驗的實績是什麼）、source（來源）、workorder（對應工作單）。查不到來源者不得列入；歸因項之間不得重複計算（須在 name 或 source 說明如何切開）。「未歸因殘差」永遠顯示，不設結案門檻。W2-04B 由 chat 端提供清單後填入。",
+  "version": "0.1",
+  "items": []
+}
