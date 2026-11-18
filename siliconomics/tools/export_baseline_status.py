@@ -4,11 +4,32 @@
 #   對帳單與期限（recon_doc、deadline）、硬體個股清單與依賴年份讀 builder/seed/coord_meta_v*.json（判斷類，未定者留空）。
 #   v0.20（規則 v1.4.3）：頂層 wattonomics_version（取自 wattonomics/model/CURRENT 檔名）；逐年 c0_fail（讀 SIF_RecoC0Fail_<年>）與
 #   c0_recon_doc、c0_deadline（meta c0）；頂層 c0_actuals.<年>（協調年份以外的已公布年份；值讀 Wattonomics 快照 WIF_Recon_NV_*，對帳單與期限讀 meta）。
-import glob, json, os, re, sys
+#   2026-11-18（三層對帳工作單 A1、A8；不改任何基準值）：逐年 timing_cum（C2 ② 累計 GW）與 timing_cum_ratio（② 累計 ÷ 當年基準）讀協調橋接檔
+#   Bridge 頁 g2c、g2p 列（檔案＝docs/reports/*協調橋接_<Wattonomics 版本>*.xlsx 最新一份）；頂層新增 method、generated、source_sha256、
+#   wattonomics_source_sha256、bridge（檔名、sha256、橋接當時讀的 Siliconomics 版本）。
+import datetime, glob, hashlib, json, os, re, sys
 import openpyxl
 
 SIL = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 YRS = [2026, 2027, 2028, 2029]
+
+
+def sha256(path):
+    return hashlib.sha256(open(path, "rb").read()).hexdigest()
+
+
+def read_bridge(wt_ver):
+    """協調橋接檔（baseline_bridge.py 的輸出）。Bridge 頁 g2c＝C2 ② 累計 GW，g2p＝② 累計 ÷ 當年基準（檢查第 7 項）。
+    回傳 (路徑, {年: (g2c, g2p)}, In 頁 A1 標題)；找不到檔案回傳 (None, {}, None)，check.py 第 7 項照舊印「未量測」。"""
+    cand = sorted(glob.glob(os.path.join(SIL, "docs", "reports", f"*協調橋接_{wt_ver}*.xlsx")))
+    if not cand:
+        return None, {}, None
+    bp = cand[-1]
+    bw = openpyxl.load_workbook(bp, data_only=True)
+    rows = {str(r[0]): r for r in bw["Bridge"].iter_rows(values_only=True) if r and r[0]}
+    # 欄：A 鍵、B 項目、C 說明、D＝2025、E..H＝2026..2029（tuple 索引 4..7）
+    out = {y: (rows["g2c"][4 + i], rows["g2p"][4 + i]) for i, y in enumerate(YRS)}
+    return bp, out, bw["In"]["A1"].value
 
 
 def main():
@@ -32,6 +53,10 @@ def main():
         lo = v(k + "_lo") if k + "_lo" in wb.defined_names else b
         hi = v(k + "_hi") if k + "_hi" in wb.defined_names else b
         return {"lo": b if lo is None else lo, "base": b, "hi": b if hi is None else hi}
+    root = os.path.dirname(SIL)
+    wt_file = open(os.path.join(root, "wattonomics", "model", "CURRENT")).read().strip()
+    wt_ver = re.search(r"v\d+(?:\.\d+)+", wt_file).group(0)
+    bridge_path, timing, bridge_title = read_bridge(wt_ver)
     years = {}
     coefs = []
     for y in YRS:
@@ -46,6 +71,9 @@ def main():
             "label": v(f"SIF_RecoLabel_{y}"),
             "converted": v(f"SIF_DeployGW_Demand_{y}"),
             "supply_side": v(f"SIF_DeployGW_Supply_{y}"),
+            # 舊 S33 係數取法（v0.18 基準；只供對照，不是現行基準，見 README「欄位語義」）。優先讀語義明確的新名 SIF_DeployGW_LegacyS33_<年>（下一版新增），
+            # 沒有就讀舊名 SIF_DeployGW_Current_<年>；current_s33 保留一版作相容別名（無讀取者），之後刪除。
+            "legacy_s33": v(f"SIF_DeployGW_LegacyS33_{y}" if f"SIF_DeployGW_LegacyS33_{y}" in wb.defined_names else f"SIF_DeployGW_Current_{y}"),
             "current_s33": v(f"SIF_DeployGW_Current_{y}"),
             "use_converted": bool(v(f"SIF_RecoUseConv_{y}")),
             "continuity": bool(v(f"SIF_RecoChain_{y}")) if f"SIF_RecoChain_{y}" in wb.defined_names else False,
@@ -64,13 +92,12 @@ def main():
             rec["c0_recon_doc"] = (c0 or {}).get("recon_doc")
             rec["c0_deadline"] = (c0 or {}).get("deadline")
             rec["c0_point"] = (c0 or {}).get("point")
+        if y in timing and timing[y][0] is not None:   # C2 ② 累計（單位 GW；check.py 第 7 項以 |timing_cum| ≤ 15% × sil_base 判定）
+            rec["timing_cum"], rec["timing_cum_ratio"] = timing[y]
         years[str(y)] = rec
         if not rec["use_converted"] and y >= 2028:
             coefs.append({"name": f"um{yy}_B（S33；經 crd_k_{yy} 帶入 {y} 基準）", "year": y, "tag": "Assumed",
                           "note": "覆蓋未補齊、該年維持現行（對帳中）；改用換算值後不再在基準鏈上"})
-    root = os.path.dirname(SIL)
-    wt_file = open(os.path.join(root, "wattonomics", "model", "CURRENT")).read().strip()
-    wt_ver = re.search(r"v\d+(?:\.\d+)+", wt_file).group(0)
     wsnap = json.load(open(os.path.join(root, "wattonomics", "data", open(os.path.join(root, "wattonomics", "data", "CURRENT_SNAPSHOT")).read().strip()), encoding="utf-8"))["names"]
     c0a = {}
     for yr, m in (meta.get("c0_actuals") or {}).items():
@@ -84,7 +111,14 @@ def main():
     st = {
         "_note": "由 siliconomics/tools/export_baseline_status.py 自 " + os.path.basename(x) + " 匯出；換算值與 Wattonomics 證據比例（含 v0.3.6 起的低／高區間）取自 Wattonomics " + wt_ver + "（" + wt_file + "）；continuity＝規則 v1.4 連續法（基準＝前一年基準 × 換算值成長率，非換算值本身）",
         "source": os.path.basename(x),
+        "source_sha256": sha256(x),
+        "method": "export_baseline_status.py：只讀 Siliconomics Interface 的 SIF_ 名稱（Coord 頁推導）、Wattonomics 快照 WIF_Recon_NV_*、協調橋接檔 Bridge 頁 g2c／g2p；判斷類欄位讀 builder/seed/coord_meta_v*.json；本程式不做判定或計算（規則 v1.4.3 C3）",
+        "generated": datetime.date.today().isoformat(),
         "wattonomics_version": wt_ver,
+        "wattonomics_source_sha256": sha256(os.path.join(root, "wattonomics", "model", wt_file)),
+        "bridge": ({"file": os.path.basename(bridge_path), "sha256": sha256(bridge_path), "in_title": bridge_title,
+                    "note": "timing_cum（GW）＝Bridge g2c、timing_cum_ratio＝g2p；橋接檔於建置當時讀「前一版」Siliconomics 基準（見 in_title），其輸出再餵進本版 In 頁 crd_x2，故來源標示版本落後一版屬設計"}
+                   if bridge_path else None),
         "threshold": v("SIF_crd_thr"),
         "wattonomics_coverage_complete": bool(v("SIF_crd_cov_done")),
         "years": years,

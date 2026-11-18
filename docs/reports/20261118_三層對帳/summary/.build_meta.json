@@ -1,0 +1,513 @@
+{
+ "out": "/home/claude/out/summary/20261118_三層對帳總表_v0.1.xlsx",
+ "REG": {
+  "mix|H100": 56,
+  "mix|GB200": 57,
+  "mix|GB300": 58,
+  "mix|VR200": 59,
+  "mix|RU": 60,
+  "mix|sum": 61,
+  "WIF_MktGW_Add": 65,
+  "WIF_MktGW_YE": 66,
+  "WIF_MktGW_Avg": 67,
+  "WIF_Spend_it_sum": 68,
+  "WIF_Spend_it_compute": 69,
+  "WIF_Spend_it_foundry": 70,
+  "WIF_Spend_it_memory": 71,
+  "WIF_Spend_it_network": 72,
+  "WIF_Spend_it_power_thermal": 73,
+  "WIF_Spend_it_server": 74,
+  "WIF_Spend_it_storage": 75,
+  "WIF_Spend_it_substrate": 76,
+  "WIF_Spend_fac_sum": 77,
+  "WIF_Spend_self_gen": 78,
+  "WIF_Spend_total": 79,
+  "WIF_Gap_Short_A_D0": 80,
+  "WIF_Coverage": 81,
+  "WIF_Evidence_Lo": 82,
+  "WIF_Evidence": 83,
+  "WIF_Evidence_Hi": 84,
+  "WIF_Recon_NV_ActualRev": 85,
+  "WIF_Recon_NV_ImpliedRev": 86,
+  "WIF_Recon_NV_NVGW": 87,
+  "WIF_Recon_NV_ShipGW": 88,
+  "WIF_Recon_NV_ContentPerGW": 89,
+  "WIF_Recon_NV_Ratio": 90,
+  "w_chk_it": 91,
+  "w_chk_tot": 92,
+  "SIF_DeployGW_Base": 96,
+  "SIF_DeployGW_Supply": 97,
+  "SIF_DeployGW_Demand": 98,
+  "SIF_DeployGW_Alt": 99,
+  "SIF_DeployGW_Current": 100,
+  "SIF_DeployGW_AltRatio": 101,
+  "SIF_DeployGWPhys_Base": 102,
+  "SIF_AIITCapex_Base": 103,
+  "SIF_UnitsCoef_Base": 104,
+  "SIF_TestSoCMkt_Base": 105,
+  "SIF_GpuAsicMkt_Base": 106,
+  "SIF_HBM_Mkt_Base": 107,
+  "SIF_AsmMkt_Base": 108,
+  "SIF_PwrMkt_Base": 109,
+  "SIF_LiqMkt_Base": 110,
+  "SIF_PCBMkt_Base": 111,
+  "SIF_CCLMkt_Base": 112,
+  "SIF_GPUSysMkt_Base": 113,
+  "st_status": 117,
+  "st_label": 118,
+  "st_deadline": 119,
+  "st_c0_deadline": 120,
+  "st_c0_fail": 121,
+  "st_use_conv": 122,
+  "st_continuity": 123,
+  "st_converted": 124,
+  "st_supply": 125,
+  "st_current": 126,
+  "st_silbase": 127,
+  "st_ws_lo": 128,
+  "st_ws_base": 129,
+  "st_ws_hi": 130,
+  "st_ss_lo": 131,
+  "st_ss_base": 132,
+  "st_ss_hi": 133,
+  "st_c0_point": 134,
+  "st_threshold": 135,
+  "tol": 136,
+  "br_lag_on": 140,
+  "br_inv_on": 141,
+  "br_g": 145,
+  "br_g2": 146,
+  "br_g3": 147,
+  "br_g3p": 148,
+  "br_g2p": 149,
+  "br_x0": 150,
+  "br_x2": 151,
+  "br_s2": 152,
+  "br_rt": 153,
+  "br_s0": 154,
+  "br_k": 155,
+  "nv_sil_implied": 159,
+  "nv_company": 160,
+  "nv_ratio_main_rec": 161,
+  "nv_ratio_second_rec": 162,
+  "nv_q1": 163,
+  "nv_q2": 164,
+  "nv_months": 165,
+  "nv_cum_rec": 166,
+  "nv_oos_q3": 167
+ },
+ "ROW": {
+  "v_judge": 6,
+  "v_rule": 7,
+  "v_c0": 8,
+  "v_gap": 9,
+  "v_pct": 10,
+  "v_dl": 11,
+  "tk_mixtxt": 13,
+  "tk_it_lo": 14,
+  "tk_it": 15,
+  "tk_it_hi": 16,
+  "tk_tot": 17,
+  "tk_gpu": 18,
+  "tk_hold": 19,
+  "w_add": 21,
+  "w_avg": 22,
+  "w_ye": 23,
+  "w_it": 24,
+  "w_tot": 25,
+  "w_impl": 26,
+  "w_short": 27,
+  "k": 29,
+  "w_s2": 30,
+  "rt": 31,
+  "w_x2": 32,
+  "w_x0": 33,
+  "s_sup": 35,
+  "s_base": 36,
+  "s_coef": 37,
+  "s_it": 38,
+  "gap_gw": 40,
+  "gap_pct": 41,
+  "gap_x": 42,
+  "gap_usd_gw": 43,
+  "gap_usd_dir": 44,
+  "g_time": 46,
+  "g_resid": 47,
+  "g_resid_pct": 48,
+  "g_tol": 49,
+  "g_judge": 50,
+  "g_share": 51,
+  "g_cum": 52,
+  "g_cum_pct": 53,
+  "g_chk": 54,
+  "r_status": 56,
+  "r_label": 57,
+  "r_use": 58,
+  "r_dl": 59,
+  "r_c0": 60,
+  "e_st_ws_lo": 62,
+  "e_st_ws_base": 63,
+  "e_st_ws_hi": 64,
+  "e_st_ss_lo": 65,
+  "e_st_ss_base": 66,
+  "e_st_ss_hi": 67,
+  "e_thr": 68,
+  "e_both": 69,
+  "b_g": 71,
+  "d_g": 72,
+  "b_g2": 73,
+  "d_g2": 74,
+  "b_g3": 75,
+  "d_g3": 76,
+  "d_flag": 77,
+  "d_w1": 78,
+  "d_w2": 79,
+  "d_w3": 80,
+  "d_dem": 81
+ },
+ "OOS_ROWS": [
+  27,
+  33
+ ],
+ "ACT": {
+  "2025": 6,
+  "2026": 7,
+  "2027": 8
+ },
+ "SHA": {
+  "tk_snapshot": "6f8642ef28d5523e2f8a22acf35ce779a89c09bb0f890c1b1078c3fa76ed3165",
+  "watt_snapshot": "fdfe33f956e8d9701f193c2f4d615939376f6904197b1466e838bee4b8c1b87a",
+  "sil_snapshot": "89d9d831a6137de1590cd373fd557b476ae081e12c5f4d7c2984e600155984ec",
+  "status": "50033855c18bb26513b6493fd5ef3573cdc5e5bd0929b1e6323f87253fc526c2",
+  "recon": "6438845a4edd852ab401ef150cb12d1d985a08931219d958b1cd9dffb2c4947f",
+  "bridge": "60ae4c91aca5db0112e8d3afa29d34b6ee26d3188553a735f42e4dcb2b0688ed",
+  "tk_xlsx": "2297abc3e93290572d7ef607717838fa4ec3cc6919d372b1b8e2d1b20bd92e91",
+  "watt_xlsx": "acb92d6fd80c6872e8f23d64e4e93651ef580f60f1a27b213f1a826e377adb58",
+  "sil_xlsx": "ad8dfaaff66e4a0b829ce2d3eede3338bfce4b55c7d033223b4208ff0128527d"
+ },
+ "GIT_CM": [
+  "d04f591572d902bef4715ff55e932b039f22686a",
+  "工作樹乾淨"
+ ],
+ "GIT_TK": [
+  "79f6b300735444bc0892be8fa2f3c89a478e6e9c",
+  "工作樹乾淨"
+ ],
+ "files": {
+  "TKS": {
+   "file": "tokenomics_snapshot_v22.0.json",
+   "rec": null,
+   "act": "2297abc3e93290572d7ef607717838fa4ec3cc6919d372b1b8e2d1b20bd92e91"
+  },
+  "TKX": {
+   "file": "20261105_Tokenomics_v22.0.xlsx",
+   "rec": null,
+   "act": "2297abc3e93290572d7ef607717838fa4ec3cc6919d372b1b8e2d1b20bd92e91"
+  },
+  "WAS": {
+   "file": "wattonomics_snapshot_v0.3.6.json",
+   "rec": "acb92d6fd80c6872e8f23d64e4e93651ef580f60f1a27b213f1a826e377adb58",
+   "act": "acb92d6fd80c6872e8f23d64e4e93651ef580f60f1a27b213f1a826e377adb58"
+  },
+  "WAX": {
+   "file": "20261116_Wattonomics_v0.3.6.xlsx",
+   "rec": null,
+   "act": "acb92d6fd80c6872e8f23d64e4e93651ef580f60f1a27b213f1a826e377adb58"
+  },
+  "SIS": {
+   "file": "siliconomics_snapshot_v0.20.json",
+   "rec": "cf29d2bbc72c3136e610b3a5a5befb78150ac7565bdfc0fa03834388dba465f2",
+   "act": "ad8dfaaff66e4a0b829ce2d3eede3338bfce4b55c7d033223b4208ff0128527d"
+  },
+  "SIB": {
+   "file": "baseline_status.json",
+   "rec": null,
+   "act": "ad8dfaaff66e4a0b829ce2d3eede3338bfce4b55c7d033223b4208ff0128527d"
+  },
+  "SIR": {
+   "file": "recon_snapshot_v0.20.json",
+   "rec": null,
+   "act": "ad8dfaaff66e4a0b829ce2d3eede3338bfce4b55c7d033223b4208ff0128527d"
+  },
+  "BRG": {
+   "file": "20261116_協調橋接_v0.3.6.xlsx",
+   "rec": null,
+   "act": "60ae4c91aca5db0112e8d3afa29d34b6ee26d3188553a735f42e4dcb2b0688ed"
+  },
+  "EXT": {
+   "file": "（外部／對帳單）",
+   "rec": null,
+   "act": null
+  }
+ },
+ "q1": 75.2,
+ "q2": 89.0,
+ "usage_w": {
+  "IF_RacksPerGW": {
+   "mirror": true,
+   "refs": 2
+  },
+  "IF_GPUsPerGW": {
+   "mirror": true,
+   "refs": 9
+  },
+  "IF_CapexIT": {
+   "mirror": true,
+   "refs": 1319
+  },
+  "IF_CapexFacility": {
+   "mirror": true,
+   "refs": 430
+  },
+  "IF_CapexTotal": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_RackPrice": {
+   "mirror": true,
+   "refs": 3
+  },
+  "IF_ScaleOutShare": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_StoragePerGPU": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_NonNV_Out_AMD": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_NonNV_Out_TPU": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_NonNV_Out_Trn": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_NonNV_Out_CS": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_NonNV_Out_OAI": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_NonNV_Out_Ascend": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_NonNV_Out_Maia": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_NonNV_Hold_AMD": {
+   "mirror": true,
+   "refs": 428
+  },
+  "IF_NonNV_Hold_TPU": {
+   "mirror": true,
+   "refs": 104
+  },
+  "IF_NonNV_Hold_Trn": {
+   "mirror": true,
+   "refs": 52
+  },
+  "IF_NonNV_Hold_CS": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_NonNV_Hold_OAI": {
+   "mirror": true,
+   "refs": 52
+  },
+  "IF_NonNV_Hold_Ascend": {
+   "mirror": true,
+   "refs": 32
+  },
+  "IF_NonNV_Hold_Maia": {
+   "mirror": true,
+   "refs": 52
+  },
+  "IF_FacilityGW": {
+   "mirror": true,
+   "refs": 50
+  },
+  "IF_HoldEcon": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_HoldAcct": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_RevGWFleet": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_RevGW_Sol": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_RevGW_Luna": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_RevGW_Astra": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_RevGW_Terra": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_OpexGW": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_FullCost_Sol": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_GPUhrEcon": {
+   "mirror": false,
+   "refs": 0
+  }
+ },
+ "usage_s": {
+  "IF_RacksPerGW": {
+   "mirror": true,
+   "refs": 18
+  },
+  "IF_GPUsPerGW": {
+   "mirror": true,
+   "refs": 28
+  },
+  "IF_CapexIT": {
+   "mirror": true,
+   "refs": 43
+  },
+  "IF_CapexFacility": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_CapexTotal": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_RackPrice": {
+   "mirror": true,
+   "refs": 8
+  },
+  "IF_ScaleOutShare": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_StoragePerGPU": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_NonNV_Out_AMD": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_NonNV_Out_TPU": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_NonNV_Out_Trn": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_NonNV_Out_CS": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_NonNV_Out_OAI": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_NonNV_Out_Ascend": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_NonNV_Out_Maia": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_NonNV_Hold_AMD": {
+   "mirror": true,
+   "refs": 4
+  },
+  "IF_NonNV_Hold_TPU": {
+   "mirror": true,
+   "refs": 4
+  },
+  "IF_NonNV_Hold_Trn": {
+   "mirror": true,
+   "refs": 4
+  },
+  "IF_NonNV_Hold_CS": {
+   "mirror": true,
+   "refs": 0
+  },
+  "IF_NonNV_Hold_OAI": {
+   "mirror": true,
+   "refs": 4
+  },
+  "IF_NonNV_Hold_Ascend": {
+   "mirror": true,
+   "refs": 4
+  },
+  "IF_NonNV_Hold_Maia": {
+   "mirror": true,
+   "refs": 4
+  },
+  "IF_FacilityGW": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_HoldEcon": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_HoldAcct": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_RevGWFleet": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_RevGW_Sol": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_RevGW_Luna": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_RevGW_Astra": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_RevGW_Terra": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_OpexGW": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_FullCost_Sol": {
+   "mirror": false,
+   "refs": 0
+  },
+  "IF_GPUhrEcon": {
+   "mirror": false,
+   "refs": 0
+  }
+ }
+}

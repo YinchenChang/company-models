@@ -61,3 +61,7 @@
 - **有條件一致（規則 v1.4.3 C0 第 8 點）：** 甲年的 C0 公司實績對帳點（Recon F 節 NVIDIA 資料中心營收純實績、D 節市場層兩讀數）同號超出 ±15% 時，`SIF_RecoLabel_<年>`＝「有條件一致」、`SIF_RecoC0Fail_<年>`＝1。個股**不**因此並列兩讀數目標價（C0 第 8 點例外於 C4；`SIF_RecoFlag_<年>` 仍為 0），只在 Coord 頁與橫幅標「有條件一致」並連結對帳單（`data/baseline_status.json` 的 `c0_recon_doc`）。
 - **狀態的唯一權威（C3）：** 逐年狀態只讀 `data/baseline_status.json` 或 `SIF_RecoStatus／Label／Flag／C0Fail_<年>`；Recon B 節不再自判（v0.20 刪除「兩邊都不錨定」）。
 - **Recon 快照（`data/recon_snapshot_v*.json`）結構：** 每個市場有 `kind`（market／structural／layer／actual）、`status`、`status_by_year`；market 類有 `market`、`modeled_sum` 與「其他（未建模）」殘差列（`residual: true`），`tools/baseline_coordination/check.py` 第 [9] 項據此檢查 C0 恆等式。
+
+## 欄位語義補充（2026-11-18，三層對帳工作單 A7）
+
+`SIF_DeployGW_*` 五組欄位的唯一語義、誰可以讀與改名方案見 `siliconomics/README.md`「欄位語義」。取數規則補一條：**硬體個股計算基準只能讀 `SIF_DeployGW_Base`**；`Supply`、`Alt`、`AltRatio` 只可並列顯示或作情境（兩讀數目標價）；`Current`（舊 S33 取法）與 `Demand`（Wattonomics 換算值）硬體個股不得讀（唯一登錄例外：`nvidia/coord_post.py` 的「改前現行值」對照欄）。`tools/baseline_coordination/check.py` 第 [14] 項在 CI 檢查。下一個 Siliconomics 版本新增 `SIF_DeployGW_LegacyS33_<年>`（＝`Current`，同值），`Current` 保留一版作相容別名後刪除。

@@ -1,5 +1,12 @@
 # Siliconomics 變更紀錄
 
+## v0.20 之後的治理補充（2026-11-18；**未升版**；三層對帳工作單 A1、A4、A7、A8；基準數值一律不動）
+
+- 狀態檔 `data/baseline_status.json` 新增逐年 `timing_cum`／`timing_cum_ratio`（讀協調橋接檔 g2c／g2p）與頂層 `method`、`generated`、`source_sha256`、`wattonomics_source_sha256`、`bridge`；`tools/baseline_coordination/check.py` 第 [7] 項四年皆有實際判定。
+- 快照 `siliconomics_snapshot_v0.20.json` 的 `source.sha256` 由 `cf29d2bb…` 改為活頁簿實際值 `ad8dfaaf…`（只改這一格；值逐名稱相同）；`export_snapshot.py --check` 與 check.py 第 [13] 項新增雜湊比對。
+- README／下游契約新增 `SIF_DeployGW_*` 欄位語義表；check.py 第 [14] 項（硬體個股計算基準只能讀 Base）；`tools/baseline_bridge.py` In 頁標題加註來源版本落後一版是設計。改名（新增 `SIF_DeployGW_LegacyS33_<年>`、`Current` 保留別名一版）的 builder 修補已驗證但**未套用**（需升版與全下游重建），見報告 `docs/reports/20261118_三層對帳_s-gov_A1A4A7A8.md` 第 3 節。
+- A4 期中實績季節權重讀數只寫設計與數字（報告第 5 節；試算工具 `tools/seasonal_h1_reading.py`），Recon 頁未改。
+
 ## v0.20（2026-11-16；`model/20261116_Siliconomics_v0.20.xlsx`；Tokenomics v22.0；Wattonomics v0.3.6；規則 v1.4.3）
 
 - **依據**：Andy 2026-11-16 22:22「我同意你的建议，然后去把它解决」（三層補強清單 B、C 節）；決策 S50；報告 `docs/reports/20261116_v0.20_build.md`。本版是 Siliconomics 單層 PR，**不因對帳單改基準值**；基準值只因讀到新版 Wattonomics 換算值依既有規則機械性變動。

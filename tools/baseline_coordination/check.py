@@ -1,11 +1,11 @@
-"""三層基準協調檢查（規則見 docs/plan/三層基準協調規則.md 第 10 節；v1.4.3 起接 CI：.github/workflows/coord-check.yml）。
+"""三層基準協調檢查（規則見 docs/plan/三層基準協調規則.md 第 10 節；第 13 項來源雜湊（A8）、第 14 項欄位語義（A7）為三層對帳工作單新增；v1.4.3 起接 CI：.github/workflows/coord-check.yml）。
 
 狀態檔 siliconomics/data/baseline_status.json 不存在時只印「未啟用」並以 0 結束。
 輸出兩類：「不符」（以 1 結束）與「提醒 [n]」（不影響結束碼）。
 
 用法：python3 tools/baseline_coordination/check.py [--status 路徑] [--today YYYY-MM-DD]
 """
-import argparse, datetime, json, pathlib, re, sys
+import argparse, ast, datetime, hashlib, json, pathlib, re, sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 DEFAULT_STATUS = ROOT / "siliconomics/data/baseline_status.json"
@@ -273,6 +273,126 @@ def check_evidence_range():
     return errs
 
 
+def _sha(p):
+    return hashlib.sha256(p.read_bytes()).hexdigest()
+
+
+def check_source_hashes(st):
+    """13. 來源雜湊一致（三層對帳工作單 A8）：快照記錄的 source.sha256＝repo 內該檔實際 SHA-256。
+    檢查對象：Siliconomics 與 Wattonomics 的 CURRENT 快照（對應 model/<source.file>）、狀態檔的 source_sha256（對 Siliconomics 活頁簿）與
+    wattonomics_source_sha256、bridge.sha256（對協調橋接檔）。活頁簿重存（LibreOffice 重算）會改變位元組，故匯出須在定稿後的最後一步。"""
+    errs = []
+    for layer in ("siliconomics", "wattonomics"):
+        ptr = ROOT / layer / "data" / "CURRENT_SNAPSHOT"
+        if not ptr.exists():
+            note(f"提醒 [13] 找不到 {layer}/data/CURRENT_SNAPSHOT，來源雜湊未檢查")
+            continue
+        fn = ptr.read_text(encoding="utf-8").strip()
+        sp = ROOT / layer / "data" / fn
+        if not sp.exists():
+            errs.append(f"[13] {layer} CURRENT_SNAPSHOT 指向不存在的檔案 {fn}")
+            continue
+        src = json.loads(sp.read_text(encoding="utf-8")).get("source", {})
+        mp = ROOT / layer / "model" / str(src.get("file", ""))
+        if not src.get("sha256"):
+            errs.append(f"[13] {fn} 未記錄 source.sha256")
+        elif not mp.is_file():
+            errs.append(f"[13] {fn} 記錄的來源檔不存在：{src.get('file')}")
+        elif src["sha256"] != _sha(mp):
+            errs.append(f"[13] {fn} 記錄 source.sha256＝{src['sha256'][:8]}…，{layer}/model/{mp.name} 實際為 {_sha(mp)[:8]}…（匯出後活頁簿被重存？重跑匯出）")
+    # 狀態檔自身
+    sil_ptr = ROOT / "siliconomics/model/CURRENT"
+    wat_ptr = ROOT / "wattonomics/model/CURRENT"
+    pairs = []
+    if "source_sha256" in st and sil_ptr.exists():
+        pairs.append(("source_sha256", ROOT / "siliconomics/model" / st.get("source", ""), st["source_sha256"]))
+    elif "source_sha256" not in st:
+        note("提醒 [13] 狀態檔未記錄 source_sha256（下次匯出狀態檔時補上）")
+    if "wattonomics_source_sha256" in st and wat_ptr.exists():
+        pairs.append(("wattonomics_source_sha256", ROOT / "wattonomics/model" / wat_ptr.read_text(encoding="utf-8").strip(), st["wattonomics_source_sha256"]))
+    br = st.get("bridge")
+    if br:
+        pairs.append(("bridge.sha256", ROOT / "siliconomics/docs/reports" / br.get("file", ""), br.get("sha256")))
+    for label, fp, rec in pairs:
+        if not fp.is_file():
+            errs.append(f"[13] 狀態檔 {label} 對應的檔案不存在：{fp.relative_to(ROOT)}")
+        elif rec != _sha(fp):
+            errs.append(f"[13] 狀態檔 {label}＝{str(rec)[:8]}…，{fp.relative_to(ROOT)} 實際為 {_sha(fp)[:8]}…")
+    return errs
+
+
+# 14. 欄位語義（三層對帳工作單 A7）：Siliconomics Interface E 節 SIF_DeployGW_* 五組欄位各只有一種語義（見 siliconomics/README.md「欄位語義」）：
+#     Base＝依規則的基準（硬體個股計算基準的唯一來源）；Supply＝供給側讀數（原始顆數，情境 A，只並列顯示）；Demand＝需求側讀數（Wattonomics 換算值，只並列顯示）；
+#     Alt／AltRatio＝另一側讀數與比值（只用於並列顯示與兩讀數目標價〔情境〕）；Current＝舊 S33 係數取法（v0.18 基準，僅供對照，不得進任何計算）。
+# 這是靜態檢查（字串與 AST），只能擋「名稱出現在基準指派」與「未登錄用途的讀取」，不能證明個股沒有在別處間接使用；新增讀取者須先登錄於下表。
+SEM_STEMS = ("Current", "Supply", "Demand", "AltRatio", "Alt")
+SEM_PAT = re.compile(r"SIF_DeployGW_(Current|Supply|Demand|AltRatio|Alt)(?![A-Za-z])")
+# 非 Base 欄位允許出現的用途（檔案 → {欄位: 用途}）；其餘硬體個股腳本只可讀 Alt／AltRatio／Supply（並列顯示或情境），讀 Current、Demand 一律不符。
+SEM_ALLOW = {
+    "nvidia/coord_post.py": {
+        "Current": "並列顯示：Coord 頁「改前現行值」對照欄（C['prev']），不進任何計算",
+        "Demand": "註解與 extract() 摘錄清單，不計算",
+    },
+}
+# 例外：目前已知違規、待修（修完後這裡可刪；例外已不再需要時只列提醒，不算不符）
+SEM_BASE_EXC = {
+    "nvidia/coord_post.py": "基準指派在讀不到 SIF_DeployGW_Base 時退回讀 SIF_DeployGW_Current_<年>（本單另開 PR 改成報錯；該 PR 合併後可刪此例外）",
+}
+
+
+def _sem_base_assign_hits(tree):
+    """AST：目標名稱含 base 的指派，其右側若含非 Base 欄位的字串（含 f-string 片段）→ 回傳 (行號, 欄位)。"""
+    hits = []
+    for node in ast.walk(tree):
+        tg = []
+        if isinstance(node, ast.Assign):
+            tg, val = node.targets, node.value
+        elif isinstance(node, (ast.AnnAssign, ast.NamedExpr)) and node.value is not None:
+            tg, val = [node.target], node.value
+        else:
+            continue
+        if not any("base" in (n.id if isinstance(n, ast.Name) else getattr(n, "attr", "")).lower()
+                   for t in tg for n in ast.walk(t) if isinstance(n, (ast.Name, ast.Attribute))):
+            continue
+        for c in ast.walk(val):
+            if isinstance(c, ast.Constant) and isinstance(c.value, str):
+                for m in SEM_PAT.finditer(c.value):
+                    hits.append((node.lineno, m.group(1)))
+    return hits
+
+
+def check_field_semantics(st):
+    errs = []
+    used_exc = set()
+    for co in st.get("hardware_companies", []):
+        for f in sorted((ROOT / co).glob("*.py")):
+            rel = f"{co}/{f.name}"
+            txt = f.read_text(encoding="utf-8", errors="ignore")
+            if "SIF_DeployGW_" not in txt:
+                continue
+            allow = SEM_ALLOW.get(rel, {})
+            for ln, line in enumerate(txt.splitlines(), 1):
+                for m in SEM_PAT.finditer(line):
+                    stem = m.group(1)
+                    if stem in ("Current", "Demand") and stem not in allow:
+                        errs.append(f"[14] {rel}:{ln} 讀 SIF_DeployGW_{stem}_（{'舊 S33 取法，僅供對照' if stem == 'Current' else '需求側讀數，只供並列顯示'}），硬體個股不得讀；未登錄於 check.py SEM_ALLOW")
+            try:
+                tree = ast.parse(txt)
+            except SyntaxError:
+                note(f"提醒 [14] {rel} 無法解析（語法錯誤），基準指派未檢查")
+                continue
+            for ln, stem in _sem_base_assign_hits(tree):
+                if rel in SEM_BASE_EXC:
+                    used_exc.add(rel)
+                    note(f"提醒 [14] 例外：{rel}:{ln} 基準指派含 SIF_DeployGW_{stem}_（{SEM_BASE_EXC[rel]}）")
+                else:
+                    errs.append(f"[14] {rel}:{ln} 計算基準的指派含 SIF_DeployGW_{stem}_：硬體個股計算基準只能讀 SIF_DeployGW_Base（{stem} 只可並列顯示或作情境）")
+    for rel in SEM_BASE_EXC:
+        if rel not in used_exc:
+            note(f"提醒 [14] 例外已不需要，可從 check.py SEM_BASE_EXC 刪除：{rel}")
+    return errs
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--status", default=str(DEFAULT_STATUS))
@@ -285,7 +405,7 @@ def main():
     st = json.loads(p.read_text(encoding="utf-8"))
     today = datetime.date.fromisoformat(a.today)
     errs = (check_status(st, today) + check_c0_actuals(st, today) + check_company_reads(st)
-            + check_version_drift(st) + check_recon_residual() + check_evidence_range())
+            + check_version_drift(st) + check_recon_residual() + check_evidence_range() + check_source_hashes(st) + check_field_semantics(st))
     for n in NOTES:
         print(n)
     for e in errs:
