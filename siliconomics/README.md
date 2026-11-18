@@ -7,7 +7,7 @@ AI 半導體 Project 的「唯一事實」Excel：加速器顆數、記憶體與
 | 現行版本 | 見 `model/CURRENT`（v0.20，2026-11-16；Wattonomics v0.3.6、Tokenomics v22.0、規則 v1.4.3） |
 | 下游快照 | `data/CURRENT_SNAPSHOT` 指向的 `data/siliconomics_snapshot_v*.json`（由 `tools/export_snapshot.py` 產生） |
 | Tokenomics 快照 | `data/tokenomics_snapshot_v22.0.json`（v0.20 起；名稱清單 `data/tokenomics_names.txt`；下游 chip_bridge 仍讀 `v21.7`，見 Checks K3） |
-| 協調狀態檔 | `data/baseline_status.json`（`tools/export_baseline_status.py`；逐年狀態的唯一權威，規則 v1.4.3 C3） |
+| 協調狀態檔 | `data/baseline_status.json`（`tools/export_baseline_status.py`；逐年狀態的唯一權威，規則 v1.4.3 C3；2026-11-18 起含 `method`、`generated`、`source_sha256`、`wattonomics_source_sha256`、`bridge`〔協調橋接檔名與雜湊〕與逐年 `timing_cum`／`timing_cum_ratio`） |
 | Recon 快照 | `data/CURRENT_RECON` 指向的 `data/recon_snapshot_v*.json`（`tools/recon.py`；每市場 kind／status／殘差列，見檔頭） |
 | 規劃書 | `docs/plan/Siliconomics_規劃書.md` |
 | 下游契約 | `docs/Siliconomics_downstream_contract.md` |
@@ -23,6 +23,8 @@ soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir si
 # 3) 匯出快照並指向它
 python3 siliconomics/tools/export_snapshot.py siliconomics/model/<檔名>.xlsx siliconomics/data/siliconomics_snapshot_vX.Y.json
 echo siliconomics_snapshot_vX.Y.json > siliconomics/data/CURRENT_SNAPSHOT
+#    快照記錄的 source.sha256 必須等於 model/ 內該檔的實際 SHA-256：匯出須是「定稿後的最後一步」——之後任何 LibreOffice 重算存檔（含 cascade 的 K1 自舉重建）都會改變檔案位元組，
+#    須重跑本步驟（值不變時只有 sha256 一格不同）。`export_snapshot.py --check` 與 `tools/baseline_coordination/check.py` 第 [13] 項（CI）會擋住不一致（v0.20 曾發生：快照記 cf29d2bb…，檔案 ad8dfaaf…，原因＝快照匯出後 cascade 又重存活頁簿）
 # 4) 對帳（v0.11 起每次升版都跑）：R4 橋接 → Recon 快照 → 以快照重建本版（Recon 頁）
 python3 siliconomics/tools/r4_bridge.py build/r4_raw.xlsx && soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir build build/r4_raw.xlsx
 cp build/r4_raw.xlsx siliconomics/docs/reports/r4_bridge/<YYYYMMDD>_R4對帳橋接_Siliconomics側_r<N>.xlsx
@@ -35,6 +37,29 @@ echo recon_snapshot_vX.Y.json > siliconomics/data/CURRENT_RECON   # 之後回到
 
 對帳狀態（Recon 頁）：|比值 − 1| ≤ 容差＝一致；超出且有已寄出的 `交流/` 證據送件（登錄在 `builder/seed/recon_evidence_v*.json`）＝時差；其餘＝待診斷（Checks K9）。只加總覆蓋個股的**基準情境**（工作方式 v1.7）。
 v0.20 起（規則 v1.4.3）：B 節（R4）狀態讀 Coord 頁、不自判；D 節由下往上市場（D1 GPU／ASIC 晶片金額）＝已建模個股加總＋殘差＝市場值，公司實績以主讀數（已公布期間累計 ÷ 層級同期間）與第二讀數（最近一季年化）判定，兩者同號超出 ±15% 才不一致、一內一外為時差邊界；F 節 NVIDIA 資料中心營收主讀數＝純實績，含指引的比值只列參考。甲年任一實績對帳點不過 → Coord 標「有條件一致」（`SIF_RecoC0Fail_<年>`）。
+
+## 欄位語義（`SIF_DeployGW_*`；三層對帳工作單 A7，2026-11-18）
+
+Interface E 節有五組部署 GW 欄位。**每一組只有一種語義**；寫新程式、新個股模型時只能照下表用，不得用「名稱聽起來像」來猜。
+
+| 名稱 | 語義（唯一） | 2029 現值（GW） | 誰可以讀、怎麼用 |
+|---|---|---|---|
+| `SIF_DeployGW_Base`（向量，欄 E–H＝2026–2029） | **依規則的基準**（規則 v1.4.3 C3：甲／乙／丙／待定／連續法決定）。成本等值、出貨年 | 42.680 | 硬體個股**計算基準的唯一來源**；個股不裁決 |
+| `SIF_DeployGW_Supply_<年>` | 供給側讀數＝原始顆數部署 GW（不乘任何係數；情境 A） | 60.139 | 只並列顯示與對照（個股 Coord 頁、對帳）；**不得進基準計算** |
+| `SIF_DeployGW_Demand_<年>` | 需求側讀數＝Wattonomics 換算值（平滑法 x2，由 `tools/baseline_bridge.py` 重算） | 28.482 | 只用於 Coord 頁判定與狀態檔；個股**不得讀** |
+| `SIF_DeployGW_Alt_<年>`／`SIF_DeployGW_AltRatio_<年>` | 另一側讀數（未被採為基準的那一條）及其 ÷ 基準 | 28.482／0.667 | 只用於對帳中年份的並列顯示與**兩讀數目標價（情境）**；不得取代基準 |
+| `SIF_DeployGW_Current_<年>` | **舊 S33 係數取法**＝原始顆數 × 舊 S33 係數（v0.18 基準）。**不是現行基準**；2029 為 51.118，≠ Base 42.680 | 51.118 | 只供「改前現行值」對照；**任何程式不得拿它算基準**。語義明確的新名 `SIF_DeployGW_LegacyS33_<年>` 於下一版新增，`Current` 保留一版作相容別名後刪除（見下） |
+
+**誰在讀（2026-11-18 全 repo 盤點；逐支用途見 `docs/reports/20261118_三層對帳_s-gov_A1A4A7A8.md` 第 2 節）：**
+
+- `Current`：`nvidia/coord_post.py`（Coord 頁「改前現行值」對照欄；另有一條「讀不到 Base 就退回讀 Current」的路徑，已另開 PR 改成報錯）、`siliconomics/tools/export_baseline_status.py`（狀態檔 `legacy_s33`／`current_s33`，無下游讀取者）。
+- `Demand`：`nvidia/coord_post.py`（註解與摘錄清單）、`export_baseline_status.py`（狀態檔 `converted`）。
+- `Supply`：`foxconn`、`quanta`、`wistron`、`wiwynn` 的 `*_post.py`（Coord 頁「情境 A 供給側讀數」並列列）、`nvidia/coord_post.py`（並列與一致性核對）、`supply_evidence_ratio.py`（分母核對）、`export_baseline_status.py`。
+- `Alt`／`AltRatio`：約 60 支個股 `*_post.py`／`c13.py`（並列顯示與兩讀數目標價）、`siliconomics/reader.py`、`tools/coord/coord.py`。
+- **以上沒有任何一支用 `Current`、`Supply`、`Demand`、`Alt` 計算基準。**
+
+**改名方案（選風險較低者）：「新增新名＋舊名保留一版作別名」，不直接改名。** 理由：(1) 直接改名＝刪除 Interface 名稱，依下游契約屬主版變動，且需同步所有讀取端；(2) 讀取端雖只有 2 支，但舊快照（v0.19／v0.19-trial／`nvidia/coord_inputs.json` 的 trial 摘錄）仍含舊名；(3) 新增名稱屬次版、不影響既有讀取者。
+**為何本 PR 不改活頁簿：** 新增名稱必須升版（連帶 SIL.VERSION 文字改變）→ 約 65 個下游模型須整批重建（`tools/cascade.sh` 兩輪），超出本單範圍與只動 `siliconomics/`、`tools/baseline_coordination/` 的邊界。已驗證的 builder 修補與驗證結果寫在報告第 3 節，等下一個 Siliconomics 版本一併套用。本 PR 做的是：語義寫入 README／契約、狀態檔讀取端先支援新名（有 `LegacyS33` 就讀它）、`tools/baseline_coordination/check.py` 第 [14] 項在 CI 擋住誤用。
 
 ## 原則（比照 Tokenomics CLAUDE.md）
 

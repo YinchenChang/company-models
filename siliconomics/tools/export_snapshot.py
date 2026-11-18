@@ -5,6 +5,9 @@
 #         只在檔名版本含「-trial」時放行 SGOV_Errors ≠ 0（三層基準協調試作：K1 SK 海力士／記憶體市場尚未跟新係數，屬步驟 5b）；快照標「試作」。main 版本行為不變
 #   檢查：python3 siliconomics/tools/export_snapshot.py --check <snapshot.json> [<xlsx>]
 #         重新讀取快照記錄的 xlsx（預設 siliconomics/model/<快照記錄的檔名>），任何值差異即以代碼 1 結束。
+#         2026-11-18 起另核對 source.sha256＝xlsx 實際 SHA-256（不同即以代碼 1 結束）。
+#         匯出必須是「定稿後的最後一步」：之後任何 LibreOffice 重算存檔（含 cascade 的 K1 自舉重建）都會改變檔案位元組而使雜湊失效，
+#         須重跑匯出（值不變時只有 sha256 一格不同）。tools/baseline_coordination/check.py 第 [13] 項在 CI 檢查此一致性。
 # 下游（markets/memory/market.py 等）只讀快照，不直接讀 xlsx；快照記錄檔名、版本、sha256。
 import hashlib, json, os, sys
 import openpyxl
@@ -64,6 +67,9 @@ def main():
         bad += ["rows"] if rows != snap["rows"] else []
         if bad:
             print("快照與活頁簿不一致：", bad[:20]); sys.exit(1)
+        h = hashlib.sha256(open(x, "rb").read()).hexdigest()
+        if snap["source"].get("sha256") != h:
+            print(f"快照值與活頁簿一致，但 source.sha256＝{snap['source'].get('sha256', '')[:8]}… ≠ 檔案實際 {h[:8]}…（匯出後活頁簿又被重存？請重跑匯出）"); sys.exit(1)
         print(f"快照與 {os.path.basename(x)} 一致（{len(names)} 個名稱）"); return
     x, out = sys.argv[1], sys.argv[2]
     allow_trial = "--allow-trial-sgov" in sys.argv[3:]

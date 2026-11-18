@@ -1,7 +1,17 @@
 {
  "_note": "由 siliconomics/tools/export_baseline_status.py 自 20261116_Siliconomics_v0.20.xlsx 匯出；換算值與 Wattonomics 證據比例（含 v0.3.6 起的低／高區間）取自 Wattonomics v0.3.6（20261116_Wattonomics_v0.3.6.xlsx）；continuity＝規則 v1.4 連續法（基準＝前一年基準 × 換算值成長率，非換算值本身）",
  "source": "20261116_Siliconomics_v0.20.xlsx",
+ "source_sha256": "ad8dfaaff66e4a0b829ce2d3eede3338bfce4b55c7d033223b4208ff0128527d",
+ "method": "export_baseline_status.py：只讀 Siliconomics Interface 的 SIF_ 名稱（Coord 頁推導）、Wattonomics 快照 WIF_Recon_NV_*、協調橋接檔 Bridge 頁 g2c／g2p；判斷類欄位讀 builder/seed/coord_meta_v*.json；本程式不做判定或計算（規則 v1.4.3 C3）",
+ "generated": "2026-11-18",
  "wattonomics_version": "v0.3.6",
+ "wattonomics_source_sha256": "acb92d6fd80c6872e8f23d64e4e93651ef580f60f1a27b213f1a826e377adb58",
+ "bridge": {
+  "file": "20261116_協調橋接_v0.3.6.xlsx",
+  "sha256": "60ae4c91aca5db0112e8d3afa29d34b6ee26d3188553a735f42e4dcb2b0688ed",
+  "in_title": "In — 輸入（藍字）。來源：20261114_Siliconomics_v0.19.xlsx、20261116_Wattonomics_v0.3.6.xlsx、R4 橋接（siliconomics/tools/r4_bridge.py）。產生日 2026-11-16",
+  "note": "timing_cum（GW）＝Bridge g2c、timing_cum_ratio＝g2p；橋接檔於建置當時讀「前一版」Siliconomics 基準（見 in_title），其輸出再餵進本版 In 頁 crd_x2，故來源標示版本落後一版屬設計"
+ },
  "threshold": 0.5,
  "wattonomics_coverage_complete": true,
  "years": {
@@ -27,6 +37,7 @@
    "label": "有條件一致",
    "converted": 20.972,
    "supply_side": 23.3995380420639,
+   "legacy_s33": 23.3995380420639,
    "current_s33": 23.3995380420639,
    "use_converted": false,
    "continuity": false,
@@ -38,7 +49,9 @@
    "sil_base": 23.3995380420639,
    "c0_recon_doc": "Drive 02-AI供應鏈/對帳/20261116_對帳單_NVIDIA資料中心營收實績對兩層_合併.md",
    "c0_deadline": "2026-11-30",
-   "c0_point": "NVIDIA 資料中心營收純實績（Recon F 節）：FY27 Q1＋Q2 164.2 vs 層級同期間 224.18（−26.8%）；第二讀數 Q2 × 4 對層級全年 −20.6%"
+   "c0_point": "NVIDIA 資料中心營收純實績（Recon F 節）：FY27 Q1＋Q2 164.2 vs 層級同期間 224.18（−26.8%）；第二讀數 Q2 × 4 對層級全年 −20.6%",
+   "timing_cum": 2.7797609806424,
+   "timing_cum_ratio": 0.118795549538004
   },
   "2027": {
    "wattonomics": {
@@ -62,6 +75,7 @@
    "label": "待定（對帳中）",
    "converted": 24.488,
    "supply_side": 39.1637387089335,
+   "legacy_s33": 39.1637387089335,
    "current_s33": 39.1637387089335,
    "use_converted": false,
    "continuity": false,
@@ -70,7 +84,9 @@
    "deadline": "2027-02-28",
    "c0_fail": false,
    "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
-   "sil_base": 39.1637387089335
+   "sil_base": 39.1637387089335,
+   "timing_cum": 4.40274400489573,
+   "timing_cum_ratio": 0.112418889259197
   },
   "2028": {
    "wattonomics": {
@@ -94,6 +110,7 @@
    "label": "待定（對帳中）",
    "converted": 28.184,
    "supply_side": 52.792138191248,
+   "legacy_s33": 42.2337105529984,
    "current_s33": 42.2337105529984,
    "use_converted": false,
    "continuity": false,
@@ -102,7 +119,9 @@
    "deadline": "2027-02-28",
    "c0_fail": false,
    "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
-   "sil_base": 42.2337105529984
+   "sil_base": 42.2337105529984,
+   "timing_cum": 4.52001568020167,
+   "timing_cum_ratio": 0.107023882605095
   },
   "2029": {
    "wattonomics": {
@@ -126,6 +145,7 @@
    "label": "連續法（前一年待定，對帳中）",
    "converted": 28.482,
    "supply_side": 60.1385917361115,
+   "legacy_s33": 51.1178029756948,
    "current_s33": 51.1178029756948,
    "use_converted": true,
    "continuity": true,
@@ -134,7 +154,9 @@
    "deadline": "2027-02-28",
    "c0_fail": false,
    "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
-   "sil_base": 42.6802634108182
+   "sil_base": 42.6802634108182,
+   "timing_cum": 4.6564777232326,
+   "timing_cum_ratio": 0.109040078772243
   }
  },
  "c0_actuals": {

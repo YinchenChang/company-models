@@ -40,7 +40,9 @@ wb = openpyxl.Workbook()
 
 # ---------------- In ----------------
 IN = wb.active; IN.title = "In"
-IN["A1"] = f"In — 輸入（藍字）。來源：{sil_f}、{wt_f}、R4 橋接（siliconomics/tools/r4_bridge.py）。產生日 {datetime.date.today()}"
+IN["A1"] = (f"In — 輸入（藍字）。來源：{sil_f}、{wt_f}、R4 橋接（siliconomics/tools/r4_bridge.py）。產生日 {datetime.date.today()}。"
+            f"注意：本檔讀的 Siliconomics 是執行當時 model/CURRENT 指向的版本（{sil_f}，通常是「前一版」）；本檔換算值 x2 再被下一版的 In 頁 crd_x2 讀入，"
+            f"所以來源版本落後一版是設計，不是標錯（三層對帳工作單 A8）")
 IN["A1"].font = BOLD
 hdr = ["鍵", "項目", "單位", "年", "低", "基準", "高", "標記", "來源"]
 for j, h in enumerate(hdr, 1):
