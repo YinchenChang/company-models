@@ -1,5 +1,13 @@
 # Siliconomics 變更紀錄
 
+## v0.20 r2（2026-11-18；**原地修補、不升版**；`model/20261116_Siliconomics_v0.20.xlsx` 同檔名重建；決策 S52；與 Wattonomics v0.3.7〔#657〕同一原子 PR）
+
+- **改讀 Wattonomics v0.3.7**（C4a：2028–29 證據比例區間）：In 頁 `crd_ew_28`、`crd_ew_29` 的低／高 0.518／0.518 → **0.454／0.545**、0.208／0.208 → **0.182／0.218**（基準不變）。Interface 只有 `SIF_crd_ew_28_lo／_hi`、`SIF_crd_ew_29_lo／_hi` 4 個名稱改值；既有名稱無新增、無刪除，`SIF_DeployGW_Base` 與其餘既有 Interface 名稱逐值不變。換算值 `crd_x2_26–29` 重算後與 v0.3.6 逐值相同（20.972／24.488／28.184／28.482）。
+- **逐年狀態不變**：2026 甲、2027 待定、2028 待定（Wattonomics 側低端 0.454 只比退出門檻 0.45 高 0.004）、2029 丙＋連續法；`crd_k`、`c0_fail` 不變。
+- **只顯示列**：Coord D 節 2028 顯示區間 31.52–40.76 → 31.39–41.56（端點讀 Wattonomics 低／高；不進基準）。
+- **狀態檔**：`wattonomics_version` v0.3.7、雜湊、`bridge`（`20261118_協調橋接_v0.3.7.xlsx`）更新；2028／2029 Wattonomics 證據比例低／高、2028 `observations.mid`、2029 `timing_cum_ratio` 0.10904 → 0.10910（改讀新橋接檔，v0.19→v0.20 輸入更新所致）。Recon 快照重跑逐值不變。
+- 為何不升版：同 v0.20 r1。
+
 ## v0.20 r1（2026-11-18；**原地修補、不升版**；`model/20261116_Siliconomics_v0.20.xlsx` 同檔名重建；既有數值一律不變；決策 S51）
 
 - **A7 舊取法改名收尾**（PR #646 方案）：Coord 頁 A 節 `cur` 列標籤「現行基準（原始 × 現行係數＝v0.18 取法）」改為「舊取法（原始 × 情境 B 顆數係數；非基準）」，B 節 `res`、C 節 `chg` 列標籤同步；Interface 新增 E2 節 `SIF_DeployGW_LegacyS33_2026–2029`（值同 `Current`），E 節 `SIF_DeployGW_Current_<年>` 標籤改「相容別名，下一版刪除」；狀態檔 `legacy_s33` 讀新名。

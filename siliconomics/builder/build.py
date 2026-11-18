@@ -582,13 +582,13 @@ def main():
         co("s33", "現行係數（S33：2026–27＝1，2028–29＝um28_B／um29_B）", lambda y, col, yy: "=1" if y <= 2027 else f"=um{yy}_B", note="決策 S33；只作『維持現行』年份的係數與情境參照")
         co("cur", "舊取法（原始 × 情境 B 顆數係數；非基準）", lambda y, col, yy: f"={R_('sup', col)}*{R_('s33', col)}",
            note="v0.18 的基準取法（原始顆數 × S33 係數）；只供對照、中間估計 (ii)。現行基準只有 C 節 base（SIF_DeployGW_Base）。Interface：SIF_DeployGW_LegacyS33_<年>（語義明確的新名）；SIF_DeployGW_Current_<年> 為相容別名，下一版刪除（三層對帳工作單 A7、PR #646 方案）")
-        co("dem", "需求側讀數：Wattonomics 換算值（平滑法 x2）", lambda y, col, yy: f"=crd_x2_{yy}", bold=True, note="In 頁 M30 crd_x2（Wattonomics v0.3.6；siliconomics/tools/baseline_bridge.py → docs/reports/20261116_協調橋接_v0.3.6.xlsx）")
+        co("dem", "需求側讀數：Wattonomics 換算值（平滑法 x2）", lambda y, col, yy: f"=crd_x2_{yy}", bold=True, note="In 頁 M30 crd_x2（Wattonomics v0.3.7；siliconomics/tools/baseline_bridge.py → docs/reports/20261118_協調橋接_v0.3.7.xlsx）")
         COROW["_r"] += 1
         CO.cell(COROW["_r"], 1, "B. 證據狀態（C3；只看狀態、不看數值高低）").font = BOLD; COROW["_r"] += 1
         co("ew", "Wattonomics 證據比例（WIF_Evidence 口徑）", lambda y, col, yy: f"=crd_ew_{yy}", "0.0%")
         co("es", "Siliconomics 證據比例", lambda y, col, yy: f"=crd_es_{yy}", "0.0%")
         # v1.3「區間跨線即待定」：兩層證據比例都用低／基準／高三值判；任一層低或高的「有證據」與基準值不同 → 待定
-        co("ew_lo", "　Wattonomics 證據比例 低", lambda y, col, yy: f"=crd_ew_{yy}_lo", "0.0%", note="Wattonomics v0.3.6 起讀 WIF_Evidence_Lo_／Hi_（規則 v1.3 區間跨線即待定）；模型只有點值的年份低＝基準＝高")
+        co("ew_lo", "　Wattonomics 證據比例 低", lambda y, col, yy: f"=crd_ew_{yy}_lo", "0.0%", note="Wattonomics v0.3.6 起讀 WIF_Evidence_Lo_／Hi_（v0.3.7 起 2028–29 為 C4a 區間）（規則 v1.3 區間跨線即待定）；模型只有點值的年份低＝基準＝高")
         co("ew_hi", "　Wattonomics 證據比例 高", lambda y, col, yy: f"=crd_ew_{yy}_hi", "0.0%")
         co("es_lo", "　Siliconomics 證據比例 低", lambda y, col, yy: f"=crd_es_{yy}_lo", "0.0%", note="docs/reports/20261114_供給側證據比例.xlsx 區間")
         co("es_hi", "　Siliconomics 證據比例 高", lambda y, col, yy: f"=crd_es_{yy}_hi", "0.0%")
