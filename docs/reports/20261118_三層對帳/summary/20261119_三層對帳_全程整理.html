@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>三層對帳全程整理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* 版面：單欄長文報告，左側固定目錄（寬螢幕）；摘要先於細節；狀態用色塊標示 */
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --ink:#1b2430; --muted:#5b6777; --line:#d9dee6;
+  --accent:#0f5e7a; --accent-soft:#e3f0f4;
+  --good:#1f7a4d; --good-bg:#e2f3ea; --warn:#9a6200; --warn-bg:#fbefd5; --bad:#a8322b; --bad-bg:#f9e3e1; --none:#5b6777; --none-bg:#e9ecf1;
+  --supply:#0f5e7a; --demand:#c47a1b;
+  --font-display:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --font-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#12171e; --surface:#1a212b; --ink:#e6eaf0; --muted:#9aa6b6; --line:#2e3846;
+    --accent:#6cc3de; --accent-soft:#1d3440;
+    --good:#6fd3a0; --good-bg:#173527; --warn:#f0c264; --warn-bg:#3a2e12; --bad:#f09a93; --bad-bg:#40201e; --none:#9aa6b6; --none-bg:#273140;
+    --supply:#6cc3de; --demand:#e8a857;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#12171e; --surface:#1a212b; --ink:#e6eaf0; --muted:#9aa6b6; --line:#2e3846;
+  --accent:#6cc3de; --accent-soft:#1d3440;
+  --good:#6fd3a0; --good-bg:#173527; --warn:#f0c264; --warn-bg:#3a2e12; --bad:#f09a93; --bad-bg:#40201e; --none:#9aa6b6; --none-bg:#273140;
+  --supply:#6cc3de; --demand:#e8a857;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.75}
+.wrap{max-width:1180px;margin:0 auto;padding:32px 20px 80px;display:grid;grid-template-columns:1fr;gap:32px}
+@media (min-width:1040px){.wrap{grid-template-columns:200px minmax(0,1fr)}}
+nav{font-size:14px}
+@media (min-width:1040px){nav{position:sticky;top:24px;align-self:start}}
+nav p{margin:0 0 8px;color:var(--muted);font-size:13px}
+nav ol{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:4px 14px}
+@media (min-width:1040px){nav ol{flex-direction:column;gap:6px}}
+nav a{color:var(--ink);text-decoration:none;border-bottom:1px solid transparent}
+nav a:hover{border-bottom-color:var(--accent);color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+main{min-width:0;display:flex;flex-direction:column;gap:40px}
+header .meta{color:var(--muted);font-size:14px;margin:0 0 6px}
+h1{font-family:var(--font-display);font-size:32px;line-height:1.3;margin:0 0 20px;text-wrap:balance}
+h2{font-family:var(--font-display);font-size:23px;line-height:1.4;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid var(--accent);text-wrap:balance}
+h3{font-size:17px;margin:22px 0 8px}
+p{margin:0 0 12px;max-width:44em}
+section{display:flex;flex-direction:column}
+.lead{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:6px;padding:18px 22px}
+.lead p{margin:0;max-width:none;font-size:17px}
+.yearcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px;margin:4px 0 6px}
+.yc{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.yc .y{font-family:var(--font-display);font-size:22px;line-height:1.2}
+.yc .t{font-size:13.5px;color:var(--muted);line-height:1.55}
+.pill{display:inline-block;font-size:12.5px;font-weight:700;padding:1px 9px;border-radius:999px;white-space:nowrap;align-self:flex-start}
+.p-good{color:var(--good);background:var(--good-bg)} .p-warn{color:var(--warn);background:var(--warn-bg)}
+.p-bad{color:var(--bad);background:var(--bad-bg)} .p-none{color:var(--none);background:var(--none-bg)}
+.tw{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px;margin:6px 0 14px}
+table{border-collapse:collapse;width:100%;font-size:14.5px;line-height:1.6}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{font-weight:700;background:var(--accent-soft);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.k{font-weight:700;white-space:nowrap}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin:6px 0 14px}
+.chart .legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13.5px;color:var(--muted);margin-bottom:10px}
+.sw{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.row{display:grid;grid-template-columns:48px minmax(0,1fr);gap:10px;align-items:center;padding:6px 0;border-top:1px dashed var(--line)}
+.row:first-of-type{border-top:none}
+.row .yr{font-weight:700;font-variant-numeric:tabular-nums}
+.bars{display:flex;flex-direction:column;gap:4px}
+.bar{display:flex;align-items:center;gap:8px;font-size:13px;font-variant-numeric:tabular-nums}
+.bar i{display:block;height:13px;border-radius:2px}
+.bar .s{background:var(--supply)} .bar .d{background:var(--demand)}
+.bar .x{height:13px;border:1px dashed var(--muted);border-radius:2px;width:60px}
+.note{font-size:14px;color:var(--muted)}
+ol.pts,ul.pts{margin:0 0 12px;padding-left:1.4em;max-width:46em}
+ol.pts li,ul.pts li{margin-bottom:8px}
+.tag{font-size:12.5px;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 5px;white-space:nowrap}
+.rank{font-weight:700;color:var(--accent)}
+.deadline{font-weight:700;color:var(--bad)}
+footer{color:var(--muted);font-size:13.5px;border-top:1px solid var(--line);padding-top:14px}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;background:var(--accent-soft);padding:0 4px;border-radius:3px}
+</style>
+<style>
+.tl{list-style:none;margin:0 0 12px;padding:0;border-left:2px solid var(--line);max-width:52em}
+.tl li{position:relative;padding:0 0 14px 20px}
+.tl li::before{content:"";position:absolute;left:-6px;top:9px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.tl .t{font-weight:700;font-variant-numeric:tabular-nums;margin-right:8px;color:var(--accent)}
+blockquote{margin:6px 0 12px;padding:8px 14px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 4px 4px 0;max-width:46em;font-size:15px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin:4px 0 12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
+.card h4{margin:0 0 6px;font-size:16px}
+.card p{margin:0 0 6px;font-size:14.5px;max-width:none}
+.card ul{margin:0;padding-left:1.2em;font-size:14.5px}
+.card li{margin-bottom:4px}
+.big{font-family:var(--font-display);font-size:26px;line-height:1.2}
+.num{font-variant-numeric:tabular-nums}
+.dq{font-weight:700;color:var(--accent);white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav aria-label="目錄">
+  <p>目錄</p>
+  <ol>
+    <li><a href="#sec-now">1 現在的狀態</a></li>
+    <li><a href="#sec-decide">2 等你決定的事</a></li>
+    <li><a href="#sec-timeline">3 事情的經過</a></li>
+    <li><a href="#sec-find">4 主要發現</a></li>
+    <li><a href="#sec-yours">5 你已做的決定</a></li>
+    <li><a href="#sec-limits">6 使用限制</a></li>
+    <li><a href="#sec-unverified">7 沒驗證的事</a></li>
+    <li><a href="#sec-fix">8 我說錯過的地方</a></li>
+    <li><a href="#sec-files">9 檔案位置</a></li>
+  </ol>
+</nav>
+
+<main>
+<header>
+  <p class="meta">涵蓋 2026-11-18 15:33 至 2026-11-19 01:04　chat 端整理　對象：Andy</p>
+  <h1>三層對帳全程整理</h1>
+  <div class="lead"><p>這一串做完三件大事：<strong>第二波工作單大部分完成</strong>；<strong>自建了 2027 年 NVIDIA 顆數並已寫進模型</strong>（912 萬改 613 萬封裝，2027 年部署基準 39.16 降到 30.45 GW，11 家投資建議改變）；<strong>兩層共用的「每 GW 的 NVIDIA 金額」已校正</strong>。主線檢查全綠。等你決定的事集中在第 2 節，最重要的是 2026 年要不要提前重判。</p></div>
+</header>
+
+<section id="sec-now">
+<h2>1　現在的狀態</h2>
+
+<h3>模型裡的數字</h3>
+<div class="tw"><table>
+<thead><tr><th>項目</th><th class="n">這一串開始時</th><th class="n">現在</th><th>說明</th></tr></thead>
+<tbody>
+<tr><td class="k">Siliconomics 版本</td><td class="n">v0.20</td><td class="n">v0.21</td><td>#678，11-19 凌晨合併</td></tr>
+<tr><td class="k">2027 年 NVIDIA 顆數（萬封裝）</td><td class="n">912</td><td class="n">613</td><td>券商二手轉述改為自建估計，區間 400–839</td></tr>
+<tr><td class="k">部署基準 2026（GW）</td><td class="n">23.40</td><td class="n">23.40</td><td>不動。11-18 裁定「打平，維持現行」</td></tr>
+<tr><td class="k">部署基準 2027</td><td class="n">39.16</td><td class="n">30.45</td><td>狀態仍是「待定（對帳中）」</td></tr>
+<tr><td class="k">部署基準 2028</td><td class="n">42.23</td><td class="n">35.05</td><td>原本乘一個沒有外部校準的 0.8，改為「2027 基準 × 需求側成長率」</td></tr>
+<tr><td class="k">部署基準 2029</td><td class="n">42.68</td><td class="n">35.42</td><td>隨 2028 連動</td></tr>
+<tr><td class="k">2027 年與需求側的差距（GW）</td><td class="n">14.7</td><td class="n">約 6.0</td><td>需求側換算值 24.49 尚未隨新版重建</td></tr>
+<tr><td class="k">每 GW 的 NVIDIA 金額：Rubin（億美元）</td><td class="n">261</td><td class="n">333</td><td>區間 280–407</td></tr>
+<tr><td class="k">每 GW 的 NVIDIA 金額：Blackwell 第一代</td><td class="n">185</td><td class="n">251</td><td>原值是類比來的</td></tr>
+<tr><td class="k">Wattonomics 版本</td><td class="n">v0.3.6</td><td class="n">v0.3.7</td><td>只把 2028–29 的證據比例由單點改成區間；基準不變。<strong>還沒改讀 Siliconomics v0.21</strong></td></tr>
+<tr><td class="k">NVIDIA 個股</td><td class="n">v0.3.11</td><td class="n">v0.3.12</td><td>每顆售價改用與 Siliconomics 相同的依據</td></tr>
+<tr><td class="k">規則</td><td class="n">v1.4.3</td><td class="n">v1.5.2</td><td>v1.5 生效；後兩次只補文字</td></tr>
+</tbody></table></div>
+
+<h3>個股</h3>
+<div class="grid2">
+  <div class="card"><h4>投資建議改變 11 家</h4>
+    <ul>
+      <li>金像電　買進 → 中立　<span class="pill p-bad">只超過門檻 0.12 個百分點</span></li>
+      <li>台達電　中立 → 放空</li>
+      <li>Disco　放空 → 中立（唯一升評）</li>
+      <li>Broadcom　放空 → 強力放空</li>
+      <li>Astera Labs　放空 → 強力放空</li>
+      <li>Advantest　中立 → 放空</li>
+      <li>Ibiden　中立 → 放空</li>
+      <li>智邦　強力買進 → 買進</li>
+      <li>光寶科　買進 → 中立</li>
+      <li>台燿　買進 → 中立</li>
+      <li>雙鴻　強力買進 → 買進</li>
+    </ul>
+  </div>
+  <div class="card"><h4>這 11 家有多可靠</h4>
+    <p>它們只對「613 萬」這一點成立。</p>
+    <ul>
+      <li>若真值在自建區間高端（839 萬）：<strong>0 家</strong>會改，11 家全部回到原評等。</li>
+      <li>若在低端（400 萬）：<strong>23 家</strong>會改。</li>
+    </ul>
+    <p>66 家重建，56 家目標價改變，範圍 −10.6% 至 +16.4%，中位數 −4.1%。</p>
+    <p>62 家讀 2027 年部署量的硬體個股，成品上都標了「2027 年 NVIDIA 顆數為自建估計（區間 400–839 萬封裝），2027 年 2 月重估」。</p>
+  </div>
+</div>
+
+<h3>還開著的 PR</h3>
+<div class="tw"><table>
+<thead><tr><th>PR</th><th>內容</th><th>狀態</th></tr></thead>
+<tbody>
+<tr><td class="k">#658</td><td>Wattonomics：xAI 2024 年存量與資金缺口頁</td><td>草稿，照你的決定不合併；資金缺口頁修法另開一版，還沒做</td></tr>
+<tr><td class="k">Tokenomics #201</td><td>工作單草稿：需求對機隊比值的名稱、Rubin Ultra 規格口徑</td><td>草稿，等定稿</td></tr>
+</tbody></table></div>
+<p class="note">這一串共合併 25 個 PR（含內容被 #669 吸收的 #657），另關閉 4 個被取代的草稿（#647、#650、#661、#662）。</p>
+</section>
+
+<section id="sec-decide">
+<h2>2　等你決定的事</h2>
+<p>依重要性排列。每題都有建議預設；你若回「照預設」，我就照最右欄做。</p>
+<div class="tw"><table>
+<thead><tr><th>#</th><th>題目</th><th>背景</th><th>選項</th><th>建議預設</th></tr></thead>
+<tbody>
+<tr><td class="dq">D1</td><td><strong>2026 年要不要提前重判</strong></td><td>11-18 裁定「打平，維持現行」。每 GW 金額校正後，供給側對前三季實績由高估 11.9% 變成高估 18.9%，超出 ±15% 容差；需求側低估 12.0%，仍在容差內。照同一套方法重判，會是需求側較近</td><td>(a) 照原訂 2027-02-28 重判<br>(b) 現在改判需求側：基準 23.40 → 20.97 GW，62 家個股 2026 年讀數下修約 10%</td><td><strong>(a)</strong>。需求側的新讀數還只是試建值；全年實績三個月內就有；你定的條件是 2026 年不動</td></tr>
+<tr><td class="dq">D2</td><td><strong>Wattonomics 升版改讀 Siliconomics v0.21</strong></td><td>兩層現在不同步。升版後約 510 個名稱會變；2028 年證據比例低值會到 0.4522，離 0.45 的門檻只差 0.002，可能讓 2028 年狀態翻轉</td><td>做／暫緩</td><td><strong>做</strong>，會改值，先出影響分析給你看再合併</td></tr>
+<tr><td class="dq">D3</td><td><strong>NVIDIA 個股 FY2029 以後的顆數</strong></td><td>NVIDIA 目標價 283.30 → 329.77（+16.4%），漲幅來自 FY2029 以後：那幾年顆數仍是券商值，卻套上新的較高單價</td><td>(a) 比照 2027 年自建一套<br>(b) 維持現狀並標示</td><td><strong>(a)</strong>，做完前維持現狀；這個漲幅請先不要引用</td></tr>
+<tr><td class="dq">D4</td><td>分階段存量流量：要不要加兩層的顯示列</td><td>橋接層已做完。加顯示列後個股才有東西可讀；不改值，約 1.5 個工作天</td><td>現在做／再等</td><td><strong>現在做</strong>，先給組裝 4 家與電源、液冷 5 家加敏感度</td></tr>
+<tr><td class="dq">D5</td><td>2027 年對帳單要不要加第三、四個檢驗點</td><td>已寫定兩個（組裝廠營收成長、買方資本支出指引）。另有兩個候選：NVIDIA 下一會計年度上半年營收、Rubin 單價的一手揭露</td><td>列入／不列</td><td>第三個<strong>列入</strong>（唯一有鑑別力且屬已公布實績）；第四個只用來檢驗自建區間</td></tr>
+<tr><td class="dq">D6</td><td>買方資本支出指引能不能在實績打平時當決勝</td><td>規則沒寫。指引屬公司說法，依規則不能單獨裁定</td><td>能／不能</td><td><strong>不能</strong>，只記錄</td></tr>
+<tr><td class="dq">D7</td><td>期限裁定判的是「凍結值」還是「現值」</td><td>2027 年檢驗點的門檻是用 39.16 寫定的，現在基準已是 30.45</td><td>(a) 凍結值<br>(b) 現值<br>(c) 兩個都列</td><td><strong>(c)</strong>，凍結值檢驗當初的預測、現值決定基準</td></tr>
+<tr><td class="dq">D8</td><td>第三季同一份財報裡的採購承諾算不算保留範圍</td><td>從 11-18 下午留到現在，草案沒給預設</td><td>(a) 只保留營收<br>(b) 整份保留</td><td><strong>(a)</strong>。你的原話指的是「第三季的數字」當對帳來源；採購承諾是另一種資訊，而且自建顆數最缺的就是它</td></tr>
+<tr><td class="dq">D9</td><td>供給側勝出時，基準取原始顆數還是含係數值</td><td>這次沒觸發（2026 年打平）</td><td>(a) 原始顆數<br>(b) 含係數值</td><td><strong>(a)</strong>，與草案傾向相同；2027-02-28 前定案即可</td></tr>
+<tr><td class="dq">D10</td><td>Tokenomics 的需求對機隊比值用哪種名稱</td><td>Tokenomics #201</td><td>四個選項</td><td>用 <code>L1_</code> 名稱（契約已允許），主版升 v23.0</td></tr>
+<tr><td class="dq">D11</td><td>報告裡的樣本外數字要不要收在獨立一節</td><td>你說第三季數字你原本不知道，我卻直接寫在正文</td><td>收／不收</td><td><strong>收</strong>：正文只寫結論，數字放最後一節</td></tr>
+</tbody></table></div>
+
+<h3>不需要你決定、我接下來會做的</h3>
+<ul class="pts">
+<li>資金缺口頁的歷史年改讀實績（你已選首選），做成新版後再處理 #658。</li>
+<li>對帳範圍延到 2030（你已選供給側延連續法），還沒實作。</li>
+<li>2026 年晶片金額對帳點變成「待診斷」，開一張對帳單追蹤。</li>
+<li>目標價總表、AI 算力地圖重產；Drive 上 66 家個股成品同步。</li>
+<li>2027 年 HBM 只用到供給的 87%，與廠商「售罄」說法衝突，查原因。</li>
+</ul>
+</section>
+
+<section id="sec-timeline">
+<h2>3　事情的經過</h2>
+<ol class="tl">
+<li><span class="t">11-18 15:33</span>接手。讀交接檔，照第 5 節順序開工。</li>
+<li><span class="t">下午</span><strong>第一輪。</strong>確認規則草案的第三季條款已修正；修好並合併 #648；把 #650 拆成兩個；做出 2026 年期限裁定材料（結論：打平）；派出六個代理做第二波工作單與兩份研究；交出匯總報告與 HTML 版。</li>
+<li><span class="t">16:38</span>你問讀報告期間我能做什麼。我列了六件不需要你決定的事並開工：橋接表收尾、晶片橋接表連動、檢查第 15 項、#661 與 #662 的獨立核對、差距的單因子拆解、個股缺口盤點。</li>
+<li><span class="t">16:56</span><strong>你的第一個決定。</strong>「沒說的照你的預設／建議」，並加兩個新方向：自己建 2027 年 NVIDIA 顆數；把分階段存量流量併入各層。</li>
+<li><span class="t">傍晚</span><strong>第二輪。</strong>自建顆數第一版（約 600 萬）、存量流量設計書、規則 v1.5 生效、Wattonomics v0.3.7 合併。</li>
+<li><span class="t">17:32</span>你問能不能關機。可以；之後改用雲端直接寫入 Google Drive。</li>
+<li><span class="t">18:49</span><strong>你的第二個決定。</strong>「按照預設繼續做」。</li>
+<li><span class="t">晚上</span><strong>第三輪。</strong>釘住 Rubin 單價（自建顆數更新為 613 萬）；蒐集組裝廠與買方的存量資料；橋接表做成兩段存量帳；2027 年檢驗點事前寫定；追溯出每 GW 金額 261 億偏低；做出「自建顆數寫進模型」的影響分析。我當時建議等到 2027 年 2 月再寫入。</li>
+<li><span class="t">21:13</span>你說傾向現在就寫入，要我再評估。我同意，但指出第三季驗不到 2027 年，並提三個條件。</li>
+<li><span class="t">21:20</span><strong>你的第三個決定。</strong>「照上面三個條件先寫進去吧」，金額也要，個股也要調。</li>
+<li><span class="t">深夜</span><strong>第四輪。</strong>建置 Siliconomics v0.21 與 66 家個股重建；獨立核對發現 NVIDIA 個股的每顆售價沒跟著改，補做；合併。</li>
+<li><span class="t">11-19 01:04</span>寫入後用第三季做局部驗證，發現 2026 年的讀數因金額校正而改變（見 D1）。</li>
+</ol>
+</section>
+
+<section id="sec-find">
+<h2>4　主要發現</h2>
+
+<h3>4.1　2027 年 NVIDIA 顆數：我們自己的看法</h3>
+<p>五條互相獨立的路徑各估一次，券商數字不當輸入，只在最後對照。單位：百萬封裝。</p>
+<div class="tw"><table>
+<thead><tr><th>路徑</th><th class="n">低</th><th class="n">基準</th><th class="n">高</th><th>主要限制</th></tr></thead>
+<tbody>
+<tr><td class="k">公司營收指引 ÷ 單價</td><td class="n">3.92</td><td class="n">5.84</td><td class="n">8.39</td><td>指引是公司自己說的</td></tr>
+<tr><td class="k">四大買方資本支出 ÷ 單價</td><td class="n">2.62</td><td class="n">4.76</td><td class="n">8.48</td><td>2027 年資本支出只有質性說法</td></tr>
+<tr><td class="k">台積電 AI 加速器營收</td><td class="n">4.00</td><td class="n">6.42</td><td class="n">11.03</td><td>台積電不揭露封裝產能，改用營收倍數</td></tr>
+<tr><td class="k">HBM 位元</td><td class="n">2.48</td><td class="n">6.64</td><td class="n">16.46</td><td>區間太寬，幾乎沒有鑑別力</td></tr>
+<tr><td class="k">系統商通路（下限）</td><td class="n">0.35</td><td class="n">0.61</td><td class="n">1.00</td><td>只涵蓋 Dell、Supermicro、HPE</td></tr>
+</tbody></table></div>
+<ul class="pts">
+<li><strong>重疊區 400–839 萬，最可能 613 萬，信心中低。</strong>原本的 912 萬與需求側的 438 萬都落在主要證據之外。</li>
+<li><strong>兩側差一倍，主因是 Rubin 每封裝賣多少錢沒被釘住。</strong>現在的估計是 11.4 萬美元（9.6–13.9 萬），三條證據線重疊，其中一條是買方的法定申報。</li>
+<li>912 萬要成立，Rubin 每封裝只能賣約 6.7 萬；438 萬要成立，要賣約 15.8 萬。兩者都在證據區間之外。</li>
+<li>最弱的一環：那筆買方申報對應的 460 MW 是 IT 還是總電力口徑沒確認。若是總電力，最可能值降到約 565 萬。另有一家新雲的資本支出對 GW 是反證。</li>
+</ul>
+
+<h3>4.2　差距不是時差</h3>
+<ul class="pts">
+<li>寫入前，若兩側都為真，2027 年底會有約 25 GW 已出貨未通電。買方端依自己的邏輯放 6.8 GW，剩 18.5 GW 要放在組裝廠通路，而依六家組裝廠與系統商的存貨天數，通路最多放 5.8–9.4 GW。</li>
+<li>所以矛盾是<strong>流量水準不一致</strong>，把時差拆細不會讓差距消失。</li>
+<li>單因子拆解的結論一致：時差與庫存係數只動 −0.11 至 +0.01 GW；有外部證據的因子合起來只解釋原差距的 41%。</li>
+</ul>
+
+<h3>4.3　每 GW 的 NVIDIA 金額偏低</h3>
+<ul class="pts">
+<li>261 億是 Siliconomics 的值，Wattonomics 原封讀入，兩層相同。</li>
+<li>它解釋了 2025 年對帳比值 0.83 的缺口的 82%–107%，幾乎全在 Blackwell 第一代。</li>
+<li>校正後（試建值）：需求側對帳比值 2025 年 0.83 → 1.02、2026 年 0.94 → 1.00。兩個有實績的年份都往 1 靠近。</li>
+<li>它只動對帳點，不動部署基準。但它讓 2026 年供給側的讀數變差，這就是 D1 的來源。</li>
+</ul>
+
+<h3>4.4　寫入後還剩什麼差距</h3>
+<p>2027 年差距由 14.7 GW 降到約 6.0 GW。剩下的粗分一半一半：</p>
+<ul class="pts">
+<li><strong>約 3.9 GW 在 NVIDIA：</strong>需求側的 438 萬仍在自建區間下緣附近，要由買方資本支出事後上修、站點覆蓋不足來解釋。</li>
+<li><strong>約 3–4 GW 在非 NVIDIA：</strong>供給側的自研晶片顆數與每顆成本都還是券商數字或假設，沒有自建。</li>
+</ul>
+
+<h3>4.5　個股層的缺口</h3>
+<ul class="pts">
+<li>最大的缺口是部署 GW 的兩層差距本身，62 家硬體個股全部承接。</li>
+<li>組裝、電源、液冷共 9 家仍讀「成本等值 GW」，應讀「實體 GW」，2027 年差 11.5%。</li>
+<li>13 個對帳點（快照實際有 15 個）只有 2 個以個股實績加總檢驗，4 個市場沒建。建議順序：HBM → 光學模組 → AI 高速電路板 → 先進封裝（改對產能）→ 電源 → 液冷。</li>
+</ul>
+
+<h3>4.6　同業怎麼做</h3>
+<ul class="pts">
+<li>沒有任何機構公開過 2027–2029 年逐年把供給側與需求側對到點值，也沒有人公布預測誤差。主要機構都只給情境區間。</li>
+<li>最值得借鏡、條件也最接近我們的是 Epoch AI：兩套獨立模型互驗，並公布自己的覆蓋率（站點資料庫約只看到 44%）。</li>
+<li>已採用的借鏡：分階段存量帳（橋接層已完成）、單因子敏感度（已完成）。</li>
+</ul>
+
+<h3>4.7　其他查核結果</h3>
+<div class="tw"><table>
+<thead><tr><th>項目</th><th>結果</th></tr></thead>
+<tbody>
+<tr><td class="k">封裝與晶粒口徑</td><td>兩層都是封裝，不是差距的原因</td></tr>
+<tr><td class="k">需求側 2027 年不計 Blackwell</td><td>只影響 0.2–0.3 GW</td></tr>
+<tr><td class="k">非 NVIDIA 廠房成本乘持有比</td><td>口徑有問題，但方向是讓 GW 偏高，不是偏低</td></tr>
+<tr><td class="k">Rubin Ultra 重複計算</td><td>屬實，0.4 GW；已在 v0.21 修正</td></tr>
+<tr><td class="k">HBM 獨立供給</td><td>三家公司都沒揭露位元或晶圓產能；自建估計 2027 年只有原模型值的 57%，區間很寬，沒有入模型</td></tr>
+<tr><td class="k">資金缺口頁歷史年</td><td>用 GW 重建、沒用實績；xAI 2024 年模型值是法定文件揭露值的 1.8 倍</td></tr>
+<tr><td class="k">2027 年兩個檢驗點的鑑別力</td><td>組裝廠營收成長在期限當下沒有鑑別力，之後也多半只能確認供給側；買方資本支出指引分得出兩側，但屬公司說法</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="sec-yours">
+<h2>5　你已做的決定</h2>
+<div class="tw"><table>
+<thead><tr><th>時間</th><th>你的原話</th><th>我據此做了什麼</th></tr></thead>
+<tbody>
+<tr><td class="k">11-18 15:33</td><td>「會改基準值的變更先給我看影響分析」「NVIDIA 第三季數字不得寫進任何模型或用來校準參數」</td><td>四個會改值的 PR 都先開草稿附影響分析；第三季數字只出現在對帳單與標明樣本外的文件</td></tr>
+<tr><td class="k">16:56</td><td>「沒說的照你的預設／建議」<br>「先集中火力對 2027 年的帳…一定要自己手搓一套出來，不能靠券商」<br>「請看看怎麼樣併入我們的三層（甚至第四層－個股層）」</td><td>2026 年裁定打平；規則 v1.5 生效；Wattonomics v0.3.7 合併；自建顆數；存量流量設計</td></tr>
+<tr><td class="k">18:49</td><td>「按照預設繼續做」</td><td>自建區間列為參考；橋接層存量帳；2027 年檢驗點事前寫定；2026 年期限改 2027-02-28</td></tr>
+<tr><td class="k">21:13</td><td>「我是想要現在寫進去，因為這樣接下來我才可以把個股模型有個新的依據，不管這依據對不對，總之是我們自己盡力去做的」</td><td>重新評估，同意，提三個條件</td></tr>
+<tr><td class="k">21:20</td><td>「還是要寫進去，然後呢，金額也要…就照上面三個條件先寫進去吧。然後那些該調整的個股也是要去調一調」</td><td>Siliconomics v0.21、NVIDIA 個股 v0.3.12、66 家重建，核對後合併</td></tr>
+</tbody></table></div>
+<p><strong>要請你留意的一點：</strong>規則 v1.5 裡有多條是依「沒說的照預設」推定生效的，不是你逐條說過的。規則本文的修訂沿革把「你明說的」和「依預設推定的」分開列了，你日後可以逐條推翻。</p>
+
+<h3>三個條件，以及實際做到的程度</h3>
+<div class="tw"><table>
+<thead><tr><th>條件</th><th>做到了嗎</th></tr></thead>
+<tbody>
+<tr><td>每 GW 的 NVIDIA 金額同一版處理</td><td><span class="pill p-good">做到</span> Siliconomics 與 NVIDIA 個股都改了。Wattonomics 要等升版才會跟上</td></tr>
+<tr><td>2026 年不動</td><td><span class="pill p-warn">部分</span> 顆數、基準、標示都沒動；但金額校正讓 2026 年的對帳讀數變了（448 → 476 十億美元）。這是機械後果，見 D1</td></tr>
+<tr><td>成品標示自建估計與區間</td><td><span class="pill p-good">做到</span> 62 家都有</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="sec-limits">
+<h2>6　使用限制</h2>
+<ol class="pts">
+<li><strong>2027 年起的部署基準是自建估計，信心中低。</strong>區間 400–839 萬對應 2027 年基準約 23.8–37.5 GW。11 家評等變動對這個區間不穩健。</li>
+<li><strong>2028、2029 年沒有獨立水準</strong>，是 2027 年基準乘需求側成長率，完全繼承 2027 年的不確定。</li>
+<li><strong>NVIDIA 個股目標價 +16.4% 不穩健</strong>，來自沒有自建顆數的 FY2029 以後。</li>
+<li><strong>2027 年隱含 NVIDIA 營收對公司指引只差 0.2%，不是驗證。</strong>顆數本來就是用同一個單價從指引反推的，這是循環。</li>
+<li><strong>兩層目前不同步。</strong>Wattonomics 還在讀舊版 Siliconomics；它的 NVIDIA 對帳點仍用 261 億。</li>
+<li><strong>2026 年的「打平」是用校正前的讀數裁定的。</strong></li>
+<li><strong>非 NVIDIA 的顆數與成本</strong>仍是券商數字或假設。</li>
+<li><strong>對帳只到 2029 年。</strong>2030 年供給側沒建。</li>
+<li><strong>第三季</strong>沒有進任何模型、種子檔或參數。合併前獨立掃描過 485 個檔。</li>
+</ol>
+</section>
+
+<section id="sec-unverified">
+<h2>7　沒驗證的事</h2>
+<ul class="pts">
+<li><strong>我自己核對過的只有幾處：</strong>2026 年裁定試算；數個 PR 的快照比對（既有名稱是否不變、基準是否如預期）；NVIDIA 個股目標價變動的來源；兩處同業研究來源；NVIDIA「下一年度成長約 70%」的原話。其餘報告都是代理產出，我讀的是結論。</li>
+<li><strong>v0.21 的獨立核對</strong>是在 NVIDIA 個股單價補做之前完成的。補做的部分我只做了差異檢查，沒有再派一次完整核對。</li>
+<li><strong>Rubin 單價與自建顆數本身沒有人重算過。</strong>核對只確認「寫進模型的數字等於報告的數字」。</li>
+<li><strong>多筆來源是二手：</strong>廣達、鴻海、緯創的季資料與月營收；廣達存貨找不到公司原文；台積電與買方的法說用第三方逐字稿；NVIDIA 第二季季報原文被網站擋，改用公司的財務長說明。</li>
+<li><strong>券商原文</strong>到現在都沒取得。</li>
+<li><strong>需求側重建後的讀數</strong>（D1 的依據之一）是試建值，不是正式建置。</li>
+<li><strong>「每 GW 400 億」</strong>代理說已在公司法說逐字稿確認，我自己沒有查到原文。</li>
+</ul>
+</section>
+
+<section id="sec-fix">
+<h2>8　我說錯過的地方</h2>
+<div class="tw"><table>
+<thead><tr><th>我說的</th><th>實際</th><th>影響</th></tr></thead>
+<tbody>
+<tr><td>「Siliconomics 每 GW 的 NVIDIA 金額用 348 億、Wattonomics 用 261 億」</td><td>兩層的 Rubin 都是 261 億；348 億是 Rubin Ultra 的值</td><td>兩層隱含營收的差別來自 GW，不是金額。已在交接檔更正</td></tr>
+<tr><td>「而我們都已經知道 107.6 了」</td><td>你當時不知道這個數字。知道的是我和各代理</td><td>我在裁定材料與回覆裡直接寫出，沒有先問你。見 D11</td></tr>
+<tr><td>影響分析表格的區間兩端寫「未跑」</td><td>代理定稿後有跑：高端 0 家、低端 23 家改評等</td><td>已更新</td></tr>
+<tr><td>建議「等 2027 年 2 月再寫入」</td><td>你選現在寫入。我重新評估後同意，但你原本的第二個理由（寫入後可用第三季驗 2027 年）不成立，第三季是 2026 年的資料</td><td>—</td></tr>
+<tr><td>交接檔寫季節權重 FY2025 41.4%、FY2026 42.4%</td><td>相反：FY2025 42.4%、FY2026 41.4%</td><td>低／基準／高不受影響</td></tr>
+<tr><td>「13 個對帳點」</td><td>快照實際有 15 個</td><td>—</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="sec-files">
+<h2>9　檔案位置</h2>
+<p>全部在 GitHub <code>YinchenChang/company-models</code> 的 <code>docs/reports/20261118_三層對帳/</code>。Drive 的 <code>Claude outputs/</code> 有主要報告的副本。</p>
+<div class="tw"><table>
+<thead><tr><th>想看什麼</th><th>資料夾或檔名</th></tr></thead>
+<tbody>
+<tr><td>交接檔（最完整的文字紀錄，共 10 節）</td><td><code>交接_20261118_晚間進度.md</code>；Drive 上是 <code>交接_20261119_含v0.21寫入.md</code></td></tr>
+<tr><td>第二波匯總報告</td><td><code>summary/</code></td></tr>
+<tr><td>2026 年裁定材料、裁定紀錄、2027 年檢驗點、第三季局部驗證</td><td><code>adjudication/</code></td></tr>
+<tr><td>自建顆數（第一版）</td><td><code>nv-units/</code></td></tr>
+<tr><td>Rubin 單價與顆數更新</td><td><code>rubin-price/</code></td></tr>
+<tr><td>寫進模型的影響分析（16 個情境）</td><td><code>units-proposal/</code></td></tr>
+<tr><td>v0.21 建置報告</td><td><code>siliconomics/docs/reports/20261118_v0.21_build.md</code></td></tr>
+<tr><td>獨立核對（兩份）</td><td><code>verify/</code></td></tr>
+<tr><td>每 GW 的 NVIDIA 金額追溯</td><td><code>nv-content-per-gw/</code></td></tr>
+<tr><td>分階段存量流量設計、組裝廠與買方資料</td><td><code>stock-flow/</code>、<code>channel-stock/</code></td></tr>
+<tr><td>差距的單因子拆解</td><td><code>sensitivity/</code></td></tr>
+<tr><td>個股缺口盤點</td><td><code>stock-gap/</code></td></tr>
+<tr><td>同業做法、HBM 獨立供給</td><td><code>peers/</code>、<code>hbm/</code></td></tr>
+<tr><td>規則本文</td><td><code>docs/plan/三層基準協調規則.md</code>（v1.5.2）</td></tr>
+</tbody></table></div>
+</section>
+
+<footer>
+本頁整理自 2026-11-18 15:33 至 2026-11-19 01:04 的對話與 repo 紀錄。數字以 repo 主線現況為準；整理時（11-19 07:50）主線檢查全綠，之後沒有新的合併。
+</footer>
+</main>
+</div>
+</body>
+</html>
