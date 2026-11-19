@@ -17,7 +17,10 @@ AI 半導體 Project 的「唯一事實」Excel：加速器顆數、記憶體與
 ## 建置（每個 Excel 新版本）
 
 ```bash
-# 1) 產生（之後各版加 --base model/<現行>.xlsx，In 頁藍字讀回現行 Excel）
+# 0) 有輸入變更時先寫進現行 Excel（Excel 優先；只在仍為舊值時寫入，給 old_base 可防覆寫；鍵不存在即報錯，新增輸入列改放 builder/seed/rows_added.json）
+#    變更 json 格式見 tools/apply_inputs.py 檔頭；步驟 1 的 --base 改指向這個輸出檔
+python3 siliconomics/tools/apply_inputs.py siliconomics/model/<現行>.xlsx <變更>.json build/in.xlsx
+# 1) 產生（之後各版加 --base model/<現行>.xlsx，或步驟 0 的 build/in.xlsx；In 頁藍字讀回 Excel）
 python3 siliconomics/builder/build.py --out build/raw/<YYYYMMDD>_Siliconomics_vX.Y.xlsx
 # 2) LibreOffice headless 重算存檔（錯誤格須為 0、Checks 的 SGOV_Errors 須為 0）
 soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir siliconomics/model build/raw/<檔名>.xlsx
