@@ -1,5 +1,5 @@
 {
- "out": "/home/claude/out/summary/20261118_三層對帳總表_v0.1.xlsx",
+ "out": "/tmp/sum2/20261119_三層對帳總表_v0.2.xlsx",
  "REG": {
   "mix|H100": 56,
   "mix|GB200": 57,
@@ -39,7 +39,7 @@
   "SIF_DeployGW_Supply": 97,
   "SIF_DeployGW_Demand": 98,
   "SIF_DeployGW_Alt": 99,
-  "SIF_DeployGW_Current": 100,
+  "SIF_DeployGW_LegacyS33": 100,
   "SIF_DeployGW_AltRatio": 101,
   "SIF_DeployGWPhys_Base": 102,
   "SIF_AIITCapex_Base": 103,
@@ -176,17 +176,17 @@
  },
  "SHA": {
   "tk_snapshot": "6f8642ef28d5523e2f8a22acf35ce779a89c09bb0f890c1b1078c3fa76ed3165",
-  "watt_snapshot": "fdfe33f956e8d9701f193c2f4d615939376f6904197b1466e838bee4b8c1b87a",
-  "sil_snapshot": "89d9d831a6137de1590cd373fd557b476ae081e12c5f4d7c2984e600155984ec",
-  "status": "50033855c18bb26513b6493fd5ef3573cdc5e5bd0929b1e6323f87253fc526c2",
-  "recon": "6438845a4edd852ab401ef150cb12d1d985a08931219d958b1cd9dffb2c4947f",
-  "bridge": "60ae4c91aca5db0112e8d3afa29d34b6ee26d3188553a735f42e4dcb2b0688ed",
+  "watt_snapshot": "8b0c8d2e4eafdb19b417d80d7394b91d232f9d94c123b4c71ae3c7220e66b2df",
+  "sil_snapshot": "69cbc1ada6fe03c9847c390c945ba7ab9b9817050900b6a2f124ecd28c3ebd57",
+  "status": "e86ee750b79e4f4ff6a4a5be901e196e42767db3cc574e41f81200f9ada2d836",
+  "recon": "95f1c96a95ac087b320186d2f2eb30b4e102ef0b401528d8530ab2ff85a7e23d",
+  "bridge": "e634724d4eb52838e0d9a1476c24fb42a89ecc31d8109bf6546cd30fce28b493",
   "tk_xlsx": "2297abc3e93290572d7ef607717838fa4ec3cc6919d372b1b8e2d1b20bd92e91",
-  "watt_xlsx": "acb92d6fd80c6872e8f23d64e4e93651ef580f60f1a27b213f1a826e377adb58",
-  "sil_xlsx": "ad8dfaaff66e4a0b829ce2d3eede3338bfce4b55c7d033223b4208ff0128527d"
+  "watt_xlsx": "c68f94f4bcdf783cf0ffbe827980bf13bbd28af15b5de905f3bfbab0db9b79fd",
+  "sil_xlsx": "8c8207f63cb9d5def1ee35bcce7c077e4a6aef7cc48688d3d81ff1af1bfe0da4"
  },
  "GIT_CM": [
-  "d04f591572d902bef4715ff55e932b039f22686a",
+  "c6965e5abec1e8c08c9632e01ba7dc02c737ffb4",
   "工作樹乾淨"
  ],
  "GIT_TK": [
@@ -205,34 +205,34 @@
    "act": "2297abc3e93290572d7ef607717838fa4ec3cc6919d372b1b8e2d1b20bd92e91"
   },
   "WAS": {
-   "file": "wattonomics_snapshot_v0.3.6.json",
-   "rec": "acb92d6fd80c6872e8f23d64e4e93651ef580f60f1a27b213f1a826e377adb58",
-   "act": "acb92d6fd80c6872e8f23d64e4e93651ef580f60f1a27b213f1a826e377adb58"
+   "file": "wattonomics_snapshot_v0.3.9.json",
+   "rec": "c68f94f4bcdf783cf0ffbe827980bf13bbd28af15b5de905f3bfbab0db9b79fd",
+   "act": "c68f94f4bcdf783cf0ffbe827980bf13bbd28af15b5de905f3bfbab0db9b79fd"
   },
   "WAX": {
-   "file": "20261116_Wattonomics_v0.3.6.xlsx",
+   "file": "20261119_Wattonomics_v0.3.9.xlsx",
    "rec": null,
-   "act": "acb92d6fd80c6872e8f23d64e4e93651ef580f60f1a27b213f1a826e377adb58"
+   "act": "c68f94f4bcdf783cf0ffbe827980bf13bbd28af15b5de905f3bfbab0db9b79fd"
   },
   "SIS": {
-   "file": "siliconomics_snapshot_v0.20.json",
-   "rec": "cf29d2bbc72c3136e610b3a5a5befb78150ac7565bdfc0fa03834388dba465f2",
-   "act": "ad8dfaaff66e4a0b829ce2d3eede3338bfce4b55c7d033223b4208ff0128527d"
+   "file": "siliconomics_snapshot_v0.22.json",
+   "rec": "8c8207f63cb9d5def1ee35bcce7c077e4a6aef7cc48688d3d81ff1af1bfe0da4",
+   "act": "8c8207f63cb9d5def1ee35bcce7c077e4a6aef7cc48688d3d81ff1af1bfe0da4"
   },
   "SIB": {
    "file": "baseline_status.json",
    "rec": null,
-   "act": "ad8dfaaff66e4a0b829ce2d3eede3338bfce4b55c7d033223b4208ff0128527d"
+   "act": "8c8207f63cb9d5def1ee35bcce7c077e4a6aef7cc48688d3d81ff1af1bfe0da4"
   },
   "SIR": {
-   "file": "recon_snapshot_v0.20.json",
+   "file": "recon_snapshot_v0.22.json",
    "rec": null,
-   "act": "ad8dfaaff66e4a0b829ce2d3eede3338bfce4b55c7d033223b4208ff0128527d"
+   "act": "8c8207f63cb9d5def1ee35bcce7c077e4a6aef7cc48688d3d81ff1af1bfe0da4"
   },
   "BRG": {
-   "file": "20261116_協調橋接_v0.3.6.xlsx",
+   "file": "20261119_協調橋接_v0.3.9.xlsx",
    "rec": null,
-   "act": "60ae4c91aca5db0112e8d3afa29d34b6ee26d3188553a735f42e4dcb2b0688ed"
+   "act": "e634724d4eb52838e0d9a1476c24fb42a89ecc31d8109bf6546cd30fce28b493"
   },
   "EXT": {
    "file": "（外部／對帳單）",
@@ -383,11 +383,11 @@
   },
   "IF_GPUsPerGW": {
    "mirror": true,
-   "refs": 28
+   "refs": 40
   },
   "IF_CapexIT": {
    "mirror": true,
-   "refs": 43
+   "refs": 37
   },
   "IF_CapexFacility": {
    "mirror": true,

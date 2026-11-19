@@ -51,16 +51,30 @@ ap.add_argument("--skip-usage-scan", action="store_true", help="略過掃描兩�
 A = ap.parse_args()
 
 CM, TKR = A.company_models, A.tokenomics
+
+
+def _cur(path):
+    with open(path, encoding="utf-8") as f:
+        return f.read().strip()
+
+
+def _latest(folder, pat):
+    c = sorted(x for x in os.listdir(folder) if re.fullmatch(pat, x))
+    return os.path.join(folder, c[-1])
+
+
+_W_X = _cur(f"{CM}/wattonomics/model/CURRENT")
+_W_V = re.search(r"_(v[\d.]+)\.xlsx$", _W_X).group(1)
 P = dict(
-    tk_snapshot=A.tk_snapshot or f"{CM}/wattonomics/data/tokenomics_snapshot_v22.0.json",
-    watt_snapshot=A.watt_snapshot or f"{CM}/wattonomics/data/wattonomics_snapshot_v0.3.6.json",
-    sil_snapshot=A.sil_snapshot or f"{CM}/siliconomics/data/siliconomics_snapshot_v0.20.json",
+    tk_snapshot=A.tk_snapshot or f"{CM}/wattonomics/data/tokenomics_snapshot_" + re.search(r"_(v[\d.]+)\.xlsx$", _cur(f"{TKR}/model/CURRENT")).group(1) + ".json",
+    watt_snapshot=A.watt_snapshot or f"{CM}/wattonomics/data/wattonomics_snapshot_{_W_V}.json",
+    sil_snapshot=A.sil_snapshot or f"{CM}/siliconomics/data/" + _cur(f"{CM}/siliconomics/data/CURRENT_SNAPSHOT"),
     status=A.status or f"{CM}/siliconomics/data/baseline_status.json",
-    recon=A.recon or f"{CM}/siliconomics/data/recon_snapshot_v0.20.json",
-    bridge=A.bridge or f"{CM}/siliconomics/docs/reports/20261116_協調橋接_v0.3.6.xlsx",
-    tk_xlsx=A.tk_xlsx or f"{TKR}/model/20261105_Tokenomics_v22.0.xlsx",
-    watt_xlsx=A.watt_xlsx or f"{CM}/wattonomics/model/20261116_Wattonomics_v0.3.6.xlsx",
-    sil_xlsx=A.sil_xlsx or f"{CM}/siliconomics/model/20261116_Siliconomics_v0.20.xlsx",
+    recon=A.recon or f"{CM}/siliconomics/data/" + _cur(f"{CM}/siliconomics/data/CURRENT_RECON"),
+    bridge=A.bridge or _latest(f"{CM}/siliconomics/docs/reports", r"\d{8}_協調橋接_" + re.escape(_W_V) + r"(r\d+)?\.xlsx"),
+    tk_xlsx=A.tk_xlsx or f"{TKR}/model/" + _cur(f"{TKR}/model/CURRENT"),
+    watt_xlsx=A.watt_xlsx or f"{CM}/wattonomics/model/{_W_X}",
+    sil_xlsx=A.sil_xlsx or f"{CM}/siliconomics/model/" + _cur(f"{CM}/siliconomics/model/CURRENT"),
 )
 YEARS = [2025, 2026, 2027, 2028, 2029]
 GENS = ["Hopper H100", "GB200 NVL72", "GB300 NVL72", "VR200 NVL72", "Rubin Ultra（MGX NVL 單架，72 GPU）"]
@@ -102,6 +116,13 @@ WN = w_snap["names"]
 SN = s_snap["names"]
 
 SHA = {k: sha256(v) for k, v in P.items()}
+
+
+def _ver(path):
+    return re.search(r"_(v[\d.]+(?:r\d+)?)\.(?:xlsx|json)$", os.path.basename(path)).group(1)
+
+
+TV, WV, SV, RV, BV = _ver(P["tk_xlsx"]), _ver(P["watt_xlsx"]), _ver(P["sil_xlsx"]), _ver(P["recon"]), _ver(P["bridge"])
 GIT_CM = git_head(CM)
 GIT_TK = git_head(TKR)
 
@@ -109,15 +130,15 @@ GIT_TK = git_head(TKR)
 FILES = {
     "TKS": dict(file=os.path.basename(P["tk_snapshot"]), ver=tk_snap["source"]["version"],
                 rec=None, act=SHA["tk_xlsx"], model="Tokenomics 模型檔"),
-    "TKX": dict(file=os.path.basename(P["tk_xlsx"]), ver="v22.0", rec=None, act=SHA["tk_xlsx"], model="Tokenomics 模型檔"),
+    "TKX": dict(file=os.path.basename(P["tk_xlsx"]), ver=TV, rec=None, act=SHA["tk_xlsx"], model="Tokenomics 模型檔"),
     "WAS": dict(file=os.path.basename(P["watt_snapshot"]), ver=w_snap["source"]["version"],
                 rec=w_snap["source"]["sha256"], act=SHA["watt_xlsx"], model="Wattonomics 模型檔"),
-    "WAX": dict(file=os.path.basename(P["watt_xlsx"]), ver="v0.3.6", rec=None, act=SHA["watt_xlsx"], model="Wattonomics 模型檔"),
+    "WAX": dict(file=os.path.basename(P["watt_xlsx"]), ver=WV, rec=None, act=SHA["watt_xlsx"], model="Wattonomics 模型檔"),
     "SIS": dict(file=os.path.basename(P["sil_snapshot"]), ver=s_snap["source"]["version"],
                 rec=s_snap["source"]["sha256"], act=SHA["sil_xlsx"], model="Siliconomics 模型檔"),
     "SIB": dict(file=os.path.basename(P["status"]), ver="（來源 " + status["source"] + "）", rec=None, act=SHA["sil_xlsx"], model="Siliconomics 模型檔"),
-    "SIR": dict(file=os.path.basename(P["recon"]), ver="v0.20", rec=None, act=SHA["sil_xlsx"], model="Siliconomics 模型檔"),
-    "BRG": dict(file=os.path.basename(P["bridge"]), ver="v0.3.6（In 頁標示 Siliconomics v0.19 輸入）", rec=None, act=SHA["bridge"], model="橋接表本檔"),
+    "SIR": dict(file=os.path.basename(P["recon"]), ver=RV, rec=None, act=SHA["sil_xlsx"], model="Siliconomics 模型檔"),
+    "BRG": dict(file=os.path.basename(P["bridge"]), ver=None, rec=None, act=SHA["bridge"], model="橋接表本檔"),
     "EXT": dict(file="（外部／對帳單）", ver="—", rec=None, act=None, model="—"),
 }
 
@@ -188,7 +209,10 @@ def sarr(name):
 
 
 def sv(name, y):
-    return SN.get(f"{name}_{y}")
+    v = SN.get(f"{name}_{y}")
+    if v is None and isinstance(SN.get(name), list):
+        v = sarr(name).get(y)
+    return v
 
 
 # ---- 橋接表 ----
@@ -206,6 +230,10 @@ for r in range(4, br_bridge.max_row + 1):
     if k:
         BR[k] = {2025 + i: br_bridge.cell(r, 4 + i).value for i in range(5)}
 BR_IN_NOTE = br_in.cell(1, 1).value
+BSV = re.search(r"Siliconomics_(v[\d.]+)\.xlsx", BR_IN_NOTE).group(1)   # 橋接表 In 頁標示的 Siliconomics 輸入版本
+BR_SAME = BSV == SV
+FILES["BRG"]["ver"] = f"{BV}（In 頁標示 Siliconomics {BSV} 輸入）"
+_br_s0_29, _sn_b29 = BR["s0"].get(2029), SN["SIF_DeployGW_Base"][-1] if isinstance(SN["SIF_DeployGW_Base"], list) else None
 
 # ---- 對帳點 ----
 MK = recon["markets"]
@@ -402,7 +430,7 @@ for code, path, role in LIST:
     r = nxt()
     file_rows[code] = r
     rel = os.path.relpath(path, CM) if path.startswith(CM) else (os.path.relpath(path, TKR) if path.startswith(TKR) else path)
-    ver = "v0.20" if code == "SIX" else FILES.get(code, {}).get("ver", "")
+    ver = SV if code == "SIX" else FILES.get(code, {}).get("ver", "")
     own = sha256(path)
     put(ws, r, 1, code, font=F_IN)
     put(ws, r, 2, rel + "\n" + role, font=F_IN)
@@ -475,7 +503,7 @@ def IR(key, y):
 
 
 # --- 1. Tokenomics 具名範圍（xlsx）---
-sec(ws, nxt(), "1. Tokenomics 每 GW 價目（直讀 v22.0 工作簿具名範圍；H 欄為快照基準值對照）", 16)
+sec(ws, nxt(), f"1. Tokenomics 每 GW 價目（直讀 {TV} 工作簿具名範圍；H 欄為快照基準值對照）", 16)
 hdr(ws, nxt(), ["鍵", "名稱／世代", "單位", "低成本", "基準", "高成本", "快照基準值", "與快照差", "—", "等級", "來源檔", "名稱／位置", "版本", "SHA 快照記錄", "SHA 實算", "比對"])
 TKROW = {}
 TK_TAG = {"IF_CapexIT": "Derived（Rubin Ultra 含 Assumed 機架價倍數）", "IF_CapexTotal": "Derived（同上）", "IF_CapexFacility": "Assumed",
@@ -523,7 +551,7 @@ for y in YEARS:
 nxt()
 
 # --- 3. Wattonomics 快照 ---
-sec(ws, nxt(), "3. Wattonomics 快照 v0.3.6（上線年；單位 IT GW 或 US$B）", 16)
+sec(ws, nxt(), f"3. Wattonomics 快照 {WV}（上線年；單位 IT GW 或 US$B）", 16)
 hdr(ws, nxt(), IN_HDR_SERIES)
 WAT_TAG = "Derived"
 
@@ -572,7 +600,7 @@ for y in YEARS:
 nxt()
 
 # --- 4. Siliconomics 快照 ---
-sec(ws, nxt(), "4. Siliconomics 快照 v0.20（出貨年；GW＝成本等值 GW；金額 US$B）", 16)
+sec(ws, nxt(), f"4. Siliconomics 快照 {SV}（出貨年；GW＝成本等值 GW；金額 US$B）", 16)
 hdr(ws, nxt(), IN_HDR_SERIES)
 
 
@@ -588,7 +616,7 @@ sser_arr("SIF_DeployGW_Base", "部署 GW 基準（依規則）", "GW", NF_GW)
 sser_yr("SIF_DeployGW_Supply", "供給側讀數：原始顆數（不乘係數）", "GW", NF_GW)
 sser_yr("SIF_DeployGW_Demand", "需求側讀數：Wattonomics 換算值（平滑法）", "GW", NF_GW)
 sser_yr("SIF_DeployGW_Alt", "另一側讀數（未被採為基準的一條）", "GW", NF_GW)
-sser_yr("SIF_DeployGW_Current", "現行取法（原始 × 舊 S33 係數；v0.18 取法）", "GW", NF_GW)
+sser_yr("SIF_DeployGW_LegacyS33", "舊 S33 取法（原始 × 舊 S33 係數；v0.18 取法；v0.21 起取代 Current 別名）", "GW", NF_GW)
 sser_yr("SIF_DeployGW_AltRatio", "另一側讀數 ÷ 基準", "x", NF_X)
 sser_arr("SIF_DeployGWPhys_Base", "實體部署 GW（出貨年）", "GW", NF_GW)
 sser_arr("SIF_AIITCapex_Base", "AI IT 資本支出（基準）", "US$B", NF_USD)
@@ -626,7 +654,7 @@ stser("st_use_conv", "是否改用換算值（1＝是）", "旗標", lambda d: (
 stser("st_continuity", "連續法（1＝是）", "旗標", lambda d: (1 if d.get("continuity") else 0), NF_INT, name="years.<年>.continuity")
 stser("st_converted", "換算值（Demand）", "GW", lambda d: d["converted"], NF_GW, name="years.<年>.converted")
 stser("st_supply", "供給側讀數", "GW", lambda d: d["supply_side"], NF_GW, name="years.<年>.supply_side")
-stser("st_current", "現行 S33 取法", "GW", lambda d: d["current_s33"], NF_GW, name="years.<年>.current_s33")
+stser("st_current", "舊 S33 取法（legacy_s33）", "GW", lambda d: d["legacy_s33"], NF_GW, name="years.<年>.legacy_s33")
 stser("st_silbase", "Siliconomics 基準", "GW", lambda d: d["sil_base"], NF_GW, name="years.<年>.sil_base")
 for lvl in ("lo", "base", "hi"):
     stser(f"st_ws_{lvl}", f"Wattonomics 證據比例（{ {'lo': '低', 'base': '基準', 'hi': '高'}[lvl] }）", "比例",
@@ -652,7 +680,7 @@ prov_cells(ws, r, "SIR", "tolerance", "Assumed")
 nxt()
 
 # --- 6. 橋接表 ---
-sec(ws, nxt(), "6. 協調橋接表 v0.3.6（In 頁參數；Bridge 頁用於交叉核對，不用來算總表）", 16)
+sec(ws, nxt(), f"6. 協調橋接表 {BV}（In 頁參數；Bridge 頁用於交叉核對，不用來算總表）", 16)
 hdr(ws, nxt(), ["鍵", "項目", "單位", "低", "基準", "高", "—", "—", "—", "等級", "來源檔", "名稱／位置", "版本", "SHA 快照記錄", "SHA 實算", "比對"])
 for k, lab, unit, tag in [("lag_on", "付款（出貨）到上線延遲", "月", "Assumed"), ("inv_on", "未上線庫存 ÷ 年出貨", "比", "Assumed")]:
     r = nxt()
@@ -673,14 +701,14 @@ nxt()
 hdr(ws, nxt(), IN_HDR_SERIES)
 BRROWS = [("g", "總差距（現行基準 − 上線直接換算）", "GW"), ("g2", "② 時差與庫存", "GW"), ("g3", "③ 殘差（分歧）", "GW"), ("g3p", "③ ÷ 現行基準", "比例"),
           ("g2p", "② 累計 ÷ 當年基準", "比例"), ("x0", "上線 GW 直接換成本等值（不做時差）", "GW"), ("x2", "換算值（平滑法；上游定基準時之基準）", "GW"),
-          ("s2", "平滑法實體出貨", "GW"), ("rt", "本庫 實體 ÷ 成本等值", "x"), ("s0", "Siliconomics 現行基準（橋接表內，v0.19 輸入）", "GW"), ("k", "k＝lag_on÷12＋inv_on", "月")]
+          ("s2", "平滑法實體出貨", "GW"), ("rt", "本庫 實體 ÷ 成本等值", "x"), ("s0", f"Siliconomics 現行基準（橋接表內，{BSV} 輸入）", "GW"), ("k", "k＝lag_on÷12＋inv_on", "月")]
 for k, lab, unit in BRROWS:
     nf = NF_PCT if unit == "比例" else NF_X if unit == "x" else NF_GW
     series("br_" + k, lab, unit, {y: BR[k].get(y) for y in YEARS if BR[k].get(y) is not None}, nf, "BRG", f"Bridge!{k}", "Derived")
 nxt()
 
 # --- 7. 對帳點 ---
-sec(ws, nxt(), "7. 實績與對帳點（recon_snapshot_v0.20.json；NVIDIA 實績取到 FY2027 Q1＋Q2）", 16)
+sec(ws, nxt(), f"7. 實績與對帳點（{os.path.basename(P['recon'])}；NVIDIA 實績取到 {nv['actual_label']}）", 16)
 hdr(ws, nxt(), IN_HDR_SERIES)
 series("nv_sil_implied", "NVIDIA 資料中心營收：Siliconomics 隱含值（R4 橋接）", "US$B", {y: v for y, v in zip(nv["years"], nv["implied"]) if v is not None}, NF_USD, "SIR", "markets.nv_dc.implied", "Derived")
 series("nv_company", "NVIDIA 資料中心營收：公司值（含指引，只列參考）", "US$B", {y: v for y, v in zip(nv["years"], nv["company"]) if v is not None}, NF_USD, "SIR", "markets.nv_dc.company", "Interested-party")
@@ -822,7 +850,7 @@ add("w_x0", "上線 GW 直接換成本等值（不做時差）", "GW", "新增�
 addsec("4. Siliconomics：供給與資本支出（出貨年；GW＝成本等值 GW）")
 add("s_sup", "供給側原始讀數（顆數，不乘係數）", "GW", "SIF_DeployGW_Supply", "Derived", "SIF_DeployGW_Supply_<年>", lambda y: f"={IR('SIF_DeployGW_Supply', y)}", NF_GW, Y26)
 add("s_base", "Siliconomics 基準（依規則）", "GW", "SIF_DeployGW_Base；2029 為連續法（前一年基準 × 換算值成長率）", "Derived", "SIF_DeployGW_Base", lambda y: f"={IR('SIF_DeployGW_Base', y)}", NF_GW, Y26, True)
-add("s_coef", "　基準 ÷ 供給側原始讀數（隱含係數）", "x", "對照顆數係數 SIF_UnitsCoef_Base（1／1／0.8／0.71；2028–29 為 Assumed）", "Derived", "（計算）",
+add("s_coef", "　基準 ÷ 供給側原始讀數（隱含係數）", "x", "對照顆數係數 SIF_UnitsCoef_Base（" + "／".join(f"{x:.2f}" for x in SN["SIF_UnitsCoef_Base"][-4:]) + "；2028–29 為 Assumed）", "Derived", "（計算）",
     lambda y: f"={S('s_base', y)}/{S('s_sup', y)}", NF_X, Y26)
 add("s_it", "AI IT 資本支出（基準）", "US$B", "SIF_AIITCapex_Base（基準 GW × 每 GW IT 單位值）", "Derived", "SIF_AIITCapex_Base", lambda y: f"={IR('SIF_AIITCapex_Base', y)}", NF_USD, Y26, True)
 
@@ -873,11 +901,11 @@ add("e_both", "兩層基準證據比例是否都過門檻（示意；規則判�
     lambda y: f'=IF(AND({S("e_st_ws_base", y)}>={S("e_thr", y)},{S("e_st_ss_base", y)}>={S("e_thr", y)}),"是","否")', None, Y26)
 
 # 核對
-addsec("9. 核對：本表重算值 vs 橋接表 v0.3.6 檔內值（橋接表 In 頁標示 Siliconomics v0.19 輸入）")
+addsec(f"9. 核對：本表重算值 vs 橋接表 {BV} 檔內值（橋接表 In 頁標示 Siliconomics {BSV} 輸入）")
 for k, mine, lab in (("g", "gap_gw", "總差距"), ("g2", "g_time", "時差"), ("g3", "g_resid", "殘差")):
     add(f"b_{k}", f"橋接表{lab}", "GW", "橋接表 Bridge 頁", "Derived", f"Bridge!{k}", (lambda y, k=k: f"={IR('br_' + k, y)}"), NF_GW, Y26)
     add(f"d_{k}", f"　本表 − 橋接表（{lab}）", "GW", "", "Derived", "（計算）", (lambda y, k=k, mine=mine: f"={S(mine, y)}-{S('b_' + k, y)}"), '0.000;-0.000;0.000', Y26)
-add("d_flag", "　核對結論", "判定", "任一差異絕對值 > 0.05 GW 即標示；差異來自橋接表用 v0.19 輸入（2029 基準 42.704 vs v0.20 42.680）", "Derived", "（計算）",
+add("d_flag", "　核對結論", "判定", ("任一差異絕對值 > 0.05 GW 即標示；橋接表與本表讀同一版 Siliconomics（" + SV + "），差異應接近 0" if BR_SAME else f"任一差異絕對值 > 0.05 GW 即標示；差異來自橋接表用 {BSV} 輸入（2029 基準 {_br_s0_29:.3f} vs {SV} {_sn_b29:.3f}）"), "Derived", "（計算）",
     lambda y: f'=IF(MAX(ABS({S("d_g", y)}),ABS({S("d_g2", y)}),ABS({S("d_g3", y)}))>0.05,"有差異（>0.05 GW）","相符（≤0.05 GW）")', None, Y26)
 add("d_w1", "核對：IT 分項加總 − IT 合計（Wattonomics）", "US$B", "應為 0", "Derived", "輸入頁核對列", lambda y: f"={IN}!{YC[y]}{REG['w_chk_it']}", '0.000')
 add("d_w2", "核對：IT＋廠房＋自備發電 − 總支出（Wattonomics）", "US$B", "應為 0", "Derived", "輸入頁核對列", lambda y: f"={IN}!{YC[y]}{REG['w_chk_tot']}", '0.000')
@@ -887,7 +915,7 @@ add("d_dem", "核對：本表含時差換算 − SIF_DeployGW_Demand", "GW", "�
 # ---- 排版 ----
 title(ws, 1, "三層對帳總表：Tokenomics × Wattonomics × Siliconomics")
 put(ws, 2, 1,
-    f"資料版本：Tokenomics v22.0（main {GIT_TK[0][:7]}）／Wattonomics v0.3.6／Siliconomics v0.20／協調橋接 v0.3.6；company-models main {GIT_CM[0][:7]}。"
+    f"資料版本：Tokenomics {TV}（main {GIT_TK[0][:7]}）／Wattonomics {WV}／Siliconomics {SV}／協調橋接 {BV}；company-models main {GIT_CM[0][:7]}。"
     "單位：GW＝IT 關鍵電力（Siliconomics 為成本等值 GW）；金額 US$B。年度口徑：Wattonomics＝上線年、Siliconomics＝出貨年，逐年金額不可直接相減。藍字＝輸入、黑字＝公式。",
     font=F_NOTE, border=False)
 ws.merge_cells(start_row=2, start_column=1, end_row=2, end_column=10)
@@ -1157,7 +1185,7 @@ ws.merge_cells("A2:J2")
 ws.row_dimensions[2].height = 30
 ws.cell(2, 1).alignment = AL_LT
 r = 4
-sec(ws, r, "A. Tokenomics 快照下傳的 23 個名稱（Tokenomics v22.0 → Wattonomics v0.3.6／Siliconomics v0.20）", 10)
+sec(ws, r, f"A. Tokenomics 快照下傳的 23 個名稱（Tokenomics {TV} → Wattonomics {WV}／Siliconomics {SV}）", 10)
 r += 1
 hdr(ws, r, ["名稱", "內容", "單位", "快照類型", "Wattonomics 有鏡像", "Wattonomics 公式引用次數", "Siliconomics 有鏡像", "Siliconomics 公式引用次數", "判定", "備註"])
 A_FIRST = r + 1
@@ -1222,7 +1250,7 @@ for nm, lab in [("IF_RevGW_Sol", "每 GW 理論營收（Sol 中層）"), ("IF_Re
     ws.merge_cells(start_row=r, start_column=9, end_row=r, end_column=10)
 r += 2
 
-sec(ws, r, "C. Siliconomics 13 個對帳點：檢驗方式與狀態（recon_snapshot_v0.20.json）", 10)
+sec(ws, r, f"C. Siliconomics 13 個對帳點：檢驗方式與狀態（{os.path.basename(P['recon'])}）", 10)
 r += 1
 hdr(ws, r, ["代號", "對帳點", "檢驗方式", "狀態", "2027 市場值（US$B／份額）", "2027 已建模加總", "加總 ÷ 市場值", "依據", "對應市場值名稱（快照）", "備註"])
 POINT_ORDER = ["soc", "gpu_asic", "cowos", "wfe", "pcb_ccl", "optics", "asic_ds", "cpo", "abf", "power", "liquid", "asm", "hbm"]
@@ -1298,21 +1326,21 @@ ws.conditional_formatting.add(f"C{C_FIRST}:C{C_LAST}", FormulaRule(formula=[f'C{
 # 「欄位語義」
 # ----------------------------------------------------------------------------------------------
 ws = ws_sem
-title(ws, 1, "欄位語義：SIF_DeployGW 五組逐年 GW（成本等值、出貨年）")
-put(ws, 2, 1, "同一個 2029 年有五個不同的數：基準 42.68、供給側 60.14、需求側／另一側 28.48、現行取法 51.12。"
-    "下游「現行基準」一詞只指 Base。Current 是舊取法的對照欄，不是基準。", font=F_NOTE, border=False)
+title(ws, 1, "欄位語義：SIF_DeployGW 逐年 GW（成本等值、出貨年）")
+put(ws, 2, 1, f"同一個 2029 年有幾個不同的數：基準 {sv('SIF_DeployGW_Base', 2029):.2f}、供給側 {sv('SIF_DeployGW_Supply', 2029):.2f}、需求側 {sv('SIF_DeployGW_Demand', 2029):.2f}、另一側 {sv('SIF_DeployGW_Alt', 2029):.2f}、舊 S33 取法 {sv('SIF_DeployGW_LegacyS33', 2029):.2f}。"
+    "下游「現行基準」一詞只指 Base。LegacyS33（v0.20 以前名為 Current）是舊取法的對照欄，不是基準。", font=F_NOTE, border=False)
 ws.merge_cells("A2:I2")
 ws.row_dimensions[2].height = 30
 ws.cell(2, 1).alignment = AL_LT
 hdr(ws, 4, ["欄位", "2026", "2027", "2028", "2029", "一句話定義", "誰該讀", "與 Base 相同？", "備註"])
 SEM = [
-    ("Base", "SIF_DeployGW_Base", "依規則 v1.4 決定的基準：2026 甲一致、2027–28 對帳中維持現行、2029 連續法。", "硬體個股算基準時只讀這一欄",
+    ("Base", "SIF_DeployGW_Base", "依規則決定的基準：" + "、".join(f"{y} {ST[str(y)]['label']}" for y in Y26 if str(y) in ST) + "。", "硬體個股算基準時只讀這一欄",
      "唯一的基準欄"),
-    ("Supply", "SIF_DeployGW_Supply", "供給側原始讀數：原始顆數部署 GW，不乘係數。", "只供並列顯示、對照", "2028–29 高於 Base（Base 含係數 0.8／0.71，Assumed）"),
+    ("Supply", "SIF_DeployGW_Supply", "供給側原始讀數：原始顆數部署 GW，不乘係數。", "只供並列顯示、對照", "Base 含顆數係數 " + "／".join(f"{x:.2f}" for x in SN["SIF_UnitsCoef_Base"][-2:]) + "（2028／2029，Assumed）"),
     ("Demand", "SIF_DeployGW_Demand", "需求側讀數：Wattonomics 上線 GW 以平滑法換到出貨年、成本等值。", "只供並列顯示、對照", "與 Alt 同值（另一側剛好是需求側）"),
     ("Alt", "SIF_DeployGW_Alt", "另一側讀數：未被採為基準的那一條；對帳中年份的個股並列兩讀數目標價用。", "對帳中年份的個股（C4 兩讀數）", "會隨規則採哪一側而換邊；目前 = Demand"),
-    ("Current", "SIF_DeployGW_Current", "現行取法（舊）：原始 × 舊 S33 係數，即 v0.18 取法；2029 為 51.118，不是基準。", "不該讀；僅對照",
-     "nvidia/coord_post.py 在讀不到 Base 時退回讀本欄（建議書 A7 待處理）"),
+    ("LegacyS33", "SIF_DeployGW_LegacyS33", f"舊 S33 取法：原始 × 舊 S33 係數，即 v0.18 取法；2029 為 {sv('SIF_DeployGW_LegacyS33', 2029):.3f}，不是基準。", "不該讀；僅對照",
+     "v0.20 r1 新增此名；v0.21 起刪除舊名 SIF_DeployGW_Current（決策 S58）"),
 ]
 SEMROW = {}
 r = 4
@@ -1334,17 +1362,17 @@ for i, y in enumerate(Y26):
     put(ws, r, 2 + i, f"=B{SEMROW['Alt']}/B{SEMROW['Base']}".replace("B", "BCDE"[i]), nf=NF_X)
 put(ws, r, 6, "＝快照 SIF_DeployGW_AltRatio_<年>（個股把產業量乘此比值得另一讀數）", font=F_NOTE, al=AL_L)
 r += 1
-put(ws, r, 1, "Current − Base", font=F_BOLD)
+put(ws, r, 1, "LegacyS33 − Base", font=F_BOLD)
 for i, y in enumerate(Y26):
     c = "BCDE"[i]
-    put(ws, r, 2 + i, f"={c}{SEMROW['Current']}-{c}{SEMROW['Base']}", nf=NF_GW, font=F_BOLD)
-put(ws, r, 6, "只有 2029 不為 0：若個股誤讀 Current，2029 產業量會高估這麼多 GW", font=F_NOTE, al=AL_L)
+    put(ws, r, 2 + i, f"={c}{SEMROW['LegacyS33']}-{c}{SEMROW['Base']}", nf=NF_GW, font=F_BOLD)
+put(ws, r, 6, "若個股誤讀舊取法，產業量會差這麼多 GW", font=F_NOTE, al=AL_L)
 r += 1
 put(ws, r, 1, "Supply − Base", font=F_NOTE)
 for i, y in enumerate(Y26):
     c = "BCDE"[i]
     put(ws, r, 2 + i, f"={c}{SEMROW['Supply']}-{c}{SEMROW['Base']}", nf=NF_GW)
-put(ws, r, 6, "2028–29 的差＝係數（0.8、0.71）把供給側壓低的部分", font=F_NOTE, al=AL_L)
+put(ws, r, 6, "差距＝顆數係數與規則採側造成的部分", font=F_NOTE, al=AL_L)
 widths(ws, [16, 12, 12, 12, 12, 58, 34, 16, 48])
 page(ws, True, 1)
 ws.freeze_panes = "B5"
@@ -1383,8 +1411,8 @@ NOTES = [
         "「容差判定」是本表依殘差 ÷ 基準與 ±15% 計算；「協調狀態」是 baseline_status.json 依規則 v1.4 判出的甲／乙／丙／待定，兩者來源不同，並列呈現。",
     ]),
     ("已知限制與需要留意之處", [
-        "Siliconomics 快照 source.sha256 與 repo 內 20261116_Siliconomics_v0.20.xlsx 實算 SHA-256 不一致（輸入頁第 0 節與各列標紅）。本表依快照 JSON 的數值計算；建議書推測為匯出後重建過檔案，數值未逐格比對全部，驗證紀錄只抽核部分名稱。Wattonomics 兩者一致；Tokenomics 快照未記錄 SHA。",
-        "協調橋接表 v0.3.6 的 In 頁標示 Siliconomics v0.19 輸入（2029 基準 42.704，v0.20 為 42.680）。本表以 v0.20 快照重算，並於總表第 9 節與橋接表檔內值並列，差異只在 2029 且很小。",
+        (f"Siliconomics 快照 source.sha256 與 repo 內 {os.path.basename(P['sil_xlsx'])} 實算 SHA-256 不一致（輸入頁第 0 節與各列標紅）。本表依快照 JSON 的數值計算，數值未逐格比對全部，驗證紀錄只抽核部分名稱。" if s_snap["source"]["sha256"] != SHA["sil_xlsx"] else f"Siliconomics 快照 source.sha256 與 repo 內 {os.path.basename(P['sil_xlsx'])} 實算 SHA-256 一致。") + (" Wattonomics 兩者一致；" if w_snap["source"]["sha256"] == SHA["watt_xlsx"] else " Wattonomics 兩者不一致（標紅）；") + "Tokenomics 快照未記錄 SHA。",
+        (f"協調橋接表 {BV} 的 In 頁標示 Siliconomics {BSV} 輸入，與本表讀的快照同版；第 9 節並列核對。" if BR_SAME else f"協調橋接表 {BV} 的 In 頁標示 Siliconomics {BSV} 輸入（2029 基準 {_br_s0_29:.3f}，{SV} 為 {_sn_b29:.3f}）。本表以 {SV} 快照重算，並於總表第 9 節與橋接表檔內值並列。"),
         "Siliconomics 快照陣列的年份對齊：長度 4 的陣列＝2026–2029；長度 5 的陣列（HBM、SoC 測試機、顆數係數）＝2025–2029。",
         "NVIDIA 公司值 2026 與 2027 含指引，只作參考；真正的公司實績只到 FY2027 Q1＋Q2。實績對帳 C 區（Q3＝107.6）為樣本外檢驗，未入模型，沒有任何其他格引用，也沒有用它擬合任何參數或季節權重；比值假設各季均勻。",
         "「公式引用次數」掃描只認具名引用；以儲存格位址間接引用的不計。IF_CapexTotal 在兩本模型都掃到 0 次，推測以 IT＋廠房相加取代，未逐格確認。",
