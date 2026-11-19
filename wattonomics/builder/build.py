@@ -215,6 +215,9 @@ HISTB_ON = "H1" not in _OFF   # v0.3.9 H1：Gap 歷史年（2024–2025）AI 資
 # v0.3.9 H1：xAI 歷史年 AI 資本支出實績（SpaceX 424B4 分部資本支出 AI；現金口徑＝現金流量表 PP&E 購置；不含已入帳未付款與以其他融資取得）
 HISTACT = {"xai": {2024: (5.633, "SpaceX 424B4 分部資本支出表 AI 2024＝5,633 US$M（mag/extract/docs/2026Q3/text/spacex_424B4.txt；三分部合計 11,163＝現金流量表 PP&E 購置）"),
                    2025: (12.727, "SpaceX 424B4 分部資本支出表 AI 2025＝12,727 US$M（同上；三分部合計 20,737＝現金流量表 PP&E 購置）")}}
+# v0.3.9 H1b：xAI 歷史年非 AI 資本支出實績（同表 Space＋Connectivity；使需要合計與全公司營業現金流同為全公司口徑）
+HISTNAI = {"xai": {2024: (5.530, "SpaceX 424B4 分部資本支出表 2024：Space 2,032＋Connectivity 3,498＝5,530 US$M（同表；AI 5,633；合計 11,163）"),
+                   2025: (8.010, "SpaceX 424B4 分部資本支出表 2025：Space 3,832＋Connectivity 4,178＝8,010 US$M（同表；AI 12,727；合計 20,737）")}}
 RETIRE = "V7" not in _OFF
 LEASE_ON = "V1" not in _OFF
 FINL_ON = "V1b" not in _OFF
@@ -598,6 +601,9 @@ def main():
     for p_, d_ in HISTACT.items():
         for y_, (v_, note_) in d_.items():
             scalar(dict(key=f"acthist_{p_}_{y_}", label=f"{PN[p_]} {y_} AI 資本支出實績（現金口徑）", unit="US$B", base=v_, tag="Verified", src="SRC_GL_352", note=note_))
+    for p_, d_ in HISTNAI.items():
+        for y_, (v_, note_) in d_.items():
+            scalar(dict(key=f"acthist_nai_{p_}_{y_}", label=f"{PN[p_]} {y_} 非 AI 資本支出實績（現金口徑）", unit="US$B", base=v_, tag="Verified", src="SRC_GL_352", note=note_))
     IN_LAST = r - 1
     for col, w in zip("ABCDEFGHIJKLMNOPQRS", (16, 50, 8, 7, 18, 12, 70) + (9,) * 11 + (5,)):
         IN.column_dimensions[col].width = w
@@ -2443,7 +2449,8 @@ def main():
             pl("ai_a", "並列讀法 A", "US$B", lambda y: "=0", years=OUTG)
         # 非 AI、模型資本支出、營業現金流、買回股利（財年 → 曆年）
         pl("nai_fy", "非 AI 資本支出（財年；模型）", "US$B", lambda y: "=" + fyexpr(p, f"gnai_{p}", y, None, zs))
-        pl("nai_cy", "非 AI 資本支出（曆年；空白＝無模型值）", "US$B", lambda y: cyexpr("nai_fy", y, fye), years=OUTG)
+        pl("nai_cy", "非 AI 資本支出（曆年；空白＝無模型值；v0.3.9 H1b：xAI 2024–2025＝424B4 實績）", "US$B",
+           lambda y: (f"=acthist_nai_{p}_{y}" if (HISTB_ON and y in HISTNAI.get(p, {})) else cyexpr("nai_fy", y, fye)), years=OUTG)
         if p in CAPP7:
             aik_ = f"ai_{p}" if f"ai_{p}" in INROW else "ai_sh"
             pl("nai_fb", "非 AI 資本支出替代旗標", "—", lambda y: ((f'=IF(ISNUMBER(CapexGW!{YC[y]}{XR[p]["cy"]}),"B 年：CapexGW 曆年資本支出 − AI（合計恆等）",' if (PAYYR_ON and y >= 2026) else "=IF(FALSE,\"\",")
@@ -3438,11 +3445,11 @@ def main():
         {"id": "GL01-124", "cat": "工程", "item": "上游換讀：Siliconomics v0.22（原釘 v0.19）", "decision": "SIL_In 改讀 siliconomics/data/CURRENT_SNAPSHOT（v0.22；不再以 --sil-snapshot 固定 v0.19）。Siliconomics v0.21 把 2027 年 NVIDIA 顆數改為自建估計、每 GW NVIDIA 內容（SIF_NVContentGW_*）改 NVIDIA 認列營收口徑；v0.22 只是讀回本版換算值後 2028、2029 年基準依連續法變動，本庫讀的名稱對 v0.21 與 v0.22 算出的 WIF_ 逐值相同。本版沒有改任何 In 頁輸入與公式；既有 WIF_ 名稱 510 個改值、0 個新增或刪除：年新增 IT GW 2027 25.50→25.68、2028 29.31→29.47（世代組合與每 GW 成本比例隨 Siliconomics 顆數組合變動，其餘年份不變）；證據比例 2027 0.472→0.469、2028 0.518→0.515（2028 低值 0.4542→0.4522）；NVIDIA 資料中心營收對帳點（隱含 ÷ 實績或指引）2025 0.826→1.017、2026 0.939→0.998、2027 0.645→0.834，Checks N-K0 由 WARN 轉 OK（原因是每 GW 內容口徑校準，不是本庫 GW 被驗證）；Gap 逐年缺口變動 0.01% 以內。原定佔用 v0.3.8 的 C4b（xAI 前一年存量，草稿 PR #658）改排 v0.3.9", "date": "2026-11-19", "quote": QB38, "status": "執行"},
     ]
     # ---- v0.3.9（C4b：xAI 前一年存量；原草稿 #658 以 v0.3.8 為底重做；草稿 PR、待 Andy 確認）----
-    QB39 = "工作單 20261118 三層對帳 watt PR 乙 C4b（原草稿 PR #658，版號原為 v0.3.8）；Andy 2026-11-19 18:11「把这些依序做完」（#658 以新版為底重做成 v0.3.9；仍為草稿、未合併，Gap 頁修法選項待 Andy）"
+    QB39 = "工作單 20261118 三層對帳 watt PR 乙 C4b（原草稿 PR #658，版號原為 v0.3.8）；Andy 2026-11-19 18:11「把这些依序做完」（#658 以新版為底重做成 v0.3.9；Gap 頁修法 Andy 19:16 選定改讀實績、19:29 決定合併）"
     decisions += [
         {"id": "GL01-126", "cat": "判斷", "item": "Gap 頁歷史年（2024–2025）AI 資本支出改讀實績（H1）",
-         "decision": "七家 2024–2025 有 CapexGW 曆年 AI 資本支出（公告資本支出 × AI 占比）者，Gap 主讀法改讀該值；xAI 讀 SpaceX 424B4 分部資本支出 AI（In S15 acthist_xai_2024＝5.633、acthist_xai_2025＝12.727；現金口徑）。無實績的家 × 年（CoreWeave 2024–25、Nebius 2024、Oracle 2024、WhiteFiber）仍為 GW 推算。原主讀法（年新增 GW × 每 GW、廠房提前一到兩年）保留為並列讀法 A。部署 GW、年底 GW、2026 年起各列不變。採現金口徑的理由：本頁以資本支出對營業現金流算缺口；2026 年起 xAI 讀的 SpaceX 模型列也是現金（CF「資本支出：SI（現金）」）。",
-         "date": "2026-11-19", "quote": "Andy 2026-11-19 19:16「要去查，而且其他的，就按照你的建议去做」", "status": "草稿（待獨立核對與 Andy 決定）；理由：GW 推算的歷史年對 xAI 為實績的 3.8 倍／3.0 倍（v0.3.9 補入 2024 年底存量後）：廠房提前付（w1＝w2＝0.5）比「廠房當年付」兩年合計多計 28.4（提前付毛額 38.5，其中替 2026–27 年新增 GW 預付 35.4；扣掉 2024–25 年自身 0.8 GW 的廠房 10.1）；xAI 以既有廠房改建、數月上線。其他家歷史年 GW 推算對 CapexGW 值在 0.44–1.47 倍。 報告 docs/verify/20261119_v0.3.9_build.md §6"},
+         "decision": "七家 2024–2025 有 CapexGW 曆年 AI 資本支出（公告資本支出 × AI 占比）者，Gap 主讀法改讀該值；xAI 讀 SpaceX 424B4 分部資本支出 AI（In S15 acthist_xai_2024＝5.633、acthist_xai_2025＝12.727；現金口徑）；H1b：xAI 同兩年非 AI 資本支出讀同表 Space＋Connectivity（acthist_nai_xai_2024＝5.530、acthist_nai_xai_2025＝8.010；Andy 2026-11-19 19:29「要补上」），使需要合計與營業現金流同為全公司口徑。無實績的家 × 年（CoreWeave 2024–25、Nebius 2024、Oracle 2024、WhiteFiber）仍為 GW 推算。原主讀法（年新增 GW × 每 GW、廠房提前一到兩年）保留為並列讀法 A。部署 GW、年底 GW、2026 年起各列不變。採現金口徑的理由：本頁以資本支出對營業現金流算缺口；2026 年起 xAI 讀的 SpaceX 模型列也是現金（CF「資本支出：SI（現金）」）。",
+         "date": "2026-11-19", "quote": "Andy 2026-11-19 19:16「要去查，而且其他的，就按照你的建议去做」；19:29「要合并，要补上，要开，要另外开一题」", "status": "已核對（未參與代理；報告第 7、8 節）；Andy 19:29 決定合併；理由：GW 推算的歷史年對 xAI 為實績的 3.8 倍／3.0 倍（v0.3.9 補入 2024 年底存量後）：廠房提前付（w1＝w2＝0.5）比「廠房當年付」兩年合計多計 28.4（提前付毛額 38.5，其中替 2026–27 年新增 GW 預付 35.4；扣掉 2024–25 年自身 0.8 GW 的廠房 10.1）；xAI 以既有廠房改建、數月上線。其他家歷史年 GW 推算對 CapexGW 值在 0.44–1.47 倍。 報告 docs/verify/20261119_v0.3.9_build.md §6"},
         {"id": "GL01-125", "cat": "判斷", "item": "C4b：xAI 2024 年底存量 0.3 GW 入 In（新納入存量改為年新增）", "decision": "In mw_xai 2023＝0、2024＝300 MW（SpaceX 424B4 Nameplate Compute Draw：2023＝0、2024＝0.3 GW；mag/extract/docs/2026Q3/text/spacex_424B4.txt；spacex/data/spacex_facts_v02.json seg.si.kpi.gw.fy2024；Interested-party：公司自訂 KPI、法定文件揭露）。xAI 2025 年新增由『新納入存量 0.8（不計年新增）』變為 0.5；2024 年新增 0.3。部署與市場 GW 只動 2024–2025。連帶 Gap 頁 xAI 2024–25 年 AI 資本支出（GW 推算口徑）上升，高於 424B4 揭露的實際值（2024 5.633、2025 12.727）；Gap 歷史年是否改讀實績的修法選項待 Andy，本版照 GW 推算、未自行決定。內容與原草稿 #658（v0.3.8，疊在 v0.3.7、Siliconomics 釘 v0.19）相同，改以 v0.3.8（讀 Siliconomics v0.22）為底", "date": "2026-11-19", "quote": QB39, "status": "草稿（待 Andy）"},
     ]
     for d in decisions:
@@ -3619,7 +3626,7 @@ def main():
         ("v0.3.6（2026-11-16）：檢核清單 A 節修補（Andy 2026-11-16 22:22「我同意你的建议，然后去把它解决」）——Siliconomics 改讀 v0.19、Tokenomics v22.0（本庫讀的名稱逐值相同）；Checks N-K0（NVIDIA 對帳點 2025 實績年帶外 WARN，依規則 v1.4.3 C0 開對帳單）；WIF_Evidence_Lo／Hi（低＝只計站點、高＝字面相加，上限 1）與 Checks E-K2；Compare H3 改為參考、權威狀態改讀 Siliconomics baseline_status.json（In S14）；Sources SRC_GL_349 重複列刪除、SRC_GL_317／319／320／070 改指現行檔；「AI 投資地圖」改稱「AI 算力地圖」。既有 WIF_ 0 變動、基準 GW 不變。Decisions GL01-117 至 GL01-122。報告 docs/verify/20261116_v0.3.6_build.md。", False),
         ("v0.3.7（2026-11-18）：由 #650 拆出的 PR 甲（草稿、待 Andy 確認；Wattonomics 單層，Siliconomics 快照仍釘 v0.19）——只含 C4a：2028–29 證據比例區間改走分母 ④ 軸 [Assumed]（Compare H2 evden_lo、evden_hi）；部署與市場 GW、Gap、Spend 不變。C4b（xAI 前一年存量）會連動 Gap 頁，另案 v0.3.8。Decisions GL01-123。報告 docs/verify/20261118_v0.3.7_build.md。", False),
         ("v0.3.8（2026-11-19）：上游換讀 Siliconomics v0.22（原釘 v0.19；Andy 2026-11-19 13:43「其他照預設。」、15:04「按預設繼續進行。」）——沒有改任何輸入與公式；Siliconomics v0.21 的 2027 年自建顆數與每 GW NVIDIA 內容（認列營收口徑）讀入後，既有 WIF_ 510 個改值：年新增 IT GW 2027 +0.7%、2028 +0.5%；證據比例 2027–28 各降約 0.003；NVIDIA 對帳點 2025 0.826→1.017（N-K0 轉 OK）、2026 0.998、2027 0.834。Decisions GL01-124。報告 docs/verify/20261119_v0.3.8_build.md；影響分析 docs/reports/20261118_三層對帳/watt-v038-impact/。", False),
-        ("v0.3.9（2026-11-19；草稿、待 Andy 確認）：C4b——In mw_xai 2023＝0、2024＝300 MW（SpaceX 424B4），xAI 2025 新納入存量 0.8 → 年新增 0.5（2024 年新增 0.3）；部署與市場 GW 只動 2024–2025；H1——Gap 頁 2024–2025 AI 資本支出主讀法改讀實績（七家讀 CapexGW 曆年 AI 資本支出；xAI 讀 424B4 現金口徑 5.633／12.727，In S15；GW 推算保留為並列讀法 A；Andy 2026-11-19 19:16）。原草稿 #658（v0.3.8）以新版為底重做。Decisions GL01-125、GL01-126。報告 docs/verify/20261119_v0.3.9_build.md。", False),
+        ("v0.3.9（2026-11-19；Andy 19:29 決定合併）：C4b——In mw_xai 2023＝0、2024＝300 MW（SpaceX 424B4），xAI 2025 新納入存量 0.8 → 年新增 0.5（2024 年新增 0.3）；部署與市場 GW 只動 2024–2025；H1——Gap 頁 2024–2025 AI 資本支出主讀法改讀實績（七家讀 CapexGW 曆年 AI 資本支出；xAI 讀 424B4 現金口徑 5.633／12.727，非 AI 讀同表 Space＋Connectivity 5.530／8.010，In S15；GW 推算保留為並列讀法 A；Andy 2026-11-19 19:16）。原草稿 #658（v0.3.8）以新版為底重做。Decisions GL01-125、GL01-126。報告 docs/verify/20261119_v0.3.9_build.md。", False),
         ("v0.3.1（2026-11-14）：三層基準協調規則 v1.1 落地（工作單 20261114_Wattonomics_v0.3.1.md）——Z2 Compare H1 ④ 覆蓋缺口兩讀法（原值 4.81、實績下限 3.03；扣 Oracle 重疊另列；不入基準）；Z3 SIL_In 讀 Siliconomics v0.18、H3 逐年協調狀態（門檻 50%、對帳中）、H4 ④＋W2 調整後比值、F 節 NVIDIA 每 GW 營收區間與指引只作參照（W-3）、H5 五家資本支出與 Siliconomics 顆數並排（W-4）；Z4 新名稱 WIF_Evidence_2026–2030（規則 v1.1 全市場分母；舊 WIF_Coverage 保留）；Checks E-K1。Z1 財報季證據經未參與代理核對：IREN Childress H2–4 延至 2027-01 入基準（T2 擴為 150 MW、M＝1；mw_neo 2026 扣 150、總量不增），Nebius 延遲只追蹤；CoreWeave、Nebius Q1–Q3 實績入證據比例。Decisions GL01-84 至 GL01-92。報告 docs/verify/20261114_v0.3.1_build.md。", True),
         ("顏色：藍字＝輸入；黑字＝公式；綠字＝跨頁或外部鏡像；淡黃底＝關鍵輸出；亮黃底＝待證據或預設待決。", False),
         ("Excel 優先：要改輸入，直接改 In 頁藍字；builder 重建時讀回（--base）。公式頁不要手改。下游只讀 Interface 的 WIF_ 名稱（經快照）。", False),

@@ -5,7 +5,7 @@
  "method": "export_baseline_status.py：只讀 Siliconomics Interface 的 SIF_ 名稱（Coord 頁推導）、Wattonomics 快照 WIF_Recon_NV_*、協調橋接檔 Bridge 頁 g2c／g2p；判斷類欄位讀 builder/seed/coord_meta_v*.json；本程式不做判定或計算（規則 v1.4.3 C3）",
  "generated": "2026-11-19",
  "wattonomics_version": "v0.3.9",
- "wattonomics_source_sha256": "dc4972c2318bee479eb3d1eb31ed7d0c18b1e4b9f7ef762454aef8356625714e",
+ "wattonomics_source_sha256": "c68f94f4bcdf783cf0ffbe827980bf13bbd28af15b5de905f3bfbab0db9b79fd",
  "bridge": {
   "file": "20261119_協調橋接_v0.3.9.xlsx",
   "sha256": "e634724d4eb52838e0d9a1476c24fb42a89ecc31d8109bf6546cd30fce28b493",
