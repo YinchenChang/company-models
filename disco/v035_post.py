@@ -622,7 +622,7 @@ def apply(wb, here, SIL, CR, PB, EQ_F):
     rr = SO.max_row + 1
     for i, (t, u) in enumerate((("C0 實績（v0.3.5）：FY2026 Q1–Q2 營收、營業利益、淨利取自 2027年3月期 第2四半期決算短信（2026-10-22）與第1四半期決算短信（2026-07-23）；本頁第 2、4 列", "https://www.disco.co.jp/eg/ir/library/doc/fr/fr20261022.pdf"),
                                 ("HistIS（v0.3.5）：FY2023–FY2025 稅前淨利、所得稅取自 2025年3月期、2026年3月期決算短信（In 頁 etr_25 說明）", "https://www.disco.co.jp/eg/ir/library/doc/fr/fr20250417.pdf"),
-                                ("層級：Siliconomics v0.22 SIF_SEMI_Pkg（SEMI 組裝與封裝設備）、SIF_HBMHybrid_Base、SIF_HBM_ShipEB_Base", "siliconomics/data/siliconomics_snapshot_v0.19.json"))):
+                                ("層級：Siliconomics v0.22 SIF_SEMI_Pkg（SEMI 組裝與封裝設備）、SIF_HBMHybrid_Base、SIF_HBM_ShipEB_Base", "siliconomics/data/" + SIL.FILE))):
         SO.cell(rr + i, 1, t); SO.cell(rr + i, 2, u)
     wb._v035 = dict(HR=HR, PL=PLA, RV=RVA, VG=VG, SNS=SNS, RM=RMA, CO=CO)
     return f"v035_post：HistIS 頁；PL 標準損益表 {PLA['start']} 起；RevDCF 頁；Val 0.7 {VG} 起；Sens 加權目標價相對基準 {SNS['t0']} 起；Coord 讀取層級與 C0 {CO['rd0']}–{CO['last']}；README v1.3 白話列 {len(RMA)} 列"

@@ -691,11 +691,11 @@ def coord_c0(wb, SIL, R):
         ("硬體股讀哪一層", "Siliconomics（零組件層；基準）", ver, "產業部署量、AI IT 資本支出、整櫃組裝市場、顆數係數、份額表、對帳中旗標（reader.py）", "下游只註明版本、不自行重估（專案規則第 3 條）"),
         ("AI IT 資本支出 SIF_AIITCapex_Base（情境 A 供給側；情境 B 以顆數係數縮放）", "US$B；見下表", "markets/network v0.2.3（Mkt!C27:F27）", "In 頁 itc_26–itc_29", "數值與 Siliconomics 基準相同（核對見下表）"),
         ("每 GW IT 資本支出、每 GW 機架數", "見 In 頁", "markets/chip_bridge（Tokenomics v21.x 經橋接表）", "In 頁 itpg_gb、itpg_vr、racks_gb、racks_vr", "唯讀"),
-        ("情境顆數係數（2028、2029）", "A 1.0／1.0；B 0.8／0.71；C 0.6／0.6", "tsmc（In!E37:E42；Siliconomics 基準係數）", "In 頁 um28_A–um29_C", "情境 B＝Siliconomics 基準"),
+        ("情境顆數係數（2028、2029）", f"A 1.0／1.0；B {SIL.COEF_B_TXT}；C 0.6／0.6", "tsmc（In!E37:E42；Siliconomics 基準係數）", "In 頁 um28_A–um29_C", "情境 B＝Siliconomics 基準"),
         ("份額快照 asm_wish_26、asm_wirel_27–29（緯創本體）", f"{wi:.4f}／1.0／{wrel[1]:g}／{wrel[2]:g}", ver, "In 頁 rel_27–rel_29；FY2026 有效份額由本模型錨點校準", "公司模型以自身營收校準，Siliconomics 只存快照（同源）"),
         ("份額快照 asm_wysh_26、asm_wyrel_27–29、asm_wyai_26（緯穎）", f"{wy:.4f}；相對值與 AI 占比見份額表", ver, "In 頁 wrel_27–wrel_29、wai_26（相對值 × ASIC 傾斜）", "緯穎模型校準、緯創模型同讀（CF09、CF23 乙）；同源"),
         ("Wattonomics 錨定 SIF_WTAnchor_Base（wta_27–29）", "0.72／0.65／0.63", ver, "只用於 Sens「Wattonomics 錨定」案例，不進目標價", "Wattonomics 現行版本 v0.3.2（本模型不直接讀）"),
-        ("對帳中旗標 SIF_RecoFlag_<yyyy>、SIF_DeployGW_AltRatio_<yyyy>", "旗標 0／1／1／1；比值 0.88／0.62／0.67／0.67", ver, "C4 兩讀數（本頁上方）", "另一側讀數＝Wattonomics 換算的產業 GW")):
+        ("對帳中旗標 SIF_RecoFlag_<yyyy>、SIF_DeployGW_AltRatio_<yyyy>", f"旗標 {SIL.FLAG4_TXT}；比值 {SIL.ALT4_TXT}", ver, "C4 兩讀數（本頁上方）", "另一側讀數＝Wattonomics 換算的產業 GW")):
         for j, v in enumerate((a, b, c, d, e), 1):
             C.cell(r, j, v)
         r += 1

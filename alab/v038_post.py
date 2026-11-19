@@ -444,7 +444,7 @@ def coord_sections(wb, SIL):
         ("非 NVIDIA scale-up 交換晶片市場 msx_26–msx_29（Scorpio X 可服務市場）", "市場層 markets/network（AI 網通市場模型，經 In 頁 A 節讀入）", I.cell(lab(I, "msx_26", col=1), 8).value.split("｜")[0].split("/")[-1], "Scorpio X 營收＝市場 × 有效份額 × 相對值", '="CY2026 "&TEXT(msx_26,"0.00")&" 十億美元；CY2029 "&TEXT(msx_29,"0.00")'),
         ("AI 加速器顆數 u_26–u_29（PCIe 等可服務市場＝顆數 × c_pcie；c_pcie 為本模型 Assumed）", "市場層 markets/network（顆數取自 markets/memory）", "同上", "PCIe 與訊號調節營收＝可服務市場 × 有效份額 × 相對值", '="CY2026 "&TEXT(u_26,"0.0")&" 百萬顆；CY2029 "&TEXT(u_29,"0.0")'),
         ("AI IT 資本支出 itc_26–itc_29（Recon 對照用）", "市場層 markets/network（Mkt 頁）", "同上", "Recon：Astera 營收 ÷ AI IT 資本支出（只作對照，不進損益）", '="CY2026 "&TEXT(itc_26,"#,##0")&" 十億美元"'),
-        ("對帳中旗標與另一側讀數比值（SIF_RecoFlag_<年>、SIF_DeployGW_AltRatio_<年>）", "Siliconomics", vtxt, "Coord 頁 A–E 節：兩讀數目標價（tools/coord）", "CY2027–CY2029＝對帳中（另一側讀數＝現行基準 × 0.62／0.67／0.67）"),
+        ("對帳中旗標與另一側讀數比值（SIF_RecoFlag_<年>、SIF_DeployGW_AltRatio_<年>）", "Siliconomics", vtxt, "Coord 頁 A–E 節：兩讀數目標價（tools/coord）", f"CY2027–CY2029＝對帳中（另一側讀數＝現行基準 × {SIL.ALT3_TXT}）"),
         ("Wattonomics 錨定係數 wta_27–wta_29（舊敏感度案例；SIF_WTAnchor_Base）", "Wattonomics（經 Siliconomics 轉入）", vtxt, "Sens 頁「Wattonomics 錨定」案例（情境 B × 係數）；兩讀數的另一側讀數取代其角色", '=TEXT(wta_27,"0.000")&"／"&TEXT(wta_28,"0.000")&"／"&TEXT(wta_29,"0.000")'),
         ("Astera Labs 份額、Scorpio X 與 PCIe 等營收假設（x_26、rel_x_*、rel_p_*、c_pcie）", "本專案為權威（Units 頁；規則第 13 條）", "本模型", "不讀自層級；有效份額由 FY2026 錨點校準（見 I 節「同源校準」）", "Assumed"),
     ]
