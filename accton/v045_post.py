@@ -681,7 +681,7 @@ def coord_c0(wb, SIL, R):
         ("非 NVIDIA scale-up 乙太網路交換匣市場", "US$B；In 頁 su_26–su_29（公式）", NET + "（Units 頁顆數 × In 頁每顆內容）", "PL 白牌市場的一部分", "每顆內容與 Siliconomics c_TRN／c_ASIC／c_AMD 同值"),
         ("AWS Trainium 顆數", "／".join(f"{N['SIF_UnitsPlat_trn'][i]:.2f}" for i in (1, 2, 3, 4)) + " 百萬顆", NET + "（Units!B10:E10）＝" + ver + " SIF_UnitsPlat_trn", "In 頁 trn_26–trn_29；網路應用產品營收", "同源（見第 2 節）"),
         ("AI IT 資本支出（情境 B＝原始 × 顆數係數）", "／".join(f"{v:,.0f}" for v in N["SIF_AIITCapex_Base"]) + " US$B", NET + "（Mkt!C27:F27）；" + ver + " SIF_AIITCapex_Base", "In 頁 itc_26–itc_29（只用於 Units、Recon 對照）", "同源（見第 2 節）"),
-        ("情境顆數係數（2028、2029）", "A 1.0／1.0；B 0.8／0.71；C 0.6／0.6", "tsmc v0.5.4（In!E37:E42；Siliconomics v0.22 基準係數）", "In 頁 um28_A–um29_C", "情境 B＝Siliconomics 基準"),
+        ("情境顆數係數（2028、2029）", f"A 1.0／1.0；B {SIL.COEF_B_TXT}；C 0.6／0.6", "tsmc v0.5.4（In!E37:E42；Siliconomics v0.22 基準係數）", "In 頁 um28_A–um29_C", "情境 B＝Siliconomics 基準"),
         ("匯率（Siliconomics 基準值）", f"{SIL.base('fx_twd'):.1f} NT$/US$", ver, "In 頁 fx", "唯讀"),
         ("Wattonomics 錨定 SIF_WTAnchor_Base（wta_27–29）", wt, ver, "只用於 Sens「Wattonomics 錨定」案例，不進目標價", "Wattonomics 現行版本 v0.3.2（本模型不直接讀）"),
         ("對帳中旗標 SIF_RecoFlag_<yyyy>、SIF_DeployGW_AltRatio_<yyyy>", f"旗標 {flg}；比值 {alt}", ver, "C4 兩讀數（本頁上方）", "另一側讀數＝Wattonomics 換算的產業 GW；本模型交換器市場與 Trainium 顆數同乘比值")):

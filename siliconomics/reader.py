@@ -82,6 +82,11 @@ RECO_FLAG = {y: NAMES.get(f"SIF_RecoFlag_{y}") for y in RECO_YEARS}
 ALT_RATIO = {y: NAMES.get(f"SIF_DeployGW_AltRatio_{y}") for y in RECO_YEARS}
 # 環境變數 SIL_COORD_ALT＝1：另一側讀數整本重建（tools/coord/alt_run.py）。各模型既有「Wattonomics 錨定」的 wta 列改放另一側讀數比值
 # （只在對帳中年份；其他年份＝1），主引擎情境 B、C 於 CY2027 起產業量 × wta（情境 A＝供給側讀數，不縮放；規則 v1.4 C4、J5）。
+# 說明文字用的現值字串（2026-11-19）：個股 Coord／README 頁的說明欄原本把係數與比值寫死，升版後過時；改由快照現值組字串。只供文字，不進任何計算
+COEF_B_TXT = "／".join(f"{V[k]['base']:.2f}" for k in ("um28_B", "um29_B") if k in V)                       # 情境 B（＝基準）顆數係數 2028／2029
+ALT3_TXT = "／".join("—" if ALT_RATIO[y] is None else f"{ALT_RATIO[y]:.2f}" for y in (2027, 2028, 2029))   # 另一側 ÷ 基準 2027–2029
+ALT4_TXT = "／".join("—" if ALT_RATIO[y] is None else f"{ALT_RATIO[y]:.2f}" for y in RECO_YEARS)           # 同上 2026–2029
+FLAG4_TXT = "／".join("—" if RECO_FLAG[y] is None else str(int(RECO_FLAG[y])) for y in RECO_YEARS)         # 對帳中旗標 2026–2029
 COORD_ALT = os.environ.get("SIL_COORD_ALT") == "1"
 if COORD_ALT:
     assert os.environ.get("COORD_RUN") == "1", "SIL_COORD_ALT＝1 只能由 tools/coord/alt_run.py 設定（同時設 COORD_RUN＝1）；環境中誤留此變數會讓正式建置讀到另一側比值"
