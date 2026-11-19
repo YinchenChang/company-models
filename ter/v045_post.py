@@ -458,7 +458,8 @@ def coord_c0(wb, SIL, CR, HR):
     advf = os.path.basename(glob.glob(os.path.join(ROOT, "advantest", "dist", "*.xlsx"))[0])
     adv_ver = re.search(r"v\d+(?:\.\d+)+", advf).group(0)
     wat_ver = re.search(r"v\d+(?:\.\d+)*", open(os.path.join(ROOT, "wattonomics", "model", "CURRENT"), encoding="utf-8").read()).group(0)
-    rec = json.load(open(os.path.join(ROOT, "siliconomics", "data", "recon_snapshot_v0.19.json"), encoding="utf-8"))
+    rec_f = open(os.path.join(ROOT, "siliconomics", "data", "CURRENT_RECON"), encoding="utf-8").read().strip()   # 跟隨現行 recon 快照（原固定讀 v0.19；值相同，下方斷言把關）
+    rec = json.load(open(os.path.join(ROOT, "siliconomics", "data", rec_f), encoding="utf-8"))
     adv_rs = next(x for x in rec["markets"]["soc"]["rows"] if x["who"] == "Advantest")["vals"][1]   # CY2026 Advantest 份額（Siliconomics recon 快照）
     mk26 = N["SIF_TestSoCMkt_Base"][1]
     oth = SIL.V["rc_soc_oth"]
