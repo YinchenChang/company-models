@@ -601,7 +601,7 @@ def apply(wb, here, SIL, CR, PB, EQ_F):
     rr = SO.max_row + 1
     for i, (t, u) in enumerate((("C0 實績（v0.3.5）：FY2026 Q1 營收、營業利益、淨利取自 2027年3月期 第1四半期 決算短信（2026-08-06，JPX iXBRL；In 頁 q1_*）；第二季決算短信本輪未取得", ""),
                                 ("HistIS（v0.3.5）：營收、營業利益、淨利、EPS 取既有 Hist 頁；毛利、銷管費只有 FY2025；FY2023–FY2024 毛利與各年稅前、所得稅未取得", ""),
-                                ("層級：Siliconomics v0.21 SIF_SEMI_Pkg（SEMI 組裝與封裝設備）、SIF_HBM_ShipEB_Base、M22 晶粒容量與層數", "siliconomics/data/siliconomics_snapshot_v0.19.json"))):
+                                ("層級：Siliconomics v0.22 SIF_SEMI_Pkg（SEMI 組裝與封裝設備）、SIF_HBM_ShipEB_Base、M22 晶粒容量與層數", "siliconomics/data/siliconomics_snapshot_v0.19.json"))):
         SO.cell(rr + i, 1, t); SO.cell(rr + i, 2, u)
     wb._v035 = dict(HR=HR, PL=PLA, RV=RVA, VG=VG, SNS=SNS, RM=RMA, CO=CO)
     return f"v035_post：HistIS 頁；PL 標準損益表 {PLA['start']} 起；RevDCF 頁；Val 0.7 {VG} 起；Sens 加權目標價相對基準 {SNS['t0']} 起；Coord 讀取層級與 C0 {CO['rd0']}–{CO['last']}；README v1.3 白話列 {len(RMA)} 列"

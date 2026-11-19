@@ -1,0 +1,54 @@
+[
+ {
+  "id": "crd_x2_26",
+  "old_base": 20.972,
+  "base": 21.052,
+  "src": "Wattonomics v0.3.8（20261119_Wattonomics_v0.3.8.xlsx；上游換讀 Siliconomics v0.21／v0.22）：siliconomics/tools/baseline_bridge.py 讀 Wattonomics v0.3.8＋Siliconomics v0.21 重算，Bridge x2（平滑法，k＝4.5÷12＋10%；覆蓋缺口＝0）；結果檔 docs/reports/20261119_協調橋接_v0.3.8.xlsx。v0.21 值（對 Siliconomics v0.20＋Wattonomics v0.3.7 算）：20.972／24.488／28.184／28.482；2027 年變動 −0.706 中 −0.852 來自 Siliconomics v0.21 的 2027 年平台組合（實體 GW 換成本等值的比例）、+0.146 來自 Wattonomics v0.3.8"
+ },
+ {
+  "id": "crd_ew_26",
+  "base": 0.857,
+  "lo": 0.599,
+  "hi": 1,
+  "src": "Wattonomics v0.3.8（20261119_Wattonomics_v0.3.8.xlsx；上游換讀 Siliconomics v0.21／v0.22，沒有改輸入與公式）：WIF_Evidence_2026（基準）、WIF_Evidence_Lo_2026／Hi_2026，取三位小數；2028–29 區間仍為 v0.3.7 的 C4a（分母 ④ 軸，[Assumed]）；規則 v1.3 區間跨線即待定。v0.21 值（Wattonomics v0.3.7）：2026 0.599／0.857／1、2027 0.435／0.472／0.630、2028 0.454／0.518／0.545、2029 0.182／0.208／0.218"
+ },
+ {
+  "id": "crd_x2_27",
+  "old_base": 24.488,
+  "base": 23.782,
+  "src": "Wattonomics v0.3.8（20261119_Wattonomics_v0.3.8.xlsx；上游換讀 Siliconomics v0.21／v0.22）：siliconomics/tools/baseline_bridge.py 讀 Wattonomics v0.3.8＋Siliconomics v0.21 重算，Bridge x2（平滑法，k＝4.5÷12＋10%；覆蓋缺口＝0）；結果檔 docs/reports/20261119_協調橋接_v0.3.8.xlsx。v0.21 值（對 Siliconomics v0.20＋Wattonomics v0.3.7 算）：20.972／24.488／28.184／28.482；2027 年變動 −0.706 中 −0.852 來自 Siliconomics v0.21 的 2027 年平台組合（實體 GW 換成本等值的比例）、+0.146 來自 Wattonomics v0.3.8"
+ },
+ {
+  "id": "crd_ew_27",
+  "base": 0.469,
+  "lo": 0.432,
+  "hi": 0.625,
+  "src": "Wattonomics v0.3.8（20261119_Wattonomics_v0.3.8.xlsx；上游換讀 Siliconomics v0.21／v0.22，沒有改輸入與公式）：WIF_Evidence_2027（基準）、WIF_Evidence_Lo_2027／Hi_2027，取三位小數；2028–29 區間仍為 v0.3.7 的 C4a（分母 ④ 軸，[Assumed]）；規則 v1.3 區間跨線即待定。v0.21 值（Wattonomics v0.3.7）：2026 0.599／0.857／1、2027 0.435／0.472／0.630、2028 0.454／0.518／0.545、2029 0.182／0.208／0.218"
+ },
+ {
+  "id": "crd_x2_28",
+  "old_base": 28.184,
+  "base": 28.265,
+  "src": "Wattonomics v0.3.8（20261119_Wattonomics_v0.3.8.xlsx；上游換讀 Siliconomics v0.21／v0.22）：siliconomics/tools/baseline_bridge.py 讀 Wattonomics v0.3.8＋Siliconomics v0.21 重算，Bridge x2（平滑法，k＝4.5÷12＋10%；覆蓋缺口＝0）；結果檔 docs/reports/20261119_協調橋接_v0.3.8.xlsx。v0.21 值（對 Siliconomics v0.20＋Wattonomics v0.3.7 算）：20.972／24.488／28.184／28.482；2027 年變動 −0.706 中 −0.852 來自 Siliconomics v0.21 的 2027 年平台組合（實體 GW 換成本等值的比例）、+0.146 來自 Wattonomics v0.3.8"
+ },
+ {
+  "id": "crd_ew_28",
+  "base": 0.515,
+  "lo": 0.452,
+  "hi": 0.542,
+  "src": "Wattonomics v0.3.8（20261119_Wattonomics_v0.3.8.xlsx；上游換讀 Siliconomics v0.21／v0.22，沒有改輸入與公式）：WIF_Evidence_2028（基準）、WIF_Evidence_Lo_2028／Hi_2028，取三位小數；2028–29 區間仍為 v0.3.7 的 C4a（分母 ④ 軸，[Assumed]）；規則 v1.3 區間跨線即待定。v0.21 值（Wattonomics v0.3.7）：2026 0.599／0.857／1、2027 0.435／0.472／0.630、2028 0.454／0.518／0.545、2029 0.182／0.208／0.218"
+ },
+ {
+  "id": "crd_x2_29",
+  "old_base": 28.482,
+  "base": 28.478,
+  "src": "Wattonomics v0.3.8（20261119_Wattonomics_v0.3.8.xlsx；上游換讀 Siliconomics v0.21／v0.22）：siliconomics/tools/baseline_bridge.py 讀 Wattonomics v0.3.8＋Siliconomics v0.21 重算，Bridge x2（平滑法，k＝4.5÷12＋10%；覆蓋缺口＝0）；結果檔 docs/reports/20261119_協調橋接_v0.3.8.xlsx。v0.21 值（對 Siliconomics v0.20＋Wattonomics v0.3.7 算）：20.972／24.488／28.184／28.482；2027 年變動 −0.706 中 −0.852 來自 Siliconomics v0.21 的 2027 年平台組合（實體 GW 換成本等值的比例）、+0.146 來自 Wattonomics v0.3.8"
+ },
+ {
+  "id": "crd_ew_29",
+  "base": 0.208,
+  "lo": 0.182,
+  "hi": 0.218,
+  "src": "Wattonomics v0.3.8（20261119_Wattonomics_v0.3.8.xlsx；上游換讀 Siliconomics v0.21／v0.22，沒有改輸入與公式）：WIF_Evidence_2029（基準）、WIF_Evidence_Lo_2029／Hi_2029，取三位小數；2028–29 區間仍為 v0.3.7 的 C4a（分母 ④ 軸，[Assumed]）；規則 v1.3 區間跨線即待定。v0.21 值（Wattonomics v0.3.7）：2026 0.599／0.857／1、2027 0.435／0.472／0.630、2028 0.454／0.518／0.545、2029 0.182／0.208／0.218"
+ }
+]

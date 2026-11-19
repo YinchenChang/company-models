@@ -453,7 +453,7 @@ def coord_c0(wb, SIL):
             if v is None: continue
             c = C.cell(r, 2 + j, v); c.number_format = fmt
         C.cell(r, 6, src); R[label] = r; r += 1
-    tsm = "經台積電個股模型成品（tsmc/dist；該模型讀 Siliconomics v0.21）"
+    tsm = "經台積電個股模型成品（tsmc/dist；該模型讀 Siliconomics v0.22）"
     arow("AWS Trainium 顆數（原始顆數；百萬顆）", [f"=In!E{ikey[f'u_trn_{y}']}" for y in (26, 27, 28)] + [None], f"{ver}：SIF_UnitsPlat_trn（AWS Trainium），{tsm}取得（In 頁 u_trn_26–u_trn_28，唯讀；CY2029 由 g29_trn 外推）")
     arow("情境 B 顆數係數（÷ 原始顆數）", [None, 1, f"=In!E{ikey['um28_B']}", f"=In!E{ikey['um29_B']}"], f"{ver}：SIF_UnitsCoef_Base，{tsm}取得（In 頁 um28_B、um29_B；CY2026–27 為 1）")
     arow("世芯占 AWS Trainium 顆數份額（情境 B；基準）", [f"=In!E{ikey['al_trn_26']}", f"=In!E{ikey['al27_B']}", f"=In!E{ikey['al28_B']}", f"=In!E{ikey['al28_B']}"],
@@ -546,7 +546,7 @@ def coord_c0(wb, SIL):
     C.cell(r, 1, "E. C0（實績）：公司實績 vs 層級隱含值（規則 v1.4.2 C0 第 2 點；Andy 11-14 17:40 固定規格；差距超過 ±15% 且兩讀數同號標「對帳中」）").font = BOLD
     R["E"] = r; r += 1
     C.cell(r, 1, "比較方法：個股側只用公司已公布實績（月營收公告與季報，Verified：合併營收；世芯不揭露 Trainium 營收金額，Trainium 與其他的拆分為模型假設 Assumed，不算實績）；"
-                 "層級側用 Siliconomics v0.21 同口徑隱含值（Trainium 顆數 × 世芯份額 × 每顆規格 × 校準係數 × 匯率）。時差：層級值為日曆年 CY2026，世芯會計年度＝日曆年；"
+                 "層級側用 Siliconomics v0.22 同口徑隱含值（Trainium 顆數 × 世芯份額 × 每顆規格 × 校準係數 × 匯率）。時差：層級值為日曆年 CY2026，世芯會計年度＝日曆年；"
                  f"主讀數＝2026 年 1–{MON} 月累計月營收 vs 層級 CY2026 × {MON} ÷ 12（線性時差近似，Derived）；第二讀數＝3Q26 × 4 vs 層級 CY2026（約等於 3Q 中點的年化速率；世芯 3Q 為 Trainium 3 奈米量產首個完整季，成長年中偏高，年化偏高）。"
                  "判定：兩讀數差距都超過 ±15% 且同號＝對帳中；只有一個超過＝時差邊界（參考）；都在內＝一致；層級側沒有同口徑隱含值＝無可比實績；層級隱含值由本公司模型校準＝參考（同源校準），不計入。"
                  "公司指引、賣方估計、本模型自己的推算只列參考，不判定。")
@@ -584,7 +584,7 @@ def coord_c0(wb, SIL):
 
     row("合併營收（NT$B）", f"=G{r_ann}", f"=D{r_rv}*4", "無同口徑隱含值",
         f"公司實績：月營收公告 1–{MON} 月累計 48.060（科技新報 2026-11-10：10 月 10.260、前 10 月累計 480.60 億元）與 3Q26 26.051（前 9 月累計 378.78 億 − 1H26 118.27 億；Q 頁）；輸入區；Verified。"
-        "層級側：Siliconomics v0.21 沒有世芯或 ASIC 設計服務的營收（層級內只有 AWS Trainium 顆數、設計夥伴份額與每顆規格；本模型取已扣 HBM 的核心價值，與世芯每顆營收口徑不同，需校準係數換算，校準係數為本模型校準）。",
+        "層級側：Siliconomics v0.22 沒有世芯或 ASIC 設計服務的營收（層級內只有 AWS Trainium 顆數、設計夥伴份額與每顆規格；本模型取已扣 HBM 的核心價值，與世芯每顆營收口徑不同，需校準係數換算，校準係數為本模型校準）。",
         "無可比實績：缺層級的 ASIC 設計服務（晶片與封裝轉售）營收市場口徑，或世芯 Trainium 營收、出貨顆數的揭露")
     row("Trainium 量產營收（NT$B）", "無實績", "無實績", f"=G{r_chc}",
         "公司實績：世芯不揭露 Trainium 營收金額（公司只說 3 奈米 AI 加速器 5 月底量產、6 月出貨，FY2026 3 奈米營收「超過 15 億美元」為媒體轉述外資報告（時報資訊 2026-08-14），Interested-party，不是公司說法，也不是已實現營收；Q 頁第 5 列 2Q26、3Q26 的 Trainium 金額為媒體口述與本模型假設，Interested-party／Assumed，不算實績）。"

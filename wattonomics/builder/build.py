@@ -14,7 +14,7 @@ from openpyxl.workbook.defined_name import DefinedName
 HERE = os.path.dirname(os.path.abspath(__file__))
 GL = os.path.dirname(HERE)
 ROOT = os.path.dirname(GL)
-VERSION = "v0.3.7"
+VERSION = "v0.3.8"
 # v0.1.9（工作單 20261102 F4）：Siliconomics R4 橋接 r1 活頁簿（Bridge 頁 b8＝推得淨新增上線 IT GW）；只作並列，首建讀入 In S8，之後以 In 為準
 SIL_R4_R1 = os.path.join(ROOT, "siliconomics", "docs", "reports", "r4_bridge",
                          "20261031_R4對帳橋接_Siliconomics側_r1.xlsx")
@@ -3419,6 +3419,11 @@ def main():
     decisions += [
         {"id": "GL01-123", "cat": "判斷", "item": "C4a：2028–29 證據比例區間改走分母 ④ 軸 [Assumed]", "decision": "2027 區間來自分子計法（低＝只計站點；高＝站點＋七家實績全額；基準＝逐家取大者）。2028–29 七家實績支撐 evact＝0，分子軸塌縮（低＝基準＝高＝51.8%、20.8%），故該法不適用。改為只在 2028–29 以分母 ④ 實績下限讀法的低／高（H1 G、I 欄：0.06／5.91 GW）當區間端點：低＝基準分子 ÷（主路徑＋④ 高＋W2）、高＝字面讀法分子 ÷（主路徑＋④ 低＋W2）。[Assumed]：端點依據只有 H1 ④ 兩讀法自身的低／高，沒有外部觀察。2026–27、2030 不動；基準 WIF_Evidence 不動", "date": "2026-11-18", "quote": QB37, "status": "預設、可撤回（待 Andy 判斷）"},
     ]
+    # ---- v0.3.8（上游換讀 Siliconomics v0.22；Andy 2026-11-19 15:04）----
+    QB38 = "Andy 2026-11-19 13:43「其他照預設。」（全程整理第 2 節 D2：Wattonomics 升版改讀 Siliconomics v0.21，先出影響分析再合併）；影響分析 docs/reports/20261118_三層對帳/watt-v038-impact/；Andy 2026-11-19 15:04「按預設繼續進行。」"
+    decisions += [
+        {"id": "GL01-124", "cat": "工程", "item": "上游換讀：Siliconomics v0.22（原釘 v0.19）", "decision": "SIL_In 改讀 siliconomics/data/CURRENT_SNAPSHOT（v0.22；不再以 --sil-snapshot 固定 v0.19）。Siliconomics v0.21 把 2027 年 NVIDIA 顆數改為自建估計、每 GW NVIDIA 內容（SIF_NVContentGW_*）改 NVIDIA 認列營收口徑；v0.22 只是讀回本版換算值後 2028、2029 年基準依連續法變動，本庫讀的名稱對 v0.21 與 v0.22 算出的 WIF_ 逐值相同。本版沒有改任何 In 頁輸入與公式；既有 WIF_ 名稱 510 個改值、0 個新增或刪除：年新增 IT GW 2027 25.50→25.68、2028 29.31→29.47（世代組合與每 GW 成本比例隨 Siliconomics 顆數組合變動，其餘年份不變）；證據比例 2027 0.472→0.469、2028 0.518→0.515（2028 低值 0.4542→0.4522）；NVIDIA 資料中心營收對帳點（隱含 ÷ 實績或指引）2025 0.826→1.017、2026 0.939→0.998、2027 0.645→0.834，Checks N-K0 由 WARN 轉 OK（原因是每 GW 內容口徑校準，不是本庫 GW 被驗證）；Gap 逐年缺口變動 0.01% 以內。原定佔用 v0.3.8 的 C4b（xAI 前一年存量，草稿 PR #658）改排 v0.3.9", "date": "2026-11-19", "quote": QB38, "status": "執行"},
+    ]
     for d in decisions:
         if d["id"] == "GL01-21":
             d.update(cat="判斷", decision="承租玩家只算 IT＋自付廠房：Oracle、CoreWeave、Nebius 的甲2 與 Gap 每 GW 成本＝IT＋（1 − 承租比例 ×（1 − 融資租賃占比））× 廠房（GL01-62、GL01-63）；房東出資的廠房（營業租賃部分）改列『出租方』（市場其餘），每 GW 仍只在擁有者計一次。營業現金流不另扣租金（個股模型已扣，Oracle CF!55）；融資租賃本金償還屬籌資活動，不在營業現金流。【2026-11-04 Andy 決定；原為待決『一律 ÷ IF_CapexTotal』】",
@@ -3590,6 +3595,7 @@ def main():
         ("v0.3.5（2026-11-15）：Andy 2026-11-15 19:15「照預設」——① Gap 主讀法改付款年 AI 資本支出金額（選項 B；選項 A 與上線年回推並列；市場其餘改上線年口徑）；② OpenAI、Anthropic 營業現金流不加回自有資本支出；③ CoreWeave、Nebius、WhiteFiber 2025-12-31 期初現金觀測（FundRaw F#276–278）；④ Nscale→Microsoft 記在出租方、IREN 維持不納入（Microsoft 融資租賃）；⑤ Microsoft 列承租玩家（基準 0、Sens）；⑥ 11 家 In Y9 全部重取（Meta、Oracle 列位、Anthropic v0_2_2）；⑦ CoreWeave 現金口徑差額備忘。Siliconomics 固定 v0.18、Tokenomics v21.10。Decisions GL01-110 至 GL01-116。報告 docs/verify/20261115_v0.3.5_build.md。", False),
         ("v0.3.6（2026-11-16）：檢核清單 A 節修補（Andy 2026-11-16 22:22「我同意你的建议，然后去把它解决」）——Siliconomics 改讀 v0.19、Tokenomics v22.0（本庫讀的名稱逐值相同）；Checks N-K0（NVIDIA 對帳點 2025 實績年帶外 WARN，依規則 v1.4.3 C0 開對帳單）；WIF_Evidence_Lo／Hi（低＝只計站點、高＝字面相加，上限 1）與 Checks E-K2；Compare H3 改為參考、權威狀態改讀 Siliconomics baseline_status.json（In S14）；Sources SRC_GL_349 重複列刪除、SRC_GL_317／319／320／070 改指現行檔；「AI 投資地圖」改稱「AI 算力地圖」。既有 WIF_ 0 變動、基準 GW 不變。Decisions GL01-117 至 GL01-122。報告 docs/verify/20261116_v0.3.6_build.md。", False),
         ("v0.3.7（2026-11-18）：由 #650 拆出的 PR 甲（草稿、待 Andy 確認；Wattonomics 單層，Siliconomics 快照仍釘 v0.19）——只含 C4a：2028–29 證據比例區間改走分母 ④ 軸 [Assumed]（Compare H2 evden_lo、evden_hi）；部署與市場 GW、Gap、Spend 不變。C4b（xAI 前一年存量）會連動 Gap 頁，另案 v0.3.8。Decisions GL01-123。報告 docs/verify/20261118_v0.3.7_build.md。", False),
+        ("v0.3.8（2026-11-19）：上游換讀 Siliconomics v0.22（原釘 v0.19；Andy 2026-11-19 13:43「其他照預設。」、15:04「按預設繼續進行。」）——沒有改任何輸入與公式；Siliconomics v0.21 的 2027 年自建顆數與每 GW NVIDIA 內容（認列營收口徑）讀入後，既有 WIF_ 510 個改值：年新增 IT GW 2027 +0.7%、2028 +0.5%；證據比例 2027–28 各降約 0.003；NVIDIA 對帳點 2025 0.826→1.017（N-K0 轉 OK）、2026 0.998、2027 0.834。Decisions GL01-124。報告 docs/verify/20261119_v0.3.8_build.md；影響分析 docs/reports/20261118_三層對帳/watt-v038-impact/。", False),
         ("v0.3.1（2026-11-14）：三層基準協調規則 v1.1 落地（工作單 20261114_Wattonomics_v0.3.1.md）——Z2 Compare H1 ④ 覆蓋缺口兩讀法（原值 4.81、實績下限 3.03；扣 Oracle 重疊另列；不入基準）；Z3 SIL_In 讀 Siliconomics v0.18、H3 逐年協調狀態（門檻 50%、對帳中）、H4 ④＋W2 調整後比值、F 節 NVIDIA 每 GW 營收區間與指引只作參照（W-3）、H5 五家資本支出與 Siliconomics 顆數並排（W-4）；Z4 新名稱 WIF_Evidence_2026–2030（規則 v1.1 全市場分母；舊 WIF_Coverage 保留）；Checks E-K1。Z1 財報季證據經未參與代理核對：IREN Childress H2–4 延至 2027-01 入基準（T2 擴為 150 MW、M＝1；mw_neo 2026 扣 150、總量不增），Nebius 延遲只追蹤；CoreWeave、Nebius Q1–Q3 實績入證據比例。Decisions GL01-84 至 GL01-92。報告 docs/verify/20261114_v0.3.1_build.md。", True),
         ("顏色：藍字＝輸入；黑字＝公式；綠字＝跨頁或外部鏡像；淡黃底＝關鍵輸出；亮黃底＝待證據或預設待決。", False),
         ("Excel 優先：要改輸入，直接改 In 頁藍字；builder 重建時讀回（--base）。公式頁不要手改。下游只讀 Interface 的 WIF_ 名稱（經快照）。", False),

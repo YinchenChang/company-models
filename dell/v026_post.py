@@ -620,7 +620,7 @@ def c0_actuals(wb, C, r, lay):
             for c in "ABC": C[f"{c}{r}"].font = BOLD
         r += 1; return r - 1
     a_rev = row2("　公司實績：AI 伺服器營收（主：1Q–2Q FY27 累計；第二：2Q FY27 × 4）", f"=B{cum}", f"=B{q3}*4", "#,##0.00", "US$B；主讀數為 6 個月累計、第二讀數為年化", VERIF, True)
-    l_mk = row2("　層級：商用 GPU 系統市場 CY2026（Siliconomics 基準層）", f"=B{lay['l_mk']}", f"=B{lay['l_mk']}", "#,##0.0", "US$B；連到下方「讀取層級」第 (1) 項的 Siliconomics 層列", "Siliconomics v0.21（商用 GPU 系統市場基準值）；Derived")
+    l_mk = row2("　層級：商用 GPU 系統市場 CY2026（Siliconomics 基準層）", f"=B{lay['l_mk']}", f"=B{lay['l_mk']}", "#,##0.0", "US$B；連到下方「讀取層級」第 (1) 項的 Siliconomics 層列", "Siliconomics v0.22（商用 GPU 系統市場基準值）；Derived")
     l_sh = row2("　× Dell 有效份額（FY2027 校準）", f"=PL!D{lay['sh0']}", f"=PL!D{lay['sh0']}", "0.00%", "＝公司 FY2027 AI 伺服器營收指引 ÷ 市場（同源）", "Derived（由本模型 FY2027 錨點校準）")
     l_fy = row2("　＝ 層級隱含 CY2026 全年 AI 伺服器營收", f"=B{l_mk}*B{l_sh}", f"=C{l_mk}*C{l_sh}", "#,##0.00", "US$B；全年（≈ Dell FY2027）", "Derived", True)
     l_tf = row2("　× 期間係數（主：已公布月數 ÷ 12；第二：1）", "=6/12", "=1", "0.000", "線性時差近似（層級值為日曆年）", "Derived")
@@ -641,7 +641,7 @@ def c0_actuals(wb, C, r, lay):
     C.cell(r, 1, "　實際檢驗 (b)：指引隱含下半年 AI 伺服器營收 ÷ 上半年實績 − 1"); C[f"B{r}"] = f"=(B{g_ai}-B{cum})/B{cum}-1"; C[f"B{r}"].number_format = "+0.0%;-0.0%"
     C.cell(r, 4, "比；公司稱季末在手訂單大增（10-Q MD&A），下半年需較上半年成長才能達成指引"); C.cell(r, 5, "Derived"); out["ref_b"] = r; r += 1
     C.cell(r, 1, "　參考（口徑不同，不判定）：Siliconomics 組裝市場 CY2026 未建模殘差（1 − 已建模 ODM 份額；含 Dell、Supermicro 等）"); C[f"B{r}"] = f"={lay['res']}"; C[f"B{r}"].number_format = "#,##0.0"
-    C.cell(r, 4, "US$B；ODM 整櫃價口徑（Dell 為品牌出貨價，口徑不同）；只作量級參考"); C.cell(r, 5, "Siliconomics v0.21（整櫃組裝市場基準值 ×（1 − 已建模 ODM 份額合計））；Derived"); out["ref_res"] = r; r += 1
+    C.cell(r, 4, "US$B；ODM 整櫃價口徑（Dell 為品牌出貨價，口徑不同）；只作量級參考"); C.cell(r, 5, "Siliconomics v0.22（整櫃組裝市場基準值 ×（1 − 已建模 ODM 份額合計））；Derived"); out["ref_res"] = r; r += 1
     out["ck"] = (ck1,); out["end"] = r
     C.column_dimensions["A"].width = max(C.column_dimensions["A"].width or 0, 60)
     return out
@@ -665,9 +665,9 @@ def coord_c0(wb, SIL, R):
     wt = "／".join(f"{N['SIF_WTAnchor_Base'][i]:.2f}" for i in (1, 2, 3))
     for a, b, c, d, e in (
         ("硬體股讀哪一層", "Siliconomics（零組件層；基準）", ver, "商用 GPU 顆數、情境顆數係數、Wattonomics 錨定、對帳中旗標；每顆系統價值讀 markets/chip_bridge", "下游只註明版本、不自行重估（專案規則第 3 條）"),
-        ("商用 GPU 顆數（GB300 級、VR200 級）", "In 頁 ug_26–ug_29、uv_26–uv_29", "tsmc v0.5.4（In 頁；Siliconomics v0.21 平台顆數）", "PL 商用 GPU 系統市場", "情境 B 的系統市場＝Siliconomics SIF_GPUSysMkt_Base（見第 2 節）"),
+        ("商用 GPU 顆數（GB300 級、VR200 級）", "In 頁 ug_26–ug_29、uv_26–uv_29", "tsmc v0.5.4（In 頁；Siliconomics v0.22 平台顆數）", "PL 商用 GPU 系統市場", "情境 B 的系統市場＝Siliconomics SIF_GPUSysMkt_Base（見第 2 節）"),
         ("每顆系統價值（GB300、VR200 NVL72 機架價 ÷ 72）", "59.7／116.7 US$K／顆", "markets/chip_bridge v0.2.3（橋接表）", "In 頁 v_gb、v_vr", "唯讀"),
-        ("情境顆數係數（2028、2029）", "A 1.0／1.0；B 0.8／0.71；C 0.6／0.6", "tsmc v0.5.4（In!E37:E42；Siliconomics v0.21 基準係數）", "In 頁 um28_A–um29_C（FY(t) 用 CY(t−1)）", "情境 B＝Siliconomics 基準"),
+        ("情境顆數係數（2028、2029）", "A 1.0／1.0；B 0.8／0.71；C 0.6／0.6", "tsmc v0.5.4（In!E37:E42；Siliconomics v0.22 基準係數）", "In 頁 um28_A–um29_C（FY(t) 用 CY(t−1)）", "情境 B＝Siliconomics 基準"),
         ("Wattonomics 錨定 SIF_WTAnchor_Base（wta_27–29）", wt, ver, "只用於 Sens「Wattonomics 錨定」案例，不進目標價", "Wattonomics 現行版本 v0.3.2（本模型不直接讀）"),
         ("對帳中旗標 SIF_RecoFlag_<yyyy>、SIF_DeployGW_AltRatio_<yyyy>", f"旗標 {flg}；比值 {alt}", ver, "C4 兩讀數（本頁上方）", "另一側讀數＝Wattonomics 換算的產業 GW；本模型 FY2028–FY2030 的 GPU 顆數同乘 CY2027–CY2029 比值")):
         for j, v in enumerate((a, b, c, d, e), 1):
@@ -713,7 +713,7 @@ def coord_c0(wb, SIL, R):
     C.cell(r, 1, "層級之間（參考；Siliconomics 對帳單 r3 處理，不計入本公司 C0）").font = BOLD; r += 1
     C.cell(r, 1, "　下列差距是 Wattonomics 與 Siliconomics 兩層之間的差距，不是 Dell 自己的量對其所讀層級值的差距；本公司依 C4 並列兩讀數，不裁決、不改上游。"); r += 1
     m5, l5, d5 = block("(2) 產業部署 GW：Siliconomics 基準對 Wattonomics 換算值（兩層之間的差距）", list(N["SIF_DeployGW_Base"]), [N[f"SIF_DeployGW_Alt_{y}"] for y in (2026, 2027, 2028, 2029)],
-                       "GW；Siliconomics 基準部署 GW 對 Wattonomics 資本支出與電力路徑換算的需求側讀數", "Wattonomics v0.3.6 經 Siliconomics 換算；Derived（需求側）", "0.00",
+                       "GW；Siliconomics 基準部署 GW 對 Wattonomics 資本支出與電力路徑換算的需求側讀數", "Wattonomics v0.3.8 經 Siliconomics 換算；Derived（需求側）", "0.00",
                        model_label="Siliconomics 基準", layer_label="Wattonomics 換算值（需求側）", ref=True)
     res = N["SIF_AsmMkt_Base"][0] * (1 - N["SIF_AsmShareSum"][0])
     lay = dict(sh0=lab(P, "Dell 份額（FY2027 校準）", rb), l_mk=l1_, res=f"{N['SIF_AsmMkt_Base'][0]!r}*(1-{N['SIF_AsmShareSum'][0]!r})")

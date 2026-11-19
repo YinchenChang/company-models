@@ -4,7 +4,7 @@ AI 半導體 Project 的「唯一事實」Excel：加速器顆數、記憶體與
 
 | 項目 | 內容 |
 |---|---|
-| 現行版本 | 見 `model/CURRENT`（v0.21，2026-11-18；會改值：2027 NVIDIA 顆數改自建估計、2028 連續法、每 GW NVIDIA 內容改認列口徑；Wattonomics v0.3.7、Tokenomics v22.0、規則 v1.4.3） |
+| 現行版本 | 見 `model/CURRENT`（v0.22，2026-11-19；會改值：讀回 Wattonomics v0.3.8 的換算值，2028、2029 年基準依連續法由 35.05／35.42 變 36.19／36.47；v0.21：2027 NVIDIA 顆數改自建估計、2028 連續法、每 GW NVIDIA 內容改認列口徑；Wattonomics v0.3.8、Tokenomics v22.0、規則 v1.5.3） |
 | **2027 年基準註記** | **2027 年 NVIDIA 顆數為自建估計（區間 400–839 萬封裝），2027 年 2 月重估**（Andy 2026-11-18；決策 S56；`SIF_RecoNote_2027`） |
 | 下游快照 | `data/CURRENT_SNAPSHOT` 指向的 `data/siliconomics_snapshot_v*.json`（由 `tools/export_snapshot.py` 產生） |
 | Tokenomics 快照 | `data/tokenomics_snapshot_v22.0.json`（v0.20 起；名稱清單 `data/tokenomics_names.txt`；下游 chip_bridge 仍讀 `v21.7`，見 Checks K3） |
@@ -49,7 +49,7 @@ Interface E 節有五組部署 GW 欄位。**每一組只有一種語義**；寫
 
 | 名稱 | 語義（唯一） | 2029 現值（GW） | 誰可以讀、怎麼用 |
 |---|---|---|---|
-| `SIF_DeployGW_Base`（向量，欄 E–H＝2026–2029） | **依規則的基準**（規則 v1.4.3 C3：甲／乙／丙／待定／連續法決定）。成本等值、出貨年 | 42.680（v0.21：35.420） | 硬體個股**計算基準的唯一來源**；個股不裁決 |
+| `SIF_DeployGW_Base`（向量，欄 E–H＝2026–2029） | **依規則的基準**（規則 v1.4.3 C3：甲／乙／丙／待定／連續法決定）。成本等值、出貨年 | 42.680（v0.21：35.420；v0.22：36.466） | 硬體個股**計算基準的唯一來源**；個股不裁決 |
 | `SIF_DeployGW_Supply_<年>` | 供給側讀數＝原始顆數部署 GW（不乘任何係數；情境 A） | 60.139 | 只並列顯示與對照（個股 Coord 頁、對帳）；**不得進基準計算** |
 | `SIF_DeployGW_Demand_<年>` | 需求側讀數＝Wattonomics 換算值（平滑法 x2，由 `tools/baseline_bridge.py` 重算） | 28.482 | 只用於 Coord 頁判定與狀態檔；個股**不得讀** |
 | `SIF_DeployGW_Alt_<年>`／`SIF_DeployGW_AltRatio_<年>` | 另一側讀數（未被採為基準的那一條）及其 ÷ 基準 | 28.482／0.667 | 只用於對帳中年份的並列顯示與**兩讀數目標價（情境）**；不得取代基準 |
