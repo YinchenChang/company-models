@@ -11,11 +11,23 @@ import sys
 
 import openpyxl
 
-OUT = "/home/claude/out/summary"
-CM = "/home/claude/company-models"
-TKR = "/home/claude/tokenomics"
-XLSX = f"{OUT}/20261118_三層對帳總表_v0.1.xlsx"
+# 用法：python3 verify_summary.py [OUT 目錄] [company-models] [tokenomics]；總表檔名讀 OUT/.build_meta.json 的 out
+OUT = sys.argv[1] if len(sys.argv) > 1 else "/home/claude/out/summary"
+CM = sys.argv[2] if len(sys.argv) > 2 else "/home/claude/company-models"
+TKR = sys.argv[3] if len(sys.argv) > 3 else "/home/claude/tokenomics"
 meta = json.load(open(f"{OUT}/.build_meta.json", encoding="utf-8"))
+XLSX = os.path.join(OUT, os.path.basename(meta["out"]))
+
+
+def _cur(p):
+    return open(p, encoding="utf-8").read().strip()
+
+
+_WX = _cur(f"{CM}/wattonomics/model/CURRENT")
+_WV = re.search(r"_(v[\d.]+)\.xlsx$", _WX).group(1)
+_TX = _cur(f"{TKR}/model/CURRENT")
+_TV = re.search(r"_(v[\d.]+)\.xlsx$", _TX).group(1)
+_BR = sorted(x for x in os.listdir(f"{CM}/siliconomics/docs/reports") if re.fullmatch(r"\d{8}_協調橋接_" + re.escape(_WV) + r"(r\d+)?\.xlsx", x))[-1]
 ROW, REG = meta["ROW"], meta["REG"]
 
 # 1. LibreOffice 重算（在副本上），讀快取值
@@ -57,16 +69,16 @@ def sv_(key, y):
 
 
 # 3. 來源（直接重讀）
-w = json.load(open(f"{CM}/wattonomics/data/wattonomics_snapshot_v0.3.6.json", encoding="utf-8"))["names"]
-s = json.load(open(f"{CM}/siliconomics/data/siliconomics_snapshot_v0.20.json", encoding="utf-8"))["names"]
+w = json.load(open(f"{CM}/wattonomics/data/wattonomics_snapshot_{_WV}.json", encoding="utf-8"))["names"]
+s = json.load(open(f"{CM}/siliconomics/data/" + _cur(f"{CM}/siliconomics/data/CURRENT_SNAPSHOT"), encoding="utf-8"))["names"]
 st = json.load(open(f"{CM}/siliconomics/data/baseline_status.json", encoding="utf-8"))
-rc = json.load(open(f"{CM}/siliconomics/data/recon_snapshot_v0.20.json", encoding="utf-8"))
-tk = json.load(open(f"{CM}/wattonomics/data/tokenomics_snapshot_v22.0.json", encoding="utf-8"))
-br = openpyxl.load_workbook(f"{CM}/siliconomics/docs/reports/20261116_協調橋接_v0.3.6.xlsx", data_only=True)["Bridge"]
+rc = json.load(open(f"{CM}/siliconomics/data/" + _cur(f"{CM}/siliconomics/data/CURRENT_RECON"), encoding="utf-8"))
+tk = json.load(open(f"{CM}/wattonomics/data/tokenomics_snapshot_{_TV}.json", encoding="utf-8"))
+br = openpyxl.load_workbook(f"{CM}/siliconomics/docs/reports/{_BR}", data_only=True)["Bridge"]
 brow = {br.cell(r, 1).value: r for r in range(4, br.max_row + 1) if br.cell(r, 1).value}
-tkx = openpyxl.load_workbook(f"{TKR}/model/20261105_Tokenomics_v22.0.xlsx", data_only=True)
-wx = openpyxl.load_workbook(f"{CM}/wattonomics/model/20261116_Wattonomics_v0.3.6.xlsx", data_only=True)
-sx = openpyxl.load_workbook(f"{CM}/siliconomics/model/20261116_Siliconomics_v0.20.xlsx", data_only=True)
+tkx = openpyxl.load_workbook(f"{TKR}/model/{_TX}", data_only=True)
+wx = openpyxl.load_workbook(f"{CM}/wattonomics/model/{_WX}", data_only=True)
+sx = openpyxl.load_workbook(f"{CM}/siliconomics/model/" + _cur(f"{CM}/siliconomics/model/CURRENT"), data_only=True)
 
 
 def close(a, b, tol=1e-6):
@@ -90,10 +102,10 @@ chk("Siliconomics SIF_DeployGW_Supply_2028", f"總表!G{ROW['s_sup']}", sv_("s_s
 chk("Siliconomics SIF_AIITCapex_Base 2027", f"總表!F{ROW['s_it']}", sv_("s_it", 2027), s["SIF_AIITCapex_Base"][1])
 # 欄位語義
 SEM = wbv["欄位語義"]
-chk("SIF_DeployGW_Current_2029（應為 51.118）", "欄位語義!E9", SEM["E9"].value, s["SIF_DeployGW_Current_2029"])
+chk("SIF_DeployGW_LegacyS33_2029（舊 Current）", "欄位語義!E9", SEM["E9"].value, s["SIF_DeployGW_LegacyS33_2029"])
 chk("SIF_DeployGW_Alt_2027", "欄位語義!C8", SEM["C8"].value, s["SIF_DeployGW_Alt_2027"])
 chk("SIF_DeployGW_Demand_2026", "欄位語義!B7", SEM["B7"].value, s["SIF_DeployGW_Demand_2026"])
-chk("Current − Base 2029", "欄位語義!E11", SEM["E11"].value, s["SIF_DeployGW_Current_2029"] - sb[3])
+chk("LegacyS33 − Base 2029", "欄位語義!E11", SEM["E11"].value, s["SIF_DeployGW_LegacyS33_2029"] - sb[3])
 # 證據比例
 chk("Wattonomics 證據比例（低）2027＝baseline_status（3 位小數）", f"總表!F{ROW['e_st_ws_lo']}", sv_("e_st_ws_lo", 2027), st["years"]["2027"]["wattonomics"]["evidence_share"]["lo"])
 chk("　同上 vs Wattonomics 快照 WIF_Evidence_Lo_2027（狀態檔四捨五入，容許 5e-4）", f"總表!F{ROW['e_st_ws_lo']}", sv_("e_st_ws_lo", 2027), w["WIF_Evidence_Lo_2027"], 5e-4)
@@ -115,7 +127,7 @@ for y in (2026, 2027, 2028, 2029):
 for y, col in ((2027, "F"), (2028, "G")):
     chk(f"橋接表殘差 g3 {y} vs 本表", f"總表!{SC[y]}{ROW['g_resid']}", sv_("g_resid", y), br[f"{col}{brow['g3']}"].value, 1e-6)
 chk("橋接表總差距 2026 vs 本表", f"總表!E{ROW['gap_gw']}", sv_("gap_gw", 2026), br[f"E{brow['g']}"].value, 1e-6)
-chk("橋接表殘差 2029（容許 v0.19→v0.20 差 0.03）", f"總表!H{ROW['g_resid']}", sv_("g_resid", 2029), br[f"H{brow['g3']}"].value, 2.5e-3)
+chk("橋接表殘差 2029（容許 2.5e-3）", f"總表!H{ROW['g_resid']}", sv_("g_resid", 2029), br[f"H{brow['g3']}"].value, 2.5e-3)
 # Tokenomics 加權 vs Wattonomics CapexGW 第 7 列
 cg = wx["CapexGW"]
 for y, col in ((2026, "G"), (2027, "H"), (2029, "J")):
@@ -173,7 +185,9 @@ for code, (rel, sha, flag, recd, act) in shas.items():
         bad.append(code)
 rec("輸入頁檔案清單 SHA-256 與重算一致（9 個檔案）", not bad and len(shas) == 9, f"檢查 {len(shas)} 個；不符 {bad}")
 sil = shas.get("SIS")
-rec("Siliconomics 快照記錄 SHA 與 repo 實算不一致已如實顯示", sil and sil[2] == "不一致" and sil[3].startswith("cf29d2bb") and sil[4].startswith("ad8dfaaf"), f"快照記錄 {sil[3][:8]}、實算 {sil[4][:8]}、比對欄＝{sil[2]}")
+_sx_sha = hashlib.sha256(open(f"{CM}/siliconomics/model/" + _cur(f"{CM}/siliconomics/model/CURRENT"), "rb").read()).hexdigest()
+_s_rec = json.load(open(f"{CM}/siliconomics/data/" + _cur(f"{CM}/siliconomics/data/CURRENT_SNAPSHOT"), encoding="utf-8"))["source"]["sha256"]
+rec("Siliconomics 快照記錄 SHA 與 repo 實算的比對結果如實顯示", sil and sil[2] == ("一致" if _s_rec == _sx_sha else "不一致") and sil[3][:8] == _s_rec[:8] and sil[4][:8] == _sx_sha[:8], f"快照記錄 {sil[3][:8]}、實算 {sil[4][:8]}、比對欄＝{sil[2]}（獨立重算：{'一致' if _s_rec == _sx_sha else '不一致'}）")
 wat = shas.get("WAS")
 rec("Wattonomics 快照記錄 SHA 與實算一致", wat and wat[2] == "一致", f"比對欄＝{wat[2]}")
 
@@ -186,7 +200,7 @@ for i, col in enumerate("EFGH"):
     xv = ISI[f"{col}{r_}"].value
     xv = float(xv) if xv is not None else None
     mm.append(abs(xv - sb[i]) if xv is not None else None)
-for nm in ("SIF_DeployGW_Supply_2028", "SIF_DeployGW_Current_2029", "SIF_DeployGW_Alt_2029", "SIF_DeployGW_Demand_2027"):
+for nm in ("SIF_DeployGW_Supply_2028", "SIF_DeployGW_LegacyS33_2029", "SIF_DeployGW_Alt_2029", "SIF_DeployGW_Demand_2027"):
     xv = ISI[f"E{rows_s[nm]}"].value
     mm.append(abs(float(xv) - s[nm]))
 rec("Siliconomics 快照數值 vs repo 內活頁簿 Interface 快取值（8 格；SHA 不一致下的數值抽核）", all(m is not None and m < 1e-9 for m in mm), f"最大差 {max(m for m in mm if m is not None):.2e}")
@@ -216,7 +230,7 @@ for nm, it in tk["items"].items():
                     if isinstance(a, (int, float)) and isinstance(b, (int, float)):
                         maxd = max(maxd, abs(a - b))
                         n += 1
-rec("Tokenomics 快照（gen_cost 類）vs v22.0 工作簿具名範圍", n > 50 and maxd < 1e-9, f"比對 {n} 格；最大差 {maxd:.2e}")
+rec(f"Tokenomics 快照（gen_cost 類）vs {_TV} 工作簿具名範圍", n > 50 and maxd < 1e-9, f"比對 {n} 格；最大差 {maxd:.2e}")
 
 # 6. 樣本外隔離
 oos_cells = []
@@ -269,7 +283,7 @@ rec("每頁設定橫向／整頁寬列印", all(wbf[n].page_setup.fitToWidth == 
 
 # 輸出
 passed = sum(1 for r in res if r[1])
-lines = ["# 三層對帳總表 驗證紀錄", "", "- 檔案：`/home/claude/out/summary/20261118_三層對帳總表_v0.1.xlsx`",
+lines = ["# 三層對帳總表 驗證紀錄", "", f"- 檔案：`{os.path.basename(XLSX)}`（Wattonomics {_WV}、Tokenomics {_TV}、橋接表 {_BR}）",
          f"- 來源：company-models main {meta['GIT_CM'][0][:7]}（{meta['GIT_CM'][1]}）、tokenomics main {meta['GIT_TK'][0][:7]}（{meta['GIT_TK'][1]}）",
          f"- 重算：LibreOffice headless（在副本上）；公式 {nform} 個，錯誤值 {len(errs)} 個",
          f"- 結果：{passed} / {len(res)} 項通過；其中抽核格子 {ok_n} / {len(checks)} 格與來源檔一致（來源檔為重新直讀，不沿用建檔程式的讀法）", "",
