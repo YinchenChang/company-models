@@ -250,7 +250,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!B21"
+      "@Coord!B22"
      ]
     },
     {
@@ -1808,12 +1808,12 @@
       "@PL!C224",
       "@PL!D224",
       "@PL!E224",
-      "@Coord!B50",
-      "@Coord!C50",
-      "@Coord!D50",
-      "@Coord!E50",
-      "@Coord!F50",
-      "@Coord!G50"
+      "@Coord!B51",
+      "@Coord!C51",
+      "@Coord!D51",
+      "@Coord!E51",
+      "@Coord!F51",
+      "@Coord!G51"
      ],
      "rows": [
       [
@@ -3965,7 +3965,7 @@
     {
      "type": "note",
      "parts": [
-      "@Coord!A53"
+      "@Coord!A54"
      ]
     },
     {
@@ -3981,14 +3981,6 @@
      ],
      "rows": [
       [
-       "@Coord!A66",
-       "@Coord!B66|p0",
-       "@Coord!C66|p1",
-       "@Coord!D66|sp1",
-       "@Coord!E66",
-       "@Coord!I66"
-      ],
-      [
        "@Coord!A67",
        "@Coord!B67|p0",
        "@Coord!C67|p1",
@@ -3998,22 +3990,30 @@
       ],
       [
        "@Coord!A68",
-       "",
-       "",
-       "",
+       "@Coord!B68|p0",
+       "@Coord!C68|p1",
+       "@Coord!D68|sp1",
        "@Coord!E68",
        "@Coord!I68"
+      ],
+      [
+       "@Coord!A69",
+       "",
+       "",
+       "",
+       "@Coord!E69",
+       "@Coord!I69"
       ]
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Coord!A70",
+      "@Coord!A71",
       "：",
-      "@Coord!B70|n0",
+      "@Coord!B71|n0",
       "。",
-      "@Coord!A71"
+      "@Coord!A72"
      ]
     },
     {
@@ -4022,25 +4022,17 @@
      "collapse": true,
      "summary": "展開：實績與層級輸入（期間、出處、等級）",
      "head": [
-      "@Coord!A55",
-      "@Coord!B55",
-      "@Coord!C55",
-      "@Coord!D55",
-      "@Coord!E55",
-      "@Coord!F55"
+      "@Coord!A56",
+      "@Coord!B56",
+      "@Coord!C56",
+      "@Coord!D56",
+      "@Coord!E56",
+      "@Coord!F56"
      ],
      "rows": [
       [
-       "@Coord!A56",
-       "@Coord!B56|n3",
-       "@Coord!C56",
-       "@Coord!D56",
-       "@Coord!E56",
-       "@Coord!F56"
-      ],
-      [
        "@Coord!A57",
-       "@Coord!B57|p1",
+       "@Coord!B57|n3",
        "@Coord!C57",
        "@Coord!D57",
        "@Coord!E57",
@@ -4056,7 +4048,7 @@
       ],
       [
        "@Coord!A59",
-       "@Coord!B59|n3",
+       "@Coord!B59|p1",
        "@Coord!C59",
        "@Coord!D59",
        "@Coord!E59",
@@ -4072,7 +4064,7 @@
       ],
       [
        "@Coord!A61",
-       "@Coord!B61|p1",
+       "@Coord!B61|n3",
        "@Coord!C61",
        "@Coord!D61",
        "@Coord!E61",
@@ -4088,11 +4080,19 @@
       ],
       [
        "@Coord!A63",
-       "@Coord!B63|n3",
+       "@Coord!B63|p1",
        "@Coord!C63",
        "@Coord!D63",
        "@Coord!E63",
        "@Coord!F63"
+      ],
+      [
+       "@Coord!A64",
+       "@Coord!B64|n3",
+       "@Coord!C64",
+       "@Coord!D64",
+       "@Coord!E64",
+       "@Coord!F64"
       ]
      ]
     },
@@ -4110,14 +4110,6 @@
       "說明"
      ],
      "rows": [
-      [
-       "@Coord!A35",
-       "@Coord!B35|n2",
-       "@Coord!C35|n2",
-       "@Coord!D35|sp1",
-       "@Coord!E35",
-       "@Coord!I35"
-      ],
       [
        "@Coord!A36",
        "@Coord!B36|n2",
@@ -4141,6 +4133,14 @@
        "@Coord!D38|sp1",
        "@Coord!E38",
        "@Coord!I38"
+      ],
+      [
+       "@Coord!A39",
+       "@Coord!B39|n2",
+       "@Coord!C39|n2",
+       "@Coord!D39|sp1",
+       "@Coord!E39",
+       "@Coord!I39"
       ]
      ]
     },
@@ -4155,13 +4155,6 @@
       "狀態"
      ],
      "rows": [
-      [
-       "@Coord!A42",
-       "@Coord!B42|n2",
-       "@Coord!C42|n2",
-       "@Coord!D42|sp1",
-       "@Coord!E42"
-      ],
       [
        "@Coord!A43",
        "@Coord!B43|n2",
@@ -4182,6 +4175,13 @@
        "@Coord!C45|n2",
        "@Coord!D45|sp1",
        "@Coord!E45"
+      ],
+      [
+       "@Coord!A46",
+       "@Coord!B46|n2",
+       "@Coord!C46|n2",
+       "@Coord!D46|sp1",
+       "@Coord!E46"
       ]
      ]
     },
@@ -4930,7 +4930,7 @@
   "note": [
    "@README!A79",
    " ",
-   "@Coord!B22"
+   "@Coord!B23"
   ]
  },
  "layout": "v1.3"
