@@ -660,7 +660,7 @@ def coord_c0(wb, SIL, R):
         ("硬體股讀哪一層", "Siliconomics（零組件層；基準）", ver, "商用 GPU 顆數、情境顆數係數、Wattonomics 錨定、對帳中旗標；每顆系統價值讀 markets/chip_bridge", "下游只註明版本、不自行重估（專案規則第 3 條）"),
         ("商用 GPU 顆數（GB300 世代、Rubin 世代）", "In 頁 uo_26–uo_29、un_26–un_29", "tsmc v0.5.4（In 頁；Siliconomics v0.22 平台顆數）", "PL 商用 GPU 系統市場", "情境 B 的系統市場＝Siliconomics SIF_GPUSysMkt_Base（見第 2 節）"),
         ("每顆系統價值（GB300、VR200 NVL72 機架價 ÷ 72）", "59.7／116.7 US$K／顆", "markets/chip_bridge v0.2.3（橋接表）", "In 頁 v_gb、v_vr", "唯讀"),
-        ("情境顆數係數（2028、2029）", "A 1.0／1.0；B 0.8／0.71；C 0.6／0.6", "tsmc v0.5.4（In!E37:E42；Siliconomics v0.22 基準係數）", "In 頁 um28_A–um29_C（會計年度＝前後兩個日曆年各半）", "情境 B＝Siliconomics 基準"),
+        ("情境顆數係數（2028、2029）", f"A 1.0／1.0；B {SIL.COEF_B_TXT}；C 0.6／0.6", "tsmc v0.5.4（In!E37:E42；Siliconomics v0.22 基準係數）", "In 頁 um28_A–um29_C（會計年度＝前後兩個日曆年各半）", "情境 B＝Siliconomics 基準"),
         ("Wattonomics 錨定 SIF_WTAnchor_Base（wta_27–29）", wt, ver, "只用於 Sens「Wattonomics 錨定」案例，不進目標價", "Wattonomics 現行版本 v0.3.2（本模型不直接讀）"),
         ("對帳中旗標 SIF_RecoFlag_<yyyy>、SIF_DeployGW_AltRatio_<yyyy>", f"旗標 {flg}；比值 {alt}", ver, "C4 兩讀數（本頁上方）", "另一側讀數＝Wattonomics 換算的產業 GW；本模型 CY2027–CY2029 的 GPU 顆數同乘比值（會計年度各取半）")):
         for j, v in enumerate((a, b, c, d, e), 1):
