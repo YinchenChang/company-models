@@ -2504,7 +2504,7 @@ def main():
             pl("ai_fb", "模型值替代（無 GW 證據）", "—", lambda y: (f'=IF(AND(ABS({YC[y]}{rows["ai_gw"]})<1E-9,{YC[y]}{rows["ocf"]}<>"",ISNUMBER({YC[y]}{rows["cai"]})),'
                                                                   f'IF(N({YC[y]}{rows["cai"]})>0,"模型值替代（無 GW 證據）",""),"")'), years=OUTG, fmt="General",
                note="營業現金流有計、但 GW 推算 AI 資本支出為 0（沒有 GW 證據）的年份，改用個股模型 AI 資本支出，計為擁有者需要；市場合計同額加上（不從市場其餘扣）")
-        pl("ai", "AI 資料中心資本支出（採用：GW 推算；無 GW 證據時用模型值）", "US$B",
+        pl("ai", "AI 資料中心資本支出（採用：主讀法〔2024–2025 有實績者＝實績，其餘 GW 推算〕；無 GW 證據時用模型值）", "US$B",
            lambda y: f'=IF({YC[y]}{rows["ai_fb"]}<>"",{YC[y]}{rows["cai"]},{YC[y]}{rows["ai_gw"]})', years=OUTG, fill=KEY)
         if p in CAPP7:
             pl("ai_mc", "並列讀法：AI 資本支出依個股模型基準（2027–2030；模型缺值時用 GW 推算）", "US$B",
@@ -3442,7 +3442,7 @@ def main():
     decisions += [
         {"id": "GL01-126", "cat": "判斷", "item": "Gap 頁歷史年（2024–2025）AI 資本支出改讀實績（H1）",
          "decision": "七家 2024–2025 有 CapexGW 曆年 AI 資本支出（公告資本支出 × AI 占比）者，Gap 主讀法改讀該值；xAI 讀 SpaceX 424B4 分部資本支出 AI（In S15 acthist_xai_2024＝5.633、acthist_xai_2025＝12.727；現金口徑）。無實績的家 × 年（CoreWeave 2024–25、Nebius 2024、Oracle 2024、WhiteFiber）仍為 GW 推算。原主讀法（年新增 GW × 每 GW、廠房提前一到兩年）保留為並列讀法 A。部署 GW、年底 GW、2026 年起各列不變。採現金口徑的理由：本頁以資本支出對營業現金流算缺口；2026 年起 xAI 讀的 SpaceX 模型列也是現金（CF「資本支出：SI（現金）」）。",
-         "date": "2026-11-19", "quote": "Andy 2026-11-19 19:16「要去查，而且其他的，就按照你的建议去做」", "status": "草稿（待獨立核對與 Andy 決定）；理由：GW 推算的歷史年對 xAI 為實績的 3.8 倍／3.0 倍（v0.3.9 補入 2024 年底存量後）：廠房提前付（w1＝w2＝0.5）替 2026–27 年新增 GW 預付 28.4；xAI 以既有廠房改建、數月上線。其他家歷史年 GW 推算對 CapexGW 值在 0.44–1.47 倍。 報告 docs/verify/20261119_v0.3.9_build.md §6"},
+         "date": "2026-11-19", "quote": "Andy 2026-11-19 19:16「要去查，而且其他的，就按照你的建议去做」", "status": "草稿（待獨立核對與 Andy 決定）；理由：GW 推算的歷史年對 xAI 為實績的 3.8 倍／3.0 倍（v0.3.9 補入 2024 年底存量後）：廠房提前付（w1＝w2＝0.5）比「廠房當年付」兩年合計多計 28.4（提前付毛額 38.5，其中替 2026–27 年新增 GW 預付 35.4；扣掉 2024–25 年自身 0.8 GW 的廠房 10.1）；xAI 以既有廠房改建、數月上線。其他家歷史年 GW 推算對 CapexGW 值在 0.44–1.47 倍。 報告 docs/verify/20261119_v0.3.9_build.md §6"},
         {"id": "GL01-125", "cat": "判斷", "item": "C4b：xAI 2024 年底存量 0.3 GW 入 In（新納入存量改為年新增）", "decision": "In mw_xai 2023＝0、2024＝300 MW（SpaceX 424B4 Nameplate Compute Draw：2023＝0、2024＝0.3 GW；mag/extract/docs/2026Q3/text/spacex_424B4.txt；spacex/data/spacex_facts_v02.json seg.si.kpi.gw.fy2024；Interested-party：公司自訂 KPI、法定文件揭露）。xAI 2025 年新增由『新納入存量 0.8（不計年新增）』變為 0.5；2024 年新增 0.3。部署與市場 GW 只動 2024–2025。連帶 Gap 頁 xAI 2024–25 年 AI 資本支出（GW 推算口徑）上升，高於 424B4 揭露的實際值（2024 5.633、2025 12.727）；Gap 歷史年是否改讀實績的修法選項待 Andy，本版照 GW 推算、未自行決定。內容與原草稿 #658（v0.3.8，疊在 v0.3.7、Siliconomics 釘 v0.19）相同，改以 v0.3.8（讀 Siliconomics v0.22）為底", "date": "2026-11-19", "quote": QB39, "status": "草稿（待 Andy）"},
     ]
     for d in decisions:
