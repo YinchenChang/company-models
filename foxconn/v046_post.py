@@ -649,8 +649,8 @@ def c0_actuals(wb, C, r, l3, rs_l, d5):
     a_cl = row2("　公司實績：雲端網路產品營收（主：1Q–3Q 累計；第二：3Q26 × 4）", f"=B{cloud9}", f"=B{cl['3Q26r']}*4", "#,##0.0", "NT$B；合併營收 × 公司揭露占比", "Derived／Interested-party")
     a_ai = row2("　× AI 占雲端網路產品比例", f"=B{ais}", f"=B{ais}", "0.0%", "見 4.2；假設值，兩邊相同", "Assumed／Interested-party")
     a_ns = row2("　＝ 公司側換算的 AI 伺服器營收", f"=B{a_cl}*B{a_ai}", f"=C{a_cl}*C{a_ai}", "#,##0.0", "NT$B；主讀數為 9 個月累計；第二讀數為年化（含假設，非公司實績）", "Assumed 級（換算含假設）", True)
-    l_mk = row2("　層級：整櫃組裝市場 CY2026（Siliconomics 基準層）", f"=B{l3}", f"=B{l3}", "#,##0.0", "US$B；連到上方「讀取層級」第 (3) 項的 Siliconomics 層列", "Siliconomics v0.21；Derived")
-    l_sh = row2("　× 鴻海份額（Siliconomics 份額表）", f"=B{rs_l}", f"=B{rs_l}", "0.0%", "連到上方 (5) 的 Siliconomics 份額列", "Siliconomics v0.21；Derived（由本模型 FY2026 錨點校準，見說明）")
+    l_mk = row2("　層級：整櫃組裝市場 CY2026（Siliconomics 基準層）", f"=B{l3}", f"=B{l3}", "#,##0.0", "US$B；連到上方「讀取層級」第 (3) 項的 Siliconomics 層列", "Siliconomics v0.22；Derived")
+    l_sh = row2("　× 鴻海份額（Siliconomics 份額表）", f"=B{rs_l}", f"=B{rs_l}", "0.0%", "連到上方 (5) 的 Siliconomics 份額列", "Siliconomics v0.22；Derived（由本模型 FY2026 錨點校準，見說明）")
     l_fx = row2("　× 匯率（新台幣 ÷ 美元；In 頁 fx）", "=fx", "=fx", "0.0", "NT$/US$", "Derived（與廣達、台達電模型相同）")
     l_fy = row2("　＝ 層級隱含 CY2026 全年 AI 伺服器營收", f"=B{l_mk}*B{l_sh}*B{l_fx}", f"=C{l_mk}*C{l_sh}*C{l_fx}", "#,##0.0", "NT$B；全年", "Derived", True)
     row2("　核對（同源證據）：層級隱含 CY2026 全年 − 本模型 FY2026 AI 伺服器營收錨點（Q 頁）", f"=B{l_fy}-a26_ai", f"=C{l_fy}-a26_ai", "0.000", "NT$B；應為 0：層級值與本模型錨點同源，所以本表不構成獨立驗證", "Derived（核對列）")
@@ -798,7 +798,7 @@ def coord_c0(wb, SIL, R):
     C.cell(r, 1, "層級之間（參考；Siliconomics 對帳單 r3 處理，不計入本公司 C0）").font = BOLD; r += 1
     C.cell(r, 1, "　下列差距是 Wattonomics 與 Siliconomics 兩層之間的差距，不是鴻海自己的量對其所讀 Siliconomics 值的差距；本公司依 C4 並列兩讀數，不裁決、不改上游。"); r += 1
     m5, l5, d5 = block("(6) 部署 GW（情境 B）對 Wattonomics 換算值（兩層之間的差距）", lambda c: f"=PL!{c}{gb('部署 GW（IT 電力）')}", [N[f"SIF_DeployGW_Alt_{y}"] for y in (2026, 2027, 2028, 2029)],
-                       "GW；Siliconomics 的需求側部署 GW 逐年值＝Wattonomics 資本支出與電力路徑換算的需求側讀數", "Wattonomics v0.3.6 經 Siliconomics 換算；Derived（需求側）", "0.00", layer_label="Wattonomics 換算值（需求側）", ref=True)
+                       "GW；Siliconomics 的需求側部署 GW 逐年值＝Wattonomics 資本支出與電力路徑換算的需求側讀數", "Wattonomics v0.3.8 經 Siliconomics 換算；Derived（需求側）", "0.00", layer_label="Wattonomics 換算值（需求側）", ref=True)
     r += 1
     C.cell(r, 1, "3. 結論（C0；判定見第 4 節 C0〔實績〕表）").font = BOLD; r += 1
     C.cell(r, 1, "對帳中項目數（C0〔實績〕判定為「對帳中」者；讀取層級的同源列不判定、不計入）")

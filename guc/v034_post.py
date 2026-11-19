@@ -451,7 +451,7 @@ def coord_c0(wb, SIL):
             if v is None: continue
             c = C.cell(r, 2 + j, v); c.number_format = fmt
         C.cell(r, 6, src); R[label] = r; r += 1
-    tsm = "經台積電個股模型成品（tsmc/dist；該模型讀 Siliconomics v0.21）"
+    tsm = "經台積電個股模型成品（tsmc/dist；該模型讀 Siliconomics v0.22）"
     arow("Google TPU 顆數（情境 A 原始顆數；百萬顆）", [f"=In!E{ikey[f'u_tpu_{y}']}" for y in (26, 27, 28)] + [None], f"{ver}：SIF_UnitsPlat（Google TPU），{tsm}取得（In 頁 u_tpu_26–u_tpu_28，唯讀；CY2029 由 g29_tpu 外推）")
     arow("其他 ASIC 顆數（情境 A 原始顆數；百萬顆）", [f"=In!E{ikey[f'u_oth_{y}']}" for y in (26, 27, 28)] + [None], f"{ver}：SIF_UnitsPlat（其他 ASIC：MTIA、Maia、Ascend 等），{tsm}取得（In 頁 u_oth_26–u_oth_28，唯讀）")
     arow("情境 B 顆數係數（÷ 原始顆數）", [None, 1, f"=In!E{ikey['um28_B']}", f"=In!E{ikey['um29_B']}"], f"{ver}：SIF_UnitsCoef_Base，{tsm}取得（In 頁 um28_B、um29_B；CY2026–27 為 1）")
@@ -538,7 +538,7 @@ def coord_c0(wb, SIL):
     C.cell(r, 1, "E. C0（實績）：公司實績 vs 層級隱含值（規則 v1.4.2 C0 第 2 點；Andy 11-14 17:40 固定規格；差距超過 ±15% 且兩讀數同號標「對帳中」）").font = BOLD
     R["E"] = r; r += 1
     C.cell(r, 1, "比較方法：個股側只用公司已公布實績（月營收公告與季報，Verified：合併營收；創意不揭露 CPU、AI ASIC、車用的金額，產品別拆分為模型假設 Assumed，不算實績）；"
-                 "層級側用 Siliconomics v0.21 同口徑隱含值（TPU 與其他 ASIC 顆數 × 創意份額 × 每顆營收 × 校準係數）。時差：層級值為日曆年 CY2026，創意會計年度＝日曆年；"
+                 "層級側用 Siliconomics v0.22 同口徑隱含值（TPU 與其他 ASIC 顆數 × 創意份額 × 每顆營收 × 校準係數）。時差：層級值為日曆年 CY2026，創意會計年度＝日曆年；"
                  f"主讀數＝2026 年 1–{MON} 月累計月營收 vs 層級 CY2026 × {MON} ÷ 12（線性時差近似，Derived）；第二讀數＝3Q26 × 4 vs 層級 CY2026（約等於 3Q 中點的年化速率；3Q 落在年度後半，成長年中偏高）。"
                  "判定：兩讀數差距都超過 ±15% 且同號＝對帳中；只有一個超過＝時差邊界（參考）；都在內＝一致；層級側沒有同口徑隱含值＝無可比實績；層級隱含值由本公司模型校準＝參考（同源校準），不計入。"
                  "公司指引、賣方估計、本模型自己的推算只列參考，不判定。")
@@ -575,7 +575,7 @@ def coord_c0(wb, SIL):
 
     row("合併營收（NT$B）", f"=G{r_rv}", f"=D{r_rv}*4", "無同口徑隱含值",
         f"公司實績：月營收公告 1–{MON} 月累計 52.532（科技新報 2026-11-05：10 月 8.433、前 10 月 525.32 億元）與 3Q26 18.754（公開資訊觀測站 t164sb04 前 9 月 44.099 − 1H26 25.345；單季 18.7545）；輸入區；Verified。"
-        "層級側：Siliconomics v0.21 沒有創意或 ASIC 設計服務的營收（層級內只有 TPU 與其他 ASIC 顆數、核心售價）；創意份額為本模型假設。",
+        "層級側：Siliconomics v0.22 沒有創意或 ASIC 設計服務的營收（層級內只有 TPU 與其他 ASIC 顆數、核心售價）；創意份額為本模型假設。",
         "無可比實績：缺層級的 ASIC 設計服務（或 Google CPU turnkey）營收市場與創意份額")
     row("Google CPU 量產營收（NT$B）", "無實績", "無實績", f"=G{r_chc}",
         "公司實績：創意不揭露 CPU 營收（公司未揭露客戶名稱與產品別金額；營收拆分 CPU 約 48% 為媒體與法人口述轉換的 Assumed，不算實績）。"

@@ -453,7 +453,7 @@ def coord_c0(wb, SIL):
             if v is None: continue
             c = C.cell(r, 2 + j, v); c.number_format = fmt
         C.cell(r, 6, src); R[label] = r; r += 1
-    tsm = "經台積電個股模型 v0.5.4 成品（tsmc/dist；該模型讀 Siliconomics v0.21）"
+    tsm = "經台積電個股模型 v0.5.4 成品（tsmc/dist；該模型讀 Siliconomics v0.22）"
     arow("AI 加速器顆數（情境 A 原始顆數；百萬顆）", [f"=In!E{ikey[f'units_{y}']}" for y in (26, 27, 28, 29)], f"{ver}：SIF_UnitsPlat_Total，{tsm}取得（In 頁 units_26–units_29，唯讀）", "0.000")
     arow("情境 B 顆數係數（÷ 原始顆數）", [None, 1, f"=In!E{ikey['um28_B']}", f"=In!E{ikey['um29_B']}"], f"{ver}：SIF_UnitsCoef_Base，{tsm}取得（In 頁 um28_B、um29_B；CY2026–27 為 1）")
     arow("封裝面積指數（2026＝1）", [f"=In!E{ikey[f'ar_{y}']}" for y in (26, 27, 28, 29)], f"{ver}：CoWoS 每片封裝數 cw_pp_*，{tsm}取得（In 頁 ar_26–ar_29；＝加速器用 CoWoS 片數 ÷ 顆數）")
@@ -534,7 +534,7 @@ def coord_c0(wb, SIL):
     C.cell(r, 1, "E. C0（實績）：公司實績 vs 層級隱含值（規則 v1.4.2 C0 第 2 點；Andy 11-14 17:40 固定規格；差距超過 ±15% 且兩讀數同號標「對帳中」）").font = BOLD
     R["E"] = r; r += 1
     C.cell(r, 1, "比較方法：個股側只用公司已公布實績（SEC 10-Q，Verified：合併營收、產品組別營收為美元金額；終端市場只揭露整數百分比，美元值＝揭露比重 × 合併營收，Derived，捨入誤差約 ±0.5 個百分點，運算約 ±2%）；"
-                 "層級側用 Siliconomics v0.21 同口徑隱含值。時差：層級值為日曆年 CY2026，艾克爾會計年度＝日曆年；主讀數＝2026 年 1–3Q 累計實績 vs 層級 CY2026 × 9 ÷ 12（線性時差近似，Derived）；"
+                 "層級側用 Siliconomics v0.22 同口徑隱含值。時差：層級值為日曆年 CY2026，艾克爾會計年度＝日曆年；主讀數＝2026 年 1–3Q 累計實績 vs 層級 CY2026 × 9 ÷ 12（線性時差近似，Derived）；"
                  "第二讀數＝3Q26 × 4 vs 層級 CY2026（約等於 3Q 中點的年化速率；3Q 落在年度後半，成長年中偏高、3Q 營收較 2Q 變動不大時兩讀數接近）。"
                  "判定：兩讀數差距都超過 ±15% 且同號＝對帳中；只有一個超過＝時差邊界（參考）；都在內＝一致；層級側沒有同口徑隱含值＝無可比實績（不以模型預測或同源值補位）。"
                  "公司指引、賣方估計、本模型自己的推算只列參考，不判定。本表「無可比實績」是指層級側沒有同口徑值（合併營收、產品組別、運算終端的公司實績都存在）；AI 先進封裝（2.5D、HDFO）則是公司側也沒有金額實績。")
@@ -562,7 +562,7 @@ def coord_c0(wb, SIL):
 
     row("合併營收（US$M）", f"=E{r_rev}", f"=D{r_rev}*4", "無同口徑隱含值",
         "公司實績：合併營收 1Q26 1,684.701、2Q26 1,897.965、3Q26 1,990.557（SEC 10-Q 合併損益表；輸入區；Verified；與 Q 頁 C4:E4 相差 < 0.1，見檢查列）。"
-        "層級側：Siliconomics v0.21 沒有艾克爾或封測服務的營收（層級內與封測相關者只有委外補充 CoWoS 月產能，單位與口徑皆不同）。無可比實績：缺層級的封測營收市場與艾克爾份額")
+        "層級側：Siliconomics v0.22 沒有艾克爾或封測服務的營收（層級內與封測相關者只有委外補充 CoWoS 月產能，單位與口徑皆不同）。無可比實績：缺層級的封測營收市場與艾克爾份額")
     row("先進產品組（Advanced products：覆晶、記憶體、晶圓級與相關測試；US$M）", f"=E{r_adv}", f"=D{r_adv}*4", "無同口徑隱含值",
         "公司實績：先進產品組營收 1Q26 1,372.001、2Q26 1,556.676、3Q26 1,631.580（SEC 10-Q 附註 2「net sales by product group」；輸入區；Verified）。"
         "此口徑含手機覆晶等非 AI 產品，不等於 AI 先進封裝；層級側無封裝市場值，無可比實績（缺層級的先進封裝美元市場與艾克爾份額）")
@@ -578,7 +578,7 @@ def coord_c0(wb, SIL):
     c = C.cell(r, 3, f"=PL!D{r_ai}/1000"); c.number_format = "0.00"
     C.cell(r, 4, "—")
     C.cell(r, 5, "參考（不判定）")
-    C.cell(r, 6, "B 欄＝外部估計 OSAT 先進封裝可服務市場約 US$0.5B／GW（艾克爾投資人日；In 頁 tam_gw，Interested-party；第二來源未找到）× Siliconomics v0.21 SIF_DeployGW_Base CY2026（上方「層級之間」第一列，約 23.4 GW）；"
+    C.cell(r, 6, "B 欄＝外部估計 OSAT 先進封裝可服務市場約 US$0.5B／GW（艾克爾投資人日；In 頁 tam_gw，Interested-party；第二來源未找到）× Siliconomics v0.22 SIF_DeployGW_Base CY2026（上方「層級之間」第一列，約 23.4 GW）；"
                  "該說法的投影片為 2025–2030E 口徑，套用到 CY2026 有時間口徑落差；C 欄＝本模型 FY2026 AI 先進封裝營收（情境 B，PL 頁，Derived：模型值、不是公司實績）。C ÷ B 見 G 欄（同 Recon 頁 C 節）。這是模型值對外部估計，不是公司實績對層級隱含值，不是 C0 證據、不判定。"
                  "若要可判定，需 Siliconomics 補 OSAT 先進封裝美元市場（或委外 CoWoS 每片價格）與艾克爾份額，或公司揭露 AI 先進封裝金額。")
     C.cell(r, 7, f'=TEXT(C{r}/B{r},"0.0%")&"（模型 ÷ 外部估計）"')

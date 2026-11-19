@@ -627,7 +627,7 @@ def apply(wb, here, SIL, CR, PB, SUMR, EQ_F):
     rr = SO.max_row + 1
     for i, (t, u) in enumerate((("C0 實績（v0.2.4）：Q1–Q3 2026 營收、訂單取自 Q 頁（公司季報新聞稿；Q1-26 數字見 Q2-26／Q3-26 新聞稿的前季欄）；Q3-26 新聞稿 2026-10-22（investing.com 簡報摘要，本頁第 2 列）", ""),
                                 ("Hist（v0.2.4）：FY2024、FY2025 損益取自 Q4-25／FY2025 新聞稿（stocktitan 轉載全文，本頁第 6 列）；FY2023 營收取自公司年報（DCF 參數說明）；FY2023 其他列與 FY2022 未取得", ""),
-                                ("層級：Siliconomics v0.21 SIF_SEMI_Pkg（SEMI 組裝與封裝設備，CY2025 實績、CY2026 起 SEMI 預測）、SIF_HBMHybrid_Base、SIF_HBM_ShipEB_Base", "siliconomics/data/siliconomics_snapshot_v0.19.json"))):
+                                ("層級：Siliconomics v0.22 SIF_SEMI_Pkg（SEMI 組裝與封裝設備，CY2025 實績、CY2026 起 SEMI 預測）、SIF_HBMHybrid_Base、SIF_HBM_ShipEB_Base", "siliconomics/data/siliconomics_snapshot_v0.19.json"))):
         SO.cell(rr + i, 1, t); SO.cell(rr + i, 2, u)
     wb._v024 = dict(HR=HR, PL=PLA, RV=RVA, VG=VG, SNS=SNS, RM=RMA, CO=CO)
     return f"v024_post：Hist 頁；PL 標準損益表 {PLA['start']} 起；RevDCF 頁；Val 0.7 {VG} 起；Sens 加權目標價相對基準 {SNS['t0']} 起；Coord 讀取層級與 C0 {CO['rd0']}–{CO['last']}；README v1.3 白話列 {len(RMA)} 列"

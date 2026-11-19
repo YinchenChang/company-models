@@ -1,15 +1,15 @@
 {
- "_note": "由 siliconomics/tools/export_baseline_status.py 自 20261118_Siliconomics_v0.21.xlsx 匯出；換算值與 Wattonomics 證據比例（含 v0.3.6 起的低／高區間）取自 Wattonomics v0.3.7（20261118_Wattonomics_v0.3.7.xlsx）；continuity＝規則 v1.4 連續法（基準＝前一年基準 × 換算值成長率，非換算值本身）",
- "source": "20261118_Siliconomics_v0.21.xlsx",
- "source_sha256": "9b8cd8bb84543e0638087ce3e901b98190e55e3ecc0e3205ab0ae0058420b799",
+ "_note": "由 siliconomics/tools/export_baseline_status.py 自 20261119_Siliconomics_v0.22.xlsx 匯出；換算值與 Wattonomics 證據比例（含 v0.3.6 起的低／高區間）取自 Wattonomics v0.3.8（20261119_Wattonomics_v0.3.8.xlsx）；continuity＝規則 v1.4 連續法（基準＝前一年基準 × 換算值成長率，非換算值本身）",
+ "source": "20261119_Siliconomics_v0.22.xlsx",
+ "source_sha256": "8c8207f63cb9d5def1ee35bcce7c077e4a6aef7cc48688d3d81ff1af1bfe0da4",
  "method": "export_baseline_status.py：只讀 Siliconomics Interface 的 SIF_ 名稱（Coord 頁推導）、Wattonomics 快照 WIF_Recon_NV_*、協調橋接檔 Bridge 頁 g2c／g2p；判斷類欄位讀 builder/seed/coord_meta_v*.json；本程式不做判定或計算（規則 v1.4.3 C3）",
  "generated": "2026-11-19",
- "wattonomics_version": "v0.3.7",
- "wattonomics_source_sha256": "646b3120e1e91d4764bbd1baac869af9980c71ce985f21161e4f0abc43edcd19",
+ "wattonomics_version": "v0.3.8",
+ "wattonomics_source_sha256": "ee0febe206e708810d6bc0b266eaa6c7438ea8324c3a5987c806ed60799ff6d1",
  "bridge": {
-  "file": "20261118_協調橋接_v0.3.7r2.xlsx",
-  "sha256": "a56d306cec4b1b8e7dbc3251fed67bedbded602472b8e077c7b2196095e6bf5f",
-  "in_title": "In — 輸入（藍字）。來源：20261118_Siliconomics_v0.21.xlsx、20261118_Wattonomics_v0.3.7.xlsx、R4 橋接（siliconomics/tools/r4_bridge.py）。產生日 2026-11-18。注意：本檔讀的 Siliconomics 是執行當時 model/CURRENT 指向的版本（20261118_Siliconomics_v0.21.xlsx，通常是「前一版」）；本檔換算值 x2 再被下一版的 In 頁 crd_x2 讀入，所以來源版本落後一版是設計，不是標錯（三層對帳工作單 A8）",
+  "file": "20261119_協調橋接_v0.3.8r1.xlsx",
+  "sha256": "eb2b617a418a49dfad26ba5dfe9479f01598107a1a197d3f92cf0797a9e6b17b",
+  "in_title": "In — 輸入（藍字）。來源：20261119_Siliconomics_v0.22.xlsx、20261119_Wattonomics_v0.3.8.xlsx、R4 橋接（siliconomics/tools/r4_bridge.py）。產生日 2026-11-19。注意：本檔讀的 Siliconomics 是執行當時 model/CURRENT 指向的版本（20261119_Siliconomics_v0.22.xlsx，通常是「前一版」）；本檔換算值 x2 再被下一版的 In 頁 crd_x2 讀入，所以來源版本落後一版是設計，不是標錯（三層對帳工作單 A8）",
   "note": "timing_cum（GW）＝Bridge g2c、timing_cum_ratio＝g2p；橋接檔於建置當時讀「前一版」Siliconomics 基準（見 in_title），其輸出再餵進本版 In 頁 crd_x2，故來源標示版本落後一版屬設計"
  },
  "threshold": 0.5,
@@ -35,7 +35,7 @@
    "status": "甲",
    "lead": null,
    "label": "有條件一致",
-   "converted": 20.972,
+   "converted": 21.052,
    "supply_side": 23.3995380420639,
    "legacy_s33": 23.3995380420639,
    "note": null,
@@ -51,8 +51,8 @@
    "c0_recon_doc": "Drive 02-AI供應鏈/對帳/20261116_對帳單_NVIDIA資料中心營收實績對兩層_合併.md；2026-11-18 已裁定：證據打平，維持現行；下次重判 NVIDIA FY2027 第四季公布後（裁定紀錄 docs/reports/20261118_三層對帳/adjudication/20261118_裁定紀錄_2026年對帳單.md）",
    "c0_deadline": "2027-02-28",
    "c0_point": "NVIDIA 資料中心營收純實績（Recon F 節）：FY27 Q1＋Q2 164.2 vs 層級同期間 224.18（−26.8%）；第二讀數 Q2 × 4 對層級全年 −20.6%",
-   "timing_cum": 2.7797609806424,
-   "timing_cum_ratio": 0.118795549538004,
+   "timing_cum": 2.85915684757562,
+   "timing_cum_ratio": 0.122188602289322,
    "observations": {
     "mid": {
      "i": null,
@@ -74,9 +74,9 @@
   "2027": {
    "wattonomics": {
     "evidence_share": {
-     "lo": 0.435,
-     "base": 0.472,
-     "hi": 0.63
+     "lo": 0.432,
+     "base": 0.469,
+     "hi": 0.625
     },
     "prev_has_evidence": false
    },
@@ -91,7 +91,7 @@
    "status": "待定",
    "lead": null,
    "label": "待定（對帳中）；2027 年 NVIDIA 顆數為自建估計（區間 400–839 萬封裝），2027 年 2 月重估",
-   "converted": 24.488,
+   "converted": 23.782,
    "supply_side": 30.452869226752,
    "legacy_s33": 30.452869226752,
    "note": "2027 年 NVIDIA 顆數為自建估計（區間 400–839 萬封裝），2027 年 2 月重估",
@@ -104,15 +104,15 @@
    "c0_fail": false,
    "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
    "sil_base": 30.452869226752,
-   "timing_cum": 4.34626673239313,
-   "timing_cum_ratio": 0.142721091402943,
+   "timing_cum": 4.41872227784146,
+   "timing_cum_ratio": 0.145100359671848,
    "observations": {
     "mid": {
-     "i": 27.3926319712879,
-     "ii": 27.3926319712879,
-     "iii": 27.470434613376,
-     "lo": 26.4251440254082,
-     "hi": 28.2613843334774
+     "i": 27.0410506145964,
+     "ii": 27.0410506145964,
+     "iii": 27.117434613376,
+     "lo": 25.9600963100278,
+     "hi": 28.0127206188291
     },
     "decay": {
      "0": null,
@@ -127,9 +127,9 @@
   "2028": {
    "wattonomics": {
     "evidence_share": {
-     "lo": 0.454,
-     "base": 0.518,
-     "hi": 0.545
+     "lo": 0.452,
+     "base": 0.515,
+     "hi": 0.542
     },
     "prev_has_evidence": true
    },
@@ -144,7 +144,7 @@
    "status": "待定",
    "lead": null,
    "label": "待定（水準＝連續法，對帳中）",
-   "converted": 28.184,
+   "converted": 28.265,
    "supply_side": 52.792138191248,
    "legacy_s33": 42.2337105529984,
    "note": null,
@@ -156,16 +156,16 @@
    "deadline": "2027-02-28",
    "c0_fail": false,
    "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
-   "sil_base": 35.0491533112862,
-   "timing_cum": 4.46353840769907,
-   "timing_cum_ratio": 0.127350819806017,
+   "sil_base": 36.193354162566,
+   "timing_cum": 4.46304397922941,
+   "timing_cum_ratio": 0.123311145996119,
    "observations": {
     "mid": {
-     "i": 35.8862819802845,
-     "ii": 32.5815221359517,
-     "iii": 40.488069095624,
-     "lo": 31.3879708201597,
-     "hi": 41.5639022728293
+     "i": 35.9725960228156,
+     "ii": 32.6546347410221,
+     "iii": 40.528569095624,
+     "lo": 31.4640930284961,
+     "hi": 41.627720807115
     },
     "decay": {
      "0": null,
@@ -197,7 +197,7 @@
    "status": "丙",
    "lead": null,
    "label": "連續法（前一年待定，對帳中）",
-   "converted": 28.482,
+   "converted": 28.478,
    "supply_side": 60.1385917361115,
    "legacy_s33": 51.1178029756948,
    "note": null,
@@ -209,9 +209,9 @@
    "deadline": "2027-02-28",
    "c0_fail": false,
    "supply_cap_check_only": "供給上限非獨立（SIF_CapOnlineGW_Base＝本庫自身推得），依規則 v1.1 只作檢查、不封頂；故不填 supply_cap",
-   "sil_base": 35.4197411514354,
-   "timing_cum": 4.60000045073,
-   "timing_cum_ratio": 0.129871091690448,
+   "sil_base": 36.4661008258112,
+   "timing_cum": 4.59564078970612,
+   "timing_cum_ratio": 0.126025011877696,
    "observations": {
     "mid": {
      "i": null,
@@ -221,9 +221,9 @@
      "hi": null
     },
     "decay": {
-     "0": 28.482,
-     "0.5": 31.9145766556431,
-     "1": 35.3471533112862
+     "0": 28.478,
+     "0.5": 32.442177081283,
+     "1": 36.406354162566
     },
     "display_only": true,
     "rule": "v1.5",
@@ -235,12 +235,10 @@
   "2025": {
    "layer": "wattonomics",
    "point": "Wattonomics 2025 NVIDIA 對帳點（WIF_Recon_NV_ImpliedRev_2025 ÷ WIF_Recon_NV_ActualRev_2025）",
-   "implied": 159.97287257007,
+   "implied": 196.898616347315,
    "actual": 193.7,
-   "ratio": 0.825879569282759,
-   "c0_fail": true,
-   "c0_recon_doc": "Drive 02-AI供應鏈/對帳/20261116_對帳單_Wattonomics_NVIDIA實績對帳2025.md",
-   "c0_deadline": "2027-02-28"
+   "ratio": 1.01651324908268,
+   "c0_fail": false
   }
  },
  "level_coefficients": [],

@@ -152,7 +152,7 @@ def main():
     nanc = sum(1 for row in wf["Compare"].iter_rows() for c in row if isinstance(c.value, str) and "兩邊都不錨定" in c.value)
     if nanc: bad.append(f"Compare 仍出現「兩邊都不錨定」{nanc} 格（協調規則 v1.1 改寫）")
     else: print("  Compare：無「兩邊都不錨定」")
-    SIL_REQ = "v0.19"   # v0.3.6：改讀 main 現行 v0.19（v0.3.1–v0.3.5 為 v0.18）
+    SIL_REQ = "v0.22"   # v0.3.8：改讀 main 現行 v0.22（v0.3.6–v0.3.7 為 v0.19；v0.3.1–v0.3.5 為 v0.18）
     a1 = str(wf["SIL_In"]["A1"].value or "")
     if f"（{SIL_REQ}，" not in a1: bad.append(f"SIL 快照版本不是 {SIL_REQ}：{a1[:80]}")
     else: print(f"  SIL_In：Siliconomics 快照 {SIL_REQ}")

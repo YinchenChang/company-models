@@ -396,7 +396,7 @@ def write_c0(ws, wb, r, L):
     for y in YEARS:
         f1("SIF_DeployGW_Supply_<yyyy>", y, N[f"SIF_DeployGW_Supply_{y}"], f"=co_gws_{yy(y)}", "GW", SL, "In 頁 Z 節 co_gws_<yy>；供給側讀數（情境 A）")
     for y in YEARS:
-        f1("SIF_DeployGW_Alt_<yyyy>", y, N[f"SIF_DeployGW_Alt_{y}"], f"=co_gwa_{yy(y)}", "GW", SL + "（Wattonomics v0.3.6 換算值）", "In 頁 Z 節 co_gwa_<yy>；另一側讀數，只進兩讀數目標價")
+        f1("SIF_DeployGW_Alt_<yyyy>", y, N[f"SIF_DeployGW_Alt_{y}"], f"=co_gwa_{yy(y)}", "GW", SL + "（Wattonomics v0.3.8 換算值）", "In 頁 Z 節 co_gwa_<yy>；另一側讀數，只進兩讀數目標價")
     for y in YEARS:
         f1("SIF_DeployGW_AltRatio_<yyyy>", y, N[f"SIF_DeployGW_AltRatio_{y}"], f"=co_r_{yy(y)}", "x", SL, "In 頁 Z 節 co_r_<yy>；另一側 ÷ 現行基準")
     for y in YEARS:
