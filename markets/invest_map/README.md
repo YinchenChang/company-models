@@ -102,6 +102,7 @@ python3 markets/invest_map/build_html.py
 
 ## 版本
 
+- v0.6.56（2026-11-19）：**重抽個股模型估值**（Andy 2026-11-19 18:11「把这些依序做完」）。Siliconomics v0.21（2027 年 NVIDIA 顆數改自建估計，2026-11-18）與 v0.22（讀回 Wattonomics v0.3.8 換算值，2026-11-19）合併後地圖沒有重產，本版補上：79 家中 56 家模型隱含價改變；評等級距改變 10 家（Broadcom、Astera Labs 放空 → 強力放空；台達電、Ibiden、Advantest 中立 → 放空；Disco 放空 → 中立；智邦、雙鴻 強力買進 → 買進；光寶科、台燿 買進 → 中立）。股價日、地位分數、黃底判斷輸入與版面都沒有改。
 - v0.6.55（2026-11-17）：**跨圖標籤改為連結**（Andy 2026-11-17 14:22「just fix it」）。7 家「另見實體 AI 地圖（跨圖）」標籤（公司檔案卡片、公司檔案面板頁首、可投資性表格）點擊連到 `physical/`，拿掉「· 建置中」；方法與來源頁跨圖列同步改寫。黃底判斷讀回 v0.6.54，舊活頁簿移 `dist/_待刪除/`。**數值 0 改變**：`data.json` 只差 meta 3 項與 `cross_map` 7 家的 url、status。
 - v0.6.54（2026-11-17）：**頁首加站際切換「算力｜實體 AI｜軟體 AI」**（Andy 2026-11-17 14:00）。`template.html` 在頁首最上方加 `.site-switch`（與 AI 軟體地圖同標記與樣式），「實體 AI」連 `physical/`、「軟體 AI」連 `software_ai/`；「導覽入口」一節改寫為固定規格。黃底判斷讀回 v0.6.53，舊活頁簿移 `dist/_待刪除/`。**數值 0 改變**：`data.json` 只有 meta 的 version、book、cm_commit 3 項不同；`index.html` 只多導覽標記與樣式。
 - v0.6.53（2026-11-17）：**新增五家個股模型與 L3 機房設施**（Andy 2026-11-17 07:48「Intel、GlobalFoundries、Vertiv、ABB、TEL 補上內容與個股模型」；08:01「電力與機房範圍定案也一起做掉」）。新模型 v0.1.0（皆 11-13 收盤）：Intel `intc/`、GlobalFoundries `gfs/`、Tokyo Electron `tel/`、Vertiv `vrt/`、ABB `abb/`（股價 CHF）；`extract_models.py` SEMIS_V2 加五家、NI_LABELS 加兩個列名；候選母體升 v0.2.6（VRT、ABBN 移入新次產業「機房電力與冷卻」，五家狀態改建置中；v0.2.5 移 `data/_待刪除/`）；`build_xlsx.py` 新增層級「L3 機房設施」（占比讀 Wattonomics 現行快照 S7 廠房拆分：配電＋UPS＋冷卻＋發電機 ÷ 廠房，2027＝53.7%，不與 IT 設備相加）、掛牌「瑞士」→ CHF；`template.html` L3 廠房說明改為範圍定案文字並顯示新次產業卡片。規則見 `docs/plan/電力與機房範圍定案_20261117.md`。其餘 74 檔估值與評等 0 改變（評等統計只多出五家：放空 +4、強力放空 +1）。
