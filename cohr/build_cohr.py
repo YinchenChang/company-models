@@ -132,6 +132,11 @@ inp("q1_rev", "FY2027 Q1（2026-09 季）營收（實績）", "US$B", None, 2.37
 inp("q1_gm", "FY2027 Q1 non-GAAP 毛利率（實績）", "%", None, "=961.9/2370.3", None, "Verified", PRQ1 + "：non-GAAP 毛利 961.9 百萬美元、40.6%（GAAP 39.1%）", "原指引 39.5%–41.5%；Q2 指引 40%–42%")
 inp("q1_opx", "FY2027 Q1 non-GAAP 營業費用（實績；研發＋銷管）", "US$B", None, "=(226.7+184.9)/1000", None, "Verified", PRQ1 + "：non-GAAP 研發 226.7＋銷管 184.9 百萬美元（營業利益 550.3、23.2%）", "原指引 4.0–4.2 億；Q2 指引 4.3–4.5 億")
 inp("q1_eps", "FY2027 Q1 non-GAAP 稀釋 EPS（實績）", "US$", None, 2.09, None, "Verified", PRQ1 + "：2.09 美元（non-GAAP 歸屬淨利 422.0 百萬；GAAP 1.90）", "原指引 1.85–2.05；共識 1.93（" + BZ + "）")
+# 外部稽核優化 W2-4（2026-11-20）：Q 頁 FY2027 Q1 實績欄的利息、所得稅、歸屬淨利改填公司新聞稿實績（原為預測式 int_f/4、tx、nci/4）
+inp("q1_int", "FY2027 Q1 non-GAAP 利息與其他淨支出（實績）", "US$B", None, "=(46.3-27.2+13.9)/1000", None, "Derived", PRQ1 + "：Table 2 利息費用 46.3、其他費用（收益）淨額 −27.2 百萬美元；Table 6 排除匯兌利益 13.9 百萬美元；三項相加＝33.0",
+    "交叉核對：non-GAAP 營業利益 550.3 − 33.0＝稅前 517.3；× 19%＝98.3（與公司 non-GAAP 所得稅相同）。全年假設 int_f 不在此改")
+inp("q1_tax", "FY2027 Q1 non-GAAP 所得稅（實績）", "US$B", None, 0.0983, None, "Verified", PRQ1 + "：Table 6 non-GAAP 所得稅 98.3 百萬美元（公司採常態化稅率 19%）", "—")
+inp("q1_ni", "FY2027 Q1 non-GAAP 歸屬 Coherent 淨利（實績）", "US$B", None, 0.4220, None, "Verified", PRQ1 + "：Table 6 non-GAAP 歸屬 Coherent 淨利 422.0 百萬美元；÷ 稀釋股數 202.0 百萬股＝2.09", "GAAP 歸屬淨利 384.7 百萬美元；少數股權淨損 3.1 百萬美元")
 inp("q_cg", "通訊季增（FY2027 Q1、Q2）", "%", 0.0, 0.05, 0.10, "Assumed", "FY2026 Q4 通訊季增 11%（公司）", "v0.3：Q1 DCC 為實績，但資料中心與通訊拆分公司未揭露、法說會數字未找到，Q1 通訊仍依本假設，資料中心＝DCC − 通訊")
 inp("q_ig", "工業季增（FY2027 Q2）", "%", -0.03, 0.0, 0.03, "Assumed", F4 + "：工業剔除出售事業約持平；半導體與顯示器設備季增（公司）", "v0.3：Q1 改實績（季減 2.8%），本列只用於 Q2")
 
@@ -291,13 +296,13 @@ qrow(9, "non-GAAP 毛利", {"B": "=a25_gp_in", "C": "=a26_gp_in", "F": "=F4*q1_g
 qrow(10, "non-GAAP 毛利率", {c: f"={c}9/{c}4" for c in "BCF"}, fmt="0.0%", tag="Derived")
 qrow(11, "non-GAAP 營業費用", {"B": "=a25_opx_in", "C": "=a26_opx_in", "F": "=q1_opx"}, tag="Verified")
 qrow(12, "non-GAAP 營業利益", {c: f"={c}9-{c}11" for c in "BCF"}, tag="Derived", note="FY2026 公司揭露 1,456.9 百萬美元")
-qrow(13, "non-GAAP 利息與其他淨支出", {"B": "=a25_int_in", "C": "=a26_int_in", "F": "=int_f/4"}, tag="Verified")
-qrow(14, "non-GAAP 稅率", {"B": "=a25_tax_in/(B12-B13)", "C": "=a26_tax_in/(C12-C13)", "F": "=tx"}, fmt="0.0%", tag="Derived")
-qrow(15, "少數股權調整（歸屬淨利 −（營業利益 − 利息）×（1 − 稅率））", {"B": "=a25_ni_in-(B12-B13)*(1-B14)", "C": "=a26_ni_in-(C12-C13)*(1-C14)", "F": "=nci/4"}, tag="Derived")
-qrow(16, "non-GAAP 歸屬 Coherent 淨利", {"B": "=a25_ni_in", "C": "=a26_ni_in", "F": "=(F12-F13)*(1-F14)+F15"}, tag="Verified／Derived")
+qrow(13, "non-GAAP 利息與其他淨支出", {"B": "=a25_int_in", "C": "=a26_int_in", "F": "=q1_int"}, tag="Verified／Derived", note="FY2027 Q1＝公司新聞稿利息費用＋其他淨額（排除匯兌利益）；見 In 頁 q1_int（W2-4：原為預測式 int_f÷4＝0.020）")
+qrow(14, "non-GAAP 稅率", {"B": "=a25_tax_in/(B12-B13)", "C": "=a26_tax_in/(C12-C13)", "F": "=q1_tax/(F12-F13)"}, fmt="0.0%", tag="Derived")
+qrow(15, "少數股權調整（歸屬淨利 −（營業利益 − 利息）×（1 − 稅率））", {"B": "=a25_ni_in-(B12-B13)*(1-B14)", "C": "=a26_ni_in-(C12-C13)*(1-C14)", "F": "=q1_ni-(F12-F13)*(1-F14)"}, tag="Derived")
+qrow(16, "non-GAAP 歸屬 Coherent 淨利", {"B": "=a25_ni_in", "C": "=a26_ni_in", "F": "=q1_ni"}, tag="Verified")
 qrow(17, "優先股股利（EPS 計算扣除）", {"B": "=a25_ni_in-a25_eps_in*a25_sh_in", "C": "=0", "F": "=0"}, tag="Derived", note="FY2025 由淨利 − EPS × 股數推得；FY2026 起優先股已轉換，無扣除")
 qrow(18, "non-GAAP 稀釋股數", {"B": "=a25_sh_in", "C": "=a26_sh_in", "E": "=sh_q4", "F": "=sh_q1"}, fmt="0.0000", tag="Verified")
-qrow(19, "non-GAAP 稀釋 EPS", {c: f"=({c}16-{c}17)/{c}18" for c in "BCF"}, fmt="0.00", tag="Derived", note="FY2027 Q1 實績 2.09（模型以實績營收、毛利率、費用、股數；利息與稅率、少數股權仍為假設）")
+qrow(19, "non-GAAP 稀釋 EPS", {c: f"=({c}16-{c}17)/{c}18" for c in "BCF"}, fmt="0.00", tag="Derived", note="FY2027 Q1 實績 2.09；利息、所得稅、歸屬淨利取公司新聞稿（W2-4，2026-11-20；先前這三項用預測式，算出 2.14）")
 Q.cell(21, 1, "推導量").font = BOLD
 Q.cell(22, 1, "FY2026 營收年增"); Q["B22"] = "=C4/B4-1"
 Q.cell(23, 1, "FY2026 營業費用年增"); Q["B23"] = "=C11/B11-1"
@@ -306,7 +311,7 @@ Q.cell(25, 1, "CY2026 資料中心（FY2026 Q3＋Q4＋FY2027 Q1＋Q2；份額校
 Q.cell(26, 1, "CY2026 下半年資料中心（＝FY2027 上半年）"); Q["B26"] = "=F6+G6"
 Q.cell(27, 1, "CY2026 上半年資料中心 ÷ 全年（hw 的依據）"); Q["B27"] = "=(D6+E6)/B25"
 Q.cell(28, 1, "核對：FY2025 Q4 DCC 由年增率回推 ÷ 實績 − 1"); Q["B28"] = "=(E6/(1+q4_dy)+E7/(1+q4_cy))/q4_dcc25-1"
-Q.cell(29, 1, "FY2027 Q1 EPS（模型，實績營收、毛利率、費用）÷ 公司實績 EPS − 1"); Q["B29"] = "=F19/q1_eps-1"
+Q.cell(29, 1, "FY2027 Q1 EPS（實績各列相除）÷ 公司公告 EPS − 1（公告值取到分，差在捨入）"); Q["B29"] = "=F19/q1_eps-1"
 Q.cell(30, 1, "FY2026 資料中心 ÷ DCC"); Q["B30"] = "=C6/C5"
 for rr_, f in ((22, "0.0%"), (23, "0.0%"), (24, "0.00"), (25, "#,##0.000"), (26, "#,##0.000"), (27, "0.0%"), (28, "0.0%"), (29, "0.0%"), (30, "0.0%")): Q[f"B{rr_}"].number_format = f
 for nm, rr_ in (("rev", 4), ("dc", 6), ("com", 7), ("ind", 8), ("gp", 9), ("opx", 11), ("int", 13), ("ni", 16), ("pref", 17), ("sh", 18), ("eps", 19)):
@@ -598,8 +603,8 @@ rec("FY2027 EPS vs 共識（四季加總）", "=cons_eps27b", pl("eps", 2027), "
 rec("FY2028 營收 vs 共識", "=cons_rev28", pl("rev", 2028), "TIKR（2026-09-30）", "")
 rec("FY2028 EPS vs 共識", "=cons_eps28", pl("eps", 2028), "MarketBeat（2026-10-23）", "", key="eps28")
 RC.cell(rr_, 1, "B. 公司指引與校準").font = BOLD; rr_ += 1
-rec("FY2027 Q1 EPS（模型，實績營收、毛利率、費用）vs 公司實績 EPS", "=q1_eps", lambda s: "=Q!F19", "公司 8-K（2026-11-04）", "利息（int_f）與少數股權（nci）仍為假設：實績 non-GAAP 利息與其他 0.033 億／季、模型 0.020", key="q1")
-rec("FY2027 Q1 EPS（模型）vs 共識", "=cons_q1eps", lambda s: "=Q!F19", "Benzinga", "")
+rec("FY2027 Q1 EPS（Q 頁實績各列相除）vs 公司實績 EPS", "=q1_eps", lambda s: "=Q!F19", "公司 8-K（2026-11-04）", "Q 頁實績欄的利息、所得稅、歸屬淨利取公司新聞稿（W2-4）；實績利息與其他 0.033／季，全年假設 int_f 0.08（每季 0.020）低於此，見 Sens", key="q1")
+rec("FY2027 Q1 EPS（Q 頁實績各列相除）vs 共識", "=cons_q1eps", lambda s: "=Q!F19", "Benzinga", "")
 rec("FY2025 Q4 DCC 由年增率回推 vs 實績（季增拆分的一致性）", "=q4_dcc25", lambda s: "=E6/(1+q4_dy)+E7/(1+q4_cy)".replace("E6", "Q!E6").replace("E7", "Q!E7"), "公司", "差距小＝資料中心、通訊拆分與兩組成長率一致", fmt="#,##0.000")
 RC.cell(rr_, 1, "C. 份額與市場").font = BOLD; rr_ += 1
 rec("CY2026 Coherent＋中際旭創可插拔有效份額", None, lambda s: f"=Units!C{UR['tot']}", "Units 頁", "須低於 100%", fmt="0.0%")

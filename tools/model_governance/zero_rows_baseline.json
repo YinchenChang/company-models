@@ -2,7 +2,5 @@
  "說明": "check_zero_rows.py 的已知待修項目；只減不增。鍵＝資料夾|工作表|標籤|類別",
  "tol": 0.005,
  "tol_round": 0.2,
- "known": [
-  "smci|RevDCF|核對：以模型 WACC 代入同一公式 − DCF 頁情境 B 評價日每股價值（應為 0）|zero"
- ]
+ "known": []
 }
