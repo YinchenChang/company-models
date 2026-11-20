@@ -28,3 +28,16 @@
 ## 收支關卡評等檢查（原則第 10 節第 63 條）
 
 `python3 tools/model_governance/check_rating_gate.py <成品.xlsx>`：基準情境收支合計為負而「投資建議」為買進或強力買進時失敗（應為「收支不足」）；沒有「收支關卡」列的模型回報「不適用」。`--map markets/invest_map/dist/data.json` 盤點地圖判定關卡不通過、估值評等卻為買進以上的公司。新建與改版的個股模型在建置腳本內必跑。
+
+## 核對列與錯誤值掃描（2026-11-20 起；CI `zero-rows-check`）
+
+`python3 tools/model_governance/check_zero_rows.py --all --baseline tools/model_governance/zero_rows_baseline.json`
+
+| 檢查 | 失敗條件 |
+|---|---|
+| 核對列 | 標籤含「應為 0」的列（或「應為 0」節標題下以「核對：」「檢查：」開頭的列）有數值的絕對值超過容差（預設 0.005；標籤寫明「捨入」者 0.2） |
+| 錯誤值 | 任何工作表出現 `#REF!`、`#NAME?`、`#VALUE!`、`#DIV/0!`、`#N/A`、`#NUM!`、`#NULL!` 或 `Err:` |
+
+不判的列：以「差額」開頭（刻意揭露）、「應接近 0」（逆向 DCF 搜尋殘差）、只有部分欄或部分情境應為 0、Sens 頁。
+
+基準清單是已知待修項目，只減不增。寫新的核對列時，請讓標籤含「應為 0」，並用具名輸入或來源常數產生核對式，不要手寫會過期的數字（起因見 `docs/reports/20261120_核對列掃描與查因.md`）。
