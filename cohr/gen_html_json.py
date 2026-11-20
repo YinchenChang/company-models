@@ -104,7 +104,7 @@ SPEC = {
     ["通訊營收成長", ["q_cg", "g_com_27", "g_com_28", "g_com_29"]],
     ["工業營收（已排除出售事業）", ["q3_ind", "q4_ind", "q1_ind", "q_ig", "ind_run", "g_ind_27", "g_ind_28", "g_ind_29"]]]],
   ["全公司營運：實績錨點、毛利率與費用", [
-    ["FY2026 第三、四季與 FY2027 第一季實績", ["q3_rev", "q4_rev", "q1_rev", "q1_gm", "q1_opx", "q1_eps", "sh_q4", "sh_q1"]],
+    ["FY2026 第三、四季與 FY2027 第一季實績", ["q3_rev", "q4_rev", "q1_rev", "q1_gm", "q1_opx", "q1_int", "q1_tax", "q1_ni", "q1_eps", "sh_q4", "sh_q1"]],
     ["FY2025、FY2026 全年實績", ["a25_rev_in", "a26_rev_in", "a25_dcc_in", "a26_dcc_in", "a25_ind_in", "a26_ind_in", "a25_gp_in", "a26_gp_in",
                                "a25_opx_in", "a26_opx_in", "a25_int_in", "a26_int_in", "a25_tax_in", "a26_tax_in", "a25_ni_in", "a26_ni_in",
                                "a25_eps_in", "a26_eps_in", "a25_sh_in", "a26_sh_in"]],
@@ -122,7 +122,7 @@ SPEC = {
  "main": {"DCF 彙總": ["明確期 FCFF 現值", "終值現值", "企業價值 EV", "＋淨現金與投資", "淨現金滾到評價日", "DCF 情境價值推到 12 個月後", "DCF 目標價（情境加權）"],
           "DCF 折現率": ["股權成本", "稅後債務成本", "權益占資本", "WACC", "永續成長率", "永續期 RONIC"],
           "Comparable 計算": ["同業前瞻 P/E 中位數", "12 個月後的前瞻 EPS", "Comparable 目標價"],
-          "sheet:Recon": ["FY2027 EPS vs 共識", "FY2028 EPS vs 共識", "FY2027 Q1 EPS（模型，實績", "CY2028 Coherent＋中際旭創", "FY2027 資料中心 ÷ CY2027"]},
+          "sheet:Recon": ["FY2027 EPS vs 共識", "FY2028 EPS vs 共識", "FY2027 Q1 EPS（Q 頁實績", "CY2028 Coherent＋中際旭創", "FY2027 資料中心 ÷ CY2027"]},
 }
 # 第三輪修正 15／21：情境驅動表依 In 頁 C 欄單位格式化（% 與 pt 用百分比，避免 0.06 顯示成小數）；DCF 彙總主表直接顯示 stub 兩列
 def _uf3(r_):
