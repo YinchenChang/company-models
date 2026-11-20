@@ -30,7 +30,10 @@ def main(folder):
         print(f"展示層數字一致性（{folder}）：不適用（沒有 display_check.json）")
         return 0
     cfg = json.load(open(cp, encoding="utf-8"))
-    xs = glob.glob(os.path.join(folder, "dist", "*.xlsx")); assert len(xs) == 1, xs
+    xs = glob.glob(os.path.join(folder, "dist", "*.xlsx"))
+    if len(xs) != 1:   # 缺檔或多檔：回報，不丟例外（W2-7）
+        print(f"展示層數字一致性（{folder}）：失敗 1 項\n  - {folder}/dist 內應剛好一個 xlsx，實際 {len(xs)} 個")
+        return 1
     X = xs[0]; HT = X[:-5] + ".html"
     wb = openpyxl.load_workbook(X, data_only=True)
     hist = re.compile(cfg.get("history_re", r"^v\d"))
@@ -66,15 +69,23 @@ def main(folder):
     else:
         fail.append(f"找不到 HTML：{HT}")
     # repo README 版本表
-    md = open(os.path.join(folder, "README.md"), encoding="utf-8").read()
+    mp = os.path.join(folder, "README.md")
+    md = open(mp, encoding="utf-8").read() if os.path.exists(mp) else ""
+    if not md: fail.append(f"找不到 {mp}")
     blocks = VT.MARK.findall(md)
-    if not blocks: fail.append("repo README.md 沒有 version-table 標記（版本表須由建置輸出產生）")
-    cur = os.path.relpath(X, folder)
-    if blocks and not any(p.split("｜")[-1].strip() == cur for p, _ in blocks): fail.append(f"repo README.md 沒有以目前成品 {cur} 為最後一欄的版本表")
+    if md and not blocks: fail.append("repo README.md 沒有 version-table 標記（版本表須由建置輸出產生）")
+    cur = os.path.relpath(X, folder).replace(os.sep, "/")   # README 內一律用「/」，Windows 上也要對得上（W2-7）
+    if blocks and not any(p.split("｜")[-1].strip().replace("\\", "/") == cur for p, _ in blocks): fail.append(f"repo README.md 沒有以目前成品 {cur} 為最後一欄的版本表")
+    n_frozen = 0
     for p, body in blocks:
-        want = VT.render(folder, [x.strip() for x in p.split("｜")], cfg["table_rows"])
+        paths = [x.strip() for x in p.split("｜")]
+        gone = VT.missing(folder, paths)
+        if len(gone) == len(paths):   # 整張表引用的成品都不在工作樹（dist 只留現行版）：凍結，無從重算
+            n_frozen += 1; continue
+        want = VT.render(folder, paths, cfg["table_rows"], body)   # 不在樹上的欄沿用既有文字，只比還在的欄
         if body != want: fail.append(f"repo README.md 版本表與成品不一致：{p}")
         else: n_ok += 1
+    if n_frozen: print(f"  （版本表 {n_frozen} 個引用的舊成品都不在工作樹，已凍結未重算；舊檔在 git 歷史）")
     print(f"展示層數字一致性（{os.path.basename(X)}）：比對 {n_ok} 處；" + ("全部通過" if not fail else f"失敗 {len(fail)} 項"))
     for f in fail[:40]: print("  -", f)
     return 1 if fail else 0

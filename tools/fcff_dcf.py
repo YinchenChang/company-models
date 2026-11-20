@@ -57,6 +57,8 @@
 #
 # 只用 openpyxl；不讀寫其他資料夾。各公司版面不同，本模組只管 FCFF／WACC 區塊；列標籤沿用下游（markets/invest_map、tools/target_summary）
 # 讀取的「DCF 目標價（情境加權）」「DCF 情境價值推到 12 個月後」。
+import re
+
 from openpyxl.styles import Font, PatternFill
 from openpyxl.utils import get_column_letter
 from openpyxl.workbook.defined_name import DefinedName
@@ -443,7 +445,41 @@ def write_checks(ws, r0, px="px", nc_bs=None, nc_note=""):
     ws.cell(r, 3, f"=({px}*sh_v*(rf+beta*(erp+crp))+(debt_v+lease_v)*kd*(1-tax_w))/({px}*sh_v+debt_v+lease_v)+wacc_adj-wacc").number_format = "0.000000"
     r += 1
     if nc_bs:
-        ws.cell(r, 1, "檢查：淨現金與投資 − 資產負債表科目（應為 0）"); ws.cell(r, 2, nc_note)
+        ws.cell(r, 1, NC_CHECK_LABEL); ws.cell(r, 2, nc_note)
         ws.cell(r, 3, f"=dcf_nc-({nc_bs})").number_format = "0.000000"
         r += 1
     return r
+
+
+NC_CHECK_LABEL = "檢查：淨現金與投資 − 資產負債表科目（應為 0）"
+_A1_REF = re.compile(r"(?<![A-Za-z_!.$])\$?[A-Z]{1,3}\$?[0-9]+(?![A-Za-z_0-9(])")
+
+
+def sync_nc_check(wb, sheet="DCF", note=None):
+    """存檔前呼叫：把「淨現金與投資 − 資產負債表科目」核對式改由 In 頁五個評價輸入（cash_v、inv_v、debt_v、lease_v、mi_v）
+    當下的內容產生，不再手寫數字（外部稽核優化 W2-1；起因見 docs/reports/20261120_核對列掃描與查因.md：
+    In 頁輸入更新後，核對式裡手寫的資產負債表數字沒有跟著改）。
+
+    各輸入格是常數時寫入該常數；是公式時（例：`=h_cash+h_ms`、`=nci_bk-nci_bk_l+nci_mv_guc+nci_mv_vis`）寫入同一公式，
+    因此市值類項目讀的是股價儲存格。權益投資不乘 inv_k（核對對象是資產負債表科目合計；基準 inv_k＝1）。
+    輸入公式含未帶工作表名稱的 A1 參照時報錯（搬到 DCF 頁會指到別格）。note 給定時改寫 B 欄說明。回傳核對列的列號。"""
+    ws = wb[sheet]
+    row = next((r for r in range(1, ws.max_row + 1) if ws.cell(r, 1).value == NC_CHECK_LABEL), None)
+    if row is None:
+        raise ValueError(f"{sheet} 頁找不到核對列：{NC_CHECK_LABEL}")
+
+    def expr(name):
+        sh, ref = next(iter(wb.defined_names[name].destinations))
+        v = wb[sh][ref.replace("$", "")].value
+        if isinstance(v, str) and v.startswith("="):
+            if _A1_REF.search(v[1:]):
+                raise ValueError(f"{name} 的公式含未帶工作表名稱的儲存格參照，無法搬到 {sheet} 頁：{v}")
+            return f"({v[1:]})"
+        if isinstance(v, bool) or not isinstance(v, (int, float)):
+            raise ValueError(f"{name} 不是數值或公式：{v!r}")
+        return repr(v)
+
+    ws.cell(row, 3).value = f"=dcf_nc-({expr('cash_v')}+{expr('inv_v')}-{expr('debt_v')}-{expr('lease_v')}-{expr('mi_v')})"
+    if note is not None:
+        ws.cell(row, 2).value = note
+    return row

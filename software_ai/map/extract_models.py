@@ -162,15 +162,41 @@ SBC_LABEL = r"^(對照：)?DCF.*(加回|SBC)"
 SBC_EXCL = r"每股|價值|不加回|差|相對|−|若 DCF|情境 DCF|A／B／C|上檔"
 
 
+SCEN_HDR = re.compile(r"^情境 ?([ABC])(?![A-Za-z])")
+
+
+def header_cols(rows, i, depth=12):
+    """第 i 列（0 起算）上方 depth 列內最近的表頭列：至少三格寫「情境 A／情境 B／情境 C」。
+    回傳 {欄索引: "A"｜"B"｜"C"｜"W"}（W＝表頭含「加權」）；找不到回傳 None。
+    用途：一列有多個數值時依表頭判斷哪一欄是情境加權、哪三欄是情境值，不依欄位位置猜（外部稽核優化 W2-8）。"""
+    for j in range(i - 1, max(i - 1 - depth, -1), -1):
+        m = {}
+        for k, c in enumerate(rows[j]):
+            if k == 0 or not isinstance(c.value, str):
+                continue
+            t = c.value.strip()
+            g = SCEN_HDR.match(t)
+            if g:
+                m[k] = g.group(1)
+            elif "加權" in t and len(t) <= 12:
+                m[k] = "W"
+        if sorted(v for v in m.values() if v != "W") == ["A", "B", "C"]:
+            return m
+    return None
+
+
 def sbc_dcf(b):
     """股票薪酬加回 DCF 目標價（v0.2 起；只作對照，不進加權目標價）。
     回傳 (情境加權單值, A／B／C 三值, 說明)。先找 Val 頁，再找 Recon 頁（部分模型放對照讀數於 Recon）。
-    版面：B 單值＝情境加權；B＋C/D/E 四值＝B 為情境加權；只有 A／B／C 三值＝只回三值（不自行加權）。"""
+    一列有多個數值時先依上方表頭（情境 A／情境 B／情境 C／情境加權）定欄：表頭標「加權」的欄＝情境加權；
+    三個情境欄以外只剩一個沒有表頭的數值欄時，該欄＝情境加權（Accenture 版面）。
+    沒有表頭時才用版面慣例：B 單值＝情境加權；只有 A／B／C 三值＝只回三值（不自行加權）。"""
     wsum = abc = note = None
     for sheet in ("Val", "Recon"):
         if sheet not in b.wb.sheetnames:
             continue
-        for row in b.wb[sheet].iter_rows():
+        rows = list(b.wb[sheet].iter_rows())
+        for i, row in enumerate(rows):
             a = row[0].value
             if not isinstance(a, str) or not re.search(SBC_LABEL, a) or "目標價" not in a or re.search(SBC_EXCL, a):
                 if isinstance(a, str) and re.search(r"^情境 DCF（股票薪酬加回）目標價", a) and abc is None:
@@ -179,15 +205,29 @@ def sbc_dcf(b):
                         abc = {"values": [v for _, v in nums[:3]], "cells": [f"{sheet}!{c}" for c, _ in nums[:3]],
                                "file": b.rel, "label": a[:70]}
                 continue
-            nums = [(c.coordinate, c.value) for c in row[1:] if isinstance(c.value, (int, float)) and not isinstance(c.value, bool)]
+            idx = [k for k, c in enumerate(row) if k and isinstance(c.value, (int, float)) and not isinstance(c.value, bool)]
+            nums = [(row[k].coordinate, row[k].value) for k in idx]
             txt = [c.value for c in row[1:] if isinstance(c.value, str) and c.value.strip() in ("未找到", "未取得")]
             if not nums:
                 if txt and note is None:
                     note = txt[0].strip()
                 continue
+            hdr = header_cols(rows, i) if len(nums) > 1 else None
+            if hdr:                                            # 依表頭定欄
+                sc = {v: k for k, v in hdr.items()}
+                if abc is None and all(sc[x] in idx for x in "ABC"):
+                    abc = {"values": [row[sc[x]].value for x in "ABC"], "cells": [f"{sheet}!{row[sc[x]].coordinate}" for x in "ABC"],
+                           "file": b.rel, "label": a[:70]}
+                rest = [k for k in idx if hdr.get(k) not in ("A", "B", "C")]
+                wk = sc.get("W") if sc.get("W") in idx else (rest[0] if len(rest) == 1 and rest[0] not in hdr else None)
+                if wk is not None and wsum is None:
+                    wsum = {"value": row[wk].value, "cell": f"{sheet}!{row[wk].coordinate}", "file": b.rel, "label": a[:70]}
+                continue
             if len(nums) == 3 and nums[0][0].startswith("B") and "加權" not in a:
                 if abc is None:
                     abc = {"values": [v for _, v in nums], "cells": [f"{sheet}!{c}" for c, _ in nums], "file": b.rel, "label": a[:70]}
+                continue
+            if len(nums) > 1 and "加權" not in a:               # 多個數值、沒有表頭、標籤也沒寫加權：無法判定哪一欄，不取
                 continue
             if nums[0][0].startswith("B") and wsum is None:
                 c, v = nums[0]
@@ -197,8 +237,69 @@ def sbc_dcf(b):
     return wsum, abc, note
 
 
+AI_NET_ROW = re.compile(r"^AI 淨效果")
+AI_NET_EXCL = re.compile(r"之一|之二|之三|每客戶|每交付|每 US|累計|反解|參考|對照|A／B／C|情境 A − 情境 C|FY20\d\d")
+AI_NET_YEAR = 2032                                             # 網頁說明：命題模組的 FY2032E 情境值
+
+
+def _year_col(rows, i, year):
+    """第 i 列上方最近一個寫該年度（FY2032E、FY2032 或 2032）的表頭格：回傳 (欄索引, 表頭列索引)。"""
+    pat = re.compile(rf"^(FY)?{year}E?$")
+    for j in range(i - 1, -1, -1):
+        for k, c in enumerate(rows[j]):
+            if k and c.value is not None and not isinstance(c.value, (bool, float)) and pat.match(str(c.value).strip()):
+                return k, j
+    return None, None
+
+
+def _scenario_of(rows, i, sheet):
+    """該列屬哪個情境：先看列標籤，再往上找最近一個 A 欄寫「情境 X」的區塊標題（含工作表第 1 列，例：PL_A — 情境 A）。"""
+    for j in range(i, -1, -1):
+        t = rows[j][0].value
+        if isinstance(t, str):
+            g = re.search(r"情境 ?([ABC])(?![A-Za-z／])", t)
+            if g:
+                return g.group(1)
+    return None
+
+
+def ai_net_blocks(b):
+    """各情境各自一個區塊（或各自一張工作表）的版面：每個情境取「AI 淨效果」合計列在 FY2032E 欄的值。
+    年度欄依表頭找（不寫死欄位）；同一情境有多列時，取標籤含「營業利益」者，否則取第一列。三個情境齊全才回傳。"""
+    for sheets in (("Seg",), ("Thesis",), ("PL", "PL_A", "PL_C")):
+        got = {}
+        for sheet in sheets:
+            if sheet not in b.wb.sheetnames:
+                continue
+            rows = list(b.wb[sheet].iter_rows())
+            for i, row in enumerate(rows):
+                a = row[0].value
+                if not isinstance(a, str) or not AI_NET_ROW.match(a) or AI_NET_EXCL.search(a):
+                    continue
+                if sum(isinstance(c.value, (int, float)) and not isinstance(c.value, bool) for c in row[1:]) < 4:
+                    continue                                   # 不是年度序列
+                k, hj = _year_col(rows, i, AI_NET_YEAR)
+                s_ = _scenario_of(rows, i, sheet)
+                if k is None or s_ is None or k >= len(row) or not isinstance(row[k].value, (int, float)):
+                    continue
+                unit = row[1].value.strip() if isinstance(row[1].value, str) else None
+                if unit is None and isinstance(rows[hj][0].value, str):   # 年度表頭列 A 欄寫「US$M 除另註」者
+                    g = re.match(r"^(\S+) 除另註", rows[hj][0].value.strip())
+                    unit = g.group(1) if g else None
+                if unit and unit in a:
+                    unit = None                                # 標籤已寫單位
+                cand = {"value": row[k].value, "cell": f"{sheet}!{row[k].coordinate}", "label": a.split(" ｜")[0].strip(), "unit": unit}
+                if s_ not in got or ("營業利益" in a and "營業利益" not in got[s_]["label"]):
+                    got[s_] = cand
+        if all(x in got for x in "ABC"):
+            lab = got["B"]["label"][:48] + f"｜FY{AI_NET_YEAR}E，情境 A／B／C" + (f"（{got['B']['unit']}）" if got["B"]["unit"] else "")
+            return {"values": [got[x]["value"] for x in "ABC"], "cells": [got[x]["cell"] for x in "ABC"], "file": b.rel, "label": lab}
+    return None
+
+
 def ai_net(b):
-    """AI 淨效果（命題模組）：Val 頁標籤含「AI 淨效果」的第一列，A／B／C 三值；有則抽。"""
+    """AI 淨效果（命題模組）：先找 Val／Thesis 頁標籤含「AI 淨效果…A／B／C」的彙總列（三值）；
+    沒有彙總列時，改讀命題模組各情境區塊的「AI 淨效果」合計列在 FY2032E 欄的值（ai_net_blocks；依表頭找欄）。"""
     for sheet in ("Val", "Thesis"):
         if sheet not in b.wb.sheetnames:
             continue
@@ -209,7 +310,7 @@ def ai_net(b):
                 if len(nums) >= 3:
                     return {"values": [v for _, v in nums[:3]], "cells": [f"{sheet}!{c}" for c, _ in nums[:3]],
                             "file": b.rel, "label": a[:70]}
-    return None
+    return ai_net_blocks(b)
 
 
 def gate_block(b):

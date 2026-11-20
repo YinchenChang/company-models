@@ -425,4 +425,8 @@ for w, cols in ((wsb, {"C": 30, "D": 44, "E": 28, "K": 50}), (wsc, {"B": 30, "D"
         w.column_dimensions[k].width = v
 
 wb.save(OUT)
+# W2-6（2026-11-20）：openpyxl 寫出的公式格沒有快取值；以 LibreOffice 重算後原地存回，成品開檔即有值（tools/xlsx_recalc.py）
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "tools"))
+import xlsx_recalc  # noqa: E402
+xlsx_recalc.recalc_inplace(OUT)
 print("rows", N, "subs", NSUB, OUT)

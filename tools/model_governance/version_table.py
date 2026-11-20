@@ -4,6 +4,7 @@
 #   <!-- version-table: <xlsx 路徑 1>｜<xlsx 路徑 2>… -->
 #   （本工具產生的表格）
 #   <!-- /version-table -->
+# 引用的舊成品已不在工作樹上時（dist 只留現行版），該欄凍結：沿用 README 既有文字、不重算，只檢查還在樹上的欄（外部稽核優化 W2-7）。
 # 路徑相對於公司資料夾（例：dist/_待刪除/20261106_NVIDIA個股模型_v0.3.4.xlsx｜dist/20261111_NVIDIA個股模型_v0.3.5.xlsx），欄名取檔名中的版號。
 # 用法：python3 tools/model_governance/version_table.py <公司資料夾> [--update]（不加 --update 時只檢查：表格與成品不一致即結束碼 1）
 import json, os, re, sys
@@ -50,12 +51,31 @@ def render_cell(wb, spec):
     return s
 
 
-def render(folder, paths, rows):
-    wbs = [openpyxl.load_workbook(os.path.join(folder, p), data_only=True) for p in paths]
+def missing(folder, paths):
+    """版本表引用、但已不在工作樹上的成品（dist 只留現行版，舊版在 git 歷史；docs/plan/dist_現行版規則.md）。"""
+    return [p for p in paths if not os.path.exists(os.path.join(folder, p.replace("\\", "/")))]
+
+
+def _frozen_cols(body):
+    """把既有表格拆成 {列標題: [各欄文字]}；找不到舊成品的欄沿用既有文字（凍結，不重算）。"""
+    out = {}
+    for line in (body or "").splitlines()[2:]:
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if cells: out[cells[0]] = cells[1:]
+    return out
+
+
+def render(folder, paths, rows, body=None):
+    """產生版本表。成品檔不在工作樹上的欄不重算：沿用 body（README 既有表格）同一格的文字；body 沒有該格時寫「（成品不在工作樹）」。"""
+    gone = set(missing(folder, paths))
+    wbs = [None if p in gone else openpyxl.load_workbook(os.path.join(folder, p.replace("\\", "/")), data_only=True) for p in paths]
     vers = [re.search(r"_v(\d+(?:\.\d+)+)\.xlsx$", p).group(1) for p in paths]
+    frozen = _frozen_cols(body)
     out = ["| 項目 | " + " | ".join(f"v{v}" for v in vers) + " |", "|---|" + "---|" * len(vers)]
     for spec in rows:
-        out.append(f"| {spec['title']} | " + " | ".join(render_cell(wb, spec) for wb in wbs) + " |")
+        old = frozen.get(spec["title"], [])
+        cells = [(old[i] if i < len(old) else "（成品不在工作樹）") if wb is None else render_cell(wb, spec) for i, wb in enumerate(wbs)]
+        out.append(f"| {spec['title']} | " + " | ".join(cells) + " |")
     return "\n".join(out) + "\n"
 
 
@@ -67,7 +87,7 @@ def main(argv):
 
     def sub(m):
         paths = [p.strip() for p in m.group(1).split("｜")]
-        want = render(folder, paths, cfg["table_rows"])
+        want = render(folder, paths, cfg["table_rows"], m.group(2))
         if m.group(2) != want: bad.append(m.group(1))
         return f"<!-- version-table: {m.group(1)} -->\n{want}<!-- /version-table -->"
     new = MARK.sub(sub, md)

@@ -1,5 +1,6 @@
 # 核對列與錯誤值掃描（tools/model_governance/check_zero_rows.py；2026-11-20 起）
 # 只讀成品的快取值，不需要 LibreOffice、不呼叫 API。
+# 另跑公式格快取值檢查（tools/model_governance/check_cached_values.py）：成品的公式格沒有快取值即失敗。
 # 基準清單 tools/model_governance/zero_rows_baseline.json 列的是已知待修項目：清單外出現新的非零核對列或錯誤值即失敗；
 # 清單內的項目修好後也會失敗一次，提醒把它從清單刪掉（清單只減不增）。
 name: zero-rows-check
@@ -9,6 +10,7 @@ on:
       - "**/dist/*.xlsx"
       - "*/model/*.xlsx"
       - "tools/model_governance/check_zero_rows.py"
+      - "tools/model_governance/check_cached_values.py"
       - "tools/model_governance/zero_rows_baseline.json"
       - ".github/workflows/zero-rows-check.yml"
   push:
@@ -17,6 +19,7 @@ on:
       - "**/dist/*.xlsx"
       - "*/model/*.xlsx"
       - "tools/model_governance/check_zero_rows.py"
+      - "tools/model_governance/check_cached_values.py"
       - "tools/model_governance/zero_rows_baseline.json"
       - ".github/workflows/zero-rows-check.yml"
 jobs:
@@ -30,3 +33,6 @@ jobs:
       - run: pip install openpyxl
       - name: 核對列與錯誤值掃描
         run: python3 tools/model_governance/check_zero_rows.py --all --baseline tools/model_governance/zero_rows_baseline.json
+      # W2-6（2026-11-20）：公式格都要有快取值（openpyxl 直接寫出、未經重算的成品會被擋下；刻意回傳空字串的格不算）
+      - name: 公式格快取值檢查
+        run: python3 tools/model_governance/check_cached_values.py --all
