@@ -1024,4 +1024,6 @@ if _CR:
     _vr6 = _vr6[0]
     assert str(_RD6.cell(_vr6, 1).value).startswith("v0.5.5（"), _RD6.cell(_vr6, 1).value
     _RD6.cell(_vr6, 1).value = PX1113_ROW + "上一版：" + _RD6.cell(_vr6, 1).value
+# 外部稽核優化 W2-1（2026-11-20）：淨現金核對式改由 In 頁輸入的來源式產生，不再手寫資產負債表數字（數值不變）
+FD.sync_nc_check(wb, note="2026-09-30 資產負債表（NT$B；3Q26 Management Report 與合併財報）：現金與有價證券 4,016.98＋長期投資 224.633 − 有息負債 1,031.58 − 租賃 36.882（2026-06-30）− 非控制權益（帳面 45.326，其中創意、采鈺改市值：股價 px_guc、px_vis × 股數 ×（1 − 台積電持股））；核對式由 In 頁 cash_v、inv_v、debt_v、lease_v、mi_v 的來源式產生（tools/fcff_dcf.py sync_nc_check）")
 wb.save(sys.argv[1]); print("saved")

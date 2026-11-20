@@ -92,6 +92,9 @@ def cell(b, sheet, c, v):
 V2_TP = r"^目標價（DCF 與 Comparable 加權）"
 V2_DCF = r"^DCF 目標價（情境加權）"
 V2_COMP = r"^Comparable 目標價（(市場主流同業法|未調整，情境加權)）"   # v0.6.40：CoreWeave v5.0（Oracle 收支型樣板）寫「未調整，情境加權」
+# W2-8（2026-11-20）：tp_comp 是未調整的市場主流同業法（並列用，不進加權）；進加權的是相對倍數調整後的值，另抽成 tp_comp_adj。
+# 沒有「調整後」列的模型（調整係數＝1 或樣板未分列）不產生 tp_comp_adj。
+V2_COMP_ADJ = r"^(② )?Comparable 目標價（(相對倍數調整後|情境加權；相對倍數調整後)"
 V2_CONS = r"^市場共識目標價(?!.*歷史對照)"   # v0.6.40：只作歷史對照的舊共識（CoreWeave v5.0）不讀
 V2_SCEN12 = r"DCF 情境價值推到( 12 個月後|目標價時點)"          # A／B／C 三欄（部分樣板無此列 → 改讀價格帶）
 V2_BAND = r"^價格帶（DCF 不如預期～順利）"          # 數值版：C 情境、A 情境
@@ -137,6 +140,11 @@ def semis_v2(b):
                 continue
             raise
         out[k] = cell(b, "Val", c, v)
+    try:
+        c, v = first_num_row(b, "Val", V2_COMP_ADJ)[0]
+        out["tp_comp_adj"] = cell(b, "Val", c, v)
+    except KeyError:
+        pass
     try:
         c, v = first_num_row(b, "Val", V2_OLD)[0]
         out["old_rule"] = cell(b, "Val", c, v)
@@ -368,7 +376,7 @@ def main():
             return cell(ba, sh, c, ba.wb[sh][c].value)
         out["Anthropic"].update({"unlisted": False, "v2": True, "ipo": True,
                                  "tp": nm("VAL_TP_W"), "tp_dcf": nm("VAL_TP_DCF"), "tp_comp": nm("VAL_TP_CompAdj"),
-                                 "tp_comp_main": nm("VAL_TP_CompMain"), "dcf_A": nm("VAL_TP_DCF_A"), "dcf_C": nm("VAL_TP_DCF_C"),
+                                 "tp_comp_adj": nm("VAL_TP_CompAdj"), "tp_comp_main": nm("VAL_TP_CompMain"), "dcf_A": nm("VAL_TP_DCF_A"), "dcf_C": nm("VAL_TP_DCF_C"),
                                  "up": nm("VAL_Up_W"), "up_comp": nm("VAL_Up_CompMain"), "rec": nm("VAL_Rating"),
                                  "model_px": dict(nm("VAL_Px"), date="2026-11-10")})
         out["Anthropic"]["model_px"]["value"] = out["Anthropic"]["model_px"]["value"]

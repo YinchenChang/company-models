@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-17",
+ "generated": "2026-11-20",
  "models": {
   "SNOW": {
    "folder": "snowflake",
@@ -124,10 +124,21 @@
     "label": "DCF 情境目標價（12 個月後；SBC 加回；US$）"
    },
    "sbc_note": null,
-   "ai_net": null,
-   "missing": [
-    "ai_net"
-   ],
+   "ai_net": {
+    "values": [
+     5021.73026636432,
+     2474.0039534762,
+     -460.551746465996
+    ],
+    "cells": [
+     "Seg!K36",
+     "Seg!K65",
+     "Seg!K94"
+    ],
+    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.2.xlsx",
+    "label": "AI 淨效果（AI 營收增量−核心侵蝕−推論成本）｜FY2032E，情境 A／B／C（US$M）"
+   },
+   "missing": [],
    "relmult": {
     "file": "software_ai/data/relmult_hist/out/snowflake.json",
     "generated": "2026-11-17",
@@ -400,10 +411,22 @@
    },
    "sbc_abc": null,
    "sbc_note": null,
-   "ai_net": null,
+   "ai_net": {
+    "values": [
+     1233.64762765064,
+     785.160288360288,
+     387.364935572038
+    ],
+    "cells": [
+     "Seg!L63",
+     "Seg!L40",
+     "Seg!L86"
+    ],
+    "file": "software_ai/palantir/dist/20261117_Palantir個股模型_v0.2.3.xlsx",
+    "label": "AI 淨效果＝增量＋侵蝕－增量推論成本｜FY2032E，情境 A／B／C（US$M）"
+   },
    "missing": [
-    "scen",
-    "ai_net"
+    "scen"
    ],
    "relmult": {
     "file": "software_ai/data/relmult_hist/out/palantir.json",
@@ -534,10 +557,22 @@
    },
    "sbc_abc": null,
    "sbc_note": null,
-   "ai_net": null,
+   "ai_net": {
+    "values": [
+     3837.94452427838,
+     410.452269019304,
+     -1797.55070432419
+    ],
+    "cells": [
+     "Thesis!K30",
+     "Thesis!K62",
+     "Thesis!K94"
+    ],
+    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.1.xlsx",
+    "label": "AI 淨效果（US$M）＝AI 增量營收 + 定價侵蝕 − 增量推論成本｜FY2032E，情境 A／B／C"
+   },
    "missing": [
-    "scen",
-    "ai_net"
+    "scen"
    ],
    "relmult": {
     "file": "software_ai/data/relmult_hist/out/crowdstrike.json",
@@ -702,10 +737,21 @@
     "label": "情境 DCF（股票薪酬加回）目標價 A／B／C"
    },
    "sbc_note": null,
-   "ai_net": null,
-   "missing": [
-    "ai_net"
-   ],
+   "ai_net": {
+    "values": [
+     4060.01860507443,
+     1611.76737491406,
+     -1447.01112771253
+    ],
+    "cells": [
+     "PL_A!K40",
+     "PL!K40",
+     "PL_C!K40"
+    ],
+    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx",
+    "label": "AI 淨效果（增量 − 侵蝕 − 推論成本）｜FY2032E，情境 A／B／C（US$M）"
+   },
+   "missing": [],
    "relmult": {
     "file": "software_ai/data/relmult_hist/out/paloalto.json",
     "generated": "2026-11-17",
@@ -840,10 +886,21 @@
    },
    "sbc_abc": null,
    "sbc_note": null,
-   "ai_net": null,
-   "missing": [
-    "ai_net"
-   ],
+   "ai_net": {
+    "values": [
+     32.4013373300894,
+     -2.65937846767639,
+     -52.4006822733897
+    ],
+    "cells": [
+     "PL!L20",
+     "PL!L69",
+     "PL!L118"
+    ],
+    "file": "software_ai/trendmicro/dist/20261117_趨勢科技個股模型_v0.2.1.xlsx",
+    "label": "AI 淨效果（增量 − 侵蝕 − 推論成本）｜FY2032E，情境 A／B／C（¥B）"
+   },
+   "missing": [],
    "relmult": {
     "file": "software_ai/data/relmult_hist/out/trendmicro.json",
     "generated": "2026-11-17",
@@ -987,10 +1044,21 @@
    },
    "sbc_abc": null,
    "sbc_note": null,
-   "ai_net": null,
-   "missing": [
-    "ai_net"
-   ],
+   "ai_net": {
+    "values": [
+     8309.93436233996,
+     -219.580635984445,
+     -7025.30989030429
+    ],
+    "cells": [
+     "Seg!K20",
+     "Seg!K42",
+     "Seg!K64"
+    ],
+    "file": "software_ai/salesforce/dist/20261117_Salesforce個股模型_v0.2.3.xlsx",
+    "label": "AI 淨效果（增量 − 侵蝕 − 推論成本）｜FY2032E，情境 A／B／C（US$M）"
+   },
+   "missing": [],
    "relmult": {
     "file": "software_ai/data/relmult_hist/out/salesforce.json",
     "generated": "2026-11-17",
@@ -1123,10 +1191,22 @@
    },
    "sbc_abc": null,
    "sbc_note": null,
-   "ai_net": null,
+   "ai_net": {
+    "values": [
+     -22.0757981944782,
+     -460.43594740819,
+     -969.737632886788
+    ],
+    "cells": [
+     "Thesis!L39",
+     "Thesis!L72",
+     "Thesis!L105"
+    ],
+    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx",
+    "label": "AI 淨效果（US$M）＝按任務營收 − 席位取代損失 − 增量推論成本｜FY2032E，情境 A／B／C"
+   },
    "missing": [
-    "scen",
-    "ai_net"
+    "scen"
    ],
    "relmult": {
     "file": "software_ai/data/relmult_hist/out/hubspot.json",
@@ -1263,12 +1343,36 @@
     "file": "software_ai/accenture/dist/20261117_Accenture個股模型_v0.2.3.xlsx",
     "label": "DCF（股票薪酬加回）情境目標價（US$；12 個月後）"
    },
-   "sbc_abc": null,
+   "sbc_abc": {
+    "values": [
+     261.233894725574,
+     228.208897921572,
+     157.683966901238
+    ],
+    "cells": [
+     "Val!C106",
+     "Val!D106",
+     "Val!E106"
+    ],
+    "file": "software_ai/accenture/dist/20261117_Accenture個股模型_v0.2.3.xlsx",
+    "label": "DCF（股票薪酬加回）情境目標價（US$；12 個月後）"
+   },
    "sbc_note": null,
-   "ai_net": null,
-   "missing": [
-    "ai_net"
-   ],
+   "ai_net": {
+    "values": [
+     5604.06326320918,
+     -2875.50365229402,
+     -17482.9129371096
+    ],
+    "cells": [
+     "Seg!K18",
+     "Seg!K44",
+     "Seg!K70"
+    ],
+    "file": "software_ai/accenture/dist/20261117_Accenture個股模型_v0.2.3.xlsx",
+    "label": "AI 淨效果（增量 − 侵蝕 − 推論成本）｜FY2032E，情境 A／B／C（US$M）"
+   },
+   "missing": [],
    "relmult": {
     "file": "software_ai/data/relmult_hist/out/accenture.json",
     "generated": "2026-11-17",
@@ -1393,10 +1497,22 @@
    "sbc_dcf": null,
    "sbc_abc": null,
    "sbc_note": "未找到",
-   "ai_net": null,
+   "ai_net": {
+    "values": [
+     254974.729433822,
+     -31578.4244540103,
+     -527279.580070139
+    ],
+    "cells": [
+     "Seg!K18",
+     "Seg!K42",
+     "Seg!K66"
+    ],
+    "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.3.xlsx",
+    "label": "AI 淨效果（增量 − 侵蝕 − 推論成本）｜FY2032E，情境 A／B／C（¥百萬）"
+   },
    "missing": [
-    "sbc_dcf",
-    "ai_net"
+    "sbc_dcf"
    ],
    "relmult": {
     "file": "software_ai/data/relmult_hist/out/fujitsu.json",
@@ -1526,17 +1642,41 @@
     "label": "情境目標價 A／B／C（加權＝w×DCF＋(1−w)×Comparable）"
    },
    "sbc_dcf": {
-    "value": 6739.28030526059,
-    "cell": "Recon!B28",
+    "value": 5639.95526869894,
+    "cell": "Recon!E28",
     "file": "software_ai/nri/dist/20261117_野村總研個股模型_v0.2.2.xlsx",
     "label": "DCF（股票薪酬加回）目標價（目標時點，日圓）"
    },
-   "sbc_abc": null,
+   "sbc_abc": {
+    "values": [
+     6739.28030526059,
+     5655.00674961359,
+     4510.52727030798
+    ],
+    "cells": [
+     "Recon!B28",
+     "Recon!C28",
+     "Recon!D28"
+    ],
+    "file": "software_ai/nri/dist/20261117_野村總研個股模型_v0.2.2.xlsx",
+    "label": "DCF（股票薪酬加回）目標價（目標時點，日圓）"
+   },
    "sbc_note": null,
-   "ai_net": null,
-   "missing": [
-    "ai_net"
-   ],
+   "ai_net": {
+    "values": [
+     3.9614718381627,
+     -46.1479420636398,
+     -111.521419189818
+    ],
+    "cells": [
+     "Thesis!M51",
+     "Thesis!M70",
+     "Thesis!M89"
+    ],
+    "file": "software_ai/nri/dist/20261117_野村總研個股模型_v0.2.2.xlsx",
+    "label": "AI 淨效果（營收口徑）＝AI 新專案增量 − 價格侵蝕 − 推論成本｜FY2032E，情境 A／B／C（¥B）"
+   },
+   "missing": [],
    "relmult": {
     "file": "software_ai/data/relmult_hist/out/nri.json",
     "generated": "2026-11-17",
@@ -1674,10 +1814,21 @@
    },
    "sbc_abc": null,
    "sbc_note": null,
-   "ai_net": null,
-   "missing": [
-    "ai_net"
-   ],
+   "ai_net": {
+    "values": [
+     14184.8473119007,
+     7795.40372228825,
+     1251.41761246074
+    ],
+    "cells": [
+     "Thesis!L23",
+     "Thesis!L34",
+     "Thesis!L45"
+    ],
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.3.xlsx",
+    "label": "AI 淨效果（營業利益口徑）｜FY2032E，情境 A／B／C（US$M）"
+   },
+   "missing": [],
    "relmult": {
     "file": "software_ai/data/relmult_hist/out/applovin.json",
     "generated": "2026-11-17",

@@ -677,6 +677,11 @@ def main():
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     wb.save(OUT)
+    # W2-6（2026-11-20）：openpyxl 寫出的公式格沒有快取值；以 LibreOffice 重算後原地存回，成品開檔即有值（tools/xlsx_recalc.py）
+    import sys
+    sys.path.insert(0, os.path.join(HERE, "..", "..", "tools"))
+    import xlsx_recalc
+    xlsx_recalc.recalc_inplace(OUT)
     print("寫出", OUT)
 
 

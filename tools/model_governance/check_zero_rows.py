@@ -14,7 +14,8 @@
 #       不算的列：文字以「差額」開頭（刻意揭露兩種推法差距，見 tools/memory_model/v13_post.py）；
 #       「應接近 0」（逆向 DCF 的搜尋殘差，落在搜尋下界時不為 0）；Sens 頁（建置快照，重複 PL 頁的核對列）。
 #       只有部分欄或部分情境應為 0、「A vs B」並列原值、明寫「非應為 0」的列也不判（無法逐列自動判定）。
-#       列內任一數值的絕對值 > tol 即失敗。標籤自己寫明「捨入」的列用 --tol-round（來源數字四捨五入）。
+#       列內任一數值的絕對值 > tol 即失敗。標籤寫「捨入」或「四捨五入」的列用 --tol-round（來源數字四捨五入）；
+#       標籤寫明容差數字（例：「四捨五入差 < 0.01」）時用標籤的數字。
 #   錯誤值＝任何工作表、任何儲存格的快取值為 #REF!、#NAME?、#VALUE!、#DIV/0!、#N/A、#NUM!、#NULL! 或以 Err: 開頭。
 import argparse, glob, json, os, re, sys
 import openpyxl
@@ -22,9 +23,20 @@ import openpyxl
 LABEL = re.compile(r"應為\s*[0０]")
 # 無法逐列自動判定的寫法：只有部分欄或部分情境應為 0、「A vs B」並列原值與差、明寫「非應為 0」
 PARTIAL = re.compile(r"非應為|[A-Z]\s*[–-]\s*[A-Z]\s*應為|情境\s*[ABC]\s*應為|\bvs\b")
+# 來源數字四捨五入造成的差：「捨入」或「四捨五入」；後面接「差 < 數字」時，該數字就是這一列的容差（W2-3）
+ROUNDING = re.compile(r"捨入|四捨五入")
+DECLARED = re.compile(r"(?:捨入|四捨五入)差?\s*[<＜≤]\s*([0-9]*\.?[0-9]+)")
 PREFIX = ("核對：", "檢查：", "核對:", "檢查:")
 ERRS = ("#REF!", "#NAME?", "#VALUE!", "#DIV/0!", "#N/A", "#NUM!", "#NULL!")
 SKIP_DIR = ("_待刪除", "archive", "legacy")
+
+
+def declared_tol(label, tol, tol_round):
+    """標籤自己寫明容差時用標籤的值（例：「四捨五入差 < 0.01」→ 0.01）；只寫「捨入」或「四捨五入」而沒有數字時用 tol_round；其餘用 tol。"""
+    m = DECLARED.search(label)
+    if m:
+        return float(m.group(1))
+    return tol_round if ROUNDING.search(label) else tol
 
 
 def is_check_label(s):
@@ -60,7 +72,7 @@ def scan(path, tol, tol_round):
                 block = False
             if not (has0 or in_block) or not nums:
                 continue
-            t = tol_round if "捨入" in first else tol
+            t = declared_tol(first, tol, tol_round)
             worst = max(nums, key=abs)
             if abs(worst) > t:
                 out.append(("zero", ws.title, r, first[:60], worst))

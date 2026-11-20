@@ -41,3 +41,22 @@
 不判的列：以「差額」開頭（刻意揭露）、「應接近 0」（逆向 DCF 搜尋殘差）、只有部分欄或部分情境應為 0、Sens 頁。
 
 基準清單是已知待修項目，只減不增。寫新的核對列時，請讓標籤含「應為 0」，並用具名輸入或來源常數產生核對式，不要手寫會過期的數字（起因見 `docs/reports/20261120_核對列掃描與查因.md`）。
+
+容差：標籤寫「捨入」或「四捨五入」的列用 `--tol-round`；標籤寫明數字（例：「四捨五入差 < 0.01」）時用標籤的數字（2026-11-20 第二波 W2-3）。
+
+淨現金核對列的寫法：建置腳本存檔前呼叫 `tools/fcff_dcf.py` 的 `sync_nc_check(wb)`，核對式由 In 頁 `cash_v`、`inv_v`、`debt_v`、`lease_v`、`mi_v` 當下的內容產生（台積電、智邦、Astera Labs 已改；其餘模型仍是 `write_checks(nc_bs=…)` 的手寫數字，改版時一併換）。
+
+## 公式格快取值檢查（`check_cached_values.py`；2026-11-20 第二波 W2-6）
+
+`python3 tools/model_governance/check_cached_values.py --all`（CI `zero-rows-check` 的第二步）
+
+成品的公式格沒有快取值即失敗。openpyxl 直接寫出的檔沒有計算結果；存進 `dist/` 前要經 LibreOffice 重算。直接由腳本存檔的活頁簿（兩本地圖活頁簿）在存檔後呼叫 `tools/xlsx_recalc.py` 的 `recalc_inplace(路徑)`。公式重算後回傳空字串的格不算失敗。
+
+## 其他檢查遇到不適用的檔案時（2026-11-20 第二波 W2-7、W2-9）
+
+| 檢查 | 情況 | 行為 |
+|---|---|---|
+| `check_display.py` | `dist/` 內不是剛好一個 xlsx、找不到 README.md | 回報失敗項目，不丟例外 |
+| `check_display.py`、`version_table.py` | README 版本表引用的舊成品已不在工作樹（`dist/` 只留現行版） | 該欄凍結：沿用 README 既有文字，只檢查還在樹上的欄；整張表都不在時略過並列出數量 |
+| `check_display.py` | 路徑分隔符 | 一律以「/」比對，Windows 上也對得上 |
+| `check_governance.py` | 活頁簿沒有 In 頁（OpenAI、Anthropic、MiniMax、智譜的模型商結構） | 回報「不適用」，結束碼 0 |

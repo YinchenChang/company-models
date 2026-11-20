@@ -1179,6 +1179,8 @@ if COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL):
     if os.environ.get("COORD_RUN") != "1":
         import px1113_post  # noqa: E402   v0.3.9：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
         print(px1113_post.apply(wb))
+# 外部稽核優化 W2-1（2026-11-20）：淨現金核對式改由 In 頁輸入的來源式產生，不再手寫資產負債表數字（數值不變）
+FD.sync_nc_check(wb, note="3Q26 資產負債表（US$B；公司 10-Q，Hist 頁）：現金 0.209396＋有價證券 1.168847 − 營業租賃負債 0.044993（流動 0.006984＋非流動 0.038009；無借款、無非控制權益）；核對式由 In 頁 cash_v、inv_v、debt_v、lease_v、mi_v 的來源式產生（tools/fcff_dcf.py sync_nc_check）")
 wb.save(sys.argv[1])
 if os.environ.get("ALAB_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

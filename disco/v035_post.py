@@ -159,7 +159,9 @@ def pl_standard(wb, HR, CR, PB):
     P.cell(r, 1, "核對（應為 0；歷史欄為決算短信捨入）").font = BOLD; r_chk = r; r += 1
     row("c1", "核對：營收 − 營業成本 − 毛利", "¥B", [f"={c}{L['rev']}-{c}{L['cogs']}-{c}{L['gp']}" for c in COLS], "0.000")
     row("c2", "核對：毛利 − 營業費用 − 營業利益", "¥B", [f"={c}{L['gp']}-{c}{L['opx']}-{c}{L['oi']}" for c in COLS], "0.000")
-    row("c3", "核對：稅前利益 − 所得稅 − 稅後淨利（歷史欄＝非控制權益，約 0.1）", "¥B", [f"={c}{L['pti']}-{c}{L['tax']}-{c}{L['ni']}" for c in COLS], "0.000")
+    # 外部稽核優化 W2-3（2026-11-20）：歷史欄扣 HistIS 頁的非控制權益列，整列應為 0（原式歷史欄留下非控制權益 0.007／0.185／0.083，標籤寫「約 0.1」）
+    row("c3", "核對：稅前利益 − 所得稅 − 非控制權益 − 稅後淨利（歷史欄的非控制權益取 HistIS 頁，為相減的 Derived 值；預測欄無非控制權益）", "¥B",
+        [f"={c}{L['pti']}-{c}{L['tax']}-HistIS!{HC[c]}{HR['mi']}-{c}{L['ni']}" for c in "CDE"] + [f"={c}{L['pti']}-{c}{L['tax']}-{c}{L['ni']}" for c in COLS[3:]], "0.000")
     row("c4", "核對：營業利益 − DCF 頁情境 B 的 EBIT（FY2026E–FY2032E）", "¥B", [None] * 3 + [f"={c}{L['oi']}-DCF!{DCOL[c]}{d_ebit}" for c in "FGHIJKL"], "0.000")
     row("c5", "核對：稅後淨利 − PL 情境 B（FY2026E–FY2029E）／延伸表（FY2030E–FY2032E）", "¥B", [None] * 3 + [f"={c}{L['ni']}-PL!{PC4[c]}{R['ni']}" for c in "FGHI"] + [f"={c}{L['ni']}-PL!{EC[c]}{X['ni']}" for c in "JKL"], "0.000")
     row("c6", "核對：營收 − PL 情境 B（FY2026E–FY2029E）／延伸表（FY2030E–FY2032E）", "¥B", [None] * 3 + [f"={c}{L['rev']}-PL!{PC4[c]}{R['rev']}" for c in "FGHI"] + [f"={c}{L['rev']}-PL!{EC[c]}{X['rev']}" for c in "JKL"], "0.000")

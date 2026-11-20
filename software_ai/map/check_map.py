@@ -145,6 +145,10 @@ def main():
     for xp in glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), "dist", "*.xlsx")):
         with zipfile.ZipFile(xp) as z:
             t = "".join(z.read(n).decode("utf-8", "ignore") for n in z.namelist() if n.endswith(".xml"))
+        # W2-6（2026-11-20）：活頁簿改為重算後存檔，文字移到 sharedStrings.xml 後本檢查才真的讀得到儲存格文字
+        # （openpyxl 直接寫出的檔，中文以字元參照存在工作表 XML 內，下面的字串比對原本比不到）。
+        # 「說明」頁既有的『可投資性』頁是指算力地圖的分頁名稱，不是個人情境，排除這一個詞後再比對。
+        t = t.replace("『可投資性』頁", "")
         h = [b for b in personal if b in t]
         if h: xh[os.path.basename(xp)] = h
     ok(not xh, "地圖活頁簿不含個人情境字樣" + (f"：{xh}" if xh else ""))

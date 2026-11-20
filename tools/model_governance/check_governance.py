@@ -4,6 +4,7 @@
 #   3. 標記：In 頁 G 欄、Q 頁「標記」欄每格只能是單一主要標記（Verified／Interested-party／Analogy／Assumed／Derived／—）；
 #      來源字串以「…；Derived）」或「…；Interested-party）」結尾（事實總帳標記）時，主要標記不得為 Verified。
 #   4. Interested-party 列須有「來源誘因」欄文字（欄名含「來源誘因」者；沒有此欄＝失敗）。
+#   活頁簿沒有 In 頁（模型商結構）時回報「不適用」、結束碼 0。
 # 用法：python3 tools/model_governance/check_governance.py <重算後 xlsx> [--html <成品 html>] [--display <公司資料夾>]；失敗時結束碼 1。
 #   --display：另跑展示層數字一致性檢查（check_display.py，原則第 10 節第 51 條；需 <公司>/display_check.json）。
 import re, sys
@@ -14,6 +15,11 @@ args = sys.argv[1:]
 X = args[0]; HTML = args[args.index("--html") + 1] if "--html" in args else None
 wb = openpyxl.load_workbook(X, data_only=True)
 fail = []
+# 模型商活頁簿（OpenAI、Anthropic、MiniMax、智譜）沿用 openai/ 的結構：Inputs／SRC_*／Checks，沒有 In 頁與 Sens 的 build_id 列。
+# 本檢查的四項都以 In 頁版面為前提，對這種結構回報「不適用」並以 0 結束，不丟例外（外部稽核優化 W2-9）。
+if "In" not in wb.sheetnames:
+    print(f"治理核對：不適用（{X}：沒有 In 頁，屬模型商活頁簿結構；該類模型的核對在其 Checks 頁與 parity CI）")
+    sys.exit(0)
 
 
 def row_of(ws, prefix):
