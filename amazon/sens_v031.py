@@ -90,14 +90,14 @@ if all(f"chain|{k}" in res for k in ("S0", "S1", "S2", "S3", "P")):
     v032 = 217.650781868569   # v0.3.2（TK 快照 v21.9）基準＝v0.3.1
     ch = [("v0.3.2", v032)] + [(k, res[f"chain|{k}"]["tp"]) for k in ("S0", "S1", "S2", "S3", "P")] + [("v0.3.3＋同業換價", res["base|base"]["tp"])]
     labs = ["殘差：10-Q 值全部改回後 − v0.3.2（應為 0）", "(a) 債務面額 181.09 → 180.89", "(b) 融資租賃 13.45 → 14.50",
-            "(c) 融資義務 11.07（含利息）→ 9.73（本金）", "(d) 2026Q3 分部折舊：推導 → 10-Q", "(e) 同業倍數 2026-10-07／10-08 → 2026-11-13（v0.3.8 原地換價）"]
+            "(c) 融資義務 11.07（含利息）→ 9.73（本金）", "(d) 2026Q3 分部折舊：推導 → 10-Q", "(e) 同業倍數 2026-10-07／10-08 → 2026-11-20（v0.3.8、v0.3.9 原地換價）"]
     steps = [{"item": labs[i], "from": ch[i][0], "to": ch[i + 1][0], "tp_from": ch[i][1], "tp_to": ch[i + 1][1], "delta": ch[i + 1][1] - ch[i][1]} for i in range(6)]
     other = {}
     for kk in ("tp1", "tpB", "gateB", "gateW", "awsm28B", "cx27B"):
         other[kk] = {k: res[f"chain|{k}"][kk] for k in ("S0", "S1", "S2", "S3", "P")}
         other[kk]["v0.3.3"] = res["base|base"][kk]
     bo = {"_readme": "Amazon v0.3.2 → v0.3.3 加權目標價變動拆解（10-Q 補入；逐步重建鏈，amazon/sens_v031.py chain|S0–S3 的整本重算值）。"
-                     "S0＝10-Q 值全部改回 v0.3.2；S1＝(a) 後；S2＝(b) 後；S3＝(c) 後；P＝(d) 後（本版輸入、同業倍數用 2026-10-07／10-08 原值）；(e)＝本版（同業倍數換 2026-11-13）− P。",
+                     "S0＝10-Q 值全部改回 v0.3.2；S1＝(a) 後；S2＝(b) 後；S3＝(c) 後；P＝(d) 後（本版輸入、同業倍數用 2026-10-07／10-08 原值）；(e)＝本版（同業倍數換 2026-11-20）− P。",
           "chain": dict(ch), "chain_sets": {k: res[f"chain|{k}"]["set"] for k in ("S0", "S1", "S2", "S3", "P")}, "steps": steps, "other_outputs": other,
           "total": ch[-1][1] - v032, "sum_check": sum(x["delta"] for x in steps) - (ch[-1][1] - v032)}
     json.dump(bo, open(os.path.join(HERE, "data", "bridge_v033.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)

@@ -1,0 +1,10 @@
+folder=amazon
+version=v0.3.8 -> v0.3.9
+px=266.66 -> 246.82
+tp=228.65 -> 216.93
+upside=-14.3% -> -12.1%
+rating=中立 -> 中立
+peers_repriced=17
+peers_unchanged=無
+checks=make_v031.sh（facts_2026q3、敏感度整本重跑、check_v03、in_layout、mag/check_in_layout、sens_coverage --require-keycol、segment_check、check_company_html）全過；check_layout_v13 通過（僅全頁參數代號警告，同前版）；tools/baseline_coordination/check.py 0 項不符；重算後公式錯誤 0；Sens 基準與 Val 加權目標價差 0（快照未過期）。前版即有的警告：Val 頁缺「橫幅：自用 AI 讀法」列。
+notes=同業 17 家（雲端 8、廣告 6、零售 3）皆以 11-13→11-20 收盤比換倍數，中位數 雲端 14.66→12.79、廣告 8.54→7.35、零售 20.99→20.97；Comparable 目標價 309.96→286.52，DCF 147.33 不變。WACC 權益權重用 px_val（10-30 收盤 240.35）依設計不隨現價換。amazon/dist 內舊 v0.3.8 兩檔已刪除（未放 _待刪除）。Coord 快照檢查通過，未重跑 alt_run。
