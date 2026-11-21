@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 24,
+ "duration_ms": 250984,
+ "total_cost_usd": 0.36613179999999995,
+ "result": "景碩（`kinsus/`）已換成 2026-11-20 收盤並升到 v0.4.6，xlsx 與 HTML 都重建完成（日期 20261121），舊 dist 已移除。沒有 commit。\n\n- **現價：** 668 → 470。\n- **加權目標價：** 691.94 → 524.86。\n- **上檔空間：** +3.6% → +11.7%。\n- **評等：** 中立 → 中立。\n- **同業：** 5 家都有換價，中位數 30.59 → 20.93，沒有未換價同業。\n- **舊值差異：** 舊值取自前版成品的重算值，與 v0.4.5 README 寫的 711.56 不同（之後上游模型重建所致）。README 已註明。\n- **未換價輸入：** 晶碩（6491.TW）市值輸入 399.5 不在價格檔，維持原值。上一次換價（px1113）也沒換。\n- **檢查：** `check_company_html`、`check_layout_v13` 和 `baseline_coordination/check.py`（0 項不符）都通過，重算錯誤格 0，Sens 與 Coord 快照已重跑。\n- **前版就沒過的項目：** `check_sens_coverage` 沒過（69 個鍵找不到 Sens 表頭）。輸出與前版相同，只有 β 數值不同，已寫進 note。\n\n改動的檔案：新增 `px1120_post.py`、`px1120_note.txt`；修改 `build_kinsus.py`、`gen_html_json.py`（版號檢查改 v0.4.6）、`README.md`、`sens.json`、`coord_alt.json`。",
+ "error": null,
+ "stderr": null
+}
