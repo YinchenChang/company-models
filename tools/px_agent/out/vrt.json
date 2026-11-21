@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 17,
+ "duration_ms": 114608,
+ "total_cost_usd": 0.28578400000000004,
+ "result": "VRT 已換成 2026-11-20 收盤，版號 v0.1.0 → v0.1.1，xlsx 和 HTML 都重建好了。\n\n| 項目 | 前 | 後 |\n|---|---|---|\n| 現價 | 202.07 | 166.24 |\n| 同業前瞻 P/E 中位數 | 23.26 | 18.29 |\n| 加權目標價 | 141.57 | 120.21 |\n| 上檔空間 | −29.9% | −27.7% |\n| 評等 | 放空 | 放空（模型公式重算） |\n\n- **前一版沒有 px1113 步驟：** v0.1.0 當初就是用 11-13 收盤建的，所以舊報價日是 11-13。\n- **同業換價：** Eaton、Schneider、台達電三家都換了，沒有未換價同業。\n- **成品與快照：** `vrt/dist/` 只留 `20261121_Vertiv個股模型_v0.1.1` 的 xlsx 和 html，舊檔已移除。Sens 快照已重跑。\n- **其他檔案：** README 和 `vrt/px1120_note.txt` 已寫。\n- **檢查：**\n  - 全數通過：company_html、check_layout_v13、sens_coverage（`--require-keycol`）、governance、baseline_coordination（0 項不符）、check_segments、check_cached_values。\n  - xlsx 無錯誤值；check_display 不適用，因為 VRT 沒有 `display_check.json`。\n  - check_layout_v13 有「參數代號」警告，來自共用模組的標籤（前一版同樣有 2 筆）。\n- **沒做的事：** 沒有 commit、push，也沒動 `vrt/` 以外的檔案。",
+ "error": null,
+ "stderr": null
+}

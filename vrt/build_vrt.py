@@ -1,4 +1,4 @@
-# Vertiv（VRT）個股模型 v0.1.0（2026-11-17；AI 供應鏈：電源與散熱，美國機房設施端）
+# Vertiv（VRT）個股模型 v0.1.1（2026-11-21；AI 供應鏈：電源與散熱，美國機房設施端）
 # 用法：python3 vrt/build_vrt.py raw.xlsx ；再以 LibreOffice headless 重算（LO_PROFILE=/tmp/lo_n5_vrt）
 # 會計年度＝日曆年，FY(t)＝CY(t)。金額：十億美元（US$B）；EPS：美元；股數：十億股。口徑：GAAP（歸屬普通股淨利＝公司淨利）。
 # 產業變數：機房設施市場讀 Wattonomics v0.3.6 快照（WIF_Spend_fac_dist／ups／cool；不讀 Siliconomics 的電源與散熱）。
@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 import fcff_dcf as FD
 import relative_multiple as RMX
 
-VER, BUILT = "0.1.0", "2026-11-17"
+VER, BUILT = "0.1.1", "2026-11-21"
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7"); KEY = PatternFill("solid", fgColor="FFF2CC")
 wb = openpyxl.Workbook()
 def hdr(ws, row, labels):
@@ -34,13 +34,13 @@ WN = WS["names"]; WSHA = WS["source"]["sha256"]
 assert WS["source"]["version"] == "v0.3.6", WS["source"]
 def px_of(tk):
     out = None
-    for f in ("markets/invest_map/data/closes_20261020_20261113.csv", "markets/invest_map/data/closes_extra_20261113.csv"):
+    for f in ("markets/invest_map/data/closes_20261109_20261120.csv",):
         for r in csv.reader(open(os.path.join(ROOT, f), encoding="utf-8")):
-            if r and r[0] == tk and r[2] == "2026-11-13": out = float(r[3])
+            if r and r[0] == tk and r[2] == "2026-11-20": out = float(r[3])
     assert out, tk
     return out
 PX = px_of("VRT")
-CLOSES = "markets/invest_map/data/closes_extra_20261113.csv（2026-11-13 收盤；Yahoo Finance 日線，主串整理）"
+CLOSES = "工作單 px1120；Yahoo Finance 日線收盤 2026-11-20（markets/invest_map/data/closes_20261109_20261120.csv）；v0.1.0 為 2026-11-13 收盤 202.07"
 
 # ---------------- In ----------------
 IN = wb.active; IN.title = "In"
@@ -108,7 +108,7 @@ inp("opm_f", "營業利益率收斂係數（FY2032 目標＝FY2029 × 係數；C
 for s, v in (("A", 0.30), ("B", 0.50), ("C", 0.20)):
     inp(f"tp_w{s}", f"情境 {s} 權重", "%", None, v, None, "Assumed", "同 delta／nvidia 慣例 0.3／0.5／0.2", "Andy 可改")
 inp("tp_w_dcf", "DCF 權重（Comparable 權重＝1 − 本值）", "%", 0.3, 0.5, 0.7, "Assumed", "個股 DCF 標準規格：DCF 與 Comparable 各半", "Sens：0.3／0.7")
-inp("px", "現價（2026-11-13 收盤）", "US$", None, PX, None, "Verified", CLOSES, "Yahoo Finance 日線收盤；只讀價格檔，不上網抓價")
+inp("px", "現價（2026-11-20 收盤）", "US$", None, PX, None, "Verified", CLOSES, "Yahoo Finance 日線收盤；只讀價格檔，不上網抓價")
 inp("cons_tp", "市場共識目標價（賣方平均）", "US$", None, 334.29, None, "Interested-party", "Yahoo quoteSummary 2026-11-17：目標價均值 334.29（30 位分析師）；docs/workorders/20261117_新增五家_INTC_GFS_VRT_ABB_TEL_Yahoo基本面快照.md", "第二來源：未找到", INC_SELL)
 inp("cons_eps27", "共識 FY2027 EPS（調整後口徑）", "US$", None, 9.874, None, "Interested-party", "Yahoo quoteSummary 2026-11-17：2027-12 EPS 9.874、營收 19.54B（共識為 Non-GAAP，本模型為 GAAP）", "共識 FY2026 EPS 7.191、營收 14.72B", INC_SELL)
 inp("cons_rev27", "共識 FY2027 營收", "US$B", None, 19.54, None, "Interested-party", "同上", "—", INC_SELL)
