@@ -1,0 +1,10 @@
+folder=accton
+version=v0.4.7 -> v0.4.8
+px=1520 -> 1230
+tp=2243.78 -> 2064.45
+upside=+47.6% -> +67.8%
+rating=買進 -> 強力買進
+peers_repriced=4
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；check_company_html accton 全過；check_layout_v13 --xlsx 通過；check_sens_coverage 12/43 鍵無案例（前版即同，未要求）；baseline_coordination/check.py 0 項不符；Sens（sens.json）與 Coord（coord_alt.json）快照已重跑，狀態 CURRENT
+notes=舊值取自 repo 內 v0.4.7 成品 xlsx（加權目標價 2,243.78、買進），與 v0.4.7 README 表列的 2,413.36／+58.8% 不同（README 數字早於 Siliconomics v0.22 重建）；README 已註明。同業共 4 家（ANET、CLS、緯穎 6669、廣達 2382）。上檔由 47.6% 升到 67.8% 跨過 50% 關卡，評等由買進變強力買進。另一側讀數 1,812.79（+47.4%，買進）。
