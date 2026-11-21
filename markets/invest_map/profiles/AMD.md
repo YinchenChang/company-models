@@ -11,7 +11,7 @@ asof: 2026-10-25
 ---
 
 ## 一句話定位
-AI 加速器（GPU）市場中 NVIDIA 以外的第二大 GPU 供應商，同時賣伺服器 CPU；資料中心 GPU 營收＝加速器市場金額 × AMD 金額份額 [本專案：20261116_AMD模型_v0.4.8.xlsx README!A3]。
+AI 加速器（GPU）市場中 NVIDIA 以外的第二大 GPU 供應商，同時賣伺服器 CPU；資料中心 GPU 營收＝加速器市場金額 × AMD 金額份額 [本專案：20261121_AMD模型_v0.4.9.xlsx README!A3]。
 
 ## 公司在做什麼
 - 賣資料中心晶片：Instinct GPU（MI355X、MI450／MI455X，用來訓練與執行 AI 模型）、EPYC 伺服器 CPU、DPU、FPGA；另有個人電腦（Client）、遊戲主機與顯示卡（Gaming）、嵌入式（Embedded）[本專案：20261121_AMD模型_v0.4.9.xlsx Q!A5:A10]。
@@ -51,10 +51,10 @@ AI 加速器（GPU）市場中 NVIDIA 以外的第二大 GPU 供應商，同時�
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| NVIDIA | AI GPU、整櫃系統 | CY2027 加速器金額份額 75.1% | [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Units!D32] |
-| Google TPU（Broadcom、聯發科設計） | 自研 AI 晶片 | CY2027 金額份額 9.8% | [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Units!D34] |
-| AWS Trainium（世芯、Marvell 設計） | 自研 AI 晶片 | CY2027 金額份額 3.0% | [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Units!D35] |
-| 其他 ASIC（MTIA、Maia、昇騰等） | 自研 AI 晶片 | CY2027 金額份額 5.4% | [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Units!D36] |
+| NVIDIA | AI GPU、整櫃系統 | CY2027 加速器金額份額 72.8% | [本專案：20261121_NVIDIA個股模型_v0.3.14.xlsx Units!D32] |
+| Google TPU（Broadcom、聯發科設計） | 自研 AI 晶片 | CY2027 金額份額 10.8% | [本專案：20261121_NVIDIA個股模型_v0.3.14.xlsx Units!D34] |
+| AWS Trainium（世芯、Marvell 設計） | 自研 AI 晶片 | CY2027 金額份額 3.3% | [本專案：20261121_NVIDIA個股模型_v0.3.14.xlsx Units!D35] |
+| 其他 ASIC（MTIA、Maia、昇騰等） | 自研 AI 晶片 | CY2027 金額份額 5.9% | [本專案：20261121_NVIDIA個股模型_v0.3.14.xlsx Units!D36] |
 
 - AMD 與 NVIDIA 模型用同一份顆數與每顆價，所以份額可互相加總 [本專案：20261121_AMD模型_v0.4.9.xlsx Recon!J29]。
 - 伺服器 CPU（與 Intel、Arm 架構自研 CPU 競爭）的份額：本專案未建立。
@@ -101,7 +101,7 @@ AI 加速器（GPU）市場中 NVIDIA 以外的第二大 GPU 供應商，同時�
 - 認股權證歸屬與 World Labs 增發｜權證占 FY2029 股數 8.6%（A）[本專案：20261121_AMD模型_v0.4.9.xlsx Recon!C25]；World Labs 本專案未建立｜收購完成（預計 2026 年底）
 
 ## 來源
-1. 本專案：`amd/README.md`；`amd/dist/20261116_AMD模型_v0.4.8.xlsx`（README、In、Q、PL、Recon、Sens）；`nvidia/dist/20261116_NVIDIA個股模型_v0.3.11.xlsx`（Units）；AI半導體 `先驗比對_NVDA_20261023.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
+1. 本專案：`amd/README.md`；`amd/dist/20261121_AMD模型_v0.4.9.xlsx`（README、In、Q、PL、Recon、Sens）；`nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx`（Units）；AI半導體 `先驗比對_NVDA_20261023.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 2. [AMD to Buy AI Research Lab World Labs in $8.2 Billion Stock Deal](https://northeasttimes.com/2026/09/28/amd-to-buy-ai-research-lab-world-labs-in-8-2-billion-stock-deal)（2026-09-28）
 3. AMD MI455／Helios 開始出貨（Cryptopolitan，2026-10-07；經 [autobound 新聞彙整](https://www.autobound.ai/companies/amd/news) 取得，僅標題）
 4. [AMD Helios in production（igor'sLAB 轉述 Reuters）](https://www.igorslab.de/en/amd-helios-in-production-mi455x-epyc-venice-openai-challenge-nvidia-ai-racks/)（日期未標示）
