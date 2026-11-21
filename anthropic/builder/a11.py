@@ -28,7 +28,7 @@ SRCK = ("rev", "gross", "ebit", "own", "cc", "fcfm")           # 情境來源列
 SRC_ZH = {"rev": "營收淨額（截頂後；Funding F01）", "gross": "營收總額（截頂後；REV_GrossCapped）", "ebit": "EBIT（現金口徑）＝差額（Funding F06）",
           "own": "自建資本支出（Funding F03）", "cc": "算力成本（現金；Funding F02）", "fcfm": "自由現金流率（Funding F09）"}
 PEERS = (("pltr", "PLTR", "Palantir"), ("crwd", "CRWD", "CrowdStrike"), ("net", "NET", "Cloudflare"), ("snow", "SNOW", "Snowflake"), ("ddog", "DDOG", "Datadog"))
-PEER_DATE = {"ddog": "2026-11-20（px1120：由 10-30 倍數 × 11-20 ÷ 10-30 收盤換算）"}
+PEER_DATE = {"ddog": "2026-11-20（px1120：由 10-30 倍數 × 11-20 ÷ 10-30 收盤換算）", **{k: "2026-11-20（px1120：由 11-06 倍數 × 11-20 ÷ 11-06 收盤換算）" for k in ("pltr", "crwd", "net", "snow")}}
 DC = "CDEFGHIJ"                                                  # 2026Q4、2027–2033
 SC = "CDEFG"                                                     # FY2026–FY2030（來源區）
 
@@ -264,7 +264,7 @@ def build(ctx):
     pe = ",".join(S(f"peer_{k}_evfs") for k, _, _ in PEERS)
     pf = ",".join(S(f"peer_{k}_fcfm") for k, _, _ in PEERS)
     row("mult", "同業 EV／遠期營收中位數（PLTR、CRWD、NET、SNOW、DDOG）", "倍", [f"=LARGE($C${P['peer0']}:$C${P['peer1']},(COUNT($C${P['peer0']}:$C${P['peer1']})+1)/2)"], fmt="0.00", name="VAL_PeerMult",
-        note="stockanalysis.com，2026-11-06 收盤（DDOG 10-30，px1120 起換算到 11-20 收盤；其餘四家倍數仍 11-06，無收盤資料故未換價）；EV／遠期營收＝遠期 P/S × EV／市值（chat 端推得）")
+        note="stockanalysis.com，2026-11-06 收盤（px1120 起五家皆換算到 11-20 收盤：DDOG 由 10-30、其餘四家由 11-06 倍數 × 價格比近似）；EV／遠期營收＝遠期 P/S × EV／市值（chat 端推得）")
     row("pfcf", "同業 TTM FCF 利益率中位數", "比例", [f"=LARGE($D${P['peer0']}:$D${P['peer1']},(COUNT($D${P['peer0']}:$D${P['peer1']})+1)/2)"], fmt="0.0%", name="VAL_PeerFCFm")
     row("cmev", "市場主流 Comparable EV＝倍數 × NTM 營收總額（未調整）", "$B", s3(lambda s: f"={c('mult')}*{X[s]}{P['ntm']}"))
     row("cmps", "市場主流 Comparable 每股＝(EV ＋ 淨現金) ÷ 股數", "$/股", s3(lambda s: f"=MAX({X[s]}{P['ncps']},({X[s]}{P['cmev']}+{c('netcash')})/{c('shares')})"), fmt="#,##0.00")

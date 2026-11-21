@@ -623,7 +623,19 @@
 "tax_s1a_nol_fed_2025": "SRC_ANT_621",
 "peer_ddog_evfs_old": "SRC_ANT_622",
 "px_ddog_1030": "SRC_ANT_623",
-"px_ddog_1120": "SRC_ANT_624"
+"px_ddog_1120": "SRC_ANT_624",
+"peer_pltr_evfs_old": "SRC_ANT_625",
+"px_pltr_1106": "SRC_ANT_626",
+"px_pltr_1120": "SRC_ANT_627",
+"peer_crwd_evfs_old": "SRC_ANT_628",
+"px_crwd_1106": "SRC_ANT_629",
+"px_crwd_1120": "SRC_ANT_630",
+"peer_net_evfs_old": "SRC_ANT_631",
+"px_net_1106": "SRC_ANT_632",
+"px_net_1120": "SRC_ANT_633",
+"peer_snow_evfs_old": "SRC_ANT_634",
+"px_snow_1106": "SRC_ANT_635",
+"px_snow_1120": "SRC_ANT_636"
 },
 "INP": {
 "year_2025": "INP_001",

@@ -1,248 +1,248 @@
 note: tools/val_sens.py 產生；LibreOffice 重算整本活頁簿後的 VAL_TP_W；勿手改
 model: 20261121_Anthropic_v0.2.4.xlsx
 date: '2026-11-21'
-base_tp: 83.6610072795771
+base_tp: 84.798923045338
 base_rating: 中立
 cases:
 - key: wacc
   name: WACC ±1pt
-  tp_lo: 81.3936423221608
-  tp_hi: 86.4100677066944
+  tp_lo: 82.5315580879216
+  tp_hi: 87.5479834724552
   lo_label: WACC＋1pt
   hi_label: WACC−1pt
   rating_lo: 中立
   rating_hi: 中立
-  up_lo: -0.0845389458760456
-  up_hi: -0.0281175603790985
+  up_lo: -0.0717404331580065
+  up_hi: -0.0153190476610592
   overrides_lo:
     val_wacc_adj: 0.01
   overrides_hi:
     val_wacc_adj: -0.01
 - key: g
   name: 永續成長率 g 2%／4%（RONIC＝WACC 時終值與 g 無關，兩欄同基準）
-  tp_lo: 83.6610072795771
-  tp_hi: 83.6610072795771
+  tp_lo: 84.798923045338
+  tp_hi: 84.798923045338
   lo_label: g 2%
   hi_label: g 4%
   rating_lo: 中立
   rating_hi: 中立
-  up_lo: -0.0590371467823967
-  up_hi: -0.0590371467823969
+  up_lo: -0.0462386340643575
+  up_hi: -0.0462386340643577
   overrides_lo:
     val_g: 0.02
   overrides_hi:
     val_g: 0.04
 - key: beta
   name: β 1.6／1.0
-  tp_lo: 80.3039245019754
-  tp_hi: 86.804657246606
+  tp_lo: 81.4418402677363
+  tp_hi: 87.9425730123669
   lo_label: β 1.6
   hi_label: β 1.0
   rating_lo: 中立
   rating_hi: 中立
-  up_lo: -0.0967953604546689
-  up_hi: -0.0236794820986839
+  up_lo: -0.0839968477366296
+  up_hi: -0.0108809693806449
   overrides_lo:
     val_beta_override: 1.6
   overrides_hi:
     val_beta_override: 1.0
 - key: erp
   name: ERP 6%／4%
-  tp_lo: 81.1744668893376
-  tp_hi: 86.828837813937
+  tp_lo: 82.3123826550984
+  tp_hi: 87.9667535796979
   lo_label: ERP 6%
   hi_label: ERP 4%
   rating_lo: 中立
   rating_hi: 中立
-  up_lo: -0.0870040840249964
-  up_hi: -0.0234075153083229
+  up_lo: -0.0742055713069572
+  up_hi: -0.0106090025902834
   overrides_lo:
     val_erp: 0.06
   overrides_hi:
     val_erp: 0.04
 - key: ronic
   name: RONIC＝WACC＋5pt
-  tp_lo: 83.6610072795771
-  tp_hi: 85.4468095880481
+  tp_lo: 84.798923045338
+  tp_hi: 86.584725353809
   lo_label: 基準（RONIC＝WACC）
   hi_label: RONIC＝WACC＋5pt
   rating_lo: 中立
   rating_hi: 中立
-  up_lo: -0.0590371467823969
-  up_hi: -0.0389516411196926
+  up_lo: -0.0462386340643575
+  up_hi: -0.0261531284016533
   overrides_lo: {}
   overrides_hi:
     val_ronic_add: 0.05
 - key: extg
   name: 延伸期 2033 營收年增 5%／15%
-  tp_lo: 82.2379656066413
-  tp_hi: 85.1579901806246
+  tp_lo: 83.3758813724022
+  tp_hi: 86.2959059463854
   lo_label: ext_g33 5%
   hi_label: ext_g33 15%
   rating_lo: 中立
   rating_hi: 中立
-  up_lo: -0.07504256431626
-  up_hi: -0.0422000879470862
+  up_lo: -0.0622440515982209
+  up_hi: -0.029401575229047
   overrides_lo:
     ext_g33: 0.05
   overrides_hi:
     ext_g33: 0.15
 - key: extm
   name: 延伸期 EBIT 利益率加碼 +5pt／+10pt（至 2033）
-  tp_lo: 85.8755951821231
-  tp_hi: 88.0901830846692
+  tp_lo: 87.013510947884
+  tp_hi: 89.22809885043
   lo_label: +5pt
   hi_label: +10pt
   rating_lo: 中立
   rating_hi: 中立
-  up_lo: -0.0341289485758279
-  up_hi: -0.00922075036925929
+  up_lo: -0.0213304358577887
+  up_hi: 0.00357776234878004
   overrides_lo:
     ext_m_add: 0.05
   overrides_hi:
     ext_m_add: 0.1
 - key: px
   name: IPO 價格 70／78（淨募資、私募股數、選擇權庫藏股與現價連動）
-  tp_lo: 82.4430694584613
-  tp_hi: 82.9758749889173
+  tp_lo: 83.5766016802239
+  tp_hi: 84.1115168641254
   lo_label: $70
   hi_label: $78
   rating_lo: 中立
   rating_hi: 中立
-  up_lo: 0.177758135120876
-  up_hi: 0.0637932690886827
+  up_lo: 0.193951452574627
+  up_hi: 0.0783527803092996
   overrides_lo:
     ipo_px: 70
   overrides_hi:
     ipo_px: 78
 - key: pbi
   name: 首次公益發行 846.84M 股不計
-  tp_lo: 83.6610072795771
-  tp_hi: 88.22558898766
+  tp_lo: 84.798923045338
+  tp_hi: 89.4255772649683
   lo_label: 基準（計入）
   hi_label: 不計
   rating_lo: 中立
   rating_hi: 中立
-  up_lo: -0.0590371467823969
-  up_hi: -0.00769779566235529
+  up_lo: -0.0462386340643575
+  up_hi: 0.00579886699998111
   overrides_lo: {}
   overrides_hi:
     val_pbi_switch: 0
 - key: vmo
   name: 捐贈配對已歸屬義務 553.44M 股不計
-  tp_lo: 83.6610072795771
-  tp_hi: 86.5887827054414
+  tp_lo: 84.798923045338
+  tp_hi: 87.7665126477336
   lo_label: 基準（計入）
   hi_label: 不計
   rating_lo: 中立
   rating_hi: 中立
-  up_lo: -0.0590371467823969
-  up_hi: -0.0261074940339507
+  up_lo: -0.0462386340643575
+  up_hi: -0.0128611781831782
   overrides_lo: {}
   overrides_hi:
     val_vmo_switch: 0
 - key: nol
   name: 2026Q4 以前 NOL 視為無限（明確期不繳稅）
-  tp_lo: 83.6610072795771
-  tp_hi: 84.9690515065435
+  tp_lo: 84.798923045338
+  tp_hi: 86.1069672723044
   lo_label: 基準
   hi_label: NOL 無限
   rating_lo: 中立
   rating_hi: 中立
-  up_lo: -0.0590371467823969
-  up_hi: -0.0443251433298448
+  up_lo: -0.0462386340643575
+  up_hi: -0.0315266306118056
   overrides_lo: {}
   overrides_hi:
     val_nol_inf_switch: 1
 - key: wc
   name: 營運資金 ±5% 營收增量
-  tp_lo: 83.3385660503917
-  tp_hi: 83.9834485087625
+  tp_lo: 84.4764818161526
+  tp_hi: 85.1213642745233
   lo_label: ＋5%（投入）
   hi_label: −5%（釋出）
   rating_lo: 中立
   rating_hi: 中立
-  up_lo: -0.062663749292636
-  up_hi: -0.0554105442721574
+  up_lo: -0.0498652365745967
+  up_hi: -0.0426120315541182
   overrides_lo:
     val_wc_rate: 0.05
   overrides_hi:
     val_wc_rate: -0.05
 - key: comp
   name: Comparable 不調整（倍數不乘 FCF 利益率比例）
-  tp_lo: 83.6610072795771
-  tp_hi: 104.914252506991
+  tp_lo: 84.798923045338
+  tp_hi: 106.543265804224
   lo_label: 基準（調整）
   hi_label: 不調整
   rating_lo: 中立
   rating_hi: 中立
-  up_lo: -0.0590371467823969
-  up_hi: 0.180005089494895
+  up_lo: -0.0462386340643575
+  up_hi: 0.198327137602336
   overrides_lo: {}
   overrides_hi:
     val_comp_adj_switch: 0
 - key: oa
   name: 超額配售計入（現金＋9.1、股數＋123.75M）
-  tp_lo: 83.6610072795771
-  tp_hi: 83.7328640137975
+  tp_lo: 84.798923045338
+  tp_hi: 84.8622427795021
   lo_label: 基準（不計）
   hi_label: 計入
   rating_lo: 中立
   rating_hi: 中立
-  up_lo: -0.0590371467823969
-  up_hi: -0.0582289504690415
+  up_lo: -0.0462386340643575
+  up_hi: -0.0455264561972547
   overrides_lo: {}
   overrides_hi:
     p_overallot_switch: 1
 - key: q4p
   name: 2026Q4 EBIT 前九月代理改工作單字面（調整後營業損益 4.081）
-  tp_lo: 83.5549685403635
-  tp_hi: 83.6610072795771
+  tp_lo: 84.6928843061243
+  tp_hi: 84.798923045338
   lo_label: 字面讀法
   hi_label: 基準（GAAP −1.260）
   rating_lo: 中立
   rating_hi: 中立
-  up_lo: -0.0602297993435668
-  up_hi: -0.0590371467823969
+  up_lo: -0.0474312866255275
+  up_hi: -0.0462386340643575
   overrides_lo:
     val_q4_proxy_switch: 0
   overrides_hi: {}
 - key: sbcadd
   name: EBIT 照扣全部股權報酬（舊讀法：不加回 14.2 與既有獎酬攤銷）
-  tp_lo: 82.9175905331309
-  tp_hi: 83.6610072795771
+  tp_lo: 84.0555062988917
+  tp_hi: 84.798923045338
   lo_label: 舊讀法
   hi_label: 基準（只扣未來新授）
   rating_lo: 中立
   rating_hi: 中立
-  up_lo: -0.0673985993349358
-  up_hi: -0.0590371467823969
+  up_lo: -0.0546000866168965
+  up_hi: -0.0462386340643575
   overrides_lo:
     val_sbc_addback_switch: 0
   overrides_hi: {}
 - key: ntm
   name: NTM 營收舊讀法 0.25 × FY2026 ＋ 0.75 × FY2027
-  tp_lo: 80.0710265126619
-  tp_hi: 83.6610072795771
+  tp_lo: 81.1259887965522
+  tp_hi: 84.798923045338
   lo_label: 舊讀法
   hi_label: 基準（2026Q4 實值＋0.75 × FY2027）
   rating_lo: 中立
   rating_hi: 中立
-  up_lo: -0.0994148407078853
-  up_hi: -0.0590371467823969
+  up_lo: -0.0875493330721828
+  up_hi: -0.0462386340643575
   overrides_lo:
     val_ntm_q4_switch: 0
   overrides_hi: {}
 - key: q4avg
   name: 2026Q4 營收：10 月取均值（(71＋81) ÷ 2 ÷ 4；情境 A／C 快照不變）
-  tp_lo: 79.9678486473425
-  tp_hi: 83.6610072795771
+  tp_lo: 81.0391504092719
+  tp_hi: 84.798923045338
   lo_label: 10 月均值
   hi_label: 基準（10-31 年化 81 ÷ 4）
   rating_lo: 中立
   rating_hi: 中立
-  up_lo: -0.100575316079828
-  up_hi: -0.0590371467823969
+  up_lo: -0.0885260329628624
+  up_hi: -0.0462386340643575
   overrides_lo:
     p_q4_avg_switch: 1
   overrides_hi: {}

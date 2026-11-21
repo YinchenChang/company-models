@@ -1,10 +1,10 @@
 {
  "subtype": "success",
  "is_error": false,
- "num_turns": 53,
- "duration_ms": 1668488,
- "total_cost_usd": 1.3888449999999999,
- "result": "Anthropic 已換成 2026-11-20 收盤並升到 v0.2.4。Excel 與兩份 HTML 都重建好了，但需要 pycel 的 parity 與 HTML 測試沒跑成。\n\n- **版號：** v0.2.3 → v0.2.4。dist 只留 20261121 的三個檔（個股模型 HTML、收支模型 HTML、xlsx），舊版已移除。\n- **現價：** 74（IPO 區間中點）→ 88.91（ANT 11-20 收盤）。\n- **加權目標價：** 82.71 → 83.66。現價同時帶動淨募資與股數，所以目標價也動，這是模型既有公式的結果。\n- **上檔空間：** +11.8% → −5.9%。\n- **評等：** 中立 → 中立（公式重算）。\n- **同業：** 收盤檔只有 DDOG，倍數 16.36 → 10.94。PLTR、CRWD、NET、SNOW 沒有收盤資料，維持原值並列為未換價。同業中位數 26.32 沒變。\n- **檢查：**\n  - Excel Checks 頁錯誤 0、警告 4（與 v0.2.3 同為 4 項）。\n  - 版面檢查（`check_layout_v13`）過；三層基準協調檢查 0 項不符。\n  - builder 結構測試 13 項過；Sens 與 Val 情境快照已重跑。\n- **沒跑成的測試：** 本環境是 Python 3.14，pycel 報 `ast.Str` 錯誤，parity 與 HTML 測試無法執行（其中一項已排除，仍有 23 項報錯），這些我沒驗到。\n- **請主串處理：** 個股模型 HTML 的橫幅與部分標籤仍寫「IPO 價格區間中點；尚未掛牌」。這來自共用的 `tools/company_html`，我不能改；數字本身是 88.91。\n- **兩個我自己的處理：**\n  - 現價 88.91 超出原本寫的上緣 78，為通過區間順序檢查，我把上緣改成 97.17（11-19 首日收盤）。\n  - Coord 固定讀 Wattonomics v0.3.5 快照，因為 `CURRENT_SNAPSHOT` 已到 v0.3.9，換版不屬於這次價格更新。\n\n細節都寫在 `anthropic/px1120_note.txt`。",
+ "num_turns": 31,
+ "duration_ms": 1120534,
+ "total_cost_usd": 0.4558980000000001,
+ "result": "Anthropic 第二輪補換完成，版號仍是 v0.2.4。PLTR、CRWD、NET、SNOW 已換算到 2026-11-20 收盤，五家同業都已換價。\n\n- **同業倍數：** 公式是倍數 × 11-20 收盤 ÷ 11-06 收盤，EV 以倍數乘價格比近似，標 Derived。PLTR 31.51→28.19、CRWD 32.82→34.72、NET 26.32→26.93、SNOW 13.35→12.33，同業中位數 26.32→26.93。\n- **估值：** 現價仍是 88.91。目標價 83.66→84.80，上檔空間 −5.9%→−4.6%，評等維持中立，距最近評等邊界 20.4 個百分點。\n- **其他輸入：** 現價、IPO 相關輸入、上緣都沒動。新增 SRC_ANT_625–636，建置程式的同業公式也一併改好。\n- **重建：** 已重建 xlsx 與兩份 HTML，並更新 README、CHANGELOG 和 `px1120_note.txt`（`peers_unchanged` 改為「無」）。Sens 已重跑。Val 情境快照重跑後沒有變動，所以 `val_scenarios.yaml` 沒有改動。\n- **檢查結果：**\n  - Excel Checks 錯誤 0、警告 4（C69、C70、C89、C231，與上一版相同）。\n  - C233（Sens 快照）通過。\n  - 三層基準協調檢查 0 項不符。\n  - HTML 版面檢查通過。\n  - builder 結構測試 13 項通過。\n  - 需要 pycel 的測試有 24 項報錯，因為本環境 Python 3.14 跑不了 pycel，與這次改動無關，未驗證。\n- **沿用的限制：** 個股模型 HTML 的橫幅仍寫「IPO 價格區間中點」，來自共用的 `tools/company_html`，我沒權限改，需主串處理。\n- **範圍：** 只改了 `anthropic/` 內的檔案，沒有 commit。",
  "error": null,
  "stderr": null
 }
