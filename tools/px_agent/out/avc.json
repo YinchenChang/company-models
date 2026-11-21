@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 21,
+ "duration_ms": 122234,
+ "total_cost_usd": 0.35590200000000005,
+ "result": "奇鋐（avc）已換成 2026-11-20 收盤，版號 v0.3.7 → v0.3.8，Excel 和 HTML 已重建，檢查都過了（有一項前版就沒過）。我沒有 commit、push 或開 PR。\n\n- **現價**：3,040 → 2,205。\n- **加權目標價**：2,423.59 → 2,192.15（取自重建後成品 xlsx）。\n- **上檔空間**：−20.3% → −0.6%。\n- **評等**：中立 → 中立，由模型公式重算。\n- **同業**：4 家都已換價，沒有未換價的。Comparable 同業前瞻 P/E 中位數 24.9 → 19.3 倍。另外富世達股價 1,975 → 1,430 元（非控制權益用市值，跟著現價一起換）。\n- **前值出入**：上一版 README 寫加權目標價 2,578.3，但 v0.3.7 成品實際是 2,423.59（Siliconomics 後續重建所致），所以「前」值取自成品，note 和 README 都有說明。\n- **檢查**：\n  - 通過：xlsx 重算錯誤格 0、`check_company_html avc`、`check_layout_v13 --xlsx`、`check_in_layout`、`baseline_coordination/check.py`（0 項不符）。\n  - 前版就沒過、不要求：`check_sens_coverage --require-keycol` 47／47 鍵無案例，已寫進 note。\n- **快照**：avc 沒有 Sens 腳本。Coord 快照已用 `alt_run` 重跑，現為 CURRENT，另一側讀數 1,999.5（−9.3%，中立）。\n- **產出**：`avc/px1120_post.py`、`avc/px1120_note.txt`、README 新增本版要點。dist 只留 `20261121_奇鋐個股模型_v0.3.8.xlsx` 和 `.html`。",
+ "error": null,
+ "stderr": null
+}
