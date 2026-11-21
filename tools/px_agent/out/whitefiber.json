@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 19,
+ "duration_ms": 1055928,
+ "total_cost_usd": 0.582371,
+ "result": "WhiteFiber 已換成 2026-11-20 收盤，版號從 v0.4.3 升到 v0.4.4。Excel 和 HTML 已重建，檔名日期 20261121。\n\n| 項目 | 前 | 後 |\n|---|---|---|\n| 現價 | 9.43 | 6.35 |\n| 加權目標價 | 13.31 | 10.35 |\n| 上檔空間 | +41.1% | +63.0% |\n| 估值評等 | 買進 | 強力買進 |\n| 投資建議 | 收支不足 | 收支不足 |\n\n- **投資建議不變：** 情境 B 的自由現金流合計為 −1,520.5 百萬美元，收支關卡不通過，所以評等升級後仍列收支不足。投資建議由模型公式重算，沒有手改。\n- **同業：** 六家同業都已換價（CoreWeave、Nebius、IREN、Oracle、DLR、EQIX），沒有未換價的。雲端同業中位數 6.08 → 4.73，託管同業中位數 21.00 → 19.13，Comparable 目標價 26.62 → 20.70。\n- **現價日：** 我把模型的現價日也改成 2026-11-20，目標價時點跟著變成 2027-11-20。\n- **做法差異：** whitefiber 沒有 `px1113_post.py`，上次換價是直接改 `build_whitefiber.py`。所以我寫了 `px1120_post.py`，它是一次性改寫的紀錄，不要重跑。\n- **檢查：** 自帶的 `make_v1.sh` 全過，公式錯誤 0；敏感度與反向 DCF 快照已重跑。`baseline_coordination/check.py` 也是 0 項不符。\n- **沒驗到：** `check_layout_v13.py` 因環境缺 `bs4` 跑不起來，我沒補驗，已寫進 note。\n- **其他異動：** 舊的 v0.4.3 xlsx 移到 `dist/_待刪除/`，`dist` 只留 v0.4.4。`make_v1.sh` 的輸出檔名和 LibreOffice 設定檔路徑也已更新。\n\n`whitefiber/px1120_note.txt` 和 README 的 v0.4.4 要點與版本表都已寫好，沒有 commit。",
+ "error": null,
+ "stderr": null
+}

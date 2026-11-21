@@ -342,7 +342,7 @@ def main():
                 "model_px": dict(nm("VAL_Px"), date=px_date)}
     for tk, folder in (("00100", "minimax"), ("02513", "zhipu")):
         b = Book(dist_xlsx(folder))
-        out[tk] = {"model": b.rel, **val_names(b, "2026-11-13")}   # Val 頁「現價（2026-11-13 收盤）」（px1113）
+        out[tk] = {"model": b.rel, **val_names(b, "2026-11-20")}   # Val 頁「現價（2026-11-20 收盤）」（px1120）
 
     # --- 收支關卡：只有損益的半導體模型 ---
     for tk, folder in SEMIS_V2:

@@ -1,0 +1,10 @@
+folder=whitefiber
+version=v0.4.3 -> v0.4.4
+px=9.43 -> 6.35
+tp=13.31 -> 10.35
+upside=+41.1% -> +63.0%
+rating=買進（投資建議 收支不足）-> 強力買進（投資建議 收支不足）
+peers_repriced=6（CRWV、NBIS、IREN、ORCL、DLR、EQIX）
+peers_unchanged=無
+checks=make_v1.sh（SENS=1 REV=1 重跑後再跑一次不重跑）全過：公式錯誤 0、檢查列與收支恆等式 148 項、In 版面、敏感度覆蓋、分部、company_html、治理與展示層一致（61 處）、收支關卡評等；tools/baseline_coordination/check.py 0 項不符。check_layout_v13.py 未能執行（環境缺 bs4），未驗。
+notes=①現價日 px_date 一併改 2026-11-20（目標價時點隨之變 2027-11-20）。②雲端同業中位數 6.08 -> 4.73、託管同業中位數 21.00 -> 19.13、Comparable 26.62 -> 20.70。③估值評等升為強力買進，但情境 B FY2026–FY2030 自由現金流合計 -1,520.5 百萬美元，收支關卡不通過，投資建議仍為收支不足（公式重算）。④DLR、EQIX 的 EV 以倍數 × 價格比近似（Derived）；共識 EBITDA 與淨負債維持原值。⑤v0.4.3 xlsx 移入 dist/_待刪除/；make_v1.sh 輸出檔名改 20261121 v0.4.4，LibreOffice 設定檔改 /tmp/lo_whitefiber。⑥build_whitefiber.py 已直接改價（px1120_post.py 為改寫紀錄，勿重跑）。
