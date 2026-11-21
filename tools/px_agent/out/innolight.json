@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 20,
+ "duration_ms": 157931,
+ "total_cost_usd": 0.35691880000000004,
+ "result": "中際旭創（innolight）已換成 2026-11-20 收盤，版號 v0.4.6 → v0.4.7。我沒有 commit。\n\n- **現價：** 466.20 → 393.20。\n- **加權目標價：** 599.23 → 522.03。\n- **上檔空間：** +28.5% → +32.8%。\n- **評等：** 買進 → 買進（模型公式重算）。\n- **同業：** 5 家全部換價，沒有未換價同業。前瞻 P/E 中位數 23.41 → 18.84。\n- **另一側讀數（三層協調）：** 目標價 461.07，評等中立。\n- **檢查：**\n  - 通過：LibreOffice 重算錯誤格 0、與建置輸出逐格比對 0 差異、`check_company_html` 全過、`check_layout_v13` 通過、`baseline_coordination` 0 項不符。\n  - 前版就沒過：`check_sens_coverage` 25／33 鍵無案例。\n- **前值差異：** 舊 README 寫的 v0.4.6 加權目標價 646.03 是當時建置值。Siliconomics v0.22 更新後，現行 v0.4.6 成品實為 599.23，所以我的前值取成品，並已在 README 與 note 註明。\n- **做法：** 價格直接改在 `build_innolight.py` 與 `v045_post.py`。這家沒有獨立的 `px1113_post.py`，所以沒有新建 `px1120_post.py`。\n- **成品：** `dist/` 只留 `20261121_中際旭創個股模型_v0.4.7.xlsx` 與 `.html`，Sens／Coord 快照已重跑，`px1120_note.txt` 已寫。",
+ "error": null,
+ "stderr": null
+}
