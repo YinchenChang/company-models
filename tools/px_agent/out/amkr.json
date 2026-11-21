@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 1,
+ "duration_ms": 2342,
+ "total_cost_usd": 0.6151746000000001,
+ "result": "這是 Sens 記錄監看的逾時通知，不用處理。Sens 快照早就跑完，`sens.json` 已更新，成品的 Sens 頁顯示 CURRENT，所以不需要重新監看。\n\nAMKR v0.4.6 已完成，結果和先前回報的一樣。",
+ "error": null,
+ "stderr": null
+}
