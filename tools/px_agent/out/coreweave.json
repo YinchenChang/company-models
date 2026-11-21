@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 20,
+ "duration_ms": 203346,
+ "total_cost_usd": 0.3476315,
+ "result": "CoreWeave 已換成 11-20 收盤並升到 v5.0.6，xlsx 和 HTML 都重建完成，檔名日期 20261121。\n\n| 項目 | 前（v5.0.5） | 後（v5.0.6） |\n|---|---|---|\n| 現價 | 53.13 | 39.51 |\n| 加權目標價 | 60.96 | 32.33 |\n| 上檔空間 | +14.7% | -18.2% |\n| 評等 | 中立 | 中立 |\n\n- **同業：** Nebius 改 81.31、Oracle 改 101.19、IREN 改 11.82，三家都換了價，沒有未換價的同業。同業前瞻 EV/EBITDA 中位數從 6.94 降到 5.22。\n- **做法：** 沿用 px1113 的做法，價格直接改在 `coreweave/build_coreweave.py` 的輸入列，EV 由公式重算。我另外改了 `coreweave/make_v5.sh`、`coreweave/README.md`，並重跑了敏感度和反向 DCF 快照。\n- **dist：** 舊檔已移除。移除舊檔時我用了 `git rm --cached`，所以暫存區有兩個刪除，沒有 commit。\n- **檢查：**\n  - `make_v5.sh` 全過：公式錯誤 0、檢查列與收支恆等式 147 項、治理（含展示層一致性）、收支關卡評等。\n  - `check_layout_v13` 通過，只有對帳章的參數代號警告，前一版同。\n  - `tools/baseline_coordination/check.py` 0 項不符。\n  - 收支合計 -97.1，關卡不通過，評等仍為中立。\n- **未做：** Coord 沒有過期提示，所以沒另跑 `alt_run`；`decomp` 沿用歷史步驟。\n- **bs4：** `check_layout_v13` 需要 bs4，我用 `pip install` 裝進環境才跑得動，未動 repo。\n\n`coreweave/px1120_note.txt` 已寫好。",
+ "error": null,
+ "stderr": null
+}

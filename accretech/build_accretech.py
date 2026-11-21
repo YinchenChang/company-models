@@ -1246,4 +1246,7 @@ _RD6.cell(_RD6.max_row + 2, 1, "v0.3.6（2026-11-15）：資產負債表換新�
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import px1113_post  # noqa: E402
 print(px1113_post.apply(wb))
+# ---------------- v0.3.8（2026-11-21）：工作單 px1120——現價與同業報價改 2026-11-20 收盤（accretech/px1120_post.py；公式與模型假設不變）----------------
+import px1120_post  # noqa: E402
+print(px1120_post.apply(wb))
 wb.save(sys.argv[1])

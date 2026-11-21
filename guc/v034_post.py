@@ -343,7 +343,7 @@ def val_g(wb):
             ("④ 市場共識目標價（賣方平均）", cons, '="stockanalysis 賣方平均目標價（In 頁 cons_tp，Interested-party）"')]
     for labl, ref, note in rows:
         V.cell(r, 1, labl); V.cell(r, 2, "=" + ref).number_format = "#,##0.00"; V.cell(r, 3, f"=B{r}/px-1").number_format = "+0.0%;-0.0%"; V.cell(r, 4, note); r += 1
-    V.cell(r, 1, "現價（2026-11-13 收盤）"); V.cell(r, 2, "=px").number_format = "#,##0.00"; V.cell(r, 4, "In 頁 px"); r += 1
+    V.cell(r, 1, "現價（2026-11-20 收盤）"); V.cell(r, 2, "=px").number_format = "#,##0.00"; V.cell(r, 4, "In 頁 px"); r += 1
     return r0
 
 

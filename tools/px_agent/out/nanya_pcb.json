@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 24,
+ "duration_ms": 251470,
+ "total_cost_usd": 0.3703003999999999,
+ "result": "南電（`nanya_pcb`）已換成 2026-11-20 收盤，版號 v0.3.6 → v0.3.7，xlsx 與 HTML 已重建（檔名日期 20261121），舊 dist 檔已移除。\n\n- **現價：** 977 → 629。\n- **目標價：** 加權目標價 843.12 → 630.68。DCF 為 252.78 → 252.88，Comparable 為 865.18 → 608.68。\n- **上檔空間：** −13.7% → +0.3%。\n- **評等：** 中立 → 中立，由模型公式重算。\n- **同業：** 5 家都有 11-20 收盤並已換價，未換價同業為無。前瞻 P/E 中位數 30.29 → 21.31，本公司前瞻 P/E 31.38 → 20.2。\n- **舊值出處：** README 舊節寫的 892.43 是 px1113 當時的值。v0.3.6 成品後來因上游重建變成 843.12，所以「前」值取自 v0.3.6 成品 xlsx 重算值，README 與 note 都有寫明。\n- **通過的檢查：** `check_company_html`、`check_layout_v13`（只有既有警告）、`baseline_coordination/check.py`（0 項不符）、xlsx 錯誤格 0。Sens 與 Coord 快照已重跑，與成品基準一致。\n- **未通過：** `check_sens_coverage` 有 50／59 個鍵沒有 Sens 案例。v0.3.6 成品的輸出與這次逐字相同，是前版就有的問題，已在 note 寫明。\n\n新增 `px1120_post.py`，改了 `build_nanya_pcb.py`、`gen_html_json.py`、`README.md`、`sens.json`、`coord_alt.json`，並寫了 `px1120_note.txt`。沒有 commit。",
+ "error": null,
+ "stderr": null
+}

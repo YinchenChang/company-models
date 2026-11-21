@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 23,
+ "duration_ms": 142478,
+ "total_cost_usd": 0.3882189,
+ "result": "格芯 `gfs/` 已換成 2026-11-20 收盤，版號 v0.1.0 → v0.1.1。成品是 `gfs/dist/20261121_格芯個股模型_v0.1.1.xlsx` 和 `.html`，舊 dist 已移除。\n\n- **價格：** 現價 41.47 → 35.56；同業前瞻 P/E 中位數 22.21 → 17.48。5 家同業（TSM、UMC、TSEM、TXN、0981.HK）全數換價，沒有未換價同業。\n- **目標價：** 加權目標價 30.49 → 25.68。\n- **上檔空間與評等：** 上檔空間 −26.5% → −27.8%，評等放空不變。Coord 另一側讀數重跑後加權目標價為 24.9，同為放空。\n- **做法：** 格芯沒有 px1113 的後處理檔，價格直接寫在 `build_gfs.py` 設定裡，所以我直接改設定，沒另寫 `px1120_post.py`。同業倍數把新收盤代入原公式，收盤取到小數兩位，與「舊倍數 × 價格比」差在萬分之一內。\n- **檢查通過：**\n  - 重算錯誤格 0，與 dist 逐格相同。\n  - HTML 檢查、版面檢查、Sens 覆蓋、分部檢查、`check_profiles`、baseline coordination（0 項不符）都過。\n- **governance 檢查失敗：** `check_governance` 失敗，前一版就沒過（Sens 缺 build_id 和狀態列、In／Q 頁缺來源誘因欄、Q 頁複合標記），沒處理，已寫進 note。\n- **README.md：** 結論與本版要點已改寫。「待判斷」「檢查結果」兩表仍是 v0.1.0 寫法，未逐項重算。\n- **新增檔案：** `gfs/px1120_note.txt` 已寫好，數值取自重建後的 xlsx。\n- **其他：** 沒有 commit 或 push。",
+ "error": null,
+ "stderr": null
+}

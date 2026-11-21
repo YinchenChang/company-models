@@ -1,0 +1,10 @@
+folder=wistron
+version=v0.4.8 -> v0.4.9
+px=171 -> 147
+tp=346.25 -> 342.95
+upside=+102.5% -> +133.3%
+rating=強力買進 -> 強力買進
+peers_repriced=5
+peers_unchanged=無
+checks=check_company_html wistron 全過；check_layout_v13 --xlsx 通過；baseline_coordination/check.py 0 項不符；LibreOffice 重算錯誤格 0；Sens、Coord 快照 CURRENT；check_sens_coverage --require-keycol 77/77 找不到 Sens 表頭（v0.4.8 即未過，既有）
+notes=另換緯穎股價 1635->1325（非控制權益市值）、緯軟股價 119->96.5；同業中位數 10.20->8.84；DCF 432.63->460.76。舊值取自 v0.4.8 成品 xlsx 重算值，與 v0.4.8 README 文字（TP 369.11、+115.9%）不同，因 v0.4.8 後上游讀數已更新，非本版改動。做法：緯創沒有 px1113_post.py，沿用 px1113 直接改 build_wistron.py 與 v046_post.py 的方式。

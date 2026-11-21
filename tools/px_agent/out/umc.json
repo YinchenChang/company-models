@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 25,
+ "duration_ms": 131113,
+ "total_cost_usd": 0.39813300000000007,
+ "result": "umc 已換成 2026-11-20 收盤，版號 v0.2.6，xlsx 和 HTML 都已重建。評等由放空轉為中立。\n\n- **現價：** 101.5 → 80.3。\n- **加權目標價：** 68.62 → 62.90。\n- **上檔空間：** −32.4% → −21.7%，越過 −25% 關卡，評等由模型公式重算，沒有手改。\n- **同業：** 五家都已換價，沒有未換價同業。倍數中位數 20.07 → 16.43。\n- **其他讀數：** DCF 76.94 → 76.66；Comparable（相對倍數調整後）60.29 → 49.14；另一側讀數（Coord）67.58（放空）→ 62.35（中立）。\n- **檢查：** 全部通過，重算錯誤格 0。\n  - 通過的有 `check_company_html`、`check_sens_coverage --require-keycol`、`check_in_layout`、`check_cached_values`、`baseline_coordination/check.py`（0 項不符）。\n  - `check_layout_v13` 顯示 ok，但有參數代號警告，我沒有跟前版逐項比對，不確定是否前版就有。\n  - Coord 快照原本會是 STALE，已重跑 `alt_run.py umc`，現為 CURRENT。\n- **價格處理：** 收盤檔的浮點尾數（80.300003）我取 4 位小數，改成 80.3。\n- **未改的舊文字：** README 開頭「現價約 20 倍前瞻 P/E」是 v0.1 舊文，我沒改，已寫進 note。\n- **環境：** 為了跑 `check_layout_v13`，臨時 `pip install bs4`。\n- **dist：** 只留 `20261121_聯電個股模型_v0.2.6.xlsx` 和 `.html`，v0.2.5 兩檔已移除。\n- **其他新增與改動：** 新增 `umc/px1120_post.py`、`px1120_readme.txt`、`px1120_note.txt`，並更新 `README.md`、`build_umc.py`、`gen_html_json.py`、`coord_alt.json`、`html.json`。\n\n沒有 commit 或 push。",
+ "error": null,
+ "stderr": null
+}

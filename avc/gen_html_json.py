@@ -269,7 +269,7 @@ post(cfg)
 import html13  # noqa: E402
 _PL = wb["PL"]
 H = {
-    "ver": "v0.3.7",
+    "ver": "v0.3.8",
     "units_chart": lambda pB, hB: {
         "type": "theme", "title": "液冷、AI 氣冷與機構、一般伺服器與網通、非伺服器營收（情境 B，十億元）與奇鋐液冷有效份額（右軸）", "x": f"@PL!D{hB}:G{hB}",
         "fmt": "n0", "fmt_r": "p1", "stack": True, "pad": 1.25, "total": f"@PL!D{pB('營收')}:G{pB('營收')}",

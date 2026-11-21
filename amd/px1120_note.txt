@@ -1,0 +1,10 @@
+folder=amd
+version=v0.4.8 -> v0.4.9
+px=534.06 -> 424.39
+tp=300.30 -> 269.49
+upside=-43.8% -> -36.5%
+rating=放空 -> 放空
+peers_repriced=5
+peers_unchanged=無
+checks=check_company_html.py amd 全過；check_layout_v13.py --xlsx 通過；check_cached_values 通過（無錯誤格）；baseline_coordination/check.py 0 項不符；Sens 模型狀態 CURRENT；check_sens_coverage.py 未過（45/60 鍵無案例，v0.4.8 前版同樣未過，不要求）
+notes=前版（v0.4.8）README 寫的目標價 310.85／上檔 -41.8% 與其 xlsx 重算值 300.30／-43.8% 不符，本版舊值取 xlsx。dist 的 _待刪除 資料夾內仍有更早的 v0.4.7 xlsx，未動。sens.json 的 attr 沿用原文。

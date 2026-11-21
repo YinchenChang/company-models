@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 19,
+ "duration_ms": 112934,
+ "total_cost_usd": 0.3116329,
+ "result": "金像電已換成 2026-11-20 收盤，版號 v0.3.6 → v0.3.7。xlsx 與 HTML 都已重建，檢查通過，只有一項既有警告。\n\n- **現價：** 1,030 → 711。\n- **加權目標價：** 1,342.60 → 1,004.12。\n- **上檔空間：** +30.3% → +41.2%。\n- **評等：** 買進 → 買進（照模型公式重算，沒手改）。\n- **同業：** 5 家同業都已換價，沒有未換價的。前瞻 P/E 中位數 16.18 → 11.17。\n- **DCF：** 726.45 → 684.26。這是 WACC 的市值權重隨現價自動重算，不是我改的。\n- **Coord 另一側讀數：** 1,154.76（中立）→ 905.61（買進），兩個讀數現在評等一致。快照已用 `tools/coord/alt_run.py` 重跑後再重建。\n- **檢查：**\n  - `check_company_html` 全過。\n  - 三層基準協調檢查 0 項不符。\n  - xlsx 錯誤格 0，重建結果與 dist 逐格相同。\n  - 版面檢查 `check_layout_v13` 通過，但警告估值章可見文字含來源檔名 `closes_…`；來源欄字樣沿用 px1113 的寫法。\n  - `check_sens_coverage` 有 38 個鍵無案例，沒加 `--require-keycol`，因為 v0.3.6 就沒過。\n- **檔案：** 新增 `gce/px1120_post.py`，`gce/build_gce.py` 加了 px1120 的呼叫，`gen_html_json.py` 內的版號改成 v0.3.7。`gce/README.md`、`gce/coord_alt.json`、`html.json` 也有更新，另寫了 `gce/px1120_note.txt`。dist 只留 v0.3.7，v0.3.6 已移除（刪除狀態已進暫存區，沒有 commit）。\n- 為了跑 `check_layout_v13`，我在環境裡裝了 `beautifulsoup4`。",
+ "error": null,
+ "stderr": null
+}

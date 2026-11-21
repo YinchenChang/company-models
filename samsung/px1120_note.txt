@@ -1,0 +1,10 @@
+folder=samsung
+version=v0.5.6 -> v0.5.7
+px=206000 -> 183100
+tp=354389 -> 325476
+upside=+72.0% -> +77.8%
+rating=強力買進 -> 強力買進
+peers_repriced=4
+peers_unchanged=無
+checks=build 重建＋LibreOffice 重算錯誤格 0；check_company_html 全通過；check_layout_v13 --xlsx 通過（有參數代號警告，非新增）；check_in_layout 通過；baseline_coordination/check.py 0 項不符；check_cached_values 無缺快取；Sens 快照與 Coord 快照已重跑（CURRENT）；check_sens_coverage --require-keycol 未通過（122/130 鍵無案例，前一版同樣未通過）；layout_check.py（Playwright）本機未安裝，未跑
+notes=舊 README 記的 v0.5.6 加權目標價 357,887（+73.7%）與該版 dist 重算值 354,389（+72.0%）不同（上游 Siliconomics 變動），上方「舊」值取 dist 重算值。Rainbow Robotics（277810.KQ）亦換 11-20 收盤 408,000 韓元（少數股權市值）。另一側讀數目標價 321,111（強力買進，+75.4%）。

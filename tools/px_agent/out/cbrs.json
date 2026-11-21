@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 19,
+ "duration_ms": 95890,
+ "total_cost_usd": 0.2612269,
+ "result": "cbrs 已換成 2026-11-20 收盤，版號 v0.1.4 → v0.1.5，Excel 與 HTML 已重建（檔名日期 20261121，舊 dist 檔已移除）。\n\n- **現價：** 108.72 → 82.67。\n- **同業前瞻 P/S：** 中位數 9.59 → 7.56。NVIDIA、AMD、Broadcom、Marvell 四家都已換價，沒有未換價同業。\n- **目標價：** 加權目標價 97.21 → 80.10。\n- **上檔空間：** −10.6% → −3.1%。\n- **評等：** 中立 → 中立，由模型公式重算。\n- **其他改動：** 新增 `px1120_post.py`，並更新 `build_cbrs.py`、`gen_html_json.py` 和 `README.md`。`px1120_note.txt` 已寫。\n- **通過的檢查：** Excel 錯誤格 0；`check_company_html` 通過；`check_layout_v13`（xlsx 加 HTML）通過，只有原本就有的參數代號警告；`baseline_coordination/check.py` 0 項不符。\n- **未通過的檢查：** `check_sens_coverage` 未通過（27／36 鍵無案例或豁免）。v0.1.4 同樣未通過，所以不要求，note 已寫明。我沒有單獨跑 `--require-keycol`，那個版本的指令在我這邊報錯。\n- **未重跑：** 本模型沒有 Sens 和 Coord 的快照，所以沒有重跑。\n- **環境：** 本機沒有 bs4，我為了跑版面檢查另外裝了。\n- **git：** 沒有 commit。",
+ "error": null,
+ "stderr": null
+}

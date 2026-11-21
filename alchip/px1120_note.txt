@@ -1,0 +1,10 @@
+folder=alchip
+version=v0.2.6 -> v0.2.7
+px=4020 -> 3240
+tp=5496.70 -> 4738.31
+upside=+36.7% -> +46.2%
+rating=買進 -> 買進
+peers_repriced=5
+peers_unchanged=無（近 12 月 P/E pe_ttm 50.74 為資料商值，未換）
+checks=錯誤格 0；check_company_html 全過；check_layout_v13 ok（僅參數代號警告）；check_in_layout 通過；baseline_coordination/check.py 0 項不符；Sens／Coord 快照已重跑、狀態 CURRENT；check_sens_coverage --require-keycol 未過（39 項缺案例，前版即未過，不要求）
+notes=前版 tp 取自 v0.2.6 dist 重算值 5,496.70（+36.7%）；v0.2.6 README 記的 5,688.32（+41.5%）是當時數字，之後 Siliconomics 快照更新使 dist 重算值不同。Comparable（調整後）8,119 -> 6,602、DCF 2,874.81 -> 2,874.91、同業中位數 39.82 -> 32.38；另一側讀數 5,176.97 -> 4,465.99（買進不變）。v0.2.6 xlsx 已移到 dist/_待刪除/（沿用慣例），舊 html 已刪；dist 現行只有 v0.2.7 的 xlsx 與 html。

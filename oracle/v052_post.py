@@ -13,7 +13,7 @@ import re
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
-VER, BUILT = "0.5.3", "2026-11-16"
+VER, BUILT = "0.5.4", "2026-11-21"
 U_10Q_Q1 = "https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm"   # Form 10-Q（季末 2026-08-31）
 U_10K = "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm"       # Form 10-K FY2026（期末 2026-05-31）
 BOLD = Font(bold=True)
@@ -555,18 +555,20 @@ def readme13(wb, C, PLA, CRD):
     put("drv", T("營收推導（情境 B）：Cloud Infrastructure（OCI）＝OCI AI 算力（已連網 MW × 每 MW 年收入，Thesis 頁）＋OCI 其他（非 AI，近四季年增向長期值收斂）；Cloud Applications（SaaS）、Software license、Software support、Hardware、Services 各自由近四季年增線性收斂到長期年增；"
                  "加總為官方三分部（Cloud and software、Hardware、Services）與合併營收。FY2029 合併營收 "), f'TEXT(PL!F{PB["rev"]},"0")', T(" 十億美元，其中 OCI "), f'TEXT(PL!F{PB["oci"]},"0")', T("（AI 算力 "), f'TEXT(PL!F{PB["ai"]},"0")', T("）、SaaS "),
         f'TEXT(PL!F{PB["saas"]},"0")', T("、軟體授權與支援 "), f'TEXT(PL!F{PB["lic"]}+PL!F{PB["sup"]},"0")', T("、硬體與服務 "), f'TEXT(PL!F{PB["hw"]}+PL!F{PB["svc"]},"0")', T("。"))
-    RD.cell(r, 1, F(T("v0.5.3（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。現價 115.16（11-05）→ "), 'TEXT(px,"0.00")',
-                    T("；OCI AI 同業（neocloud）EV／2027 EBITDA 中位數 4.81x → "), 'TEXT(mult_oci,"0.00")', T("x（對照列，不進目標價；CRWV、NBIS 的 EV 以 2026-10-21 市值依 11-13 收盤換算，淨負債不變，近似 [Derived]）；加權目標價 70.38 → "), f'TEXT({tp},"0.00")',
-                    T("；上檔空間 −38.9% → "), f'TEXT({up},"+0.0%;-0.0%")', T("；投資建議 放空 → "), f'{rec}',
-                    T("（只換現價與 neocloud EV 時為 70.11、−44.1%、放空）。現價經新股發行價（瀑布）影響目標價。軟體同業（MSFT、SAP、CRM、ADBE、NOW；報價日 2026-10-07）依價格檔同日收盤換到 2026-11-13（MSFT 用市值法，其餘倍數 × 收盤比，近似）：中位數 "
-                      + str(_PXS["medianOld"]) + " → " + str(_PXS["median"]) + "（" + "、".join(f"{t} {v['old']} → {v['new']}" for t, v in _PXS["peers"].items()) + "）；共識與其他假設不變。")))
+    RD.cell(r, 1, F(T("v0.5.4（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。現價 125.35（11-13）→ "), 'TEXT(px,"0.00")',
+                    T("；OCI AI 同業（neocloud）EV／2027 EBITDA 中位數 4.98x → "), 'TEXT(mult_oci,"0.00")', T("x（對照列，不進目標價；CRWV、NBIS 的 EV 以 11-13 市值依 11-20 收盤換算，淨負債不變，近似 [Derived]）；加權目標價 70.89 → "), f'TEXT({tp},"0.00")',
+                    T("；上檔空間 −43.4% → "), f'TEXT({up},"+0.0%;-0.0%")', T("；投資建議 放空 → "), f'{rec}',
+                    T("。現價經新股發行價（瀑布）影響目標價。軟體同業（MSFT、SAP、CRM、ADBE、NOW；報價日 2026-11-13）依價格檔同日收盤換到 2026-11-20（MSFT 用市值法，其餘倍數 × 收盤比，近似）：中位數 "
+                      + str(_PXS["medianOld"]) + " → " + str(_PXS["median"]) + "（" + "、".join(f"{t} {v['old']} → {v['new']}" for t, v in _PXS["peers"].items()) + "）；共識與其他假設不變。所有同業代號價格檔皆有，沒有未換價同業。")))
     out["ver"] = r; r += 1
+    RD.cell(r, 1, "v0.5.3（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。現價 115.16（11-05）→ 125.35；OCI AI 同業（neocloud）EV／2027 EBITDA 中位數 4.81x → 4.98x（對照列，不進目標價）；加權目標價 70.38 → 70.89；上檔空間 −38.9% → −43.4%；投資建議 放空不變。軟體同業（報價日 2026-10-07）換到 2026-11-13：中位數 15.02 → 15.31（MSFT 15.59 → 15.42、SAP 15.02 → 16.79、CRM 10.80 → 10.48、ADBE 6.60 → 6.89、NOW 20.65 → 15.31）；共識與其他假設不變。")
+    r += 1
     RD.cell(r, 1, "v0.5.2（2026-11-15）：只改展示層與新增頁——個股 HTML 版面規格 v1.3：章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→收支模組→對帳→資料狀態；新增 IS 頁（標準損益表）、Sens 頁末加權目標價相對基準、README 頁末 v1.3 白話列；新增 Coord 頁「三層協調」。既有數值格不變，目標價與評等不變")
     r += 1
     return out
 
 
-_PXS = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "peers_sw_20261113.json"), encoding="utf-8"))
+_PXS = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "peers_sw_20261120.json"), encoding="utf-8"))
 
 
 def apply(wb, C):

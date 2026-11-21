@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 25,
+ "duration_ms": 164686,
+ "total_cost_usd": 0.40674109999999997,
+ "result": "Astera Labs（`alab/`）已換成 2026-11-20 收盤，升到 v0.3.10，xlsx 和 HTML 都已重建，`alab/px1120_note.txt` 已寫好。\n\n- **現價：** 221.83 → 180.35\n- **同業前瞻 P/E 中位數：** 24.22 → 19.54（五家都換價，沒有未換價同業）\n- **加權目標價：** 106.42 → 90.33\n- **上檔空間：** −52.0% → −49.9%\n- **評等：** 放空 → 放空，由模型公式重算\n- **快照：** Sens 與 Coord 快照已重跑，狀態 CURRENT。Coord 另一側讀數為 80.58（強力放空）。\n- **檢查通過：**\n  - `check_company_html.py alab`\n  - `check_layout_v13.py`（HTML 與 `--xlsx`）\n  - `tools/baseline_coordination/check.py`（0 項不符）\n  - `check_cached_values.py`（錯誤格 0）\n- **檢查未過：** `check_sens_coverage.py` 沒過。前一版 v0.3.9 就沒過（Sens 頁找不到表頭），本版未處理，已寫進 note。\n- **成品與其他變動：**\n  - `dist/` 只留 `20261121_Astera Labs個股模型_v0.3.10.xlsx` 和 `.html`。\n  - 舊檔 v0.3.9 與 `dist/_待刪除/` 內的 v0.2 已用 `git rm` 移除，這是暫存狀態，我沒有 commit。\n  - `check_layout_v13.py` 需要 bs4，我用 pip 裝了 beautifulsoup4 才跑得動。",
+ "error": null,
+ "stderr": null
+}

@@ -1,0 +1,10 @@
+folder=arm
+version=v0.3.6 -> v0.3.7
+px=190.53 -> 152.20
+tp=42.59 -> 36.00
+upside=-77.6% -> -76.3%
+rating=強力放空 -> 強力放空
+peers_repriced=6
+peers_unchanged=無
+checks=錯誤格 0；check_company_html 通過；check_layout_v13 通過（僅參數代號警告）；check_governance 通過（build_id arm-v0.3.7-08db522972）；baseline_coordination/check.py 0 項不符；Sens 與 Coord 快照已重跑，狀態 CURRENT；check_sens_coverage 3／49 鍵（beta、ronic_sp、inv_k）無案例，v0.3.4 起即未過，未處理；--require-keycol 未能單獨判讀，同前版視為未過
+notes=同業中位數 23.92 -> 19.74（Qualcomm 16.20、Broadcom 17.50、Marvell 21.66、Rambus 17.81、Synopsys 22.43、Cadence 29.88）。新增 px1120_post.py，接在 px1113_post 後。舊 dist（v0.3.6）已移除。無其他公司引用本模型 dist。

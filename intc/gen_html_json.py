@@ -76,7 +76,7 @@ note_tail = list(cfg["hero"]["note"])[-2:]   # " "、Coord 橫幅揭露
 RD, PLW, RVW, CW, SEW, VW = WB["README"], WB["PL"], WB["RevDCF"], WB["Coord"], WB["Sens"], WB["Val"]
 r13 = row_of("README", "v1.3 展示層")
 RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
-assert str(RD[f"A{RM['ver']}"].value).startswith("v0.1.0"), RD[f"A{RM['ver']}"].value
+assert str(RD[f"A{RM['ver']}"].value).startswith("v0.1.1"), RD[f"A{RM['ver']}"].value
 cfg["hero"]["note"] = [f"@README!A{RM['hero']}"] + note_tail
 cr = lambda p, start=1: next(r for r in range(start, CW.max_row + 1) if str(CW.cell(r, 1).value or "").startswith(p))
 

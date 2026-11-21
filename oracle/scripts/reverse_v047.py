@@ -7,7 +7,7 @@ import json, os, sys, tempfile, shutil, datetime
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from sens_v04 import run, HERE   # noqa: E402
 
-PX = 115.16          # In 頁 px（與 build_oracle.py 同值；改現價時同步）
+PX = 101.19          # In 頁 px（與 build_oracle.py 同值；改現價時同步）
 
 
 def solve(target, tmp, tag, x0=9.70, x1=12.7247, tol=0.02):

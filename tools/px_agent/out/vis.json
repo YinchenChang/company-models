@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 20,
+ "duration_ms": 112043,
+ "total_cost_usd": 0.29874550000000005,
+ "result": "世界先進（`vis/`）已換成 2026-11-20 收盤，版號 v0.3.2 → v0.3.3，Excel 與 HTML 都已重建。\n\n- **現價：** 135 → 106.5。\n- **加權目標價：** 55.09 → 48.89。DCF 41.46 → 41.76，Comparable 68.73 → 56.03，同業前瞻 P/E 中位數 23.81 → 19.41。\n- **上檔空間：** −59.2% → −54.1%。\n- **評等：** 強力放空 → 強力放空，由模型公式重算，未手改。\n- **同業：** 換價 4 家（聯電、GlobalFoundries、中芯國際、Tower），沒有未換價的。NXP 出資換算用的美元兌台幣 32.939 → 33.026，只用在參考列，不進估值。\n- **檢查（通過）：** 重算錯誤格 0，`check_company_html`、`check_layout_v13`、`check_segments`、`check_in_layout` 都通過，`baseline_coordination` 0 項不符。\n- **檢查（未過）：** `check_sens_coverage --require-keycol` 為 7／26 未過，v0.3.2 就是同樣結果，不要求。\n- **快照：** 這一家沒有獨立的 Sens／Coord 快照，隨建置程式重建；兩讀數不適用，所以沒跑 `coord_alt`。\n- **檔案：** 新增 `px1120_post.py`、`px1120_readme.txt`、`px1120_note.txt`、`hist_frozen_px1120.json`，並更新 `build_vis.py`、`README.md`、`html.json`。`dist/` 只留 20261121 兩個檔。\n- **git：** 沒有 commit、push 或開 PR。舊 dist 檔我用 `git rm --cached` 取消追蹤，所以暫存區有那兩個刪除。",
+ "error": null,
+ "stderr": null
+}

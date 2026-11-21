@@ -1,4 +1,14 @@
-# dell/ — 戴爾（Dell Technologies，DELL US）收支與估值模型 v0.2.7
+# dell/ — 戴爾（Dell Technologies，DELL US）收支與估值模型 v0.2.8
+
+## v0.2.8（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）
+
+- 現價與同業報價改 2026-11-20 收盤（工作單 px1120；價格取自 `markets/invest_map/data/closes_20261109_20261120.csv`，Yahoo Finance 日線收盤）。只換價格，公式與架構不改。
+- 現價 344.53（11-13 收盤）→ **278.02** 美元；Comparable 同業前瞻 P/E 中位數 9.8 → **8.8**（HPE 48.29→40.91、SMCI 26.87→21.65、聯想 17.62→16.35、HPQ 29.36→27.96、NetApp 181.37→157.65；共識 EPS 不變）；加權目標價 226.78 → **217.02**（DCF 254.10 → 255.50、Comparable 相對倍數調整後 199.46 → 178.54）；上檔空間 −34.2% → **−21.9%**；評等放空 → **中立**（模型公式重算，未手改）。另一側讀數（Coord）→ 205.42 放空（`coord_alt.json` 重跑）；Sens 業務主因快照（`sens.json`）重跑。
+- **前後值出處：** 前值取自 v0.2.7 成品 xlsx 的重算值（226.78、−34.2%、放空）。v0.2.7 節與其版本文字寫的 238.57／−30.8%／DCF 265.9／Comparable 211.3 與該成品不符；以成品為準，舊文字不改。
+- **未換價同業：** 無（五家同業皆在 CSV）。
+- 不變：rf、β、ERP、共識 EPS 與共識目標價、預測用匯率、營運假設與情境權重、三層基準讀數。β 與 WACC 隨市值 D/E 自動重算（β 1.50 → 1.54）。
+- 實作：`dell/px1120_post.py`（只改 README 版本文字；價格在 `build_dell.py` 的 px 與 PEERS，`v026_post.py` 的現價標籤）。成品 v0.2.8，`dist/` 只留現行版。
+- 檢查：LibreOffice 重算錯誤格 0；`check_company_html.py dell` 通過；`check_layout_v13.py` 通過（剩既有參數代號警告）；`tools/baseline_coordination/check.py` 0 項不符；`check_sens_coverage.py`（Sens 頁找不到表頭）v0.2.7 即未過，本版同。
 
 ## v0.2.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
 

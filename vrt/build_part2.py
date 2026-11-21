@@ -20,11 +20,11 @@ for _c in "CDEFGH": DCFW.column_dimensions[_c].width = 13
 V = wb.create_sheet("Val")
 T = {}
 V["A1"] = "Val — 估值（美元）：目標價＝DCF 與 Comparable（相對倍數調整後）加權；市場隱含倍數、反向檢驗見 RevDCF 頁"
-V["A2"] = ("Comparable 同業：Eaton、Schneider Electric、台達電（機房電力與電氣同業；Vertiv 自身列為本公司不入同業中位數）。前瞻 P/E＝2026-11-13 收盤 ÷ 資料商前瞻 EPS（同 delta 模型 Val 頁同業表，stockanalysis，2026-10）。"
+V["A2"] = ("Comparable 同業：Eaton、Schneider Electric、台達電（機房電力與電氣同業；Vertiv 自身列為本公司不入同業中位數）。前瞻 P/E＝2026-11-20 收盤 ÷ 資料商前瞻 EPS（同 delta 模型 Val 頁同業表，stockanalysis，2026-10）。"
            "目標價看本模型 GAAP EPS，同業為資料商（混合口徑）前瞻 EPS，口徑差異見 Recon。")
 V.cell(4, 1, "1. 現價與市場隱含倍數").font = BOLD
 hdr(V, 5, ["項目", "A", "B", "C", "說明"])
-V.cell(6, 1, "現價（2026-11-13 收盤）"); V["B6"] = "=px"; V["B6"].number_format = "#,##0.00"
+V.cell(6, 1, "現價（2026-11-20 收盤）"); V["B6"] = "=px"; V["B6"].number_format = "#,##0.00"
 for rr, lab, y in ((7, "現價 ÷ FY2026 EPS（錨點，GAAP）", 2026), (8, "現價 ÷ FY2027 EPS（模型）", 2027), (9, "現價 ÷ FY2028 EPS（模型）", 2028), (10, "現價 ÷ FY2029 EPS（模型）", 2029)):
     V.cell(rr, 1, lab)
     for j, s in enumerate(SC):
@@ -47,11 +47,11 @@ def tset(r, key, label, fs, fmt, note=""):
 V.cell(r_, 1, "0.2 Comparable（機房電力與電氣同業前瞻 P/E）").font = BOLD; r_ += 1
 hdr(V, r_, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"]); T["ph"] = r_; r_ += 1
 P1 = r_
-for nm, tk, pe, src in (("Eaton", "ETN", "=352.97/(376.52/24.81)", "stockanalysis 統計頁 2026-10-27：價格 376.52 ÷ Forward PE 24.81（同 delta 模型）；2026-11-13 收盤 352.97"),
-                        ("Schneider Electric", "SU.PA", "=243.45/(241/19.46)", "stockanalysis 統計頁 2026-10-27：價格 241.00 歐元 ÷ Forward PE 19.46（同 delta 模型）；2026-11-13 收盤 243.45 歐元"),
-                        ("台達電（Delta Electronics）", "2308.TW", "=1240/(1560/30.51)", "stockanalysis 個股頁 2026-10-22：價格 1,560 ÷ Forward PE 30.51（同 delta 模型）；2026-11-13 收盤 1,240 新台幣")):
+for nm, tk, pe, src in (("Eaton", "ETN", "=311.33/(376.52/24.81)", "stockanalysis 統計頁 2026-10-27：價格 376.52 ÷ Forward PE 24.81（同 delta 模型）；2026-11-20 收盤 311.33（v0.1.0 為 11-13 收盤 352.97）"),
+                        ("Schneider Electric", "SU.PA", "=226.55/(241/19.46)", "stockanalysis 統計頁 2026-10-27：價格 241.00 歐元 ÷ Forward PE 19.46（同 delta 模型）；2026-11-20 收盤 226.55 歐元（v0.1.0 為 11-13 收盤 243.45）"),
+                        ("台達電（Delta Electronics）", "2308.TW", "=900/(1560/30.51)", "stockanalysis 個股頁 2026-10-22：價格 1,560 ÷ Forward PE 30.51（同 delta 模型）；2026-11-20 收盤 900 新台幣（v0.1.0 為 11-13 收盤 1,240）")):
     V.cell(r_, 1, nm); V.cell(r_, 2, tk); cc = V.cell(r_, 3, pe); cc.font = BLUE; cc.number_format = "0.0"
-    V.cell(r_, 4, "2026-11-13"); V.cell(r_, 5, "P/E＝2026-11-13 收盤（價格檔）÷ 資料商前瞻 EPS；" + src); V.cell(r_, 6, "Interested-party（賣方共識）"); r_ += 1
+    V.cell(r_, 4, "2026-11-20"); V.cell(r_, 5, "P/E＝2026-11-20 收盤（價格檔）÷ 資料商前瞻 EPS；" + src); V.cell(r_, 6, "Interested-party（賣方共識）"); r_ += 1
 P2 = r_ - 1; T["p1"], T["p2"] = P1, P2
 tset(r_, "pmed", "同業前瞻 P/E 中位數", [f"=MEDIAN(C{P1}:C{P2})", None, None], "0.0", "Eaton、Schneider Electric、台達電；中國 A 股不列（結構性溢價，Andy 2026-10-25）；Vertiv 自身不入中位數"); r_ += 1
 tset(r_, "feps", "12 個月後的前瞻 EPS（情境加權）", ["=" + "+".join(f"tp_w{s}*(0.16666666666666666*PL!{FC[2027]}{PB[s]['eps']}+0.8333333333333334*PL!{FC[2028]}{PB[s]['eps']})" for s in SC), None, None], "0.00",
@@ -66,7 +66,7 @@ tset(r_, "comp2", "Comparable 目標價（市場主流同業法）", [f"=B{T['co
 tset(r_, "tpw", "目標價（DCF 與 Comparable 加權）", [f"=tp_w_dcf*B{T['dcftp']}+(1-tp_w_dcf)*tp_comp_adj", f"=B{r_}/px-1", None], "#,##0.00", "DCF 權重 × DCF 目標價＋（1 − DCF 權重）× Comparable（調整後）；權重見 In 頁")
 V[f"C{r_}"].number_format = "+0.0%;-0.0%;0.0%"; r_ += 1
 tset(r_, "cons", "市場共識目標價", ["=cons_tp", f"=B{r_}/px-1", None], "#,##0.00", "Yahoo 2026-11-17（30 位分析師）；只作對帳，不作校準"); V[f"C{r_}"].number_format = "+0.0%;-0.0%;0.0%"; r_ += 1
-tset(r_, "pxr", "現價（2026-11-13 收盤）", ["=px", None, None], "#,##0.00", "Yahoo Finance 日線收盤（價格檔）"); r_ += 1
+tset(r_, "pxr", "現價（2026-11-20 收盤）", ["=px", None, None], "#,##0.00", "Yahoo Finance 日線收盤（價格檔）"); r_ += 1
 T["c1"] = r_ - 1
 tset(r_, "upw", "上檔空間：加權目標價", [f"=B{T['tpw']}/px-1", None, None], "0.0%", "相對現價"); r_ += 1
 tset(r_, "upc", "上檔空間：Comparable 目標價（未調整）", [f"=B{T['comp2']}/px-1", None, None], "0.0%"); r_ += 1
@@ -264,7 +264,7 @@ for i, (a, b) in enumerate((
         ("[Verified] Vertiv 4Q23 新聞稿（8-K 附件 99.1，2024-02-21）：FY2023 與 FY2022 損益", "https://www.sec.gov/Archives/edgar/data/1674101/000162828024005765/exhibit991vrt02212024.htm"),
         ("[Derived] Wattonomics v0.3.6 快照：機房設施支出（配電、UPS、冷卻、發電）", "wattonomics/data/wattonomics_snapshot_v0.3.6.json（sha256 " + WSHA + "）"),
         ("[Interested-party] Yahoo quoteSummary 2026-11-17（市值、Beta、共識 EPS 與營收、目標價）；只作交叉核對", "docs/workorders/20261117_新增五家_INTC_GFS_VRT_ABB_TEL_Yahoo基本面快照.md"),
-        ("[Verified] 價格：2026-11-13 收盤（Yahoo Finance 日線，主串整理）", "markets/invest_map/data/closes_extra_20261113.csv；closes_20261020_20261113.csv"),
+        ("[Verified] 價格：2026-11-20 收盤（Yahoo Finance 日線；工作單 px1120）", "markets/invest_map/data/closes_20261109_20261120.csv"),
         ("[Interested-party] 同業前瞻 EPS（Eaton、Schneider、台達電）：stockanalysis，同 delta 模型 Val 頁同業表", "delta/dist（Val 頁 0.2 同業表）"),
         ("[Interested-party] UtilityInnovation Group 收購（現金 14.5 億美元＋最多 11.5 億美元 EBITDA 對價；2026-10-26 交割）", "https://www.unite.ai/vertiv-strikes-1-45b-deal-for-microgrid-firm-utilityinnovation-group/（轉述公告；10-Q 僅列合併協議）"),
         ("[Assumed] 資料中心設施產品占營收比例（dcp）：公司未揭露，依 10-Q 營收分類推估", "本模型假設")), 3):

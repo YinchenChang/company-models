@@ -1,0 +1,10 @@
+folder=delta
+version=v0.5.8 -> v0.5.9
+px=1240 -> 900
+tp=919.9 -> 872.9
+upside=-25.8% -> -3.0%
+rating=放空 -> 中立
+peers_repriced=4
+peers_unchanged=無
+checks=xlsx 錯誤格 0 且與 LibreOffice 重算逐格相同；check_company_html 全通過；check_layout_v13 通過（未給 --xlsx 跳過對帳中檢查）；baseline_coordination 0 項不符；Coord 快照 CURRENT（已重跑 alt_run）；check_sens_coverage 未過（50/50 缺 Sens 案例表頭，v0.5.8 前版即同樣未過，不要求）
+notes=前值取自 v0.5.8 成品 xlsx 重算值（919.9／-25.8%／放空）；v0.5.8 的 README 文字寫 979.4／-21.0%／中立，與成品不符（上游 Siliconomics v0.22 快照更新所致）。台達泰國 THB 股價 190->173.5、USD/TWD 33.026、USD/THB 33.942 已換；mi_v 899.2->823.5。另一側讀數 784.04（-12.9%，中立）。舊 dist 已移除，_待刪除 資料夾未動。

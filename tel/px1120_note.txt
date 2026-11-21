@@ -1,0 +1,10 @@
+folder=tel
+version=v0.1.0 -> v0.1.1
+px=9461 -> 8309
+tp=6716.3 -> 6058.5
+upside=-29.0% -> -27.1%
+rating=放空 -> 放空
+peers_repriced=6
+peers_unchanged=無
+checks=check_governance 通過（build_id tel-v0.1.1-2b36d70159）；check_company_html 通過；check_cached_values 通過（公式格 4629 皆有快取值）；baseline_coordination/check.py 0 項不符、4 項提醒；check_rating_gate 不適用（無收支關卡列）；check_sens_coverage 未通過（Sens 頁找不到表頭，v0.1.0 即未過、全 repo 既有基線，未要求）；Sens 與 Coord 快照已重跑（CURRENT）
+notes=tel 在 px1113 時尚未建立（v0.1.0 於 11-17 以 11-13 收盤首建），無 px1113_post.py；本次直接改 build_tel.py 的價格輸入與文字，未另寫 px1120_post.py。同業倍數以 11-13 收盤為現行報價日換算。相對倍數調整係數 0.85 與 DCF 目標價 4,073 未變。舊 dist 已以 git rm 移除（未 commit）。

@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 19,
+ "duration_ms": 143488,
+ "total_cost_usd": 0.31837,
+ "result": "緯穎（wiwynn）已換成 2026-11-20 收盤，版號 v0.2.8 → v0.2.9，xlsx 和 HTML 都已重建。\n- **現價：** 1,635 → 1,325。\n- **加權目標價：** 3,145.45 → 2,874.64。DCF 目標價從 3,247.53 降到 3,109.95，因為模型用市值算 WACC 權重，隨現價自動重算，我沒另外改。\n- **上檔空間與評等：** +92.4% → +117.0%，強力買進維持不變，評等由模型公式重算。\n- **同業倍數：** 5 家都有換價，沒有未換價的。前瞻 P/E 中位數 9.70 → 8.84。\n- **Sens、Coord 快照：** 都已重跑，狀態是 CURRENT。另一側讀數的加權目標價 2,731.00 → 2,647.84，評等同為強力買進。\n- **檢查：**\n  - 通過：`check_company_html` 全過，`check_layout_v13` 通過，`baseline_coordination` 0 項不符，LibreOffice 重算錯誤格 0。\n  - 未通過但前版就如此：`check_sens_coverage --require-keycol` 41／41 鍵找不到 Sens 表頭。v0.2.8 就是這樣，已寫進 note。\n- **成品：**\n  - dist 只留 `20261121_緯穎個股模型_v0.2.9.xlsx` 和 `.html`。\n  - 舊 v0.2.8 檔已用 `git rm` 移除，尚未 commit。\n  - 另外改了建置程式、`README.md`，新增 `px1120_note.txt`。\n- **環境：** 版面檢查需要 `bs4`，我用 pip 裝在本機。",
+ "error": null,
+ "stderr": null
+}

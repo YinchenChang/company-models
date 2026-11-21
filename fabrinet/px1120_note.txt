@@ -1,0 +1,10 @@
+folder=fabrinet
+version=v0.3.6 -> v0.3.7
+px=327.98 -> 285.04
+tp=383.64 -> 343.26
+upside=+17.0% -> +20.4%
+rating=中立 -> 中立
+peers_repriced=4
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；check_company_html 全過；check_layout_v13 通過（3 項參數代號警告前版即有）；check_sens_coverage 失敗 38/47 但與 v0.3.6 逐行相同（前版即未過，不要求）；baseline_coordination/check 0 項不符；Sens（sens_fabrinet.py）與 Coord（alt_run.py）快照已重跑
+notes=舊成品重算值與 v0.3.6 README 表（加權目標價 399.88）不同，前後值以舊成品實際重算值（383.64）為準，README 已註明。DCF 185.20 -> 185.23；Comparable 調整後 582.09 -> 501.29；同業前瞻 P/E 中位數 14.91 -> 12.84；另一側讀數 320.62（+12.5%，中立）。新增 gen_html_json.py 版號斷言改 v0.3.7、v035_post.py 本版要點列改 v0.3.7 並保留 v0.3.6 列；html.json 無需改動。檢查 check_layout_v13 需 bs4，已於執行環境安裝（未入 repo）。

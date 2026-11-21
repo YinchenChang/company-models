@@ -416,7 +416,7 @@ def _v13():
                  {"type": "note", "parts": [f"@Coord!A{r_a2}"]}, {"type": "h3", "text": "本模型與公司指引、公司說法、券商的對照"}]
     S["recon"]["blocks"] = c0_blocks + S["recon"]["blocks"]
     # ---- 9. 資料狀態：本版要點 ----
-    S["status"]["blocks"][0:0] = [{"type": "h3", "text": "本版要點"}, {"type": "note", "parts": [f"@README!A{row_of('README', 'v0.2.8（')}"]}, {"type": "note", "parts": [f"@README!A{RM['ver']}"]}]
+    S["status"]["blocks"][0:0] = [{"type": "h3", "text": "本版要點"}, {"type": "note", "parts": [f"@README!A{row_of('README', 'v0.2.9（')}"]}, {"type": "note", "parts": [f"@README!A{RM['ver']}"]}]
     order = ["thesis", "valuation", "sens", "revdcf", "pl", "drivers", "recon", "status"]
     cfg["sections"] = [S[k] for k in order]
 

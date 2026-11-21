@@ -6,7 +6,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d /tmp/nbis_mk.XXXX)}"; mkdir -p "$WD"
-OUTNAME="20261116_Nebius個股模型_v0.6.3.xlsx"
+OUTNAME="20261121_Nebius個股模型_v0.6.4.xlsx"
 if [ "${SENS:-0}" = "1" ]; then python3 nebius/scripts/sens_v50.py --jobs "${JOBS:-2}"; fi
 if [ "${REV:-0}" = "1" ]; then python3 nebius/scripts/reverse_v50.py --jobs "${JOBS:-2}"; fi
 if [ "${DEC:-0}" = "1" ]; then python3 nebius/scripts/decomp_v50.py; fi

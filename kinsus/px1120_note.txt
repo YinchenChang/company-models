@@ -1,0 +1,10 @@
+folder=kinsus
+version=v0.4.5 -> v0.4.6
+px=668 -> 470
+tp=691.94 -> 524.86
+upside=+3.6% -> +11.7%
+rating=中立 -> 中立
+peers_repriced=5
+peers_unchanged=無
+checks=check_company_html 通過；check_layout_v13 --xlsx 通過；baseline_coordination/check.py 0 項不符；check_sens_coverage 未過（69 個鍵找不到 Sens 表頭），前版 v0.4.5 同樣未過，輸出除 β 數值外相同；LibreOffice 重算錯誤格 0；Sens 與 Coord 快照已重跑
+notes=晶碩（6491.TW）市值輸入 399.5（11-05 收盤）不在價格檔，維持原值，px1113 也未換。前版 dist 重算的加權目標價是 691.94，不是 v0.4.5 README 所寫 711.56（之後上游重建所致）；舊值取自前版成品。Coord 另一側讀數 650.02 -> 492.88。本公司前瞻 P/E 30.29 -> 21.31；同業中位數 30.59 -> 20.93。

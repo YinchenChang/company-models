@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 20,
+ "duration_ms": 112752,
+ "total_cost_usd": 0.31964970000000004,
+ "result": "雙鴻（auras）已換成 2026-11-20 收盤，版號 v0.2.7 → v0.2.8，xlsx 與 HTML 都已重建（檔名日期 20261121，舊 dist 檔已移除）。\n\n- **現價：** 1,140 → 794。\n- **目標價：** 1,740.9 → 1,407.7。DCF 為 1,355.0 → 1,292.5，Comparable 為 2,126.8 → 2,083.1。\n- **上檔空間：** +52.7% → +77.3%。\n- **評等：** 強力買進 → 強力買進，沒有變。\n- **同業：** 四家全部換價，未換價為無。前瞻 P/E 中位數 24.9 → 19.3。\n- **Coord 另一側讀數：** `coord_alt.json` 已重跑，快照為 CURRENT，讀數 1,270.0（+60.0%，強力買進）。\n- **檢查通過：** 錯誤格 0、`check_company_html`、`check_layout_v13`（xlsx 與 html）、`check_in_layout`、`baseline_coordination/check.py`（0 項不符、4 項提醒）。\n- **檢查未通過：** `check_sens_coverage` 有 39／47 個鍵沒有 Sens 案例，v0.2.7 就是這樣，沒有變差，已寫進 note。\n- **改動檔案：** 都在 `auras/`：`px1120_post.py`、`px1120_note.txt`、`README.md`、`build_auras.py`、`gen_html_json.py`、`html.json`、`coord_alt.json` 和 dist。\n- **未做：** 沒有 commit 或 push。",
+ "error": null,
+ "stderr": null
+}

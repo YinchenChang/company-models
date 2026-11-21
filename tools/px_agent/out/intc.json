@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 22,
+ "duration_ms": 140124,
+ "total_cost_usd": 0.37338869999999996,
+ "result": "英特爾（`intc/`）已換成 2026-11-20 收盤，版號由 v0.1.0 升到 v0.1.1。尚未 commit、push 或開 PR。\n\n- **現價：** 59.66 → 51.28。\n- **加權目標價：** 16.00 → 14.30。\n- **上檔空間：** -73.2% → -72.1%。\n- **評等：** 強力放空 → 強力放空。\n- **同業：** 5 家（TSM、AMD、UMC、GFS、TSEM）都換價，沒有未換價的。前瞻 P/E 中位數 17.79 → 14.24。\n- **檢查：**\n  - 重算後錯誤格 0，xlsx 與重算結果逐格相同。\n  - Sens 狀態 CURRENT。\n  - `check_company_html`、`check_sens_coverage` 通過。\n  - `baseline_coordination` 0 項不符，4 項提醒是原本就有的。\n  - 版面檢查章節齊全，有 3 則「全頁含參數代號」警告，文字本版沒動，前版就有。\n- **前版落差：** 舊 README 寫的 16.41／-72.5%，和 v0.1.0 成品重算值 16.00／-73.2% 不一致。本版以成品重算值為準，已寫進 README 與 note。\n- **做法差異：** `intc` 沒有 px1113 的換價紀錄，現價和同業價原本就寫在 `build_intc.py`，所以我直接改那裡，沒另寫 `px1120_post.py`。版號與快照同步改了 `v010_post.py`、`gen_html_json.py`、`gov_snapshot.json`。\n\n`dist/` 只留 `20261121_英特爾個股模型_v0.1.1` 的 xlsx 與 HTML，`intc/px1120_note.txt` 已寫好。",
+ "error": null,
+ "stderr": null
+}

@@ -1,0 +1,10 @@
+folder=gfs
+version=v0.1.0 -> v0.1.1
+px=41.47 -> 35.56
+tp=30.49 -> 25.68
+upside=-26.5% -> -27.8%
+rating=放空 -> 放空
+peers_repriced=5
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；與 dist 逐格相同；check_company_html gfs 通過；check_layout_v13（含 --xlsx）通過（全頁參數代號警告與前版相同）；check_sens_coverage --require-keycol 通過；baseline_coordination/check.py 0 項不符；segment_check gfs 符合；check_profiles 通過；Coord 快照以 alt_run.py 重跑；check_governance 失敗（Sens 無 build_id／狀態列、In／Q 頁無來源誘因欄、Q 頁複合標記，前一版即未過，未處理）
+notes=gfs 的價格寫在 build_gfs.py 設定內（無 px1113_post.py），故直接改設定並升版，未另寫 px1120_post.py。同業倍數以新收盤直接代入原公式（TSM 318.71、UMC 12.04、TSEM 115.56、TXN 263.75、0981.HK 49.12 港元÷7.8426），收盤取至小數兩位，與「舊倍數×價格比」差異在萬分之一內。無其他個股市值輸入。上檔空間 −27.8% 距中立邊界（−25%）約 2.8 個百分點，README.md 原「貼邊」說明已改寫。README.md 的待判斷與檢查結果兩表仍是 v0.1.0 寫法。

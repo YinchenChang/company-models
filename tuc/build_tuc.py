@@ -834,6 +834,9 @@ if _CR and not os.environ.get("TUC_OVERRIDE") and not WTA_ON:   # sens_tuc.py �
 # v0.2.6（2026-11-16）：現價與同業報價改 2026-11-13 收盤（px1113_post.py；工作單 px1113；只換價格，公式與架構不改）
 import px1113_post  # noqa: E402
 px1113_post.apply(wb, dict(ver="v0.2.6", prev="v0.2.5", px="6274.TWO", fpe=None, d0="2026-11-05"))
+# v0.2.7（2026-11-21）：現價與同業報價改 2026-11-20 收盤（px1120_post.py；工作單 px1120；只換價格，公式與架構不改）
+import px1120_post  # noqa: E402
+px1120_post.apply(wb, dict(ver="v0.2.7", prev="v0.2.6", px="6274.TWO", fpe=None, d0="2026-11-13"))
 wb.save(sys.argv[1])
 if os.environ.get("TUC_ROWMAP"):
     json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK, "XT": XT, "XH": XH, "XR": XR, "T": T, "EPSR": EPSR, "CFR": CFR,

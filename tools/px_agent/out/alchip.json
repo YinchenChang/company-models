@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 26,
+ "duration_ms": 226382,
+ "total_cost_usd": 0.4285451,
+ "result": "世芯-KY（alchip）已換成 2026-11-20 收盤，版號 v0.2.6 → v0.2.7。Excel 與 HTML 都已重建，沒有 commit、push 或開 PR。\n\n- **現價：** 4,020 → 3,240。\n- **加權目標價：** 5,496.70 → 4,738.31。\n- **上檔空間：** +36.7% → +46.2%。\n- **評等：** 買進 → 買進（模型公式重算，沒有手改）。\n- **同業：** 5 家同業全部換價，同業前瞻 P/E 中位數 39.82 → 32.38，沒有未換價同業。\n- **前版數字的出處：** 前版目標價取自 v0.2.6 xlsx 的重算值。v0.2.6 的 README 寫 5,688.32（+41.5%），那是當時的數字，之後 Siliconomics 快照更新，xlsx 重算值變成 5,496.70。\n- **快照與檢查：** Sens 與 Coord 快照已重跑，狀態都是 CURRENT。錯誤格 0，公司 HTML 檢查、版面檢查、In 頁版面檢查全過，三層協調檢查 0 項不符。\n- **沒過的項目：** `check_sens_coverage --require-keycol` 未過，有 39 項缺案例，前一版就沒過，已寫進 note。\n- **成品位置：** `dist/` 現在只有 20261121 的 v0.2.7 xlsx 與 html。舊 v0.2.6 xlsx 依該公司慣例移到 `dist/_待刪除/`，舊 html 已刪除。\n- **改動的檔案：** 新增 `px1120_post.py` 和 `px1120_note.txt`，其餘改動在 `build_alchip.py`、`v024_post.py`、`gen_html_json.py`、`README.md`、`sens.json`、`coord_alt.json`、`html.json`。",
+ "error": null,
+ "stderr": null
+}

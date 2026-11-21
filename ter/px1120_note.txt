@@ -1,0 +1,10 @@
+folder=ter
+version=0.4.6 -> 0.4.7
+px=249.55 -> 204.78
+tp=319.49 -> 278.11
+upside=+28.0% -> +35.8%
+rating=買進 -> 買進
+peers_repriced=5
+peers_unchanged=無
+checks=重算錯誤格 0；check_company_html 通過；check_layout_v13 --xlsx 通過；baseline_coordination/check.py 0 項不符；Sens 快照 CURRENT（已重跑 sens_ter.py 與 alt_run.py ter）；check_sens_coverage 未過（28 鍵 Sens 頁找不到表頭，前版 v0.4.6 即同樣未過，不要求）
+notes=同業中位數 27.88 -> 23.22。Technoprobe（TPRO.MI）市值輸入 €21.98 -> €18.41（11-20 取報價資料最近成交價）、歐元兌美元 1.105 -> 1.097（EURUSD=X）。前版 README 寫的加權目標價 338.56 與重建後成品重算值 319.49 不同（Siliconomics 快照已更新），本單前值取 319.49。DCF 153.27、Comparable 330.90；另一側讀數（Coord）加權仍為買進。

@@ -1,0 +1,10 @@
+folder=victory_giant
+version=v0.4.5 -> v0.4.6
+px=123.24 -> 108.22
+tp=166.99 -> 166.41
+upside=+35.5% -> +53.8%
+rating=買進 -> 強力買進
+peers_repriced=4
+peers_unchanged=無
+checks=check_company_html 全過；check_layout_v13 --xlsx ok（警告：valuation 文字含 closes_ 檔名，前一版即有）；baseline_coordination/check.py 0 項不符；錯誤格 0、快取值檢查通過；xlsx_diff 對 v0.4.5 只有價格相關差異；check_sens_coverage 未過（44／53 鍵無案例），前一版 v0.4.5 同樣未過
+notes=並列參考列 2368.TW 18.1x -> 12.5x、TTMI 9.5x -> 7.5x（由前一版顯示值換算）；Coord 另一側讀數 148.60（中立）-> 148.09（買進）；coord_alt.json 已重跑；本公司無 Sens 快照；README 前一版寫的目標價 179.33 為 px1113 當時值，v0.4.5 成品實際為 166.99（Siliconomics 快照更新後重建），本單前值取自 v0.4.5 成品

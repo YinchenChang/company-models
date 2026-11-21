@@ -1,0 +1,10 @@
+folder=alab
+version=v0.3.9 -> v0.3.10
+px=221.83 -> 180.35
+tp=106.42 -> 90.33
+upside=-52.0% -> -49.9%
+rating=放空 -> 放空
+peers_repriced=5
+peers_unchanged=無
+checks=check_company_html.py alab 通過；check_layout_v13.py（HTML 與 --xlsx）通過；tools/baseline_coordination/check.py 0 項不符；check_cached_values.py 通過（錯誤格 0）；Sens、Coord 快照 CURRENT；check_sens_coverage.py 未過（前版 v0.3.9 即未過，Sens 表頭版面的已知缺口，未處理）
+notes=build_alab.py 建置時 px1113_post 與 px1120_post 依序套用（建置基底仍是 v0.3.8 列）。sens.json 的 attr 歷史說明沿用原文。Coord 另一側讀數 80.58（強力放空）。dist/_待刪除 內舊檔 v0.2 一併移除（已用 git rm 暫存，未 commit）。

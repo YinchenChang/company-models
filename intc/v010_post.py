@@ -10,7 +10,7 @@ import os, re, json
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
-VER, BUILT = "0.1.0", "2026-11-17"
+VER, BUILT = "0.1.1", "2026-11-21"
 BOLD = Font(bold=True); BLUE = Font(color="0000FF"); HDR = PatternFill("solid", fgColor="DDEBF7")
 SAME = "讀取層級（同源，不判定）"
 IR = "https://www.intc.com/news-events/press-releases/detail/"
@@ -614,7 +614,7 @@ def readme13(wb, PLA, RVA, SNS, CR, CO):
     put("o5", T("對帳中：CY2027–CY2029 AI 顆數的另一側讀數只影響 DCAI 中 AI 相關營收，另一側加權目標價 "), TX(f"Coord!C{CR['tp']}", "#,##0.0"), T(" 美元（"), f"Coord!C{CR['rec']}", T("），個股不裁決；公司實績對層級：無可比實績。"))
     put("drv", T("分部營收推導（情境 B）：營收＝CCPG＋DCAI＋All Other＋外部代工。FY2029 CCPG "), TX(f"PL!I{PLA['s_ccg']}", "#,##0"), T("、DCAI "), TX(f"PL!I{PLA['s_dcr']}", "#,##0"), T("（AI 相關 "), TX(f"PL!I{PLA['s_dai']}", "#,##0"),
         T("）、外部代工 "), TX(f"PL!I{PLA['s_ext']}", "0.0"), T("，營收 "), TX(f"PL!I{PLA['s_rev']}", "#,##0"), T(" 十億美元；Foundry 營業利益率 "), TX(f"PL!I{PLA['s_fm']}", "0%"), T("。"))
-    RD.cell(r, 1, f"v{VER}（{BUILT}）：初版。個股 HTML 版面規格 v1.3（樣板 台積電 v0.5.5、聯電 v0.2.4）、三層協調讀取層級與 C0（含公司實績，規則 v1.4.2）、硬體股兩讀數。章節為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；"
+    RD.cell(r, 1, f"v{VER}（{BUILT}）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）；其餘沿用 v0.1.0（2026-11-17 初版）。個股 HTML 版面規格 v1.3（樣板 台積電 v0.5.5、聯電 v0.2.4）、三層協調讀取層級與 C0（含公司實績，規則 v1.4.2）、硬體股兩讀數。章節為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；"
                   "含 Hist 頁（損益表歷史 FY2022–FY2025，公司財報新聞稿，美國 GAAP）、RevDCF 頁（反向 DCF）、PL 頁末標準損益表與分部營收推導、Val 頁末 0.7 四個目標價、Sens 頁末加權目標價相對基準（連既有逐案整本重算）、"
                   "Coord 頁（兩讀數目標價；讀取層級；C0：季營收、分部、資本支出實績對層級，皆無可比實績，對帳中 0）、README 頁末 v1.3 白話列。")
     out["ver"] = r; r += 1
@@ -678,11 +678,11 @@ def governance(wb, here):
     SE.cell(r, 1, "加權目標價（建置快照）"); SE.cell(r, 4, snap.get("tp")); tb = r; r += 1
     SE.cell(r, 1, "模型狀態（CURRENT＝快照、HTML、README 與本檔輸入一致；STALE＝In 頁已改、須重跑建置）").font = Font(bold=True)
     SE.cell(r, 4, f'=IF(AND(ISNUMBER(D{fb}),ISNUMBER(D{tb}),ABS(D{fp}-D{fb})<=0.000000001*MAX(1,ABS(D{fb})),ABS(Val!$B${tpr}-D{tb})<0.005),"CURRENT","STALE")'); r += 1
-    h = hashlib.sha256(b"0.1.0")
+    h = hashlib.sha256(b"0.1.1")
     for fn in sorted(["build_intc.py", "v010_post.py", "show_intc.py", "segments.json", "coord_alt.json"]):
         p = _os.path.join(here, fn)
         if _os.path.exists(p): h.update(fn.encode()); h.update(open(p, "rb").read())
-    bid = "intc-v0.1.0-" + h.hexdigest()[:10]
+    bid = "intc-v0.1.1-" + h.hexdigest()[:10]
     SE.cell(r, 1, "build_id（README、Sens、HTML 三處相同）"); SE.cell(r, 4, bid)
     a1 = wb["README"]["A1"].value
     wb["README"]["A1"].value = (a1 + ("" if str(a1).endswith('"') or not str(a1).startswith("=") else "") ) if False else (str(a1) + '&"；build_id ' + bid + '。"' if str(a1).startswith("=") else str(a1) + "；build_id " + bid + "。")

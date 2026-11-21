@@ -1,0 +1,10 @@
+folder=amkr
+version=v0.4.5 -> v0.4.6
+px=36.11 -> 30.24
+tp=42.69 -> 32.33
+upside=+18.2% -> +6.9%
+rating=中立 -> 中立
+peers_repriced=5
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0 且與 dist 逐格 0 差異；check_company_html amkr 全部通過；check_layout_v13 --xlsx ok（參數代號警告同前版）；baseline_coordination/check.py 0 項不符；sens_amkr.py 與 alt_run.py amkr 已重跑（Sens 快照 CURRENT，基準 32.333）；check_sens_coverage --require-keycol 59／67 未過（v0.4.5 即相同，既有）
+notes=同業中位數 16.82 -> 12.14；DCF 20.94 -> 20.37；Comparable（相對倍數調整後）64.45 -> 44.29；Comparable（市場主流同業法）50.16 -> 34.47；另一側讀數 37.26（中立）-> 29.93（中立）。新檔 px1120_post.py（沿用 px1113_post.py 做法，build_amkr.py 在 px1113 之後呼叫）；README 本版要點文字放 px1120_readme.txt。amkr/README.md 的版本沿革段落未更新（本版要點在 xlsx 的 README 頁）。舊 v0.4.5 dist 已移除（git rm 暫存，未 commit）。

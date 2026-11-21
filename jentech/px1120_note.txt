@@ -1,0 +1,10 @@
+folder=jentech
+version=v0.2.7 -> v0.2.8
+px=5345 -> 3705
+tp=4138.8 -> 3342.3
+upside=-22.6% -> -9.8%
+rating=中立 -> 中立
+peers_repriced=4
+peers_unchanged=無
+checks=check_company_html 通過；check_layout_v13（html＋xlsx）通過；baseline_coordination/check.py 0 項不符；check_in_layout 通過；check_cached_values 通過（錯誤格 0）；check_sens_coverage --require-keycol 未通過（42 鍵無案例或豁免，前版即未過，不要求）
+notes=Coord 快照原為 STALE，已以 tools/coord/alt_run.py 重跑（另一側 3075.8 中立），現為 CURRENT。jentech 無獨立 sens 腳本（Sens 隨建置產生）。舊 dist 的 v0.2.7 加權目標價為 4138.8（與 px1113 README 寫的 4413.0 不同，為上游 Siliconomics 重建後的成品值），本單前值取舊 dist 重算值。為跑版面檢查另在本機 pip 安裝 beautifulsoup4、lxml（不屬 repo）。

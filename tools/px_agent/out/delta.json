@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 24,
+ "duration_ms": 120739,
+ "total_cost_usd": 0.35314480000000004,
+ "result": "台達電（delta）已換成 2026-11-20 收盤，版號 v0.5.8 → v0.5.9，xlsx 與 HTML 已重建，檔名日期 20261121。\n\n- **現價：** 1,240 → 900。\n- **加權目標價：** 919.9 → 872.9。\n- **上檔空間：** −25.8% → −3.0%。\n- **評等：** 放空 → 中立。評等由模型公式重算，沒有手改。\n- **同業：** 換價 4 家（Vertiv、Eaton、Schneider、光寶科），同業 P/E 中位數 21.5 → 19.4，未換價同業無。\n- **非控制權益：** 台達泰國股價與兩個匯率（USD/TWD、USD/THB）一併換成 11-20 收盤。\n- **前值口徑：** 前值取自 v0.5.8 成品 xlsx 的重算值。v0.5.8 的 README 文字寫的是 979.4、−21.0%、中立，與成品對不上。我判斷原因是上游 Siliconomics 快照後來更新到 v0.22，但沒有逐項驗證。這點已寫進 `px1120_note.txt` 與 `delta/README.md`。\n- **Coord：** 另一側讀數已用 `alt_run.py` 重跑，快照狀態 CURRENT。另一側評等這次是中立，前一版是放空。\n- **檢查：** xlsx 錯誤格 0，與重算結果逐格相同。`check_company_html`、`check_layout_v13`、`baseline_coordination` 都通過。`check_sens_coverage` 沒過（50/50 缺 Sens 案例表頭），v0.5.8 就是同樣結果，所以不要求，note 裡有寫。\n\n我只動了 `delta/`：新增 `px1120_post.py` 與 `px1120_note.txt`，也改了 `build_delta.py`、`gen_html_json.py`、`README.md` 和 `coord_alt.json`。舊 dist 檔已移除，`_待刪除` 資料夾沒動，沒有 commit。",
+ "error": null,
+ "stderr": null
+}

@@ -349,7 +349,7 @@ def _v13():
     r13 = find("README", "v1.3 展示層")
     RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
     assert str(RD[f"A{RM['ver']}"].value).startswith("v0.3.7"), RD[f"A{RM['ver']}"].value
-    assert str(RD[f"A{RD.max_row}"].value).startswith("v0.3.12"), RD[f"A{RD.max_row}"].value   # v0.3.12（2026-11-18）起最後一列為 v0.3.12 沿革
+    assert str(RD[f"A{RD.max_row}"].value).startswith("v0.3.13"), RD[f"A{RD.max_row}"].value   # v0.3.12（2026-11-18）起最後一列為 v0.3.13 沿革
     cfg["layout"] = "v1.3"
     # ---- 橫幅：只留 ≤200 字白話（規則與歸因移到估值章）----
     old_note = cfg["hero"]["note"]

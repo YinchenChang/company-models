@@ -1,0 +1,10 @@
+folder=guc
+version=v0.3.6 -> v0.3.7
+px=8610 -> 5400
+tp=3202.03 -> 2683.27
+upside=-62.8% -> -50.3%
+rating=強力放空 -> 強力放空
+peers_repriced=4
+peers_unchanged=無
+checks=check_company_html 全過；check_layout_v13 通過（僅參數代號警告）；check_in_layout 通過；check_cached_values 通過；baseline_coordination/check 0 項不符；錯誤格 0；Sens／Coord 快照 CURRENT；check_sens_coverage --require-keycol 未過（44／54 鍵缺案例，v0.3.6 即未過，非本版造成）
+notes=另一側讀數（Coord）加權目標價 2,919.18 -> 2,549.53（強力放空）。DCF 目標價 1,684.92 -> 1,626.27，來自 WACC 市值權重隨現價重算。上檔空間 -50.3% 距強力放空門檻（-50%）很近。舊 dist 與 _待刪除 資料夾已移除；其他公司資料夾未動。

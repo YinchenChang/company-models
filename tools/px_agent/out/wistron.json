@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 30,
+ "duration_ms": 199395,
+ "total_cost_usd": 0.4487003,
+ "result": "緯創（`wistron/`）已換成 2026-11-20 收盤，版號 v0.4.8 → v0.4.9，xlsx 與 HTML 都已重建，檔名日期 20261121，dist 只留這一版。\n\n- **價格：** 現價 171 → 147。緯穎股價 1,635 → 1,325，緯軟股價 119 → 96.5。5 家同業（廣達、鴻海、英業達、緯穎、Super Micro）都換價，沒有未換價的。\n- **目標價：** 同業前瞻 P/E 中位數 10.20 → 8.84，DCF 目標價 432.63 → 460.76，加權目標價 346.25 → 342.95。\n- **上檔空間與評等：** +102.5% → +133.3%，評等維持強力買進。\n- **舊值出處：** 舊值取自 v0.4.8 成品 xlsx 的重算值，和 v0.4.8 README 文字（369.11、+115.9%）不一致。我判斷是 v0.4.8 之後上游讀數更新所致，但沒有逐項查證；這點已寫進 README 和 note。\n- **改法：** 緯創沒有 `px1113_post.py`，所以沿用 px1113 的做法，直接改 `build_wistron.py` 和 `v046_post.py`。另改了 `gen_html_json.py` 裡的版本檢查字串（v0.4.8 → v0.4.9）。\n- **快照：** Sens、Coord 快照已重跑並為 CURRENT。\n- **檢查：**\n  - 全部通過：`check_company_html wistron`、`check_layout_v13 --xlsx`（需先裝 bs4）、`baseline_coordination/check.py`（0 項不符）、LibreOffice 重算（錯誤格 0）。\n  - 未通過但前版也沒過：`check_sens_coverage --require-keycol`，77／77 找不到 Sens 表頭，已在 note 寫明。\n- 已更新 `wistron/README.md`，並寫了 `wistron/px1120_note.txt`。沒有 commit。",
+ "error": null,
+ "stderr": null
+}

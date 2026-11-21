@@ -14,6 +14,7 @@ SAI = "https://stockanalysis.com/stocks/intc/statistics/"
 TRS = "美國財政部每日殖利率曲線 10 Yr：2026-10-23 5.00%（https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202610）"
 CSV13 = "repo markets/invest_map/data/closes_20261020_20261113.csv"
 CSV13X = "repo markets/invest_map/data/closes_extra_20261113.csv"
+CSV20 = "repo markets/invest_map/data/closes_20261109_20261120.csv"
 C = dict(kind="intc", folder="intc", name="英特爾")
 C["urlname"] = {R3: "公司新聞稿 3Q26 財報（2026-10-29）", R2: "公司新聞稿 2Q26 財報（2026-07-23）", R1: "公司新聞稿 1Q26 財報（2026-04-23）", R4: "公司新聞稿 4Q25 與 FY2025 財報（2026-01-22）",
                 CMC: "companiesmarketcap", SAI: "stockanalysis.com 統計頁"}
@@ -40,9 +41,9 @@ C["cons"] = [
     ("cons_eps27", "共識 EPS FY2027（只作對照，不進模型）", "US$", 1.791, YFW + "：2027-12 期共識 EPS 1.791；營收 69.13B", "同上"),
     ("cons_rev27", "共識營收 FY2027（只作對照，不進模型）", "US$B", 69.13, YFW, "—"),
     ("cons_n", "共識目標價家數", "家", 43, YFW + "：目標價均值 90.65（43 家）", "stockanalysis 頁面同日顯示 49 家、90.65")]
-C["px"] = 59.66; C["px_date"] = "2026-11-13"
-C["px_src"] = "收盤價取自 " + CSV13 + "（INTC 2026-11-13 收盤 59.66 美元）"
-C["px_src2"] = "價格只用 repo 兩個 CSV，不另查（工作單第 3 節）"
+C["px"] = 51.28; C["px_date"] = "2026-11-20"
+C["px_src"] = "工作單 px1120；Yahoo Finance 日線收盤 2026-11-20（" + CSV20 + "）：INTC 51.28 美元（v0.1.0 為 2026-11-13 收盤 59.66）"
+C["px_src2"] = "價格只用 repo 內 closes CSV，不另查（工作單 px1120 第 3 節）"
 C["eps_ttm"] = -3.51
 C["eps_ttm_src"] = "近四季 GAAP 稀釋 EPS：4Q25 −0.12、1Q26 −0.73、2Q26 −2.16、3Q26 0.60＝−2.41（公司新聞稿）；含 Escrowed Shares 非現金評價損失（2Q26 每股 −2.45）"
 C["eps_ttm"] = -2.41
@@ -61,7 +62,7 @@ C["scn_t"] = {"A": "情境 A（樂觀）：18A／14A 外部客戶與先進封裝
 C["tp_method"] = ("DCF（標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現到 2026 年底（期中慣例），終值＝NOPAT(FY2033) ×（1 − g ÷ RONIC）÷（WACC − g），g＝MIN(3%, 美國 10 年期公債殖利率)、RONIC＝WACC；"
                   "ke＝rf＋β ×（ERP 5%＋CRP 0），β 為自算 US 半導體產業無槓桿 β（Blume 調整 1.884）依市值 D/E 重新加槓桿；EV 加現金與短期投資、權益投資，扣債務與非控制權益（帳面），÷ 股數，以 ke 推到 12 個月後（DCF 頁、tools/fcff_dcf.py）。"
                   "資本支出與折舊逐年取 PL 頁各情境（總資本支出＝投資活動＋融資活動的 PP&E 增加，不計合資夥伴挹注與政府補助），FY2030 起線性收斂。"
-                  "Comparable：台積電 ADR、AMD、聯電 ADR、格芯、高塔前瞻 P/E 中位數（2026-11-13 收盤 ÷ Yahoo 共識 EPS 時間加權）× 相對倍數調整係數（Intel 自身 10 年相對同業的倍數比）× 12 個月後前瞻 EPS。"
+                  "Comparable：台積電 ADR、AMD、聯電 ADR、格芯、高塔前瞻 P/E 中位數（2026-11-20 收盤 ÷ Yahoo 共識 EPS 時間加權）× 相對倍數調整係數（Intel 自身 10 年相對同業的倍數比）× 12 個月後前瞻 EPS。"
                   "主要偏誤：Foundry 營業利益率路徑、外部代工營收與 DCAI AI 相關為 Assumed；FY2030 起只用收斂法（淨利率往 FY2029 × 0.9 或 0.8 收斂，對正在轉虧為盈的公司偏保守）；高 β 使 WACC 偏高。")
 C["pe_peers_note"] = "Comparable 同業：台積電（ADR）、AMD、聯電（ADR）、格芯、高塔；相對倍數調整係數的 Bloomberg 前瞻倍數只有台積電、AMD、聯電（2303.TW）滿 7 年（格芯、高塔資料不足未納入）。"
 C["ccg"] = {27: {"A": 0.04, "B": 0.02, "C": -0.03}, 28: {"A": 0.04, "B": 0.01, "C": -0.02}, 29: {"A": 0.03, "B": 0.01, "C": -0.01}}
@@ -86,12 +87,12 @@ C["cx"] = {27: {"A": 18.0, "B": 16.0, "C": 14.0}, 28: {"A": 19.0, "B": 16.0, "C"
 C["cx_src"] = "FY2025 總資本支出約 176.7 億、FY2026 約 163 億（Q 頁）；公司 FY2027 資本支出指引：未找到。資本支出強度是估值主軸"
 C["units_a1"] = "Units — Intel 分部、外部代工與資本支出（三情境）。DCAI 中 AI 相關營收 FY2028–29 乘 Siliconomics 同字母顆數係數（um28／um29）；其餘為公司層級假設（待併入 Siliconomics）"
 C["units_note"] = "讀法：Intel 的 EPS 由 Foundry 虧損收斂速度與資本支出決定；DCAI 的 AI 相關成長是營收端變數，但 Foundry 年虧 50–90 億美元的規模使其影響被稀釋。"
-_YH = "收盤 2026-11-13（repo closes CSV）÷ Yahoo 共識 EPS（2026-11-17；2/12 × 本年度＋10/12 × 次年度）"
-C["peers"] = [("台積電（TSMC，ADR）", "TSM", "=398.73/(2/12*17.5+10/12*23.39)", "2026-11-13", f"TSM {_YH}：398.73 ÷（17.50、23.39）"),
-              ("超微（AMD）", "AMD", "=534.06/(2/12*8.084+10/12*17.64)", "2026-11-13", f"AMD {_YH}：534.06 ÷（8.084、17.64）；Intel CPU 直接競爭者"),
-              ("聯電（UMC，ADR）", "UMC", "=15.4/(2/12*1.135+10/12*0.9)", "2026-11-13", f"UMC {_YH}：15.40 ÷（1.135、0.900）；次年度 EPS 低於本年度（Yahoo 數，疑含一次性）"),
-              ("格芯（GlobalFoundries）", "GFS", "=41.47/(2/12*1.988+10/12*2.6)", "2026-11-13", f"GFS {_YH}：41.47 ÷（1.988、2.600）"),
-              ("高塔半導體（Tower）", "TSEM", "=146.89/(2/12*4.067+10/12*7.004)", "2026-11-13", f"TSEM {_YH}：146.89 ÷（4.067、7.004）")]
+_YH = "收盤 2026-11-20（工作單 px1120；closes_20261109_20261120.csv）÷ Yahoo 共識 EPS（2026-11-17；2/12 × 本年度＋10/12 × 次年度）"
+C["peers"] = [("台積電（TSMC，ADR）", "TSM", "=318.71/(2/12*17.5+10/12*23.39)", "2026-11-20", f"TSM {_YH}：318.71 ÷（v0.1.0 為 11-13 收盤 398.73）；EPS （17.50、23.39）"),
+              ("超微（AMD）", "AMD", "=424.39/(2/12*8.084+10/12*17.64)", "2026-11-20", f"AMD {_YH}：424.39 ÷（v0.1.0 為 11-13 收盤 534.06）；EPS （8.084、17.64）；Intel CPU 直接競爭者"),
+              ("聯電（UMC，ADR）", "UMC", "=12.04/(2/12*1.135+10/12*0.9)", "2026-11-20", f"UMC {_YH}：12.04 ÷（v0.1.0 為 11-13 收盤 15.40）；EPS （1.135、0.900）；次年度 EPS 低於本年度（Yahoo 數，疑含一次性）"),
+              ("格芯（GlobalFoundries）", "GFS", "=35.56/(2/12*1.988+10/12*2.6)", "2026-11-20", f"GFS {_YH}：35.56 ÷（v0.1.0 為 11-13 收盤 41.47）；EPS （1.988、2.600）"),
+              ("高塔半導體（Tower）", "TSEM", "=115.56/(2/12*4.067+10/12*7.004)", "2026-11-20", f"TSEM {_YH}：115.56 ÷（v0.1.0 為 11-13 收盤 146.89）；EPS （4.067、7.004）")]
 C["peer_note"] = "晶圓代工與 CPU 同業（台積電、AMD、聯電、格芯、高塔）；EPS 為第三方彙整（Interested-party），GAAP／non-GAAP 口徑不一；不含 A 股"
 C["sens_cases"] = [("ai_adj", "DCAI 中 AI 相關營收係數", "x", "0.00"), ("ext_adj", "外部代工營收係數", "x", "0.00"), ("fm_adj", "Foundry 營業利益率調整", "pt", "0.0%"),
                    ("dcm_adj", "DCAI 營業利益率調整", "pt", "0.0%"), ("ccm_adj", "CCPG 營業利益率調整", "pt", "0.0%"), ("ccg_adj", "CCPG 營收年增調整", "pt", "0.0%"),
@@ -113,7 +114,7 @@ C["sources"] = [("公司：新聞稿 3Q26 財報（2026-10-29；3Q26 損益、�
     ("公司：新聞稿 4Q25 與 FY2025 財報（2026-01-22；FY2025 損益、分部、資產負債表、資本支出與折舊）", R4),
     ("第三方：Yahoo Finance 基本面快照（FY2022–25 年度與近五季、共識 EPS、目標價、同業前瞻 P/E；僅交叉檢查與同業 EPS；Interested-party）", YFW),
     ("資料商：companiesmarketcap 年底 P/E（2016–2025）", CMC), ("資料商：stockanalysis 統計頁（共識目標價、前瞻 P/E 對照）", SAI),
-    ("價格：repo markets/invest_map/data/closes_20261020_20261113.csv 與 closes_extra_20261113.csv（2026-11-13 收盤；不另查）", CSV13 + "；" + CSV13X),
+    ("價格：repo markets/invest_map/data/closes_20261109_20261120.csv（2026-11-20 收盤；不另查；工作單 px1120）", CSV20),
     ("無風險利率：美國財政部每日殖利率曲線 10 Yr（2026-10-23 5.00%）", TRS),
     ("行業層：Siliconomics 快照（顆數係數 um28／um29、Wattonomics 錨定 wta、代工與邏輯設備成長 eq_g_fd；本 repo，唯讀）", "siliconomics/data/CURRENT_SNAPSHOT；siliconomics/reader.py；markets/scen"),
     ("自算產業 β：US 半導體 1.884", "docs/plan/自算產業β_20261105.md"),
@@ -122,7 +123,7 @@ C["sources"] = [("公司：新聞稿 3Q26 財報（2026-10-29；3Q26 損益、�
 SABS = "公司新聞稿 3Q26（2026-10-29）資產負債表（2026-09-26）"
 C["dcf_P"] = dict(
     date="2026-12-31（工作單評價日）", ccy="US$", amt="US$B", shu="十億股",
-    rf=(0.0500, TRS + "；2026-11-05 讀取（repo AMD／NVIDIA 模型同源）", "FRED DGS10（同一序列）；利率日 2026-10-23，股價日 2026-11-13（利率未更新：未取得較新值）", "無風險利率（美國 10 年期公債殖利率，2026-10-23）"),
+    rf=(0.0500, TRS + "；2026-11-05 讀取（repo AMD／NVIDIA 模型同源）", "FRED DGS10（同一序列）；利率日 2026-10-23，股價日 2026-11-20（利率未更新：未取得較新值）", "無風險利率（美國 10 年期公債殖利率，2026-10-23）"),
     beta_fixed=("=(beta_u-beta_du)*(1+(1-tax_w)*beta_de)", "=beta_u*(1+(1-tax_w)*beta_de)", "=(beta_u+beta_du)*(1+(1-tax_w)*beta_de)", "Derived",
                 "自算產業 β：US 半導體 同業 13 家中位數（含 Intel；Yahoo Finance 月報酬 2021-11～2026-10，對 S&P 500 迴歸，Hamada 去槓桿、現金修正）；Blume 調整 0.67β＋0.33（專案規則）；以本公司市值 D/E 與稅率重新加槓桿",
                 "Sens 低／高（Analogy）：β_u ∓ beta_du（0.3），各自同式重新加槓桿（專案規則）；個股迴歸 β（Yahoo 2.43）未採用"),
@@ -146,10 +147,10 @@ C["dcf_P"] = dict(
            "FY2025 年底營運資金 ÷ 營收：應收 3.839＋存貨 11.618 − 應付 9.882（公司新聞稿 4Q25 資產負債表）÷ 52.853＝10.5%；FY2023–24 資產負債表未取得", "Sens 低／高 5%／20%（Assumed）"))
 C["dcf_ncbs"] = ("21.846+32.159+8.798-50.134-0+0-16.642", "2026-09-30 資產負債表（US$B）：現金 21.846＋短期投資 32.159＋權益投資 8.798（3Q26）− 債務 50.134 − 租賃 0（未找到）− 非控制權益 16.642")
 C["readme"] = [
- ("英特爾（INTC）個股模型 v0.1.0（AI 半導體 Project：代工層，IDM＋Intel Foundry；樣板 tsmc/、umc/，產品線參 amd/）　2026-11-17", True),
- ("版本：v0.1.0（初版）。營收＝CCPG＋DCAI（拆 AI 相關與其他）＋All Other＋外部代工營收。滾入 3Q26 實績（2026-10-29 財報）與 4Q26 指引。本版未做先驗。", False),
+ ("英特爾（INTC）個股模型 v0.1.1（AI 半導體 Project：代工層，IDM＋Intel Foundry；樣板 tsmc/、umc/，產品線參 amd/）　2026-11-21", True),
+ ("版本：v0.1.1（現價與同業報價改 2026-11-20 收盤；v0.1.0 為初版）。營收＝CCPG＋DCAI（拆 AI 相關與其他）＋All Other＋外部代工營收。滾入 3Q26 實績（2026-10-29 財報）與 4Q26 指引。本版未做先驗。", False),
  ("模型命題：Intel 的獲利由兩個變數決定——Intel Foundry 的虧損收斂速度（FY2026 年虧約 85 億美元、營業利益率約 −35%）與資本支出強度（總資本支出約占營收 26–30%）；Intel Products（CCPG、DCAI）是現金來源，DCAI 受 AI 伺服器 CPU 需求帶動。少數股權（Arizona Fab 與 Brookfield、Ireland 合資與 Apollo、Mobileye 等）持續上升，股數因美國政府、SoftBank、NVIDIA 入股增加。", False),
- ("核心問題：Foundry 能否在 FY2029 前把營業利益率由 −35% 收斂到接近損益兩平（情境 A −5%、B −13%、C −24%）；外部客戶（18A／14A、先進封裝）能把外部代工營收帶到多大（FY2029 A／B／C 90／55／25 億美元，Assumed）；現價 59.66 美元隱含的前瞻 P/E 約 34 倍（Yahoo 共識 EPS），模型要多少獲利才撐得住。", False),
+ ("核心問題：Foundry 能否在 FY2029 前把營業利益率由 −35% 收斂到接近損益兩平（情境 A −5%、B −13%、C −24%）；外部客戶（18A／14A、先進封裝）能把外部代工營收帶到多大（FY2029 A／B／C 90／55／25 億美元，Assumed）；現價 51.28 美元隱含的前瞻 P/E 約 29 倍（Yahoo 共識 EPS），模型要多少獲利才撐得住。", False),
  ("", False),
  ("會計年度近似日曆年（Intel 會計年度為 12 月最後一個週六），FY(t)≈CY(t)，不平移。FY2025A 實績、FY2026 錨點（1Q–3Q26 實績＋4Q26 指引）、FY2027–FY2029 驅動因子推導、FY2030–FY2032 收斂法。金額：十億美元；EPS：美元（稀釋）；口徑：GAAP、歸屬 Intel。", False),
  ("", False),
@@ -162,12 +163,12 @@ C["readme"] = [
  ("預估期間：FY2027–FY2029 由驅動因子推導；FY2030 起為收斂法（營收年增收斂到 4%、淨利率往 FY2029 × 0.9（B）／ × 0.8（C）／持平（A）收斂；PL 頁灰底），對正在轉虧為盈的公司偏保守（待判斷）。", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。公司數字取自公司新聞稿（IR 頁，來源等級：公司原文）；Yahoo 為第三方彙整，只作交叉檢查與同業 EPS（Interested-party）。", False),
  ("", False),
- ("已知限制：(1) Escrowed Shares（美國商務部 CHIPS 協議託管股份）的 FY2026 評價損失 126 億美元為非現金，FY2027 起不預測；其餘額與美國政府認股權證的稀釋未建模（2Q26 約 1.43 億股尚未轉交、對應約 32 億美元撥款；預設視為不在 5.31B 股內、撥款現金不計，影響估算見 README 待判斷 3）；(2) 3Q26 公司稀釋 EPS 0.60 與淨利 ÷ 稀釋股數 0.63 不同（分子另有調整，未取得）；(3) 4Q26 分部拆分、Foundry 損益兩平時點、外部客戶金額公司未揭露；(4) 租賃負債、FY2023–24 資產負債表（營運資金比）、債務利率未取得；(5) 共識 EPS 為 non-GAAP，與 GAAP 差距每股約 0.9–1.0 美元；(6) 權益投資取 3Q26 帳面 8.798；(7) 利率為 2026-10-23（美國 10 年期）而股價為 2026-11-13。", False),
+ ("已知限制：(1) Escrowed Shares（美國商務部 CHIPS 協議託管股份）的 FY2026 評價損失 126 億美元為非現金，FY2027 起不預測；其餘額與美國政府認股權證的稀釋未建模（2Q26 約 1.43 億股尚未轉交、對應約 32 億美元撥款；預設視為不在 5.31B 股內、撥款現金不計，影響估算見 README 待判斷 3）；(2) 3Q26 公司稀釋 EPS 0.60 與淨利 ÷ 稀釋股數 0.63 不同（分子另有調整，未取得）；(3) 4Q26 分部拆分、Foundry 損益兩平時點、外部客戶金額公司未揭露；(4) 租賃負債、FY2023–24 資產負債表（營運資金比）、債務利率未取得；(5) 共識 EPS 為 non-GAAP，與 GAAP 差距每股約 0.9–1.0 美元；(6) 權益投資取 3Q26 帳面 8.798；(7) 利率為 2026-10-23（美國 10 年期）而股價為 2026-11-20。", False),
  ("", False),
  ("情境對照表（A／B／C 讀同字母的行業情境；公司特有變數 A 最有利、C 最不利）", True),
  ("行業：DCAI 中 AI 相關營收 FY2028–29 乘 Siliconomics um28／um29（三組係數見 In 頁 um28_A–um29_C；B＝Siliconomics 基準係數）；Siliconomics 代工與邏輯設備年增（eq_g_fd：2026 18.9%、2027 18.1%、2028 13.6%）只作 Intel 資本支出的對照（Recon）。Siliconomics 沒有伺服器 CPU、客戶端 PC、代工利益率、外部代工營收的變數，皆為公司層級假設（建議補進 Siliconomics，見 README 檔）。", False),
  ("公司特有：外部代工營收、Foundry 營業利益率路徑、CCPG／DCAI 營業利益率、資本支出（見上）。", False)]
-C["obs"] = ["目標價 US$0（現價 0（2026-11-13 收盤））。Comparable 單獨為 0。", "（建置後由公式取代）", "（建置後由公式取代）"]
+C["obs"] = ["目標價 US$0（現價 0（2026-11-20 收盤））。Comparable 單獨為 0。", "（建置後由公式取代）", "（建置後由公式取代）"]
 
 # ======================= 建置程式（結構改寫自聯電 umc/build_umc.py；數字與文字在上方 C 設定） =======================
 import sys, os, json, re
@@ -892,7 +893,7 @@ RMX._peers = lambda folder: ([("台積電（TSMC）", "TSM"), ("超微（AMD）"
 RMX.apply(wb, C["folder"])
 RD.cell(RD.max_row, 1, "相對倍數調整（tools/relative_multiple.py；Val 第 0.5 節）已含在加權目標價：Comparable（相對倍數調整後）＝同業前瞻倍數中位數 × 本公司 10 年相對同業的倍數比（Bloomberg 前瞻倍數；同業取台積電、AMD、聯電）。「Comparable 目標價（市場主流同業法）」維持不調整。tools/target_summary 未含 Intel，本檔在建置時於行程內補上（未改 tools/）。")
 sys.path.insert(0, os.path.join(ROOT, "tools", "in_layout")); import apply_in_layout  # noqa: E402
-apply_in_layout.apply(wb, "v0.1.0", "2026-11-17")
+apply_in_layout.apply(wb, "v0.1.1", "2026-11-21")
 for _r in range(4, IN.max_row + 1):   # v0.2.2（第三輪修正第 15、23 點）：表頭統一順利／平平／不如預期；收斂法列名中性
     if str(IN.cell(_r, 1).value or "").startswith("情境驅動對照"):
         for _j, _h in zip((4, 5, 6), ("情境 A（樂觀）", "情境 B（基準）", "情境 C（保守）")): IN.cell(_r + 1, _j).value = _h

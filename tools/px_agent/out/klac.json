@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 22,
+ "duration_ms": 131979,
+ "total_cost_usd": 0.323465,
+ "result": "KLAC（科磊）已換成 2026-11-20 收盤，版號升為 v0.4.7，Excel 與 HTML 已重建，沒有 commit。\n\n- **現價**：152.32 → 126.87。\n- **同業前瞻 P/E 中位數**：23.53 → 19.93。5 家同業全部換價，沒有缺代號。\n- **加權目標價**：96.67 → 86.31。\n- **上檔空間**：-36.5% → -32.0%。\n- **評等**：放空 → 放空（模型公式重算）。\n- **檢查**：重算錯誤格 0、Sens 快照 CURRENT、Coord 快照已重跑。`check_company_html`、`check_layout_v13`（警告：Q 頁 6 格讀敏感度欄）、`check_in_layout` 通過，`baseline_coordination/check.py` 0 項不符。\n- **未過**：`check_sens_coverage` 未過（36 鍵找不到 Sens 表頭），前版 px1113 就沒過，本版相同。\n- **環境**：`check_layout_v13` 需要 bs4，我在本機用 pip 裝了 beautifulsoup4。\n- **成品**：`klac/dist/` 只留 `20261121_科磊個股模型_v0.4.7.xlsx` 與 `.html`，v0.4.6 已移除。\n- **程式**：新增 `klac/px1120_post.py`，接在 `px1113_post.py` 之後執行。因 px1113 的版本列是公式，這版把它凍結成 v0.4.6 的顯示文字。`gen_html_json.py` 的版本斷言改成 v0.4.7。\n- **文件**：已寫 `klac/px1120_note.txt`，並更新 `klac/README.md`。",
+ "error": null,
+ "stderr": null
+}

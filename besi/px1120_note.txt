@@ -1,0 +1,10 @@
+folder=besi
+version=v0.2.5 -> v0.2.6
+px=154.1 -> 142.7
+tp=136.86 -> 134.19
+upside=-11.2% -> -6.0%
+rating=中立 -> 中立
+peers_repriced=5
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；check_company_html besi 全部通過；check_layout_v13 --xlsx 通過；baseline_coordination/check.py 0 項不符；check_sens_coverage --require-keycol 56/56 未過（v0.2.5 即未過，既有，不要求）；sens_besi.py、alt_run.py besi 已重跑，快照與現行讀數一致（134.186）
+notes=BESI.AS 11-20 值為報價資料最近成交價（Yahoo 日線尚無該列）；ASM.AS 同。DCF 目標價 68.98 -> 75.08 為 WACC 市值權重與重新加槓桿 β 隨現價自動重算。Comparable（相對倍數調整後）204.74 -> 193.29，同業中位數 25.05 -> 21.82。另一側讀數 128.66 -> 128.76（中立）。建置程式以 px1113_post 接 px1120_post 兩段串接；README 本版說明文字放 px1120_readme_note.txt。

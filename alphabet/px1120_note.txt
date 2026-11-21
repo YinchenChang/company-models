@@ -1,0 +1,10 @@
+folder=alphabet
+version=v0.3.10 -> v0.3.11
+px=295.77 -> 265.29
+tp=249.86 -> 233.92
+upside=-15.5% -> -11.8%
+rating=中立 -> 中立
+peers_repriced=17（非 AI 雲端 8、數位廣告 6、訂閱 3）；另 Alphabet 自身倍數以市值法換價
+peers_unchanged=無
+checks=check_v03.py 全過（公式錯誤 0、核對列 46）；mag/check_in_layout.py 通過；sens_coverage --require-keycol 通過；segment_check 符合；check_company_html.py 全過；check_layout_v13.py 無錯誤（僅全頁參數代號警告，前版即有）；tools/baseline_coordination/check.py 0 項不符；Sens 已用 SENS=1 重跑；Coord 無 STALE 提示未重跑
+notes=check_v03.py 有「Val 缺橫幅：自用 AI 讀法列」警告，前版即有，未處理。同業倍數為近似（無市值，淨負債不變）；Comparable 目標價 311.15 -> 279.28，同業中位數：雲端 14.66->12.79、廣告 8.54->7.35、訂閱 13.74->12.54、META 9.6->8.39、自身 12.31->10.99。舊 dist 檔已移除。

@@ -1,0 +1,10 @@
+folder=arista
+version=v0.5.6 -> v0.5.7
+px=197.29 -> 167.62
+tp=133.66 -> 109.20
+upside=-32.3% -> -34.9%
+rating=放空 -> 放空
+peers_repriced=5
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；xlsx_diff 自比 0 格；check_company_html.py arista 全過；check_layout_v13.py 通過；baseline_coordination/check.py 0 項不符（4 項提醒）；check_sens_coverage.py 未過（12／36 鍵無案例，v0.5.6 即同，非本輪新增）；Sens、Coord 快照已重跑
+notes=v0.5.6 README 表列 137.58／-30.3%（Comparable 209.69、DCF 65.47）與該版 dist 重算值 133.66／-32.3%（Comparable 203.25、DCF 64.07）不符；本單前值取 dist 重算值，README 已註明。ANET、CSCO、CIEN、CLS、HPE、CRDO 皆取自 closes_20261109_20261120.csv，無 11-20 缺列代號。

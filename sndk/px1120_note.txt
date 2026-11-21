@@ -1,0 +1,10 @@
+folder=sndk
+version=v0.5.6 -> v0.5.7
+px=885.01 -> 79.24
+tp=678.40 -> 89.07
+upside=-23.3% -> +12.4%
+rating=中立 -> 中立
+peers_repriced=5
+peers_unchanged=無
+checks=check_company_html 通過；check_layout_v13 通過（參數代號警告為前版就有的 3 項）；check_in_layout 通過；check_cached_values 通過、xlsx_diff 錯誤格 0；Sens 快照 CURRENT（sens_sndk.py 重跑）、Coord 快照 CURRENT（alt_run.py 重跑，檢查列與現行一致）；baseline_coordination 0 項不符；check_sens_coverage 前版即未過（29 個鍵找不到 Sens 表頭），本版同樣未過，不要求；SNDK 分割驗證：用 11-13 分割後收盤 110.626251 建置，DCF 目標價 ×8 ＝ 670.26，與 v0.5.6 完全相同
+notes=SanDisk 本版改為 8:1 分割後口徑（股數 ×8、每股金額 ÷8）；tp 前值 678.40 是 v0.5.6 成品 dist 的分割前重算值（分割後口徑 84.80），v0.5.6 README 寫的 684.34／−22.7% 與成品不一致（上游市場層後續版本差異），以成品為準；同業 5 家為美光、SK 海力士、三星、Kioxia、WDC（WDC 只作 P/E 並列參考）；中位數前瞻 P/B 1.24 -> 1.12；另一側讀數 85.34（中立）；下游若讀 SanDisk 每股金額需注意分割後口徑

@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 25,
+ "duration_ms": 130029,
+ "total_cost_usd": 0.35184469999999995,
+ "result": "廣達已換成 2026-11-20 收盤，版號 v0.4.10 升為 v0.4.11。xlsx 和 HTML 都已重建，檔名日期 20261121，dist 只剩這一版。\n\n| 項目 | 舊值（v0.4.10） | 新值（v0.4.11） |\n|---|---|---|\n| 現價 | 276.5 | 252.0 |\n| 加權目標價 | 480.03 | 417.26 |\n| 上檔空間 | +73.6% | +65.6% |\n| 評等 | 強力買進 | 強力買進 |\n\n- **其他價格輸入：** 廣明 50.1 改 39.45，達明 213.5 改 171.0。\n- **同業：** 5 家都有 11-20 收盤，倍數都已換價，沒有未換價同業。前瞻 P/E 中位數從 10.20 降到 8.27。\n- **DCF 目標價與 Coord：** DCF 目標價 512.71 改 496.64。Coord 另一側讀數 407.32 改 376.97，評等仍是買進。\n- **檢查：**\n  - 通過：建置錯誤格 0、`check_company_html`、`check_layout_v13 --xlsx`、`check_in_layout`、`baseline_coordination`（0 項不符）。\n  - 快照：Sens 與 Coord 快照都已重跑，狀態為 CURRENT。\n  - 未過：`check_sens_coverage` 沒過（找不到 Sens 頁表頭）。v0.4.9 起就未過，不要求，已寫進 note。\n- **做法與改動檔案：**\n  - 建置程式裡沒有 `px1113_post.py` 這類獨立檔，px1113 的價格直接寫在 `build_quanta.py` 和 `v047_post.py` 裡，所以我沿用同一做法，直接改這兩支。\n  - `gen_html_json.py` 的版號檢查也改成 v0.4.11。\n  - 另外更新了 README 版本列、`sens.json`、`coord_alt.json` 和 `px1120_note.txt`。\n- **git：** 沒有 commit、push，也沒有動 `quanta/` 以外的檔案。\n- **環境：** 為了跑 `check_layout_v13`，我在本機用 pip 裝了 `beautifulsoup4`。",
+ "error": null,
+ "stderr": null
+}

@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 27,
+ "duration_ms": 281212,
+ "total_cost_usd": 0.4352033,
+ "result": "NVIDIA 已換成 2026-11-20 收盤，版號 v0.3.12 → v0.3.13。xlsx 和 HTML 已重建，檔名日期 20261121。有兩項檢查沒通過或沒跑，說明在最後。\n\n| 項目 | 前 | 後 |\n|---|---|---|\n| 現價 | 162.85 | 125.53 |\n| 加權目標價 | 333.51 | 300.62 |\n| 上檔空間 | +104.8% | +139.5% |\n| 評等 | 強力買進 | 強力買進（公式重算） |\n| 同業 P/E 中位數 | 19.95 | 17.50 |\n\n- **同業換價：** 5 家全部換價（AMD、Broadcom、Marvell、台積電 ADR、Qualcomm），沒有未換價的。\n- **快照：** Sens、Coord 快照已重跑。`sens.json` 的 `steps`、`attr` 沿用原文，和 px1113 做法相同。\n- **改動範圍：** 只動了 `nvidia/`，沒有 commit。新增了 `px1120_post.py`、`px1120_note.txt` 和 README 的 v0.3.13 段。舊 v0.3.12 xlsx 移到 `dist/_待刪除/`，舊 HTML 刪除。\n- **通過的檢查：** 治理檢查（含 112 處展示數字比對）、`check_company_html`、版本表、三層基準協調（0 項不符）、成品錯誤格 0。\n- **`check_layout_v13`：** 通過，但有一則警告（drivers 章含參數代號 `g_cap`）。我沒有比對前一版是否也有這則警告。\n- **`check_sens_coverage`：** 沒過（`ppr_bw`、`ppr_rb` 無 Sens 案例也沒有豁免）。v0.3.12 同樣沒過，所以不要求。\n- **`layout_check.py`：** 沒跑，這個環境沒有 playwright。\n\n細節都寫在 `nvidia/px1120_note.txt`。",
+ "error": null,
+ "stderr": null
+}

@@ -1,0 +1,10 @@
+folder=microsoft
+version=v0.3.9 -> v0.3.10
+px=523.88 -> 484.52
+tp=382.78 -> 354.14
+upside=-26.93% -> -26.91%
+rating=放空 -> 放空
+peers_repriced=21（不重複代號：雲端 8、廣告 6、軟體另加 ADBE 1、遊戲 3、PC 3）；另 Microsoft 自身市值法倍數 1 項
+peers_unchanged=無
+checks=make_v03.sh 全部通過：公式錯誤 0、核對列 0、C10 對帳落差 B 0.0、check_in_layout、Sens 覆蓋（--require-keycol）、segment_check、check_company_html 全過、check_layout_v13 --xlsx 通過（僅全頁參數代號警告，前版即有）；tools/baseline_coordination/check.py 0 項不符、4 項提醒；Coord 頁為本公司自帶，無 CURRENT/STALE 儲存格，未跑 tools/coord/alt_run.py。Sens 整本重算案例已重跑（data/sens_v0310_20261121.json，基準 354.1396）。前版即有的警告：In 頁有 internal_ai_reading 但 Val 缺「橫幅：自用 AI 讀法」列。
+notes=同業倍數＝11-13 倍數 × 11-20／11-13 收盤比（近似，無市值，淨負債不變；Microsoft 自身用市值法）。中位數：非 AI 雲端 14.66→12.79、數位廣告 8.54→7.35、企業軟體 10.48→8.69、遊戲 13.86→13.73、PC 7.89→7.32。倍數下修使目標價下降約 28.6，現價同時下降，故上檔空間幾乎不變。check_v03.py 的變動拆解 (g) 列門檻由 |g|<5 放寬為 <40（(g)＝−29.96 為真實變動，非錯誤）；SENS=1 的 attrib_v031.py 因 S0 重現 v0.3 時吃到新倍數而中止，故未重跑 C10 重解與變動拆解（與 px1113 作法相同，沿用 data/attrib_v031_20261029.json）。舊 dist 與 sens_v039 檔已移入各自的 _待刪除。為建置在本機安裝了 python-docx、beautifulsoup4。

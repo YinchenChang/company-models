@@ -1,0 +1,10 @@
+folder=ajinomoto
+version=v0.3.7 -> v0.3.8
+px=4227 -> 3819
+tp=3220.88 -> 3242.92
+upside=-23.8% -> -15.1%
+rating=中立 -> 中立
+peers_repriced=11
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；check_company_html 全過；check_layout_v13 通過（僅參數代號警告，前版相同）；check_in_layout 通過；baseline_coordination/check.py 0 項不符；check_sens_coverage 24 鍵無案例（前版同為 24，未處理）；重建與 dist 逐格 0 差異；alt_run.py 已重跑，Coord 快照更新
+notes=舊值取自 dist 內 v0.3.7 成品的重算值（3,220.88、−23.8%），與 v0.3.7 README 寫的 3,289.38／−22.2% 不同（上游台積電、Ibiden、欣興升版後所致）。同業 11 家含 6 家食品同業（中位數 18.4071 -> 18.5680）與 5 家電子材料同業（SOTP 參考）。少數股權市值的 JPY=X、MYR=X 一併換 11-20（mi_v 77.651 -> 77.596）。另一側讀數 tp 3118.52（-26.2%，放空）-> 3139.90（-17.8%，中立）。gen_html_json.py 第 212 行版號檢查改 v0.3.8。

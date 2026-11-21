@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 19,
+ "duration_ms": 172729,
+ "total_cost_usd": 0.2912305000000001,
+ "result": "Arm 已換成 2026-11-20 收盤，版號升到 v0.3.7，xlsx 與 HTML 都已重建（檔名日期 20261121），舊 v0.3.6 dist 已移除。\n\n- **現價：** 190.53 → 152.20\n- **同業 P/E 中位數：** 23.92 → 19.74。六家同業全數換價（Qualcomm、Broadcom、Marvell、Rambus、Synopsys、Cadence），沒有未換價同業。\n- **加權目標價：** 42.59 → 36.00\n- **上檔空間：** −77.6% → −76.3%\n- **評等：** 強力放空 → 強力放空\n- **通過的檢查：** 錯誤格 0、`check_company_html`、`check_governance`、`baseline_coordination/check.py`（0 項不符）。Sens 與 Coord 快照已重跑，狀態 CURRENT。\n- **版面檢查：** `check_layout_v13` 通過，但有參數代號警告，v0.3.5 就有。\n- **前一版就沒過：** `check_sens_coverage` 仍有 β、RONIC、非營業投資三鍵無案例（v0.3.4 起）。`--require-keycol` 單獨跑時出錯，我沒查原因，視同未過。\n- **改動內容：** 主要在 `build_arm.py`，同時改了 `v034_post.py` 的基準日、`gen_html_json.py` 的版號斷言，並新增 `px1120_post.py`。另外更新了 `README.md` 並寫了 `px1120_note.txt`。\n- **git 狀態：** 舊 dist 是用 `git rm` 移除的，已進暫存區，沒有 commit。",
+ "error": null,
+ "stderr": null
+}

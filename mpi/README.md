@@ -1,4 +1,23 @@
-# mpi/ — 旺矽（6223.TWO；MPI）個股模型 v0.2.7
+# mpi/ — 旺矽（6223.TWO；MPI）個股模型 v0.2.8
+
+## v0.2.8（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）
+
+- 現價與同業報價改 2026-11-20 收盤（工作單 px1120；價格只取自 `markets/invest_map/data/closes_20261109_20261120.csv`）。後處理 `px1120_post.py`（build 存檔前呼叫，接在 `px1113_post.py` 之後）只改價格輸入與說明文字，不改公式結構；共識 EPS、rf、預測用匯率與模型假設不變。
+- 同業前瞻倍數＝現行倍數 × 11-20 收盤 ÷ 11-13 收盤。**未換價同業：無**（四家皆有 11-20 收盤）。
+
+| 項目 | v0.2.7（現行 dist 重算值） | v0.2.8 |
+|---|---|---|
+| 現價 | 4,670（11-13） | 3,560（11-20） |
+| 同業前瞻倍數中位數 | 24.06 | 19.89 |
+| DCF 目標價 | 1,296.07 | 1,297.46 |
+| Comparable（相對倍數調整後；進加權） | 2,465.29 | 2,038.33 |
+| 加權目標價 | 1,880.68（−59.7%） | 1,667.89（−53.1%） |
+| 投資建議 | 強力放空 | 強力放空 |
+| 另一側讀數（Coord） | 1,743.47（強力放空） | 1,547.26（強力放空） |
+
+- 前版數字說明：v0.2.7 節寫加權目標價 1,960（−58.0%），現行 dist 重算值為 1,880.68（−59.7%），差在 Siliconomics v0.22 快照更新後 dist 已重建，非本版造成；上表前版欄取現行 dist。
+- 驗證：LibreOffice 重算錯誤格 0；`check_company_html mpi` 全部通過；`check_layout_v13 --xlsx` ok；`check_in_layout` 通過；`baseline_coordination/check.py` 0 項不符；`check_sens_coverage --require-keycol` 9／18 未過（與 v0.2.7 相同，既有）；Coord 快照 STALE，已重跑 `alt_run.py mpi`（`coord_alt.json` 更新）。
+- 成品：`dist/20261121_旺矽個股模型_v0.2.8.xlsx`、`.html`；v0.2.7 已移除。重建：`python3 mpi/build_mpi.py raw.xlsx`（讀 `px1120_readme.txt` 為 README 本版要點），LibreOffice 重算後 `python3 mpi/gen_html_json.py`、`python3 tools/company_html/build_company_html.py mpi`。
 
 ## v0.2.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
 

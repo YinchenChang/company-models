@@ -1,0 +1,10 @@
+folder=ibiden
+version=v0.5.7 -> v0.5.8
+px=6087 -> 4672
+tp=4407.92 -> 3281.67
+upside=-27.6% -> -29.8%
+rating=放空 -> 放空
+peers_repriced=5
+peers_unchanged=無
+checks=check_company_html 通過；check_layout_v13 通過（參數代號警告同前版）；baseline_coordination/check.py 0 項不符；check_sens_coverage 30 項「Sens 頁找不到表頭」，前版同 30 項（未要求）；xlsx 錯誤格 0；Sens 與 Coord 快照已重跑，Coord 狀態 CURRENT
+notes=前版 README 寫的 tp 4885.04／-19.7%／中立與 v0.5.7 成品（4407.92／-27.6%／放空）不符，「前」值取成品重算值，README 已說明。另一側讀數 3922 -> 2917.24（放空）。gen_html_json.py 版號斷言改 v0.5.8。

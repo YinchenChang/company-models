@@ -1,0 +1,10 @@
+folder=oracle
+version=v0.5.3 -> v0.5.4
+px=125.35 -> 101.19
+tp=70.89 -> 62.94
+upside=-43.4% -> -37.8%
+rating=放空 -> 放空
+peers_repriced=7
+peers_unchanged=無
+checks=make_v05.sh 內建檢查全過（公式錯誤 0、Sens 快照差 0、收支模組 51 項 0 失敗、in_layout、sens_coverage --require-keycol、segment_check、check_company_html）；check_layout_v13 通過（僅參數代號警告）；baseline_coordination 0 項不符；Coord 無 STALE
+notes=同業 7 家＝軟體 5（MSFT、SAP、CRM、ADBE、NOW）＋neocloud 2（CRWV、NBIS，只作 Val 對照）。軟體中位數 15.31 -> 13.12；Comparable 目標價 104.81 -> 86.80、DCF 36.97 -> 39.08；mult_oci 低/高 4.81/7.88 與 mult_leg 低/高 7.5/10.5 未動（現值 3.99、7.43 在區間外，對目標價無影響或屬敏感度設定）。舊 v0.5.3 xlsx 移 dist/_待刪除/，html 已刪。reverse_v05 的反向 DCF 在部分驅動因子顯示「區間外／無解」，屬現價下降後的結果。下游若引用 oracle dist 檔名，需主串 cascade。
