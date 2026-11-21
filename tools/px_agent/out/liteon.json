@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 25,
+ "duration_ms": 142974,
+ "total_cost_usd": 0.412675,
+ "result": "光寶（liteon）已換成 2026-11-20 收盤，版號 v0.4.6 → v0.4.7，xlsx 與 HTML 已重建，檔名日期 20261121。\n\n- **現價：** 231.5 → 175.5。\n- **同業 P/E 中位數：** 23.8 → 19.1。四家同業（台達電、Vertiv、Eaton、Flex）都在價格檔裡，所以沒有未換價同業。\n- **加權目標價：** 279.24 → 250.78。\n- **上檔空間：** +20.6% → +42.9%。\n- **評等：** 中立 → 買進，由模型公式重算，沒有手改。\n- **另一側讀數（Coord）：** 258.54 中立 → 232.56 買進。快照原本是 STALE，我重跑 `alt_run` 後已是 CURRENT。\n- **檢查：**\n  - xlsx 錯誤格 0，所有公式格都有快取值。\n  - `check_company_html`、`check_layout_v13` 通過。\n  - `baseline_coordination` 沒有不符項，另有 4 項提醒。\n  - `check_sens_coverage` 加 `--require-keycol` 仍列出 mf、kgi_dsh、beta_u 等無案例；工作單說前版就沒過的不要求，我沒有另外跑前版驗證，這點寫在 note 裡。\n- **舊值出入：** 前版 README 寫的 294.76／+27.3%／買進是 px1113 當天的值。之後上游 Siliconomics 重建，v0.4.6 成品實際是 279.24／+20.6%／中立，所以「前」值取自成品。README 與 note 都有說明。\n- **舊檔：** v0.4.6 的 dist 檔我直接刪除，沒有留在 `_待刪除`。\n- **未動：** 沒有 commit、push，也沒有改 `liteon/` 以外的檔案。\n\n改動在 `liteon/` 內：`build_liteon.py`、新增的 `px1120_post.py`、`px1120_note.txt`、`README.md`、`coord_alt.json`、`gen_html_json.py` 與 `dist/`。",
+ "error": null,
+ "stderr": null
+}

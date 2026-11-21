@@ -1,0 +1,10 @@
+folder=liteon
+version=v0.4.6 -> v0.4.7
+px=231.5 -> 175.5
+tp=279.24 -> 250.78
+upside=+20.6% -> +42.9%
+rating=中立 -> 買進
+peers_repriced=4
+peers_unchanged=無
+checks=xlsx 錯誤格 0、全部公式格有快取值；check_company_html 通過；check_layout_v13 通過；baseline_coordination/check.py 0 項不符（4 項提醒，非本版造成）；check_sens_coverage 無 --require-keycol 時通過，加 --require-keycol 仍列出 mf、kgi_dsh、beta_u 等無案例（前一版即未過，未要求）；Coord 快照 alt_run 重跑後 CURRENT
+notes=前版 README 寫的 px1113 值（294.76、+27.3%、買進）已被 Siliconomics 重建改為成品值 279.24、+20.6%、中立，本單「舊值」取 v0.4.6 成品重算值。評等因上檔空間由 +20.6% 升到 +42.9% 由中立轉買進（公式重算，未手改）。另一側讀數 258.54 中立 -> 232.56 買進。舊 dist 檔已刪除（含 _待刪除 內的 v0.4.6）。

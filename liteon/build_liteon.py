@@ -181,7 +181,7 @@ for j, y in enumerate((26, 27, 28, 29)):
 inp("kgi_dsh", *SIL.row9("pwr_kgi_0926")[1:])   # Siliconomics M17（CF11 待 Andy）
 
 sec("H. 價格與估值")
-inp("px", "股價（2026-11-13 收盤）", "NT$", None, 231.5, None, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（markets/invest_map/data/closes_20261020_20261113.csv）", "v0.4.5 為 2026-11-05 收盤 211.5；v0.4.3 為 2026-11-04 收盤 226（Yahoo Finance 日線收盤）；v0.4.2 為 2026-10-22 收盤 255.5（stockanalysis、nstock）")
+inp("px", "股價（2026-11-20 收盤）", "NT$", None, 175.5, None, "Verified", "工作單 px1120；Yahoo Finance 日線收盤 2026-11-20（markets/invest_map/data/closes_20261109_20261120.csv）", "v0.4.6 為 2026-11-13 收盤 231.5；v0.4.5 為 2026-11-05 收盤 211.5；v0.4.3 為 2026-11-04 收盤 226（Yahoo Finance 日線收盤）；v0.4.2 為 2026-10-22 收盤 255.5（stockanalysis、nstock）")
 inp("pe_ttm", "近 12 月 P/E（stockanalysis，10-22）", "x", None, 30.09, None, "Interested-party", SA, "近 12 月 EPS 8.49")
 inp("fpe", "前瞻 P/E（stockanalysis，10-22）", "x", None, 19.70, None, "Interested-party", SA, "口徑：頁面未明示（約未來 12 月）")
 inp("cons_feps", "共識前瞻 12 月 EPS（2026-10-22 價格 ÷ 前瞻 P/E）", "NT$", None, "=255.5/fpe", None, "Derived", "stockanalysis 前瞻 P/E 19.70 與當日價格 255.5（2026-10-22）", "共識前瞻 EPS 的直接數字：未找到；第三輪修正：現價改 11-04 後，前瞻 EPS 固定用報價當日價格（原 px ÷ fpe 會隨現價變動）")
@@ -513,7 +513,7 @@ V["A2"] = "循環位置：光寶科不是設備股，不套設備市場見頂年
 O = 51
 V.cell(O, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, O + 1, ["項目", "A", "B", "C", "說明"])
-V.cell(O + 2, 1, "現價（2026-11-13 收盤）"); V[f"B{O + 2}"] = "=px"; V[f"B{O + 2}"].number_format = "0.00"
+V.cell(O + 2, 1, "現價（2026-11-20 收盤）"); V[f"B{O + 2}"] = "=px"; V[f"B{O + 2}"].number_format = "0.00"
 for k, y, lab in ((3, 2026, "現價 ÷ FY2026 EPS（錨點）"), (4, 2027, "現價 ÷ FY2027 EPS（模型）"), (5, 2028, "現價 ÷ FY2028 EPS（模型）"), (6, 2029, "現價 ÷ FY2029 EPS（模型）")):
     V.cell(O + k, 1, lab)
     for j, s in enumerate(SC):
@@ -620,13 +620,13 @@ EPSR = {}
 _D12, _DTP = SDCF["v12"], SDCF["dcf"]
 V.cell(26, 1, "0.2 Comparable（市場主流同業前瞻 P/E；非 A 股公司，同業不放 A 股）").font = BOLD
 hdr(V, 27, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"])
-PEERS = [("台達電（Delta Electronics）", "2308.TW", "=1240/(1560/30.51)", "2026-11-13"), ("Vertiv", "VRT", "=202.07/(207.93/26.21)", "2026-11-13"),
-         ("Eaton", "ETN", "=352.97/(376.52/24.81)", "2026-11-13"), ("Flex", "FLEX", "=74.98/(76.55/14.74)", "2026-11-13")]
+PEERS = [("台達電（Delta Electronics）", "2308.TW", "=900/(1560/30.51)", "2026-11-20"), ("Vertiv", "VRT", "=166.24/(207.93/26.21)", "2026-11-20"),
+         ("Eaton", "ETN", "=311.33/(376.52/24.81)", "2026-11-20"), ("Flex", "FLEX", "=66.24/(76.55/14.74)", "2026-11-20")]
 PEER_SRC = {"2308.TW": "stockanalysis 個股頁 2026-10-22：價格 1,560 ÷ Forward PE 30.51（台達電模型 cons_feps 同一筆）", "VRT": "stockanalysis 統計頁 2026-10-27：價格 207.93 ÷ Forward PE 26.21",
             "ETN": "stockanalysis 統計頁 2026-10-27：價格 376.52 ÷ Forward PE 24.81", "FLEX": "stockanalysis 統計頁 2026-10-23 收盤 76.55 ÷ Forward PE 14.74"}
 for i, (nm, tk, pe, dt) in enumerate(PEERS, 28):
     V.cell(i, 1, nm); V.cell(i, 2, tk); c = V.cell(i, 3, pe); c.font = BLUE; c.number_format = "0.0"
-    V.cell(i, 4, dt); V.cell(i, 5, f"第三輪修正；px1113：P/E＝Yahoo Finance 日線收盤 2026-11-13（v0.4.5 為 11-05 收盤）÷ 資料商前瞻 EPS（{PEER_SRC[tk]}）"); V.cell(i, 6, "Interested-party")
+    V.cell(i, 4, dt); V.cell(i, 5, f"第三輪修正；px1120：P/E＝Yahoo Finance 日線收盤 2026-11-20（v0.4.6 為 11-13 收盤；v0.4.5 為 11-05 收盤）÷ 資料商前瞻 EPS（{PEER_SRC[tk]}）"); V.cell(i, 6, "Interested-party")
 PEER_LAST = 27 + len(PEERS)
 V.cell(33, 1, "未列入（資料過舊）：群電 6412.TW 前瞻 P/E 13.6x（stockanalysis 快取 2026-09-04）；康舒 6282.TW 前瞻 P/E：未找到。麥格米特 002851.SZ 為 A 股，依規則不列")
 tset(34, "pmed", "同業前瞻 P/E 中位數", [f"=MEDIAN(C28:C{PEER_LAST})", None, None], "0.0", "AI 資料中心電源與電氣同業：台達電、Vertiv、Eaton、Flex（券商常用比較組；台達電模型的同業名單也含光寶）")
@@ -638,7 +638,7 @@ hdr(V, 39, ["項目", "數值", "", "", "說明"])
 tset(40, "tpw", "目標價（DCF 與 Comparable 加權）", [f"=tp_w_dcf*B{_DTP}+(1-tp_w_dcf)*B36", None, None], "0.00", "tp_w_dcf × DCF＋（1 − tp_w_dcf）× Comparable；tp_w_dcf 見 In 頁")
 tset(41, "comp2", "Comparable 目標價（市場主流同業法）", ["=B36", None, None], "0.00")
 tset(42, "cons", "市場共識目標價", ["=cons_tp", None, None], "0.00", "stockanalysis（S&P Global）：12 位分析師平均 314.25（頁面時間 2026-10-22）")
-tset(43, "upw", "上檔空間：加權目標價", ["=B40/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-13 收盤；Yahoo Finance 日線收盤）")
+tset(43, "upw", "上檔空間：加權目標價", ["=B40/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-20 收盤；Yahoo Finance 日線收盤）")
 tset(44, "upc", "上檔空間：Comparable 目標價", ["=B41/px-1", None, None], "0.0%")
 tset(45, "geps", "與市場共識目標價的差距：EPS 因素", ["=B35/cons_feps-1", None, None], "0.0%", "本模型前瞻 EPS ÷ 共識前瞻 EPS − 1；共識前瞻 EPS＝現價 ÷ 前瞻 P/E（In 頁 cons_feps；期間為現在起算 12 個月，與本模型不同）")
 tset(46, "gmul", "與市場共識目標價的差距：倍數因素", ["=(cons_tp/cons_feps)/B34-1", None, None], "0.0%")
@@ -1000,7 +1000,7 @@ def _r3_text(wb, stub_lab, px_old_dates=(), px_new_date="2026-11-04", extra=()):
                 if w != v:
                     c.value = w; n += 1
     return n
-_r3_text(wb, "含 stub 期會計年度 FY2026（日曆年）FCFF × stub_frac", px_old_dates=("2026-10-22", "2026-11-04", "2026-11-05"), px_new_date="2026-11-13")
+_r3_text(wb, "含 stub 期會計年度 FY2026（日曆年）FCFF × stub_frac", px_old_dates=("2026-10-22", "2026-11-04", "2026-11-05", "2026-11-13"), px_new_date="2026-11-20")
 RD["A1"] = RD["A1"].value + "；v0.4.4：現價與同業報價改 2026-11-05 收盤；情境名稱改回樂觀／基準／保守"   # px1105（2026-11-06）
 # v0.4.5（2026-11-15）：三層協調 C4（規則 v1.4.2；tools/coord/）兩讀數目標價（Coord 頁；快照 liteon/coord_alt.json）＋個股 HTML 版面規格 v1.3＋C0（實績）（liteon/v13_post.py）
 sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
@@ -1013,6 +1013,9 @@ if _CR:
     # v0.4.6（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）；只改版本文字
     import px1113_post as PX
     print(PX.apply(wb, P13))
+    # v0.4.7（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）；只改版本文字
+    import px1120_post as PX20
+    print(PX20.apply(wb, P13))
 wb.save(sys.argv[1])
 if os.environ.get("LITEON_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
