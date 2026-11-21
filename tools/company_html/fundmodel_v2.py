@@ -231,7 +231,7 @@ def hero_html(B: Book) -> str:
         f'<div class="hero-s">上檔空間 {span(*uw, "sp1")}</div></div>'
         f'<div class="hero-t"><div class="hero-l">Comparable 目標價（市場主流同業法，未調整）</div><div class="hero-n">{span(*c, "n2")}</div>'
         f'<div class="hero-s">上檔空間 {span(*uc, "sp1")}</div></div>'
-        f'<div class="hero-t"><div class="hero-l">現價（IPO 價格區間中點；尚未掛牌）</div><div class="hero-n">{span(*px, "n2")}</div>'
+        f'<div class="hero-t"><div class="hero-l">現價（ANT 收盤；2026-11-19 於 Nasdaq 掛牌）</div><div class="hero-n">{span(*px, "n2")}</div>'
         f'<div class="hero-s" style="color:var(--muted)">區間 {span(*lo, "n2")}–{span(*hi, "n2")}</div></div>')
     nt = f'<p class="hero-note">{span(*note)}</p>' if note else ""
     rule = '<p class="hero-note">投資建議依加權目標價判定：上檔空間 &gt;＋50% 強力買進、&gt;＋25% 買進、≥−25% 中立、≥−50% 放空、其餘強力放空。</p>'
@@ -252,7 +252,7 @@ def bars_html(B: Book) -> str:
         w = max(0.0, (v or 0) / mx * 100)
         out.append(f'<div class="br"><span>{lab}</span><div class="bt"><u style="left:{lo / mx * 100:.2f}%;width:{(hi - lo) / mx * 100:.2f}%"></u>'
                    f'<i class="{c}" style="width:{w:.2f}%"></i><b style="left:{px[1] / mx * 100:.2f}%"></b></div><span class="bv">{span(ref, v, "n2")}</span></div>')
-    return ("".join(out) + f'<p class="refline">黑線＝現價 {span(*px, "n2")}（IPO 價格區間中點）；淡紅底＝價格區間。單位：美元／股。</p>')
+    return ("".join(out) + f'<p class="refline">黑線＝現價 {span(*px, "n2")}（ANT 收盤）；淡紅底＝招股價格區間。單位：美元／股。</p>')
 
 
 def kv(B: Book, items) -> str:
