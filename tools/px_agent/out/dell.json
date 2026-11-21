@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 26,
+ "duration_ms": 198109,
+ "total_cost_usd": 0.42124929999999994,
+ "result": "`dell/` 已換成 2026-11-20 收盤，版號升到 v0.2.8，xlsx 和 HTML 都重建完成。評等從放空變中立。\n\n| 項目 | 前（v0.2.7） | 後（v0.2.8） |\n|---|---|---|\n| 現價 | 344.53 | **278.02** |\n| 加權目標價 | 226.78 | **217.02** |\n| 上檔空間 | −34.2% | **−21.9%** |\n| 評等 | 放空 | **中立** |\n\n- 五家同業（HPE、SMCI、聯想、HPQ、NetApp）都在 CSV 內，全數換價，沒有未換價同業。同業前瞻 P/E 中位數從 9.83 降到 8.80。\n- **前值不一致：** v0.2.7 的 README 與版本文字寫的是 238.57、−30.8%。我用 HEAD 重建 v0.2.7，和舊成品逐格相同，重算值其實是 226.78、−34.2%。前後值我取成品的重算值。這個不一致已寫進 `README.md` 和 `px1120_note.txt`，舊文字沒動。\n- Sens（`sens.json`）和 Coord（`coord_alt.json`）快照已重跑。Coord 另一側讀數為 205.42，評等放空。\n- **檢查：**\n  - 重算錯誤格 0。\n  - `check_company_html` 通過。\n  - `check_layout_v13` 通過，只剩原本就有的參數代號警告。\n  - `baseline_coordination` 0 項不符。\n  - `check_sens_coverage` 未過（Sens 頁找不到表頭），v0.2.7 同樣未過，所以不要求。\n  - Playwright 版面截圖檢查（`layout_check.py`）沒跑。\n- 價格改在 `build_dell.py`，新增 `px1120_post.py` 寫版本文字。`dist/` 只留 `20261121_戴爾個股模型_v0.2.8` 的 xlsx 和 html。\n- 沒有 commit。舊 v0.2.7 的 dist 檔用 `git rm` 刪除，目前在暫存區。",
+ "error": null,
+ "stderr": null
+}

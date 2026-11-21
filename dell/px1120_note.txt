@@ -1,0 +1,10 @@
+folder=dell
+version=v0.2.7 -> v0.2.8
+px=344.53 -> 278.02
+tp=226.78 -> 217.02
+upside=-34.2% -> -21.9%
+rating=放空 -> 中立
+peers_repriced=5
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；check_company_html.py dell 通過；check_layout_v13.py 通過（僅既有參數代號警告）；baseline_coordination/check.py 0 項不符；v0.2.7 以 HEAD 重建與舊成品逐格相同（差異 0）；check_sens_coverage.py 未過（Sens 頁找不到表頭，v0.2.7 即同樣未過，不要求）；company_html layout_check（Playwright 截圖）未跑
+notes=前後值取自成品 xlsx 重算值；v0.2.7 的 README 版本文字寫 238.57／-30.8%（DCF 265.9、Comparable 211.3），與 v0.2.7 成品實際重算值 226.78／-34.2%（DCF 254.10、Comparable 199.46）不符，以成品為準，舊文字未改。評等因上檔空間進入 0%～-25% 級距，由放空轉中立。同業 P/E 中位數 9.83 -> 8.80。Coord 另一側讀數 205.42（放空），sens.json、coord_alt.json 已重跑。
