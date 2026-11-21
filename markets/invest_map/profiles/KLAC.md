@@ -98,6 +98,6 @@ asof: 2026-10-25
 - 先進封裝營收口徑｜CY2026 約 US$1.1B（公司）與 FY2026 US$1.3–1.4B（substack）口徑不同、未解 [本專案：20261121_科磊個股模型_v0.4.7.xlsx In!I8]｜FQ1-27 法說
 
 ## 來源
-1. 本專案：`klac/README.md`（v0.3，2026-10-31）；`klac/dist/20261116_科磊個股模型_v0.4.6.xlsx`（In、Q、Units、Recon 頁）
+1. 本專案：`klac/README.md`（v0.3，2026-10-31）；`klac/dist/20261121_科磊個股模型_v0.4.7.xlsx`（In、Q、Units、Recon 頁）
 2. 本專案：`先驗與比對/先驗比對_設備材料_20261022.md`、`先驗比對_TEL_20261023.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 3. [TIKR：KLA Q4 earnings hit a record $3.66 billion](https://www.tikr.com/blog/kla-corporations-q4-earnings-hit-a-record-3-66-billion-the-guide-points-higher-still)（2026-07-29）

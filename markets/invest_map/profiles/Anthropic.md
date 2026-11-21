@@ -106,8 +106,8 @@ AI 模型公司（位於 AI 金流的最上游）：自研 Claude 系列大模�
 - 雲端平台抽成率｜基準 16%，區間至 30%，直接決定營收淨額 [本專案：20261121_Anthropic收支模型_v0_2_4.xlsx Revenue!E70、K70]；S-1 寫上半年約 48% 營收經雲端市集，但未揭露抽成率 [本專案：20261121_Anthropic收支模型_v0_2_4.xlsx SRC_ANT!E466]｜IPO 後首份季報
 
 ## 來源
-1. 本專案：`anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx`（SRC_ANT、Revenue、Compute、Cost、Funding、Val、Inputs）與 `anthropic/dist/20261115_Anthropic收支模型_v0_2_3.html`；`anthropic/docs/handoff/Anthropic_handoff.md`；`anthropic/docs/reports/20261115_v0.2.3.md`、`20261111_v0.2.0.md`、`20261103_S1A原文摘錄.md`、`20261102_S1原文核對.md`
-2. 本專案：`openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx`（SRC_OAI）；`minimax/dist/20261116_MiniMax收支模型_v0_2_4.xlsx`（SRC_MM）；`alphabet/data/alphabet_facts_20261008.json`
+1. 本專案：`anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx`（SRC_ANT、Revenue、Compute、Cost、Funding、Val、Inputs）與 `anthropic/dist/20261115_Anthropic收支模型_v0_2_3.html`；`anthropic/docs/handoff/Anthropic_handoff.md`；`anthropic/docs/reports/20261115_v0.2.3.md`、`20261111_v0.2.0.md`、`20261103_S1A原文摘錄.md`、`20261102_S1原文核對.md`
+2. 本專案：`openai/dist/20261115_OpenAI收支模型_v0_6_6.xlsx`（SRC_OAI）；`minimax/dist/20261121_MiniMax收支模型_v0_2_5.xlsx`（SRC_MM）；`alphabet/data/alphabet_facts_20261008.json`
 3. [Anthropic, PBC Form S-1/A（Amendment No. 1）](https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm)（SEC EDGAR，2026-11-02）
 4. [Anthropic, PBC Form S-1](https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm)（SEC EDGAR，2026-10-26）
 5. [Anthropic IPO draft shows nearly 15-fold revenue jump and $600 billion in compute deals](https://investinglive.com/stocks/anthropic-ipo-draft-shows-nearly-15-fold-revenue-jump-and-600-billion-in-compute-deals/)（investingLive，2026-10-20）

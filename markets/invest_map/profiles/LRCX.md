@@ -102,7 +102,7 @@ asof: 2026-10-25
 - 模型 vs 共識｜FY2028 營收、EPS 比 Yahoo 共識低 11.5%、12.1% [本專案：lrcx/README.md 對帳]｜公司若給 CY2027 WFE 正式數字
 
 ## 來源
-1. 本專案：`lrcx/README.md`（v0.2.2，2026-10-31）；`lrcx/dist/20261116_科林研發模型_v0.3.6.xlsx`（In、Q、Recon 頁）
+1. 本專案：`lrcx/README.md`（v0.2.2，2026-10-31）；`lrcx/dist/20261121_科林研發模型_v0.3.7.xlsx`（In、Q、Recon 頁）
 2. 本專案：`先驗與比對/先驗比對_設備材料_20261022.md`、`先驗比對_TEL_20261023.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
-3. 本專案：`amat/dist/20261116_應用材料個股模型_v0.4.6.xlsx`（同業欄）
+3. 本專案：`amat/dist/20261121_應用材料個股模型_v0.4.7.xlsx`（同業欄）
 4. [Motley Fool：Lam Research Q1 2027 Earnings Call Transcript](https://www.fool.com/earnings/call-transcripts/2026/10/21/lam-research-lrcx-q1-2027-earnings-call-transcript/)（2026-10-21）

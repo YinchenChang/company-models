@@ -99,7 +99,7 @@ asof: 2026-10-25
 - CPO｜CPO 份額歸零只使 FY2028 EPS −3%，短期不是承重變數 [本專案：cohr/README.md 結果]｜PhotonLink 營收自 12 月季開始（公司說法）[本專案：20261121_Coherent個股模型_v0.4.7.xlsx In!I38]
 
 ## 來源
-1. 本專案：`cohr/README.md`；`cohr/dist/20261116_Coherent個股模型_v0.4.6.xlsx`（Q、Units、In、Sens、Sources）；AI半導體 `先驗比對_中際旭創_20261024.md`、`先驗比對_網通_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
+1. 本專案：`cohr/README.md`；`cohr/dist/20261121_Coherent個股模型_v0.4.7.xlsx`（Q、Units、In、Sens、Sources）；AI半導體 `先驗比對_中際旭創_20261024.md`、`先驗比對_網通_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 2. [Optics Stocks Tumble as Tech Selloff Deepens Ahead of Earnings（24/7 Wall St.）](https://247wallst.com/investing/2026/10/22/optics-stocks-tumble-as-tech-selloff-deepens-ahead-of-earnings-coherent-tumbles-12-applied-optoelectronics-drops-10-lumentum-falls-9/)（2026-10-22）
 3. [Coherent news（Earnings Whispers）](https://www.earningswhispers.com/news/COHR)（2026-10）
 4. [Coherent news（Autobound）](https://www.autobound.ai/companies/coherent/news)（2026-07～09）

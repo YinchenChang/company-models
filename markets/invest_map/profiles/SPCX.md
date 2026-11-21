@@ -120,9 +120,9 @@ asof: 2026-11-04
 - 模型與現價差距｜現價 127.79 美元（2026-11-20 收盤），加權目標價 32.84 美元、上檔空間 −74.3%，模型評級「強力放空」；市場共識目標價 244.97 美元 [本專案：20261121_SpaceX個股模型_v0.2.11.xlsx Val!B9、B8、B11、B16、B10]｜Tesla 合併案進展
 
 ## 來源
-1. 本專案：spacex/dist/20261116_SpaceX個股模型_v0.2.10.xlsx（README、In、Q、Thesis、CF、Val、Recon、Sens、Coord）、spacex/README.md（2026-11-16）
+1. 本專案：spacex/dist/20261121_SpaceX個股模型_v0.2.11.xlsx（README、In、Q、Thesis、CF、Val、Recon、Sens、Coord）、spacex/README.md（2026-11-16）
 2. 本專案：spacex/data/spacex_facts_2026q3.json、spacex_facts_v02.json（2026-10-30）
-3. 本專案：anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx（SRC_ANT）；alphabet/data/alphabet_facts_20261008.json、alphabet_facts_2026q3.json
+3. 本專案：anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx（SRC_ANT）；alphabet/data/alphabet_facts_20261008.json、alphabet_facts_2026q3.json
 4. [Anthropic is SpaceX's biggest customer, bringing in a third of revenue（The Next Web，轉述 Bloomberg）](https://thenextweb.com/news/anthropic-spacex-largest-customer-customer-b)（2026-10-29）
 5. [SpaceX and Tesla boards form special committees to review merger（TechCrunch）](https://techcrunch.com/2026/10/20/spacex-and-tesla-boards-form-special-committees-to-review-merger/)（2026-10-20）
 6. [SpaceX AI compute deal（Drive Tesla Canada）](https://driveteslacanada.ca/news/spacex-ai-compute-deal-13-billion-revenue/)（2026-09-10）

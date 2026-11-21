@@ -98,7 +98,7 @@ asof: 2026-10-25
 - 校準係數｜k_x 0.80、k_o 1.44 為顆數、份額、單價的合併係數，無法分開識別 [本專案：20261121_邁威爾個股模型_v0.3.7.xlsx Units!C30、Units!C31]｜下一版模型
 
 ## 來源
-1. 本專案：`mrvl/README.md`；`mrvl/dist/20261116_邁威爾個股模型_v0.3.6.xlsx`（In、Q、Units、PL、Recon）；`avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx`（Units）；`alchip/dist/20261116_世芯-KY個股模型_v0.2.6.xlsx`（Units）；`mediatek/dist/20261116_聯發科個股模型_v0.3.6.xlsx`（Units）；AI半導體 `先驗比對_AVGO_20261023.md`
+1. 本專案：`mrvl/README.md`；`mrvl/dist/20261121_邁威爾個股模型_v0.3.7.xlsx`（In、Q、Units、PL、Recon）；`avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx`（Units）；`alchip/dist/20261121_世芯-KY個股模型_v0.2.7.xlsx`（Units）；`mediatek/dist/20261121_聯發科個股模型_v0.3.7.xlsx`（Units）；AI半導體 `先驗比對_AVGO_20261023.md`
 2. [Marvell raises 2028 revenue forecast on strong AI data center demand](https://www.ksl.com/article/51632987/marvell-raises-2028-revenue-forecast-on-strong-ai-data-center-demand)（2026-10）
 3. [Marvell gives Google right to buy shares](https://www.verdict.co.uk/marvell-google-to-buy-shares/)（2026-08-20）
 4. [Marvell FY2027 Q2 8-K](https://www.sec.gov/Archives/edgar/data/0001835632/000183563226000022/q227_8kx812026ex-991.htm)（2026-08-27）

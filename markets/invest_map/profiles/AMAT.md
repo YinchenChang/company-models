@@ -99,9 +99,9 @@ asof: 2026-10-25
 - 模型 vs 共識｜FY2027 營收比共識低 10.0%；模型大致等於第四季年化，共識假設逐季續增 [本專案：amat/README.md 對帳]｜FY2027 第一季指引
 
 ## 來源
-1. 本專案：`amat/README.md`（v0.3.1，2026-10-31）；`amat/dist/20261116_應用材料個股模型_v0.4.6.xlsx`（In、Q、Recon 頁）
+1. 本專案：`amat/README.md`（v0.3.1，2026-10-31）；`amat/dist/20261121_應用材料個股模型_v0.4.7.xlsx`（In、Q、Recon 頁）
 2. 本專案：`先驗與比對/先驗比對_設備材料_20261022.md`、`先驗比對_TEL_20261023.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
-3. 本專案：`lrcx/dist/20261116_科林研發模型_v0.3.6.xlsx`、`klac/dist/20261116_科磊個股模型_v0.4.6.xlsx`（同業欄）
+3. 本專案：`lrcx/dist/20261121_科林研發模型_v0.3.7.xlsx`、`klac/dist/20261121_科磊個股模型_v0.4.7.xlsx`（同業欄）
 4. [Ziven：Applied Materials Q2 FY2026 Earnings Call](https://ziven.io/earnings/calls/amat/q2-fy2026)（2026-05-14）
 5. [Simply Wall St：Applied Materials Management](https://simplywall.st/stocks/at/semiconductors/vie-amat/applied-materials-shares/management)（查閱 2026-10-25）
 6. [36Kr：Applied Materials 第三季財報分析（海豚研究）](https://eu.36kr.com/en/p/3938814365908096)（2026-08-14）

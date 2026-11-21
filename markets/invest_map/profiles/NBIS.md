@@ -101,7 +101,7 @@ asof: 2026-10-25
 - 在役 MW 揭露｜季末 active MW 公司未揭露，本專案以假設代替（2026-09-30 為 330 MW、年底 550 MW）[本專案：20261121_Nebius個股模型_v0.6.4.xlsx In!E19、E20、H19]｜Q4 股東信
 
 ## 來源
-1. 本專案：`nebius/dist/20261116_Nebius個股模型_v0.6.3.xlsx`（README、In、Q、Seg、Sites、Debt、Val、RevDCF、Recon、Fund）
+1. 本專案：`nebius/dist/20261121_Nebius個股模型_v0.6.4.xlsx`（README、In、Q、Seg、Sites、Debt、Val、RevDCF、Recon、Fund）
 2. [Nebius stock falls as $3.5B loan raises AI infrastructure debt concerns](https://invezz.com/au/news/2026/10/22/nebius-stock-falls-as-dollar35b-loan-raises-ai-infrastructure-debt-concerns/)（Invezz，2026-10-22）
 3. [Nebius borrows $3.5 billion as investors question neocloud debt](https://www.thestreet.com/investing/nebius-citi-bridge-loan-gpu-prices)（TheStreet，2026-10-22）
 4. [Nebius Group Drops 12% On CoreWeave Debt Contagion](https://www.foreignpolicyjournal.com/2026/10/18/nebius-group-nasdaq-nbis-drops-12-on-coreweave-debt-contagion-but-balance-sheets-tell-different-stories-for-now/)（Foreign Policy Journal，2026-10-18）

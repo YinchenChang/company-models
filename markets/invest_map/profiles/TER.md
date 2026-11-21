@@ -101,7 +101,7 @@ asof: 2026-10-25
 - 模型 vs 共識｜FY2027 EPS（GAAP 13.74）比共識（non-GAAP 11.30）高 21.6% [本專案：ter/README.md 對帳]｜3Q26 財報後共識變化
 
 ## 來源
-1. 本專案：`ter/README.md`（v0.3，2026-10-31）；`ter/dist/20261116_泰瑞達個股模型_v0.4.6.xlsx`（In、Q、Units、Recon 頁）
+1. 本專案：`ter/README.md`（v0.3，2026-10-31）；`ter/dist/20261121_泰瑞達個股模型_v0.4.7.xlsx`（In、Q、Units、Recon 頁）
 2. 本專案：`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 3. [Teradyne：Chief Financial Officer Transition（隨 3Q25 財報公布）](https://investors.teradyne.com/news-events/press-releases/detail/428/teradyne-reports-first-quarter-2026-results)（2025-10-28）
 4. [Simply Wall St：Teradyne Management](https://simplywall.st/stocks/us/semiconductors/nasdaq-ter/teradyne/management)（查閱 2026-10-25）

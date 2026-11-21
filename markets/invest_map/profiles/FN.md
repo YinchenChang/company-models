@@ -96,7 +96,7 @@ asof: 2026-10-25
 - 顆數情境｜情境 C 全部使 FY2028 EPS −20.8% [本專案：fabrinet/README.md 結果]｜NVIDIA、雲端業者資本支出
 
 ## 來源
-1. 本專案：`fabrinet/README.md`；`fabrinet/dist/20261116_Fabrinet個股模型_v0.3.6.xlsx`（Q、Units、In）；AI半導體 `先驗比對_網通_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
+1. 本專案：`fabrinet/README.md`；`fabrinet/dist/20261121_Fabrinet個股模型_v0.3.7.xlsx`（Q、Units、In）；AI半導體 `先驗比對_網通_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 2. [A 9-Day Losing Streak Has Fabrinet Stock Down 29%（Trefis）](https://www.trefis.com/stock/fn/articles/619603/a-9-day-losing-streak-has-fabrinet-stock-down-29/2026-10-21)（2026-10-21）
 3. [Fabrinet Shares Slide Despite Earnings Beat（Yahoo Finance）](https://finance.yahoo.com/markets/stocks/articles/fabrinet-shares-slide-despite-earnings-102815774.html)（2026-08-18）
 4. [Fabrinet Q4 Earnings Call Highlights（MarketBeat）](https://www.marketbeat.com/instant-alerts/fabrinet-q4-earnings-call-highlights-2026-08-17/)（2026-08-17）

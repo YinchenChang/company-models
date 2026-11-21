@@ -93,7 +93,7 @@ AI 伺服器內部連接晶片商：PCIe 重定時器起家，成長重心正轉
 - 毛利率｜模型假設由 FY2026 73.1% 降到 70.0%／69.5%／69.0%（公司長期目標 70%）；毛利率低 −10% [本專案：alab/README.md 驅動因子、結果；20261104_Astera Labs個股模型_v0.2.xlsx Q!H6]｜3Q26 實績 72.4%、4Q26 指引約 72% [本專案：20261104_Astera Labs個股模型_v0.2.xlsx Q!F6、In!H69]
 
 ## 來源
-1. 本專案：`alab/README.md`；`alab/dist/20261104_Astera Labs個股模型_v0.2.xlsx`（Q、Units、In、Recon、Sources）；`crdo/dist/20261030_Credo個股模型_v0.2.4.xlsx`（In）；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
+1. 本專案：`alab/README.md`；`alab/dist/20261104_Astera Labs個股模型_v0.2.xlsx`（Q、Units、In、Recon、Sources）；`crdo/dist/20261121_Credo個股模型_v0.3.8.xlsx`（In）；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 2. [Astera Labs Stock Jumped 12% Yesterday（TIKR）](https://www.tikr.com/blog/astera-labs-stock-jumped-12-yesterday-the-street-sees-14-more-upside-heres-why)（2026-09-22）
 3. [Astera Labs Stock Price Down 6.9%（MarketBeat）](https://www.marketbeat.com/instant-alerts/price-astera-labs-nasdaq-alab-stock-price-down-69-should-you-sell-2026-09-08/)（2026-09-08）
 4. [Astera Labs management（Simply Wall St）](https://simplywall.st/stocks/mx/semiconductors/bmv-alab/astera-labs-shares/management)（2026-10）

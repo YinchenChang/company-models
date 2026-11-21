@@ -11,7 +11,7 @@ asof: 2026-11-04
 ---
 
 ## 一句話定位
-全球最大的社群廣告平台之一（Facebook、Instagram、WhatsApp、Messenger），靠賣廣告版位賺錢；AI 算力全部自用，用來改善推薦與廣告投放，不對外出租 [外部・未經本專案檢核]，本專案模型也以「全部自用」處理 [本專案：20261121_Meta個股模型_v0.2.3.xlsx README!A3]。本專案個股模型 v0.2.2 的命題是：AI 資本支出能否由廣告現金流支撐，以及自用算力能否帶來足以回本的廣告變現提升 [本專案：20261121_Meta個股模型_v0.2.3.xlsx README!A3]；在自用 AI 採「價值中性」讀法下，目前評等為「中立」，加權目標價 697.93 美元、上檔空間 +24.4%（現價 560.84，2026-11-20 收盤）[本專案：20261121_Meta個股模型_v0.2.3.xlsx Val!B8、B9、B11、B14]。
+全球最大的社群廣告平台之一（Facebook、Instagram、WhatsApp、Messenger），靠賣廣告版位賺錢；AI 算力全部自用，用來改善推薦與廣告投放，不對外出租 [外部・未經本專案檢核]，本專案模型也以「全部自用」處理 [本專案：20261121_Meta個股模型_v0.2.3.xlsx Thesis!A1]。本專案個股模型 v0.2.3 的命題是：AI 資本支出能否由廣告現金流支撐，以及自用算力能否帶來足以回本的廣告變現提升 [本專案：20261121_Meta個股模型_v0.2.3.xlsx README!A3]；在自用 AI 採「價值中性」讀法下，目前評等為「中立」，加權目標價 697.93 美元、上檔空間 +24.4%（現價 560.84，2026-11-20 收盤）[本專案：20261121_Meta個股模型_v0.2.3.xlsx Val!B8、B9、B11、B14]。
 
 ## 公司在做什麼
 - Family of Apps（應用程式家族）：Facebook、Instagram、Messenger、WhatsApp 等免費服務，靠廣告主購買版位付費；2026Q3 每日活躍人數（DAP，至少用一個 App 的人）36.4 億 [本專案：20261121_Meta個股模型_v0.2.3.xlsx Q!I49]。
@@ -112,7 +112,7 @@ asof: 2026-11-04
 - 每則廣告價格｜2026Q3 價格年增 14%、曝光年增 10%；長期價格年增取 1%／5% 時加權目標價 666.09／731.65 美元 [本專案：20261121_Meta個股模型_v0.2.3.xlsx Q!I48、I47；Sens!D10、D11]｜各季新聞稿的曝光與價格年增
 
 ## 來源
-1. 本專案：meta/dist/20261116_Meta個股模型_v0.2.2.xlsx（README、In、Q、Thesis、PL、CF、Val、Recon、Sens）、meta/README.md、meta/docs/reports/20261111_meta_v0.2.0_驗收採用.md（2026-11-16）
+1. 本專案：meta/dist/20261121_Meta個股模型_v0.2.3.xlsx（README、In、Q、Thesis、PL、CF、Val、Recon、Sens）、meta/README.md、meta/docs/reports/20261111_meta_v0.2.0_驗收採用.md（2026-11-16）
 2. 本專案：meta/data/meta_facts_2026q3.json（2026-10-30 擷取）
 3. 本專案：nebius/data/nebius_facts_20261007.json、coreweave/data/permw_inputs_20261007.json（2026-10-07）
 4. [Meta Platforms DEF 14A 2026（管理層名單）](https://www.sec.gov/Archives/edgar/data/1326801/000162828026025532/meta-20260416.htm)（2026-04-16）

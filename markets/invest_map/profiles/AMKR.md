@@ -101,7 +101,7 @@ asof: 2026-10-25
 - 第四季實績取代假設｜FY2026 錨點 EPS US$2.49 含第一至第三季實績與第四季假設（公司第四季指引 EPS US$0.65–0.75）[本專案：20261121_艾克爾個股模型_v0.4.6.xlsx Q!G19、Q!A2]｜第四季財報
 
 ## 來源
-1. 本專案：`amkr/README.md`（v0.3，2026-10-31）；`amkr/dist/20261116_艾克爾個股模型_v0.4.5.xlsx`（In、Q、Units、PL、Sources 頁）
+1. 本專案：`amkr/README.md`（v0.3，2026-10-31）；`amkr/dist/20261121_艾克爾個股模型_v0.4.6.xlsx`（In、Q、Units、PL、Sources 頁）
 2. 本專案：`先驗與比對/先驗比對_日月光_20261024.md`
 3. [Amkor 2026 年股東會委託書（DEF 14A）](https://www.sec.gov/Archives/edgar/data/1047127/000119312526140275/d943236ddef14a.htm)（2026）
 4. [Amkor IR：Kevin Engel](https://ir.amkor.com/management/kevin-engel)（查閱 2026-10-25）

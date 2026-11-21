@@ -96,7 +96,7 @@ asof: 2026-10-25
 - 策略檢討結論｜可能改變與應用材料的合作方式，模型未建模 [本專案：besi/README.md 最大限制]｜2027-01 初；第四季與全年實績 2027-02-25
 
 ## 來源
-1. 本專案：`besi/README.md`（v0.1.3，2026-10-31）；`besi/dist/20261116_BESI模型_v0.2.5.xlsx`（In、Q、PL、Sens 頁）
+1. 本專案：`besi/README.md`（v0.1.3，2026-10-31）；`besi/dist/20261121_BESI模型_v0.2.6.xlsx`（In、Q、PL、Sens 頁）
 2. 本專案：`先驗與比對/先驗比對_HBM_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 3. [GuruFocus：BESI Q3 2026 法說重點](https://www.gurufocus.com/news/9137691/be-semiconductor-industries-nv-besiy-q3-2026-earnings-call-highlights-revenue-more-than-doubles-a)（2026-10-22）
 4. [Simply Wall St：BESI management](https://simplywall.st/stocks/nl/semiconductors/ams-besi/be-semiconductor-industries-shares/management)（查閱 2026-10-25）

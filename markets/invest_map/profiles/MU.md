@@ -94,8 +94,8 @@ asof: 2026-10-25
 - 一般 DRAM 與 NAND 合約價見頂｜美光 FY 含半年 CY2028，對 2028 谷底較不敏感 [本專案：micron/README.md v0.3 變更]｜TrendForce 每季合約價
 
 ## 來源
-1. 本專案：`micron/README.md`、`micron/dist/20261116_美光個股模型_v0.5.6.xlsx`（In、Q、Y、Val 頁）
-2. 本專案：`先驗與比對/先驗比對_HBM_20261008.md`；`skhynix/dist/20261116_SK海力士個股模型_v0.7.8.xlsx` In 頁
+1. 本專案：`micron/README.md`、`micron/dist/20261121_美光個股模型_v0.5.7.xlsx`（In、Q、Y、Val 頁）
+2. 本專案：`先驗與比對/先驗比對_HBM_20261008.md`；`skhynix/dist/20261121_SK海力士個股模型_v0.7.9.xlsx` In 頁
 3. [Micron Reports Record Fiscal Fourth-Quarter and Full-Year 2026 Results（Micron）](https://investors.micron.com/news/press-release/2026/Micron-Technology-Inc--Reports-Record-Fiscal-Fourth-Quarter-and-Full-Year-2026-Results/)（2026-09-30）
 4. [Micron FQ4 2026 Prepared Remarks（Micron）](https://investors.micron.com/files/doc_financials/2026/q4/Q4-FY26-Prepared-Remarks.pdf)（2026-09-30）
 5. [Earnings call transcript: Micron tops Q4 2026 estimates（Investing.com）](https://www.investing.com/news/transcripts/earnings-call-transcript-micron-tops-q4-2026-estimates-as-demand-stays-hot-93CH-4925992)（2026-09-30）

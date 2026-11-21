@@ -97,7 +97,7 @@ asof: 2026-10-25
 - 產品拆分｜公司不揭露產品別營收，雷射份額由殘差推得，季報後要重新校準 [本專案：lite/README.md 最大限制]｜同上
 
 ## 來源
-1. 本專案：`lite/README.md`；`lite/dist/20261104_Lumentum個股模型_v0.4.xlsx`（Q、Units、In、Recon）；AI半導體 `先驗比對_網通_20261008.md`
+1. 本專案：`lite/README.md`；`lite/dist/20261121_Lumentum個股模型_v0.5.8.xlsx`（Q、Units、In、Recon）；AI半導體 `先驗比對_網通_20261008.md`
 2. [Optics Stocks Tumble as Tech Selloff Deepens Ahead of Earnings（24/7 Wall St.）](https://247wallst.com/investing/2026/10/22/optics-stocks-tumble-as-tech-selloff-deepens-ahead-of-earnings-coherent-tumbles-12-applied-optoelectronics-drops-10-lumentum-falls-9/)（2026-10-22）
 3. [Why Lumentum Sank Today（The Motley Fool）](https://www.fool.com/investing/2026/10/12/why-lumentum-sank-today/)（2026-10-12）
 4. [NVIDIA Announces Strategic Partnership With Lumentum](https://investor.lumentum.com/financial-news-releases/news-details/2026/NVIDIA-Announces-Strategic-Partnership-With-Lumentum-to-Develop-State-of-the-Art-Optics-Technology/default.aspx)（2026-03）
