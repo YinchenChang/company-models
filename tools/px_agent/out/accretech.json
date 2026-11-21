@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 22,
+ "duration_ms": 150630,
+ "total_cost_usd": 0.36339950000000004,
+ "result": "東京精密（accretech）已換成 2026-11-20 收盤，版號 v0.3.7 → v0.3.8，xlsx 與 HTML 都已重建。所有檢查都沒有新增失敗項目，評等維持中立。\n\n- **現價：** 13,150 → 11,185。\n- **同業前瞻 P/E 中位數：** 25.22 → 22.15。5 家同業都已換價，沒有未換價的。\n- **加權目標價：** 10,533 → 9,796。\n- **上檔空間：** -19.9% → -12.4%。\n- **評等：** 中立 → 中立，由模型公式重算，沒有手改。\n- **DCF 目標價：** 8,875 → 8,885。這是因為市值權重隨現價自動重算，共識 EPS、rf 等其他輸入都沒動。\n- **檢查：**\n  - 重算錯誤格 0。\n  - `check_company_html` 通過，`check_layout_v13 --xlsx` 通過。\n  - `baseline_coordination/check.py` 0 項不符。\n  - Sens 與 Coord 快照都是 CURRENT。\n  - `check_sens_coverage` 仍有 25 個鍵找不到 Sens 表頭，前一版就是這樣，沒有變化。\n- **其他：**\n  - 為了跑 `check_layout_v13`，我臨時用 pip 裝了 beautifulsoup4，環境原本沒有。\n  - 新增 `px1120_post.py`，接在 `px1113_post` 之後執行。\n  - 新增 `px1120_note.txt`，並更新 `README.md`、建置腳本、`gen_html_json.py`、`sens.json` 和 `coord_alt.json`。\n  - `dist/` 只留 v0.3.8 的 xlsx 與 html。\n  - 沒有 commit、push 或開 PR。",
+ "error": null,
+ "stderr": null
+}
