@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 24,
+ "duration_ms": 168746,
+ "total_cost_usd": 0.38694850000000003,
+ "result": "COHR 已換成 2026-11-20 收盤，版號 v0.4.6 → v0.4.7，xlsx 與 HTML 都已重建，評等維持中立。\n\n| 項目 | 前 | 後 |\n|---|---|---|\n| 現價 | 218.15 | 187.22 |\n| 加權目標價 | 251.41 | 195.59 |\n| 上檔空間 | +15.2% | +4.5% |\n| 評等 | 中立 | 中立 |\n| 同業 P/E 中位數 | 24.32 | 19.07 |\n\n- 四家同業（FN、AAOI、CIEN、GLW）都在收盤檔裡，全部換價，沒有未換價同業。\n- 數值取自重建後 xlsx 的重算值：錯誤格 0。Sens 快照 CURRENT；Sens 與 Coord 快照已重跑。\n- 檢查：`check_company_html` 全過，`check_layout_v13` 通過，`baseline_coordination/check` 0 項不符。\n- `check_sens_coverage` 顯示 28／37 鍵無案例，前版即同。\n- `check_layout_v13` 有「可見文字含參數代號」警告。我沒有對照前版輸出，「前版即有」是依 README 先前寫法推測。\n- `cohr/` 沒有 `px1113_post.py`，px1113 的價格是直接寫在 `build_cohr.py`，這次照同一做法改。\n- 同時改了 `v045_post.py` 的本版要點列，並把 `gen_html_json.py` 的版號斷言改成 v0.4.7。\n- 新增 `cohr/px1120_note.txt`，也更新了 `cohr/README.md`。舊 v0.4.6 的 dist 已移除，只留現行版。\n- 改動留在工作樹，沒有 commit。",
+ "error": null,
+ "stderr": null
+}
