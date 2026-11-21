@@ -31,7 +31,7 @@ AI 加速器（GPU）與整櫃系統的最大供應商，靠「加速器顆數 �
 - 資料中心內運算與網通的全年拆分：本專案未建立（README 記為未找到）。
 
 ## 市場定位與產業位置
-- 本專案推算 CY2027 加速器**金額份額** NVIDIA 75.1%，但**顆數份額**只有 40.9%：ASIC 每顆便宜很多 [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Units!D32、Units!D26]。
+- 本專案推算 CY2027 加速器**金額份額** NVIDIA 72.8%，但**顆數份額**只有 30.5%：ASIC 每顆便宜很多 [本專案：20261121_NVIDIA個股模型_v0.3.14.xlsx Units!D32、Units!D26]。
 - 同一題 Broadcom 模型現算出 75.1%，與本模型一致 [本專案：20261121_Broadcom個股模型_v0.5.9.xlsx Recon!C24]；先驗比對推導區間 75–82% [本專案：先驗比對_NVDA_20261023.md N5a]。
 - 上游依賴：台積電（晶圓、CoWoS 封裝）與 HBM（高頻寬記憶體）；本專案台積電模型判斷 2027 年 HBM 比 CoWoS 先卡 [本專案：tsmc/README.md 主要結果]。
 - 中國：公司 FY2027 Q3 指引假設中國資料中心運算營收為 0 [本專案：nvidia/README.md 驅動因子]。
@@ -48,10 +48,10 @@ AI 加速器（GPU）與整櫃系統的最大供應商，靠「加速器顆數 �
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| Google TPU（Broadcom 設計） | 自研 AI 晶片 | CY2027 金額份額 9.8% | [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Units!D34] |
-| AMD Instinct | GPU | CY2027 金額份額 6.7% | [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Units!D33] |
-| AWS Trainium | 自研 AI 晶片 | CY2027 金額份額 3.0% | [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Units!D35] |
-| 其他 ASIC（MTIA、Maia、昇騰等） | 自研 AI 晶片 | CY2027 金額份額 5.4% | [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Units!D36] |
+| Google TPU（Broadcom 設計） | 自研 AI 晶片 | CY2027 金額份額 10.8% | [本專案：20261121_NVIDIA個股模型_v0.3.14.xlsx Units!D34] |
+| AMD Instinct | GPU | CY2027 金額份額 7.3% | [本專案：20261121_NVIDIA個股模型_v0.3.14.xlsx Units!D33] |
+| AWS Trainium | 自研 AI 晶片 | CY2027 金額份額 3.3% | [本專案：20261121_NVIDIA個股模型_v0.3.14.xlsx Units!D35] |
+| 其他 ASIC（MTIA、Maia、昇騰等） | 自研 AI 晶片 | CY2027 金額份額 5.9% | [本專案：20261121_NVIDIA個股模型_v0.3.14.xlsx Units!D36] |
 
 - ASIC 顆數 2027 年已過半（JPMorgan 54%），但金額只占約 14–19% [本專案：先驗比對_NVDA_20261023.md N5b]。
 - 本專案市場層 NVIDIA 顆數 CY2027 到 CY2028 持平（9.7M→9.5M）[本專案：先驗比對_NVDA_20261023.md 資料表]。
@@ -100,13 +100,13 @@ AI 加速器（GPU）與整櫃系統的最大供應商，靠「加速器顆數 �
 
 ## 需要觀察的事項
 - 營收水準係數 k_rec（0.828）｜FY2027 由下而上比實績高 20.7%，差額來源未驗證；Q3 實績可檢驗是時點還是長期水準｜FY2027 Q3 財報（2026-11 中旬，公司尚未公告日期）[本專案：nvidia/README.md v0.1.1 第 1 點、Recon B2]
-- FY2028 毛利率｜模型 68.8% vs 公司 72–73%，差在 HBM 成本吸收比例（假設 0.5）[本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Recon!C8、Recon!B8]｜同上
+- FY2028 毛利率｜模型 71.0% vs 公司 72–73%，差在 HBM 成本吸收比例（假設 0.5）[本專案：20261121_NVIDIA個股模型_v0.3.14.xlsx Recon!C8、Recon!B8]｜同上
 - ASIC 金額份額｜±5 個百分點使 FY2028 EPS ±6.6% [本專案：nvidia/README.md 敏感度]｜Broadcom 2026-12 財報
 - 2028 後顆數持平｜CY2029 顆數持平時 FY2030 EPS 只成長 2.1% [本專案：nvidia/README.md 核心問題的答案]｜CoWoS、HBM 2027–28 擴產消息
 - 中國恢復｜恢復 10／20／40（US$B）使 FY2028 EPS +1.5%／+3.0%／+6.0% [本專案：nvidia/README.md 敏感度]｜美國許可與中國採購政策
 
 ## 來源
-1. 本專案：`nvidia/README.md`；`nvidia/dist/20261116_NVIDIA個股模型_v0.3.11.xlsx`（Q、Units、Recon）；`avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx`（Recon）；AI半導體 `先驗比對_NVDA_20261023.md`；`tsmc/README.md`（2026-10-23）
+1. 本專案：`nvidia/README.md`；`nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx`（Q、Units、Recon）；`avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx`（Recon）；AI半導體 `先驗比對_NVDA_20261023.md`；`tsmc/README.md`（2026-10-23）
 2. [Germany signs AI partnership with Nvidia at Berlin investment summit](https://thenextweb.com/news/germany-nvidia-ai-partnership-berlin-summit)（2026-10-20）
 3. [Nvidia's Market Share in China AI Chips Drops Amid U.S. Export Restrictions](https://www.gurufocus.com/news/9122830/nvidias-market-share-in-china-ai-chips-drops-amid-us-export-restrictions-nvda)（2026-10-14）
 4. [Nvidia Explores Deal Options With Reflection AI, Financial Times Says](https://www.bloomberg.com/news/articles/2026-10-10/nvidia-is-in-talks-to-acquire-reflection-ai-the-ft-reports)（2026-10-10，僅標題）

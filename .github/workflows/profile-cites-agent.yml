@@ -49,7 +49,8 @@ jobs:
           BUDGET: ${{ needs.plan.outputs.budget }}
         run: |
           mkdir -p tools/px_agent/pc_out
-          sed "s/{PROFILE}/$P/g" tools/px_agent/pc_prompt.md > /tmp/prompt.txt
+          PF=$(python3 -c "import json;print(json.load(open('tools/px_agent/pc_request.json')).get('prompt','pc_prompt.md'))")
+          sed "s/{PROFILE}/$P/g" "tools/px_agent/$PF" > /tmp/prompt.txt
           set +e
           timeout 40m claude -p "$(cat /tmp/prompt.txt)" --model "$MODEL" --max-budget-usd "$BUDGET" \
             --dangerously-skip-permissions --output-format json > /tmp/result.json 2> /tmp/err.log
