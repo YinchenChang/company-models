@@ -1190,6 +1190,9 @@ if V36 and not OVR:
         "v0.3.11（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113；Yahoo Finance 日線收盤，markets/invest_map/data/closes_20261020_20261113.csv）。現價 181.60 → 162.85；同業前瞻 P/E 中位數 16.93 → 19.95（AMD 36.12→47.70、Broadcom 16.76→19.95、Marvell 23.66→27.77、台積電 ADR 16.58→18.72、Qualcomm 16.93→18.63；新倍數＝v0.3.10 倍數 × 11-13 收盤 ÷ 11-05 收盤，共識 EPS 不變）；加權目標價 248.46（上檔 +36.8%，買進）→ 283.32（上檔 +74.0%，強力買進）；股價基準日與資料截止日改 2026-11-13（目標時點＝現價日＋12 個月隨之後移）。共識 EPS、rf、β、ERP、情境權重與營運假設不變；市值計 WACC 權重隨現價重算；Sens、Coord 快照已重跑。Recon F 節「評等升一級」邊界：上檔空間已超過 +50%（最高級距）時無升一級邊界，原公式回 #N/A，改顯示「不適用」（Recon!B44、B47–B49、D47–D49 與 README 失效條件 (3) 加 ISNUMBER 判斷；其他公式不變）。"))
     print(px1113_post.apply(wb, "v0.3.12",
         "v0.3.12（2026-11-18）：Siliconomics v0.21（2027 年 NVIDIA 顆數改自建估計 613 萬封裝，區間 400–839 萬，2027 年 2 月重估；決策 S56、S57）。依 chat 端裁示（條件 (1)「每 GW 金額」含本模型每顆售價），Blackwell、Rubin 的 GPU 模組售價改由每封裝 NVIDIA 資料中心營收（Siliconomics SIF_ppr_bw 43／50／55、SIF_ppr_rb 95.9／114.08／139.3 千美元，NVIDIA 認列口徑，含網通）倒推：模組價＝每封裝營收 − CPU − LPDDR − k_tray × 匣級加價 − 每封裝網通營收（網通另列，不重複計入）；Rubin Ultra 維持對 Rubin 的結構比。原橋接表模組價 40.4／55 留在 In 頁說明欄。k_rec 隨之依 FY2027 錨點重算。不使用 NVIDIA FY2027 第三季實績。"))
+if V36 and not OVR:
+    import v0313_post  # noqa: E402  v0.3.13（2026-11-21）：供應承諾對採購恆等式（Recon I 節；只新增）
+    print(v0313_post.apply(wb))
 wb.save(sys.argv[1])
 if os.environ.get("NV_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

@@ -278,6 +278,24 @@ if s_h:
     h0, h1 = s_h
     SEC["recon"]["blocks"].append({"type": "table", "caption": f"@Recon!A{h0}", "head": ["項目", "值", "說明"],
                                    "rows": [[f"@Recon!A{r}", f"@Recon!B{r}" + ("|n0" if isinstance(RCW.cell(r, 2).value, (int, float)) else ""), f"@Recon!J{r}"] for r in range(h0 + 1, h1 + 1)]})
+# 對帳章：供應承諾對採購恆等式（I 節；v0.3.13 起）
+def _iblk(prefix, cols):
+    r0 = find("Recon", prefix); r1 = r0
+    while RCW.cell(r1 + 1, 1).value: r1 += 1
+    def _f(r):
+        t = str(RCW.cell(r, 1).value)
+        return "p1" if ("÷" in t and "倍" not in t and "天" not in t) or "比例" in t else ("x2" if "倍" in t else ("n0" if "天數" in t else ("n2" if "每股" in t or "EPS" in t else "n1")))
+    rows = [[f"@Recon!A{r}"] + [f"@Recon!{c}{r}" + (f"|{_f(r)}" if isinstance(RCW.cell(r, ord(c) - 64).value, (int, float)) else "") for c in cols] for r in range(r0 + 1, r1 + 1)]
+    return {"type": "table", "caption": f"@Recon!A{r0}", "head": ["項目"] + [f"@Recon!{c}{r0}" for c in cols], "rows": rows}
+try:
+    _i0 = find("Recon", "I. 供應承諾對採購恆等式")
+except KeyError:
+    _i0 = None
+if _i0:
+    SEC["recon"]["blocks"] += [{"type": "h3", "text": "供應承諾對採購恆等式（只作對照與敏感度，不進目標價）"}, {"type": "note", "parts": [f"@Recon!A{_i0 + 1}"]},
+                               _iblk("I3. 各路徑的 FY2028", "BCDEF"), _iblk("I4. 承諾可支撐的 FY2028 營收", "BCDF"),
+                               dict(_iblk("I1. 已實現期間的恆等式核對", "BCDEF"), collapse=True, summary="展開：已實現期間的恆等式核對"),
+                               dict(_iblk("I2. 假設與 Q4 FY27 推算", "BCD"), collapse=True, summary="展開：假設與年底存貨推算（預登錄檢驗點）")]
 # 估值章：EBIT 口徑與現金稅率（摺疊）
 DW = wb["DCF"]
 r_bh = find("DCF", "EBIT 口徑與現金稅率")
@@ -349,7 +367,7 @@ def _v13():
     r13 = find("README", "v1.3 展示層")
     RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
     assert str(RD[f"A{RM['ver']}"].value).startswith("v0.3.7"), RD[f"A{RM['ver']}"].value
-    assert str(RD[f"A{RD.max_row}"].value).startswith("v0.3.12"), RD[f"A{RD.max_row}"].value   # v0.3.12（2026-11-18）起最後一列為 v0.3.12 沿革
+    assert str(RD[f"A{RD.max_row}"].value).startswith("v0.3.13"), RD[f"A{RD.max_row}"].value   # v0.3.13（2026-11-21）起最後一列為 v0.3.13 沿革
     cfg["layout"] = "v1.3"
     # ---- 橫幅：只留 ≤200 字白話（規則與歸因移到估值章）----
     old_note = cfg["hero"]["note"]

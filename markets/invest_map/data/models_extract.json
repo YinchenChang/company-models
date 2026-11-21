@@ -1,88 +1,88 @@
 {
  "NVDA": {
-  "model": "nvidia/dist/20261118_NVIDIA個股模型_v0.3.12.xlsx",
+  "model": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx",
   "v2": true,
   "tp": {
    "value": 333.506315070429,
    "cell": "Val!B40",
-   "file": "nvidia/dist/20261118_NVIDIA個股模型_v0.3.12.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
   },
   "tp_dcf": {
    "value": 130.154435787755,
    "cell": "Val!B23",
-   "file": "nvidia/dist/20261118_NVIDIA個股模型_v0.3.12.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
   },
   "tp_comp": {
    "value": 304.14728508376,
    "cell": "Val!B41",
-   "file": "nvidia/dist/20261118_NVIDIA個股模型_v0.3.12.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
   },
   "tp_cons": {
    "value": 328.95,
    "cell": "Val!B42",
-   "file": "nvidia/dist/20261118_NVIDIA個股模型_v0.3.12.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
   },
   "up": {
    "value": 1.04793561602965,
    "cell": "Val!B43",
-   "file": "nvidia/dist/20261118_NVIDIA個股模型_v0.3.12.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
   },
   "up_comp": {
    "value": 0.867652963363586,
    "cell": "Val!B44",
-   "file": "nvidia/dist/20261118_NVIDIA個股模型_v0.3.12.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
   },
   "tp_comp_adj": {
    "value": 536.858194353103,
    "cell": "Val!B199",
-   "file": "nvidia/dist/20261118_NVIDIA個股模型_v0.3.12.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
   },
   "old_rule": {
    "value": 467.571184194614,
    "cell": "Val!B170",
-   "file": "nvidia/dist/20261118_NVIDIA個股模型_v0.3.12.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
   },
   "tier6": {
    "value": "大於 50%",
    "cell": "Val!B178",
-   "file": "nvidia/dist/20261118_NVIDIA個股模型_v0.3.12.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
   },
   "rec": {
    "value": "強力買進",
    "cell": "Val!B179",
-   "file": "nvidia/dist/20261118_NVIDIA個股模型_v0.3.12.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
   },
   "dcf_A": {
    "value": 193.815514380598,
    "cell": "Val!B20",
-   "file": "nvidia/dist/20261118_NVIDIA個股模型_v0.3.12.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
   },
   "dcf_C": {
    "value": 90.2624310071717,
    "cell": "Val!D20",
-   "file": "nvidia/dist/20261118_NVIDIA個股模型_v0.3.12.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
   },
   "model_px": {
    "value": 162.85,
    "cell": "Val!B57",
-   "file": "nvidia/dist/20261118_NVIDIA個股模型_v0.3.12.xlsx",
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx",
    "date": "2026-11-13"
   },
   "pe_fy28": [
    {
     "value": 13.4757724411857,
     "cell": "Val!B58",
-    "file": "nvidia/dist/20261118_NVIDIA個股模型_v0.3.12.xlsx"
+    "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
    },
    {
     "value": 14.0314780808431,
     "cell": "Val!C58",
-    "file": "nvidia/dist/20261118_NVIDIA個股模型_v0.3.12.xlsx"
+    "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
    },
    {
     "value": 14.1882976893327,
     "cell": "Val!D58",
-    "file": "nvidia/dist/20261118_NVIDIA個股模型_v0.3.12.xlsx"
+    "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
    }
   ],
   "cash": {
@@ -155,7 +155,7 @@
      "PL!G292"
     ]
    ],
-   "file": "nvidia/dist/20261118_NVIDIA個股模型_v0.3.12.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
   }
  },
  "AVGO": {
