@@ -1,6 +1,26 @@
-# besi/ — BESI（BE Semiconductor Industries，BESI.AS）收支與估值模型 v0.2.5
+# besi/ — BESI（BE Semiconductor Industries，BESI.AS）收支與估值模型 v0.2.6
 
 > 標籤修正批 labels（2026-11-17，同版同檔名原地重建，數值不變）：In!I140 說明「股價日 2026-11-05」→ 2026-11-13；Coord 頁 Wattonomics 快照版本字樣隨 repo 現行檔 v0.3.5 → v0.3.6（只讀取標籤，數值不變）；`px1113_post.py` 預設掃描加入「股價日」。
+
+## v0.2.6（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）
+
+- 現價與同業報價改 2026-11-20 收盤（工作單 px1120；價格只取自 `markets/invest_map/data/closes_20261109_20261120.csv`）。後處理 `px1120_post.py`（build 存檔前、接在 `px1113_post.py` 之後呼叫）只改價格輸入與說明文字，不改公式結構；共識 EPS、rf、預測用匯率與模型假設不變。
+- 同業前瞻倍數＝現行倍數 × 11-20 收盤 ÷ 11-13 收盤。**未換價同業：無**（ASM International、ASMPT、Kulicke & Soffa、Disco、韓美皆有 11-20 收盤）。BESI.AS 的 11-20 值取自該檔「報價資料最近成交價」（Yahoo 日線尚無該列，見 `closes_20261109_20261120.csv.meta.txt`）。
+
+| 項目 | v0.2.5 | v0.2.6 |
+|---|---|---|
+| 現價 | 154.1（11-13） | 142.7（11-20） |
+| 同業前瞻倍數中位數 | 25.05 | 21.82 |
+| DCF 目標價 | 68.98 | 75.08 |
+| Comparable（相對倍數調整後；進加權） | 204.74 | 193.29 |
+| Comparable（市場主流同業法） | 156.39 | 147.64 |
+| 加權目標價 | 136.86（−11.2%） | 134.19（−6.0%） |
+| 投資建議 | 中立 | 中立 |
+| 另一側讀數（Coord） | 128.66（中立） | 128.76（中立） |
+
+- DCF 目標價隨現價變動：WACC 的資本結構權重與重新加槓桿 β 依市值計，照公式自動重算，未手改。
+- 驗證：LibreOffice 重算錯誤格 0；`check_company_html besi` 全部通過；`check_layout_v13 --xlsx` 通過；`baseline_coordination/check.py` 0 項不符；`check_sens_coverage --require-keycol` 56／56 未過（與 v0.2.5 相同，既有，不要求）；重跑 `sens_besi.py`、`alt_run.py besi`（`sens.json`、`coord_alt.json` 更新）。
+- 成品：`dist/20261121_BESI模型_v0.2.6.xlsx`、`.html`；v0.2.5 成品已移除。
 
 ## v0.2.5（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
 

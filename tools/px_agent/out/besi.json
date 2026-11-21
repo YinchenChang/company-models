@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 1,
+ "duration_ms": 3015,
+ "total_cost_usd": 0.3545346,
+ "result": "這則通知是早先那個啟動指令的收尾，不影響結果。它失敗只是因為尾端的 `sleep 240; tail -3 …` 逾時，而 `tail -3` 在這個環境也不接受。Sens 和 Coord 兩個快照在背景已經跑完，兩份 log 都有 `done`。`besi/sens.json` 和 `besi/coord_alt.json` 已更新，正式建置也用的是這兩份。\n\n前面回報的結果都不變，我沒有再改任何檔案。",
+ "error": null,
+ "stderr": null
+}
