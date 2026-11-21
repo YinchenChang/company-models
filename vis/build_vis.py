@@ -361,8 +361,8 @@ else:
     inp("vsmc_nc", "VSMC 評價日淨現金（現金 − 借款；NXP 占 40%）[Unknown]", "NT$B", "=-debt_v", 0, "=cash_v-debt_v", "Assumed", "Unknown：VSMC 未單獨揭露資產負債；基準取 0（合併淨現金全數歸母公司）", "低＝合併借款全屬 VSMC 且 VSMC 無現金；高＝合併現金與借款全在 VSMC；只作敏感度")
     inp("vda_adj", "原毛利率假設隱含的折舊比例（換成現金毛利率時加回；＝世界先進 FY2026 折舊 ÷ 營收）", "%", None, "=da_tot26/a26_rev", None, "Derived",
         "＝da_tot26 ÷ a26_rev（8 吋折舊強度）；v0.2.1 的 VSMC 毛利率標「含折舊」，以 8 吋折舊強度換成現金毛利率（Assumed 規則）", "現金毛利率＝vgm ＋ 本值；VSMC 毛利＝營收 × 現金毛利率 − VSMC 建廠折舊")
-    inp("nxp_rem", "（參考，v0.3 起不進估值）NXP 尚未注入的 VSMC 股本，以帳面倒推（方法不可驗證：驗收 C-03）", "NT$B", None, "=1.6*32.939-32.603036", None, "Derived",
-        C["vmi_src"] + "：NXP 出資 16 億美元 × 2026-11-13 匯率 32.939（Yahoo Finance TWD=X 日線收盤；工作單 px1113 K 批；v0.3.1 為 2026-11-05 的 33.034，v0.2.3 為 11-04 的 32.733）− 非控制權益帳面 32.603（2026-09-30，公開資訊觀測站；06-30 為 29.936；視為已注入金額）", "FCFF 為合併口徑（VSMC 資本支出 100%），NXP 後續注資支應其中一部分；第三輪修正選項：帳面非控制權益＋NXP 剩餘注資")
+    inp("nxp_rem", "（參考，v0.3 起不進估值）NXP 尚未注入的 VSMC 股本，以帳面倒推（方法不可驗證：驗收 C-03）", "NT$B", None, "=1.6*33.026299-32.603036", None, "Derived",
+        C["vmi_src"] + "：NXP 出資 16 億美元 × 2026-11-20 匯率 33.026（Yahoo Finance TWD=X 日線收盤 33.026299；工作單 px1120；v0.3.2 為 2026-11-13 的 32.939；v0.3.1 為 2026-11-05 的 33.034，v0.2.3 為 11-04 的 32.733）− 非控制權益帳面 32.603（2026-09-30，公開資訊觀測站；06-30 為 29.936；視為已注入金額）", "FCFF 為合併口徑（VSMC 資本支出 100%），NXP 後續注資支應其中一部分；第三輪修正選項：帳面非控制權益＋NXP 剩餘注資")
     inp("ai_sh26", "FY2026 AI 相關 ÷ 營收（記憶列）", "%", None, C["ai_sh26"], None, "Interested-party", C["ai_sh_src"], "公司：全年雙位數；只作記憶列，不進營收加總")
     for s in SC:
         inp(f"ai_sh27_{s}", f"FY2027 起 AI 相關 ÷ 營收（記憶列；情境 {s}）", "%", None, C["ai_sh27"][s], None, "Assumed",
@@ -1225,6 +1225,11 @@ import px1113_post as P1113  # noqa: E402
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _N1113 = open(os.path.join(_HERE, "px1113_note.txt"), encoding="utf-8").read().strip() if os.path.exists(os.path.join(_HERE, "px1113_note.txt")) else "v0.3.2（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。"
 print(P1113.apply(wb, _HERE, dict(ver="v0.3.2", old_ver="v0.3.1", tk="5347.TWO", note=_N1113 + " ", also={"0981.HK": "2026-10-16"})))   # NXP 出資換算匯率（參考列 nxp_rem）改 11-13 USD/TWD 32.939
+# v0.3.3（2026-11-21）：工作單 px1120——現價與同業報價改 2026-11-20 收盤（vis/px1120_post.py；只改價格輸入與說明文字）
+import px1120_post as P1120  # noqa: E402
+_R1120 = os.path.join(_HERE, "px1120_readme.txt")
+_N1120 = open(_R1120, encoding="utf-8").read().strip() if os.path.exists(_R1120) else "v0.3.3（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。"
+print(P1120.apply(wb, _HERE, dict(ver="v0.3.3", old_ver="v0.3.2", tk="5347.TWO", note=_N1120 + " ")))
 wb.save(sys.argv[1])
 if os.environ.get("ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK, "VAL": VAL, "INROW": INROW,
