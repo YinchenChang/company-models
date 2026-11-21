@@ -199,7 +199,7 @@ print("ok", OUT)
 # ───────── v0.5.4（2026-11-15）：個股 HTML 版面規格 v1.3＋三層協調（兩讀數、C0（實績））；共通步驟 emc/html13.py（同電源散熱四家；樣板 delta、auras） ─────────
 import html13  # noqa: E402
 H = {
-    "ver": "v0.5.5",
+    "ver": "v0.5.6",
     "units_chart": lambda pB, hB: {
         "type": "theme", "title": "AI 相關與非 AI 營收（情境 B，十億元）與台光電在 AI 高速 CCL 市場的有效份額（右軸）", "x": f"@PL!D{hB}:G{hB}",
         "fmt": "n1", "fmt_r": "p1", "stack": True, "pad": 1.25, "total": f"@PL!D{pB('營收')}:G{pB('營收')}",
