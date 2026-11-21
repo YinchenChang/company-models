@@ -355,7 +355,7 @@ def _v13():
     V28 = rm["V28"]; PLA, RVA, CRD, RMA = V28["PL"], V28["RV"], V28["CRD"], V28["RM"]
     S = {x["id"]: x for x in cfg["sections"]}
     PLW = wb["PL"]
-    assert str(wb["README"][f"A{RMA['ver']}"].value).startswith("v0.2.10"), wb["README"][f"A{RMA['ver']}"].value
+    assert str(wb["README"][f"A{RMA['ver']}"].value).startswith("v0.2.11"), wb["README"][f"A{RMA['ver']}"].value
     cfg["layout"] = "v1.3"
     old_note = cfg["hero"]["note"]
     cfg["hero"]["note"] = [f"@README!A{RMA['hero']}"]
