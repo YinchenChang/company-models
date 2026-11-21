@@ -50,7 +50,9 @@ for s in [s for s in syms if last.get(s, "") < top]:
         # 日線仍缺最後一日時，取報價中繼資料的最近成交價（regularMarketPrice）與其當地日期；另記在 .meta.txt
         t = yf.Ticker(s); t.history(period="5d"); m = t.history_metadata
         import zoneinfo
-        d = dt.datetime.fromtimestamp(m["regularMarketTime"], zoneinfo.ZoneInfo(m["exchangeTimezoneName"])).strftime("%Y-%m-%d")
+        rt = m["regularMarketTime"]
+        if not isinstance(rt, (int, float)): rt = rt.timestamp()
+        d = dt.datetime.fromtimestamp(rt, zoneinfo.ZoneInfo(m["exchangeTimezoneName"])).strftime("%Y-%m-%d")
         print("meta", s, d, m.get("regularMarketPrice"), m.get("chartPreviousClose"))
         if h["Close"].dropna().index[-1].strftime("%Y-%m-%d") < d <= end and m.get("regularMarketPrice"):
             rows.append((s, cur.get(s, ""), d, repr(round(float(m["regularMarketPrice"]), 6)))); meta.append("%s,%s,%s" % (s, d, m["regularMarketPrice"]))
