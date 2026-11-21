@@ -1,0 +1,10 @@
+folder=disco
+version=0.3.6 -> 0.3.7
+px=47470 -> 41350
+tp=36416.2978243351 -> 33124.0391790351
+upside=-0.232856586805665 -> -0.198934965440505
+rating=中立 -> 中立
+peers_repriced=5
+peers_unchanged=無
+checks=重算錯誤格 0；check_company_html 通過；check_layout_v13 --xlsx 通過；check_sens_coverage 前版即未過（51 鍵找不到 Sens 表頭），本版相同；baseline_coordination/check.py 0 項不符（4 項提醒）；Sens／Coord 快照 CURRENT（sens_disco.py、alt_run.py 已重跑）；tools/company_html/layout_check.py（瀏覽器截圖）未跑
+notes=另一側讀數加權目標價 31,501、評等中立（前版放空），Coord 頁文字由公式帶出。舊 README v0.3.6 節對照表寫 35,045／放空，與成品重算值 36,416／中立不符，已在 README 更正。gen_html_json.py 的 README 版本斷言由 v0.3.6 改 v0.3.7。
