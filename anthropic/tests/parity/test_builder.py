@@ -626,7 +626,8 @@ def test_v020_val_identities(eng):
     assert all(n(f"VAL_TP_DCF_{x}") >= n("VAL_NetCashPS") * (1 + n("VAL_Ke")) - 1e-9 for x in "ABC")          # 下限＝淨現金每股（推到目標時點）
     assert abs(n("VAL_Ke") - (n("VAL_Rf") + n("VAL_Beta") * n("VAL_ERP"))) < 1e-12
     assert abs(n("VAL_EV_B") - (n("VAL_PVExp_B") + n("VAL_PVTV_B"))) < 1e-9
-    assert abs(n("VAL_PeerMult") - 26.32) < 1e-12 and abs(n("VAL_PeerFCFm") - 0.298) < 1e-12 and abs(n("VAL_Beta") - (0.67 * 1.37 + 0.33)) < 1e-12
+    # px1120：同業中位數＝Cloudflare，倍數 26.32（2026-11-06）× 11-20 收盤 274.959991 ÷ 11-06 收盤 268.75
+    assert abs(n("VAL_PeerMult") - 26.32 * 274.959991 / 268.75) < 1e-9 and abs(n("VAL_PeerFCFm") - 0.298) < 1e-12 and abs(n("VAL_Beta") - (0.67 * 1.37 + 0.33)) < 1e-12
     assert abs(n("VAL_SensBase") - n("VAL_TP_W")) < 1e-9
     assert n("VAL_Yr")[0] == "2026Q4" and n("VAL_Yr")[-1] == 2033
 
