@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 23,
+ "duration_ms": 145471,
+ "total_cost_usd": 0.43025209999999997,
+ "result": "京元電（`kyec`）已換成 2026-11-20 收盤，版號 v0.4.7 → v0.4.8。Excel 與 HTML 已重建，dist 只留新版。\n\n- **現價：** 213.5 → 157.5。\n- **加權目標價：** 113.88 → 91.70。\n- **上檔空間：** −46.7% → −41.8%。\n- **評等：** 放空 → 放空。\n- **同業：** 5 家全部換價，沒有未換價的同業。P/E 中位數 16.42 → 11.58。日月光 ADS 換算匯率改用 TWD=X 11-20 收盤 33.026，預測用匯率不變。\n- **前後比對基準：** v0.4.7 的 README 文字寫 111.82，但 dist 成品實際是 113.88（Siliconomics v0.22 重建後的值）。前值取 dist 成品，兩個數字的差異已寫進 README 與 note。\n- **檢查：**\n  - 通過：Excel 重算錯誤格 0、`check_company_html` 全部通過、`check_layout_v13 --xlsx` 通過、`baseline_coordination/check.py` 0 項不符。\n  - 沒過但前版已如此：`check_sens_coverage --require-keycol` 48／48 未過，v0.4.7 即未過，這條不要求。\n  - 已重跑 Coord 另一側讀數（109.13 → 88.44，評等同為放空）。\n- **改動檔案：** 全在 `kyec/`，新增 `px1120_post.py`、`px1120_note_text.txt`、`px1120_note.txt`；`build_kyec.py` 在 px1113 之後呼叫 px1120。舊 dist 已用 `git rm` 移除，尚未 commit。",
+ "error": null,
+ "stderr": null
+}

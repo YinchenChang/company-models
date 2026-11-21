@@ -268,7 +268,7 @@ post(cfg)
 import html13  # noqa: E402
 _AI = "AI 加速器測試營收 ＝ 每加權顆營收 × 加權顆數 × 份額 × 單價"
 H = {
-    "ver": "v0.4.7",
+    "ver": "v0.4.8",
     "units_chart": lambda pB, hB: {
         "type": "theme", "title": "AI 加速器測試與非 AI 營收（情境 B，十億元）與 AI 測試占營收（右軸）", "x": f"@PL!D{hB}:G{hB}",
         "fmt": "n1", "fmt_r": "p0", "stack": True, "pad": 1.25, "total": f"@PL!D{pB('營收')}:G{pB('營收')}",
