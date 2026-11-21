@@ -14,7 +14,7 @@ import re
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
-VER, BUILT = "0.2.2", "2026-11-16"
+VER, BUILT = "0.2.3", "2026-11-21"
 U_10Q = "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm"   # 出處網址只放 Coord 頁 L 欄（HTML 不顯示外部網址）
 U_PR = "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066700/meta-09302026xexhibit991.htm"
 U_Q4_23 = "https://investor.atmeta.com/investor-news/press-release-details/2024/Meta-Reports-Fourth-Quarter-and-Full-Year-2023-Results-Initiates-Quarterly-Dividend/"
@@ -606,7 +606,7 @@ def readme13(wb, C, RVA, PLA, CRD):
         RD.cell(r, 1, F(*parts)); out[key] = r; r += 1
     put("hero", T("加權目標價 "), f'TEXT({tp},"0")', T(" 美元，比現價 "), f'TEXT(ABS({up}),"0%")', f'IF({up}<0," 低，"," 高，")', T("評等"), rec, T("；營業利益率由 "), f'TEXT(PL!D{PRB["om"]},"0%")', T("（FY2025）降到 "), f'TEXT(PL!I{PRB["om"]},"0%")', T("（FY2028）。"))
     put("rec", T("投資建議「"), rec, T("」成立的前提：自用 AI 採價值中性（讀法 2，k＝"), 'TEXT(k_ai,"0.00")', T("）；改為只計成本（讀法 1）時加權目標價 "), f'TEXT({vb("tp_r1")},"0")', T(" 美元（"), f'TEXT({vb("tp_r1", "C")},"+0%;-0%")', T("），評等"),
-        f'{vb("tp_r1", "D")}', T("；現價 "), 'TEXT(px,"0.00")', T(" 美元為 2026-11-05 收盤。"))
+        f'{vb("tp_r1", "D")}', T("；現價 "), 'TEXT(px,"0.00")', T(" 美元為 2026-11-20 收盤。"))
     put("o1", T("目標價 "), f'TEXT({tp},"0")', T("＝現金流折現 "), f'TEXT({dcf},"0")', T("、分部加總 "), f'TEXT({cmpv},"0")', T(" 各半，比現價 "), f'IF({up}<0,"低 ","高 ")', f'TEXT(ABS({up}),"0%")',
         T("；情境 A／B／C 為 "), f'TEXT({vb("scen")},"0")', T("／"), f'TEXT({vb("scen", "C")},"0")', T("／"), f'TEXT({vb("scen", "D")},"0")', T("，市場共識 "), f'TEXT({cons},"0")', T("。"))
     put("o2", T("讀法 2 依賴度高：自用 AI 價值中性（k＝1）占目標價 "), f'TEXT({vb("dep_tot", "C")},"0%")', T("；只計成本（讀法 1）降到 "), f'TEXT({vb("tp_r1")},"0")', T("，支持現價所需 k＝"), kk("kreq"), T("、評等翻轉 k＝"), kk("kflip"),
@@ -619,19 +619,21 @@ def readme13(wb, C, RVA, PLA, CRD):
         T("（最近一季年化 "), f'TEXT(Coord!F{CRD["rd2"]},"+0%;-0%")', T("），但該層級值由 Meta 資本支出換算（同源），結論："), f'Coord!G{CRD["rj"]}', T("；AI 營收、在役電力公司不揭露，無可比實績。"))
     put("drv", T("分部營收推導（情境 B）：Advertising＝廣告曝光數 × 每則廣告平均價格（各自近四季年增向長期值收斂；情境 A／C 只調價格），Other revenue 與 Reality Labs 各依近四季年增收斂；"
                  "三者加總為合併營收。FY2028 Advertising "), f'TEXT(PL!I{PRB["ads"]},"0")', T("、Other revenue "), f'TEXT(PL!I{PRB["other"]},"0.0")', T("、Reality Labs "), f'TEXT(PL!I{PRB["rl"]},"0.0")', T("，合計 "), f'TEXT(PL!I{PRB["rev"]},"0")', T(" 十億美元。"))
-    RD.cell(r, 1, F(T("v0.2.2（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。現價 605.08（11-05）→ "), 'TEXT(px,"0.00")',
-                    T("；股價基準日 2026-11-05 → 2026-11-13，目標時點隨公式 2027-11-05 → "), 'TEXT(tp_date,"yyyy-mm-dd")',
-                    T("；加權目標價 778.44 → "), f'TEXT({vb("tp")},"0.00")', T("；上檔空間 +28.7% → "), f'TEXT({vb("up")},"+0.0%;-0.0%")',
-                    T("；投資建議 買進 → "), f'{vb("rec")}', T("（只換現價時為 780.65、+21.7%、中立）；加權目標價的變動來自同業倍數換價。評價日股價與 WACC 權益權重（px_val）不隨現價換。同業倍數（報價日 2026-10-07／10-08；Meta 自身 10-28）依價格檔同日收盤換到 2026-11-13（GOOGL 與 Meta 自身用市值法，PINS、TTD、APP、RDDT、SNAP 倍數 × 收盤比，近似）：" + _PXTXT + "；共識與其他假設不變。")))
+    RD.cell(r, 1, F(T("v0.2.3（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。現價 641.69（11-13）→ "), 'TEXT(px,"0.00")',
+                    T("；股價基準日 2026-11-13 → 2026-11-20，目標時點隨公式 2027-11-13 → "), 'TEXT(tp_date,"yyyy-mm-dd")',
+                    T("；加權目標價 745.34 → "), f'TEXT({vb("tp")},"0.00")', T("；上檔空間 +16.2% → "), f'TEXT({vb("up")},"+0.0%;-0.0%")',
+                    T("；投資建議 中立 → "), f'{vb("rec")}', T("。評價日股價與 WACC 權益權重（px_val）不隨現價換。同業倍數由 2026-11-13 依價格檔收盤比換到 2026-11-20（GOOGL 與 Meta 自身用市值法，PINS、TTD、APP、RDDT、SNAP 倍數 × 收盤比，近似；無未換價同業）：" + _PXTXT + "；Class A 遠期出售的交割期限 2027-11-19 現早於目標時點 2027-11-20，仍推定已交割（判斷不變）；共識與其他假設不變。")))
     out["ver"] = r; r += 1
+    RD.cell(r, 1, "v0.2.2（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。現價 605.08（11-05）→ 641.69；股價基準日 2026-11-05 → 2026-11-13，目標時點 2027-11-05 → 2027-11-13；加權目標價 778.44 → 745.34；上檔空間 +28.7% → +16.2%；投資建議 買進 → 中立（只換現價時為 780.65、+21.7%、中立）；加權目標價的變動來自同業倍數換價。同業倍數（報價日 2026-10-07／10-08；Meta 自身 10-28）依價格檔同日收盤換到 2026-11-13（GOOGL 與 Meta 自身用市值法，其餘倍數 × 收盤比，近似）：六家中位數 9.41 → 8.54、GOOGL 14.71 → 12.33、Meta 自身 8.99 → 9.42；共識與其他假設不變。")
+    r += 1
     RD.cell(r, 1, "v0.2.1（2026-11-15）：只改展示層與新增頁——個股 HTML 版面規格 v1.3：章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；新增 RevDCF 頁、PL 頁末標準損益表、Sens 頁末加權目標價相對基準、README 頁末 v1.3 白話列；新增 Coord 頁「三層協調」。既有數值格不變，目標價與評等不變；Wattonomics 固定讀 v0.3 快照，本輪不換快照")
     r += 1
     return out
 
 
-_PXJ = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "peers_ads_20261113.json"), encoding="utf-8"))
+_PXJ = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "peers_ads_20261120.json"), encoding="utf-8"))
 _PXG = [p for p in _PXJ["peers"] if p["ticker"] == "GOOGL"][0]
-_PXTXT = f"六家中位數 {_PXJ['median1030']['value']} → {_PXJ['median']['value']}、GOOGL {_PXG['ntmEvEbitda1007']} → {_PXG['ntmEvEbitda']}、Meta 自身 {_PXJ['selfReference']['ntmEvEbitda1007']} → {_PXJ['selfReference']['ntmEvEbitda']}"
+_PXTXT = f"六家中位數 {_PXJ['median1113']['value']} → {_PXJ['median']['value']}、GOOGL {_PXG['ntmEvEbitda1113']} → {_PXG['ntmEvEbitda']}、Meta 自身 {_PXJ['selfReference']['ntmEvEbitda1113']} → {_PXJ['selfReference']['ntmEvEbitda']}"
 
 
 def apply(wb, C):
