@@ -1,0 +1,10 @@
+folder=kioxia
+version=v0.5.6 -> v0.5.7
+px=9091 -> 7307
+tp=14988 -> 13636
+upside=+64.9% -> +86.6%
+rating=強力買進 -> 強力買進
+peers_repriced=9（P/B 同業 4 家：美光、SK 海力士、三星電子、SanDisk；P/E 並列參考 5 家：美光、SK 海力士、三星電子、SanDisk、WDC；其中 4 家兩表重複）
+peers_unchanged=無
+checks=xlsx_diff 對 LibreOffice 重算檔 0 差異、錯誤格 0；check_cached_values 通過；check_company_html 全部通過；check_layout_v13（含 --xlsx）通過（僅參數代號警告，同前版）；baseline_coordination/check 0 項不符；Sens 快照與 Coord 快照已重跑；check_sens_coverage 未過（35 項「Sens 頁找不到表頭」），前一版 v0.5.6 同為 35 項未過，不要求
+notes=SanDisk 同業已改分割後口徑（報價 79.24，每股淨值與 EPS ÷8），倍數 1.46／P/E 同口徑，不受分割影響。DCF 目標價 14,487 -> 14,325；Comparable 15,489 -> 12,947；同業 P/B 中位數 1.66 -> 1.32；另一側讀數目標價 14,012 -> 13,051（強力買進，+78.6%）。數值取自重建後 xlsx 的重算值。
