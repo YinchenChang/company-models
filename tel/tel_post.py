@@ -1,9 +1,9 @@
-# 東京威力科創（8035.T）v0.1.0（2026-11-17）後處理：個股 HTML 版面規格 v1.3（樣板 accretech v0.3.5、amat、lrcx）、三層協調讀取層級與 C0（含公司實績，規則 v1.4.2）、硬體股兩讀數（Coord 頁）。
+# 東京威力科創（8035.T）v0.1.1（2026-11-21）後處理：個股 HTML 版面規格 v1.3（樣板 accretech v0.3.5、amat、lrcx）、三層協調讀取層級與 C0（含公司實績，規則 v1.4.2）、硬體股兩讀數（Coord 頁）。
 # 只新增，不改既有數值格：HistIS、PL 標準損益表、RevDCF、Val 0.7 四個目標價、Sens 加權目標價相對基準（快照 tel/sens.json）、Coord 讀取層級與 C0、README v1.3 白話列。
 import json, os, re
 from openpyxl.styles import Font, PatternFill
 
-VER, BUILT = "0.1.0", "2026-11-17"
+VER, BUILT = "0.1.1", "2026-11-21"
 BOLD = Font(bold=True); BLUE = Font(color="0000FF"); HDR = PatternFill("solid", fgColor="DDEBF7")
 SAME = "讀取層級（同源，不判定）"
 TSQ2 = "公司 FY2027 Q2 決算短信（2026-10-30）"
@@ -393,7 +393,7 @@ def coord_c0(wb, SIL, CR, HR, PB, EQ_F):
     assert len(EQB) == 5, EQB
     RB = PB["B"]
     r = CW.max_row + 3
-    CW.cell(r, 1, "三層協調：讀取層級與 C0 對帳（v0.1.0；三層基準協調規則 v1.4.2 C0、C4、C5；本節只新增，不改上游值，也不改本模型既有數值）").font = BOLD; r += 1
+    CW.cell(r, 1, "三層協調：讀取層級與 C0 對帳（v0.1.1；三層基準協調規則 v1.4.2 C0、C4、C5；本節只新增，不改上游值，也不改本模型既有數值）").font = BOLD; r += 1
     ROW = {}
     CW.cell(r, 1, "1. 讀哪一層、哪一版（下游只註明版本、不自行重估；Instructions 第 3 條）").font = BOLD; r += 1
     for j, h in enumerate(["項目", "值", "層級與讀取名稱", "版本", "模型使用處／備註"], 1):
@@ -468,7 +468,7 @@ def coord_c0(wb, SIL, CR, HR, PB, EQ_F):
     CW.column_dimensions["F"].width = 18; CW.column_dimensions["G"].width = 26; CW.column_dimensions["H"].width = 110; CW.column_dimensions["I"].width = 40
     # ---- 4. C0 ----
     r += 1
-    CW.cell(r, 1, "4. C0（實績）：公司實績 vs 層級隱含值（v0.1.0；規則 v1.4.2 C0 第 2 點；差距超過 ±15% 且兩個讀數同號才標「對帳中」；不改上游值、不開改值 PR）").font = BOLD
+    CW.cell(r, 1, "4. C0（實績）：公司實績 vs 層級隱含值（v0.1.1；規則 v1.4.2 C0 第 2 點；差距超過 ±15% 且兩個讀數同號才標「對帳中」；不改上游值、不開改值 PR）").font = BOLD
     ROW["title"] = r; r += 1
     CW.cell(r, 1, "方法：個股側＝公司已公布實績：FY2026 Q1–Q2（2026-04～2026-09；會計年度 4 月起）新設備銷售（SPE new equipment；公司說明資料），不用指引或預測。層級側：設備市場層有五個終端市場設備金額（CY；CY2025 以 SEMI 實績校準），沒有東京威力科創份額。"
                   "主讀數＝已公布期間累計 vs 層級 CY2026 × 6 ÷ 12（線性時差近似，Derived）；第二讀數＝最近一季（Q2，2026-07～09）× 4 vs 層級 CY2026（季中點晚於日曆年中點，營收逐季上升時偏高；不得寫成「夾住真值」）。"
