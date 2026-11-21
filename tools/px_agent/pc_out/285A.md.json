@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 6,
+ "duration_ms": 13424,
+ "total_cost_usd": 0.041121000000000005,
+ "result": "285A.md 只有一列要處理，已改完。\n\n- `[本專案：20261116_Kioxia個股模型_v0.5.6.xlsx README!A6]` → 改檔名。新標記是 `[本專案：20261121_Kioxia個股模型_v0.5.7.xlsx README!A6]`，儲存格位址沒變。\n- 第 20 行「營收以美元計、成本以日圓計，日圓匯率直接影響獲利」只講定性，沒有被改動的數字。\n- 現行檔 README!A6 仍是同一項（第 3 點，營收以美元計、成本以日圓計）。舊值到新值的差別在匯率敏感度和季價敏感度，這句沒有引用，所以句子沒動。\n- 沒有刪句。\n\n只改了 `markets/invest_map/profiles/285A.md`，沒有 commit 或 push。`check_profiles.py` 的結果是出處標記殘留 0、合併衝突標記 0，沒有新增問題。",
+ "error": null,
+ "stderr": null
+}
