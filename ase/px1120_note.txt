@@ -1,0 +1,10 @@
+folder=ase
+version=v0.2.8 -> v0.2.9
+px=598 -> 457
+tp=275.22 -> 206.04
+upside=-54.0% -> -54.9%
+rating=強力放空 -> 強力放空
+peers_repriced=5
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；check_cached_values 通過；check_company_html ase 全部通過；check_layout_v13 --xlsx ok；check_sens_coverage --require-keycol 通過；baseline_coordination/check.py 0 項不符；alt_run.py ase 已重跑（另一側讀數 255.43 -> 191.37）；無獨立 Sens 快照腳本
+notes=環旭 601231.SS 股價與 TWD=X、CNY=X 換算匯率一併改 11-20。建置順序為 px1113_post 再 px1120_post。README 本版要點文字在 px1120_readme_note.txt。舊 dist（v0.2.8）已移除。

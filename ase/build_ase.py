@@ -998,6 +998,14 @@ import px1113_post as P1113  # noqa: E402
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _N1113 = open(os.path.join(_HERE, "px1113_note.txt"), encoding="utf-8").read().strip() if os.path.exists(os.path.join(_HERE, "px1113_note.txt")) else "v0.2.8（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。"
 print(P1113.apply(wb, _HERE, dict(ver="v0.2.8", old_ver="v0.2.7", tk="3711.TW", note=_N1113 + " ")))   # 環旭 601231.SS 與換算匯率已補入收盤檔（K 批）：改 11-13
+# v0.2.9（2026-11-21）：工作單 px1120——現價與同業報價改 2026-11-20 收盤（ase/px1120_post.py）
+import px1120_post as P1120  # noqa: E402
+_N1120 = open(os.path.join(_HERE, "px1120_readme_note.txt"), encoding="utf-8").read().strip()
+_SRC = "Yahoo Finance 日線收盤 2026-11-20（601231.SS；markets/invest_map/data/closes_20261109_20261120.csv；工作單 px1120）"
+_SRCFX = "Yahoo Finance 日線收盤 2026-11-20：USD/TWD %s（TWD=X）、USD/CNY %s（CNY=X）；工作單 px1120，只用於股價市值與帳面換算，預測用匯率（fx）不變" % (P1120.fmt(P1120.px("TWD=X")), P1120.fmt(P1120.px("CNY=X")))
+print(P1120.apply(wb, _HERE, dict(ver="v0.2.9", old_ver="v0.2.8", tk="3711.TW", note=_N1120 + " ",
+    in_rows=[("usi_px", P1120.px("601231.SS"), "2026-11-13 收盤", "2026-11-20 收盤", _SRC),
+             ("fx_cnytwd", "=%s/%s" % (P1120.fmt(P1120.px("TWD=X")), P1120.fmt(P1120.px("CNY=X"))), "2026-11-13", "2026-11-20", _SRCFX)])))
 wb.save(sys.argv[1])
 if os.environ.get("ASE_ROWMAP"):
     import json
