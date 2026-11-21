@@ -1,0 +1,10 @@
+folder=advantest
+version=v0.7.6 -> v0.7.7
+px=30610 -> 24255
+tp=22196 -> 19668
+upside=-27.5% -> -18.9%
+rating=放空 -> 中立
+peers_repriced=5
+peers_unchanged=無
+checks=重算錯誤格 0；check_company_html 全部通過；check_layout_v13 --xlsx 通過；baseline_coordination/check.py 0 項不符；check_sens_coverage 未過（42 鍵找不到 Sens 表頭，v0.7.6 即未過，結果相同）；Sens 快照 CURRENT；Coord 快照已重跑
+notes=v0.7.6 的 README.md 對照表（加權目標價 23,640、-22.8%、中立）與該版 xlsx 成品（22,196、-27.5%、放空）不符，本版 README 已加更正，舊值取自 xlsx 成品。8035.T 為同業中位數。無其他事項。

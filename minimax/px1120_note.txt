@@ -1,0 +1,10 @@
+folder=minimax
+version=v0.2.4 -> v0.2.5
+px=152.4 -> 102.4
+tp=131.52 -> 113.53
+upside=-13.7% -> +10.9%
+rating=中立 -> 中立
+peers_repriced=1
+peers_unchanged=無
+checks=build_all.sh（重算錯誤 0、Checks 合計 0、check_html 506 不符 0、check_html_v13 910 不符 0、check_rating_gate --strict 符合）；baseline_coordination/check.py 0 項不符；company_html/check_layout_v13 ok（未給 --xlsx，略過對帳中檢查）；sens_coverage 不適用（無 In 頁低／基準／高三欄，前版同）
+notes=投資建議照模型公式重算（收支關卡 -5983.2 不通過，維持中立）。唯一同業智譜（2513.HK）334.0。同業倍數由模型公式隨智譜市值重算（7.99 -> 6.07），無獨立 px1120_post.py，改於 build_xlsx.py／val_page.py／build_html*.py 內更新價格與標籤。Val 的 I44、I49 日期衍生參數照工作單未重算。Sens／Val 快照已由 build_all.sh 重跑。dist 僅留 20261121 v0_2_5 的 xlsx、收支 HTML、個股模型 HTML。環境另裝了 beautifulsoup4 才能跑個股模型 HTML 建置。

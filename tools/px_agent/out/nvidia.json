@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 28,
+ "duration_ms": 825963,
+ "total_cost_usd": 0.5169978999999999,
+ "result": "nvidia 已換成 2026-11-20 收盤並升到 v0.3.14，xlsx 和 HTML 都已重建（檔名日期 20261121）。\n\n- **現價：** 162.85 → 125.53\n- **同業中位數：** 19.95 → 17.50（AMD 37.90、Broadcom 17.50、Marvell 21.66、台積電 ADR 14.96、Qualcomm 16.20）。五家都有 11-20 收盤，沒有未換價同業。\n- **加權目標價：** 333.51 → 300.62\n- **上檔空間：** +104.8% → +139.5%\n- **評等：** 強力買進 → 強力買進（公式重算，未手改）\n- **v0.3.13 內容：** `v0313_post.py` 的 Recon I 節等新增內容全部保留。\n- **過的檢查：** check_governance（含 `--html`、`--display`）、check_display（112 處）、check_company_html、check_cached_values、check_zero_rows、baseline_coordination（0 項不符）。\n- **沒過或沒跑：** check_sens_coverage `--require-keycol` 沒過，ppr_bw、ppr_rb 兩個鍵沒有 Sens 案例，v0.3.13 同樣沒過。check_layout_v13 和 layout_check 沒跑，環境缺 bs4、playwright。\n- **dist：** 舊 v0.3.13 的 xlsx 移到 `dist/_待刪除/`，因為 README 版本表要引用它；舊 HTML 已刪。\n- **交付檔：** 新增 `nvidia/px1120_post.py`、`px1120_note_row.txt`（沿革列文字）和 `px1120_note.txt`。沒有 commit。",
+ "error": null,
+ "stderr": null
+}

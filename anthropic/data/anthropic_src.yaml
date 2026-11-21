@@ -9824,10 +9824,10 @@ rows:
   url: "https://stockanalysis.com/stocks/pltr/statistics/"
   doc_date: '2026-11-06'
   retrieved: '2026-11-11'
-  tag: "Verified"
+  tag: "Derived"
   party: null
   basis: "市場資料"
-  note: "v0.2.0 估值頁（工作單 20261111 F4、F6；chat 端取得，建置代理照用）。chat 端以遠期 P/S × EV／市值推得；單一來源"
+  note: "px1120 第二輪：改為 2026-11-20 收盤換算（EV 無市值可用，以倍數 × 價格比近似；SRC_ANT_625 × SRC_ANT_627 ÷ SRC_ANT_626）。資料日 2026-11-06。v0.2.0 估值頁（工作單 20261111 F4、F6；chat 端取得，建置代理照用）。chat 端以遠期 P/S × EV／市值推得；單一來源"
 - id: SRC_ANT_579
   key: "peer_pltr_fcfm"
   group: "H"
@@ -9875,10 +9875,10 @@ rows:
   url: "https://stockanalysis.com/stocks/crwd/statistics/"
   doc_date: '2026-11-06'
   retrieved: '2026-11-11'
-  tag: "Verified"
+  tag: "Derived"
   party: null
   basis: "市場資料"
-  note: "v0.2.0 估值頁（工作單 20261111 F4、F6；chat 端取得，建置代理照用）。chat 端以遠期 P/S × EV／市值推得；單一來源"
+  note: "px1120 第二輪：改為 2026-11-20 收盤換算（EV 無市值可用，以倍數 × 價格比近似；SRC_ANT_628 × SRC_ANT_630 ÷ SRC_ANT_629）。資料日 2026-11-06。v0.2.0 估值頁（工作單 20261111 F4、F6；chat 端取得，建置代理照用）。chat 端以遠期 P/S × EV／市值推得；單一來源"
 - id: SRC_ANT_582
   key: "peer_crwd_fcfm"
   group: "H"
@@ -9926,10 +9926,10 @@ rows:
   url: "https://stockanalysis.com/stocks/net/statistics/"
   doc_date: '2026-11-06'
   retrieved: '2026-11-11'
-  tag: "Verified"
+  tag: "Derived"
   party: null
   basis: "市場資料"
-  note: "v0.2.0 估值頁（工作單 20261111 F4、F6；chat 端取得，建置代理照用）。chat 端以遠期 P/S × EV／市值推得；單一來源"
+  note: "px1120 第二輪：改為 2026-11-20 收盤換算（EV 無市值可用，以倍數 × 價格比近似；SRC_ANT_631 × SRC_ANT_633 ÷ SRC_ANT_632）。資料日 2026-11-06。v0.2.0 估值頁（工作單 20261111 F4、F6；chat 端取得，建置代理照用）。chat 端以遠期 P/S × EV／市值推得；單一來源"
 - id: SRC_ANT_585
   key: "peer_net_fcfm"
   group: "H"
@@ -9977,10 +9977,10 @@ rows:
   url: "https://stockanalysis.com/stocks/snow/statistics/"
   doc_date: '2026-11-06'
   retrieved: '2026-11-11'
-  tag: "Verified"
+  tag: "Derived"
   party: null
   basis: "市場資料"
-  note: "v0.2.0 估值頁（工作單 20261111 F4、F6；chat 端取得，建置代理照用）。chat 端以遠期 P/S × EV／市值推得；單一來源"
+  note: "px1120 第二輪：改為 2026-11-20 收盤換算（EV 無市值可用，以倍數 × 價格比近似；SRC_ANT_634 × SRC_ANT_636 ÷ SRC_ANT_635）。資料日 2026-11-06。v0.2.0 估值頁（工作單 20261111 F4、F6；chat 端取得，建置代理照用）。chat 端以遠期 P/S × EV／市值推得；單一來源"
 - id: SRC_ANT_588
   key: "peer_snow_fcfm"
   group: "H"
@@ -10019,7 +10019,7 @@ rows:
   key: "peer_ddog_evfs"
   group: "H"
   metric: "同業 DDOG（Datadog）EV／遠期營收（＝遠期 P/S × EV／市值）"
-  value: 16.36
+  value: 10.9
   lo: null
   hi: null
   unit: "倍"
@@ -10028,10 +10028,10 @@ rows:
   url: "https://stockanalysis.com/stocks/ddog/statistics/"
   doc_date: '2026-10-30'
   retrieved: '2026-11-11'
-  tag: "Verified"
+  tag: "Derived"
   party: null
   basis: "市場資料"
-  note: "v0.2.0 估值頁（工作單 20261111 F4、F6；chat 端取得，建置代理照用）。chat 端以遠期 P/S × EV／市值推得；單一來源；頁面為 10-30 收盤（工作單標明）"
+  note: "px1120：改為 2026-11-20 收盤換算（EV 無市值可用，以倍數 × 價格比近似；SRC_ANT_622 × SRC_ANT_624 ÷ SRC_ANT_623）。v0.2.0 估值頁（工作單 20261111 F4、F6；chat 端取得，建置代理照用）。chat 端以遠期 P/S × EV／市值推得；單一來源；頁面為 10-30 收盤（工作單標明）"
 - id: SRC_ANT_591
   key: "peer_ddog_fcfm"
   group: "H"
@@ -10559,6 +10559,261 @@ rows:
   party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
   basis: "稅務屬性"
   note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_622
+  key: "peer_ddog_evfs_old"
+  group: "H"
+  metric: "同業 DDOG EV／遠期營收（v0.2.3 原值，2026-10-30 頁面）"
+  value: 16.36
+  lo: null
+  hi: null
+  unit: "倍"
+  period: '2026-10-30'
+  source: "stockanalysis.com 統計頁（DDOG），即 SRC_ANT_590 在 v0.2.3 的值"
+  url: "https://stockanalysis.com/stocks/ddog/statistics/"
+  doc_date: '2026-10-30'
+  retrieved: '2026-11-21'
+  tag: "Verified"
+  party: null
+  basis: "市場資料"
+  note: "px1120：保留原值作換算基準"
+- id: SRC_ANT_623
+  key: "px_ddog_1030"
+  group: "H"
+  metric: "DDOG 2026-10-30 收盤（換算基準日）"
+  value: 235.27
+  lo: null
+  hi: null
+  unit: "$/股"
+  period: '2026-10-30'
+  source: "Yahoo Finance 日線收盤（markets/invest_map/data/closes_20261020_20261113.csv）"
+  url: "https://finance.yahoo.com/quote/DDOG/history/"
+  doc_date: '2026-10-30'
+  retrieved: '2026-11-21'
+  tag: "Verified"
+  party: null
+  basis: "市場資料"
+  note: "px1120"
+- id: SRC_ANT_624
+  key: "px_ddog_1120"
+  group: "H"
+  metric: "DDOG 2026-11-20 收盤"
+  value: 157.369995
+  lo: null
+  hi: null
+  unit: "$/股"
+  period: '2026-11-20'
+  source: "Yahoo Finance 日線收盤（markets/invest_map/data/closes_20261109_20261120.csv）"
+  url: "https://finance.yahoo.com/quote/DDOG/history/"
+  doc_date: '2026-11-20'
+  retrieved: '2026-11-21'
+  tag: "Verified"
+  party: null
+  basis: "市場資料"
+  note: "px1120"
+- id: SRC_ANT_625
+  key: "peer_pltr_evfs_old"
+  group: "H"
+  metric: "同業 PLTR EV／遠期營收（2026-11-06 原值）"
+  value: 31.51
+  lo: null
+  hi: null
+  unit: "倍"
+  period: '2026-11-06'
+  source: "stockanalysis.com 統計頁（PLTR），即 SRC 原列在 v0.2.4 前的值"
+  url: "https://stockanalysis.com/stocks/pltr/statistics/"
+  doc_date: '2026-11-06'
+  retrieved: '2026-11-21'
+  tag: "Verified"
+  party: null
+  basis: "市場資料"
+  note: "px1120 第二輪：保留原值作換算基準"
+- id: SRC_ANT_626
+  key: "px_pltr_1106"
+  group: "H"
+  metric: "PLTR 2026-11-06 收盤（換算基準日）"
+  value: 160.380005
+  lo: null
+  hi: null
+  unit: "$/股"
+  period: '2026-11-06'
+  source: "Yahoo Finance 日線收盤（markets/invest_map/data/closes_extra_20261120.csv）"
+  url: "https://finance.yahoo.com/quote/PLTR/history/"
+  doc_date: '2026-11-06'
+  retrieved: '2026-11-21'
+  tag: "Verified"
+  party: null
+  basis: "市場資料"
+  note: "px1120 第二輪"
+- id: SRC_ANT_627
+  key: "px_pltr_1120"
+  group: "H"
+  metric: "PLTR 2026-11-20 收盤"
+  value: 143.490005
+  lo: null
+  hi: null
+  unit: "$/股"
+  period: '2026-11-20'
+  source: "Yahoo Finance 日線收盤（markets/invest_map/data/closes_extra_20261120.csv）"
+  url: "https://finance.yahoo.com/quote/PLTR/history/"
+  doc_date: '2026-11-20'
+  retrieved: '2026-11-21'
+  tag: "Verified"
+  party: null
+  basis: "市場資料"
+  note: "px1120 第二輪"
+- id: SRC_ANT_628
+  key: "peer_crwd_evfs_old"
+  group: "H"
+  metric: "同業 CRWD EV／遠期營收（2026-11-06 原值）"
+  value: 32.82
+  lo: null
+  hi: null
+  unit: "倍"
+  period: '2026-11-06'
+  source: "stockanalysis.com 統計頁（CRWD），即 SRC 原列在 v0.2.4 前的值"
+  url: "https://stockanalysis.com/stocks/crwd/statistics/"
+  doc_date: '2026-11-06'
+  retrieved: '2026-11-21'
+  tag: "Verified"
+  party: null
+  basis: "市場資料"
+  note: "px1120 第二輪：保留原值作換算基準"
+- id: SRC_ANT_629
+  key: "px_crwd_1106"
+  group: "H"
+  metric: "CRWD 2026-11-06 收盤（換算基準日）"
+  value: 216.899994
+  lo: null
+  hi: null
+  unit: "$/股"
+  period: '2026-11-06'
+  source: "Yahoo Finance 日線收盤（markets/invest_map/data/closes_extra_20261120.csv）"
+  url: "https://finance.yahoo.com/quote/CRWD/history/"
+  doc_date: '2026-11-06'
+  retrieved: '2026-11-21'
+  tag: "Verified"
+  party: null
+  basis: "市場資料"
+  note: "px1120 第二輪"
+- id: SRC_ANT_630
+  key: "px_crwd_1120"
+  group: "H"
+  metric: "CRWD 2026-11-20 收盤"
+  value: 229.440002
+  lo: null
+  hi: null
+  unit: "$/股"
+  period: '2026-11-20'
+  source: "Yahoo Finance 日線收盤（markets/invest_map/data/closes_extra_20261120.csv）"
+  url: "https://finance.yahoo.com/quote/CRWD/history/"
+  doc_date: '2026-11-20'
+  retrieved: '2026-11-21'
+  tag: "Verified"
+  party: null
+  basis: "市場資料"
+  note: "px1120 第二輪"
+- id: SRC_ANT_631
+  key: "peer_net_evfs_old"
+  group: "H"
+  metric: "同業 NET EV／遠期營收（2026-11-06 原值）"
+  value: 26.32
+  lo: null
+  hi: null
+  unit: "倍"
+  period: '2026-11-06'
+  source: "stockanalysis.com 統計頁（NET），即 SRC 原列在 v0.2.4 前的值"
+  url: "https://stockanalysis.com/stocks/net/statistics/"
+  doc_date: '2026-11-06'
+  retrieved: '2026-11-21'
+  tag: "Verified"
+  party: null
+  basis: "市場資料"
+  note: "px1120 第二輪：保留原值作換算基準"
+- id: SRC_ANT_632
+  key: "px_net_1106"
+  group: "H"
+  metric: "NET 2026-11-06 收盤（換算基準日）"
+  value: 268.75
+  lo: null
+  hi: null
+  unit: "$/股"
+  period: '2026-11-06'
+  source: "Yahoo Finance 日線收盤（markets/invest_map/data/closes_extra_20261120.csv）"
+  url: "https://finance.yahoo.com/quote/NET/history/"
+  doc_date: '2026-11-06'
+  retrieved: '2026-11-21'
+  tag: "Verified"
+  party: null
+  basis: "市場資料"
+  note: "px1120 第二輪"
+- id: SRC_ANT_633
+  key: "px_net_1120"
+  group: "H"
+  metric: "NET 2026-11-20 收盤"
+  value: 274.959991
+  lo: null
+  hi: null
+  unit: "$/股"
+  period: '2026-11-20'
+  source: "Yahoo Finance 日線收盤（markets/invest_map/data/closes_extra_20261120.csv）"
+  url: "https://finance.yahoo.com/quote/NET/history/"
+  doc_date: '2026-11-20'
+  retrieved: '2026-11-21'
+  tag: "Verified"
+  party: null
+  basis: "市場資料"
+  note: "px1120 第二輪"
+- id: SRC_ANT_634
+  key: "peer_snow_evfs_old"
+  group: "H"
+  metric: "同業 SNOW EV／遠期營收（2026-11-06 原值）"
+  value: 13.35
+  lo: null
+  hi: null
+  unit: "倍"
+  period: '2026-11-06'
+  source: "stockanalysis.com 統計頁（SNOW），即 SRC 原列在 v0.2.4 前的值"
+  url: "https://stockanalysis.com/stocks/snow/statistics/"
+  doc_date: '2026-11-06'
+  retrieved: '2026-11-21'
+  tag: "Verified"
+  party: null
+  basis: "市場資料"
+  note: "px1120 第二輪：保留原值作換算基準"
+- id: SRC_ANT_635
+  key: "px_snow_1106"
+  group: "H"
+  metric: "SNOW 2026-11-06 收盤（換算基準日）"
+  value: 275.880005
+  lo: null
+  hi: null
+  unit: "$/股"
+  period: '2026-11-06'
+  source: "Yahoo Finance 日線收盤（markets/invest_map/data/closes_extra_20261120.csv）"
+  url: "https://finance.yahoo.com/quote/SNOW/history/"
+  doc_date: '2026-11-06'
+  retrieved: '2026-11-21'
+  tag: "Verified"
+  party: null
+  basis: "市場資料"
+  note: "px1120 第二輪"
+- id: SRC_ANT_636
+  key: "px_snow_1120"
+  group: "H"
+  metric: "SNOW 2026-11-20 收盤"
+  value: 254.820007
+  lo: null
+  hi: null
+  unit: "$/股"
+  period: '2026-11-20'
+  source: "Yahoo Finance 日線收盤（markets/invest_map/data/closes_extra_20261120.csv）"
+  url: "https://finance.yahoo.com/quote/SNOW/history/"
+  doc_date: '2026-11-20'
+  retrieved: '2026-11-21'
+  tag: "Verified"
+  party: null
+  basis: "市場資料"
+  note: "px1120 第二輪"
 not_found:
 - item: 2024 年認列營收（直接揭露值）
   tried: Reuters／Fortune／PYMNTS／Khaleej Times 招股書報導；查詢 "Anthropic 2024 revenue prospectus"

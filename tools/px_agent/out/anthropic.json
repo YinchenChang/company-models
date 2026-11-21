@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 44,
+ "duration_ms": 1622805,
+ "total_cost_usd": 0.9298512999999999,
+ "result": "Anthropic 第三輪結構修正做完了：現價與 IPO 發行價已分成兩個輸入，xlsx 和兩份 HTML 都重建了。需要 pycel 的 parity 測試（含 `test_v020_b1_ipo_in_base` 的 80.8 斷言）在本環境跑不動，沒跑，要靠 CI 驗證。\n\n- **輸入分開：** `ipo_px` 還原為 74（區間 70–78），淨募資、私募股數、選擇權庫藏股、pro forma 現金照舊讀它，淨募資從成品讀出是 80.8。新增 `mkt_px`＝88.91（ANT 2026-11-20 收盤，Verified），現價、上檔空間、評等、股權市值、反向 DCF 讀它。\n- **新增一列：** Val 頁多一列「發行價」，供私募股數與選擇權庫藏股讀取。\n- **版號：** v0.2.4（同版補正）。\n- **現價：** 74 → 88.91。\n- **目標價：** 82.71 → 83.84。\n- **上檔空間：** +11.8% → −5.7%。\n- **評等：** 中立 → 中立。\n- **檢查：** Excel Checks 頁錯誤 0、警告 4（C69、C70、C89、C231，v0.2.3 同為 4 項）。HTML 版面檢查通過，baseline_coordination 0 項不符，builder 結構測試 13 項過。\n- **測試期望值：** `tests/parity/scenarios.yaml` 改為公式格 10687、具名範圍 1837、SRC 636（具名 580）、Inputs 282。這些數目是我用 openpyxl 從成品點算的，沒用 pycel 驗證。`test_v020_val_identities` 的股數改讀 `ipo_px`。`test_inputs_ranges_and_tags` 只對 `mkt_px` 放行 Verified，其他列仍不放行，80.8 等數值斷言沒放寬。\n- **其他：** 五家同業倍數、Sens 與 Val 快照照辦（Sens、Val 快照已重跑後重建），README、CHANGELOG、`px1120_note.txt` 都已更新。個股 HTML 橫幅仍寫「尚未掛牌」，來自共用的 `tools/company_html`，我不能改，已寫在 note。",
+ "error": null,
+ "stderr": null
+}

@@ -265,7 +265,7 @@ post(cfg)
 import html13  # noqa: E402
 AIR = "AI 相關營收（＝AI 電源 ÷（1 − 非電源占比））"
 H = {
-    "ver": "v0.4.6",
+    "ver": "v0.4.7",
     "units_chart": lambda pB, hB: {
         "type": "theme", "title": "AI 相關、雲端及物聯網非 AI、光電、資訊及消費性電子營收（情境 B，十億元）與光寶 AI 電源有效份額（右軸）", "x": f"@PL!D{hB}:G{hB}",
         "fmt": "n0", "fmt_r": "p1", "stack": True, "pad": 1.25, "total": f"@PL!D{pB('營收')}:G{pB('營收')}",

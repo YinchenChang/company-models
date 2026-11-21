@@ -1,0 +1,10 @@
+folder=tsmc
+version=v0.5.6 -> v0.5.7
+px=2350 -> 2000
+tp=2280.31 -> 2062.86
+upside=-3.0% -> +3.1%
+rating=中立 -> 中立
+peers_repriced=5
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；check_cached_values 通過（公式格 2121 皆有快取值）；check_company_html 全部通過；check_layout_v13 --xlsx 通過；baseline_coordination/check.py 0 項不符（4 項提醒）；check_sens_coverage --require-keycol 未過（前一版 v0.5.6 同樣未過，輸出行數相同，未要求）；layout_check.py（1280／390 版面）因環境沒有 playwright 未跑；Sens 快照與 Coord 快照已重跑
+notes=前值取自 v0.5.6 成品 xlsx 的重算值（加權目標價 2,280.31、DCF 1,416、Comparable 相對倍數調整後 3,145），與 v0.5.6 README 寫的 2,339／−0.5% 不同，是 v0.5.6 之後的其他修改所致，本版未動。創意 8,610 → 5,400、采鈺 400.5 → 290；同業 P/E 中位數 19.2 → 16.4。另一側讀數目標價 2,191 → 1,982（中立）。所有同業代號與原報價日收盤都在收盤檔內，無未換價同業。

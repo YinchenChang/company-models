@@ -1,0 +1,10 @@
+folder=avgo
+version=v0.5.8 -> v0.5.9
+px=347.01 -> 304.41
+tp=166.10 -> 152.59
+upside=-52.1% -> -49.9%
+rating=強力放空 -> 放空
+peers_repriced=5
+peers_unchanged=無
+checks=錯誤格 0；check_company_html avgo 通過；check_layout_v13 --xlsx 通過；check_in_layout 通過；baseline_coordination/check 0 項不符；Sens／Coord 快照已重跑且非 STALE；check_sens_coverage 未通過（31/39 鍵無案例，v0.5.8 即未通過，不要求）
+notes=「舊值」取自 v0.5.8 現行成品重算值（166.10、-52.1%、強力放空），與 v0.5.8 README 寫的 173.71／-49.9%／放空不同（之後上游同步改動所致）。新上檔空間 -49.87% 距 -50% 邊界僅 0.13 個百分點，評等對價格敏感。另一側讀數目標價 139.80（強力放空）。同業 NVDA、AMD、MRVL、QCOM、TSM 皆有 11-20 收盤，無缺漏。dist 讀 nvidia/dist 現行檔，未動其他資料夾。

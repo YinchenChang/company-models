@@ -1,0 +1,10 @@
+folder=mpi
+version=v0.2.7 -> v0.2.8
+px=4670 -> 3560
+tp=1880.68 -> 1667.89
+upside=-59.7% -> -53.1%
+rating=強力放空 -> 強力放空
+peers_repriced=4
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；check_company_html mpi 全部通過；check_layout_v13 --xlsx ok；check_in_layout 通過；baseline_coordination/check.py 0 項不符；check_sens_coverage --require-keycol 9／18 未過（v0.2.7 即未過，既有，未要求）；Coord 快照 STALE 已重跑 alt_run.py（LibreOffice 私有設定檔）；company_html 瀏覽器版面檢查（layout_check.py）未跑
+notes=舊值取自現行 dist（v0.2.7 xlsx 重算值：加權目標價 1,880.68、上檔 −59.7%），與 v0.2.7 README／px1113 note 寫的 1,960（−58.0%）不同：現行 dist 已含 Siliconomics v0.22 快照更新，非本版造成；本版同業中位數與目標價前後差含此前已存在的差異以外只有價格變動。DCF 1,296.07 → 1,297.46、Comparable 2,465.29 → 2,038.33、另一側讀數 1,743.47 → 1,547.26（皆強力放空）。四家同業（FORM、6857.T、TER、2449.TW）報價日皆 2026-11-13，皆換到 11-20；SNDK 與本公司無關。

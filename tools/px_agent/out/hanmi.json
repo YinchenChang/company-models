@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 16,
+ "duration_ms": 127534,
+ "total_cost_usd": 0.31009460000000005,
+ "result": "hanmi（韓美半導體）已換成 2026-11-20 收盤，版號 v0.4.6 → v0.4.7，xlsx 和 HTML 都已重建（檔名日期 20261121），dist 只留 v0.4.7。\n\n- **現價：** 181,700 → 153,800（韓元）\n- **加權目標價：** 27,217 → 24,725\n- **上檔空間：** −85.0% → −83.9%\n- **評等：** 強力放空 → 強力放空\n- **同業：** 4 家全部換價，沒有未換價同業。前瞻 P/E 中位數 21.22 → 18.15。\n- **前版目標價有出入：** 我取 v0.4.6 成品 xlsx 的重算值 27,217 當前值。`px1113_note.txt` 和 README 寫的是 25,500，是 Siliconomics v0.22 重建前的數字。這點已寫進 `px1120_note.txt` 和 README。\n- **檢查結果：**\n  - 通過：重算錯誤格 0、`check_company_html` 全部通過、`check_layout_v13` 通過、`baseline_coordination` 0 項不符。\n  - Coord 快照：重跑 `alt_run.py hanmi` 後狀態為 CURRENT。\n  - 未過：`check_sens_coverage --require-keycol` 49／49 未過，v0.4.6 就是同樣結果，已在 note 註明。\n- **改動：** 新增 `px1120_post.py`、`hist_frozen_px1120.json`、`px1120_readme.txt`、`px1120_note.txt`；改 `build_hanmi.py`、`gen_html_json.py`、`README.md`，`coord_alt.json` 與 `html.json` 因重跑而更新。沒有 commit。",
+ "error": null,
+ "stderr": null
+}

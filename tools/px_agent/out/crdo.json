@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 19,
+ "duration_ms": 125706,
+ "total_cost_usd": 0.3065796,
+ "result": "Credo（`crdo/`）已換成 2026-11-20 收盤，版號從 v0.3.7 升到 v0.3.8，xlsx 與 HTML 都已重建（檔名日期 20261121）。沒有 commit、push，也沒有改 `crdo/` 以外的檔案。\n\n- **現價：** 131.51 → 99.86。\n- **加權目標價：** 140.69 → 119.05。\n- **上檔空間：** +7.0% → +19.2%。\n- **評等：** 中立 → 中立，由模型公式重算。\n- **同業：** 四家（ALAB、MRVL、AVGO、MTSI）都已換價，沒有未換價同業。同業 P/E 中位數 27.91 → 22.61。\n- **檢查：**\n  - `check_company_html.py crdo`：通過。\n  - `check_layout_v13.py --xlsx`：通過。\n  - `baseline_coordination/check.py`：0 項不符。\n  - 成品 xlsx：錯誤格 0。\n  - Sens、Coord 快照：狀態 CURRENT，已重跑。\n- **`check_sens_coverage.py`：** 有 39 項「Sens 頁找不到表頭」，前版 v0.3.7 也是同樣 39 項，所以不是這次造成的，note 裡已寫明。\n- **舊版數字：** 舊 README 寫的是 140.60、+6.9%，但重算前版成品是 140.69、+7.0%。我以重算值為準，note 裡也有說明。\n\n新增的檔案是 `px1120_post.py` 和 `px1120_note.txt`；`README.md`、`build_crdo.py`、`gen_html_json.py`、`sens.json`、`coord_alt.json` 也有改動。舊 v0.3.7 的 dist 檔已移除。",
+ "error": null,
+ "stderr": null
+}

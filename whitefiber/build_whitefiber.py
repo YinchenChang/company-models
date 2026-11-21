@@ -10,8 +10,8 @@ from openpyxl.workbook.defined_name import DefinedName
 from openpyxl.utils import get_column_letter as CL
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VER = "v0.4.3"
-BUILT = "2026-11-15"
+VER = "v0.4.4"
+BUILT = "2026-11-21"
 OVR = json.loads(os.environ.get("SENS_OVR", "{}"))
 TKV = os.environ.get("WYFI_TKV", "v22.0")
 TKS = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
@@ -91,8 +91,8 @@ def inp(key, item, unit, lo, base, hi, tag, src, note="—", inc=None):
 
 PRQ3 = SRCF["Q3_10Q"]; CALL = SRCF["CALL_Q3"]; K10 = SRCF["K10_25"]
 sec("A. 股價、股數、日期")
-inp("px", "現價（2026-11-13 收盤）", "US$", None, 9.43, None, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（markets/invest_map/data/closes_20261020_20261113.csv）：9.43", "v0.4.2 為 2026-11-10 收盤 " + str(fv("mkt.price.20261110")) + "；v0.2.1 現價 7.80（2026-10-06 前後）")
-inp("px_date", "現價日（px 的收盤日）", "日期", None, "=DATE(2026,11,13)", None, "Verified", "同 px", "README、Val 與 tp_date 以本列組字")
+inp("px", "現價（2026-11-20 收盤）", "US$", None, 6.35, None, "Verified", "工作單 px1120；Yahoo Finance 日線收盤 2026-11-20（`closes_20261109_20261120.csv`）：6.35", "v0.4.3 為 2026-11-13 收盤 9.43；v0.4.2 為 2026-11-10 收盤 " + str(fv("mkt.price.20261110")) + "；v0.2.1 現價 7.80（2026-10-06 前後）")
+inp("px_date", "現價日（px 的收盤日）", "日期", None, "=DATE(2026,11,20)", None, "Verified", "同 px", "README、Val 與 tp_date 以本列組字")
 inp("cutoff", "資料截止日（Q3 10-Q 與法說）", "日期", None, "=DATE(2026,11,10)", None, "Verified", PRQ3, "原則第 10 節第 41 條：三個日期分列")
 inp("built", "成品日", "日期", None, "=DATE(2026,11,16)", None, "Verified", "建置日", "—")
 inp("sh_base", "普通股流通在外（2026-09-30）", "百萬股", None, fv("bs.sharesOut.2026Q3"), None, "Verified", PRQ3 + "（bs.sharesOut.2026Q3；封面 2026-11-06 為 45.288）", "零履約價買權 5.906 百萬股（2031 交割）未扣除，見風險登錄")
@@ -210,7 +210,7 @@ inp("nol0", "淨營業虧損（NOL）可用餘額", "US$M", None, 0, 100, "Assum
 inp("nol_lim", "NOL 每年可抵稅前所得上限", "%", None, 0.8, None, "Verified", "美國稅法（TCJA 後 80%）", "—")
 
 sec("G. 評價")
-inp("rf", "無風險利率（美國 10 年期公債，2026-11-10 收盤）", "%", None, 0.0498, None, "Verified", SRCF["UST"], "與現價日相差 3 個交易日（工作單 px1113 不改 rf）")
+inp("rf", "無風險利率（美國 10 年期公債，2026-11-10 收盤）", "%", None, 0.0498, None, "Verified", SRCF["UST"], "與現價日相差 8 個交易日（工作單 px1120 不改 rf）")
 inp("beta_u", "無槓桿 β（自算產業 β：US 伺服器／EMS 代理）", "x", 1.022, 1.322, 1.622, "Analogy", "docs/plan/自算產業β_20261105.md（同 CoreWeave、Nebius 新雲樣板）", "舊版 v0.2.1 用 β 2.5（個股 β 0.84–4.77 不可靠）；判斷題")
 inp("beta", "β（依市值 D/E 重新加槓桿）", "x", None, "=beta_u*(1+(1-tax_lt)*(debt_q3+finl_q3)/(px*(sh_out+rsu_net)))", None, "Derived", "Hamada", "—")
 inp("erp", "股權風險溢酬", "%", 0.04, 0.05, 0.06, "Assumed", "DCF 標準規格預設 5%", "—")
@@ -220,28 +220,28 @@ inp("tp_g", "永續成長率 g（＝MIN(3%, 10 年期)）", "%", 0.02, "=MIN(0.0
 inp("w_dcf", "目標價中 DCF 的權重（其餘 Comparable）", "%", 0.3, 0.5, 0.7, "Assumed", "CoreWeave v5.0 樣板：DCF 50%＋Comparable 50%", "Andy 可改")
 for s, w in (("A", 0.25), ("B", 0.5), ("C", 0.25)):
     inp(f"w{s}", f"目標價情境權重 {s}", "%", None, w, None, "Assumed", "CoreWeave v5.0 樣板：25／50／25", "Andy 可改")
-PEER_D = "2026-11-13"
+PEER_D = "2026-11-20"
 MSS = SRCF["MS"]
-inp("pc_px", "CoreWeave 股價（2026-11-13 收盤）", "US$", None, 53.13, None, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）；同 coreweave/build_coreweave.py In px（v5.0.5）", "同業估值日 2026-11-13＝本模型現價日；v0.4.2 為 2026-11-11 收盤 60.77")
+inp("pc_px", "CoreWeave 股價（2026-11-20 收盤）", "US$", None, 39.51, None, "Verified", "工作單 px1120；Yahoo Finance 日線收盤 2026-11-20（`closes_20261109_20261120.csv`）：39.51", "v0.4.3 為 2026-11-13 收盤 53.13；更早：見 v0.4.3 沿革")
 inp("pc_sh", "CoreWeave 股數（Q3 基本加權）", "百萬股", None, 559, None, "Verified", SRCF["CRWV_PR"], "—")
 inp("pc_nd", "CoreWeave 淨負債：最新申報（2026-09-30）", "US$M", None, "=46873+649-4122", None, "Derived", SRCF["CRWV_PR"] + "：借款 46,873、融資租賃 649、現金 4,122", "—")
 inp("pc_ndf", "CoreWeave 淨負債：共識 FY2026 預估（財報前）", "US$M", None, 46442, None, "Interested-party", SRCF["CONS_CRWV"], "替代口徑", INC_SELL)
 inp("pc_eb", "CoreWeave NTM 共識 EBITDA", "US$M", None, "=7574*1.6/12+16656*10.4/12", None, "Interested-party", SRCF["CONS_CRWV"] + "：FY26 7,574、FY27 16,656、FY28 28,857", "原則 49 月份加權", INC_SELL)
 inp("pc_rev", "CoreWeave NTM 共識營收", "US$M", None, "=12882*1.6/12+26376*10.4/12", None, "Interested-party", SRCF["CONS_CRWV"], "—", INC_SELL)
 inp("pc_cx", "CoreWeave NTM 共識資本支出", "US$M", None, "=35953*1.6/12+46476*10.4/12", None, "Interested-party", SRCF["CONS_CRWV"], "—", INC_SELL)
-inp("pn_px", "Nebius 股價（2026-11-13 收盤）", "US$", None, 115.88, None, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）：115.88", "v0.4.2 為 2026-11-11 收盤 154.69（MarketScreener Nasdaq 5 日表）")
+inp("pn_px", "Nebius 股價（2026-11-20 收盤）", "US$", None, 81.31, None, "Verified", "工作單 px1120；Yahoo Finance 日線收盤 2026-11-20（`closes_20261109_20261120.csv`）：81.31", "v0.4.3 為 2026-11-13 收盤 115.88；更早：見 v0.4.3 沿革")
 inp("pn_sh", "Nebius 普通股流通在外（2026-09-30）", "百萬股", None, 292.902405, None, "Verified", SRCF["NBIS_6K"], "—")
 inp("pn_nd", "Nebius 淨負債：最新申報（2026-09-30）", "US$M", None, "=14190.8-7425.6", None, "Derived", SRCF["NBIS_6K"] + "：借款 14,190.8 − 現金 7,425.6", "—")
 inp("pn_ndf", "Nebius 淨負債：MarketScreener 2026 年預估", "US$M", None, 13659, None, "Interested-party", MSS, "替代口徑", INC_SELL)
 inp("pn_eb", "Nebius NTM 共識 EBITDA", "US$M", None, "=1348*1.6/12+6556*10.4/12", None, "Interested-party", MSS + "：2026 1,348、2027 6,556、2028 13,700", "原則 49 月份加權", INC_SELL)
 inp("pn_rev", "Nebius NTM 共識營收", "US$M", None, "=3379*1.6/12+11418*10.4/12", None, "Interested-party", "nebius/data/consensus_nbis_20261007.json（MarketScreener）", "—", INC_SELL)
-inp("ir_px", "IREN 股價（2026-11-13 收盤）", "US$", None, 18.17, None, "Verified", "Yahoo Finance 日線收盤 2026-11-13（`markets/invest_map/data/closes_20261020_20261113.csv`，IREN 2026-11-13＝18.17）；v0.4.3 初稿為 2026-11-11 收盤 20.84（MarketScreener Nasdaq 5 日表 11-11）；股數與淨負債來源："+MSS, "工作單 px1113：IREN 價格檔補齊後換 11-13 收盤 18.17；EV＝股價 × 股數＋淨負債，依公式重算（等同 EV 新＝EV 舊＋市值舊 ×（18.17 ÷ 20.84 − 1））；股數、淨負債、共識 EBITDA 不變")
+inp("ir_px", "IREN 股價（2026-11-20 收盤）", "US$", None, 11.82, None, "Verified", "工作單 px1120；Yahoo Finance 日線收盤 2026-11-20（`closes_20261109_20261120.csv`）：11.82", "v0.4.3 為 2026-11-13 收盤 18.17；EV＝股價 × 股數＋淨負債，依公式重算；更早：見 v0.4.3 沿革")
 inp("ir_sh", "IREN 股數", "百萬股", None, 424.357, None, "Derived", MSS, "—")
 inp("ir_nd", "IREN 淨負債：最新申報（2026-09-30）", "US$M", None, "=10208-3522", None, "Derived", SRCF["IREN_Q1"], "—")
 inp("ir_ndf", "IREN 淨負債：MarketScreener FY2027 預估", "US$M", None, 18889, None, "Interested-party", MSS, "替代口徑", INC_SELL)
 inp("ir_eb", "IREN NTM 共識 EBITDA", "US$M", None, "=1395*7.6/12+5123*4.4/12", None, "Interested-party", MSS, "原則 49 月份加權", INC_SELL)
 inp("ir_use", "IREN 進同業中位數（1＝是）", "—", None, 1, None, "Assumed", "同 CoreWeave v5.0", "—")
-inp("po_px", "Oracle 股價（2026-11-13 收盤）", "US$", None, 125.35, None, "Verified", "工作單 px1113；Yahoo Finance 日線收盤 2026-11-13（closes_20261020_20261113.csv）：125.35", "v0.4.2 為 2026-11-11 收盤 128.38（MarketScreener）")
+inp("po_px", "Oracle 股價（2026-11-20 收盤）", "US$", None, 101.19, None, "Verified", "工作單 px1120；Yahoo Finance 日線收盤 2026-11-20（`closes_20261109_20261120.csv`）：101.19", "v0.4.3 為 2026-11-13 收盤 125.35；更早：見 v0.4.3 沿革")
 inp("po_sh", "Oracle 股數", "百萬股", None, 3117.708, None, "Derived", MSS, "—")
 inp("po_nd", "Oracle 淨負債：最新實際（含融資租賃；2026-11 增資 pro forma）", "US$M", None, 87208, None, "Derived", "Oracle v0.5.1 Val!C10（同 CoreWeave v5.0 In po_nd）", "主口徑")
 inp("po_ndf", "Oracle 淨負債：MarketScreener FY2027 預估", "US$M", None, 115597, None, "Interested-party", MSS, "替代口徑", INC_SELL)
@@ -253,9 +253,9 @@ inp("rel_mult", "相對倍數調整係數", "x", None, 1.0, None, "Assumed", "1.
 inp("mult_adj", "Comparable 倍數調整（敏感度用；基準 1；雲端與託管兩分部同時）", "x", 0.8, 1.0, 1.2, "Assumed", "敏感度 ±20%", "—")
 # 託管分部同業（Andy 2026-11-15：同業法改為分部加總；託管用資料中心／託管同業倍數，雲端用新雲同業倍數）
 inp("sotp_on", "Comparable 分部加總（1＝託管 × 資料中心同業、雲端 × 新雲同業；0＝v0.4.0 全公司 × 新雲同業）", "—", None, 1, None, "Assumed", "Andy 2026-11-15 決定改為分部加總", "0 只供拆解（scripts/decomp_v50.py）")
-inp("dlr_ev", "Digital Realty（DLR）企業價值（2026-10-07 EV 86,198 × 收盤價比 11-13 ÷ 10-07；Derived 近似）", "US$M", None, "=86198*179.99/180.47", None, "Derived", SRCF["MS_DLR"] + "：2026-10-07 EV 86,198（股價 180.47）；Yahoo Finance 日線收盤 DLR 10-07＝180.47、11-13＝179.99（`closes_20261020_20261113.csv`，9-28～10-19 段已補）", "工作單 px1113：模型無 DLR 市值，倍數 × 價格比近似（淨負債不隨股價變，略高估變動；共識 EBITDA 不變）；v0.4.2 為 EV 86,198（倍數 20.42）")
+inp("dlr_ev", "Digital Realty（DLR）企業價值（2026-10-07 EV 86,198 × 收盤價比 11-20 ÷ 10-07；Derived 近似）", "US$M", None, "=86198*162.46/180.47", None, "Derived", SRCF["MS_DLR"] + "：2026-10-07 EV 86,198（股價 180.47）；Yahoo Finance 日線收盤 DLR 10-07＝180.47、11-20＝162.46（`closes_20261109_20261120.csv`；10-07 收盤取 `closes_20261020_20261113.csv`）", "工作單 px1120：模型無 DLR 市值，倍數 × 價格比近似（淨負債不隨股價變，略高估變動；共識 EBITDA 不變）；v0.4.3（11-13）EV 85,969（倍數 20.36）；v0.4.2 為 EV 86,198（倍數 20.42）")
 inp("dlr_eb", "Digital Realty NTM 共識 EBITDA（2026 × 0.25＋2027 × 0.75）", "US$M", None, "=3841*0.25+4349*0.75", None, "Interested-party", SRCF["MS_DLR"] + "：2026 3,841、2027 4,349", "原則 49 月份加權（估值日 2026-10 起 12 個月）", INC_SELL)
-inp("eqix_ev", "Equinix（EQIX）企業價值（約 2026-10-02 EV 121,482 × 收盤價比 11-13 ÷ 10-02；Derived 近似）", "US$M", None, "=121482*1053.79/1025.72", None, "Derived", SRCF["MS_EQIX"] + "：約 2026-10-02 EV 121,482（頁面股價 1,012.33）；Yahoo Finance 日線收盤 EQIX 10-02＝1,025.72、11-13＝1,053.79（`closes_20261020_20261113.csv`）；依工作單以報價日收盤計價格比（頁面股價與 10-02 收盤差 1.3%，未另調）", "工作單 px1113：模型無 EQIX 市值，倍數 × 價格比近似（淨負債不隨股價變，略高估變動；共識 EBITDA 不變）；v0.4.2 為 EV 121,482（倍數 21.06）")
+inp("eqix_ev", "Equinix（EQIX）企業價值（約 2026-10-02 EV 121,482 × 收盤價比 11-20 ÷ 10-02；Derived 近似）", "US$M", None, "=121482*968.22/1025.72", None, "Derived", SRCF["MS_EQIX"] + "：約 2026-10-02 EV 121,482（頁面股價 1,012.33）；Yahoo Finance 日線收盤 EQIX 10-02＝1,025.72、11-20＝968.22（`closes_20261109_20261120.csv`；10-02 收盤取 `closes_20261020_20261113.csv`）；依工作單以報價日收盤計價格比（頁面股價與 10-02 收盤差 1.3%，未另調）", "工作單 px1120：模型無 EQIX 市值，倍數 × 價格比近似（淨負債不隨股價變，略高估變動；共識 EBITDA 不變）；v0.4.3（11-13）EV 124,806（倍數 21.63）；v0.4.2 為 EV 121,482（倍數 21.06）")
 inp("eqix_eb", "Equinix NTM 共識 EBITDA（2026 × 0.25＋2027 × 0.75）", "US$M", None, "=5286*0.25+5930*0.75", None, "Interested-party", SRCF["MS_EQIX"] + "：2026 5,286、2027 5,930", "原則 49 月份加權", INC_SELL)
 inp("colo_disc", "託管倍數相對資料中心同業中位數的折價（小型、單一主要承租人、非 REIT）", "%", None, 0.0, 0.28, "Assumed", "基準不折價（Andy 2026-11-15 指定用資料中心／託管同業倍數）；高＝28%（約 15 倍，data/whitefiber_facts_20261008.json val.peer.coloDefault 下緣）", "只進 Sens")
 inp("tp_v040", "v0.4.0 加權目標價（全公司 × 新雲同業中位數）", "US$", None, 5.39, None, "Derived", "whitefiber/dist/_待刪除/20261115_WhiteFiber個股模型_v0.4.0.xlsx（Val 加權目標價 5.3855；投資建議放空）", "只作對照")
@@ -935,15 +935,15 @@ for j in range(3):
     cc = CL(3 + j); c_ = V.cell(r, 3 + j, f"={cc}{DC['ps']}*(1+ke)^t_tp"); c_.number_format = "#,##0.00"; c_.fill = KEY
 DC["v12"] = r; r += 2
 # Comparable
-V.cell(r, 1, "0.2 Comparable：雲端分部同業（新雲 NTM EV/EBITDA；同業估值日 2026-11-13＝現價日；IREN 11-11 收盤 20.84 → 11-13 收盤 18.17）").font = BOLD; r += 1
+V.cell(r, 1, "0.2 Comparable：雲端分部同業（新雲 NTM EV/EBITDA；同業估值日 2026-11-20＝現價日；四家皆為 11-20 收盤（IREN 11-13 收盤 18.17 → 11-20 收盤 11.82））").font = BOLD; r += 1
 PEERH = r
 hdr(V, r, ["同業", "代號", "EV（US$B）", "NTM EV/EBITDA", "估值日", "口徑與來源", "NTM EBITDA 率", "淨負債 ÷ NTM EBITDA", "資本支出 ÷ 營收", "營收成長（下一年）"]); r += 1
 P0 = r
 for nm, tk, ev, eb, src, mg, nd, cx_, gr in (
         ("CoreWeave", "CRWV", "pc_px*pc_sh+IF(peer_nd_mode=1,pc_ndf,pc_nd)", "pc_eb", "US GAAP；共識為 2026-09-25 MarketScreener（CoreWeave 財報前；財報後共識未取得）；淨負債 2026-09-30 申報（借款＋融資租賃 − 現金）", "=pc_eb/pc_rev", "=IF(peer_nd_mode=1,pc_ndf,pc_nd)/pc_eb", "=pc_cx/pc_rev", "=28.857/16.656-1"),
-        ("Nebius", "NBIS", "pn_px*pn_sh+IF(peer_nd_mode=1,pn_ndf,pn_nd)", "pn_eb", "US GAAP；MarketScreener 共識（擷取 2026-11-13）；淨負債 2026-09-30 申報（借款含可轉債 − 現金，受限現金不扣）", "=pn_eb/pn_rev", "=IF(peer_nd_mode=1,pn_ndf,pn_nd)/pn_eb", "未取得", "=13700/6556-1"),
-        ("Oracle（混合業務）", "ORCL", "po_px*po_sh+IF(peer_nd_mode=1,po_ndf,po_nd)", "po_eb", "US GAAP；MarketScreener 共識（擷取 2026-11-13）；SaaS 與授權占多數", "=po_eb/po_rev", "=IF(peer_nd_mode=1,po_ndf,po_nd)/po_eb", "=po_cx/po_rev", "=74.148/52.09-1"),
-        ("IREN", "IREN", "ir_px*ir_sh+IF(peer_nd_mode=1,ir_ndf,ir_nd)", "ir_eb", "US GAAP（10-K）；MarketScreener 共識（擷取 2026-11-13）；淨負債為 2026-09-30 申報口徑：借款含融資租賃 10.208 − 現金 3.522＝6.686（受限現金 2.256 不扣，與 CoreWeave 一致；公司自算 4.430 有扣受限現金）", None, "=IF(peer_nd_mode=1,ir_ndf,ir_nd)/ir_eb", "未取得", "=5.123/1.395-1")):
+        ("Nebius", "NBIS", "pn_px*pn_sh+IF(peer_nd_mode=1,pn_ndf,pn_nd)", "pn_eb", "US GAAP；MarketScreener 共識（擷取 2026-11-13；本版只換股價）；淨負債 2026-09-30 申報（借款含可轉債 − 現金，受限現金不扣）", "=pn_eb/pn_rev", "=IF(peer_nd_mode=1,pn_ndf,pn_nd)/pn_eb", "未取得", "=13700/6556-1"),
+        ("Oracle（混合業務）", "ORCL", "po_px*po_sh+IF(peer_nd_mode=1,po_ndf,po_nd)", "po_eb", "US GAAP；MarketScreener 共識（擷取 2026-11-13；本版只換股價）；SaaS 與授權占多數", "=po_eb/po_rev", "=IF(peer_nd_mode=1,po_ndf,po_nd)/po_eb", "=po_cx/po_rev", "=74.148/52.09-1"),
+        ("IREN", "IREN", "ir_px*ir_sh+IF(peer_nd_mode=1,ir_ndf,ir_nd)", "ir_eb", "US GAAP（10-K）；MarketScreener 共識（擷取 2026-11-13；本版只換股價）；淨負債為 2026-09-30 申報口徑：借款含融資租賃 10.208 − 現金 3.522＝6.686（受限現金 2.256 不扣，與 CoreWeave 一致；公司自算 4.430 有扣受限現金）", None, "=IF(peer_nd_mode=1,ir_ndf,ir_nd)/ir_eb", "未取得", "=5.123/1.395-1")):
     V.cell(r, 1, nm); V.cell(r, 2, tk)
     if ev:
         V.cell(r, 3, "=" + ev).number_format = "#,##0.0"; V.cell(r, 4, f'=IF(ir_use=0,"不納入",({ev})/{eb})' if tk == "IREN" else f"=({ev})/{eb}").number_format = "0.00"
@@ -956,14 +956,14 @@ for nm, tk, ev, eb, src, mg, nd, cx_, gr in (
             if isinstance(v, str) and v.startswith("="): c_.number_format = "0.0%" if j != 1 else "0.00"
     r += 1
 P1 = r - 1
-V.cell(r, 1, "  估值日 2026-11-13（＝本模型現價日；IREN 亦為 11-13 收盤 18.17，原 11-11 收盤 20.84）；NTM 自 11-11 起依月份加權（原則 49）；淨負債主口徑＝最新申報（CoreWeave、Nebius、IREN 為 2026-09-30，受限現金不扣；Oracle 含 2026-11 增資 pro forma），替代口徑見下兩列；CoreWeave 共識為其財報前。同業 4 家，少於 8 家不做迴歸（原則 7）。託管同業（DLR、EQIX 約 20 倍）不納入：本模型以單一新雲倍數評整家公司（判斷題，見 README）").font = GREY; r += 1
+V.cell(r, 1, "  估值日 2026-11-20（＝本模型現價日；四家皆為 11-20 收盤，IREN 原 11-13 收盤 18.17）；NTM 自 11-11 起依月份加權（原則 49）；淨負債主口徑＝最新申報（CoreWeave、Nebius、IREN 為 2026-09-30，受限現金不扣；Oracle 含 2026-11 增資 pro forma），替代口徑見下兩列；CoreWeave 共識為其財報前。同業 4 家，少於 8 家不做迴歸（原則 7）。託管同業（DLR、EQIX 約 20 倍）不納入：本模型以單一新雲倍數評整家公司（判斷題，見 README）").font = GREY; r += 1
 V.cell(r, 1, "  替代口徑：淨負債改用共識年底預估時的 NTM EV/EBITDA（CRWV／NBIS／ORCL／IREN；時點不一致：11-13 市值配年底預估淨負債，只作對照）")
 for j, (pxs, nds, ebs) in enumerate((("pc_px*pc_sh", "pc_ndf", "pc_eb"), ("pn_px*pn_sh", "pn_ndf", "pn_eb"), ("po_px*po_sh", "po_ndf", "po_eb"), ("ir_px*ir_sh", "ir_ndf", "ir_eb"))):
     V.cell(r, 3 + j, f"=({pxs}+{nds})/{ebs}").number_format = "0.00"
 VR["altm"] = r; r += 1
 V.cell(r, 1, "  替代口徑中位數（對照；時點不一致；Sens peer_nd_mode）"); V.cell(r, 4, f"=MEDIAN(C{r - 1}:F{r - 1})").number_format = "0.00"; VR["altmed"] = r; r += 1
 V.cell(r, 1, "  對照（不進中位數）：WhiteFiber 自身＝現價市值＋淨負債 ÷ 2027 年 EBITDA 代理（營收共識 × 40%；EBITDA 共識找不到）；後四欄為模型情境 B FY2027").font = GREY
-V.cell(r, 3, "=px*shv+netdebt0").number_format = "#,##0.0"; V.cell(r, 4, f"=C{r}/cons_eb27").number_format = "0.00"; V.cell(r, 5, "2026-11-13")
+V.cell(r, 3, "=px*shv+netdebt0").number_format = "#,##0.0"; V.cell(r, 4, f"=C{r}/cons_eb27").number_format = "0.00"; V.cell(r, 5, "2026-11-20")
 VR["selfm"] = r; SELF_R = r
 for j, f_ in enumerate((f"=PL!E{PR_['B']['aebm']}", f"=netdebt0/PL!E{PR_['B']['aeb']}", f"=Thesis!F{TR['B']['cx']}/PL!E{PR_['B']['rev']}", f"=PL!E{PR_['B']['revg']}")):
     V.cell(r, 7 + j, f_).number_format = "0.00" if j == 1 else "0.0%"
@@ -972,14 +972,14 @@ V.cell(r, 1, "同業中位數（前瞻 EV/EBITDA；雲端分部倍數）"); V.ce
 V.cell(r, 1, "0.2b 託管分部同業（上市資料中心營運商 NTM EV/EBITDA；Andy 2026-11-15 分部加總）").font = BOLD; r += 1
 hdr(V, r, ["同業", "代號", "EV（US$M）", "NTM EV/EBITDA", "估值日", "口徑與來源"]); VR["hph"] = r; r += 1
 H0 = r; VR["hp0"] = r
-for nm, tk, ev, eb, dt, src in (("Digital Realty", "DLR", "dlr_ev", "dlr_eb", "2026-11-13（EV 自 10-07 依收盤價比換算）", "MarketScreener 估值頁（EV Derived；EBITDA 為賣方共識 Interested-party）；REIT、批發型資料中心為主，最接近 NC-1 的批發長約"),
-                                ("Equinix", "EQIX", "eqix_ev", "eqix_eb", "2026-11-13（EV 自 10-02 依收盤價比換算）", "MarketScreener 估值頁（EV Derived；EBITDA 為賣方共識 Interested-party）；REIT、零售型共置與互連為主，最接近 MTL 多客戶共置")):
+for nm, tk, ev, eb, dt, src in (("Digital Realty", "DLR", "dlr_ev", "dlr_eb", "2026-11-20（EV 自 10-07 依收盤價比換算）", "MarketScreener 估值頁（EV Derived；EBITDA 為賣方共識 Interested-party）；REIT、批發型資料中心為主，最接近 NC-1 的批發長約"),
+                                ("Equinix", "EQIX", "eqix_ev", "eqix_eb", "2026-11-20（EV 自 10-02 依收盤價比換算）", "MarketScreener 估值頁（EV Derived；EBITDA 為賣方共識 Interested-party）；REIT、零售型共置與互連為主，最接近 MTL 多客戶共置")):
     V.cell(r, 1, nm); V.cell(r, 2, tk); V.cell(r, 3, "=" + ev).number_format = "#,##0.0"; V.cell(r, 4, f"={ev}/{eb}").number_format = "0.00"
     V.cell(r, 5, dt); V.cell(r, 6, src); r += 1
 H1 = r - 1
 V.cell(r, 1, "託管同業中位數（前瞻 EV/EBITDA）"); V.cell(r, 4, f"=MEDIAN(D{H0}:D{H1})").number_format = "0.00"; VR["multh0"] = r; r += 1
 V.cell(r, 1, "託管分部倍數（同業中位數 ×（1 − 折價））"); V.cell(r, 4, f"=D{VR['multh0']}*(1-colo_disc)").number_format = "0.00"; VR["multh"] = r; dn("mult_colo", f"Val!$D${r}"); r += 1
-V.cell(r, 1, "  同業選取：上市資料中心營運商中有 NTM EBITDA 共識者 2 家（Digital Realty、Equinix）；Applied Digital、Core Scientific、Cipher Mining（HPC 託管）無可用 NTM EBITDA 共識或為負、Galaxy 未取得（data/whitefiber_facts_20261008.json 資料缺口），未納入；同業少於 8 家不做迴歸（原則 7）。EV 原為 2026-10 初報價（DLR 10-07、EQIX 10-02），已依報價日收盤至 11-13 收盤的價格比換算（倍數 × 價格比近似，Derived；EBITDA 共識仍為 2026-10-08 擷取）；WhiteFiber 規模小、NC-1 單一主要承租人、非 REIT，折價 28%（約 15 倍）列 Sens").font = GREY; r += 2
+V.cell(r, 1, "  同業選取：上市資料中心營運商中有 NTM EBITDA 共識者 2 家（Digital Realty、Equinix）；Applied Digital、Core Scientific、Cipher Mining（HPC 託管）無可用 NTM EBITDA 共識或為負、Galaxy 未取得（data/whitefiber_facts_20261008.json 資料缺口），未納入；同業少於 8 家不做迴歸（原則 7）。EV 原為 2026-10 初報價（DLR 10-07、EQIX 10-02），已依報價日收盤至 11-20 收盤的價格比換算（倍數 × 價格比近似，Derived；EBITDA 共識仍為 2026-10-08 擷取）；WhiteFiber 規模小、NC-1 單一主要承租人、非 REIT，折價 28%（約 15 倍）列 Sens").font = GREY; r += 2
 hdr(V, r, ["項目", "單位", "情境 A", "情境 B", "情境 C", "說明"]); r += 1
 CO = {}
 def vr3(k, lab, unit, f, fmt="#,##0.00", note=None):
@@ -1075,7 +1075,7 @@ if SENS:
     _flip = [4 + i for i, c in enumerate(SENS["cases"]) if any(c.get(sd) and c[sd]["rec"] in _LOW for sd in ("lo", "hi"))]
 _SR = [4, 3 + len(SENS['cases'])] if SENS else [4, 4]
 _med = '"四家中間兩家的平均"'
-crow("bn_frag", "橫幅：評等脆弱點（原則 36）", "—", '=IF(C{d}<0.05,"評等脆弱點：(a) 同業中位數剛好是 "&{m}&"（"&TEXT(mult,"0.00")&" 倍）；(b) 同業估值日 11-13 與現價日同日（IREN 亦為 11-13 收盤；DLR、EQIX 維持 10 月初）、CoreWeave 共識為其財報前；(c) Sens 單一案例中有 "&TEXT({n},"0")&" 案的估值評等會由買進降為中立或更低"{lst},"")'.format(
+crow("bn_frag", "橫幅：評等脆弱點（原則 36）", "—", '=IF(C{d}<0.05,"評等脆弱點：(a) 同業中位數剛好是 "&{m}&"（"&TEXT(mult,"0.00")&" 倍）；(b) 同業估值日 11-20 與現價日同日（IREN 亦為 11-20 收盤；DLR、EQIX 的 EBITDA 共識與淨負債維持 10 月初）、CoreWeave 共識為其財報前；(c) Sens 單一案例中有 "&TEXT({n},"0")&" 案的估值評等會由買進降為中立或更低"{lst},"")'.format(
     d=CON["dist"], m=_med, n=f'SUMPRODUCT(--((ISNUMBER(MATCH(Sens!M{_SR[0]}:M{_SR[1]},{{"中立","放空","強力放空"}},0))+ISNUMBER(MATCH(Sens!N{_SR[0]}:N{_SR[1]},{{"中立","放空","強力放空"}},0)))>0))' if SENS else "0", lst=('&"（如 "&' + '&"、"&'.join(f"Sens!L{x}" for x in _flip[:6]) + ('&" 等）"' if len(_flip) > 6 else '&"）"')) if _flip else ''), None)
 V.column_dimensions["A"].width = 64; V.column_dimensions["B"].width = 11
 for c in "CDE": V.column_dimensions[c].width = 12
@@ -1588,6 +1588,8 @@ RD.cell(r, 1, "v0.4.0（2026-11-15）：依 CoreWeave v5.0.3 新雲樣板（經 
 RD.cell(r, 1, "v0.4.1（2026-11-15）：Andy 2026-11-15 決定 Comparable 改為分部加總：託管分部（NC-1 Nscale 10 年長約、MTL、代管服務、其他）FY2028 EBITDA 乘上市資料中心同業（Digital Realty、Equinix）前瞻 EV/EBITDA 中位數，雲端分部乘現行新雲同業中位數；營業費用依營收比例分攤到兩分部；DCF 不變。新增 Sens：託管倍數折價（小型、單一主要承租人、非 REIT）。新舊目標價與評等見 whitefiber/README.md v0.4.1 節。"); RL["v041"] = r; r += 1
 RD.cell(r, 1, "v0.4.2（2026-11-15）：Wattonomics 快照由 v0.3.2 改讀 v0.3.5（追公式改讀 whitefiber/data/wattonomics_trace_v0.3.5.json）。層級個股模型回寫資本支出 CapexAIModel 2026 由舊版 v0.2 的 0.473 重匯為本公司 v0.4.1 的 0.845（十億美元，同源，只列參考）；WhiteFiber 沒有付款年資本支出列，Gap 主讀法仍為 GW 推算，玩家 MW 路徑（mw_wyfi，舊版 v0.2）與 CapexAI 不變。Wattonomics 不進估值，基準輸入、目標價與評等不變。"); RL["v042"] = r; r += 1
 RD.cell(r, 1, "v0.4.3（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113；Yahoo Finance 日線，markets/invest_map/data/closes_20261020_20261113.csv）。現價 9.21（2026-11-10）→ 9.43；雲端同業報價：CoreWeave 60.77 → 53.13、Nebius 154.69 → 115.88、Oracle 128.38 → 125.35（均 2026-11-11 → 11-13；EV＝市值＋淨負債，依公式重算）。IREN 20.84（2026-11-11）→ 18.17（2026-11-13 收盤；EV＝股價 × 股數＋淨負債，公式重算，EV 15,530 → 14,397）；託管同業依報價日收盤換 11-13（價格檔已補 9-28～10-19）：DLR 10-07 收盤 180.47 → 179.99（EV 86,198 → 85,969，倍數 20.42 → 20.36）、EQIX 10-02 收盤 1,025.72 → 1,053.79（EV 121,482 → 124,806，倍數 21.06 → 21.63）；模型無 DLR／EQIX 市值，採倍數 × 價格比近似（Derived），淨負債不隨股價變。價格檔補齊後原地修改，不升版號；無未換價同業。雲端同業前瞻 EV/EBITDA 中位數 6.74 → 6.08（IREN 5.62 → 5.21、CoreWeave 5.01 → 4.73、Nebius 8.88 → 6.94、Oracle 7.86 → 7.71）；託管同業中位數 20.74 → 21.00；Comparable 目標價 27.59 → 26.62；加權目標價 13.79 → 13.31；上檔空間 +49.8% → +41.1%；估值評等 買進 → 買進，投資建議 收支不足 → 收支不足。rf、共識目標價（2026-11-10 對照值）、共識 EBITDA、淨負債、股數、營運假設與情境權重不變。Sens、RevDCF 快照已重跑；拆解沿用。")
+r += 1
+RD.cell(r, 1, "v0.4.4（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120；Yahoo Finance 日線，markets/invest_map/data/closes_20261109_20261120.csv）。現價 9.43 → 6.35；CoreWeave 53.13 → 39.51、Nebius 115.88 → 81.31、IREN 18.17 → 11.82、Oracle 125.35 → 101.19；DLR EV 85,969 → 依 10-07 收盤 180.47 與 11-20 收盤 162.46 重算、EQIX EV 依 10-02 收盤 1,025.72 與 11-20 收盤 968.22 重算（倍數 × 價格比近似，Derived）。rf、共識、淨負債、股數、營運假設與情境權重不變；無未換價同業。結果數字見 README v0.4.4。")
 RD.column_dimensions["A"].width = 180
 
 # 列號對照

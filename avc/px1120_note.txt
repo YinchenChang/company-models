@@ -1,0 +1,10 @@
+folder=avc
+version=v0.3.7 -> v0.3.8
+px=3040 -> 2205
+tp=2423.59 -> 2192.15
+upside=-20.3% -> -0.6%
+rating=中立 -> 中立
+peers_repriced=4
+peers_unchanged=無
+checks=xlsx 重算錯誤格 0；check_company_html avc 通過；check_layout_v13 --xlsx ok；check_in_layout 通過；baseline_coordination/check.py 0 項不符；check_sens_coverage --require-keycol 47/47 鍵無案例（前版 v0.3.7 即未過，既有）；Coord 快照 CURRENT
+notes=前一版 README 要點寫加權目標價 2,578.3，但現行 v0.3.7 成品實為 2,423.59（Siliconomics 後續重建所致），故前值取自成品 xlsx。另換富世達股價 1,975 -> 1,430（非控制權益市值）。本家無 Sens 快照腳本；Coord 快照已重跑（另一側 tp 1,999.5，中立）。

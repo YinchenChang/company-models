@@ -1,0 +1,10 @@
+folder=micron
+version=v0.5.6 -> v0.5.7
+px=778.31 -> 594.51
+tp=506.60 -> 493.83
+upside=-34.9% -> -16.9%
+rating=放空 -> 中立
+peers_repriced=4
+peers_unchanged=無
+checks=xlsx_diff 重算 vs dist 0 格差異、錯誤格 0；check_company_html 全過；check_layout_v13 通過（僅有「參數代號」警告）；baseline_coordination/check.py 0 項不符；sens_run 與 coord_alt 重跑（Coord 另一側 486.67 中立）；check_sens_coverage --require-keycol 未過（106／114 鍵無案例；前版同為 106／114，不要求）
+notes=舊值取自 HEAD 的 v0.5.6 dist 重算值（加權目標價 506.60、-34.9%），與 v0.5.6 README 寫的 511.70／-34.3% 不同（上游更新所致，已在 README 註明）。未新增 px1120_post.py：美光慣例是在 company.py 末尾加版本段落。

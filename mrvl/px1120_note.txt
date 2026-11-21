@@ -1,0 +1,10 @@
+folder=mrvl
+version=v0.3.6 -> v0.3.7
+px=156.76 -> 122.28
+tp=67.86 -> 62.08
+upside=-56.7% -> -49.2%
+rating=強力放空 -> 放空
+peers_repriced=5
+peers_unchanged=無
+checks=check_company_html mrvl 全過；check_layout_v13 --xlsx 通過（僅既有參數代號警告）；baseline_coordination 0 項不符；check_in_layout 通過；xlsx 錯誤格 0、重建與 dist 逐格差異 0；Sens、Coord 快照 CURRENT（已重跑 sens_mrvl.py、alt_run.py）；check_sens_coverage 80 項「找不到表頭」，前一版同為 80 項，未要求
+notes=(1) v0.3.6 README 本版要點寫加權目標價 72.87（-53.5%），但 v0.3.6 成品 xlsx 重算值為 67.86（-56.7%），本單前值取成品重算值。(2) 上檔空間跨過 -50% 門檻，評等由模型公式變為放空；另一側讀數 54.77 仍為強力放空，與現行基準評等不同。(3) 順手修正 README 公式帶出的現價日期標籤（原顯示 2026-11-05，改 2026-11-20）。(4) 舊 dist 檔與 dist/_待刪除 已移除。

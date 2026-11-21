@@ -1,0 +1,10 @@
+folder=spacex
+version=v0.2.10 -> v0.2.11
+px=139.11 -> 127.79
+tp=32.97 -> 32.84
+upside=-76.3% -> -74.3%
+rating=強力放空 -> 強力放空
+peers_repriced=8
+peers_unchanged=無
+checks=make_v02.sh 內全部檢查通過（事實總帳、check_v02、in_layout、sens_coverage --require-keycol、segment_check、check_company_html、check_governance）；check_layout_v13 --xlsx 通過；tools/baseline_coordination/check.py 0 項不符；Sens 已整本重跑（KREQ=1 SENS=1），模型狀態 CURRENT；前一版即未過的項目：無
+notes=同業 8 家（Connectivity：IRDM、TMUS、T、CMCSA、SATS；SI：CRWV、NBIS、ORCL）在收盤檔皆有 11-13 與 11-20 收盤；倍數以 v0.2.10 的 11-13 近似值乘 11-20÷11-13 收盤比（無市值，近似 [Derived]）。Connectivity 中位數 6.63x -> 6.46x，SI 中位數 7.70x -> 5.40x（只影響讀法 1，讀法 1 目標價 21.41 -> 21.52）。Comparable 上檔空間 -68.8% -> -66.2%。支持現價所需 k：flat 3.14 -> 2.95、conv k0 25.2 -> 22.8。SPCX 不受分割影響。新增 px1120_peers.py；舊 dist xlsx 移 dist/_待刪除、舊 HTML 移除；舊 kreq／sens json 移 data/_待刪除。check_layout_v13 需 bs4（本環境臨時安裝，非 repo 變更）。

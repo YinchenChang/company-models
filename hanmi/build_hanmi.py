@@ -1045,5 +1045,9 @@ import px1113_post as P1113  # noqa: E402
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _N1113 = open(os.path.join(_HERE, "px1113_note.txt"), encoding="utf-8").read().strip() if os.path.exists(os.path.join(_HERE, "px1113_note.txt")) else "v0.4.6（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。"
 print(P1113.apply(wb, _HERE, dict(ver="v0.4.6", old_ver="v0.4.5", tk="042700.KS", note=_N1113 + " ")))
+# v0.4.7（2026-11-21）：工作單 px1120——現價與同業報價改 2026-11-20 收盤（hanmi/px1120_post.py；只改價格輸入與說明文字）
+import px1120_post as P1120  # noqa: E402
+_N1120 = open(os.path.join(_HERE, "px1120_readme.txt"), encoding="utf-8").read().strip() if os.path.exists(os.path.join(_HERE, "px1120_readme.txt")) else "v0.4.7（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。"
+print(P1120.apply(wb, _HERE, dict(ver="v0.4.7", old_ver="v0.4.6", tk="042700.KS", note=_N1120 + " ")))
 wb.save(sys.argv[1])
 print("PB", {s: PB[s] for s in SC}); print("SUMR", SUMR); print("VAL", VAL, "fwd rows to", fr, "SENS_LAST", SENS_LAST, "Recon last", rr_)

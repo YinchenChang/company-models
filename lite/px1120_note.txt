@@ -1,0 +1,10 @@
+folder=lite
+version=v0.5.7 -> v0.5.8
+px=596.62 -> 460.54
+tp=384.91 -> 347.65
+upside=-35.5% -> -24.5%
+rating=放空 -> 中立
+peers_repriced=5
+peers_unchanged=無
+checks=錯誤格 0；check_company_html 全過；check_layout_v13 通過（valuation、drivers 兩章參數代號警告為前版即有）；check_sens_coverage 42/50 鍵無案例（前版即同，未過項不要求）；baseline_coordination 0 項不符；Sens、Coord 快照已重跑，狀態 CURRENT；xlsx 與 CI 口徑重建逐格差異 0
+notes=上檔空間 -24.5% 越過放空門檻 -25%，評等變中立。另一側讀數（C4）加權目標價 308.65、上檔 -33.0%、放空。舊值取自 v0.5.7 成品重算值（v0.5.7 README 表內的 413.31／-30.7% 為當時建置值，與成品不同）。MRVL 股價改 122.28（換股價值 705.42 -> 550.26）；In 頁 mrvl_tp 72.87 維持（取自 MRVL v0.3.6 成品），MRVL 換價後的新目標價需整合時由主串更新，只影響對照列。同業五家（COHR、FN、AAOI、CIEN、GLW）皆取自收盤檔。

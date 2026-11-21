@@ -1,4 +1,23 @@
-# arista/ — Arista Networks（ANET）收支與估值模型 v0.5.6
+# arista/ — Arista Networks（ANET）收支與估值模型 v0.5.7
+
+## v0.5.7（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）
+
+- 現價與同業報價改 2026-11-20 收盤（工作單 px1120；Yahoo Finance 日線收盤，`markets/invest_map/data/closes_20261109_20261120.csv`）。只換價格；共識 EPS、rf、β、預測用匯率、營運假設、情境權重與三層基準讀數不變。同業前瞻 P/E＝頁面前瞻 P/E × 11-20 收盤 ÷ 頁面價格（等於 v0.5.6 倍數 × 11-20 收盤 ÷ 11-13 收盤）。**未換價同業：無**（本公司與 CSCO、CIEN、CLS、HPE、CRDO 皆取自收盤檔）。
+- 前後值取自 v0.5.6 與 v0.5.7 成品的重算值。注意：v0.5.6 README 表列的 137.58／-30.3%、DCF 65.47、Comparable 209.69 與該版 dist 重算值（133.66／-32.3%、DCF 64.07、Comparable 203.25）不同，是 v0.5.6 的 README 數字不準；本表以 dist 重算值為準。
+
+| 項目 | v0.5.6（dist 重算值） | v0.5.7 |
+|---|---|---|
+| 現價（ANET） | 197.29（11-13） | 167.62（11-20） |
+| 同業前瞻 P/E 中位數 | 18.03 | 13.69 |
+| DCF 目標價 | 64.07 | 64.07（只經市值 D/E 影響 WACC，變動在小數第四位後） |
+| Comparable（相對倍數調整後） | 203.25 | 154.33 |
+| 加權目標價 | 133.66 | 109.20 |
+| 上檔空間／投資建議 | -32.3%／放空 | -34.9%／放空 |
+
+- Sens 快照（`sens_arista.py`）、Coord 快照（`tools/coord/alt_run.py arista`）已重跑；Coord 另一側讀數 104.88（-37.4%，放空），評等與現行相同。
+- 驗證：LibreOffice 重算錯誤格 0；`check_company_html.py arista` 全過；`check_layout_v13.py` 通過；`check_sens_coverage.py` 12／36 鍵無案例（v0.5.6 即同，非本輪新增）；`baseline_coordination/check.py` 0 項不符。
+- 建置：`build_arista.py` 內價格直接改為 11-20 收盤（無獨立 px1120 後處理檔，沿用 px1113 做法）；`v055_post.py` 的版本說明列與 `gen_html_json.py` 的版號檢查同步改 v0.5.7。
+- 成品：`dist/20261121_Arista個股模型_v0.5.7.xlsx`、`.html`；v0.5.6 已移除。
 
 ## v0.5.6（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
 

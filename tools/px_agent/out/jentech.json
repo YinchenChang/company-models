@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 20,
+ "duration_ms": 103481,
+ "total_cost_usd": 0.2983962,
+ "result": "健策（jentech）已換成 2026-11-20 收盤，版號 v0.2.7 → v0.2.8，Excel 和 HTML 都已重建，沒有 commit。\n\n- **現價：** 5,345 → 3,705\n- **加權目標價：** 4,138.8 → 3,342.3\n- **上檔空間：** −22.6% → −9.8%\n- **評等：** 中立 → 中立，由模型公式重算。\n- **同業：** 4 家（奇鋐、雙鴻、Vertiv、台達電）都在收盤檔裡，全部換價。前瞻 P/E 中位數 23.6 → 17.1。沒有未換價同業。\n- **Coord 快照：** 原本是 STALE，已用 `tools/coord/alt_run.py` 重跑，現為 CURRENT（另一側讀數 3,075.8，中立）。jentech 沒有獨立的 Sens 腳本，Sens 隨建置產生。\n- **前版目標價：** 舊 dist 的加權目標價是 4,138.8，不是 px1113 README 寫的 4,413.0。我取舊 dist 的重算值當前值，這點已寫進 note。\n- **檢查：**\n  - 通過：HTML 檢查、版面檢查（HTML＋xlsx）、三層基準協調（0 項不符）、In 頁版面、快取值檢查；錯誤格 0。\n  - 未通過：`check_sens_coverage --require-keycol`，42 個鍵無案例或豁免。前版同樣沒過，所以不要求，已寫進 note。\n- **本機安裝：** 跑版面檢查時，我在本機另外 `pip install` 了 `beautifulsoup4` 和 `lxml`，不屬於 repo。\n\n新增 `jentech/px1120_post.py` 和 `jentech/px1120_note.txt`，並改了 `build_jentech.py`、`gen_html_json.py`、`README.md`、`coord_alt.json`。`dist` 只剩 20261121 的 v0.2.8 兩個檔。",
+ "error": null,
+ "stderr": null
+}

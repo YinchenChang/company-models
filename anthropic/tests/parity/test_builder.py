@@ -98,7 +98,8 @@ def test_derived_rows_are_formulas(wb):
 def test_inputs_ranges_and_tags():
     """共同規則第 4 節：Analogy／Assumed 一律給區間；低 ≤ 值 ≤ 高；標記只限 Assumed／Analogy／Decision。"""
     for r in INP:
-        assert r["tag"] in ("Assumed", "Analogy", "Decision"), r["key"]
+        # px1120：mkt_px 是已掛牌收盤價（Verified，低＝高＝值），是 Inputs 中唯一允許 Verified 的列
+        assert r["tag"] in ("Assumed", "Analogy", "Decision") or (r["key"] == "mkt_px" and r["tag"] == "Verified"), r["key"]
         assert r["lo"] is not None and r["hi"] is not None, r["key"]
         if isinstance(r["value"], str):          # 文字鍵（Tokenomics 任務名稱）：Decision，低＝高＝值
             assert r["tag"] == "Decision" and r["lo"] == r["hi"] == r["value"], r["key"]
@@ -617,7 +618,7 @@ def test_v020_val_identities(eng):
     assert abs(n("VAL_Up_W") - up) < 1e-12
     want = "強力買進" if up > 0.5 else "買進" if up > 0.25 else "中立" if up >= -0.25 else "放空" if up >= -0.5 else "強力放空"
     assert n("VAL_Rating") == want
-    px = n("VAL_Px")
+    px = eng.get_name(i["ipo_px"])   # 股數讀發行價 ipo_px（74），不讀市價 mkt_px
     sh = (g("pros_shares_post") - g("pros_pp_shares_mid") + g("pros_pp_total") / px * 1000 + g("pros_options") * max(0, 1 - g("pros_option_strike") / px)
           + g("pros_rsu_unvested") + g("pros_rsu_new") + g("pros_vmo")) / 1000
     assert abs(n("VAL_Shares") - sh) < 1e-9
@@ -625,7 +626,8 @@ def test_v020_val_identities(eng):
     assert all(n(f"VAL_TP_DCF_{x}") >= n("VAL_NetCashPS") * (1 + n("VAL_Ke")) - 1e-9 for x in "ABC")          # 下限＝淨現金每股（推到目標時點）
     assert abs(n("VAL_Ke") - (n("VAL_Rf") + n("VAL_Beta") * n("VAL_ERP"))) < 1e-12
     assert abs(n("VAL_EV_B") - (n("VAL_PVExp_B") + n("VAL_PVTV_B"))) < 1e-9
-    assert abs(n("VAL_PeerMult") - 26.32) < 1e-12 and abs(n("VAL_PeerFCFm") - 0.298) < 1e-12 and abs(n("VAL_Beta") - (0.67 * 1.37 + 0.33)) < 1e-12
+    # px1120：同業中位數＝Cloudflare，倍數 26.32（2026-11-06）× 11-20 收盤 274.959991 ÷ 11-06 收盤 268.75
+    assert abs(n("VAL_PeerMult") - 26.32 * 274.959991 / 268.75) < 1e-9 and abs(n("VAL_PeerFCFm") - 0.298) < 1e-12 and abs(n("VAL_Beta") - (0.67 * 1.37 + 0.33)) < 1e-12
     assert abs(n("VAL_SensBase") - n("VAL_TP_W")) < 1e-9
     assert n("VAL_Yr")[0] == "2026Q4" and n("VAL_Yr")[-1] == 2033
 

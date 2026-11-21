@@ -342,7 +342,7 @@ def main():
                 "model_px": dict(nm("VAL_Px"), date=px_date)}
     for tk, folder in (("00100", "minimax"), ("02513", "zhipu")):
         b = Book(dist_xlsx(folder))
-        out[tk] = {"model": b.rel, **val_names(b, "2026-11-13")}   # Val 頁「現價（2026-11-13 收盤）」（px1113）
+        out[tk] = {"model": b.rel, **val_names(b, "2026-11-20")}   # Val 頁「現價（2026-11-20 收盤）」（px1120）
 
     # --- 收支關卡：只有損益的半導體模型 ---
     for tk, folder in SEMIS_V2:
@@ -374,11 +374,11 @@ def main():
             sh, c = ba.wb.defined_names[name].attr_text.split("!")
             sh, c = sh.strip("'"), c.replace("$", "")
             return cell(ba, sh, c, ba.wb[sh][c].value)
-        out["Anthropic"].update({"unlisted": False, "v2": True, "ipo": True,
+        out["Anthropic"].update({"unlisted": False, "v2": True, "ipo": False,   # v0.6.57：2026-11-19 掛牌（ANT），模型 v0.2.4 起現價＝收盤
                                  "tp": nm("VAL_TP_W"), "tp_dcf": nm("VAL_TP_DCF"), "tp_comp": nm("VAL_TP_CompAdj"),
                                  "tp_comp_adj": nm("VAL_TP_CompAdj"), "tp_comp_main": nm("VAL_TP_CompMain"), "dcf_A": nm("VAL_TP_DCF_A"), "dcf_C": nm("VAL_TP_DCF_C"),
                                  "up": nm("VAL_Up_W"), "up_comp": nm("VAL_Up_CompMain"), "rec": nm("VAL_Rating"),
-                                 "model_px": dict(nm("VAL_Px"), date="2026-11-10")})
+                                 "model_px": dict(nm("VAL_Px"), date="2026-11-20")})
         out["Anthropic"]["model_px"]["value"] = out["Anthropic"]["model_px"]["value"]
     # --- v0.6.22：2027 VR200 每 GW 營收校準用（Andy 2026-11-03「該校準，就去校準」）---
     # OpenAI 模型 PxQ 頁口徑一（2026 Q2 年化營收 ÷ Q2 平均上線 GW）：營收、GW（低／基準／高）、
@@ -398,6 +398,17 @@ def main():
     pq["derate_gb300"] = b.num("PxQ", [(0, r"^X07$")], 4)
     out["OpenAI"]["pxq"] = pq
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
+    # v0.6.57（2026-11-21）：股票分割換算。模型每股金額仍為分割前口徑、而地圖收盤已是分割後價格時，
+    # 模型的每股金額（目標價、情境價、模型現價）除以分割比例後再比較；模型改為分割後口徑（模型價日 ≥ 生效日）即自動停用。
+    SPLITS = {"SNDK": (8.0, "2026-11-20")}
+    for tk, (ratio, eff) in SPLITS.items():
+        m = out.get(tk)
+        if m and m.get("model_px", {}).get("date", "9999") < eff:
+            for k in ("tp", "tp_dcf", "tp_comp", "tp_cons", "tp_comp_adj", "old_rule", "dcf_A", "dcf_C", "model_px"):
+                if isinstance(m.get(k), dict) and isinstance(m[k].get("value"), (int, float)):
+                    m[k]["value"] = m[k]["value"] / ratio
+            m["split_adj"] = {"ratio": ratio, "effective": eff}
+
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=1)
     print(f"寫出 {OUT}：{len(out)} 家")

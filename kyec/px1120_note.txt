@@ -1,0 +1,10 @@
+folder=kyec
+version=v0.4.7 -> v0.4.8
+px=213.5 -> 157.5
+tp=113.884077072154 -> 91.6970407915306
+upside=-46.7% -> -41.8%
+rating=放空 -> 放空
+peers_repriced=5
+peers_unchanged=無
+checks=xlsx 重算錯誤格 0；check_company_html kyec 全部通過；check_layout_v13 --xlsx 通過；baseline_coordination/check.py 0 項不符；alt_run 已重跑、另一側與現行建置無新增非 0；check_sens_coverage --require-keycol 48／48 未過（v0.4.7 即未過，既有，本模型 Sens 用閉式參數表、無鍵欄）
+notes=（1）舊 dist 的 v0.4.7 加權目標價為 113.88，與 v0.4.7 README 文字的 111.82 不同（dist 隨 Siliconomics v0.22 重建過），前值取 dist 重算值。（2）日月光 ADS 換算匯率 TWD=X 改 33.026299（11-20 收盤），預測用匯率不變。（3）另一側讀數 109.13 -> 88.44，評等同為放空。（4）新增 px1120_post.py、px1120_note_text.txt，build_kyec.py 在 px1113 後呼叫；gen_html_json.py 的版號改 v0.4.8。（5）已用 git rm 移除舊 dist 檔（已暫存）。

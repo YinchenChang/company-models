@@ -1,4 +1,22 @@
-# amkr/ — Amkor Technology（AMKR，艾克爾）收支與估值模型 v0.4.5
+# amkr/ — Amkor Technology（AMKR，艾克爾）收支與估值模型 v0.4.6
+
+## v0.4.6（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）
+
+- 現價與同業報價改 2026-11-20 收盤（價格只取自 `markets/invest_map/data/closes_20261109_20261120.csv`）。後處理 `px1120_post.py` 在 `build_amkr.py` 的 px1113 之後呼叫，做法同 `px1113_post.py`；共識 EPS、rf、預測用匯率與模型假設不變。本版要點文字在 `px1120_readme.txt`。
+- **未換價同業：無**（五家皆有 11-20 收盤）。
+
+| 項目 | v0.4.5 | v0.4.6 |
+|---|---|---|
+| 現價 | 36.11（11-13） | 30.24（11-20） |
+| 同業前瞻倍數中位數 | 16.82 | 12.14 |
+| DCF 目標價 | 20.94 | 20.37 |
+| Comparable（相對倍數調整後） | 64.45 | 44.29 |
+| 加權目標價 | 42.69（+18.2%） | 32.33（+6.9%） |
+| 投資建議 | 中立 | 中立 |
+| 另一側讀數（Coord） | 37.26（中立） | 29.93（中立） |
+
+- 驗證：重算錯誤格 0；`check_company_html amkr` 全過；`check_layout_v13 --xlsx` ok；`baseline_coordination/check.py` 0 項不符；`check_sens_coverage --require-keycol` 59／67 未過（同前版）；重跑 `sens_amkr.py` 與 `alt_run.py amkr`。
+- 成品：`dist/20261121_艾克爾個股模型_v0.4.6.xlsx`、`.html`；v0.4.5 已移除。
 
 ## v0.4.5（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
 

@@ -1,4 +1,14 @@
-# tel/ — 東京威力科創（Tokyo Electron，TEL，8035.T）收支與估值模型 v0.1.0
+# tel/ — 東京威力科創（Tokyo Electron，TEL，8035.T）收支與估值模型 v0.1.1
+
+## v0.1.1（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）
+
+- 現價與同業報價改 2026-11-20 收盤（工作單 px1120）。價格取自 `markets/invest_map/data/closes_20261109_20261120.csv`（Yahoo Finance 日線收盤）。
+- 現價 9,461 → 8,309（8035.T）。
+- 同業前瞻 P/E（新倍數＝舊倍數 × 11-20 收盤 ÷ 11-13 收盤）：AMAT 21.02 → 17.17、LRCX 21.98 → 17.83、KLAC 27.88 → 23.22、ASML（美國 ADR）23.53 → 19.93、Disco 25.06 → 21.83、Lasertec 32.31 → 27.05；中位數 24.295 → 20.88；8035.T 自身並列參考 25.22 → 22.15。
+- 加權目標價 6,716 → 6,058（DCF 4,073 不變；Comparable 相對倍數調整後 9,360 → 8,044）；上檔空間 −29.0% → −27.1%；評等 放空 → 放空（模型公式重算）。
+- 未換價同業：無（六家同業皆在收盤檔內）。共識 EPS、rf、β、ERP、匯率、營運假設、情境權重、三層基準讀數不變；相對倍數調整係數 0.85 不變。
+- 以下 v0.1.0 各節的現價、同業倍數與目標價數字為 2026-11-13 口徑，保留當時寫法。
+- 改法：`build_tel.py` 直接改輸入與文字（版號 0.1.1），另改 `tel_post.py`、`gen_html_json.py` 版號；Sens、Coord 快照已重跑。
 
 ## v0.1.0（2026-11-17）：首版（工作單 new5）
 
@@ -65,5 +75,5 @@
 ### 檔案
 
 - `build_tel.py`（建置）、`tel_post.py`（後處理）、`sens_tel.py`（敏感度快照，寫 `sens.json`）、`tools/coord/alt_run.py tel`（兩讀數快照，寫 `coord_alt.json`）、`segments.json`、`html.json`。
-- 成品：`dist/20261117_東京威力科創個股模型_v0.1.0.xlsx`、`.html`。
+- 成品：`dist/20261121_東京威力科創個股模型_v0.1.1.xlsx`、`.html`。
 - 重建順序：`python3 tools/coord/alt_run.py tel`（`LO_PROFILE=file:///tmp/lo_<名>`）→ `sens_tel.py` → `build_tel.py <輸出.xlsx>` → LibreOffice 重算到 dist。改 In 頁後須重跑前兩步，否則 Sens 頁「模型狀態」為 STALE。

@@ -1,4 +1,13 @@
-# auras/ — 雙鴻（3324）收支與估值模型 v0.2.7
+# auras/ — 雙鴻（3324）收支與估值模型 v0.2.8
+
+## v0.2.8（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）
+
+- 現價與同業報價改 2026-11-20 收盤（工作單 px1120；價格取自 `markets/invest_map/data/closes_20261109_20261120.csv`，Yahoo Finance 日線收盤）。只換價格，公式與架構不改。
+- 現價 1,140（11-13 收盤）→ **794**；Comparable 同業前瞻 P/E 中位數 24.9 → **19.3**（奇鋐 3,040→2,205、健策 5,345→3,705、Vertiv 202.07→166.24、台達電 1,240→900；共識 EPS 不變）；加權目標價 1,740.9 → **1,407.7**（DCF 1,355.0 → 1,292.5、Comparable 相對倍數調整後 2,126.8 → 2,083.1）；上檔空間 +52.7% → **+77.3%**；評等強力買進 → **強力買進**（無變化）。另一側讀數（Coord）→ 1,270.0（+60.0%，強力買進；`coord_alt.json` 重跑，快照 CURRENT）。
+- **未換價同業：** 無（四家同業皆在 CSV）。
+- 不變：rf、β、ERP、共識 EPS 與共識目標價、預測用匯率、營運假設與情境權重、三層基準讀數。
+- 實作：`auras/px1120_post.py`（只改 README 版本文字；價格在 `build_auras.py` 的 px 與 PEERS）。成品 v0.2.8；舊版 dist 檔移除。
+- 檢查：LibreOffice 重算錯誤格 0；`check_company_html auras` 通過；`check_layout_v13`（xlsx＋html）ok；`check_in_layout` 通過；`baseline_coordination/check.py` 0 項不符；`check_sens_coverage --require-keycol` 39／47 鍵無案例（與 v0.2.7 相同，既有）。
 ## v0.2.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
 
 - 現價與同業報價改 2026-11-13 收盤（工作單 px1113；價格取自 `markets/invest_map/data/closes_20261020_20261113.csv`，Yahoo Finance 日線收盤）。只換價格，公式與架構不改。

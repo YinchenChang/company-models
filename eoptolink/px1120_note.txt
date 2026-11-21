@@ -1,0 +1,10 @@
+folder=eoptolink
+version=v0.4.6 -> v0.4.7
+px=187.58 -> 165.00
+tp=255.82 -> 221.62
+upside=+36.4% -> +34.3%
+rating=買進 -> 買進
+peers_repriced=5
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；xlsx_diff 自比 0 差異；check_company_html 全過；check_layout_v13 通過（有參數代號警告，前版同）；check_sens_coverage 未過（24／32 鍵無案例，前版即同，不要求）；baseline_coordination/check.py 0 項不符；Sens 與 Coord 快照已重跑，狀態 CURRENT
+notes=舊值取自現行 v0.4.6 成品重算值（255.82、+36.4%），不是 v0.4.6 README 表列的 277.44、+47.9%（該表為建置當時值，之後上游 Siliconomics 更新至 v0.22 使成品現值下降）。另一側讀數 193.57（+17.3%，中立）。本公司建置檔為單一 build_eoptolink.py，沿 px1113 做法直接改其中價格與版號字串（未另設 px1120_post.py）；README 本版要點列同時在 v045_post.py 內。因跑 check_layout_v13 另在建置環境安裝 beautifulsoup4（不在 repo 內）。

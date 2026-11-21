@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 19,
+ "duration_ms": 166544,
+ "total_cost_usd": 0.34197849999999996,
+ "result": "Kioxia 已換成 2026-11-20 收盤，從 v0.5.6 升到 v0.5.7。Excel 和 HTML 都重建好了，我沒有 commit。\n\n- **版本：** v0.5.6 → v0.5.7，成品在 `kioxia/dist/20261121_Kioxia個股模型_v0.5.7.xlsx` 和 `.html`，舊檔已移除。\n- **現價：** ¥9,091 → ¥7,307。\n- **加權目標價：** ¥14,988 → ¥13,636。DCF 目標價 ¥14,487 → ¥14,325，Comparable 目標價 ¥15,489 → ¥12,947。\n- **上檔空間：** +64.9% → +86.6%。\n- **評等：** 強力買進 → 強力買進，由模型公式重算，沒有手改。\n- **同業：** 前瞻 P/B 中位數 1.66 → 1.32，這 4 家和 WDC 的 P/E 都換了價，未換價同業為無。\n- **SanDisk：** 8:1 分割後，報價、每股淨值、EPS 都改成分割後口徑，倍數不受影響。\n- **做法：** 沿用 px1113 的方式，直接改 `build_kioxia.py`，沒有新增 `px1120_post.py`。Sens 和 Coord 快照已重跑，README 已加 v0.5.7 一節，`kioxia/px1120_note.txt` 已寫。\n- **檢查通過：** xlsx 重建比對 0 差異、錯誤格 0、快取值檢查、`check_company_html`、`check_layout_v13`（只有參數代號警告，前版同樣有）、`baseline_coordination` 0 項不符。\n- **檢查未過：** `check_sens_coverage` 有 35 項「Sens 頁找不到表頭」。前一版 v0.5.6 也是 35 項未過，所以不要求，note 裡有寫明。",
+ "error": null,
+ "stderr": null
+}

@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 21,
+ "duration_ms": 238585,
+ "total_cost_usd": 0.3743713999999999,
+ "result": "Disco 已換成 2026-11-20 收盤，版號 v0.3.6 → v0.3.7，xlsx 與 HTML 已重建，dist 只留新版（檔名日期 20261121）。\n\n- **現價：** 47,470 → 41,350。\n- **加權目標價：** 36,416 → 33,124。\n- **上檔空間：** -23.3% → -19.9%。\n- **評等：** 中立 → 中立，由模型公式重算。\n- **同業：** 5 家全部換價，沒有未換價同業。P/E 中位數由 25.22 變 22.15。\n- **檢查：**\n  - 通過：重算錯誤格 0、`check_company_html`、`check_layout_v13`、三層基準協調檢查（0 項不符）。Sens 與 Coord 快照已重跑，狀態為 CURRENT。\n  - 前版即未過：`check_sens_coverage`（51 個鍵找不到 Sens 表頭），本版結果相同，note 已寫明。\n  - 沒跑：`layout_check.py` 瀏覽器截圖。\n- **另一側讀數：** 加權目標價 31,501、評等中立，前版是放空。\n- **README 更正：** 舊 README 的 v0.3.6 對照表寫 35,045、放空，與成品實際的 36,416、中立不符，我已在新節更正。\n- **gen_html_json.py：** 為了讓 HTML 產生器通過，我把它裡面的 README 版本檢查由 v0.3.6 改成 v0.3.7。\n- **未提交：** 沒有 commit、push，也沒改 `disco/` 以外的檔案。\n- **新增檔案：** `px1120_post.py`（價格換算，由建置腳本接在 px1113 之後呼叫）、`px1120_note.txt`。",
+ "error": null,
+ "stderr": null
+}

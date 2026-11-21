@@ -278,7 +278,7 @@ def _ext(row_):   # 推導區塊直接延伸到 FY2032：表頭列＝各情境�
 
 
 H = {
-    "ver": "v0.4.5",
+    "ver": "v0.4.6",
     "ext": _ext,
     "units_chart": lambda pB, hB: {
         "type": "theme", "title": "AI 相關與非 AI 營收（情境 B，十億元人民幣）與勝宏在 AI 高速 PCB 市場的有效份額（右軸）", "x": f"@PL!D{hB}:G{hB}",

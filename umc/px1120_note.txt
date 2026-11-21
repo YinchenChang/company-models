@@ -1,0 +1,10 @@
+folder=umc
+version=v0.2.5 -> v0.2.6
+px=101.5 -> 80.3
+tp=68.62 -> 62.90
+upside=-32.4% -> -21.7%
+rating=放空 -> 中立
+peers_repriced=5
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；check_company_html umc 全部通過；check_layout_v13 ok（參數代號警告為前版既有）；check_sens_coverage --require-keycol 通過；check_in_layout 通過；check_cached_values 通過；baseline_coordination/check.py 0 項不符；alt_run.py umc 已重跑（Coord 快照 CURRENT，另一側讀數 62.35 中立）
+notes=評等因上檔空間越過 −25% 關卡由放空轉中立（公式重算）。收盤檔價格取 4 位小數（80.300003 → 80.3）。px1120_readme.txt 為 README 本版要點文字，build_umc.py 讀取。README 開頭「核心問題」列的靜態文字「現價約 20 倍前瞻 P/E」為 v0.1 舊文，未改（現價約 13 倍 FY2027 EPS B 情境）。bs4 為跑 check_layout_v13 臨時 pip 安裝。

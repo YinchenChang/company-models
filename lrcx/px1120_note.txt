@@ -1,0 +1,10 @@
+folder=lrcx
+version=v0.3.6 -> v0.3.7
+px=225.92 -> 183.27
+tp=157.54 -> 142.13
+upside=-30.3% -> -22.4%
+rating=放空 -> 中立
+peers_repriced=4
+peers_unchanged=無
+checks=重算錯誤格 0；check_company_html 全部通過；check_layout_v13 --xlsx 通過；baseline_coordination/check.py 0 項不符；check_sens_coverage 未過（26／26 鍵找不到 Sens 表頭，前版 v0.3.6 即未過、結果相同）；Sens 快照（sens_lrcx.py）與 Coord 快照（alt_run.py lrcx）已以新價重跑
+notes=同業前瞻 P/E（11-13→11-20）：AMAT 21.02→17.17、KLAC 27.88→23.22、ASML 23.53→19.93、8035.T 25.22→22.15；中位數 24.38→21.04。DCF 目標價 89.55→89.60；Comparable（市場主流同業法）239.84→207.02；Comparable（相對倍數調整後）225.52→194.66。Coord 另一側讀數加權目標價 132.95（放空），與現行讀數評等不同，橫幅已揭露。後處理在 px1120_post.py（接在 px1113_post 之後）；gen_html_json.py 的版本斷言改 v0.3.7。v0.3.6 的 dist 檔已移除。

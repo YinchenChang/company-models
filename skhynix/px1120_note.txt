@@ -1,0 +1,10 @@
+folder=skhynix
+version=v0.7.8 -> v0.7.9
+px=1,216,000 -> 1,113,000
+tp=1,986,232 -> 1,815,477
+upside=+63.3% -> +63.1%
+rating=強力買進 -> 強力買進
+peers_repriced=4
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；check_company_html 全過；check_layout_v13 無錯誤（僅參數代號警告）；baseline_coordination/check.py 0 項不符；check_in_layout 通過；Sens／Coord 快照重跑為 CURRENT；check_sens_coverage --require-keycol 未過（115／123 鍵無案例，v0.7.8 舊成品同樣未過，不要求）
+notes=舊成品（v0.7.8）重算值加權目標價 1,986,232，與 v0.7.8 README 要點所寫 2,021,354 不同，前後值以舊成品實際重算值為準。其他模型把 SK 海力士當同業者不在本資料夾處理。

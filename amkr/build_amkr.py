@@ -978,6 +978,11 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import px1113_post as P1113  # noqa: E402
 _N1113 = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "px1113_note.txt"), encoding="utf-8").read().strip() if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), "px1113_note.txt")) else "v0.4.5（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。"
 print(P1113.apply(wb, os.path.dirname(os.path.abspath(__file__)), dict(ver="v0.4.5", old_ver="v0.4.4", tk="AMKR", note=_N1113 + " ")))
+# v0.4.6（2026-11-21）：工作單 px1120——現價與同業報價改 2026-11-20 收盤（amkr/px1120_post.py；只改價格輸入與說明文字）
+import px1120_post as P1120  # noqa: E402
+_P1120F = os.path.join(os.path.dirname(os.path.abspath(__file__)), "px1120_readme.txt")
+_N1120 = open(_P1120F, encoding="utf-8").read().strip() if os.path.exists(_P1120F) else "v0.4.6（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。"
+print(P1120.apply(wb, os.path.dirname(os.path.abspath(__file__)), dict(ver="v0.4.6", old_ver="v0.4.5", tk="AMKR", note=_N1120 + " ")))
 wb.save(sys.argv[1])
 if os.environ.get("AMKR_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

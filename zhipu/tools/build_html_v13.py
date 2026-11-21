@@ -79,7 +79,7 @@ def bars(V: Values, cells, unit, aria, f="f1"):
 def hero(V):
     tiles = (f'<div class="hero-t"><div class="hero-l">目標價（DCF 與同業倍數各半，港元）</div><div class="hero-n">{V.n("VAL_TP_W", None, "f2")}</div>'
              f'<div class="hero-l">上檔空間 {V.n("VAL_Up_W", None, "pct1")}</div></div>'
-             f'<div class="hero-t"><div class="hero-l">現價（2026-11-13 收盤，港元）</div><div class="hero-n">{V.n("VAL_Px", None, "f2")}</div>'
+             f'<div class="hero-t"><div class="hero-l">現價（2026-11-20 收盤，港元）</div><div class="hero-n">{V.n("VAL_Px", None, "f2")}</div>'
              f'<div class="hero-l">市場共識目標價 {V.n("VAL_TP_Cons", None, "f0")}（2026-10-03）</div></div>'
              f'<div class="hero-t"><div class="hero-l">收支關卡：FY2026–FY2030 自由現金流合計（億元）</div><div class="hero-n">{V.n("VAL_Gate", None, "f1")}</div>'
              f'<div class="hero-l">估值評等 {V.n("VAL_Rating", None, "text")}</div></div>')
@@ -150,7 +150,7 @@ def vrow(V, pre, col="C"):
 
 def valuation(V):
     four = [("DCF 目標價（單純 DCF，三情境加權）", "VAL_TP_DCF", "VAL_Up_DCF", "無槓桿自由現金流折現；基準情境到 FY2030 仍虧損，三情境皆觸及淨現金下限"),
-            ("Comparable 目標價（同業 EV ÷ 未來 12 個月營收，三情境加權）", "VAL_TP_Comp", "VAL_Up_Comp", "同業只有 MiniMax（同日 2026-11-13 市值）；未做相對倍數調整"),
+            ("Comparable 目標價（同業 EV ÷ 未來 12 個月營收，三情境加權）", "VAL_TP_Comp", "VAL_Up_Comp", "同業只有 MiniMax（同日 2026-11-20 市值）；未做相對倍數調整"),
             ("加權目標價（DCF 與 Comparable 各半；橫幅主值）", "VAL_TP_W", "VAL_Up_W", "評等依此判定"),
             ("市場共識目標價（Investing.com 24 位平均，2026-10-03）", "VAL_TP_Cons", "VAL_Up_Cons", "二手、早於現價日一個月，其間股價大跌，只作對照")]
     ch = bars(V, [(c, [(r, "rev")]) for c, r in (("DCF", "VAL_TP_DCF"), ("Comparable", "VAL_TP_Comp"), ("加權", "VAL_TP_W"), ("市場共識", "VAL_TP_Cons"), ("現價", "VAL_Px"))],
@@ -169,7 +169,7 @@ def valuation(V):
         ("同業（MiniMax）EV ÷ 未來 12 個月共識營收（倍）", "同業 EV／NTM 營收中位數", "f2", "C"), ("智譜市場 EV ÷ 共識未來 12 個月營收（倍）", "對照：本公司市場 EV", "f2", "C"),
         ("智譜倍數 ÷ 同業（倍）", "對照：本公司倍數", "f2", "C"), ("本模型未來 12 個月營收（情境 B，億元）", "本模型 NTM 營收", "f1", "D")))
     return ('<section id="valuation"><h2>估值</h2>'
-            f'<div class="figblk"><h3>四個目標價與現價（港元；現價 2026-11-13 收盤）</h3>{ch}</div>'
+            f'<div class="figblk"><h3>四個目標價與現價（港元；現價 2026-11-20 收盤）</h3>{ch}</div>'
             '<p class="note">Andy 2026-11-15 決定智譜給目標價與評等。估值頁（xlsx Val 頁）＝DCF（無槓桿自由現金流，現金流沿用本收支模型）50%＋同業倍數 50%，'
             '三情境（2H26 API 任務數成長高／基準／低）25／50／25。折現率、同業選擇與權重為判斷類參數，依 Anthropic 估值頁樣板慣例預設，待確認。</p>'
             '<h3>四個目標價</h3><div class="tw"><table><thead><tr><th>目標價</th><th>港元</th><th>對現價上檔空間</th><th>說明</th></tr></thead><tbody>' + t4 + '</tbody></table></div>'
@@ -183,7 +183,7 @@ def valuation(V):
             '<p class="note"><b>DCF 淨現金下限：</b>三情境皆觸及下限，下限以評價日（2026-06-30 pro forma）淨現金按股東權益成本推到目標時點，'
             '未扣評價日之後的燒錢；若改用本模型目標時點（約 2027-11，年底期末值內插）的淨現金，加權目標價約 142 港元，評等不變。</p>'
             '<h3>DCF 與同業法（三情境）</h3><div class="tw"><table><thead><tr><th>項目</th><th>情境 A</th><th>情境 B</th><th>情境 C</th></tr></thead><tbody>' + dcf + '</tbody></table></div>'
-            '<h3>同業倍數（2026-11-13 同日市值）</h3><div class="tw"><table><thead><tr><th>項目</th><th>值</th></tr></thead><tbody>' + peer + '</tbody></table></div>'
+            '<h3>同業倍數（2026-11-20 同日市值）</h3><div class="tw"><table><thead><tr><th>項目</th><th>值</th></tr></thead><tbody>' + peer + '</tbody></table></div>'
             '<p class="note">智譜與 MiniMax 互為唯一同業（MiniMax 模型的同業也只有智譜），兩家的 Comparable 結論本質上是同一組相對價差：一家偏貴即另一家偏便宜，不是兩個獨立的檢驗。</p>'
             f'<details class="more"><summary>展開：估值方法（模型原文）</summary><p class="note">{V.n("VAL_Method", None, "text")}</p></details>'
             '<details class="more"><summary>展開：原收支模型的反向檢驗（市值隱含營收；只作對照）</summary>' + _oldval_body(V) + '</details></section>')
@@ -191,15 +191,15 @@ def valuation(V):
 
 def _oldval_body(V):
     rows = "".join(f'<tr><td>{lab}</td><td>{V.n(ref, None, f)}</td></tr>' for lab, ref, f in (
-        ("現價：收盤價（港元，2026-11-13）", "Reverse!X38", "f0"), ("市值（人民幣億元）", "RVS_MktCap", "f0"), ("淨現金（估計，人民幣億元）", "RVS_NetCash", "f0"),
-        ("企業價值 EV（人民幣億元）", "RVS_EV", "f0"), ("同業（MiniMax）企業價值 ÷ 年化營收（倍；MiniMax 市值取 2026-10-07 盤中，與智譜股價 2026-11-13 收盤不同日）", "RVS_PeerMult", "f1"),
+        ("現價：收盤價（港元，2026-11-20）", "Reverse!X38", "f0"), ("市值（人民幣億元）", "RVS_MktCap", "f0"), ("淨現金（估計，人民幣億元）", "RVS_NetCash", "f0"),
+        ("企業價值 EV（人民幣億元）", "RVS_EV", "f0"), ("同業（MiniMax）企業價值 ÷ 年化營收（倍；MiniMax 市值取 2026-10-07 盤中，與智譜股價 2026-11-20 收盤不同日）", "RVS_PeerMult", "f1"),
         ("市值隱含年營收（人民幣億元）", "RVS_MktImpliedRev", "f1"), ("模型營收首次達到的年度", "RVS_MktImpliedYear", "yrt")))
     return (f'<h3>反向檢驗：模型營收（藍）vs 市值隱含年營收（紅虛線 {V.n("RVS_MktImpliedRev", None, "f1")} 億元），紫點＝分析師共識營收</h3>{chart_revcheck(V)}'
             f'<div class="tw"><table><thead><tr><th>現價、市值與反向檢驗</th><th>值</th></tr></thead><tbody>{rows}</tbody></table></div>'
             f'{year_table(V, [("正向營收 ÷ 市值隱含營收（倍）", "RVS_FwdOverImplied", "f2", ""), ("分析師共識營收（人民幣億元；FY2029–FY2030 為沿用值）", "RVS_Target", "f1", "")])}'
             f'<p class="note">口徑差異：本摺疊的淨現金 {V.n("RVS_NetCash", None, "f0")} 億元、企業價值 {V.n("RVS_EV", None, "f0")} 億元（Reverse 頁）是 2026-06-30 現金加 7、9 月配售與可換股債券，'
             f'另扣 7 月配售款至 8-31 已動用部分；估值章正文的淨現金 {V.n(vrow(V, "淨現金（評價日"), None, "f1")} 億元、市場企業價值 {V.n(vrow(V, "市場 EV"), None, "f0")} 億元是 2026-06-30 pro forma（未扣其後動用）。'
-            f'同業倍數 {V.n("RVS_PeerMult", None, "f1")} 倍為 MiniMax 2026-10-07 盤中市值 ÷ 年化營收；正文 {V.n(vrow(V, "同業 EV／NTM 營收中位數"), None, "f2")} 倍為 2026-11-13 收盤市值 ÷ 未來 12 個月共識營收，兩者口徑不同。</p>'
+            f'同業倍數 {V.n("RVS_PeerMult", None, "f1")} 倍為 MiniMax 2026-10-07 盤中市值 ÷ 年化營收；正文 {V.n(vrow(V, "同業 EV／NTM 營收中位數"), None, "f2")} 倍為 2026-11-20 收盤市值 ÷ 未來 12 個月共識營收，兩者口徑不同。</p>'
             f'<p class="note">分析師共識只到 FY2028；FY2029–FY2030 沿用 FY2028 共識平均，乘上反向模式年增率假設 {V.n("INP_134", None, "pct0")}（基準為 0，故三年同值），不是券商預測。</p>'
             '')
 
@@ -363,7 +363,7 @@ def status(V, ver, model):
             f'<dt>版本</dt><dd>v{html.escape(ver)}（{html.escape(model.name)}）</dd>'
             '<dt>公司資料</dt><dd>招股章程（2025-12-30）、2025 年度業績公告（2026-03-31）、2026 中期業績公告（2026-08-31）；SRC_ZP 頁逐筆列出處、標記與一手／二手。</dd>'
             '<dt>口徑</dt><dd>人民幣億元；曆年制；GW＝IT 關鍵電力。</dd></dl>'
-            '<details class="more"><summary>附錄：版本要點</summary><p class="note">v0.1.7：現價與同業（MiniMax）報價改 2026-11-13 收盤（工作單 px1113）；其餘數值不變。v0.1.6：估值頁 Val 與反向 DCF 頁 RevDCF（目標價、評等、收支關卡；Andy 2026-11-15 決定）；既有收支數值不變；成品檔名對齊 MiniMax（個股模型＝版面 v1.3 頁、收支模型＝一頁摘要）。v0.1.5：版面 v1.3 個股頁、PL 標準損益表、Coord 三層協調（讀取層級、C0 實績）；既有數值不變。'
+            '<details class="more"><summary>附錄：版本要點</summary><p class="note">v0.1.8：現價與同業（MiniMax）報價改 2026-11-20 收盤（工作單 px1120）；其餘數值不變。v0.1.7：現價與同業（MiniMax）報價改 2026-11-20 收盤（工作單 px1113）；其餘數值不變。v0.1.6：估值頁 Val 與反向 DCF 頁 RevDCF（目標價、評等、收支關卡；Andy 2026-11-15 決定）；既有收支數值不變；成品檔名對齊 MiniMax（個股模型＝版面 v1.3 頁、收支模型＝一頁摘要）。v0.1.5：版面 v1.3 個股頁、PL 標準損益表、Coord 三層協調（讀取層級、C0 實績）；既有數值不變。'
             'v0.1.4：現價改 2026-11-05 收盤。v0.1.2：官方分部對帳。</p></details></section>')
 
 

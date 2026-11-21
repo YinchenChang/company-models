@@ -1,0 +1,10 @@
+folder=asml
+version=v0.3.6 -> v0.3.7
+px=1338.8 -> 1168
+tp=1403.91908521285 -> 1265.4130500162
+upside=+4.86% -> +8.34%
+rating=中立 -> 中立
+peers_repriced=5
+peers_unchanged=無
+checks=重算錯誤格 0；check_company_html 通過；check_layout_v13 通過（僅參數代號文字警告，同前版）；baseline_coordination/check.py 0 項不符；Sens 快照 CURRENT；check_sens_coverage 前版即未過（找不到 Sens 表頭的鍵，共 37 行輸出），本版相同；check_governance 無 asml 項目
+notes=ASML.AS 與 ASM.AS 的 11-20 值為報價資料最近成交價（Yahoo 日線尚無該列）。加權目標價 1,265.41；同業 P/E 中位數 25.22 -> 22.15；DCF 目標價 531.48 -> 531.56（WACC 權重隨現價）。Sens 與 Coord 快照已重跑（另一側讀數加權目標價 1,161.93、中立）。check_layout_v13 需 bs4，本機另裝。

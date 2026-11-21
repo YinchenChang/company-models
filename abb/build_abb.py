@@ -1,4 +1,4 @@
-# ABB（ABBN；SIX 瑞士證交所，股價 CHF；財報 USD）個股模型 v0.1.0（新增五家工作單，2026-11-17；AI 供應鏈 Project：電源與散熱）
+# ABB（ABBN；SIX 瑞士證交所，股價 CHF；財報 USD）個股模型 v0.1.1（v0.1.1＝工作單 px1120 換價；v0.1.0 新增五家工作單，2026-11-17；AI 供應鏈 Project：電源與散熱）
 # 用法：python3 abb/build_abb.py raw.xlsx ；再以 LibreOffice headless 重算。金額：十億美元（US$B）；股數：十億股；EPS：美元；股價：瑞士法郎（CHF）。
 # 結構：README、In、Hist、Q、Wat、PL、DCF、Val、RevDCF、Sens、Recon、Coord、Sources。
 # 資料口徑：公司原文＝ABB Q4 2025 financial information、Q3 2026 新聞稿（2026-10-20；Nasdaq／EQS 附件）；Yahoo 只作交叉核對，差異列 Recon。
@@ -15,7 +15,8 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import fcff_dcf as FD  # noqa: E402
 
-VER, BUILD_DATE, PX_DATE = "v0.1.0", "2026-11-17", "2026-11-13"
+VER, BUILD_DATE, PX_DATE = "v0.1.1", "2026-11-21", "2026-11-20"
+FX_DATE, PEER_QDATE = "2026-11-13", "2026-11-17"   # 匯率固定（預測用，不換）；同業前瞻 P/E 的報價日
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7"); KEY = PatternFill("solid", fgColor="FFF2CC")
 SUB = PatternFill("solid", fgColor="EDEDED")
 SC = ("A", "B", "C"); SCN = {"A": "順利", "B": "基準", "C": "不如預期"}
@@ -34,13 +35,15 @@ def hdr(ws, row, labels):
         c = ws.cell(row, j, h); c.font = BOLD; c.fill = HDR
 
 # ---------------- 價格（只讀兩個 CSV） ----------------
-def close(sym):
-    for fn in ("closes_20261020_20261113.csv", "closes_extra_20261113.csv"):
-        for r in csv.DictReader(open(os.path.join(ROOT, "markets/invest_map/data", fn), encoding="utf-8")):
-            if r["symbol"] == sym and r["date"] == PX_DATE: return float(r["close"])
+CSV_DIR = os.path.join(ROOT, "markets/invest_map/data")
+def close(sym, date=None, files=("closes_20261109_20261120.csv", "closes_20261020_20261113.csv", "closes_extra_20261113.csv")):
+    for fn in files:
+        for r in csv.DictReader(open(os.path.join(CSV_DIR, fn), encoding="utf-8")):
+            if r["symbol"] == sym and r["date"] == (date or PX_DATE): return float(r["close"])
     raise KeyError(sym)
-PX_CHF, FX = close("ABBN.SW"), close("CHF=X")      # FX＝每美元 CHF
-assert (PX_CHF, FX) == (69.96, 0.83593), (PX_CHF, FX)
+PX_CHF, FX = round(close("ABBN.SW"), 2), close("CHF=X", FX_DATE)      # FX＝每美元 CHF；預測用匯率維持 2026-11-13，不換
+assert (PX_CHF, FX) == (65.34, 0.83593), (PX_CHF, FX)
+PX_OLD = 69.96   # v0.1.0（2026-11-13 收盤）
 
 # ---------------- Wattonomics 快照（唯讀） ----------------
 WAT_F = "wattonomics/data/wattonomics_snapshot_v0.3.6.json"
@@ -79,10 +82,10 @@ def inrow(key, item, unit, lo, base, hi, tag, src, inc="—", note="", yellow=Fa
         for cc in range(1, 11): IN.cell(r, cc).fill = KEY
     IR["r"] += 1
 
-# --- A. 股價與匯率（只用兩個 CSV；2026-11-13 收盤） ---
+# --- A. 股價與匯率（只用投資地圖收盤價 CSV；現價 2026-11-20 收盤，匯率維持 2026-11-13） ---
 sec("A. 股價、匯率與市場共識（股價只取 markets/invest_map/data 兩個 CSV；共識與同業倍數只作對照與 Comparable 輸入）")
-inrow("px_chf", "現價（ABBN.SW，2026-11-13 收盤）", "CHF", None, PX_CHF, None, "Verified", "markets/invest_map/data/closes_extra_20261113.csv：ABBN.SW 69.96（CHF）")
-inrow("fx", "匯率：每美元兌瑞士法郎（CHF=X，2026-11-13）", "CHF/US$", None, FX, None, "Verified", "markets/invest_map/data/closes_extra_20261113.csv：CHF=X 0.83593", note="報表與現金流為美元；每股價值以本匯率換成瑞士法郎，不預測匯率")
+inrow("px_chf", "現價（ABBN.SW，2026-11-20 收盤）", "CHF", None, PX_CHF, None, "Verified", "工作單 px1120；Yahoo Finance 日線收盤 2026-11-20（closes_20261109_20261120.csv，報價資料最近成交價）：ABBN.SW 65.34（CHF）；v0.1.0 為 2026-11-13 收盤 69.96")
+inrow("fx", "匯率：每美元兌瑞士法郎（CHF=X，2026-11-13；預測用，px1120 不換）", "CHF/US$", None, FX, None, "Verified", "markets/invest_map/data/closes_extra_20261113.csv：CHF=X 0.83593（工作單 px1120 規定預測匯率不變）", note="報表與現金流為美元；每股價值以本匯率換成瑞士法郎，不預測匯率")
 inrow("px", "現價（美元；＝CHF 現價 ÷ 每美元 CHF）", "US$", None, "=px_chf/fx", None, "Derived", "px_chf ÷ fx")
 inrow("cons_tp", "市場共識目標價（賣方平均）", "CHF", None, 83.71, None, "Interested-party", "Yahoo quoteSummary 2026-11-17：目標價均值 83.71（27 家）；docs/workorders/20261117_新增五家_Yahoo基本面快照.md",
       "賣方分析師；多數為投行或券商研究，與 ABB 有承銷與顧問業務往來，評等偏買進；只作對照")
@@ -513,12 +516,12 @@ V.cell(S["dcf"], 1, "DCF 目標價（情境加權；美元）"); V.cell(S["v12"]
 V.cell(S["g"], 1, "永續成長率 g＝MIN(上限, rf)"); V.cell(S["ronic"], 1, "永續期 RONIC＝WACC 加成")
 V.cell(S["ronic"], 5, "終值再投資率＝g ÷ RONIC；基準加成 0"); V.cell(S["wacc"], 5, "(E × ke ＋ D × kd ×（1 − t）) ÷ (E ＋ D)；調整項只用於 Sens（基準 0）")
 q = S["dcf"] + 2
-V.cell(q, 1, "0.2 Comparable（美國、歐洲電氣設備同業前瞻 P/E；Yahoo 2026-11-17；來源單一）").font = BOLD
+V.cell(q, 1, "0.2 Comparable（美國、歐洲電氣設備同業前瞻 P/E；Yahoo 2026-11-17 倍數換算至 2026-11-20 收盤；來源單一）").font = BOLD
 hdr(V, q + 1, ["同業", "代號", "前瞻 P/E（下一會計年度 EPS）", "日期", "來源", "標記", "來源誘因"])
 PEERS = [("Eaton", "ETN", 20.50), ("Schneider Electric", "SU.PA", 19.18), ("nVent Electric", "NVT", 15.56), ("Vertiv", "VRT", 19.11)]
 for i, (nm, tk, pe) in enumerate(PEERS, q + 2):
-    V.cell(i, 1, nm); V.cell(i, 2, tk); c = V.cell(i, 3, pe); c.font = BLUE; c.number_format = "0.0"
-    V.cell(i, 4, "2026-11-17"); V.cell(i, 5, "Yahoo quoteSummary 同業 forwardPE（docs/workorders/20261117_新增五家_Yahoo基本面快照.md）；價格與 EPS 同幣別")
+    V.cell(i, 1, nm); V.cell(i, 2, tk); c = V.cell(i, 3, f"={pe}*{close(tk, PX_DATE)}/{close(tk, PEER_QDATE)}"); c.font = BLUE; c.number_format = "0.0"
+    V.cell(i, 4, "2026-11-20"); V.cell(i, 5, f"工作單 px1120：Yahoo 同業 forwardPE {pe}（2026-11-17；docs/workorders/20261117_新增五家_Yahoo基本面快照.md）× 11-20 收盤 {close(tk, PX_DATE)} ÷ 11-17 收盤 {close(tk, PEER_QDATE)}（closes_20261109_20261120.csv）；EPS 不變；價格與 EPS 同幣別")
     V.cell(i, 6, "Interested-party"); V.cell(i, 7, "資料商（Yahoo）彙整賣方共識 EPS；賣方研究與投行業務有利益往來")
 p1, pl_ = q + 2, q + 1 + len(PEERS)
 V.cell(pl_ + 1, 1, "並列（不進中位數）：Yahoo 的 ABB 前瞻 P/E 18.57 把瑞士法郎股價除以美元 EPS，幣別錯置；正確值見第 3 節"); V.cell(pl_ + 1, 3, 18.57).number_format = "0.0"; V.cell(pl_ + 1, 6, "Interested-party")
@@ -538,13 +541,13 @@ tset(q2 + 4, "tpw_usd", "加權目標價（美元）", [f"=tp_w_dcf*B{S['dcf']}+
 defname("tp_w_usd", f"Val!$B${q2+4}")
 # 回填第 0 節
 r = t0 + 2
-tset(r, "px", f"現價（{PX_DATE} 收盤；ABBN.SW，瑞士法郎）", ["=px_chf", None, None], "#,##0.00", "投資地圖資料夾的兩個收盤價 CSV；匯率 CHF=X 0.83593（每美元）"); r += 1
+tset(r, "px", f"現價（{PX_DATE} 收盤；ABBN.SW，瑞士法郎）", ["=px_chf", None, None], "#,##0.00", "投資地圖資料夾的收盤價 CSV；匯率 CHF=X 0.83593（每美元；2026-11-13，不換）"); r += 1
 tset(r, "dcf_s", "DCF 情境價值推到 12 個月後（瑞士法郎）", [f"={c}{S['v12']}*fx" for c in "BCD"], "#,##0.00", "美元情境價值（本頁 0.1 節）× 每美元兌瑞士法郎"); r += 1
 tset(r, "dcf", "DCF 目標價（情境加權）", [f"=B{S['dcf']}*fx", None, None], "#,##0.00", "瑞士法郎；情境權重見 In 頁"); r += 1
 tset(r, "comp", "Comparable 目標價（市場主流同業法）", [f"=B{q2+3}*fx", None, None], "#,##0.00", "瑞士法郎；本模型未做相對倍數調整（ABB 沒有 10 年前瞻倍數歷史）"); r += 1
 tset(r, "tpw", "目標價（DCF 與 Comparable 加權）", ["=tp_w_dcf*B{}+(1-tp_w_dcf)*B{}".format(T["dcf"], T["comp"]), None, None], "#,##0.00", "DCF 權重 × DCF 目標價＋（1 − DCF 權重）× Comparable 目標價；瑞士法郎"); r += 1
 tset(r, "cons", "市場共識目標價", ["=cons_tp", None, None], "#,##0.00", "Yahoo 2026-11-17：27 家賣方平均（Interested-party）；瑞士法郎"); r += 1
-tset(r, "up", "上檔空間：加權目標價", [f"=B{T['tpw']}/B{T['px']}-1", None, None], "0.0%", "現價＝In 頁現價（2026-11-13 收盤）"); r += 1
+tset(r, "up", "上檔空間：加權目標價", [f"=B{T['tpw']}/B{T['px']}-1", None, None], "0.0%", "現價＝In 頁現價（2026-11-20 收盤）"); r += 1
 tset(r, "upc", "上檔空間：Comparable 目標價", [f"=B{T['comp']}/B{T['px']}-1", None, None], "0.0%"); r += 1
 tset(r, "tier", "上檔空間級距（六級，供分組）", [f'=IF(B{T["up"]}>0.5,"大於 50%",IF(B{T["up"]}>0.25,"25%–50%",IF(B{T["up"]}>=0,"0%–25%",IF(B{T["up"]}>=-0.25,"0%～−25%",IF(B{T["up"]}>=-0.5,"−25%～−50%","小於 −50%")))))', None, None], "@", "Andy 2026-10-25 14:00"); r += 1
 tset(r, "rec", "投資建議", [f'=IF(B{T["up"]}>0.5,"強力買進",IF(B{T["up"]}>0.25,"買進",IF(B{T["up"]}>=-0.25,"中立",IF(B{T["up"]}>=-0.5,"放空","強力放空"))))', None, None], "@",
@@ -560,7 +563,7 @@ hdr(V, m0 + 1, ["項目", "A", "B", "C", "說明"])
 for i, y in enumerate((2026, 2027, 2028)):
     tset(m0 + 2 + i, f"pe{y}", f"現價 ÷ FY{y} EPS（模型）", [f"=px/PL!{YC[y]}{PB[s]['eps']}" for s in SC], "0.0", "現價（美元）÷ EPS（美元）" + ("；FY2026 三情境相同" if y == 2026 else ""))
 tset(m0 + 5, "pe27c", "現價 ÷ FY2027 EPS（共識）", ["=px/cons_eps27", None, None], "0.0", "Yahoo 的 ABB 前瞻 P/E 18.57 把 CHF 股價除以 USD EPS；本列為幣別一致的 22 倍上下")
-tset(m0 + 6, "pe_yh", "Yahoo 前瞻 P/E（幣別錯置）", ["=18.57", None, None], "0.0", "69.96 CHF ÷ 3.729 USD ≈ 18.8（約）；不採用")
+tset(m0 + 6, "pe_yh", "Yahoo 前瞻 P/E（幣別錯置）", ["=18.57", None, None], "0.0", "v0.1.0 時 69.96 CHF（2026-11-13）÷ 3.729 USD ≈ 18.8（約）；不採用")
 V.column_dimensions["A"].width = 60
 for c in "BCD": V.column_dimensions[c].width = 15
 V.column_dimensions["E"].width = 80; V.column_dimensions["F"].width = 16
@@ -721,7 +724,7 @@ for i, row_ in enumerate([
     ("ABB Q4 2025 financial information", "FY2025／FY2024 損益表（持續營運重編）、分部、現金流、資產負債表；Robotics 停業單位", "Verified（公司原文）", "2026-02", "library.e.abb.com/public/efa424a5e55545ef99275bfafc6ff638/ABB-Q4-2025-financial-information.pdf"),
     ("ABB Q3 2026 results（新聞稿與財務附件）", "Q3／9M 2026：分部、集團、資產負債表、淨負債、股數、買回、指引（Q4、FY2026）、三菱電機 JV、Rotork、資料中心", "Verified（公司原文）", "2026-10-20", "abb.com/global/en/news/139696/q3-2026-results；附件 mb.cision.com/Main/417/4411979/4326359.pdf（瑞典語譯本）"),
     ("Wattonomics 快照 v0.3.6", "WIF_Spend_fac_dist、WIF_Spend_fac_ups、WIF_Facility_*、WIF_MktGW_Add", "Derived（本專案上游層）", "2026-11-16", WAT_F),
-    ("markets/invest_map/data 兩個 CSV", "ABBN.SW 69.96 CHF；CHF=X 0.83593（2026-11-13 收盤）", "Verified", "2026-11-13", "closes_20261020_20261113.csv、closes_extra_20261113.csv"),
+    ("markets/invest_map/data 收盤價 CSV", "ABBN.SW 65.34 CHF（2026-11-20 收盤；v0.1.0 為 2026-11-13 的 69.96）；CHF=X 0.83593（2026-11-13，預測匯率不換）；同業倍數依 11-20 ÷ 11-17 收盤換算", "Verified", "2026-11-20", "closes_20261109_20261120.csv、closes_extra_20261113.csv（工作單 px1120）"),
     ("Yahoo quoteSummary 快照", "共識 EPS／營收／目標價、β 1.05、同業前瞻 P/E；年度與季度基本面（交叉核對）", "Interested-party（資料商）", "2026-11-17", "docs/workorders/20261117_新增五家_Yahoo基本面快照.md"),
     ("FRED DGS10", "美國 10 年期公債殖利率 5.10%", "Verified", "2026-11-12", "fred.stlouisfed.org/series/DGS10"),
 ], 4):

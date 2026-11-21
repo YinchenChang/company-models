@@ -9,7 +9,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-VER="${VER:-0.2.2}"; VDATE="${VDATE:-20261116}"
+VER="${VER:-0.2.3}"; VDATE="${VDATE:-20261121}"
 OUTNAME="${VDATE}_Meta個股模型_v${VER}.xlsx"
 SJ="meta/data/sens_v${VER//./}_${VDATE}.json"; KJ="meta/data/kreq_v${VER//./}.json"
 python3 meta/facts_2026q3.py                           # 事實總帳（兩讀核對；不一致即失敗）

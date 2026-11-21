@@ -1,0 +1,10 @@
+folder=nebius
+version=v0.6.3 -> v0.6.4
+px=115.88 -> 81.31
+tp=24.94 -> 11.80
+upside=-78.5% -> -85.5%
+rating=強力放空 -> 強力放空
+peers_repriced=3
+peers_unchanged=無
+checks=make_v1.sh 全過（SENS=1 REV=1 JOBS=1 已重跑敏感度與反向 DCF 快照；公式錯誤 0；檢查列與收支恆等式 157 項；In 版面；敏感度覆蓋 41 鍵含 --require-keycol；分部核對；check_company_html；展示層一致性 62 處；治理；收支關卡評等 --strict）；tools/baseline_coordination/check.py 0 項不符；版本表已更新
+notes=同業為 CoreWeave 39.51、Oracle 101.19、IREN 11.82（皆取 11-20 收盤）；前瞻 EV/EBITDA 中位數 5.21 -> 4.24（CoreWeave 4.2399 與 IREN 4.2369 幾乎相同）；Comparable 目標價 49.87 -> 23.61；收支關卡情境 B -104.8 -> -107.1（不通過，評等本就是強力放空，不受影響）。Nebius 同業 EV 由股價×股數＋淨負債公式算出，故只改四個股價輸入與日期。check_layout_v13.py 因環境缺 bs4 未能執行（未安裝套件；check_company_html 版面檢查已過）。拆解快照沿用；Coord 無獨立快照需重跑。

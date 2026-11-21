@@ -1,0 +1,76 @@
+{
+ "group": "retail",
+ "peers": [
+  {
+   "ticker": "WMT",
+   "name": "Walmart",
+   "ntmEvEbitda1007": 17.72,
+   "ntmEvEbitda": 20.97,
+   "ev1007": 921.68,
+   "ev": {
+    "value": 1090.32,
+    "asOf": "2026-11-20",
+    "note": "2026-11-20 換價（工作單 px1120）：EV 舊 1091.51（2026-11-13）× 收盤比 127.949997/128.089996；近似，無市值，淨負債不變"
+   },
+   "refDate": "2026-11-13",
+   "closeOld": 128.089996,
+   "closeNew": 127.949997,
+   "priceRatio": 0.998907,
+   "ntmEvEbitda1113": 20.99,
+   "ev1113": 1091.51
+  },
+  {
+   "ticker": "COST",
+   "name": "Costco",
+   "ntmEvEbitda1007": 25.33,
+   "ntmEvEbitda": 29.63,
+   "ev1007": 406.42,
+   "ev": {
+    "value": 475.39,
+    "asOf": "2026-11-20",
+    "note": "2026-11-20 換價（工作單 px1120）：EV 舊 477.14（2026-11-13）× 收盤比 1102.150024/1106.209961；近似，無市值，淨負債不變"
+   },
+   "refDate": "2026-11-13",
+   "closeOld": 1106.209961,
+   "closeNew": 1102.150024,
+   "priceRatio": 0.99633,
+   "ntmEvEbitda1113": 29.74,
+   "ev1113": 477.14
+  },
+  {
+   "ticker": "TGT",
+   "name": "Target",
+   "ntmEvEbitda1007": 8.77,
+   "ntmEvEbitda": 9.63,
+   "ev1007": 82.35,
+   "ev": {
+    "value": 90.49,
+    "asOf": "2026-11-20",
+    "note": "2026-11-20 換價（工作單 px1120）：EV 舊 88.1（2026-11-13）× 收盤比 165.830002/161.449997；近似，無市值，淨負債不變"
+   },
+   "refDate": "2026-11-13",
+   "closeOld": 161.449997,
+   "closeNew": 165.830002,
+   "priceRatio": 1.027129,
+   "ntmEvEbitda1113": 9.38,
+   "ev1113": 88.1
+  }
+ ],
+ "median1007": {
+  "value": 17.72
+ },
+ "median": {
+  "value": 20.97,
+  "n": 3,
+  "tag": "[Derived]（近似）",
+  "note": "3 家中位數；2026-11-20 換價（11-13 為 20.99）"
+ },
+ "asOf": "2026-11-20（倍數＝11-13 倍數 × Yahoo Finance 收盤比，近似）",
+ "priceSource": "markets/invest_map/data/closes_20261109_20261120.csv",
+ "median1113": {
+  "value": 20.99,
+  "n": 3,
+  "tag": "[Derived]（近似）"
+ },
+ "_readme": "；v0.3.9 再換價至 2026-11-20（px1120_peers.py；工作單 px1120）"
+}

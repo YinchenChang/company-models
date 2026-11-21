@@ -1,0 +1,10 @@
+folder=quanta
+version=v0.4.10 -> v0.4.11
+px=276.5 -> 252.0
+tp=480.03 -> 417.26
+upside=+73.6% -> +65.6%
+rating=強力買進 -> 強力買進
+peers_repriced=5
+peers_unchanged=無
+checks=建置錯誤格 0（LibreOffice 重算）；check_company_html 全部通過；check_layout_v13 --xlsx 通過；check_in_layout 通過（第 5 項警告 4 格，與前版相同類型）；tools/baseline_coordination/check.py 0 項不符；sens.json、coord_alt.json 重跑，快照 CURRENT；check_sens_coverage 未過（Sens 頁找不到表頭，v0.4.9 起即未過，前版同樣失敗，不要求）
+notes=廣明股價 39.45、達明 171.0 一併換價；DCF 目標價 512.71 -> 496.64；Coord 另一側讀數 407.32（買進）-> 376.97（買進）；README 版本列凍結 v0.4.10 說明；本機未提交 git。

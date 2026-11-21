@@ -1,0 +1,10 @@
+folder=coreweave
+version=v5.0.5 -> v5.0.6
+px=53.13 -> 39.51
+tp=60.96 -> 32.33
+upside=+14.7% -> -18.2%
+rating=中立 -> 中立
+peers_repriced=3（Nebius、Oracle、IREN；同業前瞻 EV/EBITDA 中位數 6.94 -> 5.22）
+peers_unchanged=無
+checks=make_v5.sh 全過（SENS=1 REV=1 JOBS=1 重跑 Sens／RevDCF 快照後再重建一次）：公式錯誤 0；檢查列與收支恆等式 147 項；In 版面；敏感度覆蓋 --require-keycol 36 鍵；分部；check_company_html；治理（展示層一致性 63 處）；收支關卡評等 --strict（收支合計 -97.1，不通過，評等中立）。check_layout_v13 --xlsx 通過（僅對 recon 章參數代號警告，前一版同）。baseline_coordination/check.py 0 項不符。LibreOffice 用私有設定檔重算。
+notes=只改價格：現價與三家同業股價（價格日皆為 11-13 收盤，直接換 11-20 收盤，EV 由公式重算）。Coord 無快照過期提示，未另跑 alt_run。拆解（decomp）沿用歷史步驟。README 版本表 v5.0.4 欄移除（舊成品已不在工作樹），改為 v5.0.5｜v5.0.6。舊 dist 已移除（暫存區有 git rm --cached 的刪除，未 commit）。

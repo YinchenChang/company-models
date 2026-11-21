@@ -1249,6 +1249,13 @@ print(P1113.apply(wb, os.path.dirname(os.path.abspath(__file__)), dict(
     extra_subs=(), fx_ads=32.939,   # 日月光 ADS 換算的 USD/TWD 33.034 → 32.939（K 批：TWD=X 2026-11-13 收盤）
 )))
 
+# v0.4.8（2026-11-21）：工作單 px1120——現價與同業報價改 2026-11-20 收盤（kyec/px1120_post.py；接在 px1113 之後；只改價格輸入與說明文字）
+import px1120_post as P1120  # noqa: E402
+print(P1120.apply(wb, os.path.dirname(os.path.abspath(__file__)), dict(
+    ver="v0.4.8", old_ver="v0.4.7", tk="2449.TW", note=os.environ.get("PX1120_NOTE") or (open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "px1120_note_text.txt"), encoding="utf-8").read().strip() if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), "px1120_note_text.txt")) else "v0.4.8（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。"),
+    extra_subs=(), fx_ads=33.026299,   # 日月光 ADS 換算的 USD/TWD 32.939 → 33.026299（TWD=X 2026-11-20 收盤）
+)))
+
 wb.save(sys.argv[1])
 if os.environ.get("KYEC_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

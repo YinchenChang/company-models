@@ -1,0 +1,66 @@
+{
+ "group": "subs",
+ "peers": [
+  {
+   "ticker": "NFLX",
+   "name": "Netflix",
+   "basis": "NTM",
+   "ntmEvEbitda1007": 15.41,
+   "ntmEvEbitda": 12.54,
+   "refDate": "2026-10-07",
+   "closeOld": 69.7,
+   "closeNew": 62.15,
+   "priceRatio": 0.891679,
+   "ntmEvEbitda1113": 13.74,
+   "close1113": 62.150002,
+   "close1120": 56.73,
+   "priceRatio1120": 0.912792
+  },
+  {
+   "ticker": "SPOT",
+   "name": "Spotify",
+   "basis": "TTM",
+   "ntmEvEbitda1007": 31.97,
+   "ntmEvEbitda": 35.96,
+   "refDate": "2026-10-07",
+   "closeOld": 512.92,
+   "closeNew": 612.63,
+   "priceRatio": 1.194397,
+   "ntmEvEbitda1113": 38.18,
+   "close1113": 612.630005,
+   "close1120": 577.030029,
+   "priceRatio1120": 0.94189
+  },
+  {
+   "ticker": "DIS",
+   "name": "Disney",
+   "basis": "TTM",
+   "ntmEvEbitda1007": 10.58,
+   "ntmEvEbitda": 11.92,
+   "refDate": "2026-10-07",
+   "closeOld": 104.75,
+   "closeNew": 118.97,
+   "priceRatio": 1.135752,
+   "ntmEvEbitda1113": 12.02,
+   "close1113": 118.970001,
+   "close1120": 117.980003,
+   "priceRatio1120": 0.991679
+  }
+ ],
+ "median1007": {
+  "value": 15.41
+ },
+ "median": {
+  "value": 12.54,
+  "n": 3,
+  "tag": "[Derived]（近似）",
+  "note": "3 家中位數；2026-11-20 換價（11-13 為 13.74）"
+ },
+ "asOf": "2026-11-20（倍數＝11-13 倍數 × Yahoo Finance 收盤比，近似；原報價日 2026-10-07／10-08）",
+ "priceSource": "markets/invest_map/data/closes_20261109_20261120.csv",
+ "median1113": {
+  "value": 13.74,
+  "n": 3,
+  "tag": "[Derived]（近似）"
+ }
+}

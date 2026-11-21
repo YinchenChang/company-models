@@ -1,6 +1,6 @@
 note: tools/val_snapshots.py 產生；值＝LibreOffice 重算後的 Val 第 3 節 B 列（各情境改 Inputs 後）；勿手改
-model: 20261111_Anthropic_v0.2.0.xlsx
-date: '2026-11-11'
+model: 20261121_Anthropic_v0.2.4.xlsx
+date: '2026-11-21'
 scenarios:
   A:
     id: VAL_SCN_A
@@ -10,7 +10,7 @@ scenarios:
       api_gn_2028: hi
       api_gn_2029: hi
       api_gn_2030: hi
-    model: 20261111_Anthropic_v0.2.0.xlsx
+    model: 20261121_Anthropic_v0.2.4.xlsx
     d2_ratio: 1.41191351000048
     values:
       rev:
@@ -53,7 +53,7 @@ scenarios:
     id: VAL_SCN_B
     desc: 基準
     overrides: {}
-    model: 20261111_Anthropic_v0.2.0.xlsx
+    model: 20261121_Anthropic_v0.2.4.xlsx
     d2_ratio: 1.09908262970838
     values:
       rev:
@@ -101,7 +101,7 @@ scenarios:
       api_gn_2029: lo
       api_gn_2030: lo
       p_q4_rr_switch: '0'
-    model: 20261111_Anthropic_v0.2.0.xlsx
+    model: 20261121_Anthropic_v0.2.4.xlsx
     d2_ratio: 1.05737821205692
     values:
       rev:

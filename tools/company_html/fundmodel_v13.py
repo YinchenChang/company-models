@@ -172,7 +172,7 @@ def hero_v13(B, M):
         f'<div class="hero-s">上檔空間 {sp(*uw, "sp1")}</div></div>'
         f'<div class="hero-t"><div class="hero-l">市場主流同業倍數法（未調整）</div><div class="hero-n">{sp(*c, "n2")}</div>'
         f'<div class="hero-s">上檔空間 {sp(*uc, "sp1")}</div></div>'
-        f'<div class="hero-t"><div class="hero-l">現價（IPO 價格區間中點；初步招股說明書 {sp(*pxd)}；尚未掛牌）</div><div class="hero-n">{sp(*px, "n2")}</div>'
+        f'<div class="hero-t"><div class="hero-l">現價（ANT 最近收盤；2026-11-19 於 Nasdaq 掛牌）</div><div class="hero-n">{sp(*px, "n2")}</div>'
         f'<div class="hero-s" style="color:var(--muted)">區間 {sp(*lo, "n2")}–{sp(*hi, "n2")}</div></div>')
     note = (f'以 IPO 區間中點 {sp(*px, "n0")} 美元計，目標價 {sp(*w, "n2")} 美元、上檔空間 {sp(*uw, "sp1")}，評等{sp(rref, rating)}。'
             f'DCF 只有 {sp(*B.cell("VAL_TP_DCF"), "n2")} 美元，市場主流同業倍數法卻到 {sp(*c, "n2")} 美元，兩者落差是本檔核心爭議。'
@@ -218,8 +218,8 @@ def valuation_v13(B, M):
             + r4("2", "Comparable 目標價（三情境加權；調整後，進加權）", "VAL_TP_CompAdj", None, "同業營收倍數 × 依 2030 年自由現金流率調降的係數")
             + r4("2a", "　Comparable 未調整值（市場主流做法）", "VAL_TP_CompMain", "VAL_Up_CompMain", "同業營收倍數直接套用，不調整")
             + r4("3", "加權目標價（DCF 與 Comparable 各半；橫幅主值）", "VAL_TP_W", "VAL_Up_W", "評等依此判定")
-            + '<tr><td>4</td><td>市場共識目標價</td><td>不適用</td><td>—</td><td class="note">尚未掛牌，無分析師共識目標價；掛牌後補進 Val 頁（附來源、家數、日期）</td></tr>'
-            + f'</tbody></table></div><p class="refline">現價 {sp(*px, "n2")} 美元＝IPO 價格區間中點（初步招股說明書 {sp(*pxd)}）。下圖黑線為現價。</p>')
+            + '<tr><td>4</td><td>市場共識目標價</td><td>不適用</td><td>—</td><td class="note">掛牌未滿一週，分析師共識目標價尚未彙整；掛牌後補進 Val 頁（附來源、家數、日期）</td></tr>'
+            + f'</tbody></table></div><p class="refline">現價 {sp(*px, "n2")} 美元＝ANT 最近收盤。下圖黑線為現價。</p>')
     # 檢查 G：估值章標題後第一個區塊必須是圖（含「目標價」「現價」）；四個目標價表與說明放在圖下方
     bars = M.bars_html(B)
     sec = sec.replace(f"<h3>目標價與現價</h3>{bars}", f'<div class="figblk"><h3>四個目標價與現價（圖）</h3>{bars}</div>{four}', 1)
@@ -307,7 +307,7 @@ def revdcf_v13(B, M):
            + tr("照目標營收時的累計外部資金需求", ext, "n1") + "</tbody></table></div>")
     yr = B.cell("RVS_CFPosYear") if B.has("RVS_CFPosYear") else None
     return ('<section id="revdcf"><h2>反向 DCF：現價隱含什麼</h2>'
-            f'<p class="note">以現價（IPO 價格區間中點）反解：要讓模型價值等於現價，各關鍵假設需要是多少，並與模型基準並列。</p>{main}{read}{chk}'
+            f'<p class="note">以現價（ANT 收盤）反解：要讓模型價值等於現價，各關鍵假設需要是多少，並與模型基準並列。</p>{main}{read}{chk}'
             '<details class="more"><summary>展開：第二段——管理層營收目標反推（若營收只走到管理層說過的目標、支出照承諾，現金與外部資金如何）</summary>'
             f'{tbl}<p class="note">讀法：倍數小於 1 表示本模型基準營收已高於管理層目標（2026–2029 年皆是）；若營收只走到管理層目標而支出照承諾，2029 年會出現外部資金需求。2025 年為實際值、2030 年無管理層目標，兩年均以本模型值代入。'
             '管理層目標多早於初步招股說明書，只作對照，不回饋基準。</p></details></section>')

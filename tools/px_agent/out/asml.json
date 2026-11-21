@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 21,
+ "duration_ms": 156041,
+ "total_cost_usd": 0.38186980000000004,
+ "result": "asml 已換成 2026-11-20 收盤，版號 v0.3.6 → v0.3.7，xlsx 與 HTML 都已重建。\n\n- **現價**：1,338.8 → 1,168 歐元。\n- **加權目標價**：1,403.92 → 1,265.41。\n- **上檔空間**：+4.9% → +8.3%。\n- **評等**：中立 → 中立，由模型公式重算。\n- **同業倍數**：AMAT、LRCX、KLAC、8035.T、ASM.AS 五家全部換價，沒有未換價同業。本表同業 P/E 中位數 25.22 → 22.15。\n- **特例**：ASML.AS 與 ASM.AS 的 11-20 值是報價資料最近成交價，來源欄與 note 都已照實寫。\n- **快照**：Sens、Coord 快照已用新價重跑，Sens 現為 CURRENT。\n- **檢查**：重算錯誤格 0。`check_company_html` 通過。`check_layout_v13` 通過，只有參數代號文字的警告，與前版相同。`baseline_coordination` 0 項不符。`check_sens_coverage` 前版就沒過，本版結果相同，已寫進 note。`check_layout_v13` 需要 bs4，我在本機另外裝了。\n- **版面**：dist 只留 `20261121_ASML個股模型_v0.3.7.xlsx` 與 `.html`，v0.3.6 已移除。\n- **其他檔案**：新增 `px1120_post.py` 與 `px1120_note.txt`，並更新 `README.md`、`build_asml.py`（接在 px1113 之後呼叫）、`gen_html_json.py`（版號斷言）、`sens.json`、`coord_alt.json`。\n- **誤操作**：中途我誤下了一次 `git rm --cached`，已立刻 `git reset` 還原，沒有 commit。",
+ "error": null,
+ "stderr": null
+}

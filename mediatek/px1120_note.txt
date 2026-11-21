@@ -1,0 +1,10 @@
+folder=mediatek
+version=v0.3.6 -> v0.3.7
+px=4120 -> 3350
+tp=1736.97 -> 1627.25
+upside=-57.8% -> -51.4%
+rating=強力放空 -> 強力放空
+peers_repriced=5
+peers_unchanged=無
+checks=錯誤格 0；check_company_html 全部通過；check_layout_v13 通過（僅有與前版相同的參數代號警告）；baseline_coordination 0 項不符；Sens 快照基準 1627.25 與 Val 頁相同（CURRENT）、Coord 快照 CURRENT；check_sens_coverage --require-keycol 未過（前版 v0.3.6 同樣未過，多個輸入無案例也無豁免，不要求）
+notes=前版值取自 v0.3.6 成品 xlsx 重算值（DCF 1613.71、加權目標價 1736.97、上檔 -57.8%），v0.3.6 README 記的 1824.87／-55.7% 與成品不符（README 未跟著後來的稽核優化更新）。同業 P/E 中位數 19.95 -> 17.50；達發市值股價 756 -> 552，mi_v 44.20 -> 32.73；本公司前瞻 P/E 39.82 -> 32.38；Coord 另一側加權目標價 1616.14 -> 1514.77。已把 v0.3.4 版本列日期更正為 2026-11-15（原隨本版日期變動）。dist 舊檔（v0.3.6 與 _待刪除）已移除。

@@ -1,0 +1,10 @@
+folder=cohr
+version=v0.4.6 -> v0.4.7
+px=218.15 -> 187.22
+tp=251.41 -> 195.59
+upside=+15.2% -> +4.5%
+rating=中立 -> 中立
+peers_repriced=4
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；Sens 快照 CURRENT；check_company_html 全過；check_layout_v13 通過（可見文字有參數代號警告，前版即有）；check_sens_coverage 28／37 鍵無案例（前版即同）；baseline_coordination/check 0 項不符
+notes=同業中位數 24.32 -> 19.07；DCF 110.86 -> 108.78；另一側讀數加權目標價 175.74（-6.1%，中立）。Sens、Coord 快照已重跑。價格改動直接寫在 build_cohr.py（沿用 px1113 做法，無獨立 px1113_post.py）；v045_post.py 的本版要點列改 v0.4.7，v0.4.6 列凍結為固定文字。

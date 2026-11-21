@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 21,
+ "duration_ms": 156480,
+ "total_cost_usd": 0.3279265,
+ "result": "Ibiden 已換成 2026-11-20 收盤，版號從 v0.5.7 升到 v0.5.8，xlsx 與 HTML 都已重建，評等仍是放空。我沒有 commit、push 或開 PR。\n\n| 項目 | 前 | 後 |\n|---|---|---|\n| 現價（日圓） | 6,087 | 4,672 |\n| 加權目標價（日圓） | 4,407.92 | 3,281.67 |\n| 上檔空間 | −27.6% | −29.8% |\n| 評等 | 放空 | 放空 |\n| 同業前瞻 P/E 中位數 | 30.29 | 20.93 |\n\n- **同業：** 五家同業都已換價，沒有未換價的。\n- **前後值口徑：** 「前」值取 v0.5.7 成品 xlsx 的重算值。v0.5.7 的 README 寫 4,885.04、−19.7%、中立，和該版成品不符。我已在 README 與 `px1120_note.txt` 寫明。\n- **檢查：**\n  - `check_company_html` 與 `check_layout_v13` 通過。`check_layout_v13` 的參數代號警告和前版相同。\n  - `baseline_coordination/check.py` 為 0 項不符，xlsx 錯誤格為 0。\n  - `check_sens_coverage` 有 30 項「Sens 頁找不到表頭」，v0.5.7 同為 30 項，所以沒有要求。\n  - Sens 與 Coord 快照已重跑，Coord 另一側讀數目標價為 2,917.24，評等同樣放空。\n- **改動：** 新增 `px1120_post.py`，並在 `build_ibiden.py` 接上。`gen_html_json.py` 的版號斷言改成 v0.5.8，這是你沒列到的小改動。\n- **成品：** dist 只留 `20261121_Ibiden個股模型_v0.5.8.xlsx` 與 `.html`，舊版已移到 `dist/_待刪除/`。\n- **環境：** 版面檢查缺 bs4，我用 pip 裝了 beautifulsoup4。",
+ "error": null,
+ "stderr": null
+}

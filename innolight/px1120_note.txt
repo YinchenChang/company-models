@@ -1,0 +1,10 @@
+folder=innolight
+version=v0.4.6 -> v0.4.7
+px=466.20 -> 393.20
+tp=599.23 -> 522.03
+upside=+28.5% -> +32.8%
+rating=買進 -> 買進
+peers_repriced=5
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；與建置輸出逐格比對 0 差異；check_company_html 全過；check_layout_v13 通過；check_sens_coverage 25／33 鍵無案例（前版即未過，不要求）；baseline_coordination/check 0 項不符（4 項既有提醒）；Sens、Coord 快照已重跑
+notes=同業前瞻 P/E 中位數 23.41 -> 18.84；DCF 405.92 -> 405.96；Comparable（調整後）792.55 -> 638.10；另一側讀數 461.07（中立，+17.3%）。舊 README 的 v0.4.6 節寫加權目標價 646.03，那是建置當時值，之後 Siliconomics v0.22 更新，前版現行成品實為 599.23，本單前值取成品。價格改在 build_innolight.py 與 v045_post.py 內直接改值（沿用 px1113 做法，無獨立 px1113_post.py）。

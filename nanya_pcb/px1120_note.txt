@@ -1,0 +1,10 @@
+folder=nanya_pcb
+version=v0.3.6 -> v0.3.7
+px=977 -> 629
+tp=843.12 -> 630.68
+upside=-13.7% -> +0.3%
+rating=中立 -> 中立
+peers_repriced=5
+peers_unchanged=無
+checks=check_company_html 通過；check_layout_v13 --xlsx 通過（僅既有警告）；baseline_coordination/check.py 0 項不符；xlsx 錯誤格 0；Sens 與 Coord 快照已重跑且與成品基準一致；check_sens_coverage 未過（50/59 鍵無案例），前版 v0.3.6 成品同樣未過、輸出逐字相同，不要求
+notes=舊值 843.12 與 -13.7% 取自 v0.3.6 成品 xlsx 重算值（README 舊節寫 892.43 是 px1113 當時值，之後上游重建已變）。前瞻 P/E 本公司 31.38 -> 20.2，同業中位數 30.29 -> 21.31。DCF 252.78 -> 252.88（現價改變市值權重）。Coord 另一側讀數 755.64 -> 565.35。dist/_待刪除 內舊檔一併移除。

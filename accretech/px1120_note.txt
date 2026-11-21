@@ -1,0 +1,10 @@
+folder=accretech
+version=v0.3.7 -> v0.3.8
+px=13150 -> 11185
+tp=10533 -> 9796
+upside=-19.9% -> -12.4%
+rating=中立 -> 中立
+peers_repriced=5
+peers_unchanged=無
+checks=重算錯誤格 0；check_company_html 通過；check_layout_v13 --xlsx 通過；baseline_coordination/check.py 0 項不符；Sens 與 Coord 快照 CURRENT；check_sens_coverage 前版即未過（25 鍵找不到 Sens 表頭），本版相同
+notes=建置腳本沿用 px1113 做法，px1120_post.py 疊在 px1113_post 之後；DCF 目標價隨現價（WACC 權重）由 8,875 變 8,885，照公式未手改。bs4 在環境內原未安裝，為跑 check_layout_v13 臨時安裝。

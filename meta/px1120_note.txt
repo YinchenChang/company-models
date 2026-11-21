@@ -1,0 +1,10 @@
+folder=meta
+version=v0.2.2 -> v0.2.3
+px=641.69 -> 560.84
+tp=745.34 -> 697.93
+upside=+16.2% -> +24.4%
+rating=中立 -> 中立
+peers_repriced=6（GOOGL、PINS、TTD、APP、RDDT、SNAP；另 Meta 自身對照倍數 9.42 -> 8.23）
+peers_unchanged=無
+checks=make_v02.sh 內全部檢查通過（check_v02、in_layout、sens_coverage --require-keycol、segment_check、check_company_html、版本表、check_governance 含展示層 71 處）；KREQ=1 SENS=1 已重跑；baseline_coordination/check.py 0 項不符（4 項提醒與 meta 無關）；check_layout_v13.py 未跑（環境缺 bs4）
+notes=check_layout_v13.py 因環境沒有 bs4 套件未能執行，其餘版面檢查（check_company_html）已過。六家同業中位數 8.54 -> 7.35。Comparable 目標價 797.59 -> 701.46，DCF 693.09 -> 694.41（目標時點後移 7 天），讀法 1 目標價 399.52 -> 353.61。上檔空間 +24.4% 距買進門檻 +25% 僅差 0.6 個百分點，評等由模型公式算出，仍是中立。Class A 遠期出售交割期限 2027-11-19 現早於目標時點 2027-11-20，推定已交割的判斷不變，只改 In 頁說明文字。同業中的 PINS、TTD、APP、RDDT、SNAP 為倍數 × 收盤比近似（無市值）。舊 dist 的 v0.2.2 xlsx 移 dist/_待刪除/（版本表引用），HTML 已移除。

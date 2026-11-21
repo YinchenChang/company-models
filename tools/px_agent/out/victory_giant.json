@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 20,
+ "duration_ms": 123753,
+ "total_cost_usd": 0.3345233,
+ "result": "勝宏科技（`victory_giant`）已換成 2026-11-20 收盤，版號 v0.4.5 → v0.4.6。xlsx 與 HTML 已重建，檔名日期 20261121，舊版 dist 已移除，沒有 commit。\n\n- **現價：** 123.24 → 108.22 人民幣。\n- **加權目標價：** 166.99 → 166.41。\n- **上檔空間：** +35.5% → +53.8%。\n- **評等：** 買進 → 強力買進。現價下跌後，上檔空間越過 50% 級距。\n- **同業：** 4 家全部換價，沒有未換價同業；前瞻 P/E 中位數 17.865 → 17.74。\n- **Coord 另一側讀數：** 148.60（中立）→ 148.09（買進）。快照已重跑，並重建成品。\n\n**檢查：**\n- 通過：`check_company_html`、`check_layout_v13`、`baseline_coordination/check.py`（0 項不符）、錯誤格 0、快取值檢查。\n- 未過：`check_sens_coverage`（44／53 鍵無案例），前一版 v0.4.5 同樣未過，故不要求。\n- 警告：版面檢查有一則警告，valuation 文字含 `closes_` 檔名，前一版也有。\n\n**備註：**\n- 舊 README 寫的 px1113 目標價 179.33 與 v0.4.5 成品的 166.99 不一致，我以成品為準。\n- 新增 `px1120_post.py`，並改了 `build_victory_giant.py` 與 `gen_html_json.py` 的版號。\n- 前後值與備註寫在 `px1120_note.txt`，README 也加了 v0.4.6 本版要點。",
+ "error": null,
+ "stderr": null
+}

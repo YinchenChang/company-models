@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 16,
+ "duration_ms": 236575,
+ "total_cost_usd": 0.2661193,
+ "result": "MiniMax 已換成 2026-11-20 收盤，升到 v0.2.5。xlsx 與兩份 HTML 已重建，放在 `dist/`，檔名日期 20261121。\n\n- **現價：** HK$152.4 → 102.4。唯一同業智譜 408.4 → 334.0，沒有未換價同業。\n- **同業倍數：** EV／NTM 營收中位數 7.99 → 6.07，由模型公式隨智譜市值重算。\n- **目標價：** 加權目標價 HK$131.52 → 113.53。DCF 60.92 沒變，Comparable 202.13 → 166.14。\n- **上檔空間：** −13.7% → +10.9%。\n- **評等：** 估值評等與投資建議都是中立，前後沒變。收支關卡仍是 −5,983.2，不通過。\n- **檢查：**\n  - 重算錯誤 0、Checks 合計 0。\n  - HTML 數字對照 506 個不符 0、`data-ref` 910 個不符 0。\n  - 收支關卡評等檢查符合。\n  - 三層基準協調檢查 0 項不符。\n  - 版面檢查 ok，但沒給 `--xlsx`，所以對帳中的檢查被略過。\n  - 敏感度覆蓋檢查顯示「不適用」，這個模型沒有 In 頁低／基準／高三欄，前版也一樣。\n- **做法差異：** MiniMax 沒有 `px1113_post.py`，前一次是直接改建置程式。這次一樣改 `build_xlsx.py`、`val_page.py`、`build_html.py`、`build_html_v13.py` 裡的價格與標籤，沒有另寫 `px1120_post.py`。\n- **未重算參數：** Val 的目標時點 I44 和 NTM 權重 I49 是依日期推出的參數，照工作單只換價格，沒有重算。\n- **環境：** 我另外裝了 `beautifulsoup4`，個股模型 HTML 才建得出來。\n- **檔案：** `README.md`、`CHANGELOG.md`、`px1120_note.txt` 已寫好。沒有 commit。",
+ "error": null,
+ "stderr": null
+}

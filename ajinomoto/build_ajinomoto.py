@@ -1092,6 +1092,53 @@ def _aji_peers(wb, log, done):
 
 
 px1113_post.apply(wb, dict(ver="v0.3.7", prev="v0.3.6", vprev="v0.3.5", px="2802.T", fpe=None, peers=False, d0="2026-11-05", extra=[_aji_peers]))
+# v0.3.8（2026-11-21）：現價與同業報價改 2026-11-20 收盤（px1120_post.py；工作單 px1120；只換價格，公式與架構不改）
+import px1120_post  # noqa: E402
+
+
+def _aji_peers20(wb, log, done):
+    """同業前瞻 P/E 公式分子（原報價日 2026-11-13 收盤）改 11-20 收盤，分母（前瞻 EPS）不變；Val 0.2 節與第 7 節各列"""
+    V = wb["Val"]; out = []
+    for r in range(1, V.max_row + 1):
+        t, f, d = V.cell(r, 2).value, V.cell(r, 3).value, V.cell(r, 4).value
+        if isinstance(t, str) and isinstance(f, str) and re.fullmatch(r"=[\d.]+/\(.+\)", f) and d == "2026-11-13":
+            c0, c1 = px1120_post.close(t, "2026-11-13"), px1120_post.close(t, "2026-11-20")
+            num = float(f[1:f.index("/")])
+            if c0 is None or c1 is None:
+                px1120_post.UNCHANGED.append(t); continue
+            assert abs(num - c0) < 1e-6, (t, num, c0)
+            old_pe = eval(f[1:]); den = f[f.index("/"):]
+            V.cell(r, 3).value = "=" + repr(c1).rstrip("0").rstrip(".") + den
+            V.cell(r, 4).value = "2026-11-20"
+            V.cell(r, 5).value = (f"2026-11-20 收盤（Yahoo Finance 日線收盤 2026-11-20；{px1120_post.SRCTAG}）÷ stockanalysis.com 前瞻 EPS（分母不變）；＝現行倍數 {old_pe:.2f} × 11-20 收盤 {c1:,g} ÷ 11-13 收盤 {c0:,g}；前一版：{V.cell(r, 5).value}")
+            for j in (3, 4, 5):
+                done.add(("Val", V.cell(r, j).coordinate))
+            out.append(f"{t} {old_pe:.2f} → {eval(V.cell(r, 3).value[1:]):.2f}")
+    assert out
+    log.append("同業：" + "；".join(out))
+
+
+def _aji_mi(wb, log, done):
+    """少數股權市值（In mi）：2658.KL 股價、JPY=X、MYR=X 改 11-20 收盤"""
+    IN = wb["In"]
+    r = next(x for x in range(1, IN.max_row + 1) if IN.cell(x, 1).value == "mi_v")
+    f = IN.cell(r, 5).value
+    q = {k: (px1120_post.close(k, "2026-11-13"), px1120_post.close(k, "2026-11-20")) for k in ("2658.KL", "JPY=X", "MYR=X")}
+    assert all(a and b for a, b in q.values()), q
+    assert "159.875" in f and "4.0774" in f and "19.74" in f, f
+    f2 = f.replace("159.875", repr(q["JPY=X"][1])).replace("4.0774", repr(q["MYR=X"][1])).replace("19.74", repr(q["2658.KL"][1]))
+    IN.cell(r, 5).value = f2
+    note = (f"；2026-11-21（工作單 px1120）：股價 MYR {q['2658.KL'][0]:g} → {q['2658.KL'][1]:g}（2658.KL）、USD/MYR {q['MYR=X'][0]:g} → {q['MYR=X'][1]:g}（MYR=X）、"
+            f"USD/JPY {q['JPY=X'][0]:g} → {q['JPY=X'][1]:g}（JPY=X）皆 Yahoo Finance 日線收盤 2026-11-20（`closes_20261109_20261120.csv`）；預測用匯率不變")
+    for j in range(6, IN.max_column + 1):
+        v = IN.cell(r, j).value
+        if isinstance(v, str) and "2658" in v and "px1113" in v:
+            IN.cell(r, j).value = v.replace("股價 Yahoo Finance 日線收盤 2026-11-13", "股價 Yahoo Finance 日線收盤 2026-11-13（前一版；現行見文末）") + note
+            done.add(("In", IN.cell(r, j).coordinate))
+    log.append(f"mi 公式 {f} → {f2}")
+
+
+px1120_post.apply(wb, dict(ver="v0.3.8", prev="v0.3.7", px="2802.T", fpe=None, peers=False, d0="2026-11-13", extra=[_aji_peers20, _aji_mi]))
 wb.save(sys.argv[1])
 if os.environ.get("AJI_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     _json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK, "VAL": VAL, "INROW": INROW, "QR": QR, "Q_NOTE": Q_NOTE,

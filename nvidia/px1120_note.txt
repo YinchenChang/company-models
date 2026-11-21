@@ -1,0 +1,10 @@
+folder=nvidia
+version=v0.3.13 -> v0.3.14
+px=162.85 -> 125.53
+tp=333.51 -> 300.62
+upside=+104.8% -> +139.5%
+rating=強力買進 -> 強力買進
+peers_repriced=5
+peers_unchanged=無
+checks=check_governance（含 --html、--display）通過；check_display 通過（112 處）；check_company_html 通過；check_cached_values 通過（7158 格）；check_zero_rows 通過；check_rating_gate 不適用（無收支關卡列）；baseline_coordination/check.py 0 項不符、4 項提醒；check_sens_coverage --require-keycol 未過（ppr_bw、ppr_rb 無 Sens 案例，v0.3.13 前版同樣未過，不要求）；check_layout_v13、layout_check 未跑（環境缺 bs4、playwright）
+notes=同業中位數 19.95 -> 17.50（AMD 37.90、Broadcom 17.50、Marvell 21.66、台積電 ADR 14.96、Qualcomm 16.20）。Sens 快照 steps、attr 沿用原文（比照 px1113）；Sens、Coord 快照已重跑。舊 v0.3.13 xlsx 移入 dist/_待刪除（版本表引用），舊 html 已刪。v0313_post.py 內容全數保留。

@@ -1010,6 +1010,10 @@ if _CR:
 # v0.3.6（2026-11-16）：現價與同業報價改 2026-11-13 收盤（px1113_post.py；工作單 px1113；只換價格，公式與架構不改）
 import px1113_post  # noqa: E402
 px1113_post.apply(wb, dict(ver="v0.3.6", prev="v0.3.5", px="2368.TW", fpe="fpe", d0="2026-11-05", refs=[("300476.SZ", 10.92), ("002463.SZ", 15.64)]))
+# v0.3.7（2026-11-21）：現價與同業報價改 2026-11-20 收盤（px1120_post.py；工作單 px1120；只換價格，公式與架構不改）
+import px1120_post  # noqa: E402
+_r = lambda t, v: round(v * px1120_post.close(t, "2026-11-13") / px1120_post.close(t, "2026-11-05"), 2)   # 並列參考倍數：v0.3.5 值經 11-13 換算（取兩位小數）
+px1120_post.apply(wb, dict(ver="v0.3.7", prev="v0.3.6", px="2368.TW", fpe="fpe", d0="2026-11-13", refs=[("300476.SZ", _r("300476.SZ", 10.92)), ("002463.SZ", _r("002463.SZ", 15.64))]))
 wb.save(sys.argv[1])
 if os.environ.get("GCE_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

@@ -1,0 +1,10 @@
+folder=tuc
+version=v0.2.6 -> v0.2.7
+px=974 -> 623
+tp=1174.81 -> 928.46
+upside=+20.6% -> +49.0%
+rating=中立 -> 買進
+peers_repriced=3
+peers_unchanged=無
+checks=check_company_html 全過；check_layout_v13 --xlsx 全過；baseline_coordination/check.py 0 項不符；LibreOffice 重算錯誤格 0；check_sens_coverage 未過（前版 v0.2.6 即未過，缺案例的項目相同，只有 β 數值隨現價微動，不要求）；sens_tuc.py、coord_alt 已重跑（Coord 另一側 839.53，+34.8%，買進）
+notes=(1) 舊值取 v0.2.6 成品實際重算值（加權目標價 1,174.81、中立）；與 v0.2.6 README 記載的 1,239.20（買進）不同，是 v0.2.6 之後上游更新所致。(2) 台燿與三家同業 11-13 → 11-20 都跌約 33%–37%（6274.TWO 974 → 623、2383.TW 4,215 → 2,810、6213.TW 533 → 355.5、2368.TW 1,030 → 711），價格照 CSV 未改；上檔空間 +49.0% 只差 1.0 個百分點到 +50% 的上一級評等，請主串留意。(3) 新增 px1120_post.py，build_tuc.py 於 px1113 之後呼叫，gen_html_json.py 版號改 v0.2.7；舊 dist 已用 git rm 移除（未 commit）。

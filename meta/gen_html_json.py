@@ -245,7 +245,7 @@ def _v13():
     PLW = wb["PL"]
     r13 = find("README", "v1.3 展示層")
     RM_ = {k: r13 + 1 + i for i, k in enumerate(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"])}
-    assert str(wb["README"][f"A{RM_['ver']}"].value).startswith("v0.2.2"), wb["README"][f"A{RM_['ver']}"].value
+    assert str(wb["README"][f"A{RM_['ver']}"].value).startswith("v0.2.3"), wb["README"][f"A{RM_['ver']}"].value
     cfg["layout"] = "v1.3"
     old_note = cfg["hero"]["note"]
     cfg["hero"]["note"] = [f"@README!A{RM_['hero']}"]

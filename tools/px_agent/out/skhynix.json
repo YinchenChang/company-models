@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 17,
+ "duration_ms": 141817,
+ "total_cost_usd": 0.273861,
+ "result": "SK 海力士已換成 2026-11-20 收盤，版號 v0.7.8 → v0.7.9。只動了 `skhynix/` 內的檔案，沒有 commit。\n\n- **現價：** 1,216,000 → 1,113,000。\n- **加權目標價：** 1,986,232 → 1,815,477。\n- **上檔空間：** +63.3% → +63.1%。\n- **評等：** 強力買進 → 強力買進，由模型公式重算。\n- **同業：** 四家都已換價，沒有未換價同業。P/B 中位數 1.36 → 1.07。\n- **舊 README 數字不一致：** v0.7.8 README 寫的目標價是 2,021,354。舊成品重算出來是 1,986,232，我以後者為前值，並在 README 與 note 都寫明。\n- **檢查結果：** Excel 重算錯誤格 0。`check_company_html` 全過，`baseline_coordination/check.py` 0 項不符，`check_in_layout` 通過。版面檢查（`check_layout_v13`）只有參數代號的警告，沒有錯誤。Sens 與 Coord 快照已重跑，不再是 STALE。\n- **未過的檢查：** `check_sens_coverage --require-keycol` 沒過（115／123 個參數沒有 Sens 案例），v0.7.8 舊成品同樣沒過，所以不要求，note 裡已寫明。\n- **成品：** `dist/20261121_SK海力士個股模型_v0.7.9.xlsx` 和 `.html`，v0.7.8 舊檔已移除。`px1120_note.txt` 與 README 的 v0.7.9 要點也寫好了。\n- **做法：** 沒有現成的 px1113 腳本，我沿用 px1113 的做法，在 `company.py` 末尾加 v0.7.9 段落，同業倍數用現行倍數 × 11-20 收盤 ÷ 11-13 收盤。",
+ "error": null,
+ "stderr": null
+}

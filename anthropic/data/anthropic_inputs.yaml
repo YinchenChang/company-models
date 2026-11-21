@@ -361,16 +361,27 @@ rows:
   range_why: "開關"
   note: ""
 - key: ipo_px
-  name: "現價＝IPO 價格區間中點（上市後改收盤價）"
+  name: "IPO 發行價（初步招股說明書區間中點；淨募資、私募股數、選擇權庫藏股、pro forma 現金依此連動）"
   index: "—"
   unit: "$/股"
   value: 74
   lo: 70
   hi: 78
   tag: "Decision"
-  basis: "工作單 20261111 v0.2.0 F1、J8：初步招股說明書封面區間 70–78（SRC_ANT_522）"
-  range_why: "區間上下緣（Sens）"
-  note: "淨募資與代扣稅款依每 $1 敏感度連動；私募股數＝26.0 ÷ 價格"
+  basis: "初步招股說明書區間 70–78 的中點（SRC_ANT_522）。實際 IPO 定價 83 與加碼發行屬正式招股書滾入，不在 px1120 範圍；現價改由 mkt_px 讀取，與本列分開"
+  range_why: "初步招股說明書區間 70–78；Sens 用 70／78"
+  note: "淨募資與代扣稅款依每 $1 敏感度連動；私募股數＝26.0 ÷ 價格。只放發行價，不放市價"
+- key: mkt_px
+  name: "現價（市價）＝2026-11-20 收盤（Nasdaq：ANT）"
+  index: "—"
+  unit: "$/股"
+  value: 88.91
+  lo: 88.91
+  hi: 88.91
+  tag: "Verified"
+  basis: "工作單 px1120；Yahoo Finance 日線收盤 2026-11-20 88.910004（markets/invest_map/data/closes_20261109_20261120.csv，ANT）"
+  range_why: "已掛牌收盤價，無區間"
+  note: "只供 VAL_Px（現價）及上檔空間、評等、反向 DCF 等以現價比較之處讀取；不影響淨募資、股數、pro forma 現金（那些讀 ipo_px）"
 - key: val_tax
   name: "稅率（美國聯邦法定）"
   index: "—"

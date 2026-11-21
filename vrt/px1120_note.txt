@@ -1,0 +1,10 @@
+folder=vrt
+version=0.1.0 -> 0.1.1
+px=202.07 -> 166.24
+tp=141.57 -> 120.21
+upside=-29.9% -> -27.7%
+rating=放空 -> 放空
+peers_repriced=3
+peers_unchanged=無
+checks=check_company_html 通過；check_layout_v13 --xlsx ok；check_sens_coverage --require-keycol 通過（30 鍵）；check_governance --html 通過；baseline_coordination 0 項不符；check_segments 符合；check_cached_values 通過；xlsx 無 #REF!/#VALUE!/#DIV/0!
+notes=VRT 上一版（v0.1.0，2026-11-17）本來就用 11-13 收盤建置，沒有 px1113 步驟，故舊報價日＝11-13。同業 P/E 為「收盤 ÷ 前瞻 EPS」，前瞻 EPS（＝2026-10 報價 ÷ 資料商 Forward PE）不變，等同現行倍數 × 11-20 收盤 ÷ 11-13 收盤。同業中位數 23.26 -> 18.29；Comparable（調整後）202.25 -> 159.07；DCF 81.34（現價改變不影響）。相對倍數調整 add_block 同讀新 P/E。check_display 不適用（無 display_check.json）。無未換價同業。

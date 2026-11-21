@@ -1,4 +1,4 @@
-# 東京威力科創（Tokyo Electron／TEL，8035.T）個股模型 v0.1.0（AI 半導體：設備與材料，前段設備 WFE）
+# 東京威力科創（Tokyo Electron／TEL，8035.T）個股模型 v0.1.1（AI 半導體：設備與材料，前段設備 WFE）
 # 用法：python3 tel/build_tel.py raw.xlsx ；再以 LibreOffice headless 重算（-env:UserInstallation 私有設定檔）
 # 會計年度 4 月到隔年 3 月：本模型 FY2025＝2025-04～2026-03（公司「2026年3月期」，公司稱 FY2026）；FY2026＝2026-04～2027-03（公司稱 FY2027）。
 # 金額：十億日圓（¥B）；EPS：日圓，皆為 2026-10-01 一拆五之後（post-split）口徑。
@@ -15,7 +15,7 @@ import cycle_position as CP
 import fcff_dcf as FD   # 標準版 DCF（無槓桿自由現金流＋WACC）共用模組
 sys.path.insert(0, os.path.join(ROOT, "siliconomics")); import reader as SIL   # 三層協調 C4 另一側讀數建置（SIL.COORD_ALT）在主引擎使用
 
-VER, BUILT = "0.1.0", "2026-11-17"
+VER, BUILT = "0.1.1", "2026-11-21"
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC"); FADE = PatternFill("solid", fgColor="E7E6E6")
 wb = openpyxl.Workbook()
@@ -163,13 +163,13 @@ inp("opex26", "營業費用 FY2026 錨點", "¥B", None, "=g26_sga", None, "Deri
 inp("ov", "營業費用變動部分占營收（兩點斜率）", "%", None, "=(opex26-opex25)/(g26_rev-a25_rev)", None, "Derived", "（FY2026 − FY2025 營業費用）÷ 營收差", "研發 FY2025 277.9 → FY2026 335.0 為主")
 inp("oF", "營業費用固定部分", "¥B", None, "=opex25-ov*a25_rev", None, "Derived", "FY2025 營業費用 − 變動部分", "")
 inp("nioi", "淨利 ÷ 營業利益（FY2027 起）", "x", 0.70, "=g26_ni/g26_oi", 0.78, "Derived", "基準＝公司 FY2026 指引隱含 0.740（865.0 ÷ 1,169.0；稅前 1,172.0、有效稅率約 26.2%）；高＝FY2024 實績 0.770（544.1 ÷ 697.3 為 0.780）", "低 0.70（Assumed：稅率上升）。FY2025 0.919 含 123 的營業外收益與特別利益（稅前 748.2 對營業利益 624.9），不採用")
-inp("bb", "FY2027 起平均股數年減幅（淨買回）", "%", 0.0, 0.008, 0.015, "Assumed", "FY2025 稀釋股數 2,296 → FY2026 上半平均 2,268.9（−1.2%，" + TSQ2 + "）；公司再發行買回上限 150 億日圓／2,500 萬股（2026-11-01～2027-03-31；" + TSQ2 + "）", "價格 9,461 下 150 億日圓約 1.6M 股（0.07%）；FY2025、FY2026 各買回約 150 億日圓，年減 0.5–1.2%")
+inp("bb", "FY2027 起平均股數年減幅（淨買回）", "%", 0.0, 0.008, 0.015, "Assumed", "FY2025 稀釋股數 2,296 → FY2026 上半平均 2,268.9（−1.2%，" + TSQ2 + "）；公司再發行買回上限 150 億日圓／2,500 萬股（2026-11-01～2027-03-31；" + TSQ2 + "）", "價格 8,309 下 150 億日圓約 1.6M 股（0.07%）；FY2025、FY2026 各買回約 150 億日圓，年減 0.5–1.2%")
 
 sec("G. 估值與對帳輸入")
 for s in SC:
     inp(f"pk_{s}", f"情境 {s}：設備市場見頂年度（日曆年；循環位置規則用）", "年", None, PEAK[s], None, "Derived", PEAK_SRC[s], "設備股共用規則（tools/cycle_position.py）：FY(t) 早於見頂年＝中段、等於＝見頂、晚於＝谷底；設備市場模型的情境係數為 Assumed" if s == "A" else "同上")
-inp("px", "股價（2026-11-13 收盤；一拆五後）", "¥", None, 9461, None, "Verified", "Yahoo Finance 日線收盤 2026-11-13：9,461（8035.T；markets/invest_map/data/closes_20261020_20261113.csv）", "價格只取自該 CSV（工作單第 3 節）")
-inp("sa_fpe", "遠期 P/E（本 repo 同業表：stockanalysis 共識換算到 2026-11-13）", "x", None, 25.22, None, "Interested-party", "同 repo 現行模型 Val 同業表（amat、lrcx、accretech）：8035.T 25.22（2026-11-13）", "僅作並列參考（不進目標價）")
+inp("px", "股價（2026-11-20 收盤；一拆五後）", "¥", None, 8309, None, "Verified", "工作單 px1120；Yahoo Finance 日線收盤 2026-11-20（`closes_20261109_20261120.csv`）：8,309（8035.T）；v0.1.0 為 2026-11-13 收盤 9,461", "價格只取自該 CSV（工作單第 3 節）")
+inp("sa_fpe", "遠期 P/E（本 repo 同業表：stockanalysis 共識換算到 2026-11-20）", "x", None, 22.15, None, "Interested-party", "同 repo 現行模型 Val 同業表（amat、lrcx、accretech）：8035.T 25.22（2026-11-13）× 11-20 收盤 8,309 ÷ 11-13 收盤 9,461＝22.15（工作單 px1120；[Derived]）", "僅作並列參考（不進目標價）")
 inp("cons_rev26", "共識營收 FY2026（2027年3月期）", "¥B", None, 3552.0, None, "Interested-party", YHS + "：FY3/27 營收 3.552T（23 位分析師）", "低於公司 10-30 指引 3,700（共識可能含指引前的估計）；第二來源：未找到")
 inp("cons_eps26", "共識 EPS FY2026", "¥", None, 375.6, None, "Interested-party", YHS + "：FY3/27 EPS 375.6", "公司指引 381.69；第二來源：未找到")
 inp("cons_rev27", "共識營收 FY2027（2028年3月期）", "¥B", None, 4487.0, None, "Interested-party", YHS + "：FY3/28 營收 4.487T", "第二來源：未找到")
@@ -494,17 +494,17 @@ tset(rr + 10, "dcftp", "DCF 目標價（情境加權）", [f"=tp_wA*B{rr + 9}+tp
 q = rr + 12
 V.cell(q, 1, "0.2 Comparable（市場主流同業前瞻 P/E：前段設備同業；非 A 股公司，同業不放 A 股）").font = BOLD
 hdr(V, q + 1, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"])
-PEERS = [("應用材料（Applied Materials）", "AMAT", 21.02, "2026-11-13", "本 repo 現行模型 Val 同業表（lrcx、klac、asml；stockanalysis.com Forward PE 共識，換算到 2026-11-13 收盤）"),
-         ("科林研發（Lam Research）", "LRCX", 21.98, "2026-11-13", "同上（amat、klac、asml 模型 Val 同業表）"),
-         ("科磊（KLA）", "KLAC", 27.88, "2026-11-13", "同上"),
-         ("ASML（美國 ADR）", "ASML", 23.53, "2026-11-13", "同上"),
-         ("Disco", "6146.T", 25.06, "2026-11-13", "同上（accretech、advantest 模型 Val 同業表）"),
-         ("Lasertec", "6920.T", 32.31, "2026-11-13", "同上（klac、accretech 模型 Val 同業表）")]
+PEERS = [("應用材料（Applied Materials）", "AMAT", 17.17, "2026-11-20", "本 repo 現行模型 Val 同業表（lrcx、klac、asml；stockanalysis.com Forward PE 共識，換算到 2026-11-13 收盤；v0.1.1 再 × 2026-11-20 收盤 ÷ 11-13 收盤換算到 2026-11-20，工作單 px1120）"),
+         ("科林研發（Lam Research）", "LRCX", 17.83, "2026-11-20", "同上（amat、klac、asml 模型 Val 同業表）"),
+         ("科磊（KLA）", "KLAC", 23.22, "2026-11-20", "同上"),
+         ("ASML（美國 ADR）", "ASML", 19.93, "2026-11-20", "同上"),
+         ("Disco", "6146.T", 21.83, "2026-11-20", "同上（accretech、advantest 模型 Val 同業表）"),
+         ("Lasertec", "6920.T", 27.05, "2026-11-20", "同上（klac、accretech 模型 Val 同業表）")]
 for i, (nm, tk, pe, dt, src) in enumerate(PEERS, q + 2):
     V.cell(i, 1, nm); V.cell(i, 2, tk); c = V.cell(i, 3, pe); c.font = BLUE; c.number_format = "0.0"
     V.cell(i, 4, dt); V.cell(i, 5, src); V.cell(i, 6, "Interested-party")
 p1 = q + 2; pl_ = q + 1 + len(PEERS)
-V.cell(pl_ + 1, 1, "並列參考（不進目標價）：東京威力科創自身前瞻 P/E"); V.cell(pl_ + 1, 3, "=sa_fpe").number_format = "0.0"; V.cell(pl_ + 1, 4, "2026-11-13"); V.cell(pl_ + 1, 5, "stockanalysis.com（本 repo 同業表 8035.T）；自身近十年前瞻 P/E 區間見第 2 節")
+V.cell(pl_ + 1, 1, "並列參考（不進目標價）：東京威力科創自身前瞻 P/E"); V.cell(pl_ + 1, 3, "=sa_fpe").number_format = "0.0"; V.cell(pl_ + 1, 4, "2026-11-20"); V.cell(pl_ + 1, 5, "stockanalysis.com（本 repo 同業表 8035.T）；自身近十年前瞻 P/E 區間見第 2 節")
 q = pl_ + 2
 tset(q, "pmed", "同業前瞻 P/E 中位數", [f"=MEDIAN(C{p1}:C{pl_})", None, None], "0.0", "前段設備同業：美國四家（應用材料、科林、科磊、ASML）與日本兩家（Disco、Lasertec）；Advantest（測試）、Kokusai（沉積）不納入以免混入測試與單一製程")
 tset(q + 1, "feps", "12 個月後的前瞻 EPS（情境加權）", ["=" + "+".join(f"tp_w{s}*(5/12*{c}{EPSR[2027]}+7/12*{c}{EPSR[2028]})" for s, c in zip(SC, "BCD")), None, None], "#,##0",
@@ -517,7 +517,7 @@ q += 2
 tset(q, "tpw", "目標價（DCF 與 Comparable 加權）", [f"=tp_w_dcf*B{T['dcftp']}+(1-tp_w_dcf)*B{T['comptp']}", None, None], "#,##0", "tp_w_dcf × DCF 目標價＋（1 − tp_w_dcf）× Comparable 目標價；tp_w_dcf 見 In 頁")
 tset(q + 1, "comp2", "Comparable 目標價（市場主流同業法）", [f"=B{T['comptp']}", None, None], "#,##0", "引用 0.2")
 tset(q + 2, "cons", "市場共識目標價", ["=cons_tp", None, None], "#,##0", "Yahoo Finance 快照（2026-11-17）：23 位分析師平均 15,252；第二來源未找到")
-tset(q + 3, "upw", "上檔空間：加權目標價", [f"=B{q}/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-13 收盤 9,461）")
+tset(q + 3, "upw", "上檔空間：加權目標價", [f"=B{q}/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-11-20 收盤 8,309）")
 tset(q + 4, "upc", "上檔空間：Comparable 目標價", [f"=B{q + 1}/px-1", None, None], "0.0%")
 tset(q + 5, "geps", "與市場共識目標價的差距：EPS 因素", [f"=B{T['feps']}/cons_feps-1", None, None], "0.0%", "本模型 12 個月後前瞻 EPS ÷ 共識前瞻 EPS − 1；共識前瞻 EPS＝FY2027（2028年3月期）共識 517.6（Recon），比本模型 12 個月後前瞻 EPS 晚約半年，EPS 因素因此偏小")
 tset(q + 6, "gmul", "與市場共識目標價的差距：倍數因素", [f"=(cons_tp/cons_feps)/B{T['pmed']}-1", None, None], "0.0%")
@@ -529,14 +529,14 @@ V.cell(q8, 1, "歷史倍數檢查：現價隱含 P/E 的十年分位（A／B／C
 V.cell(q + 9, 1, "目標價方法"); T["meth"] = q + 9
 V[f"B{q + 9}"] = ("DCF（標準版）：無槓桿自由現金流 FCFF＝NOPAT＋折舊 − 資本支出 − 營運資金增加，以 WACC 折現到 2026-12-31（期中慣例；FY2026 只計 2027-01～03），FY2026–32 明確期（FY2030 起收斂法），終值＝NOPAT(FY2033) ×（1 − g ÷ RONIC）÷（WACC − g）。"
                   "Comparable：美國四家前段設備商與 Disco、Lasertec 的前瞻 P/E 中位數 × 12 個月後前瞻 EPS（再依相對倍數調整，第 0.5 節）。"
-                  "偏誤：同業倍數取共識前瞻（本期為景氣上行期，共識傾向落後實際）；TEL 一拆五後股價 9,461，市場已定價 FY2027 EPS 約 520（共識）；DCF 已扣資本支出與營運資金，擴產期現金流偏低。")
+                  "偏誤：同業倍數取共識前瞻（本期為景氣上行期，共識傾向落後實際）；TEL 一拆五後股價 8,309，市場已定價 FY2027 EPS 約 520（共識）；DCF 已扣資本支出與營運資金，擴產期現金流偏低。")
 for k in ("dcftp", "comptp", "tpw"): V[f"B{T[k]}"].fill = KEY
 # 1. 價格與市場隱含倍數
 b0 = q + 11
 V.cell(b0, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, b0 + 1, ["項目", "A", "B", "C", "說明"])
 fr = b0 + 2
-V.cell(fr, 1, "現價（2026-11-13 收盤）"); V.cell(fr, 2, "=px").number_format = "#,##0"; V.cell(fr, 5, "Yahoo Finance 日線收盤（markets/invest_map/data/closes_20261020_20261113.csv）；一拆五後"); T["px"] = fr; fr += 1
+V.cell(fr, 1, "現價（2026-11-20 收盤）"); V.cell(fr, 2, "=px").number_format = "#,##0"; V.cell(fr, 5, "Yahoo Finance 日線收盤 2026-11-20（markets/invest_map/data/closes_20261109_20261120.csv；工作單 px1120）；一拆五後"); T["px"] = fr; fr += 1
 V.cell(fr, 1, "現價 ÷ FY2026 EPS（錨點）")
 for j, s in enumerate(SC): V.cell(fr, 2 + j, f"=px/PL!D{SUMR[(s, 'eps')]}").number_format = "0.0"
 V.cell(fr, 5, "FY2026 三情境相同（公司指引）"); fr += 1
@@ -546,7 +546,7 @@ for y in (2027, 2028, 2029):
     T[f"pe{y}"] = fr; fr += 1
 for nm, f, note in (("P/E：現價 ÷ FY2025 EPS 250.91", "=px/a25_eps", "上一個會計年度"),
                     ("P/E：現價 ÷ 近 12 月 EPS（FY25 Q3–Q4＋FY26 Q1–Q2）", "=px/(Q!D7+Q!E7+Q!G7+Q!H7)", "近 12 月 EPS＝Q 頁 51.52＋93.69＋72.03＋94.10（Derived；季 EPS 為第三方轉錄，合計與公司基本 EPS 有約 0.2% 差）"),
-                    ("遠期 P/E：stockanalysis（共識，2026-11-13）", "=sa_fpe", "參考，不用於估值")):
+                    ("遠期 P/E：stockanalysis（共識，換算到 2026-11-20）", "=sa_fpe", "參考，不用於估值")):
     V.cell(fr, 1, nm); V.cell(fr, 2, f).number_format = "0.0"; V.cell(fr, 5, note); fr += 1
 # 2. 十年前瞻 P/E（Bloomberg；取自本 repo tools/data/fwd_mult_hist.csv）
 import csv as _csv
@@ -727,7 +727,7 @@ def _ebit(s_, y):
 DPATHS = [dict(name=s_, label=f"情境 {s_}（{SCN[s_]}）", rev={y: f"PL!{EC[y]}{EXT[s_]['rev']}" for y in FY_X}, rev0=f"PL!{EC[2025]}{EXT[s_]['rev']}",
               ebit={y: _ebit(s_, y) for y in FY_X}, tax={y: "tax_w" for y in FY_X}, ebit_note="FY2030 起＝淨利 ÷ nioi（PL 延伸區塊只有淨利）") for s_ in SC]
 T["h01"] = t0 + 1; T["sens0"] = TS0; T["sens_last"] = TS0 + 1 + len(tcases)
-T = dcf_v03(T, DPATHS, FY_X, 0.25, "v0.1.0",
+T = dcf_v03(T, DPATHS, FY_X, 0.25, "v0.1.1",
             "DCF — 標準版：無槓桿自由現金流 FCFF＝NOPAT＋折舊攤銷 − 資本支出 − 營運資金增加；WACC 折現到評價日 2026-12-31（期中慣例；FY2026＝2026-04～2027-03，只計評價日後的 2027-01～03）；終值＝NOPAT ×（1＋g）×（1 − g ÷ RONIC）÷（WACC − g）。共用模組 tools/fcff_dcf.py",
             "EBIT：FY2026–FY2029 取 PL 推導區塊「營業利益」；FY2030–FY2032（PL 延伸區塊只有淨利）由淨利還原：EBIT＝淨利 ÷ nioi。稅率：公司指引隱含稅率 tax_w。"
             "業外收益不進 NOPAT，現金另在評價時加入。折舊、資本支出：近三年占營收比例，FY2027 起資本支出線性收斂到長期穩態 fc_cx_ss；營運資金：近五年營運資金增加 ÷ 營收增量 × 營收增量（存貨與預付款占比高）。",
@@ -789,9 +789,9 @@ srcs = [("公司：FY2027（2027年3月期）第2四半期 決算短信〔日本
  ("stockanalysis.com：TYO:8035 年度與季度財報（2026-11-17；第三方轉錄）", "https://stockanalysis.com/quote/tyo/8035/financials/"),
  ("finboard.net：JP:8035 損益表（FY2012–FY2025；2026-11-17；第三方轉錄）", "https://finboard.net/companies/JP:8035/income-statement"),
  ("Yahoo Finance 基本面快照（2026-11-17；共識、目標價）", "docs/workorders/20261117_新增五家_Yahoo基本面快照.md"),
- ("Yahoo Finance 日線收盤 2026-11-13（現價）", "markets/invest_map/data/closes_20261020_20261113.csv"),
+ ("Yahoo Finance 日線收盤 2026-11-20（現價；工作單 px1120）", "markets/invest_map/data/closes_20261109_20261120.csv"),
  ("Bloomberg 前瞻 P/E 十年歷史（8035.T 與同業）", "tools/data/fwd_mult_hist.csv"),
- ("本 repo 現行模型 Val 同業表（amat、lrcx、klac、asml、accretech）：同業前瞻 P/E 換算到 2026-11-13", "各模型 dist xlsx"),
+ ("本 repo 現行模型 Val 同業表（amat、lrcx、klac、asml、accretech）：同業前瞻 P/E 換算到 2026-11-20", "各模型 dist xlsx"),
  ("日本財務省：國債金利情報（10 年 2.817%，2026-11-02）", "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/jgbcme.csv"),
  ("Damodaran：國家風險溢酬（日本 CRP 0.91%，2026-01-05）", "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html"),
  ("市場層：markets/equipment 成品（本 repo）；tools/cycle_position.py", ""),
@@ -804,10 +804,10 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 130
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
 PROP = ("東京威力科創是塗佈顯影設備的全球領導者（市占約九成），並在蝕刻、沉積、清洗與探針台有完整產品線；FY2026 公司指引營收 3,700 十億日圓（+51%），"
-        "新設備銷售由 DRAM（含 HBM）與先進邏輯拉動。問題是前段設備循環能撐多久，以及一拆五後股價 9,461 日圓已經反映多少。")
-lines = [("東京威力科創（8035.T）收支與估值模型 v0.1.0（AI 半導體 Project：設備與材料，前段設備）　2026-11-17", True),
+        "新設備銷售由 DRAM（含 HBM）與先進邏輯拉動。問題是前段設備循環能撐多久，以及一拆五後股價 8,309 日圓已經反映多少。")
+lines = [("東京威力科創（8035.T）收支與估值模型 v0.1.1（AI 半導體 Project：設備與材料，前段設備）　2026-11-21", True),
  ("模型命題：" + PROP, False),
- ("（價格口徑：2026-10-01 一拆五之後；現價 ¥9,461＝2026-11-13 收盤；FY2026 公司指引 EPS ¥381.69；現價 ÷ 指引 EPS ＝ 24.8 倍；見 Val 頁第 1 節）", False), ("", False),
+ ("（價格口徑：2026-10-01 一拆五之後；現價 ¥8,309＝2026-11-20 收盤；FY2026 公司指引 EPS ¥381.69；現價 ÷ 指引 EPS ＝ 21.8 倍；見 Val 頁第 1 節）", False), ("", False),
  ("驅動因子 → 推導量（因果方向：左邊決定右邊）", True),
  ("PL 區塊｜markets/equipment 同字母情境的 DRAM、NAND、先進邏輯、其他代工邏輯、其他前段設備（CY）→ FY(t)＝3/4 × CY(t)＋1/4 × CY(t+1) → 各終端市場需求指數（FY2026＝1）× FY2026 該終端市場新設備銷售 → 新設備銷售（DRAM／NAND／非記憶體）", False),
  ("PL 區塊｜公司特有：超額成長（A +2%／B 0／C −2% 每年）、中國變化（A 0／B −5%／C −20%，× 中國占比 34%）→ 新設備銷售", False),
@@ -913,7 +913,7 @@ for _r in range(4, IN.max_row + 1):
         IN.cell(_r, 10, _incentive(str(IN.cell(_r, 8).value or "")))
 IN.column_dimensions["J"].width = 60
 sys.path.insert(0, os.path.join(ROOT, "tools", "in_layout")); import apply_in_layout  # noqa: E402
-apply_in_layout.apply(wb, "v0.1.0", "2026-11-17")
+apply_in_layout.apply(wb, "v0.1.1", "2026-11-21")
 _RD = wb["README"]
 # 新列放在 README 既有內容之後，不位移既有列；README 以外的工作表不動
 def _rw(ws, text, exact=False, col=1, start=1):
@@ -1022,8 +1022,8 @@ for t_ in answers:
 rr += 1
 _RD.cell(rr, 1, "HTML 橫幅附註用：Comparable 目標價（相對倍數調整後）的上檔空間（＝Val 相對倍數調整後 Comparable 目標價 ÷ 現價 − 1；進加權目標價的是該值，橫幅中間格則放未調整的只看 Comparable 目標價）")
 _RD.cell(rr, 2, f"=Val!B{vca}/Val!B{vpx}-1").number_format = "0.0%"
-_RD["A1"] = str(_RD["A1"].value) + "；v0.1.0（2026-11-17）：新建（工作單 20261117_新增五家）"
-_RD.cell(_RD.max_row + 2, 1, "v0.1.0（2026-11-17）：新建。結構參 accretech（日股 3 月年度）與 amat／lrcx（前段設備：終端市場需求指數 × 公司錨點）；FY2026 錨定公司 2026-10-30 首次發布的通期預想；單一應報導部門，營收構成為新設備（DRAM／NAND／非記憶體）與 Field Solutions 與其他。")
+_RD["A1"] = str(_RD["A1"].value) + "；v0.1.1（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）"
+_RD.cell(_RD.max_row + 2, 1, "v0.1.1（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）：現價 9,461 → 8,309；同業前瞻 P/E 與自身參考 P/E 依收盤價比換算；其餘輸入不變。"); _RD.cell(_RD.max_row + 1, 1, "v0.1.0（2026-11-17）：新建。結構參 accretech（日股 3 月年度）與 amat／lrcx（前段設備：終端市場需求指數 × 公司錨點）；FY2026 錨定公司 2026-10-30 首次發布的通期預想；單一應報導部門，營收構成為新設備（DRAM／NAND／非記憶體）與 Field Solutions 與其他。")
 FD.yellow(IN)   # M2 節判斷參數黃底
 
 # ---------------- 治理：build_id、輸入指紋、模型狀態（Sens 頁底部；README、HTML 同步；check_governance）----------------
@@ -1056,7 +1056,7 @@ sys.path.insert(0, os.path.join(ROOT, "tools", "coord"))
 import coord as COORD  # noqa: E402
 _CR = COORD.add_sheet(wb, os.path.dirname(os.path.abspath(__file__)), SIL)
 if _CR:
-    COORD.stamp(wb, "v0.1.0", "v0.1.0", "2026-11-17")
+    COORD.stamp(wb, "v0.1.1", "v0.1.1", "2026-11-21")
     if not os.environ.get("TEL_OVERRIDE") and not os.environ.get("TEL_SNAP"):
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
         import tel_post  # noqa: E402

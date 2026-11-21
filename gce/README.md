@@ -1,4 +1,17 @@
-# gce/ — 金像電（2368.TW）收支與估值模型 v0.3.6
+# gce/ — 金像電（2368.TW）收支與估值模型 v0.3.7
+
+## v0.3.7（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）
+
+- **現價與同業報價改 2026-11-20 收盤（工作單 px1120，`docs/workorders/20261121_px1120_現價與同業報價換11-20收盤.md`）。** 價格只取自 `markets/invest_map/data/closes_20261109_20261120.csv`（Yahoo Finance 日線收盤；更早報價日讀 `closes_20261020_20261113.csv`、`closes_extra_20261113.csv`；`px1120_post.py`，前例 `px1113_post.py`）。
+- **現價：** 1,030 → 711（2026-11-13 → 11-20 收盤）；本公司前瞻 P/E 18.08 → 12.48（× 收盤價比，共識前瞻 EPS 不變）。
+- **同業前瞻 P/E（現行倍數 × 11-20 收盤 ÷ 11-13 收盤）：** 3044.TW 14.79 → 11.17、2313.TW 19.62 → 14.56、4958.TW 22.11 → 15.58、8155.TWO 16.18 → 10.38、TTMI 9.52 → 7.56；**中位數 16.18 → 11.17**。未換價同業：無（皆在 CSV）。
+- **結果：** 加權目標價 1,342.60 → 1,004.12（DCF 726.45 → 684.26、Comparable 未調整 1,161.62 → 785.18、相對倍數調整後 1,323.99），上檔空間 +30.3% → +41.2%，評等 **買進 → 買進**。DCF 變動來自 WACC 以市值計權重隨現價重算（照公式，未改）。
+- **Coord 另一側讀數：** 加權目標價 1,154.76（+12.1%，中立）→ 905.61（+27.4%，買進）；現行基準 1,004.12（買進）。兩讀數評等現在相同。
+- **並列參考列（不進目標價）：** 300476.SZ 9.97x → 8.8x、002463.SZ 15.87x → 15.5x（同法換算，原文保留於該格「前一版」）。
+- **不改：** rf、共識 EPS 與市場共識目標價、預測用匯率、所有營運假設與情境權重、三層基準讀數、公式與架構。
+- **快照：** 已重跑 `tools/coord/alt_run.py gce`（`coord_alt.json`）後再重建。
+- **驗證：** `check_company_html` 全過；`check_layout_v13 --xlsx` ok（警告：估值章可見文字含來源檔名 `closes_…`，px1113 版同樣有此來源欄字樣）；`check_sens_coverage` 38 鍵無案例（與 v0.3.6 相同）；`baseline_coordination/check.py` 0 項不符；LibreOffice 重算錯誤格 0、重建與 dist 逐格相同。
+- 成品：`dist/20261121_金像電個股模型_v0.3.7.xlsx`、`.html`；v0.3.6 已移除。
 
 ## v0.3.6（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
 
@@ -148,9 +161,9 @@ AI 半導體 Project 載板與 PCB 次產業，樣板 `victory_giant/`（勝宏�
 | 檔案 | 內容 |
 |---|---|
 | `build_gce.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261115_金像電個股模型_v0.3.5.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261121_金像電個股模型_v0.3.7.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html_src.json`、`gen_html_json.py`、`html.json` | HTML 展示層設定：`html_src.json` 為原設定，`gen_html_json.py` 套用版面規格 v1.0 產生 `html.json`（勿手改） |
-| `dist/20261115_金像電個股模型_v0.3.5.html` | HTML 展示層（數字全由 xlsx 重算值抽出） |
+| `dist/20261121_金像電個股模型_v0.3.7.html` | HTML 展示層（數字全由 xlsx 重算值抽出） |
 
 建置：`python3 gce/build_gce.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、DCF、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數）、`tsmc/dist`（情境顆數係數）、`markets/memory/market.py`（SCEN_UNITS，核對用）、`victory_giant/dist`（每 GW PCB 金額）、`emc/dist`（台光電每 GW CCL 金額，只在 Recon）、`tools/cycle_position.py`、`tools/valuation_rule.py`；**不修改它們**。
 

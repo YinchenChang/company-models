@@ -1,0 +1,24 @@
+# px 工作單收盤價擷取（2026-11-21 起）：雲端工作環境連不到 Yahoo，改在 GitHub Actions 抓。
+# 觸發：push 到 claude/px*-prices 且 tools/px_closes/request.txt 有變動；結果提交回同一分支。
+# request.txt 一行：<起日> <迄日> <輸出路徑> [額外代號…]
+name: px-closes-fetch
+on:
+  push:
+    branches: ['claude/px*-prices']
+    paths: ['tools/px_closes/**']
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - run: pip install -q yfinance
+      - run: python3 -u tools/px_closes/fetch_closes.py $(cat tools/px_closes/request.txt)
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add markets/invest_map/data
+          git commit -m "px closes: $(cat tools/px_closes/request.txt | cut -c1-60)" || echo "no change"
+          git push

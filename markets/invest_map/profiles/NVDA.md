@@ -15,24 +15,24 @@ AI 加速器（GPU）與整櫃系統的最大供應商，靠「加速器顆數 �
 
 ## 公司在做什麼
 - 賣 AI 運算晶片（GPU，圖形處理器，現在主要用來訓練與執行 AI 模型）與整櫃伺服器系統，客戶是雲端業者、AI 實驗室與企業 [外部・未經本專案檢核]。
-- 產品世代：Blackwell（B200／B300）、Rubin、Rubin Ultra；本專案以各世代顆數建模 [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Units!A6:A9]。
+- 產品世代：Blackwell（B200／B300）、Rubin、Rubin Ultra；本專案以各世代顆數建模 [本專案：20261121_NVIDIA個股模型_v0.3.14.xlsx Units!A6:A9]。
 - 網通（把成千上萬顆 GPU 連起來的交換器、網卡、NVLink）約占資料中心營收兩成：FY2027 Q1 運算 US$60.4B、網通 US$14.8B [本專案：先驗比對_NVDA_20261023.md 資料表、N3]。
-- 公司自 FY2027 Q1 起只揭露 Data Center 與 Edge Computing 兩個平台 [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Q!M6]。
+- 公司自 FY2027 Q1 起只揭露 Data Center 與 Edge Computing 兩個平台 [本專案：20261121_NVIDIA個股模型_v0.3.14.xlsx Q!M6]。
 
 ## 主要產品與營收占比
 | 產品／部門 | 內容（白話） | 營收占比 | 期間 | 標記 |
 |---|---|---|---|---|
-| Data Center | GPU、整櫃系統、網通 | 89.7%（US$193.7B ÷ 215.9B） | FY2026 | [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Q!F5、Q!F4，占比為換算] |
-| Edge Computing | 舊 Gaming＋ProViz＋Auto＋OEM 合計 | 10.3%（US$22.2B） | FY2026 | [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Q!F6] |
+| Data Center | GPU、整櫃系統、網通 | 89.7%（US$193.7B ÷ 215.9B） | FY2026 | [本專案：20261121_NVIDIA個股模型_v0.3.14.xlsx Q!F5、Q!F4，占比為換算] |
+| Edge Computing | 舊 Gaming＋ProViz＋Auto＋OEM 合計 | 10.3%（US$22.2B） | FY2026 | [本專案：20261121_NVIDIA個股模型_v0.3.14.xlsx Q!F6] |
 | 合計 | — | 100% | FY2026 | — |
 
-- FY2027 Q2 單季 Data Center 占比升到 92.5%（89.0 ÷ 96.2）[本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Q!H5、Q!H4，換算]。
-- 毛利率：FY2026 71.1%；FY2027 錨點 73.7% [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Q!F9、Q!K9]。
+- FY2027 Q2 單季 Data Center 占比升到 92.5%（89.0 ÷ 96.2）[本專案：20261121_NVIDIA個股模型_v0.3.14.xlsx Q!H5、Q!H4，換算]。
+- 毛利率：FY2026 71.1%；FY2027 錨點 73.7% [本專案：20261121_NVIDIA個股模型_v0.3.14.xlsx Q!F9、Q!K9]。
 - 資料中心內運算與網通的全年拆分：本專案未建立（README 記為未找到）。
 
 ## 市場定位與產業位置
 - 本專案推算 CY2027 加速器**金額份額** NVIDIA 75.1%，但**顆數份額**只有 40.9%：ASIC 每顆便宜很多 [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Units!D32、Units!D26]。
-- 同一題 Broadcom 模型現算出 75.1%，與本模型一致 [本專案：20261116_Broadcom個股模型_v0.5.8.xlsx Recon!C24]；先驗比對推導區間 75–82% [本專案：先驗比對_NVDA_20261023.md N5a]。
+- 同一題 Broadcom 模型現算出 75.1%，與本模型一致 [本專案：20261121_Broadcom個股模型_v0.5.9.xlsx Recon!C24]；先驗比對推導區間 75–82% [本專案：先驗比對_NVDA_20261023.md N5a]。
 - 上游依賴：台積電（晶圓、CoWoS 封裝）與 HBM（高頻寬記憶體）；本專案台積電模型判斷 2027 年 HBM 比 CoWoS 先卡 [本專案：tsmc/README.md 主要結果]。
 - 中國：公司 FY2027 Q3 指引假設中國資料中心運算營收為 0 [本專案：nvidia/README.md 驅動因子]。
 
@@ -96,7 +96,7 @@ AI 加速器（GPU）與整櫃系統的最大供應商，靠「加速器顆數 �
 - 2026-10-14｜IDC 報告指 NVIDIA 在中國 AI 晶片的份額於 2026 上半年明顯下滑，本土晶片（華為等）替代｜中國營收難回升 [外部新聞：GuruFocus 引 IDC]
 - 2026-10-10｜FT 報導 NVIDIA 正探討與 AI 新創 Reflection AI 的交易（含收購）｜往模型端延伸 [外部新聞：Bloomberg 轉述 FT]
 - 2026-08-27｜首批 H200 依美國新許可制度出貨中國，金額很小｜Q3 指引仍假設中國資料中心運算為 0 [外部新聞：SCMP]
-- 2026-08-26｜FY2027 Q2 財報：營收 US$96.2B、Data Center 89.0B；Q3 指引 108B；FY2028 營收指引年增約 70%、毛利率約 72–73% [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Q!H4、Q!H5、Q!I4、Recon!B6、Recon!B8]；Vera Rubin 全面量產 [外部新聞：StorageNewsletter]
+- 2026-08-26｜FY2027 Q2 財報：營收 US$96.2B、Data Center 89.0B；Q3 指引 108B；FY2028 營收指引年增約 70%、毛利率約 72–73% [本專案：20261121_NVIDIA個股模型_v0.3.14.xlsx Q!H4、Q!H5、Q!I4、Recon!B6、Recon!B8]；Vera Rubin 全面量產 [外部新聞：StorageNewsletter]
 
 ## 需要觀察的事項
 - 營收水準係數 k_rec（0.828）｜FY2027 由下而上比實績高 20.7%，差額來源未驗證；Q3 實績可檢驗是時點還是長期水準｜FY2027 Q3 財報（2026-11 中旬，公司尚未公告日期）[本專案：nvidia/README.md v0.1.1 第 1 點、Recon B2]

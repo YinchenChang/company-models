@@ -620,7 +620,22 @@
 "is_s1a_wsh_9m26": "SRC_ANT_618",
 "is_s1a_int_9m26": "SRC_ANT_619",
 "is_s1a_cash_0930": "SRC_ANT_620",
-"tax_s1a_nol_fed_2025": "SRC_ANT_621"
+"tax_s1a_nol_fed_2025": "SRC_ANT_621",
+"peer_ddog_evfs_old": "SRC_ANT_622",
+"px_ddog_1030": "SRC_ANT_623",
+"px_ddog_1120": "SRC_ANT_624",
+"peer_pltr_evfs_old": "SRC_ANT_625",
+"px_pltr_1106": "SRC_ANT_626",
+"px_pltr_1120": "SRC_ANT_627",
+"peer_crwd_evfs_old": "SRC_ANT_628",
+"px_crwd_1106": "SRC_ANT_629",
+"px_crwd_1120": "SRC_ANT_630",
+"peer_net_evfs_old": "SRC_ANT_631",
+"px_net_1106": "SRC_ANT_632",
+"px_net_1120": "SRC_ANT_633",
+"peer_snow_evfs_old": "SRC_ANT_634",
+"px_snow_1106": "SRC_ANT_635",
+"px_snow_1120": "SRC_ANT_636"
 },
 "INP": {
 "year_2025": "INP_001",
@@ -903,7 +918,8 @@
 "val_bisect_lo_add": "INP_282",
 "val_bisect_w_hi": "INP_283",
 "val_bisect_s_lo": "INP_284",
-"val_bisect_s_hi": "INP_285"
+"val_bisect_s_hi": "INP_285",
+"mkt_px": "INP_286"
 },
 "CHK": {
 "src_rows": "C01",

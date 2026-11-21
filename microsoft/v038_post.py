@@ -15,7 +15,7 @@ import re
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
-VER, BUILT = "0.3.9", "2026-11-16"
+VER, BUILT = "0.3.10", "2026-11-21"
 U_IR = "https://www.microsoft.com/en-us/investor/earnings/fy-2027-q1/press-release-webcast（公司 IR 財務報表檔；本 repo 內為 mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx）"   # 出處網址只放 Coord 頁 L 欄（HTML 不顯示外部網址）
 BOLD = Font(bold=True)
 BLUE = Font(color="0000FF")
@@ -771,10 +771,12 @@ def readme13(wb, C, RVA, PLA, CRD):
                  "Devices and Consumer＝Search and advertising、XBOX、Windows OEM；兩分部加總為合併營收。FY2028 Agents and Infra "),
         f'TEXT({PLB("p_ai_seg", "G")},"0")', T("（其中 Azure AI "), f'TEXT({PLB("p_s_azai", "G")},"0")', T("、Copilot "), f'TEXT({PLB("p_cop", "G")},"0")', T("）、Devices and Consumer "), f'TEXT({PLB("p_dc", "G")},"0")',
         T("，合計 "), f'TEXT({PLB("p_tot", "G")},"0")', T(" 十億美元。"))
-    RD.cell(r, 1, F_(T("v0.3.9（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。現價 535.93（11-05）→ "), 'TEXT(px,"0.00")',
-                     T("；加權目標價 384.07 → "), f'TEXT({vb("tp")},"0.00")', T("；上檔空間 −28.3% → "), f'TEXT({vb("up")},"+0.0%;-0.0%")',
-                     T("；投資建議 放空 → "), f'{vb("rec")}', T("（只換現價時為 384.15、−26.7%、放空）。同業倍數（報價日 2026-10-07／10-08）依價格檔同日收盤換到 2026-11-13（倍數 × 收盤比，近似，無市值；Microsoft 自身用市值法）：" + _PXTXT + "；本模型 WACC 權益權重與回購價隨現價自動重算，共識、rf、β、ERP 與其他假設不變。")))
+    RD.cell(r, 1, F_(T("v0.3.10（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。現價 523.88（11-13）→ "), 'TEXT(px,"0.00")',
+                     T("；加權目標價 382.78 → "), f'TEXT({vb("tp")},"0.00")', T("；上檔空間 −26.9% → "), f'TEXT({vb("up")},"+0.0%;-0.0%")',
+                     T("；投資建議 放空 → "), f'{vb("rec")}', T("。同業倍數（11-13 值）依價格檔 11-13 與 11-20 兩日收盤比換到 2026-11-20（倍數 × 收盤比，近似，無市值；Microsoft 自身用市值法）：" + _PXTXT + "；本模型 WACC 權益權重與回購價隨現價自動重算，共識、rf、β、ERP 與其他假設不變；未換價同業：無。")))
     out["ver"] = r; r += 1
+    RD.cell(r, 1, "v0.3.9（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。現價 535.93（11-05）→ 523.88；加權目標價 384.07 → 382.78；上檔空間 −28.3% → −26.9%；投資建議 放空 → 放空。同業倍數由 2026-10-07／10-08 報價日換到 11-13（倍數 × 收盤比，近似）")
+    r += 1
     RD.cell(r, 1, "v0.3.8（2026-11-15）：只改展示層與新增頁——個股 HTML 版面規格 v1.3：章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；新增 RevDCF 頁（反向 DCF）、PL 頁末標準損益表"
                   "（FY2024A–FY2026A 實績＋FY2027E–FY2032E 情境 B，GAAP；另列 FY27Q1A）、Sens 頁末加權目標價相對基準（龍捲風圖用）、README 頁末 v1.3 白話列；新增 Coord 頁「三層協調」（F1 讀取層級；F1b 追公式；F2 C0（實績）：公司口徑資本支出 vs 層級隱含值）。"
                   "既有數值格不變（新增列與新增頁以外逐格比對 0 差異），目標價與評等不變")
@@ -782,10 +784,10 @@ def readme13(wb, C, RVA, PLA, CRD):
     return out
 
 
-_PX = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "peers_px1113_20261113.json"), encoding="utf-8"))
-_PXC = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "peers_cloud_20261113.json"), encoding="utf-8"))
-_PXA = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "peers_ads_20261113.json"), encoding="utf-8"))
-_PXTXT = (f"非 AI 雲端中位數 {_PXC['median1007']['value']} → {_PXC['median']['value']}、數位廣告 {_PXA['median1007']['value']} → {_PXA['median']['value']}、企業軟體 {_PX['mediansOld']['sw']} → {_PX['medians']['sw']}、"
+_PX = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "peers_px1120_20261120.json"), encoding="utf-8"))
+_PXC = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "peers_cloud_20261120.json"), encoding="utf-8"))
+_PXA = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "peers_ads_20261120.json"), encoding="utf-8"))
+_PXTXT = (f"非 AI 雲端中位數 {_PXC['median1113']['value']} → {_PXC['median']['value']}、數位廣告 {_PXA['median1113']['value']} → {_PXA['median']['value']}、企業軟體 {_PX['mediansOld']['sw']} → {_PX['medians']['sw']}、"
           f"遊戲 {_PX['mediansOld']['game']} → {_PX['medians']['game']}、PC {_PX['mediansOld']['pc']} → {_PX['medians']['pc']}、Microsoft 自身 {_PX['items']['val.msft.ownNtm']['old']} → {_PX['items']['val.msft.ownNtm']['new']}")
 
 

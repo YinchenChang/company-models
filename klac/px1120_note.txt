@@ -1,0 +1,10 @@
+folder=klac
+version=0.4.6 -> 0.4.7
+px=152.32 -> 126.87
+tp=96.67 -> 86.31
+upside=-36.5% -> -32.0%
+rating=放空 -> 放空
+peers_repriced=5
+peers_unchanged=無
+checks=重算錯誤格 0；Sens 快照 CURRENT（sens_klac.py 重跑）；Coord 快照 alt_run.py klac 重跑（另一側加權 78.26，放空，無新增非 0 檢查列）；check_company_html 全部通過；check_layout_v13 --xlsx 通過（警告：Q 頁 6 格讀敏感度欄）；check_in_layout 通過；baseline_coordination/check.py 0 項不符；check_sens_coverage 未過（36 鍵找不到 Sens 表頭，前版 px1113 即未過，不要求）
+notes=同業前瞻 P/E 換算（11-13→11-20）：AMAT 21.02→17.17、LRCX 21.98→17.83、ASML 23.53→19.93、8035.T 25.22→22.15、6920.T 32.31→27.05，中位數 23.53→19.93；DCF 57.57→57.62、Comparable 142.69→120.86。價格皆取自 closes_20261109_20261120.csv，無缺代號。ASML 用美國 ADR 的 ASML 列（非 ASML.AS）。px1120_post.py 接在 px1113_post 之後執行；因 px1113 的版本列為公式，本版將其凍結為 v0.4.6 顯示文字。gen_html_json.py 的版本斷言改為 v0.4.7。README 本版要點已寫入。

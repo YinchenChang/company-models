@@ -1,0 +1,10 @@
+folder=crdo
+version=v0.3.7 -> v0.3.8
+px=131.51 -> 99.86
+tp=140.69 -> 119.05
+upside=+7.0% -> +19.2%
+rating=中立 -> 中立
+peers_repriced=4
+peers_unchanged=無
+checks=check_company_html.py crdo 全過；check_layout_v13.py --xlsx 通過；baseline_coordination/check.py 0 項不符；成品 xlsx 錯誤格 0；Sens、Coord 快照 CURRENT；check_sens_coverage.py 有 39 項「Sens 頁找不到表頭」，前版（v0.3.7）同樣 39 項，非本版造成
+notes=舊版 README 寫加權目標價 140.60、+6.9%；重算前版成品為 140.69、+7.0%，本單以前版成品重算值為準。dist/_待刪除 內原有的 v0.2.4 未動。

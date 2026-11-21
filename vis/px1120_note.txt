@@ -1,0 +1,10 @@
+folder=vis
+version=v0.3.2 -> v0.3.3
+px=135 -> 106.5
+tp=55.09 -> 48.89
+upside=-59.2% -> -54.1%
+rating=強力放空 -> 強力放空
+peers_repriced=4
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；check_company_html vis 全部通過；check_layout_v13 --xlsx 通過（無失敗）；check_segments vis 符合；check_in_layout 通過；baseline_coordination/check.py 0 項不符；check_sens_coverage --require-keycol 7／26 未過（v0.3.2 即相同，既有，不要求）
+notes=同業換價為聯電、GlobalFoundries、中芯國際（0981.HK）、Tower 四家；NXP 出資換算 USD/TWD 32.939 -> 33.026（僅參考列 nxp_rem，不進估值）。同業中位數 23.81 -> 19.41；DCF 41.46 -> 41.76；Comparable 68.73 -> 56.03。Sens 與 Coord 隨建置程式重建，無獨立快照（本模型兩讀數不適用，無 coord_alt）。舊 dist 已移除。

@@ -1,6 +1,15 @@
-# cbrs/ — Cerebras Systems（CBRS）收支與估值模型 v0.1.4
+# cbrs/ — Cerebras Systems（CBRS）收支與估值模型 v0.1.5
 
 AI 半導體 Project 運算層的新個股（Andy 2026-11-08 要求新增，格式比照 `nvidia/` v0.3.4）。獨立的 Python→Excel 產生器（openpyxl，LibreOffice 重算），HTML 展示層用共用產生器 `tools/company_html/`。
+
+## v0.1.5（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）
+
+依據：`docs/workorders/20261121_px1120_現價與同業報價換11-20收盤.md`；價格只取 `markets/invest_map/data/closes_20261109_20261120.csv`。base＝v0.1.4。
+
+- **現價與同業報價改 2026-11-20 收盤（工作單 px1120）：** 現價 108.72 → 82.67（In 頁 px，Yahoo Finance 日線收盤，Verified）；Comparable 同業前瞻 P/S（＝共識前瞻 P/S × 11-20 收盤 ÷ 頁面價格）：NVIDIA 7.30→5.63、AMD 10.42→8.28、Broadcom 10.53→9.24、Marvell 8.77→6.84；**同業中位數 9.59 → 7.56**。**加權目標價 97.21 → 80.10；上檔空間 −10.6% → −3.1%；評等 中立 → 中立。**未換價同業：無。
+- **不變：** 共識、rf、β、ERP、股數、情境權重與營運假設；以市值計的 WACC 權重隨現價自動重算。本模型沒有 Sens／Coord 另一側讀數快照。
+- **檢查：** 錯誤格 0；`check_company_html` 通過；`check_layout_v13` 通過（警告只剩既有參數代號）；`baseline_coordination/check.py` 0 項不符；`check_sens_coverage` 未通過（27／36 鍵無案例或豁免，v0.1.2 起既有，本版未改）。
+- 新增 `px1120_post.py`（只改版號與說明文字）；建置同 v0.1.4。
 
 ## v0.1.4（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
 
