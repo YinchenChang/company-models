@@ -62,7 +62,7 @@ asof: 2026-10-27
 | Microsoft（Azure） | 公有雲、AI 算力出租 | 市占本專案未建立；Azure FY2026 營收 1,019.4 億美元 | [本專案：microsoft_facts_20261008.json prod27.azure.fy2026] |
 | Alphabet（Google Cloud） | 公有雲、自研 TPU、Anthropic 也是其客戶 | 市占本專案未建立；Google Cloud 2025 營收 587.1 億美元 | [本專案：alphabet_facts_20261008.json is.rev.cloud.fy2025] |
 | Oracle（OCI） | AI 機房出租 | 市占本專案未建立；OCI FY2026 營收 181.0 億美元 | [本專案：oracle_facts_20261007.json is.rev.iaas.fy2026] |
-| CoreWeave | GPU 雲 | 企業價值 753.3 億美元、2027 前瞻 EV/EBITDA 4.52 倍（2026-11-13） | [本專案：20261116_Oracle個股模型_v0.5.3.xlsx Val!C35、Val!D35] |
+| CoreWeave | GPU 雲 | 企業價值 678.2 億美元、2027 前瞻 EV/EBITDA 4.07 倍（2026-11-20） | [本專案：20261121_Oracle個股模型_v0.5.4.xlsx Val!C35、Val!D35] |
 
 - 各家雲端營收期間不同，只能比量級 [判斷]。
 - Anthropic 同時向 Google（TPU）採購算力，客戶不是 AWS 獨占 [本專案：alphabet_facts_20261008.json rp.anthropic.cloudCommit]。
@@ -102,8 +102,8 @@ asof: 2026-10-27
 - 對外 AI 報酬（命題核心）｜基準情境 FY2028 對外 AI ROIC 4.9%，低於 WACC 11.2%；要打平，機隊平均每 MW 價格 k 需約 1.30，模型基準為 0.99 [本專案：20261121_Amazon個股模型_v0.3.9.xlsx Thesis!I130、Val!B30、Thesis!I132、Thesis!I131]｜2026-10-29（美國時間）Q3 財報的 AWS 成長與 AI 營收說法
 - AWS 營業利益率（核心問題一）｜FY2028 基準 32.8%（樂觀 40.7%、保守 29.8%），2025 年為 35.4% [本專案：20261121_Amazon個股模型_v0.3.9.xlsx Val!C10、Val!B10、Val!D10、PL!D123]｜Q3 財報 AWS 營業利益率
 - 自由現金流（核心問題二）｜FY2028 自由現金流扣股利基準 +6.5 億美元；五年（2026–2030）合計基準 +896.3 億、保守 +377.3 億；基準不需新增借款 [本專案：20261121_Amazon個股模型_v0.3.9.xlsx Val!C11、CF!C6、CF!D6、CF!C7]｜Q3 現金流量表與 2026 年資本支出約 2,200 億美元指引 [本專案：amazon_facts_20261008.json guide.2026.capex]
-- 每 MW 價格 k 與 Trainium 收入口徑｜k_現貨改用 AWS 牌價時加權目標價 258.26 美元（+13.0%），k_長約改用長約下緣價格時 219.56 美元（−4.0%）[本專案：20261116_Amazon個股模型_v0.3.8.xlsx Sens!D21:E22]；敏感度最大的一項是 Trainium 收入係數改用產出比（低端 194.14 美元，−15.1%）[本專案：20261116_Amazon個股模型_v0.3.8.xlsx Sens!D11:E11]｜AWS AI 定價與 Trainium 承諾轉成營收的速度
-- 自用 AI 的讀法｜模型假設 AI 算力八成對外、自用較少；Andy 2026-10-27 定讀法 2（自用 AI 價值中性）為主值：加權目標價 228.65 美元，讀法 1（只計成本）208.76 美元；現價 266.66 美元（2026-11-13 收盤），兩種讀法的模型評級都是「中立」[本專案：20261116_Amazon個股模型_v0.3.8.xlsx Val!B19、B33、B20、B24、B35]｜財報對自用 AI（零售、Alexa 等）算力的說法
+- 每 MW 價格 k 與 Trainium 收入口徑｜k_現貨改用 AWS 牌價時加權目標價 248.05 美元（+14.3%），k_長約改用長約下緣價格時 207.35 美元（−4.4%）[本專案：20261121_Amazon個股模型_v0.3.9.xlsx Sens!D21:E22]；敏感度最大的一項是 Trainium 收入係數改用產出比（低端 182.42 美元，−15.9%）[本專案：20261121_Amazon個股模型_v0.3.9.xlsx Sens!D11:E11]｜AWS AI 定價與 Trainium 承諾轉成營收的速度
+- 自用 AI 的讀法｜模型假設 AI 算力八成對外、自用較少；Andy 2026-10-27 定讀法 2（自用 AI 價值中性）為主值：加權目標價 216.93 美元，讀法 1（只計成本）197.04 美元；現價 246.82 美元（2026-11-20 收盤），兩種讀法的模型評級都是「中立」[本專案：20261121_Amazon個股模型_v0.3.9.xlsx Val!B19、B33、B20、B24、B35]｜財報對自用 AI（零售、Alexa 等）算力的說法
 - 客戶集中｜backlog 約一半可能來自兩家 AI 實驗室 [本專案：amazon_facts_20261008.json rel.rpoShare]｜Q3 10-Q 的 RPO 揭露
 
 ## 來源
