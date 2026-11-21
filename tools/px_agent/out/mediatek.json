@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 25,
+ "duration_ms": 221609,
+ "total_cost_usd": 0.48851080000000013,
+ "result": "聯發科已換成 2026-11-20 收盤，版號 v0.3.6 → v0.3.7，xlsx 和 HTML 都已重建，檔名日期 20261121。\n\n- **現價：** 4,120 → 3,350。\n- **加權目標價：** 1,736.97 → 1,627.25。\n- **上檔空間：** −57.8% → −51.4%。\n- **評等：** 強力放空 → 強力放空，由模型公式重算，不是手改。\n- **同業倍數：** 5 家全部換價，沒有未換價的同業。同業前瞻 P/E 中位數 19.95 → 17.50。\n- **達發市值：** 達發股價 756 → 552，連帶 `mi_v` 44.20 → 32.73。\n- **前版值有出入：** v0.3.6 的 README 寫加權目標價 1,824.87、上檔 −55.7%，但成品 xlsx 重算是 1,736.97、−57.8%。本版前後值都取自成品重算值，README 和 `px1120_note.txt` 都有說明。\n- **dist：** 舊的 v0.3.6 檔和 `_待刪除` 已移除，只留現行版。\n- **檢查通過：** 錯誤格 0、`check_company_html` 通過、`check_layout_v13` 通過（只有前版就有的參數代號警告）、`baseline_coordination` 0 項不符；Sens 與 Coord 快照已重跑，狀態是 CURRENT。\n- **檢查未過：** `check_sens_coverage --require-keycol` 未過，前版一樣未過，已在 note 寫明。\n\n我沒有 commit、push 或開 PR。改動只在 `mediatek/` 內：建置程式、`README.md`、`px1120_note.txt`、`hist_frozen_px1120.json`、Sens 與 Coord 快照、`html.json`，以及 dist。另外順手把 v0.3.4 版本列的日期改回 2026-11-15，它原本會跟著本版日期跑。",
+ "error": null,
+ "stderr": null
+}
