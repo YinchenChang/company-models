@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 18,
+ "duration_ms": 182697,
+ "total_cost_usd": 0.30536610000000003,
+ "result": "AVGO 已換成 2026-11-20 收盤，版號 v0.5.8 → v0.5.9。成品是 `avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx` 和同名 `.html`。\n\n| 項目 | 前 | 後 |\n|---|---|---|\n| 現價 | 347.01 | 304.41 |\n| 加權目標價 | 166.10 | 152.59 |\n| 上檔空間 | −52.1% | −49.9% |\n| 評等 | 強力放空 | 放空 |\n\n- **同業倍數：** 中位數 18.72 → 16.20。NVDA、AMD、MRVL、QCOM、TSM 五家都有 11-20 收盤，沒有未換價同業。\n- **前值來源：** 「前」取自 v0.5.8 現行成品的重算值。v0.5.8 README 寫的是 173.71，之後被上游同步改動蓋過；這點已寫進 note 和 README。\n- **評等：** −49.9% 離 −50% 只差 0.13 個百分點，評等對價格很敏感。\n- **快照：** Sens 與 Coord 快照已重跑，基準都是 152.589，不是 STALE。\n- **有跑且通過的檢查：** 錯誤格 0、`check_company_html`、`check_layout_v13 --xlsx`、`check_in_layout`、`baseline_coordination/check`（0 項不符）。\n- **未通過的檢查：** `check_sens_coverage` 失敗（31／39 個鍵沒有案例或豁免）。v0.5.8 就是同樣結果，所以本版不要求，note 已寫明。\n\n沒有 commit。`dist` 只留現行版：舊的 v0.5.8 檔和 `_待刪除` 都已用 `git rm` 移除。新增了 `px1120_post.py` 和 `px1120_note.txt`，並改了 `build_avgo.py`、`gen_html_json.py`（版號檢查）、`README.md`、`sens.json`、`coord_alt.json`。",
+ "error": null,
+ "stderr": null
+}
