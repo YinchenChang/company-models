@@ -95,8 +95,8 @@ asof: 2026-10-25
 - 市場口徑一致性｜Dell 模型與美超微模型的 2026 年商用 GPU 系統市場現在同為 US$595B（先前兩模型因 AMD 2026 年每顆價值處理不同而有差異，已對齊），兩邊更新時需同步 [本專案：20261121_戴爾個股模型_v0.2.8.xlsx Units!C8；20261121_美超微個股模型_v0.3.9.xlsx Units!C8]｜模型更新
 
 ## 來源
-1. 本專案：`dell/README.md`（v0.1.2，2026-10-30）；`dell/dist/20261116_戴爾個股模型_v0.2.7.xlsx`（In、Q、Units 頁）
-2. 本專案：`smci/dist/20261116_美超微個股模型_v0.3.8.xlsx`（對照）
+1. 本專案：`dell/README.md`（v0.1.2，2026-10-30）；`dell/dist/20261121_戴爾個股模型_v0.2.8.xlsx`（In、Q、Units 頁）
+2. 本專案：`smci/dist/20261121_美超微個股模型_v0.3.9.xlsx`（對照）
 3. [Dell 8-K 2Q FY27 財報新聞稿](https://www.sec.gov/Archives/edgar/data/0001571996/000157199626000039/exhibit991earnings8kq2fy27.htm)（2026-09-01）
 4. [Dell FY2026 10-K（主管名單）](https://www.sec.gov/Archives/edgar/data/1571996/000157199626000008/dell-20260130.htm)（查閱 2026-10-25）
 5. [Business Wire：Dell CFO Transition](https://www.businesswire.com/news/home/20250908467929/en/Dell-Technologies-Announces-CFO-Transition)（2025-09-08）

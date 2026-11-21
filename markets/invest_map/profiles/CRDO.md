@@ -95,7 +95,7 @@ asof: 2026-10-25
 - 光學放量｜FY2027 目標逾 6 億美元是否達成 [本專案：20261121_Credo個股模型_v0.3.8.xlsx In!E37]｜同上
 
 ## 來源
-1. 本專案：`crdo/README.md`；`crdo/dist/20261116_Credo個股模型_v0.3.7.xlsx`（Q、Units、In、Sources）；AI半導體 `先驗比對_網通_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
+1. 本專案：`crdo/README.md`；`crdo/dist/20261121_Credo個股模型_v0.3.8.xlsx`（Q、Units、In、Sources）；AI半導體 `先驗比對_網通_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 2. [CRDO Moved Down by 8.76% on Oct 23（TradingKey）](https://www.tradingkey.com/news/market-movers/262236387-market-movers-crdo-20261023)（2026-10-23）
 3. [CRDO Stock Hits 6-Month Low After MaxLinear Targets Credo-Dominated Cable Market（Stocktwits）](https://stocktwits.com/news-articles/markets/equity/crdo-stock-hits-6-month-low-after-max-linear-targets-credo-dominated-cable-market/cZxyk1CRBxY)（2026-10-23）
 4. [Credo Stocks Fall 5.1% as AI Cable's 2027 Timeline Takes Focus（GuruFocus）](https://www.gurufocus.com/news/9121299/credo-stocks-fall-51-as-ai-cables-2027-timeline-takes-focus)（2026-10-13）

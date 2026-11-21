@@ -51,7 +51,7 @@ asof: 2026-11-08
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| NVIDIA | AI GPU、整櫃系統 | CY2027 加速器金額份額 75.1% | [本專案：20261116_NVIDIA個股模型_v0.3.11.xlsx Units!D32] |
+| NVIDIA | AI GPU、整櫃系統 | CY2027 加速器金額份額 72.8% | [本專案：20261121_NVIDIA個股模型_v0.3.14.xlsx Units!D32] |
 | AMD | AI GPU | CY2027 加速器金額份額 6.7% | [本專案：20261121_AMD模型_v0.4.9.xlsx Recon!C27] |
 | Broadcom、Marvell | 客製 ASIC | 本專案 Comparable 同業 | [本專案：20261121_Cerebras個股模型_v0.1.5.xlsx Val!A28:A31] |
 | CoreWeave、Nebius | 推論／訓練算力出租 | 本專案另有模型 | [本專案：coreweave、nebius 模型] |
@@ -88,14 +88,14 @@ asof: 2026-11-08
 - 2026-01｜OpenAI 合作擴大並提供營運資金貸款（約 US$1.0B，年利率 6%）[外部・未經本專案檢核：sec-api.io 轉述 10-Q]
 
 ## 需要觀察的事項
-- 平均計費 MW 上線速度｜模型最敏感變數之一（MW ×0.8 時情境 B 加權價值約 −20%）｜2026-11-12 財報、每季 [本專案：20261116_Cerebras個股模型_v0.1.4.xlsx Sens!J5]
-- 每 MW 年營收（OpenAI 合約單價與期間）｜以五年計時情境 B 加權價值約 −36%｜合約條款原文待複核 [本專案：20261116_Cerebras個股模型_v0.1.4.xlsx Sens!J7]
-- 每 MW 資本支出與現金消耗｜DCF 只有約 33 美元，主因擴建期自由現金流為負｜每季資本支出與租約揭露 [本專案：20261116_Cerebras個股模型_v0.1.4.xlsx Val!B23]
+- 平均計費 MW 上線速度｜模型最敏感變數之一（MW ×0.8 時情境 B 加權價值約 −20%）｜2026-11-12 財報、每季 [本專案：20261121_Cerebras個股模型_v0.1.5.xlsx Sens!J5]
+- 每 MW 年營收（OpenAI 合約單價與期間）｜以五年計時情境 B 加權價值約 −38%｜合約條款原文待複核 [本專案：20261121_Cerebras個股模型_v0.1.5.xlsx Sens!J7]
+- 每 MW 資本支出與現金消耗｜DCF 只有約 33 美元，主因擴建期自由現金流為負｜每季資本支出與租約揭露 [本專案：20261121_Cerebras個股模型_v0.1.5.xlsx Val!B23]
 - 客戶集中（OpenAI、UAE 客戶）｜任一客戶延後即影響 2027 營收｜每季 10-Q 客戶占比
 - 與 Tokenomics 的持有成本差距｜合約單價 7.6 低於 Tokenomics 隱含持有成本 12.2，已送算力收支｜Tokenomics 下一版 [本專案：20261121_Cerebras個股模型_v0.1.5.xlsx Recon!A15]
 
 ## 來源
-1. 本專案：`cbrs/README.md`；`cbrs/dist/20261116_Cerebras個股模型_v0.1.4.xlsx`（README、In、Q、PL、Val、Recon、Sens）；`nvidia/dist/20261116_NVIDIA個股模型_v0.3.11.xlsx`（Units）；`amd/dist/20261116_AMD模型_v0.4.8.xlsx`（Recon）
+1. 本專案：`cbrs/README.md`；`cbrs/dist/20261121_Cerebras個股模型_v0.1.5.xlsx`（README、In、Q、PL、Val、Recon、Sens）；`nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx`（Units）；`amd/dist/20261121_AMD模型_v0.4.9.xlsx`（Recon）
 2. [Cerebras 2Q26 財報新聞稿（8-K）](https://www.sec.gov/Archives/edgar/data/0002021728/000162828026056186/cbrsannouncesfinancialresu.htm)（2026-08-12）
 3. [Cerebras S-1/A（管理層）](https://www.sec.gov/Archives/edgar/data/0002021728/000162828026029503/cerebras-sx1amay2026.htm)（2026-05）
 4. [sec-api.io：Cerebras 上市後首兩季 10-Q 摘錄](https://sec-api.io/insights/cerebras-cbrs-first-public-quarters)（2026-08）

@@ -87,7 +87,6 @@ asof: 2026-10-25
 
 ## 近期重大事件
 - 2026-10-28｜FY2027 第一季財報：營收 US$4,136M、GAAP EPS US$1.18；第二季指引營收 US$4.7B±0.2B、GAAP EPS US$1.41 [本專案：20261121_科磊個股模型_v0.4.7.xlsx Q!A2、I4、I26、B32、B34]
-- 2026-11-13｜收盤 US$152.32 [本專案：20261116_科磊個股模型_v0.4.6.xlsx In!E55]
 - 2026-07-28｜FY2026 第四季：營收 US$3,658M、GAAP EPS US$1.04；全年營收 US$13,579M、EPS US$3.66 [本專案：20261121_科磊個股模型_v0.4.7.xlsx Q!F4、F26、H4、H26]
 - 2026-07-28｜法說：CY2026 WFE 上調到 low $150B；下半年營收約比上半年高 20%；先進封裝 CY2026 約 US$1.1B [本專案：20261121_科磊個股模型_v0.4.7.xlsx Recon!B13、In!I5、H8]｜在手訂單約 US$12.5B [外部新聞：TIKR]
 
@@ -99,6 +98,6 @@ asof: 2026-10-25
 - 先進封裝營收口徑｜CY2026 約 US$1.1B（公司）與 FY2026 US$1.3–1.4B（substack）口徑不同、未解 [本專案：20261121_科磊個股模型_v0.4.7.xlsx In!I8]｜FQ1-27 法說
 
 ## 來源
-1. 本專案：`klac/README.md`（v0.3，2026-10-31）；`klac/dist/20261116_科磊個股模型_v0.4.6.xlsx`（In、Q、Units、Recon 頁）
+1. 本專案：`klac/README.md`（v0.3，2026-10-31）；`klac/dist/20261121_科磊個股模型_v0.4.7.xlsx`（In、Q、Units、Recon 頁）
 2. 本專案：`先驗與比對/先驗比對_設備材料_20261022.md`、`先驗比對_TEL_20261023.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 3. [TIKR：KLA Q4 earnings hit a record $3.66 billion](https://www.tikr.com/blog/kla-corporations-q4-earnings-hit-a-record-3-66-billion-the-guide-points-higher-still)（2026-07-29）

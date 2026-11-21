@@ -48,12 +48,12 @@ asof: 2026-10-25
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| CoreWeave（CRWV） | GPU 算力雲 | 企業價值 73,099.7m；NTM EV/EBITDA 4.73 倍（2026-11-13） | [本專案：20261116_WhiteFiber個股模型_v0.4.3.xlsx Val!C38、D38、E38] |
-| Nebius（NBIS） | GPU 算力雲 | 企業價值 40,706.7m；NTM EV/EBITDA 6.94 倍（2026-11-13） | [本專案：20261116_WhiteFiber個股模型_v0.4.3.xlsx Val!C39、D39、E39] |
-| Digital Realty（DLR） | AI 資料中心託管（批發型） | 企業價值 85,968.7m；NTM EV/EBITDA 20.36 倍 | [本專案：20261116_WhiteFiber個股模型_v0.4.3.xlsx Val!C50、D50、F50] |
-| Equinix（EQIX） | 資料中心託管（零售共置與互連） | 企業價值 124,806.5m；NTM EV/EBITDA 21.63 倍 | [本專案：20261116_WhiteFiber個股模型_v0.4.3.xlsx Val!C51、D51、F51] |
+| CoreWeave（CRWV） | GPU 算力雲 | 企業價值 65,486.1m；NTM EV/EBITDA 4.24 倍（2026-11-20） | [本專案：20261121_WhiteFiber個股模型_v0.4.4.xlsx Val!C38、D38、E38] |
+| Nebius（NBIS） | GPU 算力雲 | 企業價值 30,581.1m；NTM EV/EBITDA 5.22 倍（2026-11-20） | [本專案：20261121_WhiteFiber個股模型_v0.4.4.xlsx Val!C39、D39、E39] |
+| Digital Realty（DLR） | AI 資料中心託管（批發型） | 企業價值 77,595.9m；NTM EV/EBITDA 18.38 倍 | [本專案：20261121_WhiteFiber個股模型_v0.4.4.xlsx Val!C50、D50、F50] |
+| Equinix（EQIX） | 資料中心託管（零售共置與互連） | 企業價值 114,671.9m；NTM EV/EBITDA 19.88 倍 | [本專案：20261121_WhiteFiber個股模型_v0.4.4.xlsx Val!C51、D51、F51] |
 
-- 市占：本專案未建立。WYFI 市值 427.0m（2026-11-13 現價 × 評價日股數），約為 CRWV 市值 29,700m（53.13 × 559 百萬股）的 1.4% [本專案：20261116_WhiteFiber個股模型_v0.4.3.xlsx Val!C7；In!E149、E150]（[Derived]）；Applied Digital、Core Scientific、Cipher Mining（HPC 託管）無可用 NTM EBITDA 共識，不進同業中位數 [本專案：20261116_WhiteFiber個股模型_v0.4.3.xlsx Val!A54]。
+- 市占：本專案未建立。WYFI 市值 287.5m（2026-11-20 現價 × 評價日股數），約為 CRWV 市值 22,100m（39.51 × 559 百萬股）的 1.3% [本專案：20261121_WhiteFiber個股模型_v0.4.4.xlsx Val!C7；In!E149、E150]（[Derived]）；Applied Digital、Core Scientific、Cipher Mining（HPC 託管）無可用 NTM EBITDA 共識，不進同業中位數 [本專案：20261121_WhiteFiber個股模型_v0.4.4.xlsx Val!A54]。
 - 託管業務與 APLD、CORZ 等「房東」競爭，雲端業務與大型 neocloud 競爭，兩邊規模都明顯較小 [外部・未經本專案檢核]。
 
 ## 主要客戶
@@ -91,14 +91,14 @@ asof: 2026-10-25
 - 2026-08-01｜財務長由 Erke Huang 交棒 Justin Zhu [外部新聞：Panabee 轉述 8-K]
 
 ## 需要觀察的事項
-- 融資上限｜模型以借款 ÷ 調整後 EBITDA 4.5 倍為上限，超過再走新股與高息債 [本專案：20261121_WhiteFiber個股模型_v0.4.4.xlsx In!E127；README!A35]；情境 B 淨負債 ÷ EBITDA 最差 6.24 倍、利息保障最差 1.65 倍 [本專案：20261116_WhiteFiber個股模型_v0.4.3.xlsx README!A7]；NC-1 信用協議 300m 於 2026-11-09 簽約、未動用 [本專案：20261121_WhiteFiber個股模型_v0.4.4.xlsx Debt!A1]｜NC-1 信用協議動用
+- 融資上限｜模型以借款 ÷ 調整後 EBITDA 4.5 倍為上限，超過再走新股與高息債 [本專案：20261121_WhiteFiber個股模型_v0.4.4.xlsx In!E127；README!A35]；情境 B 淨負債 ÷ EBITDA 最差 6.34 倍、利息保障最差 1.65 倍 [本專案：20261121_WhiteFiber個股模型_v0.4.4.xlsx README!A7]；NC-1 信用協議 300m 於 2026-11-09 簽約、未動用 [本專案：20261121_WhiteFiber個股模型_v0.4.4.xlsx Debt!A1]｜NC-1 信用協議動用
 - NC-1 與 Nscale 信用｜NC-1 唯一承租人為 Nscale；NC-1 長約以租賃認列，出租方租賃收款 421.49m [本專案：20261121_WhiteFiber個股模型_v0.4.4.xlsx README!A21；In!H199]；模型託管營收 FY2027 起每年約 135.8m [本專案：20261121_WhiteFiber個股模型_v0.4.4.xlsx Seg!E16]；Nscale 違約時此營收歸零｜Nscale 紐約上市進度
-- 每 MW 年收入｜本專案反向 DCF（以現價 US$9.43〔2026-11-13 收盤〕計）：現價需 FY2030 情境 B 雲端每 MW 年收入 7.67，比模型基準 10.11 低 24.2% [本專案：20261116_WhiteFiber個股模型_v0.4.3.xlsx RevDCF!G5、H5、I5]｜Q4 財報
+- 每 MW 年收入｜本專案反向 DCF（以現價 US$6.35〔2026-11-20 收盤〕計）：現價需 FY2030 情境 B 雲端每 MW 年收入 6.82，比模型基準 10.11 低 32.5% [本專案：20261121_WhiteFiber個股模型_v0.4.4.xlsx RevDCF!G5、H5、I5]｜Q4 財報
 - 雲端合約銜接｜Baseten（安大略，2026-11 起）、冰島 B300（2026-12）、巴黎（2027-01／02）、Prime Intellect（MTL-2，2027 年初完工）的上線時點 [本專案：20261121_WhiteFiber個股模型_v0.4.4.xlsx Sites!A5、E5、A6、E6、A8、E8、A9、E9]｜Q4 財報
 - 營收與公司目標、共識差距｜模型 FY2026 營收 118.3m 對共識 137m；2027 年底雲端年化 304.5m 對公司 2027 年中目標 365m [本專案：20261121_WhiteFiber個股模型_v0.4.4.xlsx Seg!D17；In!E208；Recon!B8、E8]｜Q4 財報
 
 ## 來源
-1. 本專案：`whitefiber/dist/20261116_WhiteFiber個股模型_v0.4.3.xlsx`（README、In、Q、Seg、Sites、Debt、Val、RevDCF、Recon）
+1. 本專案：`whitefiber/dist/20261121_WhiteFiber個股模型_v0.4.4.xlsx`（README、In、Q、Seg、Sites、Debt、Val、RevDCF、Recon）
 2. [Why Is WhiteFiber Down 6.95% at an Oversold RSI of 27.7 as AI Infrastructure Names Slide?](https://kalkine.ca/news/technology/why-is-whitefiber-nasdaqwyfi-down-695-at-an-oversold-rsi-of-277-as-ai-infrastructure-names-slide)（Kalkine，2026-10-14）
 3. [WhiteFiber Stock Price Down 8.2%](https://www.marketbeat.com/instant-alerts/price-whitefiber-nasdaq-wyfi-stock-price-down-82-heres-what-happened-2026-10-08/)（MarketBeat，2026-10-08）
 4. [B. Riley keeps WhiteFiber at Buy, $38 target as North Carolina financing nears](https://finance.yahoo.com/markets/stocks/articles/b-riley-keeps-whitefiber-buy-221508312.html)（Yahoo Finance，2026-09-10）

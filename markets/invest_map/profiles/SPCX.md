@@ -62,14 +62,14 @@ asof: 2026-11-04
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| CoreWeave（CRWV） | AI 算力出租 | 市占本專案未建立；NTM EV/EBITDA 5.29 倍（2026-11-13 近似） | [本專案：20261116_SpaceX個股模型_v0.2.10.xlsx In!E59] |
-| Nebius（NBIS） | AI 算力出租 | 市占本專案未建立；NTM EV/EBITDA 7.70 倍 | [本專案：20261116_SpaceX個股模型_v0.2.10.xlsx In!E60] |
-| Oracle（ORCL） | AI 算力出租（OCI） | 市占本專案未建立；NTM EV/EBITDA 8.35 倍 | [本專案：20261116_SpaceX個股模型_v0.2.10.xlsx In!E61] |
-| Iridium（IRDM） | 衛星通訊 | 市占本專案未建立；NTM EV/EBITDA 12.55 倍 | [本專案：20261116_SpaceX個股模型_v0.2.10.xlsx In!E54] |
-| EchoStar（SATS） | 衛星與頻譜（SpaceX 正收購其頻譜） | 市占本專案未建立；NTM EV/EBITDA 11.15 倍 | [本專案：20261116_SpaceX個股模型_v0.2.10.xlsx In!E58] |
+| CoreWeave（CRWV） | AI 算力出租 | 市占本專案未建立；NTM EV/EBITDA 3.93 倍（2026-11-20 近似） | [本專案：20261121_SpaceX個股模型_v0.2.11.xlsx In!E59] |
+| Nebius（NBIS） | AI 算力出租 | 市占本專案未建立；NTM EV/EBITDA 5.40 倍 | [本專案：20261121_SpaceX個股模型_v0.2.11.xlsx In!E60] |
+| Oracle（ORCL） | AI 算力出租（OCI） | 市占本專案未建立；NTM EV/EBITDA 6.74 倍 | [本專案：20261121_SpaceX個股模型_v0.2.11.xlsx In!E61] |
+| Iridium（IRDM） | 衛星通訊 | 市占本專案未建立；NTM EV/EBITDA 11.52 倍 | [本專案：20261121_SpaceX個股模型_v0.2.11.xlsx In!E54] |
+| EchoStar（SATS） | 衛星與頻譜（SpaceX 正收購其頻譜） | 市占本專案未建立；NTM EV/EBITDA 9.87 倍 | [本專案：20261121_SpaceX個股模型_v0.2.11.xlsx In!E58] |
 
 - Space 沒有直接上市同業，模型以 EV／營收 3 倍估值 [本專案：20261121_SpaceX個股模型_v0.2.11.xlsx In!E66、H66]。
-- Connectivity 同業五家（IRDM、TMUS、T、CMCSA、SATS）中位數 6.63 倍；Starlink 成長型對照倍數無可比上市公司依據 [本專案：20261116_SpaceX個股模型_v0.2.10.xlsx Val!B139；In!H63]。
+- Connectivity 同業五家（IRDM、TMUS、T、CMCSA、SATS）中位數 6.46 倍；Starlink 成長型對照倍數無可比上市公司依據 [本專案：20261121_SpaceX個股模型_v0.2.11.xlsx Val!B139；In!H63]。
 - Amazon Kuiper 是 Starlink 的競爭者，模型列為情境 C 訂戶放緩理由之一 [本專案：20261121_SpaceX個股模型_v0.2.11.xlsx In!H138]。
 - 模型（Grok）面對 OpenAI、Anthropic、Google 的競爭，同時 Anthropic、Google 又是其算力客戶 [判斷]。
 
@@ -112,17 +112,17 @@ asof: 2026-11-04
 - 2026-08-14｜完成併購 Cursor：GAAP 對價 424.74 億美元，另有收購後服務期股權報酬 233.76 億 [本專案：spacex_facts_2026q3.json cursor.consideration、cursor.postSvcAwards]｜股權報酬費用將持續到 2029 年
 
 ## 需要觀察的事項
-- 每 GW 年營收對持有成本（S2 核心問題）｜2026Q3 k0 1.87；情境 B 假設 FY2030 收斂到 1.25，FY2028 比值 A／B／C 為 1.73／1.56／1.43 [本專案：20261121_SpaceX個股模型_v0.2.11.xlsx Thesis!C9；In!E110；Val!B27、C27、D27]；若 k 不收斂，加權目標價 64.74 美元 [本專案：20261116_SpaceX個股模型_v0.2.10.xlsx Sens!D71]｜2026Q4 財報（日期未公告）
-- 營收指引與模型的差距｜2027Q1 指引中值 350 億美元，模型情境 B 為 208.3 億，低於下緣；若以 k0 校準到指引（k0 4.82），加權目標價 46.39 美元 [本專案：20261116_SpaceX個股模型_v0.2.10.xlsx Recon!C51、C52；Sens!D11]｜2026Q4 財報與 2027Q1 指引
+- 每 GW 年營收對持有成本（S2 核心問題）｜2026Q3 k0 1.87；情境 B 假設 FY2030 收斂到 1.25，FY2028 比值 A／B／C 為 1.73／1.56／1.43 [本專案：20261121_SpaceX個股模型_v0.2.11.xlsx Thesis!C9；In!E110；Val!B27、C27、D27]；若 k 不收斂，加權目標價 64.61 美元 [本專案：20261121_SpaceX個股模型_v0.2.11.xlsx Sens!D71]｜2026Q4 財報（日期未公告）
+- 營收指引與模型的差距｜2027Q1 指引中值 350 億美元，模型情境 B 為 208.3 億，低於下緣；若以 k0 校準到指引（k0 4.82），加權目標價 46.27 美元 [本專案：20261121_SpaceX個股模型_v0.2.11.xlsx Recon!C51、C52；Sens!D11]｜2026Q4 財報與 2027Q1 指引
 - 收支關卡與資金｜FY2026–FY2030 自由現金流合計 A／B／C 為 −1,766.3／−2,485.2／−3,008.6 億美元，情境 B 五年新增舉債 1,382.3 億美元，IPO 現金在 FY2027 用盡 [本專案：20261121_SpaceX個股模型_v0.2.11.xlsx CF!B6、CF!C6、CF!D6、CF!C8；spacex/README.md 重點觀察]｜下一次發債或增資
-- 擴產步調｜模型名目算力 2026 年底 2.75 GW、FY2027 年底 5.98 GW；管理層稱 2027 年底約 13 GW，照此路徑加權目標價 43.94 美元、FY2027 新增舉債 3,165.9 億美元 [本專案：20261116_SpaceX個股模型_v0.2.10.xlsx Thesis!F26、H26；In!E75；Sens!D9、J9]｜2026 年底名目算力實績
+- 擴產步調｜模型名目算力 2026 年底 2.75 GW、FY2027 年底 5.98 GW；管理層稱 2027 年底約 13 GW，照此路徑加權目標價 43.82 美元、FY2027 新增舉債 3,165.9 億美元 [本專案：20261121_SpaceX個股模型_v0.2.11.xlsx Thesis!F26、H26；In!E75；Sens!D9、J9]｜2026 年底名目算力實績
 - 客戶集中與合約終止｜Customer B 占 Q3 營收 34.5%，模型對外出租占比 72%（區間 60%–85%）[本專案：spacex_facts_2026q3.json cust.B.pct.2026q3；20261121_SpaceX個股模型_v0.2.11.xlsx In!E76、D76、F76]｜2026Q4 10-K 客戶占比
-- 模型與現價差距｜現價 139.11 美元（2026-11-13 收盤），加權目標價 32.97 美元、上檔空間 −76.3%，模型評級「強力放空」；市場共識目標價 244.97 美元 [本專案：20261116_SpaceX個股模型_v0.2.10.xlsx Val!B9、B8、B11、B16、B10]｜Tesla 合併案進展
+- 模型與現價差距｜現價 127.79 美元（2026-11-20 收盤），加權目標價 32.84 美元、上檔空間 −74.3%，模型評級「強力放空」；市場共識目標價 244.97 美元 [本專案：20261121_SpaceX個股模型_v0.2.11.xlsx Val!B9、B8、B11、B16、B10]｜Tesla 合併案進展
 
 ## 來源
-1. 本專案：spacex/dist/20261116_SpaceX個股模型_v0.2.10.xlsx（README、In、Q、Thesis、CF、Val、Recon、Sens、Coord）、spacex/README.md（2026-11-16）
+1. 本專案：spacex/dist/20261121_SpaceX個股模型_v0.2.11.xlsx（README、In、Q、Thesis、CF、Val、Recon、Sens、Coord）、spacex/README.md（2026-11-16）
 2. 本專案：spacex/data/spacex_facts_2026q3.json、spacex_facts_v02.json（2026-10-30）
-3. 本專案：anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx（SRC_ANT）；alphabet/data/alphabet_facts_20261008.json、alphabet_facts_2026q3.json
+3. 本專案：anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx（SRC_ANT）；alphabet/data/alphabet_facts_20261008.json、alphabet_facts_2026q3.json
 4. [Anthropic is SpaceX's biggest customer, bringing in a third of revenue（The Next Web，轉述 Bloomberg）](https://thenextweb.com/news/anthropic-spacex-largest-customer-customer-b)（2026-10-29）
 5. [SpaceX and Tesla boards form special committees to review merger（TechCrunch）](https://techcrunch.com/2026/10/20/spacex-and-tesla-boards-form-special-committees-to-review-merger/)（2026-10-20）
 6. [SpaceX AI compute deal（Drive Tesla Canada）](https://driveteslacanada.ca/news/spacex-ai-compute-deal-13-billion-revenue/)（2026-09-10）

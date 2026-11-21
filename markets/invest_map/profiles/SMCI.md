@@ -96,8 +96,8 @@ AI 伺服器品牌商：以買賣模式銷售含 NVIDIA、AMD GPU 的整機、�
 - 市場口徑一致性｜美超微模型與 Dell 模型的 2026 年商用 GPU 系統市場現在同為 US$595B（先前因 AMD 2026 年計價世代不同而有差異，已對齊），兩邊更新時需同步 [本專案：20261121_美超微個股模型_v0.3.9.xlsx Units!C8；20261121_戴爾個股模型_v0.2.8.xlsx Units!C8]｜模型更新
 
 ## 來源
-1. 本專案：`smci/README.md`（v0.2，2026-11-04）；`smci/dist/20261116_美超微個股模型_v0.3.8.xlsx`（In、Q、Units 頁）
-2. 本專案：`dell/dist/20261116_戴爾個股模型_v0.2.7.xlsx`（對照）
+1. 本專案：`smci/README.md`（v0.2，2026-11-04）；`smci/dist/20261121_美超微個股模型_v0.3.9.xlsx`（In、Q、Units 頁）
+2. 本專案：`dell/dist/20261121_戴爾個股模型_v0.2.8.xlsx`（對照）
 3. [Supermicro：1Q FY27 初步營運更新](https://ir.supermicro.com/news/news-details/2026/Supermicro-Provides-First-Quarter-of-Fiscal-Year-2027-Preliminary-Business-Update/default.aspx)（2026-10-20）
 4. [Supermicro：任命 Mark Long 為財務長](https://ir.supermicro.com/news/news-details/2026/Supermicro-Appoints-Mark-Long-as-Chief-Financial-Officer/default.aspx)（2026-10-15）
 5. [Supermicro：FY2026 第四季與全年財報](https://ir.supermicro.com/news/news-details/2026/Supermicro-Announces-Fourth-Quarter-and-Full-Fiscal-Year-2026-Financial-Results/default.aspx)（2026-08-11）

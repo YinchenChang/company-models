@@ -84,7 +84,6 @@ asof: 2026-10-25
 - 董事會與監事會成員（8 人）合計持股 0.01%（來源 7）。 [外部・未經本專案檢核]
 
 ## 近期重大事件
-- 2026-11-13｜Euronext 收盤 €1,338.80｜模型日股價 [本專案：20261116_ASML個股模型_v0.3.6.xlsx In!E139]
 - 2026-10-14｜第三季財報：營收 €11,662M、毛利率 57.5%、淨利 €4,960M（含 Mistral AI 評價益 €509.7M）；第四季營收指引 €14.2–15.2B，全年指引 €44–45B｜全年指引下緣由 €43B 上調到 €44B [本專案：20261121_ASML個股模型_v0.3.7.xlsx Q!I6、I8、I14、I13；In!D89:F89、H94]
 - 2026-10-14｜中國占系統出貨由第二季 14% 升到第三季 23%（記憶體廠備貨）｜與公司「全年約 20%」並列 [本專案：20261121_ASML個股模型_v0.3.7.xlsx Q!D27:E27，aiweekly；In!H106]
 - 2026-07-18｜媒體報導美國商務部自 4 月起詢問 ASML 是否有 EUV 系統違規流入中國；ASML 否認，尚無處分｜出口管制風險 [外部新聞：Börse Express]
@@ -98,7 +97,7 @@ asof: 2026-10-25
 - 模型 vs 共識｜FY2027 營收比共識低 7.1%、FY2028 EPS 比 eulerpool 隱含值低 13.2% [本專案：asml/README.md 對帳]｜2027-01 下旬第四季財報
 
 ## 來源
-1. 本專案：`asml/README.md`（v0.2，2026-10-25）；`asml/dist/20261116_ASML個股模型_v0.3.6.xlsx`（In、Q、Recon 頁）
+1. 本專案：`asml/README.md`（v0.2，2026-10-25）；`asml/dist/20261121_ASML個股模型_v0.3.7.xlsx`（In、Q、Recon 頁）
 2. 本專案：`先驗與比對/先驗比對_TEL_20261023.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 3. [ASML Board of Management](https://www.asml.com/en/company/governance/board-of-management)（查閱 2026-10-25）
 4. [Börse Express：ASML: Rekordausblick trifft Exportverdacht](https://www.boerse-express.com/news/articles/asml-rekordausblick-trifft-exportverdacht-929561)（2026-07-18）

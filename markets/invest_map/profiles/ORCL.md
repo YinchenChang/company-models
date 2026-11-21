@@ -59,7 +59,7 @@ asof: 2026-10-27
 |---|---|---|---|
 | Microsoft（Azure） | AI 算力出租、OpenAI 供應商 | 市占本專案未建立；Azure FY2026 營收 1,019.4 億美元 | [本專案：microsoft_facts_20261008.json prod27.azure.fy2026] |
 | Amazon（AWS） | 公有雲、OpenAI 也是其客戶 | 市占本專案未建立；AWS 2025 營收 1,287.3 億美元 | [本專案：amazon_facts_20261008.json is.AWS.rev.fy2025] |
-| CoreWeave | GPU 雲（同樣以租賃機房為主） | 企業價值 753.3 億美元、2027 前瞻 EV/EBITDA 4.52 倍（2026-11-13） | [本專案：20261116_Oracle個股模型_v0.5.3.xlsx Val!C35、D35] |
+| CoreWeave | GPU 雲（同樣以租賃機房為主） | 企業價值 678.2 億美元、2027 前瞻 EV/EBITDA 4.07 倍（2026-11-20） | [本專案：20261121_Oracle個股模型_v0.5.4.xlsx Val!C35、D35] |
 | SAP | 企業應用軟體 | NTM EV/EBITDA 15.13 倍 | [本專案：microsoft/data/peers_cloud_20261008.json SAP] |
 
 - OpenAI 同時向 Microsoft、Amazon 等多家採購算力，Oracle 不是唯一供應商 [本專案：amazon_facts_20261008.json contract.openai.nv]。
@@ -96,15 +96,15 @@ asof: 2026-10-27
 - 2026-07-09｜S&P 由 BBB 降至 BBB−｜再降一級即非投資級 [本專案：oracle_facts_20261007.json rating.sp]
 
 ## 需要觀察的事項
-- OCI AI 的報酬（命題核心）｜基準情境 FY2029 OCI 營收 936 億美元，為公司路徑 1,140 億的 82%；扣 AI 折舊與機房租金後 OCI AI 營業利益率 6.2%，AI 增量 ROIC 1.7%，低於 WACC 10.9% [本專案：20261116_Oracle個股模型_v0.5.3.xlsx Thesis!D125、D121、D127、D131；Val!C9]｜FY27Q2 財報（約 2026-12，日期未公告）
-- 每 MW 價格 k｜k ×0.9／×1.2（1.2 約當 Oracle 自身合約）時加權目標價 58.93／95.13 美元，是敏感度最大的一項 [本專案：20261116_Oracle個股模型_v0.5.3.xlsx Sens!C4、E4]｜OCI 新簽合約定價
+- OCI AI 的報酬（命題核心）｜基準情境 FY2029 OCI 營收 936 億美元，為公司路徑 1,140 億的 82%；扣 AI 折舊與機房租金後 OCI AI 營業利益率 6.2%，AI 增量 ROIC 1.7%，低於 WACC 10.7% [本專案：20261121_Oracle個股模型_v0.5.4.xlsx Thesis!D125、D121、D127、D131；Val!C9]｜FY27Q2 財報（約 2026-12，日期未公告）
+- 每 MW 價格 k｜k ×0.9／×1.2（1.2 約當 Oracle 自身合約）時加權目標價 49.72／89.67 美元，是敏感度最大的一項 [本專案：20261121_Oracle個股模型_v0.5.4.xlsx Sens!C4、E4]｜OCI 新簽合約定價
 - 槓桿與資金缺口｜調整後槓桿峰值基準 4.64 倍、保守 5.35 倍，S&P 降評門檻 4.5 倍 [本專案：20261121_Oracle個股模型_v0.5.4.xlsx CF!D8、E8][本專案：oracle_facts_20261007.json rating.sp]；FY2027–FY2031 自由現金流扣股利合計基準 +591.0 億、保守 −17.1 億美元；模型納入 2026-11 已交割的股債增資後，基準情境仍需新增投資級債 49.8 億（FY2028；FY2027–FY2030 外部融資合計 249.8 億，超出公司上限 200 億約 49.8 億），保守情境無新增融資需求、也不需新股或高息債 [本專案：20261121_Oracle個股模型_v0.5.4.xlsx CF!D4、E4、D5、E5、D12、D13、D14、D15、D9、E9]｜信評動作與債券、股權發行
-- 營收與交付時程｜基準 FY2027 營收 871.5 億美元，低於公司指引下限 900 億 [本專案：20261121_Oracle個股模型_v0.5.4.xlsx Recon!E20、B20]；各站點延誤再加 6 個月時加權目標價 63.53 美元 [本專案：20261116_Oracle個股模型_v0.5.3.xlsx Sens!E8]｜Jupiter 天然氣管線與 Abilene 交付、FY27Q2 財報
-- 模型與現價差距｜現價 125.35 美元（2026-11-13 收盤），加權目標價 70.89 美元、上檔空間 −43.4%，模型評級「放空」；若分部加總的 OCI AI 改用 neocloud 同業倍數，加權目標價為 94.75 美元 [本專案：20261116_Oracle個股模型_v0.5.3.xlsx Val!C76、C75、C78、C81、C87]｜模型 FY27Q2 滾入時
+- 營收與交付時程｜基準 FY2027 營收 871.5 億美元，低於公司指引下限 900 億 [本專案：20261121_Oracle個股模型_v0.5.4.xlsx Recon!E20、B20]；各站點延誤再加 6 個月時加權目標價 55.46 美元 [本專案：20261121_Oracle個股模型_v0.5.4.xlsx Sens!E8]｜Jupiter 天然氣管線與 Abilene 交付、FY27Q2 財報
+- 模型與現價差距｜現價 101.19 美元（2026-11-20 收盤），加權目標價 62.94 美元、上檔空間 −37.8%，模型評級「放空」；若分部加總的 OCI AI 改用 neocloud 同業倍數，加權目標價為 80.56 美元 [本專案：20261121_Oracle個股模型_v0.5.4.xlsx Val!C76、C75、C78、C81、C87]｜模型 FY27Q2 滾入時
 - 自用 AI 讀法不適用｜Oracle 的 AI 產能幾乎全數對外出租，模型不設自用 AI 讀法 [本專案：oracle/docs/reports/20261027_oracle_v0.4_分部架構.md 修正一]｜—
 
 ## 來源
-1. 本專案：oracle/dist/20261104_Oracle個股模型_v0.4.5.xlsx（Q、Thesis、CF、Val、Recon、Sens）、oracle/README.md、oracle/docs/reports/20261027_oracle_v0.4_分部架構.md（2026-10-27）
+1. 本專案：oracle/dist/20261121_Oracle個股模型_v0.5.4.xlsx（Q、Thesis、CF、Val、Recon、Sens）、oracle/README.md、oracle/docs/reports/20261027_oracle_v0.4_分部架構.md（2026-10-27）
 2. 本專案：oracle/data/oracle_facts_20261007.json、oracle/company.json（2026-10-07／22）
 3. 本專案：microsoft/data/microsoft_facts_20261008.json、microsoft/data/peers_cloud_20261008.json、amazon/data/amazon_facts_20261008.json
 4. [Oracle 2026 委託書 DEF 14A（管理層名單）](https://www.sec.gov/Archives/edgar/data/0001341439/000119312526402816/orcl-20260925.htm)（2026-09-25）

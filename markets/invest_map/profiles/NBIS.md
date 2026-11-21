@@ -45,15 +45,15 @@ asof: 2026-10-25
 | 營收長 | Marc Boroditsky | 本專案未建立 | [外部・未經本專案檢核] |
 
 - 經營風格：本專案尚未研究。
-- 資本配置（本專案可見部分）：客戶預付、資產擔保貸款、可轉債與 ATM 增資併用：Q3 ATM 淨額約 1.0bn [本專案：20261121_Nebius個股模型_v0.6.4.xlsx In!H130]；2026-07 資產擔保額度 0.775bn（SOFR＋2.50%，約 6.8%）[本專案：20261121_Nebius個股模型_v0.6.4.xlsx Debt!A1；In!H124]；Q3 可轉債誘導轉換費用 0.0495bn [本專案：20261121_Nebius個股模型_v0.6.4.xlsx Debt!A1]；模型缺口依序以現金、投資級債（借款不超過 EBITDA 的 4.5 倍）、新股（每年不超過市值 20%）、高息債補足 [本專案：20261116_Nebius個股模型_v0.6.3.xlsx README!A64]。
+- 資本配置（本專案可見部分）：客戶預付、資產擔保貸款、可轉債與 ATM 增資併用：Q3 ATM 淨額約 1.0bn [本專案：20261121_Nebius個股模型_v0.6.4.xlsx In!H130]；2026-07 資產擔保額度 0.775bn（SOFR＋2.50%，約 6.8%）[本專案：20261121_Nebius個股模型_v0.6.4.xlsx Debt!A1；In!H124]；Q3 可轉債誘導轉換費用 0.0495bn [本專案：20261121_Nebius個股模型_v0.6.4.xlsx Debt!A1]；模型缺口依序以現金、投資級債（借款不超過 EBITDA 的 4.5 倍）、新股（每年不超過市值 20%）、高息債補足 [本專案：20261121_Nebius個股模型_v0.6.4.xlsx README!A64]。
 - 2026-02 起投資人關係與策略職務調整（Neil Doshi 轉任策略）[外部・未經本專案檢核]。
 
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| CoreWeave（CRWV） | GPU 算力雲 | 企業價值 73.10bn；NTM EV/EBITDA 4.73 倍（2026-11-13） | [本專案：20261116_Nebius個股模型_v0.6.3.xlsx Val!C38、D38、E38] |
-| IREN | GPU 算力雲、自有電廠 | 企業價值 14.40bn；NTM EV/EBITDA 5.21 倍（2026-11-13） | [本專案：20261116_Nebius個股模型_v0.6.3.xlsx Val!C40、D40、E40] |
-| Oracle（ORCL） | 雲端與 AI 基礎設施（混合業務，SaaS 與授權占多數） | 企業價值 478.01bn；NTM EV/EBITDA 7.71 倍（2026-11-13） | [本專案：20261116_Nebius個股模型_v0.6.3.xlsx Val!C39、D39、F39] |
+| CoreWeave（CRWV） | GPU 算力雲 | 企業價值 65.49bn；NTM EV/EBITDA 4.24 倍（2026-11-20） | [本專案：20261121_Nebius個股模型_v0.6.4.xlsx Val!C38、D38、E38] |
+| IREN | GPU 算力雲、自有電廠 | 企業價值 11.70bn；NTM EV/EBITDA 4.24 倍（2026-11-20） | [本專案：20261121_Nebius個股模型_v0.6.4.xlsx Val!C40、D40、E40] |
+| Oracle（ORCL） | 雲端與 AI 基礎設施（混合業務，SaaS 與授權占多數） | 企業價值 402.69bn；NTM EV/EBITDA 6.49 倍（2026-11-20） | [本專案：20261121_Nebius個股模型_v0.6.4.xlsx Val!C39、D39、E39、F39] |
 
 - 市占：本專案未建立。
 - 與 CRWV 相比，Nebius 財務槓桿較低：Nebius 淨負債 6.77bn（借款含可轉債 14.19bn − 現金 7.43bn）[本專案：20261121_Nebius個股模型_v0.6.4.xlsx Val!C11；In!E118、E116]，CRWV 淨負債 ÷ NTM EBITDA 為 2.81 倍 [本專案：20261121_Nebius個股模型_v0.6.4.xlsx Val!H38]；差異主要來自預付款與可轉債為主的融資組合（既有借款平均利率僅 3.2%）[本專案：20261121_Nebius個股模型_v0.6.4.xlsx Val!F6]。
@@ -94,14 +94,14 @@ asof: 2026-10-25
 - 2026-07｜資產擔保額度 0.775bn（SOFR＋2.50%）[本專案：20261121_Nebius個股模型_v0.6.4.xlsx Debt!A1；In!H124]
 
 ## 需要觀察的事項
-- 每 MW 年收入｜本專案反向 DCF（以現價 US$115.88〔2026-11-13 收盤〕計）：現價需 FY2030 情境 B 每 MW 年收入 19.67，比模型基準 10.48 高 87.7%；公司稱新約 ACV 超過 25 US$m [本專案：20261116_Nebius個股模型_v0.6.3.xlsx RevDCF!G5、H5、I5、J5]｜Q4 財報
+- 每 MW 年收入｜本專案反向 DCF（以現價 US$81.31〔2026-11-20 收盤〕計）：現價需 FY2030 情境 B 每 MW 年收入 19.25，比模型基準 10.48 高 83.7%；公司稱新約 ACV 超過 25 US$m [本專案：20261121_Nebius個股模型_v0.6.4.xlsx RevDCF!G5、H5、I5、J5]｜Q4 財報
 - 預付款覆蓋率｜模型論點是「預付能否把 backlog 變現金」；模型 FY2027 起預付覆蓋資本支出 40%（公司稱 2027 年約 43%）；若覆蓋不足，缺口要靠債與新股 [本專案：20261121_Nebius個股模型_v0.6.4.xlsx In!E132、H132；README!A2]｜Q4 股東信
-- 融資條件｜模型新增擔保融資利率 7.5%、借款 ÷ 調整後 EBITDA 上限 4.5 倍 [本專案：20261121_Nebius個股模型_v0.6.4.xlsx In!E124、E128]；情境 B 淨負債 ÷ EBITDA 最差 6.40 倍（超過 4.5 倍）[本專案：20261116_Nebius個股模型_v0.6.3.xlsx Fund!D12]；10 月新額度為 364 天短期橋接，長期融資何時、以何利率完成｜2027 年 10 月額度到期前
+- 融資條件｜模型新增擔保融資利率 7.5%、借款 ÷ 調整後 EBITDA 上限 4.5 倍 [本專案：20261121_Nebius個股模型_v0.6.4.xlsx In!E124、E128]；情境 B 淨負債 ÷ EBITDA 最差 6.68 倍（超過 4.5 倍）[本專案：20261121_Nebius個股模型_v0.6.4.xlsx Fund!D12]；10 月新額度為 364 天短期橋接，長期融資何時、以何利率完成｜2027 年 10 月額度到期前
 - 營收與指引、共識差距｜模型 FY2027 營收 8.00bn 對公司指引 12–13bn（−36.0%）[本專案：20261121_Nebius個股模型_v0.6.4.xlsx Recon!E10、B10、F10]；FY2027 EBITDA 模型 4.37bn 對共識 6.56bn（−33.3%）[本專案：20261121_Nebius個股模型_v0.6.4.xlsx Recon!E35、B35、F35]；Meta Vera Rubin 部署 2027 年起是否如期｜Q4 財報、NVIDIA 交貨時程
 - 在役 MW 揭露｜季末 active MW 公司未揭露，本專案以假設代替（2026-09-30 為 330 MW、年底 550 MW）[本專案：20261121_Nebius個股模型_v0.6.4.xlsx In!E19、E20、H19]｜Q4 股東信
 
 ## 來源
-1. 本專案：`nebius/dist/20261116_Nebius個股模型_v0.6.3.xlsx`（README、In、Q、Seg、Sites、Debt、Val、RevDCF、Recon、Fund）
+1. 本專案：`nebius/dist/20261121_Nebius個股模型_v0.6.4.xlsx`（README、In、Q、Seg、Sites、Debt、Val、RevDCF、Recon、Fund）
 2. [Nebius stock falls as $3.5B loan raises AI infrastructure debt concerns](https://invezz.com/au/news/2026/10/22/nebius-stock-falls-as-dollar35b-loan-raises-ai-infrastructure-debt-concerns/)（Invezz，2026-10-22）
 3. [Nebius borrows $3.5 billion as investors question neocloud debt](https://www.thestreet.com/investing/nebius-citi-bridge-loan-gpu-prices)（TheStreet，2026-10-22）
 4. [Nebius Group Drops 12% On CoreWeave Debt Contagion](https://www.foreignpolicyjournal.com/2026/10/18/nebius-group-nasdaq-nbis-drops-12-on-coreweave-debt-contagion-but-balance-sheets-tell-different-stories-for-now/)（Foreign Policy Journal，2026-10-18）

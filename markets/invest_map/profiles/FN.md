@@ -85,7 +85,6 @@ asof: 2026-10-25
 
 ## 近期重大事件
 - 2026-10-20｜連跌 9 個交易日，累計約 −29%；媒體未指出公司特定原因 [外部新聞：Trefis]
-- 2026-11-13｜收盤 US$327.98，52 週高點 748.89 [本專案：20261116_Fabrinet個股模型_v0.3.6.xlsx In!E125、In!E126]
 - 2026-08-18｜財報後股價下跌：毛利率年減、擴產使自由現金流轉負、第一季 EPS 指引季減，另有泰國補充稅不確定性 [外部新聞：Yahoo Finance]
 - 2026-08-17｜FY2026 財報：營收 US$4.64B、non-GAAP EPS 14.09；改為三類揭露營收；第一季營收指引中點 1.40B、EPS 4.10–4.25 [本專案：20261121_Fabrinet個股模型_v0.3.7.xlsx Q!C4、Q!C19、In!I61、In!I62；外部新聞：MarketBeat]
 
@@ -97,7 +96,7 @@ asof: 2026-10-25
 - 顆數情境｜情境 C 全部使 FY2028 EPS −20.8% [本專案：fabrinet/README.md 結果]｜NVIDIA、雲端業者資本支出
 
 ## 來源
-1. 本專案：`fabrinet/README.md`；`fabrinet/dist/20261116_Fabrinet個股模型_v0.3.6.xlsx`（Q、Units、In）；AI半導體 `先驗比對_網通_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
+1. 本專案：`fabrinet/README.md`；`fabrinet/dist/20261121_Fabrinet個股模型_v0.3.7.xlsx`（Q、Units、In）；AI半導體 `先驗比對_網通_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 2. [A 9-Day Losing Streak Has Fabrinet Stock Down 29%（Trefis）](https://www.trefis.com/stock/fn/articles/619603/a-9-day-losing-streak-has-fabrinet-stock-down-29/2026-10-21)（2026-10-21）
 3. [Fabrinet Shares Slide Despite Earnings Beat（Yahoo Finance）](https://finance.yahoo.com/markets/stocks/articles/fabrinet-shares-slide-despite-earnings-102815774.html)（2026-08-18）
 4. [Fabrinet Q4 Earnings Call Highlights（MarketBeat）](https://www.marketbeat.com/instant-alerts/fabrinet-q4-earnings-call-highlights-2026-08-17/)（2026-08-17）

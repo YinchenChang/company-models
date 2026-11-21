@@ -1,0 +1,1 @@
+{"profiles": ["VERIFY"], "model": "claude-opus-5-5", "budget_usd": 8, "prompt": "pc_verify_prompt.md"}

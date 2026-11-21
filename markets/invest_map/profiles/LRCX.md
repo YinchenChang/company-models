@@ -89,7 +89,6 @@ asof: 2026-10-25
 - 口徑：13F 機構持股（insiderset 彙整頁，頁面導言稱資料為 2026-06-30（Q2 2026），但標題與 FAQ 另有 Q3 2026 字樣，資料日不完全確定）。該頁無持股比例欄，比例為本檔以 10-Q 封面流通股數 1,249,171 千股（2026/10/20）換算，僅供參考。Vanguard 已拆成兩個 13F 申報實體。proxy（來源 4）5% 以上持有人：BlackRock 117,779,780 股 9.41%（13G 資料日 2023-12-31）、Vanguard Capital Management 93,575,293 股 7.48%。 [外部・未經本專案檢核]
 
 ## 近期重大事件
-- 2026-11-13｜收盤 US$225.92 [本專案：20261116_科林研發模型_v0.3.6.xlsx In!E124]
 - 2026-10-21｜FY2027 第一季：營收 US$8.22B、毛利率 52.3%、營業利益率 40.0%、EPS US$2.19；中國占 35%；12 月季指引營收 US$8.6B±0.4B、EPS US$2.33±0.15 [本專案：20261121_科林研發模型_v0.3.7.xlsx Q!G6、G9、G14、G18、G24；In!E110、E113]
 - 2026-10-21｜公司估 CY2026 WFE 約 mid-$150B，初步看 CY2027 逾 $200B；CSBG CY2026 年增逾 30% [本專案：20261121_科林研發模型_v0.3.7.xlsx In!E114、E116、E118]｜管理層稱 12 月季中國占比將明顯下降 [本專案：20261121_科林研發模型_v0.3.7.xlsx Q!L24]
 - 2026-10-21｜法說：營業利益率首次超過 40%；Aether（乾式光阻）累計營收到 2030 年前預期上調約 US$1B [外部新聞：Motley Fool 逐字稿]
@@ -103,7 +102,7 @@ asof: 2026-10-25
 - 模型 vs 共識｜FY2028 營收、EPS 比 Yahoo 共識低 11.5%、12.1% [本專案：lrcx/README.md 對帳]｜公司若給 CY2027 WFE 正式數字
 
 ## 來源
-1. 本專案：`lrcx/README.md`（v0.2.2，2026-10-31）；`lrcx/dist/20261116_科林研發模型_v0.3.6.xlsx`（In、Q、Recon 頁）
+1. 本專案：`lrcx/README.md`（v0.2.2，2026-10-31）；`lrcx/dist/20261121_科林研發模型_v0.3.7.xlsx`（In、Q、Recon 頁）
 2. 本專案：`先驗與比對/先驗比對_設備材料_20261022.md`、`先驗比對_TEL_20261023.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
-3. 本專案：`amat/dist/20261116_應用材料個股模型_v0.4.6.xlsx`（同業欄）
+3. 本專案：`amat/dist/20261121_應用材料個股模型_v0.4.7.xlsx`（同業欄）
 4. [Motley Fool：Lam Research Q1 2027 Earnings Call Transcript](https://www.fool.com/earnings/call-transcripts/2026/10/21/lam-research-lrcx-q1-2027-earnings-call-transcript/)（2026-10-21）

@@ -95,7 +95,7 @@ asof: 2026-10-25
 - AI 毛利率｜假設 AI 毛利率比非 AI 低 6 個百分點，雲端占比上升使毛利率下滑 [本專案：arista/README.md 驅動因子（In 頁 D 節）]｜同上
 
 ## 來源
-1. 本專案：`arista/README.md`；`arista/dist/20261104_Arista個股模型_v0.4.xlsx`（Q、Recon）；AI半導體 `先驗比對_Arista_20261024.md`
+1. 本專案：`arista/README.md`；`arista/dist/20261121_Arista個股模型_v0.5.7.xlsx`（Q、Recon）；AI半導體 `先驗比對_Arista_20261024.md`
 2. [Arista Networks Inc Stock (ANET) Moved Down by 7.22% on Oct 22](https://www.tradingkey.com/news/market-movers/262232985-market-movers-anet-20261022)（2026-10-22）
 3. [Arista Networks Stock Fell 18% From Its Record in One Week](https://www.tikr.com/blog/arista-networks-stock-fell-18-from-its-record-in-one-week-heres-what-the-selloff-missed-and-where-the-stock-could-go-by-2030)（2026-10）
 4. [Arista Networks management (Simply Wall St)](https://simplywall.st/stocks/de/tech/etr-1170/arista-networks-shares/management)（2026-10）

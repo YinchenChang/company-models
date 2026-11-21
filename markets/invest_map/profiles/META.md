@@ -11,7 +11,7 @@ asof: 2026-11-04
 ---
 
 ## 一句話定位
-全球最大的社群廣告平台之一（Facebook、Instagram、WhatsApp、Messenger），靠賣廣告版位賺錢；AI 算力全部自用，用來改善推薦與廣告投放，不對外出租 [外部・未經本專案檢核]，本專案模型也以「全部自用」處理 [本專案：20261121_Meta個股模型_v0.2.3.xlsx README!A3]。本專案個股模型 v0.2.2 的命題是：AI 資本支出能否由廣告現金流支撐，以及自用算力能否帶來足以回本的廣告變現提升 [本專案：20261121_Meta個股模型_v0.2.3.xlsx README!A3]；在自用 AI 採「價值中性」讀法下，目前評等為「中立」，加權目標價 745.34 美元、上檔空間 +16.2%（現價 641.69，2026-11-13 收盤）[本專案：20261116_Meta個股模型_v0.2.2.xlsx Val!B8、B9、B11、B14]。
+全球最大的社群廣告平台之一（Facebook、Instagram、WhatsApp、Messenger），靠賣廣告版位賺錢；AI 算力全部自用，用來改善推薦與廣告投放，不對外出租 [外部・未經本專案檢核]，本專案模型也以「全部自用」處理 [本專案：20261121_Meta個股模型_v0.2.3.xlsx Thesis!A1]。本專案個股模型 v0.2.3 的命題是：AI 資本支出能否由廣告現金流支撐，以及自用算力能否帶來足以回本的廣告變現提升 [本專案：20261121_Meta個股模型_v0.2.3.xlsx README!A3]；在自用 AI 採「價值中性」讀法下，目前評等為「中立」，加權目標價 697.93 美元、上檔空間 +24.4%（現價 560.84，2026-11-20 收盤）[本專案：20261121_Meta個股模型_v0.2.3.xlsx Val!B8、B9、B11、B14]。
 
 ## 公司在做什麼
 - Family of Apps（應用程式家族）：Facebook、Instagram、Messenger、WhatsApp 等免費服務，靠廣告主購買版位付費；2026Q3 每日活躍人數（DAP，至少用一個 App 的人）36.4 億 [本專案：20261121_Meta個股模型_v0.2.3.xlsx Q!I49]。
@@ -58,14 +58,14 @@ asof: 2026-11-04
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| Alphabet（GOOGL） | 搜尋與 YouTube 廣告、AI 助手 | 市占本專案未建立；NTM EV/EBITDA 12.33 倍（2026-11-13） | [本專案：20261116_Meta個股模型_v0.2.2.xlsx In!E65] |
-| AppLovin（APP） | 行動 App 廣告 | NTM EV/EBITDA 16.62 倍 | [本專案：20261116_Meta個股模型_v0.2.2.xlsx In!E68] |
-| Reddit（RDDT） | 社群廣告 | NTM EV/EBITDA 8.79 倍 | [本專案：20261116_Meta個股模型_v0.2.2.xlsx In!E69] |
-| Pinterest（PINS） | 社群／視覺廣告 | NTM EV/EBITDA 6.45 倍 | [本專案：20261116_Meta個股模型_v0.2.2.xlsx In!E66] |
-| Snap（SNAP） | 社群廣告、AR 眼鏡 | NTM EV/EBITDA 6.73 倍 | [本專案：20261116_Meta個股模型_v0.2.2.xlsx In!E70] |
-| The Trade Desk（TTD） | 程式化廣告採購 | NTM EV/EBITDA 8.30 倍 | [本專案：20261116_Meta個股模型_v0.2.2.xlsx In!E67] |
+| Alphabet（GOOGL） | 搜尋與 YouTube 廣告、AI 助手 | 市占本專案未建立；NTM EV/EBITDA 11.01 倍（2026-11-20） | [本專案：20261121_Meta個股模型_v0.2.3.xlsx In!E65] |
+| AppLovin（APP） | 行動 App 廣告 | NTM EV/EBITDA 14.15 倍 | [本專案：20261121_Meta個股模型_v0.2.3.xlsx In!E68] |
+| Reddit（RDDT） | 社群廣告 | NTM EV/EBITDA 7.62 倍 | [本專案：20261121_Meta個股模型_v0.2.3.xlsx In!E69] |
+| Pinterest（PINS） | 社群／視覺廣告 | NTM EV/EBITDA 5.50 倍 | [本專案：20261121_Meta個股模型_v0.2.3.xlsx In!E66] |
+| Snap（SNAP） | 社群廣告、AR 眼鏡 | NTM EV/EBITDA 5.82 倍 | [本專案：20261121_Meta個股模型_v0.2.3.xlsx In!E70] |
+| The Trade Desk（TTD） | 程式化廣告採購 | NTM EV/EBITDA 7.08 倍 | [本專案：20261121_Meta個股模型_v0.2.3.xlsx In!E67] |
 
-- 六家中位數 8.55 倍，Meta 自身 9.42 倍；六家與 Meta 皆為 2026-11-13 收盤基準 [本專案：20261116_Meta個股模型_v0.2.2.xlsx Val!B135；In!E71]。
+- 六家中位數 7.35 倍，Meta 自身 8.23 倍；六家與 Meta 皆為 2026-11-20 收盤基準 [本專案：20261121_Meta個股模型_v0.2.3.xlsx Val!B135；In!E71]。
 - 競爭風險：AI 答案與代理分流廣告曝光，以及 Alphabet、TikTok 的 AI 廣告工具追上，可能讓 Meta 的價格溢價消退，即模型情境 C [本專案：20261121_Meta個股模型_v0.2.3.xlsx In!H138]。
 - 規模不同、商業模式不同（Meta 無流量取得成本），倍數只能當量級參考 [判斷]。
 
@@ -93,7 +93,7 @@ asof: 2026-11-04
 | 10 | Vanguard Portfolio Management LLC | 1.51% | [外部・未經本專案檢核：VCP Scanner META institutional holders（13F），資料期 2026Q2] |
 
 - 口徑：機構為 13F 申報（2026Q2），網站未說明分母是 Class A 或全部股數；Vanguard 因內部重組分兩個申報實體列示。Zuckerberg 為投票權口徑，另列不排名，兩者不可直接合併排序。 [外部・未經本專案檢核：VCP Scanner META institutional holders，資料期 2026Q2；Meta DEF 14C，2026-11-02]
-- Zuckerberg 經濟權約 13.4%（上列 A＋B 股數 ÷ 2026-10-16 流通股 25.56 億股）[Derived：外部股數 ÷ 本專案 20261116_Meta個股模型_v0.2.2.xlsx In!E11]。
+- Zuckerberg 經濟權約 13.4%（上列 A＋B 股數 ÷ 2026-10-16 流通股 25.56 億股）[Derived：外部股數 ÷ 本專案 20261121_Meta個股模型_v0.2.3.xlsx In!E11]。
 
 ## 近期重大事件
 - 2026-11-02｜寄發 DEF 14C：Class C 無表決權股的重述章程 2027-01-19 生效，每股 Class A／B 配發一股 Class C；同時揭露與 Zuckerberg 的 Founder Alignment Agreement｜股數約翻倍，模型每股數字為股票股利前口徑 [外部新聞：SEC EDGAR（Meta DEF 14C）；本專案：meta/README.md 每股口徑]
@@ -104,15 +104,15 @@ asof: 2026-11-04
 - 2026-07-29｜Q2 財報：法律費用 24.0 億、遣散費用 11.8 億美元；2026 資本支出指引調為 1,300–1,450 億美元；季末員工 75,472 人，Q3 季末降到 66,775 人｜成本結構調整與資本支出加碼同時發生 [本專案：meta_facts_2026q3.json txt.legal_charge.2026q2、txt.severance.2026q2、txt.guid_capex2026.2026q2、txt.headcount.2026q2、txt.headcount.2026q3]
 
 ## 需要觀察的事項
-- 自用 AI 的讀法（評等關鍵）｜讀法 2（自用 AI 價值中性）加權目標價 745.34 美元、上檔空間 +16.2%、評等「中立」；讀法 1（只計成本）399.52 美元（−37.7%）、「放空」，其中 DCF 只剩 142.18 美元（讀法 2 為 693.09）[本專案：20261116_Meta個股模型_v0.2.2.xlsx Val!B31、C31、D31、B32、C32、D32、B33、C33]；支持現價所需 k＝0.70、升為「買進」所需 k＝1.16（主值 k＝1.00，為假設）[本專案：20261116_Meta個股模型_v0.2.2.xlsx Recon!B88、B89]｜每次財報對 AI 投資回報（廣告轉換率、價格）的說法
-- 每 MW 持有成本（IF_HoldEcon）｜四世代同時取 Tokenomics 低／高成本欄時，加權目標價 679.12／875.91 美元（評等中立／買進；買進下限 802.11）[本專案：20261116_Meta個股模型_v0.2.2.xlsx Sens!D28、D29、L28、L29；Val!C16]｜Tokenomics 下一版快照
+- 自用 AI 的讀法（評等關鍵）｜讀法 2（自用 AI 價值中性）加權目標價 697.93 美元、上檔空間 +24.4%、評等「中立」；讀法 1（只計成本）353.61 美元（−36.9%）、「放空」，其中 DCF 只剩 142.42 美元（讀法 2 為 694.41）[本專案：20261121_Meta個股模型_v0.2.3.xlsx Val!B31、C31、D31、B32、C32、D32、B33、C33]；支持現價所需 k＝0.60、升為「買進」所需 k＝1.01（主值 k＝1.00，為假設）[本專案：20261121_Meta個股模型_v0.2.3.xlsx Recon!B88、B89]｜每次財報對 AI 投資回報（廣告轉換率、價格）的說法
+- 每 MW 持有成本（IF_HoldEcon）｜四世代同時取 Tokenomics 低／高成本欄時，加權目標價 631.58／828.75 美元（評等中立／買進；買進下限 701.05）[本專案：20261121_Meta個股模型_v0.2.3.xlsx Sens!D28、D29、L28、L29；Val!C16]｜Tokenomics 下一版快照
 - FY2027 資本支出｜模型情境 A／B／C 為 2,365.6／2,057.1／1,748.5 億美元，市場共識（財報前、不含租賃本金）1,930.6 億 [本專案：20261121_Meta個股模型_v0.2.3.xlsx In!E85、E84、E86；Recon!F15]｜Q4 法說（2027 年初）首次給 2027 指引
 - 現金流與收支關卡｜情境 B 自由現金流 FY2027 −346.3 億、FY2028 −140.3 億美元；五年（FY2026–FY2030）自由現金流扣股利 A／B／C 為 +81.7／+410.4／+732.8 億美元，但 A、B 仍需新增舉債（最大單年 405.3／9.3 億）[本專案：20261121_Meta個股模型_v0.2.3.xlsx Recon!D18、D19；CF!B6、C6、D6、B9、C9、B11、C11]｜公司債發行與遠期出售交割
 - AI 折舊壓低利潤率｜情境 B 合併營業利益率由 FY2025 41.4% 降到 FY2028 26.7%；FY2027／FY2028 EPS 33.73／30.46 美元，相對共識 34.07／39.53 為 −1.0%／−22.9% [本專案：20261121_Meta個股模型_v0.2.3.xlsx PL!D84、I84、H99、I99；Recon!F12、F13]｜Q4 財報的 2027 費用指引
-- 每則廣告價格｜2026Q3 價格年增 14%、曝光年增 10%；長期價格年增取 1%／5% 時加權目標價 712.97／779.59 美元 [本專案：20261116_Meta個股模型_v0.2.2.xlsx Q!I48、I47；Sens!D10、D11]｜各季新聞稿的曝光與價格年增
+- 每則廣告價格｜2026Q3 價格年增 14%、曝光年增 10%；長期價格年增取 1%／5% 時加權目標價 666.09／731.65 美元 [本專案：20261121_Meta個股模型_v0.2.3.xlsx Q!I48、I47；Sens!D10、D11]｜各季新聞稿的曝光與價格年增
 
 ## 來源
-1. 本專案：meta/dist/20261116_Meta個股模型_v0.2.2.xlsx（README、In、Q、Thesis、PL、CF、Val、Recon、Sens）、meta/README.md、meta/docs/reports/20261111_meta_v0.2.0_驗收採用.md（2026-11-16）
+1. 本專案：meta/dist/20261121_Meta個股模型_v0.2.3.xlsx（README、In、Q、Thesis、PL、CF、Val、Recon、Sens）、meta/README.md、meta/docs/reports/20261111_meta_v0.2.0_驗收採用.md（2026-11-16）
 2. 本專案：meta/data/meta_facts_2026q3.json（2026-10-30 擷取）
 3. 本專案：nebius/data/nebius_facts_20261007.json、coreweave/data/permw_inputs_20261007.json（2026-10-07）
 4. [Meta Platforms DEF 14A 2026（管理層名單）](https://www.sec.gov/Archives/edgar/data/1326801/000162828026025532/meta-20260416.htm)（2026-04-16）

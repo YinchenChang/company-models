@@ -89,7 +89,6 @@ asof: 2026-10-25
 
 ## 近期重大事件
 - 2026-10-27｜3Q26 財報：營收 US$1,306.0M、GAAP EPS US$2.17；SoC US$676M、記憶體 US$301M（法說）；4Q26 指引營收 US$1,250–1,350M、GAAP EPS US$1.88–2.18 [本專案：20261121_泰瑞達個股模型_v0.4.7.xlsx Q!A2、Q!I10、Q!I19、Q!I4、Q!I5、Q!M4；In!D69:F70]
-- 2026-11-13｜收盤 US$249.55 [本專案：20261116_泰瑞達個股模型_v0.4.6.xlsx In!E108]
 - 2026-07-28｜2Q26：營收 US$1,329.0M（+104%）、GAAP EPS US$2.38；SoC US$843.0M、記憶體 US$212.3M 創新高 [本專案：20261121_泰瑞達個股模型_v0.4.7.xlsx Q!H10、L10、H19、H4、H5]
 - 2026-07-28｜法說：記憶體訂單出貨比超過 2；美國製造中心預定 2026 年內啟用；機器人營收 +33% [外部新聞：MarketBeat]
 - 2026-07-28｜法說：公司稱完成第二家 AI 雲端客戶驗證；三家大型運算客戶分處不同階段（成熟雙供應、快速跟進、驗證中），預期份額增加在 2027 年逐步出現 [外部新聞：MarketBeat]
@@ -102,7 +101,7 @@ asof: 2026-10-25
 - 模型 vs 共識｜FY2027 EPS（GAAP 13.74）比共識（non-GAAP 11.30）高 21.6% [本專案：ter/README.md 對帳]｜3Q26 財報後共識變化
 
 ## 來源
-1. 本專案：`ter/README.md`（v0.3，2026-10-31）；`ter/dist/20261116_泰瑞達個股模型_v0.4.6.xlsx`（In、Q、Units、Recon 頁）
+1. 本專案：`ter/README.md`（v0.3，2026-10-31）；`ter/dist/20261121_泰瑞達個股模型_v0.4.7.xlsx`（In、Q、Units、Recon 頁）
 2. 本專案：`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 3. [Teradyne：Chief Financial Officer Transition（隨 3Q25 財報公布）](https://investors.teradyne.com/news-events/press-releases/detail/428/teradyne-reports-first-quarter-2026-results)（2025-10-28）
 4. [Simply Wall St：Teradyne Management](https://simplywall.st/stocks/us/semiconductors/nasdaq-ter/teradyne/management)（查閱 2026-10-25）

@@ -83,7 +83,6 @@ asof: 2026-10-25
 - 口徑：歐洲公司；AFM 大股東申報（>3%）僅 Applied Materials 為本次直接查到的申報（9.00%，交易日 2025-04-14）。其餘為 Simply Wall St 彙整（持股日期未逐一標示，價格日 2026-10-23），非 AFM 申報，僅供參考。 [外部・未經本專案檢核]
 
 ## 近期重大事件
-- 2026-11-13｜收盤 €154.10 [本專案：20261116_BESI模型_v0.2.5.xlsx In!E117、H117]
 - 2026-10-22｜第三季營收 €283.4M（年增 113.6%＝÷ 2025 年第三季 €132.7M，Derived）、淨利 €107.2M、EPS €1.33、訂單 €342.6M；第四季營收指引持平 ±5%、毛利率 63–65% [本專案：20261121_BESI模型_v0.2.6.xlsx Q!J4、E4、J10:J12、In!H80:H81]
 - 2026-10-22｜法說：記憶體嚴重短缺使 HBM 混合鍵合導入放慢，現階段以較低堆疊層數生產較久；與三家記憶體廠持續開發 [外部新聞：GuruFocus]
 - 2026-10-22｜宣布 16 週策略檢討（含與應用材料的合作機會），第四季營業費用因顧問費增加 5–10% [本專案：20261121_BESI模型_v0.2.6.xlsx In!B82、H82]
@@ -97,7 +96,7 @@ asof: 2026-10-25
 - 策略檢討結論｜可能改變與應用材料的合作方式，模型未建模 [本專案：besi/README.md 最大限制]｜2027-01 初；第四季與全年實績 2027-02-25
 
 ## 來源
-1. 本專案：`besi/README.md`（v0.1.3，2026-10-31）；`besi/dist/20261116_BESI模型_v0.2.5.xlsx`（In、Q、PL、Sens 頁）
+1. 本專案：`besi/README.md`（v0.1.3，2026-10-31）；`besi/dist/20261121_BESI模型_v0.2.6.xlsx`（In、Q、PL、Sens 頁）
 2. 本專案：`先驗與比對/先驗比對_HBM_20261008.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
 3. [GuruFocus：BESI Q3 2026 法說重點](https://www.gurufocus.com/news/9137691/be-semiconductor-industries-nv-besiy-q3-2026-earnings-call-highlights-revenue-more-than-doubles-a)（2026-10-22）
 4. [Simply Wall St：BESI management](https://simplywall.st/stocks/nl/semiconductors/ams-besi/be-semiconductor-industries-shares/management)（查閱 2026-10-25）
