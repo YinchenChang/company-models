@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 25,
+ "duration_ms": 165355,
+ "total_cost_usd": 0.45787,
+ "result": "台積電（tsmc）已換成 2026-11-20 收盤，版號 v0.5.6 → v0.5.7。Excel 與 HTML 已重建，檔名日期 20261121，舊版 dist 已移除。\n\n- **現價：** NT$2,350 → 2,000。創意 8,610 → 5,400，采鈺 400.5 → 290。\n- **同業 P/E 中位數：** 19.2 → 16.4。5 家同業都已換價，沒有未換價的。\n- **加權目標價：** 2,280 → 2,063。DCF 1,416 → 1,429，Comparable（相對倍數調整後）3,145 → 2,696。\n- **上檔空間：** −3.0% → +3.1%。\n- **評等：** 中立 → 中立，由模型公式重算。\n- **前值來源：** 前值取自 v0.5.6 成品重算值，和 v0.5.6 README 寫的 2,339／−0.5% 不同。差異來自 v0.5.6 之後的其他修改，我沒動，README 和 note 都已註明。\n- **檢查：** 重算錯誤格 0、快取值檢查、`check_company_html`、`check_layout_v13` 都通過，三層基準協調 0 項不符。Sens 與 Coord 快照已重跑。\n- **未通過或未跑：** `check_sens_coverage --require-keycol` 未過，v0.5.6 同樣未過。`layout_check.py` 因環境沒有 playwright 沒跑。兩項都寫在 `tsmc/px1120_note.txt`。\n- **改動檔案：** 只動 `tsmc/`，未 commit，改動在 `build_tsmc.py`、新增 `px1120_post.py`，並更新 README、`sens.json` 與 `coord_alt.json`。",
+ "error": null,
+ "stderr": null
+}
