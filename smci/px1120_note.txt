@@ -1,0 +1,10 @@
+folder=smci
+version=v0.3.8 -> v0.3.9
+px=26.87 -> 21.65
+tp=72.97 -> 69.85
+upside=+171.6% -> +222.6%
+rating=強力買進 -> 強力買進
+peers_repriced=5
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；check_company_html.py smci 全部通過；check_layout_v13.py（html＋xlsx）通過（只有既有參數代號警告）；baseline_coordination/check.py 0 項不符；Sens 快照與 Coord 快照皆 CURRENT（sens_smci.py、alt_run.py 已重跑）；check_sens_coverage.py --require-keycol 未過（35/35 找不到 Sens 表頭），v0.3.8 成品同樣未過，前版即未過故不要求
+notes=前值取自 v0.3.8 成品 xlsx 重算值（tp 72.97、+171.6%）；v0.3.8 README 文字寫 64.94、+141.7%，與成品不符，已在 v0.3.9 README 註明。同業 P/E 中位數 10.2 -> 8.8；DCF 82.50 -> 84.99、Comparable 相對倍數調整後 63.44 -> 54.70；另一側讀數 63.95 強力買進。v0.3.8 檔移至 dist/_待刪除/，v0.3.5 檔已刪。

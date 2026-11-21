@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 23,
+ "duration_ms": 154969,
+ "total_cost_usd": 0.3423012,
+ "result": "smci 已換成 2026-11-20 收盤，版號 v0.3.8 → v0.3.9，xlsx 與 HTML 都已重建（檔名日期 20261121）。沒有 commit。\n\n- **現價：** 26.87 → 21.65 美元。\n- **目標價：** 加權目標價 72.97 → 69.85 美元。\n- **上檔空間：** +171.6% → +222.6%。\n- **評等：** 強力買進 → 強力買進。\n- **同業：** 五家都換了價（戴爾、HPE、緯穎、廣達、緯創），沒有未換價的。前瞻 P/E 中位數 10.2 → 8.8。\n- **檢查：**\n  - 通過：重算錯誤格 0；`check_company_html.py` 全過；`check_layout_v13.py` 通過（只有舊有的參數代號警告）；`baseline_coordination/check.py` 0 項不符；Sens 與 Coord 快照都已重跑，狀態 CURRENT。\n  - 未過：`check_sens_coverage.py --require-keycol`（35 項全找不到 Sens 表頭）。v0.3.8 成品同樣沒過，已寫進 note。\n- **前值不一致：** 前值取自 v0.3.8 成品 xlsx 的重算值。v0.3.8 的 README 寫 64.94、+141.7%，與成品不符，已在 v0.3.9 README 和 note 註明。\n- **舊檔：** v0.3.8 的 xlsx 與 HTML 移到 `dist/_待刪除/`，沿用該公司慣例。工作單要求移除，若要直接刪掉請告訴我。\n\n做法沿用 px1113，新增 `px1120_post.py`，並改了 `build_smci.py`、`v037_post.py`、`gen_html_json.py`、README 與快照檔。`smci/px1120_note.txt` 已寫好。",
+ "error": null,
+ "stderr": null
+}

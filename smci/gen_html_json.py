@@ -256,7 +256,7 @@ S = {s_["id"]: s_ for s_ in cfg["sections"]}
 RD, PLW, RV = WBF["README"], WBF["PL"], WBF["RevDCF"]
 r13 = find("README", "v1.3 展示層")
 RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
-assert str(RD[f"A{RM['ver']}"].value).startswith("v0.3.8"), RD[f"A{RM['ver']}"].value
+assert str(RD[f"A{RM['ver']}"].value).startswith("v0.3.9"), RD[f"A{RM['ver']}"].value
 cfg["layout"] = "v1.3"
 old_note = cfg["hero"]["note"]
 cfg["hero"]["note"] = [f"@README!A{RM['hero']}"]            # 橫幅只留 ≤200 字白話；評等規則與相對倍數調整說明移到估值章
