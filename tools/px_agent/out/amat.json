@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 16,
+ "duration_ms": 123869,
+ "total_cost_usd": 0.26635500000000006,
+ "result": "AMAT 已換成 2026-11-20 收盤，版號 v0.4.6 → v0.4.7，xlsx 和 HTML 都重建好了。\n\n| 項目 | 前 | 後 |\n|---|---|---|\n| 現價 | 370.5 | 302.63 |\n| 加權目標價 | 251.65 | 227.84 |\n| 上檔空間 | -32.1% | -24.7% |\n| 評等 | 放空 | 中立 |\n\n- **同業**:4 家同業都已換價(LRCX、KLAC、ASML、8035.T),沒有未換價的同業。同業前瞻 P/E 中位數從 24.38 降到 21.04。\n- **評等**:評等是模型公式重算的結果,沒有手改。\n- **快照**:Sens 與 Coord 快照已用新價重跑。Sens 加權目標價 227.84,與 Val 頁一致。\n- **檢查結果**:\n  - 重算錯誤格 0。\n  - check_company_html 通過。\n  - check_layout_v13 --xlsx 通過。\n  - baseline_coordination 0 項不符。\n  - check_sens_coverage 仍有 29 鍵找不到 Sens 表頭,前一版就沒過,結果相同。\n- **dist**:`amat/dist/` 只留 `20261121_應用材料個股模型_v0.4.7.xlsx` 和 `.html`,舊的 v0.4.6 檔已移除。\n- **其他改動**:新增 `px1120_post.py`,並在 `build_amat.py` 接在 px1113 之後呼叫。我也把 `gen_html_json.py` 第 289 行的版號檢查改成 v0.4.7,否則 HTML 建不出來。`amat/README.md` 補了 v0.4.7 一節,`amat/px1120_note.txt` 已寫好。\n- **git 狀態**:沒有 commit。舊 dist 檔用 `git rm` 刪除,所以已在暫存區,新檔尚未加入。",
+ "error": null,
+ "stderr": null
+}

@@ -1,0 +1,10 @@
+folder=amat
+version=0.4.6 -> 0.4.7
+px=370.5 -> 302.63
+tp=251.65 -> 227.84
+upside=-32.1% -> -24.7%
+rating=放空 -> 中立
+peers_repriced=4
+peers_unchanged=無
+checks=重算錯誤格 0；check_company_html 通過；check_layout_v13 --xlsx 通過；baseline_coordination/check.py 0 項不符；check_sens_coverage 前版即未過（29 鍵找不到 Sens 表頭），本版相同；Sens／Coord 快照已以新價重跑
+notes=評等由模型公式重算，由放空轉中立；C4 另一側讀數加權目標價 208.35、評等放空。gen_html_json.py 的版號檢查由 v0.4.6 改 v0.4.7（為了重建 HTML）。SNDK 分割與本家無關。
