@@ -1,0 +1,10 @@
+folder=wiwynn
+version=v0.2.8 -> v0.2.9
+px=1635 -> 1325
+tp=3145.45 -> 2874.64
+upside=+92.4% -> +117.0%
+rating=強力買進 -> 強力買進
+peers_repriced=5
+peers_unchanged=無
+checks=check_company_html wiwynn 全過；check_layout_v13 --xlsx 通過；baseline_coordination/check.py 0 項不符；LibreOffice 重算錯誤格 0；Sens、Coord 快照重跑並 CURRENT；check_sens_coverage --require-keycol 41/41 鍵找不到 Sens 表頭（v0.2.8 即未過，既有）
+notes=DCF 目標價 3,247.53 -> 3,109.95（WACC 以市值計權重，隨現價自動重算）；同業前瞻 P/E 中位數 9.70 -> 8.84；另一側讀數（Coord）加權目標價 2,731.00 -> 2,647.84（強力買進）。tools/company_html 的檢查需 bs4，本機以 pip 安裝後執行。舊 dist（v0.2.8）已以 git rm 移除。
