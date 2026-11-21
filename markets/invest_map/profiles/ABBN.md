@@ -11,29 +11,29 @@ asof: 2026-11-17
 ---
 
 ## 一句話定位
-ABB 是電氣化與自動化設備公司；在 AI 資料中心裡賣的是機櫃外的配電與電力設備，資料中心只占營收一小部分（本專案模型拆分：FY2026E 約 12% [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx PL!F83]，對照 FY2025 約 7% [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx PL!E83]），多數營收來自電網、建築、工業與馬達。
+ABB 是電氣化與自動化設備公司；在 AI 資料中心裡賣的是機櫃外的配電與電力設備，資料中心只占營收一小部分（本專案模型拆分：FY2026E 約 12% [本專案：abb/dist/20261121_ABB個股模型_v0.1.1.xlsx PL!F83]，對照 FY2025 約 7% [本專案：abb/dist/20261121_ABB個股模型_v0.1.1.xlsx PL!E83]），多數營收來自電網、建築、工業與馬達。
 
 ## 公司在做什麼
-- Electrification（電氣化）：低壓與中壓配電、開關設備、建築與充電設備；資料中心的配電設備屬於這一塊 [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx README!A3、A12]。
+- Electrification（電氣化）：低壓與中壓配電、開關設備、建築與充電設備；資料中心的配電設備屬於這一塊 [本專案：abb/dist/20261121_ABB個股模型_v0.1.1.xlsx README!A3、A12]。
 - Motion（馬達驅動）：電動機與變頻器（用變頻調整馬達轉速以省電的設備），賣給工業與基礎建設。
-- Automation（自動化）：製程控制與測量；2026 年起公司新聞稿用此名，原名 Process Automation [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx README!A3]。
+- Automation（自動化）：製程控制與測量；2026 年起公司新聞稿用此名，原名 Process Automation [本專案：abb/dist/20261121_ABB個股模型_v0.1.1.xlsx README!A3]。
 - Robotics（機器人）：已簽約出售給 SoftBank，公司原文列為停業單位；2026-11-05 報導指出，中國外資安全審查禁止 SoftBank 收購其中國業務，交易未完成，ABB 與 SoftBank 稱仍在協商，未提供新交割時程 [外部新聞：Robotics247、Supply Chain Digital 轉述 FT，2026-11-05]。模型 FCFF 不含此事業，其價值仍以 50 億美元計（交割則收淨款，不交割則保留事業，價值約當出價）[Assumed] [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx In!E89；README!A32]。
 - ABB 不揭露資料中心營收；本專案模型為拆分假設 [Assumed]，不是公司數字。
 
 ## 主要產品與營收占比
 | 產品／部門 | 內容（白話） | 營收占比 | 期間 | 標記 |
 |---|---|---|---|---|
-| 資料中心（模型拆分） | 機櫃外配電、UPS（不斷電系統）相關設備 | 約 12% | FY2026E | [Assumed]，[本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx PL!F83] |
-| 資料中心（模型拆分） | 同上 | 約 7.3% | FY2025 | [Assumed]，[本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx PL!E83]；與上列 FY2026E 約 12% 並列對照 |
-| 非資料中心事業 | 電網、建築、工業電氣化、馬達、自動化 | 約 85% | FY2027E | [Derived]，＝1 − 資料中心占比 [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx PL!G83；README!A11] |
+| 資料中心（模型拆分） | 機櫃外配電、UPS（不斷電系統）相關設備 | 約 12% | FY2026E | [Assumed]，[本專案：abb/dist/20261121_ABB個股模型_v0.1.1.xlsx PL!F83] |
+| 資料中心（模型拆分） | 同上 | 約 7.3% | FY2025 | [Assumed]，[本專案：abb/dist/20261121_ABB個股模型_v0.1.1.xlsx PL!E83]；與上列 FY2026E 約 12% 並列對照 |
+| 非資料中心事業 | 電網、建築、工業電氣化、馬達、自動化 | 約 85% | FY2027E | [Derived]，＝1 − 資料中心占比 [本專案：abb/dist/20261121_ABB個股模型_v0.1.1.xlsx PL!G83；README!A11] |
 
 - 公司只說資料中心訂單在 2026 年第三季出現三位數增長 [Interested-party：媒體轉述公司新聞稿，2026-10-21]。
-- 2026-09-30 在手訂單年增：Electrification 83%、Motion 14%、Automation 11% [Verified：公司 Q3 2026 新聞稿]，經本專案模型引用 [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx README!A11]。
+- 2026-09-30 在手訂單年增：Electrification 83%、Motion 14%、Automation 11% [Verified：公司 Q3 2026 新聞稿]，經本專案模型引用 [本專案：abb/dist/20261121_ABB個股模型_v0.1.1.xlsx README!A11]。
 
 ## 市場定位與產業位置
 - 角色：機櫃外的電力基礎設施供應商（配電、保護、驅動）；機櫃內的電源屬 IT 設備，不在本專案的 ABB 邊界內 [判斷]。
-- 對 AI 資本支出的敏感度有限：本專案模型估計 FY2026E 資料中心約占 12% [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx PL!F83]（FY2025 約 7% [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx PL!E83]），因此 AI 放緩的衝擊比純設施供應商小 [Assumed]。
-- 資料中心份額依賴 Wattonomics 的配電加 UPS 設施支出；模型中 ABB 份額 FY2027 基準 7.5% [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx In!E23]、FY2032 基準 7% [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx In!E24]，為假設，區間見 [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx README!A30] [Assumed]。
+- 對 AI 資本支出的敏感度有限：本專案模型估計 FY2026E 資料中心約占 12% [本專案：abb/dist/20261121_ABB個股模型_v0.1.1.xlsx PL!F83]（FY2025 約 7% [本專案：abb/dist/20261121_ABB個股模型_v0.1.1.xlsx PL!E83]），因此 AI 放緩的衝擊比純設施供應商小 [Assumed]。
+- 資料中心份額依賴 Wattonomics 的配電加 UPS 設施支出；模型中 ABB 份額 FY2027 基準 7.5% [本專案：abb/dist/20261121_ABB個股模型_v0.1.1.xlsx In!E23]、FY2032 基準 7% [本專案：abb/dist/20261121_ABB個股模型_v0.1.1.xlsx In!E24]，為假設，區間見 [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx README!A30] [Assumed]。
 - 客戶：ABB 不單獨揭露資料中心客戶；見下方「主要客戶」。
 
 ## 管理層與經營風格
@@ -79,8 +79,8 @@ ABB 是電氣化與自動化設備公司；在 AI 資料中心裡賣的是機櫃
 - 2026-02-01｜Christian Nilsson 接任財務長 [外部・未經本專案檢核：ABB 新聞稿，2025-10-16]。
 
 ## 需要觀察的事項
-- 資料中心營收拆分｜ABB 不揭露，本專案基準假設占電氣化 22%（FY2026E）[本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx In!E22]，估值對此校準約 ±3.1% [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx Sens!D29、F29]；份額假設（FY2027 7.5%／FY2032 7%）另約 ±3.5% [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx Sens!D27、F27]｜下一次財報揭露。
-- Wattonomics 配電加 UPS 設施支出自 FY2031 起下降 [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx PL!K80:L80]｜影響終值年資料中心營收，模型結果偏保守｜Wattonomics 下次快照。
+- 資料中心營收拆分｜ABB 不揭露，本專案基準假設占電氣化 22%（FY2026E）[本專案：abb/dist/20261121_ABB個股模型_v0.1.1.xlsx In!E22]，估值對此校準約 ±3.1% [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx Sens!D29、F29]；份額假設（FY2027 7.5%／FY2032 7%）另約 ±3.5% [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx Sens!D27、F27]｜下一次財報揭露。
+- Wattonomics 配電加 UPS 設施支出自 FY2031 起下降 [本專案：abb/dist/20261121_ABB個股模型_v0.1.1.xlsx PL!K80:L80]｜影響終值年資料中心營收，模型結果偏保守｜Wattonomics 下次快照。
 - 評等邊界｜加權目標價較現價 −25.5% [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx Val!B12]，距「中立」邊界（−25%）不到 1 個百分點，請同時看 Sens 價格帶｜下次更新股價。
-- Robotics 出售交割與價值｜中國禁止 SoftBank 收購其中國業務，交易未完成、協商中；模型基準仍以 50 億美元計 [Assumed]，Sens 區間 35 至 54 億美元（低端＝交易失敗且保留事業價值打折）[本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx In!D89、E89、F89；Sens!A41]，對目標價約 −0.7%／+0.2% [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx Sens!D41、F41]｜SoftBank 與 ABB 的後續公告。
+- Robotics 出售交割與價值｜中國禁止 SoftBank 收購其中國業務，交易未完成、協商中；模型基準仍以 50 億美元計 [Assumed]，Sens 區間 35 至 54 億美元（低端＝交易失敗且保留事業價值打折）[本專案：abb/dist/20261121_ABB個股模型_v0.1.1.xlsx In!D89、E89、F89；Sens!A41]，對目標價約 −0.7%／+0.2% [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx Sens!D41、F41]｜SoftBank 與 ABB 的後續公告。
 - 共識口徑｜Yahoo FY2026 EPS 共識隱含 Q4 偏高，可能含出售收益或調整後口徑，待核 [本專案：abb/dist/20261117_ABB個股模型_v0.1.0.xlsx README!A41]｜FY2026 全年業績。

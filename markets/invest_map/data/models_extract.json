@@ -1,88 +1,88 @@
 {
  "NVDA": {
-  "model": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx",
+  "model": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx",
   "v2": true,
   "tp": {
    "value": 300.623403633738,
    "cell": "Val!B40",
-   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx"
   },
   "tp_dcf": {
    "value": 130.318566606859,
    "cell": "Val!B23",
-   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx"
   },
   "tp_comp": {
    "value": 266.795864108561,
    "cell": "Val!B41",
-   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx"
   },
   "tp_cons": {
    "value": 328.95,
    "cell": "Val!B42",
-   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx"
   },
   "up": {
    "value": 1.39483313657084,
    "cell": "Val!B43",
-   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx"
   },
   "up_comp": {
    "value": 1.12535540594727,
    "cell": "Val!B44",
-   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx"
   },
   "tp_comp_adj": {
    "value": 470.928240660616,
    "cell": "Val!B199",
-   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx"
   },
   "old_rule": {
    "value": 467.571184194614,
    "cell": "Val!B170",
-   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx"
   },
   "tier6": {
    "value": "大於 50%",
    "cell": "Val!B178",
-   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx"
   },
   "rec": {
    "value": "強力買進",
    "cell": "Val!B179",
-   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx"
   },
   "dcf_A": {
    "value": 194.189460450401,
    "cell": "Val!B20",
-   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx"
   },
   "dcf_C": {
    "value": 90.29457223676,
    "cell": "Val!D20",
-   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx"
   },
   "model_px": {
    "value": 125.53,
    "cell": "Val!B57",
-   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx",
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx",
    "date": "2026-11-20"
   },
   "pe_fy28": [
    {
     "value": 10.3875573505805,
     "cell": "Val!B58",
-    "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
+    "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx"
    },
    {
     "value": 10.8159130702379,
     "cell": "Val!C58",
-    "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
+    "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx"
    },
    {
     "value": 10.9367946511632,
     "cell": "Val!D58",
-    "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
+    "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx"
    }
   ],
   "cash": {
@@ -155,7 +155,7 @@
      "PL!G292"
     ]
    ],
-   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.13.xlsx"
+   "file": "nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx"
   }
  },
  "AVGO": {
@@ -11570,7 +11570,7 @@
   "v2": true,
   "ipo": false,
   "tp": {
-   "value": 83.6610072795771,
+   "value": 84.798923045338,
    "cell": "Val!C10",
    "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
@@ -11580,17 +11580,17 @@
    "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "tp_comp": {
-   "value": 112.05523250432,
+   "value": 114.331064035841,
    "cell": "Val!C9",
    "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "tp_comp_adj": {
-   "value": 112.05523250432,
+   "value": 114.331064035841,
    "cell": "Val!C9",
    "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "tp_comp_main": {
-   "value": 154.561722959148,
+   "value": 157.819749553613,
    "cell": "Val!C8",
    "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
@@ -11605,12 +11605,12 @@
    "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "up": {
-   "value": -0.0590371467823969,
+   "value": -0.0462386340643575,
    "cell": "Val!C12",
    "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "up_comp": {
-   "value": 0.738406511743871,
+   "value": 0.775050607958754,
    "cell": "Val!C13",
    "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
