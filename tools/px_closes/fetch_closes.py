@@ -15,7 +15,7 @@ for f in sorted(glob.glob("markets/invest_map/data/closes_*.csv")):
         cur.setdefault(r["symbol"], r["currency"])
 syms = sorted(set(cur) | set(extra))
 end1 = (dt.datetime.strptime(end, "%Y-%m-%d") + dt.timedelta(days=1)).strftime("%Y-%m-%d")
-rows, got, splits = [], set(), []
+rows, got, splits, meta = [], set(), [], []
 def grab(batch):
     df = yf.download(batch, start=start, end=end1, interval="1d", auto_adjust=False, actions=True,
                      group_by="ticker", threads=False, progress=False)
@@ -47,6 +47,13 @@ for s in [s for s in syms if last.get(s, "") < top]:
         for d, c in h["Close"].dropna().items():
             rows.append((s, cur.get(s, ""), d.strftime("%Y-%m-%d"), repr(round(float(c), 6)))); got.add(s)
         print("refetch", s, h["Close"].dropna().index[-1])
+        # 日線仍缺最後一日時，取報價中繼資料的最近成交價（regularMarketPrice）與其當地日期；另記在 .meta.txt
+        t = yf.Ticker(s); t.history(period="5d"); m = t.history_metadata
+        import zoneinfo
+        d = dt.datetime.fromtimestamp(m["regularMarketTime"], zoneinfo.ZoneInfo(m["exchangeTimezoneName"])).strftime("%Y-%m-%d")
+        print("meta", s, d, m.get("regularMarketPrice"), m.get("chartPreviousClose"))
+        if h["Close"].dropna().index[-1].strftime("%Y-%m-%d") < d <= end and m.get("regularMarketPrice"):
+            rows.append((s, cur.get(s, ""), d, repr(round(float(m["regularMarketPrice"]), 6)))); meta.append("%s,%s,%s" % (s, d, m["regularMarketPrice"]))
     except Exception as e:
         print("ERR refetch", s, repr(e)[:120])
     time.sleep(1)
@@ -55,5 +62,6 @@ rows = sorted(set(rows))
 with open(out, "w", newline="", encoding="utf-8") as f:
     w = csv.writer(f); w.writerow(["symbol", "currency", "date", "close"]); w.writerows(rows)
 open(out + ".missing.txt", "w").write("\n".join(missing) + "\n")
+open(out + ".meta.txt", "w").write("\n".join(meta) + "\n")
 open(out + ".splits.txt", "w").write("\n".join(splits) + "\n")
 print("symbols", len(syms), "rows", len(rows), "missing", missing, "splits", splits)
