@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 23,
+ "duration_ms": 155496,
+ "total_cost_usd": 0.3842952,
+ "result": "Fabrinet 已換成 2026-11-20 收盤，版號 v0.3.6 → v0.3.7。Excel 與 HTML 都已重建，舊版成品已移除，日期為 20261121。\n\n- **現價：** 327.98 → 285.04\n- **同業前瞻 P/E 中位數：** 14.91 → 12.84（四家同業都用 11-20 收盤）\n- **加權目標價：** 383.64 → 343.26\n- **上檔空間：** +17.0% → +20.4%\n- **評等：** 中立 → 中立（模型公式重算，沒有手改）\n- **未換價同業：** 無\n\n檢查結果：\n- 錯誤格 0。\n- `check_company_html` 全過。\n- `check_layout_v13` 通過；三項參數代號警告前版即有。\n- `baseline_coordination/check` 0 項不符。\n- `check_sens_coverage` 顯示 38／47 沒有案例，但與 v0.3.6 輸出逐行相同，前版即未過，不要求。\n- Sens 與 Coord 快照已重跑。\n\n- **舊 README 數字不一致：** v0.3.6 README 寫加權目標價 399.88，舊成品實際重算值是 383.64（上游重建後更新）。我以 383.64 當「舊值」，README 與 note 都已註明。\n- **bs4 未入 repo：** `check_layout_v13` 需要 bs4，我只在執行環境裝了，沒有進 repo。\n\n改動只在 `fabrinet/`：`build_fabrinet.py`、`v035_post.py`、`gen_html_json.py`、README、`sens.json`、`coord_alt.json`、新 dist 檔與 `px1120_note.txt`。沒有 commit。",
+ "error": null,
+ "stderr": null
+}
