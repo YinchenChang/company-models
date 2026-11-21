@@ -5,7 +5,7 @@ name: px-closes-fetch
 on:
   push:
     branches: ['claude/px*-prices']
-    paths: ['tools/px_closes/request.txt']
+    paths: ['tools/px_closes/**']
 permissions:
   contents: write
 jobs:
@@ -14,7 +14,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
-      - run: python3 tools/px_closes/fetch_closes.py $(cat tools/px_closes/request.txt)
+      - run: pip install -q yfinance
+      - run: python3 -u tools/px_closes/fetch_closes.py $(cat tools/px_closes/request.txt)
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
