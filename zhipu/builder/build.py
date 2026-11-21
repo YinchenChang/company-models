@@ -39,8 +39,8 @@ import z4  # noqa: E402
 import z5  # noqa: E402
 import z6  # noqa: E402
 
-VERSION = "v0.1.7"
-VERSION_DATE = "2026-11-16"   # v0.1.7：只換價（工作單 px1113）；v0.1.6：估值頁； v0.1.4：只換現價；v0.1.3：README A1 顯示版本日期（--date 仍為 Tokenomics／OpenAI 快照讀取日）
+VERSION = "v0.1.8"
+VERSION_DATE = "2026-11-21"   # v0.1.8：只換價（工作單 px1120）；v0.1.7：只換價（工作單 px1113）；v0.1.6：估值頁； v0.1.4：只換現價；v0.1.3：README A1 顯示版本日期（--date 仍為 Tokenomics／OpenAI 快照讀取日）
 SRC_YAML = ROOT / "data" / "zhipu_src.yaml"
 INP_YAML = ROOT / "data" / "zhipu_inputs.yaml"
 REGISTRY_PATH = HERE / "id_registry.json"
@@ -145,6 +145,9 @@ def sheet_readme(wb, D, snap, oai, date, summary):
         ("Checks", "C01 起；CHK_Errors 必須為 0。WARN（ARR、η 合理範圍、國產晶片 GW 對照）與 INFO 不計入。"),
         ("標記", "Verified／Interested-party／Analogy／Assumed／Derived／Decision（Analogy、Assumed 一律附區間）。"),
         ("分層", "公司財務原始數據→SRC_ZP；AI 技術與算力→TK_Link（取自 Tokenomics）；假設→Inputs；OpenAI 對照→OAI_Link（不進計算）。"),
+        ("v0.1.8 變動", "現價與同業報價改 2026-11-20 收盤（工作單 px1120；Yahoo Finance 日線，markets/invest_map/data/closes_20261109_20261120.csv）：智譜 SRC_ZP_1055 HK$408.4（2026-11-13）→ 334.0，同業 MiniMax SRC_ZP_1056 152.4 → 102.4；"
+                         "同業 EV／NTM 營收 4.79 → 2.38 倍；Comparable 目標價 183.85 → 141.61；DCF 目標價 114.99 不變；加權目標價 HK$149.42 → 128.30，上檔空間 −63.4% → −61.6%；評等與投資建議皆強力放空不變；收支關卡不變（不通過）。"
+                         "Funding 的現價 ÷ 換股價、Reverse 市值與市場隱含營收、WACC 的市值權重隨現價自動重算；Reverse 的同業倍數（MiniMax 2026-10-07 盤中市值）與營運假設不變；目標時點 1.35 年與 NTM 權重 0.153425 仍沿用 11-05 計算（工作單只換價格）。"),
         ("v0.1.7 變動", "現價與同業報價改 2026-11-13 收盤（工作單 px1113；Yahoo Finance 日線，markets/invest_map/data/closes_20261020_20261113.csv）：智譜 SRC_ZP_1055 HK$476.0（2026-11-05）→ 408.4，同業 MiniMax SRC_ZP_1056 170.2 → 152.4（與 MiniMax 模型 v0.2.4 同日同值）；"
                          "同業 EV／NTM 營收 5.65 → 4.79 倍；Comparable 目標價 198.88 → 183.85；DCF 目標價 114.99 不變；加權目標價 HK$156.94 → 149.42，上檔空間 −67.0% → −63.4%；評等與投資建議皆強力放空不變；收支關卡不變（不通過）。"
                          "Funding 的現價 ÷ 換股價、Reverse 市值與市場隱含營收隨現價變動；Reverse 的同業倍數（MiniMax 2026-10-07 盤中市值）與 Coord 以外的營運假設不變。Coord 讀取層級說明文字隨 repo 現行 Wattonomics 快照（v0.3.5）更新。"),
