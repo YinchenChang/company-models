@@ -1,0 +1,76 @@
+# 公司檔案出處改寫（API 版，2026-11-21；Andy 11-21 授權用 API 額度執行）。
+# 觸發：push 到 claude/pc1120 且 tools/px_agent/pc_request.json 有變動。
+# pc_request.json：{"profiles": ["NVDA.md", ...], "model": "...", "budget_usd": 每檔上限}
+# 每個公司檔案一個 job，結果推到 claude/pc1120-b/<檔名去掉 .md>（只含該檔與 tools/px_agent/pc_out/<檔名>.json）。不寫 main。
+name: profile-cites-agent
+on:
+  push:
+    branches: [claude/pc1120]
+    paths: ['tools/px_agent/pc_request.json']
+permissions:
+  contents: write
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      profiles: ${{ steps.p.outputs.profiles }}
+      model: ${{ steps.p.outputs.model }}
+      budget: ${{ steps.p.outputs.budget }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: p
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          r = json.load(open("tools/px_agent/pc_request.json"))
+          print("profiles=" + json.dumps(r["profiles"]))
+          print("model=" + r["model"]); print("budget=" + str(r["budget_usd"]))
+          PY
+  rewrite:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        profile: ${{ fromJson(needs.plan.outputs.profiles) }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: 安裝工具
+        run: |
+          pip install -q openpyxl || true
+          npm install -g @anthropic-ai/claude-code >/dev/null 2>&1
+      - name: 改寫（Claude Code，API 額度）
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          P: ${{ matrix.profile }}
+          MODEL: ${{ needs.plan.outputs.model }}
+          BUDGET: ${{ needs.plan.outputs.budget }}
+        run: |
+          mkdir -p tools/px_agent/pc_out
+          sed "s/{PROFILE}/$P/g" tools/px_agent/pc_prompt.md > /tmp/prompt.txt
+          set +e
+          timeout 40m claude -p "$(cat /tmp/prompt.txt)" --model "$MODEL" --max-budget-usd "$BUDGET" \
+            --dangerously-skip-permissions --output-format json > /tmp/result.json 2> /tmp/err.log
+          python3 - <<'PY'
+          import json, os
+          p = os.environ["P"]
+          try: r = json.load(open("/tmp/result.json"))
+          except Exception as e: r = {"error": repr(e), "stderr": open("/tmp/err.log").read()[-2000:]}
+          keep = {k: r.get(k) for k in ("subtype", "is_error", "num_turns", "duration_ms", "total_cost_usd", "result", "error", "stderr")}
+          json.dump(keep, open(f"tools/px_agent/pc_out/{p}.json", "w"), ensure_ascii=False, indent=1)
+          print(json.dumps({k: keep[k] for k in ("subtype", "num_turns", "total_cost_usd")}, ensure_ascii=False)); print(keep.get("result") or keep)
+          PY
+      - name: 推到結果分支
+        if: always()
+        env:
+          P: ${{ matrix.profile }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          B="claude/pc1120-b/${P%.md}"
+          git checkout -q -b "$B"
+          git add -A "markets/invest_map/profiles/$P" "tools/px_agent/pc_out/$P.json"
+          git commit -q -m "公司檔案出處改寫：$P（API 代理）" || echo "no change"
+          git push -f origin "$B"
