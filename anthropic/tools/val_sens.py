@@ -26,7 +26,7 @@ CASES = [
     ("ronic", "RONIC＝WACC＋5pt", None, {"val_ronic_add": 0.05}, "基準（RONIC＝WACC）", "RONIC＝WACC＋5pt"),
     ("extg", "延伸期 2033 營收年增 5%／15%", {"ext_g33": 0.05}, {"ext_g33": 0.15}, "ext_g33 5%", "ext_g33 15%"),
     ("extm", "延伸期 EBIT 利益率加碼 +5pt／+10pt（至 2033）", {"ext_m_add": 0.05}, {"ext_m_add": 0.10}, "+5pt", "+10pt"),
-    ("px", "IPO 價格 70／78（淨募資、私募股數、選擇權庫藏股與現價連動）", {"ipo_px": 70}, {"ipo_px": 78}, "$70", "$78"),
+    ("px", "IPO 發行價 70／78（淨募資、私募股數、選擇權庫藏股連動；現價維持 mkt_px）", {"ipo_px": 70}, {"ipo_px": 78}, "$70", "$78"),
     ("pbi", "首次公益發行 846.84M 股不計", None, {"val_pbi_switch": 0}, "基準（計入）", "不計"),
     ("vmo", "捐贈配對已歸屬義務 553.44M 股不計", None, {"val_vmo_switch": 0}, "基準（計入）", "不計"),
     ("nol", "2026Q4 以前 NOL 視為無限（明確期不繳稅）", None, {"val_nol_inf_switch": 1}, "基準", "NOL 無限"),

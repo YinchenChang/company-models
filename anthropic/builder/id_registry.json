@@ -918,7 +918,8 @@
 "val_bisect_lo_add": "INP_282",
 "val_bisect_w_hi": "INP_283",
 "val_bisect_s_lo": "INP_284",
-"val_bisect_s_hi": "INP_285"
+"val_bisect_s_hi": "INP_285",
+"mkt_px": "INP_286"
 },
 "CHK": {
 "src_rows": "C01",

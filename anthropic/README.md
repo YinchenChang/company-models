@@ -8,10 +8,10 @@ Anthropic 每 VR 等值 GW 的年營收能否覆蓋每 GW 年全成本；若不�
 
 ## v0.2.4：現價與同業報價改 2026-11-20 收盤（工作單 px1120）
 
-- 現價與同業報價改 2026-11-20 收盤（工作單 px1120）。現價 74（IPO 區間中點）→ 88.91（ANT 2026-11-20 收盤；IPO 價 83，11-19 首日收盤 97.17）；同業 EV／遠期營收中位數 26.32 → 26.32（不變：只有 DDOG 有 11-20 收盤，其倍數 16.36 → 10.94，不是中位數那一家）；加權目標價 82.71 → 83.66；上檔空間 ＋11.8% → −5.9%；評等 中立 → 中立（模型公式重算，未手改）。
-- 價格來源只用 `markets/invest_map/data/closes_20261109_20261120.csv`（ANT、DDOG 11-20）與 `closes_20261020_20261113.csv`（DDOG 10-30＝235.27）。DDOG 倍數＝16.36 × 157.37 ÷ 235.27；EV 沒有市值可用，以倍數 × 價格比近似（SRC_ANT_622–624，SRC_ANT_590 改為公式）。
-- **同版補換（第二輪，版號不變）：** PLTR、CRWD、NET、SNOW 取 `closes_extra_20261120.csv`，EV／遠期營收由資料日 2026-11-06 換算到 11-20 收盤（倍數 × 11-20 收盤 ÷ 11-06 收盤；EV 無市值可用，以倍數 × 價格比近似，標 Derived；新增 SRC_ANT_625–636）。五家同業皆已換價，無未換價同業。同業 EV／遠期營收中位數 26.32 → 26.93；加權目標價 83.66 → 84.80；上檔空間 −5.9% → −4.6%；評等中立不變。Sens、Val 情境快照已重跑。
-- 現價 `ipo_px` 同時是淨募資、私募股數、選擇權庫藏股的連動輸入，照既有公式隨現價重算（淨募資 80.8 → 91.8）；實際 IPO 價 83 未入模型；Sens 的 70／78 仍是招股說明書區間。共識、rf、β、ERP、營運假設、情境權重不變；Sens 與 Val 情境快照已重跑。
+- 現價與同業報價改 2026-11-20 收盤。現價 74（IPO 區間中點）→ 88.91（ANT 2026-11-20 收盤）；同業 EV／遠期營收中位數 26.32 → 26.93；加權目標價 82.71 → 83.84；上檔空間 ＋11.8% → −5.7%；評等 中立 → 中立（模型公式重算，未手改）。
+- **現價與發行價分開（第三輪，同版補正）：** 新增 Inputs `mkt_px`＝88.91（ANT 2026-11-20 收盤，Verified，來源 `markets/invest_map/data/closes_20261109_20261120.csv`）。Val 的 VAL_Px、上檔空間、評等、股權市值（WACC 權重）、反向 DCF 讀 `mkt_px`。`ipo_px` 還原為 74（初步招股說明書區間 70–78 中點；Sens 用 70／78），淨募資（80.8）、私募股數、選擇權庫藏股、pro forma 現金照舊讀 `ipo_px`，數值回到 v0.2.3。實際 IPO 定價 83 與加碼發行屬正式招股書滾入，不在本版。前兩輪把 `ipo_px` 直接改成 88.91，使淨募資變 91.8，已更正。
+- 同業五家（DDOG、PLTR、CRWD、NET、SNOW）EV／遠期營收換到 11-20 收盤（倍數 × 11-20 收盤 ÷ 原報價日收盤；EV 沒有市值可用，以倍數 × 價格比近似，標 Derived；SRC_ANT_622–636，SRC_ANT_590 改為公式）。價格只用 `closes_20261109_20261120.csv`、`closes_20261020_20261113.csv`、`closes_extra_20261120.csv`。無未換價同業。
+- 共識、rf、β、ERP、營運假設、情境權重不變；Sens 與 Val 情境快照已重跑。
 - Coord 維持讀 Wattonomics v0.3.5 快照（`CURRENT_SNAPSHOT` 已到 v0.3.9，不在本版範圍）。
 - 重建：`python3 builder/build.py --tk-dir <Tokenomics@eded8e6> --oai-xlsx ../openai/model/archive/20261029_OpenAI_v0.6.4.xlsx --out model/20261121_Anthropic_v0.2.4.xlsx --base model/archive/20261115_Anthropic_v0.2.3.xlsx --date 2026-11-21`；再 `tools/val_sens.py`、`tools/val_snapshots.py` 後重建；`tools/build_html.py`、`tools/build_html_v2.py --html … --xlsx … --out dist/20261121_Anthropic個股模型_v0_2_4.html`。
 

@@ -11570,47 +11570,47 @@
   "v2": true,
   "ipo": false,
   "tp": {
-   "value": 84.798923045338,
+   "value": 83.8447238096795,
    "cell": "Val!C10",
    "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "tp_dcf": {
-   "value": 55.2667820548347,
+   "value": 54.3601260590347,
    "cell": "Val!C7",
    "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "tp_comp": {
-   "value": 114.331064035841,
+   "value": 113.329321560324,
    "cell": "Val!C9",
    "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "tp_comp_adj": {
-   "value": 114.331064035841,
+   "value": 113.329321560324,
    "cell": "Val!C9",
    "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "tp_comp_main": {
-   "value": 157.819749553613,
+   "value": 156.692932405903,
    "cell": "Val!C8",
    "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "dcf_A": {
-   "value": 135.105000738668,
-   "cell": "Val!C154",
+   "value": 133.968558957387,
+   "cell": "Val!C155",
    "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "dcf_C": {
-   "value": 15.0695260422482,
-   "cell": "Val!E154",
+   "value": 14.2785714130823,
+   "cell": "Val!E155",
    "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "up": {
-   "value": -0.0462386340643575,
+   "value": -0.0569708265697955,
    "cell": "Val!C12",
    "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "up_comp": {
-   "value": 0.775050607958754,
+   "value": 0.762376925046715,
    "cell": "Val!C13",
    "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },

@@ -98,7 +98,8 @@ def test_derived_rows_are_formulas(wb):
 def test_inputs_ranges_and_tags():
     """共同規則第 4 節：Analogy／Assumed 一律給區間；低 ≤ 值 ≤ 高；標記只限 Assumed／Analogy／Decision。"""
     for r in INP:
-        assert r["tag"] in ("Assumed", "Analogy", "Decision"), r["key"]
+        # px1120：mkt_px 是已掛牌收盤價（Verified，低＝高＝值），是 Inputs 中唯一允許 Verified 的列
+        assert r["tag"] in ("Assumed", "Analogy", "Decision") or (r["key"] == "mkt_px" and r["tag"] == "Verified"), r["key"]
         assert r["lo"] is not None and r["hi"] is not None, r["key"]
         if isinstance(r["value"], str):          # 文字鍵（Tokenomics 任務名稱）：Decision，低＝高＝值
             assert r["tag"] == "Decision" and r["lo"] == r["hi"] == r["value"], r["key"]
@@ -617,7 +618,7 @@ def test_v020_val_identities(eng):
     assert abs(n("VAL_Up_W") - up) < 1e-12
     want = "強力買進" if up > 0.5 else "買進" if up > 0.25 else "中立" if up >= -0.25 else "放空" if up >= -0.5 else "強力放空"
     assert n("VAL_Rating") == want
-    px = n("VAL_Px")
+    px = eng.get_name(i["ipo_px"])   # 股數讀發行價 ipo_px（74），不讀市價 mkt_px
     sh = (g("pros_shares_post") - g("pros_pp_shares_mid") + g("pros_pp_total") / px * 1000 + g("pros_options") * max(0, 1 - g("pros_option_strike") / px)
           + g("pros_rsu_unvested") + g("pros_rsu_new") + g("pros_vmo")) / 1000
     assert abs(n("VAL_Shares") - sh) < 1e-9
