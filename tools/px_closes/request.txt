@@ -1,1 +1,1 @@
-2026-11-09 2026-11-20 markets/invest_map/data/closes_20261109_20261120.csv ANT
+2026-10-20 2026-11-20 markets/invest_map/data/closes_extra_20261120.csv --only PLTR CRWD NET SNOW DDOG
