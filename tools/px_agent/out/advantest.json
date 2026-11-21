@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 21,
+ "duration_ms": 198378,
+ "total_cost_usd": 0.34172610000000003,
+ "result": "Advantest 已換成 2026-11-20 收盤，升到 v0.7.7，Excel 和 HTML 都已重建。\n\n| 項目 | v0.7.6 | v0.7.7 |\n|---|---|---|\n| 現價（6857.T） | 30,610 | 24,255 |\n| 同業前瞻 P/E 中位數 | 26.28 | 22.15 |\n| 加權目標價 | 22,196 | 19,668 |\n| 上檔空間 | -27.5% | -18.9% |\n| 評等 | 放空 | 中立 |\n\n- **同業:** 5 家全部換價（TER、8035.T、6920.T、6146.T、KLAC），沒有未換價同業。\n- **檢查結果:** 重算錯誤格 0，`check_company_html` 全過，`check_layout_v13` 通過，`baseline_coordination/check.py` 0 項不符。Sens 快照 CURRENT，Coord 快照已重跑。\n- **未通過:** `check_sens_coverage` 未過（42 鍵找不到 Sens 表頭）。v0.7.6 即未過、結果相同，已寫入 note。\n- **文件不符:** v0.7.6 的 README 對照表寫加權目標價 23,640、評等中立，與該版 xlsx 重算值（22,196、放空）不符。我以 xlsx 為準，並在 README 加了更正。\n- **檔案:** 新增 `px1120_post.py`、`px1120_note.txt`，`build_advantest.py` 末端接上 px1120。`gen_html_json.py` 的版號斷言改成 v0.7.7，README、`sens.json`、`coord_alt.json` 也已更新。dist 只留 `20261121_..._v0.7.7` 的 xlsx 和 HTML。\n- **Git:** 未 commit、push 或開 PR。",
+ "error": null,
+ "stderr": null
+}
