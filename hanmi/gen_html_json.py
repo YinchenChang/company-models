@@ -244,7 +244,7 @@ def _ext(row_):
 
 
 H = {
-    "ver": "v0.4.6",
+    "ver": "v0.4.7",
     "units_chart": lambda pB, hB: {
         "type": "theme", "title": "HBM TC 鍵合機與其他業務營收（情境 B，億韓元）與 HBM TC 鍵合機占營收（右軸）", "x": f"@PL!D{hB}:G{hB}",
         "fmt": "n0", "fmt_r": "p0", "stack": True, "pad": 1.25, "total": f"@PL!D{pB('營收')}:G{pB('營收')}",

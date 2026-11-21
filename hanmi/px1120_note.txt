@@ -1,0 +1,10 @@
+folder=hanmi
+version=v0.4.6 -> v0.4.7
+px=181700 -> 153800
+tp=27217.17 -> 24725.13
+upside=-85.02% -> -83.92%
+rating=強力放空 -> 強力放空
+peers_repriced=4
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；check_company_html hanmi 全部通過；check_layout_v13 --xlsx ok；check_sens_coverage --require-keycol 49/49 未過（v0.4.6 即未過，既有，不要求）；baseline_coordination/check.py 0 項不符；alt_run.py hanmi 重跑，Coord 快照 CURRENT
+notes=前版加權目標價取自 v0.4.6 成品 xlsx 重算值 27,217（px1113_note 與 README 寫 25,500，為 Siliconomics v0.22 重建前的數字）。同業中位數 21.22 -> 18.15；DCF 19,940 -> 19,940；Comparable（相對倍數調整後）34,495 -> 29,510；另一側讀數 26,307 -> 23,916（皆強力放空）。dist 只留 v0.4.7。
