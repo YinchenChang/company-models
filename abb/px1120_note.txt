@@ -1,0 +1,10 @@
+folder=abb
+version=v0.1.0 -> v0.1.1
+px=69.96 -> 65.34
+tp=52.11 -> 49.52
+upside=-25.5% -> -24.2%
+rating=放空 -> 中立
+peers_repriced=4
+peers_unchanged=無
+checks=check_company_html 通過；check_layout_v13（html＋--xlsx）通過；check_governance（含 --html）通過；check_sens_coverage --require-keycol 通過；baseline_coordination/check.py 0 項不符；check_cached_values 通過；重算無錯誤值；layout_check.py 未跑（環境無 playwright）；Sens 已重跑，Coord 不適用
+notes=ABB 為 v0.1.0 新建模型，無 px1113，報價日依來源欄為 2026-11-17（Yahoo 同業倍數），倍數乘 11-20 ÷ 11-17 收盤。預測匯率 CHF=X 維持 0.83593（2026-11-13）不換。ABBN.SW、SU.PA 的 11-20 值為報價資料最近成交價。評等由放空轉中立，上檔空間 -24.2% 距放空邊界僅 0.8 個百分點。建置在 build_abb.py 內直接改（無獨立 px1120_post.py）。

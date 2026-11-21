@@ -32,7 +32,7 @@ def build(wb, c):
         r[0] += 1
         return r[0] - 1
 
-    put(f"ABB（ABBN）個股模型 {c['VER']}　成品日 {c['BUILD_DATE']}；股價基準日 {c['PX_DATE']}（收盤）；build_id {c['BID']}。AI 供應鏈 Project：電源與散熱；新增五家（工作單 2026-11-17）。", True)
+    put(f"ABB（ABBN）個股模型 {c['VER']}　成品日 {c['BUILD_DATE']}；股價基準日 {c['PX_DATE']}（收盤）；build_id {c['BID']}。AI 供應鏈 Project：電源與散熱；v0.1.1 為工作單 px1120 換價（2026-11-21）。", True)
     put("用途：以 Excel 為事實基礎，檢驗 ABB 的 AI 資料中心暴露度與估值。金額：十億美元（報表幣別）；股價與目標價：瑞士法郎（SIX：ABBN）；匯率 CHF=X 0.83593（每美元）；會計年度＝日曆年。")
     put("分部：Electrification（電氣化）、Motion（馬達驅動）、Automation（自動化；2026 年起 ABB 新聞稿使用此名，原 Process Automation）。Robotics 已簽約出售給 SoftBank（企業價值約 54 億美元），原文為停業單位；2026-11-05 報導中國外資安全審查禁止 SoftBank 收購其中國業務，交易未完成、雙方仍在協商，未提供新交割時程 [Interested-party：Robotics247、Supply Chain Digital 轉述 FT]。本模型 FCFF 不含 Robotics，其價值（交割為出售淨款，不交割為保留事業價值）在 In 頁以非營業投資加入淨現金，基準仍以 50 億美元計 [Assumed]。")
     put("三層基準：ABB 的 AI 資料中心變數讀 Wattonomics（設施電力：機櫃外的配電與 UPS；機櫃內屬 IT），不讀 Siliconomics（設施供應商例外；見 Coord 頁）。快照 v0.3.6（檔名與 sha256 前 8 碼 " + c["WSHA"] + " 見 Wat 頁）。")
@@ -63,7 +63,9 @@ def build(wb, c):
           " 倍（情境 B 路徑）；Comparable 隱含前瞻 P/E ", (f"RevDCF!B{rv['cm']}", "0.0"), " 倍對同業 ", (f"RevDCF!B{rv['cp']}", "0.0"), " 倍。"))
     put(F("回覆 3：非資料中心事業 FY2027E 營收 ", (f"{b('rev', 2027)}-{b('dc', 2027)}", "0.0"), " 十億美元，占集團 ", ("1-" + b("dcg", 2027), "0%"), "；若其成長與利潤率取 In 頁低值，加權目標價變動見 Sens（電氣化、馬達、自動化各案例）。"))
     put("", False)
-    put("版本要點（v0.1.0）", True)
+    put("版本要點（v0.1.1）", True)
+    put(F("v0.1.1（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。現價 69.96 → ", (v("px"), "0.00"), " CHF；同業前瞻 P/E 中位數 19.1 → ", (v("pmed"), "0.0"), "；加權目標價 52.11 → ", (v("tpw"), "0.00"), " CHF；上檔空間 -25.5% → ", (v("up"), "0.0%"), "；評等 放空 → ", (v("rec"),), "。共識 EPS、rf、β、ERP、預測匯率（CHF=X 0.83593，2026-11-13）、營運假設、情境權重不變；同業前瞻 P/E 以 2026-11-17 倍數 × 11-20 收盤 ÷ 11-17 收盤換算；未換價同業：無。ABBN.SW 11-20 值為報價資料最近成交價（Yahoo 日線尚無該列）。"))
+    put("版本要點（v0.1.0，以下為上一版）", True)
     for t in ["2026-11-17 獨立核對後修正：Robotics 出售狀態更新（中國禁止收購其中國業務，交易未完成；估值仍 50 億美元 [Assumed]，Sens 下緣 35 億）；In 頁資本支出註記「420 億」更正；dps_tgt 與 rf 日期差異註明；命題旁並列 FY2025 資料中心占比。",
               "首版：新增五家工作單（2026-11-17）；公司原文為 Q4 2025 financial information（FY2025／FY2024，Robotics 重編後）與 Q3 2026 新聞稿（9M 2026、資產負債表、指引）。",
               "FY2026E＝前九個月實績＋Q4 模型（公司指引：Q4 可比營收成長與 Q3 相近、Operational EBITA 率季減幅小於歷史；Q4 另有約 2.4 億瑞士法郎房產出售收益）。",

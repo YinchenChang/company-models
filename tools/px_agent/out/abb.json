@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 20,
+ "duration_ms": 130486,
+ "total_cost_usd": 0.3347589,
+ "result": "ABB 已換成 2026-11-20 收盤，版號從 v0.1.0 升到 v0.1.1。xlsx 與 HTML 都已重建，檔名日期 20261121，dist 只留這一版。\n\n- **現價：** 69.96 → 65.34 CHF。\n- **加權目標價：** 52.11 → 49.52 CHF（59.24 美元）。\n- **上檔空間：** −25.5% → −24.2%。\n- **評等：** 放空 → 中立。這是模型公式重算的結果，沒有手改，但離放空邊界（−25%）只差 0.8 個百分點。\n- **同業：** 前瞻 P/E 中位數 19.1 → 17.5，4 家同業都已換價，沒有未換價的。\n- **報價日：** ABB 是 v0.1.0 新建的模型，沒有 px1113 可比照。同業倍數的報價日依來源欄是 2026-11-17，所以新倍數＝舊倍數 × 11-20 收盤 ÷ 11-17 收盤。\n- **預測匯率：** CHF=X 維持 0.83593（11-13 值），依工作單不換。ABBN.SW 與 SU.PA 的 11-20 值是報價資料最近成交價。\n- **建置方式：** 改在 `build_abb.py` 與 `readme_abb.py` 裡，沒有另寫 `px1120_post.py`。Sens 快照已重跑，Coord 對 ABB 不適用。\n- **檢查：**\n  - 通過：check_company_html、check_layout_v13（含 `--xlsx`）、check_governance（含 `--html`）、`check_sens_coverage --require-keycol`、baseline_coordination（0 項不符）、check_cached_values；重算也沒有錯誤值。\n  - 沒跑：`layout_check.py`，因為環境沒有 playwright。\n  - check_layout_v13 要 bs4，我用 pip 另外裝了。\n\n說明檔在 `abb/px1120_note.txt`；`abb/README.md` 也已更新。沒有 commit。",
+ "error": null,
+ "stderr": null
+}
