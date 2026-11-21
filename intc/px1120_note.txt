@@ -1,0 +1,10 @@
+folder=intc
+version=v0.1.0 -> v0.1.1
+px=59.66 -> 51.28
+tp=16.00 -> 14.30
+upside=-73.2% -> -72.1%
+rating=強力放空 -> 強力放空
+peers_repriced=5
+peers_unchanged=無
+checks=build_intc.py 重建並以 LibreOffice 重算：錯誤格 0、與 dist 逐格相同（xlsx_diff）；Sens 模型狀態 CURRENT（gov_snapshot.json 的 fp、tp 已更新為新值）；check_company_html 全部通過；check_sens_coverage 通過（21 鍵、豁免 0）；baseline_coordination 0 項不符、4 項提醒（既有提醒）；check_layout_v13 章節完整，3 則「全頁含參數代號」警告為前版即有（本版未動該段文字）。
+notes=intc 沒有 px1113 的換價紀錄（v0.1.0 於 11-17 直接以 11-13 收盤建置，價格與五家同業價寫在 build_intc.py），故本次直接改 build_intc.py 內的現價與同業價（同業倍數＝新收盤÷共識 EPS 時間加權，與「舊倍數×價格比」等價），未另寫 px1120_post.py；版號同步改 v010_post.py、gen_html_json.py。加權目標價前值 16.00（-73.2%）取自 v0.1.0 成品重算值；舊 README 結論與待判斷 3 寫 16.41／-72.5%，與成品不一致（前版既有落差），已在 README 本版要點說明。同業中位數 17.79 -> 14.24；DCF 14.53 -> 14.62（WACC 市值權重隨現價重算）；Comparable 相對倍數調整後 17.47 -> 13.98。Yahoo 彙整的前瞻 P/E 30.98（股價約 55.5，2026-11-17）為第三方讀數，未動。coord_alt.json 未重跑（與價格無關）。
