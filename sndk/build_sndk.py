@@ -94,7 +94,7 @@ for k, (rv, gm, ox, op, ni, eps) in QA.items():
     inp(f"q{k}_gm", f"FQ{k} FY26 GAAP 毛利率", "%", None, gm, None, "Verified", src, "")
     inp(f"q{k}_op", f"FQ{k} FY26 GAAP 營業利益", U, None, op, None, "Verified", src, "")
     inp(f"q{k}_ni", f"FQ{k} FY26 GAAP 淨利", U, None, ni, None, "Verified", src, "")
-    inp(f"q{k}_eps", f"FQ{k} FY26 GAAP 稀釋 EPS", PXU, None, eps, None, "Verified", src, "")
+    inp(f"q{k}_eps", f"FQ{k} FY26 GAAP 稀釋 EPS（分割後；分割前 {eps}）", PXU, None, eps/8, None, "Verified", src, "公司公布值為分割前，÷8（工作單 px1120）")
 K10Q = "SanDisk 10-Q（FQ2 FY26，2026-01-02 止；FQ3 FY26，2026-04-03 止）營收依終端市場表"; K10K = "SanDisk 10-K FY2026（2026-07-03 止）"
 QSEG = {1: (0.269, 1.387, 0.652), 2: (0.440, 1.678, 0.907), 3: (1.467, 3.663, 0.820), 4: (2.977, 5.432, 0.556)}
 for k, (dc_, ed_, cs_) in QSEG.items():
