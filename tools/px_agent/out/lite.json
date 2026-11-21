@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 20,
+ "duration_ms": 194742,
+ "total_cost_usd": 0.38916590000000006,
+ "result": "Lumentum（`lite/`）已換成 2026-11-20 收盤並升到 v0.5.8，xlsx 與 HTML 都已重建，所有檢查沒有新增失敗項目。\n\n- **版號：** v0.5.7 → v0.5.8，成品是 `lite/dist/20261121_Lumentum個股模型_v0.5.8.xlsx` 和 `.html`，舊版已移除。\n- **現價：** 596.62 → 460.54。\n- **目標價：** 加權目標價 384.91 → 347.65。\n- **上檔空間：** -35.5% → -24.5%，越過放空門檻 -25%。\n- **評等：** 放空 → 中立（由模型公式重算，沒有手改）。\n- **同業：** COHR、FN、AAOI、CIEN、GLW 五家都換價，沒有未換價同業。同業前瞻 P/E 中位數 23.26 → 19.96。\n- **MRVL：** 股價改 122.28，換股價值 705.42 → 550.26。\n- **mrvl_tp：** 維持 72.87，因為它取自 MRVL v0.3.6 成品。MRVL 換價後的新目標價要整合時再更新，只影響換股價值對照列，不進加權目標價。\n- **檢查：**\n  - 錯誤格 0，`check_company_html` 全過，`baseline_coordination` 0 項不符。\n  - `check_layout_v13` 通過，但估值、驅動因子兩章有「可見文字含參數代號」警告，前版就有。\n  - `check_sens_coverage` 是 42／50 鍵無案例，前版即同，不要求。\n  - Sens、Coord 快照已重跑，狀態 CURRENT。\n- **前版數字：** v0.5.7 的 README 寫 413.31／-30.7%，但成品實際是 384.91／-35.5%。note 裡的「舊值」取自成品重算值，這點已在 README 與 note 註明。\n\n我改了 `build_lite.py`、`v055_post.py`、`gen_html_json.py`、`README.md`，快照 `sens.json`、`coord_alt.json` 因重跑而更新，另寫了 `lite/px1120_note.txt`。沒有 commit。",
+ "error": null,
+ "stderr": null
+}
