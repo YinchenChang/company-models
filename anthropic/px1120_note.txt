@@ -1,10 +1,10 @@
 folder=anthropic
 version=v0.2.3 -> v0.2.4
 px=74 -> 88.91
-tp=82.7133264927967 -> 84.798923045338
-upside=0.117747655308064 -> -0.0462386340643575
+tp=82.7133264927967 -> 83.8447238096795
+upside=0.117747655308064 -> -0.0569708265697955
 rating=中立 -> 中立
 peers_repriced=5
 peers_unchanged=無
-checks=Excel Checks 頁：錯誤 0、警告 4（C69、C70、C89、C231，v0.2.3 同為 4 項，非本版新增；C233 Sens 快照已重跑，不再警告）；check_layout_v13（HTML）通過；tools/baseline_coordination/check.py 0 項不符；check_sens_coverage：不適用（無 In 頁三欄）；builder 結構測試 13 項過；第二輪重跑後同；其餘需 pycel 的 parity／HTML 測試在本環境（Python 3.14）無法執行（pycel 報 ast.Str 錯誤，與本版改動無關），未跑
-notes=(1) Anthropic 無 px1113（11-13 當時未掛牌），現價原為 IPO 區間中點 74，本版改 ANT 11-20 收盤 88.91。ipo_px 同時帶動淨募資（80.8→91.8）、私募股數與選擇權庫藏股，照既有公式重算，故目標價 82.71→83.66；實際 IPO 價 83 未入模型；Inputs 區間上緣改 97.17（11-19 首日收盤）以通過區間順序檢查，Sens 的 70／78 不動。 (2) 第二輪（同版補換，不升版）：PLTR、CRWD、NET、SNOW 由 11-06 倍數 × 11-20 收盤 ÷ 11-06 收盤換算（31.51→28.19、32.82→34.72、26.32→26.93、13.35→12.33；EV 無市值，以倍數×價格比近似，Derived，SRC_ANT_625–636，收盤取自 closes_extra_20261120.csv）；同業中位數 26.32→26.93；Sens 與 Val 情境快照已重跑（Val 快照無變動）。第一輪原寫「同業只有 DDOG 在收盤檔」：EV／遠期營收 16.36（10-30）→ 10.94（× 157.37 ÷ 235.27；EV 無市值，以倍數×價格比近似，SRC_ANT_622–624，SRC_ANT_590 改公式）；此段已被第二輪取代。 (3) 建置用 Tokenomics eded8e6（從 GitHub 公開庫取得）；Coord 固定讀 Wattonomics v0.3.5 快照（CURRENT_SNAPSHOT 已到 v0.3.9，不在價格範圍）。 (4) 個股模型 HTML 的橫幅與部分標籤仍寫「IPO 價格區間中點；尚未掛牌」，來自共用的 tools/company_html（fundmodel_v2／v13），我無權修改，需主串處理；數字本身取自 xlsx，是 88.91。 (5) 為建置在本機安裝 pycel、bs4；未改其他資料夾。 (6) dist/_待刪除 內既有的 v0.2.2 xlsx 未動。
+checks=Excel Checks 頁：錯誤 0、警告 4（C69、C70、C89、C231，v0.2.3 同為 4 項，非本版新增）；check_layout_v13（HTML）通過；tools/baseline_coordination/check.py 0 項不符；check_sens_coverage 不適用（無 In 頁三欄）；builder 結構測試 13 項過（含 test_inputs_ranges_and_tags）；需 pycel 的 parity／HTML 測試（test_v020_b1_ipo_in_base、test_v020_val_identities、test_workbook_expectations、test_row_counts_match_report 等）在本環境（Python 3.14，pycel 報 ast.Str 錯誤）沒跑，由 CI 驗證；重建後淨募資 80.8 已由成品直接讀出
+notes=(1) 第三輪修正：前兩輪把 ipo_px 改成 88.91，使淨募資、私募股數、pro forma 現金跟著市價變動。現改為兩個輸入：ipo_px 還原 74（區間 70–78，淨募資 80.8、私募股數、選擇權庫藏股、pro forma 現金照舊讀它，數值回到 v0.2.3）；新增 mkt_px＝88.91（ANT 2026-11-20 收盤，closes_20261109_20261120.csv，Verified，INP_286），VAL_Px、上檔空間、評等、股權市值、反向 DCF 讀它。Val 新增一列「發行價」供私募股數與選擇權庫藏股讀取。實際 IPO 價 83 與加碼發行屬正式招股書滾入，未動。區間順序檢查只剩招股區間本身（70≤74≤78）。 (2) 五家同業（DDOG、PLTR、CRWD、NET、SNOW）倍數已在前輪換到 11-20，保留不動（EV 無市值，以倍數×價格比近似，Derived，SRC_ANT_622–636）；同業中位數 26.32→26.93。 (3) 測試期望值已更新：formula_cells 10687、defined_names 1837、src_rows 636、src_named 580、inp_rows 282（數值斷言如 80.8 未放寬）；test_inputs_ranges_and_tags 僅對 mkt_px 允許 Verified；test_v020_val_identities 的股數改讀 ipo_px。這些數目由 openpyxl 從成品點算，未經 pycel 驗證。 (4) Sens（含 ipo_px 70／78）與 Val 情境快照已重跑後重建；xlsx 與兩份 HTML 已重建，dist 只留現行版。 (5) 個股模型 HTML 的橫幅與部分標籤仍寫「IPO 價格區間中點；尚未掛牌」，來自共用的 tools/company_html，我無權修改，需主串處理；數字取自 xlsx。 (6) 建置用 Tokenomics eded8e6；Coord 固定讀 Wattonomics v0.3.5 快照（不在價格範圍）。 (7) dist/_待刪除 內既有 v0.2.2 xlsx 未動。

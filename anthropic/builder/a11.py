@@ -1,7 +1,7 @@
 """Anthropic v0.2.0 估值頁 Val（工作單 20261111 F1–F10；docs/plan/個股DCF標準規格.md FCFF 版；版面參考 spacex/build_spacex.py 的 Val 頁）。
 
 M 線規格例外「AI 收支模型不加 DCF 腿」（2026-11-05）因公司掛牌而失效（J5 預設：DCF＋Comparable 各半）。
-- 評價日 2026-09-30（pro forma 資產負債表日）；目標時點 12 個月（以 ke 推進）；現價＝ipo_px（IPO 區間中點 74）。
+- 評價日 2026-09-30（pro forma 資產負債表日）；目標時點 12 個月（以 ke 推進）；現價＝mkt_px（2026-11-20 收盤 88.91）；發行價 ipo_px（74）只帶動募資與股數。
 - FCFF＝EBIT（現金口徑＝Funding F06：營收淨額 − 算力現金 − 非算力〔不含股權報酬〕− 股權報酬；股權報酬只扣未來新授：IPO 一次性 RSU 與既有獎酬攤銷加回，因該批 RSU 已計入評價股數）− 稅 − 自建資本支出 − 營運資金增加。
   算力為服務／租賃付款，已在 EBIT 扣除 → 折舊 − 資本支出＝0（F03 自建資本支出另扣）。稅＝21% × 正 EBIT，扣除 2026Q4 起自身虧損累積的 NOL。
 - 欄：2026Q4（＝FY2026 − 前九月實際代理）、2027–2030（模型）、2031–2033（延伸：營收淨額年增由 FY2030 值線性收斂到 ext_g33；EBIT 利益率維持 FY2030＋ext_m_add 線性）。
@@ -113,14 +113,15 @@ def build(ctx):
     row("kdat", "稅後債務成本＝kd ×（1 − 稅率）", "比例", [f"={c('kd')}*(1-{tax})"], fmt="0.00%", name="VAL_KdAT")
     # 股數與淨現金先算（權重要用市值）
     sec("2. 評價日股數（十億股）與淨現金（工作單 F5）")
-    px = I("ipo_px")
-    row("px", "現價＝ipo_px（2026-11-20 收盤；v0.2.3 為 IPO 區間中點 74）", "$/股", [f"={px}"], fmt="#,##0.00", name="VAL_Px")
+    px = I("mkt_px")
+    row("px", "現價＝mkt_px（2026-11-20 收盤；v0.2.3 為 IPO 區間中點 74）", "$/股", [f"={px}"], fmt="#,##0.00", name="VAL_Px")
+    row("ipx", "發行價 ipo_px（初步招股說明書區間中點 74；私募股數、選擇權庫藏股、pro forma 現金依此，不隨市價）", "$/股", [f"={I('ipo_px')}"], fmt="#,##0.00")
     row("pxlo", "價格區間下緣", "$/股", [f"={S('pros_px_mid')}_Lo"], fmt="#,##0.00", name="VAL_PxLo")
     row("pxhi", "價格區間上緣", "$/股", [f"={S('pros_px_mid')}_Hi"], fmt="#,##0.00", name="VAL_PxHi")
     row("sh_post", "發行後股數（含首次公益發行、私募以 $74 計）", "十億股", [f"={S('pros_shares_post')}/{m2b}"], fmt="0.0000", note="SRC_ANT_539")
-    row("sh_pp", "私募股數依價格調整＝26.0 ÷ 價格 − 351.35M", "十億股", [f"={S('pros_pp_total')}/{c('px')}-{S('pros_pp_shares_mid')}/{m2b}"], fmt="0.0000", note="SRC_ANT_525、533")
+    row("sh_pp", "私募股數依價格調整＝26.0 ÷ 價格 − 351.35M", "十億股", [f"={S('pros_pp_total')}/{c('ipx')}-{S('pros_pp_shares_mid')}/{m2b}"], fmt="0.0000", note="SRC_ANT_525、533")
     row("sh_pbi", "扣：首次公益發行（val_pbi_switch＝0 時扣除；基準含）", "十億股", [f"=-(1-{I('val_pbi_switch')})*{S('pros_pbi_shares')}/{m2b}"], fmt="0.0000", note="SRC_ANT_541")
-    row("sh_opt", "選擇權庫藏股法＝1,774.34M ×（1 − 2.91 ÷ 價格）", "十億股", [f"={S('pros_options')}/{m2b}*MAX(0,1-{S('pros_option_strike')}/{c('px')})"], fmt="0.0000",
+    row("sh_opt", "選擇權庫藏股法＝1,774.34M ×（1 − 2.91 ÷ 價格）", "十億股", [f"={S('pros_options')}/{m2b}*MAX(0,1-{S('pros_option_strike')}/{c('ipx')})"], fmt="0.0000",
         note="SRC_ANT_542、543")
     row("sh_rsu", "RSU（服務條件未滿 1,026.66M＋9-30 後新授 47.04M；全額）", "十億股", [f"=({S('pros_rsu_unvested')}+{S('pros_rsu_new')})/{m2b}"], fmt="0.0000", note="SRC_ANT_544、545")
     row("sh_vmo", "捐贈配對已歸屬義務 553.44M（val_vmo_switch；基準含）", "十億股", [f"={I('val_vmo_switch')}*{S('pros_vmo')}/{m2b}"], fmt="0.0000", note="SRC_ANT_546")
