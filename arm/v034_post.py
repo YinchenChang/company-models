@@ -13,7 +13,7 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
 BOLD = Font(bold=True); BLUE = Font(color="0000FF"); HDR = PatternFill("solid", fgColor="DDEBF7")
-AS_OF = "2026-11-13"
+AS_OF = "2026-11-20"
 XB = "SEC XBRL companyfacts（CIK 0001973239；https://data.sec.gov/api/xbrl/companyfacts/CIK0001973239.json；20-F FY2024–FY2026；2026-11-05 讀取）"
 Q2BS = "Arm 6-K 2026-11-04（季度財報，季度結束 2026-09-30；https://www.sec.gov/Archives/edgar/data/1973239/000197323926000142/arm-20260930.htm）資產負債表（US$M ÷ 1000）"
 LET = "股東信（6-K Exhibit 99.2）non-GAAP EPS"
@@ -213,7 +213,7 @@ def add_rows(wb, ctx, G):
     # as_of
     G["asof_h"] = put(f"資料基準日（as_of）：{AS_OF}（現價日）。市場資料晚於或早於基準日超過 2 個交易日標「逾期」；最近一次財報（2Q27，2026-11-04）前的共識標「財報前，只作歷史對照」。", True)
     RD.cell(r, 1, "項目").font = BOLD; RD.cell(r, 2, "資料日期").font = BOLD; RD.cell(r, 3, "狀態").font = BOLD; G["asof_t"] = r; r += 1
-    items = [("股價 px", "2026-11-13", 0), ("同業股價（六家）", "2026-11-13", 0), ("同業前瞻 EPS（stockanalysis 頁面，最早一家）", "2026-10-26", 0),
+    items = [("股價 px", "2026-11-20", 0), ("同業股價（六家）", "2026-11-20", 0), ("同業前瞻 EPS（stockanalysis 頁面，最早一家）", "2026-10-26", 0),
              ("無風險利率 rf（美國 10 年期公債）", "2026-10-23", 0), ("市場共識目標價 cons_tp", "2026-11-05", 0), ("共識前瞻 12 月 EPS cons_feps（價格日）", "2026-11-06", 0),
              ("共識 FY2027 EPS c_eps27", "2026-11-05", 0), ("共識 FY2027 營收 c_rev27", "2026-10-21", 1), ("共識 2Q27 營收 c_q2rev（只作 2Q27 實績對照）", "2026-10-21", 1)]
     G["asof_rows"] = []

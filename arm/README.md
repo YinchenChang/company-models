@@ -1,4 +1,14 @@
-# arm/ — Arm Holdings（ARM）個股模型 v0.3.6
+# arm/ — Arm Holdings（ARM）個股模型 v0.3.7
+
+## v0.3.7（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）
+
+依據：`docs/workorders/20261121_px1120_現價與同業報價換11-20收盤.md`；價格只取 `markets/invest_map/data/closes_20261109_20261120.csv`。base＝v0.3.6。
+
+- **現價與同業報價改 2026-11-20 收盤（工作單 px1120）：** 現價 190.53 → 152.20（In 頁 px）；Comparable 同業前瞻 P/E（新＝v0.3.6 倍數 × 11-20 收盤 ÷ 11-13 收盤，共識 EPS 不變）：Qualcomm 18.63→16.20、Broadcom 19.95→17.50、Marvell 27.77→21.66、Rambus 22.07→17.81、Synopsys 25.77→22.43、Cadence 34.28→29.88；**同業中位數 23.92 → 19.74**。**加權目標價 42.59 → 36.00；上檔空間 −77.6% → −76.3%；評等 強力放空 → 強力放空。**未換價同業：無。
+- 日期輸入：資料基準日（as_of）改 2026-11-20；共識、rf、β、ERP、情境權重與營運假設不變。
+- 快照：`sens.json`、`coord_alt.json` 以新價重跑；Sens 頁快照狀態 CURRENT。新增 `px1120_post.py`（只改版號與說明文字，接在 px1113_post 之後）。
+- 建置同 v0.3.6（`sens_arm.py` → `tools/coord/alt_run.py arm` → `build_arm.py` → LibreOffice 重算 → `gen_html_json.py` → `build_company_html.py arm`）。成品 `dist/20261121_Arm個股模型_v0.3.7.xlsx`、`.html`。
+- 檢查：錯誤格 0；check_company_html、check_governance、baseline_coordination/check.py（0 項不符）通過；check_layout_v13 通過（僅參數代號警告）；check_sens_coverage 仍有 β、RONIC、非營業投資三鍵無案例（v0.3.4 起即未過，未處理）。
 
 ## v0.3.6（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
 
