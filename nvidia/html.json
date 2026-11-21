@@ -6674,6 +6674,259 @@
     },
     {
      "type": "h3",
+     "text": "供應承諾對採購恆等式（只作對照與敏感度，不進目標價）"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Recon!A75"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A88",
+     "head": [
+      "項目",
+      "@Recon!B88",
+      "@Recon!C88",
+      "@Recon!D88",
+      "@Recon!E88",
+      "@Recon!F88"
+     ],
+     "rows": [
+      [
+       "@Recon!A89",
+       "@Recon!B89|n1",
+       "@Recon!C89|n1",
+       "@Recon!D89|n1",
+       "@Recon!E89|n1",
+       "@Recon!F89|n1"
+      ],
+      [
+       "@Recon!A90",
+       "@Recon!B90|n1",
+       "@Recon!C90|n1",
+       "@Recon!D90|n1",
+       "@Recon!E90|n1",
+       "@Recon!F90|n1"
+      ],
+      [
+       "@Recon!A91",
+       "@Recon!B91|x2",
+       "@Recon!C91|x2",
+       "@Recon!D91|x2",
+       "@Recon!E91|x2",
+       "@Recon!F91|x2"
+      ],
+      [
+       "@Recon!A92",
+       "@Recon!B92|n1",
+       "@Recon!C92|n1",
+       "@Recon!D92|n1",
+       "@Recon!E92|n1",
+       "@Recon!F92|n1"
+      ],
+      [
+       "@Recon!A93",
+       "@Recon!B93|n1",
+       "@Recon!C93|n1",
+       "@Recon!D93|n1",
+       "@Recon!E93|n1",
+       "@Recon!F93|n1"
+      ],
+      [
+       "@Recon!A94",
+       "@Recon!B94|n0",
+       "@Recon!C94|n0",
+       "@Recon!D94|n0",
+       "@Recon!E94|n0",
+       "@Recon!F94|n0"
+      ],
+      [
+       "@Recon!A95",
+       "@Recon!B95|n1",
+       "@Recon!C95|n1",
+       "@Recon!D95|n1",
+       "@Recon!E95|n1",
+       "@Recon!F95|n1"
+      ],
+      [
+       "@Recon!A96",
+       "@Recon!B96|n1",
+       "@Recon!C96|n1",
+       "@Recon!D96|n1",
+       "@Recon!E96|n1",
+       "@Recon!F96|n1"
+      ],
+      [
+       "@Recon!A97",
+       "@Recon!B97|p1",
+       "@Recon!C97|p1",
+       "@Recon!D97|p1",
+       "@Recon!E97|p1",
+       "@Recon!F97|p1"
+      ],
+      [
+       "@Recon!A98",
+       "@Recon!B98|n2",
+       "@Recon!C98|n2",
+       "@Recon!D98|n2",
+       "@Recon!E98",
+       "@Recon!F98"
+      ],
+      [
+       "@Recon!A99",
+       "@Recon!B99|n2",
+       "@Recon!C99|n2",
+       "@Recon!D99|n2",
+       "@Recon!E99|n2",
+       "@Recon!F99|n2"
+      ],
+      [
+       "@Recon!A100",
+       "@Recon!B100|n2",
+       "@Recon!C100|n2",
+       "@Recon!D100|n2",
+       "@Recon!E100|n2",
+       "@Recon!F100|n2"
+      ],
+      [
+       "@Recon!A101",
+       "@Recon!B101|n2",
+       "@Recon!C101|n2",
+       "@Recon!D101|n2",
+       "@Recon!E101|n2",
+       "@Recon!F101|n2"
+      ],
+      [
+       "@Recon!A102",
+       "@Recon!B102|p1",
+       "@Recon!C102|p1",
+       "@Recon!D102|p1",
+       "@Recon!E102",
+       "@Recon!F102"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A104",
+     "head": [
+      "項目",
+      "@Recon!B104",
+      "@Recon!C104",
+      "@Recon!D104",
+      "@Recon!F104"
+     ],
+     "rows": [
+      [
+       "@Recon!A105",
+       "@Recon!B105|n1",
+       "@Recon!C105|n1",
+       "@Recon!D105|n1",
+       "@Recon!F105|n1"
+      ],
+      [
+       "@Recon!A106",
+       "@Recon!B106|n1",
+       "@Recon!C106|n1",
+       "@Recon!D106|n1",
+       "@Recon!F106|n1"
+      ],
+      [
+       "@Recon!A107",
+       "@Recon!B107|p1",
+       "@Recon!C107|p1",
+       "@Recon!D107|p1",
+       "@Recon!F107|p1"
+      ],
+      [
+       "@Recon!A108",
+       "@Recon!B108|p1",
+       "@Recon!C108|p1",
+       "@Recon!D108|p1",
+       "@Recon!F108|p1"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A77",
+     "head": [
+      "項目",
+      "@Recon!B77",
+      "@Recon!C77",
+      "@Recon!D77",
+      "@Recon!E77",
+      "@Recon!F77"
+     ],
+     "rows": [
+      [
+       "@Recon!A78",
+       "@Recon!B78|n1",
+       "@Recon!C78|n1",
+       "@Recon!D78|n1",
+       "@Recon!E78",
+       "@Recon!F78"
+      ],
+      [
+       "@Recon!A79",
+       "@Recon!B79|n1",
+       "@Recon!C79|n1",
+       "@Recon!D79|n1",
+       "@Recon!E79|n1",
+       "@Recon!F79|n1"
+      ]
+     ],
+     "collapse": true,
+     "summary": "展開：已實現期間的恆等式核對"
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A81",
+     "head": [
+      "項目",
+      "@Recon!B81",
+      "@Recon!C81",
+      "@Recon!D81"
+     ],
+     "rows": [
+      [
+       "@Recon!A82",
+       "@Recon!B82|p1",
+       "@Recon!C82",
+       "@Recon!D82"
+      ],
+      [
+       "@Recon!A83",
+       "@Recon!B83|n1",
+       "@Recon!C83",
+       "@Recon!D83"
+      ],
+      [
+       "@Recon!A84",
+       "@Recon!B84|n1",
+       "@Recon!C84",
+       "@Recon!D84"
+      ],
+      [
+       "@Recon!A85",
+       "@Recon!B85|n1",
+       "@Recon!C85",
+       "@Recon!D85"
+      ],
+      [
+       "@Recon!A86",
+       "@Recon!B86|p1",
+       "@Recon!C86|p1",
+       "@Recon!D86|p1"
+      ]
+     ],
+     "collapse": true,
+     "summary": "展開：假設與年底存貨推算（預登錄檢驗點）"
+    },
+    {
+     "type": "h3",
      "text": "實績對帳：公司已公布實績對層級隱含值"
     },
     {
