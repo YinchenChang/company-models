@@ -53,14 +53,14 @@ HIS = [  # (鍵, 項目, FY2024, FY2025, FY2026, 標記, 來源)
     ("pti", "稅前利益", None, None, None, "—", "未找到（10-K 原文本輪未取得）"),
     ("tax", "所得稅", None, None, None, "—", "未找到"),
     ("ni", "稅後淨利", None, "=a25_ni", "=a26_ni", "Verified", "FY2025：In 頁 a25_ni −1.641（含商譽減損）；FY2026：In 頁 a26_ni 11.433（" + SRC_8K + "）；FY2024：未找到"),
-    ("eps", "EPS（GAAP 稀釋；分割前）", None, "=a25_eps", "=a26_eps", "Verified", "In 頁 a25_eps −11.32、a26_eps 73.76（" + SRC_8K + "）；FY2024：未找到"),
+    ("eps", "EPS（GAAP 稀釋；分割後）", None, "=a25_eps", "=a26_eps", "Verified", "In 頁 a25_eps −1.415、a26_eps 9.22（分割前 −11.32、73.76，÷8；" + SRC_8K + "）；FY2024：未找到"),
 ]
 
 
 def hist_is(wb):
     H = wb.create_sheet("Hist")
     H["A1"] = ("Hist — 損益表歷史（v0.5.5 起；PL 頁「標準損益表」的歷史三年用）。會計年度約 6 月底結束（52／53 週）：FY2024＝2023-07～2024-06、FY2025＝2024-07～2025-06、FY2026＝2025-07～2026-07-03。"
-               "金額：十億美元；EPS：美元（2026-11-20 一股分八股前）。只用 repo 既有來源（In 頁）；空白＝未找到（本輪無法連網取 10-K／Form 10 原文，未補）。2025-02 自 WDC 分拆，FY2024 為分拆前報表")
+               "金額：十億美元；EPS：美元（2026-11-20 一股分八股後口徑）。只用 repo 既有來源（In 頁）；空白＝未找到（本輪無法連網取 10-K／Form 10 原文，未補）。2025-02 自 WDC 分拆，FY2024 為分拆前報表")
     H["A1"].font = BOLD
     hdr(H, 3, ["鍵", "項目", "FY2024", "FY2025", "FY2026", "標記", "來源"])
     r = 4; R = {}
@@ -74,7 +74,7 @@ def hist_is(wb):
         R[k] = r; r += 1
     H.cell(r, 1, "h_opx"); H.cell(r, 2, "營業費用（＝毛利 − 營業利益）"); H["E" + str(r)] = f"=E{R['gp']}-E{R['oi']}"; H["E" + str(r)].number_format = "#,##0.000"
     H.cell(r, 6, "Derived"); H.cell(r, 7, "FY2026＝毛利 − 營業利益（In 頁 ox_var 說明：GAAP 營業費用約 2.083）"); R["opx"] = r; r += 1
-    H.cell(r, 1, "h_sh"); H.cell(r, 2, "稀釋股數（＝淨利 ÷ EPS；百萬股，分割前）")
+    H.cell(r, 1, "h_sh"); H.cell(r, 2, "稀釋股數（＝淨利 ÷ EPS；百萬股，分割後）")
     for c in "DE": H[f"{c}{r}"] = f"={c}{R['ni']}*1000/{c}{R['eps']}"; H[f"{c}{r}"].number_format = "#,##0.0"
     H.cell(r, 6, "Derived"); H.cell(r, 7, "＝淨利 ÷ 稀釋 EPS"); R["sh"] = r; r += 2
     H.cell(r, 1, "核對（應約 0）").font = BOLD; r += 1
@@ -103,8 +103,8 @@ def pl_standard(wb, HR, CR, X):
     D = wb["DCF"]; dbr = lab(D, "情境 B（基準）", exact=True); d_ebit = lab(D, "營業利益 EBIT", dbr)
     hcell = lambda k, c: wb["Hist"][f"{HC[c]}{HR[k]}"].value
     r = P.max_row + 3; s0 = r
-    P.cell(r, 1, "標準損益表（v0.5.5 起；個股 HTML 版面規格 v1.3 D 節）：歷史三年（FY2024–FY2026）＋未來六年（FY2027–FY2032，情境 B 基準）。會計年度約 6 月底結束；十億美元；EPS 美元（分割前）。只引用本頁上方、Hist、DCF 頁與 In 頁，不回饋任何計算").font = BOLD; r += 1
-    P.cell(r, 1, "口徑：美國 GAAP（非 non-GAAP）；EPS 為 GAAP 稀釋 EPS（模型口徑：期末流通股數＋稀釋股數；2026-11-20 一股分八股前）。"
+    P.cell(r, 1, "標準損益表（v0.5.5 起；個股 HTML 版面規格 v1.3 D 節）：歷史三年（FY2024–FY2026）＋未來六年（FY2027–FY2032，情境 B 基準）。會計年度約 6 月底結束；十億美元；EPS 美元（分割後）。只引用本頁上方、Hist、DCF 頁與 In 頁，不回饋任何計算").font = BOLD; r += 1
+    P.cell(r, 1, "口徑：美國 GAAP（非 non-GAAP）；EPS 為 GAAP 稀釋 EPS（模型口徑：期末流通股數＋稀釋股數；2026-11-20 一股分八股後口徑）。"
                  "預測期模型推毛利、營業費用（固定＋變動）、營業利益與淨利（淨利＝（營業利益＋淨現金收益）×（1 − 稅率））；稅前利益＝淨利 ÷（1 − 稅率），所得稅＝稅前利益 − 淨利，其他收入淨額＝稅前利益 − 營業利益，三者皆為由模型淨利反推的 Derived 列，不進 EPS、現金流與目標價。"
                  "歷史欄空白＝未找到（Hist 頁）。")
     r_note = r; r += 1
@@ -146,8 +146,8 @@ def pl_standard(wb, HR, CR, X):
     row("tax", "所得稅", "$B", hh("tax") + [f"={c}{L['pti']}-{c}{r + 1}" for c in "FGHIJK"], M, "預測期＝稅前利益 − 淨利")
     row("ni", "稅後淨利", "$B", hh("ni") + fc("yni") + ext("ni"), M)
     row("nm", "淨利率", "%", [(f"={c}{L['ni']}/{c}{L['rev']}" if hv("ni", c) and hv("rev", c) else None) for c in "CDE"] + [f"={c}{L['ni']}/{c}{L['rev']}" for c in "FGHIJK"], PCT)
-    row("sh", "稀釋股數（百萬股，分割前）", "百萬股", [None, f"=Hist!D{HR['sh']}", f"=Hist!E{HR['sh']}"] + [f"={c}{L['ni']}*1000/{c}{r + 1}" for c in "FGHIJK"], "#,##0.0", "預測期＝淨利 ÷ EPS（PL 頁 EPS＝淨利 ÷（期末流通股數＋稀釋股數））")
-    row("eps", "EPS（GAAP 稀釋，分割前）", "USD", hh("eps") + fc("eps") + ext("eps"), "#,##0.00", "2026-11-20 一股分八股前")
+    row("sh", "稀釋股數（百萬股，分割後）", "百萬股", [None, f"=Hist!D{HR['sh']}", f"=Hist!E{HR['sh']}"] + [f"={c}{L['ni']}*1000/{c}{r + 1}" for c in "FGHIJK"], "#,##0.0", "預測期＝淨利 ÷ EPS（PL 頁 EPS＝淨利 ÷（期末流通股數＋稀釋股數））")
+    row("eps", "EPS（GAAP 稀釋，分割後）", "USD", hh("eps") + fc("eps") + ext("eps"), "#,##0.00", "2026-11-20 一股分八股後口徑")
     P.cell(r, 1, "比率").font = BOLD; r_ratio = r; r += 1
     row("r_yoy", "營收年增率", "%", [None, (f"=D{L['yoy']}" if hv("rev", "C") else None)] + [f"={c}{L['yoy']}" for c in "EFGHIJK"], PCT)
     row("r_gm", "毛利率", "%", [(f"={c}{L['gm']}" if hv("gp", c) else None) for c in "CDE"] + [f"={c}{L['gm']}" for c in "FGHIJK"], PCT)
@@ -571,7 +571,7 @@ def readme13(wb, PLA, RVA, SNS, CR, X):
     def put(key, *parts):
         nonlocal r
         RD.cell(r, 1, F(*parts)); out[key] = r; r += 1
-    put("hero", T("加權目標價 "), TX(tp, "#,##0"), T(" 美元，"), f'IF({up}<0,"低於","高於")', T("現價 "), TX(f"ABS({up})", "0.0%"), T("，評等"), rec, T("：DCF "), TX(dcf, "#,##0"), T(" 美元與同業 P/B 法 "), TX(cadj, "#,##0"), T(" 美元各占一半，"), both, T("（每股金額為一股分八股前）。"))
+    put("hero", T("加權目標價 "), TX(tp, "#,##0"), T(" 美元，"), f'IF({up}<0,"低於","高於")', T("現價 "), TX(f"ABS({up})", "0.0%"), T("，評等"), rec, T("：DCF "), TX(dcf, "#,##0"), T(" 美元與同業 P/B 法 "), TX(cadj, "#,##0"), T(" 美元各占一半，"), both, T("（每股金額為一股分八股後口徑）。"))
     put("rec", T("投資建議「"), rec, T("」的由來：加權目標價相對現價 "), TX(up, "+0.0%;-0.0%"), T("，依上檔空間五級固定規則判定。三情境 DCF 價值為現價的 "), TX(f"Val!B{dcfpx}", "0.00"), T("／"), TX(f"Val!C{dcfpx}", "0.00"), T("／"), TX(f"Val!D{dcfpx}", "0.00"),
         T(" 倍（樂觀／基準／保守）；DCF 權重降到三成時加權目標價 "), TX(f"Sens!C{SNS['dcfw']}", "#,##0"), T(" 美元（評等"), REC5(f"(Sens!C{SNS['dcfw']}/px-1)"), T("）。"))
     put("o1", T("目標價：加權目標價 "), TX(tp, "#,##0"), T(" 美元，比現價 "), TX("px", "#,##0"), T(" 美元"), f'IF({up}<0,"低","高")', TX(f"ABS({up})", "0.0%"), T("，評等"), rec, T("。同業比較法（記憶體同業前瞻 P/B 中位數 "), TX(pmed, "0.00"),
