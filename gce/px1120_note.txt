@@ -1,0 +1,10 @@
+folder=gce
+version=v0.3.6 -> v0.3.7
+px=1030 -> 711
+tp=1342.60 -> 1004.12
+upside=+30.3% -> +41.2%
+rating=買進 -> 買進
+peers_repriced=5
+peers_unchanged=無
+checks=check_company_html gce 全過；check_layout_v13 --xlsx ok（警告：估值章可見文字含來源檔名 closes_20261020_20261113、closes_20261109_20261120，來源欄字樣，px1113 版同）；check_sens_coverage 38 鍵無案例（未用 --require-keycol，v0.3.6 即未過）；baseline_coordination/check.py 0 項不符；xlsx 重建與 dist 逐格相同、錯誤格 0；alt_run 已重跑
+notes=DCF 726.45 -> 684.26 為 WACC 市值權重隨現價自動重算；Comparable 未調整 1161.62 -> 785.18；Coord 另一側 1154.76（中立）-> 905.61（買進）；並列參考 A 股倍數 300476.SZ 9.97x -> 8.8x、002463.SZ 15.87x -> 15.5x。gen_html_json.py 內版號 v0.3.6 改 v0.3.7。
