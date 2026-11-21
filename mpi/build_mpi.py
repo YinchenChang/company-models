@@ -1001,6 +1001,11 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 _N1113 = open(os.path.join(_HERE, "px1113_note.txt"), encoding="utf-8").read().strip() if os.path.exists(os.path.join(_HERE, "px1113_note.txt")) else "v0.2.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。"
 print(P1113.apply(wb, _HERE, dict(ver="v0.2.7", old_ver="v0.2.6", tk="6223.TWO", note=_N1113 + " ",
                                   extra_subs=(("v0.2.4 起為 2026-11-05（3,725）", "v0.2.4 起為 2026-11-05（3,725）；v0.2.7 起為 2026-11-13（%s）" % format(P1113.px("6223.TWO"), ",.10g")),))))
+# v0.2.8（2026-11-21）：工作單 px1120——現價與同業報價改 2026-11-20 收盤（mpi/px1120_post.py；只改價格輸入與說明文字）
+import px1120_post as P1120  # noqa: E402
+_N1120 = open(os.path.join(_HERE, "px1120_readme.txt"), encoding="utf-8").read().strip() if os.path.exists(os.path.join(_HERE, "px1120_readme.txt")) else "v0.2.8（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。"
+print(P1120.apply(wb, _HERE, dict(ver="v0.2.8", old_ver="v0.2.7", tk="6223.TWO", old_date="2026-11-13", note=_N1120 + " ",
+                                  extra_subs=(("v0.2.7 起為 2026-11-13（4,670）", "v0.2.7 起為 2026-11-13（4,670）；v0.2.8 起為 2026-11-20（%s）" % format(P1120.px("6223.TWO"), ",.10g")),))))
 wb.save(sys.argv[1])
 if os.environ.get("MPI_ROWMAP"):
     import json
