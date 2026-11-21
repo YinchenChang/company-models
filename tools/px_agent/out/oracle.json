@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 24,
+ "duration_ms": 354598,
+ "total_cost_usd": 0.45341069999999994,
+ "result": "Oracle 已換成 2026-11-20 收盤，版號 v0.5.3 → v0.5.4；Excel 與 HTML 都已重建。\n\n| | 前 | 後 |\n|---|---|---|\n| 現價 | 125.35 | 101.19 |\n| 加權目標價 | 70.89 | 62.94 |\n| 上檔空間 | −43.4% | −37.8% |\n| 評等 | 放空 | 放空 |\n\n- **目標價拆解：** Comparable 目標價 104.81 → 86.80；DCF 目標價 36.97 → 39.08。\n- **同業換價：** 共換 7 家，沒有未換價同業。軟體 5 家的 NTM EV/EBITDA 中位數 15.31 → 13.12；CRWV、NBIS 兩家只作 Val 對照列，不進目標價。\n- **報告 `dist` 與檔名：** `dist` 只留 `20261121_Oracle個股模型_v0.5.4` 的 xlsx 與 HTML。舊版 xlsx 移到 `dist/_待刪除/`，舊 HTML 已刪。\n- **檢查：**\n  - `make_v05.sh` 內建檢查全過：公式錯誤 0、Sens 快照差 0、收支模組 51 項 0 失敗，另含版面、敏感度覆蓋、分部、HTML 檢查。\n  - `check_layout_v13` 通過，只有參數代號警告。\n  - `baseline_coordination` 0 項不符，Coord 沒有 STALE。\n- **已知偏離：** 新倍數落在原敏感度區間之外（`mult_oci` 現值 3.99、區間 4.81–7.88；`mult_leg` 現值 7.43、區間 7.5–10.5），我沒有動區間。`mult_oci` 只作對照，對目標價沒有影響。\n- **其他注意：** 我為了跑版面檢查，在環境裡用 pip 裝了 beautifulsoup4。下游若引用 Oracle 的 dist 檔名，要由主串統一改。\n\n還沒 commit；`oracle/px1120_note.txt` 已寫好，`README.md` 也加了本版要點。",
+ "error": null,
+ "stderr": null
+}
