@@ -1,4 +1,13 @@
-# jentech/ — 健策精密（3653.TW）收支與估值模型 v0.2.7
+# jentech/ — 健策精密（3653.TW）收支與估值模型 v0.2.8
+## v0.2.8（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）
+
+- 現價與同業報價改 2026-11-20 收盤（工作單 px1120；價格取自 `markets/invest_map/data/closes_20261109_20261120.csv`，Yahoo Finance 日線收盤）。只換價格，公式與架構不改。
+- 現價 5,345（11-13 收盤）→ **3,705**；Comparable 同業前瞻 P/E 中位數 23.6 → **17.1**（奇鋐 3,040→2,205、雙鴻 1,140→794、Vertiv 202.07→166.24、台達電 1,240→900；共識 EPS 不變）；加權目標價 4,138.8 → **3,342.3**（DCF 2,472.5 → 2,472.5、Comparable 目標價 3,794.2 → 2,753.0）；上檔空間 −22.6% → **−9.8%**；評等中立 → **中立**（兩版皆在 0%～−25% 級距內）。另一側讀數（Coord）→ 3,075.8 中立（`coord_alt.json` 重跑，快照 CURRENT）。
+- **未換價同業：** 無（四家同業皆在 CSV）。
+- 不變：rf、β、ERP、共識 EPS 與共識目標價、預測用匯率、營運假設與情境權重、三層基準讀數。
+- 實作：`jentech/px1120_post.py`（只改 README 版本文字；價格在 `build_jentech.py` 的 px 與 PEERS；`px1113_post.py` 仍先執行，保留 v0.2.7 沿革列）。成品 v0.2.8；v0.2.7 的 dist 檔移除。
+- 檢查：`check_company_html`、`check_layout_v13`（HTML＋xlsx）、`baseline_coordination/check.py`（0 項不符）、`check_in_layout`、`check_cached_values` 通過；錯誤格 0。`check_sens_coverage --require-keycol` 未通過（42 鍵無案例或豁免），前版即未過，本版未處理。
+
 ## v0.2.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）
 
 - 現價與同業報價改 2026-11-13 收盤（工作單 px1113；價格取自 `markets/invest_map/data/closes_20261020_20261113.csv`，Yahoo Finance 日線收盤）。只換價格，公式與架構不改。
