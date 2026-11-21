@@ -37,6 +37,19 @@ for rnd in range(2):
     if not miss: break
     time.sleep(20)
     for s in miss: grab([s]); time.sleep(1)
+# 個別代號最後一日落後於全體最後一日時（批次下載偶爾漏最後一根；分割日亦然），改用 Ticker.history 補
+last = {}
+for r in rows: last[r[0]] = max(last.get(r[0], ""), r[2])
+top = max(last.values())
+for s in [s for s in syms if last.get(s, "") < top]:
+    try:
+        h = yf.Ticker(s).history(start=start, end=end1, interval="1d", auto_adjust=False, actions=True)
+        for d, c in h["Close"].dropna().items():
+            rows.append((s, cur.get(s, ""), d.strftime("%Y-%m-%d"), repr(round(float(c), 6)))); got.add(s)
+        print("refetch", s, h["Close"].dropna().index[-1])
+    except Exception as e:
+        print("ERR refetch", s, repr(e)[:120])
+    time.sleep(1)
 missing = [s for s in syms if s not in got]
 rows = sorted(set(rows))
 with open(out, "w", newline="", encoding="utf-8") as f:
