@@ -374,11 +374,11 @@ def main():
             sh, c = ba.wb.defined_names[name].attr_text.split("!")
             sh, c = sh.strip("'"), c.replace("$", "")
             return cell(ba, sh, c, ba.wb[sh][c].value)
-        out["Anthropic"].update({"unlisted": False, "v2": True, "ipo": True,
+        out["Anthropic"].update({"unlisted": False, "v2": True, "ipo": False,   # v0.6.57：2026-11-19 掛牌（ANT），模型 v0.2.4 起現價＝收盤
                                  "tp": nm("VAL_TP_W"), "tp_dcf": nm("VAL_TP_DCF"), "tp_comp": nm("VAL_TP_CompAdj"),
                                  "tp_comp_adj": nm("VAL_TP_CompAdj"), "tp_comp_main": nm("VAL_TP_CompMain"), "dcf_A": nm("VAL_TP_DCF_A"), "dcf_C": nm("VAL_TP_DCF_C"),
                                  "up": nm("VAL_Up_W"), "up_comp": nm("VAL_Up_CompMain"), "rec": nm("VAL_Rating"),
-                                 "model_px": dict(nm("VAL_Px"), date="2026-11-10")})
+                                 "model_px": dict(nm("VAL_Px"), date="2026-11-20")})
         out["Anthropic"]["model_px"]["value"] = out["Anthropic"]["model_px"]["value"]
     # --- v0.6.22：2027 VR200 每 GW 營收校準用（Andy 2026-11-03「該校準，就去校準」）---
     # OpenAI 模型 PxQ 頁口徑一（2026 Q2 年化營收 ÷ Q2 平均上線 GW）：營收、GW（低／基準／高）、

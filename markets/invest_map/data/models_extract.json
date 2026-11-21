@@ -159,89 +159,89 @@
   }
  },
  "AVGO": {
-  "model": "avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx",
+  "model": "avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx",
   "v2": true,
   "tp": {
-   "value": 166.09731052575,
+   "value": 152.58907630396,
    "cell": "Val!B40",
-   "file": "avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx"
+   "file": "avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx"
   },
   "tp_dcf": {
-   "value": 130.354825488702,
+   "value": 130.509098755499,
    "cell": "Val!B23",
-   "file": "avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx"
+   "file": "avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx"
   },
   "tp_comp": {
-   "value": 324.839669078549,
+   "value": 281.111252087206,
    "cell": "Val!B41",
-   "file": "avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx"
+   "file": "avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx"
   },
   "tp_cons": {
    "value": 529.1,
    "cell": "Val!B42",
-   "file": "avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx"
+   "file": "avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx"
   },
   "up": {
-   "value": -0.521347193090258,
+   "value": -0.49873829275004,
    "cell": "Val!B43",
-   "file": "avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx"
+   "file": "avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx"
   },
   "up_comp": {
-   "value": -0.063889602378753,
+   "value": -0.0765373933602517,
    "cell": "Val!B44",
-   "file": "avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx"
+   "file": "avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx"
   },
   "tp_comp_adj": {
-   "value": 201.839795562798,
+   "value": 174.669053852421,
    "cell": "Val!B133",
-   "file": "avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx"
+   "file": "avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx"
   },
   "old_rule": {
    "value": 623.997875103728,
    "cell": "Val!B104",
-   "file": "avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx"
+   "file": "avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx"
   },
   "tier6": {
-   "value": "小於 −50%",
+   "value": "−25%～−50%",
    "cell": "Val!B112",
-   "file": "avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx"
+   "file": "avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx"
   },
   "rec": {
-   "value": "強力放空",
+   "value": "放空",
    "cell": "Val!B113",
-   "file": "avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx"
+   "file": "avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx"
   },
   "dcf_A": {
-   "value": 177.804009332587,
+   "value": 178.021734754754,
    "cell": "Val!B20",
-   "file": "avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx"
+   "file": "avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx"
   },
   "dcf_C": {
-   "value": 104.631072149341,
+   "value": 104.750503221462,
    "cell": "Val!D20",
-   "file": "avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx"
+   "file": "avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx"
   },
   "model_px": {
-   "value": 347.01,
+   "value": 304.41,
    "cell": "Val!B57",
-   "file": "avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx",
-   "date": "2026-11-13"
+   "file": "avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx",
+   "date": "2026-11-20"
   },
   "pe_fy28": [
    {
-    "value": 16.4971608602059,
+    "value": 14.4719193609846,
     "cell": "Val!B60",
-    "file": "avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx"
+    "file": "avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx"
    },
    {
-    "value": 21.4824557913541,
+    "value": 18.845204367154,
     "cell": "Val!C60",
-    "file": "avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx"
+    "file": "avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx"
    },
    {
-    "value": 23.4023681861699,
+    "value": 20.5294224937379,
     "cell": "Val!D60",
-    "file": "avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx"
+    "file": "avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx"
    }
   ],
   "cash": {
@@ -289,7 +289,7 @@
      "PL!G39"
     ]
    ],
-   "file": "avgo/dist/20261116_Broadcom個股模型_v0.5.8.xlsx"
+   "file": "avgo/dist/20261121_Broadcom個股模型_v0.5.9.xlsx"
   }
  },
  "AMD": {
@@ -11186,68 +11186,68 @@
   }
  },
  "WYFI": {
-  "model": "whitefiber/dist/20261116_WhiteFiber個股模型_v0.4.3.xlsx",
+  "model": "whitefiber/dist/20261121_WhiteFiber個股模型_v0.4.4.xlsx",
   "v2": true,
   "seg_model": true,
   "tp": {
-   "value": 13.3079802360542,
+   "value": 10.3515289181899,
    "cell": "Val!C82",
-   "file": "whitefiber/dist/20261116_WhiteFiber個股模型_v0.4.3.xlsx"
+   "file": "whitefiber/dist/20261121_WhiteFiber個股模型_v0.4.4.xlsx"
   },
   "tp_dcf": {
    "value": 0,
    "cell": "Val!C79",
-   "file": "whitefiber/dist/20261116_WhiteFiber個股模型_v0.4.3.xlsx"
+   "file": "whitefiber/dist/20261121_WhiteFiber個股模型_v0.4.4.xlsx"
   },
   "tp_comp": {
-   "value": 26.6159604721085,
+   "value": 20.7030578363798,
    "cell": "Val!C81",
-   "file": "whitefiber/dist/20261116_WhiteFiber個股模型_v0.4.3.xlsx"
+   "file": "whitefiber/dist/20261121_WhiteFiber個股模型_v0.4.4.xlsx"
   },
   "tp_cons": {
    "value": 40.45,
    "cell": "Val!C102",
-   "file": "whitefiber/dist/20261116_WhiteFiber個股模型_v0.4.3.xlsx"
+   "file": "whitefiber/dist/20261121_WhiteFiber個股模型_v0.4.4.xlsx"
   },
   "up": {
-   "value": 0.411238625244352,
+   "value": 0.63016203436061,
    "cell": "Val!C84",
-   "file": "whitefiber/dist/20261116_WhiteFiber個股模型_v0.4.3.xlsx"
+   "file": "whitefiber/dist/20261121_WhiteFiber個股模型_v0.4.4.xlsx"
   },
   "up_comp": {
-   "value": 1.8224772504887,
+   "value": 2.26032406872122,
    "cell": "Val!C85",
-   "file": "whitefiber/dist/20261116_WhiteFiber個股模型_v0.4.3.xlsx"
+   "file": "whitefiber/dist/20261121_WhiteFiber個股模型_v0.4.4.xlsx"
   },
   "rec": {
    "value": "收支不足",
    "cell": "Val!C89",
-   "file": "whitefiber/dist/20261116_WhiteFiber個股模型_v0.4.3.xlsx"
+   "file": "whitefiber/dist/20261121_WhiteFiber個股模型_v0.4.4.xlsx"
   },
   "dcf_A": {
    "value": 0,
    "cell": "Val!C34",
-   "file": "whitefiber/dist/20261116_WhiteFiber個股模型_v0.4.3.xlsx"
+   "file": "whitefiber/dist/20261121_WhiteFiber個股模型_v0.4.4.xlsx"
   },
   "dcf_C": {
    "value": 0,
    "cell": "Val!E34",
-   "file": "whitefiber/dist/20261116_WhiteFiber個股模型_v0.4.3.xlsx"
+   "file": "whitefiber/dist/20261121_WhiteFiber個股模型_v0.4.4.xlsx"
   },
   "model_px": {
-   "value": 9.43,
+   "value": 6.35,
    "cell": "Val!C4",
-   "file": "whitefiber/dist/20261116_WhiteFiber個股模型_v0.4.3.xlsx",
-   "date": "2026-11-13"
+   "file": "whitefiber/dist/20261121_WhiteFiber個股模型_v0.4.4.xlsx",
+   "date": "2026-11-20"
   },
   "cash": {
    "basis": "現金流",
-   "file": "whitefiber/dist/20261116_WhiteFiber個股模型_v0.4.3.xlsx",
-   "label": "自由現金流五年合計（收支關卡口徑）（基準情境 B；A -2,112.1、C -762.0）",
+   "file": "whitefiber/dist/20261121_WhiteFiber個股模型_v0.4.4.xlsx",
+   "label": "自由現金流五年合計（收支關卡口徑）（基準情境 B；A -2,145.3、C -763.4）",
    "values": [
     [
      "情境 B 五年合計",
-     -1512.76604748437,
+     -1520.45888247129,
      "Fund!D5"
     ]
    ]
@@ -11305,7 +11305,7 @@
    "value": 102.4,
    "cell": "Val!C37",
    "file": "minimax/dist/20261121_MiniMax收支模型_v0_2_5.xlsx",
-   "date": "2026-11-13"
+   "date": "2026-11-20"
   },
   "cash": {
    "basis": "現金流",
@@ -11341,58 +11341,58 @@
   }
  },
  "02513": {
-  "model": "zhipu/dist/20261116_智譜個股模型_v0_1_7.xlsx",
+  "model": "zhipu/dist/20261121_智譜個股模型_v0_1_8.xlsx",
   "v2": true,
   "tp": {
-   "value": 149.417574966051,
+   "value": 128.300190649937,
    "cell": "Val!C9",
-   "file": "zhipu/dist/20261116_智譜個股模型_v0_1_7.xlsx"
+   "file": "zhipu/dist/20261121_智譜個股模型_v0_1_8.xlsx"
   },
   "tp_dcf": {
    "value": 114.989944134099,
    "cell": "Val!C7",
-   "file": "zhipu/dist/20261116_智譜個股模型_v0_1_7.xlsx"
+   "file": "zhipu/dist/20261121_智譜個股模型_v0_1_8.xlsx"
   },
   "tp_comp": {
-   "value": 183.845205798004,
+   "value": 141.610437165774,
    "cell": "Val!C8",
-   "file": "zhipu/dist/20261116_智譜個股模型_v0_1_7.xlsx"
+   "file": "zhipu/dist/20261121_智譜個股模型_v0_1_8.xlsx"
   },
   "tp_cons": {
    "value": 1567.3,
    "cell": "Val!C10",
-   "file": "zhipu/dist/20261116_智譜個股模型_v0_1_7.xlsx"
+   "file": "zhipu/dist/20261121_智譜個股模型_v0_1_8.xlsx"
   },
   "dcf_A": {
    "value": 114.989944134099,
    "cell": "Val!C146",
-   "file": "zhipu/dist/20261116_智譜個股模型_v0_1_7.xlsx"
+   "file": "zhipu/dist/20261121_智譜個股模型_v0_1_8.xlsx"
   },
   "dcf_C": {
    "value": 114.989944134099,
    "cell": "Val!E146",
-   "file": "zhipu/dist/20261116_智譜個股模型_v0_1_7.xlsx"
+   "file": "zhipu/dist/20261121_智譜個股模型_v0_1_8.xlsx"
   },
   "up": {
-   "value": -0.634139140631608,
+   "value": -0.615867692664861,
    "cell": "Val!C12",
-   "file": "zhipu/dist/20261116_智譜個股模型_v0_1_7.xlsx"
+   "file": "zhipu/dist/20261121_智譜個股模型_v0_1_8.xlsx"
   },
   "up_comp": {
-   "value": -0.54984033839862,
+   "value": -0.576016655192294,
    "cell": "Val!C14",
-   "file": "zhipu/dist/20261116_智譜個股模型_v0_1_7.xlsx"
+   "file": "zhipu/dist/20261121_智譜個股模型_v0_1_8.xlsx"
   },
   "rec": {
    "value": "強力放空",
    "cell": "Val!C18",
-   "file": "zhipu/dist/20261116_智譜個股模型_v0_1_7.xlsx"
+   "file": "zhipu/dist/20261121_智譜個股模型_v0_1_8.xlsx"
   },
   "model_px": {
-   "value": 408.4,
+   "value": 334,
    "cell": "Val!C37",
-   "file": "zhipu/dist/20261116_智譜個股模型_v0_1_7.xlsx",
-   "date": "2026-11-13"
+   "file": "zhipu/dist/20261121_智譜個股模型_v0_1_8.xlsx",
+   "date": "2026-11-20"
   },
   "cash": {
    "basis": "現金流",
@@ -11424,7 +11424,7 @@
      "Funding!I16"
     ]
    ],
-   "file": "zhipu/dist/20261116_智譜個股模型_v0_1_7.xlsx"
+   "file": "zhipu/dist/20261121_智譜個股模型_v0_1_8.xlsx"
   }
  },
  "OpenAI": {
@@ -11533,7 +11533,7 @@
   }
  },
  "Anthropic": {
-  "model": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx",
+  "model": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx",
   "unlisted": false,
   "cash": {
    "basis": "現金流",
@@ -11565,65 +11565,65 @@
      "Funding!I14"
     ]
    ],
-   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
+   "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "v2": true,
-  "ipo": true,
+  "ipo": false,
   "tp": {
-   "value": 82.7133264927967,
+   "value": 83.6610072795771,
    "cell": "Val!C10",
-   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
+   "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "tp_dcf": {
-   "value": 54.3666176018468,
+   "value": 55.2667820548347,
    "cell": "Val!C7",
-   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
+   "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "tp_comp": {
-   "value": 111.060035383747,
+   "value": 112.05523250432,
    "cell": "Val!C9",
-   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
+   "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "tp_comp_adj": {
-   "value": 111.060035383747,
+   "value": 112.05523250432,
    "cell": "Val!C9",
-   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
+   "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "tp_comp_main": {
-   "value": 153.444275986771,
+   "value": 154.561722959148,
    "cell": "Val!C8",
-   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
+   "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "dcf_A": {
-   "value": 133.986843868857,
+   "value": 135.105000738668,
    "cell": "Val!C154",
-   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
+   "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "dcf_C": {
-   "value": 14.2785714130823,
+   "value": 15.0695260422482,
    "cell": "Val!E154",
-   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
+   "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "up": {
-   "value": 0.117747655308064,
+   "value": -0.0590371467823969,
    "cell": "Val!C12",
-   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
+   "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "up_comp": {
-   "value": 1.07357129711853,
+   "value": 0.738406511743871,
    "cell": "Val!C13",
-   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
+   "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "rec": {
    "value": "中立",
    "cell": "Val!C15",
-   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx"
+   "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx"
   },
   "model_px": {
-   "value": 74,
+   "value": 88.91,
    "cell": "Val!C46",
-   "file": "anthropic/dist/20261115_Anthropic收支模型_v0_2_3.xlsx",
-   "date": "2026-11-10"
+   "file": "anthropic/dist/20261121_Anthropic收支模型_v0_2_4.xlsx",
+   "date": "2026-11-20"
   }
  }
 }
