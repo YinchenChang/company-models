@@ -1,0 +1,10 @@
+folder=foxconn
+version=v0.4.8 -> v0.4.9
+px=241 -> 210
+tp=412.78 -> 380.73
+upside=+71.3% -> +81.3%
+rating=強力買進 -> 強力買進
+peers_repriced=5
+peers_unchanged=無
+checks=建置錯誤格 0（xlsx_diff）；check_company_html 通過；check_in_layout 通過；check_layout_v13 --xlsx 通過（僅既有參數代號警告）；baseline_coordination/check.py 0 項不符；sens.json 與 coord_alt.json 已重跑（CURRENT）；check_sens_coverage --require-keycol 失敗 51／51（前一版 v0.4.7、v0.4.8 即未過，Sens 頁前 40 列無「目標價」表頭，不要求）
+notes=同業僅 5 家（廣達、緯創、和碩、Jabil、Flex）皆有 11-13 與 11-20 收盤，無未換價。另換價：工業富聯、鴻騰、富智康、樺漢股價與 USD/TWD、USD/CNY、USD/HKD 換算匯率（非控制權益 756.6 → 699.7 十億元）。DCF 478.47 -> 470.88；Comparable（相對倍數調整後）290.58；同業 P/E 中位數 13.29 -> 11.65；Coord 另一側讀數 371.75 -> 358.25（強力買進）。換價改在 build_foxconn.py／v046_post.py 內原地修改（沿用 px1113 做法），未另立 px1120_post.py。

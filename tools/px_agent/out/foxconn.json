@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 19,
+ "duration_ms": 178907,
+ "total_cost_usd": 0.3698836999999999,
+ "result": "鴻海已換成 2026-11-20 收盤，版號 v0.4.8 → v0.4.9，xlsx 與 HTML 都已重建，只改了 `foxconn/`。\n\n- **現價：** 241 → 210\n- **加權目標價：** 412.78 → 380.73（DCF 478.47 → 470.88）\n- **上檔空間：** +71.3% → +81.3%\n- **評等：** 強力買進 → 強力買進（模型公式重算）\n- **同業：** 5 家全部換價，無未換價同業。前瞻 P/E 中位數 13.29 → 11.65。\n- **轉投資：** 工業富聯、鴻騰、富智康、樺漢的股價與 USD/TWD、USD/CNY、USD/HKD 換算匯率也一併換價，非控制權益 756.6 → 699.7 十億元。\n- **Coord 另一側讀數：** 371.75 → 358.25，評等同為強力買進。\n- **檢查：** 錯誤格 0；`check_company_html`、`check_in_layout`、`check_layout_v13`（只有既有參數代號警告）、`baseline_coordination/check.py`（0 項不符）都通過。`sens.json` 與 `coord_alt.json` 已重跑。\n- **未過項目：** `check_sens_coverage --require-keycol` 失敗 51／51。v0.4.7、v0.4.8 就已失敗，沒有處理，已寫進 note。\n- **換價方式：** 沿用 px1113，直接改 `build_foxconn.py` 與 `v046_post.py`，沒有另立 `px1120_post.py`。\n- **其他變動：**\n  - 為了跑 `check_layout_v13`，我在環境裡用 pip 裝了 beautifulsoup4。\n  - 舊版 dist 檔已用 `git rm` 移除，該刪除已進暫存區，未 commit。\n\n成品是 `dist/20261121_鴻海個股模型_v0.4.9.xlsx` 與 `.html`，note 在 `px1120_note.txt`。",
+ "error": null,
+ "stderr": null
+}
