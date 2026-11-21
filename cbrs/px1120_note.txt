@@ -1,0 +1,10 @@
+folder=cbrs
+version=v0.1.4 -> v0.1.5
+px=108.72 -> 82.67
+tp=97.21 -> 80.10
+upside=-10.6% -> -3.1%
+rating=中立 -> 中立
+peers_repriced=4
+peers_unchanged=無
+checks=Excel 錯誤格 0；check_company_html 通過；check_layout_v13（xlsx＋html）通過（僅既有參數代號警告）；baseline_coordination/check.py 0 項不符；check_sens_coverage 未通過（27／36 鍵無案例或豁免，v0.1.4 同樣未通過，不要求）
+notes=同業中位數前瞻 P/S 9.59 -> 7.56；本模型無 Sens／Coord 快照，未重跑；README 的 README 頁 A1 與沿革已更新；check_layout_v13 需 bs4，本機另行安裝後執行
