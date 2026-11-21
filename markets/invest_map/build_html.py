@@ -23,9 +23,9 @@ ROOT = os.path.dirname(os.path.dirname(HERE))
 
 
 # v0.6.19：頁首日期改在此集中維護（原本寫死在 data 組裝處，換版時漏改）
-BUILT = "2026-11-19"
-PRICE_NOTE = ("上市公司一律用 2026-11-13 收盤（Yahoo Finance 日線）；v0.6.49 起各個股模型的現價、同業報價與目標價也已改以 2026-11-13 收盤重算（工作單 px1113），模型價與收盤同日；Anthropic 未掛牌，用 IPO 價格區間中點（上檔空間＝模型目標價 ÷ 最新收盤 − 1）")
-LAST_CLOSE = "2026-11-13"
+BUILT = "2026-11-21"
+PRICE_NOTE = ("上市公司一律用 2026-11-20 收盤（Yahoo Finance；ASML、BESI、SanDisk 的日線尚無 11-20 一列，取報價資料的最近成交價）；Anthropic 11-19 掛牌，用 11-20 收盤；SanDisk 11-20 起 8:1 分割，模型每股金額除以 8 後比較；各個股模型的現價與同業報價仍為 2026-11-13 收盤，換 11-20 收盤的模型升版進行中（工作單 px1120），完成前目標價未反映同業倍數下修（上檔空間＝模型目標價 ÷ 最新收盤 − 1）")
+LAST_CLOSE = "2026-11-20"
 # 模型狀態註記（data/model_status.csv：代號, 狀態）——偏離旗標旁顯示：最近／下次財報與模型更新計畫
 STATUS = {}
 _sf = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "model_status.csv")

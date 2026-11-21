@@ -398,6 +398,17 @@ def main():
     pq["derate_gb300"] = b.num("PxQ", [(0, r"^X07$")], 4)
     out["OpenAI"]["pxq"] = pq
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
+    # v0.6.57（2026-11-21）：股票分割換算。模型每股金額仍為分割前口徑、而地圖收盤已是分割後價格時，
+    # 模型的每股金額（目標價、情境價、模型現價）除以分割比例後再比較；模型改為分割後口徑（模型價日 ≥ 生效日）即自動停用。
+    SPLITS = {"SNDK": (8.0, "2026-11-20")}
+    for tk, (ratio, eff) in SPLITS.items():
+        m = out.get(tk)
+        if m and m.get("model_px", {}).get("date", "9999") < eff:
+            for k in ("tp", "tp_dcf", "tp_comp", "tp_cons", "tp_comp_adj", "old_rule", "dcf_A", "dcf_C", "model_px"):
+                if isinstance(m.get(k), dict) and isinstance(m[k].get("value"), (int, float)):
+                    m[k]["value"] = m[k]["value"] / ratio
+            m["split_adj"] = {"ratio": ratio, "effective": eff}
+
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=1)
     print(f"寫出 {OUT}：{len(out)} 家")

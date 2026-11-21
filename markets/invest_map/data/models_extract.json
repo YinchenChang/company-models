@@ -1888,22 +1888,22 @@
   "model": "sndk/dist/20261116_SanDisk個股模型_v0.5.6.xlsx",
   "v2": true,
   "tp": {
-   "value": 678.39546603885,
+   "value": 84.79943325485625,
    "cell": "Val!B49",
    "file": "sndk/dist/20261116_SanDisk個股模型_v0.5.6.xlsx"
   },
   "tp_dcf": {
-   "value": 670.263404693435,
+   "value": 83.78292558667937,
    "cell": "Val!B24",
    "file": "sndk/dist/20261116_SanDisk個股模型_v0.5.6.xlsx"
   },
   "tp_comp": {
-   "value": 686.527527384265,
+   "value": 85.81594092303312,
    "cell": "Val!B50",
    "file": "sndk/dist/20261116_SanDisk個股模型_v0.5.6.xlsx"
   },
   "tp_cons": {
-   "value": 2144,
+   "value": 268.0,
    "cell": "Val!B51",
    "file": "sndk/dist/20261116_SanDisk個股模型_v0.5.6.xlsx"
   },
@@ -1918,12 +1918,12 @@
    "file": "sndk/dist/20261116_SanDisk個股模型_v0.5.6.xlsx"
   },
   "tp_comp_adj": {
-   "value": 686.527527384265,
+   "value": 85.81594092303312,
    "cell": "Val!B180",
    "file": "sndk/dist/20261116_SanDisk個股模型_v0.5.6.xlsx"
   },
   "old_rule": {
-   "value": 467.618537712191,
+   "value": 58.45231721402388,
    "cell": "Val!B155",
    "file": "sndk/dist/20261116_SanDisk個股模型_v0.5.6.xlsx"
   },
@@ -1938,17 +1938,17 @@
    "file": "sndk/dist/20261116_SanDisk個股模型_v0.5.6.xlsx"
   },
   "dcf_A": {
-   "value": 1123.02323722768,
+   "value": 140.37790465346,
    "cell": "Val!B21",
    "file": "sndk/dist/20261116_SanDisk個股模型_v0.5.6.xlsx"
   },
   "dcf_C": {
-   "value": 424.805099232445,
+   "value": 53.100637404055625,
    "cell": "Val!D21",
    "file": "sndk/dist/20261116_SanDisk個股模型_v0.5.6.xlsx"
   },
   "model_px": {
-   "value": 885.01,
+   "value": 110.62625,
    "cell": "Val!B82",
    "file": "sndk/dist/20261116_SanDisk個股模型_v0.5.6.xlsx",
    "date": "2026-11-13"
@@ -2036,6 +2036,10 @@
     ]
    ],
    "file": "sndk/dist/20261116_SanDisk個股模型_v0.5.6.xlsx"
+  },
+  "split_adj": {
+   "ratio": 8.0,
+   "effective": "2026-11-20"
   }
  },
  "ANET": {
