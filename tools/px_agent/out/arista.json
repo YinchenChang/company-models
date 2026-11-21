@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 20,
+ "duration_ms": 157602,
+ "total_cost_usd": 0.36564450000000004,
+ "result": "Arista 已換成 2026-11-20 收盤並升到 v0.5.7，Excel 和 HTML 都重建完成。我沒有 commit、push，也沒有動 `arista/` 以外的檔案。\n\n| 項目 | v0.5.6 | v0.5.7 |\n|---|---|---|\n| 現價 | 197.29（11-13） | 167.62（11-20） |\n| 加權目標價 | 133.66 | 109.20 |\n| 上檔空間 | -32.3% | -34.9% |\n| 評等 | 放空 | 放空 |\n| 同業前瞻 P/E 中位數 | 18.03 | 13.69 |\n\n- **檢查：** LibreOffice 重算錯誤格 0。`check_company_html`、`check_layout_v13` 通過，`baseline_coordination` 0 項不符。`check_sens_coverage` 未過（12／36 鍵無案例），v0.5.6 就是這樣，不是這次造成。\n- **同業：** CSCO、CIEN、CLS、HPE、CRDO 五家和 ANET 都在 `closes_20261109_20261120.csv`，全部換價，沒有未換價同業。\n- **舊版 README 不準：** v0.5.6 README 表列 137.58／-30.3%，但該版成品重算是 133.66／-32.3%（DCF、Comparable 也不同）。上表前值取成品重算值，README 與 `px1120_note.txt` 已註明。\n- **做法：** 沿用 px1113，價格直接改在 `build_arista.py`，沒有另開 `px1120_post.py`。`v055_post.py` 的版本說明列和 `gen_html_json.py` 的版號檢查也同步改了。Sens、Coord 快照已重跑。\n- **成品：** `arista/dist/20261121_Arista個股模型_v0.5.7.xlsx` 和 `.html`，v0.5.6 已移除。`arista/px1120_note.txt` 已寫好。",
+ "error": null,
+ "stderr": null
+}
