@@ -49,12 +49,12 @@ AI 算力雲（neocloud）：向 NVIDIA 買 GPU、向房東租機房，把整櫃
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
 |---|---|---|---|
-| Nebius（NBIS） | GPU 算力雲 | 企業價值 40.71bn；NTM EV/EBITDA 6.94 倍（2026-11-13） | [本專案：20261116_CoreWeave個股模型_v5.0.5.xlsx Val!C38、D38、E38] |
-| IREN | GPU 算力雲、自有電廠 | 企業價值 14.40bn；NTM EV/EBITDA 5.21 倍（2026-11-13） | [本專案：20261116_CoreWeave個股模型_v5.0.5.xlsx Val!C40、D40、E40] |
-| Oracle（ORCL） | 雲端與 AI 基礎設施（混合業務，SaaS 與授權占多數） | 企業價值 478.01bn；NTM EV/EBITDA 7.71 倍（2026-11-13） | [本專案：20261116_CoreWeave個股模型_v5.0.5.xlsx Val!C39、D39、F39] |
+| Nebius（NBIS） | GPU 算力雲 | 企業價值 30.58bn；NTM EV/EBITDA 5.22 倍（2026-11-20） | [本專案：20261121_CoreWeave個股模型_v5.0.6.xlsx Val!C38、D38、E38] |
+| IREN | GPU 算力雲、自有電廠 | 企業價值 11.70bn；NTM EV/EBITDA 4.24 倍（2026-11-20） | [本專案：20261121_CoreWeave個股模型_v5.0.6.xlsx Val!C40、D40、E40] |
+| Oracle（ORCL） | 雲端與 AI 基礎設施（混合業務，SaaS 與授權占多數） | 企業價值 402.69bn；NTM EV/EBITDA 6.49 倍（2026-11-20） | [本專案：20261121_CoreWeave個股模型_v5.0.6.xlsx Val!C39、D39、F39] |
 
 - 市占：本專案未建立。
-- 本專案判讀：CRWV 自身（現價市值＋淨負債 ÷ FY2027 共識 EBITDA，財報前共識）約 4.39 倍，低於同業中位數 6.94 倍 [本專案：20261116_CoreWeave個股模型_v5.0.5.xlsx Val!D44、D45]；折價須同時看營業租賃負債 18.697bn 與客戶集中（最大客戶 36%）[本專案：20261121_CoreWeave個股模型_v5.0.6.xlsx In!E108；README!A21]，不能直接解讀為便宜。
+- 本專案判讀：CRWV 自身（現價市值＋淨負債 ÷ FY2027 共識 EBITDA，財報前共識）約 3.93 倍，低於同業中位數 5.22 倍 [本專案：20261121_CoreWeave個股模型_v5.0.6.xlsx Val!D44、D45]；折價須同時看營業租賃負債 18.697bn 與客戶集中（最大客戶 36%）[本專案：20261121_CoreWeave個股模型_v5.0.6.xlsx In!E108；README!A21]，不能直接解讀為便宜。
 - 大型雲端業者（AWS、Azure、Google Cloud）也自建 GPU 叢集，是 neocloud 的替代選項 [外部・未經本專案檢核]。
 
 ## 主要客戶
@@ -100,14 +100,14 @@ AI 算力雲（neocloud）：向 NVIDIA 買 GPU、向房東租機房，把整櫃
 - 2026-08-11｜Q2 財報：營收 2.575bn（+112%）、backlog 約 104bn，另有 Q3 初逾 25bn 新承諾；新增 Jane Street 1bn 策略投資 [外部新聞：01net 轉載公司新聞稿]
 
 ## 需要觀察的事項
-- 每 MW 年收入｜本專案反向 DCF（以現價 US$53.13〔2026-11-13 收盤〕計）：現價需 FY2030 情境 B 每 MW 年收入 10.72，比模型基準 11.22 低 4.5%；公司稱新約 20–25 [本專案：20261116_CoreWeave個股模型_v5.0.5.xlsx RevDCF!G5、H5、I5；In!E175、E176]；公司宣稱的新約價格是否反映在合約與營收是關鍵｜下一次財報（Q4 2026）
-- 融資上限與利率｜模型以借款 ÷ 調整後 EBITDA 4.5 倍為上限、新債利率 9.625% [本專案：20261121_CoreWeave個股模型_v5.0.6.xlsx In!E114、E111]；情境 B 淨負債 ÷ 調整後 EBITDA 最差年 4.66 倍（超過 4.5 倍）[本專案：20261116_CoreWeave個股模型_v5.0.5.xlsx Fund!D12]；10 月二級市場殖利率約 15% 若延續，新債成本將遠高於模型假設｜11 月美國期中選舉後高收益債發行窗口
+- 每 MW 年收入｜本專案反向 DCF（以現價 US$39.51〔2026-11-20 收盤〕計）：現價需 FY2030 情境 B 每 MW 年收入 11.73，比模型基準 11.22 高 4.5%；公司稱新約 20–25 [本專案：20261121_CoreWeave個股模型_v5.0.6.xlsx RevDCF!G5、H5、I5；In!E175、E176]；公司宣稱的新約價格是否反映在合約與營收是關鍵｜下一次財報（Q4 2026）
+- 融資上限與利率｜模型以借款 ÷ 調整後 EBITDA 4.5 倍為上限、新債利率 9.625% [本專案：20261121_CoreWeave個股模型_v5.0.6.xlsx In!E114、E111]；情境 B 淨負債 ÷ 調整後 EBITDA 最差年 4.79 倍（超過 4.5 倍）[本專案：20261121_CoreWeave個股模型_v5.0.6.xlsx Fund!D12]；10 月二級市場殖利率約 15% 若延續，新債成本將遠高於模型假設｜11 月美國期中選舉後高收益債發行窗口
 - 營收與指引、共識差距｜模型 FY2026 營收 12.35bn，低於公司指引下緣（13.0bn）5.0 pt [本專案：20261121_CoreWeave個股模型_v5.0.6.xlsx Recon!E5、F5、E6；In!E159]；FY2027 調整後 EBITDA 模型 15.19bn 對財報前共識 16.66bn（−8.8%）[本專案：20261121_CoreWeave個股模型_v5.0.6.xlsx Recon!B39、E39、F39]｜Q4 財報
 - 客戶集中｜最大客戶 36%、次大 26%（Q2 10-Q）[本專案：20261121_CoreWeave個股模型_v5.0.6.xlsx README!A21]；留意 10-Q 客戶占比變化｜Q3 10-Q
 - 產能上線速度｜年底主動電力 1.85 GW（公司數字，只作對照）[本專案：20261121_CoreWeave個股模型_v5.0.6.xlsx In!E18；Recon!B35]｜Q4 財報
 
 ## 來源
-1. 本專案：`coreweave/dist/20261116_CoreWeave個股模型_v5.0.5.xlsx`（README、In、Q、Thesis、Seg、Fund、Debt、Sites、Val、RevDCF、Recon）
+1. 本專案：`coreweave/dist/20261121_CoreWeave個股模型_v5.0.6.xlsx`（README、In、Q、Thesis、Seg、Fund、Debt、Sites、Val、RevDCF、Recon）
 2. [CoreWeave's market confidence erodes as bond yields spike and stock sinks](https://www.cnbc.com/2026/10/21/coreweaves-market-confidence-erodes-as-bond-yields-spike-stock-sinks.html)（CNBC，2026-10-21；經 briefs.co 轉述）
 3. [CoreWeave Stock Plunges 25% As AI Debt Fears Mount](https://www.forbes.com/sites/the-prompt/2026/10/20/coreweave-stock-plunges-25-as-ai-debt-fears-mount/)（Forbes，2026-10-20）
 4. [CoreWeave (CRWV) Shares Plunge Over 10%, Hit New 52-Week Low](https://www.gurufocus.com/news/9137799/coreweave-crwv-shares-plunge-over-10-hit-new-52week-low-amid-financing-woes)（GuruFocus，2026-10-22）
