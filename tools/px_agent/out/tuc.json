@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 21,
+ "duration_ms": 173407,
+ "total_cost_usd": 0.30430290000000004,
+ "result": "台燿（`tuc/`）已換成 2026-11-20 收盤，版號升到 v0.2.7，xlsx 與 HTML 已重建。\n\n| 項目 | 前 | 後 |\n|---|---|---|\n| 現價 | 974 | 623 |\n| 加權目標價 | 1,174.81 | 928.46 |\n| 上檔空間 | +20.6% | +49.0% |\n| 評等 | 中立 | 買進 |\n\n- **同業倍數：** 3 家同業都換價，沒有未換價的。前瞻 P/E 中位數從 18.85 降到 12.57。\n- **新增與修改的檔案：** 新增 `px1120_post.py`，在 `build_tuc.py` 裡接在 px1113 之後。`gen_html_json.py` 版號改 v0.2.7。`sens.json`、`coord_alt.json` 已重跑。`px1120_note.txt` 已寫。\n- **成品：** `dist/` 只留 `20261121_台燿個股模型_v0.2.7.xlsx` 和 `.html`。舊檔用 `git rm` 移除，沒有 commit。\n- **通過的檢查：** `check_company_html`、`check_layout_v13 --xlsx`、`baseline_coordination/check.py` 都過，重算錯誤格為 0。\n- **沒過的檢查：** `check_sens_coverage` 沒過，但 v0.2.6 成品就沒過，缺的案例相同，只有 β 數值隨現價變動。note 已寫明。\n- **前值與 v0.2.6 的 README 不同：** 上一版成品實際重算是 1,174.81、中立，不是 README 寫的 1,239.20、買進。我照成品重算值填前值，推測是 v0.2.6 之後上游更新所致，沒有追查。\n- **價格大跌：** 台燿和 3 家同業從 11-13 到 11-20 都跌了約 33% 到 37%。價格照 CSV 沒動。上檔空間 +49.0% 離 +50% 的上一級只差 1.0 個百分點，已寫進 note。",
+ "error": null,
+ "stderr": null
+}
