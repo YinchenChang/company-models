@@ -1114,6 +1114,11 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 _N1113 = open(os.path.join(_HERE, "px1113_note.txt"), encoding="utf-8").read().strip() if os.path.exists(os.path.join(_HERE, "px1113_note.txt")) else "v0.3.7（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。"
 print(P1113.apply(wb, _HERE, dict(ver="v0.3.7", old_ver="v0.3.6", tk="6315.T", note=_N1113 + " ",
                                   sweep=(("2026-11-05 收盤", "2026-11-13 收盤"), ("日線收盤 2026-11-05", "日線收盤 2026-11-13")))))
+# v0.3.8（2026-11-21）：工作單 px1120——現價與同業報價改 2026-11-20 收盤（towa/px1120_post.py；沿用 px1113 做法，只改價格輸入與說明文字）
+import px1120_post as P1120  # noqa: E402
+_N1120 = open(os.path.join(_HERE, "px1120_readme_note.txt"), encoding="utf-8").read().strip()
+print(P1120.apply(wb, _HERE, dict(ver="v0.3.8", old_ver="v0.3.7", tk="6315.T", old_date="2026-11-13", note=_N1120 + " ",
+                                  sweep=(("2026-11-13 收盤", "2026-11-20 收盤"), ("日線收盤 2026-11-13", "日線收盤 2026-11-20")))))
 wb.save(sys.argv[1])
 if os.environ.get("TOWA_ROWS"):
     json.dump(dict(IN=IN_ROW, SUMR={f"{a}|{b}": v for (a, b), v in SUMR.items()}, PB=PB, EXT=EXT, T=T, EPSR=EPSR, PL_CHK=PL_CHK,

@@ -1,0 +1,10 @@
+folder=towa
+version=v0.3.7 -> v0.3.8
+px=2207 -> 2352
+tp=1451.84 -> 1330.86
+upside=-34.2% -> -43.4%
+rating=放空 -> 放空
+peers_repriced=5
+peers_unchanged=無
+checks=LibreOffice 重算錯誤格 0；check_company_html towa 全部通過；check_layout_v13 --xlsx 通過；check_in_layout 通過；baseline_coordination/check.py 0 項不符；check_sens_coverage --require-keycol 37/37 未過（v0.3.7 即未過，不要求）；sens_towa.py 與 alt_run.py towa 已重跑，快照 CURRENT
+notes=v0.3.7 README 與 px1113_note 寫的加權目標價 1,415、DCF 1,448 與 v0.3.7 成品（1,451.84、1,468.99）不同；用現行程式重建 v0.3.7 得到成品值，故前值取成品重算值（1,451.84，上檔 -34.2%，非 -35.9%）。另一側讀數 1,435.86 -> 1,316.58（皆放空）。build_towa.py 在 px1113 之後接 px1120_post.py，說明文字讀 px1120_readme_note.txt；gen_html_json.py 的版號斷言改 v0.3.8。
