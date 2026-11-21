@@ -83,7 +83,7 @@ def build(ctx):
     # ═════════════ Funding 第十六節：B1–B3 ═════════════
     F.section("十六、v0.2.0 初步招股說明書（2026-11-10）：B1 IPO＋同步私募進基準（p_ipo_base_switch）、B2 條件式改讀、B3 流動性與 pro forma 對照")
     px, mid = I("ipo_px"), S("pros_px_mid")
-    F.add("p_px", "現價／發行價（ipo_px；區間中點 74，低 70、高 78）", "$/股", only25(f"={px}"), "INP；SRC_ANT_522")
+    F.add("p_px", "現價／發行價（ipo_px；px1120 起＝2026-11-20 收盤；v0.2.3 為區間中點 74，區間 70–78）", "$/股", only25(f"={px}"), "INP；SRC_ANT_522")
     F.add("p_net", "B1 公司淨募資（IPO＋私募；不含超額配售）＝84.6 ＋ 0.793 ×（價格 − 74）", "$B", only25(f"={S('pros_net_proceeds')}+{S('pros_net_per_dollar')}*(«p_px@$»-{mid})"),
           "SRC_ANT_534、536")
     F.add("p_wh", "B1 RSU 淨結算代扣稅款＝3.8 ＋ 0.052 ×（價格 − 74）", "$B", only25(f"={S('pros_rsu_withhold')}+{S('pros_rsu_withhold_per_dollar')}*(«p_px@$»-{mid})"),

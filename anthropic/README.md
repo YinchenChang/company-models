@@ -6,6 +6,15 @@ Anthropic 每 VR 等值 GW 的年營收能否覆蓋每 GW 年全成本；若不�
 - 交接：`docs/handoff/Anthropic_handoff.md`；進度：`docs/reports/20261008_anthropic_進度.md`
 - 工作規範：`CLAUDE.md`
 
+## v0.2.4：現價與同業報價改 2026-11-20 收盤（工作單 px1120）
+
+- 現價與同業報價改 2026-11-20 收盤（工作單 px1120）。現價 74（IPO 區間中點）→ 88.91（ANT 2026-11-20 收盤；IPO 價 83，11-19 首日收盤 97.17）；同業 EV／遠期營收中位數 26.32 → 26.32（不變：只有 DDOG 有 11-20 收盤，其倍數 16.36 → 10.94，不是中位數那一家）；加權目標價 82.71 → 83.66；上檔空間 ＋11.8% → −5.9%；評等 中立 → 中立（模型公式重算，未手改）。
+- 價格來源只用 `markets/invest_map/data/closes_20261109_20261120.csv`（ANT、DDOG 11-20）與 `closes_20261020_20261113.csv`（DDOG 10-30＝235.27）。DDOG 倍數＝16.36 × 157.37 ÷ 235.27；EV 沒有市值可用，以倍數 × 價格比近似（SRC_ANT_622–624，SRC_ANT_590 改為公式）。
+- **未換價同業：** PLTR、CRWD、NET、SNOW（收盤檔沒有，倍數維持 2026-11-06 原值）。
+- 現價 `ipo_px` 同時是淨募資、私募股數、選擇權庫藏股的連動輸入，照既有公式隨現價重算（淨募資 80.8 → 91.8）；實際 IPO 價 83 未入模型；Sens 的 70／78 仍是招股說明書區間。共識、rf、β、ERP、營運假設、情境權重不變；Sens 與 Val 情境快照已重跑。
+- Coord 維持讀 Wattonomics v0.3.5 快照（`CURRENT_SNAPSHOT` 已到 v0.3.9，不在本版範圍）。
+- 重建：`python3 builder/build.py --tk-dir <Tokenomics@eded8e6> --oai-xlsx ../openai/model/archive/20261029_OpenAI_v0.6.4.xlsx --out model/20261121_Anthropic_v0.2.4.xlsx --base model/archive/20261115_Anthropic_v0.2.3.xlsx --date 2026-11-21`；再 `tools/val_sens.py`、`tools/val_snapshots.py` 後重建；`tools/build_html.py`、`tools/build_html_v2.py --html … --xlsx … --out dist/20261121_Anthropic個股模型_v0_2_4.html`。
+
 ## v0.2.3：Coord 改讀 Wattonomics v0.3.5（營業現金流對照差 0）
 
 **依據：** Wattonomics v0.3.5（#618，main `2debcc7`）②⑥：Anthropic 在 Wattonomics 的營業現金流不加回自建資本支出（`gocf_ant`＝本模型 Funding F07；F03 恆為 0），且 Y9 重取改讀本模型 v0.2.2 dist（SRC_GL_320，commit `90ab689`）。建置：`python3 builder/build.py --tk-dir <Tokenomics checkout@eded8e6> --oai-xlsx ../openai/model/archive/20261029_OpenAI_v0.6.4.xlsx --out model/20261115_Anthropic_v0.2.3.xlsx --base model/archive/20261114_Anthropic_v0.2.2.xlsx --date 2026-11-15`（OAI_Link 仍為 OpenAI v0.6.4，與 v0.2.2 相同；Coord 頁隨 `../wattonomics/data/CURRENT_SNAPSHOT`＝`wattonomics_snapshot_v0.3.5.json`）。

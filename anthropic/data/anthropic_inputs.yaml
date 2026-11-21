@@ -361,16 +361,16 @@ rows:
   range_why: "開關"
   note: ""
 - key: ipo_px
-  name: "現價＝IPO 價格區間中點（上市後改收盤價）"
+  name: "現價＝2026-11-20 收盤（Nasdaq：ANT；IPO 價 83，2026-11-19 掛牌）；v0.2.3 為 IPO 區間中點 74"
   index: "—"
   unit: "$/股"
-  value: 74
+  value: 88.91
   lo: 70
-  hi: 78
+  hi: 97.17
   tag: "Decision"
-  basis: "工作單 20261111 v0.2.0 F1、J8：初步招股說明書封面區間 70–78（SRC_ANT_522）"
-  range_why: "區間上下緣（Sens）"
-  note: "淨募資與代扣稅款依每 $1 敏感度連動；私募股數＝26.0 ÷ 價格"
+  basis: "工作單 px1120；Yahoo Finance 日線收盤 2026-11-20 88.910004（markets/invest_map/data/closes_20261109_20261120.csv，ANT）。原 v0.2.3 為 IPO 初步招股說明書區間中點 74（SRC_ANT_522，區間 70–78）；Sens 的 70／78 仍為初步招股說明書區間，不隨現價改"
+  range_why: "下緣＝IPO 區間下緣 70；上緣＝2026-11-19 首日收盤 97.17（ANT，closes_20261109_20261120.csv）；Sens 另用招股說明書區間 70／78"
+  note: "淨募資與代扣稅款依每 $1 敏感度連動；私募股數＝26.0 ÷ 價格（照既有公式隨本列重算，不另改；實際 IPO 價 83 未入模型）"
 - key: val_tax
   name: "稅率（美國聯邦法定）"
   index: "—"

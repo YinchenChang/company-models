@@ -28,7 +28,7 @@ SRCK = ("rev", "gross", "ebit", "own", "cc", "fcfm")           # 情境來源列
 SRC_ZH = {"rev": "營收淨額（截頂後；Funding F01）", "gross": "營收總額（截頂後；REV_GrossCapped）", "ebit": "EBIT（現金口徑）＝差額（Funding F06）",
           "own": "自建資本支出（Funding F03）", "cc": "算力成本（現金；Funding F02）", "fcfm": "自由現金流率（Funding F09）"}
 PEERS = (("pltr", "PLTR", "Palantir"), ("crwd", "CRWD", "CrowdStrike"), ("net", "NET", "Cloudflare"), ("snow", "SNOW", "Snowflake"), ("ddog", "DDOG", "Datadog"))
-PEER_DATE = {"ddog": "2026-10-30（頁面為 10-30 收盤）"}
+PEER_DATE = {"ddog": "2026-11-20（px1120：由 10-30 倍數 × 11-20 ÷ 10-30 收盤換算）"}
 DC = "CDEFGHIJ"                                                  # 2026Q4、2027–2033
 SC = "CDEFG"                                                     # FY2026–FY2030（來源區）
 
@@ -41,7 +41,7 @@ def build(ctx):
     snap = yaml.safe_load(SNAP_YAML.read_text(encoding="utf-8")) if SNAP_YAML.exists() else {}
     sens = yaml.safe_load(SENS_YAML.read_text(encoding="utf-8")) if SENS_YAML.exists() else {}
     ws = wb.create_sheet("Val")
-    title(ws, "Val — 估值頁（v0.2.0；工作單 20261111 F）：DCF（FCFF）50%＋調整後 Comparable 50%；情境 A／B／C 25／50／25；評價日 2026-09-30、目標時點 12 個月；現價＝IPO 區間中點",
+    title(ws, "Val — 估值頁（v0.2.0；工作單 20261111 F）：DCF（FCFF）50%＋調整後 Comparable 50%；情境 A／B／C 25／50／25；評價日 2026-09-30、目標時點 12 個月；現價＝2026-11-20 收盤",
           "FCFF＝EBIT（現金口徑＝Funding F06；股權報酬只扣未來新授，IPO 一次性 RSU 與既有獎酬攤銷加回，因該批 RSU 已計入評價股數）− 稅（21% × 正 EBIT，扣 2026Q4 起自身 NOL）− 自建資本支出 − 營運資金增加；算力為服務／租賃付款已在 EBIT 扣除（折舊 − 資本支出＝0）。"
           "終值＝NOPAT(2033) ×(1 − g ÷ RONIC) ÷ (WACC − g)。情境 A、C 為快照值（藍字；tools/val_snapshots.py），B 為活公式。M 線規格例外「AI 收支模型不加 DCF 腿」因掛牌失效（J5）。",
           "本頁不被任何計算頁引用（Checks 除外）。單位：$B、十億股、$／股。")
@@ -114,7 +114,7 @@ def build(ctx):
     # 股數與淨現金先算（權重要用市值）
     sec("2. 評價日股數（十億股）與淨現金（工作單 F5）")
     px = I("ipo_px")
-    row("px", "現價＝ipo_px（IPO 區間中點；上市後改收盤價）", "$/股", [f"={px}"], fmt="#,##0.00", name="VAL_Px")
+    row("px", "現價＝ipo_px（2026-11-20 收盤；v0.2.3 為 IPO 區間中點 74）", "$/股", [f"={px}"], fmt="#,##0.00", name="VAL_Px")
     row("pxlo", "價格區間下緣", "$/股", [f"={S('pros_px_mid')}_Lo"], fmt="#,##0.00", name="VAL_PxLo")
     row("pxhi", "價格區間上緣", "$/股", [f"={S('pros_px_mid')}_Hi"], fmt="#,##0.00", name="VAL_PxHi")
     row("sh_post", "發行後股數（含首次公益發行、私募以 $74 計）", "十億股", [f"={S('pros_shares_post')}/{m2b}"], fmt="0.0000", note="SRC_ANT_539")
@@ -264,7 +264,7 @@ def build(ctx):
     pe = ",".join(S(f"peer_{k}_evfs") for k, _, _ in PEERS)
     pf = ",".join(S(f"peer_{k}_fcfm") for k, _, _ in PEERS)
     row("mult", "同業 EV／遠期營收中位數（PLTR、CRWD、NET、SNOW、DDOG）", "倍", [f"=LARGE($C${P['peer0']}:$C${P['peer1']},(COUNT($C${P['peer0']}:$C${P['peer1']})+1)/2)"], fmt="0.00", name="VAL_PeerMult",
-        note="stockanalysis.com，2026-11-06 收盤（DDOG 10-30）；EV／遠期營收＝遠期 P/S × EV／市值（chat 端推得）")
+        note="stockanalysis.com，2026-11-06 收盤（DDOG 10-30，px1120 起換算到 11-20 收盤；其餘四家倍數仍 11-06，無收盤資料故未換價）；EV／遠期營收＝遠期 P/S × EV／市值（chat 端推得）")
     row("pfcf", "同業 TTM FCF 利益率中位數", "比例", [f"=LARGE($D${P['peer0']}:$D${P['peer1']},(COUNT($D${P['peer0']}:$D${P['peer1']})+1)/2)"], fmt="0.0%", name="VAL_PeerFCFm")
     row("cmev", "市場主流 Comparable EV＝倍數 × NTM 營收總額（未調整）", "$B", s3(lambda s: f"={c('mult')}*{X[s]}{P['ntm']}"))
     row("cmps", "市場主流 Comparable 每股＝(EV ＋ 淨現金) ÷ 股數", "$/股", s3(lambda s: f"=MAX({X[s]}{P['ncps']},({X[s]}{P['cmev']}+{c('netcash')})/{c('shares')})"), fmt="#,##0.00")
@@ -324,7 +324,7 @@ def build(ctx):
     row("tpca", "Comparable 目標價：調整後（FCF 利益率比例；三情境加權；進加權）", "$/股", [f"={W3('caps')}"], fmt="#,##0.00", name="VAL_TP_CompAdj")
     row("tpw", "加權目標價＝DCF × 50% ＋ 調整後 Comparable × 50%", "$/股", [f"={I('val_w_dcf')}*{c('tpdcf')}+(1-{I('val_w_dcf')})*{c('tpca')}"], fmt="#,##0.00",
         name="VAL_TP_W", bold=True)
-    row("pxc", "現價（IPO 區間中點）", "$/股", [f"={c('px')}"], fmt="#,##0.00")
+    row("pxc", "現價（2026-11-20 收盤）", "$/股", [f"={c('px')}"], fmt="#,##0.00")
     row("upw", "上檔空間：加權目標價 ÷ 現價 − 1", "比例", [f"={c('tpw')}/{c('px')}-1"], fmt="0.0%", name="VAL_Up_W", bold=True)
     row("upcm", "上檔空間：市場主流 Comparable", "比例", [f"={c('tpcm')}/{c('px')}-1"], fmt="0.0%", name="VAL_Up_CompMain")
     row("updcf", "上檔空間：DCF", "比例", [f"={c('tpdcf')}/{c('px')}-1"], fmt="0.0%", name="VAL_Up_DCF")
@@ -339,7 +339,7 @@ def build(ctx):
     row("rnote", "評等說明（含距邊界揭露）", "—", [note_f], fmt="@", name="VAL_RatingNote")
     row("pricez", "IPO 價格區間 70／78 下的上檔空間（加權目標價不變的近似；精確值見 Sens）", "比例", [f"={c('tpw')}/{c('pxlo')}-1", f"={c('tpw')}/{c('pxhi')}-1"], fmt="0.0%")
     row("meth", "方法", "—", ["DCF（FCFF；EBIT＝Funding F06 現金口徑、股權報酬只扣未來新授；稅 21% 扣自身 NOL；WACC≈ke；終值 RONIC＝WACC、g 3%）50%＋調整後 Comparable"
-                              "（同業 EV／NTM 營收中位數 × MIN(1, FY2030 自由現金流率 ÷ 同業 FCF 利益率中位數)）50%；情境 A／B／C 25／50／25；現價＝IPO 區間中點 74（J8）；"
+                              "（同業 EV／NTM 營收中位數 × MIN(1, FY2030 自由現金流率 ÷ 同業 FCF 利益率中位數)）50%；情境 A／B／C 25／50／25；現價＝2026-11-20 收盤（px1120；v0.2.3 為 IPO 區間中點 74，J8）；"
                               "判斷題 J5 DCF＋Comparable、J6 FCF 利益率調整、J7 API 任務數高／低端＋Q4 讀法、J8 區間中點"], fmt="@", name="VAL_Method")
     row("wsum", "檢查：情境權重合計 − 1", "—", [f"={I('val_w_a')}+{I('val_w_b')}+{I('val_w_c')}-1"], fmt="0.000000")
     row("tvmax", "檢查：三情境終值占 EV 最大值", "比例", [f"=MAX($C${P['tvsh']}:$E${P['tvsh']})"], fmt="0.0%")

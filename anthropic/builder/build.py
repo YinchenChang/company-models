@@ -35,8 +35,8 @@ from common import F_BOLD, F_CALC, F_IN, F_NOTE, e6_violations, header, lo_recal
 from oai_link import read_oai  # noqa: E402
 from tk_link import NONNV_STATUS, PENDING_NOTE, V17_NAMES, V19B_NAMES, read_nonnv, read_snapshot  # noqa: E402
 
-VERSION = "v0.2.3"
-STAGE = "v0.2.3"
+VERSION = "v0.2.4"
+STAGE = "v0.2.4"
 REGISTRY_PATH = HERE / "id_registry.json"
 SRC_YAML = ROOT / "data" / "anthropic_src.yaml"
 INP_YAML = ROOT / "data" / "anthropic_inputs.yaml"
@@ -70,6 +70,8 @@ DERIVED = {
     "cmp_s1_spend_2026_9m_derived": "={SRC:cmp_s1_spend_2026_h1}+{SRC:cmp_s1_spend_2026_q3_derived}",
     # v0.2.0（初步招股說明書）：2026-09-30 Run-Rate Revenue＝10-31 值 − 增加額
     "pros_rr_0930": "={SRC:pros_rr_1031}-{SRC:pros_rr_incr}",
+    # px1120：DDOG 同業倍數換算到 2026-11-20 收盤（EV 無市值可用，以倍數 × 價格比近似）
+    "peer_ddog_evfs": "={SRC:peer_ddog_evfs_old}*{SRC:px_ddog_1120}/{SRC:px_ddog_1030}",
 }
 
 
@@ -232,6 +234,9 @@ def sheet_readme(ctx, summary):
                         "新增 SRC_ANT_594–621（S-1/A 損益表）、Inputs pl_cash_yield、pl_q4_oth_other。其餘工作表數值與 v0.2.0 逐格相同（目標價、評等不變）。"),
         ("v0.2.3 更新", "Wattonomics 改讀 v0.3.5（Coord 頁隨 wattonomics/data/CURRENT_SNAPSHOT）：Coord B 節營業現金流對照（本模型 FND_FCF＝Funding F07 vs Wattonomics gocf_ant）差 0（v0.2.2 時 Wattonomics 匯入停在 v0.1.8，差 3 至 13）。"
                         "其餘工作表數值與 v0.2.2 逐格相同（目標價、評等不變）。"),
+        ("v0.2.4 更新", "現價與同業報價改 2026-11-20 收盤（工作單 px1120）：現價 ipo_px 74（IPO 區間中點）→ 88.91（ANT 2026-11-20 收盤；IPO 價 83、2026-11-19 掛牌首日收盤 97.17）；淨募資、私募股數、選擇權庫藏股依既有公式隨現價重算（實際 IPO 價 83 未入模型）；"
+                        "同業 DDOG EV／遠期營收 16.36（2026-10-30）→ 換算到 11-20 收盤（倍數 × 157.37 ÷ 235.27；EV 無市值可用，以倍數 × 價格比近似）；PLTR、CRWD、NET、SNOW 無 11-20 收盤資料，倍數維持 2026-11-06 原值（未換價同業）。"
+                        "加權目標價 82.71 → 83.66、上檔空間 ＋11.8% → −5.9%、評等中立不變（公式重算）；共識、rf、β、ERP、營運假設、情境權重不變；Sens 與 Val 情境快照已重跑；Coord 維持讀 Wattonomics v0.3.5 快照。"),
         ("v0.2.2 更新", "版面 v1.3 收尾＋三層協調（工作單 20261114 第二批 13 家）：新頁 Coord（讀取層級〔同源，不判定〕；C0（實績）：S-1/A 營收、資本支出 vs Tokenomics 每 GW 營收 × Wattonomics 配置 GW；層級之間〔參考〕）；"
                         "只列示，不被任何計算頁引用；新增 Checks 2 列。其餘工作表數值與 v0.2.1 逐格相同（目標價、評等不變）。"),
         ("層級對應", "Haiku→低層（Tokenomics Luna）、Sonnet→中層（Sol）、Opus→頂層（Astra）；具名範圍沿用 OpenAI 的 Top／Mid／Low。"),

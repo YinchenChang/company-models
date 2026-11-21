@@ -1,0 +1,10 @@
+folder=zhipu
+version=v0.1.7 -> v0.1.8
+px=408.4 -> 334.0
+tp=149.42 -> 128.30
+upside=-63.4% -> -61.6%
+rating=強力放空 -> 強力放空
+peers_repriced=1
+peers_unchanged=無
+checks=CHK_Errors=0；check_segments.py zhipu 符合；check_layout_v13.py 全過；baseline_coordination/check.py 0 項不符；check_sens_coverage.py 不適用（本模型無 In 頁三欄）；val_snapshots.py scen、sens 已重跑；pytest 全套（parity、html 一致性）本機未跑完，見 notes
+notes=pytest：本機只有 Python 3.14，pycel 1.0b30 不相容（ast.Str），加相容墊片後全套跑逾 70 分鐘被停止，未取得結果，需靠 CI（Python 3.11）的 zhipu-parity 驗證；先前 test_builder 只有 4 項跑到、前 3 項通過。 唯一同業 MiniMax（0100.HK）102.4；同業 EV／NTM 營收 4.79 → 2.38 倍，Comparable 183.85 → 141.61，DCF 114.99 不變（仍在淨現金下限）。Reverse 的同業倍數取 MiniMax 2026-10-07 盤中市值，維持原值。目標時點 1.35 年與 NTM 權重 0.153425 沿用 11-05 計算，未重算。WACC 市值權重隨現價自動重算（10.40% → 10.26%）。Coord 快照未重跑（價格不進 Coord）。Tokenomics 檔不在本 repo，改自 github.com/YinchenChang/tokenomics 的 1916a06（v19.0）重建，與 v0.1.7 同一輸入。

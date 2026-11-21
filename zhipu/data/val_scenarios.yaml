@@ -1,6 +1,6 @@
 note: tools/val_snapshots.py scen 產生；值＝LibreOffice 重算後 Val 第 3 節 B 列（各情境改 Inputs 後）；勿手改
-model: 20261116_Zhipu_v0.1.7.xlsx
-date: '2026-11-16'
+model: z18_pre.xlsx
+date: '2026-11-21'
 scenarios:
   A:
     id: VAL_SCN_A

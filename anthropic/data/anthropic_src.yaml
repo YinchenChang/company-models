@@ -10019,7 +10019,7 @@ rows:
   key: "peer_ddog_evfs"
   group: "H"
   metric: "同業 DDOG（Datadog）EV／遠期營收（＝遠期 P/S × EV／市值）"
-  value: 16.36
+  value: 10.9
   lo: null
   hi: null
   unit: "倍"
@@ -10028,10 +10028,10 @@ rows:
   url: "https://stockanalysis.com/stocks/ddog/statistics/"
   doc_date: '2026-10-30'
   retrieved: '2026-11-11'
-  tag: "Verified"
+  tag: "Derived"
   party: null
   basis: "市場資料"
-  note: "v0.2.0 估值頁（工作單 20261111 F4、F6；chat 端取得，建置代理照用）。chat 端以遠期 P/S × EV／市值推得；單一來源；頁面為 10-30 收盤（工作單標明）"
+  note: "px1120：改為 2026-11-20 收盤換算（EV 無市值可用，以倍數 × 價格比近似；SRC_ANT_622 × SRC_ANT_624 ÷ SRC_ANT_623）。v0.2.0 估值頁（工作單 20261111 F4、F6；chat 端取得，建置代理照用）。chat 端以遠期 P/S × EV／市值推得；單一來源；頁面為 10-30 收盤（工作單標明）"
 - id: SRC_ANT_591
   key: "peer_ddog_fcfm"
   group: "H"
@@ -10559,6 +10559,57 @@ rows:
   party: "Anthropic（S-1/A；年度經查核、期中未經查核；IPO 定價前）"
   basis: "稅務屬性"
   note: "v0.2.1 新增（個股 HTML 版面 v1.3 標準損益表）。建置代理 2026-11-14 直讀 SEC EDGAR 原文；單位百萬美元換算 $B。初步招股說明書（2026-11-10）期中與年度數字與 S-1/A 相同（docs/reports/20261111_Prospectus原文摘錄.md 第 3 節）"
+- id: SRC_ANT_622
+  key: "peer_ddog_evfs_old"
+  group: "H"
+  metric: "同業 DDOG EV／遠期營收（v0.2.3 原值，2026-10-30 頁面）"
+  value: 16.36
+  lo: null
+  hi: null
+  unit: "倍"
+  period: '2026-10-30'
+  source: "stockanalysis.com 統計頁（DDOG），即 SRC_ANT_590 在 v0.2.3 的值"
+  url: "https://stockanalysis.com/stocks/ddog/statistics/"
+  doc_date: '2026-10-30'
+  retrieved: '2026-11-21'
+  tag: "Verified"
+  party: null
+  basis: "市場資料"
+  note: "px1120：保留原值作換算基準"
+- id: SRC_ANT_623
+  key: "px_ddog_1030"
+  group: "H"
+  metric: "DDOG 2026-10-30 收盤（換算基準日）"
+  value: 235.27
+  lo: null
+  hi: null
+  unit: "$/股"
+  period: '2026-10-30'
+  source: "Yahoo Finance 日線收盤（markets/invest_map/data/closes_20261020_20261113.csv）"
+  url: "https://finance.yahoo.com/quote/DDOG/history/"
+  doc_date: '2026-10-30'
+  retrieved: '2026-11-21'
+  tag: "Verified"
+  party: null
+  basis: "市場資料"
+  note: "px1120"
+- id: SRC_ANT_624
+  key: "px_ddog_1120"
+  group: "H"
+  metric: "DDOG 2026-11-20 收盤"
+  value: 157.369995
+  lo: null
+  hi: null
+  unit: "$/股"
+  period: '2026-11-20'
+  source: "Yahoo Finance 日線收盤（markets/invest_map/data/closes_20261109_20261120.csv）"
+  url: "https://finance.yahoo.com/quote/DDOG/history/"
+  doc_date: '2026-11-20'
+  retrieved: '2026-11-21'
+  tag: "Verified"
+  party: null
+  basis: "市場資料"
+  note: "px1120"
 not_found:
 - item: 2024 年認列營收（直接揭露值）
   tried: Reuters／Fortune／PYMNTS／Khaleej Times 招股書報導；查詢 "Anthropic 2024 revenue prospectus"

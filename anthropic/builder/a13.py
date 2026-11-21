@@ -21,7 +21,8 @@ WATT_DIR = ROOT.parent / "wattonomics" / "data"
 
 
 def read_watt():
-    cur = (WATT_DIR / "CURRENT_SNAPSHOT").read_text(encoding="utf-8").strip()
+    # px1120：只換價格，Coord 維持 v0.2.3 讀的 Wattonomics v0.3.5 快照（CURRENT_SNAPSHOT 已前進到 v0.3.9，不在本版範圍）
+    cur = "wattonomics_snapshot_v0.3.5.json"
     d = json.loads((WATT_DIR / cur).read_text(encoding="utf-8"))
     rows = {r["id"]: r for s in d["rows"] for r in ([s] if "id" in s else [])}
     return dict(file=d["source"]["file"], version=d["source"]["version"], sha=d["source"]["sha256"], rows=rows, names=d["names"], snap=cur)

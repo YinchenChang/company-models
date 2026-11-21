@@ -159,3 +159,6 @@
 ## v0.2.3 Coord 改讀 Wattonomics v0.3.5（2026-11-15；Excel `model/20261115_Anthropic_v0.2.3.xlsx`；v0.2.2 移至 `model/archive/`）
 - Coord（builder/a13.py）隨 `wattonomics/data/CURRENT_SNAPSHOT` 改讀 v0.3.5：營業現金流對照（`FND_FCF`＝Funding F07 vs `gocf_ant`）2026–2030 差 0（v0.2.2：3.29／4.90／7.35／10.27／13.43，層級匯入落後）；B 節說明改自快照帶出版本與出處。
 - 既有計算頁逐格不變（加權目標價 82.71、評等中立）；對帳中 0。`dist/` 重產，v0.2.2 成品移 `dist/_待刪除/`。
+
+## v0.2.4 現價與同業報價改 2026-11-20 收盤（2026-11-21；Excel `model/20261121_Anthropic_v0.2.4.xlsx`；v0.2.3 移 `model/archive/`）
+- 工作單 px1120。ipo_px 74 → 88.91；DDOG 同業倍數換算（新增 SRC_ANT_622–624）；加權目標價 82.71 → 83.66、上檔空間 +11.8% → −5.9%、評等中立不變。細節見 README。

@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 1,
+ "duration_ms": 2056,
+ "total_cost_usd": 1.0482721,
+ "result": "這是最後一個監看工具到期的通知，沒有新結果。\n\n智譜 v0.1.8 已完成，狀態不變：\n\n- 現價 334.0、加權目標價 128.30、上檔空間 −61.6%、評等強力放空。\n- 成品、README、CHANGELOG 和 `zhipu/px1120_note.txt` 都已就位，沒有 commit。\n- pytest 全套（parity、HTML 一致性）沒有結果，要靠 CI 驗證。",
+ "error": null,
+ "stderr": null
+}

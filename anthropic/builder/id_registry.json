@@ -620,7 +620,10 @@
 "is_s1a_wsh_9m26": "SRC_ANT_618",
 "is_s1a_int_9m26": "SRC_ANT_619",
 "is_s1a_cash_0930": "SRC_ANT_620",
-"tax_s1a_nol_fed_2025": "SRC_ANT_621"
+"tax_s1a_nol_fed_2025": "SRC_ANT_621",
+"peer_ddog_evfs_old": "SRC_ANT_622",
+"px_ddog_1030": "SRC_ANT_623",
+"px_ddog_1120": "SRC_ANT_624"
 },
 "INP": {
 "year_2025": "INP_001",

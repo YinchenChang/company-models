@@ -176,7 +176,7 @@ def build(ctx):
 
 
 def build_revdcf(ctx):
-    """RevDCF 頁（v0.2.1；個股 HTML 版面規格 v1.3 A 節「反向 DCF」）：以現價（IPO 區間中點）反解現價隱含的
+    """RevDCF 頁（v0.2.1；個股 HTML 版面規格 v1.3 A 節「反向 DCF」）：以現價（2026-11-20 收盤）反解現價隱含的
     (a) WACC（二分法）、(b) 2027–2033 營收等比例倍數（二分法；累積虧損扣抵逐年重算）、(c) 終值期營業利益率（封閉解）、
     (d) Comparable 倍數與相對同業係數（封閉解）。DCF 以情境 B 路徑反解「情境 B 每股價值推到目標時點＝現價」。
     只讀 Val 頁與 Inputs，無任何頁引用本頁，不影響目標價；各段附核對列（應為 0）。"""
@@ -184,7 +184,7 @@ def build_revdcf(ctx):
     I = D.I
     VP = ctx.P["a11"]["P"]
     ws = wb.create_sheet("RevDCF", index=wb.sheetnames.index("Val") + 1)
-    title(ws, "RevDCF — 反向 DCF：現價隱含什麼（v0.2.1；個股 HTML 版面規格 v1.3）：一次只動一個驅動、其餘維持基準，反解到現價（IPO 區間中點）",
+    title(ws, "RevDCF — 反向 DCF：現價隱含什麼（v0.2.1；個股 HTML 版面規格 v1.3）：一次只動一個驅動、其餘維持基準，反解到現價（2026-11-20 收盤）",
           "DCF：以情境 B 路徑反解「情境 B 評價日每股價值 ×（1＋股權成本）^目標年數＝現價」；(a) WACC 與 (b) 營收倍數用二分法 40 次，(c) 終值期營業利益率與 (d) Comparable 倍數為封閉解。"
           "（DCF 目標價為三情境加權，情境 B 為基準路徑。）反解值超出合理範圍時照實列出，不外推。",
           "本頁只讀 Val 頁與 Inputs，無任何頁引用本頁。單位：$B、十億股、$／股。")
@@ -210,7 +210,7 @@ def build_revdcf(ctx):
 
     b = lambda key: f"$B${R[key]}"  # noqa: E731
     sec("一、支持現價所需的 DCF 企業價值（情境 B 路徑）")
-    kv("px", "現價（IPO 區間中點；美元）", "=VAL_Px", "0.00", name="RVD_Px")
+    kv("px", "現價（2026-11-20 收盤；美元）", "=VAL_Px", "0.00", name="RVD_Px")
     kv("ps0r", "支持現價所需的評價日每股價值＝現價 ÷（1＋股權成本）^目標年數", f"=VAL_Px/(1+VAL_Ke)^{I('val_t_tgt')}", "0.00", name="RVD_PS0Req")
     kv("ps0b", "模型：情境 B 評價日每股價值", f"={V('ps0', 'D')}", "0.00", name="RVD_PS0B")
     kv("evr", "支持現價所需的企業價值 EV＝每股 × 評價股數 − 淨現金", f"={b('ps0r')}*VAL_Shares-VAL_NetCash", name="RVD_EVReq", bold=True)

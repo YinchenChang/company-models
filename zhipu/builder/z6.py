@@ -4,9 +4,9 @@
 - 現金流沿用模型既有路徑（Funding 頁 F01 營收、F06 差額〔含股權報酬〕＝EBIT、F10 非算力資本支出、F12 併購）：2H26 取 Funding L 欄（驅動），
   2027–2030 取 F–I 欄。股權報酬不加回（個股DCF標準規格第 1 節）。算力為服務採購／租賃付款，已在 EBIT 扣除（折舊 − 資本支出＝0；自有算力資本支出 D11r 基準 0）。
 - 評價日 2026-06-30（中期報告資產負債表日）；之後完成的 2026-07、2026-09 配售與可換股債券淨額計入淨現金，股數取 2026-09 配售後總股本；
-  現價 2026-11-13 收盤 HK$408.4（SRC_ZP_1055；v0.1.6 為 11-05 收盤 476）。可換股債券換股價 HK$892.5 高於現價 → 視為債務（本金 201.4 億）。
+  現價 2026-11-20 收盤 HK$334.0（SRC_ZP_1055；v0.1.7 為 11-13 收盤 408.4；v0.1.6 為 11-05 收盤 476）。可換股債券換股價 HK$892.5 高於現價 → 視為債務（本金 201.4 億）。
 - 情境 A／C：2H26 API 任務數成長率取 Inputs 高／低端（INP_038；樣板 Anthropic 以 API 任務數高／低端定情境），快照 data/val_scenarios.yaml（tools/val_snapshots.py）。
-- 同業：MiniMax（00100.HK），市值與智譜同日（2026-11-13 收盤；v0.1.6 為 11-05）；其餘中國與海外上市 AI 模型／應用公司找不到同日可查證市值，未納入（README 列待確認）。
+- 同業：MiniMax（00100.HK），市值與智譜同日（2026-11-20 收盤；v0.1.7 為 11-13、v0.1.6 為 11-05）；其餘中國與海外上市 AI 模型／應用公司找不到同日可查證市值，未納入（README 列待確認）。
 Val 與 RevDCF 不被任何既有計算頁或 Checks 引用；新增後既有工作表數值不變（快照狀態列在 Val 頁內）。
 """
 from __future__ import annotations
@@ -39,12 +39,12 @@ def build(wb, D, Z):
     mmx_fx = S("peer_mmx_hkdusd")
     cfg = dict(
         I=I, unit="RMB 億", ps_unit="RMB／股", cur="人民幣",
-        title="Val — 估值頁（v0.1.7；Andy 2026-11-15 決定給目標價與評等）：DCF（FCFF）50%＋同業 EV／NTM 營收 50%；情境 A／B／C 25／50／25；評價日 2026-06-30、現價 2026-11-13 收盤（v0.1.6 為 11-05）",
+        title="Val — 估值頁（v0.1.8；Andy 2026-11-15 決定給目標價與評等）：DCF（FCFF）50%＋同業 EV／NTM 營收 50%；情境 A／B／C 25／50／25；評價日 2026-06-30、現價 2026-11-20 收盤（v0.1.7 為 11-13、v0.1.6 為 11-05）",
         sub="FCFF＝EBIT（Funding F06：營收 − 算力 − 本地化交付 − 非算力 − 股權報酬；股權報酬不加回）− 稅（25% × 正 EBIT，扣評價日起自身虧損）− 非算力資本支出 − 已承諾併購 − 營運資金增加。"
             "終值＝NOPAT(2033) ×(1 − g ÷ RONIC) ÷ (WACC − g)。情境 A、C 為快照值（藍字；tools/val_snapshots.py），B 為活公式。判斷類參數（WACC 組成、同業、權重）依樣板慣例預設，待 Andy 確認。",
         sub2="本頁不被任何既有計算頁引用。單位：人民幣億元、億股、人民幣元／股；目標價以港元表示（÷ HKD/CNY 中間價）。",
-        val_date="2026-06-30（pro forma：計入其後完成的配售與可換股債券）", px_date="2026-11-13",
-        px=S("price_20261105"), px_note="SRC_ZP_1055（Yahoo Finance 日線收盤 2026-11-13；v0.1.6 為 11-05 收盤 476.0）",
+        val_date="2026-06-30（pro forma：計入其後完成的配售與可換股債券）", px_date="2026-11-20",
+        px=S("price_20261105"), px_note="SRC_ZP_1055（Yahoo Finance 日線收盤 2026-11-20；v0.1.7 為 11-13 收盤 408.4；v0.1.6 為 11-05 收盤 476.0）",
         pxfx=hk, pxfx_note="HKD/CNY 中間價 2026-09-28（Inputs fx_hkdcny）",
         shares=f"{S('shares_total_post_placing2')}/{yi}", shares_unit="億股", shares_label="評價股數＝2026-09 配售後已發行股份總數（億股）",
         shares_note="SRC_ZP 2026-09 配售完成後總股本；受限制股份有揭露（SRC_ZP_876，招股章程附註 29(b)：1H25 尚未行使 6,620 千份〔拆股前〕，1 拆 10 後約 6,620 萬股，行使價 0.10–2.00 元），未計入評價股數；若全部為增量約占 13.6%，加權目標價約降至 138–140 港元，評等不變（是否已含在已發行股數內未查證）；可換股債券價外，不計換股股數",
@@ -60,7 +60,7 @@ def build(wb, D, Z):
         debt=f"{S('bank_loans_1h26')}+{S('cb_principal')}+{S('lease_liab_fy25')}", debt_note="銀行借款＋可換股債券本金＋租賃負債（個股DCF標準規格第 2 節：債務本金＋融資租賃）",
         rf_note="美國 10 年期公債 CMT 4.86%（2026-11-06；與 Anthropic v0.2.0 同一來源 SRC_ANT_576）；港股以港元計價、聯繫匯率，沿用美元無風險利率（判斷類）",
         beta_note="Analogy：Anthropic v0.2.0 同業（高成長 AI／資料軟體）5 年 β 中位數 1.37 經 Blume 調整＝1.248；智譜 2026-01 上市，自身 β 期間不足（判斷類）",
-        ttgt_note="評價日 2026-06-30 至現價日 2026-11-13 約 0.37 年 ＋ 12 個月（目標時點與 NTM 權重沿用 11-05 計算、本版未重算：維持 1.35；工作單 px1113 只換價格）",
+        ttgt_note="評價日 2026-06-30 至現價日 2026-11-20 約 0.39 年 ＋ 12 個月（目標時點與 NTM 權重沿用 11-05 計算、本版未重算：維持 1.35；工作單 px1120 只換價格）",
         src_zh={"rev": "營收淨額（截頂後；Funding F01）", "ebit": "EBIT＝差額（含股權報酬；Funding F06）", "cx": "非算力資本支出（Funding F10）", "ma": "併購現金支出（Funding F12）"},
         scn_desc={"A": "2H26 API 任務數成長率取 Inputs 高端（INP_038 高欄）", "B": "基準（活公式）", "C": "2H26 API 任務數成長率取 Inputs 低端（INP_038 低欄）"},
         sens=sens or {},
@@ -70,14 +70,14 @@ def build(wb, D, Z):
         ebit_note="Funding F06（營收 − 算力現金成本 − 本地化交付 − 非算力 − 股權報酬）；利息與其他收益不計（FCFF 口徑）",
         cx_note="Funding F10 非算力資本支出；自有算力資本支出已在算力成本內（D11r 基準 0）",
         ma_note="Funding F12：中科加禾約 60%（2H26，3 億元，Assumed）",
-        peer_date_note="市值一律 2026-11-13 收盤；淨現金為 2026-06-30 pro forma；共識營收為最近一次彙整",
+        peer_date_note="市值一律 2026-11-20 收盤；淨現金為 2026-06-30 pro forma；共識營收為最近一次彙整",
         peers=[dict(name="MiniMax（00100.HK）", unit="USD M", px=S("peer_mmx_price_20261105"), pxfx=f"1/{mmx_fx}", shares=f"{S('peer_mmx_shares')}/{I('mul_t_m')}",
                     netcash=(f"{S('peer_mmx_cash_0630')}+{S('peer_mmx_placing_net_hkd')}/{mmx_fx}+{S('peer_mmx_cb_net_hkd')}/{mmx_fx}"
                              f"-{S('peer_mmx_bank_0630')}-{S('peer_mmx_cb_principal_hkd')}/{mmx_fx}"),
                     c26=S("peer_mmx_cons_fy26"), c27=S("peer_mmx_cons_fy27"),
-                    note="收盤價 2026-11-13 HK$152.4（MiniMax 模型 v0.2.4 S113；v0.1.6 為 11-05 收盤 170.2）；股數 2026-09-30 FF301；淨現金＝6-30 現金 1,322.8＋07 配售與可轉債淨額 − 銀行借款 − 可轉債本金（港元 ÷ 7.78）；"
-                         "共識 FY2026 452、FY2027 1,030（stockanalysis）；與 MiniMax 模型 v0.2.4 同一組數字（同日 2026-11-13 市值）")],
-        mult_note="同業只有 MiniMax 一家（中國與海外上市 AI 模型／應用公司中，取得 2026-11-13 同日可查證市值者）；其餘候選未納入，見 README（判斷類，待 Andy 確認）",
+                    note="收盤價 2026-11-20 HK$102.4（v0.1.7 為 11-13 收盤 152.4；v0.1.6 為 11-05 收盤 170.2）；股數 2026-09-30 FF301；淨現金＝6-30 現金 1,322.8＋07 配售與可轉債淨額 − 銀行借款 − 可轉債本金（港元 ÷ 7.78）；"
+                         "共識 FY2026 452、FY2027 1,030（stockanalysis）；股數、淨現金、共識與 MiniMax 模型同一組數字（同日 2026-11-20 市值）")],
+        mult_note="同業只有 MiniMax 一家（中國與海外上市 AI 模型／應用公司中，取得 2026-11-20 同日可查證市值者）；其餘候選未納入，見 README（判斷類，待 Andy 確認）",
         self=dict(c26=f"{S('cons_rev_fy26')}/{musd}", c27=f"{S('cons_rev_fy27')}/{musd}", note="Simply Wall St 共識（23 位）FY2026 60.48、FY2027 180.13 億元（2026-10-06）"),
         gate="SUM(Funding!$E$%d:$I$%d)" % (F["fcf"], F["fcf"]),
         gate_note="Funding F09 自由現金流 FY2026–FY2030 合計（與 AI 投資地圖收支關卡同一口徑）",
