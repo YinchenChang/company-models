@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 19,
+ "duration_ms": 194452,
+ "total_cost_usd": 0.40919700000000003,
+ "result": "泰瑞達（ter）已換成 2026-11-20 收盤，版號 v0.4.6 → v0.4.7，xlsx 與 HTML 都已重建，只改了 `ter/` 內的檔案。\n\n- **現價：** 249.55 → 204.78\n- **加權目標價：** 319.49 → 278.11\n- **上檔空間：** +28.0% → +35.8%\n- **評等：** 買進 → 買進\n- **同業前瞻 P/E 中位數：** 27.88 → 23.22。五家同業（6857.T、KLAC、COHU、FORM、AMAT）全部換價，未換價同業為無。Technoprobe 的市值輸入也已換價（€18.41、歐元兌美元 1.097）。\n- **檢查：**\n  - 重算錯誤格 0。\n  - `check_company_html` 通過。\n  - `check_layout_v13 --xlsx` 通過（跑它之前我先裝了 `bs4`）。\n  - `baseline_coordination/check.py` 0 項不符。\n  - Sens 快照狀態 CURRENT，Sens 與 Coord 快照已重跑。\n  - `check_sens_coverage` 未過（28 個鍵在 Sens 頁找不到表頭）。我只重跑了新版；README 記載前版同樣未過，我沒有另外把舊版再跑一次確認。\n- **前值差異：** v0.4.6 的 README 寫加權目標價 338.56，但重建後成品算出來是 319.49（Siliconomics 快照已更新到 v0.22）。本版前後對照用 319.49，已寫進 note 和 README。\n- **TPRO.MI 價格：** 11-20 Yahoo 日線尚無該列，取的是報價資料最近成交價。\n- **其他改動：** 新增 `px1120_post.py`，並在 `build_ter.py` 接在 px1113 之後呼叫。`gen_html_json.py` 的版號斷言改成 v0.4.7。README 加了 v0.4.7 一節。`px1120_note.txt` 已寫。\n- **未 commit：** 舊 dist 檔已用 `git rm` 移除，新 dist 與其他改動都還沒 commit，也沒 push。",
+ "error": null,
+ "stderr": null
+}
