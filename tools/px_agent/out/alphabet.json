@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 21,
+ "duration_ms": 392958,
+ "total_cost_usd": 0.3955290000000001,
+ "result": "Alphabet 已換成 2026-11-20 收盤，版號 v0.3.10 → v0.3.11，xlsx 和 HTML 都重建完成（檔名日期 20261121）。\n\n- **現價：** 295.77 → 265.29\n- **加權目標價：** 249.86 → 233.92（DCF 188.56 不變，Comparable 311.15 → 279.28）\n- **上檔空間：** −15.5% → −11.8%\n- **評等：** 中立 → 中立，由模型公式重算。\n- **同業倍數（近似，無市值）：** 17 家同業和 Alphabet 自身倍數全部換價，沒有未換價的同業。中位數雲端 14.66 → 12.79、廣告 8.54 → 7.35、訂閱 13.74 → 12.54。\n- **檢查結果：**\n  - `check_v03.py`、`mag/check_in_layout.py`、敏感度覆蓋、`segment_check`、`check_company_html.py`、`tools/baseline_coordination/check.py` 都通過。\n  - `check_layout_v13.py` 沒有錯誤，只有全頁參數代號警告，前版就有。\n  - `check_v03.py` 另有「Val 缺橫幅：自用 AI 讀法列」的警告，前版就有，沒處理。\n- **敏感度與協調頁：** 敏感度已用 `SENS=1` 重跑；協調頁（Coord）沒有 STALE 提示，所以沒重跑 `alt_run.py`。\n- **檔案：**\n  - 新增 `px1120_peers.py`、四個 `data/peers_*_20261120.json` 和 `px1120_note.txt`。\n  - 修改 `README.md`、`build_alphabet.py`、`v039_post.py`、`gen_html_json.py`、`check_v03.py`、`make_v03.sh`。\n  - 舊的 v0.3.10 dist 檔已移除，dist 只剩現行版。\n\n只動了 `alphabet/`，沒有 commit、push 或開 PR。",
+ "error": null,
+ "stderr": null
+}
