@@ -13,7 +13,8 @@ for f in sorted(glob.glob("markets/invest_map/data/closes_*.csv")):
     if f == out: continue
     for r in csv.DictReader(open(f, encoding="utf-8")):
         cur.setdefault(r["symbol"], r["currency"])
-syms = sorted(set(cur) | set(extra))
+only = extra and extra[0] == "--only"      # --only：只抓後面列的代號（補同業用）
+syms = sorted(set(extra[1:])) if only else sorted(set(cur) | set(extra))
 end1 = (dt.datetime.strptime(end, "%Y-%m-%d") + dt.timedelta(days=1)).strftime("%Y-%m-%d")
 rows, got, splits, meta = [], set(), [], []
 def grab(batch):
