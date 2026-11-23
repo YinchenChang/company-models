@@ -161,11 +161,11 @@ def transform(cfg, wb, co_dir=None, opts=None, pfmt="n0"):
     rowx = lambda r: [f"@PL!A{r}"] + [f"@PL!{c}{r}|{fmt(PLW.cell(r, 2).value)}" for c in "CDEFGHIJ"]
     r_ratio = plr("比率")
     r_chk = plr("核對（應為 0）")
-    r_d30 = next(r for r in range(r_chk, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("差額（2030E）：毛利"))
+    r_d30 = next(r for r in range(r_chk, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("核對：延伸期毛利"))
     is_tbl = {"type": "table", "caption": "標準損益表（GAAP；兆韓元，股數百萬股，EPS 韓元）：2023A–2025A 實績、2026E–2030E 情境 B（基準）",
               "head": [f"@PL!A{p5}"] + [f"@PL!{c}{p5}" for c in "CDEFGHIJ"],
               "rows": [rowx(plr(k)) for k in keys] + [{"sub": f"@PL!A{r_ratio}"}] + [rowx(r) for r in range(r_ratio + 1, r_chk)]
-                      + [{"sub": "核對：2030E 兩種推法的營業利益差額（毛利率與營業費用率沿用 2029E；目標價用延伸期淨利，不受影響）"}]
+                      + [{"sub": "核對與揭露：2030E 毛利 − 營業費用 − 營業利益（應為零；延伸期營業費用＝毛利 − 營業利益，是殘差不是假設）與隱含營業費用率"}]
                       + [rowx(r) for r in (r_d30, r_d30 + 1)]}
     rv_, gm_, opm_, nm_ = plr("營收"), plr("毛利率"), plr("營業利益率"), plr("淨利率")
     is_chart = {"type": "theme", "title": "營收（兆韓元）與毛利率、營業利益率、淨利率：2023A–2030E（基準情境 B）", "x": f"@PL!C{p5}:J{p5}", "fmt": "n0", "fmt_r": "p0", "stack": True, "pad": 1.6,
