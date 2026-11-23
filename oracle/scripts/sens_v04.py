@@ -12,7 +12,7 @@ import openpyxl
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BUILD = os.path.join(HERE, "build_oracle.py")
 _PXS = json.load(open(os.path.join(HERE, "data", "peers_sw_20261120.json"), encoding="utf-8"))   # v0.5.3 原地換價：軟體同業 Sens 低／高
-TK = json.load(open(os.path.join(HERE, "data", "tokenomics_snapshot_v19.0.json"), encoding="utf-8"))["items"]
+TK = json.load(open(os.path.join(HERE, "data", "tokenomics_snapshot_v22.0.json"), encoding="utf-8"))["items"]   # 外部稽核優化 W3-5（2026-11-23）：原讀 v19.0，改讀與 build_oracle.py 同一份 v22.0（IF_OpexGW 四世代基準值相同）
 GN = {"h100": "Hopper H100", "gb200": "GB200 NVL72", "gb300": "GB300 NVL72", "vr200": "VR200 NVL72"}
 OX = {g: round(TK["IF_OpexGW"]["values"][n]["基準"], 4) for g, n in GN.items()}
 
