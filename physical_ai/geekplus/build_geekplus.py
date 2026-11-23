@@ -546,7 +546,7 @@ def build(path, ov=None, sens=None, rev=None):
 
 
 # ---------------- 重算與讀值 ----------------
-LO = "file:///tmp/lo_geekplus_profile"
+LO = "file://" + os.path.join(tempfile.gettempdir(), "lo_geekplus_profile")
 def recalc_many(srcs, outdir):
     os.makedirs(outdir, exist_ok=True)
     for attempt in range(2):

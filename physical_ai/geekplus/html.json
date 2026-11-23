@@ -768,7 +768,7 @@
      "type": "kv",
      "items": [
       [
-       "@Sens!A2",
+       "建置快照代號",
        "@Sens!D2"
       ],
       [
@@ -2260,11 +2260,6 @@
      "collapse": true,
      "summary": "展開：標為「未取得」的項目",
      "sheets": {
-      "In": [
-       "B",
-       "H",
-       "I"
-      ],
       "Hist": [
        "A"
       ],
