@@ -585,7 +585,7 @@ def stamp(wb):
     RD, SE = wb["README"], wb["Sens"]
     old = SE.cell(V7.lab(SE, "build_id"), 4).value
     h = hashlib.sha256(old.encode())
-    for fn in ("coord_post.py", "coord_inputs.json", "coord_alt.json", "gen_html_json.py", "v0313_post.py", "px1120_post.py"):
+    for fn in ("coord_post.py", "coord_inputs.json", "coord_alt.json", "gen_html_json.py", "v0313_post.py", "px1120_post.py", "w3_post.py"):   # 外部稽核優化 W3-4（2026-11-23）：w3_post.py 納入 build_id 雜湊（Sens 新增快照區塊由它寫入）
         h.update(fn.encode()); h.update(open(os.path.join(HERE, fn), "rb").read())
     new = f"nvidia-v{VER}-{h.hexdigest()[:10]}"
     n = 0

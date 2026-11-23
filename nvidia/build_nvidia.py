@@ -1196,6 +1196,8 @@ if V36 and not OVR:
     print(v0313_post.apply(wb))
     import px1120_post  # noqa: E402  v0.3.14（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120；只追加沿革列）
     print(px1120_post.apply(wb, "v0.3.14", PX1120_NOTE))
+    import w3_post  # noqa: E402  外部稽核優化 W3-4（2026-11-23）：執行長異動只進 Sens 與風險登錄（Andy 決定 J1）；Sens 頁末追加快照區塊、README 風險登錄一列，基準不動
+    print(w3_post.apply(wb, os.path.dirname(os.path.abspath(__file__))))
 wb.save(sys.argv[1])
 if os.environ.get("NV_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

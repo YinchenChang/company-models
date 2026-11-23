@@ -194,6 +194,12 @@ def overrides(wb, OVR):
             IN.cell(r, 5).value = IN.cell(r, 4 if v == "@lo" else 6).value
         else:
             IN.cell(r, 5).value = v if v.startswith("=") else float(v)
+    if "_rmkeep" in OVR:
+        # 外部稽核優化 W3-4（2026-11-23）：執行長異動 Sens 案例「相對倍數溢價保留比例」——只在敏感度快照建置時生效（正式建置不設 NV_OVERRIDE）。
+        # 調整係數＝1＋保留比例 ×（原係數 − 1）；保留 1＝基準、0＝不調整。原因：Andy 2026-11-20 決定 J1（只進 Sens，基準不動）。
+        V = wb["Val"]; rr = lab(V, "相對倍數調整係數"); f0 = V.cell(rr, 2).value
+        assert isinstance(f0, str) and f0.startswith("="), f0
+        V.cell(rr, 2).value = f"=1+{float(OVR['_rmkeep'])}*(({f0[1:]})-1)"
     for flag, pre in (("_hbmflat", "hbm"), ("_cdxflat", "cdx")):
         if flag in OVR:
             for s in "ABC":
@@ -670,7 +676,10 @@ def readme(wb, ctx, bid, G, SJ):
         '="供應與產能承諾 "&TEXT(h_supply_c,"#,##0")&" 十億美元（Q2 FY27；前一季 "&TEXT(h_supply_c_q1,"#,##0")&"）：未進 FCFF（隨採購認列進成本）；需求下滑時可能產生超額採購損失（FY2026 H20 超額採購費用為先例）。觀察：Note 10 承諾金額、存貨與超額採購損失。"',
         "CoWoS／HBM 供給上限：讀 Siliconomics／markets/memory 共用顆數與價格路徑，不在個股估（X29）。觀察：台積電 CoWoS 產能分配、HBM4 合約價。",
         "客戶融資與延長付款條件（10-Q 流動性段）：未建模（金額未揭露）。觀察：應收帳款天數、10-Q 財務保證與信用支持揭露。",
-        "流通量、借券與軋空：不進目標價（估值評等不含交易執行；X14）。觀察：借券費率、空單比例。")]
+        "流通量、借券與軋空：不進目標價（估值評等不含交易執行；X14）。觀察：借券費率、空單比例。",
+        # 外部稽核優化 W3-4（2026-11-23）：風險登錄加一列「執行長異動」（Andy 2026-11-20 決定 J1：只進 Sens 與風險登錄，基準不動）。
+        # 這裡先放固定文字佔位（列號由此決定）；正式建置時 w3_post.py 會把本列改寫成帶 Sens 數字的公式。
+        "執行長異動：未建模於基準（Andy 2026-11-20 決定：只進 Sens 與風險登錄）。見 Sens 頁「執行長異動敏感度」。")]
     G["ind_h"] = put("主要假設驅動與可證偽的公開指標（原則 20）", True)
     G["ind"] = [put(t) for t in (
         "k_rec（Derived，校準殘差、FY2028 起持續）：季度 Data Center 營收 ÷ 市場層 NVIDIA 顆數 × 橋接表售價；Rubin 出貨節奏（CFO 書面說明）。",
