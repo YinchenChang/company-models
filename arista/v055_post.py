@@ -283,7 +283,9 @@ def revdcf(wb):
     V = wb["Val"]
     vb = lambda p: f"Val!$B${lab(V, p)}"
     feps, pmed, dcf_tp, coef = vb("12 個月後的前瞻 EPS（情境加權）"), vb("同業前瞻 P/E 中位數"), vb("DCF 目標價（情境加權）"), vb("相對倍數調整係數")
-    nc_cell = f"Val!$B${lab(V, '淨現金滾到評價日')}"
+    # 外部稽核優化 W4-4（2026-11-23）：讀情境 B 欄（C 欄），與本頁「以情境 B 路徑反解」一致（同美超微 W2-2）。原讀 B 欄＝情境 A；
+    # 目前 stub 期落在三情境相同的年度、兩欄值相同，本次只改參照、數值不變。
+    nc_cell = f"Val!$C${lab(V, '淨現金滾到評價日')}"
     RV["A1"] = (f"RevDCF — 反向 DCF：現價隱含什麼（v{VER} 起；個股 HTML 版面規格 v1.3）。一次只動一個驅動、其餘維持基準，反解到「現價」；全部為 Excel 公式（DCF 對各年營業利益與營收倍數為線性，用封閉解；WACC 用二分法）。"
                 "本頁只讀 DCF、Val、In 頁，無任何頁引用本頁，不影響目標價")
     RV["A1"].font = BOLD

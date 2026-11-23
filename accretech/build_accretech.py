@@ -383,7 +383,7 @@ for s in SC:
             PL[f"{FYC[y]}{sr}"] = f"={FYC[y]}{PB[s][key]}"; PL[f"{FYC[y]}{sr}"].number_format = fmt
         SUMR[(s, key)] = sr; sr += 1
     sr += 1
-PL.cell(sr, 1, "核對：三情境 FY2025 − 實績（營收與營業利益；捨入差約 0.002）"); PL[f"C{sr}"] = "=" + "+".join(f"C{PB[s]['chk']}" for s in SC); PL[f"C{sr}"].number_format = "0.000"; sr += 1
+PL.cell(sr, 1, "核對：三情境 FY2025 − 實績（營收與營業利益；三情境合計，捨入差約 0.006＝每情境約 0.002 × 3）"); PL[f"C{sr}"] = "=" + "+".join(f"C{PB[s]['chk']}" for s in SC); PL[f"C{sr}"].number_format = "0.000"; sr += 1
 PL.cell(sr, 1, "核對：FY2026 營收、營業利益、EPS − 公司指引（g_anc＝0 時應為 0；EPS 差為股數捨入）")
 PL[f"C{sr}"] = f"=ABS(D{SUMR[('A', 'rev')]}-g26_rev)+ABS(D{SUMR[('A', 'oi')]}-g26_oi)"; PL[f"D{sr}"] = f"=D{SUMR[('A', 'eps')]}-g26_eps"
 PL[f"C{sr}"].number_format = "0.000"; PL[f"D{sr}"].number_format = "0.00"; CHK26 = sr
