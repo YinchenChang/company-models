@@ -185,6 +185,67 @@ details[open] summary::before{content:"－ "}
 .linkish{appearance:none;background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left}
 .linkish:hover b,.linkish:hover{text-decoration:underline;text-underline-offset:3px}
 
+/* ---------- v0.2：公司檔案抽屜（樣式取自 AI 算力地圖 markets/invest_map/template.html，保持一致） ---------- */
+/* drawer */
+.scrim{position:fixed;inset:0;background:#0b1220;opacity:.38;z-index:20}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(760px,100%);background:var(--surface);z-index:21;display:grid;grid-template-rows:auto auto minmax(0,1fr);box-shadow:-12px 0 32px #0000002e;border-left:1px solid var(--rule-strong);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
+.dh{background:var(--navy);color:var(--navy-ink);padding:16px 22px 12px;display:grid;gap:6px}
+.dh .row1{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.dh h2{font-size:24px}
+.dh .sub{font-size:12px;color:var(--navy-muted);font-family:var(--f-mono)}
+.dh .one{font-size:13.5px;color:var(--navy-ink);max-width:62ch}
+.dh .close{appearance:none;border:1px solid #ffffff40;background:none;color:var(--navy-ink);font:inherit;font-size:12px;padding:4px 10px;cursor:pointer;border-radius:2px;white-space:nowrap}
+.dstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid var(--rule)}
+.dstats div{padding:10px 14px;border-right:1px solid var(--rule);min-width:0}
+.dstats div:last-child{border-right:0}
+.dstats .k{font-size:11px;color:var(--muted)}
+.dstats .v{font-family:var(--f-mono);font-size:15px}
+.dbody{overflow-y:auto;min-height:0;display:block}
+.dtabs{display:flex;gap:2px;border-bottom:1px solid var(--rule-strong);padding:0 14px;overflow-x:auto;position:sticky;top:0;background:var(--surface);z-index:1}
+.dtab{appearance:none;border:0;background:none;font:inherit;font-size:13px;color:var(--muted);padding:11px 10px 9px;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
+.dtab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--brass)}
+.dpane{padding:18px 22px 40px;display:grid;gap:18px;align-content:start}
+.dsec{display:grid;gap:8px}
+.dsec h3{font-family:var(--f-body);font-size:12px;letter-spacing:.1em;color:var(--brass);font-weight:600}
+.dsec ul,.dsec ol{margin:0;padding-left:1.2em;display:grid;gap:5px;max-width:70ch}
+.dsec p{margin:0;max-width:70ch}
+.dsec li{padding-left:2px}
+.ptbl{overflow-x:auto;border:1px solid var(--rule)}
+.ptbl table{font-size:12.5px}
+.mcard{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px 16px;border:1px solid var(--rule);padding:10px 12px;margin:6px 0 10px}
+.mcard .k{font-size:11px;color:var(--muted)}.mcard .v{font-size:14px;color:var(--ink)}
+.mopen{display:inline-block;border:1px solid var(--rule-strong);padding:6px 12px;color:var(--ink);text-decoration:none;font-size:13px}
+.mopen:hover{border-color:var(--brass)}
+.mframe{width:100%;height:78vh;min-height:520px;border:1px solid var(--rule);background:#fff;margin-top:8px}
+.ptbl th{position:static;background:var(--sunken)}
+.ptbl td{vertical-align:top}
+.mixbar{display:block;height:5px;background:var(--bar-soft);margin-top:4px;min-width:60px}
+.mixbar i{display:block;height:100%;background:var(--bar)}
+.tg{font-family:var(--f-mono);font-size:10px;color:var(--faint);overflow-wrap:anywhere}
+.sv{border-bottom:1px dotted var(--faint);cursor:help;outline:none}
+.sv:hover,.sv:focus{border-bottom-color:var(--brass);background:color-mix(in srgb,var(--brass) 12%,transparent)}
+.sm{font-size:9px;color:var(--faint);cursor:help;margin-left:1px;outline:none;vertical-align:super;line-height:0}
+.sm:hover,.sm:focus{color:var(--brass)}
+#srctip{position:fixed;z-index:40;max-width:min(420px,calc(100vw - 24px));background:var(--navy,#14213d);color:#fff;font-family:var(--f-mono);font-size:11px;line-height:1.45;padding:7px 9px;border-radius:3px;box-shadow:0 6px 18px #0000003a;pointer-events:none;overflow-wrap:anywhere}
+#srctip .h{font-family:var(--f-body);font-size:10px;letter-spacing:.08em;opacity:.7;margin-bottom:2px}
+details.srcs{margin-top:18px;border-top:1px solid var(--rule);padding-top:8px;font-size:11.5px;color:var(--muted)}
+details.srcs summary{cursor:pointer;font-size:11.5px;color:var(--muted)}
+details.srcs h4{margin:8px 0 2px;font-size:11px;font-weight:600;color:var(--brass);letter-spacing:.06em}
+details.srcs ol{margin:0;padding-left:1.6em;display:grid;gap:2px;font-family:var(--f-mono);font-size:10.5px;overflow-wrap:anywhere}
+.dmeta{display:flex;flex-wrap:wrap;gap:2px 18px;font-size:12px;color:var(--muted)}
+.dmeta .mi{display:inline-flex;gap:6px}
+.dmeta b{color:var(--ink);font-weight:500}
+.ev li{list-style:none;margin-left:-1.2em;padding-left:0;border-left:2px solid var(--rule-strong);padding:2px 0 2px 12px}
+.pending{padding:22px;color:var(--muted)}
+@media (max-width:600px){.dstats{grid-template-columns:repeat(2,minmax(0,1fr))}.dstats div:nth-child(2){border-right:0}.dh h2{font-size:20px}}
+
+.sv[data-src]{outline:none}
+button.chip{appearance:none;font-family:inherit;line-height:inherit;cursor:pointer}
+button.chip.m:hover{border-color:var(--ink)}
+.fbtn[disabled]{opacity:.45;cursor:default}
+.mopen.off{color:var(--faint);border-style:dashed;pointer-events:none}
+.pcard .ver{font-family:var(--f-mono);font-size:11px;color:var(--faint)}
+
 footer{border-top:1px solid var(--rule);padding-block:18px 28px;color:var(--faint);font-size:12px}
 
 @media (max-width:900px){
@@ -249,7 +310,7 @@ ul.lim{margin:0;padding-left:1.2em;display:grid;gap:5px;color:var(--muted)}
     <div>
       <div class="eyebrow">AI 軟體應用 · 價值重分配研究</div>
       <h1>AI 軟體地圖</h1>
-      <p>追蹤 AI 進入軟體與網路服務後，價值在模型層、平台層、應用層之間如何重新分配：哪些企業軟體、SaaS、IT 服務、網路平台與 AI 原生應用公司因 AI 受益或被侵蝕。先看五個計價原型的單位經濟，再看各次產業的覆蓋公司、地位與個股模型估值。</p>
+      <p>追蹤 AI 進入軟體與網路服務後，價值在模型層、平台層、應用層之間如何重新分配：哪些企業軟體、SaaS、IT 服務、網路平台與 AI 原生應用公司因 AI 受益或被侵蝕。先看五個計價原型的單位經濟，再看各次產業的覆蓋公司、地位與個股模型估值。點任何一家已建模的公司，開啟公司檔案（背景、競爭、客戶與股東、管理層、動態、個股模型）。</p>
     </div>
     <div class="meta" id="meta"></div>
   </div>
@@ -259,18 +320,20 @@ ul.lim{margin:0;padding-left:1.2em;display:grid;gap:5px;color:var(--muted)}
   <div class="wrap" role="tablist">
     <button class="tab" role="tab" id="t-map" data-v="map" aria-selected="true"><span class="ix">01</span>產業地圖</button>
     <button class="tab" role="tab" id="t-position" data-v="position" aria-selected="false"><span class="ix">02</span>產業地位</button>
-    <button class="tab" role="tab" id="t-val" data-v="val" aria-selected="false"><span class="ix">03</span>估值與評等</button>
-    <button class="tab" role="tab" id="t-models" data-v="models" aria-selected="false"><span class="ix">04</span>我們的模型</button>
-    <button class="tab" role="tab" id="t-method" data-v="method" aria-selected="false"><span class="ix">附</span>方法</button>
+    <button class="tab" role="tab" id="t-invest" data-v="invest" aria-selected="false"><span class="ix">03</span>可投資性</button>
+    <button class="tab" role="tab" id="t-profiles" data-v="profiles" aria-selected="false"><span class="ix">04</span>公司檔案</button>
+    <button class="tab" role="tab" id="t-method" data-v="method" aria-selected="false"><span class="ix">附</span>方法與來源</button>
   </div>
 </nav>
 <main class="wrap">
   <section class="view" id="v-map"></section>
   <section class="view" id="v-position" hidden></section>
-  <section class="view" id="v-val" hidden></section>
-  <section class="view" id="v-models" hidden></section>
+  <section class="view" id="v-invest" hidden></section>
+  <section class="view" id="v-profiles" hidden></section>
   <section class="view" id="v-method" hidden></section>
 </main>
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" hidden aria-modal="true" role="dialog" aria-labelledby="dname"></aside>
 <footer><div class="wrap" id="foot"></div></footer>
 <script>
 const D = /*__DATA__*/null;
@@ -285,6 +348,9 @@ const srcOf = o => (o && o.cell) ? ((o.file ? o.file.split("/").pop() + " " : D.
 const sv = (o, txt) => (o && o.value != null) ? `<span class="sv" title="${esc(srcOf(o))}">${txt}</span>` : DASH;
 const LAYERS = D.layers, SUBS = Object.fromEntries(D.subs.map(s => [s.code, s]));
 const RCLS = r => r || "未估值";
+const PF = D.profiles || {};
+const TIER = tk => { const m = D.models[tk]; return m && m.status === "ok" ? (m.tier || "未估值") : "未估值"; };
+const f1 = x => x == null ? DASH : Number(x).toFixed(1);
 
 /* ---------- header ---------- */
 function renderHead() {
@@ -307,9 +373,8 @@ function ratingDot(tk) {
 function chip(c) {
   const m = D.models[c.tk];
   const t = `<span class="t">${esc(c.tk)}</span>`;
-  if (m && m.status === "ok" && m.link) {
-    const r = ratingDot(c.tk);
-    return `<a class="chip m" href="${esc(m.link)}" title="${esc("個股模型 " + m.version + "｜" + (m.rec ? m.rec.value : ""))}"><span class="d ${esc(RCLS(r))}"></span>${esc(c.short)} ${t}</a>`;
+  if (m && m.status === "ok") {
+    return `<button class="chip m" data-open="${esc(c.tk)}" title="${esc("開啟公司檔案｜個股模型 " + m.version + "｜" + TIER(c.tk))}"><span class="d ${esc(TIER(c.tk))}"></span>${esc(c.short)} ${t}</button>`;
   }
   if (m) return `<span class="chip m rev" title="個股模型改版中（dist 無現行成品）"><span class="d 未估值"></span>${esc(c.short)} ${t}</span>`;
   return `<span class="chip" title="${esc(c.map_owner)}"><span class="d 未建模"></span>${esc(c.short)} ${t}</span>`;
@@ -332,7 +397,7 @@ function renderMap() {
     h += `<tr><td><b>${esc(s.name)}</b><span class="tagx"> ${esc(s.code)}</span></td><td>${esc(s.archetype)}</td><td class="n">${b ? sv(b, nf(b.value, 1)) : DASH}</td><td class="n ${n && n.value < 0 ? "neg" : "pos"}">${n ? sv(n, nf(n.value, 1)) : DASH}</td><td class="n">${x ? sv(x, nf(x.value, 1)) : DASH}</td><td class="n">${r ? sv(r, pct(r.value)) : DASH}</td></tr>`;
   }
   h += `</tbody></table></div></div>`;
-  h += `<div class="head"><h2>價值鏈地圖：五層、${D.subs.length} 個次產業</h2><p>每格列次產業、AI 方向（判斷，不進分數）、計價原型、全球營收池與覆蓋公司。有個股模型者標評等色並可點入；虛線框為模型改版中；空心圓為尚未建模。</p></div>`;
+  h += `<div class="head"><h2>價值鏈地圖：五層、${D.subs.length} 個次產業</h2><p>每格列次產業、AI 方向（判斷，不進分數）、計價原型、全球營收池與覆蓋公司。有個股模型者標評等色，點擊開啟公司檔案（個股模型在檔案的「個股模型」分頁）；虛線框為模型改版中；空心圓為尚未建模。</p></div>`;
   h += `<div class="legend"><span><i class="d 買進 leg-dot"></i>買進以上</span><span><i class="d 中立 leg-dot"></i>中立</span><span><i class="d 放空 leg-dot"></i>放空以下</span><span><i class="d 收支不足 leg-dot"></i>收支不足</span><span><i class="d 未估值 leg-dot"></i>模型改版中</span><span><i class="d 未建模 leg-dot"></i>尚未建模</span></div>`;
   for (const L of LAYERS) {
     h += `<div class="layer"><div class="rail"><span class="code">${esc(L.code)}</span><h3>${esc(L.title)}</h3><div class="cap">${L.subs.length} 個次產業｜覆蓋 ${L.n_cov} 家｜已建模 ${L.n_model} 家</div></div><div class="segs">`;
@@ -352,7 +417,7 @@ function renderMap() {
 const POSN = {1: "龍頭", 2: "前二／寡占", 3: "主要參與者", 4: "追隨者"};
 let posFilter = "ALL";
 function renderPosition() {
-  let h = `<div class="head"><h2>產業地位</h2><p>地位分數衡量「今天的市場地位」，不衡量 AI 讓它變好或變壞（後者是單位經濟與個股模型要回答的）。公司重要性 1 最重要；市場位置 1 龍頭、4 追隨者。亞太掛牌：「是」＝在日、韓、台、港、澳洲或中國 A 股掛牌。地圖歸屬：跨圖者以主圖模型為準。</p></div>`;
+  let h = `<div class="head"><h2>產業地位</h2><p>地位分數衡量「今天的市場地位」，不衡量 AI 讓它變好或變壞（後者是單位經濟與個股模型要回答的）。公司重要性 1 最重要；市場位置 1 龍頭、4 追隨者。亞太掛牌：「是」＝在日、韓、台、港、澳洲或中國 A 股掛牌。地圖歸屬：跨圖者以主圖模型為準。已建模的公司（名稱旁有評等）可點名稱開啟公司檔案。</p></div>`;
   h += `<div class="filters" id="pf"><button class="fbtn" data-f="ALL" aria-pressed="${posFilter === "ALL"}">全部（${D.position.length}）</button>` +
     D.subs.map(s => `<button class="fbtn" data-f="${esc(s.code)}" aria-pressed="${posFilter === s.code}">${esc(s.code)}（${s.n}）</button>`).join("") + `</div>`;
   const rows = D.position.filter(p => posFilter === "ALL" || p.sub === posFilter);
@@ -360,7 +425,7 @@ function renderPosition() {
   for (const p of rows) {
     const m = D.models[p.tk];
     const mp = m && m.status === "ok" && m.rec ? ` <span class="pill ${esc(m.rec.value)}">${esc(m.rec.value)}</span>` : "";
-    h += `<tr><td class="n">${p.rank_all == null ? DASH : nf(p.rank_all)}</td><td class="co"><b>${esc(p.name)}</b><span class="t">${esc(p.tk)}</span>${mp}<span class="s">${esc(p.basis)}</span></td><td>${esc(p.market)}</td><td>${esc(p.apac)}</td><td>${esc(p.sub_name)}<span class="tagx"> ${esc(p.sub)}</span></td><td class="n">${esc(p.imp)}</td><td>${esc(POSN[p.posn] || p.posn)}</td><td><div class="score"><span class="num">${nf(p.score, 1)}</span><span class="b"><i style="width:${Math.max(0, Math.min(100, p.score))}%"></i></span></div></td><td><span class="aid ${esc(p.ai)}">${esc(p.ai)}</span></td><td>${esc(p.map_owner)}</td></tr>`;
+    h += `<tr><td class="n">${p.rank_all == null ? DASH : nf(p.rank_all)}</td><td class="co">${m && m.status === "ok" ? `<button class="linkish" data-open="${esc(p.tk)}"><b>${esc(p.name)}</b></button>` : `<b>${esc(p.name)}</b>`}<span class="t">${esc(p.tk)}</span>${mp}<span class="s">${esc(p.basis)}</span></td><td>${esc(p.market)}</td><td>${esc(p.apac)}</td><td>${esc(p.sub_name)}<span class="tagx"> ${esc(p.sub)}</span></td><td class="n">${esc(p.imp)}</td><td>${esc(POSN[p.posn] || p.posn)}</td><td><div class="score"><span class="num">${nf(p.score, 1)}</span><span class="b"><i style="width:${Math.max(0, Math.min(100, p.score))}%"></i></span></div></td><td><span class="aid ${esc(p.ai)}">${esc(p.ai)}</span></td><td>${esc(p.map_owner)}</td></tr>`;
   }
   h += `</tbody></table></div></div>`;
   $("#v-position").innerHTML = h;
@@ -375,13 +440,59 @@ function relCell(m) {
   return `<span class="sv" title="${esc(tip)}">${r.geo_base.toFixed(2)}x</span><small>PS ${r.ps_reading == null ? DASH : r.ps_reading.toFixed(2)}／PSG ${r.psg_reading == null ? DASH : r.psg_reading.toFixed(2)}</small>` +
     (r.divergence_gt_30pct ? `<small class="neg">兩讀數差異大</small>` : "");
 }
-function renderVal() {
-  let h = `<div class="head"><h2>估值與評等</h2><p>目標價＝DCF 與 Comparable 加權（12 個月後）；上檔空間為相對現價的價差，不是年化報酬。評等依上檔空間五級，收支關卡不通過時買進以上改判「收支不足」。以下全部引用各公司個股模型成品的值；v0.2 以前的成品沒有的欄位（股票薪酬加回 DCF、相對倍數讀數）顯示「—」。</p></div>`;
-  h += `<div class="panel"><div class="tbl"><table class="v"><thead><tr><th>公司</th><th class="n">現價</th><th class="n">DCF</th><th class="n">Comparable</th><th class="n">加權目標價</th><th class="n">上檔空間</th><th>評等</th><th>收支關卡</th><th class="n">相對倍數基準</th><th class="n">DCF（股票薪酬加回）<br>對照</th><th>模型</th></tr></thead><tbody>`;
-  for (const tk of D.model_order) {
-    const m = D.models[tk];
+const YMIN = -1, YMAX = 1, XLO = 60, XHI = 100;
+const TIERS = ["強力買進", "買進", "中立", "放空", "強力放空", "收支不足", "未上市"];
+const TCOL = {強力買進: "var(--pos)", 買進: "var(--pos)", 中立: "var(--watch)", 放空: "var(--neg)", 強力放空: "var(--neg)", 收支不足: "var(--gap)", 未估值: "var(--none)"};
+function scatter() {
+  const W = 880, H = 420, mg = {l: 56, r: 24, t: 22, b: 44};
+  const pts = D.model_order.map(tk => D.models[tk]).filter(m => m.status === "ok" && m.upside && m.score != null).map(m => ({m, x: m.score, y: m.upside.value}));
+  const X = x => mg.l + (Math.max(XLO, Math.min(XHI, x)) - XLO) / (XHI - XLO) * (W - mg.l - mg.r);
+  const Y = y => mg.t + (1 - (Math.max(YMIN, Math.min(YMAX, y)) - YMIN) / (YMAX - YMIN)) * (H - mg.t - mg.b);
+  let g = "";
+  for (let i = 0; i <= 8; i++) { const y = YMIN + i * 0.25; g += `<line class="gl" x1="${mg.l}" x2="${W - mg.r}" y1="${Y(y)}" y2="${Y(y)}"/><text x="${mg.l - 8}" y="${Y(y) + 4}" text-anchor="end">${pct(y, 0)}</text>`; }
+  for (let x = XLO; x <= XHI; x += 10) g += `<line class="gl" y1="${mg.t}" y2="${H - mg.b}" x1="${X(x)}" x2="${X(x)}"/><text x="${X(x)}" y="${H - mg.b + 16}" text-anchor="middle">${x}</text>`;
+  g += `<line class="zl" x1="${mg.l}" x2="${W - mg.r}" y1="${Y(0)}" y2="${Y(0)}"/>`;
+  g += `<text x="${(mg.l + W - mg.r) / 2}" y="${H - 6}" text-anchor="middle">地位分數 →</text><text transform="translate(14 ${(mg.t + H - mg.b) / 2}) rotate(-90)" text-anchor="middle">中心空間（加權目標價 ÷ 現價 − 1）</text>`;
+  g += `<text class="q" x="${W - mg.r - 6}" y="${mg.t + 14}" text-anchor="end">高地位 · 現價未反映</text><text class="q" x="${W - mg.r - 6}" y="${H - mg.b - 8}" text-anchor="end">高地位 · 現價已超前</text>`;
+  const placed = [];
+  pts.sort((p, q) => q.x - p.x || q.y - p.y).forEach(p => {
+    const cx = X(p.x), cy = Y(p.y);
+    const right = cx > W - mg.r - 150;
+    let ly = cy - 9, tries = 0;
+    while (placed.some(q => q.right === right && Math.abs(q.x - cx) < 120 && Math.abs(q.y - ly) < 12) && tries < 8) { ly += 13; tries++; }
+    placed.push({x: cx, y: ly, right});
+    const mark = p.y > YMAX ? `<path d="M${cx - 5} ${cy + 4} L${cx} ${cy - 4} L${cx + 5} ${cy + 4}" fill="${TCOL[p.m.tier]}"/>` : `<circle cx="${cx}" cy="${cy}" r="5.5" fill="${TCOL[p.m.tier] || "var(--none)"}" stroke="var(--surface)" stroke-width="1.5"/>`;
+    g += `<g data-open="${esc(p.m.tk)}" style="cursor:pointer"><title>${esc(p.m.name)}：地位 ${f1(p.x)}，中心空間 ${pct(p.y)}，${esc(p.m.tier)}（點擊開啟公司檔案）</title>${mark}<text class="lab" x="${right ? cx - 9 : cx + 9}" y="${ly + 4}" text-anchor="${right ? "end" : "start"}">${esc(p.m.name)}</text></g>`;
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="地位分數與中心空間散布圖">${g}</svg>`;
+}
+let invFilter = "全部";
+function renderInvest() {
+  const all = D.model_order.map(tk => D.models[tk]);
+  const okm = all.filter(m => m.status === "ok");
+  const cnt = t => okm.filter(m => m.tier === t).length;
+  const ord = Object.fromEntries(TIERS.map((t, i) => [t, i]));
+  const list = all.filter(m => invFilter === "全部" || (m.status === "ok" && m.tier === invFilter))
+    .sort((p, q) => ((ord[p.tier] ?? 9) - (ord[q.tier] ?? 9)) || (((q.upside || {}).value ?? -9) - ((p.upside || {}).value ?? -9)));
+  const names = t => okm.filter(m => m.tier === t).map(m => esc(m.name)).join("、");
+  const fail = okm.filter(m => m.gate && m.gate.status && m.gate.status !== "通過");
+  const top = okm.slice().sort((p, q) => (p.rank_all ?? 999) - (q.rank_all ?? 999)).slice(0, 5);
+  let h = `<div class="head"><span class="label">視角 03</span><h2>可投資性：現價反映了多少</h2><p><b>兩道關卡，順序固定。</b>第一關「收支」：基準情境期間自由現金流（扣股利）合計為負即入不敷出；評價原為買進以上者改列「收支不足」（不列買進），中立以下維持原級。第二關「評價」：中心價＝個股模型的加權目標價（DCF 與 Comparable 加權，約 12 個月後）；中心空間＝中心價 ÷ 現價 − 1（即上檔空間，是持有期間價差，不是年化報酬）；分級依五級規則：&gt;+50% 強力買進、+25～+50% 買進、−25～+25% 中立、−50～−25% 放空、&lt;−50% 強力放空。現價為各模型的股價基準日收盤，表中逐家列日期。以下全部引用個股模型成品的值；這是研究模型的輸出，不是投資建議。</p></div>`;
+  h += `<div class="callouts">` +
+    `<div class="callout"><b>分級分布：已建模 ${okm.length} 家</b>${TIERS.filter(t => cnt(t)).map(t => `${t} ${cnt(t)} 家（${names(t)}）`).join("；")}。${all.length > okm.length ? `另有 ${all.length - okm.length} 家模型改版中。` : ""}</div>` +
+    `<div class="callout"><b>收支關卡：入不敷出 ${fail.length} 家</b>${fail.length ? fail.map(m => `${esc(m.name)}（${esc(m.tier)}）`).join("、") + "。評價買進以上者改列收支不足。" : `${okm.filter(m => m.gate && m.gate.status === "通過").length} 家的基準情境期間自由現金流合計為正，沒有因收支改判的個股。`}各家關卡口徑（期間、是否扣股利）見表中游標提示。</div>` +
+    `<div class="callout"><b>地位排名最前的已建模公司</b>${top.map(m => `${esc(m.name)}（第 ${nf(m.rank_all)} 名，地位 ${f1(m.score)}）：${esc(m.tier)}、中心空間 ${m.upside ? pct(m.upside.value) : DASH}`).join("；")}。地位分數衡量今天的市場地位，不代表現價便宜。</div>` +
+    `<div class="callout"><b>判讀 DCF 與 Comparable 的落差</b>高股票薪酬公司的標準 DCF 把股票薪酬當費用，常遠低於 Comparable 與現價；表中另列「DCF（股票薪酬加回）」對照讀數，口徑說明見本頁最下方。</div></div>`;
+  h += `<div class="panel"><div class="ph"><h3>地位 × 可投資性</h3><span class="note">右上：產業位置強、現價仍低於模型中心價。橫軸為地位分數（${XLO}–${XHI}），縱軸為中心空間（−100% ～ +100%，超出以三角形標在上緣）。點任一點開啟公司檔案。</span></div><div class="pb chart">${scatter()}</div></div>`;
+  h += `<div class="panel"><div class="ph"><h3>收支 → 評價 · ${TIERS.filter(t => cnt(t)).map(t => `${t} ${cnt(t)}`).join(" · ")}</h3><div class="filters" id="if">` +
+    ["全部", ...TIERS].map(l => { const n = l === "全部" ? all.length : cnt(l); return `<button class="fbtn" data-if="${l}" aria-pressed="${l === invFilter}"${n ? "" : " disabled"}>${l}（${n}）</button>`; }).join("") + `</div></div>`;
+  h += `<div class="tbl"><table class="v"><thead><tr><th>公司</th><th>分級</th><th>收支關卡</th><th class="n">現價</th><th class="n">DCF</th><th class="n">Comparable</th><th class="n">中心價<br>（加權目標價）</th><th class="n">中心空間<br>（上檔空間）</th><th class="n">相對倍數基準</th><th class="n">DCF（股票薪酬加回）<br>對照</th><th>個股模型</th></tr></thead><tbody>`;
+  if (!list.length) h += `<tr><td colspan="11" class="dim">這個分級目前沒有公司。</td></tr>`;
+  for (const m of list) {
+    const tk = m.tk;
+    const nm = m.status === "ok" ? `<button class="linkish" data-open="${esc(tk)}"><b>${esc(m.name)}</b></button>` : `<b>${esc(m.name)}</b>`;
     if (m.status !== "ok") {
-      h += `<tr><td class="co"><b>${esc(m.name)}</b><span class="t">${esc(tk)}</span><span class="s">${esc(m.sub_name)}</span></td><td colspan="9" class="dim">${esc(m.status)}</td><td>${DASH}</td></tr>`;
+      h += `<tr id="r-${esc(tk)}"><td class="co">${nm}<span class="t">${esc(tk)}</span><span class="s">${esc(m.sub_name)}</span></td><td colspan="9" class="dim">${esc(m.status)}</td><td>${DASH}</td></tr>`;
       continue;
     }
     const d = (m.price && m.price.value >= 1000) ? 0 : 2;
@@ -393,8 +504,8 @@ function renderVal() {
     let sbc = DASH;
     if (m.sbc_dcf) sbc = sv(m.sbc_dcf, money(m, m.sbc_dcf.value, d));
     else if (m.sbc_abc) sbc = `<span class="sv" title="${esc(m.sbc_abc.cells[1] + "｜" + m.sbc_abc.label)}">${money(m, m.sbc_abc.values[1], d)}</span><small>情境 B</small>`;
-    const lk = m.link ? `<a href="${esc(m.link)}">${esc(m.version)}</a>` : esc(m.version);
-    h += `<tr><td class="co"><b>${esc(m.name)}</b><span class="t">${esc(tk)}</span><span class="s">${esc(m.sub_name)}</span></td><td class="n">${pr}</td><td class="n">${m.dcf ? sv(m.dcf, money(m, m.dcf.value, d)) : DASH}</td><td class="n">${m.comp ? sv(m.comp, money(m, m.comp.value, d)) : DASH}</td><td class="n"><b>${m.tp ? sv(m.tp, money(m, m.tp.value, d)) : DASH}</b></td><td class="n">${up}</td><td>${rec}${vr}</td><td>${gt}</td><td class="n">${relCell(m)}</td><td class="n sbcn">${sbc}</td><td>${lk}<small>${esc(m.date)}</small></td></tr>`;
+    const lk = `<button class="linkish" data-open="${esc(tk)}" data-tab="5">${esc(m.version)}</button>`;
+    h += `<tr id="r-${esc(tk)}"><td class="co">${nm}<span class="t">${esc(tk)}</span><span class="s">${esc(m.sub_name)}</span></td><td>${rec}${vr}</td><td>${gt}</td><td class="n">${pr}</td><td class="n">${m.dcf ? sv(m.dcf, money(m, m.dcf.value, d)) : DASH}</td><td class="n">${m.comp ? sv(m.comp, money(m, m.comp.value, d)) : DASH}</td><td class="n"><b>${m.tp ? sv(m.tp, money(m, m.tp.value, d)) : DASH}</b></td><td class="n">${up}</td><td class="n">${relCell(m)}</td><td class="n sbcn">${sbc}</td><td>${lk}<small>${esc(m.date)}</small></td></tr>`;
   }
   h += `</tbody></table></div></div>`;
   // scenarios
@@ -409,64 +520,144 @@ function renderVal() {
   h += `</tbody></table></div><div class="srcnote" style="padding:8px 12px">收支關卡的單位與口徑因公司而異（游標停在數字上看列標籤）；AI 淨效果為命題模組的 FY2032E 營業利益（或淨效果）情境值，單位見列標籤，沒有命題模組輸出者顯示「—」。</div></div>`;
   h += `<div class="panel"><div class="ph"><h3>DCF 口徑說明：高股票薪酬公司的 DCF 為何遠低於現價</h3></div><div class="pb"><ul class="lim">` +
     D.dcf_notes.map(t => `<li>${esc(t)}</li>`).join("") + `</ul></div></div>`;
-  $("#v-val").innerHTML = h;
+  $("#v-invest").innerHTML = h;
 }
 
-/* ---------- 04 models ---------- */
-function renderModels() {
-  let h = `<div class="head"><h2>我們的模型</h2><p>每家一張卡，連到個股模型成品 HTML（站內相對路徑）。版本與日期取 dist/ 下最新成品；個股模型的命題、營收分部、損益表與估值細節都在各自頁面內。</p></div><div class="mcards">`;
-  for (const tk of D.model_order) {
-    const m = D.models[tk];
-    const ok = m.status === "ok";
-    h += `<div class="mc"><h3><span>${esc(m.name)}</span><span class="tk">${esc(tk)}</span></h3><div class="srcnote">${esc(m.sub_name)}｜${esc(m.layer)}</div>`;
-    if (ok) {
-      h += `<div class="row"><span>評等</span><span>${m.rec ? `<span class="pill ${esc(m.rec.value)}">${esc(m.rec.value)}</span>` : DASH}</span></div>` +
-        `<div class="row"><span>加權目標價</span><b>${m.tp ? money(m, m.tp.value, (m.price && m.price.value >= 1000) ? 0 : 2) : DASH}</b></div>` +
-        `<div class="row"><span>版本</span><b>${esc(m.version)}（${esc(m.date)}）</b></div>`;
-      if (m.link) h += `<a class="mopen" href="${esc(m.link)}">開啟 ${esc(m.version)} 個股模型</a>`;
-      else h += `<span class="mopen off">尚無 HTML 成品</span>`;
-      if (m.html_note) h += `<div class="warn">${esc(m.html_note)}</div>`;
-    } else {
-      h += `<div class="warn">${esc(m.status)}</div><span class="mopen off">個股模型改版中</span>`;
-    }
-    h += `</div>`;
+/* ---------- 04 profiles ---------- */
+function renderProfiles() {
+  const ms = D.model_order.map(tk => D.models[tk]).filter(m => m.status === "ok");
+  const n = ms.filter(m => PF[m.tk]).length;
+  let h = `<div class="head"><span class="label">視角 04</span><h2>公司檔案：先懂公司，再看數字</h2><p>每家已建模的公司一份背景資料：在做什麼、主要產品與營收占比、市場位置、管理層、同業競爭、主要客戶與前十大股東、近期重大事件與需要觀察的事項；個股模型放在檔案的「個股模型」分頁。點卡片開啟。主文不夾出處：游標停在數字（虛線底）或 ⓘ 上可看資料出處，各頁底部也列出全部出處。已完成 ${n} / ${ms.length} 家。</p></div>`;
+  for (const L of LAYERS) {
+    const list = ms.filter(m => m.layer.startsWith(L.code)).sort((p, q) => (q.score ?? 0) - (p.score ?? 0));
+    if (!list.length) continue;
+    h += `<div class="grp">${esc(L.code)} ${esc(L.title)}</div><div class="pgrid">` + list.map(m => { const pf = PF[m.tk];
+      return `<button class="pcard" data-open="${esc(m.tk)}"><span class="top"><b>${esc(m.name)} <span class="t">${esc(m.tk)}</span></b><span class="pill ${esc(m.tier)}">${esc(m.tier)}</span></span><span class="co"><span class="s">${esc(m.sub_name)} · 地位 ${f1(m.score)}</span></span><p>${pf ? pf.oneliner : "（撰寫中）"}</p><span class="ver">個股模型 ${esc(m.version)}（${esc(m.date)}）</span></button>`; }).join("") + `</div>`;
   }
-  h += `</div>`;
-  $("#v-models").innerHTML = h;
+  $("#v-profiles").innerHTML = h;
 }
+const DT = [["概要", ["公司在做什麼", "主要產品與營收占比"]], ["產業與競爭", ["市場定位與產業位置", "同業與競爭態勢"]], ["客戶與股東", ["主要客戶", "前十大股東"]], ["管理層", ["管理層與經營風格"]], ["動態與觀察", ["近期重大事件", "需要觀察的事項"]], ["個股模型", null], ["來源", ["來源"]]];
+function modelPane(tk) {
+  const m = D.models[tk];
+  if (!m || m.status !== "ok") return '<div class="pending">這家公司的個股模型改版中。</div>';
+  const d = (m.price && m.price.value >= 1000) ? 0 : 2;
+  let h = `<section class="dsec"><h3>${esc(m.name)} 個股模型 · ${esc(m.version)}</h3>` +
+    `<div class="mcard"><div><div class="k">成品日期</div><div class="v mono">${esc(m.date)}</div></div><div><div class="k">中心價（加權目標價）</div><div class="v mono">${m.tp ? money(m, m.tp.value, d) : DASH}</div></div><div><div class="k">現價（${esc((m.price || {}).date || DASH)}）</div><div class="v mono">${m.price ? money(m, m.price.value, d) : DASH}</div></div><div><div class="k">分級</div><div class="v"><span class="pill ${esc(m.tier)}">${esc(m.tier)}</span></div></div><div><div class="k">收支關卡</div><div class="v">${esc((m.gate || {}).status || DASH)}</div></div></div>`;
+  if (!m.link) return h + `<p class="note">尚無 HTML 成品；數字的權威在 Excel 版 <code>${esc(m.xlsx)}</code>。</p></section>`;
+  h += `<p class="note">以下嵌入本專案模型成品（HTML 版，與 Excel 版 <code>${esc(m.xlsx)}</code> 同一版次；可在嵌入框內切換分頁）。數字的權威在 Excel 版。${m.html_note ? esc(m.html_note) + "。" : ""}</p>` +
+    `<p><a class="mopen" href="${esc(m.link)}" target="_blank" rel="noopener">在新分頁開啟完整模型 ↗</a></p>` +
+    `<iframe class="mframe" src="${esc(m.link)}" loading="lazy" title="${esc(m.name)} 個股模型"></iframe></section>`;
+  return h;
+}
+let lastFocus = null, curTk = null;
+function decorateMix(root) {
+  root.querySelectorAll(".ptbl").forEach(t => {
+    const hs = [...t.querySelectorAll("th")].map(x => x.textContent.trim()); const j = hs.findIndex(x => x.includes("營收占比"));
+    if (j < 0) return;
+    t.querySelectorAll("tbody tr").forEach(tr => { const td = tr.children[j]; if (!td) return; const mm = td.textContent.match(/(\d+(?:\.\d+)?)\s*%/);
+      if (mm) { const x = Math.min(100, parseFloat(mm[1])); td.insertAdjacentHTML("beforeend", `<span class="mixbar"><i style="width:${x}%"></i></span>`); } });
+  });
+}
+function srcList(pf, secs) {
+  const N = pf.notes || {}; const g = secs.filter(s => N[s] && N[s].length); if (!g.length) return "";
+  const n = g.reduce((a, s) => a + N[s].length, 0);
+  return `<details class="srcs"><summary>本頁資料出處（${n}）· 游標停在數字或 ⓘ 上也可看</summary>${g.map(s => `<h4>${esc(s)}</h4><ol>${N[s].map(x => `<li>${esc(x)}</li>`).join("")}</ol>`).join("")}</details>`;
+}
+function paneHtml(pf, i) {
+  if (DT[i][1] === null) return modelPane(curTk);
+  if (!pf) return '<div class="pending">這家公司的檔案尚未完成；個股模型請看「個股模型」分頁。</div>';
+  const secs = DT[i][1];
+  return secs.map(s => `<section class="dsec${s === "近期重大事件" ? " ev" : ""}"><h3>${s}</h3>${pf.sections[s] || '<p class="note">（未填）</p>'}</section>`).join("") +
+    srcList(pf, i === 0 ? ["基本資料", ...secs] : secs[0] === "來源" ? Object.keys(pf.notes || {}) : secs);
+}
+/* 出處懸浮提示：主文不寫出處，游標停（或鍵盤／觸控聚焦）在數字上顯示 */
+(function () {
+  const tip = document.createElement("div"); tip.id = "srctip"; tip.hidden = true; tip.setAttribute("role", "tooltip"); document.body.appendChild(tip);
+  const showTip = el => { const s = el.getAttribute("data-src"); if (!s) return;
+    tip.innerHTML = `<div class="h">資料出處</div>${esc(s)}`; tip.hidden = false;
+    const r = el.getBoundingClientRect(), w = tip.offsetWidth, hh = tip.offsetHeight;
+    let x = Math.min(Math.max(8, r.left), innerWidth - w - 8), y = r.bottom + 6; if (y + hh > innerHeight - 8) y = r.top - hh - 6;
+    tip.style.left = x + "px"; tip.style.top = y + "px"; };
+  const hide = () => { tip.hidden = true; };
+  document.addEventListener("mouseover", e => { const el = e.target.closest && e.target.closest("[data-src]"); el ? showTip(el) : hide(); });
+  document.addEventListener("focusin", e => { const el = e.target.closest && e.target.closest("[data-src]"); el ? showTip(el) : hide(); });
+  document.addEventListener("click", e => { const el = e.target.closest && e.target.closest("[data-src]"); el ? showTip(el) : hide(); });
+  document.addEventListener("scroll", hide, true);
+})();
+function setPane(i) {
+  const pf = PF[curTk];
+  document.querySelectorAll("#drawer .dtab[data-dt]").forEach(b => b.setAttribute("aria-selected", String(+b.dataset.dt === i)));
+  $("#dpane").innerHTML = paneHtml(pf, i);
+  if (pf) decorateMix($("#dpane"));
+  $("#drawer .dbody").scrollTop = 0;
+}
+function openDrawer(tk, tab) {
+  const m = D.models[tk]; if (!m || m.status !== "ok") return;
+  const pf = PF[tk], meta = pf ? pf.meta : {};
+  tab = tab || 0;
+  curTk = tk; lastFocus = document.activeElement;
+  const stats = [["產業位置", esc(m.sub_name)], ["地位分數", `${f1(m.score)} · 第 ${nf(m.rank_all)} 名`],
+    ["分級", `<span class="pill ${esc(m.tier)}">${esc(m.tier)}</span> <span class="gate ${(m.gate || {}).status === "通過" ? "ok" : "no"}" style="display:inline">收支${esc((m.gate || {}).status || DASH)}</span>`],
+    ["中心空間", m.upside ? `<span class="${m.upside.value < 0 ? "dn" : "up"}">${pct(m.upside.value)}</span>` : DASH]];
+  const ML = {name_full: "全名", hq: "總部", founded: "成立", employees: "員工", fiscal_year_end: "會計年度結束", asof: "資料日"};
+  $("#drawer").innerHTML = `<div class="dh"><div class="row1"><div><div class="sub">${esc(m.layer)} · ${meta.listing || esc(tk)}</div><h2 id="dname">${esc(m.name)}</h2></div><button class="close" id="dclose">關閉 Esc</button></div>` +
+    `<div class="one">${pf ? pf.oneliner : "公司檔案撰寫中。"}</div>` +
+    (pf ? `<div class="dmeta" style="color:var(--navy-muted)">${Object.keys(ML).filter(k => meta[k]).map(k => `<span class="mi"><span>${ML[k]}</span><b style="color:var(--navy-ink)">${meta[k]}</b></span>`).join("")}</div>` : "") + `</div>` +
+    `<div class="dstats">${stats.map(([k, x]) => `<div><div class="k">${k}</div><div class="v">${x}</div></div>`).join("")}</div>` +
+    `<div class="dbody"><div class="dtabs" role="tablist">${DT.map((d, i) => `<button class="dtab" role="tab" data-dt="${i}" aria-selected="${i === tab}">${d[0]}</button>`).join("")}<button class="dtab" data-goval="${esc(tk)}">估值 →</button></div><div class="dpane" id="dpane"></div></div>`;
+  $("#drawer").hidden = false; $("#scrim").hidden = false; document.body.style.overflow = "hidden";
+  setPane(tab);
+  $("#dclose").focus();
+}
+function closeDrawer() { $("#drawer").hidden = true; $("#scrim").hidden = true; document.body.style.overflow = ""; curTk = null; if (lastFocus && lastFocus.focus) lastFocus.focus(); }
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#drawer").hidden) closeDrawer(); });
 
 /* ---------- method ---------- */
 function renderMethod() {
   const P = D.params;
   const sec = (t, body) => `<div class="panel"><div class="ph"><h3>${t}</h3></div><div class="pb">${body}</div></div>`;
-  let h = `<div class="head"><h2>方法</h2><p>本頁說明地圖怎麼排、數字從哪來、哪些地方不能當真。數字一律來自活頁簿與模型成品。</p></div>`;
+  let h = `<div class="head"><span class="label">附錄</span><h2>方法與來源</h2><p>本頁說明地圖怎麼排、數字從哪來、哪些地方不能當真。數字一律來自活頁簿與模型成品；公司檔案的來源規則見「公司檔案」一節。</p></div>`;
   h += sec("地位分數", `<p>地位分數 ＝ ${P.w_irr} × 不可替代性分 ＋ ${P.w_pos} × 市場位置分 ＋ ${P.w_vc} × 價值鏈分量分。不可替代性分＝（次產業不可替代性換分＋公司重要性換分）÷ 2（1→${P.s_irr1}、2→${P.s_irr2}、3→${P.s_irr3}）。市場位置：龍頭→${P.s_pos1}、前二或寡占→${P.s_pos2}、主要參與者→${P.s_pos3}、追隨者→${P.s_pos4}。軟體沒有 BOM，價值鏈分量改用「次產業全球營收池」分級。同一公司可出現在多個次產業，排名以列計。</p>`);
   h += sec("營收池分級", `<p>營收池中值（十億美元）≥ ${P.pool_t1} → 100；≥ ${P.pool_t2} → 75；≥ ${P.pool_t3} → 50；以下 25。營收池來自第三方研調與公司揭露（標 Analogy 或 Interested-party），為區間中值，單位經濟模型完成的次產業以模型為準。</p>`);
   h += sec("單位經濟五原型", `<p>計算單位是「AI 前的 1 個單位」：按人力（L）、按席位（S）、按廣告（A）、按用量（U）、按防護範圍（P）。每個原型逐年（${D.ue.years.join("、")} 與其間年份）算：AI 營收增量、定價侵蝕、推論成本，淨效果＝增量 − 侵蝕 − 推論成本。推論成本只讀 Tokenomics 快照（${esc(D.ue.tokenomics)}），不自行估價；未來 token 單價路徑尚待登錄，以區間作敏感度。毛利路徑與推論成本占營收成本比同表呈現。</p>`);
   h += sec("相對倍數：PS ＋ PSG", `<p>Comparable 使用的相對倍數，取本公司對同業的「歷史相對值」：PS＝市值 ÷ TTM 營收；PSG＝PS ÷ TTM 營收年增（以百分點計）。兩條序列各取最近 ${D.relmult_window} 個財季，有效點少於 ${D.relmult_min} 者只作參考、不進基準。PS 讀數＝PS 歷史相對中位數；PSG 讀數＝PSG 歷史相對中位數 × 目前本公司對同業的成長比。基準＝兩讀數的幾何平均；兩讀數差異過大時須寫明原因。規格見 software_ai/docs/plan 的「歷史相對倍數」。</p>`);
   h += sec("DCF 與評等規格", `<ul class="lim">${D.dcf_spec.map(t => `<li>${esc(t)}</li>`).join("")}</ul>`);
   h += sec("評等五級", `<div class="defs"><dl class="def" style="margin:0">${D.rating_bands.map(b => `<dt>${esc(b.name)}</dt><dd>${esc(b.rule)}</dd>`).join("")}</dl></div>`);
+  h += sec("公司檔案", `<p>每家已建模的公司一份 Markdown（software_ai/map/profiles/&lt;代號&gt;.md），格式與 AI 算力地圖的公司檔案相同。數字只取本專案檔案（研究包、個股模型成品），標「本專案」並記檔案位置；本專案沒有的數字寫「本專案未建立」。管理層身分、主要客戶、前十大股東取自公司申報與股東資料，標「外部・未經本專案檢核」；近期重大事件取自新聞，標「外部新聞」。背景知識用途，不含目標價與評等（這兩項只由個股模型帶入）。個股模型成品嵌在檔案的「個股模型」分頁。已完成 ${Object.keys(PF).length} 家。</p>`);
   h += sec("限制與未找到摘要", `<ul class="lim">${D.limits.map(t => `<li>${esc(t)}</li>`).join("")}</ul>`);
   h += sec("資料日期與來源", `<div class="defs"><dl class="def" style="margin:0">${D.sources.map(s => `<dt>${esc(s.k)}</dt><dd>${esc(s.v)}</dd>`).join("")}</dl></div>`);
   $("#v-method").innerHTML = h;
 }
 
 /* ---------- tabs ---------- */
-const VIEWS = ["map", "position", "val", "models", "method"];
-function show(v) {
+const VIEWS = ["map", "position", "invest", "profiles", "method"];
+const ALIAS = {val: "invest", models: "profiles"};          // v0.1 的分頁錨點
+function show(v, scrollTo) {
+  v = ALIAS[v] || v;
   if (!VIEWS.includes(v)) v = "map";
   for (const x of VIEWS) {
     $("#v-" + x).hidden = x !== v;
     $("#t-" + x).setAttribute("aria-selected", x === v ? "true" : "false");
   }
+  if (scrollTo) { const el = document.getElementById("r-" + scrollTo); if (el) el.scrollIntoView({block: "center"}); }
 }
 document.addEventListener("click", e => {
-  const t = e.target.closest(".tab");
+  const c = e.target.closest ? e.target : e.target.parentNode;
+  const t = c.closest(".tab");
   if (t) { show(t.dataset.v); try { history.replaceState(null, "", "#" + t.dataset.v); } catch (_) {} return; }
-  const f = e.target.closest("#pf .fbtn");
+  if (c.closest("#dclose") || c.closest("#scrim")) { closeDrawer(); return; }
+  const gv = c.closest("[data-goval]");
+  if (gv) { const tk = gv.dataset.goval; closeDrawer(); invFilter = "全部"; renderInvest(); show("invest", tk); try { history.replaceState(null, "", "#invest"); } catch (_) {} return; }
+  const dt = c.closest(".dtab[data-dt]");
+  if (dt) { setPane(+dt.dataset.dt); return; }
+  const op = c.closest("[data-open]");
+  if (op) { e.preventDefault(); openDrawer(op.dataset.open, +(op.dataset.tab || 0)); return; }
+  const iff = c.closest("[data-if]");
+  if (iff) { if (!iff.disabled) { invFilter = iff.dataset.if; renderInvest(); } return; }
+  const f = c.closest("#pf .fbtn");
   if (f) { posFilter = f.dataset.f; renderPosition(); }
 });
-renderHead(); renderMap(); renderPosition(); renderVal(); renderModels(); renderMethod();
+renderHead(); renderMap(); renderPosition(); renderInvest(); renderProfiles(); renderMethod();
 show((location.hash || "").slice(1));
 </script>
 </body>

@@ -118,9 +118,43 @@ def main():
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
+    # ---- (2b) v0.2：每家模型帶出的地位與分級、公司檔案 ----
+    pos1 = {}
+    for p in data["position"]:
+        pos1.setdefault(p["tk"], p)
+    pf = data.get("profiles", {})
+    for tk, mm in data["models"].items():
+        ok(mm["score"] == pos1[tk]["score"] and mm["rank_all"] == pos1[tk]["rank_all"], f"{tk} 地位分數與排名 = 地位表")
+        if mm["status"] == "ok":
+            ok(mm["tier"] == mm["rec"]["value"], f"{tk} 分級 = 模型投資建議")
+            ok(tk in pf and not pf[tk]["missing"], f"{tk} 有公司檔案且章節齊全")
+    TAG = re.compile(r"\[(本專案|外部|Verified|Interested-party|Derived|判斷|Analogy|Assumed|同上)[^\]]*\]")
+    left, badlink, badtag = [], [], []
+    for tk, d in pf.items():
+        parts = list(d["sections"].items()) + [("一句話定位", d["oneliner"])] + [("基本資料", v) for v in d["meta"].values()]
+        for sec, h in parts:
+            if TAG.search(re.sub(r'data-src="[^"]*"', "", h)):
+                left.append((tk, sec))
+            if sec != "來源" and re.search(r"<a\s", h):
+                badlink.append((tk, sec))
+            if re.search(r"<(script|iframe|img|link|style)\b", h, re.I):
+                badtag.append((tk, sec))
+    ok(not left, f"公司檔案主文無殘留出處標記{left[:5] if left else ''}")
+    ok(not badlink, f"公司檔案的外部連結只在「來源」節{badlink[:5] if badlink else ''}")
+    ok(not badtag, f"公司檔案不含可執行或外部載入的標籤{badtag[:5] if badtag else ''}")
+    pf_text = json.dumps(pf, ensure_ascii=False)
+    pf_personal = ["玉山", "Andy", "投資處", "持倉", "可投資", "亞太基金", "強力買進", "強力放空"]   # 「同事」「目標價」在新聞事件中是產品名與賣方動作，不列
+    hits = [b for b in pf_personal if b in pf_text]
+    ok(not hits, "公司檔案不含個人情境字樣與評等用語" + (f"：命中 {hits}" if hits else ""))
+    # 以下 (3)(4) 的外部網址與個人情境檢查對「頁面骨架＋非公司檔案資料」做：公司檔案是外部背景資料，
+    # 「來源」節需要可點的出處，內文也會出現「董事長」「持股」等職稱與會計用語，已在上面另行檢查。
+    full_html = html
+    html = html.replace(json.dumps(data, ensure_ascii=False), json.dumps({k: v for k, v in data.items() if k != "profiles"}, ensure_ascii=False))
+    ok("profiles" not in json.loads(re.search(r"const D = (.*?);\nconst DASH", html, re.S).group(1)), "骨架檢查已排除公司檔案資料")
+
     # ---- (3) 外部網址與錯誤值 ----
-    ok(not re.search(r"https?:|//[a-z0-9.-]+\.[a-z]{2,}", re.sub(r"<!--.*?-->", "", html), re.I), "網頁無外部網址（http／https／協定相對網址）")
-    ok(not re.search(r"<(script|link|img|iframe)[^>]+(src|href)=[\"']?(https?:|//)", html, re.I), "無外部載入資源")
+    ok(not re.search(r"https?:|//[a-z0-9.-]+\.[a-z]{2,}", re.sub(r"<!--.*?-->", "", html), re.I), "網頁無外部網址（http／https／協定相對網址；公司檔案「來源」節除外）")
+    ok(not re.search(r"<(script|link|img|iframe)[^>]+(src|href)=[\\]?[\"']?(https?:|//)", full_html, re.I), "無外部載入資源（含公司檔案）")
     hrefs = re.findall(r'href="([^"]+)"', html) + re.findall(r"href=\\\"([^\\\"]+)\\\"", html)
     hrefs = [h for h in hrefs if not h.startswith("${")]          # 模板運算式（值由 data.json 的 link 帶入，另於下一項檢查）
     ok(all(h.startswith(("models/", "../")) for h in hrefs), f"連結皆為站內相對路徑（{len(hrefs)} 個 href 於模板，含站際切換）")
@@ -128,7 +162,8 @@ def main():
     ok(not re.search(r"#(DIV/0!|N/A|REF!|VALUE!|NAME\?|NUM!|NULL!)|Err:\d{3}|\bNaN\b|undefined", html), "網頁無 # 錯誤值、NaN、undefined 字樣")
     # ---- (4) 個人情境與骨架 ----
     banned = ["玉山", "基金", "部位", "持倉", "持股", "Andy", "董事長", "投資處", "先驗", "可投資", "同事", "個人"]
-    hits = [b for b in banned if b in html]
+    # v0.2：分頁名稱與 AI 算力地圖一致，改用『可投資性』；它是分頁名稱，不是個人情境，比對前排除這一個詞
+    hits = [b for b in banned if b in html.replace("可投資性", "")]
     ok(not hits, f"不含個人情境字樣（{'、'.join(banned)}）" + (f"：命中 {hits}" if hits else ""))
     # 個股網頁複本與地圖活頁簿：只查明確的個人情境字樣（「先驗」「持股」在個股文中為方法／會計用語，不列）
     personal = ["玉山", "基金", "部位", "持倉", "Andy", "董事長", "投資處", "可投資", "同事"]
@@ -152,6 +187,7 @@ def main():
         h = [b for b in personal if b in t]
         if h: xh[os.path.basename(xp)] = h
     ok(not xh, "地圖活頁簿不含個人情境字樣" + (f"：{xh}" if xh else ""))
+    ok(all(x in html for x in ("產業地圖</button>", "產業地位</button>", "可投資性</button>", "公司檔案</button>", "方法與來源</button>")), "五個分頁名稱與 AI 算力地圖一致（第一個為產業地圖）")
     ok('<html lang="zh-Hant">' in html and '<meta charset="utf-8">' in html and 'name="viewport"' in html, "html lang、charset、viewport")
     sw = re.search(r'<nav class="site-switch".*?</nav>', html, re.S)
     ok(sw is not None and 'href="../"' in sw.group(0) and 'href="../physical/"' in sw.group(0) and "軟體 AI" in sw.group(0) and 'class="tab' not in sw.group(0), "站際切換 算力｜實體 AI｜軟體 AI，未用 .tab")

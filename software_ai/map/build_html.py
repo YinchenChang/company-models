@@ -12,6 +12,7 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 
 import openpyxl
@@ -19,8 +20,10 @@ import openpyxl
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
 SW = os.path.join(ROOT, "software_ai")
-BUILT = "2026-11-17"          # 頁首日期集中在此維護
-VERSION = "v0.1"
+sys.path.insert(0, os.path.join(ROOT, "markets", "invest_map"))   # 公司檔案解析程式沿用 AI 算力地圖的 profiles_md.py（唯讀引用，不複製）
+from profiles_md import load_all  # noqa: E402
+BUILT = "2026-11-23"          # 頁首日期集中在此維護
+VERSION = "v0.2"
 
 RATING_BANDS = [   # 個股模型原則第 24 條（各模型 Val 頁同文）；這是規則常數，不是模型輸出
     {"name": "強力買進", "rule": "加權目標價上檔空間 > +50%"},
@@ -142,7 +145,7 @@ def main():
             raise SystemExit(f"個股模型 {tk} 不在地位活頁簿")
         p = pos_by_tk[tk]
         rm = m.get("relmult")
-        rec = {"folder": m["folder"], "name": p["short"], "sub": p["sub"], "sub_name": p["sub_name"], "layer": p["layer"],
+        rec = {"tk": tk, "score": p["score"], "rank_all": p["rank_all"], "folder": m["folder"], "name": p["short"], "sub": p["sub"], "sub_name": p["sub_name"], "layer": p["layer"],
                "status": m["status"], "ccy": rm["ccy"] if rm else None}
         if m["status"] == "ok":
             for k in ("price", "dcf", "comp", "tp", "upside", "rating", "rec", "scen", "sbc_dcf", "sbc_abc", "ai_net"):
@@ -169,6 +172,8 @@ def main():
             else:
                 rec["link"] = None
                 rec["html_note"] = "尚無 HTML 成品"
+        if m["status"] == "ok":
+            rec["tier"] = (rec.get("rec") or {}).get("value") or "未估值"      # 分級＝模型的投資建議（已含收支關卡）
         rec["relmult"] = ({k: rm[k] for k in ("file", "generated", "ps_reading", "psg_reading", "geo_base", "divergence", "divergence_gt_30pct", "valid_points", "gaps", "peers")} if rm else None)
         models[tk] = rec
 
@@ -226,6 +231,15 @@ def main():
         {"k": "抽數", "v": f'software_ai/map/extract_models.py（{ext["generated"]}）；每個數字在 data/models_extract.json 記檔名與儲存格'},
     ]
     n_models_ok = len(ok)
+    # ---- 公司檔案（v0.2）：software_ai/map/profiles/<代號>.md ----
+    profiles = {k: v for k, v in load_all(os.path.join(HERE, "profiles")).items() if k in models}
+    for k, v in profiles.items():
+        if v["missing"]:
+            raise SystemExit(f"公司檔案 {k} 缺章節：{v['missing']}")
+    no_pf = [m["name"] for tk, m in models.items() if m["status"] == "ok" and tk not in profiles]
+    if no_pf:
+        limits.append("公司檔案尚未完成：" + "、".join(no_pf))
+    sources.append({"k": "公司檔案", "v": f"software_ai/map/profiles/<代號>.md，{len(profiles)} 家；格式規格 markets/invest_map/profiles/00_格式規格.md；工作單 software_ai/docs/workorders/20261123_AI軟體地圖_v0.2_版面對齊與公司檔案.md"})
     data = {
         "meta": {"version": VERSION, "built": BUILT, "position_book": os.path.basename(src),
                  "ue_file": os.path.basename(ue["file"]) if ue else "—", "ue_version": ue["version"] if ue else "—", "ue_date": ue["date"] if ue else "—",
@@ -238,7 +252,7 @@ def main():
         "layers": [dict(l, n_cov=sum(next(s for s in subs if s["code"] == c)["n"] for c in l["subs"]),
                         n_model=sum(1 for c in l["subs"] for x in next(s for s in subs if s["code"] == c)["companies"] if x["tk"] in models))
                    for l in layers],
-        "subs": subs, "position": position, "models": models, "model_order": order, "ue": ue_out, "params": params,
+        "subs": subs, "position": position, "models": models, "profiles": profiles, "model_order": order, "ue": ue_out, "params": params,
         "rating_bands": RATING_BANDS, "dcf_notes": DCF_NOTES, "dcf_spec": DCF_SPEC, "limits": limits, "sources": sources,
         "relmult_window": vp.get("window_quarters"), "relmult_min": vp.get("min_required"),
     }
@@ -249,7 +263,7 @@ def main():
         f.write(html)
     with open(os.path.join(HERE, "dist", "data.json"), "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=1)
-    print(f"寫出 dist/index.html：{len(subs)} 次產業、{len(position)} 檔地位、{n_models_ok}／{len(models)} 個股模型有現行成品")
+    print(f"寫出 dist/index.html：{len(subs)} 次產業、{len(position)} 檔地位、{n_models_ok}／{len(models)} 個股模型有現行成品、{len(profiles)} 份公司檔案")
 
 
 if __name__ == "__main__":
