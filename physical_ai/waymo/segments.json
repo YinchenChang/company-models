@@ -1,0 +1,14 @@
+{
+ "company": "Waymo",
+ "ticker": "Waymo（Alphabet 分部，未上市）",
+ "model_sheet": "估值",
+ "official_segments": [
+  {
+   "name": "Robotaxi 乘車營收（美國＋國際）",
+   "label": "Robotaxi 乘車營收（美國＋國際）",
+   "source": "未上市：Alphabet 不單獨揭露 Waymo（併入 Other Bets）；營收組成未揭露，以單一乘車營收列表示（原則第 5 條）"
+  }
+ ],
+ "sublines": [],
+ "check_labels": []
+}

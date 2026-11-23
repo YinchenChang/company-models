@@ -1,0 +1,16 @@
+{
+ "company": "Tesla",
+ "ticker": "TSLA",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "Automotive", "label": "汽車分部營收（官方分部）", "period": "FY2025", "value": 82056, "unit": "US$M",
+   "source": "10-K FY2025：汽車營收 69,526＋服務及其他 12,530（Derived；分部合計＝合併營收 94,827）"},
+  {"name": "Energy generation and storage", "label": "能源分部營收（官方分部）", "period": "FY2025", "value": 12771, "unit": "US$M",
+   "source": "10-K FY2025 能源發電與儲存營收"}
+ ],
+ "sublines": [
+  {"parent": "Automotive", "labels": ["車輛銷售（非 FSD／Robotaxi）", "FSD", "Robotaxi", "碳權", "汽車租賃", "服務及其他"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收"],
+ "note": "Optimus 尚未列報，PL 另列「Optimus（尚未列報；模型新增）」，歷史期為 0，含在分部合計核對內。歷史四季分部對帳見 Hist 頁。"
+}
