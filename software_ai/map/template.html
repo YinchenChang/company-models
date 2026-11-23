@@ -376,12 +376,12 @@ function relCell(m) {
     (r.divergence_gt_30pct ? `<small class="neg">兩讀數差異大</small>` : "");
 }
 function renderVal() {
-  let h = `<div class="head"><h2>估值與評等</h2><p>目標價＝DCF 與 Comparable 加權（12 個月後）；上檔空間為相對現價的價差，不是年化報酬。評等依上檔空間五級，收支關卡不通過時買進以上改判「收支不足」。以下全部引用各公司個股模型成品的值；v0.2 以前的成品沒有的欄位（股票薪酬加回 DCF、相對倍數讀數）顯示「—」。</p></div>`;
-  h += `<div class="panel"><div class="tbl"><table class="v"><thead><tr><th>公司</th><th class="n">現價</th><th class="n">DCF</th><th class="n">Comparable</th><th class="n">加權目標價</th><th class="n">上檔空間</th><th>評等</th><th>收支關卡</th><th class="n">相對倍數基準</th><th class="n">DCF（股票薪酬加回）<br>對照</th><th>模型</th></tr></thead><tbody>`;
+  let h = `<div class="head"><h2>估值與評等</h2><p>目標價＝DCF 與 Comparable 加權（12 個月後）；上檔空間為相對現價的價差，不是年化報酬。評等依上檔空間五級，收支關卡不通過時買進以上改判「收支不足」。以下全部引用各公司個股模型成品的值；v0.2 以前的成品沒有的欄位（股票薪酬加回 DCF、相對倍數讀數）顯示「—」。「SBC 揭露狀態」依各模型輸入頁股票薪酬列自己的標記與說明判定（完整／只有下限／未揭露）：未揭露或只有下限的公司，「DCF（股票薪酬加回）對照」會等於或接近標準 DCF，那是沒有資料，不是股票薪酬為零。</p></div>`;
+  h += `<div class="panel"><div class="tbl"><table class="v"><thead><tr><th>公司</th><th class="n">現價</th><th class="n">DCF</th><th class="n">Comparable</th><th class="n">加權目標價</th><th class="n">上檔空間</th><th>評等</th><th>收支關卡</th><th class="n">相對倍數基準</th><th class="n">DCF（股票薪酬加回）<br>對照</th><th>SBC 揭露狀態</th><th>模型</th></tr></thead><tbody>`;
   for (const tk of D.model_order) {
     const m = D.models[tk];
     if (m.status !== "ok") {
-      h += `<tr><td class="co"><b>${esc(m.name)}</b><span class="t">${esc(tk)}</span><span class="s">${esc(m.sub_name)}</span></td><td colspan="9" class="dim">${esc(m.status)}</td><td>${DASH}</td></tr>`;
+      h += `<tr><td class="co"><b>${esc(m.name)}</b><span class="t">${esc(tk)}</span><span class="s">${esc(m.sub_name)}</span></td><td colspan="10" class="dim">${esc(m.status)}</td><td>${DASH}</td></tr>`;
       continue;
     }
     const d = (m.price && m.price.value >= 1000) ? 0 : 2;
@@ -393,8 +393,12 @@ function renderVal() {
     let sbc = DASH;
     if (m.sbc_dcf) sbc = sv(m.sbc_dcf, money(m, m.sbc_dcf.value, d));
     else if (m.sbc_abc) sbc = `<span class="sv" title="${esc(m.sbc_abc.cells[1] + "｜" + m.sbc_abc.label)}">${money(m, m.sbc_abc.values[1], d)}</span><small>情境 B</small>`;
+    // 外部稽核優化 W3-8(d)（2026-11-23）：SBC 揭露狀態（完整／只有下限／未揭露）。未揭露時加回對照會等於標準 DCF，不代表股票薪酬為零
+    const ss = m.sbc_status;
+    const sbcSt = ss ? `<span class="sv" title="${esc((ss.cell ? ss.cell + "｜" : "") + ss.basis)}">${esc(ss.status)}</span>` +
+      (ss.status === "未揭露" ? `<small>${ss.zero ? "模型以零帶入，不代表為零" : "模型用代理值或無值，不代表為零"}</small>` : ss.status === "只有下限" ? `<small>只涵蓋部分對象，實際較高</small>` : "") : DASH;
     const lk = m.link ? `<a href="${esc(m.link)}">${esc(m.version)}</a>` : esc(m.version);
-    h += `<tr><td class="co"><b>${esc(m.name)}</b><span class="t">${esc(tk)}</span><span class="s">${esc(m.sub_name)}</span></td><td class="n">${pr}</td><td class="n">${m.dcf ? sv(m.dcf, money(m, m.dcf.value, d)) : DASH}</td><td class="n">${m.comp ? sv(m.comp, money(m, m.comp.value, d)) : DASH}</td><td class="n"><b>${m.tp ? sv(m.tp, money(m, m.tp.value, d)) : DASH}</b></td><td class="n">${up}</td><td>${rec}${vr}</td><td>${gt}</td><td class="n">${relCell(m)}</td><td class="n sbcn">${sbc}</td><td>${lk}<small>${esc(m.date)}</small></td></tr>`;
+    h += `<tr><td class="co"><b>${esc(m.name)}</b><span class="t">${esc(tk)}</span><span class="s">${esc(m.sub_name)}</span></td><td class="n">${pr}</td><td class="n">${m.dcf ? sv(m.dcf, money(m, m.dcf.value, d)) : DASH}</td><td class="n">${m.comp ? sv(m.comp, money(m, m.comp.value, d)) : DASH}</td><td class="n"><b>${m.tp ? sv(m.tp, money(m, m.tp.value, d)) : DASH}</b></td><td class="n">${up}</td><td>${rec}${vr}</td><td>${gt}</td><td class="n">${relCell(m)}</td><td class="n sbcn">${sbc}</td><td>${sbcSt}</td><td>${lk}<small>${esc(m.date)}</small></td></tr>`;
   }
   h += `</tbody></table></div></div>`;
   // scenarios

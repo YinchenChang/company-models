@@ -563,10 +563,27 @@ def main():
                         f"市場主流 Comparable（未調整）{m['tp_comp_main']['value']:,.1f}（{m['tp_comp_main']['cell']}）；"
                         f"價格帶 C～A 情境 DCF {m['dcf_C']['value']:,.1f}～{m['dcf_A']['value']:,.1f}")
             else:
-                note = (f"DCF 目標價 {m['tp_dcf']['value']:,.1f}（{m['tp_dcf']['cell']}）；"
-                        f"Comparable 目標價 {m['tp_comp']['value']:,.1f}（{m['tp_comp']['cell']}）；"
+                # 外部稽核優化 W3-1（2026-11-23）：tp_comp 是未調整的市場主流同業法、不進加權；進加權的是相對倍數調整後（tp_comp_adj，規則 X30）。
+                # 兩者並列並標明，讀者才不會拿 DCF 與未調整值平均去對加權目標價。沒有調整後列的模型 Comparable 直接進加權，照實標示。
+                if "tp_comp_adj" in m:
+                    un = m.get("tp_comp_main", m["tp_comp"])     # Anthropic：tp_comp 已是調整後，未調整值在 tp_comp_main
+                    comp_txt = (f"Comparable 目標價（未調整，不進加權）{un['value']:,.1f}（{un['cell']}）、"
+                                + ("調整後（進加權）" if "tp_comp_main" in m else "相對倍數調整後（進加權）")     # Anthropic 的調整是 FCF 利益率比例，不是相對倍數
+                                + f"{m['tp_comp_adj']['value']:,.1f}（{m['tp_comp_adj']['cell']}）；")
+                elif m.get("seg_model"):
+                    comp_txt = f"Comparable 目標價（＝分部加總，直接進加權；本模型無相對倍數調整）{m['tp_comp']['value']:,.1f}（{m['tp_comp']['cell']}）；"
+                else:
+                    comp_txt = f"Comparable 目標價（直接進加權；本模型未做相對倍數調整）{m['tp_comp']['value']:,.1f}（{m['tp_comp']['cell']}）；"
+                # 外部稽核優化 W3-8(c)（2026-11-23）：DCF 目標價為 0（每股價值被 MAX(0,…) 截斷，規則 X13）時，加權目標價只剩 Comparable 支撐
+                leg_txt = "Comparable 單腿：DCF 每股價值被 MAX(0,…) 截為 0（有限責任），加權目標價只剩 Comparable 支撐；" if (abs(m['tp_dcf']['value']) < 1e-12 and m['tp']['value'] > 0) else ""
+                # 外部稽核優化 W3-3（2026-11-23，J2）：Coord 頁 C4 兩讀數評等不同時加一句（並列是三層基準協調規則的要求，不是缺陷）；評等為模型日價
+                c4 = m.get("coord")
+                c4_txt = (f"；兩讀數評等不同（對帳中，三層基準協調規則 C4；模型日價）：現行基準讀數 {c4['rec_cur']['value']}（目標價 {c4['tp_cur']['value']:,.1f}）、"
+                          f"另一側讀數 {c4['rec_alt']['value']}（目標價 {c4['tp_alt']['value']:,.1f}，{c4['tp_alt']['cell']}）" if (c4 and c4["differ"]) else "")
+                note = (leg_txt + f"DCF 目標價 {m['tp_dcf']['value']:,.1f}（{m['tp_dcf']['cell']}）；"
+                        + comp_txt
                         + (f"市場共識目標價 {m['tp_cons']['value']:,.1f}（{m['tp_cons']['cell']}，外部、僅供對照）；" if "tp_cons" in m else "")
-                        + f"價格帶 C～A 情境 DCF {m['dcf_C']['value']:,.1f}～{m['dcf_A']['value']:,.1f}")
+                        + f"價格帶 C～A 情境 DCF {m['dcf_C']['value']:,.1f}～{m['dcf_A']['value']:,.1f}" + c4_txt)
         elif tk in ("MSFT", "AMZN", "GOOGL", "ORCL", "CRWV", "NBIS", "WYFI"):
             method = "模型加權目標價"   # v0.5.1（Andy 2026-10-26）：不顯示模型自身評等（含「賣出」），改用本地圖五級
             c1 = m["target"]

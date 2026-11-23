@@ -18,7 +18,13 @@ LAB = {  # Val 頁列標籤（與 tools/target_summary/build_summary.py、market
     "up": r"^上檔空間：加權目標價",
 }
 KEYS = ("tp", "dcf", "comp", "up")
-NAMES = {"tp": "加權目標價（DCF 與 Comparable 加權）", "dcf": "DCF 目標價（情境加權）", "comp": "Comparable 目標價（市場主流同業法；未調整）", "up": "上檔空間（加權目標價 ÷ 現價 − 1；相對現行欄＝百分點差）"}
+# 外部稽核優化 W3-1（2026-11-23）：comp 列是未調整的市場主流同業法，不進加權（進加權的是相對倍數調整後，規則 X30）；
+# 列名寫明，並在同一列右側（E–G 欄）並列調整後的值。放右側而不插列，既有儲存格位置都不動。
+# 模型沒有 tp_comp_adj（Comparable 直接進加權）時沿用舊列名，不加「不進加權」。
+NAME_COMP_PLAIN = "Comparable 目標價（市場主流同業法；未調整）"
+ADJ_HDR = "並列：Comparable 目標價（相對倍數調整後；進加權）"
+ADJ_LAB = "Comparable 目標價（相對倍數調整後；進加權）"
+NAMES = {"tp": "加權目標價（DCF 與 Comparable 加權）", "dcf": "DCF 目標價（情境加權）", "comp": "Comparable 目標價（市場主流同業法；未調整，不進加權）", "up": "上檔空間（加權目標價 ÷ 現價 − 1；相對現行欄＝百分點差）"}
 REC = lambda c: f'IF({c}>0.5,"強力買進",IF({c}>0.25,"買進",IF({c}>=-0.25,"中立",IF({c}>=-0.5,"放空","強力放空"))))'   # Val 頁五級固定規則
 
 
@@ -85,9 +91,21 @@ def add_sheet(wb, folder, SIL):
     for j, h in enumerate(["項目", "現行基準讀數（Siliconomics 基準；橫幅主值）", "另一側讀數（Wattonomics 換算的產業 GW）", "另一側相對現行"]):
         c = ws.cell(r, 1 + j, h); c.font = BOLD; c.fill = HDR
     R["hdr"] = r; r += 1
+    has_adj = "tp_comp_adj" in wb.defined_names      # 外部稽核優化 W3-1：有相對倍數調整後的值才標「不進加權」並並列
+    if has_adj:
+        for j, h in enumerate([ADJ_HDR, "現行基準讀數", "另一側讀數"]):
+            c = ws.cell(R["hdr"], 5 + j, h); c.font = BOLD; c.fill = HDR
+        ws.column_dimensions["E"].width = 46
+        ws.column_dimensions["F"].width = ws.column_dimensions["G"].width = 16
     for k in KEYS:
         R[k] = r
-        ws.cell(r, 1, NAMES[k])
+        ws.cell(r, 1, NAMES[k] if (k != "comp" or has_adj) else NAME_COMP_PLAIN)
+        if k == "comp" and has_adj:
+            # 另一側讀數的調整後值＝另一側未調整值 × 調整係數（係數與讀數無關；＝現行調整後 ÷ 現行未調整）
+            ws.cell(r, 5, ADJ_LAB)
+            ws.cell(r, 6, "=tp_comp_adj").number_format = "#,##0.00"
+            ws.cell(r, 7, f'=IF(B{r}=0,"",C{r}*F{r}/B{r})').number_format = "#,##0.00"
+            R["comp_adj"] = r
         ws.cell(r, 2, f"=Val!B{V[k]}")
         ws.cell(r, 3, J["alt"][k])
         if k == "up":
@@ -140,10 +158,15 @@ def inject_html(cfg, xlsx):
     cfg["hero"]["note"] = list(cfg["hero"]["note"]) + [" ", f"@Coord!B{r_hero}"]
     rows = [r_tp, r_dcf, r_comp, r_up]
     fm = lambda r: "sp1" if r == r_up else "n2"
+    trows = []
+    for r in rows:
+        trows.append([f"@Coord!A{r}", f"@Coord!B{r}|{fm(r)}", f"@Coord!C{r}|{fm(r)}", f"@Coord!D{r}|sp1"])
+        # 外部稽核優化 W3-1（2026-11-23）：未調整列之後並列「相對倍數調整後（進加權）」的兩讀數值（Coord 同列 E–G 欄）
+        if r == r_comp and CW.cell(r, 5).value == ADJ_LAB:
+            trows.append([f"@Coord!E{r}", f"@Coord!F{r}|n2", f"@Coord!G{r}|n2", ""])
     tbl = {"type": "table", "caption": ["兩讀數目標價（對帳中：", f"@Coord!B{r_yrs}", "）——現行基準讀數與另一側讀數並列"],
            "head": ["項目", f"@Coord!B{r_cur}", f"@Coord!B{r_alt}", "另一側相對現行"],
-           "rows": [[f"@Coord!A{r}", f"@Coord!B{r}|{fm(r)}", f"@Coord!C{r}|{fm(r)}", f"@Coord!D{r}|sp1"] for r in rows]
-                   + [[f"@Coord!A{r_rec}", f"@Coord!B{r_rec}", f"@Coord!C{r_rec}", ""]]}
+           "rows": trows + [[f"@Coord!A{r_rec}", f"@Coord!B{r_rec}", f"@Coord!C{r_rec}", ""]]}
     V = wb["Val"]
     px = next((r for r in range(1, V.max_row + 1) if re.match(r"^現價（", str(V.cell(r, 1).value or ""))), None)
     bars = {"type": "bars", "title": "兩讀數的加權目標價與現價（豎線＝現價）", "fmt": "n2",

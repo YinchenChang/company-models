@@ -261,12 +261,14 @@ def write_detail(ws, r0, paths, years, frac0, conv_from=None, title=None, fmt="#
         else:
             one("val", "每股價值（評價日）＝MAX(0,(EV＋淨現金與投資) ÷ 股數)", f"=MAX(0,(C{D['ev']}+dcf_nc)/sh_v)")
         one("v12", "每股價值推到目標時點 ×（1＋ke）^t_tgt − 期間股利", f"=C{D['val']}*(1+ke)^t_tgt-dps_tgt", nt="DCF 情境價值推到 12 個月後")
-        one("tvsh", "終值現值占 EV", f"=C{D['pvtv']}/C{D['ev']}", "0.0%")
+        # 外部稽核優化 W3-8(a)（2026-11-23）：企業價值 ≤ 0 時「終值占企業價值」是無意義的百分比（負值或正負相消），改顯示「不適用」；
+        # 企業價值為正時公式結果與原本相同。下方 80% 檢查同步改為先判斷是否為數值（文字與數字比大小在試算表恆為真，會誤報「超過 80%」）。
+        one("tvsh", "終值現值占 EV", f'=IF(C{D["ev"]}>0,C{D["pvtv"]}/C{D["ev"]},"不適用")', "0.0%", "企業價值 ≤ 0 時比例無意義，不顯示百分比")
         one("mult", "隱含終值 EV／EBITDA（最後一年後一年預估）", f"=C{D['tv']}/(({last}{D['ebit']}+{last}{D['da']})*(1+g_tv))", "0.0", "EBITDA＝EBIT＋折舊攤銷")
         one("ssck", "一致性：最後一年資本支出 ≥ 折舊 ×（1＋g）", f'=IF({last}{D["cx"]}>={last}{D["da"]}*(1+g_tv),"通過","未通過")', "@")
         one("fsum", "明確期 FCFF 合計（× 評價日後比例，未折現）", f"=SUMPRODUCT(C{D['fcff']}:{last}{D['fcff']},C${fr}:{last}${fr})")
         one("ck_f", "檢查：FCFF 各列加總 − FCFF（各年合計，應為 0）", f"=SUM(C{D['nopat']}:{last}{D['nopat']})+SUM(C{D['da']}:{last}{D['da']})-SUM(C{D['cx']}:{last}{D['cx']})-SUM(C{D['dwc']}:{last}{D['dwc']})-SUM(C{D['fcff']}:{last}{D['fcff']})", "0.000000")
-        one("ck_tv", "檢查：終值占 EV 超過 80%？（規格第 4 節；超過時在報告標示）", f'=IF(C{D["tvsh"]}>0.8,"超過 80%，需在報告標示","未超過")', "@")
+        one("ck_tv", "檢查：終值占 EV 超過 80%？（規格第 4 節；超過時在報告標示）", f'=IF(ISNUMBER(C{D["tvsh"]}),IF(C{D["tvsh"]}>0.8,"超過 80%，需在報告標示","未超過"),"不適用（企業價值 ≤ 0）")', "@")
         R["paths"][p["name"]] = D
         r += 1
     R["end"] = r

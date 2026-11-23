@@ -463,6 +463,9 @@ V.cell(r, 1, "本公司 2026-05-14 上市，無十年前瞻倍數歷史（tools/
 vrow("rmk", "相對倍數調整係數", 1, e="資料不足時＝1（不調整）", fmt="0.00")
 vrow("compadj", "Comparable 目標價（相對倍數調整後）", f"=Val!$B${R_COMP}*B{T['rmk']}", e="＝Comparable 目標價（市場主流同業法）× 調整係數；加權目標價使用本列")
 dn("tp_comp_adj", f"Val!$B${T['compadj']}")
+# 外部稽核優化 W3-1（2026-11-23）：0.3 結論的未調整 Comparable 列加註「未調整，不進加權」並並列調整後的值（共用 tools/relative_multiple.py；不改數值格）
+import relative_multiple as _RM_W3  # noqa: E402
+_RM_W3.mark_unadjusted(V, "#,##0.00", upto=T["rmk"])
 r += 1
 r = FD.write_checks(V, r, nc_bs="Q!F35+Q!F36+inv_k*Q!F37-Q!F42-Q!F43", nc_note="現金＋短期投資＋受限現金 − OpenAI 貸款 − 租賃（Q 頁 2026-09-30）")
 for c, w in zip("ABCDEF", (60, 14, 14, 14, 90, 30)): V.column_dimensions[c].width = w

@@ -161,11 +161,55 @@ def add_block(wb, ws, own, peers, metric="PE", comp_ref=None, pxfmt="#,##0", own
         ws.cell(R["adj"], 2).fill = KEY
         wb.defined_names["tp_comp_adj"] = DefinedName("tp_comp_adj", attr_text=f"{ws.title}!$B${R['adj']}")
     wb.defined_names["rm_factor"] = DefinedName("rm_factor", attr_text=f"{ws.title}!$B${R['fac']}")
+    if comp_ref:
+        R["marked"] = mark_unadjusted(ws, pxfmt, upto=r0)
     R["head"] = h
     R["first"] = first
     R["last"] = last
     R["title"] = r0
     return R
+
+
+# 外部稽核優化 W3-1（2026-11-23）：Val 頁「0.3 結論」的「Comparable 目標價（市場主流同業法）」與「上檔空間：Comparable 目標價」
+# 顯示的是未調整值，卻沒寫明它不進加權；讀者把 DCF 與它平均會對不上加權目標價（進加權的是相對倍數調整後，規則 X30）。
+# 做法：不改 A 欄列名（各家後處理、Coord、目標價總表、地圖擷取都依列名找列），只在該列說明欄（E 欄）加註並並列調整後的值。
+# 不改任何數值格；說明欄已有文字時接在後面，已有公式時不動（回傳值記錄，供檢查）。
+MARK_COMP = "未調整，不進加權"
+_MARK_ROWS = (("comp", "Comparable 目標價（市場主流同業法）"), ("upc", "上檔空間：Comparable 目標價"))
+
+
+def mark_unadjusted(ws, pxfmt="#,##0", upto=None, col=5):
+    """在 Val 頁既有的未調整 Comparable 列加註「未調整，不進加權」並並列調整後的值（tp_comp_adj）。
+    upto：只看這一列之前（第 0.5 節之前的既有內容）。回傳 {鍵: [(列號, 狀態)]}；狀態＝written／appended／skipped。"""
+    nf = pxfmt if pxfmt and pxfmt != "General" else "#,##0"
+    nf = nf.replace('"', '""')
+    out = {}
+    for r in range(1, (upto or ws.max_row + 1)):
+        a = ws.cell(r, 1).value
+        if not isinstance(a, str) or ws.cell(r, 2).value is None:
+            continue
+        for k, lab in _MARK_ROWS:
+            if not a.startswith(lab) or MARK_COMP in a:
+                continue
+            if k == "comp":
+                txt = f'"{MARK_COMP}（規則：加權目標價＝DCF 與「相對倍數調整後」的 Comparable 加權）；相對倍數調整後（進加權）＝"&TEXT(tp_comp_adj,"{nf}")&"，見本頁第 0.5 節"'
+            else:
+                txt = f'"本列用未調整的 Comparable 目標價（市場主流同業法），不進加權；相對倍數調整後（進加權）的 Comparable 目標價＝"&TEXT(tp_comp_adj,"{nf}")'
+            c = ws.cell(r, col)
+            old = c.value
+            if old is None or (isinstance(old, str) and not old.strip()):
+                c.value = "=" + txt
+                st = "written"
+            elif isinstance(old, str) and not old.startswith("="):
+                if MARK_COMP in old or "不進加權" in old:
+                    st = "skipped"
+                else:
+                    c.value = "=" + _xl_text(old.rstrip("。；") + "；") + "&" + txt
+                    st = "appended"
+            else:
+                st = "skipped"      # 說明欄已有公式或數值：不動
+            out.setdefault(k, []).append((r, st))
+    return out
 
 
 # ---- 一次接入（2026-10-29）：各建檔程式在 wb.save 之前呼叫 RM.apply(wb, "<資料夾>") ----
