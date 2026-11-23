@@ -248,7 +248,7 @@ def coord(wb, C):
         c = ws.cell(r, j, h); c.font = BOLD; c.fill = HDR
     r += 1
     F1a = r
-    ws.cell(r, 1, f"讀取層級：Tokenomics（算力單位經濟）——本模型讀 {TKV} 快照（工作單所列現行 v22.0 不在本輪換快照；換快照另走 Tokenomics 同步通知，不影響本輪 C0）；"
+    ws.cell(r, 1, f"讀取層級：Tokenomics（算力單位經濟）——本模型讀 {TKV} 快照（與 Tokenomics 現行版相同；外部稽核優化 W3-5，2026-11-23 由 v21.10 換入，本模型所讀名稱數值相同，不影響 C0）；"
                   "Wattonomics——本模型不讀（無 WIF_ 名稱進模型），v0.3.2 快照只用於下方 C0 對帳列；反向：Wattonomics 讀本模型寫回的資本支出（見下列「反向讀取」）"); ws.cell(r, 1).font = BOLD; r += 1
 
     def f1(name, yr, lv, adopt, unit, layer, note, fmt="0.000"):
@@ -515,7 +515,7 @@ def coord(wb, C):
     ws.cell(r, 4, f"=C{wrows['ye26']}").number_format = "0.000"; ws.cell(r, 5, f"=C{wrows['ye26s']}").number_format = "0.000"; ws.cell(r, 6, f"=D{r}/E{r}-1").number_format = SPCT
     ws.cell(r, 7, "參考（層級之間，不判定）"); ws.cell(r, 8, "Wattonomics PlayerGW_YE orcl 2026（資本支出路徑，同源於公司實績與指引）"); ws.cell(r, 10, "Wattonomics PlayerGW_YE orcl SiteOnly 2026（園區證據）"); rly = r; r += 1
     ws.cell(r, 1, "外部估計（賣方、研調、指引）只列參考，不判定：公司 FY27 資本支出指引（90–95）、RPO 664 等不進 C0。"); r += 1
-    ws.cell(r, 1, "版本與快照狀態：Tokenomics 本模型讀 v21.10（工作單所列現行 v22.0 未換）；Wattonomics v0.3.2 也讀 Tokenomics，版本由該層自行維護，本頁只標示。Oracle 模型值曾被 Wattonomics 讀入（資本支出寫回），本表只列層級值與追公式，不用該回饋判定；反向讀取核對見 F1。")
+    ws.cell(r, 1, "版本與快照狀態：Tokenomics 本模型讀 " + TKV + "（現行版；外部稽核優化 W3-5，2026-11-23 由 v21.10 換入，本模型所讀名稱數值相同）；Wattonomics v0.3.2 也讀 Tokenomics，版本由該層自行維護，本頁只標示。Oracle 模型值曾被 Wattonomics 讀入（資本支出寫回），本表只列層級值與追公式，不用該回饋判定；反向讀取核對見 F1。")
     r += 1
     return dict(F1=(F1a, F1b_), F1chk=F1chk, F1c=rF1c, rb=(rb0, rb1), rbc=rbc, wrows=wrows, F1R=F1R, F2h=F2h, F2hh=F2hh, F2=(F2a, F2b), rq=(rq3, rq4, rq1, rq9), rchk=rchk, rdec=rdec, r8=r8, rl=rl, rli=rli,
                 rd1=rd1, rd2=rd2, rfl=rfl, rfs=rfs, rj=rj, rjr=rjr, rg=rg, rb_=rb_, ra=(ra1, ra2, ra3), rc1=rc1, rc2=rc2, rc3=rc3, rcu=rcu, rmw=rmw, rmw2=rmw2,

@@ -52,7 +52,7 @@ for _qf in ARGS.q3v03:
         FACTS.setdefault(k, {"id": k})
         FACTS[k] = dict(FACTS[k], value=v)
 CONS = json.load(open(os.path.join(HERE, "data", "consensus_amzn_20261008.json"), encoding="utf-8"))
-TKV = "v21.10"   # v0.3.2：Tokenomics 快照 v21.7 → v21.9；v0.3.4：v21.9 → v21.10（兩次基準數值都不變）
+TKV = "v22.0"   # 外部稽核優化 W3-5（2026-11-23）：快照統一到 v22.0（v21.10 → v22.0；本模型讀的名稱只有 L1_RevGW_PQ_VR200 變動，只作上限檢查，基準不變）。v0.3.2：v21.7 → v21.9；v0.3.4：v21.9 → v21.10（兩次基準數值都不變）
 Q1NOTE = "Q1 已定案：基準＝FP8 對齊、原生精度為低端（Tokenomics v21.10，Andy 2026-11-04 照建議）"
 SNAP = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 GEN = {g["code"]: g["name"] for g in SNAP["source"]["generations"]}
@@ -222,7 +222,8 @@ inp("tk_gpuhr", "Tokenomics IF_GPUhrEcon｜Hopper H100（每 GPU 小時持有成
 inp("tk_fac", "Tokenomics L1_FacCapexMW（每 MW 機房資本支出）", "US$m/MW", None, SNAP["items"]["L1_FacCapexMW"]["values"], None, "Derived", S_TK, "")
 inp("tk_life", "AI IT 設備折舊年限（Tokenomics IF_DeprLifeIT）", "年", 5, tk("IF_DeprLifeIT", "H100"), 7, "Derived", S_TK, "管理層：伺服器使用 5–6 年（2026Q3 法說）")
 inp("fac_life", "機房折舊年限", "年", 15, 20, 30, "Assumed", "沿用 v0.2.2（AI 機房 20 年）", "管理層：資料中心建築 30 年以上")
-inp("tk_pq", "Tokenomics L1_RevGW_PQ_VR200（模型商每 MW 年實收 P×Q；只作上限檢查）", "US$m/MW-年", 36.2296, SNAP["items"]["L1_RevGW_PQ_VR200"]["values"], 78.4975, "Derived", S_TK, "上限，不得作預測")
+# 外部稽核優化 W3-5（2026-11-23）：低／高原為寫死的 v21.10 值（36.2296／78.4975），改由快照 L1_RevGW_PQ_VR200_Lo／_Hi 讀入，換快照時一併更新
+inp("tk_pq", "Tokenomics L1_RevGW_PQ_VR200（模型商每 MW 年實收 P×Q；只作上限檢查）", "US$m/MW-年", round(SNAP["items"]["L1_RevGW_PQ_VR200_Lo"]["values"], 4), SNAP["items"]["L1_RevGW_PQ_VR200"]["values"], round(SNAP["items"]["L1_RevGW_PQ_VR200_Hi"]["values"], 4), "Derived", S_TK, "上限，不得作預測")
 inp("k_long", "k_長約＝長約等值價格 ÷ 目前 VR200 IF_HoldEcon", "x", "=p_long_lo/tk_he_vr200", "=p_long/tk_he_vr200", None, "Derived", "legacy_v0.2/kspec.py（隨目前快照重算）", "低＝長約下緣（Sens）")
 inp("k_spot", "k_現貨＝現貨價 ÷ IF_GPUhrEcon｜H100", "x", None, "=p_spot/tk_gpuhr", "=p_list/tk_gpuhr", "Derived", "legacy_v0.2/kspec.py（三家一致，C1）", "高＝AWS 牌價（Sens）")
 inp("k_long_lo2", "k_長約下緣＝長約下緣價格 ÷ VR200 IF_HoldEcon（情境 C 用）", "x", None, "=p_long_lo/tk_he_vr200", None, "Derived", "v0.3.1：情境值改用專屬列（原則第 8 節，不讀敏感度欄）", "")
@@ -1365,7 +1366,7 @@ RD = wb.create_sheet("README", 0)
 B_ = lambda blk, key, col: tk_("B", blk, key, col)
 lines = [
     (f"Amazon（AMZN）個股模型 v0.3.9（命題模組＋官方營收分部 → 損益表；v0.3.9 現價與同業報價改 2026-11-20 收盤 246.82〔工作單 px1120〕，其餘輸入不變；v0.3.8 改 2026-11-13 收盤 266.66〔工作單 px1113〕；v0.3.7 只改展示層並新增頁〔HTML 版面規格 v1.3、Coord 三層協調〕，數值不變；v0.3.6 只換現價為 2026-11-05 收盤 260.21，目標價不變；v0.3.5 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；2026Q3 季度滾動、10-Q 補入、Tokenomics 快照 {TKV}）　2026-11-21", True),
-    (f"版本：v0.3.4（Tokenomics 快照 v21.9 → {TKV}，基準數值同 v0.3.3）；v0.3.3（2026Q3 10-Q 補入；v0.3.2 為 2026-11-04 Tokenomics 快照 v21.9〔基準同 v0.3.1〕，v0.3.1 為 2026-10-31，v0.3 為 2026-10-27）。資料截至 2026-09-30（2026Q3 新聞稿與 10-Q）；FY2026＝9M 實績＋Q4 模型；Tokenomics " + TKV + "（Trainium 改讀 IF_NonNV_Hold_Trn）。v0.3.3 只以 10-Q 取代 v0.3.2 沿用自 v0.3.1 的推導與沿用值（債務面額、融資租賃、融資義務〔改本金口徑〕、分部折舊；股數維持 9/30 資產負債表），評價日、現價、共識、Tokenomics、情境與權重不動。", False),
+    (f"版本：外部稽核優化 W3-5〔2026-11-23〕 Tokenomics 快照 v21.10 → {TKV}（只有上限檢查用的 L1_RevGW_PQ_VR200 改變，基準數值不變）；v0.3.4（Tokenomics 快照 v21.9 → v21.10，基準數值同 v0.3.3）；v0.3.3（2026Q3 10-Q 補入；v0.3.2 為 2026-11-04 Tokenomics 快照 v21.9〔基準同 v0.3.1〕，v0.3.1 為 2026-10-31，v0.3 為 2026-10-27）。資料截至 2026-09-30（2026Q3 新聞稿與 10-Q）；FY2026＝9M 實績＋Q4 模型；Tokenomics " + TKV + "（Trainium 改讀 IF_NonNV_Hold_Trn）。v0.3.3 只以 10-Q 取代 v0.3.2 沿用自 v0.3.1 的推導與沿用值（債務面額、融資租賃、融資義務〔改本金口徑〕、分部折舊；股數維持 9/30 資產負債表），評價日、現價、共識、Tokenomics、情境與權重不動。", False),
     ("命題：AWS 的 AI 容量（Trainium＋NVIDIA）能否以高於資金成本的報酬變現，零售與廣告的現金流能否支應資本支出。", True),
     ("核心問題：FY2028 AWS 營業利益率與自由現金流（扣股利後）是否轉正並維持。", True),
     ('="投資建議："&Val!B24&"（加權目標價 US$"&TEXT(Val!B19,"0.00")&"，現價 US$"&TEXT(px,"0.00")&"〔2026-11-13〕，上檔空間 "&TEXT(Val!B21,"+0.0%;-0.0%")&"；依五級固定規則）"', True),

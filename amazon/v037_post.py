@@ -332,7 +332,7 @@ def coord(wb, C):
     ws.cell(r, 1, "F1. 本模型讀取的層級、版本與名稱（只列層級值與本模型採用值；同源，不判定，不計入對帳中）").font = BOLD; r += 1
     hdr(ws, r, ["名稱", "年度／世代", "層級值", "本模型採用值", "單位", "層級與版本", "說明"]); r += 1
     F1a = r
-    ws.cell(r, 1, "讀取層級：Tokenomics（算力單位經濟）——本模型讀 v21.10 快照（工作單所列現行 v22.0 不在本輪換快照；換快照另走 Tokenomics 同步通知）；Wattonomics——本模型不讀（無 WIF_ 名稱進模型），v0.3.2 快照只用於下方 C0 對帳列").font = BOLD; r += 1
+    ws.cell(r, 1, "讀取層級：Tokenomics（算力單位經濟）——本模型讀 " + C["TKV"] + " 快照（與 Tokenomics 現行版相同；外部稽核優化 W3-5，2026-11-23 由 v21.10 換入）；Wattonomics——本模型不讀（無 WIF_ 名稱進模型），v0.3.2 快照只用於下方 C0 對帳列").font = BOLD; r += 1
 
     def f1(name, yr, lv, adopt, unit, layer, note, fmt="0.000"):
         nonlocal r
@@ -538,7 +538,7 @@ def coord(wb, C):
     ws.cell(r, 4, f"=C{wrows['g26']}").number_format = "#,##0.0"; ws.cell(r, 5, f"=E{rl}").number_format = "#,##0.0"; ws.cell(r, 6, f"=E{r}/D{r}-1").number_format = "+0.0%;-0.0%"
     ws.cell(r, 7, "參考（層級之間，不判定）"); ws.cell(r, 8, "Wattonomics In!K181（輸入）"); ws.cell(r, 10, "Wattonomics Gap 頁玩家資本支出（輸出）"); rb_ = r; r += 1
     ws.cell(r, 1, "外部估計（賣方、研調、指引）只列參考，不判定：2026 資本支出指引（上列）、Morgan Stanley 新增 GW 估計（事實總帳 mw.ms.*）、Epoch 站點估計不進 C0。"); r += 1
-    ws.cell(r, 1, "版本與快照狀態：本模型讀 Tokenomics v21.10（工作單所列現行 v22.0 未換）；Wattonomics v0.3.2 也讀 Tokenomics v21.10。Amazon 模型值曾被 Wattonomics 讀入（資本支出寫回 In!K179–K181 等，來源為 v0.3.1），本表只列層級值與追公式，不用該回饋判定。")
+    ws.cell(r, 1, "版本與快照狀態：本模型讀 Tokenomics " + C["TKV"] + "（現行版）；Wattonomics v0.3.2 內含的 Tokenomics 為 v21.10，與本模型的 " + C["TKV"] + " 不是同一版（層級值之間的版本差異只列參考）。Amazon 模型值曾被 Wattonomics 讀入（資本支出寫回 In!K179–K181 等，來源為 v0.3.1），本表只列層級值與追公式，不用該回饋判定。")
     r += 1
     return dict(F1=(F1a, F1b), F1chk=F1chk, F2h=F2h, F2hh=F2hh, F2=(F2a, F2b), rq=(rq1, rq2, rq3, rq9), rg9=rg9, rl=rl, rd1=rd1, rd2=rd2, rj=rj, rjr=rjr, rg=rg, rc9=rc9,
                 rai=rai, rmw=rmw, rgw=dict(y25=rgw25, q=rgq, l=rgl, j=rgj), rn=rn, rnc=rnc, rs=rs, rr=rr_, rsame=rsame, rb=rb_, rtr=(rtr0, rtr_conc), rdump=(rdump0, rdump1), wrows=wrows, tol=TOL)

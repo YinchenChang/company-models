@@ -13,7 +13,7 @@ from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OVR = json.loads(os.environ.get("SENS_OVR", "{}"))
-TKV = "v21.10"   # v0.4.3：Tokenomics 快照 v21.4 → v21.9；v0.4.5：v21.9 → v21.10（兩次基準數值都不變；名稱清單同 v21.4 快照＝microsoft/data/tokenomics_names.txt）
+TKV = "v22.0"   # 外部稽核優化 W3-5（2026-11-23）：快照統一到 v22.0（v21.10 → v22.0；本模型讀的名稱值逐一相同）。v0.4.3：Tokenomics 快照 v21.4 → v21.9；v0.4.5：v21.9 → v21.10（兩次基準數值都不變；名稱清單同 v21.4 快照＝microsoft/data/tokenomics_names.txt）
 TKS = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 TK = TKS["items"]
 SENS_F = os.path.join(HERE, "data", "sens_v04.json")
@@ -93,7 +93,7 @@ inp("rf_h100_30", "FY2030 汰換：H100 在役量的比例（換成 VR200）", "
 inp("rf_h100_31", "FY2031 汰換：H100 在役量的比例", "%", None, 0.5, None, "Assumed", "同上", "—")
 inp("rf_gb200_32", "FY2032 汰換：GB200 在役量的比例", "%", None, 1.0, None, "Assumed", "GB200 約 FY26 上線", "GB300 以後的汰換落在 FY2033 以後（模型期外；永續價值改用穩態汰換）")
 
-sec(f"D. 命題：每 MW 經濟性（Tokenomics {TKV} 快照，基準成本情境；修正一自 v19.0 升級，與 MAG 相同；v0.4.3 由 v21.4 換入 v21.9、v0.4.5 換 v21.10，基準欄不變）")
+sec(f"D. 命題：每 MW 經濟性（Tokenomics {TKV} 快照，基準成本情境；修正一自 v19.0 升級，與 MAG 相同；v0.4.3 由 v21.4 換入 v21.9、v0.4.5 換 v21.10、外部稽核優化 W3-5〔2026-11-23〕換 v22.0，基準欄不變）")
 for g in GEN:
     inp(f"he_{g}", f"每 MW 年持有成本（經濟口徑）IF_HoldEcon｜{GNAME[g]}", "US$M／MW·年", round(TK["IF_HoldEcon"]["values"][GNAME[g]]["低成本"], 4), round(tkv("IF_HoldEcon", g), 4), round(TK["IF_HoldEcon"]["values"][GNAME[g]]["高成本"], 4), "Derived", f"oracle/data/tokenomics_snapshot_{TKV}.json（Tokenomics {TKV}，{TKS['source']['commit'][:7]}；名稱清單同 microsoft/data）Interface!13 列", "低／高＝Tokenomics 低成本／高成本情境（只作敏感度）")
 for g in GEN:
@@ -1202,7 +1202,7 @@ RD = wb.create_sheet("README", 0)
 B_ = PR_["B"]; TB = TR["B"]; CB = CR_["B"]
 up = f"Val!C{CON['up']}"; tp = f"Val!C{CON['tp']}"
 lines = [
-    ("Oracle（ORCL）個股模型 v0.5.1（命題＋營收分部架構＋收支模組；v0.5.1 套用 HTML 版面 v1.0〔README 末尾新增展示層與命題回覆，其餘各頁數值同 v0.5.0〕；v0.5.0 新增收支模組六頁，既有頁數值同 v0.4.7；v0.4.7 採用 v0.4.6 驗收報告：kd／r_new 改用 2026-11 新債定價、非 AI 營運資金、評等邊界統一；v0.4.6 換現價 2026-11-05 收盤 115.16；2026-11-02 股債增資納入〔v0.4.4〕；Tokenomics 快照 " + TKV + "〔v0.4.5，基準數值不變〕）　2026-11-10", True),
+    ("Oracle（ORCL）個股模型 v0.5.1（命題＋營收分部架構＋收支模組；v0.5.1 套用 HTML 版面 v1.0〔README 末尾新增展示層與命題回覆，其餘各頁數值同 v0.5.0〕；v0.5.0 新增收支模組六頁，既有頁數值同 v0.4.7；v0.4.7 採用 v0.4.6 驗收報告：kd／r_new 改用 2026-11 新債定價、非 AI 營運資金、評等邊界統一；v0.4.6 換現價 2026-11-05 收盤 115.16；2026-11-02 股債增資納入〔v0.4.4〕；Tokenomics 快照 v21.10〔v0.4.5，基準數值不變〕、" + TKV + "〔外部稽核優化 W3-5，2026-11-23，基準數值不變〕）　2026-11-10", True),
     ("命題：OCI 已簽約的 backlog（RPO 約 6,640 億美元，約一半來自 OpenAI／Stargate）能否以高於資金成本的報酬轉成營收與現金，同時不把資產負債表撐破。命題模組（已連網 MW × 每 MW 年收入〔Tokenomics 持有成本 × 定價倍數 k〕、延誤、租金、AI 折舊）只驅動 Cloud Infrastructure 營收線的「OCI AI 算力」子列；SaaS、授權、支援、硬體、服務各有自己的成長路徑。", False),
     ("核心問題：FY2029 的 OCI 營收與營業利益率，相對於資本支出與租約的擴張，以及 Oracle 的資金缺口（自由現金流為負）要如何補。", False),
     (f'="投資建議："&Val!C{CON["rec"]}&"（加權目標價 US$"&TEXT({tp},"0.0")&"，現價 US$"&TEXT(px,"0.00")&"〔"&TEXT(px_date,"yyyy-mm-dd")&"〕，上檔空間 "&TEXT({up},"+0.0%;-0.0%")&"）——條件式：在長約價格 p_long "&TEXT(p_long,"0.00")&"、計費比例 "&TEXT(u_bill,"0%")&"、AI 設備折舊年限 "&TEXT(life_ai,"0")&" 年（Tokenomics）的基準假設下；失效條件見本頁末"', True),

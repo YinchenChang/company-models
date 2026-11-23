@@ -33,7 +33,7 @@ if A.q3cf:                                                          # 變動拆�
     _cf = json.load(open(A.q3cf, encoding="utf-8")); _cf = _cf.get("facts", _cf)
     for k, v in _cf.items():
         F[k] = dict(F.get(k, {"id": k}), value=v)
-TKV = "v21.10"   # v0.3.4：Tokenomics 快照 v21.7 → v21.9；v0.3.6：v21.9 → v21.10（兩次基準數值都不變）
+TKV = "v22.0"   # 外部稽核優化 W3-5（2026-11-23）：快照統一到 v22.0（v21.10 → v22.0；本模型讀的名稱只有 IFW_RevGWFleet_Util 變動，只作上限檢查，基準不變）。v0.3.4：v21.7 → v21.9；v0.3.6：v21.9 → v21.10（兩次基準數值都不變）
 Q1NOTE = "Q1 已定案：基準＝FP8 對齊、原生精度為低端（Tokenomics v21.10，Andy 2026-11-04 照建議）"
 TK = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 GEN = {x["code"]: x["name"] for x in TK["source"]["generations"]}
@@ -91,7 +91,7 @@ SE = wb.create_sheet("Sens"); SO = wb.create_sheet("Sources")
 # =====================================================================================================
 # In：輸入（一列一鍵；E＝基準，D＝低，F＝高）
 IN["A1"] = "In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」〔v0.3.6〕）。金額 US$B；每股 US$；股數十億股；MW＝IT MW。標記：Verified／Interested-party／Analogy／Assumed／Derived（Analogy、Assumed 一律給低／高區間）"
-IN["A2"] = "「沿用 v0.2.2」＝MAG v0.2.2 已核准的參數（原出處：alphabet/legacy_v0.2/company.json、kspec.py、data/kevidence_alphabet_20261008.json；對照表 r1 C1–C23）。v0.3.1：Tokenomics 升級 v21.7、2026Q3 實績（data/alphabet_facts_2026q3.json）、評價日 2026-09-30；v0.3.4：Tokenomics 快照換 v21.9（基準數值不變）；v0.3.5：10-Q 2026Q3 原文取代推導／沿用值（說明欄「原（v0.3.3）：」為舊值，v0.3.4 同值）；v0.3.6：Tokenomics 快照換 " + TKV + "（data/tokenomics_snapshot_" + TKV + ".json，基準數值不變）。黃底＝判斷題（Andy 可改）"
+IN["A2"] = "「沿用 v0.2.2」＝MAG v0.2.2 已核准的參數（原出處：alphabet/legacy_v0.2/company.json、kspec.py、data/kevidence_alphabet_20261008.json；對照表 r1 C1–C23）。v0.3.1：Tokenomics 升級 v21.7、2026Q3 實績（data/alphabet_facts_2026q3.json）、評價日 2026-09-30；v0.3.4：Tokenomics 快照換 v21.9（基準數值不變）；v0.3.5：10-Q 2026Q3 原文取代推導／沿用值（說明欄「原（v0.3.3）：」為舊值，v0.3.4 同值）；v0.3.6：Tokenomics 快照換 v21.10；外部稽核優化 W3-5（2026-11-23）再換 " + TKV + "（data/tokenomics_snapshot_" + TKV + ".json，基準數值不變）。黃底＝判斷題（Andy 可改）"
 hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "說明"])
 ROWS = []
 def sec(t): ROWS.append(("sec", t))
@@ -1527,7 +1527,7 @@ for col, w in zip("ABCDEF", [6, 80, 12, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = "Alphabet（GOOGL）個股模型 v0.3.11（2026-11-21；v0.3.11 只換現價與同業報價為 2026-11-20 收盤 265.29〔工作單 px1120〕，其餘輸入不變；v0.3.10 只換現價為 2026-11-13 收盤 295.77〔工作單 px1113〕；v0.3.9 版面 v1.3＋RevDCF 頁＋Coord 頁〔三層協調〕，數值不變；v0.3.8 只換現價為 2026-11-05 收盤 282.57，目標價不變；v0.3.7 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；v0.3.6：2026Q3 季度滾動＋10-Q 補入＋Tokenomics " + TKV + "）— 命題模組＋官方營收分部 → 損益表"
+RD["A1"] = "Alphabet（GOOGL）個股模型 v0.3.11（2026-11-21；v0.3.11 只換現價與同業報價為 2026-11-20 收盤 265.29〔工作單 px1120〕，其餘輸入不變；v0.3.10 只換現價為 2026-11-13 收盤 295.77〔工作單 px1113〕；v0.3.9 版面 v1.3＋RevDCF 頁＋Coord 頁〔三層協調〕，數值不變；v0.3.8 只換現價為 2026-11-05 收盤 282.57，目標價不變；v0.3.7 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；v0.3.6：2026Q3 季度滾動＋10-Q 補入＋Tokenomics v21.10；外部稽核優化 W3-5〔2026-11-23〕換 Tokenomics " + TKV + " 快照，基準數值不變）— 命題模組＋官方營收分部 → 損益表"
 RD["A3"] = "命題：AI 改變搜尋之後，Google Search 的變現能否守住，同時 Google Cloud（含 TPU）能否把翻倍的資本支出變成營收；資本支出與 2026 年股權發行後的每股價值是否高於現價。"
 RD["A4"] = "核心問題：Search & other 在 C 情境（AI 助理分流、每次查詢變現下降）下 FY2028 營收與利益率會掉多少，Cloud 的 AI 營收能否抵銷；加計 AI 折舊與股權發行後的每股價值。"
 VB = lambda k, c="B": f"Val!{c}{VR_[k]}"
@@ -1555,7 +1555,7 @@ for row in DRV:
     for j, v in enumerate(row, 1): RD.cell(r, j, v)
     r += 1
 r += 1
-RD.cell(r, 1, "與上一版的差異（v0.3.6：Tokenomics 快照 v21.9 → " + TKV + "，基準數值不變，只有 Sens 讀 IF_NonNV_Out_TPU 的案例改變；v0.3.5：2026Q3 10-Q 補入，疊在 v0.3.4 Tokenomics v21.9 快照版上；v0.3.1 季度滾動見 docs/reports/20261029_alphabet_v0.3.1_季度滾動.md）").font = BOLD; r += 1
+RD.cell(r, 1, "與上一版的差異（外部稽核優化 W3-5〔2026-11-23〕：Tokenomics 快照 v21.10 → " + TKV + "，只有上限檢查用的 IFW_RevGWFleet_Util 改變，基準數值不變；v0.3.6：Tokenomics 快照 v21.9 → v21.10，基準數值不變，只有 Sens 讀 IF_NonNV_Out_TPU 的案例改變；v0.3.5：2026Q3 10-Q 補入，疊在 v0.3.4 Tokenomics v21.9 快照版上；v0.3.1 季度滾動見 docs/reports/20261029_alphabet_v0.3.1_季度滾動.md）").font = BOLD; r += 1
 for t in ("v0.3.5 只把 v0.3.1 暫用的推導值與沿用 2026Q2 的值換成 2026Q3 10-Q 原文（docs/reports/20261104_10Q_2026Q3_原文摘錄.md；事實總帳標 [Verified]）；公式、架構、評價日、現價、共識、Tokenomics v21.7 快照、情境與權重都不動。",
           "資產負債：債務面額 126.455 → 127.485、融資租賃負債 2.59 → 3.705、應計罰款 12.156 → 13.807、非控制權益 7.1 → 6.9（不進目標價）、權益證券 90.4 → 90.384（現金＋債權類證券隨之調整）。",
           "持股：SpaceX 85.436 → 75.2（10-Q 附註）；其他可交易權益證券 7.089 → 15.184（＝10-Q 合計 90.384 − SpaceX，與 SpaceX 同步改，持股合計對得上 10-Q）。",

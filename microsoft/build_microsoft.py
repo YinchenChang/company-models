@@ -2,7 +2,7 @@
 # 用法：bash microsoft/make_v03.sh（建置 → LibreOffice 重算 → 核對 → HTML）；或
 #       python3 microsoft/build_microsoft.py raw.xlsx [--set 鍵=值 …] [--legacy-q1] [--snap v21.4] [--no-html]
 #       --set：覆寫 In 頁基準欄（E）的值（拆解與 C10 重解用）；--legacy-q1：回到 v0.3 口徑（FY2027 全年模型、評價日 2026-06-30；只供變動拆解）；
-#       --snap：Tokenomics 快照版本（預設 v21.10；v0.3.5 起）；--no-html：不寫 microsoft/html.json（變體建置用）
+#       --snap：Tokenomics 快照版本（預設 v22.0；外部稽核優化 W3-5，2026-11-23 起；v0.3.5 起為 v21.10）；--no-html：不寫 microsoft/html.json（變體建置用）
 # 財年結束於 6/30（FY2027＝2026-07～2027-06）。金額：十億美元（US$B）；MW＝IT 關鍵電力 MW；股數：十億股。
 # 結構：README → In → Q → Thesis → Seg → PL → CF → Val → Recon → Sens → Sources（順序固定）。
 # 規格：docs/plan/個股模型原則_命題加營收分部.md；工作單：mag/docs/workorders/20261027_MAG_v0.3_個股模型重建_分部架構.md、20261029_MAG_v0.3.1_季度滾動_2026Q3.md。
@@ -21,7 +21,7 @@ AP = argparse.ArgumentParser()
 AP.add_argument("out", nargs="?")
 AP.add_argument("--set", action="append", default=[])
 AP.add_argument("--legacy-q1", action="store_true")
-AP.add_argument("--snap", default="v21.10")   # v0.3.4：v21.7 → v21.9；v0.3.5：v21.9 → v21.10（兩次基準數值都不變；attrib_v031.py 以 --snap 指定舊版重現拆解）
+AP.add_argument("--snap", default="v22.0")   # 外部稽核優化 W3-5（2026-11-23）：預設快照統一到 v22.0（v21.10 → v22.0；本模型讀的名稱值逐一相同）。 v0.3.4：v21.7 → v21.9；v0.3.5：v21.9 → v21.10（兩次基準數值都不變；attrib_v031.py 以 --snap 指定舊版重現拆解）
 AP.add_argument("--no-html", action="store_true")
 AP.add_argument("--sens", default=None, help="v0.3.3：整本重算的敏感度結果 JSON（microsoft/sens_v033.py 產生）；省略時讀預設檔，--set 變體不讀")
 ARGS = AP.parse_args()
@@ -1577,7 +1577,7 @@ for c_ in "FGHIJK": VW.column_dimensions[c_].width = 11
 VW.column_dimensions["L"].width = 60
 
 V38 = None
-if not SETS and Q1ON and ARGS.snap == "v21.10":
+if not SETS and Q1ON and ARGS.snap == "v22.0":   # 外部稽核優化 W3-5（2026-11-23）：預設快照 v21.10 → v22.0
     # v0.3.8：版面規格 v1.3 全套＋Coord 頁（只新增、不改既有格）
     import v038_post
     V38 = v038_post.apply(wb, dict(BR=BL["B"].R, BC={k: b.R for k, b in BL.items()}, QR=QR, F=F, fb=fb, VR=VR_, SENS_LAST=SENS_LAST, GEN=GEN, SNAP=SNAP, TKV=TKV, TKN=TKN, tk=tk, tkv=tkv, HERE=HERE))

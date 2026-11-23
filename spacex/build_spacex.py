@@ -42,7 +42,7 @@ def _build_id():
         h.update(fn.encode()); h.update(open(os.path.join(HERE, fn), "rb").read())
     return f"spacex-{VER}-{h.hexdigest()[:10]}"
 BUILD_ID = _build_id()
-TKV = "v21.10"   # v0.2.2：Tokenomics 快照 v21.7 → v21.9；v0.2.3：v21.9 → v21.10（兩次基準數值都不變）
+TKV = "v22.0"   # 外部稽核優化 W3-5（2026-11-23）：快照統一到 v22.0（v21.10 → v22.0；本模型讀的名稱值逐一相同）。v0.2.2：Tokenomics 快照 v21.7 → v21.9；v0.2.3：v21.9 → v21.10（兩次基準數值都不變）
 TK = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 GEN = {x["code"]: x["name"] for x in TK["source"]["generations"]}
 # v0.2.7（驗收 M5，B3）：同業統一為 2026-11-06 收盤、NTM 口徑（spacex/peers_v027.py 產生；舊檔 *_20261030.json 移 _待刪除/）
@@ -121,7 +121,7 @@ IN["A1"] = ("In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感�
             "金額 US$B；每股 US$；股數十億股；GW＝IT 口徑名目算力（不乘 PUE）。標記：Verified／Interested-party／Analogy／Assumed／Derived（Analogy、Assumed 一律給低／高區間）")
 IN["A2"] = ("事實來源：spacex/data/spacex_facts_2026q3.json（10-Q 2026Q3 與 Q3／Q2 財報新聞稿兩讀核對）＋spacex/data/spacex_facts_v02.json（v0.2：424B4 FY2025／FY2024 原文、2026Q2 10-Q 附註、"
             "2026Q2／Q3 法說指引〔逐字稿未入庫，只存數字與短句〕）；"
-            f"Tokenomics {TKV} 快照 spacex/data/tokenomics_snapshot_{TKV}.json（v0.2.2 由 v21.7 換入 v21.9、v0.2.3 換 v21.10，基準數值不變）。黃底＝判斷題（Andy 可改；報告「待 Project 判斷」逐條列出預設）")
+            f"Tokenomics {TKV} 快照 spacex/data/tokenomics_snapshot_{TKV}.json（v0.2.2 由 v21.7 換入 v21.9、v0.2.3 換 v21.10、外部稽核優化 W3-5〔2026-11-23〕換 v22.0，基準數值不變）。黃底＝判斷題（Andy 可改；報告「待 Project 判斷」逐條列出預設）")
 hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "說明", "來源誘因（Interested-party 列；混合來源列寫其他欄位）"])
 ROWS = []
 def sec(t): ROWS.append(("sec", t))
@@ -1725,7 +1725,7 @@ for col, w in zip("ABCDEF", [6, 80, 12, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = f"SpaceX（Nasdaq: SPCX，含 xAI）個股模型 {VER}（2026-11-21；build_id {BUILD_ID}；v0.2.11 只換現價與同業倍數為 2026-11-20 收盤〔工作單 px1120〕；v0.2.10 只換現價與同業倍數為 2026-11-13 收盤〔工作單 px1113〕；v0.2.9 只改 Coord 頁：改讀 Wattonomics v0.3.3〔xai 2025 年底 GW 吸收公司揭露 0.8 GW〕，名目算力 C0 改「無可比實績（層級值吸收公司揭露）」，對帳中 1→0〔估值不讀層級 GW，數值不變〕；v0.2.8 只改展示層與新增頁〔版面 v1.3、RevDCF、Coord 三層協調；數值不變〕；v0.2.7 依驗收報告：評價股數計入 RSU 與選擇權〔庫藏股法〕、同業統一為 2026-11-06 NTM 口徑、Sens 加融資受限案〔目標價會變〕；v0.2.6 補治理與揭露〔數值不變〕；v0.2.5 只換現價為 2026-11-05 收盤 123.62，目標價不變；v0.2.4 只改展示層：README 頁新增命題分項、白話重點、命題回覆，供 HTML 新版面；v0.2.2／v0.2.3 換 Tokenomics 快照 v21.9／" + TKV + "，基準數值同 v0.2.1；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
+RD["A1"] = f"SpaceX（Nasdaq: SPCX，含 xAI）個股模型 {VER}（2026-11-21；build_id {BUILD_ID}；v0.2.11 只換現價與同業倍數為 2026-11-20 收盤〔工作單 px1120〕；v0.2.10 只換現價與同業倍數為 2026-11-13 收盤〔工作單 px1113〕；v0.2.9 只改 Coord 頁：改讀 Wattonomics v0.3.3〔xai 2025 年底 GW 吸收公司揭露 0.8 GW〕，名目算力 C0 改「無可比實績（層級值吸收公司揭露）」，對帳中 1→0〔估值不讀層級 GW，數值不變〕；v0.2.8 只改展示層與新增頁〔版面 v1.3、RevDCF、Coord 三層協調；數值不變〕；v0.2.7 依驗收報告：評價股數計入 RSU 與選擇權〔庫藏股法〕、同業統一為 2026-11-06 NTM 口徑、Sens 加融資受限案〔目標價會變〕；v0.2.6 補治理與揭露〔數值不變〕；v0.2.5 只換現價為 2026-11-05 收盤 123.62，目標價不變；v0.2.4 只改展示層：README 頁新增命題分項、白話重點、命題回覆，供 HTML 新版面；v0.2.2／v0.2.3 換 Tokenomics 快照 v21.9／v21.10、外部稽核優化 W3-5〔2026-11-23〕換 " + TKV + "，基準數值同 v0.2.1；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
 RD["A3"] = ("命題：SI 分部的算力投入（9M26 SI 資本支出約 400 億美元、名目算力 1.7 GW）能否由 SI 營收（對外算力出租＋Grok／Cursor／X）回本；"
             "Connectivity（Starlink）現金流與 IPO 資金能支撐多久；加計 AI 折舊與 Cursor 收購獎酬後的每股價值是否高於現價。")
 RD["A4"] = "核心問題：FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金與以融資取得 PP&E；Valor 失敗售後租回本金列融資，不扣）。"
