@@ -13,8 +13,8 @@ JOBS = int(a[3]) if len(a) > 3 else 4
 rm = json.load(open(RM, encoding="utf-8"))
 IR, VR = rm["IR"], rm["VR"]
 wbf = openpyxl.load_workbook(RAW)
-os.makedirs("/home/claude/scratch/snowflake", exist_ok=True)
-WD = tempfile.mkdtemp(prefix="snsens_", dir="/home/claude/scratch/snowflake")
+os.makedirs(os.path.join(tempfile.gettempdir(), "scratch", "snowflake"), exist_ok=True)
+WD = tempfile.mkdtemp(prefix="snsens_", dir=os.path.join(tempfile.gettempdir(), "scratch", "snowflake"))
 
 
 def recalc(path, prof):

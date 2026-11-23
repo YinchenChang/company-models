@@ -4,7 +4,7 @@
 #   SENS=1 bash software_ai/nri/make_nri.sh     # 改了輸入、公式或 facts 後重跑敏感度與反解
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$ROOT"
-WD="${WD:-/home/claude/scratch/nri/make}"; mkdir -p "$WD/out" software_ai/nri/dist; export ROWMAP="$WD/rowmap.json"
+WD="${WD:-${TMPDIR:-/tmp}/scratch/nri/make}"; mkdir -p "$WD/out" software_ai/nri/dist; export ROWMAP="$WD/rowmap.json"
 N=software_ai/nri; S=$N/data/sens_v022_20261117.json; K=$N/data/kreq_v022.json
 OUT=$N/dist/20261117_野村總研個股模型_v0.2.2.xlsx
 python3 $N/facts_nri.py
