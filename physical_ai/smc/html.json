@@ -1,0 +1,2242 @@
+{
+ "company": "SMC（SMC株式会社）",
+ "ticker": "6273.T",
+ "layout": "v1.3",
+ "wide_text": true,
+ "thesis": "@README!A3",
+ "question": "半導體與資料中心帶動的工廠自動化設備投資高峰，能否在三情境下支持高於現價的目標價；機器人（實體 AI）對 SMC 的直接貢獻有多大",
+ "scenarios": [
+  {
+   "key": "A",
+   "name": "情境 A（樂觀：受注延續、毛利率維持）"
+  },
+  {
+   "key": "B",
+   "name": "情境 B（基準）"
+  },
+  {
+   "key": "C",
+   "name": "情境 C（保守：設備投資循環回落）"
+  }
+ ],
+ "hero": {
+  "rec": "@Val!B19",
+  "tiles": [
+   [
+    "@Val!A10",
+    "@Val!B10|n0",
+    [
+     "上檔空間 ",
+     "@Val!B14|sp1"
+    ]
+   ],
+   [
+    "@Val!A11",
+    "@Val!B11|n0",
+    ""
+   ],
+   [
+    "@Val!A12",
+    "@Val!B12|n0",
+    [
+     "上檔空間 ",
+     "@Val!B27|sp1"
+    ]
+   ],
+   [
+    "@In!B46",
+    "@In!E46|n0",
+    [
+     "股價基準日 ",
+     "@In!E47"
+    ]
+   ]
+  ],
+  "note": [
+   "估值評等 ",
+   "@Val!B15",
+   "（只看上檔空間）；收支關卡",
+   "@Val!C16|n0",
+   " 十億日圓，",
+   "@Val!B18",
+   "。目標價建立在半導體帶動的設備投資高峰延續、毛利率小幅回落的假設上；機器人相關營收約占 ",
+   "@Recon!C18|p1",
+   "，不主導目標價。"
+  ]
+ },
+ "sections": [
+  {
+   "id": "thesis",
+   "title": "命題與核心問題",
+   "blocks": [
+    {
+     "type": "theme",
+     "title": "合併營收依地區堆疊（十億日圓）與營業利益率：FY2023–FY2032（情境 B）",
+     "x": "@PL!C42:L42",
+     "fmt": "n0",
+     "fmt_r": "p0",
+     "stack": true,
+     "pad": 1.3,
+     "total": "@PL!C51:L51",
+     "bars": [
+      {
+       "name": [
+        "@PL!A46"
+       ],
+       "y": "@PL!C46:L46",
+       "color": "#0b7a80"
+      },
+      {
+       "name": [
+        "@PL!A45"
+       ],
+       "y": "@PL!C45:L45",
+       "color": "#6fa8dc"
+      },
+      {
+       "name": [
+        "@PL!A47"
+       ],
+       "y": "@PL!C47:L47",
+       "color": "#6fc7cb"
+      },
+      {
+       "name": [
+        "@PL!A48"
+       ],
+       "y": "@PL!C48:L48",
+       "color": "#c29a2b"
+      },
+      {
+       "name": [
+        "@PL!A49"
+       ],
+       "y": "@PL!C49:L49",
+       "color": "#8a8c8c"
+      },
+      {
+       "name": [
+        "@PL!A50"
+       ],
+       "y": "@PL!C50:L50",
+       "color": "#d9a08f"
+      }
+     ],
+     "lines": [
+      {
+       "name": [
+        "@PL!A60"
+       ],
+       "y": "@PL!C60:L60",
+       "axis": "r",
+       "color": "#3b3838",
+       "labels": true
+      },
+      {
+       "name": [
+        "@PL!A56"
+       ],
+       "y": "@PL!C56:L56",
+       "axis": "r",
+       "color": "#b4472f",
+       "dash": true
+      }
+     ],
+     "caption": "堆疊＝單一報告分部之下的地區子列（合計等於合併營收）；FY2023–FY2025 實績、FY2026 公司指引、FY2027 起模型（地區結構固定為 FY2025）。實線＝營業利益率、虛線＝毛利率（右軸）。"
+    },
+    {
+     "type": "h3",
+     "text": "命題"
+    },
+    {
+     "type": "list",
+     "ordered": true,
+     "items": [
+      "@README!A3",
+      [
+       "承重變數：FY2027 銷售量年增（情境 B ",
+       "@In!E19|p1",
+       "）、FY2028–FY2029 每年 ",
+       "@In!E22|p1",
+       "、毛利率相對指引調整（",
+       "@In!E31|p1",
+       "）、同業前瞻本益比中位數（",
+       "@In!E84|n1",
+       " 倍）。"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "collapse": true,
+     "summary": "展開：命題回覆（依模型計算）",
+     "parts": [
+      "@README!A4"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "重點觀察"
+    },
+    {
+     "type": "list",
+     "ordered": true,
+     "items": [
+      [
+       "估值：加權目標價 ",
+       "@Val!B10|n0",
+       " 日圓（DCF ",
+       "@Val!B11|n0",
+       "、Comparable ",
+       "@Val!B12|n0",
+       "），對現價 ",
+       "@In!E46|n0",
+       " 日圓上檔 ",
+       "@Val!B14|sp1",
+       "，估值評等",
+       "@Val!B15",
+       "、投資建議",
+       "@Val!B19",
+       "。"
+      ],
+      [
+       "本期：公司把 FY2026 營收指引上修到 ",
+       "@In!E5|n0",
+       " 十億日圓、營業利益 ",
+       "@In!E6|n0",
+       "，毛利率指引 ",
+       "@In!E10|p1",
+       "；現價對指引每股盈餘的本益比 ",
+       "@In!E85|n1",
+       " 倍，低於同業中位數 ",
+       "@In!E84|n1",
+       " 倍。"
+      ],
+      [
+       "需求：受注由半導體與資料中心帶動，下半年指引營收低於上半，為模型基準；FY2027 量的情境 A／B／C 為 ",
+       "@In!E18|p0",
+       "／",
+       "@In!E19|p0",
+       "／",
+       "@In!E20|p0",
+       "。"
+      ],
+      [
+       "評等邊界：",
+       "@README!A5"
+      ],
+      "@README!A6"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "範圍"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A8"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "valuation",
+   "title": "估值",
+   "blocks": [
+    {
+     "type": "bars",
+     "title": "四個目標價與現價（日圓；豎線＝現價）",
+     "fmt": "n0",
+     "items": [
+      {
+       "label": "@Val!A11",
+       "value": "@Val!B11",
+       "series": 1
+      },
+      {
+       "label": "@Val!A12",
+       "value": "@Val!B12",
+       "series": 2
+      },
+      {
+       "label": "@Val!A10",
+       "value": "@Val!B10",
+       "series": 0
+      },
+      {
+       "label": "@In!B86",
+       "value": "@In!E86",
+       "series": 1
+      }
+     ],
+     "ref": {
+      "label": "@In!B46",
+      "value": "@In!E46"
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Val!A1"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "結論",
+     "head": [
+      "項目",
+      "數值"
+     ],
+     "rows": [
+      [
+       "@Val!A11",
+       "@Val!B11|n0"
+      ],
+      [
+       "@Val!A12",
+       "@Val!B12|n0"
+      ],
+      [
+       "@Val!A10",
+       "@Val!B10|n0"
+      ],
+      [
+       "@Val!A13",
+       "@Val!B13|n0"
+      ],
+      [
+       "@Val!A14",
+       "@Val!B14|sp1"
+      ],
+      [
+       "@Val!A15",
+       "@Val!B15"
+      ],
+      [
+       "@Val!A18",
+       "@Val!B18"
+      ],
+      [
+       "@Val!A19",
+       "@Val!B19"
+      ],
+      [
+       "@Val!A20",
+       "@Val!B20|n1"
+      ],
+      [
+       "@Val!A21",
+       "@Val!B21"
+      ],
+      [
+       "@In!B86",
+       "@In!E86|n0"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "情境目標價（日圓；NTM EPS 為日圓）",
+     "head": [
+      "@Val!A3",
+      "@Val!B3",
+      "@Val!C3",
+      "@Val!D3",
+      "@Val!E3"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "4-8",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "n0",
+       "n0",
+       "n0",
+       "n0"
+      ]
+     }
+    },
+    {
+     "type": "h3",
+     "text": "DCF 折現率"
+    },
+    {
+     "type": "kv",
+     "items": [
+      [
+       "@DCF!A3",
+       "@DCF!B3|p2"
+      ],
+      [
+       "@DCF!A6",
+       "@DCF!B6|p2"
+      ],
+      [
+       "@DCF!A7",
+       "@DCF!B7|p2"
+      ],
+      [
+       "@DCF!A9",
+       "@DCF!B9|p2"
+      ],
+      [
+       "@DCF!A8",
+       "@DCF!B8|p2"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "DCF 彙總（十億日圓；每股為日圓）",
+     "head": [
+      "項目",
+      "情境 A",
+      "情境 B",
+      "情境 C"
+     ],
+     "rows": [
+      [
+       "@DCF!A61",
+       "@DCF!B30|n1",
+       "@DCF!B61|n1",
+       "@DCF!B92|n1"
+      ],
+      [
+       "@DCF!A66",
+       "@DCF!B35|n1",
+       "@DCF!B66|n1",
+       "@DCF!B97|n1"
+      ],
+      [
+       "@DCF!A67",
+       "@DCF!B36|n0",
+       "@DCF!B67|n0",
+       "@DCF!B98|n0"
+      ],
+      [
+       "@DCF!A68",
+       "@DCF!B37|n0",
+       "@DCF!B68|n0",
+       "@DCF!B99|n0"
+      ],
+      [
+       "@DCF!A69",
+       "@DCF!B38|p1",
+       "@DCF!B69|p1",
+       "@DCF!B100|p1"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：DCF 其他項目與折現率組成",
+     "head": [
+      "項目",
+      "情境 A",
+      "情境 B",
+      "情境 C"
+     ],
+     "rows": [
+      [
+       "@DCF!A57",
+       "@DCF!B26|n1",
+       "@DCF!B57|n1",
+       "@DCF!B88|n1"
+      ],
+      [
+       "@DCF!A59",
+       "@DCF!B28|n1",
+       "@DCF!B59|n1",
+       "@DCF!B90|n1"
+      ],
+      [
+       "@DCF!A60",
+       "@DCF!B29|n1",
+       "@DCF!B60|n1",
+       "@DCF!B91|n1"
+      ],
+      [
+       "@DCF!A62",
+       "@DCF!B31|n1",
+       "@DCF!B62|n1",
+       "@DCF!B93|n1"
+      ],
+      [
+       "@DCF!A63",
+       "@DCF!B32|n1",
+       "@DCF!B63|n1",
+       "@DCF!B94|n1"
+      ],
+      [
+       "@DCF!A64",
+       "@DCF!B33|n1",
+       "@DCF!B64|n1",
+       "@DCF!B95|n1"
+      ],
+      [
+       "@DCF!A65",
+       "@DCF!B34|n1",
+       "@DCF!B65|n1",
+       "@DCF!B96|n1"
+      ],
+      [
+       "@DCF!A72",
+       "@DCF!B41|n0",
+       "@DCF!B72|n0",
+       "@DCF!B103|n0"
+      ],
+      [
+       "@In!B62",
+       "@In!E62|p2",
+       "",
+       ""
+      ],
+      [
+       "@In!B65",
+       "@In!E65|n3",
+       "",
+       ""
+      ],
+      [
+       "@In!B63",
+       "@In!E63|p1",
+       "",
+       ""
+      ],
+      [
+       "@In!B64",
+       "@In!E64|p2",
+       "",
+       ""
+      ],
+      [
+       "@In!B51",
+       "@In!E51|n2",
+       "",
+       ""
+      ],
+      [
+       "@In!B50",
+       "@In!E50|n1",
+       "",
+       ""
+      ],
+      [
+       "@DCF!A10",
+       "@DCF!B10|n1",
+       "",
+       ""
+      ],
+      [
+       "@DCF!A4",
+       "@DCF!B4|n1",
+       "",
+       ""
+      ],
+      [
+       "@DCF!A5",
+       "@DCF!B5|n1",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "上檔三段歸因與隱含倍數",
+     "head": [
+      "項目",
+      "數值"
+     ],
+     "rows": [
+      [
+       "@Val!A23",
+       "@Val!B23|sp1"
+      ],
+      [
+       "@Val!A24",
+       "@Val!B24|sp1"
+      ],
+      [
+       "@Val!A25",
+       "@Val!B25|sp1"
+      ],
+      [
+       "@Val!A27",
+       "@Val!B27|sp1"
+      ],
+      [
+       "@Val!A29",
+       "@Val!B29|n2"
+      ],
+      [
+       "@Val!A31",
+       "@Val!B31|x1"
+      ],
+      [
+       "@Val!A32",
+       "@Val!B32|n2"
+      ],
+      [
+       "@Val!A33",
+       "@Val!B33|p1"
+      ],
+      [
+       "@Val!A30",
+       "@Val!B30"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：同業前瞻本益比與中位數",
+     "head": [
+      "@In!B3",
+      "@In!E3",
+      "@In!G3",
+      "@In!I3"
+     ],
+     "rows": [
+      [
+       "@In!B76",
+       "@In!E76|n2",
+       "@In!G76|tag",
+       "@In!I76"
+      ],
+      [
+       "@In!B77",
+       "@In!E77|n2",
+       "@In!G77|tag",
+       "@In!I77"
+      ],
+      [
+       "@In!B78",
+       "@In!E78|n2",
+       "@In!G78|tag",
+       "@In!I78"
+      ],
+      [
+       "@In!B79",
+       "@In!E79|n2",
+       "@In!G79|tag",
+       "@In!I79"
+      ],
+      [
+       "@In!B80",
+       "@In!E80|n2",
+       "@In!G80|tag",
+       "@In!I80"
+      ],
+      [
+       "@In!B81",
+       "@In!E81|n2",
+       "@In!G81|tag",
+       "@In!I81"
+      ],
+      [
+       "@In!B82",
+       "@In!E82|n2",
+       "@In!G82|tag",
+       "@In!I82"
+      ],
+      [
+       "@In!B83",
+       "@In!E83|n2",
+       "@In!G83|tag",
+       "@In!I83"
+      ],
+      [
+       "@In!B84",
+       "@In!E84|n2",
+       "@In!G84|tag",
+       "@In!I84"
+      ],
+      [
+       "@In!B85",
+       "@In!E85|n2",
+       "@In!G85|tag",
+       "@In!I85"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：權重與目標價規則輸入",
+     "head": [
+      "@In!B3",
+      "@In!D3",
+      "@In!E3",
+      "@In!F3",
+      "@In!G3"
+     ],
+     "rows": [
+      [
+       "@In!B70",
+       "@In!D70|p0",
+       "@In!E70|p0",
+       "@In!F70|p0",
+       "@In!G70|tag"
+      ],
+      [
+       "@In!B72",
+       "@In!D72|p0",
+       "@In!E72|p0",
+       "@In!F72|p0",
+       "@In!G72|tag"
+      ],
+      [
+       "@In!B73",
+       "@In!D73|p0",
+       "@In!E73|p0",
+       "@In!F73|p0",
+       "@In!G73|tag"
+      ],
+      [
+       "@In!B74",
+       "@In!D74|p0",
+       "@In!E74|p0",
+       "@In!F74|p0",
+       "@In!G74|tag"
+      ],
+      [
+       "@In!B71",
+       "@In!D71|n2",
+       "@In!E71|n2",
+       "@In!F71|n2",
+       "@In!G71|tag"
+      ],
+      [
+       "@In!B61",
+       "@In!D61|n2",
+       "@In!E61|n2",
+       "@In!F61|n2",
+       "@In!G61|tag"
+      ],
+      [
+       "@In!B60",
+       "@In!D60|n0",
+       "@In!E60|n0",
+       "@In!F60|n0",
+       "@In!G60|tag"
+      ],
+      [
+       "@In!B58",
+       "@In!D58|n0",
+       "@In!E58|n0",
+       "@In!F58|n0",
+       "@In!G58|tag"
+      ],
+      [
+       "@In!B59",
+       "@In!D59|n0",
+       "@In!E59|n0",
+       "@In!F59|n0",
+       "@In!G59|tag"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sens",
+   "title": "敏感度",
+   "blocks": [
+    {
+     "type": "tornado",
+     "sheet": "Sens",
+     "label_col": "A",
+     "value_col": "E",
+     "fmt": "sp1",
+     "title": "加權目標價相對基準：輸入取低值（變動達兩位數百分比的案例）",
+     "rows": "40"
+    },
+    {
+     "type": "tornado",
+     "sheet": "Sens",
+     "label_col": "A",
+     "value_col": "E",
+     "fmt": "sp1",
+     "title": "加權目標價相對基準：輸入取高值（沒有變動達兩位數百分比的案例；列出影響最大者）",
+     "rows": "41"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Sens!A1"
+     ]
+    },
+    {
+     "type": "kv",
+     "items": [
+      [
+       "@Sens!A6",
+       "@Sens!D6|n0"
+      ],
+      [
+       "模型狀態",
+       "@Sens!D7"
+      ],
+      [
+       "build_id",
+       "@Sens!D3"
+      ]
+     ]
+    },
+    {
+     "type": "tornado",
+     "sheet": "Sens",
+     "label_col": "A",
+     "value_col": "E",
+     "fmt": "sp1",
+     "title": "加權目標價相對基準：只看單一情境、終值替代法",
+     "rows": "51,52,53,54"
+    },
+    {
+     "type": "tornado",
+     "sheet": "Sens",
+     "label_col": "A",
+     "value_col": "E",
+     "fmt": "sp1",
+     "title": "加權目標價相對基準：輸入取低值，其餘案例",
+     "rows": "10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,39,42,44,47,49",
+     "collapse": true,
+     "summary": "展開：輸入取低值、變動未達兩位數百分比的案例"
+    },
+    {
+     "type": "tornado",
+     "sheet": "Sens",
+     "label_col": "A",
+     "value_col": "E",
+     "fmt": "sp1",
+     "title": "加權目標價相對基準：輸入取高值，其餘案例",
+     "rows": "11,13,15,17,19,21,23,25,27,29,31,33,35,37,43,45,46,48,50",
+     "collapse": true,
+     "summary": "展開：輸入取高值、變動未達兩位數百分比的案例"
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：全部案例（加權目標價、DCF 目標價與估值評等）",
+     "head": [
+      "@Sens!A9",
+      "@Sens!B9",
+      "@Sens!D9",
+      "@Sens!E9",
+      "@Sens!F9",
+      "@Sens!G9",
+      "@Sens!H9"
+     ],
+     "rowgen": {
+      "sheet": "Sens",
+      "rows": "10-54",
+      "cols": [
+       "A",
+       "B",
+       "D",
+       "E",
+       "F",
+       "G",
+       "H"
+      ],
+      "fmts": [
+       "",
+       "",
+       "n0",
+       "sp1",
+       "n0",
+       "sp1",
+       ""
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "revdcf",
+   "title": "反向檢驗：現價隱含什麼（整本重算反解）",
+   "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "本模型未建反向 DCF 頁；以整本重算的反解代替：單獨調整一個承重驅動，求使加權目標價等於現價（上檔為零）及落在評等邊界所需的值，其他輸入不變。「無解」表示在搜尋區間內達不到。"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A23",
+     "head": [
+      "@Recon!A24",
+      "@Recon!C24",
+      "@Recon!D24",
+      "@Recon!E24"
+     ],
+     "rowgen": {
+      "sheet": "Recon",
+      "rows": "25-33",
+      "cols": [
+       "A",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "p2",
+       "p2",
+       ""
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "pl",
+   "title": "損益（標準損益表）",
+   "blocks": [
+    {
+     "type": "theme",
+     "title": "合併營收（十億日圓）× 情境 A／B／C 與營業利益率（情境 B）：FY2023–FY2032",
+     "x": "@PL!C42:L42",
+     "fmt": "n0",
+     "fmt_r": "p0",
+     "stack": false,
+     "pad": 1.25,
+     "bars": [
+      {
+       "name": [
+        "情境 ",
+        "A",
+        "：合併營收"
+       ],
+       "y": "@PL!C13:L13",
+       "color": "#7fb8bb"
+      },
+      {
+       "name": [
+        "情境 ",
+        "B",
+        "：合併營收"
+       ],
+       "y": "@PL!C51:L51",
+       "color": "#0b7a80"
+      },
+      {
+       "name": [
+        "情境 ",
+        "C",
+        "：合併營收"
+       ],
+       "y": "@PL!C89:L89",
+       "color": "#d9a08f"
+      }
+     ],
+     "lines": [
+      {
+       "name": [
+        "@PL!A60",
+        "（情境 B）"
+       ],
+       "y": "@PL!C60:L60",
+       "axis": "r",
+       "color": "#3b3838",
+       "labels": true
+      }
+     ],
+     "caption": "三組長條＝三情境合併營收；折線＝情境 B 營業利益率（右軸）。FY2023–FY2025 實績、FY2026 公司指引三情境相同，分化從 FY2027 開始。"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "會計口徑：日本會計準則（J-GAAP，公司法定財報準則；本表即 GAAP 口徑，未做 Non-GAAP 調整，因公司與市場皆以法定財報比較）。年度＝起始年（三月底決算）：FY2025 為最近實績年度、FY2026 為本期公司指引。營業費用＝毛利 − 營業利益（含販管費與其他營業費用）；業外含營業外損益與特別損益。"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "標準損益表（日本會計準則／GAAP；十億日圓，EPS 為日圓）：FY2023–FY2025 實績、FY2026 公司指引、FY2027 起情境 B",
+     "head": [
+      "@PL!A42",
+      "@PL!C42",
+      "@PL!D42",
+      "@PL!E42",
+      "@PL!F42",
+      "@PL!G42",
+      "@PL!H42",
+      "@PL!I42",
+      "@PL!J42",
+      "@PL!K42",
+      "@PL!L42"
+     ],
+     "rows": [
+      [
+       "@PL!A51",
+       "@PL!C51|n1",
+       "@PL!D51|n1",
+       "@PL!E51|n1",
+       "@PL!F51|n1",
+       "@PL!G51|n1",
+       "@PL!H51|n1",
+       "@PL!I51|n1",
+       "@PL!J51|n1",
+       "@PL!K51|n1",
+       "@PL!L51|n1"
+      ],
+      [
+       "@PL!A53",
+       "@PL!C53|p1",
+       "@PL!D53|p1",
+       "@PL!E53|p1",
+       "@PL!F53|p1",
+       "@PL!G53|p1",
+       "@PL!H53|p1",
+       "@PL!I53|p1",
+       "@PL!J53|p1",
+       "@PL!K53|p1",
+       "@PL!L53|p1"
+      ],
+      [
+       "@PL!A54",
+       "@PL!C54|n1",
+       "@PL!D54|n1",
+       "@PL!E54|n1",
+       "@PL!F54|n1",
+       "@PL!G54|n1",
+       "@PL!H54|n1",
+       "@PL!I54|n1",
+       "@PL!J54|n1",
+       "@PL!K54|n1",
+       "@PL!L54|n1"
+      ],
+      [
+       "@PL!A55",
+       "@PL!C55|n1",
+       "@PL!D55|n1",
+       "@PL!E55|n1",
+       "@PL!F55|n1",
+       "@PL!G55|n1",
+       "@PL!H55|n1",
+       "@PL!I55|n1",
+       "@PL!J55|n1",
+       "@PL!K55|n1",
+       "@PL!L55|n1"
+      ],
+      [
+       "@PL!A56",
+       "@PL!C56|p1",
+       "@PL!D56|p1",
+       "@PL!E56|p1",
+       "@PL!F56|p1",
+       "@PL!G56|p1",
+       "@PL!H56|p1",
+       "@PL!I56|p1",
+       "@PL!J56|p1",
+       "@PL!K56|p1",
+       "@PL!L56|p1"
+      ],
+      [
+       "@PL!A57",
+       "@PL!C57|n1",
+       "@PL!D57|n1",
+       "@PL!E57|n1",
+       "@PL!F57|n1",
+       "@PL!G57|n1",
+       "@PL!H57|n1",
+       "@PL!I57|n1",
+       "@PL!J57|n1",
+       "@PL!K57|n1",
+       "@PL!L57|n1"
+      ],
+      [
+       "@PL!A58",
+       "@PL!C58|p1",
+       "@PL!D58|p1",
+       "@PL!E58|p1",
+       "@PL!F58|p1",
+       "@PL!G58|p1",
+       "@PL!H58|p1",
+       "@PL!I58|p1",
+       "@PL!J58|p1",
+       "@PL!K58|p1",
+       "@PL!L58|p1"
+      ],
+      [
+       "@PL!A59",
+       "@PL!C59|n1",
+       "@PL!D59|n1",
+       "@PL!E59|n1",
+       "@PL!F59|n1",
+       "@PL!G59|n1",
+       "@PL!H59|n1",
+       "@PL!I59|n1",
+       "@PL!J59|n1",
+       "@PL!K59|n1",
+       "@PL!L59|n1"
+      ],
+      [
+       "@PL!A60",
+       "@PL!C60|p1",
+       "@PL!D60|p1",
+       "@PL!E60|p1",
+       "@PL!F60|p1",
+       "@PL!G60|p1",
+       "@PL!H60|p1",
+       "@PL!I60|p1",
+       "@PL!J60|p1",
+       "@PL!K60|p1",
+       "@PL!L60|p1"
+      ],
+      [
+       "@PL!A61",
+       "@PL!C61|n1",
+       "@PL!D61|n1",
+       "@PL!E61|n1",
+       "@PL!F61|n1",
+       "@PL!G61|n1",
+       "@PL!H61|n1",
+       "@PL!I61|n1",
+       "@PL!J61|n1",
+       "@PL!K61|n1",
+       "@PL!L61|n1"
+      ],
+      [
+       "@PL!A62",
+       "@PL!C62|n1",
+       "@PL!D62|n1",
+       "@PL!E62|n1",
+       "@PL!F62|n1",
+       "@PL!G62|n1",
+       "@PL!H62|n1",
+       "@PL!I62|n1",
+       "@PL!J62|n1",
+       "@PL!K62|n1",
+       "@PL!L62|n1"
+      ],
+      [
+       "@PL!A63",
+       "@PL!C63|n1",
+       "@PL!D63|n1",
+       "@PL!E63|n1",
+       "@PL!F63|n1",
+       "@PL!G63|n1",
+       "@PL!H63|n1",
+       "@PL!I63|n1",
+       "@PL!J63|n1",
+       "@PL!K63|n1",
+       "@PL!L63|n1"
+      ],
+      [
+       "@PL!A64",
+       "@PL!C64|n1",
+       "@PL!D64|n1",
+       "@PL!E64|n1",
+       "@PL!F64|n1",
+       "@PL!G64|n1",
+       "@PL!H64|n1",
+       "@PL!I64|n1",
+       "@PL!J64|n1",
+       "@PL!K64|n1",
+       "@PL!L64|n1"
+      ],
+      [
+       "@PL!A65",
+       "@PL!C65|n2",
+       "@PL!D65|n2",
+       "@PL!E65|n2",
+       "@PL!F65|n2",
+       "@PL!G65|n2",
+       "@PL!H65|n2",
+       "@PL!I65|n2",
+       "@PL!J65|n2",
+       "@PL!K65|n2",
+       "@PL!L65|n2"
+      ],
+      [
+       "@PL!A66",
+       "@PL!C66|n1",
+       "@PL!D66|n1",
+       "@PL!E66|n1",
+       "@PL!F66|n1",
+       "@PL!G66|n1",
+       "@PL!H66|n1",
+       "@PL!I66|n1",
+       "@PL!J66|n1",
+       "@PL!K66|n1",
+       "@PL!L66|n1"
+      ],
+      [
+       "@PL!A67",
+       "@PL!C67|p1",
+       "@PL!D67|p1",
+       "@PL!E67|p1",
+       "@PL!F67|p1",
+       "@PL!G67|p1",
+       "@PL!H67|p1",
+       "@PL!I67|p1",
+       "@PL!J67|p1",
+       "@PL!K67|p1",
+       "@PL!L67|p1"
+      ],
+      [
+       "@PL!A68",
+       "@PL!C68|p1",
+       "@PL!D68|p1",
+       "@PL!E68|p1",
+       "@PL!F68|p1",
+       "@PL!G68|p1",
+       "@PL!H68|p1",
+       "@PL!I68|p1",
+       "@PL!J68|p1",
+       "@PL!K68|p1",
+       "@PL!L68|p1"
+      ],
+      [
+       "@PL!A69",
+       "@PL!C69|n2",
+       "@PL!D69|n2",
+       "@PL!E69|n2",
+       "@PL!F69|n2",
+       "@PL!G69|n2",
+       "@PL!H69|n2",
+       "@PL!I69|n2",
+       "@PL!J69|n2",
+       "@PL!K69|n2",
+       "@PL!L69|n2"
+      ],
+      [
+       "@PL!A70",
+       "@PL!C70|n0",
+       "@PL!D70|n0",
+       "@PL!E70|n0",
+       "@PL!F70|n0",
+       "@PL!G70|n0",
+       "@PL!H70|n0",
+       "@PL!I70|n0",
+       "@PL!J70|n0",
+       "@PL!K70|n0",
+       "@PL!L70|n0"
+      ]
+     ]
+    },
+    {
+     "type": "pl",
+     "collapse": true,
+     "summary": "展開：三情境損益（A／B／C 並列，含折線；FY2026 起）",
+     "years": "@PL!F42:L42",
+     "metrics": [
+      {
+       "name": "合併營收（十億日圓）",
+       "fmt": "n1",
+       "chart": true,
+       "rows": {
+        "A": "@PL!F13:L13",
+        "B": "@PL!F51:L51",
+        "C": "@PL!F89:L89"
+       }
+      },
+      {
+       "name": "營業利益（十億日圓）",
+       "fmt": "n1",
+       "chart": true,
+       "rows": {
+        "A": "@PL!F21:L21",
+        "B": "@PL!F59:L59",
+        "C": "@PL!F97:L97"
+       }
+      },
+      {
+       "name": "營業利益率",
+       "fmt": "p1",
+       "rows": {
+        "A": "@PL!F22:L22",
+        "B": "@PL!F60:L60",
+        "C": "@PL!F98:L98"
+       }
+      },
+      {
+       "name": "EPS（日圓）",
+       "fmt": "n0",
+       "chart": true,
+       "rows": {
+        "A": "@PL!F32:L32",
+        "B": "@PL!F70:L70",
+        "C": "@PL!F108:L108"
+       }
+      },
+      {
+       "name": "自由現金流扣股利（十億日圓；收支關卡用）",
+       "fmt": "n1",
+       "rows": {
+        "A": "@PL!F38:L38",
+        "B": "@PL!F76:L76",
+        "C": "@PL!F114:L114"
+       }
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：情境 B 現金流（十億日圓）",
+     "head": [
+      "@PL!A42",
+      "@PL!C42",
+      "@PL!D42",
+      "@PL!E42",
+      "@PL!F42",
+      "@PL!G42",
+      "@PL!H42",
+      "@PL!I42",
+      "@PL!J42",
+      "@PL!K42",
+      "@PL!L42"
+     ],
+     "rowgen": {
+      "sheet": "PL",
+      "rows": "71-76",
+      "cols": [
+       "A",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G",
+       "H",
+       "I",
+       "J",
+       "K",
+       "L"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "drivers",
+   "title": "驅動因子：銷售量 × 價格 → 單一分部營收（地區子列）→ 利潤槓桿",
+   "blocks": [
+    {
+     "type": "theme",
+     "title": "銷售量年增 × 情境 A／B／C 與毛利率（情境 B）：FY2027–FY2032",
+     "x": "@PL!G42:L42",
+     "fmt": "p0",
+     "fmt_r": "p0",
+     "stack": false,
+     "pad": 1.4,
+     "bars": [
+      {
+       "name": [
+        "情境 ",
+        "A",
+        "：銷售量年增"
+       ],
+       "y": "@PL!G5:L5",
+       "color": "#7fb8bb"
+      },
+      {
+       "name": [
+        "情境 ",
+        "B",
+        "：銷售量年增"
+       ],
+       "y": "@PL!G43:L43",
+       "color": "#0b7a80"
+      },
+      {
+       "name": [
+        "情境 ",
+        "C",
+        "：銷售量年增"
+       ],
+       "y": "@PL!G81:L81",
+       "color": "#d9a08f"
+      }
+     ],
+     "lines": [
+      {
+       "name": [
+        "@PL!A56",
+        "（情境 B）"
+       ],
+       "y": "@PL!G56:L56",
+       "axis": "r",
+       "color": "#3b3838",
+       "labels": true
+      }
+     ],
+     "caption": "長條＝三情境銷售量年增（價格另計）；折線＝情境 B 毛利率（右軸）。情境 C 在 FY2027 設定設備投資循環回落。"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@PL!A1"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "三情境驅動（In 頁情境驅動對照；進加權目標價）",
+     "head": [
+      "項目",
+      "情境 A",
+      "情境 B",
+      "情境 C"
+     ],
+     "rows": [
+      [
+       "@In!B100",
+       "@In!D100|p1",
+       "@In!E100|p1",
+       "@In!F100|p1"
+      ],
+      [
+       "@In!B101",
+       "@In!D101|p1",
+       "@In!E101|p1",
+       "@In!F101|p1"
+      ],
+      [
+       "@In!B102",
+       "@In!D102|p1",
+       "@In!E102|p1",
+       "@In!F102|p1"
+      ],
+      [
+       "@In!B103",
+       "@In!D103|p1",
+       "@In!E103|p1",
+       "@In!F103|p1"
+      ],
+      [
+       "@In!B104",
+       "@In!D104|p1",
+       "@In!E104|p1",
+       "@In!F104|p1"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "分部營收推導（情境 B；十億日圓）：銷售量 × 價格 → 合併營收（單一分部）→ 地區子列；核對列應為零",
+     "head": [
+      "@PL!A42",
+      "@PL!C42",
+      "@PL!D42",
+      "@PL!E42",
+      "@PL!F42",
+      "@PL!G42",
+      "@PL!H42",
+      "@PL!I42",
+      "@PL!J42",
+      "@PL!K42",
+      "@PL!L42"
+     ],
+     "rowgen": {
+      "sheet": "PL",
+      "rows": "43-53",
+      "cols": [
+       "A",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G",
+       "H",
+       "I",
+       "J",
+       "K",
+       "L"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1",
+       "n1"
+      ],
+      "row_fmt": {
+       "43": {
+        "C": "p1",
+        "D": "p1",
+        "E": "p1",
+        "F": "p1",
+        "G": "p1",
+        "H": "p1",
+        "I": "p1",
+        "J": "p1",
+        "K": "p1",
+        "L": "p1"
+       },
+       "44": {
+        "C": "p1",
+        "D": "p1",
+        "E": "p1",
+        "F": "p1",
+        "G": "p1",
+        "H": "p1",
+        "I": "p1",
+        "J": "p1",
+        "K": "p1",
+        "L": "p1"
+       },
+       "53": {
+        "C": "p1",
+        "D": "p1",
+        "E": "p1",
+        "F": "p1",
+        "G": "p1",
+        "H": "p1",
+        "I": "p1",
+        "J": "p1",
+        "K": "p1",
+        "L": "p1"
+       }
+      }
+     }
+    },
+    {
+     "type": "h3",
+     "text": "一、需求與價格（命題驅動）"
+    },
+    {
+     "type": "table",
+     "caption": "有敏感度區間的參數（基準進主模型；低／高只用於敏感度頁）",
+     "head": [
+      "@In!B3",
+      "@In!D3",
+      "@In!E3",
+      "@In!F3",
+      "@In!G3"
+     ],
+     "rows": [
+      [
+       "@In!B16",
+       "@In!D16|p0",
+       "@In!E16|p0",
+       "@In!F16|p0",
+       "@In!G16|tag"
+      ],
+      [
+       "@In!B19",
+       "@In!D19|p1",
+       "@In!E19|p1",
+       "@In!F19|p1",
+       "@In!G19|tag"
+      ],
+      [
+       "@In!B22",
+       "@In!D22|p1",
+       "@In!E22|p1",
+       "@In!F22|p1",
+       "@In!G22|tag"
+      ],
+      [
+       "@In!B25",
+       "@In!D25|p1",
+       "@In!E25|p1",
+       "@In!F25|p1",
+       "@In!G25|tag"
+      ],
+      [
+       "@In!B28",
+       "@In!D28|p1",
+       "@In!E28|p1",
+       "@In!F28|p1",
+       "@In!G28|tag"
+      ]
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "二、利潤槓桿（毛利率、營業費用）"
+    },
+    {
+     "type": "table",
+     "caption": "有敏感度區間的參數",
+     "head": [
+      "@In!B3",
+      "@In!D3",
+      "@In!E3",
+      "@In!F3",
+      "@In!G3"
+     ],
+     "rows": [
+      [
+       "@In!B31",
+       "@In!D31|p1",
+       "@In!E31|p1",
+       "@In!F31|p1",
+       "@In!G31|tag"
+      ],
+      [
+       "@In!B33",
+       "@In!D33|n2",
+       "@In!E33|n2",
+       "@In!F33|n2",
+       "@In!G33|tag"
+      ],
+      [
+       "@In!B35",
+       "@In!D35|n1",
+       "@In!E35|n1",
+       "@In!F35|n1",
+       "@In!G35|tag"
+      ],
+      [
+       "@In!B37",
+       "@In!D37|p0",
+       "@In!E37|p0",
+       "@In!F37|p0",
+       "@In!G37|tag"
+      ]
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "三、現金流與折現"
+    },
+    {
+     "type": "table",
+     "caption": "有敏感度區間的參數",
+     "head": [
+      "@In!B3",
+      "@In!D3",
+      "@In!E3",
+      "@In!F3",
+      "@In!G3"
+     ],
+     "rows": [
+      [
+       "@In!B41",
+       "@In!D41|p1",
+       "@In!E41|p1",
+       "@In!F41|p1",
+       "@In!G41|tag"
+      ],
+      [
+       "@In!B14",
+       "@In!D14|n0",
+       "@In!E14|n0",
+       "@In!F14|n0",
+       "@In!G14|tag"
+      ],
+      [
+       "@In!B42",
+       "@In!D42|p1",
+       "@In!E42|p1",
+       "@In!F42|p1",
+       "@In!G42|tag"
+      ],
+      [
+       "@In!B43",
+       "@In!D43|p0",
+       "@In!E43|p0",
+       "@In!F43|p0",
+       "@In!G43|tag"
+      ],
+      [
+       "@In!B44",
+       "@In!D44|n0",
+       "@In!E44|n0",
+       "@In!F44|n0",
+       "@In!G44|tag"
+      ],
+      [
+       "@In!B39",
+       "@In!D39|p0",
+       "@In!E39|p0",
+       "@In!F39|p0",
+       "@In!G39|tag"
+      ],
+      [
+       "@In!B65",
+       "@In!D65|n3",
+       "@In!E65|n3",
+       "@In!F65|n3",
+       "@In!G65|tag"
+      ],
+      [
+       "@In!B63",
+       "@In!D63|p1",
+       "@In!E63|p1",
+       "@In!F63|p1",
+       "@In!G63|tag"
+      ],
+      [
+       "@In!B67",
+       "@In!D67|p1",
+       "@In!E67|p1",
+       "@In!F67|p1",
+       "@In!G67|tag"
+      ],
+      [
+       "@In!B68",
+       "@In!D68|p1",
+       "@In!E68|p1",
+       "@In!F68|p1",
+       "@In!G68|tag"
+      ],
+      [
+       "@In!B69",
+       "@In!D69|p1",
+       "@In!E69|p1",
+       "@In!F69|p1",
+       "@In!G69|tag"
+      ],
+      [
+       "@In!B55",
+       "@In!D55|p0",
+       "@In!E55|p0",
+       "@In!F55|p0",
+       "@In!G55|tag"
+      ],
+      [
+       "@In!B50",
+       "@In!D50|n0",
+       "@In!E50|n0",
+       "@In!F50|n0",
+       "@In!G50|tag"
+      ],
+      [
+       "@In!B70",
+       "@In!D70|p0",
+       "@In!E70|p0",
+       "@In!F70|p0",
+       "@In!G70|tag"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：FY2026 公司指引（固定輸入）",
+     "head": [
+      "@In!B3",
+      "@In!E3",
+      "@In!G3"
+     ],
+     "rows": [
+      [
+       "@In!B5",
+       "@In!E5|n1",
+       "@In!G5|tag"
+      ],
+      [
+       "@In!B6",
+       "@In!E6|n1",
+       "@In!G6|tag"
+      ],
+      [
+       "@In!B7",
+       "@In!E7|n1",
+       "@In!G7|tag"
+      ],
+      [
+       "@In!B8",
+       "@In!E8|n1",
+       "@In!G8|tag"
+      ],
+      [
+       "@In!B9",
+       "@In!E9|n0",
+       "@In!G9|tag"
+      ],
+      [
+       "@In!B10",
+       "@In!E10|p1",
+       "@In!G10|tag"
+      ],
+      [
+       "@In!B11",
+       "@In!E11|p1",
+       "@In!G11|tag"
+      ],
+      [
+       "@In!B12",
+       "@In!E12|n1",
+       "@In!G12|tag"
+      ],
+      [
+       "@In!B13",
+       "@In!E13|n1",
+       "@In!G13|tag"
+      ],
+      [
+       "@In!B15",
+       "@In!E15|n0",
+       "@In!G15|tag"
+      ],
+      [
+       "@In!B36",
+       "@In!E36|n2",
+       "@In!G36|tag"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pai",
+   "title": "實體 AI 曝險（機器人用氣動元件；只作對照，不進目標價）",
+   "blocks": [
+    {
+     "type": "compare",
+     "title": "機器人拉動的 SMC 氣動營收（十億日圓）與占合併營收比（情境 B 營收為分母）",
+     "groups": [
+      {
+       "name": "@Recon!A16",
+       "fmt": "n1",
+       "items": [
+        {
+         "name": "@Recon!B12",
+         "v": "@Recon!B16"
+        },
+        {
+         "name": "@Recon!C12",
+         "v": "@Recon!C16"
+        },
+        {
+         "name": "@Recon!D12",
+         "v": "@Recon!D16"
+        }
+       ]
+      },
+      {
+       "name": "@Recon!A17",
+       "fmt": "n1",
+       "items": [
+        {
+         "name": "@Recon!B12",
+         "v": "@Recon!B17"
+        },
+        {
+         "name": "@Recon!C12",
+         "v": "@Recon!C17"
+        },
+        {
+         "name": "@Recon!D12",
+         "v": "@Recon!D17"
+        }
+       ]
+      },
+      {
+       "name": "@Recon!A18",
+       "fmt": "p1",
+       "items": [
+        {
+         "name": "@Recon!B12",
+         "v": "@Recon!B18"
+        },
+        {
+         "name": "@Recon!C12",
+         "v": "@Recon!C18"
+        },
+        {
+         "name": "@Recon!D12",
+         "v": "@Recon!D18"
+        }
+       ]
+      },
+      {
+       "name": "@Recon!A19",
+       "fmt": "p1",
+       "items": [
+        {
+         "name": "@Recon!B12",
+         "v": "@Recon!B19"
+        },
+        {
+         "name": "@Recon!C12",
+         "v": "@Recon!C19"
+        },
+        {
+         "name": "@Recon!D12",
+         "v": "@Recon!D19"
+        }
+       ]
+      }
+     ],
+     "caption": "低／基準／高＝線 6 共用零組件模型的機器人氣動市場三情境 × SMC 份額低／基準／高（同向）。人形、AMR、車用的氣動內容在線模型基準為零，未計入。"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A7"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A11",
+     "head": [
+      "@Recon!A12",
+      "@Recon!B12",
+      "@Recon!C12",
+      "@Recon!D12",
+      "@Recon!E12"
+     ],
+     "rows": [
+      [
+       "@Recon!A13",
+       "@Recon!B13|n1",
+       "@Recon!C13|n1",
+       "@Recon!D13|n1",
+       "@Recon!E13"
+      ],
+      [
+       "@Recon!A14",
+       "@Recon!B14|n1",
+       "@Recon!C14|n1",
+       "@Recon!D14|n1",
+       "@Recon!E14"
+      ],
+      [
+       "@Recon!A15",
+       "@Recon!B15|p0",
+       "@Recon!C15|p0",
+       "@Recon!D15|p0",
+       "@Recon!E15"
+      ],
+      [
+       "@Recon!A16",
+       "@Recon!B16|n1",
+       "@Recon!C16|n1",
+       "@Recon!D16|n1",
+       "@Recon!E16"
+      ],
+      [
+       "@Recon!A17",
+       "@Recon!B17|n1",
+       "@Recon!C17|n1",
+       "@Recon!D17|n1",
+       "@Recon!E17"
+      ],
+      [
+       "@Recon!A18",
+       "@Recon!B18|p1",
+       "@Recon!C18|p1",
+       "@Recon!D18|p1",
+       "@Recon!E18"
+      ],
+      [
+       "@Recon!A19",
+       "@Recon!B19|p1",
+       "@Recon!C19|p1",
+       "@Recon!D19|p1",
+       "@Recon!E19"
+      ],
+      [
+       "@Recon!A20",
+       "@Recon!B20|n0",
+       "@Recon!C20|n0",
+       "@Recon!D20|n0",
+       "@Recon!E20"
+      ],
+      [
+       "@Recon!A21",
+       "@Recon!B21|p1",
+       "@Recon!C21|p1",
+       "@Recon!D21|p1",
+       "@Recon!E21"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "recon",
+   "title": "對帳：公司指引、共識、歷史分部與線層級變數",
+   "blocks": [
+    {
+     "type": "table",
+     "caption": "@Recon!A1",
+     "head": [
+      "@Recon!A2",
+      "@Recon!B2",
+      "@Recon!C2",
+      "@Recon!D2",
+      "@Recon!E2"
+     ],
+     "rowgen": {
+      "sheet": "Recon",
+      "rows": "3-9",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "n1",
+       ""
+      ],
+      "row_fmt": {
+       "6": {
+        "B": "n0",
+        "C": "n0",
+        "D": "n0"
+       },
+       "8": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "9": {
+        "B": "n0",
+        "C": "n0",
+        "D": "n0"
+       }
+      }
+     }
+    },
+    {
+     "type": "table",
+     "caption": "地區別營收實績（十億日圓；有價證券報告書轉載）與合併營收對帳",
+     "head": [
+      "@Hist!A20",
+      "@Hist!B20",
+      "@Hist!C20",
+      "@Hist!D20"
+     ],
+     "rowgen": {
+      "sheet": "Hist",
+      "rows": "21-27",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D"
+      ],
+      "fmts": [
+       "",
+       "n2",
+       "n2",
+       "n2"
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：線層級變數對帳（共用零組件、工業機器人）",
+     "head": [
+      "@對帳!A2",
+      "@對帳!B2",
+      "@對帳!C2",
+      "@對帳!D2",
+      "@對帳!G2"
+     ],
+     "rowgen": {
+      "sheet": "對帳",
+      "rows": "3-11",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "G"
+      ],
+      "fmts": [
+       "",
+       "",
+       "",
+       "",
+       "tag"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "status",
+   "title": "資料狀態",
+   "blocks": [
+    {
+     "type": "kv",
+     "items": [
+      [
+       "模型版本",
+       [
+        "$version",
+        "（",
+        "$date",
+        "）"
+       ]
+      ],
+      [
+       "版本與日期",
+       "@README!A1"
+      ],
+      [
+       "資料日期",
+       "@README!A2"
+      ],
+      [
+       "build_id",
+       "@Sens!D3"
+      ],
+      [
+       "來源 xlsx",
+       "$xlsx"
+      ],
+      [
+       "來源 xlsx 的雜湊指紋",
+       "$sha"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "股價與市場資料的日期",
+     "head": [
+      "@In!B3",
+      "@In!E3",
+      "@In!G3",
+      "@In!H3",
+      "@In!I3"
+     ],
+     "rows": [
+      [
+       "@In!B46",
+       "@In!E46|n0",
+       "@In!G46|tag",
+       "@In!H46",
+       "@In!I46"
+      ],
+      [
+       "@In!B62",
+       "@In!E62|p2",
+       "@In!G62|tag",
+       "@In!H62",
+       "@In!I62"
+      ],
+      [
+       "@In!B85",
+       "@In!E85|n2",
+       "@In!G85|tag",
+       "@In!H85",
+       "@In!I85"
+      ],
+      [
+       "@In!B86",
+       "@In!E86|n0",
+       "@In!G86|tag",
+       "（出處含網址，見 xlsx）",
+       "@In!I86"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Risk!A1",
+     "head": [
+      "@Risk!A2",
+      "@Risk!B2",
+      "@Risk!C2",
+      "@Risk!D2"
+     ],
+     "rows": [
+      [
+       "@Risk!A3",
+       "@Risk!B3",
+       "@Risk!C3",
+       "@Risk!D3"
+      ],
+      [
+       "@Risk!A4",
+       "@Risk!B4",
+       "（出處含網址，見 xlsx）",
+       "@Risk!D4"
+      ],
+      [
+       "@Risk!A5",
+       "@Risk!B5",
+       "@Risk!C5",
+       "@Risk!D5"
+      ],
+      [
+       "@Risk!A6",
+       "@Risk!B6",
+       "@Risk!C6",
+       "@Risk!D6"
+      ],
+      [
+       "@Risk!A7",
+       "@Risk!B7",
+       "@Risk!C7",
+       "@Risk!D7"
+      ],
+      [
+       "@Risk!A8",
+       "@Risk!B8",
+       "@Risk!C8",
+       "@Risk!D8"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "來源清單（含網址）見 xlsx Sources 頁與 In 頁來源欄；本頁為自含網頁，不放外部網址。"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "「未取得」清單"
+    },
+    {
+     "type": "scan",
+     "needle": "未取得",
+     "collapse": true,
+     "summary": "展開：標為「未取得」的項目",
+     "sheets": {
+      "In": [
+       "B",
+       "H",
+       "I"
+      ],
+      "Hist": [
+       "A",
+       "F"
+      ],
+      "對帳": [
+       "A",
+       "C"
+      ]
+     },
+     "empty": "沒有標為未取得的項目。"
+    }
+   ]
+  }
+ ]
+}

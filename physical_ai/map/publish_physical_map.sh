@@ -11,7 +11,7 @@ SRC="$ROOT/physical_ai/map/dist"
 python3 "$ROOT/physical_ai/map/check_map.py" >/dev/null || { echo "停止：check_map.py 未通過" >&2; exit 1; }
 VER=$(python3 -c "import json;print(json.load(open('$SRC/data.json',encoding='utf-8'))['meta'].get('version','v?'))")
 WT=$(mktemp -d)
-git -C "$ROOT" fetch -q origin gh-pages
+git -C "$ROOT" fetch -q --depth 1 origin +gh-pages:refs/remotes/origin/gh-pages
 git -C "$ROOT" worktree add -q --detach "$WT" origin/gh-pages
 trap 'git -C "$ROOT" worktree remove --force "$WT" >/dev/null 2>&1 || true' EXIT
 mkdir -p "$WT/physical_ai" "$WT/physical"

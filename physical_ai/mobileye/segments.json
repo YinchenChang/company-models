@@ -1,0 +1,29 @@
+{
+ "company": "mobileye",
+ "ticker": "MBLY",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "Mobileye",
+   "label": "Mobileye 分部營收",
+   "period": "9M'26（2025-12-28～2026-09-26）",
+   "value": 1530,
+   "unit": "US$M",
+   "source": "Mobileye 10-Q（2026-09-26 季，Note 9 分部資訊、封面股數、R&D Law 段）https://www.sec.gov/Archives/edgar/data/0001910139/000110465926120226/mbly-20260926x10q.htm"
+  },
+  {
+   "name": "Other（Moovit）",
+   "label": "Other（Moovit）分部營收",
+   "period": "9M'26（2025-12-28～2026-09-26）",
+   "value": 28,
+   "unit": "US$M",
+   "source": "Mobileye 10-Q（2026-09-26 季，Note 9 分部資訊、封面股數、R&D Law 段）https://www.sec.gov/Archives/edgar/data/0001910139/000110465926120226/mbly-20260926x10q.htm"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收（應為 0）",
+  "檢查：分部績效合計 − 兩分部（應為 0）"
+ ],
+ "note": "Q 頁為 10-Q Note 9 官方分部（Q3'25、Q3'26、9M'25、9M'26）；PL 頁三情境另有「檢查：Mobileye 子列合計 − Mobileye 分部」與「檢查：分部合計 − 合併營收」（FY2026 起）。FY2023–FY2025 年度分部值未取得"
+}
