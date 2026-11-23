@@ -274,6 +274,16 @@ def build(path_out):
     wb = openpyxl.load_workbook(BASE)
     SCRUBBED = scrub(wb)
     print("個人字樣改中性：", SCRUBBED)
+    # 原檔隱藏頁 Non-GAAP_legacy 有失效參照（#REF!）：該頁不屬本模型，把出現錯誤值的格改成文字，其餘公式不動（v0.3.1；zero-rows-check）
+    _vb = openpyxl.load_workbook(BASE, data_only=True)
+    _lg, _lv = wb["Non-GAAP_legacy"], _vb["Non-GAAP_legacy"]
+    LEGACY_ERR = 0
+    for row in _lg.iter_rows():
+        for c in row:
+            cv = _lv[c.coordinate].value
+            if (isinstance(c.value, str) and "#REF!" in c.value) or (isinstance(cv, str) and cv.startswith("#")):
+                c.value = "原檔參照失效"; LEGACY_ERR += 1
+    print("Non-GAAP_legacy 失效參照改文字：", LEGACY_ERR)
     ng = wb["Non-GAAP"]
     # ---------------- (1) 原檔年度欄公式範圍修正（只影響年度顯示欄，季度數值不變）
     fixes = []

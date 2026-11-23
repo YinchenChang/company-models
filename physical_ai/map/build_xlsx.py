@@ -314,6 +314,11 @@ def main():
             O.cell(j, c, r[h])
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     wb.save(OUT)
+    # LibreOffice 重算後覆寫，讓公式格帶快取值（公式格快取值檢查）
+    import shutil, subprocess, tempfile
+    tmp = tempfile.mkdtemp()
+    subprocess.run(["soffice", "--headless", "--convert-to", "xlsx", "--outdir", tmp, OUT], check=True, capture_output=True)
+    shutil.copy(os.path.join(tmp, os.path.basename(OUT)), OUT); shutil.rmtree(tmp, ignore_errors=True)
     print(OUT, "線指標", len(L), "個股", len(pos), "估值", VEND - 1)
 
 
