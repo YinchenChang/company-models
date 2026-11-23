@@ -1144,6 +1144,15 @@ _a1 = wb["README"]["A1"].value; _h, _t = _a1.split("；", 1)
 import re as _re
 assert _re.search(r"v0\.4\.[456]", _h)
 wb["README"]["A1"] = _re.sub(r"v0\.4\.[456]", "v0.4.7", _h, count=1) + "；v0.4.7（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120；只換價格，共識 EPS 與模型假設不變）；" + _t
+# 外部稽核優化 W3-6（2026-11-23）：舊範本治理項目一次補齊（build_id、模型狀態、單一主要標記與來源誘因、Sens 鍵欄）；共用函式 tools/model_governance/stamp_governance.py。
+#   只新增列、欄與文字，不動既有數值格；敏感度整本重算（CO_OVERRIDE）與協調試算（COORD_RUN）時不做。
+if _CR and not OVR:
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "model_governance")); import stamp_governance as _SG  # noqa: E402
+    import json as _json
+    _SJ = _json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "sens.json"), encoding="utf-8"))
+    print(_SG.apply(wb, here=os.path.dirname(os.path.abspath(__file__)), slug="cohr", ver=_re.search(r"v(\d+\.\d+(?:\.\d+)*)", wb["README"]["A1"].value).group(1),
+                    snapshot_tp=_SJ["_base"]["tp"], sens_keys={d["label"]: " ".join(d["keys"]) for d in _SJ["biz"].values() if "keys" in d},
+                    rerun_hint="重跑 python3 cohr/sens_cohr.py 與建置"))
 wb.save(sys.argv[1])
 if os.environ.get("COHR_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

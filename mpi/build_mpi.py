@@ -1006,6 +1006,11 @@ import px1120_post as P1120  # noqa: E402
 _N1120 = open(os.path.join(_HERE, "px1120_readme.txt"), encoding="utf-8").read().strip() if os.path.exists(os.path.join(_HERE, "px1120_readme.txt")) else "v0.2.8（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。"
 print(P1120.apply(wb, _HERE, dict(ver="v0.2.8", old_ver="v0.2.7", tk="6223.TWO", old_date="2026-11-13", note=_N1120 + " ",
                                   extra_subs=(("v0.2.7 起為 2026-11-13（4,670）", "v0.2.7 起為 2026-11-13（4,670）；v0.2.8 起為 2026-11-20（%s）" % format(P1120.px("6223.TWO"), ",.10g")),))))
+# 外部稽核優化 W3-6（2026-11-23）：舊範本治理項目一次補齊（build_id、模型狀態、單一主要標記與來源誘因、Sens 鍵）；共用函式 tools/model_governance/stamp_governance.py。
+#   只新增列、欄與文字，不動既有數值格。β 案例實際改的是 beta_u（In 頁 beta_u 低／高＝β_u ∓ beta_du），在該列補上鍵 beta_u。
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "model_governance")); import stamp_governance as _SG  # noqa: E402
+print(_SG.apply(wb, here=os.path.dirname(os.path.abspath(__file__)), slug="mpi", ver="0.2.8",   # 升版時與成品檔名的版號一起改（本模型 README!A1 開頭的版號停在 v0.2.6，不能從那裡讀）
+                sens_keys={"β 低／高": "beta_u"}))
 wb.save(sys.argv[1])
 if os.environ.get("MPI_ROWMAP"):
     import json

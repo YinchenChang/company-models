@@ -28,6 +28,11 @@ CASES = [
     # 外部稽核優化 W3（2026-11-23）：int_f 改為 Q1 實績 × 4 後，低／高區間放進 Sens（低＝FY2026 全年實績、高＝Q1 期末借款 × kd − 其他淨收益）
     ("int", "non-GAAP 利息與其他淨支出 每年 0.118／0.152 十億美元（基準 0.132＝FY2027 Q1 實績 × 4）", ["int_f"], ["int_f"]),
     ("q2", "FY2027 第二季資料中心季增 11%／27%（第二季營收對指引的落點）", ["q2_dg"], ["q2_dg"]),
+    # 外部稽核優化 W3-6（2026-11-23）：In 頁有低／高區間、原本沒有任何目標價案例的四個鍵補上整本重算案例（既有案例與基準不變）
+    ("h1r", "FY2026 上半年資料中心 ÷ 下半年資料中心 0.72／0.86（份額校準基礎）", ["h1r26"], ["h1r26"]),
+    ("qcg", "通訊營收季增（FY2027 Q1、Q2 拆分用）0%／10%", ["q_cg"], ["q_cg"]),
+    ("qig", "工業營收季增（FY2027 Q2）−3%／＋3%", ["q_ig"], ["q_ig"]),
+    ("shg", "稀釋股數年變動 0%／3%", ["sh_g"], ["sh_g"]),
 ]
 
 
@@ -64,8 +69,8 @@ rc = run(jobs, "cases")
 R = {nm: read(rc, nm) for nm in jobs}
 b = R["base"]
 out = {"_說明": "加權目標價敏感度整本重算快照（cohr/sens_cohr.py）；正式建置讀入 Sens 頁「加權目標價相對基準」表", "_base": b, "biz": {}}
-for k, label, _, _ in CASES:
-    out["biz"][k] = {"label": label, "低": R[f"{k}__lo"], "高": R[f"{k}__hi"]}
+for k, label, lo, hi in CASES:
+    out["biz"][k] = {"label": label, "keys": sorted(set(lo) | set(hi)), "低": R[f"{k}__lo"], "高": R[f"{k}__hi"]}   # keys＝本案例覆寫的 In 鍵（W3-6：建置時寫進 Sens 鍵欄）
     print(f"{k:5s} 低 {R[f'{k}__lo']['tp'] / b['tp'] - 1:+.2%}  高 {R[f'{k}__hi']['tp'] / b['tp'] - 1:+.2%}")
 print("基準", b)
 json.dump(out, open(os.path.join(HERE, "sens.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
