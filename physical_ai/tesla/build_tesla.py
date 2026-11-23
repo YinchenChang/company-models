@@ -241,10 +241,14 @@ def scrub(wb):
     hits = []
 
     def clean(v):
+        # 試算表匯出的註解標頭「ID#… ⏎ 姓名 (日期時間)」：姓名可能與文件屬性的寫法不同（連字號、分段），一律改中性用語
+        v = re.sub(r"(ID#\S+\s*\n)[^\n(]*\(", r"\1原檔作者 (", v)
         for t in terms:
             v = v.replace(f"待 {t} 決定", "原檔待決定事項").replace(f"待{t}決定", "原檔待決定事項")
         for t in terms:
             v = v.replace(t, "原檔作者")
+        # 姓名其餘部分（緊貼在已替換字樣前的拉丁字名，例如連字號寫法）一併移除
+        v = re.sub(r"[A-Za-z][A-Za-z\-]{1,30}[ \u00a0]+原檔作者", "原檔作者", v)
         return v
     for ws in wb.worksheets:
         for row in ws.iter_rows():
