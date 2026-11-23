@@ -60,3 +60,16 @@
 | `check_display.py`、`version_table.py` | README 版本表引用的舊成品已不在工作樹（`dist/` 只留現行版） | 該欄凍結：沿用 README 既有文字，只檢查還在樹上的欄；整張表都不在時略過並列出數量 |
 | `check_display.py` | 路徑分隔符 | 一律以「/」比對，Windows 上也對得上 |
 | `check_governance.py` | 活頁簿沒有 In 頁（OpenAI、Anthropic、MiniMax、智譜的模型商結構） | 回報「不適用」，結束碼 0 |
+
+## 舊範本治理項目共用補齊函式（`stamp_governance.py`；外部稽核優化 W3-6，2026-11-23）
+
+建置腳本在 `wb.save()` 之前呼叫 `stamp_governance.apply(wb, here, slug, ver, snapshot_tp=None, sens_keys=None, exempt=None)`，一次補上 `check_governance.py` 檢查的四項與 Sens 鍵：
+
+| 項目 | 做法 |
+|---|---|
+| build_id | `<slug>-v<版號>-<公司資料夾內建置腳本、後處理補丁與資料 json 的雜湊>`；寫在 Sens 頁底與 README!A1 末尾。HTML 由 `tools/company_html/build_company_html.py` 頁尾自動帶出（內文沒有同一字串時） |
+| 模型狀態 | Sens 頁底「輸入指紋」：In 頁低／基準／高欄的手填數字（不含公式格）加權加總，建置時寫死一份、活頁簿內即時重算一份，不同即 STALE；有整本重算快照的模型再比加權目標價 |
+| 單一主要標記、來源誘因欄 | 混標改成一個主要標記（取最近一期那一段；有公司指引時取 Interested-party），原混標文字寫進來源誘因欄；可用 `tag_override` 逐列指定 |
+| Sens 鍵 | 估值參數表的鍵附到 B 欄（設定）文字後；`sens_keys` 補整本重算快照等案例列的鍵；`exempt` 寫豁免句（理由由各家負責人提供） |
+
+只新增列、欄與文字，不動既有數值格。已套用：Coherent、旺矽（試作）。盤點與逐家狀況見 `docs/reports/20261123_W3-6_治理項目盤點.md`；盤點腳本 `tools/audit_w3_agent/inventory.py`。
