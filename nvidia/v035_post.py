@@ -338,6 +338,9 @@ def sens_tp(wb, SJ, ctx):
     SE.cell(r, 3, f"=tp_w_dcf*{dcf}+(1-tp_w_dcf)*{cu}").number_format = "#,##0.00"; SE.cell(r, 4, f"=C{r}/G{r}-1").number_format = "+0.0%;-0.0%"
     SE.cell(r, 5, "—"); SE.cell(r, 7, f"={tpc}").number_format = "#,##0.00"; SE.cell(r, 8, "rm_factor"); SE.cell(r, 9, 0).number_format = "+#,##0.00;-#,##0.00"
     G["rm1"] = r; r += 1
+    # 外部稽核 G-T05（2026-11-23；Andy 同意加入）：執行長異動的三個治理參數只進 Sens，基準不動（不需驗收清單 X4、X16、X30；
+    # docs/plan/高不確定性預估工作原則.md：沒有實證的數字不當點值入基準）。三案皆活頁簿公式；設定值皆 Assumed（無跨公司實證），取自 Gemini 試算提案。
+    r = ceo_cases(SE, V, r, dcf, cu, tpc)
     b = (SJ or {}).get("_base", {})
     for name, key, setting in BIZ + (BIZ36 if ctx["V36"] else []):
         d = (SJ or {}).get("biz", {}).get(key, {})
@@ -353,6 +356,44 @@ def sens_tp(wb, SJ, ctx):
         r += 1
     G["biz1"] = r - 1
     return G
+
+
+def ceo_cases(SE, V, r, dcf, cu, tpc):
+    """執行長異動三個治理參數的 Sens 案例（只新增列；全部為活頁簿公式，不回饋計算）。回傳下一列。"""
+    SRC = "設定值屬 Assumed（無跨公司實證），取自 Gemini 試算提案 G-T05（2026-11-23）；基準不動"
+    d20 = lab(V, "DCF 情境價值推到 12 個月後"); pm = lab(V, "同業前瞻 P/E 中位數"); e34 = lab(V, "各情境 12 個月後的前瞻 EPS")
+    wr = lab(SE, "WACC ±1pt"); wf = SE.cell(wr, 5).value
+    assert isinstance(wf, str) and wf.count("wacc_adj_hi") >= 1, "WACC 案例公式找不到 wacc_adj_hi"
+
+    def put(name, setting, lo, hi, lo_d, hi_d):
+        nonlocal r
+        SE.cell(r, 1, name); SE.cell(r, 2, f"{setting}；{SRC}")
+        for f, fd, ct, cr, cdl in ((lo, lo_d, 3, 4, 9), (hi, hi_d, 5, 6, 10)):
+            if f is None:
+                SE.cell(r, ct, "—"); continue
+            SE.cell(r, ct, "=" + f).number_format = "#,##0.00"
+            SE.cell(r, cr, f"={chr(64 + ct)}{r}/G{r}-1").number_format = "+0.0%;-0.0%"
+            SE.cell(r, cdl, "=" + fd).number_format = "+#,##0.00;-#,##0.00"
+        SE.cell(r, 7, f"={tpc}").number_format = "#,##0.00"
+        r += 1
+
+    # ① 相對倍數溢價保留比例：係數＝1＋（歷史相對倍數係數 − 1）× 保留比例；DCF 不變。保留 0%＝上一列、保留 100%＝基準
+    keep = lambda k: f"tp_w_dcf*{dcf}+(1-tp_w_dcf)*{cu}*(1+(rm_factor-1)*{k})"
+    put("執行長異動：相對倍數溢價保留 25%／75%", "Comparable 的相對倍數係數只保留超過 1 的部分的 25%（低）／75%（高），DCF 不變", keep("0.25"), keep("0.75"), "0", "0")
+    put("執行長異動：相對倍數溢價保留 50%", "同上，保留 50%；只有低", keep("0.5"), None, "0", None)
+    # ② 情境權重偏保守：DCF 與前瞻 EPS 都改用該組權重加權（三情境的值不變）
+    def wts(a, b, c):
+        mix = lambda row: f"({a}*Val!$B${row}+{b}*Val!$C${row}+{c}*Val!$D${row})"
+        return f"tp_w_dcf*{mix(d20)}+(1-tp_w_dcf)*Val!$B${pm}*{mix(e34)}*rm_factor", f"{mix(d20)}-{dcf}"
+    (lo, lo_d), (hi, hi_d) = wts("0.1", "0.45", "0.45"), wts("0.2", "0.55", "0.25")
+    put("執行長交接期情境權重偏保守 10／45／45、20／55／25", "樂觀／基準／保守的權重改為 10%／45%／45%（低）、20%／55%／25%（高）；基準 30%／50%／20% 不動", lo, hi, lo_d, hi_d)
+    (lo, lo_d) = wts("0.15", "0.55", "0.3")
+    put("執行長交接期情境權重偏保守 15／55／30", "同上，15%／55%／30%；只有低", lo, None, lo_d, None)
+    # ③ 治理風險溢酬：沿用上方「WACC ±1pt」高案的閉式，把加點換成 0.5pt、2pt（＋1pt 即該列高案）
+    wadd = lambda x: wf.lstrip("=").replace("wacc_adj_hi", x)
+    put("執行長異動：治理風險溢酬 WACC ＋0.5pt／＋2pt", "折現率單向加 0.5pt（低）／2pt（高），RONIC 隨 WACC、Comparable 不變；＋1pt 見目標價參數表的 WACC 高案",
+        wadd("0.005"), wadd("0.02"), f"(C{r}-G{r})/tp_w_dcf", f"(E{r}-G{r})/tp_w_dcf")
+    return r
 
 
 # ---------- Recon：同口徑註記、反解（原則 4、33、36）；毛利率差距分解與 abs_mem 反解（原則 50，v0.3.6）----------
