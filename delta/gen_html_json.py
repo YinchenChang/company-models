@@ -297,11 +297,11 @@ def _v13():
     cols = "CDEFGHIJK"
     rowx = lambda r, f=None: [f"@PL!A{r}"] + [f"@PL!{c}{r}|{f or fmt(PLW.cell(r, 2).value)}" for c in cols]
     r_ratio, r_chk = plr("比率"), plr("核對（應為 0）")
-    r_d = row("PL", "差額（FY2030E–FY2031E）：毛利 − 營業費用", ph)
+    r_d = row("PL", "核對：延伸期毛利", ph)
     is_tbl = {"type": "table", "caption": "標準損益表（GAAP 口徑，十億元新台幣；EPS 為新台幣元）：FY2023A–FY2025A 實績、FY2026E 錨點年、FY2027E–FY2031E 情境 B（基準）",
               "head": [f"@PL!A{ph}"] + [f"@PL!{c}{ph}" for c in cols],
               "rows": [rowx(plr(k)) for k in keys] + [{"sub": f"@PL!A{r_ratio}"}] + [rowx(r) for r in range(r_ratio + 1, r_chk)]
-                      + [{"sub": "核對：FY2030E–FY2031E 兩種推法的營業利益差額（毛利率與營業費用率沿用 FY2029）"}] + [rowx(r) for r in (r_d, r_d + 1)]}
+                      + [{"sub": "核對與揭露：FY2030E–FY2031E 毛利 − 營業費用 − 營業利益（應為零；延伸期營業費用＝毛利 − 營業利益，是殘差不是假設）與隱含營業費用率"}] + [rowx(r) for r in (r_d, r_d + 1)]}
     chk_tbl = {"type": "table", "caption": f"@PL!A{r_chk}", "head": [f"@PL!A{ph}"] + [f"@PL!{c}{ph}" for c in cols], "collapse": True,
                "summary": "展開：標準損益表的核對列（恆等式與對情境 B 摘要的差額，應為零）",
                "rows": [rowx(r, "n3") for r in range(r_chk + 1, until_blank("PL", r_chk + 1) + 1) if r not in (r_d, r_d + 1)]}
