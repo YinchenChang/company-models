@@ -672,7 +672,7 @@ def build(path, ov=None, sens=None, rev=None, bid="（基準檔）"):
 
 
 # ---------------- 重算與讀值 ----------------
-LO = "file:///tmp/h_pony/lo_profile"
+LO = "file://" + os.path.join(os.environ.get("HOME") or tempfile.gettempdir(), "lo_profile_pony")   # LibreOffice 隔離設定檔
 def recalc_many(paths, outdir):
     os.makedirs(outdir, exist_ok=True)
     for i in range(0, len(paths), 20):
@@ -682,7 +682,7 @@ def recalc_many(paths, outdir):
                                check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=170)
                 break
             except subprocess.TimeoutExpired:
-                subprocess.run(["pkill", "-f", "lo_profile"], stderr=subprocess.DEVNULL)
+                subprocess.run(["pkill", "-f", "lo_profile_pony"], stderr=subprocess.DEVNULL)
                 if attempt == 1: raise
     return [os.path.join(outdir, os.path.basename(p)) for p in paths]
 
@@ -960,7 +960,7 @@ def main():
     for cmd in CHECKS:
         rp = subprocess.run([sys.executable] + cmd, capture_output=True, text=True, cwd=ROOT)
         last = [l for l in (rp.stdout + rp.stderr).strip().splitlines() if l.strip()]
-        msg = ("通過" if rp.returncode == 0 else "失敗") + "：" + (last[0] if last else "")
+        msg = (("通過" if rp.returncode == 0 else "失敗") + "：" + (last[0] if last else "")).replace(ROOT + "/", "")
         results.append((os.path.basename(cmd[0]), msg[:300])); print(cmd[0], rp.returncode, "\n".join(last[:8]))
     HT = X[:-5] + ".html"
     for cmd in (["physical_ai/pony/gen_html_json.py", X], ["tools/company_html/build_company_html.py", HERE],
@@ -973,7 +973,7 @@ def main():
             continue
         head = lines[-1] if cmd[0].endswith("check_company_html.py") else (lines[0] if lines else "")
         nm = os.path.basename(cmd[0]) + ("（--html）" if "--html" in cmd else "")
-        results.append((nm, ("通過" if rp.returncode == 0 else "失敗") + "：" + head[:300])); print(cmd[0], rp.returncode, "\n".join(lines[:10]))
+        results.append((nm, (("通過" if rp.returncode == 0 else "失敗") + "：" + head[:300]).replace(ROOT + "/", ""))); print(cmd[0], rp.returncode, "\n".join(lines[:10]))
     readme(X, VR, PR, DR, bid, sens, revs, results)
 
 if __name__ == "__main__":
