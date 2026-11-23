@@ -190,7 +190,7 @@ def main():
     ok(all(x in html for x in ("產業地圖</button>", "產業地位</button>", "可投資性</button>", "公司檔案</button>", "方法與來源</button>")), "五個分頁名稱與 AI 算力地圖一致（第一個為產業地圖）")
     ok('<html lang="zh-Hant">' in html and '<meta charset="utf-8">' in html and 'name="viewport"' in html, "html lang、charset、viewport")
     sw = re.search(r'<nav class="site-switch".*?</nav>', html, re.S)
-    ok(sw is not None and 'href="../"' in sw.group(0) and 'href="../physical/"' in sw.group(0) and "軟體 AI" in sw.group(0) and 'class="tab' not in sw.group(0), "站際切換 算力｜實體 AI｜軟體 AI，未用 .tab")
+    ok(sw is not None and 'href="../"' in sw.group(0) and 'href="../physical_ai/"' in sw.group(0) and "軟體 AI" in sw.group(0) and 'class="tab' not in sw.group(0), "站際切換 算力｜實體 AI｜軟體 AI，未用 .tab")
     print("\n通過" if not FAIL else f"\n未通過：{len(FAIL)} 項")
     sys.exit(1 if FAIL else 0)
 

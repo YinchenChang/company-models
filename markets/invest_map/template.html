@@ -271,7 +271,7 @@ footer{border-top:1px solid var(--rule);padding-block:18px 28px;color:var(--fain
   <div class="wrap">
     <nav class="site-switch" aria-label="地圖">
       <span aria-current="page">算力</span>
-      <a href="physical/">實體 AI</a>
+      <a href="physical_ai/">實體 AI</a>
       <a href="software_ai/">軟體 AI</a>
     </nav>
     <div>
@@ -316,7 +316,7 @@ function px(v,c){if(v==null)return"—";const dp={USD:2,HKD:2,CNY:2,TWD:0,KRW:0,
 const CCY={USD:"US$",HKD:"HK$",CNY:"¥",TWD:"NT$",KRW:"₩",JPY:"¥"};
 const V=Object.fromEntries(D.valuation.map(v=>[v.tk,v]));
 const P=Object.fromEntries(D.position.map(p=>[p.tk,p]));
-/* v0.6.52 跨圖：主圖＝持有個股模型的專案所屬地圖；本地圖為主圖、實體 AI 地圖照列者加註。v0.6.55 起標籤連到實體 AI 地圖（physical/）。 */
+/* v0.6.52 跨圖：主圖＝持有個股模型的專案所屬地圖；本地圖為主圖、實體 AI 地圖照列者加註。v0.6.55 起標籤連到實體 AI 地圖（physical_ai/；2026-11-23 起直連，不經 physical/ 轉址）。 */
 const XM=D.cross_map||{};
 /* v0.6.55：標籤連到實體 AI 地圖（x.url）。卡片本身是 <button>，不能內嵌 <a>，故用 data-xurl＋下方擷取階段點擊處理，點標籤只換頁、不開公司檔案。 */
 const xmapTag=tk=>{const x=XM[tk]; if(!x) return ""; const st=x.status?`<i>· ${esc(x.status)}</i>`:""; const tip=`${esc(x.map)}也列此公司（${esc(x.seg)}）；公司檔案、目標價與評等只讀本地圖的個股模型。${x.url?"點擊前往"+esc(x.map)+"。":""}`;
@@ -593,7 +593,7 @@ function renderMethod(){
    ${row("股價",`${esc(D.meta.last_close_date||"")} 收盤，Yahoo Finance 日線收盤（來源記於 data/prices_*_sources.md）。各模型內的現價與同業報價已於 v0.6.49 全部改為 2026-11-13 收盤（工作單 px1113；Anthropic 未掛牌除外）；日後模型現價與最新收盤差距超過 20% 時標示。`)}
    ${row("地位分數","不可替代性（次產業與公司平均）、市場位置（次產業內 1–4 級）、價值鏈分量（占 AI IT 資本支出比例分級），加權合成。")}
    ${row("個股模型","公司檔案的「個股模型」分頁嵌入各公司模型成品的 HTML 版（<code>&lt;資料夾&gt;/dist/*.html</code>，與抽數用的 xlsx 同一版次）；GitHub Pages 發布時一併複製到 <code>models/</code>。")}
-   ${row("跨圖（v0.6.52）",`同一家公司同時出現在 AI 算力地圖與實體 AI 地圖時，<b>主圖＝持有該公司個股模型的專案所屬地圖</b>；另一張圖照列並標「跨圖」，公司檔案、目標價與評等只讀主圖的模型（Andy 2026-11-16 同意）。<b>地位分數兩圖可不同</b>（兩圖的價值鏈分母不同：本圖為每 GW AI 資本支出，實體 AI 地圖為人形機器人每台 BOM 等）。本圖為主圖、實體 AI 地圖照列者 ${Object.keys(XM).length} 家：${Object.keys(XM).map(t=>esc((P[t]||{}).name||t)).join("、")}，標「另見實體 AI 地圖（跨圖）」，點標籤連到實體 AI 地圖（v0.6.55 起；該圖 v0.1 位於站內 <code>physical/</code>，連頁首）。來源：AI實體應用 專案「實體 AI 產業地位 v0.5」個股地位頁「地圖歸屬」欄（抄錄於 <code>data/cross_map.csv</code>）。`)}
+   ${row("跨圖（v0.6.52）",`同一家公司同時出現在 AI 算力地圖與實體 AI 地圖時，<b>主圖＝持有該公司個股模型的專案所屬地圖</b>；另一張圖照列並標「跨圖」，公司檔案、目標價與評等只讀主圖的模型（Andy 2026-11-16 同意）。<b>地位分數兩圖可不同</b>（兩圖的價值鏈分母不同：本圖為每 GW AI 資本支出，實體 AI 地圖為人形機器人每台 BOM 等）。本圖為主圖、實體 AI 地圖照列者 ${Object.keys(XM).length} 家：${Object.keys(XM).map(t=>esc((P[t]||{}).name||t)).join("、")}，標「另見實體 AI 地圖（跨圖）」，點標籤連到實體 AI 地圖（v0.6.55 起；該圖位於站內 <code>physical_ai/</code>，連頁首）。來源：AI實體應用 專案「實體 AI 產業地位 v0.5」個股地位頁「地圖歸屬」欄（抄錄於 <code>data/cross_map.csv</code>）。`)}
    ${row("公司檔案","每家一份 Markdown（<code>markets/invest_map/profiles/&lt;代號&gt;.md</code>），由研究代理依同一規格撰寫、附來源標記，經未參與撰寫的代理抽查數字。背景知識用途，不是投資結論。")}
    ${row("限制","各模型估值方法不同，空間只能粗略比較；MAG 三家模型終值占 EV 逾 90%，評價口徑待 MAG v0.3；MiniMax、智譜三情境 DCF 皆觸及淨現金下限（目標價主要由同業倍數支撐）；未上市的 OpenAI 只列在地圖（Anthropic 以 IPO 價格區間中點評等）。")}
   </dl>`;
