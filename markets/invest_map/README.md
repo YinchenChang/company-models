@@ -41,7 +41,7 @@ python3 markets/invest_map/build_html.py
 ```
 <nav class="site-switch" aria-label="地圖">
   <span aria-current="page">算力</span>
-  <a href="physical/">實體 AI</a>
+  <a href="physical_ai/">實體 AI</a>
   <a href="software_ai/">軟體 AI</a>
 </nav>
 ```
