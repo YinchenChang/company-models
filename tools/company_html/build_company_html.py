@@ -929,6 +929,14 @@ def build(cdir, xlsx=None, root=None):
         secs.append(f'<section id="{s["id"]}"><h2>{esc(s["title"])}</h2>{"".join(body)}</section>')
     hero_html = render_hero(cx, cfg['hero']) if cfg.get('hero') else ''
     toc = ''.join(f'<a href="#{s["id"]}">{esc(s["title"])}</a>' for s in cfg['sections'])
+    # 外部稽核優化 W3-6（2026-11-23）：Sens 頁有 build_id 列、而頁面內文沒有帶出同一字串時，在頁尾補上（治理核對要求 README、Sens、HTML 三處相同）。
+    #   已在內文顯示 build_id 的模型（AMD、NVIDIA 等）與沒有 build_id 列的模型，頁面不變。
+    bid_html = ''
+    if 'Sens' in cx.b.wb.sheetnames:
+        _se = cx.b.wb['Sens']
+        _bid = next((_se.cell(r, 4).value for r in range(1, _se.max_row + 1) if str(_se.cell(r, 1).value or '').startswith('build_id')), None)
+        if _bid and str(_bid) not in ''.join(secs):
+            bid_html = f'｜build_id：<code class="meta" data-meta="build_id">{esc(str(_bid))}</code>'
     title = f'{cfg["company"]}模型'
     page = f"""<!doctype html>
 <html lang="zh-Hant-TW">
@@ -953,7 +961,7 @@ def build(cdir, xlsx=None, root=None):
 </main>
 <footer>
 <p>本頁由 <code class="meta">tools/company_html/build_company_html.py</code> 自 Excel 成品的重算值產生；數字的計算事實以 Excel 為準。每個數字的來源「工作表!儲存格」標在滑鼠懸停文字，或按上方按鈕顯示。</p>
-<p>來源 xlsx：{cx.part('$xlsx')}｜雜湊指紋：{cx.part('$sha')}</p>
+<p>來源 xlsx：{cx.part('$xlsx')}｜雜湊指紋：{cx.part('$sha')}{bid_html}</p>
 </footer>
 </div>
 </body>
