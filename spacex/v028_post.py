@@ -615,7 +615,7 @@ def readme13(wb, C, RVA, PLA, CRD):
     RD.cell(r, 1, F(T("v0.2.11（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。現價 139.11（11-13）→ "), 'TEXT(px,"0.00")',
                     T("；Connectivity 同業 EV／NTM EBITDA 中位數 6.63x → "), 'TEXT(MEDIAN(pm_conn_irdm,pm_conn_tmus,pm_conn_t,pm_conn_cmcsa,pm_conn_sats),"0.00")',
                     T("x；SI 同業（CRWV、NBIS、ORCL）中位數 7.70x → "), 'TEXT(MEDIAN(pm_si_crwv,pm_si_nbis,pm_si_orcl),"0.00")',
-                    T("x（同業倍數＝上一版 11-13 近似值 × 11-20÷11-13 收盤比，無市值，近似 [Derived]）；加權目標價 32.97 → "), f'TEXT({vb("tp")},"0.00")',
+                    T("x（外部稽核優化 W3-7，2026-11-23：同業換價改為分離淨負債——EV 只有市值部分隨股價變、淨負債不變，由 11-06 原值直接換到 11-20；原式為整個倍數 × 收盤比，對照見 Recon 第 7 節 H 欄；[Derived]）；加權目標價 32.97 → "), f'TEXT({vb("tp")},"0.00")',
                     T("；上檔空間 −76.3% → "), f'TEXT({vb("up")},"+0.0%;-0.0%")', T("；投資建議 強力放空 → "), f'{vb("rec")}',
                     T("。評價股數的庫藏股法與其他隨現價的公式自動重算；評價日股價（WACC 權益權重用 px_val）、共識與其他假設不變。")))
     out["ver"] = r; r += 1
