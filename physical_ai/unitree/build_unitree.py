@@ -571,7 +571,12 @@ def build(path, ov=None, sens=None, rev=None):
     RD["A3"] = "命題：宇樹的股價由人形機器人能否從科研、教育與展示市場走到大量付費採用決定——人形營收＝全球人形出貨（線 2b）× 宇樹份額 × 平均售價；四足、組件及其他兩個官方產品分部以量 × 價或成長路徑建模"
     RD["A4"] = (f'="在情境 B 讀線 2b 基準出貨、宇樹人形份額 FY2032 收斂到 "&TEXT(shr32_B,"0%")&"、人形毛利率 FY2032 收斂到 "&TEXT(hgm32_B,"0%")&"、同業 EV／營收中位數 "&TEXT(ev_med,"0.0")&" 倍的假設下：加權目標價 "&TEXT(Val!B{r_tp},"#,##0")&" 元（DCF "&TEXT(Val!B{r_dcft},"#,##0")&"、Comparable "&TEXT(Val!B{r_cmpt},"#,##0")&"），上檔空間 "&TEXT(Val!B{r_up},"+0.0%;-0.0%")&"，估值評等 "&Val!B{r_rt}&"；收支關卡 "&Val!B{r_gj}&"（情境 B FY2026–30 自由現金流扣股利 "&TEXT(Val!C{r_gate},"#,##0.0")&" 億元）；投資建議 "&Val!B{r_rec}')
     RD["A5"] = f'="距最近級距邊界 "&TEXT(Val!B{r_dist},"0.0")&" 個百分點；翻轉目標價（升一級／降一級）"&Val!B{r_bnd}&" 元。上檔三段歸因：DCF "&TEXT(Val!B{r_a1},"+0.0%;-0.0%")&"、未調整 Comparable "&TEXT(Val!B{r_a2},"+0.0%;-0.0%")&"、相對倍數調整 "&TEXT(Val!B{r_a3},"+0.0%;-0.0%")&"；現價本益比（情境 B FY2027 EPS）"&TEXT(Val!B{r_pex},"#,##0")&" 倍"'
-    RD["A6"] = "失效條件（可觀察）：年報人形銷量 FY2026 超過約 2 萬台且平均售價年降不到一成；人形毛利率維持 60% 以上；工廠或商用場景出現千台級付費訂單；同業 EV／營收中位數重估到 30 倍以上"
+    ev_rows = [13 + j for j, it in enumerate(rev or []) if it["key"] == "ev_med"]
+    if len(ev_rows) >= 2:
+        RD["A6"] = (f'="評等翻轉與失效條件：其他輸入不變下，同業 EV／營收中位數需達約 "&TEXT(Recon!C{ev_rows[1]},"0")&" 倍才升一級、約 "&TEXT(Recon!C{ev_rows[0]},"0")&" 倍才使目標價等於現價；'
+                    f'人形份額、人形毛利率單獨調整在搜尋區間內都無法翻轉評等。往有利方向的可觀察指標：年報人形銷量與平均售價、人形毛利率、工廠或商用場景千台級付費訂單、同業倍數重估"')
+    else:
+        RD["A6"] = "評等翻轉與失效條件：見 Recon 頁反解（本檔為敏感度重算用，未寫入反解）"
     RD["A7"] = "範圍與限制：上市約三個月，2026 年分產品營收、毛利率未揭露（以區間假設）；現價只有單一來源；市場共識未找到。不讀 Siliconomics／Tokenomics／Wattonomics（算力線）"
     RD["A8"] = "高不確定性原則：證據到哪裡判斷到哪裡——FY2023–FY2025 分產品量價為招股書實績（經媒體轉述），2026 年只有合併營收與淨利；FY2027 起的出貨、份額、毛利率皆為 Assumed 或讀線模型，結論是條件式"
     wb.save(path)
@@ -709,7 +714,7 @@ def write_readme(path, VR, PR, DR, bid, sens, revs):
 | 人形售價降幅 ÷ 線學習曲線（asp_k） | 1.0（0.5–1.5） | Analogy | 年報人形平均售價 |
 | 同業 EV／營收中位數（ev_med） | {inv('ev_med'):.2f} 倍（四分位 {EV_LO:.2f}–{EV_HI:.2f}） | Derived（資料商頁面，日期不一） | 同業股價與 TTM 營收 |
 
-結論主要建立在 Assumed／Analogy／Derived 輸入上：FY2027 起的出貨、份額、毛利率、費用率皆無公司指引；Verified 的只有 FY2023–FY2025 分產品量價與 2026 年前三季合併數。失效條件：{RD['A6'].value.split('：', 1)[1]}。
+結論主要建立在 Assumed／Analogy／Derived 輸入上：FY2027 起的出貨、份額、毛利率、費用率皆無公司指引；Verified 的只有 FY2023–FY2025 分產品量價與 2026 年前三季合併數。評等翻轉與失效條件：{RD['A6'].value.split('：', 1)[1]}。
 
 ## 敏感度（整本重算；Sens 頁；影響最大的 8 項）
 | 驅動 | 設定 | 鍵 | 加權目標價 | 相對基準 | 估值評等 |
@@ -752,6 +757,10 @@ def main():
         ov = json.loads(os.environ.get("UNI_OVERRIDE", "{}"))
         build(sys.argv[sys.argv.index("--raw") + 1], ov); return
     quick = "--quick" in sys.argv
+    if "--reuse" in sys.argv:   # 只改展示文字、In 頁未改時：沿用 sens.json 的敏感度與反解快照（指紋須相同）
+        sens = json.load(open(os.path.join(HERE, "sens.json")))
+        assert sens["fp"] == fingerprint(), "In 頁已改，不可 --reuse"
+        return finish(sens, sens["revs"])
     base = run_case({}, "base"); print("基準", base); px0 = in_val("px", "base")
     jobs = []
     for k, drv in CASES:
@@ -803,8 +812,12 @@ def main():
     with ThreadPoolExecutor(4) as ex:
         revs = list(ex.map(solve_one, args))
     for r in revs: print("反解", r["key"], r["label"], r["val"])
-    sens = dict(base=base, cases=cases, fp=fingerprint())
+    sens = dict(base=base, cases=cases, fp=fingerprint(), revs=revs)
     json.dump(sens, open(os.path.join(HERE, "sens.json"), "w"), ensure_ascii=False, indent=1)
+    finish(sens, revs)
+
+
+def finish(sens, revs):
     dist = os.path.join(HERE, "dist"); os.makedirs(dist, exist_ok=True)
     tmp = tempfile.mkdtemp(prefix="unif_"); raw = os.path.join(tmp, NAME)
     VR, PR, DR = build(raw, {}, sens, revs)
