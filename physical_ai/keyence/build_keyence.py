@@ -577,7 +577,7 @@ def build(path, ov=None, sens=None, rev=None):
 
 
 # ---------------- 重算（批次）與讀值 ----------------
-LO = "file:///tmp/h_keyence/lo_profile"
+LO = "file://" + os.path.join(tempfile.gettempdir(), "lo_keyence_profile")
 def recalc_many(srcs, outdir):
     os.makedirs(outdir, exist_ok=True)
     for k in range(0, len(srcs), 12):
@@ -588,7 +588,7 @@ def recalc_many(srcs, outdir):
                                check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=180)
                 break
             except subprocess.TimeoutExpired:
-                subprocess.run(["pkill", "-f", "lo_profile"], check=False)
+                subprocess.run(["pkill", "-f", "lo_keyence_profile"], check=False)
                 if attempt == 1: raise
     return [os.path.join(outdir, os.path.basename(s)) for s in srcs]
 
@@ -658,7 +658,7 @@ def write_readme(path, VR, PR, DR, bid, sens, revs):
 
 {RD['A2'].value}｜build_id `{bid}`｜成品 `dist/{NAME}`（LibreOffice 重算，錯誤值 0）
 
-東證 Prime 上市（亞太基金可投資）。所屬線：線 6 共用零組件（工業感測與機器視覺）；需求變數另讀線 2a 工業機器人。本 README 的數字由 `build_keyence.py` 從重算後的成品讀出產生，不手寫。
+東證 Prime 上市。所屬線：線 6 共用零組件（工業感測與機器視覺）；需求變數另讀線 2a 工業機器人。本 README 的數字由 `build_keyence.py` 從重算後的成品讀出產生，不手寫。
 
 **股票分割：** 2026-11-21 生效 1 拆 5（基準日 2026-11-20；`physical_ai/data/closes2_20261109_20261120.csv.splits.txt` 記 2026-11-19）。csv 收盤為分割調整後價格；本模型股數（評價日 {inv['sh_v']:,.2f} 百萬股）、EPS、每股股利、目標價全部用分割後口徑，財報原文的分割前數字以 `split_r`＝5 換算，In 頁 A2 寫明。
 

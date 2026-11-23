@@ -776,7 +776,6 @@
      "caption": "@Recon!A11",
      "head": [
       "@Recon!A12",
-      "@Recon!B12",
       "@Recon!C12",
       "@Recon!D12",
       "@Recon!E12"
@@ -786,13 +785,11 @@
       "rows": "13-18",
       "cols": [
        "A",
-       "B",
        "C",
        "D",
        "E"
       ],
       "fmts": [
-       "",
        "",
        "n2",
        "n2",
@@ -1980,6 +1977,8 @@
     },
     {
      "type": "table",
+     "collapse": true,
+     "summary": "展開：線模型讀入值（全球人形出貨與全尺寸出廠價）",
      "caption": "@Line!A1",
      "head": [
       "@Line!A2",
@@ -2181,19 +2180,14 @@
      "collapse": true,
      "summary": "展開：標為「未找到」的項目",
      "sheets": {
-      "In": [
-       "B",
-       "H",
-       "I"
-      ],
       "Hist": [
        "A"
       ],
       "Q": [
-       "A",
-       "B",
-       "C",
-       "E"
+       "A"
+      ],
+      "Recon": [
+       "A"
       ]
      },
      "empty": "沒有標為未找到的項目。"

@@ -111,15 +111,15 @@ hero = {"rec": vv("rec"),
                  " 百萬美元），投資建議為收支不足。加權值主要來自樂觀情境的 DCF；只看基準情境為 ", vv("tps", "C", "n2"), " 美元。"]}
 
 thesis = {"id": "thesis", "title": "命題與核心問題", "blocks": [
-    {"type": "theme", "title": "營收依官方分部堆疊（百萬美元）與滲透率：FY2023–FY2035（情境 B）", "x": f"@PL!C{B['hdr']}:O{B['hdr']}", "fmt": "n0", "fmt_r": "p1", "stack": True, "pad": 1.3,
-     "total": pl("rev"),
-     "bars": [{"name": [f"@PL!A{B[k]}"], "y": pl(k), "color": c} for k, c in (("rt", "#0b7a80"), ("rk", "#6fa8dc"), ("ls", "#c29a2b"))],
+    {"type": "theme", "title": "營收依官方分部堆疊（百萬美元）與滲透率：FY2026–FY2035（情境 B）", "x": f"@PL!F{B['hdr']}:O{B['hdr']}", "fmt": "n0", "fmt_r": "p1", "stack": True, "pad": 1.3,
+     "total": pl("rev", "B", "F"),
+     "bars": [{"name": [f"@PL!A{B[k]}"], "y": pl(k, "B", "F"), "color": c} for k, c in (("rt", "#0b7a80"), ("rk", "#6fa8dc"), ("ls", "#c29a2b"))],
      "lines": [{"name": [f"@PL!A{B['pen']}"], "y": pl("pen", "B", "F"), "axis": "r", "color": "#b4472f", "labels": True}],
-     "caption": "堆疊＝三個官方報告分部（合計等於營收）；折線＝小馬 Robotaxi 趟數占中國網約車趟數的比例（右軸，FY2026 起）。FY2023 只取得合併營收；FY2026 為九個月實績加第四季錨點；FY2027 起為模型。"},
+     "caption": "堆疊＝三個官方報告分部（合計等於營收）；折線＝小馬 Robotaxi 趟數占中國網約車趟數的比例（右軸）。FY2026 為九個月實績加第四季錨點；FY2027 起為模型；歷史年度見損益章。"},
     {"type": "h3", "text": "命題"},
     {"type": "list", "ordered": True, "items": [
         "@README!A3",
-        ["核心命題的承重變數：情境 B 期末車隊 FY2027 ", iv("f27_B", "n0"), " 台、FY2028–FY2030 每年 ", iv("fg_B", "p0"), "；每英里價格、稼動率與營運成本讀線 1a 中國基準，FY2026 校準係數：營收 ", iv("k_rt", "n3"), " 倍、成本 ", iv("cr_k", "n3"), " 倍。"]]},
+        ["核心命題的承重變數：情境 B 期末車隊 FY2027 ", iv("f27_B", "n0"), " 台、FY2028–FY2030 每年 ", iv("fg_B", "p0"), "；每英里價格、稼動率與營運成本讀Robotaxi 線模型 中國基準，FY2026 校準係數：營收 ", iv("k_rt", "n3"), " 倍、成本 ", iv("cr_k", "n3"), " 倍。"]]},
     {"type": "note", "collapse": True, "summary": "展開：命題回覆（依模型計算）", "parts": ["@README!A4"]},
     {"type": "h3", "text": "重點觀察"},
     {"type": "list", "ordered": True, "items": [
@@ -193,7 +193,7 @@ drivers = {"id": "drivers", "title": "驅動因子：車隊 × 每英里經濟 �
     {"type": "theme", "title": "每付費英里經濟（美元，情境 B）與期末車隊：FY2026–FY2035", "x": f"@PL!F{B['hdr']}:O{B['hdr']}", "fmt": "n3", "fmt_r": "n0", "stack": False, "pad": 1.3,
      "bars": [{"name": [f"@PL!A{B[k]}"], "y": pl(k, "B", "F"), "color": c} for k, c in (("rpm", "#0b7a80"), ("opx", "#d9a08f"), ("gpm", "#c29a2b"))],
      "lines": [{"name": [f"@PL!A{B['fl']}"], "y": pl("fl", "B", "F"), "axis": "r", "color": "#3b3838", "labels": True}],
-     "caption": "長條＝每付費英里的 Robotaxi 營收、單位營運成本與毛利（價格與成本讀線 1a 中國基準，再乘情境乘數與 FY2026 校準係數）；折線＝期末車隊（右軸）。FY2033 起線值持平。"},
+     "caption": "長條＝每付費英里的 Robotaxi 營收、單位營運成本與毛利（價格與成本讀Robotaxi 線模型 中國基準，再乘情境乘數與 FY2026 校準係數）；折線＝期末車隊（右軸）。FY2033 起線值持平。"},
     {"type": "note", "parts": [f"@PL!A{find(P, 'PL — ', exact=False)}"]},
     {"type": "table", "caption": "三情境驅動（In 頁情境驅動對照；進加權目標價）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
      "rows": [[f"@In!B{inr(f + '_scn')}", f"@In!D{inr(f + '_scn')}|{fm}", f"@In!E{inr(f + '_scn')}|{fm}", f"@In!F{inr(f + '_scn')}|{fm}"]
@@ -208,7 +208,7 @@ drivers = {"id": "drivers", "title": "驅動因子：車隊 × 每英里經濟 �
     {"type": "table", "caption": "有敏感度區間的參數（基準進主模型；低／高只用於敏感度頁）", "head": ["@In!B3", "@In!D3", "@In!E3", "@In!F3", "@In!G3"],
      "rows": [[il(k), f"@In!D{inr(k)}|{f}", iv(k, f), f"@In!F{inr(k)}|{f}", f"@In!G{inr(k)}|tag"] for k, f in
               (("fl25", "n0"), ("fl26", "n0"), ("f27_B", "n0"), ("fg_B", "p0"), ("fglt_B", "p0"), ("um_B", "n2"), ("pm_B", "n2"), ("om_B", "n2"), ("kdec", "n0"), ("veh_life", "n1"), ("own_r", "p0"))]},
-    {"type": "table", "collapse": True, "summary": "展開：讀自線 1a 的每英里輸入與 FY2026 校準係數（固定輸入）", "head": ["@In!B3", "@In!E3", "@In!G3"],
+    {"type": "table", "collapse": True, "summary": "展開：讀自Robotaxi 線模型 的每英里輸入與 FY2026 校準係數（固定輸入）", "head": ["@In!B3", "@In!E3", "@In!G3"],
      "rows": [[il(k), iv(k, f), f"@In!G{inr(k)}|tag"] for k, f in
               [(f"pmd{y}", "n0") for y in (26, 28, 30, 32)] + [(f"prc{y}", "n3") for y in (26, 28, 30, 32)] + [(f"ox{y}", "n3") for y in range(26, 33)]
               + [(f"veh{y}", "n0") for y in (26, 28, 30, 32)] + [("k_rt", "n3"), ("cr_k", "n3"), ("tpvd", "n0"), ("mkt26", "n0")]]},
@@ -227,17 +227,18 @@ drivers = {"id": "drivers", "title": "驅動因子：車隊 × 每英里經濟 �
 
 Q = wb["Q"]; qs = find(Q, "單季或半年（Derived）"); qe = find(Q, "Robotaxi 占營收", qs)
 RE = wb["對帳"]
-recon = {"id": "recon", "title": "對帳：公司目標、共識、季度分部與線 1a 變數", "blocks": [
+recon = {"id": "recon", "title": "對帳：公司目標、共識、季度分部與Robotaxi 線模型 變數", "blocks": [
     {"type": "table", "caption": "@Recon!A1", "head": [f"@Recon!{c}2" for c in "ABCDE"],
      "rowgen": {"sheet": "Recon", "rows": f"3-{find(RC, '加權目標價 vs 賣方平均目標價（US$）')}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n2", "n2", "n2", ""]}},
     {"type": "table", "caption": "季度與半年度分部營收（百萬美元；累計原文相減）與分部對帳", "head": [f"@Q!{c}{qs}" for c in "ABCDEF"],
      "rowgen": {"sheet": "Q", "rows": f"{qs + 1}-{qe}", "cols": list("ABCDEF"), "fmts": [""] + ["n2"] * 5, "row_fmt": {str(qe): {c: "p1" for c in "BCDEF"}}}},
-    {"type": "table", "caption": "每車每日營收：實績與線 1a 推算（美元）", "head": ["項目", "數值"],
+    {"type": "table", "caption": "每車每日營收：實績與Robotaxi 線模型 推算（美元）", "head": ["項目", "數值"],
      "rows": [[f"@Q!A{find(Q, 'Q3', exact=False)}", f"@Q!F{find(Q, 'Q3', exact=False)}|n1"], [f"@Q!A{find(Q, '線 1a 基準', exact=False)}", f"@Q!F{find(Q, '線 1a 基準', exact=False)}|n1"]]},
-    {"type": "table", "collapse": True, "summary": "展開：線 1a 變數對帳（讀入值、用法、不一致處）", "head": [f"@對帳!{c}2" for c in "ABCDEF"],
+    {"type": "table", "collapse": True, "summary": "展開：Robotaxi 線模型 變數對帳（讀入值、用法、不一致處）", "head": [f"@對帳!{c}2" for c in "ABCDEF"],
      "rowgen": {"sheet": "對帳", "rows": f"3-{RE.max_row}", "cols": ["A", "B", "C", "D", "E", "F"], "fmts": ["", "", "g", "", "", ""]}}]}
 
 RK = wb["Risk"]
+MR = find(RK, "未找到／未取得清單", exact=False)
 status = {"id": "status", "title": "資料狀態", "blocks": [
     {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期", "@README!A1"], ["資料日期", "@README!A2"], ["build_id", "@Sens!D3"], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"]]},
     {"type": "table", "caption": "股價與市場資料的日期", "head": ["@In!B3", "@In!E3", "@In!G3", "@In!I3"],
@@ -245,16 +246,16 @@ status = {"id": "status", "title": "資料狀態", "blocks": [
               [il("px_hk"), iv("px_hk", "n2"), f"@In!G{inr('px_hk')}|tag", nourl("In", f"I{inr('px_hk')}")],
               [il("rf"), iv("rf", "p2"), f"@In!G{inr('rf')}|tag", nourl("In", f"I{inr('rf')}")],
               [il("cons_tp"), iv("cons_tp", "n2"), f"@In!G{inr('cons_tp')}|tag", nourl("In", f"I{inr('cons_tp')}")]]},
-    {"type": "table", "caption": "@Risk!A1", "head": ["@Risk!A2", "@Risk!B2", "@Risk!C2", "@Risk!D2"], "rows": [[nourl("Risk", f"{c}{r}") for c in "ABCD"] for r in range(3, RK.max_row + 1)]},
+    {"type": "table", "caption": "@Risk!A1", "head": ["@Risk!A2", "@Risk!B2", "@Risk!C2", "@Risk!D2"], "rows": [[nourl("Risk", f"{c}{r}") for c in "ABCD"] for r in range(3, MR - 1)]},
     {"type": "note", "parts": ["來源清單（含網址）見 xlsx Sources 頁與 In 頁來源欄；本頁為自含網頁，不放外部網址。"]},
     {"type": "h3", "text": "「未找到」與「未取得」清單"},
-    {"type": "scan", "needle": "未取得", "collapse": True, "summary": "展開：標為「未取得」的項目", "sheets": {"In": ["B", "H", "I"], "Hist": ["A"], "Q": ["A"]}, "empty": "沒有標為未取得的項目。"},
-    {"type": "scan", "needle": "未找到", "collapse": True, "summary": "展開：標為「未找到」的項目", "sheets": {"In": ["B", "H", "I"]}, "empty": "沒有標為未找到的項目。"}]}
+    {"type": "table", "collapse": True, "summary": "展開：未找到與未取得的資料、替代做法", "head": [f"@Risk!{c}{MR + 1}" for c in "ABCD"],
+     "rows": [[f"@Risk!{c}{r}" for c in "ABCD"] for r in range(MR + 2, RK.max_row + 1)]}]}
 
 cfg = {"company": "小馬智行 Pony.ai", "ticker": "PONY", "layout": "v1.3", "wide_text": True,
        "thesis": "@README!A3",
        "question": "Robotaxi 在中國的滲透速度與每英里經濟，能否在流動資金耗盡前讓小馬跨過營業利益轉正；現價是否已把營運業務定價在接近零",
-       "scenarios": [{"key": "A", "name": "情境 A（樂觀：車隊快速擴張、高稼動、低成本）"}, {"key": "B", "name": "情境 B（基準：線 1a 中國基準）"}, {"key": "C", "name": "情境 C（保守：擴張放緩、價格戰、成本下降慢）"}],
+       "scenarios": [{"key": "A", "name": "情境 A（樂觀：車隊快速擴張、高稼動、低成本）"}, {"key": "B", "name": "情境 B（基準：Robotaxi 線模型 中國基準）"}, {"key": "C", "name": "情境 C（保守：擴張放緩、價格戰、成本下降慢）"}],
        "hero": hero,
        "sections": [thesis, valuation, sens, revdcf, pl_sec, drivers, recon, status]}
 json.dump(cfg, open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)

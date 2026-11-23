@@ -805,7 +805,6 @@
      "caption": "@Recon!A13",
      "head": [
       "@Recon!A14",
-      "@Recon!B14",
       "@Recon!C14",
       "@Recon!D14",
       "@Recon!E14"
@@ -815,13 +814,11 @@
       "rows": "15-26",
       "cols": [
        "A",
-       "B",
        "C",
        "D",
        "E"
       ],
       "fmts": [
-       "",
        "",
        "n3",
        "n3",
@@ -2342,9 +2339,7 @@
      "summary": "展開：標為「未取得」的項目",
      "sheets": {
       "In": [
-       "B",
-       "H",
-       "I"
+       "B"
       ],
       "Hist": [
        "A"

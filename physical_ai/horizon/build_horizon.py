@@ -21,7 +21,7 @@ BLUE = Font(color="0000FF"); BOLD = Font(bold=True)
 HDR = PatternFill("solid", fgColor="DDEBF7")
 SC = ("A", "B", "C"); SCN = {"A": "樂觀", "B": "基準", "C": "保守"}
 YRS = list(range(2023, 2033)); COL = {y: "CDEFGHIJKL"[i] for i, y in enumerate(YRS)}   # PL：C＝FY2023 … L＝FY2032
-LO = "file://" + os.path.join(os.environ.get("HOME", "/tmp"), "lo_horizon_profile")
+LO = "file://" + os.path.join(os.environ.get("HOME") or tempfile.gettempdir(), "lo_horizon_profile")
 
 # ---------------- 出處 ----------------
 IR26 = "公司 2026 中期業績公告（港交所 2026-08-31）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101009.pdf"
@@ -716,7 +716,7 @@ def write_readme(path, VR, PR, DR, bid, sens, revs, checks):
 
 {RD['A2'].value}｜build_id `{bid}`｜成品 `dist/{NAME}`（LibreOffice 重算，錯誤值 0）
 
-港交所主板上市（亞太基金可投資）。報表人民幣、股價港元（匯率 CNY=X ÷ HKD=X＝{inv('fx'):.5f} 人民幣／港元）。本 README 的數字由 `build_horizon.py` 從重算後的成品讀出產生，不手寫。
+港交所主板上市（亞太掛牌）。報表人民幣、股價港元（匯率 CNY=X ÷ HKD=X＝{inv('fx'):.5f} 人民幣／港元）。本 README 的數字由 `build_horizon.py` 從重算後的成品讀出產生，不手寫。
 
 **未做與縮小範圍（高不確定性原則）：** 公司仍虧損、無數字指引，FY2027 起的營收、毛利率、費用全部是 Assumed 路徑（給情境與區間）；DCF 的價值幾乎全來自終值期利潤率，Comparable 以硬體為主的同業 EV／營收，兩法都在證據邊界外。未做：客戶集中度（年報未讀）、FY2023 營收拆分、現金流量表科目（中期公告無現金流量表；折舊、資本支出用資料商與假設）、RSU／選擇權股數（暫值 400 百萬股）、未參與製作者的獨立核對。
 
@@ -734,8 +734,8 @@ def write_readme(path, VR, PR, DR, bid, sens, revs, checks):
 
 - 加權目標價 **{f2(tp)} 港元**（DCF {f2(dcf)}、Comparable {f2(cmp_)}），現價 {f2(inv('px'))}（2026-11-20 收盤），上檔 {pc(up)}，估值評等 **{g(f"B{VR['rt']}")}**；收支關卡 {g(f"B{VR['gj']}")} → 投資建議 **{g(f"B{VR['rec']}")}**。
 - 方法：DCF 標準版 FCFF（WACC／ke／g／RONIC＝{g(f"B{VR['wk']}")}）50%＋EV／營收 Comparable 50%（同業 Mobileye、Ambarella、禾賽、速騰中位數 {inv('ev_med'):.2f} 倍 × FY2028 營收）；相對倍數係數 1.00（未調整）。
-- 現行 EV／FY2027 營收（情境 B）{g(f"B{VR['evs']}"):.2f} 倍，為同業中位數的 {g(f"B{VR['evr']}"):.2f} 倍；加權目標價隱含 EV／FY2028 營收 {g(f"B{VR['ievs']}"):.2f} 倍。同業以硬體為主（毛利率較低），地平線授權占營收過半，倍數差有部分是商業模式差，不是錯價（判斷題，未調整）。
-- 賣方平均目標價 {inv('cons_tp'):.2f} 港元（資料商 18 位、2026-10-02），遠高於本模型：賣方多以 2030 年 EV／EBITDA 或 P/E 折現（高盛 29 倍 EV／EBITDA），隱含 2028 年前後轉盈；本模型情境 B 營業利益轉正年度：{g(f"B{VR['be']}")}。
+- 現行 EV／FY2027 營收（情境 B）{g(f"B{VR['evs']}"):.2f} 倍，為同業中位數的 {g(f"B{VR['evr']}"):.2f} 倍；加權目標價隱含 EV／FY2028 營收 {g(f"B{VR['ievs']}"):.2f} 倍（接近零：情境 B、C 的 DCF 股權價值為負、以零計，加權目標價約等於每股淨現金與投資）。同業以硬體為主（毛利率較低），地平線授權占營收過半，倍數差有部分是商業模式差，不是錯價（判斷題，未調整）。
+- 賣方平均目標價 {inv('cons_tp'):.2f} 港元（資料商 18 位、2026-10-02），遠高於本模型：個別賣方以 2030 年獲利倍數折現（高盛 2026-09-09：29 倍 EV／EBITDA，經轉述），公司目標約 2028 年損益兩平（Interested-party）；本模型情境 B 營業利益轉正年度：{g(f"B{VR['be']}")}。
 
 ## 營收線與損益（情境 B，RMB bn）
 | 列 | {" | ".join(f"FY{y}" for y in YRS)} |
@@ -809,6 +809,10 @@ def run_checks(x):
             ["tools/model_governance/check_governance.py", x], ["tools/model_governance/check_rating_gate.py", x, "--strict"],
             ["tools/model_governance/check_zero_rows.py", x], ["tools/model_governance/check_cached_values.py", x],
             ["tools/segment_check/check_segments.py", HERE]]
+    html = os.path.join(HERE, "dist", NAME[:-5] + ".html")
+    for c in (["physical_ai/horizon/gen_html_json.py", x], ["tools/company_html/build_company_html.py", HERE]):
+        subprocess.run([sys.executable] + c, check=True, cwd=ROOT, stdout=subprocess.DEVNULL)
+    cmds += [["tools/company_html/check_company_html.py", HERE], ["tools/company_html/check_layout_v13.py", html, "--xlsx", x]]
     out = []
     for c in cmds:
         rp = subprocess.run([sys.executable] + c, capture_output=True, text=True, cwd=ROOT)

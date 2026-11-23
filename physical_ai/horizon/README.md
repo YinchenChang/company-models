@@ -2,7 +2,7 @@
 
 資料截止日 2026-11-23（財報 2026-08-31 中期業績；股價 2026-11-20）；成品日 2026-11-23；股價基準日 2026-11-20（收盤 3.12 港元）；目標價時點 2027-11-20｜build_id `horizon-v0.1-e280d176a4`｜成品 `dist/20261123_地平線個股模型_v0.1.xlsx`（LibreOffice 重算，錯誤值 0）
 
-港交所主板上市（亞太基金可投資）。報表人民幣、股價港元（匯率 CNY=X ÷ HKD=X＝0.85004 人民幣／港元）。本 README 的數字由 `build_horizon.py` 從重算後的成品讀出產生，不手寫。
+港交所主板上市（亞太掛牌）。報表人民幣、股價港元（匯率 CNY=X ÷ HKD=X＝0.85004 人民幣／港元）。本 README 的數字由 `build_horizon.py` 從重算後的成品讀出產生，不手寫。
 
 **未做與縮小範圍（高不確定性原則）：** 公司仍虧損、無數字指引，FY2027 起的營收、毛利率、費用全部是 Assumed 路徑（給情境與區間）；DCF 的價值幾乎全來自終值期利潤率，Comparable 以硬體為主的同業 EV／營收，兩法都在證據邊界外。未做：客戶集中度（年報未讀）、FY2023 營收拆分、現金流量表科目（中期公告無現金流量表；折舊、資本支出用資料商與假設）、RSU／選擇權股數（暫值 400 百萬股）、未參與製作者的獨立核對。
 
@@ -98,6 +98,8 @@
 - `tools/model_governance/check_zero_rows.py`：通過（掃描 1 檔；有問題 0 檔；項目 0（新增 0、已知 0）；基準清單可刪 0）
 - `tools/model_governance/check_cached_values.py`：通過（[通過] physical_ai/horizon/dist/20261123_地平線個股模型_v0.1.xlsx：公式格 1560，全部有快取值（其中刻意回傳空字串 0） 掃描 1 檔；公式格 1560；無快取值的檔 0；刻意回傳空字串的格 0）
 - `tools/segment_check/check_segments.py`：通過（[符合] physical_ai/horizon - 3 個官方分部、0 條子列、1 個核對列皆通過（20261123_地平線個股模型_v0.1.xlsx））
+- `tools/company_html/check_company_html.py`：通過（horizon：數字 1275、圖上資料點 148、標籤 930、空格 15、未標記文字節點 194 全部通過）
+- `tools/company_html/check_layout_v13.py`：通過（ok   physical_ai/horizon/dist/20261123_地平線個股模型_v0.1.html（章節 ['thesis', 'valuation', 'sens', 'revdcf', 'pl', 'drivers', 'recon', 'status']；個別模組 []） 警告 全頁 sens 可見文字含參數代號 ['bu）
 
 ## 檔案
 - `build_horizon.py`：建置＋整本重算 Sens／反解＋產生本 README、`segments.json`、`sens.json`，最後跑核對。

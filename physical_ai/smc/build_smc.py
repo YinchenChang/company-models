@@ -256,8 +256,8 @@ def build(path, ov=None, sens=None, rev=None):
     for j, y in enumerate(HISTY):
         yy = y % 100; H.cell(i, 2 + j, f"=h_rev_{yy}-h_cogs_{yy}-h_op_{yy}"); dn(f"h_sga_{yy}", f"Hist!${'BCD'[j]}${i}")
     H.cell(i, 5, "Derived"); H.cell(i, 6, "資料商 SG&A 列較本列小約 0.5（其他營業費用另列）；公司 FY2025 販管費率 22.7%（" + BR2Q + "）與本列一致"); i += 1
-    H.cell(i, 1, "營運資金 ÷ 營收（年底；Derived）"); H.cell(i, 3, "=(206.733+489.660-46.898)/h_rev_24"); H.cell(i, 4, "=(234.366+506.697-31.822)/h_rev_25")
-    H.cell(i, 6, SAB + "：應收、存貨、應付（FY2023 年底未取得）"); i += 2
+    H.cell(i, 1, "營運資金 ÷ 營收（年底；Derived；FY2023 年底明細未取得）"); H.cell(i, 3, "=(206.733+489.660-46.898)/h_rev_24"); H.cell(i, 4, "=(234.366+506.697-31.822)/h_rev_25")
+    H.cell(i, 6, SAB + "：應收、存貨、應付"); i += 2
     # 地區別
     hdr(H, i, ["地區別營收（地域ごとの情報；顧客所在地）", "FY2023", "FY2024", "FY2025", "標記", "來源"]); i += 1
     r0 = i
@@ -678,6 +678,10 @@ def main():
     if "--raw" in sys.argv:
         ov = json.loads(os.environ.get("SMC_OVERRIDE", "{}"))
         build(sys.argv[sys.argv.index("--raw") + 1], ov); return
+    if "--post" in sys.argv:   # 沿用 sens.json 的整本重算快照，只重做成品、HTML、核對、README（In 頁改過時模型狀態會顯示 STALE）
+        sj = json.load(open(os.path.join(HERE, "sens.json")))
+        sens = dict(base=sj["base"], cases=sj["cases"], fp=sj["fp"], fp_sum=sj["base"]["fp_sum"], build_id=sj["build_id"])
+        finalize(sens, sj["revs"]); return
     px0 = in_val("px", "base")
     jobs = {"base": {}}
     meta = {}
@@ -732,8 +736,13 @@ def main():
             print("反解", key, lab, x)
     fp = fingerprint(); bid = f"smc-{VER}-{fp}"
     sens = dict(base=base, cases=cases, fp=fp, fp_sum=base["fp_sum"], build_id=bid)
-    json.dump(dict(base={k: base[k] for k in ("tp", "dcf", "cmp", "up", "rt", "alt_dcf", "alt_tp")}, cases=cases, fp=fp, build_id=bid),
+    json.dump(dict(base={k: base[k] for k in ("tp", "dcf", "cmp", "up", "rt", "alt_dcf", "alt_tp", "fp_sum")}, cases=cases, fp=fp, build_id=bid, revs=revs),
               open(os.path.join(HERE, "sens.json"), "w"), ensure_ascii=False, indent=1)
+    finalize(sens, revs)
+
+
+def finalize(sens, revs):
+    bid = sens["build_id"]
     # 成品
     dist = os.path.join(HERE, "dist"); os.makedirs(dist, exist_ok=True)
     tmp = tempfile.mkdtemp(prefix="smcf_"); raw = os.path.join(tmp, NAME)

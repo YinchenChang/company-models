@@ -581,7 +581,7 @@ def build(path, ov=None, sens=None, rev=None):
 # ---------------- 重算與讀值 ----------------
 def recalc(src, outdir, prof="0"):
     os.makedirs(outdir, exist_ok=True)
-    cmd = ["soffice", f"-env:UserInstallation=file:///tmp/h_unitree/lo_{prof}", "--headless", "--convert-to", "xlsx", "--outdir", outdir, src]
+    cmd = ["soffice", "-env:UserInstallation=file://" + os.path.join(os.environ.get("HOME") or tempfile.gettempdir(), f"lo_{prof}"), "--headless", "--convert-to", "xlsx", "--outdir", outdir, src]
     for attempt in range(2):
         try:
             subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=180)

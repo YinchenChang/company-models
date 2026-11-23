@@ -158,8 +158,8 @@ valuation = {"id": "valuation", "title": "估值", "blocks": [
 RVH = find(RC, "反解目標")
 revdcf = {"id": "revdcf", "title": "反向檢驗：現價隱含什麼（整本重算反解）", "blocks": [
     {"type": "note", "parts": ["本模型未建反向 DCF 頁；以整本重算的反解代替：單獨調整一個承重驅動，求使加權目標價等於現價（上檔為零）及落在升一級邊界所需的值，其他輸入不變。「無解」表示在搜尋區間內達不到。"]},
-    {"type": "table", "caption": f"@Recon!A{RVH - 1}", "head": [f"@Recon!{c}{RVH}" for c in "ABCDE"],
-     "rowgen": {"sheet": "Recon", "rows": f"{RVH + 1}-{RC.max_row}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "", "n2", "n2", ""]}}]}
+    {"type": "table", "caption": f"@Recon!A{RVH - 1}", "head": [f"@Recon!{c}{RVH}" for c in "ACDE"],
+     "rowgen": {"sheet": "Recon", "rows": f"{RVH + 1}-{RC.max_row}", "cols": ["A", "C", "D", "E"], "fmts": ["", "n2", "n2", ""]}}]}
 
 def r_(lab, k, f, hist="C"):
     return [lab] + [f"@PL!{c}{B[k]}|{f}" for c in STD]
@@ -223,7 +223,7 @@ recon = {"id": "recon", "title": "對帳：實績、線模型與現價隱含", "
                             str(find(RC, "FY2026 宇樹人形份額", exact=False)): {c: "p1" for c in "BCD"}, str(find(RC, "FY2026 人形出貨", exact=False)): {c: "n0" for c in "BCD"}}}},
     {"type": "table", "caption": "季度合併營收與淨利（億元；累計原文，單季相減）", "head": [f"@Q!{c}2" for c in "ABCDEFGH"],
      "rowgen": {"sheet": "Q", "rows": "3-6", "cols": list("ABCDEFGH"), "fmts": [""] + ["n2"] * 6 + ["tag"]}},
-    {"type": "table", "caption": "@Line!A1", "head": [f"@Line!{c}2" for c in "ABCDE"],
+    {"type": "table", "collapse": True, "summary": "展開：線模型讀入值（全球人形出貨與全尺寸出廠價）", "caption": "@Line!A1", "head": [f"@Line!{c}2" for c in "ABCDE"],
      "rowgen": {"sheet": "Line", "rows": f"3-{LS.max_row}", "cols": list("ABCDE"), "fmts": ["", "", "n0", "n0", "n0"]}},
     {"type": "table", "collapse": True, "summary": "展開：線層級變數對帳（是否與線模型一致）", "head": [f"@對帳!{c}2" for c in "ABCGI"],
      "rowgen": {"sheet": "對帳", "rows": f"3-{RE.max_row}", "cols": ["A", "B", "C", "G", "I"], "fmts": ["", "", "", "tag", ""]}}]}
@@ -236,7 +236,7 @@ status = {"id": "status", "title": "資料狀態", "blocks": [
     {"type": "table", "caption": "@Risk!A1", "head": ["@Risk!A2", "@Risk!B2", "@Risk!C2", "@Risk!D2"], "rows": [[nourl("Risk", f"{c}{r}") for c in "ABCD"] for r in range(3, RK.max_row + 1)]},
     {"type": "note", "parts": ["來源清單（含網址）見 xlsx Sources 頁與 In 頁來源欄；本頁為自含網頁，不放外部網址。"]},
     {"type": "h3", "text": "「未找到」與「未揭露」清單"},
-    {"type": "scan", "needle": "未找到", "collapse": True, "summary": "展開：標為「未找到」的項目", "sheets": {"In": ["B", "H", "I"], "Hist": ["A"], "Q": ["A", "B", "C", "E"]}, "empty": "沒有標為未找到的項目。"}]}
+    {"type": "scan", "needle": "未找到", "collapse": True, "summary": "展開：標為「未找到」的項目", "sheets": {"Hist": ["A"], "Q": ["A"], "Recon": ["A"]}, "empty": "沒有標為未找到的項目。"}]}
 
 cfg = {"company": "宇樹科技 Unitree", "ticker": "688836.SS", "layout": "v1.3", "wide_text": True,
        "thesis": "@README!A3",

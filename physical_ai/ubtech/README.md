@@ -1,6 +1,6 @@
 # physical_ai/ubtech — 優必選 UBTech（9880.HK）個股模型 v0.1
 
-資料截止日 2026-11-23（財報、公告與資料商）；成品日 2026-11-23；股價基準日 2026-11-20（收盤 57.90 港元）；目標價時點 2027-11-20｜build_id `v0.1+1d7ecd35`｜成品 `dist/20261123_優必選個股模型_v0.1.xlsx`（LibreOffice 重算，錯誤值 0）
+資料截止日 2026-11-23（財報、公告與資料商）；成品日 2026-11-23；股價基準日 2026-11-20（收盤 57.90 港元）；目標價時點 2027-11-20｜build_id `v0.1+3cf25070`｜成品 `dist/20261123_優必選個股模型_v0.1.xlsx`（LibreOffice 重算，錯誤值 0）
 
 港交所主板上市（2023-12）。報表人民幣（中國企業會計準則，港交所公告同一口徑），股價與目標價港元（匯率取 csv 的 HKD=X、CNY=X）。所屬線：線 4 人形機器人（`physical_ai/lines/humanoid/`）。本 README 的數字由 `build_ubtech.py` 從重算後的成品讀出產生，不手寫。
 
@@ -97,6 +97,8 @@
 | 目標價＝現價（上檔 0%） | `gop_B` | 格點 -10%～+15% 內無解 | 8.0% | 情境 B 核心營業費用年增 FY2027 起（情境 A／C 不動） |
 | 升一級邊界（上檔 -50%） | `gop_B` | -9.0% | 8.0% | 情境 B 核心營業費用年增 FY2027 起（情境 A／C 不動） |
 
+反解占比換算銷量（Recon 頁）：目標價＝現價（上檔 0%）：情境 B FY2027 全尺寸人形銷量約 11,552 台（公司 2027 年產量目標 1 萬台的 1.16 倍）；升一級邊界（上檔 -50%）：情境 B FY2027 全尺寸人形銷量約 5,193 台（公司 2027 年產量目標 1 萬台的 0.52 倍）。反解值是「目標價＝現價」或評等邊界的點，不是評等門檻本身；其他輸入不變。
+
 ## 對帳（線層級變數；xlsx「對帳」頁）
 讀自 `physical_ai/lines/humanoid/dist/20261116_人形機器人單位經濟_v0.1.xlsx`「下游取數」：全球人形出貨 `SHIP_2026`–`SHIP_2032`（C34:E40；情境 A／B／C 讀高／基準／低）、全尺寸售價 `HUM_PRICE_2026`（D10）、`HUM_PRICE_2028`／`2030`／`2035`（C77:E77、C79:E79、C81:E81；年度間幾何內插）；`HUM_BOM_2026`、`HUM_MFG_2026`、`HUM_PROD_REQ` 只作對照。與線模型不一致的自設值：全尺寸毛利率（FY2026 55.0%、FY2030 起情境 B 35.0%）高於線模型定價毛利率 25%——線模型為出廠硬體定價假設，優必選營收含解決方案與服務，且以殘差法推得；2026 上半年每台營收換算美元為線模型 2026 出廠售價的 0.91 倍（量級一致）。
 
@@ -114,13 +116,13 @@
 | `錯誤值掃描（建置腳本）` | 通過（結束碼 0） | 錯誤值 0 格 |
 | `tools/in_layout/check_in_layout.py` | 通過（結束碼 0） | In 頁版面核對通過（情境專屬 30 列皆已列入對照） |
 | `tools/sens_coverage/check_sens_coverage.py --require-keycol` | 通過（結束碼 0） | 敏感度覆蓋核對通過（32 個有低／高區間的鍵皆有案例或豁免；豁免 0） |
-| `tools/model_governance/check_governance.py` | 通過（結束碼 0） | 治理核對：build_id v0.1+1d7ecd35；全部通過 |
+| `tools/model_governance/check_governance.py` | 通過（結束碼 0） | 治理核對：build_id v0.1+3cf25070；全部通過 |
 | `tools/model_governance/check_rating_gate.py --strict` | 通過（結束碼 0） | 收支關卡評等檢查：符合：投資建議 強力放空（估值評等 強力放空）；收支合計 -5.4（Val 頁，不通過） |
 | `tools/model_governance/check_zero_rows.py` | 通過（結束碼 0） | 掃描 1 檔；有問題 0 檔；項目 0（新增 0、已知 0）；基準清單可刪 0 |
-| `tools/model_governance/check_cached_values.py` | 通過（結束碼 0） | [通過] physical_ai/ubtech/dist/20261123_優必選個股模型_v0.1.xlsx：公式格 1462，全部有快取值（其中刻意回傳空字串 0） 掃描 1 檔；公式格 1462；無快取值的檔 0；刻意回傳空字串的格 0 |
+| `tools/model_governance/check_cached_values.py` | 通過（結束碼 0） | [通過] physical_ai/ubtech/dist/20261123_優必選個股模型_v0.1.xlsx：公式格 1466，全部有快取值（其中刻意回傳空字串 0） 掃描 1 檔；公式格 1466；無快取值的檔 0；刻意回傳空字串的格 0 |
 | `tools/segment_check/check_segments.py` | 通過（結束碼 0） | [符合] physical_ai/ubtech   - 6 個官方分部、0 條子列、1 個核對列皆通過（20261123_優必選個股模型_v0.1.xlsx） |
-| `tools/company_html/check_company_html.py` | 未通過（結束碼 1） | ubtech：數字 1325、圖上資料點 198、標籤 948、空格 54、未標記文字節點 189 失敗 1 項（顯示前 40 項）：  - ubtech：含外部網址或 @import／url() |
-| `tools/company_html/check_layout_v13.py` | 通過（結束碼 0） |   警告 全頁 sens 可見文字含參數代號 ['build_idv0']   警告 全頁 revdcf 可見文字含參數代號 ['build_ubtech']   警告 全頁 recon 可見文字含參數代號 ['HUM_BOM_2026', 'HUM_MFG_2026', 'HUM_PRICE_2026', 'HUM_PRICE_2028', 'HUM_PRICE_2030', 'HUM_PRICE_2035', 'HUM_PROD_REQ', 'SHIP_2026'] |
+| `tools/company_html/check_company_html.py` | 通過（結束碼 0） | ubtech：數字 1331、圖上資料點 198、標籤 943、空格 54、未標記文字節點 189 全部通過 |
+| `tools/company_html/check_layout_v13.py` | 通過（結束碼 0） | ok   physical_ai/ubtech/dist/20261123_優必選個股模型_v0.1.html（章節 ['thesis', 'valuation', 'sens', 'revdcf', 'pl', 'drivers', 'recon', 'status']；個別模組 []）   警告 全頁 sens 可見文字含參數代號 ['build_idv0']   警告 全頁 recon 可見文字含參數代號 ['physical_ai'] |
 
 ## 檔案
 - `build_ubtech.py`：建置＋整本重算 Sens／反解＋產生 `sens.json`、`segments.json`、HTML 與本 README，並跑上表核對。`write_readme_ubt.py`：本 README 產生器。

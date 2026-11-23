@@ -635,6 +635,22 @@ def build(path, ov=None, sens=None, rev=None, bid="（基準檔）"):
              ("雙重股權結構（B 類高投票權）", "否", "治理", "股東會")]
     for i_, row in enumerate(risks, 3):
         for j, v in enumerate(row): RK.cell(i_, 1 + j, v)
+    i_ = 3 + len(risks) + 1
+    RK.cell(i_, 1, "未找到／未取得清單（「未找到」＝查過沒有公開資料；「未取得」＝有資料但本輪未取得原文）").font = BOLD; i_ += 1
+    hdr(RK, i_, ["項目", "狀態", "替代做法", "下次怎麼補"]); i_ += 1
+    miss = [("分部毛利與分部營業利益", "未找到（公司未揭露）", "FY2026 合併毛利率殘差校準 cr_k；Robotruck、智慧方案毛利率 Assumed", "20-F 分部附註"),
+            ("FY2023 分部營收、稅前、股數、資本支出", "未取得", "PL 頁 FY2023 只列合併數", "F-1 招股書或 FY2024 20-F 比較欄"),
+            ("Q1、Q2 單季分部營收", "未取得", "以 H1'26 半年度列示", "Q1'26 新聞稿"),
+            ("2025 年底精確車隊", "未取得", "公司稱超過 1,400 台；區間 1,100–1,446", "20-F 營運數據或公司部落格"),
+            ("選擇權與 RSU 數量、加權履約價", "未取得", "淨稀釋 0–5% 區間（基準 2%）", "20-F 股權報酬附註"),
+            ("折舊攤銷", "未取得", "資本支出五年平均攤提推算", "20-F 現金流量表"),
+            ("FY2027 以後車隊或營收目標", "未找到", "車隊路徑 Assumed（三情境）", "法說會、投資人日"),
+            ("共識逐年營收（FY2027 起）", "未取得（資料商付費牆）", "只用 FY2026 共識（財報前）", "資料商"),
+            ("中國國家風險溢酬原文", "未取得", "Assumed 0.9%（0.6–1.2%）", "Damodaran 國家風險表"),
+            ("自有車隊比例（聯合部署夥伴持有車輛占比）", "未找到", "Assumed 60%（30–100%）", "公司揭露車隊持有結構")]
+    for row in miss:
+        for j, v in enumerate(row): RK.cell(i_, 1 + j, v)
+        i_ += 1
     RK.column_dimensions["A"].width = 56; RK.column_dimensions["C"].width = 50
 
     # ---------------- Sources ----------------
@@ -946,6 +962,18 @@ def main():
         last = [l for l in (rp.stdout + rp.stderr).strip().splitlines() if l.strip()]
         msg = ("通過" if rp.returncode == 0 else "失敗") + "：" + (last[0] if last else "")
         results.append((os.path.basename(cmd[0]), msg[:300])); print(cmd[0], rp.returncode, "\n".join(last[:8]))
+    HT = X[:-5] + ".html"
+    for cmd in (["physical_ai/pony/gen_html_json.py", X], ["tools/company_html/build_company_html.py", HERE],
+                ["tools/company_html/check_company_html.py", HERE], ["tools/company_html/check_layout_v13.py", HT, "--xlsx", X],
+                ["tools/model_governance/check_governance.py", X, "--html", HT]):
+        rp = subprocess.run([sys.executable] + cmd, capture_output=True, text=True, cwd=ROOT)
+        lines = [l for l in (rp.stdout + rp.stderr).strip().splitlines() if l.strip()]
+        if cmd[0].endswith(("gen_html_json.py", "build_company_html.py")):
+            print(cmd[0], rp.returncode, lines[-1:] if lines else ""); assert rp.returncode == 0, lines[-5:]
+            continue
+        head = lines[-1] if cmd[0].endswith("check_company_html.py") else (lines[0] if lines else "")
+        nm = os.path.basename(cmd[0]) + ("（--html）" if "--html" in cmd else "")
+        results.append((nm, ("通過" if rp.returncode == 0 else "失敗") + "：" + head[:300])); print(cmd[0], rp.returncode, "\n".join(lines[:10]))
     readme(X, VR, PR, DR, bid, sens, revs, results)
 
 if __name__ == "__main__":
