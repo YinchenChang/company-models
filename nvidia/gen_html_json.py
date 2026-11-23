@@ -152,7 +152,7 @@ SPEC = {
   ["Edge Computing（遊戲、PC、工作站、車用與機器人）", [
     ["營收與毛利率", ["gm_edge", "eg", "edge_q"]]]],
   ["全公司：錨點、費用、稅與股數、股價與目標價規則", [
-    ["FY2027 錨點（第三季指引＋第四季假設）", ["q3_rev", "q3_gm", "q3_opx", "q4_g", "q4_gm", "q4_opx_g", "q_oth", "tx_27", "q_sh"]],
+    ["FY2027 錨點（前三季實績＋第四季指引）", ["q4_rev", "q4_gm", "q4_opx", "q_oth", "tx_27", "q_sh"]],
     ["營業費用、稅與股數", ["phi", "g_opx_min", "opx_adj", "tx_f", "oth_f", "sh_g"]],
     ["股價與循環位置", ["px", "r_disc", "pk_A", "pk_B", "pk_C"]],
     ["目標價規則（情境權重、DCF 權重、延伸期收斂與共識）", ["tp_wA", "tp_wB", "tp_wC", "tp_g", "tp_gd", "tp_w_dcf", "nm10", "cons_tp"]],

@@ -470,7 +470,7 @@ def write_c0(ws, wb, r, L):
            SU + " × SIF_UnitsCoef_Base，換成同一 FY 月數加權口徑：FY(t+1)＝" + "11/12 × CY(t)＋1/12 × CY(t+1)" + ("（FY2030 缺 CY2030 層級值，只用 CY2029；本列差距仍等於認列係數 − 1，與是否加權無關）" if y == 2029 else ""), st_u, sub=True, status="參考（認列係數缺口的分項，不判定）")
     # (3) 資料中心營收：同一缺口的分項
     f2("資料中心營收 FY2027 錨點 vs R4 公司錨點（同一輸入）", "FY2027（CY2026）", "US$B", "=a27_dc", "=" + C1(CMP, 2026), "#,##0.0",
-       "Q 頁 FY2027 錨點＝Q1、Q2 公司實績＋Q3 指引中點＋Q4 假設（Q!K5）", "Verified／Assumed（Q4 為假設）",
+       "Q 頁 FY2027 錨點＝Q1～Q3 公司實績＋Q4 指引中點（Q!K5）", "Verified／Interested-party（Q4 為指引）",
        f"{SL} Recon 快照 nv_dc.company（R4 橋接 r11 n4＝nv_dc_26）", "Verified／Assumed", status="讀取層級（同源，不判定）")
     f2("資料中心營收 FY2027 錨點 vs Siliconomics 隱含（FY 月數加權；R4 n5 比值的另一面，不是個股新證據）", "FY2027（CY2026／CY2027 加權）", "US$B", "=a27_dc", f"={WC}*{C1(IMP, 2026)}+(1-{WC})*{C1(IMP, 2027)}", "#,##0.0",
        "同上（公司實績加指引的錨點）", "Verified／Assumed",
