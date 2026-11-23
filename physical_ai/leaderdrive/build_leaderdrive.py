@@ -25,7 +25,7 @@ ROOT = os.path.dirname(os.path.dirname(HERE))
 VER = "v0.1"
 NAME = f"20261123_綠的諧波個股模型_{VER}.xlsx"
 OUT = os.path.join(HERE, "dist", NAME)
-HOMEDIR = os.environ.get("HOME", "/tmp/h_leaderdrive")
+HOMEDIR = os.path.expanduser("~")
 TMP = os.path.join(HOMEDIR, "ld_build")
 LO = ["soffice", f"-env:UserInstallation=file://{HOMEDIR}/lo_profile", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML"]
 
@@ -996,7 +996,7 @@ def write_readme(path, meta, sens):
 
 ## 命題
 
-1. **營收結構：** 官方產品分部為諧波減速器及金屬件（2025 年 476 百萬元，約八成）、機電一體化產品、智能自動化裝備；用途別（工業機器人、人形、其他）公司未揭露，本模型以 Assumed 拆分（2026 年人形占諧波營收 {I['hum_sh26']:.0%}，區間 8–25%）。
+1. **營收結構：** 官方產品分部為諧波減速器及金屬件（2025 年 {wb['Hist']['E8'].value:,.0f} 百萬元，占 {wb['Hist']['E8'].value / wb['Hist']['E4'].value:.0%}）、機電一體化產品、智能自動化裝備；用途別（工業機器人、人形、其他）公司未揭露，本模型以 Assumed 拆分（2026 年人形占諧波營收 {I['hum_sh26']:.0%}，區間 8–25%）。
 2. **量：** 工業機器人用跟隨線 3 全球機器人諧波需求；人形用＝線 4 全球出貨 × 線 6 每台用量 × 份額。2026 年隱含人形份額 {TH[f'E{THB["hsh"]}'].value:.0%}（以線 4 基準校準）。
 3. **價：** 每顆分部營收 2025 年 {I['asp25']:,.0f} 元，依線 6 每年降 {I['pd']:.0%}；本公司 2024→2025 已降約 15%（含組合），來福 2025 平均售價 571 元、年降 21%。價格競爭是量增利潤不落在本公司的主要機制。
 
@@ -1035,7 +1035,7 @@ def write_readme(path, meta, sens):
 - **同業倍數：** 4 家 A 股同業原報價日 2026-09-30～10-30，前瞻 P/E 依 2026-11-20 收盤等比例換算（EPS 未更新）；哈默納科、Nabtesco 取本專案模型值；少於 8 家不做迴歸；中大力德、五洲新春資料商無前瞻 P/E，未進中位數。
 - **rf 逾期：** 中國 10 年期國債 1.61% 為 2026-11-05 值（跨模型一致）。
 - **協調檔：** 實體 AI 模型不讀 Siliconomics／Tokenomics／Wattonomics；相關條文不適用。
-- **獨立核對：** 依 Project 規則，給 Andy 判讀的數字應由未參與製作的代理獨立核對；本代理無法啟動子代理，待主代理安排。
+- **獨立核對：** 依專案規則，交付判讀的數字應由未參與製作的代理獨立核對；本代理無法啟動子代理，待主代理安排。
 
 ## 資料來源
 

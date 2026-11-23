@@ -77,7 +77,7 @@ def main_tor(side, rs):
         return dict(TOR, title=f"加權目標價相對基準：輸入取{side}值（變動達兩位數百分比的案例）", rows=",".join(map(str, big(rs))))
     return dict(TOR, title=f"加權目標價相對基準：輸入取{side}值（沒有變動達兩位數百分比的案例；列出影響最大者）", rows=",".join(map(str, sorted(rs, key=lambda r: -abs(SE.cell(r, 6).value))[:1])))
 sens_blocks = [main_tor("低", lo), main_tor("高", hi), {"type": "note", "parts": ["@Sens!A1"]},
-               {"type": "kv", "items": [["@Sens!A2", "@Sens!D2"], ["@Sens!A3", "@Sens!D3"]]}]
+               {"type": "kv", "items": [["建置快照代號", "@Sens!D2"], ["@Sens!A3", "@Sens!D3"]]}]
 if oth:
     sens_blocks.append(dict(TOR, title="加權目標價相對基準：只看單一情境、終值替代法", rows=",".join(map(str, oth))))
 for side, rs in (("低", lo), ("高", hi)):
@@ -235,7 +235,7 @@ status = {"id": "status", "title": "資料狀態", "blocks": [
     {"type": "table", "caption": "@Risk!A1", "head": ["@Risk!A2", "@Risk!B2", "@Risk!C2", "@Risk!D2"], "rows": [[nourl("Risk", f"{c}{r}") for c in "ABCD"] for r in range(3, RK.max_row + 1)]},
     {"type": "note", "parts": ["來源清單（含網址）見 xlsx Sources 頁與 In 頁來源欄；本頁為自含網頁，不放外部網址。"]},
     {"type": "h3", "text": "「未取得」清單"},
-    {"type": "scan", "needle": "未取得", "collapse": True, "summary": "展開：標為「未取得」的項目", "sheets": {"In": ["B", "H", "I"], "Hist": ["A"], "Q": ["A"], "對帳": ["A", "C"]}, "empty": "沒有標為未取得的項目。"}]}
+    {"type": "scan", "needle": "未取得", "collapse": True, "summary": "展開：標為「未取得」的項目", "sheets": {"In": ["B"], "Hist": ["A"], "Q": ["A"], "對帳": ["A", "C"]}, "empty": "沒有標為未取得的項目。"}]}
 
 cfg = {"company": "極智嘉 Geek+", "ticker": "2590.HK", "layout": "v1.3", "wide_text": True,
        "thesis": "@README!A3",

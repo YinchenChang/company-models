@@ -100,7 +100,7 @@ hero = {"rec": vv("rec"),
                   [f"@Val!A{VR['cmp']}", vv("cmp", "B", "n0"), ""],
                   [il("px"), iv("px", "n0"), ["股價基準日 ", iv("px_date")]]],
         "note": ["估值評等 ", vv("rt"), "；收支關卡", vv("gj"), "（情境 B 自由現金流扣股利合計 ", vv("gate", "C", "n1"),
-                 " 十億日圓）。現價只有模型下一年度持續營業每股盈餘的 ", vv("pe1", "B", "x1"), "；只看保守情境時目標價約等於現價，評等由產業機器循環的延續決定。"]}
+                 " 十億日圓）。現價只有模型下一年度持續營業每股盈餘的 ", vv("pe1", "B", "x1"), "；只看保守情境時情境目標價為 ", vv("tps", "D", "n0"), " 日圓，評等取決於產業機器循環能否延續。"]}
 
 # 日本單體受注
 QO = find(Q, "日本單體（THK 本體）"); QO1, QO2 = QO + 1, find(Q, "2026Q3", QO)
@@ -234,7 +234,7 @@ status = {"id": "status", "title": "資料狀態", "blocks": [
     {"type": "table", "caption": "@Risk!A1", "head": ["@Risk!A2", "@Risk!B2", "@Risk!C2", "@Risk!D2"], "rows": [[nourl("Risk", f"{c}{r}") for c in "ABCD"] for r in range(3, RK.max_row + 1)]},
     {"type": "note", "parts": ["來源清單（含網址）見 xlsx Sources 頁與 In 頁來源欄；本頁為自含網頁，不放外部網址。"]},
     {"type": "h3", "text": "「未取得」清單"},
-    {"type": "scan", "needle": "未取得", "collapse": True, "summary": "展開：標為「未取得」的項目", "sheets": {"In": ["B", "H", "I"], "Hist": ["A"], "對帳": ["A", "C"]}, "empty": "沒有標為未取得的項目。"}]}
+    {"type": "scan", "needle": "未取得", "collapse": True, "summary": "展開：標為「未取得」的項目", "sheets": {"In": ["B"], "Hist": ["A"], "對帳": ["A", "C"]}, "empty": "沒有標為未取得的項目。"}]}
 
 cfg = {"company": "THK", "ticker": "6481.T", "layout": "v1.3", "wide_text": True,
        "thesis": "@README!A3",

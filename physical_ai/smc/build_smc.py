@@ -757,7 +757,7 @@ def finalize(sens, revs):
             if isinstance(c.value, str) and (c.value[:4] in ("#DIV", "#VAL", "#REF", "#NAM", "#N/A", "#NUM", "#NUL") or c.value.startswith("Err:"))]
     print("錯誤值格數", len(errs), errs[:10])
     assert not errs, errs
-    assert abs(wbv["Val"][f"B{M['VR']['tp']}"].value - base["tp"]) < 1e-6 * base["tp"], "成品與快照基準不一致"
+    assert abs(wbv["Val"][f"B{M['VR']['tp']}"].value - sens["base"]["tp"]) < 1e-6 * sens["base"]["tp"], "成品與快照基準不一致"
     json.dump(dict(company="smc", ticker="6273.T", model_sheet="PL",
                    official_segments=[dict(name="自動制御機器事業（單一報告分部）", label="營收（合併；自動制御機器事業，單一報告分部）", period="FY2025（2026年3月期）",
                                            value=842.541, unit="¥B", source=TS2Q + "（セグメント情報：単一セグメントのため記載省略）；" + EDB)],

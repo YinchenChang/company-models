@@ -4,7 +4,7 @@
 
 **本模型適用《高不確定性預估工作原則》**（`docs/plan/高不確定性預估工作原則.md`）：人形機器人需求尚未發生、公司未揭露用途別營收，相關輸入一律給區間並標 Assumed／Analogy；結論只在證據邊界內成立。
 
-- 成品：`dist/20261123_綠的諧波個股模型_v0.1.xlsx`（build_id `v0.1+549f06a1`；LibreOffice 重算，0 錯誤值）；HTML 展示層 `dist/20261123_綠的諧波個股模型_v0.1.html`（`gen_html_json.py` 產生 `html.json`，再以 `tools/company_html/build_company_html.py` 產生）
+- 成品：`dist/20261123_綠的諧波個股模型_v0.1.xlsx`（build_id `v0.1+eebd3bc3`；LibreOffice 重算，0 錯誤值）；HTML 展示層 `dist/20261123_綠的諧波個股模型_v0.1.html`（`gen_html_json.py` 產生 `html.json`，再以 `tools/company_html/build_company_html.py` 產生）
 - 建置：`python3 physical_ai/leaderdrive/build_leaderdrive.py`（需要 soffice；整本重算敏感度與反解；結尾自動跑 in_layout、sens_coverage --require-keycol、model_governance、rating_gate --strict、zero_rows、cached_values、segment_check）
 - 日期：資料截止日 2026-11-23（財報、券商預測、同業倍數）｜成品日 2026-11-23｜股價基準日 2026-11-20（收盤 230.80 元）｜評價日 2026-12-31｜目標時點 2027-11-20
 - 會計年度＝日曆年；單位百萬元人民幣；中國會計準則（法定財報口徑，GAAP）。上海科創板，亞太掛牌。
