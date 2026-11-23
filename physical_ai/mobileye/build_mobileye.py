@@ -576,7 +576,7 @@ def build(path, ov=None, sens=None, rev=None):
 
 
 # ---------------- 重算與讀值 ----------------
-LO = "file:///tmp/h_mobileye/lo_profile"
+LO = "file://" + os.path.join(tempfile.gettempdir(), "lo_mbly_profile")
 def recalc(src, outdir):
     os.makedirs(outdir, exist_ok=True)
     for attempt in range(2):
@@ -585,7 +585,7 @@ def recalc(src, outdir):
                            check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=180)
             break
         except subprocess.TimeoutExpired:
-            subprocess.run(["pkill", "-f", "lo_profile"], check=False)
+            subprocess.run(["pkill", "-f", "lo_mbly_profile"], check=False)
             if attempt: raise
     return os.path.join(outdir, os.path.basename(src))
 
