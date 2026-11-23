@@ -170,8 +170,9 @@ def hero_v13(B, M):
     tiles = (
         f'<div class="hero-t"><div class="hero-l">目標價（DCF 與同業倍數各半）</div><div class="hero-n">{sp(*w, "n2")}</div>'
         f'<div class="hero-s">上檔空間 {sp(*uw, "sp1")}</div></div>'
-        f'<div class="hero-t"><div class="hero-l">市場主流同業倍數法（未調整）</div><div class="hero-n">{sp(*c, "n2")}</div>'
-        f'<div class="hero-s">上檔空間 {sp(*uc, "sp1")}</div></div>'
+        # 外部稽核優化 W3-1（2026-11-23）：這一格是未調整值、不進加權；並列進加權的調整後值（VAL_TP_CompAdj），避免讀者拿 DCF 與它平均
+        f'<div class="hero-t"><div class="hero-l">市場主流同業倍數法（未調整，不進加權）</div><div class="hero-n">{sp(*c, "n2")}</div>'
+        f'<div class="hero-s">上檔空間 {sp(*uc, "sp1")}；調整後（進加權）{sp(*B.cell("VAL_TP_CompAdj"), "n2")}</div></div>'
         f'<div class="hero-t"><div class="hero-l">現價（ANT 最近收盤；2026-11-19 於 Nasdaq 掛牌）</div><div class="hero-n">{sp(*px, "n2")}</div>'
         f'<div class="hero-s" style="color:var(--muted)">區間 {sp(*lo, "n2")}–{sp(*hi, "n2")}</div></div>')
     note = (f'以 IPO 區間中點 {sp(*px, "n0")} 美元計，目標價 {sp(*w, "n2")} 美元、上檔空間 {sp(*uw, "sp1")}，評等{sp(rref, rating)}。'

@@ -364,9 +364,12 @@ def coord(wb, TKV, WATT):
     B0 = r
     vb = lambda p: f"=Val!B{lab(V, p)}"
     for labl, ref, fmt in (("加權目標價（DCF 與 Comparable 加權）", vb("目標價（DCF 與 Comparable 加權）"), "#,##0.00"), ("DCF 目標價（情境加權）", vb("DCF 目標價（情境加權）"), "#,##0.00"),
-                           ("Comparable 目標價（市場主流同業法；未調整）", vb("Comparable 目標價（市場主流同業法）"), "#,##0.00"), ("上檔空間（加權目標價 ÷ 現價 − 1）", vb("上檔空間：加權目標價"), "+0.0%;-0.0%")):
+                           ("Comparable 目標價（市場主流同業法；未調整，不進加權）", vb("Comparable 目標價（市場主流同業法）"), "#,##0.00"), ("上檔空間（加權目標價 ÷ 現價 − 1）", vb("上檔空間：加權目標價"), "+0.0%;-0.0%")):
         C.cell(r, 1, labl); C.cell(r, 2, ref).number_format = fmt; C.cell(r, 3, f"=B{r}").number_format = fmt
-        C.cell(r, 4, f"=C{r}-B{r}" if "上檔" in labl else f"=C{r}/B{r}-1").number_format = "+0.0%;-0.0%"; r += 1
+        C.cell(r, 4, f"=C{r}-B{r}" if "上檔" in labl else f"=C{r}/B{r}-1").number_format = "+0.0%;-0.0%"
+        if "不進加權" in labl:   # 外部稽核優化 W3-1（2026-11-23）：同列右側並列進加權的「相對倍數調整後」值（不插列，既有儲存格位置不動）
+            C.cell(r, 5, "Comparable 目標價（相對倍數調整後；進加權）"); C.cell(r, 6, "=tp_comp_adj").number_format = fmt; C.cell(r, 7, f"=F{r}").number_format = fmt
+        r += 1
     C.cell(r, 1, "投資建議（五級固定規則）"); C.cell(r, 2, "=" + REC5(f"B{r - 1}")); C.cell(r, 3, "=" + REC5(f"C{r - 1}")); B_rec = r; r += 1
     C.cell(r, 1, "是否有估值依賴的對帳中年份"); C.cell(r, 2, "否"); B_dep = r; r += 1
     C.cell(r, 1, "說明"); C.cell(r, 2, "C4 只適用估值依賴 Siliconomics 對帳中年份的硬體個股。本模型的營收量是平均計費 MW（公司合約與揭露推得），不是產業顆數；另一側讀數的唯一差異（產業部署 GW）"

@@ -497,6 +497,83 @@ def render_list(cx, blk):
 
 # 只在橫幅有 ai_note 時輸出（HTML 版面規格 v1.1），既有成品逐位元組不變
 AI_CSS = ".hero-ai{font-size:14px;color:#1f2328;font-weight:600}"
+FLAG_CSS = ".hero-flag{margin:0;font-size:14px;color:#1f2328;font-weight:600}"
+
+# ── 外部稽核優化 第三波（2026-11-23）：橫幅的共用提示，全部由 xlsx 判斷、數字與評等都取自儲存格 ──
+#   W3-1：橫幅的「只看 Comparable 目標價」一格是未調整的市場主流同業法，不進加權（進加權的是相對倍數調整後，規則 X30）；
+#         讀者把 DCF 與它平均會對不上加權目標價。有「相對倍數調整後」列的模型：該格標明「未調整，不進加權」，副值並列調整後的值。
+#         沒有調整後列的模型（算力買賣方：Comparable 即分部加總，直接進加權）不動，避免誤標。
+#   W3-3：Coord 頁兩讀數的評等不同時加一行提示（J2；並列是三層基準協調規則 C4 的要求，不是缺陷）。
+#   W3-8(c)：DCF 目標價為零（每股價值被有限責任下限截斷，規則 X13）而加權目標價仍為正時，標示「Comparable 單腿」。
+RECS5 = ("強力買進", "買進", "中立", "放空", "強力放空")
+_isnum = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)
+
+
+def _val_scan(cx):
+    """Val 頁：未調整 Comparable 的儲存格集合、調整後列號、DCF 目標價與加權目標價的儲存格。沒有 Val 頁回傳 None。"""
+    wb = cx.b.wb
+    if 'Val' not in wb.sheetnames:
+        return None
+    ws = wb['Val']
+    out = {'unadj': {}, 'adj': None, 'dcf': None, 'tp': None}
+    for r in range(1, ws.max_row + 1):
+        a = ws.cell(r, 1).value
+        if not isinstance(a, str):
+            continue
+        nums = [(get_column_letter(c), ws.cell(r, c).value) for c in range(2, 6) if _isnum(ws.cell(r, c).value)]
+        if not nums:
+            continue
+        col, v = nums[0]
+        if a == 'Comparable 目標價' or a.startswith('Comparable 目標價（市場主流同業法）'):
+            out['unadj'][f'{col}{r}'] = v
+        elif a.startswith('Comparable 目標價（相對倍數調整後）') and out['adj'] is None:
+            out['adj'] = (f'{col}{r}', v)
+        elif a.startswith('DCF 目標價（情境加權）') and out['dcf'] is None:
+            out['dcf'] = (f'{col}{r}', v)
+        elif a.startswith('目標價（DCF 與 Comparable 加權）') and out['tp'] is None:
+            out['tp'] = (f'{col}{r}', v)
+    return out
+
+
+def hero_w3(cx, h):
+    """回傳（改寫後的 tiles, 提示列 HTML 清單）。html.json 不必改；判斷不成立時原樣回傳。"""
+    tiles = [list(t) for t in h['tiles']]
+    flags = []
+    vs = _val_scan(cx)
+    if vs and vs['adj'] and vs['unadj']:
+        adj_c, adj_v = vs['adj']
+        for t in tiles:
+            lab, main, sub = t
+            refs, f = split_spec(main if isinstance(main, str) else '')
+            m = REF_RE.match(refs) if refs else None
+            if not m or m.group('sheet') != 'Val' or m.group('b') or m.group('a') not in vs['unadj']:
+                continue
+            ltxt = cx.text_of(lab)
+            if 'Comparable' not in ltxt or '不進加權' in ltxt:
+                continue
+            lab = list(lab) if isinstance(lab, list) else [lab]
+            same = abs(vs['unadj'][m.group('a')] - adj_v) <= 1e-9 * max(1.0, abs(adj_v))
+            if same:      # 調整係數為一：兩個值相同，寫明即可
+                t[0] = lab + ['〔未調整；本模型相對倍數調整係數為一，與進加權的值相同〕']
+            else:
+                t[0] = lab + ['〔不進加權〕' if '未調整' in ltxt else '〔未調整，不進加權〕']
+                sub = (list(sub) if isinstance(sub, list) else [sub]) if sub else []
+                t[2] = sub + ['；' if sub else '', '相對倍數調整後（進加權）', f'@Val!{adj_c}|{f or "n2"}']
+    wb = cx.b.wb
+    if 'Coord' in wb.sheetnames:
+        ws = wb['Coord']
+        for r in range(1, ws.max_row + 1):
+            a = ws.cell(r, 1).value
+            b, c = ws.cell(r, 2).value, ws.cell(r, 3).value
+            if isinstance(a, str) and a.startswith('投資建議') and b in RECS5 and c in RECS5:
+                if b != c:
+                    flags.append(f'兩讀數評等不同：現行基準讀數 {cx.span("Coord", f"B{r}", "")}、另一側讀數 {cx.span("Coord", f"C{r}", "")}。'
+                                 '對帳中年份個股不裁決哪一側正確，兩個目標價並列是三層基準協調規則的要求、不是模型缺陷；明細見估值章「兩讀數目標價」。')
+                break
+    if vs and vs['dcf'] and vs['tp'] and abs(vs['dcf'][1]) < 1e-12 and vs['tp'][1] > 0:
+        flags.append(f'Comparable 單腿：DCF 目標價為 {cx.span("Val", vs["dcf"][0], "n2")}（每股價值被有限責任下限截為零），'
+                     f'加權目標價 {cx.span("Val", vs["tp"][0], "n2")} 只剩 Comparable 支撐。')
+    return tiles, flags
 
 
 def render_hero(cx, h):
@@ -507,7 +584,8 @@ def render_hero(cx, h):
     tone = 'neg' if ('放空' in rec_txt or '收支不足' in rec_txt) else 'pos' if '買進' in rec_txt else 'neu'
     o = [f'<div class="hero hero-{tone}"><div class="hero-rec"><span class="hero-k">投資建議</span>'
          f'<span class="hero-v">{cx.cell_html(h["rec"])}</span></div><div class="hero-tiles">']
-    for lab, main, sub in h['tiles']:
+    tiles, flags = hero_w3(cx, h)      # 外部稽核優化 第三波（2026-11-23）：共用提示（見 hero_w3）
+    for lab, main, sub in tiles:
         o.append(f'<div class="hero-t"><div class="hero-l">{cx.cell_html(lab)}</div><div class="hero-n">{cx.cell_html(main)}</div>'
                  + (f'<div class="hero-s">{cx.cell_html(sub)}</div>' if sub else '') + '</div>')
     o.append('</div>')
@@ -515,6 +593,8 @@ def render_hero(cx, h):
         o.append(f'<p class="hero-note hero-ai">{cx.cell_html(h["ai_note"])}</p>')
     if h.get('note'):
         o.append(f'<p class="hero-note">{cx.cell_html(h["note"])}</p>')
+    for t in flags:
+        o.append(f'<p class="hero-flag">{t}</p>')
     o.append('</div>')
     return ''.join(o)
 
@@ -847,6 +927,7 @@ def build(cdir, xlsx=None, root=None):
         for blk in s.get('blocks', []):
             body.append(render_block(cx, blk, cfg, root))
         secs.append(f'<section id="{s["id"]}"><h2>{esc(s["title"])}</h2>{"".join(body)}</section>')
+    hero_html = render_hero(cx, cfg['hero']) if cfg.get('hero') else ''
     toc = ''.join(f'<a href="#{s["id"]}">{esc(s["title"])}</a>' for s in cfg['sections'])
     title = f'{cfg["company"]}模型'
     page = f"""<!doctype html>
@@ -856,7 +937,7 @@ def build(cdir, xlsx=None, root=None):
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
 <title>{esc(title)}</title>
-<style>{CSS}{WIDE_CSS if (cfg.get('wide_text') or cfg.get('hero')) else ''}{AI_CSS if (cfg.get('hero') or {}).get('ai_note') else ''}{THEME_CSS if any(b.get('type') in ('theme', 'compare') for sc in cfg['sections'] for b in sc['blocks']) else ''}</style>
+<style>{CSS}{WIDE_CSS if (cfg.get('wide_text') or cfg.get('hero')) else ''}{AI_CSS if (cfg.get('hero') or {}).get('ai_note') else ''}{FLAG_CSS if 'class="hero-flag"' in hero_html else ''}{THEME_CSS if any(b.get('type') in ('theme', 'compare') for sc in cfg['sections'] for b in sc['blocks']) else ''}</style>
 </head>
 <body>
 <input type="checkbox" id="refs" class="refs-toggle" aria-label="顯示每個數字的來源儲存格">
@@ -867,7 +948,7 @@ def build(cdir, xlsx=None, root=None):
 <label class="refs" for="refs">顯示來源儲存格（工作表!儲存格）</label>
 <nav class="toc" aria-label="章節">{toc}</nav>
 </header>
-{render_hero(cx, cfg['hero']) if cfg.get('hero') else ''}<main>
+{hero_html}<main>
 {"".join(secs)}
 </main>
 <footer>
