@@ -678,7 +678,7 @@ def write_readme(path, VR, PR, DR, bid, sens, revs):
 
 - 加權目標價 **{f0(tp)} 日圓**（DCF {f0(dcf)}、Comparable {f0(cmp_)}），現價 {f0(inv['px'])}（2026-11-20 收盤，分割調整後），上檔 {pc(up)}，估值評等 **{g(f"B{VR['rt']}")}**；收支關卡 {g(f"B{VR['gj']}")}（情境 B FY2026–30 自由現金流扣股利 {g(f"C{VR['gate']}"):,.0f} 十億日圓）→ 投資建議 **{g(f"B{VR['rec']}")}**。
 - 方法：DCF 標準版 FCFF（WACC／ke／g／RONIC＝{g(f"B{VR['wk']}")}；無有息負債，WACC＝ke）50%＋Comparable 50%（同業 6 家前瞻 P/E 中位數 {inv['pe_med']:.2f} 倍 × 目標時點 NTM EPS；視覺與量測子群 {inv['pe_vm']:.2f} 倍、FA 零組件子群 {inv['pe_fa']:.2f} 倍，純展示）。相對倍數係數 1.00（未調整：缺 Keyence 對同業的 10 年前瞻 P/E 歷史）。
-- Keyence 現行前瞻 P/E {inv['pe_self']:.1f} 倍（現價 ÷ 共識 FY2026 EPS），為同業中位數的 {g(f"B{VR['pe2']}"):.2f} 倍；Comparable 以同業中位數計，等於假設這個溢價在 12 個月內消失——這是 Comparable 低於現價的主因（見 Sens 的 rel_k 高案）。
+- Keyence 現行前瞻 P/E {inv['pe_self']:.1f} 倍（現價 ÷ 共識 FY2026 EPS），只比同業中位數高 {g(f"B{VR['pe2']}"):.2f} 倍（視覺與量測同業本身倍數高），所以 Comparable（{f0(cmp_)}）與現價接近；加權目標價低於現價主要來自 DCF（{f0(dcf)}；上檔歸因 DCF {pc(g(f"B{VR['a1']}"))}）：WACC＝ke 約 8.9%、RONIC＝WACC 時，終值只約 11.6 倍 NOPAT。Sens 的 β、ERP、WACC、RONIC、終值替代法各案即為這個主因的證據。
 - 每股淨現金與投資 {g(f"B{VR['cash']}"):,.0f} 日圓（占現價 {g(f"B{VR['cashp']}")*100:.1f}%）。隱含前瞻 P/E（加權目標價 ÷ 情境 B NTM EPS）{g(f"B{VR['pe']}"):.1f} 倍。
 
 ## 營收分部與標準損益表（官方單一分部；PL 頁三情境，情境 B 摘要，¥B）

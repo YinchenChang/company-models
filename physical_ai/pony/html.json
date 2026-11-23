@@ -2601,38 +2601,77 @@
      "text": "「未找到」與「未取得」清單"
     },
     {
-     "type": "scan",
-     "needle": "未取得",
+     "type": "table",
      "collapse": true,
-     "summary": "展開：標為「未取得」的項目",
-     "sheets": {
-      "In": [
-       "B",
-       "H",
-       "I"
+     "summary": "展開：未找到與未取得的資料、替代做法",
+     "head": [
+      "@Risk!A12",
+      "@Risk!B12",
+      "@Risk!C12",
+      "@Risk!D12"
+     ],
+     "rows": [
+      [
+       "@Risk!A13",
+       "@Risk!B13",
+       "@Risk!C13",
+       "@Risk!D13"
       ],
-      "Hist": [
-       "A"
+      [
+       "@Risk!A14",
+       "@Risk!B14",
+       "@Risk!C14",
+       "@Risk!D14"
       ],
-      "Q": [
-       "A"
+      [
+       "@Risk!A15",
+       "@Risk!B15",
+       "@Risk!C15",
+       "@Risk!D15"
+      ],
+      [
+       "@Risk!A16",
+       "@Risk!B16",
+       "@Risk!C16",
+       "@Risk!D16"
+      ],
+      [
+       "@Risk!A17",
+       "@Risk!B17",
+       "@Risk!C17",
+       "@Risk!D17"
+      ],
+      [
+       "@Risk!A18",
+       "@Risk!B18",
+       "@Risk!C18",
+       "@Risk!D18"
+      ],
+      [
+       "@Risk!A19",
+       "@Risk!B19",
+       "@Risk!C19",
+       "@Risk!D19"
+      ],
+      [
+       "@Risk!A20",
+       "@Risk!B20",
+       "@Risk!C20",
+       "@Risk!D20"
+      ],
+      [
+       "@Risk!A21",
+       "@Risk!B21",
+       "@Risk!C21",
+       "@Risk!D21"
+      ],
+      [
+       "@Risk!A22",
+       "@Risk!B22",
+       "@Risk!C22",
+       "@Risk!D22"
       ]
-     },
-     "empty": "沒有標為未取得的項目。"
-    },
-    {
-     "type": "scan",
-     "needle": "未找到",
-     "collapse": true,
-     "summary": "展開：標為「未找到」的項目",
-     "sheets": {
-      "In": [
-       "B",
-       "H",
-       "I"
-      ]
-     },
-     "empty": "沒有標為未找到的項目。"
+     ]
     }
    ]
   }

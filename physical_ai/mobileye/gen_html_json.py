@@ -237,7 +237,7 @@ recon = {"id": "recon", "title": "對帳：公司指引、共識、官方分部�
      "rowgen": {"sheet": "Q", "rows": "3-10", "cols": list("ABCDE"), "fmts": [""] + ["n0"] * 4}},
     {"type": "table", "caption": "系統出貨與平均售價（季）", "head": [f"@Q!{c}12" for c in "ABCDEF"],
      "rowgen": {"sheet": "Q", "rows": "13-15", "cols": list("ABCDEF"), "fmts": [""] + ["n1"] * 5}},
-    {"type": "table", "collapse": True, "summary": "展開：線層級變數對帳（線 1 Robotaxi、線 2 智慧車）", "head": [f"@對帳!{c}2" for c in "ABCDGH"],
+    {"type": "table", "collapse": True, "summary": "展開：線層級變數對帳（Robotaxi 線、智慧車線）", "head": [f"@對帳!{c}2" for c in "ABCDGH"],
      "rowgen": {"sheet": "對帳", "rows": f"3-{RE.max_row}", "cols": ["A", "B", "C", "D", "G", "H"], "fmts": ["", "", "", "", "tag", ""]}}]}
 
 RK = wb["Risk"]

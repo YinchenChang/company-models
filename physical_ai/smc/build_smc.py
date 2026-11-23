@@ -605,7 +605,7 @@ def build(path, ov=None, sens=None, rev=None):
 
 
 # ---------------- 重算與讀值 ----------------
-LO = "file:///tmp/h_smc/lo_profile"
+LO = "file://" + os.path.join(os.environ.get("HOME") or tempfile.gettempdir(), "lo_profile")   # LibreOffice 使用者設定（隔離）
 def recalc(paths, outdir):
     os.makedirs(outdir, exist_ok=True)
     for i in range(0, len(paths), 20):
@@ -731,7 +731,8 @@ def main():
         for lab, tgt in targets:
             x = sol[(key, lab)]
             if x is None:
-                revs.append(dict(label=lab, key=key, val=f"區間 {lo_:+.0%}～{hi_:+.0%} 內無解", base=b0, note=note))
+                rng = f"{lo_:g}～{hi_:g} 倍" if key == "pe_med" else f"{lo_:+.0%}～{hi_:+.0%}"
+                revs.append(dict(label=lab, key=key, val=f"區間 {rng} 內無解", base=b0, note=note))
             else:
                 revs.append(dict(label=lab, key=key, val=x, base=b0, note=note + f"；驗證：重算上檔 {vmap[(key, lab)]:+.2%} vs 目標 {tgt:+.0%}"))
             print("反解", key, lab, x)
@@ -814,7 +815,7 @@ def write_readme(X, M, bid, sens, revs, chk=None):
 
 {RD['A2'].value}｜build_id `{bid}`｜成品 `dist/{NAME}`（LibreOffice 重算，錯誤值 0）
 
-東證 Prime 上市（亞太基金可投資）。會計年度 3 月底，年度標籤採起始年（FY2026＝2026-04～2027-03，即 2027年3月期）。本 README 的數字由 `build_smc.py` 從重算後的成品讀出產生，不手寫。
+東證 Prime 上市（亞太掛牌）。會計年度 3 月底，年度標籤採起始年（FY2026＝2026-04～2027-03，即 2027年3月期）。本 README 的數字由 `build_smc.py` 從重算後的成品讀出產生，不手寫。
 
 ## 命題
 {RD['A3'].value}
@@ -823,7 +824,7 @@ def write_readme(X, M, bid, sens, revs, chk=None):
 
 {RD['A5'].value}
 
-**實體 AI 曝險：** {RD['A7'].value}
+{RD['A7'].value}
 
 ## 估值（評價日 2027-03-31；目標時點 2027-11-20）
 | 情境 | DCF（推到目標時點） | Comparable（同業 P/E × NTM EPS） | 情境目標價 |

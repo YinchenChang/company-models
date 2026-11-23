@@ -119,6 +119,9 @@ Nasdaq ADS（1 ADS＝1 股 A 類普通股，美元）；港交所 2026.HK（2025
 - `check_zero_rows.py`：通過：掃描 1 檔；有問題 0 檔；項目 0（新增 0、已知 0）；基準清單可刪 0
 - `check_cached_values.py`：通過：[通過] /home/claude/company-models/physical_ai/pony/dist/20261123_小馬智行個股模型_v0.1.xlsx：公式格 2482，全部有快取值（其中刻意回傳空字串 0）
 - `check_segments.py`：通過：[符合] /home/claude/company-models/physical_ai/pony
+- `check_company_html.py`：通過：全部通過
+- `check_layout_v13.py`：通過：ok   /home/claude/company-models/physical_ai/pony/dist/20261123_小馬智行個股模型_v0.1.html（章節 ['thesis', 'valuation', 'sens', 'revdcf', 'pl', 'drivers', 'recon', 'status']；個別模組 []）
+- `check_governance.py（--html）`：通過：治理核對：build_id pony-v0.1-b9ddcae956；全部通過
 
 ## 檔案
 - `build_pony.py`：建置＋整本重算 Sens／反解＋產生本 README、`segments.json`、`sens.json`，並跑核對。

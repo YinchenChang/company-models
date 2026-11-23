@@ -810,7 +810,7 @@ def write_readme(path, VR, PR, bid, sens, revs):
 
 失效條件：{RD['A6'].value.split('：', 1)[1]}。各 Sens 案例的估值評等出現「{'、'.join(rts)}」。
 
-**區間穩健性：** 強力買進只在點值成立，**不穩健**——距下緣 {g(f"B{VR['dist']}"):.1f} 個百分點，單一參數取低值有 {sum(1 for c in sens['cases'] if rating(c['tp']/inv('px')-1) != g(f"B{VR['rt']}"))} 案降到買進或以下（最低 {min(c['tp'] for c in sens['cases']):.2f} 港元，{min(sens['cases'], key=lambda c: c['tp'])['drv']}）；除「只看情境 C」為中立外，其餘案例都在買進以上。反解：北美 EBITDA 率降到 {next(r['val'] for r in revs if r['key']=='m_na' and '降一級' in r['label'])*100:.2f}%、或亞太降到 {next(r['val'] for r in revs if r['key']=='m_ap' and '降一級' in r['label'])*100:.2f}%（其他不變）即降為買進；中國 SBW 份額在 0–60% 內都不會使評等降級。
+**區間穩健性：** 強力買進只在點值成立，**不穩健**——距下緣 {g(f"B{VR['dist']}"):.1f} 個百分點，Sens 共 {len(sens['cases'])} 案中有 {sum(1 for c in sens['cases'] if rating(c['tp']/inv('px')-1) != g(f"B{VR['rt']}"))} 案降到買進或以下（最低 {min(c['tp'] for c in sens['cases']):.2f} 港元，{min(sens['cases'], key=lambda c: c['tp'])['drv']}）；除「只看情境 C」為中立外，其餘案例都在買進以上。反解：北美 EBITDA 率降到 {next(r['val'] for r in revs if r['key']=='m_na' and '降一級' in r['label'])*100:.2f}%、或亞太降到 {next(r['val'] for r in revs if r['key']=='m_ap' and '降一級' in r['label'])*100:.2f}%（其他不變）即降為買進；中國 SBW 份額在 0–60% 內都不會使評等降級。
 
 ## 敏感度（整本重算；Sens 頁；影響最大的 8 項）
 | 驅動 | 設定 | 鍵 | 加權目標價 | 相對基準 | 估值評等 |
