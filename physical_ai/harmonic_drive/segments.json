@@ -1,0 +1,14 @@
+{
+ "company": "Harmonic Drive Systems",
+ "ticker": "6324.T",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "日本", "label": "日本 營收", "period": "FY2025（2026年3月期）", "value": 26.627, "unit": "十億日圓（外部顧客營收）", "source": "有價證券報告書（經 envalith.com 彙整）"},
+  {"name": "中國", "label": "中國 營收", "period": "FY2025（2026年3月期）", "value": 4.047, "unit": "十億日圓", "source": "同上"},
+  {"name": "北米", "label": "北美 營收", "period": "FY2025（2026年3月期）", "value": 12.108, "unit": "十億日圓", "source": "同上"},
+  {"name": "欧州", "label": "歐洲 營收", "period": "FY2025（2026年3月期）", "value": 16.777, "unit": "十億日圓", "source": "同上"}
+ ],
+ "sublines": [],
+ "check_labels": ["檢查：分部合計 − 合併營收"],
+ "note": "官方報告分部為地區別（日本〔含亞洲〕、中國、北米、欧州）；產品別（減速裝置、メカトロニクス）與用途別（產業機器人、半導體設備、人形、其他）不是報告分部。用途為命題模組的拆分，合計＝合併營收（PL 頁「檢查：用途合計 − 合併營收」）。分部營收取到百萬日圓，核對誤差 ≤ 0.002 十億日圓。"
+}

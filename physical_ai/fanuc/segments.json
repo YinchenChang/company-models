@@ -1,0 +1,20 @@
+{
+ "company": "Fanuc",
+ "ticker": "6954.T",
+ "model_sheet": "PL",
+ "official_segments": [
+  {
+   "name": "單一分部（FA 綜合供應商；決算短信セグメント情報省略）",
+   "label": "合併營收",
+   "period": "FY2025（2025-04～2026-03）",
+   "value": 857.831,
+   "unit": "¥B",
+   "source": "Fanuc 2026年3月期 決算短信（連結）；2027年3月期 中間期決算短信：単一セグメント"
+  }
+ ],
+ "sublines": [
+  {"parent": "單一分部（FA 綜合供應商；決算短信セグメント情報省略）", "labels": ["FA 營收", "Robot 營收", "Robomachine 營收", "Service 營收"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收"],
+ "note": "部門別（FA、Robot、Robomachine、Service）為公司決算補足資料固定揭露的子列；部門取整到億日圓，歷史核對容許 ±0.1（FY2024 部門合計 797.2 對合併 797.129）"
+}

@@ -1,0 +1,3959 @@
+{
+ "company": "Tesla",
+ "ticker": "TSLA",
+ "layout": "v1.3",
+ "wide_text": true,
+ "thesis": "@README!B3",
+ "question": "AI 進入實體世界（FSD、Robotaxi、Optimus）的價值有多少已反映在現價，而不是汽車與能源本業？",
+ "scenarios": [
+  {
+   "key": "A",
+   "name": "情境 A（Optimus 與 Robotaxi 放量接近公司說法）"
+  },
+  {
+   "key": "B",
+   "name": "情境 B（基準）"
+  },
+  {
+   "key": "C",
+   "name": "情境 C（Optimus 可靠度未解決、Robotaxi 規模縮小）"
+  }
+ ],
+ "hero": {
+  "rec": "@Val!C17",
+  "tiles": [
+   [
+    "@Val!A11",
+    "@Val!C11|n2",
+    [
+     "上檔空間 ",
+     "@Val!C13|sp1"
+    ]
+   ],
+   [
+    "@Val!A10",
+    "@Val!C10|n2",
+    [
+     "DCF 目標價 ",
+     "@Val!C9|n2"
+    ]
+   ],
+   [
+    [
+     "現價（",
+     "@In!E6",
+     " 收盤）"
+    ],
+    "@Val!C12|n2",
+    ""
+   ]
+  ],
+  "note": [
+   "加權目標價＝DCF 與分部加總加權（DCF 權重 ",
+   "@In!E105|p0",
+   "）；Robotaxi 分部占加權目標價 ",
+   "@Val!C25|p1",
+   "。收支關卡（FY2026–FY2030 情境 B 自由現金流合計）",
+   "@Val!C16|n0",
+   " 百萬美元，",
+   "@Val!D16",
+   "。市場共識目標價為前版對照值（擷取日見估值章），未更新。"
+  ]
+ },
+ "sections": [
+  {
+   "id": "thesis",
+   "title": "命題與核心問題",
+   "blocks": [
+    {
+     "type": "theme",
+     "title": "合併營收（百萬美元，依分部與命題子列堆疊）與毛利率：FY2025–FY2035（情境 B）",
+     "x": "@PL!C3:M3",
+     "fmt": "n0",
+     "fmt_r": "p0",
+     "stack": true,
+     "pad": 1.25,
+     "total": "@PL!C43:M43",
+     "bars": [
+      {
+       "name": [
+        "@PL!A35"
+       ],
+       "y": "@PL!C35:M35",
+       "color": "#b7e3e4"
+      },
+      {
+       "name": [
+        "@PL!A38"
+       ],
+       "y": "@PL!C38:M38",
+       "color": "#d9b65c"
+      },
+      {
+       "name": [
+        "@PL!A39"
+       ],
+       "y": "@PL!C39:M39",
+       "color": "#8a8c8c"
+      },
+      {
+       "name": [
+        "@PL!A40"
+       ],
+       "y": "@PL!C40:M40",
+       "color": "#6fc7cb"
+      },
+      {
+       "name": [
+        "@PL!A41"
+       ],
+       "y": "@PL!C41:M41",
+       "color": "#10a0a7"
+      },
+      {
+       "name": [
+        "@PL!A36"
+       ],
+       "y": "@PL!C36:M36",
+       "color": "#0b7a80"
+      },
+      {
+       "name": [
+        "@PL!A37"
+       ],
+       "y": "@PL!C37:M37",
+       "color": "#c29a2b"
+      },
+      {
+       "name": [
+        "@PL!A42"
+       ],
+       "y": "@PL!C42:M42",
+       "color": "#6f6bae"
+      }
+     ],
+     "lines": [
+      {
+       "name": [
+        "@PL!A46"
+       ],
+       "y": "@PL!C46:M46",
+       "axis": "r",
+       "color": "#3b3838",
+       "labels": true
+      }
+     ],
+     "caption": "堆疊＝汽車分部各子列（車輛銷售、碳權、租賃、服務及其他、FSD、Robotaxi）、能源分部與 Optimus（尚未列報），合計等於合併營收；折線＝毛利率（右軸）。FSD、Robotaxi、Optimus 三條是命題所指的實體 AI 業務。"
+    },
+    {
+     "type": "h3",
+     "text": "命題"
+    },
+    {
+     "type": "list",
+     "ordered": true,
+     "items": [
+      "@README!B3"
+     ]
+    },
+    {
+     "type": "note",
+     "collapse": true,
+     "summary": "展開：命題回覆（依模型計算）",
+     "parts": [
+      "@README!B4"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "重點觀察"
+    },
+    {
+     "type": "list",
+     "ordered": true,
+     "items": [
+      [
+       "估值：加權目標價 ",
+       "@Val!C11|n2",
+       " 美元，相對現價 ",
+       "@Val!C12|n2",
+       " 上檔空間 ",
+       "@Val!C13|sp1",
+       "，估值評等",
+       "@Val!C14",
+       "；距最近級距邊界 ",
+       "@Val!C19|p1",
+       "，目標價要到 ",
+       "@Val!C20|n2",
+       " 才升一級。"
+      ],
+      [
+       "現金流折現腿三情境（A／B／C）每股 ",
+       "@Val!C4|n2",
+       "／",
+       "@Val!D4|n2",
+       "／",
+       "@Val!E4|n2",
+       "；情境 C 股權價值為負、依限責處理歸零。汽車本業毛利率偏低、資本支出高，明確期自由現金流撐不起現價。"
+      ],
+      [
+       "分部加總腿三情境 ",
+       "@Val!C5|n2",
+       "／",
+       "@Val!D5|n2",
+       "／",
+       "@Val!E5|n2",
+       "；其中 Robotaxi 分部價值（十億美元，讀 Robotaxi 分部模型）",
+       "@In!E70|n1",
+       "／",
+       "@In!E71|n1",
+       "／",
+       "@In!E72|n1",
+       "，占加權目標價 ",
+       "@Val!C25|p1",
+       "；分部加總的主體是 FSD 與 Optimus。"
+      ],
+      [
+       "反解：要支持現價，情境 B 的 Robotaxi 分部價值約需 ",
+       "@Recon!D15|n0",
+       " 十億美元，分部模型值為 ",
+       "@In!E71|n1",
+       "。"
+      ],
+      [
+       "收支關卡：FY2026–FY2030 情境 B 自由現金流合計 ",
+       "@Val!C16|n0",
+       " 百萬美元（",
+       "@Val!D16",
+       "），最低單年 ",
+       "@Val!C32|n0",
+       "；評價日淨現金與投資 ",
+       "@Val!C33|n0",
+       " 百萬美元。投資建議",
+       "@Val!C17",
+       "。"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "valuation",
+   "title": "估值：現金流折現與分部加總兩腿",
+   "blocks": [
+    {
+     "type": "bars",
+     "title": "四個目標價與現價（美元；豎線＝現價；市場共識為前版對照值，未更新）",
+     "fmt": "n2",
+     "items": [
+      {
+       "label": "@Val!A9",
+       "value": "@Val!C9",
+       "series": 1
+      },
+      {
+       "label": "@Val!A10",
+       "value": "@Val!C10",
+       "series": 2
+      },
+      {
+       "label": "@Val!A11",
+       "value": "@Val!C11",
+       "series": 0
+      },
+      {
+       "label": "@In!B8",
+       "value": "@In!E8",
+       "series": 1
+      }
+     ],
+     "ref": {
+      "label": [
+       "現價（",
+       "@In!E6",
+       " 收盤）"
+      ],
+      "value": "@Val!C12"
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Val!A1"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "市場共識目標價：",
+      "@In!H8",
+      "（",
+      "@In!I8",
+      "）。"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "結論",
+     "head": [
+      "項目",
+      "數值"
+     ],
+     "rows": [
+      [
+       "@Val!A9",
+       "@Val!C9|n2"
+      ],
+      [
+       "@Val!A10",
+       "@Val!C10|n2"
+      ],
+      [
+       "@Val!A11",
+       "@Val!C11|n2"
+      ],
+      [
+       "@Val!A12",
+       "@Val!C12|n2"
+      ],
+      [
+       "@Val!A13",
+       "@Val!C13|sp1"
+      ],
+      [
+       "@Val!A14",
+       "@Val!C14"
+      ],
+      [
+       "@Val!A16",
+       "@Val!C16|n0"
+      ],
+      [
+       "@Val!A17",
+       "@Val!C17"
+      ],
+      [
+       "@In!B105",
+       "@In!E105|p0"
+      ],
+      [
+       "@In!B8",
+       "@In!E8|n2"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Val!C18"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "三情境：兩腿每股價值與情境目標價（美元；最後一欄為情境加權）",
+     "head": [
+      "@Val!A3",
+      "@Val!C3",
+      "@Val!D3",
+      "@Val!E3",
+      "@Val!F3"
+     ],
+     "rows": [
+      [
+       "@Val!A4",
+       "@Val!C4|n2",
+       "@Val!D4|n2",
+       "@Val!E4|n2",
+       "@Val!F4|n2"
+      ],
+      [
+       "@Val!A5",
+       "@Val!C5|n2",
+       "@Val!D5|n2",
+       "@Val!E5|n2",
+       "@Val!F5|n2"
+      ],
+      [
+       "@Val!A6",
+       "@Val!C6|p0",
+       "@Val!D6|p0",
+       "@Val!E6|p0",
+       "@Val!F6|p0"
+      ],
+      [
+       "@Val!A7",
+       "@Val!C7|n2",
+       "@Val!D7|n2",
+       "@Val!E7|n2"
+      ]
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "分部加總中 Robotaxi 的比重"
+    },
+    {
+     "type": "table",
+     "head": [
+      "項目",
+      "數值"
+     ],
+     "rows": [
+      [
+       "@Val!A25",
+       "@Val!C25|p1"
+      ],
+      [
+       "@Val!A22",
+       "@Val!C22|sp1"
+      ],
+      [
+       "@Val!A23",
+       "@Val!C23|sp1"
+      ],
+      [
+       "@Val!A24",
+       "@Val!C24|sp1"
+      ],
+      [
+       "@SOTP!A23",
+       "@SOTP!C23|n2",
+       "@SOTP!D23|n2",
+       "@SOTP!E23|n2"
+      ]
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "現金流折現：折現率"
+    },
+    {
+     "type": "kv",
+     "items": [
+      [
+       "@DCF!A4",
+       "@DCF!C4|p2"
+      ],
+      [
+       "@DCF!A5",
+       "@DCF!C5|p2"
+      ],
+      [
+       "@DCF!A9",
+       "@DCF!C9|p2"
+      ],
+      [
+       "@DCF!A11",
+       "@DCF!C11|p2"
+      ],
+      [
+       "@DCF!A10",
+       "@DCF!C10|p2"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：折現率組成（無風險利率、β、股權風險溢酬、資本結構）",
+     "head": [
+      "@In!B3",
+      "@In!D3",
+      "@In!E3",
+      "@In!F3",
+      "@In!G3"
+     ],
+     "rows": [
+      [
+       "@In!B10",
+       "@In!D10|p1",
+       "@In!E10|p1",
+       "@In!F10|p1",
+       "@In!G10|tag"
+      ],
+      [
+       "@In!B11",
+       "@In!D11|n2",
+       "@In!E11|n2",
+       "@In!F11|n2",
+       "@In!G11|tag"
+      ],
+      [
+       "@In!B12",
+       "@In!D12|n2",
+       "@In!E12|n2",
+       "@In!F12|n2",
+       "@In!G12|tag"
+      ],
+      [
+       "@In!B13",
+       "@In!D13|n2",
+       "@In!E13|n2",
+       "@In!F13|n2",
+       "@In!G13|tag"
+      ],
+      [
+       "@In!B14",
+       "@In!D14|p1",
+       "@In!E14|p1",
+       "@In!F14|p1",
+       "@In!G14|tag"
+      ],
+      [
+       "@In!B15",
+       "@In!D15|p1",
+       "@In!E15|p1",
+       "@In!F15|p1",
+       "@In!G15|tag"
+      ],
+      [
+       "@In!B16",
+       "@In!D16|p1",
+       "@In!E16|p1",
+       "@In!F16|p1",
+       "@In!G16|tag"
+      ],
+      [
+       "@In!B17",
+       "@In!D17|p1",
+       "@In!E17|p1",
+       "@In!F17|p1",
+       "@In!G17|tag"
+      ],
+      [
+       "@DCF!A6",
+       "",
+       "@DCF!C6|n0",
+       "",
+       ""
+      ],
+      [
+       "@DCF!A7",
+       "",
+       "@DCF!C7|n0",
+       "",
+       ""
+      ],
+      [
+       "@DCF!A8",
+       "",
+       "@DCF!C8|p1",
+       "",
+       ""
+      ],
+      [
+       "@DCF!A12",
+       "",
+       "@DCF!C12|n0",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "現金流折現彙總（三情境；百萬美元，每股為美元）",
+     "head": [
+      "項目",
+      "情境 A",
+      "情境 B",
+      "情境 C"
+     ],
+     "rows": [
+      [
+       "@DCF!A59",
+       "@DCF!C30|n0",
+       "@DCF!C59|n0",
+       "@DCF!C88|n0"
+      ],
+      [
+       "@DCF!A61",
+       "@DCF!C32|n0",
+       "@DCF!C61|n0",
+       "@DCF!C90|n0"
+      ],
+      [
+       "@DCF!A62",
+       "@DCF!C33|n0",
+       "@DCF!C62|n0",
+       "@DCF!C91|n0"
+      ],
+      [
+       "@DCF!A64",
+       "@DCF!C35|n0",
+       "@DCF!C64|n0",
+       "@DCF!C93|n0"
+      ],
+      [
+       "@DCF!A69",
+       "@DCF!C40|n2",
+       "@DCF!C69|n2",
+       "@DCF!C98|n2"
+      ],
+      [
+       "@DCF!A70",
+       "@DCF!C41|n2",
+       "@DCF!C70|n2",
+       "@DCF!C99|n2"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：現金流折現其餘項目（終值、終值占企業價值、CEO 獎酬股數）",
+     "head": [
+      "項目",
+      "情境 A",
+      "情境 B",
+      "情境 C"
+     ],
+     "rows": [
+      [
+       "@DCF!A60",
+       "@DCF!C31|n0",
+       "@DCF!C60|n0",
+       "@DCF!C89|n0"
+      ],
+      [
+       "@DCF!A63",
+       "@DCF!C34|p1",
+       "@DCF!C63|p1",
+       "@DCF!C92|p1"
+      ],
+      [
+       "@DCF!A65",
+       "@DCF!C36|n3",
+       "@DCF!C65|n3",
+       "@DCF!C94|n3"
+      ],
+      [
+       "@DCF!A66",
+       "@DCF!C37|p1",
+       "@DCF!C66|p1",
+       "@DCF!C95|p1"
+      ],
+      [
+       "@DCF!A67",
+       "@DCF!C38|n1",
+       "@DCF!C67|n1",
+       "@DCF!C96|n1"
+      ],
+      [
+       "@DCF!A68",
+       "@DCF!C39|n1",
+       "@DCF!C68|n1",
+       "@DCF!C97|n1"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "分部加總彙總（沿用原檔 2035 年分部倍數法；百萬美元，每股為美元）",
+     "head": [
+      "項目",
+      "情境 A",
+      "情境 B",
+      "情境 C"
+     ],
+     "rows": [
+      [
+       "@SOTP!A5",
+       "@SOTP!C5|n0",
+       "@SOTP!D5|n0",
+       "@SOTP!E5|n0"
+      ],
+      [
+       "@SOTP!A8",
+       "@SOTP!C8|n0",
+       "@SOTP!D8|n0",
+       "@SOTP!E8|n0"
+      ],
+      [
+       "@SOTP!A10",
+       "@SOTP!C10|n0",
+       "@SOTP!D10|n0",
+       "@SOTP!E10|n0"
+      ],
+      [
+       "@SOTP!A13",
+       "@SOTP!C13|n0",
+       "@SOTP!D13|n0",
+       "@SOTP!E13|n0"
+      ],
+      [
+       "@SOTP!A14",
+       "@SOTP!C14|n0",
+       "@SOTP!D14|n0",
+       "@SOTP!E14|n0"
+      ],
+      [
+       "@SOTP!A15",
+       "@SOTP!C15|n0",
+       "@SOTP!D15|n0",
+       "@SOTP!E15|n0"
+      ],
+      [
+       "@SOTP!A16",
+       "@SOTP!C16|n0",
+       "@SOTP!D16|n0",
+       "@SOTP!E16|n0"
+      ],
+      [
+       "@SOTP!A17",
+       "@SOTP!C17|n0",
+       "@SOTP!D17|n0",
+       "@SOTP!E17|n0"
+      ],
+      [
+       "@SOTP!A22",
+       "@SOTP!C22|n2",
+       "@SOTP!D22|n2",
+       "@SOTP!E22|n2"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：分部加總其餘項目（各分部營收、市銷率、股數）",
+     "head": [
+      "項目",
+      "情境 A",
+      "情境 B",
+      "情境 C"
+     ],
+     "rows": [
+      [
+       "@SOTP!A4",
+       "@SOTP!C4|n0",
+       "@SOTP!D4|n0",
+       "@SOTP!E4|n0"
+      ],
+      [
+       "@SOTP!A6",
+       "@SOTP!C6|n0",
+       "@SOTP!D6|n0",
+       "@SOTP!E6|n0"
+      ],
+      [
+       "@SOTP!A7",
+       "@SOTP!C7|n1",
+       "@SOTP!D7|n1",
+       "@SOTP!E7|n1"
+      ],
+      [
+       "@SOTP!A9",
+       "@SOTP!C9|n0",
+       "@SOTP!D9|n0",
+       "@SOTP!E9|n0"
+      ],
+      [
+       "@SOTP!A11",
+       "@SOTP!C11|n0",
+       "@SOTP!D11|n0",
+       "@SOTP!E11|n0"
+      ],
+      [
+       "@SOTP!A12",
+       "@SOTP!C12|n1",
+       "@SOTP!D12|n1",
+       "@SOTP!E12|n1"
+      ],
+      [
+       "@SOTP!A18",
+       "@SOTP!C18|p1",
+       "@SOTP!D18|p1",
+       "@SOTP!E18|p1"
+      ],
+      [
+       "@SOTP!A19",
+       "@SOTP!C19|n1",
+       "@SOTP!D19|n1",
+       "@SOTP!E19|n1"
+      ],
+      [
+       "@SOTP!A20",
+       "@SOTP!C20|n1",
+       "@SOTP!D20|n1",
+       "@SOTP!E20|n1"
+      ],
+      [
+       "@SOTP!A21",
+       "@SOTP!C21|n2",
+       "@SOTP!D21|n2",
+       "@SOTP!E21|n2"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：分部加總倍數與權重輸入",
+     "head": [
+      "@In!B3",
+      "@In!D3",
+      "@In!E3",
+      "@In!F3",
+      "@In!G3"
+     ],
+     "rows": [
+      [
+       "@In!B63",
+       "@In!D63|p1",
+       "@In!E63|p1",
+       "@In!F63|p1",
+       "@In!G63|tag"
+      ],
+      [
+       "@In!B64",
+       "@In!D64|n0",
+       "@In!E64|n0",
+       "@In!F64|n0",
+       "@In!G64|tag"
+      ],
+      [
+       "@In!B65",
+       "@In!D65|n2",
+       "@In!E65|n2",
+       "@In!F65|n2",
+       "@In!G65|tag"
+      ],
+      [
+       "@In!B66",
+       "@In!D66|p1",
+       "@In!E66|p1",
+       "@In!F66|p1",
+       "@In!G66|tag"
+      ],
+      [
+       "@In!B67",
+       "@In!D67|n2",
+       "@In!E67|n2",
+       "@In!F67|n2",
+       "@In!G67|tag"
+      ],
+      [
+       "@In!B68",
+       "@In!D68|p1",
+       "@In!E68|p1",
+       "@In!F68|p1",
+       "@In!G68|tag"
+      ],
+      [
+       "@In!B69",
+       "@In!D69|n2",
+       "@In!E69|n2",
+       "@In!F69|n2",
+       "@In!G69|tag"
+      ],
+      [
+       "@In!B102",
+       "@In!D102|p1",
+       "@In!E102|p1",
+       "@In!F102|p1",
+       "@In!G102|tag"
+      ],
+      [
+       "@In!B103",
+       "@In!D103|p1",
+       "@In!E103|p1",
+       "@In!F103|p1",
+       "@In!G103|tag"
+      ],
+      [
+       "@In!B104",
+       "@In!D104|p1",
+       "@In!E104|p1",
+       "@In!F104|p1",
+       "@In!G104|tag"
+      ],
+      [
+       "@In!B105",
+       "@In!D105|p1",
+       "@In!E105|p1",
+       "@In!F105|p1",
+       "@In!G105|tag"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：評等邊界、區間與期間",
+     "head": [
+      "項目",
+      "數值"
+     ],
+     "rows": [
+      [
+       "@Val!A19",
+       "@Val!C19|p1"
+      ],
+      [
+       "@Val!A20",
+       "@Val!C20|n2"
+      ],
+      [
+       "@Val!A21",
+       "@Val!C21|n2"
+      ],
+      [
+       "@Val!A26",
+       "@Val!C26|n2"
+      ],
+      [
+       "@Val!A27",
+       "@Val!C27|n2"
+      ],
+      [
+       "@Val!A28",
+       "@Val!C28"
+      ],
+      [
+       "@Val!A29",
+       "@Val!C29"
+      ],
+      [
+       "@Val!A30",
+       "@Val!C30|n2"
+      ],
+      [
+       "@Val!A31",
+       "@Val!C31|p1"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sens",
+   "title": "敏感度",
+   "blocks": [
+    {
+     "type": "bars",
+     "title": "加權目標價相對基準：輸入取低值，變動達百分之十以上的案例（美元；豎線＝基準加權目標價）",
+     "fmt": "n2",
+     "items": [
+      {
+       "label": "@Sens!A37",
+       "value": "@Sens!D37",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A15",
+       "value": "@Sens!D15",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A36",
+       "value": "@Sens!D36",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A30",
+       "value": "@Sens!D30",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A13",
+       "value": "@Sens!D13",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A17",
+       "value": "@Sens!D17",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A31",
+       "value": "@Sens!D31",
+       "series": 0
+      }
+     ],
+     "ref": {
+      "label": "@Sens!A39",
+      "value": "@Sens!D39"
+     }
+    },
+    {
+     "type": "bars",
+     "title": "加權目標價相對基準：輸入取高值，變動達百分之十以上的案例（美元；豎線＝基準加權目標價）",
+     "fmt": "n2",
+     "items": [
+      {
+       "label": "@Sens!A15",
+       "value": "@Sens!E15",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A17",
+       "value": "@Sens!E17",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A37",
+       "value": "@Sens!E37",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A13",
+       "value": "@Sens!E13",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A30",
+       "value": "@Sens!E30",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A36",
+       "value": "@Sens!E36",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A16",
+       "value": "@Sens!E16",
+       "series": 1
+      }
+     ],
+     "ref": {
+      "label": "@Sens!A39",
+      "value": "@Sens!D39"
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Sens!A1"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Sens!A2"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "本模型的敏感度頁列加權目標價的絕對值；圖以基準加權目標價為豎線，長條在線左側為低於基準、右側為高於基準。"
+     ]
+    },
+    {
+     "type": "bars",
+     "title": "加權目標價相對基準：輸入取低值，其餘案例",
+     "fmt": "n2",
+     "items": [
+      {
+       "label": "@Sens!A14",
+       "value": "@Sens!D14",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A19",
+       "value": "@Sens!D19",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A16",
+       "value": "@Sens!D16",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A6",
+       "value": "@Sens!D6",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A5",
+       "value": "@Sens!D5",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A32",
+       "value": "@Sens!D32",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A33",
+       "value": "@Sens!D33",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A7",
+       "value": "@Sens!D7",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A12",
+       "value": "@Sens!D12",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A24",
+       "value": "@Sens!D24",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A34",
+       "value": "@Sens!D34",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A35",
+       "value": "@Sens!D35",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A18",
+       "value": "@Sens!D18",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A26",
+       "value": "@Sens!D26",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A11",
+       "value": "@Sens!D11",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A25",
+       "value": "@Sens!D25",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A27",
+       "value": "@Sens!D27",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A20",
+       "value": "@Sens!D20",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A21",
+       "value": "@Sens!D21",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A8",
+       "value": "@Sens!D8",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A22",
+       "value": "@Sens!D22",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A23",
+       "value": "@Sens!D23",
+       "series": 0
+      }
+     ],
+     "ref": {
+      "label": "@Sens!A39",
+      "value": "@Sens!D39"
+     },
+     "collapse": true,
+     "summary": "展開：輸入取低值，變動未達百分之十的案例"
+    },
+    {
+     "type": "bars",
+     "title": "加權目標價相對基準：輸入取高值，其餘案例",
+     "fmt": "n2",
+     "items": [
+      {
+       "label": "@Sens!A14",
+       "value": "@Sens!E14",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A19",
+       "value": "@Sens!E19",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A6",
+       "value": "@Sens!E6",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A32",
+       "value": "@Sens!E32",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A5",
+       "value": "@Sens!E5",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A12",
+       "value": "@Sens!E12",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A24",
+       "value": "@Sens!E24",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A10",
+       "value": "@Sens!E10",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A7",
+       "value": "@Sens!E7",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A34",
+       "value": "@Sens!E34",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A28",
+       "value": "@Sens!E28",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A27",
+       "value": "@Sens!E27",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A33",
+       "value": "@Sens!E33",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A26",
+       "value": "@Sens!E26",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A9",
+       "value": "@Sens!E9",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A35",
+       "value": "@Sens!E35",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A25",
+       "value": "@Sens!E25",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A18",
+       "value": "@Sens!E18",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A20",
+       "value": "@Sens!E20",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A21",
+       "value": "@Sens!E21",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A22",
+       "value": "@Sens!E22",
+       "series": 1
+      },
+      {
+       "label": "@Sens!A8",
+       "value": "@Sens!E8",
+       "series": 0
+      },
+      {
+       "label": "@Sens!A23",
+       "value": "@Sens!E23",
+       "series": 1
+      }
+     ],
+     "ref": {
+      "label": "@Sens!A39",
+      "value": "@Sens!D39"
+     },
+     "collapse": true,
+     "summary": "展開：輸入取高值，變動未達百分之十的案例"
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：全部案例（加權目標價、現金流折現目標價與估值評等）",
+     "head": [
+      "@Sens!A4",
+      "@Sens!B4",
+      "@Sens!D4",
+      "@Sens!E4",
+      "@Sens!F4",
+      "@Sens!G4",
+      "@Sens!H4",
+      "@Sens!I4"
+     ],
+     "rowgen": {
+      "sheet": "Sens",
+      "rows": "5-37",
+      "cols": [
+       "A",
+       "B",
+       "D",
+       "E",
+       "F",
+       "G",
+       "H",
+       "I"
+      ],
+      "fmts": [
+       "",
+       "",
+       "n2",
+       "n2",
+       "n2",
+       "n2",
+       "",
+       ""
+      ]
+     }
+    },
+    {
+     "type": "kv",
+     "items": [
+      [
+       "@Sens!A39",
+       "@Sens!D39|n2"
+      ],
+      [
+       "@Sens!A41",
+       "@Sens!D41|n2"
+      ],
+      [
+       "模型狀態",
+       "@Sens!D44"
+      ],
+      [
+       "建置編號",
+       "@Sens!D45"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "revdcf",
+   "title": "反向檢驗：現價隱含的 Robotaxi 分部價值",
+   "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "本模型未建整本反向現金流折現；以下用分部加總腿的線性反解回答「現價隱含什麼」：其他假設不變，三情境的 Robotaxi 分部價值同加多少，加權目標價才等於現價或評等邊界。"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A13",
+     "head": [
+      "@Recon!A4",
+      "@Recon!B4",
+      "@Recon!C4",
+      "@Recon!D4",
+      "@Recon!E4"
+     ],
+     "rows": [
+      [
+       "@Recon!A15",
+       "@Recon!B15|n2",
+       "@Recon!C15|n0",
+       "@Recon!D15|n0",
+       "@Recon!E15"
+      ],
+      [
+       "@Recon!A16",
+       "@Recon!B16|n2",
+       "@Recon!C16|n0",
+       "@Recon!D16|n0",
+       "@Recon!E16"
+      ],
+      [
+       "@Recon!A17",
+       "@Recon!B17|n2",
+       "@Recon!C17|n0",
+       "@Recon!D17|n0",
+       "@Recon!E17"
+      ]
+     ]
+    },
+    {
+     "type": "kv",
+     "items": [
+      [
+       "@In!B71",
+       "@In!E71|n1"
+      ],
+      [
+       "@Val!A20",
+       "@Val!C20|n2"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pl",
+   "title": "損益（情境 B）",
+   "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "損益表採美國會計準則（GAAP）口徑：Tesla 財報與本模型原檔引擎皆以 GAAP 淨利為主。FY2025 為實績、FY2026 含前三季實績；FY2027 起依輸入頁調整。本模型損益頁未列營收年增率、營業成本、營業利益率、淨利率與淨利年增率，也只有一個完整歷史年度；本版不補列。"
+     ]
+    },
+    {
+     "type": "theme",
+     "title": "合併營收（百萬美元）與毛利率：FY2025–FY2035（情境 B）",
+     "x": "@PL!C3:M3",
+     "fmt": "n0",
+     "fmt_r": "p0",
+     "stack": true,
+     "pad": 1.5,
+     "bars": [
+      {
+       "name": [
+        "@PL!A43"
+       ],
+       "y": "@PL!C43:M43",
+       "color": "#6fc7cb"
+      }
+     ],
+     "lines": [
+      {
+       "name": [
+        "@PL!A46"
+       ],
+       "y": "@PL!C46:M46",
+       "axis": "r",
+       "color": "#0b7a80",
+       "labels": true
+      }
+     ],
+     "caption": "長條＝合併營收；折線＝毛利率（右軸，GAAP）。"
+    },
+    {
+     "type": "table",
+     "caption": "損益表（GAAP；百萬美元，EPS 為美元）：FY2025 實績、FY2026 含前三季實績、FY2027 起情境 B",
+     "head": [
+      "@PL!A3",
+      "@PL!C3:M3"
+     ],
+     "rows": [
+      [
+       "營收（合併）",
+       "@PL!C43|n0",
+       "@PL!D43|n0",
+       "@PL!E43|n0",
+       "@PL!F43|n0",
+       "@PL!G43|n0",
+       "@PL!H43|n0",
+       "@PL!I43|n0",
+       "@PL!J43|n0",
+       "@PL!K43|n0",
+       "@PL!L43|n0",
+       "@PL!M43|n0"
+      ],
+      [
+       "@PL!A45",
+       "@PL!C45|n0",
+       "@PL!D45|n0",
+       "@PL!E45|n0",
+       "@PL!F45|n0",
+       "@PL!G45|n0",
+       "@PL!H45|n0",
+       "@PL!I45|n0",
+       "@PL!J45|n0",
+       "@PL!K45|n0",
+       "@PL!L45|n0",
+       "@PL!M45|n0"
+      ],
+      [
+       "@PL!A46",
+       "@PL!C46|p1",
+       "@PL!D46|p1",
+       "@PL!E46|p1",
+       "@PL!F46|p1",
+       "@PL!G46|p1",
+       "@PL!H46|p1",
+       "@PL!I46|p1",
+       "@PL!J46|p1",
+       "@PL!K46|p1",
+       "@PL!L46|p1",
+       "@PL!M46|p1"
+      ],
+      [
+       "@PL!A47",
+       "@PL!C47|n0",
+       "@PL!D47|n0",
+       "@PL!E47|n0",
+       "@PL!F47|n0",
+       "@PL!G47|n0",
+       "@PL!H47|n0",
+       "@PL!I47|n0",
+       "@PL!J47|n0",
+       "@PL!K47|n0",
+       "@PL!L47|n0",
+       "@PL!M47|n0"
+      ],
+      [
+       "@PL!A48",
+       "@PL!C48|n0",
+       "@PL!D48|n0",
+       "@PL!E48|n0",
+       "@PL!F48|n0",
+       "@PL!G48|n0",
+       "@PL!H48|n0",
+       "@PL!I48|n0",
+       "@PL!J48|n0",
+       "@PL!K48|n0",
+       "@PL!L48|n0",
+       "@PL!M48|n0"
+      ],
+      [
+       "@PL!A49",
+       "@PL!C49|n0",
+       "@PL!D49|n0",
+       "@PL!E49|n0",
+       "@PL!F49|n0",
+       "@PL!G49|n0",
+       "@PL!H49|n0",
+       "@PL!I49|n0",
+       "@PL!J49|n0",
+       "@PL!K49|n0",
+       "@PL!L49|n0",
+       "@PL!M49|n0"
+      ],
+      [
+       "@PL!A50",
+       "@PL!C50|n0",
+       "@PL!D50|n0",
+       "@PL!E50|n0",
+       "@PL!F50|n0",
+       "@PL!G50|n0",
+       "@PL!H50|n0",
+       "@PL!I50|n0",
+       "@PL!J50|n0",
+       "@PL!K50|n0",
+       "@PL!L50|n0",
+       "@PL!M50|n0"
+      ],
+      [
+       "@PL!A51",
+       "@PL!C51|n0",
+       "@PL!D51|n0",
+       "@PL!E51|n0",
+       "@PL!F51|n0",
+       "@PL!G51|n0",
+       "@PL!H51|n0",
+       "@PL!I51|n0",
+       "@PL!J51|n0",
+       "@PL!K51|n0",
+       "@PL!L51|n0",
+       "@PL!M51|n0"
+      ],
+      [
+       "@PL!A52",
+       "@PL!C52|n0",
+       "@PL!D52|n0",
+       "@PL!E52|n0",
+       "@PL!F52|n0",
+       "@PL!G52|n0",
+       "@PL!H52|n0",
+       "@PL!I52|n0",
+       "@PL!J52|n0",
+       "@PL!K52|n0",
+       "@PL!L52|n0",
+       "@PL!M52|n0"
+      ],
+      [
+       "@PL!A53",
+       "@PL!C53|n0",
+       "@PL!D53|n0",
+       "@PL!E53|n0",
+       "@PL!F53|n0",
+       "@PL!G53|n0",
+       "@PL!H53|n0",
+       "@PL!I53|n0",
+       "@PL!J53|n0",
+       "@PL!K53|n0",
+       "@PL!L53|n0",
+       "@PL!M53|n0"
+      ],
+      [
+       "@PL!A54",
+       "@PL!C54|n0",
+       "@PL!D54|n0",
+       "@PL!E54|n0",
+       "@PL!F54|n0",
+       "@PL!G54|n0",
+       "@PL!H54|n0",
+       "@PL!I54|n0",
+       "@PL!J54|n0",
+       "@PL!K54|n0",
+       "@PL!L54|n0",
+       "@PL!M54|n0"
+      ],
+      [
+       "@PL!A55",
+       "@PL!C55|n2",
+       "@PL!D55|n2",
+       "@PL!E55|n2",
+       "@PL!F55|n2",
+       "@PL!G55|n2",
+       "@PL!H55|n2",
+       "@PL!I55|n2",
+       "@PL!J55|n2",
+       "@PL!K55|n2",
+       "@PL!L55|n2",
+       "@PL!M55|n2"
+      ],
+      {
+       "sub": "現金流（收支關卡用）"
+      },
+      [
+       "@PL!A56",
+       "@PL!C56|n0",
+       "@PL!D56|n0",
+       "@PL!E56|n0",
+       "@PL!F56|n0",
+       "@PL!G56|n0",
+       "@PL!H56|n0",
+       "@PL!I56|n0",
+       "@PL!J56|n0",
+       "@PL!K56|n0",
+       "@PL!L56|n0",
+       "@PL!M56|n0"
+      ],
+      [
+       "@PL!A57",
+       "@PL!C57|n0",
+       "@PL!D57|n0",
+       "@PL!E57|n0",
+       "@PL!F57|n0",
+       "@PL!G57|n0",
+       "@PL!H57|n0",
+       "@PL!I57|n0",
+       "@PL!J57|n0",
+       "@PL!K57|n0",
+       "@PL!L57|n0",
+       "@PL!M57|n0"
+      ],
+      [
+       "@PL!A58",
+       "@PL!C58|n0",
+       "@PL!D58|n0",
+       "@PL!E58|n0",
+       "@PL!F58|n0",
+       "@PL!G58|n0",
+       "@PL!H58|n0",
+       "@PL!I58|n0",
+       "@PL!J58|n0",
+       "@PL!K58|n0",
+       "@PL!L58|n0",
+       "@PL!M58|n0"
+      ],
+      [
+       "@PL!A59",
+       "@PL!C59|n0",
+       "@PL!D59|n0",
+       "@PL!E59|n0",
+       "@PL!F59|n0",
+       "@PL!G59|n0",
+       "@PL!H59|n0",
+       "@PL!I59|n0",
+       "@PL!J59|n0",
+       "@PL!K59|n0",
+       "@PL!L59|n0",
+       "@PL!M59|n0"
+      ],
+      [
+       "@PL!A60",
+       "@PL!C60|n0",
+       "@PL!D60|n0",
+       "@PL!E60|n0",
+       "@PL!F60|n0",
+       "@PL!G60|n0",
+       "@PL!H60|n0",
+       "@PL!I60|n0",
+       "@PL!J60|n0",
+       "@PL!K60|n0",
+       "@PL!L60|n0",
+       "@PL!M60|n0"
+      ]
+     ]
+    },
+    {
+     "type": "pl",
+     "collapse": true,
+     "summary": "展開：三情境損益（A／B／C 並列，含折線）",
+     "years": "@PL!C3:M3",
+     "metrics": [
+      {
+       "name": "合併營收（百萬美元）",
+       "fmt": "n0",
+       "rows": {
+        "A": "@PL!C14:M14",
+        "B": "@PL!C43:M43",
+        "C": "@PL!C72:M72"
+       },
+       "chart": true
+      },
+      {
+       "name": "營業利益（百萬美元）",
+       "fmt": "n0",
+       "rows": {
+        "A": "@PL!C19:M19",
+        "B": "@PL!C48:M48",
+        "C": "@PL!C77:M77"
+       },
+       "chart": true
+      },
+      {
+       "name": "毛利率",
+       "fmt": "p1",
+       "rows": {
+        "A": "@PL!C17:M17",
+        "B": "@PL!C46:M46",
+        "C": "@PL!C75:M75"
+       }
+      },
+      {
+       "name": "EPS（稀釋，美元）",
+       "fmt": "n2",
+       "rows": {
+        "A": "@PL!C26:M26",
+        "B": "@PL!C55:M55",
+        "C": "@PL!C84:M84"
+       },
+       "chart": true
+      },
+      {
+       "name": "自由現金流（百萬美元）",
+       "fmt": "n0",
+       "rows": {
+        "A": "@PL!C31:M31",
+        "B": "@PL!C60:M60",
+        "C": "@PL!C89:M89"
+       },
+       "chart": true
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "檢查：分部合計 − 合併營收（三情境，應為零）",
+     "head": [
+      "@PL!A3",
+      "@PL!C3:M3"
+     ],
+     "rows": [
+      [
+       "情境 A",
+       "@PL!C15|n1",
+       "@PL!D15|n1",
+       "@PL!E15|n1",
+       "@PL!F15|n1",
+       "@PL!G15|n1",
+       "@PL!H15|n1",
+       "@PL!I15|n1",
+       "@PL!J15|n1",
+       "@PL!K15|n1",
+       "@PL!L15|n1",
+       "@PL!M15|n1"
+      ],
+      [
+       "情境 B",
+       "@PL!C44|n1",
+       "@PL!D44|n1",
+       "@PL!E44|n1",
+       "@PL!F44|n1",
+       "@PL!G44|n1",
+       "@PL!H44|n1",
+       "@PL!I44|n1",
+       "@PL!J44|n1",
+       "@PL!K44|n1",
+       "@PL!L44|n1",
+       "@PL!M44|n1"
+      ],
+      [
+       "情境 C",
+       "@PL!C73|n1",
+       "@PL!D73|n1",
+       "@PL!E73|n1",
+       "@PL!F73|n1",
+       "@PL!G73|n1",
+       "@PL!H73|n1",
+       "@PL!I73|n1",
+       "@PL!J73|n1",
+       "@PL!K73|n1",
+       "@PL!L73|n1",
+       "@PL!M73|n1"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "drivers",
+   "title": "驅動因子：分部營收推導",
+   "blocks": [
+    {
+     "type": "theme",
+     "title": "合併營收 × 情境 A／B／C（百萬美元）：FY2027–FY2035",
+     "x": "@PL!E3:M3",
+     "fmt": "n0",
+     "stack": false,
+     "pad": 1.15,
+     "bars": [
+      {
+       "name": [
+        "情境 ",
+        "A",
+        "：合併營收"
+       ],
+       "y": "@PL!E14:M14",
+       "color": "#7fb8bb"
+      },
+      {
+       "name": [
+        "情境 ",
+        "B",
+        "：合併營收"
+       ],
+       "y": "@PL!E43:M43",
+       "color": "#3b3838"
+      },
+      {
+       "name": [
+        "情境 ",
+        "C",
+        "：合併營收"
+       ],
+       "y": "@PL!E72:M72",
+       "color": "#d9a08f"
+      }
+     ],
+     "caption": "三情境只在 Robotaxi 營收（讀 Robotaxi 分部模型）與 Optimus 量倍數上分化；車輛、FSD、能源、服務三情境相同。"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!B7"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "分部營收推導（情境 B；百萬美元）：汽車分部子列＋能源分部＋Optimus＝合併營收",
+     "head": [
+      "@PL!A3",
+      "@PL!B3",
+      "@PL!C3:M3"
+     ],
+     "rows": [
+      [
+       "@PL!A34",
+       "@PL!B34",
+       "@PL!C34|n0",
+       "@PL!D34|n0",
+       "@PL!E34|n0",
+       "@PL!F34|n0",
+       "@PL!G34|n0",
+       "@PL!H34|n0",
+       "@PL!I34|n0",
+       "@PL!J34|n0",
+       "@PL!K34|n0",
+       "@PL!L34|n0",
+       "@PL!M34|n0"
+      ],
+      [
+       "@PL!A35",
+       "@PL!B35",
+       "@PL!C35|n0",
+       "@PL!D35|n0",
+       "@PL!E35|n0",
+       "@PL!F35|n0",
+       "@PL!G35|n0",
+       "@PL!H35|n0",
+       "@PL!I35|n0",
+       "@PL!J35|n0",
+       "@PL!K35|n0",
+       "@PL!L35|n0",
+       "@PL!M35|n0"
+      ],
+      [
+       "@PL!A36",
+       "@PL!B36",
+       "@PL!C36|n0",
+       "@PL!D36|n0",
+       "@PL!E36|n0",
+       "@PL!F36|n0",
+       "@PL!G36|n0",
+       "@PL!H36|n0",
+       "@PL!I36|n0",
+       "@PL!J36|n0",
+       "@PL!K36|n0",
+       "@PL!L36|n0",
+       "@PL!M36|n0"
+      ],
+      [
+       "@PL!A37",
+       "@PL!B37",
+       "@PL!C37|n0",
+       "@PL!D37|n0",
+       "@PL!E37|n0",
+       "@PL!F37|n0",
+       "@PL!G37|n0",
+       "@PL!H37|n0",
+       "@PL!I37|n0",
+       "@PL!J37|n0",
+       "@PL!K37|n0",
+       "@PL!L37|n0",
+       "@PL!M37|n0"
+      ],
+      [
+       "@PL!A38",
+       "@PL!B38",
+       "@PL!C38|n0",
+       "@PL!D38|n0",
+       "@PL!E38|n0",
+       "@PL!F38|n0",
+       "@PL!G38|n0",
+       "@PL!H38|n0",
+       "@PL!I38|n0",
+       "@PL!J38|n0",
+       "@PL!K38|n0",
+       "@PL!L38|n0",
+       "@PL!M38|n0"
+      ],
+      [
+       "@PL!A39",
+       "@PL!B39",
+       "@PL!C39|n0",
+       "@PL!D39|n0",
+       "@PL!E39|n0",
+       "@PL!F39|n0",
+       "@PL!G39|n0",
+       "@PL!H39|n0",
+       "@PL!I39|n0",
+       "@PL!J39|n0",
+       "@PL!K39|n0",
+       "@PL!L39|n0",
+       "@PL!M39|n0"
+      ],
+      [
+       "@PL!A40",
+       "@PL!B40",
+       "@PL!C40|n0",
+       "@PL!D40|n0",
+       "@PL!E40|n0",
+       "@PL!F40|n0",
+       "@PL!G40|n0",
+       "@PL!H40|n0",
+       "@PL!I40|n0",
+       "@PL!J40|n0",
+       "@PL!K40|n0",
+       "@PL!L40|n0",
+       "@PL!M40|n0"
+      ],
+      [
+       "@PL!A41",
+       "@PL!B41",
+       "@PL!C41|n0",
+       "@PL!D41|n0",
+       "@PL!E41|n0",
+       "@PL!F41|n0",
+       "@PL!G41|n0",
+       "@PL!H41|n0",
+       "@PL!I41|n0",
+       "@PL!J41|n0",
+       "@PL!K41|n0",
+       "@PL!L41|n0",
+       "@PL!M41|n0"
+      ],
+      [
+       "@PL!A42",
+       "@PL!B42",
+       "@PL!C42|n0",
+       "@PL!D42|n0",
+       "@PL!E42|n0",
+       "@PL!F42|n0",
+       "@PL!G42|n0",
+       "@PL!H42|n0",
+       "@PL!I42|n0",
+       "@PL!J42|n0",
+       "@PL!K42|n0",
+       "@PL!L42|n0",
+       "@PL!M42|n0"
+      ],
+      [
+       "@PL!A43",
+       "@PL!B43",
+       "@PL!C43|n0",
+       "@PL!D43|n0",
+       "@PL!E43|n0",
+       "@PL!F43|n0",
+       "@PL!G43|n0",
+       "@PL!H43|n0",
+       "@PL!I43|n0",
+       "@PL!J43|n0",
+       "@PL!K43|n0",
+       "@PL!L43|n0",
+       "@PL!M43|n0"
+      ],
+      [
+       "@PL!A44",
+       "@PL!B44",
+       "@PL!C44|n1",
+       "@PL!D44|n1",
+       "@PL!E44|n1",
+       "@PL!F44|n1",
+       "@PL!G44|n1",
+       "@PL!H44|n1",
+       "@PL!I44|n1",
+       "@PL!J44|n1",
+       "@PL!K44|n1",
+       "@PL!L44|n1",
+       "@PL!M44|n1"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：情境 A、C 的分部營收",
+     "head": [
+      "@PL!A3",
+      "@PL!C3:M3"
+     ],
+     "rows": [
+      {
+       "sub": "@PL!A4"
+      },
+      [
+       "@PL!A5",
+       "@PL!C5|n0",
+       "@PL!D5|n0",
+       "@PL!E5|n0",
+       "@PL!F5|n0",
+       "@PL!G5|n0",
+       "@PL!H5|n0",
+       "@PL!I5|n0",
+       "@PL!J5|n0",
+       "@PL!K5|n0",
+       "@PL!L5|n0",
+       "@PL!M5|n0"
+      ],
+      [
+       "@PL!A6",
+       "@PL!C6|n0",
+       "@PL!D6|n0",
+       "@PL!E6|n0",
+       "@PL!F6|n0",
+       "@PL!G6|n0",
+       "@PL!H6|n0",
+       "@PL!I6|n0",
+       "@PL!J6|n0",
+       "@PL!K6|n0",
+       "@PL!L6|n0",
+       "@PL!M6|n0"
+      ],
+      [
+       "@PL!A7",
+       "@PL!C7|n0",
+       "@PL!D7|n0",
+       "@PL!E7|n0",
+       "@PL!F7|n0",
+       "@PL!G7|n0",
+       "@PL!H7|n0",
+       "@PL!I7|n0",
+       "@PL!J7|n0",
+       "@PL!K7|n0",
+       "@PL!L7|n0",
+       "@PL!M7|n0"
+      ],
+      [
+       "@PL!A8",
+       "@PL!C8|n0",
+       "@PL!D8|n0",
+       "@PL!E8|n0",
+       "@PL!F8|n0",
+       "@PL!G8|n0",
+       "@PL!H8|n0",
+       "@PL!I8|n0",
+       "@PL!J8|n0",
+       "@PL!K8|n0",
+       "@PL!L8|n0",
+       "@PL!M8|n0"
+      ],
+      [
+       "@PL!A9",
+       "@PL!C9|n0",
+       "@PL!D9|n0",
+       "@PL!E9|n0",
+       "@PL!F9|n0",
+       "@PL!G9|n0",
+       "@PL!H9|n0",
+       "@PL!I9|n0",
+       "@PL!J9|n0",
+       "@PL!K9|n0",
+       "@PL!L9|n0",
+       "@PL!M9|n0"
+      ],
+      [
+       "@PL!A10",
+       "@PL!C10|n0",
+       "@PL!D10|n0",
+       "@PL!E10|n0",
+       "@PL!F10|n0",
+       "@PL!G10|n0",
+       "@PL!H10|n0",
+       "@PL!I10|n0",
+       "@PL!J10|n0",
+       "@PL!K10|n0",
+       "@PL!L10|n0",
+       "@PL!M10|n0"
+      ],
+      [
+       "@PL!A11",
+       "@PL!C11|n0",
+       "@PL!D11|n0",
+       "@PL!E11|n0",
+       "@PL!F11|n0",
+       "@PL!G11|n0",
+       "@PL!H11|n0",
+       "@PL!I11|n0",
+       "@PL!J11|n0",
+       "@PL!K11|n0",
+       "@PL!L11|n0",
+       "@PL!M11|n0"
+      ],
+      [
+       "@PL!A12",
+       "@PL!C12|n0",
+       "@PL!D12|n0",
+       "@PL!E12|n0",
+       "@PL!F12|n0",
+       "@PL!G12|n0",
+       "@PL!H12|n0",
+       "@PL!I12|n0",
+       "@PL!J12|n0",
+       "@PL!K12|n0",
+       "@PL!L12|n0",
+       "@PL!M12|n0"
+      ],
+      [
+       "@PL!A13",
+       "@PL!C13|n0",
+       "@PL!D13|n0",
+       "@PL!E13|n0",
+       "@PL!F13|n0",
+       "@PL!G13|n0",
+       "@PL!H13|n0",
+       "@PL!I13|n0",
+       "@PL!J13|n0",
+       "@PL!K13|n0",
+       "@PL!L13|n0",
+       "@PL!M13|n0"
+      ],
+      [
+       "@PL!A14",
+       "@PL!C14|n0",
+       "@PL!D14|n0",
+       "@PL!E14|n0",
+       "@PL!F14|n0",
+       "@PL!G14|n0",
+       "@PL!H14|n0",
+       "@PL!I14|n0",
+       "@PL!J14|n0",
+       "@PL!K14|n0",
+       "@PL!L14|n0",
+       "@PL!M14|n0"
+      ],
+      {
+       "sub": "@PL!A62"
+      },
+      [
+       "@PL!A63",
+       "@PL!C63|n0",
+       "@PL!D63|n0",
+       "@PL!E63|n0",
+       "@PL!F63|n0",
+       "@PL!G63|n0",
+       "@PL!H63|n0",
+       "@PL!I63|n0",
+       "@PL!J63|n0",
+       "@PL!K63|n0",
+       "@PL!L63|n0",
+       "@PL!M63|n0"
+      ],
+      [
+       "@PL!A64",
+       "@PL!C64|n0",
+       "@PL!D64|n0",
+       "@PL!E64|n0",
+       "@PL!F64|n0",
+       "@PL!G64|n0",
+       "@PL!H64|n0",
+       "@PL!I64|n0",
+       "@PL!J64|n0",
+       "@PL!K64|n0",
+       "@PL!L64|n0",
+       "@PL!M64|n0"
+      ],
+      [
+       "@PL!A65",
+       "@PL!C65|n0",
+       "@PL!D65|n0",
+       "@PL!E65|n0",
+       "@PL!F65|n0",
+       "@PL!G65|n0",
+       "@PL!H65|n0",
+       "@PL!I65|n0",
+       "@PL!J65|n0",
+       "@PL!K65|n0",
+       "@PL!L65|n0",
+       "@PL!M65|n0"
+      ],
+      [
+       "@PL!A66",
+       "@PL!C66|n0",
+       "@PL!D66|n0",
+       "@PL!E66|n0",
+       "@PL!F66|n0",
+       "@PL!G66|n0",
+       "@PL!H66|n0",
+       "@PL!I66|n0",
+       "@PL!J66|n0",
+       "@PL!K66|n0",
+       "@PL!L66|n0",
+       "@PL!M66|n0"
+      ],
+      [
+       "@PL!A67",
+       "@PL!C67|n0",
+       "@PL!D67|n0",
+       "@PL!E67|n0",
+       "@PL!F67|n0",
+       "@PL!G67|n0",
+       "@PL!H67|n0",
+       "@PL!I67|n0",
+       "@PL!J67|n0",
+       "@PL!K67|n0",
+       "@PL!L67|n0",
+       "@PL!M67|n0"
+      ],
+      [
+       "@PL!A68",
+       "@PL!C68|n0",
+       "@PL!D68|n0",
+       "@PL!E68|n0",
+       "@PL!F68|n0",
+       "@PL!G68|n0",
+       "@PL!H68|n0",
+       "@PL!I68|n0",
+       "@PL!J68|n0",
+       "@PL!K68|n0",
+       "@PL!L68|n0",
+       "@PL!M68|n0"
+      ],
+      [
+       "@PL!A69",
+       "@PL!C69|n0",
+       "@PL!D69|n0",
+       "@PL!E69|n0",
+       "@PL!F69|n0",
+       "@PL!G69|n0",
+       "@PL!H69|n0",
+       "@PL!I69|n0",
+       "@PL!J69|n0",
+       "@PL!K69|n0",
+       "@PL!L69|n0",
+       "@PL!M69|n0"
+      ],
+      [
+       "@PL!A70",
+       "@PL!C70|n0",
+       "@PL!D70|n0",
+       "@PL!E70|n0",
+       "@PL!F70|n0",
+       "@PL!G70|n0",
+       "@PL!H70|n0",
+       "@PL!I70|n0",
+       "@PL!J70|n0",
+       "@PL!K70|n0",
+       "@PL!L70|n0",
+       "@PL!M70|n0"
+      ],
+      [
+       "@PL!A71",
+       "@PL!C71|n0",
+       "@PL!D71|n0",
+       "@PL!E71|n0",
+       "@PL!F71|n0",
+       "@PL!G71|n0",
+       "@PL!H71|n0",
+       "@PL!I71|n0",
+       "@PL!J71|n0",
+       "@PL!K71|n0",
+       "@PL!L71|n0",
+       "@PL!M71|n0"
+      ],
+      [
+       "@PL!A72",
+       "@PL!C72|n0",
+       "@PL!D72|n0",
+       "@PL!E72|n0",
+       "@PL!F72|n0",
+       "@PL!G72|n0",
+       "@PL!H72|n0",
+       "@PL!I72|n0",
+       "@PL!J72|n0",
+       "@PL!K72|n0",
+       "@PL!L72|n0",
+       "@PL!M72|n0"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "三情境驅動（In 頁情境驅動對照）",
+     "head": [
+      "@In!B108",
+      "@In!C108",
+      "@In!D108",
+      "@In!E108",
+      "@In!F108"
+     ],
+     "rows": [
+      [
+       "@In!B109",
+       "@In!C109",
+       "@In!D109|n2",
+       "@In!E109|n2",
+       "@In!F109|n2"
+      ],
+      [
+       "@In!B110",
+       "@In!C110",
+       "@In!D110|n0",
+       "@In!E110|n0",
+       "@In!F110|n0"
+      ],
+      [
+       "@In!B111",
+       "@In!C111",
+       "@In!D111|n0",
+       "@In!E111|n0",
+       "@In!F111|n0"
+      ],
+      [
+       "@In!B112",
+       "@In!C112",
+       "@In!D112|n0",
+       "@In!E112|n0",
+       "@In!F112|n0"
+      ],
+      [
+       "@In!B113",
+       "@In!C113",
+       "@In!D113|n0",
+       "@In!E113|n0",
+       "@In!F113|n0"
+      ],
+      [
+       "@In!B114",
+       "@In!C114",
+       "@In!D114|n0",
+       "@In!E114|n0",
+       "@In!F114|n0"
+      ],
+      [
+       "@In!B115",
+       "@In!C115",
+       "@In!D115|n0",
+       "@In!E115|n0",
+       "@In!F115|n0"
+      ],
+      [
+       "@In!B116",
+       "@In!C116",
+       "@In!D116|n0",
+       "@In!E116|n0",
+       "@In!F116|n0"
+      ],
+      [
+       "@In!B117",
+       "@In!C117",
+       "@In!D117|n0",
+       "@In!E117|n0",
+       "@In!F117|n0"
+      ],
+      [
+       "@In!B118",
+       "@In!C118",
+       "@In!D118|n0",
+       "@In!E118|n0",
+       "@In!F118|n0"
+      ],
+      [
+       "@In!B119",
+       "@In!C119",
+       "@In!D119|n1",
+       "@In!E119|n1",
+       "@In!F119|n1"
+      ],
+      [
+       "@In!B120",
+       "@In!C120",
+       "@In!D120|p1",
+       "@In!E120|p1",
+       "@In!F120|p1"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：歷史分部營收對帳（季度與年度；百萬美元）",
+     "head": [
+      "@Hist!A43",
+      "@Hist!B43",
+      "@Hist!C43",
+      "@Hist!D43",
+      "@Hist!E43",
+      "@Hist!F43",
+      "@Hist!G43",
+      "@Hist!J43"
+     ],
+     "rowgen": {
+      "sheet": "Hist",
+      "rows": "44-49",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G",
+       "J"
+      ],
+      "fmts": [
+       "",
+       "n0",
+       "n0",
+       "n0",
+       "n0",
+       "n0",
+       "n1",
+       "n1"
+      ]
+     }
+    },
+    {
+     "type": "h3",
+     "text": "一、汽車與 FSD"
+    },
+    {
+     "type": "table",
+     "caption": "有敏感度區間的參數（基準進主模型；低／高只用於敏感度頁）",
+     "head": [
+      "@In!B3",
+      "@In!D3",
+      "@In!E3",
+      "@In!F3",
+      "@In!G3"
+     ],
+     "rows": [
+      [
+       "@In!B24",
+       "@In!D24|p1",
+       "@In!E24|p1",
+       "@In!F24|p1",
+       "@In!G24|tag"
+      ],
+      [
+       "@In!B25",
+       "@In!D25|n2",
+       "@In!E25|n2",
+       "@In!F25|n2",
+       "@In!G25|tag"
+      ],
+      [
+       "@In!B23",
+       "@In!D23|p1",
+       "@In!E23|p1",
+       "@In!F23|p1",
+       "@In!G23|tag"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：本業務的固定輸入（無敏感度區間）",
+     "head": [
+      "@In!B3",
+      "@In!D3",
+      "@In!E3",
+      "@In!F3",
+      "@In!G3"
+     ],
+     "rows": [
+      [
+       "@In!B26",
+       "@In!D26|p1",
+       "@In!E26|p1",
+       "@In!F26|p1",
+       "@In!G26|tag"
+      ]
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "二、現金流與資本支出"
+    },
+    {
+     "type": "table",
+     "caption": "有敏感度區間的參數（基準進主模型；低／高只用於敏感度頁）",
+     "head": [
+      "@In!B3",
+      "@In!D3",
+      "@In!E3",
+      "@In!F3",
+      "@In!G3"
+     ],
+     "rows": [
+      [
+       "@In!B54",
+       "@In!D54|n0",
+       "@In!E54|n0",
+       "@In!F54|n0",
+       "@In!G54|tag"
+      ],
+      [
+       "@In!B55",
+       "@In!D55|p1",
+       "@In!E55|p1",
+       "@In!F55|p1",
+       "@In!G55|tag"
+      ],
+      [
+       "@In!B56",
+       "@In!D56|p1",
+       "@In!E56|p1",
+       "@In!F56|p1",
+       "@In!G56|tag"
+      ],
+      [
+       "@In!B57",
+       "@In!D57|n0",
+       "@In!E57|n0",
+       "@In!F57|n0",
+       "@In!G57|tag"
+      ],
+      [
+       "@In!B58",
+       "@In!D58|p1",
+       "@In!E58|p1",
+       "@In!F58|p1",
+       "@In!G58|tag"
+      ],
+      [
+       "@In!B59",
+       "@In!D59|n0",
+       "@In!E59|n0",
+       "@In!F59|n0",
+       "@In!G59|tag"
+      ],
+      [
+       "@In!B29",
+       "@In!D29|p1",
+       "@In!E29|p1",
+       "@In!F29|p1",
+       "@In!G29|tag"
+      ]
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "三、股數與 CEO 獎酬"
+    },
+    {
+     "type": "table",
+     "caption": "有敏感度區間的參數（基準進主模型；低／高只用於敏感度頁）",
+     "head": [
+      "@In!B3",
+      "@In!D3",
+      "@In!E3",
+      "@In!F3",
+      "@In!G3"
+     ],
+     "rows": [
+      [
+       "@In!B61",
+       "@In!D61|n2",
+       "@In!E61|n2",
+       "@In!F61|n2",
+       "@In!G61|tag"
+      ]
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "四、全公司：折現率"
+    },
+    {
+     "type": "table",
+     "caption": "有敏感度區間的參數（基準進主模型；低／高只用於敏感度頁）",
+     "head": [
+      "@In!B3",
+      "@In!D3",
+      "@In!E3",
+      "@In!F3",
+      "@In!G3"
+     ],
+     "rows": [
+      [
+       "@In!B13",
+       "@In!D13|n2",
+       "@In!E13|n2",
+       "@In!F13|n2",
+       "@In!G13|tag"
+      ],
+      [
+       "@In!B14",
+       "@In!D14|p1",
+       "@In!E14|p1",
+       "@In!F14|p1",
+       "@In!G14|tag"
+      ],
+      [
+       "@In!B17",
+       "@In!D17|p1",
+       "@In!E17|p1",
+       "@In!F17|p1",
+       "@In!G17|tag"
+      ],
+      [
+       "@In!B19",
+       "@In!D19|p1",
+       "@In!E19|p1",
+       "@In!F19|p1",
+       "@In!G19|tag"
+      ],
+      [
+       "@In!B20",
+       "@In!D20|p1",
+       "@In!E20|p1",
+       "@In!F20|p1",
+       "@In!G20|tag"
+      ],
+      [
+       "@In!B21",
+       "@In!D21|n0",
+       "@In!E21|n0",
+       "@In!F21|n0",
+       "@In!G21|tag"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：本業務的固定輸入（無敏感度區間）",
+     "head": [
+      "@In!B3",
+      "@In!D3",
+      "@In!E3",
+      "@In!F3",
+      "@In!G3"
+     ],
+     "rows": [
+      [
+       "@In!B10",
+       "@In!D10|p1",
+       "@In!E10|p1",
+       "@In!F10|p1",
+       "@In!G10|tag"
+      ],
+      [
+       "@In!B11",
+       "@In!D11|n2",
+       "@In!E11|n2",
+       "@In!F11|n2",
+       "@In!G11|tag"
+      ],
+      [
+       "@In!B12",
+       "@In!D12|n2",
+       "@In!E12|n2",
+       "@In!F12|n2",
+       "@In!G12|tag"
+      ],
+      [
+       "@In!B15",
+       "@In!D15|p1",
+       "@In!E15|p1",
+       "@In!F15|p1",
+       "@In!G15|tag"
+      ],
+      [
+       "@In!B16",
+       "@In!D16|p1",
+       "@In!E16|p1",
+       "@In!F16|p1",
+       "@In!G16|tag"
+      ],
+      [
+       "@In!B18",
+       "@In!D18|p1",
+       "@In!E18|p1",
+       "@In!F18|p1",
+       "@In!G18|tag"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "robotaxi",
+   "title": "Robotaxi 分部（讀 Robotaxi 分部模型）",
+   "blocks": [
+    {
+     "type": "theme",
+     "title": "Robotaxi 營收 × 情境 A／B／C（百萬美元）：FY2027–FY2035",
+     "x": "@PL!E3:M3",
+     "fmt": "n0",
+     "stack": false,
+     "pad": 1.1,
+     "bars": [
+      {
+       "name": [
+        "情境 ",
+        "A",
+        "：Robotaxi 營收"
+       ],
+       "y": "@PL!E8:M8",
+       "color": "#c29a2b"
+      },
+      {
+       "name": [
+        "情境 ",
+        "B",
+        "：Robotaxi 營收"
+       ],
+       "y": "@PL!E37:M37",
+       "color": "#3b3838"
+      },
+      {
+       "name": [
+        "情境 ",
+        "C",
+        "：Robotaxi 營收"
+       ],
+       "y": "@PL!E66:M66",
+       "color": "#d9a08f"
+      }
+     ],
+     "caption": "Robotaxi 營收逐年讀 Robotaxi 分部模型（自有車隊全額＋車主車輛抽成），乘敏感度倍數（基準為一）；FY2026 以前沿用原檔。"
+    },
+    {
+     "type": "table",
+     "caption": "Robotaxi 分部價值（現值，十億美元；進分部加總腿）",
+     "head": [
+      "@In!B3",
+      "@In!D3",
+      "@In!E3",
+      "@In!F3",
+      "@In!G3"
+     ],
+     "rows": [
+      [
+       "@In!B70",
+       "@In!D70|n1",
+       "@In!E70|n1",
+       "@In!F70|n1",
+       "@In!G70|tag"
+      ],
+      [
+       "@In!B71",
+       "@In!D71|n1",
+       "@In!E71|n1",
+       "@In!F71|n1",
+       "@In!G71|tag"
+      ],
+      [
+       "@In!B72",
+       "@In!D72|n1",
+       "@In!E72|n1",
+       "@In!F72|n1",
+       "@In!G72|tag"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "head": [
+      "項目",
+      "情境 A",
+      "情境 B",
+      "情境 C"
+     ],
+     "rows": [
+      [
+       "@SOTP!A16",
+       "@SOTP!C16|n0",
+       "@SOTP!D16|n0",
+       "@SOTP!E16|n0"
+      ],
+      [
+       "@SOTP!A23",
+       "@SOTP!C23|n2",
+       "@SOTP!D23|n2",
+       "@SOTP!E23|n2"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@對帳!H12"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "Robotaxi 相關輸入（敏感度與毛利調整）",
+     "head": [
+      "@In!B3",
+      "@In!D3",
+      "@In!E3",
+      "@In!F3",
+      "@In!G3"
+     ],
+     "rows": [
+      [
+       "@In!B28",
+       "@In!D28|n2",
+       "@In!E28|n2",
+       "@In!F28|n2",
+       "@In!G28|tag"
+      ],
+      [
+       "@In!B27",
+       "@In!D27|p1",
+       "@In!E27|p1",
+       "@In!F27|p1",
+       "@In!G27|tag"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：Robotaxi 對帳變數（車隊、票價、單量、成本、分部價值與營收）",
+     "head": [
+      "@對帳!A3",
+      "@對帳!C3",
+      "@對帳!D3",
+      "@對帳!G3",
+      "@對帳!H3"
+     ],
+     "rows": [
+      [
+       "@對帳!A9",
+       "@對帳!C9",
+       "@對帳!D9",
+       "@對帳!G9",
+       "@對帳!H9"
+      ],
+      [
+       "@對帳!A10",
+       "@對帳!C10",
+       "@對帳!D10",
+       "@對帳!G10",
+       "@對帳!H10"
+      ],
+      [
+       "@對帳!A11",
+       "@對帳!C11",
+       "@對帳!D11",
+       "@對帳!G11",
+       "@對帳!H11"
+      ],
+      [
+       "@對帳!A12",
+       "@對帳!C12",
+       "@對帳!D12",
+       "@對帳!G12",
+       "@對帳!H12"
+      ],
+      [
+       "@對帳!A13",
+       "@對帳!C13",
+       "@對帳!D13",
+       "@對帳!G13",
+       "@對帳!H13"
+      ],
+      [
+       "@對帳!A14",
+       "@對帳!C14",
+       "@對帳!D14",
+       "@對帳!G14",
+       "@對帳!H14"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "optimus",
+   "title": "Optimus 分部（人形機器人單位經濟）",
+   "blocks": [
+    {
+     "type": "theme",
+     "title": "Optimus 營收（百萬美元，情境 B）與每台成本、售價（千美元，右軸）：FY2027–FY2035",
+     "x": "@PL!E3:M3",
+     "fmt": "n0",
+     "fmt_r": "n0",
+     "stack": true,
+     "pad": 1.2,
+     "bars": [
+      {
+       "name": [
+        "@Optimus!A24"
+       ],
+       "y": "@Optimus!E24:M24",
+       "color": "#6f6bae"
+      }
+     ],
+     "lines": [
+      {
+       "name": [
+        "@Optimus!A5"
+       ],
+       "y": "@Optimus!E5:M5",
+       "axis": "r",
+       "color": "#0b7a80",
+       "labels": true
+      },
+      {
+       "name": [
+        "@Optimus!A23"
+       ],
+       "y": "@Optimus!E23:M23",
+       "axis": "r",
+       "color": "#b4472f",
+       "labels": "below"
+      },
+      {
+       "name": [
+        "@Optimus!A22"
+       ],
+       "y": "@Optimus!E22:M22",
+       "axis": "r",
+       "color": "#c29a2b",
+       "dash": true
+      }
+     ],
+     "caption": "長條＝Optimus 營收；折線＝平均售價、每台製造成本與每台 BOM（學習曲線，右軸）。Tesla 未揭露任何 Optimus 財務數字，全部為假設。"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Optimus!A1"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "Optimus 單位經濟（情境 B）",
+     "head": [
+      "@Optimus!A3",
+      "@Optimus!B3",
+      "@PL!E3:M3"
+     ],
+     "rows": [
+      [
+       "@Optimus!A5",
+       "@Optimus!B5",
+       "@Optimus!E5|n1",
+       "@Optimus!F5|n1",
+       "@Optimus!G5|n1",
+       "@Optimus!H5|n1",
+       "@Optimus!I5|n1",
+       "@Optimus!J5|n1",
+       "@Optimus!K5|n1",
+       "@Optimus!L5|n1",
+       "@Optimus!M5|n1"
+      ],
+      [
+       "@Optimus!A20",
+       "@Optimus!B20",
+       "@Optimus!E20|n0",
+       "@Optimus!F20|n0",
+       "@Optimus!G20|n0",
+       "@Optimus!H20|n0",
+       "@Optimus!I20|n0",
+       "@Optimus!J20|n0",
+       "@Optimus!K20|n0",
+       "@Optimus!L20|n0",
+       "@Optimus!M20|n0"
+      ],
+      [
+       "@Optimus!A21",
+       "@Optimus!B21",
+       "@Optimus!E21|n0",
+       "@Optimus!F21|n0",
+       "@Optimus!G21|n0",
+       "@Optimus!H21|n0",
+       "@Optimus!I21|n0",
+       "@Optimus!J21|n0",
+       "@Optimus!K21|n0",
+       "@Optimus!L21|n0",
+       "@Optimus!M21|n0"
+      ],
+      [
+       "@Optimus!A22",
+       "@Optimus!B22",
+       "@Optimus!E22|n1",
+       "@Optimus!F22|n1",
+       "@Optimus!G22|n1",
+       "@Optimus!H22|n1",
+       "@Optimus!I22|n1",
+       "@Optimus!J22|n1",
+       "@Optimus!K22|n1",
+       "@Optimus!L22|n1",
+       "@Optimus!M22|n1"
+      ],
+      [
+       "@Optimus!A23",
+       "@Optimus!B23",
+       "@Optimus!E23|n1",
+       "@Optimus!F23|n1",
+       "@Optimus!G23|n1",
+       "@Optimus!H23|n1",
+       "@Optimus!I23|n1",
+       "@Optimus!J23|n1",
+       "@Optimus!K23|n1",
+       "@Optimus!L23|n1",
+       "@Optimus!M23|n1"
+      ],
+      [
+       "@Optimus!A24",
+       "@Optimus!B24",
+       "@Optimus!E24|n0",
+       "@Optimus!F24|n0",
+       "@Optimus!G24|n0",
+       "@Optimus!H24|n0",
+       "@Optimus!I24|n0",
+       "@Optimus!J24|n0",
+       "@Optimus!K24|n0",
+       "@Optimus!L24|n0",
+       "@Optimus!M24|n0"
+      ],
+      [
+       "@Optimus!A25",
+       "@Optimus!B25",
+       "@Optimus!E25|n0",
+       "@Optimus!F25|n0",
+       "@Optimus!G25|n0",
+       "@Optimus!H25|n0",
+       "@Optimus!I25|n0",
+       "@Optimus!J25|n0",
+       "@Optimus!K25|n0",
+       "@Optimus!L25|n0",
+       "@Optimus!M25|n0"
+      ],
+      [
+       "@Optimus!A26",
+       "@Optimus!B26",
+       "@Optimus!E26|p1",
+       "@Optimus!F26|p1",
+       "@Optimus!G26|p1",
+       "@Optimus!H26|p1",
+       "@Optimus!I26|p1",
+       "@Optimus!J26|p1",
+       "@Optimus!K26|p1",
+       "@Optimus!L26|p1",
+       "@Optimus!M26|p1"
+      ],
+      [
+       "@Optimus!A27",
+       "@Optimus!B27",
+       "@Optimus!E27|n0",
+       "@Optimus!F27|n0",
+       "@Optimus!G27|n0",
+       "@Optimus!H27|n0",
+       "@Optimus!I27|n0",
+       "@Optimus!J27|n0",
+       "@Optimus!K27|n0",
+       "@Optimus!L27|n0",
+       "@Optimus!M27|n0"
+      ],
+      [
+       "@Optimus!A28",
+       "@Optimus!B28",
+       "@Optimus!E28|n0",
+       "@Optimus!F28|n0",
+       "@Optimus!G28|n0",
+       "@Optimus!H28|n0",
+       "@Optimus!I28|n0",
+       "@Optimus!J28|n0",
+       "@Optimus!K28|n0",
+       "@Optimus!L28|n0",
+       "@Optimus!M28|n0"
+      ],
+      [
+       "@Optimus!A29",
+       "@Optimus!B29",
+       "@Optimus!E29|n0",
+       "@Optimus!F29|n0",
+       "@Optimus!G29|n0",
+       "@Optimus!H29|n0",
+       "@Optimus!I29|n0",
+       "@Optimus!J29|n0",
+       "@Optimus!K29|n0",
+       "@Optimus!L29|n0",
+       "@Optimus!M29|n0"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：情境 A、C 的 Optimus 單位經濟",
+     "head": [
+      "@Optimus!A3",
+      "@Optimus!B3",
+      "@PL!E3:M3"
+     ],
+     "rows": [
+      {
+       "sub": "@Optimus!A7"
+      },
+      [
+       "@Optimus!A8",
+       "@Optimus!B8",
+       "@Optimus!E8|n0",
+       "@Optimus!F8|n0",
+       "@Optimus!G8|n0",
+       "@Optimus!H8|n0",
+       "@Optimus!I8|n0",
+       "@Optimus!J8|n0",
+       "@Optimus!K8|n0",
+       "@Optimus!L8|n0",
+       "@Optimus!M8|n0"
+      ],
+      [
+       "@Optimus!A9",
+       "@Optimus!B9",
+       "@Optimus!E9|n0",
+       "@Optimus!F9|n0",
+       "@Optimus!G9|n0",
+       "@Optimus!H9|n0",
+       "@Optimus!I9|n0",
+       "@Optimus!J9|n0",
+       "@Optimus!K9|n0",
+       "@Optimus!L9|n0",
+       "@Optimus!M9|n0"
+      ],
+      [
+       "@Optimus!A10",
+       "@Optimus!B10",
+       "@Optimus!E10|n1",
+       "@Optimus!F10|n1",
+       "@Optimus!G10|n1",
+       "@Optimus!H10|n1",
+       "@Optimus!I10|n1",
+       "@Optimus!J10|n1",
+       "@Optimus!K10|n1",
+       "@Optimus!L10|n1",
+       "@Optimus!M10|n1"
+      ],
+      [
+       "@Optimus!A11",
+       "@Optimus!B11",
+       "@Optimus!E11|n1",
+       "@Optimus!F11|n1",
+       "@Optimus!G11|n1",
+       "@Optimus!H11|n1",
+       "@Optimus!I11|n1",
+       "@Optimus!J11|n1",
+       "@Optimus!K11|n1",
+       "@Optimus!L11|n1",
+       "@Optimus!M11|n1"
+      ],
+      [
+       "@Optimus!A12",
+       "@Optimus!B12",
+       "@Optimus!E12|n0",
+       "@Optimus!F12|n0",
+       "@Optimus!G12|n0",
+       "@Optimus!H12|n0",
+       "@Optimus!I12|n0",
+       "@Optimus!J12|n0",
+       "@Optimus!K12|n0",
+       "@Optimus!L12|n0",
+       "@Optimus!M12|n0"
+      ],
+      [
+       "@Optimus!A13",
+       "@Optimus!B13",
+       "@Optimus!E13|n0",
+       "@Optimus!F13|n0",
+       "@Optimus!G13|n0",
+       "@Optimus!H13|n0",
+       "@Optimus!I13|n0",
+       "@Optimus!J13|n0",
+       "@Optimus!K13|n0",
+       "@Optimus!L13|n0",
+       "@Optimus!M13|n0"
+      ],
+      [
+       "@Optimus!A14",
+       "@Optimus!B14",
+       "@Optimus!E14|p1",
+       "@Optimus!F14|p1",
+       "@Optimus!G14|p1",
+       "@Optimus!H14|p1",
+       "@Optimus!I14|p1",
+       "@Optimus!J14|p1",
+       "@Optimus!K14|p1",
+       "@Optimus!L14|p1",
+       "@Optimus!M14|p1"
+      ],
+      [
+       "@Optimus!A15",
+       "@Optimus!B15",
+       "@Optimus!E15|n0",
+       "@Optimus!F15|n0",
+       "@Optimus!G15|n0",
+       "@Optimus!H15|n0",
+       "@Optimus!I15|n0",
+       "@Optimus!J15|n0",
+       "@Optimus!K15|n0",
+       "@Optimus!L15|n0",
+       "@Optimus!M15|n0"
+      ],
+      [
+       "@Optimus!A16",
+       "@Optimus!B16",
+       "@Optimus!E16|n0",
+       "@Optimus!F16|n0",
+       "@Optimus!G16|n0",
+       "@Optimus!H16|n0",
+       "@Optimus!I16|n0",
+       "@Optimus!J16|n0",
+       "@Optimus!K16|n0",
+       "@Optimus!L16|n0",
+       "@Optimus!M16|n0"
+      ],
+      [
+       "@Optimus!A17",
+       "@Optimus!B17",
+       "@Optimus!E17|n0",
+       "@Optimus!F17|n0",
+       "@Optimus!G17|n0",
+       "@Optimus!H17|n0",
+       "@Optimus!I17|n0",
+       "@Optimus!J17|n0",
+       "@Optimus!K17|n0",
+       "@Optimus!L17|n0",
+       "@Optimus!M17|n0"
+      ],
+      {
+       "sub": "@Optimus!A31"
+      },
+      [
+       "@Optimus!A32",
+       "@Optimus!B32",
+       "@Optimus!E32|n0",
+       "@Optimus!F32|n0",
+       "@Optimus!G32|n0",
+       "@Optimus!H32|n0",
+       "@Optimus!I32|n0",
+       "@Optimus!J32|n0",
+       "@Optimus!K32|n0",
+       "@Optimus!L32|n0",
+       "@Optimus!M32|n0"
+      ],
+      [
+       "@Optimus!A33",
+       "@Optimus!B33",
+       "@Optimus!E33|n0",
+       "@Optimus!F33|n0",
+       "@Optimus!G33|n0",
+       "@Optimus!H33|n0",
+       "@Optimus!I33|n0",
+       "@Optimus!J33|n0",
+       "@Optimus!K33|n0",
+       "@Optimus!L33|n0",
+       "@Optimus!M33|n0"
+      ],
+      [
+       "@Optimus!A34",
+       "@Optimus!B34",
+       "@Optimus!E34|n1",
+       "@Optimus!F34|n1",
+       "@Optimus!G34|n1",
+       "@Optimus!H34|n1",
+       "@Optimus!I34|n1",
+       "@Optimus!J34|n1",
+       "@Optimus!K34|n1",
+       "@Optimus!L34|n1",
+       "@Optimus!M34|n1"
+      ],
+      [
+       "@Optimus!A35",
+       "@Optimus!B35",
+       "@Optimus!E35|n1",
+       "@Optimus!F35|n1",
+       "@Optimus!G35|n1",
+       "@Optimus!H35|n1",
+       "@Optimus!I35|n1",
+       "@Optimus!J35|n1",
+       "@Optimus!K35|n1",
+       "@Optimus!L35|n1",
+       "@Optimus!M35|n1"
+      ],
+      [
+       "@Optimus!A36",
+       "@Optimus!B36",
+       "@Optimus!E36|n0",
+       "@Optimus!F36|n0",
+       "@Optimus!G36|n0",
+       "@Optimus!H36|n0",
+       "@Optimus!I36|n0",
+       "@Optimus!J36|n0",
+       "@Optimus!K36|n0",
+       "@Optimus!L36|n0",
+       "@Optimus!M36|n0"
+      ],
+      [
+       "@Optimus!A37",
+       "@Optimus!B37",
+       "@Optimus!E37|n0",
+       "@Optimus!F37|n0",
+       "@Optimus!G37|n0",
+       "@Optimus!H37|n0",
+       "@Optimus!I37|n0",
+       "@Optimus!J37|n0",
+       "@Optimus!K37|n0",
+       "@Optimus!L37|n0",
+       "@Optimus!M37|n0"
+      ],
+      [
+       "@Optimus!A38",
+       "@Optimus!B38",
+       "@Optimus!E38|p1",
+       "@Optimus!F38|p1",
+       "@Optimus!G38|p1",
+       "@Optimus!H38|p1",
+       "@Optimus!I38|p1",
+       "@Optimus!J38|p1",
+       "@Optimus!K38|p1",
+       "@Optimus!L38|p1",
+       "@Optimus!M38|p1"
+      ],
+      [
+       "@Optimus!A39",
+       "@Optimus!B39",
+       "@Optimus!E39|n0",
+       "@Optimus!F39|n0",
+       "@Optimus!G39|n0",
+       "@Optimus!H39|n0",
+       "@Optimus!I39|n0",
+       "@Optimus!J39|n0",
+       "@Optimus!K39|n0",
+       "@Optimus!L39|n0",
+       "@Optimus!M39|n0"
+      ],
+      [
+       "@Optimus!A40",
+       "@Optimus!B40",
+       "@Optimus!E40|n0",
+       "@Optimus!F40|n0",
+       "@Optimus!G40|n0",
+       "@Optimus!H40|n0",
+       "@Optimus!I40|n0",
+       "@Optimus!J40|n0",
+       "@Optimus!K40|n0",
+       "@Optimus!L40|n0",
+       "@Optimus!M40|n0"
+      ],
+      [
+       "@Optimus!A41",
+       "@Optimus!B41",
+       "@Optimus!E41|n0",
+       "@Optimus!F41|n0",
+       "@Optimus!G41|n0",
+       "@Optimus!H41|n0",
+       "@Optimus!I41|n0",
+       "@Optimus!J41|n0",
+       "@Optimus!K41|n0",
+       "@Optimus!L41|n0",
+       "@Optimus!M41|n0"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "對人工的 TCO 與回本期（展示，不進目標價；情境 B）",
+     "head": [
+      "@Optimus!A3",
+      "@Optimus!B3",
+      "@PL!E3:M3"
+     ],
+     "rows": [
+      [
+       "@Optimus!A44",
+       "@Optimus!B44",
+       "@Optimus!E44|n2",
+       "@Optimus!F44|n2",
+       "@Optimus!G44|n2",
+       "@Optimus!H44|n2",
+       "@Optimus!I44|n2",
+       "@Optimus!J44|n2",
+       "@Optimus!K44|n2",
+       "@Optimus!L44|n2",
+       "@Optimus!M44|n2"
+      ],
+      [
+       "@Optimus!A45",
+       "@Optimus!B45",
+       "@Optimus!E45|n2",
+       "@Optimus!F45|n2",
+       "@Optimus!G45|n2",
+       "@Optimus!H45|n2",
+       "@Optimus!I45|n2",
+       "@Optimus!J45|n2",
+       "@Optimus!K45|n2",
+       "@Optimus!L45|n2",
+       "@Optimus!M45|n2"
+      ],
+      [
+       "@Optimus!A46",
+       "@Optimus!B46",
+       "@Optimus!E46|n2",
+       "@Optimus!F46|n2",
+       "@Optimus!G46|n2",
+       "@Optimus!H46|n2",
+       "@Optimus!I46|n2",
+       "@Optimus!J46|n2",
+       "@Optimus!K46|n2",
+       "@Optimus!L46|n2",
+       "@Optimus!M46|n2"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Optimus!A48"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "分部加總中的 Optimus 與校準",
+     "head": [
+      "項目",
+      "本模型",
+      "對照值"
+     ],
+     "rows": [
+      [
+       "@Recon!A19",
+       "@Recon!B19|n2",
+       "@Recon!C19|n1"
+      ],
+      [
+       "@Recon!A20",
+       "@Recon!B20|p1",
+       "@Recon!C20|n1"
+      ],
+      [
+       "@Recon!A21",
+       "@Recon!B21|p1",
+       "@Recon!C21|n1"
+      ],
+      [
+       "@Recon!A22",
+       "@Recon!B22|n1",
+       "@Recon!C22|n1"
+      ]
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "Optimus 參數"
+    },
+    {
+     "type": "table",
+     "caption": "有敏感度區間的參數（基準進主模型；低／高只用於敏感度頁）",
+     "head": [
+      "@In!B3",
+      "@In!D3",
+      "@In!E3",
+      "@In!F3",
+      "@In!G3"
+     ],
+     "rows": [
+      [
+       "@In!B43",
+       "@In!D43|n1",
+       "@In!E43|n1",
+       "@In!F43|n1",
+       "@In!G43|tag"
+      ],
+      [
+       "@In!B44",
+       "@In!D44|n1",
+       "@In!E44|n1",
+       "@In!F44|n1",
+       "@In!G44|tag"
+      ],
+      [
+       "@In!B45",
+       "@In!D45|n1",
+       "@In!E45|n1",
+       "@In!F45|n1",
+       "@In!G45|tag"
+      ],
+      [
+       "@In!B47",
+       "@In!D47|p1",
+       "@In!E47|p1",
+       "@In!F47|p1",
+       "@In!G47|tag"
+      ],
+      [
+       "@In!B48",
+       "@In!D48|p1",
+       "@In!E48|p1",
+       "@In!F48|p1",
+       "@In!G48|tag"
+      ],
+      [
+       "@In!B49",
+       "@In!D49|p1",
+       "@In!E49|p1",
+       "@In!F49|p1",
+       "@In!G49|tag"
+      ],
+      [
+       "@In!B50",
+       "@In!D50|n1",
+       "@In!E50|n1",
+       "@In!F50|n1",
+       "@In!G50|tag"
+      ],
+      [
+       "@In!B52",
+       "@In!D52|n2",
+       "@In!E52|n2",
+       "@In!F52|n2",
+       "@In!G52|tag"
+      ],
+      [
+       "@In!B31",
+       "@In!D31|n0",
+       "@In!E31|n0",
+       "@In!F31|n0",
+       "@In!G31|tag"
+      ],
+      [
+       "@In!B32",
+       "@In!D32|n0",
+       "@In!E32|n0",
+       "@In!F32|n0",
+       "@In!G32|tag"
+      ],
+      [
+       "@In!B33",
+       "@In!D33|n0",
+       "@In!E33|n0",
+       "@In!F33|n0",
+       "@In!G33|tag"
+      ],
+      [
+       "@In!B34",
+       "@In!D34|n0",
+       "@In!E34|n0",
+       "@In!F34|n0",
+       "@In!G34|tag"
+      ],
+      [
+       "@In!B35",
+       "@In!D35|n0",
+       "@In!E35|n0",
+       "@In!F35|n0",
+       "@In!G35|tag"
+      ],
+      [
+       "@In!B36",
+       "@In!D36|n0",
+       "@In!E36|n0",
+       "@In!F36|n0",
+       "@In!G36|tag"
+      ],
+      [
+       "@In!B37",
+       "@In!D37|n0",
+       "@In!E37|n0",
+       "@In!F37|n0",
+       "@In!G37|tag"
+      ],
+      [
+       "@In!B38",
+       "@In!D38|n0",
+       "@In!E38|n0",
+       "@In!F38|n0",
+       "@In!G38|tag"
+      ],
+      [
+       "@In!B39",
+       "@In!D39|n0",
+       "@In!E39|n0",
+       "@In!F39|n0",
+       "@In!G39|tag"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：本業務的固定輸入（無敏感度區間）",
+     "head": [
+      "@In!B3",
+      "@In!D3",
+      "@In!E3",
+      "@In!F3",
+      "@In!G3"
+     ],
+     "rows": [
+      [
+       "@In!B46",
+       "@In!D46|n0",
+       "@In!E46|n0",
+       "@In!F46|n0",
+       "@In!G46|tag"
+      ],
+      [
+       "@In!B40",
+       "@In!D40|n2",
+       "@In!E40|n2",
+       "@In!F40|n2",
+       "@In!G40|tag"
+      ],
+      [
+       "@In!B41",
+       "@In!D41|n2",
+       "@In!E41|n2",
+       "@In!F41|n2",
+       "@In!G41|tag"
+      ],
+      [
+       "@In!B42",
+       "@In!D42|n2",
+       "@In!E42|n2",
+       "@In!F42|n2",
+       "@In!G42|tag"
+      ],
+      [
+       "@In!B51",
+       "@In!D51|n2",
+       "@In!E51|n2",
+       "@In!F51|n2",
+       "@In!G51|tag"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "recon",
+   "title": "對帳：原檔、共識與線層級變數",
+   "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "@Recon!A1"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "本模型與原檔、市場共識對照（共識為前版對照值，未更新）",
+     "head": [
+      "@Recon!A3",
+      "@Recon!B3",
+      "@Recon!C3",
+      "@Recon!D3",
+      "@Recon!E3"
+     ],
+     "rows": [
+      [
+       "@Recon!A4",
+       "@Recon!B4|n2",
+       "@Recon!C4|n2",
+       "@Recon!D4|n2",
+       "@Recon!E4"
+      ],
+      [
+       "@Recon!A5",
+       "@Recon!B5|n2",
+       "@Recon!C5|n2",
+       "@Recon!D5|n2",
+       "@Recon!E5"
+      ],
+      [
+       "@Recon!A6",
+       "@Recon!B6|n2",
+       "@Recon!C6|n2",
+       "@Recon!D6|n2",
+       "@Recon!E6"
+      ],
+      [
+       "@Recon!A7",
+       "@Recon!B7|n2",
+       "@Recon!C7|n2",
+       "@Recon!D7|n2",
+       "@Recon!E7"
+      ],
+      [
+       "@Recon!A8",
+       "@Recon!B8|n2",
+       "@Recon!C8|n2",
+       "@Recon!D8|n2",
+       "@Recon!E8"
+      ],
+      [
+       "@Recon!A9",
+       "@Recon!B9|n2",
+       "@Recon!C9|n2",
+       "@Recon!D9|n2",
+       "@Recon!E9"
+      ],
+      [
+       "@Recon!A10",
+       "@Recon!B10|n2",
+       "@Recon!C10|n2",
+       "@Recon!D10|n2",
+       "@Recon!E10"
+      ],
+      [
+       "@Recon!A11",
+       "@Recon!B11|n2",
+       "@Recon!C11|n2",
+       "@Recon!D11|n2",
+       "@Recon!E11"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "其他對照",
+     "head": [
+      "項目",
+      "本模型",
+      "對照值",
+      "說明"
+     ],
+     "rows": [
+      [
+       "@Recon!A23",
+       "@Recon!B23|n0",
+       "@Recon!C23|n0",
+       "@Recon!E23"
+      ],
+      [
+       "@Recon!A24",
+       "@Recon!B24|n0",
+       "@Recon!C24|n0",
+       "@Recon!E24"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@對帳!A1"
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：線層級變數對帳（FSD、Robotaxi、人形機器人、訓練算力）",
+     "head": [
+      "@對帳!A3",
+      "@對帳!B3",
+      "@對帳!C3",
+      "@對帳!D3",
+      "@對帳!G3",
+      "@對帳!H3"
+     ],
+     "rowgen": {
+      "sheet": "對帳",
+      "rows": "4-21",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "G",
+       "H"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "status",
+   "title": "資料狀態",
+   "blocks": [
+    {
+     "type": "kv",
+     "items": [
+      [
+       "模型版本",
+       [
+        "$version",
+        "（",
+        "$date",
+        "）"
+       ]
+      ],
+      [
+       "版本與日期",
+       "@README!A1"
+      ],
+      [
+       "build_id",
+       "@Sens!D45"
+      ],
+      [
+       "來源 xlsx",
+       "$xlsx"
+      ],
+      [
+       "來源 xlsx 的雜湊指紋",
+       "$sha"
+      ]
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "方法、判斷題與限制"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!B8",
+      "@README!B11",
+      "@README!B12",
+      "@README!B9",
+      "@README!B10"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "資料基準日",
+     "head": [
+      "項目",
+      "日期與來源"
+     ],
+     "rowgen": {
+      "sheet": "README",
+      "rows": "16-20",
+      "cols": [
+       "A",
+       "B"
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "caption": "風險登錄",
+     "head": [
+      "@風險登錄!A3",
+      "@風險登錄!B3",
+      "@風險登錄!C3",
+      "@風險登錄!D3"
+     ],
+     "rowgen": {
+      "sheet": "風險登錄",
+      "rows": "4-13",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D"
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：改版紀錄",
+     "head": [
+      "@改版紀錄_v0.3!B3",
+      "@改版紀錄_v0.3!C3",
+      "@改版紀錄_v0.3!D3",
+      "@改版紀錄_v0.3!E3",
+      "@改版紀錄_v0.3!F3"
+     ],
+     "rowgen": {
+      "sheet": "改版紀錄_v0.3",
+      "rows": "4-28",
+      "cols": [
+       "B",
+       "C",
+       "D",
+       "E",
+       "F"
+      ]
+     }
+    },
+    {
+     "type": "h3",
+     "text": "「未取得」清單"
+    },
+    {
+     "type": "scan",
+     "needle": "未取得",
+     "collapse": true,
+     "summary": "展開：標為「未取得」的項目",
+     "sheets": {
+      "Recon": [
+       "A"
+      ],
+      "對帳": [
+       "A"
+      ]
+     },
+     "empty": "沒有標為未取得的項目。"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,44 @@
+{
+ "company": "nabtesco",
+ "ticker": "6268.T",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "コンポーネントソリューション",
+   "label": "CMP 營收",
+   "period": "Q1'26（單季）",
+   "value": 22.259,
+   "unit": "¥B",
+   "source": "公司 2026年12月期 中間期決算短信（訂正版，2026-09-30 訂正後再訂正）https://www.nabtesco.com/cms/wp-content/uploads/Revision-of-Summary_of_Consolidated_Financial_Statements_for_FY2026_Q2_2-.pdf；envalith.com 分部頁（轉載第 1 四半期決算短信分部表；百萬日圓）https://envalith.com/en/companies/6268/segments"
+  },
+  {
+   "name": "トランスポートソリューション",
+   "label": "TRS 營收",
+   "period": "Q1'26（單季）",
+   "value": 24.891,
+   "unit": "¥B",
+   "source": "公司 2026年12月期 中間期決算短信（訂正版，2026-09-30 訂正後再訂正）https://www.nabtesco.com/cms/wp-content/uploads/Revision-of-Summary_of_Consolidated_Financial_Statements_for_FY2026_Q2_2-.pdf；envalith.com 分部頁（轉載第 1 四半期決算短信分部表；百萬日圓）https://envalith.com/en/companies/6268/segments"
+  },
+  {
+   "name": "アクセシビリティソリューション",
+   "label": "ACB 營收",
+   "period": "Q1'26（單季）",
+   "value": 32.186,
+   "unit": "¥B",
+   "source": "公司 2026年12月期 中間期決算短信（訂正版，2026-09-30 訂正後再訂正）https://www.nabtesco.com/cms/wp-content/uploads/Revision-of-Summary_of_Consolidated_Financial_Statements_for_FY2026_Q2_2-.pdf；envalith.com 分部頁（轉載第 1 四半期決算短信分部表；百萬日圓）https://envalith.com/en/companies/6268/segments"
+  },
+  {
+   "name": "その他（マニュファクチャリングソリューション）",
+   "label": "MFR 營收",
+   "period": "Q1'26（單季）",
+   "value": 3.696,
+   "unit": "¥B",
+   "source": "公司 2026年12月期 中間期決算短信（訂正版，2026-09-30 訂正後再訂正）https://www.nabtesco.com/cms/wp-content/uploads/Revision-of-Summary_of_Consolidated_Financial_Statements_for_FY2026_Q2_2-.pdf；envalith.com 分部頁（轉載第 1 四半期決算短信分部表；百萬日圓）https://envalith.com/en/companies/6268/segments"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ],
+ "note": "Q 頁單季分部列（累計原文相減）；PL 頁三情境另有「檢查：分部合計 − 合併營收」與「檢查：CMP 子列合計 − CMP」（精密減速機三子列＋CMP 其他＝CMP）。FY2025 分部為億日圓取整，差 −0.01"
+}
