@@ -229,9 +229,10 @@ _add_semis()
 # 未上市與算力層的地圖節點（不進排序）
 MAP_EXTRA = []  # OpenAI、Anthropic 已納入 POSITION（2026-10-25 Andy：未上市也放，可投資性寫「未上市」）
 
+# 外部稽核優化 W3-5（2026-11-23）：Tokenomics 快照 data/tokenomics_snapshot_v21.8.json → v22.0（latest() 取版號最新一份）；px_g 三值在 v22.0 Cap_In!C226:E226 核對未變
 PARAMS = [
     ("gate_tol", 50, "收支關卡容忍帶（US$B，只用於 MSFT／GOOGL／AMZN／ORCL／META）：五年合計在 −gate_tol～0 視為 0、不變號（2026-10-29 MAG 串建議預設，待 Andy 決定）"),
-    ("px_g", -0.09, "token 牌價年變化率 g 基準（抄錄 Tokenomics v21.8 Cap_In!C226，Derived；非契約名稱）——2026 Q2 校準點推到 2027 用"),
+    ("px_g", -0.09, "token 牌價年變化率 g 基準（抄錄 Tokenomics v22.0 Cap_In!C226，Derived；非契約名稱；外部稽核優化 W3-5〔2026-11-23〕核對：與 v21.8 同值）——2026 Q2 校準點推到 2027 用"),
     ("px_g_lo", -0.20, "g 低端（Tokenomics Cap_In!D226）"),
     ("px_g_hi", 0.05, "g 高端（Tokenomics Cap_In!E226）"),
     ("px_dt", 1.125, "校準點到 2027 的年數：2026 Q2 中點（2026.375）→ 2027 年中（2027.5）[判斷]"),
@@ -388,7 +389,7 @@ def main():
               "[Derived]", "即 token 帳 GW 路線（OpenAI 模型基準欄 1.870）：模型 token 量約為實收對應量的倍數")
     r_px = put("牌價係數：2026 Q2 → 2027（(1+g)^年數）", "—",
                ("=(1+px_g_lo)^px_dt", "=(1+px_g)^px_dt", "=(1+px_g_hi)^px_dt"), "倍",
-               "參數 px_g／px_g_lo／px_g_hi／px_dt", "g 抄錄 Tokenomics v21.8 Cap_In!C226:E226（−9%／−20%／+5%）")
+               "參數 px_g／px_g_lo／px_g_hi／px_dt", "g 抄錄 Tokenomics v22.0 Cap_In!C226:E226（−9%／−20%／+5%）")
     r_rev27 = put("VR200 每 GW 年營收：2027 預估（校準後）", "VR200",
                   (f"=$D${r_cal26}*C{r_px}", f"=$D${r_cal26}*D{r_px}", f"=$D${r_cal26}*E{r_px}"), "$B/GW/年",
                   "[Derived]", "＝2026 Q2 校準值 × 牌價係數（低／高只動 g）")
