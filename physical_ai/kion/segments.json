@@ -1,0 +1,28 @@
+{
+ "company": "kion",
+ "ticker": "KGX.DE",
+ "model_sheet": "PL",
+ "official_segments": [
+  {
+   "name": "ITS",
+   "label": "ITS（Linde、STILL 等）營收",
+   "period": "FY2025",
+   "value": 8.272,
+   "unit": "EUR B",
+   "source": "KION 新聞稿：FY2025 solid financial year（分部數字）https://www.kiongroup.com/en/Newsroom/Story-Categories/Growth/Article/KION-with-solid-financial-year-2025-–-strong-order-intake.html"
+  },
+  {
+   "name": "SCS／IAS",
+   "label": "IAS（Dematic 等）營收",
+   "period": "FY2025",
+   "value": 3.071,
+   "unit": "EUR B",
+   "source": "KION 新聞稿：FY2025 solid financial year（分部數字）https://www.kiongroup.com/en/Newsroom/Story-Categories/Growth/Article/KION-with-solid-financial-year-2025-–-strong-order-intake.html"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收（應為 0）"
+ ],
+ "note": "兩個報告分部（ITS、SCS 自 2026 年改稱 IAS）；本部與抵銷列為差額（FY2025 −0.046）。"
+}
