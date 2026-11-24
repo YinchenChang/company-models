@@ -1,0 +1,60 @@
+{
+ "company": "nidec",
+ "ticker": "6594.T",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "精密小型馬達（SPMS）",
+   "label": "精密小型馬達（SPMS） 營收",
+   "period": "9M'26（2025-04～2025-12 累計，外部顧客）",
+   "value": 295.264,
+   "unit": "¥B",
+   "source": "公司 FY2026 第 3 四半期決算短信 分部（搜尋結果摘錄：九個月累計各分部營業收入）https://www.nidec.com/files/user/www-nidec-com/corporate/news/2026/0930-09/260930-09en.pdf"
+  },
+  {
+   "name": "車載（AMEC）",
+   "label": "車載（AMEC） 營收",
+   "period": "9M'26（2025-04～2025-12 累計，外部顧客）",
+   "value": 270.057,
+   "unit": "¥B",
+   "source": "公司 FY2026 第 3 四半期決算短信 分部（搜尋結果摘錄：九個月累計各分部營業收入）https://www.nidec.com/files/user/www-nidec-com/corporate/news/2026/0930-09/260930-09en.pdf"
+  },
+  {
+   "name": "家電・商業・產業用 MOEN",
+   "label": "家電・商業・產業用 MOEN 營收",
+   "period": "9M'26（2025-04～2025-12 累計，外部顧客）",
+   "value": 500.686,
+   "unit": "¥B",
+   "source": "公司 FY2026 第 3 四半期決算短信 分部（搜尋結果摘錄：九個月累計各分部營業收入）https://www.nidec.com/files/user/www-nidec-com/corporate/news/2026/0930-09/260930-09en.pdf"
+  },
+  {
+   "name": "家電・商業・產業用 ACIM",
+   "label": "家電・商業・產業用 ACIM 營收",
+   "period": "9M'26（2025-04～2025-12 累計，外部顧客）",
+   "value": 325.329,
+   "unit": "¥B",
+   "source": "公司 FY2026 第 3 四半期決算短信 分部（搜尋結果摘錄：九個月累計各分部營業收入）https://www.nidec.com/files/user/www-nidec-com/corporate/news/2026/0930-09/260930-09en.pdf"
+  },
+  {
+   "name": "機器與自動化（Nidec Machinery and Automation）",
+   "label": "機器與自動化（Nidec Machinery and Automation） 營收",
+   "period": "9M'26（2025-04～2025-12 累計，外部顧客）",
+   "value": 148.987,
+   "unit": "¥B",
+   "source": "公司 FY2026 第 3 四半期決算短信 分部（搜尋結果摘錄：九個月累計各分部營業收入）https://www.nidec.com/files/user/www-nidec-com/corporate/news/2026/0930-09/260930-09en.pdf"
+  },
+  {
+   "name": "集團公司事業（Group Company Business）",
+   "label": "集團公司事業（Group Company Business） 營收",
+   "period": "9M'26（2025-04～2025-12 累計，外部顧客）",
+   "value": 446.034,
+   "unit": "¥B",
+   "source": "公司 FY2026 第 3 四半期決算短信 分部（搜尋結果摘錄：九個月累計各分部營業收入）https://www.nidec.com/files/user/www-nidec-com/corporate/news/2026/0930-09/260930-09en.pdf"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收（四捨五入差 < 0.005）"
+ ],
+ "note": "官方報告分部為公司事業單位（SPMS、AMEC、MOEN、ACIM、機器與自動化、集團公司事業）；Q 頁以分部合計對合併營收，PL 頁以重編合併營收等比例縮放分部，另有「檢查：分部合計 − 核心營收」「檢查：核心＋人形 − 合併營收」。"
+}
