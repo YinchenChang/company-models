@@ -1,0 +1,45 @@
+{
+ "company": "zhaowei",
+ "ticker": "003021.SZ",
+ "model_sheet": "PL",
+ "official_segments": [
+  {
+   "name": "微型傳動系統",
+   "label": "微型傳動系統 營收",
+   "period": "FY2025",
+   "value": 1031,
+   "unit": "百萬元",
+   "source": "理杏仁 兆威機電營收構成頁（https://www.lixinger.com/equity/company/detail/sz/003021/3021/operation-revenue-constitution；資料商，取自搜尋摘要）：2025 年微型傳動系統 10.31 億元、精密零件 5.96 億元；同花順 F10 兆威機電財務頁（https://basic.10jqka.com.cn/003021/finance.html，2026-11-24 讀取；資料商）：2023–2025 營收、淨利、毛利率、每股盈餘、2025 年底貨幣資金"
+  },
+  {
+   "name": "精密零件",
+   "label": "精密零件 營收",
+   "period": "FY2025",
+   "value": 596,
+   "unit": "百萬元",
+   "source": "理杏仁 兆威機電營收構成頁（https://www.lixinger.com/equity/company/detail/sz/003021/3021/operation-revenue-constitution；資料商，取自搜尋摘要）：2025 年微型傳動系統 10.31 億元、精密零件 5.96 億元；同花順 F10 兆威機電財務頁（https://basic.10jqka.com.cn/003021/finance.html，2026-11-24 讀取；資料商）：2023–2025 營收、淨利、毛利率、每股盈餘、2025 年底貨幣資金"
+  },
+  {
+   "name": "其他業務（殘差）",
+   "label": "其他業務 營收",
+   "period": "FY2025",
+   "value": 89,
+   "unit": "百萬元",
+   "source": "理杏仁 兆威機電營收構成頁（https://www.lixinger.com/equity/company/detail/sz/003021/3021/operation-revenue-constitution；資料商，取自搜尋摘要）：2025 年微型傳動系統 10.31 億元、精密零件 5.96 億元；同花順 F10 兆威機電財務頁（https://basic.10jqka.com.cn/003021/finance.html，2026-11-24 讀取；資料商）：2023–2025 營收、淨利、毛利率、每股盈餘、2025 年底貨幣資金"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "微型傳動系統",
+   "labels": [
+    "微型傳動：非機器人用途（子列）",
+    "微型傳動：靈巧手與機器人模組（子列）"
+   ]
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收（應為 0）",
+  "檢查：微型傳動子列合計 − 微型傳動分部（應為 0）"
+ ],
+ "note": "官方分部＝2025 年報分產品（資料商轉錄）：微型傳動系統、精密零件，其餘為其他業務（殘差）。靈巧手與機器人模組為微型傳動系統內的命題子列（Assumed），合計＝微型傳動分部。"
+}
