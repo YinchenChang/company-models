@@ -1,0 +1,35 @@
+{
+ "company": "novanta",
+ "ticker": "NOVT",
+ "model_sheet": "PL",
+ "official_segments": [
+  {
+   "period": "FY2025",
+   "unit": "US$M",
+   "source": "公司 2025 全年財報新聞稿（2026-02-23；Stock Titan 轉載）https://www.stocktitan.net/news/NOVT/novanta-announces-financial-results-for-the-fourth-quarter-and-full-xwoj6lugo4hv.html（兩個報告分部）",
+   "name": "Automation Enabling Technologies",
+   "label": "營收：Automation Enabling Technologies（AET）",
+   "value": 500.8
+  },
+  {
+   "period": "FY2025",
+   "unit": "US$M",
+   "source": "公司 2025 全年財報新聞稿（2026-02-23；Stock Titan 轉載）https://www.stocktitan.net/news/NOVT/novanta-announces-financial-results-for-the-fourth-quarter-and-full-xwoj6lugo4hv.html（兩個報告分部）",
+   "name": "Medical Solutions",
+   "label": "營收：Medical Solutions",
+   "value": 479.8
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "Automation Enabling Technologies",
+   "labels": [
+    "人形機器人六維力感測（命題子列，增量）"
+   ]
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ],
+ "note": "兩個報告分部（AET、Medical Solutions）FY2025 營收加總等於合併營收 980.6；PL 頁「檢查：分部合計 − 合併營收」各年為零。人形六維力為命題子列（增量，屬 AET 的 ATI 力感測），計入合併營收。"
+}

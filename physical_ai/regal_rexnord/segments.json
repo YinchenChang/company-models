@@ -1,0 +1,37 @@
+{
+ "company": "Regal Rexnord",
+ "ticker": "RRX",
+ "model_sheet": "PL",
+ "official_segments": [
+  {
+   "name": "Automation & Motion Control",
+   "label": "營收：AMC 自動化與運動控制（Kollmorgen 等；不含無框馬達增量）",
+   "period": "FY2025",
+   "value": 1689.8,
+   "unit": "US$M",
+   "source": "公司 8-K 附件：2025 年第四季及全年財報新聞稿（2026-02-04）https://www.sec.gov/Archives/edgar/data/82811/000008281126000041/a4q2025earningsannouncement.htm：分部淨銷售"
+  },
+  {
+   "name": "Industrial Powertrain Solutions",
+   "label": "營收：IPS 工業動力傳動",
+   "period": "FY2025",
+   "value": 2594.1,
+   "unit": "US$M",
+   "source": "公司 8-K 附件：2025 年第四季及全年財報新聞稿（2026-02-04）https://www.sec.gov/Archives/edgar/data/82811/000008281126000041/a4q2025earningsannouncement.htm：分部淨銷售"
+  },
+  {
+   "name": "Power Efficiency Solutions",
+   "label": "營收：PES 電力效率方案（含資料中心）",
+   "period": "FY2025",
+   "value": 1650.6,
+   "unit": "US$M",
+   "source": "公司 8-K 附件：2025 年第四季及全年財報新聞稿（2026-02-04）https://www.sec.gov/Archives/edgar/data/82811/000008281126000041/a4q2025earningsannouncement.htm：分部淨銷售"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 − 核心營收",
+  "檢查：核心＋無框增量＋已處分分部 − 合併營收"
+ ],
+ "note": "PL 頁三分部即官方分部；FY2024 另有已處分的 Industrial Systems 157.8（核對列處理）；無框馬達增量為命題子列（FY2027 起，列於 AMC）。Q 頁有 9M'26 分部與合併營收核對。"
+}

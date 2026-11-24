@@ -1,0 +1,68 @@
+{
+ "company": "inovance",
+ "ticker": "300124.SZ",
+ "model_sheet": "PL",
+ "official_segments": [
+  {
+   "name": "通用自動化",
+   "label": "通用自動化 營收",
+   "period": "FY2025",
+   "value": 16900,
+   "unit": "百萬元",
+   "source": "鳳凰財經 2025 年報點評（https://finance.ifeng.com/c/8udndDyY7Iz）：轉錄公司 2025 年報分業務營收、毛利率、研發費用"
+  },
+  {
+   "name": "智慧電梯",
+   "label": "智慧電梯 營收",
+   "period": "FY2025",
+   "value": 5200,
+   "unit": "百萬元",
+   "source": "鳳凰財經 2025 年報點評（https://finance.ifeng.com/c/8udndDyY7Iz）：轉錄公司 2025 年報分業務營收、毛利率、研發費用"
+  },
+  {
+   "name": "新能源汽車動力系統",
+   "label": "新能源汽車動力系統 營收",
+   "period": "FY2025",
+   "value": 20323,
+   "unit": "百萬元",
+   "source": "鳳凰財經 2025 年報點評（https://finance.ifeng.com/c/8udndDyY7Iz）：轉錄公司 2025 年報分業務營收、毛利率、研發費用"
+  },
+  {
+   "name": "新興業務（智能機器人＋數字能源）",
+   "label": "新興業務（智能機器人＋數字能源）營收",
+   "period": "FY2025",
+   "value": 1795,
+   "unit": "百萬元",
+   "source": "鳳凰財經 2025 年報點評（https://finance.ifeng.com/c/8udndDyY7Iz）：轉錄公司 2025 年報分業務營收、毛利率、研發費用"
+  },
+  {
+   "name": "其他（殘差，含取整差）",
+   "label": "其他營收",
+   "period": "FY2025",
+   "value": 887,
+   "unit": "百萬元",
+   "source": "鳳凰財經 2025 年報點評（https://finance.ifeng.com/c/8udndDyY7Iz）：轉錄公司 2025 年報分業務營收、毛利率、研發費用"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "通用自動化",
+   "labels": [
+    "通用自動化：基礎（子列）",
+    "通用自動化：人形伺服增量（子列）"
+   ]
+  },
+  {
+   "parent": "新興業務（智能機器人＋數字能源）",
+   "labels": [
+    "新興業務：智能機器人（子列）",
+    "新興業務：數字能源（子列）"
+   ]
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收（應為 0）",
+  "檢查：子列合計 − 分部（應為 0）"
+ ],
+ "note": "官方分部取自 2025 年報分業務營收（通用自動化、智慧電梯、新能源汽車動力系統、新興業務、其他）；工業自動化合計與通用自動化加電梯的取整差併入其他。新興業務內智能機器人與數字能源的拆分、通用自動化的人形增量為命題拆分（Assumed），合計等於分部。"
+}

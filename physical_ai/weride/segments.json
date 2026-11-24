@@ -1,0 +1,45 @@
+{
+ "company": "文遠知行 WeRide",
+ "ticker": "WRD",
+ "model_sheet": "PL",
+ "official_segments": [
+  {
+   "name": "Robotaxi services",
+   "label": "Robotaxi 服務營收",
+   "period": "FY2025",
+   "value": 22.075,
+   "unit": "US$M（人民幣 ÷ 6.7045）",
+   "source": "公司新聞稿：2025 年第四季及全年未經審計財務報告（2026-03-23）https://ir.weride.ai/news-releases/news-release-details/weride-reports-record-full-year-2025-revenue-rmb6846-million-90；公司 6-K 附件 99.1：2026 年第三季未經審計財務報告（IFRS，人民幣；2026-11-20）https://www.sec.gov/Archives/edgar/data/0001867729/000110465926130438/tm2630019d1_ex99-1.htm"
+  },
+  {
+   "name": "Other revenue (residual)",
+   "label": "其餘營收（殘差）",
+   "period": "FY2025",
+   "value": 80.034,
+   "unit": "US$M（人民幣 ÷ 6.7045）",
+   "source": "公司新聞稿：2025 年第四季及全年未經審計財務報告（2026-03-23）https://ir.weride.ai/news-releases/news-release-details/weride-reports-record-full-year-2025-revenue-rmb6846-million-90；公司 6-K 附件 99.1：2026 年第三季未經審計財務報告（IFRS，人民幣；2026-11-20）https://www.sec.gov/Archives/edgar/data/0001867729/000110465926130438/tm2630019d1_ex99-1.htm"
+  },
+  {
+   "name": "Unused slot",
+   "label": "（無第三分部）營收",
+   "period": "FY2025",
+   "value": 0.0,
+   "unit": "US$M（人民幣 ÷ 6.7045）",
+   "source": "公司新聞稿：2025 年第四季及全年未經審計財務報告（2026-03-23）https://ir.weride.ai/news-releases/news-release-details/weride-reports-record-full-year-2025-revenue-rmb6846-million-90；公司 6-K 附件 99.1：2026 年第三季未經審計財務報告（IFRS，人民幣；2026-11-20）https://www.sec.gov/Archives/edgar/data/0001867729/000110465926130438/tm2630019d1_ex99-1.htm"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "Robotaxi services",
+   "labels": [
+    "Robotaxi：車資（車隊 × 每車日付費英里 × 每英里價格）",
+    "Robotaxi：其他（聯合部署車輛銷售、合作收入；校準）"
+   ]
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收（應為 0）",
+  "檢查：Robotaxi 子列合計 − Robotaxi（應為 0）"
+ ],
+ "note": "PL 頁三情境各有分部核對列；FY2023 分部未取得（核對列空白）。Q 頁另有半年度與單季分部對帳。子列只在預測期（FY2026 起）"
+}
