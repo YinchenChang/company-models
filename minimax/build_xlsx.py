@@ -9,8 +9,8 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 
-VERSION = 'v0.2.5'
-DATE = '2026-11-21'
+VERSION = 'v0.2.6'
+DATE = '2026-11-24'
 YEARS = [2025, 2026, 2027, 2028, 2029, 2030]
 YCOL = {y: get_column_letter(4 + i) for i, y in enumerate(YEARS)}  # D..I
 
@@ -815,6 +815,9 @@ def build(out):
         ('v0.2.3（2026-11-15）：估值頁 Val 與反向 DCF 頁 RevDCF（Andy 2026-11-15 決定 MiniMax 與智譜都給目標價與評等）', BOLD),
         ('Val：DCF（FCFF；現金流沿用本模型 R09、P16、I22）50%＋同業 EV／NTM 營收（智譜，同日市值；v0.2.3 為 2026-11-05，v0.2.5 起 2026-11-20）50%；情境 A／B／C＝API token 量年增高／基準／低（25／50／25）；評價日 2026-06-30 pro forma、現價 2026-11-20 收盤（v0.2.3 為 11-05）；五級評等＋收支關卡（原則第 63 條）。RevDCF：支持現價所需 EV、終值期營業利益率、延伸期利益率加碼、同業倍數係數。', None),
         ('判斷類參數（待 Andy 確認）：rf 4.86%（美債 10 年）、β 1.248（Anthropic 同業 Blume）、ERP 5%（未加國家風險）、g 3%、RONIC＝WACC、DCF／同業 50／50、同業只有智譜、不做相對倍數調整、延伸期利益率維持 FY2030。新增 SRC S142–S155、Inputs I35–I61（附加在尾端）；既有計算頁數值不變。', None),
+        ('', None),
+        ('v0.2.6（2026-11-24）：Tokenomics 快照 v19.0 → v22.0（外部稽核優化 W3-5；與 Tokenomics 現行版相同）', BOLD),
+        ('值改變的名稱：IF_TokGW_Luna（H100、GB200 +17.7%）、IF_FullCost_Luna（−12.8%、−14.3%）、IF_FullCost_Sol（+10.6%、+4.3%）。Compute、PnL、Funding、PL 與 Val 來源列隨之改變（收支合計 −5,983.2 → −5,982.6）；三情境 DCF 都在淨現金下限、Comparable 用營收，加權目標價、上檔空間與評等不變。現價與同業報價不變（2026-11-20 收盤）。Val 情境與敏感度快照以新快照重跑。', None),
         ('', None),
         ('v0.2.5（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120；Yahoo Finance 日線，markets/invest_map/data/closes_20261109_20261120.csv）', BOLD),
         ('MiniMax 現價 HK$152.4（2026-11-13）→ 102.4（SRC_MM S113）；同業智譜 HK$408.4 → 334.0（S143）。其餘輸出（同業中位數、目標價、上檔空間、評等）見 README v0.2.5 前後值表。未換價同業：無。rf、β、ERP、共識、匯率、營運假設、情境權重、I44／I49 不變；Sensitivity 與 Val 快照已重跑。', None),
