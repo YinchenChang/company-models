@@ -4959,6 +4959,13 @@
     "file": "software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.xlsx",
     "label": "AI 淨效果（AI 營收增量−核心侵蝕−推論成本）｜FY2032E，情境 A／B／C（US$M）"
    },
+   "sbc_status": {
+    "status": "完整",
+    "cell": "In!A20",
+    "file": "software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.xlsx",
+    "zero": false,
+    "basis": "sbc_a（Derived）：股票薪酬：固定部分（US$M；股票薪酬＝固定＋變動×營收）｜US$M｜Derived｜Q 頁迴歸：最近三點截距；「全期持平」（占營收比固定為最近四季）為 Sens 下緣案例"
+   },
    "version": "v0.2.3",
    "date": "2026-11-24",
    "xlsx": "20261124_Snowflake個股模型_v0.2.3.xlsx",
@@ -5113,6 +5120,13 @@
     "file": "software_ai/datadog/dist/20261117_Datadog個股模型_v0.2.2.xlsx",
     "label": "AI 淨效果（FY2032E，Thesis 頁；US$M）A／B／C"
    },
+   "sbc_status": {
+    "status": "完整",
+    "cell": "In!A64",
+    "file": "software_ai/datadog/dist/20261117_Datadog個股模型_v0.2.2.xlsx",
+    "zero": false,
+    "basis": "sbc_0（Derived）：股票薪酬占營收（近四季）｜%｜Derived｜近四季 SBC ÷ 營收｜全期持平；DCF 不加回（預設）"
+   },
    "version": "v0.2.2",
    "date": "2026-11-17",
    "xlsx": "20261117_Datadog個股模型_v0.2.2.xlsx",
@@ -5238,6 +5252,13 @@
     "file": "software_ai/palantir/dist/20261117_Palantir個股模型_v0.2.3.xlsx",
     "label": "AI 淨效果＝增量＋侵蝕－增量推論成本｜FY2032E，情境 A／B／C（US$M）"
    },
+   "sbc_status": {
+    "status": "完整",
+    "cell": "In!A77",
+    "file": "software_ai/palantir/dist/20261117_Palantir個股模型_v0.2.3.xlsx",
+    "zero": false,
+    "basis": "sbc_r（Derived）：股票薪酬占營收（只用於現金流加回；損益表已含）｜%｜Derived｜10-Q 現金流量表：前三季 785.690 ÷ 5,881.458（FY2025：15.3%）｜現金流加回非現金股票薪酬；DCF 不加回（NOPAT 已扣）"
+   },
    "version": "v0.2.3",
    "date": "2026-11-17",
    "xlsx": "20261117_Palantir個股模型_v0.2.3.xlsx",
@@ -5362,6 +5383,13 @@
     ],
     "file": "software_ai/crowdstrike/dist/20261124_CrowdStrike個股模型_v0.2.2.xlsx",
     "label": "AI 淨效果（US$M）＝AI 增量營收 + 定價侵蝕 − 增量推論成本｜FY2032E，情境 A／B／C"
+   },
+   "sbc_status": {
+    "status": "完整",
+    "cell": "In!A17",
+    "file": "software_ai/crowdstrike/dist/20261124_CrowdStrike個股模型_v0.2.2.xlsx",
+    "zero": false,
+    "basis": "sbc_nc（Derived）：SBC 中屬非現金部分的比率（SBC ÷ SBC 加雇主薪資稅）｜%｜Derived｜FY2026：現金流量表 SBC 1,096.7 ÷ 調節表 SBC 與雇主薪資稅 1,130.6｜用於 FCF（現金口徑）與 SBC 加回案"
    },
    "version": "v0.2.2",
    "date": "2026-11-24",
@@ -5517,6 +5545,13 @@
     "file": "software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx",
     "label": "AI 淨效果（增量 − 侵蝕 − 推論成本）｜FY2032E，情境 A／B／C（US$M）"
    },
+   "sbc_status": {
+    "status": "完整",
+    "cell": "In!A63",
+    "file": "software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx",
+    "zero": false,
+    "basis": "sbc_pct（Derived）：股票薪酬（SBC-related charges）占營收｜%｜Derived｜PANW 8-K 附件 99.1 FY2026 Q4 新聞稿（2026-09-01）（網址見模型） 1,712÷11,480｜DCF 以 NOPAT 扣股票薪酬、不加回"
+   },
    "version": "v0.2.2",
    "date": "2026-11-24",
    "xlsx": "20261124_Palo Alto Networks個股模型_v0.2.2.xlsx",
@@ -5666,6 +5701,13 @@
     "file": "software_ai/trendmicro/dist/20261117_趨勢科技個股模型_v0.2.1.xlsx",
     "label": "AI 淨效果（增量 − 侵蝕 − 推論成本）｜FY2032E，情境 A／B／C（¥B）"
    },
+   "sbc_status": {
+    "status": "只有下限",
+    "cell": "In!A98",
+    "file": "software_ai/trendmicro/dist/20261117_趨勢科技個股模型_v0.2.1.xlsx",
+    "zero": false,
+    "basis": "sbc_dir（Verified）：董事股票選擇權報酬（FY2025；僅董事，合併股票薪酬未找到）｜¥B｜Verified｜（網址見模型） p.11（事實總帳 sbc.dir.fy25）｜只作 SBC 加回對照的下限；不進加權目標價"
+   },
    "version": "v0.2.1",
    "date": "2026-11-17",
    "xlsx": "20261117_趨勢科技個股模型_v0.2.1.xlsx",
@@ -5803,6 +5845,13 @@
     "file": "software_ai/salesforce/dist/20261117_Salesforce個股模型_v0.2.3.xlsx",
     "label": "AI 淨效果（增量 − 侵蝕 − 推論成本）｜FY2032E，情境 A／B／C（US$M）"
    },
+   "sbc_status": {
+    "status": "完整",
+    "cell": "In!A68",
+    "file": "software_ai/salesforce/dist/20261117_Salesforce個股模型_v0.2.3.xlsx",
+    "zero": false,
+    "basis": "sbc_pct（Derived）：股票薪酬占營收（只用於 P／FCF 對照列與落差分解、DCF 加回對照；不進目標價）｜比例｜Derived｜Q2 FY27 904÷11,345＝8.0%、FY2026 8.4%（Derived）"
+   },
    "version": "v0.2.3",
    "date": "2026-11-17",
    "xlsx": "20261117_Salesforce個股模型_v0.2.3.xlsx",
@@ -5936,6 +5985,13 @@
     ],
     "file": "software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx",
     "label": "AI 淨效果（US$M）＝按任務營收 − 席位取代損失 − 增量推論成本｜FY2032E，情境 A／B／C"
+   },
+   "sbc_status": {
+    "status": "完整",
+    "cell": "In!A107",
+    "file": "software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx",
+    "zero": false,
+    "basis": "sbc_pct（Derived）：股票薪酬占營收（只用於 Q4 2026 單季；FY2027 起改依增量 sbc_inc）｜%｜Derived｜近四季現金流量表 SBC ÷ 營收（Hist 頁）｜Q4 為單季預測"
    },
    "version": "v0.2.2",
    "date": "2026-11-24",
@@ -6104,6 +6160,13 @@
     "file": "software_ai/accenture/dist/20261117_Accenture個股模型_v0.2.3.xlsx",
     "label": "AI 淨效果（增量 − 侵蝕 − 推論成本）｜FY2032E，情境 A／B／C（US$M）"
    },
+   "sbc_status": {
+    "status": "完整",
+    "cell": "In!A27",
+    "file": "software_ai/accenture/dist/20261117_Accenture個股模型_v0.2.3.xlsx",
+    "zero": false,
+    "basis": "sbc_pct（Derived）：股票薪酬占營收（只用於「股票薪酬加回」DCF 對照讀數）｜比例｜Derived｜FY2026 股票薪酬 2,100.433÷營收 74,183.445＝2.83%（10-K FY2026 現金流量表；Derived）；預測期持平；對照讀數不進加權目標價"
+   },
    "version": "v0.2.3",
    "date": "2026-11-17",
    "xlsx": "20261117_Accenture個股模型_v0.2.3.xlsx",
@@ -6229,6 +6292,13 @@
     ],
     "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.3.xlsx",
     "label": "AI 淨效果（增量 − 侵蝕 − 推論成本）｜FY2032E，情境 A／B／C（¥百萬）"
+   },
+   "sbc_status": {
+    "status": "未揭露",
+    "cell": null,
+    "file": "software_ai/fujitsu/dist/20261117_Fujitsu個股模型_v0.2.3.xlsx",
+    "basis": "模型沒有股票薪酬輸入列；加回 DCF 列標「未找到」",
+    "zero": false
    },
    "version": "v0.2.3",
    "date": "2026-11-17",
@@ -6381,6 +6451,13 @@
     "file": "software_ai/nri/dist/20261124_野村總研個股模型_v0.2.3.xlsx",
     "label": "AI 淨效果（營收口徑）＝AI 新專案增量 − 價格侵蝕 − 推論成本｜FY2032E，情境 A／B／C（¥B）"
    },
+   "sbc_status": {
+    "status": "未揭露",
+    "cell": "In!A12",
+    "file": "software_ai/nri/dist/20261124_野村總研個股模型_v0.2.3.xlsx",
+    "zero": true,
+    "basis": "sbc_r（Assumed）：股票薪酬占營收（DCF 加回對照用）｜%｜Assumed｜NRI 決算短信與說明資料未單列股票薪酬金額（未找到），以 0 計｜只作對照，不進模型"
+   },
    "version": "v0.2.3",
    "date": "2026-11-24",
    "xlsx": "20261124_野村總研個股模型_v0.2.3.xlsx",
@@ -6525,6 +6602,13 @@
     "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.3.xlsx",
     "label": "AI 淨效果（營業利益口徑）｜FY2032E，情境 A／B／C（US$M）"
    },
+   "sbc_status": {
+    "status": "完整",
+    "cell": "In!A76",
+    "file": "software_ai/applovin/dist/20261117_AppLovin個股模型_v0.2.3.xlsx",
+    "zero": false,
+    "basis": "sbc_r（Derived）：股票薪酬率（含於各費用內；只影響非 GAAP 與現金流加回）｜%｜Derived｜2026 年前三季 253.417 ÷ 5,950.950（Adjusted EBITDA 調節表）｜DCF 不加回（sbc_add＝0）"
+   },
    "version": "v0.2.3",
    "date": "2026-11-17",
    "xlsx": "20261117_AppLovin個股模型_v0.2.3.xlsx",
@@ -6658,6 +6742,13 @@
     ],
     "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.3.xlsx",
     "label": "AI 淨效果（營業利益，相對 FY2026）FY2032E：A／B／C（十億韓元）"
+   },
+   "sbc_status": {
+    "status": "未揭露",
+    "cell": "In!A106",
+    "file": "software_ai/naver/dist/20261117_Naver個股模型_v0.2.3.xlsx",
+    "zero": true,
+    "basis": "sbc_pct（Assumed）：股票薪酬占營收（只作對照，不進模型）｜%｜Assumed｜未找到：股票薪酬金額未取得；0＝DCF（股票薪酬加回）讀數與標準 DCF 相同｜只作對照，不進模型；Recon 並列加回讀數（G4 第 2 條）"
    },
    "version": "v0.2.3",
    "date": "2026-11-17",
@@ -6794,6 +6885,13 @@
     ],
     "file": "software_ai/lycorp/dist/20261124_LY個股模型_v0.2.3.xlsx",
     "label": "AI 淨效果（營業利益）FY2032E：A／B／C（十億日圓）"
+   },
+   "sbc_status": {
+    "status": "未揭露",
+    "cell": "In!A84",
+    "file": "software_ai/lycorp/dist/20261124_LY個股模型_v0.2.3.xlsx",
+    "zero": false,
+    "basis": "sbc_pct（Assumed）：股票薪酬占營收（只用於 SBC 加回對照 DCF；不進目標價）｜%｜Assumed｜LY 不揭露股票薪酬費用；以權益變動表「股份基礎給付交易」代理：9M FY2025 1.683、H1 FY2026 0.590 十億日圓，年化約 1.2 十億日圓 ÷ FY2026E 營收約 0.05%｜代理值，非費用；金額極小，加回對"
    },
    "version": "v0.2.3",
    "date": "2026-11-24",

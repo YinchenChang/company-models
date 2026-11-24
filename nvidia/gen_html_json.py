@@ -447,11 +447,11 @@ def _v13():
     rowx = lambda r: [f"@PL!A{r}"] + [f"@PL!{c}{r}|{fmt(PLW.cell(r, 2).value)}" for c in "CDEFGHIJ"]
     r_ratio = plr("比率"); r_gaap = next(r for r in range(ph, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("GAAP 對照"))
     r_chk = plr("核對（應為 0）")
-    r_d31 = next(r for r in range(r_chk, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("差額（FY2031E）：毛利"))
+    r_d31 = next(r for r in range(r_chk, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("核對：延伸期毛利"))
     is_tbl = {"type": "table", "caption": "標準損益表（十億美元；EPS 為美元）：FY2024A–FY2026A 實績、FY2027E–FY2031E 情境 B（基準）",
               "head": [f"@PL!A{ph}"] + [f"@PL!{c}{ph}" for c in "CDEFGHIJ"],
               "rows": [rowx(plr(k)) for k in keys] + [{"sub": f"@PL!A{r_ratio}"}] + [rowx(r) for r in range(r_ratio + 1, r_gaap)]
-                      + [{"sub": "核對：FY2031E 兩種推法的營業利益差額（毛利率與營業費用率沿用 FY2030，Andy 決定）"}]
+                      + [{"sub": "核對與揭露：FY2031E 毛利 − 營業費用 − 營業利益（應為零；延伸期營業費用＝毛利 − 營業利益，是殘差不是假設）與隱含營業費用率"}]
                       + [rowx(r) for r in (r_d31, r_d31 + 1)]}
     gaap_tbl = {"type": "table", "caption": f"@PL!A{r_gaap}", "head": [f"@PL!A{ph}"] + [f"@PL!{c}{ph}" for c in "CDE"], "collapse": True,
                 "summary": "展開：GAAP 對照（含權益證券損益；只列實績）與核對列",
@@ -565,6 +565,15 @@ PLAIN = {
     "Recon!A67": "反解：FY2028 毛利率（情境 B）達指引下緣所需的漲價吸收比例（只展示，基準不變）",
     "Recon!J72": "公司未單獨揭露供應預付，含在預付及其他流動資產與其他資產內；營運資金比率因此無法剔除供應預付",
 }
+# 上表「業務主因」表的列號是以「NVIDIA 顆數係數」在第 991 列時的位置寫的；表內插列後依該列實際位置平移
+# （2026-11-23：相對倍數係數＝1 之後新增執行長異動 5 列；獨立核對發現未平移時白話標籤對到別的案例）
+_bz0 = find("Sens", "目標價敏感度：業務主因")
+_off = next(r for r in range(_bz0, wb["Sens"].max_row + 1) if str(wb["Sens"][f"A{r}"].value or "").startswith("NVIDIA 顆數係數")) - 991
+if _off:
+    PLAIN = {(f"Sens!{k[5]}{int(k[6:]) + _off}" if k.startswith("Sens!") and int(k[6:]) >= 991 else k): v for k, v in PLAIN.items()}
+for _k, _want in (("Sens!A996", "匣級加價保留比例"), ("Sens!A997", "HBM／LPDDR 吸收比例"), ("Sens!A1002", "營業費用彈性"), ("Sens!A1005", "有效稅率"), ("Sens!A1016", "k_rec 自 FY2028")):
+    _c = f"A{int(_k[6:]) + _off}"
+    assert str(wb["Sens"][_c].value).startswith(_want), (_c, wb["Sens"][_c].value, _want)   # 白話標籤必須對到同一個案例
 FOLD = {"DCF!A2": "展開：DCF 的營業利益與自由現金流口徑", "Sens!A24": "展開：敏感度讀法（月數加權與售價案例的口徑）",
         "Recon!A68": "展開：FY2027 校準缺口的持續性假設"}
 

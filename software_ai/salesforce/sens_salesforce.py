@@ -27,7 +27,7 @@ COMBO = [("ptok,p0", "高", {"ptok": "F", "p0": "F"}, "價格與成本聯動：t
          ("ps_peer", "資料庫", {"ps_peer": ("in", "ps_peer_db")}, "同業 P／S＝資料庫最近一季中位（對照；v0.2.1 的值）"),
          ("cm_adj", "PS", {"cm_adj": ("in", "rel_ps")}, "相對倍數僅 PS 讀數（ps_only）"),
          ("cm_adj", "PSG", {"cm_adj": ("in", "rel_psg")}, "相對倍數僅 PSG 讀數（psg_only）")]
-WD = tempfile.mkdtemp(prefix="sfsens_", dir="/home/claude/scratch/salesforce")
+WD = tempfile.mkdtemp(prefix="sfsens_")  # 外部稽核優化 W3-9（2026-11-23）：寫死的容器路徑改為系統暫存資料夾（換機器也能跑）
 
 
 def recalc(path, prof):

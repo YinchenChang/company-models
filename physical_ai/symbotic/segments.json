@@ -1,0 +1,46 @@
+{
+ "company": "symbotic",
+ "ticker": "SYM",
+ "model_sheet": "PL",
+ "official_segments": [
+  {
+   "name": "Systems",
+   "label": "Systems 營收",
+   "period": "FY2025",
+   "value": 2.118868,
+   "unit": "US$B",
+   "source": "公司新聞稿 Symbotic Reports Fourth Quarter and Fiscal Year 2025 Results（2025-11-24；8-K 附件同文，經 finviz 轉載）https://finviz.com/news/237861/symbotic-reports-fourth-quarter-and-fiscal-year-2025-results（單一報告分部；三條營收線）"
+  },
+  {
+   "name": "Software maintenance and support",
+   "label": "Software maintenance and support 營收",
+   "period": "FY2025",
+   "value": 0.029602,
+   "unit": "US$B",
+   "source": "公司新聞稿 Symbotic Reports Fourth Quarter and Fiscal Year 2025 Results（2025-11-24；8-K 附件同文，經 finviz 轉載）https://finviz.com/news/237861/symbotic-reports-fourth-quarter-and-fiscal-year-2025-results（單一報告分部；三條營收線）"
+  },
+  {
+   "name": "Operation services",
+   "label": "Operation services 營收",
+   "period": "FY2025",
+   "value": 0.098452,
+   "unit": "US$B",
+   "source": "公司新聞稿 Symbotic Reports Fourth Quarter and Fiscal Year 2025 Results（2025-11-24；8-K 附件同文，經 finviz 轉載）https://finviz.com/news/237861/symbotic-reports-fourth-quarter-and-fiscal-year-2025-results（單一報告分部；三條營收線）"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "Systems",
+   "labels": [
+    "既有 backlog：Systems 認列（子列）",
+    "新訂單：Systems 認列（子列）",
+    "Walmart 門市後場：Systems 認列（子列）"
+   ]
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收（應為 0）",
+  "檢查：Systems 子列合計 − Systems（應為 0）"
+ ],
+ "note": "公司為單一報告分部（10-K），營收依三條營收線揭露，本模型以三條營收線為分部列；Q 頁另有 FY2023–9M FY2026 營收線對帳（檢查列為 0）。Systems 三條子列（既有 backlog、新訂單、門市後場）合計＝Systems"
+}

@@ -1,0 +1,36 @@
+{
+ "company": "geekplus",
+ "ticker": "2590.HK",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "倉儲履約（Warehouse fulfilment）",
+   "label": "倉儲履約營收",
+   "period": "H1'26",
+   "value": 1201.553,
+   "unit": "RMB m",
+   "source": "公司 2026 年中期業績公告（港交所 2590，2026-08-28）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0828/2026082803684.pdf"
+  },
+  {
+   "name": "工業搬運（Industrial material transport）",
+   "label": "工業搬運營收",
+   "period": "H1'26",
+   "value": 82.221,
+   "unit": "RMB m",
+   "source": "公司 2026 年中期業績公告（港交所 2590，2026-08-28）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0828/2026082803684.pdf"
+  },
+  {
+   "name": "其他（Others）",
+   "label": "其他營收",
+   "period": "H1'26",
+   "value": 0.125,
+   "unit": "RMB m",
+   "source": "公司 2026 年中期業績公告（港交所 2590，2026-08-28）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0828/2026082803684.pdf"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：產品線合計 − 營收（應為 0）"
+ ],
+ "note": "公司只有一個經營分部（年報分部附註：One）；以公司揭露的產品線營收作分部列。Q 頁半年度（H1'25、H2'25、H1'26）；PL 頁三情境另有「檢查：分部合計 − 營收（應為 0）」（FY2024 起）；Hist 頁 FY2024、FY2025 年度對帳。FY2023 產品線未取得"
+}

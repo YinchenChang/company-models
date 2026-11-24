@@ -968,6 +968,11 @@ for j in range(3):
 crow("dcf", "DCF 目標價（情境加權）", "US$", "=" + sw(DC["v12"]))
 crow("comp", "Comparable 目標價（情境加權）", "US$", "=" + sw(CO["v12"]))
 crow("comp0", "Comparable 目標價（未調整，情境加權）", "US$", "=" + sw(CO["v120"]))
+# 外部稽核優化 W3-1、W3-8(c)（2026-11-23）：說明欄標明哪一個 Comparable 進加權；DCF 目標價為 0 時標示「Comparable 單腿」（規則 X13 要求註明截斷）。只加說明，不改數值格
+V.cell(CON["dcf"], 6).value = (f'=IF(C{CON["dcf"]}=0,"Comparable 單腿：三情境 DCF 每股價值都被 MAX(0,…) 截為 0（股權價值為負取 0＝有限責任），加權目標價只剩 Comparable 支撐（＝Comparable × （1 − DCF 權重））",'
+                               f'IF(MIN(C{DC["v12"]}:E{DC["v12"]})=0,"部分情境的 DCF 每股價值被 MAX(0,…) 截為 0（有限責任）",""))')
+V.cell(CON["comp"], 6).value = "進加權（＝未調整 × 相對倍數係數 rel_mult）"
+V.cell(CON["comp0"], 6).value = "未調整（市場主流同業法），不進加權；進加權的是上一列"
 crow("tp", "目標價（DCF 與 Comparable 加權）", "US$", f"=w_dcf*C{CON['dcf']}+(1-w_dcf)*C{CON['comp']}", note='="DCF "&TEXT(w_dcf,"0%")&"＋Comparable "&TEXT(1-w_dcf,"0%")&"；情境 "&TEXT(wA,"0%")&"／"&TEXT(wB,"0%")&"／"&TEXT(wC,"0%")')
 V.cell(CON["tp"], 3).fill = KEY
 crow("px", "現價", "US$", "=px")

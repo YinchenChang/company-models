@@ -1,0 +1,36 @@
+{
+ "company": "unitree",
+ "ticker": "688836.SS",
+ "model_sheet": "PL",
+ "official_segments": [
+  {
+   "name": "人形機器人",
+   "label": "人形機器人營收",
+   "period": "FY2025",
+   "value": 8.68,
+   "unit": "億元",
+   "source": "中國證券報 2026-06-02 A04 版（上市委審議通過報導，引招股書）https://epaper.cs.com.cn/zgzqb/images/2026-06/02/A04/zqDB1102.pdf；虎嗅 2026-10-23（AD財經，引上交所招股書：分產品營收、銷量、單價、毛利率、費用、存貨）https://www.huxiu.com/article/4900054.html"
+  },
+  {
+   "name": "四足機器人",
+   "label": "四足機器人營收",
+   "period": "FY2025",
+   "value": 6.98,
+   "unit": "億元",
+   "source": "中國證券報 2026-06-02 A04 版（上市委審議通過報導，引招股書）https://epaper.cs.com.cn/zgzqb/images/2026-06/02/A04/zqDB1102.pdf；虎嗅 2026-10-23（AD財經，引上交所招股書：分產品營收、銷量、單價、毛利率、費用、存貨）https://www.huxiu.com/article/4900054.html"
+  },
+  {
+   "name": "組件及其他",
+   "label": "組件及其他營收",
+   "period": "FY2025",
+   "value": 1.33,
+   "unit": "億元",
+   "source": "中國證券報 2026-06-02 A04 版（上市委審議通過報導，引招股書）https://epaper.cs.com.cn/zgzqb/images/2026-06/02/A04/zqDB1102.pdf；虎嗅 2026-10-23（AD財經，引上交所招股書：分產品營收、銷量、單價、毛利率、費用、存貨）https://www.huxiu.com/article/4900054.html"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ],
+ "note": "招股書主營業務按產品劃分：人形機器人、四足機器人、組件（關節馬達、光達等）；本模型將組件與其他業務（租賃、技術服務）合併為「組件及其他」＝合併營收 − 人形 − 四足（FY2025 組件 1.04、其他 0.23，差額為主營／其他業務口徑）。2026 年分產品營收未揭露，PL 頁 FY2026 起為模型值。"
+}

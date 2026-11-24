@@ -5,8 +5,8 @@ import json, os, shutil, subprocess, sys, tempfile
 import openpyxl
 RAW, RM, OUT = sys.argv[1:4]
 rm = json.load(open(RM, encoding="utf-8")); IR, VR = rm["IR"], rm["VR"]
-os.makedirs("/home/claude/scratch/nri", exist_ok=True)
-WD = tempfile.mkdtemp(prefix="kreq_", dir="/home/claude/scratch/nri")
+os.makedirs(os.path.join(tempfile.gettempdir(), "scratch", "nri"), exist_ok=True)
+WD = tempfile.mkdtemp(prefix="kreq_", dir=os.path.join(tempfile.gettempdir(), "scratch", "nri"))
 subprocess.run(["soffice", f"-env:UserInstallation=file://{WD}/lo", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", WD + "/b", RAW], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=dict(os.environ, LC_ALL="C.UTF-8"), check=True)
 base = openpyxl.load_workbook(WD + "/b/" + os.path.basename(RAW), data_only=True)["In"]
 g = lambda k: base.cell(IR[k], 5).value

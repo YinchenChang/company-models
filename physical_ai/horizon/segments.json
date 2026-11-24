@@ -1,0 +1,36 @@
+{
+ "company": "horizon",
+ "ticker": "9660.HK",
+ "model_sheet": "半年",
+ "official_segments": [
+  {
+   "name": "產品方案（Product solutions）",
+   "label": "產品方案營收",
+   "period": "H1'26",
+   "value": 0.925627,
+   "unit": "RMB bn",
+   "source": "公司 2026 中期業績公告（港交所 2026-08-31）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101009.pdf"
+  },
+  {
+   "name": "授權及服務（License and services）",
+   "label": "授權及服務營收",
+   "period": "H1'26",
+   "value": 1.129357,
+   "unit": "RMB bn",
+   "source": "公司 2026 中期業績公告（港交所 2026-08-31）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101009.pdf"
+  },
+  {
+   "name": "非車載（Non-automotive；2026 起列停業單位）",
+   "label": "非車載營收",
+   "period": "H1'26",
+   "value": 0.0,
+   "unit": "RMB bn",
+   "source": "公司 2026 中期業績公告（港交所 2026-08-31）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101009.pdf"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收（應為 0）"
+ ],
+ "note": "半年頁：H1'25（重編）、H2'25、FY2025、H1'26；PL 頁三情境另有「檢查：分部合計 − 合併營收（應為 0）」（含授權兩子列合計＝授權及服務）。公司以營收線揭露（車載：產品方案、授權及服務；非車載），非 IFRS 8 多分部"
+}

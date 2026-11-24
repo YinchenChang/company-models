@@ -3,7 +3,7 @@
 用法：python3 build_salesforce.py <raw.xlsx> [--sens data/sens_v01.json] [--rowmap rowmap.json]
 所有計算為活公式；輸入在 In 頁（藍字）。LibreOffice 重算後才有快取值。
 """
-import datetime, hashlib, json, sys
+import datetime, hashlib, json, os, sys
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment
 from openpyxl.workbook.defined_name import DefinedName
@@ -13,10 +13,11 @@ SENS = sys.argv[sys.argv.index("--sens") + 1] if "--sens" in sys.argv else None
 KREQ = sys.argv[sys.argv.index("--kreq") + 1] if "--kreq" in sys.argv else None
 ROWMAP = sys.argv[sys.argv.index("--rowmap") + 1] if "--rowmap" in sys.argv else None
 VER, VDATE = "0.2.3", "20261117"
-PP = json.load(open("/home/claude/company-models/software_ai/data/relmult_hist/out/peer_ps_20261113.json", encoding="utf-8"))["companies"]["salesforce"]["groups"]["all"]
-PPD = json.load(open("/home/claude/company-models/software_ai/data/relmult_hist/out/peer_ps_20261113.json", encoding="utf-8"))["as_of"]
-RM = json.load(open("/home/claude/company-models/software_ai/data/relmult_hist/out/salesforce.json", encoding="utf-8"))["groups"]["all"]
-TK = json.load(open("/home/claude/company-models/software_ai/salesforce/data/tokenomics_snapshot_v22.0.json", encoding="utf-8"))
+_HERE = os.path.dirname(os.path.abspath(__file__)); _SA = os.path.dirname(_HERE)   # 外部稽核優化 W3-9（2026-11-23）：輸入檔路徑由寫死的容器路徑改為相對於本腳本位置
+PP = json.load(open(os.path.join(_SA, "data", "relmult_hist", "out", "peer_ps_20261113.json"), encoding="utf-8"))["companies"]["salesforce"]["groups"]["all"]
+PPD = json.load(open(os.path.join(_SA, "data", "relmult_hist", "out", "peer_ps_20261113.json"), encoding="utf-8"))["as_of"]
+RM = json.load(open(os.path.join(_SA, "data", "relmult_hist", "out", "salesforce.json"), encoding="utf-8"))["groups"]["all"]
+TK = json.load(open(os.path.join(_HERE, "data", "tokenomics_snapshot_v22.0.json"), encoding="utf-8"))
 TKI = TK["items"]
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); YEL = PatternFill("solid", fgColor="FFF2CC"); HDR = PatternFill("solid", fgColor="DDEBF7")
 wb = openpyxl.Workbook()

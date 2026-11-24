@@ -19,7 +19,8 @@ PKEY = {"TSLA-EV": "TSLA", "TSLA-RT": "TSLA", "1810-EV": "1810", "300124-M": "30
 
 # 個股模型 HTML（tools/company_html 產生）：本專案模型發布到 gh-pages physical_ai/models/<資料夾>/；跨圖公司連 AI 算力地圖的 models/
 MODEL_DIR = {"TSLA": "tesla", "6324": "harmonic_drive", "6268": "nabtesco", "2049": "hiwin", "6954": "fanuc", "6506": "yaskawa",
-             "WAYMO": "waymo", "TSLA-RT": "tesla_robotaxi"}
+             "WAYMO": "waymo", "TSLA-RT": "tesla_robotaxi",
+             "MBLY": "mobileye", "9660": "horizon", "PONY": "pony", "9880": "ubtech", "UNITREE": "unitree", "2590": "geekplus", "SYM": "symbotic", "1316": "nexteer", "6481": "thk", "688017": "leaderdrive", "6273": "smc", "6861": "keyence"}
 CROSS = {"NVDA-C": "NVDA", "2330": "2330", "AMZN": "AMZN", "TER": "TER", "2308": "2308", "2317": "2317"}
 
 

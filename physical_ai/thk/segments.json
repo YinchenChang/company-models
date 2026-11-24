@@ -1,0 +1,52 @@
+{
+ "company": "thk",
+ "ticker": "6481.T",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "日本",
+   "label": "日本（所在地別）營收",
+   "period": "9M'26（累計，外部顧客）",
+   "value": 95.602,
+   "unit": "¥B",
+   "source": "公司 FY2026 第 3 四半期決算短信〔IFRS〕（英文版，2026-11-13）https://www.thk.com/jp/wordpress/wp-content/uploads/2026/11/261113_financial_result_en.pdf 分部情報"
+  },
+  {
+   "name": "美洲",
+   "label": "美洲（所在地別）營收",
+   "period": "9M'26（累計，外部顧客）",
+   "value": 55.572,
+   "unit": "¥B",
+   "source": "公司 FY2026 第 3 四半期決算短信〔IFRS〕（英文版，2026-11-13）https://www.thk.com/jp/wordpress/wp-content/uploads/2026/11/261113_financial_result_en.pdf 分部情報"
+  },
+  {
+   "name": "歐洲",
+   "label": "歐洲（所在地別）營收",
+   "period": "9M'26（累計，外部顧客）",
+   "value": 40.82,
+   "unit": "¥B",
+   "source": "公司 FY2026 第 3 四半期決算短信〔IFRS〕（英文版，2026-11-13）https://www.thk.com/jp/wordpress/wp-content/uploads/2026/11/261113_financial_result_en.pdf 分部情報"
+  },
+  {
+   "name": "中國",
+   "label": "中國（所在地別）營收",
+   "period": "9M'26（累計，外部顧客）",
+   "value": 78.712,
+   "unit": "¥B",
+   "source": "公司 FY2026 第 3 四半期決算短信〔IFRS〕（英文版，2026-11-13）https://www.thk.com/jp/wordpress/wp-content/uploads/2026/11/261113_financial_result_en.pdf 分部情報"
+  },
+  {
+   "name": "其他",
+   "label": "其他（所在地別）營收",
+   "period": "9M'26（累計，外部顧客）",
+   "value": 20.616,
+   "unit": "¥B",
+   "source": "公司 FY2026 第 3 四半期決算短信〔IFRS〕（英文版，2026-11-13）https://www.thk.com/jp/wordpress/wp-content/uploads/2026/11/261113_financial_result_en.pdf 分部情報"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 − 停業重分類 − 合併營收（四捨五入差 < 0.005）"
+ ],
+ "note": "官方報告分部為所在地別（含已轉讓的汽車與運輸機器事業至 2026-05），Q 頁以「分部合計 − 停業單位重分類 − 合併營收」對帳。PL 頁營收列改用公司揭露的持續營業客戶地區別營收（Investor Information p.14），另有「檢查：地區合計 − 核心營收」「檢查：核心＋人形 − 合併營收」。"
+}

@@ -23,7 +23,7 @@ from openpyxl.workbook.defined_name import DefinedName
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
 DIST = os.path.join(HERE, "dist")
-SCR = "/home/claude/scratch/crowdstrike"
+SCR = os.path.join(__import__("tempfile").gettempdir(), "scratch", "crowdstrike")  # 外部稽核優化 W3-9（2026-11-23）：寫死的容器路徑改為系統暫存資料夾（換機器也能跑）
 VERSION = "v0.2.2"
 BUILD_DATE = "2026-11-24"
 FILE_DATE = "20261124"

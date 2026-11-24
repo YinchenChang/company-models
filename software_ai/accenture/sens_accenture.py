@@ -37,8 +37,8 @@ if "cps" in IR:
                       sets=[("cps", cps_hi), ("a27", base["a27"] * 0.5)] + [(k, base[k] * 0.5) for k in a_keys]))
     cases.append(dict(key="joint:route_terra", side="模型組合", label="模型路由：多數任務路由到便宜模型（Terra 層級成本）且自動化比例乘 1.25（便宜則多用）", setting=f"cps＝{cps_lo:g}；a27、a32_A/B/C 各乘 1.25",
                       sets=[("cps", cps_lo), ("a27", base["a27"] * 1.25)] + [(k, base[k] * 1.25) for k in a_keys]))
-os.makedirs(f"/home/claude/scratch/{SLUG}", exist_ok=True)
-WD = tempfile.mkdtemp(prefix=f"{SLUG}sens_", dir=f"/home/claude/scratch/{SLUG}")
+os.makedirs(os.path.join(tempfile.gettempdir(), "scratch", SLUG), exist_ok=True)
+WD = tempfile.mkdtemp(prefix=f"{SLUG}sens_", dir=os.path.join(tempfile.gettempdir(), "scratch", SLUG))
 
 
 def recalc(path, prof):

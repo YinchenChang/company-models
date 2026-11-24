@@ -341,6 +341,50 @@ def scen_prices(b):
     return {"values": [o["value"] for o in vals], "cells": [o["cell"] for o in vals], "file": b.rel, "label": "情境 A／B／C 目標價"}
 
 
+# 外部稽核優化 W3-8(d)（2026-11-23）：SBC（股票薪酬）揭露狀態，只做在地圖層（不改各家模型）。
+# 目的：公司沒揭露股票薪酬、模型以 0 或代理值帶入時，地圖上「股票薪酬加回 DCF」會等於標準 DCF，讀者容易讀成「股票薪酬為零」。
+# 判定只依模型 In 頁股票薪酬輸入列（鍵以 sbc 開頭；不含「是否加回」開關列）自己寫的標記與說明，不另外查證：
+#   未揭露＝有輸入列標 Assumed 且寫明未找到／未揭露／不揭露／未單列／未取得；或沒有輸入列且加回 DCF 列標「未找到」；
+#   只有下限＝同上，但另有標 Verified／Derived 的輸入列寫明是「下限」（只涵蓋部分對象，例：只有董事選擇權）；
+#   完整＝有標 Verified／Derived 的輸入列，且沒有上述字樣。
+#   都不符合時回傳「未判定」，不猜。
+SBC_NONE = r"未找到|未揭露|不揭露|未單列|未單獨揭露|未取得"
+SBC_SWITCH = r"是否加回|加回股票薪酬（|0＝不加回"
+TAGS = ("Verified", "Derived", "Assumed", "Analogy", "Interested-party")
+
+
+def sbc_status(b, sbc_note=None):
+    rows = []
+    if "In" in b.wb.sheetnames:
+        for row in b.wb["In"].iter_rows():
+            k = row[0].value
+            if not isinstance(k, str) or not re.match(r"sbc", k) or len(row) < 2:
+                continue
+            lab = str(row[1].value or "")
+            if re.search(SBC_SWITCH, lab):
+                continue
+            txt = [str(c.value) for c in row[1:] if isinstance(c.value, str)]
+            tag = next((t for t in txt if t in TAGS), None)
+            nums = [c.value for c in row[2:] if isinstance(c.value, (int, float)) and not isinstance(c.value, bool)]
+            rows.append({"cell": f"In!{row[0].coordinate}", "key": k, "label": lab[:80], "tag": tag, "text": "｜".join(txt), "nums": nums})
+    none_rows = [r for r in rows if r["tag"] == "Assumed" and re.search(SBC_NONE, r["text"])]
+    low_rows = [r for r in rows if r["tag"] in ("Verified", "Derived") and "下限" in r["text"] and re.search(SBC_NONE, r["text"])]
+    full_rows = [r for r in rows if r["tag"] in ("Verified", "Derived")]
+    if none_rows and low_rows:
+        st, ev = "只有下限", low_rows[0]
+    elif none_rows:
+        st, ev = "未揭露", none_rows[0]
+    elif not rows and sbc_note:
+        return {"status": "未揭露", "cell": None, "file": b.rel, "basis": f"模型沒有股票薪酬輸入列；加回 DCF 列標「{sbc_note}」", "zero": False}
+    elif full_rows:
+        st, ev = "完整", full_rows[0]
+    else:
+        return {"status": "未判定", "cell": None, "file": b.rel, "basis": "In 頁找不到可判定的股票薪酬輸入列（沒查其他頁）", "zero": False}
+    zero = st == "未揭露" and bool(ev["nums"]) and all(abs(v) < 1e-12 for v in ev["nums"][:1])
+    return {"status": st, "cell": ev["cell"], "file": b.rel, "zero": zero,
+            "basis": f"{ev['key']}（{ev['tag']}）：" + re.sub(r"https?://\S+", "（網址見模型）", ev["text"])[:160]}     # 地圖網頁不得含外部網址（check_map.py）
+
+
 def read_model(folder, tk, tmp):
     x = latest(folder, "xlsx")
     rec = {"folder": folder, "ticker": tk, "status": "ok"}
@@ -367,6 +411,7 @@ def read_model(folder, tk, tmp):
     rec["scen"] = scen_prices(b)
     rec["sbc_dcf"], rec["sbc_abc"], rec["sbc_note"] = sbc_dcf(b)
     rec["ai_net"] = ai_net(b)
+    rec["sbc_status"] = sbc_status(b, rec["sbc_note"])
     rec["missing"] = [k for k in ("price", "dcf", "comp", "tp", "upside", "rating", "rec", "scen", "sbc_dcf", "ai_net")
                       if not rec.get(k)] + (["gate"] if not rec["gate"]["basis"] else [])
     return rec

@@ -11,3 +11,15 @@ TER,TER,USD,204.78,2026-11-20,Yahoo Finance 日線（https://finance.yahoo.com/q
 2330,2330.TW,TWD,2000,2026-11-20,Yahoo Finance 日線（https://finance.yahoo.com/quote/2330.TW/history/；physical_ai/data/closes_20261109_20261120.csv）
 2308,2308.TW,TWD,900,2026-11-20,Yahoo Finance 日線（https://finance.yahoo.com/quote/2308.TW/history/；physical_ai/data/closes_20261109_20261120.csv）
 2317,2317.TW,TWD,210,2026-11-20,Yahoo Finance 日線（https://finance.yahoo.com/quote/2317.TW/history/；physical_ai/data/closes_20261109_20261120.csv）
+MBLY,MBLY,USD,4.57,2026-11-20,Yahoo Finance 日線（https://finance.yahoo.com/quote/MBLY/history/；physical_ai/data/closes2_20261109_20261120.csv）
+9660,9660.HK,HKD,3.12,2026-11-20,Yahoo Finance 日線（https://finance.yahoo.com/quote/9660.HK/history/；physical_ai/data/closes2_20261109_20261120.csv）
+PONY,PONY,USD,3.31,2026-11-20,Yahoo Finance 日線（https://finance.yahoo.com/quote/PONY/history/；physical_ai/data/closes2_20261109_20261120.csv）
+9880,9880.HK,HKD,57.9,2026-11-20,Yahoo Finance 日線（https://finance.yahoo.com/quote/9880.HK/history/；physical_ai/data/closes2_20261109_20261120.csv）
+UNITREE,688836.SS,CNY,590,2026-11-20,單一來源、未經交易所資料複核：etnet 經濟通 688836 報價頁（2026-11-23 讀取）；Yahoo 收盤檔無此代號
+2590,2590.HK,HKD,5.405,2026-11-20,Yahoo Finance 日線（https://finance.yahoo.com/quote/2590.HK/history/；physical_ai/data/closes2_20261109_20261120.csv）
+SYM,SYM,USD,31.1,2026-11-20,Yahoo Finance 日線（https://finance.yahoo.com/quote/SYM/history/；physical_ai/data/closes2_20261109_20261120.csv）
+1316,1316.HK,HKD,4.18,2026-11-20,Yahoo Finance 日線（https://finance.yahoo.com/quote/1316.HK/history/；physical_ai/data/closes2_20261109_20261120.csv）
+6481,6481.T,JPY,4249,2026-11-20,Yahoo Finance 日線（https://finance.yahoo.com/quote/6481.T/history/；physical_ai/data/closes2_20261109_20261120.csv）
+688017,688017.SS,CNY,230.8,2026-11-20,Yahoo Finance 日線（https://finance.yahoo.com/quote/688017.SS/history/；physical_ai/data/closes2_20261109_20261120.csv）
+6273,6273.T,JPY,55300,2026-11-20,Yahoo Finance 日線（https://finance.yahoo.com/quote/6273.T/history/；physical_ai/data/closes2_20261109_20261120.csv）
+6861,6861.T,JPY,14025,2026-11-20,Yahoo Finance 日線（https://finance.yahoo.com/quote/6861.T/history/；physical_ai/data/closes2_20261109_20261120.csv）

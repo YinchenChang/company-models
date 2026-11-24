@@ -5,7 +5,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$ROOT"
 D=software_ai/snowflake
-WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD/out" $D/dist /home/claude/scratch/snowflake
+WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD/out" $D/dist "${TMPDIR:-/tmp}/scratch/snowflake"
 S=$D/data/sens_v022_20261117.json
 K=$D/data/kreq_v022.json
 OUT=$D/dist/20261124_Snowflake個股模型_v0.2.3.xlsx

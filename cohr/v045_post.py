@@ -128,7 +128,7 @@ def pl_standard(wb, HR, CR):
                  "其他收入（淨額）＝−利息與其他淨支出（non-GAAP）。GAAP 合計（毛利、營業利益、淨利、EPS）列在本表下方對照，只列實績；預測不估 GAAP。")
     r_note = r; r += 1
     P.cell(r, 1, "FY2027E–FY2029E＝情境 B 由下而上（FY2027 含 Q1 實績與 Q2 指引）；FY2030E–FY2032E＝延伸期（收斂法只推營收與淨利，營業利益＝（淨利 − 少數股權調整）÷（1 − 稅率）＋利息與其他，與 DCF 頁 EBIT 的起點相同、未扣股票薪酬）。"
-                 "延伸期毛利率與營業費用率沿用 FY2029E，據以算出營業成本、毛利與營業費用；與延伸期營業利益的差額見表末核對列（目標價用延伸期淨利，不受影響）。歷史淨利年增 FY2024 用舊口徑同口徑計算（見說明欄）")
+                 "延伸期毛利率沿用 FY2029E，據以算出營業成本與毛利；營業費用＝毛利 − 營業利益（殘差，不是假設；外部稽核優化 W3-2）；隱含營業費用率見表末揭露列（目標價用延伸期淨利，不受影響）。歷史淨利年增 FY2024 用舊口徑同口徑計算（見說明欄）")
     r_note2 = r; r += 1
     for j, h in enumerate(["項目", "單位"] + YEARS + ["說明"], 1):
         c = P.cell(r, j, h); c.font = BOLD; c.fill = HDR
@@ -159,8 +159,8 @@ def pl_standard(wb, HR, CR):
         "FY2024A–FY2029E＝營收 − 毛利；FY2030E–FY2032E＝營收 ×（1 − 前一年毛利率）")
     row("gp", "毛利", "US$B", hh("gp") + fc("gp") + [f"={c}{L['rev']}-{c}{rc}" for c in "IJK"], M)
     row("gm", "毛利率", "%", [f"={c}{L['gp']}/{c}{L['rev']}" for c in COLS], PCT, "FY2030E–FY2032E＝前一年（沿用）")
-    row("opx", "營業費用（研發＋銷管）", "US$B", hh("opx") + fc("opx") + [f"={c}{L['rev']}*{p}{rc + 3}/{p}{L['rev']}" for p, c in (("H", "I"), ("I", "J"), ("J", "K"))], M,
-        "non-GAAP，不含股票薪酬；FY2030E–FY2032E＝營收 × 前一年營業費用率")
+    row("opx", "營業費用（研發＋銷管）", "US$B", hh("opx") + fc("opx") + [None] * 3, M,
+        "non-GAAP，不含股票薪酬；FY2030E–FY2032E＝毛利 − 營業利益（殘差，不是假設；隱含費用率見表末揭露列）")
     assert L["opx"] == rc + 3
     row("oi", "營業利益", "US$B", hh("oi") + fc("oi") + [f"=({c}{rc + 10}-nci)/(1-tx)+int_f" for c in "IJK"], M, "FY2030E–FY2032E 由淨利反推（同 DCF 頁起點；不改）")
     row("opm", "營業利益率", "%", [f"={c}{L['oi']}/{c}{L['rev']}" for c in COLS], PCT)
@@ -189,9 +189,13 @@ def pl_standard(wb, HR, CR):
     P.cell(r, 1, "核對（應為 0）").font = BOLD; r_chk = r; r += 1
     row("c1", "核對：營收 − 營業成本 − 毛利", "US$B", [f"={c}{L['rev']}-{c}{L['cogs']}-{c}{L['gp']}" for c in COLS], "0.000")
     row("c2", "核對：毛利 − 營業費用 − 營業利益（FY2024A–FY2029E；歷史有 ±0.001 的捨入差）", "US$B", [f"={c}{L['gp']}-{c}{L['opx']}-{c}{L['oi']}" for c in COLS[:6]] + [None] * 3, "0.000")
-    row("c2b", "差額（FY2030E–FY2032E）：毛利 − 營業費用（沿用前一年比率推算）− 延伸期營業利益（由淨利反推）；不為 0 表示兩種推法不一致，目標價用延伸期淨利", "US$B",
-        [None] * 6 + [f"={c}{L['gp']}-{c}{L['opx']}-{c}{L['oi']}" for c in "IJK"], "0.000")
-    row("c2c", "差額（FY2030E–FY2032E）占營收", "%", [None] * 6 + [f"={c}{L['c2b']}/{c}{L['rev']}" for c in "IJK"], PCT)
+    # 外部稽核優化 W3-2（2026-11-23；Andy 決定 J3）：延伸期（FY2030E–FY2032E）營業費用改為殘差＝毛利 − 營業利益，使「毛利 − 營業費用 − 營業利益＝0」每一年都成立。
+    # 原因：原本營業費用＝營收 × 沿用的費用率，營業利益卻由淨利反推，兩者對不上（差額占營收約 1–4%）。只改營業費用這一列的呈現；毛利、營業利益、淨利、EPS、目標價都不動。
+    # 隱含的營業費用率列在下方揭露列（不是新假設，是殘差算出來的結果）。
+    for c in "IJK":
+        P[f"{c}{L['opx']}"] = f"={c}{L['gp']}-{c}{L['oi']}"; P[f"{c}{L['opx']}"].number_format = P[f"H{L['opx']}"].number_format
+    row("c2b", "核對：延伸期毛利 − 營業費用 − 營業利益（FY2030E–FY2032E；延伸期營業費用＝毛利 − 營業利益，應為 0）", "US$B", [None] * 6 + [f"={c}{L['gp']}-{c}{L['opx']}-{c}{L['oi']}" for c in "IJK"], "0.000")
+    row("c2c", "揭露（不是核對列）：隱含營業費用率＝營業費用 ÷ 營收（FY2030E–FY2032E 的營業費用是殘差，不是假設；FY2029E 欄供對照）", "%", [None] * 5 + [f"={c}{L['opx']}/{c}{L['rev']}" for c in "HIJK"], "0.00%")
     row("c3", "核對：稅前利益 − 所得稅 ＋ 少數股權調整 − 稅後淨利", "US$B", [f"={c}{L['pti']}-{c}{L['tax']}+{c}{L['nci']}-{c}{L['ni']}" for c in COLS], "0.000")
     row("c4", "核對：稅後淨利 − PL 情境 B（FY2027E–FY2032E）；FY2025A、FY2026A − In 頁", "US$B",
         [None, f"=D{L['ni']}-a25_ni_in", f"=E{L['ni']}-a26_ni_in"] + [f"={c}{L['ni']}-PL!{s}{R['ni']}" for c, s in zip("FGHIJK", "EFGHIJ")], "0.000")

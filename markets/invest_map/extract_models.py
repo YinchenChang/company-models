@@ -94,7 +94,11 @@ V2_DCF = r"^DCF 目標價（情境加權）"
 V2_COMP = r"^Comparable 目標價（(市場主流同業法|未調整，情境加權)）"   # v0.6.40：CoreWeave v5.0（Oracle 收支型樣板）寫「未調整，情境加權」
 # W2-8（2026-11-20）：tp_comp 是未調整的市場主流同業法（並列用，不進加權）；進加權的是相對倍數調整後的值，另抽成 tp_comp_adj。
 # 沒有「調整後」列的模型（調整係數＝1 或樣板未分列）不產生 tp_comp_adj。
-V2_COMP_ADJ = r"^(② )?Comparable 目標價（(相對倍數調整後|情境加權；相對倍數調整後)"
+V2_COMP_ADJ = r"^(② )?Comparable 目標價（(相對倍數調整後|情境加權；相對倍數調整後)|^Comparable 目標價（情境加權）$"
+# 外部稽核優化 W3-1（2026-11-23）：Oracle 收支型樣板（CoreWeave、Nebius、WhiteFiber）進加權的列名是「Comparable 目標價（情境加權）」
+# （＝未調整 × rel_mult），補進 tp_comp_adj，地圖才能把「未調整」與「進加權」並列。
+# 仍沒有調整後列的模型（MAG、Oracle、Meta、SpaceX：Comparable 即分部加總；ABB、MiniMax、智譜：未做相對倍數調整）
+# Comparable 直接進加權，不產生 tp_comp_adj；地圖依此不標「不進加權」。
 V2_CONS = r"^市場共識目標價(?!.*歷史對照)"   # v0.6.40：只作歷史對照的舊共識（CoreWeave v5.0）不讀
 V2_SCEN12 = r"DCF 情境價值推到( 12 個月後|目標價時點)"          # A／B／C 三欄（部分樣板無此列 → 改讀價格帶）
 V2_BAND = r"^價格帶（DCF 不如預期～順利）"          # 數值版：C 情境、A 情境
@@ -126,6 +130,33 @@ def semis_px(b):
         except (KeyError, IndexError):
             continue
     raise KeyError(f"{b.rel} 找不到模型現價")
+
+
+RECS5 = ("強力買進", "買進", "中立", "放空", "強力放空")
+
+
+def coord_two(b):
+    """外部稽核優化 W3-3（2026-11-23）：Coord 頁 C4 兩讀數（現行基準讀數、另一側讀數）的加權目標價與模型日評等。
+    只在兩個讀數都有評等時回傳；沒有 Coord 頁或該頁不並列兩讀數（算力買賣方的 Coord 只做 C0 對帳）回傳 None。"""
+    if "Coord" not in b.wb.sheetnames:
+        return None
+    ws = b.wb["Coord"]
+    rec = tp = None
+    for row in ws.iter_rows(min_col=1, max_col=3):
+        a, bb, cc = row[0].value, row[1].value, row[2].value
+        if not isinstance(a, str):
+            continue
+        if rec is None and a.startswith("投資建議") and bb in RECS5 and cc in RECS5:
+            rec = row
+        if a.startswith("加權目標價") and all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in (bb, cc)):
+            tp = row       # 取評等列之前最近的一列（NVIDIA 的 Coord 另有不相干的加權目標價列在後面）
+        if rec is not None:
+            break
+    if rec is None or tp is None:
+        return None
+    g = lambda c: cell(b, "Coord", c.coordinate, c.value)
+    return {"rec_cur": g(rec[1]), "rec_alt": g(rec[2]), "tp_cur": g(tp[1]), "tp_alt": g(tp[2]),
+            "differ": rec[1].value != rec[2].value}
 
 
 def semis_v2(b):
@@ -161,6 +192,9 @@ def semis_v2(b):
         nums = first_num_row(b, "Val", V2_BAND)          # B＝C 情境、C＝A 情境
         out["dcf_C"], out["dcf_A"] = cell(b, "Val", *nums[0]), cell(b, "Val", *nums[1])
     out["model_px"] = semis_px(b)
+    c4 = coord_two(b)
+    if c4:
+        out["coord"] = c4
     try:
         out["pe_fy28"] = [b.num("Val", [(0, r"^現價 ÷ FY2028 EPS（模型）")], i) for i in range(3)]
     except (KeyError, IndexError):
@@ -407,8 +441,22 @@ def main():
             for k in ("tp", "tp_dcf", "tp_comp", "tp_cons", "tp_comp_adj", "old_rule", "dcf_A", "dcf_C", "model_px"):
                 if isinstance(m.get(k), dict) and isinstance(m[k].get("value"), (int, float)):
                     m[k]["value"] = m[k]["value"] / ratio
+            for k in ("tp_cur", "tp_alt"):      # W3-3：Coord 兩讀數目標價同樣換算
+                if m.get("coord"):
+                    m["coord"][k]["value"] = m["coord"][k]["value"] / ratio
             m["split_adj"] = {"ratio": ratio, "effective": eff}
 
+    # 外部稽核優化 W3-1（2026-11-23）：擷取檔寫明 tp_comp 的角色，下游不必自己推斷。
+    # 有 tp_comp_adj 的模型：tp_comp＝未調整，不進加權（進加權的是 tp_comp_adj）；沒有的模型：tp_comp 直接進加權。
+    # Anthropic 例外：tp_comp 取的就是調整後的值（未調整值在 tp_comp_main）。
+    for tk, m in out.items():
+        if isinstance(m.get("tp_comp"), dict):
+            if tk == "Anthropic":
+                m["tp_comp_role"] = "相對倍數調整後，進加權（未調整值見 tp_comp_main，不進加權）"
+            elif "tp_comp_adj" in m:
+                m["tp_comp_role"] = "未調整，不進加權（進加權的是 tp_comp_adj）"
+            else:
+                m["tp_comp_role"] = "直接進加權（本模型無相對倍數調整）"
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=1)
     print(f"寫出 {OUT}：{len(out)} 家")

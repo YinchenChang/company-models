@@ -124,8 +124,8 @@ def pl_standard(wb):
     P.cell(r, 1, "標準損益表（v0.3.4 起；個股 HTML 版面規格 v1.3 D 節）：歷史三年（FY2023–FY2025 實績）＋未來六年（FY2026E–FY2031E，情境 B 基準；FY2026E 為錨點）。十億新台幣；EPS 新台幣。只引用本頁上方、Hist、Q、DCF 頁，不回饋任何計算").font = BOLD; r += 1
     P.cell(r, 1, "口徑：TIFRS（台灣採國際財務報導準則；合併財報、歸屬母公司淨利）。創意無非控制權益，稅後淨利即歸屬母公司淨利；EPS 用基本 EPS（本模型口徑，與公司公告同口徑）。預測期的「其他收入（淨額）」＝營業外淨額（利息、匯兌與其他）")
     r_note = r; r += 1
-    P.cell(r, 1, "FY2026E＝錨點（1Q–3Q26 實績＋4Q26 假設）；FY2027E–FY2029E＝情境 B 由下而上；FY2030E、FY2031E＝延伸期（收斂法只推營收與歸屬母公司淨利）：毛利率與營業費用率沿用 FY2029E 推算營業成本、毛利與營業費用；"
-                 "營業利益取 DCF 頁情境 B（由淨利反推）；其他收入＝每年營業外淨額假設；所得稅＝稅前利益 − 歸屬母公司淨利。兩種推法的營業利益差額列在表末核對列，不改既有淨利與目標價")
+    P.cell(r, 1, "FY2026E＝錨點（1Q–3Q26 實績＋4Q26 假設）；FY2027E–FY2029E＝情境 B 由下而上；FY2030E、FY2031E＝延伸期（收斂法只推營收與歸屬母公司淨利）：毛利率沿用 FY2029E 據以算出營業成本與毛利；營業費用＝毛利 − 營業利益（殘差，不是假設；外部稽核優化 W3-2）；"
+                 "營業利益取 DCF 頁情境 B（由淨利反推）；其他收入＝每年營業外淨額假設；所得稅＝稅前利益 − 歸屬母公司淨利。隱含營業費用率見表末揭露列，不改既有淨利與目標價")
     r_note2 = r; r += 1
     hdr = ["項目", "單位"] + YEARS + ["說明"]
     for j, h in enumerate(hdr, 1):
@@ -150,7 +150,7 @@ def pl_standard(wb):
     row("cogs", "營業成本", "NT$B", hh("cogs") + [f"=PL!{c}{R['rev']}-PL!{c}{R['gp']}" for c in SRC[:5]] + [f"=J{L['rev']}*(1-I{r_c + 2})", f"=K{L['rev']}*(1-I{r_c + 2})"], M, "FY2030E、FY2031E＝營收 ×（1 − FY2029E 毛利率）")
     row("gp", "毛利", "NT$B", hh("gp") + [f"=PL!{c}{R['gp']}" for c in SRC[:5]] + [f"=J{L['rev']}-J{L['cogs']}", f"=K{L['rev']}-K{L['cogs']}"], M)
     row("gm", "毛利率", "%", [f"={c}{L['gp']}/{c}{L['rev']}" for c in COLS], PCT, "FY2030E、FY2031E＝FY2029E（沿用）")
-    row("opx", "營業費用（研發、銷管）", "NT$B", hh("opx") + [f"=PL!{c}{R['opx']}" for c in SRC[:5]] + [f"=J{L['rev']}*I{r_c + 3}/I{L['rev']}", f"=K{L['rev']}*I{r_c + 3}/I{L['rev']}"], M, "FY2030E、FY2031E＝營收 × FY2029E 營業費用率")
+    row("opx", "營業費用（研發、銷管）", "NT$B", hh("opx") + [f"=PL!{c}{R['opx']}" for c in SRC[:5]] + [None] * 2, M, "FY2030E、FY2031E＝毛利 − 營業利益（殘差，不是假設；隱含費用率見表末揭露列）")
     row("oi", "營業利益", "NT$B", hh("oi") + [f"=PL!{c}{R['oi']}" for c in SRC[:5]] + [f"=DCF!F{d_ebit}", f"=DCF!G{d_ebit}"], M, "FY2030E、FY2031E 取 DCF 頁情境 B 的營業利益（延伸期由淨利反推；不改）")
     row("opm", "營業利益率", "%", [f"={c}{L['oi']}/{c}{L['rev']}" for c in COLS], PCT)
     row("oth", "其他收入（淨額；營業外淨額）", "NT$B", hh("nonop") + [f"=PL!{c}{R['oth']}" for c in SRC[:5]] + ["=nonop_f", "=nonop_f"], M, "利息、匯兌與其他；FY2030E 起＝每年營業外淨額假設")
@@ -170,10 +170,14 @@ def pl_standard(wb):
     row("g_epsd", "EPS（基本，公司公告；NT$）", "NT$", ["=h_epsr_23", "=h_epsr_24", "=h_epsr_25"], "0.00", "FY2025 公司公告 28.13（Q 頁第 20 列）")
     P.cell(r, 1, "核對（應為 0；FY2023–FY2024 歷史列因百萬元四捨五入容許 ±0.002）").font = BOLD; r_chk = r; r += 1
     row("c1", "核對：營收 − 營業成本 − 毛利", "NT$B", [f"={c}{L['rev']}-{c}{L['cogs']}-{c}{L['gp']}" for c in COLS], "0.000")
-    row("c2", "核對：毛利 − 營業費用 − 營業利益（FY2030E、FY2031E 見下兩列）", "NT$B", [f"={c}{L['gp']}-{c}{L['opx']}-{c}{L['oi']}" for c in COLS[:7]] + [None, None], "0.000")
-    row("c2b", "差額（FY2030E、FY2031E）：毛利 − 營業費用（沿用 FY2029E 比率推算）− 延伸期營業利益（由淨利反推）；不為 0 表示兩種推法不一致，目標價用延伸期淨利", "NT$B",
-        [None] * 7 + [f"=J{L['gp']}-J{L['opx']}-J{L['oi']}", f"=K{L['gp']}-K{L['opx']}-K{L['oi']}"], "0.000")
-    row("c2c", "差額占營收", "%", [None] * 7 + [f"=J{L['c2b']}/J{L['rev']}", f"=K{L['c2b']}/K{L['rev']}"], PCT)
+    row("c2", "核對：毛利 − 營業費用 − 營業利益（FY2030E、FY2031E 見下一列）", "NT$B", [f"={c}{L['gp']}-{c}{L['opx']}-{c}{L['oi']}" for c in COLS[:7]] + [None, None], "0.000")
+    # 外部稽核優化 W3-2（2026-11-23；Andy 決定 J3）：延伸期（FY2030E、FY2031E）營業費用改為殘差＝毛利 − 營業利益，使「毛利 − 營業費用 − 營業利益＝0」每一年都成立。
+    # 原因：原本營業費用＝營收 × 沿用的費用率，營業利益卻由淨利反推，兩者對不上（差額占營收約 1–4%）。只改營業費用這一列的呈現；毛利、營業利益、淨利、EPS、目標價都不動。
+    # 隱含的營業費用率列在下方揭露列（不是新假設，是殘差算出來的結果）。
+    for c in "JK":
+        P[f"{c}{L['opx']}"] = f"={c}{L['gp']}-{c}{L['oi']}"; P[f"{c}{L['opx']}"].number_format = P[f"I{L['opx']}"].number_format
+    row("c2b", "核對：延伸期毛利 − 營業費用 − 營業利益（FY2030E、FY2031E；延伸期營業費用＝毛利 − 營業利益，應為 0）", "NT$B", [None] * 7 + [f"={c}{L['gp']}-{c}{L['opx']}-{c}{L['oi']}" for c in "JK"], "0.000")
+    row("c2c", "揭露（不是核對列）：隱含營業費用率＝營業費用 ÷ 營收（FY2030E、FY2031E 的營業費用是殘差，不是假設；FY2029E 欄供對照）", "%", [None] * 6 + [f"={c}{L['opx']}/{c}{L['rev']}" for c in "IJK"], "0.00%")
     row("c3", "核對：歸屬母公司淨利 − 情境 B（PL 上方區塊；FY2025A–FY2031E）", "NT$B", [None, None] + [f"={c}{L['ni']}-PL!{s}{R['ni']}" for c, s in zip(COLS[2:], SRC)], "0.000")
     row("c4", "核對：EPS − 情境 B（PL 上方區塊；FY2025A–FY2031E）", "NT$", [None, None] + [f"={c}{L['eps']}-PL!{s}{R['eps']}" for c, s in zip(COLS[2:], SRC)], "0.000")
     hr_ = lab(wb["Hist"], "h_ni", col=1)
