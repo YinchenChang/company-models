@@ -133,7 +133,7 @@ def hist_links(wb, ctx):
         "tax_w": "=(h_tax_24/h_pti_24+h_tax_25/h_pti_25+Q!F19)/3",
         "kd": "=SUMPRODUCT(h_note_amt,h_note_rate)/SUM(h_note_amt)",
         "dps_tgt": "=h_dps_q*4",
-        "stub_div": "=h_dps_q*sh_v",
+        "stub_div": "=2*h_dps_q*sh_v",   # 外部稽核優化 W3-4（2026-11-23）：Q3 FY27 新聞稿已宣告 2026-12-23 發放的股息，stub 期內已宣告股息由一次變兩次
         "da_rev": "=(h_da_q3fy26+h_da_q4fy26+h_da_h1fy27)/h_rev_ltm" if "ratio" in P else "=h_da_26/h_rev_26",
         "cx_rev": "=(h_cx_q3fy26+h_cx_q4fy26+h_cx_h1fy27)/h_rev_ltm" if "ratio" in P else "=h_cx_26/h_rev_26",
         "sh_v": "=h_shout+h_rsu+h_opt" if "sh" in P else "=h_dil_q2",
@@ -194,6 +194,12 @@ def overrides(wb, OVR):
             IN.cell(r, 5).value = IN.cell(r, 4 if v == "@lo" else 6).value
         else:
             IN.cell(r, 5).value = v if v.startswith("=") else float(v)
+    if "_rmkeep" in OVR:
+        # 外部稽核優化 W3-4（2026-11-23）：執行長異動 Sens 案例「相對倍數溢價保留比例」——只在敏感度快照建置時生效（正式建置不設 NV_OVERRIDE）。
+        # 調整係數＝1＋保留比例 ×（原係數 − 1）；保留 1＝基準、0＝不調整。原因：Andy 2026-11-20 決定 J1（只進 Sens，基準不動）。
+        V = wb["Val"]; rr = lab(V, "相對倍數調整係數"); f0 = V.cell(rr, 2).value
+        assert isinstance(f0, str) and f0.startswith("="), f0
+        V.cell(rr, 2).value = f"=1+{float(OVR['_rmkeep'])}*(({f0[1:]})-1)"
     for flag, pre in (("_hbmflat", "hbm"), ("_cdxflat", "cdx")):
         if flag in OVR:
             for s in "ABC":
@@ -230,7 +236,7 @@ def norm_tags(wb):
                 parts = [p.strip() for p in re.split(r"／|（", t)]
                 prim = "Interested-party" if any(p.startswith("Interested-party") for p in parts) else parts[0]
                 ws.cell(r, tcol).value = prim
-                note = (f"欄別標記（v0.3.4 混標「{t}」）：主要標記取最近一期原文；實績季為財報（Verified）、Q3 FY27 為公司指引（Interested-party）、Q4 FY27 為假設（Assumed）" if sh == "Q"
+                note = (f"欄別標記（v0.3.4 混標「{t}」）：主要標記取最近一期原文；實績季為財報（Verified）、FY27 Q1～Q3 為財報實績、Q4 FY27 為公司指引（Interested-party）" if sh == "Q"
                         else f"v0.3.4 混標「{t}」：主要標記取最近一期原文；低／高區間為假設（Assumed）")
                 ws.cell(r, icol, (incentive(ws.cell(r, scol).value) + "；" + note) if prim == "Interested-party" else note); n += 1; t = prim
             if sh == "In" and t == "Verified":
@@ -286,21 +292,19 @@ BIZ = [("NVIDIA 顆數係數 ×0.9／×1.1（FY2028 起，三情境同乘）", "
        ("中國恢復 10／40（FY2028 起每年；基準 0）", "cn_amt", "事件型尾端（原則 19）：只進 Sens"),
        ("Edge Computing 毛利率 低／高", "gm_edge", "50%／70%"),
        ("Edge Computing 營收年增 低／高", "eg", "0%／15%"),
-       ("Edge Computing 季增（Q3、Q4 FY27）低／高", "edge_q", "Data Center 錨點＝總營收 − Edge，Edge 誤差傳到錨點與 k_rec（原則 39）"),
+       ("Edge Computing 季增（Q4 FY27）低／高", "edge_q", "Data Center 錨點＝總營收 − Edge，Edge 誤差傳到錨點與 k_rec（原則 39）"),
        ("營業費用彈性 phi 低／高", "phi", "0.4／0.8"),
        ("營業費用年增下限 低／高", "g_opx_min", "0%／10%"),
        ("營業費用率 −2pt／＋2pt", "opx_adj", "引擎 opxa 換成 opx_adj 低／高"),
        ("有效稅率 tx_f 16%／18%", "tx_f", "公司 FY2027 指引區間"),
        ("其他收益淨額 低／高", "oth_f", "0.5／2.4（US$B）"),
        ("稀釋股數年變動 低／高", "sh_g", "−2.5%／0%"),
-       ("Q3 FY27 營收指引 −2%／＋2%（錨點）", "q3_rev", "k_rec、c_nh 整本重算（原則 39）"),
-       ("Q3 FY27 毛利率指引 ±50bp（錨點）", "q3_gm", "同上"),
-       ("Q4 FY27 營收季增 5%／15%（錨點）", "q4_g", "同上"),
-       ("Q4 FY27 毛利率 71%／74%（錨點）", "q4_gm", "同上"),
-       ("Q4 FY27 營業費用季增 低／高（錨點）", "q4_opx_g", "同上"),
-       ("Q3、Q4 FY27 其他收益 低／高（錨點）", "q_oth", "同上"),
-       ("Q3、Q4 FY27 稅率 16%／18%（錨點）", "tx_27", "同上"),
-       ("Q3、Q4 FY27 股數季變動 低／高（錨點）", "q_sh", "同上")]
+       # 外部稽核優化 W3-4（2026-11-23）：Q3 改實績後，錨點案例只剩 Q4（公司指引區間與原假設）
+       ("Q4 FY27 營收指引 −3%／＋3%（錨點）", "q4_rev", "k_rec、c_nh 整本重算（原則 39）"),
+       ("Q4 FY27 毛利率指引 71%／72%（錨點）", "q4_gm", "同上"),
+       ("Q4 FY27 其他收益 低／高（錨點）", "q_oth", "同上"),
+       ("Q4 FY27 稅率 16%／18%（錨點）", "tx_27", "同上"),
+       ("Q4 FY27 股數季變動 低／高（錨點）", "q_sh", "同上")]
 BIZ36 = [("k_rec 自 FY2028 起線性衰減、FY2030 回到 1（原則 48；基準＝持續）", "krdecay", "只有高：k_rec＝校準值 → FY2028 +1/3、FY2029 +2/3、FY2030 回到 1 的差距（整本重算）"),
          ("折舊 ÷ 營收 低／高（原則 35）", "da_rev", "低＝H1 FY27、高＝FY2026（v0.3.5 基準）；基準＝最近四季"),
          ("資本支出 ÷ 營收 低／高（原則 35）", "cx_rev", "低＝Q4 FY26（最近四季最低季）、高＝FY2026（v0.3.5 基準）；基準＝最近四季"),
@@ -452,7 +456,7 @@ def recon(wb, SJ, ctx):
                 ("② HBM 價格（全額轉嫁下，HBM 價格路徑 vs 持平在 2026）", "hbm", "轉嫁後售價與成本同額上升，毛利率仍被稀釋"),
                 ("③ LPDDR 價格（全額轉嫁、HBM 持平下，一般 DRAM 價格路徑 vs 持平）", "lp", "同上"),
                 ("④ 世代與顆數組合、網通與 Edge 占比（記憶體價格持平時 FY2028 − FY2027 錨點；餘項）", "mix", "Rubin／Rubin Ultra 占比與 c_nh 校準"),
-                ("⑤ FY2027 錨點毛利率 − 指引中點（g28_gm）", "anchor", "錨點＝Q1、Q2 實績＋Q3 指引＋Q4 假設")]
+                ("⑤ FY2027 錨點毛利率 − 指引中點（g28_gm）", "anchor", "錨點＝Q1～Q3 實績＋Q4 指引")]
         for labl, k, note in rows:
             RC.cell(r, 1, labl); v = gm.get(k)
             if v is not None: RC.cell(r, 2, v * 100).number_format = "+0.00;-0.00"
@@ -602,7 +606,7 @@ def readme(wb, ctx, bid, G, SJ):
         elif v.startswith("重點觀察 3：最敏感的是 NVIDIA 顆數"):   # 原則 13
             b = v.split("下一個檢驗點是", 1)[1].split("：", 1)[0]
             s_u, s_a, s_1 = lab(SE, "NVIDIA 顆數係數 低"), lab(SE, "ASIC 金額份額 +5pt"), lab(SE, "HBM／LPDDR 吸收比例 1")
-            w = (f'="重點觀察 3：EPS 敏感度（情境 A 為底）：顆數 ×0.9 時 FY2028 EPS "&TEXT(Sens!E{s_u},{SG})&"；ASIC 金額份額 +5pt 時 "&TEXT(Sens!E{s_a},{SG})&"；HBM／LPDDR 全額吸收時 "&TEXT(Sens!E{s_1},{SG})&"（Sens 頁）。目標價敏感度見 Sens 業務主因表。下一個檢驗點是"&' + lit(b) + '&"：營收對照 Q3 指引 "&TEXT(q3_rev*10,"#,##0")&" 億美元（區間 "&TEXT(q3_rev_lo*10,"#,##0")&"～"&TEXT(q3_rev_hi*10,"#,##0")&"），以及 Q4 指引。"')
+            w = (f'="重點觀察 3：EPS 敏感度（情境 A 為底）：顆數 ×0.9 時 FY2028 EPS "&TEXT(Sens!E{s_u},{SG})&"；ASIC 金額份額 +5pt 時 "&TEXT(Sens!E{s_a},{SG})&"；HBM／LPDDR 全額吸收時 "&TEXT(Sens!E{s_1},{SG})&"（Sens 頁）。目標價敏感度見 Sens 業務主因表。下一個檢驗點是"&' + lit(b) + '&"：營收對照 Q4 指引 "&TEXT(q4_rev*10,"#,##0")&" 億美元（區間 "&TEXT(q4_rev_lo*10,"#,##0")&"～"&TEXT(q4_rev_hi*10,"#,##0")&"），以及 Q1 FY28 指引。"')
         elif v.startswith("="):
             if v.startswith('="重點觀察 2：'):   # 原則 13：手寫 EPS 改公式
                 w = (f'="重點觀察 2：FY2028 EPS 情境 A／B／C 為 "&TEXT({eps("A", "E")},"0.00")&"／"&TEXT({eps("B", "E")},"0.00")&"／"&TEXT({eps("C", "E")},"0.00")&"，FY2029 為 "&TEXT({eps("A", "F")},"0.00")&"／"&TEXT({eps("B", "F")},"0.00")&"／"&TEXT({eps("C", "F")},"0.00")'
@@ -701,7 +705,7 @@ def readme(wb, ctx, bid, G, SJ):
              f'="(2) 毛利率：FY2028 實際毛利率是否 ≥ "&TEXT(g28_gm_lo,"0%")&"（公司指引下緣）；模型情境 B 為 "&TEXT({gB},"0.0%")&"。高於指引下緣表示吸收比例 abs_mem 或非記憶體成本假設偏保守。"',
              f'="(3) DCF：DCF 目標價（目前 "&TEXT(Recon!C{inv["dcf_up"]},"0.00")&"）"&IF(ISNUMBER({E_up}),"升到約 "&TEXT(Recon!B{inv["dcf_up"]},"0.00")&" 評等升一級（上檔 "&TEXT({E_up},"+0%;-0%")&"；Comparable 不變）","；已是最高評等級（強力買進），沒有升一級邊界")&IF(Recon!B{inv["dcf_dn"]}>0,"，降到約 "&TEXT(Recon!B{inv["dcf_dn"]},"0.00")&" 降一級","；即使 DCF 為 0 也不會降一級（Comparable 不變時）")&"。可觀察：WACC 組成（rf、自算產業 β）與 FY2028–FY2030 營收、營業利益率。"',
              f'="(4) 倍數：Comparable 採用倍數（同業中位數 × 相對倍數係數；目前 "&TEXT({pmed}*rm_factor,"0.0")&" 倍）降到約 "&TEXT(Recon!B{inv["pe_dn"]},"0.0")&" 倍評等降一級；支持現價需約 "&TEXT(Recon!B{inv["pe_px"]},"0.0")&" 倍。可觀察：同業前瞻本益比中位數。"',
-             f'="(5) 顆數與 k_rec：Q3 FY27 財報（約 2026-11 下旬）營收對照 Q3 指引 "&TEXT(q3_rev*10,"#,##0")&" 億美元（區間 "&TEXT(q3_rev_lo*10,"#,##0")&"～"&TEXT(q3_rev_hi*10,"#,##0")&"）；Rubin 出貨與認列節奏若使 k_rec 缺口收斂，目標價上升（Sens 業務主因表「k_rec 衰減」）。"']
+             f'="(5) 顆數與 k_rec：Q3 FY27 已公布（營收 "&TEXT(Q!I4*10,"#,##0")&" 億美元，高於原指引 1,080）；下一個檢驗點是 Q4 FY27 財報（約 2027-02），營收對照 Q4 指引 "&TEXT(q4_rev*10,"#,##0")&" 億美元（區間 "&TEXT(q4_rev_lo*10,"#,##0")&"～"&TEXT(q4_rev_hi*10,"#,##0")&"）；Rubin 出貨與認列節奏若使 k_rec 缺口收斂，目標價上升（Sens 業務主因表「k_rec 衰減」）。"']
     G["fail"] = [put(t) for t in fails]
     G["frame"] = put(f'="估值框架並列：100% DCF＝"&TEXT({dcf},"0.00")&" 美元、100% Comparable（相對倍數調整後）＝"&TEXT(tp_comp_adj,"0.00")&" 美元、只看 Comparable（未調整）"&TEXT({cu},"0.00")&" 美元、加權（DCF "&TEXT(tp_w_dcf,"0%")&"）＝"&TEXT({tp},"0.00")&" 美元；DCF 情境價格帶 "&TEXT(Val!B{band},"0.0")&"～"&TEXT(Val!C{band},"0.0")&" 美元。"')
     G["risk_h"] = put("風險登錄（原則 10、19；是否建模、理由、觀察指標）", True)
@@ -711,7 +715,10 @@ def readme(wb, ctx, bid, G, SJ):
         '="供應與產能承諾 "&TEXT(h_supply_c,"#,##0")&" 十億美元（Q2 FY27；前一季 "&TEXT(h_supply_c_q1,"#,##0")&"）：未進 FCFF（隨採購認列進成本）；需求下滑時可能產生超額採購損失（FY2026 H20 超額採購費用為先例）。觀察：Note 10 承諾金額、存貨與超額採購損失。"',
         "CoWoS／HBM 供給上限：讀 Siliconomics／markets/memory 共用顆數與價格路徑，不在個股估（X29）。觀察：台積電 CoWoS 產能分配、HBM4 合約價。",
         "客戶融資與延長付款條件（10-Q 流動性段）：未建模（金額未揭露）。觀察：應收帳款天數、10-Q 財務保證與信用支持揭露。",
-        "流通量、借券與軋空：不進目標價（估值評等不含交易執行；X14）。觀察：借券費率、空單比例。")]
+        "流通量、借券與軋空：不進目標價（估值評等不含交易執行；X14）。觀察：借券費率、空單比例。",
+        # 外部稽核優化 W3-4（2026-11-23）：風險登錄加一列「執行長異動」（Andy 2026-11-20 決定 J1：只進 Sens 與風險登錄，基準不動）。
+        # 這裡先放固定文字佔位（列號由此決定）；正式建置時 w3_post.py 會把本列改寫成帶 Sens 數字的公式。
+        "執行長異動：未建模於基準（Andy 2026-11-20 決定：只進 Sens 與風險登錄）。見 Sens 頁「執行長異動敏感度」。")]
     G["ind_h"] = put("主要假設驅動與可證偽的公開指標（原則 20）", True)
     G["ind"] = [put(t) for t in (
         "k_rec（Derived，校準殘差、FY2028 起持續）：季度 Data Center 營收 ÷ 市場層 NVIDIA 顆數 × 橋接表售價；Rubin 出貨節奏（CFO 書面說明）。",
@@ -742,8 +749,8 @@ def apply(wb, here, ctx):
     RC.cell(rr, 10).value = "分母：C／E／G 欄＝各情境 FY2028 EPS（FY 口徑，2026-11-20 現價）；統一口徑（12 個月前瞻情境加權 EPS）的倍數見 Val 0.6 節。EPS 越高，現價越便宜"
     r = inrow(wb, "rf"); IN.cell(r, 9, str(IN.cell(r, 9).value or "") + "。期限：10 年期；取值日 2026-10-23（股價日 2026-11-20，逾期；與其他個股模型同一取值日，見 README 資料基準日表，X24）")
     r = inrow(wb, "px"); IN.cell(r, 9, str(IN.cell(r, 9).value or "") + "。定位：Yahoo Finance NVDA 日線 2026-11-20 Close 125.53（未調整；原則 45）")
-    for k, add in (("q3_rev", "定位：Q2 FY27 新聞稿 Outlook 段：Revenue is expected to be $108.0 billion, plus or minus 2%（原則 45）"),
-                   ("q3_gm", "定位：Q2 FY27 新聞稿 Outlook 段：GAAP and non-GAAP gross margins 74.0%, plus or minus 50 basis points"),
+    for k, add in (("q4_rev", "定位：Q3 FY27 新聞稿 Outlook 段：Revenue is expected to be $130.0 billion, plus or minus 3%（原則 45）"),
+                   ("q4_gm", "定位：Q3 FY27 新聞稿 Outlook 段：GAAP and non-GAAP gross margins are expected to be between 71.0% and 72.0%"),
                    ("beta_u", "依據：docs/plan/自算產業β_20261105.md（US 半導體 13 家；NVIDIA 本身在同業組內）")):
         c = IN.cell(inrow(wb, k), 9); c.value = str(c.value or "") + "。" + add
     SO = wb["Sources"]

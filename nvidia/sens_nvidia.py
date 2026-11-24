@@ -3,6 +3,9 @@
 # Sens 頁「業務主因」表、Recon G 節（毛利率差距分解、abs_mem 反解）與 README 目標價變動拆解。
 # In 頁或模型改動後重跑一次，再正式建置（否則 Sens 頁模型狀態顯示 STALE）。
 # 用法：python3 nvidia/sens_nvidia.py [暫存資料夾，預設 /tmp/work_nvidia/sens]；NV_STAGE 同正式建置（預設 0.3.6）。
+# 外部稽核優化 W3-4（2026-11-23）：新增「執行長異動」案例組（sens.json 的 "ceo"；Andy 2026-11-20 決定 J1：只進 Sens 與風險登錄，基準不動）。
+#   案例定義見 w3_post.CEO_CASES（相對倍數溢價保留、WACC 加點、情境權重、三案合併；數值 Assumed，來自 Gemini 試算 2026-11-19）。
+#   NV_SENS_ONLY=ceo：只重跑基準與這一組，併入既有 sens.json（基準指紋與目標價須與既有快照相同，否則報錯，改跑完整版）。
 import glob, json, os, shutil, subprocess, sys
 import openpyxl
 
@@ -14,6 +17,8 @@ env0 = {k: v for k, v in os.environ.items() if k not in ("NV_OVERRIDE", "NV_V36_
 env0["NV_STAGE"] = STAGE
 sys.path.insert(0, HERE)
 from v035_post import BIZ, BIZ36  # noqa: E402
+from w3_post import CEO_CASES  # noqa: E402
+ONLY = os.environ.get("NV_SENS_ONLY", "")
 
 
 def lab(ws, prefix, start=1):
@@ -38,6 +43,8 @@ def read(rc, nm):
     rg28 = next(r for r in range(1, IN.max_row + 1) if IN.cell(r, 1).value == "g28_gm")
     g28, g28lo = IN.cell(rg28, 5).value, IN.cell(rg28, 4).value
     return dict(tp=V.cell(lab(V, "目標價（DCF 與 Comparable 加權）"), 2).value, dcf=V.cell(lab(V, "DCF 目標價（情境加權）"), 2).value,
+                comp=V.cell(lab(V, "Comparable 目標價（相對倍數調整後）"), 2).value, up=V.cell(lab(V, "上檔空間：加權目標價"), 2).value,
+                rec=V.cell(lab(V, "投資建議"), 2).value, wacc=V.cell(lab(V, "WACC"), 2).value, rm=V.cell(lab(V, "相對倍數調整係數"), 2).value,
                 fp=SE.cell(lab(SE, "輸入指紋（本檔即時重算"), 4).value, px=V.cell(lab(V, "現價（"), 2).value,
                 gm28=PL.cell(rg, 5).value, gm27=PL.cell(rg, 4).value, g28=g28, g28lo=g28lo)
 
@@ -47,6 +54,27 @@ b = read(rc0, "base")
 out = {"_stage": STAGE, "_base": {"fp": b["fp"], "tp": b["tp"], "dcf": b["dcf"]}}
 print("基準", round(b["tp"], 4), "DCF", round(b["dcf"], 4), "FY2028 毛利率 B", b["gm28"])
 O = lambda s: {"NV_OVERRIDE": s}
+CEO_KEYS = ("tp", "dcf", "comp", "up", "rec", "wacc", "rm")
+
+
+def ceo_block(base):
+    """執行長異動案例組（外部稽核優化 W3-4）：每案整本重建後讀加權目標價、DCF、Comparable（調整後）、上檔空間、評等、WACC、相對倍數係數"""
+    rcc = run({f"ceo_{k}": O(ov) for k, _, _, ov in CEO_CASES if ov}, "ceo")
+    res = {"base": {k: base[k] for k in CEO_KEYS}}
+    for k, _, _, ov in CEO_CASES:
+        if not ov: continue
+        r = read(rcc, f"ceo_{k}"); res[k] = {kk: r[kk] for kk in CEO_KEYS}
+        print(f"ceo_{k:10s} 加權 {r['tp']:.2f}（{r['tp'] / base['tp'] - 1:+.1%}） DCF {r['dcf']:.2f} Comparable {r['comp']:.2f} 評等 {r['rec']}")
+    return res
+
+
+if ONLY == "ceo":
+    path = os.path.join(HERE, "sens.json"); old = json.load(open(path, encoding="utf-8"))
+    assert old.get("_stage") == STAGE and abs(old["_base"]["fp"] - b["fp"]) <= 1e-9 * max(1, abs(b["fp"])) and abs(old["_base"]["tp"] - b["tp"]) < 5e-10, \
+        ("既有 sens.json 的基準與本次重建不同，請跑完整版", old["_base"], b["fp"], b["tp"])
+    old["ceo"] = ceo_block(b)
+    json.dump(old, open(path, "w"), ensure_ascii=False, indent=2)   # indent=2：與 repo 內既有 sens.json 排版一致（外部稽核優化 W3-4）
+    sys.exit(0)
 SPEC = {"uk": ("_P:uf=uk_lo", "_P:uf=uk_hi"), "cn_amt": ("_P:cn=cn_amt_lo", "_P:cn=cn_amt_hi"), "opx_adj": ("_P:opxa=opx_adj_lo", "_P:opxa=opx_adj_hi"),
         "krdecay": (None, "_krdecay=1"), "sh_v": ("sh_v==h_shout", None)}
 JOBS = {}
@@ -88,4 +116,5 @@ if STAGE >= "0.3.6":
                    f"（合計 {st[-1][1] - st[0][1]:+.2f}，{st[-1][1] / st[0][1] - 1:+.1%}）；上檔空間 {u0:+.1%} → {u1:+.1%}，評等 {rec(u0)} → {rec(u1)}（{'未翻轉' if rec(u0) == rec(u1) else '翻轉'}）；"
                    f"距最近級距邊界 {edge:+.0%} 為 {abs(u1 - edge) * 100:.1f} 個百分點（加權目標價 {px * (1 + edge):.2f} 美元時翻轉）。")
     print(out["attr"])
-json.dump(out, open(os.path.join(HERE, "sens.json"), "w"), ensure_ascii=False, indent=1)
+out["ceo"] = ceo_block(b)
+json.dump(out, open(os.path.join(HERE, "sens.json"), "w"), ensure_ascii=False, indent=2)   # indent=2：與 repo 內既有 sens.json 排版一致（外部稽核優化 W3-4）
