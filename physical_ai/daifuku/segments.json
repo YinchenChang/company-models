@@ -1,0 +1,60 @@
+{
+ "company": "daifuku",
+ "ticker": "6383.T",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "Daifuku",
+   "label": "Daifuku（日本本體）營收",
+   "period": "9M'26（累計，外部顧客）",
+   "value": 172.821,
+   "unit": "¥B",
+   "source": "公司 FY2026 第 3 四半期決算短信〔J-GAAP〕（英文版，2026-11-11）https://www.daifuku.com/ir/assets/FY2026Q3e.pdf 營收分解"
+  },
+  {
+   "name": "Contec",
+   "label": "Contec 營收",
+   "period": "9M'26（累計，外部顧客）",
+   "value": 17.913,
+   "unit": "¥B",
+   "source": "公司 FY2026 第 3 四半期決算短信〔J-GAAP〕（英文版，2026-11-11）https://www.daifuku.com/ir/assets/FY2026Q3e.pdf 營收分解"
+  },
+  {
+   "name": "Daifuku North America",
+   "label": "Daifuku North America 營收",
+   "period": "9M'26（累計，外部顧客）",
+   "value": 142.813,
+   "unit": "¥B",
+   "source": "公司 FY2026 第 3 四半期決算短信〔J-GAAP〕（英文版，2026-11-11）https://www.daifuku.com/ir/assets/FY2026Q3e.pdf 營收分解"
+  },
+  {
+   "name": "Clean Factomation",
+   "label": "Clean Factomation（韓國）營收",
+   "period": "9M'26（累計，外部顧客）",
+   "value": 55.038,
+   "unit": "¥B",
+   "source": "公司 FY2026 第 3 四半期決算短信〔J-GAAP〕（英文版，2026-11-11）https://www.daifuku.com/ir/assets/FY2026Q3e.pdf 營收分解"
+  },
+  {
+   "name": "Daifuku Suzhou",
+   "label": "Daifuku (Suzhou) Cleanroom Automation 營收",
+   "period": "9M'26（累計，外部顧客）",
+   "value": 33.002,
+   "unit": "¥B",
+   "source": "公司 FY2026 第 3 四半期決算短信〔J-GAAP〕（英文版，2026-11-11）https://www.daifuku.com/ir/assets/FY2026Q3e.pdf 營收分解"
+  },
+  {
+   "name": "其他",
+   "label": "其他（未列報告分部的子公司）營收",
+   "period": "9M'26（累計，外部顧客）",
+   "value": 131.46,
+   "unit": "¥B",
+   "source": "公司 FY2026 第 3 四半期決算短信〔J-GAAP〕（英文版，2026-11-11）https://www.daifuku.com/ir/assets/FY2026Q3e.pdf 營收分解"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 ＋ 合併調整 − 合併營收（四捨五入差 < 0.005）"
+ ],
+ "note": "官方報告分部為公司別（日本本體、Contec、北美、韓國 Clean Factomation、蘇州無塵室、其他），Q 頁以「分部合計 ＋ 合併調整 − 合併營收」對帳。PL 頁營收列改用公司揭露的客戶產業別營收（同一份決算短信），另有「檢查：產業別合計 − 營收」。"
+}
