@@ -1191,7 +1191,7 @@ CASE_KEY = {"讀法 1（自用 AI 只計成本）": "internal_ai_reading", "k �
             "ERP 4.5%": "erp", "ERP 6%": "erp", "永續期新投資報酬 WACC＋5pt": "ronic_prem", "SOTP 倍數 −20%": "m_sw m_cloud m_ads m_game m_pc", "SOTP 倍數 +20%": "m_sw m_cloud m_ads m_game m_pc"}
 ALT_KEY = ["pace_epoch cap_epoch", "k_long_lo p_long_lo", "tv_alt", "m_own", "internal_ai_reading pace_epoch", "shadow_base", "floor", "floor", "g_q2_win",
            "nonnv pace_nv0", "nonnv", "tgt_alt", "oai_stake26", "oai_stake", "oai_stake liq_disc", "w_dcf", "w_dcf", "w_A w_B w_C", "w_B"]
-# v0.3.3：整本重算案例（In 頁低／高；microsoft/sens_v033.py 產生 microsoft/data/sens_v0310_20261121.json；v0.3.5 起，v0.3.6 改名沿用）
+# v0.3.3：整本重算案例（In 頁低／高；microsoft/sens_v033.py 產生 microsoft/data/sens_v0311_20261124.json；v0.3.5 起，v0.3.6 改名沿用）
 def _f(k, v):
     u = INR[k][2]
     return f"{v * 100:.4g}%" if u in ("%", "pt") else f"{v:,.4g}"
@@ -1219,7 +1219,7 @@ for k, lab, grp, ex in (("mw_ext_26", "FY2026 年底在役對外 AI MW", "命題
                         ("al_ind", "SOTP 利益率分配：Industry", "評價：SOTP 分配", ""), ("al_fro", "SOTP 利益率分配：Frontier", "評價：SOTP 分配", ""),
                         ("al_srch", "SOTP 利益率分配：Search and advertising", "評價：SOTP 分配", "")):
     RCASES += _rc(k, lab, grp, ex)
-_SP = ARGS.sens or os.path.join(HERE, "data", "sens_v0310_20261121.json")
+_SP = ARGS.sens or os.path.join(HERE, "data", "sens_v0311_20261124.json")
 SENSJ = json.load(open(_SP, encoding="utf-8")) if (os.path.exists(_SP) and not ARGS.set) else {}
 CUR["Sens"] = SENS_BLK0
 srow = 4
@@ -1393,7 +1393,7 @@ if ATTR:
     rrow("v0.3 加權目標價（以本程式 --legacy-q1 等設定重現；v0.3 成品 385.56）", st[0]["tp"], None, f"重現差 {st[0]['tp'] - 385.56225022499:+.6f}", fmt="0.00")
     for i in range(1, len(st)):
         rrow(STEPN[st[i]["key"]], st[i]["tp"] - st[i - 1]["tp"], None, f"累計 {st[i]['tp']:.2f}；讀法 1 {st[i]['tp_r1']:.2f}", fmt="0.00")
-    rrow("(g) v0.3.7 現價 531.01 → 535.93（2026-11-05 收盤）→ v0.3.9 換 523.88（2026-11-13 收盤）→ v0.3.10 換 484.52（2026-11-20 收盤；經 WACC 權重與回購價）並把同業倍數換到 11-20（經分部加總 SOTP）", f"=Val!$B${VR_['tp']}-{st[-1]['tp']!r}", None, f"v0.3.1～v0.3.6 加權目標價 {st[-1]['tp']:.2f}（v0.3.2～v0.3.6 基準數值不變）", fmt="0.00")
+    rrow("(g) v0.3.7 現價 531.01 → 535.93（2026-11-05 收盤）→ v0.3.9 換 523.88（2026-11-13 收盤）→ v0.3.10 換 484.52（2026-11-20 收盤；經 WACC 權重與回購價）並把同業倍數換到 11-20（經分部加總 SOTP）→ v0.3.11 同業換價改為分離淨負債（外部稽核優化 W3-7；Microsoft 自身、ORCL、CRM）", f"=Val!$B${VR_['tp']}-{st[-1]['tp']!r}", None, f"v0.3.1～v0.3.6 加權目標價 {st[-1]['tp']:.2f}（v0.3.2～v0.3.6 基準數值不變）", fmt="0.00")
     rrow("v0.3.7 加權目標價（本檔 Val 頁）", f"=Val!$B${VR_['tp']}", None, "—", fmt="0.00")
     n_ = len(st) + 1
     rrow("檢查：v0.3 ＋ (a)～(g) − v0.3.7（應為 0）", f"=SUM(B{r0}:B{r0 + n_ - 1})-B{r0 + n_}", None, "拆解 JSON 與本檔不同步時不為 0（重跑 attrib_v031.py）", fmt="0.000")
@@ -1472,7 +1472,7 @@ SO.column_dimensions["B"].width = 90; SO.column_dimensions["C"].width = 22; SO.c
 # =====================================================================================
 RD = WS["README"]
 RB = BL["B"]
-RD["A1"] = "Microsoft（MSFT）個股模型 v0.3.10 — 命題＋官方營收分部 → 損益表（2026-11-21；v0.3.10 只換現價為 2026-11-20 收盤 484.52〔工作單 px1120〕與同業倍數，其餘輸入不變；v0.3.9 只換現價為 2026-11-13 收盤 523.88〔工作單 px1113〕；v0.3.8 只改展示層並新增 RevDCF、Coord 頁與標準損益表〔個股 HTML 版面規格 v1.3；三層協調 C0 實績對帳〕，數值不變；v0.3.7 只換現價為 2026-11-05 收盤 535.93；v0.3.6 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；數值同 v0.3.1〔2026-10-29 季度滾動〕；資料截至 FY27Q1〔2026-09-30〕；評價日 2026-09-30、目標價時點 2027-10-29）"
+RD["A1"] = "Microsoft（MSFT）個股模型 v0.3.11 — 命題＋官方營收分部 → 損益表（2026-11-24；v0.3.11 外部稽核優化第三波〔會改值〕：同業 EV／EBITDA 換價改為分離淨負債〔W3-7；Microsoft 自身、ORCL、CRM〕、Tokenomics 快照 v21.10 → v22.0〔W3-5，所讀名稱數值相同〕，現價不變；v0.3.10 只換現價為 2026-11-20 收盤 484.52〔工作單 px1120〕與同業倍數，其餘輸入不變；v0.3.9 只換現價為 2026-11-13 收盤 523.88〔工作單 px1113〕；v0.3.8 只改展示層並新增 RevDCF、Coord 頁與標準損益表〔個股 HTML 版面規格 v1.3；三層協調 C0 實績對帳〕，數值不變；v0.3.7 只換現價為 2026-11-05 收盤 535.93；v0.3.6 只改展示層〔README 展示列與命題回覆、HTML 新版面〕；數值同 v0.3.1〔2026-10-29 季度滾動〕；資料截至 FY27Q1〔2026-09-30〕；評價日 2026-09-30、目標價時點 2027-10-29）"
 RD["A2"] = "工作表：README → In → Q → Thesis → Seg → PL → CF → Val → Recon → Sens → Sources。金額十億美元；財年 6 月結束（FY2027＝2026-07～2027-06）"
 RD["A3"] = "命題：AI 能否同時在 Azure（算力）與 Microsoft 365（Copilot 應用）變現，撐住翻倍的資本支出。"
 RD["A4"] = "核心問題：FY2029 的 AI 增量營業利益能否覆蓋 AI 資本支出的資金成本（AI 增量 ROIC 對 WACC），且自由現金流不需停止回購。"
