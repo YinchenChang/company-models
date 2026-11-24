@@ -470,7 +470,7 @@ def write_c0(ws, wb, r, L):
            SU + " × SIF_UnitsCoef_Base，換成同一 FY 月數加權口徑：FY(t+1)＝" + "11/12 × CY(t)＋1/12 × CY(t+1)" + ("（FY2030 缺 CY2030 層級值，只用 CY2029；本列差距仍等於認列係數 − 1，與是否加權無關）" if y == 2029 else ""), st_u, sub=True, status="參考（認列係數缺口的分項，不判定）")
     # (3) 資料中心營收：同一缺口的分項
     f2("資料中心營收 FY2027 錨點 vs R4 公司錨點（同一輸入）", "FY2027（CY2026）", "US$B", "=a27_dc", "=" + C1(CMP, 2026), "#,##0.0",
-       "Q 頁 FY2027 錨點＝Q1、Q2 公司實績＋Q3 指引中點＋Q4 假設（Q!K5）", "Verified／Assumed（Q4 為假設）",
+       "Q 頁 FY2027 錨點＝Q1～Q3 公司實績＋Q4 指引中點（Q!K5）", "Verified／Interested-party（Q4 為指引）",
        f"{SL} Recon 快照 nv_dc.company（R4 橋接 r11 n4＝nv_dc_26）", "Verified／Assumed", status="讀取層級（同源，不判定）")
     f2("資料中心營收 FY2027 錨點 vs Siliconomics 隱含（FY 月數加權；R4 n5 比值的另一面，不是個股新證據）", "FY2027（CY2026／CY2027 加權）", "US$B", "=a27_dc", f"={WC}*{C1(IMP, 2026)}+(1-{WC})*{C1(IMP, 2027)}", "#,##0.0",
        "同上（公司實績加指引的錨點）", "Verified／Assumed",
@@ -574,7 +574,7 @@ def write_c0(ws, wb, r, L):
     r += 1
     return {"F1": (F1a, F1b), "F1chk": RF_chk, "F2h": RF_h, "F2": (F2a, F2b), "n": RF_n, "sum": RF_s, "F3": (F3h, F3hh, F3a, F3b, rd1, rd2, rjd, RF3N, RF3S, RF_read, RF3K, RF3S1)}
 
-VER = "0.3.14"
+VER = "0.3.15"
 NOTE_VER = "0.3.8"   # In 頁既有說明欄的版本字樣維持 v0.3.8（本版只新增 Coord 頁 F 節）
 
 
@@ -585,7 +585,7 @@ def stamp(wb):
     RD, SE = wb["README"], wb["Sens"]
     old = SE.cell(V7.lab(SE, "build_id"), 4).value
     h = hashlib.sha256(old.encode())
-    for fn in ("coord_post.py", "coord_inputs.json", "coord_alt.json", "gen_html_json.py", "v0313_post.py", "px1120_post.py"):
+    for fn in ("coord_post.py", "coord_inputs.json", "coord_alt.json", "gen_html_json.py", "v0313_post.py", "px1120_post.py", "w3_post.py"):   # 外部稽核優化 W3-4（2026-11-23）：w3_post.py 納入 build_id 雜湊（Sens 新增快照區塊由它寫入）
         h.update(fn.encode()); h.update(open(os.path.join(HERE, fn), "rb").read())
     new = f"nvidia-v{VER}-{h.hexdigest()[:10]}"
     n = 0
@@ -597,8 +597,8 @@ def stamp(wb):
     a1 = RD["A1"].value
     assert "個股模型 v0.3.7" in a1, a1[:80]
     RD["A1"].value = a1.replace("個股模型 v0.3.7", f"個股模型 v{VER}", 1).replace(
-        "標準損益表、反向 DCF 頁）", f"標準損益表、反向 DCF 頁）；v0.3.8：三層協調——對帳中標示與兩讀數目標價（規則 v1.4 C4；Coord 頁、In 頁 Z 節；基準數值不變）；v0.3.9：Coord 頁新增 F 節「三層協調：讀取層級與 C0 由下往上對帳」（只新增；數值不變）；v0.3.10：Coord 頁 F3 新增「C0（實績）」（公司已公布實績 vs 層級隱含值），F2 既有列改標讀取層級／參考、不判定（只新增與改標；數值不變）；v0.3.11：現價與同業報價改 2026-11-13 收盤（工作單 px1113）；v0.3.12：Siliconomics v0.21（2027 年 NVIDIA 顆數自建估計、每封裝售價）；v0.3.13：Recon I 節供應承諾對採購恆等式（只新增對照與揭露，數值不變）；v0.3.14：現價與同業報價改 2026-11-20 收盤（工作單 px1120）", 1)
-    HS = wb["Hist"]; HS.cell(V7.lab(HS, "h_built"), 3).value = "=DATE(2026,11,21)"   # 成品日（v0.3.14）
+        "標準損益表、反向 DCF 頁）", f"標準損益表、反向 DCF 頁）；v0.3.8：三層協調——對帳中標示與兩讀數目標價（規則 v1.4 C4；Coord 頁、In 頁 Z 節；基準數值不變）；v0.3.9：Coord 頁新增 F 節「三層協調：讀取層級與 C0 由下往上對帳」（只新增；數值不變）；v0.3.10：Coord 頁 F3 新增「C0（實績）」（公司已公布實績 vs 層級隱含值），F2 既有列改標讀取層級／參考、不判定（只新增與改標；數值不變）；v0.3.11：現價與同業報價改 2026-11-13 收盤（工作單 px1113）；v0.3.12：Siliconomics v0.21（2027 年 NVIDIA 顆數自建估計、每封裝售價）；v0.3.13：Recon I 節供應承諾對採購恆等式（只新增對照與揭露，數值不變）；v0.3.14：現價與同業報價改 2026-11-20 收盤（工作單 px1120）；v0.3.15：FY2027 第三季財報滾入（Q 頁第三季改實績、第四季改公司指引），執行長異動的三案合併、評等、檢驗指標與風險登錄列（外部稽核優化 W3-4）", 1)
+    HS = wb["Hist"]; HS.cell(V7.lab(HS, "h_built"), 3).value = "=DATE(2026,11,24)"   # 成品日（v0.3.15）
     return f"build_id {old} → {new}（{n} 格）"
 
 

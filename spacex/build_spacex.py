@@ -32,7 +32,7 @@ F.update({it["id"]: it for it in FD2["items"]})
 STAGE = int(os.environ.get("SPCX_STAGE", "99"))   # 歸因瀑布：1 讀法 2 加回小修、2 融資租賃重扣小修、3 G5 原文、4 G1 Q4 資本支出、5 G1 年底 GW、6 G3 pace（9M 占比）、7 pace 改用 Q4 拆法（二修）、8 v0.2.1 pace 季速改 ÷(1 − fin_sh)、9 v0.2.1 pace 分母改 FY2027 世代組合（預設全部）
 G2C = os.path.join(HERE, "data", "g2cal_v021_20261030.json")   # v0.2.1 重解（pace 改變 FY2027 營收）
 G2CAL = json.load(open(G2C, encoding="utf-8")) if (os.path.exists(G2C) and not os.environ.get("SPCX_NO_G2CAL")) else None   # G2 校準 k0（g2cal_v02.py 解出；只用於 Sens）
-VER = "v0.2.11"
+VER = "v0.2.12"
 # v0.2.6（驗收報告 2026-11-09 採用項）：build_id＝版本＋建置輸入雜湊（建置腳本與 data/ 下非敏感度 json），README、Sens、HTML 三處相同（A1）
 import hashlib
 def _build_id():
@@ -42,7 +42,7 @@ def _build_id():
         h.update(fn.encode()); h.update(open(os.path.join(HERE, fn), "rb").read())
     return f"spacex-{VER}-{h.hexdigest()[:10]}"
 BUILD_ID = _build_id()
-TKV = "v21.10"   # v0.2.2：Tokenomics 快照 v21.7 → v21.9；v0.2.3：v21.9 → v21.10（兩次基準數值都不變）
+TKV = "v22.0"   # 外部稽核優化 W3-5（2026-11-23）：快照統一到 v22.0（v21.10 → v22.0；本模型讀的名稱值逐一相同）。v0.2.2：Tokenomics 快照 v21.7 → v21.9；v0.2.3：v21.9 → v21.10（兩次基準數值都不變）
 TK = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 GEN = {x["code"]: x["name"] for x in TK["source"]["generations"]}
 # v0.2.7（驗收 M5，B3）：同業統一為 2026-11-06 收盤、NTM 口徑（spacex/peers_v027.py 產生；舊檔 *_20261030.json 移 _待刪除/）
@@ -121,7 +121,7 @@ IN["A1"] = ("In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感�
             "金額 US$B；每股 US$；股數十億股；GW＝IT 口徑名目算力（不乘 PUE）。標記：Verified／Interested-party／Analogy／Assumed／Derived（Analogy、Assumed 一律給低／高區間）")
 IN["A2"] = ("事實來源：spacex/data/spacex_facts_2026q3.json（10-Q 2026Q3 與 Q3／Q2 財報新聞稿兩讀核對）＋spacex/data/spacex_facts_v02.json（v0.2：424B4 FY2025／FY2024 原文、2026Q2 10-Q 附註、"
             "2026Q2／Q3 法說指引〔逐字稿未入庫，只存數字與短句〕）；"
-            f"Tokenomics {TKV} 快照 spacex/data/tokenomics_snapshot_{TKV}.json（v0.2.2 由 v21.7 換入 v21.9、v0.2.3 換 v21.10，基準數值不變）。黃底＝判斷題（Andy 可改；報告「待 Project 判斷」逐條列出預設）")
+            f"Tokenomics {TKV} 快照 spacex/data/tokenomics_snapshot_{TKV}.json（v0.2.2 由 v21.7 換入 v21.9、v0.2.3 換 v21.10、外部稽核優化 W3-5〔2026-11-23〕換 v22.0，基準數值不變）。黃底＝判斷題（Andy 可改；報告「待 Project 判斷」逐條列出預設）")
 hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "說明", "來源誘因（Interested-party 列；混合來源列寫其他欄位）"])
 ROWS = []
 def sec(t): ROWS.append(("sec", t))
@@ -207,15 +207,16 @@ inp("sbc_add", "DCF 加回股權報酬（1＝是；Sens 用）", "x", None, 0, 1
 inp("tv_alt", "終值改用 FY2032 無槓桿自由現金流 ×(1＋g)（1＝是；Sens 用）", "x", None, 0, 1, "Assumed", "同 Alphabet", judg=True)
 
 sec("C. 分部加總（SOTP）倍數（目標時點 NTM EBITDA × 同業 EV/EBITDA；Space 用 EV／營收；SI 對外出租用自身 DCF）")
+# 外部稽核優化 W3-7（2026-11-23）：同業換價改為分離淨負債（EV 新＝EV 原值＋市值 ×（價格比 − 1）；淨負債不隨股價變）。原式（整個倍數 × 收盤比）結果列在來源欄與 Recon 第 7 節 H 欄對照。
 for p_ in PCN["peers"]:
-    inp(f"pm_conn_{p_['ticker'].lower()}", f"Connectivity 同業：{p_['name']}（{p_['ticker']}）EV／NTM EBITDA（2026-11-20 近似）", "x", None, p_["ntmEvEbitda"], None, "Derived",
-        f"MarketScreener {p_['url']}（2026-11-06 原值 {p_['ntmEvEbitda1106']}，EV {p_['evCurrent1106']:,.0f}；11-13 近似值 {p_['ntmEvEbitda1113']}，EV {p_['evCurrent1113']:,.0f}）× 11-20÷11-13 收盤比 {p_['closeNew']}/{p_['closeOld']}（closes_20261109_20261120.csv）＝EV {p_['evCurrent']:,.0f} ÷ NTM EBITDA {p_['ntmEbitda']:,.0f}（{p_['ntmNote']}）；近似（無市值）；data/peers_connectivity_20261120.json",
+    inp(f"pm_conn_{p_['ticker'].lower()}", f"Connectivity 同業：{p_['name']}（{p_['ticker']}）EV／NTM EBITDA（2026-11-20；分離淨負債換價）", "x", None, p_["ntmEvEbitda"], None, "Derived",
+        f"MarketScreener {p_['url']}（2026-11-06 原值 {p_['ntmEvEbitda1106']}，EV {p_['evCurrent1106']:,.0f}）；{p_.get('sepMethod', '仍為整體縮放（近似）')}；EV {p_['evCurrent']:,.0f} ÷ NTM EBITDA {p_['ntmEbitda']:,.0f}（{p_['ntmNote']}）＝{p_['ntmEvEbitda']}；原式（整體縮放）對照 {p_['ntmEvEbitdaScaled']}；收盤價 closes_20261109_20261120.csv；data/peers_connectivity_20261120.json",
         p_.get("note", "") or "賣方共識 EBITDA（第三方彙整）")
 for p_ in PSI["peers"]:
-    inp(f"pm_si_{p_['ticker'].lower()}", f"SI 同業（AI 基礎設施／雲）：{p_['name']}（{p_['ticker']}）EV／NTM EBITDA（2026-11-20 近似）", "x", None, p_["ntmEvEbitda"], None, "Derived",
-        f"MarketScreener {p_['url']}（2026-11-06 原值 {p_['ntmEvEbitda1106']}，EV {p_['evCurrent1106']:,.0f}；11-13 近似值 {p_['ntmEvEbitda1113']}，EV {p_['evCurrent1113']:,.0f}）× 11-20÷11-13 收盤比 {p_['closeNew']}/{p_['closeOld']}（closes_20261109_20261120.csv）＝EV {p_['evCurrent']:,.0f} ÷ NTM EBITDA {p_['ntmEbitda']:,.0f}（{p_['ntmNote']}）；近似（無市值）；data/peers_si_20261120.json", p_.get("note", ""))
+    inp(f"pm_si_{p_['ticker'].lower()}", f"SI 同業（AI 基礎設施／雲）：{p_['name']}（{p_['ticker']}）EV／NTM EBITDA（2026-11-20；分離淨負債換價）", "x", None, p_["ntmEvEbitda"], None, "Derived",
+        f"MarketScreener {p_['url']}（2026-11-06 原值 {p_['ntmEvEbitda1106']}，EV {p_['evCurrent1106']:,.0f}）；{p_.get('sepMethod', '仍為整體縮放（近似）')}；EV {p_['evCurrent']:,.0f} ÷ NTM EBITDA {p_['ntmEbitda']:,.0f}（{p_['ntmNote']}）＝{p_['ntmEvEbitda']}；原式（整體縮放）對照 {p_['ntmEvEbitdaScaled']}；收盤價 closes_20261109_20261120.csv；data/peers_si_20261120.json", p_.get("note", ""))
 inp("mult_cn_adj", "Connectivity 倍數＝同業中位數 × 本係數（Sens：同業區間下緣／上緣）", "x", round(CN_LO / CN_MED, 4), 1.0, round(CN_HI / CN_MED, 4), "Derived",
-    f"data/peers_connectivity_20261120.json：五家 EV／NTM EBITDA 區間 {CN_LO:.2f}（{_cn_lo_t}）–{CN_HI:.2f}（{_cn_hi_t}），中位數 {CN_MED:.2f}（v0.2.10 為 11-13 口徑 {PCN['median1113']:.2f}；v0.2.9 為 2026-11-06 口徑 {PCN['median1106']:.2f}；v0.2.6 為 FY2026 口徑 7.13）", "低／高＝區間下緣／上緣 ÷ 中位數")
+    f"data/peers_connectivity_20261120.json：五家 EV／NTM EBITDA 區間 {CN_LO:.2f}（{_cn_lo_t}）–{CN_HI:.2f}（{_cn_hi_t}），中位數 {CN_MED:.2f}（分離淨負債換價；原式整體縮放為 {PCN['medianScaled']:.2f}；v0.2.10 為 11-13 口徑 {PCN['median1113']:.2f}；v0.2.9 為 2026-11-06 口徑 {PCN['median1106']:.2f}；v0.2.6 為 FY2026 口徑 7.13）", "低／高＝區間下緣／上緣 ÷ 中位數")
 inp("mult_cn_pm", "Connectivity 倍數 ±30%（Starlink 成長型對照倍數無依據時的替代）", "x", 0.7, 1.0, 1.3, "Assumed",
     "10-30 chat 端指示：Starlink 成長型對照倍數無可比上市公司依據（ASTS EBITDA 為負、NM）→ ±30%", "Sens 用")
 inp("mult_si_adj", "讀法 1 自用 AI 增量營運成本扣除的倍數＝SI 同業中位數 × 本係數（v0.2 起只影響讀法 1）", "x", 0.7, 1.0, 1.4, "Assumed",
@@ -1280,10 +1281,10 @@ V.cell(r, 1, "0.2 分部加總（SOTP；目標時點 NTM 分部調整後 EBITDA 
 hdr(V, r, ["同業組／倍數", "倍數", "家數", "", "說明"]); r += 1
 ck = [f"pm_conn_{p_['ticker'].lower()}" for p_ in PCN["peers"]]
 sk = [f"pm_si_{p_['ticker'].lower()}" for p_ in PSI["peers"]]
-vput("mult_conn", "Connectivity：衛星與電信同業 EV／NTM EBITDA 中位數（2026-11-20 近似） × mult_cn_adj × mult_cn_pm", ["=MEDIAN(" + ",".join(ck) + ")*mult_cn_adj*mult_cn_pm", len(ck)], ["0.00", "0"], note="data/peers_connectivity_20261113.json（2026-11-20 收盤，NTM；v0.2.10 為 20261113.json、v0.2.9 為 20261106.json）：" + "、".join(k.split("_")[-1].upper() for k in ck))
+vput("mult_conn", "Connectivity：衛星與電信同業 EV／NTM EBITDA 中位數（2026-11-20；分離淨負債換價） × mult_cn_adj × mult_cn_pm", ["=MEDIAN(" + ",".join(ck) + ")*mult_cn_adj*mult_cn_pm", len(ck)], ["0.00", "0"], note="data/peers_connectivity_20261113.json（2026-11-20 收盤，NTM；v0.2.10 為 20261113.json、v0.2.9 為 20261106.json）：" + "、".join(k.split("_")[-1].upper() for k in ck))
 dn("mult_conn", f"Val!$B${VR_['mult_conn']}")
 vput("mult_si", "讀法 1 自用 AI 營運成本扣除倍數：AI 基礎設施／雲同業中位數 × mult_si_adj", ["=MEDIAN(" + ",".join(sk) + ")*mult_si_adj", len(sk)], ["0.00", "0"],
-     note="data/peers_si_20261120.json：CRWV、NBIS、ORCL 皆 EV／NTM EBITDA（2026-11-20 近似；v0.2.7 統一口徑）")
+     note="data/peers_si_20261120.json：CRWV、NBIS、ORCL 皆 EV／NTM EBITDA（2026-11-20；分離淨負債換價，W3-7；v0.2.7 統一口徑）")
 dn("mult_si", f"Val!$B${VR_['mult_si']}")
 r += 1
 hdr(V, r, ["分部（NTM 分部調整後 EBITDA；Space 為營收）", "情境 A", "情境 B", "情境 C", "倍數與說明", "EV：A", "EV：B", "EV：C"]); r += 1
@@ -1559,21 +1560,22 @@ rc6("ia_gap", "影子效益 ÷ 可歸因 EBITDA（倍）", [f"=IF({c}{r - 1}>0,{
 R6_END = r - 1
 # v0.2.7（驗收 M5，B3）：7. 同業可比性（同一估值日 2026-11-06、NTM 口徑；成長、利潤率、槓桿、資本強度並列，不做迴歸：每組 3–5 家）
 r += 1
-RC.cell(r, 1, "7. 同業可比性（2026-11-06 收盤 MarketScreener 原值，倍數依收盤比換到 2026-11-20〔近似；11-13 值再乘 11-20÷11-13〕；B＝EV／NTM EBITDA、C＝下一年度營收成長、D＝下一年度 EBITDA 率、E＝下一年度淨負債 ÷ EBITDA、F＝FCF ÷ EBITDA〔資本強度代理〕）").font = BOLD; R7 = r; r += 1
-hdr(RC, r, ["同業", "EV／NTM EBITDA", "營收成長", "EBITDA 率", "淨負債 ÷ EBITDA", "FCF ÷ EBITDA", "說明"]); r += 1
+RC.cell(r, 1, "7. 同業可比性（2026-11-06 收盤 MarketScreener 原值，換到 2026-11-20 收盤：只有市值部分隨股價變，淨負債與 NTM EBITDA 不變〔分離淨負債；外部稽核優化 W3-7，2026-11-23〕；H＝原式〔整個倍數 × 收盤比〕對照；B＝EV／NTM EBITDA、C＝下一年度營收成長、D＝下一年度 EBITDA 率、E＝下一年度淨負債 ÷ EBITDA、F＝FCF ÷ EBITDA〔資本強度代理〕）").font = BOLD; R7 = r; r += 1
+hdr(RC, r, ["同業", "EV／NTM EBITDA", "營收成長", "EBITDA 率", "淨負債 ÷ EBITDA", "FCF ÷ EBITDA", "說明", "原式（整個倍數 × 收盤比）對照"]); r += 1
 for grp, D in (("Connectivity", PCN), ("SI（只用於讀法 1）", PSI)):
     for p_ in D["peers"]:
         RC.cell(r, 1, f"{grp}：{p_['name']}（{p_['ticker']}）")
         for j, (k_, f_) in enumerate((("ntmEvEbitda", "0.00"), ("salesGrowthNext", "0.0%"), ("ebitdaMarginNext", "0.0%"), ("netDebtToEbitdaNext", "0.00"), ("fcfToEbitdaNext", "0.00"))):
             v_ = p_.get(k_)
             RC.cell(r, 2 + j, v_ if v_ is not None else "未取得").number_format = f_
-        RC.cell(r, 7, p_.get("note") or "Derived（賣方共識彙整）"); r += 1
-    RC.cell(r, 1, f"  {grp} 中位數"); RC.cell(r, 2, D["median"]).number_format = "0.00"; r += 1
+        RC.cell(r, 7, p_.get("note") or "Derived（賣方共識彙整）")
+        RC.cell(r, 8, p_["ntmEvEbitdaScaled"]).number_format = "0.00"; r += 1      # W3-7：原式結果對照
+    RC.cell(r, 1, f"  {grp} 中位數"); RC.cell(r, 2, D["median"]).number_format = "0.00"; RC.cell(r, 8, D["medianScaled"]).number_format = "0.00"; r += 1
 RC.cell(r, 1, "  對照：本模型 Connectivity 情境 B FY2028 分部調整後 EBITDA 率（C 欄）、FY2027→FY2028 分部營收成長（D 欄）")
 RC.cell(r, 3, f"=PL!I{PR_['B']['e_cn']}/PL!I{PR_['B']['conn']}").number_format = "0.0%"
 RC.cell(r, 4, f"=PL!I{PR_['B']['conn']}/PL!H{PR_['B']['conn']}-1").number_format = "0.0%"
 RC.cell(r, 7, "Starlink 成長遠高於電信同業，倍數取中位數偏保守；成長型對照無可比上市公司（ASTS EBITDA 為負），以 mult_cn_pm ±30% 涵蓋"); r += 1
-RC.cell(r, 1, "  資本支出率：MarketScreener 財務頁未列 Capex，未取得；以 FCF ÷ EBITDA 代理。模型現價日與同業報價日同為 11-20（同業由 11-06 原值依收盤比換算，近似）"); r += 1
+RC.cell(r, 1, "  資本支出率：MarketScreener 財務頁未列 Capex，未取得；以 FCF ÷ EBITDA 代理。模型現價日與同業報價日同為 11-20。換價方法（外部稽核優化 W3-7，2026-11-23）：EV 新＝11-06 EV＋11-06 市值 ×（11-20 收盤 ÷ 11-06 參考價 − 1），淨負債與 NTM EBITDA 不變；市值＝EV − 同來源當年度預估淨負債（Connectivity 五家）或股數 × 參考價（NBIS、ORCL 用 MarketScreener 股數，反推淨負債與同來源預估值相符；CRWV 用 Q3 基本加權 559 百萬股）。八家都已分離，沒有仍用整體縮放的同業。原式（整個倍數 × 收盤比）等於假設淨負債跟著股價等比例變動，結果列 H 欄對照"); r += 1
 R7_END = r - 1
 RC.column_dimensions["A"].width = 76
 for c in "BCDEFG": RC.column_dimensions[c].width = 13
@@ -1714,7 +1716,7 @@ SRCS = [
     ("Benzinga SPCX 報價", "2026-11-05", "https://www.benzinga.com/quote/SPCX", "Verified", "11-05 4:02 PM 123.58（第二來源）"),
     ("Digrin SPCX 月線", "2026-10-30", "https://www.digrin.com/stocks/detail/SPCX/price", "Derived", "9 月收盤 150.86（評價日股價，單一來源）"),
     ("美國財政部每日殖利率曲線（10 Yr）", "2026-10-27", "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202610", "Verified", "無風險利率 4.99%"),
-    ("同業檔 spacex/data/peers_si_20261120.json、peers_connectivity_20261120.json（MarketScreener 2026-11-06 估值頁與財務頁原值，倍數依收盤比換到 11-13 再到 11-20；spacex/peers_v027.py → peers_v0210.py → px1120_peers.py）", "2026-11-20", "https://www.marketscreener.com", "Derived", "SOTP 倍數（v0.2.7 統一 NTM 口徑）；同業可比性表（Recon 第 7 節）"),
+    ("同業檔 spacex/data/peers_si_20261120.json、peers_connectivity_20261120.json（MarketScreener 2026-11-06 估值頁與財務頁原值，分離淨負債後只把市值部分換到 11-20 收盤〔W3-7〕；spacex/peers_v027.py → peers_v0210.py → px1120_peers.py）", "2026-11-20", "https://www.marketscreener.com", "Derived", "SOTP 倍數（v0.2.7 統一 NTM 口徑）；同業可比性表（Recon 第 7 節）"),
     ("共識檔 spacex/data/consensus_spcx_20261030.json（MarketBeat、Simply Wall St 過期、Shacknews）", "2026-10-30", "repo 內", "Interested-party", "共識目標價、過期年度共識"),
     ("A 段事實總帳報告 spacex/docs/reports/20261030_spacex_v0.1_A段_事實總帳.md", "2026-10-30", "repo 內", "—", "名目算力口徑、Valor、找不到的項目"),
     ("Wattonomics v0.3.3 快照摘錄 spacex/data/wattonomics_c0_v0.3.3.json 與追公式 wattonomics_trace_v0.3.3.json（xai 玩家；只用於 Coord 頁 C0 對帳列，不進模型計算；v0.2.9 由 v0.3.2 換讀）", "2026-11-15", "repo 內（YinchenChang/company-models wattonomics/data）", "Derived／Interested-party", "Coord 頁 F1、F1b、F2"),
@@ -1725,7 +1727,7 @@ for col, w in zip("ABCDEF", [6, 80, 12, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = f"SpaceX（Nasdaq: SPCX，含 xAI）個股模型 {VER}（2026-11-21；build_id {BUILD_ID}；v0.2.11 只換現價與同業倍數為 2026-11-20 收盤〔工作單 px1120〕；v0.2.10 只換現價與同業倍數為 2026-11-13 收盤〔工作單 px1113〕；v0.2.9 只改 Coord 頁：改讀 Wattonomics v0.3.3〔xai 2025 年底 GW 吸收公司揭露 0.8 GW〕，名目算力 C0 改「無可比實績（層級值吸收公司揭露）」，對帳中 1→0〔估值不讀層級 GW，數值不變〕；v0.2.8 只改展示層與新增頁〔版面 v1.3、RevDCF、Coord 三層協調；數值不變〕；v0.2.7 依驗收報告：評價股數計入 RSU 與選擇權〔庫藏股法〕、同業統一為 2026-11-06 NTM 口徑、Sens 加融資受限案〔目標價會變〕；v0.2.6 補治理與揭露〔數值不變〕；v0.2.5 只換現價為 2026-11-05 收盤 123.62，目標價不變；v0.2.4 只改展示層：README 頁新增命題分項、白話重點、命題回覆，供 HTML 新版面；v0.2.2／v0.2.3 換 Tokenomics 快照 v21.9／" + TKV + "，基準數值同 v0.2.1；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
+RD["A1"] = f"SpaceX（Nasdaq: SPCX，含 xAI）個股模型 {VER}（2026-11-24；build_id {BUILD_ID}；v0.2.12 外部稽核優化第三波〔會改值〕：同業 EV／EBITDA 換價改為分離淨負債〔W3-7〕、Tokenomics 快照 v21.10 → v22.0〔W3-5，所讀名稱數值相同〕，現價不變；v0.2.11 只換現價與同業倍數為 2026-11-20 收盤〔工作單 px1120〕；v0.2.10 只換現價與同業倍數為 2026-11-13 收盤〔工作單 px1113〕；v0.2.9 只改 Coord 頁：改讀 Wattonomics v0.3.3〔xai 2025 年底 GW 吸收公司揭露 0.8 GW〕，名目算力 C0 改「無可比實績（層級值吸收公司揭露）」，對帳中 1→0〔估值不讀層級 GW，數值不變〕；v0.2.8 只改展示層與新增頁〔版面 v1.3、RevDCF、Coord 三層協調；數值不變〕；v0.2.7 依驗收報告：評價股數計入 RSU 與選擇權〔庫藏股法〕、同業統一為 2026-11-06 NTM 口徑、Sens 加融資受限案〔目標價會變〕；v0.2.6 補治理與揭露〔數值不變〕；v0.2.5 只換現價為 2026-11-05 收盤 123.62，目標價不變；v0.2.4 只改展示層：README 頁新增命題分項、白話重點、命題回覆，供 HTML 新版面；v0.2.2／v0.2.3 換 Tokenomics 快照 v21.9／v21.10、外部稽核優化 W3-5〔2026-11-23〕換 " + TKV + "，基準數值同 v0.2.1；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
 RD["A3"] = ("命題：SI 分部的算力投入（9M26 SI 資本支出約 400 億美元、名目算力 1.7 GW）能否由 SI 營收（對外算力出租＋Grok／Cursor／X）回本；"
             "Connectivity（Starlink）現金流與 IPO 資金能支撐多久；加計 AI 折舊與 Cursor 收購獎酬後的每股價值是否高於現價。")
 RD["A4"] = "核心問題：FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金與以融資取得 PP&E；Valor 失敗售後租回本金列融資，不扣）。"

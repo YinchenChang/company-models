@@ -13,7 +13,7 @@ import re
 
 from openpyxl.styles import Font, PatternFill
 
-VER, BUILT = "0.3.9", "2026-11-21"
+VER, BUILT = "0.3.10", "2026-11-24"
 U_PR = "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf"   # 出處網址只放 Coord 頁 L 欄（HTML 不顯示外部網址）
 BOLD = Font(bold=True)
 BLUE = Font(color="0000FF")
@@ -332,7 +332,7 @@ def coord(wb, C):
     ws.cell(r, 1, "F1. 本模型讀取的層級、版本與名稱（只列層級值與本模型採用值；同源，不判定，不計入對帳中）").font = BOLD; r += 1
     hdr(ws, r, ["名稱", "年度／世代", "層級值", "本模型採用值", "單位", "層級與版本", "說明"]); r += 1
     F1a = r
-    ws.cell(r, 1, "讀取層級：Tokenomics（算力單位經濟）——本模型讀 v21.10 快照（工作單所列現行 v22.0 不在本輪換快照；換快照另走 Tokenomics 同步通知）；Wattonomics——本模型不讀（無 WIF_ 名稱進模型），v0.3.2 快照只用於下方 C0 對帳列").font = BOLD; r += 1
+    ws.cell(r, 1, "讀取層級：Tokenomics（算力單位經濟）——本模型讀 " + C["TKV"] + " 快照（與 Tokenomics 現行版相同；外部稽核優化 W3-5，2026-11-23 由 v21.10 換入）；Wattonomics——本模型不讀（無 WIF_ 名稱進模型），v0.3.2 快照只用於下方 C0 對帳列").font = BOLD; r += 1
 
     def f1(name, yr, lv, adopt, unit, layer, note, fmt="0.000"):
         nonlocal r
@@ -538,7 +538,7 @@ def coord(wb, C):
     ws.cell(r, 4, f"=C{wrows['g26']}").number_format = "#,##0.0"; ws.cell(r, 5, f"=E{rl}").number_format = "#,##0.0"; ws.cell(r, 6, f"=E{r}/D{r}-1").number_format = "+0.0%;-0.0%"
     ws.cell(r, 7, "參考（層級之間，不判定）"); ws.cell(r, 8, "Wattonomics In!K181（輸入）"); ws.cell(r, 10, "Wattonomics Gap 頁玩家資本支出（輸出）"); rb_ = r; r += 1
     ws.cell(r, 1, "外部估計（賣方、研調、指引）只列參考，不判定：2026 資本支出指引（上列）、Morgan Stanley 新增 GW 估計（事實總帳 mw.ms.*）、Epoch 站點估計不進 C0。"); r += 1
-    ws.cell(r, 1, "版本與快照狀態：本模型讀 Tokenomics v21.10（工作單所列現行 v22.0 未換）；Wattonomics v0.3.2 也讀 Tokenomics v21.10。Amazon 模型值曾被 Wattonomics 讀入（資本支出寫回 In!K179–K181 等，來源為 v0.3.1），本表只列層級值與追公式，不用該回饋判定。")
+    ws.cell(r, 1, "版本與快照狀態：本模型讀 Tokenomics " + C["TKV"] + "（現行版）；Wattonomics v0.3.2 內含的 Tokenomics 為 v21.10，與本模型的 " + C["TKV"] + " 不是同一版（層級值之間的版本差異只列參考）。Amazon 模型值曾被 Wattonomics 讀入（資本支出寫回 In!K179–K181 等，來源為 v0.3.1），本表只列層級值與追公式，不用該回饋判定。")
     r += 1
     return dict(F1=(F1a, F1b), F1chk=F1chk, F2h=F2h, F2hh=F2hh, F2=(F2a, F2b), rq=(rq1, rq2, rq3, rq9), rg9=rg9, rl=rl, rd1=rd1, rd2=rd2, rj=rj, rjr=rjr, rg=rg, rc9=rc9,
                 rai=rai, rmw=rmw, rgw=dict(y25=rgw25, q=rgq, l=rgl, j=rgj), rn=rn, rnc=rnc, rs=rs, rr=rr_, rsame=rsame, rb=rb_, rtr=(rtr0, rtr_conc), rdump=(rdump0, rdump1), wrows=wrows, tol=TOL)
@@ -575,10 +575,13 @@ def readme13(wb, C, RVA, PLA, CRD):
     put("drv", T("分部營收推導（情境 B）：North America、International＝零售六條營收線（線上商店、實體店、第三方賣家、廣告、訂閱、其他）依年增率推算再按北美比例分配；AWS＝AWS AI（對外 AI 在役 MW × 每 MW 年持有成本 × 價格比）＋AWS 其他（非 AI 雲端，近四季年增向長期值收斂）；四者加總為合併營收。FY2028：North America "),
         f'TEXT({PLB("na", "I")},"0")', T("、International "), f'TEXT({PLB("intl", "I")},"0")', T("、AWS 其他 "), f'TEXT({PLB("aws_o", "I")},"0")', T("、AWS AI "), f'TEXT({PLB("aws_ai", "I")},"0")',
         T("，合計 "), f'TEXT({PLB("tot", "I")},"0")', T(" 十億美元。"))
-    RD.cell(r, 1, F_(T("v0.3.9（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。現價 266.66（11-13）→ "), 'TEXT(px,"0.00")',
-                     T("；加權目標價 228.65 → "), f'TEXT({tp},"0.00")', T("；上檔空間 −14.3% → "), f'TEXT({up},"+0.0%;-0.0%")',
-                     T("；投資建議 中立 → "), rec, T("。本模型現價只影響上檔空間與評等（WACC 權益權重用 In 頁 px_val〔2026-10-30 收盤 240.35，依設計不隨現價換〕）；加權目標價的變動來自同業倍數換價。同業倍數（11-13 → 11-20 收盤，倍數 × 收盤比，近似，無市值）：" + _PXTXT + "；共識與其他假設不變；本版無未換價同業。")))
+    # v0.3.10（2026-11-24；外部稽核優化 W3-5）：Tokenomics 快照 v22.0（目標價不變，上限檢查列改變）；v0.3.9 列凍結為固定文字
+    RD.cell(r, 1, F_(T("v0.3.10（2026-11-24）：Tokenomics 快照 v21.10 → v22.0（外部稽核優化 W3-5；與 Tokenomics 現行版相同）。本模型讀的名稱只有 VR200 每 GW 年營收（P×Q）與其低、高值改變（49.51 → 51.75），只作上限檢查（命題、對帳、敏感度頁的比值列）；低、高值原為寫死，改由快照讀入；估值頁數值不變。現價不變（2026-11-20 收盤 "), 'TEXT(px,"0.00")',
+                     T("）；加權目標價 216.93 → "), f'TEXT({tp},"0.00")', T("；上檔空間 −12.1% → "), f'TEXT({up},"+0.0%;-0.0%")',
+                     T("；投資建議 中立 → "), rec, T("。")))
     out["ver"] = r; r += 1
+    RD.cell(r, 1, "v0.3.9（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。現價 266.66（11-13）→ 246.82；加權目標價 228.65 → 216.93；上檔空間 −14.3% → -12.1%；投資建議 中立 → 中立。本模型現價只影響上檔空間與評等（WACC 權益權重用 In 頁 px_val〔2026-10-30 收盤 240.35，依設計不隨現價換〕）；加權目標價的變動來自同業倍數換價。同業倍數（11-13 → 11-20 收盤，倍數 × 收盤比，近似，無市值）：非 AI 雲端中位數 14.66 → 12.79、數位廣告 8.54 → 7.35、零售 20.99 → 20.97；共識與其他假設不變；本版無未換價同業。")
+    r += 1
     RD.cell(r, 1, "v0.3.8（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。現價 260.21（11-05）→ 266.66；加權目標價 217.69 → 228.65；上檔空間 −16.3% → −14.3%；投資建議 中立 → 中立（只換現價時為 217.69、−18.4%、中立）。本模型現價只影響上檔空間與評等（WACC 權益權重用 In 頁 px_val〔2026-10-30 收盤 240.35，依設計不隨現價換〕）；加權目標價的變動來自同業倍數換價。同業倍數（報價日 2026-10-07／10-08）依價格檔同日收盤換到 2026-11-13（倍數 × 收盤比，近似，無市值）：非 AI 雲端中位數 13.82 → 14.66、數位廣告 9.11 → 8.54、零售 17.72 → 20.99（報價日 2026-10-07／10-08 → 11-13）；零售同業 WMT、COST、TGT 同法換價；共識與其他假設不變。")
     r += 1
     RD.cell(r, 1, "v0.3.7（2026-11-15）：只改展示層與新增頁——個股 HTML 版面規格 v1.3：章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；新增 RevDCF 頁（反向 DCF）、PL 頁末標準損益表"

@@ -201,8 +201,8 @@ def build_coord(wb, REG, YCOL, snap_meta, n_tk):
     sec('B. 讀取層級（同源，不判定）：本模型實際讀的層級、版本與名稱；自層級讀入的值只列在此節，不進 C0')
     header(['項目', '單位', '內容', '', '', '', '', '', '', '', '', '說明'])
     row('tkv', 'Tokenomics（TK_Link 快照）', [f"{snap_meta['version']}｜{snap_meta['file']}｜提交 {snap_meta['commit'][:7]}"], '',
-        f"快照檔 minimax/data/{snap_meta['snap']}（SHA-256 {snap_meta['file_sha256']}；讀取日 {snap_meta['read_date']}）。Tokenomics master 現行為 v22.0；"
-        '本輪不換快照（工作單：模型仍讀舊快照者寫明版本、不在本輪換）。TK 值只作算力物理（每 GW 產能、利用率、持有成本、全成本 $/M）與對照，不回饋 Tokenomics')
+        f"快照檔 minimax/data/{snap_meta['snap']}（SHA-256 {snap_meta['file_sha256']}；讀取日 {snap_meta['read_date']}）。與 Tokenomics master 現行版（v22.0）相同；"
+        '外部稽核優化 W3-5（2026-11-23）由 v19.0 換入（IF_TokGW_Luna、IF_FullCost_Luna／Sol 改變；加權目標價不變）。TK 值只作算力物理（每 GW 產能、利用率、持有成本、全成本 $/M）與對照，不回饋 Tokenomics')
     row('tkn', 'Tokenomics 取值列數（TK_Link TK01–TK12；另列 IF_HoldEcon 全 15 欄）', [f'=COUNTA(TK_Link!$A$5:$A${4 + n_tk})'], '列',
         '讀入名稱：IF_TokGW_Luna、IF_TokGW_Sol、IF_Util、IF_HoldEcon（另列全 15 欄）、IF_FullCost_Luna、IF_FullCost_Sol；IF_PriceRef_Luna、IF_PriceRef_Sol 只用於 Inputs 說明文字（名稱檔 minimax/data/tokenomics_names.txt）', fmt='0')
     row('wtv', 'Wattonomics', [f"本模型不讀 Wattonomics；本頁對照用快照 {W['version']}｜{W['file']}"], '',

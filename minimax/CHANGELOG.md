@@ -2,6 +2,12 @@
 
 每次同步記錄：版本、工作包、commit／PR 與變動摘要。
 
+## v0.2.6 — Tokenomics 快照 v19.0 → v22.0（2026-11-24；外部稽核優化 W3-5，`docs/workorders/20261123_TK_v22.0_下游同步通知.md`）
+- `data/tokenomics_snapshot_CURRENT` 改指 `tokenomics_snapshot_v22.0.json`。值改變的名稱：`IF_TokGW_Luna`（H100、GB200 +17.7%）、`IF_FullCost_Luna`（−12.8%、−14.3%）、`IF_FullCost_Sol`（+10.6%、+4.3%）。
+- Compute、PnL、Funding、PL 與 Val 來源列改變（收支合計 −5,983.2 → −5,982.6）。三情境 DCF 都在淨現金下限、Comparable 用營收：加權目標價 113.53、上檔空間 +10.9%、評等與投資建議中立，皆不變；收支關卡不變（不通過）。
+- `data/val_scenarios.json`、`data/val_sens.json` 以新快照重跑。現價與同業報價不變（2026-11-20 收盤）。
+- 成品 `dist/20261124_MiniMax收支模型_v0_2_6.xlsx／.html`、`dist/20261124_MiniMax個股模型_v0_2_6.html`；v0.2.5 成品自 dist 移除。
+
 ## v0.2.5 — 現價與同業報價改 2026-11-20 收盤（2026-11-21；工作單 `docs/workorders/20261121_px1120_現價與同業報價換11-20收盤.md`）
 - SRC_MM S113 HK$152.4（11-13）→ 102.4（11-20）；S143（智譜）408.4 → 334.0；價格取自 `markets/invest_map/data/closes_20261109_20261120.csv`。
 - 同業 EV／NTM 營收中位數 7.99 → 6.07；Comparable 目標價 202.13 → 166.14；DCF 60.92 不變；加權目標價 131.52 → 113.53（上檔空間 −13.7% → +10.9%）；評等與投資建議皆中立不變；收支關卡不變。

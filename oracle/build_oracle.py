@@ -13,7 +13,7 @@ from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OVR = json.loads(os.environ.get("SENS_OVR", "{}"))
-TKV = "v21.10"   # v0.4.3：Tokenomics 快照 v21.4 → v21.9；v0.4.5：v21.9 → v21.10（兩次基準數值都不變；名稱清單同 v21.4 快照＝microsoft/data/tokenomics_names.txt）
+TKV = "v22.0"   # 外部稽核優化 W3-5（2026-11-23）：快照統一到 v22.0（v21.10 → v22.0；本模型讀的名稱值逐一相同）。v0.4.3：Tokenomics 快照 v21.4 → v21.9；v0.4.5：v21.9 → v21.10（兩次基準數值都不變；名稱清單同 v21.4 快照＝microsoft/data/tokenomics_names.txt）
 TKS = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 TK = TKS["items"]
 SENS_F = os.path.join(HERE, "data", "sens_v04.json")
@@ -93,7 +93,7 @@ inp("rf_h100_30", "FY2030 汰換：H100 在役量的比例（換成 VR200）", "
 inp("rf_h100_31", "FY2031 汰換：H100 在役量的比例", "%", None, 0.5, None, "Assumed", "同上", "—")
 inp("rf_gb200_32", "FY2032 汰換：GB200 在役量的比例", "%", None, 1.0, None, "Assumed", "GB200 約 FY26 上線", "GB300 以後的汰換落在 FY2033 以後（模型期外；永續價值改用穩態汰換）")
 
-sec(f"D. 命題：每 MW 經濟性（Tokenomics {TKV} 快照，基準成本情境；修正一自 v19.0 升級，與 MAG 相同；v0.4.3 由 v21.4 換入 v21.9、v0.4.5 換 v21.10，基準欄不變）")
+sec(f"D. 命題：每 MW 經濟性（Tokenomics {TKV} 快照，基準成本情境；修正一自 v19.0 升級，與 MAG 相同；v0.4.3 由 v21.4 換入 v21.9、v0.4.5 換 v21.10、外部稽核優化 W3-5〔2026-11-23〕換 v22.0，基準欄不變）")
 for g in GEN:
     inp(f"he_{g}", f"每 MW 年持有成本（經濟口徑）IF_HoldEcon｜{GNAME[g]}", "US$M／MW·年", round(TK["IF_HoldEcon"]["values"][GNAME[g]]["低成本"], 4), round(tkv("IF_HoldEcon", g), 4), round(TK["IF_HoldEcon"]["values"][GNAME[g]]["高成本"], 4), "Derived", f"oracle/data/tokenomics_snapshot_{TKV}.json（Tokenomics {TKV}，{TKS['source']['commit'][:7]}；名稱清單同 microsoft/data）Interface!13 列", "低／高＝Tokenomics 低成本／高成本情境（只作敏感度）")
 for g in GEN:
@@ -231,14 +231,14 @@ inp("eb_nbis", "Nebius 2027 年共識 EBITDA", "US$B", None, 6.194, None, "Inter
 inp("mult_oci", "OCI AI 前瞻 EV/EBITDA（neocloud 同業中位數；修正一起只作對照列）", "x", 4.81, "=MEDIAN(Val!D61:D62)", 7.88, "Derived", "CoreWeave、Nebius：EV（2026-11-20 近似；v0.5.3 為 2026-11-13，v0.5.2 以前 2026-10-21）÷ 2027 年共識 EBITDA（Val 頁同業表）", "第三家同業（IREN、WhiteFiber）EBITDA 共識：未找到；v0.3.1 為 6x [Assumed]")
 def _sw(t, nm, key):
     v = PXS["peers"][t]
-    inp(key, f"{nm} NTM EV/EBITDA", "x", None, v["new"], None, "Derived", FACTS + f" val.peer.{t.lower()}（2026-10-07 {v['old1007']}；工作單 px1113 換價至 2026-11-13 {v['old']}；工作單 px1120 換價至 2026-11-20：{v['method']}；收盤 {v['closeOld']} → {v['closeNew']}）", f"2026-11-20 換價（[Derived]）；v0.5.3 為 2026-11-13 值 {v['old']}；v0.5.2 以前為 2026-10-07 值 {v['old1007']}")
+    inp(key, f"{nm} NTM EV/EBITDA", "x", None, v["new"], None, "Derived", FACTS + f" val.peer.{t.lower()}（2026-10-07 {v['old1007']}；工作單 px1113 換價至 2026-11-13 {v['old']}；工作單 px1120 換價至 2026-11-20：{v['method']}；收盤 {v['closeOld']} → {v['closeNew']}；原式（倍數 × 收盤比）對照 {v['newScaled']}）", f"2026-11-20 換價（{v['tag']}；外部稽核優化 W3-7：{'已分離淨負債' if v['separated'] else '仍為整體縮放（近似）'}）；v0.5.3 為 2026-11-13 值 {v['old']}；v0.5.2 以前為 2026-10-07 值 {v['old1007']}")
 _sw("MSFT", "Microsoft", "pm_msft")
 _sw("SAP", "SAP", "pm_sap")
 _sw("CRM", "Salesforce", "pm_crm")
 _sw("ADBE", "Adobe", "pm_adbe")
 _sw("NOW", "ServiceNow", "pm_now")
-inp("mult_sw", "其餘業務（軟體、硬體、服務）前瞻 EV/EBITDA（軟體同業中位數）", "x", PXS["lo"], "=MEDIAN(pm_msft,pm_sap,pm_crm,pm_adbe,pm_now)", PXS["hi"], "Derived", "Microsoft、SAP、Salesforce、Adobe、ServiceNow NTM EV/EBITDA（報價日 2026-10-07，工作單 px1113 換價至 2026-11-13、工作單 px1120 換價至 2026-11-20；Val 頁同業表；Sens 低／高＝Salesforce／Microsoft）", "硬體與服務以軟體倍數計（偏高，影響小，見報告第 5 節）")
-inp("mult_leg", "傳統業務（授權、支援、硬體、服務）前瞻 EV/EBITDA", "x", 7.5, "=MEDIAN(pm_crm,pm_adbe)", 10.5, "Derived", "軟體同業中成熟、低成長的兩家（Salesforce、Adobe；2026-11-20 換價後 " + f"{PXS['peers']['CRM']['new']}、{PXS['peers']['ADBE']['new']}" + "）中位數；修正一（F2／核對意見 3）", "高成長的 SaaS 與 OCI 非 AI 仍用軟體中位數")
+inp("mult_sw", "其餘業務（軟體、硬體、服務）前瞻 EV/EBITDA（軟體同業中位數）", "x", PXS["lo"], "=MEDIAN(pm_msft,pm_sap,pm_crm,pm_adbe,pm_now)", PXS["hi"], "Derived", "Microsoft、SAP、Salesforce、Adobe、ServiceNow NTM EV/EBITDA（報價日 2026-10-07，工作單 px1113 換價至 2026-11-13、工作單 px1120 換價至 2026-11-20；Val 頁同業表；Sens 低／高＝Salesforce／Microsoft；外部稽核優化 W3-7（2026-11-23）：MSFT、CRM 換價已分離淨負債，SAP、ADBE、NOW 仍為整體縮放（近似，repo 內無市值）；全部用原式時中位數 " + f"{PXS['medianScaled']}、低值 {PXS['loScaled']}" + "）", "硬體與服務以軟體倍數計（偏高，影響小，見報告第 5 節）")
+inp("mult_leg", "傳統業務（授權、支援、硬體、服務）前瞻 EV/EBITDA", "x", 7.5, "=MEDIAN(pm_crm,pm_adbe)", 10.5, "Derived", "軟體同業中成熟、低成長的兩家（Salesforce、Adobe；2026-11-20 換價後 " + f"{PXS['peers']['CRM']['new']}、{PXS['peers']['ADBE']['new']}" + "；CRM 已分離淨負債、ADBE 仍為整體縮放〔近似〕，兩家都用原式時為 " + f"{PXS['legacyMedianScaled']}" + "）中位數；修正一（F2／核對意見 3）", "高成長的 SaaS 與 OCI 非 AI 仍用軟體中位數")
 inp("split_mode", "其餘業務 EBITDA 拆分法（0＝成長型與傳統同利潤率 m_sw；1＝授權＋支援 m_ls、成長型以 Q1 推得）", "—", None, 0, None, "Assumed", "第二次核對意見 5：替代拆法列 Sens", "—")
 inp("m_ls", "授權＋支援利潤率（split_mode＝1 時）", "%", None, 0.85, None, "Assumed", "第二次核對意見 5（支援為高利潤率維護合約）", "—")
 inp("ai_floor", "OCI AI 企業價值取下限 0（1＝是；敏感度用）", "—", None, 0, None, "Assumed", "第二次核對意見 5：情境 C 的負值 AI 腿是否截為 0", "預設 0（保留價值毀損）")
@@ -957,12 +957,14 @@ for nm, tk, ev, eb, dt, src in (("CoreWeave", "CRWV", "ev_crwv", "eb_crwv", "202
     V.cell(r, 4, f"={ev}/{eb}").number_format = "0.00"; V.cell(r, 5, dt); V.cell(r, 6, src); r += 1
 OCI_PEERS = (r - 2, r - 1)
 V.cell(r, 1, "  第三家（IREN、WhiteFiber）：EBITDA 共識未找到——不符合「至少 3 家」規格；本版 OCI AI 主值改用 DCF，倍數只作對照").font = GREY; r += 1
-V.cell(r, 1, "其餘業務同業（軟體）：NTM EV/EBITDA（SBC 加回口徑）").font = GREY; r += 1
+V.cell(r, 1, "其餘業務同業（軟體）：NTM EV/EBITDA（SBC 加回口徑）").font = GREY
+V.cell(r, 7, "原式（倍數 × 收盤比）對照").font = GREY; r += 1      # 外部稽核優化 W3-7（2026-11-23）：換價改分離淨負債後，保留原式結果對照
 SW0 = r
 for nm, tk, m in (("Microsoft", "MSFT", "=pm_msft"), ("SAP", "SAP", "=pm_sap"), ("Salesforce", "CRM", "=pm_crm"), ("Adobe", "ADBE", "=pm_adbe"), ("ServiceNow", "NOW", "=pm_now")):
     V.cell(r, 1, nm); V.cell(r, 2, tk); c = V.cell(r, 4, m); c.number_format = "0.00"
-    V.cell(r, 5, "2026-11-20（換價）"); V.cell(r, 6, f"oracle/data/oracle_facts_20261007.json val.peer.{tk.lower()}（EV ÷ 共識 EBITDA 時間加權，2026-10-07；工作單 px1113 換價至 2026-11-13（{PXS['peers'][tk]['old']}）、工作單 px1120 換價至 2026-11-20：" + ("MSFT 市值法" if tk == "MSFT" else "倍數 × 收盤比近似") + f"，2026-10-07 原值 {PXS['peers'][tk]['old1007']}；Derived）；會計口徑："
-                                     + ("IFRS 16（租賃費用不在 EBITDA 內）" if tk == "SAP" else "US GAAP（營業租賃費用在 EBITDA 內）")); r += 1
+    V.cell(r, 5, "2026-11-20（換價）"); V.cell(r, 6, f"oracle/data/oracle_facts_20261007.json val.peer.{tk.lower()}（EV ÷ 共識 EBITDA 時間加權，2026-10-07；工作單 px1113 換價至 2026-11-13（{PXS['peers'][tk]['old']}）、工作單 px1120 換價至 2026-11-20：" + ("已分離淨負債（EV 只有市值部分隨股價變；W3-7）" if PXS['peers'][tk]['separated'] else "倍數 × 收盤比——仍為整體縮放（近似；repo 內無市值，等於假設淨負債隨股價等比例變動）") + f"，2026-10-07 原值 {PXS['peers'][tk]['old1007']}；Derived）；會計口徑："
+                                     + ("IFRS 16（租賃費用不在 EBITDA 內）" if tk == "SAP" else "US GAAP（營業租賃費用在 EBITDA 內）"))
+    V.cell(r, 7, PXS["peers"][tk]["newScaled"]).number_format = "0.00"; r += 1
 SW_PEERS = (SW0, r - 1)
 V.cell(r, 1, "  口徑（v0.4.7）：本模型 EV 只含融資租賃、OCI AI EBITDA 為租金後（US GAAP 營業租賃），與 US GAAP 同業一致；中位數恰為 SAP（IFRS 16），換成 US GAAP 口徑時 SAP 倍數會略高，量化：未取得（租賃負債規模未查）").font = GREY; r += 1
 for _r in range(4, IN.max_row + 1):
@@ -1202,7 +1204,7 @@ RD = wb.create_sheet("README", 0)
 B_ = PR_["B"]; TB = TR["B"]; CB = CR_["B"]
 up = f"Val!C{CON['up']}"; tp = f"Val!C{CON['tp']}"
 lines = [
-    ("Oracle（ORCL）個股模型 v0.5.1（命題＋營收分部架構＋收支模組；v0.5.1 套用 HTML 版面 v1.0〔README 末尾新增展示層與命題回覆，其餘各頁數值同 v0.5.0〕；v0.5.0 新增收支模組六頁，既有頁數值同 v0.4.7；v0.4.7 採用 v0.4.6 驗收報告：kd／r_new 改用 2026-11 新債定價、非 AI 營運資金、評等邊界統一；v0.4.6 換現價 2026-11-05 收盤 115.16；2026-11-02 股債增資納入〔v0.4.4〕；Tokenomics 快照 " + TKV + "〔v0.4.5，基準數值不變〕）　2026-11-10", True),
+    ("Oracle（ORCL）個股模型 v0.5.1（命題＋營收分部架構＋收支模組；v0.5.1 套用 HTML 版面 v1.0〔README 末尾新增展示層與命題回覆，其餘各頁數值同 v0.5.0〕；v0.5.0 新增收支模組六頁，既有頁數值同 v0.4.7；v0.4.7 採用 v0.4.6 驗收報告：kd／r_new 改用 2026-11 新債定價、非 AI 營運資金、評等邊界統一；v0.4.6 換現價 2026-11-05 收盤 115.16；2026-11-02 股債增資納入〔v0.4.4〕；Tokenomics 快照 v21.10〔v0.4.5，基準數值不變〕、" + TKV + "〔外部稽核優化 W3-5，2026-11-23，基準數值不變〕）　2026-11-10", True),
     ("命題：OCI 已簽約的 backlog（RPO 約 6,640 億美元，約一半來自 OpenAI／Stargate）能否以高於資金成本的報酬轉成營收與現金，同時不把資產負債表撐破。命題模組（已連網 MW × 每 MW 年收入〔Tokenomics 持有成本 × 定價倍數 k〕、延誤、租金、AI 折舊）只驅動 Cloud Infrastructure 營收線的「OCI AI 算力」子列；SaaS、授權、支援、硬體、服務各有自己的成長路徑。", False),
     ("核心問題：FY2029 的 OCI 營收與營業利益率，相對於資本支出與租約的擴張，以及 Oracle 的資金缺口（自由現金流為負）要如何補。", False),
     (f'="投資建議："&Val!C{CON["rec"]}&"（加權目標價 US$"&TEXT({tp},"0.0")&"，現價 US$"&TEXT(px,"0.00")&"〔"&TEXT(px_date,"yyyy-mm-dd")&"〕，上檔空間 "&TEXT({up},"+0.0%;-0.0%")&"）——條件式：在長約價格 p_long "&TEXT(p_long,"0.00")&"、計費比例 "&TEXT(u_bill,"0%")&"、AI 設備折舊年限 "&TEXT(life_ai,"0")&" 年（Tokenomics）的基準假設下；失效條件見本頁末"', True),
@@ -1246,7 +1248,7 @@ lines += [
 # v0.5.2：README 第 1 列版本文字（只改版號與日期；其餘文字不動）
 _t0 = lines[0][0]
 assert "個股模型 v0.5.1（命題＋營收分部架構＋收支模組；" in _t0 and _t0.endswith("　2026-11-10"), _t0[-40:]
-lines[0] = (_t0.replace("個股模型 v0.5.1（命題＋營收分部架構＋收支模組；", "個股模型 v0.5.4（命題＋營收分部架構＋收支模組；v0.5.4 只換現價與同業報價為 2026-11-20 收盤〔工作單 px1120〕；v0.5.3 只換為 2026-11-13 收盤〔工作單 px1113〕；v0.5.2 套用 HTML 版面 v1.3 並新增 IS、Coord 兩頁〔既有各頁數值同 v0.5.1〕；", 1)[:-len("2026-11-10")] + "2026-11-21", lines[0][1])
+lines[0] = (_t0.replace("個股模型 v0.5.1（命題＋營收分部架構＋收支模組；", "個股模型 v0.5.5（命題＋營收分部架構＋收支模組；v0.5.5 外部稽核優化第三波〔會改值〕：軟體同業 EV／EBITDA 換價改為分離淨負債〔W3-7；CRM〕、Tokenomics 快照 v21.10 → v22.0〔W3-5，所讀名稱數值相同〕，現價不變；v0.5.4 只換現價與同業報價為 2026-11-20 收盤〔工作單 px1120〕；v0.5.3 只換為 2026-11-13 收盤〔工作單 px1113〕；v0.5.2 套用 HTML 版面 v1.3 並新增 IS、Coord 兩頁〔既有各頁數值同 v0.5.1〕；", 1)[:-len("2026-11-10")] + "2026-11-21", lines[0][1])
 for i, (t, b) in enumerate(lines, 1):
     RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170

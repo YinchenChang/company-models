@@ -14,7 +14,7 @@ import re
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
-VER, BUILT = "0.3.11", "2026-11-21"
+VER, BUILT = "0.3.12", "2026-11-24"
 U_10Q = "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q3/GOOG-10-Q-Q3-2026.pdf"   # 出處網址只放 Coord 頁 L 欄（HTML 不顯示外部網址）
 BOLD = Font(bold=True)
 BLUE = Font(color="0000FF")
@@ -393,7 +393,7 @@ def coord(wb, C):
         c = ws.cell(r, j, h); c.font = BOLD; c.fill = HDR
     r += 1
     F1a = r
-    ws.cell(r, 1, "讀取層級：Tokenomics（算力單位經濟）——本模型讀 v21.10 快照（工作單所列現行 v22.0 不在本輪換快照；換快照另走 Tokenomics 同步通知）；Wattonomics——本模型不讀（無 WIF_ 名稱進模型），v0.3.2 快照只用於下方 C0 對帳列"); ws.cell(r, 1).font = BOLD; r += 1
+    ws.cell(r, 1, "讀取層級：Tokenomics（算力單位經濟）——本模型讀 " + TKV + " 快照（與 Tokenomics 現行版相同；外部稽核優化 W3-5，2026-11-23 由 v21.10 換入）；Wattonomics——本模型不讀（無 WIF_ 名稱進模型），v0.3.2 快照只用於下方 C0 對帳列"); ws.cell(r, 1).font = BOLD; r += 1
 
     def f1(name, yr, lv, adopt, unit, layer, note, fmt="0.000"):
         nonlocal r
@@ -591,7 +591,7 @@ def coord(wb, C):
     ws.cell(r, 4, f"=C{wrows['guid']}").number_format = "#,##0.0"; ws.cell(r, 5, f"=E{rl}").number_format = "#,##0.0"; ws.cell(r, 6, f"=D{r}/E{r}-1").number_format = "+0.0%;-0.0%"
     ws.cell(r, 7, "參考（層級之間，不判定）"); ws.cell(r, 8, "Wattonomics 資本支出輸入列 cap_googl（公司指引中點）"); ws.cell(r, 10, "Wattonomics Gap 頁玩家資本支出（GW 推算）"); rb_ = r; r += 1
     ws.cell(r, 1, "外部估計（賣方、研調、指引）只列參考，不判定：2026 資本支出指引（上列）、Cloud 積壓 RPO（In 頁事實）等不進 C0。"); r += 1
-    ws.cell(r, 1, "版本與快照狀態：Tokenomics 本模型讀 v21.10（工作單所列現行 v22.0 未換；v21.10 換 v22.0 只影響 IFW_RevGWFleet_Util，約 −2%，只作上限檢查，不影響基準）；Wattonomics v0.3.2 也讀 Tokenomics v21.10，兩側版本一致。Alphabet 模型值曾被 Wattonomics 讀入（營業現金流、資本支出寫回），本表只列層級值與追公式，不用該回饋判定。")
+    ws.cell(r, 1, "版本與快照狀態：Tokenomics 本模型讀 " + TKV + "（現行版；由 v21.10 換入只影響 IFW_RevGWFleet_Util，約 −2%，只作上限檢查，不影響基準）；Wattonomics v0.3.2 內含的 Tokenomics 為 v21.10，與本模型的 " + TKV + " 不是同一版（層級值之間的版本差異只列參考）。Alphabet 模型值曾被 Wattonomics 讀入（營業現金流、資本支出寫回），本表只列層級值與追公式，不用該回饋判定。")
     r += 1
     return dict(F1=(F1a, F1b), F1chk=F1chk, F2h=F2h, F2hh=F2hh, F2=(F2a, F2b), rq=(rq1, rq2, rq3, rq9), rl=rl, rd1=rd1, rd2=rd2, rj=rj, rjr=rjr, rtr=rtr, rdump=(rdump0, rdump1), rg=rg, ra=(ra1, ra2, ra3, ra4, ra5),
                 rc1=rc1, rc2=rc2, rcu=rcu, rtp=rtp, rmw=rmw, rn=rn, rnb=rnb, rnc=rnc, rs=rs, rr=rr_, rsame=rsame, rk=rk, rb=rb_, wrows=wrows, tol=TOL)
@@ -631,10 +631,13 @@ def readme13(wb, C, RVA, PLA, CRD):
     put("drv", T("分部營收推導（情境 B）：Google Services＝Search & other（B 路徑年增，情境 A／C 再乘分流與變現變動）＋YouTube ads＋Google Network＋訂閱與裝置（各自近四季年增向長期值收斂）；"
                  "Google Cloud＝Cloud AI（AI 在役 MW × 對外比例 × 每 MW 年收入）＋TPU 系統銷售＋Cloud 其他（近四季年增收斂）；另加 Other Bets 與避險損益，加總為合併營收。FY2028 Services "),
         f'TEXT(PL!I{PRB["gs"]},"0")', T("、Cloud "), f'TEXT(PL!I{PRB["cloud"]},"0")', T("（其中 Cloud AI "), f'TEXT(PL!I{PRB["ai"]},"0")', T("）、Other Bets "), f'TEXT(PL!I{PRB["ob"]},"0.0")', T("，合計 "), f'TEXT(PL!I{PRB["rev"]},"0")', T(" 十億美元。"))
-    RD.cell(r, 1, F(T("v0.3.11（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。現價 295.77（11-13）→ "), 'TEXT(px,"0.00")',
-                    T("；加權目標價 249.86 → "), f'TEXT({vb("tp")},"0.00")', T("；上檔空間 −15.5% → "), f'TEXT({vb("up")},"+0.0%;-0.0%")',
-                    T("；投資建議 中立 → "), f'{vb("rec")}', T("。本模型現價只影響上檔空間與評等（WACC 權益權重與回購價用 In 頁 px_val〔評價日 2026-09-30 收盤 344.08〕，依設計不隨現價換）；加權目標價的變動來自同業倍數換價。同業倍數（v0.3.10 已由報價日 2026-10-07／10-08 換到 11-13）再依價格檔收盤換到 2026-11-20（倍數 × 11-20 收盤 ÷ 11-13 收盤，近似，無市值；Alphabet 自身用市值法）：" + _PXTXT + "；訂閱組 NFLX、SPOT、DIS 同法換價；本版全部同業皆有 11-20 收盤，無未換價同業；共識與其他假設不變。")))
+    # v0.3.12（2026-11-24；外部稽核優化 W3-5）：Tokenomics 快照 v22.0（目標價不變，上限檢查列改變）；v0.3.11 列凍結為固定文字
+    RD.cell(r, 1, F(T("v0.3.12（2026-11-24）：Tokenomics 快照 v21.10 → v22.0（外部稽核優化 W3-5；與 Tokenomics 現行版相同）。本模型讀的名稱只有機隊每 GW 年營收（利用率層）改變，約 −2%，只作上限檢查（命題頁的比值列）；估值頁數值不變。現價不變（2026-11-20 收盤 "), 'TEXT(px,"0.00")',
+                    T("）；加權目標價 233.92 → "), f'TEXT({vb("tp")},"0.00")', T("；上檔空間 −11.8% → "), f'TEXT({vb("up")},"+0.0%;-0.0%")',
+                    T("；投資建議 中立 → "), f'{vb("rec")}', T("。")))
     out["ver"] = r; r += 1
+    RD.cell(r, 1, "v0.3.11（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。現價 295.77（11-13）→ 265.29；加權目標價 249.86 → 233.92；上檔空間 −15.5% → -11.8%；投資建議 中立 → 中立。本模型現價只影響上檔空間與評等（WACC 權益權重與回購價用 In 頁 px_val〔評價日 2026-09-30 收盤 344.08〕，依設計不隨現價換）；加權目標價的變動來自同業倍數換價。同業倍數（v0.3.10 已由報價日 2026-10-07／10-08 換到 11-13）再依價格檔收盤換到 2026-11-20（倍數 × 11-20 收盤 ÷ 11-13 收盤，近似，無市值；Alphabet 自身用市值法）：非 AI 雲端中位數 14.66 → 12.79、數位廣告中位數 8.54 → 7.35、訂閱中位數 13.74 → 12.54、META 9.6 → 8.39、Alphabet 自身 12.31 → 10.99；訂閱組 NFLX、SPOT、DIS 同法換價；本版全部同業皆有 11-20 收盤，無未換價同業；共識與其他假設不變。")
+    r += 1
     RD.cell(r, 1, "v0.3.10（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。現價 282.57（11-05）→ 295.77；加權目標價 257.76 → 249.86；上檔空間 −8.8% → −15.5%；投資建議 中立 → 中立。"
                   "同業倍數由報價日 2026-10-07／10-08 依同日收盤換到 11-13（非 AI 雲端中位數 13.82 → 14.66、數位廣告 9.11 → 8.54、訂閱 15.41 → 13.74、META 10.79 → 9.6、Alphabet 自身 14.68 → 12.31）；共識與其他假設不變。")
     r += 1

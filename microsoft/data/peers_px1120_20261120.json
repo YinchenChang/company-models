@@ -6,117 +6,141 @@
   "val.peer.sw.orcl": {
    "ticker": "ORCL",
    "old": 8.33,
-   "new": 6.72,
+   "new": 7.38,
+   "newScaled": 6.72,
+   "separated": true,
    "refDate": "2026-11-13",
    "closeOld": 125.349998,
    "closeNew": 101.190002,
    "priceRatio": 0.80726,
-   "method": "倍數 × 收盤比（近似，無市值）"
+   "method": "分離淨負債（W3-7）：EV 新＝566,120＋市值（10-07）434,050 ×（101.190002 ÷ 143.56 − 1）＝438,015；淨負債 132,070 與 EBITDA 不變；倍數＝10-07 原值 9.54 × EV 新 ÷ EV 舊；EV 566,120、市值 434,050（StockAnalysis 2026-10-07；oracle_facts_20261007.json val.ev.orcl）"
   },
   "val.peer.sw.sap": {
    "ticker": "SAP",
    "old": 16.79,
    "new": 14.22,
+   "newScaled": 14.22,
+   "separated": false,
    "refDate": "2026-11-13",
    "closeOld": 234.899994,
    "closeNew": 198.929993,
    "priceRatio": 0.846871,
-   "method": "倍數 × 收盤比（近似，無市值）"
+   "method": "倍數 × 收盤比——仍為整體縮放（近似）：repo 內沒有市值或淨負債"
   },
   "val.peer.sw.crm": {
    "ticker": "CRM",
    "old": 10.48,
-   "new": 8.69,
+   "new": 8.98,
+   "newScaled": 8.69,
+   "separated": true,
    "refDate": "2026-11-13",
    "closeOld": 217.839996,
    "closeNew": 180.619995,
    "priceRatio": 0.829141,
-   "method": "倍數 × 收盤比（近似，無市值）"
+   "method": "分離淨負債（W3-7）：EV 新＝214,520＋市值（10-07）184,813 ×（180.619995 ÷ 224.56 − 1）＝178,357；淨負債 29,707 與 EBITDA 不變；倍數＝10-07 原值 10.8 × EV 新 ÷ EV 舊；EV 214,520（oracle_facts_20261007.json val.peer.crm）、市值＝823.0 百萬股（StockAnalysis，頁面日期 2026-11-15）× 10-07 收盤"
   },
   "val.peer.sw.adbe": {
    "ticker": "ADBE",
    "old": 6.89,
    "new": 6.17,
+   "newScaled": 6.17,
+   "separated": false,
    "refDate": "2026-11-13",
    "closeOld": 243.080002,
    "closeNew": 217.710007,
    "priceRatio": 0.895631,
-   "method": "倍數 × 收盤比（近似，無市值）"
+   "method": "倍數 × 收盤比——仍為整體縮放（近似）：repo 內沒有市值或淨負債"
   },
   "val.peer.sw.now": {
    "ticker": "NOW",
    "old": 15.31,
    "new": 13.12,
+   "newScaled": 13.12,
+   "separated": false,
    "refDate": "2026-11-13",
    "closeOld": 102.25,
    "closeNew": 87.610001,
    "priceRatio": 0.856822,
-   "method": "倍數 × 收盤比（近似，無市值）"
+   "method": "倍數 × 收盤比——仍為整體縮放（近似）：repo 內沒有市值或淨負債"
   },
   "val.peer.game.ttwo": {
    "ticker": "TTWO",
    "old": 55.39,
    "new": 51.06,
+   "newScaled": 51.06,
+   "separated": false,
    "refDate": "2026-11-13",
    "closeOld": 227.820007,
    "closeNew": 210.0,
    "priceRatio": 0.92178,
-   "method": "倍數 × 收盤比（近似，無市值）"
+   "method": "倍數 × 收盤比——仍為整體縮放（近似）：repo 內沒有市值或淨負債"
   },
   "val.peer.game.ntdoy": {
    "ticker": "NTDOY",
    "old": 13.86,
    "new": 13.73,
+   "newScaled": 13.73,
+   "separated": false,
    "refDate": "2026-11-13",
    "closeOld": 13.7,
    "closeNew": 13.57,
    "priceRatio": 0.990511,
-   "method": "倍數 × 收盤比（近似，無市值）"
+   "method": "倍數 × 收盤比——仍為整體縮放（近似）：repo 內沒有市值或淨負債"
   },
   "val.peer.game.ntes": {
    "ticker": "NTES",
    "old": 8.41,
    "new": 6.87,
+   "newScaled": 6.87,
+   "separated": false,
    "refDate": "2026-11-13",
    "closeOld": 122.18,
    "closeNew": 99.849998,
    "priceRatio": 0.817237,
-   "method": "倍數 × 收盤比（近似，無市值）"
+   "method": "倍數 × 收盤比——仍為整體縮放（近似）：repo 內沒有市值或淨負債"
   },
   "val.peer.pc.hpq": {
    "ticker": "HPQ",
    "old": 6.88,
    "new": 6.55,
+   "newScaled": 6.55,
+   "separated": false,
    "refDate": "2026-11-13",
    "closeOld": 29.360001,
    "closeNew": 27.959999,
    "priceRatio": 0.952316,
-   "method": "倍數 × 收盤比（近似，無市值）"
+   "method": "倍數 × 收盤比——仍為整體縮放（近似）：repo 內沒有市值或淨負債"
   },
   "val.peer.pc.dell": {
    "ticker": "DELL",
    "old": 13.25,
    "new": 10.69,
+   "newScaled": 10.69,
+   "separated": false,
    "refDate": "2026-11-13",
    "closeOld": 344.529999,
    "closeNew": 278.019989,
    "priceRatio": 0.806954,
-   "method": "倍數 × 收盤比（近似，無市值）"
+   "method": "倍數 × 收盤比——仍為整體縮放（近似）：repo 內沒有市值或淨負債"
   },
   "val.peer.pc.0992.hk": {
    "ticker": "0992.HK",
    "old": 7.89,
    "new": 7.32,
+   "newScaled": 7.32,
+   "separated": false,
    "refDate": "2026-11-13",
    "closeOld": 17.620001,
    "closeNew": 16.35,
    "priceRatio": 0.927923,
-   "method": "倍數 × 收盤比（近似，無市值）"
+   "method": "倍數 × 收盤比——仍為整體縮放（近似）：repo 內沒有市值或淨負債"
   },
   "val.msft.ownNtm": {
    "ticker": "MSFT",
    "old": 15.5,
    "new": 14.35,
+   "newScaled": 14.35,
+   "separated": true,
    "refDate": "2026-11-13",
    "closeOld": 523.880005,
    "closeNew": 484.519989,
@@ -125,6 +149,11 @@
   }
  },
  "medians": {
+  "sw": 8.98,
+  "game": 13.73,
+  "pc": 7.32
+ },
+ "mediansScaled": {
   "sw": 8.69,
   "game": 13.73,
   "pc": 7.32

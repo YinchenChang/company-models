@@ -15,7 +15,7 @@ import re
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
-VER, BUILT = "0.3.10", "2026-11-21"
+VER, BUILT = "0.3.11", "2026-11-24"
 U_IR = "https://www.microsoft.com/en-us/investor/earnings/fy-2027-q1/press-release-webcast（公司 IR 財務報表檔；本 repo 內為 mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx）"   # 出處網址只放 Coord 頁 L 欄（HTML 不顯示外部網址）
 BOLD = Font(bold=True)
 BLUE = Font(color="0000FF")
@@ -431,7 +431,7 @@ def coord(wb, C):
         c = ws.cell(r, j, h); c.font = BOLD; c.fill = HDR
     r += 1
     F1a = r
-    ws.cell(r, 1, "讀取層級：Tokenomics（算力單位經濟）——本模型讀 v21.10 快照（工作單所列現行 v22.0 不在本輪換快照；換快照另走 Tokenomics 同步通知）；Wattonomics——本模型不讀（無 WIF_ 名稱進模型），v0.3.2 快照只用於下方 C0 對帳列").font = BOLD; r += 1
+    ws.cell(r, 1, "讀取層級：Tokenomics（算力單位經濟）——本模型讀 " + TKV + " 快照（與 Tokenomics 現行版相同；外部稽核優化 W3-5，2026-11-23 由 v21.10 換入）；Wattonomics——本模型不讀（無 WIF_ 名稱進模型），v0.3.2 快照只用於下方 C0 對帳列").font = BOLD; r += 1
 
     def f1(name, yr, lv, adopt, unit, layer, note, fmt="0.000"):
         nonlocal r
@@ -725,7 +725,7 @@ def coord(wb, C):
     ws.cell(r, 4, f"=C{wrows['gcy']}").number_format = "#,##0.0"; ws.cell(r, 5, f"=E{rl}").number_format = "#,##0.0"; ws.cell(r, 6, f"=E{r}/D{r}-1").number_format = "+0.0%;-0.0%"
     ws.cell(r, 7, "參考（層級之間，不判定）"); ws.cell(r, 8, "Wattonomics CapexGW!G18（公司資本支出日曆年換算；輸入）"); ws.cell(r, 10, "Wattonomics Gap 頁玩家資本支出（GW 推算；輸出）"); rb_ = r; r += 1
     ws.cell(r, 1, "外部估計（賣方、研調、指引）只列參考，不判定：CY2026 資本支出指引（上列）、RPO（In 頁事實）等不進 C0。"); r += 1
-    ws.cell(r, 1, "版本與快照狀態：Tokenomics 本模型讀 v21.10（工作單所列現行 v22.0 未換；換 v22.0 另走 Tokenomics 同步通知）；Wattonomics v0.3.2 也讀 Tokenomics v21.10，兩側版本一致。Microsoft 模型值曾被 Wattonomics 讀入（資本支出寫回，In!K169、L169、K168、L168），本表只列層級值與追公式，不用該回饋判定。")
+    ws.cell(r, 1, "版本與快照狀態：Tokenomics 本模型讀 " + TKV + "（現行版；本模型所讀名稱數值與 v21.10 相同）；Wattonomics v0.3.2 內含的 Tokenomics 為 v21.10，與本模型的 " + TKV + " 不是同一版（層級值之間的版本差異只列參考）。Microsoft 模型值曾被 Wattonomics 讀入（資本支出寫回，In!K169、L169、K168、L168），本表只列層級值與追公式，不用該回饋判定。")
     r += 1
     return dict(F1=(F1a, F1b), F1chk=F1chk, F2h=F2h, F2hh=F2hh, F2=(F2a, F2b), rq=(rq1, rq2, rq3, rq9), rp=(rp1, rp2, rp3, rp9), rl=rl, rd1=rd1, rd2=rd2, rj=rj, rjr=rjr, rtr=rtr_conc, rdump=(rdump0, rdump1), rdump_note=rdump_note,
                 rg=rg, rgw=dict(y25=rgw25, q=(rgq1, rgq2, rgq3), l=rgl, d1=rgd1, d2=rgd2, fac=rfac, ais=rais, b1=rgb1, b2=rgb2, b25=rgb25, j=rgj, jr=rgjr, pg=rgpg), rc9=rc9, rc3=rc3, ra=(ra1, ra2, ra3, ra5), rai=rai, rcu=rcu, rmw=rmw, rn=rn, rnb=rnb, rnc=rnc, rs=rs, rr=rr_, rsame=rsame, rk=rk, rfb=rfb, rb=rb_, wrows=wrows, tol=TOL)
@@ -771,10 +771,15 @@ def readme13(wb, C, RVA, PLA, CRD):
                  "Devices and Consumer＝Search and advertising、XBOX、Windows OEM；兩分部加總為合併營收。FY2028 Agents and Infra "),
         f'TEXT({PLB("p_ai_seg", "G")},"0")', T("（其中 Azure AI "), f'TEXT({PLB("p_s_azai", "G")},"0")', T("、Copilot "), f'TEXT({PLB("p_cop", "G")},"0")', T("）、Devices and Consumer "), f'TEXT({PLB("p_dc", "G")},"0")',
         T("，合計 "), f'TEXT({PLB("p_tot", "G")},"0")', T(" 十億美元。"))
-    RD.cell(r, 1, F_(T("v0.3.10（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。現價 523.88（11-13）→ "), 'TEXT(px,"0.00")',
-                     T("；加權目標價 382.78 → "), f'TEXT({vb("tp")},"0.00")', T("；上檔空間 −26.9% → "), f'TEXT({vb("up")},"+0.0%;-0.0%")',
-                     T("；投資建議 放空 → "), f'{vb("rec")}', T("。同業倍數（11-13 值）依價格檔 11-13 與 11-20 兩日收盤比換到 2026-11-20（倍數 × 收盤比，近似，無市值；Microsoft 自身用市值法）：" + _PXTXT + "；本模型 WACC 權益權重與回購價隨現價自動重算，共識、rf、β、ERP 與其他假設不變；未換價同業：無。")))
+    # v0.3.11（2026-11-24；外部稽核優化第三波，會改值）：W3-7 同業換價分離淨負債、W3-5 Tokenomics 快照 v22.0；v0.3.10 列凍結為固定文字
+    RD.cell(r, 1, F_(T("v0.3.11（2026-11-24）：外部稽核優化第三波（會改值；現價不變，2026-11-20 收盤 "), 'TEXT(px,"0.00")',
+                     T("）。(1) 同業 EV／EBITDA 的換價改為分離淨負債（W3-7）：Microsoft 自身與企業軟體同業的 ORCL、CRM，企業價值只有市值部分隨股價變、淨負債不變；其餘同業 repo 內沒有市值，仍為倍數 × 收盤比的整體縮放（近似）。各組中位數（11-13 → 11-20）：" + _PXTXT
+                       + "。(2) Tokenomics 快照 v21.10 → v22.0（W3-5）：本模型讀的名稱數值相同，只有版本與出處文字改變。加權目標價 354.14 → "), f'TEXT({vb("tp")},"0.00")',
+                     T("；上檔空間 −26.9% → "), f'TEXT({vb("up")},"+0.0%;-0.0%")', T("；投資建議 放空 → "), f'{vb("rec")}',
+                     T("。上檔空間距放空與中立的分界（−25%）約 1 個百分點。共識、rf、β、ERP 與其他假設不變。")))
     out["ver"] = r; r += 1
+    RD.cell(r, 1, "v0.3.10（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。現價 523.88（11-13）→ 484.52；加權目標價 382.78 → 354.14；上檔空間 −26.9% → -26.9%；投資建議 放空 → 放空。同業倍數（11-13 值）依價格檔 11-13 與 11-20 兩日收盤比換到 2026-11-20（倍數 × 收盤比，近似，無市值；Microsoft 自身用市值法）：非 AI 雲端中位數 14.66 → 12.79、數位廣告 8.54 → 7.35、企業軟體 10.48 → 8.69、遊戲 13.86 → 13.73、PC 7.89 → 7.32、Microsoft 自身 15.5 → 14.35；本模型 WACC 權益權重與回購價隨現價自動重算，共識、rf、β、ERP 與其他假設不變；未換價同業：無。")
+    r += 1
     RD.cell(r, 1, "v0.3.9（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。現價 535.93（11-05）→ 523.88；加權目標價 384.07 → 382.78；上檔空間 −28.3% → −26.9%；投資建議 放空 → 放空。同業倍數由 2026-10-07／10-08 報價日換到 11-13（倍數 × 收盤比，近似）")
     r += 1
     RD.cell(r, 1, "v0.3.8（2026-11-15）：只改展示層與新增頁——個股 HTML 版面規格 v1.3：章節改為命題→估值→敏感度→反向 DCF→損益→驅動因子→對帳→資料狀態；新增 RevDCF 頁（反向 DCF）、PL 頁末標準損益表"
