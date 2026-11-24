@@ -1,0 +1,6 @@
+{"model": "claude-sonnet-5-5", "budget_usd": 6,
+ "companies": [
+  {"folder": "daifuku", "name": "Daifuku 大福（6383.T，東證 Prime）", "yahoo": "6383.T", "line": "線 5 倉儲物流自動化（lines/warehouse）", "profile": "6383"},
+  {"folder": "zhaowei", "name": "兆威機電（003021.SZ，深交所）", "yahoo": "003021.SZ", "line": "線 6 共用零組件（lines/components；靈巧手，另讀線 4 人形 lines/humanoid）", "profile": "003021"},
+  {"folder": "weride", "name": "文遠知行 WeRide（WRD，NASDAQ；另有港股）", "yahoo": "WRD", "line": "線 1 Robotaxi（lines/robotaxi）", "profile": "WRD"}
+ ]}

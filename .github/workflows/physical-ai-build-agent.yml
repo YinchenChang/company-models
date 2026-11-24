@@ -1,0 +1,89 @@
+# 實體 AI 個股模型建置（API 版；2026-11-24 起，依 2026-11-24 授權的 API 額度上限執行）。
+# 觸發：push 到 claude/phys-batch3 且 physical_ai/agent/request.json 有變動。
+# request.json：{"model": "...", "budget_usd": 每家上限, "companies": [{folder,name,yahoo,line,profile}]}
+# 每家一個 job，用 Claude Code（secrets.ANTHROPIC_API_KEY）依 physical_ai/agent/prompt.md 建置，
+# 結果推到 claude/phys-batch3-out/<資料夾>（只含 physical_ai/<資料夾>/ 與 physical_ai/agent/out/<資料夾>.json）。不寫 main。
+name: physical-ai-build-agent
+on:
+  push:
+    branches: [claude/phys-batch3]
+    paths: ['physical_ai/agent/request.json']
+permissions:
+  contents: write
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      companies: ${{ steps.p.outputs.companies }}
+      model: ${{ steps.p.outputs.model }}
+      budget: ${{ steps.p.outputs.budget }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: p
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          r = json.load(open("physical_ai/agent/request.json"))
+          print("companies=" + json.dumps(r["companies"], ensure_ascii=False))
+          print("model=" + r["model"]); print("budget=" + str(r["budget_usd"]))
+          PY
+  build:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        c: ${{ fromJson(needs.plan.outputs.companies) }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: 安裝建置工具
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends python3-openpyxl python3-numpy libreoffice-calc fonts-noto-cjk >/dev/null
+          pip install -q openpyxl numpy || true
+          npm install -g @anthropic-ai/claude-code >/dev/null 2>&1
+      - name: 建置（Claude Code，API 額度）
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          F: ${{ matrix.c.folder }}
+          NAME: ${{ matrix.c.name }}
+          YAHOO: ${{ matrix.c.yahoo }}
+          LINE: ${{ matrix.c.line }}
+          PROFILE: ${{ matrix.c.profile }}
+          MODEL: ${{ needs.plan.outputs.model }}
+          BUDGET: ${{ needs.plan.outputs.budget }}
+        run: |
+          mkdir -p physical_ai/agent/out
+          python3 - <<'PY'
+          import os
+          t = open("physical_ai/agent/prompt.md", encoding="utf-8").read()
+          for k, e in (("FOLDER", "F"), ("NAME", "NAME"), ("YAHOO", "YAHOO"), ("LINE", "LINE"), ("PROFILE", "PROFILE")):
+              t = t.replace("{" + k + "}", os.environ[e])
+          open("/tmp/prompt.txt", "w", encoding="utf-8").write(t)
+          PY
+          set +e
+          timeout 90m claude -p "$(cat /tmp/prompt.txt)" --model "$MODEL" --max-budget-usd "$BUDGET" \
+            --dangerously-skip-permissions --output-format json > /tmp/result.json 2> /tmp/err.log
+          echo "exit=$?"
+          python3 - <<'PY'
+          import json, os
+          f = os.environ["F"]
+          try: r = json.load(open("/tmp/result.json"))
+          except Exception as e: r = {"error": repr(e), "stderr": open("/tmp/err.log").read()[-2000:]}
+          keep = {k: r.get(k) for k in ("subtype", "is_error", "num_turns", "duration_ms", "total_cost_usd", "result", "error", "stderr")}
+          json.dump(keep, open(f"physical_ai/agent/out/{f}.json", "w"), ensure_ascii=False, indent=1)
+          print(json.dumps({k: keep[k] for k in ("subtype", "num_turns", "total_cost_usd")}, ensure_ascii=False)); print(keep.get("result") or keep)
+          PY
+      - name: 推到結果分支
+        if: always()
+        env:
+          F: ${{ matrix.c.folder }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -q -b "claude/phys-batch3-out/$F"
+          git add -A "physical_ai/$F" "physical_ai/agent/out/$F.json"
+          git commit -q -m "physical_ai 第三批：$F v0.1（API 建置代理，未獨立核對）" || echo "no change"
+          git push -f origin "claude/phys-batch3-out/$F"
