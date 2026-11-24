@@ -248,7 +248,7 @@ def main():
         "kpis": [{"k": "次產業", "v": str(len(subs)), "s": f"{len(layers)} 層"},
                  {"k": "覆蓋個股（地位表）", "v": str(len(position)), "s": f'亞太掛牌 {sum(1 for p in position if str(p["apac"]).startswith("是"))} 家'},
                  {"k": "已建模", "v": f"{n_models_ok}／{len(models)}", "s": "個股模型現行成品"},
-                 {"k": "現價日", "v": pdates[-1] if pdates else "—", "s": "各模型股價基準日"}],
+                 {"k": "現價日", "v": (pdates[0] if pdates[0] == pdates[-1] else f"{pdates[0]} ～ {pdates[-1]}") if pdates else "—", "s": "各模型股價基準日不同，逐家見表" if pdates and pdates[0] != pdates[-1] else "各模型股價基準日"}],
         "layers": [dict(l, n_cov=sum(next(s for s in subs if s["code"] == c)["n"] for c in l["subs"]),
                         n_model=sum(1 for c in l["subs"] for x in next(s for s in subs if s["code"] == c)["companies"] if x["tk"] in models))
                    for l in layers],
