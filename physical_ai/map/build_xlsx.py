@@ -12,8 +12,8 @@ from openpyxl.workbook.defined_name import DefinedName
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
-VERSION = "v0.4"
-DATE = "20261123"
+VERSION = "v0.5"
+DATE = "20261124"
 OUT = os.path.join(HERE, "dist", f"{DATE}_實體AI地圖_資料_{VERSION}.xlsx")
 YEL = PatternFill("solid", fgColor="FFF2CC")
 HDR = PatternFill("solid", fgColor="DDEBF7")
@@ -122,14 +122,17 @@ def named(wb, nm):
 OWN = {"TSLA": ("tesla", "*Tesla個股模型_v*.xlsx"), "6324": ("harmonic_drive", "*.xlsx"), "6268": ("nabtesco", "*.xlsx"),
        "2049": ("hiwin", "*.xlsx"), "6954": ("fanuc", "*.xlsx"), "6506": ("yaskawa", "*.xlsx"),
        # 第二批（2026-11-23）
-       "MBLY": ("mobileye", "*.xlsx"), "9660": ("horizon", "*.xlsx"), "PONY": ("pony", "*.xlsx"), "9880": ("ubtech", "*.xlsx"), "UNITREE": ("unitree", "*.xlsx"), "2590": ("geekplus", "*.xlsx"), "SYM": ("symbotic", "*.xlsx"), "1316": ("nexteer", "*.xlsx"), "6481": ("thk", "*.xlsx"), "688017": ("leaderdrive", "*.xlsx"), "6273": ("smc", "*.xlsx"), "6861": ("keyence", "*.xlsx")}
+       "MBLY": ("mobileye", "*.xlsx"), "9660": ("horizon", "*.xlsx"), "PONY": ("pony", "*.xlsx"), "9880": ("ubtech", "*.xlsx"), "UNITREE": ("unitree", "*.xlsx"), "2590": ("geekplus", "*.xlsx"), "SYM": ("symbotic", "*.xlsx"), "1316": ("nexteer", "*.xlsx"), "6481": ("thk", "*.xlsx"), "688017": ("leaderdrive", "*.xlsx"), "6273": ("smc", "*.xlsx"), "6861": ("keyence", "*.xlsx"),
+       # 第三批（2026-11-24）
+       "6383": ("daifuku", "*.xlsx"), "003021": ("zhaowei", "*.xlsx"), "WRD": ("weride", "*.xlsx"), "6471": ("nsk", "*.xlsx"), "NOVT": ("novanta", "*.xlsx"), "AUTO": ("autostore", "*.xlsx"), "KGX": ("kion", "*.xlsx"), "300124": ("inovance", "*.xlsx"), "601100": ("hengli", "*.xlsx"), "RRX": ("regal_rexnord", "*.xlsx"), "603501": ("omnivision", "*.xlsx"), "2382.HK": ("sunny", "*.xlsx"), "603667": ("wuzhou", "*.xlsx"), "603728": ("moons", "*.xlsx"), "002050": ("sanhua", "*.xlsx"), "601689": ("tuopu", "*.xlsx"), "002747": ("estun", "*.xlsx"), "2498": ("robosense", "*.xlsx"), "HSAI": ("hesai", "*.xlsx")}
 SEGM = {"WAYMO": ("waymo", "*.xlsx"), "TSLA-RT": ("tesla_robotaxi", "*.xlsx")}
 # 跨圖：產業地位代號 → 算力地圖代號
 CROSS = {"NVDA-C": "NVDA", "2330": "2330", "AMZN": "AMZN", "TER": "TER", "2308": "2308", "2317": "2317"}
 TP_PATS = [r"^目標價（DCF 與", r"^加權目標價"]
 GATE_PATS = [r"^入不敷出判定用"]
 CCY = {"TSLA": "USD", "6324": "JPY", "6268": "JPY", "2049": "TWD", "6954": "JPY", "6506": "JPY",
-       "MBLY": "USD", "9660": "HKD", "PONY": "USD", "9880": "HKD", "UNITREE": "CNY", "2590": "HKD", "SYM": "USD", "1316": "HKD", "6481": "JPY", "688017": "CNY", "6273": "JPY", "6861": "JPY"}
+       "MBLY": "USD", "9660": "HKD", "PONY": "USD", "9880": "HKD", "UNITREE": "CNY", "2590": "HKD", "SYM": "USD", "1316": "HKD", "6481": "JPY", "688017": "CNY", "6273": "JPY", "6861": "JPY",
+       "6383": "JPY", "003021": "CNY", "WRD": "USD", "6471": "JPY", "NOVT": "USD", "AUTO": "NOK", "KGX": "EUR", "300124": "CNY", "601100": "CNY", "RRX": "USD", "603501": "CNY", "2382.HK": "HKD", "603667": "CNY", "603728": "CNY", "002050": "CNY", "601689": "CNY", "002747": "CNY", "2498": "HKD", "HSAI": "USD"}
 
 
 def own_models():

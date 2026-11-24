@@ -1,0 +1,36 @@
+{
+ "company": "robosense",
+ "ticker": "2498.HK",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "產品（Products）",
+   "label": "產品營收",
+   "period": "H1'26",
+   "value": 958.003,
+   "unit": "RMB m",
+   "source": "公司 2026 年中期業績公告（港交所 2498，2026-08-26）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0826/2026082601087.pdf"
+  },
+  {
+   "name": "解決方案（Solutions）",
+   "label": "解決方案營收",
+   "period": "H1'26",
+   "value": 17.22,
+   "unit": "RMB m",
+   "source": "公司 2026 年中期業績公告（港交所 2498，2026-08-26）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0826/2026082601087.pdf"
+  },
+  {
+   "name": "服務與其他（Services and others）",
+   "label": "服務與其他營收",
+   "period": "H1'26",
+   "value": 44.526,
+   "unit": "RMB m",
+   "source": "公司 2026 年中期業績公告（港交所 2498，2026-08-26）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0826/2026082601087.pdf"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分類合計 − 營收（應為 0）"
+ ],
+ "note": "公司披露營收分類為產品、解決方案、服務與其他（中期業績公告）；Q 頁 H1'25、H1'26 對帳。ADAS 與機器人營收分拆公司未揭露金額（只稱機器人近一半），PL 頁為推導值；PL 頁另有「檢查：分部合計 − 營收（應為 0）」（FY2026 起）"
+}

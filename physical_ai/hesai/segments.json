@@ -1,0 +1,37 @@
+{
+ "company": "禾賽 Hesai",
+ "ticker": "HSAI",
+ "model_sheet": "PL",
+ "official_segments": [
+  {
+   "name": "Product revenues",
+   "label": "產品營收",
+   "period": "FY2025",
+   "value": 2982.9,
+   "unit": "RMB M",
+   "source": "公司 6-K 附件 99.1：2025 年第四季及全年未經審計財務報告（2026-03-24）https://www.sec.gov/Archives/edgar/data/1861737/000110465926033591/tm269592d1_ex99-1.htm"
+  },
+  {
+   "name": "Service revenues",
+   "label": "服務營收",
+   "period": "FY2025",
+   "value": 44.6,
+   "unit": "RMB M",
+   "source": "公司 6-K 附件 99.1：2025 年第四季及全年未經審計財務報告（2026-03-24）https://www.sec.gov/Archives/edgar/data/1861737/000110465926033591/tm269592d1_ex99-1.htm"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "Product revenues",
+   "labels": [
+    "光達營收（出貨量 × ASP）",
+    "策略成長業務營收（致動模組等）"
+   ]
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收（應為 0）",
+  "檢查：光達＋策略成長業務 − 產品營收（應為 0）"
+ ],
+ "note": "公司只揭露產品與服務兩類營收（與出貨量）；光達與策略成長業務為模型子列（預測期 FY2026 起），策略成長業務營收指引 200–300 百萬人民幣。FY2023 分部未取得"
+}

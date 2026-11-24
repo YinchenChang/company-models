@@ -1,0 +1,36 @@
+{
+ "company": "nsk",
+ "ticker": "6471.T",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "產業機械",
+   "label": "產業機械 營收",
+   "period": "FY2026 公司指引（2027年3月期）",
+   "value": 436.0,
+   "unit": "¥B",
+   "source": "Quartr NSK Q2 2027 earnings summary（資料商摘要，2026-11）https://quartr.com/events/nsk-ltd-6471-q2-2027_FYqHy2GP（產業機械、汽車）；轉向與其他為差額（Derived）"
+  },
+  {
+   "name": "汽車",
+   "label": "汽車 營收",
+   "period": "FY2026 公司指引（2027年3月期）",
+   "value": 403.0,
+   "unit": "¥B",
+   "source": "Quartr NSK Q2 2027 earnings summary（資料商摘要，2026-11）https://quartr.com/events/nsk-ltd-6471-q2-2027_FYqHy2GP（產業機械、汽車）；轉向與其他為差額（Derived）"
+  },
+  {
+   "name": "轉向與其他（差額）",
+   "label": "轉向與其他、內部調整（差額）營收",
+   "period": "FY2026 公司指引（2027年3月期）",
+   "value": 211.0,
+   "unit": "¥B",
+   "source": "Quartr NSK Q2 2027 earnings summary（資料商摘要，2026-11）https://quartr.com/events/nsk-ltd-6471-q2-2027_FYqHy2GP（產業機械、汽車）；轉向與其他為差額（Derived）"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收（應為 0）"
+ ],
+ "note": "報告分部：產業機械、汽車、轉向（2025-09 起合併）。本次取得的來源只給產業機械與汽車的 FY2026 指引營收，轉向與其他以合併減兩者的差額列示（Derived），故 Q 頁分部檢查必為 0，不具獨立驗證力；PL 頁分部營收以此為起點，FY2025 以前分部營收未取得。"
+}

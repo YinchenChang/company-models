@@ -1,0 +1,44 @@
+{
+ "company": "sunny",
+ "ticker": "2382.HK",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "手機",
+   "label": "手機產品營收",
+   "period": "2026 上半年",
+   "value": 13148.628,
+   "unit": "百萬人民幣",
+   "source": "公司 2026 中期業績公告〔港交所，2026-08-26〕https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0826/2026082601115.pdf 分部資訊"
+  },
+  {
+   "name": "車載",
+   "label": "車載產品營收",
+   "period": "2026 上半年",
+   "value": 3761.928,
+   "unit": "百萬人民幣",
+   "source": "公司 2026 中期業績公告〔港交所，2026-08-26〕https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0826/2026082601115.pdf 分部資訊"
+  },
+  {
+   "name": "XR",
+   "label": "XR 產品營收",
+   "period": "2026 上半年",
+   "value": 955.72,
+   "unit": "百萬人民幣",
+   "source": "公司 2026 中期業績公告〔港交所，2026-08-26〕https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0826/2026082601115.pdf 分部資訊"
+  },
+  {
+   "name": "其他",
+   "label": "其他產品營收",
+   "period": "2026 上半年",
+   "value": 4039.428,
+   "unit": "百萬人民幣",
+   "source": "公司 2026 中期業績公告〔港交所，2026-08-26〕https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0826/2026082601115.pdf 分部資訊"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部營收合計 − 合併營收（應為 0）"
+ ],
+ "note": "官方報告分部為手機、車載、XR、其他四類（2025 年報起；FY2024 與 2025H1 為公司重編值）。PL 營收列直接用四分部；另有「機器人與 Robotaxi 相機模組」命題子列（線 6 市場 × 份額，FY2026 以前為 0）與檢查列。"
+}

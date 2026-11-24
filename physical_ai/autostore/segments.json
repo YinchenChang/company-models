@@ -1,0 +1,20 @@
+{
+ "company": "autostore",
+ "ticker": "AUTO.OL",
+ "model_sheet": "PL",
+ "official_segments": [
+  {
+   "name": "合併營收（單一報告分部）",
+   "label": "營收（合併）",
+   "period": "FY2025",
+   "value": 0.5386,
+   "unit": "US$B",
+   "source": "AutoStore Q4 2025 financial results（公司公告，2026-02-12）https://www.autostoresystem.com/investors-press-releases/autostore-q4-2025-financial-results（經搜尋摘要讀取，非全文）"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：市場 × 份額 − 營收（FY2026 起）"
+ ],
+ "note": "公司為單一報告分部；可取得公告未拆分系統與軟體服務營收，故以合併營收為唯一分部列，PL 頁另以「市場 × 份額 − 營收」核對推導一致（FY2026 起）。"
+}
