@@ -675,7 +675,7 @@
   {
    "key": "rel_mult+ps_only",
    "side": "低",
-   "label": "相對倍數取 PS 單讀數：relmult_hist 的 ps_only（工作單 G5.1）",
+   "label": "相對倍數取 P/S 單讀數：relmult_hist 的 ps_only（工作單 G5.1）",
    "setting": "rel_mult＝ps_only 1.259（基準 1.271）",
    "tp": 287.494699338217,
    "dcf": 90.6907168554095,

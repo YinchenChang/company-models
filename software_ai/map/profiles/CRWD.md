@@ -62,7 +62,7 @@ asof: 2026-11-23
 
 - 2026-02-20 Anthropic 發表 Claude Code Security 後，CRWD 兩日跌近 20%，市場擔心 AI 平台能自建防護 [本專案：data/research_crowdstrike.md (8)]。
 - 另一面，公司把 Claude、OpenAI 都當通路與合作夥伴 [外部新聞：CrowdStrike 新聞稿（IR）]；本專案研究包記錄公司稱 AI 擴大攻擊面是需求來源 [本專案：data/research_crowdstrike.md (8)]。
-- 現價 P/S 約為同業中位數的 4.4 倍，代表市場給的是平台溢價 [本專案：crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.1.xlsx Val!B19]。
+- 現價 P/S 約為同業中位數的 4.4 倍，代表市場給的是平台溢價 [本專案：crowdstrike/dist/20261124_CrowdStrike個股模型_v0.2.2.xlsx Val!B19]。
 
 ## 主要客戶
 - 財報揭露的客戶集中度：10-K 稱「業務不依賴任何特定終端客戶」，未揭露占營收 10% 以上的客戶；客戶逾 88,000 家（含託管資安服務商〔MSSP〕的終端客戶）[外部・未經本專案檢核：CrowdStrike 10-K FY2026 Customers 節，2026-03]。
@@ -102,12 +102,12 @@ asof: 2026-11-23
 - 價格保留與 AI 代理單位數｜本專案兩項承重 Assumed（ero、pf 與代理單位比），決定 AI 淨效果是正是負 [本專案：crowdstrike/README.md 承重 Assumed 2；Thesis 頁]｜公司揭露 AIDR 絕對 ARR 時
 - 美元淨留存率與 Flex 轉換增幅｜用來檢驗定價是否受壓；FY2026 為 115%，Flex 轉換平均 ARR 增逾 40% [本專案：data/research_crowdstrike.md (4)(5)]｜Q3 FY2027 財報（預計 2026 年 12 月初）
 - ARR 軌跡｜公司 FY2027 期末 ARR 指引 6,603.0M–6,611.9M，模型為 6,685M [本專案：data/facts_crowdstrike.csv FY2027 期末 ARR 指引；crowdstrike/README.md 承重 Assumed 1]｜Q3 FY2027 財報
-- 推論成本｜模型情境 B 的增量推論成本約占 non-GAAP 營業成本 6.9%，不是主要風險 [本專案：crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.1.xlsx README!A7]｜Tokenomics 快照更新時
+- 推論成本｜模型情境 B 的增量推論成本約占 non-GAAP 營業成本 6.9%，不是主要風險 [本專案：crowdstrike/dist/20261124_CrowdStrike個股模型_v0.2.2.xlsx README!A7]｜Tokenomics 快照更新時
 - SBC 與 GAAP 利益率｜SBC 約占營收 23%，GAAP 營業利益率仍為負，是 DCF 與 non-GAAP 口徑差距主因 [本專案：data/research_crowdstrike.md (6)；README!A8]｜Q3 FY2027 財報
 - 法律與資料品質｜DOJ／SEC 就營收認列與 ARR 報告的資訊請求未有結論；Delta 案在證據開示 [本專案：crowdstrike/README.md 風險登錄]｜10-Q／8-K 披露
 
 ## 來源
-1. 本專案：`software_ai/crowdstrike/data/research_crowdstrike.md`；`data/facts_crowdstrike.csv`；`README.md`；`dist/20261117_CrowdStrike個股模型_v0.2.1.xlsx`（README、Val）；`software_ai/map/dist/data.json`
+1. 本專案：`software_ai/crowdstrike/data/research_crowdstrike.md`；`data/facts_crowdstrike.csv`；`README.md`；`dist/20261124_CrowdStrike個股模型_v0.2.2.xlsx`（README、Val）；`software_ai/map/dist/data.json`
 2. [CrowdStrike Form 10-K FY2026](https://www.sec.gov/Archives/edgar/data/1535527/000153552726000010/crwd-20260131.htm)（2026-03）
 3. [CrowdStrike 2026 Proxy Statement（DEF 14A）](https://www.sec.gov/Archives/edgar/data/1535527/000110465926055599/tm2532333-4_def14a.htm)（2026-04）
 4. [Vanguard Group Schedule 13G/A](https://www.sec.gov/Archives/edgar/data/0001535527/000010290926001050/primary_doc.xml)（2026-03-26）

@@ -128,7 +128,7 @@ valuation = {"id": "valuation", "title": "估值", "blocks": [
      "rows": [[f"@Val!A{VR[k]}", vv(k, "B", f)] for k, f in (("c_ev", "n0"), ("c_eb", "n1"), ("c_mult", "n1"), ("c_peer", "n1"), ("c_ratio", "n2"), ("c_rel", "n2"), ("c_rr", "sp1"))]},
     {"type": "table", "caption": "同業 EV／EBITDA（TTM；Analogy；逾期＝資料日與現價基準日相差超過兩個交易日）", "head": ["公司", "對應分部", "會計準則", "租賃處理", "倍數", "資料日", "逾期"],
      "rowgen": {"sheet": "Peers", "rows": "4-14", "cols": ["A", "C", "D", "E", "H", "I", "J"], "fmts": ["", "", "", "", "x1", "", ""]}},
-    {"type": "table", "caption": "歷史相對倍數 rel_mult：PS 與 PSG 兩條序列讀數（relmult_hist 分組讀數；Derived）", "head": ["分部", "PS 讀數", "PSG 讀數", "幾何平均（基準）", "兩讀數差異", "差異大於三成", "只用 PS", "只用 PSG", "下界", "上界"],
+    {"type": "table", "caption": "歷史相對倍數 rel_mult：P/S 與 PSG 兩條序列讀數（relmult_hist 分組讀數；Derived）", "head": ["分部", "P/S 讀數", "PSG 讀數", "幾何平均（基準）", "兩讀數差異", "差異大於三成", "只用 P/S", "只用 PSG", "下界", "上界"],
      "rowgen": {"sheet": "Peers", "rows": "25-27", "cols": ["A", "B", "C", "D", "E", "F", "J", "K", "L", "M"], "fmts": ["", "n2", "n2", "n2", "p0", "", "n2", "n2", "n2", "n2"]}},
     {"type": "note", "parts": ["@README!A43"]},
     {"type": "table", "caption": "DCF（股票薪酬加回）對照讀數：只作對照，不進加權目標價", "head": ["項目", "數值"],
@@ -199,7 +199,7 @@ recon = {"id": "recon", "title": "對帳：公司指引與市場共識", "blocks
 status = {"id": "status", "title": "資料狀態", "blocks": [
     {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期", "@README!A1"], ["build_id", f"@Sens!D{rm['SE_BID']}"], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"]]},
     {"type": "h3", "text": "本版要點與限制"},
-    {"type": "list", "items": ["@README!A2", "@README!A14", "@README!A15", "@README!A16", "@README!A17", "@README!A41", "@README!A42", "@README!A43", "@README!A44"]},
+    {"type": "list", "items": ["@README!A2", "@README!A14", "@README!A15", "@README!A16", "@README!A17", "@README!A41", "@README!A42", "@README!A43", "@README!A44", "@README!A45"]},
     {"type": "h3", "text": "市場資料日期與失效條件"},
     {"type": "list", "items": ["@README!A29", "@README!A31"]},
     {"type": "table", "caption": "風險登錄", "head": ["風險", "是否建模", "理由", "觀察指標"], "rowgen": {"sheet": "README", "rows": "34-38", "cols": ["A", "B", "C", "D"]}},

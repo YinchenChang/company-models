@@ -7,11 +7,11 @@ hq: 美國麻州劍橋 [外部・未經本專案檢核]
 founded: 2005 [外部・未經本專案檢核]
 employees: 8,882（2025 年底）[本專案：software_ai/hubspot/data/research_hubspot.md (4)]
 fiscal_year_end: 12 月底 [本專案：software_ai/hubspot/data/research_hubspot.md 開頭說明]
-asof: 2026-11-23
+asof: 2026-11-24
 ---
 
 ## 一句話定位
-位於企業軟體的前台應用層（CRM、行銷與客服自動化），向員工 2–2,000 人的中型 B2B 企業賣訂閱，按客戶規模與層級（Starter、Professional、Enterprise）計價；AI 的爭點是「按任務計價的 AI 代理能帶來多少增量，能否抵過席位被代理取代的侵蝕」[本專案：software_ai/hubspot/data/research_hubspot.md (1)；software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx README!A3]。
+位於企業軟體的前台應用層（CRM、行銷與客服自動化），向員工 2–2,000 人的中型 B2B 企業賣訂閱，按客戶規模與層級（Starter、Professional、Enterprise）計價；AI 的爭點是「按任務計價的 AI 代理能帶來多少增量，能否抵過席位被代理取代的侵蝕」[本專案：software_ai/hubspot/data/research_hubspot.md (1)；software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx README!A3]。
 
 ## 公司在做什麼
 - 賣的是一套整合的客戶平台：行銷、銷售、客服、內容、營運等產品（公司稱為 Hub），共用同一份客戶資料庫（Smart CRM）[本專案：software_ai/hubspot/data/research_hubspot.md (2)]。
@@ -35,7 +35,7 @@ asof: 2026-11-23
 ## 市場定位與產業位置
 - 在本專案的地圖上屬「S2 企業應用層」的 CRM 次產業，地位分數 69，次產業內排第 2 [本專案：software_ai/map/dist/data.json HUBS]。同次產業另一家已建模公司是 Salesforce。
 - 護城河來自整合與中型市場：一套平台涵蓋行銷、銷售、客服，並靠合作夥伴（協助客戶導入的服務商）觸及大量中小客戶。合作夥伴與其轉介客戶約占 2025 年底客戶數的 25%、2025 年營收的 49% [外部・未經本專案檢核：HubSpot 10-K FY2025（SEC），2026-02-11]。
-- 定價方式正在轉換：席位式訂閱仍是主體，AI 代理按結果收費；新的「seats and credits」方案先在北歐、荷比盧、EMEA 新客戶試行，初始單價較低、點數用量約 2–3 倍，結果預計 2027-02 公布 [本專案：software_ai/hubspot/data/research_hubspot.md (5)；software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx README!A30]。
+- 定價方式正在轉換：席位式訂閱仍是主體，AI 代理按結果收費；新的「seats and credits」方案先在北歐、荷比盧、EMEA 新客戶試行，初始單價較低、點數用量約 2–3 倍，結果預計 2027-02 公布 [本專案：software_ai/hubspot/data/research_hubspot.md (5)；software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx README!A30]。
 - 管理層說，AI 改變了客戶找到、評估與購買軟體的方式，進站詢問型需求承壓，預期延續到 2027 [本專案：software_ai/hubspot/data/research_hubspot.md (5)]。
 - 市場規模、市占：本專案未建立。
 
@@ -52,7 +52,7 @@ asof: 2026-11-23
 - 新任執行長把這次換手稱為「refounding」（重新創辦），範圍含產品、市場進入方式與文化；公司重申 Q4 與全年 2026 指引不變 [外部新聞：HubSpot 8-K 新聞稿，2026-11-12]。
 - 本專案記錄到：2026-10-01 的重組計畫約 7% 員工（約 660 人），費用 65–75 百萬美元，多數在 Q4 認列 [本專案：software_ai/hubspot/data/research_hubspot.md (6)]。
 - 本專案記錄到：Q3'26 回購 230.8 百萬美元、授權剩餘約 964 百萬美元，淨現金 1,310.5 百萬美元、無債務 [本專案：software_ai/hubspot/data/research_hubspot.md (8)]。
-- 本專案的模型與研究包截至 2026-11-17 未反映 2026-11-12 的執行長與財務長異動。
+- 2026-11-12 的執行長與財務長異動已收進研究包（8-K 查證）；公司同日重申指引，對成本率的影響目前分不出來，模型數字未因此調整 [本專案：hubspot/data/research_hubspot.md (5a)；hubspot/README.md]。
 
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
@@ -99,15 +99,15 @@ asof: 2026-11-23
 - 2026-08-06｜Q2 財報：營收 911.7 百萬美元；全年營收指引中點低於市場預期，股價單日跌逾 20%。為什麼重要：「AI 改變客戶發現與購買軟體的方式」成為管理層主要說法 [本專案：software_ai/hubspot/data/research_hubspot.md (3)；外部新聞：Finviz；CFO Dive]
 
 ## 需要觀察的事項
-- 席位被取代的速度｜模型的承重變數；FY2032 的 AI 淨效果在情境 A／B／C 為 −22／−460／−970（US$M），主因是席位取代損失而非推論成本 [本專案：software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx Thesis!L39、Thesis!L72、Thesis!L105]｜2027-02 Q4 財報（NRR 是否低於 100%）
-- 客戶淨增與每客戶營收｜Q4 淨增管理層稱低於 5,000；模型 FY2027 客戶年增 6.0% [本專案：software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx README!A33]｜2027-02 Q4 財報與 FY2027 指引
-- seats and credits 的初始單價｜試點區單價較低、點數用量 2–3 倍，幅度未揭露；若擴及現有客戶，侵蝕可能擴大 [本專案：software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx README!A34]｜2027-02 公布 EMEA 試點結果
-- 非 GAAP 營業利益率｜模型 FY2027 為 21.3%，低於管理層 2027 年 23–24% 的目標；重組節省不計入基準 [本專案：software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx README!A31；README!A39]｜2027-02 起各季
-- 每任務推論成本｜每解決一次對話的推論成本約 0.068 美元，占單價 13.7%；公司未揭露 token 用量，本專案以 Tokenomics 工作負載類比 [本專案：software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx Thesis!C8、Thesis!D9]｜AI 供應鏈 Tokenomics 新版
-- 領導層異動後的方向｜新執行長與新財務長是否改變產品、定價與費用路徑，本專案模型尚未納入 [判斷]｜2026-12 至 2027-02（Burgess 到任、Q4 財報）
+- 席位被取代的速度｜模型的承重變數；FY2032 的 AI 淨效果在情境 A／B／C 為 −22／−460／−970（US$M），主因是席位取代損失而非推論成本 [本專案：software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx Thesis!L39、Thesis!L72、Thesis!L105]｜2027-02 Q4 財報（NRR 是否低於 100%）
+- 客戶淨增與每客戶營收｜Q4 淨增管理層稱低於 5,000；模型 FY2027 客戶年增 6.0% [本專案：software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx README!A33]｜2027-02 Q4 財報與 FY2027 指引
+- seats and credits 的初始單價｜試點區單價較低、點數用量 2–3 倍，幅度未揭露；若擴及現有客戶，侵蝕可能擴大 [本專案：software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx README!A34]｜2027-02 公布 EMEA 試點結果
+- 非 GAAP 營業利益率｜模型 FY2027 為 21.3%，低於管理層 2027 年 23–24% 的目標；重組節省不計入基準 [本專案：software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx README!A31；README!A39]｜2027-02 起各季
+- 每任務推論成本｜每解決一次對話的推論成本約 0.068 美元，占單價 13.7%；公司未揭露 token 用量，本專案以 Tokenomics 工作負載類比 [本專案：software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx Thesis!C8、Thesis!D9]｜AI 供應鏈 Tokenomics 新版
+- 領導層異動後的方向｜新執行長與新財務長是否改變產品、定價與費用路徑，本專案模型未因此改數字，重判條件見模型 README [判斷]｜2026-12 至 2027-02（Burgess 到任、Q4 財報）
 
 ## 來源
-1. 本專案：`software_ai/hubspot/data/research_hubspot.md`；`software_ai/hubspot/README.md`；`software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx`（README、Thesis）；`software_ai/map/dist/data.json`
+1. 本專案：`software_ai/hubspot/data/research_hubspot.md`；`software_ai/hubspot/README.md`；`software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx`（README、Thesis）；`software_ai/map/dist/data.json`
 2. [HubSpot, Inc. Form 10-K FY2025](https://www.sec.gov/Archives/edgar/data/1404655/000119312526046646/hubs-20251231.htm)（2026-02-11）
 3. [HubSpot 2026 年委託書（DEF 14A）](https://www.sec.gov/Archives/edgar/data/1404655/000119312526182210/hubs-20260427.htm)（2026-04-27）
 4. [HubSpot 8-K 新聞稿：領導層異動](https://www.sec.gov/Archives/edgar/data/0001404655/000119312526457055/d77303dex991.htm)（2026-11-12）

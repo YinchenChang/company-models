@@ -121,6 +121,7 @@
      "items": [
       "@README!A8",
       "@README!A18",
+      "@README!A20",
       "@README!A19"
      ]
     }
@@ -971,14 +972,14 @@
      "type": "table",
      "caption": "情境驅動（三情境並排，進加權目標價；In 頁情境驅動對照）",
      "head": [
-      "@In!B109",
-      "@In!D109",
-      "@In!E109",
-      "@In!F109"
+      "@In!B134",
+      "@In!D134",
+      "@In!E134",
+      "@In!F134"
      ],
      "rowgen": {
       "sheet": "In",
-      "rows": "110-114",
+      "rows": "135-139",
       "cols": [
        "B",
        "D",
@@ -992,17 +993,17 @@
        "n2"
       ],
       "row_fmt": {
-       "114": {
+       "139": {
         "D": "p0",
         "E": "p0",
         "F": "p0"
        },
-       "111": {
+       "136": {
         "D": "p0",
         "E": "p0",
         "F": "p0"
        },
-       "112": {
+       "137": {
         "D": "p0",
         "E": "p0",
         "F": "p0"
@@ -1023,7 +1024,7 @@
      ],
      "rowgen": {
       "sheet": "In",
-      "rows": "8-38,51-103",
+      "rows": "8-39,52-128",
       "cols": [
        "B",
        "D",
@@ -1089,6 +1090,111 @@
     },
     {
      "type": "table",
+     "caption": "@Recon!A15",
+     "head": [
+      "@Recon!A16",
+      "@Recon!B16",
+      "@Recon!C16",
+      "@Recon!D16",
+      "@Recon!E16",
+      "@Recon!F16",
+      "@Recon!G16"
+     ],
+     "rowgen": {
+      "sheet": "Recon",
+      "rows": "17-24",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G"
+      ],
+      "fmts": [
+       "",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "",
+       ""
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A26",
+     "head": [
+      "@Recon!A27",
+      "@Recon!B27",
+      "@Recon!C27",
+      "@Recon!D27",
+      "@Recon!E27",
+      "@Recon!F27",
+      "@Recon!G27"
+     ],
+     "rowgen": {
+      "sheet": "Recon",
+      "rows": "28-30",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G"
+      ],
+      "fmts": [
+       "",
+       "n2",
+       "n2",
+       "n2",
+       "sp1",
+       "",
+       ""
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "caption": "@Recon!A32",
+     "head": [
+      "@Recon!A33",
+      "@Recon!B33",
+      "@Recon!C33",
+      "@Recon!D33",
+      "@Recon!E33",
+      "@Recon!F33",
+      "@Recon!G33"
+     ],
+     "rowgen": {
+      "sheet": "Recon",
+      "rows": "34-42",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G"
+      ],
+      "fmts": [
+       "",
+       "n3",
+       "n3",
+       "n3",
+       "",
+       "",
+       ""
+      ]
+     }
+    },
+    {
+     "type": "table",
      "collapse": true,
      "summary": "展開：逐分部、有機成長、同業可比性與 Tokenomics 讀值",
      "head": [
@@ -1102,7 +1208,7 @@
      ],
      "rowgen": {
       "sheet": "Recon",
-      "rows": "17-50",
+      "rows": "46-79",
       "cols": [
        "A",
        "B",
@@ -1134,7 +1240,7 @@
      ],
      "rowgen": {
       "sheet": "Recon",
-      "rows": "54-59",
+      "rows": "83-89",
       "cols": [
        "A",
        "B",
@@ -1186,9 +1292,9 @@
       [
        "Tokenomics 快照",
        [
-        "@Recon!B41",
+        "@Recon!B70",
         "；",
-        "@Recon!C41"
+        "@Recon!C70"
        ]
       ]
      ]
@@ -1201,8 +1307,9 @@
      "type": "list",
      "items": [
       "@README!A2",
-      "@README!A30",
-      "@README!A31"
+      "@README!A31",
+      "@README!A32",
+      "@README!A33"
      ]
     },
     {
@@ -1212,14 +1319,14 @@
     {
      "type": "list",
      "items": [
-      "@README!A22",
       "@README!A23",
       "@README!A24",
       "@README!A25",
       "@README!A26",
       "@README!A27",
       "@README!A28",
-      "@README!A29"
+      "@README!A29",
+      "@README!A30"
      ]
     },
     {

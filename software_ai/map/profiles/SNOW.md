@@ -48,7 +48,7 @@ asof: 2026-11-23
 | 共同創辦人、董事 | Benoit Dageville | 董事自 2011 | MarketScreener 列為董事 [外部・未經本專案檢核：MarketScreener，2026-09 快照] |
 
 - 經營風格：本專案尚未研究。
-- 本專案記錄到：不配息（期間股利 0）；有 2,300 百萬美元可轉債，轉換價 157.50 美元，並有 capped call [本專案：20261117_Snowflake個股模型_v0.2.2.xlsx Val!B35；snowflake/README.md v0.2 修正內容第 4 點]。
+- 本專案記錄到：不配息（期間股利 0）；有 2,300 百萬美元可轉債，轉換價 157.50 美元，並有 capped call [本專案：20261124_Snowflake個股模型_v0.2.3.xlsx Val!B35；snowflake/README.md v0.2 修正內容第 4 點]。
 - 股票薪酬偏重：占營收 34.1%（FY2026），FY2027 Q2 降到 27.4% [本專案：research_snowflake.md 第 6 節]。
 - 管理層稱 AI 降低對人力成長的依賴：今年上半年新增員工 334 人（含 Observe 173 人），去年同期 935 人 [本專案：research_snowflake.md 第 6 節、第 8 節]。
 
@@ -57,11 +57,11 @@ asof: 2026-11-23
 |---|---|---|---|
 | Databricks | 資料與 AI 平台，爭取 AI 工作負載 | 本專案未建立 | [本專案：research_snowflake.md 第 8 節空方論述提及] |
 | AWS、Azure、GCP 自家資料服務 | 資料倉儲；同時也是 Snowflake 的底層雲端 | 本專案未建立 | [外部・未經本專案檢核] |
-| MongoDB、Datadog、Elastic 等 | 資料庫與可觀測性（Snowflake 收購 Observe 後與 Datadog 重疊） | 本專案未建立 | [本專案：20261117_Snowflake個股模型_v0.2.2.xlsx Val!A64:A70 同業清單] |
+| MongoDB、Datadog、Elastic 等 | 資料庫與可觀測性（Snowflake 收購 Observe 後與 Datadog 重疊） | 本專案未建立 | [本專案：20261124_Snowflake個股模型_v0.2.3.xlsx Val!A64:A70 同業清單] |
 
 - 空方論點是 AI 代理可能繞過資料倉儲、Databricks 追趕 AI 工作負載；多方論點是代理工作負載直接變成消耗，不必重新談約 [本專案：research_snowflake.md 第 8 節]。
-- 本專案模型把「核心消耗被模型直讀資料或開放格式（如 Iceberg）替代」列為要建模的風險 [本專案：20261117_Snowflake個股模型_v0.2.2.xlsx README!A25]。
-- 同業現價 P/S 中位數 9.36 倍，Snowflake 自身 18.87 倍 [本專案：20261117_Snowflake個股模型_v0.2.2.xlsx Val!B84、Val!B85]。
+- 本專案模型把「核心消耗被模型直讀資料或開放格式（如 Iceberg）替代」列為要建模的風險 [本專案：20261124_Snowflake個股模型_v0.2.3.xlsx README!A25]。
+- 同業現價 P/S 中位數 9.36 倍，Snowflake 自身 18.87 倍 [本專案：20261124_Snowflake個股模型_v0.2.3.xlsx Val!B84、Val!B85]。
 
 ## 主要客戶
 - 客戶集中度：10-K FY2026 是否有「單一客戶占營收 10% 以上」的揭露：未找到（查過 10-K FY2026 前 76 萬字元的業務、MD&A、附註 7 至 12，未見相關句）。 [外部・未經本專案檢核：SEC 10-K FY2026，2026-03]
@@ -94,15 +94,15 @@ asof: 2026-11-23
 - 2026-09-03｜FY2027 Q2 財報（2026-09-02 發布）：營收 US$1,546.8M、產品營收年增 37%，FY2027 產品營收指引上修到 US$6.07B，非 GAAP 產品毛利率指引由 75.0% 降到 74.0%；股價盤中一度大漲逾兩成｜成長加速，但 AI 稀釋毛利 [本專案：research_snowflake.md 第 3.2 節、第 7 節；外部新聞：The Motley Fool，2026-09-03]
 
 ## 需要觀察的事項
-- 產品營收是否達 Q3 FY27 指引 US$1,588 至 1,593M｜低於 US$1,588M 為模型的失效條件 [本專案：20261117_Snowflake個股模型_v0.2.2.xlsx README!A22；research_snowflake.md 第 7 節]｜2026-12-02 財報 [外部新聞：Snowflake 新聞稿]
-- 產品毛利率與推論成本｜非 GAAP 產品毛利率指引 74.0%，跌破即為失效；模型情境 B 的產品毛利率從 FY2027 的 75.3% 降到 FY2032 的 70.7% [本專案：20261117_Snowflake個股模型_v0.2.2.xlsx README!A8、A22]｜2026-12-02 財報
-- RPO 年增與淨營收留存率｜RPO 年增由 42% 降到 30%，低於 25% 為失效；留存率低於 120% 為失效，目前 126% [本專案：20261117_Snowflake個股模型_v0.2.2.xlsx README!A22；research_snowflake.md 第 4.2 節]｜同上
-- AI 功能的消耗占比｜AI 營收金額已不揭露，模型以 AI 功能 credit 占比停滯為失效條件 [本專案：20261117_Snowflake個股模型_v0.2.2.xlsx README!A22；research_snowflake.md 第 9 節]｜同上
+- 產品營收是否達 Q3 FY27 指引 US$1,588 至 1,593M｜低於 US$1,588M 為模型的失效條件 [本專案：20261124_Snowflake個股模型_v0.2.3.xlsx README!A22；research_snowflake.md 第 7 節]｜2026-12-02 財報 [外部新聞：Snowflake 新聞稿]
+- 產品毛利率與推論成本｜非 GAAP 產品毛利率指引 74.0%，跌破即為失效；模型情境 B 的產品毛利率從 FY2027 的 75.3% 降到 FY2032 的 70.7% [本專案：20261124_Snowflake個股模型_v0.2.3.xlsx README!A8、A22]｜2026-12-02 財報
+- RPO 年增與淨營收留存率｜RPO 年增由 42% 降到 30%，低於 25% 為失效；留存率低於 120% 為失效，目前 126% [本專案：20261124_Snowflake個股模型_v0.2.3.xlsx README!A22；research_snowflake.md 第 4.2 節]｜同上
+- AI 功能的消耗占比｜AI 營收金額已不揭露，模型以 AI 功能 credit 占比停滯為失效條件 [本專案：20261124_Snowflake個股模型_v0.2.3.xlsx README!A22；research_snowflake.md 第 9 節]｜同上
 - 股票薪酬與稀釋｜FY2027 Q2 SBC 為 US$423.6M；模型 DCF 不加回 SBC，估值對此敏感 [本專案：research_snowflake.md 第 6 節；snowflake/README.md 合理性關卡診斷]｜同上
 - AI Credit 計價切換的實際生效日｜各來源日期互相矛盾（2026-04、2026-07、2026-11-12 版價目表），影響 AI 營收認列口徑 [本專案：research_snowflake.md 第 9 節]｜待公司說明
 
 ## 來源
-1. 本專案：`software_ai/snowflake/data/research_snowflake.md`；`software_ai/snowflake/data/facts_snowflake.csv`；`software_ai/snowflake/README.md`；`software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.2.xlsx`（README、Val）；`software_ai/map/dist/data.json`
+1. 本專案：`software_ai/snowflake/data/research_snowflake.md`；`software_ai/snowflake/data/facts_snowflake.csv`；`software_ai/snowflake/README.md`；`software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.xlsx`（README、Val）；`software_ai/map/dist/data.json`
 2. [Snowflake 2026 Annual Report and Proxy Statement](https://s26.q4cdn.com/463892824/files/doc_financials/2025/ar/Snowflake-2026-Annual-Report-and-Proxy-Statement.pdf)（2026）
 3. [Snowflake 10-K FY2026](https://www.sec.gov/Archives/edgar/data/1640147/000164014726000008/snow-20260131.htm)（2026-03）
 4. [MarketScreener：Snowflake company governance](https://www.marketscreener.com/quote/stock/SNOWFLAKE-INC-112440376/company-governance/)（2026-09 快照）

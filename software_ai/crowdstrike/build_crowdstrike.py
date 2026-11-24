@@ -24,9 +24,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
 DIST = os.path.join(HERE, "dist")
 SCR = os.path.join(__import__("tempfile").gettempdir(), "scratch", "crowdstrike")  # 外部稽核優化 W3-9（2026-11-23）：寫死的容器路徑改為系統暫存資料夾（換機器也能跑）
-VERSION = "v0.2.1"
-BUILD_DATE = "2026-11-16"
-FILE_DATE = "20261117"
+VERSION = "v0.2.2"
+BUILD_DATE = "2026-11-24"
+FILE_DATE = "20261124"
 YEARS = list(range(2024, 2033))                 # FY2024A..FY2032E
 YC = {y: openpyxl.utils.get_column_letter(3 + i) for i, y in enumerate(YEARS)}   # C..K
 FC = [2027, 2028, 2029, 2030, 2031, 2032]
@@ -40,12 +40,12 @@ YEL = PatternFill("solid", fgColor="FFF2CC")
 HDR = PatternFill("solid", fgColor="DDEBF7")
 
 # ───────────────────────── 輸入（In 頁）─────────────────────────
-Q2PR = "https://ir.crowdstrike.com/news-releases/news-release-details/crowdstrike-reports-second-quarter-fiscal-year-2027-financial（Q2 FY2027 新聞稿，2026-08-26）"
-TENQ = "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000031/crwd-20260731.htm（Form 10-Q 截至 2026-07-31）"
-K26 = "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000010/crwd-20260131.htm（Form 10-K FY2026）"
-Q4PR = "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000007/crwd-20260303xex991.htm（8-K Ex.99.1，2026-03-03）"
+Q2PR = "CrowdStrike Q2 FY2027 新聞稿（2026-08-26）"
+TENQ = "CrowdStrike Form 10-Q 截至 2026-07-31（2026-09）"
+K26 = "CrowdStrike Form 10-K FY2026（2026-03）"
+Q4PR = "CrowdStrike 8-K Ex.99.1 Q4／FY2026 新聞稿（2026-03-03）"
 TKS = "data/tk_snapshot_v22.0.json（Tokenomics v22.0 快照；取自 software_ai/unit_economics/data/tk_snapshot.json，2026-11-16）"
-SA = "https://stockanalysis.com/stocks/{}/statistics/"
+SA = "StockAnalysis {} 統計頁"
 VEND = "資料商（StockAnalysis）整理值，非法定文件"
 SEC = "#"
 # (key, 項目, 單位, 低, 基準, 高, 標記, 來源, 說明, 來源誘因)
@@ -75,7 +75,7 @@ INP = [
     (SEC, "B. 折現率、估值與目標價設定"),
     ("rf", "無風險利率（美國 10 年期公債，2026-11-12）", "%", None, 0.051, None, "Verified", "FRED DGS10 https://fred.stlouisfed.org/series/DGS10（2026-11-12：5.10%；現價日前 1 個交易日；G5-2 統一）", None, None),
     ("beta_ya", "原始 β：Yahoo Finance「Beta (5Y Monthly)」", "x", None, 1.20, None, "Interested-party", "https://finance.yahoo.com/quote/CRWD/key-statistics/（讀取日 2026-11-16，頁面未標日期）", "未標資料日；市值欄與現價不一致，只取 β", "資料商整理值"),
-    ("beta_sa", "原始 β：StockAnalysis 統計頁", "x", None, 1.19, None, "Interested-party", SA.format("crwd") + "（讀取日 2026-11-16）", "頁面疑為舊快取（市值與財報日對不上 2026），β 僅作第二來源，兩來源差 0.01", "資料商整理值"),
+    ("beta_sa", "原始 β：StockAnalysis 統計頁", "x", None, 1.19, None, "Interested-party", SA.format("CRWD") + "（讀取日 2026-11-16）", "頁面疑為舊快取（市值與財報日對不上 2026），β 僅作第二來源，兩來源差 0.01", "資料商整理值"),
     ("blume_a", "Blume 調整權重", "x", None, 0.67, None, "Assumed", "Blume (1971) 慣例 β_adj＝0.67×β＋0.33", None, None),
     ("beta", "β（Blume 調整後兩來源的中位數）", "x", None, "=MEDIAN(blume_a*beta_ya+1-blume_a,blume_a*beta_sa+1-blume_a)", None, "Derived", "兩來源 Blume 調整後取中位數（兩個值時為平均）", None, None),
     ("erp", "股權風險溢酬", "%", 0.04, 0.05, 0.06, "Assumed", "個股 DCF 標準規格 v1.0 第 2 節：預設 5%（4–6%）", None, None),
@@ -93,13 +93,14 @@ INP = [
     ("t_hold", "持有期間：股價基準日 → 目標時點", "年", None, "=(tp_date-px_date)/365", None, "Derived", "(tp_date − px_date) ÷ 365", None, None),
     ("wacc_adj", "WACC 調整（只用於敏感度；基準 0）", "%", -0.01, 0.0, 0.01, "Assumed", "個股 DCF 標準規格第 4 節：WACC ±1pt", None, None),
     ("tv_alt", "終值方法開關（0＝NOPAT 價值驅動式；1＝FCFF×(1+g) 替代法）", "0／1", 0, 0, 1, "Assumed", "個股 DCF 標準規格第 4 節：終值改用 FCFF ×(1＋g) 的替代法", "只用於敏感度", None),
+    ("ev_floor", "情境 DCF 企業價值下限 0（1＝加權用每股價值以 MAX(0, EV) 計；0＝撤回，用原始讀數）", "0／1", 0, 1, None, "Assumed", "工作單 G9-1（原則第 56 條）：預設（專案負責人 2026-11-17 未回覆、2026-11-23／11-24「全部按預設」），可撤回；原始 EV 與每股價值照列在 CF、Val、README", "只影響 EV 小於 0 的情境（目前情境 A）；撤回方式：本列基準改 0，或 Sens『ev_floor 低』案", None),
     ("sbc_ab", "DCF 是否加回股票薪酬（0＝不加回；1＝加回）", "0／1", 0, 0, 1, "Assumed", "個股 DCF 標準規格第 1 節：股票薪酬不加回（預設）；加回只作敏感度", "只用於敏感度", None),
-    ("pm_panw", "對照：同業 EV／營收（TTM）：Palo Alto Networks", "x", None, 22.88, None, "Interested-party", SA.format("panw") + "（2026-11-14 更新，收盤 2026-11-13）", "US GAAP；租賃處理未核對；與 CRWD 同為平台型資安", VEND),
-    ("pm_ftnt", "對照：同業 EV／營收（TTM）：Fortinet", "x", None, 11.32, None, "Interested-party", SA.format("ftnt") + "（2026-11-15 更新）", "US GAAP；硬體占比高，成長較低；租賃處理未核對", VEND),
-    ("pm_zs", "對照：同業 EV／營收（TTM）：Zscaler", "x", None, 8.88, None, "Interested-party", SA.format("zs") + "（2026-11-14 更新）", "US GAAP；2026-11 價格；租賃處理未核對", VEND),
-    ("pm_okta", "對照：同業 EV／營收（TTM）：Okta", "x", None, 9.67, None, "Interested-party", SA.format("okta") + "（2026-11-14 更新）", "US GAAP；身分安全；租賃處理未核對", VEND),
-    ("pm_s", "對照：同業 EV／營收（TTM）：SentinelOne", "x", None, 7.48, None, "Interested-party", SA.format("s") + "（2026-10-27 更新，收盤 2026-10-26）", "逾期（與基準日相差超過 2 個交易日）；直接競爭者；租賃處理未核對", VEND),
-    ("pm_chkp", "對照：同業 EV／營收（TTM）：Check Point", "x", None, 4.67, None, "Interested-party", SA.format("chkp") + "（2026-11-15 更新）", "會計準則（IFRS 或 US GAAP）與租賃處理未核對；低成長", VEND),
+    ("pm_panw", "對照：同業 EV／營收（TTM）：Palo Alto Networks", "x", None, 22.88, None, "Interested-party", SA.format("PANW") + "（2026-11-14 更新，收盤 2026-11-13）", "US GAAP；租賃處理未核對；與 CRWD 同為平台型資安", VEND),
+    ("pm_ftnt", "對照：同業 EV／營收（TTM）：Fortinet", "x", None, 11.32, None, "Interested-party", SA.format("FTNT") + "（2026-11-15 更新）", "US GAAP；硬體占比高，成長較低；租賃處理未核對", VEND),
+    ("pm_zs", "對照：同業 EV／營收（TTM）：Zscaler", "x", None, 8.88, None, "Interested-party", SA.format("ZS") + "（2026-11-14 更新）", "US GAAP；2026-11 價格；租賃處理未核對", VEND),
+    ("pm_okta", "對照：同業 EV／營收（TTM）：Okta", "x", None, 9.67, None, "Interested-party", SA.format("OKTA") + "（2026-11-14 更新）", "US GAAP；身分安全；租賃處理未核對", VEND),
+    ("pm_s", "對照：同業 EV／營收（TTM）：SentinelOne", "x", None, 7.48, None, "Interested-party", SA.format("S") + "（2026-10-27 更新，收盤 2026-10-26）", "逾期（與基準日相差超過 2 個交易日）；直接競爭者；租賃處理未核對", VEND),
+    ("pm_chkp", "對照：同業 EV／營收（TTM）：Check Point", "x", None, 4.67, None, "Interested-party", SA.format("CHKP") + "（2026-11-15 更新）", "會計準則（IFRS 或 US GAAP）與租賃處理未核對；低成長", VEND),
     ("pm_med", "同業 EV／營收（TTM）中位數（對照列用，不進加權目標價；G6）", "x", None, "=MEDIAN(pm_panw,pm_ftnt,pm_zs,pm_okta,pm_s,pm_chkp)", None, "Derived", "六家同業中位數；少於約 8 家，不做迴歸（原則第 10 節第 7 條）", "G2-6：分子 EV（無槓桿）、分母 TTM 營收，與本公司同口徑；Comparable 乘目標日 TTM 營收；分母為各家 TTM 營收；成長率、利益率、資本強度並列未做（未取得）", None),
     ("ps_panw", "同業 P/S（股權市值 ÷ TTM 營收）：Palo Alto Networks", "x", None, PSJ["peers"]["PANW"], None, "Derived", PSSRC, "Palo Alto Networks"+"；價格日 2026-11-13", VEND),
     ("ps_ftnt", "同業 P/S（股權市值 ÷ TTM 營收）：Fortinet", "x", None, PSJ["peers"]["FTNT"], None, "Derived", PSSRC, "Fortinet"+"；價格日 2026-11-13", VEND),
@@ -246,8 +247,36 @@ class Reg:
     rows = {}
 
 
+URL_NAMES = [
+    (r"https://finance\.yahoo\.com/quote/CRWD/key-statistics/?", "Yahoo Finance CRWD 關鍵統計頁"),
+    (r"https://fred\.stlouisfed\.org/series/DGS10", "FRED DGS10"),
+    (r"https://ir\.crowdstrike\.com/\S*?financial", "CrowdStrike Q2 FY2027 新聞稿"),
+    (r"https://(?:www\.)?sec\.gov/Archives/edgar/data/1535527/000153552724000004/\S*?\.htm", "CrowdStrike Q4 FY2024 新聞稿（8-K Ex.99.1）"),
+    (r"https://(?:www\.)?sec\.gov/Archives/edgar/data/1535527/000153552726000007/\S*?\.htm", "CrowdStrike Q4／FY2026 新聞稿（8-K Ex.99.1）"),
+    (r"https://(?:www\.)?sec\.gov/Archives/edgar/data/1535527/000153552726000010/\S*?\.htm", "CrowdStrike Form 10-K FY2026"),
+    (r"https://(?:www\.)?sec\.gov/Archives/edgar/data/1535527/000153552726000031/\S*?\.htm", "CrowdStrike Form 10-Q（2026-07-31）"),
+    (r"https://stockanalysis\.com/stocks/crwd/forecast", "StockAnalysis CRWD 預測頁"),
+    (r"https://stockanalysis\.com/stocks/crwd/history/?", "StockAnalysis CRWD 歷史收盤價頁"),
+    (r"https://stockanalysis\.com/stocks/\w+/statistics/?", "StockAnalysis 同業統計頁"),
+    (r"https://www\.webull\.com/news/\d+", "Webull 轉載之 Q2 FY2027 法說會逐字稿"),
+    (r"https?://[^\s（）；，,)]+", "（網址略）"),
+]
+
+
+def deurl(v, ws_title, col):
+    """G8：HTML 成品不得有外部網址：儲存格文字內的網址改寫為文件名（日期原本已在括號內）；Sources 頁 D 欄（網址欄）保留。"""
+    if not isinstance(v, str) or v.startswith("=") or "http" not in v:
+        return v
+    if ws_title == "Sources" and col == "D":
+        return v
+    for pat, nm in URL_NAMES:
+        v = re.sub(pat, nm, v)
+    return v
+
+
 def f_(ws, cell, v, fmt=None, bold=False, blue=False, fill=None, wrap=False):
     c = ws[cell]
+    v = deurl(v, ws.title, c.column_letter)
     c.value = v
     if fmt:
         c.number_format = fmt
@@ -276,7 +305,7 @@ def build(ov=None, sens=None, out=None):
     # ───────── In ─────────
     In = ws_["In"]
     f_(In, "A1", "In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」）。金額 US$M；每股 US$（4 比 1 拆股後）；股數百萬股。標記：Verified／Interested-party／Analogy／Assumed／Derived；Interested-party 列須有來源誘因。", wrap=False)
-    f_(In, "A2", "事實總帳：data/facts_crowdstrike.csv（逐列出處）與 data/research_crowdstrike.md；Tokenomics v22.0 快照 data/tk_snapshot_v22.0.json（推論成本只讀快照）。本版未做先驗（Andy 2026-11-16 指示先跳過）。")
+    f_(In, "A2", "事實總帳：data/facts_crowdstrike.csv（逐列出處）與 data/research_crowdstrike.md；Tokenomics v22.0 快照 data/tk_snapshot_v22.0.json（推論成本只讀快照）。本版未做先驗（專案負責人 2026-11-16 指示先跳過）。")
     for j, h in enumerate(["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "說明", "來源誘因（Interested-party 列；混合來源列寫其他欄位）"], 1):
         f_(In, f"{openpyxl.utils.get_column_letter(j)}3", h, bold=True, fill=HDR)
     r = 4
@@ -456,7 +485,7 @@ def build(ov=None, sens=None, out=None):
     CB = {}
     C_OFF = {"title": 0, "yr": 1, "rev": 2, "gr": 3, "ebit": 4, "tax": 5, "nopat": 6, "da": 7, "cx": 8, "wc": 9, "sbcab": 10, "fcff": 11, "int": 12, "fcf": 13,
              "cash": 14, "t": 15, "cf": 16, "df": 17, "pv": 18, "spv": 19, "n33": 20, "tv": 21, "tvdf": 22, "tvpv": 23, "ev": 24, "nc": 25, "eq": 26, "ps0": 27,
-             "ps1": 28, "tvsh": 29, "gate": 30, "mincash": 31}
+             "ps1": 28, "tvsh": 29, "gate": 30, "mincash": 31, "evf": 32, "ps1f": 33}
     for bi, s in enumerate(SC):
         PB[s] = {k: 4 + bi * 34 + v for k, v in P_OFF.items()}
         CB[s] = {k: 4 + bi * 34 + v for k, v in C_OFF.items()}
@@ -642,7 +671,8 @@ def build(ov=None, sens=None, out=None):
               "t": "折現時點（自評價日，年；期中）", "cf": "DCF 現金流（FY2027 扣上半年實績）", "df": "折現因子", "pv": "現值",
               "spv": "明確期與延伸期現值合計", "n33": "終年 NOPAT × (1＋g)（FY2038）", "tv": "終值", "tvdf": "終值折現因子", "tvpv": "終值現值",
               "ev": "企業價值 EV", "nc": "＋淨現金（現金 − 長期負債，2026-07-31）", "eq": "股權價值", "ps0": "每股價值（評價日，US$）",
-              "ps1": "每股價值（目標時點，US$）", "tvsh": "終值占 EV", "gate": "收支關卡：FY2026–FY2030 自由現金流合計（US$M）", "mincash": "預測期最低年末現金（US$M）"}
+              "ps1": "每股價值（目標時點，US$）", "tvsh": "終值占 EV", "gate": "收支關卡：FY2026–FY2030 自由現金流合計（US$M）", "mincash": "預測期最低年末現金（US$M）",
+              "evf": "加權用企業價值 EV（下限 0：MAX(0, EV)；G9-1，預設、可撤回；原始讀數見上方 EV 列）", "ps1f": "加權用每股價值（目標時點，US$；以加權用 EV 計；進 Val 頁 DCF 目標價）"}
         for k, lab in cl.items():
             f_(cf, f"A{C_[k]}", lab)
         ext_cols = {y: openpyxl.utils.get_column_letter(5 + (y - 2026)) for y in range(2026, 2038)}   # E..P
@@ -701,6 +731,8 @@ def build(ov=None, sens=None, out=None):
         f_(cf, E_("tvsh"), f'=IF(OR({E_("ev")}<=0,{E_("tvpv")}<0),"N/M",{E_("tvpv")}/{E_("ev")})', "0.0%")
         f_(cf, E_("gate"), f"=SUM(E{C_['fcf']}:I{C_['fcf']})", "#,##0.0")
         f_(cf, E_("mincash"), f"=MIN(E{C_['cash']}:K{C_['cash']})", "#,##0.0")
+        f_(cf, E_("evf"), f"=IF(ev_floor=1,MAX(0,{E_('ev')}),{E_('ev')})", "#,##0.0")
+        f_(cf, E_("ps1f"), f"=(({E_('evf')}+{E_('nc')})/sh_dil)*(1+ke)^t_tgt", "0.00")
     cf.column_dimensions["A"].width = 60
     P.column_dimensions["A"].width = 52
     # ───────── Val ─────────
@@ -729,7 +761,7 @@ def build(ov=None, sens=None, out=None):
         f_(V, f"{openpyxl.utils.get_column_letter(j)}5", h, bold=True, fill=HDR)
     cmp_rows = {"A": 60, "B": 61, "C": 62}
     f_(V, "A6", "DCF 目標價（情境加權）")
-    f_(V, "B6", "=" + "+".join(f"tp_w{s}*CF!E{CB[s]['ps1']}" for s in SC), "0.00")
+    f_(V, "B6", "=" + "+".join(f"tp_w{s}*CF!E{CB[s]['ps1f']}" for s in SC), "0.00")
     f_(V, "A7", "Comparable 目標價（同業 P/S 股權口徑；單一分部）")
     f_(V, "B7", f"=tp_wA*B{cmp_rows['A']}+tp_wB*B{cmp_rows['B']}+tp_wC*B{cmp_rows['C']}".replace("B60", "B64").replace("B61", "B64").replace("B62", "B64"), "0.00")
     # Comparable 表（列 64–70；欄 B、C、D＝情境 A、B、C）
@@ -775,7 +807,7 @@ def build(ov=None, sens=None, out=None):
     f_(V, "A22", "上檔空間三段歸因：相對倍數調整貢獻")
     f_(V, "B22", "=B11-B20-B21", "+0.0%;-0.0%")
     f_(V, "E22", "未調整 Comparable 的相對倍數係數＝1；基準係數為共用庫 geo_base（In 頁 rel_mult），此項即其調整貢獻（Sens 有係數低／高案）")
-    f_(V, "A23", "重點：Comparable 價格＝EV 倍數 × 營收，隨 TTM 營收與同業倍數連動；DCF 價格依 WACC、終值與 SBC 費用化")
+    f_(V, "A23", "重點：Comparable 價格＝同業 P/S × 相對倍數係數 × TTM 營收 ÷ 稀釋股數，隨 TTM 營收與同業 P/S 連動；DCF 價格依 WACC、終值與 SBC 費用化")
     f_(V, "A24", "加權中 DCF 與 Comparable 各占的目標價美元（DCF／Comparable）")
     f_(V, "B24", "=w_dcf*B6", "0.00")
     f_(V, "C24", "=(1-w_dcf)*B7", "0.00")
@@ -786,7 +818,7 @@ def build(ov=None, sens=None, out=None):
     f_(V, "E26", "原則第 63 條：收支不足時投資建議不得為買進以上；B14、B16、B26 與 CF 頁 B3 同為三情境最小值（v0.1.2 統一口徑）；CF 頁 B3 是該頁第一個收支關卡列，check_rating_gate 由此讀取")
     f_(V, "A28", "DCF 有效性檢查（情境 A／B／C 的 DCF 企業價值皆須大於零；原則第 56 條）")
     f_(V, "B28", f'=IF(MIN(CF!E{CB["A"]["ev"]},CF!E{CB["B"]["ev"]},CF!E{CB["C"]["ev"]})>0,"通過","不通過")', bold=True)
-    f_(V, "E28", tf("情境 A／B／C 的 EV US$M：", (f"CF!E{CB['A']['ev']}", "#,##0"), "／", (f"CF!E{CB['B']['ev']}", "#,##0"), "／", (f"CF!E{CB['C']['ev']}", "#,##0"), "；EV 小於或等於零或終值現值為負時，終值占 EV 等比率顯示 N/M；EV 為負的情境的 DCF 每股價值不作為估值依據"))
+    f_(V, "E28", tf("情境 A／B／C 的 EV US$M：", (f"CF!E{CB['A']['ev']}", "#,##0"), "／", (f"CF!E{CB['B']['ev']}", "#,##0"), "／", (f"CF!E{CB['C']['ev']}", "#,##0"), "；EV 小於或等於零或終值現值為負時，終值占 EV 等比率顯示 N/M；EV 為負的情境，加權用每股價值以 EV 下限 0 計（Val 頁 54–55 列，預設、可撤回），原始讀數照列在上方"))
     f_(V, "A27", "入不敷出判定")
     f_(V, "B27", '=IF(B16<0,"不通過","通過")')
     # DCF 彙總表（列 44–54）
@@ -800,6 +832,11 @@ def build(ov=None, sens=None, out=None):
         f_(V, f"A{rr}", lab)
         for c, s in zip("BCD", SC):
             f_(V, f"{c}{rr}", f"=CF!E{CB[s][k]}", nf)
+    f_(V, "A54", "加權用企業價值 EV（US$M；下限 0＝MAX(0, EV)；G9-1 預設、可撤回；原始讀數見上方 EV 列）")
+    f_(V, "A55", "加權用每股價值：目標時點（US$；進 DCF 目標價；情境 EV 為負者以 EV＝0 計）")
+    for c, s in zip("BCD", SC):
+        f_(V, f"{c}54", f"=CF!E{CB[s]['evf']}", "#,##0")
+        f_(V, f"{c}55", f"=CF!E{CB[s]['ps1f']}", "0.00")
     # Comparable 表（列 64–70）
     f_(V, "A58", "Comparable 主腿（情境 A／B／C；同業 P/S 中位 × 相對倍數係數 × 目標時點 TTM 營收；股權口徑）", bold=True)
     for j, h in enumerate(["項目", "情境 A", "情境 B", "情境 C"], 1):
@@ -957,7 +994,7 @@ def build(ov=None, sens=None, out=None):
     inhash = hashlib.sha256(json.dumps([[str(x) for x in it] for it in INP] + [sorted((k, str(v)) for k, v in ov.items())] + [VERSION], ensure_ascii=False).encode()).hexdigest()[:10]
     build_id = f"crowdstrike-{VERSION}-{inhash}"
     f_(RD, "A1", tf(f"CrowdStrike（CRWD）個股模型 {VERSION}｜build_id {build_id}｜資料截止日 ", ("data_date", "yyyy-mm-dd"), f"｜成品日 {BUILD_DATE}｜股價基準日 ", ("px_date", "yyyy-mm-dd"), "｜評價日 ", ("val_date", "yyyy-mm-dd"), "｜本版未做先驗"))
-    f_(RD, "A2", f"{VERSION} 要點：v0.2.1（工作單 G6／G7）：Comparable 主腿改 P/S 股權口徑（同業中位 P/S 讀共用庫 peer_ps_20261113.json、乘 geo_base、乘目標時點 TTM 營收、除以稀釋股數、不加淨現金），主腿用 P/S 是為了與 PS／PSG 相對值同口徑；原 EV／營收改為對照列、不進加權目標價；Sens 加「同業 P/S＝資料庫最近一季中位」案。v0.2（工作單 G5）：相對倍數改讀共用庫 geo_base（取代自算年度值）並補 ps_only、psg_only、sens.low、sens.high 四案；無風險利率統一為 FRED DGS10 2026-11-12；Recon 與 HTML 估值章並列 DCF（股票薪酬加回）讀數。承 v0.1.1／v0.1.2：依工作單 G3 修正 v0.1：基準不再全期持平（改為依 FY2023–FY2026 回歸的固定＋變動成本規模經濟，全期持平移到 Sens 下緣）、折舊攤銷由前一年資本支出推得、相對倍數係數（v0.1.1 曾自算 5 年平均，v0.2 已由共用庫取代）、新增合理性關卡診斷與事件尾端 Sens（DOJ／SEC、Delta 案）。其餘依 software_ai 工作單 G 節建立：命題模組＝原型 P（按防護範圍計價）單位經濟，三情境（AI 代理防護放量／基準／價格侵蝕）；官方分部為單一分部，營收線＝訂閱、專業服務；FCFF DCF 到 FY2032＋同業 EV／營收法各半；推論成本只讀 Tokenomics v22.0 快照。本版未做先驗（Andy 2026-11-16 指示先跳過）。")
+    f_(RD, "A2", f"{VERSION} 要點：v0.2.2（工作單 G8／G9）：(1) 情境 DCF 企業價值為負（情境 A）者，加權用每股價值以企業價值下限 0 計（公式 MAX(0, EV)；CF 頁加權用 EV、加權用每股價值列、Val 頁 54–55 列；原始讀數照列；預設、可撤回：In 頁 ev_floor 改 0）；(2) HTML 成品不含外部網址（出處改寫為文件名與日期）；(3) 檔案內去人名，決策者寫「專案負責人」；(4) Comparable 標籤統一 P/S 用語；P/S 主腿股權價值只扣一次非控制權益（本公司無非控制權益，數字不變）。v0.2.1（工作單 G6／G7）：Comparable 主腿改 P/S 股權口徑（同業中位 P/S 讀共用庫 peer_ps_20261113.json、乘 geo_base、乘目標時點 TTM 營收、除以稀釋股數、不加淨現金），主腿用 P/S 是為了與 PS／PSG 相對值同口徑；原 EV／營收改為對照列、不進加權目標價；Sens 加「同業 P/S＝資料庫最近一季中位」案。v0.2（工作單 G5）：相對倍數改讀共用庫 geo_base（取代自算年度值）並補 ps_only、psg_only、sens.low、sens.high 四案；無風險利率統一為 FRED DGS10 2026-11-12；Recon 與 HTML 估值章並列 DCF（股票薪酬加回）讀數。承 v0.1.1／v0.1.2：依工作單 G3 修正 v0.1：基準不再全期持平（改為依 FY2023–FY2026 回歸的固定＋變動成本規模經濟，全期持平移到 Sens 下緣）、折舊攤銷由前一年資本支出推得、相對倍數係數（v0.1.1 曾自算 5 年平均，v0.2 已由共用庫取代）、新增合理性關卡診斷與事件尾端 Sens（DOJ／SEC、Delta 案）。其餘依 software_ai 工作單 G 節建立：命題模組＝原型 P（按防護範圍計價）單位經濟，三情境（AI 代理防護放量／基準／價格侵蝕）；官方分部為單一分部，營收線＝訂閱、專業服務；FCFF DCF 到 FY2032＋同業 P/S 法（Comparable 主腿）各半；推論成本只讀 Tokenomics v22.0 快照。本版未做先驗（專案負責人 2026-11-16 指示先跳過）。")
     f_(RD, "A3", tf("命題：AI 進入資安後，CrowdStrike 的 ARR 由『受保護單位 × 每單位模組數 × 每模組年費』驅動；AI 代理（非人類身分）創造新的受保護單位與模組（增量），AI 平台業者與打包競爭可能侵蝕每模組年費（定價侵蝕），推論成本進入毛利。現價要成立，FY2028 起現金流須為本模型基準的 ", ("RevDCF!B13", "0.0"), " 倍。"))
     f_(RD, "A4", tf("核心問題：FY2032 的 AI 淨效果（AI 代理防護增量營收 + 定價侵蝕 − 增量推論成本）在情境 A／B／C 各為 US$M ", (f"Thesis!K{TB['A']['net']}", "#,##0"), "／", (f"Thesis!K{TB['B']['net']}", "#,##0"), "／", (f"Thesis!K{TB['C']['net']}", "#,##0"), "；FY2032 營收情境 B 為 US$M ", (f"PL!K{PB['B']['rev']}", "#,##0"), "。"))
     f_(RD, "A5", tf("投資建議：", ("Val!B14", "@"), "——在『AI 代理防護以情境權重放量、每模組價格依情境小幅下降、股票薪酬依規格費用化（不加回）』的基準假設下；加權目標價 US$", ("Val!B8", "0.00"), "，上檔空間 ", ("Val!B11", "+0.0%;-0.0%"), "（現價 US$", ("px", "0.00"), "，", ("px_date", "yyyy-mm-dd"), "）。主要失效條件見下方。"))
@@ -973,7 +1010,7 @@ def build(ov=None, sens=None, out=None):
           ("Thesis", "tasks_0、tasks_A／B／C、tok_task、px_tok（Tokenomics 快照）", "AI 推論成本與兩平價格保留率", "任務數、token、單價上升 → 推論成本上升 → AI 淨效果下降"),
           ("PL", "conv、ps_pct、gmsub_ng、opx_27、fix_ng、sbc_27、fix_sbc、oth_pct、gm_gap", "營收、毛利、營業利益、EPS（GAAP 與 non-GAAP）", "費用率與 SBC 率下降 → 營業利益率上升"),
           ("CF", "da_k、cx_27、fix_cx、wc_in、tax", "FCFF、收支關卡、現金", "資本支出上升 → FCFF 下降；營運資金流入上升 → FCFF 上升"),
-          ("Val", "rf、beta、erp、kd_sp、g_tv、ronic_sp、pm_*、rel_mult、w_dcf", "DCF、Comparable、加權目標價、投資建議", "WACC 上升 → DCF 下降；同業倍數與係數上升 → Comparable 上升")]
+          ("Val", "rf、beta、erp、kd_sp、g_tv、ronic_sp、pm_*、rel_mult、w_dcf", "DCF、Comparable、加權目標價、投資建議", "WACC 上升 → DCF 下降；同業 P/S 與係數上升 → Comparable 上升")]
     for i, row in enumerate(mp):
         for j, v in enumerate(row):
             f_(RD, f"{openpyxl.utils.get_column_letter(j + 1)}{12 + i}", v)
@@ -988,7 +1025,7 @@ def build(ov=None, sens=None, out=None):
     f_(RD, "A28", tf("承重 Assumed 1（人類端單位與模組路徑 gu、gm）。可證偽指標：Q3 FY2027 期末 ARR 對公司指引 ", ("g_arr27", "#,##0"), "（FY2027 期末）的軌跡；模型 FY2027 ARR 為 ", (f"Thesis!F{TB['B']['ARR']}", "#,##0"), "。"))
     f_(RD, "A29", "承重 Assumed 2（價格保留：ero、pf）。可證偽指標：公司揭露的美元淨留存率（FY2026 為 115%）、Falcon Flex 轉換 ARR 增幅（Q2 FY2027 逾 40%）、AIDR 絕對 ARR 與客戶數（目前未揭露）。")
     f_(RD, "A30", tf("承重 Assumed 3（相對倍數係數 rel_mult，基準為共用庫 geo_base，Derived）。費用率、SBC 率、資本支出率以近四季為起點，只依歷史回歸的固定成本吸收規模經濟（non-GAAP 營業利益率 ", ("Q!M17", "0.0%"), "、SBC 占營收 ", ("Q!M18", "0.0%"), "），無證據的改善只放 Sens；可證偽指標為這兩個比率的逐季路徑。"))
-    f_(RD, "A31", "結論條件式：評等隨加權目標價相對現價的級距而定；DCF 與 Comparable 各半時，評等翻轉需要 (a) 現金流反解係數大幅下降，或 (b) 同業倍數與相對倍數係數上升（見 Recon 與 Sens）。")
+    f_(RD, "A31", "結論條件式：評等隨加權目標價相對現價的級距而定；DCF 與 Comparable 各半時，評等翻轉需要 (a) 現金流反解係數大幅下降，或 (b) 同業 P/S 與相對倍數係數上升（見 Recon 與 Sens）。")
     f_(RD, "A32", "失效條件（可觀察）：DCF 企業價值（任一情境）小於或等於零（原則第 56 條；Val 頁 DCF 有效性檢查）；FY2027 以後淨新增 ARR 年增持續高於本模型基準；AIDR／代理防護揭露絕對 ARR 且高於情境 A；SBC 占營收快速下降；DOJ／SEC 資訊請求有結論。")
     f_(RD, "A33", "本版未做先驗；公開 repo，內容只含公司與市場事實。")
     f_(RD, "A35", "風險登錄", bold=True)
@@ -1008,7 +1045,7 @@ def build(ov=None, sens=None, out=None):
     f_(RD, "A46", tf("3. 現價隱含什麼：FY2028 起現金流須為情境 B 基準的 ", ("raw", 'IF(RevDCF!B13<0,"（基準現值合計為負，倍數無意義）",TEXT(RevDCF!B13,"0.0")&" 倍")'), "，或 EV／TTM 營收為同業中位數的 ", ("RevDCF!B18", "0.0"), " 倍。"))
     f_(RD, "A48", "不適用：算力 MW、Wattonomics 對照、Tokenomics 自用 AI 讀法 2（CrowdStrike 不自建算力出租；推論成本向模型商購買）。")
     f_(RD, "A49", "不適用：三層協調（Coord 頁、C0、兩讀數）：非 Siliconomics 覆蓋。")
-    f_(RD, "A50", "未做：先驗（Andy 2026-11-16 指示先跳過）。")
+    f_(RD, "A50", "未做：先驗（專案負責人 2026-11-16 指示先跳過）。")
     f_(RD, "A51", "未做：展示層數字一致性檢查設定（display_check.json，原則第 10 節第 51 條）；本版 README、HTML 的數字由儲存格組字，未另建對照檔。")
     f_(RD, "A52", "未做：RSU 與選擇權庫藏股法明細（以稀釋加權平均近似）；現金稅率橋（原則第 10 節第 40 條）；事件型尾端 Sens（DOJ／SEC、Delta 案；原則第 19 條）；同業成長與利益率並列（未取得）。")
     f_(RD, "A53", "v0.2 待辦：改讀 software_ai/unit_economics 的 P 原型；補 AIDR／Charlotte AI 揭露；以 10-K 核對 FY2022–FY2023 員工數。")
@@ -1017,9 +1054,9 @@ def build(ov=None, sens=None, out=None):
     f_(RD, "A56", tf("(a) DCF 目標價 ", ("Val!B6", "0.00"), "＝現價的 ", ("Val!B6/px", "0.0%"), "：", ("raw", 'IF(OR(Val!B6<0.25*px,Val!B6>4*px),"觸發（低於 25% 或高於 4 倍）","未觸發")'), "；(b) DCF 企業價值 US$M：情境 A ", (f"CF!E{CB['A']['ev']}", "#,##0"), "、情境 B ", (f"CF!E{CB['B']['ev']}", "#,##0"), "、情境 C ", (f"CF!E{CB['C']['ev']}", "#,##0"), "：", ("raw", f'IF(MIN(CF!E{CB["A"]["ev"]},CF!E{CB["B"]["ev"]},CF!E{CB["C"]["ev"]})<=0,"任一情境為負或零，觸發（EV 為負，情境 A）","三情境皆為正，未觸發")'), "；(c) 評等 ", ("Val!B14", "@"), "：", ("raw", 'IF(OR(Val!B14="強力放空",Val!B14="強力買進"),"觸發","未觸發")'), "；(d) FY2027 營收差距 ", ("Recon!D5", "+0.0%;-0.0%"), "、non-GAAP 營業利益差距 ", ("Recon!D7", "+0.0%;-0.0%"), "（門檻 10%）：", ("raw", 'IF(OR(ABS(Recon!D5)>0.1,ABS(Recon!D7)>0.1),"觸發","未觸發")'), "。"))
     f_(RD, "A57", tf("診斷量：FY2032 情境 B 的 GAAP 營業利益率 ", (f"PL!K{PB['B']['ebitm']}", "0.0%"), "、non-GAAP 營業利益率 ", (f"PL!K{PB['B']['ngopm']}", "0.0%"), "、SBC（含薪資稅）占營收 ", (f"PL!K{PB['B']['sbc']}/PL!K{PB['B']['rev']}", "0.0%"), "；DCF 加回 SBC 時的 DCF 目標價 ", ((f"Sens!H{sens_r[('sbc_ab', '高')]}" if ('sbc_ab', '高') in sens_r else "0"), "0.00"), "；SBC 規模經濟加大案（固定部分高值）的相對基準 ", ((f"Sens!E{sens_r[('fix_sbc', '高')]}" if ('fix_sbc', '高') in sens_r else "0"), "+0.0%;-0.0%"), "。"))
     f_(RD, "A58", tf("核對：(1) 營運資金為現金流入、符號正確（情境 B 的 FY2027 營運資金流入 US$M ", (f"CF!F{CB['B']['wc']}", "#,##0"), "）；(2) 模型 FY2027 公司口徑近似自由現金流 US$M ", (f"CF!F{CB['B']['fcf']}", "#,##0"), "，對照 FY2026 實績 ", ("h_fcf26", "#,##0"), "、FY2027 上半年實績 ", ("h1_fcf_co", "#,##0"), "；(3) 淨現金與股數取自 10-Q 與新聞稿（In 頁）；(4) 折舊攤銷由資本支出推得（In 頁 da_k）。"))
-    f_(RD, "A59", "診斷結論：DCF 偏低與強力放空不是公式或符號錯誤，而是輸入口徑的結果：GAAP 營業利益（SBC 費用化）在 FY2023–FY2026 實績中接近零或為負，歷史 SBC 占營收沒有下降趨勢，規模經濟只由固定成本回歸取得（幅度小），所以預測期 GAAP 營業利益率仍接近零（略為負），終值為負或近零。保留此結果的限制：它由『SBC 視為費用、無證據不假設其占比下降』這個口徑決定，不是對公司價值的經濟定論；DCF 加回 SBC、SBC 與費用的規模經濟加大案、延伸期利益率上移案在 Sens 各有列。Comparable 單法（同業倍數 × 共用庫相對倍數基準）才是本版加權目標價的主要來源。")
+    f_(RD, "A59", "診斷結論：DCF 偏低與強力放空不是公式或符號錯誤，而是輸入口徑的結果：GAAP 營業利益（SBC 費用化）在 FY2023–FY2026 實績中接近零或為負，歷史 SBC 占營收沒有下降趨勢，規模經濟只由固定成本回歸取得（幅度小），所以預測期 GAAP 營業利益率仍接近零（略為負），終值為負或近零。保留此結果的限制：它由『SBC 視為費用、無證據不假設其占比下降』這個口徑決定，不是對公司價值的經濟定論；DCF 加回 SBC、SBC 與費用的規模經濟加大案、延伸期利益率上移案在 Sens 各有列。Comparable 單法（同業 P/S × 共用庫相對倍數基準）才是本版加權目標價的主要來源。v0.2.2（G9-1）：情境 A 的 DCF 企業價值為負，加權用每股價值以企業價值下限 0 計（原始讀數照列在 CF、Val 頁；預設、可撤回，In 頁 ev_floor 改 0 即用原始讀數）。")
     pv_ = lambda sc: f"CF!E{CB[sc]['ps0']}"
-    f_(RD, "A60", tf("情境排序倒掛（比照原則第 60 條）：三情境的 DCF 終值現值 US$M 為 情境 A ", (f"CF!E{CB['A']['tvpv']}", "#,##0"), "、情境 B ", (f"CF!E{CB['B']['tvpv']}", "#,##0"), "、情境 C ", (f"CF!E{CB['C']['tvpv']}", "#,##0"), "；DCF 每股價值（評價日）US$ 情境 A ", (pv_("A"), "0.00"), "、情境 B ", (pv_("B"), "0.00"), "、情境 C ", (pv_("C"), "0.00"), "，", ("raw", f'IF(AND({pv_("A")}<{pv_("B")},{pv_("B")}<{pv_("C")}),"呈 A 小於 B 小於 C，與 AI 淨效果 A 大於 B 大於 C 的方向相反（倒掛）","未倒掛")'), "。成因：GAAP 營業利益率（SBC 費用化）長期在零附近、略為負，營收越大，負的 NOPAT 與負的終值越大，所以營收較高的情境 DCF 反而較低；三情境的 DCF 排序因此不代表經營好壞排序，EV 為負的情境 DCF 每股價值不作為估值依據（Val 頁 DCF 有效性檢查），加權目標價主要由 Comparable 決定。"))
+    f_(RD, "A60", tf("情境排序倒掛（比照原則第 60 條）：三情境的 DCF 終值現值 US$M 為 情境 A ", (f"CF!E{CB['A']['tvpv']}", "#,##0"), "、情境 B ", (f"CF!E{CB['B']['tvpv']}", "#,##0"), "、情境 C ", (f"CF!E{CB['C']['tvpv']}", "#,##0"), "；DCF 每股價值（評價日）US$ 情境 A ", (pv_("A"), "0.00"), "、情境 B ", (pv_("B"), "0.00"), "、情境 C ", (pv_("C"), "0.00"), "，", ("raw", f'IF(AND({pv_("A")}<{pv_("B")},{pv_("B")}<{pv_("C")}),"呈 A 小於 B 小於 C，與 AI 淨效果 A 大於 B 大於 C 的方向相反（倒掛）","未倒掛")'), "。成因：GAAP 營業利益率（SBC 費用化）長期在零附近、略為負，營收越大，負的 NOPAT 與負的終值越大，所以營收較高的情境 DCF 反而較低；三情境的 DCF 排序因此不代表經營好壞排序，EV 為負的情境，原始 DCF 每股價值照列但不作為估值依據（Val 頁 DCF 有效性檢查），加權用每股價值以企業價值下限 0 計（G9-1，預設、可撤回），加權目標價主要由 Comparable 決定。"))
     RD.column_dimensions["A"].width = 120
     # ───────── Sens ─────────
     S = ws_["Sens"]
@@ -1090,7 +1127,7 @@ def build(ov=None, sens=None, out=None):
             ("S03", "CrowdStrike Form 10-K FY2026", "2026-03", "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000010/crwd-20260131.htm", "Verified", "損益、ARR、淨留存、分部、RPO、員工"),
             ("S04", "CrowdStrike Q4／FY2026 新聞稿（8-K Ex.99.1）", "2026-03-03", "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000007/crwd-20260303xex991.htm", "Verified", "FY2025／FY2026 損益與現金流"),
             ("S05", "CrowdStrike Q4 FY2024 新聞稿（8-K Ex.99.1）", "2024-03-05", "https://sec.gov/Archives/edgar/data/1535527/000153552724000004/crwd-20240305xex991.htm", "Verified", "FY2023／FY2024 損益與現金流"),
-            ("S06", "FRED DGS10（美國 10 年期公債殖利率）", "2026-11-12", "https://fred.stlouisfed.org/series/DGS10", "Verified", "rf＝5.15%"),
+            ("S06", "FRED DGS10（美國 10 年期公債殖利率）", "2026-11-12", "https://fred.stlouisfed.org/series/DGS10", "Verified", "rf＝5.10%"),
             ("S07", "StockAnalysis：CRWD 歷史收盤價", "2026-11-13", "https://stockanalysis.com/stocks/crwd/history/", "Verified", "現價（單一資料商）"),
             ("S08", "StockAnalysis：CRWD 預測", "2026-11-03", "https://stockanalysis.com/stocks/crwd/forecast", "Interested-party", "賣方共識與目標價（只作對照）"),
             ("S09", "StockAnalysis：同業統計頁（PANW、FTNT、ZS、OKTA、S、CHKP）", "2026-11-14／15", "https://stockanalysis.com/stocks/panw/statistics/", "Interested-party", "同業 EV／營收（TTM）"),

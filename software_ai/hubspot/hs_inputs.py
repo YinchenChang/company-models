@@ -28,6 +28,7 @@ def tkv(name, idx=None):
 # 公司來源簡稱
 K25 = "https://www.sec.gov/Archives/edgar/data/1404655/000119312526046646/hubs-20251231.htm（10-K FY2025）"
 Q3Q = "https://www.sec.gov/Archives/edgar/data/1404655/000119312526447363/hubs-20260930.htm（10-Q 2026Q3）"
+K8R = "https://www.sec.gov/Archives/edgar/data/1404655/000119312526414965/d183135d8k.htm（8-K，簽署日 2026-10-06）"
 Q3PR = "https://www.sec.gov/Archives/edgar/data/1404655/000119312526447249/hubs-ex99_1.htm（Q3 2026 新聞稿，2026-11-04）"
 PPC = "https://ppc.land/hubspot-forecasts-q4-revenue-below-q3-as-growth-slows-to-12-from-17/（法說摘要，第二來源）"
 HSP = "https://www.hubspot.com/company-news/hubspots-customer-agent-and-prospecting-agent-now-you-pay-when-the-task-is-complete（HubSpot 官網）"
@@ -91,8 +92,8 @@ INP = [
     ("ps_peer_date", "同業 P/S 最舊資料日", "日期", None, D(2026, 10, 26), None, "Verified", "同上（stale 清單）", "供逾期核對（Recon）；其餘同業為 2026-11-13", None),
     ("ps_peer_db", "同業中位 P/S：資料庫最近一季（2026-06-30；v0.2 的值，只供 Sens 對照案）", "x", None, 4.03, None, "Derived", "software_ai/data/relmult_hist/out/peer_ps_20261113.json：hubspot.groups.all.db_last_quarter.median", "只供 Sens 對照案；不進主模型", None),
     ("rel_ps_now", "HUBS 現行 P/S 相對值（2026-11-13：HUBS 3.82 ÷ 同業中位 4.95）", "x", None, 3.82/4.95, None, "Derived", "software_ai/data/relmult_hist/out/peer_ps_20261113.json：own_ps ÷ peer_median_ps", "只供對照（Val 與 Recon 的現行相對值）；不進主模型", None),
-    ("rel_mult", "相對倍數係數（HUBS 對同業中位數；取相對倍數歷史讀數的幾何平均基準）", "x", 0.6465043833518652, 1.2714865566748963, 1.579667603932714, "Derived", "software_ai/data/relmult_hist/out/hubspot.json：geo_base（base_source：PS 與 PSG 兩讀數幾何平均，Derived）；低／高＝sens.low／sens.high；窗口 2021-09-30 至 2026-06-30，同業 11 家", "PS 相對值與 PSG 相對值（PSG＝PS÷TTM 營收年增）的歷史中位數；本模型 Comparable 主腿為 P/S 口徑（工作單 G6），與 PS／PSG 相對值同口徑；P/E 只作對照列；PS 與 PSG 兩讀數相差 2.0%（未超過 30%）；HUBS 成長／同業成長比 1.52（TTM）；現行前瞻 P/E 相對值見 Recon", None),
-    ("rm_ps", "relmult_hist：ps_only 讀數（PS 相對值歷史中位數）", "x", None, 1.2591749963481562, None, "Derived", "software_ai/data/relmult_hist/out/hubspot.json：ps_only", "只供 Sens 案例；不進主模型", None),
+    ("rel_mult", "相對倍數係數（HUBS 對同業中位數；取相對倍數歷史讀數的幾何平均基準）", "x", 0.6465043833518652, 1.2714865566748963, 1.579667603932714, "Derived", "software_ai/data/relmult_hist/out/hubspot.json：geo_base（base_source：P/S 與 PSG 兩讀數幾何平均，Derived）；低／高＝sens.low／sens.high；窗口 2021-09-30 至 2026-06-30，同業 11 家", "P/S 相對值與 PSG 相對值（PSG＝P/S÷TTM 營收年增）的歷史中位數；本模型 Comparable 主腿為 P/S 口徑（工作單 G6），與 P/S／PSG 相對值同口徑；P/E 只作對照列；P/S 與 PSG 兩讀數相差 2.0%（未超過 30%）；HUBS 成長／同業成長比 1.52（TTM）；現行前瞻 P/E 相對值見 Recon", None),
+    ("rm_ps", "relmult_hist：ps_only 讀數（P/S 相對值歷史中位數）", "x", None, 1.2591749963481562, None, "Derived", "software_ai/data/relmult_hist/out/hubspot.json：ps_only", "只供 Sens 案例；不進主模型", None),
     ("rm_psg", "relmult_hist：psg_only 讀數（PSG 相對值歷史中位數）", "x", None, 1.283918493055893, None, "Derived", "software_ai/data/relmult_hist/out/hubspot.json：psg_only", "只供 Sens 案例；不進主模型", None),
     (SEC, "C. 命題驅動：客戶數 × 每客戶訂閱營收；AI 代理按任務計價（增量）與席位被代理取代（侵蝕）；v0.2 改讀 unit_economics"),
     ("na_q4", "Q4 2026 客戶淨增", "戶", 2000, 4000, 5000, "Assumed", PPC + "：Q4 淨增「低於 5,000」（管理層說法）", "Q3 實績 5,258；Q2 6,988", None),
@@ -145,7 +146,7 @@ INP = [
     ("sbc_pct", "股票薪酬占營收（只用於 Q4 2026 單季；FY2027 起改依增量 sbc_inc）", "%", None, "=h_sbc_ltm/h_rev_ltm", None, "Derived", "近四季現金流量表 SBC ÷ 營收（Hist 頁）", "Q4 為單季預測", None),
     ("sbc_inc", "增量股票薪酬率（營收每增 1 美元的 SBC 增量）：FY2027 起", "%", 0.046, "=(h_sbc_25-h_sbc_23)/(h_rev_25-h_rev_23)", 0.1404, "Derived", "FY2023 至 FY2025 斜率：SBC 432.3→528.2（Hist 頁）；SBC 占營收 FY2021 12.8%、FY2022 15.9%、FY2023 19.9%、FY2024 19.2%、FY2025 16.9%、近四季 14.0%", "SBC＝近四季 SBC＋斜率×營收增量。低案＝FY2024→FY2025 斜率 4.6%；高案＝0.1404＝全期持平於近四季占比（下緣）。DCF 不加回 SBC", None),
     ("adj_pct", "非 GAAP 調節其他項（收購攤銷、收購費用、重組、SBC 雇主稅等）占營收", "%", 0.01, "=(h_ngoi_ltm-h_oi_ltm-h_sbc_ltm)/h_rev_ltm", 0.02, "Derived", "近四季：非 GAAP 營業利益 − GAAP 營業利益 − SBC（Hist 頁）", "全期持平；Q4 2026 重組費用另列", None),
-    ("restr_q4", "Q4 2026 重組費用（2026 Restructuring Plan，約 7% 員工）", "US$M", 65, 70, 75, "Interested-party", Q3Q + " 附註：預估 65–75 百萬美元，多數於 Q4 認列", "只影響 Q4 一次性費用與現金；後續節省不入基準（工作單 G2.3）", CO),
+    ("restr_q4", "Q4 2026 重組費用（2026 Restructuring Plan，約 7% 員工；GAAP 一次性項目）", "US$M", 65, 70, 75, "Verified", K8R + "（8-K Item 2.05：預估約 65–75 百萬美元，多數於 FY2026 Q4；區間為申報值，基準取中點 70）；同 " + Q3Q + " 附註", "一次性 GAAP 費用，只放 Q4／FY2026，不改經常性費用率；Q4 與 FY2027 Q1 的拆分未揭露，故全額入 Q4、FY2027 為 0；後續節省不入基準（工作單 G2.3、G10）", None),
     ("ps_pct", "專業服務與其他營收 ÷ 訂閱營收", "%", 0.015, "=(h_ps_ltm)/(h_sub_ltm)", 0.025, "Derived", "近四季（Hist 頁）", "全期持平", None),
     ("da_pct", "折舊與攤銷占營收", "%", 0.04, "=h_da_ltm/h_rev_ltm", 0.055, "Derived", "近四季（Hist 頁）", None, None),
     ("cx_pct", "資本支出（含資本化軟體）占營收", "%", 0.05, "=(h_ppe_ltm+h_capsw_ltm)/h_rev_ltm", 0.07, "Derived", "近四季（Hist 頁）", None, None),
