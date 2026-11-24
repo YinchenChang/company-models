@@ -1,0 +1,44 @@
+{
+ "company": "schaeffler",
+ "ticker": "SHA0.DE",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "動力傳動與底盤",
+   "label": "動力傳動與底盤",
+   "period": "FY2025",
+   "value": 8900,
+   "unit": "€M",
+   "source": "公司新聞稿「Schaeffler reports solid results for 2025」（2026-03-03）https://www.mynewsdesk.com/fi/schaeffler/pressreleases/schaeffler-reports-solid-results-for-2025-3435255 事業部門表"
+  },
+  {
+   "name": "電動化",
+   "label": "電動化",
+   "period": "FY2025",
+   "value": 5015,
+   "unit": "€M",
+   "source": "公司新聞稿「Schaeffler reports solid results for 2025」（2026-03-03）https://www.mynewsdesk.com/fi/schaeffler/pressreleases/schaeffler-reports-solid-results-for-2025-3435255 事業部門表"
+  },
+  {
+   "name": "車輛生命週期（售後）",
+   "label": "車輛生命週期（售後）",
+   "period": "FY2025",
+   "value": 3038,
+   "unit": "€M",
+   "source": "公司新聞稿「Schaeffler reports solid results for 2025」（2026-03-03）https://www.mynewsdesk.com/fi/schaeffler/pressreleases/schaeffler-reports-solid-results-for-2025-3435255 事業部門表"
+  },
+  {
+   "name": "軸承與工業",
+   "label": "軸承與工業",
+   "period": "FY2025",
+   "value": 6368,
+   "unit": "€M",
+   "source": "公司新聞稿「Schaeffler reports solid results for 2025」（2026-03-03）https://www.mynewsdesk.com/fi/schaeffler/pressreleases/schaeffler-reports-solid-results-for-2025-3435255 事業部門表"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：四部門合計 ＋ 其他與調節 − 合併營收（應為 0）"
+ ],
+ "note": "官方事業部門四個加『其他與調節』（含人形、國防成長領域，公司未拆金額），Q 頁以合併營收倒推對帳；PL 營收列沿用同一分法，另有「檢查：五列合計 − 核心營收」「檢查：核心＋人形 − 合併營收」。"
+}
