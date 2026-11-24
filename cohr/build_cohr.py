@@ -1143,7 +1143,7 @@ if _CR and not OVR:
 _a1 = wb["README"]["A1"].value; _h, _t = _a1.split("；", 1)
 import re as _re
 assert _re.search(r"v0\.4\.[456]", _h)
-wb["README"]["A1"] = _re.sub(r"v0\.4\.[456]", "v0.4.7", _h, count=1) + "；v0.4.7（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120；只換價格，共識 EPS 與模型假設不變）；" + _t
+wb["README"]["A1"] = _re.sub(r"v0\.4\.[4567]", "v0.4.8", _h, count=1) + "；v0.4.7（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120；只換價格，共識 EPS 與模型假設不變）；v0.4.8（2026-11-24）：全年利息與其他淨支出假設改為 FY2027 Q1 實績 × 4（外部稽核優化 W3；會改值，現價與同業報價不變）；" + _t
 wb.save(sys.argv[1])
 if os.environ.get("COHR_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
