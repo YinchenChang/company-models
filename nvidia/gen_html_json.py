@@ -367,7 +367,7 @@ def _v13():
     r13 = find("README", "v1.3 展示層")
     RM = dict(zip(["hero", "rec", "o1", "o2", "o3", "o4", "o5", "drv", "ver"], range(r13 + 1, r13 + 10)))
     assert str(RD[f"A{RM['ver']}"].value).startswith("v0.3.7"), RD[f"A{RM['ver']}"].value
-    assert str(RD[f"A{RD.max_row}"].value).startswith("v0.3.14"), RD[f"A{RD.max_row}"].value   # v0.3.14（2026-11-21）起最後一列為 v0.3.14 沿革
+    assert str(RD[f"A{RD.max_row}"].value).startswith("v0.3.15"), RD[f"A{RD.max_row}"].value   # v0.3.15（2026-11-24）起最後一列為 v0.3.15 沿革
     cfg["layout"] = "v1.3"
     # ---- 橫幅：只留 ≤200 字白話（規則與歸因移到估值章）----
     old_note = cfg["hero"]["note"]
@@ -569,10 +569,11 @@ PLAIN = {
 # （2026-11-23：相對倍數係數＝1 之後新增執行長異動 5 列；獨立核對發現未平移時白話標籤對到別的案例）
 _bz0 = find("Sens", "目標價敏感度：業務主因")
 _off = next(r for r in range(_bz0, wb["Sens"].max_row + 1) if str(wb["Sens"][f"A{r}"].value or "").startswith("NVIDIA 顆數係數")) - 991
-if _off:
-    PLAIN = {(f"Sens!{k[5]}{int(k[6:]) + _off}" if k.startswith("Sens!") and int(k[6:]) >= 991 else k): v for k, v in PLAIN.items()}
-for _k, _want in (("Sens!A996", "匣級加價保留比例"), ("Sens!A997", "HBM／LPDDR 吸收比例"), ("Sens!A1002", "營業費用彈性"), ("Sens!A1005", "有效稅率"), ("Sens!A1016", "k_rec 自 FY2028")):
-    _c = f"A{int(_k[6:]) + _off}"
+# v0.3.15（2026-11-24；外部稽核優化 W3-4）：第三季滾入後錨點案例由 8 列減為 5 列（原 1008–1015 → 1008–1012），其後各列（原第 1016 列起）再上移 3 列
+_row = lambda old: old + _off - (3 if old >= 1016 else 0)
+PLAIN = {(f"Sens!{k[5]}{_row(int(k[6:]))}" if k.startswith("Sens!") and int(k[6:]) >= 991 else k): v for k, v in PLAIN.items()}
+for _k, _want in (("Sens!A1008", "Q4 FY27 營收指引"), ("Sens!A996", "匣級加價保留比例"), ("Sens!A997", "HBM／LPDDR 吸收比例"), ("Sens!A1002", "營業費用彈性"), ("Sens!A1005", "有效稅率"), ("Sens!A1016", "k_rec 自 FY2028")):
+    _c = f"A{_row(int(_k[6:]))}"
     assert str(wb["Sens"][_c].value).startswith(_want), (_c, wb["Sens"][_c].value, _want)   # 白話標籤必須對到同一個案例
 FOLD = {"DCF!A2": "展開：DCF 的營業利益與自由現金流口徑", "Sens!A24": "展開：敏感度讀法（月數加權與售價案例的口徑）",
         "Recon!A68": "展開：FY2027 校準缺口的持續性假設"}
