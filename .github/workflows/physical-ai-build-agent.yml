@@ -33,7 +33,7 @@ jobs:
     timeout-minutes: 100
     strategy:
       fail-fast: false
-      max-parallel: 12
+      max-parallel: 20
       matrix:
         c: ${{ fromJson(needs.plan.outputs.companies) }}
     steps:
@@ -42,7 +42,7 @@ jobs:
         run: |
           sudo apt-get update -q
           sudo apt-get install -y -q --no-install-recommends python3-openpyxl python3-numpy libreoffice-calc fonts-noto-cjk >/dev/null
-          pip install -q openpyxl numpy || true
+          pip install -q openpyxl numpy beautifulsoup4 lxml pypdf pycryptodome || true
           npm install -g @anthropic-ai/claude-code >/dev/null 2>&1
       - name: 建置（Claude Code，API 額度）
         env:

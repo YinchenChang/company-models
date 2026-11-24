@@ -1,6 +1,146 @@
-{"model": "claude-sonnet-5-5", "budget_usd": 6,
+{
+ "model": "claude-sonnet-5-5",
+ "budget_usd": 3.5,
  "companies": [
-  {"folder": "daifuku", "name": "Daifuku 大福（6383.T，東證 Prime）", "yahoo": "6383.T", "line": "線 5 倉儲物流自動化（lines/warehouse）", "profile": "6383"},
-  {"folder": "zhaowei", "name": "兆威機電（003021.SZ，深交所）", "yahoo": "003021.SZ", "line": "線 6 共用零組件（lines/components；靈巧手，另讀線 4 人形 lines/humanoid）", "profile": "003021"},
-  {"folder": "weride", "name": "文遠知行 WeRide（WRD，NASDAQ；另有港股）", "yahoo": "WRD", "line": "線 1 Robotaxi（lines/robotaxi）", "profile": "WRD"}
- ]}
+  {
+   "folder": "nsk",
+   "name": "NSK 日本精工（6471.T）",
+   "yahoo": "6471.T",
+   "line": "線 6 共用零組件（lines/components；人形用量另讀線 4 lines/humanoid）",
+   "profile": "6471"
+  },
+  {
+   "folder": "schaeffler",
+   "name": "Schaeffler 舍弗勒（SHA0.DE）",
+   "yahoo": "SHA0.DE",
+   "line": "線 6 共用零組件（lines/components；人形用量另讀線 4 lines/humanoid）",
+   "profile": "SHA0"
+  },
+  {
+   "folder": "novanta",
+   "name": "Novanta（NOVT，NASDAQ）",
+   "yahoo": "NOVT",
+   "line": "線 6 共用零組件（lines/components；人形用量另讀線 4 lines/humanoid）",
+   "profile": "NOVT"
+  },
+  {
+   "folder": "autostore",
+   "name": "AutoStore（AUTO.OL，奧斯陸）",
+   "yahoo": "AUTO.OL",
+   "line": "線 5 倉儲物流自動化（lines/warehouse）",
+   "profile": "AUTO"
+  },
+  {
+   "folder": "kion",
+   "name": "KION（KGX.DE）",
+   "yahoo": "KGX.DE",
+   "line": "線 5 倉儲物流自動化（lines/warehouse）",
+   "profile": "KGX"
+  },
+  {
+   "folder": "nidec",
+   "name": "Nidec 日本電產（6594.T）",
+   "yahoo": "6594.T",
+   "line": "線 6 共用零組件（lines/components；人形用量另讀線 4 lines/humanoid）",
+   "profile": "6594"
+  },
+  {
+   "folder": "inovance",
+   "name": "匯川技術（300124.SZ）",
+   "yahoo": "300124.SZ",
+   "line": "線 3 工業機器人（lines/industrial_robot）；伺服驅動另讀線 6",
+   "profile": "300124"
+  },
+  {
+   "folder": "shuanghuan",
+   "name": "雙環傳動（002472.SZ）",
+   "yahoo": "002472.SZ",
+   "line": "線 6 共用零組件（lines/components；人形用量另讀線 4 lines/humanoid）",
+   "profile": "002472"
+  },
+  {
+   "folder": "hengli",
+   "name": "恒立液壓（601100.SS）",
+   "yahoo": "601100.SS",
+   "line": "線 6 共用零組件（lines/components；人形用量另讀線 4 lines/humanoid）",
+   "profile": "601100"
+  },
+  {
+   "folder": "regal_rexnord",
+   "name": "Regal Rexnord（RRX，NYSE）",
+   "yahoo": "RRX",
+   "line": "線 6 共用零組件（lines/components；人形用量另讀線 4 lines/humanoid）",
+   "profile": "RRX"
+  },
+  {
+   "folder": "omnivision",
+   "name": "豪威集團／韋爾股份（603501.SS）",
+   "yahoo": "603501.SS",
+   "line": "線 6 共用零組件（lines/components；人形用量另讀線 4 lines/humanoid）",
+   "profile": "603501"
+  },
+  {
+   "folder": "sunny",
+   "name": "舜宇光學（2382.HK）",
+   "yahoo": "2382.HK",
+   "line": "線 6 共用零組件（lines/components；人形用量另讀線 4 lines/humanoid）",
+   "profile": "2382.HK"
+  },
+  {
+   "folder": "orbbec",
+   "name": "奧比中光（688322.SS）",
+   "yahoo": "688322.SS",
+   "line": "線 6 共用零組件（lines/components；人形用量另讀線 4 lines/humanoid）",
+   "profile": "688322"
+  },
+  {
+   "folder": "wuzhou",
+   "name": "五洲新春（603667.SS）",
+   "yahoo": "603667.SS",
+   "line": "線 6 共用零組件（lines/components；人形用量另讀線 4 lines/humanoid）",
+   "profile": "603667"
+  },
+  {
+   "folder": "moons",
+   "name": "鳴志電器（603728.SS）",
+   "yahoo": "603728.SS",
+   "line": "線 6 共用零組件（lines/components；人形用量另讀線 4 lines/humanoid）",
+   "profile": "603728"
+  },
+  {
+   "folder": "hesai",
+   "name": "禾賽 Hesai（HSAI，NASDAQ；另有港股）",
+   "yahoo": "HSAI",
+   "line": "線 1 Robotaxi 與線 2 智慧車（lines/robotaxi、lines/smart_car）；LiDAR 另讀線 6",
+   "profile": "HSAI"
+  },
+  {
+   "folder": "sanhua",
+   "name": "三花智控（002050.SZ）",
+   "yahoo": "002050.SZ",
+   "line": "線 6 共用零組件（lines/components；人形用量另讀線 4 lines/humanoid）",
+   "profile": "002050"
+  },
+  {
+   "folder": "tuopu",
+   "name": "拓普集團（601689.SS）",
+   "yahoo": "601689.SS",
+   "line": "線 6 共用零組件（lines/components；人形用量另讀線 4 lines/humanoid）",
+   "profile": "601689"
+  },
+  {
+   "folder": "estun",
+   "name": "埃斯頓 Estun（002747.SZ）",
+   "yahoo": "002747.SZ",
+   "line": "線 3 工業機器人（lines/industrial_robot）",
+   "profile": "002747"
+  },
+  {
+   "folder": "robosense",
+   "name": "速騰聚創 RoboSense（2498.HK）",
+   "yahoo": "2498.HK",
+   "line": "線 1 Robotaxi 與線 2 智慧車（lines/robotaxi、lines/smart_car）；LiDAR 另讀線 6",
+   "profile": "2498"
+  }
+ ]
+}
