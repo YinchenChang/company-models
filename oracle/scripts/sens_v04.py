@@ -12,7 +12,7 @@ import openpyxl
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BUILD = os.path.join(HERE, "build_oracle.py")
 _PXS = json.load(open(os.path.join(HERE, "data", "peers_sw_20261120.json"), encoding="utf-8"))   # v0.5.3 原地換價：軟體同業 Sens 低／高
-TK = json.load(open(os.path.join(HERE, "data", "tokenomics_snapshot_v19.0.json"), encoding="utf-8"))["items"]
+TK = json.load(open(os.path.join(HERE, "data", "tokenomics_snapshot_v22.0.json"), encoding="utf-8"))["items"]   # 外部稽核優化 W3-5（2026-11-23）：原讀 v19.0，改讀與 build_oracle.py 同一份 v22.0（IF_OpexGW 四世代基準值相同）
 GN = {"h100": "Hopper H100", "gb200": "GB200 NVL72", "gb300": "GB300 NVL72", "vr200": "VR200 NVL72"}
 OX = {g: round(TK["IF_OpexGW"]["values"][n]["基準"], 4) for g, n in GN.items()}
 
@@ -50,7 +50,7 @@ CASES = [
 ]
 # v0.4.2：敏感度覆蓋（個股模型原則第 9 節）——In 頁每個有低／高的鍵都要有案例；IF_HoldEcon 四世代同時一案（鍵 he_all）。
 # 第 5 欄（可省略）＝Sens 頁「鍵」欄文字；省略時取低／高覆寫的全部鍵。
-TKV = "v21.10"   # v0.4.3：IF_HoldEcon 低／高改讀 v21.9 快照；v0.4.5：v21.10（與 build_oracle.py 同檔）
+TKV = "v22.0"   # 外部稽核優化 W3-5（2026-11-23）：與 build_oracle.py 同檔（v22.0；IF_HoldEcon 值與 v21.10 相同）。v0.4.3：IF_HoldEcon 低／高改讀 v21.9 快照；v0.4.5：v21.10（與 build_oracle.py 同檔）
 _TK21 = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))["items"]["IF_HoldEcon"]["values"]
 HE = {g: (round(_TK21[n]["低成本"], 4), round(_TK21[n]["高成本"], 4)) for g, n in GN.items()}
 CASES += [
