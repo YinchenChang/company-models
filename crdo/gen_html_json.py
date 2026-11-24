@@ -333,11 +333,11 @@ def _v13():
     fmt = lambda u: {"%": "p1", "US$": "n2", "十億股": "n3"}.get(u, "n1")
     rowx = lambda r, cols=COLS_: [f"@PL!A{r}"] + [f"@PL!{c}{r}|{fmt(PLW.cell(r, 2).value)}" for c in cols]
     r_ratio = plr("比率"); r_gaap = next(r for r in range(ph, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("GAAP 對照"))
-    r_chk = plr("核對（應為 0）"); r_c2b = next(r for r in range(r_chk, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("差額（FY2030E"))
+    r_chk = plr("核對（應為 0）"); r_c2b = next(r for r in range(r_chk, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("核對：延伸期毛利"))
     is_tbl = {"type": "table", "caption": "標準損益表（Non-GAAP；十億美元，EPS 為美元，稀釋）：FY2024A–FY2026A 實績、FY2027E–FY2032E 情境 B（基準）",
               "head": [f"@PL!A{ph}"] + [f"@PL!{c}{ph}" for c in COLS_],
               "rows": [rowx(plr(k)) for k in keys] + [{"sub": f"@PL!A{r_ratio}"}] + [rowx(r) for r in range(r_ratio + 1, r_gaap)]
-                      + [{"sub": "核對：FY2030E–FY2032E 兩種推法的營業利益差額（毛利率與營業費用率沿用 FY2029E）"}] + [rowx(r) for r in (r_c2b, r_c2b + 1)]}
+                      + [{"sub": "核對與揭露：FY2030E–FY2032E 毛利 − 營業費用 − 營業利益（應為零；延伸期營業費用＝毛利 − 營業利益，是殘差不是假設）與隱含營業費用率"}] + [rowx(r) for r in (r_c2b, r_c2b + 1)]}
     gaap_tbl = {"type": "table", "caption": f"@PL!A{r_gaap}", "head": [f"@PL!A{ph}"] + [f"@PL!{c}{ph}" for c in "CDE"], "collapse": True,
                 "summary": "展開：GAAP 對照（只列實績）與核對列",
                 "rows": [[f"@PL!A{r}"] + [f"@PL!{c}{r}|{fmt(PLW.cell(r, 2).value)}" if PLW[f"{c}{r}"].value is not None else "—" for c in "CDE"] for r in range(r_gaap + 1, r_chk)]

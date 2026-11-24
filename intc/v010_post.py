@@ -339,8 +339,7 @@ def pl_standard(wb, HR, CR, B):
     P.cell(r, 1, "口徑：GAAP（美國 GAAP 合併財報；歷史三年與 FY2022 基期皆取公司財報新聞稿）。Intel 另公布 Non-GAAP（排除股權報酬、收購相關、重組等），市場共識 EPS 多為 Non-GAAP 口徑，本表與模型一律 GAAP，不做 Non-GAAP 調整。"
                  "稅後淨利＝歸屬 Intel 淨利（模型淨利口徑）；EPS 為稀釋 EPS（歷史為公司公告值）。營業費用含重組（＝毛利 − 營業利益）；其他收入（淨額）＝稅前利益 − 營業利益，FY2026E 含 Escrowed Shares 評價損失 126 億美元（非現金，FY2027 起不預測）。")
     r_note = r; r += 1
-    P.cell(r, 1, "FY2030E–FY2032E（收斂法延伸期，只推營收與淨利）：營業利益取 DCF 頁情境 B 的 EBIT（＝（淨利 ＋ 非控制權益）÷（1 − 稅率）− 營業外淨額，由淨利還原）；毛利率與營業費用率沿用前一年據以算出營業成本、毛利與營業費用，"
-                 "與延伸期營業利益的差額列核對列，不改淨利與目標價。")
+    P.cell(r, 1, "FY2030E–FY2032E（收斂法延伸期，只推營收與淨利）：營業利益取 DCF 頁情境 B 的 EBIT（＝（淨利 ＋ 非控制權益）÷（1 − 稅率）− 營業外淨額，由淨利還原）；毛利率沿用前一年 據以算出營業成本與毛利；營業費用＝毛利 − 營業利益（殘差，不是假設；外部稽核優化 W3-2）；隱含營業費用率見表末揭露列，不改淨利與目標價。")
     r_note2 = r; r += 1
     for j, h in enumerate(["項目", "單位"] + YEARS + ["說明"], 1):
         c = P.cell(r, j, h); c.font = BOLD; c.fill = HDR
@@ -367,7 +366,7 @@ def pl_standard(wb, HR, CR, B):
     row("gp", "毛利", "US$B", hh("gp") + eb("gp") + [f"={c}{g['rev']}*{c}{g['gm']}" for c in "JKL"], M, "FY2026E–FY2029E＝PL 頁毛利（＝營業利益＋營業費用）；FY2030E 起＝營收 × 毛利率")
     row("gm", "毛利率", "%", [f"={c}{g['gp']}/{c}{g['rev']}" for c in "CDEFGHI"] + [f"={p}{g['gm']}" for p in "IJK"], PCT, "FY2030E–FY2032E＝前一年")
     row("opx", "營業費用（含重組）", "US$B", [f"=Hist!{HC[c]}{HR['opx']}" for c in "CDE"] + eb("opx")
-        + [f"={c}{g['rev']}*{p}{g['opx']}/{p}{g['rev']}" for p, c in (("I", "J"), ("J", "K"), ("K", "L"))], M, "歷史＝毛利 − 營業利益；FY2026E–FY2029E＝PL 頁營業費用；FY2030E 起＝營收 × 前一年營業費用率")
+        + [None] * 3, M, "歷史＝毛利 − 營業利益；FY2026E–FY2029E＝PL 頁營業費用；FY2030E 起＝毛利 − 營業利益（殘差，不是假設；隱含費用率見表末揭露列）")
     row("oi", "營業利益", "US$B", hh("oi") + eb("oi") + [f"=DCF!{DCOL[c]}{d_ebit}" for c in "JKL"], M, "FY2030E–FY2032E＝DCF 頁情境 B EBIT（淨利還原）")
     row("opm", "營業利益率", "%", [f"={c}{g['oi']}/{c}{g['rev']}" for c in COLS], PCT)
     row("oth", "其他收入（淨額；營業外）", "US$B", [f"={c}{g['pti']}-{c}{g['oi']}" for c in COLS], M, "＝稅前利益 − 營業利益（權益投資損益、利息及其他）；FY2026E 含 Escrowed Shares 評價損失（非現金）")
@@ -399,9 +398,14 @@ def pl_standard(wb, HR, CR, B):
          "基期或當期淨利為負或零時標 n/a（FY2022 基期＝Hist 頁）")
     P.cell(r, 1, "核對（應為 0；實績欄可有 ±0.002 的捨入差）").font = BOLD; r_chk = r; r += 1
     row2("c1", "核對：營收 − 營業成本 − 毛利", "US$B", [f"={c}{g['rev']}-{c}{g['cogs']}-{c}{g['gp']}" for c in COLS], "0.000")
-    row2("c2", "核對：毛利 − 營業費用 − 營業利益（FY2030E–FY2032E 為差額，見下）", "US$B", [f"={c}{g['gp']}-{c}{g['opx']}-{c}{g['oi']}" for c in "CDEFGHI"] + [None] * 3, "0.000")
-    row2("c2b", "差額（FY2030E–FY2032E）：毛利 − 營業費用（沿用前一年比率推算）− 延伸期營業利益（由淨利還原）；目標價用延伸期淨利，不受影響", "US$B", [None] * 7 + [f"={c}{g['gp']}-{c}{g['opx']}-{c}{g['oi']}" for c in "JKL"], "0.000")
-    row2("c2c", "差額（FY2030E–FY2032E）占營收", "%", [None] * 7 + [f"={c}{L['c2b']}/{c}{g['rev']}" for c in "JKL"], PCT)
+    row2("c2", "核對：毛利 − 營業費用 − 營業利益（FY2030E–FY2032E 見下一列）", "US$B", [f"={c}{g['gp']}-{c}{g['opx']}-{c}{g['oi']}" for c in "CDEFGHI"] + [None] * 3, "0.000")
+    # 外部稽核優化 W3-2（2026-11-23；Andy 決定 J3）：延伸期（FY2030E–FY2032E）營業費用改為殘差＝毛利 − 營業利益，使「毛利 − 營業費用 − 營業利益＝0」每一年都成立。
+    # 原因：原本營業費用＝營收 × 沿用的費用率，營業利益卻由淨利反推，兩者對不上（差額占營收約 1–4%）。只改營業費用這一列的呈現；毛利、營業利益、淨利、EPS、目標價都不動。
+    # 隱含的營業費用率列在下方揭露列（不是新假設，是殘差算出來的結果）。
+    for c in "JKL":
+        P[f"{c}{g['opx']}"] = f"={c}{g['gp']}-{c}{g['oi']}"; P[f"{c}{g['opx']}"].number_format = P[f"I{g['opx']}"].number_format
+    row2("c2b", "核對：延伸期毛利 − 營業費用 − 營業利益（FY2030E–FY2032E；延伸期營業費用＝毛利 − 營業利益，應為 0）", "US$B", [None] * 7 + [f"={c}{g['gp']}-{c}{g['opx']}-{c}{g['oi']}" for c in "JKL"], "0.000")
+    row2("c2c", "揭露（不是核對列）：隱含營業費用率＝營業費用 ÷ 營收（FY2030E–FY2032E 的營業費用是殘差，不是假設；FY2029E 欄供對照）", "%", [None] * 6 + [f"={c}{g['opx']}/{c}{g['rev']}" for c in "IJKL"], "0.00%")
     row2("c3", "核對：稅前利益 − 所得稅 − 非控制權益 − 稅後淨利", "US$B", [f"={c}{g['pti']}-{c}{g['tax']}-{c}{g['nci']}-{c}{g['ni']}" for c in COLS], "0.000")
     row2("c4", "核對：稅後淨利 ÷ 股數 − EPS（預測期）", "US$", [None] * 3 + [f"={c}{g['ni']}/{c}{g['sh']}-{c}{g['eps']}" for c in "FGHIJKL"], "0.0000")
     row2("c5", "核對：營收 − DCF 頁情境 B 營收（FY2027E–FY2032E）／ − Q 頁 FY2026 錨點（FY2026E）", "US$B", [None] * 3 + [f"=F{g['rev']}-a26_rev"] + [f"={c}{g['rev']}-DCF!{d}{d_rev}" for c, d in zip("GHIJKL", "CDEFGH")], "0.000")

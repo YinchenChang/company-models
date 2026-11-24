@@ -1307,4 +1307,21 @@ print(px1113_post.apply(wb))
 # ---------------- v0.4.7（2026-11-21）：工作單 px1120——現價與同業報價改 2026-11-20 收盤（ter/px1120_post.py；公式與模型假設不變）----------------
 import px1120_post  # noqa: E402
 print(px1120_post.apply(wb))
+# ---------------- 外部稽核優化 W3-8(e)（2026-11-23）：情境 C 每股價值高於情境 B，成品要寫明（第二波查證：屬情境設計，不是錯誤）----------------
+# 情境字母指「產業情境」：C 的測試機市場最小，但假設泰瑞達自 Advantest 搶回 SoC 份額（與 Advantest 模型的情境 C 互為鏡像），FY2028 起營收高於 B。
+# 只加說明（Val 頁該列說明欄的公式文字＋README 末列），數值格不動；情境 C 不高於 B 時 Val 說明欄顯示空白。
+def _w3_scen_note(wb):
+    V, RD = wb["Val"], wb["README"]
+    r_ = next((r for r in range(1, V.max_row + 1) if str(V.cell(r, 1).value or "").startswith("DCF 情境價值推到 12 個月後")
+               and all(isinstance(V.cell(r, c).value, str) for c in (2, 3, 4))), None)
+    assert r_, "Val 頁找不到「DCF 情境價值推到 12 個月後」列"
+    why = ("不是排序錯誤：情境名稱指產業情境。情境 C 的測試機市場最小，但假設泰瑞達自 Advantest 搶回 SoC 測試機份額"
+           "（Advantest 讓出的份額全由泰瑞達取得，與 Advantest 模型的情境 C 互為鏡像；In 頁 B 節、Units 頁），"
+           "FY2028 起營收高於情境 B；讀情境 C 時不要當成本公司每股價值的下緣")
+    if V.cell(r_, 5).value is None:
+        V.cell(r_, 5).value = (f'=IF(D{r_}>C{r_},"情境 C（保守）"&TEXT(D{r_},"#,##0.0")&" 高於情境 B（基準）"&TEXT(C{r_},"#,##0.0")&"。"&' + RMX._xl_text(why) + ',"")')
+    n_ = RD.max_row + 2
+    RD.cell(n_, 1).value = (f'=IF(Val!D{r_}>Val!C{r_},"情境倒掛說明：DCF 情境價值（推到 12 個月後）情境 C（保守）"&TEXT(Val!D{r_},"#,##0.0")&" 高於情境 B（基準）"&TEXT(Val!C{r_},"#,##0.0")&"。"&'
+                            + RMX._xl_text(why + "。") + ',"情境倒掛說明：目前情境 C 的 DCF 情境價值不高於情境 B，無倒掛。")')
+_w3_scen_note(wb)
 wb.save(sys.argv[1])

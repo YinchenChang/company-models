@@ -482,17 +482,17 @@ function renderInvest() {
     `<div class="callout"><b>分級分布：已建模 ${okm.length} 家</b>${TIERS.filter(t => cnt(t)).map(t => `${t} ${cnt(t)} 家（${names(t)}）`).join("；")}。${all.length > okm.length ? `另有 ${all.length - okm.length} 家模型改版中。` : ""}</div>` +
     `<div class="callout"><b>收支關卡：入不敷出 ${fail.length} 家</b>${fail.length ? fail.map(m => `${esc(m.name)}（${esc(m.tier)}）`).join("、") + "。評價買進以上者改列收支不足。" : `${okm.filter(m => m.gate && m.gate.status === "通過").length} 家的基準情境期間自由現金流合計為正，沒有因收支改判的個股。`}各家關卡口徑（期間、是否扣股利）見表中游標提示。</div>` +
     `<div class="callout"><b>地位排名最前的已建模公司</b>${top.map(m => `${esc(m.name)}（第 ${nf(m.rank_all)} 名，地位 ${f1(m.score)}）：${esc(m.tier)}、中心空間 ${m.upside ? pct(m.upside.value) : DASH}`).join("；")}。地位分數衡量今天的市場地位，不代表現價便宜。</div>` +
-    `<div class="callout"><b>判讀 DCF 與 Comparable 的落差</b>高股票薪酬公司的標準 DCF 把股票薪酬當費用，常遠低於 Comparable 與現價；表中另列「DCF（股票薪酬加回）」對照讀數，口徑說明見本頁最下方。</div></div>`;
+    `<div class="callout"><b>判讀 DCF 與 Comparable 的落差</b>高股票薪酬公司的標準 DCF 把股票薪酬當費用，常遠低於 Comparable 與現價；表中另列「DCF（股票薪酬加回）」對照讀數，口徑說明見本頁最下方。「SBC 揭露狀態」依各模型輸入頁股票薪酬列自己的標記與說明判定（完整／只有下限／未揭露）：未揭露或只有下限的公司，「DCF（股票薪酬加回）對照」會等於或接近標準 DCF，那是沒有資料，不是股票薪酬為零。</div></div>`;
   h += `<div class="panel"><div class="ph"><h3>地位 × 可投資性</h3><span class="note">右上：產業位置強、現價仍低於模型中心價。橫軸為地位分數（${XLO}–${XHI}），縱軸為中心空間（−100% ～ +100%，超出以三角形標在上緣）。點任一點開啟公司檔案。</span></div><div class="pb chart">${scatter()}</div></div>`;
   h += `<div class="panel"><div class="ph"><h3>收支 → 評價 · ${TIERS.filter(t => cnt(t)).map(t => `${t} ${cnt(t)}`).join(" · ")}</h3><div class="filters" id="if">` +
     ["全部", ...TIERS].map(l => { const n = l === "全部" ? all.length : cnt(l); return `<button class="fbtn" data-if="${l}" aria-pressed="${l === invFilter}"${n ? "" : " disabled"}>${l}（${n}）</button>`; }).join("") + `</div></div>`;
-  h += `<div class="tbl"><table class="v"><thead><tr><th>公司</th><th>分級</th><th>收支關卡</th><th class="n">現價</th><th class="n">DCF</th><th class="n">Comparable</th><th class="n">中心價<br>（加權目標價）</th><th class="n">中心空間<br>（上檔空間）</th><th class="n">相對倍數基準</th><th class="n">DCF（股票薪酬加回）<br>對照</th><th>個股模型</th></tr></thead><tbody>`;
-  if (!list.length) h += `<tr><td colspan="11" class="dim">這個分級目前沒有公司。</td></tr>`;
+  h += `<div class="tbl"><table class="v"><thead><tr><th>公司</th><th>分級</th><th>收支關卡</th><th class="n">現價</th><th class="n">DCF</th><th class="n">Comparable</th><th class="n">中心價<br>（加權目標價）</th><th class="n">中心空間<br>（上檔空間）</th><th class="n">相對倍數基準</th><th class="n">DCF（股票薪酬加回）<br>對照</th><th>SBC 揭露狀態</th><th>個股模型</th></tr></thead><tbody>`;
+  if (!list.length) h += `<tr><td colspan="12" class="dim">這個分級目前沒有公司。</td></tr>`;
   for (const m of list) {
     const tk = m.tk;
     const nm = m.status === "ok" ? `<button class="linkish" data-open="${esc(tk)}"><b>${esc(m.name)}</b></button>` : `<b>${esc(m.name)}</b>`;
     if (m.status !== "ok") {
-      h += `<tr id="r-${esc(tk)}"><td class="co">${nm}<span class="t">${esc(tk)}</span><span class="s">${esc(m.sub_name)}</span></td><td colspan="9" class="dim">${esc(m.status)}</td><td>${DASH}</td></tr>`;
+      h += `<tr id="r-${esc(tk)}"><td class="co">${nm}<span class="t">${esc(tk)}</span><span class="s">${esc(m.sub_name)}</span></td><td colspan="10" class="dim">${esc(m.status)}</td><td>${DASH}</td></tr>`;
       continue;
     }
     const d = (m.price && m.price.value >= 1000) ? 0 : 2;
@@ -504,8 +504,12 @@ function renderInvest() {
     let sbc = DASH;
     if (m.sbc_dcf) sbc = sv(m.sbc_dcf, money(m, m.sbc_dcf.value, d));
     else if (m.sbc_abc) sbc = `<span class="sv" title="${esc(m.sbc_abc.cells[1] + "｜" + m.sbc_abc.label)}">${money(m, m.sbc_abc.values[1], d)}</span><small>情境 B</small>`;
+    // 外部稽核優化 W3-8(d)（2026-11-23）：SBC 揭露狀態（完整／只有下限／未揭露）。未揭露時加回對照會等於標準 DCF，不代表股票薪酬為零
+    const ss = m.sbc_status;
+    const sbcSt = ss ? `<span class="sv" title="${esc((ss.cell ? ss.cell + "｜" : "") + ss.basis)}">${esc(ss.status)}</span>` +
+      (ss.status === "未揭露" ? `<small>${ss.zero ? "模型以零帶入，不代表為零" : "模型用代理值或無值，不代表為零"}</small>` : ss.status === "只有下限" ? `<small>只涵蓋部分對象，實際較高</small>` : "") : DASH;
     const lk = `<button class="linkish" data-open="${esc(tk)}" data-tab="5">${esc(m.version)}</button>`;
-    h += `<tr id="r-${esc(tk)}"><td class="co">${nm}<span class="t">${esc(tk)}</span><span class="s">${esc(m.sub_name)}</span></td><td>${rec}${vr}</td><td>${gt}</td><td class="n">${pr}</td><td class="n">${m.dcf ? sv(m.dcf, money(m, m.dcf.value, d)) : DASH}</td><td class="n">${m.comp ? sv(m.comp, money(m, m.comp.value, d)) : DASH}</td><td class="n"><b>${m.tp ? sv(m.tp, money(m, m.tp.value, d)) : DASH}</b></td><td class="n">${up}</td><td class="n">${relCell(m)}</td><td class="n sbcn">${sbc}</td><td>${lk}<small>${esc(m.date)}</small></td></tr>`;
+    h += `<tr id="r-${esc(tk)}"><td class="co">${nm}<span class="t">${esc(tk)}</span><span class="s">${esc(m.sub_name)}</span></td><td>${rec}${vr}</td><td>${gt}</td><td class="n">${pr}</td><td class="n">${m.dcf ? sv(m.dcf, money(m, m.dcf.value, d)) : DASH}</td><td class="n">${m.comp ? sv(m.comp, money(m, m.comp.value, d)) : DASH}</td><td class="n"><b>${m.tp ? sv(m.tp, money(m, m.tp.value, d)) : DASH}</b></td><td class="n">${up}</td><td class="n">${relCell(m)}</td><td class="n sbcn">${sbc}</td><td>${sbcSt}</td><td>${lk}<small>${esc(m.date)}</small></td></tr>`;
   }
   h += `</tbody></table></div></div>`;
   // scenarios

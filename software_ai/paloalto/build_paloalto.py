@@ -2,7 +2,7 @@
 """Palo Alto Networks（PANW）個股模型 v0.2.1：命題（原型 P 按防護範圍計價）＋營收線 → 損益表 → FCFF DCF／同業 P/S。
 用法：python3 software_ai/paloalto/build_paloalto.py [--sens-only] [--no-sens]
   1. 建基準檔並以 LibreOffice 重算；2. 逐案整本重算（Sens）；3. 寫成品 dist/<日期>_Palo Alto Networks個股模型_v0.2.1.xlsx 並重算。
-需要：python3＋openpyxl、LibreOffice（soffice）。暫存檔在 /home/claude/scratch/paloalto。"""
+需要：python3＋openpyxl、LibreOffice（soffice）。暫存檔在系統暫存資料夾下的 scratch/paloalto。"""
 import copy, datetime, glob, hashlib, json, os, re, shutil, subprocess, sys
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment
@@ -11,7 +11,7 @@ from openpyxl.workbook.defined_name import DefinedName
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
-SCR = "/home/claude/scratch/paloalto"
+SCR = os.path.join(__import__("tempfile").gettempdir(), "scratch", "paloalto")  # 外部稽核優化 W3-9（2026-11-23）：寫死的容器路徑改為系統暫存資料夾（換機器也能跑）
 VER, VDATE = "0.2.1", "20261117"
 RELJ = json.load(open(os.path.join(ROOT, "software_ai", "data", "relmult_hist", "out", "paloalto.json"), encoding="utf-8"))
 RELG = RELJ["groups"]["all"] if "groups" in RELJ else RELJ

@@ -46,3 +46,7 @@ python3 tools/coord/trace_wattonomics.py wattonomics/model/<Wattonomics>.xlsx <�
 - **多根記錄**：每格的 `roots` 記錄經過該格的每個根及其在該根下的狀態；JSON 另有 `root_flags`（各根下被旗標的輸入格與狀態），避免誤讀「某根看不到公司輸入」。`--roots` 可直接給 `Sheet!Cell`。
 - 限制：不支援整欄參照（`A:A`）與未列的函數；上線 GW 根的生效判斷若有 `unparsed`，須人工確認。無 Gap 名稱的玩家（neo、sov 等）用 `--roots` 指定根。
 - 判定仍靠人：同源旗標只標「路徑上讀到公司輸入」，要看 `status` 是否生效、再把結論寫進 Coord 追公式列（整列同源→「參考（同源校準）」、「無可比實績（層級值同源）」；部分同源→改比每 GW）。
+
+## 外部稽核優化 W3-1、W3-3（2026-11-23）
+- **Comparable 列標籤**：兩讀數表的 Comparable 列是未調整的市場主流同業法，不進加權（進加權的是相對倍數調整後，規則 X30）。`add_sheet` 在模型有 `tp_comp_adj` 時把列名寫成「…未調整，不進加權」，並在同一列 E–G 欄並列「相對倍數調整後；進加權」的兩讀數值（另一側＝另一側未調整值 × 現行調整後 ÷ 現行未調整）。放右側而不插列，既有儲存格位置不變。`inject_html` 在兩讀數表多列這一列。
+- **評等不同的提示**：兩讀數評等不同時，`tools/company_html/build_company_html.py` 的橫幅另起一行提示（讀 Coord 頁「投資建議」列 B、C 欄，各家不必改 html.json）；算力地圖的註記欄同樣加一句（`markets/invest_map/extract_models.py` 的 `coord` 欄）。並列是規則 C4 的要求，不是缺陷。

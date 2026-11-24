@@ -148,7 +148,7 @@ def main():
         rec = {"tk": tk, "score": p["score"], "rank_all": p["rank_all"], "folder": m["folder"], "name": p["short"], "sub": p["sub"], "sub_name": p["sub_name"], "layer": p["layer"],
                "status": m["status"], "ccy": rm["ccy"] if rm else None}
         if m["status"] == "ok":
-            for k in ("price", "dcf", "comp", "tp", "upside", "rating", "rec", "scen", "sbc_dcf", "sbc_abc", "ai_net"):
+            for k in ("price", "dcf", "comp", "tp", "upside", "rating", "rec", "scen", "sbc_dcf", "sbc_abc", "ai_net", "sbc_status"):   # sbc_status：外部稽核優化 W3-8(d)（2026-11-23）
                 rec[k] = m.get(k)
             rec.update({"version": m["version"], "date": m["date"], "xlsx": os.path.basename(m["xlsx"]), "sbc_note": m.get("sbc_note"), "missing": m.get("missing", [])})
             g = dict(m["gate"])

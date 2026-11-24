@@ -5,7 +5,7 @@ import json, os, shutil, subprocess, sys, tempfile
 import openpyxl
 RAW, RM, OUT = sys.argv[1:4]
 rm = json.load(open(RM, encoding="utf-8")); IR, VR = rm["IR"], rm["VR"]
-WD = tempfile.mkdtemp(prefix="sfkreq_", dir="/home/claude/scratch/salesforce")
+WD = tempfile.mkdtemp(prefix="sfkreq_")  # 外部稽核優化 W3-9（2026-11-23）：寫死的容器路徑改為系統暫存資料夾（換機器也能跑）
 base = openpyxl.load_workbook(RAW)["In"]
 px = base.cell(IR["px"], 5).value
 n = [0]

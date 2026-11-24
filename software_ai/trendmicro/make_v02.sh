@@ -4,7 +4,7 @@
 #   SENS=1 bash software_ai/trendmicro/make_v02.sh   # 重跑敏感度與反解
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$ROOT"; T=software_ai/trendmicro
-WD="${WD:-/home/claude/scratch/trendmicro}"; mkdir -p "$WD" $T/dist
+WD="${WD:-${TMPDIR:-/tmp}/scratch/trendmicro}"; mkdir -p "$WD" $T/dist
 VDATE="${VDATE:-20261117}"; OUT="${VDATE}_趨勢科技個股模型_v0.2.1.xlsx"
 python3 $T/facts_trendmicro.py
 python3 tools/tokenomics/import_tokenomics.py --check $T/data/tk_snapshot.json --tokenomics "${TOKENOMICS_DIR:-/home/claude/yinchenchang/tokenomics}"
