@@ -14,7 +14,7 @@ import re
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
-VER, BUILT = "0.2.11", "2026-11-21"   # v0.2.9：只換 Coord 讀的 Wattonomics 快照（v0.3.2 → v0.3.3）
+VER, BUILT = "0.2.12", "2026-11-24"   # v0.2.9：只換 Coord 讀的 Wattonomics 快照（v0.3.2 → v0.3.3）
 BOLD = Font(bold=True)
 BLUE = Font(color="0000FF")
 HDR = PatternFill("solid", fgColor="DDEBF7")
@@ -612,13 +612,16 @@ def readme13(wb, C, RVA, PLA, CRD):
         T("）；對帳單已由 Wattonomics v0.3.3 吸收，層級改讀公司揭露，判定："), f'Coord!G{CRD["rg"][2]}', T("，對帳中 "), f'TEXT(Coord!D{CRD["rncount"]},"0")', T(" 項；資本支出與 2026 年底 GW 也同源，無可比實績。"))
     put("drv", T("營收推導（情境 B）：Space＝客戶發射 × 每次收入＋發射與開發；Connectivity＝平均訂戶 × ARPU ×（含 Kits 的調整）＋企業與政府；SI＝對外雲端服務（在役 GW × 對外比例 × 每 GW 年營收）＋Grok／Cursor／X 訂閱、資料授權與 API＋廣告，加總為合併營收。FY2028 Space "),
         f'TEXT(PL!I{PRB["space"]},"0.0")', T("、Connectivity "), f'TEXT(PL!I{PRB["conn"]},"0")', T("、SI "), f'TEXT(PL!I{PRB["si"]},"0")', T("，合計 "), f'TEXT(PL!I{PRB["rev"]},"0")', T(" 十億美元。"))
-    RD.cell(r, 1, F(T("v0.2.11（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。現價 139.11（11-13）→ "), 'TEXT(px,"0.00")',
-                    T("；Connectivity 同業 EV／NTM EBITDA 中位數 6.63x → "), 'TEXT(MEDIAN(pm_conn_irdm,pm_conn_tmus,pm_conn_t,pm_conn_cmcsa,pm_conn_sats),"0.00")',
-                    T("x；SI 同業（CRWV、NBIS、ORCL）中位數 7.70x → "), 'TEXT(MEDIAN(pm_si_crwv,pm_si_nbis,pm_si_orcl),"0.00")',
-                    T("x（外部稽核優化 W3-7，2026-11-23：同業換價改為分離淨負債——EV 只有市值部分隨股價變、淨負債不變，由 11-06 原值直接換到 11-20；原式為整個倍數 × 收盤比，對照見 Recon 第 7 節 H 欄；[Derived]）；加權目標價 32.97 → "), f'TEXT({vb("tp")},"0.00")',
-                    T("；上檔空間 −76.3% → "), f'TEXT({vb("up")},"+0.0%;-0.0%")', T("；投資建議 強力放空 → "), f'{vb("rec")}',
-                    T("。評價股數的庫藏股法與其他隨現價的公式自動重算；評價日股價（WACC 權益權重用 px_val）、共識與其他假設不變。")))
+    # v0.2.12（2026-11-24；外部稽核優化第三波，會改值）：W3-7 同業換價分離淨負債、W3-5 Tokenomics 快照 v22.0；v0.2.11 列凍結為固定文字
+    RD.cell(r, 1, F(T("v0.2.12（2026-11-24）：外部稽核優化第三波（會改值；現價不變，2026-11-20 收盤 "), 'TEXT(px,"0.00")',
+                    T("）。(1) 同業 EV／NTM EBITDA 的換價改為分離淨負債（W3-7）：企業價值只有市值部分隨股價變、淨負債不變，由 2026-11-06 原值直接換到 11-20；原式為整個倍數 × 收盤比，對照見 Recon 第 7 節 H 欄（[Derived]）。Connectivity 同業中位數 6.46x → "),
+                    'TEXT(MEDIAN(pm_conn_irdm,pm_conn_tmus,pm_conn_t,pm_conn_cmcsa,pm_conn_sats),"0.00")',
+                    T("x；SI 同業（CRWV、NBIS、ORCL）中位數 5.40x → "), 'TEXT(MEDIAN(pm_si_crwv,pm_si_nbis,pm_si_orcl),"0.00")',
+                    T("x。(2) Tokenomics 快照 v21.10 → v22.0（W3-5）：本模型讀的名稱數值相同，只有版本與出處文字改變。加權目標價 32.84 → "), f'TEXT({vb("tp")},"0.00")',
+                    T("；上檔空間 −74.3% → "), f'TEXT({vb("up")},"+0.0%;-0.0%")', T("；投資建議 強力放空 → "), f'{vb("rec")}', T("。")))
     out["ver"] = r; r += 1
+    RD.cell(r, 1, "v0.2.11（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120）。現價 139.11（11-13）→ 127.79；Connectivity 同業 EV／NTM EBITDA 中位數 6.63x → 6.46x；SI 同業（CRWV、NBIS、ORCL）中位數 7.70x → 5.40x（同業倍數＝上一版 11-13 近似值 × 11-20÷11-13 收盤比，無市值，近似 [Derived]）；加權目標價 32.97 → 32.84；上檔空間 −76.3% → -74.3%；投資建議 強力放空 → 強力放空。評價股數的庫藏股法與其他隨現價的公式自動重算；評價日股價（WACC 權益權重用 px_val）、共識與其他假設不變。")
+    r += 1
     RD.cell(r, 1, "v0.2.10（2026-11-16）：現價與同業報價改 2026-11-13 收盤（工作單 px1113）。現價 123.62（11-05）→ 139.11；Connectivity 同業 EV／NTM EBITDA 中位數 6.32x → 6.63x；SI 同業中位數 7.73x → 7.70x（同業倍數＝2026-11-06 MarketScreener 原值 × 收盤比，無市值，近似 [Derived]）；加權目標價 32.73 → 32.97；上檔空間 −73.5% → −76.3%；投資建議 強力放空不變。")
     r += 1
     RD.cell(r, 1, "v0.2.9（2026-11-15）：Coord 頁改讀 Wattonomics v0.3.3（PR #581，xai 2025 年底 GW 吸收公司揭露 0.8 GW），名目算力 C0 改「參考（同源校準）／無可比實績（層級值吸收公司揭露）」，對帳中 1→0；估值不讀層級 GW，目標價與評等不變。"

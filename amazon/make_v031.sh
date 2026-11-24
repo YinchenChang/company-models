@@ -8,7 +8,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-OUTNAME="20261121_Amazon個股模型_v0.3.9.xlsx"
+OUTNAME="20261124_Amazon個股模型_v0.3.10.xlsx"
 SJ="amazon/data/sens_v039_20261121.json"
 python3 amazon/facts_2026q3.py                                   # 2026Q3 事實總帳（兩讀核對；不一致即失敗）
 if [ "${CALIB:-0}" = "1" ]; then python3 amazon/calib_pace_v031.py "$WD/calib"; fi
