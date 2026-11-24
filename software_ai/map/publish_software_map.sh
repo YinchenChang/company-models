@@ -24,7 +24,7 @@ print("模型檔檢查通過")
 PY
 
 WT=$(mktemp -d)
-git -C "$ROOT" fetch -q origin gh-pages
+git -C "$ROOT" fetch -q --depth=1 origin gh-pages:refs/remotes/origin/gh-pages
 git -C "$ROOT" worktree add -q --detach "$WT" origin/gh-pages
 trap 'git -C "$ROOT" worktree remove --force "$WT" >/dev/null 2>&1 || true' EXIT
 rm -rf "$WT/software_ai"
@@ -44,7 +44,6 @@ print("已複製模型 HTML：", n, "家")
 PY
 cd "$WT"
 git add -A
-git -c user.name="Claude" -c user.email="noreply@anthropic.com" commit -q -m "發布 AI 軟體地圖 $VER（來源 main $SHA；只更新 software_ai/）" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
-Claude-Session: https://claude.ai/code/session_01V11BcxnDR1soAd3TmNvgEp"
+git -c user.name="Claude" -c user.email="noreply@anthropic.com" commit -q -m "發布 AI 軟體地圖 $VER（來源 main $SHA；只更新 software_ai/）" -m "${PUBLISH_TRAILER:-Co-Authored-By: Claude <noreply@anthropic.com>}"
 git push -q origin HEAD:gh-pages
 echo "已發布 AI 軟體地圖 $VER 到 gh-pages software_ai/（來源 $SHA）：$(git rev-parse --short HEAD)"

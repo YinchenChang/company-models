@@ -13,7 +13,9 @@
    "unit": "US$M",
    "source": "PANW 8-K 附件 99.1 FY2026 Q4 財報新聞稿（2026-09-01）損益表；10-K FY2026 Item 7",
    "url": "https://www.sec.gov/Archives/edgar/data/0001327567/000132756726000019/ex991q426earningsrelease.htm",
-   "ttm2026q4": 2280
+   "ttm2026q4": 2280,
+   "ttm2027q1": 2441,
+   "q1_fy2027": 595
   },
   {
    "name": "Subscription and support",
@@ -23,20 +25,36 @@
    "unit": "US$M",
    "source": "同上；10-K FY2026 Item 7（Subscription 6,239、Support 2,961）",
    "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
-   "ttm2026q4": 9200
+   "ttm2026q4": 9200,
+   "ttm2027q1": 10010,
+   "q1_fy2027": 2850
   }
  ],
  "consolidated": {
   "period": "FY2026",
   "revenue": 11480,
-  "check": "Product＋Subscription and support－合併營收：FY2022–FY2026 各年與 FY2026 Q1–Q4 各季差額皆為 0（四捨五入至 0.1 百萬）"
+  "check": "Product＋Subscription and support－合併營收：FY2022–FY2026 各年與 FY2026 Q1–Q4 各季差額皆為 0（四捨五入至 0.1 百萬）；FY2027 Q1 Product＋Subscription and support－合併營收＝0（Hist 頁核對列）",
+  "latest_quarter": {
+   "period": "FY2027 Q1（2026-08-01 至 2026-10-31）",
+   "revenue": 3445,
+   "ttm_revenue": 12451,
+   "source": "PANW 8-K 附件 99.1 FY2027 Q1 財報新聞稿（2026-11-18）與 10-Q；Product 595＋Subscription and support 2,850＝3,445；TTM＝FY2026 − FY2026 Q1 ＋ FY2027 Q1（Derived）"
+  }
  },
  "sublines": [
   {
    "parent": "Subscription and support",
-   "labels": ["Subscription", "Support", "NGS ARR 相關營收", "其他 Subscription and support"],
+   "labels": [
+    "Subscription",
+    "Support",
+    "NGS ARR 相關營收",
+    "其他 Subscription and support"
+   ],
    "values": {
-    "FY2026": {"Subscription": 6239, "Support": 2961}
+    "FY2026": {
+     "Subscription": 6239,
+     "Support": 2961
+    }
    },
    "drivers": {
     "NGS ARR 相關營收": "（期初 NGS ARR＋期末 NGS ARR）÷ 2 × 認列於 S&S 的比例（命題模組 P：受保護單位 × 每單位年價；單位經濟變數名稱與 software_ai/unit_economics 一致）",

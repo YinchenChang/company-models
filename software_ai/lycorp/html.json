@@ -588,15 +588,15 @@
     },
     {
      "type": "table",
-     "caption": "歷史相對倍數 rel_mult：PS 與 PSG 兩條序列讀數（relmult_hist 分組讀數；Derived）",
+     "caption": "歷史相對倍數 rel_mult：P/S 與 PSG 兩條序列讀數（relmult_hist 分組讀數；Derived）",
      "head": [
       "分部",
-      "PS 讀數",
+      "P/S 讀數",
       "PSG 讀數",
       "幾何平均（基準）",
       "兩讀數差異",
       "差異大於三成",
-      "只用 PS",
+      "只用 P/S",
       "只用 PSG",
       "下界",
       "上界"
@@ -1897,7 +1897,8 @@
       "@README!A41",
       "@README!A42",
       "@README!A43",
-      "@README!A44"
+      "@README!A44",
+      "@README!A45"
      ]
     },
     {

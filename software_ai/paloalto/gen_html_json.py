@@ -19,15 +19,20 @@ rel_hdr = SC["rel"] + 1
 rel_rows = [r for r in range(rel_hdr + 1, SC["note"]) if wb["Sens"].cell(r, 1).value]
 case_first, case_last = SC["hdr"] + 1, SC["rel"] - 2
 R = {k: find("RevDCF", t) for k, t in dict(px="現價", mrow="模型核心", imp="現價隱含核心", interp="解讀", ev0="現價隱含企業價值").items()}
-RC = {"h1": find("Recon", "項目", start=3), "s2": find("Recon", "2. 逐分部"), "s3": find("Recon", "3. 一次性"), "s4": find("Recon", "4. 同業"), "s5": find("Recon", "5. Tokenomics"), "s6": find("Recon", "7. 風險")}
+RC = {"h1": find("Recon", "項目", start=3), "s1b": find("Recon", "1b. 指引沿革"), "s1b2": find("Recon", "1b2. Q1 實績"), "s1c": find("Recon", "1c. FY2027 Q1"), "s2": find("Recon", "2. 逐分部"), "s3": find("Recon", "3. 一次性"), "s4": find("Recon", "4. 同業"), "s5": find("Recon", "5. Tokenomics"), "s6": find("Recon", "7. 風險")}
 P = {k: find("PL", t) for k, t in dict(prod="Product", ss="Subscription and support", rev="合併營收", chk1="檢查：Product＋", n="受保護代理身分數", rho="每單位營收", arr="NGS ARR（期末）", incr="AI 營收增量（代理", eros="定價侵蝕（相對", inf="推論成本增量（市場價", net="AI 淨效果", cpt="每次成功分析", fcff="FCFF（無槓桿", is0="標準損益表年度", io="營收", yoy_n="淨利年增率", isnote="標準損益表說明", ck1="檢查：標準損益表", ck2="檢查：營收 ＝", opm="營業利益率").items()}
 IS0 = find("PL", "營收", start=P["is0"] + 1, exact=True)
 IS_END = find("PL", "EPS（完全稀釋", start=IS0)
 NYOY = find("PL", "淨利年增率", start=IS_END)
 SCN_H = find("In", "鍵", start=100)
+IN_A0 = find("In", "tp_date", exact=True, col=1)
+IN_A1 = find("In", "ovh", exact=True, col=1)
+IN_D = find("In", "gu27", exact=True, col=1) - 1
+IN_E = find("In", "ac_val", exact=True, col=1)
 YC = "CDEFGHIJK"
 RH_END = find("RelHist", "PS 讀數（歷史中位）") - 2
 DX = find("README", "合理性關卡診斷")
+EV = find("README", "FY2027 Q1 事件")
 RD = find("README", "不適用與未做項目")
 def yrs(sh, r, c1="C", c2="K"): return f"@{sh}!{c1}{r}:{c2}{r}"
 rec = V["rec"]
@@ -52,7 +57,7 @@ cfg = {
     {"type": "h3", "text": "命題回覆（依模型計算）"},
     {"type": "list", "items": [f"@README!A{r}" for r in (9, 10, 11)]},
     {"type": "h3", "text": "本版要點"},
-    {"type": "list", "items": ["@README!A8", "@README!A18", f"@README!A{DX}"]}]},
+    {"type": "list", "items": ["@README!A8", "@README!A18", f"@README!A{EV}", f"@README!A{DX}"]}]},
   {"id": "valuation", "title": "估值", "blocks": [
     {"type": "bars", "title": "目標價與現價（美元；豎線＝現價）", "fmt": "n2",
      "items": [{"label": f"@Val!A{V[k]}", "value": f"@Val!B{V[k]}", "series": sr} for k, sr in (("dcf", 1), ("cmp", 2), ("tp", 0))],
@@ -109,16 +114,19 @@ cfg = {
     {"type": "table", "caption": "情境驅動（三情境並排，進加權目標價；In 頁情境驅動對照）", "head": [f"@In!{c}{SCN_H}" for c in "BDEF"],
      "rowgen": {"sheet": "In", "rows": f"{SCN_H+1}-{SCN_H+5}", "cols": ["B", "D", "E", "F"], "fmts": ["", "n2", "n2", "n2"], "row_fmt": {str(SCN_H + 5): {c: "p0" for c in "DEF"}, str(SCN_H + 2): {c: "p0" for c in "DEF"}, str(SCN_H + 3): {c: "p0" for c in "DEF"}}}},
     {"type": "table", "collapse": True, "summary": "展開：單一參數區間（基準進主模型，敏感度低／高只用於敏感度頁）", "head": ["@In!B3", "@In!D3", "@In!E3", "@In!F3", "@In!G3"],
-     "rowgen": {"sheet": "In", "rows": "8-38,51-103", "cols": ["B", "D", "E", "F", "G"], "fmts": ["", "n3", "n3", "n3", ""]}}]},
+     "rowgen": {"sheet": "In", "rows": f"{IN_A0}-{IN_A1},{IN_D}-{IN_E}", "cols": ["B", "D", "E", "F", "G"], "fmts": ["", "n3", "n3", "n3", ""]}}]},
   {"id": "recon", "title": "對帳：公司指引與共識", "blocks": [
     {"type": "note", "parts": ["@Recon!A1"]},
-    {"type": "table", "caption": "指引與共識對照（FY2027）", "head": ["項目", "本模型", "指引低", "指引高", "共識", "判定", "說明"], "rowgen": {"sheet": "Recon", "rows": f"{RC['h1']+1}-{RC['s2']-2}", "cols": list("ABCDEFG"), "fmts": ["", "n3", "n3", "n3", "n3", "", ""]}},
+    {"type": "table", "caption": "指引與共識對照（FY2027）", "head": ["項目", "本模型", "指引低", "指引高", "共識", "判定", "說明"], "rowgen": {"sheet": "Recon", "rows": f"{RC['h1']+1}-{RC['s1b']-2}", "cols": list("ABCDEFG"), "fmts": ["", "n3", "n3", "n3", "n3", "", ""]}},
+    {"type": "table", "caption": f"@Recon!A{RC['s1b']}", "head": [f"@Recon!{c}{RC['s1b']+1}" for c in "ABCDEFG"], "rowgen": {"sheet": "Recon", "rows": f"{RC['s1b']+2}-{RC['s1b2']-2}", "cols": list("ABCDEFG"), "fmts": ["", "n3", "n3", "n3", "n3", "", ""]}},
+    {"type": "table", "caption": f"@Recon!A{RC['s1b2']}", "head": [f"@Recon!{c}{RC['s1b2']+1}" for c in "ABCDEFG"], "rowgen": {"sheet": "Recon", "rows": f"{RC['s1b2']+2}-{RC['s1c']-2}", "cols": list("ABCDEFG"), "fmts": ["", "n2", "n2", "n2", "sp1", "", ""]}},
+    {"type": "table", "caption": f"@Recon!A{RC['s1c']}", "head": [f"@Recon!{c}{RC['s1c']+1}" for c in "ABCDEFG"], "rowgen": {"sheet": "Recon", "rows": f"{RC['s1c']+2}-{RC['s2']-2}", "cols": list("ABCDEFG"), "fmts": ["", "n3", "n3", "n3", "", "", ""]}},
     {"type": "table", "collapse": True, "summary": "展開：逐分部、有機成長、同業可比性與 Tokenomics 讀值", "head": ["項目", "欄一", "欄二", "欄三", "欄四", "欄五", "欄六"], "rowgen": {"sheet": "Recon", "rows": f"{RC['s2']+2}-{RC['s6']-2}", "cols": list("ABCDEFG"), "fmts": ["", "n3", "n3", "n3", "n3", "", ""]}},
     {"type": "table", "caption": "風險登錄", "head": ["風險", "是否建模", "理由", "觀察指標"], "rowgen": {"sheet": "Recon", "rows": f"{RC['s6']+2}-{wb['Recon'].max_row}", "cols": list("ABCD"), "fmts": [""] * 4}}]},
   {"id": "status", "title": "資料狀態", "blocks": [
     {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["版本與日期", "@README!A1"], ["build_id", "@Sens!D3"], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"], ["Tokenomics 快照", [f"@Recon!B{RC['s5']+2}", "；", f"@Recon!C{RC['s5']+2}"]]]},
     {"type": "h3", "text": "市場資料日期與失效條件"},
-    {"type": "list", "items": ["@README!A2", f"@README!A{RD+9}", f"@README!A{RD+10}"]},
+    {"type": "list", "items": ["@README!A2", f"@README!A{RD+9}", f"@README!A{RD+10}", f"@README!A{RD+11}"]},
     {"type": "h3", "text": "不適用與未做項目"},
     {"type": "list", "items": [f"@README!A{r}" for r in range(RD + 1, RD + 9)]},
     {"type": "h3", "text": "「未找到」清單"},

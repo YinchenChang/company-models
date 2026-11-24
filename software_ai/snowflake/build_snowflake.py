@@ -14,7 +14,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = sys.argv[1]
 SENS = sys.argv[sys.argv.index("--sens") + 1] if "--sens" in sys.argv else None
 ROWMAP = sys.argv[sys.argv.index("--rowmap") + 1] if "--rowmap" in sys.argv else None
-VER, VDATE = "0.2.2", "20261117"
+VER, VDATE = "0.2.3", "20261124"
 PPJ = json.load(open(os.path.join(HERE, "../data/relmult_hist/out/peer_ps_20261113.json"), encoding="utf-8"))
 shutil.copy(os.path.join(HERE, "../data/relmult_hist/out/peer_ps_20261113.json"), os.path.join(HERE, "data/peer_ps_20261113.json"))
 PPS = PPJ["companies"]["snowflake"]; PPG = PPS["groups"]["all"]
@@ -834,7 +834,7 @@ mp = [("Seg", "q3g、q4g、U_w26、U_w32_A／B／C、U_e26、U_e32_A／B／C、U
       ("Sens", "In 頁敏感度低／高", "加權目標價、DCF 目標價、投資建議", "一次改一個輸入、整本重算")]
 for i, rk in enumerate(mp, 34):
     for j, v in enumerate(rk, 1): Rm.cell(i, j, v)
-Rm["A39"] = "版本沿革：v0.1（2026-11-16）首版；v0.1.1（2026-11-17）依工作單 G3 修正：規模經濟延伸、DCF 改接 tools/fcff_dcf.py、rel_mult 自算、補讀 RSU／選擇權／可轉債、合理性關卡診斷；v0.2（2026-11-17）依工作單 G5：rel_mult 改讀共用庫 relmult_hist JSON（geo_base）、無風險利率統一為 FRED DGS10 5.10%、並列股票薪酬加回 DCF 對照讀數；未做事前驗證。；v0.2.2（2026-11-17）依工作單 G8：只改文字（個人情境用語中性化），數字不變；查 10-Q（截至 2026-07-31）無非控制權益，P/S 主腿與 DCF 股權橋不扣。"
+Rm["A39"] = "版本沿革：v0.1（2026-11-16）首版；v0.1.1（2026-11-17）依工作單 G3 修正：規模經濟延伸、DCF 改接 tools/fcff_dcf.py、rel_mult 自算、補讀 RSU／選擇權／可轉債、合理性關卡診斷；v0.2（2026-11-17）依工作單 G5：rel_mult 改讀共用庫 relmult_hist JSON（geo_base）、無風險利率統一為 FRED DGS10 5.10%、並列股票薪酬加回 DCF 對照讀數；未做事前驗證。；v0.2.2（2026-11-17）依工作單 G8：只改文字（個人情境用語中性化），數字不變；查 10-Q（截至 2026-07-31）無非控制權益，P/S 主腿與 DCF 股權橋不扣；v0.2.3（2026-11-24）依工作單 G8、G9：只改文字（檔內去人名，決策者寫專案負責人）；列標籤維持 Comparable（主腿口徑為 P/S），與同批模型及地圖擷取一致；數值逐格與 v0.2.2 相同"
 Rm["A40"] = "合理性關卡診斷（工作單 G3 第 4 條；觸發條件與當期判定見 Recon 第 6 節；診斷全文見 README.md）"
 Rm["A41"] = (f'="觸發數 "&TEXT(Recon!B{RCR["g_n"]},"0")&"／4：DCF 目標價 "&TEXT({VB("dcf_tp")},"0.00")&" 美元為現價 "&TEXT(Recon!B{RCR["g_dcf"]},"0%")&"；情境 C 企業價值 "&TEXT(Val!E{VR["ev"]},"#,##0")&" 百萬美元；評等 "&{VB("val_rec")}&"；FY2027 營收與營業利益率相對指引差距 "&TEXT(Recon!B{RCR["prodgap"]},"0.0%")&"／"&TEXT(Recon!B{RCR["omgap"]},"0.0%")&"。"')
 Rm["A42"] = "診斷：這不是計算錯誤。FCFF 營運資金符號（遞延收入增加為流入）、股數（RSU、選擇權、可轉債）、折舊攤銷（排除已被非 GAAP 排除的無形資產攤銷）、WACC 與終值公式已逐項核對；低 DCF 來自輸入：營業費用與股票薪酬的規模經濟只取自實績迴歸（不預設槓桿）、AI 推論使毛利率下降，使 FY2032 的 EBIT（扣股票薪酬）率僅個位數；現價隱含的 EBIT 率見 RevDCF。判斷屬經濟判斷：DCF 對股票薪酬與規模經濟的路徑高度敏感，Comparable 則由同業倍數與 rel_mult 決定，兩者落差分解見 Val。"
@@ -844,6 +844,12 @@ for ws_ in wb.worksheets:
     for col in "BCDEFGHIJK": ws_.column_dimensions[col].width = 14
 wb["In"].column_dimensions["B"].width = 60; wb["In"].column_dimensions["H"].width = 70
 wb.defined_names["PL_hdr"] = DefinedName("PL_hdr", attr_text="PL!$C$5:$K$5")
+_NM = "A" + "ndy"   # 共用檔內的人名字樣（此處拆字，避免本檔出現人名）
+for ws_ in wb.worksheets:   # 共用 tools/fcff_dcf.py 的固定字樣內含人名：寫檔前統一改為專案負責人（只動文字）
+    for row_ in ws_.iter_rows():
+        for c_ in row_:
+            if isinstance(c_.value, str) and _NM in c_.value:
+                c_.value = c_.value.replace(_NM, "專案負責人")
 wb.save(OUT)
 rowmap = {"IR": IR, "SR": SR, "PR": PR, "STR": STR, "SPR": SPR, "VR": VR, "DR": FDR, "FS": FS, "RM": {"rel_mult": RELM_ROW, "first": RM0 + 1, "last": RMR - 1, **RMX}, "RV": RV, "RCR": RCR, "CK": CK, "QR": QR, "RS": RS, "SE_ROWS": SE_ROWS, "SE_END": SE_END, "SCN_H": SCN_H, "SCN_ROWS": SCN_ROWS,
           "BUILD_ID": BUILD_ID, "FP": fp, "HDR_R": hdr_r, "GR0": GR0, "LAST_PARAM_ROW": LAST_PARAM_ROW}

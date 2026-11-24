@@ -32,6 +32,10 @@ SRC = {
     "TD": ("https://twelvedata.com/markets/402519/stock/mta/1hubs/analysis", "Twelve Data HUBS analysis（無明確日期；含 2026-09-18 至 11-06 分析師動作）"),
     "SAF": ("https://stockanalysis.com/stocks/hubs/forecast/", "StockAnalysis HUBS forecast（2026-10-23，財報前）"),
     "MS": ("https://uk.marketscreener.com/quote/stock/HUBSPOT-INC-45166580/finances/", "MarketScreener HUBS 財務頁（頁面時間 2026-10-12，財報前）"),
+    "K8_1006": (E + "000119312526414965/d183135d8k.htm", "HubSpot 8-K（Item 2.02／2.05／7.01；簽署日 2026-10-06；事件日 2026-10-01，2026 重組計畫）"),
+    "K8_1112": (E + "000119312526457055/d77303d8k.htm", "HubSpot 8-K（Item 5.02／7.01／9.01；2026-11-12；執行長與財務長異動，附件 10.1 離職協議、10.2 轉任協議）"),
+    "PR_1112": (E + "000119312526457055/d77303dex991.htm", "8-K 附件 99.1 新聞稿「HubSpot Announces Leadership Transition」（2026-11-12）"),
+    "PPC660": ("https://ppc.land/hubspot-cuts-nearly-660-jobs-as-it-reorganizes-teams-around-outcomes/", "PPC Land：HubSpot 裁員報導（媒體轉述執行長 2026-10-06 員工信；第二來源，非申報文件）"),
 }
 V, I, A, AS, D = "Verified", "Interested-party", "Analogy", "Assumed", "Derived"
 INC_CO = "公司自訂指標／非 GAAP 口徑或管理層說法，傾向呈現成長與獲利改善；定義可變更"
@@ -168,6 +172,19 @@ f("非 GAAP 訂閱毛利率", 0.854, "比率", "Q3'26", "非 GAAP（去年同期
 f("訂閱與託管成本年增（含 AI 功能使用量）", 23.246, "US$M", "Q3'26 對 Q3'25", "10-Q MD&A 成本變動表", "Q3Q", "MD&A Cost of revenue", V)
 f("營業成本內容含 AI 推論", "訂閱營業成本含「AI inferencing costs」", "文字", "2026Q3", "10-Q 成本科目定義", "Q3Q", "Key Components of Consolidated Statements of Operations", V)
 f("重組計畫（2026-10-01 董事會核准）", "裁撤約 7% 員工；預估費用 65–75 百萬美元，多數於 Q4 認列", "文字", "2026Q4", "10-Q 附註 Restructuring Plan", "Q3Q", "Restructuring Plan 附註", V)
+# ---------------- 財報後事件（2026-11-24 補；G10）：只入研究包與 README，不改任何預測值 ----------------
+EV = "2026-11-24"
+f("重組計畫：董事會核准日與申報", "董事會於 2026-10-01 核准；8-K 於 2026-10-06 申報（Item 2.05）", "文字", "2026-10-01／2026-10-06", "法定申報", "K8_1006", "Item 2.05", V, asof=EV)
+f("重組計畫：影響員工比例", "約 7% 員工", "文字", "2026 重組計畫", "8-K 原文：impacting approximately 7% of the Company's workforce；人數未載", "K8_1006", "Item 2.05", V, asof=EV)
+f("重組計畫：預估費用", "65–75（主要為現金：遣散、通知期、員工轉銜與福利）", "US$M", "2026 重組計畫", "公司預估區間（8-K 原文 approximately $65 million to $75 million）；非 GAAP 排除重組費用", "K8_1006", "Item 2.05／Item 2.02", V, asof=EV)
+f("重組計畫：認列與付款時程", "多數費用於 FY2026 Q4；職務裁撤於 FY2027 Q1 底前大致完成；實質上全部現金付款於 2027-06-30 前完成", "文字", "FY2026Q4–FY2027Q2", "8-K 原文；Q4 與 FY2027 Q1 的費用拆分未載", "K8_1006", "Item 2.05", V, asof=EV)
+f("重組計畫：裁員人數（媒體）", "近 660 人", "人", "2026-10-06", "媒體轉述執行長員工信；8-K 只載約 7%；對 2025 年底員工 8,882 人 × 7% ≒ 622（Derived，僅供對照）", "PPC660", "文章內文", I, "媒體轉述，非申報文件；人數口徑（是否含契約或外包）未載", asof=EV)
+f("重組計畫：2026-10-06 同申報重申指引", "重申 Q3 與 FY2026 營收、非 GAAP 營業利益、非 GAAP EPS 指引（2026-08-05 原指引）", "文字", "2026-10-06", "公司指引", "K8_1006", "Item 2.02", I, asof=EV)
+f("執行長異動", "Yamini Rangan 卸任總裁暨執行長並辭董事，2026-11-12 生效，留任員工至 2026-12-01；共同創辦人 Brian Halligan（現任董事）同日任總裁暨執行長，續任董事", "文字", "2026-11-12", "法定申報；董事會席次由 11 減為 10", "K8_1112", "Item 5.02", V, asof=EV)
+f("執行長異動：Halligan 薪酬", "未定；公司將以 8-K 修正揭露", "文字", "2026-11-12", "8-K 原文：尚未敲定 compensatory arrangements", "K8_1112", "Item 5.02", V, asof=EV)
+f("財務長異動：Kate Bueker 退休", "2027-02-11 退休；轉任顧問至 2027-12-31，期間續領底薪、續歸屬股權", "文字", "2027-02-11", "8-K 載明非因與公司意見不合；2026 下半年獎金資格保留、FY2027 無年度獎金", "K8_1112", "Item 5.02／附件 10.2", V, asof=EV)
+f("財務長異動：Karen Burgess 接任", "2026-11-30 到職任 EVP Finance（CFO Designate），2027-02-11 起任財務長；前為 Adobe Creativity & Productivity 事業單位 SVP 暨財務長；底薪 US$535,000、簽約金 US$500,000、RSU 2026-12-01 US$2.5M 與 2027-03-01 US$8.5M", "文字", "2026-11-30／2027-02-11", "法定申報", "K8_1112", "Item 5.02", V, asof=EV)
+f("異動當日指引", "重申 FY2026 Q4 與全年指引（2026-11-04 原指引）；新聞稿未述及重組或費用", "文字", "2026-11-12", "公司說法", "PR_1112", "Item 7.01／新聞稿", I, asof=EV)
 f("營收：Americas（Q3'26）", 556.758, "US$M", "Q3'26", "GAAP", "Q3Q", "地理資訊附註", V)
 f("營收：Europe（Q3'26）", 309.812, "US$M", "Q3'26", "GAAP", "Q3Q", "地理資訊附註", V)
 f("營收：Asia Pacific（Q3'26）", 80.995, "US$M", "Q3'26", "GAAP", "Q3Q", "地理資訊附註", V)
@@ -228,6 +245,10 @@ f("共識非 GAAP EPS FY2026", 13.30, "US$", "FY2026", "StockAnalysis；財報�
 
 
 NOT_FOUND = [
+    "重組費用在 FY2026 Q4 與 FY2027 Q1 的拆分，及現金與非現金比例（8-K 只載總額 65–75 與「多數於 Q4」；Q4 財報前不會有）；因此模型 Q4 以區間中點 70 全額入帳，FY2027 重組費用為 0（拆分未找到，不是分不出來）",
+    "裁員人數的申報值（8-K 只載約 7%；近 660 人僅媒體）",
+    "Halligan 的薪酬條件（8-K 載明尚未定，將以修正申報揭露；截至 2026-11-24 未見修正申報）",
+    "Rangan 離職協議（8-K 附件 10.1）與 Bueker 轉任協議（附件 10.2）的金額細節：本次只讀 8-K 本文與新聞稿，附件未讀取",
     "Pro 以上客戶占全體 Customers 的比例（法說只給「Pro 以上客戶中 20% 使用 agents」，分母未揭露）",
     "付費席位（seats）數與每席位年費（HubSpot 只揭露 Customers 與 Average Subscription Revenue per Customer；本模型以 Customer 為計算單位）",
     "HubSpot Credits 總營收、Customer Agent 與 Prospecting Agent 營收、AI 相關 ARR（公司未揭露；10-Q 只說 credits 屬訂閱營收的一部分）",

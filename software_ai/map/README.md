@@ -11,7 +11,7 @@
 | `build_html.py`、`template.html` | 重算地位活頁簿＋抽數檔 → `dist/index.html`（單一自足 HTML）、`dist/data.json`；並把各模型最新 HTML 複製到 `dist/models/<公司>.html`（本機預覽，不進版控） |
 | `profiles/<代號>.md` | 公司檔案，每家已建模公司一份。格式照 `markets/invest_map/profiles/00_格式規格.md`；解析程式引用 `markets/invest_map/profiles_md.py`（不複製）。數字只取本專案檔案並標出處；管理層、主要客戶、前十大股東、近期事件為外部資料並標記；不寫目標價與評等 |
 | `check_map.py` | 交付前核對：(1) 評等、投資建議、加權目標價等於模型成品值（重讀儲存格；確認引用 dist/ 最新成品）；(2) 次產業、公司數、地位分數等於活頁簿，單位經濟數字等於重算後成品；(3) 無外部網址、無錯誤值字樣；(4) 無個人情境字樣、頁面骨架 |
-| `publish_software_map.sh` | 在 gh-pages 追加一個 commit，只動站上 `software_ai/`（`index.html`＋`models/<公司>.html`）。**需 Andy 點名「發布」才可執行** |
+| `publish_software_map.sh` | 在 gh-pages 追加一個 commit，只動站上 `software_ai/`（`index.html`＋`models/<公司>.html`）。**需專案負責人點名「發布」才可執行** |
 
 ## 重建
 

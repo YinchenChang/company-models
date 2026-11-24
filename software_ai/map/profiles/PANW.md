@@ -7,7 +7,7 @@ hq: 美國加州聖塔克拉拉 [外部・未經本專案檢核]
 founded: 2005 [外部・未經本專案檢核]
 employees: 21,921（FY2026 年底，含 CyberArk 併入約 4,223 人）[本專案：research_paloalto.md §6]
 fiscal_year_end: 7 月底（FY2026＝2025-08-01 至 2026-07-31）
-asof: 2026-11-23
+asof: 2026-11-24
 ---
 
 ## 一句話定位
@@ -37,7 +37,7 @@ asof: 2026-11-23
 - 同時覆蓋網路、雲端、SOC、身分四條線的平台型廠商，賣點是「整合採購」；資安支出屬合規剛性，本專案給的不可替代性分數為 1（最高）[本專案：map/dist/data.json 資安次產業]。市占數字：本專案未建立。
 - FY2026 有機營收年增 14.4%，合併年增 24.5%；差距來自 CyberArk 與 Chronosphere 併入，併入貢獻營收 US$930M [本專案：research_paloalto.md §3；Derived，11,480−930 後與 FY2025 比]。
 - 每單位年價、受保護身分與端點數、模組採用分布：公司不揭露，本專案模型只能用比例尺假設 [本專案：research_paloalto.md §9；paloalto/README.md]。
-- 推論成本：公司向模型商購買，不自建算力；模型推算 FY2032 推論成本增量只占營業成本約 4%，量級小於 AI 增量與價格侵蝕 [本專案：20261117_Palo Alto Networks個股模型_v0.2.1.xlsx README!A9、README!A16]。
+- 推論成本：公司向模型商購買，不自建算力；模型推算 FY2032 推論成本增量只占營業成本約 4%，量級小於 AI 增量與價格侵蝕 [本專案：20261124_Palo Alto Networks個股模型_v0.2.2.xlsx README!A9、README!A16]。
 - 通路集中度見「主要客戶」節。
 
 ## 管理層與經營風格
@@ -64,7 +64,7 @@ asof: 2026-11-23
 | CrowdStrike | 端點、SOC、身分 | 本專案未建立 | — |
 | Okta、Microsoft Entra | 身分安全（與 CyberArk 重疊） | 本專案未建立 | — |
 
-- 本專案的比較同業為 Fortinet、Zscaler、Check Point、Cloudflare 等；規模與市占需另行建立 [本專案：paloalto/README.md；20261117_Palo Alto Networks個股模型_v0.2.1.xlsx Val!A47:A58]。
+- 本專案的比較同業為 Fortinet、Zscaler、Check Point、Cloudflare 等；規模與市占需另行建立 [本專案：paloalto/README.md；20261124_Palo Alto Networks個股模型_v0.2.2.xlsx Val!A47:A58]。
 - 競爭格局的方向：資安廠商都在往「單一平台」收斂，並各自加碼 AI 代理安全產品 [判斷]。
 - 身分線有大型作業系統與雲端廠商的內建功能做替代；可觀測性（Chronosphere）市場也已擁擠 [本專案：research_paloalto.md §8 空方第 2 點，第三方意見]。
 
@@ -88,7 +88,7 @@ asof: 2026-11-23
 - 口徑：委託書「5% 以上實益持有人」表，分母為 2026-09-18 流通股 818,443,112 股。其餘持股人未找到：查過委託書（無 5% 以下名單）；Yahoo Finance 持股頁的比例欄與委託書明顯不一致、不予採用；Simply Wall St 頁面資料日期為 2025-07，過舊不採用。不推估 [外部・未經本專案檢核：2026 委託書，2026-09-18]。
 
 ## 近期重大事件
-- 2026-11-18｜FY2027 第一季財報：營收 US$3,445M、年增 39%；NGS ARR US$9.73B；公司上調 FY2027 全年指引，營收 US$14.52–14.57B、NGS ARR US$11.475–11.525B。同日宣布擬收購 Applied Compute（開放權重模型的後訓練與推論平台）。本專案模型建於 2026-11-17，尚未納入這次實績與指引 [外部新聞：Palo Alto Networks 新聞稿（Placera 轉載）]。
+- 2026-11-18｜FY2027 第一季財報：營收 US$3,445M、年增 39%；NGS ARR US$9.73B；公司上調 FY2027 全年指引，營收 US$14.52–14.57B、NGS ARR US$11.475–11.525B。同日宣布擬收購 Applied Compute（開放權重模型的後訓練與推論平台）。本專案模型 v0.2.2（2026-11-24）已納入這季實績與新指引（指引只作對照）；收購案未交割，未入模型 [本專案：paloalto/data/research_paloalto.md；paloalto/README.md]。
 - 2026-10-30｜公司建議股東不要接受 Tutanota LLC 的小額公開收購要約（mini-tender，常以低於市價收購少量股份）[外部新聞：Palo Alto Networks 新聞稿標題]。
 - 2026-09-22｜Unit 42 Continuous Frontier AI Defense 上線，提供 Anthropic 與 OpenAI 最新模型給客戶用於資安防禦；這是把 AI 模型商當供應商與合作對象的例子 [外部新聞：Palo Alto Networks 新聞稿標題]。
 - 2026-09-01｜FY2026 第四季財報：全年營收 US$11.48B；NGS ARR US$9.10B；FY2030 NGS ARR 目標由 US$15B 調到 US$20B [外部新聞：Palo Alto Networks 新聞稿；本專案：research_paloalto.md §8]。同日宣布收購 Console（AI 原生的代理式工作流程平台，併入 Cortex）。
@@ -104,7 +104,7 @@ asof: 2026-11-23
 - 模型更新｜2026-11-18 的實績與上調指引尚未進模型，原模型 FY2027 營收指引區間為 US$14.10–14.20B [本專案：research_paloalto.md §7]｜下一版模型。
 
 ## 來源
-1. 本專案：`software_ai/paloalto/data/research_paloalto.md`；`software_ai/paloalto/data/facts_paloalto.csv`；`software_ai/paloalto/README.md`；`software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx`（README、Val）；`software_ai/map/dist/data.json`
+1. 本專案：`software_ai/paloalto/data/research_paloalto.md`；`software_ai/paloalto/data/facts_paloalto.csv`；`software_ai/paloalto/README.md`；`software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx`（README、Val）；`software_ai/map/dist/data.json`
 2. [Palo Alto Networks 管理層頁](https://paloaltonetworks.com/about-us/management)（2026-11-23 查閱）
 3. [PANW Form 10-K FY2026](https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm)（2026-09-10）
 4. [PANW DEF 14A（2026 委託書）](https://www.sec.gov/Archives/edgar/data/0001327567/000130817926000432/panw-20261027.htm)（2026-10-27）

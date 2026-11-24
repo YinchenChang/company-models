@@ -1,11 +1,11 @@
 #!/bin/bash
-# Palo Alto Networks 個股模型 v0.2.1：建置（含敏感度整本重算）→ LibreOffice 重算 → html.json → HTML → 全部核對。
+# Palo Alto Networks 個股模型 v0.2.2：建置（含敏感度整本重算）→ LibreOffice 重算 → html.json → HTML → 全部核對。
 #   bash software_ai/paloalto/make_paloalto.sh      # 約 1.5 分鐘；需要 python3＋openpyxl、LibreOffice
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$ROOT"
 P=software_ai/paloalto
 python3 $P/build_paloalto.py
-OUT="$P/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx"
+OUT="$P/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx"
 python3 $P/gen_html_json.py "$OUT" $P/html.json
 python3 tools/segment_check/check_segments.py $P
 python3 tools/in_layout/check_in_layout.py "$OUT"
@@ -16,3 +16,5 @@ python3 tools/company_html/check_layout_v13.py "${OUT%.xlsx}.html" --xlsx "$OUT"
 python3 tools/model_governance/check_governance.py "$OUT" --html "${OUT%.xlsx}.html"
 python3 tools/model_governance/check_rating_gate.py "$OUT" --strict
 python3 tools/tokenomics/import_tokenomics.py --check $P/../unit_economics/data/tk_snapshot.json
+
+! grep -qE 'https?://' "${OUT%.xlsx}.html" || { echo "HTML 含外部網址"; exit 1; }

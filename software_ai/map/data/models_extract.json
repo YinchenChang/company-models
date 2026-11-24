@@ -1,71 +1,71 @@
 {
- "generated": "2026-11-20",
+ "generated": "2026-11-24",
  "models": {
   "SNOW": {
    "folder": "snowflake",
    "ticker": "SNOW",
    "status": "ok",
    "html": {
-    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.2.html",
-    "name": "20261117_Snowflake個股模型_v0.2.2.html",
-    "date": "20261117",
-    "version": "v0.2.2",
+    "file": "software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.html",
+    "name": "20261124_Snowflake個股模型_v0.2.3.html",
+    "date": "20261124",
+    "version": "v0.2.3",
     "title": "Snowflake個股模型"
    },
-   "xlsx": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.2.xlsx",
-   "date": "2026-11-17",
-   "version": "v0.2.2",
+   "xlsx": "software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.xlsx",
+   "date": "2026-11-24",
+   "version": "v0.2.3",
    "title": "Snowflake個股模型",
    "html_matches": true,
    "recalculated": false,
    "price": {
     "value": 291,
     "cell": "Val!B5",
-    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.2.xlsx",
+    "file": "software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.xlsx",
     "label": "現價（US$）",
     "date": "2026-11-13"
    },
    "dcf": {
     "value": 24.1569811012914,
     "cell": "Val!B8",
-    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.2.xlsx",
+    "file": "software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.xlsx",
     "label": "DCF 目標價（情境加權；US$）"
    },
    "comp": {
     "value": 218.972984244735,
     "cell": "Val!B9",
-    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.2.xlsx",
+    "file": "software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.xlsx",
     "label": "Comparable 目標價（情境加權；US$）"
    },
    "tp": {
     "value": 121.564982673013,
     "cell": "Val!B10",
-    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.2.xlsx",
+    "file": "software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.xlsx",
     "label": "加權目標價（DCF 與 Comparable 加權；US$）"
    },
    "upside": {
     "value": -0.582250918649439,
     "cell": "Val!B11",
-    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.2.xlsx",
+    "file": "software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.xlsx",
     "label": "上檔空間（相對現價）"
    },
    "rating": {
     "value": "強力放空",
     "cell": "Val!B12",
-    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.2.xlsx",
+    "file": "software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.xlsx",
     "label": "估值評等（只看上檔空間）"
    },
    "rec": {
     "value": "強力放空",
     "cell": "Val!B16",
-    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.2.xlsx",
+    "file": "software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.xlsx",
     "label": "投資建議"
    },
    "gate": {
     "basis": {
      "value": 10722.9152037658,
      "cell": "Val!B14",
-     "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.2.xlsx",
+     "file": "software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.xlsx",
      "label": "入不敷出判定用（情境 B 期間合計；US$M）"
     },
     "abc": {
@@ -79,13 +79,13 @@
       "Val!D13",
       "Val!E13"
      ],
-     "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.2.xlsx",
+     "file": "software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.xlsx",
      "label": "收支關卡（FY2026–FY2030 公司口徑自由現金流合計，未扣股利因無股利；情境 A／B／C；US$M）"
     },
     "verdict": {
      "value": "通過",
      "cell": "Val!B15",
-     "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.2.xlsx",
+     "file": "software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.xlsx",
      "label": "入不敷出判定"
     }
    },
@@ -100,13 +100,13 @@
      "Val!D54",
      "Val!E54"
     ],
-    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.2.xlsx",
+    "file": "software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.xlsx",
     "label": "情境加權目標價（各情境 DCF 與 Comparable 加權；US$）"
    },
    "sbc_dcf": {
     "value": 71.5513470870952,
     "cell": "Recon!B36",
-    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.2.xlsx",
+    "file": "software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.xlsx",
     "label": "DCF 目標價（情境加權；SBC 加回；US$）"
    },
    "sbc_abc": {
@@ -120,7 +120,7 @@
      "Recon!C35",
      "Recon!D35"
     ],
-    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.2.xlsx",
+    "file": "software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.xlsx",
     "label": "DCF 情境目標價（12 個月後；SBC 加回；US$）"
    },
    "sbc_note": null,
@@ -135,7 +135,7 @@
      "Seg!K65",
      "Seg!K94"
     ],
-    "file": "software_ai/snowflake/dist/20261117_Snowflake個股模型_v0.2.2.xlsx",
+    "file": "software_ai/snowflake/dist/20261124_Snowflake個股模型_v0.2.3.xlsx",
     "label": "AI 淨效果（AI 營收增量−核心侵蝕−推論成本）｜FY2032E，情境 A／B／C（US$M）"
    },
    "missing": [],
@@ -478,73 +478,73 @@
    "ticker": "CRWD",
    "status": "ok",
    "html": {
-    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.1.html",
-    "name": "20261117_CrowdStrike個股模型_v0.2.1.html",
-    "date": "20261117",
-    "version": "v0.2.1",
+    "file": "software_ai/crowdstrike/dist/20261124_CrowdStrike個股模型_v0.2.2.html",
+    "name": "20261124_CrowdStrike個股模型_v0.2.2.html",
+    "date": "20261124",
+    "version": "v0.2.2",
     "title": "CrowdStrike個股模型"
    },
-   "xlsx": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.1.xlsx",
-   "date": "2026-11-17",
-   "version": "v0.2.1",
+   "xlsx": "software_ai/crowdstrike/dist/20261124_CrowdStrike個股模型_v0.2.2.xlsx",
+   "date": "2026-11-24",
+   "version": "v0.2.2",
    "title": "CrowdStrike個股模型",
    "html_matches": true,
    "recalculated": false,
    "price": {
     "value": 226.61,
     "cell": "Val!B9",
-    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.1.xlsx",
+    "file": "software_ai/crowdstrike/dist/20261124_CrowdStrike個股模型_v0.2.2.xlsx",
     "label": "現價（拆股後）",
     "date": "2026-11-13"
    },
    "dcf": {
-    "value": 5.17560539872742,
+    "value": 5.30126759290159,
     "cell": "Val!B6",
-    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.1.xlsx",
+    "file": "software_ai/crowdstrike/dist/20261124_CrowdStrike個股模型_v0.2.2.xlsx",
     "label": "DCF 目標價（情境加權）"
    },
    "comp": {
     "value": 117.609197869714,
     "cell": "Val!B7",
-    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.1.xlsx",
+    "file": "software_ai/crowdstrike/dist/20261124_CrowdStrike個股模型_v0.2.2.xlsx",
     "label": "Comparable 目標價（同業 P/S 股權口徑；單一分部）"
    },
    "tp": {
-    "value": 61.3924016342208,
+    "value": 61.4552327313079,
     "cell": "Val!B8",
-    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.1.xlsx",
+    "file": "software_ai/crowdstrike/dist/20261124_CrowdStrike個股模型_v0.2.2.xlsx",
     "label": "目標價（DCF 與 Comparable 加權）"
    },
    "upside": {
-    "value": -0.729083440120821,
+    "value": -0.728806174787927,
     "cell": "Val!B11",
-    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.1.xlsx",
+    "file": "software_ai/crowdstrike/dist/20261124_CrowdStrike個股模型_v0.2.2.xlsx",
     "label": "上檔空間：加權目標價"
    },
    "rating": {
     "value": "強力放空",
     "cell": "Val!B25",
-    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.1.xlsx",
+    "file": "software_ai/crowdstrike/dist/20261124_CrowdStrike個股模型_v0.2.2.xlsx",
     "label": "估值評等（只看上檔空間）"
    },
    "rec": {
     "value": "強力放空",
     "cell": "Val!B14",
-    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.1.xlsx",
+    "file": "software_ai/crowdstrike/dist/20261124_CrowdStrike個股模型_v0.2.2.xlsx",
     "label": "投資建議"
    },
    "gate": {
     "basis": {
      "value": 10416.3878745828,
      "cell": "Val!B26",
-     "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.1.xlsx",
+     "file": "software_ai/crowdstrike/dist/20261124_CrowdStrike個股模型_v0.2.2.xlsx",
      "label": "入不敷出判定用（收支關卡：三情境最小值，同 B16，US$M）"
     },
     "abc": null,
     "verdict": {
      "value": "通過",
      "cell": "Val!B27",
-     "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.1.xlsx",
+     "file": "software_ai/crowdstrike/dist/20261124_CrowdStrike個股模型_v0.2.2.xlsx",
      "label": "入不敷出判定"
     }
    },
@@ -552,7 +552,7 @@
    "sbc_dcf": {
     "value": 25.9602998146609,
     "cell": "Recon!B39",
-    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.1.xlsx",
+    "file": "software_ai/crowdstrike/dist/20261124_CrowdStrike個股模型_v0.2.2.xlsx",
     "label": "DCF 目標價（目標時點，三情境加權），股票薪酬加回"
    },
    "sbc_abc": null,
@@ -568,7 +568,7 @@
      "Thesis!K62",
      "Thesis!K94"
     ],
-    "file": "software_ai/crowdstrike/dist/20261117_CrowdStrike個股模型_v0.2.1.xlsx",
+    "file": "software_ai/crowdstrike/dist/20261124_CrowdStrike個股模型_v0.2.2.xlsx",
     "label": "AI 淨效果（US$M）＝AI 增量營收 + 定價侵蝕 − 增量推論成本｜FY2032E，情境 A／B／C"
    },
    "missing": [
@@ -619,121 +619,121 @@
    "ticker": "PANW",
    "status": "ok",
    "html": {
-    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.1.html",
-    "name": "20261117_Palo Alto Networks個股模型_v0.2.1.html",
-    "date": "20261117",
-    "version": "v0.2.1",
+    "file": "software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.html",
+    "name": "20261124_Palo Alto Networks個股模型_v0.2.2.html",
+    "date": "20261124",
+    "version": "v0.2.2",
     "title": "Palo Alto Networks個股模型"
    },
-   "xlsx": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx",
-   "date": "2026-11-17",
-   "version": "v0.2.1",
+   "xlsx": "software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx",
+   "date": "2026-11-24",
+   "version": "v0.2.2",
    "title": "Palo Alto Networks個股模型",
    "html_matches": true,
    "recalculated": false,
    "price": {
-    "value": 322.24,
+    "value": 353.43,
     "cell": "Val!B15",
-    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx",
-    "label": "現價（2026-11-13 收盤）",
-    "date": "2026-11-13"
+    "file": "software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx",
+    "label": "現價（2026-11-23 收盤）",
+    "date": "2026-11-23"
    },
    "dcf": {
-    "value": 49.1517201516108,
+    "value": 49.1540622536487,
     "cell": "Val!B17",
-    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx",
+    "file": "software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx",
     "label": "DCF 目標價（三情境加權）"
    },
    "comp": {
-    "value": 218.508398756621,
+    "value": 218.681816929047,
     "cell": "Val!B18",
-    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx",
+    "file": "software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx",
     "label": "Comparable 目標價（同業 P/S 法，三情境加權）"
    },
    "tp": {
-    "value": 133.830059454116,
+    "value": 133.917939591348,
     "cell": "Val!B16",
-    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx",
+    "file": "software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx",
     "label": "加權目標價（DCF 與 Comparable 加權）"
    },
    "upside": {
-    "value": -0.584688246480524,
+    "value": -0.621090627305696,
     "cell": "Val!B20",
-    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx",
+    "file": "software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx",
     "label": "加權目標價上檔空間"
    },
    "rating": {
     "value": "強力放空",
     "cell": "Val!B24",
-    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx",
+    "file": "software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx",
     "label": "估值評等（只看上檔空間）"
    },
    "rec": {
     "value": "強力放空",
     "cell": "Val!B28",
-    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx",
+    "file": "software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx",
     "label": "投資建議"
    },
    "gate": {
     "basis": {
-     "value": 29033.5528244749,
+     "value": 29038.3041293,
      "cell": "Val!B25",
-     "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx",
+     "file": "software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx",
      "label": "入不敷出判定用（收支關卡：FY2027–FY2031 自由現金流扣股利合計，情境 B）"
     },
     "abc": {
      "values": [
-      30331.2255391138,
-      29033.5528244749,
-      26164.1506205777
+      30335.9768439389,
+      29038.3041293,
+      26168.9019254028
      ],
      "cells": [
       "Val!B26",
       "Val!C26",
       "Val!D26"
      ],
-     "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx",
+     "file": "software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx",
      "label": "收支關卡 A／B／C（FY2027–FY2031 自由現金流扣股利合計，US$M）"
     },
     "verdict": {
      "value": "通過",
      "cell": "Val!B27",
-     "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx",
+     "file": "software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx",
      "label": "入不敷出判定"
     }
    },
    "scen": {
     "values": [
-     137.911584289844,
-     134.760700323869,
-     127.887252878882
+     138.058711706906,
+     134.850031467798,
+     127.912983722888
     ],
     "cells": [
      "Val!B29",
      "Val!C29",
      "Val!D29"
     ],
-    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx",
+    "file": "software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx",
     "label": "情境目標價 A／B／C"
    },
    "sbc_dcf": {
-    "value": 82.731600181245,
+    "value": 82.7304343237593,
     "cell": "Val!B32",
-    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx",
+    "file": "software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx",
     "label": "DCF（股票薪酬加回）目標價（三情境加權；只作對照，不進加權目標價）"
    },
    "sbc_abc": {
     "values": [
-     90.2162985651665,
-     84.5745481021691,
-     71.5610059554754
+     90.2138388176509,
+     84.5730467324114,
+     71.5618050125636
     ],
     "cells": [
      "Val!B33",
      "Val!C33",
      "Val!D33"
     ],
-    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx",
+    "file": "software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx",
     "label": "情境 DCF（股票薪酬加回）目標價 A／B／C"
    },
    "sbc_note": null,
@@ -748,7 +748,7 @@
      "PL!K40",
      "PL_C!K40"
     ],
-    "file": "software_ai/paloalto/dist/20261117_Palo Alto Networks個股模型_v0.2.1.xlsx",
+    "file": "software_ai/paloalto/dist/20261124_Palo Alto Networks個股模型_v0.2.2.xlsx",
     "label": "AI 淨效果（增量 − 侵蝕 − 推論成本）｜FY2032E，情境 A／B／C（US$M）"
    },
    "missing": [],
@@ -1104,66 +1104,66 @@
    "ticker": "HUBS",
    "status": "ok",
    "html": {
-    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.html",
-    "name": "20261117_HubSpot個股模型_v0.2.1.html",
-    "date": "20261117",
-    "version": "v0.2.1",
+    "file": "software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.html",
+    "name": "20261124_HubSpot個股模型_v0.2.2.html",
+    "date": "20261124",
+    "version": "v0.2.2",
     "title": "HubSpot個股模型"
    },
-   "xlsx": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx",
-   "date": "2026-11-17",
-   "version": "v0.2.1",
+   "xlsx": "software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx",
+   "date": "2026-11-24",
+   "version": "v0.2.2",
    "title": "HubSpot個股模型",
    "html_matches": true,
    "recalculated": false,
    "price": {
     "value": 217.25,
     "cell": "Val!B9",
-    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx",
+    "file": "software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx",
     "label": "現價",
     "date": "2026-11-13"
    },
    "dcf": {
     "value": 90.6907168554095,
     "cell": "Val!B6",
-    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx",
+    "file": "software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx",
     "label": "DCF 目標價（情境加權）"
    },
    "comp": {
     "value": 489.033903259422,
     "cell": "Val!B7",
-    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx",
+    "file": "software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx",
     "label": "Comparable 目標價（同業 P/S 中位數法；情境加權）"
    },
    "tp": {
     "value": 289.862310057416,
     "cell": "Val!B8",
-    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx",
+    "file": "software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx",
     "label": "目標價（DCF 與 Comparable 加權）"
    },
    "upside": {
     "value": 0.334233878284997,
     "cell": "Val!B11",
-    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx",
+    "file": "software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx",
     "label": "上檔空間：加權目標價"
    },
    "rating": {
     "value": "買進",
     "cell": "Val!B15",
-    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx",
+    "file": "software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx",
     "label": "估值評等（依加權目標價上檔空間；五級）"
    },
    "rec": {
     "value": "買進",
     "cell": "Val!B17",
-    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx",
+    "file": "software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx",
     "label": "投資建議"
    },
    "gate": {
     "basis": {
      "value": 4080.72061589778,
      "cell": "Val!B16",
-     "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx",
+     "file": "software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx",
      "label": "入不敷出判定用：收支關卡（情境 B；FY2026–FY2030 自由現金流減股利合計，US$M）"
     },
     "abc": {
@@ -1177,7 +1177,7 @@
       "Val!C19",
       "Val!D19"
      ],
-     "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx",
+     "file": "software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx",
      "label": "收支關卡：FY2026–FY2030 自由現金流減股利合計（US$M；情境 A／B／C）"
     },
     "verdict": null
@@ -1186,7 +1186,7 @@
    "sbc_dcf": {
     "value": 207.176339841715,
     "cell": "Val!B31",
-    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx",
+    "file": "software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx",
     "label": "對照：DCF（股票薪酬加回）目標價（US$；情境加權；不進加權目標價）"
    },
    "sbc_abc": null,
@@ -1202,7 +1202,7 @@
      "Thesis!L72",
      "Thesis!L105"
     ],
-    "file": "software_ai/hubspot/dist/20261117_HubSpot個股模型_v0.2.1.xlsx",
+    "file": "software_ai/hubspot/dist/20261124_HubSpot個股模型_v0.2.2.xlsx",
     "label": "AI 淨效果（US$M）＝按任務營收 − 席位取代損失 − 增量推論成本｜FY2032E，情境 A／B／C"
    },
    "missing": [
@@ -1557,94 +1557,94 @@
    "ticker": "4307",
    "status": "ok",
    "html": {
-    "file": "software_ai/nri/dist/20261117_野村總研個股模型_v0.2.2.html",
-    "name": "20261117_野村總研個股模型_v0.2.2.html",
-    "date": "20261117",
-    "version": "v0.2.2",
+    "file": "software_ai/nri/dist/20261124_野村總研個股模型_v0.2.3.html",
+    "name": "20261124_野村總研個股模型_v0.2.3.html",
+    "date": "20261124",
+    "version": "v0.2.3",
     "title": "野村總研個股模型"
    },
-   "xlsx": "software_ai/nri/dist/20261117_野村總研個股模型_v0.2.2.xlsx",
-   "date": "2026-11-17",
-   "version": "v0.2.2",
+   "xlsx": "software_ai/nri/dist/20261124_野村總研個股模型_v0.2.3.xlsx",
+   "date": "2026-11-24",
+   "version": "v0.2.3",
    "title": "野村總研個股模型",
    "html_matches": true,
    "recalculated": false,
    "price": {
     "value": 6012,
     "cell": "Val!B68",
-    "file": "software_ai/nri/dist/20261117_野村總研個股模型_v0.2.2.xlsx",
+    "file": "software_ai/nri/dist/20261124_野村總研個股模型_v0.2.3.xlsx",
     "label": "現價（日圓）",
     "date": "2026-11-13"
    },
    "dcf": {
     "value": 5639.95526869894,
     "cell": "Val!B69",
-    "file": "software_ai/nri/dist/20261117_野村總研個股模型_v0.2.2.xlsx",
+    "file": "software_ai/nri/dist/20261124_野村總研個股模型_v0.2.3.xlsx",
     "label": "DCF 目標價（情境加權）"
    },
    "comp": {
-    "value": 6185.91550742287,
+    "value": 6193.40852062159,
     "cell": "Val!B80",
-    "file": "software_ai/nri/dist/20261117_野村總研個股模型_v0.2.2.xlsx",
+    "file": "software_ai/nri/dist/20261124_野村總研個股模型_v0.2.3.xlsx",
     "label": "Comparable 目標價（相對倍數調整後）"
    },
    "tp": {
-    "value": 5912.9353880609,
+    "value": 5916.68189466026,
     "cell": "Val!B81",
-    "file": "software_ai/nri/dist/20261117_野村總研個股模型_v0.2.2.xlsx",
+    "file": "software_ai/nri/dist/20261124_野村總研個股模型_v0.2.3.xlsx",
     "label": "目標價（DCF 與 Comparable 加權）"
    },
    "upside": {
-    "value": -0.0164778130304554,
+    "value": -0.0158546416067427,
     "cell": "Val!B82",
-    "file": "software_ai/nri/dist/20261117_野村總研個股模型_v0.2.2.xlsx",
+    "file": "software_ai/nri/dist/20261124_野村總研個股模型_v0.2.3.xlsx",
     "label": "上檔空間：加權目標價"
    },
    "rating": {
     "value": "中立",
     "cell": "Val!B85",
-    "file": "software_ai/nri/dist/20261117_野村總研個股模型_v0.2.2.xlsx",
+    "file": "software_ai/nri/dist/20261124_野村總研個股模型_v0.2.3.xlsx",
     "label": "估值評等（只看上檔空間）"
    },
    "rec": {
     "value": "中立",
     "cell": "Val!B88",
-    "file": "software_ai/nri/dist/20261117_野村總研個股模型_v0.2.2.xlsx",
+    "file": "software_ai/nri/dist/20261124_野村總研個股模型_v0.2.3.xlsx",
     "label": "投資建議"
    },
    "gate": {
     "basis": {
      "value": 335.848327443653,
      "cell": "Val!B86",
-     "file": "software_ai/nri/dist/20261117_野村總研個股模型_v0.2.2.xlsx",
+     "file": "software_ai/nri/dist/20261124_野村總研個股模型_v0.2.3.xlsx",
      "label": "入不敷出判定用：收支關卡合計（情境 B，¥B）"
     },
     "abc": null,
     "verdict": {
      "value": "通過",
      "cell": "Val!B87",
-     "file": "software_ai/nri/dist/20261117_野村總研個股模型_v0.2.2.xlsx",
+     "file": "software_ai/nri/dist/20261124_野村總研個股模型_v0.2.3.xlsx",
      "label": "入不敷出判定"
     }
    },
    "scen": {
     "values": [
-     6481.61923646743,
-     5921.78819806188,
-     5326.54591965242
+     6485.36574306679,
+     5925.53470466124,
+     5330.29242625178
     ],
     "cells": [
      "Val!B90",
      "Val!C90",
      "Val!D90"
     ],
-    "file": "software_ai/nri/dist/20261117_野村總研個股模型_v0.2.2.xlsx",
+    "file": "software_ai/nri/dist/20261124_野村總研個股模型_v0.2.3.xlsx",
     "label": "情境目標價 A／B／C（加權＝w×DCF＋(1−w)×Comparable）"
    },
    "sbc_dcf": {
     "value": 5639.95526869894,
     "cell": "Recon!E28",
-    "file": "software_ai/nri/dist/20261117_野村總研個股模型_v0.2.2.xlsx",
+    "file": "software_ai/nri/dist/20261124_野村總研個股模型_v0.2.3.xlsx",
     "label": "DCF（股票薪酬加回）目標價（目標時點，日圓）"
    },
    "sbc_abc": {
@@ -1658,7 +1658,7 @@
      "Recon!C28",
      "Recon!D28"
     ],
-    "file": "software_ai/nri/dist/20261117_野村總研個股模型_v0.2.2.xlsx",
+    "file": "software_ai/nri/dist/20261124_野村總研個股模型_v0.2.3.xlsx",
     "label": "DCF（股票薪酬加回）目標價（目標時點，日圓）"
    },
    "sbc_note": null,
@@ -1673,7 +1673,7 @@
      "Thesis!M70",
      "Thesis!M89"
     ],
-    "file": "software_ai/nri/dist/20261117_野村總研個股模型_v0.2.2.xlsx",
+    "file": "software_ai/nri/dist/20261124_野村總研個股模型_v0.2.3.xlsx",
     "label": "AI 淨效果（營收口徑）＝AI 新專案增量 − 價格侵蝕 − 推論成本｜FY2032E，情境 A／B／C（¥B）"
    },
    "missing": [],
@@ -2023,73 +2023,73 @@
    "ticker": "4689",
    "status": "ok",
    "html": {
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.2.html",
-    "name": "20261117_LY個股模型_v0.2.2.html",
-    "date": "20261117",
-    "version": "v0.2.2",
+    "file": "software_ai/lycorp/dist/20261124_LY個股模型_v0.2.3.html",
+    "name": "20261124_LY個股模型_v0.2.3.html",
+    "date": "20261124",
+    "version": "v0.2.3",
     "title": "LY個股模型"
    },
-   "xlsx": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.2.xlsx",
-   "date": "2026-11-17",
-   "version": "v0.2.2",
+   "xlsx": "software_ai/lycorp/dist/20261124_LY個股模型_v0.2.3.xlsx",
+   "date": "2026-11-24",
+   "version": "v0.2.3",
    "title": "LY個股模型",
    "html_matches": true,
    "recalculated": false,
    "price": {
     "value": 543.3,
     "cell": "Val!B9",
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.2.xlsx",
+    "file": "software_ai/lycorp/dist/20261124_LY個股模型_v0.2.3.xlsx",
     "label": "現價（2026-11-16 收盤）",
     "date": "2026-11-16"
    },
    "dcf": {
     "value": 732.884593684852,
     "cell": "Val!B6",
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.2.xlsx",
+    "file": "software_ai/lycorp/dist/20261124_LY個股模型_v0.2.3.xlsx",
     "label": "DCF 目標價（情境加權）"
    },
    "comp": {
     "value": 604.69411975232,
     "cell": "Val!B7",
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.2.xlsx",
+    "file": "software_ai/lycorp/dist/20261124_LY個股模型_v0.2.3.xlsx",
     "label": "Comparable 目標價（P/S 主腿，情境加權）"
    },
    "tp": {
     "value": 668.789356718586,
     "cell": "Val!B8",
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.2.xlsx",
+    "file": "software_ai/lycorp/dist/20261124_LY個股模型_v0.2.3.xlsx",
     "label": "目標價（DCF 與 Comparable 加權）"
    },
    "upside": {
     "value": 0.230976176548106,
     "cell": "Val!B11",
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.2.xlsx",
+    "file": "software_ai/lycorp/dist/20261124_LY個股模型_v0.2.3.xlsx",
     "label": "上檔空間：加權目標價"
    },
    "rating": {
     "value": "中立",
     "cell": "Val!B16",
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.2.xlsx",
+    "file": "software_ai/lycorp/dist/20261124_LY個股模型_v0.2.3.xlsx",
     "label": "估值評等（依加權目標價上檔空間，不含收支關卡）"
    },
    "rec": {
     "value": "中立",
     "cell": "Val!B19",
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.2.xlsx",
+    "file": "software_ai/lycorp/dist/20261124_LY個股模型_v0.2.3.xlsx",
     "label": "投資建議"
    },
    "gate": {
     "basis": {
      "value": 918.736738009812,
      "cell": "Val!B18",
-     "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.2.xlsx",
+     "file": "software_ai/lycorp/dist/20261124_LY個股模型_v0.2.3.xlsx",
      "label": "入不敷出判定用：基準情境 B 收支關卡合計（十億日圓）"
     },
     "abc": null,
     "verdict": {
      "value": "通過（FY2026–FY2030 自由現金流扣利息與股利合計為正）",
      "cell": "Val!B17",
-     "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.2.xlsx",
+     "file": "software_ai/lycorp/dist/20261124_LY個股模型_v0.2.3.xlsx",
      "label": "收支關卡判定"
     }
    },
@@ -2104,13 +2104,13 @@
      "Val!B73",
      "Val!B74"
     ],
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.2.xlsx",
+    "file": "software_ai/lycorp/dist/20261124_LY個股模型_v0.2.3.xlsx",
     "label": "情境 A／B／C 目標價"
    },
    "sbc_dcf": {
     "value": 736.304595788328,
     "cell": "Val!B119",
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.2.xlsx",
+    "file": "software_ai/lycorp/dist/20261124_LY個股模型_v0.2.3.xlsx",
     "label": "DCF 目標價（SBC 加回；三情境加權）"
    },
    "sbc_abc": null,
@@ -2126,7 +2126,7 @@
      "Val!C80",
      "Val!D80"
     ],
-    "file": "software_ai/lycorp/dist/20261117_LY個股模型_v0.2.2.xlsx",
+    "file": "software_ai/lycorp/dist/20261124_LY個股模型_v0.2.3.xlsx",
     "label": "AI 淨效果（營業利益）FY2032E：A／B／C（十億日圓）"
    },
    "missing": [],

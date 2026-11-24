@@ -9,7 +9,7 @@ import facts_nri as FN
 ap = argparse.ArgumentParser(); ap.add_argument("out"); ap.add_argument("--sens"); ap.add_argument("--kreq"); ap.add_argument("--set", action="append", default=[])
 A = ap.parse_args(); OVR = {k: float(v) for k, v in (s.split("=", 1) for s in A.set)}
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7"); KEY = PatternFill("solid", fgColor="FFF2CC")
-VER = "v0.2.2"; VDATE = "2026-11-17"
+VER = "v0.2.3"; VDATE = "2026-11-24"
 def _bid():
     h = hashlib.sha256()
     for fn in ["build_nri.py", "facts_nri.py", os.path.join("data", "tokenomics_snapshot_v22.0.json")]: h.update(fn.encode()); h.update(open(os.path.join(HERE, fn), "rb").read())
@@ -514,7 +514,7 @@ vrow("f_ttm", "TTM 營收權重 f（目標時點 TTM 中 FY2028 的占比：目�
 for X in "ABC": vrow("ttm" + X, f"目標時點 TTM 營收（十億日圓；情境 {X}）", f"=(1-$B${VR['f_ttm']})*PL!H{PR[X]['rev']}+$B${VR['f_ttm']}*PL!I{PR[X]['rev']}", fmt="#,##0.0", note="FY2027E 與 FY2028E 依月數加權")
 vrow("sh_t", "評價日稀釋股數（百萬股；2026-09-30 封面；NRI 稀釋＝基本）", "=sh_out", fmt="#,##0.000")
 vrow("comp_raw", "Comparable 目標價（主腿：同業中位 P/S × 本公司目標時點 TTM 營收，扣非控制權益，÷ 評價日股數，rel_mult＝1.00 未調整，情境加權）", f"=(ps_med*(tp_wA*B{VR['ttmA']}+tp_wB*B{VR['ttmB']}+tp_wC*B{VR['ttmC']})-mi_0)*1000/B{VR['sh_t']}", fmt="#,##0", note="P/S 口徑與 PS／PSG 相對值同口徑（G6）；同業 P/S 取 peer_ps_20261113.json（價格日見 In 頁 ps_q）；股權口徑，不加淨現金、不扣淨債務，只扣非控制權益")
-vrow("tpcomp", "Comparable 目標價（相對倍數調整後）", f"=B{VR['comp_raw']}*rm_adj", fmt="#,##0", note="係數取歷史相對倍數 geo_base（In 頁 rm_adj，Derived）；P/S 主腿與 PS／PSG 相對值同口徑")
+vrow("tpcomp", "Comparable 目標價（相對倍數調整後）", f"=(ps_med*rm_adj*(tp_wA*B{VR['ttmA']}+tp_wB*B{VR['ttmB']}+tp_wC*B{VR['ttmC']})-mi_0)*1000/B{VR['sh_t']}", fmt="#,##0", note="係數取歷史相對倍數 geo_base（In 頁 rm_adj，Derived）；P/S 主腿與 PS／PSG 相對值同口徑；非控制權益只扣一次、不乘倍數（G8 第 1 條；v0.2.3）")
 vrow("tp", "目標價（DCF 與 Comparable 加權）", f"=w_dcf*B{VR['tpdcf']}+(1-w_dcf)*B{VR['tpcomp']}", fmt="#,##0", bold=True)
 vrow("up", "上檔空間：加權目標價", f"=B{VR['tp']}/px-1", fmt="+0.0%;-0.0%", note="目標價為股價基準日起 12 個月；折現期間自評價日起（見上方），上檔空間不是年化報酬")
 vrow("upd", "上檔空間：DCF", f"=B{VR['tpdcf']}/px-1", fmt="+0.0%;-0.0%")
@@ -526,7 +526,7 @@ vrow("rec", "投資建議", f'=IF(AND(B{VR["gate"]}<0,OR(B{VR["tier"]}="買進",
 vrow("cons", "市場共識目標價（14 家平均，S&P Global 經 StockAnalysis；2026-09-11，財報前，只作歷史對照）", P["tp_cons_avg"], fmt="#,##0")
 V.cell(VR["cons"], 3, "家數"); V.cell(VR["cons"], 4, P["tp_cons_n"])
 vrow("scen_up", "情境目標價 A／B／C（加權＝w×DCF＋(1−w)×Comparable）", None)
-for j, X in enumerate("ABC"): V.cell(VR["scen_up"], 2 + j, f"=w_dcf*B{FC_[X]['vt']}+(1-w_dcf)*rm_adj*(ps_med*B{VR['ttm'+X]}-mi_0)*1000/B{VR['sh_t']}").number_format = "#,##0"
+for j, X in enumerate("ABC"): V.cell(VR["scen_up"], 2 + j, f"=w_dcf*B{FC_[X]['vt']}+(1-w_dcf)*(ps_med*rm_adj*B{VR['ttm'+X]}-mi_0)*1000/B{VR['sh_t']}").number_format = "#,##0"
 vrow("pe_now", "本公司現行前瞻 P/E ÷ 同業中位數（現價 ÷ 情境 B NTM EPS ÷ 中位數；G2-6、第 47 條）", f"=px/B{VR['ntmB']}/pe_mult", fmt="0.00", note="以模型 NTM EPS 計；資料商 NRI 前瞻 P/E 25.78（2026-11-09，按現價重算見同業表）÷ 同業中位數另見 Recon 第 4 節")
 vrow("pe_ref1", "對照列（不進加權）：前瞻 P/E Comparable，rel_mult＝1.00（同業 P/E 中位數 × 情境加權 NTM EPS）", f"=pe_mult*(tp_wA*B{VR['ntmA']}+tp_wB*B{VR['ntmB']}+tp_wC*B{VR['ntmC']})", fmt="#,##0", note="盈餘型倍數只作對照：PS／PSG 相對值已含利潤率差，不能套到本益比（G6）")
 vrow("pe_ref2", "對照列（不進加權）：前瞻 P/E Comparable，rel_mult＝本公司現行相對值（現行 P/E ÷ 同業中位數）", f"=B{VR['pe_ref1']}*B{VR['pe_now']}", fmt="#,##0", note="讀數 2：現行相對值下的盈餘型讀數")
@@ -717,10 +717,10 @@ for i, rk in enumerate([("Thesis", "util、hrs_y、rate0、c_head、sav_r、auto
                         ("Val", "rf、beta_raw、erp、g_tv、w_dcf、pe_mult", "WACC、DCF、Comparable、加權目標價、評等", "FCFF 折現＋同業 P/E × NTM EPS → 加權"),
                         ("Sens", "In 頁敏感度低／高", "加權目標價、DCF 目標價、投資建議", "一次改一個輸入、整本重算")], 34):
     for j, v in enumerate(rk, 1): RD.cell(i, j, v)
-RD["A39"] = "版本沿革：v0.2.2（2026-11-17）依 G7：同業中位 P/S 改讀 peer_ps_20261113.json、股權口徑扣非控制權益、評價日股數；v0.2.1（2026-11-17）依 G6：Comparable 主腿改 P/S 口徑、前瞻 P/E 改對照列；v0.1（2026-11-16）首版，相對倍數 1.00、現價 2026-11-09；v0.2（2026-11-17）依 G5：相對倍數改取歷史 PS／PSG 基準、現價與無風險利率統一、DCF（股票薪酬加回）對照；未做先驗。"
+RD["A39"] = "版本沿革：v0.2.3（2026-11-24）依 G8、G9：Comparable 主腿非控制權益只扣一次、不乘相對倍數（原先被 rel_mult 乘上），其餘數字不變；v0.2.2（2026-11-17）依 G7：同業中位 P/S 改讀 peer_ps_20261113.json、股權口徑扣非控制權益、評價日股數；v0.2.1（2026-11-17）依 G6：Comparable 主腿改 P/S 口徑、前瞻 P/E 改對照列；v0.1（2026-11-16）首版，相對倍數 1.00、現價 2026-11-09；v0.2（2026-11-17）依 G5：相對倍數改取歷史 PS／PSG 基準、現價與無風險利率統一、DCF（股票薪酬加回）對照；未做先驗。"
 # ===================================== 套用 In 版面、樣式與輸出
 import apply_in_layout
-apply_in_layout.apply(wb, VER, "2026-11-17")
+apply_in_layout.apply(wb, VER, VDATE)
 for name, rng in (("PL_hdr", f"PL!$C${PR['B']['hdr']}:$M${PR['B']['hdr']}"),): wb.defined_names[name] = DefinedName(name, attr_text=rng)
 wb.save(A.out)
 rowmap = {"IR": IN_ROW, "TR": TR, "SC": SC, "PR": {k: v for k, v in PR.items() if k != "IS"}, "IS": PR["IS"], "VR": VR, "FC": FC_, "RVR": RVR, "RCR": RCR, "CR": CR, "TKR": TKR, "SE_ROWS": SE_ROWS, "SE_END": SE_END, "HDR_R": HDR_R, "BUILD_ID": BUILD_ID, "FP": FP, "GATE": GATE, "HR": HR, "PE": [PE_A, PE_B]}
