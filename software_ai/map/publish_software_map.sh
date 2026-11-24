@@ -24,7 +24,7 @@ print("模型檔檢查通過")
 PY
 
 WT=$(mktemp -d)
-git -C "$ROOT" fetch -q --depth=1 origin gh-pages:refs/remotes/origin/gh-pages
+git -C "$ROOT" fetch -q --depth=1 origin +gh-pages:refs/remotes/origin/gh-pages
 git -C "$ROOT" worktree add -q --detach "$WT" origin/gh-pages
 trap 'git -C "$ROOT" worktree remove --force "$WT" >/dev/null 2>&1 || true' EXIT
 rm -rf "$WT/software_ai"
