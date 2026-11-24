@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 1,
+ "duration_ms": 8029,
+ "total_cost_usd": 3.3785817000000002,
+ "result": "那個背景等待指令因為超過時間上限被停掉了，不影響成果。它只是在等建置結束，而建置早在它被停掉之前就完成了。xlsx、HTML 和 README 都已產出，核對結果如先前的回報。\n\n這個等待指令是我自己開的，不需要重跑，我也沒有再啟動任何東西。",
+ "error": null,
+ "stderr": null
+}
