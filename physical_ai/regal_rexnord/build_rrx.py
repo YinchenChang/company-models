@@ -212,7 +212,7 @@ def build(path, ov=None, sens=None, rev=None, bid="{BID}"):
         Q.cell(i, 9, CO); Q.cell(i, 6, q3).font = BLUE; Q.cell(i, 7, g3).font = BLUE; Q.cell(i, 8, mg).font = BLUE
     Q.cell(6, 1, "分部合計"); Q.cell(6, 2, "=SUM(B3:B5)"); Q.cell(6, 3, "=SUM(C3:C5)"); Q.cell(6, 6, "=SUM(F3:F5)"); Q.cell(6, 4, "Derived")
     Q.cell(7, 1, "合併營收（公司揭露）"); Q.cell(7, 2, 4411.2).font = BLUE; Q.cell(7, 3, 4625.5).font = BLUE; Q.cell(7, 6, 1588.0).font = BLUE; Q.cell(7, 4, "Verified"); Q.cell(7, 5, Q326)
-    Q.cell(8, 1, "檢查：分部合計 − 合併營收（四捨五入差 < 0.5）"); Q.cell(8, 2, "=ROUND(B6-B7,1)"); Q.cell(8, 3, "=ROUND(C6-C7,1)"); Q.cell(8, 6, "=ROUND(F6-F7,1)"); Q.cell(8, 4, "Derived")
+    Q.cell(8, 1, "檢查：分部合計 − 合併營收（前年同期分部營收由年增率反推，四捨五入差 < 1.0）"); Q.cell(8, 2, "=ROUND(B6-B7,1)"); Q.cell(8, 3, "=ROUND(C6-C7,1)"); Q.cell(8, 6, "=ROUND(F6-F7,1)"); Q.cell(8, 4, "Derived")
     Q.cell(9, 1, "註：官方分部即 PL 頁分部（AMC 在 PL 頁另加無框馬達增量命題子列）；Q3 分部調整後 EBITDA 率為公司揭露，其他季度未取得")
     Q.column_dimensions["A"].width = 50
 
