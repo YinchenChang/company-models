@@ -337,11 +337,11 @@ fmt = lambda u: {"%": "p1", "US$": "n2", "十億股": "n3"}.get(u, "n1")
 PC9 = "CDEFGHIJK"
 rowx = lambda r: [f"@PL!A{r}"] + [f"@PL!{c}{r}|{fmt(PLW.cell(r, 2).value)}" for c in PC9]
 r_ratio = plr("比率"); r_dil = plr("GAAP 稀釋 EPS 對照（歷史；預測不估 GAAP）"); r_chk = plr("核對（應為 0）")
-r_d31 = next(r for r in range(r_chk, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("差額（FY2031E、FY2032E）：毛利"))
+r_d31 = next(r for r in range(r_chk, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("核對：延伸期毛利"))
 is_tbl = {"type": "table", "caption": "標準損益表（Non-GAAP 口徑，十億美元；EPS 為美元）：FY2024A–FY2026A 實績、FY2027E–FY2032E 情境 B（基準）；標「對帳中」的年度依賴 Siliconomics 對帳中年份（Dell 會計年度約落後日曆年一年：FY2028E–FY2030E 對 CY2027–CY2029；FY2031E–FY2032E 為延伸期，隨另一側讀數變動；FY2027E 為錨點，不標）",
           "head": [f"@PL!A{ph}"] + [f"@PL!{c}{ph}" for c in PC9],
           "rows": [rowx(plr(k)) for k in keys] + [{"sub": f"@PL!A{r_ratio}"}] + [rowx(r) for r in range(r_ratio + 1, r_dil)]
-                  + [{"sub": "核對：FY2031E、FY2032E 兩種推法的營業利益差額（應為零：預測期營業費用與毛利為展示用拆分）"}] + [rowx(r) for r in (r_d31, r_d31 + 1)]}
+                  + [{"sub": "核對與揭露：FY2031E、FY2032E 毛利 − 營業費用 − 營業利益（應為零：預測期營業費用與毛利為展示用拆分）與營業費用率"}] + [rowx(r) for r in (r_d31, r_d31 + 1)]}
 dil_tbl = {"type": "table", "caption": f"@PL!A{r_dil}", "head": [f"@PL!A{ph}"] + [f"@PL!{c}{ph}" for c in "CDE"], "collapse": True,
            "summary": "展開：GAAP 稀釋 EPS 對照（歷史）與核對列",
            "rows": [[f"@PL!A{r_dil + 1}"] + [f"@PL!{c}{r_dil + 1}|n2" for c in "CDE"]] + [{"sub": f"@PL!A{r_chk}"}]

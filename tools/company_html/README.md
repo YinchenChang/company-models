@@ -58,3 +58,10 @@ Excel 是計算事實的來源；HTML 只負責呈現，給 Andy 與投資處同
 收支型個股的 v1.3 產生器：`fundmodel_v13.py`（profile 設 `layout="v13"` 時由 `fundmodel_v2.py` 呼叫；目前只有 Anthropic）。新增章節：反向 DCF（讀 xlsx `RevDCF` 頁 `RVD_*`：隱含 WACC、營收倍數、終值期營業利益率、Comparable 倍數；管理層目標反推摺疊）、敏感度（v1.3 H 節：讀 Val `VAL_SensPct` 的相對基準 % 與白話標籤）、損益（讀 xlsx `PL` 頁具名範圍 `PL_*`）、驅動因子（分部營收推導表＋圖、成本面）；重用圖表的 SVG 提示文字去掉具名範圍代號。
 
 - 頂層 `"layout": "v1.3"`（可選，2026-11-14，首例 CoreWeave v5.0.2）：產生器與 `check_company_html.py` 改依 v1.3 章節順序檢查（`thesis → valuation → sens → revdcf → pl → drivers →` 個別模組 0 到多個（id 自訂）`→ recon → status`；函式 `v13_order_error`）。未設此鍵的公司沿用七章順序，輸出逐位元組不變。
+
+## 橫幅的共用提示（外部稽核優化第三波，2026-11-23）
+`render_hero` 會先呼叫 `hero_w3`，由 xlsx 判斷後自動加上以下內容，各家 `html.json` 不必改；判斷不成立時輸出與原本逐位元組相同。
+- **未調整的 Comparable 格**（W3-1）：Val 頁有「Comparable 目標價（相對倍數調整後）」列，且橫幅某格的主值指向未調整的 Comparable 列時，該格標籤加「〔未調整，不進加權〕」，副值並列「相對倍數調整後（進加權）」的值；兩值相同（調整係數為一）時只在標籤說明。沒有調整後列的模型（Comparable 直接進加權）不動。
+- **兩讀數評等不同**（W3-3）：Coord 頁「投資建議」列 B、C 欄的評等不同時，橫幅加一行 `.hero-flag`。
+- **Comparable 單腿**（W3-8）：Val 頁「DCF 目標價（情境加權）」為零而加權目標價為正時，橫幅加一行 `.hero-flag`。
+提示列用 `.hero-flag`，不是 `.hero-note`，不計入版面檢查的橫幅說明字數。

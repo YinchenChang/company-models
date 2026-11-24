@@ -7,8 +7,8 @@ import openpyxl
 RAW, RM, OUT = sys.argv[1], sys.argv[2], sys.argv[3]
 JOBS = int(sys.argv[4]) if len(sys.argv) > 4 else 4
 rm = json.load(open(RM, encoding="utf-8")); IR, VR = rm["IR"], rm["VR"]
-os.makedirs("/home/claude/scratch/nri", exist_ok=True)
-WD = tempfile.mkdtemp(prefix="sens_", dir="/home/claude/scratch/nri")
+os.makedirs(os.path.join(tempfile.gettempdir(), "scratch", "nri"), exist_ok=True)
+WD = tempfile.mkdtemp(prefix="sens_", dir=os.path.join(tempfile.gettempdir(), "scratch", "nri"))
 def recalc(path, prof):
     out = os.path.join(os.path.dirname(path), "out"); os.makedirs(out, exist_ok=True)
     subprocess.run(["soffice", f"-env:UserInstallation=file://{prof}", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", out, path],

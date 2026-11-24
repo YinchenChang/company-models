@@ -322,13 +322,13 @@ def _v13():
     rowx = lambda r: [f"@PL!A{r}"] + [f"@PL!{c}{r}|{fmt(PLW.cell(r, 2).value)}" for c in COLS9]
     r_ratio = plr("比率"); r_gaap = next(r for r in range(ph, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("GAAP 對照"))
     r_chk = next(r for r in range(ph, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("核對（應為 0"))
-    r_d = next(r for r in range(r_chk, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("差額（FY2030E"))
+    r_d = next(r for r in range(r_chk, PLW.max_row + 1) if str(PLW.cell(r, 1).value or "").startswith("核對：延伸期毛利"))
     head = [f"@PL!A{ph}"] + [f"@PL!{c}{ph}" for c in COLS9]
     rp = cr("損益表年度標示")
     head[5:10] = [f"@Coord!{c}{rp}" for c in "BCDEF"]          # FY2027E–FY2031E 標「對帳中」
     is_tbl = {"type": "table", "caption": "標準損益表（十億新台幣；EPS 為新台幣）：FY2023A–FY2025A 實績、FY2026E–FY2031E 情境 B（基準）；TIFRS（合併財報，歸屬母公司）", "head": head,
               "rows": [rowx(plr(k)) for k in keys] + [{"sub": f"@PL!A{r_ratio}"}] + [rowx(r) for r in range(r_ratio + 1, r_gaap)]
-                      + [{"sub": "核對：FY2030E、FY2031E 兩種推法的營業利益差額（毛利率與營業費用率沿用 FY2029E）"}] + [rowx(r) for r in (r_d, r_d + 1)]}
+                      + [{"sub": "核對與揭露：FY2030E、FY2031E 毛利 − 營業費用 − 營業利益（應為零；延伸期營業費用＝毛利 − 營業利益，是殘差不是假設）與隱含營業費用率"}] + [rowx(r) for r in (r_d, r_d + 1)]}
     gaap_tbl = {"type": "table", "caption": f"@PL!A{r_gaap}", "head": [f"@PL!A{ph}"] + [f"@PL!{c}{ph}" for c in "CDE"], "collapse": True, "summary": "展開：基本 EPS（公司公告，只列實績）",
                 "rows": [[f"@PL!A{r}"] + [f"@PL!{c}{r}|n2" for c in "CDE"] for r in range(r_gaap + 1, r_chk)]}
     rv_, gm2, opm2, nm_ = plr("營收"), plr("毛利率"), plr("營業利益率"), plr("淨利率")

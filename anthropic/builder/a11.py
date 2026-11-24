@@ -241,8 +241,11 @@ def build(ctx):
     row("tv", "終值（2032 年底）＝NOPAT(2033) ×(1 − g ÷ RONIC) ÷ (WACC − g)", "$B", s3(lambda s: f"={X[s]}{P['tvn']}*(1-{c('g')}/{c('ronic')})/({c('wacc')}-{c('g')})"))
     row("pvtv", "終值現值（折現年數＝2032 期中＋0.5）", "$B", s3(lambda s: f"={X[s]}{P['tv']}/(1+{c('wacc')})^($I${P['t']}+{c('mid')})"))
     row("ev", "企業價值 EV", "$B", s3(lambda s: f"={X[s]}{P['pvx']}+{X[s]}{P['pvtv']}"), bold=True)
-    row("tvsh", "終值占 EV（>80% 標示）", "比例", s3(lambda s: f"={X[s]}{P['pvtv']}/{X[s]}{P['ev']}"), fmt="0.0%")
-    row("tvflag", "終值占 EV > 80%（1＝是）", "旗標", s3(lambda s: f"=IF({X[s]}{P['tvsh']}>0.8,1,0)"), fmt="0")
+    # 外部稽核優化 W3-8(a)（2026-11-23）：企業價值 ≤ 0 時（情境 C）終值與企業價值同為負，相除得到看似正常的正百分比，沒有意義；改顯示「不適用」。
+    # 旗標先判斷是否為數值（文字與數字比大小恆為真），情境 C 旗標維持 0；下方「三情境最大值」用 MAX，會略過文字，值不變。
+    row("tvsh", "終值占 EV（>80% 標示）", "比例", s3(lambda s: f'=IF({X[s]}{P["ev"]}>0,{X[s]}{P["pvtv"]}/{X[s]}{P["ev"]},"不適用")'), fmt="0.0%",
+        note="企業價值 ≤ 0 的情境比例無意義，顯示「不適用」")
+    row("tvflag", "終值占 EV > 80%（1＝是）", "旗標", s3(lambda s: f"=IF(ISNUMBER({X[s]}{P['tvsh']}),IF({X[s]}{P['tvsh']}>0.8,1,0),0)"), fmt="0")
     row("eqv", "股權價值＝EV ＋ 淨現金", "$B", s3(lambda s: f"={X[s]}{P['ev']}+{c('netcash')}"))
     row("ps0", "每股價值（評價日）＝股權價值 ÷ 評價股數", "$/股", s3(lambda s: f"={X[s]}{P['eqv']}/{c('shares')}"), fmt="#,##0.00")
     row("ncps", "下限：淨現金每股（評價日）＝淨現金 ÷ 評價股數", "$/股", s3(lambda s: f"={c('netcash')}/{c('shares')}"), fmt="#,##0.00",
