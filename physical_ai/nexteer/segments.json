@@ -1,0 +1,70 @@
+{
+ "company": "耐世特 Nexteer",
+ "ticker": "1316.HK",
+ "model_sheet": "PL",
+ "official_segments": [
+  {
+   "name": "North America",
+   "label": "北美（North America）營收",
+   "period": "FY2025",
+   "value": 2290.418,
+   "unit": "US$M",
+   "source": "公司 2025 年報（港交所 2026-04-24）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0424/2026042402166.pdf 分部資訊"
+  },
+  {
+   "name": "Asia Pacific",
+   "label": "亞太（Asia Pacific）營收",
+   "period": "FY2025",
+   "value": 1468.928,
+   "unit": "US$M",
+   "source": "公司 2025 年報（港交所 2026-04-24）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0424/2026042402166.pdf 分部資訊"
+  },
+  {
+   "name": "EMEASA",
+   "label": "EMEASA（歐洲、中東、非洲及南美）營收",
+   "period": "FY2025",
+   "value": 798.9,
+   "unit": "US$M",
+   "source": "公司 2025 年報（港交所 2026-04-24）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0424/2026042402166.pdf 分部資訊"
+  },
+  {
+   "name": "Others",
+   "label": "其他（Others）營收",
+   "period": "FY2025",
+   "value": 25.971,
+   "unit": "US$M",
+   "source": "公司 2025 年報（港交所 2026-04-24）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0424/2026042402166.pdf 分部資訊"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "Asia Pacific",
+   "labels": [
+    "亞太：SBW 營收（中國；子列）",
+    "亞太：SBW 替代自家 EPS 抵減（子列）",
+    "亞太：傳統轉向與傳動軸（子列）"
+   ]
+  },
+  {
+   "parent": "North America",
+   "labels": [
+    "北美：SBW 營收（子列）",
+    "北美：SBW 替代自家 EPS 抵減（子列）",
+    "北美：傳統轉向與傳動軸（子列）"
+   ]
+  },
+  {
+   "parent": "EMEASA",
+   "labels": [
+    "EMEASA：SBW 營收（子列）",
+    "EMEASA：SBW 替代自家 EPS 抵減（子列）",
+    "EMEASA：傳統轉向與傳動軸（子列）"
+   ]
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收（應為 0）",
+  "檢查：子列合計 − 分部（三地區合計，應為 0）"
+ ],
+ "note": "官方應報導分部為地區（北美、亞太、EMEASA；其他為未分配）。產品線（EPS、CIS、HPS、DL）列在 Hist 頁並有合計核對；SBW 公司未單獨揭露，為命題子列"
+}

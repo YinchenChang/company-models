@@ -1,18 +1,19 @@
 {
  "meta": {
-  "version": "v0.3",
-  "book": "20261123_實體AI地圖_資料_v0.3.xlsx",
+  "version": "v0.4",
+  "book": "20261123_實體AI地圖_資料_v0.4.xlsx",
   "built": "2026-11-23",
   "close_date": "2026-11-20",
   "price_note": "上市公司一律用 2026-11-20 收盤（Yahoo Finance 日線，data/prices.csv）；上檔空間＝最新一份模型目標價 ÷ 最新收盤 − 1。台股只顯示上檔空間與評等，不顯示目標價。",
   "tiers": {
    "未上市": 9,
-   "未估值": 78,
-   "中立": 6,
-   "強力放空": 1,
-   "買進": 2,
-   "放空": 1,
-   "強力買進": 2
+   "未估值": 66,
+   "中立": 8,
+   "收支不足": 1,
+   "買進": 3,
+   "強力放空": 6,
+   "強力買進": 5,
+   "放空": 1
   },
   "n_pos": 100,
   "n_cross": 7,
@@ -411,6 +412,138 @@
    "ver": "v0.3",
    "url": "models/tesla_robotaxi/20261117_TeslaRobotaxi個股模型_v0.3.html",
    "local": "../../tesla_robotaxi/dist/20261117_TeslaRobotaxi個股模型_v0.3.html",
+   "home": "實體 AI 地圖"
+  },
+  "MBLY": {
+   "folder": "mobileye",
+   "file": "20261123_Mobileye個股模型_v0.1.html",
+   "xlsx": "20261123_Mobileye個股模型_v0.1.xlsx",
+   "title": "Mobileye個股模型",
+   "date": "2026-11-23",
+   "ver": "v0.1",
+   "url": "models/mobileye/20261123_Mobileye個股模型_v0.1.html",
+   "local": "../../mobileye/dist/20261123_Mobileye個股模型_v0.1.html",
+   "home": "實體 AI 地圖"
+  },
+  "9660": {
+   "folder": "horizon",
+   "file": "20261123_地平線個股模型_v0.1.html",
+   "xlsx": "20261123_地平線個股模型_v0.1.xlsx",
+   "title": "地平線個股模型",
+   "date": "2026-11-23",
+   "ver": "v0.1",
+   "url": "models/horizon/20261123_地平線個股模型_v0.1.html",
+   "local": "../../horizon/dist/20261123_地平線個股模型_v0.1.html",
+   "home": "實體 AI 地圖"
+  },
+  "PONY": {
+   "folder": "pony",
+   "file": "20261123_小馬智行個股模型_v0.1.html",
+   "xlsx": "20261123_小馬智行個股模型_v0.1.xlsx",
+   "title": "小馬智行個股模型",
+   "date": "2026-11-23",
+   "ver": "v0.1",
+   "url": "models/pony/20261123_小馬智行個股模型_v0.1.html",
+   "local": "../../pony/dist/20261123_小馬智行個股模型_v0.1.html",
+   "home": "實體 AI 地圖"
+  },
+  "9880": {
+   "folder": "ubtech",
+   "file": "20261123_優必選個股模型_v0.1.html",
+   "xlsx": "20261123_優必選個股模型_v0.1.xlsx",
+   "title": "優必選個股模型",
+   "date": "2026-11-23",
+   "ver": "v0.1",
+   "url": "models/ubtech/20261123_優必選個股模型_v0.1.html",
+   "local": "../../ubtech/dist/20261123_優必選個股模型_v0.1.html",
+   "home": "實體 AI 地圖"
+  },
+  "UNITREE": {
+   "folder": "unitree",
+   "file": "20261123_宇樹個股模型_v0.1.html",
+   "xlsx": "20261123_宇樹個股模型_v0.1.xlsx",
+   "title": "宇樹個股模型",
+   "date": "2026-11-23",
+   "ver": "v0.1",
+   "url": "models/unitree/20261123_宇樹個股模型_v0.1.html",
+   "local": "../../unitree/dist/20261123_宇樹個股模型_v0.1.html",
+   "home": "實體 AI 地圖"
+  },
+  "2590": {
+   "folder": "geekplus",
+   "file": "20261123_極智嘉個股模型_v0.1.1.html",
+   "xlsx": "20261123_極智嘉個股模型_v0.1.1.xlsx",
+   "title": "極智嘉個股模型",
+   "date": "2026-11-23",
+   "ver": "v0.1.1",
+   "url": "models/geekplus/20261123_極智嘉個股模型_v0.1.1.html",
+   "local": "../../geekplus/dist/20261123_極智嘉個股模型_v0.1.1.html",
+   "home": "實體 AI 地圖"
+  },
+  "SYM": {
+   "folder": "symbotic",
+   "file": "20261123_Symbotic個股模型_v0.1.html",
+   "xlsx": "20261123_Symbotic個股模型_v0.1.xlsx",
+   "title": "Symbotic個股模型",
+   "date": "2026-11-23",
+   "ver": "v0.1",
+   "url": "models/symbotic/20261123_Symbotic個股模型_v0.1.html",
+   "local": "../../symbotic/dist/20261123_Symbotic個股模型_v0.1.html",
+   "home": "實體 AI 地圖"
+  },
+  "1316": {
+   "folder": "nexteer",
+   "file": "20261123_耐世特個股模型_v0.1.html",
+   "xlsx": "20261123_耐世特個股模型_v0.1.xlsx",
+   "title": "耐世特個股模型",
+   "date": "2026-11-23",
+   "ver": "v0.1",
+   "url": "models/nexteer/20261123_耐世特個股模型_v0.1.html",
+   "local": "../../nexteer/dist/20261123_耐世特個股模型_v0.1.html",
+   "home": "實體 AI 地圖"
+  },
+  "6481": {
+   "folder": "thk",
+   "file": "20261123_THK個股模型_v0.1.html",
+   "xlsx": "20261123_THK個股模型_v0.1.xlsx",
+   "title": "THK個股模型",
+   "date": "2026-11-23",
+   "ver": "v0.1",
+   "url": "models/thk/20261123_THK個股模型_v0.1.html",
+   "local": "../../thk/dist/20261123_THK個股模型_v0.1.html",
+   "home": "實體 AI 地圖"
+  },
+  "688017": {
+   "folder": "leaderdrive",
+   "file": "20261123_綠的諧波個股模型_v0.1.html",
+   "xlsx": "20261123_綠的諧波個股模型_v0.1.xlsx",
+   "title": "綠的諧波個股模型",
+   "date": "2026-11-23",
+   "ver": "v0.1",
+   "url": "models/leaderdrive/20261123_綠的諧波個股模型_v0.1.html",
+   "local": "../../leaderdrive/dist/20261123_綠的諧波個股模型_v0.1.html",
+   "home": "實體 AI 地圖"
+  },
+  "6273": {
+   "folder": "smc",
+   "file": "20261123_SMC個股模型_v0.1.html",
+   "xlsx": "20261123_SMC個股模型_v0.1.xlsx",
+   "title": "SMC個股模型",
+   "date": "2026-11-23",
+   "ver": "v0.1",
+   "url": "models/smc/20261123_SMC個股模型_v0.1.html",
+   "local": "../../smc/dist/20261123_SMC個股模型_v0.1.html",
+   "home": "實體 AI 地圖"
+  },
+  "6861": {
+   "folder": "keyence",
+   "file": "20261123_Keyence個股模型_v0.1.html",
+   "xlsx": "20261123_Keyence個股模型_v0.1.xlsx",
+   "title": "Keyence個股模型",
+   "date": "2026-11-23",
+   "ver": "v0.1",
+   "url": "models/keyence/20261123_Keyence個股模型_v0.1.html",
+   "local": "../../keyence/dist/20261123_Keyence個股模型_v0.1.html",
    "home": "實體 AI 地圖"
   },
   "NVDA-C": {
@@ -7471,8 +7604,8 @@
    "basis": "中國第二梯隊 Robotaxi；車隊擴張中",
    "tag": "[判斷]",
    "exp": "高",
-   "tier": "未估值",
-   "val_key": null,
+   "tier": "收支不足",
+   "val_key": "PONY",
    "seg_key": null,
    "grp": "1"
   },
@@ -7552,8 +7685,8 @@
    "basis": "全球 ADAS 視覺方案出貨龍頭（晶片數據讀 AI供應鏈）",
    "tag": "[Interested-party：公司揭露]",
    "exp": "高",
-   "tier": "未估值",
-   "val_key": null,
+   "tier": "買進",
+   "val_key": "MBLY",
    "seg_key": null,
    "grp": "2"
   },
@@ -7579,8 +7712,8 @@
    "basis": "中國 ADAS 晶片與方案主要供應商",
    "tag": "[Interested-party：公司揭露]",
    "exp": "高",
-   "tier": "未估值",
-   "val_key": null,
+   "tier": "強力放空",
+   "val_key": "9660",
    "seg_key": null,
    "grp": "2"
   },
@@ -7741,8 +7874,8 @@
    "basis": "全球氣動元件龍頭",
    "tag": "[判斷]",
    "exp": "中",
-   "tier": "未估值",
-   "val_key": null,
+   "tier": "中立",
+   "val_key": "6273",
    "seg_key": null,
    "grp": "6C"
   },
@@ -7768,8 +7901,8 @@
    "basis": "工業感測與機器視覺龍頭，高毛利直銷模式",
    "tag": "[判斷]",
    "exp": "中",
-   "tier": "未估值",
-   "val_key": null,
+   "tier": "中立",
+   "val_key": "6861",
    "seg_key": null,
    "grp": "6B"
   },
@@ -7822,8 +7955,8 @@
    "basis": "轉向系統與線控轉向",
    "tag": "[判斷]",
    "exp": "中",
-   "tier": "未估值",
-   "val_key": null,
+   "tier": "強力買進",
+   "val_key": "1316",
    "seg_key": null,
    "grp": "2"
   },
@@ -7984,8 +8117,8 @@
    "basis": "人形與四足出貨量領先、價格最低",
    "tag": "[Interested-party：公司與媒體]",
    "exp": "高",
-   "tier": "未估值",
-   "val_key": null,
+   "tier": "強力放空",
+   "val_key": "UNITREE",
    "seg_key": null,
    "grp": "4"
   },
@@ -8038,8 +8171,8 @@
    "basis": "Walker S 工廠場景；訂單公告多",
    "tag": "[Interested-party：公司公告]",
    "exp": "高",
-   "tier": "未估值",
-   "val_key": null,
+   "tier": "強力放空",
+   "val_key": "9880",
    "seg_key": null,
    "grp": "4"
   },
@@ -8497,8 +8630,8 @@
    "basis": "倉儲機器人系統；Walmart 為主要客戶",
    "tag": "[判斷]",
    "exp": "高",
-   "tier": "未估值",
-   "val_key": null,
+   "tier": "強力放空",
+   "val_key": "SYM",
    "seg_key": null,
    "grp": "5"
   },
@@ -8551,8 +8684,8 @@
    "basis": "倉儲 AMR 主要供應商",
    "tag": "[Interested-party：公司揭露]",
    "exp": "高",
-   "tier": "未估值",
-   "val_key": null,
+   "tier": "強力買進",
+   "val_key": "2590",
    "seg_key": null,
    "grp": "5"
   },
@@ -8713,8 +8846,8 @@
    "basis": "國產諧波減速機龍頭",
    "tag": "[判斷]",
    "exp": "高",
-   "tier": "未估值",
-   "val_key": null,
+   "tier": "強力放空",
+   "val_key": "688017",
    "seg_key": null,
    "grp": "6A"
   },
@@ -8821,8 +8954,8 @@
    "basis": "線性導軌全球龍頭",
    "tag": "[判斷]",
    "exp": "中",
-   "tier": "未估值",
-   "val_key": null,
+   "tier": "強力買進",
+   "val_key": "6481",
    "seg_key": null,
    "grp": "6A"
   },
@@ -10060,7 +10193,7 @@
    "mpd": "2026-11-20",
    "mfile": "physical_ai/tesla/dist/20261123_Tesla個股模型_v0.3.1.xlsx",
    "tw": false,
-   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.3.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/tesla/dist/20261123_Tesla個股模型_v0.3.1.xlsx｜Val!C11）"
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/tesla/dist/20261123_Tesla個股模型_v0.3.1.xlsx｜Val!C11）"
   },
   "6324": {
    "map": "實體 AI 地圖",
@@ -10079,7 +10212,7 @@
    "mpd": "2026-11-20",
    "mfile": "physical_ai/harmonic_drive/dist/20261123_哈默納科個股模型_v0.1.1.xlsx",
    "tw": false,
-   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.3.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/harmonic_drive/dist/20261123_哈默納科個股模型_v0.1.1.xlsx｜Val!B28）"
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/harmonic_drive/dist/20261123_哈默納科個股模型_v0.1.1.xlsx｜Val!B28）"
   },
   "6268": {
    "map": "實體 AI 地圖",
@@ -10098,7 +10231,7 @@
    "mpd": "2026-11-20",
    "mfile": "physical_ai/nabtesco/dist/20261123_Nabtesco個股模型_v0.1.1.xlsx",
    "tw": false,
-   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.3.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/nabtesco/dist/20261123_Nabtesco個股模型_v0.1.1.xlsx｜Val!B9）"
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/nabtesco/dist/20261123_Nabtesco個股模型_v0.1.1.xlsx｜Val!B9）"
   },
   "2049": {
    "map": "實體 AI 地圖",
@@ -10117,7 +10250,7 @@
    "mpd": "2026-11-20",
    "mfile": "physical_ai/hiwin/dist/20261123_上銀個股模型_v0.1.1.xlsx",
    "tw": true,
-   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.3.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/hiwin/dist/20261123_上銀個股模型_v0.1.1.xlsx｜Val!C53）"
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/hiwin/dist/20261123_上銀個股模型_v0.1.1.xlsx｜Val!C53）"
   },
   "6954": {
    "map": "實體 AI 地圖",
@@ -10136,7 +10269,7 @@
    "mpd": "2026-11-20",
    "mfile": "physical_ai/fanuc/dist/20261123_發那科個股模型_v0.1.1.xlsx",
    "tw": false,
-   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.3.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/fanuc/dist/20261123_發那科個股模型_v0.1.1.xlsx｜Val!B24）"
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/fanuc/dist/20261123_發那科個股模型_v0.1.1.xlsx｜Val!B24）"
   },
   "6506": {
    "map": "實體 AI 地圖",
@@ -10155,7 +10288,235 @@
    "mpd": "2026-11-20",
    "mfile": "physical_ai/yaskawa/dist/20261123_安川電機個股模型_v0.1.1.xlsx",
    "tw": false,
-   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.3.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/yaskawa/dist/20261123_安川電機個股模型_v0.1.1.xlsx｜Val!B10）"
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/yaskawa/dist/20261123_安川電機個股模型_v0.1.1.xlsx｜Val!B10）"
+  },
+  "MBLY": {
+   "map": "實體 AI 地圖",
+   "ccy": "USD",
+   "tp": 6.04944836750429,
+   "tp_src": "physical_ai/mobileye/dist/20261123_Mobileye個股模型_v0.1.xlsx｜Val!B9",
+   "close": 4.57,
+   "close_date": "2026-11-20",
+   "close_src": "Yahoo Finance 日線（https://finance.yahoo.com/quote/MBLY/history/；physical_ai/data/closes2_20261109_20261120.csv）",
+   "up": 0.323730496171617,
+   "vtier": "買進",
+   "gate": 667.983862336656,
+   "gate_src": "physical_ai/mobileye/dist/20261123_Mobileye個股模型_v0.1.xlsx｜Val!B16",
+   "tier": "買進",
+   "mpx": 4.57,
+   "mpd": "2026-11-20",
+   "mfile": "physical_ai/mobileye/dist/20261123_Mobileye個股模型_v0.1.xlsx",
+   "tw": false,
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/mobileye/dist/20261123_Mobileye個股模型_v0.1.xlsx｜Val!B9）"
+  },
+  "9660": {
+   "map": "實體 AI 地圖",
+   "ccy": "HKD",
+   "tp": 1.17003741952291,
+   "tp_src": "physical_ai/horizon/dist/20261123_地平線個股模型_v0.1.xlsx｜Val!B9",
+   "close": 3.12,
+   "close_date": "2026-11-20",
+   "close_src": "Yahoo Finance 日線（https://finance.yahoo.com/quote/9660.HK/history/；physical_ai/data/closes2_20261109_20261120.csv）",
+   "up": -0.62498800656317,
+   "vtier": "強力放空",
+   "gate": -19.4450545538462,
+   "gate_src": "physical_ai/horizon/dist/20261123_地平線個股模型_v0.1.xlsx｜Val!B16",
+   "tier": "強力放空",
+   "mpx": 3.12,
+   "mpd": "2026-11-20",
+   "mfile": "physical_ai/horizon/dist/20261123_地平線個股模型_v0.1.xlsx",
+   "tw": false,
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/horizon/dist/20261123_地平線個股模型_v0.1.xlsx｜Val!B9）"
+  },
+  "PONY": {
+   "map": "實體 AI 地圖",
+   "ccy": "USD",
+   "tp": 4.49777840719404,
+   "tp_src": "physical_ai/pony/dist/20261123_小馬智行個股模型_v0.1.xlsx｜Val!B10",
+   "close": 3.31,
+   "close_date": "2026-11-20",
+   "close_src": "Yahoo Finance 日線（https://finance.yahoo.com/quote/PONY/history/；physical_ai/data/closes2_20261109_20261120.csv）",
+   "up": 0.358845440239891,
+   "vtier": "買進",
+   "gate": -886.308725602623,
+   "gate_src": "physical_ai/pony/dist/20261123_小馬智行個股模型_v0.1.xlsx｜Val!B17",
+   "tier": "收支不足",
+   "mpx": 3.31,
+   "mpd": "2026-11-20",
+   "mfile": "physical_ai/pony/dist/20261123_小馬智行個股模型_v0.1.xlsx",
+   "tw": false,
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/pony/dist/20261123_小馬智行個股模型_v0.1.xlsx｜Val!B10）"
+  },
+  "9880": {
+   "map": "實體 AI 地圖",
+   "ccy": "HKD",
+   "tp": 23.5042946684509,
+   "tp_src": "physical_ai/ubtech/dist/20261123_優必選個股模型_v0.1.xlsx｜Val!B11",
+   "close": 57.9,
+   "close_date": "2026-11-20",
+   "close_src": "Yahoo Finance 日線（https://finance.yahoo.com/quote/9880.HK/history/；physical_ai/data/closes2_20261109_20261120.csv）",
+   "up": -0.594053632669242,
+   "vtier": "強力放空",
+   "gate": -5.38418457692352,
+   "gate_src": "physical_ai/ubtech/dist/20261123_優必選個股模型_v0.1.xlsx｜Val!B18",
+   "tier": "強力放空",
+   "mpx": 57.900002,
+   "mpd": "2026-11-20",
+   "mfile": "physical_ai/ubtech/dist/20261123_優必選個股模型_v0.1.xlsx",
+   "tw": false,
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/ubtech/dist/20261123_優必選個股模型_v0.1.xlsx｜Val!B11）"
+  },
+  "UNITREE": {
+   "map": "實體 AI 地圖",
+   "ccy": "CNY",
+   "tp": 64.5996650488697,
+   "tp_src": "physical_ai/unitree/dist/20261123_宇樹個股模型_v0.1.xlsx｜Val!B9",
+   "close": 590,
+   "close_date": "2026-11-20",
+   "close_src": "單一來源、未經交易所資料複核：etnet 經濟通 688836 報價頁（2026-11-23 讀取）；Yahoo 收盤檔無此代號",
+   "up": -0.890509042290051,
+   "vtier": "強力放空",
+   "gate": 34.2889657184829,
+   "gate_src": "physical_ai/unitree/dist/20261123_宇樹個股模型_v0.1.xlsx｜Val!B16",
+   "tier": "強力放空",
+   "mpx": 590,
+   "mpd": "2026-11-20",
+   "mfile": "physical_ai/unitree/dist/20261123_宇樹個股模型_v0.1.xlsx",
+   "tw": false,
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/unitree/dist/20261123_宇樹個股模型_v0.1.xlsx｜Val!B9）"
+  },
+  "2590": {
+   "map": "實體 AI 地圖",
+   "ccy": "HKD",
+   "tp": 10.1778563761309,
+   "tp_src": "physical_ai/geekplus/dist/20261123_極智嘉個股模型_v0.1.1.xlsx｜Val!B9",
+   "close": 5.405,
+   "close_date": "2026-11-20",
+   "close_src": "Yahoo Finance 日線（https://finance.yahoo.com/quote/2590.HK/history/；physical_ai/data/closes2_20261109_20261120.csv）",
+   "up": 0.883044657933562,
+   "vtier": "強力買進",
+   "gate": 1165.55947290303,
+   "gate_src": "physical_ai/geekplus/dist/20261123_極智嘉個股模型_v0.1.1.xlsx｜Val!B17",
+   "tier": "強力買進",
+   "mpx": 5.405,
+   "mpd": "2026-11-20",
+   "mfile": "physical_ai/geekplus/dist/20261123_極智嘉個股模型_v0.1.1.xlsx",
+   "tw": false,
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/geekplus/dist/20261123_極智嘉個股模型_v0.1.1.xlsx｜Val!B9）"
+  },
+  "SYM": {
+   "map": "實體 AI 地圖",
+   "ccy": "USD",
+   "tp": 7.92114865627712,
+   "tp_src": "physical_ai/symbotic/dist/20261123_Symbotic個股模型_v0.1.xlsx｜Val!B9",
+   "close": 31.1,
+   "close_date": "2026-11-20",
+   "close_src": "Yahoo Finance 日線（https://finance.yahoo.com/quote/SYM/history/；physical_ai/data/closes2_20261109_20261120.csv）",
+   "up": -0.74530068629334,
+   "vtier": "強力放空",
+   "gate": 2.35405430515207,
+   "gate_src": "physical_ai/symbotic/dist/20261123_Symbotic個股模型_v0.1.xlsx｜Val!B17",
+   "tier": "強力放空",
+   "mpx": 31.1,
+   "mpd": "2026-11-20",
+   "mfile": "physical_ai/symbotic/dist/20261123_Symbotic個股模型_v0.1.xlsx",
+   "tw": false,
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/symbotic/dist/20261123_Symbotic個股模型_v0.1.xlsx｜Val!B9）"
+  },
+  "1316": {
+   "map": "實體 AI 地圖",
+   "ccy": "HKD",
+   "tp": 6.69682778737834,
+   "tp_src": "physical_ai/nexteer/dist/20261123_耐世特個股模型_v0.1.xlsx｜Val!B9",
+   "close": 4.18,
+   "close_date": "2026-11-20",
+   "close_src": "Yahoo Finance 日線（https://finance.yahoo.com/quote/1316.HK/history/；physical_ai/data/closes2_20261109_20261120.csv）",
+   "up": 0.602111910856062,
+   "vtier": "強力買進",
+   "gate": 690.40504125974,
+   "gate_src": "physical_ai/nexteer/dist/20261123_耐世特個股模型_v0.1.xlsx｜Val!B17",
+   "tier": "強力買進",
+   "mpx": 4.18,
+   "mpd": "2026-11-20",
+   "mfile": "physical_ai/nexteer/dist/20261123_耐世特個股模型_v0.1.xlsx",
+   "tw": false,
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/nexteer/dist/20261123_耐世特個股模型_v0.1.xlsx｜Val!B9）"
+  },
+  "6481": {
+   "map": "實體 AI 地圖",
+   "ccy": "JPY",
+   "tp": 8332.16887851949,
+   "tp_src": "physical_ai/thk/dist/20261123_THK個股模型_v0.1.xlsx｜Val!B9",
+   "close": 4249,
+   "close_date": "2026-11-20",
+   "close_src": "Yahoo Finance 日線（https://finance.yahoo.com/quote/6481.T/history/；physical_ai/data/closes2_20261109_20261120.csv）",
+   "up": 0.960971729470344,
+   "vtier": "強力買進",
+   "gate": 106.246464548576,
+   "gate_src": "physical_ai/thk/dist/20261123_THK個股模型_v0.1.xlsx｜Val!B17",
+   "tier": "強力買進",
+   "mpx": 4249,
+   "mpd": "2026-11-20",
+   "mfile": "physical_ai/thk/dist/20261123_THK個股模型_v0.1.xlsx",
+   "tw": false,
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/thk/dist/20261123_THK個股模型_v0.1.xlsx｜Val!B9）"
+  },
+  "688017": {
+   "map": "實體 AI 地圖",
+   "ccy": "CNY",
+   "tp": 46.2452700226596,
+   "tp_src": "physical_ai/leaderdrive/dist/20261123_綠的諧波個股模型_v0.1.xlsx｜Val!B28",
+   "close": 230.8,
+   "close_date": "2026-11-20",
+   "close_src": "Yahoo Finance 日線（https://finance.yahoo.com/quote/688017.SS/history/；physical_ai/data/closes2_20261109_20261120.csv）",
+   "up": -0.799630545829031,
+   "vtier": "強力放空",
+   "gate": 88.8571152150567,
+   "gate_src": "physical_ai/leaderdrive/dist/20261123_綠的諧波個股模型_v0.1.xlsx｜Val!B34",
+   "tier": "強力放空",
+   "mpx": 230.8,
+   "mpd": "2026-11-20",
+   "mfile": "physical_ai/leaderdrive/dist/20261123_綠的諧波個股模型_v0.1.xlsx",
+   "tw": false,
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/leaderdrive/dist/20261123_綠的諧波個股模型_v0.1.xlsx｜Val!B28）"
+  },
+  "6273": {
+   "map": "實體 AI 地圖",
+   "ccy": "JPY",
+   "tp": 62709.7670478481,
+   "tp_src": "physical_ai/smc/dist/20261123_SMC個股模型_v0.1.xlsx｜Val!B10",
+   "close": 55300,
+   "close_date": "2026-11-20",
+   "close_src": "Yahoo Finance 日線（https://finance.yahoo.com/quote/6273.T/history/；physical_ai/data/closes2_20261109_20261120.csv）",
+   "up": 0.133992170847163,
+   "vtier": "中立",
+   "gate": 720.111152667244,
+   "gate_src": "physical_ai/smc/dist/20261123_SMC個股模型_v0.1.xlsx｜Val!B17",
+   "tier": "中立",
+   "mpx": 55300,
+   "mpd": "2026-11-20",
+   "mfile": "physical_ai/smc/dist/20261123_SMC個股模型_v0.1.xlsx",
+   "tw": false,
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/smc/dist/20261123_SMC個股模型_v0.1.xlsx｜Val!B10）"
+  },
+  "6861": {
+   "map": "實體 AI 地圖",
+   "ccy": "JPY",
+   "tp": 12627.8762705699,
+   "tp_src": "physical_ai/keyence/dist/20261123_Keyence個股模型_v0.1.xlsx｜Val!B10",
+   "close": 14025,
+   "close_date": "2026-11-20",
+   "close_src": "Yahoo Finance 日線（https://finance.yahoo.com/quote/6861.T/history/；physical_ai/data/closes2_20261109_20261120.csv）",
+   "up": -0.0996166652000072,
+   "vtier": "中立",
+   "gate": 3135.55209912757,
+   "gate_src": "physical_ai/keyence/dist/20261123_Keyence個股模型_v0.1.xlsx｜Val!B17",
+   "tier": "中立",
+   "mpx": 14025,
+   "mpd": "2026-11-20",
+   "mfile": "physical_ai/keyence/dist/20261123_Keyence個股模型_v0.1.xlsx",
+   "tw": false,
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/keyence/dist/20261123_Keyence個股模型_v0.1.xlsx｜Val!B10）"
   },
   "NVDA-C": {
    "map": "AI 算力地圖（跨圖）",
@@ -10174,7 +10535,7 @@
    "mpd": null,
    "mfile": "20261121_NVIDIA個股模型_v0.3.14.html",
    "tw": false,
-   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.3.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：AI 算力地圖 v0.6.58 data.json → nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx Val!B40）"
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：AI 算力地圖 v0.6.58 data.json → nvidia/dist/20261121_NVIDIA個股模型_v0.3.14.xlsx Val!B40）"
   },
   "2330": {
    "map": "AI 算力地圖（跨圖）",
@@ -10193,7 +10554,7 @@
    "mpd": null,
    "mfile": "20261121_台積電個股模型_v0.5.7.html",
    "tw": true,
-   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.3.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：AI 算力地圖 v0.6.58 data.json → tsmc/dist/20261121_台積電個股模型_v0.5.7.xlsx Val!B94）"
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：AI 算力地圖 v0.6.58 data.json → tsmc/dist/20261121_台積電個股模型_v0.5.7.xlsx Val!B94）"
   },
   "AMZN": {
    "map": "AI 算力地圖（跨圖）",
@@ -10212,7 +10573,7 @@
    "mpd": null,
    "mfile": "20261121_Amazon個股模型_v0.3.9.html",
    "tw": false,
-   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.3.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：AI 算力地圖 v0.6.58 data.json → amazon/dist/20261121_Amazon個股模型_v0.3.9.xlsx Val!B19）"
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：AI 算力地圖 v0.6.58 data.json → amazon/dist/20261121_Amazon個股模型_v0.3.9.xlsx Val!B19）"
   },
   "TER": {
    "map": "AI 算力地圖（跨圖）",
@@ -10231,7 +10592,7 @@
    "mpd": null,
    "mfile": "20261121_泰瑞達個股模型_v0.4.7.html",
    "tw": false,
-   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.3.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：AI 算力地圖 v0.6.58 data.json → ter/dist/20261121_泰瑞達個股模型_v0.4.7.xlsx Val!B126）"
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：AI 算力地圖 v0.6.58 data.json → ter/dist/20261121_泰瑞達個股模型_v0.4.7.xlsx Val!B126）"
   },
   "2308": {
    "map": "AI 算力地圖（跨圖）",
@@ -10250,7 +10611,7 @@
    "mpd": null,
    "mfile": "20261121_台達電個股模型_v0.5.9.html",
    "tw": true,
-   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.3.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：AI 算力地圖 v0.6.58 data.json → delta/dist/20261121_台達電個股模型_v0.5.9.xlsx Val!B119）"
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：AI 算力地圖 v0.6.58 data.json → delta/dist/20261121_台達電個股模型_v0.5.9.xlsx Val!B119）"
   },
   "2317": {
    "map": "AI 算力地圖（跨圖）",
@@ -10269,7 +10630,7 @@
    "mpd": null,
    "mfile": "20261121_鴻海個股模型_v0.4.9.html",
    "tw": true,
-   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.3.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：AI 算力地圖 v0.6.58 data.json → foxconn/dist/20261121_鴻海個股模型_v0.4.9.xlsx Val!B120）"
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：AI 算力地圖 v0.6.58 data.json → foxconn/dist/20261121_鴻海個股模型_v0.4.9.xlsx Val!B120）"
   }
  },
  "segvals": {

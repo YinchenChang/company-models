@@ -1,0 +1,60 @@
+{
+ "company": "優必選 UBTech",
+ "ticker": "9880.HK",
+ "model_sheet": "PL",
+ "official_segments": [
+  {
+   "name": "全尺寸具身智能人形機器人產品及服務",
+   "label": "全尺寸具身智能人形機器人產品及服務 營收",
+   "period": "FY2025",
+   "value": 0.820557,
+   "unit": "¥B（十億元人民幣）",
+   "source": "港交所 優必選 2025 年度業績公告（2026-03-31，CAS）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033102607.pdf（按產品類別的營收分拆）"
+  },
+  {
+   "name": "非具身智能人形機器人產品及服務",
+   "label": "非具身智能人形機器人產品及服務 營收",
+   "period": "FY2025",
+   "value": 0.047963,
+   "unit": "¥B（十億元人民幣）",
+   "source": "港交所 優必選 2025 年度業績公告（2026-03-31，CAS）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033102607.pdf（按產品類別的營收分拆）"
+  },
+  {
+   "name": "其他智能機器人產品及服務",
+   "label": "其他智能機器人產品及服務 營收",
+   "period": "FY2025",
+   "value": 0.628656,
+   "unit": "¥B（十億元人民幣）",
+   "source": "港交所 優必選 2025 年度業績公告（2026-03-31，CAS）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033102607.pdf（按產品類別的營收分拆）"
+  },
+  {
+   "name": "其他智能硬件設備",
+   "label": "其他智能硬件設備 營收",
+   "period": "FY2025",
+   "value": 0.499207,
+   "unit": "¥B（十億元人民幣）",
+   "source": "港交所 優必選 2025 年度業績公告（2026-03-31，CAS）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033102607.pdf（按產品類別的營收分拆）"
+  },
+  {
+   "name": "園林機械、汽車及液壓零部件",
+   "label": "園林機械、汽車及液壓零部件 營收",
+   "period": "FY2025",
+   "value": 0.0,
+   "unit": "¥B（十億元人民幣）",
+   "source": "港交所 優必選 2025 年度業績公告（2026-03-31，CAS）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033102607.pdf（按產品類別的營收分拆）"
+  },
+  {
+   "name": "其他",
+   "label": "其他 營收",
+   "period": "FY2025",
+   "value": 0.004616,
+   "unit": "¥B（十億元人民幣）",
+   "source": "港交所 優必選 2025 年度業績公告（2026-03-31，CAS）https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033102607.pdf（按產品類別的營收分拆）"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ],
+ "note": "公司年報與中報按產品類別揭露營收（2026 起新增鋒龍並表的園林機械、汽車及液壓零部件）；應報導分部的正式劃分未取得，以產品類別為營收分部。FY2023 產品類別未取得（PL 頁 FY2023 只有合併營收）。Hist 頁另有 FY2024、FY2025、H1'25、H1'26 產品類別合計 − 營收核對列（皆為 0）。"
+}

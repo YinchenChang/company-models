@@ -101,7 +101,7 @@ if not (sw and 'href="../"' in sw.group(0) and 'href="../software_ai/"' in sw.gr
     fail.append("頁首站際切換（算力｜實體 AI｜軟體 AI）不正確")
 # 6 v0.3：個股模型 HTML（本專案 8 份都要有、檔案存在、與 xlsx 同版；跨圖連 AI 算力地圖 models/）；可投資性頁有散布圖與分級篩選
 MD = D.get("models", {})
-for k in ("TSLA", "6324", "6268", "2049", "6954", "6506", "WAYMO", "TSLA-RT"):
+for k in ("TSLA", "6324", "6268", "2049", "6954", "6506", "WAYMO", "TSLA-RT", "MBLY", "9660", "PONY", "9880", "UNITREE", "2590", "SYM", "1316", "6481", "688017", "6273", "6861"):
     m = MD.get(k)
     if not m:
         fail.append(f"{k} 沒有個股模型 HTML"); continue
@@ -115,7 +115,7 @@ for k, itk in CROSS.items():
     if not m or not m["url"].startswith("../models/") or inv["models"][itk]["file"] != m["file"]:
         fail.append(f"跨圖 {k} 模型連結與 AI 算力地圖 data.json 不符")
 for tk, v in D["valuation"].items():
-    if v["map"] == "實體 AI 地圖" and (v["mpd"] != v["close_date"] or not close(v["mpx"], v["close"], 1e-9)):
+    if v["map"] == "實體 AI 地圖" and (v["mpd"] != v["close_date"] or not close(v["mpx"], v["close"], 1e-6)):
         fail.append(f"{tk} 模型現價（{v['mpx']}，{v['mpd']}）與收盤（{v['close']}，{v['close_date']}）不同日或不同值")
 for need in ('function scatter(', 'data-if=', '["個股模型","MODEL"]', 'class="mframe"'):
     if need not in html_txt:

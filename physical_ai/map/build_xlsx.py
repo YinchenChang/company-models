@@ -12,7 +12,7 @@ from openpyxl.workbook.defined_name import DefinedName
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
-VERSION = "v0.3"
+VERSION = "v0.4"
 DATE = "20261123"
 OUT = os.path.join(HERE, "dist", f"{DATE}_實體AI地圖_資料_{VERSION}.xlsx")
 YEL = PatternFill("solid", fgColor="FFF2CC")
@@ -120,13 +120,16 @@ def named(wb, nm):
 
 # 代號（產業地位 csv）→ (資料夾, 檔名樣式)
 OWN = {"TSLA": ("tesla", "*Tesla個股模型_v*.xlsx"), "6324": ("harmonic_drive", "*.xlsx"), "6268": ("nabtesco", "*.xlsx"),
-       "2049": ("hiwin", "*.xlsx"), "6954": ("fanuc", "*.xlsx"), "6506": ("yaskawa", "*.xlsx")}
+       "2049": ("hiwin", "*.xlsx"), "6954": ("fanuc", "*.xlsx"), "6506": ("yaskawa", "*.xlsx"),
+       # 第二批（2026-11-23）
+       "MBLY": ("mobileye", "*.xlsx"), "9660": ("horizon", "*.xlsx"), "PONY": ("pony", "*.xlsx"), "9880": ("ubtech", "*.xlsx"), "UNITREE": ("unitree", "*.xlsx"), "2590": ("geekplus", "*.xlsx"), "SYM": ("symbotic", "*.xlsx"), "1316": ("nexteer", "*.xlsx"), "6481": ("thk", "*.xlsx"), "688017": ("leaderdrive", "*.xlsx"), "6273": ("smc", "*.xlsx"), "6861": ("keyence", "*.xlsx")}
 SEGM = {"WAYMO": ("waymo", "*.xlsx"), "TSLA-RT": ("tesla_robotaxi", "*.xlsx")}
 # 跨圖：產業地位代號 → 算力地圖代號
 CROSS = {"NVDA-C": "NVDA", "2330": "2330", "AMZN": "AMZN", "TER": "TER", "2308": "2308", "2317": "2317"}
 TP_PATS = [r"^目標價（DCF 與", r"^加權目標價"]
 GATE_PATS = [r"^入不敷出判定用"]
-CCY = {"TSLA": "USD", "6324": "JPY", "6268": "JPY", "2049": "TWD", "6954": "JPY", "6506": "JPY"}
+CCY = {"TSLA": "USD", "6324": "JPY", "6268": "JPY", "2049": "TWD", "6954": "JPY", "6506": "JPY",
+       "MBLY": "USD", "9660": "HKD", "PONY": "USD", "9880": "HKD", "UNITREE": "CNY", "2590": "HKD", "SYM": "USD", "1316": "HKD", "6481": "JPY", "688017": "CNY", "6273": "JPY", "6861": "JPY"}
 
 
 def own_models():
