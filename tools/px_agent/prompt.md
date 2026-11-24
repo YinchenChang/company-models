@@ -5,7 +5,7 @@
 2. 先看這一家上次換價怎麼做：`{FOLDER}/px1113_post.py`、`px1113_peers.py` 或建置程式裡 px1113 的段落，以及 `{FOLDER}/README.md` 的重建方式。沿用同一做法寫 px1120（新檔 `px1120_post.py` 或同等位置），不要重寫架構。
 3. 價格只取自 `markets/invest_map/data/closes_20261109_20261120.csv`（新日 2026-11-20；舊報價日 2026-11-13 也在此檔）與舊兩檔 `closes_20261020_20261113.csv`、`closes_extra_20261113.csv`（更早的報價日）。檔內沒有的代號維持原值、列入未換價同業，不得臆造或上網查價。
 4. 只換價格：現價、模型內其他股價或市值輸入、Comparable 同業倍數（新倍數＝現行倍數 × 11-20 收盤 ÷ 現行報價日收盤）。共識 EPS、rf、β、ERP、預測匯率、營運假設、情境權重、三層基準讀數都不變。投資建議由模型公式重算，不手改。
-5. 依該公司慣例重建 dist（xlsx＋HTML；檔名日期 20261121；舊 dist 檔移除，dist 只留現行版）。Sens／Coord 快照若 STALE 依 px1113 工作單第 4 節重跑。LibreOffice 用私有設定檔（-env:UserInstallation=file:///tmp/lo_{FOLDER}）。
+5. 依該公司慣例重建 dist（xlsx＋HTML；檔名日期 20261121；舊 dist 檔移除，dist 只留現行版）。Sens／Coord 快照若 STALE 依 px1113 工作單第 4 節重跑；**有 `coord_alt.json` 的公司換價後一律重跑 `python3 tools/coord/alt_run.py {FOLDER}`（另一側讀數的目標價與上檔空間都隨現價與同業倍數變動，不是「與價格無關」），重建後跑 `python3 tools/model_governance/check_zero_rows.py {FOLDER}/dist/*.xlsx`，成品不得有 STALE。**LibreOffice 用私有設定檔（-env:UserInstallation=file:///tmp/lo_{FOLDER}）。
 6. 跑該公司自帶檢查與 px1113 工作單第 4 節列的檢查；前一版就沒過的項目不要求，但要在 note 寫明。
 7. 寫 `{FOLDER}/px1120_note.txt`（格式見工作單第 4 節），數值取自重建後成品的重算值。
 8. 做不完或遇到無法判斷的事：不要硬做。把已完成的部分留在可重建的狀態，在 px1120_note.txt 的 notes 寫清楚卡在哪裡，然後結束。

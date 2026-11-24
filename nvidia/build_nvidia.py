@@ -1196,6 +1196,9 @@ if V36 and not OVR:
     print(v0313_post.apply(wb))
     import px1120_post  # noqa: E402  v0.3.14（2026-11-21）：現價與同業報價改 2026-11-20 收盤（工作單 px1120；只追加沿革列）
     print(px1120_post.apply(wb, "v0.3.14", PX1120_NOTE))
+    # v0.3.14 同版增補（2026-11-23；外部稽核 G-T05，Andy 同意）：Sens 業務主因表新增執行長異動三組案例（v035_post.ceo_cases；只新增列，基準與目標價不變）
+    print(px1120_post.apply(wb, "v0.3.14", "v0.3.14 同版增補（2026-11-23）：敏感度頁「業務主因」表新增執行長異動的三組案例——相對倍數溢價保留比例、情境權重偏保守、治理風險溢酬（折現率加點）。"
+                                           "三組設定值都沒有跨公司實證（Assumed），取自 Gemini 試算提案；依已定規則只進敏感度，基準假設、加權目標價與評等不變。"))
 wb.save(sys.argv[1])
 if os.environ.get("NV_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

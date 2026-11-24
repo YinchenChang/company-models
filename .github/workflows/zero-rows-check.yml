@@ -1,4 +1,4 @@
-# 核對列與錯誤值掃描（tools/model_governance/check_zero_rows.py；2026-11-20 起）
+# 核對列、錯誤值與過期旗標（STALE）掃描（tools/model_governance/check_zero_rows.py；2026-11-20 起）
 # 只讀成品的快取值，不需要 LibreOffice、不呼叫 API。
 # 另跑公式格快取值檢查（tools/model_governance/check_cached_values.py）：成品的公式格沒有快取值即失敗。
 # 基準清單 tools/model_governance/zero_rows_baseline.json 列的是已知待修項目：清單外出現新的非零核對列或錯誤值即失敗；

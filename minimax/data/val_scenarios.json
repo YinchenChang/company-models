@@ -1,6 +1,6 @@
 {
  "note": "scripts/val_snapshots.py scen 產生；值＝LibreOffice 重算後 Val 第 3 節 B 列（各情境改 Inputs 後）；勿手改",
- "model": "build_xlsx.py（2026-11-21）",
+ "model": "build_xlsx.py（2026-11-23）",
  "scenarios": {
   "A": {
    "id": "VAL_SCN_A",
