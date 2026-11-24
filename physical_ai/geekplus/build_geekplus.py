@@ -11,7 +11,7 @@ from openpyxl.workbook.defined_name import DefinedName
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
-VER = "v0.1"
+VER = "v0.1.1"
 DATE = "20261123"
 NAME = f"{DATE}_極智嘉個股模型_{VER}.xlsx"
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True)
@@ -126,7 +126,7 @@ inp("fc_wc", "營運資金增加 ÷ 營收增量", "%", 0.07, "=((958.208+803.15
     "（應收＋存貨 − 應付 − 合約負債）的變動 ÷ 營收增量：FY2024→FY2025 (230.9 − 132.6) ÷ 762.0＝12.9%（" + AR25 + "）", "低 7%（FY2024 營運資金 ÷ 營收 5.5%）、高 25%（上半年季節性墊高到 470.2）；Assumed")
 inp("dps_tgt", "評價日到目標時點之每股股利", "RMB", None, 0.0, None, "Assumed", "未派息", "")
 inp("t_tgt", "評價日到目標時點（年）", "年", None, 1.0, None, "Derived", "2026-12-31 → 2027-12-31", "")
-inp("w_dcf", "DCF 權重（其餘為 Comparable：EV ÷ 營收）", "x", 0.3, 0.5, 0.7, "Assumed", "個股模型原則第 4 節預設各半", "")
+inp("w_dcf", "DCF 權重（其餘為 Comparable：EV ÷ 營收）", "x", 0.5, 0.7, 0.9, "Assumed", "個股模型原則第 4 節預設各半；v0.1.1 依獨立核對調降 Comparable 權重：Comparable 的上檔幾乎全部來自「倍數向同業中位數收斂」的假設（Analogy），證據不足以與 DCF 等權", "低＝原則預設各半；高＝幾乎只看 DCF")
 for s, v in (("A", 0.25), ("B", 0.50), ("C", 0.25)):
     inp(f"w_{s}", f"情境權重 {s}", "x", None, v, None, "Assumed", "DCF 標準規格第 3 節預設 25／50／25", "")
 
@@ -389,7 +389,7 @@ def build(path, ov=None, sens=None, rev=None):
 
     # ---------------- Val ----------------
     V = wb.create_sheet("Val")
-    V["A1"] = "Val — 目標價（港元）：DCF（權重見 In 頁，基準一半）＋ Comparable（EV ÷ 營收；其餘權重）；三情境 25／50／25；評等五級（> +50% 強力買進、> +25% 買進、≥ −25% 中立、≥ −50% 放空、其餘強力放空）"
+    V["A1"] = "Val — 目標價（港元）：DCF（權重見 In 頁）＋ Comparable（EV ÷ 營收；其餘權重）；三情境 25／50／25；評等五級（> +50% 強力買進、> +25% 買進、≥ −25% 中立、≥ −50% 放空、其餘強力放空）"
     hdr(V, 3, ["項目", "情境 A", "情境 B", "情境 C", "加權", "說明"])
     vr = 4
     def vrow(lab, fs, note=""):
@@ -709,7 +709,7 @@ def write_readme(path, VR, PR, DR, sens, revs):
 - 歷史 EPS 用公司公告值，FY2023–FY2024 與年度利潤 ÷ 加權股數不一致（上市前優先股口徑），分母未取得。
 - 7 月買回 16.2 百萬股的金額未取得（假設 10 港元）；8–11 月是否續買未核對（資料商流通股 1,289 百萬股，Sens 低案）。
 - 股價 52 週下跌約 84% 的主因未找到（「沒找到」，不是「分不出來」）。
-- 未做：未參與製作的代理獨立核對（Project 規則第 10 條，待主代理安排）；check_display（無 display_check.json）。
+- 獨立核對（2026-11-24，未參與製作者）：數字一致性通過；結論穩健性見「結論的證據邊界」。未做：check_display（無 display_check.json）。
 
 ## 檔案
 - `build_geekplus.py`：建置＋整本重算 Sens／反解＋產生本 README、`segments.json`、`sens.json`。
@@ -717,7 +717,8 @@ def write_readme(path, VR, PR, DR, sens, revs):
 - `html.json`＋`gen_html_json.py`：HTML 展示層設定（tools/company_html，layout v1.3）；`dist/{NAME[:-5]}.html`。
 
 ## 版本紀錄
-- v0.1（2026-11-23）：初版；現價 {IV['px']:.3f} 港元（2026-11-20 收盤）；加權目標價 {f2(tp)}、上檔 {pc(up)}、估值評等 {g(f"B{VR['rt']}")}、投資建議 {g(f"B{VR['rec']}")}。
+- v0.1（2026-11-23）：初版；現價 5.405 港元（2026-11-20 收盤）；加權目標價 12.17、上檔 +125.2%、估值評等 強力買進、投資建議 強力買進。
+- v0.1.1（2026-11-24）：獨立核對後 DCF 權重由一半改為七成（Comparable 三成），其餘輸入不變；加權目標價 {f2(tp)}、上檔 {pc(up)}、估值評等 {g(f"B{VR['rt']}")}、投資建議 {g(f"B{VR['rec']}")}。
 """
     open(os.path.join(HERE, "README.md"), "w").write(txt)
 

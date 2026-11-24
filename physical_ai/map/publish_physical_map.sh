@@ -2,7 +2,7 @@
 # 發布實體 AI 地圖到 gh-pages 的 physical_ai/ 子資料夾（v0.2 起；與 AI 算力地圖、AI 軟體地圖約定的網址），舊位置 physical/ 放同一份頁面（<base> 指向 physical_ai/，不轉址）。
 # 在現有 gh-pages 上「追加一個 commit」，不 force、只動 physical_ai/（含 models/）與 physical/。
 # 用法（在含 physical_ai/map/dist 成品的工作目錄）：bash physical_ai/map/publish_physical_map.sh
-# 需要 Andy 明確授權發布（AI實體應用 Project 規則第 11 條；2026-11-17 08:10 授權發布；13:58 要求改版）。
+# 發布需要專案負責人明確授權（專案規則第 11 條）。
 set -euo pipefail
 ROOT=$(git rev-parse --show-toplevel)
 SHA=$(git -C "$ROOT" rev-parse --short HEAD)

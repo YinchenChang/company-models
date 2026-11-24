@@ -471,13 +471,13 @@
   },
   "2590": {
    "folder": "geekplus",
-   "file": "20261123_極智嘉個股模型_v0.1.html",
-   "xlsx": "20261123_極智嘉個股模型_v0.1.xlsx",
+   "file": "20261123_極智嘉個股模型_v0.1.1.html",
+   "xlsx": "20261123_極智嘉個股模型_v0.1.1.xlsx",
    "title": "極智嘉個股模型",
    "date": "2026-11-23",
-   "ver": "v0.1",
-   "url": "models/geekplus/20261123_極智嘉個股模型_v0.1.html",
-   "local": "../../geekplus/dist/20261123_極智嘉個股模型_v0.1.html",
+   "ver": "v0.1.1",
+   "url": "models/geekplus/20261123_極智嘉個股模型_v0.1.1.html",
+   "local": "../../geekplus/dist/20261123_極智嘉個股模型_v0.1.1.html",
    "home": "實體 AI 地圖"
   },
   "SYM": {
@@ -10388,21 +10388,21 @@
   "2590": {
    "map": "實體 AI 地圖",
    "ccy": "HKD",
-   "tp": 12.1729633176525,
-   "tp_src": "physical_ai/geekplus/dist/20261123_極智嘉個股模型_v0.1.xlsx｜Val!B9",
+   "tp": 10.1778563761309,
+   "tp_src": "physical_ai/geekplus/dist/20261123_極智嘉個股模型_v0.1.1.xlsx｜Val!B9",
    "close": 5.405,
    "close_date": "2026-11-20",
    "close_src": "Yahoo Finance 日線（https://finance.yahoo.com/quote/2590.HK/history/；physical_ai/data/closes2_20261109_20261120.csv）",
-   "up": 1.25216712630018,
+   "up": 0.883044657933562,
    "vtier": "強力買進",
    "gate": 1165.55947290303,
-   "gate_src": "physical_ai/geekplus/dist/20261123_極智嘉個股模型_v0.1.xlsx｜Val!B17",
+   "gate_src": "physical_ai/geekplus/dist/20261123_極智嘉個股模型_v0.1.1.xlsx｜Val!B17",
    "tier": "強力買進",
    "mpx": 5.405,
    "mpd": "2026-11-20",
-   "mfile": "physical_ai/geekplus/dist/20261123_極智嘉個股模型_v0.1.xlsx",
+   "mfile": "physical_ai/geekplus/dist/20261123_極智嘉個股模型_v0.1.1.xlsx",
    "tw": false,
-   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/geekplus/dist/20261123_極智嘉個股模型_v0.1.xlsx｜Val!B9）"
+   "up_src": "資料活頁簿 20261123_實體AI地圖_資料_v0.4.xlsx｜估值頁：目標價 ÷ 收盤 − 1（目標價出處：physical_ai/geekplus/dist/20261123_極智嘉個股模型_v0.1.1.xlsx｜Val!B9）"
   },
   "SYM": {
    "map": "實體 AI 地圖",
