@@ -1121,7 +1121,9 @@ def main():
             CX.cell(rows["in"], col, f'=IF({I9}<>"",{I9},IF({I2}<>"",{I2},""))').number_format = "0.0"
             CX.cell(rows["insrc"], col, f'=IF({I9}<>"","Y9",IF({I2}<>"","Y2（代入）",""))')
             IN_ = f"{c}{rows['in']}"
-            CX.cell(rows["cnt"], col, f'=({IN_}<>"")' + (f"+{pc}{rows['cnt']}" if pc else "")).number_format = "0"
+            # Excel 相容（2026-11-25）：首欄須是數值，不是邏輯值。Excel 比較時邏輯值恆大於數字（FALSE>0 為 TRUE），
+            # 首欄留邏輯值會讓次欄「前一年已知值個數>0」誤判為真，再去乘空字串 → #VALUE!（LibreOffice 把 FALSE 當 0，所以看不到）
+            CX.cell(rows["cnt"], col, f'=({IN_}<>"")*1' + (f"+{pc}{rows['cnt']}" if pc else "")).number_format = "0"
             CX.cell(rows["N"], col, f'=IF({IN_}<>"",{IN_},' + (f"{nc}{rows['N']})" if nc else '"")'))
             prevfy = f"{pc}{rows['fy']}" if pc else '""'
             prevcnt = f"{pc}{rows['cnt']}" if pc else "0"
@@ -3111,15 +3113,21 @@ def main():
         CK.cell(r, 1, f"G-K1-{y}"); CK.cell(r, 2, f"{y} Gap 每 GW 建置成本項目合計＝每 GW 建置成本")
         CK.cell(r, 3, f"=Gap!{YC[y]}{GROW['isum']}"); CK.cell(r, 4, f"=Gap!{YC[y]}{GROW['pgw']}")
         CK.cell(r, 5, f"=C{r}-D{r}"); CK.cell(r, 6, f'=IF(ABS(E{r})<1E-6,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Gap）"); r += 1
-    k2 = []
+    k2 = []; k2p = {}
     for p in sorted(XR) + ["xai"]:
-        R_ = XR.get(p) or XRX[p]
+        R_ = XR.get(p) or XRX[p]; k2 = k2p.setdefault(p, [])
         for y in [y for y in YEARS if y >= 2026]:
             c = YC[y]; g_ = f"CapexGW!{c}{R_['gw']}"
             k2.append(f'IF({g_}="",0,ABS(CapexGW!{c}{R_["fund"]}/(CapexGW!{c}{R_["pit"]}+CapexGW!{c}{R_.get("pfo", R_["pfac"])})-{g_}))'
                       f'+ABS(Gap!{c}{GPR[p]["add"]}-CapexGW!{c}{R_["main"]})+ABS(Gap!{c}{GPR[p]["pit"]}+Gap!{c}{GPR[p]["pfac"]}-CapexGW!{c}{R_["pit"]}-CapexGW!{c}{R_.get("pfo", R_["pfac"])})')
     CK.cell(r, 1, "G-K2"); CK.cell(r, 2, "同源一致：CapexGW 資金 ÷ 每 GW 成本＝甲2 付款年 GW；Gap 玩家年新增＝CapexGW 主路徑（上線年）、每 GW＝CapexGW（七家與 xAI、2026 起；v0.1.8）")
-    CK.cell(r, 3, "=" + "+".join(k2)); CK.cell(r, 6, f'=IF(C{r}<1E-6,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Gap）"); r += 1
+    # Excel 相容（2026-11-25）：單一公式上限 8,192 字元，整段相加（約 8,600 字元）會被 Excel 開檔時移除。
+    # 改成每家一格小計（J 欄起，一家一欄），C 欄加總；數值不變
+    for i_, p in enumerate(k2p):
+        CK.cell(r, 10 + i_, "=" + "+".join(k2p[p]))
+    CK.cell(r, 3, f"=SUM({get_column_letter(10)}{r}:{get_column_letter(9 + len(k2p))}{r})")
+    CK.cell(r, 8, "逐家小計在本列 J 欄起（一家一欄；Excel 單一公式上限 8,192 字元）")
+    CK.cell(r, 6, f'=IF(C{r}<1E-6,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Gap）"); r += 1
     M0 = GMK["AD0"]
     CK.cell(r, 1, "G-K3"); CK.cell(r, 2, "A／D0：情景比例 r＝1（2024–2032）；11 家 AI 需要（× r）＝玩家層加總（未縮放）；組成合計＝11 家 AI 資本支出")
     CK.cell(r, 3, "=" + "+".join(f"ABS(Gap!{YC[y]}{M0['r']}-1)" for y in YEARS) + "+" +

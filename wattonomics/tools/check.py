@@ -35,6 +35,10 @@ def main():
                 if isinstance(fv, str) and fv.startswith("=") and v is None:
                     nuncalc += 1
     if nerr: bad.append(f"錯誤格 {nerr}")
+    # 2b) Excel 相容（2026-11-25）：單一公式上限 8,192 字元；超過者 Excel 開檔時會整格移除（LibreOffice 不會報錯）
+    toolong = [f"{ws_.title}!{c_.coordinate}（{len(c_.value)}）" for ws_ in wf.worksheets for row_ in ws_.iter_rows() for c_ in row_
+               if isinstance(c_.value, str) and c_.value.startswith("=") and len(c_.value) > 8000]
+    if toolong: bad.append(f"公式超過 Excel 長度上限（留 192 字元餘裕）：{toolong}")
     if nuncalc > 0:
         print(f"  註：{nuncalc} 個公式格值為空（空字串結果或未重算；若全部為空表示未經 LibreOffice 重算）")
     # 3) Checks
