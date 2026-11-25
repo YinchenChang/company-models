@@ -23,8 +23,8 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.6.59"
-DATE = "20261124"
+VERSION = "v0.6.60"
+DATE = "20261125"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI算力地圖_資料_{VERSION}.xlsx")
 # v0.6.50 起改名「AI算力地圖」；讀回前版時兩種檔名都認，依日期＋版號排序
 BOOK_GLOBS = ("*_AI算力地圖_資料_*.xlsx", "*_AI投資地圖_資料_*.xlsx")
