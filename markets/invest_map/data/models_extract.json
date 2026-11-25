@@ -1,93 +1,93 @@
 {
  "NVDA": {
-  "model": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx",
+  "model": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx",
   "v2": true,
   "tp": {
    "value": 316.024638604775,
    "cell": "Val!B40",
-   "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+   "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
   },
   "tp_dcf": {
    "value": 136.480447574721,
    "cell": "Val!B23",
-   "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+   "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
   },
   "tp_comp": {
    "value": 280.755543439529,
    "cell": "Val!B41",
-   "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+   "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
   },
   "tp_cons": {
    "value": 328.95,
    "cell": "Val!B42",
-   "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+   "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
   },
   "up": {
    "value": 1.51752281211483,
    "cell": "Val!B43",
-   "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+   "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
   },
   "up_comp": {
    "value": 1.23656132748768,
    "cell": "Val!B44",
-   "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+   "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
   },
   "tp_comp_adj": {
    "value": 495.568829634828,
    "cell": "Val!B199",
-   "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+   "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
   },
   "old_rule": {
    "value": 490.393284232978,
    "cell": "Val!B170",
-   "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+   "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
   },
   "tier6": {
    "value": "大於 50%",
    "cell": "Val!B178",
-   "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+   "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
   },
   "rec": {
    "value": "強力買進",
    "cell": "Val!B179",
-   "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+   "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
   },
   "dcf_A": {
    "value": 203.744832543481,
    "cell": "Val!B20",
-   "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+   "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
   },
   "dcf_C": {
    "value": 94.2697035832203,
    "cell": "Val!D20",
-   "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+   "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
   },
   "model_px": {
    "value": 125.53,
    "cell": "Val!B57",
-   "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx",
+   "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx",
    "date": "2026-11-20"
   },
   "coord": {
    "rec_cur": {
     "value": "強力買進",
     "cell": "Coord!B34",
-    "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+    "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
    },
    "rec_alt": {
     "value": "強力買進",
     "cell": "Coord!C34",
-    "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+    "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
    },
    "tp_cur": {
     "value": 316.024638604775,
     "cell": "Coord!B32",
-    "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+    "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
    },
    "tp_alt": {
     "value": 274.315749943282,
     "cell": "Coord!C32",
-    "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+    "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
    },
    "differ": false
   },
@@ -95,17 +95,17 @@
    {
     "value": 9.86920515589649,
     "cell": "Val!B58",
-    "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+    "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
    },
    {
     "value": 10.2762269787351,
     "cell": "Val!C58",
-    "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+    "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
    },
    {
     "value": 10.3910987809308,
     "cell": "Val!D58",
-    "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+    "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
    }
   ],
   "cash": {
@@ -178,7 +178,7 @@
      "PL!G292"
     ]
    ],
-   "file": "nvidia/dist/20261124_NVIDIA個股模型_v0.3.15.xlsx"
+   "file": "nvidia/dist/20261125_NVIDIA個股模型_v0.3.16.xlsx"
   },
   "tp_comp_role": "未調整，不進加權（進加權的是 tp_comp_adj）"
  },
