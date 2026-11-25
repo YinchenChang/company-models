@@ -46,6 +46,14 @@ python3 wattonomics/tools/check.py wattonomics/model/<檔名>.xlsx wattonomics/d
 
 Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格並以 LibreOffice 重算）：`python3 wattonomics/tools/gap_sensitivity.py wattonomics/model/<檔名>.xlsx`
 
+## Excel 相容（2026-11-25 增訂；Andy 以 Excel 開檔發現）
+
+模型以 LibreOffice 重算與核對，但 Andy 用 Excel 開檔，兩者有兩處行為不同，建置時須遵守：
+
+- **比較式的運算元不得是邏輯值。** Excel 比較時邏輯值恆大於任何數字（`FALSE>0` 為 TRUE），LibreOffice 把 FALSE 當 0。`(條件)` 的結果要進比較或累加時，一律寫成 `(條件)*1`。v0.3.9 以前 CapexGW「已知值累計個數」首欄是邏輯值，Oracle、CoreWeave、Nebius 的補值列在 Excel 重算時變 #VALUE!，一路傳到 Deploy 主路徑（LibreOffice 看不到）。
+- **單一公式不得超過 8,192 字元**（Excel 上限；超過者開檔時整格被移除）。`tools/check.py` 以 8,000 字元為界報錯。Checks G-K2 因此拆成逐家小計（該列 J 欄起），C 欄加總。
+- 核對紀錄：`docs/verify/20261125_v0.3.9_Excel相容修正.md`。
+
 ## 原則
 
 - Excel 是唯一事實來源；`builder/` 只產生公式頁與格式，計算一律為 Excel 公式。`builder/seed/` 只用於 v0.1 首建。

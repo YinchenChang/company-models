@@ -2,7 +2,7 @@
  "source": {
   "file": "20261119_Wattonomics_v0.3.9.xlsx",
   "version": "v0.3.9",
-  "sha256": "c68f94f4bcdf783cf0ffbe827980bf13bbd28af15b5de905f3bfbab0db9b79fd",
+  "sha256": "d3a6f86a8ed0850007561d3ccc6f2cb6c804ef8b4c31d85279f23741c233f63b",
   "unit": "IT GW（＝TK GW，IT 關鍵電力；設施＝× IF_FacilityGW）",
   "years": [
    2024,
@@ -9956,7 +9956,7 @@
    ]
   },
   {
-   "sec": "S14. v0.3.6 Siliconomics 權威協調狀態（siliconomics/data/baseline_status.json，來源 20261119_Siliconomics_v0.22.xlsx（repo main 04bd1f76 2026-11-19））：建置時由 json 重寫、不讀 --base；Wattonomics 不自行判定逐年狀態"
+   "sec": "S14. v0.3.6 Siliconomics 權威協調狀態（siliconomics/data/baseline_status.json，來源 20261119_Siliconomics_v0.22.xlsx（repo main 8be8d07 2026-11-21））：建置時由 json 重寫、不讀 --base；Wattonomics 不自行判定逐年狀態"
   },
   {
    "id": "sil_bs_lab_2026",
